@@ -31,7 +31,8 @@ function dXdt = ell_eesm_ode(t, X, l0, mydata, n, back)
   pp1 = p1/p2;
   pp2 = p2/p1;
   
-  dXdt = s*A*X + s*X*A' + pp1*X + pp2*BPB;
+  AX = A*X;
+  dXdt = s*AX + s*AX' + pp1*X + pp2*BPB;
   dXdt = reshape(0.5*(dXdt + dXdt'), n*n, 1);
 
   return;
