@@ -268,7 +268,7 @@ function RS = reach(lsys, X0, L0, T, Options)
       B            = reshape(BB, d1, du);
       mydata.Bp    = B * p;
       mydata.BPB   = B * P * B';
-      mydata.BPBsr = sqrtm(mydata.BPB);
+      mydata.BPBsr = sqrtm(full(mydata.BPB));
       mydata.BPBsr = 0.5*(mydata.BPBsr + (mydata.BPBsr)');
     else
       Bp    = zeros(d1, size(RS.time_values, 2));

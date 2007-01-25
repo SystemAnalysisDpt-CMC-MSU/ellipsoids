@@ -50,7 +50,7 @@ A(N+1:end, 1:N) = -diag([2*o, 1]) + diag(o, 1) + diag(o, -1);
 B = [zeros(2*N-1, 1); 1];
 U = ellipsoid(1, 1);
 
-ls = linsys(A, B, U);
+ls = linsys(sparse(A), sparse(B), U);
 
 % Reach set
 X0 = ell_unitball(n);
