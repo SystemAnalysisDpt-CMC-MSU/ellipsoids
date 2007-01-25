@@ -880,7 +880,7 @@ function RS = reach(lsys, X0, L0, T, Options)
     LL = [];
     for ii = 1:N
       l0 = L0(:, ii);
-      L  = [];
+      L  = zeros(d1, size(RS.time_values, 2));
       for i = 1:size(RS.time_values, 2)
         t = RS.time_values(i);
         if back > 0
@@ -888,7 +888,7 @@ function RS = reach(lsys, X0, L0, T, Options)
         else
           F = ell_value_extract(mydata.Phinv, t, [d1 d1]);
         end
-        L = [L F'*l0];
+        L(:, i) = F'*l0;
       end
       LL = [LL {L}];
     end
