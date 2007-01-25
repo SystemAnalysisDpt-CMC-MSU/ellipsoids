@@ -1,0 +1,7 @@
+2007-01-26 a.daryin
+	* Optimized for performance.
+	  Results of bign.m for N = 5, 10, 25, 35:
+	  Before - 12.3, 45.8, 309.6, 603.2 s
+	  After - 5.4, 8.0 35.2, 75.0 s
+	* Added test for large dimensions (bign.m).
+	* Added CHANGELOG.txt.
