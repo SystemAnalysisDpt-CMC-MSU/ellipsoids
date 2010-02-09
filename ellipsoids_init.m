@@ -12,7 +12,7 @@ function out = ellipsoids_init(varargin)
   global ellOptions;
 
 
-  ellOptions.version = '1.1';
+  ellOptions.version = '1.1.2';
   ellOptions.verbose = 1; % verbosity 1 ==> ON, 0 ==> OFF
   if ellOptions.verbose > 0
     fprintf('Initializing Ellipsoidal Toolbox version %s ...\n', ellOptions.version);

@@ -290,6 +290,33 @@ function slide = ell_demo1
 
     NN = NN + 1;
     slide(NN).code = {
+      'RV = rand(2, 7); ell_plot(RV, ''b*''); grid on; hold on;',
+      'plot(ell_enclose(RV), ''r''); hold off;'
+    };
+    slide(NN).text = {
+      'For given set of points in R^n the minimum volume ellipsoid that contains these points can be computed:',
+      '',
+      '>> V = rand(2, 7);  % 7 random points in R^2',
+      '>> E = ell_enclose(V);',
+      '>> ell_plot(V, ''b*''); hold on;'
+      '>> plot(E, ''r''); grid on'
+    };
+
+
+    NN = NN + 1;
+    slide(NN).code = {
+      'EU = ellunion_ea(EA); plot(EA, ''b'', EU, ''r''); grid on;'
+    };
+    slide(NN).text = {
+      'For two or more ellipsoids in R^n the minimum volume ellipsoid that contains the union of these ellipsoids can be computed:',
+      '',
+      '>> EU = ellunion_ea(EA);',
+      '>> plot(EA, ''b'', EU, ''r''); grid on;'
+    };
+
+
+    NN = NN + 1;
+    slide(NN).code = {
       'opts.show_all = 1; minksum(EA, opts); grid on;'
     };
     slide(NN).text = {

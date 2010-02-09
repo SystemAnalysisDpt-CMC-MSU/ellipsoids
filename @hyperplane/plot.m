@@ -264,12 +264,15 @@ function plot(varargin)
       set(h, 'Color', clr, 'LineWidth', Options.width(i));
     else
       e2 = U(:, 3);
+      if min(min(abs(x0))) < ellOptions.abs_tol
+        x0 = x0 + ellOptions.abs_tol * ones(3, 1);
+      end
       x3 = x0 - c*e2;
       x4 = x0 + c*e2;
-      if str2num(version('-release')) >= 14
-        ch = convhulln([x1 x3 x2 x4]', {'QJ', 'QbB', 'Qs', 'QR0'});
-      else
+      if str2num(version('-release')) <= 13
         ch = convhulln([x1 x3 x2 x4]');
+      else
+        ch = convhulln([x1 x3 x2 x4]', {'QJ', 'QbB', 'Qs', 'QR0', 'Pp'});
       end
       patch('Vertices', [x1 x3 x2 x4]', 'Faces', ch, ...
             'FaceVertexCData', clr(ones(1, 4), :), 'FaceColor', 'flat', ...

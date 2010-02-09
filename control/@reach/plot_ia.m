@@ -175,7 +175,7 @@ function plot_ia(rs, varargin)
   ih = ishold;
 
   if size(rs.time_values, 2) == 1
-    E   = move2origin(inv(E'));
+    E   = move2origin(E');
     M   = size(E, 2);
     N   = ellOptions.plot2d_grid;
     phi = linspace(0, 2*pi, N);
@@ -183,15 +183,20 @@ function plot_ia(rs, varargin)
     X   = [];
     for i = 1:N
       l    = L(:, i);
-      mval = inf;
+      mval = ellOptions.abs_tol;
+      mQ   = [];
       for j = 1:M
         Q = parameters(E(1, j));
+        if isempty(mQ)
+          mQ = Q;
+        end
         v = l' * Q * l;
-        if v < mval
+        if v > mval
           mval = v;
+          mQ   = Q;
         end
       end
-      x = (l/sqrt(mval)) + rs.center_values;
+      x = (mQ*l/sqrt(mval)) + rs.center_values;
       X = [X x];
     end
     if Options.fill ~= 0
@@ -222,20 +227,25 @@ function plot_ia(rs, varargin)
 
   if isdiscrete(rs.system)
     for ii = 1:n
-      EE = move2origin(inv(E(:, ii)));
+      EE = move2origin(E(:, ii));
       EE = EE';
       X  = [];
       for i = 1:s
         l    = L(:, i);
-        mval = inf;
+        mval = ellOptions.abs_tol;
+        mQ   = [];
         for j = 1:m
           Q  = parameters(EE(1, j));
+          if isempty(mQ)
+            mQ = Q;
+          end
           v  = l' * Q * l;
-          if v < mval
+          if v > mval
             mval = v;
+            mQ   = Q;
           end
         end
-        x = (l/sqrt(mval)) + rs.center_values(:, ii);
+        x = (mQ*l/sqrt(mval)) + rs.center_values(:, ii);
         X = [X x];
       end
       tt = rs.time_values(ii) * ones(1, s);
@@ -260,20 +270,25 @@ function plot_ia(rs, varargin)
     F = ell_triag_facets(s, size(rs.time_values, 2));
     V = [];
     for ii = 1:n
-      EE = move2origin(inv(E(:, ii)));
+      EE = move2origin(E(:, ii));
       EE = EE';
       X  = [];
       for i = 1:s
         l    = L(:, i);
-        mval = inf;
+        mval = ellOptions.abs_tol;
+	mQ   = [];
         for j = 1:m
           Q  = parameters(EE(1, j));
+	  if isempty(mQ)
+            mQ = Q;
+          end
           v  = l' * Q * l;
-          if v < mval
+          if v > mval
             mval = v;
+	    mQ   = Q;
           end
         end
-        x = (l/sqrt(mval)) + rs.center_values(:, ii);
+        x = (mQ*l/sqrt(mval)) + rs.center_values(:, ii);
         X = [X x];
       end
       tt = rs.time_values(ii) * ones(1, s);

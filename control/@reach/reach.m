@@ -53,6 +53,12 @@ function RS = reach(lsys, X0, L0, T, Options)
     evalin('base', 'ellipsoids_init;');
   end
 
+  if isstruct(lsys) & (nargin == 1)
+    RS = class(lsys, 'reach');
+    return;
+  end
+
+
   RS.system             = [];
   RS.t0                 = [];
   RS.X0                 = [];
@@ -197,7 +203,7 @@ function RS = reach(lsys, X0, L0, T, Options)
       end
       AC(:, i) = reshape(A, d1*d1, 1);
       if isdiscrete(lsys) & (rank(A) < d1)
-        A = ell_regularize(A);
+        A        = ell_regularize(A);
         DD(1, i) = 1;
       elseif isdiscrete(lsys)
         DD(1, i) = 0;
@@ -227,7 +233,7 @@ function RS = reach(lsys, X0, L0, T, Options)
   if iscell(lsys.B)
     BB = zeros(d1*du, size(RS.time_values, 2));
     for i = 1:size(RS.time_values, 2)
-      B  = matrix_eval(lsys.B, RS.time_values(i));
+      B        = matrix_eval(lsys.B, RS.time_values(i));
       BB(:, i) = reshape(B, d1*du, 1);
     end
   else
@@ -238,7 +244,7 @@ function RS = reach(lsys, X0, L0, T, Options)
   GG = zeros(d1*dd, size(RS.time_values, 2));
   if iscell(lsys.G)
     for i = 1:size(RS.time_values, 2)
-      B  = matrix_eval(lsys.G, RS.time_values(i));
+      B        = matrix_eval(lsys.G, RS.time_values(i));
       GG(:, i) = reshape(B, d1*dd, 1);
     end
   elseif ~(isempty(lsys.G))
@@ -249,7 +255,7 @@ function RS = reach(lsys, X0, L0, T, Options)
   if iscell(lsys.C)
     CC = zeros(d1*dy, size(RS.time_values, 2));
     for i = 1:size(RS.time_values, 2)
-      C  = matrix_eval(lsys.C, RS.time_values(i));
+      C        = matrix_eval(lsys.C, RS.time_values(i));
       CC(:, i) = reshape(C, d1*dy, 1);
     end
     if isdiscrete(lsys)
@@ -275,14 +281,13 @@ function RS = reach(lsys, X0, L0, T, Options)
       BPB   = zeros(d1*d1, size(RS.time_values, 2));
       BPBsr = zeros(d1*d1, size(RS.time_values, 2));
       for i = 1:size(RS.time_values, 2)
-        B     = reshape(BB(:, i), d1, du);
-        Bp(:, i) = B*p;
-        B     = B * P * B';
-        BPB(:, i) = reshape(B, d1*d1, 1);
-        B     = sqrtm(B);
-        B     = 0.5*(B + B');
+        B           = reshape(BB(:, i), d1, du);
+        Bp(:, i)    = B*p;
+        B           = B * P * B';
+        BPB(:, i)   = reshape(B, d1*d1, 1);
+        B           = sqrtm(B);
+        B           = 0.5*(B + B');
         BPBsr(:, i) = reshape(B, d1*d1, 1);
-      end
       if isdiscrete(lsys)
         mydata.Bp    = Bp;
         mydata.BPB   = BPB;
@@ -298,9 +303,9 @@ function RS = reach(lsys, X0, L0, T, Options)
     if size(BB, 2) == 1
       mydata.Bp = reshape(BB, d1, du) * p;
     else
-      Bp = zeros(d1, size(RS.time_values, 2));;
+      Bp = zeros(d1, size(RS.time_values, 2));
       for i = 1:size(RS.time_values, 2)
-        B  = reshape(BB(:, i), d1, du);
+        B        = reshape(BB(:, i), d1, du);
         Bp(:, i) = B*p;
       end
       if isdiscrete(lsys)
@@ -339,10 +344,10 @@ function RS = reach(lsys, X0, L0, T, Options)
             error('REACH: shape matrix of ellipsoidal control bounds must be positive definite.')
           end
           Bp(:, i)    = B*p;
-          P     = B * P * B';
+          P           = B * P * B';
           BPB(:, i)   = reshape(P, d1*d1, 1);
-	  P     = sqrtm(P);
-	  P     = 0.5*(P + P');
+	  P           = sqrtm(P);
+	  P           = 0.5*(P + P');
           BPBsr(:, i) = reshape(P, d1*d1, 1);
         end
         if isdiscrete(lsys)
@@ -370,16 +375,16 @@ function RS = reach(lsys, X0, L0, T, Options)
         mydata.BPBsr = 0.5*(mydata.BPBsr + (mydata.BPBsr)');
       else
         BPB   = zeros(d1*d1, size(RS.time_values, 2));
-        BPBsr = [];
+        BPBsr = zeros(d1*d1, size(RS.time_values, 2));
         for i = 1:size(RS.time_values, 2)
           P = matrix_eval(lsys.control.shape, RS.time_values(i));
           if (P ~= P') | (min(eig(P)) < 0)
             error('REACH: shape matrix of ellipsoidal control bounds must be positive definite.')
           end
-          P     = B * P * B';
+          P           = B * P * B';
           BPB(:, i)   = reshape(P, d1*d1, 1);
-          P     = sqrtm(P);
-          P     = 0.5*(P + P');
+          P           = sqrtm(P);
+          P           = 0.5*(P + P');
           BPBsr(:, i) = reshape(P, d1*d1, 1);
         end
         mydata.Bp = B * lsys.control.center;
@@ -411,10 +416,10 @@ function RS = reach(lsys, X0, L0, T, Options)
           P = lsys.control.shape;
         end
         Bp(:, i)    = B*p;
-        P     = B * P * B';
+        P           = B * P * B';
         BPB(:, i)   = reshape(P, d1*d1, 1);
-        P     = sqrtm(P);
-        P     = 0.5*(P + P');
+        P           = sqrtm(P);
+        P           = 0.5*(P + P');
         BPBsr(:, i) = reshape(P, d1*d1, 1);
       end
       if isdiscrete(lsys)
@@ -444,12 +449,12 @@ function RS = reach(lsys, X0, L0, T, Options)
         GQG   = zeros(d1*d1, size(RS.time_values, 2));
         GQGsr = zeros(d1*d1, size(RS.time_values, 2));
         for i = 1:size(RS.time_values, 2)
-          G     = reshape(GG(:, i), d1, dd);
-          Gq(:, i)    = G*q;
-          G     = G * Q * G';
+          G           = reshape(GG(:, i), d1, dd);
+          Gq          = [Gq G*q];
+          G           = G * Q * G';
           GQG(:, i)   = reshape(G, d1*d1, 1);
-          G     = sqrtm(G);
-          G     = 0.5*(G + G');
+          G           = sqrtm(G);
+          G           = 0.5*(G + G');
           GQGsr(:, i) = reshape(G, d1*d1, 1);
         end
         if isdiscrete(lsys)
@@ -480,7 +485,7 @@ function RS = reach(lsys, X0, L0, T, Options)
       end
     elseif iscell(lsys.disturbance)
       q  = lsys.disturbance;
-      Gq = zeros(d1, size(RS.time_values, 2));;
+      Gq = zeros(d1, size(RS.time_values, 2));
       for i = 1:size(RS.time_values, 2)
         if size(GG, 2) == 1
           G = reshape(GG, d1, dd);
@@ -498,20 +503,20 @@ function RS = reach(lsys, X0, L0, T, Options)
       if size(GG, 2) == 1
         G = reshape(GG, d1, dd);
         if iscell(lsys.disturbance.center) & iscell(lsys.disturbance.shape)
-          Gq    = zeros(d1, size(RS.time_values, 2));;
-          GQG   = zeros(d1*d1, size(RS.time_values, 2));;
-          GQGsr = zeros(d1*d1, size(RS.time_values, 2));;
+          Gq    = zeros(d1, size(RS.time_values, 2));
+          GQG   = zeros(d1*d1, size(RS.time_values, 2));
+          GQGsr = zeros(d1*d1, size(RS.time_values, 2));
           for i = 1:size(RS.time_values, 2)
             q = matrix_eval(lsys.disturbance.center, RS.time_values(i));
             Q = matrix_eval(lsys.disturbance.shape, RS.time_values(i));
             if (Q ~= Q') | (min(eig(Q)) < 0)
               error('REACH: shape matrix of ellipsoidal disturbance bounds must be positive definite.')
             end
-            Gq(:, i) = G*q;
-            Q     = G * Q * G';
+            Gq(:, i)    = G*q;
+            Q           = G * Q * G';
             GQG(:, i)   = reshape(Q, d1*d1, 1);
-            Q     = sqrtm(Q);
-            Q     = 0.5*(Q + Q');
+            Q           = sqrtm(Q);
+            Q           = 0.5*(Q + Q');
             GQGsr(:, i) = reshape(Q, d1*d1, 1);
           end
           if isdiscrete(lsys)
@@ -524,11 +529,10 @@ function RS = reach(lsys, X0, L0, T, Options)
             mydata.GQGsr = spline(RS.time_values, GQGsr);
           end
         elseif iscell(lsys.disturbance.center)
-          Gq  = zeros(d1, size(RS.time_values, 2));;
+          Gq  = zeros(d1, size(RS.time_values, 2));
           for i = 1:size(RS.time_values, 2)
             q  = matrix_eval(lsys.disturbance.center, RS.time_values(i));
             Gq(:, i) = G*q;
-          end
           if isdiscrete(lsys)
             mydata.Gq  = Gq;
           else
@@ -545,10 +549,10 @@ function RS = reach(lsys, X0, L0, T, Options)
             if (Q ~= Q') | (min(eig(Q)) < 0)
               error('REACH: shape matrix of ellipsoidal disturbance bounds must be positive definite.')
             end
-            Q     = G * Q * G';
+            Q           = G * Q * G';
             GQG(:, i)   = reshape(Q, d1*d1, 1);
-            Q     = sqrtm(Q);
-            Q     = 0.5*(Q + Q');
+            Q           = sqrtm(Q);
+            Q           = 0.5*(Q + Q');
             GQGsr(:, i) = reshape(Q, d1*d1, 1);
           end
           mydata.Gq  = G * lsys.disturbance.center;
@@ -561,9 +565,9 @@ function RS = reach(lsys, X0, L0, T, Options)
           end
         end
       else
-        Gq    = zeros(d1, size(RS.time_values, 2));;
-        GQG   = zeros(d1*d1, size(RS.time_values, 2));;
-        GQGsr = zeros(d1*d1, size(RS.time_values, 2));;
+        Gq    = zeros(d1, size(RS.time_values, 2));
+        GQG   = zeros(d1*d1, size(RS.time_values, 2));
+        GQGsr = zeros(d1*d1, size(RS.time_values, 2));
         for i = 1:size(RS.time_values, 2)
           G = reshape(GG(:, i), d1, dd);
           if iscell(lsys.disturbance.center)
@@ -579,11 +583,11 @@ function RS = reach(lsys, X0, L0, T, Options)
           else
             Q = lsys.disturbance.shape;
           end
-          Gq(:, i)  = G*q;
-          Q     = G * Q * G';
+          Gq(:, i)    = G*q;
+          Q           = G * Q * G';
           GQG(:, i)   = reshape(Q, d1*d1, 1);
-          Q     = sqrtm(Q);
-          Q     = 0.5*(Q + Q');
+          Q           = sqrtm(Q);
+          Q           = 0.5*(Q + Q');
           GQGsr(:, i) = reshape(Q, d1*d1, 1);
         end
         if isdiscrete(lsys)
@@ -715,8 +719,8 @@ function RS = reach(lsys, X0, L0, T, Options)
       Phi   = zeros(d1*d1, size(RS.time_values, 2));
       Phinv = zeros(d1*d1, size(RS.time_values, 2));
       for i = 1:size(RS.time_values, 2)
-        P     = expm(mydata.A * abs(RS.time_values(i) - t0));
-        PP    = ell_inv(P);
+        P           = expm(mydata.A * abs(RS.time_values(i) - t0));
+        PP          = ell_inv(P);
         Phi(:, i)   = reshape(P, d1*d1, 1);
         Phinv(:, i) = reshape(PP, d1*d1, 1);
       end

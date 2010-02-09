@@ -1,0 +1,69 @@
+\section{Additional Software}
+Some routines of the {\it Ellipsoidal Toolbox}, namely,
+\begin{itemize}
+\item {\tt contains}
+\item {\tt distance}
+\item {\tt ellintersection\_ia}
+\item {\tt ellunion\_ea}
+\item {\tt intersect}
+\item {\tt intersection\_ia}
+\item {\tt isinside}
+\end{itemize}
+require solving convex programming problems.
+We use YALMIP (\cite{yalmip}, \cite{yalmiphp}) as an
+interface to an external optimization solver.
+YALMIP supports a large variety of optimization packages.
+One of them, SeDuMi (\cite{sedumi}, \cite{sedumihp}) is distributed
+along with {\it ET}.
+The user is free to choose any other optimization solver so long
+as it is supported by YALMIP.
+The list of supported optimization packages can be
+obtained from \cite{yalmiphp}.
+
+Both YALMIP and SeDuMi are included in the {\it ET} distribution, so you
+do not need to download them separately. However, if you have them already
+installed, or wish to install them independently of {\it ET}, you should
+download the lite version of {\it ET}.
+
+
+\section{Installation and Quick Start}
+\begin{enumerate}
+\item Go to
+\newline
+{\tt http://code.google.com/p/ellipsoids}
+\newline
+and download the {\it Ellipsoidal Toolbox} or its lite version stripped
+of YALMIP and SeDuMi.
+\item Unzip the distribution file into the directory where you would like
+the toolbox to be.
+\item Read the copyright notice.
+\item In MATLAB command window change the working directory to the one where
+you unzipped the toolbox and type
+\newline
+{\tt >> install}
+\item At this point, the directory tree of the {\it Ellipsoidal Toolbox} is
+added to the MATLAB path list. In order to save the updated path list,
+in your MATLAB window menu go to {\tt File} $\rightarrow$ {\tt Set Path...} and
+click {\tt Save}.
+\item To get an idea of what the toolbox is about, type
+\newline
+{\tt >> ell\_demo1}
+\newline
+This will produce a demo of basic {\it ET} functionality: how to create
+and manipulate ellipsoids.
+\newline
+Type
+\newline
+{\tt >> ell\_demo2}
+\newline
+to learn how to plot ellipsoids and hyperplanes in 2 and 3D.
+\newline
+For a quick tutorial on how to use the toolbox for reachability analysis
+and verification, type
+\newline
+{\tt >> ell\_demo3}
+\end{enumerate}
+
+
+
+

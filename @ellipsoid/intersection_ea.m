@@ -10,12 +10,12 @@ function E = intersection_ea(E1, X)
 %
 %     E = INTERSECTION_EA(E1, E2) Given two ellipsoidal arrays of equal sizes,
 %                                 E1 and E2, or, alternatively, E1 or E2 must be
-%                                 a single ellipsoid, comuptes the minimal volume
-%                                 ellipsoid that contains the intersection of
-%                                 two corresponding ellipsoids from E1 and from E2.
+%                                 a single ellipsoid, computes the ellipsoid 
+%                                 that contains the intersection of two
+%                                 corresponding ellipsoids from E1 and from E2.
 %      E = INTERSECTION_EA(E1, H) Given array of ellipsoids E1 and array of
 %                                 hyperplanes H whose sizes match, computes
-%                                 the minimal volume external ellipsoidal
+%                                 the external ellipsoidal
 %                                 approximations of intersections of ellipsoids
 %                                 and halfspaces defined by hyperplanes in H.
 %                                 If v is normal vector of hyperplane and c - shift,
@@ -23,16 +23,14 @@ function E = intersection_ea(E1, X)
 %                                         <v, x> <= c.
 %      E = INTERSECTION_EA(E1, P) Given array of ellipsoids E1 and array of
 %                                 polytopes P whose sizes match, computes
-%                                 the minimal volume external ellipsoidal
-%                                 approximations of intersections of
-%                                 ellipsoids E1 and polytopes P.
+%                                 the external ellipsoidal approximations
+%                                 of intersections of ellipsoids E1 and
+%                                 polytopes P.
 %
 %    The method used to compute the minimal volume overapproximating ellipsoid
 %    is described in "Ellipsoidal Calculus Based on Propagation and Fusion"
 %    by Lluis Ros, Assumpta Sabater and Federico Thomas;
 %    IEEE Transactions on Systems, Man and Cybernetics, Vol.32, No.4, pp.430-442, 2002.
-%    This paper can be found in 
-%               ~ellipsoids/doc/EllipsoidalCalculusPropagationFusion.pdf.
 %    For more information, visit
 %               http://www-iri.upc.es/people/ros/ellipsoids.html
 %
@@ -224,7 +222,7 @@ function E = l_intersection_ea(E1, E2)
   Y = 0.5*(Y + Y');
   k = 1 - a*(1 - a)*(q2 - q1)'*Q2*Y*Q1*(q2 - q1);
   q = Y*(a*Q1*q1 + (1 - a)*Q2*q2);
-  Q = k*Y;
+  Q = (1+ellOptions.abs_tol)*k*Y;
   E = ellipsoid(q, Q); 
   
   return;
@@ -242,10 +240,8 @@ function a = l_get_lambda(q1, Q1, q2, Q2, flag)
 
   [a, f] = fzero(@ell_fusionlambda, 0.5, [], q1, Q1, q2, Q2, size(q1, 1));
 
-  if a < 0
-    a = 1;
-  elseif a > 1
-    if flag
+  if (a < 0) | (a > 1) 
+    if flag | (det(Q1) > det(Q2))
       a = 1;
     else
       a = 0;

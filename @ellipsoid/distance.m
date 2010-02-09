@@ -25,25 +25,23 @@ function [d, status] = distance(E, X, flag)
 %                          ellipsoid or P - single polytope object, 
 %                          compute the distance from ellipsoids to polytopes pairwise.
 %                          Requires Multi-Parametric Toolbox.
-%    D = DISTANCE(E, X, F) Optional parameter F, if set to 1, indicates that
+%   D = DISTANCE(E, X, F)  Optional parameter F, if set to 1, indicates that
 %                          the distance should be computed in the metric
 %                          of ellipsoids in E. By default (F = 0), the distance
 %                          is computed in Euclidean metric.
 %
 %    Negative distance value means
 %      for ellipsoid and vector: vector belongs to the ellipsoid,
-%      for two ellipsoids: they intersect,
 %      for ellipsoid and hyperplane: ellipsoid intersects the hyperplane.
 %    Zero distance value means
 %      for ellipsoid and vector: vector is a boundary point of the ellipsoid,
-%      for two ellipsoids: they touch,
 %      for ellipsoid and hyperplane: ellipsoid touches the hyperplane.
 %
-%    Distance between ellipsoid E and polytope P is the optimal value
+%    Distance between ellipsoid E and ellipsoid or polytope X is the optimal value
 %    of the following problem:
 %                               min |x - y|
-%                  subject to:  x belongs to E, y belongs to P.
-%    Zero distance means that intersection of E and P is nonempty.
+%                  subject to:  x belongs to E, y belongs to X.
+%    Zero distance means that intersection of E and X is nonempty.
 %
 %
 % Output:
@@ -154,84 +152,102 @@ function [d, status] = l_pointdist(E, X, flag)
     else
       fprintf('Computing ellipsoid-to-vector distance...\n');
     end
+    fprintf('Invoking YALMIP...\n');
   end
 
-  o.fungrad = 1;
-  o.congrad = 1;
-  %x0        = [1; zeros(k-1, 1)];
-  x0        = rand(k, 1);
-  x0        = x0/sqrt(x0'*x0);
-  d         = [];
+  d      = [];
+  status = [];
   if (t > 1) & (t == l)
     for i = 1:m
-      dd = [];
+      dd  = [];
+      sts = [];
       for j = 1:n
-        y = X(:, i*j);
-        switch ellOptions.nlcp_solver
-          case 1, % use Optimization Toolbox routines
-            o       = optimset('GradObj', 'on', 'GradConstr', 'on');
-            if flag
-              [x, fv] = fmincon(@distpobjfun, x0, [], [], [], [], [], [], @ellconstraint, o, E(i, j), y, E(i, j).shape); 
-            else
-              [x, fv] = fmincon(@distpobjfun, x0, [], [], [], [], [], [], @ellconstraint, o, E(i, j), y); 
-            end
-          otherwise,
-            if flag
-              [x, fv] = ell_nlfnlc(@distpobjfun, x0, @ellconstraint, o, E(i, j), y, E(i, j).shape); 
-            else
-              [x, fv] = ell_nlfnlc(@distpobjfun, x0, @ellconstraint, o, E(i, j), y); 
-            end
+        y      = X(:, i*j);
+        [q, Q] = double(E(i, j));
+        Qi     = ell_inv(Q);
+        Qi     = 0.5*(Qi + Qi');
+        dst    = (q - y)'*Qi*(q - y) - 1;
+        o      = struct('yalmiptime', [], 'solvertime', [], 'info', [], 'problem', [], 'dimacs', []);
+        if dst > 0
+          x = sdpvar(mx, 1);
+          if flag
+            f = (x - y)'*Qi*(x - y);
+          else
+            f = (x - y)'*(x - y);
+          end
+          C   = set(x'*Qi*x + 2*(-Qi*q)'*x + (q'*Qi*q - 1) <= 0);
+          o   = solvesdp(C, f, ellOptions.sdpsettings);
+          dst = double(f);
+          if dst < ellOptions.abs_tol
+            dst = 0;
+          end
+          dst = sqrt(dst);
         end
-        dd = [dd -fv];
+        dd  = [dd dst];
+	sts = [sts o];
       end
-      d = [d; dd];
+      d      = [d; dd];
+      status = [status sts];
     end
   elseif (t > 1)
     for i = 1:m
-      dd = [];
+      dd  = [];
+      sts = [];
       for j = 1:n
-        switch ellOptions.nlcp_solver
-          case 1, % use Optimization Toolbox routines
-            o       = optimset('GradObj', 'on', 'GradConstr', 'on');
-            if flag
-              [x, fv] = fmincon(@distpobjfun, x0, [], [], [], [], [], [], @ellconstraint, o, E(i, j), X, E(i, j).shape); 
-            else
-              [x, fv] = fmincon(@distpobjfun, x0, [], [], [], [], [], [], @ellconstraint, o, E(i, j), X); 
-            end
-          otherwise,
-            if flag
-              [x, fv] = ell_nlfnlc(@distpobjfun, x0, @ellconstraint, o, E(i, j), X, E(i, j).shape); 
-            else
-              [x, fv] = ell_nlfnlc(@distpobjfun, x0, @ellconstraint, o, E(i, j), X); 
-            end
+        y      = X;
+        [q, Q] = double(E(i, j));
+        Qi     = ell_inv(Q);
+        Qi     = 0.5*(Qi + Qi');
+        dst    = (q - y)'*Qi*(q - y) - 1;
+        o      = struct('yalmiptime', [], 'solvertime', [], 'info', [], 'problem', [], 'dimacs', []);
+        if dst > 0
+          x = sdpvar(mx, 1);
+          if flag
+            f = (x - y)'*Qi*(x - y);
+          else
+            f = (x - y)'*(x - y);
+          end
+          C   = set(x'*Qi*x + 2*(-Qi*q)'*x + (q'*Qi*q - 1) <= 0);
+          o   = solvesdp(C, f, ellOptions.sdpsettings);
+          dst = double(f);
+          if dst < ellOptions.abs_tol
+            dst = 0;
+          end
+          dst = sqrt(dst);
         end
-        dd = [dd -fv];
+        dd  = [dd dst];
+	sts = [sts o];
       end
-      d = [d; dd];
+      d      = [d; dd];
+      status = [status sts];
     end
   else
     for i = 1:l
-      y = X(:, i);
-      switch ellOptions.nlcp_solver
-        case 1, % use Optimization Toolbox routines
-          o       = optimset('GradObj', 'on', 'GradConstr', 'on');
-          if flag
-            [x, fv] = fmincon(@distpobjfun, x0, [], [], [], [], [], [], @ellconstraint, o, E, y, E.shape); 
-          else
-            [x, fv] = fmincon(@distpobjfun, x0, [], [], [], [], [], [], @ellconstraint, o, E, y); 
-          end
-        otherwise,
-          if flag
-            [x, fv] = ell_nlfnlc(@distpobjfun, x0, @ellconstraint, o, E, y, E.shape); 
-          else
-            [x, fv] = ell_nlfnlc(@distpobjfun, x0, @ellconstraint, o, E, y); 
-          end
+      y      = X(:, i);
+      [q, Q] = double(E);
+      Qi     = ell_inv(Q);
+      Qi     = 0.5*(Qi + Qi');
+      dst    = (q - y)'*Qi*(q - y) - 1;
+      o      = struct('yalmiptime', [], 'solvertime', [], 'info', [], 'problem', [], 'dimacs', []);
+      if dst > 0
+        x = sdpvar(mx, 1);
+        if flag
+          f = (x - y)'*Qi*(x - y);
+        else
+          f = (x - y)'*(x - y);
+        end
+        C   = set(x'*Qi*x + 2*(-Qi*q)'*x + (q'*Qi*q - 1) <= 0);
+        o   = solvesdp(C, f, ellOptions.sdpsettings);
+        dst = double(f);
+        if dst < ellOptions.abs_tol
+          dst = 0;
+        end
+        dst = sqrt(dst);
       end
-      d = [d -fv];
+      d      = [d dst];
+      status = [status o];
     end
   end
-
-  status = [];
 
   return;
 
@@ -272,86 +288,111 @@ function [d, status] = l_elldist(E, X, flag)
     else
       fprintf('Computing ellipsoid-to-ellipsoid distance...\n');
     end
+    fprintf('Invoking YALMIP...\n');
   end
 
-  o.fungrad = 1;
-  o.congrad = 1;
-  %x0        = [1; zeros(mn1-1, 1)];
-  x0        = rand(mn1, 1);
-  x0        = x0/sqrt(x0'*x0);
-  d         = [];
+  d      = [];
+  status = [];
   if (t1 > 1) & (t2 > 1)
     for i = 1:m
-      dd = [];
+      dd  = [];
+      sts = [];
       for j = 1:n
-        switch ellOptions.nlcp_solver
-          case 1, % use Optimization Toolbox routines
-            o       = optimset('GradObj', 'on', 'GradConstr', 'on');
-            if flag
-              [x, fv] = fmincon(@distobjfun, x0, [], [], [], [], [], [], @ellconstraint, o, E(i, j), X(i, j), E(i, j).shape); 
-            else
-              [x, fv] = fmincon(@distobjfun, x0, [], [], [], [], [], [], @ellconstraint, o, E(i, j), X(i, j)); 
-            end
-          otherwise,
-            if flag
-              [x, fv] = ell_nlfnlc(@distobjfun, x0, @ellconstraint, o, E(i, j), X(i, j), E(i, j).shape); 
-            else
-              [x, fv] = ell_nlfnlc(@distobjfun, x0, @ellconstraint, o, E(i, j), X(i, j)); 
-            end
+        [q, Q] = double(E(i, j));
+        [r, R] = double(X(i, j));
+        Qi     = ell_inv(Q);
+        Qi     = 0.5*(Qi + Qi');
+        Ri     = ell_inv(R);
+        Ri     = 0.5*(Ri + Ri');
+        o      = struct('yalmiptime', [], 'solvertime', [], 'info', [], 'problem', [], 'dimacs', []);
+        x      = sdpvar(mx1, 1);
+        y      = sdpvar(mx1, 1);
+        if flag
+          f = (x - y)'*Qi*(x - y);
+        else
+          f = (x - y)'*(x - y);
         end
-        dd = [dd -fv];
+        C   = set(x'*Qi*x + 2*(-Qi*q)'*x + (q'*Qi*q - 1) <= 0);
+        C   = C + set(y'*Ri*y + 2*(-Ri*r)'*y + (r'*Ri*r - 1) <= 0);
+        o   = solvesdp(C, f, ellOptions.sdpsettings);
+        dst = double(f);
+        if dst < ellOptions.abs_tol
+          dst = 0;
+        end
+        dst = sqrt(dst);
+        dd  = [dd dst];
+	sts = [sts o];
       end
-      d = [d; dd];
+      d      = [d; dd];
+      status = [status sts];
     end
   elseif (t1 > 1)
     for i = 1:m
-      dd = [];
+      dd  = [];
+      sts = [];
       for j = 1:n
-        switch ellOptions.nlcp_solver
-          case 1, % use Optimization Toolbox routines
-            o       = optimset('GradObj', 'on', 'GradConstr', 'on');
-            if flag
-              [x, fv] = fmincon(@distobjfun, x0, [], [], [], [], [], [], @ellconstraint, o, E(i, j), X, E(i, j).shape); 
-            else
-              [x, fv] = fmincon(@distobjfun, x0, [], [], [], [], [], [], @ellconstraint, o, E(i, j), X); 
-            end
-          otherwise,
-            if flag
-              [x, fv] = ell_nlfnlc(@distobjfun, x0, @ellconstraint, o, E(i, j), X, E(i, j).shape); 
-            else
-              [x, fv] = ell_nlfnlc(@distobjfun, x0, @ellconstraint, o, E(i, j), X); 
-            end
+        [q, Q] = double(E(i, j));
+        [r, R] = double(X);
+        Qi     = ell_inv(Q);
+        Qi     = 0.5*(Qi + Qi');
+        Ri     = ell_inv(R);
+        Ri     = 0.5*(Ri + Ri');
+        o      = struct('yalmiptime', [], 'solvertime', [], 'info', [], 'problem', [], 'dimacs', []);
+        x      = sdpvar(mx1, 1);
+        y      = sdpvar(mx1, 1);
+        if flag
+          f = (x - y)'*Qi*(x - y);
+        else
+          f = (x - y)'*(x - y);
         end
-        dd = [dd -fv];
+        C   = set(x'*Qi*x + 2*(-Qi*q)'*x + (q'*Qi*q - 1) <= 0);
+        C   = C + set(y'*Ri*y + 2*(-Ri*r)'*y + (r'*Ri*r - 1) <= 0);
+        o   = solvesdp(C, f, ellOptions.sdpsettings);
+        dst = double(f);
+        if dst < ellOptions.abs_tol
+          dst = 0;
+        end
+        dst = sqrt(dst);
+        dd  = [dd dst];
+	sts = [sts o];
       end
-      d = [d; dd];
+      d      = [d; dd];
+      status = [status sts];
     end
   else
     for i = 1:k
-      dd = [];
+      dd  = [];
+      sts = [];
       for j = 1:l
-        switch ellOptions.nlcp_solver
-          case 1, % use Optimization Toolbox routines
-            o       = optimset('GradObj', 'on', 'GradConstr', 'on');
-            if flag
-              [x, fv] = fmincon(@distobjfun, x0, [], [], [], [], [], [], @ellconstraint, o, E, X(i, j), E.shape); 
-            else
-              [x, fv] = fmincon(@distobjfun, x0, [], [], [], [], [], [], @ellconstraint, o, E, X(i, j)); 
-            end
-          otherwise,
-            if flag
-              [x, fv] = ell_nlfnlc(@distobjfun, x0, @ellconstraint, o, E, X(i, j), E.shape); 
-            else
-              [x, fv] = ell_nlfnlc(@distobjfun, x0, @ellconstraint, o, E, X(i, j)); 
-            end
+        [q, Q] = double(E);
+        [r, R] = double(X(i, j));
+        Qi     = ell_inv(Q);
+        Qi     = 0.5*(Qi + Qi');
+        Ri     = ell_inv(R);
+        Ri     = 0.5*(Ri + Ri');
+        o      = struct('yalmiptime', [], 'solvertime', [], 'info', [], 'problem', [], 'dimacs', []);
+        x      = sdpvar(mx1, 1);
+        y      = sdpvar(mx1, 1);
+        if flag
+          f = (x - y)'*Qi*(x - y);
+        else
+          f = (x - y)'*(x - y);
         end
-        dd = [dd -fv];
+        C   = set(x'*Qi*x + 2*(-Qi*q)'*x + (q'*Qi*q - 1) <= 0);
+        C   = C + set(y'*Ri*y + 2*(-Ri*r)'*y + (r'*Ri*r - 1) <= 0);
+        o   = solvesdp(C, f, ellOptions.sdpsettings);
+        dst = double(f);
+        if dst < ellOptions.abs_tol
+          dst = 0;
+        end
+        dst = sqrt(dst);
+        dd  = [dd dst];
+	sts = [sts o];
       end
-      d = [d; dd];
+      d      = [d; dd];
+      status = [status sts];
     end
   end
-
-  status = [];
 
   return;
 
@@ -520,12 +561,15 @@ function [d, status] = l_polydist(E, X)
     else
       fprintf('Computing ellipsoid-to-polytope distance...\n');
     end
+    fprintf('Invoking YALMIP...\n');
   end
 
-  d = [];
+  d      = [];
+  status = [];
   if (t1 > 1) & (t2 > 1)
     for i = 1:m
-      dd = [];
+      dd  = [];
+      sts = [];
       for j = 1:n
         [q, Q] = parameters(E(i, j));
         %[A, b] = double(X(i, j));
@@ -537,7 +581,11 @@ function [d, status] = l_polydist(E, X)
         Q  = 0.5*(Q + Q');
         x  = sdpvar(mx1, 1);
         y  = sdpvar(mx1, 1);
-        f  = (y - x)'*(y - x);
+        if flag
+          f  = (y - x)'*Q*(y - x);
+        else
+          f  = (y - x)'*(y - x);
+        end
         C  = set(x'*Q*x + 2*(-Q*q)'*x + (q'*Q*q - 1) <= 0);
         C  = C + set(A*y - b <= 0);
         o  = solvesdp(C, f, ellOptions.sdpsettings);
@@ -545,15 +593,18 @@ function [d, status] = l_polydist(E, X)
         if d1 < ellOptions.abs_tol
           d1 = 0;
         end
-        d1 = sqrt(d1);
-        dd = [dd d1];
+        d1  = sqrt(d1);
+        dd  = [dd d1];
+	sts = [sts o];
       end
-      d = [d; dd];
+      d      = [d; dd];
+      status = [status sts];
     end
   elseif (t1 > 1)
     [A, b] = double(X);
     for i = 1:m
-      dd = [];
+      dd  = [];
+      sts = [];
       for j = 1:n
         [q, Q] = parameters(E(i, j));
         if size(Q, 2) > rank(Q)
@@ -563,7 +614,11 @@ function [d, status] = l_polydist(E, X)
         Q  = 0.5*(Q + Q');
         x  = sdpvar(mx1, 1);
         y  = sdpvar(mx1, 1);
-        f  = (y - x)'*(y - x);
+        if flag
+          f  = (y - x)'*Q*(y - x);
+        else
+          f  = (y - x)'*(y - x);
+        end
         C  = set(x'*Q*x + 2*(-Q*q)'*x + (q'*Q*q - 1) <= 0);
         C  = C + set(A*y - b <= 0);
         o  = solvesdp(C, f, ellOptions.sdpsettings);
@@ -571,10 +626,12 @@ function [d, status] = l_polydist(E, X)
         if d1 < ellOptions.abs_tol
           d1 = 0;
         end
-        d1 = sqrt(d1);
-        dd = [dd d1];
+        d1  = sqrt(d1);
+        dd  = [dd d1];
+	sts = [sts o];
       end
-      d = [d; dd];
+      d      = [d; dd];
+      status = [status sts];
     end
   else
     [q, Q] = parameters(E);
@@ -584,13 +641,18 @@ function [d, status] = l_polydist(E, X)
     Q = ell_inv(Q);
     Q = 0.5*(Q + Q');
     for i = 1:k
-      dd = [];
+      dd  = [];
+      sts = [];
       for j = 1:l
         %[A, b] = double(X(i, j));
         [A, b] = double(X(j));
         x  = sdpvar(mx1, 1);
         y  = sdpvar(mx1, 1);
-        f  = (y - x)'*(y - x);
+        if flag
+          f  = (y - x)'*Q*(y - x);
+        else
+          f  = (y - x)'*(y - x);
+        end
         C  = set(x'*Q*x + 2*(-Q*q)'*x + (q'*Q*q - 1) <= 0);
         C  = C + set(A*y - b <= 0);
         o  = solvesdp(C, f, ellOptions.sdpsettings);
@@ -598,13 +660,13 @@ function [d, status] = l_polydist(E, X)
         if d1 < ellOptions.abs_tol
           d1 = 0;
         end
-        d1 = sqrt(d1);
-        dd = [dd d1];
+        d1  = sqrt(d1);
+        dd  = [dd d1];
+	sts = [sts o];
       end
-      d = [d; dd];
+      d      = [d; dd];
+      status = [status sts];
     end
   end
-
-  status = o;
 
   return;

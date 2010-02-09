@@ -17,7 +17,7 @@ function P = polar(E)
 %
 %             P = { l in R^n  | <l, q> + sqrt(<l, Q l>) <= 1 }
 %
-%    If the origin as an interior point of ellipsoid E(q, Q),
+%    If the origin is an interior point of ellipsoid E(q, Q),
 %    then its polar set P is an ellipsoid.
 %
 %

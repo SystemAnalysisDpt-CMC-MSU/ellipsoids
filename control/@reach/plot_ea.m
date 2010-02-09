@@ -180,37 +180,36 @@ function plot_ea(rs, varargin)
     L   = [cos(phi); sin(phi)];
     X   = [];
     for i = 1:N
-      l    = L(:, i);
-      mval = ellOptions.abs_tol;
-      for j = 1:M
-        if trace(E(1, j)) > ellOptions.abs_tol
-          Q = parameters(inv(E(1, j)));
-          v = l' * Q * l;
-          if v > mval
-            mval = v;
-          end
-        end
+      l      = L(:, i);
+      [v, x] = rho(E, l);
+      idx    = find(isinternal((1+ellOptions.abs_tol)*E, x, 'i') > 0);
+      if ~isempty(idx)
+        x = x(:, idx(1, 1)) + rs.center_values;
+	X = [X x];
       end
-      x = (l/sqrt(mval)) + rs.center_values;
-      X = [X x];
     end
-    if Options.fill ~= 0
-      fill(X(1, :), X(2, :), Options.color);
+    if ~isempty(X)
+      X = [X X(:, 1)];
+      if Options.fill ~= 0
+        fill(X(1, :), X(2, :), Options.color);
+        hold on;
+      end
+      h = ell_plot(X);
       hold on;
-    end
-    h = ell_plot(X);
-    hold on;
-    set(h, 'Color', Options.color, 'LineWidth', Options.width);
-    h = ell_plot(rs.center_values, '.');
-    set(h, 'Color', Options.color);
-    if isdiscrete(rs.system)
-      title(sprintf('%s at time step K = %d', back, rs.time_values));
+      set(h, 'Color', Options.color, 'LineWidth', Options.width);
+      h = ell_plot(rs.center_values, '.');
+      set(h, 'Color', Options.color);
+      if isdiscrete(rs.system)
+        title(sprintf('%s at time step K = %d', back, rs.time_values));
+      else
+        title(sprintf('%s at time T = %d', back, rs.time_values));
+      end
+      xlabel('x_1'); ylabel('x_2');
+      if ih == 0
+        hold off;
+      end
     else
-      title(sprintf('%s at time T = %d', back, rs.time_values));
-    end
-    xlabel('x_1'); ylabel('x_2');
-    if ih == 0
-      hold off;
+      warning('2D grid too sparse! Please, increase ''ellOptions.plot2d_grid'' parameter...');
     end
     return;
   end
@@ -222,37 +221,36 @@ function plot_ea(rs, varargin)
 
   if isdiscrete(rs.system)
     for ii = 1:n
-      %EE = move2origin(E(:, ii));
-      EE = move2origin(inv(E(:, ii)));
+      EE = move2origin(E(:, ii));
       EE = EE';
       X  = [];
+      cnt = 0;
       for i = 1:s
-        l    = L(:, i);
-        mval = ellOptions.abs_tol;
-        for j = 1:m
-          %if trace(EE(1, j)) > ellOptions.abs_tol
-          if 1
-            %Q  = parameters(inv(EE(1, j)));
-            Q  = parameters(EE(1, j));
-            v  = l' * Q * l;
-            if v > mval
-              mval = v;
-            end
-          end
+        l = L(:, i);
+        [v, x] = rho(EE, l);
+        idx    = find(isinternal((1+ellOptions.abs_tol)*EE, x, 'i') > 0);
+        if ~isempty(idx)
+          x = x(:, idx(1, 1)) + rs.center_values(:, ii);
+          X = [X x];
         end
-        x = (l/sqrt(mval)) + rs.center_values(:, ii);
-        X = [X x];
       end
-      tt = rs.time_values(ii) * ones(1, s);
-      X  = [tt; X];
-      if Options.fill ~= 0
-        fill3(X(1, :), X(2, :), X(3, :), Options.color);
+      tt = rs.time_values(ii);
+      if ~isempty(X)
+        X  = [X X(:, 1)];
+        tt = rs.time_values(:, ii) * ones(1, size(X, 2));
+        X  = [tt; X];
+        if Options.fill ~= 0
+          fill3(X(1, :), X(2, :), X(3, :), Options.color);
+          hold on;
+        end
+        h = ell_plot(X);
+        set(h, 'Color', Options.color, 'LineWidth', Options.width);
         hold on;
+      else
+        warning('2D grid too sparse! Please, increase ''ellOptions.plot2d_grid'' parameter...');
       end
-      h = ell_plot(X);
-      set(h, 'Color', Options.color, 'LineWidth', Options.width);
-      hold on;
       h = ell_plot([tt(1, 1); rs.center_values(:, ii)], '.');
+      hold on;
       set(h, 'Color', clr);
     end
     xlabel('k');
@@ -265,7 +263,6 @@ function plot_ea(rs, varargin)
     F = ell_triag_facets(s, size(rs.time_values, 2));
     V = [];
     for ii = 1:n
-      %EE = move2origin(E(:, ii));
       EE = move2origin(inv(E(:, ii)));
       EE = EE';
       X  = [];
@@ -273,9 +270,7 @@ function plot_ea(rs, varargin)
         l    = L(:, i);
         mval = ellOptions.abs_tol;
         for j = 1:m
-          %if trace(EE(1, j)) > ellOptions.abs_tol
           if 1
-            %Q  = parameters(inv(EE(1, j)));
             Q  = parameters(EE(1, j));
             v  = l' * Q * l;
             if v > mval

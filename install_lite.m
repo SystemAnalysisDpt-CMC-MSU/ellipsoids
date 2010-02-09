@@ -3,7 +3,7 @@ function install(root)
 % Install Ellipsoidal Toolbox.
 %
 
-  fprintf('Installing Ellipsoidal Toolbox version 1.1 ...\n\n');
+  fprintf('Installing Ellipsoidal Toolbox version 1.1.2 ...\n\n');
 
   if ~exist('root', 'var')
     root = pwd;

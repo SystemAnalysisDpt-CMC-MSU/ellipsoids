@@ -1,5 +1,5 @@
 Ellipsoidal Toolbox
-    www.eecs.berkeley.edu/~akurzhan/ellipsoids
+    http://code.google.com/p/ellipsoids/
 
 
 The Ellipsoidal Toolbox is a standalone set of easy-to-use configurable
@@ -28,6 +28,13 @@ Required software: MATLAB 6.5 (or higher).
 
 What's new
 ----------
+06/06/2009: version 1.1.2
+            * Bug fixes.
+
+11/01/2008: Version 1.1.1
+            * Bug fixes in distance and containment functions.
+            * Updated manual.
+
 12/10/2006: Version 1.1
             * New operations with ellipsoids.
             * Maxmin and minmax reach sets for discrete-time systems with
@@ -81,8 +88,8 @@ Installation
 
 2. Download the Ellipsoidal Toolbox.
 
-3. Unzip the file 'ellipsoids_1_02.zip' into the directory where you want
-   your toolbox to be.
+3. Unzip the file 'ellipsoids_111.zip' or 'ellipsoids_111_lite.zip'
+   into the directory where you want your toolbox to be.
 
 4. Read the 'COPYRIGHT.txt' file.
 
@@ -182,6 +189,9 @@ Software used by Ellipsoidal Toolbox
 Related links
 -------------
 
+* Multi-Parametric Toolbox (MPT):
+  control.ee.ethz.ch/~mpt
+
 * Ellipsoidal calculus based on propagation and fusion:
   www-iri.upc.es/people/ros/ellipsoids.html
 
@@ -190,9 +200,6 @@ Related links
 
 * Level Set Toolbox:
   www.cs.ubc.ca/~mitchell/ToolboxLS
-
-* Multi-Parametric Toolbox (MPT):
-  control.ee.ethz.ch/~mpt
 
 * Polyhedral Hybrid Automaton Verifier (PHAVer):
   www.cs.ru.nl/~goranf
@@ -205,5 +212,5 @@ Related links
 
 
 For questions and bug reports,
-please, contact Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>.
+please, contact Alex Kurzhanskiy <alexk at lihodeev dot com>.
 

@@ -13,7 +13,7 @@ function [QQ, LL] = iedist_de(ntv, X0, l0, mydata, N, back, mnmx)
   vrb                = ellOptions.verbose;
   ellOptions.verbose = 0;
 
-  if back > 1
+  if back > 0
     for i = 2:ntv
       A   = ell_value_extract(mydata.A, i, [N N]);
       Ai  = ell_inv(A);
@@ -27,6 +27,9 @@ function [QQ, LL] = iedist_de(ntv, X0, l0, mydata, N, back, mnmx)
       end
       if rank(BPB) < N
         BPB = ell_regularize(BPB);
+      end
+      if rank(GQG) < N
+        GQG = ell_regularize(GQG);
       end
       l = A' * l;
       if mnmx > 0 % minmax case
@@ -65,6 +68,9 @@ function [QQ, LL] = iedist_de(ntv, X0, l0, mydata, N, back, mnmx)
         BPB = ell_regularize(BPB, e2);
       elseif rank(BPB) < N
         BPB = ell_regularize(BPB);
+      end
+      if rank(GQG) < N
+        GQG = ell_regularize(GQG);
       end
       l = Ai' * l;
       if mnmx > 0 % minmax case

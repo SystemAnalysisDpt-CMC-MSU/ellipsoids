@@ -72,14 +72,12 @@ function res = contains(E1, E2)
     end
   end
 
-  o.fungrad = 1;
-  o.congrad = 1;
-  res       = [];
+  res = [];
   if (t1 > 1) & (t2 > 1)
     for i = 1:m
       r = [];
       for j = 1:n
-        r = [r (l_global_min(E1(i, j), E2(i, j), mn1) > -ellOptions.abs_tol)];
+        r = [r l_check_containment(E1(i, j), E2(i, j))];
       end
       res = [res; r];
     end
@@ -87,7 +85,7 @@ function res = contains(E1, E2)
     for i = 1:m
       r = [];
       for j = 1:n
-        r = [r (l_global_min(E1(i, j), E2, mn1) > -ellOptions.abs_tol)];
+        r = [r l_check_containment(E1(i, j), E2)];
       end
       res = [res; r];
     end
@@ -95,7 +93,7 @@ function res = contains(E1, E2)
     for i = 1:k
       r = [];
       for j = 1:l
-        r = [r (l_global_min(E1, E2(i, j), mn1) > -ellOptions.abs_tol)];
+        r = [r l_check_containment(E1, E2(i, j))];
       end
       res = [res; r];
     end
@@ -109,41 +107,36 @@ function res = contains(E1, E2)
 
 %%%%%%%%
 
-function res = l_global_min(E1, E2, n)
+function res = l_check_containment(E1, E2)
 %
-% L_GLOBAL_MIN - find minimum of the difference of support functions of
-%                two single ellipsoids.
+% L_CHECK_CONTAINMENT - check if E2 is inside E1.
 %
 
   global ellOptions;
 
-  X0 = [];
-  for i = 1:n
-    %x0       = zeros(n, 1);
-    %x0(i, 1) = 1;
-    x0       = rand(n, 1);
-    x0       = x0/sqrt(x0'*x0);
-    X0       = [X0 x0 -x0];
+  [q, Q] = double(E1);
+  [r, R] = double(E2);
+  
+  Qi     = ell_inv(Q);
+  Ri     = ell_inv(R);
+
+  A      = [Qi -Qi*q; (-Qi*q)' (q'*Qi*q-1)];
+  B      = [Ri -Ri*r; (-Ri*r)' (r'*Ri*r-1)];
+
+  if ellOptions.verbose > 0
+    fprintf('Invoking YALMIP...\n');
   end
 
-  o.fungrad = 1;
-  o.congrad = 1;
-  res       = [];
-  for i = 1:(2*n)
-    switch ellOptions.nlcp_solver
-      case 1, % use Optimization Toolbox routines
-        o       = optimset('GradObj', 'on', 'GradConstr', 'on');
-        [x, fv] = fmincon(@contobjfun, X0(:, i), [], [], [], [], [], [], @ellconstraint, o, E1, E2); 
-      otherwise,
-        [x, fv] = ell_nlfnlc(@contobjfun, X0(:, i), @ellconstraint, o, E1, E2); 
-    end
-    if fv < -ellOptions.abs_tol
-      res = fv;
-      return;
-    end
-    res = [res fv]; 
-  end
+  x      = sdpvar(1, 1);
+  f      = 1;
+  C      = set('A <= x*B');
+  C      = C + set('x >= 0');
+  s      = solvesdp(C, f, ellOptions.sdpsettings);
 
-  res = min(res);
+  if s.problem == 0
+    res = 1;
+  else
+    res = 0;
+  end
 
   return;

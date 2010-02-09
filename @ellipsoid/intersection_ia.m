@@ -207,7 +207,7 @@ function E = l_intersection_ia(E1, E2)
   q      = ell_inv(Q)*(a1*Q1*q1 + a2*Q2*q2);
   Q      = Q/(1 - (a1*q1'*Q1*q1 + a2*q2'*Q2*q2 - q'*Q*q));
   Q      = ell_inv(Q);
-  Q      = 0.5*(Q + Q');
+  Q      = (1-ellOptions.abs_tol)*0.5*(Q + Q');
   E      = ellipsoid(q, Q);
   
   return;

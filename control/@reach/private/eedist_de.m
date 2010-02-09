@@ -28,6 +28,9 @@ function [QQ, LL] = eedist_de(ntv, X0, l0, mydata, N, back, mnmx)
       if rank(BPB) < N
         BPB = ell_regularize(BPB);
       end
+      if rank(GQG) < N
+        GQG = ell_regularize(GQG);
+      end
       l = A' * l;
       if mnmx > 0 % minmax case
         E = minkmp_ea(ellipsoid(0.5*(Q+Q')), ellipsoid(0.5*(GQG+GQG')), ellipsoid(0.5*(BPB+BPB')), l);
@@ -65,6 +68,9 @@ function [QQ, LL] = eedist_de(ntv, X0, l0, mydata, N, back, mnmx)
         BPB = ell_regularize(BPB, e2);
       elseif rank(BPB) < N
         BPB = ell_regularize(BPB);
+      end
+      if rank(GQG) < N
+        GQG = ell_regularize(GQG);
       end
       l = Ai' * l;
       if mnmx > 0 % minmax case

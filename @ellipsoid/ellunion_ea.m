@@ -88,7 +88,7 @@ function [E, S] = ellunion_ea(EE)
   
   B = sqrtm(A);
   P = ell_inv(B'*B);
-  P = 0.5*(P + P');
+  P = (1+ellOptions.abs_tol)*0.5*(P + P');
 
   A = ell_inv(A);
   p = -A * b;
