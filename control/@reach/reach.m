@@ -288,6 +288,7 @@ function RS = reach(lsys, X0, L0, T, Options)
         B           = sqrtm(B);
         B           = 0.5*(B + B');
         BPBsr(:, i) = reshape(B, d1*d1, 1);
+      end
       if isdiscrete(lsys)
         mydata.Bp    = Bp;
         mydata.BPB   = BPB;
@@ -450,7 +451,7 @@ function RS = reach(lsys, X0, L0, T, Options)
         GQGsr = zeros(d1*d1, size(RS.time_values, 2));
         for i = 1:size(RS.time_values, 2)
           G           = reshape(GG(:, i), d1, dd);
-          Gq          = [Gq G*q];
+          Gq(:, i)    = G*q;
           G           = G * Q * G';
           GQG(:, i)   = reshape(G, d1*d1, 1);
           G           = sqrtm(G);
@@ -533,6 +534,7 @@ function RS = reach(lsys, X0, L0, T, Options)
           for i = 1:size(RS.time_values, 2)
             q  = matrix_eval(lsys.disturbance.center, RS.time_values(i));
             Gq(:, i) = G*q;
+          end
           if isdiscrete(lsys)
             mydata.Gq  = Gq;
           else
@@ -635,7 +637,7 @@ function RS = reach(lsys, X0, L0, T, Options)
         end
         if isdiscrete(lsys)
           mydata.w = w;
-          mydata.W = W
+          mydata.W = W;
         else
           mydata.w = spline(RS.time_values, w);
           mydata.W = spline(RS.time_values, W);
