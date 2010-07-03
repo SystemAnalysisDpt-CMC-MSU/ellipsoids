@@ -269,7 +269,7 @@ function plot(varargin)
       end
       x3 = x0 - c*e2;
       x4 = x0 + c*e2;
-      if str2num(version('-release')) <= 13
+      if strcmp(version('-release'), '13')
         ch = convhulln([x1 x3 x2 x4]');
       else
         ch = convhulln([x1 x3 x2 x4]', {'QJ', 'QbB', 'Qs', 'QR0', 'Pp'});
