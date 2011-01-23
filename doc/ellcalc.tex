@@ -666,10 +666,11 @@ To find the internal approximating ellipsoid
 $\EE(q^-,Q^-)\subseteq\EE(q_1,Q_1)\cap\EE(q_2,Q_2)$, define
 \begin{eqnarray}
 \beta_1 & = &
-\min_{\langle x,W_2x\rangle=1}\langle x,W_1x\rangle, \label{beta1}\\
-\beta_2 & = & \min_{\langle x,W_1x\rangle=1}\langle x,W_2x\rangle, \label{beta2}
+\min_{\langle (x-q_2),W_2(x-q_2)\rangle=1}\langle (x-q_1),W_1(x-q_1)\rangle,
+\label{beta1}\\
+\beta_2 & = & \min_{\langle (x-q_1),W_1(x-q_1)\rangle=1}\langle
+(x-q_2),W_2(x-q_2)\rangle, \label{beta2}
 \end{eqnarray}
-Notice that (\ref{beta1}) and (\ref{beta2}) are QCQP problems.
 Parameters $\beta_1$ and $\beta_2$ are invariant with respect to affine
 coordinate transformation and describe the position of ellipsoids
 $\EE(q_1,Q_1)$, $\EE(q_2,Q_2)$ with respect to each other:
