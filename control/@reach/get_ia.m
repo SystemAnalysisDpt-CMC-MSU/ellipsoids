@@ -65,6 +65,7 @@ function [I, T] = get_ia(rs)
     for j = 1:n
       q  = rs.center_values(:, j);
       Q  = (1 - ellOptions.rel_tol) * reshape(QQ(:, j), d, d);
+      Q  = real(Q);
       if min(eig(Q)) < (- ellOptions.abs_tol)
         Q = ellOptions.abs_tol * eye(d);
       end

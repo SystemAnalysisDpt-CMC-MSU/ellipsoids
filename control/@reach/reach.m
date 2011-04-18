@@ -831,6 +831,7 @@ function RS = reach(lsys, X0, L0, T, Options)
 
 
 
+
   
   %%% Compute internal shape matrices. %%%
 

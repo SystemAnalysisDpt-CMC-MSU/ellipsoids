@@ -28,6 +28,9 @@ Required software: MATLAB 6.5 (or higher).
 
 What's new
 ----------
+04/17/2011: version 1.1.3
+            * Bug fixes.
+
 06/06/2009: version 1.1.2
             * Bug fixes.
 

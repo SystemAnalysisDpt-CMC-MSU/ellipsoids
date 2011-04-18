@@ -72,6 +72,11 @@ function RS = evolve(CRS, T, lsys)
   
   Options               = [];
   Options.approximation = 2;
+  if isempty(get_ea(CRS))
+    Options.approximation = 1;
+  elseif isempty(get_ia(CRS))
+    Options.approximation = 0;
+  end
   Options.minmax        = RS.minmax;
   
   if isempty(CRS.calc_data)
@@ -776,7 +781,6 @@ function RS = evolve(CRS, T, lsys)
     end
     RS.ea_values = QQ;
   end
-
 
 
 
