@@ -20,7 +20,7 @@ and hyperplanes.
 The toolbox provides efficient plotting routines for ellipsoids, hyperplanes
 and reach sets.
 
-Required software: MATLAB 6.5 (or higher).
+Required software: MATLAB 2012a (or higher).
 
 
 
@@ -28,6 +28,10 @@ Required software: MATLAB 6.5 (or higher).
 
 What's new
 ----------
+
+04/17/2011: version 1.4 IN DEVELOPMENT
+				
+
 04/17/2011: version 1.1.3
             * Bug fixes.
 
@@ -91,7 +95,7 @@ Installation
 
 2. Download the Ellipsoidal Toolbox.
 
-3. Unzip the file 'ellipsoids_111.zip' or 'ellipsoids_111_lite.zip'
+3. Unzip the file 'ellipsoids_14.zip' or 'ellipsoids_14_lite.zip'
    into the directory where you want your toolbox to be.
 
 4. Read the 'COPYRIGHT.txt' file.
@@ -99,7 +103,7 @@ Installation
 5. In your MATLAB command window change the working directory to the one
    where you unzipped the distribution file and type:
 
-    >> install
+    >> s_install
 
 6. At this point, the directory tree of the Ellipsoidal Toolbox is added
    to the MATLAB path list. In order to save the updated path list,
@@ -216,4 +220,6 @@ Related links
 
 For questions and bug reports,
 please, contact Alex Kurzhanskiy <alexk at lihodeev dot com>.
+				Peter Gagarinov <pgagarinov at gmail dot com>
+
 
