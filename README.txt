@@ -1,7 +1,6 @@
 Ellipsoidal Toolbox
     http://code.google.com/p/ellipsoids/
 
-
 The Ellipsoidal Toolbox is a standalone set of easy-to-use configurable
 MATLAB routines to perform operations with ellipsoids and hyperplanes
 of arbitrary dimensions. It computes the external and internal ellipsoidal
