@@ -168,7 +168,10 @@ classdef test_case < handle
                 if (ok)
                     result = add_success(result, self);
                 end;
-            catch
+            catch meObj
+                baseMeObj=modgen.common.throwerror('internalError','Oops, we should not be here');
+                newMeObj=baseMeObj.addCause(meObj);
+                throw(newMeObj);
             end;
             result = stop_test(result, self);
             
