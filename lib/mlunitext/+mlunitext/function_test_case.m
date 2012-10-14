@@ -15,5 +15,4 @@ classdef function_test_case < mlunit.function_test_case
             self=self@mlunit.function_test_case(varargin{:});
         end
     end
-    
 end

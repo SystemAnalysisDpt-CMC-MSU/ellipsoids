@@ -89,13 +89,13 @@ classdef test_case < mlunit.test_case
             catch meObj
                 if (nargin == 1)
                     result = default_test_result(self);
-                end;
+                end
                 
                 result = start_test(result, self);
                 
-                result = add_error_with_stack(result, self, meObj);
+                result = add_error(result, self, meObj);
                 return;
-            end;
+            end
         end
         function self = set_up_param(self,varargin)
             

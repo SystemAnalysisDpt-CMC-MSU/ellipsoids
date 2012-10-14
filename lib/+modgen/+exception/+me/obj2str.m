@@ -1,4 +1,4 @@
-function [message,stacktrace]=obj2str(err,varargin)
+function [message,stacktrace]=obj2str(meObj,varargin)
 % OBJ2STR returns string representations of an MException object
 %
 % input:
@@ -18,13 +18,16 @@ function [message,stacktrace]=obj2str(err,varargin)
 % Faculty of Applied Mathematics and Cybernetics, System Analysis
 % Department, 12-October-2012, <pgagarinov@gmail.com>$
 
-
-stacktrace = modgen.exception.me.printstack(err.stack,varargin{:});
-[message, stacktrace] = modgen.exception.me.parsemessage(err.message, stacktrace);
+modgen.common.type.simple.checkgen(meObj,@(x)isa(x,'MException'));
+%
+stacktrace = modgen.exception.me.printstack(meObj.stack,varargin{:});
+[message, stacktrace] = modgen.exception.me.parsemessage(meObj.message,...
+    stacktrace);
 stacktrace = sprintf('%s\n', stacktrace);
-nCause=length(err.cause);
+nCause=length(meObj.cause);
 for iCause=1:nCause
-    [messageCause,stacktraceCause]=modgen.exception.me.obj2str(err.cause{iCause},varargin{:});
+    [messageCause,stacktraceCause]=modgen.exception.me.obj2str(...
+        meObj.cause{iCause},varargin{:});
     message=[message,sprintf('\n\tCause(%d): %s',iCause,messageCause)];
     stacktrace=[stacktrace,sprintf('\tCause(%d): %s',iCause,stacktraceCause)];
 end

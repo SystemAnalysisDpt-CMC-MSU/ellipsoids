@@ -43,27 +43,28 @@ classdef test_case < handle
     
     methods
         function self = test_case(name, subclass)
-            
+            import modgen.common.throwerror;
             if (nargin == 0)
                 self.name = '';
             else
                 self.name = name;
-                
+                %
                 if (nargin == 1)
-                    if (isempty(self.name))
+                    if isempty(self.name)
                         self.name = 'run_test';
-                    end;
+                    end
                 else
-                    if (isempty(self.name))
+                    if isempty(self.name)
                         self.name = 'run_test';
                     else
                         r = mlunit.reflect(subclass);
                         if (~method_exists(r, name))
-                            error(['Method ', name ' does not exists.']);
-                        end;
-                    end;
-                end;
-            end;
+                            throwerror('noSuchMethod',...
+                                ['Method ', name ' does not exists.']);
+                        end
+                    end
+                end
+            end
         end
         
         function count = count_test_cases(self) %#ok
@@ -123,56 +124,49 @@ classdef test_case < handle
             %
             if (nargin == 1)
                 result = default_test_result(self);
-            end;
+            end
             
             result = start_test(result, self);
             try
                 try
                     set_up(self);
-                catch err
-                    result = add_error_with_stack(result, self, err);
+                catch meObj
+                    result = add_error_with_stack(result, self, meObj);
                     return;
-                end;
+                end
                 
                 ok = 0;
                 try
                     method = self.name;
                     eval([method, '(self);']);
                     ok = 1;
-                catch err
-                    %err = lasterror;
-                    errmsg = err.message;
-                    failure = strfind(err.identifier, 'MLUNIT:TESTFAILURE');
-                    if (size(failure) > 0)
+                catch meObj
+                    isFailure = ~isempty(strfind(meObj.identifier,...
+                        'MLUNIT:TESTFAILURE'));
+                    if isFailure
                         result = add_failure(result, ...
-                            self, err);
+                            self, meObj);
                     else
-                        if (~ismember('stack',fieldnames(err)))
-                            err.stack(1).file = char(which(self.name));
-                            err.stack(1).line = '1';
-                            err.stack = vertcat(err.stack, ...
-                                dbstack('-completenames'));
-                        end;
-                        
-                        result = add_error_with_stack(result, self, err);
-                    end;
-                end;
+                        result = add_error(result, self, meObj);
+                    end
+                end
                 
                 try
                     self = tear_down(self);
-                catch err
-                    result = add_error_with_stack(result, self, err);
+                catch meObj
+                    result = add_error_with_stack(result, self, meObj);
                     ok = 0;
-                end;
+                end
                 
                 if (ok)
                     result = add_success(result, self);
-                end;
+                end
             catch meObj
-                baseMeObj=modgen.common.throwerror('internalError','Oops, we should not be here');
+                baseMeObj=modgen.common.throwerror('internalError',...
+                    'Oops, we should not be here');
                 newMeObj=baseMeObj.addCause(meObj);
                 throw(newMeObj);
-            end;
+            end
             result = stop_test(result, self);
             
         end
