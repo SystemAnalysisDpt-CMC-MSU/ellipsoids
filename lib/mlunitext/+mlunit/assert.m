@@ -23,25 +23,32 @@ function assert(expr, msg, isInternalCall)
 % Faculty of Applied Mathematics and Cybernetics, System Analysis
 % Department, 7-October-2012, <pgagarinov@gmail.com>$
 %
-import modgen.common.throwerror;
-if (nargin == 1)
-    msg = 'no message.';
-    isInternalCall = false;
-end;
-if (nargin == 2)
-    isInternalCall = false;
-end;
-if ((isempty(expr)) || (~expr))
-    stack = dbstack('-completenames');
-    stacktrace = '';
-    for i = 2 + isInternalCall:size(stack, 1)
-        stacktrace = sprintf('%s\n  In %s at line %d', ...
-            stacktrace, ...
-            stack(i).file, stack(i).line);
-    end;
-    stacktrace = sprintf('%s\n', stacktrace);
-    throwerror(['MLUNIT FAILURE:Traceback (most recent call first): ', ...
-        stacktrace, ...
-        'AssertionError: ', ...
-        msg]);
-end;
+% import modgen.common.throwerror;
+
+if nargin==1
+    msg='no message';
+end
+% if (nargin == 1)
+%     msg = 'no message.';
+%     isInternalCall = false;
+% elseif nargin == 2
+%     isInternalCall = false;
+% else
+%     disp('1');
+% end
+% if ((isempty(expr)) || (~expr))
+%     stack = dbstack('-completenames');
+%     stacktrace=modgen.exception.me.printstack(stack(2+isInternalCall:end));
+%     [~, stacktrace] = modgen.exception.me.parsemessage(msg, stacktrace);
+%     throwerror('FAILURE',['Traceback (most recent call first)', ...
+%         stacktrace, ...
+%         'AssertionError: ', ...
+%         msg]);
+% end;
+if ~expr
+    try
+        mlunit.fail(msg);
+    catch meObj
+        throwAsCaller(meObj)
+    end
+end

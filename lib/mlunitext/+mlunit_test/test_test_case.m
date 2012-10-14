@@ -59,6 +59,7 @@ classdef test_test_case < mlunitext.test_case
             catch
             end;
             assert_equals(0, error);
+            assert_not_equals(1, error);
 
             error = 0;
             try
@@ -66,6 +67,7 @@ classdef test_test_case < mlunitext.test_case
             catch
             end;
             assert_equals(0, error);
+            assert_not_equals(1, error);
         end
         %
         function test_default_result(self)
@@ -171,6 +173,7 @@ classdef test_test_case < mlunitext.test_case
             test = mlunit_test.mock_test('test_method');
             result = run(test);
             assert_equals(1, get_tests_run(result));
+            assert_not_equals(0, get_tests_run(result));
         end
         %
         function test_template_method(self)

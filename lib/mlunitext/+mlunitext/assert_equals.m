@@ -20,4 +20,8 @@ function assert_equals(varargin)
 % Faculty of Applied Mathematics and Cybernetics, System Analysis
 % Department, 7-October-2012, <pgagarinov@gmail.com>$
 %
-mlunit.assert_equals(varargin{:});
+try
+    mlunit.assert_equals(varargin{:});
+catch meObj
+    throwAsCaller(meObj);
+end

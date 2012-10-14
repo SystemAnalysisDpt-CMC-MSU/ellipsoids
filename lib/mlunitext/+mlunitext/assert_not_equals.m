@@ -20,4 +20,8 @@ function assert_not_equals(varargin)
 % $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
 % Faculty of Applied Mathematics and Cybernetics, System Analysis
 % Department, 7-October-2012, <pgagarinov@gmail.com>$
-mlunit.assert_not_equals(varargin{:});
+try
+    mlunit.assert_not_equals(varargin{:});
+catch meObj
+    throwAsCaller(meObj);
+end

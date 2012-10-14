@@ -1,4 +1,4 @@
-classdef reflect
+classdef reflect<handle
     % REFLECT class.
     % The class reflect helps to find out which methods to a class belong.
     % In fact it is simply a wrapper for the Matlab methods function,
@@ -17,24 +17,27 @@ classdef reflect
     % Faculty of Applied Mathematics and Cybernetics, System Analysis
     % Department, 7-October-2012, <pgagarinov@gmail.com>$
     
-    properties
-        class_name
-        full_class_name
+    properties (Access=private)
+        metaClass
+        shortClassName
+        isMethodListCached=false
+        methodNameList
     end
     
     methods
-        function self = reflect(class_name)
-            if exist(class_name,'class') == 0
-                error([upper(mfilename),':noSuchClass'],...
-                    'No such class: %s', class_name);
+        function self = reflect(fullClassName)
+            mc=meta.class.fromName(fullClassName);
+            if isempty(mc)
+                modgen.common.throwerror('noSuchClass',...
+                    'No such class: %s', fullClassName);
+            else
+                self.metaClass=mc;
             end
-            
-            split = regexp(class_name, '\.', 'split');
-            self.full_class_name = class_name;
-            self.class_name = split(end);
+            classNamePartList = regexp(fullClassName, '\.', 'split');
+            self.shortClassName=classNamePartList{end};
         end
-        
-        function methds = get_methods(self)
+        %
+        function methodNameList = get_methods(self)
             % GET_METHODS returns the list of methods of the
             %   'reflected' class.
             %
@@ -45,32 +48,28 @@ classdef reflect
             %                                   % class test_case
             %
             %  See also MLUNIT.REFLECT.
-            
-            methds = [];
-            if (~isempty(self.full_class_name))
-                try
-                    object = eval(sprintf('%s', self.full_class_name));
-                    d = methods(object); % FIXME , '-full');
-                catch exception %#ok<NASGU>
-                    d = methods(self.full_class_name); % FIXME , '-full');
-                end;
-                
-                for i = 1:size(d, 1)
-                    method = cellstr(d(i));
-                    if (~strcmp(self.class_name, method))
-                        methds = [methds; method]; %#ok<AGROW>
-                    end;
-                end;
-            end;
+            %
+            if self.isMethodListCached
+                methodNameList=self.methodNameList;
+            else
+                methodNameList={self.metaClass.MethodList.Name}.';
+                methodNameList=unique(methodNameList);
+                isConstrVec=cellfun(@(x)isequal(x,self.shortClassName),...
+                    methodNameList);
+                methodNameList=methodNameList(~isConstrVec);
+                %               end
+                self.isMethodListCached=true;
+                self.methodNameList=methodNameList;
+            end
         end
         
-        function exists = method_exists(self, method_name)
+        function isPositive = method_exists(self, methodName)
             % METHOD_EXISTS returns true, if a method with the name
             % method_name exists in the 'reflected' class.
             %
             % Input:
             %   regular:
-            %       self: 
+            %       self:
             %       method_name: char[1,] - name of the method to check
             %
             % Example:
@@ -80,7 +79,8 @@ classdef reflect
             %
             %  See also MLUNIT.REFLECT.
             import modgen.common.ismembercellstr;
-            exists = ismembercellstr(method_name, get_methods(self));
+            isPositive=any(cellfun(@(x)isequal(x,methodName),...
+                self.get_methods()));
         end
     end
 end

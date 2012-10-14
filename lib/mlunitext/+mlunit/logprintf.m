@@ -18,8 +18,8 @@ logLevel = lower(logLevel);
 switch logLevel
     case {'trace', 'debug', 'info', 'warn', 'error', 'fatal'}
     otherwise
-        error([upper(mfilename),':wrongInput'], ...
-            'Unsupported value of logLevel: %s', logLevel);
+        modgen.common.throwerror('wrongInput', ...
+            ['Unsupported value of logLevel: %s', logLevel]);
 end
 %
 if isempty(log4jLogger)

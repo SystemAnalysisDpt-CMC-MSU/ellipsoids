@@ -10,7 +10,7 @@ classdef test_text_test_runner < mlunitext.test_case
     % Faculty of Applied Mathematics and Cybernetics, System Analysis
     % Department, 7-October-2012, <pgagarinov@gmail.com>$
 
-    properties
+    properties (Access=private)
         runner = [];
     end
 
