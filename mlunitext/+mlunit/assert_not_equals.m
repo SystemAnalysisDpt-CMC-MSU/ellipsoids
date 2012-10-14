@@ -35,5 +35,5 @@ else
     msgOut = msg;
 end;
 if (isequal(actualVal, expectedVal))
-    fail(msgOut, 1);
+    mlunit.fail(msgOut);
 end;

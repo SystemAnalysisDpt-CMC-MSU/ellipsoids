@@ -23,4 +23,8 @@ function assert(varargin)
 % Faculty of Applied Mathematics and Cybernetics, System Analysis
 % Department, 7-October-2012, <pgagarinov@gmail.com>$
 %
-mlunit.assert(varargin{:});
+try
+    mlunit.assert(varargin{:});
+catch meObj
+    throwAsCaller(meObj);
+end

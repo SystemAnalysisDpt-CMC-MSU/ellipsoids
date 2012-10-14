@@ -14,6 +14,7 @@ function fail(msg)
 if (nargin == 0)
     msg = 'no message.';
 end;
-modgen.common.throwerror('MLUNIT:TESTFAILURE',msg);
+meObj=modgen.common.throwerror('MLUNIT:TESTFAILURE',msg);
+throwAsCaller(meObj);
 
 

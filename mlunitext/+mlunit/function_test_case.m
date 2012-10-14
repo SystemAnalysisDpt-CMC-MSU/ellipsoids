@@ -63,7 +63,7 @@ classdef function_test_case < mlunit.test_case
             %
             %  See also MLUNIT.TEST_CASE, MLUNIT.TEST_CASE.RUN.
             
-            if (strcmp(class(self.set_up_function), 'function_handle'))
+            if isa(self.set_up_function, 'function_handle')
                 self.set_up_function();
             end;
         end
@@ -97,7 +97,7 @@ classdef function_test_case < mlunit.test_case
             %
             %  See also MLUNIT.TEST_CASE, MLUNIT.TEST_CASE.RUN.
             
-            if (strcmp(class(self.tear_down_function), 'function_handle'))
+            if isa(self.tear_down_function, 'function_handle')
                 self.tear_down_function();
             end;
         end
