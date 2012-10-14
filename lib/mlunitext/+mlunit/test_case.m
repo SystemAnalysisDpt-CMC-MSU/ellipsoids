@@ -2,7 +2,7 @@ classdef test_case < handle
 % TEST_CASE is the base class for all tests. It defines a
 %  fixture to run multiple tests. The constructor is called as follows:
 %
-% Example: test = test_case('test_foo', 'my_test');
+%  Example: test = test_case('test_foo', 'my_test');
 %  test_foo is the name of the test method, my_test is the name of a
 %  subclass of test_case. Such a class is created as follows:
 %
