@@ -34,10 +34,12 @@ classdef test_text_test_result < mlunitext.test_case
             result = add_success(result, mock_test('test_method'));
             result = stop_test(result, mock_test('test_method'));
             result = start_test(result, mock_test('test_method'));
-            result = add_error(result, mock_test('test_method'), 'foo error');
+            result = add_error_by_message(result,...
+                mock_test('test_method'),'foo error');
             result = stop_test(result, mock_test('test_method'));
             result = start_test(result, mock_test('test_method'));
-            result = add_failure(result, mock_test('test_method'), 'foo failure');
+            result = add_failure_by_message(result,...
+                mock_test('test_method'), 'foo failure');
             result = stop_test(result, mock_test('test_method'));
         end
         function self = test_verbosity_null(self)

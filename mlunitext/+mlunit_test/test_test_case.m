@@ -57,7 +57,7 @@ classdef test_test_case < mlunitext.test_case
                 test_case('foo', 'mock_test');
                 error = 1;
             catch
-            end;
+            end
             assert_equals(0, error);
             assert_not_equals(1, error);
 
@@ -65,7 +65,7 @@ classdef test_test_case < mlunitext.test_case
             try
                 test_case('', 'mock_test');
             catch
-            end;
+            end
             assert_equals(0, error);
             assert_not_equals(1, error);
         end
@@ -118,7 +118,7 @@ classdef test_test_case < mlunitext.test_case
                 run(test, default_test_result(self));
             catch
                 assert(0);
-            end;
+            end
             assert(strcmp('', get_log(test)));
         end
         %
@@ -137,7 +137,7 @@ classdef test_test_case < mlunitext.test_case
                 run(test, default_test_result(self));
             catch
                 assert(0);
-            end;
+            end
             assert(strcmp('set_up test_method ', get_log(test)));
         end
         %

@@ -10,7 +10,7 @@ classdef test_loader
     % Faculty of Applied Mathematics and Cybernetics, System Analysis
     % Department, 7-October-2012, <pgagarinov@gmail.com>$
     methods
-        function names = get_test_case_names(self, test_case_class) 
+        function methodNameList = get_test_case_names(~, testCaseClassName) 
             % GET_TEST_CASE_NAMES returns a list of string
             % with all test* methods from the test_case_class.
             %
@@ -29,24 +29,14 @@ classdef test_loader
             % See also MLUNIT.TEST_LOADER.LOAD_TESTS_FROM_MFILE.
             %
             import mlunit.*;
-            t = reflect(test_case_class);
-            names = get_methods(t);
-            for i = size(names, 1):-1:1
-                if (~strncmp(names(i), 'test', 4))
-                    names(i) = [];
-                end;
-            end;
-            names = sortrows(names);
-            if (~isempty(names))
-                t = eval([test_case_class, '(''', char(names(1)), ''')']);
-            end;
-            
-            if (~isa(t, 'test_case'))
-                names = [];
-            end;
+            typeInfo = reflect(testCaseClassName);
+            methodNameList = get_methods(typeInfo);
+            isTestVec=cellfun(@(x)strncmp(x, 'test', 4),methodNameList);
+            methodNameList=methodNameList(isTestVec);
+            methodNameList = sort(methodNameList);
         end
         
-        function suite = load_tests_from_test_case(self, test_case_class)
+        function suiteObj = load_tests_from_test_case(self, testCaseClassName)
             % LOAD_TESTS_FROM_TEST_CASE returns a test_suite
             % with all test* methods from a test_case. It returns an 
             % empty matrix, if the test is not found.
@@ -65,18 +55,20 @@ classdef test_loader
             %   suite = test_suite(load_tests_from_test_case(loader, 'my_test'));
             
             import mlunit.*;
-            suite = [];
-            names = get_test_case_names(self, test_case_class);
-            if (~isempty(names))
-                suite = test_suite(map(self, ...
-                    test_case_class, ...
-                    names));
-            end;
+            testCaseNameList = get_test_case_names(self, testCaseClassName);
+            if isempty(testCaseNameList)
+                suiteObj = mlunit.test_suite.empty;
+            else
+                suiteObj = test_suite(map(self, ...
+                    testCaseClassName, ...
+                    testCaseNameList));
+            end
         end
         
-        function tests = map(self, test_case_class, test_names) %#ok
-            % MAP returns a list of objects instantiated from
-            %   the class test_case_class and the methods in test_names.
+        function testCaseList = map(self, testCaseClassName, testNameList) %#ok
+            % MAP returns a list of test case objects instantiated from
+            %   the class test_case_class and corresponding to the method names
+            %   from test_names.
             %
             % Input:
             %   regular:
@@ -97,11 +89,9 @@ classdef test_loader
             %
             %  See also MLUNIT.TEST_LOADER.LOAD_TESTS_FROM_MFILE.
             
-            tests = {};
-            for i = 1:length(test_names)
-                test = eval([test_case_class, '(''', char(test_names(i)), ''')']);
-                tests{i} = test; %#ok<AGROW>
-            end;
+            testCaseList=cellfun(@(x)eval(...
+                [testCaseClassName,'(''', x, ''')']),...
+                testNameList,'UniformOutput',false);
         end
     end
 end

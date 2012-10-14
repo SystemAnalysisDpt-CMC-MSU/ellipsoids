@@ -28,17 +28,15 @@ classdef test_result<handle
     methods
         function self=test_result(varargin)
         end
-        function self = add_error_with_stack(self, test, err)
-            % ADD_ERROR_WITH_STACK adds an error for the test
-            % to the list of errors using the struct members of lasterror
-            % (file and stack) to generate a more detailed error report.
+        function self = add_error(self, testName, meObj)
+            % ADD_ERROR_WITH_STACK adds an error to the test result
             %
             % Input:
             %   regular:
             %       self:
-            %       test: mlunit.test_case[1,1] - test to which the errors
+            %       testName: mlunit.test_case[1,1] - test to which the errors
             %           are added
-            %       err: MException[1,1] - an error object to add to the
+            %       meObj: MException[1,1] - an error object to add to the
             %           test
             %
             % Example:
@@ -46,53 +44,55 @@ classdef test_result<handle
             %
             % See also MLUNIT.TEST_RESULT.ADD_ERROR, MLUNIT.TEST_CASE.RUN.
             %
-            [message,stacktrace]=modgen.exception.me.obj2str(err);
+            [message,stacktrace]=modgen.exception.me.obj2str(meObj);
             stacktrace = sprintf('%s\n', stacktrace);
-            self = add_error(self, ...
-                test, ...
-                ['Traceback (most recent call first): ', ...
+            errMsg=['Traceback (most recent call first): ', ...
                 stacktrace, ...,
                 'Error: ', ...
-                message ', Identifier: ',err.identifier]);
+                message ', Identifier: ',meObj.identifier];
+            self = self.add_error_by_message(testName,errMsg);
         end
         
-        function self = add_error(self, test, error)
-            % ADD_ERROR adds an error for the test to the list
-            % of errors.
+        function self = add_error_by_message(self, testName, errorMsg)
+            % ADD_ERROR adds an error to the test result based on the
+            % error message
             %
             % Input:
             %   regular:
             %       self:
-            %       test: mlunit.test_case[1,1] - test to which the errors
+            %       testName: mlunit.test_case[1,1] - test to which the errors
             %           are added
-            %       error: MException[1,1] - an error object to add to the
-            %           test
+            %       errorMsg: char[1,] - an error message
+            %
             % Example:
             %   add_error is usually only called by the run method of
             %   test_case, see test_case.run:
             %       result = add_error(result, self, stacktrace);
             %
             %  See also MLUNIT.TEST_CASE.RUN.
-            
+            %
+            if ~ischar(errorMsg)
+                modgen.common.throwerror('wrongInput',...
+                    'errorMsg is expected to be a character array');
+            end
             newlines = sprintf('\n\n');
-            if (size(strfind(error, newlines)) == 0)
-                error = sprintf('%s\n\n', error);
+            if isempty(strfind(errorMsg, newlines))
+                errorMsg = sprintf('%s\n\n', errorMsg);
             end;
             last = size(self.errors, 1);
-            self.errors{last + 1, 1} = test.str();
-            self.errors{last + 1, 2} = error;
+            self.errors{last + 1, 1} = testName.str();
+            self.errors{last + 1, 2} = errorMsg;
         end
         
-        function self = add_failure(self, test, failure)
-            % ADD_FAILURE adds a failure for the test to the
-            % list of failures.
+        function self = add_failure(self, testName, meObj)
+            % ADD_FAILURE adds a failure for the test result
             %
             % Input:
             %   regular:
             %       self:
-            %       test: mlunit.test_case[1,1] - test to which the errors
+            %       testName: mlunit.test_case[1,1] - test to which the errors
             %           are added
-            %       failure: MException[1,1] - a failure object to add to the
+            %       meObj: MException[1,1] - a failure object to add to the
             %           test
             %
             %  Example:
@@ -102,17 +102,36 @@ classdef test_result<handle
             %
             %  See also TEST_CASE/RUN.
             
-            last = size(self.failures, 1);
-            self.failures{last + 1, 1} = test.str();
-            if isa(failure, 'MException')
-                [message,stacktrace]=modgen.exception.me.obj2str(failure);
-            else
-                message = failure;
-                stacktrace = '';
-            end
-            self.failures{last + 1, 2} = [message,stacktrace];
+            [message,stacktrace]=modgen.exception.me.obj2str(meObj);
+            self.add_failure_by_message(testName,[message,stacktrace]);
         end
-        
+        %
+        function self = add_failure_by_message(self, testName, failMsg)
+            % ADD_FAILURE adds a failure to the test result based on the
+            % failure message
+            %
+            % Input:
+            %   regular:
+            %       self:
+            %       testName: mlunit.test_case[1,1] - test to which the errors
+            %           are added
+            %       failMsg: char[1,] - failure message
+            %
+            %  Example:
+            %   add_failure is usually only called by the run method of
+            %   test_case, see test_case/run:
+            %       result = add_failure(result, self, errmsg);
+            %
+            %  See also TEST_CASE/RUN.
+            if ~ischar(failMsg)
+                modgen.common.throwerror('wrongInput',...
+                    'failMsg is expected to be a character array');
+            end
+            last = size(self.failures, 1);
+            self.failures{last + 1, 1} = testName.str();
+            self.failures{last + 1, 2} = failMsg;
+        end        
+        %
         function self = add_success(self, ~)
             % ADD_SUCCESS is an empty method for classes, which
             %   might do some action on a successful test.

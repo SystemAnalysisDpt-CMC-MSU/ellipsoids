@@ -57,7 +57,6 @@ classdef reflect<handle
                 isConstrVec=cellfun(@(x)isequal(x,self.shortClassName),...
                     methodNameList);
                 methodNameList=methodNameList(~isConstrVec);
-                %               end
                 self.isMethodListCached=true;
                 self.methodNameList=methodNameList;
             end

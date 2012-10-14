@@ -27,11 +27,11 @@ classdef test_function_test_case < mlunitext.test_case
 
             import mlunitext.*;
 
-            test = function_test_case(@() assert(1), 0, 0);
+            test = function_test_case(@() assert(1), @()0, @()0);
             result = run(test);
             assert_equals(1, get_tests_run(result));
         end
-
+        %
         function self = test_run(self)
             %test_function_test_case/test_fixture tests the run method of
             %function_test_case.
