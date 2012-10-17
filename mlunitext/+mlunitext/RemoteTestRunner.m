@@ -16,7 +16,9 @@ classdef RemoteTestRunner<handle
             self.emailLogger.sendMessage('STARTED','');
             try
                 logMessageStr=evalc('results=feval(testPackName,varargin{:});');
-                [errorCount,failCount,messageStr]=mlunitext.countfailsinresults(results);
+                [errorCount,failCount]=results.getErrorFailCount();
+                messageStr=results.getErrorFailMessage();
+                %    
                 if (failCount+errorCount)>0
                     subjectStr=sprintf('FAILED:(failures: %d, errors %d)',failCount,errorCount);
                 else

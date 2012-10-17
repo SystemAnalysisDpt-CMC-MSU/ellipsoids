@@ -116,18 +116,26 @@ classdef test_test_result < mlunitext.test_case
             assert_equals(1, was_successful(self.result));
             assert_equals('mlunitext.test_result run=1 errors=0 failures=0', ...
                 summary(self.result));
+            check(0,0);
             self.result = add_error_by_message(self.result, ...
                 mlunit_test.mock_test('test_method'), 'foo error');
             assert_equals('mlunitext.test_result run=1 errors=1 failures=0', ...
                 summary(self.result));
+            check(1,0);
             self.result = add_failure_by_message(self.result, ...
                 mlunit_test.mock_test('test_method'), 'foo failure');
             assert_equals('mlunitext.test_result run=1 errors=1 failures=1', ...
                 summary(self.result));
+            check(1,1);
             self.result = stop_test(self.result, ...
                 mlunit_test.mock_test('test_method'));
             self.result = set_should_stop(self.result);
             assert_equals(1, get_should_stop(self.result));
+            function check(nExpErrors,nExpFailures)
+                [nErrors,nFailures]=self.result.getErrorFailCount();
+                assert(nErrors==nExpErrors);
+                assert(nFailures==nExpFailures);
+            end
         end
     end
 end

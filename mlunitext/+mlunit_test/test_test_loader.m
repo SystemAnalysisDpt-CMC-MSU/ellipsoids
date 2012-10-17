@@ -30,16 +30,21 @@ classdef test_test_loader < mlunitext.test_case
 
             import mlunitext.*;
 
-            t = test_loader;
-            n = get_test_case_names(t, 'mlunit_test.mock_test');
-            assert(size(n, 1) > 0);
-            assert_equals(size(n, 1), sum(strncmp(n, 'test', 4)));
+            testLoaderObj = test_loader;
+            testMethodNameList = get_test_case_names(testLoaderObj,...
+                'mlunit_test.mock_test');
+            assert(modgen.common.iscol(testMethodNameList));
+            %
+            assert(size(testMethodNameList, 1) > 0);
+            assert_equals(size(testMethodNameList, 1),...
+                sum(strncmp(testMethodNameList, 'test', 4)));
 
-            n = get_test_case_names(t, 'mlunit_test.mock_test_failed_set_up');
-            % Inheritance is supported by class reflect with mlUnit 1.5.2
-            assert_equals(3, sum(strncmp(n, 'test', 4)));
+            testMethodNameList = get_test_case_names(testLoaderObj,...
+                'mlunit_test.mock_test_failed_set_up');
+            assert_equals(3, sum(strncmp(testMethodNameList, 'test', 4)));
+            %
         end
-
+        %
         function self = test_load_tests_from_test_case(self)
             % TEST_LOAD_TESTS_FROM_TEST_CASE tests the 
             %   method test_loader.load_tests_from_test_case.
@@ -52,12 +57,19 @@ classdef test_test_loader < mlunitext.test_case
 
             import mlunitext.*;
 
-            t = test_loader;
-            suite = load_tests_from_test_case(t, 'mlunit_test.mock_test');
+            testLoader = test_loader;
+            suite = load_tests_from_test_case(testLoader, 'mlunit_test.mock_test');
+            assert(modgen.common.isrow(suite.tests));            
             result = test_result;
             result = run(suite, result);
             assert_equals(3, get_tests_run(result));
             assert_equals(1, get_errors(result));
+            %
+            testLoader=mlunit.test_loader;
+            suite = load_tests_from_test_case(testLoader,...
+                'mlunit_test.mock_test');
+            assert(modgen.common.isrow(suite.tests));
+            %
         end
     end
 end

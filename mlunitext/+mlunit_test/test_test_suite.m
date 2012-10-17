@@ -167,6 +167,9 @@ classdef test_test_suite < mlunitext.test_case
             self.result = run(self.suite, self.result);
             assert(strcmp('mlunitext.test_result run=0 errors=0 failures=0', ...
                 summary(self.result)));
+            [nErrors,nFailures]=self.result.getErrorFailCount();
+            assert(nErrors==0);
+            assert(nFailures==0);
         end
 
         function test_suite(self)
@@ -185,6 +188,9 @@ classdef test_test_suite < mlunitext.test_case
             self.result = run(self.suite, self.result);
             assert(strcmp('mlunitext.test_result run=2 errors=1 failures=0', ...
                 summary(self.result)));
+            [nErrors,nFailures]=self.result.getErrorFailCount();
+            assert(nErrors==1);
+            assert(nFailures==0);
         end
     end
 end

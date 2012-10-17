@@ -344,5 +344,35 @@ classdef test_result<handle
                 self.should_stop=self.should_stop|curObj.get_should_stop();
             end
         end
+        function [errorCount,failCount]=getErrorFailCount(self)
+            nRes=length(self);
+            errorCount=0;
+            failCount=0;
+            for iRes=1:nRes
+                errorCount=errorCount+self(iRes).get_errors();
+                failCount=failCount+self(iRes).get_failures();
+            end
+        end
+        %
+        function message=getErrorFailMessage(self)
+            nRes=length(self);
+            messageList=cell(1,nRes);
+            for iRes=1:nRes
+                messageList{iRes}=feval('print_errors',self(iRes));
+            end
+            message=[messageList{:}];
+        end        
+        %
+        function display(self)
+            message=evalc('display@handle(self)');
+            message=strrep(message,'self = ','');
+            [errorCount,failCount]=self.getErrorFailCount();
+            %
+            fprintf([...
+                '\n%s\n+--------------------------------------------+',...
+                '\n|         (FAILURES: %d, ERRORS %d)            |',...
+                '\n+--------------------------------------------+\n'],....
+                message,failCount,errorCount);
+        end
     end
 end
