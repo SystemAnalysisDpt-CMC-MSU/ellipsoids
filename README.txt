@@ -220,5 +220,4 @@ Related links
 For questions and bug reports,
 please, contact Alex Kurzhanskiy <alexk at lihodeev dot com>.
 				Peter Gagarinov <pgagarinov at gmail dot com>
-онннннбюп!
 
