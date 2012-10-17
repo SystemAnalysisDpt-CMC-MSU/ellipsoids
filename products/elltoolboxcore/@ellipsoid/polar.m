@@ -51,7 +51,10 @@ function P = polar(E)
     PP = [];
     for j = 1:n
       if isdegenerate(E(i, j))
-        PP = [PP ellipsoid];
+           modgen.common.throwerror('degenerateEllipsoid','The resulting ellipsoid is not bounded');
+
+         %error('polar:degenerateEllipsoid', 'aaa');
+        
       else
         [q, Q] = parameters(E(i, j));
         d      = size(Q, 2);
@@ -64,7 +67,9 @@ function P = polar(E)
           W  = (1 + q'*M*q)*M;
           PP = [PP ellipsoid(w, W)];
         else
-          PP = [PP ellipsoid];
+         modgen.common.throwerror('degenerateEllipsoid','The resulting ellipsoid is not bounded');
+
+          %error('polar:degenerateEllipsoid', 'aaa');
 	end
       end
     end
