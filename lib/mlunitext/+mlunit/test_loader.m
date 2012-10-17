@@ -10,6 +10,7 @@ classdef test_loader
     % Faculty of Applied Mathematics and Cybernetics, System Analysis
     % Department, 7-October-2012, <pgagarinov@gmail.com>$
     methods
+        %
         function methodNameList = get_test_case_names(~, testCaseClassName) 
             % GET_TEST_CASE_NAMES returns a list of string
             % with all test* methods from the test_case_class.
@@ -35,51 +36,62 @@ classdef test_loader
             methodNameList=methodNameList(isTestVec);
             methodNameList = sort(methodNameList);
         end
-        
-        function suiteObj = load_tests_from_test_case(self, testCaseClassName)
+        %
+        function suite = load_tests_from_test_case(self,...
+                testCaseClassName,varargin)
             % LOAD_TESTS_FROM_TEST_CASE returns a test_suite
-            % with all test* methods from a test_case. It returns an 
-            % empty matrix, if the test is not found.
+            % with all test* methods from a test case. If tests are not
+            % found an empty matrix returned
             %
             % Input:
             %   regular:
-            %       self:
-            %       test_case_class: mlunit.test_case[1,1] - test case
-            %           object
+            %       self: mlunitext.test_loader[1,1] 
+            %       testCaseClassName: char[1,] - name of test case class
+            %           from which the tests are to be loaded
+            %       
+            %   optional/properties:
+            %       any of the optional parameters or properties of
+            %           mlunitext.test_case class
             %
             % Output:
-            %   suite: mlunit.test_suite[1,1] - resulting test suite
-            %
+            %   suite: mlunitext.test_suite
+            %       
             % Example:
             %   loader = test_loader;
             %   suite = test_suite(load_tests_from_test_case(loader, 'my_test'));
             
-            import mlunit.*;
-            testCaseNameList = get_test_case_names(self, testCaseClassName);
-            if isempty(testCaseNameList)
-                suiteObj = mlunit.test_suite.empty;
-            else
-                suiteObj = test_suite(map(self, ...
+            import mlunitext.*;
+            %
+            suite = test_suite;
+            testNameList = get_test_case_names(self, testCaseClassName);
+            if (~isempty(testNameList))
+                suite = test_suite(map(self, ...
                     testCaseClassName, ...
-                    testCaseNameList));
+                    testNameList,varargin{:}));
             end
         end
-        
-        function testCaseList = map(self, testCaseClassName, testNameList) %#ok
-            % MAP returns a list of test case objects instantiated from
-            %   the class test_case_class and corresponding to the method names
-            %   from test_names.
+        %
+        function testList = map(self, testCaseClassName, testMethodNameList,...
+                varargin) %#ok
+            % MAP returns a list of objects instantiated from
+            % the class testCaseClassName and the methods specified by
+            % testMethodNameList
             %
             % Input:
             %   regular:
-            %       self:
-            %       test_case_class: char[1,] - test case class name
-            %       test_names: cell[1,] of char[1,] - list of test names
+            %       self: mlunitext.test_loader[1,1] 
+            %       testCaseClassName: char[1,] - name of test case class
+            %           from which the tests are to be loaded
+            %       testMethodNameList: cell[1,] of char[1,] - list of
+            %       test case method names
+            %       
+            %   optional/properties:
+            %       any of the optional parameters or properties of
+            %           mlunitext.test_case class
             %
             % Output:
-            %   tests: cell[1,] of mlunit.test_case[1,1] - list of created
-            %       test objects
-            %
+            %   suite: mlunitext.test_suite
+            %       
             %  Example:
             %    If you have for example a test_case my_test with two
             %    methods test_foo1 and test_foo2, then
@@ -88,10 +100,15 @@ classdef test_loader
             %    instantiated with test_foo1, the other with test_foo2.
             %
             %  See also MLUNIT.TEST_LOADER.LOAD_TESTS_FROM_MFILE.
-            
-            testCaseList=cellfun(@(x)eval(...
-                [testCaseClassName,'(''', x, ''')']),...
-                testNameList,'UniformOutput',false);
+            %
+            nTests=length(testMethodNameList);
+            testList = cell(1,nTests);
+            for iTest = 1:nTests
+                testObj = feval(testCaseClassName,...
+                    testMethodNameList{iTest},...
+                    testCaseClassName,varargin{:});
+                testList{iTest} = testObj;
+            end;
         end
-    end
+    end    
 end
