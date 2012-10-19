@@ -14,7 +14,7 @@ function inpArray=checkcelloffunc(inpArray,isEmptyAllowed)
 %   inpArray: cell[1,] of char[1,]
 %
 % $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-% Faculty of Applied Mathematics and Cybernetics, System Analysis
+% Faculty of Computational Mathematics and Cybernetics, System Analysis
 % Department, 7-October-2012, <pgagarinov@gmail.com>$
 %
 import modgen.common.throwerror;

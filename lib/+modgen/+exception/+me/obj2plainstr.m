@@ -3,7 +3,7 @@ function resStr=obj2plainstr(meObj)
 %hyper-references and via a legacy function errst2str
 %
 % $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-% Faculty of Applied Mathematics and Cybernetics, System Analysis
+% Faculty of Computational Mathematics and Cybernetics, System Analysis
 % Department, 12-October-2012, <pgagarinov@gmail.com>$
 %
 resCStr=cellfun(@(x)sprintf('%s\n',x),...

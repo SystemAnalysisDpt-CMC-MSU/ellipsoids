@@ -15,7 +15,7 @@ function [message,stacktrace]=obj2str(meObj,varargin)
 %     stacktrace: char [m,n] - string representation of the stack trace
 %
 % $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-% Faculty of Applied Mathematics and Cybernetics, System Analysis
+% Faculty of Computational Mathematics and Cybernetics, System Analysis
 % Department, 12-October-2012, <pgagarinov@gmail.com>$
 
 modgen.common.type.simple.checkgen(meObj,@(x)isa(x,'MException'));

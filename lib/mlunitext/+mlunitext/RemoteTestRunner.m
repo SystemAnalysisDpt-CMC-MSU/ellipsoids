@@ -47,4 +47,3 @@ classdef RemoteTestRunner<handle
     end
     
 end
-

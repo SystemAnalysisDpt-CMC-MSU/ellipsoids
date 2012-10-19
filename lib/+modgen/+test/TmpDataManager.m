@@ -3,7 +3,7 @@ classdef TmpDataManager<modgen.io.TmpDataManager
     % data folders, root folder name is determined automatically
     %
     % $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-    % Faculty of Applied Mathematics and Cybernetics, System Analysis
+    % Faculty of Computational Mathematics and Cybernetics, System Analysis
     % Department, 7-October-2012, <pgagarinov@gmail.com>$    
     %
     methods (Static)
@@ -53,4 +53,3 @@ classdef TmpDataManager<modgen.io.TmpDataManager
         end
     end
 end
-

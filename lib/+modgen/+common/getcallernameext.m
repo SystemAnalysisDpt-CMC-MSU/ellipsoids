@@ -40,7 +40,7 @@ function [methodName className]=getcallernameext(indStack)
 %          Analogous situation is for scripts and methods of classes.
 %
 % $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-% Faculty of Applied Mathematics and Cybernetics, System Analysis
+% Faculty of Computational Mathematics and Cybernetics, System Analysis
 % Department, 7-October-2012, <pgagarinov@gmail.com>$
 %
 

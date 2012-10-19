@@ -22,7 +22,7 @@ function isValid=isvalidsize(varargin)
 %                   mask;
 %
 % $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-% Faculty of Applied Mathematics and Cybernetics, System Analysis
+% Faculty of Computational Mathematics and Cybernetics, System Analysis
 % Department, 12-October-2012, <pgagarinov@gmail.com>$
 %
 sizeCell=cellfun(@size,varargin(1:end-1),'UniformOutput',false);

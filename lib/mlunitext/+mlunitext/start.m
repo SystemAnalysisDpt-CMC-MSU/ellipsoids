@@ -12,7 +12,7 @@ function start(varargin)
 %  See also MLUNIT.GUI_TEST_RUNNER.RUN.
 
 % $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-% Faculty of Applied Mathematics and Cybernetics, System Analysis
+% Faculty of Computational Mathematics and Cybernetics, System Analysis
 % Department, 7-October-2012, <pgagarinov@gmail.com>$
 
 mlunit.start(varargin{:});
