@@ -8,7 +8,7 @@ function fail(msg)
 % Example: fail('Test failed.');
 %
 % $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-% Faculty of Applied Mathematics and Cybernetics, System Analysis
+% Faculty of Computational Mathematics and Cybernetics, System Analysis
 % Department, 7-October-2012, <pgagarinov@gmail.com>$
 %
 if (nargin == 0)
@@ -16,5 +16,4 @@ if (nargin == 0)
 end;
 meObj=modgen.common.throwerror('MLUNIT:TESTFAILURE',msg);
 throwAsCaller(meObj);
-
 

@@ -30,7 +30,7 @@ function [reg, prop]=parseparams(args,propNameList,nRegExpected,nPropExpected)
 %   prop: cell[1,nProps*2] - list of property name-value pairs
 %
 % $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-% Faculty of Applied Mathematics and Cybernetics, System Analysis
+% Faculty of Computational Mathematics and Cybernetics, System Analysis
 % Department, 7-October-2012, <pgagarinov@gmail.com>$
 %
 import modgen.common.*;
@@ -131,6 +131,5 @@ if nargin==4
     end
 end
 end
-
 
 

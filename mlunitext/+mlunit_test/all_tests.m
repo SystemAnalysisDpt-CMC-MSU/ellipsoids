@@ -5,7 +5,7 @@ function suite = all_tests
 %         run(gui_test_runner, 'mlunit_test.all_tests');
 
 % $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-% Faculty of Applied Mathematics and Cybernetics, System Analysis
+% Faculty of Computational Mathematics and Cybernetics, System Analysis
 % Department, 7-October-2012, <pgagarinov@gmail.com>$
 
 import mlunitext.*;

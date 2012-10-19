@@ -13,7 +13,7 @@ function [taskName,SProp]=gettaskname()
 %       taskName: char[1,] - same as above
 %       
 % $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-% Faculty of Applied Mathematics and Cybernetics, System Analysis
+% Faculty of Computational Mathematics and Cybernetics, System Analysis
 % Department, 7-October-2012, <pgagarinov@gmail.com>$
 %
 curTaskObj=getCurrentTask();
@@ -33,5 +33,4 @@ end
 SProp.isMain=isMain;
 SProp.taskId=taskId;
 SProp.taskName=taskName;
-
 

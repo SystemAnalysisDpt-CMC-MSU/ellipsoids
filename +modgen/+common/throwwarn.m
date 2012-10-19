@@ -13,7 +13,7 @@ function throwwarn(msgTag,varargin)
 %       ...
 %
 % $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-% Faculty of Applied Mathematics and Cybernetics, System Analysis
+% Faculty of Computational Mathematics and Cybernetics, System Analysis
 % Department, 7-October-2012, <pgagarinov@gmail.com>$
 %
 import modgen.common.*;
@@ -21,4 +21,3 @@ callerName=getcallername(2,'full');
 callerName=strrep(callerName,'.',':');
 warnMsg=[upper(callerName),':',msgTag];
 warning(warnMsg,varargin{:});
-

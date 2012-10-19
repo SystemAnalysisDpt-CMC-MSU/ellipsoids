@@ -5,7 +5,7 @@ classdef test_function_test_case < mlunitext.test_case
     %         run(gui_test_runner, 'test_function_test_case');
 
     % $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-    % Faculty of Applied Mathematics and Cybernetics, System Analysis
+    % Faculty of Computational Mathematics and Cybernetics, System Analysis
     % Department, 7-October-2012, <pgagarinov@gmail.com>$
 
     properties

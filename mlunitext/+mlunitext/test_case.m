@@ -40,7 +40,7 @@ classdef test_case < mlunit.test_case
             %          end of test runs     
             %
             % $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-            % Faculty of Applied Mathematics and Cybernetics, System Analysis
+            % Faculty of Computational Mathematics and Cybernetics, System Analysis
             % Department, 7-October-2012, <pgagarinov@gmail.com>$
             %
             [reg,prop]=modgen.common.parseparams(varargin,...
@@ -123,7 +123,7 @@ classdef test_case < mlunit.test_case
             %          checked)
             %
             % $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-            % Faculty of Applied Mathematics and Cybernetics, System Analysis
+            % Faculty of Computational Mathematics and Cybernetics, System Analysis
             % Department, 7-October-2012, <pgagarinov@gmail.com>$
             %
             [reg,~,causeCheckDepth]=...
@@ -191,7 +191,7 @@ classdef test_case < mlunit.test_case
             %           time of calculation is returned for all runs
             %
             % $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-            % Faculty of Applied Mathematics and Cybernetics, System Analysis
+            % Faculty of Computational Mathematics and Cybernetics, System Analysis
             % Department, 7-October-2012, <pgagarinov@gmail.com>$
             %
             [reg,~,nRuns,useMedianTime]=...
