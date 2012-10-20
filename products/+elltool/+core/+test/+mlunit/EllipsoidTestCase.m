@@ -108,18 +108,77 @@ classdef EllipsoidTestCase < mlunitext.test_case
             
             testEllipsoid_2 = ellipsoid(eye(nDim));
             testRes = intersect(testEllipsoid, testEllipsoid_2, 'i');
-         %   mlunit.assert_equals(-1, testRes);
+            mlunit.assert_equals(-1, testRes);
             
             
             %empty intersection
+            
+            %with ellipsoid
             nDim = 2;
             testEllipsoid = ellipsoid(eye(nDim));
             testEllipsoid_2 = ellipsoid([1000, -1000]', eye(nDim));
             testRes = intersect(testEllipsoid, testEllipsoid_2, 'i');
             mlunit.assert_equals(0, testRes);
-           % testRes = intersect(testEllipsoid, testEllipsoid_2, 'u');
-           % mlunit.assert_equals(0, testRes);
+         
+            %with hyperplane
            
+            nDim = 2;
+            testEllipsoid = ellipsoid([1000, -1000]', eye(nDim));
+            testHyperPlane = hyperplane([1, 0]', 10);
+            testRes = intersect(testEllipsoid, testHyperPlane);
+           
+            %two ellipsoids
+            nDim = 2;
+            testEllipsoid(1) = ellipsoid(eye(nDim));
+            testEllipsoid(2) = ellipsoid([1, 0]', eye(nDim));
+            testEllipsoid_2 = ellipsoid([100, -100]', eye(nDim));
+            testRes = intersect(testEllipsoid, testEllipsoid_2, 'i');
+             mlunit.assert_equals(0, testRes);
+            %intersection is not empty
+            
+            nDim = 2;
+            testEllipsoid = ellipsoid(eye(nDim));
+            testRes = intersect(testEllipsoid, testEllipsoid);
+            mlunit.assert_equals(1, testRes);
+            
+            nDim = 2;
+            testEllipsoid = ellipsoid(eye(nDim));
+            testEllipsoid_2 = ellipsoid([2, 0]', eye(nDim));
+            testRes = intersect(testEllipsoid, testEllipsoid_2);
+            mlunit.assert_equals(1, testRes);
+            
+            
+            nDim = 2;
+            testEllipsoid = ellipsoid(eye(nDim));
+            testEllipsoid_2 = ellipsoid([1, 0]', eye(nDim));
+            testRes = intersect(testEllipsoid, testEllipsoid_2);
+            mlunit.assert_equals(1, testRes);
+            
+            nDim = 2;
+            testEllipsoid(1) = ellipsoid(eye(nDim));
+            testEllipsoid(2) = ellipsoid([1, 0]', eye(nDim));
+            testEllipsoid_2 = ellipsoid([0, 1]', eye(nDim));
+            testRes = intersect(testEllipsoid, testEllipsoid_2, 'i');
+            mlunit.assert_equals(1, testRes);
+            
+            nDim = 2;
+            testEllipsoid(1) = ellipsoid(eye(nDim));
+            testEllipsoid(2) = ellipsoid([2, 0]', eye(nDim));
+            testEllipsoid_2 = ellipsoid([1, 1]', eye(nDim));
+            testRes = intersect(testEllipsoid, testEllipsoid_2, 'u');
+            mlunit.assert_equals(1, testRes);
+            
+            %hyperplane
+            nDim = 2;
+            testEllipsoid(1) = ellipsoid(eye(nDim));
+            testEllipsoid(2) = ellipsoid([2, 0]', eye(nDim));
+            testHyperPlane = hyperplane([1, 0]', 1);
+            testRes = intersect(testEllipsoid, testHyperPlane, 'i');
+            mlunit.assert_equals(1, testRes);
+            testRes = intersect(testEllipsoid, testHyperPlane, 'u');
+            mlunit.assert_equals(1, testRes);
+            
+  
         end
         function self = testIntersectEa(self)
             mlunit.assert_equals(0, sin(0));
@@ -131,7 +190,46 @@ classdef EllipsoidTestCase < mlunitext.test_case
             mlunit.assert_equals(0, sin(0));
         end
         function self = testEllunionEa(self)
-            mlunit.assert_equals(0, sin(0));
+            nDim = 10;
+            nArr = 15;
+            eyeEllipsoid = ellipsoid(eye(nDim));
+            for iArr = 1:nArr
+                testEllipsoid(iArr) = eyeEllipsoid;
+            end;
+            resEllipsoid = ellunion_ea(testEllipsoid);
+            answerEllipsoid = eyeEllipsoid;
+            mlunit.assert_equals(1, eq(resEllipsoid, answerEllipsoid));
+            
+            clear;
+            nDim = 2;
+            testEllipsoid(1) = ellipsoid(eye(nDim));
+            testEllipsoid(2) = ellipsoid([1, 0]', eye(nDim));
+            resEllipsoid = ellunion_ea(testEllipsoid);
+            
+   
+            answerEllipsoid = ellipsoid([0.500000000007025, 0]', [2.389624507507514, 0; 0, 1.296525111099451]);
+            mlunit.assert_equals(1, eq(resEllipsoid, answerEllipsoid));
+            
+            clear;
+            nDim = 2;
+            testEllipsoid(1) = ellipsoid(eye(nDim));
+            testEllipsoid(2) = ellipsoid([1, 0]', eye(nDim));
+            testEllipsoid(3) = ellipsoid([0, 1]', eye(nDim));
+            resEllipsoid = ellunion_ea(testEllipsoid);
+            
+            answerEllipsoid = ellipsoid([0.361900110249858, 0.361900133569072]', [2.713989519131491, -0.428437951540780;-0.428437951540780, 2.713989419417838]);
+            mlunit.assert_equals(1, eq(resEllipsoid, answerEllipsoid));
+          
+            nDim = 3;
+            testEllipsoid(1) = ellipsoid(eye(3));
+            testEllipsoid(2) = ellipsoid([1, 0.5, -0.5]', [2, 0, 0; 0, 1, 0; 0, 0, 0.5]);
+            testEllipsoid(3) = ellipsoid([0.5, 0.3, 1]', [0.5, 0, 0; 0, 0.5, 0; 0, 0, 2]);
+            resEllipsoid = ellunion_ea(testEllipsoid);
+            answerEllipsoidShape = [3.214278694218219 0.597782759694970 -0.610825850601710;0.597782759694970 1.826390762576929  -0.135640504336856;-0.610825850601710 -0.135640504336856 4.757741441412507];
+            answerEllipsoidCenter = [0.678848085399030, 0.271345388982263, 0.242812544509344]';
+            answerEllipsoid = ellipsoid(answerEllipsoidCenter, answerEllipsoidShape);
+            mlunit.assert_equals(1, eq(resEllipsoid, answerEllipsoid));
+            
         end
         function self = testHpIntersection(self)
             mlunit.assert_equals(0, sin(0));
