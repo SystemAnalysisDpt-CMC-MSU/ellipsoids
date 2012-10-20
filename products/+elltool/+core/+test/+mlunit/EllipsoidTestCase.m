@@ -112,12 +112,11 @@ classdef EllipsoidTestCase < mlunitext.test_case
             
             
             %empty intersection
-          %  nDim = 2;
-          %  testEllipsoid(1) = ellipsoid(eye(nDim));
-          %  testEllipsoid(2) = ellipsoid([1, 0]', eye(nDim));
-          %  testEllipsoid_2 = ellipsoid([1000, -1000]', eye(nDim));
-          %  testRes = intersect(testEllipsoid, testEllipsoid_2, 'i');
-          %  mlunit.assert_equals(0, testRes);
+            nDim = 2;
+            testEllipsoid = ellipsoid(eye(nDim));
+            testEllipsoid_2 = ellipsoid([1000, -1000]', eye(nDim));
+            testRes = intersect(testEllipsoid, testEllipsoid_2, 'i');
+            mlunit.assert_equals(0, testRes);
            % testRes = intersect(testEllipsoid, testEllipsoid_2, 'u');
            % mlunit.assert_equals(0, testRes);
            
