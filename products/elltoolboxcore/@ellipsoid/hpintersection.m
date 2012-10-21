@@ -78,6 +78,7 @@ function I = hpintersection(E, H)
       for j = 1:n
         if distance(E(i, j), H(i, j)) > 0
           Q = [Q ellipsoid];
+          modgen.common.throwerror('degenerateEllipsoid','Hypeplane doesn''t intersect ellipsoid');
 	else
           Q = [Q l_compute1intersection(E(i, j), H(i, j), mx1)];
 	end
@@ -102,6 +103,7 @@ function I = hpintersection(E, H)
       for j = 1:l
         if distance(E, H(i, j)) > 0
           Q = [Q ellipsoid];
+          modgen.common.throwerror('degenerateEllipsoid','Hypeplane doesn''t intersect ellipsoid');
 	else
           Q = [Q l_compute1intersection(E, H(i, j), mx1)];
 	end
