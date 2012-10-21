@@ -354,15 +354,6 @@ classdef test_result<handle
             end
         end
         %
-        function message=getErrorFailMessage(self)
-            nRes=length(self);
-            messageList=cell(1,nRes);
-            for iRes=1:nRes
-                messageList{iRes}=feval('print_errors',self(iRes));
-            end
-            message=[messageList{:}];
-        end        
-        %
         function display(self)
             message=evalc('display@handle(self)');
             message=strrep(message,'self = ','');
