@@ -11,13 +11,15 @@ function outCVec = catcellstrwithsep(inpCMat,sepStr)
 % Output:
 %   outCVec: cell[nRows,1] of char[1,] - cell vector of strings
 %       
-% $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-% Faculty of Computational Mathematics and Cybernetics, System Analysis
-% Department, 7-October-2012, <pgagarinov@gmail.com>$
+%
+% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-06-02 $ 
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2011 $
+%
 %
 import modgen.string.catwithsep;
 nRows=size(inpCMat,1);
 nCols=size(inpCMat,2);
 outCVec=cellfun(@(x)catwithsep(x,sepStr),...
     mat2cell(inpCMat,ones(nRows,1),nCols),'UniformOutput',false);
-
