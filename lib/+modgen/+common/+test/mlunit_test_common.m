@@ -1349,7 +1349,7 @@ classdef mlunit_test_common < mlunitext.test_case
             checkTime(inpMat,100);
             
             function checkTime(inpMat,nRuns) %#ok<INUSL>
-                maxTolerance=0.2;
+                maxTolerance=0.25;
                 outMat1=[];
                 indForwardVec1=[];
                 indBackwardVec1=[];

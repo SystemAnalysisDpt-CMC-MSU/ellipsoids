@@ -13,7 +13,8 @@ classdef mlunit_test_xmlloadsave < mlunitext.test_case
             self = self@mlunitext.test_case(varargin{:});
             metaClass=metaclass(self);
             self.locDir=fileparts(which(metaClass.Name));
-            self.fileName=[self.locDir,filesep,'tmp1.xml'];
+            self.fileName=[modgen.test.TmpDataManager.getDirByCallerKey,...
+                filesep,'tmp.xml'];            
         end
         function self=set_up_param(self,varargin)
             Data.a=[1 2 3];
@@ -68,7 +69,6 @@ classdef mlunit_test_xmlloadsave < mlunitext.test_case
             self.xmlsave(self.fileName,SData);
             SRes=xmlload(self.fileName);
             mlunit.assert_equals(isequalwithequalnans(SRes,SData),true);
-            delete(self.fileName);
         end
         function testNegative(self)
             checkN(handle([1,2]));
