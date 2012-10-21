@@ -14,9 +14,12 @@ classdef Log4jConfigurator<handle
     % or configureInternal will result in a warning with no configuration
     % change, until unlockConfiguration is called.
     %
-    % $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-    % Faculty of Computational Mathematics and Cybernetics, System Analysis
-    % Department, 7-October-2012, <pgagarinov@gmail.com>$
+    %
+    % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-05-21 $ 
+    % $Copyright: Moscow State University,
+    %            Faculty of Computational Mathematics and Computer Science,
+    %            System Analysis Department 2011 $
+    %
 
     properties (Constant,Abstract)
         MASTER_LOG_FILE_NAME

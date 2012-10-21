@@ -20,8 +20,12 @@ function meObj=throwerror(msgTag,varargin)
 % Department, 7-October-2012, <pgagarinov@gmail.com>$
 %
 import modgen.common.*;
+if nargin>1
+    varargin{1}=strrep(varargin{1},'\','\\');
+end
 callerName=getcallername(2,'full');
 callerName=strrep(callerName,'.',':');
+
 meObj=MException([upper(callerName),':',msgTag],varargin{:});
 if nargout==0
     throwAsCaller(meObj);

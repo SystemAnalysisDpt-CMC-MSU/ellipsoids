@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<root version="103" xml_tb_version="2.0" type="struct" >
+<valueObj type="struct" >
+	<alpha type="double" >1</alpha>
+	<beta type="double" >2</beta>
+</valueObj>
+<keyStr type="char" >def</keyStr>
+</root>

@@ -12,11 +12,17 @@ function throwwarn(msgTag,varargin)
 %       same inputs as in error function
 %       ...
 %
-% $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-% Faculty of Computational Mathematics and Cybernetics, System Analysis
-% Department, 7-October-2012, <pgagarinov@gmail.com>$
+%
+% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2012-05-25 $ 
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2012 $
+%
 %
 import modgen.common.*;
+if nargin>1
+    varargin{1}=strrep(varargin{1},'\','\\');
+end
 callerName=getcallername(2,'full');
 callerName=strrep(callerName,'.',':');
 warnMsg=[upper(callerName),':',msgTag];

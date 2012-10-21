@@ -3,9 +3,12 @@ function jobObj = dfevalasync(dfcn, numArgOut, varargin)
 % additional property called 'clustersize' which specifies a maximum number
 % of workers on the system
 %
-% $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-% Faculty of Computational Mathematics and Cybernetics, System Analysis
-% Department, 7-October-2012, <pgagarinov@gmail.com>$
+%
+% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-03-31 $ 
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2011 $
+%
 %
 % Check arguments
 error(nargoutchk(1,1,nargout, 'struct'))
