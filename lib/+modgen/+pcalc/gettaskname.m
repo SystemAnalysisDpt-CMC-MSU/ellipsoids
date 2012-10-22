@@ -12,9 +12,12 @@ function [taskName,SProp]=gettaskname()
 %       taskId: numerical[1,1] - number of child task
 %       taskName: char[1,] - same as above
 %       
-% $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-% Faculty of Computational Mathematics and Cybernetics, System Analysis
-% Department, 7-October-2012, <pgagarinov@gmail.com>$
+%
+% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-03-29 $ 
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2011 $
+%
 %
 curTaskObj=getCurrentTask();
 isMain=isempty(curTaskObj);
@@ -33,4 +36,3 @@ end
 SProp.isMain=isMain;
 SProp.taskId=taskId;
 SProp.taskName=taskName;
-

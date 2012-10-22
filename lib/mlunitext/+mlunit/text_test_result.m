@@ -205,7 +205,16 @@ classdef text_test_result < mlunit.test_result
                 mlunit.logprintf('info','%s', errors{i, 2});
             end;
         end
-
+        %
+        function message=getErrorFailMessage(self)
+            nRes=length(self);
+            messageList=cell(1,nRes);
+            for iRes=1:nRes
+                messageList{iRes}=evalc('print_errors(self(iRes))');
+            end
+            message=[messageList{:}];
+        end  
+        %
         function print_errors(self)
             % PRINT_ERRORS writes the description of all 
             % errors and failures to the textOutFid.
