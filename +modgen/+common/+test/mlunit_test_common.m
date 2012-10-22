@@ -1349,16 +1349,18 @@ classdef mlunit_test_common < mlunitext.test_case
             checkTime(inpMat,100);
             
             function checkTime(inpMat,nRuns) %#ok<INUSL>
-                maxTolerance=0.25;
+                MAX_TOLERANCE=0.25;
                 outMat1=[];
                 indForwardVec1=[];
                 indBackwardVec1=[];
                 outMat2=[];
                 indForwardVec2=[];
                 indBackwardVec2=[];
-                time1=self.runAndCheckTime('[outMat1,indForwardVec1,indBackwardVec1]=uniquejoint({inpMat},1,''optimized'');',...
+                time1=self.runAndCheckTime(...
+                    '[outMat1,indForwardVec1,indBackwardVec1]=uniquejoint({inpMat},1,''optimized'');',...
                     'nRuns',nRuns,'useMedianTime',true);
-                time2=self.runAndCheckTime('[outMat2,indForwardVec2,indBackwardVec2]=uniquejoint({inpMat},1,''standard'');',...
+                time2=self.runAndCheckTime(...
+                    '[outMat2,indForwardVec2,indBackwardVec2]=uniquejoint({inpMat},1,''standard'');',...
                     'nRuns',nRuns,'useMedianTime',true);
                 mlunit.assert_equals(true,isequal(outMat1,outMat2));
                 mlunit.assert_equals(true,isequal(indForwardVec1,indForwardVec2));
@@ -1371,8 +1373,8 @@ classdef mlunit_test_common < mlunitext.test_case
                 mlunit.assert_equals(true,isequal(indBackwardVec1,indBackwardVec2));
                 curTolerance=max(max(time1/time2,time2/time1)-1,0);
                 messageStr=sprintf('Ratio error %f between chosen and mininal exceeds maximal one %f',...
-                    curTolerance,maxTolerance);
-                mlunit.assert_equals(true,curTolerance<maxTolerance,messageStr);
+                    curTolerance,MAX_TOLERANCE);
+                mlunit.assert_equals(true,curTolerance<MAX_TOLERANCE,messageStr);
             end
         end
         function self=test_ismemberjoint_performance(self)
@@ -1396,26 +1398,29 @@ classdef mlunit_test_common < mlunitext.test_case
             checkTime(inpMat1,inpMat2,10);
             
             function checkTime(inpMat1,inpMat2,nRuns) %#ok<INUSL>
-                maxTolerance=0.2;
+                MAX_TOLERANCE=0.25;
                 isMemberVec1=[];
                 indMemberVec1=[];
                 isMemberVec2=[];
                 indMemberVec2=[];
-                time1=self.runAndCheckTime('[isMemberVec1,indMemberVec1]=ismemberjoint({inpMat1},{inpMat2},1,''optimized'');',...
+                time1=self.runAndCheckTime(...
+                    '[isMemberVec1,indMemberVec1]=ismemberjoint({inpMat1},{inpMat2},1,''optimized'');',...
                     'nRuns',nRuns,'useMedianTime',true);
-                time2=self.runAndCheckTime('[isMemberVec2,indMemberVec2]=ismemberjoint({inpMat1},{inpMat2},1,''standard'');',...
+                time2=self.runAndCheckTime(...
+                    '[isMemberVec2,indMemberVec2]=ismemberjoint({inpMat1},{inpMat2},1,''standard'');',...
                     'nRuns',nRuns,'useMedianTime',true);
                 mlunit.assert_equals(true,isequal(isMemberVec1,isMemberVec2));
                 mlunit.assert_equals(true,isequal(indMemberVec1,indMemberVec2));
                 time1=min(time1,time2);
-                time2=self.runAndCheckTime('[isMemberVec2,indMemberVec2]=ismemberjoint({inpMat1},{inpMat2},1);',...
+                time2=self.runAndCheckTime(...
+                    '[isMemberVec2,indMemberVec2]=ismemberjoint({inpMat1},{inpMat2},1);',...
                     'nRuns',nRuns,'useMedianTime',true);
                 mlunit.assert_equals(true,isequal(isMemberVec1,isMemberVec2));
                 mlunit.assert_equals(true,isequal(indMemberVec1,indMemberVec2));
                 curTolerance=max(max(time1/time2,time2/time1)-1,0);
                 messageStr=sprintf('Ratio error %f between chosen and mininal exceeds maximal one %f',...
-                    curTolerance,maxTolerance);
-                mlunit.assert_equals(true,curTolerance<maxTolerance,messageStr);
+                    curTolerance,MAX_TOLERANCE);
+                mlunit.assert_equals(true,curTolerance<MAX_TOLERANCE,messageStr);
             end
         end
     end
