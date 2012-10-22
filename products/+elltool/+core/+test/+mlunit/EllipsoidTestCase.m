@@ -238,7 +238,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
             nDim = 2;
             testEllipsoid = ellipsoid([100, -100]', eye(nDim));
             testHyperPlane = hyperplane([0 -1]', 1);
-            self.runAndCheckError('hpintersection(testEllipsoid, testHyperPlane)','degenerateEllipsoid');
+            self.runAndCheckError('resEllipsoid = hpintersection(testEllipsoid, testHyperPlane)','degenerateEllipsoid');
             
             nDim = 2;
             testEllipsoid = ellipsoid(eye(nDim));
@@ -310,7 +310,41 @@ classdef EllipsoidTestCase < mlunitext.test_case
             answerEllipsoidMatrix(1) = 0;
             answerEllipsoid = ellipsoid(zeros(nDim, 1), answerEllipsoidMatrix);
             mlunit.assert_equals(1, eq(resEllipsoid, answerEllipsoid));
-
+            
+            
+            %two output arguments
+            nDim = 2;
+            testEllipsoid = ellipsoid([100, -100]', eye(nDim));
+            testHyperPlane = hyperplane([0 -1]', 1);
+            [resEllipsoid, isIntersected] = hpintersection(testEllipsoid, testHyperPlane);
+            answerEllipsoid = ellipsoid;
+            mlunit.assert_equals(1, eq(resEllipsoid, answerEllipsoid));
+            mlunit.assert_equals(true, isIntersected);
+            
+            
+            %wrong dimension
+            for iDim = 1:2
+                for jDim = 1:2
+                    for kDim = 1:2
+                        testEllipsoidArray(iDim, jDim, kDim) = ellipsoid(eye(3));
+                    end;
+                end;
+            end;
+            
+            testHyperPlane = hyperplane([0, 0, 1]', 2);
+            self.runAndCheckError('resEllipsoid = hpintersection(testEllipsoidArray, testHyperPlane)','Wrong_input');
+            
+            for iDim = 1:2
+                for jDim = 1:2
+                    for kDim = 1:2
+                        testHyperPlaneArray(iDim, jDim, kDim) = hyperplane([0, 0, 1]', 2);
+                    end;
+                end;
+            end;
+            
+            testEllipsoid = ellipsoid(eye(3));
+            self.runAndCheckError('resEllipsoid = hpintersection(testEllipsoidArray, testHyperPlane)','Wrong_input');
+            
         end
     end
         

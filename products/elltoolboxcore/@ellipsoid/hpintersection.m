@@ -1,4 +1,4 @@
-function I = hpintersection(E, H)
+function [I, isnIntersectedMat] = hpintersection(E, H)
 %
 % HPINTERSECTION - computes the intersection of ellipsoid with hyperplane.
 %
@@ -41,7 +41,13 @@ function I = hpintersection(E, H)
   if ~(isa(E, 'ellipsoid')) | ~(isa(H, 'hyperplane'))
     error('HPINTERSECTION: first argument must be ellipsoid, second argument - hyperplane.');
   end 
-
+  isnIntersectedMat = false;
+  if ndims(E) ~= 2
+      modgen.common.throwerror('Wrong_input','The dimension of input must be 2');
+  end;
+  if ndims(H) ~= 2
+       modgen.common.throwerror('Wrong_input','The dimension of input must be 2');
+  end;
   [m, n] = size(E);
   [k, l] = size(H);
   t1     = m * n;
@@ -78,7 +84,11 @@ function I = hpintersection(E, H)
       for j = 1:n
         if distance(E(i, j), H(i, j)) > 0
           Q = [Q ellipsoid];
-          modgen.common.throwerror('degenerateEllipsoid','Hypeplane doesn''t intersect ellipsoid');
+          if (nargout == 1)
+            modgen.common.throwerror('degenerateEllipsoid','Hypeplane doesn''t intersect ellipsoid');
+          else
+            isnIntersectedMat = true;
+          end;
 	else
           Q = [Q l_compute1intersection(E(i, j), H(i, j), mx1)];
 	end
@@ -103,7 +113,11 @@ function I = hpintersection(E, H)
       for j = 1:l
         if distance(E, H(i, j)) > 0
           Q = [Q ellipsoid];
-          modgen.common.throwerror('degenerateEllipsoid','Hypeplane doesn''t intersect ellipsoid');
+          if (nargout == 1)
+            modgen.common.throwerror('degenerateEllipsoid','Hypeplane doesn''t intersect ellipsoid');
+          else
+            isnIntersectedMat = true;
+          end;
 	else
           Q = [Q l_compute1intersection(E, H(i, j), mx1)];
 	end
