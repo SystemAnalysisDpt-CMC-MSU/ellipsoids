@@ -54,6 +54,6 @@ set myDate=%date:~10,4%-%date:~4,2%-%date:~7,2%
 echo %0: Launching Matlab...
 MATLAB "%matlabBin%" -sd "%mDir%" -singleCompThread ^
  -logfile %logDir%\run_tests_remotely.%runMarker%.%myDate%_%myTime%.log ^
- -wait -r "try, cd %deploymentDir%, s_install, cd %mDir%, %mFile%, exit, catch, exit, end"
+ -wait -r "try, cd %deploymentDir%, s_install, cd %svnRoot%, %mFile%, exit, catch, exit, end"
 
 echo ==== %0: %date% %time% Done! =====
