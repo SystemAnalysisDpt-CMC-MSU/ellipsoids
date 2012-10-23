@@ -187,7 +187,50 @@ classdef EllipsoidTestCase < mlunitext.test_case
             mlunit.assert_equals(0, sin(0));
         end
         function self = testEllintersectionIa(self)
-            mlunit.assert_equals(0, sin(0));
+            nDim = 10;
+            nArr = 15;
+            eyeEllipsoid = ellipsoid(eye(nDim));
+            for iArr = 1:nArr
+                testEllipsoid(iArr) = eyeEllipsoid;
+            end;
+            resEllipsoid = ellintersection_ia(testEllipsoid);
+            answerEllipsoid = eyeEllipsoid;
+            mlunit.assert_equals(1, eq(resEllipsoid, answerEllipsoid));
+            
+            clear;
+            
+            nDim = 2;
+            testEllipsoid(1) = ellipsoid(eye(nDim));
+            testEllipsoid(2) = ellipsoid([1, 0].', eye(nDim));
+            resEllipsoid = ellintersection_ia(testEllipsoid);
+
+            answerEllipsoid = ellipsoid([0.5, 0]', [0.235394505823186, 0; 0, 0.578464829541428]);
+            mlunit.assert_equals(1, eq(resEllipsoid, answerEllipsoid));
+            
+            clear;
+            nDim = 2;
+            testEllipsoid(1) = ellipsoid(eye(nDim));
+            testEllipsoid(2) = ellipsoid([1, 0].', eye(nDim));
+            testEllipsoid(3) = ellipsoid([0, 1].', eye(nDim));
+            resEllipsoid = ellintersection_ia(testEllipsoid);
+            answerEllipsoidCenter = [0.407334088244713, 0.407334086547540].';
+            answerEllipsoidMatrix = [0.125814751017434, 0.053912585874054; 0.053912585874054, 0.125814748979735];
+            answerEllipsoid = ellipsoid(answerEllipsoidCenter, answerEllipsoidMatrix);
+            mlunit.assert_equals(1, eq(resEllipsoid, answerEllipsoid));
+            
+            
+            clear;
+            nDim = 3;
+            testEllipsoid(1) = ellipsoid(eye(nDim));
+            testEllipsoid(2) = ellipsoid([1, 0.5, -0.5].', [2, 0, 0; 0, 1, 0; 0, 0, 0.5]);
+            testEllipsoid(3) = ellipsoid([0.5, 0.3, 1].', [0.5, 0, 0; 0, 0.5, 0; 0, 0, 2]);
+            resEllipsoid = ellintersection_ia(testEllipsoid);
+            
+            answerEllipsoidCenter = [0.513846517075189, 0.321868721330990, -0.100393450228106].';
+            answerEllipsoidMatrix = [0.156739727326948, -0.005159338786834, 0.011041318375176; -0.005159338786834, 0.161491682085078, 0.014052111019755; 0.011041318375176, 0.014052111019755, 0.062235791525665];
+            answerEllipsoid = ellipsoid(answerEllipsoidCenter, answerEllipsoidMatrix);
+            mlunit.assert_equals(1, eq(resEllipsoid, answerEllipsoid));
+            
         end
         function self = testEllunionEa(self)
             nDim = 10;
@@ -205,8 +248,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
             testEllipsoid(1) = ellipsoid(eye(nDim));
             testEllipsoid(2) = ellipsoid([1, 0].', eye(nDim));
             resEllipsoid = ellunion_ea(testEllipsoid);
-            
-   
+              
             answerEllipsoid = ellipsoid([0.5, 0].', [2.389605510164642, 0; 0, 1.296535157845836]);
             mlunit.assert_equals(1, eq(resEllipsoid, answerEllipsoid));
             
@@ -221,7 +263,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
             mlunit.assert_equals(1, eq(resEllipsoid, answerEllipsoid));
         
             nDim = 3;
-            testEllipsoid(1) = ellipsoid(eye(3));
+            testEllipsoid(1) = ellipsoid(eye(nDim));
             testEllipsoid(2) = ellipsoid([1, 0.5, -0.5].', [2, 0, 0; 0, 1, 0; 0, 0, 0.5]);
             testEllipsoid(3) = ellipsoid([0.5, 0.3, 1].', [0.5, 0, 0; 0, 0.5, 0; 0, 0, 2]);
             resEllipsoid = ellunion_ea(testEllipsoid);

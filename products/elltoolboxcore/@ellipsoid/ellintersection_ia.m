@@ -83,7 +83,7 @@ function [E, S] = ellintersection_ia(EE)
     cnstr = cnstr + set('X>=0');
     cnstr = cnstr + set('ll(i, 1)>=0');
   end
-
+  ellOptions.sdpsettings = sdpsettings('solver','sedumi','sedumi.eps',1e-17);
   S = solvesdp(cnstr, -logdet(B), ellOptions.sdpsettings);
   B = double(B);
   d = double(d);
@@ -93,7 +93,7 @@ function [E, S] = ellintersection_ia(EE)
   end
 
   P = B * B';
-  P = (1-ellOptions.abs_tol)*0.5*(P + P');
+  P = 0.5*(P + P');
 
   E = ellipsoid(d, P);
 
