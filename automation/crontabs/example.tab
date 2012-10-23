@@ -1,0 +1,3 @@
+SET SVNDIRTEST=C:\SVN_Local\EllTrunk
+# Run tests
+*/30 * * * * %SVNDIRTEST%\automation\run_matlab_tests_E1.bat >> %SVNDIRTEST%\automation\cron\cron_%YYYY%-%MM%-%DD%_%hh%-%mm%-%ss%.log 2>&1

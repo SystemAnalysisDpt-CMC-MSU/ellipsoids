@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<root version="103" xml_tb_version="2.0" type="struct" >
+<valueObj type="struct" >
+	<alpha type="struct" >
+		<beta type="cell" size="2 1">
+			<item type="char" >aaa+bbb</item>
+			<item type="char" >aa+bbbb</item>
+		</beta>
+	</alpha>
+	<alpha1 type="cell" size="2 1">
+		<item type="char" >aaa2312103+bbb2312103</item>
+		<item type="char" >aa2312103+bbbb2312103</item>
+	</alpha1>
+	<alpha2 type="struct" size="2 3">
+		<a idx="1" type="cell" size="2 1">
+			<item type="char" >aaa11spoil+bbb11spoil</item>
+			<item type="char" >aa11spoil+bbbb11spoil</item>
+		</a>
+		<a idx="2" type="double" size="0 0"/> 
+		<a idx="3" type="double" size="0 0"/> 
+		<a idx="4" type="double" size="0 0"/> 
+		<a idx="5" type="double" size="0 0"/> 
+		<a idx="6" type="cell" size="2 1">
+			<item type="char" >aaa23+bbb23</item>
+			<item type="char" >aa23+bbbb23</item>
+		</a>
+	</alpha2>
+	<alpha3 type="double" >104</alpha3>
+	<alpha4 type="cell" size="3 1">
+		<item type="char" >a</item>
+		<item type="char" >b</item>
+		<item type="char" >c</item>
+	</alpha4>
+	<alpha5 type="double" size="3 1">1001 2001 3001</alpha5>
+</valueObj>
+<keyStr type="char" >def</keyStr>
+</root>
