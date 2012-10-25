@@ -3,7 +3,7 @@ function result = run_tests(varargin)
     loader = mlunitext.test_loader;
     suiteBasic =...
         loader.load_tests_from_test_case(...
-        'elltool.reach.test.mlunit.BasicTestCase', varargin{:});
+        'elltool.reach.test.mlunit.ReachTestCase', varargin{:});
     %
     suite = mlunit.test_suite(suiteBasic.tests);
     %
