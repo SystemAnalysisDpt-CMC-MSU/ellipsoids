@@ -96,7 +96,7 @@ else
 end
 
 %a directory, where backtest stores its cached sqlqueries
-Data.dConf.backtest.input.gen.dumpDir=[pwd filesep 'DumpBKT' filesep];
+Data.dConf.backtest.input.gen.dumpDir=['test' filesep 'DumpBKT' filesep];
 
 Data.dConf.backtest.gen.isRecoveredFromDump=0;
 % options of saving results of experiments (used in behavioral testing
@@ -109,18 +109,18 @@ Data.dConf.backtest.gen.isSavedToFile=1; % save in .exps file
 Data.dConf.backtest.gen.resPathList={'gen','portfolio','pair.positions','asset.positions'};
 % directory in which results of experiments will be stored
 %
-Data.dConf.backtest.gen.resDir=[pwd filesep '..' filesep '..' filesep 'EExplorer/Experiment_base' filesep];
+Data.dConf.backtest.gen.resDir=['test' filesep '..' filesep '..' filesep 'EExplorer/Experiment_base' filesep];
 %
 %% backtest sharing setting
 % if true, skip sharing,
 Data.dConf.backtest.calc.sharing.isSharing=0;
-Data.dConf.backtest.calc.sharing.sharingFolder=[pwd filesep 'DumpBKT\share'];
+Data.dConf.backtest.calc.sharing.sharingFolder=['test' filesep 'DumpBKT\share'];
 % do perform some testing checks upon sharing,
 Data.dConf.backtest.calc.sharing.isTestMode=0;
 
 %% backtest sql caching setting
 
-Data.dConf.backtest.input.database.sqlCaching.cacheDir=[pwd filesep 'DumpBKT/sql' filesep];
+Data.dConf.backtest.input.database.sqlCaching.cacheDir=['test' filesep 'DumpBKT/sql' filesep];
 Data.dConf.backtest.input.database.sqlCaching.isCaching=0;
 %
 %% Do not place on GUI
