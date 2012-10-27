@@ -5,7 +5,7 @@ classdef mock_test_not_instantiated < mlunit_test.mock_test
     %  Example: See TEST_REFLECT.TEST_GET_METHOD.
 
     % $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-    % Faculty of Applied Mathematics and Cybernetics, System Analysis
+    % Faculty of Computational Mathematics and Cybernetics, System Analysis
     % Department, 7-October-2012, <pgagarinov@gmail.com>$
 
     methods

@@ -40,7 +40,7 @@ classdef test_case < mlunit.test_case
             %          end of test runs     
             %
             % $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-            % Faculty of Applied Mathematics and Cybernetics, System Analysis
+            % Faculty of Computational Mathematics and Cybernetics, System Analysis
             % Department, 7-October-2012, <pgagarinov@gmail.com>$
             %
             [reg,prop]=modgen.common.parseparams(varargin,...
@@ -89,13 +89,13 @@ classdef test_case < mlunit.test_case
             catch meObj
                 if (nargin == 1)
                     result = default_test_result(self);
-                end;
+                end
                 
                 result = start_test(result, self);
                 
-                result = add_error_with_stack(result, self, meObj);
+                result = add_error(result, self, meObj);
                 return;
-            end;
+            end
         end
         function self = set_up_param(self,varargin)
             
@@ -123,7 +123,7 @@ classdef test_case < mlunit.test_case
             %          checked)
             %
             % $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-            % Faculty of Applied Mathematics and Cybernetics, System Analysis
+            % Faculty of Computational Mathematics and Cybernetics, System Analysis
             % Department, 7-October-2012, <pgagarinov@gmail.com>$
             %
             [reg,~,causeCheckDepth]=...
@@ -191,7 +191,7 @@ classdef test_case < mlunit.test_case
             %           time of calculation is returned for all runs
             %
             % $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-            % Faculty of Applied Mathematics and Cybernetics, System Analysis
+            % Faculty of Computational Mathematics and Cybernetics, System Analysis
             % Department, 7-October-2012, <pgagarinov@gmail.com>$
             %
             [reg,~,nRuns,useMedianTime]=...

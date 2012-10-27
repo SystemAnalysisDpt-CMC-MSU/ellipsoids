@@ -10,9 +10,12 @@ function [uuidStr, leastSignificantBits, mostSignificantBits] = getuuid()
 %   mostSignificantBits: int64[1,1] - most significant 64 bits of this
 %     UUID's 128 bit value
 %
-% $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-% Faculty of Applied Mathematics and Cybernetics, System Analysis
-% Department, 7-October-2012, <pgagarinov@gmail.com>$
+%
+% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-03-29 $ 
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2011 $
+%
 
 uuid = java.util.UUID.randomUUID();
 uuidStr = char( uuid.toString() );

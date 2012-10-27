@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<root version="" xml_tb_version="2.0" type="struct" >
+<valueObj type="struct" >
+	<dConf type="struct" >
+        <gen type="struct" >
+            <curRevision type="double" >19641</curRevision>
+        </gen>
+	</dConf>
+</valueObj>
+<keyStr type="char" >testConfA</keyStr>
+</root>

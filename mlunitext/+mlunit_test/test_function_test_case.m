@@ -5,7 +5,7 @@ classdef test_function_test_case < mlunitext.test_case
     %         run(gui_test_runner, 'test_function_test_case');
 
     % $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-    % Faculty of Applied Mathematics and Cybernetics, System Analysis
+    % Faculty of Computational Mathematics and Cybernetics, System Analysis
     % Department, 7-October-2012, <pgagarinov@gmail.com>$
 
     properties
@@ -27,11 +27,11 @@ classdef test_function_test_case < mlunitext.test_case
 
             import mlunitext.*;
 
-            test = function_test_case(@() assert(1), 0, 0);
+            test = function_test_case(@() assert(1), @()0, @()0);
             result = run(test);
             assert_equals(1, get_tests_run(result));
         end
-
+        %
         function self = test_run(self)
             %test_function_test_case/test_fixture tests the run method of
             %function_test_case.

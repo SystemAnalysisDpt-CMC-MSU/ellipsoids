@@ -14,11 +14,12 @@ function outCMat = sepcellstrbysep(inpCVec,sepStr)
 %       
 % Note: this function is an inversion of catcellstrwithsep
 %
-% $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-% Faculty of Applied Mathematics and Cybernetics, System Analysis
-% Department, 7-October-2012, <pgagarinov@gmail.com>$
+%
+% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-06-05 $ 
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2011 $
+%
 %
 outCVec=cellfun(@(x)strsplit(x,sepStr),inpCVec,'UniformOutput',false);
 outCMat=vertcat(outCVec{:});
-
-

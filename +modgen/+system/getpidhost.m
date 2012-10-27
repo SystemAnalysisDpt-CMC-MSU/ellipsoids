@@ -7,9 +7,12 @@ function [pidHostStr,pidVal,hostName]=getpidhost()
 %   pid: double[1,1] - pid of current Matlab instance
 %   hostName: char[1,] - host name
 %
-% $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-% Faculty of Applied Mathematics and Cybernetics, System Analysis
-% Department, 7-October-2012, <pgagarinov@gmail.com>$
+%
+% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-03-29 $ 
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2011 $
+%
 %
 pidHostStr=char(...
     java.lang.management.ManagementFactory.getRuntimeMXBean().getName());

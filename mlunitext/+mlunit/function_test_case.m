@@ -7,35 +7,43 @@ classdef function_test_case < mlunit.test_case
     %  See also MLUNIT.TEST_CASE.
     %
     % $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-    % Faculty of Applied Mathematics and Cybernetics, System Analysis
+    % Faculty of Computational Mathematics and Cybernetics, System Analysis
     % Department, 7-October-2012, <pgagarinov@gmail.com>$
     
     properties
-        set_up_function
-        tear_down_function
-        test_function
+        fSetUp
+        fTearDown
+        fTest
     end
-    
+    %
     methods
-        function self = function_test_case(test_function, ...
-                set_up_function, tear_down_function)
+        function self = function_test_case(fTest, ...
+                fSetUp, fTearDown)
+            import modgen.common.type.simple.checkgen;
             if (nargin == 0)
-                test_function = @() 0;
-            end;
-            if (nargin <= 1)
-                set_up_function = @() 0;
-                tear_down_function = @() 0;
-            elseif (nargin == 2)
-                tear_down_function = @() 0;
-            end;
-            
-            self.test_function = test_function;
-            self.set_up_function = set_up_function;
-            self.tear_down_function = tear_down_function;
+                fTest = @()0;
+            else
+                checkgen(fTest,'isfunction(x)');
+                if nargin ==1
+                    fSetUp = @()0;
+                    fTearDown = @()0;
+                else
+                    checkgen(fSetUp,'isfunction(x)');
+                    if nargin == 2
+                        fTearDown = @()0;
+                    else
+                        checkgen(fTearDown,'isfunction(x)');
+                    end
+                end
+            end
+            %
+            self.fTest = fTest;
+            self.fSetUp = fSetUp;
+            self.fTearDown = fTearDown;
         end
         
         function self = run_test(self)
-            %function_test_case.run_test calls the test_function by the
+            %function_test_case.run_test calls the fTest by the
             %function handle.
             %
             %  Example:
@@ -48,12 +56,12 @@ classdef function_test_case < mlunit.test_case
             %         summary(result)
             %
             %  See also MLUNIT.TEST_CASE.
-            
-            self.test_function();
+            %
+            self.fTest();
         end
         
         function self = set_up(self)
-            %function_test_case.set_up calls the set_up_function every
+            %function_test_case.set_up calls the fSetUp every
             %time before a test is executed. Its purpose is to set up the
             %fixture.
             %
@@ -62,9 +70,9 @@ classdef function_test_case < mlunit.test_case
             %    test_case.run.
             %
             %  See also MLUNIT.TEST_CASE, MLUNIT.TEST_CASE.RUN.
-            
-            if isa(self.set_up_function, 'function_handle')
-                self.set_up_function();
+            %
+            if isa(self.fSetUp, 'function_handle')
+                self.fSetUp();
             end;
         end
         
@@ -83,11 +91,11 @@ classdef function_test_case < mlunit.test_case
             %           >> test.str
             %           test_method(function_test_case)
             
-            s = [func2str(self.test_function), '(', class(self), ')'];
+            s = [func2str(self.fTest), '(', class(self), ')'];
         end
         
         function self = tear_down(self)
-            %function_test_case.tear_down calls the tear_down_function,
+            %function_test_case.tear_down calls the fTearDown,
             %every time after a test is executed. Its purpose is to clean
             %up the fixture.
             %
@@ -97,8 +105,8 @@ classdef function_test_case < mlunit.test_case
             %
             %  See also MLUNIT.TEST_CASE, MLUNIT.TEST_CASE.RUN.
             
-            if isa(self.tear_down_function, 'function_handle')
-                self.tear_down_function();
+            if isa(self.fTearDown, 'function_handle')
+                self.fTearDown();
             end;
         end
     end

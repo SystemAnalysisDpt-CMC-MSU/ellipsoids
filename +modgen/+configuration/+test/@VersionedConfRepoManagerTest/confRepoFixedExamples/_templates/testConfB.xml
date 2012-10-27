@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<!-- written on 10-Dec-2009 20:40:37 -->
+<root version="0" xml_tb_version="2.0" type="struct" >
+<valueObj type="struct" >
+	<alpha type="double" >0</alpha>
+	<beta type="double" >0</beta>
+</valueObj>
+<keyStr type="char" >testConfB</keyStr>
+</root>

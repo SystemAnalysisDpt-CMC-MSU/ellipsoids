@@ -143,4 +143,3 @@ classdef EmailLogger<handle
         end
     end
 end
-
