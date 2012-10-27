@@ -3,10 +3,6 @@ function [error, stacktrace] = parsemessage(error, stacktrace)
 % further information for the stacktrace.
 %
 
-% $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-% Faculty of Applied Mathematics and Cybernetics, System Analysis
-% Department, 12-October-2012, <pgagarinov@gmail.com>$
-
 if (~isempty(strfind(error, 'Unbalanced or misused parentheses or brackets.')) || ...
         ~isempty(strfind(error, 'Unbalanced or unexpected parenthesis or bracket.')))
     [tokens] = regexp(error, 'Error:.*File:\ ([\w\ \.,$&/\\:@]*.m)\ Line: (\w*)\ Column: (\w*).*', 'tokens', 'once');

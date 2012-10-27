@@ -47,4 +47,3 @@ classdef EmailLoggerBuilder
         end
     end
 end
-

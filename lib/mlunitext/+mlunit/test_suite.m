@@ -18,7 +18,7 @@ classdef test_suite < handle
     %  See also MLUNIT.TEST_CASE, MLUNIT.TEST_LOADER, MLUNIT.TEST_RESULT.
     
     % $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-    % Faculty of Applied Mathematics and Cybernetics, System Analysis
+    % Faculty of Computational Mathematics and Cybernetics, System Analysis
     % Department, 7-October-2012, <pgagarinov@gmail.com>$
     
     properties (Access=private)
@@ -85,7 +85,7 @@ classdef test_suite < handle
             %       instead of the tests in the original suite
             %
             % $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-            % Faculty of Applied Mathematics and Cybernetics, System Analysis
+            % Faculty of Computational Mathematics and Cybernetics, System Analysis
             % Department, 7-October-2012, <pgagarinov@gmail.com>$
             
             [reg,prop]=modgen.common.parseparams(varargin);

@@ -2,15 +2,17 @@ classdef TmpDataManager<modgen.io.TmpDataManager
     % TMPDATAMANAGER provides a basic functionality for managing temporary
     % data folders, root folder name is determined automatically
     %
-    % $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-    % Faculty of Applied Mathematics and Cybernetics, System Analysis
-    % Department, 7-October-2012, <pgagarinov@gmail.com>$    
-    %
     methods (Static)
         function setRootDir()
-            curFilePath=which('modgen.test.run_tests');
+            ANCHOR_FILE_NAME='modgen.test.run_public_tests';
+            curFilePath=which(ANCHOR_FILE_NAME);
+            if isempty(curFilePath)
+                modgen.common.throwerror('anchorNotFound',...
+                    sprintf('location of anchor file %s not found',...
+                    curFilePath));
+            end
             %
-            dirName=[rmlastnpathparts(...
+            dirName=[modgen.path.rmlastnpathparts(...
                 curFilePath,3),...
                 filesep,'TTD'];
             %
@@ -26,6 +28,13 @@ classdef TmpDataManager<modgen.io.TmpDataManager
             %
             % Output:
             %   resDir: char[1,] - resulting directory name
+            %
+            %
+            % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-05-18 $ 
+            % $Copyright: Moscow State University,
+            %            Faculty of Computational Mathematics and Computer Science,
+            %            System Analysis Department 2011 $
+            %
             %
             modgen.test.TmpDataManager.setRootDir();
             %
@@ -43,7 +52,7 @@ classdef TmpDataManager<modgen.io.TmpDataManager
             % Output:
             %   resDir: char[1,] - resulting directory name
             %
-
+            %
             if nargin<1
                 keyName='';
             end
@@ -53,4 +62,3 @@ classdef TmpDataManager<modgen.io.TmpDataManager
         end
     end
 end
-

@@ -18,9 +18,12 @@ function [isThereVec,indLocVec]=ismembercellstr(aList,bList,isHigherIndexUsed)
 %   indLocVec: double[1,nAElem] - contains indices for those elements of
 %   aList for which... (see above) and zero otherwise
 %
-% $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-% Faculty of Applied Mathematics and Cybernetics, System Analysis
-% Department, 7-October-2012, <pgagarinov@gmail.com>$
+%
+% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-05-08 $ 
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2011 $
+%
 %
 if nargin==2
     isHigherIndexUsed=false;

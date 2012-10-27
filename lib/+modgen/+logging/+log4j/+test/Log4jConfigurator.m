@@ -32,4 +32,3 @@ classdef Log4jConfigurator<modgen.logging.log4j.Log4jConfigurator
         end
     end
 end
-

@@ -39,7 +39,7 @@ classdef test_suite<mlunit.test_suite
             %           end of test runs
             %
             % $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-            % Faculty of Applied Mathematics and Cybernetics, System Analysis
+            % Faculty of Computational Mathematics and Cybernetics, System Analysis
             % Department, 7-October-2012, <pgagarinov@gmail.com>$
             %
             [reg,prop]=modgen.common.parseparams(varargin,...

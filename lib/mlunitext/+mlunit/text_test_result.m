@@ -1,7 +1,7 @@
 classdef text_test_result < mlunit.test_result
 % TEXT_TEST_RESULT class is inherited from test_result and prints
-%  formatted test results to a stream. The constructor creates an 
-%  object while the parameter verbosity defines, how much output is written. 
+%  formatted test results to a textOutFid. The constructor creates an 
+%  object while the parameter verbosityLevel defines, how much output is written. 
 %  Possible values are 0, 1 and 2. 
 %
 %  Example:
@@ -11,19 +11,46 @@ classdef text_test_result < mlunit.test_result
 %  See also MLUNIT.TEST_RESULT.
 
 % $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-% Faculty of Applied Mathematics and Cybernetics, System Analysis
+% Faculty of Computational Mathematics and Cybernetics, System Analysis
 % Department, 7-October-2012, <pgagarinov@gmail.com>$
 
     properties
-        stream = 0;
-        verbosity = 0;
-        dots = 0;
-        show_all = 0;
+        textOutFid = 0;
+        verbosityLevel = 0;
+        isDotDispMode = 0;
+        isAllShown = 0;
     end
 
     methods
         function self = text_test_result(varargin)
+            % TEXT_TEST_RESULT creates an instance of TEXT_TEST_RESULT
+            % class
+            %
+            % Case#1 (copy-constructor)
+            %   Input:
+            %       regular:
+            %           inpObj: mlunit.text_test_result[1,1] - an object to
+            %               copy
+            %
+            %   
+            % Case#2 (regular-constructor)
+            %   Input:
+            %       regular:
+            %           textOutFid: double[1,1] - integer fileId used by
+            %               internal fprintf command, textOutFid=1 will
+            %               cause all output to be printed to the console
+            %           verbosityLevel: double[1,1] - integer verbosity
+            %               level, can take one of the following three 
+            %               values: {0,1,2} where
+            %                   0 - nothing is displayed in console
+            %                   1 - only dots are displayed
+            %                   2 - maximum amount of information is
+            %                       displayed
+            %               
+            %
+            % 
             import modgen.common.throwerror;
+            import modgen.common.type.simple.checkgen;
             if nargin == 1
                 if ~isa(varargin{1},class(self))
                     throwerror('wrongInput',...
@@ -32,34 +59,43 @@ classdef text_test_result < mlunit.test_result
                 %
                 %% Copy constructor
                 %
-                self.stream = varargin{1}.stream;
-                self.verbosity = varargin{1}.verbosity;
-                self.dots = varargin{1}.dots;
-                self.show_all = varargin{1}.show_all;
+                self.textOutFid = varargin{1}.textOutFid;
+                self.verbosityLevel = varargin{1}.verbosityLevel;
+                self.isDotDispMode = varargin{1}.isDotDispMode;
+                self.isAllShown = varargin{1}.isAllShown;
             elseif nargin == 2
                 %% Regular constructor
                 %
-                self.stream = varargin{1};
-                self.verbosity = varargin{2};
-                if (self.verbosity == 1)
-                    self.dots = 1;
-                    self.show_all = 0;
-                elseif (self.verbosity > 1)
-                    self.dots = 0;
-                    self.show_all = 1;
+                textOutFid = varargin{1};
+                verbosityLevel = varargin{2};
+                %
+                checkgen(textOutFid,...
+                    @(x)isscalar(x)&&isa(x,'double')&&(x>0)&&(fix(x)==x));
+                checkgen(verbosityLevel,...
+                    @(x)isscalar(x)&&isa(x,'double')&&(x==0||x==1||x==2));
+                
+                self.textOutFid=textOutFid;
+                self.verbosityLevel=verbosityLevel;
+                %
+                if (self.verbosityLevel == 1)
+                    self.isDotDispMode = 1;
+                    self.isAllShown = 0;
+                elseif (self.verbosityLevel > 1)
+                    self.isDotDispMode = 0;
+                    self.isAllShown = 1;
                 else
-                    self.dots = 0;
-                    self.show_all = 0;
+                    self.isDotDispMode = 0;
+                    self.isAllShown = 0;
                 end;
             else
                 throwerror('wrongInput','Too many arguments');
             end
         end
 
-        function self = add_error(self, test, error)
+        function self = add_error_by_message(self, test, error)
             % ADD_ERROR calls the inherited method from 
-            % test_result and writes out an 'E' (verbosity == 1) or 'ERROR' 
-            % (verbosity == 2) to the stream.
+            % test_result and writes out an 'E' (verbosityLevel == 1) or 'ERROR' 
+            % (verbosityLevel == 2) to the textOutFid.
             %
             % Input:
             %   regular:
@@ -75,18 +111,19 @@ classdef text_test_result < mlunit.test_result
             %
             %  See also MLUNIT.TEST_RESULT.ADD_ERROR, MLUNIT.TEST_CASE.RUN.
 
-            self = add_error@mlunit.test_result(self, test, error);
-            if (self.dots)
-                fprintf(self.stream,'E');
-            elseif (self.show_all)
-                fprintf(self.stream,'ERROR\n');
+            self = add_error_by_message@mlunit.test_result(self,...
+                test, error);
+            if (self.isDotDispMode)
+                fprintf(self.textOutFid,'E');
+            elseif (self.isAllShown)
+                fprintf(self.textOutFid,'ERROR\n');
             end;
         end
 
-        function self = add_failure(self, test, failure)
+        function self = add_failure_by_message(self, test, failure)
             % ADD_FAILURE calls the inherited method from 
-            % test_result and writes out an 'F' (verbosity == 1) or 
-            % 'FAILURE' (verbosity == 2) to the stream.
+            % test_result and writes out an 'F' (verbosityLevel == 1) or 
+            % 'FAILURE' (verbosityLevel == 2) to the textOutFid.
             %
             % Input:
             %   regular:
@@ -103,18 +140,19 @@ classdef text_test_result < mlunit.test_result
             %  See also MLUNIT.TEST_RESULT.ADD_FAILURE, 
             %           MLUNIT.TEST_CASE.RUN.
 
-            self = add_failure@mlunit.test_result(self, test, failure);
-            if (self.dots)
-                fprintf(self.stream,'F');
-            elseif (self.show_all)
-                fprintf(self.stream,'FAIL\n');
+            self = add_failure_by_message@mlunit.test_result(self,...
+                test, failure);
+            if (self.isDotDispMode)
+                fprintf(self.textOutFid,'F');
+            elseif (self.isAllShown)
+                fprintf(self.textOutFid,'FAIL\n');
             end;
         end
 
         function self = add_success(self, test)
             % ADD_SUCCESS calls the inherited method from 
-            % test_result and writes out an '.' (verbosity == 1) or 'OK' 
-            % (verbosity == 2) to the stream.
+            % test_result and writes out an '.' (verbosityLevel == 1) or 'OK' 
+            % (verbosityLevel == 2) to the textOutFid.
             %
             % Input:
             %   regular:
@@ -130,10 +168,10 @@ classdef text_test_result < mlunit.test_result
             %           MLUNIT.TEST_CASE.RUN.
 
             self = add_success@mlunit.test_result(self, test);
-            if (self.dots)
-                fprintf(self.stream,'.');
-            elseif (self.show_all)
-                fprintf(self.stream,'OK\n');
+            if (self.isDotDispMode)
+                fprintf(self.textOutFid,'.');
+            elseif (self.isAllShown)
+                fprintf(self.textOutFid,'OK\n');
             end;
         end
         %
@@ -141,7 +179,7 @@ classdef text_test_result < mlunit.test_result
             % PRINT_ERROR_LIST is a helper function for
             % text_test_result.print_errors. It iterates through 
             % all errors in errors and writes them to 
-            %  the stream. prefix is a string, which is written before 
+            %  the textOutFid. prefix is a string, which is written before 
             %  each error or failure, to differ between them.
             %
             %  Input:
@@ -167,10 +205,19 @@ classdef text_test_result < mlunit.test_result
                 mlunit.logprintf('info','%s', errors{i, 2});
             end;
         end
-
+        %
+        function message=getErrorFailMessage(self)
+            nRes=length(self);
+            messageList=cell(1,nRes);
+            for iRes=1:nRes
+                messageList{iRes}=evalc('print_errors(self(iRes))');
+            end
+            message=[messageList{:}];
+        end  
+        %
         function print_errors(self)
             % PRINT_ERRORS writes the description of all 
-            % errors and failures to the stream.
+            % errors and failures to the textOutFid.
             %
             % Example:
             %    print_errors is called for example from 
@@ -179,8 +226,8 @@ classdef text_test_result < mlunit.test_result
             %
             %  See also MLUNIT.TEXT_TEST_RUNNER.RUN.
 
-            if ((self.dots) || (self.show_all))
-                fprintf(self.stream,'\n');
+            if ((self.isDotDispMode) || (self.isAllShown))
+                fprintf(self.textOutFid,'\n');
             end;
             print_error_list(self, 'ERROR', get_error_list(self));
             print_error_list(self, 'FAIL', get_failure_list(self));
@@ -188,8 +235,8 @@ classdef text_test_result < mlunit.test_result
 
         function self = start_test(self, test)
             % START_TEST calls the inherited method from 
-            % test_result and writes out the name of the test to the stream
-            % (if verbosity==2) or to the logger at DEBUG level
+            % test_result and writes out the name of the test to the textOutFid
+            % (if verbosityLevel==2) or to the logger at DEBUG level
             %
             % Input:
             %   regular:
@@ -205,8 +252,8 @@ classdef text_test_result < mlunit.test_result
             %           MLUNIT.TEST_CASE.RUN.
 
             self = start_test@mlunit.test_result(self, test);
-            if (self.show_all)
-                fprintf(self.stream,[str(test), ' ... ']);
+            if (self.isAllShown)
+                fprintf(self.textOutFid,[str(test), ' ... ']);
             else
                 mlunit.logprintf('debug',['=== START ', str(test)]);
             end;

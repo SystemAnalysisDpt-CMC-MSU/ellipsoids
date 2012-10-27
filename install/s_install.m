@@ -1,6 +1,9 @@
-disp('Installing Ellipsoidal Toolbox version 1.4dev ...');
+welcomeString=sprintf('Installing Ellipsoidal Toolbox');
+disp([welcomeString,'...']);
 s_setpath;
 s_setjavapath;
 %
-modgen.deployment.s_setjavapath
-disp('Installing Ellipsoidal Toolbox version 1.4dev: done');
+modgen.deployment.s_set_public_javapath
+modgen.logging.log4j.Log4jConfigurator.configureSimply();
+ellipsoids_init();
+disp([welcomeString,': done']);

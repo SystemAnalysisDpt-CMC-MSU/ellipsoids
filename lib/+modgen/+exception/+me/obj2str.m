@@ -14,9 +14,12 @@ function [message,stacktrace]=obj2str(err,varargin)
 %     message: char [1,n] - error message
 %     stacktrace: char [m,n] - string representation of the stack trace
 %
-% $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-% Faculty of Applied Mathematics and Cybernetics, System Analysis
-% Department, 12-October-2012, <pgagarinov@gmail.com>$
+%
+% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-03-29 $ 
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2011 $
+%
 
 
 stacktrace = modgen.exception.me.printstack(err.stack,varargin{:});

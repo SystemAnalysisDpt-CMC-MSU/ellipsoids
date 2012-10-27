@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<root version="2" xml_tb_version="2.0" type="struct" >
+<valueObj type="struct" >
+	<dim type="cell" >
+		<item type="double" >2</item>
+	</dim>
+	<At type="cell" size="2 1">
+		<item type="char" >0 1</item>
+		<item type="char" >-1 0</item>
+	</At>
+	<Bt type="cell" size="2 1">
+		<item type="char" >1 0</item>
+		<item type="char" >0 1</item>
+	</Bt>
+	<initial_set type="struct" >
+		<Q type="cell" size="2 1">
+			<item type="double" >1 0</item>
+			<item type="double" >0 1</item>
+		</Q>
+		<a type="double" size="2 1">0 0</a>
+	</initial_set>
+	<control_restriction type="struct" >
+		<Q type="cell" size="2 1">
+			<item type="char" >0.01 0</item>
+			<item type="char" >0 0.01</item>
+		</Q>
+		<a type="cell" size="2 1">
+			<item type="char" >2*sin(2*t)</item>
+			<item type="char" >0.2*cos(3*t)</item>
+		</a>
+	</control_restriction>
+	<time_interval type="struct" >
+		<t0 type="cell" >
+			<item type="double" >0</item>
+		</t0>
+		<t1 type="cell" >
+			<item type="double" >6</item>
+		</t1>
+	</time_interval>
+	<description type="char" > </description>
+	<disturbance_restriction type="struct" >
+		<Q type="cell" size="2 1">
+			<item type="char" >1 0</item>
+			<item type="char" >0 1</item>
+		</Q>
+		<a type="cell" size="2 1">
+			<item type="char" >0</item>
+			<item type="char" >0</item>
+		</a>
+	</disturbance_restriction>
+	<Ct type="cell" size="2 1">
+		<item type="char" >0 0</item>
+		<item type="char" >0 0</item>
+	</Ct>
+</valueObj>
+<keyStr type="char" >simple2d</keyStr>
+</root>

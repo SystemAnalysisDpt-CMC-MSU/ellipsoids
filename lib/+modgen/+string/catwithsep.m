@@ -10,12 +10,14 @@ function outStr = catwithsep(inpStrList,sepStr)
 % Output:
 %   outStr: char[1,] - resulting string
 %
-% $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-% Faculty of Applied Mathematics and Cybernetics, System Analysis
-% Department, 7-October-2012, <pgagarinov@gmail.com>$
+%
+% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-06-02 $ 
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2011 $
+%
 %
 outStrList=cellfun(@(x,y)[x,sepStr],inpStrList,'UniformOutput',false);
 outStr=[outStrList{:}];
 nSepSymb=length(sepStr);
 outStr=outStr(1:(end-nSepSymb));
-
