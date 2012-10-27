@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<root version="1" xml_tb_version="2.0" type="struct" >
+<valueObj type="struct" >
+	<dim type="cell" >
+		<item type="double" >2</item>
+	</dim>
+	<At type="cell" size="2 1">
+		<item type="char" >0 1</item>
+		<item type="char" >-1 0</item>
+	</At>
+	<Bt type="cell" size="2 1">
+		<item type="char" >1 0</item>
+		<item type="char" >0 1</item>
+	</Bt>
+	<initial_set type="struct" >
+		<Q type="cell" size="2 1">
+			<item type="double" >1 0</item>
+			<item type="double" >0 1</item>
+		</Q>
+		<a type="double" size="2 1">0 0</a>
+	</initial_set>
+	<control_restriction type="struct" >
+		<Q type="cell" size="2 1">
+			<item type="char" >3 0</item>
+			<item type="char" >0 0.1</item>
+		</Q>
+		<a type="cell" size="2 1">
+			<item type="char" >0</item>
+			<item type="char" >0</item>
+		</a>
+	</control_restriction>
+	<time_interval type="struct" >
+		<t0 type="cell" >
+			<item type="double" >0</item>
+		</t0>
+		<t1 type="cell" >
+			<item type="double" >12</item>
+		</t1>
+	</time_interval>
+</valueObj>
+<keyStr type="char" >notouch2d</keyStr>
+</root>
