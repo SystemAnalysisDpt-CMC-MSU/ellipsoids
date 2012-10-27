@@ -22,19 +22,12 @@ function [isIn,indIn]=ismemberobjinternal(aCell,bCell,funHandle)
 %   bCell={struct('a',2,'b',2); struct('a',111,'g','555')}
 %   [isIn,indIn]=ismemberobjinternal(aCell,bCell,@(x,y)x.a==y.a)
 %
-%TODO:
-%   make it faster
-%
-% Created by Vladimir Shakhov
 %
 % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-03-29 $ 
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2011 $
 %
-%   skipping calculation of the second output if it is not necessary
-%
-
 %%
 if nargin<3
     funHandle=@isequalwithequalnans;

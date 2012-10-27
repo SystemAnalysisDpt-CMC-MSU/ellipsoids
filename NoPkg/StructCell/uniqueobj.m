@@ -18,17 +18,11 @@ function varargout=uniqueobj(objCell,funHandle)
 %     indInUniq: double[nObjects,1] : all
 %         all(funHandle(uniqObjCell(indInUniq)==objCell))
 %
-% Created by Vladimir Shakhov
-%
 % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-03-29 $ 
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2011 $
 %
-%   old function is renamed to uniqueobjinternal, this function uses
-%   uniquejoint if funHandle is not given
-%
-
 varargout=cell(1,nargout);
 if nargout>0,
     if nargin>=2,

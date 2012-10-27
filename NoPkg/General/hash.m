@@ -94,8 +94,10 @@ function h = hashinner(inp,meth)
 %     disp(h)
 % end
 %
-% Created by Shakhov, AT 6/11/2006 
-
+% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2006 $ 
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2006 $
 
 inp=inp(:);
 % convert strings and logicals into uint8 format
