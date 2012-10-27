@@ -21,9 +21,7 @@ import modgen.common.throwerror
 %
 % Output:
 % -------
-%    regular:
-%        I - array of ellipsoids resulting from intersections.
-%    optional:
+%      I - array of ellipsoids resulting from intersections.
 %      isnIntersectedMat - logical matrix. 
 %      isnIntersectedMat(i, j) = true, if E(i, j) doesn't intersect H(i, j)
 %      isnIntersectedMat(i, j) = false, otherwise. 
@@ -68,7 +66,7 @@ import modgen.common.throwerror
   
   isSecondOutput = nargout==2;
   
-  if (isSecondOutput == 2)
+  if (isSecondOutput)
     isnIntersectedMat = false(m, n);
   end;
 
