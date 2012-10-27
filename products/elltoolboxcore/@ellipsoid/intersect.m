@@ -257,7 +257,7 @@ function [res, status] = qcqp(EA, E)
       Q = 0.5*(Q + Q');
 
       % YALMIP
-      F = F + set('x''*Q*x + 2*(-Q*q)''*x + (q''*Q*q - 1) <= 0');
+      F = F + set(x'*Q*x + 2*(-Q*q)'*x + (q'*Q*q - 1) <= 0);
     end
   end
 

@@ -82,6 +82,7 @@ function [E, S] = ellunion_ea(EE)
     cnstr = cnstr + set('-tt(i, 1)<=0');
   end
   ellOptions.sdpsettings = sdpsettings('solver','sedumi','sedumi.eps',1e-17);
+ 
   S = solvesdp(cnstr, -logdet(A), ellOptions.sdpsettings);
   A = double(A);
   b = double(b);

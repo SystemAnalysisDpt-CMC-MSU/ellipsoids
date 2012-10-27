@@ -16,11 +16,18 @@ import modgen.common.throwerror
 %                              hyperplanes pairwise.
 %
 %
+% 
+%
+%
 % Output:
 % -------
-%
-%    I - array of ellipsoids resulting from intersections.
-%
+%    regular:
+%        I - array of ellipsoids resulting from intersections.
+%    optional:
+%      isnIntersectedMat - logical matrix. 
+%      isnIntersectedMat(i, j) = true, if E(i, j) doesn't intersect H(i, j)
+%      isnIntersectedMat(i, j) = false, otherwise. 
+%        
 %
 % See also:
 % ---------
@@ -58,8 +65,11 @@ import modgen.common.throwerror
   if (t1 > 1) & (t2 > 1) & ((m ~= k) | (n ~= l))
     error('HPINTERSECTION: sizes of ellipsoidal and hyperplane arrays do not match.');
   end
-  if (nargout == 2)
-    isnIntersectedMat = logical(zeros(m, n));
+  
+  isSecondOutput = nargout==2;
+  
+  if (isSecondOutput == 2)
+    isnIntersectedMat = false(m, n);
   end;
 
   dims1 = dimension(E);
@@ -90,7 +100,7 @@ import modgen.common.throwerror
       for j = 1:n
         if distance(E(i, j), H(i, j)) > 0
           Q = [Q ellipsoid];
-          if (nargout == 1)
+          if (~isSecondOutput)
             throwerror('degenerateEllipsoid','Hypeplane doesn''t intersect ellipsoid');
           else
             isnIntersectedMat(i, j) = true;
@@ -119,7 +129,7 @@ import modgen.common.throwerror
       for j = 1:l
         if distance(E, H(i, j)) > 0
           Q = [Q ellipsoid];
-          if (nargout == 1)
+          if (~isSecondOutput)
             throwerror('degenerateEllipsoid','Hypeplane doesn''t intersect ellipsoid');
           else
             isnIntersectedMat(i, j) = true;

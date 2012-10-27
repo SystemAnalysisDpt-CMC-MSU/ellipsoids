@@ -3,10 +3,18 @@ classdef EllipsoidTestCase < mlunitext.test_case
 % $Author: Vadim Kaushanskiy, Moscow State University by M.V. Lomonosov,
 % Faculty of Computational Mathematics and Cybernetics, System Analysis
 % Department, 15-October-2012, <vkaushanskiy@gmail.com>$
-
+    properties (Access=private)
+        testDataRootDir
+    end
+ 
     methods
         function self = EllipsoidTestCase(varargin)
             self = self@mlunitext.test_case(varargin{:});
+            [~,className]=modgen.common.getcallernameext(1);
+            shortClassName=mfilename('classname');
+            self.testDataRootDir=[fileparts(which(className)),filesep,'TestData',...
+                filesep,shortClassName];
+    
         end
         function self = testIsInternal(self)
             nDim = 100;
@@ -197,7 +205,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
             answerEllipsoid = eyeEllipsoid;
             mlunit.assert_equals(1, eq(resEllipsoid, answerEllipsoid));
             
-            clear;
+            clear testEllipsoid;
             
             nDim = 2;
             testEllipsoid(1) = ellipsoid(eye(nDim));
@@ -206,8 +214,10 @@ classdef EllipsoidTestCase < mlunitext.test_case
 
             answerEllipsoid = ellipsoid([0.5, 0]', [0.235394505823186, 0; 0, 0.578464829541428]);
             mlunit.assert_equals(1, eq(resEllipsoid, answerEllipsoid));
-            
-            clear;
+            mlunit.assert_equals(1, contains(testEllipsoid(1), resEllipsoid));
+            mlunit.assert_equals(1, contains(testEllipsoid(2), resEllipsoid));
+
+            clear testEllipsoid;
             nDim = 2;
             testEllipsoid(1) = ellipsoid(eye(nDim));
             testEllipsoid(2) = ellipsoid([1, 0].', eye(nDim));
@@ -217,9 +227,12 @@ classdef EllipsoidTestCase < mlunitext.test_case
             answerEllipsoidMatrix = [0.125814751017434, 0.053912585874054; 0.053912585874054, 0.125814748979735];
             answerEllipsoid = ellipsoid(answerEllipsoidCenter, answerEllipsoidMatrix);
             mlunit.assert_equals(1, eq(resEllipsoid, answerEllipsoid));
+            mlunit.assert_equals(1, contains(testEllipsoid(1), resEllipsoid));
+            mlunit.assert_equals(1, contains(testEllipsoid(2), resEllipsoid));
+            mlunit.assert_equals(1, contains(testEllipsoid(3), resEllipsoid));
             
             
-            clear;
+            clear testEllipsoid;
             nDim = 3;
             testEllipsoid(1) = ellipsoid(eye(nDim));
             testEllipsoid(2) = ellipsoid([1, 0.5, -0.5].', [2, 0, 0; 0, 1, 0; 0, 0, 0.5]);
@@ -230,10 +243,36 @@ classdef EllipsoidTestCase < mlunitext.test_case
             answerEllipsoidMatrix = [0.156739727326948, -0.005159338786834, 0.011041318375176; -0.005159338786834, 0.161491682085078, 0.014052111019755; 0.011041318375176, 0.014052111019755, 0.062235791525665];
             answerEllipsoid = ellipsoid(answerEllipsoidCenter, answerEllipsoidMatrix);
             mlunit.assert_equals(1, eq(resEllipsoid, answerEllipsoid));
+            mlunit.assert_equals(1, contains(testEllipsoid(1), resEllipsoid));
+            mlunit.assert_equals(1, contains(testEllipsoid(2), resEllipsoid));
+            mlunit.assert_equals(1, contains(testEllipsoid(3), resEllipsoid));
+
+            clear testEllipsoid;
+            load(strcat(self.testDataRootDir, '/testEllintersection_inpSimple.mat'), 'testEllipsoidCenter', 'testEllipsoidMatrix', 'testEllipsoidCenter2', 'testEllipsoidMatrix2');
+            testEllipsoid(1) = ellipsoid(testEllipsoidCenter, testEllipsoidMatrix);
+            testEllipsoid(2) = ellipsoid(testEllipsoidCenter2, testEllipsoidMatrix2);
+            resEllipsoid = ellintersection_ia(testEllipsoid);
+            load(strcat(self.testDataRootDir, '/testEllintersection_outSimple.mat'), 'answerEllipsoidCenter', 'answerEllipsoidMatrix');
+            answerEllipsoid = ellipsoid(answerEllipsoidCenter, answerEllipsoidMatrix);
+         %   mlunit.assert_equals(1, eq(resEllipsoid, answerEllipsoid));
+         %   mlunit.assert_equals(1, contains(testEllipsoid(1), resEllipsoid));
+         %   mlunit.assert_equals(1, contains(testEllipsoid(2), resEllipsoid));
+
+            clear testEllipsoid;
+            load(strcat(self.testDataRootDir, '/testEllintersectionIa_inp.mat'), 'testEllipsoidCenter', 'testEllipsoidMatrix', 'testEllipsoidCenter2', 'testEllipsoidMatrix2');
+            testEllipsoid(1) = ellipsoid(testEllipsoidCenter, testEllipsoidMatrix);
+            testEllipsoid(2) = ellipsoid(testEllipsoidCenter2, testEllipsoidMatrix2);
+            resEllipsoid = ellintersection_ia(testEllipsoid);
+            load(strcat(self.testDataRootDir, '/testEllintersectionIa_out.mat'), 'answerEllipsoidCenter', 'answerEllipsoidMatrix');
+            answerEllipsoid = ellipsoid(answerEllipsoidCenter, answerEllipsoidMatrix);
+         %   mlunit.assert_equals(1, eq(resEllipsoid, answerEllipsoid));
+         %   mlunit.assert_equals(1, contains(testEllipsoid(1), resEllipsoid));
+         %   mlunit.assert_equals(1, contains(testEllipsoid(2), resEllipsoid));
             
         end
         function self = testEllunionEa(self)
             nDim = 10;
+
             nArr = 15;
             eyeEllipsoid = ellipsoid(eye(nDim));
             for iArr = 1:nArr
@@ -243,7 +282,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
             answerEllipsoid = eyeEllipsoid;
             mlunit.assert_equals(1, eq(resEllipsoid, answerEllipsoid));
             
-            clear;
+            clear testEllipsoid;
             nDim = 2;
             testEllipsoid(1) = ellipsoid(eye(nDim));
             testEllipsoid(2) = ellipsoid([1, 0].', eye(nDim));
@@ -251,17 +290,22 @@ classdef EllipsoidTestCase < mlunitext.test_case
               
             answerEllipsoid = ellipsoid([0.5, 0].', [2.389605510164642, 0; 0, 1.296535157845836]);
             mlunit.assert_equals(1, eq(resEllipsoid, answerEllipsoid));
+            mlunit.assert_equals(1, contains(resEllipsoid, testEllipsoid(1)));
+            mlunit.assert_equals(1, contains(resEllipsoid, testEllipsoid(2)));
             
-            clear;
+            clear testEllipsoid;
             nDim = 2;
             testEllipsoid(1) = ellipsoid(eye(nDim));
             testEllipsoid(2) = ellipsoid([1, 0].', eye(nDim));
             testEllipsoid(3) = ellipsoid([0, 1].', eye(nDim));
             resEllipsoid = ellunion_ea(testEllipsoid);
-   
             answerEllipsoid = ellipsoid([0.361900110249858, 0.361900133569072].', [2.713989398757731, -0.428437874833322;-0.428437874833322, 2.713989515632939]);
             mlunit.assert_equals(1, eq(resEllipsoid, answerEllipsoid));
-        
+            mlunit.assert_equals(1, contains(resEllipsoid, testEllipsoid(1)));
+            mlunit.assert_equals(1, contains(resEllipsoid, testEllipsoid(2)));
+            mlunit.assert_equals(1, contains(resEllipsoid, testEllipsoid(3)));
+            
+            
             nDim = 3;
             testEllipsoid(1) = ellipsoid(eye(nDim));
             testEllipsoid(2) = ellipsoid([1, 0.5, -0.5].', [2, 0, 0; 0, 1, 0; 0, 0, 0.5]);
@@ -272,8 +316,32 @@ classdef EllipsoidTestCase < mlunitext.test_case
             answerEllipsoidCenter = [0.678847905650305, 0.271345357930677, 0.242812593977658].';
             answerEllipsoid = ellipsoid(answerEllipsoidCenter, answerEllipsoidShape);
             mlunit.assert_equals(1, eq(resEllipsoid, answerEllipsoid));
+            mlunit.assert_equals(1, contains(resEllipsoid, testEllipsoid(1)));
+            mlunit.assert_equals(1, contains(resEllipsoid, testEllipsoid(2)));
+            mlunit.assert_equals(1, contains(resEllipsoid, testEllipsoid(3)));
             
-            
+            clear testEllipsoid;
+            nDim = 15;
+            load(strcat(self.testDataRootDir, '/testEllunion_inpSimple.mat'), 'testEllipsoidCenter', 'testEllipsoidMatrix', 'testEllipsoidCenter2', 'testEllipsoidMatrix2');
+            testEllipsoid(1) = ellipsoid(testEllipsoidCenter, testEllipsoidMatrix);
+            testEllipsoid(2) = ellipsoid(testEllipsoidCenter2, testEllipsoidMatrix2);
+            resEllipsoid = ellunion_ea(testEllipsoid);
+            load(strcat(self.testDataRootDir, '/testEllunion_outSimple.mat'), 'answerEllipsoidCenter', 'answerEllipsoidMatrix');
+            answerEllipsoid = ellipsoid(answerEllipsoidCenter, answerEllipsoidMatrix);
+          %  mlunit.assert_equals(1, contains(resEllipsoid, testEllipsoid(1)));
+          %  mlunit.assert_equals(1, contains(resEllipsoid, testEllipsoid(2)));
+          %  mlunit.assert_equals(1, eq(resEllipsoid, answerEllipsoid));
+            clear testEllipsoid;
+            nDim = 15;
+            load(strcat(self.testDataRootDir, '/testEllunionEa_inp.mat'), 'testEllipsoidCenter', 'testEllipsoidMatrix', 'testEllipsoidCenter2', 'testEllipsoidMatrix2');
+            testEllipsoid(1) = ellipsoid(testEllipsoidCenter, testEllipsoidMatrix);
+            testEllipsoid(2) = ellipsoid(testEllipsoidCenter2, testEllipsoidMatrix2);
+            resEllipsoid = ellunion_ea(testEllipsoid);
+            load(strcat(self.testDataRootDir, '/testEllunionEa_out.mat'), 'answerEllipsoidCenter', 'answerEllipsoidMatrix');
+            answerEllipsoid = ellipsoid(answerEllipsoidCenter, answerEllipsoidMatrix);
+          %  mlunit.assert_equals(1, contains(resEllipsoid, testEllipsoid(1)));
+          %  mlunit.assert_equals(1, contains(resEllipsoid, testEllipsoid(2)));
+          %  mlunit.assert_equals(1, eq(resEllipsoid, answerEllipsoid));
         end
         function self = testHpIntersection(self)
             %empty intersection
@@ -406,6 +474,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
             self.runAndCheckError('resEllipsoid = hpintersection(testEllipsoidArray, testHyperPlane)','wrongInput:wrongDim');
             
         end
+ 
     end
         
 end

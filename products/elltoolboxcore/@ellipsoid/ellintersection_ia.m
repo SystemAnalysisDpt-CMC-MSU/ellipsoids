@@ -83,7 +83,7 @@ function [E, S] = ellintersection_ia(EE)
     cnstr = cnstr + set('X>=0');
     cnstr = cnstr + set('ll(i, 1)>=0');
   end
-  ellOptions.sdpsettings = sdpsettings('solver','sedumi','sedumi.eps',1e-17);
+  ellOptions.sdpsettings = sdpsettings('solver','sedumi','sedumi.eps',1e-19, 'sedumi.numtol', 1.000000000000000e-11);
   S = solvesdp(cnstr, -logdet(B), ellOptions.sdpsettings);
   B = double(B);
   d = double(d);
