@@ -1,4 +1,7 @@
 function P = polar(E)
+
+import modgen.common.throwerror 
+
 %
 % POLAR - computes the polar ellipsoids.
 %
@@ -51,7 +54,8 @@ function P = polar(E)
     PP = [];
     for j = 1:n
       if isdegenerate(E(i, j))
-        PP = [PP ellipsoid];
+           throwerror('degenerateEllipsoid','The resulting ellipsoid is not bounded');
+    
       else
         [q, Q] = parameters(E(i, j));
         d      = size(Q, 2);
@@ -64,7 +68,9 @@ function P = polar(E)
           W  = (1 + q'*M*q)*M;
           PP = [PP ellipsoid(w, W)];
         else
-          PP = [PP ellipsoid];
+            throwerror('degenerateEllipsoid','The resulting ellipsoid is not bounded');
+
+      
 	end
       end
     end

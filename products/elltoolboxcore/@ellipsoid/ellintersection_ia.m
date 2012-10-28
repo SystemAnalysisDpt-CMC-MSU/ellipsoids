@@ -93,7 +93,7 @@ function [E, S] = ellintersection_ia(EE)
   end
 
   P = B * B';
-  P = (1-ellOptions.abs_tol)*0.5*(P + P');
+  P = 0.5*(P + P');
 
   E = ellipsoid(d, P);
 

@@ -131,8 +131,8 @@ function res = l_check_containment(E1, E2)
   f      = 1;
   C      = set('A <= x*B');
   C      = C + set('x >= 0');
+  ellOptions.sdpsettings = sdpsettings('solver','sdpt3');
   s      = solvesdp(C, f, ellOptions.sdpsettings);
-
   if s.problem == 0
     res = 1;
   else
