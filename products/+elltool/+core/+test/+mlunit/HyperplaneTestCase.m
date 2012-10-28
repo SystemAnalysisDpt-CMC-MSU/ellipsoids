@@ -1,67 +1,139 @@
 classdef HyperplaneTestCase < mlunitext.test_case
+    properties (Access=private)
+        testDataRootDir
+    end
     methods
         function self = HyperplaneTestCase(varargin)
             self = self@mlunitext.test_case(varargin{:});
+            [~,className]=modgen.common.getcallernameext(1);
+            shortClassName=mfilename('classname');
+            self.testDataRootDir=[fileparts(which(className)),filesep,'TestData',...
+                filesep,shortClassName];     
         end
         
-        function self = testIsRightConstructed(self)
+        function self = testIsRightConstructedAndDouble(self)  
+            %method double is implicitly tested in every comparison between
+            %hyperplanes contents and normals and constants, from which it 
+            %was constructed(in function isNormalAndConstantRight)
+            methodName=modgen.common.getcallernameext(1);
+            inpFileName=[self.testDataRootDir,filesep,[methodName,'_inp.mat']];
+            
+            testDataStructure = load(inpFileName);
+            testNormalVec = testDataStructure.testNormalVec;
+            testConstant = testDataStructure.testConstant;
+            
             %simple construction test
-            testNormal = [1; 0; 3];
-            testConstant = 1;
-            testingHyraplane = hyperplane(testNormal, testConstant);
-            res = isNormalAndConstantRight(testNormal, testConstant,testingHyraplane);
+            testingHyraplane = hyperplane(testNormalVec, testConstant);
+            res = self.isNormalAndConstantRight(testNormalVec, testConstant,testingHyraplane);
             mlunit.assert_equals(1, res);
             
             
             %omitting constant test
-            testNormal = [1; 0; 3];
             testConstant = 0;
-            testingHyraplane = hyperplane(testNormal);
-            res = isNormalAndConstantRight(testNormal, testConstant,testingHyraplane);
+            testingHyraplane = hyperplane(testNormalVec);
+            res = self.isNormalAndConstantRight(testNormalVec, testConstant,testingHyraplane);
             mlunit.assert_equals(1, res);
             
-            %mutliple Hyperplane test
-            testNormals = [[3; 4; 43; 1], [1; 0; 3; 3], [5; 2; 2; 12]];
-            testConstants = [1 2 3];
-            testingHyraplanes = hyperplane(testNormals, testConstants);
             
-            nHypeplanes = size(testNormals,2);
+            testNormalsMat = testDataStructure.testNormalsMat;
+            testConstants = testDataStructure.testConstants;
+            %mutliple Hyperplane test
+            testingHyraplaneVec = hyperplane(testNormalsMat, testConstants);
+            
+            nHypeplanes = size(testNormalsMat,2);
             res = 0;
             for iHyperplanes = 1:nHypeplanes
-                res = res + isNormalAndConstantRight(testNormal(iHyperplanes),...
-                    testConstants(iHyperplanes), testingHyraplanes(iHyperplanes));
+                res = res + self.isNormalAndConstantRight(testNormalsMat(:,iHyperplanes),...
+                    testConstants(iHyperplanes), testingHyraplaneVec(iHyperplanes));
             end
             mlunit.assert_equals(nHypeplanes, res);
             
             %mutliple Hyperplane one constant test
-            testNormals = [[3; 4; 43; 1], [1; 0; 3; 3], [5; 2; 2; 12]];
+            testNormalsMat = [[3; 4; 43; 1], [1; 0; 3; 3], [5; 2; 2; 12]];
             testConstant = 2;
-            testingHyraplanes = hyperplane(testNormals, testConstant);
+            testingHyraplaneVec = hyperplane(testNormalsMat, testConstant);
             
-            nHypeplanes = size(testNormals,2);
+            nHypeplanes = size(testNormalsMat,2);
             res = 0;
             for iHyperplanes = 1:nHypeplanes
-                res = res + isNormalAndConstantRight(testNormal(iHyperplanes),...
-                    testConstant, testingHyraplanes(iHyperplanes));
+                res = res + self.isNormalAndConstantRight(testNormalsMat(:,iHyperplanes),...
+                    testConstant, testingHyraplaneVec(iHyperplanes));
             end
             mlunit.assert_equals(nHypeplanes, res);
         end
         
+        function self = testContains(self)
+            methodName=modgen.common.getcallernameext(1);
+            inpFileName=[self.testDataRootDir,filesep,[methodName,'_inp.mat']];
+            
+            testDataStructure = load(inpFileName);
+            
+            containedVec = testDataStructure.containedVec;
+            notContainedVec = testDataStructure.notContainedVec;
+            
+            testHyperplane = testDataStructure.testHyperplane;
+            res = contains(testHyperplane,containedVec);
+            mlunit.assert_equals(1, res);
+            
+            res = contains(testHyperplane,notContainedVec);
+            mlunit.assert_equals(0, res);
+            
+            testHyperplanesVec = testDataStructure.testHyperplanesVec;
+            testVectorsMat = testDataStructure.testVectorsMat;
+            isContainedVec = testDataStructure.isContainedVec;
+            isContainedVecTested = contains(testHyperplanesVec,testVectorsMat);
+            res = sum(isContainedVec == isContainedVecTested) == size(isContainedVec,2);
+            
+            mlunit.assert_equals(1, res);
+        end
+        
+        function self = testDimensions(self)
+            methodName=modgen.common.getcallernameext(1);
+            inpFileName=[self.testDataRootDir,filesep,[methodName,'_inp.mat']];
+            
+            testDataStructure = load(inpFileName);
+            testHyperplanesVec = testDataStructure.testHyperplanesVec;
+            dimensionsVec = testDataStructure.dimensionsVec;
+            dimensionsVecTested = dimension(testHyperplanesVec);
+            res = sum(dimensionsVec == dimensionsVecTested) == size(dimensionsVec,2);
+            mlunit.assert_equals(1, res);
+        end
+        
+        function self = testIsEmpty(self)
+            methodName=modgen.common.getcallernameext(1);
+            inpFileName=[self.testDataRootDir,filesep,[methodName,'_inp.mat']];
+            
+            testDataStructure = load(inpFileName);
+            testHyperplanesVec = testDataStructure.testHyperplanesVec;
+            isEmptyVec = testDataStructure.isEmptyVec;
+            isEmptyVecTested = isempty(testHyperplanesVec);
+            res = sum(isEmptyVec == isEmptyVecTested) == size(isEmptyVec,2);
+            mlunit.assert_equals(1, res);
+        end
+        
         function self = testUminus(self)
-            testNormal = [1; 0; 3];
-            testConstant = 1;
+            methodName=modgen.common.getcallernameext(1);
+            inpFileName=[self.testDataRootDir,filesep,[methodName,'_inp.mat']];
+            
+            testDataStructure = load(inpFileName);
+            testNormal = testDataStructure.testNormal;
+            testConstant = testDataStructure.testConstant;
             testHyraplane = hyperplane(testNormal, testConstant);
             minusTestHyraplane = uminus(testHyraplane);
-            res = isNormalAndConstantRight(-testNormal, -testConstant,minusTestHyraplane);
+            res = self.isNormalAndConstantRight(-testNormal, -testConstant,minusTestHyraplane);
             mlunit.assert_equals(1, res);
         end
         
         function self = testEq(self)
-            testNormal = [1; 0; 3];
-            testConstant = 1;
-            nEqualNormal1 = [2; 4; 3];
-            nEqualNormal2 = [1; 0; 3; 1];
-            nEqualConstant = 2;
+            methodName=modgen.common.getcallernameext(1);
+            inpFileName=[self.testDataRootDir,filesep,[methodName,'_inp.mat']];
+            
+            testDataStructure = load(inpFileName);
+            testNormal = testDataStructure.testNormal;
+            testConstant = testDataStructure.testConstant;
+            nEqualNormal1 = testDataStructure.nEqualNormal1;
+            nEqualNormal2 =  testDataStructure.nEqualNormal2;
+            nEqualConstant = testDataStructure.nEqualConstant;
             
             etalonHyraplane = hyperplane(testNormal, testConstant);
             equalHyperaplane1 = hyperplane(testNormal, testConstant);
@@ -80,10 +152,13 @@ classdef HyperplaneTestCase < mlunitext.test_case
             res4 = eq(etalonHyraplane,nEqualHyperplane1);
             mlunit.assert_equals(0, res4);
             res5 = eq(etalonHyraplane,nEqualHyperplane2);
-            mlunit.assert_equals(1, res5);
+            mlunit.assert_equals(0, res5);
         end
             
-        function res = isNormalAndConstantRight(testNormal, testConstant, testingHyraplane)
+    end
+    
+    methods(Static)
+         function res = isNormalAndConstantRight(testNormal, testConstant, testingHyraplane)
             [resultNormal, resultConstant] = double(testingHyraplane);
             
             testNormalSize = size(testNormal);
