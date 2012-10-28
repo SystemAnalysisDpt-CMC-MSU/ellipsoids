@@ -1,16 +1,15 @@
 classdef ReachTestCase < mlunit.test_case
-    
+    %
     methods
         function self = ReachTestCase(varargin)
             self = self@mlunit.test_case(varargin{:});
         end
-        
         % testing function reach(...)
-        
+        %
         % \dot{x}(\tau) = A x(\tau), B = 0
         % T = [0 t]
         function self = testStationarySystemWithoutControl(self)
-            
+            %
             global ellOptions;
             linsysAMat = eye(2);
             linsysBMat = zeros(2);
@@ -21,28 +20,34 @@ classdef ReachTestCase < mlunit.test_case
             initialSetEll = ellipsoid(configurationQMat);
             initialDirectionsMat = [1 0; 0 1];
             timeIntervalVec = [0 1];
-            
+            %
             reachSet = reach(stationaryLinsys,...
                              initialSetEll,...
                              initialDirectionsMat,...
                              timeIntervalVec);
             externalApproximationMat = get_ea(reachSet);
             internalApproximationMat = get_ia(reachSet);
-            
+            approximationCenter = get_center(reachSet);
+            approximationDirections = get_directions(reachSet);
+            approximationGoodCurves = get_goodcurves(reachSet);
+            %
             %externalApproximationVec = cell(1, ellOptions.time_grid);
             %internalApproximationVec = cell(1, ellOptions.time_grid);
             externalApproximationVec = [];
             internalApproximationVec = [];
+            directionsArray = zeros(2, ellOptions.time_grid, 2);
+            goodCurvesArray = zeros(2, ellOptions.time_grid, 2);
             timeGridVec = linspace(timeIntervalVec(1),...
                                    timeIntervalVec(2),...
                                    ellOptions.time_grid);
+            %                   
             for iTime = 1 : ellOptions.time_grid
                 %externalApproximationVec(iTime) =...
                 %    {ellipsoid(exp(2 * timeGridVec(iTime)) * eye(2))};
                 %internalApproximationVec(iTime) =...
                 %    {ellipsoid(exp(2 * timeGridVec(iTime)) * eye(2))};
-                
-                
+                %
+                %
                 % changing size on each step is bad, but method with
                 % cell array (commented) isn't work, because get_ea
                 % returns not a cell array
@@ -52,35 +57,65 @@ classdef ReachTestCase < mlunit.test_case
                 internalApproximationVec =...
                     [internalApproximationVec...
                     ellipsoid(exp(2 * timeGridVec(iTime)) * eye(2))];
+                directionsArray(:, iTime, 1) =...
+                    [exp(-timeGridVec(iTime)) 0; 0 exp(-timeGridVec(iTime))] *...
+                    initialDirectionsMat(:, 1);
+                directionsArray(:, iTime, 2) =...
+                    [exp(-timeGridVec(iTime)) 0; 0 exp(-timeGridVec(iTime))] *...
+                    initialDirectionsMat(:, 2);
+                goodCurvesArray(:, iTime, 1) =...
+                    [exp(2 * timeGridVec(iTime)) 0;...
+                     0 exp(2 * timeGridVec(iTime))] *...
+                    directionsArray(:, iTime, 1) ./...
+                    sqrt(directionsArray(:, iTime, 1).' *...
+                    [exp(2 * timeGridVec(iTime)) 0;...
+                     0 exp(2 * timeGridVec(iTime))] *...
+                    directionsArray(:, iTime, 1));
+                goodCurvesArray(:, iTime, 2) =...
+                    [exp(2 * timeGridVec(iTime)) 0;...
+                     0 exp(2 * timeGridVec(iTime))] *...
+                    directionsArray(:, iTime, 2) ./...
+                    sqrt(directionsArray(:, iTime, 2).' *...
+                    [exp(2 * timeGridVec(iTime)) 0;...
+                     0 exp(2 * timeGridVec(iTime))] *...
+                    directionsArray(:, iTime, 2));
             end
-            
+            %
+            directionsMat = reshape(directionsArray, 2, 2 * ellOptions.time_grid);
+            goodCurvesMat = reshape(goodCurvesArray, 2, 2 * ellOptions.time_grid);
+            %
             % if you uncomment these two strings you will see
             % that approximations are not equal even under 1e-4:
-            
+            %
             %externalApproximationVec(ellOptions.time_grid)
             %externalApproximation(1, ellOptions.time_grid)
-            
+            %
             % rows of ea (or ia) are equal in this test,
             % because nothing depends on L0:
-            ellOptions.abs_tol = 1e-4;
-            
+            %
+            approximationDirectionsMat = cell2mat(approximationDirections);
+            approximationGoodCurvesMat = cell2mat(approximationGoodCurves);
+            %
+            %externalApproximationVec(ellOptions.time_grid)
+            %externalApproximationMat(1, ellOptions.time_grid)
+            %internalApproximationMat(1, ellOptions.time_grid)
+            %
             externalApproximationEqualityVec =...
                 externalApproximationVec == externalApproximationMat(1, :);
             internalApproximationEqualityVec =...
                 internalApproximationVec == internalApproximationMat(1, :);
+            approximationCenterEqualityMat =...
+                approximationCenter == zeros(size(approximationCenter));
+            approximationDirectionsEqualityMat =...
+                approximationDirectionsMat == directionsMat;
+            approximationGoodCurvesEqualityMat =...
+                approximationGoodCurvesMat == goodCurvesMat;
             testResult = all(externalApproximationEqualityVec) *...
-                         all(internalApproximationEqualityVec);
-            
+                         all(internalApproximationEqualityVec) *...
+                         all(approximationCenterEqualityMat(:)) *...
+                         all(approximationDirectionsEqualityMat(:)) *...
+                         all(approximationGoodCurvesEqualityMat(:));
             mlunit.assert_equals(1, testResult);
-            
-            ellOptions.abs_tol = 1e-7;
-            %plot_ea(reachSet);
-            %hold on;
-            %plot_ia(reachSet);
-            %mlunit.assert_equals();
-            %display(externalApproximation);
-        end
-        
+        end      
     end
-    
 end
