@@ -1,12 +1,8 @@
 function results=run_tests(varargin)
-<<<<<<< .working
-resList{1} = lib_run_tests(varargin{:});
-resList{2} = elltool.core.tests.run_tests();
-
-results = [resList{:}];=======
 logger=modgen.logging.log4j.Log4jConfigurator.getLogger();
 resList{1}=lib_run_tests(varargin{:});
 resList{2}=gras.test.run_tests();
+resList{3} = elltool.core.tests.run_tests();
 results=[resList{:}];
 %
 [errorCount,failCount]=results.getErrorFailCount();
@@ -15,4 +11,4 @@ logger.info(sprintf([...
     '\n|      ELLIPSOID TOOLBOX TEST RESULTS        |',...
     '\n|         (FAILURES: %d, ERRORS %d)            |',...
     '\n+--------------------------------------------+'],....
-    failCount,errorCount));>>>>>>> .merge-right.r133
+    failCount,errorCount));
