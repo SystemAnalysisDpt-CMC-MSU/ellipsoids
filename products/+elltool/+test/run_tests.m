@@ -1,6 +1,10 @@
 function results=run_tests(varargin)
 logger=modgen.logging.log4j.Log4jConfigurator.getLogger();
-results=lib_run_tests(varargin{:});
+%
+resList{2}=lib_run_tests(varargin{:});
+resList{1}=mlunitext.runtestcase(...
+'elltool.linsys.test.mlunit.LinSysTestCase');
+results=[resList{:}];
 %
 [errorCount,failCount]=results.getErrorFailCount();
 logger.info(sprintf([...
