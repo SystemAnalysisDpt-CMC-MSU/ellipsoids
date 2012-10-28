@@ -198,7 +198,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
   
         end
 
-        function self = testEllintersectionIa(self)
+        function self = DISABLED_testEllintersectionIa(self)
             nDim = 10;
             nArr = 15;
             eyeEllipsoid = ellipsoid(eye(nDim));
@@ -274,7 +274,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             self.flexAssert(1, contains(testEllVec(2), resEllVec));
             
         end
-        function self = testEllunionEa(self)
+        function self = DISABLED_testEllunionEa(self)
             nDim = 10;
 
             nArr = 15;
