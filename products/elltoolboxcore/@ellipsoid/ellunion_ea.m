@@ -81,7 +81,7 @@ function [E, S] = ellunion_ea(EE)
     cnstr = cnstr + set('X<=0');
     cnstr = cnstr + set('-tt(i, 1)<=0');
   end
- 
+  
   S = solvesdp(cnstr, -logdet(A), ellOptions.sdpsettings);
   
   A = double(A);
