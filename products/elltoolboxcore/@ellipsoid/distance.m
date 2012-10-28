@@ -65,7 +65,7 @@ function [d, status] = distance(E, X, flag)
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
-
+%   
   global ellOptions;
 
   if ~isstruct(ellOptions)
@@ -82,7 +82,7 @@ function [d, status] = distance(E, X, flag)
 
 
   if isa(X, 'double')
-    [d, status] = l_pointdist(E, X, flag);
+    [d, status] = computePointsEllDist(E, X, flag);
     if nargout < 2
       clear status;
     end
@@ -121,138 +121,163 @@ function [d, status] = distance(E, X, flag)
 
 
 %%%%%%%%
+function [ distEllVec timeOfComputation ] = computeEllVecDistance(ellObj,vectorVec,nMaxIter,absTol, relTol)
+% COMPUTEELLVECDISTANCE - computes the distance between an ellipsoid and a
+%                         vector
+% Input:
+%       ellObj:  ellipsoid: [1,1] - an object of class ellipsoid,
+%       vectorVec: double[mVectorVec,1] - vector,
+%       nMaxIter: double[1,1] - maximal number of iterations,
+%       absTol: double[1,1] - absolute tolerance, 
+%       relTol: double[1,1] - relative tolerance 
+% Output:
+%       distEllVec: double[1,1]  - computed distance,
+%       timeOfComputation: double[1,1] - time of computation
+%  
+%
+% Author:    Vitaly Baranov  <vetbar42@gmail.com> $	$Date: 2012-10-28 $ 
+% Copyright: Lomonosov Moscow State University,
+%            Faculty of Computational Mathematics and Cybernetics,
+%            System Analysis Department 2012 $
+%
+% Literature: 
+%   Stanley Chan, "Numerical method for Finding Minimum Distance to an
+%   Ellipsoid". http://videoprocessing.ucsd.edu/~stanleychan/publication/unpublished/Ellipse.pdf
+% 
+ import modgen.common.throwerror 
+ tic;
+ [ellCenterVec, ellQMat] = double(ellObj);
+ vectorVec=vectorVec-ellCenterVec;
+ vectorEllVal=vectorVec'*ellQMat*vectorVec;
+ if ( vectorEllVal< 1)
+     distEllVec=-1;
+ elseif (vectorEllVal==1)
+     distEllVec=0;
+ else
+     [unitaryMat diagMat]=eig(ellQMat);
+     unitaryMat=transpose(unitaryMat);
+     distEllVec=diag(diagMat);
+     qVec=unitaryMat*vectorVec;
+     dMean=mean(distEllVec);
+     vectorNorm=norm(vectorVec);
+     x0=sqrt((dMean*vectorNorm*vectorNorm)-1)/dMean;
+     fDetermenativeFunction=@(x) -1+sum((qVec.*qVec).*(distEllVec./((1+distEllVec*x).^2)));
+     %%Bisection for interval estimation
+     aPoint=0;
+     bPoint=2*x0;
+     cPoint=aPoint+(bPoint-aPoint)/2;
+     determenativeFunctionAtPointA=fDetermenativeFunction(aPoint);
+     determenativeFunctionAtPointB=fDetermenativeFunction(bPoint);
+     determenativeFunctionAtPointC=fDetermenativeFunction(cPoint);
+     iIter=1;
+     while( iIter < nMaxIter) && ((abs(determenativeFunctionAtPointA-...
+             determenativeFunctionAtPointC)>absTol ||....
+             abs(determenativeFunctionAtPointB-determenativeFunctionAtPointC)>absTol))
+         cPoint=aPoint+(bPoint-aPoint)*0.5;
+         determenativeFunctionAtPointA=fDetermenativeFunction(aPoint);
+         determenativeFunctionAtPointB=fDetermenativeFunction(bPoint);
+         determenativeFunctionAtPointC=fDetermenativeFunction(cPoint);
+         if sign(determenativeFunctionAtPointA)~=sign(determenativeFunctionAtPointC)
+             bPoint=cPoint;
+         else
+             aPoint=cPoint;
+         end
+         iIter=iIter+1;
+     end
+     %%Secant Method, search for zeros
+     intervalHalfLength=10*sqrt(relTol);
+     xVec=zeros(1,nMaxIter);
+     xVec(1)=cPoint-intervalHalfLength;
+     xVec(2)=cPoint+intervalHalfLength;
+     oneStepError=Inf;
+     kIter=2;
+     while( kIter < nMaxIter ) && ( oneStepError > relTol )
+         deltaF = fDetermenativeFunction(xVec(kIter))-fDetermenativeFunction(xVec(kIter-1));
+         if abs(deltaF) <= absTol
+             throwerror('notSecant','Secant method is not applicable.');
+         else
+             xVec(kIter+1)=xVec(kIter)-fDetermenativeFunction(xVec(kIter))*...
+                 (xVec(kIter)-xVec(kIter-1))/deltaF;
+             oneStepError=abs(xVec(kIter)-xVec(kIter-1))^2;
+         end
+         kIter=kIter+1;
+     end
+     lambda=xVec(kIter);
+     auxilliaryVec = (eye(size(ellQMat))+lambda*ellQMat)\vectorVec;
+     distEllVec = norm(auxilliaryVec-vectorVec);
+ end
+ timeOfComputation=toc;
+ 
+
   
-function [d, status] = l_pointdist(E, X, flag)
+function [distMat, timeMat] = computePointsEllDist(ellObjMat, vecArray, flag)
 %
 % L_POINTDIST - distance from ellipsoid to vector.
 %
-
   global ellOptions;
-
-  [m, n] = size(E);
-  [k, l] = size(X);
-  t      = m * n;
-  if (t > 1) & (l > 1) & (t ~= l)
+%
+  [mSize, lSize] = size(ellObjMat);
+  [kSize, nVec] = size(vecArray);
+  nEllObj      = mSize * lSize;
+  if (nEllObj > 1) && (nVec > 1) && (nEllObj ~= nVec)
     error('DISTANCE: number of ellipsoids does not match the number of vectors.');
   end
-
-  dims = dimension(E);
-  mn   = min(min(dims));
-  mx   = max(max(dims));
-  if mn ~= mx
+%
+  dimsMat = dimension(ellObjMat);
+  minDim   = min(min(dimsMat));
+  maxDim   = max(max(dimsMat));
+  if minDim ~= maxDim
     error('DISTANCE: ellipsoids must be of the same dimension.')
   end
-  if mx ~= k
+  if maxDim ~= kSize
     error('DISTANCE: dimensions of ellipsoid an vector do not match.');
   end
-
+%
   if ellOptions.verbose > 0
-    if (t > 1) | (l > 1)
-      fprintf('Computing %d ellipsoid-to-vector distances...\n', max([t l]));
+    if (nEllObj > 1) || (nVec > 1)
+      fprintf('Computing %d ellipsoid-to-vector distances...\n', max([nEllObj nVec]));
     else
       fprintf('Computing ellipsoid-to-vector distance...\n');
     end
-    fprintf('Invoking YALMIP...\n');
   end
-
-  d      = [];
-  status = [];
-  if (t > 1) & (t == l)
-    for i = 1:m
-      dd  = [];
-      sts = [];
-      for j = 1:n
-        y      = X(:, i*j);
-        [q, Q] = double(E(i, j));
-        Qi     = ell_inv(Q);
-        Qi     = 0.5*(Qi + Qi');
-        dst    = (q - y)'*Qi*(q - y) - 1;
-        o      = struct('yalmiptime', [], 'solvertime', [], 'info', [], 'problem', [], 'dimacs', []);
-        if dst > 0
-          x = sdpvar(mx, 1);
-          if flag
-            f = (x - y)'*Qi*(x - y);
-          else
-            f = (x - y)'*(x - y);
-          end
-          C   = set(x'*Qi*x + 2*(-Qi*q)'*x + (q'*Qi*q - 1) <= 0);
-          o   = solvesdp(C, f, ellOptions.sdpsettings);
-          dst = double(f);
-          if dst < ellOptions.abs_tol
-            dst = 0;
-          end
-          dst = sqrt(dst);
-        end
-        dd  = [dd dst];
-	sts = [sts o];
+%
+%  
+  N_MAX_ITER=50;
+  ABS_TOL=ellOptions.abs_tol;
+  REL_TOL=ellOptions.rel_tol;     
+  if (nEllObj > 1) && (nEllObj == nVec)
+    distMat=zeros(mSize,lSize);
+    timeMat=zeros(mSize,lSize);
+    for i = 1:mSize
+      for j = 1:lSize
+        yVec      = vecArray(:, i*j);
+        [dist time] = computeEllVecDistance(ellObjMat(i,j),yVec,N_MAX_ITER,ABS_TOL,REL_TOL);
+        distMat(i,j) = dist;
+        timeMat(i,j) = time;
       end
-      d      = [d; dd];
-      status = [status sts];
     end
-  elseif (t > 1)
-    for i = 1:m
-      dd  = [];
-      sts = [];
-      for j = 1:n
-        y      = X;
-        [q, Q] = double(E(i, j));
-        Qi     = ell_inv(Q);
-        Qi     = 0.5*(Qi + Qi');
-        dst    = (q - y)'*Qi*(q - y) - 1;
-        o      = struct('yalmiptime', [], 'solvertime', [], 'info', [], 'problem', [], 'dimacs', []);
-        if dst > 0
-          x = sdpvar(mx, 1);
-          if flag
-            f = (x - y)'*Qi*(x - y);
-          else
-            f = (x - y)'*(x - y);
-          end
-          C   = set(x'*Qi*x + 2*(-Qi*q)'*x + (q'*Qi*q - 1) <= 0);
-          o   = solvesdp(C, f, ellOptions.sdpsettings);
-          dst = double(f);
-          if dst < ellOptions.abs_tol
-            dst = 0;
-          end
-          dst = sqrt(dst);
-        end
-        dd  = [dd dst];
-	sts = [sts o];
+  elseif (nEllObj > 1)
+    distMat=zeros(mSize,lSize);
+    timeMat=zeros(mSize,lSize);
+    for i = 1:mSize
+      for j = 1:lSize
+       yVec=vecArray;
+       [dist time] = computeEllVecDistance(ellObjMat(i,j),yVec,N_MAX_ITER,ABS_TOL,REL_TOL);
+       distMat(i,j) = dist;
+       timeMat(i,j) = time;
       end
-      d      = [d; dd];
-      status = [status sts];
     end
   else
-    for i = 1:l
-      y      = X(:, i);
-      [q, Q] = double(E);
-      Qi     = ell_inv(Q);
-      Qi     = 0.5*(Qi + Qi');
-      dst    = (q - y)'*Qi*(q - y) - 1;
-      o      = struct('yalmiptime', [], 'solvertime', [], 'info', [], 'problem', [], 'dimacs', []);
-      if dst > 0
-        x = sdpvar(mx, 1);
-        if flag
-          f = (x - y)'*Qi*(x - y);
-        else
-          f = (x - y)'*(x - y);
-        end
-        C   = set(x'*Qi*x + 2*(-Qi*q)'*x + (q'*Qi*q - 1) <= 0);
-        o   = solvesdp(C, f, ellOptions.sdpsettings);
-        dst = double(f);
-        if dst < ellOptions.abs_tol
-          dst = 0;
-        end
-        dst = sqrt(dst);
-      end
-      d      = [d dst];
-      status = [status o];
+    distMat=zeros(1,nVec);
+    timeMat=zeros(1,nVec);
+    for i = 1:nVec        
+      yVec= vecArray(:, i); 
+      [dist time]= computeEllVecDistance(ellObjMat,yVec,N_MAX_ITER,ABS_TOL,REL_TOL);
+      distMat(i) = dist;
+      timeMat(i) = time;
     end
   end
-
-  return;
-
-
-
+return;
 
 
 %%%%%%%%
@@ -380,7 +405,9 @@ function [d, status] = l_elldist(E, X, flag)
         end
         C   = set(x'*Qi*x + 2*(-Qi*q)'*x + (q'*Qi*q - 1) <= 0);
         C   = C + set(y'*Ri*y + 2*(-Ri*r)'*y + (r'*Ri*r - 1) <= 0);
-        o   = solvesdp(C, f, ellOptions.sdpsettings);
+        options=sdpsettings;
+        options.lmilab.reltol=ellOptions.abs_tol;
+        o   = solvesdp(C, f, options);
         dst = double(f);
         if dst < ellOptions.abs_tol
           dst = 0;
