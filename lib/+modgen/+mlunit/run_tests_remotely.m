@@ -32,7 +32,7 @@ try
         rethrow(meObj);
     end
 catch meObj
-    disponoff([],errst2str(meObj));
+    disp(errst2str(meObj));
     rethrow(meObj);
 end
     
