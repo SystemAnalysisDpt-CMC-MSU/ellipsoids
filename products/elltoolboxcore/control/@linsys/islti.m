@@ -1,56 +1,45 @@
-function res = islti(lsys)
+function isLtiMat = islti(linSysMat)
+% ISLTI checks if linear system is time-invariant.
 %
-% ISLTI - checks if linear system is time-invariant.
-%
-%
-% Description:
-% ------------
-%
-%    RES = ISLTI(LSYS)  Checks if linear system defined by LSYS object
-%                       is time-invariant.
-%
+% Input:
+%   regular:
+%       linSysMat: linsys[mRows,nCols] - a matrix of linear systems.
 %
 % Output:
-% -------
+%   isLtiMat: double[mRows,nCols] - a matrix such that it's element at
+%       position (i,j) is 1 if corresponding linear system is time-invariant, 
+%       and 0 otherwise.
 %
-%    1 - if the system is time-invariant, 0 - otherwise.
+% $Author: Alex Kurzhanskiy  <akurzhan@eecs.berkeley.edu> $    $Date: 2004-2008 $
+% $Copyright:  The Regents of the University of California 2004-2008 $
 %
+% $Author: Ivan Menshikov  <ivan.v.menshikov@gmail.com> $    $Date: 2012 $
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2012 $
 %
-% See also:
-% ---------
+global ellOptions;
 %
-%    LINSYS/LINSYS.
-%
-
-%
-% Author:
-% -------
-%
-%    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-%
-
-  global ellOptions;
-
-  if ~isstruct(ellOptions)
+if ~isstruct(ellOptions)
     evalin('base', 'ellipsoids_init;');
-  end
-
-  if ~(isa(lsys, 'linsys'))
+end
+%
+if ~(isa(lsys, 'linsys'))
     error('ISLTI: input argument must be linear system object.');
-  end
-
-  [m, n] = size(lsys);
-  res    = [];
-  for i = 1:m
-    r = [];
-    for j = 1:n
-      if lsys(i, j).lti > 0
-        r = [r 1];
-      else
-        r = [r 0];
-      end
-      res = [res; r];
+end
+%
+[mRows, nCols] = size(linSysMat);
+isLtiMat = zeros(mRows, nCols);
+%
+for iRow = 1:mRows
+    for jCol = 1:nCols
+        % double type should be replaced with boolean
+        if linSysMat(iRow, jCol).lti > 0
+            isLtiMat(iRow, jCol) = 1;
+        else
+            isLtiMat(iRow, jCol) = 0;
+        end
     end
-  end
-
-  return;
+end
+%
+end
