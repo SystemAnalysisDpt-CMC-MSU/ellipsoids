@@ -176,23 +176,30 @@ classdef HyperplaneTestCase < mlunitext.test_case
             plot(testHyperplane3DVec1,'g',testHyperplane3DVec2,'r');            
         end
         %    
-%         function self = testWrongInput(self)
-%             methodName=modgen.common.getcallernameext(1);
-%             inpFileName=[self.testDataRootDir,filesep,[methodName,'_inp.mat']];
-%             %
-%             testDataStructure = load(inpFileName);
-%             testConstant = testDataStructure.testConstant;
-%             testHyperplane = testDataStructure.testHyperplane;
-%             nanVector = testDataStructure.nanVector;
-%             infVector = testDataStructure.infVector;
-%             %
-%             self.runAndCheckError('contains(testHyperplane,nanVector)',...
-%                 'X is expected to comply with all of the following conditions: ~any(isnan(x1(:)))');
-%             self.runAndCheckError('hyperplane(infVector,testConstant)',...
-%                 'v,c is expected to comply with all of the following conditions: ~(any( isnan(x1(:)) ) || any(isinf(x1(:))) || any(isnan(x2(:))) || any(isinf(x2(:))))');
-%             self.runAndCheckError('hyperplane(nanVector,testConstant)',...
-%                 'v,c is expected to comply with all of the following conditions: ~(any( isnan(x1(:)) ) || any(isinf(x1(:))) || any(isnan(x2(:))) || any(isinf(x2(:))))');
-%         end
+        function self = testWrongInput(self)
+            methodName=modgen.common.getcallernameext(1);
+            inpFileName=[self.testDataRootDir,filesep,[methodName,'_inp.mat']];
+            %
+            testDataStructure = load(inpFileName);
+            testConstant = testDataStructure.testConstant;
+            testHyperplane = testDataStructure.testHyperplane;
+            nanVector = testDataStructure.nanVector;
+            infVector = testDataStructure.infVector;
+            %
+            self.runAndCheckError('contains(testHyperplane,nanVector)',...
+                'wrongInput',['X is expected to comply with all ',...
+                'of the following conditions: ~any(isnan(x1(:)))']);
+            self.runAndCheckError('hyperplane(infVector,testConstant)',...
+                'wrongInput',...
+                ['v,c is expected to comply with all of the following ',...
+                'conditions: ~(any( isnan(x1(:)) ) || any(isinf(x1(:))) ',...
+                '|| any(isnan(x2(:))) || any(isinf(x2(:))))']);
+            self.runAndCheckError('hyperplane(nanVector,testConstant)',...
+                'wrongInput',...
+                ['v,c is expected to comply with all of the ',...
+                'following conditions: ~(any( isnan(x1(:)) ) || ',...
+                'any(isinf(x1(:))) || any(isnan(x2(:))) || any(isinf(x2(:))))']);
+        end
     end
     %
     methods(Static)
