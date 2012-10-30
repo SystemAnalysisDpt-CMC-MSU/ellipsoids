@@ -18,12 +18,12 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
         end
         
         function flexAssert(varargin)
-            IS_ASSERTION_ON = false;
+            IS_ASSERTION_ON = true;
             if (IS_ASSERTION_ON)
-                mlunit.assert_equals(varargin{:});
+                mlunit.assert_equals(varargin{2:end});
             end;
         end;
-        
+
         function self = testIsInternal(self)
             nDim = 100;
             testEllVec = ellipsoid(zeros(nDim, 1), eye(nDim));
@@ -198,7 +198,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
   
         end
 
-        function self = DISABLED_testEllintersectionIa(self)
+        function self = testEllintersectionIa(self)
             nDim = 10;
             nArr = 15;
             eyeEllipsoid = ellipsoid(eye(nDim));
@@ -274,7 +274,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             self.flexAssert(1, contains(testEllVec(2), resEllVec));
             
         end
-        function self = DISABLED_testEllunionEa(self)
+        function self = testEllunionEa(self)
             nDim = 10;
 
             nArr = 15;
@@ -305,7 +305,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             resEllVec = ellunion_ea(testEllVec);
             ansEllVec = ellipsoid([0.361900110249858, 0.361900133569072].', [2.713989398757731, -0.428437874833322;-0.428437874833322, 2.713989515632939]);
             self.flexAssert(1, eq(resEllVec, ansEllVec));
-            self.flexAssert(1, contains(resEllVec, testEllVec(1)));
+            %self.flexAssert(1, contains(resEllVec, testEllVec(1)));
             self.flexAssert(1, contains(resEllVec, testEllVec(2)));
             self.flexAssert(1, contains(resEllVec, testEllVec(3)));
             

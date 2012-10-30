@@ -67,8 +67,7 @@ function [d, status] = distance(E, X, flag)
 %
 
   global ellOptions;
-
-  if ~isstruct(ellOptions)
+if ~isstruct(ellOptions)
     evalin('base', 'ellipsoids_init;');
   end
 
@@ -152,7 +151,7 @@ function [d, status] = l_pointdist(E, X, flag)
     else
       fprintf('Computing ellipsoid-to-vector distance...\n');
     end
-    fprintf('Invoking YALMIP...\n');
+    fprintf('Invoking CVX...\n');
   end
 
   d      = [];
@@ -169,22 +168,27 @@ function [d, status] = l_pointdist(E, X, flag)
         dst    = (q - y)'*Qi*(q - y) - 1;
         o      = struct('yalmiptime', [], 'solvertime', [], 'info', [], 'problem', [], 'dimacs', []);
         if dst > 0
-          x = sdpvar(mx, 1);
-          if flag
-            f = (x - y)'*Qi*(x - y);
-          else
-            f = (x - y)'*(x - y);
-          end
-          C   = set(x'*Qi*x + 2*(-Qi*q)'*x + (q'*Qi*q - 1) <= 0);
-          o   = solvesdp(C, f, ellOptions.sdpsettings);
-          dst = double(f);
+            cvx_begin sdp
+                variable x(mx, 1)
+                if flag
+                    f = (x - y)'*Qi*(x - y);
+                else
+                    f = (x - y)'*(x - y);
+                end
+                minimize(f)
+                subject to
+                    x'*Qi*x + 2*(-Qi*q)'*x + (q'*Qi*q - 1) <= 0
+            cvx_end
+            
+         
+          dst = f;
           if dst < ellOptions.abs_tol
             dst = 0;
           end
           dst = sqrt(dst);
         end
         dd  = [dd dst];
-	sts = [sts o];
+	sts = [sts cvx_status];
       end
       d      = [d; dd];
       status = [status sts];
@@ -201,22 +205,26 @@ function [d, status] = l_pointdist(E, X, flag)
         dst    = (q - y)'*Qi*(q - y) - 1;
         o      = struct('yalmiptime', [], 'solvertime', [], 'info', [], 'problem', [], 'dimacs', []);
         if dst > 0
-          x = sdpvar(mx, 1);
-          if flag
-            f = (x - y)'*Qi*(x - y);
-          else
-            f = (x - y)'*(x - y);
-          end
-          C   = set(x'*Qi*x + 2*(-Qi*q)'*x + (q'*Qi*q - 1) <= 0);
-          o   = solvesdp(C, f, ellOptions.sdpsettings);
-          dst = double(f);
+            cvx_begin sdp
+                variable x(mx, 1)
+                if flag
+                    f = (x - y)'*Qi*(x - y);
+                else
+                    f = (x - y)'*(x - y);
+                end
+                minimize(f)
+                subject to
+                    x'*Qi*x + 2*(-Qi*q)'*x + (q'*Qi*q - 1) <= 0
+            cvx_end
+  
+          dst = f;
           if dst < ellOptions.abs_tol
             dst = 0;
           end
           dst = sqrt(dst);
         end
         dd  = [dd dst];
-	sts = [sts o];
+	sts = [sts cvx_status];
       end
       d      = [d; dd];
       status = [status sts];
@@ -230,15 +238,26 @@ function [d, status] = l_pointdist(E, X, flag)
       dst    = (q - y)'*Qi*(q - y) - 1;
       o      = struct('yalmiptime', [], 'solvertime', [], 'info', [], 'problem', [], 'dimacs', []);
       if dst > 0
+          
+          cvx_begin sdp
+            variable x(mx, 1)
+            if flag
+                f = (x - y)'*Qi*(x - y);
+            else
+                f = (x - y)'*(x - y);
+            end
+            minimize(f)
+            subject to
+                x'*Qi*x + 2*(-Qi*q)'*x + (q'*Qi*q - 1) <= 0
+          cvx_end
+
         x = sdpvar(mx, 1);
         if flag
           f = (x - y)'*Qi*(x - y);
         else
           f = (x - y)'*(x - y);
         end
-        C   = set(x'*Qi*x + 2*(-Qi*q)'*x + (q'*Qi*q - 1) <= 0);
-        o   = solvesdp(C, f, ellOptions.sdpsettings);
-        dst = double(f);
+        dst = f;
         if dst < ellOptions.abs_tol
           dst = 0;
         end
@@ -288,7 +307,7 @@ function [d, status] = l_elldist(E, X, flag)
     else
       fprintf('Computing ellipsoid-to-ellipsoid distance...\n');
     end
-    fprintf('Invoking YALMIP...\n');
+    fprintf('Invoking CVX...\n');
   end
 
   d      = [];
@@ -304,24 +323,27 @@ function [d, status] = l_elldist(E, X, flag)
         Qi     = 0.5*(Qi + Qi');
         Ri     = ell_inv(R);
         Ri     = 0.5*(Ri + Ri');
-        o      = struct('yalmiptime', [], 'solvertime', [], 'info', [], 'problem', [], 'dimacs', []);
-        x      = sdpvar(mx1, 1);
-        y      = sdpvar(mx1, 1);
-        if flag
-          f = (x - y)'*Qi*(x - y);
-        else
-          f = (x - y)'*(x - y);
-        end
-        C   = set(x'*Qi*x + 2*(-Qi*q)'*x + (q'*Qi*q - 1) <= 0);
-        C   = C + set(y'*Ri*y + 2*(-Ri*r)'*y + (r'*Ri*r - 1) <= 0);
-        o   = solvesdp(C, f, ellOptions.sdpsettings);
-        dst = double(f);
+        cvx_begin sdp
+            variable x(mx1, 1)
+            variable y(mx1, 1)
+            if flag
+                f = (x - y)'*Qi*(x - y);
+            else
+                f = (x - y)'*(x - y);
+            end
+            minimize(f)
+            subject to
+                x'*Qi*x + 2*(-Qi*q)'*x + (q'*Qi*q - 1) <= 0
+                y'*Ri*y + 2*(-Ri*r)'*y + (r'*Ri*r - 1) <= 0
+        cvx_end
+
+        dst = f;
         if dst < ellOptions.abs_tol
           dst = 0;
         end
         dst = sqrt(dst);
         dd  = [dd dst];
-	sts = [sts o];
+	sts = [sts cvx_status];
       end
       d      = [d; dd];
       status = [status sts];
@@ -337,24 +359,27 @@ function [d, status] = l_elldist(E, X, flag)
         Qi     = 0.5*(Qi + Qi');
         Ri     = ell_inv(R);
         Ri     = 0.5*(Ri + Ri');
-        o      = struct('yalmiptime', [], 'solvertime', [], 'info', [], 'problem', [], 'dimacs', []);
-        x      = sdpvar(mx1, 1);
-        y      = sdpvar(mx1, 1);
-        if flag
-          f = (x - y)'*Qi*(x - y);
-        else
-          f = (x - y)'*(x - y);
-        end
-        C   = set(x'*Qi*x + 2*(-Qi*q)'*x + (q'*Qi*q - 1) <= 0);
-        C   = C + set(y'*Ri*y + 2*(-Ri*r)'*y + (r'*Ri*r - 1) <= 0);
-        o   = solvesdp(C, f, ellOptions.sdpsettings);
-        dst = double(f);
+        cvx_begin sdp
+            variable x(mx1, 1)
+            variable y(mx1, 1)
+            if flag
+                f = (x - y)'*Qi*(x - y);
+            else
+                f = (x - y)'*(x - y);
+            end
+            minimize(f)
+            subject to
+                x'*Qi*x + 2*(-Qi*q)'*x + (q'*Qi*q - 1) <= 0
+                y'*Ri*y + 2*(-Ri*r)'*y + (r'*Ri*r - 1) <= 0
+        cvx_end
+
+        dst = f;
         if dst < ellOptions.abs_tol
           dst = 0;
         end
         dst = sqrt(dst);
         dd  = [dd dst];
-	sts = [sts o];
+	sts = [sts cvx_status];
       end
       d      = [d; dd];
       status = [status sts];
@@ -370,24 +395,27 @@ function [d, status] = l_elldist(E, X, flag)
         Qi     = 0.5*(Qi + Qi');
         Ri     = ell_inv(R);
         Ri     = 0.5*(Ri + Ri');
-        o      = struct('yalmiptime', [], 'solvertime', [], 'info', [], 'problem', [], 'dimacs', []);
-        x      = sdpvar(mx1, 1);
-        y      = sdpvar(mx1, 1);
-        if flag
-          f = (x - y)'*Qi*(x - y);
-        else
-          f = (x - y)'*(x - y);
-        end
-        C   = set(x'*Qi*x + 2*(-Qi*q)'*x + (q'*Qi*q - 1) <= 0);
-        C   = C + set(y'*Ri*y + 2*(-Ri*r)'*y + (r'*Ri*r - 1) <= 0);
-        o   = solvesdp(C, f, ellOptions.sdpsettings);
-        dst = double(f);
+        cvx_begin sdp
+            variable x(mx1, 1)
+            variable y(mx1, 1)
+            if flag
+                f = (x - y)'*Qi*(x - y);
+            else
+                f = (x - y)'*(x - y);
+            end
+            minimize(f)
+            subject to
+                x'*Qi*x + 2*(-Qi*q)'*x + (q'*Qi*q - 1) <= 0
+                y'*Ri*y + 2*(-Ri*r)'*y + (r'*Ri*r - 1) <= 0
+        cvx_end
+
+        dst = f;
         if dst < ellOptions.abs_tol
           dst = 0;
         end
         dst = sqrt(dst);
         dd  = [dd dst];
-	sts = [sts o];
+	sts = [sts cvx_status];
       end
       d      = [d; dd];
       status = [status sts];
@@ -561,7 +589,7 @@ function [d, status] = l_polydist(E, X)
     else
       fprintf('Computing ellipsoid-to-polytope distance...\n');
     end
-    fprintf('Invoking YALMIP...\n');
+    fprintf('Invoking CVX...\n');
   end
 
   d      = [];
@@ -579,23 +607,27 @@ function [d, status] = l_polydist(E, X)
         end
         Q  = ell_inv(Q);
         Q  = 0.5*(Q + Q');
-        x  = sdpvar(mx1, 1);
-        y  = sdpvar(mx1, 1);
-        if flag
-          f  = (y - x)'*Q*(y - x);
-        else
-          f  = (y - x)'*(y - x);
-        end
-        C  = set(x'*Q*x + 2*(-Q*q)'*x + (q'*Q*q - 1) <= 0);
-        C  = C + set(A*y - b <= 0);
-        o  = solvesdp(C, f, ellOptions.sdpsettings);
-        d1 = double(f);
+        cvx_begin sdp
+            variable x(mx1, 1)
+            variable y(mx1, 1)
+            if flag
+                f = (x - y)'*Qi*(x - y);
+            else
+                f = (x - y)'*(x - y);
+            end
+            minimize(f)
+            subject to
+                x'*Qi*x + 2*(-Qi*q)'*x + (q'*Qi*q - 1) <= 0
+                A*y - b <= 0
+        cvx_end
+
+        d1 = f;
         if d1 < ellOptions.abs_tol
           d1 = 0;
         end
         d1  = sqrt(d1);
         dd  = [dd d1];
-	sts = [sts o];
+	sts = [sts cvx_status];
       end
       d      = [d; dd];
       status = [status sts];
@@ -612,23 +644,27 @@ function [d, status] = l_polydist(E, X)
         end
         Q  = ell_inv(Q);
         Q  = 0.5*(Q + Q');
-        x  = sdpvar(mx1, 1);
-        y  = sdpvar(mx1, 1);
-        if flag
-          f  = (y - x)'*Q*(y - x);
-        else
-          f  = (y - x)'*(y - x);
-        end
-        C  = set(x'*Q*x + 2*(-Q*q)'*x + (q'*Q*q - 1) <= 0);
-        C  = C + set(A*y - b <= 0);
-        o  = solvesdp(C, f, ellOptions.sdpsettings);
-        d1 = double(f);
+        cvx_begin sdp
+            variable x(mx1, 1)
+            variable y(mx1, 1)
+            if flag
+                f = (x - y)'*Qi*(x - y);
+            else
+                f = (x - y)'*(x - y);
+            end
+            minimize(f)
+            subject to
+                x'*Qi*x + 2*(-Qi*q)'*x + (q'*Qi*q - 1) <= 0
+                A*y - b <= 0
+        cvx_end
+
+        d1 = f;
         if d1 < ellOptions.abs_tol
           d1 = 0;
         end
         d1  = sqrt(d1);
         dd  = [dd d1];
-	sts = [sts o];
+	sts = [sts cvx_status];
       end
       d      = [d; dd];
       status = [status sts];
@@ -646,23 +682,27 @@ function [d, status] = l_polydist(E, X)
       for j = 1:l
         %[A, b] = double(X(i, j));
         [A, b] = double(X(j));
-        x  = sdpvar(mx1, 1);
-        y  = sdpvar(mx1, 1);
-        if flag
-          f  = (y - x)'*Q*(y - x);
-        else
-          f  = (y - x)'*(y - x);
-        end
-        C  = set(x'*Q*x + 2*(-Q*q)'*x + (q'*Q*q - 1) <= 0);
-        C  = C + set(A*y - b <= 0);
-        o  = solvesdp(C, f, ellOptions.sdpsettings);
-        d1 = double(f);
+        cvx_begin sdp
+            variable x(mx1, 1)
+            variable y(mx1, 1)
+            if flag
+                f = (x - y)'*Qi*(x - y);
+            else
+                f = (x - y)'*(x - y);
+            end
+            minimize(f)
+            subject to
+                x'*Qi*x + 2*(-Qi*q)'*x + (q'*Qi*q - 1) <= 0
+                A*y - b <= 0
+        cvx_end
+
+        d1 = f;
         if d1 < ellOptions.abs_tol
           d1 = 0;
         end
         d1  = sqrt(d1);
         dd  = [dd d1];
-	sts = [sts o];
+	sts = [sts cvx_status];
       end
       d      = [d; dd];
       status = [status sts];

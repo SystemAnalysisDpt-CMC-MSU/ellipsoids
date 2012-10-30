@@ -34,7 +34,7 @@ function [E, S] = ellintersection_ia(EE)
 % -------
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-%
+%    Vadim Kaushanskiy <vkaushanskiy@gmail.com>
 
   global ellOptions;
 
@@ -57,48 +57,45 @@ function [E, S] = ellintersection_ia(EE)
   I      = eye(mn);
 
   if ellOptions.verbose > 0
-    fprintf('Invoking YALMIP...\n');
+    fprintf('Invoking CVX...\n');
   end
 
-  B      = sdpvar(mn, mn);
-  d      = sdpvar(mn, 1);
-  ll     = sdpvar(M, 1);
-
-  cnstr = lmi;
-
-  for i = 1:M
-    [q, Q] = double(EE(i));
-    
-    if rank(Q) < mn
-      Q = regularize(Q);
-    end
-    
-    A     = ell_inv(Q);
-    b     = -A * q;
-    c     = q' * A * q - 1;
-    X     = [(-ll(i,1)-c+b'*Q*b) zz'       (d+Q*b)'
-             zz                  ll(i,1)*I B
-             (d+Q*b)             B         Q];
-
-    cnstr = cnstr + set('X>=0');
-    cnstr = cnstr + set('ll(i, 1)>=0');
-  end
-
-  S = solvesdp(cnstr, -logdet(B), ellOptions.sdpsettings);
-  B = double(B);
-  d = double(d);
+cvx_begin sdp
+    variable cvxEllMat(mn,mn) symmetric
+    variable cvxEllCenterVec(mn)
+    variable cvxDirVec(M)
   
-  if rank(B) < mn
-    B = regularize(B);
+    maximize( det_rootn( cvxEllMat ) )
+    subject to
+        -cvxDirVec <= 0;
+        for i = 1:M
+            [q, Q] = double(EE(i));
+            if rank(Q) < mn
+                Q = regularize(Q);
+            end
+            A     = ell_inv(Q);
+            b     = -A * q;
+            c     = q' * A * q - 1;
+            [ (-cvxDirVec(i)-c+b'*Q*b), zeros(mn,1)', (cvxEllCenterVec + Q*b)' ;
+              zeros(mn,1), cvxDirVec(i)*eye(mn), cvxEllMat;
+              (cvxEllCenterVec + Q*b), cvxEllMat, Q] >= 0;
+             
+        end
+        
+cvx_end
+
+
+  
+ 
+  if rank(cvxEllMat) < mn
+    cvxEllMat = regularize(cvxEllMat);
   end
 
-  P = B * B';
-  P = 0.5*(P + P');
+  ellMat = cvxEllMat * cvxEllMat';
+  ellMat = 0.5*(ellMat + ellMat');
 
-  E = ellipsoid(d, P);
+  E = ellipsoid(cvxEllCenterVec, ellMat);
 
   if nargout < 2
     clear S;
   end
-
-  return;

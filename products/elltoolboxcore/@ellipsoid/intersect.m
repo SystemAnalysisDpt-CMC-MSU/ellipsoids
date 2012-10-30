@@ -87,7 +87,7 @@ function [res, status] = intersect(E, X, s)
 % -------
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-%
+%    Vadim Kaushanskiy <vkaushanskiy@gmail.com>
 
   global ellOptions;
 
@@ -131,7 +131,7 @@ function [res, status] = intersect(E, X, s)
       error('INTERSECT: ellipsoids must be of the same dimension.');
     end
     if ellOptions.verbose > 0
-      fprintf('Invoking YALMIP...\n');
+      fprintf('Invoking CVX...\n');
     end
     [m, n] = size(X);
     res    = [];
@@ -158,7 +158,7 @@ function [res, status] = intersect(E, X, s)
       error('INTERSECT: ellipsoids and hyperplanes must be of the same dimension.');
     end
     if ellOptions.verbose > 0
-      fprintf('Invoking YALMIP...\n');
+      fprintf('Invoking CVX...\n');
     end
     [m, n] = size(X);
     res    = [];
@@ -193,7 +193,7 @@ function [res, status] = intersect(E, X, s)
       error('INTERSECT: ellipsoids and polytopes must be of the same dimension.');
     end
     if ellOptions.verbose > 0
-      fprintf('Invoking YALMIP...\n');
+      fprintf('Invoking CVX...\n');
     end
     res    = [];
     status = [];
@@ -229,7 +229,7 @@ function [res, status] = qcqp(EA, E)
 %
 
   global ellOptions;
-
+  status = 1;
   [q, Q] = parameters(E(1, 1));
   if size(Q, 2) > rank(Q)
     if ellOptions.verbose > 0
@@ -240,42 +240,40 @@ function [res, status] = qcqp(EA, E)
   end
   Q = ell_inv(Q);
   Q = 0.5*(Q + Q');
-  
-  % YALMIP
-  x         = sdpvar(length(Q), 1);
-  objective = x'*Q*x + 2*(-Q*q)'*x + (q'*Q*q - 1);
-  F         = set([]);
-  
+  QQ = Q;
+  qq = q;
+  %cvx
   [m, n] = size(EA);
-  for i = 1:m
-    for j = 1:n
-      [q, Q] = parameters(EA(i, j));
-      if size(Q, 2) > rank(Q)
-        Q = regularize(Q);
-      end
-      Q = ell_inv(Q);
-      Q = 0.5*(Q + Q');
 
-      % YALMIP
-      F = F + set(x'*Q*x + 2*(-Q*q)'*x + (q'*Q*q - 1) <= 0);
-    end
-  end
 
-  % YALMIP 
-  
-  status = solvesdp(F, objective, ellOptions.sdpsettings);
-  
-  if status.problem ~= 0
-    % problem is infeasible, or global minimum cannot be found
-    res = -1;
-    return;
-  end
+  cvx_begin sdp
+    variable x(length(Q), 1)
+    minimize(x'*Q*x + 2*(-Q*q)'*x + (q'*Q*q - 1))
+    subject to      
+        for i = 1:m
+            for j = 1:n
+                [q, Q] = parameters(EA(i, j));
+                if size(Q, 2) > rank(Q)
+                    Q = regularize(Q);
+                end
+                Q = ell_inv(Q);
+                Q = 0.5*(Q + Q');
+                x'*Q*x + 2*(-Q*q)'*x + (q'*Q*q - 1) <= 0;
+            end
+         end
 
-  if double(objective) < ellOptions.abs_tol
-    res = 1;
+  cvx_end
+  cvx_status
+  if strcmp(cvx_status,'Infeasible') || strcmp(cvx_status,'Inaccurate/Infeasible')
+      res = -1;
+      return;
+  end;
+  if x'*QQ*x + 2*(-QQ*qq)'*x + (qq'*QQ*qq - 1) <= ellOptions.abs_tol
+      res = 1;
   else
-    res = 0;
-  end
+      res = 0;
+  end;
+
 
   return;
 
@@ -292,49 +290,45 @@ function [res, status] = lqcqp(EA, H)
 %
 
   global ellOptions;
-
+  status = 1;
   [v, c] = parameters(H);
   if c < 0
     c = -c;
     v = -v;
   end
-
-  % YALMIP
-  x         = sdpvar(size(v, 1), 1);
-  objective = v'*x - c;
-  F         = set([]);
   
+  %cvx
   [m, n] = size(EA);
-  for i = 1:m
-    for j = 1:n
-      [q, Q] = parameters(EA(i, j));
-      if size(Q, 2) > rank(Q)
-        Q = regularize(Q);
-      end
-      Q  = ell_inv(Q);
-      Q  = 0.5*(Q + Q');
 
-      % YALMIP
-      F = F + set(x'*Q*x - 2*q'*Q*x + (q'*Q*q - 1) <= 0);
-    end
-  end
 
-  % YALMIP 
-  status = solvesdp(F, objective, ellOptions.sdpsettings);
+  cvx_begin sdp
+    variable x(size(v, 1), 1)
+    minimize(abs(v'*x - c))
+    subject to      
+        for i = 1:m
+            for j = 1:n
+                [q, Q] = parameters(EA(i, j));
+                if size(Q, 2) > rank(Q)
+                    Q = regularize(Q);
+                end
+                Q  = ell_inv(Q);
+                x'*Q*x - 2*q'*Q*x + (q'*Q*q - 1) <= 0;
+            end
+        end
 
-  if status.problem ~= 0
-    % problem is infeasible, or global minimum cannot be found
-    res = -1;
-    return;
-  end
-
-  F   = F + set(v'*x - c == 0);
-  status = solvesdp(F, objective, ellOptions.sdpsettings);
-  if status.problem ~= 0
-    res = 0;
+  cvx_end
+  cvx_status
+  if strcmp(cvx_status,'Infeasible')
+      res = -1;
+      return;
+  end;
+  
+  
+  if abs(v'*x - c) <= ellOptions.abs_tol
+      res = 1;
   else
-    res = 1;
-  end
+      res = 0;
+  end;
 
   return;
 
@@ -351,44 +345,37 @@ function [res, status] = lqcqp2(EA, P)
 %
 
   global ellOptions;
-
+  status = 1;
   [A, b] = double(P);
-
-  % YALMIP
-  x         = sdpvar(size(A, 2), 1);
-  objective = A(1, :)*x;
-  F         = set([]);
-  
   [m, n] = size(EA);
-  for i = 1:m
-    for j = 1:n
-      [q, Q] = parameters(EA(i, j));
-      if size(Q, 2) > rank(Q)
-        Q = regularize(Q);
-      end
-      Q  = ell_inv(Q);
-      Q  = 0.5*(Q + Q');
+  
+  cvx_begin sdp
+    variable x(size(A, 2), 1)
+    minimize(A(1, :)*x)
+    subject to      
+        for i = 1:m
+            for j = 1:n
+                [q, Q] = parameters(EA(i, j));
+                if size(Q, 2) > rank(Q)
+                    Q = regularize(Q);
+                end
+                Q  = ell_inv(Q);
+                Q  = 0.5*(Q + Q');
+                x'*Q*x - 2*q'*Q*x + (q'*Q*q - 1) <= 0;
+            end
+        end
 
-      % YALMIP
-      F = F + set(x'*Q*x - 2*q'*Q*x + (q'*Q*q - 1) <= 0);
-    end
-  end
-
-  % YALMIP 
-  status = solvesdp(F, objective, ellOptions.sdpsettings);
-
-  if status.problem ~= 0
-    % problem is infeasible, or global minimum cannot be found
-    res = -1;
-    return;
-  end
-
-  F   = F + set(A*x - b <= 0);
-  status = solvesdp(F, objective, ellOptions.sdpsettings);
-  if status.problem ~= 0
-    res = 0;
+  cvx_end
+  cvx_status
+  if strcmp(cvx_status,'Infeasible')
+      res = -1;
+      return;
+  end;
+  if A(1, :)*x <= ellOptions.abs_tol
+      res = 1;
   else
-    res = 1;
-  end
+      res = 0;
+  end;
+
 
   return;

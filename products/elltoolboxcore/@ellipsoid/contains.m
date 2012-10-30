@@ -34,7 +34,7 @@ function res = contains(E1, E2)
 % -------
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-%
+%    Vadim Kaushanskiy <vkaushanskiy@gmail.com>
 
   global ellOptions;
 
@@ -119,24 +119,22 @@ function res = l_check_containment(E1, E2)
   
   Qi     = ell_inv(Q);
   Ri     = ell_inv(R);
-
-  A      = [Qi -Qi*q; (-Qi*q)' (q'*Qi*q-1)];
-  B      = [Ri -Ri*r; (-Ri*r)' (r'*Ri*r-1)];
+  AMat      = [Qi -Qi*q; (-Qi*q)' (q'*Qi*q-1)];
+  BMat      = [Ri -Ri*r; (-Ri*r)' (r'*Ri*r-1)];
 
   if ellOptions.verbose > 0
-    fprintf('Invoking YALMIP...\n');
+    fprintf('Invoking CVX...\n');
   end
+cvx_begin sdp
+    variable cvxxVec(1, 1)
+    minimize(1)
+    subject to      
+        AMat <= cvxxVec*BMat
+        cvxxVec >= 0
+cvx_end
 
-  x      = sdpvar(1, 1);
-  f      = 1;
-  C      = set('A <= x*B');
-  C      = C + set('x >= 0');
-  ellOptions.sdpsettings = sdpsettings('solver','sdpt3');
-  s      = solvesdp(C, f, ellOptions.sdpsettings);
-  if s.problem == 0
+  if strcmp(cvx_status,'Solved') || strcmp(cvx_status, 'Inaccurate/Solved')
     res = 1;
   else
     res = 0;
   end
-
-  return;
