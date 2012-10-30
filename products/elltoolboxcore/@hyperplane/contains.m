@@ -42,6 +42,10 @@ function res = contains(H, X)
   if ~(isa(X, 'double'))
     error('CONTAINS: second input argument must be of type double.');
   end
+  
+  
+  import modgen.common.type.simple.checkgenext;
+  checkgenext('~any(isnan(x1(:)))',1,X); 
 
   d = dimension(H);
   m = min(min(d));
@@ -60,45 +64,51 @@ function res = contains(H, X)
   if (t ~= l) & (t > 1) & (l > 1)
     error('CONTAINS: number of vectors does not match the number of hyperplanes.');
   end
-
-  res = [];
-  if (t > 1) & (l > 1)
+  
+  if(t > 1)
+    res = false(m,n);
+  else
+    res = false(1,l);
+  end
+  
+  if (t > 1) && (l > 1)  
     for i = 1:m
-      r = [];
       for j = 1:n
         [v, c] = parameters(H(i, j));
-	x      = X(:, i*j);
-        if abs((v'*x) - c) < ellOptions.abs_tol
-          r = [r 1];
-        else
-          r = [r 0];
-        end
+        x = X(:, i*j);
+        res(i,j) = isContain(v,c,x);
       end
-      res = [res; r];
     end
   elseif t > 1
+    x = X;
     for i = 1:m
-      r = [];
       for j = 1:n
         [v, c] = parameters(H(i, j));
-        if abs((v'*X) - c) < ellOptions.abs_tol
-          r = [r 1];
-        else
-          r = [r 0];
-        end
+        res(i,j) = isContain(v,c,x);
       end
-      res = [res; r];
     end
   else
+    [v, c] = parameters(H);
     for i = 1:l
-      [v, c] = parameters(H);
-      x      = X(:, i);
-      if abs((v'*x) - c) < ellOptions.abs_tol
-        res = [res 1];
-      else
-        res = [res 0];
-      end
+      x = X(:, i);
+      res(1,i) = isContain(v,c,x);
     end
   end
 
   return;
+  
+ function res = isContain(hyperplaneNorm, hyperplaneConst, vector)     
+     global ellOptions;
+     res = 0;
+     indInfComponent = (vector == inf) | (vector == -inf);
+     if any(hyperplaneNorm(indInfComponent) ~= 0)
+         return;
+     else
+         hyperplaneNorm = hyperplaneNorm(~indInfComponent);
+         vector = vector(~indInfComponent);
+         if abs((hyperplaneNorm'*vector) - hyperplaneConst) < ellOptions.abs_tol
+            res = 1;
+         end
+     end
+
+             

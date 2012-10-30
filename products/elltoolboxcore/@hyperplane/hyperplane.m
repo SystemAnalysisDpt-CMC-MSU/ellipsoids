@@ -35,7 +35,6 @@ function HA = hyperplane(v, c)
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
-
   global ellOptions;
 
   if ~isstruct(ellOptions)
@@ -50,11 +49,11 @@ function HA = hyperplane(v, c)
   if nargin < 2
     c = 0;
   end
-
+  
   if ~(isa(v, 'double')) | ~(isa(c, 'double'))
     error('ELL_HYPERPLANE: both arguments must be of type ''double''.');
   end
-
+  
   [n, m] = size(v);
   [k, l] = size(c);
   if k > 1
@@ -68,6 +67,10 @@ function HA = hyperplane(v, c)
     error(sprintf('ELL_HYPERPLANE: second argument must be a single scalar, or an array of %d scalars.', m));
   end
 
+  
+  import modgen.common.type.simple.checkgenext;  
+  checkgenext('~(any( isnan(x1(:)) ) || any(isinf(x1(:))) || any(isnan(x2(:))) || any(isinf(x2(:))))',2,v,c); 
+  
   if l == 1
     c(1:m) = c;
   end
