@@ -47,17 +47,15 @@ ellOptions.plot2d_grid = 200; % grid density for plotting in 2D
 ellOptions.plot3d_grid = 200; % grid density for plotting in 3D
 
 
-% YALMIP settings.
+% CVX settings.
 try
-    ellOptions.sdpsettings = sdpsettings('Verbose', 0, 'warning', 0,...
-        'cachesolvers', 1);
+    ellOptions.cvx_solver = 'sdpt3';
+    ellOptions.cvx_precision = [0, ellOptions.rel_tol/2];
+    cvx_precision(ellOptions.cvx_precision);
+    cvx_solver(ellOptions.cvx_solver);
+
 catch
-    warning('YALMIP not found, some functionality may be not accessible.');
-    ellOptions.sdpsettings = [];
-end
-%
-if ellOptions.verbose > 0
-    disp([welcomeString,': done']);
+    warning('CVX not found, some functionality may be not accessible.');
 end
 
 SEllOptions=ellOptions;
