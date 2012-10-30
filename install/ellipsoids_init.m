@@ -13,7 +13,7 @@ global ellOptions;
 
 
 ellOptions.version = '1.4dev';
-ellOptions.verbose = 1; % verbosity 1 ==> ON, 0 ==> OFF
+ellOptions.verbose = 0; % verbosity 1 ==> ON, 0 ==> OFF
 
 if ellOptions.verbose > 0
     welcomeString=sprintf(...
@@ -48,14 +48,10 @@ ellOptions.plot3d_grid = 200; % grid density for plotting in 3D
 
 
 % CVX settings.
-try
+if elltool.cvx.CVXControllerChecker.isSetUp()
     ellOptions.cvx_solver = 'sdpt3';
     ellOptions.cvx_precision = [0, ellOptions.rel_tol/2];
     cvx_precision(ellOptions.cvx_precision);
     cvx_solver(ellOptions.cvx_solver);
-
-catch
-    warning('CVX not found, some functionality may be not accessible.');
 end
-
 SEllOptions=ellOptions;
