@@ -1,5 +1,6 @@
 function SEllOptions = ellipsoids_init()
 %
+import elltool.cvx.CVXController;
 % ELLIPSOIDS_INIT - initializes Ellipsoidal Toolbox.
 %
 % Any routine of Ellipsoidal Toolbox can be called with user-specified values
@@ -48,10 +49,8 @@ ellOptions.plot3d_grid = 200; % grid density for plotting in 3D
 
 
 % CVX settings.
-if elltool.cvx.CVXControllerChecker.isSetUp()
-    ellOptions.cvx_solver = 'sdpt3';
-    ellOptions.cvx_precision = [0, ellOptions.rel_tol/2];
-    cvx_precision(ellOptions.cvx_precision);
-    cvx_solver(ellOptions.cvx_solver);
+if CVXController.isSetUp()
+    CVXController.setSolver('sdpt3');
+    CVXController.setPrecision(ellOptions.rel_tol);
 end
 SEllOptions=ellOptions;

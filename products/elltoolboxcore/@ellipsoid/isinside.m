@@ -206,9 +206,6 @@ function [res, status] = qcqp(EA, E)
   Q = ell_inv(Q);
   Q = 0.5*(Q + Q');
   
-  
-cvx_precision(ellOptions.cvx_precision);
-cvx_solver(ellOptions.cvx_solver);
 [m, n] = size(EA);
  
 cvx_begin sdp
