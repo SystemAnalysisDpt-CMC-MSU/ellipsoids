@@ -27,7 +27,7 @@ try
     log4jConfiguratorName,emailSubjSuffName,runnerName,...
     fTempDirGetter,SCRIPT_NAME);
 catch meObj
-    disponoff([],errst2str(meObj));
+    disp(errst2str(meObj));
     rethrow(meObj);
 end
     

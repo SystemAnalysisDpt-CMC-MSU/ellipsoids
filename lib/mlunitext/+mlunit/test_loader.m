@@ -54,17 +54,18 @@ classdef test_loader
             %           mlunitext.test_case class
             %
             % Output:
-            %   suite: mlunitext.test_suite
+            %   suite: mlunit.test_suite
             %       
             % Example:
             %   loader = test_loader;
             %   suite = test_suite(load_tests_from_test_case(loader, 'my_test'));
             
-            import mlunitext.*;
+            import mlunit.*;
             %
-            suite = test_suite;
             testNameList = get_test_case_names(self, testCaseClassName);
-            if (~isempty(testNameList))
+            if isempty(testNameList)
+                suite = test_suite;
+            else
                 suite = test_suite(map(self, ...
                     testCaseClassName, ...
                     testNameList,varargin{:}));
