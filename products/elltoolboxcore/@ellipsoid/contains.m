@@ -127,10 +127,9 @@ function res = l_check_containment(E1, E2)
   end
 cvx_begin sdp
     variable cvxxVec(1, 1)
-    minimize(1)
-    subject to      
-        AMat <= cvxxVec*BMat
-        cvxxVec >= 0
+        
+    AMat <= cvxxVec*BMat
+    cvxxVec >= 0
 cvx_end
 
   if strcmp(cvx_status,'Solved') || strcmp(cvx_status, 'Inaccurate/Solved')

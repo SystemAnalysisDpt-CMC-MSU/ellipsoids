@@ -25,7 +25,7 @@ end
 
 
 ellOptions.abs_tol = 1e-7; % absolute tolerance
-ellOptions.rel_tol = 1e-6; % relative tolerance
+ellOptions.rel_tol = 1e-5; % relative tolerance
 
 
 % ODE solver parameters.
@@ -51,6 +51,6 @@ ellOptions.plot3d_grid = 200; % grid density for plotting in 3D
 % CVX settings.
 if CVXController.isSetUp()
     CVXController.setSolver('sdpt3');
-    CVXController.setPrecision(ellOptions.rel_tol);
+    CVXController.setPrecision(2*ellOptions.rel_tol);
 end
 SEllOptions=ellOptions;

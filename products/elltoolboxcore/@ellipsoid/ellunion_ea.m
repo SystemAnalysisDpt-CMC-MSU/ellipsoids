@@ -66,7 +66,7 @@ cvx_begin sdp
     variable cvxDirVec(M)
     maximize( det_rootn( cvxEllMat ) )
     subject to
-        cvxDirVec >= 0
+        -cvxDirVec <= 0
         for i = 1:M
             [q, Q] = double(EE(i));
             Q = (Q + Q')*0.5;
@@ -85,10 +85,10 @@ cvx_begin sdp
         end
 cvx_end
  
-  ellMat = inv(cvxEllMat);
-  ellMat = 0.5*(ellMat+ellMat.');
-  invCvxEllMat = ell_inv(cvxEllMat);
-  ellCenterVec = -invCvxEllMat * cvxEllCenterVec;
+
+  ellMat = ell_inv(cvxEllMat);
+  ellMat = 0.5*(ellMat + ellMat');
+  ellCenterVec = -ellMat * cvxEllCenterVec;
 
   E = ellipsoid(ellCenterVec, ellMat);
 

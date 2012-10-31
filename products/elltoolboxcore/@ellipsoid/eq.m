@@ -56,7 +56,7 @@ function res = eq(E1, E2)
         end
         q = E1(i, j).center - E2(i, j).center;
         Q = E1(i, j).shape - E2(i, j).shape;
-        if (norm(q) > ellOptions.abs_tol) | (norm(Q) > ellOptions.abs_tol)
+        if (norm(q) > ellOptions.rel_tol) | (norm(Q) > ellOptions.rel_tol)
           r = [r 0];
         else
           r = [r 1];
@@ -74,7 +74,7 @@ function res = eq(E1, E2)
         end
         q = E1(i, j).center - E2.center;
         Q = E1(i, j).shape - E2.shape;
-        if (norm(q) > ellOptions.abs_tol) | (norm(Q) > ellOptions.abs_tol)
+        if (norm(q) > ellOptions.rel_tol) | (norm(Q) > ellOptions.rel_tol)
           r = [r 0];
         else
           r = [r 1];
