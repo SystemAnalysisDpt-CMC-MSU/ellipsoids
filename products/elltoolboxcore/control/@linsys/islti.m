@@ -6,9 +6,9 @@ function isLtiMat = islti(linSysMat)
 %       linSysMat: linsys[mRows,nCols] - a matrix of linear systems.
 %
 % Output:
-%   isLtiMat: double[mRows,nCols] - a matrix such that it's element at
-%       position (i,j) is 1 if corresponding linear system is time-invariant, 
-%       and 0 otherwise.
+%   isLtiMat: logical[mRows,nCols] - a matrix such that it's element at
+%       position (i,j) is true if corresponding linear system is time-invariant, 
+%       and false otherwise.
 %
 % $Author: Alex Kurzhanskiy  <akurzhan@eecs.berkeley.edu> $    $Date: 2004-2008 $
 % $Copyright:  The Regents of the University of California 2004-2008 $
@@ -24,21 +24,16 @@ if ~isstruct(ellOptions)
     evalin('base', 'ellipsoids_init;');
 end
 %
-if ~(isa(lsys, 'linsys'))
-    error('ISLTI: input argument must be linear system object.');
+if ~(isa(linSysMat, 'linsys'))
+    modgen.common.throwerror('wrongType', 'input argument must be linear system object.');
 end
 %
 [mRows, nCols] = size(linSysMat);
-isLtiMat = zeros(mRows, nCols);
+isLtiMat = false(mRows, nCols);
 %
 for iRow = 1:mRows
     for jCol = 1:nCols
-        % double type should be replaced with boolean
-        if linSysMat(iRow, jCol).lti > 0
-            isLtiMat(iRow, jCol) = 1;
-        else
-            isLtiMat(iRow, jCol) = 0;
-        end
+        isLtiMat(iRow, jCol) = linSysMat(iRow, jCol).lti;
     end
 end
 %

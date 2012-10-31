@@ -6,9 +6,9 @@ function hasNoiseMat = hasnoise(linSysMat)
 %       linSysMat: linsys[mRows,nCols] - a matrix of linear systems.
 %
 % Output:
-%   hasNoiseMat: double[mRows,nCols] - a matrix such that it's element at
-%       position (i,j) is 1 if corresponding linear system has noise, 
-%       and 0 otherwise.
+%   hasNoiseMat: logical[mRows,nCols] - a matrix such that it's element at
+%       position (i,j) is true if corresponding linear system has noise, 
+%       and false otherwise.
 %
 % $Author: Alex Kurzhanskiy  <akurzhan@eecs.berkeley.edu> $    $Date: 2004-2008 $
 % $Copyright:  The Regents of the University of California 2004-2008 $
@@ -25,19 +25,16 @@ if ~isstruct(ellOptions)
 end
 %
 if ~(isa(linSysMat, 'linsys'))
-    error('HASNOISE: input argument must be linear system object.');
+    modgen.common.throwerror('wrongType', 'input argument must be linear system object.');
 end
 %
 [mRows, nCols] = size(linSysMat);
-hasNoiseMat = zeros(mRows, nCols);
+hasNoiseMat = false(mRows, nCols);
 %
 for iRow = 1:mRows
     for jCol = 1:nCols
-        % double type should be replaced with boolean
         if ~isempty( linSysMat(iRow, jCol).noise ) 
-            hasNoiseMat(iRow, jCol) = 1;
-        else
-            hasNoiseMat(iRow, jCol) = 0;
+            hasNoiseMat(iRow, jCol) = true;
         end
     end
 end

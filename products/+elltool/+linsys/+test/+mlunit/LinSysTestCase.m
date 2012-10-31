@@ -340,5 +340,133 @@ classdef LinSysTestCase < mlunitext.test_case
             mlunit.assert_equals( all(resultMat(:)), true ); 
             %
         end
+        %
+        function self = testHasNoise(self)
+            aMat = eye(3);
+            bMat = eye(3);
+            cMat = eye(3);
+            gMat = eye(3);
+            uEllipsoid = ell_unitball(3);
+            vEllipsoid = ell_unitball(3);
+            wVec = eye(3,1);
+            wCVec = {'t';'t';'t'};
+            wEllipsoid = ell_unitball(3);
+            wEllipsoidStruct.shape = {'t','t','t';'t','t','t';'t','t','t'};
+            wEllipsoidStruct.center = {'t';'t';'t'};
+            %
+            % test matrix of systems
+            %
+            systemMat = [ ...
+                linsys([],[],[]), ...
+                linsys(aMat,bMat,uEllipsoid,gMat,vEllipsoid,cMat,[]), ...
+                linsys(aMat,bMat,uEllipsoid,gMat,vEllipsoid,cMat,wVec); ...
+                linsys(aMat,bMat,uEllipsoid,gMat,vEllipsoid,cMat,wCVec), ...
+                linsys(aMat,bMat,uEllipsoid,gMat,vEllipsoid,cMat,wEllipsoid),...
+                linsys(aMat,bMat,uEllipsoid,gMat,vEllipsoid,cMat,wEllipsoidStruct) ...
+            ];
+            obtainedMat = hasnoise(systemMat);
+            expectedMat = [ false false true; true true true ];
+            eqMat = (obtainedMat == expectedMat);
+            mlunit.assert_equals( all(eqMat(:)), true );              
+        end
+        %
+        function self = testDisturbance(self)
+            aMat = eye(3);
+            bMat = eye(3);
+            gMat = eye(3);
+            uEllipsoid = ell_unitball(3);            
+            vVec = eye(3,1);
+            vCVec = {'t';'t';'t'};
+            vEllipsoid = ell_unitball(3);
+            vEllipsoidStruct.shape = {'t','t','t';'t','t','t';'t','t','t'};
+            vEllipsoidStruct.center = {'t';'t';'t'};
+            %
+            % test matrix of systems
+            %            
+            systemMat = [ ...
+                linsys([],[],[]), ...
+                linsys(aMat,bMat,uEllipsoid,gMat,vVec), ...
+                linsys(aMat,bMat,uEllipsoid,gMat,vCVec); ...
+                linsys(aMat,bMat,uEllipsoid,gMat,vEllipsoid), ...
+                linsys(aMat,bMat,uEllipsoid,gMat,vEllipsoidStruct), ...
+                linsys(aMat,bMat,uEllipsoid,[],vEllipsoidStruct) ...
+            ];
+            obtainedMat = hasdisturbance(systemMat);
+            expectedMat = [ false true true; true true false ];
+            eqMat = (obtainedMat == expectedMat);
+            mlunit.assert_equals( all(eqMat(:)), true );              
+        end 
+        %
+        function self = testIsDiscrete(self)
+            aMat = eye(3);
+            bMat = eye(3);
+            cMat = eye(3);
+            uEllipsoid = ell_unitball(3);
+            uVec = {'k';'k';'k'};
+            vVec = {'k';'k';'k'};
+            wVec = {'k';'k';'k'};            
+            %
+            % test matrix of systems
+            %
+            systemMat = [ ...
+                linsys([],[],[]), ...
+                linsys(aMat,bMat,uEllipsoid), ...
+                linsys(aMat,bMat,uEllipsoid,[],[],cMat,[]); ...
+                linsys(aMat,bMat,uEllipsoid,[],[],cMat,[],'c'), ...
+                linsys(aMat,bMat,uEllipsoid,[],[],cMat,[],'d'), ...
+                linsys(aMat,bMat,uVec,[],vVec,cMat,wVec,'d') ...
+            ];
+            obtainedMat = isdiscrete(systemMat);
+            expectedMat = [ false false false; false true true ];
+            eqMat = (obtainedMat == expectedMat);
+            mlunit.assert_equals( all(eqMat(:)), true );               
+        end   
+        %
+        function self = testIsLti(self)
+            aMat = eye(3);
+            bMat = eye(3);            
+            gMat = eye(3);
+            cMat = eye(3);
+            vEllipsoid = ell_unitball(3);                        
+            uEllipsoid = ell_unitball(3);
+            aCMat = {'t','t','t';'t','t','t';'t','t','t'};           
+            bCMat = {'t','t','t';'t','t','t';'t','t','t'};           
+            gCMat = {'t','t','t';'t','t','t';'t','t','t'};           
+            cCMat = {'t','t','t';'t','t','t';'t','t','t'};           
+            %
+            % test matrix of systems
+            %
+            systemMat = [ ...
+                linsys([],[],[]), ...
+                linsys(aMat, bMat, uEllipsoid, gMat, vEllipsoid, cMat), ...
+                linsys(aCMat, bMat, uEllipsoid, gMat, vEllipsoid, cMat); ...
+                linsys(aMat, bCMat, uEllipsoid, gMat, vEllipsoid, cMat), ...
+                linsys(aMat, bMat, uEllipsoid, gCMat, vEllipsoid, cMat), ...
+                linsys(aMat, bMat, uEllipsoid, gMat, vEllipsoid, cCMat) ...
+            ];
+            obtainedMat = islti(systemMat);
+            expectedMat = [ true true false; false false false ];
+            eqMat = (obtainedMat == expectedMat);
+            mlunit.assert_equals( all(eqMat(:)), true );                 
+        end
+        %
+        function self = testIsEmpty(self)
+            aMat = eye(3);
+            bMat = eye(3); 
+            uEllipsoid = ell_unitball(3);
+            %
+            % test matrix of systems
+            %
+            systemMat = [ ...
+                linsys(), ...
+                linsys([],[],[]); ...
+                linsys(aMat,bMat,[]), ...
+                linsys(aMat,bMat,uEllipsoid) ...
+            ];
+            obtainedMat = isempty(systemMat);
+            expectedMat = [ true true; false false];
+            eqMat = (obtainedMat == expectedMat);
+            mlunit.assert_equals( all(eqMat(:)), true );                 
+        end         
     end
 end

@@ -100,12 +100,13 @@ function ls = linsys(A, B, U, G, V, C, W, D)
 %
 %    LINSYS/DIMENSION, ISEMPTY, ISDISCRETE, ISLTI, HASDISTURBANCE, HASNOISE.
 %
-
+% $Author: Alex Kurzhanskiy  <akurzhan@eecs.berkeley.edu> $    $Date: 2004-2008 $
+% $Copyright:  The Regents of the University of California 2004-2008 $
 %
-% Author:
-% -------
-%
-%    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+% $Author: Ivan Menshikov  <ivan.v.menshikov@gmail.com> $    $Date: 2012 $
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2012 $
 %
 
   global ellOptions;
@@ -122,20 +123,20 @@ function ls = linsys(A, B, U, G, V, C, W, D)
     ls.disturbance    = [];
     ls.C              = [];
     ls.noise          = [];
-    ls.lti            = 0;
-    ls.dt             = 0;
-    ls.constantbounds = [0 0 0];
+    ls.lti            = false;
+    ls.dt             = false;
+    ls.constantbounds = false(1,3);
     ls                = class(ls, 'linsys');
     return;
   end
 
-  lti    = 1;
+  lti    = true;
   [m, n] = size(A);
   if m ~= n
     error('linsys:dimension:A', 'LINSYS: A must be square matrix.');
   end
   if iscell(A)
-    lti = 0;
+    lti = false;
   elseif ~(isa(A, 'double'))
     error('linsys:type:A', 'LINSYS: matrix A must be of type ''cell'' or ''double''.');
   end
@@ -146,13 +147,13 @@ function ls = linsys(A, B, U, G, V, C, W, D)
     error('linsys:dimension:B', 'LINSYS: dimensions of A and B do not match.');
   end
   if iscell(B)
-    lti = 0;
+    lti = false;
   elseif ~(isa(B, 'double'))
     error('linsys:type:B', 'LINSYS: matrix B must be of type ''cell'' or ''double''.');
   end 
   ls.B = B;
   
-  cbu = 1;
+  cbu = true;
   if nargin > 2
     if isempty(U)
       % leave as is
@@ -173,10 +174,10 @@ function ls = linsys(A, B, U, G, V, C, W, D)
         error('linsys:dimension:U', 'LINSYS: dimensions of control vector U and matrix B do not match.');
       end
       if iscell(U)
-          cbu = 0;
+          cbu = false;
       end
     elseif isstruct(U) && isfield(U, 'center') && isfield(U, 'shape')
-      cbu = 0;
+      cbu = false;
       U   = U(1, 1);
       l_check_ell_struct(U, l);      
     else
@@ -196,7 +197,7 @@ function ls = linsys(A, B, U, G, V, C, W, D)
         error('linsys:dimension:G', 'LINSYS: dimensions of A and G do not match.');
       end
       if iscell(G)
-        lti = 0;
+        lti = false;
       elseif ~(isa(G, 'double'))
         error('linsys:type:G', 'LINSYS: matrix G must be of type ''cell'' or ''double''.');
       end 
@@ -205,7 +206,7 @@ function ls = linsys(A, B, U, G, V, C, W, D)
     G = [];
   end
 
-  cbv = 1;
+  cbv = true;
   if nargin > 4
     if isempty(G) || isempty(V)
       G = [];
@@ -224,10 +225,10 @@ function ls = linsys(A, B, U, G, V, C, W, D)
         error('linsys:dimension:V', 'LINSYS: dimensions of disturbance vector V and matrix G do not match.');
       end
       if iscell(V)
-          cbv = 0;
+          cbv = false;
       end
     elseif isstruct(V) && isfield(V, 'center') && isfield(V, 'shape')
-      cbv = 0;
+      cbv = false;
       V   = V(1, 1);
       l_check_ell_struct(V, l);
     else
@@ -248,7 +249,7 @@ function ls = linsys(A, B, U, G, V, C, W, D)
         error('linsys:dimension:C', 'LINSYS: dimensions of A and C do not match.');
       end
       if iscell(C)
-        lti = 0;
+        lti = false;
       elseif ~(isa(C, 'double'))
         error('linsys:type:C', 'LINSYS: matrix C must be of type ''cell'' or ''double''.');
       end 
@@ -258,7 +259,7 @@ function ls = linsys(A, B, U, G, V, C, W, D)
   end
   ls.C = C;
   
-  cbw = 1;
+  cbw = true;
   if nargin > 6
     if isempty(W)
       % leave as is
@@ -276,10 +277,10 @@ function ls = linsys(A, B, U, G, V, C, W, D)
         error('linsys:dimension:W', 'LINSYS: dimensions of noise vector W and matrix C do not match.');
       end
       if iscell(W)
-          cbw = 0;
+          cbw = false;
       end
     elseif isstruct(W) && isfield(W, 'center') && isfield(W, 'shape')
-      cbw = 0;
+      cbw = false;
       W   = W(1, 1);
       l_check_ell_struct(W, k);
     else
@@ -291,9 +292,9 @@ function ls = linsys(A, B, U, G, V, C, W, D)
   ls.noise = W;
 
   ls.lti = lti;
-  ls.dt  = 0;
+  ls.dt  = false;
   if (nargin > 7)  && ischar(D) && (D == 'd')
-    ls.dt = 1;
+    ls.dt = true;
   end
   ls.constantbounds = [cbu cbv cbw];
   ls                = class(ls, 'linsys');
@@ -341,18 +342,16 @@ function l_check_ell_struct(E, N)
     if ellOptions.verbose > 0
       fprintf('LINSYS: Warning! Cannot check if symbolic matrix is positive definite.\n');
     end
-    for i = 1:n
-      for j = i:n
-        if any( Q{i, j} ~= Q{j, i} )
-          error( sprintf('linsys:value:%s:shape',inputname(1)), ...
+    isEqMat = strcmp(Q, Q.');
+    if ~all( isEqMat(:) )
+        error( sprintf('linsys:value:%s:shape',inputname(1)), ...
               'shape matrix must be symmetric, positive definite' );
-        end
-      end
     end
   else
     if isa(Q, 'double')
-      notEqual = ( Q ~= Q' );
-      if any( notEqual(:) ) || min(eig(Q)) < 0
+      errorMat = abs(Q - Q.');
+      maxError = max( errorMat(:) );
+      if maxError > ellOptions.abs_tol || min(eig(Q)) < 0
         error( sprintf('linsys:value:%s:shape',inputname(1)), ...
             'shape matrix must be symmetric, positive definite' );
       end                    
