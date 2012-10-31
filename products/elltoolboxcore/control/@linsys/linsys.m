@@ -349,7 +349,7 @@ function l_check_ell_struct(E, N)
     end
   else
     if isa(Q, 'double')
-      isnEqMat = ( Q ~= Q.' )
+      isnEqMat = ( Q ~= Q.' );
       if any( isnEqMat(:) ) || min(eig(Q)) <= 0
         error( sprintf('linsys:value:%s:shape',inputname(1)), ...
             'shape matrix must be symmetric, positive definite' );
