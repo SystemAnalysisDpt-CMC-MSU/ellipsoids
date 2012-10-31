@@ -2,7 +2,7 @@
 <root version="2" xml_tb_version="2.0" type="struct" >
 <valueObj type="struct" >
 	<dim type="cell" >
-		<item type="double" >8</item>
+		<item type="double" >2</item>
 	</dim>
 	<At type="cell" size="2 1">
 		<item type="char" >cos(t) -sin(t)</item>
