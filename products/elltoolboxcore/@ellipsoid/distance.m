@@ -62,10 +62,15 @@ function [d, status] = distance(E, X, flag)
 %
 % Author:
 % -------
-%
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
-%   
+% $Author: 
+% ------- 
+%   Vitaly Baranov  <vetbar42@gmail.com> $    $Date: 31-10-2012 $
+% $Copyright: Lomonosov Moscow State University,
+%            Faculty of Computational Mathematics and Cybernetics,
+%            System Analysis Department 2012 $
+   
   global ellOptions;
 
   if ~isstruct(ellOptions)
@@ -119,6 +124,86 @@ function [d, status] = distance(E, X, flag)
 
 
 
+function [ellDist timeOfCalculation] = computeEllEllDistance(ellObj1,ellObj2,nMaxIter,absTol)
+% COMPUTEELLELLDISTANCE - computes the distance between two ellipsoids
+% Input:
+%       ellObj1:  ellipsoid: [1,1] - first ellipsoid,
+%       ellObj2: ellipsoid: [1,1] - second ellipsoid,
+%       nMaxIter: int8[1,1] - maximal number of iterations,
+%       absTol: double[1,1] - absolute tolerance, 
+% Output:
+%       ellDist  - computed distance
+%       timeOfComputation - time of computation
+%  
+%
+% Vitaly Baranov  <vetbar42@gmail.com> $	$Date: 2012-10-28 $ 
+% Copyright: Lomonosov Moscow State University,
+%            Faculty of Computational Mathematics and Cybernetics,
+%            System Analysis Department 2012 $
+%
+% Literature: 
+%    Lin, A. and Han, S. On the Distance between Two Ellipsoids. 
+%    SIAM Journal on Optimization, 2002, Vol. 13, No. 1 : pp. 298-308
+%
+% 
+tic;
+[ellCenterVec1, ellQMat1] = double(ellObj1);
+[ellCenterVec2, ellQMat2] = double(ellObj2);
+%
+ellQMat1=ellQMat1\eye(size(ellQMat1));
+ellQMat2=ellQMat2\eye(size(ellQMat2));
+%
+if (ellCenterVec1==ellCenterVec2)
+    ellDist=0;
+else
+    circleCenterVec1=ellCenterVec1;
+    circleCenterVec2=ellCenterVec2;
+    %
+    myAngleFunc=@(xVec,yVec) acos(xVec.'*yVec/(norm(xVec)*norm(yVec)));
+    mySquareFunc=@(a,b,c) (@(t) a*t^2+b*t+c);
+    kIter=1;
+    isDone=false;  
+    ellDist=inf;
+    while (kIter<=nMaxIter) &&(~isDone)
+        %solve two onde dimentional qudratic equations of the type ax^2+bx+c=0 to get the stepsizes 
+        circleCentersDiffVec=circleCenterVec2-circleCenterVec1;
+        ellCircleCentersDiffVec1=circleCenterVec1-ellCenterVec1;
+        ellCircleCentersDiffVec2=circleCenterVec1-ellCenterVec2;
+        aCoeff1=circleCentersDiffVec.'*ellQMat1*circleCentersDiffVec;
+        bCoeff1=2*circleCentersDiffVec.'*ellQMat1*ellCircleCentersDiffVec1;
+        cCoeff1=ellCircleCentersDiffVec1.'*ellQMat1*ellCircleCentersDiffVec1-1;
+        aCoeff2=circleCentersDiffVec.'*ellQMat2*circleCentersDiffVec;
+        bCoeff2=2*circleCentersDiffVec.'*ellQMat2*ellCircleCentersDiffVec2;
+        cCoeff2=ellCircleCentersDiffVec2.'*ellQMat2*ellCircleCentersDiffVec2-1;  
+    %
+        stepSize1=fzero(mySquareFunc(aCoeff1,bCoeff1,cCoeff1),[0,1]);
+        stepSize2=fzero(mySquareFunc(aCoeff2,bCoeff2,cCoeff2),[0,1]);
+        if (stepSize2<=stepSize1)
+            ellDist=0;
+            isDone=true;
+        else
+            newPointVec1=circleCenterVec1+stepSize1.*circleCentersDiffVec;
+            newPointVec2=circleCenterVec1+stepSize2.*circleCentersDiffVec;
+            newPointsDiffVec=newPointVec2-newPointVec1;
+            newCircleVec1=2*ellQMat1*newPointVec1-2*ellQMat1*ellCenterVec1;
+            newCircleVec2=2*ellQMat2*newPointVec2-2*ellQMat2*ellCenterVec2;
+    %        
+            angleEll1=myAngleFunc(newPointsDiffVec,newCircleVec1);
+            angleEll2=myAngleFunc(-newPointsDiffVec,newCircleVec2);
+            if (angleEll1<absTol) && (angleEll2<absTol)
+                ellDist=norm(newPointsDiffVec);
+                isDone=true;
+            else
+                gamma1Coeff=1/norm(2*ellQMat1);
+                gamma2Coeff=1/norm(2*ellQMat2);
+                circleCenterVec1=newPointVec1-gamma1Coeff*(newCircleVec1);
+                circleCenterVec2=newPointVec2-gamma2Coeff*(newCircleVec2);
+            end
+        end 
+        kIter=kIter+1;   
+    end
+end
+timeOfCalculation=toc;
 
 %%%%%%%%
 function [ distEllVec timeOfComputation ] = computeEllVecDistance(ellObj,vectorVec,nMaxIter,absTol, relTol)
@@ -147,6 +232,7 @@ function [ distEllVec timeOfComputation ] = computeEllVecDistance(ellObj,vectorV
  import modgen.common.throwerror 
  tic;
  [ellCenterVec, ellQMat] = double(ellObj);
+ ellQMat=ellQMat\eye(size(ellQMat));
  vectorVec=vectorVec-ellCenterVec;
  vectorEllVal=vectorVec'*ellQMat*vectorVec;
  if ( vectorEllVal< 1)
@@ -282,144 +368,68 @@ return;
 
 %%%%%%%%
 
-function [d, status] = l_elldist(E, X, flag)
+function [distEllEll, timeOfCalculation] = l_elldist(ellObj1, ellObj2, flag)
 %
 % L_ELLDIST - distance from ellipsoid to ellipsoid.
 %
+    global ellOptions;
 
-  global ellOptions;
-
-  [m, n] = size(E);
-  [k, l] = size(X);
-  t1     = m * n;
-  t2     = k * l;
-  if (t1 > 1) & (t2 > 1) & ((m ~= k) | (n ~= l))
-    error('DISTANCE: sizes of ellipsoidal arrays do not match.');
-  end
-
-  dims1 = dimension(E);
-  dims2 = dimension(X);
-  mn1   = min(min(dims1));
-  mn2   = min(min(dims2));
-  mx1   = max(max(dims1));
-  mx2   = max(max(dims2));
-  if (mn1 ~= mx1) | (mn2 ~= mx2) | (mn1 ~= mn2)
-    error('DISTANCE: ellipsoids must be of the same dimension.');
-  end
-
-  if ellOptions.verbose > 0
-    if (t1 > 1) | (t2 > 1)
-      fprintf('Computing %d ellipsoid-to-ellipsoid distances...\n', max([t1 t2]));
+    [mSize1, kSize1] = size(ellObj1);
+    [mSize2, kSize2] = size(ellObj2);
+    nEllObj1     = mSize1 * kSize1;
+    nEllObj2     = mSize2 * kSize2;
+    if (nEllObj1 > 1) && (nEllObj2 > 1) && ((mSize1 ~= mSize2) || (kSize1 ~= kSize2))
+        throwerror('DISTANCE: sizes of ellipsoidal arrays do not match.');
+    end
+    dimemsionMat1 = dimension(ellObj1);
+    dimensionMat2 = dimension(ellObj2);
+    minDimension1   = min(min(dimemsionMat1));
+    minDimension2   = min(min(dimensionMat2));
+    maxDimension1   = max(max(dimemsionMat1));
+    maxDimension2   = max(max(dimensionMat2));
+    if (minDimension1 ~= maxDimension1) || (minDimension2 ~= maxDimension2) || (minDimension1 ~= minDimension2)
+        throwerror('DISTANCE: ellipsoids must be of the same dimension.');
+    end
+    if ellOptions.verbose > 0
+    if (nEllObj1 > 1) || (nEllObj2 > 1)
+      fprintf('Computing %d ellipsoid-to-ellipsoid distances...\n', max([nEllObj1 nEllObj2]));
     else
       fprintf('Computing ellipsoid-to-ellipsoid distance...\n');
     end
-    fprintf('Invoking YALMIP...\n');
-  end
-
-  d      = [];
-  status = [];
-  if (t1 > 1) & (t2 > 1)
-    for i = 1:m
-      dd  = [];
-      sts = [];
-      for j = 1:n
-        [q, Q] = double(E(i, j));
-        [r, R] = double(X(i, j));
-        Qi     = ell_inv(Q);
-        Qi     = 0.5*(Qi + Qi');
-        Ri     = ell_inv(R);
-        Ri     = 0.5*(Ri + Ri');
-        o      = struct('yalmiptime', [], 'solvertime', [], 'info', [], 'problem', [], 'dimacs', []);
-        x      = sdpvar(mx1, 1);
-        y      = sdpvar(mx1, 1);
-        if flag
-          f = (x - y)'*Qi*(x - y);
-        else
-          f = (x - y)'*(x - y);
-        end
-        C   = set(x'*Qi*x + 2*(-Qi*q)'*x + (q'*Qi*q - 1) <= 0);
-        C   = C + set(y'*Ri*y + 2*(-Ri*r)'*y + (r'*Ri*r - 1) <= 0);
-        o   = solvesdp(C, f, ellOptions.sdpsettings);
-        dst = double(f);
-        if dst < ellOptions.abs_tol
-          dst = 0;
-        end
-        dst = sqrt(dst);
-        dd  = [dd dst];
-	sts = [sts o];
-      end
-      d      = [d; dd];
-      status = [status sts];
     end
-  elseif (t1 > 1)
-    for i = 1:m
-      dd  = [];
-      sts = [];
-      for j = 1:n
-        [q, Q] = double(E(i, j));
-        [r, R] = double(X);
-        Qi     = ell_inv(Q);
-        Qi     = 0.5*(Qi + Qi');
-        Ri     = ell_inv(R);
-        Ri     = 0.5*(Ri + Ri');
-        o      = struct('yalmiptime', [], 'solvertime', [], 'info', [], 'problem', [], 'dimacs', []);
-        x      = sdpvar(mx1, 1);
-        y      = sdpvar(mx1, 1);
-        if flag
-          f = (x - y)'*Qi*(x - y);
-        else
-          f = (x - y)'*(x - y);
+    N_MAX_ITER=1000;
+    ABS_TOL=ellOptions.abs_tol;
+    if (nEllObj1 > 1) && (nEllObj2 > 1)
+        distEllEll=zeros(mSize1,kSize1);  
+        timeOfCalculation=zeros(mSize1,kSize1);
+        for i = 1:mSize1
+            for j = 1:kSize1
+                [distEllEll(i,j) timeOfCalculation(i,j)]=...
+                computeEllEllDistance(ellObj1(i,j),ellObj2(i,j),...
+                N_MAX_ITER,ABS_TOL);
+            end
         end
-        C   = set(x'*Qi*x + 2*(-Qi*q)'*x + (q'*Qi*q - 1) <= 0);
-        C   = C + set(y'*Ri*y + 2*(-Ri*r)'*y + (r'*Ri*r - 1) <= 0);
-        o   = solvesdp(C, f, ellOptions.sdpsettings);
-        dst = double(f);
-        if dst < ellOptions.abs_tol
-          dst = 0;
+    elseif (nEllObj1 > 1)
+        distEllEll=zeros(mSize2,kSize2);  
+        timeOfCalculation=zeros(mSize2,kSize2);
+        for i = 1:mSize1
+            for j = 1:kSize1
+                [distEllEll(i,j) timeOfCalculation(i,j)]=...
+                    computeEllEllDistance(ellObj1(i,j),ellObj2,...
+                    N_MAX_ITER,ABS_TOL);      
+            end
         end
-        dst = sqrt(dst);
-        dd  = [dd dst];
-	sts = [sts o];
-      end
-      d      = [d; dd];
-      status = [status sts];
+    else
+        distEllEll=zeros(mSize2,kSize2);  
+        timeOfCalculation=zeros(mSize2,kSize2);
+        for i = 1:mSize2
+          for j = 1:kSize2        
+            [distEllEll(mSize2,kSize2) timeOfCalculation(mSize2,kSize2)]=...
+                computeEllEllDistance(ellObj1,ellObj2(i,j),...
+                N_MAX_ITER,ABS_TOL);
+          end
+        end
     end
-  else
-    for i = 1:k
-      dd  = [];
-      sts = [];
-      for j = 1:l
-        [q, Q] = double(E);
-        [r, R] = double(X(i, j));
-        Qi     = ell_inv(Q);
-        Qi     = 0.5*(Qi + Qi');
-        Ri     = ell_inv(R);
-        Ri     = 0.5*(Ri + Ri');
-        o      = struct('yalmiptime', [], 'solvertime', [], 'info', [], 'problem', [], 'dimacs', []);
-        x      = sdpvar(mx1, 1);
-        y      = sdpvar(mx1, 1);
-        if flag
-          f = (x - y)'*Qi*(x - y);
-        else
-          f = (x - y)'*(x - y);
-        end
-        C   = set(x'*Qi*x + 2*(-Qi*q)'*x + (q'*Qi*q - 1) <= 0);
-        C   = C + set(y'*Ri*y + 2*(-Ri*r)'*y + (r'*Ri*r - 1) <= 0);
-        options=sdpsettings;
-        options.lmilab.reltol=ellOptions.abs_tol;
-        o   = solvesdp(C, f, options);
-        dst = double(f);
-        if dst < ellOptions.abs_tol
-          dst = 0;
-        end
-        dst = sqrt(dst);
-        dd  = [dd dst];
-	sts = [sts o];
-      end
-      d      = [d; dd];
-      status = [status sts];
-    end
-  end
 
   return;
 
