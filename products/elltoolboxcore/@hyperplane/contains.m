@@ -49,8 +49,8 @@ function res = contains(H, X)
     checkgenext('~any(isnan(x1(:)))',1,X); 
 
     nDimVec = dimension(H);
-    maxDimSize = min(min(nDimVec));
-    minDimSize = max(max(nDimVec));
+    maxDimSize = min(nDimVec(:));
+    minDimSize = max(nDimVec(:));
     if maxDimSize ~= minDimSize
         error('CONTAINS: hyperplanes must be of the same dimension.');
     end
@@ -62,7 +62,7 @@ function res = contains(H, X)
 
     [nRowsH, nColsH] = size(H);
     nHplanes = nRowsH * nColsH;
-    if (nHplanes ~= nVectors) & (nHplanes > 1) & (nVectors > 1)
+    if (nHplanes ~= nVectors) && (nHplanes > 1) && (nVectors > 1)
         error('CONTAINS: number of vectors does not match the number of hyperplanes.');
     end
 

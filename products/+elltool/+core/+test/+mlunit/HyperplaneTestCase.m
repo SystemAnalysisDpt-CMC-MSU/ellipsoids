@@ -104,7 +104,7 @@ classdef HyperplaneTestCase < mlunitext.test_case
         end
         %
         function self = testIsEmpty(self)
-            SInpData =  self.auxReadFile(self);;
+            SInpData =  self.auxReadFile(self);
             testHyperplanesVec = SInpData.testHyperplanesVec;
             isEmptyVec = SInpData.isEmptyVec;
             isEmptyTestedVec = isempty(testHyperplanesVec);
