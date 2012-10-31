@@ -1,4 +1,9 @@
 classdef HyperplaneTestCase < mlunitext.test_case
+    % $Author: <Zakharov Eugene>  <justenterrr@gmail.com> $    $Date: <31 october> $
+    % $Copyright: Moscow State University,
+    %            Faculty of Computational Mathematics and Computer Science,
+    %            System Analysis Department <2012> $
+    %
     properties (Access=private)
         testDataRootDir
     end
@@ -15,12 +20,10 @@ classdef HyperplaneTestCase < mlunitext.test_case
             %method double is implicitly tested in every comparison between
             %hyperplanes contents and normals and constants, from which it 
             %was constructed(in function isNormalAndConstantRight)
-            methodName=modgen.common.getcallernameext(1);
-            inpFileName=[self.testDataRootDir,filesep,[methodName,'_inp.mat']];
             %
-            testDataStructure = load(inpFileName);
-            testNormalVec = testDataStructure.testNormalVec;
-            testConstant = testDataStructure.testConstant;
+            SInpData =  self.auxReadFile(self);
+            testNormalVec = SInpData.testNormalVec;
+            testConstant = SInpData.testConstant;
             %
             %simple construction test
             testingHyraplane = hyperplane(testNormalVec, testConstant);
@@ -34,8 +37,8 @@ classdef HyperplaneTestCase < mlunitext.test_case
             mlunit.assert_equals(1, res);
             %
             %
-            testNormalsMat = testDataStructure.testNormalsMat;
-            testConstantVec = testDataStructure.testConstants;
+            testNormalsMat = SInpData.testNormalsMat;
+            testConstantVec = SInpData.testConstants;
             %
             %mutliple Hyperplane test
             testingHyraplaneVec = hyperplane(testNormalsMat, testConstantVec);
@@ -63,14 +66,11 @@ classdef HyperplaneTestCase < mlunitext.test_case
         end
         %
         function self = testContains(self)
-            methodName=modgen.common.getcallernameext(1);
-            inpFileName=[self.testDataRootDir,filesep,[methodName,'_inp.mat']];
+            SInpData =  self.auxReadFile(self);
             %
-            testDataStructure = load(inpFileName);
-            %
-            testHyperplanesVec = testDataStructure.testHyperplanesVec;
-            testVectorsMat = testDataStructure.testVectorsMat;
-            isContainedVec = testDataStructure.isContainedVec;
+            testHyperplanesVec = SInpData.testHyperplanesVec;
+            testVectorsMat = SInpData.testVectorsMat;
+            isContainedVec = SInpData.isContainedVec;
             isContainedTestedVec = contains(testHyperplanesVec,testVectorsMat);
             isOk = all(isContainedVec == isContainedTestedVec);
             %
@@ -78,12 +78,9 @@ classdef HyperplaneTestCase < mlunitext.test_case
         end
         %
         function self = testDimensions(self)
-            methodName=modgen.common.getcallernameext(1);
-            inpFileName=[self.testDataRootDir,filesep,[methodName,'_inp.mat']];
-            %
-            testDataStructure = load(inpFileName);
-            testHyperplanesVec = testDataStructure.testHyperplanesVec;
-            dimensionsVec = testDataStructure.dimensionsVec;
+            SInpData =  self.auxReadFile(self);
+            testHyperplanesVec = SInpData.testHyperplanesVec;
+            dimensionsVec = SInpData.dimensionsVec;
             dimensionsTestedVec = dimension(testHyperplanesVec);
             isOk = all(dimensionsVec == dimensionsTestedVec);
             mlunit.assert(isOk);
@@ -91,13 +88,10 @@ classdef HyperplaneTestCase < mlunitext.test_case
         %
         %
         function self = testEqAndNe(self)
-            methodName=modgen.common.getcallernameext(1);
-            inpFileName=[self.testDataRootDir,filesep,[methodName,'_inp.mat']];
-            %
-            testDataStructure = load(inpFileName);
-            testHyperplanesVec = testDataStructure.testHyperplanesVec;
-            compareHyperplanesVec = testDataStructure.compareHyperplanesVec;
-            isEqVec = testDataStructure.isEqVec;
+            SInpData =  self.auxReadFile(self);
+            testHyperplanesVec = SInpData.testHyperplanesVec;
+            compareHyperplanesVec = SInpData.compareHyperplanesVec;
+            isEqVec = SInpData.isEqVec;
             %
             testedIsEqVec = eq(testHyperplanesVec,compareHyperplanesVec);
             testedNeVec = ne(testHyperplanesVec,compareHyperplanesVec);
@@ -110,25 +104,19 @@ classdef HyperplaneTestCase < mlunitext.test_case
         end
         %
         function self = testIsEmpty(self)
-            methodName=modgen.common.getcallernameext(1);
-            inpFileName=[self.testDataRootDir,filesep,[methodName,'_inp.mat']];
-            %
-            testDataStructure = load(inpFileName);
-            testHyperplanesVec = testDataStructure.testHyperplanesVec;
-            isEmptyVec = testDataStructure.isEmptyVec;
+            SInpData =  self.auxReadFile(self);;
+            testHyperplanesVec = SInpData.testHyperplanesVec;
+            isEmptyVec = SInpData.isEmptyVec;
             isEmptyTestedVec = isempty(testHyperplanesVec);
             isOk = all(isEmptyVec == isEmptyTestedVec);
             mlunit.assert(isOk);
         end
         %
         function self = testIsParallel(self)
-            methodName=modgen.common.getcallernameext(1);
-            inpFileName=[self.testDataRootDir,filesep,[methodName,'_inp.mat']];
-            %
-            testDataStructure = load(inpFileName);
-            testHyperplanesVec = testDataStructure.testHyperplanesVec;
-            isParallelVec = testDataStructure.isParallelVec;
-            compareHyperplanesVec  = testDataStructure.compareHyperplanesVec;
+            SInpData =  self.auxReadFile(self);
+            testHyperplanesVec = SInpData.testHyperplanesVec;
+            isParallelVec = SInpData.isParallelVec;
+            compareHyperplanesVec  = SInpData.compareHyperplanesVec;
             %
             testedIsParallel = isparallel(testHyperplanesVec,compareHyperplanesVec);
             isOk = all(testedIsParallel == isParallelVec);
@@ -137,12 +125,9 @@ classdef HyperplaneTestCase < mlunitext.test_case
         end
         %
         function self = testUminus(self)
-            methodName=modgen.common.getcallernameext(1);
-            inpFileName=[self.testDataRootDir,filesep,[methodName,'_inp.mat']];
-            %
-            testDataStructure = load(inpFileName);
-            testNormalVec = testDataStructure.testNormalVec;
-            testConstant = testDataStructure.testConstant;
+            SInpData =  self.auxReadFile(self);
+            testNormalVec = SInpData.testNormalVec;
+            testConstant = SInpData.testConstant;
             testHyraplane = hyperplane(testNormalVec, testConstant);
             minusTestHyraplane = uminus(testHyraplane);
             res = self.isNormalAndConstantRight(-testNormalVec, -testConstant,minusTestHyraplane);
@@ -150,55 +135,39 @@ classdef HyperplaneTestCase < mlunitext.test_case
         end
         %
         function self = testDisplay(self)
-            methodName=modgen.common.getcallernameext(1);
-            inpFileName=[self.testDataRootDir,filesep,[methodName,'_inp.mat']];
-            %
-            testDataStructure = load(inpFileName);
-            testHyperplane = testDataStructure.testHyperplane;
+            SInpData =  self.auxReadFile(self);
+            testHyperplane = SInpData.testHyperplane;
             display(testHyperplane);
-            testHyperplaneVec = testDataStructure.testHyperplaneVec;
+            testHyperplaneVec = SInpData.testHyperplaneVec;
             display(testHyperplaneVec);
         end
         %
         function self = testPlot(self)
-            methodName=modgen.common.getcallernameext(1);
-            inpFileName=[self.testDataRootDir,filesep,[methodName,'_inp.mat']];
+            SInpData =  self.auxReadFile(self);
+            testHyperplane3D1Vec = SInpData.testHyperplaneVec3D1;
+            testHyperplane3D2Vec = SInpData.testHyperplaneVec3D2;
+            testHyperplane2DVec = SInpData.testHyperplaneVec2D;
+            STestOptions = SInpData.testOptions;
             %
-            testDataStructure = load(inpFileName);
-            testHyperplane3DVec1 = testDataStructure.testHyperplaneVec3D1;
-            testHyperplane3DVec2 = testDataStructure.testHyperplaneVec3D2;
-            testHyperplane2DVec = testDataStructure.testHyperplaneVec2D;
-            testOptions = testDataStructure.testOptions;
-            %
-            plot(testHyperplane3DVec1);
+            plot(testHyperplane3D1Vec);
             plot(testHyperplane2DVec);
-            plot(testHyperplane3DVec1,testOptions);
-            plot(testHyperplane3DVec1,'g',testHyperplane3DVec2,'r');            
+            plot(testHyperplane3D1Vec,STestOptions);
+            plot(testHyperplane3D1Vec,'g',testHyperplane3D2Vec,'r');            
         end
         %    
         function self = testWrongInput(self)
-            methodName=modgen.common.getcallernameext(1);
-            inpFileName=[self.testDataRootDir,filesep,[methodName,'_inp.mat']];
+            SInpData =  self.auxReadFile(self);
+            testConstant = SInpData.testConstant;
+            testHyperplane = SInpData.testHyperplane;
+            nanVec = SInpData.nanVector;
+            infVec = SInpData.infVector;
             %
-            testDataStructure = load(inpFileName);
-            testConstant = testDataStructure.testConstant;
-            testHyperplane = testDataStructure.testHyperplane;
-            nanVector = testDataStructure.nanVector;
-            infVector = testDataStructure.infVector;
-            %
-            self.runAndCheckError('contains(testHyperplane,nanVector)',...
-                'wrongInput',['X is expected to comply with all ',...
-                'of the following conditions: ~any(isnan(x1(:)))']);
-            self.runAndCheckError('hyperplane(infVector,testConstant)',...
-                'wrongInput',...
-                ['v,c is expected to comply with all of the following ',...
-                'conditions: ~(any( isnan(x1(:)) ) || any(isinf(x1(:))) ',...
-                '|| any(isnan(x2(:))) || any(isinf(x2(:))))']);
-            self.runAndCheckError('hyperplane(nanVector,testConstant)',...
-                'wrongInput',...
-                ['v,c is expected to comply with all of the ',...
-                'following conditions: ~(any( isnan(x1(:)) ) || ',...
-                'any(isinf(x1(:))) || any(isnan(x2(:))) || any(isinf(x2(:))))']);
+            self.runAndCheckError('contains(testHyperplane,nanVec)','wrongInput',...
+                'X is expected');
+            self.runAndCheckError('hyperplane(infVec,testConstant)','wrongInput',...
+                'v,c is');
+            self.runAndCheckError('hyperplane(nanVec,testConstant)','wrongInput',...
+                'v,c is');
         end
     end
     %
@@ -206,11 +175,11 @@ classdef HyperplaneTestCase < mlunitext.test_case
          function res = isNormalAndConstantRight(testNormal, testConstant, testingHyraplane)
             [resultNormal, resultConstant] = double(testingHyraplane);
             %
-            testNormalSize = size(testNormal);
-            resultNormalSize = size(resultNormal);
+            testNormSizeVec = size(testNormal);
+            resNormSizeVec = size(resultNormal);
             %
-            isSizesMatch = (testNormalSize(1) == resultNormalSize(1)) &&...
-                (testNormalSize(2) == resultNormalSize(2));
+            isSizesMatch = (testNormSizeVec(1) == resNormSizeVec(1)) &&...
+                (testNormSizeVec(2) == resNormSizeVec(2));
             %
             if(isSizesMatch)
                 res = all(testNormal == resultNormal) && (testConstant == ...
@@ -218,6 +187,14 @@ classdef HyperplaneTestCase < mlunitext.test_case
             else
                 res = false;
             end
-         end             
+         end
+         
+         function SInpData = auxReadFile(self)
+            methodName=modgen.common.getcallernameext(2);
+            inpFileName=[self.testDataRootDir,filesep,[methodName,'_inp.mat']];
+            %
+            SInpData = load(inpFileName);
+         end
+
     end
 end

@@ -23,91 +23,92 @@ function res = contains(H, X)
 %
 
 %
-% Author:
-% -------
+% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+% $Copyright:  The Regents of the University of California 2004-2008 $
 %
-%    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-%
+% $Author: <Zakharov Eugene>  <justenterrr@gmail.com> $    $Date: <31 october> $
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department <2012> $
 
-  global ellOptions;
+    import modgen.common.type.simple.checkgenext;
+    global ellOptions;
 
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
-
-  if ~(isa(H, 'hyperplane'))
-    error('CONTAINS: first input argument must be hyperplane.');
-  end
-
-  if ~(isa(X, 'double'))
-    error('CONTAINS: second input argument must be of type double.');
-  end
-  
-  
-  import modgen.common.type.simple.checkgenext;
-  checkgenext('~any(isnan(x1(:)))',1,X); 
-
-  d = dimension(H);
-  m = min(min(d));
-  n = max(max(d));
-  if m ~= n
-    error('CONTAINS: hyperplanes must be of the same dimension.');
-  end
-
-  [k, l] = size(X);
-  if k ~= n
-    error('CONTAINS: vector dimension does not match the dimension of hyperplanes.');
-  end
-
-  [m, n] = size(H);
-  t      = m * n;
-  if (t ~= l) & (t > 1) & (l > 1)
-    error('CONTAINS: number of vectors does not match the number of hyperplanes.');
-  end
-  
-  if(t > 1)
-    res = false(m,n);
-  else
-    res = false(1,l);
-  end
-  
-  if (t > 1) && (l > 1)  
-    for i = 1:m
-      for j = 1:n
-        [v, c] = parameters(H(i, j));
-        x = X(:, i*j);
-        res(i,j) = isContain(v,c,x);
-      end
+    if ~isstruct(ellOptions)
+        evalin('base', 'ellipsoids_init;');
     end
-  elseif t > 1
-    x = X;
-    for i = 1:m
-      for j = 1:n
-        [v, c] = parameters(H(i, j));
-        res(i,j) = isContain(v,c,x);
-      end
-    end
-  else
-    [v, c] = parameters(H);
-    for i = 1:l
-      x = X(:, i);
-      res(1,i) = isContain(v,c,x);
-    end
-  end
 
-  return;
-  
- function res = isContain(hyperplaneNorm, hyperplaneConst, vector)     
+    if ~(isa(H, 'hyperplane'))
+        error('CONTAINS: first input argument must be hyperplane.');
+    end
+
+    if ~(isa(X, 'double'))
+        error('CONTAINS: second input argument must be of type double.');
+    end
+
+    checkgenext('~any(isnan(x1(:)))',1,X); 
+
+    nDimVec = dimension(H);
+    maxDimSize = min(min(nDimVec));
+    minDimSize = max(max(nDimVec));
+    if maxDimSize ~= minDimSize
+        error('CONTAINS: hyperplanes must be of the same dimension.');
+    end
+
+    [vecLen, nVectors] = size(X);
+    if vecLen ~= minDimSize
+        error('CONTAINS: vector dimension does not match the dimension of hyperplanes.');
+    end
+
+    [nRowsH, nColsH] = size(H);
+    nHplanes = nRowsH * nColsH;
+    if (nHplanes ~= nVectors) & (nHplanes > 1) & (nVectors > 1)
+        error('CONTAINS: number of vectors does not match the number of hyperplanes.');
+    end
+
+    if(nHplanes > 1)
+        res = false(nRowsH,nColsH);
+    else
+        res = false(1,nVectors);
+    end
+
+    if (nHplanes > 1) && (nVectors > 1)  
+        for iRow = 1:nRowsH
+            for jCol = 1:nColsH
+                [normVec, const] = parameters(H(iRow, jCol));
+                xVec = X(:, iRow*jCol);
+                res(iRow,jCol) = isContain(normVec,const,xVec);
+            end
+        end
+    elseif nHplanes > 1
+        xVec = X;
+    for iRow = 1:nRowsH
+        for jCol = 1:nColsH
+            [normVec, const] = parameters(H(iRow, jCol));
+            res(iRow,jCol) = isContain(normVec,const,xVec);
+        end
+    end
+    else
+        [normVec, const] = parameters(H);
+        for i = 1:nVectors
+            xVec = X(:, i);
+            res(1,i) = isContain(normVec,const,xVec);
+        end
+    end
+
+    return;
+
+ function res = isContain(hplaneNormVec, hplaneConst, xVec)     
      global ellOptions;
-     res = 0;
-     indInfComponent = (vector == inf) | (vector == -inf);
-     if any(hyperplaneNorm(indInfComponent) ~= 0)
+     res = false;
+     isInfComponent = (xVec == inf) | (xVec == -inf);
+     if any(hplaneNormVec(isInfComponent) ~= 0)
          return;
      else
-         hyperplaneNorm = hyperplaneNorm(~indInfComponent);
-         vector = vector(~indInfComponent);
-         if abs((hyperplaneNorm'*vector) - hyperplaneConst) < ellOptions.abs_tol
-            res = 1;
+         hplaneNormVec = hplaneNormVec(~isInfComponent);
+         xVec = xVec(~isInfComponent);
+         if abs((hplaneNormVec'*xVec) - hplaneConst) < ellOptions.abs_tol
+            res = true;
          end
      end
 
