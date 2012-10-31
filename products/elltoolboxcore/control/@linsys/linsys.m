@@ -349,9 +349,8 @@ function l_check_ell_struct(E, N)
     end
   else
     if isa(Q, 'double')
-      errorMat = abs(Q - Q.');
-      maxError = max( errorMat(:) );
-      if maxError > ellOptions.abs_tol || min(eig(Q)) < 0
+      isnEqMat = ( Q ~= Q.' )
+      if any( isnEqMat(:) ) || min(eig(Q)) <= 0
         error( sprintf('linsys:value:%s:shape',inputname(1)), ...
             'shape matrix must be symmetric, positive definite' );
       end                    

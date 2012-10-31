@@ -6,280 +6,357 @@ classdef LinSysTestCase < mlunitext.test_case
         end
         %
         function self = testConstructor(self)
+            clear uEllStuct;
+            clear vEllStuct;
+            clear wEllStuct;
+            ell2d = ell_unitball(2);
+            ell3d = ell_unitball(3);
+            ell4d = ell_unitball(4);
             %
             % non-square matrix A
-            %
-            aMat = eye(5,2);
-            bMat = eye(3);
-            uEllipsoid = ell_unitball(3);
-            self.runAndCheckError('linsys(aMat, bMat, uEllipsoid)', ...
+            %            
+            self.runAndCheckError(...
+                'linsys(eye(3,4), eye(3), ell3d)', ...
                 'linsys:dimension:A');
             %
             % wrong type of matrix A
             %
-            aMat = true(3);
-            bMat = eye(3);
-            uEllipsoid = ell_unitball(3);
-            self.runAndCheckError('linsys(aMat, bMat, uEllipsoid)', ...
+            self.runAndCheckError(...
+                'linsys(true(3), eye(3),  ell3d)', ...
                 'linsys:type:A');          
             %
             % incorrect dimension of matrix B
             %
-            aMat = eye(3);
-            bMat = eye(4,3);
-            uEllipsoid = ell_unitball(3);
-            self.runAndCheckError('linsys(aMat, bMat, uEllipsoid)', ...
+            self.runAndCheckError(...
+                'linsys(eye(3), eye(4,3), ell3d)', ...
                 'linsys:dimension:B');
             %
             % incorrect type of matrix B
             %
-            aMat = eye(3);
-            bMat = true(3,4);
-            uEllipsoid = ell_unitball(4);
-            self.runAndCheckError('linsys(aMat, bMat, uEllipsoid)', ...
+            self.runAndCheckError(...
+                'linsys(eye(3), true(3), ell3d)', ...
                 'linsys:type:B'); 
             %
-            % incorrect dimension of U
+            % incorrect dimension of U when U is a constant ellipsoid
             %
-            aMat = eye(3);
-            bMat = eye(3,4);
-            uEllipsoid = ell_unitball(5);
-            self.runAndCheckError('linsys(aMat, bMat, uEllipsoid)', ...
+            self.runAndCheckError(...
+                'linsys(eye(3), eye(3), ell4d)', ...
                 'linsys:dimension:U');
             %
-            clear uEllipsoidStruct;
-            uEllipsoidStruct.center = {'1','2','3','4'}';
-            uEllipsoidStruct.shape =  ones(5);
-            self.runAndCheckError('linsys(aMat, bMat, uEllipsoidStruct)', ...
+            % incorrect dimension of U when U is a symbolic ellipsoid
+            %
+            uEllStuct.center = {'1';'1';'1';'1'};
+            uEllStuct.shape =  eye(3);
+            self.runAndCheckError(...
+                'linsys(eye(3), eye(3), uEllStuct)', ...
+                'linsys:dimension:U:center');          
+            %
+            uEllStuct.center = {'1';'1';'1'};
+            uEllStuct.shape =  ones(4);
+            self.runAndCheckError(...
+                'linsys(eye(3), eye(3), uEllStuct)', ...
                 'linsys:dimension:U:shape');          
             %
-            clear uEllipsoidStruct;
-            uEllipsoidStruct.center = {'1','2','3'}';
-            uEllipsoidStruct.shape =  ones(4);
-            self.runAndCheckError('linsys(aMat, bMat, uEllipsoidStruct)', ...
-                'linsys:dimension:U:center');          
-            %            
-            uVec = {'t','t','t'}';
-            self.runAndCheckError('linsys(aMat, bMat, uVec)', ...
-                'linsys:dimension:U');
+            % incorrect dimension of U when U is a constant vector
             %
-            uVec = ones(6,1);
-            self.runAndCheckError('linsys(aMat, bMat, uVec)', ...
+            self.runAndCheckError(...
+                'linsys(eye(3), eye(3), eye(4,1))', ...
                 'linsys:dimension:U'); 
             %
-            % incorrect type of U
+            % incorrect dimension of U when U is a symbolic vector
+            %   
+            uCVec = {'t';'t';'t';'t'};
+            self.runAndCheckError(...
+                'linsys(eye(3), eye(3), uCVec)', ...
+                'linsys:dimension:U');
             %
-            aMat = eye(3);
-            bMat = eye(3);
-            uVec = true(3,1);
-            self.runAndCheckError('linsys(aMat, bMat, uVec)', ...
+            % incorrect type of U when U is a vector
+            %
+            self.runAndCheckError(...
+                'linsys(eye(3), eye(3), true(3,1))', ...
                 'linsys:type:U');
             %
-            clear uEllipsoidStruct;
-            uEllipsoidStruct.center = ones(3,1);
-            uEllipsoidStruct.shape =  ones(3);
-            self.runAndCheckError('linsys(aMat, bMat, uEllipsoidStruct)', ...
+            % incorrect type of U when U is a all-constant structure
+            %         
+            uEllStuct.center = eye(3,1);
+            uEllStuct.shape =  eye(3);
+            self.runAndCheckError(...
+                'linsys(eye(3), eye(3), uEllStuct)', ...
                 'linsys:type:U');
             %
-            % incorrect value of U
+            % incorrect value of U when U.shape is non-symmetric cell matrix
             %
-            aMat = eye(2);
-            bMat = eye(2);
-            clear uEllipsoidStruct;
-            uEllipsoidStruct.center = zeros(2,1);
-            uEllipsoidStruct.shape =  {'t','t^2';'t^3','t^4'};
-            self.runAndCheckError('linsys(aMat, bMat, uEllipsoidStruct)', ...
+            uEllStuct.center = zeros(2,1);
+            uEllStuct.shape =  {'t','t^2';'t^3','t^4'};
+            self.runAndCheckError(...
+                'linsys(eye(2), eye(2), uEllStuct)', ...
                 'linsys:value:U:shape');
             %
-            clear uEllipsoidStruct;
-            uEllipsoidStruct.center = {'t','t'}';
-            uEllipsoidStruct.shape =  [1 2; 3 4];
-            self.runAndCheckError('linsys(aMat, bMat, uEllipsoidStruct)', ...
+            % incorrect value of U when U.shape is non-symmetric 
+            % negative-defined constant matrix
+            %
+            uEllStuct.center = {'t';'t'};
+            uEllStuct.shape =  [1 2; 3 4];
+            self.runAndCheckError(...
+                'linsys(eye(2), eye(2), uEllStuct)', ...
                 'linsys:value:U:shape');
             %
-            clear uEllipsoidStruct;
-            uEllipsoidStruct.center = {'t','t'}';
-            uEllipsoidStruct.shape =  [1 2; 2 1];
-            self.runAndCheckError('linsys(aMat, bMat, uEllipsoidStruct)', ...
+            % incorrect value of U when U.shape is non-symmetric 
+            % positive-defined constant matrix
+            %
+            uEllStuct.center = {'t';'t'};
+            uEllStuct.shape =  [2 1; 3 2];
+            self.runAndCheckError(...
+                'linsys(eye(2), eye(2), uEllStuct)', ...
+                'linsys:value:U:shape');            
+            %
+            % incorrect value of U when U.shape is symmetric but 
+            % negative-defined constant matrix
+            %
+            uEllStuct.center = {'t';'t'};
+            uEllStuct.shape =  [1 2; 2 1];
+            self.runAndCheckError(...
+                'linsys(eye(2), eye(2), uEllStuct)', ...
                 'linsys:value:U:shape');
+            %
+            % incorrect value of U when U.shape is symmetric but 
+            % non-negative-defined constant matrix
+            %
+            uEllStuct.center = {'t';'t'};
+            uEllStuct.shape =  [1 0; 0 0];
+            self.runAndCheckError(...
+                'linsys(eye(2), eye(2), uEllStuct)', ...
+                'linsys:value:U:shape');
+            %
+            % correct value of U when U.shape is symmetric and 
+            % positive-defined constant matrix
+            %         
+            uEllStuct.center = {'t';'t'};
+            uEllStuct.shape =  [1 0; 0 1];
+            linsys(eye(2), eye(2), uEllStuct);
             %
             % incorrect dimension of matrix G
             %
-            aMat = eye(3);
-            bMat = eye(3);
-            uEllipsoid = ell_unitball(3);
-            gMat = eye(4);
-            vEllipsoid = ell_unitball(4);
-            self.runAndCheckError('linsys(aMat, bMat, uEllipsoid, gMat, vEllipsoid)', ...
+            self.runAndCheckError(...
+                'linsys(eye(3), eye(3), ell3d, eye(4), ell4d)', ...
                 'linsys:dimension:G');
             %
             % incorrect type of matrix G
             %
-            aMat = eye(3);
-            bMat = eye(3);
-            uEllipsoid = ell_unitball(3);
-            gMat = true(3);
-            vEllipsoid = ell_unitball(3);
-            self.runAndCheckError('linsys(aMat, bMat, uEllipsoid, gMat, vEllipsoid)', ...
+            self.runAndCheckError(...
+                'linsys(eye(3), eye(3), ell3d, true(3), ell3d)', ...
                 'linsys:type:G'); 
             %
-            % incorrect dimension of V
+            % incorrect dimension of V when V is a constant ellipsoid
             %
-            aMat = eye(3);
-            bMat = eye(3,4);
-            uEllipsoid = ell_unitball(4);
-            gMat = eye(3,5);
-            vEllipsoid = ell_unitball(4);
-            self.runAndCheckError('linsys(aMat, bMat, uEllipsoid, gMat, vEllipsoid)', ...
+            self.runAndCheckError(...
+                'linsys(eye(3), eye(3), ell3d, eye(3), ell4d)', ...
                 'linsys:dimension:V');
             %
-            clear uEllipsoidStruct;
-            vEllipsoidStruct.center = {'1','2','3','4'}';
-            vEllipsoidStruct.shape =  ones(5);
-            self.runAndCheckError('linsys(aMat, bMat, uEllipsoid, gMat, vEllipsoidStruct)', ...
+            % incorrect dimension of V when V is a symbolic ellipsoid
+            %
+            vEllStuct.center = {'1';'1';'1';'1'};
+            vEllStuct.shape =  ones(3);
+            self.runAndCheckError(...
+                'linsys(eye(3), eye(3), ell3d, eye(3), vEllStuct)', ...
                 'linsys:dimension:V:center');          
             %
-            clear vEllipsoidStruct;
-            vEllipsoidStruct.center = {'1','2','3','4','5'}';
-            vEllipsoidStruct.shape =  ones(4);
-            self.runAndCheckError('linsys(aMat, bMat, uEllipsoid, gMat, vEllipsoidStruct)', ...
+            vEllStuct.center = {'1';'1';'1'};
+            vEllStuct.shape =  ones(4);
+            self.runAndCheckError(...
+                'linsys(eye(3), eye(3), ell3d, eye(3), vEllStuct)', ...
                 'linsys:dimension:V:shape');          
-            %            
-            vVec = {'t','t','t'}';
-            self.runAndCheckError('linsys(aMat, bMat, uEllipsoid, gMat, vVec)', ...
+            %
+            % incorrect dimension of V when V is a constant vector
+            %         
+            vVec = eye(4,1);
+            self.runAndCheckError(...
+                'linsys(eye(3), eye(3), ell3d, eye(3),  vVec)', ...
                 'linsys:dimension:V');
             %
-            vVec = ones(6,1);
-            self.runAndCheckError('linsys(aMat, bMat, uEllipsoid, gMat, vVec)', ...
+            % incorrect dimension of V when V is a symbolic vector
+            %
+            vCVec = {'t';'t';'t';'t'};
+            self.runAndCheckError(...
+                'linsys(eye(3), eye(3), ell3d, eye(3), vCVec)', ...
                 'linsys:dimension:V'); 
             %
-            % incorrect type of V
+            % incorrect type of V when V is a vector
             %
-            aMat = eye(3);
-            bMat = eye(3);
-            uEllipsoid = ell_unitball(3);
-            gMat = eye(3);            
-            vVec = true(3,1);
-            self.runAndCheckError('linsys(aMat, bMat, uEllipsoid, gMat, vVec)', ...
+            self.runAndCheckError(...
+                'linsys(eye(3), eye(3), ell3d, eye(3), true(3,1))', ...
                 'linsys:type:V');
             %
-            clear vEllipsoidStruct;
-            vEllipsoidStruct.center = ones(3,1);
-            vEllipsoidStruct.shape =  ones(3);
-            self.runAndCheckError('linsys(aMat, bMat, uEllipsoid, gMat, vEllipsoidStruct)', ...
+            % incorrect type of V when V is a all-constant structure
+            %
+            vEllStuct.center = eye(3,1);
+            vEllStuct.shape =  eye(3);
+            self.runAndCheckError(...
+                'linsys(eye(3), eye(3), ell3d, eye(3), vEllStuct)', ...
                 'linsys:type:V');
             %
-            % incorrect value of V
-            %
-            aMat = eye(2);
-            bMat = eye(2);
-            uEllipsoid = ell_unitball(2);
-            gMat = eye(2);                       
-            clear vEllipsoidStruct;
-            vEllipsoidStruct.center = zeros(2,1);
-            vEllipsoidStruct.shape =  {'t','t^2';'t^3','t^4'};
-            self.runAndCheckError('linsys(aMat, bMat, uEllipsoid, gMat, vEllipsoidStruct)', ...
+            % incorrect value of V when V.shape is non-symmetric cell matrix
+            %                         
+            vEllStuct.center = zeros(2,1);
+            vEllStuct.shape =  {'t','t^2';'t^3','t^4'};
+            self.runAndCheckError(...
+                'linsys(eye(2), eye(2), ell2d, eye(2), vEllStuct)', ...
                 'linsys:value:V:shape');
             %
-            clear vEllipsoidStruct;
-            vEllipsoidStruct.center = {'t','t'}';
-            vEllipsoidStruct.shape =  [1 2; 3 4];
-            self.runAndCheckError('linsys(aMat, bMat, uEllipsoid, gMat, vEllipsoidStruct)', ...
+            % incorrect value of V when V.shape is non-symmetric 
+            % negative-defined constant matrix
+            %
+            vEllStuct.center = {'t';'t'};
+            vEllStuct.shape =  [1 2; 3 4];
+            self.runAndCheckError(...
+                'linsys(eye(2), eye(2), ell2d, eye(2), vEllStuct)', ...
                 'linsys:value:V:shape');
             %
-            clear vEllipsoidStruct;
-            vEllipsoidStruct.center = {'t','t'}';
-            vEllipsoidStruct.shape =  [1 2; 2 1];
-            self.runAndCheckError('linsys(aMat, bMat, uEllipsoid, gMat, vEllipsoidStruct)', ...
+            % incorrect value of V when V.shape is non-symmetric 
+            % positive-defined constant matrix
+            %
+            vEllStuct.center = {'t';'t'};
+            vEllStuct.shape =  [2 1; 3 2];
+            self.runAndCheckError(...
+                'linsys(eye(2), eye(2), ell2d, eye(2), vEllStuct)', ...
                 'linsys:value:V:shape');            
+            %
+            % incorrect value of V when V.shape is symmetric but
+            % negative-defined constant matrix
+            %
+            vEllStuct.center = {'t';'t'};
+            vEllStuct.shape =  [1 2; 2 1];
+            self.runAndCheckError(...
+                'linsys(eye(2), eye(2), ell2d, eye(2), vEllStuct)', ...
+                'linsys:value:V:shape');
+            %
+            % incorrect value of V when V.shape is symmetric but 
+            % non-negative-defined constant matrix
+            %
+            vEllStuct.center = {'t';'t'};
+            vEllStuct.shape =  [1 0; 0 0];
+            self.runAndCheckError(...
+                'linsys(eye(2), eye(2), ell2d, eye(2), vEllStuct)', ...
+                'linsys:value:V:shape');
+            %
+            % correct value of V when V.shape is symmetric and 
+            % positive-defined constant matrix
+            %          
+            vEllStuct.center = {'t';'t'};
+            vEllStuct.shape =  [1 0; 0 1];  
+            linsys(eye(2), eye(2), ell2d, eye(2), vEllStuct);
             %
             % incorrect dimension of matrix C
             %
-            aMat = eye(3);
-            bMat = eye(3);
-            uEllipsoid = ell_unitball(3);
-            cMat = eye(3,4);
-            self.runAndCheckError('linsys(aMat, bMat, uEllipsoid, [], [], cMat)', ...
+            self.runAndCheckError(...
+                'linsys(eye(3), eye(3), ell3d, [], [], eye(4))', ...
                 'linsys:dimension:C');
             %
             % incorrect type of matrix C
             %
-            aMat = eye(3);
-            bMat = eye(3);
-            uEllipsoid = ell_unitball(3);
-            cMat = true(3);
-            self.runAndCheckError('linsys(aMat, bMat, uEllipsoid, [], [], cMat)', ...
+            self.runAndCheckError(...
+                'linsys(eye(3), eye(3), ell3d, [], [], true(3))', ...
                 'linsys:type:C');
             %
-            % incorrect dimension of W
+            % incorrect dimension of W when W is a constant ellipsoid
             %
-            aMat = eye(3);
-            bMat = eye(3);
-            uEllipsoid = ell_unitball(3);
-            gMat = eye(3);
-            vEllipsoid = ell_unitball(3);
-            cMat = eye(3);
-            wEllipsoid = ell_unitball(2);
-            self.runAndCheckError('linsys(aMat, bMat, uEllipsoid, gMat, vEllipsoid, cMat, wEllipsoid)', ...
+            self.runAndCheckError(...
+                'linsys(eye(3), eye(3), ell3d, eye(3), ell3d, eye(3), ell4d)', ...
                 'linsys:dimension:W');
             %
-            clear uEllipsoidStruct;
-            wEllipsoidStruct.center = {'1','2','3','4'}';
-            wEllipsoidStruct.shape =  ones(3);
-            self.runAndCheckError('linsys(aMat, bMat, uEllipsoid, gMat, vEllipsoid, cMat, wEllipsoidStruct)', ...
+            % incorrect dimension of W when W is a symbolic ellipsoid
+            %
+            wEllStuct.center = {'1';'1';'1';'1'};
+            wEllStuct.shape =  ones(3);
+            self.runAndCheckError(...
+                'linsys(eye(3), eye(3), ell3d, eye(3), ell3d, eye(3), wEllStuct)', ...
                 'linsys:dimension:W:center');          
             %
-            clear wEllipsoidStruct;
-            wEllipsoidStruct.center = {'1','2','3'}';
-            wEllipsoidStruct.shape =  ones(4);
-            self.runAndCheckError('linsys(aMat, bMat, uEllipsoid, gMat, vEllipsoid, cMat, wEllipsoidStruct)', ...
+            wEllStuct.center = {'1';'1';'1'};
+            wEllStuct.shape =  ones(4);
+            self.runAndCheckError(...
+                'linsys(eye(3), eye(3), ell3d, eye(3), ell3d, eye(3), wEllStuct)', ...
                 'linsys:dimension:W:shape');          
-            %            
-            wVec = {'t','t','t','t'}';
-            self.runAndCheckError('linsys(aMat, bMat, uEllipsoid, gMat, vEllipsoid, cMat, wVec)', ...
+            %
+            % incorrect dimension of W when W is a constant vector
+            %         
+            wVec = eye(4,1);
+            self.runAndCheckError(...
+                'linsys(eye(3), eye(3), ell3d, eye(3), ell3d, eye(3), wVec)', ...
                 'linsys:dimension:W');
             %
-            wVec = ones(6,1);
-            self.runAndCheckError('linsys(aMat, bMat, uEllipsoid, gMat, vEllipsoid, cMat, wVec)', ...
+            % incorrect dimension of W when W is a symbolic vector
+            %
+            wCVec = {'t';'t';'t';'t'};
+            self.runAndCheckError(...
+                'linsys(eye(3), eye(3), ell3d, eye(3), ell3d, eye(3), wCVec)', ...
                 'linsys:dimension:W'); 
             %
-            % incorrect type of W
-            %            
-            wVec = true(3,1);
-            self.runAndCheckError('linsys(aMat, bMat, uEllipsoid, gMat, vEllipsoid, cMat, wVec)', ...
+            % incorrect type of W when W is a vector
+            %
+            self.runAndCheckError(...
+                'linsys(eye(3), eye(3), ell3d, eye(3), ell3d, eye(3), true(3,1))', ...
                 'linsys:type:W');
             %
-            clear wEllipsoidStruct;
-            wEllipsoidStruct.center = ones(3,1);
-            wEllipsoidStruct.shape =  ones(3);
-            self.runAndCheckError('linsys(aMat, bMat, uEllipsoid, gMat, vEllipsoid, cMat, wEllipsoidStruct)', ...
+            % incorrect type of W when W is a all-constant structure
+            %
+            wEllStuct.center = eye(3,1);
+            wEllStuct.shape =  eye(3);
+            self.runAndCheckError(...
+                'linsys(eye(3), eye(3), ell3d, eye(3), ell3d, eye(3), wEllStuct)', ...
                 'linsys:type:W');
             %
-            % incorrect value of W
-            %
-            aMat = eye(2);
-            bMat = eye(2);
-            uEllipsoid = ell_unitball(2);
-            gMat = eye(2);
-            vEllipsoid = ell_unitball(2);
-            cMat = eye(2);            
-            clear wEllipsoidStruct;
-            wEllipsoidStruct.center = zeros(2,1);
-            wEllipsoidStruct.shape =  {'t','t^2';'t^3','t^4'};
-            self.runAndCheckError('linsys(aMat, bMat, uEllipsoid, gMat, vEllipsoid, cMat, wEllipsoidStruct)', ...
+            % incorrect value of W when W.shape is non-symmetric cell matrix
+            %                         
+            wEllStuct.center = zeros(2,1);
+            wEllStuct.shape =  {'t','t^2';'t^3','t^4'};
+            self.runAndCheckError(...
+                'linsys(eye(2), eye(2), ell2d, eye(2), ell2d, eye(2), wEllStuct)', ...
                 'linsys:value:W:shape');
             %
-            clear wEllipsoidStruct;
-            wEllipsoidStruct.center = {'t','t'}';
-            wEllipsoidStruct.shape =  [1 2; 3 4];
-            self.runAndCheckError('linsys(aMat, bMat, uEllipsoid, gMat, vEllipsoid, cMat, wEllipsoidStruct)', ...
+            % incorrect value of W when W.shape is non-symmetric 
+            % negative-defined constant matrix
+            %
+            wEllStuct.center = {'t';'t'};
+            wEllStuct.shape =  [1 2; 3 4];
+            self.runAndCheckError(...
+                'linsys(eye(2), eye(2), ell2d, eye(2), ell2d, eye(2), wEllStuct)', ...
                 'linsys:value:W:shape');
             %
-            clear wEllipsoidStruct;
-            wEllipsoidStruct.center = {'t','t'}';
-            wEllipsoidStruct.shape =  [1 2; 2 1];
-            self.runAndCheckError('linsys(aMat, bMat, uEllipsoid, gMat, vEllipsoid, cMat, wEllipsoidStruct)', ...
-                'linsys:value:W:shape');                
+            % incorrect value of W when W.shape is non-symmetric 
+            % positive-defined constant matrix
+            %
+            wEllStuct.center = {'t';'t'};
+            wEllStuct.shape =  [2 1; 3 2];
+            self.runAndCheckError(...
+                'linsys(eye(2), eye(2), ell2d, eye(2), ell2d, eye(2), wEllStuct)', ...
+                'linsys:value:W:shape');            
+            %
+            % incorrect value of W when W.shape is symmetric but 
+            % negative-defined constant matrix
+            %
+            wEllStuct.center = {'t';'t'};
+            wEllStuct.shape =  [1 2; 2 1];
+            self.runAndCheckError(...
+                'linsys(eye(2), eye(2), ell2d, eye(2), ell2d, eye(2), wEllStuct)', ...
+                'linsys:value:W:shape');
+            %
+            % incorrect value of W when W.shape is symmetric but 
+            % non-negative-defined constant matrix
+            %
+            wEllStuct.center = {'t';'t'};
+            wEllStuct.shape =  [1 0; 0 0];
+            self.runAndCheckError(...
+                'linsys(eye(2), eye(2), ell2d, eye(2), ell2d, eye(2), wEllStuct)', ...
+                'linsys:value:W:shape');
+            %
+            % correct value of W when W.shape is symmetric and 
+            % positive-defined constant matrix
+            %          
+            wEllStuct.center = {'t';'t'};
+            wEllStuct.shape =  [1 0; 0 1];  
+            linsys(eye(2), eye(2), ell2d, eye(2), ell2d, eye(2), wEllStuct);         
+            %
         end
         %
         function self = testDimension(self)
@@ -288,54 +365,33 @@ classdef LinSysTestCase < mlunitext.test_case
             %
             system = linsys([],[],[]);                        
             [nStates, nInputs, nOutputs, nDistInputs] = dimension(system);
-            %
             obtainedVec = [nStates, nInputs, nOutputs, nDistInputs];
             expectedVec = [0 0 0 0];
-            %
             mlunit.assert_equals( all(expectedVec == obtainedVec), true );
             %                 
             % test simple system without disturbance
             %
-            aMat = eye(2);
-            bMat = eye(2,3);
-            uEllipsoid = ell_unitball(3);
-            %
-            system = linsys(aMat,bMat,uEllipsoid);                        
+            system = linsys(eye(2), eye(2,3), ell_unitball(3));                        
             [nStates, nInputs, nOutputs, nDistInputs] = dimension(system);
-            %
             obtainedVec = [nStates, nInputs, nOutputs, nDistInputs];
             expectedVec = [2 3 2 0];
-            %
             mlunit.assert_equals( all(expectedVec == obtainedVec), true );   
             %
             % test complex system with disturbance and noise            
             %
-            aMat = eye(5);
-            bMat = eye(5,10);
-            uEllipsoid = ell_unitball(10);
-            gMat = eye(5,11);
-            vEllipsoid = ell_unitball(11);
-            cMat = zeros(3,5);
-            wEllipsoid = ell_unitball(3);
-            %
-            system = linsys(aMat,bMat,uEllipsoid,gMat,vEllipsoid,cMat,...
-                wEllipsoid);
+            system = linsys(eye(5),eye(5,10),ell_unitball(10), ...
+                eye(5,11),ell_unitball(11),zeros(3,5),ell_unitball(3));
             [nStates, nInputs, nOutputs, nDistInputs] = dimension(system);
-            %
             obtainedVec = [nStates, nInputs, nOutputs, nDistInputs];
             expectedVec = [5 10 3 11];
-            %
             mlunit.assert_equals( all(expectedVec == obtainedVec), true );   
             %            
             % test array of systems       
             %
             systemMat = [system system; system system];
-            [nStatesMat, nInputsMat, nOutputsMat, nDistInputsMat] = ...
-                dimension(systemMat);
-            %
+            [nStatesMat, nInputsMat, nOutputsMat, nDistInputsMat] = dimension(systemMat);
             obtainedMat=[nStatesMat,nInputsMat,nOutputsMat,nDistInputsMat];
             expectedMat=[ 5*ones(2), 10*ones(2), 3*ones(2), 11*ones(2) ];
-            %
             resultMat = (expectedMat(:) == obtainedMat(:));
             mlunit.assert_equals( all(resultMat(:)), true ); 
             %
@@ -351,8 +407,8 @@ classdef LinSysTestCase < mlunitext.test_case
             wVec = eye(3,1);
             wCVec = {'t';'t';'t'};
             wEllipsoid = ell_unitball(3);
-            wEllipsoidStruct.shape = {'t','t','t';'t','t','t';'t','t','t'};
-            wEllipsoidStruct.center = {'t';'t';'t'};
+            wEllStuct.shape = {'t','t','t';'t','t','t';'t','t','t'};
+            wEllStuct.center = {'t';'t';'t'};
             %
             % test matrix of systems
             %
@@ -362,7 +418,7 @@ classdef LinSysTestCase < mlunitext.test_case
                 linsys(aMat,bMat,uEllipsoid,gMat,vEllipsoid,cMat,wVec); ...
                 linsys(aMat,bMat,uEllipsoid,gMat,vEllipsoid,cMat,wCVec), ...
                 linsys(aMat,bMat,uEllipsoid,gMat,vEllipsoid,cMat,wEllipsoid),...
-                linsys(aMat,bMat,uEllipsoid,gMat,vEllipsoid,cMat,wEllipsoidStruct) ...
+                linsys(aMat,bMat,uEllipsoid,gMat,vEllipsoid,cMat,wEllStuct) ...
             ];
             obtainedMat = hasnoise(systemMat);
             expectedMat = [ false false true; true true true ];
@@ -378,8 +434,8 @@ classdef LinSysTestCase < mlunitext.test_case
             vVec = eye(3,1);
             vCVec = {'t';'t';'t'};
             vEllipsoid = ell_unitball(3);
-            vEllipsoidStruct.shape = {'t','t','t';'t','t','t';'t','t','t'};
-            vEllipsoidStruct.center = {'t';'t';'t'};
+            vEllStuct.shape = {'t','t','t';'t','t','t';'t','t','t'};
+            vEllStuct.center = {'t';'t';'t'};
             %
             % test matrix of systems
             %            
@@ -388,8 +444,8 @@ classdef LinSysTestCase < mlunitext.test_case
                 linsys(aMat,bMat,uEllipsoid,gMat,vVec), ...
                 linsys(aMat,bMat,uEllipsoid,gMat,vCVec); ...
                 linsys(aMat,bMat,uEllipsoid,gMat,vEllipsoid), ...
-                linsys(aMat,bMat,uEllipsoid,gMat,vEllipsoidStruct), ...
-                linsys(aMat,bMat,uEllipsoid,[],vEllipsoidStruct) ...
+                linsys(aMat,bMat,uEllipsoid,gMat,vEllStuct), ...
+                linsys(aMat,bMat,uEllipsoid,[],vEllStuct) ...
             ];
             obtainedMat = hasdisturbance(systemMat);
             expectedMat = [ false true true; true true false ];
@@ -467,6 +523,19 @@ classdef LinSysTestCase < mlunitext.test_case
             expectedMat = [ true true; false false];
             eqMat = (obtainedMat == expectedMat);
             mlunit.assert_equals( all(eqMat(:)), true );                 
-        end         
+        end     
+        %
+        function self = testDisplay(self)
+            system = linsys( eye(3), eye(3,4), ell_unitball(4), ...
+                eye(3,5), ell_unitball(5), eye(2,3), ell_unitball(2), 'd');
+            resStr = evalc('display(system)');
+            isOk = ~isempty(strfind(resStr,'A'));
+            isOk = ~isempty(strfind(resStr,'B')) && isOk;
+            isOk = ~isempty(strfind(resStr,'Control bound')) && isOk;
+            isOk = ~isempty(strfind(resStr,'Disturbance bounds')) && isOk;
+            isOk = ~isempty(strfind(resStr,'Noise bounds')) && isOk;
+            mlunitext.assert(isOk);      
+        end   
+        %
     end
 end
