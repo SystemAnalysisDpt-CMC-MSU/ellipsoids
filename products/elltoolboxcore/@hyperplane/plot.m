@@ -13,12 +13,12 @@ function figHandleVec = plot(varargin)
 %
 % Input:
 %   regular:
-%       hM: hyperplane[m,n] - matrix of 2D or 3D hyperplanes. All
-%       hyperplanes in hM must be either 2D or 3D simutaneously.
+%       hMat: hyperplane[m,n] - matrix of 2D or 3D hyperplanes. All hyperplanes
+%             in hM must be either 2D or 3D simutaneously.
 %   optional:
 %       colorSpec: char[1,1] - specify wich color hyperplane plots will
-%       have
-%       option: structure, containing some of follwing fields:
+%                  have
+%       option: structure[1,1], containing some of follwing fields:
 %           option.newfigure: boolean[1,1]   - if 1, each plot command will open a new figure window.
 %           option.size: double[1,1] - length of the line segment in 2D, or square diagonal in 3D.
 %           option.center: double[1,1] - center of the line segment in 2D, of the square in 3D.
@@ -309,8 +309,6 @@ function figHandleVec = plot(varargin)
     hold off;
   end
 
-  return;
-
 
 
 
@@ -351,4 +349,3 @@ function res = my_color_table(ch)
       res = [0 0 0];
   end
 
-  return;
