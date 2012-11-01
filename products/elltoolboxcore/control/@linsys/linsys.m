@@ -100,12 +100,13 @@ function ls = linsys(A, B, U, G, V, C, W, D)
 %
 %    LINSYS/DIMENSION, ISEMPTY, ISDISCRETE, ISLTI, HASDISTURBANCE, HASNOISE.
 %
-
+% $Author: Alex Kurzhanskiy  <akurzhan@eecs.berkeley.edu> $    $Date: 2004-2008 $
+% $Copyright:  The Regents of the University of California 2004-2008 $
 %
-% Author:
-% -------
-%
-%    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+% $Author: Ivan Menshikov  <ivan.v.menshikov@gmail.com> $    $Date: 2012 $
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2012 $
 %
 
   global ellOptions;
@@ -122,65 +123,65 @@ function ls = linsys(A, B, U, G, V, C, W, D)
     ls.disturbance    = [];
     ls.C              = [];
     ls.noise          = [];
-    ls.lti            = 0;
-    ls.dt             = 0;
-    ls.constantbounds = [0 0 0];
+    ls.lti            = false;
+    ls.dt             = false;
+    ls.constantbounds = false(1,3);
     ls                = class(ls, 'linsys');
     return;
   end
 
-  lti    = 1;
+  lti    = true;
   [m, n] = size(A);
   if m ~= n
-    error('LINSYS: A must be square matrix.');
+    error('linsys:dimension:A', 'LINSYS: A must be square matrix.');
   end
   if iscell(A)
-    lti = 0;
+    lti = false;
   elseif ~(isa(A, 'double'))
-    error('LINSYS: matrix A must be of type ''cell'' or ''double''.');
+    error('linsys:type:A', 'LINSYS: matrix A must be of type ''cell'' or ''double''.');
   end
   ls.A = A;
   
   [k, l] = size(B);
   if k ~= n
-    error('LINSYS: dimensions of A and B do not match.');
+    error('linsys:dimension:B', 'LINSYS: dimensions of A and B do not match.');
   end
   if iscell(B)
-    lti = 0;
+    lti = false;
   elseif ~(isa(B, 'double'))
-    error('LINSYS: matrix B must be of type ''cell'' or ''double''.');
+    error('linsys:type:B', 'LINSYS: matrix B must be of type ''cell'' or ''double''.');
   end 
   ls.B = B;
   
-  cbu = 1;
+  cbu = true;
   if nargin > 2
     if isempty(U)
-      ; % leave as is
+      % leave as is
     elseif isa(U, 'ellipsoid')
       U      = U(1, 1);
       [d, r] = dimension(U);
       if d ~= l
-        error('LINSYS: dimensions of control bounds U and matrix B do not match.');
+        error('linsys:dimension:U', 'LINSYS: dimensions of control bounds U and matrix B do not match.');
       end
-      if (d > r) & (ellOptions.verbose > 0)
+      if (d > r) && (ellOptions.verbose > 0)
         fprintf('LINSYS: Warning! Control bounds U represented by degenerate ellipsoid.\n');
       end
-    elseif isa(U, 'double') | iscell(U)
+    elseif isa(U, 'double') || iscell(U)
       [k, m] = size(U);
       if m > 1
-        error('LINSYS: control U must be an ellipsoid or a vector.')
+        error('linsys:type:U', 'LINSYS: control U must be an ellipsoid or a vector.')
       elseif k ~= l
-        error('LINSYS: dimensions of control vector U and matrix B do not match.');
+        error('linsys:dimension:U', 'LINSYS: dimensions of control vector U and matrix B do not match.');
       end
-    elseif isstruct(U) & isfield(U, 'center') & isfield(U, 'shape')
-      cbu = 0;
+      if iscell(U)
+          cbu = false;
+      end
+    elseif isstruct(U) && isfield(U, 'center') && isfield(U, 'shape')
+      cbu = false;
       U   = U(1, 1);
-      msg = l_check_ell_struct(U, l);
-      if ~(isempty(msg))
-        error(sprintf('LINSYS: control bounds U: %s.', msg));  
-      end
+      l_check_ell_struct(U, l);      
     else
-      error('LINSYS: control U must be an ellipsoid or a vector.')
+      error('linsys:type:U', 'LINSYS: control U must be an ellipsoid or a vector.')
     end
   else
     U = [];
@@ -189,49 +190,49 @@ function ls = linsys(A, B, U, G, V, C, W, D)
 
   if nargin > 3
     if isempty(G)
-      ; % leave as is
+      % leave as is
     else
       [k, l] = size(G);
       if k ~= n
-        error('LINSYS: dimensions of A and G do not match.');
+        error('linsys:dimension:G', 'LINSYS: dimensions of A and G do not match.');
       end
       if iscell(G)
-        lti = 0;
+        lti = false;
       elseif ~(isa(G, 'double'))
-        error('LINSYS: matrix G must be of type ''cell'' or ''double''.');
+        error('linsys:type:G', 'LINSYS: matrix G must be of type ''cell'' or ''double''.');
       end 
     end 
   else
     G = [];
   end
 
-  cbv = 1;
+  cbv = true;
   if nargin > 4
-    if isempty(G) | isempty(V)
+    if isempty(G) || isempty(V)
       G = [];
       V = [];
     elseif isa(V, 'ellipsoid')
       V      = V(1, 1);
       [d, r] = dimension(V);
       if d ~= l
-        error('LINSYS: dimensions of disturbance bounds V and matrix G do not match.');
+        error('linsys:dimension:V', 'LINSYS: dimensions of disturbance bounds V and matrix G do not match.');
       end
-    elseif isa(V, 'double') | iscell(V)
+    elseif isa(V, 'double') || iscell(V)
       [k, m] = size(V);
       if m > 1
-        error('LINSYS: disturbance V must be an ellipsoid or a vector.')
+        error('linsys:type:V', 'LINSYS: disturbance V must be an ellipsoid or a vector.')
       elseif k ~= l
-        error('LINSYS: dimensions of disturbance vector V and matrix G do not match.');
+        error('linsys:dimension:V', 'LINSYS: dimensions of disturbance vector V and matrix G do not match.');
       end
-    elseif isstruct(V) & isfield(V, 'center') & isfield(V, 'shape')
-      cbv = 0;
+      if iscell(V)
+          cbv = false;
+      end
+    elseif isstruct(V) && isfield(V, 'center') && isfield(V, 'shape')
+      cbv = false;
       V   = V(1, 1);
-      msg = l_check_ell_struct(V, l);
-      if ~(isempty(msg))
-        error(sprintf('LINSYS: disturbance bounds V: %s.', msg));  
-      end
+      l_check_ell_struct(V, l);
     else
-      error('LINSYS: disturbance V must be an ellipsoid or a vector.')
+      error('linsys:type:V', 'LINSYS: disturbance V must be an ellipsoid or a vector.')
     end
   else
     V = [];
@@ -245,12 +246,12 @@ function ls = linsys(A, B, U, G, V, C, W, D)
     else
       [k, l] = size(C);
       if l ~= n
-        error('LINSYS: dimensions of A and C do not match.');
+        error('linsys:dimension:C', 'LINSYS: dimensions of A and C do not match.');
       end
       if iscell(C)
-        lti = 0;
+        lti = false;
       elseif ~(isa(C, 'double'))
-        error('LINSYS: matrix C must be of type ''cell'' or ''double''.');
+        error('linsys:type:C', 'LINSYS: matrix C must be of type ''cell'' or ''double''.');
       end 
     end 
   else
@@ -258,32 +259,32 @@ function ls = linsys(A, B, U, G, V, C, W, D)
   end
   ls.C = C;
   
-  cbw = 1;
+  cbw = true;
   if nargin > 6
     if isempty(W)
-      ; % leave as is
+      % leave as is
     elseif isa(W, 'ellipsoid')
       W      = W(1, 1);
       [d, r] = dimension(W);
       if d ~= k
-        error('LINSYS: dimensions of noise bounds W and matrix C do not match.');
+        error('linsys:dimension:W', 'LINSYS: dimensions of noise bounds W and matrix C do not match.');
       end
-    elseif isa(W, 'double') | iscell(W)
+    elseif isa(W, 'double') || iscell(W)
       [l, m] = size(W);
       if m > 1
-        error('LINSYS: noise W must be an ellipsoid or a vector.')
+        error('linsys:type:W', 'LINSYS: noise W must be an ellipsoid or a vector.')
       elseif k ~= l
-        error('LINSYS: dimensions of noise vector W and matrix C do not match.');
+        error('linsys:dimension:W', 'LINSYS: dimensions of noise vector W and matrix C do not match.');
       end
-    elseif isstruct(W) & isfield(W, 'center') & isfield(W, 'shape')
-      cbw = 0;
+      if iscell(W)
+          cbw = false;
+      end
+    elseif isstruct(W) && isfield(W, 'center') && isfield(W, 'shape')
+      cbw = false;
       W   = W(1, 1);
-      msg = l_check_ell_struct(W, k);
-      if ~(isempty(msg))
-        error(sprintf('LINSYS: noise bounds W: %s.', msg));  
-      end
+      l_check_ell_struct(W, k);
     else
-      error('LINSYS: noise W must be an ellipsoid or a vector.')
+      error('linsys:type:W', 'LINSYS: noise W must be an ellipsoid or a vector.')
     end
   else
     W   = [];
@@ -291,22 +292,19 @@ function ls = linsys(A, B, U, G, V, C, W, D)
   ls.noise = W;
 
   ls.lti = lti;
-  ls.dt  = 0;
-  if (nargin > 7)  & ischar(D) & (D == 'd')
-    ls.dt = 1;
+  ls.dt  = false;
+  if (nargin > 7)  && ischar(D) && (D == 'd')
+    ls.dt = true;
   end
   ls.constantbounds = [cbu cbv cbw];
   ls                = class(ls, 'linsys');
 
-  return;
-
-
-
+end
 
 
 %%%%%%%%
 
-function msg = l_check_ell_struct(E, N)
+function l_check_ell_struct(E, N)
 %
 % L_CHECK_ELL_STRUCT - checks if given structure E represents an ellipsoid
 %                      of dimension N.
@@ -314,59 +312,52 @@ function msg = l_check_ell_struct(E, N)
 
   global ellOptions;
 
-  msg = '';
   q   = E.center;
   Q   = E.shape;
 
   [k, l] = size(q);
   [m, n] = size(Q);
   if m ~= n
-    msg = 'shape matrix must be symmetric, positive definite';
-    return;
+    error( sprintf('linsys:value:%s:shape',inputname(1)), ...
+        'shape matrix must be symmetric, positive definite' );
   elseif n ~= N
-    msg = sprintf('shape matrix must be of dimension %dx%d', N, N);
-    return;
-  elseif l > 1
-    msg = sprintf('center must be a vector of dimension %d', N);
-    return;
-  elseif k ~= N
-    msg = sprintf('center must be a vector of dimension %d', N);
-    return;
+    error( sprintf('linsys:dimension:%s:shape',inputname(1)), ...
+        'shape matrix must be of dimension %dx%d', N, N );
+  elseif l > 1 || k ~= N
+    error( sprintf('linsys:dimension:%s:center',inputname(1)), ...
+        'center must be a vector of dimension %d', N );  
   end 
 
-  if ~(iscell(q)) & ~(iscell(Q))
-    msg = 'for constant ellipsoids us ellipsoid object';
-    return;
+  if ~iscell(q) && ~iscell(Q)
+    error( sprintf('linsys:type:%s',inputname(1)), ...
+        'for constant ellipsoids use ellipsoid object' );
   end
 
-  if ~(iscell(q))
-    if ~(isa(q, 'double'))
-      msg = 'center must be of type ''cell'' or ''double''';
-      return;
-    end
+  if ~iscell(q) && ~isa(q, 'double')
+    error( sprintf('linsys:type:%s:center',inputname(1)), ...
+        'center must be of type ''cell'' or ''double''' );        
   end
 
-  if ~(iscell(Q))
-    if ~(isa(Q, 'double'))
-      msg = 'shape matrix must be of type ''cell'' or ''double''';
-      return;
-    end
-    if (Q ~= Q') | (min(eig(Q)) < 0)
-      msg = 'shape matrix must be symmetric, positive definite';
-      return;
-    end
-  else
+  if iscell(Q)
     if ellOptions.verbose > 0
       fprintf('LINSYS: Warning! Cannot check if symbolic matrix is positive definite.\n');
     end
-    for i = 1:n
-      for j = i:n
-	if min(Q{i, j} == Q{j, i}) < 1
-          msg = 'shape matrix must be symmetric, positive definite';
-          return;
-        end
-      end
+    isEqMat = strcmp(Q, Q.');
+    if ~all( isEqMat(:) )
+        error( sprintf('linsys:value:%s:shape',inputname(1)), ...
+              'shape matrix must be symmetric, positive definite' );
     end
+  else
+    if isa(Q, 'double')
+      isnEqMat = ( Q ~= Q.' );
+      if any( isnEqMat(:) ) || min(eig(Q)) <= 0
+        error( sprintf('linsys:value:%s:shape',inputname(1)), ...
+            'shape matrix must be symmetric, positive definite' );
+      end                    
+    else
+      error( sprintf('linsys:type:%s:shape',inputname(1)), ...
+          'shape matrix must be of type ''cell'' or ''double''' );    
+    end        
   end
 
-  return; 
+end
