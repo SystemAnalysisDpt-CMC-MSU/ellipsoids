@@ -47,26 +47,20 @@ function [N, I, O, D] = dimension(lsys)
     error('DIMENSION: input argument must be linear system object.');
   end
 
-  N      = [];
-  I      = [];
-  O      = [];
-  D      = [];
   [m, n] = size(lsys);
+  
+  N      = zeros(m,n);
+  I      = zeros(m,n);
+  O      = zeros(m,n);
+  D      = zeros(m,n);
+  
   for i = 1:m
-    nn = [];
-    ii = [];
-    oo = [];
-    dd = [];
     for j = 1:n
-      nn = [nn size(lsys(i, j).A, 1)];
-      ii = [ii size(lsys(i, j).B, 2)];
-      oo = [oo size(lsys(i, j).C, 1)];
-      dd = [dd size(lsys(i, j).G, 2)];
+      N(i, j) = size(lsys(i, j).A, 1);
+      I(i, j) = size(lsys(i, j).B, 2);
+      O(i, j) = size(lsys(i, j).C, 1);
+      D(i, j) = size(lsys(i, j).G, 2);
     end
-    N = [N; nn];
-    I = [I; ii];
-    O = [O; oo];
-    D = [D; dd];
   end
 
   if nargout < 4
