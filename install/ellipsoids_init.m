@@ -50,7 +50,7 @@ ellOptions.plot3d_grid = 200; % grid density for plotting in 3D
 
 % CVX settings.
 if CVXController.isSetUp()
-    CVXController.setSolver('sdpt3');
-    CVXController.setPrecision(2*ellOptions.rel_tol);
+    CVXController.setSolver('sedumi');
+    CVXController.setPrecision(ellOptions.rel_tol);
 end
 SEllOptions=ellOptions;

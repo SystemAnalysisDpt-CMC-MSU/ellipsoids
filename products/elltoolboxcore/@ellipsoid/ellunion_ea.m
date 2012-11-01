@@ -60,6 +60,7 @@ function [E, S] = ellunion_ea(EE)
   end
   
 
+
 cvx_begin sdp
     variable cvxEllMat(mn,mn) symmetric
     variable cvxEllCenterVec(mn)
@@ -74,7 +75,7 @@ cvx_begin sdp
                 Q = regularize(Q);
             end
     
-            Q     = ell_inv(Q);
+            Q     = inv(Q);
             Q = (Q + Q')*0.5;
             bb    = -Q * q;
             cc    = q' * Q * q - 1;
@@ -86,7 +87,7 @@ cvx_begin sdp
 cvx_end
  
 
-  ellMat = ell_inv(cvxEllMat);
+  ellMat = inv(cvxEllMat);
   ellMat = 0.5*(ellMat + ellMat');
   ellCenterVec = -ellMat * cvxEllCenterVec;
 

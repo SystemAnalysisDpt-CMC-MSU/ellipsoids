@@ -9,7 +9,8 @@ classdef CVXController
         end
         function setPrecision(relTol)
             import elltool.cvx.CVXController;
-            cvx_precision([0, relTol*0.5]);
+            cvx_precision([0, 2*relTol]);
+         
         end
         function isPositive=isSetUp()
             import elltool.cvx.CVXController;

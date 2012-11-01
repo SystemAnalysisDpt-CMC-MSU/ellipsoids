@@ -127,7 +127,6 @@ function res = l_check_containment(E1, E2)
   end
 cvx_begin sdp
     variable cvxxVec(1, 1)
-        
     AMat <= cvxxVec*BMat
     cvxxVec >= 0
 cvx_end

@@ -318,7 +318,7 @@ function [res, status] = lqcqp(EA, H)
 
   cvx_end
   cvx_status
-  if strcmp(cvx_status,'Infeasible')
+  if strcmp(cvx_status,'Infeasible') || strcmp(cvx_status, 'Inaccurate/Infeasible')
       res = -1;
       return;
   end;
