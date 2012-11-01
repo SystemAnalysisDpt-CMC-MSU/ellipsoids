@@ -17,7 +17,7 @@ function display(S)
   disp([inputname(1) ' =']);
 
   [m, n] = size(S);
-  if (m > 1) | (n > 1)
+  if (m > 1) || (n > 1)
     fprintf('%dx%d array of linear systems.\n\n', m, n);
     return;
   end
@@ -88,7 +88,7 @@ function display(S)
     fprintf('   vector\n'); disp(S.control);
   end
 
-  if ~(isempty(S.G)) & ~(isempty(S.disturbance))
+  if ~(isempty(S.G)) && ~(isempty(S.disturbance))
     if iscell(S.G)
       if isdiscrete(S)
         fprintf('\nG[k]:\n');
