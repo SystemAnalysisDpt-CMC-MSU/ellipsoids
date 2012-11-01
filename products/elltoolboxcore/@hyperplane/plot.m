@@ -1,4 +1,4 @@
-function plot(varargin)
+function figHandleVec = plot(varargin)
 %
 % PLOT - plots hyperplanes in 2D or 3D.
 %
@@ -25,8 +25,8 @@ function plot(varargin)
 % Output:
 % -------
 %
-%    None.
-%
+%    Array with handles of figures hyperplanes were plotted in. The size of array
+%is [1 n], where n is number of figures.
 %
 % See also:
 % ---------
@@ -35,11 +35,14 @@ function plot(varargin)
 %
 
 % 
-% Author:
-% -------
+% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+% $Copyright:  The Regents of the University of California 2004-2008 $
 %
-%    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-%
+% $Author: <Zakharov Eugene>  <justenterrr@gmail.com> $    $Date: <1 november> $
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department <2012> $
+
 
   global ellOptions;
 
@@ -221,13 +224,27 @@ function plot(varargin)
     end
   end
 
-  ih = ishold;
-
+  if  ~isempty(findall(0,'Type','Figure')) && ~(Options.newfigure)
+    ih = ishold;
+  else
+    ih = false;
+  end 
+  
+  if Options.newfigure
+      figHandleVec = zeros(1,hp_count);
+  else 
+      if ih
+          figHandleVec = gcf;
+      else
+          figHandleVec = figure();
+      end
+  end
+  
   for i = 1:hp_count
     if Options.newfigure ~= 0
-      figure;
+        figHandleVec(i) = figure();
     else
-      newplot;
+      newplot(figHandleVec);
     end
 
     hold on;
@@ -289,7 +306,7 @@ function plot(varargin)
 
   end
 
-  if ih == 0;
+  if ~ih;
     hold off;
   end
 

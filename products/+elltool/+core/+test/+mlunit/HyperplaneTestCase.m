@@ -26,14 +26,14 @@ classdef HyperplaneTestCase < mlunitext.test_case
             testConstant = SInpData.testConstant;
             %
             %simple construction test
-            testingHyraplane = hyperplane(testNormalVec, testConstant);
-            res = self.isNormalAndConstantRight(testNormalVec, testConstant,testingHyraplane);
+            testingHyperplane = hyperplane(testNormalVec, testConstant);
+            res = self.isNormalAndConstantRight(testNormalVec, testConstant,testingHyperplane);
             mlunit.assert_equals(1, res);
             %
             %omitting constant test
             testConstant = 0;
-            testingHyraplane = hyperplane(testNormalVec);
-            res = self.isNormalAndConstantRight(testNormalVec, testConstant,testingHyraplane);
+            testingHyperplane = hyperplane(testNormalVec);
+            res = self.isNormalAndConstantRight(testNormalVec, testConstant,testingHyperplane);
             mlunit.assert_equals(1, res);
             %
             %
@@ -144,15 +144,19 @@ classdef HyperplaneTestCase < mlunitext.test_case
         %
         function self = testPlot(self)
             SInpData =  self.auxReadFile(self);
-            testHyperplane3D1Vec = SInpData.testHyperplaneVec3D1;
-            testHyperplane3D2Vec = SInpData.testHyperplaneVec3D2;
-            testHyperplane2DVec = SInpData.testHyperplaneVec2D;
-            STestOptions = SInpData.testOptions;
+            testHplane3D1Vec = SInpData.testHplane3D1Vec;
+            testHplane3D2Vec = SInpData.testHplane3D2Vec;
+            testHplane2DVec = SInpData.testHplane2DVec;
+            STestOptions = SInpData.STestOptions;
             %
-            plot(testHyperplane3D1Vec);
-            plot(testHyperplane2DVec);
-            plot(testHyperplane3D1Vec,STestOptions);
-            plot(testHyperplane3D1Vec,'g',testHyperplane3D2Vec,'r');            
+            pHandle = plot(testHplane3D1Vec);
+            close(pHandle);
+            pHandle = plot(testHplane2DVec);
+            close(pHandle);
+            pHandle = plot(testHplane3D1Vec,STestOptions);
+            close(pHandle);
+            pHandle = plot(testHplane3D1Vec,'g',testHplane3D2Vec,'r');
+            close(pHandle);            
         end
         %    
         function self = testWrongInput(self)
