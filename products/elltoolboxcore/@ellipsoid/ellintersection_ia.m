@@ -86,6 +86,9 @@ cvx_end
 
 
   
+  if strcmp(cvx_status,'Infeasible') || strcmp(cvx_status,'Inaccurate/Infeasible') || strcmp(cvx_status,'Failed')
+      throwerror('cvxError','Cvx cannot solve the system');
+  end;
  
   if rank(cvxEllMat) < mn
     cvxEllMat = regularize(cvxEllMat);

@@ -87,6 +87,9 @@ cvx_begin sdp
 cvx_end
  
 
+  if strcmp(cvx_status,'Infeasible') || strcmp(cvx_status,'Inaccurate/Infeasible') || strcmp(cvx_status,'Failed')
+      throwerror('cvxError','Cvx cannot solve the system');
+  end;
   ellMat = inv(cvxEllMat);
   ellMat = 0.5*(ellMat + ellMat');
   ellCenterVec = -ellMat * cvxEllCenterVec;

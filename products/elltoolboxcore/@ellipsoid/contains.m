@@ -132,6 +132,9 @@ function res = l_check_containment(E1, E2)
     cvxxVec >= 0
   cvx_end
 
+  if strcmp(cvx_status,'Failed')
+    throwerror('cvxError','Cvx failed');
+  end;
   if strcmp(cvx_status,'Solved') || strcmp(cvx_status, 'Inaccurate/Solved')
     res = 1;
   else

@@ -30,7 +30,7 @@ function E = ell_enclose(V)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %    Vadim Kaushanskiy <vkaushanskiy@gmail.com>
 
-
+import modgen.common.throwerror
 global ellOptions;
 
 if ~isstruct(ellOptions)
@@ -61,7 +61,9 @@ cvx_begin sdp
         end
 cvx_end
 
-
+if strcmp(cvx_status,'Infeasible') || strcmp(cvx_status,'Inaccurate/Infeasible') || strcmp(cvx_status,'Failed')
+    throwerror('cvxError','Cvx cannot solve the system');
+end;
 
 sqrtEllMat = cvxEllMat;
 ellCenterVec = cvxEllCenterVec;

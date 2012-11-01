@@ -228,7 +228,10 @@ cvx_end
 
 
   status = 1;
-  if strcmp(cvx_status,'Infeasible')
+  if strcmp(cvx_status,'Failed')
+    throwerror('cvxError','Cvx failed');
+  end;
+  if strcmp(cvx_status,'Infeasible') || strcmp(cvx_status,'Inaccurate/Infeasible')
     % problem is infeasible, or global minimum cannot be found
     res = -1;
     status = 0;
