@@ -252,22 +252,22 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             self.flexAssert(1, contains(testEllVec(3), resEllVec));
 
             clear testEllVec;
-            load(strcat(self.testDataRootDir, '/testEllintersection_inpSimple.mat'), 'testEllCenterVec', 'testEllMat', 'testEllCenter2Vec', 'testEll2Mat');
+            load(strcat(self.testDataRootDir, strcat(filesep, 'testEllintersection_inpSimple.mat')), 'testEllCenterVec', 'testEllMat', 'testEllCenter2Vec', 'testEll2Mat');
             testEllVec(1) = ellipsoid(testEllCenterVec, testEllMat);
             testEllVec(2) = ellipsoid(testEllCenter2Vec, testEll2Mat);
             resEllVec = ellintersection_ia(testEllVec);
-            load(strcat(self.testDataRootDir, '/testEllintersection_outSimple.mat'), 'ansEllCenterVec', 'ansEllMat');
+            load(strcat(self.testDataRootDir, strcat(filesep, 'testEllintersection_outSimple.mat')), 'ansEllCenterVec', 'ansEllMat');
             ansEllVec = ellipsoid(ansEllCenterVec, ansEllMat);
             self.flexAssert(1, eq(resEllVec, ansEllVec));
             self.flexAssert(1, contains(testEllVec(1), resEllVec));
             self.flexAssert(1, contains(testEllVec(2), resEllVec));
 
             clear testEllVec;
-            load(strcat(self.testDataRootDir, '/testEllintersectionIa_inp.mat'), 'testEllCenterVec', 'testEllMat', 'testEllCenter2Vec', 'testEll2Mat');
+            load(strcat(self.testDataRootDir, strcat(filesep, 'testEllintersectionIa_inp.mat')), 'testEllCenterVec', 'testEllMat', 'testEllCenter2Vec', 'testEll2Mat');
             testEllVec(1) = ellipsoid(testEllCenterVec, testEllMat);
             testEllVec(2) = ellipsoid(testEllCenter2Vec, testEll2Mat);
             resEllVec = ellintersection_ia(testEllVec);
-            load(strcat(self.testDataRootDir, '/testEllintersectionIa_out.mat'), 'ansEllCenterVec', 'ansEllMat');
+            load(strcat(self.testDataRootDir, strcat(filesep, 'testEllintersectionIa_out.mat')), 'ansEllCenterVec', 'ansEllMat');
             ansEllVec = ellipsoid(ansEllCenterVec, ansEllMat);
             self.flexAssert(1, eq(resEllVec, ansEllVec));
             self.flexAssert(1, contains(testEllVec(1), resEllVec));
@@ -326,22 +326,22 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             
             clear testEllVec;
             nDim = 15;
-            load(strcat(self.testDataRootDir, '/testEllunion_inpSimple.mat'), 'testEllCenterVec', 'testEllMat', 'testEllCenter2Vec', 'testEll2Mat');
+            load(strcat(self.testDataRootDir, strcat(filesep, 'testEllunion_inpSimple.mat')), 'testEllCenterVec', 'testEllMat', 'testEllCenter2Vec', 'testEll2Mat');
             testEllVec(1) = ellipsoid(testEllCenterVec, testEllMat);
             testEllVec(2) = ellipsoid(testEllCenter2Vec, testEll2Mat);
             resEllVec = ellunion_ea(testEllVec);
-            load(strcat(self.testDataRootDir, '/testEllunion_outSimple.mat'), 'ansEllCenterVec', 'ansEllMat');
+            load(strcat(self.testDataRootDir, strcat(filesep, 'testEllunion_outSimple.mat')), 'ansEllCenterVec', 'ansEllMat');
             ansEllVec = ellipsoid(ansEllCenterVec, ansEllMat);
             self.flexAssert(1, contains(resEllVec, testEllVec(1)));
             self.flexAssert(1, contains(resEllVec, testEllVec(2)));
             self.flexAssert(1, eq(resEllVec, ansEllVec));
             clear testEllVec;
             nDim = 15;
-            load(strcat(self.testDataRootDir, '/testEllunionEa_inp.mat'), 'testEllCenterVec', 'testEllMat', 'testEllCenter2Vec', 'testEll2Mat');
+            load(strcat(self.testDataRootDir, strcat(filesep, 'testEllunionEa_inp.mat')), 'testEllCenterVec', 'testEllMat', 'testEllCenter2Vec', 'testEll2Mat');
             testEllVec(1) = ellipsoid(testEllCenterVec, testEllMat);
             testEllVec(2) = ellipsoid(testEllCenter2Vec, testEll2Mat);
             resEllVec = ellunion_ea(testEllVec);
-            load(strcat(self.testDataRootDir, '/testEllunionEa_out.mat'), 'ansEllCenterVec', 'ansEllMat');
+            load(strcat(self.testDataRootDir, strcat(filesep, 'testEllunionEa_out.mat')), 'ansEllCenterVec', 'ansEllMat');
             ansEllVec = ellipsoid(ansEllCenterVec, ansEllMat);
             self.flexAssert(1, contains(resEllVec, testEllVec(1)));
             self.flexAssert(1, contains(resEllVec, testEllVec(2)));

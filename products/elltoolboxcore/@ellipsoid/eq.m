@@ -25,7 +25,7 @@ function res = eq(E1, E2)
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
-
+  import gras.la.sqrtm;
   global ellOptions;
 
   if ~isstruct(ellOptions)
@@ -91,7 +91,7 @@ function res = eq(E1, E2)
           continue;
         end
         q = E1.center - E2(i, j).center;
-        Q = E1.shape - E2(i, j).shape;
+        Q = sqrtm(E1.shape) - sqrtm(E2(i, j).shape);
         if (norm(q) > ellOptions.rel_tol) | (norm(Q) > ellOptions.rel_tol)
            r = [r 0];
         else
