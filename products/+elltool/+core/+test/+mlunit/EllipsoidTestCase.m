@@ -13,7 +13,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
         function self = testDistance(self)
             
             global  ellOptions;
-            load(strcat(self.testDataRootDir, '/testEllEllRMat.mat'),...
+            load(strcat(self.testDataRootDir,filesep,'testEllEllRMat.mat'),...
                  'testOrth50Mat','testOrth100Mat','testOrth3Mat','testOrth2Mat');
             %
             %testing vector-ellipsoid distance
@@ -137,12 +137,13 @@ classdef EllipsoidTestCase < mlunitext.test_case
             mlunit.assert_equals(1,abs(testRes-3)<ellOptions.abs_tol);
             %
             %distance between two vectors of ellipsoids of rather high
-            %dimension (12<=nDim<=26)
-            load(strcat(self.testDataRootDir, '/testEllEllDist.mat'),...
+            %dimension (12<=nDim<=26) with matrices that have nonzero non
+            %diagonal elements
+            load(strcat(self.testDataRootDir,filesep,'testEllEllDist.mat'),...
                  'testEllipsoid1Vec','testEllipsoid2Vec','testAnswVec','nEllVec');
             testResVec=distance(testEllipsoid1Vec,testEllipsoid2Vec);
             mlunit.assert_equals(ones(1,nEllVec),...
-                abs(testResVec-testAnswVec)<ellOptions.abs_tol);
+                 abs(testResVec-testAnswVec)<ellOptions.abs_tol);
             %
             %distance between two ellipsoids and an ellipsoid (of 3-dimension), 
             %all matrices with nonzero nondiagonal elements 

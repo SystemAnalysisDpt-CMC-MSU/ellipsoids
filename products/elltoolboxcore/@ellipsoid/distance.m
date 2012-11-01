@@ -151,7 +151,7 @@ tic;
 ellQ1Mat=ellQ1Mat\eye(size(ellQ1Mat));
 ellQ2Mat=ellQ2Mat\eye(size(ellQ2Mat));
 %
-if all(ellCenter1Vec==ellCenter2Vec)
+if (isinternal(ellObj1,ellCenter2Vec)||isinternal(ellObj2,ellCenter1Vec))
     ellDist=0;
 else
     %initial centers of circle inside the ellipsoids
@@ -393,23 +393,14 @@ function [distEllEll, timeOfCalculation] = l_elldist(ellObj1, ellObj2, flag)
     if (nEllObj1 > 1) && (nEllObj2 > 1) && ((mSize1 ~= mSize2) || (kSize1 ~= kSize2))
         throwerror('DISTANCE: sizes of ellipsoidal arrays do not match.');
     end
-    dimemsionMat1 = dimension(ellObj1);
-    dimensionMat2 = dimension(ellObj2);
-    minDimension1   = min(min(dimemsionMat1));
-    minDimension2   = min(min(dimensionMat2));
-    maxDimension1   = max(max(dimemsionMat1));
-    maxDimension2   = max(max(dimensionMat2));
-%     if (minDimension1 ~= maxDimension1) || (minDimension2 ~= maxDimension2) || (minDimension1 ~= minDimension2)
-%         throwerror('DISTANCE: ellipsoids must be of the same dimension.');
-%     end
     if ellOptions.verbose > 0
-    if (nEllObj1 > 1) || (nEllObj2 > 1)
-      fprintf('Computing %d ellipsoid-to-ellipsoid distances...\n', max([nEllObj1 nEllObj2]));
-    else
-      fprintf('Computing ellipsoid-to-ellipsoid distance...\n');
+        if (nEllObj1 > 1) || (nEllObj2 > 1)
+          fprintf('Computing %d ellipsoid-to-ellipsoid distances...\n', max([nEllObj1 nEllObj2]));
+        else
+          fprintf('Computing ellipsoid-to-ellipsoid distance...\n');
+        end
     end
-    end
-    N_MAX_ITER=5000;
+    N_MAX_ITER=10000;
     ABS_TOL=ellOptions.abs_tol;
     if (nEllObj1 > 1) && (nEllObj2 > 1)
         distEllEll=zeros(mSize1,kSize1);  
