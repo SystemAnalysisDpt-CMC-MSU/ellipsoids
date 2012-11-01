@@ -12,6 +12,11 @@ classdef CVXController
             cvx_precision([0, 2*relTol]);
          
         end
+        function setIsVerbosityEnabhed(isQuiet)
+            import elltool.cvx.CVXController;
+            cvx_quiet(~isQuiet);
+        end
+        
         function isPositive=isSetUp()
             import elltool.cvx.CVXController;
             if CVXController.isOnPath()

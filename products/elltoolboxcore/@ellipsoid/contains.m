@@ -121,15 +121,16 @@ function res = l_check_containment(E1, E2)
   Ri     = ell_inv(R);
   AMat      = [Qi -Qi*q; (-Qi*q)' (q'*Qi*q-1)];
   BMat      = [Ri -Ri*r; (-Ri*r)' (r'*Ri*r-1)];
-
+  AMat = 0.5*(AMat + AMat');
+  BMat = 0.5*(BMat + BMat');
   if ellOptions.verbose > 0
     fprintf('Invoking CVX...\n');
   end
-cvx_begin sdp
+  cvx_begin sdp
     variable cvxxVec(1, 1)
     AMat <= cvxxVec*BMat
     cvxxVec >= 0
-cvx_end
+  cvx_end
 
   if strcmp(cvx_status,'Solved') || strcmp(cvx_status, 'Inaccurate/Solved')
     res = 1;

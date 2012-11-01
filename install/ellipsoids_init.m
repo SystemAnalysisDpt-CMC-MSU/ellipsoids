@@ -52,5 +52,6 @@ ellOptions.plot3d_grid = 200; % grid density for plotting in 3D
 if CVXController.isSetUp()
     CVXController.setSolver('sedumi');
     CVXController.setPrecision(ellOptions.rel_tol);
+    CVXController.setIsVerbosityEnabhed(false);
 end
 SEllOptions=ellOptions;
