@@ -5,6 +5,42 @@ classdef SuiteSupportFunction < mlunitext.test_case
         crm
         crmSys
     end
+    properties (Constant, GetAccess = private)
+        rel_tol = 1e-6;
+        abs_tol = 1e-7;
+    end
+    methods (Static)
+        function dif = derivativeSupportFunction(t, x, aMat, bMat,...
+                                                 pVec, pMat, nElem)
+            y = x(1 : nElem);
+            %
+            dif = zeros(nElem + 1, 1);
+            dif(1 : nElem) = -(aMat(t).') * y;
+            dif(nElem + 1) =...
+                (y.') * bMat(t) * pVec(t) +...
+                sqrt((y.') * bMat(t) * pMat(t) * (bMat(t).') * y);
+        end
+        %
+        function fMatCalc = getHandleFromCellMat(inputCMat)
+            localCMat = inputCMat;
+            [nRows, nColumn] = size(localCMat);
+            for iRow = 1 : nRows
+                for jColumn = 1 : nColumn
+                    if jColumn == nColumn
+                        localCMat(iRow, jColumn) =...
+                            strcat(localCMat(iRow, jColumn), ';');
+                    else
+                        localCMat(iRow, jColumn) =...
+                            strcat(localCMat(iRow, jColumn), ',');
+                    end
+                end
+            end
+            localCMat = localCMat.';
+            helpStr = strcat('fRes = @(t) [', localCMat{:}, '];');
+            eval(helpStr);
+            fMatCalc = fRes;
+        end
+    end
     methods
         function self = SuiteSupportFunction(varargin)
             self = self@mlunitext.test_case(varargin{:});
@@ -65,25 +101,110 @@ classdef SuiteSupportFunction < mlunitext.test_case
                 'storageFormat','mat',...
                 'useHashedPath',false,'useHashedKeys',true);
             %
-            for iConf=1:nConfs
-                confName=confNameList{iConf};
-                inpKey=confName;
-                SRunProp=gras.ellapx.uncertcalc.run(confName,...
-                    'confRepoMgr',crm,'sysConfRepoMgr',crmSys);
+            for iConf = 1 : nConfs
+                confName = confNameList{iConf};
+                crm.selectConf(confName);
+                crm.setParam('plottingProps.isEnabled',false,...
+                    'writeDepth','cache');
+                inpKey = confName;
+                %
+                SRunProp = gras.ellapx.uncertcalc.run(confName,...
+                    'confRepoMgr', crm, 'sysConfRepoMgr', crmSys);
                 if crm.getParam('plottingProps.isEnabled')
                     SRunProp.plotterObj.closeAllFigures();
                 end
+                fGetScaleFactor = @(x)1/x;
+                scaleFactorFieldList = {'scaleFactor'};
+                SRunProp.ellTubeRel.scale(fGetScaleFactor,...
+                    scaleFactorFieldList);
                 %
-                calcPrecision=crm.getParam('genericProps.calcPrecision');                
-                isOk=all(SRunProp.ellTubeProjRel.calcPrecision<=...
+                %SRunProp.ellTubeRel
+                %
+                calcPrecision = crm.getParam('genericProps.calcPrecision');                
+                isOk = all(SRunProp.ellTubeProjRel.calcPrecision <=...
                     calcPrecision);
                 mlunit.assert_equals(true,isOk);
                 %
-                self.crmSys.getParam('At');
-                disp(At)
-                pause;
+                isCt = self.crmSys.isParam('Ct');
+                isQt = self.crmSys.isParam('disturbance_restriction.Q');
+                %
+                if isCt
+                    CtCMat = self.crmSys.getParam('Ct');
+                    zerCMat = cellfun(@(x) num2str(x),...
+                        num2cell(zeros(size(CtCMat))), 'UniformOutput', false);
+                    cEqMat = strcmp(CtCMat, zerCMat);
+                end
+                if isQt
+                    QtCMat = self.crmSys.getParam('disturbance_restriction.Q');
+                    zerQtCMat = cellfun(@(x) num2str(x),...
+                        num2cell(zeros(size(QtCMat))), 'UniformOutput', false);
+                    qEqMat = strcmp(QtCMat, zerQtCMat);
+                end
+                isnDisturbance = ~isCt  || ~isQt ||...
+                    all(cEqMat(:)) || all(qEqMat(:));
+                if isnDisturbance
+                    AtCMat = self.crmSys.getParam('At');
+                    fAtMatCalc = self.getHandleFromCellMat(AtCMat);
+                    BtCMat = self.crmSys.getParam('Bt');
+                    fBtMatCalc = self.getHandleFromCellMat(BtCMat);
+                    PtCVec = self.crmSys.getParam('control_restriction.a');
+                    fPtVecCalc = self.getHandleFromCellMat(PtCVec);
+                    PtCMat = self.crmSys.getParam('control_restriction.Q');
+                    fPtMatCalc = self.getHandleFromCellMat(PtCMat);
+                    % X0 and x0 are double:
+                    X0Mat = self.crmSys.getParam('initial_set.Q');
+                    x0Vec = self.crmSys.getParam('initial_set.a');
+                    %
+                    timeCVec = SRunProp.ellTubeRel.timeVec;
+                    nTuples = SRunProp.ellTubeRel.getNTuples;
+                    %
+                    goodDirCMat = SRunProp.ellTubeRel.ltGoodDirMat;
+                    ellMatCArray = SRunProp.ellTubeRel.QArray;
+                    ellCenterCArray = SRunProp.ellTubeRel.aMat;
+                    %
+                    nElem = size(x0Vec, 1);
+                    odeOptionsVec = odeset('RelTol', self.rel_tol,...
+                        'AbsTol', self.abs_tol * ones(nElem + 1, 1));
+                    for iTuple = 1 : nTuples
+                        curTimeVec = timeCVec{iTuple};
+                        curGoodDirMat = goodDirCMat{iTuple};
+                        curEllMatArray = ellMatCArray{iTuple};
+                        curEllCenterArray = ellCenterCArray{iTuple};
+                        supFun0 =...
+                            curGoodDirMat(:, 1).' * x0Vec +...
+                            sqrt(curGoodDirMat(:, 1).' *...
+                            X0Mat * curGoodDirMat(:, 1));
+                        [~, expResultVec] =...
+                            ode45(@(t, x) self.derivativeSupportFunction(t,...
+                            x, fAtMatCalc, fBtMatCalc, fPtVecCalc,...
+                            fPtMatCalc, nElem), curTimeVec,...
+                            [curGoodDirMat(:, 1).', supFun0], odeOptionsVec);
+                        expSupFuncMat = expResultVec(:, 1 : nElem);
+                        supFuncMat = curGoodDirMat(:, :);
+                        errorMat = abs(expSupFuncMat - supFuncMat.');
+                        isOk = max(errorMat(:)) <= calcPrecision;
+                        %                        
+                        isOkCurrent = true;
+                        for iTime = 1 : numel(curTimeVec)
+                            supFun = curGoodDirMat(:, iTime).' *...
+                                curEllCenterArray(:, iTime) +...
+                                sqrt(curGoodDirMat(:, iTime).' *...
+                                curEllMatArray(:, :, iTime) *...
+                                curGoodDirMat(:, iTime));
+                            isOkCurrent = isOkCurrent &&...
+                                abs(supFun - expResultVec(iTime, end)) <=...
+                                calcPrecision;
+                            %if ~isOkCurrent
+                            %    supFun
+                            %	expResultVec(iTime, end)
+                            %end
+                        end
+                        %isOkCurrent;
+                        isOk = isOk && isOkCurrent;
+                        mlunit.assert_equals(true, isOk);
+                    end        
+                end       
             end
-            
         end
     end
 end
