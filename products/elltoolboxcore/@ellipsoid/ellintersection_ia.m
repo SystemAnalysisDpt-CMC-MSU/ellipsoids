@@ -35,7 +35,8 @@ function [E, S] = ellintersection_ia(EE)
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %    Vadim Kaushanskiy <vkaushanskiy@gmail.com>
-
+  
+  import modgen.common.throwerror 
   global ellOptions;
 
   if ~isstruct(ellOptions)

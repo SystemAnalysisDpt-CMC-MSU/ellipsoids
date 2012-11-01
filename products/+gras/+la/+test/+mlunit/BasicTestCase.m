@@ -18,40 +18,40 @@ classdef BasicTestCase < mlunitext.test_case
 
         function self = testSqrtM(self)
             import gras.la.sqrtm;
-            Eps = 1e-6;
+            MAX_TOL = 1e-6;
             nDim = 1000;
             testMat = eye(nDim);
-            SqrtMat = sqrtm(testMat);
-            mlunit.assert_equals(testMat, SqrtMat);
+            sqrtMat = sqrtm(testMat);
+            mlunit.assert_equals(testMat, sqrtMat);
             
             nDim = 1000;
             testMat = diag(1:nDim);
-            SqrtMat = sqrtm(testMat);
-            mlunit.assert_equals(sqrt(testMat), SqrtMat);
+            sqrtMat = sqrtm(testMat);
+            mlunit.assert_equals(sqrt(testMat), sqrtMat);
             
             nDim = 2;
             testMat = [2, 1; 1, 2];
-            VMat = [-1/sqrt(2), 1/sqrt(2); 1/sqrt(2), 1/sqrt(2)];
-            DMat = diag([1, sqrt(3)]);
-            sqrtTestMat = VMat*DMat*VMat';
-            SqrtMat = sqrtm(testMat);
-            mlunit.assert_equals(sqrtTestMat, SqrtMat);
+            vMat = [-1/sqrt(2), 1/sqrt(2); 1/sqrt(2), 1/sqrt(2)];
+            dMat = diag([1, sqrt(3)]);
+            sqrtTestMat = vMat*dMat*vMat';
+            sqrtMat = sqrtm(testMat);
+            mlunit.assert_equals(sqrtTestMat, sqrtMat);
 
             nDim = 3;
             testMat = [5, -4, 1; -4, 6, -4; 1, -4, 5];
             sqrtTestMat = [2, -1, 0; -1, 2, -1; 0, -1, 2];
-            SqrtMat = sqrtm(testMat);
-            mlunit.assert_equals(1, norm(sqrtTestMat-SqrtMat) < Eps);
+            sqrtMat = sqrtm(testMat);
+            mlunit.assert(norm(sqrtTestMat-sqrtMat) < MAX_TOL);
             
             nDim = 15;
             load(strcat(self.testDataRootDir, strcat(filesep, 'testSqrtm1_inp.mat')), 'testMat');
-            SqrtMat = sqrtm(testMat);
-            mlunit.assert_equals(1, norm(testMat-SqrtMat*SqrtMat')<Eps);
+            sqrtMat = sqrtm(testMat);
+            mlunit.assert(norm(testMat-sqrtMat*sqrtMat')<MAX_TOL);
             
             nDim = 15;
             load(strcat(self.testDataRootDir, strcat(filesep, 'testSqrtm2_inp.mat')), 'testMat');
-            SqrtMat = sqrtm(testMat);
-            mlunit.assert_equals(1, norm(testMat-SqrtMat*SqrtMat') < Eps);
+            sqrtMat = sqrtm(testMat);
+            mlunit.assert(norm(testMat-sqrtMat*sqrtMat') < MAX_TOL);
 
         end
     end

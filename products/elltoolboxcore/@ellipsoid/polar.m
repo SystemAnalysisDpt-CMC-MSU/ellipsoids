@@ -1,7 +1,5 @@
 function P = polar(E)
 
-import modgen.common.throwerror 
-
 %
 % POLAR - computes the polar ellipsoids.
 %
@@ -42,7 +40,7 @@ import modgen.common.throwerror
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
-
+  import modgen.common.throwerror 
   if ~(isa(E, 'ellipsoid'))
     error('POLAR: input argument must be array of ellipsoids.');
   end
