@@ -1,4 +1,7 @@
-function I = hpintersection(E, H)
+function [I, isnIntersectedMat] = hpintersection(E, H)
+
+import modgen.common.throwerror 
+
 %
 % HPINTERSECTION - computes the intersection of ellipsoid with hyperplane.
 %
@@ -13,11 +16,16 @@ function I = hpintersection(E, H)
 %                              hyperplanes pairwise.
 %
 %
+% 
+%
+%
 % Output:
 % -------
-%
-%    I - array of ellipsoids resulting from intersections.
-%
+%      I - array of ellipsoids resulting from intersections.
+%      isnIntersectedMat - logical matrix. 
+%      isnIntersectedMat(i, j) = true, if E(i, j) doesn't intersect H(i, j)
+%      isnIntersectedMat(i, j) = false, otherwise. 
+%        
 %
 % See also:
 % ---------
@@ -41,6 +49,12 @@ function I = hpintersection(E, H)
   if ~(isa(E, 'ellipsoid')) | ~(isa(H, 'hyperplane'))
     error('HPINTERSECTION: first argument must be ellipsoid, second argument - hyperplane.');
   end 
+  if ndims(E) ~= 2
+      throwerror('wrongInput:wrongDim','The dimension of input must be 2');
+  end;
+  if ndims(H) ~= 2
+       throwerror('wrongInput:wrongDim','The dimension of input must be 2');
+  end;
 
   [m, n] = size(E);
   [k, l] = size(H);
@@ -49,6 +63,12 @@ function I = hpintersection(E, H)
   if (t1 > 1) & (t2 > 1) & ((m ~= k) | (n ~= l))
     error('HPINTERSECTION: sizes of ellipsoidal and hyperplane arrays do not match.');
   end
+  
+  isSecondOutput = nargout==2;
+  
+  if (isSecondOutput)
+    isnIntersectedMat = false(m, n);
+  end;
 
   dims1 = dimension(E);
   dims2 = dimension(H);
@@ -78,6 +98,11 @@ function I = hpintersection(E, H)
       for j = 1:n
         if distance(E(i, j), H(i, j)) > 0
           Q = [Q ellipsoid];
+          if (~isSecondOutput)
+            throwerror('degenerateEllipsoid','Hypeplane doesn''t intersect ellipsoid');
+          else
+            isnIntersectedMat(i, j) = true;
+          end;
 	else
           Q = [Q l_compute1intersection(E(i, j), H(i, j), mx1)];
 	end
@@ -102,6 +127,11 @@ function I = hpintersection(E, H)
       for j = 1:l
         if distance(E, H(i, j)) > 0
           Q = [Q ellipsoid];
+          if (~isSecondOutput)
+            throwerror('degenerateEllipsoid','Hypeplane doesn''t intersect ellipsoid');
+          else
+            isnIntersectedMat(i, j) = true;
+          end;
 	else
           Q = [Q l_compute1intersection(E, H(i, j), mx1)];
 	end

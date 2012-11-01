@@ -81,15 +81,14 @@ function [E, S] = ellunion_ea(EE)
     cnstr = cnstr + set('X<=0');
     cnstr = cnstr + set('-tt(i, 1)<=0');
   end
-
+  
   S = solvesdp(cnstr, -logdet(A), ellOptions.sdpsettings);
+  
   A = double(A);
   b = double(b);
   
-  B = sqrtm(A);
-  P = ell_inv(B'*B);
-  P = (1+ellOptions.abs_tol)*0.5*(P + P');
-
+  B = inv(A);
+  P = 0.5*(B+B.');
   A = ell_inv(A);
   p = -A * b;
 

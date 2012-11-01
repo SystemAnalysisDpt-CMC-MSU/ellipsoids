@@ -262,6 +262,7 @@ function [res, status] = qcqp(EA, E)
   end
 
   % YALMIP 
+  
   status = solvesdp(F, objective, ellOptions.sdpsettings);
   
   if status.problem ~= 0
