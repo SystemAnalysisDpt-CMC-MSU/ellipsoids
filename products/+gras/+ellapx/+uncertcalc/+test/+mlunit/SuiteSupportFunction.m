@@ -1,4 +1,8 @@
 classdef SuiteSupportFunction < mlunitext.test_case
+% $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: 2-11-2012 $
+% $Copyright: Moscow State University,
+%             Faculty of Computational Mathematics and Computer Science,
+%             System Analysis Department 2012 $
     properties (Access=private)
         testDataRootDir
         confNameList
@@ -6,8 +10,8 @@ classdef SuiteSupportFunction < mlunitext.test_case
         crmSys
     end
     properties (Constant, GetAccess = private)
-        rel_tol = 1e-6;
-        abs_tol = 1e-7;
+        REL_TOL = 1e-6;
+        ABS_TOL = 1e-7;
     end
     methods (Static)
         function difVec = derivativeSupportFunction(t, xVec, fAMat, fBMat,...
@@ -109,8 +113,6 @@ classdef SuiteSupportFunction < mlunitext.test_case
                 fPtVecCalc = self.getHandleFromCellMat(PtCVec);
                 PtCMat = self.crmSys.getParam('control_restriction.Q');
                 fPtMatCalc = self.getHandleFromCellMat(PtCMat);
-                % X0 and x0 are double:
-                %X0Mat = self.crmSys.getParam('initial_set.Q');
                 x0Vec = self.crmSys.getParam('initial_set.a');
                 %
                 timeCVec = SRunProp.ellTubeRel.timeVec;
@@ -121,8 +123,8 @@ classdef SuiteSupportFunction < mlunitext.test_case
                 ellCenterCMat = SRunProp.ellTubeRel.aMat;
                 %
                 nElem = size(x0Vec, 1);
-                odeOptionsCVec = odeset('RelTol', self.rel_tol,...
-                    'AbsTol', self.abs_tol * ones(nElem + 1, 1));
+                OdeOptionsStruct = odeset('RelTol', self.REL_TOL,...
+                    'AbsTol', self.ABS_TOL * ones(nElem + 1, 1));
                 for iTuple = 1 : nTuples
                     curTimeVec = timeCVec{iTuple};
                     curGoodDirMat = goodDirCMat{iTuple};
@@ -137,39 +139,15 @@ classdef SuiteSupportFunction < mlunitext.test_case
                         ode45(@(t, x) self.derivativeSupportFunction(t,...
                         x, fAtMatCalc, fBtMatCalc, fPtVecCalc,...
                         fPtMatCalc, nElem), curTimeVec,...
-                        [curGoodDirMat(:, 1).', supFun0], odeOptionsCVec);
+                        [curGoodDirMat(:, 1).', supFun0], OdeOptionsStruct);
                     %
                     expSupFuncMat = expResultMat(:, 1 : nElem);
                     supFuncMat = curGoodDirMat(:, :);
                     errorMat = abs(expSupFuncMat - supFuncMat.');
                     isOk = max(errorMat(:)) <= calcPrecision;
                     %
-                    %isOkCurrent = true;
-%                     supFunFirstMat = curGoodDirMat .* curEllCenterMat;
-%                     firstReshapeEllMat = reshape(curEllMatArray,...
-%                         size(curEllMatArray, 1),...
-%                         size(curEllMatArray, 2) * size(curEllMatArray, 3));
-%                     firstReshapeGoodDirVec = reshape(curGoodDirMat, 1,...
-%                         size(curGoodDirMat, 1) * size(curGoodDirMat, 2));
-%                     secondReshapeGoodDirMat =...
-%                         ones(size(curEllMatArray, 1), 1) *...
-%                         firstReshapeGoodDirVec;
-%                     firstProdResMat = firstReshapeEllMat .*...
-%                         secondReshapeGoodDirMat;
-%                     secondProdResMat = reshape(firstProdResMat,...
-%                         size(curEllMatArray, 1),...
-%                         size(curEllMatArray, 2),...
-%                         size(curEllMatArray, 3));
-%                     thirdProdResMat = sum(secondProdResMat, 2);
-%                     fourthProdResMat = reshape(thirdProdResMat,...
-%                         size(thirdProdResMat, 1),...
-%                         size(thirdProdResMat, 3));
-%                     prodResMat = curGoodDirMat .* fourthProdResMat;
-%                     surFunSecondMat = curGoodDirMat .* prodResMat;
-%                     surFunSecondVec = sum(surFunSecondMat);
-%                     supFunFirstVec = sum(supFunFirstMat);
-%                     supFunVec = supFunFirstVec + sqrt(surFunSecondVec);
-                    supFunVec = sqrt(gras.gen.SquareMatVector.lrMultiplyByVec(...
+                    supFunVec =...
+                        sqrt(gras.gen.SquareMatVector.lrMultiplyByVec(...
                         curEllMatArray,curGoodDirMat)) +...
                         sum(curEllCenterMat .* curGoodDirMat, 1);
                     errorSupFunMat = abs(expResultMat(:, end) - supFunVec.');

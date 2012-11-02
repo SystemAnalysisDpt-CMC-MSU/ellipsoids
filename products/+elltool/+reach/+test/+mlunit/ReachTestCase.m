@@ -2,8 +2,8 @@ classdef ReachTestCase < mlunit.test_case
     %
     properties (Constant, GetAccess = private)
         N_TIME_GRID_POINTS = 200;
-        rel_tol = 1e-6;
-        abs_tol = 1e-7;
+        REL_TOL = 1e-6;
+        ABS_TOL = 1e-7;
     end
     %
     properties (Access = private)
@@ -163,8 +163,8 @@ classdef ReachTestCase < mlunit.test_case
             fPVecCalc = @(t) [0; 0];
             fPMatCalc = @(t) [2 1; 1 2];
             nElem = size(initDirectionsMat, 1);
-            odeOptionsVec = odeset('RelTol', self.rel_tol,...
-                'AbsTol', self.abs_tol * ones(nElem + 1, 1));
+            OdeOptionsStruct = odeset('RelTol', self.REL_TOL,...
+                'AbsTol', self.ABS_TOL * ones(nElem + 1, 1));
             %saveFileStr = strcat(self.testDataRootDir, '/test8.mat');
             %save(saveFileStr,...
             %    'linsysAMat', 'linsysBMat', 'controlBoundsUEll',...
@@ -179,7 +179,7 @@ classdef ReachTestCase < mlunit.test_case
                     ode45(@(t, x) self.derivativeSupportFunction(t, x,...
                     fAMatCalc, fBMatCalc, fPVecCalc, fPMatCalc, nElem),...
                     [t0 t1], [initDirectionsMat(:, iDirect).', supFun0],...
-                    odeOptionsVec);
+                    OdeOptionsStruct);
                 %% checking equality
                 iTimeGrid =  self.N_TIME_GRID_POINTS * iDirect;
                 isTestOk = isTestOk &&...
@@ -215,8 +215,8 @@ classdef ReachTestCase < mlunit.test_case
                 approxDirCMat = get_directions(reachSet);
                 approxDirMat = cell2mat(approxDirCMat);
                 nElem = size(initDirectionsMat, 1);
-                odeOptionsVec = odeset('RelTol', self.rel_tol,...
-                    'AbsTol', self.abs_tol * ones(nElem + 1, 1));
+                OdeOptionsStruct = odeset('RelTol', self.REL_TOL,...
+                    'AbsTol', self.ABS_TOL * ones(nElem + 1, 1));
                 isTestOk = true;
                 for iDirect = 1 : size(initDirectionsMat, 2)
                     supFun0 =...
@@ -226,7 +226,7 @@ classdef ReachTestCase < mlunit.test_case
                         fAMatCalc, fBMatCalc, fPVecCalc, fPMatCalc, nElem),...
                         timeIntervalVec,...
                         [initDirectionsMat(:, iDirect).', supFun0],...
-                        odeOptionsVec);
+                        OdeOptionsStruct);
                     %% checking equality
                     iTimeGrid =  self.N_TIME_GRID_POINTS * iDirect;
                     isTestOk = isTestOk &&...

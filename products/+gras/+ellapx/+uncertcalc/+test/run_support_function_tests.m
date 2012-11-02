@@ -33,20 +33,21 @@ for iConf=nConfs:-1:1
             CtCMat = crmSys.getParam('Ct');
             zerCMat = cellfun(@(x) num2str(x),...
                 num2cell(zeros(size(CtCMat))), 'UniformOutput', false);
-            cEqMat = strcmp(CtCMat, zerCMat);
+            isEqMatCStr = strcmp(CtCMat, zerCMat);
         end
         if isQt
             QtCMat = crmSys.getParam('disturbance_restriction.Q');
             zerQtCMat = cellfun(@(x) num2str(x),...
                 num2cell(zeros(size(QtCMat))), 'UniformOutput', false);
-            qEqMat = strcmp(QtCMat, zerQtCMat);
+            isEqMatQStr = strcmp(QtCMat, zerQtCMat);
         end
-        isnDisturbance = ~isCt  || ~isQt || all(cEqMat(:)) || all(qEqMat(:));
+        isnDisturbance =...
+            ~isCt  || ~isQt || all(isEqMatCStr(:)) || all(isEqMatQStr(:));
         %
         if isnDisturbance
             suiteList{iConf}=loader.load_tests_from_test_case(...
-                'gras.ellapx.uncertcalc.test.mlunit.SuiteSupportFunction',{confName},...
-                crm,crmSys,'marker',confName);
+                'gras.ellapx.uncertcalc.test.mlunit.SuiteSupportFunction',...
+                {confName}, crm,crmSys,'marker',confName);
             isnEmptyVec(iConf)=true;
         end
     end
