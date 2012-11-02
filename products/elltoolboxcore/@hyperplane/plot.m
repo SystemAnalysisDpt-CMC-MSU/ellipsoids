@@ -1,45 +1,47 @@
-function plot(varargin)
+function figHandleVec = plot(varargin)
 %
 % PLOT - plots hyperplanes in 2D or 3D.
 %
 %
-% Description:
-% ------------
+% Usage:
+%       plot(h) - plots hyperplane H in default (red) color.
+%       plot(hM) -plots hyperplanes contained in hyperplane matrix.
+%       plot(hM1, 'cSpec1', hM2, 'cSpec1',...) - plots hyperplanes in h1 in
+%           cSpec1 color, hyperplanes in h2 in cSpec2 color, etc.
+%       plot(hM1, hM2,..., hMn, option) - plots h1,...,hn using options given
+%           in the option structure.
 %
-% PLOT(H, OPTIONS) plots hyperplane H if 2 <= dimension(E) <= 3.
-%
-%                PLOT(H)  Plots H in default (red) color.
-%            PLOT(HA, H)  Plots array of hyperplanes HA and single hyperplane H.
-% PLOT(H1, 'g', H2, 'b')  Plots H1 in green and H2 in blue color.
-%      PLOT(HA, Options)  Plots HA using options given in the Options structure.
-%
-%
-% Options.newfigure   - if 1, each plot command will open a new figure window.
-% Options.size        - length of the line segment in 2D, or square diagonal in 3D.
-% Options.center      - center of the line segment in 2D, of the square in 3D.
-% Options.width       - line width for 2D plots.
-% Options.color       - sets default colors in the form [x y z].
-% Options.shade = 0-1 - level of transparency (0 - transparent, 1 - opaque).
-%
+% Input:
+%   regular:
+%       hMat: hyperplane[m,n] - matrix of 2D or 3D hyperplanes. All hyperplanes
+%             in hM must be either 2D or 3D simutaneously.
+%   optional:
+%       colorSpec: char[1,1] - specify wich color hyperplane plots will
+%                  have
+%       option: structure[1,1], containing some of follwing fields:
+%           option.newfigure: boolean[1,1]   - if 1, each plot command will open a new figure window.
+%           option.size: double[1,1] - length of the line segment in 2D, or square diagonal in 3D.
+%           option.center: double[1,1] - center of the line segment in 2D, of the square in 3D.
+%           option.width: double[1,1] - specifies the width (in points) of the line for 2D plots.
+%           option.color: double[1,3] - sets default colors in the form [x y z], .
+%           option.shade = 0-1 - level of transparency (0 - transparent, 1 - opaque).
+%           NOTE: if using options and colorSpec simutaneously, option.color is
+%           ignored
 %
 % Output:
-% -------
+%   regular:
+%       figHandleVec: double[1,n] - array with handles of figures hyperplanes
+%       were plotted in. Where n is number of figures.
 %
-%    None.
-%
-%
-% See also:
-% ---------
-%
-%    HYPERPLANE/HYPERPLANE, PLOT.
-%
-
 % 
-% Author:
-% -------
+% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+% $Copyright:  The Regents of the University of California 2004-2008 $
 %
-%    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-%
+% $Author: <Zakharov Eugene>  <justenterrr@gmail.com> $    $Date: <1 november> $
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department <2012> $
+
 
   global ellOptions;
 
@@ -221,13 +223,27 @@ function plot(varargin)
     end
   end
 
-  ih = ishold;
-
+  if  ~isempty(findall(0,'Type','Figure')) && ~(Options.newfigure)
+    ih = ishold;
+  else
+    ih = false;
+  end 
+  
+  if Options.newfigure
+      figHandleVec = zeros(1,hp_count);
+  else 
+      if ih
+          figHandleVec = gcf;
+      else
+          figHandleVec = figure();
+      end
+  end
+  
   for i = 1:hp_count
     if Options.newfigure ~= 0
-      figure;
+        figHandleVec(i) = figure();
     else
-      newplot;
+      newplot(figHandleVec);
     end
 
     hold on;
@@ -289,11 +305,9 @@ function plot(varargin)
 
   end
 
-  if ih == 0;
+  if ~ih;
     hold off;
   end
-
-  return;
 
 
 
@@ -335,4 +349,3 @@ function res = my_color_table(ch)
       res = [0 0 0];
   end
 
-  return;

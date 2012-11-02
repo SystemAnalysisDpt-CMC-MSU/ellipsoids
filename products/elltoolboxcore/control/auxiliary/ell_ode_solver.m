@@ -8,11 +8,7 @@ function [tt, xx] = ell_ode_solver(fn, t, x0, varargin)
   opt = odeset('NormControl', ellOptions.norm_control, ...
                'RelTol', ellOptions.rel_tol, ...
                'AbsTol', ellOptions.abs_tol);
-
-  if ellOptions.ode_solver_options == 0
-    opt = [];
-  end
-
+           
   switch ellOptions.ode_solver
     case 2,
       opt      = odeset(opt, 'InitialStep', abs(t(1)-t(2))/2);
