@@ -33,7 +33,8 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             
             testEll1Vec = ellipsoid(eye(3));
             testEll2Vec = ellipsoid([1, 0, 0; 0, 0, 0; 0, 0, 1]);
-            self.runAndCheckError('contains(testEll1Vec, testEll2Vec)','cvxError');
+            testResVec = contains(testEll1Vec, testEll2Vec);
+            mlunit.assert_equals(1, testResVec);
             
             testEll1Vec = ellipsoid(eye(3));
             testEll2Vec = ellipsoid(eye(3));
