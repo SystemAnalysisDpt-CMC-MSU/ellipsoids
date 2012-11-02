@@ -1,4 +1,8 @@
 function results=run_support_function_tests(inpConfNameList)
+% $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: 2-11-2012 $
+% $Copyright: Moscow State University,
+%             Faculty of Computational Mathematics and Computer Science,
+%             System Analysis Department 2012 $
 runner = mlunit.text_test_runner(1, 1);
 loader = mlunitext.test_loader;
 %

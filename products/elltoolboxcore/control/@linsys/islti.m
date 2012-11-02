@@ -1,56 +1,40 @@
-function res = islti(lsys)
+function isLtiMat = islti(linSysMat)
+% ISLTI checks if linear system is time-invariant.
 %
-% ISLTI - checks if linear system is time-invariant.
-%
-%
-% Description:
-% ------------
-%
-%    RES = ISLTI(LSYS)  Checks if linear system defined by LSYS object
-%                       is time-invariant.
-%
+% Input:
+%   regular:
+%       linSysMat: linsys[mRows,nCols] - a matrix of linear systems.
 %
 % Output:
-% -------
+%   isLtiMat: logical[mRows,nCols] - a matrix such that it's element at
+%       position (i,j) is true if corresponding linear system is time-invariant, 
+%       and false otherwise.
 %
-%    1 - if the system is time-invariant, 0 - otherwise.
+% $Author: Alex Kurzhanskiy  <akurzhan@eecs.berkeley.edu> $    $Date: 2004-2008 $
+% $Copyright:  The Regents of the University of California 2004-2008 $
 %
+% $Author: Ivan Menshikov  <ivan.v.menshikov@gmail.com> $    $Date: 2012 $
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2012 $
 %
-% See also:
-% ---------
+global ellOptions;
 %
-%    LINSYS/LINSYS.
-%
-
-%
-% Author:
-% -------
-%
-%    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-%
-
-  global ellOptions;
-
-  if ~isstruct(ellOptions)
+if ~isstruct(ellOptions)
     evalin('base', 'ellipsoids_init;');
-  end
-
-  if ~(isa(lsys, 'linsys'))
-    error('ISLTI: input argument must be linear system object.');
-  end
-
-  [m, n] = size(lsys);
-  res    = [];
-  for i = 1:m
-    r = [];
-    for j = 1:n
-      if lsys(i, j).lti > 0
-        r = [r 1];
-      else
-        r = [r 0];
-      end
-      res = [res; r];
+end
+%
+if ~(isa(linSysMat, 'linsys'))
+    modgen.common.throwerror('wrongType', 'input argument must be linear system object.');
+end
+%
+[mRows, nCols] = size(linSysMat);
+isLtiMat = false(mRows, nCols);
+%
+for iRow = 1:mRows
+    for jCol = 1:nCols
+        isLtiMat(iRow, jCol) = linSysMat(iRow, jCol).lti;
     end
-  end
-
-  return;
+end
+%
+end
