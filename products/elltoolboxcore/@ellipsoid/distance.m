@@ -67,6 +67,7 @@ function [d, status] = distance(E, X, flag)
 %
 
   global ellOptions;
+  import modgen.common.throwerror
 if ~isstruct(ellOptions)
     evalin('base', 'ellipsoids_init;');
   end
@@ -391,6 +392,12 @@ function [d, status] = l_elldist(E, X, flag)
       for j = 1:l
         [q, Q] = double(E);
         [r, R] = double(X(i, j));
+        if rank(Q) < size(q, 1)
+            Q = regularize(Q);
+        end
+        if rank(R) < size(r, 1)
+            R = regularize(R);
+        end
         Qi     = ell_inv(Q);
         Qi     = 0.5*(Qi + Qi');
         Ri     = ell_inv(R);

@@ -37,7 +37,7 @@ function [E, S] = ellunion_ea(EE)
 %    Vadim Kaushanskiy <vkaushanskiy@gmail.com>
 
   global ellOptions;
-
+  import modgen.common.throwerror;
   if ~isstruct(ellOptions)
     evalin('base', 'ellipsoids_init;');
   end

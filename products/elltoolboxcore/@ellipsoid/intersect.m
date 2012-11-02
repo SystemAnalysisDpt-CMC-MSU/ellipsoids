@@ -90,7 +90,7 @@ function [res, status] = intersect(E, X, s)
 %    Vadim Kaushanskiy <vkaushanskiy@gmail.com>
 
   global ellOptions;
-
+  import modgen.common.throwerror
   if ~isstruct(ellOptions)
     evalin('base', 'ellipsoids_init;');
   end
@@ -227,7 +227,7 @@ function [res, status] = qcqp(EA, E)
 % QCQP - formulate quadratically constrained quadratic programming problem
 %        and invoke external solver.
 %
-
+  import modgen.common.throwerror;
   global ellOptions;
   status = 1;
   [q, Q] = parameters(E(1, 1));
@@ -287,7 +287,7 @@ function [res, status] = lqcqp(EA, H)
 % LQCQP - formulate quadratic programming problem with linear and quadratic constraints,
 %         and invoke external solver.
 %
-
+  import modgen.common.throwerror;
   global ellOptions;
   status = 1;
   [v, c] = parameters(H);
@@ -341,7 +341,7 @@ function [res, status] = lqcqp2(EA, P)
 % LQCQP2 - formulate quadratic programming problem with linear and quadratic constraints,
 %         and invoke external solver.
 %
-
+  import modgen.common.throwerror;
   global ellOptions;
   status = 1;
   [A, b] = double(P);

@@ -23,7 +23,51 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
                 mlunit.assert_equals(varargin{2:end});
             end;
         end;
-
+        
+        
+        function self = testContains(self)
+            testEll1Vec = ellipsoid(eye(3));
+            testEll2Vec = ellipsoid([10, 0, 5]', [1, 0, 0; 0, 0, 0; 0, 0, 1]);
+            testResVec = contains(testEll1Vec, testEll2Vec);
+            mlunit.assert_equals(0, testResVec);
+            
+            testEll1Vec = ellipsoid(eye(3));
+            testEll2Vec = ellipsoid([1, 0, 0; 0, 0, 0; 0, 0, 1]);
+            self.runAndCheckError('contains(testEll1Vec, testEll2Vec)','cvxError');
+            
+            testEll1Vec = ellipsoid(eye(3));
+            testEll2Vec = ellipsoid(eye(3));
+            testResVec = contains(testEll1Vec, testEll2Vec);
+            mlunit.assert_equals(1, testResVec);
+            
+            testEll1Vec = ellipsoid(eye(3));
+            testEll2Vec = ellipsoid([1e-4, 1e-4, 0]', eye(3));
+            testResVec = contains(testEll1Vec, testEll2Vec);
+            mlunit.assert_equals(0, testResVec);
+            
+            testEll1Vec = ellipsoid(4*eye(2));
+            testEll2Vec = ellipsoid([1, 0]', eye(2));
+            testResVec = contains(testEll1Vec, testEll2Vec);
+            mlunit.assert_equals(1, testResVec);
+            
+            
+            testEll1Vec = ellipsoid(eye(2));
+            testEll2Vec = ellipsoid(zeros(2));
+            testResVec = contains(testEll1Vec, testEll2Vec);
+            mlunit.assert_equals(1, testResVec);
+            
+            testEll1Vec = ellipsoid(eye(2));
+            testEll2Vec = ellipsoid([1, 0; 0, 0]);
+            testResVec = contains(testEll1Vec, testEll2Vec);
+            mlunit.assert_equals(1, testResVec);
+            
+            testEll1Vec = ellipsoid([1, 0, 0; 0, 0, 0; 0, 0, 1]);
+            testEll2Vec = ellipsoid([1, 0, 0; 0, 0, 0; 0, 0, 0]);
+            testResVec = contains(testEll1Vec, testEll2Vec);
+            mlunit.assert_equals(1, testResVec);
+            
+        end
+        
         function self = testIsInternal(self)
             nDim = 100;
             testEllVec = ellipsoid(zeros(nDim, 1), eye(nDim));
@@ -135,7 +179,19 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             testEllVec_2 = ellipsoid([1000, -1000].', eye(nDim));
             testResVec = intersect(testEllVec, testEllVec_2, 'i');
             self.flexAssert(0, testResVec);
+            
+            %degenerate ellipsoid
+            nDim = 3;
+            testEllVec = ellipsoid(eye(nDim));
+            testEllVec_2 = ellipsoid([1, 0, 0; 0, 0, 0; 0, 0, 1]);
+            testResVec = intersect(testEllVec, testEllVec_2);
+            self.flexAssert(1, testResVec);
          
+            nDim = 3;
+            testEllVec = ellipsoid(eye(nDim));
+            testEllVec_2 = ellipsoid([10, 0, 0].', [1, 0, 0; 0, 0, 0; 0, 0, 1]);
+            testResVec = intersect(testEllVec, testEllVec_2);
+            self.flexAssert(0, testResVec);
             %with hyperplane
            
             nDim = 2;

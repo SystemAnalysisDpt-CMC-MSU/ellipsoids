@@ -37,7 +37,7 @@ function res = contains(E1, E2)
 %    Vadim Kaushanskiy <vkaushanskiy@gmail.com>
 
   global ellOptions;
-
+  
   if ~isstruct(ellOptions)
     evalin('base', 'ellipsoids_init;');
   end
@@ -113,14 +113,20 @@ function res = l_check_containment(E1, E2)
 %
 
   global ellOptions;
-
+  import modgen.common.throwerror;
   [q, Q] = double(E1);
   [r, R] = double(E2);
-  
+  if size(Q, 2) > rank(Q)
+      Q = regularize(Q);
+  end
+  if size(R, 2) > rank(R)
+      R = regularize(R);
+  end
   Qi     = ell_inv(Q);
   Ri     = ell_inv(R);
   AMat      = [Qi -Qi*q; (-Qi*q)' (q'*Qi*q-1)];
   BMat      = [Ri -Ri*r; (-Ri*r)' (r'*Ri*r-1)];
+
   AMat = 0.5*(AMat + AMat');
   BMat = 0.5*(BMat + BMat');
   if ellOptions.verbose > 0
