@@ -33,16 +33,16 @@ for iConf=nConfs:-1:1
             CtCMat = crmSys.getParam('Ct');
             zerCMat = cellfun(@(x) num2str(x),...
                 num2cell(zeros(size(CtCMat))), 'UniformOutput', false);
-            isEqMatCStr = strcmp(CtCMat, zerCMat);
+            isEqCMat = strcmp(CtCMat, zerCMat);
         end
         if isQt
             QtCMat = crmSys.getParam('disturbance_restriction.Q');
             zerQtCMat = cellfun(@(x) num2str(x),...
                 num2cell(zeros(size(QtCMat))), 'UniformOutput', false);
-            isEqMatQStr = strcmp(QtCMat, zerQtCMat);
+            isEqQMat = strcmp(QtCMat, zerQtCMat);
         end
         isnDisturbance =...
-            ~isCt  || ~isQt || all(isEqMatCStr(:)) || all(isEqMatQStr(:));
+            ~isCt  || ~isQt || all(isEqCMat(:)) || all(isEqQMat(:));
         %
         if isnDisturbance
             suiteList{iConf}=loader.load_tests_from_test_case(...
