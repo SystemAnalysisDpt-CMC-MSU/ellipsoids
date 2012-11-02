@@ -2,11 +2,14 @@ function results=run_support_function_tests(inpConfNameList)
 runner = mlunit.text_test_runner(1, 1);
 loader = mlunitext.test_loader;
 %
+BAD_TEST_NAME_LIST = {'advanced', 'test3d'};
+%
 crm=gras.ellapx.uncertcalc.test.conf.ConfRepoMgr();
 confNameList=crm.deployConfTemplate('*');
 if nargin>0
     confNameList=intersect(confNameList,inpConfNameList);
 end
+confNameList = setdiff(confNameList, BAD_TEST_NAME_LIST);
 crmSys=gras.ellapx.uncertcalc.test.conf.sysdef.ConfRepoMgr();
 crmSys.deployConfTemplate('*');
 nConfs=length(confNameList);

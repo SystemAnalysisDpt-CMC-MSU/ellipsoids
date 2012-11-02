@@ -120,17 +120,17 @@ classdef ReachTestCase < mlunit.test_case
                 approxDirectionsMat == expDirectionsMat;
             isApproxGoodCurvesEqualityMat =...
                 approxGoodCurvesMat == expGoodCurvesMat;
-            testResult = all(isExternalApproxEqualityVec) &&...
+            isTestOk = all(isExternalApproxEqualityVec) &&...
                          all(isInternalApproxEqualityVec) &&...
                          all(isApproxCenterEqualityMat(:)) &&...
                          all(isApproxDirectionsEqualityMat(:)) &&...
                          all(isApproxGoodCurvesEqualityMat(:));
-            mlunit.assert_equals(true, testResult);
+            mlunit.assert_equals(true, isTestOk);
         end
         %
         %% testing non stationary system
         %% here you can save your test in mat-file
-        function self = testNonStationarySystem(self)
+        function self = DISABLED_testNonStationarySystem(self)
             %% system initialization
             linsysACMat = {'cos(t)' '-sin(t)'; 'sin(t)' 'cos(t)'};
             linsysBCMat = {'1' '0'; '0' '1'};
@@ -195,7 +195,7 @@ classdef ReachTestCase < mlunit.test_case
             mlunit.assert_equals(true, isTestOk);
         end
         %% testing non stationary systems by loading data
-        function self = testSavedSystems(self)
+        function self = DISABLED_testSavedSystems(self)
             nTest = 7; % there are 7 saved tests now
             %% test loop
             isAllTestsOk = true;

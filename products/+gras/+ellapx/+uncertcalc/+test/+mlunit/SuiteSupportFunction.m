@@ -10,15 +10,15 @@ classdef SuiteSupportFunction < mlunitext.test_case
         abs_tol = 1e-7;
     end
     methods (Static)
-        function dif = derivativeSupportFunction(t, x, aMat, bMat,...
-                pVec, pMat, nElem)
-            y = x(1 : nElem);
+        function difVec = derivativeSupportFunction(t, xVec, fAMat, fBMat,...
+                fPVec, fPMat, nElem)
+            yVec = xVec(1 : nElem);
             %
-            dif = zeros(nElem + 1, 1);
-            dif(1 : nElem) = -(aMat(t).') * y;
-            dif(nElem + 1) =...
-                (y.') * bMat(t) * pVec(t) +...
-                sqrt((y.') * bMat(t) * pMat(t) * (bMat(t).') * y);
+            difVec = zeros(nElem + 1, 1);
+            difVec(1 : nElem) = -(fAMat(t).') * yVec;
+            difVec(nElem + 1) =...
+                (yVec.') * fBMat(t) * fPVec(t) +...
+                sqrt((yVec.') * fBMat(t) * fPMat(t) * (fBMat(t).') * yVec);
         end
         %
         function fMatCalc = getHandleFromCellMat(inputCMat)
@@ -72,6 +72,7 @@ classdef SuiteSupportFunction < mlunitext.test_case
             end
             self.confNameList=confNameList;
         end
+        %
         function testSupportCompare(self)
             crm=self.crm;
             crmSys=self.crmSys;
@@ -95,13 +96,11 @@ classdef SuiteSupportFunction < mlunitext.test_case
                 SRunProp.ellTubeRel.scale(fGetScaleFactor,...
                     scaleFactorFieldList);
                 %
-                %SRunProp.ellTubeRel
-                %
                 calcPrecision = crm.getParam('genericProps.calcPrecision');
                 isOk = all(SRunProp.ellTubeProjRel.calcPrecision <=...
                     calcPrecision);
                 mlunit.assert_equals(true,isOk);
-                
+                %
                 AtCMat = self.crmSys.getParam('At');
                 fAtMatCalc = self.getHandleFromCellMat(AtCMat);
                 BtCMat = self.crmSys.getParam('Bt');
@@ -111,7 +110,7 @@ classdef SuiteSupportFunction < mlunitext.test_case
                 PtCMat = self.crmSys.getParam('control_restriction.Q');
                 fPtMatCalc = self.getHandleFromCellMat(PtCMat);
                 % X0 and x0 are double:
-                X0Mat = self.crmSys.getParam('initial_set.Q');
+                %X0Mat = self.crmSys.getParam('initial_set.Q');
                 x0Vec = self.crmSys.getParam('initial_set.a');
                 %
                 timeCVec = SRunProp.ellTubeRel.timeVec;
@@ -119,49 +118,62 @@ classdef SuiteSupportFunction < mlunitext.test_case
                 %
                 goodDirCMat = SRunProp.ellTubeRel.ltGoodDirMat;
                 ellMatCArray = SRunProp.ellTubeRel.QArray;
-                ellCenterCArray = SRunProp.ellTubeRel.aMat;
+                ellCenterCMat = SRunProp.ellTubeRel.aMat;
                 %
                 nElem = size(x0Vec, 1);
-                odeOptionsVec = odeset('RelTol', self.rel_tol,...
+                odeOptionsCVec = odeset('RelTol', self.rel_tol,...
                     'AbsTol', self.abs_tol * ones(nElem + 1, 1));
                 for iTuple = 1 : nTuples
                     curTimeVec = timeCVec{iTuple};
                     curGoodDirMat = goodDirCMat{iTuple};
                     curEllMatArray = ellMatCArray{iTuple};
-                    curEllCenterArray = ellCenterCArray{iTuple};
+                    curEllCenterMat = ellCenterCMat{iTuple};
                     supFun0 =...
-                        curGoodDirMat(:, 1).' * x0Vec +...
+                        curGoodDirMat(:, 1).' * curEllCenterMat(:, 1) +...
                         sqrt(curGoodDirMat(:, 1).' *...
-                        X0Mat * curGoodDirMat(:, 1));
+                        curEllMatArray(:, :, 1) * curGoodDirMat(:, 1));
                     %
-                    [~, expResultVec] =...
+                    [~, expResultMat] =...
                         ode45(@(t, x) self.derivativeSupportFunction(t,...
                         x, fAtMatCalc, fBtMatCalc, fPtVecCalc,...
                         fPtMatCalc, nElem), curTimeVec,...
-                        [curGoodDirMat(:, 1).', supFun0], odeOptionsVec);
+                        [curGoodDirMat(:, 1).', supFun0], odeOptionsCVec);
                     %
-                    expSupFuncMat = expResultVec(:, 1 : nElem);
+                    expSupFuncMat = expResultMat(:, 1 : nElem);
                     supFuncMat = curGoodDirMat(:, :);
                     errorMat = abs(expSupFuncMat - supFuncMat.');
                     isOk = max(errorMat(:)) <= calcPrecision;
                     %
-                    isOkCurrent = true;
-                    for iTime = 1 : numel(curTimeVec)
-                        supFun = curGoodDirMat(:, iTime).' *...
-                            curEllCenterArray(:, iTime) +...
-                            sqrt(curGoodDirMat(:, iTime).' *...
-                            curEllMatArray(:, :, iTime) *...
-                            curGoodDirMat(:, iTime));
-                        isOkCurrent = isOkCurrent &&...
-                            abs(supFun - expResultVec(iTime, end)) <=...
-                            calcPrecision;
-                        %if ~isOkCurrent
-                        %    supFun
-                        %	expResultVec(iTime, end)
-                        %end
-                    end
-                    %isOkCurrent;
-                    isOk = isOk && isOkCurrent;
+                    %isOkCurrent = true;
+%                     supFunFirstMat = curGoodDirMat .* curEllCenterMat;
+%                     firstReshapeEllMat = reshape(curEllMatArray,...
+%                         size(curEllMatArray, 1),...
+%                         size(curEllMatArray, 2) * size(curEllMatArray, 3));
+%                     firstReshapeGoodDirVec = reshape(curGoodDirMat, 1,...
+%                         size(curGoodDirMat, 1) * size(curGoodDirMat, 2));
+%                     secondReshapeGoodDirMat =...
+%                         ones(size(curEllMatArray, 1), 1) *...
+%                         firstReshapeGoodDirVec;
+%                     firstProdResMat = firstReshapeEllMat .*...
+%                         secondReshapeGoodDirMat;
+%                     secondProdResMat = reshape(firstProdResMat,...
+%                         size(curEllMatArray, 1),...
+%                         size(curEllMatArray, 2),...
+%                         size(curEllMatArray, 3));
+%                     thirdProdResMat = sum(secondProdResMat, 2);
+%                     fourthProdResMat = reshape(thirdProdResMat,...
+%                         size(thirdProdResMat, 1),...
+%                         size(thirdProdResMat, 3));
+%                     prodResMat = curGoodDirMat .* fourthProdResMat;
+%                     surFunSecondMat = curGoodDirMat .* prodResMat;
+%                     surFunSecondVec = sum(surFunSecondMat);
+%                     supFunFirstVec = sum(supFunFirstMat);
+%                     supFunVec = supFunFirstVec + sqrt(surFunSecondVec);
+                    supFunVec = sqrt(gras.gen.SquareMatVector.lrMultiplyByVec(...
+                        curEllMatArray,curGoodDirMat)) +...
+                        sum(curEllCenterMat .* curGoodDirMat, 1);
+                    errorSupFunMat = abs(expResultMat(:, end) - supFunVec.');
+                    isOk = isOk && max(errorSupFunMat(:)) <= calcPrecision;
                     mlunit.assert_equals(true, isOk);
                 end
             end
