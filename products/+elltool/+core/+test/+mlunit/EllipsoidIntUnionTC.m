@@ -69,6 +69,45 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             
         end
         
+        function self = testEq(self)
+            global ellOptions;
+            if ~isstruct(ellOptions)
+                evalin('base', 'ellipsoids_init;');
+            end
+            MAX_TOL = ellOptions.rel_tol;
+            
+            
+            testMat = eye(2);
+            mlunit.assert_equals(1, eq(ellipsoid(testMat), ellipsoid(testMat)));
+            
+            test1Mat = eye(2);
+            test2SqrtMat = eye(2) + 1.01*MAX_TOL; 
+            test2Mat = test2SqrtMat*test2SqrtMat.';
+            mlunit.assert_equals(0, eq(ellipsoid(test1Mat), ellipsoid(test2Mat)));
+            
+            test1Mat = eye(2);
+            test2SqrtMat = eye(2) + 0.5*MAX_TOL; 
+            test2Mat = test2SqrtMat*test2SqrtMat.';
+            mlunit.assert_equals(1, eq(ellipsoid(test1Mat), ellipsoid(test2Mat)));
+            
+            test1Mat = eye(2);
+            test2SqrtMat = eye(2) + MAX_TOL; 
+            test2Mat = test2SqrtMat*test2SqrtMat.';
+            mlunit.assert_equals(0, eq(ellipsoid(test1Mat), ellipsoid(test2Mat)));
+            
+            test1Mat = eye(2);
+            test2Mat = eye(2) + MAX_TOL;
+            mlunit.assert_equals(1, eq(ellipsoid(test1Mat), ellipsoid(test2Mat)));
+            
+            test1Mat = eye(2);
+            test2Mat = eye(2) - 0.99*MAX_TOL;
+            mlunit.assert_equals(1, eq(ellipsoid(test1Mat), ellipsoid(test2Mat)));
+            
+            test1Mat = 100*eye(2);
+            test2Mat = 100*eye(2) - 0.99*MAX_TOL;
+            mlunit.assert_equals(1, eq(ellipsoid(test1Mat), ellipsoid(test2Mat)));
+        end
+        
         function self = testIsInternal(self)
             nDim = 100;
             testEllVec = ellipsoid(zeros(nDim, 1), eye(nDim));
