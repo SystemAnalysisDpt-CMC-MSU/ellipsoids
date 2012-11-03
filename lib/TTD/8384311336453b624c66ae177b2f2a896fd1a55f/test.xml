@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<root xml_tb_version="2.0" type="struct" >
-<valueObj type="struct" >
-	<a type="double" >1</a>
-	<b type="double" >2</b>
-</valueObj>
-<keyStr type="char" >test</keyStr>
-</root>

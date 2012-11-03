@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<!-- written on 03-Nov-2012 01:18:43 -->
-<root version="0.1" someparam="abra-kadabra" xml_tb_version="2.0" type="struct" >
-<a type="double" >1 2 3</a>
-<b type="double" size="3 1">1 2 3</b>
-<c type="char" >sdfasdfa</c>
-<d type="char" size="8 1">sdfasdfa</d>
-</root>
