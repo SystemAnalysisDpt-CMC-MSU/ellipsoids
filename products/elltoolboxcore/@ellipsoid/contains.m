@@ -34,10 +34,10 @@ function res = contains(E1, E2)
 % -------
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-%
+%    Vadim Kaushanskiy <vkaushanskiy@gmail.com>
 
   global ellOptions;
-
+  
   if ~isstruct(ellOptions)
     evalin('base', 'ellipsoids_init;');
   end
@@ -113,30 +113,36 @@ function res = l_check_containment(E1, E2)
 %
 
   global ellOptions;
-
+  import modgen.common.throwerror;
   [q, Q] = double(E1);
   [r, R] = double(E2);
-  
+  if size(Q, 2) > rank(Q)
+      Q = regularize(Q);
+  end
+  if size(R, 2) > rank(R)
+      R = regularize(R);
+  end
   Qi     = ell_inv(Q);
   Ri     = ell_inv(R);
+  AMat      = [Qi -Qi*q; (-Qi*q)' (q'*Qi*q-1)];
+  BMat      = [Ri -Ri*r; (-Ri*r)' (r'*Ri*r-1)];
 
-  A      = [Qi -Qi*q; (-Qi*q)' (q'*Qi*q-1)];
-  B      = [Ri -Ri*r; (-Ri*r)' (r'*Ri*r-1)];
-
+  AMat = 0.5*(AMat + AMat');
+  BMat = 0.5*(BMat + BMat');
   if ellOptions.verbose > 0
-    fprintf('Invoking YALMIP...\n');
+    fprintf('Invoking CVX...\n');
   end
+  cvx_begin sdp
+    variable cvxxVec(1, 1)
+    AMat <= cvxxVec*BMat
+    cvxxVec >= 0
+  cvx_end
 
-  x      = sdpvar(1, 1);
-  f      = 1;
-  C      = set('A <= x*B');
-  C      = C + set('x >= 0');
-  ellOptions.sdpsettings = sdpsettings('solver','sdpt3');
-  s      = solvesdp(C, f, ellOptions.sdpsettings);
-  if s.problem == 0
+  if strcmp(cvx_status,'Failed')
+    throwerror('cvxError','Cvx failed');
+  end;
+  if strcmp(cvx_status,'Solved') || strcmp(cvx_status, 'Inaccurate/Solved')
     res = 1;
   else
     res = 0;
   end
-
-  return;

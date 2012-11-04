@@ -22,5 +22,6 @@ suite=mlunitext.test_suite(horzcat(testLists{:}));
 %
 resList{1}=runner.run(suite);
 resList{2}=gras.ellapx.uncertcalc.conf.sysdef.test.run_tests();
+resList{3}=gras.ellapx.uncertcalc.test.run_support_function_tests();
 %
 results=[resList{:}];

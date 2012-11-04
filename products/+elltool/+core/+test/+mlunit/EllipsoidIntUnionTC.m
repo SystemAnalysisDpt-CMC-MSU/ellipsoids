@@ -18,11 +18,95 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
         end
         
         function flexAssert(varargin)
-            IS_ASSERTION_ON = false;
+            IS_ASSERTION_ON = true;
             if (IS_ASSERTION_ON)
-                mlunit.assert_equals(varargin{:});
+                mlunit.assert_equals(varargin{2:end});
             end;
         end;
+        
+        
+        function self = testContains(self)
+            testEll1Vec = ellipsoid(eye(3));
+            testEll2Vec = ellipsoid([10, 0, 5]', [1, 0, 0; 0, 0, 0; 0, 0, 1]);
+            testResVec = contains(testEll1Vec, testEll2Vec);
+            mlunit.assert_equals(0, testResVec);
+            
+            testEll1Vec = ellipsoid(eye(3));
+            testEll2Vec = ellipsoid([1, 0, 0; 0, 0, 0; 0, 0, 1]);
+            %testResVec = contains(testEll1Vec, testEll2Vec);
+            %mlunit.assert_equals(1, testResVec);
+            
+            testEll1Vec = ellipsoid(eye(3));
+            testEll2Vec = ellipsoid(eye(3));
+            testResVec = contains(testEll1Vec, testEll2Vec);
+            mlunit.assert_equals(1, testResVec);
+            
+            testEll1Vec = ellipsoid(eye(3));
+            testEll2Vec = ellipsoid([1e-4, 1e-4, 0]', eye(3));
+            testResVec = contains(testEll1Vec, testEll2Vec);
+            mlunit.assert_equals(0, testResVec);
+            
+            testEll1Vec = ellipsoid(4*eye(2));
+            testEll2Vec = ellipsoid([1, 0]', eye(2));
+            testResVec = contains(testEll1Vec, testEll2Vec);
+            mlunit.assert_equals(1, testResVec);
+            
+            
+            testEll1Vec = ellipsoid(eye(2));
+            testEll2Vec = ellipsoid(zeros(2));
+            testResVec = contains(testEll1Vec, testEll2Vec);
+            mlunit.assert_equals(1, testResVec);
+            
+            testEll1Vec = ellipsoid(eye(2));
+            testEll2Vec = ellipsoid([1, 0; 0, 0]);
+            testResVec = contains(testEll1Vec, testEll2Vec);
+            mlunit.assert_equals(1, testResVec);
+            
+            testEll1Vec = ellipsoid([1, 0, 0; 0, 0, 0; 0, 0, 1]);
+            testEll2Vec = ellipsoid([1, 0, 0; 0, 0, 0; 0, 0, 0]);
+            testResVec = contains(testEll1Vec, testEll2Vec);
+            mlunit.assert_equals(1, testResVec);
+            
+        end
+        
+        function self = testEq(self)
+            global ellOptions;
+            if ~isstruct(ellOptions)
+                evalin('base', 'ellipsoids_init;');
+            end
+            MAX_TOL = ellOptions.rel_tol;
+            
+            
+            testMat = eye(2);
+            mlunit.assert_equals(1, eq(ellipsoid(testMat), ellipsoid(testMat)));
+            
+            test1Mat = eye(2);
+            test2SqrtMat = eye(2) + 1.01*MAX_TOL; 
+            test2Mat = test2SqrtMat*test2SqrtMat.';
+            mlunit.assert_equals(0, eq(ellipsoid(test1Mat), ellipsoid(test2Mat)));
+            
+            test1Mat = eye(2);
+            test2SqrtMat = eye(2) + 0.5*MAX_TOL; 
+            test2Mat = test2SqrtMat*test2SqrtMat.';
+            mlunit.assert_equals(1, eq(ellipsoid(test1Mat), ellipsoid(test2Mat)));
+            
+            test1Mat = eye(2);
+            test2SqrtMat = eye(2) + MAX_TOL; 
+            test2Mat = test2SqrtMat*test2SqrtMat.';
+            mlunit.assert_equals(0, eq(ellipsoid(test1Mat), ellipsoid(test2Mat)));
+            
+            test1Mat = eye(2);
+            test2Mat = eye(2) + MAX_TOL;
+            mlunit.assert_equals(1, eq(ellipsoid(test1Mat), ellipsoid(test2Mat)));
+            
+            test1Mat = eye(2);
+            test2Mat = eye(2) - 0.99*MAX_TOL;
+            mlunit.assert_equals(1, eq(ellipsoid(test1Mat), ellipsoid(test2Mat)));
+            
+            test1Mat = 100*eye(2);
+            test2Mat = 100*eye(2) - 0.99*MAX_TOL;
+            mlunit.assert_equals(1, eq(ellipsoid(test1Mat), ellipsoid(test2Mat)));
+        end
         
         function self = testIsInternal(self)
             nDim = 100;
@@ -135,7 +219,19 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             testEllVec_2 = ellipsoid([1000, -1000].', eye(nDim));
             testResVec = intersect(testEllVec, testEllVec_2, 'i');
             self.flexAssert(0, testResVec);
+            
+            %degenerate ellipsoid
+            nDim = 3;
+            testEllVec = ellipsoid(eye(nDim));
+            testEllVec_2 = ellipsoid([1, 0, 0; 0, 0, 0; 0, 0, 1]);
+            testResVec = intersect(testEllVec, testEllVec_2);
+            self.flexAssert(1, testResVec);
          
+            nDim = 3;
+            testEllVec = ellipsoid(eye(nDim));
+            testEllVec_2 = ellipsoid([10, 0, 0].', [1, 0, 0; 0, 0, 0; 0, 0, 1]);
+            testResVec = intersect(testEllVec, testEllVec_2);
+            self.flexAssert(0, testResVec);
             %with hyperplane
            
             nDim = 2;
@@ -198,7 +294,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
   
         end
 
-        function self = DISABLED_testEllintersectionIa(self)
+        function self = testEllintersectionIa(self)
             nDim = 10;
             nArr = 15;
             eyeEllipsoid = ellipsoid(eye(nDim));
@@ -227,8 +323,8 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             testEllVec(2) = ellipsoid([1, 0].', eye(nDim));
             testEllVec(3) = ellipsoid([0, 1].', eye(nDim));
             resEllVec = ellintersection_ia(testEllVec);
-            ansEllCenterVec = [0.407334088244713, 0.407334086547540].';
-            ansEllMat = [0.125814751017434, 0.053912585874054; 0.053912585874054, 0.125814748979735];
+            ansEllCenterVec =  [0.407334113249147, 0.407334108829435].';
+            ansEllMat = [0.125814744141070, 0.053912566043053; 0.053912566043053, 0.125814738841440];
             ansEllVec = ellipsoid(ansEllCenterVec, ansEllMat);
             self.flexAssert(1, eq(resEllVec, ansEllVec));
             self.flexAssert(1, contains(testEllVec(1), resEllVec));
@@ -252,29 +348,35 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             self.flexAssert(1, contains(testEllVec(3), resEllVec));
 
             clear testEllVec;
-            load(strcat(self.testDataRootDir, '/testEllintersection_inpSimple.mat'), 'testEllCenterVec', 'testEllMat', 'testEllCenter2Vec', 'testEll2Mat');
+            load(strcat(self.testDataRootDir, strcat(filesep, 'testEllintersection_inpSimple.mat')), 'testEllCenterVec', 'testEllMat', 'testEllCenter2Vec', 'testEll2Mat');
             testEllVec(1) = ellipsoid(testEllCenterVec, testEllMat);
             testEllVec(2) = ellipsoid(testEllCenter2Vec, testEll2Mat);
             resEllVec = ellintersection_ia(testEllVec);
-            load(strcat(self.testDataRootDir, '/testEllintersection_outSimple.mat'), 'ansEllCenterVec', 'ansEllMat');
+            load(strcat(self.testDataRootDir, strcat(filesep, 'testEllintersection_outSimple.mat')), 'ansEllCenterVec', 'ansEllMat');
             ansEllVec = ellipsoid(ansEllCenterVec, ansEllMat);
             self.flexAssert(1, eq(resEllVec, ansEllVec));
             self.flexAssert(1, contains(testEllVec(1), resEllVec));
             self.flexAssert(1, contains(testEllVec(2), resEllVec));
 
             clear testEllVec;
-            load(strcat(self.testDataRootDir, '/testEllintersectionIa_inp.mat'), 'testEllCenterVec', 'testEllMat', 'testEllCenter2Vec', 'testEll2Mat');
+            load(strcat(self.testDataRootDir, strcat(filesep, 'testEllintersectionIa_inp.mat')), 'testEllCenterVec', 'testEllMat', 'testEllCenter2Vec', 'testEll2Mat');
             testEllVec(1) = ellipsoid(testEllCenterVec, testEllMat);
             testEllVec(2) = ellipsoid(testEllCenter2Vec, testEll2Mat);
             resEllVec = ellintersection_ia(testEllVec);
-            load(strcat(self.testDataRootDir, '/testEllintersectionIa_out.mat'), 'ansEllCenterVec', 'ansEllMat');
+            load(strcat(self.testDataRootDir, strcat(filesep, 'testEllintersectionIa_out.mat')), 'ansEllCenterVec', 'ansEllMat');
             ansEllVec = ellipsoid(ansEllCenterVec, ansEllMat);
             self.flexAssert(1, eq(resEllVec, ansEllVec));
             self.flexAssert(1, contains(testEllVec(1), resEllVec));
             self.flexAssert(1, contains(testEllVec(2), resEllVec));
             
+            clear testEllVec;
+            nDim = 2;
+            testEllVec(1) = ellipsoid(eye(nDim));
+            testEllVec(2) = ellipsoid([100, 0]', eye(nDim));
+            self.runAndCheckError('ellintersection_ia(testEllVec)','cvxError');
+            
         end
-        function self = DISABLED_testEllunionEa(self)
+        function self = testEllunionEa(self)
             nDim = 10;
 
             nArr = 15;
@@ -326,22 +428,22 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             
             clear testEllVec;
             nDim = 15;
-            load(strcat(self.testDataRootDir, '/testEllunion_inpSimple.mat'), 'testEllCenterVec', 'testEllMat', 'testEllCenter2Vec', 'testEll2Mat');
+            load(strcat(self.testDataRootDir, strcat(filesep, 'testEllunion_inpSimple.mat')), 'testEllCenterVec', 'testEllMat', 'testEllCenter2Vec', 'testEll2Mat');
             testEllVec(1) = ellipsoid(testEllCenterVec, testEllMat);
             testEllVec(2) = ellipsoid(testEllCenter2Vec, testEll2Mat);
             resEllVec = ellunion_ea(testEllVec);
-            load(strcat(self.testDataRootDir, '/testEllunion_outSimple.mat'), 'ansEllCenterVec', 'ansEllMat');
+            load(strcat(self.testDataRootDir, strcat(filesep, 'testEllunion_outSimple.mat')), 'ansEllCenterVec', 'ansEllMat');
             ansEllVec = ellipsoid(ansEllCenterVec, ansEllMat);
             self.flexAssert(1, contains(resEllVec, testEllVec(1)));
             self.flexAssert(1, contains(resEllVec, testEllVec(2)));
             self.flexAssert(1, eq(resEllVec, ansEllVec));
             clear testEllVec;
             nDim = 15;
-            load(strcat(self.testDataRootDir, '/testEllunionEa_inp.mat'), 'testEllCenterVec', 'testEllMat', 'testEllCenter2Vec', 'testEll2Mat');
+            load(strcat(self.testDataRootDir, strcat(filesep, 'testEllunionEa_inp.mat')), 'testEllCenterVec', 'testEllMat', 'testEllCenter2Vec', 'testEll2Mat');
             testEllVec(1) = ellipsoid(testEllCenterVec, testEllMat);
             testEllVec(2) = ellipsoid(testEllCenter2Vec, testEll2Mat);
             resEllVec = ellunion_ea(testEllVec);
-            load(strcat(self.testDataRootDir, '/testEllunionEa_out.mat'), 'ansEllCenterVec', 'ansEllMat');
+            load(strcat(self.testDataRootDir, strcat(filesep, 'testEllunionEa_out.mat')), 'ansEllCenterVec', 'ansEllMat');
             ansEllVec = ellipsoid(ansEllCenterVec, ansEllMat);
             self.flexAssert(1, contains(resEllVec, testEllVec(1)));
             self.flexAssert(1, contains(resEllVec, testEllVec(2)));

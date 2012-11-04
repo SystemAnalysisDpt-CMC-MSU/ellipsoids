@@ -28,9 +28,9 @@ function E = ell_enclose(V)
 % -------
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-%
+%    Vadim Kaushanskiy <vkaushanskiy@gmail.com>
 
-
+import modgen.common.throwerror
 global ellOptions;
 
 if ~isstruct(ellOptions)
@@ -45,25 +45,31 @@ end
 [m, n] = size(V);
 
 if ellOptions.verbose > 0
-  fprintf('Invoking YALMIP...\n');
+  fprintf('Invoking CVX...\n');
 end
 
-A = sdpvar(m, m);
-b = sdpvar(m, 1);
-C = set('A > 0');
-for i = 1:n
-  C = C + set('||A*V(:, i)+b||<1');
-end
 
-s  = solvesdp(C, -logdet(A), ellOptions.sdpsettings);
+cvx_begin sdp
+    variable cvxEllMat(m,m) symmetric
+    variable cvxEllCenterVec(m)
+    
+    maximize( det_rootn( cvxEllMat ) )
+    subject to
+        cvxEllMat >= 0
+        for i = 1:n
+            norm(cvxEllMat*V(:, i)+cvxEllCenterVec)<=1
+        end
+cvx_end
 
-Aa = double(A);
-bb = double(b);
+if strcmp(cvx_status,'Infeasible') || strcmp(cvx_status,'Inaccurate/Infeasible') || strcmp(cvx_status,'Failed')
+    throwerror('cvxError','Cvx cannot solve the system');
+end;
 
-Q  = ell_inv(Aa' * Aa);
-Q  = 0.5 * (Q' + Q);
-q  = -inv(Aa) * bb;
+sqrtEllMat = cvxEllMat;
+ellCenterVec = cvxEllCenterVec;
 
-E  = ellipsoid(q, Q);
+ellMat  = ell_inv(sqrtEllMat' * sqrtEllMat);
+ellMat  = 0.5 * (ellMat' + ellMat);
+ellCenterVec  = -inv(ellMat) * ellCenterVec;
 
-return;
+E  = ellipsoid(ellCenterVec, ellMat);

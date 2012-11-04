@@ -187,5 +187,3 @@ function I = l_compute1intersection(E, H, n)
   Z   = (1 - h) * [0 zeros(1, n-1); zeros(n-1, 1) W];
   I   = ellipsoid(z, Z);
   I   = ell_inv(T)*(I + f);
-
-  return;

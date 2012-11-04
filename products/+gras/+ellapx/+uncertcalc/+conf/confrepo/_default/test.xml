@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<root version="11" xml_tb_version="2.0" type="struct" >
+<root version="16" xml_tb_version="2.0" type="struct" >
 <valueObj type="struct" >
 	<genericProps type="struct" >
 		<calcTimeLimVec type="double" >0 6</calcTimeLimVec>
@@ -89,23 +89,30 @@
 	<plottingProps type="struct" >
 		<isEnabled type="boolean" >1</isEnabled>
 		<viewAngleVec type="double" >37.5 30</viewAngleVec>
+		<isGoodCurvesSeparately type="boolean" >1</isGoodCurvesSeparately>
 	</plottingProps>
 	<ellipsoidalApxProps type="struct" >
 		<internalApx type="struct" >
 			<isEnabled type="boolean" >1</isEnabled>
 			<schemas type="struct" >
-				<sqrtQ type="struct" >
+				<noUncertSqrtQ type="struct" >
 					<isEnabled type="boolean" >1</isEnabled>
 					<props type="struct" >
 						<selectionMethodForSMatrix type="char" >volume</selectionMethodForSMatrix>
 					</props>
-				</sqrtQ>
-				<justQ type="struct" >
+				</noUncertSqrtQ>
+				<noUncertJustQ type="struct" >
 					<isEnabled type="boolean" >0</isEnabled>
 					<props type="struct" >
 						<selectionMethodForSMatrix type="char" >volume</selectionMethodForSMatrix>
 					</props>
-				</justQ>
+				</noUncertJustQ>
+				<uncert type="struct" >
+					<isEnabled type="boolean" >0</isEnabled>
+					<props type="struct" >
+						<selectionMethodForSMatrix type="char" >volume</selectionMethodForSMatrix>
+					</props>
+				</uncert>
 			</schemas>
 			<dispScaleFactor type="double" >0.97</dispScaleFactor>
 		</internalApx>
@@ -118,6 +125,18 @@
 			</schemas>
 			<dispScaleFactor type="double" >1.01</dispScaleFactor>
 		</externalApx>
+		<extIntApx type="struct" >
+			<isEnabled type="boolean" >0</isEnabled>
+			<schemas type="struct" >
+				<uncert type="struct" >
+					<isEnabled type="boolean" >0</isEnabled>
+					<props type="struct" >
+						<selectionMethodForSMatrix type="char" >volume</selectionMethodForSMatrix>
+						<minQSqrtMatEig type="double" >0.1</minQSqrtMatEig>
+					</props>
+				</uncert>
+			</schemas>
+		</extIntApx>
 	</ellipsoidalApxProps>
 	<systemDefinitionConfName type="char" >default</systemDefinitionConfName>
 </valueObj>

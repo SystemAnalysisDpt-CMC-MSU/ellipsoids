@@ -57,7 +57,7 @@ function dXdt = ell_eesm_ode(t, X, l0, mydata, n, back)
 
   l1 = Y * F' * l0;
   l2 = GQGsr * F' * l0;
-  if (norm(l1) < ellOptions.abs_tol) | (norm(l2) < ellOptions.abs_tol)
+  if (norm(l1) < abs_tol_solver) | (norm(l2) < abs_tol_solver) %
     S = I;
   else
     S = ell_valign(l1, l2);
