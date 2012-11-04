@@ -55,3 +55,8 @@ if CVXController.isSetUp()
     CVXController.setIsVerbosityEnabled(false);
 end
 SEllOptions=ellOptions;
+
+%Options initialisation
+confRepoMgr=elltool.conf.ConfRepoManager();
+confRepoMgr.selectConf('default');
+elltool.conf.Options.setConfRepoMgr(confRepoMgr);
