@@ -52,11 +52,7 @@ function RRS = refine(RS, L0, Options)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  global ellOptions;
-
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
+  import elltool.conf.Properties;
 
   RRS = RS(1, 1);
   if isempty(RRS)
@@ -132,7 +128,7 @@ function RRS = refine(RS, L0, Options)
   %%% Compute external shape matrices. %%%
 
   if (Options.approximation ~= 1)
-    if ellOptions.verbose > 0
+    if Properties.getIsVerbose()
       if (N - EN) > 0
         fprintf('Computing external shape matrices...\n');
       end
@@ -182,7 +178,7 @@ function RRS = refine(RS, L0, Options)
   %%% Compute internal shape matrices. %%%
 
   if (Options.approximation ~= 0)
-    if ellOptions.verbose > 0
+    if Properties.getIsVerbose()
       if (N - IN) > 0
         fprintf('Computing internal shape matrices...\n');
       end

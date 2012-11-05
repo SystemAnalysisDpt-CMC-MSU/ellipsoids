@@ -32,11 +32,7 @@ function RS = evolve(CRS, T, lsys)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  global ellOptions;
-
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
+  import elltool.conf.Properties;
 
   if nargin < 2
     error('EVOLVE: insufficient number of input arguments.');
@@ -95,7 +91,7 @@ function RS = evolve(CRS, T, lsys)
       RS.time_values = T(1):T(2);
     end
   else
-    RS.time_values = linspace(T(1), T(2), ellOptions.time_grid);
+    RS.time_values = linspace(T(1), T(2), Properties.getNTimeGridPoints());
   end
 
   if RS.time_values(1) > RS.time_values(end)
@@ -127,7 +123,7 @@ function RS = evolve(CRS, T, lsys)
   %%% Perform matrix, control, disturbance and noise evaluations. %%%
   %%% Create splines if needed.                                   %%%
 
-  if ellOptions.verbose > 0
+  if Properties.getIsVerbose()
     fprintf('Performing preliminary function evaluations...\n');
   end
 
@@ -631,7 +627,7 @@ function RS = evolve(CRS, T, lsys)
 
   %%% Compute state transition matrix. %%%
 
-  if ellOptions.verbose > 0
+  if Properties.getIsVerbose()
     fprintf('Computing state transition matrix...\n');
   end
 
@@ -700,7 +696,7 @@ function RS = evolve(CRS, T, lsys)
   
   %%% Compute the center of the reach set. %%%
 
-  if ellOptions.verbose > 0
+  if Properties.getIsVerbose()
     fprintf('Computing the trajectory of the reach set center...\n');
   end
 
@@ -739,7 +735,7 @@ function RS = evolve(CRS, T, lsys)
   %%% Compute external shape matrices. %%%
 
   if (Options.approximation ~= 1)
-    if ellOptions.verbose > 0
+    if Properties.getIsVerbose()
       fprintf('Computing external shape matrices...\n');
     end
 
@@ -788,7 +784,7 @@ function RS = evolve(CRS, T, lsys)
   %%% Compute internal shape matrices. %%%
 
   if (Options.approximation ~= 0)
-    if ellOptions.verbose > 0
+    if Properties.getIsVerbose()
       fprintf('Computing internal shape matrices...\n');
     end
 

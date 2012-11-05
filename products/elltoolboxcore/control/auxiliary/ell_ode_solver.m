@@ -3,13 +3,13 @@ function [tt, xx] = ell_ode_solver(fn, t, x0, varargin)
 % ELL_ODE_SOLVER - caller for particular ODE solver.
 %
 
-  global ellOptions;
+  import elltool.conf.Properties;
 
-  opt = odeset('NormControl', ellOptions.norm_control, ...
-               'RelTol', ellOptions.rel_tol, ...
-               'AbsTol', ellOptions.abs_tol);
+  opt = odeset('NormControl', Properties.getODENormControl(), ...
+               'RelTol', Properties.getRelTol(), ...
+               'AbsTol', Properties.getAbsTol());
            
-  switch ellOptions.ode_solver
+  switch properties.getODESolverName()
     case 2,
       opt      = odeset(opt, 'InitialStep', abs(t(1)-t(2))/2);
       [tt, xx] = ode23(fn, t, x0, opt, varargin{:});

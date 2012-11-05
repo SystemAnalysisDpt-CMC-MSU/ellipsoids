@@ -5,12 +5,12 @@
     <isVerbose type="boolean" >false</isVerbose>
     <!-- -->
     <absoluteTolerance type="double">1e-7</absoluteTolerance>
-    <relativeTolerance type="double">1e-6</relativeTolerance>
+    <relativeTolerance type="double">1e-5</relativeTolerance>
     <!-- -->
     <numberOfTimeGridPoints type="double">200</numberOfTimeGridPoints>
     <ODESolverName type="double">1</ODESolverName>
-    <isODENormControl type="boolean">true</isODENormControl>
-    <isEnabledOdeSolverOptions type="boolean">true</isEnabledOdeSolverOptions>
+    <oDENormControl type="char">on</oDENormControl>
+    <isEnabledOdeSolverOptions type="boolean">false</isEnabledOdeSolverOptions>
     <!-- -->
     <nPlot2dPoints type="double">200</nPlot2dPoints>
     <nPlot3dPoints type="double">200</nPlot3dPoints>

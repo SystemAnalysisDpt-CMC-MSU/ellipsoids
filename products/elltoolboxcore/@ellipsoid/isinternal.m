@@ -50,11 +50,8 @@ function res = isinternal(E, X, s)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  global ellOptions;
+  import elltool.conf.Properties;
 
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
 
   if ~isa(E, 'ellipsoid')
     error('ISINTERNAL: first argument must be an ellipsoid, or an array of ellipsoids.');
@@ -101,7 +98,7 @@ function res = isinternal_sub(E, x, s, k)
 % ISINTERNAL_SUB - compute result for single vector.
 %
 
-  global ellOptions;
+  import elltool.conf.Properties;
 
   if s == 'u'
     res = 0;
@@ -116,7 +113,7 @@ function res = isinternal_sub(E, x, s, k)
       Q = E(i, j).shape;
 
       if rank(Q) < k
-        if ellOptions.verbose > 0
+        if Properties.getIsVerbose()
           fprintf('ISINTERNAL: Warning! There is degenerate ellipsoid in the array.\n');
           fprintf('            Regularizing...\n');
         end
@@ -125,12 +122,12 @@ function res = isinternal_sub(E, x, s, k)
  
       r = q' * ell_inv(Q) * q;
       if (s == 'u')
-        if (r < 1) | (abs(r - 1) < ellOptions.abs_tol)
+        if (r < 1) | (abs(r - 1) < Properties.getAbsTol())
           res = 1;
           return;
         end
       else
-        if (r > 1) & (abs(r - 1) > ellOptions.abs_tol)
+        if (r > 1) & (abs(r - 1) > Properties.getAbsTol())
           res = 0;
           return;
         end

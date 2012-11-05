@@ -4,7 +4,7 @@ function dXdt = ell_iesm_ode(t, X, l0, mydata, n, back)
 %                  for system with disturbance.
 %
 
-  global ellOptions;
+  import elltool.conf.Properties;
 
   if back > 0
     t = -t;
@@ -27,11 +27,11 @@ function dXdt = ell_iesm_ode(t, X, l0, mydata, n, back)
   p1    = sqrt(l0' * F * GQG * F' * l0);
   p2    = sqrt(l0' * F * X * F' * l0);
 
-  if abs(p1) < ellOptions.abs_tol
-    p1 = ellOptions.abs_tol;
+  if abs(p1) < Properties.getAbsTol()
+    p1 = Properties.getAbsTol();
   end
-  if abs(p2) < ellOptions.abs_tol
-    p2 = ellOptions.abs_tol;
+  if abs(p2) < Properties.getAbsTol()
+    p2 = Properties.getAbsTol();
   end
 
   pp1 = p1/p2;
@@ -40,12 +40,12 @@ function dXdt = ell_iesm_ode(t, X, l0, mydata, n, back)
   l2  = BPBsr * F' * l0;
   %l3  = F' * l0;
 
-  if (norm(l1) < ellOptions.abs_tol) | (norm(l2) < ellOptions.abs_tol)
+  if (norm(l1) < Properties.getAbsTol()) | (norm(l2) < Properties.getAbsTol())
     S1 = I;
   else
     S1 = ell_valign(l1, l2);
   end
-  %if (norm(l1) < ellOptions.abs_tol) | (norm(l3) < ellOptions.abs_tol)
+  %if (norm(l1) < Properties.getAbsTol()) | (norm(l3) < Properties.getAbsTol())
   %  S2 = I;
   %else
   %  S2 = ell_valign(l1, l3);
@@ -58,10 +58,10 @@ function dXdt = ell_iesm_ode(t, X, l0, mydata, n, back)
   dXdt = 0.5*(dXdt + dXdt');
 
   %mn   = min(eig(dXdt));
-  %if (min(eig(X)) < ellOptions.abs_tol) & (mn < 0)
+  %if (min(eig(X)) < Properties.getAbsTol()) & (mn < 0)
   %  mn   = abs(mn);
   %  ee   = min(svd(W + W'));
-  %  nu   = (mn + ellOptions.abs_tol)/ee;
+  %  nu   = (mn + Properties.getAbsTol())/ee;
   %  mu   = mu + nu;
   %  dXdt = dXdt + nu*(W + W');
   %end

@@ -3,9 +3,9 @@ function x = ellbndr_3d(E)
 % ELLBNDR_3D - compute the boundary of 3D ellipsoid.
 %
 
-  global ellOptions;
+  import elltool.conf.Properties;
 
-  M   = ellOptions.plot3d_grid/2;
+  M   = Properties.getNPlot3dPoints()/2;
   N   = M/2;
 
   psy = linspace(0, pi, N);

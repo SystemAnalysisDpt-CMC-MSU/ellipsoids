@@ -28,11 +28,7 @@ function T = trace(E)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  global ellOptions;
-
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
+  import elltool.conf.Properties;
 
   [m, n] = size(E);
   T      = [];

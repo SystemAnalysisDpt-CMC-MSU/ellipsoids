@@ -36,11 +36,9 @@ function [E, S] = ellunion_ea(EE)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %    Vadim Kaushanskiy <vkaushanskiy@gmail.com>
 
-  global ellOptions;
+  import elltool.conf.Properties;
   import modgen.common.throwerror;
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
+
 
   dims = dimension(EE);
   mn   = min(min(dims));
@@ -55,7 +53,7 @@ function [E, S] = ellunion_ea(EE)
   EE     = reshape(EE, 1, M);
   zz     = zeros(mn, mn);
 
-  if ellOptions.verbose > 0
+  if Properties.getIsVerbose()
     fprintf('Invoking CVX...\n');
   end
   

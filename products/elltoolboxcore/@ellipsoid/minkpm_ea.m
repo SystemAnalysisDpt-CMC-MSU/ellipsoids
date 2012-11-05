@@ -33,11 +33,8 @@ function EA = minkpm_ea(EE, E2, L)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  global ellOptions;
+  import elltool.conf.Properties;
 
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
 
   if ~(isa(EE, 'ellipsoid')) | ~(isa(E2, 'ellipsoid'))
     error('MINKPM_EA: first and second arguments must be ellipsoids.');
@@ -61,8 +58,8 @@ function EA = minkpm_ea(EE, E2, L)
 
   N                  = size(L, 2);
   EA                 = [];
-  vrb                = ellOptions.verbose;
-  ellOptions.verbose = 0;
+  vrb                = Properties.getIsVerbose();
+  Properties.setIsVerbose(false);
   
   % sanity check: the approximated set should be nonempty
   for i = 1:N
@@ -71,8 +68,8 @@ function EA = minkpm_ea(EE, E2, L)
     if min(ET > E2) < 1
       if vrb > 0
         fprintf('MINKPM_EA: the resulting set is empty.\n');
-      end
-      ellOptions.verbose = vrb;
+      end       
+      Properties.setIsVerbose(vrb);
       return;
     end
   end
@@ -87,10 +84,10 @@ function EA = minkpm_ea(EE, E2, L)
     end
   end
   
-  ellOptions.verbose = vrb;
+  Properties.setIsVerbose(vrb);
 
   if isempty(EA)
-    if ellOptions.verbose > 0
+    if Properties.getIsVerbose()
       fprintf('MINKPM_EA: cannot compute external approximation for any\n');
       fprintf('           of the specified directions.\n');
     end

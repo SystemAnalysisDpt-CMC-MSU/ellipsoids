@@ -13,11 +13,7 @@ function display(rs)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  global ellOptions;
-
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
+  import elltool.conf.Properties;
 
   fprintf('\n');
   disp([inputname(1) ' =']);

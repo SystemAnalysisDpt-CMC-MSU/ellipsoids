@@ -3,7 +3,7 @@ function R = regularize(Q)
 % REGULARIZE - regularization of singular symmetric matrix.
 %
 
-  global ellOptions;
+  import elltool.conf.Properties;
 
   if Q ~= Q'
     error('REGULARIZE: matrix must be symmetric.');
@@ -14,7 +14,7 @@ function R = regularize(Q)
 
   if r < n
     [U S V] = svd(Q);
-    E       = ellOptions.abs_tol * eye(n - r);
+    E       = Properties.getAbsTol() * eye(n - r);
     R       = Q + (U * [zeros(r, r) zeros(r, (n-r)); zeros((n-r), r) E] * U');
     R       = 0.5*(R + R');
   else

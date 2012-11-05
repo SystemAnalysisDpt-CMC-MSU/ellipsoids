@@ -30,11 +30,7 @@ function [D, N] = dimension(rs)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  global ellOptions;
-
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
+  import elltool.conf.Properties;
 
   if ~(isa(rs, 'reach'))
     error('DIMENSION: input argument must be reach set object.');

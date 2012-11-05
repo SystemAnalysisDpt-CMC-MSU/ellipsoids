@@ -1,6 +1,4 @@
-global ellOptions;
-
-%ellOptions.plot2d_grid = 1000;
+import elltool.conf.Properties;
 
 A3 = [0 1; 0 0];
 B3 = [0; 1];

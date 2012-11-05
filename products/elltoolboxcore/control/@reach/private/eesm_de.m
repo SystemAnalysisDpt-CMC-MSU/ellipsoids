@@ -4,15 +4,15 @@ function [QQ, LL] = eesm_de(ntv, X0, l0, mydata, N, back)
 %           for discrete-time system without disturbance.
 %
 
-  global ellOptions;
+  import elltool.conf.Properties;
 
   LL                 = l0;
   l                  = l0;
   QQ                 = X0;
   Q                  = reshape(X0, N, N);
-  vrb                = ellOptions.verbose;
-  ellOptions.verbose = 0;
-
+  vrb                = Properties.getIsVerbose();
+  Properties.setIsVerbose(false);
+  
   if back > 0
     for i = 2:ntv
       A   = ell_value_extract(mydata.A, i, [N N]);
@@ -48,7 +48,7 @@ function [QQ, LL] = eesm_de(ntv, X0, l0, mydata, N, back)
       end
       if dd > 0
         %e1  = max(svd(A)) * max(svd(Q)) * 4 * eps;
-        e1  = ellOptions.abs_tol;
+        e1  = Properties.getAbsTol();
         e2  = sqrt(e1*e1 + 2*max(eig(BPB))*e1);
         BPB = ell_regularize(BPB, e2);
       elseif rank(BPB) < N
@@ -62,6 +62,6 @@ function [QQ, LL] = eesm_de(ntv, X0, l0, mydata, N, back)
     end
   end
 
-  ellOptions.verbose = vrb;
+  Properties.setIsVerbose(vrb);
 
   return;

@@ -3,11 +3,7 @@ function R = ell_regularize(Q, delta)
 % ELL_REGULARIZE - regularization of singular matrix.
 %
 
-  global ellOptions;
-
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
+  import elltool.conf.Properties;
 
   [m, n] = size(Q);
   if m ~= n
@@ -16,7 +12,7 @@ function R = ell_regularize(Q, delta)
   end
 
   if nargin < 2
-    delta = ellOptions.abs_tol;
+    delta = Properties.getAbsTol();
   end
 
   r = rank(Q);

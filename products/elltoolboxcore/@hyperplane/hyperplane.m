@@ -35,11 +35,7 @@ function HA = hyperplane(v, c)
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
-  global ellOptions;
-
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
+  import elltool.conf.Properties;
 
   if nargin == 0
     HA = hyperplane(0);
@@ -84,7 +80,7 @@ function HA = hyperplane(v, c)
 %      H.normal = - H.normal;
 %      H.shift  = - H.shift;
 %    end
-    if (norm(H.normal) <= ellOptions.abs_tol) & (H.shift > ellOptions.abs_tol)
+    if (norm(H.normal) <= Properties.getAbsTol()) & (H.shift > Properties.getAbsTol())
       H.normal = 0;
       H.shift  = 0;
     end

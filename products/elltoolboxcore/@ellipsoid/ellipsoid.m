@@ -37,11 +37,8 @@ function [E] = ellipsoid(varargin)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  global ellOptions;
+  import elltool.conf.Properties;
 
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
 
   if nargin == 0
     E.center = [];
@@ -81,7 +78,7 @@ function [E] = ellipsoid(varargin)
   mev = min(eig(Q));
   if (mev < 0)
     %tol = n * norm(Q) * eps;
-    tol = ellOptions.abs_tol;
+    tol = Properties.getAbsTol();
     if abs(mev) > tol
       error('ELLIPSOID: shape matrix must be positive semi-definite.');
     end

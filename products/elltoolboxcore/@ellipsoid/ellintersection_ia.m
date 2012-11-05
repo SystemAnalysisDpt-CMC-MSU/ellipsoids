@@ -37,11 +37,8 @@ function [E, S] = ellintersection_ia(EE)
 %    Vadim Kaushanskiy <vkaushanskiy@gmail.com>
   
   import modgen.common.throwerror 
-  global ellOptions;
+  import elltool.conf.Properties;
 
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
 
   dims = dimension(EE);
   mn   = min(min(dims));
@@ -57,7 +54,7 @@ function [E, S] = ellintersection_ia(EE)
   zz     = zeros(mn, 1);
   I      = eye(mn);
 
-  if ellOptions.verbose > 0
+  if Properties.getIsVerbose()
     fprintf('Invoking CVX...\n');
   end
 

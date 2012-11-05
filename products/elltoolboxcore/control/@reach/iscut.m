@@ -28,11 +28,8 @@ function res = iscut(rs)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  global ellOptions;
+  import elltool.conf.Properties;
 
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
 
   if ~(isa(rs, 'reach'))
     error('ISCUT: input argument must be reach set object.');

@@ -109,11 +109,7 @@ function ls = linsys(A, B, U, G, V, C, W, D)
 %            System Analysis Department 2012 $
 %
 
-  global ellOptions;
-
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
+  import elltool.conf.Properties;
 
   if nargin == 0
     ls.A              = [];
@@ -163,7 +159,7 @@ function ls = linsys(A, B, U, G, V, C, W, D)
       if d ~= l
         error('linsys:dimension:U', 'LINSYS: dimensions of control bounds U and matrix B do not match.');
       end
-      if (d > r) && (ellOptions.verbose > 0)
+      if (d > r) && (Properties.getIsVerbose())
         fprintf('LINSYS: Warning! Control bounds U represented by degenerate ellipsoid.\n');
       end
     elseif isa(U, 'double') || iscell(U)
@@ -310,7 +306,7 @@ function l_check_ell_struct(E, N)
 %                      of dimension N.
 %
 
-  global ellOptions;
+  import elltool.conf.Properties;
 
   q   = E.center;
   Q   = E.shape;
@@ -339,7 +335,7 @@ function l_check_ell_struct(E, N)
   end
 
   if iscell(Q)
-    if ellOptions.verbose > 0
+    if Properties.getIsVerbose()
       fprintf('LINSYS: Warning! Cannot check if symbolic matrix is positive definite.\n');
     end
     isEqMat = strcmp(Q, Q.');

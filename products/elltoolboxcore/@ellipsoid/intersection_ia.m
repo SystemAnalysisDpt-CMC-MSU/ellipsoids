@@ -49,11 +49,8 @@ function E = intersection_ia(E1, X)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  global ellOptions;
+  import elltool.conf.Properties;
 
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
 
   if ~(isa(E1, 'ellipsoid'))
     error('INTERSECTION_IA: first input argument must be ellipsoid.');
@@ -158,7 +155,7 @@ function E = l_intersection_ia(E1, E2)
 %                     of single ellipsoid with single ellipsoid or halfspace.
 %
 
-  global ellOptions;
+  import elltool.conf.Properties;
 
   if isa(E2, 'ellipsoid')
     if E1 == E2
@@ -207,7 +204,7 @@ function E = l_intersection_ia(E1, E2)
   q      = ell_inv(Q)*(a1*Q1*q1 + a2*Q2*q2);
   Q      = Q/(1 - (a1*q1'*Q1*q1 + a2*q2'*Q2*q2 - q'*Q*q));
   Q      = ell_inv(Q);
-  Q      = (1-ellOptions.abs_tol)*0.5*(Q + Q');
+  Q      = (1-Properties.getAbsTol())*0.5*(Q + Q');
   E      = ellipsoid(q, Q);
   
   return;
@@ -224,7 +221,7 @@ function EA = l_polyintersect(E, P)
 %                   of single ellipsoid with single polytope.
 %
 
-  global ellOptions;
+  import elltool.conf.Properties;
 
   EA = E;
   HA = polytope2hyperplane(P);

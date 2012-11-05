@@ -47,11 +47,7 @@ function RS = reach(lsys, X0, L0, T, Options)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  global ellOptions;
-
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
+  import elltool.conf.Properties;
 
   if isstruct(lsys) & (nargin == 1)
     RS = class(lsys, 'reach');
@@ -149,10 +145,10 @@ function RS = reach(lsys, X0, L0, T, Options)
     end
   else
     if size(T, 2) == 1
-      RS.time_values = linspace(0, T, ellOptions.time_grid);
+      RS.time_values = linspace(0, T, Properties.getNTimeGridPoints());
       RS.t0          = 0;
     else
-      RS.time_values = linspace(T(1), T(2), ellOptions.time_grid);
+      RS.time_values = linspace(T(1), T(2), Properties.getNTimeGridPoints());
       RS.t0          = T(1);
     end
   end
@@ -171,7 +167,7 @@ function RS = reach(lsys, X0, L0, T, Options)
   %%% Perform matrix, control, disturbance and noise evaluations. %%%
   %%% Create splines if needed.                                   %%%
 
-  if ellOptions.verbose > 0
+  if Properties.getIsVerbose()
     fprintf('Performing preliminary function evaluations...\n');
   end
 
@@ -679,7 +675,7 @@ function RS = reach(lsys, X0, L0, T, Options)
 
   %%% Compute state transition matrix. %%%
 
-  if ellOptions.verbose > 0
+  if Properties.getIsVerbose()
     fprintf('Computing state transition matrix...\n');
   end
 
@@ -748,7 +744,7 @@ function RS = reach(lsys, X0, L0, T, Options)
   
   %%% Compute the center of the reach set. %%%
 
-  if ellOptions.verbose > 0
+  if Properties.getIsVerbose()
     fprintf('Computing the trajectory of the reach set center...\n');
   end
 
@@ -787,7 +783,7 @@ function RS = reach(lsys, X0, L0, T, Options)
   %%% Compute external shape matrices. %%%
 
   if (Options.approximation ~= 1)
-    if ellOptions.verbose > 0
+    if Properties.getIsVerbose()
       fprintf('Computing external shape matrices...\n');
     end
 
@@ -836,7 +832,7 @@ function RS = reach(lsys, X0, L0, T, Options)
   %%% Compute internal shape matrices. %%%
 
   if (Options.approximation ~= 0)
-    if ellOptions.verbose > 0
+    if Properties.getIsVerbose()
       fprintf('Computing internal shape matrices...\n');
     end
 

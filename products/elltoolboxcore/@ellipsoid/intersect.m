@@ -89,11 +89,8 @@ function [res, status] = intersect(E, X, s)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %    Vadim Kaushanskiy <vkaushanskiy@gmail.com>
 
-  global ellOptions;
+  import elltool.conf.Properties;
   import modgen.common.throwerror
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
 
   if ~(isa(E, 'ellipsoid'))
     error('INTERSECT: first input argument must be ellipsoid.');
@@ -108,17 +105,17 @@ function [res, status] = intersect(E, X, s)
 
   if s == 'u'
     [m, n] = size(E);
-    res    = (distance(E(1, 1), X) <= ellOptions.abs_tol);
+    res    = (distance(E(1, 1), X) <= Properties.getAbsTol());
     for i = 1:m
       for j = 1:n
         if (i > 1) | (j > 1)
-          res = res | (distance(E(i, j), X) <= ellOptions.abs_tol);
+          res = res | (distance(E(i, j), X) <= Properties.getAbsTol());
         end
       end
     end
     status = [];
   elseif min(size(E) == [1 1]) == 1
-    res    = (distance(E, X) <= ellOptions.abs_tol);
+    res    = (distance(E, X) <= Properties.getAbsTol());
     status = [];
   elseif isa(X, 'ellipsoid')
     dims = dimension(E);
@@ -130,7 +127,7 @@ function [res, status] = intersect(E, X, s)
     if (m ~= n) | (k ~= l) | (k ~= m)
       error('INTERSECT: ellipsoids must be of the same dimension.');
     end
-    if ellOptions.verbose > 0
+    if Properties.getIsVerbose()
       fprintf('Invoking CVX...\n');
     end
     [m, n] = size(X);
@@ -157,7 +154,7 @@ function [res, status] = intersect(E, X, s)
     if (m ~= n) | (k ~= l) | (k ~= m)
       error('INTERSECT: ellipsoids and hyperplanes must be of the same dimension.');
     end
-    if ellOptions.verbose > 0
+    if Properties.getIsVerbose()
       fprintf('Invoking CVX...\n');
     end
     [m, n] = size(X);
@@ -192,7 +189,7 @@ function [res, status] = intersect(E, X, s)
     if (mm ~= nn) | (k ~= l) | (k ~= mm)
       error('INTERSECT: ellipsoids and polytopes must be of the same dimension.');
     end
-    if ellOptions.verbose > 0
+    if Properties.getIsVerbose()
       fprintf('Invoking CVX...\n');
     end
     res    = [];
@@ -228,11 +225,11 @@ function [res, status] = qcqp(EA, E)
 %        and invoke external solver.
 %
   import modgen.common.throwerror;
-  global ellOptions;
+  import elltool.conf.Properties;
   status = 1;
   [q, Q] = parameters(E(1, 1));
   if size(Q, 2) > rank(Q)
-    if ellOptions.verbose > 0
+    if Properties.getIsVerbose()
       fprintf('QCQP: Warning! Degenerate ellipsoid.\n');
       fprintf('      Regularizing...\n');
     end
@@ -267,7 +264,7 @@ function [res, status] = qcqp(EA, E)
       res = -1;
       return;
   end;
-  if x'*QQ*x + 2*(-QQ*qq)'*x + (qq'*QQ*qq - 1) <= ellOptions.abs_tol
+  if x'*QQ*x + 2*(-QQ*qq)'*x + (qq'*QQ*qq - 1) <= Properties.getAbsTol()
       res = 1;
   else
       res = 0;
@@ -288,7 +285,7 @@ function [res, status] = lqcqp(EA, H)
 %         and invoke external solver.
 %
   import modgen.common.throwerror;
-  global ellOptions;
+  import elltool.conf.Properties;
   status = 1;
   [v, c] = parameters(H);
   if c < 0
@@ -322,7 +319,7 @@ function [res, status] = lqcqp(EA, H)
   end;
   
   
-  if abs(v'*x - c) <= ellOptions.abs_tol
+  if abs(v'*x - c) <= Properties.getAbsTol()
       res = 1;
   else
       res = 0;
@@ -342,7 +339,7 @@ function [res, status] = lqcqp2(EA, P)
 %         and invoke external solver.
 %
   import modgen.common.throwerror;
-  global ellOptions;
+  import elltool.conf.Properties;
   status = 1;
   [A, b] = double(P);
   [m, n] = size(EA);
@@ -372,7 +369,7 @@ end;
       res = -1;
       return;
   end;
-  if A(1, :)*x <= ellOptions.abs_tol
+  if A(1, :)*x <= Properties.getAbsTol()
       res = 1;
   else
       res = 0;

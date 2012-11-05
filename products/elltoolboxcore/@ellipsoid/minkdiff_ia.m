@@ -52,11 +52,8 @@ function IA = minkdiff_ia(E1, E2, L)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  global ellOptions;
+  import elltool.conf.Properties;
 
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
 
   if ~(isa(E1, 'ellipsoid')) | ~(isa(E2, 'ellipsoid'))
     error('MINKDIFF_IA: first and second arguments must be single ellipsoids.');
@@ -71,7 +68,7 @@ function IA = minkdiff_ia(E1, E2, L)
   IA = [];
 
   if isbigger(E1, E2) == 0
-    if ellOptions.verbose > 0
+    if Properties.getIsVerbose()
       fprintf('MINKDIFF_IA: geometric difference of these two ellipsoids is empty set.\n');
     end
     return;
@@ -94,7 +91,7 @@ function IA = minkdiff_ia(E1, E2, L)
   L  = rm_bad_directions(Q1, Q2, L);
   m  = size(L, 2);
   if m < 1
-    if ellOptions.verbose > 0
+    if Properties.getIsVerbose()
       fprintf('MINKDIFF_IA: cannot compute internal approximation for any\n');
       fprintf('             of the specified directions.\n');
     end

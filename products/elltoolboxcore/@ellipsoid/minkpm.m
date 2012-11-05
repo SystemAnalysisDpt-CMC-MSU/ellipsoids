@@ -48,11 +48,7 @@ function [y, Y] = minkpm(varargin)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  global ellOptions;
-
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
+  import elltool.conf.Properties;
 
   if nargin < 2
     error('MINKPM: first and second arguments must be ellipsoids.');
@@ -83,11 +79,11 @@ function [y, Y] = minkpm(varargin)
 
   switch n
     case 2,
-      phi = linspace(0, 2*pi, ellOptions.plot2d_grid);
+      phi = linspace(0, 2*pi, Properties.getNPlot2dPoints());
       L   = [cos(phi); sin(phi)];
 
     case 3,
-      M   = ellOptions.plot3d_grid/2;
+      M   = Properties.getNPlot3dPoints()/2;
       N   = M/2;
       psy = linspace(0, pi, N);
       phi = linspace(0, 2*pi, M);
@@ -102,10 +98,10 @@ function [y, Y] = minkpm(varargin)
 
   end
 
-  vrb                = ellOptions.verbose;
-  ellOptions.verbose = 0;
+   vrb                = Properties.getIsVerbose();
+  Properties.setIsVerbose(false);
   EA                 = minksum_ea(EE, L);
-  ellOptions.verbose = vrb;
+  Properties.setIsVerbose(vrb);
   
   if min(EA > E2) == 0
     switch nargout
@@ -173,7 +169,7 @@ function [y, Y] = minkpm(varargin)
     end
   end
 
-  if ellOptions.verbose > 0
+  if Properties.getIsVerbose()
     if nargout == 0
       fprintf('Computing and plotting (sum(E_i) - E) ...\n');
     else
@@ -186,7 +182,7 @@ function [y, Y] = minkpm(varargin)
 %  EF                 = [];
 %  LL                 = [];
   N                  = size(L, 2);
-  ellOptions.verbose = 0;
+  Properties.setIsVerbose(false);
 
 %  for i = 1:N
 %    l = L(:, i);
@@ -315,8 +311,8 @@ function [y, Y] = minkpm(varargin)
       end
 
   end
-
-  ellOptions.verbose = vrb;
+  
+  Properties.setIsVerbose(vrb);
 
   if nargout == 0
     if ih == 0

@@ -30,11 +30,7 @@ function C = cut(rs, T)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  global ellOptions;
-
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
+  import elltool.conf.Properties;
 
   if ~(isa(rs, 'reach'))
     error('CUT: first input argument must be reach set object.');

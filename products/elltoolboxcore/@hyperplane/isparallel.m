@@ -30,11 +30,8 @@ function res = isparallel(H1, H2)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  global ellOptions;
+  import elltool.conf.Properties;
 
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
 
   if ~(isa(H1, 'hyperplane')) | ~(isa(H2, 'hyperplane'))
     error('ISPARALLEL: input arguments must be hyperplanes.');
@@ -89,7 +86,7 @@ function res = l_hpparallel(H1, H2)
 % L_HPPARALLEL - check if two single hyperplanes are equal.
 %
 
-  global ellOptions;
+  import elltool.conf.Properties;
 
   x   = parameters(H1);
   y   = parameters(H2);
@@ -104,9 +101,9 @@ function res = l_hpparallel(H1, H2)
   if min(size(x) == size(y)) < 1
     return;
   end
-  if max(abs(x - y)) < ellOptions.abs_tol
+  if max(abs(x - y)) < Properties.getAbsTol()
     res = 1;
-  elseif max(abs(x + y)) < ellOptions.abs_tol
+  elseif max(abs(x + y)) < Properties.getAbsTol()
     res = 1;
   end
 

@@ -47,8 +47,8 @@ classdef Properties<modgen.common.obj.StaticPropStorage
             oDESolverName = elltool.conf.Properties.getOption('ODESolverName');
         end
         %
-        function isODENormControl = getIsODENormControl()
-            isODENormControl = elltool.conf.Properties.getOption('isODENormControl');
+        function oDENormControl = getODENormControl()
+            oDENormControl = elltool.conf.Properties.getOption('oDENormControl');
         end
         %
         function isEnabled = getIsEnabledOdeSolverOptions()
@@ -62,11 +62,33 @@ classdef Properties<modgen.common.obj.StaticPropStorage
         function nPlot3dPoints = getNPlot3dPoints()
             nPlot3dPoints = elltool.conf.Properties.getOption('nPlot3dPoints');
         end
+        %%
+        %Public setters
+        function setIsVerbose(isVerb)
+            elltool.conf.Properties.setOption('isVerbose',isVerb);
+        end
+        %
+        function setNPlot2dPoints(nPlot2dPoints)
+            elltool.conf.Properties.setOption('nPlot2dPoints',nPlot2dPoints);
+        end
+        %
+        function setNPlot3dPoints(nPlot3dPoints)
+            elltool.conf.Properties.setOption('nPlot3dPoints',nPlot3dPoints);
+        end
+        %
+        function setNTimeGridPoints(nTimeGridPoints)
+            elltool.conf.Properties.setOption('numberOfTimeGridPoints',nTimeGridPoints);
+        end
     end
     methods(Static,Access = private)
         function opt = getOption(optName)
             confRepMgr = elltool.conf.Properties.getConfRepoMgr();
             opt = confRepMgr.getParam(optName);
+        end
+        %
+        function setOption(optName,optVal)
+            confRepMgr = elltool.conf.Properties.getConfRepoMgr();
+            confRepMgr.setParam(optName,optVal);
         end
     end
         

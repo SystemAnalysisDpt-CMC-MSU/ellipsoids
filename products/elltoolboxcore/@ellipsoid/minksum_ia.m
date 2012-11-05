@@ -47,11 +47,8 @@ function IA = minksum_ea(E, L)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  global ellOptions;
+  import elltool.conf.Properties;
 
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
 
   if ~(isa(E, 'ellipsoid'))
     error('MINKSUM_IA: first argument must be array of ellipsoids.');
@@ -83,7 +80,7 @@ function IA = minksum_ea(E, L)
       for j = 1:n
         Q = E(i, j).shape;
         if size(Q, 1) > rank(Q)
-          if ellOptions.verbose > 0
+          if Properties.getIsVerbose()
             fprintf('MINKSUM_IA: Warning! Degenerate ellipsoid.\n');
             fprintf('            Regularizing...\n');
           end

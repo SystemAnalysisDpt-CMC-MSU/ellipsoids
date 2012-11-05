@@ -43,11 +43,7 @@ function figHandleVec = plot(varargin)
 %            System Analysis Department <2012> $
 
 
-  global ellOptions;
-
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
+  import elltool.conf.Properties;
 
   nai = nargin;
   H   = varargin{1};
@@ -215,7 +211,7 @@ function figHandleVec = plot(varargin)
     error('PLOT: hyperplane dimension must be 2 or 3.');
   end
 
-  if ellOptions.verbose > 0
+  if Properties.getIsVerbose()
     if hp_count == 1
       fprintf('Plotting hyperplane...\n');
     else
@@ -280,8 +276,8 @@ function figHandleVec = plot(varargin)
       set(h, 'Color', clr, 'LineWidth', Options.width(i));
     else
       e2 = U(:, 3);
-      if min(min(abs(x0))) < ellOptions.abs_tol
-        x0 = x0 + ellOptions.abs_tol * ones(3, 1);
+      if min(min(abs(x0))) < Properties.getAbsTol()
+        x0 = x0 + Properties.getAbsTol() * ones(3, 1);
       end
       x3 = x0 - c*e2;
       x4 = x0 + c*e2;

@@ -31,11 +31,8 @@ function HA = polytope2hyperplane(P)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  global ellOptions;
+  import elltool.conf.Properties;
 
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
 
   if ~(isa(P, 'polytope'))
     error('POLYTOPE2HYPERPLANE: input argument must be single polytope.');

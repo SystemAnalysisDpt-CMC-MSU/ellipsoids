@@ -3,10 +3,10 @@ function x = ellbndr_2d(E, N)
 % ELLBNDR_2D - compute the boundary of 2D ellipsoid.
 %
 
-  global ellOptions;
+  import elltool.conf.Properties;
 
   if nargin < 2
-    N = ellOptions.plot2d_grid;
+    N = Properties.getNPlot2dPoints();
   end
   
   phi    = linspace(0, 2*pi, N);

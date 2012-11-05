@@ -32,11 +32,7 @@ function res = contains(H, X)
 %            System Analysis Department <2012> $
 
     import modgen.common.type.simple.checkgenext;
-    global ellOptions;
-
-    if ~isstruct(ellOptions)
-        evalin('base', 'ellipsoids_init;');
-    end
+    import elltool.conf.Properties;
 
     if ~(isa(H, 'hyperplane'))
         error('CONTAINS: first input argument must be hyperplane.');
@@ -98,8 +94,9 @@ function res = contains(H, X)
 
     return;
 
- function res = isContain(hplaneNormVec, hplaneConst, xVec)     
-     global ellOptions;
+ function res = isContain(hplaneNormVec, hplaneConst, xVec) 
+     import elltool.conf.Properties;
+     q =  Properties.getAbsTol();
      res = false;
      isInfComponent = (xVec == inf) | (xVec == -inf);
      if any(hplaneNormVec(isInfComponent) ~= 0)
@@ -107,7 +104,7 @@ function res = contains(H, X)
      else
          hplaneNormVec = hplaneNormVec(~isInfComponent);
          xVec = xVec(~isInfComponent);
-         if abs((hplaneNormVec'*xVec) - hplaneConst) < ellOptions.abs_tol
+         if abs((hplaneNormVec'*xVec) - hplaneConst) < Properties.getAbsTol();
             res = true;
          end
      end

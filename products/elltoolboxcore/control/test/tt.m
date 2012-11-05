@@ -3,7 +3,7 @@
   A        = {'2' '0'; '0' 't'};
   B        = {'0' 'exp(t)'; 'sqrt(t)' '0'};
   P = ell_unitball(2);
-  global ellOptions;
+  import elltool.conf.Properties;
   T        = [1.1 2];
   phi      = 0:0.1:pi;
   L0       = [cos(phi); sin(phi)];

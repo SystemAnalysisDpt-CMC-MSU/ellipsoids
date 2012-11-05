@@ -52,11 +52,7 @@ function [y, Y] = minkdiff(varargin)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  global ellOptions;
-
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
+  import elltool.conf.Properties;
 
   if nargin < 2
     error('MINKDIFF: first and second arguments must be single ellipsoids.');
@@ -146,7 +142,7 @@ function [y, Y] = minkdiff(varargin)
     end
   end
 
-  if ellOptions.verbose > 0
+  if Properties.getIsVerbose()
     if nargout == 0
       fprintf('Computing and plotting geometric difference of two ellipsoids...\n');
     else
@@ -165,7 +161,7 @@ function [y, Y] = minkdiff(varargin)
   switch n
     case 2,
       y      = E1.center - E2.center;
-      phi    = linspace(0, 2*pi, ellOptions.plot2d_grid);
+      phi    = linspace(0, 2*pi, Properties.getNPlot2dPoints());
       l = rm_bad_directions(Q1, Q2, [cos(phi); sin(phi)]);
       if size(l, 2) > 0
         [r, Y] = rho(E1, l);
@@ -189,7 +185,7 @@ function [y, Y] = minkdiff(varargin)
 
     case 3,
       y   = E1.center - E2.center;
-      M   = ellOptions.plot3d_grid/2;
+      M   = Properties.getNPlot3dPoints()/2;
       N   = M/2;
       psy = linspace(0, pi, N);
       phi = linspace(0, 2*pi, M);
