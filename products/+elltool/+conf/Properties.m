@@ -1,19 +1,20 @@
 classdef Properties<modgen.common.obj.StaticPropStorage
+    %PROPERTIES is a static class, providing emulation of static properties
+    %for toolbox.
+    %
+    %$Author: <Zakharov Eugene>  <justenterrr@gmail.com> $    $Date: <5 november> $
+    %$Copyright: Moscow State University,
+    %            Faculty of Computational Mathematics and Computer Science,
+    %            System Analysis Department <2012> $
+    %
     methods(Static)
-        %
-        function flush()
-            %Just for testing. Would be remowed or rewrited
-            branchName=mfilename('class');
-            modgen.common.obj.StaticPropStorage.flushInternal(branchName);
-        end   
-        %
         function ConfRepoMgr=getConfRepoMgr()
             import modgen.common.throwerror;
             branchName=mfilename('class');
             [ConfRepoMgr, isThere] = modgen.common.obj.StaticPropStorage.getPropInternal(...
                 branchName,'ConfRepoMgr',true);
             if ~isThere
-                throwerror('noInicialisation','Properties.confRepoManager was not inicialised yet');
+                throwerror('notInitialized','Properties.confRepoManager was not inicialised yet');
             end
         end
         %
@@ -22,7 +23,8 @@ classdef Properties<modgen.common.obj.StaticPropStorage
             modgen.common.obj.StaticPropStorage.setPropInternal(...
                 branchName,'ConfRepoMgr',ConfRepoMgr);
         end
-        %
+        %%
+        %Public getters
         function version = getVersion()
             version = elltool.conf.Properties.getOption('version');
         end
@@ -72,10 +74,6 @@ classdef Properties<modgen.common.obj.StaticPropStorage
             elltool.conf.Properties.setOption('nPlot2dPoints',nPlot2dPoints);
         end
         %
-        function setNPlot3dPoints(nPlot3dPoints)
-            elltool.conf.Properties.setOption('nPlot3dPoints',nPlot3dPoints);
-        end
-        %
         function setNTimeGridPoints(nTimeGridPoints)
             elltool.conf.Properties.setOption('numberOfTimeGridPoints',nTimeGridPoints);
         end
@@ -91,5 +89,12 @@ classdef Properties<modgen.common.obj.StaticPropStorage
             confRepMgr.setParam(optName,optVal);
         end
     end
+%     methods(Static,Access = protected)
+%         function flush()
+%             %Just for testing.
+%             branchName=mfilename('class');
+%             modgen.common.obj.StaticPropStorage.flushInternal(branchName);
+%         end   
+%     end
         
 end

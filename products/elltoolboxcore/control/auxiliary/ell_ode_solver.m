@@ -10,10 +10,10 @@ function [tt, xx] = ell_ode_solver(fn, t, x0, varargin)
                'AbsTol', Properties.getAbsTol());
            
   switch properties.getODESolverName()
-    case 2,
+    case 'ode 23',
       opt      = odeset(opt, 'InitialStep', abs(t(1)-t(2))/2);
       [tt, xx] = ode23(fn, t, x0, opt, varargin{:});
-    case 3,
+    case 'ode 113',
       [tt, xx] = ode113(fn, t, x0, opt, varargin{:});
     otherwise,
       [tt, xx] = ode45(fn, t, x0, opt, varargin{:});

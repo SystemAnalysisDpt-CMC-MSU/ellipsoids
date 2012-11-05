@@ -8,7 +8,7 @@
     <relativeTolerance type="double">1e-5</relativeTolerance>
     <!-- -->
     <numberOfTimeGridPoints type="double">200</numberOfTimeGridPoints>
-    <ODESolverName type="double">1</ODESolverName>
+    <ODESolverName type="char">ode 45</ODESolverName>
     <oDENormControl type="char">on</oDENormControl>
     <isEnabledOdeSolverOptions type="boolean">false</isEnabledOdeSolverOptions>
     <!-- -->
