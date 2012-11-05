@@ -107,6 +107,7 @@ classdef Ellipsoid < handle
                 throwerror('wrongMatrix','Ellipsoid matrix should be positive semi-definite.')
             end
         end
+        ellObj = inv (ellObj)
     end
 end
 
