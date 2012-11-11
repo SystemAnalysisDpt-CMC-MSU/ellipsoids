@@ -25,9 +25,6 @@ function [ resEllVec ] = minkdiffNew_ia( ellObj1, ellObj2, dirMat)
     if mSize~=nDimSpace
         throwerror('wrongDir','MINKDIFF_IA: dimension of the direction vectors must be the same as dimension of ellipsoids');
     end
-    if nDirs<1 
-        throwerror('wrongDir','MINKDIFF_IA: specify directions');
-    end
     %
     resCenterVec=ellObj1.centerVec-ellObj2.centerVec;
     resEllVec(nDirs)=Ellipsoid();
