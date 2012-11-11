@@ -10,12 +10,13 @@ classdef Ellipsoid < handle
             import modgen.common.throwerror
             %
             nInput=length(varargin);
-            if (nInput==0 || nInput>3)
+            if  nInput>3
                 throwerror('wrongParameters','Incorrect number of parameters');
-                return;
-            end
-            %
-            if nInput==1   
+            elseif nInput==0
+                ellObj.diagMat=0;
+                ellObj.eigvMat=0;
+                ellObj.centerVec=0;
+            elseif nInput==1   
                 ellMat=varargin{1};
                 [mSize nSize]=size(ellMat);
                 isPar2Vector= nSize==1;
@@ -25,7 +26,7 @@ classdef Ellipsoid < handle
                     ellObj.eigvMat=eye(size(ellObj.diagMat));
                 elseif (mSize~=nSize) || (min(min((ellMat == ellMat.'))) == 0)
                     throwerror('wrongMatrix','Input should be a symmetric matrix or a vector.');
-                elseif ellMat==ellMat.*eye(ndims(ellMat)) %check if the matrix is diagonal
+                elseif ellMat==ellMat.*eye(mSize,nSize) %check if the matrix is diagonal
                     ellObj.diagMat=ellMat;
                     ellObj.eigvMat=eye(mSize);
                 else %ordinary square matrix
@@ -108,6 +109,7 @@ classdef Ellipsoid < handle
             end
         end
         ellObj = inv (ellObj)
+        ellObjVec = minksumNew_ea(ellObjVec, dirVec)
     end
 end
 
