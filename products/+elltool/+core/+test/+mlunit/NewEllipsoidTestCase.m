@@ -371,6 +371,70 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
              mlunit.assert_equals(1,isEllEqual(resEllipsoid,...
                  Ellipsoid(oldCenVec,oldQMat)));      
          end
+         function self = testMinksum_ia(self)
+            global ellOptions
+            %
+            import elltool.core.Ellipsoid;
+            %
+            load(strcat(self.testDataRootDir,filesep,'testNewEll.mat'),...
+                 'testEll2x2Mat','testEll2x3Mat','testEll10x2Mat',...
+                 'testEll10x3Mat','testEll10x20Mat',...
+                  'testEll10x50Mat','testEll10x100Mat');
+            %
+            load(strcat(self.testDataRootDir,filesep,'testNewEllRandM.mat'),...
+             'testOrth2Mat','testOrth3Mat',...
+                 'testOrth20Mat','testOrth50Mat',...
+                 'testOrth100Mat');
+            % Test#1. Simple.
+            test1Mat=2*eye(2);
+            test2Mat=[1 0; 0 2];
+            testEllipsoid1=Ellipsoid(test1Mat);
+            testEllipsoid2=Ellipsoid(test2Mat);
+            dirVec=[1,0].';
+            resEllipsoid=minksumNew_ia([testEllipsoid1, testEllipsoid2], dirVec);
+            resOldEllipsoid=minksum_ia([ellipsoid(test1Mat), ellipsoid(test2Mat)],...
+                dirVec);
+%             vMat=resEllipsoid.eigvMat;
+%             dMat=resEllipsoid.diagMat;
+%             qMat=vMat*dMat*vMat.';
+            [oldCenVec oldQMat]=double(resOldEllipsoid);
+            mlunit.assert_equals(1,isEllEqual(resEllipsoid,...
+                 Ellipsoid(oldCenVec,oldQMat)));       
+            % 
+            % Test#2. Ten ellipsoids. Non-degenerate. Non-zero centers. 
+            % Non-diagonal matrices. Random matrices.
+            % A lot of multiple various directions. 
+            % 50D case.
+            nElems=10;
+            testEllNewVec(nElems)=Ellipsoid();
+            testEllOldVec(nElems)=ellipsoid();
+            for iElem=1:nElems
+                centerVec=iElem*(1:50).';
+                qMat=testEll10x50Mat{iElem};
+                testEllNewVec(iElem)=Ellipsoid(centerVec,qMat);
+                testEllOldVec(iElem)=ellipsoid(centerVec,qMat);
+            end
+            nDirs=48;
+            angleStep=2*pi/nDirs;
+            phiAngle=0:angleStep:2*pi-angleStep;
+            dirMat=[cos(phiAngle); sin(phiAngle); zeros(48,nDirs)];
+            resNewEllVec=minksumNew_ia(testEllNewVec,dirMat);
+            resOldEllVec=minksum_ia(testEllOldVec,dirMat);
+            isStillCorrect=true;
+            iDir=1;
+            while (iDir<nDirs) && isStillCorrect
+                newQMat=resNewEllVec(iDir).eigvMat*resNewEllVec(iDir).diagMat*...
+                    resNewEllVec(iDir).eigvMat.';
+                newQMat=0.5*(newQMat+newQMat.');
+                newQCenVec=resNewEllVec(iDir).centerVec;
+                [oldQCenVec oldQMat]=double(resOldEllVec(iDir));
+                iDir=iDir+1;
+                isStillCorrect=isEllEqual(Ellipsoid(newQCenVec,newQMat),...
+                    Ellipsoid(oldQCenVec,oldQMat));
+            end
+            mlunit.assert_equals(1, isStillCorrect);
+            %             
+         end
      end
 end
 
