@@ -432,8 +432,7 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
             mlunit.assert_equals(1, isStillCorrect);
             %             
          end
-           function self = testMinkdiff_ea(self)
-            global ellOptions
+         function self = testMinkdiff_ea(self)
             %
             import elltool.core.Ellipsoid;
             %
@@ -456,9 +455,9 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
             resEllipsoid=minkdiffNew_ea(testEllipsoid1, testEllipsoid2, dirVec);
             resOldEllipsoid=minkdiff_ea(ellipsoid(test1Mat), ellipsoid(test2Mat),...
                  dirVec);
-            vMat=resEllipsoid.eigvMat;
-            dMat=resEllipsoid.diagMat;
-             qMat=vMat*dMat*vMat.';
+%              vMat=resEllipsoid.eigvMat;
+%              dMat=resEllipsoid.diagMat;
+%              qMat=vMat*dMat*vMat.';
              [oldCenVec oldQMat]=double(resOldEllipsoid);
              mlunit.assert_equals(1,isEllEqual(resEllipsoid,...
                  Ellipsoid(oldCenVec,oldQMat)));            
@@ -468,11 +467,9 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
              testEllipsoid2=Ellipsoid([1 0; 0 0.1]);
              phi=pi/2;
              dirVec=[cos(phi) sin(phi) ].';
-             %resEllipsoid=minkdiffNew_ea(testEllipsoid1, testEllipsoid2, dirVec);
-             %mlunit.assert_equals(1,isEllEqual(resEllipsoid,Ellipsoid([0 0; 0 0.9])));              
-             self.runAndCheckError('minkdiffNew_ea(testEllipsoid1, testEllipsoid2, dirVec)',...
+              self.runAndCheckError('minkdiffNew_ea(testEllipsoid1, testEllipsoid2, dirVec)',...
                 'wrongDir');
-            %
+             %
              %
              %Test#3. Difference between sphere and random ellipse. 
              test1Mat=2*eye(2);
@@ -551,6 +548,56 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
              mlunit.assert_equals(1,isEllEqual(resEllipsoid,...
                  Ellipsoid(oldCenVec,oldQMat)));      
          end
+          function self = testDistance(self)
+            global ellOptions
+            %
+            import elltool.core.Ellipsoid;
+            %
+            load(strcat(self.testDataRootDir,filesep,'testNewEll.mat'),...
+                 'testEll2x2Mat','testEll2x3Mat','testEll10x2Mat',...
+                 'testEll10x3Mat','testEll10x20Mat',...
+                  'testEll10x50Mat','testEll10x100Mat');
+            load(strcat(self.testDataRootDir,filesep,'testEllEllRMat.mat'),...
+                 'testOrth50Mat','testOrth100Mat','testOrth3Mat','testOrth2Mat');
+            %
+            % Test#1. Two ellipsoids. 2D case.
+            testEllipsoid1 = Ellipsoid([25,0;0,9]);
+            testEllipsoid2 = Ellipsoid([10;0],[4,0;0,9]);
+            testRes=distanceNew(testEllipsoid1,testEllipsoid2);
+            mlunit.assert_equals(1, (abs(testRes-3)<ellOptions.abs_tol));
+            % Test#2. Two ellipsoids. 3D case.   
+            testEllipsoid1 = Ellipsoid([0,-15,0].',[25,0,0;0,100,0;0,0,9]);
+            testEllipsoid2 = Ellipsoid([0,7,0].',[9,0,0;0,25,0;0,0,100]);
+            testRes=distanceNew(testEllipsoid1,testEllipsoid2);
+            mlunit.assert_equals(1, (abs(testRes-7)<ellOptions.abs_tol));
+            % Test#3. Case of ellipses with intersection
+            testEllipsoid1 = Ellipsoid([1 2 3].',[1,2,5;2,5,3;5,3,100]);
+            testEllipsoid2 = Ellipsoid([1,2,3.2].',[1,2,7;2,10,5;7,5,100]);
+            testRes=distanceNew(testEllipsoid1,testEllipsoid2);
+            mlunit.assert_equals(1, (abs(testRes)<ellOptions.abs_tol));
+            %
+            % Test#4. distance between two ellipsoids of high dimensions and random
+            %matrices
+            nDim=100;
+            testEll1Mat=diag(1:2:2*nDim);
+            testEll1Mat=testOrth100Mat*testEll1Mat*testOrth100Mat.';
+            testEll1Mat=0.5*(testEll1Mat+testEll1Mat.');
+            testEll2Mat=diag([25;(1:(nDim-1)).']);
+            testEll2Mat=testOrth100Mat*testEll2Mat*testOrth100Mat.';
+            testEll2Mat=0.5*(testEll2Mat+testEll2Mat.');
+            testEll2CenterVec=testOrth100Mat*[9;zeros(nDim-1,1)];            
+            testEllipsoid1=Ellipsoid(testEll1Mat);
+            testEllipsoid2=Ellipsoid(testEll2CenterVec,testEll2Mat);
+            testRes=distanceNew(testEllipsoid1,testEllipsoid2);
+            mlunit.assert_equals(1,abs(testRes-3)<ellOptions.abs_tol);
+            %
+            % Test#5. Two Undounded ellipsoids. 3D case.   
+            testEllipsoid1 = Ellipsoid([Inf,9,25].');
+            testEllipsoid2 = Ellipsoid([0,10,0].',[Inf, 25,16].');
+            testRes=distanceNew(testEllipsoid1,testEllipsoid2);
+            mlunit.assert_equals(1, (abs(testRes-2)<ellOptions.abs_tol));
+            %         
+          end
      end
 end
 
