@@ -1,4 +1,4 @@
-classdef IMatrixInterpolant<handle
+classdef IMatrixFunction<handle
     methods (Abstract)
         mSize=getMatrixSize(self)
         res=evaluate(self,timeVec)

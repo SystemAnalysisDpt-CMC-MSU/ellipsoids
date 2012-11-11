@@ -1,4 +1,4 @@
-classdef MatrixSFTripleProd<gras.interp.IMatrixInterpolant
+classdef MatrixSFTripleProd<gras.gen.IMatrixFunction
     properties (Access=private)
         formula1Func
         formula2Func

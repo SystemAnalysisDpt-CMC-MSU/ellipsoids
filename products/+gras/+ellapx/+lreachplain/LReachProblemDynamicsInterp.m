@@ -1,56 +1,52 @@
-classdef LReachProblemDefInterp<handle
+classdef LReachProblemDynamicsInterp<gras.ellapx.lreachplain.IReachProblemDynamics
     properties (Access=private)
+        problemDef
         AtSpline
         BptSpline
         xtSpline
         BPBTransSpline
         Xtt0Spline
-        X0Mat
-        x0Vec
-        t0
-        t1
         timeVec
-        sysDim
     end
     properties (Constant,GetAccess=private)
         N_TIME_POINTS=1000;
     end    
     methods
-        function sysDim=getDimensionality(self)
-            sysDim=self.sysDim;
+        function BPBTransDynamics=getBPBTransDynamics(self)
+            BPBTransDynamics=self.BPBTransSpline;
         end
-        function BPBTransSpline=getBPBTransSpline(self)
-            BPBTransSpline=self.BPBTransSpline;
+        function AtDynamics=getAtDynamics(self)
+            AtDynamics=self.AtSpline;
+        end
+        function BptDynamics=getBptDynamics(self)
+            BptDynamics=self.BptSpline;
+        end        
+        function xtDynamics=getxtDynamics(self)
+            xtDynamics=self.xtSpline;
+        end
+        function Xtt0Dynamics=getXtt0Dynamics(self)
+            Xtt0Dynamics=self.Xtt0Spline;
         end
         function timeVec=getTimeVec(self)
             timeVec=self.timeVec;
-        end
-        function AtSpline=getAtSpline(self)
-            AtSpline=self.AtSpline;
-        end
-        function BptSpline=getBptSpline(self)
-            BptSpline=self.BptSpline;
-        end        
-        function xtSpline=getxtSpline(self)
-            xtSpline=self.xtSpline;
-        end
-        function Xtt0Spline=getXtt0Spline(self)
-            Xtt0Spline=self.Xtt0Spline;
-        end
+        end             
+        function sysDim=getDimensionality(self)
+            sysDim=self.problemDef.getDimensionality();
+        end           
         function X0Mat=getX0Mat(self)
-            X0Mat=self.X0Mat;
+            X0Mat=self.problemDef.getX0Mat();
         end
         function x0Vec=getx0Vec(self)
-            x0Vec=self.x0Vec;
+            x0Vec=self.problemDef.getx0Vec();
         end
         function tLims=getTimeLimsVec(self)
-            tLims=[self.t0,self.t1];
+            tLims=self.problemDef.getTimeLimsVec();
         end
         function t0=gett0(self)
-            t0=self.t0;
+            t0=self.problemDef.gett0();
         end
         function t1=gett1(self)
-            t1=self.t1;
+            t1=self.problemDef.gett1();
         end
     end
     methods (Static,Access=private)
@@ -64,38 +60,42 @@ classdef LReachProblemDefInterp<handle
         end
     end
     methods
-        function self=LReachProblemDefInterp(AtDefMat,BtDefMat,...
-                PtDefMat,ptDefVec,X0DefMat,x0DefVec,tLims,calcPrecision)
+        function self=LReachProblemDynamicsInterp(problemDef,calcPrecision)      
             import gras.ellapx.common.*;
             import gras.interp.MatrixInterpolantFactory;
             import gras.interp.MatrixSymbInterpFactory;
             %
             import gras.gen.SquareMatVector;
-            import gras.ellapx.lreachplain.LReachProblemDefInterp;
+            import gras.ellapx.lreachplain.LReachProblemDynamicsInterp;
             import gras.ode.MatrixODESolver;
             %
+            if ~isa(problemDef, 'IReachContProblemDef') 
+                modgen.common.throwerror('LReachProblemDynamicsInterp:WrongInput', 'Incorrect system definition');
+            end        
+            self.problemDef = problemDef;
+            %            
             ODE_NORM_CONTROL='on';
             %
-            nTimePoints=LReachProblemDefInterp.N_TIME_POINTS;
+            nTimePoints=LReachProblemDynamicsInterp.N_TIME_POINTS;
             odeArgList={'NormControl',ODE_NORM_CONTROL,'RelTol',...
                 calcPrecision,'AbsTol',calcPrecision};
             %
-            self.X0Mat=X0DefMat;
-            self.x0Vec=x0DefVec;
-            self.t0=tLims(1);
-            self.t1=tLims(2);
+            AtDefMat = problemDef.getAMatDef();
+            BtDefMat = problemDef.getBMatDef();
+            PtDefMat = problemDef.getPCMat();
+            ptDefVec = problemDef.getpCVec();
+            x0DefVec = problemDef.getx0Vec();
+            t0 = problemDef.gett0();
+            t1 = problemDef.gett1();
             %
-            sysDim=size(AtDefMat,1);
-            self.sysDim=sysDim;
-            tVec=linspace(tLims(1),tLims(2),nTimePoints);
-            %
-            self.timeVec=tVec;
+            sysDim = size(AtDefMat, 1);
+            tVec = linspace(t0,t1,nTimePoints);
             %
             %% Creating Xtt0Spline
             %
             solverObj=MatrixODESolver([sysDim,sysDim],@ode45,...
                 odeArgList{:});
-            fHandleR_Xtt0=@(t,x)LReachProblemDefInterp.R_Xtt0(AtDefMat,t,x);
+            fHandleR_Xtt0=@(t,x)LReachProblemDynamicsInterp.R_Xtt0(AtDefMat,t,x);
             [timeXtt0Vec,data_Xtt0]=solverObj.solve(fHandleR_Xtt0,tVec,...
                 eye(sysDim));
             %
@@ -111,7 +111,7 @@ classdef LReachProblemDefInterp<handle
             %
             %% Creating xtSpline
             solverObj=MatrixODESolver(sysDim,@ode45,odeArgList{:});
-            fHandleR_xt=@(t,x)LReachProblemDefInterp.R_xt(...
+            fHandleR_xt=@(t,x)LReachProblemDynamicsInterp.R_xt(...
                 self.AtSpline,...
                 self.BptSpline,t,x);
             [timeXtVec,xtArray]=solverObj.solve(fHandleR_xt,tVec,x0DefVec);
@@ -121,7 +121,3 @@ classdef LReachProblemDefInterp<handle
         end
     end
 end
-    
-    
-    
-    

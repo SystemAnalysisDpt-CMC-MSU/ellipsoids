@@ -1,4 +1,4 @@
-classdef MatrixSFBinaryProdByVec<gras.interp.IMatrixInterpolant
+classdef MatrixSFBinaryProdByVec<gras.gen.IMatrixFunction
     % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-12-12$
     % $Copyright: Moscow State University,
     %            Faculty of Computational Mathematics and Computer Science,
