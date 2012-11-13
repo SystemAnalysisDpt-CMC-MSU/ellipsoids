@@ -8,7 +8,7 @@ function x = ellbndr_2d(E)
   N      = ellOptions.plot2d_grid;
   phi    = linspace(0, 2*pi, N);
   l      = [cos(phi); sin(phi)];
-  [~, x] = rho(E, l);
+  [r, x] = rho(E, l);
   x      = [x x(:, 1)];
 
-end
+  return;

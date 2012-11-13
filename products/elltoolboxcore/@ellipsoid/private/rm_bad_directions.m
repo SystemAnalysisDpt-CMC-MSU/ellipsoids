@@ -21,4 +21,4 @@ function LC = rm_bad_directions(Q1, Q2, L)
     end
   end
 
-end
+  return;

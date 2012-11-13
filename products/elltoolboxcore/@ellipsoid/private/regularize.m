@@ -5,14 +5,14 @@ function R = regularize(Q)
 
   global ellOptions;
 
-  if ( ~all(all(Q == Q')) )
+  if Q ~= Q'
     error('REGULARIZE: matrix must be symmetric.');
   end
 
   [m, n] = size(Q);
   r      = rank(Q);
 
-  if r < min(m,n)
+  if r < n
     [U S V] = svd(Q);
     E       = ellOptions.abs_tol * eye(n - r);
     R       = Q + (U * [zeros(r, r) zeros(r, (n-r)); zeros((n-r), r) E] * U');

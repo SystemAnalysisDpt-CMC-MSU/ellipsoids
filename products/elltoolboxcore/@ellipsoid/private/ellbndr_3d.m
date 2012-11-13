@@ -11,12 +11,12 @@ function x = ellbndr_3d(E)
   psy = linspace(0, pi, N);
   phi = linspace(0, 2*pi, M);
 
-  l = zeros(3,M*(N-2));
+  l   = [];
   for i = 2:(N - 1)
     arr = cos(psy(i))*ones(1, M);
-    l(:,((i-2)*M)+(1:M) )  = [cos(phi)*sin(psy(i)); sin(phi)*sin(psy(i)); arr];
+    l   = [l [cos(phi)*sin(psy(i)); sin(phi)*sin(psy(i)); arr]];
   end
 
-  [~, x] = rho(E, l);
+  [r, x] = rho(E, l);
 
-end
+  return;

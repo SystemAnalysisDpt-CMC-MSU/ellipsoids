@@ -62,7 +62,7 @@ function res = isbaddirection(E1, E2, L)
     error('ISBADDIRECTION: direction vectors must be of the same dimension as ellipsoids.');
   end
 
-  res = ones(1,d);
+  res = [];
   Q1  = E1.shape;
   Q2  = E2.shape;
   T   = ell_simdiag(Q2, Q1);
@@ -71,8 +71,10 @@ function res = isbaddirection(E1, E2, L)
     l = L(:, i);
     p = sqrt(l'*Q1*l)/sqrt(l'*Q2*l);
     if a > p
-      res(i) = 0;
+      res = [res 0];
+    else
+      res = [res 1];
     end
   end
 
-end
+  return;
