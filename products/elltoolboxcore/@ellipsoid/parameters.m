@@ -29,17 +29,10 @@ function [q, Q] = parameters(E)
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
+    if nargout < 2
+        q = double(E);
+    else
+        [q, Q] = double(E);
+    end    
 
-  [m, n] = size(E);
-  if (m > 1) | (n > 1)
-    error('PARAMETERS: the argument of this function must be single ellipsoid.');
-  end
-  
-  if nargout < 2
-    q = E.shape;
-  else
-    q = E.center;
-    Q = E.shape;
-  end
-
-  return;
+    

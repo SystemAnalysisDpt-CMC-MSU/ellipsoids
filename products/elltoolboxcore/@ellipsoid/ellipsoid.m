@@ -36,7 +36,7 @@ function [E] = ellipsoid(varargin)
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
-
+  import modgen.common.throwerror;  
   global ellOptions;
 
   if ~isstruct(ellOptions)
@@ -51,28 +51,34 @@ function [E] = ellipsoid(varargin)
   end
 
   if nargin > 2
-    error('ELLIPSOID: arguments must be center (optional) and shape matrix.');
+    throwerror('wrongInput:tooManyArgs','ELLIPSOID: arguments must be center (optional) and shape matrix.');
   end
 
   if nargin == 1
-    Q      = real(varargin{1});
+    if (~isreal(varargin{1}))
+      throwerror('wrongInput:imagArgs','ELLIPSOID: arguments must be real.');  
+    end
+    Q      = varargin{1};
     [m, n] = size(Q);
     q      = zeros(n, 1);
     k      = n;
     l      = 1;
   else
-    q      = real(varargin{1});
-    Q      = real(varargin{2});
+    if (~isreal(varargin{1}))|| (~isreal(varargin{2}))
+      throwerror('wrongInput:imagArgs','ELLIPSOID: arguments must be real.');  
+    end  
+    q      = varargin{1};
+    Q      = varargin{2};
     [k, l] = size(q);
     [m, n] = size(Q);
   end
   
   if l > 1
-    error('ELLIPSOID: center of an ellipsoid must be a vector.');
+    throwerror('wrongInput:wrongCenter','ELLIPSOID: center of an ellipsoid must be a vector.');
   end
   
-  if (m ~= n) | (min(min((Q == Q'))) == 0)
-    error('ELLIPSOID: shape matrix must be symmetric.');
+  if (m ~= n) || (all(all((Q == Q'))) == 0)
+    throwerror('wrongInput:wrongMat','ELLIPSOID: shape matrix must be symmetric.');
   end
 
   % We cannot just check the condition 'min(eig(Q)) < 0'
@@ -83,11 +89,11 @@ function [E] = ellipsoid(varargin)
     %tol = n * norm(Q) * eps;
     tol = ellOptions.abs_tol;
     if abs(mev) > tol
-      error('ELLIPSOID: shape matrix must be positive semi-definite.');
+      throwerror('wrongInput:wrongMat','ELLIPSOID: shape matrix must be positive semi-definite.');
     end
   end
   if k ~= n
-    error('ELLIPSOID: dimensions of the center and the shape matrix do not match.');
+    throwerror('wrongInput:dimsMismatch','ELLIPSOID: dimensions of the center and the shape matrix do not match.');
   end
 
   E.center = q;

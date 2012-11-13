@@ -27,7 +27,7 @@ function M = maxeig(E)
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
-
+  import modgen.common.throwerror;
   global ellOptions;
 
   if ~isstruct(ellOptions)
@@ -39,13 +39,14 @@ function M = maxeig(E)
   end
 
   [m, n] = size(E);
-  M      = [];
+  M      = zeros(m,n);
   for i = 1:m
-    mx = [];
     for j = 1:n
-      mx = [mx max(eig(E(i, j).shape))];
+      if isempty(E(i,j))
+          throwerror('wrongInput:emptyEllipsoid','MAXEIG: input argument is empty.');
+      end  
+      M(i,j) = max(eig(E(i, j).shape));
     end
-    M = [M; mx];
   end
 
   return;
