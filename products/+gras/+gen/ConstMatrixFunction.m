@@ -1,5 +1,5 @@
 classdef ConstMatrixFunction<handle
-    properties (Access=private)
+    properties (Access=protected)
         mMat
         mSizeVec
         nDims
@@ -11,7 +11,7 @@ classdef ConstMatrixFunction<handle
             mSizeVec = self.mSizeVec;
         end
         function res=evaluate(self,timeVec)
-            res = self.mMat;
+            res = repmat(self.mMat,[1,1,numel(timeVec)]);
         end
         function nDims=getDimensionality(self)
             nDims = self.nDims;
@@ -22,15 +22,14 @@ classdef ConstMatrixFunction<handle
         function nRows=getNRows(self)
             nRows = self.nRows;
         end
-    end  
+    end
     methods
         function self=ConstMatrixFunction(mMat)
+            %
+            modgen.common.type.simple.checkgen(mMat,...
+                'isnumeric(x)&&ismat(x)');
+            %
             self.mMat = mMat;
-            %
-            if ~ismatrix(mMat)
-                modgen.common.throwerror('ConstMatrixFunction:WrongInput', 'Input is not a matrix');
-            end
-            %
             self.mSizeVec = size(mMat);
             self.nRows = self.mSizeVec(1);
             self.nCols = self.mSizeVec(2);
@@ -45,7 +44,3 @@ classdef ConstMatrixFunction<handle
         end
     end
 end
-    
-    
-    
-    

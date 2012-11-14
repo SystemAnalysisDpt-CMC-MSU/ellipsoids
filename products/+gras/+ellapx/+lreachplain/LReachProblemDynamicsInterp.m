@@ -1,5 +1,6 @@
-classdef LReachProblemDynamicsInterp<gras.ellapx.lreachplain.IReachProblemDynamics
-    properties (Access=private)
+classdef LReachProblemDynamicsInterp<...
+        gras.ellapx.lreachplain.IReachProblemDynamics
+    properties (Access=protected)
         problemDef
         AtSpline
         BptSpline
@@ -8,9 +9,9 @@ classdef LReachProblemDynamicsInterp<gras.ellapx.lreachplain.IReachProblemDynami
         Xtt0Spline
         timeVec
     end
-    properties (Constant,GetAccess=private)
+    properties (Constant,GetAccess=protected)
         N_TIME_POINTS=1000;
-    end    
+    end
     methods
         function BPBTransDynamics=getBPBTransDynamics(self)
             BPBTransDynamics=self.BPBTransSpline;
@@ -20,7 +21,7 @@ classdef LReachProblemDynamicsInterp<gras.ellapx.lreachplain.IReachProblemDynami
         end
         function BptDynamics=getBptDynamics(self)
             BptDynamics=self.BptSpline;
-        end        
+        end
         function xtDynamics=getxtDynamics(self)
             xtDynamics=self.xtSpline;
         end
@@ -29,38 +30,23 @@ classdef LReachProblemDynamicsInterp<gras.ellapx.lreachplain.IReachProblemDynami
         end
         function timeVec=getTimeVec(self)
             timeVec=self.timeVec;
-        end             
-        function sysDim=getDimensionality(self)
-            sysDim=self.problemDef.getDimensionality();
-        end           
-        function X0Mat=getX0Mat(self)
-            X0Mat=self.problemDef.getX0Mat();
-        end
-        function x0Vec=getx0Vec(self)
-            x0Vec=self.problemDef.getx0Vec();
-        end
-        function tLims=getTimeLimsVec(self)
-            tLims=self.problemDef.getTimeLimsVec();
-        end
-        function t0=gett0(self)
-            t0=self.problemDef.gett0();
-        end
-        function t1=gett1(self)
-            t1=self.problemDef.gett1();
         end
     end
-    methods (Static,Access=private)
+    methods (Static,Access=protected)
         function res=R_Xtt0(At,t,x)
             import gras.gen.SquareMatVector;
             res=reshape(SquareMatVector.fromFormulaMat(At,t)*...
                 reshape(x,size(At)),[numel(At) 1]);
         end
-        function res=R_xt(AtSpline,BptSpline,t,y)
-            res=AtSpline.evaluate(t)*y+BptSpline.evaluate(t);
+    end
+    methods (Access=protected)
+        function fHandleR_xt = getXtDerivFunc(self)
+            fHandleR_xt = @(t,x) self.AtSpline.evaluate(t)*x+...
+                self.BptSpline.evaluate(t);
         end
     end
     methods
-        function self=LReachProblemDynamicsInterp(problemDef,calcPrecision)      
+        function self=LReachProblemDynamicsInterp(problemDef,calcPrecision)
             import gras.ellapx.common.*;
             import gras.interp.MatrixInterpolantFactory;
             import gras.interp.MatrixSymbInterpFactory;
@@ -69,11 +55,13 @@ classdef LReachProblemDynamicsInterp<gras.ellapx.lreachplain.IReachProblemDynami
             import gras.ellapx.lreachplain.LReachProblemDynamicsInterp;
             import gras.ode.MatrixODESolver;
             %
-            if ~isa(problemDef, 'IReachContProblemDef') 
-                modgen.common.throwerror('LReachProblemDynamicsInterp:WrongInput', 'Incorrect system definition');
-            end        
+            if ~isa(problemDef,...
+                    'gras.ellapx.lreachplain.IReachContProblemDef')
+                modgen.common.throwerror('wrongInput',...
+                    'Incorrect system definition');
+            end
             self.problemDef = problemDef;
-            %            
+            %
             ODE_NORM_CONTROL='on';
             %
             nTimePoints=LReachProblemDynamicsInterp.N_TIME_POINTS;
@@ -90,18 +78,22 @@ classdef LReachProblemDynamicsInterp<gras.ellapx.lreachplain.IReachProblemDynami
             %
             sysDim = size(AtDefMat, 1);
             tVec = linspace(t0,t1,nTimePoints);
+            self.timeVec = tVec;
             %
-            %% Creating Xtt0Spline
+            % compute X(t,t0)
             %
             solverObj=MatrixODESolver([sysDim,sysDim],@ode45,...
                 odeArgList{:});
-            fHandleR_Xtt0=@(t,x)LReachProblemDynamicsInterp.R_Xtt0(AtDefMat,t,x);
+            fHandleR_Xtt0=@(t,x)LReachProblemDynamicsInterp.R_Xtt0(...
+                AtDefMat,t,x);
             [timeXtt0Vec,data_Xtt0]=solverObj.solve(fHandleR_Xtt0,tVec,...
                 eye(sysDim));
             %
             self.Xtt0Spline=MatrixInterpolantFactory.createInstance(...
                 'column',data_Xtt0,timeXtt0Vec);
-            %% Creating AtSpline BPBTransSpline BptSpline
+            %
+            % compute A(t), B(t)P(t)B'(t), B(t)p(t)
+            %
             self.AtSpline=MatrixSymbInterpFactory.single(AtDefMat);
             %
             self.BPBTransSpline=MatrixSymbInterpFactory.rMultiply(...
@@ -109,15 +101,18 @@ classdef LReachProblemDynamicsInterp<gras.ellapx.lreachplain.IReachProblemDynami
             self.BptSpline=MatrixSymbInterpFactory.rMultiplyByVec(...
                 BtDefMat,ptDefVec);
             %
-            %% Creating xtSpline
-            solverObj=MatrixODESolver(sysDim,@ode45,odeArgList{:});
-            fHandleR_xt=@(t,x)LReachProblemDynamicsInterp.R_xt(...
-                self.AtSpline,...
-                self.BptSpline,t,x);
-            [timeXtVec,xtArray]=solverObj.solve(fHandleR_xt,tVec,x0DefVec);
+            % compute x(t) only if the constructor was called directly
+            % i.e. not from a subclass constructor
             %
-            self.xtSpline=MatrixInterpolantFactory.createInstance(...
-                'column',xtArray,timeXtVec);
+            if ~isa(self,...
+                    'gras.ellapx.lreachuncert.LReachProblemDynamicsInterp')
+                solverObj=MatrixODESolver(sysDim,@ode45,odeArgList{:});
+                [timeXtVec,xtArray]=solverObj.solve(self.getXtDerivFunc(),...
+                    tVec,x0DefVec);
+                %
+                self.xtSpline=MatrixInterpolantFactory.createInstance(...
+                    'column',xtArray,timeXtVec);
+            end
         end
     end
 end

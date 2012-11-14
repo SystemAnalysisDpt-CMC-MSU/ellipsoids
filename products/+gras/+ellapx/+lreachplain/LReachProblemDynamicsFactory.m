@@ -1,0 +1,16 @@
+classdef LReachProblemDynamicsFactory<handle
+    methods(Static)
+        function pDynamicsObject=create(pDefObj,calcPrecision)
+            if isa(pDefObj,...
+                    'gras.ellapx.lreachplain.ReachContLTIProblemDef')
+                pDynamicsObject = ...
+                    gras.ellapx.lreachplain.LReachProblemLTIDynamics(...
+                    pDefObj, calcPrecision);
+            else
+                pDynamicsObject = ...
+                    gras.ellapx.lreachplain.LReachProblemDynamicsInterp(...
+                    pDefObj, calcPrecision);
+            end
+        end
+    end
+end

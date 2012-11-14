@@ -8,7 +8,7 @@ classdef IReachContProblemDef<handle
         tLims=getTimeLimsVec(self)
         t0=gett0(self)
         t1=gett1(self)
-		pCVec=getpCVec(self)
-		pCMat=getPCMat(self)
+        pCVec=getpCVec(self)
+        pCMat=getPCMat(self)
     end
 end

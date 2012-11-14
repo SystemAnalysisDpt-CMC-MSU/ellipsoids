@@ -1,19 +1,27 @@
-classdef ReachContLTIProblemDef<gras.ellapx.lreachplain.LReachContProblemDef
-    methods (Static,Access=private)
+classdef ReachContLTIProblemDef<...
+        gras.ellapx.lreachplain.LReachContProblemDef
+    methods (Static,Access=protected)
         % check whether there are no 't' occurences
-        function isConst = isConst(mMat)
-            isConst = all( cellfun( @(x) isempty(x), strfind(mMat, 't') ) );
+        function isOk=isConst(mCMat)
+            isOk=all(reshape(cellfun('isempty',strfind(mCMat,'t')),[],1));
         end
-    end    
+    end
     methods
         function self=ReachContLTIProblemDef(aCMat,bCMat,...
                 pCMat,pCVec,x0Mat,x0Vec,tLims)
             %
-            if ~isConst(aCMat) || ~isConst(bCMat) || ~isConst(pCMat) || ~isConsr(pCVec)
-                modgen.common.throwerror('ReachContLTIProblemDef:WrongInput', 'Input depends on ''t''');
+            import gras.ellapx.lreachplain.ReachContLTIProblemDef;
+            %
+            if ~(ReachContLTIProblemDef.isConst(aCMat)&&...
+                    ReachContLTIProblemDef.isConst(bCMat)&&...
+                    ReachContLTIProblemDef.isConst(pCMat)&&...
+                    ReachContLTIProblemDef.isConst(pCVec))
+                modgen.common.throwerror('wrongInput',...
+                    'Input depends on ''t''');
             end
             %
-            self=self@gras.ellapx.lreachplain.LReachContProblemDef(aCMat,bCMat,pCMat,pCVec,x0Mat,x0Vec,tLims);
+            self=self@gras.ellapx.lreachplain.LReachContProblemDef(...
+                aCMat,bCMat,pCMat,pCVec,x0Mat,x0Vec,tLims);
         end
     end
 end

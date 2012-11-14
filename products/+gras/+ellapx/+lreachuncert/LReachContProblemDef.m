@@ -1,5 +1,7 @@
-classdef LReachContProblemDef<gras.ellapx.lreachuncert.IReachContProblemDef & gras.ellapx.lreachplain.LReachContProblemDef
-    properties (Access=private)
+classdef LReachContProblemDef<...
+        gras.ellapx.lreachuncert.IReachContProblemDef & ...
+        gras.ellapx.lreachplain.LReachContProblemDef
+    properties (Access=protected)
         cCMat
         qCVec
         qCMat
@@ -8,21 +10,29 @@ classdef LReachContProblemDef<gras.ellapx.lreachuncert.IReachContProblemDef & gr
         function cCMat=getCMatDef(self)
             cCMat=self.cCMat;
         end
-		function qCVec=getqCVec(self)
+        function qCVec=getqCVec(self)
             qCVec=self.qCVec;
         end
-		function qCMat=getQCMat(self)
+        function qCMat=getQCMat(self)
             qCMat=self.qCMat;
         end
         function self=LReachContProblemDef(aCMat,bCMat,...
                 pCMat,pCVec,cCMat,qCMat,qCVec,x0Mat,x0Vec,tLims)
             %
-            self=self@gras.ellapx.lreachplain.LReachContProblemDef(aCMat,bCMat,...
-                pCMat,pCVec,x0Mat,x0Vec,tLims);
-            %
+            self=self@gras.ellapx.lreachplain.LReachContProblemDef(...
+                aCMat,bCMat,pCMat,pCVec,x0Mat,x0Vec,tLims);
+            modgen.common.type.simple.checkgenext([...
+                'iscellofstring(x2)&&ismat(x2)&&',...
+                'iscellofstring(x3)&&ismat(x3)&&',...
+                'iscellofstring(x4)&&iscol(x4)&&',...
+                'size(x3,1)==size(x3,2)&&',...
+                'size(x2,1)==size(x1,1)&&',...
+                'size(x3,1)==size(x2,2)&&',...
+                'size(x4,1)==size(x2,2)'],...
+                4,aCMat,cCMat,qCMat,qCVec);
             self.cCMat = cCMat;
             self.qCMat = qCMat;
-            self.qCVec = qCVec; 
+            self.qCVec = qCVec;
         end
     end
 end
