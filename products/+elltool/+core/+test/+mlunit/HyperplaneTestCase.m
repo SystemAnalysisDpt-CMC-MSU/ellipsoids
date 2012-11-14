@@ -137,9 +137,9 @@ classdef HyperplaneTestCase < mlunitext.test_case
         function self = testDisplay(self)
             SInpData =  self.auxReadFile(self);
             testHyperplane = SInpData.testHyperplane;
-            display(testHyperplane);
+            evalc('display(testHyperplane);');
             testHyperplaneVec = SInpData.testHyperplaneVec;
-            display(testHyperplaneVec);
+            evalc('display(testHyperplaneVec);');
         end
         %
         function self = testPlot(self)

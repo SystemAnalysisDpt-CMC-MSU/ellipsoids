@@ -4,7 +4,7 @@
 	<dConf type="struct" >
 		<gen type="struct" >
 			<curRevision type="double" >19641</curRevision>
-			<nProcessors type="double" >1</nProcessors>
+			<nProcessors type="double" >2</nProcessors>
 			<connectors type="struct" >
 				<type idx="1" type="char" >mym</type>
 				<sourceName idx="1" type="char" >production_1_8_all</sourceName>
@@ -69,16 +69,16 @@
 		<backtest type="struct" >
 			<output type="struct" >
 				<gen type="struct" >
-					<dumpDir type="char" >.\DumpBKT\</dumpDir>
+					<dumpDir type="char" >./DumpBKT/</dumpDir>
 				</gen>
 			</output>
 			<input type="struct" >
 				<gen type="struct" >
-					<dumpDir type="char" >test\DumpBKT\</dumpDir>
+					<dumpDir type="char" >test/DumpBKT/</dumpDir>
 				</gen>
 				<database type="struct" >
 					<sqlCaching type="struct" >
-						<cacheDir type="char" >test\DumpBKT/sql\</cacheDir>
+						<cacheDir type="char" >test/DumpBKT/sql/</cacheDir>
 						<isCaching type="double" >0</isCaching>
 					</sqlCaching>
 				</database>
@@ -94,12 +94,12 @@
 					<item type="char" >pair.positions</item>
 					<item type="char" >asset.positions</item>
 				</resPathList>
-				<resDir type="char" >test\..\..\EExplorer/Experiment_base\</resDir>
+				<resDir type="char" >test/../../EExplorer/Experiment_base/</resDir>
 			</gen>
 			<calc type="struct" >
 				<sharing type="struct" >
 					<isSharing type="double" >0</isSharing>
-					<sharingFolder type="char" >test\DumpBKT\share</sharingFolder>
+					<sharingFolder type="char" >test/DumpBKT\share</sharingFolder>
 					<isTestMode type="double" >0</isTestMode>
 				</sharing>
 				<pairForecast type="struct" >
