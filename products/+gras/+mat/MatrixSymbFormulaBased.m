@@ -1,12 +1,10 @@
-classdef MatrixSFBinaryProdByVec<gras.gen.IMatrixFunction
+classdef MatrixSymbFormulaBased<gras.mat.IMatrixFunction
     % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-12-12$
     % $Copyright: Moscow State University,
     %            Faculty of Computational Mathematics and Computer Science,
-    %            System Analysis Department 2011 $
-    %    
+    %            System Analysis Department 2011 $    
     properties (Access=private)
-        formula1Func
-        formula2Func
+        formulaFunc
         nDims
         nCols
         nRows
@@ -22,39 +20,33 @@ classdef MatrixSFBinaryProdByVec<gras.gen.IMatrixFunction
         function nRows=getNRows(self)
             nRows=self.nRows;
         end        
-        function self=MatrixSFBinaryProdByVec(formula1CMat,formula2CMat)
+        function self=MatrixSymbFormulaBased(formulaCMat)
             % MATRIXCUBESPLINE represents a cubic interpolant of
             % matrix-value function
             %
             % Input:
             %   regular:
-            %       formula1CMat: cell[nCols,nRows] of char[1,] - formula
+            %       formulaCMat: cell[nCols,nRows] of char[1,] - formula
             %       array of the matrix depending on t (time)
             %           
             %
-            import modgen.common.type.simple.checkgenext
+            import modgen.common.type.simple.checkgen;
             import modgen.cell.cellstr2func;
             if nargin==0
-                self.formula1Func='';
-                self.formula2Func='';
+                self.formulaStr='';
                 self.nDims=2;
                 self.nCols=0;
                 self.nRows=0;
                 self.mSizeVec=[0,0];
             else
-                checkgenext(['iscellofstring(x1)&&ndims(x1)==2&&',...
-                    'iscellofstring(x2)&&ndims(x2)==2&&',...
-                    'size(x1,2)==size(x2,1)&&size(x2,2)==1'],...
-                    2,formula1CMat,formula2CMat);
-                %
-                sizeVec=[size(formula1CMat,1),size(formula2CMat,2)];
+                checkgen(formulaCMat,...
+                    'iscellofstring(x)&&ndims(x)==2');
+                sizeVec=size(formulaCMat);
                 self.nDims=length(sizeVec);
                 self.nCols=sizeVec(1);
                 self.nRows=sizeVec(2);
                 self.mSizeVec=sizeVec;
-                self.formula1Func=cellstr2func(formula1CMat,'t');
-                self.formula2Func=cellstr2func(formula2CMat,'t');
-                
+                self.formulaFunc=cellstr2func(formulaCMat,'t');
             end
         end
         function mSize=getMatrixSize(self)
@@ -62,17 +54,7 @@ classdef MatrixSFBinaryProdByVec<gras.gen.IMatrixFunction
         end
         function resArray=evaluate(self,timeVec)
             import gras.gen.MatVector;
-            %
-            res1Array=MatVector.fromFunc(self.formula1Func,timeVec);
-            res2Array=MatVector.fromFunc(self.formula2Func,timeVec);
-            %
-            if numel(timeVec)==1
-                resArray=res1Array*res2Array;
-            else
-                sizeVec=[size(res2Array,1),size(res2Array,3)];
-                resArray=gras.gen.MatVector.rMultiplyByVec(res1Array,...
-                    reshape(res2Array,sizeVec));
-            end
+            resArray=MatVector.fromFunc(self.formulaFunc,timeVec);
         end
     end
 end

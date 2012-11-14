@@ -1,8 +1,8 @@
 classdef MatrixSymbInterpFactory
     methods (Static)
         function obj=rMultiply(inp1CMat,inp2CMat,inp3CMat)
-            import gras.interp.MatrixSFBinaryProd;
-            import gras.interp.MatrixSFTripleProd;
+            import gras.mat.MatrixSFBinaryProd;
+            import gras.mat.MatrixSFTripleProd;
             import modgen.common.throwerror;
             if nargin==2
                 obj=MatrixSFBinaryProd(inp1CMat,inp2CMat);
@@ -14,11 +14,11 @@ classdef MatrixSymbInterpFactory
             end
         end
         function obj=rMultiplyByVec(inp1CMat,inp2CMat)
-            import gras.interp.MatrixSFBinaryProdByVec;
+            import gras.mat.MatrixSFBinaryProdByVec;
             obj=MatrixSFBinaryProdByVec(inp1CMat,inp2CMat);
         end
         function obj=single(inpCMat)
-            import gras.interp.MatrixSymbFormulaBased;
+            import gras.mat.MatrixSymbFormulaBased;
             obj=MatrixSymbFormulaBased(inpCMat);
         end
     end

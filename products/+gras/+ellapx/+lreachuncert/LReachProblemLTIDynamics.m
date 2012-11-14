@@ -1,6 +1,6 @@
 classdef LReachProblemLTIDynamics<...
-        gras.ellapx.lreachuncert.IReachProblemDynamics & ...
-        gras.ellapx.lreachplain.LReachProblemLTIDynamics
+        gras.ellapx.lreachplain.AReachProblemLTIDynamics & ...
+        gras.ellapx.lreachuncert.IReachProblemDynamics
     properties (Access=protected)
         CQCTransDynamics
         CqtDynamics
@@ -16,44 +16,48 @@ classdef LReachProblemLTIDynamics<...
             import gras.interp.MatrixInterpolantFactory;
             import gras.gen.MatVector;
             import gras.ode.MatrixODESolver;
+            import gras.mat.ConstMatrixFunction;
+            import gras.mat.ConstColFunction;
             %
-            self=self@gras.ellapx.lreachplain.LReachProblemLTIDynamics(...
-                problemDef,calcPrecision);
-            %
-            if ~isa(problemDef,...
-                    'gras.ellapx.lreachuncert.ReachContLTIProblemDef')
+            if ~isa(problemDef,'gras.ellapx.lreachuncert.ReachContLTIProblemDef')
                 modgen.common.throwerror('wrongInput',...
                     'Incorrect system definition');
             end
+            %
+            % call superclass constructor
+            %
+            self=self@gras.ellapx.lreachplain.AReachProblemLTIDynamics(...
+                problemDef,calcPrecision);
+            %
+            % copy necessary data to local variables
+            %
+            AMat = self.AtDynamics.evaluate(0);
+            BpVec = self.BptDynamics.evaluate(0);
+            x0Vec = problemDef.getx0Vec();
+            sysDim = size(AMat,1);
+            %
+            % compute C(t)q(t) and C(t)Q(t)C'(t)
             %
             CMat = MatVector.fromFormulaMat(problemDef.getCMatDef(),0);
             QMat = MatVector.fromFormulaMat(problemDef.getQCMat(),0);
             qVec = MatVector.fromFormulaMat(problemDef.getqCVec(),0);
             CqVec = CMat*qVec;
+            CQCTransMat = CMat*QMat*(CMat.');
             %
-            self.CqtDynamics = gras.gen.ConstMatrixFunction( CqVec );
-            self.CQCTransDynamics = gras.gen.ConstMatrixFunction( ...
-                CMat*QMat*(CMat.') );
-            %
-            % setup ode solver
-            %
-            ODE_NORM_CONTROL='on';
-            sysDim=size(problemDef.getAMatDef(),1);
-            nTimePoints=self.N_TIME_POINTS;
-            tVec=linspace(problemDef.gett0(),problemDef.gett1(),...
-                nTimePoints);
-            odeArgList={'NormControl',ODE_NORM_CONTROL,'RelTol',...
-                calcPrecision,'AbsTol',calcPrecision};
+            self.CqtDynamics = ConstColFunction(CqVec);
+            self.CQCTransDynamics = ConstMatrixFunction(CQCTransMat);
             %
             % compute x(t)
             %
-            AMat = self.getAtDynamics().evaluate(0);
-            BpVec = self.getBptDynamics().evaluate(0);
-            BpPlusCqVec = BpVec+CqVec;
+            odeArgList={'NormControl',self.ODE_NORM_CONTROL,'RelTol',...
+                calcPrecision,'AbsTol',calcPrecision};
             solverObj=MatrixODESolver(sysDim,@ode45,odeArgList{:});
-            fHandleR_xt = @(t,x) AMat*x+BpPlusCqVec;
-            [timeXtVec,xtArray]=solverObj.solve(fHandleR_xt,...
-                tVec,problemDef.getx0Vec());
+            %
+            BpPlusCqVec = BpVec + CqVec;
+            xtDerivFunc = @(t,x) AMat*x+BpPlusCqVec;
+            %
+            [timeXtVec,xtArray]=solverObj.solve(xtDerivFunc,...
+                self.timeVec,x0Vec);
             %
             self.xtSpline=MatrixInterpolantFactory.createInstance(...
                 'column',xtArray,timeXtVec);

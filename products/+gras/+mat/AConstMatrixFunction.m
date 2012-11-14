@@ -1,4 +1,4 @@
-classdef ConstMatrixFunction<handle
+classdef AConstMatrixFunction<gras.mat.IMatrixFunction
     properties (Access=protected)
         mMat
         mSizeVec
@@ -24,23 +24,15 @@ classdef ConstMatrixFunction<handle
         end
     end
     methods
-        function self=ConstMatrixFunction(mMat)
+        function self=AConstMatrixFunction(mMat)
             %
             modgen.common.type.simple.checkgen(mMat,...
-                'isnumeric(x)&&ismat(x)');
+                'isnumeric(x)&&ismat(x)&&~isempty(x)');
             %
             self.mMat = mMat;
             self.mSizeVec = size(mMat);
             self.nRows = self.mSizeVec(1);
             self.nCols = self.mSizeVec(2);
-            %
-            if isempty(self.mMat)
-                self.nDims = 0;
-            elseif self.nRows == 1 || self.nCols == 1
-                self.nDims = 1;
-            else
-                self.nDims = 2;
-            end
         end
     end
 end

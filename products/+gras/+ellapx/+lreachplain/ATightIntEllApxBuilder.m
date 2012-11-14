@@ -35,7 +35,7 @@ classdef ATightIntEllApxBuilder<gras.ellapx.lreachplain.ATightEllApxBuilder
                     modgen.common.throwerror('wrongInput',...
                         'method %s is not supported',methodName);
             end
-        end        
+        end
     end
     methods (Access=protected)
         function apxType=getApxType(~)
@@ -46,8 +46,8 @@ classdef ATightIntEllApxBuilder<gras.ellapx.lreachplain.ATightEllApxBuilder
         function self=prepareODEData(self)
             %ODE is solved on time span [tau0, tau1]\in[t0,t1]
             import gras.interp.MatrixInterpolantFactory;
-            import gras.interp.MatrixSFSqrtm;
-            pDefObj=self.getProblemDef();            
+            import gras.mat.MatrixSFSqrtm;
+            pDefObj=self.getProblemDef();
             nGoodDirs=self.getNGoodDirs();
             timeVec=pDefObj.getTimeVec;
             %
@@ -65,7 +65,7 @@ classdef ATightIntEllApxBuilder<gras.ellapx.lreachplain.ATightEllApxBuilder
                 self.getProblemDef().getBPBTransSpline());
         end
     end
-    methods 
+    methods
         function self=ATightIntEllApxBuilder(pDefObj,goodDirSetObj,...
                 timeLimsVec,calcPrecision,sMethodName)
             self=self@gras.ellapx.lreachplain.ATightEllApxBuilder(...

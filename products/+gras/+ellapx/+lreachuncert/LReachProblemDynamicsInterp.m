@@ -1,15 +1,9 @@
 classdef LReachProblemDynamicsInterp<...
-        gras.ellapx.lreachuncert.IReachProblemDynamics & ...
-        gras.ellapx.lreachplain.LReachProblemDynamicsInterp
+        gras.ellapx.lreachplain.AReachProblemDynamicsInterp & ...
+        gras.ellapx.lreachuncert.IReachProblemDynamics
     properties (Access=protected)
         CQCTransSpline
         CqtSpline
-    end
-    methods (Access=protected)
-        function fHandleR_xt = getXtDerivFunc(self)
-            fHandleR_xt = @(t,x) self.AtSpline.evaluate(t)*x+...
-                self.BptSpline.evaluate(t)+self.CqtSpline.evaluate(t);
-        end
     end
     methods
         function CqtDynamics=getCqtDynamics(self)
@@ -19,13 +13,10 @@ classdef LReachProblemDynamicsInterp<...
             CQCTransDynamics=self.CQCTransSpline;
         end
         function self=LReachProblemDynamicsInterp(problemDef,calcPrecision)
-            import gras.interp.MatrixSymbInterpFactory;
+            import gras.ellapx.common.*;
             import gras.interp.MatrixInterpolantFactory;
-            import gras.gen.SquareMatVector;
+            import gras.interp.MatrixSymbInterpFactory;
             import gras.ode.MatrixODESolver;
-            %
-            self=self@gras.ellapx.lreachplain.LReachProblemDynamicsInterp(...
-                problemDef,calcPrecision);
             %
             if ~isa(problemDef,...
                     'gras.ellapx.lreachuncert.IReachContProblemDef')
@@ -33,30 +24,40 @@ classdef LReachProblemDynamicsInterp<...
                     'Incorrect system definition');
             end
             %
-            % compute C(t)Q(t)C'(t), C(t)q(t)
+            % call superclass constructor
+            %
+            self=self@gras.ellapx.lreachplain.AReachProblemDynamicsInterp(...
+                problemDef,calcPrecision);
+            %
+            % copy necessary data to local variables
             %
             CtDefMat = problemDef.getCMatDef();
+            QCMat = problemDef.getQCMat();
+            qCVec = problemDef.getqCVec();
+            x0DefVec = problemDef.getx0Vec();
+            sysDim = size(problemDef.getAMatDef(), 1);
+            %
+            % compute C(t)Q(t)C'(t)
+            %
             self.CQCTransSpline=MatrixSymbInterpFactory.rMultiply(...
-                CtDefMat,problemDef.getQCMat(),CtDefMat.');
+                CtDefMat,QCMat,CtDefMat.');
+            %
+            % compute C(t)q(t)
             %
             self.CqtSpline=MatrixSymbInterpFactory.rMultiplyByVec(...
-                CtDefMat,problemDef.getqCVec());
-            %
-            % setup ode solver
-            %
-            ODE_NORM_CONTROL='on';
-            sysDim=size(problemDef.getAMatDef(),1);
-            nTimePoints=self.N_TIME_POINTS;
-            tVec=linspace(problemDef.gett0(),problemDef.gett1(),...
-                nTimePoints);
-            odeArgList={'NormControl',ODE_NORM_CONTROL,'RelTol',...
-                calcPrecision,'AbsTol',calcPrecision};
+                CtDefMat,qCVec);
             %
             % compute x(t)
             %
+            odeArgList={'NormControl',self.ODE_NORM_CONTROL,'RelTol',...
+                calcPrecision,'AbsTol',calcPrecision};
             solverObj=MatrixODESolver(sysDim,@ode45,odeArgList{:});
-            [timeXtVec,xtArray]=solverObj.solve(self.getXtDerivFunc(),...
-                tVec,problemDef.getx0Vec());
+            %
+            xtDerivFunc = @(t,x) self.AtSpline.evaluate(t)*x+...
+                self.BptSpline.evaluate(t)+self.CqtSpline.evaluate(t);
+            %
+            [timeXtVec,xtArray]=solverObj.solve(xtDerivFunc,...
+                self.timeVec,x0DefVec);
             %
             self.xtSpline=MatrixInterpolantFactory.createInstance(...
                 'column',xtArray,timeXtVec);

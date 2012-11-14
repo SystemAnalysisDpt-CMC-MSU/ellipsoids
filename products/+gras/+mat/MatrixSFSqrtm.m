@@ -1,4 +1,4 @@
-classdef MatrixSFSqrtm<gras.gen.IMatrixFunction
+classdef MatrixSFSqrtm<gras.mat.IMatrixFunction
     % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2012-01-17$
     % $Copyright: Moscow State University,
     %            Faculty of Computational Mathematics and Computer Science,
@@ -23,7 +23,7 @@ classdef MatrixSFSqrtm<gras.gen.IMatrixFunction
             %
             % Input:
             %   regular:
-            %       interpObj: gras.gen.IMatrixFunction[1,1]
+            %       interpObj: gras.mat.IMatrixFunction[1,1]
             %           
             %
             self.interpObj=interpObj;

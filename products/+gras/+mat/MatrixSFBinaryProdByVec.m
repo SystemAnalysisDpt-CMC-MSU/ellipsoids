@@ -1,8 +1,12 @@
-classdef MatrixSFTripleProd<gras.gen.IMatrixFunction
+classdef MatrixSFBinaryProdByVec<gras.mat.IMatrixFunction
+    % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-12-12$
+    % $Copyright: Moscow State University,
+    %            Faculty of Computational Mathematics and Computer Science,
+    %            System Analysis Department 2011 $
+    %    
     properties (Access=private)
         formula1Func
         formula2Func
-        formula3Func
         nDims
         nCols
         nRows
@@ -18,15 +22,21 @@ classdef MatrixSFTripleProd<gras.gen.IMatrixFunction
         function nRows=getNRows(self)
             nRows=self.nRows;
         end        
-        function self=MatrixSFTripleProd(formula1CMat,formula2CMat,...
-                formula3CMat)
+        function self=MatrixSFBinaryProdByVec(formula1CMat,formula2CMat)
+            % MATRIXCUBESPLINE represents a cubic interpolant of
+            % matrix-value function
+            %
+            % Input:
+            %   regular:
+            %       formula1CMat: cell[nCols,nRows] of char[1,] - formula
+            %       array of the matrix depending on t (time)
+            %           
             %
             import modgen.common.type.simple.checkgenext
             import modgen.cell.cellstr2func;
             if nargin==0
                 self.formula1Func='';
                 self.formula2Func='';
-                self.formula3Func='';
                 self.nDims=2;
                 self.nCols=0;
                 self.nRows=0;
@@ -34,20 +44,17 @@ classdef MatrixSFTripleProd<gras.gen.IMatrixFunction
             else
                 checkgenext(['iscellofstring(x1)&&ndims(x1)==2&&',...
                     'iscellofstring(x2)&&ndims(x2)==2&&',...
-                    'iscellofstring(x3)&&ndims(x3)==2&&',...
-                    'size(x1,2)==size(x2,1)&&size(x2,2)==size(x3,1)'],...
-                    3,formula1CMat,formula2CMat,formula3CMat);
+                    'size(x1,2)==size(x2,1)&&size(x2,2)==1'],...
+                    2,formula1CMat,formula2CMat);
                 %
-                sizeVec=[size(formula1CMat,1),size(formula3CMat,2)];
-                %
+                sizeVec=[size(formula1CMat,1),size(formula2CMat,2)];
                 self.nDims=length(sizeVec);
                 self.nCols=sizeVec(1);
                 self.nRows=sizeVec(2);
                 self.mSizeVec=sizeVec;
-                %
                 self.formula1Func=cellstr2func(formula1CMat,'t');
                 self.formula2Func=cellstr2func(formula2CMat,'t');
-                self.formula3Func=cellstr2func(formula3CMat,'t');                
+                
             end
         end
         function mSize=getMatrixSize(self)
@@ -55,14 +62,16 @@ classdef MatrixSFTripleProd<gras.gen.IMatrixFunction
         end
         function resArray=evaluate(self,timeVec)
             import gras.gen.MatVector;
+            %
             res1Array=MatVector.fromFunc(self.formula1Func,timeVec);
             res2Array=MatVector.fromFunc(self.formula2Func,timeVec);
-            res3Array=MatVector.fromFunc(self.formula3Func,timeVec);
+            %
             if numel(timeVec)==1
-                resArray=res1Array*res2Array*res3Array;
+                resArray=res1Array*res2Array;
             else
-                resArray=gras.gen.MatVector.rMultiply(res1Array,res2Array,...
-                    res3Array);
+                sizeVec=[size(res2Array,1),size(res2Array,3)];
+                resArray=gras.gen.MatVector.rMultiplyByVec(res1Array,...
+                    reshape(res2Array,sizeVec));
             end
         end
     end
