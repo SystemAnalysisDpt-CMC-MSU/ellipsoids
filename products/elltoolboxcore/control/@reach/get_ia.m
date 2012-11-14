@@ -36,7 +36,6 @@ function [I, T] = get_ia(rs)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  import elltool.conf.Properties;
 
   if ~(isa(rs, 'reach'))
     error('GET_IA: input argument must be reach set object.');
@@ -60,10 +59,10 @@ function [I, T] = get_ia(rs)
     ee = [];
     for j = 1:n
       q  = rs.center_values(:, j);
-      Q  = (1 - Properties.getRelTol()) * reshape(QQ(:, j), d, d);
+      Q  = (1 - rs.properties.relTol()) * reshape(QQ(:, j), d, d);
       Q  = real(Q);
-      if min(eig(Q)) < (- Properties.getAbsTol())
-        Q = Properties.getAbsTol() * eye(d);
+      if min(eig(Q)) < (- rs.properties.absTol())
+        Q = rs.properties.absTol() * eye(d);
       end
       ee = [ee ellipsoid(q, Q)];
     end

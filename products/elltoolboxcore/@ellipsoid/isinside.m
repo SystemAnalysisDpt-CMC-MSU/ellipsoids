@@ -197,7 +197,7 @@ function [res, status] = qcqp(EA, E)
       fprintf('QCQP: Warning! Degenerate ellipsoid.\n');
       fprintf('      Regularizing...\n');
     end
-    Q = regularize(Q);
+    Q = regularize(Q,E(1,1).properties.absTol);
   end
   Q = ell_inv(Q);
   Q = 0.5*(Q + Q');
@@ -213,7 +213,7 @@ cvx_begin sdp
         for j = 1:n
         [q, Q] = parameters(EA(i, j));
         if size(Q, 2) > rank(Q)
-            Q = regularize(Q);
+            Q = regularize(Q,E(i,j).properties.absTol);
         end
         Q = ell_inv(Q);
         Q = 0.5*(Q + Q');

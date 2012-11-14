@@ -4,12 +4,12 @@
 	<version type="char" >1.4dev</version>
     <isVerbose type="boolean" >false</isVerbose>
     <!-- -->
-    <absoluteTolerance type="double">1e-7</absoluteTolerance>
-    <relativeTolerance type="double">1e-5</relativeTolerance>
+    <absTol type="double">1e-7</absTol>
+    <relTol type="double">1e-5</relTol>
     <!-- -->
-    <numberOfTimeGridPoints type="double">200</numberOfTimeGridPoints>
-    <ODESolverName type="char">ode 45</ODESolverName>
-    <oDENormControl type="char">on</oDENormControl>
+    <nTimeGridPoints type="double">200</nTimeGridPoints>
+    <ODESolverName type="char">ode45</ODESolverName>
+    <ODENormControl type="char">on</ODENormControl>
     <isEnabledOdeSolverOptions type="boolean">false</isEnabledOdeSolverOptions>
     <!-- -->
     <nPlot2dPoints type="double">200</nPlot2dPoints>

@@ -1,4 +1,4 @@
-function RS = reach(lsys, X0, L0, T, Options)
+function RS = reach(lsys, X0, L0, T, Options,varargin)
 %
 % REACH - computes reach set approximation of the linear system for the given
 %         time interval.
@@ -48,7 +48,11 @@ function RS = reach(lsys, X0, L0, T, Options)
 %
 
   import elltool.conf.Properties;
-
+  
+  neededPropNameList = {'absTol','relTol'};
+  SProp =  elltool.conf.parseProp(varargin,neededPropNameList);
+  
+  RS.properties = SProp;
   if isstruct(lsys) & (nargin == 1)
     RS = class(lsys, 'reach');
     return;
@@ -800,9 +804,9 @@ function RS = reach(lsys, X0, L0, T, Options)
                              mydata, ...
                              d1, ...
                              back, ...
-                             Options.minmax);
+                             Options.minmaxRS.properties.absTol);
         elseif ~(isempty(mydata.BPB))
-          [Q, L] = eesm_de(size(tvals, 2), Q0, l0, mydata, d1, back);
+          [Q, L] = eesm_de(size(tvals, 2), Q0, l0, mydata, d1, back,RS.properties.absTol);
         else
           Q = [];
           L = [];
@@ -851,9 +855,9 @@ function RS = reach(lsys, X0, L0, T, Options)
                              mydata, ...
                              d1, ...
                              back, ...
-                             Options.minmax);
+                             Options.minmax, RS.properties.absTol);
         elseif ~(isempty(mydata.BPB))
-          [Q, L] = iesm_de(size(tvals, 2), Q0, l0, mydata, d1, back);
+          [Q, L] = iesm_de(size(tvals, 2), Q0, l0, mydata, d1, back,RS.properties.absTol);
         else
           Q = [];
           L = [];

@@ -1,4 +1,4 @@
-function HA = hyperplane(v, c)
+function HA = hyperplane(v, c,varargin)
 %
 % HYPERPLANE - creates hyperplane structure (or array of hyperplane structures).
 %
@@ -35,8 +35,8 @@ function HA = hyperplane(v, c)
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
-  import elltool.conf.Properties;
-
+  neededPropNameList = {'absTol','relTol'};
+  SProp =  elltool.conf.parseProp(varargin,neededPropNameList);
   if nargin == 0
     HA = hyperplane(0);
     return;
@@ -62,10 +62,11 @@ function HA = hyperplane(v, c)
   if (l ~= 1) & (l ~= m)
     error(sprintf('ELL_HYPERPLANE: second argument must be a single scalar, or an array of %d scalars.', m));
   end
-
+  
   
   import modgen.common.type.simple.checkgenext;  
   checkgenext('~(any( isnan(x1(:)) ) || any(isinf(x1(:))) || any(isnan(x2(:))) || any(isinf(x2(:))))',2,v,c); 
+  
   
   if l == 1
     c(1:m) = c;
@@ -76,11 +77,12 @@ function HA = hyperplane(v, c)
     H = [];
     H.normal = real(v(:, i));
     H.shift  = real(c(i));
+    H.properties = SProp;
 %    if H.shift < 0
 %      H.normal = - H.normal;
 %      H.shift  = - H.shift;
 %    end
-    if (norm(H.normal) <= Properties.getAbsTol()) & (H.shift > Properties.getAbsTol())
+    if (norm(H.normal) <= SProp.absTol) & (H.shift > SProp.absTol)
       H.normal = 0;
       H.shift  = 0;
     end

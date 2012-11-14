@@ -37,19 +37,17 @@ function [E] = ellipsoid(varargin)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  import elltool.conf.Properties;
-
+  neededPropNameList = {'absTol','relTol'};
+  SProp =  elltool.conf.parseProp(varargin,neededPropNameList);
 
   if nargin == 0
     E.center = [];
     E.shape  = [];
+    E.properties = SProp;
     E        = class(E, 'ellipsoid');
     return;
   end
 
-  if nargin > 2
-    error('ELLIPSOID: arguments must be center (optional) and shape matrix.');
-  end
 
   if nargin == 1
     Q      = real(varargin{1});
@@ -78,7 +76,7 @@ function [E] = ellipsoid(varargin)
   mev = min(eig(Q));
   if (mev < 0)
     %tol = n * norm(Q) * eps;
-    tol = Properties.getAbsTol();
+    tol = SProp.absTol;
     if abs(mev) > tol
       error('ELLIPSOID: shape matrix must be positive semi-definite.');
     end
@@ -89,6 +87,7 @@ function [E] = ellipsoid(varargin)
 
   E.center = q;
   E.shape  = Q; 
+  E.properties = SProp;
   E        = class(E, 'ellipsoid');
-
+  
   return;

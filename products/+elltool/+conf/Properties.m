@@ -2,10 +2,10 @@ classdef Properties<modgen.common.obj.StaticPropStorage
     %PROPERTIES is a static class, providing emulation of static properties
     %for toolbox.
     %
-    %$Author: <Zakharov Eugene>  <justenterrr@gmail.com> $    $Date: <5 november> $
+    %$Author: Zakharov Eugene  <justenterrr@gmail.com> $    $Date: 5-november-2012 $
     %$Copyright: Moscow State University,
     %            Faculty of Computational Mathematics and Computer Science,
-    %            System Analysis Department <2012> $
+    %            System Analysis Department 2012 $
     %
     methods(Static)
         function ConfRepoMgr=getConfRepoMgr()
@@ -34,15 +34,15 @@ classdef Properties<modgen.common.obj.StaticPropStorage
         end
         %
         function absTol = getAbsTol()
-            absTol = elltool.conf.Properties.getOption('absoluteTolerance');
+            absTol = elltool.conf.Properties.getOption('absTol');
         end
         %
         function absRel = getRelTol()
-            absRel = elltool.conf.Properties.getOption('relativeTolerance');
+            absRel = elltool.conf.Properties.getOption('relTol');
         end
         %
         function nTimeGridPoints = getNTimeGridPoints()
-            nTimeGridPoints = elltool.conf.Properties.getOption('numberOfTimeGridPoints');
+            nTimeGridPoints = elltool.conf.Properties.getOption('nTimeGridPoints');
         end
         %
         function oDESolverName = getODESolverName()
@@ -50,7 +50,7 @@ classdef Properties<modgen.common.obj.StaticPropStorage
         end
         %
         function oDENormControl = getODENormControl()
-            oDENormControl = elltool.conf.Properties.getOption('oDENormControl');
+            oDENormControl = elltool.conf.Properties.getOption('ODENormControl');
         end
         %
         function isEnabled = getIsEnabledOdeSolverOptions()
@@ -75,7 +75,7 @@ classdef Properties<modgen.common.obj.StaticPropStorage
         end
         %
         function setNTimeGridPoints(nTimeGridPoints)
-            elltool.conf.Properties.setOption('numberOfTimeGridPoints',nTimeGridPoints);
+            elltool.conf.Properties.setOption('nTimeGridPoints',nTimeGridPoints);
         end
     end
     methods(Static,Access = private)

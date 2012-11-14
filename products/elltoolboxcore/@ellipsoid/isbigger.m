@@ -61,11 +61,11 @@ function res = isbigger(E1, E2)
       fprintf('ISBIGGER: Warning! First ellipsoid is degenerate.');
       fprintf('          Regularizing...');
     end
-    A = regularize(A);
+    A = regularize(A,E1.properties.absTol);
   end
 
   T = ell_simdiag(A, B);
-  if max(abs(diag(T*B*T'))) < (1 + Properties.getAbsTol())
+  if max(abs(diag(T*B*T'))) < (1 + E1.properties.absTol)
     res = 1;
   else
     res = 0;

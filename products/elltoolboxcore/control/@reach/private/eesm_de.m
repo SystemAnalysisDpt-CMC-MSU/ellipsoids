@@ -1,4 +1,4 @@
-function [QQ, LL] = eesm_de(ntv, X0, l0, mydata, N, back)
+function [QQ, LL] = eesm_de(ntv, X0, l0, mydata, N, back,absTol)
 %
 % EESM_DE - recurrence relation for the shape matrix of external ellipsoid
 %           for discrete-time system without disturbance.
@@ -48,8 +48,7 @@ function [QQ, LL] = eesm_de(ntv, X0, l0, mydata, N, back)
       end
       if dd > 0
         %e1  = max(svd(A)) * max(svd(Q)) * 4 * eps;
-        e1  = Properties.getAbsTol();
-        e2  = sqrt(e1*e1 + 2*max(eig(BPB))*e1);
+        e2  = sqrt(absTol*absTol + 2*max(eig(BPB))*absTol);
         BPB = ell_regularize(BPB, e2);
       elseif rank(BPB) < N
         BPB = ell_regularize(BPB);

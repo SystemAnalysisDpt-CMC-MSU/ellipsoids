@@ -44,8 +44,8 @@ function D = dimension(H);
       h = H(i, j);
       s = size(h.normal, 1);
       if s < 2
-        if (abs(h.normal) <= Properties.getAbsTol()) & ...
-           (abs(h.shift) <= Properties.getAbsTol())
+        if (abs(h.normal) <= h.properties.absTol) & ...
+           (abs(h.shift) <= Properties.absTol)
           r = [r 0];
         else
           r = [r s];

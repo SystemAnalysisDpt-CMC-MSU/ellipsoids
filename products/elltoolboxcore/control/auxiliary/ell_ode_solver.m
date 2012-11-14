@@ -8,15 +8,9 @@ function [tt, xx] = ell_ode_solver(fn, t, x0, varargin)
   opt = odeset('NormControl', Properties.getODENormControl(), ...
                'RelTol', Properties.getRelTol(), ...
                'AbsTol', Properties.getAbsTol());
-           
-  switch properties.getODESolverName()
-    case 'ode 23',
-      opt      = odeset(opt, 'InitialStep', abs(t(1)-t(2))/2);
-      [tt, xx] = ode23(fn, t, x0, opt, varargin{:});
-    case 'ode 113',
-      [tt, xx] = ode113(fn, t, x0, opt, varargin{:});
-    otherwise,
-      [tt, xx] = ode45(fn, t, x0, opt, varargin{:});
-  end
 
-  return;
+  solverName = Properties.getODESolverName();
+  if strcmp(solverName,'ode23')
+      odeset(opt, 'InitialStep', abs(t(1)-t(2))/2);
+  end
+  [tt,xx]=feval(solverName,fn,t,x0,opt,varargin{:}); 

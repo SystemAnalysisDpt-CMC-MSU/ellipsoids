@@ -12,9 +12,6 @@ function res = eq(H1, H2)
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
-
-  import elltool.conf.Properties;
-
   if ~(isa(H1, 'hyperplane')) | ~(isa(H2, 'hyperplane'))
     error('==: input arguments must be hyperplanes.');
   end
@@ -67,9 +64,6 @@ function res = l_hpeq(H1, H2)
 %
 % L_HPEQ - check if two single hyperplanes are equal.
 %
-
-  import elltool.conf.Properties;
-
   [x, a] = parameters(H1);
   [y, b] = parameters(H2);
   res    = 0;
@@ -92,15 +86,15 @@ function res = l_hpeq(H1, H2)
     b = -b;
     y = -y;
   end
-  if abs(a - b) > Properties.getAbsTol()
+  if abs(a - b) > H1.properties.absTol
     return;
   end
-  if max(abs(x - y)) < Properties.getAbsTol()
+  if max(abs(x - y)) < H1.properties.absTol()
     res = 1;
     return;
   end
-  if a < Properties.getAbsTol()
-    if max(abs(x + y)) < Properties.getAbsTol()
+  if a < H1.properties.absTol
+    if max(abs(x + y)) < H1.properties.absTol
       res = 1;
     end
   end

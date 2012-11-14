@@ -30,8 +30,6 @@ function res = isparallel(H1, H2)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  import elltool.conf.Properties;
-
 
   if ~(isa(H1, 'hyperplane')) | ~(isa(H2, 'hyperplane'))
     error('ISPARALLEL: input arguments must be hyperplanes.');
@@ -85,9 +83,6 @@ function res = l_hpparallel(H1, H2)
 %
 % L_HPPARALLEL - check if two single hyperplanes are equal.
 %
-
-  import elltool.conf.Properties;
-
   x   = parameters(H1);
   y   = parameters(H2);
   res = 0;
@@ -101,9 +96,9 @@ function res = l_hpparallel(H1, H2)
   if min(size(x) == size(y)) < 1
     return;
   end
-  if max(abs(x - y)) < Properties.getAbsTol()
+  if max(abs(x - y)) < H1.properties.absTol()
     res = 1;
-  elseif max(abs(x + y)) < Properties.getAbsTol()
+  elseif max(abs(x + y)) < H1.properties.absTol()
     res = 1;
   end
 

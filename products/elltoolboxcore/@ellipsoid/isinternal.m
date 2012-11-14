@@ -117,17 +117,17 @@ function res = isinternal_sub(E, x, s, k)
           fprintf('ISINTERNAL: Warning! There is degenerate ellipsoid in the array.\n');
           fprintf('            Regularizing...\n');
         end
-        Q = regularize(Q);
+        Q = regularize(Q,E(i,j).properties.absTol);
       end
  
       r = q' * ell_inv(Q) * q;
       if (s == 'u')
-        if (r < 1) | (abs(r - 1) < Properties.getAbsTol())
+        if (r < 1) | (abs(r - 1) < E(i,j).properties.absTol)
           res = 1;
           return;
         end
       else
-        if (r > 1) & (abs(r - 1) > Properties.getAbsTol())
+        if (r > 1) & (abs(r - 1) > E(i,j).properties.absTol)
           res = 0;
           return;
         end

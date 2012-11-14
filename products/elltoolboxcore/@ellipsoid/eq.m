@@ -27,7 +27,7 @@ function res = eq(E1, E2)
 %
   import gras.la.sqrtm;
   import elltool.conf.Properties;
-  U = Properties.getRelTol();
+  
   if ~(isa(E1, 'ellipsoid')) | ~(isa(E2, 'ellipsoid'))
     error('==: both arguments must be ellipsoids.');
   end
@@ -52,7 +52,7 @@ function res = eq(E1, E2)
         end
         q = E1(i, j).center - E2(i, j).center;
         Q = sqrtm(E1(i, j).shape) - sqrtm(E2(i, j).shape);
-        if (norm(q) > Properties.getRelTol()) | (norm(Q) > Properties.getRelTol())
+        if (norm(q) > E1(i,j).properties.relTol) | (norm(Q) > E1(i,j).properties.relTol)
           r = [r 0];
         else
           r = [r 1];
@@ -70,7 +70,7 @@ function res = eq(E1, E2)
         end
         q = E1(i, j).center - E2.center;
         Q = sqrtm(E1(i, j).shape) - sqrtm(E2.shape);
-        if (norm(q) > Properties.getRelTol()) | (norm(Q) > Properties.getRelTol())
+        if (norm(q) > E1(i,j).properties.relTol) | (norm(Q) > E1(i,j).properties.relTol)
           r = [r 0];
         else
           r = [r 1];
@@ -88,10 +88,7 @@ function res = eq(E1, E2)
         end
         q = E1.center - E2(i, j).center;
         Q = sqrtm(E1.shape) - sqrtm(E2(i, j).shape);
-        U = Properties.getRelTol();
-        U1 = norm(q);
-        U2 = norm(Q);
-        if (norm(q) > Properties.getRelTol()) | (norm(Q) > Properties.getRelTol())
+        if (norm(q) > E1.properties.relTol) | (norm(Q) > E1.properties.relTol)
            r = [r 0];
         else
           r = [r 1];

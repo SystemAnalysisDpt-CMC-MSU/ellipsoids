@@ -113,10 +113,10 @@ function res = l_check_containment(E1, E2)
   [q, Q] = double(E1);
   [r, R] = double(E2);
   if size(Q, 2) > rank(Q)
-      Q = regularize(Q);
+      Q = regularize(Q,E1.properties.absTol);
   end
   if size(R, 2) > rank(R)
-      R = regularize(R);
+      R = regularize(R,E2.properties.absTol);
   end
   Qi     = ell_inv(Q);
   Ri     = ell_inv(R);

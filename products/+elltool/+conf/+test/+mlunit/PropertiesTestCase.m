@@ -19,7 +19,7 @@ classdef PropertiesTestCase < mlunitext.test_case
             %remember previous ConfRepoMgr to restore it after test
             import elltool.conf.Properties;
             prevConfRepo = Properties.getConfRepoMgr();
-            prevAbsTol = prevConfRepo.getParam('absoluteTolerance');
+            prevAbsTol = prevConfRepo.getParam('absTol');
             %%
             %testing getters
             confRepo = elltool.conf.ConfRepoMgr();
@@ -39,11 +39,11 @@ classdef PropertiesTestCase < mlunitext.test_case
             %
             confRepo.setParam('version',version);
             confRepo.setParam('isVerbose',verbose);
-            confRepo.setParam('absoluteTolerance',absTol);
-            confRepo.setParam('relativeTolerance',relTol);
-            confRepo.setParam('numberOfTimeGridPoints',timeGrid);
+            confRepo.setParam('absTol',absTol);
+            confRepo.setParam('relTol',relTol);
+            confRepo.setParam('nTimeGridPoints',timeGrid);
             confRepo.setParam('ODESolverName',odeSolver);
-            confRepo.setParam('oDENormControl',normControl);
+            confRepo.setParam('ODENormControl',normControl);
             confRepo.setParam('isEnabledOdeSolverOptions',solverOptions);
             confRepo.setParam('nPlot2dPoints',plot2dGrid);
             confRepo.setParam('nPlot3dPoints',plot3dGrid);

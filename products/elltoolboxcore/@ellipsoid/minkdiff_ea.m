@@ -91,10 +91,10 @@ function EA = minkdiff_ea(E1, E2, L)
     return;
   end
   if rank(Q1) < size(Q1, 1)
-    Q1 = regularize(Q1);
+    Q1 = regularize(Q1,E1.properties.absTol);
   end
   if rank(Q2) < size(Q2, 1)
-    Q2 = regularize(Q2);
+    Q2 = regularize(Q2,E2.properties.absTol);
   end
 
   Q1 = sqrtm(Q1);

@@ -30,9 +30,6 @@ function EP = projection(E, B)
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
-
-  import elltool.conf.Properties;
-
   if ~(isa(E, 'ellipsoid')) | ~(isa(B, 'double'))
     error('PROJECTION: arguments must be array of ellipsoids and matrix with orthogonal columns.');
   end
@@ -56,7 +53,7 @@ function EP = projection(E, B)
   for i = 1:(l - 1)
     v = B(:, i);
     for j = (i + 1):l
-      if abs(v'*B(:, j)) > Properties.getAbsTol()
+      if abs(v'*B(:, j)) > E.properties.getAbsTol()
         error('PROJECTION: basis vectors must be orthogonal.');
       end
     end

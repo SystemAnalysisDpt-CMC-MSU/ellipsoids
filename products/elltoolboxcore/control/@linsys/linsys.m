@@ -1,4 +1,4 @@
-function ls = linsys(A, B, U, G, V, C, W, D)
+function ls = linsys(A, B, U, G, V, C, W, D,varargin)
 %
 % LINSYS - constructor for linear system object.
 %
@@ -110,7 +110,9 @@ function ls = linsys(A, B, U, G, V, C, W, D)
 %
 
   import elltool.conf.Properties;
-
+   neededPropNameList = {'absTol','relTol'};
+  SProp =  elltool.conf.parseProp(varargin,neededPropNameList);
+  
   if nargin == 0
     ls.A              = [];
     ls.B              = [];
@@ -122,6 +124,7 @@ function ls = linsys(A, B, U, G, V, C, W, D)
     ls.lti            = false;
     ls.dt             = false;
     ls.constantbounds = false(1,3);
+    ls.properties = SProp;
     ls                = class(ls, 'linsys');
     return;
   end
@@ -293,6 +296,7 @@ function ls = linsys(A, B, U, G, V, C, W, D)
     ls.dt = true;
   end
   ls.constantbounds = [cbu cbv cbw];
+  ls.properties = SProp;
   ls                = class(ls, 'linsys');
 
 end

@@ -70,7 +70,7 @@ cvx_begin sdp
             [q, Q] = double(EE(i));
             Q = (Q + Q')*0.5;
             if rank(Q) < mn
-                Q = regularize(Q);
+                Q = regularize(Q,EE(i).properties.absTol);
             end
     
             Q     = inv(Q);

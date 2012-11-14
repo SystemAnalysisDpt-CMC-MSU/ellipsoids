@@ -36,8 +36,6 @@ function [E, T] = get_ea(rs)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  import elltool.conf.Properties;
-
   if ~(isa(rs, 'reach'))
     error('GET_EA: input argument must be reach set object.');
   end
@@ -60,9 +58,9 @@ function [E, T] = get_ea(rs)
     ee = [];
     for j = 1:n
       q  = rs.center_values(:, j);
-      Q  = (1 + Properties.getRelTol()) * reshape(QQ(:, j), d, d);
-      if min(eig(Q)) < (- Properties.getAbsTol())
-        Q = Properties.getAbsTol() * eye(d);
+      Q  = (1 + rs.properties.relTol()) * reshape(QQ(:, j), d, d);
+      if min(eig(Q)) < (- rs.properties.absTol())
+        Q = rs.properties.absTol() * eye(d);
       end
       ee = [ee ellipsoid(q, Q)];
     end

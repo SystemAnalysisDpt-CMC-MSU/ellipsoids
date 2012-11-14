@@ -39,7 +39,7 @@ function I = inv(E)
   for i = 1:m
     for j = 1:n
       if isdegenerate(I(i, j))
-        Q = regularize(I(i, j).shape);
+        Q = regularize(I(i, j).shape,I(i,j).properties.absTol);
       else
         Q = I(i, j).shape;
       end

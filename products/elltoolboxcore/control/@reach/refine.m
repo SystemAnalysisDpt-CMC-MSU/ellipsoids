@@ -147,9 +147,9 @@ function RRS = refine(RS, L0, Options)
                              mydata, ...
                              d1, ...
                              back, ...
-                             Options.minmax);
+                             Options.minmax,RS.properties.absTol);
         elseif ~(isempty(mydata.BPB))
-          [Q, L] = eesm_de(size(tvals, 2), Q0, l0, mydata, d1, back);
+          [Q, L] = eesm_de(size(tvals, 2), Q0, l0, mydata, d1, back,RS.properties.absTol);
         else
           Q = [];
           L = [];
@@ -199,9 +199,9 @@ function RRS = refine(RS, L0, Options)
                              mydata, ...
                              d1, ...
                              back, ...
-                             Options.minmax);
+                             Options.minmax,RS.properties.absTol);
         elseif ~(isempty(mydata.BPB))
-          [Q, L] = iesm_de(size(tvals, 2), Q0, l0, mydata, d1, back);
+          [Q, L] = iesm_de(size(tvals, 2), Q0, l0, mydata, d1, back,RS.properties.absTol);
         else
           Q = [];
           L = [];

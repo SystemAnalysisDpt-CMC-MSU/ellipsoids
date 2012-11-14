@@ -152,11 +152,11 @@ function [y, Y] = minkdiff(varargin)
 	
   Q1 = E1.shape;
   if rank(Q1) < size(Q1, 1)
-    Q1 = regularize(Q1);
+    Q1 = regularize(Q1,E1.properties.absTol);
   end
   Q2 = E2.shape;
   if rank(Q2) < size(Q2, 1)
-    Q2 = regularize(Q2);
+    Q2 = regularize(Q2,E2.properties.absTol);
   end
   switch n
     case 2,
