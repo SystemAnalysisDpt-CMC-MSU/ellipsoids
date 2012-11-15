@@ -18,7 +18,6 @@ function isEmptyMat = isempty(linSysMat)
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
 %
-import elltool.conf.Properties;
 %
 if ~(isa(linSysMat, 'linsys'))
     modgen.common.throwerror('wrongType', 'input argument must be linear system object.');

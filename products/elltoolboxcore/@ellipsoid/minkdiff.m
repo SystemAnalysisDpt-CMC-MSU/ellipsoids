@@ -152,16 +152,16 @@ function [y, Y] = minkdiff(varargin)
 	
   Q1 = E1.shape;
   if rank(Q1) < size(Q1, 1)
-    Q1 = regularize(Q1,E1.properties.absTol);
+    Q1 = regularize(Q1,E1.absTol);
   end
   Q2 = E2.shape;
   if rank(Q2) < size(Q2, 1)
-    Q2 = regularize(Q2,E2.properties.absTol);
+    Q2 = regularize(Q2,E2.absTol);
   end
   switch n
     case 2,
       y      = E1.center - E2.center;
-      phi    = linspace(0, 2*pi, Properties.getNPlot2dPoints());
+      phi    = linspace(0, 2*pi, E1.nPlot2dPoints);
       l = rm_bad_directions(Q1, Q2, [cos(phi); sin(phi)]);
       if size(l, 2) > 0
         [r, Y] = rho(E1, l);
@@ -185,7 +185,7 @@ function [y, Y] = minkdiff(varargin)
 
     case 3,
       y   = E1.center - E2.center;
-      M   = Properties.getNPlot3dPoints()/2;
+      M   = E1.nPlot3dPoints()/2;
       N   = M/2;
       psy = linspace(0, pi, N);
       phi = linspace(0, 2*pi, M);

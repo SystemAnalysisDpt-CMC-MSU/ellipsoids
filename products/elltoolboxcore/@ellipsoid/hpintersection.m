@@ -168,7 +168,7 @@ function I = l_compute1intersection(E, H, n)
       fprintf('HPINTERSECTION: Warning! Degenerate ellipsoid.\n');
       fprintf('                Regularizing...\n');
     end
-    Q = regularize(Q,E.properties.absTol);
+    Q = regularize(Q,E.absTol);
   end
 
   W   = ell_inv(Q);

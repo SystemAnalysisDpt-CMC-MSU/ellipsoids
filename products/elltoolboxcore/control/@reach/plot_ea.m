@@ -36,9 +36,6 @@ function plot_ea(rs, varargin)
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
-
-  import elltool.conf.Properties;
-
   if ~(isa(rs, 'reach'))
     error('PLOT_EA: first input argument must be reach set.');
   end
@@ -111,14 +108,14 @@ function plot_ea(rs, varargin)
     back = 'Reach set';
   end
 
-  if Properties.getIsVerbose()
+  if rs.iVerbose()
     fprintf('Plotting reach set external approximation...\n');
   end
   
   if d == 3
     EE  = move2origin(E(:, end));
     EE  = EE';
-    M   = Properties.getNPlot3dPoints()/2;
+    M   = rs.nPlot3dPoints()/2;
     N   = M/2;
     psy = linspace(0, pi, N);
     phi = linspace(0, 2*pi, M);
@@ -132,9 +129,9 @@ function plot_ea(rs, varargin)
     m = size(EE, 2);
     for i = 1:n
       l    = L(:, i);
-      mval = Properties.getAbsTol();
+      mval = rs.absTol();
       for j = 1:m
-        if trace(EE(1, j)) > Properties.getAbsTol()
+        if trace(EE(1, j)) > rs.absTol()
           Q = parameters(inv(EE(1, j)));
           v = l' * Q * l;
           if v > mval
@@ -171,14 +168,14 @@ function plot_ea(rs, varargin)
   if size(rs.time_values, 2) == 1
     E   = move2origin(E');
     M   = size(E, 2);
-    N   = Properties.getNPlot2dPoints;
+    N   = rs.nPlot2dPoints;
     phi = linspace(0, 2*pi, N);
     L   = [cos(phi); sin(phi)];
     X   = [];
     for i = 1:N
       l      = L(:, i);
       [v, x] = rho(E, l);
-      idx    = find(isinternal((1+Properties.getAbsTol())*E, x, 'i') > 0);
+      idx    = find(isinternal((1+rs.absTol())*E, x, 'i') > 0);
       if ~isempty(idx)
         x = x(:, idx(1, 1)) + rs.center_values;
 	X = [X x];
@@ -205,13 +202,13 @@ function plot_ea(rs, varargin)
         hold off;
       end
     else
-      warning('2D grid too sparse! Please, increase parameter nPlot2dPoints(Properties.setNPlot2dPoints(value))...');
+      warning('2D grid too sparse! Please, increase parameter nPlot2dPoints(rs.nPlot2dPoints(value))...');
     end
     return;
   end
 
   [m, n] = size(E);
-  s      = (1/2) * Properties.getNPlot2dPoints();
+  s      = (1/2) * rs.nPlot2dPoints();
   phi    = linspace(0, 2*pi, s);
   L      = [cos(phi); sin(phi)];
 
@@ -224,7 +221,7 @@ function plot_ea(rs, varargin)
       for i = 1:s
         l = L(:, i);
         [v, x] = rho(EE, l);
-        idx    = find(isinternal((1+Properties.getAbsTol())*EE, x, 'i') > 0);
+        idx    = find(isinternal((1+rs.absTol())*EE, x, 'i') > 0);
         if ~isempty(idx)
           x = x(:, idx(1, 1)) + rs.center_values(:, ii);
           X = [X x];
@@ -243,7 +240,7 @@ function plot_ea(rs, varargin)
         set(h, 'Color', Options.color, 'LineWidth', Options.width);
         hold on;
       else
-        warning('2D grid too sparse! Please, increase parameter nPlot2dPoints(Properties.setNPlot2dPoints(value))...');
+        warning('2D grid too sparse! Please, increase parameter nPlot2dPoints(rs.nPlot2dPoints(value))...');
       end
       h = ell_plot([tt(1, 1); rs.center_values(:, ii)], '.');
       hold on;
@@ -264,7 +261,7 @@ function plot_ea(rs, varargin)
       X  = [];
       for i = 1:s
         l    = L(:, i);
-        mval = Properties.getAbsTol();
+        mval = rs.absTol();
         for j = 1:m
           if 1
             Q  = parameters(EE(1, j));

@@ -28,10 +28,6 @@ function res = isempty(H)
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
-
-  import elltool.conf.Properties;
-
-
   if ~(isa(H, 'hyperplane'))
     error('ISEMPTY: input argument must be hyperplane.');
   end

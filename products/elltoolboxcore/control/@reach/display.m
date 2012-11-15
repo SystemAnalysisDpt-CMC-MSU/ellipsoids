@@ -12,9 +12,6 @@ function display(rs)
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
-
-  import elltool.conf.Properties;
-
   fprintf('\n');
   disp([inputname(1) ' =']);
 

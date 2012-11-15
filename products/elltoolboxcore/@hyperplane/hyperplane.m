@@ -35,8 +35,8 @@ function HA = hyperplane(v, c,varargin)
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
-  neededPropNameList = {'absTol','relTol'};
-  SProp =  elltool.conf.parseProp(varargin,neededPropNameList);
+  neededPropNameList = {'absTol'};
+  absTol =  elltool.conf.parseProp(varargin,neededPropNameList);
   if nargin == 0
     HA = hyperplane(0);
     return;
@@ -77,12 +77,12 @@ function HA = hyperplane(v, c,varargin)
     H = [];
     H.normal = real(v(:, i));
     H.shift  = real(c(i));
-    H.properties = SProp;
+    H.absTol = absTol;
 %    if H.shift < 0
 %      H.normal = - H.normal;
 %      H.shift  = - H.shift;
 %    end
-    if (norm(H.normal) <= SProp.absTol) & (H.shift > SProp.absTol)
+    if (norm(H.normal) <= absTol) & (H.shift > absTol)
       H.normal = 0;
       H.shift  = 0;
     end

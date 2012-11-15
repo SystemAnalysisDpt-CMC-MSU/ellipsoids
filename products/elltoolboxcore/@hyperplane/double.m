@@ -27,10 +27,6 @@ function [v, c] = double(H)
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
-
-  import elltool.conf.Properties;
-
-
   if ~(isa(H, 'hyperplane'))
     error('DOUBLE: input argument must be hyperplane.');
   end

@@ -43,7 +43,7 @@ classdef PropertiesTestCase < mlunitext.test_case
             confRepo.setParam('relTol',relTol);
             confRepo.setParam('nTimeGridPoints',timeGrid);
             confRepo.setParam('ODESolverName',odeSolver);
-            confRepo.setParam('ODENormControl',normControl);
+            confRepo.setParam('isODENormControl',normControl);
             confRepo.setParam('isEnabledOdeSolverOptions',solverOptions);
             confRepo.setParam('nPlot2dPoints',plot2dGrid);
             confRepo.setParam('nPlot3dPoints',plot3dGrid);
@@ -55,7 +55,7 @@ classdef PropertiesTestCase < mlunitext.test_case
             mlunit.assert_equals(relTol,Properties.getRelTol());
             mlunit.assert_equals(timeGrid,Properties.getNTimeGridPoints());
             mlunit.assert_equals(odeSolver,Properties.getODESolverName());
-            mlunit.assert_equals(normControl,Properties.getODENormControl());
+            mlunit.assert_equals(normControl,Properties.getIsODENormControl());
             mlunit.assert_equals(solverOptions,Properties.getIsEnabledOdeSolverOptions());
             mlunit.assert_equals(plot2dGrid,Properties.getNPlot2dPoints());
             mlunit.assert_equals(plot3dGrid,Properties.getNPlot3dPoints());

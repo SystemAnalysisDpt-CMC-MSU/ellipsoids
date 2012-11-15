@@ -36,9 +36,6 @@ function plot_ia(rs, varargin)
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
-
-  import elltool.conf.Properties;
-
   if ~(isa(rs, 'reach'))
     error('PLOT_IA: first input argument must be reach set.');
   end
@@ -111,7 +108,7 @@ function plot_ia(rs, varargin)
     back = 'Reach set';
   end
 
-  if Properties.getIsVerbose()
+  if rs.iVerbose()
     fprintf('Plotting reach set internal approximation...\n');
   end
   
@@ -119,7 +116,7 @@ function plot_ia(rs, varargin)
     EE         = move2origin(inv(E(:, end)));
     EE         = EE';
     m          = size(EE, 2);
-    M          = Properties.getNPlot3dPoints()/2;
+    M          = rs.nPlot3dPoints/2;
     N          = M/2;
     psy        = linspace(-pi/2, pi/2, N);
     phi        = linspace(0, 2*pi, M);
@@ -173,13 +170,13 @@ function plot_ia(rs, varargin)
   if size(rs.time_values, 2) == 1
     E   = move2origin(E');
     M   = size(E, 2);
-    N   = Properties.getNPlot2dPoints();
+    N   = rs.nPlot2dPoints;
     phi = linspace(0, 2*pi, N);
     L   = [cos(phi); sin(phi)];
     X   = [];
     for i = 1:N
       l    = L(:, i);
-      mval = Properties.getAbsTol();
+      mval =rs.absTol;
       mQ   = [];
       for j = 1:M
         Q = parameters(E(1, j));
@@ -217,7 +214,7 @@ function plot_ia(rs, varargin)
   end
 
   [m, n] = size(E);
-  s      = (1/2) * Properties.getNPlot2dPoints();
+  s      = (1/2) * rs.nPlot2dPoints;
   phi    = linspace(0, 2*pi, s);
   L      = [cos(phi); sin(phi)];
 
@@ -228,7 +225,7 @@ function plot_ia(rs, varargin)
       X  = [];
       for i = 1:s
         l    = L(:, i);
-        mval = Properties.getAbsTol();
+        mval = rs.absTol;
         mQ   = [];
         for j = 1:m
           Q  = parameters(EE(1, j));
@@ -271,7 +268,7 @@ function plot_ia(rs, varargin)
       X  = [];
       for i = 1:s
         l    = L(:, i);
-        mval = Properties.getAbsTol();
+        mval = rs.absTol;
 	mQ   = [];
         for j = 1:m
           Q  = parameters(EE(1, j));

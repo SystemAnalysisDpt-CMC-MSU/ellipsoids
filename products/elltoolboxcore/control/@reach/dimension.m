@@ -29,9 +29,6 @@ function [D, N] = dimension(rs)
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
-
-  import elltool.conf.Properties;
-
   if ~(isa(rs, 'reach'))
     error('DIMENSION: input argument must be reach set object.');
   end

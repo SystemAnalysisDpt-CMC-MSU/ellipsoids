@@ -48,11 +48,14 @@ function RS = reach(lsys, X0, L0, T, Options,varargin)
 %
 
   import elltool.conf.Properties;
+  neededPropNameList = {'absTol','relTol','nPlot2dPoints','nPlot2dPoints','nTimeGridPoints'};
+  [absTol, relTol, nPlot2dPoints,nPlot3dPoints,nTimeGridPoints] =  elltool.conf.parseProp(varargin,neededPropNameList);
   
-  neededPropNameList = {'absTol','relTol'};
-  SProp =  elltool.conf.parseProp(varargin,neededPropNameList);
-  
-  RS.properties = SProp;
+  RS.absTol = absTol;
+  RS.relTol = relTol;
+  RS.nPlot2dPoints = nPlot2dPoints;
+  RS.nPlot3dPoints = nPlot3dPoints;
+  RS.nTimeGridPoints = nTimeGridPoints;
   if isstruct(lsys) & (nargin == 1)
     RS = class(lsys, 'reach');
     return;
@@ -149,10 +152,10 @@ function RS = reach(lsys, X0, L0, T, Options,varargin)
     end
   else
     if size(T, 2) == 1
-      RS.time_values = linspace(0, T, Properties.getNTimeGridPoints());
+      RS.time_values = linspace(0, T, nTimeGridPoints());
       RS.t0          = 0;
     else
-      RS.time_values = linspace(T(1), T(2), Properties.getNTimeGridPoints());
+      RS.time_values = linspace(T(1), T(2), nTimeGridPoints());
       RS.t0          = T(1);
     end
   end
@@ -804,9 +807,9 @@ function RS = reach(lsys, X0, L0, T, Options,varargin)
                              mydata, ...
                              d1, ...
                              back, ...
-                             Options.minmaxRS.properties.absTol);
+                             Options.minmaxRS.absTol);
         elseif ~(isempty(mydata.BPB))
-          [Q, L] = eesm_de(size(tvals, 2), Q0, l0, mydata, d1, back,RS.properties.absTol);
+          [Q, L] = eesm_de(size(tvals, 2), Q0, l0, mydata, d1, back,RS.absTol);
         else
           Q = [];
           L = [];
@@ -855,9 +858,9 @@ function RS = reach(lsys, X0, L0, T, Options,varargin)
                              mydata, ...
                              d1, ...
                              back, ...
-                             Options.minmax, RS.properties.absTol);
+                             Options.minmax, RS.absTol);
         elseif ~(isempty(mydata.BPB))
-          [Q, L] = iesm_de(size(tvals, 2), Q0, l0, mydata, d1, back,RS.properties.absTol);
+          [Q, L] = iesm_de(size(tvals, 2), Q0, l0, mydata, d1, back,RS.absTol);
         else
           Q = [];
           L = [];

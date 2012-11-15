@@ -37,13 +37,17 @@ function [E] = ellipsoid(varargin)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  neededPropNameList = {'absTol','relTol'};
-  SProp =  elltool.conf.parseProp(varargin,neededPropNameList);
+  neededPropNameList = {'absTol','relTol','nPlot2dPoints','nPlot3dPoints','nTimeGridPoints'};
+  [absTol, relTol,nPlot2dPoints,nPlot3dPoints,nTimeGridPoints] =  elltool.conf.parseProp(varargin,neededPropNameList);
 
   if nargin == 0
     E.center = [];
     E.shape  = [];
-    E.properties = SProp;
+    E.absTol = absTol;
+    E.relTol = relTol;
+    E.nPlot2dPoints = nPlot2dPoints;
+    E.nPlot3dPoints = nPlot3dPoints;
+    E.nTimeGridPoints = nTimeGridPoints;
     E        = class(E, 'ellipsoid');
     return;
   end
@@ -76,7 +80,7 @@ function [E] = ellipsoid(varargin)
   mev = min(eig(Q));
   if (mev < 0)
     %tol = n * norm(Q) * eps;
-    tol = SProp.absTol;
+    tol = absTol;
     if abs(mev) > tol
       error('ELLIPSOID: shape matrix must be positive semi-definite.');
     end
@@ -87,7 +91,11 @@ function [E] = ellipsoid(varargin)
 
   E.center = q;
   E.shape  = Q; 
-  E.properties = SProp;
+  E.absTol = absTol;
+  E.relTol = relTol;
+  E.nPlot2dPoints = nPlot2dPoints;
+  E.nPlot3dPoints = nPlot3dPoints;
+  E.nTimeGridPoints = nTimeGridPoints;
   E        = class(E, 'ellipsoid');
   
   return;

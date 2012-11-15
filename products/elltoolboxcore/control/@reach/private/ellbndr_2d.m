@@ -6,7 +6,7 @@ function x = ellbndr_2d(E, N)
   import elltool.conf.Properties;
 
   if nargin < 2
-    N = Properties.getNPlot2dPoints();
+    N = getNPlot2dPoints(E);
   end
   
   phi    = linspace(0, 2*pi, N);

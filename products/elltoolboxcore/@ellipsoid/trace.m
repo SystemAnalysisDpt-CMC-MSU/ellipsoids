@@ -20,15 +20,12 @@ function T = trace(E)
 %
 %    ELLIPSOID/ELLIPSOID.
 %
-
 %
 % Author:
 % -------
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
-
-  import elltool.conf.Properties;
 
   [m, n] = size(E);
   T      = [];

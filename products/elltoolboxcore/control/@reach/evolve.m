@@ -31,9 +31,7 @@ function RS = evolve(CRS, T, lsys)
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
-
   import elltool.conf.Properties;
-
   if nargin < 2
     error('EVOLVE: insufficient number of input arguments.');
   end
@@ -91,7 +89,7 @@ function RS = evolve(CRS, T, lsys)
       RS.time_values = T(1):T(2);
     end
   else
-    RS.time_values = linspace(T(1), T(2), Properties.getNTimeGridPoints());
+    RS.time_values = linspace(T(1), T(2), CRS.nTimeGridPoints());
   end
 
   if RS.time_values(1) > RS.time_values(end)
@@ -754,9 +752,9 @@ function RS = evolve(CRS, T, lsys)
                              mydata, ...
                              d1, ...
                              back, ...
-                             Options.minmax, RS.properties.absTol);
+                             Options.minmax, RS.absTol);
         elseif ~(isempty(mydata.BPB)
-          [Q, L] = eesm_de(size(tvals, 2), Q0, l0, mydata, d1, back,RS.properties.absTol);
+          [Q, L] = eesm_de(size(tvals, 2), Q0, l0, mydata, d1, back,RS.absTol);
         else
           Q = [];
           L = [];
@@ -806,9 +804,9 @@ function RS = evolve(CRS, T, lsys)
                              mydata, ...
                              d1, ...
                              back, ...
-                             Options.minmax,RS.properties.absTol);
+                             Options.minmax,RS.absTol);
         elseif ~(isempty(mydata.BPB))
-          [Q, L] = iesm_de(size(tvals, 2), Q0, l0, mydata, d1, back,RS.properties.absTol);
+          [Q, L] = iesm_de(size(tvals, 2), Q0, l0, mydata, d1, back,RS.absTol);
         else
           Q = [];
           L = [];

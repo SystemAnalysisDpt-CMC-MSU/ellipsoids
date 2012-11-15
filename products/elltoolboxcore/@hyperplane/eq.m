@@ -86,15 +86,15 @@ function res = l_hpeq(H1, H2)
     b = -b;
     y = -y;
   end
-  if abs(a - b) > H1.properties.absTol
+  if abs(a - b) > H1.absTol
     return;
   end
-  if max(abs(x - y)) < H1.properties.absTol()
+  if max(abs(x - y)) < H1.absTol()
     res = 1;
     return;
   end
-  if a < H1.properties.absTol
-    if max(abs(x + y)) < H1.properties.absTol
+  if a < H1.absTol
+    if max(abs(x + y)) < H1.absTol
       res = 1;
     end
   end

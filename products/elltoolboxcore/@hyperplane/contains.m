@@ -71,7 +71,7 @@ function res = contains(H, X)
         for iRow = 1:nRowsH
             for jCol = 1:nColsH
                 [normVec, const] = parameters(H(iRow, jCol));
-                absTol = H(iRow, jCol).properties.absTol;
+                absTol = H(iRow, jCol).absTol;
                 xVec = X(:, iRow*jCol);
                 res(iRow,jCol) = isContain(normVec,const,xVec,absTol);
             end
@@ -81,13 +81,13 @@ function res = contains(H, X)
     for iRow = 1:nRowsH
         for jCol = 1:nColsH
             [normVec, const] = parameters(H(iRow, jCol));
-            absTol = H(iRow, jCol).properties.absTol;
+            absTol = H(iRow, jCol).absTol;
             res(iRow,jCol) = isContain(normVec,const,xVec,absTol);
         end
     end
     else
         [normVec, const] = parameters(H);
-        absTol = H(iRow, jCol).properties.absTol;
+        absTol = H(iRow, jCol).absTol;
         for i = 1:nVectors
             xVec = X(:, i);
             res(1,i) = isContain(normVec,const,xVec,absTol);

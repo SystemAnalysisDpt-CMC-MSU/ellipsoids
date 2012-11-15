@@ -31,9 +31,6 @@ function V = volume(E)
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
-
-  import elltool.conf.Properties;
-
   if ~(isa(E, 'ellipsoid'))
     error('VOLUME: input argument must be ellipsoid.');
   end

@@ -36,9 +36,6 @@ function [N, I, O, D] = dimension(lsys)
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
-
-  import elltool.conf.Properties;
-
   if ~(isa(lsys, 'linsys'))
     error('DIMENSION: input argument must be linear system object.');
   end

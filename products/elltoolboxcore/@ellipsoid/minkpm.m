@@ -79,11 +79,11 @@ function [y, Y] = minkpm(varargin)
 
   switch n
     case 2,
-      phi = linspace(0, 2*pi, Properties.getNPlot2dPoints());
+      phi = linspace(0, 2*pi, EE.nPlot2dPoints);
       L   = [cos(phi); sin(phi)];
 
     case 3,
-      M   = Properties.getNPlot3dPoints()/2;
+      M   = EE.nPlot3dPoints/2;
       N   = M/2;
       psy = linspace(0, pi, N);
       phi = linspace(0, 2*pi, M);

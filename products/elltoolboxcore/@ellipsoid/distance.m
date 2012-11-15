@@ -144,10 +144,10 @@ tic;
 [ellCenter1Vec, ellQ1Mat] = double(ellObj1);
 [ellCenter2Vec, ellQ2Mat] = double(ellObj2);
 if rank(ellQ1Mat) < size(ellQ1Mat, 2)
-    ellQ1Mat = regularize(ellQ1Mat,ellObj1.properties.absTol);
+    ellQ1Mat = regularize(ellQ1Mat,ellObj1.absTol);
 end
 if rank(ellQ2Mat) < size(ellQ2Mat, 2)
-    ellQ2Mat = regularize(ellQ2Mat,ellObj2.properties.absTol);
+    ellQ2Mat = regularize(ellQ2Mat,ellObj2.absTol);
 end
 
 %
@@ -350,8 +350,8 @@ function [distMat, timeMat] = computePointsEllDist(ellObjMat, vecArray, flag)
     for i = 1:mSize
       for j = 1:lSize
         yVec      = vecArray(:, i*j);
-        ABS_TOL = ellObjMat(i,j).properties.absTol;
-        REL_TOL = ellObjMat(i,j).properties.relTol;
+        ABS_TOL = ellObjMat(i,j).absTol;
+        REL_TOL = ellObjMat(i,j).relTol;
         [dist time] = computeEllVecDistance(ellObjMat(i,j),yVec,N_MAX_ITER,ABS_TOL,REL_TOL);
         distMat(i,j) = dist;
         timeMat(i,j) = time;
@@ -363,8 +363,8 @@ function [distMat, timeMat] = computePointsEllDist(ellObjMat, vecArray, flag)
     for i = 1:mSize
       for j = 1:lSize
        yVec=vecArray;    
-       ABS_TOL = ellObjMat(i,j).properties.absTol;
-       REL_TOL = ellObjMat(i,j).properties.relTol;
+       ABS_TOL = ellObjMat(i,j).absTol;
+       REL_TOL = ellObjMat(i,j).relTol;
        [dist time] = computeEllVecDistance(ellObjMat(i,j),yVec,N_MAX_ITER,ABS_TOL,REL_TOL);
        distMat(i,j) = dist;
        timeMat(i,j) = time;
@@ -375,8 +375,8 @@ function [distMat, timeMat] = computePointsEllDist(ellObjMat, vecArray, flag)
     timeMat=zeros(1,nVec);
     for i = 1:nVec        
       yVec= vecArray(:, i); 
-      ABS_TOL = ellObjMat.properties.absTol;
-      REL_TOL = ellObjMat.properties.relTol;
+      ABS_TOL = ellObjMat.absTol;
+      REL_TOL = ellObjMat.relTol;
       [dist time]= computeEllVecDistance(ellObjMat,yVec,N_MAX_ITER,ABS_TOL,REL_TOL);
       distMat(i) = dist;
       timeMat(i) = time;
@@ -413,7 +413,7 @@ function [distEllEll, timeOfCalculation] = l_elldist(ellObj1, ellObj2, flag)
         timeOfCalculation=zeros(mSize1,kSize1);
         for i = 1:mSize1
             for j = 1:kSize1
-                ABS_TOL = ellObj1(i,j).properties.absTol;
+                ABS_TOL = ellObj1(i,j).absTol;
                 [distEllEll(i,j) timeOfCalculation(i,j)]=...
                 computeEllEllDistance(ellObj1(i,j),ellObj2(i,j),...
                 N_MAX_ITER,ABS_TOL);
@@ -424,7 +424,7 @@ function [distEllEll, timeOfCalculation] = l_elldist(ellObj1, ellObj2, flag)
         timeOfCalculation=zeros(mSize2,kSize2);
         for i = 1:mSize1
             for j = 1:kSize1
-                ABS_TOL = ellObj1(i,j).properties.absTol;
+                ABS_TOL = ellObj1(i,j).absTol;
                 [distEllEll(i,j) timeOfCalculation(i,j)]=...
                     computeEllEllDistance(ellObj1(i,j),ellObj2,...
                     N_MAX_ITER,ABS_TOL);      
@@ -436,7 +436,7 @@ function [distEllEll, timeOfCalculation] = l_elldist(ellObj1, ellObj2, flag)
         for i = 1:mSize2
           for j = 1:kSize2
               
-            ABS_TOL = ellObj1.properties.absTol;
+            ABS_TOL = ellObj1.absTol;
             [distEllEll(mSize2,kSize2) timeOfCalculation(mSize2,kSize2)]=...
                 computeEllEllDistance(ellObj1,ellObj2(i,j),...
                 N_MAX_ITER,ABS_TOL);
@@ -625,7 +625,7 @@ function [d, status] = l_polydist(E, X)
         %[A, b] = double(X(i, j));
         [A, b] = double(X(j));
         if size(Q, 2) > rank(Q)
-          Q = regularize(Q,E(i,j).properties.absTol);
+          Q = regularize(Q,E(i,j).absTol);
         end
         Q  = ell_inv(Q);
         Q  = 0.5*(Q + Q');
@@ -644,7 +644,7 @@ function [d, status] = l_polydist(E, X)
         cvx_end
 
         d1 = f;
-        if d1 < E(i,j).properties.absTol
+        if d1 < E(i,j).absTol
           d1 = 0;
         end
         d1  = sqrt(d1);
@@ -662,7 +662,7 @@ function [d, status] = l_polydist(E, X)
       for j = 1:n
         [q, Q] = parameters(E(i, j));
         if size(Q, 2) > rank(Q)
-          Q = regularize(Q,E(i,j).properties.absTol);
+          Q = regularize(Q,E(i,j).absTol);
         end
         Q  = ell_inv(Q);
         Q  = 0.5*(Q + Q');
@@ -681,7 +681,7 @@ function [d, status] = l_polydist(E, X)
         cvx_end
 
         d1 = f;
-        if d1 < E(i,j).properties.absTol
+        if d1 < E(i,j).absTol
           d1 = 0;
         end
         d1  = sqrt(d1);
@@ -694,7 +694,7 @@ function [d, status] = l_polydist(E, X)
   else
     [q, Q] = parameters(E);
     if size(Q, 2) > rank(Q)
-      Q = regularize(Q,E.properties.absTol);
+      Q = regularize(Q,E.absTol);
     end
     Q = ell_inv(Q);
     Q = 0.5*(Q + Q');
@@ -719,7 +719,7 @@ function [d, status] = l_polydist(E, X)
         cvx_end
 
         d1 = f;
-        if d1 < E.properties.absTol
+        if d1 < E.absTol
           d1 = 0;
         end
         d1  = sqrt(d1);

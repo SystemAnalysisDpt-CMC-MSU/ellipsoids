@@ -108,10 +108,9 @@ function ls = linsys(A, B, U, G, V, C, W, D,varargin)
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
 %
-
-  import elltool.conf.Properties;
-   neededPropNameList = {'absTol','relTol'};
-  SProp =  elltool.conf.parseProp(varargin,neededPropNameList);
+   import elltool.conf.Properties;
+   neededPropNameList = {'absTol'};
+  absTol =  elltool.conf.parseProp(varargin,neededPropNameList);
   
   if nargin == 0
     ls.A              = [];
@@ -124,7 +123,7 @@ function ls = linsys(A, B, U, G, V, C, W, D,varargin)
     ls.lti            = false;
     ls.dt             = false;
     ls.constantbounds = false(1,3);
-    ls.properties = SProp;
+    ls.absTol = absTol;
     ls                = class(ls, 'linsys');
     return;
   end
@@ -296,7 +295,7 @@ function ls = linsys(A, B, U, G, V, C, W, D,varargin)
     ls.dt = true;
   end
   ls.constantbounds = [cbu cbv cbw];
-  ls.properties = SProp;
+  ls.absTol = absTol;
   ls                = class(ls, 'linsys');
 
 end
@@ -309,9 +308,7 @@ function l_check_ell_struct(E, N)
 % L_CHECK_ELL_STRUCT - checks if given structure E represents an ellipsoid
 %                      of dimension N.
 %
-
   import elltool.conf.Properties;
-
   q   = E.center;
   Q   = E.shape;
 

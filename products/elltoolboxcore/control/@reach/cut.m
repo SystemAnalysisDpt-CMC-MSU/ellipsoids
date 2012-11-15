@@ -29,9 +29,6 @@ function C = cut(rs, T)
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
-
-  import elltool.conf.Properties;
-
   if ~(isa(rs, 'reach'))
     error('CUT: first input argument must be reach set object.');
   end

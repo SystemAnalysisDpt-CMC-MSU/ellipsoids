@@ -5,7 +5,7 @@ function x = ellbndr_3d(E)
 
   import elltool.conf.Properties;
 
-  M   = Proreties.getNPlot3dPoints()/2;
+  M   = getNPlot3dPoints(E)/2;
   N   = M/2;
 
   psy = linspace(0, pi, N);

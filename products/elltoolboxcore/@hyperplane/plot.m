@@ -276,8 +276,15 @@ function figHandleVec = plot(varargin)
       set(h, 'Color', clr, 'LineWidth', Options.width(i));
     else
       e2 = U(:, 3);
-      if min(min(abs(x0))) < Properties.getAbsTol()
-        x0 = x0 + Properties.getAbsTol() * ones(3, 1);
+      [nRows, nCols] = size(hps);
+      absTolMat = zeros(nRows,nCols);
+      for iRows = 1:nRows
+          for iCols = 1:nCols
+              absTolMat(iRows,iCols) = hps(iRows,iCols).absTol;
+          end
+      end
+      if min(min(abs(x0))) < min(absTolMat(:))
+        x0 = x0 + min(absTolMat(:)) * ones(3, 1);
       end
       x3 = x0 - c*e2;
       x4 = x0 + c*e2;

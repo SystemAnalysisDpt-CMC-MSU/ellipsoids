@@ -27,9 +27,6 @@ function [v, c] = parameters(H)
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
-
-  import elltool.conf.Properties;
-
   if ~(isa(H, 'hyperplane'))
     error('PARAMETERS: input argument must be hyperplane.');
   end

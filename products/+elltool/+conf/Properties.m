@@ -49,8 +49,8 @@ classdef Properties<modgen.common.obj.StaticPropStorage
             oDESolverName = elltool.conf.Properties.getOption('ODESolverName');
         end
         %
-        function oDENormControl = getODENormControl()
-            oDENormControl = elltool.conf.Properties.getOption('ODENormControl');
+        function isODENormControl = getIsODENormControl()
+            isODENormControl = elltool.conf.Properties.getOption('isODENormControl');
         end
         %
         function isEnabled = getIsEnabledOdeSolverOptions()

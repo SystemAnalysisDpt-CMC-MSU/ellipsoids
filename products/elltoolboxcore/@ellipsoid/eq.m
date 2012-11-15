@@ -52,7 +52,7 @@ function res = eq(E1, E2)
         end
         q = E1(i, j).center - E2(i, j).center;
         Q = sqrtm(E1(i, j).shape) - sqrtm(E2(i, j).shape);
-        if (norm(q) > E1(i,j).properties.relTol) | (norm(Q) > E1(i,j).properties.relTol)
+        if (norm(q) > E1(i,j).relTol) | (norm(Q) > E1(i,j).relTol)
           r = [r 0];
         else
           r = [r 1];
@@ -70,7 +70,7 @@ function res = eq(E1, E2)
         end
         q = E1(i, j).center - E2.center;
         Q = sqrtm(E1(i, j).shape) - sqrtm(E2.shape);
-        if (norm(q) > E1(i,j).properties.relTol) | (norm(Q) > E1(i,j).properties.relTol)
+        if (norm(q) > E1(i,j).relTol) | (norm(Q) > E1(i,j).relTol)
           r = [r 0];
         else
           r = [r 1];
@@ -88,7 +88,7 @@ function res = eq(E1, E2)
         end
         q = E1.center - E2(i, j).center;
         Q = sqrtm(E1.shape) - sqrtm(E2(i, j).shape);
-        if (norm(q) > E1.properties.relTol) | (norm(Q) > E1.properties.relTol)
+        if (norm(q) > E1.relTol) | (norm(Q) > E1.relTol)
            r = [r 0];
         else
           r = [r 1];

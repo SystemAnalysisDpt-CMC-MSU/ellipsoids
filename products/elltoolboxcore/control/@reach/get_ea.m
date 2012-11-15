@@ -58,9 +58,9 @@ function [E, T] = get_ea(rs)
     ee = [];
     for j = 1:n
       q  = rs.center_values(:, j);
-      Q  = (1 + rs.properties.relTol()) * reshape(QQ(:, j), d, d);
-      if min(eig(Q)) < (- rs.properties.absTol())
-        Q = rs.properties.absTol() * eye(d);
+      Q  = (1 + rs.relTol()) * reshape(QQ(:, j), d, d);
+      if min(eig(Q)) < (- rs.absTol())
+        Q = rs.absTol() * eye(d);
       end
       ee = [ee ellipsoid(q, Q)];
     end

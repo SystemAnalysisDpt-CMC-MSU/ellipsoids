@@ -82,11 +82,11 @@ function IA = minkdiff_ia(E1, E2, L)
   q  = E1.center - E2.center;
   Q1 = E1.shape;
   if rank(Q1) < size(Q1, 1)
-    Q1 = regularize(Q1,E1.properties.absTol);
+    Q1 = regularize(Q1,E1.absTol);
   end
   Q2 = E2.shape;
   if rank(Q2) < size(Q2, 1)
-    Q2 = regularize(Q2,E2.properties.absTol);
+    Q2 = regularize(Q2,E2.absTol);
   end
   L  = rm_bad_directions(Q1, Q2, L);
   m  = size(L, 2);

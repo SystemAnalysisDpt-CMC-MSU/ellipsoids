@@ -53,7 +53,6 @@ function RRS = refine(RS, L0, Options)
 %
 
   import elltool.conf.Properties;
-
   RRS = RS(1, 1);
   if isempty(RRS)
     return;
@@ -147,9 +146,9 @@ function RRS = refine(RS, L0, Options)
                              mydata, ...
                              d1, ...
                              back, ...
-                             Options.minmax,RS.properties.absTol);
+                             Options.minmax,RS.absTol);
         elseif ~(isempty(mydata.BPB))
-          [Q, L] = eesm_de(size(tvals, 2), Q0, l0, mydata, d1, back,RS.properties.absTol);
+          [Q, L] = eesm_de(size(tvals, 2), Q0, l0, mydata, d1, back,RS.absTol);
         else
           Q = [];
           L = [];
@@ -199,9 +198,9 @@ function RRS = refine(RS, L0, Options)
                              mydata, ...
                              d1, ...
                              back, ...
-                             Options.minmax,RS.properties.absTol);
+                             Options.minmax,RS.absTol);
         elseif ~(isempty(mydata.BPB))
-          [Q, L] = iesm_de(size(tvals, 2), Q0, l0, mydata, d1, back,RS.properties.absTol);
+          [Q, L] = iesm_de(size(tvals, 2), Q0, l0, mydata, d1, back,RS.absTol);
         else
           Q = [];
           L = [];

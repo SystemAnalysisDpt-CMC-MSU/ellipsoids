@@ -1,4 +1,4 @@
-function SProp = parseProp(args,neededPropNameList)
+function varargout = parseProp(args,neededPropNameList)
 %PARSEPROP parses input into sturcture with filds from neededPropNameList
 %and values stated in args or in current Properties.
 %
@@ -14,7 +14,7 @@ function SProp = parseProp(args,neededPropNameList)
 %               relTol
 %               nTimeGridPoints
 %               ODESolverName
-%               ODENormControl
+%               isODENormControl
 %               isEnabledOdeSolverOptions
 %               nPlot2dPoints
 %               nPlot3dPoints
@@ -35,7 +35,7 @@ import elltool.conf.Properties;
 import modgen.common.throwerror;
 %
 propNamesList = {'version','isVerbose','absTol','relTol',...
-'nTimeGridPoints','ODESolverName','ODENormControl','isEnabledOdeSolverOptions',...
+'nTimeGridPoints','ODESolverName','isODENormControl','isEnabledOdeSolverOptions',...
 'nPlot2dPoints','nPlot3dPoints'};
 %
 if(isempty(neededPropNameList))    
@@ -49,7 +49,7 @@ SPreProp = struct('version',Properties.getVersion(),...
 'relTol',Properties.getRelTol(),...
 'nTimeGridPoints',Properties.getNTimeGridPoints(),...
 'ODESolverName',Properties.getODESolverName(),...
-'ODENormControl',Properties.getODENormControl,...
+'isODENormControl',Properties.getIsODENormControl,...
 'isEnabledOdeSolverOptions',Properties.getIsEnabledOdeSolverOptions(),...
 'nPlot2dPoints',Properties.getNPlot2dPoints(),...
 'nPlot3dPoints',Properties.getNPlot3dPoints());
@@ -60,18 +60,18 @@ nProp = size(neededPropNameList,2);
 [~,parsedInpList] = modgen.common.parseparams(args, neededPropNameList);
 %%
 %
-SProp = struct;
+varargout = cell(1,nProp);
 for iProp = 1:nProp
     propInd = find(strcmp(neededPropNameList(iProp),parsedInpList),1,'first');
     if ~isempty(propInd)
         propVal = parsedInpList{propInd+1};
         checkPropAndValue(propVal, neededPropNameList{iProp});
-        SProp.(neededPropNameList{iProp}) = propVal;
+        varargout{iProp} = propVal;
     else
         if ~any(strcmp(neededPropNameList(iProp),propNamesList))
             throwerror('wrongInput',[neededPropNameList{iProp},':no such property']);
         end
-        SProp.(neededPropNameList{iProp}) = SPreProp.(neededPropNameList{iProp});
+        varargout{iProp} = SPreProp.(neededPropNameList{iProp});
     end
 end
 %
@@ -83,13 +83,13 @@ isOk = true;
 switch property
     case 'version'
         isOk = isa(value, 'char');
-    case 'oDENormControl'
+    case 'isODENormControl'
         isOk = isa(value, 'char') && any(strcmp(value, {'on','off'}));
     case 'ODESolverName'
         isOk = isa(value,'char') && any(strcmp(value, {'ode45','ode23','ode113'}));
     %
     case {'isVerbose','isEnabledOdeSolverOptions'}
-        isOk = isa(value, 'boolean');
+        isOk = isa(value, 'boolean') || (value == 1) || (value == 0);
     %
     case {'absTol','relTol'}
         isOk = isa(value,'double') && (value > 0);

@@ -9,7 +9,7 @@
     <!-- -->
     <nTimeGridPoints type="double">200</nTimeGridPoints>
     <ODESolverName type="char">ode45</ODESolverName>
-    <ODENormControl type="char">on</ODENormControl>
+    <isODENormControl type="char">on</isODENormControl>
     <isEnabledOdeSolverOptions type="boolean">false</isEnabledOdeSolverOptions>
     <!-- -->
     <nPlot2dPoints type="double">200</nPlot2dPoints>

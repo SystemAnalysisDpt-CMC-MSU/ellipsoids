@@ -101,11 +101,11 @@ function [y, Y] = minkmp(varargin)
 
   switch n
     case 2,
-      phi = linspace(0, 2*pi, Properties.getNPlot2dPoints());
+      phi = linspace(0, 2*pi, E1.nPlot2dPoints);
       L   = [cos(phi); sin(phi)];
 
     case 3,
-      M   = Properties.getNPlot3dPoints()/2;
+      M   = E1.nPlot3dPoints/2;
       N   = M/2;
       psy = linspace(0, pi, N);
       phi = linspace(0, 2*pi, M);

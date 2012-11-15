@@ -69,7 +69,7 @@ cvx_begin sdp
         for i = 1:M
             [q, Q] = double(EE(i));
             if rank(Q) < mn
-                Q = regularize(Q,EE(i).properties.absTol);
+                Q = regularize(Q,EE(i).absTol);
             end
             A     = ell_inv(Q);
             b     = -A * q;
@@ -89,7 +89,7 @@ cvx_end
   end;
  
   if rank(cvxEllMat) < mn
-    cvxEllMat = regularize(cvxEllMat,Properties.getAbsTol());
+    cvxEllMat = regularize(cvxEllMat,minAbsTol(EE));
   end
 
   ellMat = cvxEllMat * cvxEllMat';

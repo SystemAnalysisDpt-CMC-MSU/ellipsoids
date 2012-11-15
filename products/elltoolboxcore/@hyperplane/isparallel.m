@@ -96,9 +96,9 @@ function res = l_hpparallel(H1, H2)
   if min(size(x) == size(y)) < 1
     return;
   end
-  if max(abs(x - y)) < H1.properties.absTol()
+  if max(abs(x - y)) < H1.absTol()
     res = 1;
-  elseif max(abs(x + y)) < H1.properties.absTol()
+  elseif max(abs(x + y)) < H1.absTol()
     res = 1;
   end
 

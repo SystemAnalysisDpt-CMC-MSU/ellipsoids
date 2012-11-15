@@ -2,10 +2,9 @@ function R = regularize(Q,absTol)
 %
 % REGULARIZE - regularization of singular symmetric matrix.
 %
-
-  import elltool.conf.Properties;
-
-  if Q ~= Q'
+    
+  isSymMat = Q ~= transpose(Q);
+  if any(isSymMat(:))
     error('REGULARIZE: matrix must be symmetric.');
   end
 

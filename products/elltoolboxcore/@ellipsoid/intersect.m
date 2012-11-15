@@ -105,17 +105,17 @@ function [res, status] = intersect(E, X, s)
 
   if s == 'u'
     [m, n] = size(E);
-    res    = (distance(E(1, 1), X) <= E(1,1).properties.absTol);
+    res    = (distance(E(1, 1), X) <= E(1,1).absTol);
     for i = 1:m
       for j = 1:n
         if (i > 1) | (j > 1)
-          res = res | (distance(E(i, j), X) <= E(i,j).properties.absTol);
+          res = res | (distance(E(i, j), X) <= E(i,j).absTol);
         end
       end
     end
     status = [];
   elseif min(size(E) == [1 1]) == 1
-    res    = (distance(E, X) <= E.properties.absTol);
+    res    = (distance(E, X) <= E.absTol);
     status = [];
   elseif isa(X, 'ellipsoid')
     dims = dimension(E);
@@ -233,7 +233,7 @@ function [res, status] = qcqp(EA, E)
       fprintf('QCQP: Warning! Degenerate ellipsoid.\n');
       fprintf('      Regularizing...\n');
     end
-    Q = regularize(Q,E(1,1).properties.absTol);
+    Q = regularize(Q,E(1,1).absTol);
   end
   Q = ell_inv(Q);
   Q = 0.5*(Q + Q');
@@ -251,7 +251,7 @@ function [res, status] = qcqp(EA, E)
             for j = 1:n
                 [q, Q] = parameters(EA(i, j));
                 if size(Q, 2) > rank(Q)
-                    Q = regularize(Q,E(i,j).properties.absTol);
+                    Q = regularize(Q,E(i,j).absTol);
                 end
                 Q = ell_inv(Q);
                 Q = 0.5*(Q + Q');
@@ -264,7 +264,7 @@ function [res, status] = qcqp(EA, E)
       res = -1;
       return;
   end;
-  if x'*QQ*x + 2*(-QQ*qq)'*x + (qq'*QQ*qq - 1) <= Properties.getAbsTol()
+  if x'*QQ*x + 2*(-QQ*qq)'*x + (qq'*QQ*qq - 1) <= minAbsTol(EA)
       res = 1;
   else
       res = 0;
@@ -305,7 +305,7 @@ function [res, status] = lqcqp(EA, H)
             for j = 1:n
                 [q, Q] = parameters(EA(i, j));
                 if size(Q, 2) > rank(Q)
-                    Q = regularize(Q,EA(i,j).properties.absTol);
+                    Q = regularize(Q,EA(i,j).absTol);
                 end
                 Q  = ell_inv(Q);
                 x'*Q*x - 2*q'*Q*x + (q'*Q*q - 1) <= 0;
@@ -319,7 +319,7 @@ function [res, status] = lqcqp(EA, H)
   end;
   
   
-  if abs(v'*x - c) <= Properties.getAbsTol()
+  if abs(v'*x - c) <= minAbsTol(EA)
       res = 1;
   else
       res = 0;
@@ -352,7 +352,7 @@ function [res, status] = lqcqp2(EA, P)
             for j = 1:n
                 [q, Q] = parameters(EA(i, j));
                 if size(Q, 2) > rank(Q)
-                    Q = regularize(Q,EA(i,j).properties.absTol);
+                    Q = regularize(Q,EA(i,j).absTol);
                 end
                 Q  = ell_inv(Q);
                 Q  = 0.5*(Q + Q');
@@ -369,7 +369,7 @@ end;
       res = -1;
       return;
   end;
-  if A(1, :)*x <= Properties.getAbsTol()
+  if A(1, :)*x <= minAbsTol(EA)
       res = 1;
   else
       res = 0;
