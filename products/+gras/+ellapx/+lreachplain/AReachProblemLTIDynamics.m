@@ -1,38 +1,5 @@
 classdef AReachProblemLTIDynamics<...
-        gras.ellapx.lreachplain.IReachProblemDynamics
-    properties (Access=protected)
-        problemDef
-        AtDynamics
-        BptDynamics
-        BPBTransDynamics
-        xtSpline
-        Xtt0Spline
-        timeVec
-    end
-    properties (Constant,GetAccess=protected)
-        ODE_NORM_CONTROL='on';
-        N_TIME_POINTS=1000;
-    end
-    methods
-        function BPBTransDynamics=getBPBTransDynamics(self)
-            BPBTransDynamics=self.BPBTransDynamics;
-        end
-        function AtDynamics=getAtDynamics(self)
-            AtDynamics=self.AtDynamics;
-        end
-        function BptDynamics=getBptDynamics(self)
-            BptDynamics=self.BptDynamics;
-        end
-        function xtDynamics=getxtDynamics(self)
-            xtDynamics=self.xtSpline;
-        end
-        function Xtt0Dynamics=getXtt0Dynamics(self)
-            Xtt0Dynamics=self.Xtt0Spline;
-        end
-        function timeVec=getTimeVec(self)
-            timeVec=self.timeVec;
-        end
-    end
+        gras.ellapx.lreachplain.AReachProblemDynamics
     methods
         function self=AReachProblemLTIDynamics(problemDef,calcPrecision)
             %
@@ -71,7 +38,7 @@ classdef AReachProblemLTIDynamics<...
                 t = self.timeVec(iTimePoint)-t0;
                 data_Xtt0(:,:,iTimePoint) = expm(AMat*t);
             end
-            self.Xtt0Spline=MatrixInterpolantFactory.createInstance(...
+            self.Xtt0Dynamics=MatrixInterpolantFactory.createInstance(...
                 'column',data_Xtt0,self.timeVec);
         end
     end

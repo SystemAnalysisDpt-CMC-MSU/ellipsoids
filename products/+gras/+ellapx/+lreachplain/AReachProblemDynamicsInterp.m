@@ -1,38 +1,5 @@
 classdef AReachProblemDynamicsInterp<...
-        gras.ellapx.lreachplain.IReachProblemDynamics
-    properties (Access=protected)
-        problemDef
-        AtSpline
-        BptSpline
-        xtSpline
-        BPBTransSpline
-        Xtt0Spline
-        timeVec
-    end
-    properties (Constant,GetAccess=protected)
-        N_TIME_POINTS=1000;
-        ODE_NORM_CONTROL='on';
-    end
-    methods
-        function BPBTransDynamics=getBPBTransDynamics(self)
-            BPBTransDynamics=self.BPBTransSpline;
-        end
-        function AtDynamics=getAtDynamics(self)
-            AtDynamics=self.AtSpline;
-        end
-        function BptDynamics=getBptDynamics(self)
-            BptDynamics=self.BptSpline;
-        end
-        function xtDynamics=getxtDynamics(self)
-            xtDynamics=self.xtSpline;
-        end
-        function Xtt0Dynamics=getXtt0Dynamics(self)
-            Xtt0Dynamics=self.Xtt0Spline;
-        end
-        function timeVec=getTimeVec(self)
-            timeVec=self.timeVec;
-        end
-    end
+        gras.ellapx.lreachplain.AReachProblemDynamics
     methods
         function self=AReachProblemDynamicsInterp(problemDef,calcPrecision)
             import gras.ellapx.common.*;
@@ -71,21 +38,21 @@ classdef AReachProblemDynamicsInterp<...
             [timeXtt0Vec,data_Xtt0]=solverObj.solve(Xtt0DerivFunc,...
                 self.timeVec,Xtt0InitialMat);
             %
-            self.Xtt0Spline=MatrixInterpolantFactory.createInstance(...
+            self.Xtt0Dynamics=MatrixInterpolantFactory.createInstance(...
                 'column',data_Xtt0,timeXtt0Vec);
             %
             % compute A(t)
             %
-            self.AtSpline=MatrixSymbInterpFactory.single(AtDefMat);
+            self.AtDynamics=MatrixSymbInterpFactory.single(AtDefMat);
             %
             % compute B(t)P(t)B'(t)
             %
-            self.BPBTransSpline=MatrixSymbInterpFactory.rMultiply(...
+            self.BPBTransDynamics=MatrixSymbInterpFactory.rMultiply(...
                 BtDefMat,PtDefMat,BtDefMat.');
             %
             % compute B(t)p(t)
             %
-            self.BptSpline=MatrixSymbInterpFactory.rMultiplyByVec(...
+            self.BptDynamics=MatrixSymbInterpFactory.rMultiplyByVec(...
                 BtDefMat,ptDefVec);
         end
     end

@@ -46,7 +46,7 @@ classdef ATightIntEllApxBuilder<gras.ellapx.lreachplain.ATightEllApxBuilder
         function self=prepareODEData(self)
             %ODE is solved on time span [tau0, tau1]\in[t0,t1]
             import gras.interp.MatrixInterpolantFactory;
-            import gras.mat.MatrixSFSqrtm;
+            import gras.mat.symb.MatrixSFSqrtm;
             pDefObj=self.getProblemDef();
             nGoodDirs=self.getNGoodDirs();
             timeVec=pDefObj.getTimeVec;

@@ -1,17 +1,7 @@
 classdef LReachProblemLTIDynamics<...
         gras.ellapx.lreachplain.AReachProblemLTIDynamics & ...
-        gras.ellapx.lreachuncert.IReachProblemDynamics
-    properties (Access=protected)
-        CQCTransDynamics
-        CqtDynamics
-    end
+        gras.ellapx.lreachuncert.AReachProblemDynamics
     methods
-        function CqtDynamics=getCqtDynamics(self)
-            CqtDynamics=self.CqtDynamics;
-        end
-        function CQCTransDynamics=getCQCTransDynamics(self)
-            CQCTransDynamics=self.CQCTransDynamics;
-        end
         function self=LReachProblemLTIDynamics(problemDef,calcPrecision)
             import gras.interp.MatrixInterpolantFactory;
             import gras.gen.MatVector;
@@ -59,7 +49,7 @@ classdef LReachProblemLTIDynamics<...
             [timeXtVec,xtArray]=solverObj.solve(xtDerivFunc,...
                 self.timeVec,x0Vec);
             %
-            self.xtSpline=MatrixInterpolantFactory.createInstance(...
+            self.xtDynamics=MatrixInterpolantFactory.createInstance(...
                 'column',xtArray,timeXtVec);
         end
     end

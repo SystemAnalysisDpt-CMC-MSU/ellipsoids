@@ -1,17 +1,7 @@
 classdef LReachProblemDynamicsInterp<...
         gras.ellapx.lreachplain.AReachProblemDynamicsInterp & ...
-        gras.ellapx.lreachuncert.IReachProblemDynamics
-    properties (Access=protected)
-        CQCTransSpline
-        CqtSpline
-    end
+        gras.ellapx.lreachuncert.AReachProblemDynamics
     methods
-        function CqtDynamics=getCqtDynamics(self)
-            CqtDynamics=self.CqtSpline;
-        end
-        function CQCTransDynamics=getCQCTransDynamics(self)
-            CQCTransDynamics=self.CQCTransSpline;
-        end
         function self=LReachProblemDynamicsInterp(problemDef,calcPrecision)
             import gras.ellapx.common.*;
             import gras.interp.MatrixInterpolantFactory;
@@ -39,12 +29,12 @@ classdef LReachProblemDynamicsInterp<...
             %
             % compute C(t)Q(t)C'(t)
             %
-            self.CQCTransSpline=MatrixSymbInterpFactory.rMultiply(...
+            self.CQCTransDynamics=MatrixSymbInterpFactory.rMultiply(...
                 CtDefMat,QCMat,CtDefMat.');
             %
             % compute C(t)q(t)
             %
-            self.CqtSpline=MatrixSymbInterpFactory.rMultiplyByVec(...
+            self.CqtDynamics=MatrixSymbInterpFactory.rMultiplyByVec(...
                 CtDefMat,qCVec);
             %
             % compute x(t)
@@ -53,13 +43,13 @@ classdef LReachProblemDynamicsInterp<...
                 calcPrecision,'AbsTol',calcPrecision};
             solverObj=MatrixODESolver(sysDim,@ode45,odeArgList{:});
             %
-            xtDerivFunc = @(t,x) self.AtSpline.evaluate(t)*x+...
-                self.BptSpline.evaluate(t)+self.CqtSpline.evaluate(t);
+            xtDerivFunc = @(t,x) self.AtDynamics.evaluate(t)*x+...
+                self.BptDynamics.evaluate(t)+self.CqtDynamics.evaluate(t);
             %
             [timeXtVec,xtArray]=solverObj.solve(xtDerivFunc,...
                 self.timeVec,x0DefVec);
             %
-            self.xtSpline=MatrixInterpolantFactory.createInstance(...
+            self.xtDynamics=MatrixInterpolantFactory.createInstance(...
                 'column',xtArray,timeXtVec);
         end
     end

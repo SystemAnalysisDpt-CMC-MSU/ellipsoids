@@ -10,9 +10,6 @@ classdef LReachProblemDefInterp<handle
         function BPBTransSpline=getBPBTransSpline(self)
             BPBTransSpline=self.pDynObj.getBPBTransDynamics();
         end
-        %function timeVec=getTimeVec(self)
-        %   timeVec=pDefObj.timeVec;
-        %end
         function AtSpline=getAtSpline(self)
             AtSpline=self.pDynObj.getAtDynamics();
         end
@@ -50,13 +47,18 @@ classdef LReachProblemDefInterp<handle
             %
             import gras.ellapx.lreachplain.LReachProblemDynamicsFactory;
             import gras.ellapx.lreachplain.LReachContProblemDef;
+            import gras.ellapx.lreachplain.ReachContLTIProblemDef;
             %
             if nargin == 0
                 % called from subclass
             else
-                %
-                self.pDefObj = LReachContProblemDef(AtDefMat,BtDefMat,...
-                    PtDefMat,ptDefVec,X0DefMat,x0DefVec,tLims);
+                try
+                    self.pDefObj = ReachContLTIProblemDef(AtDefMat,BtDefMat,...
+                        PtDefMat,ptDefVec,X0DefMat,x0DefVec,tLims);
+                catch error
+                    self.pDefObj = LReachContProblemDef(AtDefMat,BtDefMat,...
+                        PtDefMat,ptDefVec,X0DefMat,x0DefVec,tLims);
+                end
                 %
                 self.pDynObj = LReachProblemDynamicsFactory.create(...
                     self.pDefObj,calcPrecision);
