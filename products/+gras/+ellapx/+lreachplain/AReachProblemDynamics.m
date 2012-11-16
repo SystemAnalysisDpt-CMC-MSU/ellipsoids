@@ -5,9 +5,11 @@ classdef AReachProblemDynamics<...
         AtDynamics
         BptDynamics
         BPBTransDynamics
-        xtDynamics
         Xtt0Dynamics
         timeVec
+    end
+    properties (Abstract,Access=protected)
+        xtDynamics
     end
     properties (Constant,GetAccess=protected)
         N_TIME_POINTS=1000;
@@ -32,5 +34,8 @@ classdef AReachProblemDynamics<...
         function timeVec=getTimeVec(self)
             timeVec=self.timeVec;
         end
+        function problemDef=getProblemDef(self)
+            problemDef=self.problemDef;
+        end        
     end
 end

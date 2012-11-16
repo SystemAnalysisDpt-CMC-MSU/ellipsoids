@@ -11,4 +11,7 @@ classdef IReachContProblemDef<handle
         pCVec=getpCVec(self)
         pCMat=getPCMat(self)
     end
+    methods(Abstract,Static)
+        isOk=isCompatible(self)
+    end
 end

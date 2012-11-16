@@ -1,6 +1,9 @@
 classdef LReachProblemDynamicsInterp<...
         gras.ellapx.lreachplain.AReachProblemDynamicsInterp & ...
         gras.ellapx.lreachuncert.AReachProblemDynamics
+    properties (Access=protected)
+        xtDynamics
+    end
     methods
         function self=LReachProblemDynamicsInterp(problemDef,calcPrecision)
             import gras.ellapx.common.*;

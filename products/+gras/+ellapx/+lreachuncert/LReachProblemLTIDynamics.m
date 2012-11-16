@@ -1,6 +1,9 @@
 classdef LReachProblemLTIDynamics<...
         gras.ellapx.lreachplain.AReachProblemLTIDynamics & ...
         gras.ellapx.lreachuncert.AReachProblemDynamics
+    properties (Access=protected)
+        xtDynamics
+    end
     methods
         function self=LReachProblemLTIDynamics(problemDef,calcPrecision)
             import gras.interp.MatrixInterpolantFactory;

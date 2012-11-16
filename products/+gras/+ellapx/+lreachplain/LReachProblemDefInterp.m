@@ -46,22 +46,14 @@ classdef LReachProblemDefInterp<handle
                 PtDefMat,ptDefVec,X0DefMat,x0DefVec,tLims,calcPrecision)
             %
             import gras.ellapx.lreachplain.LReachProblemDynamicsFactory;
-            import gras.ellapx.lreachplain.LReachContProblemDef;
-            import gras.ellapx.lreachplain.ReachContLTIProblemDef;
             %
             if nargin == 0
                 % called from subclass
             else
-                try
-                    self.pDefObj = ReachContLTIProblemDef(AtDefMat,BtDefMat,...
-                        PtDefMat,ptDefVec,X0DefMat,x0DefVec,tLims);
-                catch error
-                    self.pDefObj = LReachContProblemDef(AtDefMat,BtDefMat,...
-                        PtDefMat,ptDefVec,X0DefMat,x0DefVec,tLims);
-                end
-                %
-                self.pDynObj = LReachProblemDynamicsFactory.create(...
-                    self.pDefObj,calcPrecision);
+                self.pDynObj = LReachProblemDynamicsFactory.createByParams(...
+                    AtDefMat,BtDefMat,PtDefMat,ptDefVec,X0DefMat,...
+                    x0DefVec,tLims,calcPrecision);
+                self.pDefObj = self.pDynObj.getProblemDef();
             end
         end
     end

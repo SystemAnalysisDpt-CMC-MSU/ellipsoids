@@ -12,23 +12,13 @@ classdef LReachProblemDefInterp<...
                 X0DefMat,x0DefVec,tLims,calcPrecision)
             %
             import gras.ellapx.lreachuncert.LReachProblemDynamicsFactory;
-            import gras.ellapx.lreachuncert.LReachContProblemDef;
-            import gras.ellapx.lreachuncert.ReachContLTIProblemDef;
             %
             self = self@gras.ellapx.lreachplain.LReachProblemDefInterp();
             %
-            try
-                self.pDefObj = ReachContLTIProblemDef(AtDefMat,BtDefMat,...
-                    PtDefMat,ptDefVec,CtDefMat,QtDefMat,qtDefVec,...
-                    X0DefMat,x0DefVec,tLims);
-            catch error
-                self.pDefObj = LReachContProblemDef(AtDefMat,BtDefMat,...
-                    PtDefMat,ptDefVec,CtDefMat,QtDefMat,qtDefVec,...
-                    X0DefMat,x0DefVec,tLims);
-            end
-            %
-            self.pDynObj = LReachProblemDynamicsFactory.create(...
-                self.pDefObj,calcPrecision);
+            self.pDynObj = LReachProblemDynamicsFactory.createByParams(...
+                AtDefMat,BtDefMat,PtDefMat,ptDefVec,CtDefMat,QtDefMat,...
+                qtDefVec,X0DefMat,x0DefVec,tLims,calcPrecision);
+            self.pDefObj = self.pDynObj.getProblemDef();
         end
     end
 end
