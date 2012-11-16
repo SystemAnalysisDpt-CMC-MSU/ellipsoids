@@ -34,6 +34,24 @@ classdef AReachProblemDynamics<...
         function timeVec=getTimeVec(self)
             timeVec=self.timeVec;
         end
+        function X0Mat=getX0Mat(self)
+            X0Mat=self.problemDef.getX0Mat();
+        end
+        function x0Vec=getx0Vec(self)
+            x0Vec=self.problemDef.getx0Vec();
+        end
+        function tLims=getTimeLimsVec(self)
+            tLims=self.problemDef.getTimeLimsVec();
+        end
+        function t0=gett0(self)
+            t0=self.problemDef.gett0();
+        end
+        function t1=gett1(self)
+            t1=self.problemDef.gett1();
+        end
+        function sysDim=getDimensionality(self)
+            sysDim=self.problemDef.getDimensionality();
+        end        
         function problemDef=getProblemDef(self)
             problemDef=self.problemDef;
         end        

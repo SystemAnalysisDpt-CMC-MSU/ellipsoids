@@ -7,5 +7,11 @@ classdef IReachProblemDynamics<handle
         Xtt0Dynamics=getXtt0Dynamics(self)
         problemDef=getProblemDef(self)
         timeVec=getTimeVec(self)
+        X0Mat=getX0Mat(self)
+        x0Vec=getx0Vec(self)
+        timeLimsVec=getTimeLimsVec(self)
+        t0=gett0(self)
+        t1=gett1(self)
+        sysDim=getDimensionality(self)        
     end
 end

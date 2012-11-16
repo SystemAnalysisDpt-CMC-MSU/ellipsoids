@@ -47,7 +47,7 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.IEllApxBuilder
             import gras.ellapx.gen.ATightEllApxBuilder;
             import modgen.common.throwerror;
             if ~isa(pDefObj,...
-                    'gras.ellapx.lreachplain.LReachProblemDefInterp')
+                    'gras.ellapx.lreachplain.IReachProblemDynamics')
                 throwerror('wrongInput','incorrect type of pDefObj');
             end
             sTime=goodDirSetObj.getsTime();

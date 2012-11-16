@@ -62,7 +62,7 @@ classdef ATightIntEllApxBuilder<gras.ellapx.lreachplain.ATightEllApxBuilder
             end
             self.ltSplineList=ltSplineList;
             self.BPBTransSqrtSpline=MatrixSFSqrtm(...
-                self.getProblemDef().getBPBTransSpline());
+                self.getProblemDef().getBPBTransDynamics());
         end
     end
     methods
