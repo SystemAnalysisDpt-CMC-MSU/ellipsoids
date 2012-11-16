@@ -225,7 +225,15 @@ classdef EllipsoidTestCase < mlunitext.test_case
             testHyp=hyperplane(testHypVVec,testHypC);
             testRes=distance(testEllipsoid,testHyp);
             mlunit.assert_equals(1,abs(testRes(1)-7)<ellOptions.abs_tol&&...
-                abs(testRes(2)-5)<ellOptions.abs_tol);          
+                abs(testRes(2)-5)<ellOptions.abs_tol);   
+            
+            %distance where two ellipsoids have one common point 
+            % according to existing precision policy ellOptions.abs_tol
+            testEll1=ellipsoid([1+1e-20 0].',[1 0; 0 1]);
+            testEll2=ellipsoid([-1 0].',[1 0;0 1]);
+            testRes=distance(testEll1,testEll2);
+            mlunit.assert_equals(1,abs(testRes)<ellOptions.abs_tol);   
+            
         end
     end
 end
