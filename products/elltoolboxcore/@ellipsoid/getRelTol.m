@@ -1,2 +1,8 @@
-function res = getRelTol(E)
-res = E.relTol;
+function res = getRelTol(ellMat)
+[nRows, nCols] = size(ellMat);
+res = zeros(nRows,nCols);
+for iRows = 1:nRows
+    for jCols = 1:nCols
+        res(iRows,jCols) = ellMat(iRows,jCols).relTol;
+    end
+end

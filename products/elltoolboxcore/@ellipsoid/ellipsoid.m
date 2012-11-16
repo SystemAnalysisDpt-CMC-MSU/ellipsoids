@@ -37,8 +37,8 @@ function [E] = ellipsoid(varargin)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  neededPropNameList = {'absTol','relTol','nPlot2dPoints','nPlot3dPoints','nTimeGridPoints'};
-  [absTol, relTol,nPlot2dPoints,nPlot3dPoints,nTimeGridPoints] =  elltool.conf.parseProp(varargin,neededPropNameList);
+  neededPropNameList = {'absTol','relTol','nPlot2dPoints','nPlot3dPoints'};
+  [absTol, relTol,nPlot2dPoints,nPlot3dPoints] =  elltool.conf.parseProp(varargin,neededPropNameList);
 
   if nargin == 0
     E.center = [];
@@ -47,7 +47,6 @@ function [E] = ellipsoid(varargin)
     E.relTol = relTol;
     E.nPlot2dPoints = nPlot2dPoints;
     E.nPlot3dPoints = nPlot3dPoints;
-    E.nTimeGridPoints = nTimeGridPoints;
     E        = class(E, 'ellipsoid');
     return;
   end
@@ -95,7 +94,6 @@ function [E] = ellipsoid(varargin)
   E.relTol = relTol;
   E.nPlot2dPoints = nPlot2dPoints;
   E.nPlot3dPoints = nPlot3dPoints;
-  E.nTimeGridPoints = nTimeGridPoints;
   E        = class(E, 'ellipsoid');
   
   return;

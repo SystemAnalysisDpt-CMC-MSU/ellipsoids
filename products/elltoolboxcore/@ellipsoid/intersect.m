@@ -102,14 +102,14 @@ function [res, status] = intersect(E, X, s)
   if (nargin < 3) | ~(ischar(s))
     s = 'u';
   end
-
+  absTolMat = getAbsTol(E);
   if s == 'u'
     [m, n] = size(E);
-    res    = (distance(E(1, 1), X) <= E(1,1).absTol);
+    res    = (distance(E(1, 1), X) <= absTolMat(1,1));
     for i = 1:m
       for j = 1:n
         if (i > 1) | (j > 1)
-          res = res | (distance(E(i, j), X) <= E(i,j).absTol);
+          res = res | (distance(E(i, j), X) <= absTolMat(i,j));
         end
       end
     end
@@ -228,12 +228,13 @@ function [res, status] = qcqp(EA, E)
   import elltool.conf.Properties;
   status = 1;
   [q, Q] = parameters(E(1, 1));
+  
   if size(Q, 2) > rank(Q)
     if Properties.getIsVerbose()
       fprintf('QCQP: Warning! Degenerate ellipsoid.\n');
       fprintf('      Regularizing...\n');
     end
-    Q = regularize(Q,E(1,1).absTol);
+    Q = regularize(Q,getAbsTol(E(1,1)));
   end
   Q = ell_inv(Q);
   Q = 0.5*(Q + Q');
@@ -243,6 +244,7 @@ function [res, status] = qcqp(EA, E)
   [m, n] = size(EA);
 
 
+  absTolMat = getAbsTol(EA);
   cvx_begin sdp
     variable x(length(Q), 1)
     minimize(x'*Q*x + 2*(-Q*q)'*x + (q'*Q*q - 1))
@@ -251,7 +253,7 @@ function [res, status] = qcqp(EA, E)
             for j = 1:n
                 [q, Q] = parameters(EA(i, j));
                 if size(Q, 2) > rank(Q)
-                    Q = regularize(Q,E(i,j).absTol);
+                    Q = regularize(Q,absTolMat);
                 end
                 Q = ell_inv(Q);
                 Q = 0.5*(Q + Q');
@@ -264,7 +266,7 @@ function [res, status] = qcqp(EA, E)
       res = -1;
       return;
   end;
-  if x'*QQ*x + 2*(-QQ*qq)'*x + (qq'*QQ*qq - 1) <= minAbsTol(EA)
+  if x'*QQ*x + 2*(-QQ*qq)'*x + (qq'*QQ*qq - 1) <= min(getAbsTol(EA(:)))
       res = 1;
   else
       res = 0;
@@ -296,7 +298,8 @@ function [res, status] = lqcqp(EA, H)
   %cvx
   [m, n] = size(EA);
 
-
+  
+  absTolMat = getAbsTol(EA);
   cvx_begin sdp
     variable x(size(v, 1), 1)
     minimize(abs(v'*x - c))
@@ -305,7 +308,7 @@ function [res, status] = lqcqp(EA, H)
             for j = 1:n
                 [q, Q] = parameters(EA(i, j));
                 if size(Q, 2) > rank(Q)
-                    Q = regularize(Q,EA(i,j).absTol);
+                    Q = regularize(Q,absTolMat(i,j));
                 end
                 Q  = ell_inv(Q);
                 x'*Q*x - 2*q'*Q*x + (q'*Q*q - 1) <= 0;
@@ -319,7 +322,7 @@ function [res, status] = lqcqp(EA, H)
   end;
   
   
-  if abs(v'*x - c) <= minAbsTol(EA)
+  if abs(v'*x - c) <= min(getAbsTol(EA(:)))
       res = 1;
   else
       res = 0;
@@ -344,6 +347,7 @@ function [res, status] = lqcqp2(EA, P)
   [A, b] = double(P);
   [m, n] = size(EA);
   
+  absTolMat = getAbsTol(EA);
   cvx_begin sdp
     variable x(size(A, 2), 1)
     minimize(A(1, :)*x)
@@ -352,7 +356,7 @@ function [res, status] = lqcqp2(EA, P)
             for j = 1:n
                 [q, Q] = parameters(EA(i, j));
                 if size(Q, 2) > rank(Q)
-                    Q = regularize(Q,EA(i,j).absTol);
+                    Q = regularize(Q,absTolMat(i,j));
                 end
                 Q  = ell_inv(Q);
                 Q  = 0.5*(Q + Q');
@@ -369,7 +373,7 @@ end;
       res = -1;
       return;
   end;
-  if A(1, :)*x <= minAbsTol(EA)
+  if A(1, :)*x <= min(getAbsTol(EA(:)))
       res = 1;
   else
       res = 0;

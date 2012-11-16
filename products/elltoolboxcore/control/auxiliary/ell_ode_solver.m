@@ -4,6 +4,8 @@ function [tt, xx] = ell_ode_solver(fn, t, x0, varargin)
 %
 
   import elltool.conf.Properties;
+  INIT_STEP_EXCLUSION_ODE_SOLVER='ode23';
+  
   if Properties.getIsODENormControl()
       normControl = 'on';
   else
@@ -15,7 +17,6 @@ function [tt, xx] = ell_ode_solver(fn, t, x0, varargin)
 
   solverName = Properties.getODESolverName();
   
-  INIT_STEP_EXCLUSION_ODE_SOLVER='ode23';
   if strcmp(solverName,INIT_STEP_EXCLUSION_ODE_SOLVER)
       odeset(opt, 'InitialStep', abs(t(1)-t(2))/2);
   end

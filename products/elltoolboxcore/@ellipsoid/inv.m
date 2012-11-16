@@ -36,10 +36,11 @@ function I = inv(E)
   I      = E;
   [m, n] = size(I);
 
+  absTolMat = getAbsTol(I);
   for i = 1:m
     for j = 1:n
       if isdegenerate(I(i, j))
-        Q = regularize(I(i, j).shape,I(i,j).absTol);
+        Q = regularize(I(i, j).shape,absTolMat(i,j));
       else
         Q = I(i, j).shape;
       end

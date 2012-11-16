@@ -343,15 +343,17 @@ function [distMat, timeMat] = computePointsEllDist(ellObjMat, vecArray, flag)
   end
 %
 %  
-  N_MAX_ITER=50;    
+  N_MAX_ITER=50;   
+  absTolMat = getAbsTol(ellObjMat);
+  relTolMat = getRelTol(ellObjMat);
   if (nEllObj > 1) && (nEllObj == nVec)
     distMat=zeros(mSize,lSize);
     timeMat=zeros(mSize,lSize);
     for i = 1:mSize
       for j = 1:lSize
         yVec      = vecArray(:, i*j);
-        ABS_TOL = ellObjMat(i,j).absTol;
-        REL_TOL = ellObjMat(i,j).relTol;
+        ABS_TOL = absTolMat(i,j);
+        REL_TOL = relTolMat(i,j);
         [dist time] = computeEllVecDistance(ellObjMat(i,j),yVec,N_MAX_ITER,ABS_TOL,REL_TOL);
         distMat(i,j) = dist;
         timeMat(i,j) = time;
@@ -363,8 +365,8 @@ function [distMat, timeMat] = computePointsEllDist(ellObjMat, vecArray, flag)
     for i = 1:mSize
       for j = 1:lSize
        yVec=vecArray;    
-       ABS_TOL = ellObjMat(i,j).absTol;
-       REL_TOL = ellObjMat(i,j).relTol;
+        ABS_TOL = absTolMat(i,j);
+        REL_TOL = relTolMat(i,j);
        [dist time] = computeEllVecDistance(ellObjMat(i,j),yVec,N_MAX_ITER,ABS_TOL,REL_TOL);
        distMat(i,j) = dist;
        timeMat(i,j) = time;
@@ -408,12 +410,13 @@ function [distEllEll, timeOfCalculation] = l_elldist(ellObj1, ellObj2, flag)
         end
     end
     N_MAX_ITER=10000;
+    absTolMat = getAbsTol(ellObj1);
     if (nEllObj1 > 1) && (nEllObj2 > 1)
         distEllEll=zeros(mSize1,kSize1);  
         timeOfCalculation=zeros(mSize1,kSize1);
         for i = 1:mSize1
             for j = 1:kSize1
-                ABS_TOL = ellObj1(i,j).absTol;
+                ABS_TOL = absTolMat(i,j);
                 [distEllEll(i,j) timeOfCalculation(i,j)]=...
                 computeEllEllDistance(ellObj1(i,j),ellObj2(i,j),...
                 N_MAX_ITER,ABS_TOL);
@@ -424,7 +427,7 @@ function [distEllEll, timeOfCalculation] = l_elldist(ellObj1, ellObj2, flag)
         timeOfCalculation=zeros(mSize2,kSize2);
         for i = 1:mSize1
             for j = 1:kSize1
-                ABS_TOL = ellObj1(i,j).absTol;
+                ABS_TOL = absTolMat(i,j);
                 [distEllEll(i,j) timeOfCalculation(i,j)]=...
                     computeEllEllDistance(ellObj1(i,j),ellObj2,...
                     N_MAX_ITER,ABS_TOL);      
@@ -613,7 +616,8 @@ function [d, status] = l_polydist(E, X)
     end
     fprintf('Invoking CVX...\n');
   end
-
+  
+  absTolMat = getAbsTol(E);
   d      = [];
   status = [];
   if (t1 > 1) & (t2 > 1)
@@ -625,7 +629,7 @@ function [d, status] = l_polydist(E, X)
         %[A, b] = double(X(i, j));
         [A, b] = double(X(j));
         if size(Q, 2) > rank(Q)
-          Q = regularize(Q,E(i,j).absTol);
+          Q = regularize(Q,absTolMat(i,j));
         end
         Q  = ell_inv(Q);
         Q  = 0.5*(Q + Q');
@@ -644,7 +648,7 @@ function [d, status] = l_polydist(E, X)
         cvx_end
 
         d1 = f;
-        if d1 < E(i,j).absTol
+        if d1 <absTolMat(i,j)
           d1 = 0;
         end
         d1  = sqrt(d1);
@@ -662,7 +666,7 @@ function [d, status] = l_polydist(E, X)
       for j = 1:n
         [q, Q] = parameters(E(i, j));
         if size(Q, 2) > rank(Q)
-          Q = regularize(Q,E(i,j).absTol);
+          Q = regularize(Q,absTolMat(i,j));
         end
         Q  = ell_inv(Q);
         Q  = 0.5*(Q + Q');
@@ -681,7 +685,7 @@ function [d, status] = l_polydist(E, X)
         cvx_end
 
         d1 = f;
-        if d1 < E(i,j).absTol
+        if d1 < absTolMat(i,j)
           d1 = 0;
         end
         d1  = sqrt(d1);

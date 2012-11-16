@@ -58,7 +58,7 @@ function [E, S] = ellunion_ea(EE)
   end
   
 
-
+absTolVec = getAbsTol(EE);
 cvx_begin sdp
     variable cvxEllMat(mn,mn) symmetric
     variable cvxEllCenterVec(mn)
@@ -70,7 +70,7 @@ cvx_begin sdp
             [q, Q] = double(EE(i));
             Q = (Q + Q')*0.5;
             if rank(Q) < mn
-                Q = regularize(Q,EE(i).absTol);
+                Q = regularize(Q,absTolVec(i));
             end
     
             Q     = inv(Q);

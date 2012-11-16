@@ -74,6 +74,7 @@ function EA = minksum_ea(E, L)
   end
 
   EA = [];
+  absTolMat = getAbsTol(E);
   for ii = 1:d
     l = L(:, ii);
     for i = 1:m
@@ -84,7 +85,7 @@ function EA = minksum_ea(E, L)
             fprintf('MINKSUM_EA: Warning! Degenerate ellipsoid.\n');
             fprintf('            Regularizing...\n');
           end
-          Q = regularize(Q,E(i,j).absTol);
+          Q = regularize(Q,absTolMat(i,j));
         end
   
         p = sqrt(l'*Q*l);

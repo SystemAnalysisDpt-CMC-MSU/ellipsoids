@@ -190,14 +190,15 @@ function [res, status] = qcqp(EA, E)
 %
 
   import elltool.conf.Properties;
-
+  
+  absTolMat = getAbsTol(E);
   [q, Q] = parameters(E(1, 1));
   if size(Q, 2) > rank(Q)
     if Properties.getIsVerbose()
       fprintf('QCQP: Warning! Degenerate ellipsoid.\n');
       fprintf('      Regularizing...\n');
     end
-    Q = regularize(Q,E(1,1).absTol);
+    Q = regularize(Q,absTolMat(1,1));
   end
   Q = ell_inv(Q);
   Q = 0.5*(Q + Q');
@@ -213,7 +214,7 @@ cvx_begin sdp
         for j = 1:n
         [q, Q] = parameters(EA(i, j));
         if size(Q, 2) > rank(Q)
-            Q = regularize(Q,E(i,j).absTol);
+            Q = regularize(Q,absTolMat(i,j));
         end
         Q = ell_inv(Q);
         Q = 0.5*(Q + Q');
@@ -234,7 +235,7 @@ cvx_end
     return;
   end
    
-  if (x'*Q*x + 2*(-Q*q)'*x + (q'*Q*q - 1)) < minAbsTol(EA)
+  if (x'*Q*x + 2*(-Q*q)'*x + (q'*Q*q - 1)) < min(getAbsTol(EA(:)))
     res = 1;
   else
     res = 0;

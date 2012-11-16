@@ -105,7 +105,8 @@ function res = isinternal_sub(E, x, s, k)
   else
     res = 1;
   end
-
+  
+  absTolMat = getAbsTol(E);
   [m, n] = size(E);
   for i = 1:m
     for j = 1:n
@@ -117,17 +118,17 @@ function res = isinternal_sub(E, x, s, k)
           fprintf('ISINTERNAL: Warning! There is degenerate ellipsoid in the array.\n');
           fprintf('            Regularizing...\n');
         end
-        Q = regularize(Q,E(i,j).absTol);
+        Q = regularize(Q,absTolMat(i,j));
       end
  
       r = q' * ell_inv(Q) * q;
       if (s == 'u')
-        if (r < 1) | (abs(r - 1) < E(i,j).absTol)
+        if (r < 1) | (abs(r - 1) < absTolMat(i,j))
           res = 1;
           return;
         end
       else
-        if (r > 1) & (abs(r - 1) > E(i,j).absTol)
+        if (r > 1) & (abs(r - 1) > absTolMat(i,j))
           res = 0;
           return;
         end

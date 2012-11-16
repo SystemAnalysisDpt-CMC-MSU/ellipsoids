@@ -57,7 +57,7 @@ function [E, S] = ellintersection_ia(EE)
   if Properties.getIsVerbose()
     fprintf('Invoking CVX...\n');
   end
-
+absTolVec = getAbsTol(EE);
 cvx_begin sdp
     variable cvxEllMat(mn,mn) symmetric
     variable cvxEllCenterVec(mn)
@@ -69,7 +69,7 @@ cvx_begin sdp
         for i = 1:M
             [q, Q] = double(EE(i));
             if rank(Q) < mn
-                Q = regularize(Q,EE(i).absTol);
+                Q = regularize(Q,absTolVec(i));
             end
             A     = ell_inv(Q);
             b     = -A * q;
@@ -89,7 +89,7 @@ cvx_end
   end;
  
   if rank(cvxEllMat) < mn
-    cvxEllMat = regularize(cvxEllMat,minAbsTol(EE));
+    cvxEllMat = regularize(cvxEllMat,min(getAbsTol(EE(:))));
   end
 
   ellMat = cvxEllMat * cvxEllMat';
