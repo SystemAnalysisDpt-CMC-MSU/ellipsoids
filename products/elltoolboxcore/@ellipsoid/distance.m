@@ -187,7 +187,7 @@ else
     %
         stepSize1=fzero(fSquareFunc(aCoeff1,bCoeff1,cCoeff1),[0,1]);
         stepSize2=fzero(fSquareFunc(aCoeff2,bCoeff2,cCoeff2),[0,1]);
-        if (stepSize2<=stepSize1)
+        if (stepSize2-stepSize1<=absTol)
             %in this case the interval between the centers of circles
             %belongs to the ellipsoids and we obtain intersection
             ellDist=0;
