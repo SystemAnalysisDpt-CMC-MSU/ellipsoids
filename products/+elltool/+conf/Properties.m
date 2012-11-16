@@ -77,6 +77,7 @@ classdef Properties<modgen.common.obj.StaticPropStorage
         function setNTimeGridPoints(nTimeGridPoints)
             elltool.conf.Properties.setOption('nTimeGridPoints',nTimeGridPoints);
         end
+        function varargout = parseProp(args,neededPropNameList)
     end
     methods(Static,Access = private)
         function opt = getOption(optName)
@@ -88,13 +89,5 @@ classdef Properties<modgen.common.obj.StaticPropStorage
             confRepMgr = elltool.conf.Properties.getConfRepoMgr();
             confRepMgr.setParam(optName,optVal);
         end
-    end
-%     methods(Static,Access = protected)
-%         function flush()
-%             %Just for testing.
-%             branchName=mfilename('class');
-%             modgen.common.obj.StaticPropStorage.flushInternal(branchName);
-%         end   
-%     end
-        
+    end     
 end

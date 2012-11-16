@@ -1,6 +1,7 @@
 function varargout = parseProp(args,neededPropNameList)
-%PARSEPROP parses input into sturcture with filds from neededPropNameList
-%and values stated in args or in current Properties.
+%PARSEPROP parses input into cell array with values of properties listed in
+%neededPropNameList. Values are taken from args or, if there no value for
+%some property in args, in current Properties.
 %
 %Input:
 %   regular:
@@ -22,9 +23,9 @@ function varargout = parseProp(args,neededPropNameList)
 %           error.
 %
 %Output:
-%   SProp:struct[1,1] - structure, with fields, specified in neededPropNameList
-%                       or all possible fields, if neededPropNameList is
-%                       empty cell
+%   varargout:cell array[1,] - cell array with values of properties listed
+%                              in neededPropNameList in the same order as they
+%                              listed in neededPropNameList
 %
 %$Author: Zakharov Eugene  <justenterrr@gmail.com> $    $Date: 5-november-2012 $
 %$Copyright: Moscow State University,
