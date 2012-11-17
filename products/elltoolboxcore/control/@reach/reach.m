@@ -1,6 +1,6 @@
 classdef reach < handle
 %REACH class of reach sets
-    properties
+    properties (Access=private)
         absTol
         relTol 
         nPlot2dPoints
@@ -77,8 +77,6 @@ classdef reach < handle
         %
         %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
         %
-
-        display(varargin);
           import elltool.conf.Properties;
           neededPropNameList = {'absTol','relTol','nPlot2dPoints','nPlot3dPoints','nTimeGridPoints'};
           [absTolVal, relTolVal, nPlot2dPointsVal,nPlot3dPointsVal,nTimeGridPointsVal] =...

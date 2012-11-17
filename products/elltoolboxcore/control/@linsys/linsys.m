@@ -1,6 +1,6 @@
 classdef linsys < handle
 %CLASSDEF class of linear systems
-    properties
+    properties (Access=private)
             A 
             B 
             control 

@@ -1,6 +1,6 @@
 classdef hyperplane < handle
 %HYPERPLANE - a class for hyperplanes
-    properties
+    properties (Access=private)
         normal
         shift
         absTol

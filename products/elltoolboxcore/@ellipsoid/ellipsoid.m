@@ -1,6 +1,6 @@
 classdef ellipsoid < handle
 %ELLIPSOID class of ellipsoids
-    properties 
+    properties (Access=private)
         center
         shape 
         absTol
