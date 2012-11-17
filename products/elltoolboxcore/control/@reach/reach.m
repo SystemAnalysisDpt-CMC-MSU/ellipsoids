@@ -49,7 +49,7 @@ function RS = reach(lsys, X0, L0, T, Options,varargin)
 
   import elltool.conf.Properties;
   neededPropNameList = {'absTol','relTol','nPlot2dPoints','nPlot2dPoints','nTimeGridPoints'};
-  [absTol, relTol, nPlot2dPoints,nPlot3dPoints,nTimeGridPoints] =  elltool.conf.parseProp(varargin,neededPropNameList);
+  [absTol, relTol, nPlot2dPoints,nPlot3dPoints,nTimeGridPoints] =  elltool.conf.Properties.parseProp(varargin,neededPropNameList);
   
   RS.absTol = absTol;
   RS.relTol = relTol;

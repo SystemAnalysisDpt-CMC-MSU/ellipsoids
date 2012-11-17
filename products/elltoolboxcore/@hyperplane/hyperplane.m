@@ -36,7 +36,7 @@ function HA = hyperplane(v, c,varargin)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
   neededPropNameList = {'absTol'};
-  absTol =  elltool.conf.parseProp(varargin,neededPropNameList);
+  absTol =  elltool.conf.Properties.parseProp(varargin,neededPropNameList);
   if nargin == 0
     HA = hyperplane(0);
     return;

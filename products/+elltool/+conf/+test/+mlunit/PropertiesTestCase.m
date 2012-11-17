@@ -87,15 +87,15 @@ classdef PropertiesTestCase < mlunitext.test_case
             someArg = 4;
             args = {'absTol',testAbsTol, 'relTol',testRelTol,'nPlot2dPoints',nPlot2dPoints, 'someOtherArg', someArg};
             neededProp = {'absTol','relTol'};
-            [absTol, relTol] = elltool.conf.parseProp(args,neededProp);
+            [absTol, relTol] = elltool.conf.Properties.parseProp(args,neededProp);
             isOk = (absTol == testAbsTol) && (relTol == testRelTol);
             mlunit.assert(isOk);
             %Negative test
             args{2} = -absTol;
-            self.runAndCheckError('elltool.conf.parseProp(args,neededProp)','wrongInput');
+            self.runAndCheckError('elltool.conf.Properties.parseProp(args,neededProp)','wrongInput');
             args{2} = absTol;
             neededProp{2} = 'notAProperty';
-            self.runAndCheckError('elltool.conf.parseProp(args,neededProp)','wrongInput');
+            self.runAndCheckError('elltool.conf.Properties.parseProp(args,neededProp)','wrongInput');
         end
     end
     

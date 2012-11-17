@@ -110,7 +110,7 @@ function ls = linsys(A, B, U, G, V, C, W, D,varargin)
 %
    import elltool.conf.Properties;
    neededPropNameList = {'absTol'};
-  absTol =  elltool.conf.parseProp(varargin,neededPropNameList);
+  absTol =  elltool.conf.Properties.parseProp(varargin,neededPropNameList);
   
   if nargin == 0
     ls.A              = [];

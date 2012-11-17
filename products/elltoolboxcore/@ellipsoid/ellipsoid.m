@@ -38,7 +38,7 @@ function [E] = ellipsoid(varargin)
 %
 
   neededPropNameList = {'absTol','relTol','nPlot2dPoints','nPlot3dPoints'};
-  [absTol, relTol,nPlot2dPoints,nPlot3dPoints] =  elltool.conf.parseProp(varargin,neededPropNameList);
+  [absTol, relTol,nPlot2dPoints,nPlot3dPoints] =  elltool.conf.Properties.parseProp(varargin,neededPropNameList);
 
   if nargin == 0
     E.center = [];
