@@ -14,6 +14,14 @@ classdef AReachProblemDynamics<...
     properties (Constant,GetAccess=protected)
         N_TIME_POINTS=1000;
         ODE_NORM_CONTROL='on';
+        CALC_PRECISION_FACTOR=0.01;
+    end
+    methods (Access=protected)
+        function odePropList=getOdePropList(self,calcPrecision)
+            odePropList={'NormControl',self.ODE_NORM_CONTROL,'RelTol',...
+                calcPrecision*self.CALC_PRECISION_FACTOR,...
+                'AbsTol',calcPrecision*self.CALC_PRECISION_FACTOR};            
+        end
     end
     methods
         function BPBTransDynamics=getBPBTransDynamics(self)

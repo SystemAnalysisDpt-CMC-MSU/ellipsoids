@@ -26,8 +26,7 @@ classdef AReachProblemDynamicsInterp<...
             %
             self.timeVec = linspace(t0,t1,self.N_TIME_POINTS);
             %
-            odeArgList={'NormControl',self.ODE_NORM_CONTROL,'RelTol',...
-                calcPrecision,'AbsTol',calcPrecision};
+            odeArgList=self.getOdePropList(calcPrecision);
             solverObj=MatrixODESolver(sizeAtVec,@ode45,odeArgList{:});
             %
             Xtt0DerivFunc = @(t,x) reshape(...

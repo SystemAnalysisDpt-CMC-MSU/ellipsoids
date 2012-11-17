@@ -10,8 +10,8 @@ classdef SuiteSupportFunction < mlunitext.test_case
         crmSys
     end
     properties (Constant, GetAccess = private)
-        REL_TOL = 1e-6;
-        ABS_TOL = 1e-7;
+        REL_TOL_FACTOR = 1e-3;
+        ABS_TOL_FACTOR = 1e-3;
     end
     methods (Static)
         function difVec = derivativeSupportFunction(t, xVec, fAMat, fBMat,...
@@ -123,8 +123,9 @@ classdef SuiteSupportFunction < mlunitext.test_case
                 ellCenterCMat = SRunProp.ellTubeRel.aMat;
                 %
                 nElem = size(x0Vec, 1);
-                OdeOptionsStruct = odeset('RelTol', self.REL_TOL,...
-                    'AbsTol', self.ABS_TOL * ones(nElem + 1, 1));
+                OdeOptionsStruct = odeset(...
+                    'RelTol', calcPrecision*self.REL_TOL_FACTOR,...
+                    'AbsTol', calcPrecision*self.ABS_TOL_FACTOR);
                 for iTuple = 1 : nTuples
                     curTimeVec = timeCVec{iTuple};
                     curGoodDirMat = goodDirCMat{iTuple};
@@ -144,15 +145,23 @@ classdef SuiteSupportFunction < mlunitext.test_case
                     expSupFuncMat = expResultMat(:, 1 : nElem);
                     supFuncMat = curGoodDirMat(:, :);
                     errorMat = abs(expSupFuncMat - supFuncMat.');
-                    isOk = max(errorMat(:)) <= calcPrecision;
+                    errTol=max(errorMat(:));
+                    isOk = errTol <= calcPrecision;
+                    %
+                    mlunit.assert_equals(true, isOk,...
+                        sprintf('errTol=%g>calcPrecision=%g',errTol,...
+                        calcPrecision));
                     %
                     supFunVec =...
                         sqrt(gras.gen.SquareMatVector.lrMultiplyByVec(...
                         curEllMatArray,curGoodDirMat)) +...
                         sum(curEllCenterMat .* curGoodDirMat, 1);
                     errorSupFunMat = abs(expResultMat(:, end) - supFunVec.');
-                    isOk = isOk && max(errorSupFunMat(:)) <= calcPrecision;
-                    mlunit.assert_equals(true, isOk);
+                    errTol=max(errorSupFunMat(:));
+                    isOk = errTol <= calcPrecision;
+                    mlunit.assert_equals(true, isOk,...
+                        sprintf('errTol=%g>calcPrecision=%g',errTol,...
+                        calcPrecision));
                 end
             end
         end

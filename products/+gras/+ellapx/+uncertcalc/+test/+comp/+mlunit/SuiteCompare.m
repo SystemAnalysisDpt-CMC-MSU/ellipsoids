@@ -117,8 +117,8 @@ classdef SuiteCompare < mlunitext.test_case
                 end
                 fieldValue1.sortBy(SSORT_KEYS.(fieldName));
                 fieldValue2.sortBy(SSORT_KEYS.(fieldName));
-                [isOk,reportStr]=fieldValue1.isEqual(fieldValue2,'maxTolerance',...
-                    MAX_TOL,'checkTupleOrder',true);
+                [isOk,reportStr]=fieldValue1.isEqual(fieldValue2,...
+                    'maxTolerance',2*calcPrecision,'checkTupleOrder',true);
                 %
                 reportStr=sprintf('confName=%s\n %s',confName,...
                     reportStr);

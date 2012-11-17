@@ -42,8 +42,7 @@ classdef LReachProblemLTIDynamics<...
             %
             % compute x(t)
             %
-            odeArgList={'NormControl',self.ODE_NORM_CONTROL,'RelTol',...
-                calcPrecision,'AbsTol',calcPrecision};
+            odeArgList=self.getOdePropList(calcPrecision);
             solverObj=MatrixODESolver(sysDim,@ode45,odeArgList{:});
             %
             BpPlusCqVec = BpVec + CqVec;
