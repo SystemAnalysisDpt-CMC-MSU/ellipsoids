@@ -17,8 +17,8 @@ classdef SuiteBasic < mlunitext.test_case
         function testTouchRun(~)
             N_EXP_ELL_TUBES=6;
             N_EXP_ELL_PROJS=24;
-            crm=gras.ellapx.uncertcalc.test.conf.ConfRepoMgr();
-            crmSys=gras.ellapx.uncertcalc.test.conf.sysdef.ConfRepoMgr();
+            crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
+            crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
             SRunProp=gras.ellapx.uncertcalc.run('basic','basic',...
                 'confRepoMgr',crm,'sysConfRepoMgr',crmSys);
             if crm.getParam('plottingProps.isEnabled')

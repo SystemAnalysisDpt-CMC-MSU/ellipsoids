@@ -1,4 +1,4 @@
-function updateall()
+function updateconftemplate(confName)
 % UPDATECONFTEMPLATE updates the specified template configuration
 %
 %
@@ -8,5 +8,5 @@ function updateall()
 %            System Analysis Department 2011 $
 %
 %
-confRepoMgr=gras.ellapx.uncertcalc.test.conf.ConfRepoMgr();
-confRepoMgr.updateAll();
+confRepoMgr=gras.ellapx.uncertcalc.test.comp.conf.ConfRepoMgr();
+confRepoMgr.updateConfTemplate(confName);

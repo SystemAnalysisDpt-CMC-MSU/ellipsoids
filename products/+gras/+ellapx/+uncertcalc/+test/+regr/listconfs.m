@@ -8,5 +8,5 @@ function listconfs()
 %            System Analysis Department 2011 $
 %
 %
-confRepoMgr=gras.ellapx.uncertcalc.test.conf.ConfRepoMgr();
+confRepoMgr=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
 confRepoMgr.getConfNameList()

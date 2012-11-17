@@ -1,4 +1,4 @@
 function editconftemplate(confName)
-confRepoMgr=gras.ellapx.uncertcalc.test.conf.ConfRepoMgr();
+confRepoMgr=gras.ellapx.uncertcalc.test.comp.conf.ConfRepoMgr();
 confRepoMgr.editConfTemplate(confName);
 end

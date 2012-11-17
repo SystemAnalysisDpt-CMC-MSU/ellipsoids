@@ -18,13 +18,13 @@ classdef SuiteRegression < mlunitext.test_case
             if nargin>2
                 self.crm=varargin{2};
             else
-                self.crm=gras.ellapx.uncertcalc.test.conf.ConfRepoMgr();
+                self.crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
             end
             if nargin>3
                 self.crmSys=varargin{3};
             else
                 self.crmSys=...
-                    gras.ellapx.uncertcalc.test.conf.sysdef.ConfRepoMgr();
+                    gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
             end
             confNameList=varargin{1};
             if strcmp(confNameList,'*')

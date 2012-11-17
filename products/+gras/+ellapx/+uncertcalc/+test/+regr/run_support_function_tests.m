@@ -8,13 +8,13 @@ loader = mlunitext.test_loader;
 %
 BAD_TEST_NAME_LIST = {'advanced', 'test3d'};
 %
-crm=gras.ellapx.uncertcalc.test.conf.ConfRepoMgr();
+crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
 confNameList=crm.deployConfTemplate('*');
 if nargin>0
     confNameList=intersect(confNameList,inpConfNameList);
 end
 confNameList = setdiff(confNameList, BAD_TEST_NAME_LIST);
-crmSys=gras.ellapx.uncertcalc.test.conf.sysdef.ConfRepoMgr();
+crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
 crmSys.deployConfTemplate('*');
 nConfs=length(confNameList);
 suiteList=cell(1,nConfs);
@@ -50,7 +50,7 @@ for iConf=nConfs:-1:1
         %
         if isnDisturbance
             suiteList{iConf}=loader.load_tests_from_test_case(...
-                'gras.ellapx.uncertcalc.test.mlunit.SuiteSupportFunction',...
+                'gras.ellapx.uncertcalc.test.regr.mlunit.SuiteSupportFunction',...
                 {confName}, crm,crmSys,'marker',confName);
             isnEmptyVec(iConf)=true;
         end
