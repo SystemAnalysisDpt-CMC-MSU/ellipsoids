@@ -1,19 +1,19 @@
-function nPlot3dPointsMat = getNPlot3dPoints(rsMat)
-%GETNPLOT3DPOINTS gives matrix  the same size as rsMat of value of 
-%nPlot3dPoints property for each element in rsMat - matrix of reach sets
+function nPlot3dPointsArr = getNPlot3dPoints(rsArr)
+%GETNPLOT3DPOINTS gives array  the same size as rsArr of value of 
+%nPlot3dPoints property for each element in rsArr - array of reach sets
 %
 % Input:
 %   regular:
-%       rsMat:reach[nRows,nCols] - reach set matrix
+%       rsArr:reach[nDims1,nDims2,...] - reach set array
 %
 % Output:
-%   nPlot3dPointsMat:double[nRows, nCols]- matrix of values of nPlot3dPoints 
+%   nPlot3dPointsArr:double[nDims1,nDims2,...]- array of values of nPlot3dPoints 
 %                                         property for each reach set in
-%                                         rsMat
+%                                         rsArr
 %
 %$Author: Zakharov Eugene  <justenterrr@gmail.com> $    $Date: 17-november-2012 $
 %$Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Computer Science,
+%            Faculty of Computational Arrhematics and Computer Science,
 %            System Analysis Department 2012 $
 %
-nPlot3dPointsMat = getProperty(rsMat,'nPlot3dPoints');
+nPlot3dPointsArr = getProperty(rsArr,'nPlot3dPoints');

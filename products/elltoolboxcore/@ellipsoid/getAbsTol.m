@@ -1,18 +1,18 @@
-function absTolMat = getAbsTol(ellMat)
-%GETABSTOL gives matrix the same size as ellMat with values of absTol properties
-%for each ellipsoid in ellMat
+function absTolArr = getAbsTol(ellArr)
+%GETABSTOL gives array the same size as ellArr with values of absTol properties
+%for each ellipsoid in ellArr
 %
 % Input:
 %   regular:
-%       ellMat:ellipsoid[nRows, nCols] - matrix of ellipsoids
+%       ellArr:ellipsoid[nRows, nCols] - multidimension array of ellipsoids
 %
 % Output:
-%   absTolMat:double[nRows, nCols]- matrix of absTol properties for
-%                                   ellipsoids in ellMat
+%   absTolArr:double[nRows, nCols]- multidimension array of absTol properties for
+%                                   ellipsoids in ellArr
 %
 %$Author: Zakharov Eugene  <justenterrr@gmail.com> $    $Date: 17-november-2012 $
 %$Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Computer Science,
+%            Faculty of Computational Arrhematics and Computer Science,
 %            System Analysis Department 2012 $
 %
-absTolMat = getProperty(ellMat,'absTol');
+absTolArr = getProperty(ellArr,'absTol');

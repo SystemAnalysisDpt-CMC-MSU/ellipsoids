@@ -229,18 +229,30 @@ classdef EllipsoidTestCase < mlunitext.test_case
                 abs(testRes(2)-5)<absTol);          
         end
         function self = testPropertyGetters(self)
+            ellCenter = [1;1];
+            ellMat = eye(2);
             testAbsTol = 1;
             testRelTol = 2;
             testNPlot2dPoints = 3;
             testNPlot3dPoints = 4;
-            ellCenter = [1;1];
-            ellMat = eye(2);
+            args = {ellCenter,ellMat, 'absTol',testAbsTol,'relTol',testRelTol,...
+                             'nPlot2dPoints',testNPlot2dPoints,...
+                             'nPlot3dPoints',testNPlot3dPoints};
+           %%
+            ellArr = [ellipsoid(args{:}),ellipsoid(args{:});...
+                           ellipsoid(args{:}),ellipsoid(args{:})];
+            ellArr(:,:,2) = [ellipsoid(args{:}),ellipsoid(args{:});...
+                           ellipsoid(args{:}),ellipsoid(args{:})];
+            sizeArr = size(ellArr);
+            testAbsTolArr = repmat(testAbsTol,sizeArr);
+            testRelTolArr = repmat(testRelTol,sizeArr);
+            testNPlot2dPointsArr = repmat(testNPlot2dPoints,sizeArr);
+            testNPlot3dPointsArr = repmat(testNPlot3dPoints,sizeArr);
             %%
-            ell = ellipsoid(ellCenter,ellMat, 'absTol',testAbsTol,'relTol',testRelTol,'nPlot2dPoints',testNPlot2dPoints,...
-                             'nPlot3dPoints',testNPlot3dPoints);
-            isOk = (testAbsTol == ell.getAbsTol) && (testRelTol == ell.getRelTol) &&...
-                   (testNPlot2dPoints == ell.getNPlot2dPoints) &&...
-                   (testNPlot3dPoints == ell.getNPlot3dPoints);
+            isOkArr = (testAbsTolArr == ellArr.getAbsTol()) &(testRelTolArr == ellArr.getRelTol()) &...
+               (testNPlot2dPointsArr == ellArr.getNPlot2dPoints()) &...
+               (testNPlot3dPointsArr == ellArr.getNPlot3dPoints());
+            isOk = all(isOkArr(:));
             mlunit.assert(isOk);            
         end
     end

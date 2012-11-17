@@ -177,15 +177,20 @@ classdef HyperplaneTestCase < mlunitext.test_case
        function self = testGetAbsTol(self)
            normVec = ones(3,1);
            const = 0;
-           absTol1 = 1;
-           absTol2 = 2;
-           absTol3 = 3;
-           absTol4 = 4;
-           hplaneMat = [hyperplane(normVec,const, 'absTol',absTol1),hyperplane(normVec,const, 'absTol',absTol2);...
-                        hyperplane(normVec,const, 'absTol',absTol3),hyperplane(normVec,const, 'absTol',absTol4)];
-           testAbsTolMat = [absTol1, absTol2; absTol3, absTol4];
-           isOk = all(testAbsTolMat(:) == hplaneMat(:).getAbsTol);
-           mlunit.assert(isOk);
+           testAbsTol = 1;
+           args = {normVec,const, 'absTol',testAbsTol};
+           %              
+           hplaneArr = [hyperplane(args{:}),hyperplane(args{:});...
+                           hyperplane(args{:}),hyperplane(args{:})];
+           hplaneArr(:,:,2) = [hyperplane(args{:}),hyperplane(args{:});...
+                           hyperplane(args{:}),hyperplane(args{:})];
+           sizeArr = size(hplaneArr);
+            testAbsTolArr = repmat(testAbsTol,sizeArr);
+            %
+            isOkArr = (testAbsTolArr == hplaneArr.getAbsTol());
+            %  
+            isOk = all(isOkArr(:));
+            mlunit.assert(isOk);
        end
     end
     %

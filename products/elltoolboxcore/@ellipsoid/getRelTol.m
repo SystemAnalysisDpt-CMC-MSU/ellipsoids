@@ -1,18 +1,18 @@
-function relTolMat = getRelTol(ellMat)
-%GETRELTOL gives matrix the same size as ellMat with values of relTol properties
-%for each ellipsoid in ellMat
+function relTolArr = getRelTol(ellArr)
+%GETRELTOL gives array the same size as ellArr with values of relTol properties
+%for each ellipsoid in ellArr
 %
 % Input:
 %   regular:
-%       ellMat:ellipsoid[nRows, nCols] - matrix of ellipsoids
+%       ellArr:ellipsoid[nRows, nCols] - multidimension array of ellipsoids
 %
 % Output:
-%   relTolMat:double[nRows, nCols]- matrix of relTol properties for
-%                                   ellipsoids in ellMat
+%   relTolArr:double[nRows, nCols]- multidimension array of relTol properties for
+%                                   ellipsoids in ellArr
 %
 %$Author: Zakharov Eugene  <justenterrr@gmail.com> $    $Date: 17-november-2012 $
 %$Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Computer Science,
+%            Faculty of Computational Arrhematics and Computer Science,
 %            System Analysis Department 2012 $
 %
-relTolMat = getProperty(ellMat,'relTol');
+relTolArr = getProperty(ellArr,'relTol');

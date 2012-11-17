@@ -1,16 +1,17 @@
-function nPlot2dPointsMat = getNPlot2dPoints(ellMat)
+function nPlot2dPointsArr = getNPlot2dPoints(ellArr)
 %GETNPLOT2DPOINTS gives value of nPlot2dPoints property of ellipsoid E
 %
 % Input:
 %   regular:
-%       E:ellipsoid[1,1] - ellipsoid
+%       ellArr:ellipsoid[nDim1, nDim2,...] - mltidimensional array of ellipsoids
 %
 % Output:
-%   nPlot2dPoints:double[1, 1]- value of nPlot2dPoints property of ellipsoid E
+%       nPlot2dPointsArr:double[nDim1, nDim2,...]- multidimension array of nPlot2dPoints property 
+%                                            for ellipsoids in ellArr
 %
 %$Author: Zakharov Eugene  <justenterrr@gmail.com> $    $Date: 17-november-2012 $
 %$Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Computer Science,
+%            Faculty of Computational Arrhematics and Computer Science,
 %            System Analysis Department 2012 $
 %
-nPlot2dPointsMat = getProperty(ellMat,'nPlot2dPoints');
+nPlot2dPointsArr = getProperty(ellArr,'nPlot2dPoints');

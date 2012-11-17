@@ -1,16 +1,16 @@
-function absTolMat = getAbsTol(rsMat)
-%GETABSTOL gives value of absTol property of reach set RS
-%
+function absTolArr = getAbsTol(rsArr)
+%GETABSTOL gives array the same size as rsArray with values of absTol properties
+%for each reach set in rsArr.
 % Input:
 %   regular:
-%       RS:reach[1,1] - reach set
+%       RS:reach[nDims1, nDims2,...] - reach set array
 %
 % Output:
-%   absTol:double[1, 1]- value of absTol property of reach set RS
+%   absTol:double[nDims1, nDims2,...]- array of absTol propertis for for each reach set in rsArr
 %
 %$Author: Zakharov Eugene  <justenterrr@gmail.com> $    $Date: 17-november-2012 $
 %$Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Computer Science,
+%            Faculty of Computational Arrhematics and Computer Science,
 %            System Analysis Department 2012 $
 %
-absTolMat = getProperty(rsMat,'absTol');
+absTolArr = getProperty(rsArr,'absTol');

@@ -1,16 +1,17 @@
-function nPlot3dPointsMat = getNPlot3dPoints(ellMat)
+function nPlot3dPointsArr = getNPlot3dPoints(ellArr)
 %GETNPLOT3DPOINTS gives value of nPlot3dPoints property of ellipsoid E
 %
 % Input:
 %   regular:
-%       E:ellipsoid[1,1] - ellipsoid
+%       ellArr:ellipsoid[nDim1, nDim2,...] - mltidimensional array of ellipsoids
 %
 % Output:
-%   nPlot3dPoints:double[1, 1]- value of nPlot3dPoints property of ellipsoid E
+%       nPlot2dPointsArr:double[nDim1, nDim2,...]- multidimension array of nPlot3dPoints property 
+%                                            for ellipsoids in ellArr
 %
 %$Author: Zakharov Eugene  <justenterrr@gmail.com> $    $Date: 17-november-2012 $
 %$Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Computer Science,
+%            Faculty of Computational Arrhematics and Computer Science,
 %            System Analysis Department 2012 $
 %
-nPlot3dPointsMat = getProperty(ellMat,'nPlot3dPoints');
+nPlot3dPointsArr = getProperty(ellArr,'nPlot3dPoints');

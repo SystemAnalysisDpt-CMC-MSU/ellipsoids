@@ -1,22 +1,16 @@
-function absTolMat = getAbsTol(linsysMat)
-%GETABSTOL gives value of absTol property of linsys linear system lin
-%
+function absTolArr = getAbsTol(linsysArr)
+%GETABSTOL gives array the same size as linsysArr with values of absTol properties
+%for each hyperplane in hplaneArr.
 % Input:
 %   regular:
-%       lin:linsys[1,1] - linear system
+%       linsysArr:linsys[nDims1,nDims2,...] - array of linear systems
 %
 % Output:
-%   absTol:double[1, 1]- value of absTol property of linear system lin
-%
+%   absTolArr:double[nDims1,nDims2,...]- array of absTol properties for
+%                                        linear systems in linsysArr
 %$Author: Zakharov Eugene  <justenterrr@gmail.com> $    $Date: 17-november-2012 $
 %$Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
 %
-[nRows, nCols] = size(linsysMat);
-absTolMat = zeros(nRows,nCols);
-for iRows = 1:nRows
-    for jCols = 1:nCols
-        absTolMat(iRows,jCols) = linsysMat(iRows,jCols).absTol;
-    end
-end
+absTolArr=arrayfun(@(x)x.absTol,linsysArr);
