@@ -3,7 +3,7 @@ function varargout = parseProp(args,neededPropNameList)
 %neededPropNameList. Values are taken from args or, if there no value for
 %some property in args, in current Properties.
 %
-%Input:
+% Input:
 %   regular:
 %       args:cell[1,] - cell array of arguments that should be parsed.
 %       neededPropNameList:cell[1,] or empty cell - cell array of strings, containing
@@ -22,7 +22,7 @@ function varargout = parseProp(args,neededPropNameList)
 %           trying to specify other properties would be regarded as an
 %           error.
 %
-%Output:
+% Output:
 %   varargout:cell array[1,] - cell array with values of properties listed
 %                              in neededPropNameList in the same order as they
 %                              listed in neededPropNameList

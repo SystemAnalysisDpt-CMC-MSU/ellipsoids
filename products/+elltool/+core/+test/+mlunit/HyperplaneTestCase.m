@@ -173,9 +173,23 @@ classdef HyperplaneTestCase < mlunitext.test_case
             self.runAndCheckError('hyperplane(nanVec,testConstant)','wrongInput',...
                 'v,c is');
         end
+       %
+       function self = testGetAbsTol(self)
+           normVec = ones(3,1);
+           const = 0;
+           absTol1 = 1;
+           absTol2 = 2;
+           absTol3 = 3;
+           absTol4 = 4;
+           hplaneMat = [hyperplane(normVec,const, 'absTol',absTol1),hyperplane(normVec,const, 'absTol',absTol2);...
+                        hyperplane(normVec,const, 'absTol',absTol3),hyperplane(normVec,const, 'absTol',absTol4)];
+           testAbsTolMat = [absTol1, absTol2; absTol3, absTol4];
+           isOk = all(testAbsTolMat(:) == hplaneMat(:).getAbsTol);
+           mlunit.assert(isOk);
+       end
     end
     %
-    methods(Static)
+    methods(Static, Access = private)
          function res = isNormalAndConstantRight(testNormal, testConstant, testingHyraplane)
             [resultNormal, resultConstant] = double(testingHyraplane);
             %

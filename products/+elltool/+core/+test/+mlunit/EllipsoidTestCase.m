@@ -228,5 +228,20 @@ classdef EllipsoidTestCase < mlunitext.test_case
             mlunit.assert_equals(1,abs(testRes(1)-7)<absTol&&...
                 abs(testRes(2)-5)<absTol);          
         end
+        function self = testPropertyGetters(self)
+            testAbsTol = 1;
+            testRelTol = 2;
+            testNPlot2dPoints = 3;
+            testNPlot3dPoints = 4;
+            ellCenter = [1;1];
+            ellMat = eye(2);
+            %%
+            ell = ellipsoid(ellCenter,ellMat, 'absTol',testAbsTol,'relTol',testRelTol,'nPlot2dPoints',testNPlot2dPoints,...
+                             'nPlot3dPoints',testNPlot3dPoints);
+            isOk = (testAbsTol == ell.getAbsTol) && (testRelTol == ell.getRelTol) &&...
+                   (testNPlot2dPoints == ell.getNPlot2dPoints) &&...
+                   (testNPlot3dPoints == ell.getNPlot3dPoints);
+            mlunit.assert(isOk);            
+        end
     end
 end

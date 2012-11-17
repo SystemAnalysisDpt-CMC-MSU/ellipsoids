@@ -245,5 +245,40 @@ classdef ReachTestCase < mlunit.test_case
             end;
             mlunit.assert_equals(true, isAllTestsOk);
         end
+        function self = testPropertyGetters(self)
+            testAbsTol = 1;
+            testRelTol = 2;
+            testNPlot2dPoints = 3;
+            testNPlot3dPoints = 4;
+            testNTimeGridPoints = 5;
+            %%
+            linsysAMat = eye(2);
+            linsysBMat = zeros(2);
+            configurationQMat = eye(2);
+            controlBoundsUEll = ellipsoid(configurationQMat);
+            stationaryLinsys =...
+                linsys(linsysAMat, linsysBMat, controlBoundsUEll);
+            initialSetEll = ellipsoid(configurationQMat);
+            initialDirectionsMat = [1 0; 0 1];
+            timeIntervalVec = [0 1];  
+            Options = struct('approximation',0,'save_all',0,'minmax',0);
+            %%
+            reachSet = reach(stationaryLinsys,...
+                             initialSetEll,...
+                             initialDirectionsMat,...
+                             timeIntervalVec,Options,'absTol',testAbsTol,'relTol',testRelTol,...
+                             'nTimeGridPoints',testNTimeGridPoints,'nPlot2dPoints',testNPlot2dPoints,...
+                             'nPlot3dPoints',testNPlot3dPoints);
+            absTol = reachSet.getAbsTol;
+            r = reachSet.getRelTol;
+            n1 = reachSet.getNPlot2dPoints;
+            n2 = reachSet.getNPlot3dPoints;
+            n3 = reachSet.getNTimeGridPoints;
+            isOk = (testAbsTol == reachSet.getAbsTol) && (testRelTol == reachSet.getRelTol) &&...
+                   (testNPlot2dPoints == reachSet.getNPlot2dPoints) &&...
+                   (testNPlot3dPoints == reachSet.getNPlot3dPoints) && ...
+                   (testNTimeGridPoints == reachSet.getNTimeGridPoints);
+            mlunit.assert(isOk);            
+        end
     end
 end

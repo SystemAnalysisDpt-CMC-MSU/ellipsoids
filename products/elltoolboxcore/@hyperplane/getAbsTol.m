@@ -1,11 +1,11 @@
-function absTol = getAbsTol(H)
+function absTolMat = getAbsTol(hplaneMat)
 %GETABSTOL gives value of absTol property of hyperplane H
 %
-%Input:
+% Input:
 %   regular:
 %       H:hyperplane[1,1] - hyperplane
 %
-%Output:
+% Output:
 %   absTol:double[1, 1]- value of absTol property of hyperplane H
 %
 %$Author: Zakharov Eugene  <justenterrr@gmail.com> $    $Date: 17-november-2012 $
@@ -13,4 +13,10 @@ function absTol = getAbsTol(H)
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
 %
-absTol = H.absTol;
+[nRows, nCols] = size(hplaneMat);
+absTolMat = zeros(nRows,nCols);
+for iRows = 1:nRows
+    for jCols = 1:nCols
+        absTolMat(iRows,jCols) = hplaneMat(iRows,jCols).absTol;
+    end
+end

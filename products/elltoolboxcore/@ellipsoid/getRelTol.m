@@ -2,11 +2,11 @@ function relTolMat = getRelTol(ellMat)
 %GETRELTOL gives matrix the same size as ellMat with values of relTol properties
 %for each ellipsoid in ellMat
 %
-%Input:
+% Input:
 %   regular:
 %       ellMat:ellipsoid[nRows, nCols] - matrix of ellipsoids
 %
-%Output:
+% Output:
 %   relTolMat:double[nRows, nCols]- matrix of relTol properties for
 %                                   ellipsoids in ellMat
 %
@@ -15,10 +15,4 @@ function relTolMat = getRelTol(ellMat)
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
 %
-[nRows, nCols] = size(ellMat);
-relTolMat = zeros(nRows,nCols);
-for iRows = 1:nRows
-    for jCols = 1:nCols
-        relTolMat(iRows,jCols) = ellMat(iRows,jCols).relTol;
-    end
-end
+relTolMat = getProperty(ellMat,'relTol');

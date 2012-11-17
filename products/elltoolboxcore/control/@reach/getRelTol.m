@@ -1,11 +1,11 @@
-function relTol = getRelTol(RS)
+function relTolMat = getRelTol(rsMat)
 %GETRELTOL gives value of relTol property of reach set RS
 %
-%Input:
+% Input:
 %   regular:
 %       RS:reach[1,1] - reach set
 %
-%Output:
+% Output:
 %   relTol:double[1, 1]- value of relTol property of reach set RS
 %
 %$Author: Zakharov Eugene  <justenterrr@gmail.com> $    $Date: 17-november-2012 $
@@ -13,4 +13,4 @@ function relTol = getRelTol(RS)
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
 %
-relTol = RS.relTol;
+relTolMat = getProperty(rsMat,'relTol');

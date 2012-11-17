@@ -1,16 +1,19 @@
-function nPlot2dPoints = getNPlot2dPoints(RS)
-%GETNPLOT2DPOINTS gives value of nPlot2dPoints property of reach set RS
+function nPlot2dPointsMat = getNPlot2dPoints(rsMat)
+%GETNPLOT2DPOINTS gives matrix  the same size as rsMat of value of 
+%nPlot2dPoints property for each element in rsMat - matrix of reach sets
 %
-%Input:
+% Input:
 %   regular:
-%       RS:reach[1,1] - reach set
+%       rsMat:reach[nRows,nCols] - reach set matrix
 %
-%Output:
-%   nPlot2dPoints:double[1, 1]- value of nPlot2dPoints property of reach set RS
+% Output:
+%   nPlot2dPointsMat:double[nRows, nCols]- matrix of values of nTimeGridPoints 
+%                                         property for each reach set in
+%                                         rsMat
 %
 %$Author: Zakharov Eugene  <justenterrr@gmail.com> $    $Date: 17-november-2012 $
 %$Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
 %
-nPlot2dPoints = RS.nPlot2dPoints;
+nPlot2dPointsMat = getProperty(rsMat,'nPlot2dPoints');
