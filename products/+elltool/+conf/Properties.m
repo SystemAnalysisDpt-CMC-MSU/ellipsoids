@@ -77,7 +77,8 @@ classdef Properties<modgen.common.obj.StaticPropStorage
         function setNTimeGridPoints(nTimeGridPoints)
             elltool.conf.Properties.setOption('nTimeGridPoints',nTimeGridPoints);
         end
-        function varargout = parseProp(args,neededPropNameList)
+        %
+        varargout = parseProp(args,neededPropNameList)
     end
     methods(Static,Access = private)
         function opt = getOption(optName)

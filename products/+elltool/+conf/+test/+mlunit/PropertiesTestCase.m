@@ -77,7 +77,25 @@ classdef PropertiesTestCase < mlunitext.test_case
             %placing previous confRepoMgr back and testing if absTol
             %not changed
             Properties.setConfRepoMgr(prevConfRepo);
-            mlunit.assert_equals(prevAbsTol,Properties.getAbsTol());            
+            mlunit.assert_equals(prevAbsTol,Properties.getAbsTol());   
+        end
+        function self = testParseProp(self)
+            %Positive test
+            testAbsTol = 1;
+            testRelTol = 2;
+            nPlot2dPoints = 3;
+            someArg = 4;
+            args = {'absTol',testAbsTol, 'relTol',testRelTol,'nPlot2dPoints',nPlot2dPoints, 'someOtherArg', someArg};
+            neededProp = {'absTol','relTol'};
+            [absTol, relTol] = elltool.conf.parseProp(args,neededProp);
+            isOk = (absTol == testAbsTol) && (relTol == testRelTol);
+            mlunit.assert(isOk);
+            %Negative test
+            args{2} = -absTol;
+            self.runAndCheckError('elltool.conf.parseProp(args,neededProp)','wrongInput');
+            args{2} = absTol;
+            neededProp{2} = 'notAProperty';
+            self.runAndCheckError('elltool.conf.parseProp(args,neededProp)','wrongInput');
         end
     end
     

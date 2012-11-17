@@ -1,7 +1,9 @@
-function listconf()
-%LISTCONF gives a list of existing configurations
+function setconf(confName)
+%SETCONF selects the configuration confName as current
 %
-%No input or output, just displays list of configuration
+%Input:
+%   regular:
+%       confName:char[1,] - name of configuration to set
 %
 %$Author: Zakharov Eugene  <justenterrr@gmail.com> $    $Date: 17-november-2012 $
 %$Copyright: Moscow State University,
@@ -9,4 +11,5 @@ function listconf()
 %            System Analysis Department 2012 $
 %
 confRepoMgr=elltool.conf.Properties.getConfRepoMgr();
-disp(confRepoMgr.getConfNameList().');
+confRepoMgr.selectConf(confName);
+elltool.conf.Properties.setConfRepoMgr(confRepoMgr);
