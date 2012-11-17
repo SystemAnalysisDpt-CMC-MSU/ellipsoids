@@ -1,6 +1,9 @@
 classdef Reach<handle
-    properties (Access = private)
+    properties (Access = public)
+        linSys
         smartLinSys
+        ellTubeBuilder
+        ellUnionTubeRel
     end
     methods
         function self = Reach(linSys, X0Ell, L0Mat, timeVec, OptStruct)
@@ -9,6 +12,8 @@ classdef Reach<handle
             if ~isstruct(ellOptions)
                 evalin('base', 'ellipsoids_init;');
             end
+            %%
+            self.linSys = linSys;
             %%
             import gras.ellapx.lreachuncert.LReachProblemDefInterp;
             %% analize input
@@ -121,11 +126,78 @@ classdef Reach<handle
                 PtStrCMat, ptStrCVec, GtStrCMat,...
                 QtStrCMat, qtStrCVec, X0Mat, x0Vec,...
                 timeVec, ellOptions.rel_tol);
-            %%
+            %% Normalize good directions
+            sysDim = size(AtStrCMat, 1);
+            L0SqNormVec = sum(L0Mat .* L0Mat);
+            indNonZerSqNormVec = find(L0SqNormVec);
+            L0SqNormVec(indNonZerSqNormVec) =...
+                sqrt(L0SqNormVec(indNonZerSqNormVec));
+            L0Mat(:, indNonZerSqNormVec) =...
+                L0Mat(:,indNonZerSqNormVec) ./...
+                L0SqNormVec(ones(1, sysDim), indNonZerSqNormVec);
+            %% Make good direction object
+            goodDirSetObj =...
+                gras.ellapx.lreachplain.GoodDirectionSet(...
+                self.smartLinSys, timeVec(1), L0Mat, ellOptions.rel_tol);
+            %% internal approx
+            intBuilder =...
+                gras.ellapx.lreachplain.IntEllApxBuilder(...
+                self.smartLinSys, goodDirSetObj, timeVec,...
+                ellOptions.rel_tol, 'volume');
+            %% external approx
+            extBuilder=...
+                gras.ellapx.lreachplain.ExtEllApxBuilder(...
+                self.smartLinSys, goodDirSetObj, timeVec,...
+                ellOptions.rel_tol);
+            %% int-ext approx
+            intExtBuilder =...
+                gras.ellapx.lreachplain.IntProperEllApxBuilder(...
+                self.smartLinSys, goodDirSetObj, timeVec,...
+                ellOptions.rel_tol, 'volume');
+            %% get tube builder
+            self.ellTubeBuilder =...
+                gras.ellapx.gen.EllApxCollectionBuilder(...
+                [{intBuilder}, {extBuilder}, {intExtBuilder}]);
+            %% preparing plot
+            import gras.ellapx.smartdb.rels.EllUnionTube;
+            import gras.ellapx.uncertcalc.EllApxBuilder;
+            ellTubeRel = self.ellTubeBuilder.getEllTubes();
+            self.ellUnionTubeRel = EllUnionTube.fromEllTubes(ellTubeRel);
+            %% plot and proj plot
+            import gras.ellapx.lreachplain.EllTubeDynamicSpaceProjector;
+            import gras.ellapx.proj.EllTubeStaticSpaceProjector;
+            import gras.ellapx.proj.EllTubeCollectionProjector;
+            
+            %Orth = eye(2);
+            %projSpaceList = reshape(cellstr(num2str(Orth(:))), size(Orth));
+            projSpaceList = {[true true]};
+            projectorList = cell(1, 2);
+            %% dyn projection
+            projectorList{2} =...
+                EllTubeDynamicSpaceProjector(projSpaceList, goodDirSetObj);
+            %% static projection
+            staticProjectorObj = EllTubeStaticSpaceProjector(projSpaceList);
+            projectorList{1} = staticProjectorObj;
+            %% build proj    
+            isnEmptyVec = ~cellfun('isempty', projectorList);
+            projectorObj =...
+                EllTubeCollectionProjector(projectorList(isnEmptyVec));
+            ellTubeProjRel = projectorObj.project(ellTubeRel);
+            ellUnionTubeStaticProjRel =...
+                staticProjectorObj.project(self.ellUnionTubeRel);
+            plotterObj = smartdb.disp.RelationDataPlotter();
+            ellTubeRel.plot(plotterObj);
+            %ellTubeProjRel.plot(plotterObj);
+            %ellUnionTubeStaticProjRel.plot(plotterObj);
         end
         %%
         %
         %
         %
+        function linSys = get_system(self)
+            linSys = self.linSys;
+        end
+        
+        %function [dirCArray timeVec] = get_directions(self)
     end
 end
