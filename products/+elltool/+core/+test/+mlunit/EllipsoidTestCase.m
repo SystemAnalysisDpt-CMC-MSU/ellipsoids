@@ -228,11 +228,11 @@ classdef EllipsoidTestCase < mlunitext.test_case
             mlunit.assert_equals(1,abs(testRes(1)-7)<absTol&&...
                 abs(testRes(2)-5)<absTol);          
             %distance where two ellipsoids have one common point 
-            % according to existing precision policy ellOptions.abs_tol
+            % according to existing precision policy elltool.conf.Properties.getAbsTol()
             testEll1=ellipsoid([1+1e-20 0].',[1 0; 0 1]);
             testEll2=ellipsoid([-1 0].',[1 0;0 1]);
             testRes=distance(testEll1,testEll2);
-            mlunit.assert_equals(1,abs(testRes)<ellOptions.abs_tol);   
+            mlunit.assert_equals(1,abs(testRes)<elltool.conf.Properties.getAbsTol());   
             
         end
         function self = testPropertyGetters(self)
