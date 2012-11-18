@@ -234,6 +234,87 @@ classdef EllipsoidTestCase < mlunitext.test_case
             testRes=distance(testEll1,testEll2);
             mlunit.assert_equals(1,abs(testRes)<ellOptions.abs_tol);   
             
+            %
+            %
+            %DISTANCE FROM VECTOR TO ELLIPSOID 
+            %IN ELLIPSOID METRIC
+            %
+            % Test#1. Distance between an ellipsoid and a vector.
+            testEllipsoid = ellipsoid([1,0,0;0,5,0;0,0,10]);
+            testPointVec = [3,0,0].';
+            testRes = distance(testEllipsoid, testPointVec,1);
+            ansRes = ellVecDistanceCVX(testEllipsoid, testPointVec,1);
+            mlunit.assert_equals(1, (abs(testRes-ansRes)<ellOptions.abs_tol));
+            %
+            % Test#2. Distance between an ellipsoid and a vector.
+            testEllipsoid = ellipsoid([2,0,0;0,5,0;0,0,10]);
+            testPointVec = [3,0,0].';
+            testRes = distance(testEllipsoid, testPointVec,1);
+            ansRes = ellVecDistanceCVX(testEllipsoid, testPointVec,1);
+            mlunit.assert_equals(1, (abs(testRes-ansRes)<ellOptions.abs_tol));
+            %
+            %Test#3 
+            % Distance between two ellipsoids and a vector
+            testEllipsoidVec = [ellipsoid([5,5,0].',[1,0,0;0,5,0;0,0,10]),...
+                ellipsoid([0,10,0].',[10, 0, 0; 0, 16 , 0; 0,0, 5])];
+            testPointVec = [0,5,0].';
+            testResVec = distance(testEllipsoidVec, testPointVec,1);
+            ansResVec(1)=ellVecDistanceCVX(testEllipsoidVec(1), testPointVec,1);
+            ansResVec(2)=ellVecDistanceCVX(testEllipsoidVec(2), testPointVec,1);
+            mlunit.assert_equals(1, (abs(testResVec(1)-ansResVec(1))<ellOptions.abs_tol) &&...
+                (abs(testResVec(2)-ansResVec(2))<ellOptions.abs_tol));
+            %
+            %Test#4.
+            % Random ellipsoid matrix, low dimension case.
+            nDim=2;
+            testEllMat=diag(1:2);
+            testEllMat=testOrth2Mat*testEllMat*testOrth2Mat.';
+            testEllMat=0.5*(testEllMat+testEllMat.');
+            testEllipsoid=ellipsoid(testEllMat);
+            testPointVec=testOrth2Mat*[10;zeros(nDim-1,1)];
+            testRes=distance(testEllipsoid, testPointVec,1);
+            ansRes = ellVecDistanceCVX(testEllipsoid, testPointVec,1);
+            mlunit.assert_equals(1,abs(testRes-ansRes)<ellOptions.abs_tol);
+            %
+            %Test#5.
+            % Distance between two ellipsoids with random matrices and two vectors
+            testEll1Mat=[5,2,0;2,5,0;0,0,1];
+            testEll1Mat=testOrth3Mat*testEll1Mat*testOrth3Mat.';
+            testEll1Mat=0.5*(testEll1Mat+testEll1Mat.');
+            testEll2Mat=[4,0,0;0,9,0;0,0,25];
+            testEll2Mat=testOrth3Mat*testEll2Mat*testOrth3Mat.';
+            testEll2Mat=0.5*(testEll2Mat+testEll2Mat.');
+            testEll2CenterVec=testOrth3Mat*[0;0;5];
+            testEllipsoid1=ellipsoid(testEll1Mat);
+            testEllipsoid2=ellipsoid(testEll2CenterVec,testEll2Mat);
+            testEllipsoidVec = [testEllipsoid1,testEllipsoid2];
+            testPointMat = testOrth3Mat*([0,0,5; 0,5,5].');
+            testResVec = distance(testEllipsoidVec, testPointMat,1);
+            ansResVec(1)=distance(testEllipsoid1,testPointMat(:,1),1);
+            ansResVec(2)=distance(testEllipsoid2,testPointMat(:,2),1);
+            mlunit.assert_equals(1, (abs(testResVec(1)-ansResVec(1))<ellOptions.abs_tol) &&...
+                (abs(testResVec(2)-ansResVec(2))<ellOptions.abs_tol));
+            %
         end
     end
+end
+
+function distEllVec=ellVecDistanceCVX(ellObj,vectorVec,flag)
+    [ellCenVec ellQMat]=double(ellObj);
+    ellQMat=ellQMat\eye(size(ellQMat));
+    ellQMat=0.5*(ellQMat+ellQMat.');
+    ellDims = dimension(ellObj);
+    maxDim   = max(max(ellDims));
+    cvx_begin sdp
+        variable x(maxDim, 1)
+        if flag
+            fDist = (x - vectorVec)'*ellQMat*(x - vectorVec);
+        else
+            fDist = (x - vectorVec)'*(x - vectorVec);
+        end
+        minimize(fDist)
+        subject to
+            x'*ellQMat*x + 2*(-ellQMat*ellCenVec)'*x + (ellCenVec'*ellQMat*ellCenVec - 1) <= 0
+    cvx_end
+    distEllVec = fDist;
 end
