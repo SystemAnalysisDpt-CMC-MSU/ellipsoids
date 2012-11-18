@@ -54,12 +54,7 @@ function [X, FVAL] = ell_nlfnlc(objf, x0, nlcf, Options, varargin)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  global ellOptions;
-
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
-
+  import elltool.conf.Properties;
 
   if nargin < 3
     error('ELL_NLFNLC: function requires at least four input arguments.');
@@ -175,11 +170,11 @@ function [X, FVAL] = ell_nlfnlc(objf, x0, nlcf, Options, varargin)
                                  CHG, f, GRAD, c, ceq, cGRAD, ceqGRAD, varargin{:});
 
   if status < 0
-    if ellOptions.verbose > 0
+    if Properties.getIsVerbose()
       fprintf('ELL_NLFNLC: Warning! NLCP solver cannot compute the minimum.\n');
     end
   elseif status == 0
-    if ellOptions.verbose > 0
+    if Properties.getIsVerbose()
       fprintf('ELL_NLFNLC: Warning! Maximum of function evaluations exceeded.\n');
     end
   end

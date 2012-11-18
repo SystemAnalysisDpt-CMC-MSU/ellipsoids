@@ -1,0 +1,243 @@
+classdef SuiteBasic < mlunitext.test_case
+    methods
+        function self = SuiteBasic(varargin)
+            self = self@mlunitext.test_case(varargin{:});
+        end
+        %
+        function testConstMatrixFunction(self)
+            import gras.mat.ConstMatrixFunction;
+            %
+            f = ConstMatrixFunction(zeros(1));
+            mlunit.assert_equals(f.getDimensionality,2);
+            mlunit.assert_equals(f.getNRows,1);
+            mlunit.assert_equals(f.getNCols,1);
+            mlunit.assert_equals(all(f.getMatrixSize == [1 1]), true);
+            aArrayExpected = repmat(zeros(1), [1 1 3]);
+            aArrayObtained = f.evaluate([1 2 3]);
+            isOkArray = ( aArrayExpected == aArrayObtained );
+            mlunit.assert_equals(all(isOkArray(:)),true);
+            %
+            f = ConstMatrixFunction(zeros(2));
+            mlunit.assert_equals(f.getDimensionality,2);
+            mlunit.assert_equals(f.getNRows,2);
+            mlunit.assert_equals(f.getNCols,2);
+            mlunit.assert_equals(all(f.getMatrixSize == [2 2]), true);
+            aArrayExpected = repmat(zeros(2), [1 1 5]);
+            aArrayObtained = f.evaluate([1 2 3 4 5]);
+            isOkArray = ( aArrayExpected == aArrayObtained );
+            mlunit.assert_equals(all(isOkArray(:)),true);
+            %
+            f = ConstMatrixFunction(zeros(1,2));
+            mlunit.assert_equals(f.getDimensionality,2);
+            mlunit.assert_equals(f.getNRows,1);
+            mlunit.assert_equals(f.getNCols,2);
+            mlunit.assert_equals(all(f.getMatrixSize == [1 2]), true);
+            aArrayExpected = repmat(zeros(1,2), [1 1 1]);
+            aArrayObtained = f.evaluate(1);
+            isOkArray = ( aArrayExpected == aArrayObtained );
+            mlunit.assert_equals(all(isOkArray(:)),true);
+            %
+            f = ConstMatrixFunction(zeros(2,1));
+            mlunit.assert_equals(f.getDimensionality,2);
+            mlunit.assert_equals(f.getNRows,2);
+            mlunit.assert_equals(f.getNCols,1);
+            mlunit.assert_equals(all(f.getMatrixSize == [2 1]), true);
+            aArrayExpected = repmat(zeros(2,1), [1 1 8]);
+            aArrayObtained = f.evaluate([1 2 3 4 5 6 7 8]);
+            isOkArray = ( aArrayExpected == aArrayObtained );
+            mlunit.assert_equals(all(isOkArray(:)),true);
+            %
+            f = ConstMatrixFunction(zeros(2,3));
+            mlunit.assert_equals(f.getDimensionality,2);
+            mlunit.assert_equals(f.getNRows,2);
+            mlunit.assert_equals(f.getNCols,3);
+            mlunit.assert_equals(all(f.getMatrixSize == [2 3]), true);
+            aArrayExpected = repmat(zeros(2,3), [1 1 2]);
+            aArrayObtained = f.evaluate([1 2]);
+            isOkArray = ( aArrayExpected == aArrayObtained );
+            mlunit.assert_equals(all(isOkArray(:)),true);
+            %
+            f = ConstMatrixFunction(zeros(3,2));
+            mlunit.assert_equals(f.getDimensionality,2);
+            mlunit.assert_equals(f.getNRows,3);
+            mlunit.assert_equals(f.getNCols,2);
+            mlunit.assert_equals(all(f.getMatrixSize == [3 2]), true);
+            aArrayExpected = repmat(zeros(3,2), [1 1 3]);
+            aArrayObtained = f.evaluate([1 2 3]);
+            isOkArray = ( aArrayExpected == aArrayObtained );
+            mlunit.assert_equals(all(isOkArray(:)),true);
+            %
+            self.runAndCheckError(...
+                'gras.mat.ConstMatrixFunction([])', ...
+                'MODGEN:COMMON:TYPE:SIMPLE:CHECKGEN:wrongInput');
+            %
+            self.runAndCheckError(...
+                'gras.mat.ConstMatrixFunction(zeros([2 2 2]))', ...
+                'MODGEN:COMMON:TYPE:SIMPLE:CHECKGEN:wrongInput');
+            %
+            self.runAndCheckError(...
+                'gras.mat.ConstMatrixFunction({})', ...
+                'MODGEN:COMMON:TYPE:SIMPLE:CHECKGEN:wrongInput');
+            %
+            self.runAndCheckError(...
+                'gras.mat.ConstMatrixFunction({1,2;3,4})', ...
+                'MODGEN:COMMON:TYPE:SIMPLE:CHECKGEN:wrongInput');
+            %
+        end
+        function testConstRowFunction(self)
+            import gras.mat.ConstRowFunction;
+            %
+            f = ConstRowFunction(zeros(1));
+            mlunit.assert_equals(f.getDimensionality,1);
+            mlunit.assert_equals(f.getNRows,1);
+            mlunit.assert_equals(f.getNCols,1);
+            mlunit.assert_equals(all(f.getMatrixSize == [1 1]), true);
+            aArrayExpected = repmat(zeros(1), [1 1 3]);
+            aArrayObtained = f.evaluate([1 2 3]);
+            isOkArray = ( aArrayExpected == aArrayObtained );
+            mlunit.assert_equals(all(isOkArray(:)),true);
+            %
+            f = ConstRowFunction(zeros(1,10));
+            mlunit.assert_equals(f.getDimensionality,1);
+            mlunit.assert_equals(f.getNRows,1);
+            mlunit.assert_equals(f.getNCols,10);
+            mlunit.assert_equals(all(f.getMatrixSize == [1 10]), true);
+            aArrayExpected = repmat(zeros(1,10), [1 1 6]);
+            aArrayObtained = f.evaluate([1 2 3 4 5 6]);
+            isOkArray = ( aArrayExpected == aArrayObtained );
+            mlunit.assert_equals(all(isOkArray(:)),true);
+            %
+            self.runAndCheckError(...
+                'gras.mat.ConstRowFunction([])', ...
+                'MODGEN:COMMON:TYPE:SIMPLE:CHECKGEN:wrongInput');
+            %
+            self.runAndCheckError(...
+                'gras.mat.ConstRowFunction(zeros(2))', ...
+                'MODGEN:COMMON:TYPE:SIMPLE:CHECKGEN:wrongInput');
+            %
+            self.runAndCheckError(...
+                'gras.mat.ConstRowFunction(zeros(2,1))', ...
+                'MODGEN:COMMON:TYPE:SIMPLE:CHECKGEN:wrongInput');
+            %
+            self.runAndCheckError(...
+                'gras.mat.ConstRowFunction(zeros([2 2 2]))', ...
+                'MODGEN:COMMON:TYPE:SIMPLE:CHECKGEN:wrongInput');
+            %
+            self.runAndCheckError(...
+                'gras.mat.ConstRowFunction({})', ...
+                'MODGEN:COMMON:TYPE:SIMPLE:CHECKGEN:wrongInput');
+            %
+            self.runAndCheckError(...
+                'gras.mat.ConstRowFunction({1,2;3,4})', ...
+                'MODGEN:COMMON:TYPE:SIMPLE:CHECKGEN:wrongInput');
+            %
+        end
+        function testConstColFunction(self)
+            import gras.mat.ConstColFunction;
+            %
+            f = ConstColFunction(zeros(1));
+            mlunit.assert_equals(f.getDimensionality,1);
+            mlunit.assert_equals(f.getNRows,1);
+            mlunit.assert_equals(f.getNCols,1);
+            mlunit.assert_equals(all(f.getMatrixSize == [1 1]), true);
+            aArrayExpected = repmat(zeros(1), [1 1 3]);
+            aArrayObtained = f.evaluate([1 2 3]);
+            isOkArray = ( aArrayExpected == aArrayObtained );
+            mlunit.assert_equals(all(isOkArray(:)),true);
+            %
+            f = ConstColFunction(zeros(10,1));
+            mlunit.assert_equals(f.getDimensionality,1);
+            mlunit.assert_equals(f.getNRows,10);
+            mlunit.assert_equals(f.getNCols,1);
+            mlunit.assert_equals(all(f.getMatrixSize == [10 1]), true);
+            aArrayExpected = repmat(zeros(10,1), [1 1 6]);
+            aArrayObtained = f.evaluate([1 2 3 4 5 6]);
+            isOkArray = ( aArrayExpected == aArrayObtained );
+            mlunit.assert_equals(all(isOkArray(:)),true);
+            %
+            self.runAndCheckError(...
+                'gras.mat.ConstColFunction([])', ...
+                'MODGEN:COMMON:TYPE:SIMPLE:CHECKGEN:wrongInput');
+            %
+            self.runAndCheckError(...
+                'gras.mat.ConstColFunction(zeros(2))', ...
+                'MODGEN:COMMON:TYPE:SIMPLE:CHECKGEN:wrongInput');
+            %
+            self.runAndCheckError(...
+                'gras.mat.ConstColFunction(zeros(1,2))', ...
+                'MODGEN:COMMON:TYPE:SIMPLE:CHECKGEN:wrongInput');
+            %
+            self.runAndCheckError(...
+                'gras.mat.ConstColFunction(zeros([2 2 2]))', ...
+                'MODGEN:COMMON:TYPE:SIMPLE:CHECKGEN:wrongInput');
+            %
+            self.runAndCheckError(...
+                'gras.mat.ConstColFunction({})', ...
+                'MODGEN:COMMON:TYPE:SIMPLE:CHECKGEN:wrongInput');
+            %
+            self.runAndCheckError(...
+                'gras.mat.ConstRowFunction({1,2;3,4})', ...
+                'MODGEN:COMMON:TYPE:SIMPLE:CHECKGEN:wrongInput');
+            %
+        end
+        function testConstMatrixFunctionFactory(self)
+            import gras.mat.ConstMatrixFunctionFactory;
+            import gras.mat.ConstMatrixFunction;
+            import gras.mat.ConstRowFunction;
+            import gras.mat.ConstColFunction;
+            %
+            f = gras.mat.ConstMatrixFunctionFactory.createInstance(...
+                {'1'});
+            mlunit.assert_equals(isa(f,'gras.mat.ConstMatrixFunction'),...
+                true);
+            aMatExpected = [1];
+            aMatObtained = f.evaluate(0);
+            isOkMat = ( aMatExpected == aMatObtained );
+            mlunit.assert_equals(all(isOkMat(:)),true);
+            %
+            f = gras.mat.ConstMatrixFunctionFactory.createInstance(...
+                {'1','2';'3','4'});
+            mlunit.assert_equals(isa(f,'gras.mat.ConstMatrixFunction'),...
+                true);
+            aMatExpected = [1 2; 3 4];
+            aMatObtained = f.evaluate(0);
+            isOkMat = ( aMatExpected == aMatObtained );
+            mlunit.assert_equals(all(isOkMat(:)),true);
+            %
+            f = gras.mat.ConstMatrixFunctionFactory.createInstance(...
+                {'1','2'});
+            mlunit.assert_equals(isa(f,'gras.mat.ConstRowFunction'),...
+                true);
+            aMatExpected = [1 2];
+            aMatObtained = f.evaluate(0);
+            isOkMat = ( aMatExpected == aMatObtained );
+            mlunit.assert_equals(all(isOkMat(:)),true);
+            %
+            f = gras.mat.ConstMatrixFunctionFactory.createInstance(...
+                {'1';'2'});
+            mlunit.assert_equals(isa(f,'gras.mat.ConstColFunction'),...
+                true);
+            aMatExpected = [1; 2];
+            aMatObtained = f.evaluate(0);
+            isOkMat = ( aMatExpected == aMatObtained );
+            mlunit.assert_equals(all(isOkMat(:)),true);
+            %
+            self.runAndCheckError(...
+                'gras.mat.ConstMatrixFunctionFactory.createInstance([])', ...
+                'MODGEN:COMMON:TYPE:SIMPLE:CHECKGEN:wrongInput');
+            %
+            self.runAndCheckError(...
+                'gras.mat.ConstMatrixFunctionFactory.createInstance({})', ...
+                'MODGEN:COMMON:TYPE:SIMPLE:CHECKGEN:wrongInput');
+            %
+            self.runAndCheckError(...
+                'gras.mat.ConstMatrixFunctionFactory.createInstance({''t''})', ...
+                'MODGEN:COMMON:TYPE:SIMPLE:CHECKGEN:wrongInput');
+            %
+            self.runAndCheckError(...
+                'gras.mat.ConstMatrixFunctionFactory.createInstance({1,''t'';1,1})', ...
+                'MODGEN:COMMON:TYPE:SIMPLE:CHECKGEN:wrongInput');
+            %
+        end
+    end
+end

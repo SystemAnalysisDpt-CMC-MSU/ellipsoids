@@ -70,11 +70,9 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
         end
         
         function self = testEq(self)
-            global ellOptions;
-            if ~isstruct(ellOptions)
-                evalin('base', 'ellipsoids_init;');
-            end
-            MAX_TOL = ellOptions.rel_tol;
+            import elltool.conf.Properties;
+            
+            MAX_TOL = Properties.getRelTol();
             
             
             testMat = eye(2);

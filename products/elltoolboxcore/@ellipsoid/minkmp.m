@@ -49,11 +49,7 @@ function [y, Y] = minkmp(varargin)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  global ellOptions;
-
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
+  import elltool.conf.Properties;
 
   if nargin < 3
     error('MINKMP: first, second and third arguments must be ellipsoids.');
@@ -105,11 +101,11 @@ function [y, Y] = minkmp(varargin)
 
   switch n
     case 2,
-      phi = linspace(0, 2*pi, ellOptions.plot2d_grid);
+      phi = linspace(0, 2*pi, E1.nPlot2dPoints);
       L   = [cos(phi); sin(phi)];
 
     case 3,
-      M   = ellOptions.plot3d_grid/2;
+      M   = E1.nPlot3dPoints/2;
       N   = M/2;
       psy = linspace(0, pi, N);
       phi = linspace(0, 2*pi, M);
@@ -172,7 +168,7 @@ function [y, Y] = minkmp(varargin)
     end
   end
 
-  if ellOptions.verbose > 0
+  if Properties.getIsVerbose()
     if nargout == 0
       fprintf('Computing and plotting (E0 - E) + sum(E_i) ...\n');
     else
@@ -180,10 +176,10 @@ function [y, Y] = minkmp(varargin)
     end
   end
 
-  vrb                = ellOptions.verbose;
-  ellOptions.verbose = 0;
+  vrb                = Properties.getIsVerbose();
+  Properties.setIsVerbose(false);
   [x, X]             = minksum(EE);
-  ellOptions.verbose = vrb;
+  Properties.setIsVerbose(vrb);
   y                  = E1.center - E2.center + x;
   Y                  = [];
   N                  = size(L, 2);

@@ -20,19 +20,12 @@ function T = trace(E)
 %
 %    ELLIPSOID/ELLIPSOID.
 %
-
 %
 % Author:
 % -------
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
-
-  global ellOptions;
-
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
 
   [m, n] = size(E);
   T      = [];

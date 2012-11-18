@@ -28,13 +28,6 @@ function res = isempty(H)
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
-
-  global ellOptions;
-
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
-
   if ~(isa(H, 'hyperplane'))
     error('ISEMPTY: input argument must be hyperplane.');
   end

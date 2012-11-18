@@ -3,7 +3,7 @@ function dXdt = ell_eesm_ode(t, X, l0, mydata, n, back)
 % ELL_EESM_ODE - ODE for the shape matrix of the external ellipsoid.
 %
 
-  global ellOptions;
+  import elltool.conf.Properties;
 
   if back > 0
     t = -t;
@@ -21,11 +21,11 @@ function dXdt = ell_eesm_ode(t, X, l0, mydata, n, back)
   p1 = sqrt(l0' * F * BPB * F' * l0);
   p2 = sqrt(l0' * F * X * F' * l0);
 
-  if abs(p1) < ellOptions.abs_tol
-    p1 = ellOptions.abs_tol;
+  if abs(p1) < Properties.getAbsTol()
+    p1 = Properties.getAbsTol();
   end
-  if abs(p2) < ellOptions.abs_tol
-    p2 = ellOptions.abs_tol;
+  if abs(p2) < Properties.getAbsTol()
+    p2 = Properties.getAbsTol();
   end
 
   pp1 = p1/p2;

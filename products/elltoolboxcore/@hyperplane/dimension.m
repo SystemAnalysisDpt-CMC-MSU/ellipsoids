@@ -30,12 +30,6 @@ function D = dimension(H);
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  global ellOptions;
-
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
-
   if ~isa(H, 'hyperplane')
     error('DIMENSION: input must be array of hyperplanes.');
   end
@@ -48,8 +42,8 @@ function D = dimension(H);
       h = H(i, j);
       s = size(h.normal, 1);
       if s < 2
-        if (abs(h.normal) <= ellOptions.abs_tol) & ...
-           (abs(h.shift) <= ellOptions.abs_tol)
+        if (abs(h.normal) <= h.absTol) & ...
+           (abs(h.shift) <= h.absTol)
           r = [r 0];
         else
           r = [r s];

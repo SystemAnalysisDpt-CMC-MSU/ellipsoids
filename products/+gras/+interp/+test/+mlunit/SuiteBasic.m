@@ -8,8 +8,8 @@ classdef SuiteBasic < mlunitext.test_case
 
         end
         function testMatrixSFSqrt(~)
-            import gras.interp.MatrixSymbFormulaBased;
-            import gras.interp.MatrixSFSqrtm;
+            import gras.mat.symb.MatrixSymbFormulaBased;
+            import gras.mat.symb.MatrixSFSqrtm;
             MAX_TOL=1e-14;
             sym1CMat={'cos(t)','sin(t)';'-sin(t)','cos(t)'};
             timeVec=0:0.1:2*pi;

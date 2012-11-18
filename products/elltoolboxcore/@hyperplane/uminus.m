@@ -12,13 +12,6 @@ function H1 = uminus(H)
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
-
-  global ellOptions;
-
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
-
   if ~(isa(H, 'hyperplane'))
     error('UMINUS: input argument must be hyperplanes.');
   end

@@ -73,16 +73,12 @@ function [d, status] = distance(E, X, flag)
 %    2. Stanley Chan, "Numerical method for Finding Minimum Distance to an
 %       Ellipsoid". http://videoprocessing.ucsd.edu/~stanleychan/publication/unpublished/Ellipse.pdf
 %   
-  global ellOptions;
   import modgen.common.throwerror
-if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
 
   if nargin < 3
     flag = 0;
   end
-
+  
   if ~(isa(E, 'ellipsoid'))
     error('DISTANCE: first argument must be ellipsoid or array of ellipsoids.');
   end
@@ -148,10 +144,10 @@ tic;
 [ellCenter1Vec, ellQ1Mat] = double(ellObj1);
 [ellCenter2Vec, ellQ2Mat] = double(ellObj2);
 if rank(ellQ1Mat) < size(ellQ1Mat, 2)
-    ellQ1Mat = regularize(ellQ1Mat);
+    ellQ1Mat = ellipsoid.regularize(ellQ1Mat,ellObj1.absTol);
 end
 if rank(ellQ2Mat) < size(ellQ2Mat, 2)
-    ellQ2Mat = regularize(ellQ2Mat);
+    ellQ2Mat = ellipsoid.regularize(ellQ2Mat,ellObj2.absTol);
 end
 
 %
@@ -187,7 +183,7 @@ else
     %
         stepSize1=fzero(fSquareFunc(aCoeff1,bCoeff1,cCoeff1),[0,1]);
         stepSize2=fzero(fSquareFunc(aCoeff2,bCoeff2,cCoeff2),[0,1]);
-        if (stepSize2<=stepSize1)
+        if (stepSize2-stepSize1<=absTol)
             %in this case the interval between the centers of circles
             %belongs to the ellipsoids and we obtain intersection
             ellDist=0;
@@ -319,7 +315,7 @@ function [distMat, timeMat] = computePointsEllDist(ellObjMat, vecArray, flag)
 %
 % L_POINTDIST - distance from ellipsoid to vector.
 %
-  global ellOptions;
+  import elltool.conf.Properties;
 %
   [mSize, lSize] = size(ellObjMat);
   [kSize, nVec] = size(vecArray);
@@ -338,7 +334,7 @@ function [distMat, timeMat] = computePointsEllDist(ellObjMat, vecArray, flag)
     error('DISTANCE: dimensions of ellipsoid an vector do not match.');
   end
 %
-  if ellOptions.verbose > 0
+  if Properties.getIsVerbose()
     if (nEllObj > 1) || (nVec > 1)
       fprintf('Computing %d ellipsoid-to-vector distances...\n', max([nEllObj nVec]));
     else
@@ -347,15 +343,17 @@ function [distMat, timeMat] = computePointsEllDist(ellObjMat, vecArray, flag)
   end
 %
 %  
-  N_MAX_ITER=50;
-  ABS_TOL=ellOptions.abs_tol;
-  REL_TOL=ellOptions.rel_tol;     
+  N_MAX_ITER=50;   
+  absTolMat = getAbsTol(ellObjMat);
+  relTolMat = getRelTol(ellObjMat);
   if (nEllObj > 1) && (nEllObj == nVec)
     distMat=zeros(mSize,lSize);
     timeMat=zeros(mSize,lSize);
     for i = 1:mSize
       for j = 1:lSize
         yVec      = vecArray(:, i*j);
+        ABS_TOL = absTolMat(i,j);
+        REL_TOL = relTolMat(i,j);
         [dist time] = computeEllVecDistance(ellObjMat(i,j),yVec,N_MAX_ITER,ABS_TOL,REL_TOL);
         distMat(i,j) = dist;
         timeMat(i,j) = time;
@@ -366,7 +364,9 @@ function [distMat, timeMat] = computePointsEllDist(ellObjMat, vecArray, flag)
     timeMat=zeros(mSize,lSize);
     for i = 1:mSize
       for j = 1:lSize
-       yVec=vecArray;
+       yVec=vecArray;    
+        ABS_TOL = absTolMat(i,j);
+        REL_TOL = relTolMat(i,j);
        [dist time] = computeEllVecDistance(ellObjMat(i,j),yVec,N_MAX_ITER,ABS_TOL,REL_TOL);
        distMat(i,j) = dist;
        timeMat(i,j) = time;
@@ -377,6 +377,8 @@ function [distMat, timeMat] = computePointsEllDist(ellObjMat, vecArray, flag)
     timeMat=zeros(1,nVec);
     for i = 1:nVec        
       yVec= vecArray(:, i); 
+      ABS_TOL = ellObjMat.absTol;
+      REL_TOL = ellObjMat.relTol;
       [dist time]= computeEllVecDistance(ellObjMat,yVec,N_MAX_ITER,ABS_TOL,REL_TOL);
       distMat(i) = dist;
       timeMat(i) = time;
@@ -391,7 +393,7 @@ function [distEllEll, timeOfCalculation] = l_elldist(ellObj1, ellObj2, flag)
 %
 % L_ELLDIST - distance from ellipsoid to ellipsoid.
 %
-    global ellOptions;
+    import elltool.conf.Properties;
 
     [mSize1, kSize1] = size(ellObj1);
     [mSize2, kSize2] = size(ellObj2);
@@ -400,7 +402,7 @@ function [distEllEll, timeOfCalculation] = l_elldist(ellObj1, ellObj2, flag)
     if (nEllObj1 > 1) && (nEllObj2 > 1) && ((mSize1 ~= mSize2) || (kSize1 ~= kSize2))
         throwerror('DISTANCE: sizes of ellipsoidal arrays do not match.');
     end
-    if ellOptions.verbose > 0
+    if Properties.getIsVerbose()
         if (nEllObj1 > 1) || (nEllObj2 > 1)
           fprintf('Computing %d ellipsoid-to-ellipsoid distances...\n', max([nEllObj1 nEllObj2]));
         else
@@ -408,12 +410,13 @@ function [distEllEll, timeOfCalculation] = l_elldist(ellObj1, ellObj2, flag)
         end
     end
     N_MAX_ITER=10000;
-    ABS_TOL=ellOptions.abs_tol;
+    absTolMat = getAbsTol(ellObj1);
     if (nEllObj1 > 1) && (nEllObj2 > 1)
         distEllEll=zeros(mSize1,kSize1);  
         timeOfCalculation=zeros(mSize1,kSize1);
         for i = 1:mSize1
             for j = 1:kSize1
+                ABS_TOL = absTolMat(i,j);
                 [distEllEll(i,j) timeOfCalculation(i,j)]=...
                 computeEllEllDistance(ellObj1(i,j),ellObj2(i,j),...
                 N_MAX_ITER,ABS_TOL);
@@ -424,6 +427,7 @@ function [distEllEll, timeOfCalculation] = l_elldist(ellObj1, ellObj2, flag)
         timeOfCalculation=zeros(mSize2,kSize2);
         for i = 1:mSize1
             for j = 1:kSize1
+                ABS_TOL = absTolMat(i,j);
                 [distEllEll(i,j) timeOfCalculation(i,j)]=...
                     computeEllEllDistance(ellObj1(i,j),ellObj2,...
                     N_MAX_ITER,ABS_TOL);      
@@ -433,7 +437,9 @@ function [distEllEll, timeOfCalculation] = l_elldist(ellObj1, ellObj2, flag)
         distEllEll=zeros(mSize2,kSize2);  
         timeOfCalculation=zeros(mSize2,kSize2);
         for i = 1:mSize2
-          for j = 1:kSize2        
+          for j = 1:kSize2
+              
+            ABS_TOL = ellObj1.absTol;
             [distEllEll(mSize2,kSize2) timeOfCalculation(mSize2,kSize2)]=...
                 computeEllEllDistance(ellObj1,ellObj2(i,j),...
                 N_MAX_ITER,ABS_TOL);
@@ -454,7 +460,7 @@ function [d, status] = l_hpdist(E, X, flag)
 % L_HPDIST - distance from ellipsoid to hyperplane.
 %
 
-  global ellOptions;
+  import elltool.conf.Properties;
 
   [m, n] = size(E);
   [k, l] = size(X);
@@ -477,7 +483,7 @@ function [d, status] = l_hpdist(E, X, flag)
     error('DISTANCE: hyperplanes must be of the same dimension.');
   end
 
-  if ellOptions.verbose > 0
+  if Properties.getIsVerbose()
     if (t1 > 1) | (t2 > 1)
       fprintf('Computing %d ellipsoid-to-hyperplane distances...\n', max([t1 t2]));
     else
@@ -572,7 +578,7 @@ function [d, status] = l_polydist(E, X)
 % L_POLYDIST - distance from ellipsoid to polytope.
 %
 
-  global ellOptions;
+  import elltool.conf.Properties;
 
   [m, n] = size(E);
   [k, l] = size(X);
@@ -602,7 +608,7 @@ function [d, status] = l_polydist(E, X)
     error('DISTANCE: polytopes must be of the same dimension.');
   end
 
-  if ellOptions.verbose > 0
+  if Properties.getIsVerbose()
     if (t1 > 1) | (t2 > 1)
       fprintf('Computing %d ellipsoid-to-polytope distances...\n', max([t1 t2]));
     else
@@ -610,7 +616,8 @@ function [d, status] = l_polydist(E, X)
     end
     fprintf('Invoking CVX...\n');
   end
-
+  
+  absTolMat = getAbsTol(E);
   d      = [];
   status = [];
   if (t1 > 1) & (t2 > 1)
@@ -622,7 +629,7 @@ function [d, status] = l_polydist(E, X)
         %[A, b] = double(X(i, j));
         [A, b] = double(X(j));
         if size(Q, 2) > rank(Q)
-          Q = regularize(Q);
+          Q = ellipsoid.regularize(Q,absTolMat(i,j));
         end
         Q  = ell_inv(Q);
         Q  = 0.5*(Q + Q');
@@ -641,7 +648,7 @@ function [d, status] = l_polydist(E, X)
         cvx_end
 
         d1 = f;
-        if d1 < ellOptions.abs_tol
+        if d1 <absTolMat(i,j)
           d1 = 0;
         end
         d1  = sqrt(d1);
@@ -659,7 +666,7 @@ function [d, status] = l_polydist(E, X)
       for j = 1:n
         [q, Q] = parameters(E(i, j));
         if size(Q, 2) > rank(Q)
-          Q = regularize(Q);
+          Q = ellipsoid.regularize(Q,absTolMat(i,j));
         end
         Q  = ell_inv(Q);
         Q  = 0.5*(Q + Q');
@@ -678,7 +685,7 @@ function [d, status] = l_polydist(E, X)
         cvx_end
 
         d1 = f;
-        if d1 < ellOptions.abs_tol
+        if d1 < absTolMat(i,j)
           d1 = 0;
         end
         d1  = sqrt(d1);
@@ -691,7 +698,7 @@ function [d, status] = l_polydist(E, X)
   else
     [q, Q] = parameters(E);
     if size(Q, 2) > rank(Q)
-      Q = regularize(Q);
+      Q = ellipsoid.regularize(Q,E.absTol);
     end
     Q = ell_inv(Q);
     Q = 0.5*(Q + Q');
@@ -716,7 +723,7 @@ function [d, status] = l_polydist(E, X)
         cvx_end
 
         d1 = f;
-        if d1 < ellOptions.abs_tol
+        if d1 < E.absTol
           d1 = 0;
         end
         d1  = sqrt(d1);

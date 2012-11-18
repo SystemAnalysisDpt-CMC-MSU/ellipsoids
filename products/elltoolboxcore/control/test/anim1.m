@@ -1,7 +1,6 @@
-global ellOptions;
+import elltool.conf.Properties;
 
-ellOptions.plot2d_grid = 1000;
-
+Properties.setNPlot2dPoints(1000)
 A = {'0' '-10'; '1/(2 + sin(t))' '-4/(2 + sin(t))'};
 B = {'10' '0'; '0' '1/(2 + sin(t))'};
 %U = ell_unitball(2);
