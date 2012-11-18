@@ -229,9 +229,9 @@ classdef reach < handle
             AC = zeros(d1*d1, size(RS.time_values, 2));
             for i = 1:size(RS.time_values, 2)
               if (back > 0) & ~(isdiscrete(lsys)) & 0
-                A  = matrix_eval(lsys.A, -RS.time_values(i));
+                A  = reach.matrix_eval(lsys.A, -RS.time_values(i));
               else
-                A  = matrix_eval(lsys.A, RS.time_values(i));
+                A  = reach.matrix_eval(lsys.A, RS.time_values(i));
               end
               AC(:, i) = reshape(A, d1*d1, 1);
               if isdiscrete(lsys) & (rank(A) < d1)
@@ -265,7 +265,7 @@ classdef reach < handle
           if iscell(lsys.B)
             BB = zeros(d1*du, size(RS.time_values, 2));
             for i = 1:size(RS.time_values, 2)
-              B        = matrix_eval(lsys.B, RS.time_values(i));
+              B        = reach.matrix_eval(lsys.B, RS.time_values(i));
               BB(:, i) = reshape(B, d1*du, 1);
             end
           else
@@ -276,7 +276,7 @@ classdef reach < handle
           GG = zeros(d1*dd, size(RS.time_values, 2));
           if iscell(lsys.G)
             for i = 1:size(RS.time_values, 2)
-              B        = matrix_eval(lsys.G, RS.time_values(i));
+              B        = reach.matrix_eval(lsys.G, RS.time_values(i));
               GG(:, i) = reshape(B, d1*dd, 1);
             end
           elseif ~(isempty(lsys.G))
@@ -287,7 +287,7 @@ classdef reach < handle
           if iscell(lsys.C)
             CC = zeros(d1*dy, size(RS.time_values, 2));
             for i = 1:size(RS.time_values, 2)
-              C        = matrix_eval(lsys.C, RS.time_values(i));
+              C        = reach.matrix_eval(lsys.C, RS.time_values(i));
               CC(:, i) = reshape(C, d1*dy, 1);
             end
             if isdiscrete(lsys)
@@ -356,7 +356,7 @@ classdef reach < handle
               else
                 B = reshape(BB(:, i), d1, du);
               end
-              Bp(:, i) = B*matrix_eval(p, RS.time_values(i));
+              Bp(:, i) = B*reach.matrix_eval(p, RS.time_values(i));
             end
             if isdiscrete(lsys)
               mydata.Bp = Bp;
@@ -371,8 +371,8 @@ classdef reach < handle
                 BPB   = zeros(d1*d1, size(RS.time_values, 2));
                 BPBsr = zeros(d1*d1, size(RS.time_values, 2));
                 for i = 1:size(RS.time_values, 2)
-                  p = matrix_eval(lsys.control.center, RS.time_values(i));
-                  P = matrix_eval(lsys.control.shape, RS.time_values(i));
+                  p = reach.matrix_eval(lsys.control.center, RS.time_values(i));
+                  P = reach.matrix_eval(lsys.control.shape, RS.time_values(i));
                   if (P ~= P') | (min(eig(P)) < 0)
                     error('REACH: shape matrix of ellipsoidal control bounds must be positive definite.')
                   end
@@ -395,7 +395,7 @@ classdef reach < handle
               elseif iscell(lsys.control.center)
                 Bp  = zeros(d1, size(RS.time_values, 2));
                 for i = 1:size(RS.time_values, 2)
-                  p  = matrix_eval(lsys.control.center, RS.time_values(i));
+                  p  = reach.matrix_eval(lsys.control.center, RS.time_values(i));
                   Bp(:, i) = B*p;
                 end
                 if isdiscrete(lsys)
@@ -410,7 +410,7 @@ classdef reach < handle
                 BPB   = zeros(d1*d1, size(RS.time_values, 2));
                 BPBsr = zeros(d1*d1, size(RS.time_values, 2));
                 for i = 1:size(RS.time_values, 2)
-                  P = matrix_eval(lsys.control.shape, RS.time_values(i));
+                  P = reach.matrix_eval(lsys.control.shape, RS.time_values(i));
                   if (P ~= P') | (min(eig(P)) < 0)
                     error('REACH: shape matrix of ellipsoidal control bounds must be positive definite.')
                   end
@@ -436,12 +436,12 @@ classdef reach < handle
               for i = 1:size(RS.time_values, 2)
                 B = reshape(BB(:, i), d1, du);
                 if iscell(lsys.control.center)
-                  p = matrix_eval(lsys.control.center, RS.time_values(i));
+                  p = reach.matrix_eval(lsys.control.center, RS.time_values(i));
                 else
                   p = lsys.control.center;
                 end
                 if iscell(lsys.control.shape)
-                  P = matrix_eval(lsys.control.shape, RS.time_values(i));
+                  P = reach.matrix_eval(lsys.control.shape, RS.time_values(i));
                   if (P ~= P') | (min(eig(P)) < 0)
                     error('REACH: shape matrix of ellipsoidal control bounds must be positive definite.')
                   end
@@ -525,7 +525,7 @@ classdef reach < handle
                 else
                   G = reshape(GG(:, i), d1, dd);
                 end
-                Gq(:, i) = G*matrix_eval(q, RS.time_values(i));
+                Gq(:, i) = G*reach.matrix_eval(q, RS.time_values(i));
               end
               if isdiscrete(lsys)
                 mydata.Gq = Gq;
@@ -540,8 +540,8 @@ classdef reach < handle
                   GQG   = zeros(d1*d1, size(RS.time_values, 2));
                   GQGsr = zeros(d1*d1, size(RS.time_values, 2));
                   for i = 1:size(RS.time_values, 2)
-                    q = matrix_eval(lsys.disturbance.center, RS.time_values(i));
-                    Q = matrix_eval(lsys.disturbance.shape, RS.time_values(i));
+                    q = reach.matrix_eval(lsys.disturbance.center, RS.time_values(i));
+                    Q = reach.matrix_eval(lsys.disturbance.shape, RS.time_values(i));
                     if (Q ~= Q') | (min(eig(Q)) < 0)
                       error('REACH: shape matrix of ellipsoidal disturbance bounds must be positive definite.')
                     end
@@ -564,7 +564,7 @@ classdef reach < handle
                 elseif iscell(lsys.disturbance.center)
                   Gq  = zeros(d1, size(RS.time_values, 2));
                   for i = 1:size(RS.time_values, 2)
-                    q  = matrix_eval(lsys.disturbance.center, RS.time_values(i));
+                    q  = reach.matrix_eval(lsys.disturbance.center, RS.time_values(i));
                     Gq(:, i) = G*q;
                   end
                   if isdiscrete(lsys)
@@ -579,7 +579,7 @@ classdef reach < handle
                   GQG   = zeros(d1*d1, size(RS.time_values, 2));
                   GQGsr = zeros(d1*d1, size(RS.time_values, 2));
                   for i = 1:size(RS.time_values, 2)
-                    Q = matrix_eval(lsys.disturbance.shape, RS.time_values(i));
+                    Q = reach.matrix_eval(lsys.disturbance.shape, RS.time_values(i));
                     if (Q ~= Q') | (min(eig(Q)) < 0)
                       error('REACH: shape matrix of ellipsoidal disturbance bounds must be positive definite.')
                     end
@@ -605,12 +605,12 @@ classdef reach < handle
                 for i = 1:size(RS.time_values, 2)
                   G = reshape(GG(:, i), d1, dd);
                   if iscell(lsys.disturbance.center)
-                    q = matrix_eval(lsys.disturbance.center, RS.time_values(i));
+                    q = reach.matrix_eval(lsys.disturbance.center, RS.time_values(i));
                   else
                     q = lsys.disturbance.center;
                   end
                   if iscell(lsys.disturbance.shape)
-                    Q = matrix_eval(lsys.disturbance.shape, RS.time_values(i));
+                    Q = reach.matrix_eval(lsys.disturbance.shape, RS.time_values(i));
                     if (Q ~= Q') | (min(eig(Q)) < 0)
                       error('REACH: shape matrix of ellipsoidal disturbance bounds must be positive definite.')
                     end
@@ -648,7 +648,7 @@ classdef reach < handle
             elseif iscell(lsys.noise)
               w = [];
               for i = 1:size(RS.time_values, 2)
-                w = [w matrix_eval(lsys.noise.center, RS.time_values(i))];
+                w = [w reach.matrix_eval(lsys.noise.center, RS.time_values(i))];
               end
               if isdiscrete(lsys)
                 mydata.w = w;
@@ -660,8 +660,8 @@ classdef reach < handle
                 w = [];
                 W = [];
                 for i = 1:size(RS.time_values, 2)
-                  w  = [w matrix_eval(lsys.noise.center, RS.time_values(i))];
-                  ww = matrix_eval(lsys.noise.shape, RS.time_values(i));
+                  w  = [w reach.matrix_eval(lsys.noise.center, RS.time_values(i))];
+                  ww = reach.matrix_eval(lsys.noise.shape, RS.time_values(i));
                   if (ww ~= ww') | (min(eig(ww)) < 0)
                     error('REACH: shape matrix of ellipsoidal noise bounds must be positive definite.')
                   end
@@ -677,7 +677,7 @@ classdef reach < handle
               elseif iscell(lsys.noise.center)
                 w = [];
                 for i = 1:size(RS.time_values, 2)
-                  w = [w matrix_eval(lsys.noise.center, RS.time_values(i))];
+                  w = [w reach.matrix_eval(lsys.noise.center, RS.time_values(i))];
                 end
                 if isdiscrete(lsys)
                   mydata.w = w;
@@ -688,7 +688,7 @@ classdef reach < handle
               else
                 W = [];
                 for i = 1:size(RS.time_values, 2)
-                  ww = matrix_eval(lsys.noise.shape, RS.time_values(i));
+                  ww = reach.matrix_eval(lsys.noise.shape, RS.time_values(i));
                   if (ww ~= ww') | (min(eig(ww)) < 0)
                     error('REACH: shape matrix of ellipsoidal noise bounds must be positive definite.')
                   end
@@ -830,7 +830,7 @@ classdef reach < handle
               l0 = L0(:, ii);
               if isdiscrete(lsys)   % discrete-time system
                 if hasdisturbance(lsys)
-                  [Q, L] = eedist_de(size(tvals, 2), ...
+                  [Q, L] = reach.eedist_de(size(tvals, 2), ...
                                      Q0, ...
                                      l0, ...
                                      mydata, ...
@@ -838,7 +838,7 @@ classdef reach < handle
                                      back, ...
                                      Options.minmaxRS.absTol);
                 elseif ~(isempty(mydata.BPB))
-                  [Q, L] = eesm_de(size(tvals, 2), Q0, l0, mydata, d1, back,RS.absTol);
+                  [Q, L] = reach.eesm_de(size(tvals, 2), Q0, l0, mydata, d1, back,RS.absTol);
                 else
                   Q = [];
                   L = [];
@@ -881,7 +881,7 @@ classdef reach < handle
               l0 = L0(:, ii);
               if isdiscrete(lsys)   % discrete-time system
                 if hasdisturbance(lsys)
-                  [Q, L] = iedist_de(size(tvals, 2), ...
+                  [Q, L] = reach.iedist_de(size(tvals, 2), ...
                                      Q0, ...
                                      l0, ...
                                      mydata, ...
@@ -889,7 +889,7 @@ classdef reach < handle
                                      back, ...
                                      Options.minmax, RS.absTol);
                 elseif ~(isempty(mydata.BPB))
-                  [Q, L] = iesm_de(size(tvals, 2), Q0, l0, mydata, d1, back,RS.absTol);
+                  [Q, L] = reach.iesm_de(size(tvals, 2), Q0, l0, mydata, d1, back,RS.absTol);
                 else
                   Q = [];
                   L = [];
@@ -901,7 +901,7 @@ classdef reach < handle
                   Q       = Q';
                 elseif ~(isempty(mydata.BPB))
                   [tt, Q] = ell_ode_solver(@ell_iesm_ode, tvals, reshape(M, d1*d1, 1), M*l0, l0, mydata, d1, back);
-                  Q       = fix_iesm(Q', d1);
+                  Q       = reach.fix_iesm(Q', d1);
                 else
                   Q = [];
                 end
@@ -944,5 +944,16 @@ classdef reach < handle
     
     methods(Access = private)
         propValMat = getProperty(rsMat,propName)
+        x = ellbndr_2d(E, N)
+        x = ellbndr_3d(E)
+    end
+    methods(Static,Access = private)
+        res = my_color_table(ch)
+        [QQ, LL] = eedist_de(ntv, X0, l0, mydata, N, back, mnmx,absTol)
+        [QQ, LL] = eesm_de(ntv, X0, l0, mydata, N, back,absTol)
+        QQ = fix_iesm(Q, d)
+        [QQ, LL] = iedist_de(ntv, X0, l0, mydata, N, back, mnmx,absTol)
+        [QQ, LL] = iesm_de(ntv, X0, l0, mydata, N, back,absTol)
+        M = matrix_eval(X, t)
     end
 end

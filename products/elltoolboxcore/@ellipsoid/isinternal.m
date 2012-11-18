@@ -118,7 +118,7 @@ function res = isinternal_sub(E, x, s, k)
           fprintf('ISINTERNAL: Warning! There is degenerate ellipsoid in the array.\n');
           fprintf('            Regularizing...\n');
         end
-        Q = regularize(Q,absTolMat(i,j));
+        Q = ellipsoid.regularize(Q,absTolMat(i,j));
       end
  
       r = q' * ell_inv(Q) * q;

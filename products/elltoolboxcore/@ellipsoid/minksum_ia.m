@@ -85,7 +85,7 @@ function IA = minksum_ea(E, L)
             fprintf('MINKSUM_IA: Warning! Degenerate ellipsoid.\n');
             fprintf('            Regularizing...\n');
           end
-          Q = regularize(Q,absTolMat(i,j));
+          Q = ellipsoid.regularize(Q,absTolMat(i,j));
         end
         Q = sqrtm(Q);
         if (i == 1) & (j == 1)

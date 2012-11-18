@@ -97,7 +97,7 @@ function plot_ia(rs, varargin)
 
 
   if (nargin > 1) & ischar(varargin{1})
-    Options.color = my_color_table(varargin{1});
+    Options.color = reach.my_color_table(varargin{1});
   end
   
   E   = get_ia(rs);

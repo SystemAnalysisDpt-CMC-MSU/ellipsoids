@@ -118,8 +118,16 @@ classdef ellipsoid < handle
         end
     end
     
+    
+    methods(Static,Access = private)
+        res = my_color_table(ch)
+        R = regularize(Q,absTol)
+        LC = rm_bad_directions(Q1, Q2, L)
+    end
     methods(Access = private)
         propValMat = getProperty(hplaneMat,propName)
+        x = ellbndr_2d(E)
+        x = ellbndr_3d(E)
     end
     
 end

@@ -61,7 +61,7 @@ function res = isbigger(E1, E2)
       fprintf('ISBIGGER: Warning! First ellipsoid is degenerate.');
       fprintf('          Regularizing...');
     end
-    A = regularize(A,E1.absTol);
+    A = ellipsoid.regularize(A,E1.absTol);
   end
 
   T = ell_simdiag(A, B);

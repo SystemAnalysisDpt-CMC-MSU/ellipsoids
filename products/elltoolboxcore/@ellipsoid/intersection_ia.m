@@ -168,7 +168,7 @@ function E = l_intersection_ia(E1, E2)
   q1 = E1.center;
   Q1 = E1.shape;
   if rank(Q1) < size(Q1, 1)
-    Q1 = ell_inv(regularize(Q1,E1.absTol));
+    Q1 = ell_inv(ellipsoid.regularize(Q1,E1.absTol));
   else
     Q1 = ell_inv(Q1);
   end

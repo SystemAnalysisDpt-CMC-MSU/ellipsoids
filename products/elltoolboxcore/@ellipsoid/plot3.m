@@ -76,7 +76,7 @@ function plot3(varargin)
       E1     = reshape(E, 1, cnt);
       ells   = [ells E1];
       if (i < nai) & ischar(varargin{i + 1})
-        clr = my_color_table(varargin{i + 1});
+        clr = ellipsoid.my_color_table(varargin{i + 1});
         val = 1;
       else
         clr = [0 0 0];

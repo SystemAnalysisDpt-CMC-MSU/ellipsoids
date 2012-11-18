@@ -70,7 +70,7 @@ cvx_begin sdp
             [q, Q] = double(EE(i));
             Q = (Q + Q')*0.5;
             if rank(Q) < mn
-                Q = regularize(Q,absTolVec(i));
+                Q = ellipsoid.regularize(Q,absTolVec(i));
             end
     
             Q     = inv(Q);

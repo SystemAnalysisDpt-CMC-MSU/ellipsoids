@@ -164,7 +164,7 @@ function E = l_intersection_ea(E1, E2)
   q1 = E1.center;
   Q1 = E1.shape;
   if rank(Q1) < size(Q1, 1)
-    Q1 = ell_inv(regularize(Q1,E1.absTol));
+    Q1 = ell_inv(ellipsoid.regularize(Q1,E1.absTol));
   else
     Q1 = ell_inv(Q1);
   end
@@ -199,7 +199,7 @@ function E = l_intersection_ea(E1, E2)
     q2 = E2.center;
     Q2 = E2.shape;
     if rank(Q2) < size(Q2, 1)
-      Q2 = ell_inv(regularize(Q2,E2.absTol));
+      Q2 = ell_inv(ellipsoid.regularize(Q2,E2.absTol));
     else
       Q2 = ell_inv(Q2);
     end
@@ -209,7 +209,7 @@ function E = l_intersection_ea(E1, E2)
   X = a*Q1 + (1 - a)*Q2;
   X = 0.5*(X + X');
  % if rank(X) < size(X, 1)
- %   X = regularize(X);
+ %   X = ellipsoid.regularize(X);
  % end
   Y = ell_inv(X);
   Y = 0.5*(Y + Y');

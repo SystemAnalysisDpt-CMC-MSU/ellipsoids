@@ -144,10 +144,10 @@ tic;
 [ellCenter1Vec, ellQ1Mat] = double(ellObj1);
 [ellCenter2Vec, ellQ2Mat] = double(ellObj2);
 if rank(ellQ1Mat) < size(ellQ1Mat, 2)
-    ellQ1Mat = regularize(ellQ1Mat,ellObj1.absTol);
+    ellQ1Mat = ellipsoid.regularize(ellQ1Mat,ellObj1.absTol);
 end
 if rank(ellQ2Mat) < size(ellQ2Mat, 2)
-    ellQ2Mat = regularize(ellQ2Mat,ellObj2.absTol);
+    ellQ2Mat = ellipsoid.regularize(ellQ2Mat,ellObj2.absTol);
 end
 
 %
@@ -629,7 +629,7 @@ function [d, status] = l_polydist(E, X)
         %[A, b] = double(X(i, j));
         [A, b] = double(X(j));
         if size(Q, 2) > rank(Q)
-          Q = regularize(Q,absTolMat(i,j));
+          Q = ellipsoid.regularize(Q,absTolMat(i,j));
         end
         Q  = ell_inv(Q);
         Q  = 0.5*(Q + Q');
@@ -666,7 +666,7 @@ function [d, status] = l_polydist(E, X)
       for j = 1:n
         [q, Q] = parameters(E(i, j));
         if size(Q, 2) > rank(Q)
-          Q = regularize(Q,absTolMat(i,j));
+          Q = ellipsoid.regularize(Q,absTolMat(i,j));
         end
         Q  = ell_inv(Q);
         Q  = 0.5*(Q + Q');
@@ -698,7 +698,7 @@ function [d, status] = l_polydist(E, X)
   else
     [q, Q] = parameters(E);
     if size(Q, 2) > rank(Q)
-      Q = regularize(Q,E.absTol);
+      Q = ellipsoid.regularize(Q,E.absTol);
     end
     Q = ell_inv(Q);
     Q = 0.5*(Q + Q');

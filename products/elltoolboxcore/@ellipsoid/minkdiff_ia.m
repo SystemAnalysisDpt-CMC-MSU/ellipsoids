@@ -82,13 +82,13 @@ function IA = minkdiff_ia(E1, E2, L)
   q  = E1.center - E2.center;
   Q1 = E1.shape;
   if rank(Q1) < size(Q1, 1)
-    Q1 = regularize(Q1,E1.absTol);
+    Q1 = ellipsoid.regularize(Q1,E1.absTol);
   end
   Q2 = E2.shape;
   if rank(Q2) < size(Q2, 1)
-    Q2 = regularize(Q2,E2.absTol);
+    Q2 = ellipsoid.regularize(Q2,E2.absTol);
   end
-  L  = rm_bad_directions(Q1, Q2, L);
+  L  = ellipsoid.rm_bad_directions(Q1, Q2, L);
   m  = size(L, 2);
   if m < 1
     if Properties.getIsVerbose()
