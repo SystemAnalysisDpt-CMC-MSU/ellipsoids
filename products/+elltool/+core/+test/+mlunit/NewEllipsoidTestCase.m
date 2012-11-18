@@ -385,7 +385,47 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
              'testOrth2Mat','testOrth3Mat',...
                  'testOrth20Mat','testOrth50Mat',...
                  'testOrth100Mat');
-            % Test#1. Simple.
+            
+            % Test#1. Infinite degenerate + nondegenerate.
+            %test1Mat=2*eye(2);
+            %test2Mat=[1 0; 0 2];
+            testEllipsoid1=Ellipsoid([0 Inf].');
+            testEllipsoid2=Ellipsoid([1 1].');
+            dirVec=[1,0].';
+            resEllipsoid=minksumNew_ia([testEllipsoid1, testEllipsoid2], dirVec);
+            resDiagMat=resEllipsoid.diagMat;
+            resEigvMat=resEllipsoid.eigvMat;
+            resCenVec=resEllipsoid.centerVec;
+            
+            ansDiagVec=[1 Inf].';
+            ansEigvMat=[1 0; 0 1];
+            ansCenVec=[0 0].';
+            ansEllipsoid=Ellipsoid(ansCenVec,ansDiagVec,ansEigvMat);
+            mlunit.assert_equals(1,isEllEqual(resEllipsoid,ansEllipsoid)); 
+             
+            % Test#2. Infinite degenerate + nondegenerate.
+            % Rotated matrices.
+            %test1Mat=2*eye(2);
+            %test2Mat=[1 0; 0 2];
+%             ell1Mat=[1 0; 1 1];
+%             testEllipsoid1=Ellipsoid([0,0].',[0 Inf].',ell1Mat);
+%             ellM=testEllipsoid1.eigvMat;
+%             ellD=testEllipsoid1.diagMat;
+%             testEllipsoid2=Ellipsoid([0,0].',[1 1].');
+%             dirVec=[1,0].';
+%             resEllipsoid=minksumNew_ia([testEllipsoid1, testEllipsoid2], dirVec);
+%             resDiagMat=resEllipsoid.diagMat;
+%             resEigvMat=resEllipsoid.eigvMat;
+%             resCenVec=resEllipsoid.centerVec;
+%             
+%             ansDiagVec=[1 Inf].';
+%             ansEigvMat=testOrth2Mat;
+%             ansCenVec=[0 0].';
+%             ansEllipsoid=Ellipsoid(ansCenVec,ansDiagVec,ansEigvMat);
+%             mlunit.assert_equals(1,isEllEqual(resEllipsoid,ansEllipsoid)); 
+             
+              
+             % Test#1. Simple.
             test1Mat=2*eye(2);
             test2Mat=[1 0; 0 2];
             testEllipsoid1=Ellipsoid(test1Mat);
@@ -430,7 +470,9 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
                     Ellipsoid(oldQCenVec,oldQMat));
             end
             mlunit.assert_equals(1, isStillCorrect);
-            %             
+            %    
+             
+            % 
          end
          function self = testMinkdiff_ea(self)
             %
