@@ -31,7 +31,7 @@ function [q, Q] = double(E)
 %
 
   [m, n] = size(E);
-  if (m > 1) | (n > 1)
+  if (m > 1) || (n > 1)
     error('DOUBLE: the argument of this function must be single ellipsoid.');
   end
   
@@ -41,5 +41,6 @@ function [q, Q] = double(E)
     q = E.center;
     Q = E.shape;
   end
-
-  return;
+  
+end
+  

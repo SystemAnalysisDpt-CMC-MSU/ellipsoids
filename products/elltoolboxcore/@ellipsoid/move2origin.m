@@ -42,4 +42,4 @@ function EO = move2origin(E)
     end
   end
 
-  return;
+end

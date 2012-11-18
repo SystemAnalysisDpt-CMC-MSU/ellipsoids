@@ -55,13 +55,13 @@ function IA = minkdiff_ia(E1, E2, L)
   import elltool.conf.Properties;
 
 
-  if ~(isa(E1, 'ellipsoid')) | ~(isa(E2, 'ellipsoid'))
+  if ~(isa(E1, 'ellipsoid')) || ~(isa(E2, 'ellipsoid'))
     error('MINKDIFF_IA: first and second arguments must be single ellipsoids.');
   end
 
   [k, l] = size(E1);
   [m, n] = size(E2);
-  if (k ~= 1) | (l ~= 1) | (m ~= 1) | (n ~= 1)
+  if (k ~= 1) || (l ~= 1) || (m ~= 1) || (n ~= 1)
     error('MINKDIFF_IA: first and second arguments must be single ellipsoids.');
   end
 
@@ -104,4 +104,4 @@ function IA = minkdiff_ia(E1, E2, L)
     IA = [IA ellipsoid(q, Q)];
   end 
 
-  return;
+end

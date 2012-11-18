@@ -57,12 +57,12 @@ function [y, Y] = minkpm(varargin)
   EE = varargin{1};
   E2 = varargin{2};
 
-  if ~(isa(EE, 'ellipsoid')) | ~(isa(E2, 'ellipsoid'))
+  if ~(isa(EE, 'ellipsoid')) || ~(isa(E2, 'ellipsoid'))
     error('MINKPM: first and second arguments must be ellipsoids.');
   end
 
   [m, n] = size(E2);
-  if (m ~= 1) | (n ~= 1)
+  if (m ~= 1) || (n ~= 1)
     error('MINKPM: second argument must be single ellipsoid.');
   end
 
@@ -70,7 +70,7 @@ function [y, Y] = minkpm(varargin)
   k    = min(min(dims));
   m    = max(max(dims));
   n    = dimension(E2);
-  if (k ~= m) | (m ~= n)
+  if (k ~= m) || (m ~= n)
     error('MINKPM: all ellipsoids must be of the same dimension.');
   end
   if n > 3
@@ -267,7 +267,7 @@ function [y, Y] = minkpm(varargin)
           I = minksum_ia(EE, l);
           if isbigger(I, E2);
             if ~isbaddirection(I, E2, l)
-              [r, x] = rho(minkdiff_ea(E, E2, l), l);
+              [~, x] = rho(minkdiff_ea(E, E2, l), l);
               Y      = [Y x];
             end
           end
@@ -324,7 +324,7 @@ function [y, Y] = minkpm(varargin)
     y = Y;
   end
   if nargout == 0
-    clear y, Y;
+    clear y Y;
   end
 
-  return;
+end

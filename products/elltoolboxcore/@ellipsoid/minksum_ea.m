@@ -68,7 +68,7 @@ function EA = minksum_ea(E, L)
   end
 
   [m, n] = size(E);
-  if (m == 1) & (n == 1)
+  if (m == 1) && (n == 1)
     EA = E;
     return;
   end
@@ -90,7 +90,7 @@ function EA = minksum_ea(E, L)
   
         p = sqrt(l'*Q*l);
 
-        if (i == 1) & (j == 1)
+        if (i == 1) && (j == 1)
           q = E(i, j).center;
           S = (1/p) * Q;
           P = p;
@@ -105,4 +105,4 @@ function EA = minksum_ea(E, L)
     EA = [EA ellipsoid(q, S)];
   end
 
-  return;
+end

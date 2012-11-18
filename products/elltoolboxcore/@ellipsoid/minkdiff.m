@@ -61,7 +61,7 @@ function [y, Y] = minkdiff(varargin)
   E1 = varargin{1};
   E2 = varargin{2};
 
-  if ~(isa(E1, 'ellipsoid')) | ~(isa(E2, 'ellipsoid'))
+  if ~(isa(E1, 'ellipsoid')) || ~(isa(E2, 'ellipsoid'))
     error('MINKDIFF: first and second arguments must be single ellipsoids.');
   end
 
@@ -132,7 +132,7 @@ function [y, Y] = minkdiff(varargin)
     ih = ishold;
   end
 
-  if (Options.show_all ~= 0) & (nargout == 0)
+  if (Options.show_all ~= 0) && (nargout == 0)
     plot([E1 E2], 'b');
     hold on;
     if Options.newfigure ~= 0
@@ -164,8 +164,8 @@ function [y, Y] = minkdiff(varargin)
       phi    = linspace(0, 2*pi, E1.nPlot2dPoints);
       l = ellipsoid.rm_bad_directions(Q1, Q2, [cos(phi); sin(phi)]);
       if size(l, 2) > 0
-        [r, Y] = rho(E1, l);
-        [r, X] = rho(E2, l);
+        [~, Y] = rho(E1, l);
+        [~, X] = rho(E2, l);
         Y      = Y - X;
         Y      = [Y Y(:, 1)];
       else
@@ -189,15 +189,15 @@ function [y, Y] = minkdiff(varargin)
       N   = M/2;
       psy = linspace(0, pi, N);
       phi = linspace(0, 2*pi, M);
-      l   = [];
+      l   = zeros(3,M*(N-2));
       for i = 2:(N - 1)
         arr = cos(psy(i))*ones(1, M);
-        l   = [l [cos(phi)*sin(psy(i)); sin(phi)*sin(psy(i)); arr]];
+        l(:,(M*(i-2))+(1:M))   = [cos(phi)*sin(psy(i)); sin(phi)*sin(psy(i)); arr];
       end
       l = ellipsoid.rm_bad_directions(Q1, Q2, l);
       if size(l, 2) > 0
-        [r, Y] = rho(E1, l);
-        [r, X] = rho(E2, l);
+        [~, Y] = rho(E1, l);
+        [~, X] = rho(E2, l);
         Y      = Y - X;
       else
         Y = y;
@@ -248,7 +248,7 @@ function [y, Y] = minkdiff(varargin)
     y = Y;
   end
   if nargout == 0
-    clear y, Y;
+    clear y Y;
   end
 
-  return;
+end

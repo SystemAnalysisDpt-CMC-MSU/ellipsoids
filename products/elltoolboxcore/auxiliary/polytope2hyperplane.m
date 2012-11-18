@@ -42,4 +42,4 @@ function HA = polytope2hyperplane(P)
   [A, b] = double(P);
   HA     = hyperplane(A', b');
 
-  return;
+end

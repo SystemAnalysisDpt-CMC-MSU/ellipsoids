@@ -16,7 +16,7 @@ function disp(E)
   fprintf('Ellipsoid with parameters\n');
 
   [m, n] = size(E);
-  if (m > 1) | (n > 1)
+  if (m > 1) || (n > 1)
     fprintf('%dx%d array of ellipsoids.\n\n', m, n);
     return;
   end
@@ -29,4 +29,4 @@ function disp(E)
     return;
   end
 
-  return;
+end

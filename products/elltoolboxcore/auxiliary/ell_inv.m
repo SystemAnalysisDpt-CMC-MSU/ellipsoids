@@ -37,4 +37,4 @@ function I = ell_inv(A)
   B = inv(A);
   I = inv(B*A) * B;
 
-  return;
+end
