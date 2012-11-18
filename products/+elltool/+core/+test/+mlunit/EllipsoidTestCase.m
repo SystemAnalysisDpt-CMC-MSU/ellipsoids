@@ -295,11 +295,21 @@ classdef EllipsoidTestCase < mlunitext.test_case
             mlunit.assert_equals(1, (abs(testResVec(1)-ansResVec(1))<ellOptions.abs_tol) &&...
                 (abs(testResVec(2)-ansResVec(2))<ellOptions.abs_tol));
             %
+%             %DISTANCE FROM ELLIPSOID TO ELLIPSOID 
+%             %IN ELLIPSOID METRIC
+%             %
+%             % Test#1.
+%             % Distance between two ellipsoids
+%             testEllipsoid1 = ellipsoid([25,0;0,9]);
+%             testEllipsoid2 = ellipsoid([10;0],[4,0;0,9]);
+%             testRes=distance(testEllipsoid1,testEllipsoid2,1);
+%             ansRes=ellEllDistanceCVX(testEllipsoid1,testEllipsoid2,1);
+%             mlunit.assert_equals(1, (abs(testRes-ansRes)<ellOptions.abs_tol));
         end
     end
 end
 
-function distEllVec=ellVecDistanceCVX(ellObj,vectorVec,flag)
+function distEll=ellVecDistanceCVX(ellObj,vectorVec,flag)
     [ellCenVec ellQMat]=double(ellObj);
     ellQMat=ellQMat\eye(size(ellQMat));
     ellQMat=0.5*(ellQMat+ellQMat.');
@@ -316,5 +326,39 @@ function distEllVec=ellVecDistanceCVX(ellObj,vectorVec,flag)
         subject to
             x'*ellQMat*x + 2*(-ellQMat*ellCenVec)'*x + (ellCenVec'*ellQMat*ellCenVec - 1) <= 0
     cvx_end
-    distEllVec = fDist;
+    distEll = sqrt(fDist);
+end
+function distEllEll=ellEllDistanceCVX(ellObj1,ellObj2,flag)
+%     [ellCenVec ellQMat]=double(ellObj);
+%     ellQMat=ellQMat\eye(size(ellQMat));
+%     ellQMat=0.5*(ellQMat+ellQMat.');
+%     ellDims = dimension(ellObj);
+%     maxDim   = max(max(ellDims));
+    dims1 = dimension(ellObj1);
+    dims2 = dimension(ellObj2);
+    mn1   = min(min(dims1));
+    mn2   = min(min(dims2));
+    mx1   = max(max(dims1));
+    mx2   = max(max(dims2));
+    [q, Q] = double(ellObj1);
+    [r, R] = double(ellObj2);
+    Qi     = ell_inv(Q);
+    Qi     = 0.5*(Qi + Qi');
+    Ri     = ell_inv(R);
+    Ri     = 0.5*(Ri + Ri');
+    cvx_begin sdp
+            variable x(mx1, 1)
+            variable y(mx1, 1)
+            if flag
+                f = (x - y)'*Qi*(x - y);
+            else
+                f = (x - y)'*(x - y);
+            end
+            minimize(f)
+            subject to
+                x'*Qi*x + 2*(-Qi*q)'*x + (q'*Qi*q - 1) <= 0
+                y'*Ri*y + 2*(-Ri*r)'*y + (r'*Ri*r - 1) <= 0
+        cvx_end
+
+        distEllEll = f;
 end
