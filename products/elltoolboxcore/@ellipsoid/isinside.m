@@ -79,7 +79,7 @@ function [res, status] = isinside(E1, E2, s)
 % -------
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-%
+%    Vadim Kaushanskiy <vkaushanskiy@gmail.com>
 
   global ellOptions;
 
@@ -158,7 +158,7 @@ function [res, status] = isinside(E1, E2, s)
       error('ISINSIDE: ellipsoids must be of the same dimension.');
     end
     if ellOptions.verbose > 0
-      fprintf('Invoking YALMIP...\n');
+      fprintf('Invoking CVX...\n');
     end
     [m, n] = size(E1);
     res    = 1;
@@ -205,37 +205,40 @@ function [res, status] = qcqp(EA, E)
   end
   Q = ell_inv(Q);
   Q = 0.5*(Q + Q');
-
-  % YALMIP
-  x         = sdpvar(length(Q), 1);
-  objective = x'*Q*x + 2*(-Q*q)'*x + (q'*Q*q - 1);
-  F         = set([]);
   
-  [m, n] = size(EA);
-  for i = 1:m
-    for j = 1:n
-      [q, Q] = parameters(EA(i, j));
-      if size(Q, 2) > rank(Q)
-        Q = regularize(Q);
-      end
-      Q = ell_inv(Q);
-      Q = 0.5*(Q + Q');
-
-      % YALMIP
-      F = F + set(x'*Q*x + 2*(-Q*q)'*x + (q'*Q*q - 1) <= 0);
+[m, n] = size(EA);
+ 
+cvx_begin sdp
+    variable x(length(Q), 1)
+   
+    minimize(x'*Q*x + 2*(-Q*q)'*x + (q'*Q*q - 1))
+    subject to
+      for i = 1:m
+        for j = 1:n
+        [q, Q] = parameters(EA(i, j));
+        if size(Q, 2) > rank(Q)
+            Q = regularize(Q);
+        end
+        Q = ell_inv(Q);
+        Q = 0.5*(Q + Q');
+        x'*Q*x + 2*(-Q*q)'*x + (q'*Q*q - 1) <= 0;
     end
   end
+cvx_end
 
-  % YALMIP 
-  status = solvesdp(F, -objective, ellOptions.sdpsettings);
-  
-  if status.problem ~= 0
+
+  status = 1;
+  if strcmp(cvx_status,'Failed')
+    throwerror('cvxError','Cvx failed');
+  end;
+  if strcmp(cvx_status,'Infeasible') || strcmp(cvx_status,'Inaccurate/Infeasible')
     % problem is infeasible, or global minimum cannot be found
     res = -1;
+    status = 0;
     return;
   end
-
-  if double(objective) < ellOptions.abs_tol
+   
+  if (x'*Q*x + 2*(-Q*q)'*x + (q'*Q*q - 1)) < ellOptions.abs_tol
     res = 1;
   else
     res = 0;

@@ -4,6 +4,8 @@ resList{1}=lib_run_tests(varargin{:});
 resList{2}=gras.test.run_tests();
 resList{3} = elltool.core.test.run_tests();
 resList{4} = elltool.linsys.test.run_tests();
+resList{5} = elltool.reach.test.run_tests();
+%
 results=[resList{:}];
 [errorCount,failCount]=results.getErrorFailCount();
 logger.info(sprintf([...

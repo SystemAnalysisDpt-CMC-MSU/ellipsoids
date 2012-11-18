@@ -34,10 +34,10 @@ function [E, S] = ellunion_ea(EE)
 % -------
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-%
+%    Vadim Kaushanskiy <vkaushanskiy@gmail.com>
 
   global ellOptions;
-
+  import modgen.common.throwerror;
   if ~isstruct(ellOptions)
     evalin('base', 'ellipsoids_init;');
   end
@@ -56,47 +56,48 @@ function [E, S] = ellunion_ea(EE)
   zz     = zeros(mn, mn);
 
   if ellOptions.verbose > 0
-    fprintf('Invoking YALMIP...\n');
-  end
-
-  A      = sdpvar(mn, mn);
-  b      = sdpvar(mn, 1);
-  tt     = sdpvar(M, 1);
-
-  cnstr = lmi;
-
-  for i = 1:M
-    [q, Q] = double(EE(i));
-    
-    if rank(Q) < mn
-      Q = regularize(Q);
-    end
-    
-    Q     = ell_inv(Q);
-    bb    = -Q * q;
-    cc    = q' * Q * q - 1;
-    X     = [(A-tt(i,1)*Q)   (b-tt(i,1)*bb)  zz
-             (b-tt(i,1)*bb)' (-1-tt(i,1)*cc) b'
-             zz'             b               (-A)];
-    cnstr = cnstr + set('X<=0');
-    cnstr = cnstr + set('-tt(i, 1)<=0');
+    fprintf('Invoking CVX...\n');
   end
   
-  S = solvesdp(cnstr, -logdet(A), ellOptions.sdpsettings);
-  
-  A = double(A);
-  b = double(b);
-  
-  B = inv(A);
-  P = 0.5*(B+B.');
-  A = ell_inv(A);
-  p = -A * b;
 
-  E = ellipsoid(p, P);
+
+cvx_begin sdp
+    variable cvxEllMat(mn,mn) symmetric
+    variable cvxEllCenterVec(mn)
+    variable cvxDirVec(M)
+    maximize( det_rootn( cvxEllMat ) )
+    subject to
+        -cvxDirVec <= 0
+        for i = 1:M
+            [q, Q] = double(EE(i));
+            Q = (Q + Q')*0.5;
+            if rank(Q) < mn
+                Q = regularize(Q);
+            end
+    
+            Q     = inv(Q);
+            Q = (Q + Q')*0.5;
+            bb    = -Q * q;
+            cc    = q' * Q * q - 1;
+           
+            [ -(cvxEllMat - cvxDirVec(i)*Q), -(cvxEllCenterVec - cvxDirVec(i)*bb), zeros(mn, mn);
+              -(cvxEllCenterVec - cvxDirVec(i)*bb)', -(- 1 - cvxDirVec(i)*cc), -cvxEllCenterVec';
+               zeros(mn,mn), -cvxEllCenterVec, cvxEllMat] >= 0;
+        end
+cvx_end
+ 
+
+  if strcmp(cvx_status,'Infeasible') || strcmp(cvx_status,'Inaccurate/Infeasible') || strcmp(cvx_status,'Failed')
+      throwerror('cvxError','Cvx cannot solve the system');
+  end;
+  ellMat = inv(cvxEllMat);
+  ellMat = 0.5*(ellMat + ellMat');
+  ellCenterVec = -ellMat * cvxEllCenterVec;
+
+  E = ellipsoid(ellCenterVec, ellMat);
 
   if nargout < 2
     clear S;
   end
 
-  return;
-  
+

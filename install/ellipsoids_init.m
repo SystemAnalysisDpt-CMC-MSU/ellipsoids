@@ -1,5 +1,6 @@
 function SEllOptions = ellipsoids_init()
 %
+import elltool.cvx.CVXController;
 % ELLIPSOIDS_INIT - initializes Ellipsoidal Toolbox.
 %
 % Any routine of Ellipsoidal Toolbox can be called with user-specified values
@@ -13,7 +14,7 @@ global ellOptions;
 
 
 ellOptions.version = '1.4dev';
-ellOptions.verbose = 1; % verbosity 1 ==> ON, 0 ==> OFF
+ellOptions.verbose = 0; % verbosity 1 ==> ON, 0 ==> OFF
 
 if ellOptions.verbose > 0
     welcomeString=sprintf(...
@@ -24,7 +25,7 @@ end
 
 
 ellOptions.abs_tol = 1e-7; % absolute tolerance
-ellOptions.rel_tol = 1e-6; % relative tolerance
+ellOptions.rel_tol = 1e-5; % relative tolerance
 
 
 % ODE solver parameters.
@@ -47,17 +48,10 @@ ellOptions.plot2d_grid = 200; % grid density for plotting in 2D
 ellOptions.plot3d_grid = 200; % grid density for plotting in 3D
 
 
-% YALMIP settings.
-try
-    ellOptions.sdpsettings = sdpsettings('Verbose', 0, 'warning', 0,...
-        'cachesolvers', 1);
-catch
-    warning('YALMIP not found, some functionality may be not accessible.');
-    ellOptions.sdpsettings = [];
+% CVX settings.
+if CVXController.isSetUp()
+    CVXController.setSolver('sedumi');
+    CVXController.setPrecision(ellOptions.rel_tol);
+    CVXController.setIsVerbosityEnabled(false);
 end
-%
-if ellOptions.verbose > 0
-    disp([welcomeString,': done']);
-end
-
 SEllOptions=ellOptions;
