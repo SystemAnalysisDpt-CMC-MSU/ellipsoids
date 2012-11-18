@@ -1,17 +1,17 @@
-function [QQ, LL] = iedist_de(ntv, X0, l0, mydata, N, back, mnmx)
+function [QQ, LL] = eedist_de(ntv, X0, l0, mydata, N, back, mnmx,absTol)
 %
-% IEDIST_DE - recurrence relation for the shape matrix of internal ellipsoid
+% EEDIST_DE - recurrence relation for the shape matrix of external ellipsoid
 %             for discrete-time system with disturbance.
 %
 
-  global ellOptions;
+  import elltool.conf.Properties;
 
   LL                 = l0;
   l                  = l0;
   QQ                 = X0;
   Q                  = reshape(X0, N, N);
-  vrb                = ellOptions.verbose;
-  ellOptions.verbose = 0;
+  vrb                = Properties.getIsVerbose();
+  Properties.setIsVerbose(false);
 
   if back > 0
     for i = 2:ntv
@@ -33,9 +33,9 @@ function [QQ, LL] = iedist_de(ntv, X0, l0, mydata, N, back, mnmx)
       end
       l = A' * l;
       if mnmx > 0 % minmax case
-        E = minkmp_ia(ellipsoid(0.5*(Q+Q')), ellipsoid(0.5*(GQG+GQG')), ellipsoid(0.5*(BPB+BPB')), l);
+        E = minkmp_ea(ellipsoid(0.5*(Q+Q')), ellipsoid(0.5*(GQG+GQG')), ellipsoid(0.5*(BPB+BPB')), l);
       else
-        E = minkpm_ia([ellipsoid(0.5*(Q+Q')) ellipsoid(0.5*(BPB+BPB'))], ellipsoid(0.5*(GQG+GQG')), l);
+        E = minkpm_ea([ellipsoid(0.5*(Q+Q')) ellipsoid(0.5*(BPB+BPB'))], ellipsoid(0.5*(GQG+GQG')), l);
       end
       if ~isempty(E)
         Q = parameters(E);
@@ -63,8 +63,7 @@ function [QQ, LL] = iedist_de(ntv, X0, l0, mydata, N, back, mnmx)
       end
       if dd > 0
         %e1  = max(svd(A)) * max(svd(Q)) * 4 * eps;
-        e1  = ellOptions.abs_tol;
-        e2  = sqrt(e1*e1 + 2*max(eig(BPB))*e1);
+        e2  = sqrt(absTol*absTol + 2*max(eig(BPB))*absTol);
         BPB = ell_regularize(BPB, e2);
       elseif rank(BPB) < N
         BPB = ell_regularize(BPB);
@@ -74,9 +73,9 @@ function [QQ, LL] = iedist_de(ntv, X0, l0, mydata, N, back, mnmx)
       end
       l = Ai' * l;
       if mnmx > 0 % minmax case
-        E = minkmp_ia(ellipsoid(0.5*(Q+Q')), ellipsoid(0.5*(GQG+GQG')), ellipsoid(0.5*(BPB+BPB')), l);
+        E = minkmp_ea(ellipsoid(0.5*(Q+Q')), ellipsoid(0.5*(GQG+GQG')), ellipsoid(0.5*(BPB+BPB')), l);
       else
-        E = minkpm_ia([ellipsoid(0.5*(Q+Q')) ellipsoid(0.5*(BPB+BPB'))], ellipsoid(0.5*(GQG+GQG')), l);
+        E = minkpm_ea([ellipsoid(0.5*(Q+Q')) ellipsoid(0.5*(BPB+BPB'))], ellipsoid(0.5*(GQG+GQG')), l);
       end
       if ~isempty(E)
         Q = parameters(E);
@@ -87,7 +86,6 @@ function [QQ, LL] = iedist_de(ntv, X0, l0, mydata, N, back, mnmx)
       LL = [LL l];
     end
   end
-
-  ellOptions.verbose = vrb;
+  Properties.setIsVerbose(vrb);
 
   return;

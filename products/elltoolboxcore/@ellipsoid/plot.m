@@ -40,11 +40,8 @@ function plot(varargin)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  global ellOptions;
+  import elltool.conf.Properties;
 
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
 
   nai = nargin;
   E   = varargin{1};
@@ -80,7 +77,7 @@ function plot(varargin)
       E1     = reshape(E, 1, cnt);
       ells   = [ells E1];
       if (i < nai) & ischar(varargin{i + 1})
-        clr = my_color_table(varargin{i + 1});
+        clr = ellipsoid.my_color_table(varargin{i + 1});
         val = 1;
       else
         clr = [0 0 0];
@@ -203,7 +200,7 @@ function plot(varargin)
     error('PLOT: ellipsoid dimension can be 1, 2 or 3.');
   end
 
-  if ellOptions.verbose > 0
+  if Properties.getIsVerbose()
     if ell_count == 1
       fprintf('Plotting ellipsoid...\n');
     else

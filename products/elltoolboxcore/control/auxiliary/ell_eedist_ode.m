@@ -4,7 +4,7 @@ function dXdt = ell_eesm_ode(t, X, l0, mydata, n, back)
 %                  for system with disturbance.
 %
 
-  global ellOptions;
+  import elltool.conf.Properties;
 
   if back > 0
     t = -t;
@@ -27,11 +27,11 @@ function dXdt = ell_eesm_ode(t, X, l0, mydata, n, back)
   p1    = sqrt(l0' * F * BPB * F' * l0);
   p2    = sqrt(l0' * F * X * F' * l0);
 
-  if abs(p1) < ellOptions.abs_tol
-    p1 = ellOptions.abs_tol;
+  if abs(p1) < Properties.getAbsTol()
+    p1 = Properties.getAbsTol();
   end
-  if abs(p2) < ellOptions.abs_tol
-    p2 = ellOptions.abs_tol;
+  if abs(p2) < Properties.getAbsTol()
+    p2 = Properties.getAbsTol();
   end
 
   pp1 = p1/p2;
@@ -40,16 +40,16 @@ function dXdt = ell_eesm_ode(t, X, l0, mydata, n, back)
   %g1  = mu * sqrt(l0' * F * F' * l0);
   %g2  = sqrt(l0' * F * GQG * F' * l0);
 
-  %if abs(g2) < ellOptions.abs_tol
-  %  g2 = ellOptions.abs_tol;
+  %if abs(g2) < Properties.getAbsTol()
+  %  g2 = Properties.getAbsTol();
   %end
 
   %gg1 = g1/g2;
 
   %if mu == 0
   %  gg2 = 0;
-  %elseif abs(g1) < ellOptions.abs_tol
-  %  g1  = ellOptions.abs_tol;
+  %elseif abs(g1) < Properties.getAbsTol()
+  %  g1  = Properties.getAbsTol();
   %  gg2 = mu * mu * (g2/g1);
   %else
   %  gg2 = mu * mu * (g2/g1);
@@ -72,12 +72,12 @@ function dXdt = ell_eesm_ode(t, X, l0, mydata, n, back)
   %if mn < 0
   %  mn = abs(mn);
   %  g1 = sqrt(l0' * F * F' * l0);
-  %  if abs(g1) < ellOptions.abs_tol
-  %    g1 = ellOptions.abs_tol;
+  %  if abs(g1) < Properties.getAbsTol()
+  %    g1 = Properties.getAbsTol();
   %  end
   %  gg   = g2/g1;
   %  ee   = min(svd(X));
-  %  nu   = (mn + ellOptions.abs_tol)/(gg + ee);
+  %  nu   = (mn + Properties.getAbsTol())/(gg + ee);
   %  mu   = mu + nu;
   %  dXdt = dXdt + nu*X + nu*gg*I;
   %  dXdt = 0.5*(dXdt + dXdt');

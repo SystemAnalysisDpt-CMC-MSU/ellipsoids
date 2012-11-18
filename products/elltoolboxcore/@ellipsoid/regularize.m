@@ -1,11 +1,10 @@
-function R = regularize(Q)
+function R = regularize(Q,absTol)
 %
 % REGULARIZE - regularization of singular symmetric matrix.
 %
-
-  global ellOptions;
-
-  if Q ~= Q'
+    
+  isSymMat = Q ~= transpose(Q);
+  if any(isSymMat(:))
     error('REGULARIZE: matrix must be symmetric.');
   end
 
@@ -14,7 +13,7 @@ function R = regularize(Q)
 
   if r < n
     [U S V] = svd(Q);
-    E       = ellOptions.abs_tol * eye(n - r);
+    E       = absTol * eye(n - r);
     R       = Q + (U * [zeros(r, r) zeros(r, (n-r)); zeros((n-r), r) E] * U');
     R       = 0.5*(R + R');
   else

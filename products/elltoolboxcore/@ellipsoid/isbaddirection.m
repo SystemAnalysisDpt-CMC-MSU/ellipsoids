@@ -39,16 +39,13 @@ function res = isbaddirection(E1, E2, L)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  global ellOptions;
+  import elltool.conf.Properties;
 
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
 
   [k, d] = size(L);
 
   if isbigger(E1, E2) == 0
-    if ellOptions.verbose > 0
+    if Properties.getIsVerbose()
       fprintf('ISBADDIRECTION: geometric difference of these two ellipsoids is empty set.\n');
       fprintf('                All directions are bad.\n');
     end

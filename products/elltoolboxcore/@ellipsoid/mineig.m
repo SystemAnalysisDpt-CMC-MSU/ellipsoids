@@ -28,11 +28,7 @@ function M = mineig(E)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  global ellOptions;
-
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
+  import elltool.conf.Properties;
 
   if ~(isa(E, 'ellipsoid'))
     error('MINEIG: input argument must be ellipsoid.')

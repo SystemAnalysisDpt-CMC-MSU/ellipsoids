@@ -33,11 +33,7 @@ function EA = minkmp_ea(E1, E2, EE, L)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  global ellOptions;
-
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
+  import elltool.conf.Properties;
 
   if ~(isa(EE, 'ellipsoid')) | ~(isa(E2, 'ellipsoid')) | ~(isa(E1, 'ellipsoid'))
     error('MINKMP_EA: first, second and third arguments must be ellipsoids.');
@@ -64,7 +60,7 @@ function EA = minkmp_ea(E1, E2, EE, L)
   EA = [];
 
   if ~isbigger(E1, E2)
-    if ellOptions.verbose > 0
+    if Properties.getIsVerbose()
       fprintf('MINKMP_EA: the resulting set is empty.\n');
     end
     return;
@@ -74,8 +70,8 @@ function EA = minkmp_ea(E1, E2, EE, L)
   N                  = size(L, 2);
   [m, n]             = size(EE);
   EE                 = reshape(EE, 1, m*n);
-  vrb                = ellOptions.verbose;
-  ellOptions.verbose = 0;
+  vrb                = Properties.getIsVerbose();
+  Properties.setIsVerbose(false);
 
   for i = 1:N
     l = L(:, i);
@@ -85,10 +81,10 @@ function EA = minkmp_ea(E1, E2, EE, L)
     end
   end
 
-  ellOptions.verbose = vrb;
+  Properties.setIsVerbose(vrb);
 
   if isempty(EA)
-    if ellOptions.verbose > 0
+    if Properties.getIsVerbose()
       fprintf('MINKMP_EA: cannot compute external approximation for any\n');
       fprintf('           of the specified directions.\n');
     end

@@ -57,11 +57,6 @@ function E = intersection_ea(E1, X)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  global ellOptions;
-
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
 
   if ~(isa(E1, 'ellipsoid'))
     error('INTERSECTION_EA: first input argument must be ellipsoid.');
@@ -166,12 +161,10 @@ function E = l_intersection_ea(E1, E2)
 %                     of single ellipsoid with single ellipsoid or halfspace.
 %
 
-  global ellOptions;
-
   q1 = E1.center;
   Q1 = E1.shape;
   if rank(Q1) < size(Q1, 1)
-    Q1 = ell_inv(regularize(Q1));
+    Q1 = ell_inv(ellipsoid.regularize(Q1,E1.absTol));
   else
     Q1 = ell_inv(Q1);
   end
@@ -206,7 +199,7 @@ function E = l_intersection_ea(E1, E2)
     q2 = E2.center;
     Q2 = E2.shape;
     if rank(Q2) < size(Q2, 1)
-      Q2 = ell_inv(regularize(Q2));
+      Q2 = ell_inv(ellipsoid.regularize(Q2,E2.absTol));
     else
       Q2 = ell_inv(Q2);
     end
@@ -216,13 +209,13 @@ function E = l_intersection_ea(E1, E2)
   X = a*Q1 + (1 - a)*Q2;
   X = 0.5*(X + X');
  % if rank(X) < size(X, 1)
- %   X = regularize(X);
+ %   X = ellipsoid.regularize(X);
  % end
   Y = ell_inv(X);
   Y = 0.5*(Y + Y');
   k = 1 - a*(1 - a)*(q2 - q1)'*Q2*Y*Q1*(q2 - q1);
   q = Y*(a*Q1*q1 + (1 - a)*Q2*q2);
-  Q = (1+ellOptions.abs_tol)*k*Y;
+  Q = (1+E1.absTol)*k*Y;
   E = ellipsoid(q, Q); 
   
   return;
@@ -261,8 +254,6 @@ function EA = l_polyintersect(E, P)
 % L_POLYINTERSECT - computes external ellipsoidal approximation of intersection
 %                   of single ellipsoid with single polytope.
 %
-
-  global ellOptions;
 
   EA = E;
   HA = polytope2hyperplane(P);

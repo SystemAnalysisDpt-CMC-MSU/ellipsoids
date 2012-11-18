@@ -40,11 +40,7 @@ import modgen.common.throwerror
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  global ellOptions;
-
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
+  import elltool.conf.Properties;
 
   if ~(isa(E, 'ellipsoid')) | ~(isa(H, 'hyperplane'))
     error('HPINTERSECTION: first argument must be ellipsoid, second argument - hyperplane.');
@@ -83,7 +79,7 @@ import modgen.common.throwerror
     error('HPINTERSECTION: hyperplanes must be of the same dimension.');
   end
 
-  if ellOptions.verbose > 0
+  if Properties.getIsVerbose()
     if (t1 > 1) | (t2 > 1)
       fprintf('Computing %d ellipsoid-hyperplane intersections...\n', max([t1 t2]));
     else
@@ -154,7 +150,7 @@ function I = l_compute1intersection(E, H, n)
 %                          single hyperplane.
 %
 
-  global ellOptions;
+  import elltool.conf.Properties;
 
   [v, c] = parameters(H);
   if c < 0
@@ -168,11 +164,11 @@ function I = l_compute1intersection(E, H, n)
   Q = E.shape;
 
   if rank(Q) < n
-    if ellOptions.verbose > 0
+    if Properties.getIsVerbose()
       fprintf('HPINTERSECTION: Warning! Degenerate ellipsoid.\n');
       fprintf('                Regularizing...\n');
     end
-    Q = regularize(Q);
+    Q = ellipsoid.regularize(Q,E.absTol);
   end
 
   W   = ell_inv(Q);

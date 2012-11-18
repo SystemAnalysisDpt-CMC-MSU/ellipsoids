@@ -1,12 +1,10 @@
 % A test with large state dimension  (n)
 function bign
 
-global ellOptions
+import elltool.conf.Properties;
 
-ellipsoids_init
-ellOptions.verbose = 0;
-ellOptions.time_grid = 1000;
-
+Properties.setIsVerbose(false);
+Properties.setNTimeGridPoints(135);
 profile clear
 profile on
 

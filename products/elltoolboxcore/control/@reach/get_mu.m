@@ -32,11 +32,8 @@ function [mu, T] = get_mu(rs)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  global ellOptions;
+  import elltool.conf.Properties;
 
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
 
   if ~(isa(rs, 'reach'))
     error('GET_MU: input argument must be reach set object.');
