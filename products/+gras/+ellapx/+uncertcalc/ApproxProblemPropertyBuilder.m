@@ -53,7 +53,7 @@ classdef ApproxProblemPropertyBuilder
                 sysConfRepoMgr.getParam('time_interval.t1')];
             %
             tStart=tic;            
-            import gras.ellapx.lreachuncert.LReachProblemDynamicsFactory;
+            import gras.ellapx.lreachuncert.probdyn.LReachProblemDynamicsFactory;
             pDefObj = LReachProblemDynamicsFactory.createByParams(...
                 AtDefMat,BtDefMat,PtDefMat,ptDefVec,CtDefMat,...
                 QtDefMat,qtDefVec,X0DefMat,x0DefVec,tLims,calcPrecision);

@@ -1,12 +1,12 @@
 classdef AReachProblemDynamicsInterp<...
-        gras.ellapx.lreachplain.AReachProblemDynamics
+        gras.ellapx.lreachplain.probdyn.AReachProblemDynamics
     methods
         function self=AReachProblemDynamicsInterp(problemDef,calcPrecision)
             import gras.ellapx.common.*;
             import gras.interp.MatrixInterpolantFactory;
             import gras.interp.MatrixSymbInterpFactory;
             import gras.gen.SquareMatVector;
-            import gras.ellapx.lreachplain.LReachProblemDynamicsInterp;
+            import gras.ellapx.lreachplain.probdyn.LReachProblemDynamicsInterp;
             import gras.ode.MatrixODESolver;
             %
             self.problemDef = problemDef;

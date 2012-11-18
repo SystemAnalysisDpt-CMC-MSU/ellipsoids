@@ -1,6 +1,6 @@
 classdef LReachProblemLTIDynamics<...
-        gras.ellapx.lreachplain.AReachProblemLTIDynamics & ...
-        gras.ellapx.lreachuncert.AReachProblemDynamics
+        gras.ellapx.lreachplain.probdyn.AReachProblemLTIDynamics & ...
+        gras.ellapx.lreachuncert.probdyn.AReachProblemDynamics
     properties (Access=protected)
         xtDynamics
     end
@@ -12,14 +12,14 @@ classdef LReachProblemLTIDynamics<...
             import gras.mat.ConstMatrixFunction;
             import gras.mat.ConstColFunction;
             %
-            if ~isa(problemDef,'gras.ellapx.lreachuncert.ReachContLTIProblemDef')
+            if ~isa(problemDef,'gras.ellapx.lreachuncert.probdef.ReachContLTIProblemDef')
                 modgen.common.throwerror('wrongInput',...
                     'Incorrect system definition');
             end
             %
             % call superclass constructor
             %
-            self=self@gras.ellapx.lreachplain.AReachProblemLTIDynamics(...
+            self=self@gras.ellapx.lreachplain.probdyn.AReachProblemLTIDynamics(...
                 problemDef,calcPrecision);
             %
             % copy necessary data to local variables

@@ -1,5 +1,5 @@
 classdef AReachProblemDynamics<...
-        gras.ellapx.lreachplain.IReachProblemDynamics
+        gras.ellapx.lreachplain.probdyn.IReachProblemDynamics
     properties (Access=protected)
         problemDef
         AtDynamics

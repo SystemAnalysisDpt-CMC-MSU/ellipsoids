@@ -1,6 +1,5 @@
 classdef LReachProblemDynamicsInterp<...
-        gras.ellapx.lreachplain.AReachProblemDynamicsInterp & ...
-        gras.ellapx.lreachuncert.AReachProblemDynamics
+        gras.ellapx.lreachplain.probdyn.AReachProblemDynamicsInterp
     properties (Access=protected)
         xtDynamics
     end
@@ -8,47 +7,33 @@ classdef LReachProblemDynamicsInterp<...
         function self=LReachProblemDynamicsInterp(problemDef,calcPrecision)
             import gras.ellapx.common.*;
             import gras.interp.MatrixInterpolantFactory;
-            import gras.interp.MatrixSymbInterpFactory;
             import gras.ode.MatrixODESolver;
             %
             if ~isa(problemDef,...
-                    'gras.ellapx.lreachuncert.IReachContProblemDef')
+                    'gras.ellapx.lreachplain.probdef.IReachContProblemDef')
                 modgen.common.throwerror('wrongInput',...
                     'Incorrect system definition');
             end
             %
             % call superclass constructor
             %
-            self=self@gras.ellapx.lreachplain.AReachProblemDynamicsInterp(...
+            self=self@gras.ellapx.lreachplain.probdyn.AReachProblemDynamicsInterp(...
                 problemDef,calcPrecision);
             %
             % copy necessary data to local variables
             %
-            CtDefMat = problemDef.getCMatDef();
-            QCMat = problemDef.getQCMat();
-            qCVec = problemDef.getqCVec();
             x0DefVec = problemDef.getx0Vec();
             sysDim = size(problemDef.getAMatDef(), 1);
-            %
-            % compute C(t)Q(t)C'(t)
-            %
-            self.CQCTransDynamics=MatrixSymbInterpFactory.rMultiply(...
-                CtDefMat,QCMat,CtDefMat.');
-            %
-            % compute C(t)q(t)
-            %
-            self.CqtDynamics=MatrixSymbInterpFactory.rMultiplyByVec(...
-                CtDefMat,qCVec);
             %
             % compute x(t)
             %
             odeArgList=self.getOdePropList(calcPrecision);
             solverObj=MatrixODESolver(sysDim,@ode45,odeArgList{:});
             %
-            xtDerivFunc = @(t,x) self.AtDynamics.evaluate(t)*x+...
-                self.BptDynamics.evaluate(t)+self.CqtDynamics.evaluate(t);
+            XtDerivFunc = @(t,x) self.AtDynamics.evaluate(t)*x+...
+                self.BptDynamics.evaluate(t);
             %
-            [timeXtVec,xtArray]=solverObj.solve(xtDerivFunc,...
+            [timeXtVec,xtArray]=solverObj.solve(XtDerivFunc,...
                 self.timeVec,x0DefVec);
             %
             self.xtDynamics=MatrixInterpolantFactory.createInstance(...

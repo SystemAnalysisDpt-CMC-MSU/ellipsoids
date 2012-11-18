@@ -1,4 +1,4 @@
-classdef IReachContProblemDef<gras.ellapx.lreachplain.IReachContProblemDef
+classdef IReachContProblemDef<gras.ellapx.lreachplain.probdef.IReachContProblemDef
     methods (Abstract)
         cCMat=getCMatDef(self)
         qCVec=getqCVec(self)

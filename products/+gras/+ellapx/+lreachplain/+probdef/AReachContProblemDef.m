@@ -1,4 +1,4 @@
-classdef AReachContProblemDef<gras.ellapx.lreachplain.IReachContProblemDef
+classdef AReachContProblemDef<gras.ellapx.lreachplain.probdef.IReachContProblemDef
     properties (Access=protected)
         sysDim
         bCMat
@@ -68,6 +68,14 @@ classdef AReachContProblemDef<gras.ellapx.lreachplain.IReachContProblemDef
     methods
         function self=AReachContProblemDef(aCMat,bCMat,pCMat,pCVec,...
                 x0Mat,x0Vec,tLims)
+            %
+            import gras.ellapx.lreachplain.probdef.AReachContProblemDef;
+            %
+            if ~AReachContProblemDef.isCompatible(aCMat,bCMat,pCMat,...
+                    pCVec,x0Mat,x0Vec,tLims)
+                modgen.common.throwerror(...
+                    'wrongInput','Incorrect system definition');
+            end            
             %
             self.aCMat = aCMat;
             self.bCMat = bCMat;

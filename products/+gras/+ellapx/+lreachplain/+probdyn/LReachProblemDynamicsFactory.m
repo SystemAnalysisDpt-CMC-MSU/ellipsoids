@@ -1,15 +1,15 @@
 classdef LReachProblemDynamicsFactory<handle
     methods(Static)
         function pDynamicsObject=create(pDefObj,calcPrecision)
-            import gras.ellapx.lreachplain.LReachProblemDynamicsInterp;
-            import gras.ellapx.lreachplain.LReachProblemLTIDynamics;
+            import gras.ellapx.lreachplain.probdyn.LReachProblemDynamicsInterp;
+            import gras.ellapx.lreachplain.probdyn.LReachProblemLTIDynamics;
             %
             if isa(pDefObj,...
-                    'gras.ellapx.lreachplain.ReachContLTIProblemDef')
+                    'gras.ellapx.lreachplain.probdef.ReachContLTIProblemDef')
                 pDynamicsObject = LReachProblemLTIDynamics(pDefObj,...
                     calcPrecision);
             elseif isa(pDefObj,...
-                    'gras.ellapx.lreachplain.LReachContProblemDef')
+                    'gras.ellapx.lreachplain.probdef.LReachContProblemDef')
                 pDynamicsObject = LReachProblemDynamicsInterp(pDefObj,...
                     calcPrecision);
             else
@@ -19,10 +19,10 @@ classdef LReachProblemDynamicsFactory<handle
         end
         function pDynamicsObject=createByParams(aCMat,bCMat,pCMat,pCVec,...
                 x0Mat,x0Vec,tLims,calcPrecision)
-            import gras.ellapx.lreachplain.LReachContProblemDef;
-            import gras.ellapx.lreachplain.LReachProblemDynamicsInterp;
-            import gras.ellapx.lreachplain.ReachContLTIProblemDef;
-            import gras.ellapx.lreachplain.LReachProblemLTIDynamics;
+            import gras.ellapx.lreachplain.probdef.LReachContProblemDef;
+            import gras.ellapx.lreachplain.probdyn.LReachProblemDynamicsInterp;
+            import gras.ellapx.lreachplain.probdef.ReachContLTIProblemDef;
+            import gras.ellapx.lreachplain.probdyn.LReachProblemLTIDynamics;
             %
             if ReachContLTIProblemDef.isCompatible(aCMat,bCMat,pCMat,...
                     pCVec,x0Mat,x0Vec,tLims)

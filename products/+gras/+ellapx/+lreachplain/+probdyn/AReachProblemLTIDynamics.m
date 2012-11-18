@@ -1,5 +1,5 @@
 classdef AReachProblemLTIDynamics<...
-        gras.ellapx.lreachplain.AReachProblemDynamics
+        gras.ellapx.lreachplain.probdyn.AReachProblemDynamics
     methods
         function self=AReachProblemLTIDynamics(problemDef,calcPrecision)
             %

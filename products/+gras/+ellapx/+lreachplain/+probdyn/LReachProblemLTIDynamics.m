@@ -1,5 +1,5 @@
 classdef LReachProblemLTIDynamics<...
-        gras.ellapx.lreachplain.AReachProblemLTIDynamics
+        gras.ellapx.lreachplain.probdyn.AReachProblemLTIDynamics
     properties (Access=protected)
         xtDynamics
     end
@@ -9,14 +9,14 @@ classdef LReachProblemLTIDynamics<...
             import gras.interp.MatrixInterpolantFactory;
             import gras.ode.MatrixODESolver;
             %
-            if ~isa(problemDef,'gras.ellapx.lreachplain.ReachContLTIProblemDef')
+            if ~isa(problemDef,'gras.ellapx.lreachplain.probdef.ReachContLTIProblemDef')
                 modgen.common.throwerror('wrongInput',...
                     'Incorrect system definition');
             end
             %
             % call superclass constructor
             %
-            self=self@gras.ellapx.lreachplain.AReachProblemLTIDynamics(...
+            self=self@gras.ellapx.lreachplain.probdyn.AReachProblemLTIDynamics(...
                 problemDef,calcPrecision);
             %
             % copy necessary data to local variables
