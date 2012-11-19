@@ -16,7 +16,7 @@ function slide = ell_demo3
   verbose                = Properties.getIsVerbose();
   plot2d_grid            = Properties.getNPlot2dPoints();
   Properties.setIsVerbose(false);
-  Properties.setNPlot2dPoints(1000);
+  Properties.setNTimeGridPoints(100);
   
  if nargout < 1
     playshow ell_demo3;
@@ -118,7 +118,7 @@ function slide = ell_demo3
     slide(NN).code = {
       'ct = cut(rs, [3 5]);',
       'cla;',
-      'plot_ea(ct); hold on; plot_ia(ct); hold off',
+      'plot_ea(ct); hold on; plot_ia(ct); hold off;',
       'ylabel(''V_C''); zlabel(''i_L'');'
     };
     slide(NN).text = {

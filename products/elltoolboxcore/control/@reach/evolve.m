@@ -753,7 +753,7 @@ function RS = evolve(CRS, T, lsys)
                              d1, ...
                              back, ...
                              Options.minmax, RS.absTol);
-        elseif ~(isempty(mydata.BPB)
+        elseif ~(isempty(mydata.BPB))
           [Q, L] = reach.eesm_de(size(tvals, 2), Q0, l0, mydata, d1, back,RS.absTol);
         else
           Q = [];

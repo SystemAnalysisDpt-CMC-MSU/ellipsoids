@@ -158,6 +158,11 @@ classdef HyperplaneTestCase < mlunitext.test_case
             pHandle = plot(testHplane3D1Vec,'g',testHplane3D2Vec,'r');
             close(pHandle);            
         end
+        function testPlotSimple(~)
+            HA = hyperplane([1 0; 1 -2]'', [4 -2]);
+            o.width = 2; o.size = [3 6.6]; o.center = [0 -2; 0 0];
+            plot(HA, 'r', o); hold off;
+        end
         %    
         function self = testWrongInput(self)
             SInpData =  self.auxReadFile(self);

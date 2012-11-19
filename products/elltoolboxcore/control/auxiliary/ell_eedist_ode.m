@@ -1,4 +1,4 @@
-function dXdt = ell_eesm_ode(t, X, l0, mydata, n, back)
+function dXdt = ell_eedist_ode(t, X, l0, mydata, n, back)
 %
 % ELL_EEDIST_ODE - ODE for the shape matrix of the external ellipsoid
 %                  for system with disturbance.
@@ -57,7 +57,7 @@ function dXdt = ell_eesm_ode(t, X, l0, mydata, n, back)
 
   l1 = Y * F' * l0;
   l2 = GQGsr * F' * l0;
-  if (norm(l1) < abs_tol_solver) | (norm(l2) < abs_tol_solver) %
+  if (norm(l1) < Properties.getAbsTol()) || (norm(l2) < Properties.getAbsTol()) %
     S = I;
   else
     S = ell_valign(l1, l2);
@@ -84,5 +84,3 @@ function dXdt = ell_eesm_ode(t, X, l0, mydata, n, back)
   %end
   
   dXdt = reshape(dXdt, n*n, 1);
-
-  return;
