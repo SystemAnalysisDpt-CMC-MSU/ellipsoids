@@ -1,8 +1,10 @@
 classdef Reach<handle
+    properties (Constant,GetAccess=private)
+        MIN_EIG = 0.1
+    end
     properties (Access = public)
         linSys
         smartLinSys
-        ellTubeBuilder
         ellTubeRel
     end
     methods
@@ -16,17 +18,18 @@ classdef Reach<handle
             self.linSys = linSys;
             %% analize input
             import modgen.common.type.simple.checkgenext;
+            import modgen.common.throwerror;
             if (nargin == 0) || isempty(linSys)
                 return;
             end
             if nargin < 4
-                error('REACH: insufficient number of input arguments.');
+                throwerror('REACH: insufficient number of input arguments.');
             end
             if ~(isa(linSys, 'elltool.core.control.LinSys'))
-                error('REACH: first input argument must be linear system object.');
+                throwerror('REACH: first input argument must be linear system object.');
             end
             if ~(isa(X0Ell, 'ellipsoid'))
-                error('REACH: set of initial conditions must be ellipsoid.');
+                throwerror('REACH: set of initial conditions must be ellipsoid.');
             end
             checkgenext('x1==x2&&x2==x3', 3,...
                 dimension(linSys), dimension(X0Ell), size(L0Mat, 1));
@@ -34,22 +37,23 @@ classdef Reach<handle
             [timeRows, timeCols] = size(timeVec);
             if ~(isa(timeVec, 'double')) || (timeRows ~= 1) ||...
                     ((timeCols ~= 2) && (timeCols ~= 1))
-                error(['REACH: time interval must be specified as ',...
+                throwerror(['REACH: time interval must be specified as ',...
                     '''[t0 t1]'', or, in discrete-time - as ''[k0 k1]''.']);
             end
             if (nargin < 5) || ~(isstruct(OptStruct))
                 OptStruct = [];
                 OptStruct.approximation = 2;
-                OptStruct.save_all = 0;
+                OptStruct.saveAll = 0;
                 OptStruct.minmax = 0;
             else
                 if ~(isfield(OptStruct, 'approximation')) || ...
-                    (OptStruct.approximation < 0) || (OptStruct.approximation > 2)
+                    (OptStruct.approximation < 0) ||...
+                    (OptStruct.approximation > 2)
                     OptStruct.approximation = 2;
                 end
-                if ~(isfield(OptStruct, 'save_all')) || ...
-                    (OptStruct.save_all < 0) || (OptStruct.save_all > 2)
-                    OptStruct.save_all = 0;
+                if ~(isfield(OptStruct, 'saveAll')) || ...
+                    (OptStruct.saveAll < 0) || (OptStruct.saveAll > 2)
+                    OptStruct.saveAll = 0;
                 end
                 if ~(isfield(OptStruct, 'minmax')) || ...
                     (OptStruct.minmax < 0) || (OptStruct.minmax > 1)
@@ -132,32 +136,16 @@ classdef Reach<handle
             goodDirSetObj =...
                 gras.ellapx.lreachplain.GoodDirectionSet(...
                 self.smartLinSys, timeVec(1), L0Mat, ellOptions.rel_tol);
-            %% internal approx
-            %intBuilder =...
-            %    gras.ellapx.lreachplain.IntEllApxBuilder(...
-            %    self.smartLinSys, goodDirSetObj, timeVec,...
-            %    ellOptions.rel_tol, 'volume');
-            %% external approx
-            %extBuilder=...
-            %    gras.ellapx.lreachplain.ExtEllApxBuilder(...
-            %    self.smartLinSys, goodDirSetObj, timeVec,...
-            %    ellOptions.rel_tol);
-            %% int-ext approx
             extIntBuilder =...
                 gras.ellapx.lreachuncert.ExtIntEllApxBuilder(...
                 self.smartLinSys, goodDirSetObj, timeVec,...
-                ellOptions.rel_tol, 'volume', 0.1);
-            
-            %intExtBuilder =...
-            %    gras.ellapx.lreachplain.IntProperEllApxBuilder(...
-            %    self.smartLinSys, goodDirSetObj, timeVec,...
-            %    ellOptions.rel_tol, 'volume');
+                ellOptions.rel_tol, 'volume', self.MIN_EIG);
             %% get tubes
-            self.ellTubeBuilder =...
+            ellTubeBuilder =...
                 gras.ellapx.gen.EllApxCollectionBuilder({extIntBuilder});
-            %import gras.ellapx.smartdb.rels.EllUnionTube;
             import gras.ellapx.uncertcalc.EllApxBuilder;
-            self.ellTubeRel = self.ellTubeBuilder.getEllTubes();
+            self.ellTubeRel = ellTubeBuilder.getEllTubes();
+            ellTubeRel = ellTubeBuilder.getEllTubes();
             %self.ellUnionTubeRel = EllUnionTube.fromEllTubes(ellTubeRel);
             %% plot and proj plot
             %import gras.ellapx.lreachplain.EllTubeDynamicSpaceProjector;
@@ -193,50 +181,87 @@ classdef Reach<handle
         function linSys = get_system(self)
             linSys = self.linSys;
         end
-        %
-        %function [dirCArray timeVec] = get_directions(self)
-        %
+        %%
+        function [directionsCVec timeVec] = get_directions(self)
+            import gras.ellapx.enums.EApproxType;
+            SData = self.ellTubeRel.getTuplesFilteredBy('approxType',...
+                EApproxType.Internal);
+            directionsCVec = SData.ltGoodDirMat.';
+            if nargout > 1
+                timeVec = cell2mat(SData.timeVec(1));
+            end
+        end
+        %%
         function [trCenterMat timeVec] = get_center(self)
             trCenterMat = cell2mat(self.ellTubeRel.aMat(1));
             if nargout > 1
                 timeVec = cell2mat(self.ellTubeRel.timeVec(1));
             end
         end
-        %
+        %%
         function [eaEllMat timeVec] = get_ea(self)
-            nTuples = size(self.ellTubeRel.QArray, 1) / 2;
-            nTimes = size(cell2mat(self.ellTubeRel.timeVec(1)), 2);
-            for iTuple = 1 : nTuples
-                tupleCentMat = cell2mat(self.ellTubeRel.aMat(iTuple));
-                tupleMatArray = cell2mat(self.ellTubeRel.QArray(iTuple));
-               for jTime = 1 : nTimes
+            import gras.ellapx.enums.EApproxType;
+            SData = self.ellTubeRel.getTuplesFilteredBy('approxType',...
+                EApproxType.External);
+            nTuples = size(SData.QArray, 1);
+            nTimes = numel(SData.timeVec{1});
+            for iTuple = nTuples : -1 : 1
+                tupleCentMat = cell2mat(SData.aMat(iTuple));
+                tupleMatArray = cell2mat(SData.QArray(iTuple));
+               for jTime = nTimes : -1 : 1
                    eaEllMat(iTuple, jTime) =...
                        ellipsoid(tupleCentMat(:, jTime),...
                        tupleMatArray(:, :, jTime));
                end
             end
             if nargout > 1
-                timeVec = cell2mat(self.ellTubeRel.timeVec(1));
+                timeVec = cell2mat(SData.timeVec(1));
             end
         end
-        %
+        %%
         function [iaEllMat timeVec] = get_ia(self)
-            nTuples = size(self.ellTubeRel.QArray, 1) / 2;
-            nTimes = size(cell2mat(self.ellTubeRel.timeVec(1)), 2);
-            for iTuple = 1 : nTuples
-                tupleCentMat =...
-                    cell2mat(self.ellTubeRel.aMat(iTuple + nTuples));
-                tupleMatArray =...
-                    cell2mat(self.ellTubeRel.QArray(iTuple + nTuples));
-               for jTime = 1 : nTimes
+            import gras.ellapx.enums.EApproxType;
+            SData = self.ellTubeRel.getTuplesFilteredBy('approxType',...
+                EApproxType.Internal);
+            nTuples = size(SData.QArray, 1);
+            nTimes = numel(SData.timeVec{1});
+            for iTuple = nTuples : -1 : 1
+                tupleCentMat = cell2mat(SData.aMat(iTuple));
+                tupleMatArray = cell2mat(SData.QArray(iTuple));
+               for jTime = nTimes : -1 : 1
                    iaEllMat(iTuple, jTime) =...
                        ellipsoid(tupleCentMat(:, jTime),...
                        tupleMatArray(:, :, jTime));
                end
             end
             if nargout > 1
-                timeVec = cell2mat(self.ellTubeRel.timeVec(1));
+                timeVec = cell2mat(SData.timeVec(1));
             end
+        end
+        %%
+        function [goodCurvesCVec timeVec] = get_goodcurves(self)
+            import gras.ellapx.enums.EApproxType;
+            SData = self.ellTubeRel.getTuplesFilteredBy('approxType',...
+                EApproxType.Internal);
+            goodCurvesCVec = SData.xTouchCurveMat.';
+            if nargout > 1
+                timeVec = cell2mat(SData.timeVec(1));
+            end
+        end
+        %%
+        function projSet = projection(self, projMat)
+            import gras.ellapx.enums.EProjType;
+            %import gras.ellapx.lreachplain.EllTubeDynamicSpaceProjector;
+            fProj =...
+                @(~, timeVec, varargin)...
+                deal(repmat(projMat.',[1 1 numel(timeVec)]),...
+                repmat(projMat,[1 1 numel(timeVec)]));
+            projSpaceList = false(size(projMat, 1));
+            projSpaceList(1 : size(projMat, 2)) = true;
+            projSpaceList = {projSpaceList};
+            projType = EProjType.Static;
+            projSet = self.ellTubeRel.project(projType,...
+                projSpaceList, fProj);
         end
     end
 end
