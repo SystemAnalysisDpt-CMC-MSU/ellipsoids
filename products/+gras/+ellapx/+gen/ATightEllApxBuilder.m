@@ -10,7 +10,7 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.IEllApxBuilder
         odeRelCalcPrecision        
     end
     properties (Constant,GetAccess=private)
-        MAX_PRECISION_FACTOR=0.02;
+        MAX_PRECISION_FACTOR=0.007;
     end
     methods (Access=protected)
         function res=getAbsODECalcPrecision(self)
@@ -47,7 +47,7 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.IEllApxBuilder
             import gras.ellapx.gen.ATightEllApxBuilder;
             import modgen.common.throwerror;
             if ~isa(pDefObj,...
-                    'gras.ellapx.lreachplain.LReachProblemDefInterp')
+                    'gras.ellapx.lreachplain.probdyn.IReachProblemDynamics')
                 throwerror('wrongInput','incorrect type of pDefObj');
             end
             sTime=goodDirSetObj.getsTime();

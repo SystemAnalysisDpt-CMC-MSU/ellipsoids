@@ -36,12 +36,8 @@ function res = contains(E1, E2)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %    Vadim Kaushanskiy <vkaushanskiy@gmail.com>
 
-  global ellOptions;
+  import elltool.conf.Properties;
   
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
-
   if ~(isa(E1, 'ellipsoid')) | ~(isa(E2, 'ellipsoid'))
     error('CONTAINS: input arguments must be ellipsoids.');
   end
@@ -64,7 +60,7 @@ function res = contains(E1, E2)
     error('CONTAINS: ellipsoids must be of the same dimension.');
   end
 
-  if ellOptions.verbose > 0
+  if Properties.getIsVerbose()
     if (t1 > 1) | (t2 > 1)
       fprintf('Checking %d ellipsoid-in-ellipsoid containments...\n', max([t1 t2]));
     else
@@ -112,15 +108,15 @@ function res = l_check_containment(E1, E2)
 % L_CHECK_CONTAINMENT - check if E2 is inside E1.
 %
 
-  global ellOptions;
+  import elltool.conf.Properties;
   import modgen.common.throwerror;
   [q, Q] = double(E1);
   [r, R] = double(E2);
   if size(Q, 2) > rank(Q)
-      Q = regularize(Q);
+      Q = ellipsoid.regularize(Q,E1.absTol);
   end
   if size(R, 2) > rank(R)
-      R = regularize(R);
+      R = ellipsoid.regularize(R,E2.absTol);
   end
   Qi     = ell_inv(Q);
   Ri     = ell_inv(R);
@@ -129,7 +125,7 @@ function res = l_check_containment(E1, E2)
 
   AMat = 0.5*(AMat + AMat');
   BMat = 0.5*(BMat + BMat');
-  if ellOptions.verbose > 0
+  if Properties.getIsVerbose()
     fprintf('Invoking CVX...\n');
   end
   cvx_begin sdp

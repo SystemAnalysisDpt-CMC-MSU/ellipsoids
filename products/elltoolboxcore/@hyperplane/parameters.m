@@ -27,13 +27,6 @@ function [v, c] = parameters(H)
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
-
-  global ellOptions;
-
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
-
   if ~(isa(H, 'hyperplane'))
     error('PARAMETERS: input argument must be hyperplane.');
   end

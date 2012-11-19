@@ -1,4 +1,4 @@
-global ellOptions;
+import elltool.conf.Properties;
 
 C = 1;
   A1 = {'sin(3*t)' '-0.22' '0'; '0' '-1' '0'; '-0.5' '1' 'cos(0.2*t)'};
@@ -7,7 +7,7 @@ C = 1;
   U1.shape = {'2 - sin(2*t)' '0' '0'; '0' '2- cos(3*t)' '0'; '0' '0' '1'};
   T  = [0 3];
   L0 = [1 0 0; 0 0 1;0 1 1;1 -1 1; 1 0 1; 1 1 0]';
-  X0 = [4 -2 5]' +ellOptions.abs_tol*ell_unitball(3);
+  X0 = [4 -2 5]' +Properties.getAbsTol()*ell_unitball(3);
 
   s1 = linsys(A1, B1, U1);
   rs1 = reach(s1, X0, L0, T);
@@ -20,7 +20,7 @@ C = 1;
   for i = 1:200
 	  cla;
     x0  = C * xx(:, i);
-    X0  = x0 + ellOptions.abs_tol*ell_unitball(3);
+    X0  = x0 + Properties.getAbsTol()*ell_unitball(3);
     rs1 = reach(s1, X0, L0, [tt(i) (tt(i)+3)]);
     plot_ea(rs1, 'r'); hold on;
     plot_ia(rs1, 'b');

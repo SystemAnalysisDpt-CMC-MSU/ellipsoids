@@ -73,16 +73,12 @@ function [d, status] = distance(E, X, flag)
 %    2. Stanley Chan, "Numerical method for Finding Minimum Distance to an
 %       Ellipsoid". http://videoprocessing.ucsd.edu/~stanleychan/publication/unpublished/Ellipse.pdf
 %   
-  global ellOptions;
   import modgen.common.throwerror
-if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
 
   if nargin < 3
     flag = 0;
   end
-
+  
   if ~(isa(E, 'ellipsoid'))
     error('DISTANCE: first argument must be ellipsoid or array of ellipsoids.');
   end
@@ -126,7 +122,7 @@ if ~isstruct(ellOptions)
 
 
 
-function [ellDist timeOfCalculation] = computeEllEllDistance(ellObj1,ellObj2,nMaxIter,absTol,isFlagOn)
+function [ellDist timeOfCalculation] = computeEllEllDistance(ellObj1,ellObj2,nMaxIter,absTol)
 % COMPUTEELLELLDISTANCE - computes the distance between two ellipsoids
 % Input:
 %       ellObj1:  ellipsoid: [1,1] - first ellipsoid,
@@ -144,99 +140,90 @@ function [ellDist timeOfCalculation] = computeEllEllDistance(ellObj1,ellObj2,nMa
 %            System Analysis Department 2012 $
 %
 % 
-    tic;
-    [ellCenter1Vec, ellQ1Mat] = double(ellObj1);
-    [ellCenter2Vec, ellQ2Mat] = double(ellObj2);
-    if rank(ellQ1Mat) < size(ellQ1Mat, 2)
-        ellQ1Mat = regularize(ellQ1Mat);
-    end
-    if rank(ellQ2Mat) < size(ellQ2Mat, 2)
-        ellQ2Mat = regularize(ellQ2Mat);
-    end
+tic;
+[ellCenter1Vec, ellQ1Mat] = double(ellObj1);
+[ellCenter2Vec, ellQ2Mat] = double(ellObj2);
+if rank(ellQ1Mat) < size(ellQ1Mat, 2)
+    ellQ1Mat = ellipsoid.regularize(ellQ1Mat,ellObj1.absTol);
+end
+if rank(ellQ2Mat) < size(ellQ2Mat, 2)
+    ellQ2Mat = ellipsoid.regularize(ellQ2Mat,ellObj2.absTol);
+end
 
+%
+ellQ1Mat=ellQ1Mat\eye(size(ellQ1Mat));
+ellQ2Mat=ellQ2Mat\eye(size(ellQ2Mat));
+%
+if (isinternal(ellObj1,ellCenter2Vec)||isinternal(ellObj2,ellCenter1Vec))
+    ellDist=0;
+else
+    %initial centers of circle inside the ellipsoids
+    circleCenter1Vec=ellCenter1Vec;
+    circleCenter2Vec=ellCenter2Vec;
     %
-    ellQ1Mat=ellQ1Mat\eye(size(ellQ1Mat));
-    ellQ2Mat=ellQ2Mat\eye(size(ellQ2Mat));
+    fAngleFunc=@(xVec,yVec) acos(xVec.'*yVec/(norm(xVec)*norm(yVec)));
+    fSquareFunc=@(a,b,c) (@(t) a*t^2+b*t+c);
+    kIter=1;
+    isDone=false;  
+    ellDist=inf;
+    %find stepsizes that determine the points on the interval formed by
+    %centers of circles, and that points should belong to the boundaries of
+    %corresponding ellipsoids
+    while (kIter<=nMaxIter) &&(~isDone)
+        %solve two one dimentional qudratic equations of the type ax^2+bx+c=0 to get the stepsizes 
+        circleCentersDiffVec=circleCenter2Vec-circleCenter1Vec;
+        ellCircleCentersDiff1Vec=circleCenter1Vec-ellCenter1Vec;
+        ellCircleCentersDiff2Vec=circleCenter1Vec-ellCenter2Vec;
+        aCoeff1=circleCentersDiffVec.'*ellQ1Mat*circleCentersDiffVec;
+        bCoeff1=2*circleCentersDiffVec.'*ellQ1Mat*ellCircleCentersDiff1Vec;
+        cCoeff1=ellCircleCentersDiff1Vec.'*ellQ1Mat*ellCircleCentersDiff1Vec-1;
+        aCoeff2=circleCentersDiffVec.'*ellQ2Mat*circleCentersDiffVec;
+        bCoeff2=2*circleCentersDiffVec.'*ellQ2Mat*ellCircleCentersDiff2Vec;
+        cCoeff2=ellCircleCentersDiff2Vec.'*ellQ2Mat*ellCircleCentersDiff2Vec-1;  
     %
-    if (isinternal(ellObj1,ellCenter2Vec)||isinternal(ellObj2,ellCenter1Vec))
-        ellDist=0;
-    elseif ~isFlagOn
-        %initial centers of circle inside the ellipsoids
-        circleCenter1Vec=ellCenter1Vec;
-        circleCenter2Vec=ellCenter2Vec;
-        %
-        fAngleFunc=@(xVec,yVec) acos(xVec.'*yVec/(norm(xVec)*norm(yVec)));
-        fSquareFunc=@(a,b,c) (@(t) a*t^2+b*t+c);
-        kIter=1;
-        isDone=false;  
-        ellDist=inf;
-        %find stepsizes that determine the points on the interval formed by
-        %centers of circles, and that points should belong to the boundaries of
-        %corresponding ellipsoids
-        while (kIter<=nMaxIter) &&(~isDone)
-            %solve two one dimentional qudratic equations of the type ax^2+bx+c=0 to get the stepsizes 
-            circleCentersDiffVec=circleCenter2Vec-circleCenter1Vec;
-            ellCircleCentersDiff1Vec=circleCenter1Vec-ellCenter1Vec;
-            ellCircleCentersDiff2Vec=circleCenter1Vec-ellCenter2Vec;
-            aCoeff1=circleCentersDiffVec.'*ellQ1Mat*circleCentersDiffVec;
-            bCoeff1=2*circleCentersDiffVec.'*ellQ1Mat*ellCircleCentersDiff1Vec;
-            cCoeff1=ellCircleCentersDiff1Vec.'*ellQ1Mat*ellCircleCentersDiff1Vec-1;
-            aCoeff2=circleCentersDiffVec.'*ellQ2Mat*circleCentersDiffVec;
-            bCoeff2=2*circleCentersDiffVec.'*ellQ2Mat*ellCircleCentersDiff2Vec;
-            cCoeff2=ellCircleCentersDiff2Vec.'*ellQ2Mat*ellCircleCentersDiff2Vec-1;  
-        %
-            stepSize1=fzero(fSquareFunc(aCoeff1,bCoeff1,cCoeff1),[0,1]);
-            stepSize2=fzero(fSquareFunc(aCoeff2,bCoeff2,cCoeff2),[0,1]);
-            if (stepSize2-stepSize1<=absTol)
-                %in this case the interval between the centers of circles
-                %belongs to the ellipsoids and we obtain intersection
-                ellDist=0;
+        stepSize1=fzero(fSquareFunc(aCoeff1,bCoeff1,cCoeff1),[0,1]);
+        stepSize2=fzero(fSquareFunc(aCoeff2,bCoeff2,cCoeff2),[0,1]);
+        if (stepSize2-stepSize1<=absTol)
+            %in this case the interval between the centers of circles
+            %belongs to the ellipsoids and we obtain intersection
+            ellDist=0;
+            isDone=true;
+        else
+            %define new points on the boader of the ellipsoids
+            newPoint1Vec=circleCenter1Vec+stepSize1.*circleCentersDiffVec;
+            newPoint2Vec=circleCenter1Vec+stepSize2.*circleCentersDiffVec;
+            newPointsDiffVec=newPoint2Vec-newPoint1Vec;
+            %Auxilliary vectors, if ellipsoid is q(x)=0.5x'Ax+b'x+c then
+            %auxilliary vectors equal to Ax+b, but in our case we have to
+            %determine A from input Q, since we have x'Q^(-1)x as input
+            %representation of ellipsoid
+            auxilliary1Vec=ellQ1Mat*newPoint1Vec-ellQ1Mat*ellCenter1Vec;
+            auxilliary2Vec=ellQ2Mat*newPoint2Vec-ellQ2Mat*ellCenter2Vec;
+            newCircle1Vec=auxilliary1Vec+auxilliary1Vec;
+            newCircle2Vec=auxilliary2Vec+auxilliary2Vec;
+            %
+            angleEll1=fAngleFunc(newPointsDiffVec,newCircle1Vec);
+            angleEll2=fAngleFunc(-newPointsDiffVec,newCircle2Vec);
+            if (angleEll1<absTol) && (angleEll2<absTol)
+                ellDist=norm(newPointsDiffVec);
                 isDone=true;
             else
-                %define new points on the boader of the ellipsoids
-                newPoint1Vec=circleCenter1Vec+stepSize1.*circleCentersDiffVec;
-                newPoint2Vec=circleCenter1Vec+stepSize2.*circleCentersDiffVec;
-                newPointsDiffVec=newPoint2Vec-newPoint1Vec;
-                %Auxilliary vectors, if ellipsoid is q(x)=0.5x'Ax+b'x+c then
-                %auxilliary vectors equal to Ax+b, but in our case we have to
-                %determine A from input Q, since we have x'Q^(-1)x as input
-                %representation of ellipsoid
-                auxilliary1Vec=ellQ1Mat*newPoint1Vec-ellQ1Mat*ellCenter1Vec;
-                auxilliary2Vec=ellQ2Mat*newPoint2Vec-ellQ2Mat*ellCenter2Vec;
-                newCircle1Vec=auxilliary1Vec+auxilliary1Vec;
-                newCircle2Vec=auxilliary2Vec+auxilliary2Vec;
-                %
-                angleEll1=fAngleFunc(newPointsDiffVec,newCircle1Vec);
-                angleEll2=fAngleFunc(-newPointsDiffVec,newCircle2Vec);
-                if (angleEll1<absTol) && (angleEll2<absTol)
-                    ellDist=norm(newPointsDiffVec);
-                    isDone=true;
-                else
-                    %the form of these constans is proved in the article cited
-                    %at the title
-                    gamma1Coeff=1/norm(2*ellQ1Mat);
-                    gamma2Coeff=1/norm(2*ellQ2Mat);
-                    %finally we calculate new centers of circles
-                    circleCenter1Vec=newPoint1Vec-gamma1Coeff*(newCircle1Vec);
-                    circleCenter2Vec=newPoint2Vec-gamma2Coeff*(newCircle2Vec);
-                end
-            end 
-            kIter=kIter+1;   
-        end
-    else
-%         ellQ2InvMat=ellQ2Mat\eye(size(ellQ2Mat));
-%         auxMat=ellQ1Mat*ellQ2InvMat;
-%         [eigMat diagMat]=eig(auxMat);
-%         minEigV=min(diag(diagMat));
-%         maxEigV=max(diag(diagMat));
-%         lam1=(1-maxEigV^(0.5))^2;
-%         lam2=(1+minEigV^(0.5))^2;
-%         ellDist=min(lam1,lam2);
+                %the form of these constans is proved in the article cited
+                %at the title
+                gamma1Coeff=1/norm(2*ellQ1Mat);
+                gamma2Coeff=1/norm(2*ellQ2Mat);
+                %finally we calculate new centers of circles
+                circleCenter1Vec=newPoint1Vec-gamma1Coeff*(newCircle1Vec);
+                circleCenter2Vec=newPoint2Vec-gamma2Coeff*(newCircle2Vec);
+            end
+        end 
+        kIter=kIter+1;   
     end
-    timeOfCalculation=toc;
+end
+timeOfCalculation=toc;
 
 %%%%%%%%
-function [ distEllVec timeOfComputation ] = computeEllVecDistance(ellObj,vectorVec,nMaxIter,absTol, relTol,isFlagOn)
+function [ distEllVec timeOfComputation ] = computeEllVecDistance(ellObj,vectorVec,nMaxIter,absTol, relTol)
 % COMPUTEELLVECDISTANCE - computes the distance between an ellipsoid and a
 %                         vector
 % Input:
@@ -256,35 +243,35 @@ function [ distEllVec timeOfComputation ] = computeEllVecDistance(ellObj,vectorV
 %            System Analysis Department 2012 $
 %
 %
-    import modgen.common.throwerror 
-    tic;
-    [ellCenterVec, ellQMat] = double(ellObj);
-    ellQMat=ellQMat\eye(size(ellQMat));%=A
-    vectorVec=vectorVec-ellCenterVec;
-    vectorEllVal=vectorVec'*ellQMat*vectorVec;
-    if ( vectorEllVal< 1)
-        distEllVec=-1;
-    elseif (vectorEllVal==1)
-        distEllVec=0;
-    elseif ~isFlagOn
-        [unitaryMat diagMat]=eig(ellQMat);
-        unitaryMat=transpose(unitaryMat);
-        distEllVec=diag(diagMat);
-        qVec=unitaryMat*vectorVec;
-        dMean=mean(distEllVec);
-        vectorNorm=norm(vectorVec);
-        x0=sqrt((dMean*vectorNorm*vectorNorm)-1)/dMean;
-        fDetFunction=@(x) -1+sum((qVec.*qVec).*(distEllVec./...
+ import modgen.common.throwerror 
+ tic;
+ [ellCenterVec, ellQMat] = double(ellObj);
+ ellQMat=ellQMat\eye(size(ellQMat));
+ vectorVec=vectorVec-ellCenterVec;
+ vectorEllVal=vectorVec'*ellQMat*vectorVec;
+ if ( vectorEllVal< 1)
+     distEllVec=-1;
+ elseif (vectorEllVal==1)
+     distEllVec=0;
+ else
+     [unitaryMat diagMat]=eig(ellQMat);
+     unitaryMat=transpose(unitaryMat);
+     distEllVec=diag(diagMat);
+     qVec=unitaryMat*vectorVec;
+     dMean=mean(distEllVec);
+     vectorNorm=norm(vectorVec);
+     x0=sqrt((dMean*vectorNorm*vectorNorm)-1)/dMean;
+     fDetFunction=@(x) -1+sum((qVec.*qVec).*(distEllVec./...
          ((1+distEllVec*x).*(1+distEllVec*x))));
-        %%Bisection for interval estimation
-        aPoint=0;
-        bPoint=x0+x0;
-        cPoint=aPoint+0.5*(bPoint-aPoint);
-        detFunctionAtPointA=fDetFunction(aPoint);
-        detFunctionAtPointB=fDetFunction(bPoint);
-        detFunctionAtPointC=fDetFunction(cPoint);
-        iIter=1;
-        while( iIter < nMaxIter) && ((abs(detFunctionAtPointA-...
+     %%Bisection for interval estimation
+     aPoint=0;
+     bPoint=x0+x0;
+     cPoint=aPoint+0.5*(bPoint-aPoint);
+     detFunctionAtPointA=fDetFunction(aPoint);
+     detFunctionAtPointB=fDetFunction(bPoint);
+     detFunctionAtPointC=fDetFunction(cPoint);
+     iIter=1;
+     while( iIter < nMaxIter) && ((abs(detFunctionAtPointA-...
              detFunctionAtPointC)>absTol ||....
              abs(detFunctionAtPointB-detFunctionAtPointC)>absTol))
          cPoint=aPoint+(bPoint-aPoint)*0.5;
@@ -297,15 +284,15 @@ function [ distEllVec timeOfComputation ] = computeEllVecDistance(ellObj,vectorV
              aPoint=cPoint;
          end
          iIter=iIter+1;
-        end
-        %%Secant Method, search for zeros
-        intervalHalfLength=10*sqrt(relTol);
-        xVec=zeros(1,nMaxIter);
-        xVec(1)=cPoint-intervalHalfLength;
-        xVec(2)=cPoint+intervalHalfLength;
-        oneStepError=Inf;
-        kIter=2;
-        while( kIter < nMaxIter ) && ( oneStepError > relTol )
+     end
+     %%Secant Method, search for zeros
+     intervalHalfLength=10*sqrt(relTol);
+     xVec=zeros(1,nMaxIter);
+     xVec(1)=cPoint-intervalHalfLength;
+     xVec(2)=cPoint+intervalHalfLength;
+     oneStepError=Inf;
+     kIter=2;
+     while( kIter < nMaxIter ) && ( oneStepError > relTol )
          deltaF = fDetFunction(xVec(kIter))-fDetFunction(xVec(kIter-1));
          if abs(deltaF) <= absTol
              throwerror('notSecant','Secant method is not applicable.');
@@ -315,22 +302,12 @@ function [ distEllVec timeOfComputation ] = computeEllVecDistance(ellObj,vectorV
              oneStepError=abs(xVec(kIter)-xVec(kIter-1))^2;
          end
          kIter=kIter+1;
-        end
-        lambda=xVec(kIter);
-        auxilliaryVec = (eye(size(ellQMat))+lambda*ellQMat)\vectorVec;
-        distEllVec = norm(auxilliaryVec-vectorVec);
-    else
-        % (y-x)'A(y-x) -> min s.t. x'Ax=1
-        % Lagrangian: L=(y-x)'A(y-x) + lambda (1 - x'Ax) =>
-        % A(y-x)+lambda Ax=0 => y=(1+lambda) x =>
-        % 1+lambda=1/(y'Ay)^(1/2) => find lambda and 
-        % find (y-x)'A(y-x).
-        distPlus=(sqrt(vectorEllVal)+1);
-        distMinus=abs(sqrt(vectorEllVal)-1);
-        distEllVec=min(distPlus, distMinus);
-    end
-    timeOfComputation=toc;
- 
+     end
+     lambda=xVec(kIter);
+     auxilliaryVec = (eye(size(ellQMat))+lambda*ellQMat)\vectorVec;
+     distEllVec = norm(auxilliaryVec-vectorVec);
+ end
+ timeOfComputation=toc;
  
 
   
@@ -338,7 +315,7 @@ function [distMat, timeMat] = computePointsEllDist(ellObjMat, vecArray, flag)
 %
 % L_POINTDIST - distance from ellipsoid to vector.
 %
-  global ellOptions;
+  import elltool.conf.Properties;
 %
   [mSize, lSize] = size(ellObjMat);
   [kSize, nVec] = size(vecArray);
@@ -357,7 +334,7 @@ function [distMat, timeMat] = computePointsEllDist(ellObjMat, vecArray, flag)
     error('DISTANCE: dimensions of ellipsoid an vector do not match.');
   end
 %
-  if ellOptions.verbose > 0
+  if Properties.getIsVerbose()
     if (nEllObj > 1) || (nVec > 1)
       fprintf('Computing %d ellipsoid-to-vector distances...\n', max([nEllObj nVec]));
     else
@@ -366,16 +343,18 @@ function [distMat, timeMat] = computePointsEllDist(ellObjMat, vecArray, flag)
   end
 %
 %  
-  N_MAX_ITER=50;
-  ABS_TOL=ellOptions.abs_tol;
-  REL_TOL=ellOptions.rel_tol;     
+  N_MAX_ITER=50;   
+  absTolMat = getAbsTol(ellObjMat);
+  relTolMat = getRelTol(ellObjMat);
   if (nEllObj > 1) && (nEllObj == nVec)
     distMat=zeros(mSize,lSize);
     timeMat=zeros(mSize,lSize);
     for i = 1:mSize
       for j = 1:lSize
         yVec      = vecArray(:, i*j);
-        [dist time] = computeEllVecDistance(ellObjMat(i,j),yVec,N_MAX_ITER,ABS_TOL,REL_TOL,flag);
+        ABS_TOL = absTolMat(i,j);
+        REL_TOL = relTolMat(i,j);
+        [dist time] = computeEllVecDistance(ellObjMat(i,j),yVec,N_MAX_ITER,ABS_TOL,REL_TOL);
         distMat(i,j) = dist;
         timeMat(i,j) = time;
       end
@@ -385,8 +364,10 @@ function [distMat, timeMat] = computePointsEllDist(ellObjMat, vecArray, flag)
     timeMat=zeros(mSize,lSize);
     for i = 1:mSize
       for j = 1:lSize
-       yVec=vecArray;
-       [dist time] = computeEllVecDistance(ellObjMat(i,j),yVec,N_MAX_ITER,ABS_TOL,REL_TOL,flag);
+       yVec=vecArray;    
+        ABS_TOL = absTolMat(i,j);
+        REL_TOL = relTolMat(i,j);
+       [dist time] = computeEllVecDistance(ellObjMat(i,j),yVec,N_MAX_ITER,ABS_TOL,REL_TOL);
        distMat(i,j) = dist;
        timeMat(i,j) = time;
       end
@@ -396,7 +377,9 @@ function [distMat, timeMat] = computePointsEllDist(ellObjMat, vecArray, flag)
     timeMat=zeros(1,nVec);
     for i = 1:nVec        
       yVec= vecArray(:, i); 
-      [dist time]= computeEllVecDistance(ellObjMat,yVec,N_MAX_ITER,ABS_TOL,REL_TOL,flag);
+      ABS_TOL = ellObjMat.absTol;
+      REL_TOL = ellObjMat.relTol;
+      [dist time]= computeEllVecDistance(ellObjMat,yVec,N_MAX_ITER,ABS_TOL,REL_TOL);
       distMat(i) = dist;
       timeMat(i) = time;
     end
@@ -410,7 +393,7 @@ function [distEllEll, timeOfCalculation] = l_elldist(ellObj1, ellObj2, flag)
 %
 % L_ELLDIST - distance from ellipsoid to ellipsoid.
 %
-    global ellOptions;
+    import elltool.conf.Properties;
 
     [mSize1, kSize1] = size(ellObj1);
     [mSize2, kSize2] = size(ellObj2);
@@ -419,7 +402,7 @@ function [distEllEll, timeOfCalculation] = l_elldist(ellObj1, ellObj2, flag)
     if (nEllObj1 > 1) && (nEllObj2 > 1) && ((mSize1 ~= mSize2) || (kSize1 ~= kSize2))
         throwerror('DISTANCE: sizes of ellipsoidal arrays do not match.');
     end
-    if ellOptions.verbose > 0
+    if Properties.getIsVerbose()
         if (nEllObj1 > 1) || (nEllObj2 > 1)
           fprintf('Computing %d ellipsoid-to-ellipsoid distances...\n', max([nEllObj1 nEllObj2]));
         else
@@ -427,15 +410,16 @@ function [distEllEll, timeOfCalculation] = l_elldist(ellObj1, ellObj2, flag)
         end
     end
     N_MAX_ITER=10000;
-    ABS_TOL=ellOptions.abs_tol;
+    absTolMat = getAbsTol(ellObj1);
     if (nEllObj1 > 1) && (nEllObj2 > 1)
         distEllEll=zeros(mSize1,kSize1);  
         timeOfCalculation=zeros(mSize1,kSize1);
         for i = 1:mSize1
             for j = 1:kSize1
+                ABS_TOL = absTolMat(i,j);
                 [distEllEll(i,j) timeOfCalculation(i,j)]=...
                 computeEllEllDistance(ellObj1(i,j),ellObj2(i,j),...
-                N_MAX_ITER,ABS_TOL,flag);
+                N_MAX_ITER,ABS_TOL);
             end
         end
     elseif (nEllObj1 > 1)
@@ -443,19 +427,22 @@ function [distEllEll, timeOfCalculation] = l_elldist(ellObj1, ellObj2, flag)
         timeOfCalculation=zeros(mSize2,kSize2);
         for i = 1:mSize1
             for j = 1:kSize1
+                ABS_TOL = absTolMat(i,j);
                 [distEllEll(i,j) timeOfCalculation(i,j)]=...
                     computeEllEllDistance(ellObj1(i,j),ellObj2,...
-                    N_MAX_ITER,ABS_TOL,flag);      
+                    N_MAX_ITER,ABS_TOL);      
             end
         end
     else
         distEllEll=zeros(mSize2,kSize2);  
         timeOfCalculation=zeros(mSize2,kSize2);
         for i = 1:mSize2
-          for j = 1:kSize2        
+          for j = 1:kSize2
+              
+            ABS_TOL = ellObj1.absTol;
             [distEllEll(mSize2,kSize2) timeOfCalculation(mSize2,kSize2)]=...
                 computeEllEllDistance(ellObj1,ellObj2(i,j),...
-                N_MAX_ITER,ABS_TOL,flag);
+                N_MAX_ITER,ABS_TOL);
           end
         end
     end
@@ -473,7 +460,7 @@ function [d, status] = l_hpdist(E, X, flag)
 % L_HPDIST - distance from ellipsoid to hyperplane.
 %
 
-  global ellOptions;
+  import elltool.conf.Properties;
 
   [m, n] = size(E);
   [k, l] = size(X);
@@ -496,7 +483,7 @@ function [d, status] = l_hpdist(E, X, flag)
     error('DISTANCE: hyperplanes must be of the same dimension.');
   end
 
-  if ellOptions.verbose > 0
+  if Properties.getIsVerbose()
     if (t1 > 1) | (t2 > 1)
       fprintf('Computing %d ellipsoid-to-hyperplane distances...\n', max([t1 t2]));
     else
@@ -591,7 +578,7 @@ function [d, status] = l_polydist(E, X)
 % L_POLYDIST - distance from ellipsoid to polytope.
 %
 
-  global ellOptions;
+  import elltool.conf.Properties;
 
   [m, n] = size(E);
   [k, l] = size(X);
@@ -621,7 +608,7 @@ function [d, status] = l_polydist(E, X)
     error('DISTANCE: polytopes must be of the same dimension.');
   end
 
-  if ellOptions.verbose > 0
+  if Properties.getIsVerbose()
     if (t1 > 1) | (t2 > 1)
       fprintf('Computing %d ellipsoid-to-polytope distances...\n', max([t1 t2]));
     else
@@ -629,7 +616,8 @@ function [d, status] = l_polydist(E, X)
     end
     fprintf('Invoking CVX...\n');
   end
-
+  
+  absTolMat = getAbsTol(E);
   d      = [];
   status = [];
   if (t1 > 1) & (t2 > 1)
@@ -641,7 +629,7 @@ function [d, status] = l_polydist(E, X)
         %[A, b] = double(X(i, j));
         [A, b] = double(X(j));
         if size(Q, 2) > rank(Q)
-          Q = regularize(Q);
+          Q = ellipsoid.regularize(Q,absTolMat(i,j));
         end
         Q  = ell_inv(Q);
         Q  = 0.5*(Q + Q');
@@ -660,7 +648,7 @@ function [d, status] = l_polydist(E, X)
         cvx_end
 
         d1 = f;
-        if d1 < ellOptions.abs_tol
+        if d1 <absTolMat(i,j)
           d1 = 0;
         end
         d1  = sqrt(d1);
@@ -678,7 +666,7 @@ function [d, status] = l_polydist(E, X)
       for j = 1:n
         [q, Q] = parameters(E(i, j));
         if size(Q, 2) > rank(Q)
-          Q = regularize(Q);
+          Q = ellipsoid.regularize(Q,absTolMat(i,j));
         end
         Q  = ell_inv(Q);
         Q  = 0.5*(Q + Q');
@@ -697,7 +685,7 @@ function [d, status] = l_polydist(E, X)
         cvx_end
 
         d1 = f;
-        if d1 < ellOptions.abs_tol
+        if d1 < absTolMat(i,j)
           d1 = 0;
         end
         d1  = sqrt(d1);
@@ -710,7 +698,7 @@ function [d, status] = l_polydist(E, X)
   else
     [q, Q] = parameters(E);
     if size(Q, 2) > rank(Q)
-      Q = regularize(Q);
+      Q = ellipsoid.regularize(Q,E.absTol);
     end
     Q = ell_inv(Q);
     Q = 0.5*(Q + Q');
@@ -735,7 +723,7 @@ function [d, status] = l_polydist(E, X)
         cvx_end
 
         d1 = f;
-        if d1 < ellOptions.abs_tol
+        if d1 < E.absTol
           d1 = 0;
         end
         d1  = sqrt(d1);

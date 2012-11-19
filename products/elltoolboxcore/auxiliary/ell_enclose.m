@@ -31,11 +31,7 @@ function E = ell_enclose(V)
 %    Vadim Kaushanskiy <vkaushanskiy@gmail.com>
 
 import modgen.common.throwerror
-global ellOptions;
-
-if ~isstruct(ellOptions)
-  evalin('base', 'ellipsoids_init;');
-end
+import elltool.conf.Properties;
 
 if nargin < 1
   E = ellipsoid;
@@ -44,7 +40,7 @@ end
 
 [m, n] = size(V);
 
-if ellOptions.verbose > 0
+if Properties.getIsVerbose()
   fprintf('Invoking CVX...\n');
 end
 

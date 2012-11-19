@@ -12,13 +12,6 @@ function res = eq(H1, H2)
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
-
-  global ellOptions;
-
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
-
   if ~(isa(H1, 'hyperplane')) | ~(isa(H2, 'hyperplane'))
     error('==: input arguments must be hyperplanes.');
   end
@@ -71,9 +64,6 @@ function res = l_hpeq(H1, H2)
 %
 % L_HPEQ - check if two single hyperplanes are equal.
 %
-
-  global ellOptions;
-
   [x, a] = parameters(H1);
   [y, b] = parameters(H2);
   res    = 0;
@@ -96,15 +86,15 @@ function res = l_hpeq(H1, H2)
     b = -b;
     y = -y;
   end
-  if abs(a - b) > ellOptions.abs_tol
+  if abs(a - b) > H1.absTol
     return;
   end
-  if max(abs(x - y)) < ellOptions.abs_tol
+  if max(abs(x - y)) < H1.absTol()
     res = 1;
     return;
   end
-  if a < ellOptions.abs_tol
-    if max(abs(x + y)) < ellOptions.abs_tol
+  if a < H1.absTol
+    if max(abs(x + y)) < H1.absTol
       res = 1;
     end
   end

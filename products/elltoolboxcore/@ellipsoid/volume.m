@@ -31,13 +31,6 @@ function V = volume(E)
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
-
-  global ellOptions;
-
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
-
   if ~(isa(E, 'ellipsoid'))
     error('VOLUME: input argument must be ellipsoid.');
   end

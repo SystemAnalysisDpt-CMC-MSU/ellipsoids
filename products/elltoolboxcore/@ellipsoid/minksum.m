@@ -46,11 +46,8 @@ function [y, Y] = minksum(varargin)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  global ellOptions;
+  import elltool.conf.Properties;
 
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
 
   nai = nargin;
   E   = varargin{1};
@@ -123,7 +120,7 @@ function [y, Y] = minksum(varargin)
     end
   end
 
-  if (ellOptions.verbose > 0) & (cnt > 1)
+  if (Properties.getIsVerbose()) & (cnt > 1)
     if nargout == 0
       fprintf('Computing and plotting geometric sum of %d ellipsoids...\n', cnt);
     else

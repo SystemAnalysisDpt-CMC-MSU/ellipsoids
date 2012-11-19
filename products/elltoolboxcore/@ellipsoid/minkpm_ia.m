@@ -33,11 +33,8 @@ function IA = minkpm_ea(EE, E2, L)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  global ellOptions;
+  import elltool.conf.Properties;
 
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
 
   if ~(isa(EE, 'ellipsoid')) | ~(isa(E2, 'ellipsoid'))
     error('MINKPM_IA: first and second arguments must be ellipsoids.');
@@ -62,8 +59,8 @@ function IA = minkpm_ea(EE, E2, L)
   N                  = size(L, 2);
   IA                 = [];
   ES                 = minksum_ia(EE, L);
-  vrb                = ellOptions.verbose;
-  ellOptions.verbose = 0;
+  vrb                = Properties.getIsVerbose();
+  Properties.setIsVerbose(false);
 
   for i = 1:N
     E = ES(i);
@@ -75,10 +72,10 @@ function IA = minkpm_ea(EE, E2, L)
     end
   end
 
-  ellOptions.verbose = vrb;
+  Properties.setIsVerbose(vrb);
 
   if isempty(IA)
-    if ellOptions.verbose > 0
+    if Properties.getIsVerbose()
       fprintf('MINKPM_IA: cannot compute internal approximation for any\n');
       fprintf('           of the specified directions.\n');
     end

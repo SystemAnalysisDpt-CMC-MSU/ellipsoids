@@ -37,11 +37,8 @@ function [E, S] = ellintersection_ia(EE)
 %    Vadim Kaushanskiy <vkaushanskiy@gmail.com>
   
   import modgen.common.throwerror 
-  global ellOptions;
+  import elltool.conf.Properties;
 
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
 
   dims = dimension(EE);
   mn   = min(min(dims));
@@ -57,10 +54,10 @@ function [E, S] = ellintersection_ia(EE)
   zz     = zeros(mn, 1);
   I      = eye(mn);
 
-  if ellOptions.verbose > 0
+  if Properties.getIsVerbose()
     fprintf('Invoking CVX...\n');
   end
-
+absTolVec = getAbsTol(EE);
 cvx_begin sdp
     variable cvxEllMat(mn,mn) symmetric
     variable cvxEllCenterVec(mn)
@@ -72,7 +69,7 @@ cvx_begin sdp
         for i = 1:M
             [q, Q] = double(EE(i));
             if rank(Q) < mn
-                Q = regularize(Q);
+                Q = ellipsoid.regularize(Q,absTolVec(i));
             end
             A     = ell_inv(Q);
             b     = -A * q;
@@ -92,7 +89,7 @@ cvx_end
   end;
  
   if rank(cvxEllMat) < mn
-    cvxEllMat = regularize(cvxEllMat);
+    cvxEllMat = ellipsoid.regularize(cvxEllMat,min(getAbsTol(EE(:))));
   end
 
   ellMat = cvxEllMat * cvxEllMat';

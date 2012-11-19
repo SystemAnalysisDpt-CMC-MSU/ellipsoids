@@ -29,11 +29,7 @@ function lsys = get_system(rs)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  global ellOptions;
-
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
+  import elltool.conf.Properties;
 
   if ~(isa(rs, 'reach'))
     error('GET_SYSTEM: input argument must be an reach set object.');

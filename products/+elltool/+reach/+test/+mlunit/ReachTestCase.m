@@ -245,5 +245,44 @@ classdef ReachTestCase < mlunit.test_case
             end;
             mlunit.assert_equals(true, isAllTestsOk);
         end
+        function self = testPropertyGetters(self)
+            testAbsTol = 1;
+            testRelTol = 2;
+            testNPlot2dPoints = 3;
+            testNPlot3dPoints = 4;
+            testNTimeGridPoints = 5;
+            %%
+            linsysAMat = eye(2);
+            linsysBMat = zeros(2);
+            configurationQMat = eye(2);
+            controlBoundsUEll = ellipsoid(configurationQMat);
+            stationaryLinsys =...
+                linsys(linsysAMat, linsysBMat, controlBoundsUEll);
+            initialSetEll = ellipsoid(configurationQMat);
+            initialDirectionsMat = [1 0; 0 1];
+            timeIntervalVec = [0 1];  
+            Options = struct('approximation',0,'save_all',0,'minmax',0);
+            %%
+            args = {stationaryLinsys,...
+                             initialSetEll,...
+                             initialDirectionsMat,...
+                             timeIntervalVec,Options,'absTol',testAbsTol,'relTol',testRelTol,...
+                             'nTimeGridPoints',testNTimeGridPoints,'nPlot2dPoints',testNPlot2dPoints,...
+                             'nPlot3dPoints',testNPlot3dPoints};
+            reachSetArr = [reach(args{:}) reach(args{:}); reach(args{:}) reach(args{:})];
+            reachSetArr(:,:,2) = [reach(args{:}) reach(args{:}); reach(args{:}) reach(args{:})];
+            sizeArr = size(reachSetArr);
+            testAbsTolArr = repmat(testAbsTol,sizeArr);
+            testRelTolArr = repmat(testRelTol,sizeArr);
+            testNPlot2dPointsArr = repmat(testNPlot2dPoints,sizeArr);
+            testNPlot3dPointsArr = repmat(testNPlot3dPoints,sizeArr);
+            testNTimeGridPointsArr = repmat(testNTimeGridPoints,sizeArr);
+            isOkArr = (testAbsTolArr == reachSetArr.getAbsTol()) &(testRelTolArr == reachSetArr.getRelTol()) &...
+                   (testNPlot2dPointsArr == reachSetArr.getNPlot2dPoints()) &...
+                   (testNPlot3dPointsArr == reachSetArr.getNPlot3dPoints()) & ...
+                   (testNTimeGridPointsArr == reachSetArr.getNTimeGridPoints());
+            isOk = all(isOkArr(:));
+            mlunit.assert(isOk); 
+        end
     end
 end

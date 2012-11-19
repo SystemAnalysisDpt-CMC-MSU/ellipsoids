@@ -29,11 +29,8 @@ function res = isempty(E)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  global ellOptions;
+  import elltool.conf.Properties;
 
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
 
   if ~(isa(E, 'ellipsoid'))
     error('ISEMPTY: input argument must be ellipsoid.');

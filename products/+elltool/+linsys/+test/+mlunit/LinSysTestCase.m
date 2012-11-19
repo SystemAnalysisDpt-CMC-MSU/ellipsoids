@@ -537,5 +537,21 @@ classdef LinSysTestCase < mlunitext.test_case
             mlunitext.assert(isOk);      
         end   
         %
+        function self = testGetAbsTol(self)
+           testAbsTol = 1e-8;
+           args = {eye(3), eye(3,4), ell_unitball(4), ...
+                eye(3,5), ell_unitball(5), eye(2,3), ell_unitball(2), 'd','absTol',testAbsTol};
+           systemArr = [linsys(args{:}),linsys(args{:});...
+                           linsys(args{:}),linsys(args{:})];
+           systemArr(:,:,2) = [linsys(args{:}),linsys(args{:});...
+                           linsys(args{:}),linsys(args{:})];
+           sizeArr = size(systemArr);
+           testAbsTolArr = repmat(testAbsTol,sizeArr);
+           %
+           isOkArr = (testAbsTolArr == systemArr.getAbsTol());
+           %  
+           isOk = all(isOkArr(:));
+           mlunit.assert(isOk);
+        end
     end
 end

@@ -81,11 +81,7 @@ function [res, status] = isinside(E1, E2, s)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %    Vadim Kaushanskiy <vkaushanskiy@gmail.com>
 
-  global ellOptions;
-
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
+  import elltool.conf.Properties;
 
   if ~(isa(E1, 'ellipsoid'))
     error('ISINSIDE: first input argument must be ellipsoid.');
@@ -157,7 +153,7 @@ function [res, status] = isinside(E1, E2, s)
     if (m ~= n) | (k ~= l) | (k ~= m)
       error('ISINSIDE: ellipsoids must be of the same dimension.');
     end
-    if ellOptions.verbose > 0
+    if Properties.getIsVerbose()
       fprintf('Invoking CVX...\n');
     end
     [m, n] = size(E1);
@@ -193,15 +189,16 @@ function [res, status] = qcqp(EA, E)
 %        and invoke external solver.
 %
 
-  global ellOptions;
-
+  import elltool.conf.Properties;
+  
+  absTolMat = getAbsTol(E);
   [q, Q] = parameters(E(1, 1));
   if size(Q, 2) > rank(Q)
-    if ellOptions.verbose > 0
+    if Properties.getIsVerbose()
       fprintf('QCQP: Warning! Degenerate ellipsoid.\n');
       fprintf('      Regularizing...\n');
     end
-    Q = regularize(Q);
+    Q = ellipsoid.regularize(Q,absTolMat(1,1));
   end
   Q = ell_inv(Q);
   Q = 0.5*(Q + Q');
@@ -217,7 +214,7 @@ cvx_begin sdp
         for j = 1:n
         [q, Q] = parameters(EA(i, j));
         if size(Q, 2) > rank(Q)
-            Q = regularize(Q);
+            Q = ellipsoid.regularize(Q,absTolMat(i,j));
         end
         Q = ell_inv(Q);
         Q = 0.5*(Q + Q');
@@ -238,7 +235,7 @@ cvx_end
     return;
   end
    
-  if (x'*Q*x + 2*(-Q*q)'*x + (q'*Q*q - 1)) < ellOptions.abs_tol
+  if (x'*Q*x + 2*(-Q*q)'*x + (q'*Q*q - 1)) < min(getAbsTol(EA(:)))
     res = 1;
   else
     res = 0;

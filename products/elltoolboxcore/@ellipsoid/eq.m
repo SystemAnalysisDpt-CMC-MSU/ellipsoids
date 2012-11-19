@@ -26,12 +26,8 @@ function res = eq(E1, E2)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
   import gras.la.sqrtm;
-  global ellOptions;
-
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
-
+  import elltool.conf.Properties;
+  
   if ~(isa(E1, 'ellipsoid')) | ~(isa(E2, 'ellipsoid'))
     error('==: both arguments must be ellipsoids.');
   end
@@ -56,7 +52,7 @@ function res = eq(E1, E2)
         end
         q = E1(i, j).center - E2(i, j).center;
         Q = sqrtm(E1(i, j).shape) - sqrtm(E2(i, j).shape);
-        if (norm(q) > ellOptions.rel_tol) | (norm(Q) > ellOptions.rel_tol)
+        if (norm(q) > E1(i,j).relTol) | (norm(Q) > E1(i,j).relTol)
           r = [r 0];
         else
           r = [r 1];
@@ -74,7 +70,7 @@ function res = eq(E1, E2)
         end
         q = E1(i, j).center - E2.center;
         Q = sqrtm(E1(i, j).shape) - sqrtm(E2.shape);
-        if (norm(q) > ellOptions.rel_tol) | (norm(Q) > ellOptions.rel_tol)
+        if (norm(q) > E1(i,j).relTol) | (norm(Q) > E1(i,j).relTol)
           r = [r 0];
         else
           r = [r 1];
@@ -92,7 +88,7 @@ function res = eq(E1, E2)
         end
         q = E1.center - E2(i, j).center;
         Q = sqrtm(E1.shape) - sqrtm(E2(i, j).shape);
-        if (norm(q) > ellOptions.rel_tol) | (norm(Q) > ellOptions.rel_tol)
+        if (norm(q) > E1.relTol) | (norm(Q) > E1.relTol)
            r = [r 0];
         else
           r = [r 1];

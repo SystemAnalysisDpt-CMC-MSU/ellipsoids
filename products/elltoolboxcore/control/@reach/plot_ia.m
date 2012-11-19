@@ -36,13 +36,6 @@ function plot_ia(rs, varargin)
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
-
-  global ellOptions;
-
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
-
   if ~(isa(rs, 'reach'))
     error('PLOT_IA: first input argument must be reach set.');
   end
@@ -104,7 +97,7 @@ function plot_ia(rs, varargin)
 
 
   if (nargin > 1) & ischar(varargin{1})
-    Options.color = my_color_table(varargin{1});
+    Options.color = reach.my_color_table(varargin{1});
   end
   
   E   = get_ia(rs);
@@ -115,7 +108,7 @@ function plot_ia(rs, varargin)
     back = 'Reach set';
   end
 
-  if ellOptions.verbose > 0
+  if rs.iVerbose()
     fprintf('Plotting reach set internal approximation...\n');
   end
   
@@ -123,7 +116,7 @@ function plot_ia(rs, varargin)
     EE         = move2origin(inv(E(:, end)));
     EE         = EE';
     m          = size(EE, 2);
-    M          = ellOptions.plot3d_grid/2;
+    M          = rs.nPlot3dPoints/2;
     N          = M/2;
     psy        = linspace(-pi/2, pi/2, N);
     phi        = linspace(0, 2*pi, M);
@@ -177,13 +170,13 @@ function plot_ia(rs, varargin)
   if size(rs.time_values, 2) == 1
     E   = move2origin(E');
     M   = size(E, 2);
-    N   = ellOptions.plot2d_grid;
+    N   = rs.nPlot2dPoints;
     phi = linspace(0, 2*pi, N);
     L   = [cos(phi); sin(phi)];
     X   = [];
     for i = 1:N
       l    = L(:, i);
-      mval = ellOptions.abs_tol;
+      mval =rs.absTol;
       mQ   = [];
       for j = 1:M
         Q = parameters(E(1, j));
@@ -221,7 +214,7 @@ function plot_ia(rs, varargin)
   end
 
   [m, n] = size(E);
-  s      = (1/2) * ellOptions.plot2d_grid;
+  s      = (1/2) * rs.nPlot2dPoints;
   phi    = linspace(0, 2*pi, s);
   L      = [cos(phi); sin(phi)];
 
@@ -232,7 +225,7 @@ function plot_ia(rs, varargin)
       X  = [];
       for i = 1:s
         l    = L(:, i);
-        mval = ellOptions.abs_tol;
+        mval = rs.absTol;
         mQ   = [];
         for j = 1:m
           Q  = parameters(EE(1, j));
@@ -275,7 +268,7 @@ function plot_ia(rs, varargin)
       X  = [];
       for i = 1:s
         l    = L(:, i);
-        mval = ellOptions.abs_tol;
+        mval = rs.absTol;
 	mQ   = [];
         for j = 1:m
           Q  = parameters(EE(1, j));

@@ -32,11 +32,6 @@ function res = contains(H, X)
 %            System Analysis Department <2012> $
 
     import modgen.common.type.simple.checkgenext;
-    global ellOptions;
-
-    if ~isstruct(ellOptions)
-        evalin('base', 'ellipsoids_init;');
-    end
 
     if ~(isa(H, 'hyperplane'))
         error('CONTAINS: first input argument must be hyperplane.');
@@ -76,8 +71,9 @@ function res = contains(H, X)
         for iRow = 1:nRowsH
             for jCol = 1:nColsH
                 [normVec, const] = parameters(H(iRow, jCol));
+                absTol = H(iRow, jCol).absTol;
                 xVec = X(:, iRow*jCol);
-                res(iRow,jCol) = isContain(normVec,const,xVec);
+                res(iRow,jCol) = isContain(normVec,const,xVec,absTol);
             end
         end
     elseif nHplanes > 1
@@ -85,21 +81,22 @@ function res = contains(H, X)
     for iRow = 1:nRowsH
         for jCol = 1:nColsH
             [normVec, const] = parameters(H(iRow, jCol));
-            res(iRow,jCol) = isContain(normVec,const,xVec);
+            absTol = H(iRow, jCol).absTol;
+            res(iRow,jCol) = isContain(normVec,const,xVec,absTol);
         end
     end
     else
         [normVec, const] = parameters(H);
+        absTol = H(iRow, jCol).absTol;
         for i = 1:nVectors
             xVec = X(:, i);
-            res(1,i) = isContain(normVec,const,xVec);
+            res(1,i) = isContain(normVec,const,xVec,absTol);
         end
     end
 
     return;
 
- function res = isContain(hplaneNormVec, hplaneConst, xVec)     
-     global ellOptions;
+ function res = isContain(hplaneNormVec, hplaneConst, xVec,absTol) 
      res = false;
      isInfComponent = (xVec == inf) | (xVec == -inf);
      if any(hplaneNormVec(isInfComponent) ~= 0)
@@ -107,7 +104,7 @@ function res = contains(H, X)
      else
          hplaneNormVec = hplaneNormVec(~isInfComponent);
          xVec = xVec(~isInfComponent);
-         if abs((hplaneNormVec'*xVec) - hplaneConst) < ellOptions.abs_tol
+         if abs((hplaneNormVec'*xVec) - hplaneConst) < absTol;
             res = true;
          end
      end
