@@ -1,4 +1,4 @@
-function isBadDirVec = isbaddirection(minEll, subEll, dirsMat)
+function res = isbaddirection(E1, E2, L)
 %
 % ISBADDIRECTION - checks if ellipsoidal approximations of geometric difference
 %                  of two ellipsoids can be computed for given directions.
@@ -19,11 +19,11 @@ function isBadDirVec = isbaddirection(minEll, subEll, dirsMat)
 % Output:
 % -------
 %
-%    isBadDirVec - logical array with length being equal to the number of columns
-%                  in matrix L.
-%                  true marks direction vector as bad - ellipsoidal approximation cannot
-%                  be computed for this direction.
-%                  false means the opposite.
+%    RES - array of 1 or 0 with length being equal to the number of columns
+%          in matrix L.
+%          1 marks direction vector as bad - ellipsoidal approximation cannot
+%          be computed for this direction.
+%          0 means the opposite.
 %
 %
 % See also:
@@ -37,21 +37,41 @@ function isBadDirVec = isbaddirection(minEll, subEll, dirsMat)
 % -------
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-%    Rustam Guliev <glvrst@gmail.com>
+%
+
+  import elltool.conf.Properties;
 
 
-  import modgen.common.throwwar;
-  %import elltool.conf.Properties;
+  [k, d] = size(L);
 
-  if ~isbigger(minEll, subEll)
-    %if Properties.getIsVerbose() > 0
-    %  fprintf('ISBADDIRECTION: geometric difference of these two ellipsoids is empty set.\n');
-    %  fprintf('                All directions are bad.\n'); 
-    %end
-    throwwarn('wrongInput:emptyGeomDiff',...
-        'ISBADDIRECTION: geometric difference of these two ellipsoids is empty set.\n');  
+  if isbigger(E1, E2) == 0
+    if Properties.getIsVerbose()
+      fprintf('ISBADDIRECTION: geometric difference of these two ellipsoids is empty set.\n');
+      fprintf('                All directions are bad.\n');
+    end
+    res = ones(1, d);
+    return;
   end
 
-  isBadDirVec=isbaddirectionmat(minEll.shape, subEll.shape, dirsMat);
+  n = dimension(E1);
 
+  if k ~= n
+    error('ISBADDIRECTION: direction vectors must be of the same dimension as ellipsoids.');
+  end
 
+  res = [];
+  Q1  = E1.shape;
+  Q2  = E2.shape;
+  T   = ell_simdiag(Q2, Q1);
+  a   = min(abs(diag(T*(Q1)*T')));
+  for i = 1:d
+    l = L(:, i);
+    p = sqrt(l'*Q1*l)/sqrt(l'*Q2*l);
+    if a > p
+      res = [res 0];
+    else
+      res = [res 1];
+    end
+  end
+
+  return;

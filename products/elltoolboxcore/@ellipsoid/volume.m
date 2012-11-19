@@ -31,19 +31,15 @@ function V = volume(E)
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
-  import modgen.common.throwerror;
-  
   if ~(isa(E, 'ellipsoid'))
     error('VOLUME: input argument must be ellipsoid.');
   end
 
   [m, n] = size(E);
-  V=zeros(m,n);
+  V      = [];
   for i = 1:m
+    v = [];
     for j = 1:n
-      if isempty(E(i,j))
-          throwerror('wrongInput:emptyEllipsoid','VOLUME: input argument is empty.');
-      end
       Q = E(i, j).shape;
       if isdegenerate(E(i, j))
         S = 0;
@@ -57,6 +53,9 @@ function V = volume(E)
           S = ((2^(2*k + 1))*(pi^k)*factorial(k))/factorial(2*k + 1);
         end
       end
-      V(i,j)= S*sqrt(det(Q));
+      v = [v S*sqrt(det(Q))];
     end
+    V = [V; v];
   end
+
+  return;

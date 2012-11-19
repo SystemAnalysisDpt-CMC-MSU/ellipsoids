@@ -33,7 +33,7 @@ function res = minus(E, b)
   if ~(isa(E, 'ellipsoid'))
     error('MINUS: first argument must be ellipsoid.');
   end
-  if isa(E, 'ellipsoid') && ~(isa(b, 'double'))
+  if isa(E, 'ellipsoid') & ~(isa(b, 'double'))
     error('MINUS: this operation is only permitted between ellipsoid and vector in R^n.');
   end
 
@@ -45,7 +45,7 @@ function res = minus(E, b)
   end
 
   [k, l] = size(b);
-  if (l ~= 1) || (k ~= n)
+  if (l ~= 1) | (k ~= n)
     error('MINUS: vector dimension does not match.');
   end
 
@@ -63,4 +63,4 @@ function res = minus(E, b)
     clear r;
   end
 
-end
+  return;

@@ -35,13 +35,13 @@ function EA = minkmp_ea(E1, E2, EE, L)
 
   import elltool.conf.Properties;
 
-  if ~(isa(EE, 'ellipsoid')) || ~(isa(E2, 'ellipsoid')) || ~(isa(E1, 'ellipsoid'))
+  if ~(isa(EE, 'ellipsoid')) | ~(isa(E2, 'ellipsoid')) | ~(isa(E1, 'ellipsoid'))
     error('MINKMP_EA: first, second and third arguments must be ellipsoids.');
   end
 
   [k, l] = size(E1);
   [m, n] = size(E2);
-  if (k ~= 1) || (l ~= 1) || (m ~= 1) || (n ~= 1)
+  if (k ~= 1) | (l ~= 1) | (m ~= 1) | (n ~= 1)
     error('MINKMP_EA: first and second arguments must be single ellipsoids.');
   end
 
@@ -50,7 +50,7 @@ function EA = minkmp_ea(E1, E2, EE, L)
   n  = dimension(E2);
   mn = min(min(dimension(EE)));
   mx = max(max(dimension(EE)));
-  if (mn ~= mx) || (mn ~= n) || (m ~= n)
+  if (mn ~= mx) | (mn ~= n) | (m ~= n)
     error('MINKMP_EA: all ellipsoids must be of the same dimension.');
   end
   if n ~= k
@@ -90,4 +90,4 @@ function EA = minkmp_ea(E1, E2, EE, L)
     end
   end
 
-end
+  return;

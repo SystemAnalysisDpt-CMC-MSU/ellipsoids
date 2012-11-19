@@ -95,11 +95,11 @@ function [res, status] = intersect(E, X, s)
   if ~(isa(E, 'ellipsoid'))
     error('INTERSECT: first input argument must be ellipsoid.');
   end
-  if ~(isa(X, 'ellipsoid')) && ~(isa(X, 'hyperplane')) && ~(isa(X, 'polytope'))
+  if ~(isa(X, 'ellipsoid')) & ~(isa(X, 'hyperplane')) & ~(isa(X, 'polytope'))
     error('INTERSECT: second input argument must be ellipsoid, hyperplane or polytope.');
   end
 
-  if (nargin < 3) || ~(ischar(s))
+  if (nargin < 3) | ~(ischar(s))
     s = 'u';
   end
   absTolMat = getAbsTol(E);
@@ -108,7 +108,7 @@ function [res, status] = intersect(E, X, s)
     res    = (distance(E(1, 1), X) <= absTolMat(1,1));
     for i = 1:m
       for j = 1:n
-        if (i > 1) || (j > 1)
+        if (i > 1) | (j > 1)
           res = res | (distance(E(i, j), X) <= absTolMat(i,j));
         end
       end
@@ -124,7 +124,7 @@ function [res, status] = intersect(E, X, s)
     dims = dimension(X);
     k    = min(min(dims));
     l    = max(max(dims));
-    if (m ~= n) || (k ~= l) || (k ~= m)
+    if (m ~= n) | (k ~= l) | (k ~= m)
       error('INTERSECT: ellipsoids must be of the same dimension.');
     end
     if Properties.getIsVerbose()
@@ -138,8 +138,8 @@ function [res, status] = intersect(E, X, s)
       s = [];
       for j = 1:n
         [rr, ss] = qcqp(E, X(i, j));
-        r = [r rr];
-	    s = [s ss];
+        r        = [r rr];
+	s        = [s ss];
       end
       res    = [res; r];
       status = [status; s];
@@ -151,7 +151,7 @@ function [res, status] = intersect(E, X, s)
     dims = dimension(X);
     k    = min(min(dims));
     l    = max(max(dims));
-    if (m ~= n) || (k ~= l) || (k ~= m)
+    if (m ~= n) | (k ~= l) | (k ~= m)
       error('INTERSECT: ellipsoids and hyperplanes must be of the same dimension.');
     end
     if Properties.getIsVerbose()
@@ -186,7 +186,7 @@ function [res, status] = intersect(E, X, s)
     end
     k = min(min(dims));
     l = max(max(dims));
-    if (mm ~= nn) || (k ~= l) || (k ~= mm)
+    if (mm ~= nn) | (k ~= l) | (k ~= mm)
       error('INTERSECT: ellipsoids and polytopes must be of the same dimension.');
     end
     if Properties.getIsVerbose()
@@ -211,7 +211,7 @@ function [res, status] = intersect(E, X, s)
     clear status;
   end
 
-end
+  return;
 
 
 
@@ -273,7 +273,7 @@ function [res, status] = qcqp(EA, E)
   end;
 
 
-end
+  return;
 
 
 
@@ -328,7 +328,7 @@ function [res, status] = lqcqp(EA, H)
       res = 0;
   end;
 
-end
+  return;
 
 
 
@@ -378,4 +378,4 @@ end;
   else
       res = 0;
   end;
-end
+  

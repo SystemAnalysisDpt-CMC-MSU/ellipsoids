@@ -14,6 +14,6 @@ function res = lt(E1, E2)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  res = ~gt(E2, E1);
+  res = gt(E2, E1);
 
-end
+  return;

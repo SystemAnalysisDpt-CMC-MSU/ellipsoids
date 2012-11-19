@@ -65,32 +65,6 @@ classdef BasicTestCase < mlunitext.test_case
             mlunit.assert(norm(sqrtm(test1Mat) - sqrtm(test2Mat)) < MAX_TOL);
             
         end
-        
-        function self = testIsMatSymm(self)
-            import gras.la.ismatsymm;
-            
-            %scalar
-            mlunit.assert( ismatsymm(2) );
-            
-            %diag matrix
-            mlunit.assert( ismatsymm(diag(1:5)) );
-            
-            %nDim = 20, 100
-            testAMat = rand(20,20);
-            mlunit.assert( ismatsymm(testAMat*(testAMat')) );
-            
-            testAMat = 10*rand(100,100);
-            mlunit.assert( ismatsymm(testAMat+(testAMat')) );
-            
-            %negative tests
-            testAMat = [2 1;3 2];
-            mlunit.assert( ~ismatsymm(testAMat) );
-            
-            testAMat = 10*rand(20,20)+diag(1:19,1);
-            mlunit.assert( ~ismatsymm(testAMat) );
-            
-            self.runAndCheckError('gras.la.ismatsymm(eye(5,7))','wrongInput:nonSquareMat');
-        end
     end
     
 end

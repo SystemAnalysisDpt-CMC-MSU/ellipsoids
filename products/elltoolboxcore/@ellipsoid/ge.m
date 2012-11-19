@@ -16,4 +16,4 @@ function res = ge(E1, E2)
 
   res = gt(E1, E2);
 
-end
+  return;

@@ -10,4 +10,4 @@ function [d, g] = distpobjfun(x, E, y, varargin)
   d = x'*q + sqrt(x'*Q*x) - x'*y;
   g = q - y + ((Q*x)/sqrt(x'*Q*x));
 
-end
+  return;

@@ -31,4 +31,4 @@ function [B] = ell_unitball(n)
 
   B = ellipsoid(eye(n));
 
-end
+  return;

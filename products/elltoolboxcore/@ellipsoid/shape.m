@@ -33,7 +33,7 @@ function EM = shape(E, A)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  if ~(isa(A, 'double')) || ~(isa(E, 'ellipsoid'))
+  if ~(isa(A, 'double')) | ~(isa(E, 'ellipsoid'))
     msg = sprintf('SHAPE: expected arguments are:\n');
     msg = sprintf('%s       - array of ellipsoids of the same dimension,\n', msg);
     msg = sprintf('%s       - scalar, or square matrix of the same dimension as ellipsoids.\n', msg);
@@ -47,7 +47,7 @@ function EM = shape(E, A)
   d      = dimension(E);
   k      = max(max(d));
   l      = min(min(d));
-  if ((k ~= l) && (n ~= 1) && (m ~= 1)) || ((k ~= n) && (n ~= 1) && (m ~= 1))
+  if ((k ~= l) & (n ~= 1) & (m ~= 1)) | ((k ~= n) & (n ~= 1) & (m ~= 1))
     error('SHAPE: dimensions do not match.');
   end
 
@@ -63,4 +63,4 @@ function EM = shape(E, A)
     clear r;
   end
 
-end
+  return;

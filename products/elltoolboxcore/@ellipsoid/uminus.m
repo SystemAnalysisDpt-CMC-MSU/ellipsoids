@@ -26,4 +26,4 @@ function I = uminus(E)
     end
   end
 
-end
+  return;

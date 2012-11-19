@@ -23,4 +23,4 @@ function f = ell_fusionlambda(a, q1, Q1, q2, Q2, n)
   f = k*det(X)*trace(det(X)*Y*(Q1 - Q2)) - n*((det(X))^2)* ...
       (2*q'*Q1*q1 - 2*q'*Q2*q2 + q'*(Q2 - Q1)*q - q1'*Q1*q1 + q2'*Q2*q2);
 
-end
+  return;

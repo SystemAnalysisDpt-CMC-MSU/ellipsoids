@@ -27,7 +27,7 @@ function M = maxeig(E)
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
-  import modgen.common.throwerror;
+
   import elltool.conf.Properties;
 
   if ~(isa(E, 'ellipsoid'))
@@ -35,14 +35,13 @@ function M = maxeig(E)
   end
 
   [m, n] = size(E);
-  M      = zeros(m,n);
+  M      = [];
   for i = 1:m
+    mx = [];
     for j = 1:n
-      if isempty(E(i,j))
-          throwerror('wrongInput:emptyEllipsoid','MAXEIG: input argument is empty.');
-      end  
-      M(i,j) = max(eig(E(i, j).shape));
+      mx = [mx max(eig(E(i, j).shape))];
     end
+    M = [M; mx];
   end
 
-end
+  return;

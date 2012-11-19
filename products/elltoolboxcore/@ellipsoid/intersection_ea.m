@@ -61,7 +61,7 @@ function E = intersection_ea(E1, X)
   if ~(isa(E1, 'ellipsoid'))
     error('INTERSECTION_EA: first input argument must be ellipsoid.');
   end
-  if ~(isa(X, 'ellipsoid')) && ~(isa(X, 'hyperplane')) && ~(isa(X, 'polytope'))
+  if ~(isa(X, 'ellipsoid')) & ~(isa(X, 'hyperplane')) & ~(isa(X, 'polytope'))
     error('INTERSECTION_EA: second input argument must be ellipsoid, hyperplane or polytope.');
   end
 
@@ -86,7 +86,7 @@ function E = intersection_ea(E1, X)
   mx1   = max(max(dims1));
   mx2   = max(max(dims2));
 
-  if (mn1 ~= mx1) || (mn2 ~= mx2) || (mx1 ~= mx2)
+  if (mn1 ~= mx1) | (mn2 ~= mx2) | (mx1 ~= mx2)
     if isa(X, 'hyperplane')
       error('INTERSECTION_EA: ellipsoids and hyperplanes must be of the same dimension.');
     elseif isa(X, 'polytope')
@@ -98,7 +98,7 @@ function E = intersection_ea(E1, X)
 
   t1     = k * l;
   t2     = m * n;
-  if (t1 > 1) && (t2 > 1) && ((k ~= m) || (l ~= n))
+  if (t1 > 1) & (t2 > 1) & ((k ~= m) | (l ~= n))
     if isa(X, 'hyperplane')
       error('INTERSECTION_EA: sizes of ellipsoidal and hyperplane arrays do not match.');
     elseif isa(X, 'polytope')
@@ -109,7 +109,7 @@ function E = intersection_ea(E1, X)
   end
 
   E = [];
-  if (t1 > 1) && (t2 > 1)
+  if (t1 > 1) & (t2 > 1)
     for i = 1:k
       e = [];
       for j = 1:l
@@ -147,7 +147,7 @@ function E = intersection_ea(E1, X)
     end
   end
 
-end
+  return;
 
 
 
@@ -173,11 +173,11 @@ function E = l_intersection_ea(E1, E2)
     [v, c] = parameters(-E2);
     c      = c/sqrt(v'*v);
     v      = v/sqrt(v'*v);
-    if (v'*q1 > c) && ~(intersect(E1, E2))
+    if (v'*q1 > c) & ~(intersect(E1, E2))
       E = E1;
       return;
     end
-    if (v'*q1 < c) && ~(intersect(E1, E2))
+    if (v'*q1 < c) & ~(intersect(E1, E2))
       E = ellipsoid;
       return;
     end
@@ -218,7 +218,7 @@ function E = l_intersection_ea(E1, E2)
   Q = (1+E1.absTol)*k*Y;
   E = ellipsoid(q, Q); 
   
-end
+  return;
 
 
 

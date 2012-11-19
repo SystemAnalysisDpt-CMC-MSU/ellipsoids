@@ -110,7 +110,7 @@ function [y, Y] = minksum(varargin)
     ih = ishold;
   end
 
-  if (Options.show_all ~= 0) && (nargout == 0)
+  if (Options.show_all ~= 0) & (nargout == 0)
     plot(ells, 'b');
     hold on;
     if Options.newfigure ~= 0
@@ -120,7 +120,7 @@ function [y, Y] = minksum(varargin)
     end
   end
 
-  if (Properties.getIsVerbose()) && (cnt > 1)
+  if (Properties.getIsVerbose()) & (cnt > 1)
     if nargout == 0
       fprintf('Computing and plotting geometric sum of %d ellipsoids...\n', cnt);
     else
@@ -142,7 +142,7 @@ function [y, Y] = minksum(varargin)
           Y = Y + ellbndr_2d(E);
           y = y + E.center;
         end
-        if (i == cnt) && (nargout == 0)
+        if (i == cnt) & (nargout == 0)
           if Options.fill ~= 0
             fill(Y(1, :), Y(2, :), clr);
             hold on;
@@ -162,7 +162,7 @@ function [y, Y] = minksum(varargin)
           Y = Y + ellbndr_3d(E);
           y = y + E.center;
         end
-        if (i == cnt) && (nargout == 0)
+        if (i == cnt) & (nargout == 0)
           chll = convhulln(Y');
           vs   = size(Y, 2);
           patch('Vertices', Y', 'Faces', chll, ...
@@ -189,7 +189,7 @@ function [y, Y] = minksum(varargin)
           Y(1, 1) = Y(1, 1) + E.center - sqrt(E.shape);
           Y(1, 2) = Y(1, 2) + E.center + sqrt(E.shape);
         end
-        if (i == cnt) && (nargout == 0)
+        if (i == cnt) & (nargout == 0)
           h = ell_plot(Y);
           hold on;
           set(h, 'Color', clr, 'LineWidth', 2);
@@ -211,7 +211,7 @@ function [y, Y] = minksum(varargin)
     clear Y;
   end
   if nargout == 0
-    clear y Y;
+    clear y, Y;
   end
 
-end
+  return;

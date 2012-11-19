@@ -42,7 +42,7 @@ import modgen.common.throwerror
 
   import elltool.conf.Properties;
 
-  if ~(isa(E, 'ellipsoid')) || ~(isa(H, 'hyperplane'))
+  if ~(isa(E, 'ellipsoid')) | ~(isa(H, 'hyperplane'))
     error('HPINTERSECTION: first argument must be ellipsoid, second argument - hyperplane.');
   end 
   if ndims(E) ~= 2
@@ -56,7 +56,7 @@ import modgen.common.throwerror
   [k, l] = size(H);
   t1     = m * n;
   t2     = k * l;
-  if (t1 > 1) && (t2 > 1) && ((m ~= k) || (n ~= l))
+  if (t1 > 1) & (t2 > 1) & ((m ~= k) | (n ~= l))
     error('HPINTERSECTION: sizes of ellipsoidal and hyperplane arrays do not match.');
   end
   
@@ -80,7 +80,7 @@ import modgen.common.throwerror
   end
 
   if Properties.getIsVerbose()
-    if (t1 > 1) || (t2 > 1)
+    if (t1 > 1) | (t2 > 1)
       fprintf('Computing %d ellipsoid-hyperplane intersections...\n', max([t1 t2]));
     else
       fprintf('Computing ellipsoid-hyperplane intersection...\n');
@@ -88,7 +88,7 @@ import modgen.common.throwerror
   end
 
   I = [];
-  if (t1 > 1) && (t2 > 1)
+  if (t1 > 1) & (t2 > 1)
     for i = 1:m
       Q = [];
       for j = 1:n
@@ -99,9 +99,9 @@ import modgen.common.throwerror
           else
             isnIntersectedMat(i, j) = true;
           end;
-        else
+	else
           Q = [Q l_compute1intersection(E(i, j), H(i, j), mx1)];
-        end
+	end
       end
       I = [I; Q];
     end
@@ -128,15 +128,15 @@ import modgen.common.throwerror
           else
             isnIntersectedMat(i, j) = true;
           end;
-        else
+	else
           Q = [Q l_compute1intersection(E, H(i, j), mx1)];
-        end
+	end
       end
       I = [I; Q];
     end
   end
 
-end
+  return;
 
 
 
@@ -183,4 +183,3 @@ function I = l_compute1intersection(E, H, n)
   Z   = (1 - h) * [0 zeros(1, n-1); zeros(n-1, 1) W];
   I   = ellipsoid(z, Z);
   I   = ell_inv(T)*(I + f);
-end
