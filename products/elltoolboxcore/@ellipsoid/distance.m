@@ -121,7 +121,41 @@ function [d, status] = distance(E, X, flag)
   return;
 
 
-
+function [ellDist timeOfCalculation] = findEllMetDistance(ellObj1,ellObj2,nMaxIter,absTol)
+% FINDEELLELLDISTANCE - computes the distance between two ellipsoids
+%                       in ellipsoidal metric 
+% Input:
+%       ellObj1:  ellipsoid: [1,1] - first ellipsoid,
+%       ellObj2: ellipsoid: [1,1] - second ellipsoid,
+%       nMaxIter: int8[1,1] - maximal number of iterations,
+%       absTol: double[1,1] - absolute tolerance, 
+% Output:
+%       ellDist: double[1,1]  - computed distance
+%       timeOfComputation: double[1,1] - time of computation
+%  
+% Vitaly Baranov  <vetbar42@gmail.com> $	$Date: 2012-11-19 $ 
+% Copyright: Lomonosov Moscow State University,
+%            Faculty of Computational Mathematics and Cybernetics,
+%            System Analysis Department 2012 $
+%
+% 
+    [cen1Vec ellQ1Mat]=double(ellObj1);
+    [cen2Vec ellQ2Mat]=double(ellObj2);
+    if rank(ellQ1Mat) < size(ellQ1Mat, 2)
+        ellQ1Mat = ellipsoid.regularize(ellQ1Mat,ellObj1.absTol);
+    end
+    sqrQ1Mat=sqrtm(ellQ1Mat);
+    sqrInvQ1Mat=sqrQ1Mat\eye(size(sqrQ1Mat));
+    newQ1Mat=eye(size(ellQ1Mat));
+    newCen1Vec=sqrInvQ1Mat*cen1Vec;
+    newQ2Mat=sqrInvQ1Mat*ellQ2Mat*sqrInvQ1Mat;
+    newCen2Vec=sqrInvQ1Mat*cen2Vec;
+    newQ2Mat=0.5*(newQ2Mat+newQ2Mat.');
+    [ellDist timeOfCalculation]=...
+        computeEllEllDistance(ellipsoid(newCen1Vec,newQ1Mat),...
+        ellipsoid(newCen2Vec,newQ2Mat),nMaxIter,absTol);
+%
+  
 function [ellDist timeOfCalculation] = computeEllEllDistance(ellObj1,ellObj2,nMaxIter,absTol)
 % COMPUTEELLELLDISTANCE - computes the distance between two ellipsoids
 % Input:
@@ -223,7 +257,7 @@ end
 timeOfCalculation=toc;
 
 %%%%%%%%
-function [ distEllVec timeOfComputation ] = computeEllVecDistance(ellObj,vectorVec,nMaxIter,absTol, relTol)
+function [ distEllVec timeOfComputation ] = computeEllVecDistance(ellObj,vectorVec,nMaxIter,absTol, relTol,isFlagOn)
 % COMPUTEELLVECDISTANCE - computes the distance between an ellipsoid and a
 %                         vector
 % Input:
@@ -243,35 +277,38 @@ function [ distEllVec timeOfComputation ] = computeEllVecDistance(ellObj,vectorV
 %            System Analysis Department 2012 $
 %
 %
- import modgen.common.throwerror 
- tic;
- [ellCenterVec, ellQMat] = double(ellObj);
- ellQMat=ellQMat\eye(size(ellQMat));
- vectorVec=vectorVec-ellCenterVec;
- vectorEllVal=vectorVec'*ellQMat*vectorVec;
- if ( vectorEllVal< 1)
-     distEllVec=-1;
- elseif (vectorEllVal==1)
-     distEllVec=0;
- else
-     [unitaryMat diagMat]=eig(ellQMat);
-     unitaryMat=transpose(unitaryMat);
-     distEllVec=diag(diagMat);
-     qVec=unitaryMat*vectorVec;
-     dMean=mean(distEllVec);
-     vectorNorm=norm(vectorVec);
-     x0=sqrt((dMean*vectorNorm*vectorNorm)-1)/dMean;
-     fDetFunction=@(x) -1+sum((qVec.*qVec).*(distEllVec./...
+    import modgen.common.throwerror 
+    tic;
+    [ellCenterVec, ellQMat] = double(ellObj);
+    if rank(ellQMat) < size(ellQMat, 2)
+        ellQMat = ellipsoid.regularize(ellQMat,ellObj.absTol);
+    end
+    ellQMat=ellQMat\eye(size(ellQMat));
+    vectorVec=vectorVec-ellCenterVec;
+    vectorEllVal=vectorVec'*ellQMat*vectorVec;
+    if ( vectorEllVal < (1-absTol) )
+        distEllVec=-1;
+    elseif (abs(vectorEllVal-1)<absTol)
+        distEllVec=0;
+    elseif ~isFlagOn
+        [unitaryMat diagMat]=eig(ellQMat);
+        unitaryMat=transpose(unitaryMat);
+        distEllVec=diag(diagMat);
+        qVec=unitaryMat*vectorVec;
+        dMean=mean(distEllVec);
+        vectorNorm=norm(vectorVec);
+        x0=sqrt((dMean*vectorNorm*vectorNorm)-1)/dMean;
+        fDetFunction=@(x) -1+sum((qVec.*qVec).*(distEllVec./...
          ((1+distEllVec*x).*(1+distEllVec*x))));
-     %%Bisection for interval estimation
-     aPoint=0;
-     bPoint=x0+x0;
-     cPoint=aPoint+0.5*(bPoint-aPoint);
-     detFunctionAtPointA=fDetFunction(aPoint);
-     detFunctionAtPointB=fDetFunction(bPoint);
-     detFunctionAtPointC=fDetFunction(cPoint);
-     iIter=1;
-     while( iIter < nMaxIter) && ((abs(detFunctionAtPointA-...
+        %%Bisection for interval estimation
+        aPoint=0;
+        bPoint=x0+x0;
+        cPoint=aPoint+0.5*(bPoint-aPoint);
+        detFunctionAtPointA=fDetFunction(aPoint);
+        detFunctionAtPointB=fDetFunction(bPoint);
+        detFunctionAtPointC=fDetFunction(cPoint);
+        iIter=1;
+        while( iIter < nMaxIter) && ((abs(detFunctionAtPointA-...
              detFunctionAtPointC)>absTol ||....
              abs(detFunctionAtPointB-detFunctionAtPointC)>absTol))
          cPoint=aPoint+(bPoint-aPoint)*0.5;
@@ -284,15 +321,15 @@ function [ distEllVec timeOfComputation ] = computeEllVecDistance(ellObj,vectorV
              aPoint=cPoint;
          end
          iIter=iIter+1;
-     end
-     %%Secant Method, search for zeros
-     intervalHalfLength=10*sqrt(relTol);
-     xVec=zeros(1,nMaxIter);
-     xVec(1)=cPoint-intervalHalfLength;
-     xVec(2)=cPoint+intervalHalfLength;
-     oneStepError=Inf;
-     kIter=2;
-     while( kIter < nMaxIter ) && ( oneStepError > relTol )
+        end
+        %%Secant Method, search for zeros
+        intervalHalfLength=10*sqrt(relTol);
+        xVec=zeros(1,nMaxIter);
+        xVec(1)=cPoint-intervalHalfLength;
+        xVec(2)=cPoint+intervalHalfLength;
+        oneStepError=Inf;
+        kIter=2;
+        while( kIter < nMaxIter ) && ( oneStepError > relTol )
          deltaF = fDetFunction(xVec(kIter))-fDetFunction(xVec(kIter-1));
          if abs(deltaF) <= absTol
              throwerror('notSecant','Secant method is not applicable.');
@@ -302,12 +339,22 @@ function [ distEllVec timeOfComputation ] = computeEllVecDistance(ellObj,vectorV
              oneStepError=abs(xVec(kIter)-xVec(kIter-1))^2;
          end
          kIter=kIter+1;
-     end
-     lambda=xVec(kIter);
-     auxilliaryVec = (eye(size(ellQMat))+lambda*ellQMat)\vectorVec;
-     distEllVec = norm(auxilliaryVec-vectorVec);
- end
- timeOfComputation=toc;
+        end
+        lambda=xVec(kIter);
+        auxilliaryVec = (eye(size(ellQMat))+lambda*ellQMat)\vectorVec;
+        distEllVec = norm(auxilliaryVec-vectorVec);
+    else
+        % (y-x)'A(y-x) -> min s.t. x'Ax=1
+        % Lagrangian: L=(y-x)'A(y-x) + lambda (1 - x'Ax) =>
+        % A(y-x)+lambda Ax=0 => y=(1+lambda) x =>
+        % 1+lambda=1/(y'Ay)^(1/2) => find lambda and 
+        % find (y-x)'A(y-x).
+        distPlus=(sqrt(vectorEllVal)+1);
+        distMinus=abs(sqrt(vectorEllVal)-1);
+        distEllVec=min(distPlus, distMinus);
+    end
+    timeOfComputation=toc;
+
  
 
   
@@ -354,7 +401,7 @@ function [distMat, timeMat] = computePointsEllDist(ellObjMat, vecArray, flag)
         yVec      = vecArray(:, i*j);
         ABS_TOL = absTolMat(i,j);
         REL_TOL = relTolMat(i,j);
-        [dist time] = computeEllVecDistance(ellObjMat(i,j),yVec,N_MAX_ITER,ABS_TOL,REL_TOL);
+        [dist time] = computeEllVecDistance(ellObjMat(i,j),yVec,N_MAX_ITER,ABS_TOL,REL_TOL,flag);
         distMat(i,j) = dist;
         timeMat(i,j) = time;
       end
@@ -367,7 +414,7 @@ function [distMat, timeMat] = computePointsEllDist(ellObjMat, vecArray, flag)
        yVec=vecArray;    
         ABS_TOL = absTolMat(i,j);
         REL_TOL = relTolMat(i,j);
-       [dist time] = computeEllVecDistance(ellObjMat(i,j),yVec,N_MAX_ITER,ABS_TOL,REL_TOL);
+       [dist time] = computeEllVecDistance(ellObjMat(i,j),yVec,N_MAX_ITER,ABS_TOL,REL_TOL,flag);
        distMat(i,j) = dist;
        timeMat(i,j) = time;
       end
@@ -379,7 +426,7 @@ function [distMat, timeMat] = computePointsEllDist(ellObjMat, vecArray, flag)
       yVec= vecArray(:, i); 
       ABS_TOL = ellObjMat.absTol;
       REL_TOL = ellObjMat.relTol;
-      [dist time]= computeEllVecDistance(ellObjMat,yVec,N_MAX_ITER,ABS_TOL,REL_TOL);
+      [dist time]= computeEllVecDistance(ellObjMat,yVec,N_MAX_ITER,ABS_TOL,REL_TOL,flag);
       distMat(i) = dist;
       timeMat(i) = time;
     end
@@ -417,9 +464,15 @@ function [distEllEll, timeOfCalculation] = l_elldist(ellObj1, ellObj2, flag)
         for i = 1:mSize1
             for j = 1:kSize1
                 ABS_TOL = absTolMat(i,j);
-                [distEllEll(i,j) timeOfCalculation(i,j)]=...
-                computeEllEllDistance(ellObj1(i,j),ellObj2(i,j),...
-                N_MAX_ITER,ABS_TOL);
+                if flag
+                    [distEllEll(i,j) timeOfCalculation(i,j)]=...
+                        findEllMetDistance(ellObj1(i,j),ellObj2(i,j),...
+                        N_MAX_ITER,ABS_TOL);
+                else
+                    [distEllEll(i,j) timeOfCalculation(i,j)]=...
+                        computeEllEllDistance(ellObj1(i,j),ellObj2(i,j),...
+                        N_MAX_ITER,ABS_TOL);
+                end
             end
         end
     elseif (nEllObj1 > 1)
@@ -428,21 +481,32 @@ function [distEllEll, timeOfCalculation] = l_elldist(ellObj1, ellObj2, flag)
         for i = 1:mSize1
             for j = 1:kSize1
                 ABS_TOL = absTolMat(i,j);
-                [distEllEll(i,j) timeOfCalculation(i,j)]=...
-                    computeEllEllDistance(ellObj1(i,j),ellObj2,...
-                    N_MAX_ITER,ABS_TOL);      
+                if flag
+                    [distEllEll(i,j) timeOfCalculation(i,j)]=...
+                        findEllMetDistance(ellObj1(i,j),ellObj2,...
+                        N_MAX_ITER,ABS_TOL);
+                else
+                    [distEllEll(i,j) timeOfCalculation(i,j)]=...
+                        computeEllEllDistance(ellObj1(i,j),ellObj2,...
+                        N_MAX_ITER,ABS_TOL);
+                end
             end
         end
     else
         distEllEll=zeros(mSize2,kSize2);  
         timeOfCalculation=zeros(mSize2,kSize2);
+        ABS_TOL = ellObj1.absTol; 
         for i = 1:mSize2
           for j = 1:kSize2
-              
-            ABS_TOL = ellObj1.absTol;
-            [distEllEll(mSize2,kSize2) timeOfCalculation(mSize2,kSize2)]=...
-                computeEllEllDistance(ellObj1,ellObj2(i,j),...
-                N_MAX_ITER,ABS_TOL);
+            if flag 
+                [distEllEll(i,j) timeOfCalculation(i,j)]=...
+                    findEllMetDistance(ellObj1,ellObj2(i,j),...
+                    N_MAX_ITER,ABS_TOL);
+             else
+                 [distEllEll(mSize2,kSize2) timeOfCalculation(mSize2,kSize2)]=...
+                    computeEllEllDistance(ellObj1,ellObj2(i,j),...
+                    N_MAX_ITER,ABS_TOL);
+             end
           end
         end
     end
