@@ -352,6 +352,19 @@ classdef EllipsoidTestCase < mlunitext.test_case
             ansResVec(2)=distance(testEllipsoidVec(2),testEllipsoid,1);
             mlunit.assert_equals(1, all(abs(testResVec-ansResVec)<...
                 elltool.conf.Properties.getAbsTol()));
+            %
+            % Test #4.
+            % distance between two pairs of ellipsoids 
+            testEllipsoid1Vec=[ellipsoid([0, -6, 0].',[100,0,0; 0,4,0; 0,0, 25]),...
+                ellipsoid([0,0,-4.5].',[100,0,0; 0, 25,0; 0,0,4])];
+            testEllipsoid2Vec=[ellipsoid([0, 6, 0].',[100,0,0; 0,4,0; 0,0, 25]),...
+                ellipsoid([0,0,4.5].',[100,0,0; 0, 25,0; 0,0,4])];
+            %
+            testResVec=distance(testEllipsoid1Vec,testEllipsoid2Vec,1);
+            ansResVec(1)=distance(testEllipsoid1Vec(1),testEllipsoid2Vec(1),1);
+            ansResVec(2)=distance(testEllipsoid1Vec(2),testEllipsoid2Vec(2),1);
+            mlunit.assert_equals(1, all(abs(testResVec-ansResVec)<...
+                elltool.conf.Properties.getAbsTol()));
         end
         function self = testPropertyGetters(self)
             ellCenter = [1;1];

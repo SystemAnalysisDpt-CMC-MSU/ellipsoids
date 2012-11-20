@@ -118,7 +118,7 @@ function [d, status] = distance(E, X, flag)
 
   error('DISTANCE: second argument must be array of vectors, ellipsoids, hyperplanes or polytopes.');
 
-  return;
+end
 
 
 function [ellDist timeOfCalculation] = findEllMetDistance(ellObj1,ellObj2,nMaxIter,absTol)
@@ -154,6 +154,7 @@ function [ellDist timeOfCalculation] = findEllMetDistance(ellObj1,ellObj2,nMaxIt
     [ellDist timeOfCalculation]=...
         computeEllEllDistance(ellipsoid(newCen1Vec,newQ1Mat),...
         ellipsoid(newCen2Vec,newQ2Mat),nMaxIter,absTol);
+end
 %
   
 function [ellDist timeOfCalculation] = computeEllEllDistance(ellObj1,ellObj2,nMaxIter,absTol)
@@ -255,7 +256,8 @@ else
     end
 end
 timeOfCalculation=toc;
-
+end
+      
 %%%%%%%%
 function [ distEllVec timeOfComputation ] = computeEllVecDistance(ellObj,vectorVec,nMaxIter,absTol, relTol,isFlagOn)
 % COMPUTEELLVECDISTANCE - computes the distance between an ellipsoid and a
@@ -281,7 +283,7 @@ function [ distEllVec timeOfComputation ] = computeEllVecDistance(ellObj,vectorV
     tic;
     [ellCenterVec, ellQMat] = double(ellObj);
     if rank(ellQMat) < size(ellQMat, 2)
-        ellQMat = ellipsoid.regularize(ellQMat,ellObj.absTol);
+        ellQMat = ellipsoid.regularize(ellQMat,absTol);
     end
     ellQMat=ellQMat\eye(size(ellQMat));
     vectorVec=vectorVec-ellCenterVec;
@@ -298,8 +300,6 @@ function [ distEllVec timeOfComputation ] = computeEllVecDistance(ellObj,vectorV
         dMean=mean(distEllVec);
         vectorNorm=norm(vectorVec);
         x0=sqrt((dMean*vectorNorm*vectorNorm)-1)/dMean;
-        fDetFunction=@(x) -1+sum((qVec.*qVec).*(distEllVec./...
-         ((1+distEllVec*x).*(1+distEllVec*x))));
         %%Bisection for interval estimation
         aPoint=0;
         bPoint=x0+x0;
@@ -354,96 +354,76 @@ function [ distEllVec timeOfComputation ] = computeEllVecDistance(ellObj,vectorV
         distEllVec=min(distPlus, distMinus);
     end
     timeOfComputation=toc;
-
- 
+    
+    function res=fDetFunction(xPoint)
+        tmpVec=1+distEllVec*xPoint;
+        res= -1+sum((qVec.*qVec).*(distEllVec./...
+         (tmpVec.*tmpVec)));
+    end
+end
 
   
-function [distMat, timeMat] = computePointsEllDist(ellObjMat, vecArray, flag)
+function [distArray, timeArray] = computePointsEllDist(ellObjArray, vecArray, flag)
 %
 % L_POINTDIST - distance from ellipsoid to vector.
 %
-  import elltool.conf.Properties;
-%
-  [mSize, lSize] = size(ellObjMat);
-  [kSize, nVec] = size(vecArray);
-  nEllObj      = mSize * lSize;
-  if (nEllObj > 1) && (nVec > 1) && (nEllObj ~= nVec)
-    error('DISTANCE: number of ellipsoids does not match the number of vectors.');
-  end
-%
-  dimsMat = dimension(ellObjMat);
-  minDim   = min(min(dimsMat));
-  maxDim   = max(max(dimsMat));
-  if minDim ~= maxDim
-    error('DISTANCE: ellipsoids must be of the same dimension.')
-  end
-  if maxDim ~= kSize
-    error('DISTANCE: dimensions of ellipsoid an vector do not match.');
-  end
-%
-  if Properties.getIsVerbose()
-    if (nEllObj > 1) || (nVec > 1)
-      fprintf('Computing %d ellipsoid-to-vector distances...\n', max([nEllObj nVec]));
-    else
-      fprintf('Computing ellipsoid-to-vector distance...\n');
+    import elltool.conf.Properties;
+    %
+    [mSize, lSize] = size(ellObjArray);
+    [kSize, nVec] = size(vecArray);
+    nEllObj      = mSize * lSize;
+    if (nEllObj > 1) && (nVec > 1) && (nEllObj ~= nVec)
+        error('DISTANCE: number of ellipsoids does not match the number of vectors.');
     end
-  end
+    %
+    dimsMat = dimension(ellObjArray);
+    minDim   = min(min(dimsMat));
+    maxDim   = max(max(dimsMat));
+    if minDim ~= maxDim
+        error('DISTANCE: ellipsoids must be of the same dimension.')
+    end
+    if maxDim ~= kSize
+        error('DISTANCE: dimensions of ellipsoid an vector do not match.');
+    end
+    %
+    if Properties.getIsVerbose()
+        if (nEllObj > 1) || (nVec > 1)
+            fprintf('Computing %d ellipsoid-to-vector distances...\n', max([nEllObj nVec]));
+        else
+            fprintf('Computing ellipsoid-to-vector distance...\n');
+        end
+    end
 %
 %  
-  N_MAX_ITER=50;   
-  absTolMat = getAbsTol(ellObjMat);
-  relTolMat = getRelTol(ellObjMat);
-  if (nEllObj > 1) && (nEllObj == nVec)
-    distMat=zeros(mSize,lSize);
-    timeMat=zeros(mSize,lSize);
-    for i = 1:mSize
-      for j = 1:lSize
-        yVec      = vecArray(:, i*j);
-        ABS_TOL = absTolMat(i,j);
-        REL_TOL = relTolMat(i,j);
-        [dist time] = computeEllVecDistance(ellObjMat(i,j),yVec,N_MAX_ITER,ABS_TOL,REL_TOL,flag);
-        distMat(i,j) = dist;
-        timeMat(i,j) = time;
-      end
+    N_MAX_ITER=50;  
+    dimSpace=maxDim;
+    absTolArray = getAbsTol(ellObjArray);
+    relTolArray = getRelTol(ellObjArray);
+    if (nEllObj > 1) && (nEllObj == nVec)
+        vecCArray=mat2cell(vecArray,dimSpace,ones(1,nVec));
+        fComposite=@(ellObj,xVec,absTol,relTol)computeEllVecDistance(ellObj,xVec{1},N_MAX_ITER,absTol,relTol,flag);
+        [distArray timeArray] =arrayfun(fComposite,ellObjArray,vecCArray,absTolArray,relTolArray);
+    elseif (nEllObj > 1)
+        fCompositeOneVec=@(ellObj,absTol,relTol)computeEllVecDistance(ellObj,vecArray,N_MAX_ITER,absTol,relTol,flag);
+        [distArray timeArray] =arrayfun(fCompositeOneVec,ellObjArray,absTolArray,relTolArray);
+    else
+        vecCArray=mat2cell(vecArray,dimSpace,ones(1,nVec));
+        fCompositeOneEll=@(xVec)computeEllVecDistance(ellObjArray,xVec{1},N_MAX_ITER,absTolArray,relTolArray,flag);
+        [distArray timeArray] =arrayfun(fCompositeOneEll,vecCArray);
     end
-  elseif (nEllObj > 1)
-    distMat=zeros(mSize,lSize);
-    timeMat=zeros(mSize,lSize);
-    for i = 1:mSize
-      for j = 1:lSize
-       yVec=vecArray;    
-        ABS_TOL = absTolMat(i,j);
-        REL_TOL = relTolMat(i,j);
-       [dist time] = computeEllVecDistance(ellObjMat(i,j),yVec,N_MAX_ITER,ABS_TOL,REL_TOL,flag);
-       distMat(i,j) = dist;
-       timeMat(i,j) = time;
-      end
-    end
-  else
-    distMat=zeros(1,nVec);
-    timeMat=zeros(1,nVec);
-    for i = 1:nVec        
-      yVec= vecArray(:, i); 
-      ABS_TOL = ellObjMat.absTol;
-      REL_TOL = ellObjMat.relTol;
-      [dist time]= computeEllVecDistance(ellObjMat,yVec,N_MAX_ITER,ABS_TOL,REL_TOL,flag);
-      distMat(i) = dist;
-      timeMat(i) = time;
-    end
-  end
-return;
+end
 
 
 %%%%%%%%
 
-function [distEllEll, timeOfCalculation] = l_elldist(ellObj1, ellObj2, flag)
+function [distEllEllArray, timeOfCalculationArray] = l_elldist(ellObj1Array, ellObj2Array, flag)
 %
 % L_ELLDIST - distance from ellipsoid to ellipsoid.
 %
     import elltool.conf.Properties;
 
-    [mSize1, kSize1] = size(ellObj1);
-    [mSize2, kSize2] = size(ellObj2);
+    [mSize1, kSize1] = size(ellObj1Array);
+    [mSize2, kSize2] = size(ellObj2Array);
     nEllObj1     = mSize1 * kSize1;
     nEllObj2     = mSize2 * kSize2;
     if (nEllObj1 > 1) && (nEllObj2 > 1) && ((mSize1 ~= mSize2) || (kSize1 ~= kSize2))
@@ -457,61 +437,34 @@ function [distEllEll, timeOfCalculation] = l_elldist(ellObj1, ellObj2, flag)
         end
     end
     N_MAX_ITER=10000;
-    absTolMat = getAbsTol(ellObj1);
+    absTolArray = getAbsTol(ellObj1Array);
     if (nEllObj1 > 1) && (nEllObj2 > 1)
-        distEllEll=zeros(mSize1,kSize1);  
-        timeOfCalculation=zeros(mSize1,kSize1);
-        for i = 1:mSize1
-            for j = 1:kSize1
-                ABS_TOL = absTolMat(i,j);
-                if flag
-                    [distEllEll(i,j) timeOfCalculation(i,j)]=...
-                        findEllMetDistance(ellObj1(i,j),ellObj2(i,j),...
-                        N_MAX_ITER,ABS_TOL);
-                else
-                    [distEllEll(i,j) timeOfCalculation(i,j)]=...
-                        computeEllEllDistance(ellObj1(i,j),ellObj2(i,j),...
-                        N_MAX_ITER,ABS_TOL);
-                end
-            end
-        end
+       fCompositeFlagOn=@(ellObj1,ellObj2,absTol)findEllMetDistance(ellObj1,ellObj2,N_MAX_ITER,absTol);
+       fCompositeFlagOff=@(ellObj1,ellObj2,absTol)computeEllEllDistance(ellObj1,ellObj2,N_MAX_ITER,absTol);
+       if flag
+           [distEllEllArray timeOfCalculationArray] =arrayfun(fCompositeFlagOn,ellObj1Array,ellObj2Array,absTolArray);
+       else
+           [distEllEllArray timeOfCalculationArray] =arrayfun(fCompositeFlagOff,ellObj1Array,ellObj2Array,absTolArray);  
+       end
     elseif (nEllObj1 > 1)
-        distEllEll=zeros(mSize2,kSize2);  
-        timeOfCalculation=zeros(mSize2,kSize2);
-        for i = 1:mSize1
-            for j = 1:kSize1
-                ABS_TOL = absTolMat(i,j);
-                if flag
-                    [distEllEll(i,j) timeOfCalculation(i,j)]=...
-                        findEllMetDistance(ellObj1(i,j),ellObj2,...
-                        N_MAX_ITER,ABS_TOL);
-                else
-                    [distEllEll(i,j) timeOfCalculation(i,j)]=...
-                        computeEllEllDistance(ellObj1(i,j),ellObj2,...
-                        N_MAX_ITER,ABS_TOL);
-                end
-            end
+        fCompositeOneEll2FlagOn=@(ellObj1,absTol)findEllMetDistance(ellObj1,ellObj2Array,N_MAX_ITER,absTol);
+        fCompositeOneEll2FlagOff=@(ellObj1,absTol)computeEllEllDistance(ellObj1,ellObj2Array,N_MAX_ITER,absTol);
+        if flag
+            [distEllEllArray timeOfCalculationArray] =arrayfun(fCompositeOneEll2FlagOn,ellObj1Array,absTolArray);
+        else
+            [distEllEllArray timeOfCalculationArray] =arrayfun(fCompositeOneEll2FlagOff,ellObj1Array,absTolArray);  
         end
     else
-        distEllEll=zeros(mSize2,kSize2);  
-        timeOfCalculation=zeros(mSize2,kSize2);
-        ABS_TOL = ellObj1.absTol; 
-        for i = 1:mSize2
-          for j = 1:kSize2
-            if flag 
-                [distEllEll(i,j) timeOfCalculation(i,j)]=...
-                    findEllMetDistance(ellObj1,ellObj2(i,j),...
-                    N_MAX_ITER,ABS_TOL);
-             else
-                 [distEllEll(mSize2,kSize2) timeOfCalculation(mSize2,kSize2)]=...
-                    computeEllEllDistance(ellObj1,ellObj2(i,j),...
-                    N_MAX_ITER,ABS_TOL);
-             end
-          end
+        fCompositeOneEll1FlagOn=@(ellObj2,absTol)findEllMetDistance(ellObj1Array,ellObj2,N_MAX_ITER,absTol);
+        fCompositeOneEll1FlagOff=@(ellObj2,absTol)computeEllEllDistance(ellObj1Array,ellObj2,N_MAX_ITER,absTol);
+        if flag
+            [distEllEllArray timeOfCalculationArray] =arrayfun(fCompositeOneEll1FlagOn,ellObj2Array,absTolArray);
+        else
+            [distEllEllArray timeOfCalculationArray] =arrayfun(fCompositeOneEll1FlagOff,ellObj2Array,absTolArray);  
         end
     end
+end
 
-  return;
 
 
 
@@ -629,7 +582,7 @@ function [d, status] = l_hpdist(E, X, flag)
 
   status = [];
 
-  return;
+end
 
 
 
@@ -799,4 +752,4 @@ function [d, status] = l_polydist(E, X)
     end
   end
 
-  return;
+end
