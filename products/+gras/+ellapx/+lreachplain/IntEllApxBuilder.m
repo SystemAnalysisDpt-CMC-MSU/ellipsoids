@@ -43,7 +43,6 @@ classdef IntEllApxBuilder<gras.ellapx.lreachplain.ATightIntEllApxBuilder
     end
     methods
         function self=IntEllApxBuilder(varargin)
-            import gras.interp.MatrixInterpolantFactory;            
             self=self@gras.ellapx.lreachplain.ATightIntEllApxBuilder(...
                 varargin{:});
             X0sqrt=sqrtm(self.getProblemDef().getX0Mat);

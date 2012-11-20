@@ -20,7 +20,9 @@ classdef EllUnionTubeStaticProj<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&
         end
     end
     properties (Constant,GetAccess=protected,Hidden)
-        N_ISO_SURF_ONEDIM_POINTS=60;
+        N_ISO_SURF_ONEDIM_POINTS=70;
+        N_ISO_SURF_MIN_TIME_POINTS=200;
+        N_ISO_SURF_MAX_TIME_POINTS=700;
     end
     methods
         function self=EllUnionTubeStaticProj(varargin)
@@ -143,7 +145,7 @@ classdef EllUnionTubeStaticProj<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&
             end
         end
         function hVec=plotCreateReachTubeFunc(self,hAxes,projType,...
-                    timeVec,lsGoodDirOrigVec,ltGoodDirMat,sTime,...
+                    inpTimeVec,lsGoodDirOrigVec,ltGoodDirMat,sTime,...
                     xTouchCurveMat,xTouchOpCurveMat,ltGoodDirNormVec,...
                     ltGoodDirNormOrigVec,timeTouchEndVec,timeTouchOpEndVec,...
                 isLtTouchVec,isLtTouchOpVec,approxType,QArray,aMat)
@@ -151,6 +153,12 @@ classdef EllUnionTubeStaticProj<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&
             import modgen.common.throwerror;
             import gras.ellapx.enums.EApproxType;
             import gras.ellapx.smartdb.rels.EllUnionTubeStaticProj;
+            import gras.interp.MatrixInterpolantFactory;
+            nDims=size(aMat,1);
+            if nDims~=2
+                throwerror('wrongDimensionality',...
+                    'plotting of only 2-dimensional projections is supported');
+            end
             goodDirStr=self.goodDirProp2Str(...
                 lsGoodDirOrigVec,sTime);
             patchName=sprintf('Union tube, %s: %s',char(approxType),...
@@ -161,6 +169,38 @@ classdef EllUnionTubeStaticProj<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&
             %calculate mesh for elltube to choose the points for isogrid
             %
             %choose iso-grid
+            timeVec=inpTimeVec;
+            nTimePoints=length(timeVec);
+            nMinTimePoints=self.N_ISO_SURF_MIN_TIME_POINTS;
+            maxRefineFactor=fix(self.N_ISO_SURF_MAX_TIME_POINTS/nTimePoints);
+            minRefineFactor=ceil(nMinTimePoints/nTimePoints);
+            %
+            onesVec=ones(size(timeVec));
+            QMatList=shiftdim(mat2cell(QArray,nDims,nDims,onesVec),1);
+            aVecList=mat2cell(aMat,nDims,onesVec);
+            timeList=num2cell(timeVec);
+            %
+            refineFactorList=cellfun(@getRefineFactorByNeighborQMat,...
+                aVecList(1:end-1),QMatList(1:end-1),timeList(1:end-1),...
+                aVecList(2:end),QMatList(2:end),timeList(2:end),...
+                'UniformOutput',false);
+            %
+            resTimeVecList=cellfun(@(x,y,z)linspace(x,y,z+1),...
+                timeList(1:end-1),timeList(2:end),refineFactorList,...
+                'UniformOutput',false);
+            resTimeVecList=cellfun(@(x)x(1:end-1),resTimeVecList,...
+                'UniformOutput',false);
+            resTimeVec=[resTimeVecList{:}];
+            %
+            QMatSpline=MatrixInterpolantFactory.createInstance(...
+                'symm_column_triu',QArray,timeVec);
+            aVecSpline=MatrixInterpolantFactory.createInstance(...
+                'column',aMat,timeVec);
+            %
+            timeVec=resTimeVec;
+            QArray=QMatSpline.evaluate(timeVec);
+            aMat=aVecSpline.evaluate(timeVec);
+            %
             xMax=max(shiftdim(sqrt(QArray(1,1,:)),1)+aMat(1,:));
             xMin=min(-shiftdim(sqrt(QArray(1,1,:)),1)+aMat(1,:));
             %
@@ -217,12 +257,24 @@ classdef EllUnionTubeStaticProj<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&
             if approxType==EApproxType.External
                 hTouchVec=self.plotCreateTubeTouchCurveFunc(...
                     hAxes,projType,...
-                    timeVec,lsGoodDirOrigVec,ltGoodDirMat,sTime,...
+                    inpTimeVec,lsGoodDirOrigVec,ltGoodDirMat,sTime,...
                     xTouchCurveMat,xTouchOpCurveMat,ltGoodDirNormVec,...
                     ltGoodDirNormOrigVec,...
                     timeTouchEndVec,timeTouchOpEndVec,...
                     isLtTouchVec,isLtTouchOpVec);
                 hVec=[hTouchVec,hVec];
+            end
+            function refineFactor=getRefineFactorByNeighborQMat(...
+                    aLeftVec,qLeftMat,tLeft,aRightVec,qRightMat,tRight)
+                    tDeltaInv=1./(tRight-tLeft);
+                    aDiff=abs(norm(aRightVec-aLeftVec)*tDeltaInv);
+                    qDiff=sqrt(max(abs(eig(qRightMat-qLeftMat))))*tDeltaInv;
+                    eigLeftVec=eig(qLeftMat);
+                    eigRightVec=eig(qRightMat);
+                    condVal=0.5*(max(eigLeftVec)/min(eigLeftVec)+...
+                        max(eigRightVec)/min(eigRightVec));
+                    refineFactor=min(ceil(max(minRefineFactor,...
+                        log(sqrt((aDiff+qDiff)*condVal)))),maxRefineFactor);
             end
         end
         function hVec=plotCreateTubeTouchCurveFunc(self,hAxes,projType,...
