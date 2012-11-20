@@ -34,5 +34,8 @@ classdef CompositeMatrixOperations<gras.mat.IMatrixOperations
         function obj=lrMultiplyByVec(self,mMatFunc,lrColFunc)
             obj = gras.mat.MatrixLRTimesFunc(mMatFunc,lrColFunc,'R');
         end
+        function obj=lrDivideVec(self,mMatFunc,lrColFunc)
+            obj = gras.mat.MatrixLRDivideVecFunc(mMatFunc,lrColFunc);
+        end
     end
 end

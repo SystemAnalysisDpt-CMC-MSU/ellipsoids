@@ -11,5 +11,6 @@ classdef IMatrixOperations
         obj=sqrtm(self,mMat)
         obj=lrMultiply(self,mMat,lrMat,flag)
         obj=lrMultiplyByVec(self,mMat,lrVec)
+        obj=lrDivideVec(self,mMat,lrVec)
     end
 end

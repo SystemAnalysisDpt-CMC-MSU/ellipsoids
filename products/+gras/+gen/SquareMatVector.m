@@ -91,14 +91,15 @@ classdef SquareMatVector<gras.gen.MatVector
             if length(BSizeVec)==2
                 BSizeVec(3)=1;
             end;
-            OutArray=zeros([ASizeVec(1) ASizeVec(1) BSizeVec(3)]);
             switch flag
                 case 'L',
+                    OutArray=zeros([ASizeVec(1) ASizeVec(1) BSizeVec(3)]);
                     for t=1:1:BSizeVec(3)
                         OutArray(:,:,t)=InpAArray(:,:,t)*...
                             InpBArray(:,:,t)*transpose(InpAArray(:,:,t));
                     end;
                 case 'R',
+                    OutArray=zeros([ASizeVec(2) ASizeVec(2) BSizeVec(3)]);
                     for t=1:1:BSizeVec(3)
                         OutArray(:,:,t)=transpose(...
                             InpAArray(:,:,t))*InpBArray(:,:,t)*...
