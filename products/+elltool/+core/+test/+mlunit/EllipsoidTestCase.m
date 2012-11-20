@@ -234,6 +234,137 @@ classdef EllipsoidTestCase < mlunitext.test_case
             testRes=distance(testEll1,testEll2);
             mlunit.assert_equals(1,abs(testRes)<elltool.conf.Properties.getAbsTol());   
             
+            %
+            %
+            %DISTANCE FROM VECTOR TO ELLIPSOID 
+            %IN ELLIPSOID METRIC
+            %
+            % Test#1. Distance between an ellipsoid and a vector.
+            testEllipsoid = ellipsoid([1,0,0;0,5,0;0,0,10]);
+            testPointVec = [3,0,0].';
+            %
+            testRes = distance(testEllipsoid, testPointVec,1);
+            ansRes = ellVecDistanceCVX(testEllipsoid, testPointVec,1);
+            mlunit.assert_equals(1, (abs(testRes-ansRes)<elltool.conf.Properties.getAbsTol()));
+            %
+            % Test#2. Distance between an ellipsoid and a vector.
+            testEllipsoid = ellipsoid([2,0,0;0,5,0;0,0,10]);
+            testPointVec = [3,0,0].';
+            %
+            testRes = distance(testEllipsoid, testPointVec,1);
+            ansRes = ellVecDistanceCVX(testEllipsoid, testPointVec,1);
+            mlunit.assert_equals(1, (abs(testRes-ansRes)<elltool.conf.Properties.getAbsTol()));
+            %
+            %Test#3 
+            % Distance between two ellipsoids and a vector
+            testEllipsoidVec = [ellipsoid([5,5,0].',[1,0,0;0,5,0;0,0,10]),...
+                ellipsoid([0,10,0].',[10, 0, 0; 0, 16 , 0; 0,0, 5])];
+            testPointVec = [0,5,0].';
+            %
+            testResVec = distance(testEllipsoidVec, testPointVec,1);
+            ansResVec(1)=ellVecDistanceCVX(testEllipsoidVec(1), testPointVec,1);
+            ansResVec(2)=ellVecDistanceCVX(testEllipsoidVec(2), testPointVec,1);
+            mlunit.assert_equals(1, (abs(testResVec(1)-ansResVec(1))<elltool.conf.Properties.getAbsTol()) &&...
+                (abs(testResVec(2)-ansResVec(2))<elltool.conf.Properties.getAbsTol()));
+            %
+            %Test#4.
+            % Random ellipsoid matrix, low dimension case.
+            nDim=2;
+            testEllMat=diag(1:2);
+            testEllMat=testOrth2Mat*testEllMat*testOrth2Mat.';
+            testEllMat=0.5*(testEllMat+testEllMat.');
+            testEllipsoid=ellipsoid(testEllMat);
+            testPointVec=testOrth2Mat*[10;zeros(nDim-1,1)];
+            %
+            testRes=distance(testEllipsoid, testPointVec,1);
+            ansRes = ellVecDistanceCVX(testEllipsoid, testPointVec,1);
+            mlunit.assert_equals(1,abs(testRes-ansRes)<elltool.conf.Properties.getAbsTol());
+            %
+            %Test#5.
+            % Distance between two ellipsoids with random matrices and two vectors
+            testEll1Mat=[5,2,0;2,5,0;0,0,1];
+            testEll1Mat=testOrth3Mat*testEll1Mat*testOrth3Mat.';
+            testEll1Mat=0.5*(testEll1Mat+testEll1Mat.');
+            testEll2Mat=[4,0,0;0,9,0;0,0,25];
+            testEll2Mat=testOrth3Mat*testEll2Mat*testOrth3Mat.';
+            testEll2Mat=0.5*(testEll2Mat+testEll2Mat.');
+            testEll2CenterVec=testOrth3Mat*[0;0;5];
+            testEllipsoid1=ellipsoid(testEll1Mat);
+            testEllipsoid2=ellipsoid(testEll2CenterVec,testEll2Mat);
+            testEllipsoidVec = [testEllipsoid1,testEllipsoid2];
+            testPointMat = testOrth3Mat*([0,0,5; 0,5,5].');
+            %
+            testResVec = distance(testEllipsoidVec, testPointMat,1);
+            ansResVec(1)=distance(testEllipsoid1,testPointMat(:,1),1);
+            ansResVec(2)=distance(testEllipsoid2,testPointMat(:,2),1);
+            mlunit.assert_equals(1, all(abs(testResVec-ansResVec)<...
+                elltool.conf.Properties.getAbsTol()));
+                  %
+            %DISTANCE FROM ELLIPSOID TO ELLIPSOID 
+            %IN ELLIPSOIDAL METRIC
+            %
+            % Test#1.
+            % Distance between two ellipsoids
+            testEllipsoid1 = ellipsoid([25,0;0,9]);
+            testEllipsoid2 = ellipsoid([10;0],[4,0;0,9]);
+            testRes=distance(testEllipsoid1,testEllipsoid2,1);
+            ansRes=ellEllDistanceCVX(testEllipsoid1,testEllipsoid2,1);
+            mlunit.assert_equals(1, (abs(testRes-ansRes)<elltool.conf.Properties.getAbsTol()));
+            %
+            % Test#2.
+            % Distance between two ellipsoids of high dimensions and random
+            % matrices
+            nDim=100;
+            testEll1Mat=diag(1:2:2*nDim);
+            testEll1Mat=testOrth100Mat*testEll1Mat*testOrth100Mat.';
+            testEll1Mat=0.5*(testEll1Mat+testEll1Mat.');
+            testEll2Mat=diag([25;(1:(nDim-1)).']);
+            testEll2Mat=testOrth100Mat*testEll2Mat*testOrth100Mat.';
+            testEll2Mat=0.5*(testEll2Mat+testEll2Mat.');
+            testEll2CenterVec=testOrth100Mat*[9;zeros(nDim-1,1)];            
+            testEllipsoid1=ellipsoid(testEll1Mat);
+            testEllipsoid2=ellipsoid(testEll2CenterVec,testEll2Mat);
+            %
+            testRes=distance(testEllipsoid1,testEllipsoid2,1);
+            ansRes=ellEllDistanceCVX(testEllipsoid1,testEllipsoid2,1);
+            mlunit.assert_equals(1,abs(testRes-ansRes)<elltool.conf.Properties.getAbsTol());
+            %
+            % Test#3.
+            % Distance between two ellipsoids and an ellipsoid (of 3-dimension), 
+            % all matrices with nonzero nondiagonal elements 
+            testEll1Mat=[9,0,0; 0,25,0; 0,0, 1];
+            testEll1Mat=testOrth3Mat*testEll1Mat*testOrth3Mat.';
+            testEll1Mat=0.5*(testEll1Mat+testEll1Mat.');
+            testEll2Mat=[9,0,0; 0, 25,0; 0,0,1];
+            testEll2Mat=testOrth3Mat*testEll2Mat*testOrth3Mat.';
+            testEll2Mat=0.5*(testEll2Mat+testEll2Mat.');
+            testEll2CenterVec=testOrth3Mat*[-5;0;0];
+            testEll3Mat=[25,0,0; 0,100,0; 0,0, 1];
+            testEll3Mat=testOrth3Mat*testEll3Mat*testOrth3Mat.';
+            testEll3Mat=0.5*(testEll3Mat+testEll3Mat.');
+            testEll3CenterVec=testOrth3Mat*[5;0;0];
+            testEllipsoidVec=[ellipsoid(testEll1Mat),...
+                ellipsoid(testEll2CenterVec,testEll2Mat)];
+            testEllipsoid=ellipsoid(testEll3CenterVec,testEll3Mat);
+            %
+            testResVec=distance(testEllipsoidVec,testEllipsoid,1);
+            ansResVec(1)=distance(testEllipsoidVec(1),testEllipsoid,1);
+            ansResVec(2)=distance(testEllipsoidVec(2),testEllipsoid,1);
+            mlunit.assert_equals(1, all(abs(testResVec-ansResVec)<...
+                elltool.conf.Properties.getAbsTol()));
+            %
+            % Test #4.
+            % distance between two pairs of ellipsoids 
+            testEllipsoid1Vec=[ellipsoid([0, -6, 0].',[100,0,0; 0,4,0; 0,0, 25]),...
+                ellipsoid([0,0,-4.5].',[100,0,0; 0, 25,0; 0,0,4])];
+            testEllipsoid2Vec=[ellipsoid([0, 6, 0].',[100,0,0; 0,4,0; 0,0, 25]),...
+                ellipsoid([0,0,4.5].',[100,0,0; 0, 25,0; 0,0,4])];
+            %
+            testResVec=distance(testEllipsoid1Vec,testEllipsoid2Vec,1);
+            ansResVec(1)=distance(testEllipsoid1Vec(1),testEllipsoid2Vec(1),1);
+            ansResVec(2)=distance(testEllipsoid1Vec(2),testEllipsoid2Vec(2),1);
+            mlunit.assert_equals(1, all(abs(testResVec-ansResVec)<...
+                elltool.conf.Properties.getAbsTol()));
         end
         function self = testPropertyGetters(self)
             ellCenter = [1;1];
@@ -848,6 +979,51 @@ classdef EllipsoidTestCase < mlunitext.test_case
     end
 end
 
+function distEll=ellVecDistanceCVX(ellObj,vectorVec,flag)
+    [ellCenVec ellQMat]=double(ellObj);
+    ellQMat=ellQMat\eye(size(ellQMat));
+    ellQMat=0.5*(ellQMat+ellQMat.');
+    ellDims = dimension(ellObj);
+    maxDim   = max(max(ellDims));
+    cvx_begin sdp
+        variable x(maxDim, 1)
+        if flag
+            fDist = (x - vectorVec)'*ellQMat*(x - vectorVec);
+        else
+            fDist = (x - vectorVec)'*(x - vectorVec);
+        end
+        minimize(fDist)
+        subject to
+            x'*ellQMat*x + 2*(-ellQMat*ellCenVec)'*x + (ellCenVec'*ellQMat*ellCenVec - 1) <= 0
+    cvx_end
+    distEll = sqrt(fDist);
+end
+function distEllEll=ellEllDistanceCVX(ellObj1,ellObj2,flag)
+    dims1Mat = dimension(ellObj1);
+    %dims2Mat = dimension(ellObj2);
+    maxDim   = max(max(dims1Mat));
+    %maxDim2   = max(max(dims2Mat));
+    [cen1Vec, q1Mat] = double(ellObj1);
+    [cen2Vec, q2Mat] = double(ellObj2);
+    qi1Mat     = ell_inv(q1Mat);
+    qi1Mat     = 0.5*(qi1Mat + qi1Mat');
+    qi2Mat     = ell_inv(q2Mat);
+    qi2Mat     = 0.5*(qi2Mat + qi2Mat');
+    cvx_begin sdp
+            variable x(maxDim, 1)
+            variable y(maxDim, 1)
+            if flag
+                fDist = (x - y)'*qi1Mat*(x - y);
+            else
+                fDist = (x - y)'*(x - y);
+            end
+            minimize(fDist)
+            subject to
+                x'*qi1Mat*x + 2*(-qi1Mat*cen1Vec)'*x + (cen1Vec'*qi1Mat*cen1Vec - 1) <= 0
+                y'*qi2Mat*y + 2*(-qi2Mat*cen2Vec)'*y + (cen2Vec'*qi2Mat*cen2Vec - 1) <= 0
+     cvx_end
+     distEllEll = sqrt(fDist);
+end
 function isEq = subTestFunc(testEllCenterVec, testEllMat, testAnalitVec, testAnalitMat)
     import elltool.conf.Properties;
     absTol = Properties.getAbsTol();
@@ -960,4 +1136,3 @@ function [varargout] = createTypicalHighDimEll(flag)
         otherwise
     end
 end
-
