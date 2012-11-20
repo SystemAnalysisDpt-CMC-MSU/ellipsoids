@@ -579,6 +579,38 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             self.runAndCheckError('resEllVec = hpintersection(testEllVec, testHpArr)','wrongInput:wrongDim');
             
         end
+        
+        function self = testEllEnclose(self)
+            pointsVec = [1, 0, -1, 0; 0, 1, 0, -1];
+            resEllVec = ell_enclose(pointsVec);
+            ansEllVec = ellipsoid([0, 0].', eye(2));
+            mlunit.assert_equals(1, eq(resEllVec, ansEllVec));
+            
+            pointsVec = [2, 0, -2, 0; 0, 1/3, 0, -1/3];
+            resEllVec = ell_enclose(pointsVec);
+            ansEllVec = ellipsoid([0, 0].', [4, 0; 0, 1/9]);
+            mlunit.assert_equals(1, eq(resEllVec, ansEllVec));
+            
+            pointsVec = [1/2, 0, 0, 0; 0, 0, 0, -3];
+            resEllVec = ell_enclose(pointsVec);
+            ansEllVec = ellipsoid([1/6, -1].', [1/9, 1/3; 1/3, 4]);
+            mlunit.assert_equals(1, eq(resEllVec, ansEllVec));           
+            
+            phiAngleVec = 0:0.1:2*pi;
+            psiAngleVec = 0:0.1:pi;
+            pointsVec = zeros(3, numel(phiAngleVec)*numel(psiAngleVec));
+            for iAngle = 1:numel(phiAngleVec)
+                for jAngle = 1:numel(psiAngleVec)
+                    pointsVec(1, (iAngle-1)*numel(psiAngleVec) + jAngle) = cos(phiAngleVec(iAngle))*sin(psiAngleVec(jAngle));
+                    pointsVec(2, (iAngle-1)*numel(psiAngleVec) + jAngle) = sin(phiAngleVec(iAngle))*sin(psiAngleVec(jAngle));
+                    pointsVec(3, (iAngle-1)*numel(psiAngleVec) + jAngle) = cos(psiAngleVec(jAngle));
+                end
+            end
+            resEllVec = ell_enclose(pointsVec);
+            ansEllVec = ellipsoid([0, 0, 0].', eye(3));
+            mlunit.assert_equals(1, eq(resEllVec, ansEllVec));
+            
+        end
  
     end
         

@@ -51,17 +51,17 @@ function EA = minkdiff_ea(E1, E2, L)
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
-
+  import modgen.common.throwerror;
   import elltool.conf.Properties;
 
   if ~(isa(E1, 'ellipsoid')) | ~(isa(E2, 'ellipsoid'))
-    error('MINKDIFF_EA: first and second arguments must be single ellipsoids.');
+    throwerror('wrongInput', 'MINKDIFF_EA: first and second arguments must be single ellipsoids.');
   end
 
   [k, l] = size(E1);
   [m, n] = size(E2);
   if (k ~= 1) | (l ~= 1) | (m ~= 1) | (n ~= 1)
-    error('MINKDIFF_EA: first and second arguments must be single ellipsoids.');
+    throwerror('wrongInput', 'MINKDIFF_EA: first and second arguments must be single ellipsoids.');
   end
 
   EA = [];
@@ -76,7 +76,7 @@ function EA = minkdiff_ea(E1, E2, L)
   k = size(L, 1);
   n = dimension(E1);
   if k ~= n
-    error('MINKDIFF_EA: dimension of the direction vectors must be the same as dimension of ellipsoids.');
+    throwerror('wrongSizes', 'MINKDIFF_EA: dimension of the direction vectors must be the same as dimension of ellipsoids.');
   end
   q  = E1.center - E2.center;
   Q1 = E1.shape;
