@@ -53,7 +53,7 @@ function EP = projection(E, B)
   for i = 1:(l - 1)
     v = B(:, i);
     for j = (i + 1):l
-      if abs(v'*B(:, j)) > E.properties.getAbsTol()
+      if abs(v'*B(:, j)) > E.getAbsTol()
         error('PROJECTION: basis vectors must be orthogonal.');
       end
     end

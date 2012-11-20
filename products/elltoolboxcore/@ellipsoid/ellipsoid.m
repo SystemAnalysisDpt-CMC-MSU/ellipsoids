@@ -60,7 +60,8 @@ classdef ellipsoid < handle
         %
 
           neededPropNameList = {'absTol','relTol','nPlot2dPoints','nPlot3dPoints'};
-          [absTolVal, relTolVal,nPlot2dPointsVal,nPlot3dPointsVal] =  elltool.conf.Properties.parseProp(varargin,neededPropNameList);
+          [absTolVal, relTolVal,nPlot2dPointsVal,nPlot3dPointsVal] =...
+              elltool.conf.Properties.parseProp(varargin,neededPropNameList);
 
           if nargin == 0
             E.center = [];
@@ -90,7 +91,7 @@ classdef ellipsoid < handle
             error('ELLIPSOID: center of an ellipsoid must be a vector.');
           end
 
-          if (m ~= n) | (min(min((Q == Q'))) == 0)
+          if (m ~= n) || (min(min((Q == Q'))) == 0)
             error('ELLIPSOID: shape matrix must be symmetric.');
           end
 

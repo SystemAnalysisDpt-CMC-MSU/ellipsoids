@@ -31,7 +31,7 @@ function [q, Q] = parameters(E)
 %
 
   [m, n] = size(E);
-  if (m > 1) | (n > 1)
+  if (m > 1) || (n > 1)
     error('PARAMETERS: the argument of this function must be single ellipsoid.');
   end
   
