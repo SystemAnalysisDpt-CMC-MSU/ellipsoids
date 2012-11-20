@@ -32,17 +32,17 @@ function EA = minkpm_ea(EE, E2, L)
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
-
+  import modgen.common.throwerror;
   import elltool.conf.Properties;
 
 
   if ~(isa(EE, 'ellipsoid')) | ~(isa(E2, 'ellipsoid'))
-    error('MINKPM_EA: first and second arguments must be ellipsoids.');
+    throwerror('wrongInput', 'MINKPM_EA: first and second arguments must be ellipsoids.');
   end
 
   [m, n] = size(E2);
   if (m ~= 1) | (n ~= 1)
-    error('MINKPM_EA: second argument must be single ellipsoid.');
+    throwerror('wrongInput', 'MINKPM_EA: second argument must be single ellipsoid.');
   end
 
   k  = size(L, 1);
@@ -50,10 +50,10 @@ function EA = minkpm_ea(EE, E2, L)
   mn = min(min(dimension(EE)));
   mx = max(max(dimension(EE)));
   if (mn ~= mx) | (mn ~= n)
-    error('MINKPM_EA: all ellipsoids must be of the same dimension.');
+    throwerror('wrongSizes', 'MINKPM_EA: all ellipsoids must be of the same dimension.');
   end
   if n ~= k
-    error('MINKPM_EA: dimension of the direction vectors must be the same as dimension of ellipsoids.');
+    throwerror('wrongSizes', 'MINKPM_EA: dimension of the direction vectors must be the same as dimension of ellipsoids.');
   end
 
   N                  = size(L, 2);
