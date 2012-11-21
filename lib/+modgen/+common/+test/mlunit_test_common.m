@@ -1398,7 +1398,7 @@ classdef mlunit_test_common < mlunitext.test_case
             checkTime(inpMat1,inpMat2,10);
             
             function checkTime(inpMat1,inpMat2,nRuns) %#ok<INUSL>
-                MAX_TOLERANCE=0.25;
+                MAX_TOLERANCE=0.3;
                 isMemberVec1=[];
                 indMemberVec1=[];
                 isMemberVec2=[];

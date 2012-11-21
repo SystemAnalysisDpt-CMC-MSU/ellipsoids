@@ -8,13 +8,37 @@ classdef Properties<modgen.common.obj.StaticPropStorage
     %            System Analysis Department 2012 $
     %
     methods(Static)
+        function init()
+            import elltool.cvx.CVXController;            
+            import elltool.conf.Properties;
+            DEFAULT_CONF_NAME='default';
+            confRepoMgr=elltool.conf.ConfRepoMgr();
+            confRepoMgr.selectConf(DEFAULT_CONF_NAME);
+            Properties.setConfRepoMgr(confRepoMgr);            
+            % CVX settings.
+            if CVXController.isSetUp()
+                CVXController.setSolver('sedumi');
+                CVXController.setPrecision(Properties.getRelTol());
+                CVXController.setIsVerbosityEnabled(false);
+            end            
+        end
         function ConfRepoMgr=getConfRepoMgr()
             import modgen.common.throwerror;
             branchName=mfilename('class');
-            [ConfRepoMgr, isThere] = modgen.common.obj.StaticPropStorage.getPropInternal(...
-                branchName,'ConfRepoMgr',true);
+            [ConfRepoMgr, isThere] = getCrm();
             if ~isThere
-                throwerror('notInitialized','Properties.confRepoManager was not inicialised yet');
+                elltool.conf.Properties.init();
+                [ConfRepoMgr, isThere] = getCrm();                
+                if ~isThere
+                    throwerror('noConfRepoMgr',...
+                        'cannot initialize Configuration Repo Manager');
+                end
+            end
+            
+            function [ConfRepoMgr, isThere]=getCrm()
+                [ConfRepoMgr, isThere] = ...
+                    modgen.common.obj.StaticPropStorage.getPropInternal(...
+                    branchName,'ConfRepoMgr',true);                
             end
         end
         %
@@ -78,6 +102,10 @@ classdef Properties<modgen.common.obj.StaticPropStorage
             elltool.conf.Properties.setOption('nTimeGridPoints',nTimeGridPoints);
         end
         %
+        function SProp=getPropStruct()
+            SProp=elltool.conf.Properties.getConfRepoMgr.getCurConf();
+        end
+        %
         varargout = parseProp(args,neededPropNameList)
     end
     methods(Static,Access = private)
@@ -90,5 +118,5 @@ classdef Properties<modgen.common.obj.StaticPropStorage
             confRepMgr = elltool.conf.Properties.getConfRepoMgr();
             confRepMgr.setParam(optName,optVal);
         end
-    end     
+    end
 end

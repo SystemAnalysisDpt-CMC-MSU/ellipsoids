@@ -228,11 +228,7 @@ function figHandleVec = plot(varargin)
   if Options.newfigure
       figHandleVec = zeros(1,hp_count);
   else 
-      if ih
-          figHandleVec = gcf;
-      else
-          figHandleVec = figure();
-      end
+      figHandleVec = gcf;
   end
   
   for i = 1:hp_count

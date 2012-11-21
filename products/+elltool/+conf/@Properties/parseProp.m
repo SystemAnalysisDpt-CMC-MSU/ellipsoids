@@ -36,25 +36,15 @@ import elltool.conf.Properties;
 import modgen.common.throwerror;
 %
 propNamesList = {'version','isVerbose','absTol','relTol',...
-'nTimeGridPoints','ODESolverName','isODENormControl','isEnabledOdeSolverOptions',...
-'nPlot2dPoints','nPlot3dPoints'};
+    'nTimeGridPoints','ODESolverName','isODENormControl','isEnabledOdeSolverOptions',...
+    'nPlot2dPoints','nPlot3dPoints'};
 %
-if(isempty(neededPropNameList))    
+if isempty(neededPropNameList)
     neededPropNameList = propNamesList;
 end
 %%
 %
-SPreProp = struct('version',Properties.getVersion(),...
-'isVerbose',Properties.getIsVerbose(),...
-'absTol',Properties.getAbsTol(),...
-'relTol',Properties.getRelTol(),...
-'nTimeGridPoints',Properties.getNTimeGridPoints(),...
-'ODESolverName',Properties.getODESolverName(),...
-'isODENormControl',Properties.getIsODENormControl,...
-'isEnabledOdeSolverOptions',Properties.getIsEnabledOdeSolverOptions(),...
-'nPlot2dPoints',Properties.getNPlot2dPoints(),...
-'nPlot3dPoints',Properties.getNPlot3dPoints());
-%%
+SPreProp=Properties.getPropStruct();
 %
 nProp = size(neededPropNameList,2);
 %
@@ -88,15 +78,15 @@ switch property
         isOk = isa(value, 'char') && any(strcmp(value, {'on','off'}));
     case 'ODESolverName'
         isOk = isa(value,'char') && any(strcmp(value, {'ode45','ode23','ode113'}));
-    %
+        %
     case {'isVerbose','isEnabledOdeSolverOptions'}
         isOk = isa(value, 'boolean') || (value == 1) || (value == 0);
-    %
+        %
     case {'absTol','relTol'}
         isOk = isa(value,'double') && (value > 0);
     case {'nTimeGridPoints','nPlot2dPoints','nPlot3dPoints'}
         isOk = isa(value,'double') && (value > 0) && (mod(value,1) == 0);
-    
+        
     otherwise
         throwerror('wrongInput',[property,':no such property']);
 end

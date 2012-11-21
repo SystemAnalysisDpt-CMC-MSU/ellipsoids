@@ -15,7 +15,9 @@ classdef HyperplaneTestCase < mlunitext.test_case
             self.testDataRootDir=[fileparts(which(className)),filesep,'TestData',...
                 filesep,shortClassName];     
         end
-        
+        function tear_down(~)
+            close all;
+        end
         function self = testHyperplaneAndDouble(self)  
             %method double is implicitly tested in every comparison between
             %hyperplanes contents and normals and constants, from which it 
@@ -157,6 +159,13 @@ classdef HyperplaneTestCase < mlunitext.test_case
             close(pHandle);
             pHandle = plot(testHplane3D1Vec,'g',testHplane3D2Vec,'r');
             close(pHandle);            
+        end
+        function testPlotSimple(~)
+            HA = hyperplane([1 0; 1 -2]'', [4 -2]);
+            o.width = 2; o.size = [3 6.6]; o.center = [0 -2; 0 0];
+            hFig=figure();
+            h=plot(HA, 'r', o); hold off;
+            close(hFig);
         end
         %    
         function self = testWrongInput(self)

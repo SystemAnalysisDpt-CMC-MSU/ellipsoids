@@ -19,7 +19,7 @@ classdef mock_test < mlunitext.test_case
             self = self@mlunitext.test_case(varargin{:});
         end
         
-        function self = tear_down(self)
+        function tear_down(self)
             % TEAR_DOWN is a mock tear_down, that adds to the
             % member variable log the string 'tear_down '.
             %
@@ -63,7 +63,7 @@ classdef mock_test < mlunitext.test_case
             log = self.log;
         end
         
-        function self = set_up(self)
+        function set_up(self)
             % SET_UP is a mock set_up, that sets the member
             % variable log to 'set_up '.
             %
@@ -78,7 +78,7 @@ classdef mock_test < mlunitext.test_case
             self.log = 'set_up ';
         end
         
-        function self = test_broken_method(self) %#ok
+        function test_broken_method(self) %#ok
             % TEST_BROKEN_METHOD is a mock test method, that is
             % broken as it only class error(' ').
             %

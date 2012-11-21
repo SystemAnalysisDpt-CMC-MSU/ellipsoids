@@ -15,7 +15,7 @@ function slide = ell_demo1
   verbose                = Properties.getIsVerbose();
   plot2d_grid            = Properties.getNPlot2dPoints();
   Properties.setIsVerbose(false);
-  Properties.setNPlot2dPoints(1000);
+  Properties.setNPlot2dPoints(300);
 
   if nargout < 1
     playshow ell_demo1;

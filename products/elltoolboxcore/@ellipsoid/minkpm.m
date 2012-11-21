@@ -41,290 +41,254 @@ function [y, Y] = minkpm(varargin)
 %    ELLIPSOID/ELLIPSOID, MINKSUM, MINKDIFF, MINKMP.
 %
 
-% 
+%
 % Author:
 % -------
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  import elltool.conf.Properties;
+import elltool.conf.Properties;
 
-  if nargin < 2
+if nargin < 2
     error('MINKPM: first and second arguments must be ellipsoids.');
-  end
+end
 
-  EE = varargin{1};
-  E2 = varargin{2};
+EE = varargin{1};
+E2 = varargin{2};
 
-  if ~(isa(EE, 'ellipsoid')) | ~(isa(E2, 'ellipsoid'))
+if ~(isa(EE, 'ellipsoid')) || ~(isa(E2, 'ellipsoid'))
     error('MINKPM: first and second arguments must be ellipsoids.');
-  end
+end
 
-  [m, n] = size(E2);
-  if (m ~= 1) | (n ~= 1)
+[m, n] = size(E2);
+if (m ~= 1) || (n ~= 1)
     error('MINKPM: second argument must be single ellipsoid.');
-  end
+end
 
-  dims = dimension(EE);
-  k    = min(min(dims));
-  m    = max(max(dims));
-  n    = dimension(E2);
-  if (k ~= m) | (m ~= n)
+dims = dimension(EE);
+k    = min(min(dims));
+m    = max(max(dims));
+n    = dimension(E2);
+if (k ~= m) || (m ~= n)
     error('MINKPM: all ellipsoids must be of the same dimension.');
-  end
-  if n > 3
+end
+if n > 3
     error('MINKPM: ellipsoid dimension must be not higher than 3.');
-  end
+end
 
-  switch n
+switch n
     case 2,
-      phi = linspace(0, 2*pi, EE.nPlot2dPoints);
-      L   = [cos(phi); sin(phi)];
-
+        nPlot2dPointsArray=EE.nPlot2dPoints;
+        nPlot2dPoints=max(nPlot2dPointsArray(:));
+        phi = linspace(0, 2*pi, nPlot2dPoints);
+        L   = [cos(phi); sin(phi)];
+        
     case 3,
-      M   = EE.nPlot3dPoints/2;
-      N   = M/2;
-      psy = linspace(0, pi, N);
-      phi = linspace(0, 2*pi, M);
-      L   = [];
-      for i = 2:(N - 1)
-        arr = cos(psy(i))*ones(1, M);
-        L   = [L [cos(phi)*sin(psy(i)); sin(phi)*sin(psy(i)); arr]];
-      end
-      
+        M   = EE.nPlot3dPoints/2;
+        N   = M/2;
+        psy = linspace(0, pi, N);
+        phi = linspace(0, 2*pi, M);
+        L   = [];
+        for i = 2:(N - 1)
+            arr = cos(psy(i))*ones(1, M);
+            L   = [L [cos(phi)*sin(psy(i)); sin(phi)*sin(psy(i)); arr]];
+        end
+        
     otherwise,
-      L = [-1 1];
+        L = [-1 1];
+        
+end
 
-  end
+vrb                = Properties.getIsVerbose();
+Properties.setIsVerbose(false);
+EA                 = minksum_ea(EE, L);
+Properties.setIsVerbose(vrb);
 
-   vrb                = Properties.getIsVerbose();
-  Properties.setIsVerbose(false);
-  EA                 = minksum_ea(EE, L);
-  Properties.setIsVerbose(vrb);
-  
-  if min(EA > E2) == 0
+if min(EA > E2) == 0
     switch nargout
-      case 0,
-        fprintf('The resulting set is empty.');
-        return;
-
-      case 1,
-        y = [];
-        return;
-
-      otherwise,
-        y = [];
-        Y = [];
-        return;
-
+        case 0,
+            fprintf('The resulting set is empty.');
+            return;
+            
+        case 1,
+            y = [];
+            return;
+            
+        otherwise,
+            y = [];
+            Y = [];
+            return;
+            
     end
-  end
-
-  if nargin > 2
+end
+%
+if nargin > 2
     if isstruct(varargin{3})
-      Options = varargin{3};
+        Options = varargin{3};
     else
-      Options = [];
+        Options = [];
     end
-  else
+else
     Options = [];
-  end
+end
 
-  if ~isfield(Options, 'newfigure')
+if ~isfield(Options, 'newfigure')
     Options.newfigure = 0;
-  end
+end
 
-  if ~isfield(Options, 'fill')
+if ~isfield(Options, 'fill')
     Options.fill = 0;
-  end
+end
 
-  if ~isfield(Options, 'show_all')
+if ~isfield(Options, 'show_all')
     Options.show_all = 0;
-  end
+end
 
-  if ~isfield(Options, 'color')
+if ~isfield(Options, 'color')
     Options.color = [1 0 0];
-  end
+end
 
-  if ~isfield(Options, 'shade')
+if ~isfield(Options, 'shade')
     Options.shade = 0.4;
-  else
+else
     Options.shade = Options.shade(1, 1);
-  end
+end
 
-  clr  = Options.color;
+clr  = Options.color;
 
-  if nargout == 0
+if nargout == 0
     ih = ishold;
-  end
+end
 
-  if (Options.show_all ~= 0) & (nargout == 0)
+if (Options.show_all ~= 0) && (nargout == 0)
     plot(EE, 'b', E2, 'k');
     hold on;
     if Options.newfigure ~= 0
-      figure;
+        figure;
     else
-      newplot;
+        newplot;
     end
-  end
+end
 
-  if Properties.getIsVerbose()
+if Properties.getIsVerbose()
     if nargout == 0
-      fprintf('Computing and plotting (sum(E_i) - E) ...\n');
+        fprintf('Computing and plotting (sum(E_i) - E) ...\n');
     else
-      fprintf('Computing (sum(E_i) - E) ...\n');
+        fprintf('Computing (sum(E_i) - E) ...\n');
     end
-  end
+end
 
-  y                  = EA(1).center - E2.center;
-  Y                  = [];
-%  EF                 = [];
-%  LL                 = [];
-  N                  = size(L, 2);
-  Properties.setIsVerbose(false);
-
-%  for i = 1:N
-%    l = L(:, i);
-%    E = EA(i);
-%    if ~isbaddirection(E, E2, l)
-%      EF = [EF minkdiff_ea(E, E2, l)];
-%      LL = [LL l];
-%    end
-%  end
+y= EA(1).center - E2.center;
+Y=[];
+N= size(L, 2);
+Properties.setIsVerbose(false);
 %
-%  M = size(EF, 2);
-%  
-%  for i = 1:N
-%    l    = L(:, i);
-%    mval = 0;
-%
-%    for j = 1:M
-%      Q = parameters(EF(j));
-%      v = l' * ell_inv(Q) * l;
-%      if v > mval
-%        mval = v;
-%      end
-%    end
-%    
-%    if mval > 0
-%      Y = [Y ((l/sqrt(mval))+y)];
-%    end
-%  end
-%
-%  if isempty(Y)
-%    Y = y;
-%  end
-
-  switch n
+switch n
     case 2,
-      EF = [];
-      LL = [];
-      for i = 1:N
-        l = L(:, i);
-        E = EA(i);
-        if ~isbaddirection(E, E2, l)
-          EF = [EF minkdiff_ea(E, E2, l)];
-          LL = [LL l];
-        end
-      end
-      M = size(EF, 2);
-      for i = 1:N
-        l    = L(:, i);
-        mval = 0;
-        for j = 1:M
-          Q = parameters(EF(j));
-          v = l' * ell_inv(Q) * l;
-          if v > mval
-            mval = v;
-          end
-        end
-        if mval > 0
-          Y = [Y ((l/sqrt(mval))+y)];
-        end
-      end
-      if isempty(Y)
-        Y = y;
-      end
-      Y = [Y Y(:, 1)];
-      if nargout == 0
-        if Options.fill ~= 0
-          fill(Y(1, :), Y(2, :), clr);
-          hold on;
-        end
-        h = ell_plot(Y);
-        hold on;
-        set(h, 'Color', clr, 'LineWidth', 2);
-        h = ell_plot(y, '.');
-        set(h, 'Color', clr);
-      end
-
-    case 3,
-      for i = 1:N
-        l = L(:, i);
-        E = EA(i);
-        if ~isbaddirection(E, E2, l)
-          I = minksum_ia(EE, l);
-          if isbigger(I, E2);
-            if ~isbaddirection(I, E2, l)
-              [r, x] = rho(minkdiff_ea(E, E2, l), l);
-              Y      = [Y x];
+        EF(N) = ellipsoid();
+        LL = zeros(n,N);
+        for i = 1:N
+            l = L(:, i);
+            E = EA(i);
+            if ~isbaddirection(E, E2, l)
+                EF(i)=minkdiff_ea(E, E2, l);
+                LL(:,i)=l;
             end
-          end
         end
-      end
-      if isempty(Y)
-        Y = y;
-      end
-      if nargout == 0
-        vs = size(Y, 2);
-        if vs > 1
-          chll = convhulln(Y');
-          patch('Vertices', Y', 'Faces', chll, ...
-                'FaceVertexCData', clr(ones(1, vs), :), 'FaceColor', 'flat', ...
-                'FaceAlpha', Options.shade(1, 1));
-        else
-          h = ell_plot(y, '*');
-          set(h, 'Color', clr);
+        M = size(EF, 2);
+        mValVec=zeros(1,N);
+        for j = 1:M
+            Q = EF(j).shape;
+            invQ=ell_inv(Q);
+            for i = 1:N
+                l    = L(:, i);
+                v = l' * invQ * l;
+                if v > mValVec(i)
+                    mValVec(i) = v;
+                end
+            end
         end
-        hold on;
-        shading interp;
-        lighting phong;
-        material('metal');
-        view(3);
-        %camlight('headlight','local');
-        %camlight('headlight','local');
-        %camlight('right','local');
-        %camlight('left','local');
-      end
-
+        isPosVec=mValVec>0;
+        nPos=sum(isPosVec);
+        mValMultVec=1./sqrt(mValVec(isPosVec));
+        Y=L(:,isPosVec).*mValMultVec(ones(1,n),:)+y(:,ones(1,nPos));
+        if isempty(Y)
+            Y = y;
+        end
+        Y = [Y Y(:, 1)];
+        if nargout == 0
+            if Options.fill ~= 0
+                fill(Y(1, :), Y(2, :), clr);
+                hold on;
+            end
+            h = ell_plot(Y);
+            hold on;
+            set(h, 'Color', clr, 'LineWidth', 2);
+            h = ell_plot(y, '.');
+            set(h, 'Color', clr);
+        end
+        
+    case 3,
+        for i = 1:N
+            l = L(:, i);
+            E = EA(i);
+            if ~isbaddirection(E, E2, l)
+                I = minksum_ia(EE, l);
+                if isbigger(I, E2);
+                    if ~isbaddirection(I, E2, l)
+                        [~, x] = rho(minkdiff_ea(E, E2, l), l);
+                        Y      = [Y x];
+                    end
+                end
+            end
+        end
+        if isempty(Y)
+            Y = y;
+        end
+        if nargout == 0
+            vs = size(Y, 2);
+            if vs > 1
+                chll = convhulln(Y');
+                patch('Vertices', Y', 'Faces', chll, ...
+                    'FaceVertexCData', clr(ones(1, vs), :), 'FaceColor', 'flat', ...
+                    'FaceAlpha', Options.shade(1, 1));
+            else
+                h = ell_plot(y, '*');
+                set(h, 'Color', clr);
+            end
+            hold on;
+            shading interp;
+            lighting phong;
+            material('metal');
+            view(3);
+        end
+        
     otherwise,
-      Y       = [y y];
-      Y(1, 1) = EA(1).center - E2.center + sqrt(E2.shape) - sqrt(EA(1).shape);
-      Y(1, 2) = EA(1).center - E2.center + sqrt(EA(1).shape) - sqrt(E2.shape);
-      if nargout == 0
-        h = ell_plot(Y);
-        hold on;
-        set(h, 'Color', clr, 'LineWidth', 2);
-        h = ell_plot(y, '*');
-        set(h, 'Color', clr);
-      end
+        Y       = [y y];
+        Y(1, 1) = EA(1).center - E2.center + sqrt(E2.shape) - sqrt(EA(1).shape);
+        Y(1, 2) = EA(1).center - E2.center + sqrt(EA(1).shape) - sqrt(E2.shape);
+        if nargout == 0
+            h = ell_plot(Y);
+            hold on;
+            set(h, 'Color', clr, 'LineWidth', 2);
+            h = ell_plot(y, '*');
+            set(h, 'Color', clr);
+        end
+        
+end
 
-  end
-  
-  Properties.setIsVerbose(vrb);
+Properties.setIsVerbose(vrb);
 
-  if nargout == 0
+if nargout == 0
     if ih == 0
-      hold off;
+        hold off;
     end
-  end
+end
 
-  if nargout == 1
+if nargout == 1
     y = Y;
-  end
-  if nargout == 0
-    clear y, Y;
-  end
-
-  return;
+end
+if nargout == 0
+    clear y  Y;
+end

@@ -15,7 +15,7 @@ function slide = ell_demo2
   verbose                = Properties.getIsVerbose();
   plot2d_grid            = Properties.getNPlot2dPoints();
   Properties.setIsVerbose(false);
-  Properties.setNPlot2dPoints(1000);
+  Properties.setNPlot2dPoints(300);
   
   if nargout < 1
     playshow ell_demo2;
@@ -241,11 +241,11 @@ function slide = ell_demo2
       'E = ellipsoid([2 -1 0; -1 1 0; 0 0 1.5]); o = []; o.show_all = 1; o.fill = 1;',
       'subplot(2, 2, 1); minkdiff(E32, E, o);',
       'title(''(a) Geometric Difference''); xlabel(''x_1''); ylabel(''x_2''); zlabel(''x_3'');',
-      'subplot(2, 2, 2); minkdiff(projection(E32, B1), projection(E, B1), o)',
+      'subplot(2, 2, 2); minkdiff(projection(E32, B1), projection(E, B1), o),',
       'title(''(b) Projection on basis B1''); xlabel(''x_1''); ylabel(''x_2'');',
-      'subplot(2, 2, 3); minkdiff(projection(E32, B2), projection(E, B2), o)',
+      'subplot(2, 2, 3); minkdiff(projection(E32, B2), projection(E, B2), o),',
       'title(''(c) Projection on basis B2''); xlabel(''x_1''); ylabel(''x_3'');',
-      'subplot(2, 2, 4); minkdiff(projection(E32, B3), projection(E, B3), o)',
+      'subplot(2, 2, 4); minkdiff(projection(E32, B3), projection(E, B3), o),',
       'title(''(d) Projection on basis B3''); xlabel(''x_2''); ylabel(''x_3'');',
     };
     slide(NN).text = {

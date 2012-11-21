@@ -1,4 +1,4 @@
-classdef reach < handle
+classdef reach
 %REACH class of reach sets
     properties (Access=private)
         absTol
