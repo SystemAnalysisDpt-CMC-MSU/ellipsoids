@@ -63,8 +63,7 @@ classdef Ellipsoid < handle
                     throwerror('wrongDimensions',...
                         'Dimension of center vector must be the same as matrix');
                 end
-                ellObj.centerVec=ellCenterVec;
-                
+                ellObj.centerVec=ellCenterVec;                
             elseif nInput == 3
                 ellCenterVec=varargin{1};
                 ellDiagMat=varargin{2};
@@ -149,15 +148,17 @@ classdef Ellipsoid < handle
                 ellObj.eigvMat=eigvResMat;
                 ellObj.centerVec=ellCenterVec;
             end
-            minEigVal=min(diag(ellObj.diagMat));       
-            if (minEigVal<0 && abs(minEigVal)> CHECK_TOL)
-                throwerror('wrongMatrix',...
-                    'Ellipsoid matrix should be positive semi-definite.')
+            if (nInput~=0)
+                minEigVal=min(diag(ellObj.diagMat));       
+                if (minEigVal<0 && abs(minEigVal)> CHECK_TOL)
+                    throwerror('wrongMatrix',...
+                        'Ellipsoid matrix should be positive semi-definite.')
+                end
             end
         end
         ellObj = inv (ellObj)
         ellObjVec = minksumNew_ea(ellObjVec, dirMat)
-        ellObjVec = minksumNew_ia(ellObjVec, dirMat)
+        ellObjVec = minksumIa(ellObjVec, dirMat)
         ellObjVec = minkdiffNew_ia(ellObj1, ellObj2, dirMat)
         ellObjVec = minkdiffNew_ea(ellObj1, ellObj2, dirMat)
         distVec = distace(ellObjVec, objVec)

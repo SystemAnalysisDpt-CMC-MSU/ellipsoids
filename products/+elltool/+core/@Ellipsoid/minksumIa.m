@@ -1,9 +1,8 @@
-function [ ellResVec ] = minksumNew_ia(ellObjVec, dirMat )
+function [ ellResVec ] = minksumIa(ellObjVec, dirMat )
     import elltool.core.Ellipsoid;
     import modgen.common.throwerror
-    import elltool.conf.Properties;    
-    ABS_TOL = Properties.getAbsTol(); 
-        
+    CHECK_TOL=1e-12;
+              
     if (~isa(ellObjVec,'Ellipsoid'))
         throwerror('notEllipsoid','MINKSUM_IA: first argument must be array of ellipsoids');
     end
@@ -31,22 +30,40 @@ function [ ellResVec ] = minksumNew_ia(ellObjVec, dirMat )
         ellResVec(nDirSize)=Ellipsoid(1);
         for iDir=1:nDirSize
             curDirVec=dirMat(:,iDir);
-            resDiagVec=zeros(dimSpace,1);
-            isInfDirVec=findInfDir(ellObjVec,nEllObj);
-            if all(isInfDirVec==1)
+            resDiagVec=zeros(dimSpace,1); 
+            %find Inf space basis and orthogonal to it
+            ellObjCVec=num2cell(ellObjVec);
+            [isInfCMat allInfDirCMat]=cellfun(@findAllInfDir,ellObjCVec,...
+                 'UniformOutput', false);
+            isInfMat=cell2mat(isInfCMat);
+            allInfDirMat=cell2mat(allInfDirCMat);  
+            if all(all(isInfMat==1))
                 %all are infinite
                 ellResVec(iDir)=Ellipsoid(Inf*ones(dimSpace,1));
-            elseif ~all(isInfDirVec==0)
-                %here infinite present
-                nInf=sum(isInfDirVec);
-                nNonInf=dimSpace-nInf;
-                %create nonInfDirMat of vectors
-                %orthogonal to infDirMat
-                %resDiagVec(isInfDirVec)=Inf;
-                firstEllQMat=ellObjVec(1).eigvMat;
-                nonInfDirMat=firstEllQMat(:,~isInfDirVec);
-                projCurDirVec=nonInfDirMat.'*curDirVec;
-                if (abs(projCurDirVec)<ABS_TOL)
+            elseif ~all(isInfMat(:)==0)
+                %Infinite eigenvalues present
+                %Construnct orthogonal basis 
+                [orthBasMat rBasMat]=qr(allInfDirMat);
+                %L2 Basis
+                if size(rBasMat,2)==1
+                    isNeg=rBasMat(1)<0;
+                    orthBasMat(:,isNeg)=-orthBasMat(:,isNeg);
+                else
+                    isNegVec=diag(rBasMat)<0;
+                    orthBasMat(:,isNegVec)=-orthBasMat(:,isNegVec);
+                end
+                tolerance = CHECK_TOL*norm(allInfDirMat,'fro');
+                rangL1 = sum(abs(diag(rBasMat)) > tolerance);
+                rangL1 = rangL1(1); %for case where rBasMat is vector.
+                nNonInf=dimSpace-rangL1;
+                %rang L1>0 since there are Inf elements
+                infIndVec=1:rangL1;
+                finIndVec=(rangL1+1):dimSpace;
+                infBasMat=orthBasMat(:,infIndVec);
+                nonInfBasMat = orthBasMat(:,finIndVec);
+                %
+                projCurDirVec=nonInfBasMat.'*curDirVec;
+                if all(abs(projCurDirVec)<CHECK_TOL)
                     %direction lies in the space of infinite directions
                     ellResVec(iDir)=Ellipsoid(Inf*ones(dimSpace,1));
                 else
@@ -57,15 +74,16 @@ function [ ellResVec ] = minksumNew_ia(ellObjVec, dirMat )
                         diagMat=ellObjVec(iEll).diagMat;
                         isInfHereVec=diag(diagMat)==Inf;
                         diagMat(isInfHereVec,isInfHereVec)=0;
-                        curEllMat=eigvMat*diagMat*eigvMat;
-                        projQMat=nonInfDirMat.'*curEllMat*nonInfDirMat;
-                        projCenVec=nonInfDirMat.'*ellObjVec(iEll).centerVec;
+                        curEllMat=eigvMat*diagMat*eigvMat.';
+                        projQMat=nonInfBasMat.'*curEllMat*nonInfBasMat;
+                        projCenVec=nonInfBasMat.'*ellObjVec(iEll).centerVec;
                         %add to the total sum of projection, finding a proper
                         %approximation
+                        projQMat=sqrtm(projQMat);
                         if (iEll==1)
                             qNICenVec=projCenVec;
                             firstVec=projQMat*projCurDirVec;
-                            if all(abs(firstVec)<ABS_TOL)
+                            if all(abs(firstVec)<CHECK_TOL)
                                 sumNIMat=0;
                             else
                                 sumNIMat=projQMat;
@@ -74,7 +92,7 @@ function [ ellResVec ] = minksumNew_ia(ellObjVec, dirMat )
                         else
                             qNICenVec=qNICenVec+projCenVec;
                             curAuxVec=projQMat*projCurDirVec;
-                            if all(abs(curAuxVec)<ABS_TOL)
+                            if all(abs(curAuxVec)<CHECK_TOL)
                                 %in the ker
                                 orthSNIMat=0;
                             else
@@ -90,15 +108,19 @@ function [ ellResVec ] = minksumNew_ia(ellObjVec, dirMat )
                     end
                     % Constructing resulting ellipsoid
                     sumNIMat=sumNIMat.'*sumNIMat;
-                    sumNIMat=0.5*(sumNIMat+sumNIMat);
-                    [notInfEigvMat notInfDiagMat]=eig(sumNIMat);
-                    resEllMat=zeros(dimSpace,dimSpace);
-                    resEllMat(:,isInfDirVec)=firstEllQMat(:,isInfDirVec);
-                    resEllMat(~isInfDirVec,~isInfDirVec)=notInfEigvMat;
-                    resDiagVec(isInfDirVec)=Inf;
-                    resDiagVec(~isInfDirVec)=diag(notInfDiagMat);
+                    sumNIMat=0.5*(sumNIMat+sumNIMat);     
+                    [eigvProjMat, notInfDiagMat]=eig(sumNIMat);
+                    %find eigenvector whose projections are eigvProjMat
+                    notInfEigvMat=nonInfBasMat*eigvProjMat;
+                    resEllMat=zeros(dimSpace);
+                    resEllMat(:,infIndVec)=infBasMat;
+                    resEllMat(:,finIndVec)=notInfEigvMat;
+                    resEllMat=resEllMat/norm(resEllMat);
+                    resDiagVec(infIndVec)=Inf;
+                    resDiagVec(finIndVec)=diag(notInfDiagMat);
                     qCenVec=zeros(dimSpace,1);
-                    qCenVec(~isInfDirVec)=qNICenVec;
+                    qCenVec(finIndVec)=qNICenVec;
+                    resEllMat=0.5*(resEllMat+resEllMat);
                     ellResVec(iDir)=Ellipsoid(qCenVec,resDiagVec,resEllMat);
                 end
             else %finite case, degenerate included
@@ -109,7 +131,7 @@ function [ ellResVec ] = minksumNew_ia(ellObjVec, dirMat )
                     if (iEll==1)
                         qCenVec=ellObjVec(iEll).centerVec;
                         firstVec=ellQMat*curDirVec;
-                        if (all(abs(firstVec)<ABS_TOL))
+                        if (all(abs(firstVec)<CHECK_TOL))
                             sumMat=eye(dimSpace);
                         else
                             sumMat=ellQMat;
@@ -118,7 +140,7 @@ function [ ellResVec ] = minksumNew_ia(ellObjVec, dirMat )
                     else
                         qCenVec=qCenVec+ellObjVec(iEll).centerVec;
                         auxVec=ellQMat*curDirVec;
-                        if (all(abs(auxVec)<ABS_TOL))
+                        if (all(abs(auxVec)<CHECK_TOL))
                             orthSMat=0;
                         else
                             if (wasFirst)
@@ -147,21 +169,9 @@ function dimsMat=ellSpaceDimension(ellObjMat)
             dimsMat(iInd,jInd)=size(ellObjMat(iInd,jInd).diagMat,1);
         end
     end
+end       
+function [isInfVec infDirEigMat] = findAllInfDir(ellObj)
+    isInfVec=(diag(ellObj.diagMat)==Inf);
+    eigvMat=ellObj.eigvMat;
+    infDirEigMat=eigvMat(:,isInfVec);
 end
-
-function  [isInfDirVec]=findInfDir(ellObjVec,nEllObj)
-    import elltool.core.Ellipsoid;
-    [mSize kSize]=size(ellObjVec(1).eigvMat);
-    isInfDirVec=zeros(mSize,1);
-    %infDirMat=[];
-   
-    for iEll=1:nEllObj
-        %eigvMat=ellObjVec(iEll).eigvMat;
-        isHereInfDirVec=diag(ellObjVec(iEll).diagMat)==Inf;
-            
-        %infDirMat=[infDirMat; eigvMat(:,isHereInfDirVec)];
-        isInfDirVec=isInfDirVec+isHereInfDirVec;
-    end
-    isInfDirVec=isInfDirVec>0;
-end
-           
