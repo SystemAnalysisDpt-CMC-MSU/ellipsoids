@@ -1,5 +1,4 @@
 function [ ellResVec] = minksumNew_ea( ellObjVec, dirMat )
-    global ellOptions    
     import elltool.core.Ellipsoid;
     import modgen.common.throwerror
           
@@ -115,11 +114,12 @@ function isZeroMat=findZeroEig(ellObjVec,nDim)
 end
 
 function isDirInKerVec=findDirInKer(ellObjVec,curDir)
-    global ellOptions  
+    import elltool.conf.Properties;    
+    ABS_TOL = Properties.getAbsTol(); 
     nSize=size(ellObjVec,2);
     for iInd=1:nSize
         ellQMat=ellObjVec(iInd).eigvMat*ellObjVec(iInd).diagMat*...
             ellObjVec(iInd).eigvMat.';             
-        isDirInKerVec(iInd)=all(abs(ellQMat*curDir)<ellOptions.abs_tol);
+        isDirInKerVec(iInd)=all(abs(ellQMat*curDir)<ABS_TOL);
     end
 end

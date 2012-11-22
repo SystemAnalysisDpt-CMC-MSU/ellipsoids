@@ -264,7 +264,7 @@ function [distMat, timeMat] = computePointsEllDist(ellObjMat, vecArray, flag)
         error('DISTANCE: dimensions of ellipsoid an vector do not match.');
       end
     %
-      if ellOptions.verbose > 0
+      if Properties.getIsVerbose()
         if (nEllObj > 1) || (nVec > 1)
           fprintf('Computing %d ellipsoid-to-vector distances...\n', max([nEllObj nVec]));
         else
@@ -326,7 +326,7 @@ function distEllEll = proceedEllEllDist(ellObj1, ellObj2, flag)
     if (nEllObj1 > 1) && (nEllObj2 > 1) && ((mSize1 ~= mSize2) || (kSize1 ~= kSize2))
         throwerror('DISTANCE: sizes of ellipsoidal arrays do not match.');
     end
-    if ellOptions.verbose > 0
+    if Properties.getIsVerbose()
         if (nEllObj1 > 1) || (nEllObj2 > 1)
           fprintf('Computing %d ellipsoid-to-ellipsoid distances...\n', max([nEllObj1 nEllObj2]));
         else
@@ -396,7 +396,7 @@ function [d, status] = l_hpdist(E, X, flag)
     error('DISTANCE: hyperplanes must be of the same dimension.');
     end
 
-    if ellOptions.verbose > 0
+    if Properties.getIsVerbose()
     if (t1 > 1) | (t2 > 1)
       fprintf('Computing %d ellipsoid-to-hyperplane distances...\n', max([t1 t2]));
     else
@@ -521,7 +521,7 @@ function [d, status] = l_polydist(E, X)
     error('DISTANCE: polytopes must be of the same dimension.');
   end
 
-  if ellOptions.verbose > 0
+  if Properties.getIsVerbose()
     if (t1 > 1) | (t2 > 1)
       fprintf('Computing %d ellipsoid-to-polytope distances...\n', max([t1 t2]));
     else

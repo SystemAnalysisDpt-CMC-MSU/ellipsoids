@@ -1,10 +1,10 @@
 function ellInvObj = inv( ellObj )
-    
-    global ellOptions    
-    import elltool.core.Ellipsoid;
+    import elltool.core.Ellipsoid;    
+    import elltool.conf.Properties;    
+    ABS_TOL = Properties.getAbsTol();
     diagVec=diag(ellObj.diagMat);
     isInfVec=diagVec==Inf;
-    isZeroVec=abs(diagVec)<ellOptions.abs_tol;
+    isZeroVec=abs(diagVec)<ABS_TOL;
     isFinNZVec=logical((~isInfVec).*(~isZeroVec));
     diagVec(isFinNZVec)=1./diagVec(isFinNZVec);
     diagVec(isInfVec)=0;

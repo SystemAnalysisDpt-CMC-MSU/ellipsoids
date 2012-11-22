@@ -1,8 +1,9 @@
 function [ ellResVec ] = minksumNew_ia(ellObjVec, dirMat )
-    global ellOptions    
     import elltool.core.Ellipsoid;
     import modgen.common.throwerror
-          
+    import elltool.conf.Properties;    
+    ABS_TOL = Properties.getAbsTol(); 
+        
     if (~isa(ellObjVec,'Ellipsoid'))
         throwerror('notEllipsoid','MINKSUM_IA: first argument must be array of ellipsoids');
     end
@@ -45,7 +46,7 @@ function [ ellResVec ] = minksumNew_ia(ellObjVec, dirMat )
                 firstEllQMat=ellObjVec(1).eigvMat;
                 nonInfDirMat=firstEllQMat(:,~isInfDirVec);
                 projCurDirVec=nonInfDirMat.'*curDirVec;
-                if (abs(projCurDirVec)<ellOptions.abs_tol)
+                if (abs(projCurDirVec)<ABS_TOL)
                     %direction lies in the space of infinite directions
                     ellResVec(iDir)=Ellipsoid(Inf*ones(dimSpace,1));
                 else
@@ -64,7 +65,7 @@ function [ ellResVec ] = minksumNew_ia(ellObjVec, dirMat )
                         if (iEll==1)
                             qNICenVec=projCenVec;
                             firstVec=projQMat*projCurDirVec;
-                            if all(abs(firstVec)<ellOptions.abs_tol)
+                            if all(abs(firstVec)<ABS_TOL)
                                 sumNIMat=0;
                             else
                                 sumNIMat=projQMat;
@@ -73,7 +74,7 @@ function [ ellResVec ] = minksumNew_ia(ellObjVec, dirMat )
                         else
                             qNICenVec=qNICenVec+projCenVec;
                             curAuxVec=projQMat*projCurDirVec;
-                            if all(abs(curAuxVec)<ellOptions.abs_tol)
+                            if all(abs(curAuxVec)<ABS_TOL)
                                 %in the ker
                                 orthSNIMat=0;
                             else
@@ -108,7 +109,7 @@ function [ ellResVec ] = minksumNew_ia(ellObjVec, dirMat )
                     if (iEll==1)
                         qCenVec=ellObjVec(iEll).centerVec;
                         firstVec=ellQMat*curDirVec;
-                        if (all(abs(firstVec)<ellOptions.abs_tol))
+                        if (all(abs(firstVec)<ABS_TOL))
                             sumMat=eye(dimSpace);
                         else
                             sumMat=ellQMat;
@@ -117,7 +118,7 @@ function [ ellResVec ] = minksumNew_ia(ellObjVec, dirMat )
                     else
                         qCenVec=qCenVec+ellObjVec(iEll).centerVec;
                         auxVec=ellQMat*curDirVec;
-                        if (all(abs(auxVec)<ellOptions.abs_tol))
+                        if (all(abs(auxVec)<ABS_TOL))
                             orthSMat=0;
                         else
                             if (wasFirst)

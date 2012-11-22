@@ -92,6 +92,9 @@ classdef Ellipsoid < handle
                     diagVec=diag(ellDiagMat);
                 end
                 isInfVec=diagVec==Inf;
+                allIntMat=ellWMat(:,isInfVec);
+                orthBasMat=gras.la.matorth(ellWMat);
+                infBasMat=orthBasMat(:,isInfVec);
                 diagSumMat=diag(diagVec(~isInfVec));
                 ellWSumMat=ellWMat(~isInfVec,~isInfVec);
                 [nonInfVMat nonInfDMat]=eig(ellWSumMat*diagSumMat*ellWSumMat.');
