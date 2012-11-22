@@ -1,19 +1,17 @@
-classdef MatrixTernaryTimesFunc<gras.mat.AMatrixTernaryOpFunc
+classdef MatrixTernaryTimesFunc<gras.mat.fcnlib.AMatrixTernaryOpFunc
     methods
         function self=MatrixTernaryTimesFunc(lMatFunc, mMatFunc,...
                 rMatFunc)
             %
-            self=self@gras.mat.AMatrixTernaryOpFunc(lMatFunc, mMatFunc,...
+            self=self@gras.mat.fcnlib.AMatrixTernaryOpFunc(lMatFunc, mMatFunc,...
                 rMatFunc, @(a,b,c) a*b*c);
             %
             lSizeVec = lMatFunc.getMatrixSize();
             mSizeVec = mMatFunc.getMatrixSize();
             rSizeVec = rMatFunc.getMatrixSize();
             %
-            if lSizeVec(2) ~= mSizeVec(1) || mSizeVec(2) ~= rSizeVec(1)
-                modgen.common.throwerror('wrongInput',...
-                    'Inner matrix dimensions must agree');
-            end
+            modgen.common.type.simple.checkgenext('x1(2)==x2(1)&&x2(2)==x3(1)', 3,...
+                lSizeVec, mSizeVec, rSizeVec);
             %
             self.nRows = lSizeVec(1);
             self.nCols = rSizeVec(2);

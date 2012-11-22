@@ -11,7 +11,6 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             import gras.ellapx.lreachplain.ATightEllApxBuilder;
             import gras.ellapx.common.*;
             import gras.gen.SquareMatVector;
-            import gras.interp.MatrixInterpolantFactory;
             import gras.ode.MatrixODESolver;
             import modgen.logging.log4j.Log4jConfigurator;
             logger=Log4jConfigurator.getLogger();

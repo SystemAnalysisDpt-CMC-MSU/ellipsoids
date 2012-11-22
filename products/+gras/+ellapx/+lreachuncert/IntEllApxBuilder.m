@@ -45,28 +45,27 @@ classdef IntEllApxBuilder<gras.ellapx.lreachplain.IntProperEllApxBuilder
     methods (Access=private)
         function self=prepareODEData(self)
             import gras.ellapx.common.*;
-            import gras.gen.MatVector;
+            import gras.mat.fcnlib.MatrixOperationsFactory;
             import gras.ellapx.lreachplain.IntEllApxBuilder;
-            import gras.interp.MatrixInterpolantFactory;
             %
             nGoodDirs=self.getNGoodDirs();
             pDefObj=self.getProblemDef();
             timeVec=pDefObj.getTimeVec;
-            %ODE is solved on time span [tau0, tau1]\in[t0,t1]
-            dataCQCTransArray=pDefObj.getCQCTransDynamics.evaluate(timeVec);
             %
-            goodDirCurveSpline=self.getGoodDirSet().getGoodDirCurveSpline();
-            goodDirArray=goodDirCurveSpline.evaluate(timeVec);
-            slCQClSqrtSplineList=cell(1,nGoodDirs);
-            tmpArray=MatVector.rMultiply(dataCQCTransArray,...
-                goodDirArray);
-            lCQClSqrtArray=shiftdim(sqrt(sum(tmpArray.*goodDirArray,1)),1);
-            for l=1:1:nGoodDirs
-                slCQClSqrtSplineList{l}=...
-                    MatrixInterpolantFactory.createInstance(...
-                    'column',lCQClSqrtArray(l,:),timeVec);
-            end
-            self.slCQClSqrtSplineList=slCQClSqrtSplineList;
+            % calculate <l,CQC l>^{1/2}
+            %
+            matOpFactory = MatrixOperationsFactory.create(timeVec);
+            %
+            CQCTransDynamics = pDefObj.getCQCTransDynamics();
+            goodDirSet = self.getGoodDirSet();
+            self.slCQClSqrtSplineList = cell(1, nGoodDirs);
+            %
+            for iGoodDir = 1:nGoodDirs
+                ltSpline = goodDirSet.getGoodDirOneCurveSpline(iGoodDir);
+                %
+                self.slCQClSqrtSplineList{iGoodDir} = matOpFactory.quadraticFormSqrt(...
+                    CQCTransDynamics, ltSpline);
+            end              
         end
     end    
     methods

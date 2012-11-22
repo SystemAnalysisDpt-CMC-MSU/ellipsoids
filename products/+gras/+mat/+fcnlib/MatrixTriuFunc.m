@@ -1,8 +1,8 @@
-classdef MatrixTriuFunc<gras.mat.AMatrixUnaryOpFunc
+classdef MatrixTriuFunc<gras.mat.fcnlib.AMatrixUnaryOpFunc
     methods
         function self=MatrixTriuFunc(lMatFunc)
             %
-            self=self@gras.mat.AMatrixUnaryOpFunc(lMatFunc,@triu);
+            self=self@gras.mat.fcnlib.AMatrixUnaryOpFunc(lMatFunc,@triu);
             %
             self.nRows = lMatFunc.getNRows();
             self.nCols = lMatFunc.getNCols();

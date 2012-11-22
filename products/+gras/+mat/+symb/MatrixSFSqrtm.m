@@ -29,7 +29,7 @@ classdef MatrixSFSqrtm<gras.mat.IMatrixFunction
             self.interpObj=interpObj;
         end
         function mSize=getMatrixSize(self)
-            mSize=size(self.interpObj.mSizeVec);
+            mSize=self.interpObj.mSizeVec;
         end
         function resArray=evaluate(self,timeVec)
             import gras.gen.MatVector;

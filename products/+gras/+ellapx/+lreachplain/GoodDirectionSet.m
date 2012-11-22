@@ -19,6 +19,10 @@ classdef GoodDirectionSet
             ltGoodDirCurveSpline=...
                 self.ltGoodDirOneCurveSplineList{dirNum};
         end
+        function ltGoodDirOneCurveSplineList=getGoodDirOneCurveSplineList(self)
+            ltGoodDirOneCurveSplineList=...
+                self.ltGoodDirOneCurveSplineList;
+        end        
         %
         function xstTransSpline=getXstTransSpline(self)
             xstTransSpline=self.xstTransSpline;
@@ -32,12 +36,13 @@ classdef GoodDirectionSet
         function self=GoodDirectionSet(pDefObj,sTime,lsGoodDirMat,...
                 calcPrecision)
             import gras.ellapx.common.*;
-            import gras.gen.SquareMatVector;
-            import gras.interp.MatrixInterpolantFactory;
-            import modgen.common.throwerror;
+            import gras.mat.fcnlib.MatrixOperationsFactory;
+            import gras.mat.ConstMatrixFunction;
+            import gras.mat.ConstColFunction;            
+            import modgen.common.throwerror;            
             %
             self.lsGoodDirMat=lsGoodDirMat;
-            Xtt0SplineObj=pDefObj.getXtt0Dynamics();
+            %
             timeLimsVec=pDefObj.getTimeLimsVec();
             if (sTime>timeLimsVec(2))||(sTime<timeLimsVec(1))
                 throwerror('wrongInput',...
@@ -51,22 +56,27 @@ classdef GoodDirectionSet
                     'sTime is expected to be among elements of timeVec');
             end
             %
-            xtt0Array=Xtt0SplineObj.evaluate(timeVec);
-            xt0tTransArray=SquareMatVector.transpose(SquareMatVector.pinv(xtt0Array));
-            xst0TransMat=transpose(xtt0Array(:,:,indSTime));
-            xstTransArray=SquareMatVector.rMultiply(xt0tTransArray,...
-                xst0TransMat);
-            self.xstTransSpline=...
-                MatrixInterpolantFactory.createInstance(...
-                'column',xstTransArray,timeVec);
-            self.sTime=sTime;
-            ltGoodDirCurveArray=SquareMatVector.rMultiply(...
-                xstTransArray,lsGoodDirMat);
-            self.ltGoodDirCurveSpline=...
-                MatrixInterpolantFactory.createInstance(...
-                'column',ltGoodDirCurveArray,timeVec);
-            self.ltGoodDirOneCurveSplineList=...
-                self.ltGoodDirCurveSpline.getColSplines();
+            matOpFactory = MatrixOperationsFactory.create(timeVec);
+            %
+            Xtt0Dynamics = pDefObj.getXtt0Dynamics();
+            Xt0tTransDynamics = matOpFactory.transpose(matOpFactory.pinv(Xtt0Dynamics));
+            Xst0TransConstMatFunc = ConstMatrixFunction(Xtt0Dynamics.evaluate(sTime).');
+            XstTransDynamics = matOpFactory.rMultiply(Xt0tTransDynamics, Xst0TransConstMatFunc);
+            %
+            self.xstTransSpline = XstTransDynamics;
+            self.sTime=sTime;         
+            %
+            nGoodDirs = self.getNGoodDirs();
+            %
+            self.ltGoodDirOneCurveSplineList = cell(nGoodDirs, 1);
+            for iGoodDir = 1:nGoodDirs
+                lsGoodDirConstColFunc = ConstColFunction(lsGoodDirMat(:,iGoodDir));
+                self.ltGoodDirOneCurveSplineList{iGoodDir} = ...
+                    matOpFactory.rMultiply(XstTransDynamics, lsGoodDirConstColFunc);
+            end
+            %
+            lsGoodDirConstMatFunc = ConstMatrixFunction(lsGoodDirMat);
+            self.ltGoodDirCurveSpline = matOpFactory.rMultiply(XstTransDynamics, lsGoodDirConstMatFunc);
         end
     end
 end

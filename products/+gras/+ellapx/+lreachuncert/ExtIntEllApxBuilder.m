@@ -145,87 +145,46 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
     methods (Access=private)
         function self=prepareODEData(self)
             import gras.ellapx.common.*;
-            import gras.gen.MatVector;
             import gras.ellapx.lreachplain.IntEllApxBuilder;
-            import gras.interp.MatrixInterpolantFactory;
-            import gras.gen.SquareMatVector;
+            import gras.mat.fcnlib.MatrixOperationsFactory;
             %
             nGoodDirs=self.getNGoodDirs();
             pDefObj=self.getProblemDef();
-            timeVec=pDefObj.getTimeVec;
-            %ODE is solved on time span [tau0, tau1]\in[t0,t1]
-            dataCQCTransArray=pDefObj.getCQCTransDynamics.evaluate(timeVec);
-            dataBPBTransArray=pDefObj.getBPBTransDynamics.evaluate(timeVec);
+            timeVec=pDefObj.getTimeVec;            
             %
-            goodDirCurveSpline=self.getGoodDirSet().getGoodDirCurveSpline();
-            goodDirArray=goodDirCurveSpline.evaluate(timeVec);
-            %% calculate <l,CQC l>^{1/2}
-            slCQClSqrtSplineList=cell(1,nGoodDirs);
-            tmpArray=MatVector.rMultiply(dataCQCTransArray,...
-                goodDirArray);
-            lCQClSqrtArray=shiftdim(sqrt(sum(tmpArray.*goodDirArray,1)),1);
-            for l=1:1:nGoodDirs
-                slCQClSqrtSplineList{l}=...
-                    MatrixInterpolantFactory.createInstance(...
-                    'column',lCQClSqrtArray(l,:),timeVec);
-            end
-            self.slCQClSqrtSplineList=slCQClSqrtSplineList;
-            %% calculate <l,BPB l>^{1/2}
-            slBPBlSqrtSplineList=cell(1,nGoodDirs);
-            tmpArray=MatVector.rMultiply(dataBPBTransArray,...
-                goodDirArray);
-            lBPBSqrtArray=shiftdim(sqrt(sum(tmpArray.*goodDirArray,1)),1);
-            for l=1:1:nGoodDirs
-                slBPBlSqrtSplineList{l}=...
-                    MatrixInterpolantFactory.createInstance(...
-                    'column',lBPBSqrtArray(l,:),timeVec);
-            end
-            self.slBPBlSqrtSplineList=slBPBlSqrtSplineList;
+            % calculate <l,Ml>^{1/2} and M^{1/2}l for BPB' and CQC'
             %
-            %ODE is solved on time span [tau0, tau1]\in[t0,t1]
-            dataBPBTransSqrtArray=SquareMatVector.sqrtm(dataBPBTransArray);
+            matOpFactory = MatrixOperationsFactory.create(timeVec);
             %
-            dataCQCTransSqrtArray=SquareMatVector.sqrtm(dataCQCTransArray);
+            BPBTransDynamics = pDefObj.getBPBTransDynamics();
+            CQCTransDynamics = pDefObj.getCQCTransDynamics();
+            BPBTransSqrtDynamics = matOpFactory.sqrtm(BPBTransDynamics);
+            CQCTransSqrtDynamics = matOpFactory.sqrtm(CQCTransDynamics);
             %
-            ltSplineList=cell(1,nGoodDirs);
-            for iGoodDir=1:nGoodDirs
-                ltSplineList{iGoodDir}=...
-                    MatrixInterpolantFactory.createInstance(...
-                    'column',...
-                    squeeze(goodDirArray(:,iGoodDir,:)),timeVec);
-            end
-            self.ltSplineList=ltSplineList;
+            self.ltSplineList = self.getGoodDirSet().getGoodDirOneCurveSplineList();
             %
-            %%
-            BPBTransSqrtLArray=SquareMatVector.rMultiply(...
-                dataBPBTransSqrtArray,goodDirArray);
+            self.slBPBlSqrtSplineList = cell(1, nGoodDirs);
+            self.slCQClSqrtSplineList = cell(1, nGoodDirs);
+            self.BPBTransSqrtLSplineList = cell(1, nGoodDirs);
+            self.CQCTransSqrtLSplineList = cell(1, nGoodDirs);
             %
-            BPBTransSqrtLSplineList=cell(nGoodDirs,1);
-            %
-            for l=1:1:nGoodDirs
-                BPBTransSqrtLSplineList{l}=...
-                    MatrixInterpolantFactory.createInstance(...
-                    'column',squeeze(BPBTransSqrtLArray(:,l,:)),timeVec);
-            end
-            self.BPBTransSqrtLSplineList=BPBTransSqrtLSplineList;   
-            %%
-            CQCTransSqrtLArray=SquareMatVector.rMultiply(...
-                dataCQCTransSqrtArray,goodDirArray);
-            %
-            CQCTransSqrtLSplineList=cell(nGoodDirs,1);
-            %
-            for l=1:1:nGoodDirs
-                CQCTransSqrtLSplineList{l}=...
-                    MatrixInterpolantFactory.createInstance(...
-                    'column',squeeze(CQCTransSqrtLArray(:,l,:)),timeVec);
-            end
-            self.CQCTransSqrtLSplineList=CQCTransSqrtLSplineList;               
+            for iGoodDir = 1:nGoodDirs
+                ltSpline = self.ltSplineList{iGoodDir};
+                %
+                self.slBPBlSqrtSplineList{iGoodDir} = matOpFactory.quadraticFormSqrt(...
+                    BPBTransDynamics, ltSpline);
+                self.slCQClSqrtSplineList{iGoodDir} = matOpFactory.quadraticFormSqrt(...
+                    CQCTransDynamics, ltSpline);
+                self.BPBTransSqrtLSplineList{iGoodDir} = matOpFactory.rMultiply(...
+                    BPBTransSqrtDynamics, ltSpline);
+                self.CQCTransSqrtLSplineList{iGoodDir} = matOpFactory.rMultiply(...
+                    CQCTransSqrtDynamics, ltSpline);
+            end  
         end
         function build(self)
             import gras.ellapx.lreachplain.ATightEllApxBuilder;
             import gras.ellapx.common.*;
             import gras.gen.SquareMatVector;
-            import gras.interp.MatrixInterpolantFactory;
             import gras.ode.MatrixSysODESolver;
             import modgen.logging.log4j.Log4jConfigurator;
             ODE_NORM_CONTROL='on';

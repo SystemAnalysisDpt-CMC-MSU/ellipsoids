@@ -1,17 +1,15 @@
-classdef MatrixBinaryTimesFunc<gras.mat.AMatrixBinaryOpFunc
+classdef MatrixBinaryTimesFunc<gras.mat.fcnlib.AMatrixBinaryOpFunc
     methods
         function self=MatrixBinaryTimesFunc(lMatFunc, rMatFunc)
             %
-            self=self@gras.mat.AMatrixBinaryOpFunc(lMatFunc, rMatFunc,...
+            self=self@gras.mat.fcnlib.AMatrixBinaryOpFunc(lMatFunc, rMatFunc,...
                 @mtimes);
             %
             lSizeVec = lMatFunc.getMatrixSize();
             rSizeVec = rMatFunc.getMatrixSize();
             %
-            if lSizeVec(2) ~= rSizeVec(1)
-                modgen.common.throwerror('wrongInput',...
-                    'Inner matrix dimensions must agree');
-            end
+            modgen.common.type.simple.checkgenext('x1(2)==x2(1)', 2,...
+                lSizeVec, rSizeVec);
             %
             self.nRows = lSizeVec(1);
             self.nCols = rSizeVec(2);

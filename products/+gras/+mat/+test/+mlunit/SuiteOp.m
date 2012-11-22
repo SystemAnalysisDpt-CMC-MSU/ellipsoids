@@ -23,6 +23,7 @@ classdef SuiteOp < mlunitext.test_case
     methods(Access=private)
         function runTestsForFactory(self,factory)
             import gras.mat.*;
+            import gras.mat.fcnlib.*;
             %
             % test triu square
             %
@@ -150,10 +151,32 @@ classdef SuiteOp < mlunitext.test_case
             mMat = ones(4);
             lrVecFun = ConstMatrixFunction(lrVec);
             mMatFun = ConstMatrixFunction(mMat);
-            rMatFun = factory.lrMultiply(mMatFun,lrVecFun,'R');
+            rMatFun = factory.lrMultiplyByVec(mMatFun,lrVecFun);
             expectedMatVec = (lrVec.')*mMat*lrVec;
             obtainedMatVec = rMatFun.evaluate(0);
             self.isMatVecEq(expectedMatVec, obtainedMatVec);
+            %
+            % test lrDivideVec
+            %
+            lrVec = ones(4,1);
+            mMat = 2*eye(4);
+            lrVecFun = ConstMatrixFunction(lrVec);
+            mMatFun = ConstMatrixFunction(mMat);
+            rMatFun = factory.lrDivideVec(mMatFun,lrVecFun);
+            expectedMatVec = 2;
+            obtainedMatVec = rMatFun.evaluate(0);
+            self.isMatVecEq(expectedMatVec, obtainedMatVec);            
+            %
+            % test quadraticFormSqrt
+            %
+            xVec = ones(4,1);
+            mMat = eye(4);
+            xVecFun = ConstMatrixFunction(xVec);
+            mMatFun = ConstMatrixFunction(mMat);
+            rMatFun = factory.quadraticFormSqrt(mMatFun,xVecFun);
+            expectedMatVec = 2*ones(1,20);
+            obtainedMatVec = rMatFun.evaluate(1:20);
+            self.isMatVecEq(expectedMatVec, obtainedMatVec);               
         end
     end
     methods
@@ -162,16 +185,17 @@ classdef SuiteOp < mlunitext.test_case
         end
         %
         function testCompositeMatrixOperations(self)
-            factory = gras.mat.CompositeMatrixOperations;
+            factory = gras.mat.fcnlib.CompositeMatrixOperations;
             self.runTestsForFactory(factory);
         end
         function testSplineMatrixOperations(self)
             timeVec = linspace(-5,5,1000);
-            factory = gras.mat.SplineMatrixOperations(timeVec);
+            factory = gras.mat.fcnlib.SplineMatrixOperations(timeVec);
             self.runTestsForFactory(factory);
         end
         function testOtherOperations(self)
             import gras.mat.*;
+            import gras.mat.fcnlib.*;
             %
             % test MatrixExpFunc
             %

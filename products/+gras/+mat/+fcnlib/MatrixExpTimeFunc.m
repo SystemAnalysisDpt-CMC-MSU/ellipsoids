@@ -1,6 +1,8 @@
-classdef MatrixExpTimeFunc<gras.mat.AMatrixUnaryOpFunc
+classdef MatrixExpTimeFunc<gras.mat.fcnlib.AMatrixOpFunc
+    properties (Access=protected)
+        lMatFunc
+    end    
     methods
-        % redefine evaluate since opFuncHandle depend on t
         function resArray=evaluate(self,timeVec)
             nTimePoints = numel(timeVec);
             %
@@ -8,24 +10,23 @@ classdef MatrixExpTimeFunc<gras.mat.AMatrixUnaryOpFunc
             %
             resArray = zeros( [self.nRows, self.nCols, nTimePoints] );
             for iTimePoint = 1:nTimePoints
-                resArray(:,:,iTimePoint) = self.opFuncHandle(...
-                    lArray(:,:,iTimePoint), timeVec(iTimePoint));
+                resArray(:,:,iTimePoint) = expm(...
+                    lArray(:,:,iTimePoint)*timeVec(iTimePoint));
             end
         end
     end
     methods
         function self=MatrixExpTimeFunc(lMatFunc)
             %
-            self=self@gras.mat.AMatrixUnaryOpFunc(lMatFunc,...
-                @(mMat, t) expm(mMat*t));
+            modgen.common.type.simple.checkgen(lMatFunc,...
+                @(x)isa(x,'gras.mat.IMatrixFunction'));
             %
-            lSizeVec = lMatFunc.getMatrixSize();
+            modgen.common.type.simple.checkgen(lMatFunc.getMatrixSize(),...
+                'x(1)==x(2)');
             %
-            if lSizeVec(1)~=lSizeVec(2)
-                modgen.common.throwerror('wrongInput',...
-                    'Matrix must be square');
-            end
+            self=self@gras.mat.fcnlib.AMatrixOpFunc;
             %
+            self.lMatFunc = lMatFunc;
             self.nRows = lMatFunc.getNRows();
             self.nCols = lMatFunc.getNCols();
             self.nDims = lMatFunc.getDimensionality();

@@ -3,7 +3,6 @@ classdef AMatrixOpFunc<gras.mat.IMatrixFunction
         nRows
         nCols
         nDims
-        opFuncHandle
     end
     methods
         function mSizeVec = getMatrixSize(self)
@@ -17,17 +16,6 @@ classdef AMatrixOpFunc<gras.mat.IMatrixFunction
         end
         function nRows=getNRows(self)
             nRows = self.nRows;
-        end
-    end
-    methods
-        function self=AMatrixOpFunc(opFuncHandle)
-            %
-            if ~isa(opFuncHandle, 'function_handle')
-                modgen.common.throwerror('wrongInput',...
-                    'opFuncHandle must be of type function_handle');
-            end
-            %
-            self.opFuncHandle = opFuncHandle;
         end
     end
 end

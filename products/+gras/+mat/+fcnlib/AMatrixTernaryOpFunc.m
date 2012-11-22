@@ -1,8 +1,9 @@
-classdef AMatrixTernaryOpFunc<gras.mat.AMatrixOpFunc
+classdef AMatrixTernaryOpFunc<gras.mat.fcnlib.AMatrixOpFunc
     properties (Access=protected)
         lMatFunc
         mMatFunc
         rMatFunc
+        opFuncHandle
     end
     methods
         function resArray=evaluate(self,timeVec)
@@ -24,26 +25,21 @@ classdef AMatrixTernaryOpFunc<gras.mat.AMatrixOpFunc
         function self=AMatrixTernaryOpFunc(lMatFunc, mMatFunc,...
                 rMatFunc, opFuncHandle)
             %
-            if ~isa(lMatFunc, 'gras.mat.IMatrixFunction')
-                modgen.common.throwerror('wrongInput',...
-                    'lMatFunc must be of type IMatrixFunction');
-            end
+            modgen.common.type.simple.checkgen(lMatFunc,...
+                @(x)isa(x,'gras.mat.IMatrixFunction'));
+            modgen.common.type.simple.checkgen(mMatFunc,...
+                @(x)isa(x,'gras.mat.IMatrixFunction'));
+            modgen.common.type.simple.checkgen(rMatFunc,...
+                @(x)isa(x,'gras.mat.IMatrixFunction'));
+            modgen.common.type.simple.checkgen(opFuncHandle,...
+                @(x)isa(x,'function_handle'));
             %
-            if ~isa(mMatFunc, 'gras.mat.IMatrixFunction')
-                modgen.common.throwerror('wrongInput',...
-                    'mMatFunc must be of type IMatrixFunction');
-            end
-            %
-            if ~isa(rMatFunc, 'gras.mat.IMatrixFunction')
-                modgen.common.throwerror('wrongInput',...
-                    'rMatFunc must be of type IMatrixFunction');
-            end
-            %
-            self=self@gras.mat.AMatrixOpFunc(opFuncHandle);
+            self=self@gras.mat.fcnlib.AMatrixOpFunc;
             %
             self.lMatFunc = lMatFunc;
             self.mMatFunc = mMatFunc;
             self.rMatFunc = rMatFunc;
+            self.opFuncHandle = opFuncHandle;
         end
     end
 end

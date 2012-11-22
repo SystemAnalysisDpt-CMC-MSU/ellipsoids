@@ -1,6 +1,7 @@
-classdef AMatrixUnaryOpFunc<gras.mat.AMatrixOpFunc
+classdef AMatrixUnaryOpFunc<gras.mat.fcnlib.AMatrixOpFunc
     properties (Access=protected)
         lMatFunc
+        opFuncHandle
     end
     methods
         function resArray=evaluate(self,timeVec)
@@ -18,14 +19,15 @@ classdef AMatrixUnaryOpFunc<gras.mat.AMatrixOpFunc
     methods
         function self=AMatrixUnaryOpFunc(lMatFunc, opFuncHandle)
             %
-            if ~isa(lMatFunc, 'gras.mat.IMatrixFunction')
-                modgen.common.throwerror('wrongInput',...
-                    'lMatFunc must be of type IMatrixFunction');
-            end
+            modgen.common.type.simple.checkgen(lMatFunc,...
+                @(x)isa(x,'gras.mat.IMatrixFunction'));
+            modgen.common.type.simple.checkgen(opFuncHandle,...
+                @(x)isa(x,'function_handle'));
             %
-            self=self@gras.mat.AMatrixOpFunc(opFuncHandle);
+            self=self@gras.mat.fcnlib.AMatrixOpFunc;
             %
             self.lMatFunc = lMatFunc;
+            self.opFuncHandle = opFuncHandle;
         end
     end
 end

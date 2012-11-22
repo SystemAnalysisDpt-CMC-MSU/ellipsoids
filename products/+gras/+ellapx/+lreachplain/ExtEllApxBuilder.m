@@ -44,28 +44,27 @@ classdef ExtEllApxBuilder<gras.ellapx.lreachplain.ATightEllApxBuilder
     methods (Access=private)
         function self=prepareODEData(self)
             import gras.ellapx.common.*;
-            import gras.gen.MatVector;
+            import gras.mat.fcnlib.MatrixOperationsFactory;
             import gras.ellapx.lreachplain.IntEllApxBuilder;
-            import gras.interp.MatrixInterpolantFactory;
             %
             nGoodDirs=self.getNGoodDirs();
             pDefObj=self.getProblemDef();
             timeVec=pDefObj.getTimeVec;
-            %ODE is solved on time span [tau0, tau1]\in[t0,t1]
-            dataBPBTransArray=pDefObj.getBPBTransDynamics.evaluate(timeVec);
             %
-            goodDirCurveSpline=self.getGoodDirSet().getGoodDirCurveSpline();
-            goodDirArray=goodDirCurveSpline.evaluate(timeVec);
-            slBPBlSqrtSplineList=cell(1,nGoodDirs);
-            tmpArray=MatVector.rMultiply(dataBPBTransArray,...
-                goodDirArray);
-            lBPBlSqrtArray=shiftdim(sqrt(sum(tmpArray.*goodDirArray,1)),1);
-            for l=1:1:nGoodDirs
-                slBPBlSqrtSplineList{l}=...
-                    MatrixInterpolantFactory.createInstance(...
-                    'column',lBPBlSqrtArray(l,:),timeVec);
-            end
-            self.slBPBlSqrtSplineList=slBPBlSqrtSplineList;
+            % calculate <l,BPB' l>^{1/2}
+            %
+            matOpFactory = MatrixOperationsFactory.create(timeVec);
+            %
+            BPBTransDynamics = pDefObj.getBPBTransDynamics();
+            goodDirSet = self.getGoodDirSet();
+            self.slBPBlSqrtSplineList = cell(1, nGoodDirs);
+            %
+            for iGoodDir = 1:nGoodDirs
+                ltSpline = goodDirSet.getGoodDirOneCurveSpline(iGoodDir);
+                %
+                self.slBPBlSqrtSplineList{iGoodDir} = matOpFactory.quadraticFormSqrt(...
+                    BPBTransDynamics, ltSpline);
+            end               
         end
     end
     methods 

@@ -1,15 +1,11 @@
-classdef MatrixLRTimesFunc<gras.mat.AMatrixBinaryOpFunc
+classdef MatrixLRTimesFunc<gras.mat.fcnlib.AMatrixBinaryOpFunc
     methods
         function self=MatrixLRTimesFunc(mMatFunc, lrMatFunc, flag)
             %
             if nargin < 3
                 flag = 'R';
             end
-            %
-            if flag ~= 'L' && flag ~= 'R'
-                modgen.common.throwerror('wrongInput',...
-                    'Incorrect flag value');
-            end
+            modgen.common.type.simple.checkgen(flag,@(x) x=='L'||x=='R');
             %
             if flag == 'R'
                 fHandle = @(mMat,lrMat) (lrMat.')*mMat*lrMat;
@@ -17,25 +13,23 @@ classdef MatrixLRTimesFunc<gras.mat.AMatrixBinaryOpFunc
                 fHandle = @(mMat,lrMat) lrMat*mMat*(lrMat.');
             end
             %
-            self=self@gras.mat.AMatrixBinaryOpFunc(mMatFunc, lrMatFunc,...
+            self=self@gras.mat.fcnlib.AMatrixBinaryOpFunc(mMatFunc, lrMatFunc,...
                 fHandle);
             %
             mSizeVec = mMatFunc.getMatrixSize();
             lrSizeVec = lrMatFunc.getMatrixSize();
             %
+            modgen.common.type.simple.checkgen(mSizeVec,'x(1)==x(2)');
+            %
             if flag == 'R'
-                if ~(mSizeVec(1)==mSizeVec(2)&&mSizeVec(2)==lrSizeVec(1))
-                    modgen.common.throwerror('wrongInput',...
-                        'Inner matrix dimensions must agree');
-                end
+                modgen.common.type.simple.checkgenext('x1(2)==x2(1)',2,...
+                    mSizeVec, lrSizeVec);
                 %
                 self.nRows = lrSizeVec(2);
                 self.nCols = lrSizeVec(2);
             else
-                if ~(mSizeVec(1)==mSizeVec(2)&&lrSizeVec(2)==mSizeVec(1))
-                    modgen.common.throwerror('wrongInput',...
-                        'Inner matrix dimensions must agree');
-                end
+                modgen.common.type.simple.checkgenext('x2(2)==x1(1)',2,...
+                    mSizeVec, lrSizeVec);
                 %
                 self.nRows = lrSizeVec(1);
                 self.nCols = lrSizeVec(1);

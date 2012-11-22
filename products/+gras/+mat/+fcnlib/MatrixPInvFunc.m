@@ -1,8 +1,8 @@
-classdef MatrixTransposeFunc<gras.mat.AMatrixUnaryOpFunc
+classdef MatrixPInvFunc<gras.mat.fcnlib.AMatrixUnaryOpFunc
     methods
-        function self=MatrixTransposeFunc(lMatFunc)
+        function self=MatrixPInvFunc(lMatFunc)
             %
-            self=self@gras.mat.AMatrixUnaryOpFunc(lMatFunc,@transpose);
+            self=self@gras.mat.fcnlib.AMatrixUnaryOpFunc(lMatFunc,@pinv);
             %
             self.nRows = lMatFunc.getNCols();
             self.nCols = lMatFunc.getNRows();
