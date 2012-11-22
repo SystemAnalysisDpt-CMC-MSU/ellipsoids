@@ -1,41 +1,34 @@
-function display(E)
+function display(myEllMat)
 %
-% Description:
-% ------------
+%    DISPLAY - Displays the details of the ellipsoid object.
 %
-%    Displays ellipsoid object.
+% Input:
+%   regular:
+%       myEllMat: ellipsod [mRows, nCols] - matrix of ellipsoids.
 %
-
-%
-% Author:
-% -------
-%
-%    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-%
+% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+% $Copyright:  The Regents of the University of California 2004-2008 $
 
   fprintf('\n');
   disp([inputname(1) ' =']);
 
-  [m, n] = size(E);
-  if (m > 1) || (n > 1)
-    fprintf('%dx%d array of ellipsoids.\n\n', m, n);
-    return;
-  end
-
-  fprintf('\n');
-  fprintf('Center:\n'); disp(E.center);
-  fprintf('Shape Matrix:\n'); disp(E.shape);
-
-  if isempty(E)
-    fprintf('Empty ellipsoid.\n\n');
-    return;
-  end
-
-  [s, e]    = dimension(E);  
-  if e < s
-    fprintf('Degenerate (rank %d) ellipsoid in R^%d.\n\n', e, s);
+  [mRows, nCols] = size(myEllMat);
+  if (mRows > 1) || (nCols > 1)
+    fprintf('%dx%d array of ellipsoids.\n\n', mRows, nCols);
   else
-    fprintf('Nondegenerate ellipsoid in R^%d.\n\n', s);
+    fprintf('\n');
+    fprintf('Center:\n'); disp(myEllMat.center);
+    fprintf('Shape Matrix:\n'); disp(myEllMat.shape);
+    if isempty(myEllMat)
+        fprintf('Empty ellipsoid.\n\n');
+    else
+        [spaceDim, ellDim]    = dimension(myEllMat);  
+        if ellDim < spaceDim
+            fprintf('Degenerate (rank %d) ellipsoid in R^%d.\n\n', ellDim, spaceDim);
+        else
+            fprintf('Nondegenerate ellipsoid in R^%d.\n\n', spaceDim);
+        end
+    end
   end
   
 end
