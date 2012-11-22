@@ -81,7 +81,18 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
             ansCenVec=ones(nDims,1);
             %
             mlunit.assert_equals(1,isEqElM(resEllipsoid,...
-                ansVMat,ansDMat,ansCenVec));     
+                ansVMat,ansDMat,ansCenVec));    
+            % Test#6. Ellipsoid(q,D,W) 
+            wMat=[1 0;2 0];
+            dMat=[0 1].';
+            resEllipsoid=Ellipsoid([0,0].',dMat,wMat);
+            ansVMat=[-1 0; 0 -1];
+            ansVMat=ansVMat/norm(ansVMat);
+            ansDMat=[0 0].';
+            ansCenVec=[0 0].';
+            %
+            mlunit.assert_equals(1,isEqElM(resEllipsoid,...
+                ansVMat,ansDMat,ansCenVec));    
         end
         
         function self = testInv(self)
