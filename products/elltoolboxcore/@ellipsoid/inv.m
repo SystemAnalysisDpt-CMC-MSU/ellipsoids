@@ -49,4 +49,4 @@ function I = inv(E)
     end
   end
 
-  return;
+end

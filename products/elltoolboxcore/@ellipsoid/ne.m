@@ -16,4 +16,4 @@ function res = ne(E1, E2)
 
   res = ~(eq(E1, E2));
 
-  return;
+end

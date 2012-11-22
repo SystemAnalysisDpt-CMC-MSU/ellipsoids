@@ -1,23 +1,21 @@
-function R = regularize(Q,absTol)
+function regQMat = regularize(qMat,absTol)
 %
 % REGULARIZE - regularization of singular symmetric matrix.
 %
-    
-  isSymMat = Q ~= transpose(Q);
-  if any(isSymMat(:))
+  import gras.la.ismatsymm;  
+ 
+  if ~ismatsymm(qMat)
     error('REGULARIZE: matrix must be symmetric.');
   end
 
-  [m, n] = size(Q);
-  r      = rank(Q);
+  [~, n] = size(qMat);
+  r      = rank(qMat);
 
   if r < n
-    [U S V] = svd(Q);
+    [U, ~, ~] = svd(qMat);
     E       = absTol * eye(n - r);
-    R       = Q + (U * [zeros(r, r) zeros(r, (n-r)); zeros((n-r), r) E] * U');
-    R       = 0.5*(R + R');
+    regQMat       = qMat + (U * [zeros(r, r) zeros(r, (n-r)); zeros((n-r), r) E] * U');
+    regQMat       = 0.5*(regQMat + regQMat');
   else
-    R = Q;
+    regQMat = qMat;
   end
-
-  return;

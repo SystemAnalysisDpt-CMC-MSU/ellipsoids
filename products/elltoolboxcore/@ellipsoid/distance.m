@@ -483,7 +483,7 @@ function [d, status] = l_hpdist(E, X, flag)
   [k, l] = size(X);
   t1     = m * n;
   t2     = k * l;
-  if (t1 > 1) & (t2 > 1) & ((m ~= k) | (n ~= l))
+  if (t1 > 1) && (t2 > 1) && ((m ~= k) || (n ~= l))
     error('DISTANCE: sizes of ellipsoidal and hyperplane arrays do not match.');
   end
 
@@ -501,7 +501,7 @@ function [d, status] = l_hpdist(E, X, flag)
   end
 
   if Properties.getIsVerbose()
-    if (t1 > 1) | (t2 > 1)
+    if (t1 > 1) || (t2 > 1)
       fprintf('Computing %d ellipsoid-to-hyperplane distances...\n', max([t1 t2]));
     else
       fprintf('Computing ellipsoid-to-hyperplane distance...\n');
@@ -509,7 +509,7 @@ function [d, status] = l_hpdist(E, X, flag)
   end
 
   d = [];
-  if (t1 > 1) & (t2 > 1)
+  if (t1 > 1) && (t2 > 1)
     for i = 1:m
       dd = [];
       for j = 1:n
@@ -543,9 +543,9 @@ function [d, status] = l_hpdist(E, X, flag)
       for j = 1:n
         if flag
           sr = sqrt(v' * (E(i, j).shape) * v);
-	else
+        else
           sr = sqrt(v' * v);
-	end
+        end
         if (v' * E(i, j).center) < c
           d1 = (c - rho(E(i, j), v))/sr;
         else
@@ -601,7 +601,7 @@ function [d, status] = l_polydist(E, X)
   [k, l] = size(X);
   t1     = m * n;
   t2     = k * l;
-  if (t1 > 1) & (t2 > 1) & ((m ~= k) | (n ~= l))
+  if (t1 > 1) && (t2 > 1) && ((m ~= k) || (n ~= l))
     error('DISTANCE: sizes of ellipsoidal and polytope arrays do not match.');
   end
 
@@ -626,7 +626,7 @@ function [d, status] = l_polydist(E, X)
   end
 
   if Properties.getIsVerbose()
-    if (t1 > 1) | (t2 > 1)
+    if (t1 > 1) || (t2 > 1)
       fprintf('Computing %d ellipsoid-to-polytope distances...\n', max([t1 t2]));
     else
       fprintf('Computing ellipsoid-to-polytope distance...\n');
@@ -637,7 +637,7 @@ function [d, status] = l_polydist(E, X)
   absTolMat = getAbsTol(E);
   d      = [];
   status = [];
-  if (t1 > 1) & (t2 > 1)
+  if (t1 > 1) && (t2 > 1)
     for i = 1:m
       dd  = [];
       sts = [];

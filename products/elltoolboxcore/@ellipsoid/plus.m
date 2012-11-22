@@ -30,10 +30,10 @@ function res = plus(X, Y)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  if isa(X, 'ellipsoid') & ~(isa(Y, 'double'))
+  if isa(X, 'ellipsoid') && ~(isa(Y, 'double'))
     error('PLUS: this operation is only permitted between ellipsoid and vector in R^n.');
   end
-  if isa(Y, 'ellipsoid') & ~(isa(X, 'double'))
+  if isa(Y, 'ellipsoid') && ~(isa(X, 'double'))
     error('PLUS: this operation is only permitted between ellipsoid and vector in R^n.');
   end
 
@@ -53,7 +53,7 @@ function res = plus(X, Y)
   end
 
   [k, l] = size(b);
-  if (l ~= 1) | (k ~= n)
+  if (l ~= 1) || (k ~= n)
     error('PLUS: vector dimension does not match.');
   end
 
@@ -71,4 +71,4 @@ function res = plus(X, Y)
     clear r;
   end
 
-  return;
+end

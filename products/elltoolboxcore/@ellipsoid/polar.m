@@ -68,8 +68,7 @@ function P = polar(E)
         else
             throwerror('degenerateEllipsoid','The resulting ellipsoid is not bounded');
 
-      
-	end
+        end
       end
     end
     P = [P; PP];
