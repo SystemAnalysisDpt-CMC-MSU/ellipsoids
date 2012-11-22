@@ -13,17 +13,75 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
         end
         function self = testConstructor(self)
             import elltool.core.Ellipsoid;
-
-%             ellObj5=Ellipsoid([0 0 0 0].', [1 Inf 2 Inf]', rand(4,4));
-%             ellObj2=Ellipsoid([1 2 3].');
-%             nDims=10;
-%             M1=orth(randn(nDims,nDims));
-%             M=M1*diag(1:nDims)*M1.';
-%             M=M+M.';
-%             ellObj1=Ellipsoid([1:nDims].',M);
-            wMat=[1 2;2 4].';
+            %
+            load(strcat(self.testDataRootDir,filesep,'testNewEllRandM.mat'),...
+             'testOrth2Mat','testOrth3Mat',...
+                 'testOrth20Mat','testOrth50Mat',...
+                 'testOrth100Mat');
+            % Test#1. Ellipsoid(q,D,W) 
+            wMat=[1 1;1 2];
+            dMat=[Inf 1].';
+            resEllipsoid=Ellipsoid([0,0].',dMat,wMat);
+            ansVMat=[-1 1; 1 1];
+            ansVMat=ansVMat/norm(ansVMat);
+            ansDMat=[0.5 Inf].';
+            ansCenVec=[0 0].';
+            %
+            mlunit.assert_equals(1,isEqElM(resEllipsoid,...
+                ansVMat,ansDMat,ansCenVec));      
+            %
+            % Test#2. Ellipsoid(q,D,W) 
+            wMat=[1 2;1 2];
             dMat=[1 Inf].';
-            ellObj1=Ellipsoid([0,0].',dMat,wMat);
+            resEllipsoid=Ellipsoid([0,0].',dMat,wMat);
+            %
+            ansVMat=[-1 1; 1 1];
+            ansVMat=ansVMat/norm(ansVMat);
+            ansDMat=[0 Inf].';
+            ansCenVec=[0 0].';
+            %
+            mlunit.assert_equals(1,isEqElM(resEllipsoid,...
+                ansVMat,ansDMat,ansCenVec));       
+            %
+            % Test#3. Ellipsoid(q,D,W) 
+            wMat=testOrth2Mat;
+            dMat=[5 Inf].';
+            resEllipsoid=Ellipsoid([1,2].',dMat,wMat);
+            %
+            ansVMat=testOrth2Mat;
+            ansDMat=[5 Inf].';
+            ansCenVec=[1 2].';
+            %
+            mlunit.assert_equals(1,isEqElM(resEllipsoid,...
+                ansVMat,ansDMat,ansCenVec));      
+            %
+            % Test#4. Ellipsoid(q,D,W) 3d-case. 
+            % Orthogonal Matrix. Finite eigenvalues.
+            nDims=3;
+            wMat=testOrth3Mat;
+            dMat=(1:nDims).';
+            resEllipsoid=Ellipsoid(ones(nDims,1),dMat,wMat);
+            %
+            ansVMat=testOrth3Mat;
+            ansDMat=(1:nDims).';
+            ansCenVec=ones(nDims,1);
+            %
+            mlunit.assert_equals(1,isEqElM(resEllipsoid,...
+                ansVMat,ansDMat,ansCenVec));      
+            %
+            % Test#5. Ellipsoid(q,D,W) 
+            % 100-d case. Orthogonal matrix. Infinite eigenvalues.
+            nDims=100;
+            wMat=testOrth100Mat;
+            dMat=[ Inf; Inf; (0:(nDims-4)).'; Inf];
+            resEllipsoid=Ellipsoid(ones(nDims,1),dMat,wMat);
+            %
+            ansVMat=testOrth100Mat;
+            ansDMat=[ Inf; Inf; (0:(nDims-4)).'; Inf];
+            ansCenVec=ones(nDims,1);
+            %
+            mlunit.assert_equals(1,isEqElM(resEllipsoid,...
+                ansVMat,ansDMat,ansCenVec));     
         end
         
         function self = testInv(self)
@@ -41,7 +99,7 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
                  'testEll2x2Mat','testEll2x3Mat','testEll10x2Mat',...
                  'testEll10x3Mat','testEll10x20Mat',...
                   'testEll10x50Mat','testEll10x100Mat');
-            ABS_TOL = Properties.getAbsTol();
+            absTol = Properties.getAbsTol();
             % Test#1. Two non-degenerate ellipsoids. Zero centers. 
             %Simple diagonal matrices. Simple direction. 2D case.
             q1Mat=[1 0;0 1];
@@ -54,7 +112,7 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
             newQMat=resNewEll.eigvMat*resNewEll.diagMat*resNewEll.eigvMat.';
             [oldQCenVec oldQMat]=double(resOldEll);
             mlunit.assert_equals(1, all(all(abs(newQMat-oldQMat)<...
-                ABS_TOL)));
+                absTol)));
             %
             %Test#2. Two ellipses. Non-degenerate. Non-zero centers. 
             %Simple diagonal matrices. Simple direction. 2D case.
@@ -71,7 +129,7 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
             newQCenVec=resNewEll.centerVec;
             [oldQCenVec oldQMat]=double(resOldEll);
             mlunit.assert_equals(1, all(all(abs(newQMat-oldQMat)<...
-                ABS_TOL))&& all(oldQCenVec-newQCenVec)<ABS_TOL);
+                absTol))&& all(oldQCenVec-newQCenVec)<absTol);
             %
             %Test#3. Two ellipses. Non-degenerate. Non-zero centers. Diagonal matrices.
             % Simple direction. Ellipses, not circles. 2D case.
@@ -88,7 +146,7 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
             newQCenVec=resNewEll.centerVec;
             [oldQCenVec oldQMat]=double(resOldEll);
             mlunit.assert_equals(1, all(all(abs(newQMat-oldQMat)<...
-                ABS_TOL))&& all((oldQCenVec-newQCenVec)<ABS_TOL));
+                absTol))&& all((oldQCenVec-newQCenVec)<absTol));
             %
             %Test#4. Two ellipsoids. Non-degenerate. Non-zero centers. 
             % Diagonal matrices. Multiple various directions. 
@@ -114,7 +172,7 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
                 [oldQCenVec oldQMat]=double(resOldEllVec(iDir));
                 iDir=iDir+1;
                 isStillCorrect=all(all(abs(newQMat-oldQMat)<...
-                ABS_TOL))&& all((oldQCenVec-newQCenVec)<ABS_TOL);
+                absTol))&& all((oldQCenVec-newQCenVec)<absTol);
             end
             mlunit.assert_equals(1, isStillCorrect);
             %
@@ -143,7 +201,7 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
                 [oldQCenVec oldQMat]=double(resOldEllVec(iDir));
                 iDir=iDir+1;
                 isStillCorrect=all(all(abs(newQMat-oldQMat)<...
-                ABS_TOL))&& all((oldQCenVec-newQCenVec)<ABS_TOL);
+                absTol))&& all((oldQCenVec-newQCenVec)<absTol);
             end
             mlunit.assert_equals(1, isStillCorrect);
             %
@@ -174,7 +232,7 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
                 [oldQCenVec oldQMat]=double(resOldEllVec(iDir)); 
                 iDir=iDir+1;
                 isStillCorrect=all(all(abs(newQMat-oldQMat)<...
-                ABS_TOL))&& all((oldQCenVec-newQCenVec)<ABS_TOL);
+                absTol))&& all((oldQCenVec-newQCenVec)<absTol);
             end
             mlunit.assert_equals(1, isStillCorrect);
             %
@@ -206,7 +264,7 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
                 [oldQCenVec oldQMat]=double(resOldEllVec(iDir));
                 iDir=iDir+1;
                 isStillCorrect=all(all(abs(newQMat-oldQMat)<...
-                ABS_TOL))&& all((oldQCenVec-newQCenVec)<ABS_TOL);
+                absTol))&& all((oldQCenVec-newQCenVec)<absTol);
             end
             mlunit.assert_equals(1, isStillCorrect);
             %
@@ -219,7 +277,7 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
             resEllMat=resEllObj.eigvMat*resEllObj.diagMat*resEllObj.eigvMat.';
             testAnswerMat=[4 0; 0 2];
             mlunit.assert_equals(1,all(all(abs(resEllMat-testAnswerMat)<...
-                ABS_TOL)))
+                absTol)))
             % Test#8. Two ellipsoids. Degenerate case. 
             % Unbounded result.
             testEllipsoid1=Ellipsoid([1 0; 0 1]);
@@ -238,7 +296,7 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
             resEllMat=resEllObj.eigvMat*resEllObj.diagMat*resEllObj.eigvMat.';
             testAnswerMat=[1 2; 2 5];
             mlunit.assert_equals(1,all(all((resEllMat-testAnswerMat)<...
-                ABS_TOL)));
+                absTol)));
             %
             % Test#10. Two ellipsoids. Degenerate case. 
             % Two directions. 2D case.
@@ -642,7 +700,7 @@ end
 
 function isEqual=isEllEqual(ellObj1, ellObj2)
     import elltool.conf.Properties;
-    ABS_TOL = Properties.getAbsTol();
+    absTol = Properties.getAbsTol();
     isInfinite1Vec=diag(ellObj1.diagMat)==Inf;
     isInfinite2Vec=diag(ellObj2.diagMat)==Inf;
     ell1VMat=ellObj1.eigvMat(~isInfinite1Vec,~isInfinite1Vec);
@@ -651,6 +709,34 @@ function isEqual=isEllEqual(ellObj1, ellObj2)
     ell2VMat=ellObj2.eigvMat(~isInfinite2Vec,~isInfinite2Vec);
     isEqualInfinite=all(isInfinite1Vec==isInfinite2Vec);
     isEqualFinite=all(all(abs(ell1VMat*ell1DMat*ell1VMat.'-...
-        ell2VMat*ell2DMat*ell2VMat.')<ABS_TOL));
+        ell2VMat*ell2DMat*ell2VMat.')<absTol));
     isEqual=isEqualInfinite && isEqualFinite;
+end
+
+function isEqual=isEqM( objMat1, objMat2)
+    import elltool.conf.Properties;
+    absTol = Properties.getAbsTol();
+    isEqual=all(all(abs(objMat1-objMat2)<absTol));
+end
+
+function isEqual=isEqV( objVec1, objVec2)
+    import elltool.conf.Properties;
+    absTol = Properties.getAbsTol();
+    isInf1Vec=objVec1==Inf;
+    isInf2Vec=objVec2==Inf;
+    isEqualInf=all(isInf1Vec==isInf2Vec);
+    isEqualFin=all(abs(objVec1(~isInf1Vec)-objVec2(~isInf2Vec))<absTol);
+    isEqual=isEqualInf && isEqualFin;
+end
+function isEqual=isEqElM(resEllipsoid,ansVMat,ansDVec,ansCenVec)
+    eigvMat=resEllipsoid.eigvMat;
+    diagVec=diag(resEllipsoid.diagMat);
+    cenVec=resEllipsoid.centerVec;
+    %sort in increasing eigenvalue order
+    [diagVec indVec]=sort(diagVec);
+    eigvMat=eigvMat(:,indVec);
+    [ansDVec indVec]=sort(ansDVec);
+    ansVMat=ansVMat(:,indVec);
+    isEqual=isEqV(diagVec,ansDVec)&&isEqV(cenVec,ansCenVec)&&...
+        isEqM(eigvMat,ansVMat);    
 end

@@ -6,8 +6,9 @@ classdef Ellipsoid < handle
     end
     methods
         function ellObj = Ellipsoid(varargin)
-            global ellOptions
             import modgen.common.throwerror
+            import elltool.conf.Properties;    
+            absTol = Properties.getAbsTol(); 
             %
             nInput=length(varargin);
             if  nInput>3
@@ -32,8 +33,7 @@ classdef Ellipsoid < handle
                 else %ordinary square matrix
                     [ellObj.eigvMat ellObj.diagMat]=eig(ellMat);
                 end
-                ellObj.centerVec=zeros(mSize,1);
-                
+                ellObj.centerVec=zeros(mSize,1);                
             elseif nInput==2
                 ellCenterVec=varargin{1};
                 ellMat=varargin{2};
@@ -92,25 +92,62 @@ classdef Ellipsoid < handle
                     diagVec=diag(ellDiagMat);
                 end
                 isInfVec=diagVec==Inf;
-                allInfMat=ellWMat(:,isInfVec);
-                %orthBasMat=gras.la.matorth(ellWMat);
-                %infBasMat=orthBasMat(:,isInfVec);
-                infBasMat=orth(allInfMat);
-                projVec=ellWMat.'*infBasMat;
-                
-                diagSumMat=diag(diagVec(~isInfVec));
-                ellWSumMat=ellWMat(~isInfVec,~isInfVec);
-                [nonInfVMat nonInfDMat]=eig(ellWSumMat*diagSumMat*ellWSumMat.');
-                ellObj.diagMat=zeros(mDSize);
-                ellObj.eigvMat=zeros(mDSize);
-                ellObj.diagMat(~isInfVec,~isInfVec)=nonInfDMat;
-                ellObj.eigvMat(~isInfVec,~isInfVec)=nonInfVMat;
-                ellObj.diagMat(isInfVec,isInfVec)=diag(diagVec(isInfVec));
-                ellObj.eigvMat(isInfVec,isInfVec)=eye(length(diagVec(isInfVec)));
+                if all(~isInfVec)
+                    ellAuxMat=ellWMat*diag(diagVec)*ellWMat.';
+                    [eigvResMat diagResMat]=eig(ellAuxMat);
+                    eigvResMat=-eigvResMat;
+                    diagResVec=diag(diagResMat);
+                else
+                    [wQMar wRMat]=qr(ellWMat);
+                    if all(all(abs(abs(wRMat)-eye(size(wRMat)))<absTol))
+                        %W is orthogonal
+                        diagResVec=diagVec;
+                        eigvResMat=ellWMat;
+                    else
+                        allInfMat=ellWMat(:,isInfVec);
+                        %L1 and L2 Basis
+                        [orthBasMat rBasMat]=qr(allInfMat);
+                        if size(rBasMat,2)==1
+                            isNeg=rBasMat(1)<0;
+                            orthBasMat(:,isNeg)=-orthBasMat(:,isNeg);
+                        else
+                            isNegVec=diag(rBasMat)<0;
+                            orthBasMat(:,isNegVec)=-orthBasMat(:,isNegVec);
+                        end
+                        %Find rang L1
+                        tolerance = absTol*norm(allInfMat,'fro');
+                        rangL1 = sum(abs(diag(rBasMat)) > tolerance);
+                        rangL1 = rangL1(1); % fix for case where R is vector.
+                        %L1 - first rangL1 columns of orthBasMat.
+                        if rangL1 > 0
+                             infIndVec=1:rangL1;
+                             finIndVec=(rangL1+1):mWSize;
+                             nonInfBasMat = orthBasMat(:,finIndVec);
+                        else
+                             nonInfBasMat = [];
+                        end
+                        %Projecton of directions on L2. Is finite then is finite 
+                        diagResVec=zeros(mDSize,1);  
+                        if ~isempty(nonInfBasMat)
+                            projMat=nonInfBasMat.'*ellWMat;
+                            isZeroProjVec=all(abs(projMat)<absTol,1);
+                            if ~all(isZeroProjVec)
+                                diagVec(isInfVec)=0;
+                                ellAuxMat=projMat*diag(diagVec)*projMat.';
+                                [nonInfVMat nonInfDMat]=eig(ellAuxMat);
+                                diagResVec(finIndVec)=diag(nonInfDMat);
+                            end
+                        end
+                        diagResVec(infIndVec)=Inf;
+                        eigvResMat=orthBasMat;
+                    end
+                end
+                ellObj.diagMat=diag(diagResVec);
+                ellObj.eigvMat=eigvResMat;
                 ellObj.centerVec=ellCenterVec;
             end
-            minEigVal=min(diag(ellObj.diagMat));     
-            if (minEigVal<0 && abs(minEigVal)> ellOptions.abs_tol)
+            minEigVal=min(diag(ellObj.diagMat));       
+            if (minEigVal<0 && abs(minEigVal)> absTol)
                 throwerror('wrongMatrix','Ellipsoid matrix should be positive semi-definite.')
             end
         end
