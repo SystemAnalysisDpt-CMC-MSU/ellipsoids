@@ -13,9 +13,10 @@ function res = gt(E1, E2)
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
+import modgen.common.throwerror;
 
-  if ~(isa(E1, 'ellipsoid')) | ~(isa(E2, 'ellipsoid'))
-    error('<>: both input arguments must be ellipsoids.');
+  if ~(isa(E1, 'ellipsoid')) || ~(isa(E2, 'ellipsoid'))
+    throwerror('wrongInput', '<>: both input arguments must be ellipsoids.');
   end
 
   [k, l] = size(E1);
@@ -23,12 +24,12 @@ function res = gt(E1, E2)
   [m, n] = size(E2);
   t      = m * n;
 
-  if ((k ~= m) | (l ~= n)) & (s > 1) & (t > 1)
-    error('<>: sizes of ellipsoidal arrays do not match.')
+  if ((k ~= m) || (l ~= n)) && (s > 1) && (t > 1)
+    throwerror('wrongSizes', '<>: sizes of ellipsoidal arrays do not match.');
   end
 
   res = [];
-  if (s > 1) & (t > 1)
+  if (s > 1) && (t > 1)
     for i = 1:m
       r = [];
       for j = 1:n
@@ -54,4 +55,4 @@ function res = gt(E1, E2)
     end
   end
 
-  return;
+end

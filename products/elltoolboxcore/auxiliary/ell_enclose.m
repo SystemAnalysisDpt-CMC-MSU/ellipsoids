@@ -66,6 +66,8 @@ ellCenterVec = cvxEllCenterVec;
 
 ellMat  = ell_inv(sqrtEllMat' * sqrtEllMat);
 ellMat  = 0.5 * (ellMat' + ellMat);
-ellCenterVec  = -inv(ellMat) * ellCenterVec;
+ellCenterVec  = -inv(sqrtEllMat) * ellCenterVec;
 
 E  = ellipsoid(ellCenterVec, ellMat);
+
+end

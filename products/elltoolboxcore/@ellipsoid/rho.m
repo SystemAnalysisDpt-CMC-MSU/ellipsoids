@@ -62,7 +62,7 @@ function [res, x] = rho(E, L)
 
   [m, n] = size(E);
   [k, d] = size(L);
-  if (m > 1) | (n > 1)
+  if (m > 1) || (n > 1)
     if d > 1
       msg = sprintf('RHO: arguments must be single ellipsoid and matrix of direction vectors,\n     or array of ellipsoids and single direction vector.');
       error(msg);
@@ -73,8 +73,8 @@ function [res, x] = rho(E, L)
   end
 
   dims = dimension(E);
-  mn   = min(min(dims));
-  mx   = max(max(dims));
+  mn   = min(dims(:));
+  mx   = max(dims(:));
   if mn ~= mx
     error('RHO: ellipsoids in the array must be of the same dimension.');
   end
@@ -83,11 +83,10 @@ function [res, x] = rho(E, L)
   end
 
   
-  res = [];
-  x   = [];
   if ea > 0 % multiple ellipsoids, one direction
+    res=NaN(m,n);
+    x=NaN(k,m*n);
     for i = 1:m
-      r = [];
       for j = 1:n
         q  = E(i, j).center;
         Q  = E(i, j).shape;
@@ -95,23 +94,22 @@ function [res, x] = rho(E, L)
         if sr == 0
           sr = eps;
         end
-        r  = [r (q'*L + sr)];
-        x  = [x (((Q*L)/sr) + q)];
+        res(i,j) = q'*L + sr;
+        x(:,(i-1)*n+j)=((Q*L)/sr) + q;
       end
-      res = [res; r];
     end
   else % one ellipsoid, multiple directions
     q = E.center;
     Q = E.shape;
+    res=NaN(1,d);
+    x=NaN(k,d);
     for i = 1:d
       l   = L(:, i);
       sr  = sqrt(l'*Q*l);
       if sr == 0
         sr = eps;
       end
-      res = [res (q'*l + sr)];
-      x   = [x (((Q*l)/sr) + q)];
+      res(i) = q'*l + sr;
+      x(:,i)=((Q*l)/sr) + q;
     end
   end
-
-  return;

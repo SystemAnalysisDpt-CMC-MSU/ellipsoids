@@ -16,4 +16,4 @@ function res = lt(E1, E2)
 
   res = gt(E2, E1);
 
-  return;
+end

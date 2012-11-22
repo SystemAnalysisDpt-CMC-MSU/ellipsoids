@@ -42,7 +42,7 @@ classdef IntEllApxBuilder<gras.ellapx.lreachplain.ATightIntEllApxBuilder
         end    
     end
     methods
-        function self=IntEllApxBuilder(varargin)   
+        function self=IntEllApxBuilder(varargin)
             self=self@gras.ellapx.lreachplain.ATightIntEllApxBuilder(...
                 varargin{:});
             X0sqrt=sqrtm(self.getProblemDef().getX0Mat);
