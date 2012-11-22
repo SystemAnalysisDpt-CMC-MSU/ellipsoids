@@ -39,16 +39,18 @@ function [sd, ed] = dimension(E)
 
 
   [m, n] = size(E);
-
+  
+  sd=zeros(m,n);
+  ed=zeros(m,n);
   for i = 1:m
     for j = 1:n
       sd(i, j) = size(E(i, j).shape, 1);
       ed(i, j) = rank(E(i, j).shape);
-      if isempty(E(i, j).shape) | isempty(E(i, j).center)
+      if isempty(E(i, j).shape) || isempty(E(i, j).center)
         sd(i, j) = 0;
         ed(i, j) = 0;
       end
     end
   end
 
-  return;
+end

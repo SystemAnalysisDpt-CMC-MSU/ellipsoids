@@ -30,4 +30,4 @@ function [F0, F, G0, G] = ellconstraint(x, Q1, Q2, varargin)
     G = 2 * x;
   end
 
-  return;
+end

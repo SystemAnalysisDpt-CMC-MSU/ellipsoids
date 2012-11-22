@@ -1,4 +1,4 @@
-function IA = minkpm_ea(EE, E2, L)
+function IA = minkpm_ia(EE, E2, L)
 %
 % MINKPM_IA - computation of internal approximating ellipsoids
 %             of (E1 + E2 + ... + En) - E in given directions.
@@ -36,12 +36,12 @@ function IA = minkpm_ea(EE, E2, L)
   import elltool.conf.Properties;
 
 
-  if ~(isa(EE, 'ellipsoid')) | ~(isa(E2, 'ellipsoid'))
+  if ~(isa(EE, 'ellipsoid')) || ~(isa(E2, 'ellipsoid'))
     throwerror('wrongInput', 'MINKPM_IA: first and second arguments must be ellipsoids.');
   end
 
   [m, n] = size(E2);
-  if (m ~= 1) | (n ~= 1)
+  if (m ~= 1) || (n ~= 1)
     throwerror('wrongInput', 'MINKPM_IA: second argument must be single ellipsoid.');
   end
 
@@ -49,7 +49,7 @@ function IA = minkpm_ea(EE, E2, L)
   n  = dimension(E2);
   mn = min(min(dimension(EE)));
   mx = max(max(dimension(EE)));
-  if (mn ~= mx) | (mn ~= n)
+  if (mn ~= mx) || (mn ~= n)
     throwerror('wrongSizes', 'MINKPM_IA: all ellipsoids must be of the same dimension.');
   end
   if n ~= k
@@ -81,4 +81,4 @@ function IA = minkpm_ea(EE, E2, L)
     end
   end
 
-  return;
+end

@@ -17,7 +17,7 @@ function display(E)
   disp([inputname(1) ' =']);
 
   [m, n] = size(E);
-  if (m > 1) | (n > 1)
+  if (m > 1) || (n > 1)
     fprintf('%dx%d array of ellipsoids.\n\n', m, n);
     return;
   end
@@ -38,4 +38,4 @@ function display(E)
     fprintf('Nondegenerate ellipsoid in R^%d.\n\n', s);
   end
   
-  return;
+end

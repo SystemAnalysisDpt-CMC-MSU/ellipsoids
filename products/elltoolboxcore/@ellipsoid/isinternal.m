@@ -68,13 +68,11 @@ function res = isinternal(E, X, s)
     error('ISINTERNAL: second argument must be an array of vectors.');
   end
 
-  if (nargin < 3) | ~(ischar(s))
+  if (nargin < 3) || ~(ischar(s))
     s = 'u';
   end
 
-  res = [];
-
-  if (s ~= 'u') & (s ~= 'i')
+  if (s ~= 'u') && (s ~= 'i')
     error('ISINTERNAL: third argument is expected to be either ''u'', or ''i''.');
   end
 
@@ -83,11 +81,12 @@ function res = isinternal(E, X, s)
     error('ISINTERNAL: dimensions of ellipsoid and vector do not match.');
   end
 
+  res=zeros(1,l);
   for i = 1:l
-    res = [res isinternal_sub(E, X(:, i), s, k)];
+    res(i) = isinternal_sub(E, X(:, i), s, k);
   end
 
-  return;
+end
 
 
 
@@ -136,4 +135,4 @@ function res = isinternal_sub(E, x, s, k)
     end
   end
   
-  return;
+end
