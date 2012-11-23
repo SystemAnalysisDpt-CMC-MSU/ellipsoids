@@ -41,6 +41,7 @@ else
 end
 end
 
+
 function [isEqual,reportStrList]= structcompare1darray(SX,SY,tol)
 % STRUCTCOMPARE1D compares 1-dimentional structural arrays
 %
