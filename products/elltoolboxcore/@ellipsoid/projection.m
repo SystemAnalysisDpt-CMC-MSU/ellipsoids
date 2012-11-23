@@ -30,12 +30,9 @@ function EP = projection(E, B)
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
-%   if ~(isa(E, 'ellipsoid')) || ~(isa(B, 'double'))
-%     error('PROJECTION: arguments must be array of ellipsoids and matrix with orthogonal columns.');
-%   end
-
-import modgen.common.type.simple.checkgenext;
-checkgenext(@(x1,x2)isa(x1,'ellipsoid')&&isa(x2,'double'),2,E,B,'Input argument',' ');
+  if ~(isa(E, 'ellipsoid')) || ~(isa(B, 'double'))
+    error('PROJECTION: arguments must be array of ellipsoids and matrix with orthogonal columns.');
+  end
 
   [k, l] = size(B);
   dims   = dimension(E);

@@ -1,4 +1,4 @@
-function modEllArr = shape(inpEllArr, modMat)
+function EM = shape(E, A)
 %
 % SHAPE - modifies the shape matrix of the ellipsoid without changing its center.
 %
@@ -31,30 +31,36 @@ function modEllArr = shape(inpEllArr, modMat)
 % -------
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-%    Rustam Guliev <glvrst@gmail.com>
+%
 
+  if ~(isa(A, 'double')) || ~(isa(E, 'ellipsoid'))
+    msg = sprintf('SHAPE: expected arguments are:\n');
+    msg = sprintf('%s       - array of ellipsoids of the same dimension,\n', msg);
+    msg = sprintf('%s       - scalar, or square matrix of the same dimension as ellipsoids.\n', msg);
+    error(msg);
+  end
 
-import modgen.common.type.simple.checkgenext;
-checkgenext(@(x1,x2)isa(x1,'ellipsoid')&&isa(x2,'double'),2,inpEllArr,modMat,'Input argument',' ');
+  [m, n] = size(A); 
+  if m ~= n
+    error('SHAPE: only square matrices are allowed.');
+  end
+  d      = dimension(E);
+  k      = max(max(d));
+  l      = min(min(d));
+  if ((k ~= l) && (n ~= 1) && (m ~= 1)) || ((k ~= n) && (n ~= 1) && (m ~= 1))
+    error('SHAPE: dimensions do not match.');
+  end
 
-if ~isscalar(modMat)
-    [nRow, nDim] = size(modMat); 
-    if nRow ~= nDim
-        error('SHAPE: only square matrices are allowed.');    
-    end 
-    nDimsVec = dimension(inpEllArr(:));
-    if ~all(nDimsVec==nDim)
-    	error('SHAPE: dimensions do not match.');
-    end    
-end
-
-modEllArr = arrayfun(@(x) fsingleShape(x),inpEllArr);
-
-    function modEll = fsingleShape(singEll)
-        qMat    = modMat*(singEll.shape)*modMat';
-        qMat    = 0.5*(qMat + qMat');
-        modEll = ellipsoid(singEll.center, qMat);
+  EM     = [];
+  [m, n] = size(E);
+  for i = 1:m
+    for j = 1:n
+     Q    = A*(E(i, j).shape)*A';
+     Q    = 0.5*(Q + Q');
+     r(j) = ellipsoid(E(i, j).center, Q);
     end
+    EM = [EM; r];
+    clear r;
+  end
+
 end
-
-

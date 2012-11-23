@@ -23,7 +23,7 @@ if (nRows~=nCols)
         'ISMATSYMM: Input matrix mast be square.');
 end
 isSymm=false;
-if all(all(qMat == transpose(qMat)))
+if (all(all(qMat == transpose(qMat))))
     isSymm=true;
 end
 

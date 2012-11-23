@@ -727,7 +727,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
                          ellipsoid(rand(20,1),9*diag(0:19)), ellipsoid(diag(1:21));
                          ellipsoid(diag(0.1:0.1:10)), ellipsoid(diag(0:0.0001:0.01))];
             testVolMat = volume(testEllMat); 
-            testRightVolMat = [(pi^10)*sqrt(prod(0.01:0.01:0.2))/prod(1:10), (pi^6)*(2^7)*sqrt(prod(0.1:0.1:1.3))/prod(1:2:13);
+            testRightVolMat = [(pi^6)*sqrt(prod(0.01:0.01:0.2))/prod(1:6), (pi^6)*(2^7)*sqrt(prod(0.1:0.1:1.3))/prod(1:2:13);
                                0,                                          (pi^10)*(2^11)*sqrt(prod(1:21))/prod(1:2:21);
                                (pi^50)*sqrt(prod(0.1:0.1:10))/prod(1:50), 0];
             
