@@ -1,19 +1,21 @@
-function res = ge(E1, E2)
+function resMat = ge(firsrEllMat, secondEllMat)
 %
+% GE - checks if the first ellipsoid is bigger than the second one.
+%      Same as GT.
 %
-% Description:
-% ------------
+% Input:
+%   regular:
+%       firsrEllMat: ellipsoid [mRows, nCols] - matrix of ellipsoids.
+%       secondEllMat: ellipsoid [mRows, nCols] - matrix of ellipsoids
+%           of the corresponding dimensions.
 %
-%    Same as GT.
+% Output:
+%   resMat: double[mRows, nCols],
+%       resMat(iRows, jCols) = 1 - if firsrEllMat(iRows, jCols)
+%       contains secondEllMat(iRows, jCols)
+%       when both have same center, 0 - otherwise.
 %
+% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+% $Copyright:  The Regents of the University of California 2004-2008 $
 
-%
-% Author:
-% -------
-%
-%    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-%
-
-  res = gt(E1, E2);
-
-end
+resMat = gt(firsrEllMat, secondEllMat);
