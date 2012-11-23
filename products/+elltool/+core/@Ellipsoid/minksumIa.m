@@ -4,7 +4,8 @@ function [ ellResVec ] = minksumIa(ellObjVec, dirMat )
     CHECK_TOL=1e-12;
               
     if (~isa(ellObjVec,'Ellipsoid'))
-        throwerror('notEllipsoid','MINKSUM_IA: first argument must be array of ellipsoids');
+        throwerror('notEllipsoid',...
+            'MINKSUM_IA: first argument must be array of ellipsoids');
     end
     
     ellObjVec=ellObjVec(:).';
@@ -12,13 +13,15 @@ function [ ellResVec ] = minksumIa(ellObjVec, dirMat )
     minDimSpace=min(min(dimsSpaceVec));
     maxDimSpace=max(max(dimsSpaceVec));
     if (minDimSpace~=maxDimSpace)
-        throwerror('wrongSizes','MINKSUM_IA: ellipsoids of the array must be in the same vector space');
+        throwerror('wrongSizes',...
+            'MINKSUM_IA: ellipsoids of the array must be in the same vector space');
     end
     dimSpace=maxDimSpace;
     %
     [mDirSize nDirSize]=size(dirMat);
     if (mDirSize~=dimSpace)
-        msgStr=sprintf('MINKSUM_IA: second argument must be vector(s) in R^%d',dimSpace);
+        msgStr=sprintf(...
+            'MINKSUM_IA: second argument must be vector(s) in R^%d',dimSpace);
         throwerror('wrongDir',msgStr);
     end
     %

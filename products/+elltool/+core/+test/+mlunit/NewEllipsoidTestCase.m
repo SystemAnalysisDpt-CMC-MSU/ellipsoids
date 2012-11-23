@@ -372,7 +372,7 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
             mlunit.assert_equals(1,isEllEll2Equal(resEllObj,...
                 Ellipsoid([4.5; Inf; 4.5])));
             %
-            % Test#15. Two. Infinite, degenerate case. 
+            % Test#16. Two. Infinite, degenerate case. 
             % One directions. 3D case. Degenerate direction
             testEllipsoid1=Ellipsoid([0;Inf;1]);
             testEllipsoid2=Ellipsoid([3 2 1].');
@@ -384,117 +384,179 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
                 Ellipsoid([Inf; Inf; Inf])));
             
         end
-%          function self = testMinkdiff_ia(self)
-%             import elltool.core.Ellipsoid;
-%             %
-%             load(strcat(self.testDataRootDir,filesep,'testNewEll.mat'),...
-%                  'testEll2x2Mat','testEll2x3Mat','testEll10x2Mat',...
-%                  'testEll10x3Mat','testEll10x20Mat',...
-%                   'testEll10x50Mat','testEll10x100Mat');
-%             %
-%             load(strcat(self.testDataRootDir,filesep,'testNewEllRandM.mat'),...
-%              'testOrth2Mat','testOrth3Mat',...
-%                  'testOrth20Mat','testOrth50Mat',...
-%                  'testOrth100Mat');
-%             %
-%             %Test#1. Simple.
-%             test1Mat=2*eye(2);
-%             test2Mat=[1 0; 0 0.1];
-%             testEllipsoid1=Ellipsoid(test1Mat);
-%             testEllipsoid2=Ellipsoid(test2Mat);
-%             dirVec=[1,0].';
-%             resEllipsoid=minkdiffNew_ia(testEllipsoid1, testEllipsoid2, dirVec);
-%             resOldEllipsoid=minkdiff_ia(ellipsoid(test1Mat), ellipsoid(test2Mat),...
-%                  dirVec);
-%              [oldCenVec oldQMat]=double(resOldEllipsoid);
-%              mlunit.assert_equals(1,isEllEqual(resEllipsoid,...
-%                  Ellipsoid(oldCenVec,oldQMat)));            
-%              %
-%              %Test#2. Where old method doenst work.
-%              testEllipsoid1=Ellipsoid(2*eye(2));
-%              testEllipsoid2=Ellipsoid([1 0; 0 0.1]);
-%              phi=pi/2;
-%              dirVec=[cos(phi) sin(phi) ].';
-%              resEllipsoid=minkdiffNew_ia(testEllipsoid1, testEllipsoid2, dirVec);
-%              mlunit.assert_equals(1,isEllEqual(resEllipsoid,Ellipsoid([0 0; 0 0.9])));              
-%              %
-%              %Test#3. Difference between sphere and random ellipse. 
-%              test1Mat=2*eye(2);
-%              %test1Mat=testOrth2Mat*test1Mat*testOrth2Mat.';
-%              test2Mat=[1 0; 0 0.1];
-%              test2Mat=testOrth2Mat*test2Mat*testOrth2Mat.';
-%              testEllipsoid1=Ellipsoid(test1Mat);
-%              testEllipsoid2=Ellipsoid(test2Mat);
-%              phi=pi/6;
-%              dirVec=[cos(phi) sin(phi) ].';
-%              resEllipsoid=minkdiffNew_ia(testEllipsoid1, testEllipsoid2, dirVec);
-%              resOldEllipsoid=minkdiff_ia(ellipsoid(test1Mat), ellipsoid(test2Mat),...
-%                  dirVec);
-%              [oldCenVec oldQMat]=double(resOldEllipsoid);
-%              mlunit.assert_equals(1,isEllEqual(resEllipsoid,...
-%                  Ellipsoid(oldCenVec,oldQMat)));              
-%              %
-%              %Test#4. Difference between 3-dimension ellipsoids. 
-%              test1Mat=10*diag(1:3);
-%              test1Mat=testOrth3Mat*test1Mat*testOrth3Mat.';
-%              test1Mat=0.5*(test1Mat+test1Mat.');
-%              test2Mat=diag(1:3);
-%              test2Mat=testOrth3Mat*test2Mat*testOrth3Mat.';
-%              test2Mat=0.5*(test2Mat+test2Mat.');
-%              testEllipsoid1=Ellipsoid(test1Mat);
-%              testEllipsoid2=Ellipsoid(test2Mat);
-%              phi=pi/6;
-%              dirVec=[cos(phi);sin(phi);zeros(1,1)];
-%              dirVec=testOrth3Mat*dirVec;
-%              resEllipsoid=minkdiffNew_ia(testEllipsoid1, testEllipsoid2, dirVec);
-%              resOldEllipsoid=minkdiff_ia(ellipsoid(test1Mat), ellipsoid(test2Mat),...
-%                  dirVec);
-%              [oldCenVec oldQMat]=double(resOldEllipsoid);
-%              mlunit.assert_equals(1,isEllEqual(resEllipsoid,...
-%                  Ellipsoid(oldCenVec,oldQMat)));      
-%              %
-%              %Test#5. Difference between high dimension ellipsoids. 100D case. 
-%              test1Mat=10*diag(1:100);
-%              test1Mat=testOrth100Mat*test1Mat*testOrth100Mat.';
-%              test1Mat=0.5*(test1Mat+test1Mat.');
-%              test2Mat=diag(1:100);
-%              test2Mat=testOrth100Mat*test2Mat*testOrth100Mat.';
-%              test2Mat=0.5*(test2Mat+test2Mat.');
-%              testEllipsoid1=Ellipsoid(test1Mat);
-%              testEllipsoid2=Ellipsoid(test2Mat);
-%              phi=pi/6;
-%              dirVec=[cos(phi);sin(phi);zeros(98,1)];
-%              dirVec=testOrth100Mat*dirVec;
-%              resEllipsoid=minkdiffNew_ia(testEllipsoid1, testEllipsoid2, dirVec);
-%              resOldEllipsoid=minkdiff_ia(ellipsoid(test1Mat), ellipsoid(test2Mat),...
-%                  dirVec);
-%              [oldCenVec oldQMat]=double(resOldEllipsoid);
-%              mlunit.assert_equals(1,isEllEqual(resEllipsoid,...
-%                  Ellipsoid(oldCenVec,oldQMat)));      
-%              
-%              %Test#6. Difference between high dimension ellipsoids. 100D case.
-%              % Non-zero centers.
-%              nDims=100;
-%              testCen1Vec=(1:nDims)';
-%              testCen2Vec=(-49:50).';
-%              test1Mat=10*diag(1:nDims);
-%              test1Mat=testOrth100Mat*test1Mat*testOrth100Mat.';
-%              test1Mat=0.5*(test1Mat+test1Mat.');
-%              test2Mat=diag(1:nDims);
-%              test2Mat=testOrth100Mat*test2Mat*testOrth100Mat.';
-%              test2Mat=0.5*(test2Mat+test2Mat.');
-%              testEllipsoid1=Ellipsoid(testCen1Vec,test1Mat);
-%              testEllipsoid2=Ellipsoid(testCen2Vec,test2Mat);
-%              phi=pi/6;
-%              dirVec=[cos(phi);sin(phi);zeros(98,1)];
-%              dirVec=testOrth100Mat*dirVec;
-%              resEllipsoid=minkdiffNew_ia(testEllipsoid1, testEllipsoid2, dirVec);
-%              resOldEllipsoid=minkdiff_ia(ellipsoid(testCen1Vec,test1Mat),...
-%                  ellipsoid(testCen2Vec,test2Mat),dirVec);
-%              [oldCenVec oldQMat]=double(resOldEllipsoid);
-%              mlunit.assert_equals(1,isEllEqual(resEllipsoid,...
-%                  Ellipsoid(oldCenVec,oldQMat)));      
-%          end
+         function self = testMinkdiff_ia(self)
+            import elltool.core.Ellipsoid;
+            %
+            load(strcat(self.testDataRootDir,filesep,'testNewEll.mat'),...
+                 'testEll2x2Mat','testEll2x3Mat','testEll10x2Mat',...
+                 'testEll10x3Mat','testEll10x20Mat',...
+                  'testEll10x50Mat','testEll10x100Mat');
+            %
+            load(strcat(self.testDataRootDir,filesep,'testNewEllRandM.mat'),...
+             'testOrth2Mat','testOrth3Mat',...
+                 'testOrth20Mat','testOrth50Mat',...
+                 'testOrth100Mat');
+            %
+            %Test#1. Simple.
+            test1Mat=2*eye(2);
+            test2Mat=[1 0; 0 0.1];
+            testEllipsoid1=Ellipsoid(test1Mat);
+            testEllipsoid2=Ellipsoid(test2Mat);
+            dirVec=[1,0].';
+            resEllipsoid=minkdiffIa(testEllipsoid1, testEllipsoid2, dirVec);
+            resOldEllipsoid=minkdiff_ia(ellipsoid(test1Mat), ellipsoid(test2Mat),...
+                 dirVec);
+             [oldCenVec oldQMat]=double(resOldEllipsoid);
+             mlunit.assert_equals(1,isEllEqual(resEllipsoid,...
+                 Ellipsoid(oldCenVec,oldQMat)));            
+             %
+             %Test#2. Where old method doenst work.
+             testEllipsoid1=Ellipsoid(2*eye(2));
+             testEllipsoid2=Ellipsoid([1 0; 0 0.1]);
+             phi=pi/2;
+             dirVec=[cos(phi) sin(phi) ].';
+             resEllipsoid=minkdiffIa(testEllipsoid1, testEllipsoid2, dirVec);
+             mlunit.assert_equals(1,isEllEqual(resEllipsoid,Ellipsoid([0 0; 0 0.9])));              
+             %
+             %Test#3. Difference between sphere and random ellipse. 
+             test1Mat=2*eye(2);
+             %test1Mat=testOrth2Mat*test1Mat*testOrth2Mat.';
+             test2Mat=[1 0; 0 0.1];
+             test2Mat=testOrth2Mat*test2Mat*testOrth2Mat.';
+             testEllipsoid1=Ellipsoid(test1Mat);
+             testEllipsoid2=Ellipsoid(test2Mat);
+             phi=pi/6;
+             dirVec=[cos(phi) sin(phi) ].';
+             resEllipsoid=minkdiffIa(testEllipsoid1, testEllipsoid2, dirVec);
+             resOldEllipsoid=minkdiff_ia(ellipsoid(test1Mat), ellipsoid(test2Mat),...
+                 dirVec);
+             [oldCenVec oldQMat]=double(resOldEllipsoid);
+             mlunit.assert_equals(1,isEllEqual(resEllipsoid,...
+                 Ellipsoid(oldCenVec,oldQMat)));              
+             %
+             %Test#4. Difference between 3-dimension ellipsoids. 
+             test1Mat=10*diag(1:3);
+             test1Mat=testOrth3Mat*test1Mat*testOrth3Mat.';
+             test1Mat=0.5*(test1Mat+test1Mat.');
+             test2Mat=diag(1:3);
+             test2Mat=testOrth3Mat*test2Mat*testOrth3Mat.';
+             test2Mat=0.5*(test2Mat+test2Mat.');
+             testEllipsoid1=Ellipsoid(test1Mat);
+             testEllipsoid2=Ellipsoid(test2Mat);
+             phi=pi/6;
+             dirVec=[cos(phi);sin(phi);zeros(1,1)];
+             dirVec=testOrth3Mat*dirVec;
+             resEllipsoid=minkdiffIa(testEllipsoid1, testEllipsoid2, dirVec);
+             resOldEllipsoid=minkdiff_ia(ellipsoid(test1Mat), ellipsoid(test2Mat),...
+                 dirVec);
+             [oldCenVec oldQMat]=double(resOldEllipsoid);
+             mlunit.assert_equals(1,isEllEqual(resEllipsoid,...
+                 Ellipsoid(oldCenVec,oldQMat)));      
+             %
+             %Test#5. Difference between high dimension ellipsoids. 100D case. 
+             test1Mat=10*diag(1:100);
+             test1Mat=testOrth100Mat*test1Mat*testOrth100Mat.';
+             test1Mat=0.5*(test1Mat+test1Mat.');
+             test2Mat=diag(1:100);
+             test2Mat=testOrth100Mat*test2Mat*testOrth100Mat.';
+             test2Mat=0.5*(test2Mat+test2Mat.');
+             testEllipsoid1=Ellipsoid(test1Mat);
+             testEllipsoid2=Ellipsoid(test2Mat);
+             phi=pi/6;
+             dirVec=[cos(phi);sin(phi);zeros(98,1)];
+             dirVec=testOrth100Mat*dirVec;
+             resEllipsoid=minkdiffIa(testEllipsoid1, testEllipsoid2, dirVec);
+             resOldEllipsoid=minkdiff_ia(ellipsoid(test1Mat), ellipsoid(test2Mat),...
+                 dirVec);
+             [oldCenVec oldQMat]=double(resOldEllipsoid);
+             mlunit.assert_equals(1,isEllEqual(resEllipsoid,...
+                 Ellipsoid(oldCenVec,oldQMat)));      
+             
+             %Test#6. Difference between high dimension ellipsoids. 100D case.
+             % Non-zero centers.
+             nDims=100;
+             testCen1Vec=(1:nDims)';
+             testCen2Vec=(-49:50).';
+             test1Mat=10*diag(1:nDims);
+             test1Mat=testOrth100Mat*test1Mat*testOrth100Mat.';
+             test1Mat=0.5*(test1Mat+test1Mat.');
+             test2Mat=diag(1:nDims);
+             test2Mat=testOrth100Mat*test2Mat*testOrth100Mat.';
+             test2Mat=0.5*(test2Mat+test2Mat.');
+             testEllipsoid1=Ellipsoid(testCen1Vec,test1Mat);
+             testEllipsoid2=Ellipsoid(testCen2Vec,test2Mat);
+             phi=pi/6;
+             dirVec=[cos(phi);sin(phi);zeros(98,1)];
+             dirVec=testOrth100Mat*dirVec;
+             resEllipsoid=minkdiffIa(testEllipsoid1, testEllipsoid2, dirVec);
+             resOldEllipsoid=minkdiff_ia(ellipsoid(testCen1Vec,test1Mat),...
+                 ellipsoid(testCen2Vec,test2Mat),dirVec);
+             [oldCenVec oldQMat]=double(resOldEllipsoid);
+             mlunit.assert_equals(1,isEllEqual(resEllipsoid,...
+                 Ellipsoid(oldCenVec,oldQMat)));      
+             %
+             %Test#7. Difference between 3-dimension ellipsoids.
+             % Degenerate case 
+             test1Mat=diag([1;2;0]);
+             test2Mat=diag([0.5;1;0]);
+             testEllipsoid1=Ellipsoid(test1Mat);
+             testEllipsoid2=Ellipsoid(test2Mat);
+             phi=pi/2.1;
+             dirVec=[cos(phi);sin(phi);zeros(1,1)];
+             resEllipsoid=minkdiffIa(testEllipsoid1, testEllipsoid2, dirVec);
+             resOldEllipsoid=minkdiff_ia(ellipsoid(test1Mat(1:2,1:2)),...
+                 ellipsoid(test2Mat(1:2,1:2)),dirVec(1:2));
+             [oldCenVec oldQMat]=double(resOldEllipsoid);
+             [eigOMat diaOMat]=eig(oldQMat);
+             ansWMat=zeros(3);
+             ansWMat(1:2,1:2)=eigOMat;
+             ansWMat(3,3)=1;
+             ansDMat=zeros(3);
+             ansDMat(1:2,1:2)=diaOMat;
+             ansEllipsoid=Ellipsoid([oldCenVec; 0],ansDMat,ansWMat);
+             mlunit.assert_equals(1,isEllEll2Equal(resEllipsoid,...
+                 ansEllipsoid));      
+             %   
+             %Test#8. Difference between 3-dimension ellipsoids.
+             % Infinite case. Rotated.
+             test1Mat=diag([Inf;5;5]);
+             test2Mat=diag([Inf;1;1]);
+             cenVec=zeros(3,1);
+             testEllipsoid1=Ellipsoid(cenVec,test1Mat,testOrth3Mat);
+             testEllipsoid2=Ellipsoid(cenVec,test2Mat,testOrth3Mat);
+             dirVec=[0;10;-1];
+             dirVec=dirVec/norm(dirVec);
+             dirVec=testOrth3Mat*dirVec;
+             resEllipsoid=minkdiffIa(testEllipsoid1, testEllipsoid2, dirVec);
+             resOldEllipsoid=minkdiff_ia(ellipsoid(test1Mat(2:3,2:3)),...
+                 ellipsoid(test2Mat(2:3,2:3)),dirVec(2:3));
+             [~, oldQMat]=double(resOldEllipsoid);
+             [~, diaOMat]=eig(oldQMat);
+             ansDMat=zeros(3);
+             ansDMat(1,1)=Inf;
+             ansDMat(2:3,2:3)=diaOMat;
+             mlunit.assert_equals(1,isEllEll2Equal(Ellipsoid(resEllipsoid.diagMat),...
+                 Ellipsoid(ansDMat)));      
+             %
+             %Test#9. Difference between 3-dimension ellipsoids.
+             % Infinite and degenerate 
+             test1Mat=diag([Inf;Inf;1]);
+             %test1Mat=testOrth3Mat*test1Mat*testOrth3Mat.';
+             %test1Mat=0.5*(test1Mat+test1Mat.');
+             test2Mat=diag([1;1;0]);
+             %test2Mat=testOrth3Mat*test2Mat*testOrth3Mat.';
+             %test2Mat=0.5*(test2Mat+test2Mat.');
+             cenVec=zeros(3,1);
+             testEllipsoid1=Ellipsoid(cenVec,test1Mat,testOrth3Mat.');
+             testEllipsoid2=Ellipsoid(cenVec,test2Mat,testOrth3Mat.');
+             dirVec=[1;1;1];
+             dirVec=dirVec/norm(dirVec);
+             resEllipsoid=minkdiffIa(testEllipsoid1, testEllipsoid2, dirVec);
+             %
+             ansDMat=diag([Inf;Inf;1]);
+             mlunit.assert_equals(1,isEllEll2Equal(resEllipsoid,...
+                 Ellipsoid(cenVec,ansDMat,testOrth3Mat.')));      
+         end
          function self = testMinksum_ia(self)
             import elltool.core.Ellipsoid;
             %
@@ -884,33 +946,7 @@ function isEqual=isEqElM(resEllipsoid,ansVMat,ansDVec,ansCenVec)
     isEqual=isEqV(diagVec,ansDVec)&&isEqV(cenVec,ansCenVec)&&...
         isEqM(eigvMat,ansVMat);    
 end
-function isEqual=isEllEllEqual(ellObj1, ellObj2)
-    %CHECK_TOL=1e-12;
-    eigv1Mat=ellObj1.eigvMat;
-    diag1Vec=diag(ellObj1.diagMat);
-    cen1Vec=ellObj1.centerVec;
-    eigv2Mat=ellObj2.eigvMat;
-    diag2Vec=diag(ellObj2.diagMat);
-    cen2Vec=ellObj2.centerVec;
-    %sort in increasing eigenvalue order
-    [diag1Vec indVec]=sort(diag1Vec);
-    eigv1Mat=eigv1Mat(:,indVec);
-    [diag2Vec indVec]=sort(diag2Vec);
-    eigv2Mat=eigv2Mat(:,indVec);
-    isEqual=isEqV(diag1Vec,diag2Vec)&&isEqV(cen1Vec,cen2Vec)&&...
-        isEqM(eigv1Mat,eigv2Mat);  
-%     
-%     isInfinite1Vec=diag(ellObj1.diagMat)==Inf;
-%     isInfinite2Vec=diag(ellObj2.diagMat)==Inf;
-%     ell1VMat=ellObj1.eigvMat(~isInfinite1Vec,~isInfinite1Vec);
-%     ell1DMat=ellObj1.diagMat(~isInfinite1Vec,~isInfinite1Vec);
-%     ell2DMat=ellObj2.diagMat(~isInfinite2Vec,~isInfinite2Vec);
-%     ell2VMat=ellObj2.eigvMat(~isInfinite2Vec,~isInfinite2Vec);
-%     isEqualInfinite=all(isInfinite1Vec==isInfinite2Vec);
-%     isEqualFinite=all(all(abs(ell1VMat*ell1DMat*ell1VMat.'-...
-%         ell2VMat*ell2DMat*ell2VMat.')<CHECK_TOL));
-%     isEqual=isEqualInfinite && isEqualFinite;
-end
+
 function isEqual=isEllEll2Equal(ellObj1, ellObj2)
     % eig vectors corresponding to the same eig values are collinear
     eigv1Mat=ellObj1.eigvMat;
