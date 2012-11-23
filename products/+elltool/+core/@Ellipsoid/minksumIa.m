@@ -31,7 +31,7 @@ function [ ellResVec ] = minksumIa(ellObjVec, dirMat )
         for iDir=1:nDirSize
             curDirVec=dirMat(:,iDir);
             resDiagVec=zeros(dimSpace,1); 
-            %find Inf space basis and orthogonal to it
+            %find all Inf directions
             ellObjCVec=num2cell(ellObjVec);
             [isInfCMat allInfDirCMat]=cellfun(@findAllInfDir,ellObjCVec,...
                  'UniformOutput', false);
