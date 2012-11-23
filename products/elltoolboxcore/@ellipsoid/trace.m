@@ -1,4 +1,4 @@
-function T = trace(E)
+function trArr = trace(inpEllArr)
 %
 % TRACE - returns the trace of the ellipsoid.
 %
@@ -25,23 +25,15 @@ function T = trace(E)
 % -------
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+%    Rustam Guliev  <glvrst@gmail.com>
 %
-  import modgen.common.throwerror;
-  
-  if ~(isa(E, 'ellipsoid'))
-    error('TRACE: input argument must be ellipsoid.')
-  end
-  
-  [m, n] = size(E);
-  T      = zeros(m, n);
+    
+import modgen.common.throwerror;
+import modgen.common.type.simple.checkgen;
 
-  for i = 1:m
-    for j = 1:n
-      if isempty(E(i,j))
-          throwerror('wrongInput:emptyEllipsoid','TRACE: input argument is empty.');
-      end
-      T(i, j) = trace(double(E(i, j)));
-    end
-  end
+checkgen(inpEllArr,@(x)isa(x,'ellipsoid'),'Input argument');
 
+if any(isempty(inpEllArr(:)))
+    throwerror('wrongInput:emptyEllipsoid','TRACE: input argument is empty.');
 end
+trArr = arrayfun(@(x) trace(double(x)), inpEllArr);

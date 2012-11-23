@@ -1,4 +1,4 @@
-function I = uminus(E)
+function newEllArr = uminus(inpEllArr)
 %
 % Description:
 % ------------
@@ -11,19 +11,17 @@ function I = uminus(E)
 % -------
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+%    Rustam Guliev <glvrst@gmail.com>
 %
 
-  if ~(isa(E, 'ellipsoid'))
-    error('UMINUS: input argument must be array of ellipsoids.');
-  end
+import modgen.common.type.simple.checkgen;
+checkgen(inpEllArr,@(x)isa(x,'ellipsoid'),'Input argument');
 
-  I      = E;
-  [m, n] = size(I);
+nDimVec = size(inpEllArr);
+newEllCVec = arrayfun(@(x) ellipsoid(-x.center, x.shape),inpEllArr,...
+    'UniformOutput',false);
 
-  for i = 1:m
-    for j = 1:n
-      I(i, j).center = - I(i, j).center;
-    end
-  end
-
-end
+%Conver cell to array
+newEllArr(prod(nDimVec)) = ellipsoid; 
+newEllArr(:) = newEllCVec{:};
+newEllArr = reshape(newEllArr,nDimVec);

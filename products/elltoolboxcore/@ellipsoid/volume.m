@@ -1,4 +1,4 @@
-function V = volume(E)
+function volArr = volume(inpEllArr)
 %
 % VOLUME - returns the volume of the ellipsoid.
 %
@@ -30,33 +30,33 @@ function V = volume(E)
 % -------
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+%    Guliev Rustam <glvrst@gmail.ru>
 %
-  import modgen.common.throwerror;
-  
-  if ~(isa(E, 'ellipsoid'))
-    error('VOLUME: input argument must be ellipsoid.');
-  end
 
-  [m, n] = size(E);
-  V=zeros(m,n);
-  for i = 1:m
-    for j = 1:n
-      if isempty(E(i,j))
-          throwerror('wrongInput:emptyEllipsoid','VOLUME: input argument is empty.');
-      end
-      Q = E(i, j).shape;
-      if isdegenerate(E(i, j))
-        S = 0;
-      else
-        N = size(Q, 1) - 1;
-        if mod(N, 2) > 0
-          k = (N + 1)/2;
-          S = (pi^k)/factorial(k);
-        else
-          k = N/2;
-          S = ((2^(2*k + 1))*(pi^k)*factorial(k))/factorial(2*k + 1);
-        end
-      end
-      V(i,j)= S*sqrt(det(Q));
+import modgen.common.type.simple.checkgen;
+checkgen(inpEllArr,@(x)isa(x,'ellipsoid'),'Input argument');
+  
+volArr = arrayfun(@(x) fsingleVolume(x),inpEllArr);
+
+end
+  
+function vol = fsingleVolume(singleEll)
+    import modgen.common.throwerror;
+    if isempty(singleEll)
+    	throwerror('wrongInput:emptyEllipsoid','VOLUME: input argument is empty.');
     end
-  end
+    qMat = singleEll.shape;
+    if isdegenerate(singleEll)
+    	s = 0;
+    else
+        nDim=size(qMat,1);
+        if mod(nDim,2)
+            k = (nDim-1)/2;
+            s = ((2^(2*k + 1))*(pi^k)*factorial(k))/factorial(2*k + 1);
+        else
+            k = nDim/2;
+            s = (pi^k)/factorial(k);
+        end
+    end
+    vol= s*sqrt(det(qMat));
+end

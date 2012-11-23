@@ -55,11 +55,10 @@ function [res, x] = rho(E, L)
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
+import modgen.common.type.simple.checkgen;
+checkgen(inpEllArr,@(x)isa(x,'ellipsoid'),'Input argument');
 
-  if ~(isa(E, 'ellipsoid'))
-    error('RHO: first argument must be ellipsoid.');
-  end
-
+  
   [m, n] = size(E);
   [k, d] = size(L);
   if (m > 1) || (n > 1)
