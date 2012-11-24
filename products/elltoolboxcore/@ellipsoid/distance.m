@@ -717,8 +717,8 @@ function [d, status] = l_polydist(E, X)
     if size(Q, 2) > rank(Q)
       Q = ellipsoid.regularize(Q,E.absTol);
     end
-    Q = ell_inv(Q);
-    Q = 0.5*(Q + Q');
+    Qi = ell_inv(Q);
+    Qi = 0.5*(Qi + Qi');
     for i = 1:k
       dd  = [];
       sts = [];

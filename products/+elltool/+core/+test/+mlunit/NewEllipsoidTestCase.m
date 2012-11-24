@@ -902,55 +902,63 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
              ansDMat=diag([Inf;Inf;1]);
              mlunit.assert_equals(1,isEllEll2Equal(resEllipsoid,...
                  Ellipsoid(cenVec,ansDMat)))
-         end
-% %           function self = testDistance(self)
-% %             import elltool.core.Ellipsoid;
-% %             %
-% %             load(strcat(self.testDataRootDir,filesep,'testNewEll.mat'),...
-% %                  'testEll2x2Mat','testEll2x3Mat','testEll10x2Mat',...
-% %                  'testEll10x3Mat','testEll10x20Mat',...
-% %                   'testEll10x50Mat','testEll10x100Mat');
-% %             load(strcat(self.testDataRootDir,filesep,'testEllEllRMat.mat'),...
-% %                  'testOrth50Mat','testOrth100Mat','testOrth3Mat','testOrth2Mat');
-% %             %
-% %             % Test#1. Two ellipsoids. 2D case.
-% %             testEllipsoid1 = Ellipsoid([25,0;0,9]);
-% %             testEllipsoid2 = Ellipsoid([10;0],[4,0;0,9]);
-% %             testRes=distanceNew(testEllipsoid1,testEllipsoid2);
-% %             mlunit.assert_equals(1, (abs(testRes-3)<ABS_TOL));
-% %             % Test#2. Two ellipsoids. 3D case.   
-% %             testEllipsoid1 = Ellipsoid([0,-15,0].',[25,0,0;0,100,0;0,0,9]);
-% %             testEllipsoid2 = Ellipsoid([0,7,0].',[9,0,0;0,25,0;0,0,100]);
-% %             testRes=distanceNew(testEllipsoid1,testEllipsoid2);
-% %             mlunit.assert_equals(1, (abs(testRes-7)<ABS_TOL));
-% %             % Test#3. Case of ellipses with intersection
-% %             testEllipsoid1 = Ellipsoid([1 2 3].',[1,2,5;2,5,3;5,3,100]);
-% %             testEllipsoid2 = Ellipsoid([1,2,3.2].',[1,2,7;2,10,5;7,5,100]);
-% %             testRes=distanceNew(testEllipsoid1,testEllipsoid2);
-% %             mlunit.assert_equals(1, (abs(testRes)<ABS_TOL));
-% %             %
-% %             % Test#4. distance between two ellipsoids of high dimensions and random
-% %             %matrices
-% %             nDim=100;
-% %             testEll1Mat=diag(1:2:2*nDim);
-% %             testEll1Mat=testOrth100Mat*testEll1Mat*testOrth100Mat.';
-% %             testEll1Mat=0.5*(testEll1Mat+testEll1Mat.');
-% %             testEll2Mat=diag([25;(1:(nDim-1)).']);
-% %             testEll2Mat=testOrth100Mat*testEll2Mat*testOrth100Mat.';
-% %             testEll2Mat=0.5*(testEll2Mat+testEll2Mat.');
-% %             testEll2CenterVec=testOrth100Mat*[9;zeros(nDim-1,1)];            
-% %             testEllipsoid1=Ellipsoid(testEll1Mat);
-% %             testEllipsoid2=Ellipsoid(testEll2CenterVec,testEll2Mat);
-% %             testRes=distanceNew(testEllipsoid1,testEllipsoid2);
-% %             mlunit.assert_equals(1,abs(testRes-3)<ABS_TOL);
-% %             %
-% %             % Test#5. Two Undounded ellipsoids. 3D case.   
-% %             testEllipsoid1 = Ellipsoid([Inf,9,25].');
-% %             testEllipsoid2 = Ellipsoid([0,10,0].',[Inf, 25,16].');
-% %             testRes=distanceNew(testEllipsoid1,testEllipsoid2);
-% %             mlunit.assert_equals(1, (abs(testRes-2)<ABS_TOL));
-% %             %         
-% %           end
+          end
+          %
+          %   
+          %%%%%%%%%%%%%%%
+         function self = testDistance(self)
+            import elltool.core.Ellipsoid;
+            %
+            load(strcat(self.testDataRootDir,filesep,'testNewEll.mat'),...
+                 'testEll2x2Mat','testEll2x3Mat','testEll10x2Mat',...
+                 'testEll10x3Mat','testEll10x20Mat',...
+                  'testEll10x50Mat','testEll10x100Mat');
+            load(strcat(self.testDataRootDir,filesep,'testEllEllRMat.mat'),...
+                 'testOrth50Mat','testOrth100Mat','testOrth3Mat','testOrth2Mat');
+            %
+            CHECK_TOL=1e-9;
+            % Test#1. Two ellipsoids. 2D case.
+            testEllipsoid1 = Ellipsoid([25,0;0,9]);
+            testEllipsoid2 = Ellipsoid([10;0],[4,0;0,9]);
+            testRes=distanceNew(testEllipsoid1,testEllipsoid2);
+            mlunit.assert_equals(1, (abs(testRes-3)<CHECK_TOL));
+            % Test#2. Two ellipsoids. 3D case.   
+            testEllipsoid1 = Ellipsoid([0,-15,0].',[25,0,0;0,100,0;0,0,9]);
+            testEllipsoid2 = Ellipsoid([0,7,0].',[9,0,0;0,25,0;0,0,100]);
+            testRes=distanceNew(testEllipsoid1,testEllipsoid2);
+            mlunit.assert_equals(1, (abs(testRes-7)<CHECK_TOL));
+            % Test#3. Case of ellipses with intersection
+            testEllipsoid1 = Ellipsoid([1 2 3].',[1,2,5;2,5,3;5,3,100]);
+            testEllipsoid2 = Ellipsoid([1,2,3.2].',[1,2,7;2,10,5;7,5,100]);
+            testRes=distanceNew(testEllipsoid1,testEllipsoid2);
+            mlunit.assert_equals(1, (abs(testRes)<CHECK_TOL));
+            %
+            % Test#4. distance between two ellipsoids of high dimensions and random
+            %matrices
+            nDim=100;
+            testEll1Mat=diag(1:2:2*nDim);
+            testEll1Mat=testOrth100Mat*testEll1Mat*testOrth100Mat.';
+            testEll1Mat=0.5*(testEll1Mat+testEll1Mat.');
+            testEll2Mat=diag([25;(1:(nDim-1)).']);
+            testEll2Mat=testOrth100Mat*testEll2Mat*testOrth100Mat.';
+            testEll2Mat=0.5*(testEll2Mat+testEll2Mat.');
+            testEll2CenterVec=testOrth100Mat*[9;zeros(nDim-1,1)];            
+            testEllipsoid1=Ellipsoid(testEll1Mat);
+            testEllipsoid2=Ellipsoid(testEll2CenterVec,testEll2Mat);
+            testRes=distanceNew(testEllipsoid1,testEllipsoid2);
+            mlunit.assert_equals(1,abs(testRes-3)<CHECK_TOL);
+            %
+            % Test#5. 3D. Nondeg-deg dist.   
+            testEllipsoid1 = Ellipsoid([1,1,1].');
+            testEllipsoid2 = Ellipsoid([0,10,0].',[0,4,1].');
+            testRes=distanceNew(testEllipsoid1,testEllipsoid2);
+            mlunit.assert_equals(1, (abs(testRes-7)<CHECK_TOL));
+            % Test#6. 3D. Nondeg-deg dist.    
+            testEllipsoid1 = Ellipsoid([1,1,1].');
+            testEllipsoid2 = Ellipsoid([0,10,0].',[0,0,1].');
+            testRes=distanceNew(testEllipsoid1,testEllipsoid2);
+            mlunit.assert_equals(1, (abs(testRes-9)<CHECK_TOL));
+          end
       end
 end
 
