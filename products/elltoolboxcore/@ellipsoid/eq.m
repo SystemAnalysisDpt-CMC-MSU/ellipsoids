@@ -1,4 +1,4 @@
-function [isEqual, reportStr] = eq(ellFirstArr, ellSecArr)
+function [isEqualArr, reportStr] = eq(ellFirstArr, ellSecArr)
 
 import modgen.common.throwerror;
 import modgen.struct.structcomparevec;
@@ -13,11 +13,13 @@ checkgen(ellSecArr,@(x)isa(x,'ellipsoid'));
 nFirstElems = kDim * lDim;
 [mDim, nDim] = size(ellSecArr);
 nSecElems = mDim * nDim;
+
+firstSizeVec = [kDim, lDim];
+secSizeVec = [mDim, nDim];
 relTol = ellFirstArr(1, 1).relTol;
 if (nFirstElems > 1) & (nSecElems > 1)
-    leftSizeVec = size(ellFirstArr);
-    rightSizeVec = size(ellSecArr);
-    if ~isequal(leftSizeVec, rightSizeVec)
+ 
+    if ~isequal(firstSizeVec, secSizeVec)
         throwerror...
         ('wrongSizes', '==: sizes of ellipsoidal arrays do not... match.');
     end;
@@ -25,28 +27,28 @@ if (nFirstElems > 1) & (nSecElems > 1)
         x.center'),ellFirstArr(:, :));
     SEll2Array=arrayfun(@(x)struct('Q',gras.la.sqrtm(x.shape),'q',...
         x.center'),ellSecArr(:, :));
-    [isEqual,reportStr]=modgen.struct.structcomparevec(SEll1Array,...
+    [isEqualArr,reportStr]=modgen.struct.structcomparevec(SEll1Array,...
         SEll2Array,relTol);
-    isEqual = reshape(isEqual, leftSizeVec);
+    isEqualArr = reshape(isEqualArr, firstSizeVec);
 elseif (nFirstElems > 1)
 
     SScalar = arrayfun(@(x)struct('Q',gras.la.sqrtm(x.shape),'q',...
         x.center'), ellSecArr);   
     SEll1Array=arrayfun(@(x)struct('Q',gras.la.sqrtm(x.shape),'q',...
         x.center'),ellFirstArr(:, :));
-    SEll2Array=repmat(SScalar, size(ellFirstArr));
-    [isEqual,reportStr]=modgen.struct.structcomparevec(SEll1Array,...
+    SEll2Array=repmat(SScalar, firstSizeVec);
+    [isEqualArr,reportStr]=modgen.struct.structcomparevec(SEll1Array,...
         SEll2Array,relTol);
     
-    isEqual = reshape(isEqual, size(ellFirstArr));
+    isEqualArr = reshape(isEqualArr, firstSizeVec);
 else
     SScalar = arrayfun(@(x)struct('Q',gras.la.sqrtm(x.shape),'q',...
         x.center'), ellFirstArr);   
-    SEll1Array=repmat(SScalar, size(ellSecArr));
+    SEll1Array=repmat(SScalar, secSizeVec);
     SEll2Array=arrayfun(@(x)struct('Q',gras.la.sqrtm(x.shape),'q',...
         x.center'),ellSecArr(:, :));
-    [isEqual,reportStr]=modgen.struct.structcomparevec(SEll1Array,...
+    [isEqualArr,reportStr]=modgen.struct.structcomparevec(SEll1Array,...
         SEll2Array,relTol);
-    isEqual = reshape(isEqual, size(ellSecArr));
+    isEqualArr = reshape(isEqualArr, secSizeVec);
 end
 
