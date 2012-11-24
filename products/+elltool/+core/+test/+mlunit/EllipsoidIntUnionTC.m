@@ -26,6 +26,31 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
         end;
         
         
+        function self = sensitivityTest(self)
+            EPS = 1e-5;
+            
+            load(strcat(self.testDataRootDir, strcat(filesep,...
+                'testEllunionEa_inp.mat')), 'testEllCenterVec', ...
+                'testEllMat', 'testEllCenter2Vec', 'testEll2Mat');
+            testEllVec(2) = ellipsoid;
+            testEllVec(1) = ellipsoid(testEllCenterVec, testEllMat);
+            testEllVec(2) = ellipsoid(testEllCenter2Vec, testEll2Mat);
+            resEllVec = ellunion_ea(testEllVec);
+            
+            testEllCenterVec = testEllCenterVec + EPS;
+            testEllMat = testEllMat + EPS;
+            testEllCenter2Vec = testEllCenter2Vec + EPS;
+            testEll2Mat = testEll2Mat + EPS;
+            
+            testEllVec(1) = ellipsoid(testEllCenterVec, testEllMat);
+            testEllVec(2) = ellipsoid(testEllCenter2Vec, testEll2Mat);
+            
+            resSensEllVec = ellunion_ea(testEllVec);
+            
+            [isEqual, reportStr] = eq(resEllVec, resSensEllVec);
+            mlunit.assert_equals(true, isEqual, reportStr);
+        end
+        
         function self = testContains(self)
             testEll1Vec = ellipsoid(eye(3));
             testEll2Vec = ellipsoid([10, 0, 5]',...
