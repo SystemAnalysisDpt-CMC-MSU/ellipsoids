@@ -27,7 +27,9 @@ if (nFirstElems > 1) & (nSecElems > 1)
         x.center'),ellSecArr(:, :));
     [isEqual,reportStr]=modgen.struct.structcomparevec(SEll1Array,...
         SEll2Array,relTol);
+    isEqual = reshape(isEqual, leftSizeVec);
 elseif (nFirstElems > 1)
+
     SScalar = arrayfun(@(x)struct('Q',gras.la.sqrtm(x.shape),'q',...
         x.center'), ellSecArr);   
     SEll1Array=arrayfun(@(x)struct('Q',gras.la.sqrtm(x.shape),'q',...
@@ -35,6 +37,8 @@ elseif (nFirstElems > 1)
     SEll2Array=repmat(SScalar, size(ellFirstArr));
     [isEqual,reportStr]=modgen.struct.structcomparevec(SEll1Array,...
         SEll2Array,relTol);
+    
+    isEqual = reshape(isEqual, size(ellFirstArr));
 else
     SScalar = arrayfun(@(x)struct('Q',gras.la.sqrtm(x.shape),'q',...
         x.center'), ellFirstArr);   
@@ -43,5 +47,6 @@ else
         x.center'),ellSecArr(:, :));
     [isEqual,reportStr]=modgen.struct.structcomparevec(SEll1Array,...
         SEll2Array,relTol);
+    isEqual = reshape(isEqual, size(ellSecArr));
 end
 

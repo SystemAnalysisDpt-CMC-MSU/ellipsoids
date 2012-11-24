@@ -104,6 +104,23 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             test1Mat = 100*eye(2);
             test2Mat = 100*eye(2) - 0.99*MAX_TOL;
             mlunit.assert_equals(1, eq(ellipsoid(test1Mat), ellipsoid(test2Mat)));
+            
+            testEll = ellipsoid(eye(2));
+            testEll2 = ellipsoid([1e-3, 0].', eye(2));
+            mDim = 10;
+            nDim = 15;
+            testEllArr = repmat(testEll, mDim, nDim);
+            isEqualArr = true(mDim, nDim);
+            isnEqualArr = ~isEqualArr;
+            mlunit.assert_equals(isEqualArr, testEll.eq(testEllArr));
+            mlunit.assert_equals(isEqualArr, testEllArr.eq(testEll));
+            mlunit.assert_equals(isnEqualArr, testEll2.eq(testEllArr));
+            mlunit.assert_equals(isnEqualArr, testEllArr.eq(testEll2));
+            
+            testEll2Arr = repmat(testEll2, mDim, nDim);
+            mlunit.assert_equals(isEqualArr, testEllArr.eq(testEllArr));
+            mlunit.assert_equals(isnEqualArr, testEll2Arr.eq(testEllArr));
+            
         end
         
         function self = testIsInternal(self)
