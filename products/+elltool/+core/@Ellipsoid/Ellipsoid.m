@@ -157,7 +157,7 @@ classdef Ellipsoid < handle
             end
         end
         ellObj = inv (ellObj)
-        ellObjVec = minksumNew_ea(ellObjVec, dirMat)
+        ellObjVec = minksumEa(ellObjVec, dirMat)
         ellObjVec = minksumIa(ellObjVec, dirMat)
         ellObjVec = minkdiffIa(ellObj1, ellObj2, dirMat)
         ellObjVec = minkdiffEa(ellObj1, ellObj2, dirMat)
