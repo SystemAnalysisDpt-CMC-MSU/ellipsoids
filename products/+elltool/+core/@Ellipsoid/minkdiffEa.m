@@ -36,7 +36,7 @@ function [ resEllVec ] = minkdiffEa( ellObj1, ellObj2, dirMat)
     for iDir=1:nDirs
          curDirVec=dirMat(:,iDir);
          isInf1Vec=ell1DiagVec==Inf;
-         if ~all(isInf1Vec)
+         if ~all(~isInf1Vec)
              %Infinite case
              eigv1Mat=ellObj1.eigvMat;
              eigv2Mat=ellObj2.eigvMat;   
@@ -52,8 +52,10 @@ function [ resEllVec ] = minkdiffEa( ellObj1, ellObj2, dirMat)
              ell2DiagVec(isInf2Vec)=0;
              curEllMat=eigv1Mat*diag(ell1DiagVec)*eigv1Mat.';
              resProjQ1Mat=finBasMat.'*curEllMat*finBasMat;
+             resProjQ1Mat=0.5*(resProjQ1Mat+resProjQ1Mat.');
              curEllMat=eigv2Mat*diag(ell2DiagVec)*eigv2Mat.';
              resProjQ2Mat=finBasMat.'*curEllMat*finBasMat;
+             resProjQ2Mat=0.5*(resProjQ2Mat+resProjQ2Mat.');
              curProjDirVec=finBasMat.'*curDirVec;
              if all(abs(curProjDirVec)<CHECK_TOL)
                  resQMat=orthBasMat;
@@ -62,7 +64,7 @@ function [ resEllVec ] = minkdiffEa( ellObj1, ellObj2, dirMat)
              else
                  %Find result in finite projection
                  finEllMat=findDiffEaFC(resProjQ1Mat,resProjQ2Mat,...
-                     curProjDirVec,nDimSpace);
+                     curProjDirVec,nDimSpace-rangInf);
                  %Construct result
                  [eigPMat diaPMat]=eig(finEllMat);
                  resQMat=zeros(nDimSpace);
@@ -97,7 +99,9 @@ function [ resEllVec ] = minkdiffEa( ellObj1, ellObj2, dirMat)
                 nonZeroBasMat = orthBasMat(:,nonZeroIndVec);
                 projCurDirVec=nonZeroBasMat.'*curDirVec;
                 projQ1Mat=nonZeroBasMat.'*ellQ1Mat*nonZeroBasMat;
+                projQ1Mat=0.5*(projQ1Mat+projQ1Mat.');
                 projQ2Mat=nonZeroBasMat.'*ellQ2Mat*nonZeroBasMat;
+                projQ2Mat=0.5*(projQ2Mat+projQ2Mat.');
                 resProjQMat=findDiffEaND(projQ1Mat,projQ2Mat,projCurDirVec);
                 %Construct the result
                 [eigPMat diaPMat]=eig(resProjQMat);
@@ -137,6 +141,8 @@ function resEllMat=findDiffEaFC(ellQ1Mat, ellQ2Mat,curDirVec,nDimSpace)
         projCurDirVec=nonZeroBasMat.'*curDirVec;
         projQ1Mat=nonZeroBasMat.'*ellQ1Mat*nonZeroBasMat;
         projQ2Mat=nonZeroBasMat.'*ellQ2Mat*nonZeroBasMat;
+        projQ1Mat=0.5*(projQ1Mat+projQ1Mat.');
+        projQ2Mat=0.5*(projQ2Mat+projQ2Mat.');
         resProjQMat=findDiffEaND(projQ1Mat,projQ2Mat,projCurDirVec);
         [eigPMat diaPMat]=eig(resProjQMat);
         resQMat=zeros(nDimSpace);
@@ -238,10 +244,12 @@ function isBigger=checkBigger(ellObj1,ellObj2,nDimSpace)
                     diag1Mat(isInf1DirVec,isInf1DirVec)=0;
                     curEllMat=eigv1Mat*diag1Mat*eigv1Mat.';
                     resProjQ1Mat=allNINZ1Mat.'*curEllMat*allNINZ1Mat;
+                    resProjQ1Mat=0.5*(resProjQ1Mat+resProjQ1Mat.');
                     %
                     diag2Mat(isInf2DirVec,isInf2DirVec)=0;
                     curEllMat=eigv2Mat*diag2Mat*eigv2Mat.';
                     resProjQ2Mat=allNINZ1Mat.'*curEllMat*allNINZ1Mat;
+                    resProjQ2Mat=0.5*(resProjQ2Mat+resProjQ2Mat.');
                     isBigger=contains(resProjQ1Mat,resProjQ2Mat);
                 end
             end
@@ -254,13 +262,23 @@ end
 function resQMat=findDiffEaND(ellQ1Mat, ellQ2Mat,curDirVec)
     %Find matrix of ellipsoids that is the result of
     %external approximation of difference in direction curDirVec   
-    ellSQR1Mat=sqrtm(ellQ1Mat);
-    ellSQR2Mat=sqrtm(ellQ2Mat);
-    %
-    sOrthMat=ell_valign(ellSQR1Mat*curDirVec,ellSQR2Mat*curDirVec);
-    auxMat=ellSQR1Mat-sOrthMat*ellSQR2Mat;
-    resQMat=auxMat.'*auxMat;
-    resQMat=0.5*(resQMat+resQMat.');
+    ellSQR1Mat=findSqrtOfMatrix(ellQ1Mat);
+    ellSQR2Mat=findSqrtOfMatrix(ellQ2Mat);
+    %Checking "goodness" of direction
+    ellInvQ1Mat=ellQ1Mat\eye(size(ellQ1Mat));
+    [~,diagMat]=eig(ellQ2Mat*ellInvQ1Mat);
+    lamMin=min(diag(diagMat));
+    p1Par=sqrt(curDirVec.'*ellQ1Mat*curDirVec);
+    p2Par=sqrt(curDirVec.'*ellQ2Mat*curDirVec);
+    pPar=p2Par/p1Par;
+  %  if (pPar<lamMin && pPar>1)   
+        sOrthMat=  ell_valign(ellSQR1Mat*curDirVec,ellSQR2Mat*curDirVec);
+        auxMat=ellSQR1Mat-sOrthMat*ellSQR2Mat;
+        resQMat=auxMat.'*auxMat;
+        resQMat=0.5*(resQMat+resQMat.');
+   % else
+   %     resQMat=zeros(size(ellQ1Mat));
+   % end
 end
 function isContain=contains(ellQ1Mat,ellQ2Mat)
     CHECK_TOL=1e-9;
@@ -272,4 +290,11 @@ function isContain=contains(ellQ1Mat,ellQ2Mat)
     else
         isContain = 0;
     end
+end
+function sqMat=findSqrtOfMatrix(qMat)
+    CHECK_TOL=1e-9;
+    [eigvMat diagMat]=eig(qMat);
+    isZeroVec=diag(abs(diagMat)<CHECK_TOL);
+    diagMat(isZeroVec,isZeroVec)=0;
+    sqMat=eigvMat*diagMat.^(1/2)*eigvMat.';
 end

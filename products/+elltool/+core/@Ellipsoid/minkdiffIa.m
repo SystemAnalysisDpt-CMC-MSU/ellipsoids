@@ -51,8 +51,10 @@ function [ resEllVec ] = minkdiffIa( ellObj1, ellObj2, dirMat)
              ell2DiagVec(isInf2Vec)=0;
              curEllMat=eigv1Mat*diag(ell1DiagVec)*eigv1Mat.';
              resProjQ1Mat=finBasMat.'*curEllMat*finBasMat;
+             resProjQ1Mat=0.5*(resProjQ1Mat+resProjQ1Mat.');
              curEllMat=eigv2Mat*diag(ell2DiagVec)*eigv2Mat.';
              resProjQ2Mat=finBasMat.'*curEllMat*finBasMat;
+             resProjQ2Mat=0.5*(resProjQ2Mat+resProjQ2Mat.');
              curProjDirVec=finBasMat.'*curDirVec;
              if all(abs(curProjDirVec)<CHECK_TOL)
                  resQMat=orthBasMat;
@@ -61,7 +63,7 @@ function [ resEllVec ] = minkdiffIa( ellObj1, ellObj2, dirMat)
              else
                  %Find result in finite projection
                  finEllMat=findDiffIaFC(resProjQ1Mat,resProjQ2Mat,...
-                     curProjDirVec,nDimSpace);
+                     curProjDirVec,nDimSpace-rangInf);
                  %Construct result
                  [eigPMat diaPMat]=eig(finEllMat);
                  resQMat=zeros(nDimSpace);
@@ -97,6 +99,8 @@ function [ resEllVec ] = minkdiffIa( ellObj1, ellObj2, dirMat)
                 projCurDirVec=nonZeroBasMat.'*curDirVec;
                 projQ1Mat=nonZeroBasMat.'*ellQ1Mat*nonZeroBasMat;
                 projQ2Mat=nonZeroBasMat.'*ellQ2Mat*nonZeroBasMat;
+                projQ1Mat=0.5*(projQ1Mat+projQ1Mat.');
+                projQ2Mat=0.5*(projQ2Mat+projQ2Mat.');
                 resProjQMat=findDiffIaND(projQ1Mat,projQ2Mat,projCurDirVec);
                 %Construct the result
                 [eigPMat diaPMat]=eig(resProjQMat);
@@ -136,6 +140,8 @@ function resEllMat=findDiffIaFC(ellQ1Mat, ellQ2Mat,curDirVec,nDimSpace)
         projCurDirVec=nonZeroBasMat.'*curDirVec;
         projQ1Mat=nonZeroBasMat.'*ellQ1Mat*nonZeroBasMat;
         projQ2Mat=nonZeroBasMat.'*ellQ2Mat*nonZeroBasMat;
+        projQ1Mat=0.5*(projQ1Mat+projQ1Mat.');
+        projQ2Mat=0.5*(projQ2Mat+projQ2Mat.');
         resProjQMat=findDiffIaND(projQ1Mat,projQ2Mat,projCurDirVec);
         [eigPMat diaPMat]=eig(resProjQMat);
         resQMat=zeros(nDimSpace);

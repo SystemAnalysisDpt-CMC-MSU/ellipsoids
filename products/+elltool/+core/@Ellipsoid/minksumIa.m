@@ -79,10 +79,13 @@ function [ ellResVec ] = minksumIa(ellObjVec, dirMat )
                         diagMat(isInfHereVec,isInfHereVec)=0;
                         curEllMat=eigvMat*diagMat*eigvMat.';
                         projQMat=nonInfBasMat.'*curEllMat*nonInfBasMat;
+                        projQMat=0.5*(projQMat+projQMat.');
+                        %res=det(projQMat)
+                        %res1=det(projQMat(1:2,1:2))
                         projCenVec=nonInfBasMat.'*ellObjVec(iEll).centerVec;
                         %add to the total sum of projection, finding a proper
                         %approximation
-                        projQMat=sqrtm(projQMat);
+                        projQMat=findSqrtOfMatrix(projQMat);
                         if (iEll==1)
                             qNICenVec=projCenVec;
                             firstVec=projQMat*projCurDirVec;
@@ -113,6 +116,7 @@ function [ ellResVec ] = minksumIa(ellObjVec, dirMat )
                     sumNIMat=sumNIMat.'*sumNIMat;
                     sumNIMat=0.5*(sumNIMat+sumNIMat);     
                     [eigvProjMat, notInfDiagMat]=eig(sumNIMat);
+                    notInfDiagMat=abs(notInfDiagMat);
                     %find eigenvector whose projections are eigvProjMat
                     notInfEigvMat=nonInfBasMat*eigvProjMat;
                     resEllMat=zeros(dimSpace);
@@ -178,3 +182,11 @@ function [isInfVec infDirEigMat] = findAllInfDir(ellObj)
     eigvMat=ellObj.eigvMat;
     infDirEigMat=eigvMat(:,isInfVec);
 end
+function sqMat=findSqrtOfMatrix(qMat)
+    CHECK_TOL=1e-9;
+    [eigvMat diagMat]=eig(qMat);
+    isZeroVec=diag(abs(diagMat)<CHECK_TOL);
+    diagMat(isZeroVec,isZeroVec)=0;
+    sqMat=eigvMat*diagMat.^(1/2)*eigvMat.';
+end
+                        
