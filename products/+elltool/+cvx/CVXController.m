@@ -56,5 +56,14 @@ classdef CVXController
                     'won''t be available\n',horLineStr]));
             end
         end
+        function solverStr = getSolver()
+            solverStr = cvx_solver();
+        end
+        function precisionVec = getPrecision()
+            precisionVec = cvx_precision();
+        end
+        function isVerb = getIsVerbosityEnabled()
+            isVerb = cvx_quiet();
+        end
     end
 end

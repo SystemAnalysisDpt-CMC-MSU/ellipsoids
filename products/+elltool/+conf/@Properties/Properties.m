@@ -7,6 +7,11 @@ classdef Properties<modgen.common.obj.StaticPropStorage
     %            Faculty of Computational Mathematics and Computer Science,
     %            System Analysis Department 2012 $
     %
+    
+    properties (GetAccess=private,Constant)
+        SEDUMI_SOLVER = 'sedumi';
+    end
+
     methods(Static)
         function init()
             import elltool.cvx.CVXController;            
@@ -18,7 +23,7 @@ classdef Properties<modgen.common.obj.StaticPropStorage
             % CVX settings.
             elltool.cvx.CVXController.setUpIfNot();
             if CVXController.isSetUp()
-                CVXController.setSolver('sedumi');
+                CVXController.setSolver(Properties.SEDUMI_SOLVER);
                 CVXController.setPrecision(Properties.getRelTol());
                 CVXController.setIsVerbosityEnabled(false);
             else
@@ -27,7 +32,15 @@ classdef Properties<modgen.common.obj.StaticPropStorage
             end
         end
         function checkSettings()
-            
+            import modgen.common.throwerror;
+            import elltool.cvx.CVXController;
+            precisionVec = CVXController.getPrecision();
+            solverStr = CVXController.getSolver();
+            isVerbosity = CVXController.getIsVerbosityEnabled();
+            if (~eq(precisionVec, [0, 0, 2*1e-5])) | (~(strcmp(solverStr, ...
+                    'SeDuMi'))) | (~isVerbosity)
+                 throwerror('cvxError', 'wrong cvx properties');
+            end
         end
         
         function ConfRepoMgr=getConfRepoMgr()

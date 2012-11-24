@@ -26,10 +26,11 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
         end;
         
         
-        function self = testEllunionEaSensitivity(self)
+        function self = testEllUnionEaSensitivity(self)
             import elltool.conf.Properties;
+            Properties.checkSettings();
             relTol = Properties.getRelTol();
-            EPS = relTol;
+            sensEPS = relTol;
             
             load(strcat(self.testDataRootDir, strcat(filesep,...
                 'testEllunionEa_inp.mat')), 'testEllCenterVec', ...
@@ -39,10 +40,10 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             testEllVec(2) = ellipsoid(testEllCenter2Vec, testEll2Mat);
             resEllVec = ellunion_ea(testEllVec);
             
-            testEllCenterVec = testEllCenterVec + EPS;
-            testEllMat = testEllMat + EPS;
-            testEllCenter2Vec = testEllCenter2Vec + EPS;
-            testEll2Mat = testEll2Mat + EPS;
+            testEllCenterVec = testEllCenterVec + sensEPS;
+            testEllMat = testEllMat + sensEPS;
+            testEllCenter2Vec = testEllCenter2Vec + sensEPS;
+            testEll2Mat = testEll2Mat + sensEPS;
             
             testEllVec(1) = ellipsoid(testEllCenterVec, testEllMat);
             testEllVec(2) = ellipsoid(testEllCenter2Vec, testEll2Mat);
@@ -53,10 +54,11 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             mlunit.assert_equals(true, isEqual, reportStr);
         end
         
-        function self = testEllintersectionIaSensitivity(self)
+        function self = testEllIntersectionIaSensitivity(self)
             import elltool.conf.Properties;
+            Properties.checkSettings();
             relTol = Properties.getRelTol();
-            EPS = relTol;
+            sensEPS = relTol;
             
             load(strcat(self.testDataRootDir, strcat(filesep,...
                 'testEllintersectionIa_inp.mat')), 'testEllCenterVec', ...
@@ -66,10 +68,10 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             testEllVec(2) = ellipsoid(testEllCenter2Vec, testEll2Mat);
             resEllVec = ellintersection_ia(testEllVec);
             
-            testEllCenterVec = testEllCenterVec + EPS;
-            testEllMat = testEllMat + EPS;
-            testEllCenter2Vec = testEllCenter2Vec + EPS;
-            testEll2Mat = testEll2Mat + EPS;
+            testEllCenterVec = testEllCenterVec + sensEPS;
+            testEllMat = testEllMat + sensEPS;
+            testEllCenter2Vec = testEllCenter2Vec + sensEPS;
+            testEll2Mat = testEll2Mat + sensEPS;
             
             testEllVec(1) = ellipsoid(testEllCenterVec, testEllMat);
             testEllVec(2) = ellipsoid(testEllCenter2Vec, testEll2Mat);
@@ -82,7 +84,9 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
 
         
         
-        function self = testContains(self)
+        function self = testContains(self)            
+            import elltool.conf.Properties;
+            Properties.checkSettings();
             testEll1Vec = ellipsoid(eye(3));
             testEll2Vec = ellipsoid([10, 0, 5]',...
                 [1, 0, 0; 0, 0, 0; 0, 0, 1]);
@@ -354,6 +358,8 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
         end
 
         function self = testEllintersectionIa(self)
+            import elltool.conf.Properties;
+            Properties.checkSettings();
             nDim = 10;
             nArr = 15;
             eyeEllipsoid = ellipsoid(eye(nDim));
@@ -459,6 +465,8 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             
         end
         function self = testEllunionEa(self)
+            import elltool.conf.Properties;
+            Properties.checkSettings();
             nDim = 10;
 
             nArr = 15;
@@ -699,6 +707,8 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
         end
         
         function self = testEllEnclose(self)
+            import elltool.conf.Properties;
+            Properties.checkSettings();
             pointsVec = [1, 0, -1, 0; 0, 1, 0, -1];
             resEllVec = ell_enclose(pointsVec);
             ansEllVec = ellipsoid([0, 0].', eye(2));
