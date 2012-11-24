@@ -3,20 +3,20 @@ function [isEqualVec,reportStr]= structcomparevec(SX,SY,tol)
 %
 % Input:
 %   regular:
-%       S1: struct[] - first input structure
-%       S2: struct[] - second input structure
+%       SLeft: struct[] - first input structure array
+%       SRight: struct[] - second input structure array
 %   optional:
-%       tol: double[1,] - maximum allowed tolerance, default value is 0
+%       tol: double[1,1] - maximum allowed tolerance, default value is 0
 %
 % Output:
-%   isEqual: logical[1,1] - true if the structures are found equal
-%   reportStr: char[1,1] report about the found differences
+%   isEqualVec: logical[1,] - true if the structures are found equal
+%   reportStr: char[1,] report about the found differences
 %
 %
-% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-06-05 $ 
+% $Author: Vadim Kaushanskiy  <vkaushanskiy@gmail.com> $	$Date: 2012-23-11 $ 
 % $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Computer Science,
-%            System Analysis Department 2011 $
+%            Faculty of Computational Mathematics and Cybernetics,
+%            System Analysis Department 2012 $
 %
 %
 

@@ -81,7 +81,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             test1Mat = eye(2);
             test2SqrtMat = eye(2) + 1.01*MAX_TOL; 
             test2Mat = test2SqrtMat*test2SqrtMat.';
-            mlunit.assert_equals(1, eq(ellipsoid(test1Mat), ellipsoid(test2Mat)));
+            mlunit.assert_equals(0, eq(ellipsoid(test1Mat), ellipsoid(test2Mat)));
             
             test1Mat = eye(2);
             test2SqrtMat = eye(2) + 0.5*MAX_TOL; 
@@ -91,7 +91,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             test1Mat = eye(2);
             test2SqrtMat = eye(2) + MAX_TOL; 
             test2Mat = test2SqrtMat*test2SqrtMat.';
-            mlunit.assert_equals(1, eq(ellipsoid(test1Mat), ellipsoid(test2Mat)));
+            mlunit.assert_equals(0, eq(ellipsoid(test1Mat), ellipsoid(test2Mat)));
             
             test1Mat = eye(2);
             test2Mat = eye(2) + MAX_TOL;
