@@ -9,7 +9,8 @@ classdef CVXController
         end
         function setPrecision(relTol)
             import elltool.cvx.CVXController;
-            cvx_precision([0, 2*relTol]);
+            TOL_FACTOR = 2;
+            cvx_precision([0, TOL_FACTOR*relTol]);
          
         end
         function setIsVerbosityEnabled(isQuiet)

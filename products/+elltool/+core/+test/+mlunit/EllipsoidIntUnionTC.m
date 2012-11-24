@@ -2,7 +2,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
 
 % $Author: Vadim Kaushanskiy, Moscow State University by M.V. Lomonosov,
 % Faculty of Computational Mathematics and Cybernetics, System Analysis
-% Department, 28-October-2012, <vkaushanskiy@gmail.com>$
+% Department, 24-December-2012, <vkaushanskiy@gmail.com>$
     properties (Access=private)
         testDataRootDir
     end

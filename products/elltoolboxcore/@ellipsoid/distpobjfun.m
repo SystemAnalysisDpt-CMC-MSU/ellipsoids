@@ -1,13 +1,24 @@
-function [d, g] = distpobjfun(x, E, y, varargin)
+function [resD, resGVec] = distpobjfun(xVec, myEll, yVec, varargin)
 %
 % DISTPOBJFUN - objective function for calculation of distance between
 %               an ellipsoid and a point.
 %
+% Input:
+%   regular:
+%       myEll: E1ellipsoid [1, 1] - single ellipsoid of dimention nDims.
+%       yVec: double[nDims, 1] - single point.
+%       xVec: double[nDims, 1] - Direction vector.
+%
+% Output:
+%   resD: double[1, 1] -
+%   resGVec: double[nDims, 1] -
+%
+% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+% $Copyright:  The Regents of the University of California 2004-2008 $
 
-  q = E.center;
-  Q = E.shape;
+myEllCentVec = myEll.center;
+myEllShMat = myEll.shape;
 
-  d = x'*q + sqrt(x'*Q*x) - x'*y;
-  g = q - y + ((Q*x)/sqrt(x'*Q*x));
-
-  return;
+resD = xVec'*myEllCentVec + sqrt(xVec'*myEllShMat*xVec) - xVec'*yVec;
+resGVec = myEllCentVec - yVec + ...
+    ((myEllShMat*xVec)/sqrt(xVec'*myEllShMat*xVec));

@@ -26,16 +26,22 @@ function T = trace(E)
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
-
+  import modgen.common.throwerror;
+  
+  if ~(isa(E, 'ellipsoid'))
+    error('TRACE: input argument must be ellipsoid.')
+  end
+  
   [m, n] = size(E);
-  T      = [];
+  T      = zeros(m, n);
 
   for i = 1:m
-    t = [];
     for j = 1:n
-      t = [t trace(double(E(i, j)))];
+      if isempty(E(i,j))
+          throwerror('wrongInput:emptyEllipsoid','TRACE: input argument is empty.');
+      end
+      T(i, j) = trace(double(E(i, j)));
     end
-    T = [T; t];
   end
 
-  return;
+end

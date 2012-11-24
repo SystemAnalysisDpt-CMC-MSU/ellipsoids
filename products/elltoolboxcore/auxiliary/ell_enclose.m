@@ -69,3 +69,5 @@ ellMat  = 0.5 * (ellMat' + ellMat);
 ellCenterVec  = -inv(sqrtEllMat) * ellCenterVec;
 
 E  = ellipsoid(ellCenterVec, ellMat);
+
+end

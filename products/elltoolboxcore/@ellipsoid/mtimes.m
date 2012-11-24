@@ -30,7 +30,7 @@ function res = mtimes(A, E)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
   import modgen.common.throwerror;
-  if ~(isa(A, 'double')) | ~(isa(E, 'ellipsoid'))
+  if ~(isa(A, 'double')) || ~(isa(E, 'ellipsoid'))
     throwerror('wrongInput', 'MTIMES: first multiplier is expected to be a matrix or a scalar,\n        and second multiplier - an ellipsoid.');
   end
 
@@ -38,7 +38,7 @@ function res = mtimes(A, E)
   d      = dimension(E);
   k      = max(d);
   l      = min(d);
-  if ((k ~= l) & (n ~= 1) & (m ~= 1)) | ((k ~= n) & (n ~= 1) & (m ~= 1))
+  if ((k ~= l) && (n ~= 1) && (m ~= 1)) || ((k ~= n) && (n ~= 1) && (m ~= 1))
     throwerror('wrongSizes', 'MTIMES: dimensions do not match.');
   end
 
@@ -57,4 +57,4 @@ function res = mtimes(A, E)
     clear r;
   end
 
-  return;
+end

@@ -1,127 +1,137 @@
-function res = contains(E1, E2)
-%
+function resMat = contains(firstEllMat, secondEllMat)
 % CONTAINS - checks if one ellipsoid contains the other.
+%            The condition for E1 to contain E2 is 
+%            min(rho(l | E1) - rho(l | E2)) > 0,
+%            subject to <l, l> = 1.
 %
-%
-% Description:
-% ------------
-%
-%    RES = CONTAINS(E1, E2)  Checks if ellipsoid E1 contains ellipsoid E2.
-%                            E1 and E2 must be ellipsoidal arrays of the same
-%                            size, or, alternatively, E1 or E2 should be a single
-%                            ellipsoid.
-%
-%    The condition for E1 to contain E2 is 
-%                min(rho(l | E1) - rho(l | E2)) > 0,
-%    subject to
-%                <l, l> = 1.
-%
+% Input:
+%   regular:
+%       firstEllMat: ellipsoid [mRows, nCols] - first matrix of ellipsoids.
+%       secondEllMat: ellipsoid [mRows, nCols] - second matrix
+%           of ellipsoids.
 %
 % Output:
-% -------
+%   resMat: double[mRows, nCols],
+%       resMat(iRows, jCols) = 1 - firstEllMat(iRows, jCols)
+%       contains secondEllMat(iRows, jCols), 0 - otherwise.
 %
-%    1 - E1 contains E2, 0 - otherwise.
 %
-%
-% See also:
-% ---------
-%
-%    ELLIPSOID/ELLIPSOID, ISINSIDE, ISINTERNAL, ISBIGGER, RHO.
-%
-
-%
-% Author:
-% -------
-%
-%    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-%    Vadim Kaushanskiy <vkaushanskiy@gmail.com>
+% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+% $Copyright:  The Regents of the University of California 2004-2008 $
 
   import elltool.conf.Properties;
+  import modgen.common.throwerror;
   
-  if ~(isa(E1, 'ellipsoid')) | ~(isa(E2, 'ellipsoid'))
-    error('CONTAINS: input arguments must be ellipsoids.');
+  if ~(isa(firstEllMat, 'ellipsoid')) || ~(isa(secondEllMat, 'ellipsoid'))
+    throwerror('wrongInput', ...
+        'CONTAINS: input arguments must be ellipsoids.');
   end
 
-  [m, n] = size(E1);
-  [k, l] = size(E2);
-  t1     = m * n;
-  t2     = k * l;
-  if (t1 > 1) & (t2 > 1) & ((m ~= k) | (n ~= l))
-    error('CONTAINS: sizes of ellipsoidal arrays do not match.');
+  [mRowsFirst, nColsFirst] = size(firstEllMat);
+  [mRowsSecond, nColsSecond] = size(secondEllMat);
+  nSizeFirst = mRowsFirst * nColsFirst;
+  nSizeSecond = mRowsSecond * nColsSecond;
+  if (nSizeFirst > 1) && (nSizeSecond > 1) && ...
+          ((mRowsFirst ~= mRowsSecond) || (nColsFirst ~= nColsSecond))
+    throwerror('wrongInput', ...
+        'CONTAINS: sizes of ellipsoidal arrays do not match.');
   end
 
-  dims1 = dimension(E1);
-  dims2 = dimension(E2);
-  mn1   = min(min(dims1));
-  mn2   = min(min(dims2));
-  mx1   = max(max(dims1));
-  mx2   = max(max(dims2));
-  if (mn1 ~= mx1) | (mn2 ~= mx2) | (mn1 ~= mn2)
-    error('CONTAINS: ellipsoids must be of the same dimension.');
+  dimFirst = dimension(firstEllMat);
+  dimSecond = dimension(secondEllMat);
+  minDimFirst   = min(min(dimFirst));
+  minDimSecond   = min(min(dimSecond));
+  maxDimFirst   = max(max(dimFirst));
+  maxDimSecond   = max(max(dimSecond));
+  if (minDimFirst ~= maxDimFirst) || (minDimSecond ~= maxDimSecond) ...
+          || (minDimFirst ~= minDimSecond)
+    throwerror('wrongSizes', ...
+        'CONTAINS: ellipsoids must be of the same dimension.');
   end
 
   if Properties.getIsVerbose()
-    if (t1 > 1) | (t2 > 1)
-      fprintf('Checking %d ellipsoid-in-ellipsoid containments...\n', max([t1 t2]));
+    if (nSizeFirst > 1) || (nSizeSecond > 1)
+      fprintf('Checking %d ellipsoid-in-ellipsoid containments...\n',...
+          max([nSizeFirst nSizeSecond]));
     else
       fprintf('Checking ellipsoid-in-ellipsoid containment...\n');
     end
   end
 
-  res = [];
-  if (t1 > 1) & (t2 > 1)
-    for i = 1:m
-      r = [];
-      for j = 1:n
-        r = [r l_check_containment(E1(i, j), E2(i, j))];
+  resMat = [];
+  if (nSizeFirst > 1) && (nSizeSecond > 1)
+    for iRowsFirst = 1:mRowsFirst
+      resPart = [];
+      for jColsFirst = 1:nColsFirst
+        resPart = [resPart l_check_containment(firstEllMat(iRowsFirst, ...
+            jColsFirst), secondEllMat(iRowsFirst, jColsFirst))];
       end
-      res = [res; r];
+      resMat = [resMat; resPart];
     end
-  elseif (t1 > 1)
-    for i = 1:m
-      r = [];
-      for j = 1:n
-        r = [r l_check_containment(E1(i, j), E2)];
+  elseif (nSizeFirst > 1)
+    for iRowsFirst = 1:mRowsFirst
+      resPart = [];
+      for jColsFirst = 1:nColsFirst
+        resPart = [resPart l_check_containment(firstEllMat(iRowsFirst, ...
+            jColsFirst), secondEllMat)];
       end
-      res = [res; r];
+      resMat = [resMat; resPart];
     end
   else
-    for i = 1:k
-      r = [];
-      for j = 1:l
-        r = [r l_check_containment(E1, E2(i, j))];
+    for iRowsSecond = 1:mRowsSecond
+      resPart = [];
+      for jColsSecond = 1:nColsSecond
+        resPart = [resPart l_check_containment(firstEllMat, ...
+            secondEllMat(iRowsSecond, jColsSecond))];
       end
-      res = [res; r];
+      resMat = [resMat; resPart];
     end
   end
 
-  return;
-
+end
 
 
 
 
 %%%%%%%%
 
-function res = l_check_containment(E1, E2)
+function res = l_check_containment(firstEll, secondEll)
 %
-% L_CHECK_CONTAINMENT - check if E2 is inside E1.
+% L_CHECK_CONTAINMENT - check if secondEll is inside firstEll.
 %
+% Input:
+%   regular:
+%       firstEll: ellipsoid [1, nCols] - first ellipsoid.
+%       secondEll: ellipsoid [1, nCols] - second ellipsoid.
+%
+% Output:
+%   res: double[1,1], 1 - secondEll is inside firstEll, 0 - otherwise.
+%
+%
+% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+% $Copyright:  The Regents of the University of California 2004-2008 $
 
   import elltool.conf.Properties;
   import modgen.common.throwerror;
-  [q, Q] = double(E1);
-  [r, R] = double(E2);
-  if size(Q, 2) > rank(Q)
-      Q = ellipsoid.regularize(Q,E1.absTol);
+  
+  [fstEllCentVec, fstEllShMat] = double(firstEll);
+  [secEllCentVec, secEllShMat] = double(secondEll);
+  if size(fstEllShMat, 2) > rank(fstEllShMat)
+      fstEllShMat = ellipsoid.regularize(fstEllShMat,firstEll.absTol);
   end
-  if size(R, 2) > rank(R)
-      R = ellipsoid.regularize(R,E2.absTol);
+  if size(secEllShMat, 2) > rank(secEllShMat)
+      secEllShMat = ellipsoid.regularize(secEllShMat,secondEll.absTol);
   end
-  Qi     = ell_inv(Q);
-  Ri     = ell_inv(R);
-  AMat      = [Qi -Qi*q; (-Qi*q)' (q'*Qi*q-1)];
-  BMat      = [Ri -Ri*r; (-Ri*r)' (r'*Ri*r-1)];
+  
+  invFstEllShMat = ell_inv(fstEllShMat);
+  invSecEllShMat = ell_inv(secEllShMat);
+  
+  AMat = [invFstEllShMat -invFstEllShMat*fstEllCentVec;...
+      (-invFstEllShMat*fstEllCentVec)' ...
+      (fstEllCentVec'*invFstEllShMat*fstEllCentVec-1)];
+  BMat = [invSecEllShMat -invSecEllShMat*secEllCentVec;...
+      (-invSecEllShMat*secEllCentVec)'...
+      (secEllCentVec'*invSecEllShMat*secEllCentVec-1)];
 
   AMat = 0.5*(AMat + AMat');
   BMat = 0.5*(BMat + BMat');
@@ -137,8 +147,10 @@ function res = l_check_containment(E1, E2)
   if strcmp(cvx_status,'Failed')
     throwerror('cvxError','Cvx failed');
   end;
-  if strcmp(cvx_status,'Solved') || strcmp(cvx_status, 'Inaccurate/Solved')
+  if strcmp(cvx_status,'Solved') ...
+          || strcmp(cvx_status, 'Inaccurate/Solved')
     res = 1;
   else
     res = 0;
   end
+end
