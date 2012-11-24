@@ -856,30 +856,19 @@ classdef EllipsoidTestCase < mlunitext.test_case
 
                         
             testMat = eye(2);
-            [isEq, reportStr] = eq(ellipsoid(testMat), ellipsoid(testMat));
-            mlunit.assert_equals(true, isEq);
-            mlunit.assert_equals('', reportStr);
+            checkEllEqual(ellipsoid(testMat), ellipsoid(testMat), true, '');
 
             test1Mat = eye(2);
             test2Mat = eye(2) + MAX_TOL;
-            [isEq, reportStr] = eq(ellipsoid(test1Mat),...
-                ellipsoid(test2Mat)); 
-            mlunit.assert_equals(true, isEq);
-            mlunit.assert_equals('', reportStr);
+            checkEllEqual(ellipsoid(test1Mat), ellipsoid(test2Mat), true, '');
             
             test1Mat = eye(2);
             test2Mat = eye(2) - 0.99*MAX_TOL;
-            [isEq, reportStr] = eq(ellipsoid(test1Mat),...
-                ellipsoid(test2Mat)); 
-            mlunit.assert_equals(true, isEq);
-            mlunit.assert_equals('', reportStr);
+            checkEllEqual(ellipsoid(test1Mat), ellipsoid(test2Mat), true, '');
             
             test1Mat = 100*eye(2);
             test2Mat = 100*eye(2) - 0.99*MAX_TOL;
-            [isEq, reportStr] = eq(ellipsoid(test1Mat),...
-                ellipsoid(test2Mat)); 
-            mlunit.assert_equals(true, isEq);
-            mlunit.assert_equals('', reportStr);
+            checkEllEqual(ellipsoid(test1Mat), ellipsoid(test2Mat), true, '');
             
             testEll = ellipsoid(eye(2));
             testEll2 = ellipsoid([1e-3, 0].', eye(2));
@@ -904,62 +893,47 @@ classdef EllipsoidTestCase < mlunitext.test_case
                 testEllipsoidZeros3 testEllipsoidEmpty] = createTypicalEll(1);
             [testEllHighDim1 testEllHighDim2] = createTypicalHighDimEll(1);
             
-            [isEq, reportStr] = eq(testEllHighDim1, testEllHighDim1);
-            mlunit.assert_equals(true, isEq);
-            mlunit.assert_equals('', reportStr);
             
-            [isEq, reportStr] = eq(testEllHighDim1, testEllHighDim2);
-            mlunit.assert_equals(false, isEq);
-            mlunit.assert_equals('(1).Q-->Max. difference (2.316625e+00) is greater than the specified tolerance(1.000000e-05)', ...
-                reportStr);
+            checkEllEqual(testEllHighDim1, testEllHighDim1, true, '');
+            
+            checkEllEqual(testEllHighDim1, testEllHighDim2, false, ...
+                '(1).Q-->Max. difference (2.316625e+00) is greater than the specified tolerance(1.000000e-05)');
             
             [testEllHighDim1 testEllHighDim2] = createTypicalHighDimEll(2);
-            [isEq, reportStr] = eq(testEllHighDim1, testEllHighDim1);
-            mlunit.assert_equals(true, isEq);
-            mlunit.assert_equals('', reportStr);
+            checkEllEqual(testEllHighDim1, testEllHighDim1, true, '');
             
-            [isEq, reportStr] = eq(testEllHighDim1, testEllHighDim2);
-            mlunit.assert_equals(false, isEq);
-            mlunit.assert_equals('(1).Q-->Max. difference (2.316625e+00) is greater than the specified tolerance(1.000000e-05)', ...
-                reportStr);
+            
+            checkEllEqual(testEllHighDim1, testEllHighDim2, false, ...
+                '(1).Q-->Max. difference (2.316625e+00) is greater than the specified tolerance(1.000000e-05)');
             
             [testEllHighDim1 testEllHighDim2] = createTypicalHighDimEll(3);
-            [isEq, reportStr] = eq(testEllHighDim1, testEllHighDim1);
-            mlunit.assert_equals(true, isEq);
-            mlunit.assert_equals('', reportStr);
+            checkEllEqual(testEllHighDim1, testEllHighDim1, true, '');
+
+            checkEllEqual(testEllHighDim1, testEllHighDim2, false, ...
+                '(1).Q-->Max. difference (2.316625e+00) is greater than the specified tolerance(1.000000e-05)');
+
             
-            [isEq, reportStr] = eq(testEllHighDim1, testEllHighDim2);
-            mlunit.assert_equals(false, isEq);
-            mlunit.assert_equals('(1).Q-->Max. difference (2.316625e+00) is greater than the specified tolerance(1.000000e-05)', ...
-                reportStr);
+            checkEllEqual(testEllipsoid1, testEllipsoid1, true, '');
             
-            [isEq, reportStr] = eq(testEllipsoid1, testEllipsoid1);
-            mlunit.assert_equals(true, isEq);
-            mlunit.assert_equals('', reportStr);            
+            checkEllEqual(testEllipsoid2, testEllipsoid1, false, ...
+                '(1).q-->Max. difference (1) is greater than the specified tolerance(1.000000e-05)');
+    
+            checkEllEqual(testEllipsoid3, testEllipsoid2, false, ...
+                '(1).Q-->Max. difference (4.142136e-01) is greater than the specified tolerance(1.000000e-05)');
             
-            [isEq, reportStr] = eq(testEllipsoid2, testEllipsoid1);
-            mlunit.assert_equals(false, isEq);    
-            mlunit.assert_equals('(1).q-->Max. difference (1) is greater than the specified tolerance(1.000000e-05)', ...
-                reportStr);
             
-            [isEq, reportStr] = eq(testEllipsoid3, testEllipsoid2);
-            mlunit.assert_equals(false, isEq);
-            mlunit.assert_equals('(1).Q-->Max. difference (4.142136e-01) is greater than the specified tolerance(1.000000e-05)', ...
-                reportStr);
+            checkEllEqual(testEllipsoid3, testEllipsoid2, false, ...
+                '(1).Q-->Max. difference (4.142136e-01) is greater than the specified tolerance(1.000000e-05)');
                        
-            [isEq, reportStr] = eq(testEllipsoidZeros2, testEllipsoidZeros3);
-            mlunit.assert_equals(false, isEq);
             ansStr = sprintf('(1).Q-->Different sizes (left: [2 2], right: [3 3])\n(1).q-->Different sizes (left: [1 2], right: [1 3])');
-            mlunit.assert_equals(ansStr, reportStr);
+            checkEllEqual(testEllipsoidZeros2, testEllipsoidZeros3, false, ansStr);
+  
             
-            [isEq, reportStr] = eq(testEllipsoidZeros2, testEllipsoidEmpty);
-            mlunit.assert_equals(false, isEq);
             ansStr = sprintf('(1).Q-->Different sizes (left: [2 2], right: [0 0])\n(1).q-->Different sizes (left: [1 2], right: [0 0])');
-            mlunit.assert_equals(ansStr, reportStr);
-            
-            [isEq, reportStr] = eq(testEllipsoidEmpty, testEllipsoidEmpty);
-            mlunit.assert_equals(true, isEq);
-            mlunit.assert_equals('', reportStr);
+            checkEllEqual(testEllipsoidZeros2, testEllipsoidEmpty, false, ansStr);
+   
+ 
+            checkEllEqual(testEllipsoidEmpty, testEllipsoidEmpty, true, '');
             
             testNotEllipsoid = [];
             %'==: both arguments must be ellipsoids.'
@@ -968,11 +942,11 @@ classdef EllipsoidTestCase < mlunitext.test_case
             %'==: sizes of ellipsoidal arrays do not match.'
             self.runAndCheckError('eq([testEllipsoidEmpty testEllipsoidEmpty], [testEllipsoidEmpty; testEllipsoidEmpty])','wrongSizes');
             
-            [isEq, reportStr] = eq([testEllipsoidZeros2 testEllipsoidZeros3], [testEllipsoidZeros3 testEllipsoidZeros3]);
-
-            mlunit.assert_equals([false, true], isEq);
+            
+    
             ansStr = sprintf('(1).Q-->Different sizes (left: [2 2], right: [3 3])\n(1).q-->Different sizes (left: [1 2], right: [1 3])');
-            mlunit.assert_equals(ansStr, reportStr);
+            checkEllEqual([testEllipsoidZeros2 testEllipsoidZeros3], [testEllipsoidZeros3 testEllipsoidZeros3], [false, true], ansStr);
+
         end
         
         function self = testNe(self)
@@ -1691,6 +1665,11 @@ function [varargout] = createTypicalEll(flag)
             varargout{4} = [1; 0];
         otherwise
     end
+end
+function checkEllEqual(testEll1Vec, testEll2Vec, isEqual, ansStr)
+    [isEq, reportStr] = eq(testEll1Vec, testEll2Vec);
+    mlunit.assert_equals(isEq, isEqual);
+    mlunit.assert_equals(reportStr, ansStr);
 end
 
 function [varargout] = createTypicalHighDimEll(flag)
