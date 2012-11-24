@@ -20,6 +20,7 @@ function [isEqual,reportStr]= structcompare(SX,SY,tol)
 %
 %
 
+import modgen.struct.structcomparevec;
 if nargin<3
     tol=0;
 end
@@ -29,16 +30,9 @@ if ~isequal(size(SX),size(SY));
     reportStr={'sizes are different'};
     return;
 end
-[isEqualVec,reportStrList]=structcompare1darray(SX(:),SY(:),tol);
+[isEqualVec,reportStr]=structcomparevec(SX(:),SY(:),tol);
 isEqual=all(isEqualVec);
-nReports=length(reportStrList);
-if nReports>1
-    reportStrList(1:end-1)=cellfun(@(x)horzcat(x,sprintf('\n')),reportStrList(1:end-1),'UniformOutput',false);
-end
-if nReports>0
-    reportStr=[reportStrList{:}];
-else
-    reportStr='';
-end
+
+
 
 
