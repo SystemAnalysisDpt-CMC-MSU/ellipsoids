@@ -76,34 +76,49 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             
             
             testMat = eye(2);
-            mlunit.assert_equals(1, eq(ellipsoid(testMat), ellipsoid(testMat)));
+            [isEq, reportStr] = eq(ellipsoid(testMat), ellipsoid(testMat));
+            mlunit.assert_equals(1, isEq);
+            mlunit.assert_equals('', reportStr);
+            
             
             test1Mat = eye(2);
             test2SqrtMat = eye(2) + 1.01*MAX_TOL; 
             test2Mat = test2SqrtMat*test2SqrtMat.';
-            mlunit.assert_equals(0, eq(ellipsoid(test1Mat), ellipsoid(test2Mat)));
+            [isEq, reportStr] = eq(ellipsoid(test1Mat), ellipsoid(test2Mat));
+            mlunit.assert_equals(0, isEq);
+            mlunit.assert_equals('(1).Q-->Max. difference (1.010000e-05) is greater than the specified tolerance(1.000000e-05)', reportStr);
             
             test1Mat = eye(2);
             test2SqrtMat = eye(2) + 0.5*MAX_TOL; 
             test2Mat = test2SqrtMat*test2SqrtMat.';
-            mlunit.assert_equals(1, eq(ellipsoid(test1Mat), ellipsoid(test2Mat)));
+            [isEq, reportStr] = eq(ellipsoid(test1Mat), ellipsoid(test2Mat));            
+            mlunit.assert_equals(1, isEq);
+            mlunit.assert_equals('', reportStr);
             
             test1Mat = eye(2);
             test2SqrtMat = eye(2) + MAX_TOL; 
             test2Mat = test2SqrtMat*test2SqrtMat.';
-            mlunit.assert_equals(0, eq(ellipsoid(test1Mat), ellipsoid(test2Mat)));
-            
+            [isEq, reportStr] = eq(ellipsoid(test1Mat), ellipsoid(test2Mat)); 
+            mlunit.assert_equals(0, isEq);
+            mlunit.assert_equals(reportStr, '(1).Q-->Max. difference (1.000000e-05) is greater than the specified tolerance(1.000000e-05)');
+           
             test1Mat = eye(2);
             test2Mat = eye(2) + MAX_TOL;
-            mlunit.assert_equals(1, eq(ellipsoid(test1Mat), ellipsoid(test2Mat)));
+            [isEq, reportStr] = eq(ellipsoid(test1Mat), ellipsoid(test2Mat)); 
+            mlunit.assert_equals(1, isEq);
+            mlunit.assert_equals('', reportStr);
             
             test1Mat = eye(2);
             test2Mat = eye(2) - 0.99*MAX_TOL;
-            mlunit.assert_equals(1, eq(ellipsoid(test1Mat), ellipsoid(test2Mat)));
+            [isEq, reportStr] = eq(ellipsoid(test1Mat), ellipsoid(test2Mat)); 
+            mlunit.assert_equals(1, isEq);
+            mlunit.assert_equals('', reportStr);
             
             test1Mat = 100*eye(2);
             test2Mat = 100*eye(2) - 0.99*MAX_TOL;
-            mlunit.assert_equals(1, eq(ellipsoid(test1Mat), ellipsoid(test2Mat)));
+            [isEq, reportStr] = eq(ellipsoid(test1Mat), ellipsoid(test2Mat)); 
+            mlunit.assert_equals(1, isEq);
+            mlunit.assert_equals('', reportStr);
             
             testEll = ellipsoid(eye(2));
             testEll2 = ellipsoid([1e-3, 0].', eye(2));
@@ -120,6 +135,10 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             testEll2Arr = repmat(testEll2, mDim, nDim);
             mlunit.assert_equals(isEqualArr, testEllArr.eq(testEllArr));
             mlunit.assert_equals(isnEqualArr, testEll2Arr.eq(testEllArr));
+            
+            self.runAndCheckError('eq([testEll, testEll2], [testEll; testEll2])','wrongSizes');
+
+            
             
         end
         
