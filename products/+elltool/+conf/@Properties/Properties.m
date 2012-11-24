@@ -8,8 +8,9 @@ classdef Properties<modgen.common.obj.StaticPropStorage
     %            System Analysis Department 2012 $
     %
     
-    properties (GetAccess=private,Constant)
-        SEDUMI_SOLVER = 'sedumi';
+    properties (GetAccess=public,Constant)
+        SEDUMI_SOLVER = 'SeDuMi';
+        TOL_FACTOR = 2;
     end
 
     methods(Static)
@@ -22,10 +23,14 @@ classdef Properties<modgen.common.obj.StaticPropStorage
             Properties.setConfRepoMgr(confRepoMgr);            
             % CVX settings.
             elltool.cvx.CVXController.setUpIfNot();
-            if CVXController.isSetUp()
-                CVXController.setSolver(Properties.SEDUMI_SOLVER);
-                CVXController.setPrecision(Properties.getRelTol());
+            if CVXController.isSetUp();
+                Properties.setInitSolverStr(Properties.SEDUMI_SOLVER);
+                Properties.setInitPrecisionVec([0, Properties.TOL_FACTOR*Properties.getRelTol()]);
+                Properties.setInitVerb(false);
+                CVXController.setSolver('sedumi');
+                CVXController.setPrecision([0, Properties.TOL_FACTOR*Properties.getRelTol()]);
                 CVXController.setIsVerbosityEnabled(false);
+                
             else
                 import modgen.common.throwerror;
                 throwerror('cvxError', 'can''t setup cvx');
@@ -34,11 +39,16 @@ classdef Properties<modgen.common.obj.StaticPropStorage
         function checkSettings()
             import modgen.common.throwerror;
             import elltool.cvx.CVXController;
+            import elltool.conf.Properties;
             precisionVec = CVXController.getPrecision();
             solverStr = CVXController.getSolver();
             isVerbosity = CVXController.getIsVerbosityEnabled();
-            if (~eq(precisionVec, [0, 0, 2*1e-5])) | (~(strcmp(solverStr, ...
-                    'SeDuMi'))) | (~isVerbosity)
+            initPrecisionVec = Properties.getInitPrecisionVec();
+            initSolverStr = Properties.getInitSolverStr();
+            initVerb = Properties.getInitVerb();
+            if (~isequal(precisionVec, initPrecisionVec)) | ...
+                    (~(strcmp(solverStr, initSolverStr))) ...
+                    | (isVerbosity ~= initVerb)
                  throwerror('cvxError', 'wrong cvx properties');
             end
         end
@@ -70,6 +80,19 @@ classdef Properties<modgen.common.obj.StaticPropStorage
         end
         %%
         %Public getters
+        function initPrecisionVec = getInitPrecisionVec()
+           initPrecisionVec = elltool.conf.Properties.getOption...
+               ('initPrecisionVec');
+        end
+        function initSolverStr = getInitSolverStr()
+           initSolverStr = elltool.conf.Properties.getOption...
+               ('initSolverStr');
+        end
+        function initVerb = getInitVerb()
+            initVerb = elltool.conf.Properties.getOption...
+                ('initVerb');
+        end
+
         function version = getVersion()
             version = elltool.conf.Properties.getOption('version');
         end
@@ -111,6 +134,16 @@ classdef Properties<modgen.common.obj.StaticPropStorage
         end
         %%
         %Public setters
+        function setInitPrecisionVec(precisionVec)
+           elltool.conf.Properties.setOption('initPrecisionVec',precisionVec); 
+        end
+        function setInitSolverStr(solverStr)
+           elltool.conf.Properties.setOption('initSolverStr',solverStr);
+        end
+        function setInitVerb(isVerb)
+            elltool.conf.Properties.setOption('initVerb',isVerb);
+        end
+        
         function setIsVerbose(isVerb)
             elltool.conf.Properties.setOption('isVerbose',isVerb);
         end

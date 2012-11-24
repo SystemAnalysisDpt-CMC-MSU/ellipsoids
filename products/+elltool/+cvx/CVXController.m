@@ -7,10 +7,9 @@ classdef CVXController
         function setSolver(solverName)
             cvx_solver(solverName);
         end
-        function setPrecision(relTol)
+        function setPrecision(relTolVec)
             import elltool.cvx.CVXController;
-            TOL_FACTOR = 2;
-            cvx_precision([0, TOL_FACTOR*relTol]);
+            cvx_precision(relTolVec);
          
         end
         function setIsVerbosityEnabled(isQuiet)
@@ -60,10 +59,11 @@ classdef CVXController
             solverStr = cvx_solver();
         end
         function precisionVec = getPrecision()
-            precisionVec = cvx_precision();
+            precision2Vec = cvx_precision();
+            precisionVec = [precision2Vec(1), precision2Vec(3)];
         end
         function isVerb = getIsVerbosityEnabled()
-            isVerb = cvx_quiet();
+            isVerb = ~cvx_quiet();
         end
     end
 end

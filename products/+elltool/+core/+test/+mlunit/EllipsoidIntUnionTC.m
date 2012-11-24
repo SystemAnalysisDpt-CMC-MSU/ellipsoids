@@ -17,7 +17,10 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
                 filesep,shortClassName];
     
         end
-        
+        function setUpCheckSettings(self)
+            import elltool.conf.Properties;
+            Properties.checkSettings();
+        end;
         function flexAssert(varargin)
             IS_ASSERTION_ON = true;
             if (IS_ASSERTION_ON)
@@ -28,7 +31,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
         
         function self = testEllUnionEaSensitivity(self)
             import elltool.conf.Properties;
-            Properties.checkSettings();
+            self.setUpCheckSettings();
             relTol = Properties.getRelTol();
             sensEPS = relTol;
             
@@ -56,7 +59,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
         
         function self = testEllIntersectionIaSensitivity(self)
             import elltool.conf.Properties;
-            Properties.checkSettings();
+            self.setUpCheckSettings();
             relTol = Properties.getRelTol();
             sensEPS = relTol;
             
@@ -85,8 +88,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
         
         
         function self = testContains(self)            
-            import elltool.conf.Properties;
-            Properties.checkSettings();
+            self.setUpCheckSettings();
             testEll1Vec = ellipsoid(eye(3));
             testEll2Vec = ellipsoid([10, 0, 5]',...
                 [1, 0, 0; 0, 0, 0; 0, 0, 1]);
@@ -358,8 +360,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
         end
 
         function self = testEllintersectionIa(self)
-            import elltool.conf.Properties;
-            Properties.checkSettings();
+            self.setUpCheckSettings()
             nDim = 10;
             nArr = 15;
             eyeEllipsoid = ellipsoid(eye(nDim));
@@ -465,8 +466,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             
         end
         function self = testEllunionEa(self)
-            import elltool.conf.Properties;
-            Properties.checkSettings();
+            self.setUpCheckSettings();
             nDim = 10;
 
             nArr = 15;
@@ -707,8 +707,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
         end
         
         function self = testEllEnclose(self)
-            import elltool.conf.Properties;
-            Properties.checkSettings();
+            self.setUpCheckSettings()
             pointsVec = [1, 0, -1, 0; 0, 1, 0, -1];
             resEllVec = ell_enclose(pointsVec);
             ansEllVec = ellipsoid([0, 0].', eye(2));
