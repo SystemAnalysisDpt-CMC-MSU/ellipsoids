@@ -26,8 +26,10 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
         end;
         
         
-        function self = sensitivityTest(self)
-            EPS = 1e-5;
+        function self = testEllunionEaSensitivity(self)
+            import elltool.conf.Properties;
+            relTol = Properties.getRelTol();
+            EPS = relTol;
             
             load(strcat(self.testDataRootDir, strcat(filesep,...
                 'testEllunionEa_inp.mat')), 'testEllCenterVec', ...
@@ -50,6 +52,35 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             [isEqual, reportStr] = eq(resEllVec, resSensEllVec);
             mlunit.assert_equals(true, isEqual, reportStr);
         end
+        
+        function self = testEllintersectionIaSensitivity(self)
+            import elltool.conf.Properties;
+            relTol = Properties.getRelTol();
+            EPS = relTol;
+            
+            load(strcat(self.testDataRootDir, strcat(filesep,...
+                'testEllintersectionIa_inp.mat')), 'testEllCenterVec', ...
+                'testEllMat', 'testEllCenter2Vec', 'testEll2Mat');
+            testEllVec(2) = ellipsoid;
+            testEllVec(1) = ellipsoid(testEllCenterVec, testEllMat);
+            testEllVec(2) = ellipsoid(testEllCenter2Vec, testEll2Mat);
+            resEllVec = ellintersection_ia(testEllVec);
+            
+            testEllCenterVec = testEllCenterVec + EPS;
+            testEllMat = testEllMat + EPS;
+            testEllCenter2Vec = testEllCenter2Vec + EPS;
+            testEll2Mat = testEll2Mat + EPS;
+            
+            testEllVec(1) = ellipsoid(testEllCenterVec, testEllMat);
+            testEllVec(2) = ellipsoid(testEllCenter2Vec, testEll2Mat);
+            
+            resSensEllVec = ellintersection_ia(testEllVec);
+            
+            [isEqual, reportStr] = eq(resEllVec, resSensEllVec);
+            mlunit.assert_equals(true, isEqual, reportStr);
+        end
+
+        
         
         function self = testContains(self)
             testEll1Vec = ellipsoid(eye(3));

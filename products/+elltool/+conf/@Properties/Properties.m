@@ -16,12 +16,20 @@ classdef Properties<modgen.common.obj.StaticPropStorage
             confRepoMgr.selectConf(DEFAULT_CONF_NAME);
             Properties.setConfRepoMgr(confRepoMgr);            
             % CVX settings.
+            elltool.cvx.CVXController.setUpIfNot();
             if CVXController.isSetUp()
                 CVXController.setSolver('sedumi');
                 CVXController.setPrecision(Properties.getRelTol());
                 CVXController.setIsVerbosityEnabled(false);
-            end            
+            else
+                import modgen.common.throwerror;
+                throwerror('cvxError', 'can''t setup cvx');
+            end
         end
+        function checkSettings()
+            
+        end
+        
         function ConfRepoMgr=getConfRepoMgr()
             import modgen.common.throwerror;
             branchName=mfilename('class');
