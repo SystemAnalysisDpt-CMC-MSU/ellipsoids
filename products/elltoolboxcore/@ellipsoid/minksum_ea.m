@@ -47,64 +47,60 @@ function EA = minksum_ea(E, L)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  global ellOptions;
-
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
-
-  if ~(isa(E, 'ellipsoid'))
+import elltool.conf.Properties;
+import modgen.common.throwerror;
+%
+if ~(isa(E, 'ellipsoid'))
     error('MINKSUM_EA: first argument must be array of ellipsoids.');
-  end
+end
 
-  dims = dimension(E);
-  m    = min(min(dims));
-  n    = max(max(dims));
-  if m ~= n
-    error('MINKSUM_EA: ellipsoids in the array must be of the same dimension.');
-  end
+dims = dimension(E);
+m    = min(min(dims));
+n    = max(max(dims));
+if m ~= n
+    throwerror('MINKSUM_EA: ellipsoids in the array must be of the same dimension.');
+end
 
-  [k, d] = size(L);
-  if (k ~= n)
+[k, d] = size(L);
+if (k ~= n)
     msg = sprintf('MINKSUM_EA: second argument must be vector(s) in R^%d.', n);
-    error(msg);
-  end
+    throwerror(msg);
+end
 
-  [m, n] = size(E);
-  if (m == 1) & (n == 1)
+[m, n] = size(E);
+if (m == 1) && (n == 1)
     EA = E;
     return;
-  end
-
-  EA = [];
-  for ii = 1:d
+end
+%
+EA(d) = ellipsoid();
+absTolMat = getAbsTol(E);
+for ii = 1:d
     l = L(:, ii);
     for i = 1:m
-      for j = 1:n
-        Q = E(i, j).shape;
-        if size(Q, 1) > rank(Q)
-          if ellOptions.verbose > 0
-            fprintf('MINKSUM_EA: Warning! Degenerate ellipsoid.\n');
-            fprintf('            Regularizing...\n');
-          end
-          Q = regularize(Q);
+        for j = 1:n
+            Q = E(i, j).shape;
+            if size(Q, 1) > rank(Q)
+                if Properties.getIsVerbose()
+                    fprintf('MINKSUM_EA: Warning! Degenerate ellipsoid.\n');
+                    fprintf('            Regularizing...\n');
+                end
+                Q = ellipsoid.regularize(Q,absTolMat(i,j));
+            end
+            
+            p = sqrt(l'*Q*l);
+            
+            if (i == 1) && (j == 1)
+                q = E(i, j).center;
+                S = (1/p) * Q;
+                P = p;
+            else
+                q = q + E(i, j).center;
+                S = S + ((1/p) * Q);
+                P = P + p;
+            end
         end
-  
-        p = sqrt(l'*Q*l);
-
-        if (i == 1) & (j == 1)
-          q = E(i, j).center;
-          S = (1/p) * Q;
-          P = p;
-        else
-          q = q + E(i, j).center;
-          S = S + ((1/p) * Q);
-          P = P + p;
-        end
-      end
     end
     S  = 0.5*P*(S + S');
-    EA = [EA ellipsoid(q, S)];
-  end
-
-  return;
+    EA(ii) = ellipsoid(q, S);
+end

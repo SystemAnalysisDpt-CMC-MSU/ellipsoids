@@ -36,11 +36,6 @@ function [I, T] = get_ia(rs)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  global ellOptions;
-
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
 
   if ~(isa(rs, 'reach'))
     error('GET_IA: input argument must be reach set object.');
@@ -64,10 +59,10 @@ function [I, T] = get_ia(rs)
     ee = [];
     for j = 1:n
       q  = rs.center_values(:, j);
-      Q  = (1 - ellOptions.rel_tol) * reshape(QQ(:, j), d, d);
+      Q  = (1 - rs.relTol()) * reshape(QQ(:, j), d, d);
       Q  = real(Q);
-      if min(eig(Q)) < (- ellOptions.abs_tol)
-        Q = ellOptions.abs_tol * eye(d);
+      if min(eig(Q)) < (- rs.absTol())
+        Q = rs.absTol() * eye(d);
       end
       ee = [ee ellipsoid(q, Q)];
     end

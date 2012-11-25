@@ -13,7 +13,7 @@ function res = isempty(E)
 % Output:
 % -------
 %
-%    1 - if ellipsoid is empty, 0 - otherwise.
+%    true - if ellipsoid is empty, false - otherwise.
 %
 %
 % See also:
@@ -29,11 +29,8 @@ function res = isempty(E)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  global ellOptions;
+  import elltool.conf.Properties;
 
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
 
   if ~(isa(E, 'ellipsoid'))
     error('ISEMPTY: input argument must be ellipsoid.');
@@ -41,4 +38,4 @@ function res = isempty(E)
 
   res = ~dimension(E);
 
-  return;
+end

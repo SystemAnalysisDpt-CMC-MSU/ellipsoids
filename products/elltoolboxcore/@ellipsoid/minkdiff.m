@@ -52,11 +52,7 @@ function [y, Y] = minkdiff(varargin)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  global ellOptions;
-
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
+  import elltool.conf.Properties;
 
   if nargin < 2
     error('MINKDIFF: first and second arguments must be single ellipsoids.');
@@ -65,7 +61,7 @@ function [y, Y] = minkdiff(varargin)
   E1 = varargin{1};
   E2 = varargin{2};
 
-  if ~(isa(E1, 'ellipsoid')) | ~(isa(E2, 'ellipsoid'))
+  if ~(isa(E1, 'ellipsoid')) || ~(isa(E2, 'ellipsoid'))
     error('MINKDIFF: first and second arguments must be single ellipsoids.');
   end
 
@@ -136,7 +132,7 @@ function [y, Y] = minkdiff(varargin)
     ih = ishold;
   end
 
-  if (Options.show_all ~= 0) & (nargout == 0)
+  if (Options.show_all ~= 0) && (nargout == 0)
     plot([E1 E2], 'b');
     hold on;
     if Options.newfigure ~= 0
@@ -146,7 +142,7 @@ function [y, Y] = minkdiff(varargin)
     end
   end
 
-  if ellOptions.verbose > 0
+  if Properties.getIsVerbose()
     if nargout == 0
       fprintf('Computing and plotting geometric difference of two ellipsoids...\n');
     else
@@ -156,20 +152,20 @@ function [y, Y] = minkdiff(varargin)
 	
   Q1 = E1.shape;
   if rank(Q1) < size(Q1, 1)
-    Q1 = regularize(Q1);
+    Q1 = ellipsoid.regularize(Q1,E1.absTol);
   end
   Q2 = E2.shape;
   if rank(Q2) < size(Q2, 1)
-    Q2 = regularize(Q2);
+    Q2 = ellipsoid.regularize(Q2,E2.absTol);
   end
   switch n
     case 2,
       y      = E1.center - E2.center;
-      phi    = linspace(0, 2*pi, ellOptions.plot2d_grid);
-      l = rm_bad_directions(Q1, Q2, [cos(phi); sin(phi)]);
+      phi    = linspace(0, 2*pi, E1.nPlot2dPoints);
+      l = ellipsoid.rm_bad_directions(Q1, Q2, [cos(phi); sin(phi)]);
       if size(l, 2) > 0
-        [r, Y] = rho(E1, l);
-        [r, X] = rho(E2, l);
+        [~, Y] = rho(E1, l);
+        [~, X] = rho(E2, l);
         Y      = Y - X;
         Y      = [Y Y(:, 1)];
       else
@@ -189,19 +185,19 @@ function [y, Y] = minkdiff(varargin)
 
     case 3,
       y   = E1.center - E2.center;
-      M   = ellOptions.plot3d_grid/2;
+      M   = E1.nPlot3dPoints()/2;
       N   = M/2;
       psy = linspace(0, pi, N);
       phi = linspace(0, 2*pi, M);
-      l   = [];
+      l   = zeros(3,M*(N-2));
       for i = 2:(N - 1)
         arr = cos(psy(i))*ones(1, M);
-        l   = [l [cos(phi)*sin(psy(i)); sin(phi)*sin(psy(i)); arr]];
+        l(:,(M*(i-2))+(1:M))   = [cos(phi)*sin(psy(i)); sin(phi)*sin(psy(i)); arr];
       end
-      l = rm_bad_directions(Q1, Q2, l);
+      l = ellipsoid.rm_bad_directions(Q1, Q2, l);
       if size(l, 2) > 0
-        [r, Y] = rho(E1, l);
-        [r, X] = rho(E2, l);
+        [~, Y] = rho(E1, l);
+        [~, X] = rho(E2, l);
         Y      = Y - X;
       else
         Y = y;
@@ -252,7 +248,7 @@ function [y, Y] = minkdiff(varargin)
     y = Y;
   end
   if nargout == 0
-    clear y, Y;
+    clear y Y;
   end
 
-  return;
+end

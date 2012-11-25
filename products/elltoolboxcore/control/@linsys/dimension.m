@@ -36,13 +36,6 @@ function [N, I, O, D] = dimension(lsys)
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
-
-  global ellOptions;
-
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
-
   if ~(isa(lsys, 'linsys'))
     error('DIMENSION: input argument must be linear system object.');
   end

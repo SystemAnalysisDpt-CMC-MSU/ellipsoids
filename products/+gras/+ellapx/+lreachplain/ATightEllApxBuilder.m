@@ -63,7 +63,7 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
                     toc(tStart)));               
             end
             %
-            aMat=pDefObj.getxtSpline.evaluate(resTimeVec);
+            aMat=pDefObj.getxtDynamics.evaluate(resTimeVec);
             %
             [apxSchemaName,apxSchemaDescr]=self.getApxSchemaNameAndDescr();
             apxType=self.getApxType();

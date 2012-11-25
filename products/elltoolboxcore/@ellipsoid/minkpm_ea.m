@@ -32,47 +32,44 @@ function EA = minkpm_ea(EE, E2, L)
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
+  import modgen.common.throwerror;
+  import elltool.conf.Properties;
 
-  global ellOptions;
 
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
-
-  if ~(isa(EE, 'ellipsoid')) | ~(isa(E2, 'ellipsoid'))
-    error('MINKPM_EA: first and second arguments must be ellipsoids.');
+  if ~(isa(EE, 'ellipsoid')) || ~(isa(E2, 'ellipsoid'))
+    throwerror('wrongInput', 'MINKPM_EA: first and second arguments must be ellipsoids.');
   end
 
   [m, n] = size(E2);
-  if (m ~= 1) | (n ~= 1)
-    error('MINKPM_EA: second argument must be single ellipsoid.');
+  if (m ~= 1) || (n ~= 1)
+    throwerror('wrongInput', 'MINKPM_EA: second argument must be single ellipsoid.');
   end
 
   k  = size(L, 1);
   n  = dimension(E2);
   mn = min(min(dimension(EE)));
   mx = max(max(dimension(EE)));
-  if (mn ~= mx) | (mn ~= n)
-    error('MINKPM_EA: all ellipsoids must be of the same dimension.');
+  if (mn ~= mx) || (mn ~= n)
+    throwerror('wrongSizes', 'MINKPM_EA: all ellipsoids must be of the same dimension.');
   end
   if n ~= k
-    error('MINKPM_EA: dimension of the direction vectors must be the same as dimension of ellipsoids.');
+    throwerror('wrongSizes', 'MINKPM_EA: dimension of the direction vectors must be the same as dimension of ellipsoids.');
   end
 
   N                  = size(L, 2);
   EA                 = [];
-  vrb                = ellOptions.verbose;
-  ellOptions.verbose = 0;
+  vrb                = Properties.getIsVerbose();
+  Properties.setIsVerbose(false);
   
   % sanity check: the approximated set should be nonempty
   for i = 1:N
-    [U, S, V] = svd(L(:, i));
+    [U, ~, ~] = svd(L(:, i));
     ET        = minksum_ea(EE, U);
     if min(ET > E2) < 1
       if vrb > 0
         fprintf('MINKPM_EA: the resulting set is empty.\n');
-      end
-      ellOptions.verbose = vrb;
+      end       
+      Properties.setIsVerbose(vrb);
       return;
     end
   end
@@ -87,13 +84,13 @@ function EA = minkpm_ea(EE, E2, L)
     end
   end
   
-  ellOptions.verbose = vrb;
+  Properties.setIsVerbose(vrb);
 
   if isempty(EA)
-    if ellOptions.verbose > 0
+    if Properties.getIsVerbose()
       fprintf('MINKPM_EA: cannot compute external approximation for any\n');
       fprintf('           of the specified directions.\n');
     end
   end
 
-  return;
+end

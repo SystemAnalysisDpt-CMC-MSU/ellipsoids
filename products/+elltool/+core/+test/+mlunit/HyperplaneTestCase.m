@@ -15,7 +15,9 @@ classdef HyperplaneTestCase < mlunitext.test_case
             self.testDataRootDir=[fileparts(which(className)),filesep,'TestData',...
                 filesep,shortClassName];     
         end
-        
+        function tear_down(~)
+            close all;
+        end
         function self = testHyperplaneAndDouble(self)  
             %method double is implicitly tested in every comparison between
             %hyperplanes contents and normals and constants, from which it 
@@ -158,6 +160,13 @@ classdef HyperplaneTestCase < mlunitext.test_case
             pHandle = plot(testHplane3D1Vec,'g',testHplane3D2Vec,'r');
             close(pHandle);            
         end
+        function testPlotSimple(~)
+            HA = hyperplane([1 0; 1 -2]'', [4 -2]);
+            o.width = 2; o.size = [3 6.6]; o.center = [0 -2; 0 0];
+            hFig=figure();
+            h=plot(HA, 'r', o); hold off;
+            close(hFig);
+        end
         %    
         function self = testWrongInput(self)
             SInpData =  self.auxReadFile(self);
@@ -173,9 +182,28 @@ classdef HyperplaneTestCase < mlunitext.test_case
             self.runAndCheckError('hyperplane(nanVec,testConstant)','wrongInput',...
                 'v,c is');
         end
+       %
+       function self = testGetAbsTol(self)
+           normVec = ones(3,1);
+           const = 0;
+           testAbsTol = 1;
+           args = {normVec,const, 'absTol',testAbsTol};
+           %              
+           hplaneArr = [hyperplane(args{:}),hyperplane(args{:});...
+                           hyperplane(args{:}),hyperplane(args{:})];
+           hplaneArr(:,:,2) = [hyperplane(args{:}),hyperplane(args{:});...
+                           hyperplane(args{:}),hyperplane(args{:})];
+           sizeArr = size(hplaneArr);
+            testAbsTolArr = repmat(testAbsTol,sizeArr);
+            %
+            isOkArr = (testAbsTolArr == hplaneArr.getAbsTol());
+            %  
+            isOk = all(isOkArr(:));
+            mlunit.assert(isOk);
+       end
     end
     %
-    methods(Static)
+    methods(Static, Access = private)
          function res = isNormalAndConstantRight(testNormal, testConstant, testingHyraplane)
             [resultNormal, resultConstant] = double(testingHyraplane);
             %

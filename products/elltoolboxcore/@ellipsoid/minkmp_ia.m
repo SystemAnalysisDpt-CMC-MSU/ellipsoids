@@ -33,19 +33,15 @@ function IA = minkmp_ia(E1, E2, EE, L)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  global ellOptions;
+  import elltool.conf.Properties;
 
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
-
-  if ~(isa(EE, 'ellipsoid')) | ~(isa(E2, 'ellipsoid')) | ~(isa(E1, 'ellipsoid'))
+  if ~(isa(EE, 'ellipsoid')) || ~(isa(E2, 'ellipsoid')) || ~(isa(E1, 'ellipsoid'))
     error('MINKMP_IA: first, second and third arguments must be ellipsoids.');
   end
 
   [k, l] = size(E1);
   [m, n] = size(E2);
-  if (k ~= 1) | (l ~= 1) | (m ~= 1) | (n ~= 1)
+  if (k ~= 1) || (l ~= 1) || (m ~= 1) || (n ~= 1)
     error('MINKMP_IA: first and second arguments must be single ellipsoids.');
   end
 
@@ -54,7 +50,7 @@ function IA = minkmp_ia(E1, E2, EE, L)
   n  = dimension(E2);
   mn = min(min(dimension(EE)));
   mx = max(max(dimension(EE)));
-  if (mn ~= mx) | (mn ~= n) | (m ~= n)
+  if (mn ~= mx) || (mn ~= n) || (m ~= n)
     error('MINKMP_IA: all ellipsoids must be of the same dimension.');
   end
   if n ~= k
@@ -64,7 +60,7 @@ function IA = minkmp_ia(E1, E2, EE, L)
   IA = [];
 
   if ~isbigger(E1, E2)
-    if ellOptions.verbose > 0
+    if Properties.getIsVerbose()
       fprintf('MINKMP_IA: the resulting set is empty.\n');
     end
     return;
@@ -74,8 +70,8 @@ function IA = minkmp_ia(E1, E2, EE, L)
   N                  = size(L, 2);
   [m, n]             = size(EE);
   EE                 = reshape(EE, 1, m*n);
-  vrb                = ellOptions.verbose;
-  ellOptions.verbose = 0;
+  vrb                = Properties.getIsVerbose();
+  Properties.setIsVerbose(false);
 
 
   for i = 1:N
@@ -86,13 +82,12 @@ function IA = minkmp_ia(E1, E2, EE, L)
     end
   end
   
-  ellOptions.verbose = vrb;
-
+  Properties.setIsVerbose(vrb);
   if isempty(IA)
-    if ellOptions.verbose > 0
+    if Properties.getIsVerbose()
       fprintf('MINKMP_IA: cannot compute external approximation for any\n');
       fprintf('           of the specified directions.\n');
     end
   end
 
-  return;
+end

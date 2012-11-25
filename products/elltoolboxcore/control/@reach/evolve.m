@@ -31,13 +31,7 @@ function RS = evolve(CRS, T, lsys)
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
-
-  global ellOptions;
-
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
-
+  import elltool.conf.Properties;
   if nargin < 2
     error('EVOLVE: insufficient number of input arguments.');
   end
@@ -95,7 +89,7 @@ function RS = evolve(CRS, T, lsys)
       RS.time_values = T(1):T(2);
     end
   else
-    RS.time_values = linspace(T(1), T(2), ellOptions.time_grid);
+    RS.time_values = linspace(T(1), T(2), CRS.nTimeGridPoints());
   end
 
   if RS.time_values(1) > RS.time_values(end)
@@ -127,7 +121,7 @@ function RS = evolve(CRS, T, lsys)
   %%% Perform matrix, control, disturbance and noise evaluations. %%%
   %%% Create splines if needed.                                   %%%
 
-  if ellOptions.verbose > 0
+  if Properties.getIsVerbose()
     fprintf('Performing preliminary function evaluations...\n');
   end
 
@@ -152,7 +146,7 @@ function RS = evolve(CRS, T, lsys)
     DD = [];
     AC = [];
     for i = 1:size(RS.time_values, 2)
-      A  = matrix_eval(lsys.A, RS.time_values(i));
+      A  = reach.matrix_eval(lsys.A, RS.time_values(i));
       AC = [AC reshape(A, d1*d1, 1)];
       if isdiscrete(lsys) & (rank(A) < d1)
         A = ell_regularize(A);
@@ -185,7 +179,7 @@ function RS = evolve(CRS, T, lsys)
   if iscell(lsys.B)
     BB = [];
     for i = 1:size(RS.time_values, 2)
-      B  = matrix_eval(lsys.B, RS.time_values(i));
+      B  = reach.matrix_eval(lsys.B, RS.time_values(i));
       BB = [BB reshape(B, d1*du, 1)];
     end
   else
@@ -196,7 +190,7 @@ function RS = evolve(CRS, T, lsys)
   GG = [];
   if iscell(lsys.G)
     for i = 1:size(RS.time_values, 2)
-      B  = matrix_eval(lsys.G, RS.time_values(i));
+      B  = reach.matrix_eval(lsys.G, RS.time_values(i));
       GG = [GG reshape(B, d1*dd, 1)];
     end
   elseif ~(isempty(lsys.G))
@@ -207,7 +201,7 @@ function RS = evolve(CRS, T, lsys)
   if iscell(lsys.C)
     CC = [];
     for i = 1:size(RS.time_values, 2)
-      C  = matrix_eval(lsys.C, RS.time_values(i));
+      C  = reach.matrix_eval(lsys.C, RS.time_values(i));
       CC = [CC reshape(C, d1*dy, 1)];
     end
     if isdiscrete(lsys)
@@ -276,7 +270,7 @@ function RS = evolve(CRS, T, lsys)
       else
         B = reshape(BB(:, i), d1, du);
       end
-      Bp = [Bp B*matrix_eval(p, RS.time_values(i))];
+      Bp = [Bp B*reach.matrix_eval(p, RS.time_values(i))];
     end
     if isdiscrete(lsys)
       mydata.Bp = Bp;
@@ -291,8 +285,8 @@ function RS = evolve(CRS, T, lsys)
         BPB   = [];
         BPBsr = [];
         for i = 1:size(RS.time_values, 2)
-          p = matrix_eval(lsys.control.center, RS.time_values(i));
-          P = matrix_eval(lsys.control.shape, RS.time_values(i));
+          p = reach.matrix_eval(lsys.control.center, RS.time_values(i));
+          P = reach.matrix_eval(lsys.control.shape, RS.time_values(i));
           if (P ~= P') | (min(eig(P)) < 0)
             error('EVOLVE: shape matrix of ellipsoidal control bounds must be positive definite.')
           end
@@ -315,7 +309,7 @@ function RS = evolve(CRS, T, lsys)
       elseif iscell(lsys.control.center)
         Bp  = [];
         for i = 1:size(RS.time_values, 2)
-          p  = matrix_eval(lsys.control.center, RS.time_values(i));
+          p  = reach.matrix_eval(lsys.control.center, RS.time_values(i));
           Bp = [Bp B*p];
         end
         if isdiscrete(lsys)
@@ -330,7 +324,7 @@ function RS = evolve(CRS, T, lsys)
         BPB   = [];
         BPBsr = [];
         for i = 1:size(RS.time_values, 2)
-          P   = matrix_eval(lsys.control.shape, RS.time_values(i));
+          P   = reach.matrix_eval(lsys.control.shape, RS.time_values(i));
           if (P ~= P') | (min(eig(P)) < 0)
             error('EVOLVE: shape matrix of ellipsoidal control bounds must be positive definite.')
           end
@@ -356,12 +350,12 @@ function RS = evolve(CRS, T, lsys)
       for i = 1:size(RS.time_values, 2)
         B = reshape(BB(:, i), d1, du);
         if iscell(lsys.control.center)
-          p = matrix_eval(lsys.control.center, RS.time_values(i));
+          p = reach.matrix_eval(lsys.control.center, RS.time_values(i));
         else
           p = lsys.control.center;
         end
         if iscell(lsys.control.shape)
-          P = matrix_eval(lsys.control.shape, RS.time_values(i));
+          P = reach.matrix_eval(lsys.control.shape, RS.time_values(i));
           if (P ~= P') | (min(eig(P)) < 0)
             error('EVOLVE: shape matrix of ellipsoidal control bounds must be positive definite.')
           end
@@ -445,7 +439,7 @@ function RS = evolve(CRS, T, lsys)
         else
           G = reshape(GG(:, i), d1, dd);
         end
-        Gq = [Gq G*matrix_eval(q, RS.time_values(i), isdiscrete(lsys))];
+        Gq = [Gq G*reach.matrix_eval(q, RS.time_values(i), isdiscrete(lsys))];
       end
       if isdiscrete(lsys)
         mydata.Gq = Gq;
@@ -460,8 +454,8 @@ function RS = evolve(CRS, T, lsys)
           GQG   = [];
           GQGsr = [];
           for i = 1:size(RS.time_values, 2)
-            q = matrix_eval(lsys.disturbance.center, RS.time_values(i));
-            Q = matrix_eval(lsys.disturbance.shape, RS.time_values(i));
+            q = reach.matrix_eval(lsys.disturbance.center, RS.time_values(i));
+            Q = reach.matrix_eval(lsys.disturbance.shape, RS.time_values(i));
             if (Q ~= Q') | (min(eig(Q)) < 0)
               error('EVOLVE: shape matrix of ellipsoidal disturbance bounds must be positive definite.')
             end
@@ -484,7 +478,7 @@ function RS = evolve(CRS, T, lsys)
         elseif iscell(lsys.disturbance.center)
           Gq  = [];
           for i = 1:size(RS.time_values, 2)
-            q  = matrix_eval(lsys.disturbance.center, RS.time_values(i));
+            q  = reach.matrix_eval(lsys.disturbance.center, RS.time_values(i));
             Gq = [Gq G*q];
           end
           if isdiscrete(lsys)
@@ -499,7 +493,7 @@ function RS = evolve(CRS, T, lsys)
           GQG   = [];
           GQGsr = [];
           for i = 1:size(RS.time_values, 2)
-            Q   = matrix_eval(lsys.disturbance.shape, RS.time_values(i));
+            Q   = reach.matrix_eval(lsys.disturbance.shape, RS.time_values(i));
             if (Q ~= Q') | (min(eig(Q)) < 0)
               error('EVOLVE: shape matrix of ellipsoidal disturbance bounds must be positive definite.')
             end
@@ -525,12 +519,12 @@ function RS = evolve(CRS, T, lsys)
         for i = 1:size(RS.time_values, 2)
           G = reshape(GG(:, i), d1, dd);
           if iscell(lsys.disturbance.center)
-            q = matrix_eval(lsys.disturbance.center, RS.time_values(i));
+            q = reach.matrix_eval(lsys.disturbance.center, RS.time_values(i));
           else
             q = lsys.disturbance.center;
           end
           if iscell(lsys.disturbance.shape)
-            Q = matrix_eval(lsys.disturbance.shape, RS.time_values(i));
+            Q = reach.matrix_eval(lsys.disturbance.shape, RS.time_values(i));
             if (Q ~= Q') | (min(eig(Q)) < 0)
               error('EVOLVE: shape matrix of ellipsoidal disturbance bounds must be positive definite.')
             end
@@ -568,7 +562,7 @@ function RS = evolve(CRS, T, lsys)
     elseif iscell(lsys.noise)
       w = [];
       for i = 1:size(RS.time_values, 2)
-        w = [w matrix_eval(lsys.noise.center, RS.time_values(i))];
+        w = [w reach.matrix_eval(lsys.noise.center, RS.time_values(i))];
       end
       if isdiscrete(lsys)
         mydata.w = w;
@@ -580,8 +574,8 @@ function RS = evolve(CRS, T, lsys)
         w = [];
         W = [];
         for i = 1:size(RS.time_values, 2)
-          w  = [w matrix_eval(lsys.noise.center, RS.time_values(i))];
-          ww = matrix_eval(lsys.noise.shape, RS.time_values(i));
+          w  = [w reach.matrix_eval(lsys.noise.center, RS.time_values(i))];
+          ww = reach.matrix_eval(lsys.noise.shape, RS.time_values(i));
           if (ww ~= ww') | (min(eig(ww)) < 0)
             error('EVOLVE: shape matrix of ellipsoidal noise bounds must be positive definite.')
           end
@@ -597,7 +591,7 @@ function RS = evolve(CRS, T, lsys)
       elseif iscell(lsys.noise.center)
         w = [];
         for i = 1:size(RS.time_values, 2)
-          w = [w matrix_eval(lsys.noise.center, RS.time_values(i))];
+          w = [w reach.matrix_eval(lsys.noise.center, RS.time_values(i))];
         end
         if isdiscrete(lsys)
           mydata.w = w;
@@ -608,7 +602,7 @@ function RS = evolve(CRS, T, lsys)
       else
         W = [];
         for i = 1:size(RS.time_values, 2)
-          ww = matrix_eval(lsys.noise.shape, RS.time_values(i));
+          ww = reach.matrix_eval(lsys.noise.shape, RS.time_values(i));
           if (ww ~= ww') | (min(eig(ww)) < 0)
             error('EVOLVE: shape matrix of ellipsoidal noise bounds must be positive definite.')
           end
@@ -631,7 +625,7 @@ function RS = evolve(CRS, T, lsys)
 
   %%% Compute state transition matrix. %%%
 
-  if ellOptions.verbose > 0
+  if Properties.getIsVerbose()
     fprintf('Computing state transition matrix...\n');
   end
 
@@ -700,7 +694,7 @@ function RS = evolve(CRS, T, lsys)
   
   %%% Compute the center of the reach set. %%%
 
-  if ellOptions.verbose > 0
+  if Properties.getIsVerbose()
     fprintf('Computing the trajectory of the reach set center...\n');
   end
 
@@ -739,7 +733,7 @@ function RS = evolve(CRS, T, lsys)
   %%% Compute external shape matrices. %%%
 
   if (Options.approximation ~= 1)
-    if ellOptions.verbose > 0
+    if Properties.getIsVerbose()
       fprintf('Computing external shape matrices...\n');
     end
 
@@ -752,15 +746,15 @@ function RS = evolve(CRS, T, lsys)
       l0 = RS.initial_directions(:, ii);
       if isdiscrete(lsys)   % discrete-time system
         if hasdisturbance(lsys)
-          [Q, L] = eedist_de(size(tvals, 2), ...
+          [Q, L] = reach.eedist_de(size(tvals, 2), ...
                              Q0, ...
                              l0, ...
                              mydata, ...
                              d1, ...
                              back, ...
-                             Options.minmax);
+                             Options.minmax, RS.absTol);
         elseif ~(isempty(mydata.BPB))
-          [Q, L] = eesm_de(size(tvals, 2), Q0, l0, mydata, d1, back);
+          [Q, L] = reach.eesm_de(size(tvals, 2), Q0, l0, mydata, d1, back,RS.absTol);
         else
           Q = [];
           L = [];
@@ -788,7 +782,7 @@ function RS = evolve(CRS, T, lsys)
   %%% Compute internal shape matrices. %%%
 
   if (Options.approximation ~= 0)
-    if ellOptions.verbose > 0
+    if Properties.getIsVerbose()
       fprintf('Computing internal shape matrices...\n');
     end
 
@@ -804,15 +798,15 @@ function RS = evolve(CRS, T, lsys)
       l0 = RS.initial_directions(:, ii);
       if isdiscrete(lsys)   % discrete-time system
         if hasdisturbance(lsys)
-          [Q, L] = iedist_de(size(tvals, 2), ...
+          [Q, L] = reach.iedist_de(size(tvals, 2), ...
                              Q0, ...
                              l0, ...
                              mydata, ...
                              d1, ...
                              back, ...
-                             Options.minmax);
+                             Options.minmax,RS.absTol);
         elseif ~(isempty(mydata.BPB))
-          [Q, L] = iesm_de(size(tvals, 2), Q0, l0, mydata, d1, back);
+          [Q, L] = reach.iesm_de(size(tvals, 2), Q0, l0, mydata, d1, back,RS.absTol);
         else
           Q = [];
           L = [];
@@ -824,7 +818,7 @@ function RS = evolve(CRS, T, lsys)
           Q       = Q';
         elseif ~(isempty(mydata.BPB))
           [tt, Q] = ell_ode_solver(@ell_iesm_ode, tvals, reshape(X0, d1*d1, 1), X0*l0, l0, mydata, d1, back);
-          Q       = fix_iesm(Q', d1);
+          Q       = reach.fix_iesm(Q', d1);
         else
           Q = [];
         end

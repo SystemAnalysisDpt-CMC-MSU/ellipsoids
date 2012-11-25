@@ -31,19 +31,16 @@ function res = isbigger(E1, E2)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  global ellOptions;
+  import elltool.conf.Properties;
 
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
 
-  if ~(isa(E1, 'ellipsoid')) | ~(isa(E2, 'ellipsoid'))
+  if ~(isa(E1, 'ellipsoid')) || ~(isa(E2, 'ellipsoid'))
     error('ISBIGGER: both arguments must be single ellipsoids.');
   end
 
   [k, l] = size(E1);
   [m, n] = size(E2);
-  if (k > 1) | (l > 1) | (m > 1) | (n > 1)
+  if (k > 1) || (l > 1) || (m > 1) || (n > 1)
     error('ISBIGGER: both arguments must be single ellipsoids.');
   end
 
@@ -60,18 +57,18 @@ function res = isbigger(E1, E2)
   A = E1.shape;
   B = E2.shape;
   if r1 < m
-    if ellOptions.verbose > 0
+    if Properties.getIsVerbose()
       fprintf('ISBIGGER: Warning! First ellipsoid is degenerate.');
       fprintf('          Regularizing...');
     end
-    A = regularize(A);
+    A = ellipsoid.regularize(A,E1.absTol);
   end
 
   T = ell_simdiag(A, B);
-  if max(abs(diag(T*B*T'))) < (1 + ellOptions.abs_tol)
+  if max(abs(diag(T*B*T'))) < (1 + E1.absTol)
     res = 1;
   else
     res = 0;
   end
 
-  return;
+end

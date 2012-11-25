@@ -52,12 +52,7 @@ function RRS = refine(RS, L0, Options)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  global ellOptions;
-
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
-
+  import elltool.conf.Properties;
   RRS = RS(1, 1);
   if isempty(RRS)
     return;
@@ -132,7 +127,7 @@ function RRS = refine(RS, L0, Options)
   %%% Compute external shape matrices. %%%
 
   if (Options.approximation ~= 1)
-    if ellOptions.verbose > 0
+    if Properties.getIsVerbose()
       if (N - EN) > 0
         fprintf('Computing external shape matrices...\n');
       end
@@ -145,15 +140,15 @@ function RRS = refine(RS, L0, Options)
       l0 = RRS.initial_directions(:, ii);
       if isdiscrete(RRS.system)   % discrete-time system
         if hasdisturbance(RRS.system)
-          [Q, L] = eedist_de(size(tvals, 2), ...
+          [Q, L] = reach.eedist_de(size(tvals, 2), ...
                              Q0, ...
                              l0, ...
                              mydata, ...
                              d1, ...
                              back, ...
-                             Options.minmax);
+                             Options.minmax,RS.absTol);
         elseif ~(isempty(mydata.BPB))
-          [Q, L] = eesm_de(size(tvals, 2), Q0, l0, mydata, d1, back);
+          [Q, L] = reach.eesm_de(size(tvals, 2), Q0, l0, mydata, d1, back,RS.absTol);
         else
           Q = [];
           L = [];
@@ -182,7 +177,7 @@ function RRS = refine(RS, L0, Options)
   %%% Compute internal shape matrices. %%%
 
   if (Options.approximation ~= 0)
-    if ellOptions.verbose > 0
+    if Properties.getIsVerbose()
       if (N - IN) > 0
         fprintf('Computing internal shape matrices...\n');
       end
@@ -197,15 +192,15 @@ function RRS = refine(RS, L0, Options)
       l0 = RRS.initial_directions(:, ii);
       if isdiscrete(RRS.system)   % discrete-time system
         if hasdisturbance(RRS.system)
-          [Q, L] = iedist_de(size(tvals, 2), ...
+          [Q, L] = reach.iedist_de(size(tvals, 2), ...
                              Q0, ...
                              l0, ...
                              mydata, ...
                              d1, ...
                              back, ...
-                             Options.minmax);
+                             Options.minmax,RS.absTol);
         elseif ~(isempty(mydata.BPB))
-          [Q, L] = iesm_de(size(tvals, 2), Q0, l0, mydata, d1, back);
+          [Q, L] = reach.iesm_de(size(tvals, 2), Q0, l0, mydata, d1, back,RS.absTol);
         else
           Q = [];
           L = [];
@@ -217,7 +212,7 @@ function RRS = refine(RS, L0, Options)
           Q       = Q';
         elseif ~(isempty(mydata.BPB))
           [tt, Q] = ell_ode_solver(@ell_iesm_ode, tvals, reshape(M, d1*d1, 1), M*l0, l0, mydata, d1, back);
-          Q       = fix_iesm(Q', d1);
+          Q       = reach.fix_iesm(Q', d1);
         else
           Q = [];
         end

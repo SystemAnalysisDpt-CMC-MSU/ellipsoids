@@ -1,103 +1,81 @@
-function [E, S] = ellunion_ea(EE)
+function outEll = ellunion_ea(inpEllMat)
 %
 % ELLUNION_EA - computes minimum volume ellipsoid that contains union
 %               of given ellipsoids.
 %
-%
-% Description:
-% ------------
-%
-%    E = ELLUNION_EA(EE)  Among all ellipsoids that contain the union
-%                         of ellipsoids in the ellipsoidal array EE,
-%                         find the one that has minimal volume.
-%
-%
-%     We use YALMIP as interface to the optimization tools.
-%     (http://control.ee.ethz.ch/~joloef/yalmip.php)
-%
+% Input:
+%   regular:
+%       inpEllMat: ellipsoid [mRows, nCols] - matrix of ellipsoids
+%           of the same dimentions.
 %
 % Output:
-% -------
+%   outEll: ellipsoid [1, 1] - resulting minimum volume ellipsoid.
 %
-%    E - resulting minimum volume ellipsoid.
-%    S - (optional) status variable returned by YALMIP.
+% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+% $Copyright:  The Regents of the University of California 2004-2008 $
 %
-%
-% See also:
-% ---------
-%
-%    ELLIPSOID/ELLIPSOID, ELLINTERSECTION_IA.
-%
+% $Author: Vadim Kaushanskiy <vkaushanskiy@gmail.com> $  $Date: 10-11-2012$
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2012 $
 
-%
-% Author:
-% -------
-%
-%    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-%    Vadim Kaushanskiy <vkaushanskiy@gmail.com>
+import elltool.conf.Properties;
+import modgen.common.throwerror;
 
-  global ellOptions;
-  import modgen.common.throwerror;
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
+ellDimensions = dimension(inpEllMat);
+minEllDim   = min(min(ellDimensions));
+maxEllDim   = max(max(ellDimensions));
 
-  dims = dimension(EE);
-  mn   = min(min(dims));
-  mx   = max(max(dims));
+if minEllDim ~= maxEllDim
+    throwerror('wrongSizes', ...
+        'ELLUNION_EA: all ellipsoids must be of the same dimension.');
+end
 
-  if mn ~= mx
-    error('ELLUNION_EA: all ellipsoids must be of the same dimension.');
-  end
+[mRows, nCols] = size(inpEllMat);
+nEllipsoids = mRows * nCols;
+inpEllVec  = reshape(inpEllMat, 1, nEllipsoids);
 
-  [m, n] = size(EE);
-  M      = m * n;
-  EE     = reshape(EE, 1, M);
-  zz     = zeros(mn, mn);
-
-  if ellOptions.verbose > 0
+if Properties.getIsVerbose()
     fprintf('Invoking CVX...\n');
-  end
-  
+end
 
 
+absTolVec = getAbsTol(inpEllVec);
 cvx_begin sdp
-    variable cvxEllMat(mn,mn) symmetric
-    variable cvxEllCenterVec(mn)
-    variable cvxDirVec(M)
-    maximize( det_rootn( cvxEllMat ) )
-    subject to
-        -cvxDirVec <= 0
-        for i = 1:M
-            [q, Q] = double(EE(i));
-            Q = (Q + Q')*0.5;
-            if rank(Q) < mn
-                Q = regularize(Q);
-            end
+variable cvxEllMat(minEllDim, minEllDim) symmetric
+variable cvxEllCenterVec(minEllDim)
+variable cvxDirVec(nEllipsoids)
+maximize( det_rootn( cvxEllMat ) )
+subject to
+-cvxDirVec <= 0
+for iEllipsoid = 1:nEllipsoids
+    [inpEllcenrVec, inpEllShMat] = double(inpEllVec(iEllipsoid));
+    inpEllShMat = (inpEllShMat + inpEllShMat')*0.5;
+    if rank(inpEllShMat) < minEllDim
+        inpEllShMat = ellipsoid.regularize(inpEllShMat,absTolVec(iEllipsoid));
+    end
     
-            Q     = inv(Q);
-            Q = (Q + Q')*0.5;
-            bb    = -Q * q;
-            cc    = q' * Q * q - 1;
-           
-            [ -(cvxEllMat - cvxDirVec(i)*Q), -(cvxEllCenterVec - cvxDirVec(i)*bb), zeros(mn, mn);
-              -(cvxEllCenterVec - cvxDirVec(i)*bb)', -(- 1 - cvxDirVec(i)*cc), -cvxEllCenterVec';
-               zeros(mn,mn), -cvxEllCenterVec, cvxEllMat] >= 0;
-        end
+    inpEllShMat     = inv(inpEllShMat);
+    inpEllShMat = (inpEllShMat + inpEllShMat')*0.5;
+    bVec    = -inpEllShMat * inpEllcenrVec;
+    constraint    = inpEllcenrVec' * inpEllShMat * inpEllcenrVec - 1;
+    
+    [ -(cvxEllMat - cvxDirVec(iEllipsoid)*inpEllShMat), -(cvxEllCenterVec...
+        - cvxDirVec(iEllipsoid)*bVec), zeros(minEllDim, minEllDim);
+        -(cvxEllCenterVec - cvxDirVec(iEllipsoid)*bVec)', -(- 1 - ...
+        cvxDirVec(iEllipsoid)*constraint), -cvxEllCenterVec';
+        zeros(minEllDim, minEllDim), -cvxEllCenterVec, cvxEllMat] >= 0;
+end
 cvx_end
- 
-
-  if strcmp(cvx_status,'Infeasible') || strcmp(cvx_status,'Inaccurate/Infeasible') || strcmp(cvx_status,'Failed')
-      throwerror('cvxError','Cvx cannot solve the system');
-  end;
-  ellMat = inv(cvxEllMat);
-  ellMat = 0.5*(ellMat + ellMat');
-  ellCenterVec = -ellMat * cvxEllCenterVec;
-
-  E = ellipsoid(ellCenterVec, ellMat);
-
-  if nargout < 2
-    clear S;
-  end
 
 
+if strcmp(cvx_status,'Infeasible') || ...
+        strcmp(cvx_status,'Inaccurate/Infeasible') || ...
+        strcmp(cvx_status,'Failed')
+    throwerror('cvxError','Cvx cannot solve the system');
+end;
+ellMat = inv(cvxEllMat);
+ellMat = 0.5*(ellMat + ellMat');
+ellCenterVec = -ellMat * cvxEllCenterVec;
+
+outEll = ellipsoid(ellCenterVec, ellMat);

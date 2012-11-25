@@ -152,9 +152,9 @@ classdef test_case < handle
                 end
                 
                 try
-                    self = tear_down(self);
+                    tear_down(self);
                 catch meObj
-                    result = add_error_with_stack(result, self, meObj);
+                    result = add_error(result, self, meObj);
                     ok = 0;
                 end
                 

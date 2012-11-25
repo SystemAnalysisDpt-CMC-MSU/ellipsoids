@@ -25,15 +25,12 @@ function res = eq(E1, E2)
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
+  import modgen.common.throwerror;
   import gras.la.sqrtm;
-  global ellOptions;
-
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
-
-  if ~(isa(E1, 'ellipsoid')) | ~(isa(E2, 'ellipsoid'))
-    error('==: both arguments must be ellipsoids.');
+  import elltool.conf.Properties;
+  
+  if ~(isa(E1, 'ellipsoid')) || ~(isa(E2, 'ellipsoid'))
+    throwerror('wrongInput', '==: both arguments must be ellipsoids.');
   end
 
   [k, l] = size(E1);
@@ -41,12 +38,12 @@ function res = eq(E1, E2)
   [m, n] = size(E2);
   t      = m * n;
 
-  if ((k ~= m) | (l ~= n)) & (s > 1) & (t > 1)
-    error('==: sizes of ellipsoidal arrays do not match.');
+  if ((k ~= m) || (l ~= n)) && (s > 1) && (t > 1)
+    throwerror('wrongSizes', '==: sizes of ellipsoidal arrays do not match.');
   end
 
   res = [];
-  if (s > 1) & (t > 1)
+  if (s > 1) && (t > 1)
     for i = 1:m
       r = [];
       for j = 1:n
@@ -56,7 +53,7 @@ function res = eq(E1, E2)
         end
         q = E1(i, j).center - E2(i, j).center;
         Q = sqrtm(E1(i, j).shape) - sqrtm(E2(i, j).shape);
-        if (norm(q) > ellOptions.rel_tol) | (norm(Q) > ellOptions.rel_tol)
+        if (norm(q) > E1(i,j).relTol) | (norm(Q) > E1(i,j).relTol)
           r = [r 0];
         else
           r = [r 1];
@@ -74,7 +71,7 @@ function res = eq(E1, E2)
         end
         q = E1(i, j).center - E2.center;
         Q = sqrtm(E1(i, j).shape) - sqrtm(E2.shape);
-        if (norm(q) > ellOptions.rel_tol) | (norm(Q) > ellOptions.rel_tol)
+        if (norm(q) > E1(i,j).relTol) | (norm(Q) > E1(i,j).relTol)
           r = [r 0];
         else
           r = [r 1];
@@ -92,7 +89,7 @@ function res = eq(E1, E2)
         end
         q = E1.center - E2(i, j).center;
         Q = sqrtm(E1.shape) - sqrtm(E2(i, j).shape);
-        if (norm(q) > ellOptions.rel_tol) | (norm(Q) > ellOptions.rel_tol)
+        if (norm(q) > E1.relTol) | (norm(Q) > E1.relTol)
            r = [r 0];
         else
           r = [r 1];
@@ -102,4 +99,4 @@ function res = eq(E1, E2)
     end
   end
 
-  return; 
+end

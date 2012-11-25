@@ -27,29 +27,26 @@ function M = mineig(E)
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
-
-  global ellOptions;
-
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
+  import modgen.common.throwerror;
+  import elltool.conf.Properties;
 
   if ~(isa(E, 'ellipsoid'))
     error('MINEIG: input argument must be ellipsoid.')
   end
 
   [m, n] = size(E);
-  M      = [];
+  M = zeros(m,n);
   for i = 1:m
-    mx = [];
     for j = 1:n
+      if isempty(E(i,j))
+          throwerror('wrongInput:emptyEllipsoid','MINEIG: input argument is empty.');
+      end
       if isdegenerate(E(i, j))
-        mx = [mx 0];
+        M(i,j)=0;
       else
-        mx = [mx min(eig(E(i, j).shape))];
+        M(i,j) = min(eig(E(i, j).shape));
       end
     end
-    M = [M; mx];
   end
 
-  return;
+end

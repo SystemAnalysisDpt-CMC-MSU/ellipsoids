@@ -30,11 +30,7 @@ function P = hyperplane2polytope(HA)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  global ellOptions;
-
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
+  import elltool.conf.Properties;
 
   if ~(isa(HA, 'hyperplane'))
     error('HYPERPLANE2POLYTOPE: input argument must be array of hyperplanes.');
@@ -60,4 +56,4 @@ function P = hyperplane2polytope(HA)
 
   P = polytope(A, b);
 
-  return;
+end

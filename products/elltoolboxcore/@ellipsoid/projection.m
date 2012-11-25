@@ -30,14 +30,7 @@ function EP = projection(E, B)
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
-
-  global ellOptions;
-
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
-
-  if ~(isa(E, 'ellipsoid')) | ~(isa(B, 'double'))
+  if ~(isa(E, 'ellipsoid')) || ~(isa(B, 'double'))
     error('PROJECTION: arguments must be array of ellipsoids and matrix with orthogonal columns.');
   end
 
@@ -60,13 +53,14 @@ function EP = projection(E, B)
   for i = 1:(l - 1)
     v = B(:, i);
     for j = (i + 1):l
-      if abs(v'*B(:, j)) > ellOptions.abs_tol
+      if abs(v'*B(:, j)) > E.getAbsTol()
         error('PROJECTION: basis vectors must be orthogonal.');
       end
     end
   end
 
   % normalize the basis vectors
+  BB = zeros(k,l);
   for i = 1:l
     BB(:, i) = B(:, i)/norm(B(:, i));
   end
@@ -85,4 +79,4 @@ function EP = projection(E, B)
     clear r;
   end
 
-  return;
+end

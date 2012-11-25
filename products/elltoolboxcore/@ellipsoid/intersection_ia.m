@@ -49,16 +49,11 @@ function E = intersection_ia(E1, X)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  global ellOptions;
-
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
 
   if ~(isa(E1, 'ellipsoid'))
     error('INTERSECTION_IA: first input argument must be ellipsoid.');
   end
-  if ~(isa(X, 'ellipsoid')) & ~(isa(X, 'hyperplane')) & ~(isa(X, 'polytope'))
+  if ~(isa(X, 'ellipsoid')) && ~(isa(X, 'hyperplane')) && ~(isa(X, 'polytope'))
     error('INTERSECTION_IA: second input argument must be ellipsoid, hyperplane or polytope.');
   end
 
@@ -83,7 +78,7 @@ function E = intersection_ia(E1, X)
   mn2   = min(min(dims2));
   mx1   = max(max(dims1));
   mx2   = max(max(dims2));
-  if (mn1 ~= mx1) | (mn2 ~= mx2) | (mx1 ~= mx2)
+  if (mn1 ~= mx1) || (mn2 ~= mx2) || (mx1 ~= mx2)
     if isa(X, 'hyperplane')
       error('INTERSECTION_IA: ellipsoids and hyperplanes must be of the same dimension.');
     elseif isa(X, 'polytope')
@@ -95,7 +90,7 @@ function E = intersection_ia(E1, X)
 
   t1     = k * l;
   t2     = m * n;
-  if (t1 > 1) & (t2 > 1) & ((k ~= m) | (l ~= n))
+  if (t1 > 1) && (t2 > 1) && ((k ~= m) || (l ~= n))
     if isa(X, 'hyperplane')
       error('INTERSECTION_IA: sizes of ellipsoidal and hyperplane arrays do not match.');
     elseif isa(X, 'polytope')
@@ -106,7 +101,7 @@ function E = intersection_ia(E1, X)
   end
 
   E = [];
-  if (t1 > 1) & (t2 > 1)
+  if (t1 > 1) && (t2 > 1)
     for i = 1:k
       e = [];
       for j = 1:l
@@ -144,7 +139,7 @@ function E = intersection_ia(E1, X)
     end
   end
 
-  return;
+end
 
 
 
@@ -158,7 +153,6 @@ function E = l_intersection_ia(E1, E2)
 %                     of single ellipsoid with single ellipsoid or halfspace.
 %
 
-  global ellOptions;
 
   if isa(E2, 'ellipsoid')
     if E1 == E2
@@ -174,7 +168,7 @@ function E = l_intersection_ia(E1, E2)
   q1 = E1.center;
   Q1 = E1.shape;
   if rank(Q1) < size(Q1, 1)
-    Q1 = ell_inv(regularize(Q1));
+    Q1 = ell_inv(ellipsoid.regularize(Q1,E1.absTol));
   else
     Q1 = ell_inv(Q1);
   end
@@ -182,17 +176,17 @@ function E = l_intersection_ia(E1, E2)
   [v, c] = parameters(-E2);
   c      = c/sqrt(v'*v);
   v      = v/sqrt(v'*v);
-  if (v'*q1 > c) & ~(intersect(E1, E2))
+  if (v'*q1 > c) && ~(intersect(E1, E2))
     E = E1;
     return;
   end
-  if (v'*q1 < c) & ~(intersect(E1, E2))
+  if (v'*q1 < c) && ~(intersect(E1, E2))
     E = ellipsoid;
     return;
   end
 
   [q, Q] = parameters(hpintersection(E1, E2));
-  [r, x] = rho(E1, v);
+  [~, x] = rho(E1, v);
   h      = 2*sqrt(maxeig(E1));
   q2     = q + h*v;
   Q2     = (v*v')/(h^2);
@@ -207,10 +201,10 @@ function E = l_intersection_ia(E1, E2)
   q      = ell_inv(Q)*(a1*Q1*q1 + a2*Q2*q2);
   Q      = Q/(1 - (a1*q1'*Q1*q1 + a2*q2'*Q2*q2 - q'*Q*q));
   Q      = ell_inv(Q);
-  Q      = (1-ellOptions.abs_tol)*0.5*(Q + Q');
+  Q      = (1-E1.absTol)*0.5*(Q + Q');
   E      = ellipsoid(q, Q);
   
-  return;
+end
 
   
 
@@ -224,7 +218,6 @@ function EA = l_polyintersect(E, P)
 %                   of single ellipsoid with single polytope.
 %
 
-  global ellOptions;
 
   EA = E;
   HA = polytope2hyperplane(P);
@@ -239,4 +232,4 @@ function EA = l_polyintersect(E, P)
     return;
   end
 
-  return;
+end

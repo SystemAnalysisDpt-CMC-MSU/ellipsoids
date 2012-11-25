@@ -3,7 +3,7 @@ function dXdt = ell_iesm_ode(t, X, xl0, l0, mydata, n, back)
 % ELL_IESM_ODE - ODE for the shape matrix of the internal ellipsoid.
 %
 
-  global ellOptions;
+  import elltool.conf.Properties;
 
   if back > 0
     t = -t;
@@ -21,7 +21,7 @@ function dXdt = ell_iesm_ode(t, X, xl0, l0, mydata, n, back)
 
   l = BPBsr * F' * l0;
   xl0 = Y * F' * l0;
-  if norm(l) < ellOptions.abs_tol
+  if norm(l) < Properties.getAbsTol()
     S = eye(n);
   else
     S = ell_valign(xl0, l);

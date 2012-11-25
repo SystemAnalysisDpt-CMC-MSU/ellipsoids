@@ -51,27 +51,24 @@ function IA = minkdiff_ia(E1, E2, L)
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
+  import modgen.common.throwerror;
+  import elltool.conf.Properties;
 
-  global ellOptions;
 
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
-
-  if ~(isa(E1, 'ellipsoid')) | ~(isa(E2, 'ellipsoid'))
-    error('MINKDIFF_IA: first and second arguments must be single ellipsoids.');
+  if ~(isa(E1, 'ellipsoid')) || ~(isa(E2, 'ellipsoid'))
+    throwerror('wrongInput', 'MINKDIFF_IA: first and second arguments must be single ellipsoids.');
   end
 
   [k, l] = size(E1);
   [m, n] = size(E2);
-  if (k ~= 1) | (l ~= 1) | (m ~= 1) | (n ~= 1)
-    error('MINKDIFF_IA: first and second arguments must be single ellipsoids.');
+  if (k ~= 1) || (l ~= 1) || (m ~= 1) || (n ~= 1)
+    throwerror('wrongInput', 'MINKDIFF_IA: first and second arguments must be single ellipsoids.');
   end
 
   IA = [];
 
   if isbigger(E1, E2) == 0
-    if ellOptions.verbose > 0
+    if Properties.getIsVerbose()
       fprintf('MINKDIFF_IA: geometric difference of these two ellipsoids is empty set.\n');
     end
     return;
@@ -80,21 +77,21 @@ function IA = minkdiff_ia(E1, E2, L)
   k = size(L, 1);
   n = dimension(E1);
   if k ~= n
-    error('MINKDIFF_IA: dimension of the direction vectors must be the same as dimension of ellipsoids.');
+    throwerror('wrongSizes', 'MINKDIFF_IA: dimension of the direction vectors must be the same as dimension of ellipsoids.');
   end
   q  = E1.center - E2.center;
   Q1 = E1.shape;
   if rank(Q1) < size(Q1, 1)
-    Q1 = regularize(Q1);
+    Q1 = ellipsoid.regularize(Q1,E1.absTol);
   end
   Q2 = E2.shape;
   if rank(Q2) < size(Q2, 1)
-    Q2 = regularize(Q2);
+    Q2 = ellipsoid.regularize(Q2,E2.absTol);
   end
-  L  = rm_bad_directions(Q1, Q2, L);
+  L  = ellipsoid.rm_bad_directions(Q1, Q2, L);
   m  = size(L, 2);
   if m < 1
-    if ellOptions.verbose > 0
+    if Properties.getIsVerbose()
       fprintf('MINKDIFF_IA: cannot compute internal approximation for any\n');
       fprintf('             of the specified directions.\n');
     end
@@ -107,4 +104,4 @@ function IA = minkdiff_ia(E1, E2, L)
     IA = [IA ellipsoid(q, Q)];
   end 
 
-  return;
+end

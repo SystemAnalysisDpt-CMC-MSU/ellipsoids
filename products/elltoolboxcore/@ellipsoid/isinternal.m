@@ -50,11 +50,8 @@ function res = isinternal(E, X, s)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  global ellOptions;
+  import elltool.conf.Properties;
 
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
 
   if ~isa(E, 'ellipsoid')
     error('ISINTERNAL: first argument must be an ellipsoid, or an array of ellipsoids.');
@@ -71,13 +68,11 @@ function res = isinternal(E, X, s)
     error('ISINTERNAL: second argument must be an array of vectors.');
   end
 
-  if (nargin < 3) | ~(ischar(s))
+  if (nargin < 3) || ~(ischar(s))
     s = 'u';
   end
 
-  res = [];
-
-  if (s ~= 'u') & (s ~= 'i')
+  if (s ~= 'u') && (s ~= 'i')
     error('ISINTERNAL: third argument is expected to be either ''u'', or ''i''.');
   end
 
@@ -86,11 +81,12 @@ function res = isinternal(E, X, s)
     error('ISINTERNAL: dimensions of ellipsoid and vector do not match.');
   end
 
+  res=zeros(1,l);
   for i = 1:l
-    res = [res isinternal_sub(E, X(:, i), s, k)];
+    res(i) = isinternal_sub(E, X(:, i), s, k);
   end
 
-  return;
+end
 
 
 
@@ -101,14 +97,15 @@ function res = isinternal_sub(E, x, s, k)
 % ISINTERNAL_SUB - compute result for single vector.
 %
 
-  global ellOptions;
+  import elltool.conf.Properties;
 
   if s == 'u'
     res = 0;
   else
     res = 1;
   end
-
+  
+  absTolMat = getAbsTol(E);
   [m, n] = size(E);
   for i = 1:m
     for j = 1:n
@@ -116,21 +113,21 @@ function res = isinternal_sub(E, x, s, k)
       Q = E(i, j).shape;
 
       if rank(Q) < k
-        if ellOptions.verbose > 0
+        if Properties.getIsVerbose()
           fprintf('ISINTERNAL: Warning! There is degenerate ellipsoid in the array.\n');
           fprintf('            Regularizing...\n');
         end
-        Q = regularize(Q);
+        Q = ellipsoid.regularize(Q,absTolMat(i,j));
       end
  
       r = q' * ell_inv(Q) * q;
       if (s == 'u')
-        if (r < 1) | (abs(r - 1) < ellOptions.abs_tol)
+        if (r < 1) | (abs(r - 1) < absTolMat(i,j))
           res = 1;
           return;
         end
       else
-        if (r > 1) & (abs(r - 1) > ellOptions.abs_tol)
+        if (r > 1) & (abs(r - 1) > absTolMat(i,j))
           res = 0;
           return;
         end
@@ -138,4 +135,4 @@ function res = isinternal_sub(E, x, s, k)
     end
   end
   
-  return;
+end

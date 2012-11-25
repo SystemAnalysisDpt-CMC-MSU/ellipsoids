@@ -18,12 +18,6 @@ function isDiscreteMat = isdiscrete(linSysMat)
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
 %
-global ellOptions;
-%
-if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-end
-%
 if ~(isa(linSysMat, 'linsys'))
     modgen.common.throwerror('wrongType', 'input argument must be linear system object.');
 end

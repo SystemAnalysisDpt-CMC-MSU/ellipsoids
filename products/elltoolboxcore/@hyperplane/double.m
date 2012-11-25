@@ -27,13 +27,6 @@ function [v, c] = double(H)
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
-
-  global ellOptions;
-
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
-
   if ~(isa(H, 'hyperplane'))
     error('DOUBLE: input argument must be hyperplane.');
   end

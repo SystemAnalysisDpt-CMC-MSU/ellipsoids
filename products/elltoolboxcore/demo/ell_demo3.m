@@ -10,25 +10,22 @@ function slide = ell_demo3
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  global ellOptions;
+  import elltool.conf.Properties;
 
-  if ~isstruct(ellOptions)
-    evalin('base', 'ellipsoids_init;');
-  end
-
-  verbose              = ellOptions.verbose;
-  timegrid             = ellOptions.time_grid;
-  ellOptions.verbose   = 0;
-  ellOptions.time_grid = 100;
-
-  if nargout < 1
+ 
+  verbose                = Properties.getIsVerbose();
+  plot2d_grid            = Properties.getNPlot2dPoints();
+  Properties.setIsVerbose(false);
+  Properties.setNTimeGridPoints(100);
+  
+ if nargout < 1
     playshow ell_demo3;
-    ellOptions.verbose   = verbose;
-    ellOptions.time_grid = timegrid;
+    Properties.setIsVerbose(verbose);
+    Properties.setNPlot2dPoints(plot2d_grid);
   else
     NN = 1;
     slide(NN).code = {
-      'global ellOptions;',
+      'import elltool.conf.Properties;',
       'cla; axis([-4 4 -2 2]);',
       'axis([-4 4 -2 2]); grid off; axis off;',
       'text(-2, 0.5, ''REACHABILITY'', ''FontSize'', 16);'
@@ -121,7 +118,7 @@ function slide = ell_demo3
     slide(NN).code = {
       'ct = cut(rs, [3 5]);',
       'cla;',
-      'plot_ea(ct); hold on; plot_ia(ct); hold off',
+      'plot_ea(ct); hold on; plot_ia(ct); hold off;',
       'ylabel(''V_C''); zlabel(''i_L'');'
     };
     slide(NN).text = {
@@ -136,7 +133,7 @@ function slide = ell_demo3
 
     NN = NN + 1;
     slide(NN).code = {
-      'global ellOptions; ellOptions.plot2d_grid = 800;',
+      'import elltool.conf.Properties; Properties.setNPlot2dPoints(800);',
       'cla; ct = cut(ct, 5); plot_ea(ct); hold on; plot_ia(ct);',
       'xlabel(''V_C''); ylabel(''i_L'');'
     };
@@ -231,7 +228,7 @@ function slide = ell_demo3
 
     NN = NN + 1;
     slide(NN).code = {
-      'global ellOptions; ellOptions.plot2d_grid = 200;',
+      'import elltool.conf.Properties; Properties.setNPlot2dPoints(200);',
       'A = {''0'' ''-10''; ''1/(2 + sin(t))'' ''-4/(2 + sin(t))''};',
       'B = {''10'' ''0''; ''0'' ''1/(2 + sin(t))''};',
       's = linsys(A, B, CB); rs = reach(s, X0, L0, 10);',

@@ -7,7 +7,7 @@ function I = inv(E)
 % ------------
 %
 %    I = INV(E)  Inverts shape matrices of ellipsoids in the array E.
-%                In case shape matrix is sigular, it is regularized before inversion.
+%                In case shape matrix is sigular, it is ellipsoid.regularized before inversion.
 %
 %
 % Output:
@@ -36,10 +36,11 @@ function I = inv(E)
   I      = E;
   [m, n] = size(I);
 
+  absTolMat = getAbsTol(I);
   for i = 1:m
     for j = 1:n
       if isdegenerate(I(i, j))
-        Q = regularize(I(i, j).shape);
+        Q = ellipsoid.regularize(I(i, j).shape,absTolMat(i,j));
       else
         Q = I(i, j).shape;
       end
@@ -48,4 +49,4 @@ function I = inv(E)
     end
   end
 
-  return;
+end

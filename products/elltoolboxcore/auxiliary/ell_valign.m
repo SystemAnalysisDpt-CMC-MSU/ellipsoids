@@ -43,21 +43,21 @@ function T = ell_valign(v, x)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-  if ~(isa(v, 'double')) | ~(isa(x, 'double'))
+  if ~(isa(v, 'double')) || ~(isa(x, 'double'))
     error('ELL_VALIGN: both arguments must be vectors in R^n.');
   end
 
   [k, l] = size(v);
   [m, n] = size(x);
-  if (l ~= 1) | (n ~= 1)
+  if (l ~= 1) || (n ~= 1)
     error('ELL_VALIGN: both arguments must be vectors in R^n.');
   end
   if k ~= m
     error('ELL_VALIGN: both vectors must be of the same dimension.');
   end 
 
-  [U1 S V1] = svd(v);
-  [U2 S V2] = svd(x);
+  [U1, ~, V1] = svd(v);
+  [U2, ~, V2] = svd(x);
   T         = U1 * V1 * V2' * U2';
 
-  return;
+end

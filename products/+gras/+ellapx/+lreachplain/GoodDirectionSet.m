@@ -37,7 +37,7 @@ classdef GoodDirectionSet
             import modgen.common.throwerror;
             %
             self.lsGoodDirMat=lsGoodDirMat;
-            Xtt0SplineObj=pDefObj.getXtt0Spline();
+            Xtt0SplineObj=pDefObj.getXtt0Dynamics();
             timeLimsVec=pDefObj.getTimeLimsVec();
             if (sTime>timeLimsVec(2))||(sTime<timeLimsVec(1))
                 throwerror('wrongInput',...
