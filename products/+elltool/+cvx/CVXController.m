@@ -9,8 +9,11 @@ classdef CVXController
         end
         function setPrecision(relTolVec)
             import elltool.cvx.CVXController;
-            
-            cvx_precision(relTolVec);
+            if abs(relTolVec(1) - relTolVec(2)) > eps
+                import modgen.common.throwerror;
+                throwerror('cvxError', 'wrong precision format for cvx beta version');
+            end
+            cvx_precision([relTolVec(1), relTolVec(3)]);
          
         end
         function setIsVerbosityEnabled(isQuiet)

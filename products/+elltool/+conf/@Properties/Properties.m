@@ -10,6 +10,7 @@ classdef Properties<modgen.common.obj.StaticPropStorage
     
     properties (GetAccess=public,Constant)
         DEFAULT_SOLVER = 'SeDuMi';
+        DEFAULT_CONF_NAME='default'
         TOL_FACTOR = 2;
     end
 
@@ -17,16 +18,18 @@ classdef Properties<modgen.common.obj.StaticPropStorage
         function init()
             import elltool.cvx.CVXController;            
             import elltool.conf.Properties;
-            DEFAULT_CONF_NAME='default';
             confRepoMgr=elltool.conf.ConfRepoMgr();
-            confRepoMgr.selectConf(DEFAULT_CONF_NAME);
+            confRepoMgr.selectConf(Properties.DEFAULT_CONF_NAME);
             Properties.setConfRepoMgr(confRepoMgr);            
             % CVX settings.
             elltool.cvx.CVXController.setUpIfNot();
             if CVXController.isSetUp();
                 CVXController.setSolver('sedumi');
-                CVXController.setPrecision([0, Properties.TOL_FACTOR*Properties.getRelTol()]);
-                CVXController.setIsVerbosityEnabled(false);
+                CVXController.setPrecision(...
+                Properties.getPrecisionForCVXVec(Properties.TOL_FACTOR...
+                *Properties.getRelTol()));
+                CVXController.setIsVerbosityEnabled(...
+                    Properties.getIsVerbose());
                 
             else
                 import modgen.common.throwerror;
@@ -93,27 +96,33 @@ classdef Properties<modgen.common.obj.StaticPropStorage
         end
         %
         function nTimeGridPoints = getNTimeGridPoints()
-            nTimeGridPoints = elltool.conf.Properties.getOption('nTimeGridPoints');
+            nTimeGridPoints = elltool.conf.Properties.getOption(...
+                'nTimeGridPoints');
         end
         %
         function oDESolverName = getODESolverName()
-            oDESolverName = elltool.conf.Properties.getOption('ODESolverName');
+            oDESolverName = elltool.conf.Properties.getOption(...
+                'ODESolverName');
         end
         %
         function isODENormControl = getIsODENormControl()
-            isODENormControl = elltool.conf.Properties.getOption('isODENormControl');
+            isODENormControl = elltool.conf.Properties.getOption(...
+                'isODENormControl');
         end
         %
         function isEnabled = getIsEnabledOdeSolverOptions()
-            isEnabled = elltool.conf.Properties.getOption('isEnabledOdeSolverOptions');
+            isEnabled = elltool.conf.Properties.getOption(...
+                'isEnabledOdeSolverOptions');
         end
         %
         function nPlot2dPoints = getNPlot2dPoints()
-            nPlot2dPoints = elltool.conf.Properties.getOption('nPlot2dPoints');
+            nPlot2dPoints = elltool.conf.Properties.getOption(...
+                'nPlot2dPoints');
         end
         %
         function nPlot3dPoints = getNPlot3dPoints()
-            nPlot3dPoints = elltool.conf.Properties.getOption('nPlot3dPoints');
+            nPlot3dPoints = elltool.conf.Properties.getOption(...
+                'nPlot3dPoints');
         end
         %%
         %Public setters
@@ -123,11 +132,13 @@ classdef Properties<modgen.common.obj.StaticPropStorage
         end
         %
         function setNPlot2dPoints(nPlot2dPoints)
-            elltool.conf.Properties.setOption('nPlot2dPoints',nPlot2dPoints);
+            elltool.conf.Properties.setOption('nPlot2dPoints',...
+                nPlot2dPoints);
         end
         %
         function setNTimeGridPoints(nTimeGridPoints)
-            elltool.conf.Properties.setOption('nTimeGridPoints',nTimeGridPoints);
+            elltool.conf.Properties.setOption('nTimeGridPoints',...
+                nTimeGridPoints);
         end
         %
         function SProp=getPropStruct()
@@ -145,6 +156,9 @@ classdef Properties<modgen.common.obj.StaticPropStorage
         function setOption(optName,optVal)
             confRepMgr = elltool.conf.Properties.getConfRepoMgr();
             confRepMgr.setParam(optName,optVal);
+        end
+        function relTolVec = getPrecisionForCVXVec(relTol)
+            relTolVec = [0, 0, relTol];
         end
     end
 end
