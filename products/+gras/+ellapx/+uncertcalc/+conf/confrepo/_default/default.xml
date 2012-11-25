@@ -1,9 +1,10 @@
 <?xml version="1.0"?>
-<root version="16" xml_tb_version="2.0" type="struct" >
+<root version="18" xml_tb_version="2.0" type="struct" >
 <valueObj type="struct" >
 	<genericProps type="struct" >
 		<calcTimeLimVec type="double" >0 4</calcTimeLimVec>
 		<calcPrecision type="double" >0.0001</calcPrecision>
+		<isSplineForMatrixCalcUsed type="boolean" >0</isSplineForMatrixCalcUsed>
 	</genericProps>
 	<projectionProps type="struct" >
 		<projSpaceSetName type="char" >set1</projSpaceSetName>
@@ -86,7 +87,7 @@
 			<isEnabled type="boolean" >1</isEnabled>
 			<schemas type="struct" >
 				<noUncertSqrtQ type="struct" >
-					<isEnabled type="boolean" >1</isEnabled>
+					<isEnabled type="boolean" >0</isEnabled>
 					<props type="struct" >
 						<selectionMethodForSMatrix type="char" >volume</selectionMethodForSMatrix>
 					</props>
@@ -97,12 +98,6 @@
 						<selectionMethodForSMatrix type="char" >volume</selectionMethodForSMatrix>
 					</props>
 				</noUncertJustQ>
-				<uncert type="struct" >
-					<isEnabled type="boolean" >0</isEnabled>
-					<props type="struct" >
-						<selectionMethodForSMatrix type="char" >volume</selectionMethodForSMatrix>
-					</props>
-				</uncert>
 			</schemas>
 			<dispScaleFactor type="double" >0.98</dispScaleFactor>
 		</internalApx>
@@ -110,7 +105,7 @@
 			<isEnabled type="boolean" >1</isEnabled>
 			<schemas type="struct" >
 				<justQ type="struct" >
-					<isEnabled type="boolean" >1</isEnabled>
+					<isEnabled type="boolean" >0</isEnabled>
 				</justQ>
 			</schemas>
 			<dispScaleFactor type="double" >1.02</dispScaleFactor>

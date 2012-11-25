@@ -1,5 +1,5 @@
-function updateall()
-% UPDATECONFTEMPLATE updates the specified template configuration
+function updateallconf()
+% UPDATEALLCONF updates all the configurations in the nested packages
 %
 %
 % $Author: Peter Gagarinov <pgagarinov@gmail.com> $	$Date: 2011-09-09 $ 

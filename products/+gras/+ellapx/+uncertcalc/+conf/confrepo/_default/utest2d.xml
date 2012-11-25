@@ -1,9 +1,10 @@
 <?xml version="1.0"?>
-<root version="15" xml_tb_version="2.0" type="struct" >
+<root version="18" xml_tb_version="2.0" type="struct" >
 <valueObj type="struct" >
 	<genericProps type="struct" >
 		<calcTimeLimVec type="double" >0 6</calcTimeLimVec>
 		<calcPrecision type="double" >0.0001</calcPrecision>
+		<isSplineForMatrixCalcUsed type="boolean" >1</isSplineForMatrixCalcUsed>
 	</genericProps>
 	<projectionProps type="struct" >
 		<projSpaceSetName type="char" >set1</projSpaceSetName>
@@ -23,8 +24,8 @@
 				<lsGoodDirSets type="struct" >
 					<set1 type="cell" >
 						<item type="double" >1 -0.1</item>
-                        <item type="double" >0.6 1</item>
-                        <item type="double" >0 1</item>
+						<item type="double" >0.6 1</item>
+						<item type="double" >0 1</item>
 					</set1>
 					<set2 type="cell" >
 						<item type="double" >0.6 1</item>
@@ -67,6 +68,7 @@
 	<plottingProps type="struct" >
 		<isEnabled type="boolean" >0</isEnabled>
 		<viewAngleVec type="double" >37.5 30</viewAngleVec>
+		<isGoodCurvesSeparately type="boolean" >1</isGoodCurvesSeparately>
 	</plottingProps>
 	<ellipsoidalApxProps type="struct" >
 		<internalApx type="struct" >
@@ -84,12 +86,6 @@
 						<selectionMethodForSMatrix type="char" >volume</selectionMethodForSMatrix>
 					</props>
 				</noUncertJustQ>
-				<uncert type="struct" >
-					<isEnabled type="boolean" >1</isEnabled>
-					<props type="struct" >
-						<selectionMethodForSMatrix type="char" >volume</selectionMethodForSMatrix>
-					</props>
-				</uncert>
 			</schemas>
 			<dispScaleFactor type="double" >0.97</dispScaleFactor>
 		</internalApx>

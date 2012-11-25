@@ -4,33 +4,44 @@ classdef AReachProblemDynamicsInterp<...
         function self=AReachProblemDynamicsInterp(problemDef,calcPrecision)
             import gras.ellapx.common.*;
             import gras.interp.MatrixInterpolantFactory;
-            import gras.interp.MatrixSymbInterpFactory;
-            import gras.gen.SquareMatVector;
             import gras.ellapx.lreachplain.probdyn.LReachProblemDynamicsInterp;
             import gras.ode.MatrixODESolver;
+            import gras.ellapx.uncertcalc.MatrixOperationsFactory;
             %
             self.problemDef = problemDef;
             %
             % copy necessary data to local variables
             %
-            AtDefMat = problemDef.getAMatDef();
-            BtDefMat = problemDef.getBMatDef();
-            PtDefMat = problemDef.getPCMat();
-            ptDefVec = problemDef.getpCVec();
+            AtDefCMat = problemDef.getAMatDef();
             t0 = problemDef.gett0();
             t1 = problemDef.gett1();
-            sizeAtVec = size(AtDefMat);
-            numelAt = numel(AtDefMat);
+            sizeAtVec = size(AtDefCMat);
+            numelAt = numel(AtDefCMat);
             %
-            % compute X(t,t0)
+            % create dynamics for A(t), B(t)P(t)B'(t) and B(t)p(t)
             %
             self.timeVec = linspace(t0,t1,self.N_TIME_POINTS);
+            matOpFactory = MatrixOperationsFactory.create(self.timeVec);
+            %
+            self.AtDynamics = matOpFactory.fromSymbMatrix(AtDefCMat);
+            BtDynamics = matOpFactory.fromSymbMatrix(...
+                problemDef.getBMatDef());
+            PtDynamics = matOpFactory.fromSymbMatrix(...
+                problemDef.getPCMat());
+            ptDynamics = matOpFactory.fromSymbMatrix(...
+                problemDef.getpCVec());
+            self.BPBTransDynamics = matOpFactory.lrMultiply(PtDynamics,...
+                BtDynamics, 'L');
+            self.BptDynamics = matOpFactory.rMultiplyByVec(BtDynamics,...
+                ptDynamics);
+            %
+            % compute X(t,t0)
             %
             odeArgList=self.getOdePropList(calcPrecision);
             solverObj=MatrixODESolver(sizeAtVec,@ode45,odeArgList{:});
             %
             Xtt0DerivFunc = @(t,x) reshape(...
-                SquareMatVector.fromFormulaMat(AtDefMat,t)*...
+                self.AtDynamics.evaluate(t)*...
                 reshape(x,sizeAtVec),[numelAt 1]);
             Xtt0InitialMat = eye(sizeAtVec);
             %
@@ -39,20 +50,6 @@ classdef AReachProblemDynamicsInterp<...
             %
             self.Xtt0Dynamics=MatrixInterpolantFactory.createInstance(...
                 'column',data_Xtt0,timeXtt0Vec);
-            %
-            % compute A(t)
-            %
-            self.AtDynamics=MatrixSymbInterpFactory.single(AtDefMat);
-            %
-            % compute B(t)P(t)B'(t)
-            %
-            self.BPBTransDynamics=MatrixSymbInterpFactory.rMultiply(...
-                BtDefMat,PtDefMat,BtDefMat.');
-            %
-            % compute B(t)p(t)
-            %
-            self.BptDynamics=MatrixSymbInterpFactory.rMultiplyByVec(...
-                BtDefMat,ptDefVec);
         end
     end
 end
