@@ -25,6 +25,8 @@
 				<lsGoodDirSets type="struct" >
 					<set1 type="cell" >
 						<item type="double" >1 0 0 0 0 0 0 0</item>
+						<item type="double" >0 0 1 0 0 0 0 0</item>
+						<item type="double" >0 0 1 1 0 0 0 0</item>
 					</set1>
 				</lsGoodDirSets>
 			</manual>
@@ -70,7 +72,7 @@
             </log4jSettings>
 	</logging>
 	<plottingProps type="struct" >
-		<isEnabled type="boolean" >1</isEnabled>
+		<isEnabled type="boolean" >0</isEnabled>
 		<viewAngleVec type="double" >-37.5 30</viewAngleVec>
 		<isGoodCurvesSeparately type="boolean" >1</isGoodCurvesSeparately>
 	</plottingProps>
@@ -85,7 +87,7 @@
 					</props>
 				</noUncertSqrtQ>
 				<noUncertJustQ type="struct" >
-					<isEnabled type="boolean" >1</isEnabled>
+					<isEnabled type="boolean" >0</isEnabled>
 					<props type="struct" >
 						<selectionMethodForSMatrix type="char" >volume</selectionMethodForSMatrix>
 					</props>
@@ -97,7 +99,7 @@
 			<isEnabled type="boolean" >1</isEnabled>
 			<schemas type="struct" >
 				<justQ type="struct" >
-					<isEnabled type="boolean" >0</isEnabled>
+					<isEnabled type="boolean" >1</isEnabled>
 				</justQ>
 			</schemas>
 			<dispScaleFactor type="double" >1.02</dispScaleFactor>
@@ -115,7 +117,7 @@
 			</schemas>
 		</extIntApx>
 	</ellipsoidalApxProps>
-	<systemDefinitionConfName type="char" >basic</systemDefinitionConfName>
+	<systemDefinitionConfName type="char" >default</systemDefinitionConfName>
 </valueObj>
-<keyStr type="char" >onedir</keyStr>
+<keyStr type="char" >advancednodisp</keyStr>
 </root>

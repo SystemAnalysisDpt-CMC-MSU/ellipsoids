@@ -120,6 +120,16 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             %
             piNumerator=slCQClSqrtDynamics.evaluate(t);
             piDenominator=sqrt(sum((QIntMat*ltVec).*ltVec));
+            if (piNumerator<=0)||(piDenominator<=0)
+                if min(eig(D))<=0
+                    throwerror('wrongInput',...
+                        ['degenerate matrices C,Q for disturbance ',...
+                        'contraints are not supported']);
+                else
+                    throwerror('wrongInput',...
+                        'the estimate has degraded, reason unknown');
+                end
+            end
             %
             tmp=(A*Q_star+R_sqrt*transpose(S))*transpose(Q_star);
             dQIntMat=tmp+transpose(tmp)-...
@@ -302,7 +312,6 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
                 ExtIntEllApxBuilder.N_TIME_POINTS,calcPrecision);
             self.minQMatEig=minQSqrtMatEig*minQSqrtMatEig;
             self.goodDirSetObj=goodDirSetObj;
-            %self.prepareODEData();
             self.sMethodName=sMethodName;
             self.prepareODEData();
         end
