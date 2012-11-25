@@ -18,16 +18,17 @@ classdef Properties<modgen.common.obj.StaticPropStorage
         function init()
             import elltool.cvx.CVXController;            
             import elltool.conf.Properties;
+         
             confRepoMgr=elltool.conf.ConfRepoMgr();
             confRepoMgr.selectConf(Properties.DEFAULT_CONF_NAME);
             Properties.setConfRepoMgr(confRepoMgr);            
             % CVX settings.
+            relTol = Properties.TOL_FACTOR*Properties.getRelTol();
             elltool.cvx.CVXController.setUpIfNot();
             if CVXController.isSetUp();
-                CVXController.setSolver('sedumi');
+                CVXController.setSolver(Properties.DEFAULT_SOLVER);
                 CVXController.setPrecision(...
-                Properties.getPrecisionForCVXVec(Properties.TOL_FACTOR...
-                *Properties.getRelTol()));
+                Properties.getPrecisionForCVXVec(relTol));
                 CVXController.setIsVerbosityEnabled(...
                     Properties.getIsVerbose());
                 
@@ -40,11 +41,13 @@ classdef Properties<modgen.common.obj.StaticPropStorage
             import modgen.common.throwerror;
             import elltool.cvx.CVXController;
             import elltool.conf.Properties;
+            relTol = Properties.TOL_FACTOR*Properties.getRelTol();
             precisionVec = CVXController.getPrecision();
             solverStr = CVXController.getSolver();
             isVerbosity = CVXController.getIsVerbosityEnabled();
-            if (~isequal(precisionVec, [0, 0, ...
-                    Properties.TOL_FACTOR*Properties.getRelTol()])) | ...
+            if (~isequal(precisionVec, ...
+                    Properties.getPrecisionForCVXVec(...
+                    relTol))) | ...
                     (~(strcmp(solverStr, Properties.DEFAULT_SOLVER))) ...
                     | (isVerbosity ~= Properties.getIsVerbose())
                  throwerror('cvxError', 'wrong cvx properties');
