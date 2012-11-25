@@ -4,15 +4,19 @@ classdef Ellipsoid < handle
         diagMat
         eigvMat
     end
+    properties (Constant)
+        CHECK_TOL=1e-09;
+    end
     methods
         function ellObj = Ellipsoid(varargin)
             import modgen.common.throwerror
-            CHECK_TOL=1e-12;
+            import elltool.core.Ellipsoid;
+            absTol=Ellipsoid.CHECK_TOL;
             %
             nInput=nargin;
             if  nInput>3
                 throwerror('wrongParameters','Incorrect number of parameters');
-            elseif nInput==1   
+            elseif nInput==1
                 ellMat=varargin{1};
                 [mSize nSize]=size(ellMat);
                 isPar2Vector= nSize==1;
@@ -26,14 +30,14 @@ classdef Ellipsoid < handle
                 else
                     isDiagonalMat=ellMat==(ellMat.*eye(mSize));
                     if all(isDiagonalMat(:))
-                      ellObj.diagMat=ellMat;
+                        ellObj.diagMat=ellMat;
                         ellObj.eigvMat=eye(mSize);
                     else %ordinary square matrix
                         [ellObj.eigvMat ellObj.diagMat]=eig(ellMat);
-                
+                        
                     end
                 end
-                ellObj.centerVec=zeros(mSize,1);                
+                ellObj.centerVec=zeros(mSize,1);
             elseif nInput==2
                 ellCenterVec=varargin{1};
                 ellMat=varargin{2};
@@ -63,7 +67,7 @@ classdef Ellipsoid < handle
                     throwerror('wrongDimensions',...
                         'Dimension of center vector must be the same as matrix');
                 end
-                ellObj.centerVec=ellCenterVec;                
+                ellObj.centerVec=ellCenterVec;
             elseif nInput == 3
                 ellCenterVec=varargin{1};
                 ellDiagMat=varargin{2};
@@ -77,18 +81,18 @@ classdef Ellipsoid < handle
                 end
                 if (mCenSize ~=mDSize || mCenSize~=mWSize)
                     throwerror('wrongDimensions',...
-                    'Input matrices and center vector must be of the same dimension');
+                        'Input matrices and center vector must be of the same dimension');
                 end
-                if (nDSize>1) 
-                    if nDSize~=mDSize  
+                if (nDSize>1)
+                    if nDSize~=mDSize
                         throwerror('wrongDiagonal',...
-                        'Second argument should be either diagonal matrix or a vector');
+                            'Second argument should be either diagonal matrix or a vector');
                     end
-                    isDiagonal=ellDiagMat==(ellDiagMat.*eye(mDSize));
+                    isDiagonal=all(all(ellDiagMat==(ellDiagMat.*eye(mDSize))));
                     if ~isDiagonal
                         throwerror('wrongDiagonal',...
-                        'Second argument should be either diagonal matrix or a vector');
-                    end            
+                            'Second argument should be either diagonal matrix or a vector');
+                    end
                 end
                 if (nWSize~=mWSize)
                     throwerror('wrongParameters',...
@@ -101,7 +105,7 @@ classdef Ellipsoid < handle
                 end
                 isInfVec=diagVec==Inf;
                 [~,wRMat]=qr(ellWMat);
-                if all(all(abs(abs(wRMat)-eye(size(wRMat)))<CHECK_TOL))
+                if all(all(abs(abs(wRMat)-eye(size(wRMat)))<absTol))
                     %W is orthogonal
                     diagResVec=diagVec;
                     eigvResMat=ellWMat;
@@ -122,18 +126,18 @@ classdef Ellipsoid < handle
                         orthBasMat(:,isNegVec)=-orthBasMat(:,isNegVec);
                     end
                     %Find rang L1, here rangL1>0
-                    tolerance = CHECK_TOL*norm(allInfMat,'fro');
+                    tolerance = absTol*norm(allInfMat,'fro');
                     rangL1 = sum(abs(diag(rBasMat)) > tolerance);
                     rangL1 = rangL1(1);%for case where rBasMat is a vector.
                     %L1 - first rangL1 columns of orthBasMat.
                     infIndVec=1:rangL1;
                     finIndVec=(rangL1+1):mWSize;
                     nonInfBasMat = orthBasMat(:,finIndVec);
-                    %Projecton of directions on L2. Is finite then is finite 
-                    diagResVec=zeros(mDSize,1);  
+                    %Projecton of directions on L2. Is finite then is finite
+                    diagResVec=zeros(mDSize,1);
                     if ~isempty(nonInfBasMat)
                         projMat=nonInfBasMat.'*ellWMat;
-                        isZeroProjVec=all(abs(projMat)<CHECK_TOL,1);
+                        isZeroProjVec=all(abs(projMat)<absTol,1);
                         if ~all(isZeroProjVec)
                             diagVec(isInfVec)=0;
                             ellAuxMat=projMat*diag(diagVec)*projMat.';
@@ -149,19 +153,19 @@ classdef Ellipsoid < handle
                 ellObj.centerVec=ellCenterVec;
             end
             if (nInput~=0)
-                minEigVal=min(diag(ellObj.diagMat));       
-                if (minEigVal<0 && abs(minEigVal)> CHECK_TOL)
+                minEigVal=min(diag(ellObj.diagMat));
+                if (minEigVal<0 && abs(minEigVal)> absTol)
                     throwerror('wrongMatrix',...
                         'Ellipsoid matrix should be positive semi-definite.')
                 end
             end
         end
-        ellObj = inv (ellObj)
-        ellObjVec = minksumEa(ellObjVec, dirMat)
-        ellObjVec = minksumIa(ellObjVec, dirMat)
-        ellObjVec = minkdiffIa(ellObj1, ellObj2, dirMat)
-        ellObjVec = minkdiffEa(ellObj1, ellObj2, dirMat)
-        distVec = distace(ellObjVec, objVec)
+        %         ellObj = inv (ellObj)
+        %         ellObjVec = minksumEa(ellObjVec, dirMat)
+        %         ellObjVec = minksumIa(ellObjVec, dirMat)
+        %         ellObjVec = minkdiffIa(ellObj1, ellObj2, dirMat)
+        %         ellObjVec = minkdiffEa(ellObj1, ellObj2, dirMat)
+        %         distVec = distace(ellObjVec, objVec)
     end
 end
 

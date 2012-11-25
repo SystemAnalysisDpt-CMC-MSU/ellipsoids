@@ -1,12 +1,11 @@
-function [ ellResVec] = minksumEa( ellObjVec, dirMat )
+function [ ellResVec] = minkSumEa( ellObjVec, dirMat )
     import elltool.core.Ellipsoid;
     import modgen.common.throwerror
     %
-    CHECK_TOL=1e-10;
+    absTol=Ellipsoid.CHECK_TOL;
     %
-    if (~isa(ellObjVec,'Ellipsoid'))
-        throwerror('notEllipsoid','MINKSUM_EA: first argument must be array of ellipsoids');
-    end
+    modgen.common.type.simple.checkgenext(@(x,y)isa(x,...
+        'elltool.core.Ellipsoid')&&ismatrix(y),2,ellObjVec,dirMat)
     %
     ellObjVec=ellObjVec(:).';
     dimsSpaceVec=ellSpaceDimension(ellObjVec);
@@ -30,7 +29,7 @@ function [ ellResVec] = minksumEa( ellObjVec, dirMat )
         ellResVec(nDirSize)=Ellipsoid();
         for iDir=1:nDirSize;
             curDirVec=dirMat(:,iDir);
-           ellObjCVec=num2cell(ellObjVec);
+            ellObjCVec=num2cell(ellObjVec);
             [isInfCMat allInfDirCMat]=cellfun(@findAllInfDir,ellObjCVec,...
                   'UniformOutput', false);
              isInfMat=cell2mat(isInfCMat);
@@ -39,9 +38,9 @@ function [ ellResVec] = minksumEa( ellObjVec, dirMat )
              if isInfCase
                 areAllInf=all(isInfMat(:)==1); 
                 ellResVec(iDir)=findINF(ellObjVec,curDirVec,dimSpace,...
-                    areAllInf,allInfDirMat);
+                    areAllInf,allInfDirMat,absTol);
              else
-                findDK=@(ellObj)findDirInKer(ellObj,curDirVec);
+                findDK=@(ellObj)findDirInKer(ellObj,curDirVec,absTol);
                 isDirInKerVec=arrayfun(findDK,ellObjVec);
                 isDRKCase=~all(isDirInKerVec==0);
                 if~isDRKCase
@@ -49,7 +48,8 @@ function [ ellResVec] = minksumEa( ellObjVec, dirMat )
                     ellResVec(iDir)=findFND(ellObjVec,curDirVec);
                 else
                     %Finite, degenerate
-                    ellResVec(iDir)=findFD(ellObjVec,curDirVec,dimSpace,isDirInKerVec);
+                    ellResVec(iDir)=findFD(ellObjVec,curDirVec,dimSpace,...
+                        isDirInKerVec,absTol);
                 end
              end    
         end
@@ -58,17 +58,15 @@ end
 %
 %
 %
-function resEllObj=findINF(ellObjVec,curDirVec,dimSpace,areAllInf,allInfDirMat)
+function resEllObj=findINF(ellObjVec,curDirVec,dimSpace,areAllInf,allInfDirMat,absTol)
     import elltool.core.Ellipsoid;
-    CHECK_TOL=1e-10;
-  
     if areAllInf
         %all are infinite
         resEllObj=Ellipsoid(Inf*ones(dimSpace,1));
     else
         %Infinite eigenvalues present
         %Construnct orthogonal basis 
-        [orthBasMat rangL1]=findBasRang(allInfDirMat);    
+        [orthBasMat rangL1]=findBasRang(allInfDirMat,absTol);    
          %nNonInf=dimSpace-rangL1;
         %rang L1>0 since there are Inf elements
         infIndVec=1:rangL1;
@@ -77,7 +75,7 @@ function resEllObj=findINF(ellObjVec,curDirVec,dimSpace,areAllInf,allInfDirMat)
         nonInfBasMat = orthBasMat(:,finIndVec);
         %
         projCurDirVec=nonInfBasMat.'*curDirVec;
-        if all(abs(projCurDirVec)<CHECK_TOL)
+        if all(abs(projCurDirVec)<absTol)
             %direction lies in the space of infinite directions
             resEllObj=Ellipsoid(Inf*ones(dimSpace,1));
         else
@@ -88,14 +86,15 @@ function resEllObj=findINF(ellObjVec,curDirVec,dimSpace,areAllInf,allInfDirMat)
               %indDegEllVec=(1:nEllObj).';
               %indDegEllVec=indDegEllVec(isDirInKerVec);
               ellObjCVec=num2cell(ellObjVec);                     
-              cmptAllZeroDirFin=@(ellObj)findAllZeroDirFin(ellObj,infBasMat,nonInfBasMat,projCurDirVec);
+              cmptAllZeroDirFin=@(ellObj)findAllZeroDirFin(ellObj,...
+                  nonInfBasMat,projCurDirVec,absTol);
               [allZeroDirFCMat]=cellfun(cmptAllZeroDirFin,...
                     ellObjCVec,'UniformOutput', false);
                 %isZeroMat=cell2mat(isZeroCMat);
                 allZeroFDirMat=cell2mat(allZeroDirFCMat); 
                 if ~isempty(allZeroFDirMat)
                     %Construnct orthogonal basis  
-                    [orthBasZFMat rangZL1]=findBasRang(allZeroFDirMat);
+                    [orthBasZFMat rangZL1]=findBasRang(allZeroFDirMat,absTol);
                     %rang ZL1>0 since there are Zero elements
                     zeroIndVec=1:rangZL1;
                     nonZeroIndVec=(rangZL1+1):dimSpace;
@@ -108,7 +107,7 @@ function resEllObj=findINF(ellObjVec,curDirVec,dimSpace,areAllInf,allInfDirMat)
                     nonZeroBasMat = orthBasZFMat(:,nonZeroIndVec);
                     projCurDirVec=zeroBasMat.'*curDirVec;
                     %find projection of all ellipsoids on zeroBasMat
-                    wasFirstNonDeg=false;
+                    isBeenFirstNonDeg=false;
                     for iEll=1:nEllObj
                         eigviMat=ellObjVec(iEll).eigvMat;
                         diagiMat=ellObjVec(iEll).diagMat;
@@ -116,12 +115,12 @@ function resEllObj=findINF(ellObjVec,curDirVec,dimSpace,areAllInf,allInfDirMat)
                         projQMat=zeroBasMat.'*curEllMat*zeroBasMat;
                         projCenVec=zeroBasMat.'*ellObjVec(iEll).centerVec;
                         curPNum=sqrt(projCurDirVec.'*projQMat*projCurDirVec);
-                        if (abs(curPNum)>CHECK_TOL)
-                            if (~wasFirstNonDeg)
+                        if (abs(curPNum)>absTol)
+                            if (~isBeenFirstNonDeg)
                                 cenVec=projCenVec;
                                 sumMat=1/(curPNum)*projQMat;
                                 sumPNum=curPNum;
-                                wasFirstNonDeg=true;
+                                isBeenFirstNonDeg=true;
                             else
                                 cenVec=cenVec+projCenVec;
                                 sumMat=sumMat+1/(curPNum)*projQMat;
@@ -147,7 +146,7 @@ function resEllObj=findINF(ellObjVec,curDirVec,dimSpace,areAllInf,allInfDirMat)
                     resEllObj=Ellipsoid(qCenVec,resDiagVec,resFinMat); 
                 else
                     %find projection of all ellipsoids on zeroBasMat
-                    wasFirstNonDeg=false;
+                    isBeenFirstNonDeg=false;
                     for iEll=1:nEllObj
                         eigviMat=ellObjVec(iEll).eigvMat;
                         diagiMat=ellObjVec(iEll).diagMat;
@@ -157,12 +156,12 @@ function resEllObj=findINF(ellObjVec,curDirVec,dimSpace,areAllInf,allInfDirMat)
                         projQMat=nonInfBasMat.'*curEllMat*nonInfBasMat;
                         projCenVec=nonInfBasMat.'*ellObjVec(iEll).centerVec;
                         curPNum=sqrt(projCurDirVec.'*projQMat*projCurDirVec);
-                        if (abs(curPNum)>CHECK_TOL)
-                            if (~wasFirstNonDeg)
+                        if (abs(curPNum)>absTol)
+                            if (~isBeenFirstNonDeg)
                                 cenVec=projCenVec;
                                 sumMat=1/(curPNum)*projQMat;
                                 sumPNum=curPNum;
-                                wasFirstNonDeg=true;
+                                isBeenFirstNonDeg=true;
                             else
                                 cenVec=cenVec+projCenVec;
                                 sumMat=sumMat+1/(curPNum)*projQMat;
@@ -212,21 +211,21 @@ function resEllObj=findFND(ellObjVec,curDirVec)
     resEllObj=Ellipsoid(cenVec,resEllMat);
 end
 %
-function resEllObj=findFD(ellObjVec,curDirVec,dimSpace,isDirInKerVec)
+function resEllObj=findFD(ellObjVec,curDirVec,dimSpace,isDirInKerVec,absTol)
     import elltool.core.Ellipsoid;
-    CHECK_TOL=1e-12;
     %Aim: find direction correspoding to zero e.vl. among ellipsoids
     %for wich Q*l=0;
     nEllObj=length(ellObjVec);
     indDegEllVec=(1:nEllObj).';
     indDegEllVec=indDegEllVec(isDirInKerVec);
     ellObjCVec=num2cell(ellObjVec);
-    [~, allZeroDirCMat]=cellfun(@findAllZeroDir,...
+    findAZD=@(ellObj)findAllZeroDir(ellObj,absTol);
+    [~, allZeroDirCMat]=cellfun(findAZD,...
         ellObjCVec(indDegEllVec),'UniformOutput', false);
     %isZeroMat=cell2mat(isZeroCMat);
     allZeroDirMat=cell2mat(allZeroDirCMat); 
     %Construnct orthogonal basis 
-    [orthBasZMat rangZL1]=findBasRang(allZeroDirMat);
+    [orthBasZMat rangZL1]=findBasRang(allZeroDirMat,absTol);
     %rang ZL1>0 since there are Zero elements
     zeroIndVec=1:rangZL1;
     nonZeroIndVec=(rangZL1+1):dimSpace;
@@ -234,7 +233,7 @@ function resEllObj=findFD(ellObjVec,curDirVec,dimSpace,isDirInKerVec)
     nonZeroBasMat = orthBasZMat(:,nonZeroIndVec);
     projCurDirVec=zeroBasMat.'*curDirVec;
     %find projection of all ellipsoids on zeroBasMat
-    wasFirstNonDeg=false;
+    isBeenFirstNonDeg=false;
     for iEll=1:nEllObj
         eigviMat=ellObjVec(iEll).eigvMat;
         diagiMat=ellObjVec(iEll).diagMat;
@@ -242,12 +241,12 @@ function resEllObj=findFD(ellObjVec,curDirVec,dimSpace,isDirInKerVec)
         projQMat=zeroBasMat.'*curEllMat*zeroBasMat;
         projCenVec=zeroBasMat.'*ellObjVec(iEll).centerVec;
         curPNum=sqrt(projCurDirVec.'*projQMat*projCurDirVec);
-        if (abs(curPNum)>CHECK_TOL)
-            if (~wasFirstNonDeg)
+        if (abs(curPNum)>absTol)
+            if (~isBeenFirstNonDeg)
                 cenVec=projCenVec;
                 sumMat=1/(curPNum)*projQMat;
                 sumPNum=curPNum;
-                wasFirstNonDeg=true;
+                isBeenFirstNonDeg=true;
             else
                 cenVec=cenVec+projCenVec;
                 sumMat=sumMat+1/(curPNum)*projQMat;
@@ -282,36 +281,26 @@ function dimsMat=ellSpaceDimension(ellObjMat)
         end
     end
 end
-
-function isZeroMat=findZeroEig(ellObjVec,nDim)
-   nSize=size(ellObjVec,2);
-    isZeroVec=zeros(nDim,nSize);
-    for iInd=1:nSize
-        isZeroMat(:,iInd)=(diag(ellObjVec(iInd).diagMat)==0);
-    end   
-end
 function [isInfVec infDirEigMat] = findAllInfDir(ellObj)
     isInfVec=(diag(ellObj.diagMat)==Inf);
     eigvMat=ellObj.eigvMat;
     infDirEigMat=eigvMat(:,isInfVec);
 end
-function [isZeroVec zeroDirEigMat] = findAllZeroDir(ellObj)
-    CHECK_TOL=1e-12;
-    isZeroVec=(abs(diag(ellObj.diagMat))<CHECK_TOL);
+function [isZeroVec zeroDirEigMat] = findAllZeroDir(ellObj,absTol)
+    isZeroVec=(abs(diag(ellObj.diagMat))<absTol);
     eigvMat=ellObj.eigvMat;
     zeroDirEigMat=eigvMat(:,isZeroVec);
 end
-function [zeroDirEigMat] = findAllZeroDirFin(ellObj,infBasMat,finBasMat,curDirVec)
-    CHECK_TOL=1e-12;
+function [zeroDirEigMat] = findAllZeroDirFin(ellObj,finBasMat,curDirVec,absTol)
     eigvMat=ellObj.eigvMat;
     diagMat=ellObj.diagMat;
-    isZeroVec=abs(diag(diagMat))<CHECK_TOL;
+    isZeroVec=abs(diag(diagMat))<absTol;
     isInfHereVec=diag(diagMat)==Inf;
     diagMat(isInfHereVec,isInfHereVec)=0;
     projQMat=eigvMat*diagMat*eigvMat.';
     projQMat=finBasMat.'*projQMat*finBasMat;
     projDirVec=curDirVec;
-    isZero=all(abs(projQMat*projDirVec)<CHECK_TOL);
+    isZero=all(abs(projQMat*projDirVec)<absTol);
     if (isZero)    
         zeroDirEigMat=eigvMat(:,isZeroVec);
     else
@@ -319,14 +308,12 @@ function [zeroDirEigMat] = findAllZeroDirFin(ellObj,infBasMat,finBasMat,curDirVe
     end
     
 end
-function isDirInKer=findDirInKer(ellObj,curDir)
-    CHECK_TOL=1e-12;
+function isDirInKer=findDirInKer(ellObj,curDir,absTol)
     ellQMat=ellObj.eigvMat*ellObj.diagMat*...
             ellObj.eigvMat.';             
-    isDirInKer=all(abs(ellQMat*curDir)<CHECK_TOL);   
+    isDirInKer=all(abs(ellQMat*curDir)<absTol);   
 end
-function [orthBasMat rang]=findBasRang(qMat)
-    CHECK_TOL=1e-12;
+function [orthBasMat rang]=findBasRang(qMat,absTol)
     [orthBasMat rBasMat]=qr(qMat);
     if size(rBasMat,2)==1
         isNeg=rBasMat(1)<0;
@@ -335,7 +322,7 @@ function [orthBasMat rang]=findBasRang(qMat)
         isNegVec=diag(rBasMat)<0;
         orthBasMat(:,isNegVec)=-orthBasMat(:,isNegVec);
     end
-    tolerance = CHECK_TOL*norm(qMat,'fro');
+    tolerance = absTol*norm(qMat,'fro');
     rang = sum(abs(diag(rBasMat)) > tolerance);
     rang = rang(1); %for case where rBasZMat is vector.
 end              

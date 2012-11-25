@@ -1,4 +1,4 @@
-function [ resDist ] = distanceNew( ellObj, objVec, flag )
+function [ resDist ] = distance( ellObj, objVec, flag )
     import elltool.core.Ellipsoid
     import modgen.common.throwerror
     CHECK_TOL=1e-9;
