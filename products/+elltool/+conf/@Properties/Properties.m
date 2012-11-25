@@ -8,7 +8,7 @@ classdef Properties<modgen.common.obj.StaticPropStorage
     %            Faculty of Computational Mathematics and Computer Science,
     %            System Analysis Department 2012 $
     %
-    properties (GetAccess=public,Constant)
+    properties (GetAccess=private,Constant)
         DEFAULT_SOLVER = 'SeDuMi';
         DEFAULT_CONF_NAME='default'
         TOL_FACTOR = 2;
