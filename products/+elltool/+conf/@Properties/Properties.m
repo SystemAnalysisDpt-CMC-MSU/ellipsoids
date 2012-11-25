@@ -23,7 +23,7 @@ classdef Properties<modgen.common.obj.StaticPropStorage
             confRepoMgr.selectConf(Properties.DEFAULT_CONF_NAME);
             Properties.setConfRepoMgr(confRepoMgr);            
             % CVX settings.
-            relTol = Properties.TOL_FACTOR*Properties.getRelTol();
+            relTol = Properties.getRelTol();
             elltool.cvx.CVXController.setUpIfNot();
             if CVXController.isSetUp();
                 CVXController.setSolver(Properties.DEFAULT_SOLVER);
@@ -41,7 +41,7 @@ classdef Properties<modgen.common.obj.StaticPropStorage
             import modgen.common.throwerror;
             import elltool.cvx.CVXController;
             import elltool.conf.Properties;
-            relTol = Properties.TOL_FACTOR*Properties.getRelTol();
+            relTol = Properties.getRelTol();
             precisionVec = CVXController.getPrecision();
             solverStr = CVXController.getSolver();
             isVerbosity = CVXController.getIsVerbosityEnabled();
@@ -161,7 +161,8 @@ classdef Properties<modgen.common.obj.StaticPropStorage
             confRepMgr.setParam(optName,optVal);
         end
         function relTolVec = getPrecisionForCVXVec(relTol)
-            relTolVec = [0, 0, relTol];
+            import elltool.conf.Properties;
+            relTolVec = [0, 0, Properties.TOL_FACTOR*relTol];
         end
     end
 end
