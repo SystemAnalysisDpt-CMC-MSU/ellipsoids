@@ -4,27 +4,27 @@ function [myEllCentVec, myEllshMat] = double(myEll)
 %
 % Input:
 %   regular:
-%       myEll: ellipsoid [1, 1] - single ellipsoid of dimention ellDimension.
+%       myEll: ellipsoid [1, 1] - single ellipsoid of dimention nDims.
 %
 % Output:
-%    myEllCenterVec: double[ellDimension, 1] - center of the ellipsoid myEll.
-%    myEllshapeMat: double[ellDimension, ellDimension] - shape matrix of the ellipsoid myEll.
+%   myEllCenterVec: double[nDims, 1] - center of the ellipsoid myEll.
+%   myEllshapeMat: double[nDims, nDims] - shape matrix
+%       of the ellipsoid myEll.
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
 
-  import modgen.common.throwerror;
+import modgen.common.throwerror;
 
-  [mRows, nCols] = size(myEll);
-  if (mRows > 1) || (nCols > 1)
-    throwerror('wrongInput', 'DOUBLE: the argument of this function must be single ellipsoid.');
-  end
-  
-  if nargout < 2
+[mRows, nCols] = size(myEll);
+if (mRows > 1) || (nCols > 1)
+    throwerror('wrongInput', ...
+        'DOUBLE: the argument of this function must be single ellipsoid.');
+end
+
+if nargout < 2
     myEllCentVec = myEll.shape;
-  else
+else
     myEllCentVec = myEll.center;
     myEllshMat = myEll.shape;
-  end
-
 end
