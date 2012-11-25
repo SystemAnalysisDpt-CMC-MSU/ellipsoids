@@ -1,7 +1,7 @@
 classdef ATightIntEllApxBuilder<gras.ellapx.lreachplain.ATightEllApxBuilder
     properties (Access=private)
         ltSplineList
-        BPBTransSqrtSpline
+        BPBTransSqrtDynamics
         sMethodName
     end
     methods (Access=protected)
@@ -9,8 +9,8 @@ classdef ATightIntEllApxBuilder<gras.ellapx.lreachplain.ATightEllApxBuilder
             ltSpline=self.ltSplineList{iGoodDir};
         end
         %
-        function resSpline=getBPBTransSqrtSpline(self)
-            resSpline=self.BPBTransSqrtSpline;
+        function resObj=getBPBTransSqrtDynamics(self)
+            resObj=self.BPBTransSqrtDynamics;
         end
         %
         function S=getOrthTranslMatrix(self,Q_star,R_sqrt,b,a)
@@ -44,7 +44,7 @@ classdef ATightIntEllApxBuilder<gras.ellapx.lreachplain.ATightEllApxBuilder
     end
     methods (Access=private)
         function self=prepareODEData(self)
-            import gras.mat.fcnlib.MatrixOperationsFactory;
+            import gras.ellapx.uncertcalc.MatrixOperationsFactory;
             %
             pDefObj=self.getProblemDef();
             timeVec=pDefObj.getTimeVec;
@@ -54,8 +54,9 @@ classdef ATightIntEllApxBuilder<gras.ellapx.lreachplain.ATightEllApxBuilder
             matOpFactory = MatrixOperationsFactory.create(timeVec);
             %
             BPBTransDynamics = pDefObj.getBPBTransDynamics();
-            self.BPBTransSqrtSpline = matOpFactory.sqrtm(BPBTransDynamics);
-            self.ltSplineList = self.getGoodDirSet().getGoodDirOneCurveSplineList();
+            self.BPBTransSqrtDynamics = matOpFactory.sqrtm(BPBTransDynamics);
+            self.ltSplineList = ...
+                self.getGoodDirSet().getGoodDirOneCurveSplineList();
         end
     end
     methods

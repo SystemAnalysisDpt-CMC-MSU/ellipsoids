@@ -1,4 +1,4 @@
-classdef SplineMatrixOperations<gras.mat.fcnlib.IMatrixOperations
+classdef SplineMatrixOperations<gras.mat.fcnlib.AMatrixOperations
     properties (Access=protected)
         timeVec
     end
@@ -9,21 +9,24 @@ classdef SplineMatrixOperations<gras.mat.fcnlib.IMatrixOperations
             obj = gras.interp.MatrixInterpolantFactory.createInstance(...
                 'column',resDataArray,self.timeVec);
         end
-        function obj = interpolateBinary(self, fHandle, lMatFunc, rMatFunc, varargin)
+        function obj = interpolateBinary(self, fHandle, lMatFunc,...
+                rMatFunc, varargin)
             lDataArray = lMatFunc.evaluate(self.timeVec);
             rDataArray = rMatFunc.evaluate(self.timeVec);
             resDataArray = fHandle(lDataArray, rDataArray, varargin{:});
             obj = gras.interp.MatrixInterpolantFactory.createInstance(...
                 'column',resDataArray,self.timeVec);
         end
-        function obj = interpolateBinarySqueezed(self, fHandle, lMatFunc, rMatFunc)
+        function obj = interpolateBinarySqueezed(self, fHandle,...
+                lMatFunc, rMatFunc)
             lDataArray = lMatFunc.evaluate(self.timeVec);
             rDataArray = squeeze(rMatFunc.evaluate(self.timeVec));
             resDataArray = fHandle(lDataArray, rDataArray);
             obj = gras.interp.MatrixInterpolantFactory.createInstance(...
                 'column',resDataArray,self.timeVec);
         end
-        function obj = interpolateTernary(self, fHandle, lMatFunc, mMatFunc, rMatFunc)
+        function obj = interpolateTernary(self, fHandle, lMatFunc,...
+                mMatFunc, rMatFunc)
             lDataArray = lMatFunc.evaluate(self.timeVec);
             mDataArray = mMatFunc.evaluate(self.timeVec);
             rDataArray = rMatFunc.evaluate(self.timeVec);
@@ -101,13 +104,14 @@ classdef SplineMatrixOperations<gras.mat.fcnlib.IMatrixOperations
             xArray = xColFunc.evaluate(self.timeVec);
             tmpArray = zeros(size(xArray));
             for iTimePoint = 1:nTimePoints
-                tmpArray(:,:,iTimePoint) = mArray(:,:,iTimePoint)*xArray(:,:,iTimePoint);
+                tmpArray(:,:,iTimePoint) = ...
+                    mArray(:,:,iTimePoint)*xArray(:,:,iTimePoint);
             end
             resVec = shiftdim(sqrt(sum(tmpArray.*xArray,1)),1);
             %
             obj = gras.interp.MatrixInterpolantFactory.createInstance(...
-                    'column',resVec,self.timeVec);
-        end        
+                'column',resVec,self.timeVec);
+        end
         function self=SplineMatrixOperations(timeVec)
             modgen.common.type.simple.checkgen(timeVec,...
                 'isnumeric(x)&&isrow(x)&&~isempty(x)');

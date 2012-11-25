@@ -1,4 +1,4 @@
-classdef CompositeMatrixOperations<gras.mat.fcnlib.IMatrixOperations
+classdef CompositeMatrixOperations<gras.mat.fcnlib.AMatrixOperations
     methods
         function obj=triu(self,mMatFunc)
             obj = gras.mat.fcnlib.MatrixTriuFunc(mMatFunc);
@@ -23,22 +23,27 @@ classdef CompositeMatrixOperations<gras.mat.fcnlib.IMatrixOperations
         end
         function obj=rMultiply(self,lMatFunc,mMatFunc,rMatFunc)
             if nargin > 3
-                obj = gras.mat.fcnlib.MatrixTernaryTimesFunc(lMatFunc,mMatFunc,rMatFunc);
+                obj = gras.mat.fcnlib.MatrixTernaryTimesFunc(lMatFunc,...
+                    mMatFunc,rMatFunc);
             else
-                obj = gras.mat.fcnlib.MatrixBinaryTimesFunc(lMatFunc,mMatFunc);
+                obj = gras.mat.fcnlib.MatrixBinaryTimesFunc(lMatFunc,...
+                    mMatFunc);
             end
         end
         function obj=lrMultiply(self,mMatFunc,lrMatFunc,flag)
-            obj = gras.mat.fcnlib.MatrixLRTimesFunc(mMatFunc,lrMatFunc,flag);
+            obj = gras.mat.fcnlib.MatrixLRTimesFunc(mMatFunc,lrMatFunc,...
+                flag);
         end
         function obj=lrMultiplyByVec(self,mMatFunc,lrColFunc)
-            obj = gras.mat.fcnlib.MatrixLRTimesFunc(mMatFunc,lrColFunc,'R');
+            obj = gras.mat.fcnlib.MatrixLRTimesFunc(mMatFunc,lrColFunc,...
+                'R');
         end
         function obj=lrDivideVec(self,mMatFunc,lrColFunc)
-            obj = gras.mat.fcnlib.MatrixLRDivideVecFunc(mMatFunc,lrColFunc);
+            obj = gras.mat.fcnlib.MatrixLRDivideVecFunc(mMatFunc,...
+                lrColFunc);
         end
         function obj=quadraticFormSqrt(self,mMatFunc,xColFunc)
             obj = gras.mat.fcnlib.QuadraticFormSqrtFunc(mMatFunc,xColFunc);
-        end           
+        end
     end
 end

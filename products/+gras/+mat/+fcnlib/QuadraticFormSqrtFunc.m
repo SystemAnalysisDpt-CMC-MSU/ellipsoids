@@ -11,7 +11,8 @@ classdef QuadraticFormSqrtFunc<gras.mat.fcnlib.AMatrixOpFunc
             xArray = self.xColFunc.evaluate(timeVec);
             tmpArray = zeros(size(xArray));
             for iTimePoint = 1:nTimePoints
-                tmpArray(:,:,iTimePoint) = mArray(:,:,iTimePoint)*xArray(:,:,iTimePoint);
+                tmpArray(:,:,iTimePoint) = ...
+                    mArray(:,:,iTimePoint)*xArray(:,:,iTimePoint);
             end
             resVec = shiftdim(sqrt(sum(tmpArray.*xArray,1)),1);
         end

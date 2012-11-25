@@ -2,34 +2,34 @@ classdef ExtEllApxBuilder<gras.ellapx.lreachplain.ATightEllApxBuilder
     properties (Constant,GetAccess=private)
         APPROX_SCHEMA_NAME='ExternalQ'
         APPROX_SCHEMA_DESCR='External approximation based on matrix ODE for Q'
-    end    
+    end
     properties (Access=private)
-        slBPBlSqrtSplineList
+        slBPBlSqrtDynamicsList
     end
     methods (Access=protected)
-        function resMat=calcEllApxMatrixDeriv(~,ASpline,BPBTransSpline,...
-                slBPBlSqrtSpline,ltSpline,t,QMat)
-            AMat=ASpline.evaluate(t);
-            piNumerator=slBPBlSqrtSpline.evaluate(t);
+        function resMat=calcEllApxMatrixDeriv(~,ADynamics,BPBTransDynamics,...
+                slBPBlSqrtDynamics,ltSpline,t,QMat)
+            AMat=ADynamics.evaluate(t);
+            piNumerator=slBPBlSqrtDynamics.evaluate(t);
             ltVec=ltSpline.evaluate(t);
             piDenominator=sqrt(sum((QMat*ltVec).*ltVec));
             tmpMat=AMat*QMat;
             resMat=tmpMat+tmpMat.'+piNumerator.*QMat./piDenominator+...
-                piDenominator.*BPBTransSpline.evaluate(t)./piNumerator;
+                piDenominator.*BPBTransDynamics.evaluate(t)./piNumerator;
         end
         function fHandle=getEllApxMatrixDerivFunc(self,iGoodDir)
-                fHandle=...
-                    @(t,y)calcEllApxMatrixDeriv(self,...
-                    self.getProblemDef().getAtDynamics,...
-                    self.getProblemDef.getBPBTransDynamics,...
-                    self.slBPBlSqrtSplineList{iGoodDir},...
-                    self.getGoodDirSet.getGoodDirOneCurveSpline(...
-                    iGoodDir),t,y);     
+            fHandle=...
+                @(t,y)calcEllApxMatrixDeriv(self,...
+                self.getProblemDef().getAtDynamics,...
+                self.getProblemDef.getBPBTransDynamics,...
+                self.slBPBlSqrtDynamicsList{iGoodDir},...
+                self.getGoodDirSet.getGoodDirOneCurveSpline(...
+                iGoodDir),t,y);
         end
         function QArray=adjustEllApxMatrixVec(~,QArray)
         end
         function initQMat=getEllApxMatrixInitValue(self,~)
-             initQMat=self.getProblemDef().getX0Mat();
+            initQMat=self.getProblemDef().getX0Mat();
         end
     end
     methods (Access=protected)
@@ -39,12 +39,12 @@ classdef ExtEllApxBuilder<gras.ellapx.lreachplain.ATightEllApxBuilder
         function [apxSchemaName,apxSchemaDescr]=getApxSchemaNameAndDescr(self)
             apxSchemaName=self.APPROX_SCHEMA_NAME;
             apxSchemaDescr=self.APPROX_SCHEMA_DESCR;
-        end 
+        end
     end
     methods (Access=private)
         function self=prepareODEData(self)
             import gras.ellapx.common.*;
-            import gras.mat.fcnlib.MatrixOperationsFactory;
+            import gras.ellapx.uncertcalc.MatrixOperationsFactory;
             import gras.ellapx.lreachplain.IntEllApxBuilder;
             %
             nGoodDirs=self.getNGoodDirs();
@@ -57,17 +57,18 @@ classdef ExtEllApxBuilder<gras.ellapx.lreachplain.ATightEllApxBuilder
             %
             BPBTransDynamics = pDefObj.getBPBTransDynamics();
             goodDirSet = self.getGoodDirSet();
-            self.slBPBlSqrtSplineList = cell(1, nGoodDirs);
+            self.slBPBlSqrtDynamicsList = cell(1, nGoodDirs);
             %
             for iGoodDir = 1:nGoodDirs
                 ltSpline = goodDirSet.getGoodDirOneCurveSpline(iGoodDir);
                 %
-                self.slBPBlSqrtSplineList{iGoodDir} = matOpFactory.quadraticFormSqrt(...
-                    BPBTransDynamics, ltSpline);
-            end               
+                self.slBPBlSqrtDynamicsList{iGoodDir} = ...
+                    matOpFactory.quadraticFormSqrt(BPBTransDynamics,...
+                    ltSpline);
+            end
         end
     end
-    methods 
+    methods
         function self=ExtEllApxBuilder(varargin)
             self=self@gras.ellapx.lreachplain.ATightEllApxBuilder(...
                 varargin{:});

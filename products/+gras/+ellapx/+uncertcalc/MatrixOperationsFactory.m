@@ -4,8 +4,9 @@ classdef MatrixOperationsFactory
     end
     methods(Static)
         function obj =create(timeVec)
-            if gras.mat.fcnlib.MatrixOperationsFactory.USE_SPLINE_INTERPOLATION
-                obj = gras.mat.fcnlib.SplineMatrixOperations(timeVec);
+            import gras.ellapx.uncertcalc.MatrixOperationsFactory;
+            if MatrixOperationsFactory.USE_SPLINE_INTERPOLATION
+                obj = gras.interp.SplineMatrixOperations(timeVec);
             else
                 obj = gras.mat.fcnlib.CompositeMatrixOperations();
             end

@@ -7,21 +7,6 @@ classdef SuiteBasic < mlunitext.test_case
         function self = set_up_param(self,varargin)
 
         end
-        function testMatrixSFSqrt(~)
-            import gras.mat.symb.MatrixSymbFormulaBased;
-            import gras.mat.symb.MatrixSFSqrtm;
-            MAX_TOL=1e-14;
-            sym1CMat={'cos(t)','sin(t)';'-sin(t)','cos(t)'};
-            timeVec=0:0.1:2*pi;
-            obj=MatrixSymbFormulaBased(sym1CMat);
-            resArray=obj.evaluate(timeVec);
-            objSqrt=MatrixSFSqrtm(obj);
-            resSqrtArray=objSqrt.evaluate(timeVec);
-            expSqrtArray=gras.gen.SquareMatVector.evalMFunc(@sqrtm,...
-                resArray,'keepSize',true);
-            isOk=max(abs(resSqrtArray(:)-expSqrtArray(:)))<MAX_TOL;
-            mlunit.assert_equals(true,isOk);
-        end
         function testMatrixSymbolicInterp(~)
             %% Check symbolic interp
             timeVec=0:0.1:2*pi;
@@ -30,94 +15,14 @@ classdef SuiteBasic < mlunitext.test_case
             checkMaster();
             %
             function checkMaster()
-                import gras.interp.MatrixSymbInterpFactory;
                 symCMat={'cos(t)','sin(t)';'-sin(t)','cos(t)'};            
-                dataArray=gras.gen.MatVector.fromFormulaMat(symCMat,timeVec);            
-                mInterp=MatrixSymbInterpFactory.single(symCMat);
+                dataArray=gras.gen.MatVector.fromFormulaMat(symCMat,timeVec);  
+                mInterp=gras.mat.symb.MatrixSymbFormulaBased(symCMat);
                 check(mInterp);
                 function check(mInterp)
                     resDataArray=mInterp.evaluate(timeVec);
                     mlunit.assert_equals(true,isequal(dataArray,resDataArray));
                 end
-            end
-        end
-        function testMatrixSFProdByVec(~)
-            %
-            sym1CMat={'cos(t)','sin(t)';'-sin(t)','cos(t)'};
-            sym2CMat={'t';'2*t'};
-            timeVec=0:0.1:2*pi;
-            check();
-            timeVec=0;
-            check();
-            function check()
-                import gras.gen.MatVector;
-                import gras.interp.MatrixSymbInterpFactory;                
-                nTimePoints=length(timeVec);
-                m1Interp=MatrixSymbInterpFactory.single(sym1CMat);
-                m2Interp=MatrixSymbInterpFactory.single(sym2CMat);
-                m1Array=m1Interp.evaluate(timeVec);
-                m2Array=m2Interp.evaluate(timeVec);
-                etArray=MatVector.rMultiplyByVec(m1Array,squeeze(m2Array));
-                mProdInterp=MatrixSymbInterpFactory.rMultiplyByVec(sym1CMat,sym2CMat);
-                resArray=mProdInterp.evaluate(timeVec);
-                mlunit.assert_equals(nTimePoints,size(resArray,2));
-                mlunit.assert_equals(true,isequal(resArray,etArray));
-            end
-        end
-        function testMatrixSFProdBased(~)
-            MAX_TOL=1e-11;
-            timeVec=0:0.1:2*pi;            
-            %
-            check();
-            timeVec=0;
-            check();
-            function check()
-                import gras.interp.MatrixSymbInterpFactory;  
-                sym1CMat={'cos(t)','sin(t)';'-sin(t)','cos(t)'};
-                sym2CMat={'1','0';'0','1'};                
-                dataArray=gras.gen.MatVector.fromFormulaMat(sym1CMat,timeVec);
-                mInterp=MatrixSymbInterpFactory.single(sym1CMat);
-                resDataArray=mInterp.evaluate(timeVec);
-                mlunit.assert_equals(true,isequal(dataArray,resDataArray));
-                %
-                mInterpBin=MatrixSymbInterpFactory.rMultiply(sym1CMat,sym2CMat);
-                resDataArray=mInterpBin.evaluate(timeVec);
-                mlunit.assert_equals(true,isequal(dataArray,resDataArray));
-                %
-                mInterpBin=MatrixSymbInterpFactory.rMultiply(sym2CMat,sym1CMat);
-                resDataArray=mInterpBin.evaluate(timeVec);
-                mlunit.assert_equals(true,isequal(dataArray,resDataArray));
-                %
-                sym2CMat={'t','2*t';'3*t','4*t'};
-                mInterpBin=MatrixSymbInterpFactory.rMultiply(sym1CMat,sym2CMat);
-                m2Interp=MatrixSymbInterpFactory.single(sym2CMat);
-                resDataArray=mInterpBin.evaluate(timeVec);
-                etDataArray=gras.gen.MatVector.rMultiply(dataArray,...
-                    m2Interp.evaluate(timeVec));
-                %
-                mlunit.assert_equals(true,isequal(resDataArray,etDataArray));
-                %
-                mInterpBin=MatrixSymbInterpFactory.rMultiply(sym2CMat,sym1CMat);
-                resDataArray=mInterpBin.evaluate(timeVec);
-                etDataArray=gras.gen.MatVector.rMultiply(...
-                    m2Interp.evaluate(timeVec),dataArray);
-                mlunit.assert_equals(true,isequal(resDataArray,etDataArray));
-                %
-                sym3CMat={'sqrt(t)','2*sqrt(t)';'3*sqrt(t)','4*sqrt(t)'};
-                mInterpTriple=MatrixSymbInterpFactory.rMultiply(sym1CMat,sym2CMat,sym3CMat);
-                mInterpBin=MatrixSymbInterpFactory.rMultiply(sym1CMat,sym2CMat);
-                m3Interp=MatrixSymbInterpFactory.single(sym3CMat);
-                etDataArray=gras.gen.MatVector.rMultiply(mInterpBin.evaluate(timeVec),...
-                    m3Interp.evaluate(timeVec));
-                resDataArray=mInterpTriple.evaluate(timeVec);
-                maxTol=max(abs(etDataArray(:)-resDataArray(:)));
-                mlunit.assert_equals(true,maxTol<=MAX_TOL);
-                %
-                mInterpBin=MatrixSymbInterpFactory.rMultiply(sym2CMat,sym3CMat);
-                etDataArray=gras.gen.MatVector.rMultiply(mInterp.evaluate(timeVec),...
-                    mInterpBin.evaluate(timeVec));
-                maxTol=max(abs(etDataArray(:)-resDataArray(:)));
-                mlunit.assert_equals(true,maxTol<=MAX_TOL);
             end
         end
         function testMatrixCubicSplineBasic(self)

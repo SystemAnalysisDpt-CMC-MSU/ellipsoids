@@ -27,27 +27,27 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             %
             lsGoodDirMat=self.getGoodDirSet().getlsGoodDirMat;
             sTime=self.getGoodDirSet().getsTime();
-            %            
+            %
             %
             pDefObj=self.getProblemDef();
             pDefTimeLimsVec=pDefObj.getTimeLimsVec();
             pStartTime=pDefTimeLimsVec(1);
             solveTimeVec=self.getTimeVec;
-            resTimeVec=self.getTimeVec;            
+            resTimeVec=self.getTimeVec;
             if solveTimeVec(1)~=pStartTime
                 solveTimeVec=[pStartTime solveTimeVec];
                 isFirstPointToRemove=true;
             else
                 isFirstPointToRemove=false;
             end
-            QArrayList=cell(1,nLDirs);            
+            QArrayList=cell(1,nLDirs);
             %% Calculating internal approximation
             for l=1:1:nLDirs
                 tStart=tic;
                 logStr=sprintf(...
                     'solving ode for direction \n %s  defined at time %f',...
                     mat2str(lsGoodDirMat(:,l).'),sTime);
-                logger.info([logStr,'...']);                
+                logger.info([logStr,'...']);
                 fHandle=self.getEllApxMatrixDerivFunc(l);
                 initValueMat=self.getEllApxMatrixInitValue(l);
                 %
@@ -59,7 +59,7 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
                 %
                 QArrayList{l}=self.adjustEllApxMatrixVec(data_Q_star);
                 logger.info(sprintf([logStr,':done, %.3f sec. elapsed'],...
-                    toc(tStart)));               
+                    toc(tStart)));
             end
             %
             aMat=pDefObj.getxtDynamics.evaluate(resTimeVec);
@@ -71,7 +71,7 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             sTime=goodDirSetObj.getsTime();
             ltGoodDirArray=goodDirSetObj.getGoodDirCurveSpline(...
                 ).evaluate(resTimeVec);
-            %            
+            %
             self.ellTubeRel=gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
                 QArrayList,aMat,resTimeVec,ltGoodDirArray,sTime,apxType,...
                 apxSchemaName,apxSchemaDescr,self.getCalcPrecision);
@@ -79,7 +79,7 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
     end
     methods (Abstract,Access=protected)
         apxType=getApxType(self);
-        [apxSchemaName,apxSchemaDescr]=getApxSchemaNameAndDescr(self);    
+        [apxSchemaName,apxSchemaDescr]=getApxSchemaNameAndDescr(self);
     end
     methods (Abstract, Access=protected)
         fHandle=getEllApxMatrixDerivFunc(self,iGoodDir);
@@ -96,8 +96,8 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             %Since certain parameters of ellipsoidal approximation depend
             %on all configuration matrix components we need increase
             %precision. The resulting tolerance is proportional to the
-            %cumulative tolerance in all matrix components. To account 
-            %for that fact we need to adjust a tolerance for 
+            %cumulative tolerance in all matrix components. To account
+            %for that fact we need to adjust a tolerance for
             %each matrix component.
             %
             self=self@gras.ellapx.gen.ATightEllApxBuilder(pDefObj,...

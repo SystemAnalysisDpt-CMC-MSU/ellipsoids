@@ -4,27 +4,30 @@ classdef IntEllApxBuilder<gras.ellapx.lreachplain.IntProperEllApxBuilder
         APPROX_SCHEMA_DESCR='Internal approximation based on matrix ODE for (Q)'
     end
     properties(Access=protected)
-        slCQClSqrtSplineList
+        slCQClSqrtDynamicsList
     end
     methods (Access=protected)
-      function fHandle=getEllApxMatrixDerivFunc(self,iGoodDir)
-                fHandle=...
-                    @(t,y)calcEllApxMatrixDeriv(self,...
-                    self.getProblemDef().getAtDynamics,...
-                    self.getBPBTransSqrtSpline(iGoodDir),...
-                    self.getProblemDef().getCQCTransDynamics,...
-                    self.slCQClSqrtSplineList{iGoodDir},...
-                    self.getBDirSpline(iGoodDir),...
-                    self.getADirSpline(iGoodDir),...
-                    t,y);     
-        end        
-        function res=calcEllApxMatrixDeriv(self,At_spline,...
-                BPBTransSqrtSpline,CQCTransSpline,slCQClSqrtSpline,...
-                BPBTransSqrtLSpline,ltSpline,t,QMat)
+% this is dead code and it contains calls to undefined methods like
+% self.getADirSpline, it should probably be removed
+%
+%         function fHandle=getEllApxMatrixDerivFunc(self,iGoodDir)
+%             fHandle=...
+%                 @(t,y)calcEllApxMatrixDeriv(self,...
+%                 self.getProblemDef().getAtDynamics,...
+%                 self.getBPBTransSqrtDynamics(iGoodDir),...
+%                 self.getProblemDef().getCQCTransDynamics,...
+%                 self.slCQClSqrtDynamicsList{iGoodDir},...
+%                 self.getBDirSpline(iGoodDir),...
+%                 self.getADirSpline(iGoodDir),...
+%                 t,y);
+%         end
+        function res=calcEllApxMatrixDeriv(self,AtDynamics,...
+                BPBTransSqrtDynamics,CQCTransDynamics,slCQClSqrtDynamics,...
+                BPBTransSqrtLDynamics,ltSpline,t,QMat)
             import modgen.common.throwerror;
-            A=At_spline.evaluate(t);
-            R_sqrt=BPBTransSqrtSpline.evaluate(t);
-            rSqrtlVec=BPBTransSqrtLSpline.evaluate(t);
+            A=AtDynamics.evaluate(t);
+            R_sqrt=BPBTransSqrtDynamics.evaluate(t);
+            rSqrtlVec=BPBTransSqrtLDynamics.evaluate(t);
             ltVec=ltSpline.evaluate(t);
             %
             [VMat,DMat]=eig(QMat);
@@ -33,19 +36,19 @@ classdef IntEllApxBuilder<gras.ellapx.lreachplain.IntProperEllApxBuilder
             end
             Q_star=VMat*sqrt(DMat)*transpose(VMat);
             S=self.getOrthTranslMatrix(Q_star,R_sqrt,rSqrtlVec,Q_star*ltVec);
-            %            
-            piNumerator=slCQClSqrtSpline.evaluate(t);
+            %
+            piNumerator=slCQClSqrtDynamics.evaluate(t);
             piDenominator=sqrt(sum((QMat*ltVec).*ltVec));
             %
             tmp=(A*Q_star+R_sqrt*transpose(S))*transpose(Q_star);
             res=tmp+transpose(tmp)-piNumerator.*QMat./piDenominator-...
-                piDenominator.*CQCTransSpline.evaluate(t)./piNumerator;
+                piDenominator.*CQCTransDynamics.evaluate(t)./piNumerator;
         end
     end
     methods (Access=private)
         function self=prepareODEData(self)
             import gras.ellapx.common.*;
-            import gras.mat.fcnlib.MatrixOperationsFactory;
+            import gras.ellapx.uncertcalc.MatrixOperationsFactory;
             import gras.ellapx.lreachplain.IntEllApxBuilder;
             %
             nGoodDirs=self.getNGoodDirs();
@@ -58,21 +61,21 @@ classdef IntEllApxBuilder<gras.ellapx.lreachplain.IntProperEllApxBuilder
             %
             CQCTransDynamics = pDefObj.getCQCTransDynamics();
             goodDirSet = self.getGoodDirSet();
-            self.slCQClSqrtSplineList = cell(1, nGoodDirs);
+            self.slCQClSqrtDynamicsList = cell(1, nGoodDirs);
             %
             for iGoodDir = 1:nGoodDirs
                 ltSpline = goodDirSet.getGoodDirOneCurveSpline(iGoodDir);
                 %
-                self.slCQClSqrtSplineList{iGoodDir} = matOpFactory.quadraticFormSqrt(...
-                    CQCTransDynamics, ltSpline);
-            end              
+                self.slCQClSqrtDynamicsList{iGoodDir} = ...
+                    matOpFactory.quadraticFormSqrt(CQCTransDynamics,ltSpline);
+            end
         end
-    end    
+    end
     methods
         function [apxSchemaName,apxSchemaDescr]=getApxSchemaNameAndDescr(self)
             apxSchemaName=self.APPROX_SCHEMA_NAME;
             apxSchemaDescr=self.APPROX_SCHEMA_DESCR;
-        end        
+        end
         function self=IntEllApxBuilder(varargin)
             self=self@gras.ellapx.lreachplain.IntProperEllApxBuilder(...
                 varargin{:});

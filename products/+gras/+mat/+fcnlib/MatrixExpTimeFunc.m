@@ -1,7 +1,7 @@
 classdef MatrixExpTimeFunc<gras.mat.fcnlib.AMatrixOpFunc
     properties (Access=protected)
         lMatFunc
-    end    
+    end
     methods
         function resArray=evaluate(self,timeVec)
             nTimePoints = numel(timeVec);

@@ -13,5 +13,7 @@ classdef IMatrixOperations<handle
         obj=lrMultiplyByVec(self,mMatFunc,lrVecFunc)
         obj=lrDivideVec(self,mMatFunc,lrVecFunc)
         obj=quadraticFormSqrt(self,mMatFunc,xVecFunc)
+        %
+        obj=fromSymbMatrix(self,mCMat)
     end
 end

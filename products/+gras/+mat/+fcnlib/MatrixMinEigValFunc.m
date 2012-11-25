@@ -2,7 +2,8 @@ classdef MatrixMinEigValFunc<gras.mat.fcnlib.AMatrixUnaryOpFunc
     methods
         function self=MatrixMinEigValFunc(lMatFunc)
             %
-            self=self@gras.mat.fcnlib.AMatrixUnaryOpFunc(lMatFunc,@(x)min(eig(x)));
+            self=self@gras.mat.fcnlib.AMatrixUnaryOpFunc(lMatFunc,...
+                @(x)min(eig(x)));
             %
             modgen.common.type.simple.checkgen(lMatFunc.getMatrixSize(),...
                 'x(1)==x(2)');

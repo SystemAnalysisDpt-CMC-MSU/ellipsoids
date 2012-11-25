@@ -165,7 +165,7 @@ classdef SuiteOp < mlunitext.test_case
             rMatFun = factory.lrDivideVec(mMatFun,lrVecFun);
             expectedMatVec = 2;
             obtainedMatVec = rMatFun.evaluate(0);
-            self.isMatVecEq(expectedMatVec, obtainedMatVec);            
+            self.isMatVecEq(expectedMatVec, obtainedMatVec);
             %
             % test quadraticFormSqrt
             %
@@ -176,7 +176,7 @@ classdef SuiteOp < mlunitext.test_case
             rMatFun = factory.quadraticFormSqrt(mMatFun,xVecFun);
             expectedMatVec = 2*ones(1,20);
             obtainedMatVec = rMatFun.evaluate(1:20);
-            self.isMatVecEq(expectedMatVec, obtainedMatVec);               
+            self.isMatVecEq(expectedMatVec, obtainedMatVec);
         end
     end
     methods
@@ -190,7 +190,7 @@ classdef SuiteOp < mlunitext.test_case
         end
         function testSplineMatrixOperations(self)
             timeVec = linspace(-5,5,1000);
-            factory = gras.mat.fcnlib.SplineMatrixOperations(timeVec);
+            factory = gras.interp.SplineMatrixOperations(timeVec);
             self.runTestsForFactory(factory);
         end
         function testOtherOperations(self)
