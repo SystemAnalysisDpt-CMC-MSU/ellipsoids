@@ -8,8 +8,8 @@ classdef LReachProblemDynamicsInterp<...
         function self=LReachProblemDynamicsInterp(problemDef,calcPrecision)
             import gras.ellapx.common.*;
             import gras.interp.MatrixInterpolantFactory;
-            import gras.interp.MatrixSymbInterpFactory;
             import gras.ode.MatrixODESolver;
+            import gras.ellapx.uncertcalc.MatrixOperationsFactory;
             %
             if ~isa(problemDef,...
                     'gras.ellapx.lreachuncert.probdef.IReachContProblemDef')
@@ -22,23 +22,22 @@ classdef LReachProblemDynamicsInterp<...
             self=self@gras.ellapx.lreachplain.probdyn.AReachProblemDynamicsInterp(...
                 problemDef,calcPrecision);
             %
-            % copy necessary data to local variables
+            matOpFactory = MatrixOperationsFactory.create(self.timeVec);
             %
-            CtDefMat = problemDef.getCMatDef();
-            QCMat = problemDef.getQCMat();
-            qCVec = problemDef.getqCVec();
-            x0DefVec = problemDef.getx0Vec();
-            sysDim = size(problemDef.getAMatDef(), 1);
+            sysDim = self.AtDynamics.getNRows();
             %
-            % compute C(t)Q(t)C'(t)
+            % create C(t)Q(t)C'(t) and C(t)q(t) dynamics
             %
-            self.CQCTransDynamics=MatrixSymbInterpFactory.rMultiply(...
-                CtDefMat,QCMat,CtDefMat.');
-            %
-            % compute C(t)q(t)
-            %
-            self.CqtDynamics=MatrixSymbInterpFactory.rMultiplyByVec(...
-                CtDefMat,qCVec);
+            CtDynamics = matOpFactory.fromSymbMatrix(...
+                problemDef.getCMatDef());
+            QtDynamics = matOpFactory.fromSymbMatrix(...
+                problemDef.getQCMat());
+            qtDynamics = matOpFactory.fromSymbMatrix(...
+                problemDef.getqCVec());
+            self.CQCTransDynamics = matOpFactory.lrMultiply(QtDynamics,...
+                CtDynamics, 'L');
+            self.CqtDynamics = matOpFactory.rMultiplyByVec(CtDynamics,...
+                qtDynamics);
             %
             % compute x(t)
             %
@@ -49,7 +48,7 @@ classdef LReachProblemDynamicsInterp<...
                 self.BptDynamics.evaluate(t)+self.CqtDynamics.evaluate(t);
             %
             [timeXtVec,xtArray]=solverObj.solve(xtDerivFunc,...
-                self.timeVec,x0DefVec);
+                self.timeVec, problemDef.getx0Vec());
             %
             self.xtDynamics=MatrixInterpolantFactory.createInstance(...
                 'column',xtArray,timeXtVec);

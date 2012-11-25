@@ -1,9 +1,10 @@
 <?xml version="1.0"?>
-<root version="16" xml_tb_version="2.0" type="struct" >
+<root version="18" xml_tb_version="2.0" type="struct" >
 <valueObj type="struct" >
 	<genericProps type="struct" >
 		<calcTimeLimVec type="double" >0 7</calcTimeLimVec>
 		<calcPrecision type="double" >0.0001</calcPrecision>
+		<isSplineForMatrixCalcUsed type="boolean" >1</isSplineForMatrixCalcUsed>
 	</genericProps>
 	<projectionProps type="struct" >
 		<projSpaceSetName type="char" >set1</projSpaceSetName>
@@ -29,7 +30,7 @@
 					</set2>
 					<set3 type="cell" >
 						<item type="double" >1 0</item>
-                        <item type="double" >0 1</item>
+						<item type="double" >0 1</item>
 					</set3>
 				</lsGoodDirSets>
 			</manual>
@@ -84,12 +85,6 @@
 						<selectionMethodForSMatrix type="char" >volume</selectionMethodForSMatrix>
 					</props>
 				</noUncertJustQ>
-				<uncert type="struct" >
-					<isEnabled type="boolean" >1</isEnabled>
-					<props type="struct" >
-						<selectionMethodForSMatrix type="char" >volume</selectionMethodForSMatrix>
-					</props>
-				</uncert>
 			</schemas>
 			<dispScaleFactor type="double" >0.99</dispScaleFactor>
 		</internalApx>

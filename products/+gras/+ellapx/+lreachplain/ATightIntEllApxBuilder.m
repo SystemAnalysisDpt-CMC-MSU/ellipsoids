@@ -1,7 +1,7 @@
 classdef ATightIntEllApxBuilder<gras.ellapx.lreachplain.ATightEllApxBuilder
     properties (Access=private)
         ltSplineList
-        BPBTransSqrtSpline
+        BPBTransSqrtDynamics
         sMethodName
     end
     methods (Access=protected)
@@ -9,8 +9,8 @@ classdef ATightIntEllApxBuilder<gras.ellapx.lreachplain.ATightEllApxBuilder
             ltSpline=self.ltSplineList{iGoodDir};
         end
         %
-        function resSpline=getBPBTransSqrtSpline(self)
-            resSpline=self.BPBTransSqrtSpline;
+        function resObj=getBPBTransSqrtDynamics(self)
+            resObj=self.BPBTransSqrtDynamics;
         end
         %
         function S=getOrthTranslMatrix(self,Q_star,R_sqrt,b,a)
@@ -44,25 +44,19 @@ classdef ATightIntEllApxBuilder<gras.ellapx.lreachplain.ATightEllApxBuilder
     end
     methods (Access=private)
         function self=prepareODEData(self)
-            %ODE is solved on time span [tau0, tau1]\in[t0,t1]
-            import gras.interp.MatrixInterpolantFactory;
-            import gras.mat.symb.MatrixSFSqrtm;
+            import gras.ellapx.uncertcalc.MatrixOperationsFactory;
+            %
             pDefObj=self.getProblemDef();
-            nGoodDirs=self.getNGoodDirs();
             timeVec=pDefObj.getTimeVec;
             %
-            goodDirCurveSpline=self.getGoodDirSet().getGoodDirCurveSpline();
-            goodDirArray=goodDirCurveSpline.evaluate(timeVec);
-            ltSplineList=cell(1,nGoodDirs);
-            for iGoodDir=1:nGoodDirs
-                ltSplineList{iGoodDir}=...
-                    MatrixInterpolantFactory.createInstance(...
-                    'column',...
-                    squeeze(goodDirArray(:,iGoodDir,:)),timeVec);
-            end
-            self.ltSplineList=ltSplineList;
-            self.BPBTransSqrtSpline=MatrixSFSqrtm(...
-                self.getProblemDef().getBPBTransDynamics());
+            % calculate (BPB')^{1/2}
+            %
+            matOpFactory = MatrixOperationsFactory.create(timeVec);
+            %
+            BPBTransDynamics = pDefObj.getBPBTransDynamics();
+            self.BPBTransSqrtDynamics = matOpFactory.sqrtm(BPBTransDynamics);
+            self.ltSplineList = ...
+                self.getGoodDirSet().getGoodDirOneCurveSplineList();
         end
     end
     methods

@@ -40,16 +40,13 @@ classdef MatVector
             Y=MatVector.fromExpression(expStr,t);
         end
         %
-        function Y=fromFunc(fHandle,t)
-            if numel(t)==1
-                Y=fHandle(t);
-            else
-                t=shiftdim(t,-1);
-                Y=fHandle(t);
-                nTimePoints=numel(t);
-                if size(Y,3)==1&&nTimePoints>1
-                    Y=repmat(Y,[1,1,nTimePoints]);
-                end
+        function yArray=fromFunc(fHandle,t)
+            nTimePoints = numel(t);
+            mMat = fHandle(t(1));
+            yArray = zeros([size(mMat) nTimePoints]);
+            yArray(:,:,1) = mMat;
+            for iTimePoint = 2:nTimePoints
+                yArray(:,:,iTimePoint) = fHandle(t(iTimePoint));
             end
         end         
         %

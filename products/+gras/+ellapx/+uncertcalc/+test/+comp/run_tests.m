@@ -7,13 +7,14 @@ confNameList=crm.deployConfTemplate('*');
 crmSys=gras.ellapx.uncertcalc.test.comp.conf.sysdef.ConfRepoMgr();
 crmSys.deployConfTemplate('*');
 nConfs=length(confNameList);
+PAIR_CONF_NAME_SUFFIX='_pair';
 %
 suiteList={};
 for iConf=nConfs:-1:1
     confName = confNameList{iConf};
-    if isempty(strfind(confName, '_lti'));
+    if isempty(strfind(confName,PAIR_CONF_NAME_SUFFIX));
         % if system is not lti, find corresponding lti system
-        confNameLti = strcat(confName, '_lti');
+        confNameLti = strcat(confName,PAIR_CONF_NAME_SUFFIX);
         % add lti and not-lti pair test
         suiteList{end+1}=loader.load_tests_from_test_case(...
             'gras.ellapx.uncertcalc.test.comp.mlunit.SuiteCompare',...
