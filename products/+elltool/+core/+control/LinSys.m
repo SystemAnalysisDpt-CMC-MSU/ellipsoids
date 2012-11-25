@@ -61,26 +61,26 @@ classdef LinSys<handle
             isTimeInvar = true;
             [mRows, nCols] = size(AtInpMat);
             if mRows ~= nCols
-                error('linsys:dimension:A',...
+                throwerror('linsys:dimension:A',...
                     'LINSYS: A must be square matrix.');
             end
             if iscell(AtInpMat)
                 isTimeInvar = false;
             elseif ~(isa(AtInpMat, 'double'))
-                error('linsys:type:A',...
+                throwerror('linsys:type:A',...
                     'LINSYS: matrix A must be of type ''cell'' or ''double''.');
             end
             self.AtMat = AtInpMat;
             %%
             [kRows, lCols] = size(BtInpMat);
             if kRows ~= nCols
-                error('linsys:dimension:B',...
+                throwerror('linsys:dimension:B',...
                     'LINSYS: dimensions of A and B do not match.');
             end
             if iscell(BtInpMat)
                 isTimeInvar = false;
             elseif ~(isa(BtInpMat, 'double'))
-                error('linsys:type:B',...
+                throwerror('linsys:type:B',...
                     'LINSYS: matrix B must be of type ''cell'' or ''double''.');
             end 
             self.BtMat = BtInpMat;
@@ -93,7 +93,7 @@ classdef LinSys<handle
                     UBoundsEll = UBoundsEll(1, 1);
                     [dRows, rCols] = dimension(UBoundsEll);
                     if dRows ~= lCols
-                        error('linsys:dimension:U',...
+                        throwerror('linsys:dimension:U',...
                             'LINSYS: dimensions of control bounds U and matrix B do not match.');
                     end
                     if (dRows > rCols) && (ellOptions.verbose > 0)
@@ -102,10 +102,10 @@ classdef LinSys<handle
                 elseif isa(UBoundsEll, 'double') || iscell(UBoundsEll)
                     [kRows, mRows] = size(UBoundsEll);
                     if mRows > 1
-                        error('linsys:type:U',...
+                        throwerror('linsys:type:U',...
                             'LINSYS: control U must be an ellipsoid or a vector.')
                     elseif kRows ~= lCols
-                        error('linsys:dimension:U',...
+                        throwerror('linsys:dimension:U',...
                             'LINSYS: dimensions of control vector U and matrix B do not match.');
                     end
                     if iscell(UBoundsEll)
@@ -118,7 +118,7 @@ classdef LinSys<handle
                     UBoundsEll = UBoundsEll(1, 1);
                     self.isEllHaveNeededDim(UBoundsEll, lCols);      
                 else
-                    error('linsys:type:U',...
+                    throwerror('linsys:type:U',...
                         'LINSYS: control U must be an ellipsoid or a vector.')
                 end
             else
@@ -132,13 +132,13 @@ classdef LinSys<handle
                 else
                     [kRows, lCols] = size(GtInpMat);
                     if kRows ~= nCols
-                        error('linsys:dimension:G',...
+                        throwerror('linsys:dimension:G',...
                             'LINSYS: dimensions of A and G do not match.');
                     end
                     if iscell(GtInpMat)
                         isTimeInvar = false;
                     elseif ~(isa(GtInpMat, 'double'))
-                        error('linsys:type:G',...
+                        throwerror('linsys:type:G',...
                             'LINSYS: matrix G must be of type ''cell'' or ''double''.');
                     end 
                 end 
@@ -161,10 +161,10 @@ classdef LinSys<handle
                 elseif isa(distBoundsEll, 'double') || iscell(distBoundsEll)
                     [kRows, mRows] = size(distBoundsEll);
                     if mRows > 1
-                        error('linsys:type:V',...
+                        throwerror('linsys:type:V',...
                             'LINSYS: disturbance V must be an ellipsoid or a vector.')
                     elseif kRows ~= lCols
-                        error('linsys:dimension:V',...
+                        throwerror('linsys:dimension:V',...
                             'LINSYS: dimensions of disturbance vector V and matrix G do not match.');
                     end
                     if iscell(distBoundsEll)
@@ -177,7 +177,7 @@ classdef LinSys<handle
                     distBoundsEll = distBoundsEll(1, 1);
                     self.isEllHaveNeededDim(distBoundsEll, lCols);
                 else
-                    error('linsys:type:V',...
+                    throwerror('linsys:type:V',...
                         'LINSYS: disturbance V must be an ellipsoid or a vector.')
                 end
             else
@@ -192,13 +192,13 @@ classdef LinSys<handle
                 else
                     [kRows, lCols] = size(CtInpMat);
                     if lCols ~= nCols
-                        error('linsys:dimension:C',...
+                        throwerror('linsys:dimension:C',...
                             'LINSYS: dimensions of A and C do not match.');
                     end
                     if iscell(CtInpMat)
                         isTimeInvar = false;
                     elseif ~(isa(CtInpMat, 'double'))
-                        error('linsys:type:C',...
+                        throwerror('linsys:type:C',...
                             'LINSYS: matrix C must be of type ''cell'' or ''double''.');
                     end 
                 end 
@@ -215,16 +215,16 @@ classdef LinSys<handle
                     noiseBoundsEll = noiseBoundsEll(1, 1);
                     [dRows, rCols] = dimension(noiseBoundsEll);
                     if dRows ~= kRows
-                        error('linsys:dimension:W',...
+                        throwerror('linsys:dimension:W',...
                             'LINSYS: dimensions of noise bounds W and matrix C do not match.');
                     end
                 elseif isa(noiseBoundsEll, 'double') || iscell(noiseBoundsEll)
                     [lCols, mRows] = size(noiseBoundsEll);
                     if mRows > 1
-                        error('linsys:type:W',...
+                        throwerror('linsys:type:W',...
                             'LINSYS: noise W must be an ellipsoid or a vector.')
                     elseif kRows ~= lCols
-                        error('linsys:dimension:W',...
+                        throwerror('linsys:dimension:W',...
                             'LINSYS: dimensions of noise vector W and matrix C do not match.');
                     end
                     if iscell(noiseBoundsEll)
@@ -237,7 +237,7 @@ classdef LinSys<handle
                     noiseBoundsEll = noiseBoundsEll(1, 1);
                     self.isEllHaveNeededDim(noiseBoundsEll, kRows);
                 else
-                    error('linsys:type:W',...
+                    throwerror('linsys:type:W',...
                         'LINSYS: noise W must be an ellipsoid or a vector.')
                 end
             else
@@ -266,23 +266,23 @@ classdef LinSys<handle
             [mRows, nCols] = size(QMat);
             %%
             if mRows ~= nCols
-                error(sprintf('linsys:value:%s:shape', inputname(1)),...
+                throwerror(sprintf('linsys:value:%s:shape', inputname(1)),...
                     'shape matrix must be symmetric, positive definite');
             elseif nCols ~= NDim
-                error(sprintf('linsys:dimension:%s:shape', inputname(1)),...
+                throwerror(sprintf('linsys:dimension:%s:shape', inputname(1)),...
                     'shape matrix must be of dimension %dx%d', NDim, NDim);
             elseif lCols > 1 || kRows ~= NDim
-                error(sprintf('linsys:dimension:%s:center', inputname(1)),...
+                throwerror(sprintf('linsys:dimension:%s:center', inputname(1)),...
                     'center must be a vector of dimension %d', NDim);  
             end 
             %%
             if ~iscell(qVec) && ~iscell(QMat)
-                error( sprintf('linsys:type:%s',inputname(1)), ...
+                throwerror( sprintf('linsys:type:%s',inputname(1)), ...
                     'for constant ellipsoids use ellipsoid object' );
             end
             %%
             if ~iscell(qVec) && ~isa(qVec, 'double')
-                error(sprintf('linsys:type:%s:center', inputname(1)),...
+                throwerror(sprintf('linsys:type:%s:center', inputname(1)),...
                     'center must be of type ''cell'' or ''double''');        
             end
             %%
@@ -292,18 +292,18 @@ classdef LinSys<handle
                 end
                 isEqMat = strcmp(QMat, QMat.');
                 if ~all(isEqMat(:))
-                    error(sprintf('linsys:value:%s:shape', inputname(1)),...
+                    throwerror(sprintf('linsys:value:%s:shape', inputname(1)),...
                         'shape matrix must be symmetric, positive definite');
                 end
             else
                 if isa(QMat, 'double')
                     isnEqMat = (QMat ~= QMat.');
                     if any(isnEqMat(:)) || min(eig(QMat)) <= 0
-                        error(sprintf('linsys:value:%s:shape', inputname(1)),...
+                        throwerror(sprintf('linsys:value:%s:shape', inputname(1)),...
                             'shape matrix must be symmetric, positive definite');
                     end                    
                 else
-                    error(sprintf('linsys:type:%s:shape', inputname(1)),...
+                    throwerror(sprintf('linsys:type:%s:shape', inputname(1)),...
                         'shape matrix must be of type ''cell'' or ''double''');    
                 end        
             end

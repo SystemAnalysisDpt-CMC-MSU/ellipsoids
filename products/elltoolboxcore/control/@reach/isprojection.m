@@ -1,4 +1,4 @@
-function res = isempty(rs)
+function res = isprojection(rs)
 %
 % ISPROJECTION - checks if given reach set object is a projection.
 %
