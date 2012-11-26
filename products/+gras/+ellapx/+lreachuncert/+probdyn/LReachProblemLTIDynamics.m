@@ -35,10 +35,9 @@ classdef LReachProblemLTIDynamics<...
             QMat = MatVector.fromFormulaMat(problemDef.getQCMat(),0);
             qVec = MatVector.fromFormulaMat(problemDef.getqCVec(),0);
             CqVec = CMat*qVec;
-            CQCTransMat = CMat*QMat*(CMat.');
             %
             self.CqtDynamics = ConstColFunction(CqVec);
-            self.CQCTransDynamics = ConstMatrixFunction(CQCTransMat);
+            self.CQCTransDynamics = ConstMatrixFunction(CMat*QMat*(CMat.'));
             %
             % compute x(t)
             %

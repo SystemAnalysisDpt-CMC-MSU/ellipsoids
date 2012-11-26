@@ -41,6 +41,6 @@ classdef MatrixOperationsFactory<modgen.common.obj.StaticPropStorage
         function flush()
             branchName=mfilename('class');
             modgen.common.obj.StaticPropStorage.flushInternal(branchName);
-        end 
+        end
     end
 end

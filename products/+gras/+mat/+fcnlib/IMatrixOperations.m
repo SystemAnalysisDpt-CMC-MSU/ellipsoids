@@ -9,6 +9,8 @@ classdef IMatrixOperations<handle
         %
         obj=inv(self,mMatFunc)
         obj=sqrtm(self,mMatFunc)
+        obj=expm(self,mMatFunc)
+        obj=expmt(self,mMatFunc,t0)
         obj=lrMultiply(self,mMatFunc,lrMatFunc,flag)
         obj=lrMultiplyByVec(self,mMatFunc,lrVecFunc)
         obj=lrDivideVec(self,mMatFunc,lrVecFunc)

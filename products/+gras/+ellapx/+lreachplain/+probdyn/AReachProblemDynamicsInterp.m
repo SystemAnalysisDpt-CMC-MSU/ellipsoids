@@ -6,7 +6,6 @@ classdef AReachProblemDynamicsInterp<...
             import gras.interp.MatrixInterpolantFactory;
             import gras.ellapx.lreachplain.probdyn.LReachProblemDynamicsInterp;
             import gras.ode.MatrixODESolver;
-            import gras.gen.SquareMatVector;
             import gras.ellapx.uncertcalc.MatrixOperationsFactory;
             %
             self.problemDef = problemDef;
@@ -19,9 +18,10 @@ classdef AReachProblemDynamicsInterp<...
             sizeAtVec = size(AtDefCMat);
             numelAt = numel(AtDefCMat);
             %
+            self.timeVec = linspace(t0,t1,self.N_TIME_POINTS);
+            %
             % create dynamics for A(t), B(t)P(t)B'(t) and B(t)p(t)
             %
-            self.timeVec = linspace(t0,t1,self.N_TIME_POINTS);
             matOpFactory = MatrixOperationsFactory.create(self.timeVec);
             %
             self.AtDynamics = matOpFactory.fromSymbMatrix(AtDefCMat);
@@ -36,8 +36,7 @@ classdef AReachProblemDynamicsInterp<...
             odeArgList=self.getOdePropList(calcPrecision);
             solverObj=MatrixODESolver(sizeAtVec,@ode45,odeArgList{:});
             %
-            Xtt0DerivFunc = @(t,x) reshape(...
-                SquareMatVector.fromFormulaMat(AtDefCMat,t)*...
+            Xtt0DerivFunc = @(t,x) reshape(self.AtDynamics.evaluate(t)*...
                 reshape(x,sizeAtVec),[numelAt 1]);
             Xtt0InitialMat = eye(sizeAtVec);
             %

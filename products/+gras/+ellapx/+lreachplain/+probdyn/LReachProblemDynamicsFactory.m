@@ -35,11 +35,11 @@ classdef LReachProblemDynamicsFactory<handle
                 pDefObj = LReachContProblemDef(aCMat,bCMat,pCMat,...
                     pCVec,x0Mat,x0Vec,tLims);
                 pDynamicsObject = LReachProblemDynamicsInterp(pDefObj,...
-                    calcPrecision);                
+                    calcPrecision);
             else
                 modgen.common.throwerror(...
                     'wrongInput', 'Incorrect system definition');
             end
-        end        
+        end
     end
 end

@@ -9,6 +9,7 @@ classdef AReachProblemLTIDynamics<...
             import gras.ode.MatrixODESolver;
             import gras.mat.ConstMatrixFunction;
             import gras.mat.ConstColFunction;
+            import gras.ellapx.uncertcalc.MatrixOperationsFactory;
             %
             self.problemDef = problemDef;
             %
@@ -18,28 +19,21 @@ classdef AReachProblemLTIDynamics<...
             BMat = MatVector.fromFormulaMat(problemDef.getBMatDef(),0);
             PMat = MatVector.fromFormulaMat(problemDef.getPCMat(),0);
             pVec = MatVector.fromFormulaMat(problemDef.getpCVec(),0);
-            BpVec = BMat*pVec;
-            BPBTransMat = BMat*PMat*(BMat.');
             t0 = problemDef.gett0();
             t1 = problemDef.gett1();
-            sysDim=size(AMat,1);
+            %
+            self.timeVec = linspace(t0,t1,self.N_TIME_POINTS);
             %
             % compute A(t), B(t)p(t) and B(t)P(t)B'(t) dynamics
             %
             self.AtDynamics = ConstMatrixFunction(AMat);
-            self.BptDynamics = ConstColFunction(BpVec);
-            self.BPBTransDynamics = ConstMatrixFunction(BPBTransMat);
+            self.BptDynamics = ConstColFunction(BMat*pVec);
+            self.BPBTransDynamics = ConstMatrixFunction(BMat*PMat*(BMat.'));
             %
             % compute X(t,t0)
             %
-            self.timeVec = linspace(t0,t1,self.N_TIME_POINTS);
-            data_Xtt0 = zeros([sysDim, sysDim, self.N_TIME_POINTS]);
-            for iTimePoint = 1:self.N_TIME_POINTS
-                t = self.timeVec(iTimePoint)-t0;
-                data_Xtt0(:,:,iTimePoint) = expm(AMat*t);
-            end
-            self.Xtt0Dynamics=MatrixInterpolantFactory.createInstance(...
-                'column',data_Xtt0,self.timeVec);
+            matOpFactory = MatrixOperationsFactory.create(self.timeVec);
+            self.Xtt0Dynamics = matOpFactory.expmt(AMat, t0);
         end
     end
 end

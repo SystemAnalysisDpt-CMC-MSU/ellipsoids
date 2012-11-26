@@ -12,6 +12,6 @@ classdef IReachProblemDynamics<handle
         timeLimsVec=getTimeLimsVec(self)
         t0=gett0(self)
         t1=gett1(self)
-        sysDim=getDimensionality(self)        
+        sysDim=getDimensionality(self)
     end
 end

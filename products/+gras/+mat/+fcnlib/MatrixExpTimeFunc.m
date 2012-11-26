@@ -1,6 +1,7 @@
 classdef MatrixExpTimeFunc<gras.mat.fcnlib.AMatrixOpFunc
     properties (Access=protected)
         lMatFunc
+        t0
     end
     methods
         function resArray=evaluate(self,timeVec)
@@ -11,12 +12,12 @@ classdef MatrixExpTimeFunc<gras.mat.fcnlib.AMatrixOpFunc
             resArray = zeros( [self.nRows, self.nCols, nTimePoints] );
             for iTimePoint = 1:nTimePoints
                 resArray(:,:,iTimePoint) = expm(...
-                    lArray(:,:,iTimePoint)*timeVec(iTimePoint));
+                    lArray(:,:,iTimePoint)*(timeVec(iTimePoint)-self.t0));
             end
         end
     end
     methods
-        function self=MatrixExpTimeFunc(lMatFunc)
+        function self=MatrixExpTimeFunc(lMatFunc, t0)
             %
             modgen.common.type.simple.checkgen(lMatFunc,...
                 @(x)isa(x,'gras.mat.IMatrixFunction'));
@@ -27,6 +28,7 @@ classdef MatrixExpTimeFunc<gras.mat.fcnlib.AMatrixOpFunc
             self=self@gras.mat.fcnlib.AMatrixOpFunc;
             %
             self.lMatFunc = lMatFunc;
+            self.t0 = t0;
             self.nRows = lMatFunc.getNRows();
             self.nCols = lMatFunc.getNCols();
             self.nDims = lMatFunc.getDimensionality();

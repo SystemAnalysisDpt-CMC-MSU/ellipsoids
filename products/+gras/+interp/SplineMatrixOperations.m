@@ -66,6 +66,31 @@ classdef SplineMatrixOperations<gras.mat.fcnlib.AMatrixOperations
                 @gras.gen.SquareMatVector.sqrtm,...
                 mMatFunc);
         end
+        function obj=expm(self,mMatFunc)
+            nTimePoints = numel(self.timeVec);
+            %
+            mArray = mMatFunc.evaluate(self.timeVec);
+            %
+            for iTimePoint = 1:nTimePoints
+                mArray(:,:,iTimePoint) = expm(mArray(:,:,iTimePoint));
+            end
+            %
+            obj = gras.interp.MatrixInterpolantFactory.createInstance(...
+                'column',mArray,self.timeVec);
+        end
+        function obj=expmt(self,mMatFunc,t0)
+            nTimePoints = numel(self.timeVec);
+            %
+            mArray = mMatFunc.evaluate(self.timeVec);
+            %
+            for iTimePoint = 1:nTimePoints
+                mArray(:,:,iTimePoint) = expm(mArray(:,:,iTimePoint)*...
+                    (self.timeVec(iTimePoint)-t0));
+            end
+            %
+            obj = gras.interp.MatrixInterpolantFactory.createInstance(...
+                'column',mArray,self.timeVec);
+        end
         function obj=rMultiplyByVec(self,lMatFunc,rColFunc)
             obj = self.interpolateBinarySqueezed(...
                 @gras.gen.MatVector.rMultiplyByVec,...

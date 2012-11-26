@@ -18,6 +18,12 @@ classdef CompositeMatrixOperations<gras.mat.fcnlib.AMatrixOperations
         function obj=sqrtm(self,mMatFunc)
             obj = gras.mat.fcnlib.MatrixSqrtFunc(mMatFunc);
         end
+        function obj=expm(self,mMatFunc)
+            obj = gras.mat.fcnlib.MatrixExpFunc(mMatFunc);
+        end
+        function obj=expmt(self,mMatFunc,t0)
+            obj = gras.mat.fcnlib.MatrixExpTimeFunc(mMatFunc,t0);
+        end
         function obj=rMultiplyByVec(self,lMatFunc,rColFunc)
             obj = gras.mat.fcnlib.MatrixBinaryTimesFunc(lMatFunc,rColFunc);
         end
