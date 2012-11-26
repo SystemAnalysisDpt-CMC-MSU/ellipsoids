@@ -33,7 +33,7 @@ classdef AReachProblemLTIDynamics<...
             % compute X(t,t0)
             %
             matOpFactory = MatrixOperationsFactory.create(self.timeVec);
-            self.Xtt0Dynamics = matOpFactory.expmt(AMat, t0);
+            self.Xtt0Dynamics = matOpFactory.expmt(self.AtDynamics, t0);
         end
     end
 end

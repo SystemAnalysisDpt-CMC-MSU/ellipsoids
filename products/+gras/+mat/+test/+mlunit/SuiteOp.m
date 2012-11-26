@@ -177,6 +177,24 @@ classdef SuiteOp < mlunitext.test_case
             expectedMatVec = 2*ones(1,20);
             obtainedMatVec = rMatFun.evaluate(1:20);
             self.isMatVecEq(expectedMatVec, obtainedMatVec);
+            %
+            % test expm
+            %
+            aMat = ones(4);
+            aMatFun = ConstMatrixFunction(aMat);
+            rMatFun = factory.expm(aMatFun);
+            expectedMatVec = expm(aMat);
+            obtainedMatVec = rMatFun.evaluate(0);
+            self.isMatVecEq(expectedMatVec, obtainedMatVec);
+            %
+            % test expmt
+            %
+            aMat = ones(4);
+            aMatFun = ConstMatrixFunction(aMat);
+            rMatFun = factory.expmt(aMatFun,0);
+            expectedMatVec = cat(3,expm(aMat*0),expm(aMat*0.5),expm(aMat*1));
+            obtainedMatVec = rMatFun.evaluate([0, 0.5, 1]);
+            self.isMatVecEq(expectedMatVec, obtainedMatVec);          
         end
     end
     methods
@@ -189,32 +207,13 @@ classdef SuiteOp < mlunitext.test_case
             self.runTestsForFactory(factory);
         end
         function testSplineMatrixOperations(self)
-            timeVec = linspace(-5,5,1000);
+            timeVec = linspace(-5,5,10000);
             factory = gras.interp.SplineMatrixOperations(timeVec);
             self.runTestsForFactory(factory);
         end
         function testOtherOperations(self)
             import gras.mat.*;
             import gras.mat.fcnlib.*;
-            %
-            % test MatrixExpFunc
-            %
-            aMat = ones(4);
-            aMatFun = ConstMatrixFunction(aMat);
-            rMatFun = MatrixExpFunc(aMatFun);
-            expectedMatVec = expm(aMat);
-            obtainedMatVec = rMatFun.evaluate(0);
-            self.isMatVecEq(expectedMatVec, obtainedMatVec);
-            %
-            % test MatrixExpTimeFunc
-            %
-            aMat = ones(4);
-            aMatFun = ConstMatrixFunction(aMat);
-            rMatFun = MatrixExpTimeFunc(aMatFun);
-            expectedMatVec = cat(3,...
-                expm(aMat*0),expm(aMat*1),expm(aMat*2),expm(aMat*3));
-            obtainedMatVec = rMatFun.evaluate([0 1 2 3]);
-            self.isMatVecEq(expectedMatVec, obtainedMatVec);
             %
             % test MatrixMinEigValFunc
             %
