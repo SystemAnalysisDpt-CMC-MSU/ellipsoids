@@ -194,7 +194,7 @@ classdef SuiteOp < mlunitext.test_case
             rMatFun = factory.expmt(aMatFun,0);
             expectedMatVec = cat(3,expm(aMat*0),expm(aMat*0.5),expm(aMat*1));
             obtainedMatVec = rMatFun.evaluate([0, 0.5, 1]);
-            self.isMatVecEq(expectedMatVec, obtainedMatVec);          
+            self.isMatVecEq(expectedMatVec, obtainedMatVec);
         end
     end
     methods

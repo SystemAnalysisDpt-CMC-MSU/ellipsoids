@@ -37,46 +37,71 @@ classdef SplineMatrixOperations<gras.mat.fcnlib.AMatrixOperations
     end
     methods
         function obj=triu(self,mMatFunc)
-            obj = self.interpolateUnary(...
-                @gras.gen.MatVector.triu,...
-                mMatFunc);
+            if self.isMatFuncConst(mMatFunc)
+                obj = self.constTriu(mMatFunc);
+            else
+                obj = self.interpolateUnary(...
+                    @gras.gen.MatVector.triu,...
+                    mMatFunc);
+            end
         end
         function obj=makeSymmetric(self,mMatFunc)
-            obj = self.interpolateUnary(...
-                @gras.gen.MatVector.makeSymmetric,...
-                mMatFunc);
+            if self.isMatFuncConst(mMatFunc)
+                obj = self.constMakeSymmetric(mMatFunc);
+            else
+                obj = self.interpolateUnary(...
+                    @gras.gen.MatVector.makeSymmetric,...
+                    mMatFunc);
+            end
         end
         function obj=pinv(self,mMatFunc)
-            obj = self.interpolateUnary(...
-                @gras.gen.MatVector.pinv,...
-                mMatFunc);
+            if self.isMatFuncConst(mMatFunc)
+                obj = self.constPinv(mMatFunc);
+            else
+                obj = self.interpolateUnary(...
+                    @gras.gen.MatVector.pinv,...
+                    mMatFunc);
+            end
         end
         function obj=transpose(self,mMatFunc)
-            obj = self.interpolateUnary(...
-                @gras.gen.MatVector.transpose,...
-                mMatFunc);
+            if self.isMatFuncConst(mMatFunc)
+                obj = self.constTranspose(mMatFunc);
+            else
+                obj = self.interpolateUnary(...
+                    @gras.gen.MatVector.transpose,...
+                    mMatFunc);
+            end
         end
         function obj=inv(self,mMatFunc)
-            obj = self.interpolateUnary(...
-                @gras.gen.SquareMatVector.inv,...
-                mMatFunc);
+            if self.isMatFuncConst(mMatFunc)
+                obj = self.constInv(mMatFunc);
+            else
+                obj = self.interpolateUnary(...
+                    @gras.gen.SquareMatVector.inv,...
+                    mMatFunc);
+            end
         end
         function obj=sqrtm(self,mMatFunc)
-            obj = self.interpolateUnary(...
-                @gras.gen.SquareMatVector.sqrtm,...
-                mMatFunc);
+            if self.isMatFuncConst(mMatFunc)
+                obj = self.constSqrtm(mMatFunc);
+            else
+                obj = self.interpolateUnary(...
+                    @gras.gen.SquareMatVector.sqrtm,...
+                    mMatFunc);
+            end
         end
         function obj=expm(self,mMatFunc)
-            nTimePoints = numel(self.timeVec);
-            %
-            mArray = mMatFunc.evaluate(self.timeVec);
-            %
-            for iTimePoint = 1:nTimePoints
-                mArray(:,:,iTimePoint) = expm(mArray(:,:,iTimePoint));
+            if self.isMatFuncConst(mMatFunc)
+                obj = self.constExpm(mMatFunc);
+            else
+                nTimePoints = numel(self.timeVec);
+                mArray = mMatFunc.evaluate(self.timeVec);
+                for iTimePoint = 1:nTimePoints
+                    mArray(:,:,iTimePoint) = expm(mArray(:,:,iTimePoint));
+                end
+                obj = gras.interp.MatrixInterpolantFactory.createInstance(...
+                    'column',mArray,self.timeVec);
             end
-            %
-            obj = gras.interp.MatrixInterpolantFactory.createInstance(...
-                'column',mArray,self.timeVec);
         end
         function obj=expmt(self,mMatFunc,t0)
             nTimePoints = numel(self.timeVec);
@@ -92,35 +117,59 @@ classdef SplineMatrixOperations<gras.mat.fcnlib.AMatrixOperations
                 'column',mArray,self.timeVec);
         end
         function obj=rMultiplyByVec(self,lMatFunc,rColFunc)
-            obj = self.interpolateBinarySqueezed(...
-                @gras.gen.MatVector.rMultiplyByVec,...
-                lMatFunc,rColFunc);
+            if self.isMatFuncConst(lMatFunc,rColFunc)
+                obj = self.constRMultiplyByVec(lMatFunc,rColFunc);
+            else
+                obj = self.interpolateBinarySqueezed(...
+                    @gras.gen.MatVector.rMultiplyByVec,...
+                    lMatFunc,rColFunc);
+            end
         end
         function obj=rMultiply(self,lMatFunc,mMatFunc,rMatFunc)
             if nargin < 4
-                obj = self.interpolateBinary(...
-                    @gras.gen.MatVector.rMultiply,...
-                    lMatFunc,mMatFunc);
+                if self.isMatFuncConst(lMatFunc,mMatFunc)
+                    obj = self.constRMultiply(lMatFunc,mMatFunc);
+                else
+                    obj = self.interpolateBinary(...
+                        @gras.gen.MatVector.rMultiply,...
+                        lMatFunc,mMatFunc);
+                end
             else
-                obj = self.interpolateTernary(...
-                    @gras.gen.MatVector.rMultiply,...
-                    lMatFunc,mMatFunc,rMatFunc);
+                if self.isMatFuncConst(lMatFunc,mMatFunc,rMatFunc)
+                    obj = self.constRMultiply(lMatFunc,mMatFunc,rMatFunc);
+                else
+                    obj = self.interpolateTernary(...
+                        @gras.gen.MatVector.rMultiply,...
+                        lMatFunc,mMatFunc,rMatFunc);
+                end
             end
         end
         function obj=lrMultiply(self,mMatFunc,lrMatFunc,flag)
-            obj = self.interpolateBinary(...
-                @gras.gen.SquareMatVector.lrMultiply,...
-                mMatFunc,lrMatFunc,flag);
+            if self.isMatFuncConst(mMatFunc,lrMatFunc)
+                obj = self.constLrMultiply(mMatFunc,lrMatFunc,flag);
+            else
+                obj = self.interpolateBinary(...
+                    @gras.gen.SquareMatVector.lrMultiply,...
+                    mMatFunc,lrMatFunc,flag);
+            end
         end
         function obj=lrMultiplyByVec(self,mMatFunc,lrColFunc)
-            obj = self.interpolateBinarySqueezed(...
-                @gras.gen.SquareMatVector.lrMultiplyByVec,...
-                mMatFunc,lrColFunc);
+            if self.isMatFuncConst(mMatFunc,lrColFunc)
+                obj = self.constLrMultiplyByVec(mMatFunc,lrColFunc);
+            else
+                obj = self.interpolateBinarySqueezed(...
+                    @gras.gen.SquareMatVector.lrMultiplyByVec,...
+                    mMatFunc,lrColFunc);
+            end
         end
         function obj=lrDivideVec(self,mMatFunc,lrColFunc)
-            obj = self.interpolateBinarySqueezed(...
-                @gras.gen.SquareMatVector.lrDivideVec,...
-                mMatFunc,lrColFunc);
+            if self.isMatFuncConst(mMatFunc,lrColFunc)
+                obj = self.constLrDivideVec(mMatFunc,lrColFunc);
+            else
+                obj = self.interpolateBinarySqueezed(...
+                    @gras.gen.SquareMatVector.lrDivideVec,...
+                    mMatFunc,lrColFunc);
+            end
         end
         function obj=quadraticFormSqrt(self,mMatFunc,xColFunc)
             nTimePoints = numel(self.timeVec);
