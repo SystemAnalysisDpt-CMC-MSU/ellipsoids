@@ -1,9 +1,9 @@
-classdef MatrixLRDivideVecFunc<gras.mat.fcnlib.AMatrixBinaryOpFunc
+classdef MatrixLRDivideVecFunc<gras.mat.AMatrixBinaryOpFunc
     methods
         function self=MatrixLRDivideVecFunc(mMatFunc, lrVecFunc)
             fHandle = @(mMat,lrVec) (lrVec.')*(mMat\lrVec);
             %
-            self=self@gras.mat.fcnlib.AMatrixBinaryOpFunc(mMatFunc,...
+            self=self@gras.mat.AMatrixBinaryOpFunc(mMatFunc,...
                 lrVecFunc,fHandle);
             %
             modgen.common.type.simple.checkgenext(...

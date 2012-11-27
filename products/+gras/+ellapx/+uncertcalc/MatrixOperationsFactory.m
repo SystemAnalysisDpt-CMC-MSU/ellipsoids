@@ -18,7 +18,7 @@ classdef MatrixOperationsFactory<modgen.common.obj.StaticPropStorage
             if isSplineUsed
                 obj = gras.interp.SplineMatrixOperations(timeVec);
             else
-                obj = gras.mat.fcnlib.CompositeMatrixOperations();
+                obj = gras.mat.CompositeMatrixOperations();
             end
         end
         function setConfRepoMgr(crmObj)

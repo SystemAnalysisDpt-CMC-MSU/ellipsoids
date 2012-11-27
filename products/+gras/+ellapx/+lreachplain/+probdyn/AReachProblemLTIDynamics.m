@@ -7,8 +7,8 @@ classdef AReachProblemLTIDynamics<...
             import gras.interp.MatrixInterpolantFactory;
             import gras.gen.MatVector;
             import gras.ode.MatrixODESolver;
-            import gras.mat.ConstMatrixFunction;
-            import gras.mat.ConstColFunction;
+            import gras.mat.fcnlib.ConstMatrixFunction;
+            import gras.mat.fcnlib.ConstColFunction;
             import gras.ellapx.uncertcalc.MatrixOperationsFactory;
             %
             self.problemDef = problemDef;

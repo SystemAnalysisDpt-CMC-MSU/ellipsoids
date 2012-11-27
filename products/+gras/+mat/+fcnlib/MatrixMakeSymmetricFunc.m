@@ -1,8 +1,8 @@
-classdef MatrixMakeSymmetricFunc<gras.mat.fcnlib.AMatrixUnaryOpFunc
+classdef MatrixMakeSymmetricFunc<gras.mat.AMatrixUnaryOpFunc
     methods
         function self=MatrixMakeSymmetricFunc(lMatFunc)
             %
-            self=self@gras.mat.fcnlib.AMatrixUnaryOpFunc(lMatFunc,...
+            self=self@gras.mat.AMatrixUnaryOpFunc(lMatFunc,...
                 @(x) 0.5*(x+x.'));
             %
             modgen.common.type.simple.checkgen(lMatFunc.getMatrixSize(),...

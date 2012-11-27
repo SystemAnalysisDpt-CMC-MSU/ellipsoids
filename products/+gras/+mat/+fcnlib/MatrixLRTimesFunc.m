@@ -1,4 +1,4 @@
-classdef MatrixLRTimesFunc<gras.mat.fcnlib.AMatrixBinaryOpFunc
+classdef MatrixLRTimesFunc<gras.mat.AMatrixBinaryOpFunc
     methods
         function self=MatrixLRTimesFunc(mMatFunc, lrMatFunc, flag)
             %
@@ -13,7 +13,7 @@ classdef MatrixLRTimesFunc<gras.mat.fcnlib.AMatrixBinaryOpFunc
                 fHandle = @(mMat,lrMat) lrMat*mMat*(lrMat.');
             end
             %
-            self=self@gras.mat.fcnlib.AMatrixBinaryOpFunc(mMatFunc,...
+            self=self@gras.mat.AMatrixBinaryOpFunc(mMatFunc,...
                 lrMatFunc,fHandle);
             %
             mSizeVec = mMatFunc.getMatrixSize();

@@ -1,4 +1,4 @@
-classdef QuadraticFormSqrtFunc<gras.mat.fcnlib.AMatrixOpFunc
+classdef QuadraticFormSqrtFunc<gras.mat.AMatrixOpFunc
     properties (Access=protected)
         mMatFunc
         xColFunc
@@ -9,12 +9,17 @@ classdef QuadraticFormSqrtFunc<gras.mat.fcnlib.AMatrixOpFunc
             %
             mArray = self.mMatFunc.evaluate(timeVec);
             xArray = self.xColFunc.evaluate(timeVec);
-            tmpArray = zeros(size(xArray));
-            for iTimePoint = 1:nTimePoints
-                tmpArray(:,:,iTimePoint) = ...
-                    mArray(:,:,iTimePoint)*xArray(:,:,iTimePoint);
+            %
+            if nTimePoints == 1
+                resVec = sqrt((xArray.')*mArray*xArray);
+            else
+                tmpArray = zeros(size(xArray));
+                for iTimePoint = 1:nTimePoints
+                    tmpArray(:,:,iTimePoint) = ...
+                        mArray(:,:,iTimePoint)*xArray(:,:,iTimePoint);
+                end
+                resVec = shiftdim(sqrt(sum(tmpArray.*xArray,1)),1);
             end
-            resVec = shiftdim(sqrt(sum(tmpArray.*xArray,1)),1);
         end
     end
     methods
@@ -29,7 +34,7 @@ classdef QuadraticFormSqrtFunc<gras.mat.fcnlib.AMatrixOpFunc
                 'x1(1)==x1(2)&&x1(2)==x2(1)&&x2(2)==1', 2,...
                 mMatFunc.getMatrixSize(), xColFunc.getMatrixSize());
             %
-            self=self@gras.mat.fcnlib.AMatrixOpFunc;
+            self=self@gras.mat.AMatrixOpFunc;
             %
             self.mMatFunc = mMatFunc;
             self.xColFunc = xColFunc;

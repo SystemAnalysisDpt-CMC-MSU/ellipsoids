@@ -9,8 +9,8 @@ classdef LReachProblemLTIDynamics<...
             import gras.interp.MatrixInterpolantFactory;
             import gras.gen.MatVector;
             import gras.ode.MatrixODESolver;
-            import gras.mat.ConstMatrixFunction;
-            import gras.mat.ConstColFunction;
+            import gras.mat.fcnlib.ConstMatrixFunction;
+            import gras.mat.fcnlib.ConstColFunction;
             %
             if ~isa(problemDef,'gras.ellapx.lreachuncert.probdef.ReachContLTIProblemDef')
                 modgen.common.throwerror('wrongInput',...

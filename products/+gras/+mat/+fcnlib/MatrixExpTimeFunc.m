@@ -1,4 +1,4 @@
-classdef MatrixExpTimeFunc<gras.mat.fcnlib.AMatrixOpFunc
+classdef MatrixExpTimeFunc<gras.mat.AMatrixOpFunc
     properties (Access=protected)
         lMatFunc
         t0
@@ -9,10 +9,14 @@ classdef MatrixExpTimeFunc<gras.mat.fcnlib.AMatrixOpFunc
             %
             lArray = self.lMatFunc.evaluate(timeVec);
             %
-            resArray = zeros( [self.nRows, self.nCols, nTimePoints] );
-            for iTimePoint = 1:nTimePoints
-                resArray(:,:,iTimePoint) = expm(...
-                    lArray(:,:,iTimePoint)*(timeVec(iTimePoint)-self.t0));
+            if nTimePoints == 1
+                resArray = expm(lArray*(timeVec-self.t0));
+            else
+                resArray = zeros( [self.nRows, self.nCols, nTimePoints] );
+                for iTimePoint = 1:nTimePoints
+                    resArray(:,:,iTimePoint) = expm(...
+                        lArray(:,:,iTimePoint)*(timeVec(iTimePoint)-self.t0));
+                end
             end
         end
     end
@@ -25,7 +29,7 @@ classdef MatrixExpTimeFunc<gras.mat.fcnlib.AMatrixOpFunc
             modgen.common.type.simple.checkgen(lMatFunc.getMatrixSize(),...
                 'x(1)==x(2)');
             %
-            self=self@gras.mat.fcnlib.AMatrixOpFunc;
+            self=self@gras.mat.AMatrixOpFunc;
             %
             self.lMatFunc = lMatFunc;
             self.t0 = t0;

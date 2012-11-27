@@ -1,8 +1,8 @@
-classdef MatrixInvFunc<gras.mat.fcnlib.AMatrixUnaryOpFunc
+classdef MatrixInvFunc<gras.mat.AMatrixUnaryOpFunc
     methods
         function self=MatrixInvFunc(lMatFunc)
             %
-            self=self@gras.mat.fcnlib.AMatrixUnaryOpFunc(lMatFunc,@inv);
+            self=self@gras.mat.AMatrixUnaryOpFunc(lMatFunc,@inv);
             %
             modgen.common.type.simple.checkgen(lMatFunc.getMatrixSize(),...
                 'x(1)==x(2)');

@@ -203,7 +203,7 @@ classdef SuiteOp < mlunitext.test_case
         end
         %
         function testCompositeMatrixOperations(self)
-            factory = gras.mat.fcnlib.CompositeMatrixOperations;
+            factory = gras.mat.CompositeMatrixOperations;
             self.runTestsForFactory(factory);
         end
         function testSplineMatrixOperations(self)
