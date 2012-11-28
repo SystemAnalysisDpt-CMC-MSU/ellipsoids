@@ -11,6 +11,181 @@ classdef mlunit_test_common < mlunitext.test_case
         % 
         end
         %
+        
+        function self=testCheckMultVar(self)
+            a='sdfadf';
+            b='asd';
+            %
+            checkP('isstring(x1)',1,a,'varNameList',{'alpha'});
+            checkP('isstring(x1)',1,a);
+            checkP('numel(x1)==numel(x2)',2,a,a);
+            checkP('numel(x1)==numel(x2)',2,a,a,'varNameList',{'alpha'});
+            checkP('numel(x1)==numel(x2)',2,a,a,'varNameList',{'alpha','beta'});
+            
+            
+            %
+            checkNSuperMaster('');
+            checkNSuperMaster('MyMessage','errorMessage','MyMessage');
+            %
+            function checkNSuperMaster(errorMessage,varargin)
+            
+            checkNMaster('',errorMessage,varargin{:});
+            checkNMaster('wrongParam:badType',errorMessage,'errorTag',...
+                'wrongParam:badType',varargin{:});
+            %
+            checkNMaster('wrongParam:badType',errorMessage,'errorTag',...
+                'wrongParam:badType',varargin{:});
+            end
+            %
+            function checkNMaster(expTag,expMessage,varargin)
+                isEmptyMsg=isempty(expMessage);
+                checkN('numel(x1)==numel(x2)',2,expTag,expMessage,a,a,...
+                    'varNameList',{'alpha','beta','gamma'},varargin{:});
+                if isEmptyMsg
+                    expMessage='Alpha,Beta';
+                end
+                checkN('numel(x1)==numel(x2)',2,expTag,expMessage,a,b,...
+                    'varNameList',{'Alpha','Beta'},varargin{:});
+                if isEmptyMsg
+                    expMessage='Alpha,b';
+                end                
+                checkN('numel(x1)==numel(x2)',2,expTag,expMessage,a,b,...
+                    'varNameList',{'Alpha'},varargin{:});
+            end
+            
+            %
+            function checkN(typeSpec,nPlaceHolders,expTag,expMsg,a,b,varargin)
+                if isempty(expMsg)
+                    runArgList={};
+                else
+                    runArgList={expMsg};
+                end
+                if isempty(expTag)
+                    expTag=':wrongInput';
+                end
+                import modgen.common.type.simple.lib.*;
+                try
+                    modgen.common.checkmultvar(...
+                    typeSpec,nPlaceHolders,a,b,varargin{:});
+                catch meObj
+                    self.runAndCheckError(...
+                        'rethrow(meObj)',expTag,runArgList{:});
+                end
+                fHandle=typeSpec2Handle(typeSpec,nPlaceHolders);                
+                try 
+                    modgen.common.checkmultvar(...
+                        fHandle,nPlaceHolders,a,b,varargin{:});
+                catch meObj
+                    self.runAndCheckError(...
+                        'rethrow(meObj)',expTag,runArgList{:});
+                end
+            end
+            %
+            function checkP(typeSpec,nPlaceHolders,varargin)
+                import modgen.common.throwerror;
+                modgen.common.checkmultvar(typeSpec,...
+                    nPlaceHolders,varargin{:});
+                fHandle=typeSpec2Handle(typeSpec,nPlaceHolders);
+                modgen.common.checkmultvar(fHandle,...
+                    nPlaceHolders,varargin{:});
+            end
+            %
+            function fHandle=typeSpec2Handle(typeSpec,nPlaceHolders)
+                import modgen.common.type.simple.lib.*;                
+                switch nPlaceHolders
+                    case 1,
+                        fHandle=eval(['@(x1)(',typeSpec,')']);
+                    case 2,
+                        fHandle=eval(['@(x1,x2)(',typeSpec,')']);
+                    case 3,
+                        fHandle=eval(['@(x1,x2,x3)(',typeSpec,')']);
+                    otherwise,
+                        throwerror('wrongInput',...
+                            'unsupported number of arguments');
+                end
+            end
+        end
+        function self=testCheckVar(self)
+            a='sdfadf';
+            modgen.common.checkvar(a,'isstring(x)');
+            modgen.common.checkvar(a,'isstring(x)','aa');
+            a=1;
+            checkN(a,'isstring(x)');
+            checkN(a,'iscelloffunc(x)');
+            %
+            checkP(a,'isstring(x)||isrow(x)');
+            %
+            checkP(a,'isstring(x)||isrow(x)||isabrakadabra(x)');
+            %
+            a=1;
+            checkN(a,'isstring(x)&&isvec(x)');
+            checkN(a,'isstring(x)&&isabrakadabra(x)');
+            %
+            a=true;
+            checkP(a,'islogical(x)&&isscalar(x)');
+            a=struct();
+            checkP(a,'isstruct(x)&&isscalar(x)');
+            %
+            a={'a','b'};
+            checkP(a,'iscellofstrvec(x)');
+            a={'a','b';'d','e'};
+            checkP(a,'iscellofstrvec(x)');
+            a={'a','b'};
+            checkP(a,'iscellofstring(x)');
+            a={'a','b';'d','e'};
+            checkP(a,'iscellofstring(x)');  
+            a={'a','b';'d','esd'.'};
+            checkN(a,'iscellofstring(x)');  
+            %
+            a={@(x)1,@(x)2};
+            checkP(a,'iscelloffunc(x)');
+            a={@(x)1,'@(x)2'};
+            checkN(a,'iscelloffunc(x)');
+            %
+            checkNE('','myMessage',a,'iscelloffunc(x)',...
+                'errorMessage','myMessage');
+            checkNE('wrongType:wrongSomething','myMessage',a,...
+                'iscelloffunc(x)',...
+                'errorMessage','myMessage','errorTag',...
+                'wrongType:wrongSomething');
+            checkNE('wrongType:wrongSomething','',a,'iscelloffunc(x)',...
+                'errorTag','wrongType:wrongSomething');
+            %
+            function checkN(x,typeSpec,varargin)
+                checkNE('','',x,typeSpec,varargin{:});
+                
+            end
+            function checkNE(errorTag,errorMessage,x,typeSpec,varargin)
+                import modgen.common.type.simple.lib.*;
+                if isempty(errorTag)
+                    errorTag=':wrongInput';
+                end
+                if isempty(errorMessage)
+                    addArgList={};
+                else
+                    addArgList={errorMessage};
+                end
+                self.runAndCheckError(...
+                    ['modgen.common.checkvar(x,',...
+                    'typeSpec,varargin{:})'],...
+                    errorTag,addArgList{:});
+                fHandle=eval(['@(x)(',typeSpec,')']);
+                self.runAndCheckError(...
+                    ['modgen.common.checkvar(x,',...
+                    'fHandle,varargin{:})'],...
+                    errorTag,addArgList{:});
+            end
+            
+            function checkP(x,typeSpec,varargin)
+                import modgen.common.type.simple.lib.*;
+                modgen.common.checkvar(x,typeSpec,varargin{:});
+                fHandle=eval(['@(x)(',typeSpec,')']);
+                modgen.common.checkvar(x,fHandle,varargin{:});
+            end
+            
+        end
+        %
+        
         function testThrowWarn(~)
             check('wrongInput','test message');
             check('wrongInput',...

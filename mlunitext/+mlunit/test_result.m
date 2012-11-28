@@ -44,12 +44,7 @@ classdef test_result<handle
             %
             % See also MLUNIT.TEST_RESULT.ADD_ERROR, MLUNIT.TEST_CASE.RUN.
             %
-            [message,stacktrace]=modgen.exception.me.obj2str(meObj);
-            stacktrace = sprintf('%s\n', stacktrace);
-            errMsg=['Traceback (most recent call first): ', ...
-                stacktrace, ...,
-                'Error: ', ...
-                message ', Identifier: ',meObj.identifier];
+            errMsg=modgen.exception.me.obj2hypstr(meObj);
             self = self.add_error_by_message(testName,errMsg);
         end
         
