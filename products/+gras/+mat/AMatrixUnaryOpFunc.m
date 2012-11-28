@@ -1,4 +1,4 @@
-classdef AMatrixUnaryOpFunc<gras.mat.fcnlib.AMatrixOpFunc
+classdef AMatrixUnaryOpFunc<gras.mat.AMatrixOpFunc
     properties (Access=protected)
         lMatFunc
         opFuncHandle
@@ -9,10 +9,14 @@ classdef AMatrixUnaryOpFunc<gras.mat.fcnlib.AMatrixOpFunc
             %
             lArray = self.lMatFunc.evaluate(timeVec);
             %
-            resArray = zeros( [self.nRows, self.nCols, nTimePoints] );
-            for iTimePoint = 1:nTimePoints
-                resArray(:,:,iTimePoint) = self.opFuncHandle(...
-                    lArray(:,:,iTimePoint));
+            if nTimePoints == 1
+                resArray = self.opFuncHandle(lArray);
+            else
+                resArray = zeros( [self.nRows, self.nCols, nTimePoints] );
+                for iTimePoint = 1:nTimePoints
+                    resArray(:,:,iTimePoint) = self.opFuncHandle(...
+                        lArray(:,:,iTimePoint));
+                end
             end
         end
     end
@@ -24,7 +28,7 @@ classdef AMatrixUnaryOpFunc<gras.mat.fcnlib.AMatrixOpFunc
             modgen.common.type.simple.checkgen(opFuncHandle,...
                 @(x)isa(x,'function_handle'));
             %
-            self=self@gras.mat.fcnlib.AMatrixOpFunc;
+            self=self@gras.mat.AMatrixOpFunc;
             %
             self.lMatFunc = lMatFunc;
             self.opFuncHandle = opFuncHandle;

@@ -20,7 +20,7 @@ classdef AReachProblemDynamics<...
         function odePropList=getOdePropList(self,calcPrecision)
             odePropList={'NormControl',self.ODE_NORM_CONTROL,'RelTol',...
                 calcPrecision*self.CALC_PRECISION_FACTOR,...
-                'AbsTol',calcPrecision*self.CALC_PRECISION_FACTOR};            
+                'AbsTol',calcPrecision*self.CALC_PRECISION_FACTOR};
         end
     end
     methods
@@ -59,9 +59,9 @@ classdef AReachProblemDynamics<...
         end
         function sysDim=getDimensionality(self)
             sysDim=self.problemDef.getDimensionality();
-        end        
+        end
         function problemDef=getProblemDef(self)
             problemDef=self.problemDef;
-        end        
+        end
     end
 end

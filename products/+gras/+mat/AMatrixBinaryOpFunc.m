@@ -1,4 +1,4 @@
-classdef AMatrixBinaryOpFunc<gras.mat.fcnlib.AMatrixOpFunc
+classdef AMatrixBinaryOpFunc<gras.mat.AMatrixOpFunc
     properties (Access=protected)
         lMatFunc
         rMatFunc
@@ -11,10 +11,14 @@ classdef AMatrixBinaryOpFunc<gras.mat.fcnlib.AMatrixOpFunc
             lArray = self.lMatFunc.evaluate(timeVec);
             rArray = self.rMatFunc.evaluate(timeVec);
             %
-            resArray = zeros( [self.nRows, self.nCols, nTimePoints] );
-            for iTimePoint = 1:nTimePoints
-                resArray(:,:,iTimePoint) = self.opFuncHandle(...
-                    lArray(:,:,iTimePoint), rArray(:,:,iTimePoint));
+            if nTimePoints == 1
+                resArray = self.opFuncHandle(lArray,rArray);
+            else
+                resArray = zeros( [self.nRows, self.nCols, nTimePoints] );
+                for iTimePoint = 1:nTimePoints
+                    resArray(:,:,iTimePoint) = self.opFuncHandle(...
+                        lArray(:,:,iTimePoint), rArray(:,:,iTimePoint));
+                end
             end
         end
     end
@@ -28,7 +32,7 @@ classdef AMatrixBinaryOpFunc<gras.mat.fcnlib.AMatrixOpFunc
             modgen.common.type.simple.checkgen(opFuncHandle,...
                 @(x)isa(x,'function_handle'));
             %
-            self=self@gras.mat.fcnlib.AMatrixOpFunc;
+            self=self@gras.mat.AMatrixOpFunc;
             %
             self.lMatFunc = lMatFunc;
             self.rMatFunc = rMatFunc;

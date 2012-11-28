@@ -1,8 +1,8 @@
-classdef MatrixMinusFunc<gras.mat.fcnlib.AMatrixBinaryOpFunc
+classdef MatrixMinusFunc<gras.mat.AMatrixBinaryOpFunc
     methods
         function self=MatrixMinusFunc(lMatFunc, rMatFunc)
             %
-            self=self@gras.mat.fcnlib.AMatrixBinaryOpFunc(lMatFunc,...
+            self=self@gras.mat.AMatrixBinaryOpFunc(lMatFunc,...
                 rMatFunc,@minus);
             %
             modgen.common.type.simple.checkgenext(...

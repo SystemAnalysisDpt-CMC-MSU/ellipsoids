@@ -1,8 +1,8 @@
-classdef SplineMatrixOperations<gras.mat.fcnlib.AMatrixOperations
+classdef SplineMatrixOperations<gras.mat.AMatrixOperations
     properties (Access=protected)
         timeVec
     end
-    methods(Access=protected)
+    methods(Access=private)
         function obj = interpolateUnary(self, fHandle, mMatFunc)
             dataArray = mMatFunc.evaluate(self.timeVec);
             resDataArray = fHandle(dataArray);
@@ -37,81 +37,151 @@ classdef SplineMatrixOperations<gras.mat.fcnlib.AMatrixOperations
     end
     methods
         function obj=triu(self,mMatFunc)
-            obj = self.interpolateUnary(...
-                @gras.gen.MatVector.triu,...
-                mMatFunc);
+            obj=triu@gras.mat.AMatrixOperations(self,mMatFunc);
+            if isempty(obj)
+                obj = self.interpolateUnary(...
+                    @gras.gen.MatVector.triu,...
+                    mMatFunc);
+            end
         end
         function obj=makeSymmetric(self,mMatFunc)
-            obj = self.interpolateUnary(...
-                @gras.gen.MatVector.makeSymmetric,...
-                mMatFunc);
+            obj=makeSymmetric@gras.mat.AMatrixOperations(self,mMatFunc);
+            if isempty(obj)
+                obj = self.interpolateUnary(...
+                    @gras.gen.MatVector.makeSymmetric,...
+                    mMatFunc);
+            end
         end
         function obj=pinv(self,mMatFunc)
-            obj = self.interpolateUnary(...
-                @gras.gen.MatVector.pinv,...
-                mMatFunc);
+            obj=pinv@gras.mat.AMatrixOperations(self,mMatFunc);
+            if isempty(obj)
+                obj = self.interpolateUnary(...
+                    @gras.gen.MatVector.pinv,...
+                    mMatFunc);
+            end
         end
         function obj=transpose(self,mMatFunc)
-            obj = self.interpolateUnary(...
-                @gras.gen.MatVector.transpose,...
-                mMatFunc);
+            obj=transpose@gras.mat.AMatrixOperations(self,mMatFunc);
+            if isempty(obj)
+                obj = self.interpolateUnary(...
+                    @gras.gen.MatVector.transpose,...
+                    mMatFunc);
+            end
         end
         function obj=inv(self,mMatFunc)
-            obj = self.interpolateUnary(...
-                @gras.gen.SquareMatVector.inv,...
-                mMatFunc);
+            obj=inv@gras.mat.AMatrixOperations(self,mMatFunc);
+            if isempty(obj)
+                obj = self.interpolateUnary(...
+                    @gras.gen.SquareMatVector.inv,...
+                    mMatFunc); 
+            end
         end
         function obj=sqrtm(self,mMatFunc)
-            obj = self.interpolateUnary(...
-                @gras.gen.SquareMatVector.sqrtm,...
-                mMatFunc);
+            obj=sqrtm@gras.mat.AMatrixOperations(self,mMatFunc);
+            if isempty(obj)
+                obj = self.interpolateUnary(...
+                    @gras.gen.SquareMatVector.sqrtm,...
+                    mMatFunc);
+            end
+        end
+        function obj=expm(self,mMatFunc)
+            obj=expm@gras.mat.AMatrixOperations(self,mMatFunc);
+            if isempty(obj)
+                nTimePoints = numel(self.timeVec);
+                mArray = mMatFunc.evaluate(self.timeVec);
+                for iTimePoint = 1:nTimePoints
+                    mArray(:,:,iTimePoint) = expm(mArray(:,:,iTimePoint));
+                end
+                obj = gras.interp.MatrixInterpolantFactory.createInstance(...
+                    'column',mArray,self.timeVec);
+            end
+        end
+        function obj=expmt(self,mMatFunc,t0)
+            obj=expmt@gras.mat.AMatrixOperations(self,mMatFunc,t0);
+            if isempty(obj)
+                nTimePoints = numel(self.timeVec);
+                mArray = mMatFunc.evaluate(self.timeVec);
+                for iTimePoint = 1:nTimePoints
+                    mArray(:,:,iTimePoint) = expm(mArray(:,:,iTimePoint)*...
+                        (self.timeVec(iTimePoint)-t0));
+                end
+                obj = gras.interp.MatrixInterpolantFactory.createInstance(...
+                    'column',mArray,self.timeVec);
+            end
         end
         function obj=rMultiplyByVec(self,lMatFunc,rColFunc)
-            obj = self.interpolateBinarySqueezed(...
-                @gras.gen.MatVector.rMultiplyByVec,...
-                lMatFunc,rColFunc);
+            obj=rMultiplyByVec@gras.mat.AMatrixOperations(...
+                self,lMatFunc,rColFunc);
+            if isempty(obj)
+                obj = self.interpolateBinarySqueezed(...
+                    @gras.gen.MatVector.rMultiplyByVec,...
+                    lMatFunc,rColFunc);
+            end
         end
         function obj=rMultiply(self,lMatFunc,mMatFunc,rMatFunc)
             if nargin < 4
-                obj = self.interpolateBinary(...
-                    @gras.gen.MatVector.rMultiply,...
-                    lMatFunc,mMatFunc);
+                obj=rMultiply@gras.mat.AMatrixOperations(...
+                    self,lMatFunc,mMatFunc);
+                if isempty(obj)
+                    obj = self.interpolateBinary(...
+                        @gras.gen.MatVector.rMultiply,...
+                        lMatFunc,mMatFunc);
+                end
             else
-                obj = self.interpolateTernary(...
-                    @gras.gen.MatVector.rMultiply,...
-                    lMatFunc,mMatFunc,rMatFunc);
+                obj=rMultiply@gras.mat.AMatrixOperations(...
+                    self,lMatFunc,mMatFunc,rMatFunc);
+                if isempty(obj)
+                    obj = self.interpolateTernary(...
+                        @gras.gen.MatVector.rMultiply,...
+                        lMatFunc,mMatFunc,rMatFunc);
+                end
             end
         end
         function obj=lrMultiply(self,mMatFunc,lrMatFunc,flag)
-            obj = self.interpolateBinary(...
-                @gras.gen.SquareMatVector.lrMultiply,...
-                mMatFunc,lrMatFunc,flag);
+            obj=lrMultiply@gras.mat.AMatrixOperations(...
+                self,mMatFunc,lrMatFunc,flag);
+            if isempty(obj)
+                obj = self.interpolateBinary(...
+                    @gras.gen.SquareMatVector.lrMultiply,...
+                    mMatFunc,lrMatFunc,flag);
+            end
         end
         function obj=lrMultiplyByVec(self,mMatFunc,lrColFunc)
-            obj = self.interpolateBinarySqueezed(...
-                @gras.gen.SquareMatVector.lrMultiplyByVec,...
-                mMatFunc,lrColFunc);
+            obj=lrMultiplyByVec@gras.mat.AMatrixOperations(...
+                self,mMatFunc,lrColFunc);
+            if isempty(obj)
+                obj = self.interpolateBinarySqueezed(...
+                    @gras.gen.SquareMatVector.lrMultiplyByVec,...
+                    mMatFunc,lrColFunc);
+            end
         end
         function obj=lrDivideVec(self,mMatFunc,lrColFunc)
-            obj = self.interpolateBinarySqueezed(...
-                @gras.gen.SquareMatVector.lrDivideVec,...
-                mMatFunc,lrColFunc);
+            obj=lrDivideVec@gras.mat.AMatrixOperations(...
+                self,mMatFunc,lrColFunc);
+            if isempty(obj)
+                obj = self.interpolateBinarySqueezed(...
+                    @gras.gen.SquareMatVector.lrDivideVec,...
+                    mMatFunc,lrColFunc);
+            end
         end
         function obj=quadraticFormSqrt(self,mMatFunc,xColFunc)
-            nTimePoints = numel(self.timeVec);
-            %
-            mArray = mMatFunc.evaluate(self.timeVec);
-            xArray = xColFunc.evaluate(self.timeVec);
-            tmpArray = zeros(size(xArray));
-            for iTimePoint = 1:nTimePoints
-                tmpArray(:,:,iTimePoint) = ...
-                    mArray(:,:,iTimePoint)*xArray(:,:,iTimePoint);
+            obj=quadraticFormSqrt@gras.mat.AMatrixOperations(...
+                self,mMatFunc,xColFunc);
+            if isempty(obj)
+                nTimePoints = numel(self.timeVec);
+                mArray = mMatFunc.evaluate(self.timeVec);
+                xArray = xColFunc.evaluate(self.timeVec);
+                tmpArray = zeros(size(xArray));
+                for iTimePoint = 1:nTimePoints
+                    tmpArray(:,:,iTimePoint) = ...
+                        mArray(:,:,iTimePoint)*xArray(:,:,iTimePoint);
+                end
+                resVec = shiftdim(sqrt(sum(tmpArray.*xArray,1)),1);
+                obj = gras.interp.MatrixInterpolantFactory.createInstance(...
+                    'column',resVec,self.timeVec);
             end
-            resVec = shiftdim(sqrt(sum(tmpArray.*xArray,1)),1);
-            %
-            obj = gras.interp.MatrixInterpolantFactory.createInstance(...
-                'column',resVec,self.timeVec);
         end
+        %
         function self=SplineMatrixOperations(timeVec)
             modgen.common.type.simple.checkgen(timeVec,...
                 'isnumeric(x)&&isrow(x)&&~isempty(x)');

@@ -18,7 +18,7 @@ classdef MatrixOperationsFactory<modgen.common.obj.StaticPropStorage
             if isSplineUsed
                 obj = gras.interp.SplineMatrixOperations(timeVec);
             else
-                obj = gras.mat.fcnlib.CompositeMatrixOperations();
+                obj = gras.mat.CompositeMatrixOperations();
             end
         end
         function setConfRepoMgr(crmObj)
@@ -41,6 +41,6 @@ classdef MatrixOperationsFactory<modgen.common.obj.StaticPropStorage
         function flush()
             branchName=mfilename('class');
             modgen.common.obj.StaticPropStorage.flushInternal(branchName);
-        end 
+        end
     end
 end

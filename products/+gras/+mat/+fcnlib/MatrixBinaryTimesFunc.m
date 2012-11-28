@@ -1,8 +1,8 @@
-classdef MatrixBinaryTimesFunc<gras.mat.fcnlib.AMatrixBinaryOpFunc
+classdef MatrixBinaryTimesFunc<gras.mat.AMatrixBinaryOpFunc
     methods
         function self=MatrixBinaryTimesFunc(lMatFunc, rMatFunc)
             %
-            self=self@gras.mat.fcnlib.AMatrixBinaryOpFunc(lMatFunc,...
+            self=self@gras.mat.AMatrixBinaryOpFunc(lMatFunc,...
                 rMatFunc,@mtimes);
             %
             lSizeVec = lMatFunc.getMatrixSize();

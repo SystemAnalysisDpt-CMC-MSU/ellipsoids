@@ -58,7 +58,7 @@ classdef MatrixColCubicSpline<gras.interp.AMatrixCubicSpline
             %       dataArray: double[nCols,nRows,nTimePoints]
             %               /double[nRows,nTimes] - data array
             %       timeVec: double[1,nTimePoints] -
-            %           
+            %
             %
             self=self@gras.interp.AMatrixCubicSpline(varargin{:});
         end

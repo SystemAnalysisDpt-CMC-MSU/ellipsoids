@@ -18,30 +18,25 @@ classdef AReachProblemDynamicsInterp<...
             sizeAtVec = size(AtDefCMat);
             numelAt = numel(AtDefCMat);
             %
+            self.timeVec = linspace(t0,t1,self.N_TIME_POINTS);
+            %
             % create dynamics for A(t), B(t)P(t)B'(t) and B(t)p(t)
             %
-            self.timeVec = linspace(t0,t1,self.N_TIME_POINTS);
             matOpFactory = MatrixOperationsFactory.create(self.timeVec);
             %
             self.AtDynamics = matOpFactory.fromSymbMatrix(AtDefCMat);
-            BtDynamics = matOpFactory.fromSymbMatrix(...
-                problemDef.getBMatDef());
-            PtDynamics = matOpFactory.fromSymbMatrix(...
-                problemDef.getPCMat());
-            ptDynamics = matOpFactory.fromSymbMatrix(...
-                problemDef.getpCVec());
-            self.BPBTransDynamics = matOpFactory.lrMultiply(PtDynamics,...
-                BtDynamics, 'L');
-            self.BptDynamics = matOpFactory.rMultiplyByVec(BtDynamics,...
-                ptDynamics);
+            BtDefCMat = problemDef.getBMatDef();
+            self.BPBTransDynamics = matOpFactory.rSymbMultiply(...
+                BtDefCMat, problemDef.getPCMat(), BtDefCMat.');
+            self.BptDynamics = matOpFactory.rSymbMultiplyByVec(...
+                BtDefCMat, problemDef.getpCVec());
             %
             % compute X(t,t0)
             %
             odeArgList=self.getOdePropList(calcPrecision);
             solverObj=MatrixODESolver(sizeAtVec,@ode45,odeArgList{:});
             %
-            Xtt0DerivFunc = @(t,x) reshape(...
-                self.AtDynamics.evaluate(t)*...
+            Xtt0DerivFunc = @(t,x) reshape(self.AtDynamics.evaluate(t)*...
                 reshape(x,sizeAtVec),[numelAt 1]);
             Xtt0InitialMat = eye(sizeAtVec);
             %

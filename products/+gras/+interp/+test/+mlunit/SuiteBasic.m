@@ -5,8 +5,94 @@ classdef SuiteBasic < mlunitext.test_case
         end
         %
         function self = set_up_param(self,varargin)
-
+            
         end
+        %
+        function testMatrixSFProdByVec(~)
+            %
+            sym1CMat={'cos(t)','sin(t)';'-sin(t)','cos(t)'};
+            sym2CMat={'t';'2*t'};
+            timeVec=0:0.1:2*pi;
+            check();
+            timeVec=0;
+            check();
+            function check()
+                import gras.gen.MatVector;
+                import gras.mat.symb.MatrixSymbFormulaBased;
+                import gras.mat.symb.MatrixSFBinaryProdByVec;
+                nTimePoints=length(timeVec);
+                m1Interp=MatrixSymbFormulaBased(sym1CMat);
+                m2Interp=MatrixSymbFormulaBased(sym2CMat);
+                m1Array=m1Interp.evaluate(timeVec);
+                m2Array=m2Interp.evaluate(timeVec);
+                etArray=MatVector.rMultiplyByVec(m1Array,squeeze(m2Array));
+                mProdInterp=MatrixSFBinaryProdByVec(sym1CMat,sym2CMat);
+                resArray=mProdInterp.evaluate(timeVec);
+                mlunit.assert_equals(nTimePoints,size(resArray,2));
+                mlunit.assert_equals(true,isequal(resArray,etArray));
+            end
+        end
+        %
+        function testMatrixSFProdBased(~)
+            MAX_TOL=1e-11;
+            timeVec=0:0.1:2*pi;
+            %
+            check();
+            timeVec=0;
+            check();
+            function check()
+                import gras.mat.symb.MatrixSymbFormulaBased;
+                import gras.mat.symb.MatrixSFBinaryProd;
+                import gras.mat.symb.MatrixSFTripleProd;
+                %
+                sym1CMat={'cos(t)','sin(t)';'-sin(t)','cos(t)'};
+                sym2CMat={'1','0';'0','1'};
+                dataArray=gras.gen.MatVector.fromFormulaMat(sym1CMat,timeVec);
+                mInterp=MatrixSymbFormulaBased(sym1CMat);
+                resDataArray=mInterp.evaluate(timeVec);
+                mlunit.assert_equals(true,isequal(dataArray,resDataArray));
+                %
+                mInterpBin=MatrixSFBinaryProd(sym1CMat,sym2CMat);
+                resDataArray=mInterpBin.evaluate(timeVec);
+                mlunit.assert_equals(true,isequal(dataArray,resDataArray));
+                %
+                mInterpBin=MatrixSFBinaryProd(sym2CMat,sym1CMat);
+                resDataArray=mInterpBin.evaluate(timeVec);
+                mlunit.assert_equals(true,isequal(dataArray,resDataArray));
+                %
+                sym2CMat={'t','2*t';'3*t','4*t'};
+                mInterpBin=MatrixSFBinaryProd(sym1CMat,sym2CMat);
+                m2Interp=MatrixSymbFormulaBased(sym2CMat);
+                resDataArray=mInterpBin.evaluate(timeVec);
+                etDataArray=gras.gen.MatVector.rMultiply(dataArray,...
+                    m2Interp.evaluate(timeVec));
+                %
+                mlunit.assert_equals(true,isequal(resDataArray,etDataArray));
+                %
+                mInterpBin=MatrixSFBinaryProd(sym2CMat,sym1CMat);
+                resDataArray=mInterpBin.evaluate(timeVec);
+                etDataArray=gras.gen.MatVector.rMultiply(...
+                    m2Interp.evaluate(timeVec),dataArray);
+                mlunit.assert_equals(true,isequal(resDataArray,etDataArray));
+                %
+                sym3CMat={'sqrt(t)','2*sqrt(t)';'3*sqrt(t)','4*sqrt(t)'};
+                mInterpTriple=MatrixSFTripleProd(sym1CMat,sym2CMat,sym3CMat);
+                mInterpBin=MatrixSFBinaryProd(sym1CMat,sym2CMat);
+                m3Interp=MatrixSymbFormulaBased(sym3CMat);
+                etDataArray=gras.gen.MatVector.rMultiply(mInterpBin.evaluate(timeVec),...
+                    m3Interp.evaluate(timeVec));
+                resDataArray=mInterpTriple.evaluate(timeVec);
+                maxTol=max(abs(etDataArray(:)-resDataArray(:)));
+                mlunit.assert_equals(true,maxTol<=MAX_TOL);
+                %
+                mInterpBin=MatrixSFBinaryProd(sym2CMat,sym3CMat);
+                etDataArray=gras.gen.MatVector.rMultiply(mInterp.evaluate(timeVec),...
+                    mInterpBin.evaluate(timeVec));
+                maxTol=max(abs(etDataArray(:)-resDataArray(:)));
+                mlunit.assert_equals(true,maxTol<=MAX_TOL);
+            end
+        end
+        %
         function testMatrixSymbolicInterp(~)
             %% Check symbolic interp
             timeVec=0:0.1:2*pi;
@@ -15,8 +101,8 @@ classdef SuiteBasic < mlunitext.test_case
             checkMaster();
             %
             function checkMaster()
-                symCMat={'cos(t)','sin(t)';'-sin(t)','cos(t)'};            
-                dataArray=gras.gen.MatVector.fromFormulaMat(symCMat,timeVec);  
+                symCMat={'cos(t)','sin(t)';'-sin(t)','cos(t)'};
+                dataArray=gras.gen.MatVector.fromFormulaMat(symCMat,timeVec);
                 mInterp=gras.mat.symb.MatrixSymbFormulaBased(symCMat);
                 check(mInterp);
                 function check(mInterp)
@@ -43,7 +129,7 @@ classdef SuiteBasic < mlunitext.test_case
             check('column_triu');
             for iTime=1:N_TIME_POINTS
                 dataArray(:,:,iTime)=dataArray(:,:,iTime)*transpose(dataArray(:,:,iTime));
-            end            
+            end
             check('posdef_chol');
             tmpMat=rand(8,8);
             dataArray(:,:,10)=tmpMat+transpose(tmpMat);
@@ -53,7 +139,7 @@ classdef SuiteBasic < mlunitext.test_case
             checkN('symm_column_triu');
             checkN('posdef_chol');
             dataArray=gras.gen.MatVector.triu(dataArray);
-            check('column_triu');            
+            check('column_triu');
             dataArray=rand(8,N_TIME_POINTS);
             check('column');
             check('row');
@@ -61,7 +147,7 @@ classdef SuiteBasic < mlunitext.test_case
             posArray=rand(8,8,N_TIME_POINTS);
             for iTime=1:N_TIME_POINTS
                 posArray(:,:,iTime)=posArray(:,:,iTime)*transpose(posArray(:,:,iTime));
-            end              
+            end
             multArray=rand(8,8,N_TIME_POINTS);
             dataArray=gras.gen.SquareMatVector.lrMultiply(posArray,...
                 multArray,'L');
@@ -75,7 +161,7 @@ classdef SuiteBasic < mlunitext.test_case
                 check('row');
                 checkN('column_triu');
                 checkN('symm_column_triu');
-                checkN('posdef_chol');                
+                checkN('posdef_chol');
             end
             function checkN(shape,inpArgList)
                 if nargin<2
@@ -84,7 +170,7 @@ classdef SuiteBasic < mlunitext.test_case
                     inpArgList={inpArgList};
                 end
                 self.runAndCheckError(@(x)check(shape,inpArgList{:}),...
-                    ':wrongInput');                
+                    ':wrongInput');
             end
             function check(shape,inpArgList)
                 if nargin<2
@@ -132,7 +218,7 @@ classdef SuiteBasic < mlunitext.test_case
                         catDataArray=dataList{1};
                     end
                     mlunit.assert_equals(true,isequal(resDataArray,catDataArray));
-                end                
+                end
                 function checkInternal()
                     maxTol=max(abs(dataArray(:)-resDataArray(:)));
                     isOk=maxTol<=MAX_TOL;

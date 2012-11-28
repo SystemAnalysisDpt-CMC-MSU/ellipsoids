@@ -1,9 +1,9 @@
-classdef MatrixTernaryTimesFunc<gras.mat.fcnlib.AMatrixTernaryOpFunc
+classdef MatrixTernaryTimesFunc<gras.mat.AMatrixTernaryOpFunc
     methods
         function self=MatrixTernaryTimesFunc(lMatFunc, mMatFunc,...
                 rMatFunc)
             %
-            self=self@gras.mat.fcnlib.AMatrixTernaryOpFunc(lMatFunc,...
+            self=self@gras.mat.AMatrixTernaryOpFunc(lMatFunc,...
                 mMatFunc, rMatFunc, @(a,b,c) a*b*c);
             %
             lSizeVec = lMatFunc.getMatrixSize();
