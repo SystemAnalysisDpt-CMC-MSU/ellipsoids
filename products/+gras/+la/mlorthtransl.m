@@ -19,17 +19,25 @@ nElems=size(dstArray,3);
 nDims=size(dstArray,1);
 nVecs=size(srcMat,2);
 oMat=zeros([nDims,nDims,nElems,nVecs]);
+ABS_TOL=1e-7;
 for l=1:1:nVecs
-    [srcQ,srcR]=qr(srcMat(:,l));
-    if srcR(1,1)<0
-        srcQ(:,1)=-srcQ(:,1);
-    end
-    srcQTr=transpose(srcQ);
+    srcVec=srcMat(:,l);
     for t=1:1:nElems
-        [dstQ,dstR]=qr(dstArray(:,l,t));
-        if dstR(1,1)<0
-            dstQ(:,1)=-dstQ(:,1);
-        end
-        oMat(:,:,t,l)=dstQ*srcQTr;
+        dstVec=dstArray(:,l,t);        
+        dstVec = dstVec/sqrt(sum(dstVec.*dstVec));
+        srcVec = srcVec/sqrt(sum(srcVec.*srcVec));
+        scalProd = sum(srcVec.*dstVec);
+        sVal = sqrt(1 - scalProd^2);
+        qMat = zeros(nDims, 2);
+        qMat(:, 1) = dstVec;
+        %
+        if abs(sVal) > ABS_TOL
+            qMat(:, 2) = (srcVec - scalProd * dstVec)/sVal;
+        else
+            qMat(:, 2) = 0; 
+        end;
+        sMat = [scalProd-1 sVal; -sVal scalProd-1];
+        %
+        oMat(:,:,t,l) = eye(nDims) + (qMat*sMat)*qMat';
     end
 end
