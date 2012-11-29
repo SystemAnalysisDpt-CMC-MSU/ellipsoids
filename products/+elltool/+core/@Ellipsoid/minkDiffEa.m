@@ -13,7 +13,7 @@ function [ resEllVec ] = minkDiffEa( ellObj1, ellObj2, dirMat)
     ell2DiagVec=diag(ellObj2.diagMat);
     [mSize nDirs]=size(dirMat);
     nDimSpace=length(ell1DiagVec);
-   
+    %
     %Check whether one ellipsoid is bigger then the other
     isFirstBigger=checkBigger(ellObj1,ellObj2,nDimSpace,absTol);
     if ~isFirstBigger
@@ -59,17 +59,25 @@ function [ resEllVec ] = minkDiffEa( ellObj1, ellObj2, dirMat)
                  %Find result in finite projection
                  finEllMat=findDiffEaFC(resProjQ1Mat,resProjQ2Mat,...
                      curProjDirVec,nDimSpace-rangInf,absTol);
-                 %Construct result
-                 [eigPMat diaPMat]=eig(finEllMat);
-                 resQMat=zeros(nDimSpace);
-                 basNZMat=finBasMat*eigPMat;
-                 resQMat(:,finIndVec)=basNZMat;
-                 resQMat(:,infIndVec)=infBasMat;
-                 diagQVec=zeros(nDimSpace,1);
-                 diagQVec(finIndVec)=diag(diaPMat);
-                 diagQVec(infIndVec)=Inf;
+                 if isempty(finEllMat)
+                     resQMat=[];
+                 else
+                     %Construct result
+                     [eigPMat diaPMat]=eig(finEllMat);
+                     resQMat=zeros(nDimSpace);
+                     basNZMat=finBasMat*eigPMat;
+                     resQMat(:,finIndVec)=basNZMat;
+                     resQMat(:,infIndVec)=infBasMat;
+                     diagQVec=zeros(nDimSpace,1);
+                     diagQVec(finIndVec)=diag(diaPMat);
+                     diagQVec(infIndVec)=Inf;
+                 end
              end
-             resEllVec(iDir)=Ellipsoid(resCenterVec,diagQVec,resQMat);
+             if ~isempty(resQMat)
+                resEllVec(iDir)=Ellipsoid(resCenterVec,diagQVec,resQMat);
+             else
+                resEllVec(iDir)=[];
+             end
          else
              %Finite case
              ellQ1Mat=ellObj1.eigvMat*ellObj1.diagMat*ellObj1.eigvMat.';
@@ -77,7 +85,11 @@ function [ resEllVec ] = minkDiffEa( ellObj1, ellObj2, dirMat)
              if min(ell1DiagVec)>absTol
                 %Non-degenerate
                 resQMat=findDiffEaND(ellQ1Mat,ellQ2Mat,curDirVec,absTol);
-                resEllVec(iDir)=Ellipsoid(resCenterVec,resQMat);
+                if isempty(resQMat)
+                    resEllVec(iDir)=[];
+                else
+                    resEllVec(iDir)=Ellipsoid(resCenterVec,resQMat);
+                end
              else
                 %Degenerate 
                 %find projection on non-zero space of Q2
@@ -98,18 +110,22 @@ function [ resEllVec ] = minkDiffEa( ellObj1, ellObj2, dirMat)
                 projQ2Mat=0.5*(projQ2Mat+projQ2Mat.');
                 resProjQMat=findDiffEaND(projQ1Mat,projQ2Mat,projCurDirVec,...
                     absTol);
-                %Construct the result
-                [eigPMat diaPMat]=eig(resProjQMat);
-                resQMat=zeros(nDimSpace);
-                basNZMat=nonZeroBasMat*eigPMat;
-                resQMat(:,nonZeroIndVec)=basNZMat;
-                resQMat(:,zeroIndVec)=zeroBasMat;
-                diagQVec=zeros(nDimSpace,1);
-                diagQVec(nonZeroIndVec)=diag(diaPMat);
-                resEllMat=resQMat*diag(diagQVec)*resQMat.';
-                resEllMat=0.5*(resEllMat+resEllMat);
-                resEllVec(iDir)=Ellipsoid(resCenterVec,resEllMat);
-                %find projection of all ellipsoids on zeroBasMat
+                if isempty(resProjQMat)
+                    resEllVec(iDir)=[];
+                else
+                    %Construct the result
+                    [eigPMat diaPMat]=eig(resProjQMat);
+                    resQMat=zeros(nDimSpace);
+                    basNZMat=nonZeroBasMat*eigPMat;
+                    resQMat(:,nonZeroIndVec)=basNZMat;
+                    resQMat(:,zeroIndVec)=zeroBasMat;
+                    diagQVec=zeros(nDimSpace,1);
+                    diagQVec(nonZeroIndVec)=diag(diaPMat);
+                    resEllMat=resQMat*diag(diagQVec)*resQMat.';
+                    resEllMat=0.5*(resEllMat+resEllMat);
+                    resEllVec(iDir)=Ellipsoid(resCenterVec,resEllMat);
+                    %find projection of all ellipsoids on zeroBasMat
+                end
              end
          end
     end
@@ -126,7 +142,7 @@ function resEllMat=findDiffEaFC(ellQ1Mat, ellQ2Mat,curDirVec,nDimSpace,absTol)
         isZeroVec=abs(ell1DiagVec)<absTol;
         zeroDirMat=eigv1Mat(:,isZeroVec);
         % Find basis in all space
-        [orthBasMat rangZ]=findBasRang(zeroDirMat,asbTol);
+        [orthBasMat rangZ]=findBasRang(zeroDirMat,absTol);
         %rangZ>0 since there is at least one zero e.v. Q1
         zeroIndVec=1:rangZ;
         nonZeroIndVec=(rangZ+1):nDimSpace;
@@ -138,15 +154,19 @@ function resEllMat=findDiffEaFC(ellQ1Mat, ellQ2Mat,curDirVec,nDimSpace,absTol)
         projQ1Mat=0.5*(projQ1Mat+projQ1Mat.');
         projQ2Mat=0.5*(projQ2Mat+projQ2Mat.');
         resProjQMat=findDiffEaND(projQ1Mat,projQ2Mat,projCurDirVec,absTol);
-        [eigPMat diaPMat]=eig(resProjQMat);
-        resQMat=zeros(nDimSpace);
-        basNZMat=nonZeroBasMat*eigPMat;
-        resQMat(:,nonZeroIndVec)=basNZMat;
-        resQMat(:,zeroIndVec)=zeroBasMat;
-        diagQVec=zeros(nDimSpace,1);
-        diagQVec(nonZeroIndVec)=diag(diaPMat);
-        resEllMat=resQMat*diag(diagQVec)*resQMat.';
-        resEllMat=0.5*(resEllMat+resEllMat);
+        if isempty(resProjQMat)
+            resEllMat=[];
+        else
+            [eigPMat diaPMat]=eig(resProjQMat);
+            resQMat=zeros(nDimSpace);
+            basNZMat=nonZeroBasMat*eigPMat;
+            resQMat(:,nonZeroIndVec)=basNZMat;
+            resQMat(:,zeroIndVec)=zeroBasMat;
+            diagQVec=zeros(nDimSpace,1);
+            diagQVec(nonZeroIndVec)=diag(diaPMat);
+            resEllMat=resQMat*diag(diagQVec)*resQMat.';
+            resEllMat=0.5*(resEllMat+resEllMat);
+        end
      end
 end
 %
@@ -251,25 +271,26 @@ function isBigger=checkBigger(ellObj1,ellObj2,nDimSpace,absTol)
 end
 %
 function resQMat=findDiffEaND(ellQ1Mat, ellQ2Mat,curDirVec,absTol)
-    %Find matrix of ellipsoids that is the result of
-    %external approximation of difference in direction curDirVec   
-    ellSQR1Mat=findSqrtOfMatrix(ellQ1Mat,absTol);
-    ellSQR2Mat=findSqrtOfMatrix(ellQ2Mat,absTol);
-    %Checking "goodness" of direction
-    ellInvQ1Mat=ellQ1Mat\eye(size(ellQ1Mat));
-    [~,diagMat]=eig(ellQ2Mat*ellInvQ1Mat);
-    lamMin=min(diag(diagMat));
-    p1Par=sqrt(curDirVec.'*ellQ1Mat*curDirVec);
-    p2Par=sqrt(curDirVec.'*ellQ2Mat*curDirVec);
-    pPar=p2Par/p1Par;
-  %  if (pPar<lamMin && pPar>1)   
-        sOrthMat=  gras.la.orthtransl(ellSQR2Mat*curDirVec,ellSQR1Mat*curDirVec);%align_matrix4(ellSQR1Mat*curDirVec,ellSQR2Mat*curDirVec);
+     %Find matrix of ellipsoids that is the result of
+     %external approximation of difference in direction curDirVec   
+     ellSQR1Mat=findSqrtOfMatrix(ellQ1Mat,absTol);
+     ellSQR2Mat=findSqrtOfMatrix(ellQ2Mat,absTol);
+     %Checking "goodness" of direction
+     ellInvQ1Mat=ellQ1Mat\eye(size(ellQ1Mat));
+     [~,diagMat]=eig(ellQ2Mat*ellInvQ1Mat);
+     lamMax=max(diag(diagMat));
+     %
+     p1Par=sqrt(curDirVec.'*ellQ1Mat*curDirVec);
+     p2Par=sqrt(curDirVec.'*ellQ2Mat*curDirVec);
+     pPar=p2Par/p1Par;
+     if (pPar>lamMax && pPar<1)
+        sOrthMat=  gras.la.orthtransl(ellSQR2Mat*curDirVec,ellSQR1Mat*curDirVec);
         auxMat=ellSQR1Mat-sOrthMat*ellSQR2Mat;
         resQMat=auxMat.'*auxMat;
         resQMat=0.5*(resQMat+resQMat.');
-   % else
-   %     resQMat=zeros(size(ellQ1Mat));
-   % end
+     else
+         resQMat=[];
+     end
 end
 function isContained=contains(ellQ1Mat,ellQ2Mat,absTol)
     isContained=min(eig(ellQ1Mat-ellQ2Mat))>=-absTol;  
@@ -279,22 +300,4 @@ function sqMat=findSqrtOfMatrix(qMat,absTol)
     isZeroVec=diag(abs(diagMat)<absTol);
     diagMat(isZeroVec,isZeroVec)=0;
     sqMat=eigvMat*diagMat.^(1/2)*eigvMat.';
-end
-function R = align_matrix4(v1, v2)
-
-n = size(v1, 1);
-v1 = v1/norm(v1);
-v2 = v2/norm(v2);
-c = v2'*v1;
-s = sqrt(1 - c^2);
-Q = zeros(n, 2);
-Q(:, 1) = v1;
-if abs(s) > 1e-6,
-    Q(:, 2) = (v2 - c * v1)/s;
-else
-    Q(:, 2) = 0; disp('zero!')
-end;
-S = [c-1 s; -s c-1];
-
-R = eye(n) + (Q*S)*Q';
 end

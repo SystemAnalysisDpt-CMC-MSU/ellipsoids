@@ -48,7 +48,7 @@ classdef Ellipsoid < handle
                 if isPar2Vector
                     ellObj.diagMat=diag(ellMat);
                     ellObj.eigvMat=eye(size(ellObj.diagMat));
-                elseif (mSize~=nSize) || (min(min((ellMat == ellMat.'))) == 0)
+                elseif (mSize~=nSize)  
                     throwerror('wrongMatrix',...
                         'Input should be a symmetric matrix or a vector.');
                 else
@@ -56,8 +56,14 @@ classdef Ellipsoid < handle
                     if  all(isDiagonalMat(:))
                         ellObj.diagMat=ellMat;
                         ellObj.eigvMat=eye(mSize);
-                    else %ordinary square matrix
-                        [ellObj.eigvMat ellObj.diagMat]=eig(ellMat);
+                    else 
+                        if ~(all(all(( ellMat - ellMat.')<absTol)))
+                            %matrix should be symmetric
+                            throwerror('wrongMatrix',...
+                                'Input should be a symmetric matrix or a vector.');
+                        else   
+                            [ellObj.eigvMat ellObj.diagMat]=eig(ellMat);
+                        end
                     end
                 end
                 if nCenSize~=1
@@ -160,12 +166,6 @@ classdef Ellipsoid < handle
                 end
             end
         end
-        %         ellObj = inv (ellObj)
-        %         ellObjVec = minksumEa(ellObjVec, dirMat)
-        %         ellObjVec = minksumIa(ellObjVec, dirMat)
-        %         ellObjVec = minkdiffIa(ellObj1, ellObj2, dirMat)
-        %         ellObjVec = minkdiffEa(ellObj1, ellObj2, dirMat)
-        %         distVec = distace(ellObjVec, objVec)
     end
 end
 

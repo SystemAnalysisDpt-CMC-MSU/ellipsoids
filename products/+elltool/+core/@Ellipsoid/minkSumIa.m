@@ -68,8 +68,6 @@ function [ ellResVec ] = minkSumIa(ellObjVec, dirMat )
                         curEllMat=eigvMat*diagMat*eigvMat.';
                         projQMat=nonInfBasMat.'*curEllMat*nonInfBasMat;
                         projQMat=0.5*(projQMat+projQMat.');
-                        %res=det(projQMat)
-                        %res1=det(projQMat(1:2,1:2))
                         projCenVec=nonInfBasMat.'*ellObjVec(iEll).centerVec;
                         %add to the total sum of projection, finding a proper
                         %approximation
@@ -91,7 +89,7 @@ function [ ellResVec ] = minkSumIa(ellObjVec, dirMat )
                                 orthSNIMat=0;
                             else
                                 if (isBeenFirst)
-                                    orthSNIMat=align_matrix4(firstVec,curAuxVec);%gras.la.orthtransl(curAuxVec,firstVec);                            
+                                    orthSNIMat=gras.la.orthtransl(curAuxVec,firstVec);                            
                                 else
                                     firstVec=curAuxVec;
                                     orthSNIMat=eye(nNonInf);
@@ -123,12 +121,7 @@ function [ ellResVec ] = minkSumIa(ellObjVec, dirMat )
                 for iEll=1:nEllObj
                     diagVec=diag(ellObjVec(iEll).diagMat);
                     eigvMat=ellObjVec(iEll).eigvMat;
-                    diagSVec=diagVec.^(0.5);
-                    %isZeroVec=(diag(ellObjVec(iEll).diagMat)<absTol);
-                    %diagVec(isZeroVec)=absTol;
-                    %ellQMat=eigvMat*sqrtm(diag(diagVec))*eigvMat.'; %Square root of ellQMat.
-                    ellQMat=eigvMat*diag(diagSVec)*eigvMat.';
-                    %ellQMat=0.5*(ellQMat+ellQMat).';
+                    ellQMat=eigvMat*diag(abs(diagVec).^(0.5))*eigvMat.';
                     if (iEll==1)
                         qCenVec=ellObjVec(iEll).centerVec;
                         firstVec=ellQMat*curDirVec;
@@ -145,17 +138,7 @@ function [ ellResVec ] = minkSumIa(ellObjVec, dirMat )
                             orthSMat=0;
                         else
                             if (isBeenFirst)
-                                orthSMat=align_matrix4(firstVec,auxVec);
-%                                 aV=orthSMat*auxVec;
-%                                 aa=aV./firstVec;
-%                                 bV=orthSMat*firstVec;
-%                                 bb=bV./auxVec;
-%                                 
-%                                  orthS11Mat=gras.la.orthtransl(auxVec,firstVec);
-%                                  orthS2Mat=gras.la.orthtransl(firstVec,auxVec);
-%                                  oS3Mat=orthSMat.';
-%                                  oS4Mat=orthS2Mat.';
-%                                  orthS10Mat=ell_valign(firstVec,auxVec);
+                                orthSMat=gras.la.orthtransl(auxVec,firstVec);
                             else
                                 orthSMat=eye(dimSpace);
                                 isBeenFirst=true;
@@ -205,22 +188,3 @@ function [orthBasMat rang]=findBasRang(qMat,absTol)
     rang = sum(abs(diag(rBasMat)) > tolerance);
     rang = rang(1); %for case where rBasZMat is vector.
 end              
-                 
-function R = align_matrix4(v1, v2)
-
-n = size(v1, 1);
-v1 = v1/norm(v1);
-v2 = v2/norm(v2);
-c = v2'*v1;
-s = sqrt(1 - c^2);
-Q = zeros(n, 2);
-Q(:, 1) = v1;
-if abs(s) > 1e-6,
-    Q(:, 2) = (v2 - c * v1)/s;
-else
-    Q(:, 2) = 0; disp('zero!')
-end;
-S = [c-1 s; -s c-1];
-
-R = eye(n) + (Q*S)*Q';
-end
