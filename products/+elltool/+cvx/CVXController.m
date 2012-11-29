@@ -7,9 +7,13 @@ classdef CVXController
         function setSolver(solverName)
             cvx_solver(solverName);
         end
-        function setPrecision(relTol)
+        function setPrecision(relTolVec)
             import elltool.cvx.CVXController;
-            cvx_precision([0, 2*relTol]);
+            if abs(relTolVec(1) - relTolVec(2)) > eps
+                import modgen.common.throwerror;
+                throwerror('cvxError', 'wrong precision format for cvx beta version');
+            end
+            cvx_precision([relTolVec(1), relTolVec(3)]);
          
         end
         function setIsVerbosityEnabled(isQuiet)
@@ -39,21 +43,42 @@ classdef CVXController
             logger.info('Setting up CVX...');
             feval(elltool.cvx.CVXController.CVX_SETUP_FUNC_NAME);
             logger.info('Setting up CVX: done');
+            CVXController.checkIfSetUp();
+        end
+        function checkIfSetUp()
+            import elltool.cvx.CVXController;
+            modgen.common.throwerror;
+            if ~CVXController.isSetUp();
+                throwerror('cvxNotSetUp','CVX is not set up');
+            end
+        end
+        function checkIfOnPath()
+            import elltool.cvx.CVXController;
+            N_HOR_LINE_CHARS=60;            
+            if ~CVXController.isOnPath()
+                horLineStr=['\n',repmat('-',1,N_HOR_LINE_CHARS),'\n'];
+                msgStr=sprintf(['\n',horLineStr,...
+                    '\nCVX is not found!!! \n',...
+                    'Please put CVX into "cvx" ',...
+                    'folder next to "products" folder ',horLineStr]);
+                modgen.common.throwerror('cvxNotFound',msgStr);
+            end            
         end
         function setUpIfNot()
-            N_HOR_LINE_CHARS=60;
             import elltool.cvx.CVXController;
-            if CVXController.isOnPath()
-                if ~CVXController.isSetUp()
-                    CVXController.setUp()
-                end            
-            else
-                horLineStr=['\n',repmat('-',1,N_HOR_LINE_CHARS),'\n'];
-                modgen.common.throwwarn('cvxNotFound',...
-                    sprintf(['\n',horLineStr,...
-                    '\nCVX is not found!!! Some functionality ',...
-                    'won''t be available\n',horLineStr]));
-            end
+            CVXController.checkIfOnPath();
+            if ~CVXController.isSetUp()
+                CVXController.setUp()
+            end            
+        end
+        function solverStr = getSolver()
+            solverStr = cvx_solver();
+        end
+        function precisionVec = getPrecision()
+            precisionVec = cvx_precision();
+        end
+        function isVerb = getIsVerbosityEnabled()
+            isVerb = ~cvx_quiet();
         end
     end
 end

@@ -1,82 +1,102 @@
 function [firOutArgMat, secOutArgMat] = minkmp(varargin)
 %
-% MINKMP - computes and plots geometric (Minkowski) sum of the geometric difference
-%          of two ellipsoids and the geometric sum of n ellipsoids in 2D or 3D:
+% MINKMP - computes and plots geometric (Minkowski) sum of the geometric
+%          difference of two ellipsoids and the geometric sum of n
+%          ellipsoids in 2D or 3D: (E0 - E) + (E1 + E2 + ... + En)
 %
-%          (E0 - E) + (E1 + E2 + ... + En)
+%   MINKMP(E0, E, EE, OPTIONS) - Computes geometric sum of the geometric
+%       difference of two ellipsoids E0 - E and the geometric sum of
+%       ellipsoids in the ellipsoidal array EE, if
+%       1 <= dimension(E0) = dimension(E) = dimension(EE) <= 3,
+%       and plots it if no output arguments are specified.
 %
+%   [y, Y] = MINKMP(E0, E, EE) - computes
+%       (E0 - E) + (geometric sum of ellipsoids in EE).
+%       Here y is the center, and Y - array of boundary points.
+%   MINKMP(E0, E, EE) - plots
+%       (E0 - E) + (geometric sum of ellipsoids in EE)
+%       in default (red) color.
+%   MINKMP(E0, E, EE, Options) - plots
+%       (E0 - E) + (geometric sum of ellipsoids in EE)
+%       using options given in the Options structure.
 %
-% Description:
-% ------------
+% Input:
+%   regular:
+%       minEll: ellipsoid [1, 1] - first ellipsoid. Suppose
+%           nDim - space dimension, nDim = 2 or 3.
+%       subEll: ellipsoid [1, 1] - second ellipsoid
+%           of the same dimention.
+%       sumEllMat: ellipsoid [mRows, nCols] - matrix of ellipsoids.
 %
-% MINKMP(E0, E, EE, OPTIONS)  Computes geometric sum of the geometric difference
-%                             of two ellipsoids E0 - E and the geometric sum of
-%                             ellipsoids in the ellipsoidal array EE, if
-%                             1 <= dimension(E0) = dimension(E) = dimension(EE) <= 3,
-%                             and plots it if no output arguments are specified.
-%
-%    [y, Y] = MINKMP(E0, E, EE)  Computes (E0 - E) + (geometric sum of ellipsoids in EE).
-%                                Here y is the center, and Y - array of boundary points.
-%             MINKMP(E0, E, EE)  Plots (E0 - E) + (geometric sum of ellipsoids in EE)
-%                                in default (red) color.
-%    MINKMP(E0, E, EE, Options)  Plots (E0 - E) + (geometric sum of ellipsoids in EE)
-%                                using options given in the Options structure.
-%
-% Options.show_all     - if 1, displays also ellipsoids
-% Options.newfigure    - if 1, each plot command will open a new figure window.
-% Options.fill         - if 1, the resulting set in 2D will be filled with color.
-% Options.color        - sets default colors in the form [x y z].
-% Options.shade = 0-1  - level of transparency (0 - transparent, 1 - opaque).
-% Options.grid         - if 1, grid on.
+%   optional:
+%       Options: structure[1, 1] - fields:
+%           show_all: double[1, 1] - if 1, displays
+%               also ellipsoids fstEll and secEll.
+%           newfigure: double[1, 1] - if 1, each plot
+%               command will open a new figure window.
+%           fill: double[1, 1] - if 1, the resulting
+%               set in 2D will be filled with color.
+%           color: double[1, 3] - sets default colors
+%               in the form [x y z].
+%           shade: double[1, 1] = 0-1 - level of transparency
+%               (0 - transparent, 1 - opaque).
 %
 % Output:
-% -------
+%   firOutArgMat: double[nDim, 1] - center of the resulting set.
+%   secOutArgMat: double[nDim, nBoundPoints] - set of boundary
+%       points (vertices) of resulting set.
 %
-%    firOutArgMat - center of the resulting set.
-%    secOutArgMat - set of boundary points (vertices) of resulting set.
-% 
-% $Author: Rustam Guliev, Moscow State University by M.V. Lomonosov,
-% Faculty of Computational Mathematics and Cybernetics, System Analysis
-% Department, 23-October-2012, <glvrst@gmail.com>$
+% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+% $Copyright:  The Regents of the University of California 2004-2008 $
 %
-
+% $Author: Rustam Guliev <glvrst@gmail.com> $  $Date: 23-10-2012$
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2012 $
 
 import modgen.common.throwerror;
 import elltool.conf.Properties;
 
 if nargin < 3
-    throwerror('wrongInput','MINKMP: first, second and third arguments must be ellipsoids.');
+    throwerror('wrongInput', ...
+        'MINKMP: first, second and third arguments must be ellipsoids.');
 end
 
 minEll = varargin{1};
 subEll = varargin{2};
 sumEllMat = varargin{3};
 
-if ~(isa(minEll, 'ellipsoid')) || ~(isa(subEll, 'ellipsoid')) || ~(isa(sumEllMat, 'ellipsoid'))
-    throwerror('wrongInput','MINKMP: first, second and third arguments must be ellipsoids.');
+if ~(isa(minEll, 'ellipsoid')) || ~(isa(subEll, 'ellipsoid')) ...
+        || ~(isa(sumEllMat, 'ellipsoid'))
+    throwerror('wrongInput', ...
+        'MINKMP: first, second and third arguments must be ellipsoids.');
 end
 
 if (~isscalar(minEll)) || (~isscalar(subEll))
-    throwerror('wrongInput','MINKMP: first and second arguments must be single ellipsoid.');
+    throwerror('wrongInput', ...
+        'MINKMP: first and second arguments must be single ellipsoid.');
 end
 
 nDim    = dimension(minEll);
-nDimsVec = dimension(sumEllMat);
+nDimsMat = dimension(sumEllMat);
 
-if (~all(nDimsVec(:)==nDim)) || (dimension(subEll) ~= nDim)
-    throwerror('wrongInput','MINKMP: all ellipsoids must be of the same dimension.');
+if (~all(nDimsMat(:)==nDim)) || (dimension(subEll) ~= nDim)
+    throwerror('wrongInput', ...
+        'MINKMP: all ellipsoids must be of the same dimension.');
 end
 
 if nDim > 3
-    throwerror('wrongInput','MINKMP: ellipsoid dimension must be not higher than 3.');
+    throwerror('wrongInput', ...
+        'MINKMP: ellipsoid dimension must be not higher than 3.');
 end
 
 if isdegenerate(minEll)
-    throwerror('wrongInput','MINKMP: minuend ellipsoid is degenerate.');
+    throwerror('wrongInput', ...
+        'MINKMP: minuend ellipsoid is degenerate.');
 end
-  
+
 nArgOut=nargout;
-  
+
 if ~isbigger(minEll, subEll)
     %minkmp is empty
     switch nArgOut
@@ -112,41 +132,50 @@ else
                 firOutArgMat+max(sumBoundMat);
             firOutArgMat=firOutArgMat+sumCentVec;
         case 2
-            phi = linspace(0, 2*pi, minEll.nPlot2dPoints);
-            lDirsMat   = [cos(phi); sin(phi)];
+            phiVec = linspace(0, 2*pi, minEll.nPlot2dPoints);
+            lDirsMat   = [cos(phiVec); sin(phiVec)];
         case 3
             phiGrid   = minEll.nPlot3dPoints/2;
             psyGrid   = phiGrid/2;
-            psy = linspace(0, pi, psyGrid);
-            phi = linspace(0, 2*pi, phiGrid);
+            psyVec = linspace(0, pi, psyGrid);
+            phiVec = linspace(0, 2*pi, phiGrid);
             lDirsMat   = zeros(3,phiGrid*(psyGrid-2));
             for i = 2:(psyGrid - 1)
-                arr = cos(psy(i))*ones(1, phiGrid);
-                lDirsMat(:,(i-2)*phiGrid+(1:phiGrid))   = [cos(phi)*sin(psy(i)); sin(phi)*sin(psy(i)); arr];
+                arrVec = cos(psyVec(i))*ones(1, phiGrid);
+                lDirsMat(:,(i-2)*phiGrid+(1:phiGrid)) = ...
+                    [cos(phiVec)*sin(psyVec(i)); ...
+                    sin(phiVec)*sin(psyVec(i)); arrVec];
             end
     end
     
     if nDim>1
         if rank(subEll.shape)==0
             tmpEll=ellipsoid(minEll.center-subEll.center,minEll.shape);
-            [firOutArgMat, secOutArgMat]=minksum([tmpEll; sumEllMat(:)]);
+            [firOutArgMat, secOutArgMat] = ...
+                minksum([tmpEll; sumEllMat(:)]);
         else
             if isdegenerate(subEll)
                 subEll.shape = regularize(subEll.shape);
             end
             q1Mat=minEll.shape;
             q2Mat=subEll.shape;
-            isGoodDirVec = ~ellipsoid.isbaddirectionmat(q1Mat, q2Mat, lDirsMat);
+            isGoodDirVec = ~ellipsoid.isbaddirectionmat(q1Mat, q2Mat, ...
+                lDirsMat);
             if  ~any(isGoodDirVec)
-                tmpEll=ellipsoid(minEll.center-subEll.center,zeros(nDim,nDim));
-                [firOutArgMat, secOutArgMat]=minksum([tmpEll; sumEllMat(:)]);
+                tmpEll=ellipsoid(minEll.center-subEll.center, ...
+                    zeros(nDim,nDim));
+                [firOutArgMat, secOutArgMat]=minksum([tmpEll; ...
+                    sumEllMat(:)]);
             else
                 [sumCentVec, sumBoundMat]=minksum(sumEllMat);
-                [~, minEllPtsMat] = rho(minEll, lDirsMat(:,isGoodDirVec));
-                [~, subEllPtsMat] = rho(subEll, lDirsMat(:,isGoodDirVec));
+                [~, minEllPtsMat] = rho(minEll, ...
+                    lDirsMat(:,isGoodDirVec));
+                [~, subEllPtsMat] = rho(subEll, ...
+                    lDirsMat(:,isGoodDirVec));
                 diffBoundMat =  minEllPtsMat - subEllPtsMat;
                 firOutArgMat = minEll.center-subEll.center+sumCentVec;
-                secOutArgMat = diffBoundMat+ sumBoundMat(:,isGoodDirVec);
+                secOutArgMat = diffBoundMat + ...
+                    sumBoundMat(:,isGoodDirVec);
             end
         end
     end
@@ -154,7 +183,7 @@ else
     if nDim==2
         secOutArgMat=[secOutArgMat secOutArgMat(:,1)];
     end
-%=======================================================================   
+    %===================================================================
     if (nArgOut ==1)
         firOutArgMat = secOutArgMat;
         clear secOutArgMat;
@@ -223,11 +252,11 @@ else
                 if SOptions.fill
                     fill(secOutArgMat(1,:),secOutArgMat(2,:),colorVec);
                 else
-                   SEllPlot = ell_plot(secOutArgMat);
+                    SEllPlot = ell_plot(secOutArgMat);
                     set(SEllPlot, 'Color', colorVec, 'LineWidth', 2);
                 end
                 SEllPlot = ell_plot(firOutArgMat, '.');
-                set(SEllPlot, 'Color', colorVec); 
+                set(SEllPlot, 'Color', colorVec);
                 xlabel('$x$','interpreter','latex','FontSize',14);
                 ylabel('$y$','interpreter','latex','FontSize',14);
             case 3
@@ -235,9 +264,11 @@ else
                     ConvHullnMat = convhulln(secOutArgMat');
                     camlight;  camlight('headlight');
                     shading interp; material('metal');
-                    patch('Vertices', secOutArgMat', 'Faces', ConvHullnMat, ...
-                    'FaceVertexCData', colorVec(ones(1, size(secOutArgMat, 2)), :), 'FaceColor', 'flat', ...
-                    'FaceAlpha', shade,'FaceLighting','phong','EdgeColor','none');
+                    patch('Vertices', secOutArgMat', 'Faces', ...
+                        ConvHullnMat, 'FaceVertexCData', ...
+                        colorVec(ones(1, size(secOutArgMat, 2)), :), ...
+                        'FaceColor', 'flat', 'FaceAlpha', shade, ...
+                        'FaceLighting','phong','EdgeColor','none');
                     %lighting phong;
                 else
                     SEllPlot = ell_plot(firOutArgMat, '*');
@@ -253,9 +284,8 @@ else
         end
         if ~isHolded
             hold off;
-        end 
+        end
         clear firOutArgMat secOutArgMat;
     end
     Properties.setIsVerbose(false);
-end
 end

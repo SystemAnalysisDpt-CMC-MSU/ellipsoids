@@ -263,7 +263,7 @@ function resQMat=findDiffEaND(ellQ1Mat, ellQ2Mat,curDirVec,absTol)
     p2Par=sqrt(curDirVec.'*ellQ2Mat*curDirVec);
     pPar=p2Par/p1Par;
   %  if (pPar<lamMin && pPar>1)   
-        sOrthMat=  gras.la.orthtransl(ellSQR2Mat*curDirVec,ellSQR1Mat*curDirVec);
+        sOrthMat=  gras.la.orthtransl(ellSQR2Mat*curDirVec,ellSQR1Mat*curDirVec);%align_matrix4(ellSQR1Mat*curDirVec,ellSQR2Mat*curDirVec);
         auxMat=ellSQR1Mat-sOrthMat*ellSQR2Mat;
         resQMat=auxMat.'*auxMat;
         resQMat=0.5*(resQMat+resQMat.');
@@ -279,4 +279,22 @@ function sqMat=findSqrtOfMatrix(qMat,absTol)
     isZeroVec=diag(abs(diagMat)<absTol);
     diagMat(isZeroVec,isZeroVec)=0;
     sqMat=eigvMat*diagMat.^(1/2)*eigvMat.';
+end
+function R = align_matrix4(v1, v2)
+
+n = size(v1, 1);
+v1 = v1/norm(v1);
+v2 = v2/norm(v2);
+c = v2'*v1;
+s = sqrt(1 - c^2);
+Q = zeros(n, 2);
+Q(:, 1) = v1;
+if abs(s) > 1e-6,
+    Q(:, 2) = (v2 - c * v1)/s;
+else
+    Q(:, 2) = 0; disp('zero!')
+end;
+S = [c-1 s; -s c-1];
+
+R = eye(n) + (Q*S)*Q';
 end

@@ -1,4 +1,4 @@
-function resMat = gt(firsrEllMat, secondEllMat)
+function isPositiveMat = gt(firsrEllMat, secondEllMat)
 %
 % GT - checks if the first ellipsoid is bigger than the second one.
 %
@@ -9,16 +9,17 @@ function resMat = gt(firsrEllMat, secondEllMat)
 %           of the corresponding dimensions.
 %
 % Output:
-%   resMat: double[mRows, nCols],
-%       resMat(iRows, jCols) = 1 - if firsrEllMat(iRows, jCols)
+%   isPositiveMat: logical[mRows, nCols],
+%       resMat(iRows, jCols) = true - if firsrEllMat(iRows, jCols)
 %       contains secondEllMat(iRows, jCols)
-%       when both have same center, 0 - otherwise.
+%       when both have same center, false - otherwise.
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
 import modgen.common.throwerror;
 
-if ~(isa(firsrEllMat, 'ellipsoid')) || ~(isa(secondEllMat, 'ellipsoid'))
+if ~(isa(firsrEllMat, 'ellipsoid')) || ...
+        ~(isa(secondEllMat, 'ellipsoid'))
     throwerror('wrongInput', ...
         '<>: both input arguments must be ellipsoids.');
 end
@@ -29,37 +30,39 @@ nFstEllipsoids = mRowsFstEllMatrix * nColsFstEllMatrix;
 nSecEllipsoids = mRowsSecEllMatrix * nColsSecEllMatrix;
 
 if ((mRowsFstEllMatrix ~= mRowsSecEllMatrix) || (nColsFstEllMatrix ~= ...
-        nColsSecEllMatrix)) && (nFstEllipsoids > 1) && (nSecEllipsoids > 1)
+        nColsSecEllMatrix)) && (nFstEllipsoids > 1) && ...
+        (nSecEllipsoids > 1)
     throwerror('wrongSizes', ...
         '<>: sizes of ellipsoidal arrays do not match.');
 end
 
-resMat = [];
+isPositiveMat = logical([]);
 if (nFstEllipsoids > 1) && (nSecEllipsoids > 1)
     for iRow = 1:mRowsSecEllMatrix
-        resPartVec = [];
+        isPositivePartVec = logical([]);
         for jCol = 1:nColsSecEllMatrix
-            resPartVec = [resPartVec isbigger(firsrEllMat(iRow, jCol),...
-                secondEllMat(iRow, jCol))];
+            isPositivePartVec = logical([isPositivePartVec ...
+                isbigger(firsrEllMat(iRow, jCol), ...
+                secondEllMat(iRow, jCol))]);
         end
-        resMat = [resMat; resPartVec];
+        isPositiveMat = logical([isPositiveMat; isPositivePartVec]);
     end
 elseif (nFstEllipsoids > 1)
     for iRow = 1:mRowsFstEllMatrix
-        resPartVec = [];
+        isPositivePartVec = logical([]);
         for jCol = 1:nColsFstEllMatrix
-            resPartVec = [resPartVec isbigger(firsrEllMat(iRow, ...
-                jCol), secondEllMat)];
+            isPositivePartVec = logical([isPositivePartVec ...
+                isbigger(firsrEllMat(iRow, jCol), secondEllMat)]);
         end
-        resMat = [resMat; resPartVec];
+        isPositiveMat = logical([isPositiveMat; isPositivePartVec]);
     end
 else
     for iRow = 1:mRowsSecEllMatrix
-        resPartVec = [];
+        isPositivePartVec = logical([]);
         for jCol = 1:nColsSecEllMatrix
-            resPartVec = [resPartVec isbigger(firsrEllMat,...
-                secondEllMat(iRow, jCol))];
+            isPositivePartVec = logical([isPositivePartVec isbigger(firsrEllMat,...
+                secondEllMat(iRow, jCol))]);
         end
-        resMat = [resMat; resPartVec];
+        isPositiveMat = logical([isPositiveMat; isPositivePartVec]);
     end
 end

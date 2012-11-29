@@ -598,53 +598,55 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
                 'testOrth2Mat','testOrth3Mat',...
                 'testOrth20Mat','testOrth50Mat',...
                 'testOrth100Mat');
-            % Test#1. Simple.
-            test1Mat=2*eye(2);
-            test2Mat=[1 0; 0 2];
-            testEllipsoid1=Ellipsoid(test1Mat);
-            testEllipsoid2=Ellipsoid(test2Mat);
-            dirVec=[1,0].';
-            resEllipsoid=minkSumIa([testEllipsoid1, testEllipsoid2], dirVec);
-            resOldEllipsoid=minksum_ia([ellipsoid(test1Mat), ellipsoid(test2Mat)],...
-                dirVec);
-            [oldCenVec oldQMat]=double(resOldEllipsoid);
-            mlunit.assert_equals(1,isEllEll2Equal(resEllipsoid,...
-                Ellipsoid(oldCenVec,oldQMat)));
-            %
-            % Test#2. Ten ellipsoids. Non-degenerate. Non-zero centers.
-            % Non-diagonal matrices. Random matrices.
-            % A lot of multiple various directions.
-            % 50D case.
-            nElems=10;
-            nDim=50;
-            testEllNewVec(nElems)=Ellipsoid();
-            testEllOldVec(nElems)=ellipsoid();
-            for iElem=1:nElems
-                centerVec=iElem*(1:nDim).';
-                qMat=testEll10x50Mat{iElem};
-                testEllNewVec(iElem)=Ellipsoid(centerVec,qMat);
-                testEllOldVec(iElem)=ellipsoid(centerVec,qMat);
-            end
-            nDirs=48;
-            angleStep=2*pi/nDirs;
-            phiAngle=0:angleStep:2*pi-angleStep;
-            dirMat=[cos(phiAngle); sin(phiAngle); zeros(nDim-2,nDirs)];
-            resNewEllVec=minkSumIa(testEllNewVec,dirMat);
-            resOldEllVec=minksum_ia(testEllOldVec,dirMat);
-            isStillCorrect=true;
-            iDir=1;
-            while (iDir<nDirs) && isStillCorrect
-                newQMat=resNewEllVec(iDir).eigvMat*resNewEllVec(iDir).diagMat*...
-                    resNewEllVec(iDir).eigvMat.';
-                newQMat=0.5*(newQMat+newQMat.');
-                newQCenVec=resNewEllVec(iDir).centerVec;
-                [oldQCenVec oldQMat]=double(resOldEllVec(iDir));
-                iDir=iDir+1;
-                isStillCorrect=isEllEll2Equal(Ellipsoid(newQCenVec,newQMat),...
-                    Ellipsoid(oldQCenVec,oldQMat));
-            end
-            mlunit.assert_equals(1, isStillCorrect);
-            %
+%Comparison with old method minksum_ia is not correct since old method works incorrectly 
+            
+%             % Test#1. Simple.
+%             test1Mat=2*eye(2);
+%             test2Mat=[1 0; 0 2];
+%             testEllipsoid1=Ellipsoid(test1Mat);
+%             testEllipsoid2=Ellipsoid(test2Mat);
+%             dirVec=[1,0].';
+%             resEllipsoid=minkSumIa([testEllipsoid1, testEllipsoid2], dirVec);
+%             resOldEllipsoid=minksum_ia([ellipsoid(test1Mat), ellipsoid(test2Mat)],...
+%                 dirVec);
+%             [oldCenVec oldQMat]=double(resOldEllipsoid);
+%             mlunit.assert_equals(1,isEllEll2Equal(resEllipsoid,...
+%                 Ellipsoid(oldCenVec,oldQMat)));
+%             %
+%             % Test#2. Ten ellipsoids. Non-degenerate. Non-zero centers.
+%             % Non-diagonal matrices. Random matrices.
+%             % A lot of multiple various directions.
+%             % 50D case.
+%             nElems=10;
+%             nDim=50;
+%             testEllNewVec(nElems)=Ellipsoid();
+%             testEllOldVec(nElems)=ellipsoid();
+%             for iElem=1:nElems
+%                 centerVec=iElem*(1:nDim).';
+%                 qMat=testEll10x50Mat{iElem};
+%                 testEllNewVec(iElem)=Ellipsoid(centerVec,qMat);
+%                 testEllOldVec(iElem)=ellipsoid(centerVec,qMat);
+%             end
+%             nDirs=48;
+%             angleStep=2*pi/nDirs;
+%             phiAngle=0:angleStep:2*pi-angleStep;
+%             dirMat=[cos(phiAngle); sin(phiAngle); zeros(nDim-2,nDirs)];
+%             resNewEllVec=minkSumIa(testEllNewVec,dirMat);
+%             resOldEllVec=minksum_ia(testEllOldVec,dirMat);
+%             isStillCorrect=true;
+%             iDir=1;
+%             while (iDir<nDirs) && isStillCorrect
+%                 newQMat=resNewEllVec(iDir).eigvMat*resNewEllVec(iDir).diagMat*...
+%                     resNewEllVec(iDir).eigvMat.';
+%                 newQMat=0.5*(newQMat+newQMat.');
+%                 newQCenVec=resNewEllVec(iDir).centerVec;
+%                 [oldQCenVec oldQMat]=double(resOldEllVec(iDir));
+%                 iDir=iDir+1;
+%                 isStillCorrect=isEllEll2Equal(Ellipsoid(newQCenVec,newQMat),...
+%                     Ellipsoid(oldQCenVec,oldQMat));
+%             end
+%             mlunit.assert_equals(1, isStillCorrect);
+%             %
             %Test#3(o2). Infinite+nondegenerate.
             test1WMat=[1 -1;1 1];
             test1WMat=test1WMat/norm(test1WMat);
@@ -682,21 +684,21 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
             ansEllipsoid=Ellipsoid(ansCenVec,ansDiagVec,ansEigvMat);
             mlunit.assert_equals(1,isEllEll2Equal(resEllipsoid,ansEllipsoid));
             %
-            % Test#5.
-            test1Mat=[2 0;0 1];
-            test2Mat=[4 0;0 3];
-            testEllipsoid1=Ellipsoid(test1Mat);
-            testEllipsoid2=Ellipsoid(test2Mat);
-            dirVec=[1,1].';
-            dirVec=dirVec/norm(dirVec);
-            resEllipsoid=minkSumIa([testEllipsoid1, testEllipsoid2], dirVec);
-            resOldEllipsoid=minksum_ia([ellipsoid(test1Mat), ellipsoid(test2Mat)],...
-                dirVec);
-            [oldCenVec oldQMat]=double(resOldEllipsoid);
-            %
-            mlunit.assert_equals(1,isEllEll2Equal(resEllipsoid,...
-                Ellipsoid(oldCenVec,oldQMat)));
-            
+%             % Test#5.
+%             test1Mat=[2 0;0 1];
+%             test2Mat=[4 0;0 3];
+%             testEllipsoid1=Ellipsoid(test1Mat);
+%             testEllipsoid2=Ellipsoid(test2Mat);
+%             dirVec=[1,1].';
+%             dirVec=dirVec/norm(dirVec);
+%             resEllipsoid=minkSumIa([testEllipsoid1, testEllipsoid2], dirVec);
+%             resOldEllipsoid=minksum_ia([ellipsoid(test1Mat), ellipsoid(test2Mat)],...
+%                 dirVec);
+%             [oldCenVec oldQMat]=double(resOldEllipsoid);
+%             %
+%             mlunit.assert_equals(1,isEllEll2Equal(resEllipsoid,...
+%                 Ellipsoid(oldCenVec,oldQMat)));
+%             
             %Test#6(o3). Infinite+nondegenerate. 3d-case
             nDim=3;
             test1WMat=eye(nDim);
@@ -1022,10 +1024,10 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
             load(strcat(self.testDataRootDir,filesep,'testEllEllRMat.mat'),...
                 'testOrth50Mat','testOrth100Mat','testOrth3Mat','testOrth2Mat');
             %
-            nEllObj=10;
-            nDim=50;
+            nEllObj=20;
+            nDim=100;
             %Orthogonal matrix
-            oMat=testOrth50Mat;
+            oMat=testOrth100Mat;
             %Massives of ellipsoid size of nEllObj
             %For Sum
             ellNINDCSumVec=buildNINDCSum();   %Non-Infinite Non-Degenerate Case
@@ -1040,7 +1042,31 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
             %
             dirVec=ones(nDim,1);
             dirVec=dirVec/norm(dirVec);
+            %[oMat,~]=qr(rand(nDim,nDim));
+       
             %
+%             absTol=1e-9;
+%             test1Vec(1)=ellipsoid(diag([1,1,2]));
+%             test1Vec(2)=ellipsoid(diag([1,1,1]));
+%             test2Vec(1)=ellipsoid(oMat*diag([1,1,2])*oMat.');
+%             test2Vec(2)=ellipsoid(oMat*diag([1,1,1])*oMat.');
+%             res1=minksum_ia(test1Vec,dirVec);
+%             [q1Vec q1Mat]=double(res1);
+%             [~, d1Mat]=eig(q1Mat);
+%             res2=minksum_ia(test2Vec,oMat*dirVec);
+%             [q1Vec q2Mat]=double(res2);
+%             [~, d2Mat]=eig(q2Mat);
+%             isEqual=all(all(abs(d1Mat-d2Mat)<absTol));
+            
+       %     testVec(1)=Ellipsoid(diag([1,1,2]));
+       %     testVec(2)=Ellipsoid(diag([1,1,1]));
+            %
+            check(@minkSumIa,ellNINDCSumVec,dirVec,oMat)
+            check(@minkSumIa,ellINDCSumVec,dirVec,oMat)
+            check(@minkSumIa,ellNIDCSumVec,dirVec,oMat)
+            check(@minkSumIa,ellIDCSumVec,dirVec,oMat)
+            %
+%            check(@minkSumIa,testVec,dirVec,oMat);
             check(@minkDiffIa,ellNINDCDiffVec,dirVec,oMat)
             check(@minkDiffIa,ellNIDCDiffVec,dirVec,oMat)
             check(@minkDiffIa,ellINDCDiffVec,dirVec,oMat)
@@ -1050,11 +1076,6 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
             %check(@minkDiffEa,ellNIDCDiffVec,dirVec,oMat)
             check(@minkDiffEa,ellINDCDiffVec,dirVec,oMat)
             %check(@minkDiffEa,ellIDCDiffVec,dirVec,oMat)
-            %
-            check(@minkSumIa,ellNINDCSumVec,dirVec,oMat)
-            check(@minkSumIa,ellINDCSumVec,dirVec,oMat)
-            %check(@minkSumIa,ellNIDCVec,dirVec,oMat)
-            %check(@minkSumIa,ellIDCVec,dirVec,oMat)
             %
             check(@minkSumEa,ellNINDCSumVec,dirVec,oMat)
             check(@minkSumEa,ellINDCSumVec,dirVec,oMat)
@@ -1078,6 +1099,7 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
                     ellObjRotVec(iEll)=rotateEll(ellVec(iEll),oMat);
                 end
                 resR2Ell=fMethod(ellObjRotVec,oMat*dirVec);
+               
                 resR3Ell=rotateEll(resR2Ell,oMat.');
                 isEqual=isEllEll2Equal(resR1Ell,resR3Ell);
             end

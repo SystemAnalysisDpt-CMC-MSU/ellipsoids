@@ -4,7 +4,7 @@ classdef ConstMatrixFunctionFactory
             import modgen.common.type.simple.checkgen;
             import modgen.common.throwerror;
             import gras.gen.MatVector;
-            import gras.mat.*;
+            import gras.mat.fcnlib.*;
             import gras.mat.symb.iscellofstringconst;
             %
             checkgen(mCMat,'(isnumeric(x)||iscellofstring(x))&&ismat(x)');
@@ -23,6 +23,10 @@ classdef ConstMatrixFunctionFactory
             else
                 obj = ConstMatrixFunction(mMat);
             end
+        end
+        %
+        function obj=createEmptyInstance()
+            obj=gras.mat.fcnlib.ConstMatrixFunction.empty(0,1);
         end
     end
 end

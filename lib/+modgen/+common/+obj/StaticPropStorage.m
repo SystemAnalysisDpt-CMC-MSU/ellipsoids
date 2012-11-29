@@ -1,6 +1,7 @@
 classdef StaticPropStorage<handle
     methods (Static,Access=private)
-        function [propVal,isThere]=setGetProp(isFlushed,isPresenceChecked,branchName,propName,propVal)
+        function [propVal,isThere]=setGetProp(isFlushed,...
+                isPresenceChecked,branchName,propName,propVal)
             persistent branchStorage;
             if isempty(branchStorage)
                 branchStorage=containers.Map;
@@ -43,11 +44,13 @@ classdef StaticPropStorage<handle
     end
     
     methods (Static,Access=protected)
-        function [propVal,isThere]=getPropInternal(branchName,propName,isPresenceChecked)
+        function [propVal,isThere]=getPropInternal(branchName,propName,...
+                isPresenceChecked)
             if nargin<3
                 isPresenceChecked=false;
             end
-            [propVal,isThere]=modgen.common.obj.StaticPropStorage.setGetProp(...
+            [propVal,isThere]=...
+                modgen.common.obj.StaticPropStorage.setGetProp(...
                 false,isPresenceChecked,branchName,propName);
         end
         function setPropInternal(branchName,propName,propVal)
@@ -55,7 +58,8 @@ classdef StaticPropStorage<handle
                 false,false,branchName,propName,propVal);
         end
         function flushInternal(branchName)
-            modgen.common.obj.StaticPropStorage.setGetProp(true,false,branchName);
+            modgen.common.obj.StaticPropStorage.setGetProp(true,false,...
+                branchName);
         end
     end
     

@@ -3,6 +3,7 @@ function ellipsoids_init()
 % ELLIPSOIDS_INIT - initializes Ellipsoidal Toolbox.
 import elltool.conf.Properties;
 %Options initialisation
+warning('on','all');
 Properties.init();
 %
 if Properties.getIsVerbose()
