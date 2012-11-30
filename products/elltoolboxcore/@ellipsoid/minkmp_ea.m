@@ -1,12 +1,16 @@
 function extApprEllVec = minkmp_ea(fstEll, secEll, inpEllMat, dirMat)
 %
 % MINKMP_EA - computation of external approximating ellipsoids
-%             of (E0 - E) + (E1 + ... + En) in given directions.
+%             of (E - Em) + (E1 + ... + En) along given directions.
+%             where E = fstEll, Em = secEll,
+%             E1, E2, ..., En - are ellipsoids in sumEllMat
 %
-%   EA = MINKMP_EA(E0, E, EE, L) - Computes external approximating
-%       ellipsoids of (E0 - E) + (E1 + E2 + ... + En),
-%       where E1, E2, ..., En are ellipsoids in array EE,
-%       in directions specified by columns of matrix L.
+%   extApprEllVec = MINKMP_EA(fstEll, secEll, inpEllMat, dirMat) -
+%       Computes external approximating
+%       ellipsoids of (E - Em) + (E1 + E2 + ... + En),
+%       where E1, E2, ..., En are ellipsoids in array inpEllMat,
+%       E = fstEll, Em = secEll,
+%       along directions specified by columns of matrix dirMat.
 %
 % Input:
 %   regular:
@@ -82,8 +86,9 @@ for iCol = 1:nCols
     dirVec = dirMat(:, iCol);
     if ~isbaddirection(fstEll, secEll, dirVec)
         goodDirMat = [goodDirMat dirVec];
-        extApprEllVec = [extApprEllVec minksum_ea([minkdiff_ea(fstEll, ...
-            secEll, dirVec) inpEllVec], dirVec)];
+        extApprEllVec = [extApprEllVec ...
+            minksum_ea([minkdiff_ea(fstEll, secEll, dirVec) ...
+            inpEllVec], dirVec)];
     end
 end
 

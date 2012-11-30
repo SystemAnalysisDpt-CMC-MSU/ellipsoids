@@ -1,8 +1,9 @@
 function invEllMat = inv(myEllMat)
 %
 % INV - inverts shape matrices of ellipsoids in the given array.
-%   I = INV(myEllMat)  Inverts shape matrices of ellipsoids in the
-%       array myEllMat. In case shape matrix is sigular, it is
+%
+%   invEllMat = INV(myEllMat)  Inverts shape matrices of ellipsoids
+%       in the array myEllMat. In case shape matrix is sigular, it is
 %       regularized before inversion.
 %
 % Input:

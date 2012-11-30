@@ -4,7 +4,7 @@ function display(myEllMat)
 %
 % Input:
 %   regular:
-%       myEllMat: ellipsod [mRows, nCols] - matrix of ellipsoids.
+%       myEllMat: ellipsoid [mRows, nCols] - matrix of ellipsoids.
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $

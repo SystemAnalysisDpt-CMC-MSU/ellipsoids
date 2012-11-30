@@ -1,12 +1,16 @@
 function intApprEllVec = minkmp_ia(fstEll, secEll, inpEllMat, dirMat)
 %
 % MINKMP_IA - computation of internal approximating ellipsoids
-%             of (E0 - E) + (E1 + ... + En) in given directions.
+%             of (E - Em) + (E1 + ... + En) along given directions.
+%             where E = fstEll, Em = secEll,
+%             E1, E2, ..., En - are ellipsoids in sumEllMat
 %
-%   IA = MINKMP_IA(E0, E, EE, L)  Computes internal approximating
-%       ellipsoids of (E0 - E) + (E1 + E2 + ... + En),
-%       where E1, E2, ..., En are ellipsoids in array EE,
-%       in directions specified by columns of matrix L.
+%   intApprEllVec = MINKMP_IA(fstEll, secEll, inpEllMat, dirMat) -
+%       Computes internal approximating
+%       ellipsoids of (E - Em) + (E1 + E2 + ... + En),
+%       where E1, E2, ..., En are ellipsoids in array inpEllMat,
+%       E = fstEll, Em = secEll,
+%       along directions specified by columns of matrix dirMat.
 %
 % Input:
 %   regular:
@@ -16,7 +20,7 @@ function intApprEllVec = minkmp_ia(fstEll, secEll, inpEllMat, dirMat)
 %           of the same dimention.
 %       inpEllMat: ellipsoid [1, nCols] - array of ellipsoids
 %           of the same dimentions.
-%       dirMat: numeric[nDim, nCols] - matrix whose columns specify the
+%       dirMat: double[nDim, nCols] - matrix whose columns specify the
 %           directions for which the approximations should be computed.
 %
 % Output:
@@ -83,8 +87,9 @@ for iCol = 1:nCols
     dirVec = dirMat(:, iCol);
     if ~isbaddirection(fstEll, secEll, dirVec)
         goodDirMat = [goodDirMat dirVec];
-        intApprEllVec = [intApprEllVec minksum_ia([minkdiff_ia(fstEll, ...
-            secEll, dirVec) inpEllVec], dirVec)];
+        intApprEllVec = [intApprEllVec ...
+            minksum_ia([minkdiff_ia(fstEll, secEll, dirVec) ...
+            inpEllVec], dirVec)];
     end
 end
 

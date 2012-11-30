@@ -4,7 +4,7 @@ function isPositiveMat = isdegenerate(myEllMat)
 %
 % Input:
 %   regular:
-%       myEllMat: ellipsod [mRows, nCols] - single ellipsoid.
+%       myEllMat: ellipsoid [mRows, nCols] - single ellipsoid.
 %
 % Output:
 %   isResMat: logical[mRows, nCols], isPositiveMat(iRow, jCol) = true 

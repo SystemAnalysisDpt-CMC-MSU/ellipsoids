@@ -1,20 +1,20 @@
-function isBadDirVec = isbaddirection(minEll, subEll, dirsMat)
+function isBadDirVec = isbaddirection(fstEll, secEll, dirsMat)
 %
 % ISBADDIRECTION - checks if ellipsoidal approximations of geometric
 %                  difference of two ellipsoids can be computed for
 %                  given directions.
-%   RES = ISBADDIRECTION(minEll, subEll, dirsMat)  Checks if it is
-%       possible to build ellipsoidal approximation of the geometric
-%       difference of two ellipsoids minEll - subEll in directions
-%       specified by matrix dirsMat (columns of dirsMat are
-%       direction vectors). Type 'help minkdiff_ea' or
+%   isBadDirVec = ISBADDIRECTION(fstEll, secEll, dirsMat) - Checks if
+%       it is possible to build ellipsoidal approximation of the
+%       geometric difference of two ellipsoids fstEll - secEll in
+%       directions specified by matrix dirsMat (columns of dirsMat
+%       are direction vectors). Type 'help minkdiff_ea' or
 %       'help minkdiff_ia' for more information.
 %
 % Input:
 %   regular:
-%       minEll: ellipsod [1, 1] - first ellipsoid. Suppose nDim - space
-%       dimension.
-%       subEll: ellipsod [1, 1] - second ellipsoid of the same dimention.
+%       fstEll: ellipsoid [1, 1] - first ellipsoid. Suppose nDim - space
+%           dimension.
+%       secEll: ellipsoid [1, 1] - second ellipsoid of the same dimention.
 %       dirsMat: numeric[nDims, nCols] - matrix whose columns are
 %           direction vectors that need to be checked.
 %
@@ -34,11 +34,11 @@ function isBadDirVec = isbaddirection(minEll, subEll, dirsMat)
 
 import modgen.common.throwwarn;
 
-if ~isbigger(minEll, subEll)
+if ~isbigger(fstEll, secEll)
     fstErrMsg = 'ISBADDIRECTION: geometric difference of these ';
     secErrMsg = 'two ellipsoids is empty set.\n';
     throwwarn('wrongInput:emptyGeomDiff', [fstErrMsg secErrMsg]);
 end
 
-isBadDirVec=ellipsoid.isbaddirectionmat(minEll.shape,...
-    subEll.shape, dirsMat);
+isBadDirVec=ellipsoid.isbaddirectionmat(fstEll.shape,...
+    secEll.shape, dirsMat);

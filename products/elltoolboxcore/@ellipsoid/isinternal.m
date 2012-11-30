@@ -3,17 +3,18 @@ function isPositiveVec = isinternal(myEllMat, matrixOfVecMat, mode)
 % ISINTERNAL - checks if given points belong to the union or intersection
 %              of ellipsoids in the given array.
 %
-%   RES = ISINTERNAL(E, X, s)  Checks if vectors specified as columns of
-%       matrix X belong to the union (s = 'u'), or
-%       intersection (s = 'i') of the ellipsoids in E.
-%       If E is a single ellipsoid, then this function
-%       checks if points in X belong to E or not.
-%       Ellipsoids in E must be of the same dimension.
-%       Column size of matrix X should match the dimension of ellipsoids.
+%   isPositiveVec = ISINTERNAL(myEllMat,  matrixOfVecMat, mode) - Checks
+%       if vectors specified as columns of matrix matrixOfVecMat
+%       belong to the union (mode = 'u'), or intersection (mode = 'i')
+%       of the ellipsoids in myEllMat. If myEllMat is a single
+%       ellipsoid, then this function checks if points in matrixOfVecMat
+%       belong to myEllMat or not. Ellipsoids in E must be
+%       of the same dimension. Column size of matrix  matrixOfVecMat
+%       should match the dimension of ellipsoids.
 %
-%    Let E(q, Q) be an ellipsoid with center q and shape matrix Q.
-%    Checking if given vector x belongs to E(q, Q) is equivalent
-%    to checking if inequality
+%    Let myEllMat(iEll) = E(q, Q) be an ellipsoid with center q and shape
+%    matrix Q. Checking if given vector matrixOfVecMat = x belongs
+%    to E(q, Q) is equivalent to checking if inequality
 %                    <(x - q), Q^(-1)(x - q)> <= 1
 %    holds.
 %    If x belongs to at least one of the ellipsoids in the array, then it
@@ -26,12 +27,12 @@ function isPositiveVec = isinternal(myEllMat, matrixOfVecMat, mode)
 %
 % Input:
 %   regular:
-%       myEllMat: ellipsod [mRowsOfEllMat, nColsOfEllMat] - matrix
+%       myEllMat: ellipsoid [mRowsOfEllMat, nColsOfEllMat] - matrix
 %           of ellipsoids.
 %       matrixOfVecMat: double [mRows, nColsOfVec] - matrix which
 %           specifiy points.
 %
-%   properties:
+%   optional:
 %       mode: char[1, 1] - 'u' or 'i', go to description.
 %
 % Output:
@@ -101,7 +102,8 @@ function isPositive = isinternal_sub(myEllMat, xVec, mode, mRows)
 %       myEllMat: ellipsod [mRowsOfEllMat, nColsOfEllMat] - matrix of
 %           ellipsoids.
 %       xVec: double [mRows, 1] - matrix which specifiy points.
-%       mRows: double[1, 1] - dimension of ellipsoids in myEllMat and xVec.
+%       mRows: double[1, 1] - dimension of ellipsoids
+%           in myEllMat and xVec.
 %
 %   properties:
 %       mode: char[1, 1] - 'u' or 'i', go to description.
@@ -131,7 +133,8 @@ for iEllRow = 1:mEllRows
         
         if rank(myEllShMat) < mRows
             if Properties.getIsVerbose()
-                fstFprintStr = 'ISINTERNAL: Warning! There is degenerate ';
+                fstFprintStr = ...
+                    'ISINTERNAL: Warning! There is degenerate ';
                 secFprintStr = 'ellipsoid in the array.\n';
                 fprintf([fstFprintStr secFprintStr]);
                 fprintf('            Regularizing...\n');
@@ -142,12 +145,14 @@ for iEllRow = 1:mEllRows
         
         rScal = myEllCentVec' * ell_inv(myEllShMat) * myEllCentVec;
         if (mode == 'u')
-            if (rScal < 1) || (abs(rScal - 1) < absTolMat(iEllRow,jEllCol))
+            if (rScal < 1) || (abs(rScal - 1) ...
+                    < absTolMat(iEllRow,jEllCol))
                 isPositive = true;
                 return;
             end
         else
-            if (rScal > 1) && (abs(rScal - 1) > absTolMat(iEllRow,jEllCol))
+            if (rScal > 1) && (abs(rScal - 1) ...
+                    > absTolMat(iEllRow,jEllCol))
                 isPositive = false;
                 return;
             end
