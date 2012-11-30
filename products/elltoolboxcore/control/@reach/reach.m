@@ -1,6 +1,6 @@
 classdef reach
 %REACH class of reach sets
-    properties (Access=private)
+    properties (Access=public)
         absTol
         relTol 
         nPlot2dPoints

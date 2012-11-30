@@ -236,6 +236,80 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
         end
     end
     methods
+        function cutEllTubeRel = cut(self, cutTimeVec)
+            SData = self.getData();
+            %
+            if numel(cutTimeVec) == 1
+                cutTimeVec = [cutTimeVec(1) cutTimeVec(1)];
+            end
+            if numel(cutTimeVec) ~= 2
+                throwerror(['Reach:cut:input vector should ',...
+                    'contain 1 or 2 elements']);
+            end
+            nTuples = self.getNElems();
+            s0 = cutTimeVec(1);
+            s1 = cutTimeVec(2);
+            if s0 > s1
+                throwerror('Reach:cut:s0 must be LEQ than s1');
+            end
+            for iTuple = 1 : nTuples
+                timeVec = SData.timeVec{iTuple};
+                t0 = timeVec(1);
+                t1 = timeVec(end);
+                if s0 < t0 || s0 > t1 || s1 < t0 || s1 > t1
+                    throwerror('Reach:cut:wrong input format');
+                end
+                indLower = timeVec < s0;
+                indGreater = timeVec > s1;
+                if cutTimeVec(1) == cutTimeVec(2)
+                    indClosest = find(indLower, 1, 'last');
+                    indNewTimeVec = false(size(indLower));
+                    indNewTimeVec(indClosest) = true;
+                else
+                    indNewTimeVec = ~ (indLower | indGreater);
+                end
+                newTimeVec = SData.timeVec{iTuple}(indNewTimeVec);
+                % s0 ans s1 may not be in timeVec
+                newS0 = newTimeVec(1);
+                newS1 = newTimeVec(end);
+                sTime = SData.sTime(iTuple);
+                if newS0 <= sTime && sTime <= newS1
+                    newSTime = sTime;
+                    newIndSTime = find(newTimeVec == newSTime, 1);
+                else
+                    newSTime = newTimeVec(1);
+                    newIndSTime = 1;
+                end
+                SData.timeVec{iTuple} = newTimeVec;
+                SData.sTime(iTuple) = newSTime;
+                SData.indSTime(iTuple) = newIndSTime;
+                SData.QArray{iTuple} =...
+                    SData.QArray{iTuple}(:, :, indNewTimeVec);
+                SData.aMat{iTuple} =...
+                    SData.aMat{iTuple}(:, indNewTimeVec);
+                SData.MArray{iTuple} =...
+                SData.MArray{iTuple}(:, :, indNewTimeVec);
+                SData.ltGoodDirMat{iTuple} =...
+                    SData.ltGoodDirMat{iTuple}(:, indNewTimeVec);
+                SData.lsGoodDirVec{iTuple} =...
+                    SData.ltGoodDirMat{iTuple}(:, newIndSTime);
+                SData.ltGoodDirNormVec{iTuple} =...
+                    SData.ltGoodDirNormVec{iTuple}(indNewTimeVec);
+                SData.lsGoodDirNorm(iTuple) =...
+                    SData.ltGoodDirNormVec{iTuple}(newIndSTime);
+                SData.xTouchCurveMat{iTuple} =...
+                    SData.xTouchCurveMat{iTuple}(:, indNewTimeVec);
+                SData.xsTouchVec{iTuple} =...
+                    SData.xTouchCurveMat{iTuple}(:, newIndSTime);
+                SData.xTouchOpCurveMat{iTuple} =...
+                    SData.xTouchOpCurveMat{iTuple}(:, indNewTimeVec);
+                SData.xsTouchOpVec{iTuple} =...
+                    SData.xTouchOpCurveMat{iTuple}(:, newIndSTime);
+            end
+            cutEllTubeRel = ...
+                gras.ellapx.smartdb.rels.EllTube.fromStructList(...
+                'gras.ellapx.smartdb.rels.EllTube', {SData});
+        end
         function scale(self,fCalcFactor,fieldNameList)
             import gras.ellapx.smartdb.rels.EllTubeBasic;
             scaleFactorVec=self.applyTupleGetFunc(fCalcFactor,...

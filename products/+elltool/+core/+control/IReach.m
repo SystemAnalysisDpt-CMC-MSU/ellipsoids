@@ -1,0 +1,20 @@
+classdef IReach < handle
+    methods (Abstract)
+        plot_ea(self)
+        plot_ia(self)
+        display(self)
+        isProj = isprojection(self)
+        isCut = iscut(self)
+        cutObj = cut(self, cutTimeVec)
+        [RSdim SSdim] = dimension(self)
+        linSys = get_system(self)
+        [directionsCVec timeVec] = get_directions(self)
+        [trCenterMat timeVec] = get_center(self)
+        [eaEllMat timeVec] = get_ea(self)
+        [iaEllMat timeVec] = get_ia(self)
+        [goodCurvesCVec timeVec] = get_goodcurves(self)
+        projObj = projection(self, projMat)
+        isEmptyIntersect = intersect(self, intersectObj, approxTypeChar)
+        newReachObj = evolve(self, newEndTime, linSys)
+    end
+end

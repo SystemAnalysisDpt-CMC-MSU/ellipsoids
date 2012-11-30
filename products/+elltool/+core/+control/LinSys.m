@@ -38,12 +38,6 @@ classdef LinSys<handle
         %%
         function self = LinSys(AtInpMat, BtInpMat, UBoundsEll, GtInpMat,...
                 distBoundsEll, CtInpMat, noiseBoundsEll, discrFlag)
-            global ellOptions;
-            %
-            if ~isstruct(ellOptions)
-                evalin('base', 'ellipsoids_init;');
-            end
-            %%
             if nargin == 0
                 self.AtMat = [];
                 self.BtMat = [];
@@ -96,7 +90,8 @@ classdef LinSys<handle
                         throwerror('linsys:dimension:U',...
                             'LINSYS: dimensions of control bounds U and matrix B do not match.');
                     end
-                    if (dRows > rCols) && (ellOptions.verbose > 0)
+                    if (dRows > rCols) &&...
+                            (elltool.conf.Properties.getIsVerbose() > 0)
                         fprintf('LINSYS: Warning! Control bounds U represented by degenerate ellipsoid.\n');
                     end
                 elseif isa(UBoundsEll, 'double') || iscell(UBoundsEll)
@@ -253,13 +248,9 @@ classdef LinSys<handle
             self.isConstantBoundsVec = [isCBU isCBV isCBW];
         end
         %
-        %
-        %
         function isEllHaveNeededDim(InpEll, NDim)
         % isEllHaveNeededDim - checks if given structure E represents an ellipsoid
         %                      of dimension N.
-            global ellOptions;
-            %%
             qVec = InpEll.center;
             QMat = InpEll.shape;
             [kRows, lCols] = size(qVec);
@@ -287,7 +278,7 @@ classdef LinSys<handle
             end
             %%
             if iscell(QMat)
-                if ellOptions.verbose > 0
+                if elltool.conf.Properties.getIsVerbose() > 0
                     fprintf('LINSYS: Warning! Cannot check if symbolic matrix is positive definite.\n');
                 end
                 isEqMat = strcmp(QMat, QMat.');
@@ -309,15 +300,7 @@ classdef LinSys<handle
             end
         end
         %
-        %
-        %
         function [stateDim, inpDim, outDim, distDim] = dimension(self)
-            global ellOptions;
-            %%
-            if ~isstruct(ellOptions)
-                evalin('base', 'ellipsoids_init;');
-            end
-            %%
             stateDim = size(self.AtMat, 1);
             inpDim = size(self.BtMat, 2);
             outDim = size(self.CtMat, 1);
@@ -334,8 +317,6 @@ classdef LinSys<handle
             end
             return;
         end
-        %
-        %
         %
         function display(self)
             fprintf('\n');
@@ -525,73 +506,31 @@ classdef LinSys<handle
             return; 
         end
         %
-        %
-        %
         function isDisturbance = hasdisturbance(self)
-            global ellOptions;
-            %%
-            if ~isstruct(ellOptions)
-                evalin('base', 'ellipsoids_init;');
-            end
-            %%
             if  ~isempty(self.disturbanceBoundsEll) && ~isempty(self.GtMat)
                 isDisturbance = true;
             end
         end
         %
-        %
-        %
         function isNoise = hasnoise(self)
-            global ellOptions;
-            %%
-            if ~isstruct(ellOptions)
-                evalin('base', 'ellipsoids_init;');
-            end
-            %%
             isNoise = false;
-            %%
             if ~isempty(self.noiseBoundsEll) 
                 isNoise = true;
             end
         end
         %
-        %
-        %
         function isDiscrete = isdiscrete(self)
-            global ellOptions;
-            %%
-            if ~isstruct(ellOptions)
-                evalin('base', 'ellipsoids_init;');
-            end
-            %%
             isDiscrete = self.isDiscr;
         end
         %
-        %
-        %
         function isEmpty = isempty(self)
-            global ellOptions;
-            %%
-            if ~isstruct(ellOptions)
-                evalin('base', 'ellipsoids_init;');
-            end
-            %%
             isEmpty = false;
-            %%
             if isempty(self.AtMat) 
                 isEmpty = true;
             end
         end
         %
-        %
-        %
         function isLti = islti(self)
-            global ellOptions;
-            %%
-            if ~isstruct(ellOptions)
-                evalin('base', 'ellipsoids_init;');
-            end
-            %%
             isLti = self.isTimeInv;
         end
     end

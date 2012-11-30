@@ -140,8 +140,8 @@ classdef ReachTestCase < mlunit.test_case
             linsysBCMat = {'1' '0'; '0' '1'};
             configQVec = [0; 0];
             configQMat = [2 1; 1 2];
-            controlBiundsMat = eye(2);
-            controlBoundsUEll = ellipsoid(controlBiundsMat);
+            controlBoundsMat = eye(2);
+            controlBoundsUEll = ellipsoid(controlBoundsMat);
             nonStationaryLinsys =...
                 elltool.core.control.LinSys(linsysACMat, linsysBCMat, controlBoundsUEll);
             %% X0:
