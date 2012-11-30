@@ -1,13 +1,36 @@
 function [ resEllVec ] = minkDiffEa( ellObj1, ellObj2, dirMat)
-    import elltool.core.Ellipsoid;
+% MINKDIFFEA - computes tight external ellipsoidal approximation for 
+%              Minkowsky difference of two generalized ellipsoids
+%
+% Input:
+%       ellObj1: Ellipsoid: [1,1] - first generalized ellipsoid   
+%       ellObj2: Ellipsoid: [1,1] - second generalized ellipsoid       
+%       dirMat: double[nDim,nDir] - matrix whose columns specify 
+%       directions for which approximations should be computed
+% Output:
+%   resEllVec: Ellipsoid[1,nDir] - vector of generalized ellipsoids of 
+%   external approximation of the dirrence of first and second generalized
+%   ellipsoids (may contain empty ellipsoids if in specified 
+%   directions approximation cannot be computed)
+%
+%
+% $Author: Vitaly Baranov  <vetbar42@gmail.com> $    $Date: 2012-11$ 
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Cybernetics,
+%            System Analysis Department 2012 $
+%
+%
+import elltool.core.Ellipsoid;
     import modgen.common.throwerror
     %
     absTol=Ellipsoid.CHECK_TOL;
     %
-    modgen.common.type.simple.checkgenext(@(x,y)isa(x,'elltool.core.Ellipsoid')&&...
-          isa(y,'elltool.core.Ellipsoid'),2,ellObj1,ellObj2)
+    modgen.common.type.simple.checkgenext(@(x,y)isa(x,...
+        'elltool.core.Ellipsoid')&&isa(y,'elltool.core.Ellipsoid'),...
+        2,ellObj1,ellObj2)
     %
-    modgen.common.type.simple.checkgenext('isscalar(x1)&&isscalar(x2)',2,ellObj1,ellObj2);
+    modgen.common.type.simple.checkgenext('isscalar(x1)&&isscalar(x2)',...
+        2,ellObj1,ellObj2);
     %
     ell1DiagVec=diag(ellObj1.diagMat);
     ell2DiagVec=diag(ellObj2.diagMat);
@@ -76,7 +99,7 @@ function [ resEllVec ] = minkDiffEa( ellObj1, ellObj2, dirMat)
              if ~isempty(resQMat)
                 resEllVec(iDir)=Ellipsoid(resCenterVec,diagQVec,resQMat);
              else
-                resEllVec(iDir)=[];
+                resEllVec(iDir)=Ellipsoid();
              end
          else
              %Finite case
@@ -86,7 +109,7 @@ function [ resEllVec ] = minkDiffEa( ellObj1, ellObj2, dirMat)
                 %Non-degenerate
                 resQMat=findDiffEaND(ellQ1Mat,ellQ2Mat,curDirVec,absTol);
                 if isempty(resQMat)
-                    resEllVec(iDir)=[];
+                    resEllVec(iDir)=Ellipsoid();
                 else
                     resEllVec(iDir)=Ellipsoid(resCenterVec,resQMat);
                 end
@@ -108,10 +131,10 @@ function [ resEllVec ] = minkDiffEa( ellObj1, ellObj2, dirMat)
                 projQ1Mat=0.5*(projQ1Mat+projQ1Mat.');
                 projQ2Mat=nonZeroBasMat.'*ellQ2Mat*nonZeroBasMat;
                 projQ2Mat=0.5*(projQ2Mat+projQ2Mat.');
-                resProjQMat=findDiffEaND(projQ1Mat,projQ2Mat,projCurDirVec,...
-                    absTol);
+                resProjQMat=findDiffEaND(projQ1Mat,...
+                    projQ2Mat,projCurDirVec,absTol);
                 if isempty(resProjQMat)
-                    resEllVec(iDir)=[];
+                    resEllVec(iDir)=Ellipsoid();
                 else
                     %Construct the result
                     [eigPMat diaPMat]=eig(resProjQMat);
@@ -131,7 +154,8 @@ function [ resEllVec ] = minkDiffEa( ellObj1, ellObj2, dirMat)
     end
 end
 %
-function resEllMat=findDiffEaFC(ellQ1Mat, ellQ2Mat,curDirVec,nDimSpace,absTol)
+function resEllMat=findDiffEaFC(ellQ1Mat, ellQ2Mat,curDirVec,...
+    nDimSpace,absTol)
     [eigv1Mat dia1Mat]=eig(ellQ1Mat);
     ell1DiagVec=diag(dia1Mat);
     %
@@ -170,134 +194,19 @@ function resEllMat=findDiffEaFC(ellQ1Mat, ellQ2Mat,curDirVec,nDimSpace,absTol)
      end
 end
 %
-function [orthBasMat rang]=findBasRang(qMat,absTol)
-    [orthBasMat rBasMat]=qr(qMat);
-    if size(rBasMat,2)==1
-        isNeg=rBasMat(1)<0;
-        orthBasMat(:,isNeg)=-orthBasMat(:,isNeg);
-    else
-        isNegVec=diag(rBasMat)<0;
-        orthBasMat(:,isNegVec)=-orthBasMat(:,isNegVec);
-    end
-    tolerance = absTol*norm(qMat,'fro');
-    rang = sum(abs(diag(rBasMat)) > tolerance);
-    rang = rang(1); %for case where rBasZMat is vector.
-end
-function isBigger=checkBigger(ellObj1,ellObj2,nDimSpace,absTol)
-    %Algorithm: 
-    %First construct orthogonal basises of infinite directions for both
-    %ellipsoids and then check that these directions are collinear. 
-    %Then find projections on nonifinite basis, whis is the same for two
-    %ellipsoids. Then find zero directions among this basis for each of the
-    %ellipsoids ans check that directions in first ellipsoid correspond 
-    %to zero directions of the second. Finally, project every ellipsoids
-    %on basis that doesnt contain zero directions for first ellipsoid and
-    %then use simultaneos diagonalization. 
-    %
-    %Find infinite directions for each of the ellipsoids
-    eigv1Mat=ellObj1.eigvMat;
-    eigv2Mat=ellObj2.eigvMat;
-    diag1Mat=ellObj1.diagMat;
-    diag2Mat=ellObj2.diagMat;
-    isInf1DirVec=diag(diag1Mat)==Inf;
-    isInf2DirVec=diag(diag2Mat)==Inf;
-    allInfDir1Mat=eigv1Mat(:,isInf1DirVec);
-    allInfDir2Mat=eigv2Mat(:,isInf2DirVec);
-    %Find basis for first ell
-    [orthBas1Mat rang1Inf]=findBasRang(allInfDir1Mat,absTol);
-    %rangZ>0 since there is at least one zero e.v. Q1
-    finInd1Vec=(rang1Inf+1):nDimSpace; 
-    finBas1Mat = orthBas1Mat(:,finInd1Vec);
-    %Find basis for second ell
-    [orthBas2Mat rang2Inf]=findBasRang(allInfDir2Mat,absTol);
-    %rangZ>0 since there is at least one zero e.v. Q1
-    infInd2Vec=1:rang2Inf; 
-    infBas2Mat=orthBas2Mat(:,infInd2Vec);
-    %
-    if isempty(finBas1Mat)
-        isBigger=true;
-    else
-        if (isempty(infBas2Mat))
-                isInf2SubSInf1=true;
-        else
-            isInf2SubSInf1=all(all(abs(infBas2Mat.'*finBas1Mat)<absTol));
-        end
-        if isInf2SubSInf1
-            %Further we consider only finite directions
-            %Find zero directions of first ell in NonInf Space (Z1) 
-            isZeroDir1Vec=abs(diag(diag1Mat))<absTol;
-            isNInfDir1Vec=~isInf1DirVec;
-            isNotInfAndZeroVec=logical(isNInfDir1Vec.*isZeroDir1Vec);
-            allNIZero1Mat=eigv1Mat(:,isNotInfAndZeroVec);
-            isNotInfAndNotZeroVec=logical((~isInf1DirVec).*(~isZeroDir1Vec));
-            allNINZ1Mat=eigv1Mat(:,isNotInfAndNotZeroVec);
-            %
-            %Zero direction for second
-            isZeroDir2Vec=abs(diag(diag1Mat))<absTol;
-            isNInfDir2Vec=~isInf2DirVec;
-            isNotInfAndZeroVec=logical(isNInfDir2Vec.*isZeroDir2Vec);
-            allNIZero2Mat=eigv2Mat(:,isNotInfAndZeroVec);
-            %Non zero direction in Ell2 should be orthogonal to zero
-            %directions in Ell1
-            if (isempty(allNIZero1Mat)) && (~isempty(allNIZero2Mat))
-                isBigger=false;
-            else
-                if ~isempty(allNIZero2Mat)
-                    auxMat=allNINZ1Mat.'*allNIZero2Mat;
-                    isOrth=all(all(abs(auxMat)<absTol));
-                else
-                    isOrth=true;
-                end
-                if (~isOrth)
-                    isBigger=false;
-                else
-                    %Project ell2 on non-zero directions of ell1
-                    diag1Mat(isInf1DirVec,isInf1DirVec)=0;
-                    curEllMat=eigv1Mat*diag1Mat*eigv1Mat.';
-                    resProjQ1Mat=allNINZ1Mat.'*curEllMat*allNINZ1Mat;
-                    resProjQ1Mat=0.5*(resProjQ1Mat+resProjQ1Mat.');
-                    %
-                    diag2Mat(isInf2DirVec,isInf2DirVec)=0;
-                    curEllMat=eigv2Mat*diag2Mat*eigv2Mat.';
-                    resProjQ2Mat=allNINZ1Mat.'*curEllMat*allNINZ1Mat;
-                    resProjQ2Mat=0.5*(resProjQ2Mat+resProjQ2Mat.');
-                    isBigger=contains(resProjQ1Mat,resProjQ2Mat,absTol);
-                end
-            end
-        else
-            isBigger=false;
-        end
-    end
-end
-%
 function resQMat=findDiffEaND(ellQ1Mat, ellQ2Mat,curDirVec,absTol)
      %Find matrix of ellipsoids that is the result of
-     %external approximation of difference in direction curDirVec   
-     ellSQR1Mat=findSqrtOfMatrix(ellQ1Mat,absTol);
-     ellSQR2Mat=findSqrtOfMatrix(ellQ2Mat,absTol);
-     %Checking "goodness" of direction
-     ellInvQ1Mat=ellQ1Mat\eye(size(ellQ1Mat));
-     [~,diagMat]=eig(ellQ2Mat*ellInvQ1Mat);
-     lamMax=max(diag(diagMat));
-     %
-     p1Par=sqrt(curDirVec.'*ellQ1Mat*curDirVec);
-     p2Par=sqrt(curDirVec.'*ellQ2Mat*curDirVec);
-     pPar=p2Par/p1Par;
-     if (pPar>lamMax && pPar<1)
-        sOrthMat=  gras.la.orthtransl(ellSQR2Mat*curDirVec,ellSQR1Mat*curDirVec);
+     %external approximation of difference in direction curDirVec         
+     import elltool.core.Ellipsoid;
+     if isGoodDir(ellQ1Mat,ellQ2Mat,curDirVec)
+        ellSQR1Mat=findSqrtOfMatrix(ellQ1Mat,absTol);
+        ellSQR2Mat=findSqrtOfMatrix(ellQ2Mat,absTol);
+        sOrthMat=  gras.la.orthtransl(ellSQR2Mat*curDirVec,...
+            ellSQR1Mat*curDirVec);
         auxMat=ellSQR1Mat-sOrthMat*ellSQR2Mat;
         resQMat=auxMat.'*auxMat;
         resQMat=0.5*(resQMat+resQMat.');
      else
          resQMat=[];
      end
-end
-function isContained=contains(ellQ1Mat,ellQ2Mat,absTol)
-    isContained=min(eig(ellQ1Mat-ellQ2Mat))>=-absTol;  
-end
-function sqMat=findSqrtOfMatrix(qMat,absTol)
-    [eigvMat diagMat]=eig(qMat);
-    isZeroVec=diag(abs(diagMat)<absTol);
-    diagMat(isZeroVec,isZeroVec)=0;
-    sqMat=eigvMat*diagMat.^(1/2)*eigvMat.';
 end

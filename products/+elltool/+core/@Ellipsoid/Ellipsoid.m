@@ -167,5 +167,11 @@ classdef Ellipsoid < handle
             end
         end
     end
+    methods ( Access = private)
+      isOk = isGoodDir(ellQ1Mat,ellQ2Mat,dirVec)     
+      sqMat = findSqrtOfMatrix(qMat,absTol)
+      isBigger=checkBigger(ellObj1,ellObj2,nDimSpace,absTol)
+      [isInfVec infDirEigMat] = findAllInfDir(ellObj)
+    end
 end
 

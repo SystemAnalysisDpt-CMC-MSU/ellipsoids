@@ -1,4 +1,17 @@
 function ellInvObj = inv( ellObj )
+% INV - create generalized ellipsoid whose matrix in pseudoinverse 
+%   to the matrix of input generalized ellipsoid 
+% Input:
+%       ellObj: Ellipsoid: [1,1] - generalized ellipsoid
+% Output:
+%   ellInvObj: Ellipsoid: [1,1] - inverse generalized ellipsoid
+%
+% $Author: Vitaly Baranov  <vetbar42@gmail.com> $    $Date: 2012-11$ 
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Cybernetics,
+%            System Analysis Department 2012 $
+%
+%
     import elltool.core.Ellipsoid;    
     import elltool.conf.Properties;
     modgen.common.type.simple.checkgenext(@(x)isa(x,'elltool.core.Ellipsoid'),...
@@ -16,4 +29,3 @@ function ellInvObj = inv( ellObj )
     diagVec(isZeroVec)=Inf;
     ellInvObj=Ellipsoid(ellObj.centerVec,diagVec,ellObj.eigvMat);
 end
-

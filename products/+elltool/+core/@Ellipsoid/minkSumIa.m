@@ -1,4 +1,23 @@
 function [ ellResVec ] = minkSumIa(ellObjVec, dirMat )
+% MINKSUMIA - computes tight internal ellipsoidal approximation for 
+%              Minkowsky sum of the set of generalized ellipsoids
+%
+% Input:
+%       ellObjVec: Ellipsoid: [kSize,mSize] - vector of  generalized 
+%                                           ellipsoid   
+%       dirMat: double[nDim,nDir] - matrix whose columns specify 
+%       directions for which approximations should be computed
+% Output:
+%   ellResVec: Ellipsoid[1,nDir] - vector of generalized ellipsoids of 
+%   internal approximation of the dirrence of first and second generalized
+%   ellipsoids
+%
+% $Author: Vitaly Baranov  <vetbar42@gmail.com> $    $Date: 2012-11$ 
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Cybernetics,
+%            System Analysis Department 2012 $
+%
+%
     import elltool.core.Ellipsoid;
     import modgen.common.throwerror
     %
@@ -8,7 +27,8 @@ function [ ellResVec ] = minkSumIa(ellObjVec, dirMat )
         'elltool.core.Ellipsoid')&&ismatrix(y),2,ellObjVec,dirMat)
     %
     ellObjVec=ellObjVec(:).';
-    dimsSpaceVec=ellSpaceDimension(ellObjVec);
+    fSizeFirst=@(ellObj)size(ellObj.diagMat,1);
+    dimsSpaceVec=arrayfun(fSizeFirst,ellObjVec);
     minDimSpace=min(min(dimsSpaceVec));
     maxDimSpace=max(max(dimsSpaceVec));
     if (minDimSpace~=maxDimSpace)
@@ -20,7 +40,8 @@ function [ ellResVec ] = minkSumIa(ellObjVec, dirMat )
     [mDirSize nDirSize]=size(dirMat);
     if (mDirSize~=dimSpace)
         msgStr=sprintf(...
-            'MINKSUM_IA: second argument must be vector(s) in R^%d',dimSpace);
+            'MINKSUM_IA: second argument must be vector(s) in R^%d',...
+            dimSpace);
         throwerror('wrongDir',msgStr);
     end
     %
@@ -68,9 +89,10 @@ function [ ellResVec ] = minkSumIa(ellObjVec, dirMat )
                         curEllMat=eigvMat*diagMat*eigvMat.';
                         projQMat=nonInfBasMat.'*curEllMat*nonInfBasMat;
                         projQMat=0.5*(projQMat+projQMat.');
-                        projCenVec=nonInfBasMat.'*ellObjVec(iEll).centerVec;
-                        %add to the total sum of projection, finding a proper
-                        %approximation
+                        projCenVec=nonInfBasMat.'*...
+                            ellObjVec(iEll).centerVec;
+                        %add to the total sum of projection, finding a 
+                        %proper approximation
                         projQMat=findSqrtOfMatrix(projQMat,absTol);
                         if (iEll==1)
                             qNICenVec=projCenVec;
@@ -89,7 +111,8 @@ function [ ellResVec ] = minkSumIa(ellObjVec, dirMat )
                                 orthSNIMat=0;
                             else
                                 if (isBeenFirst)
-                                    orthSNIMat=gras.la.orthtransl(curAuxVec,firstVec);                            
+                                    orthSNIMat=...
+                                        gras.la.orthtransl(curAuxVec,firstVec);                            
                                 else
                                     firstVec=curAuxVec;
                                     orthSNIMat=eye(nNonInf);
@@ -114,7 +137,8 @@ function [ ellResVec ] = minkSumIa(ellObjVec, dirMat )
                     qCenVec=zeros(dimSpace,1);
                     qCenVec(finIndVec)=qNICenVec;
                     resEllMat=0.5*(resEllMat+resEllMat);
-                    ellResVec(iDir)=Ellipsoid(qCenVec,resDiagVec,resEllMat);
+                    ellResVec(iDir)=Ellipsoid(qCenVec,...
+                        resDiagVec,resEllMat);
                 end
             else %finite case, degenerate included
                 isBeenFirst=false;
@@ -138,7 +162,8 @@ function [ ellResVec ] = minkSumIa(ellObjVec, dirMat )
                             orthSMat=0;
                         else
                             if (isBeenFirst)
-                                orthSMat=gras.la.orthtransl(auxVec,firstVec);
+                                orthSMat=...
+                                    gras.la.orthtransl(auxVec,firstVec);
                             else
                                 orthSMat=eye(dimSpace);
                                 isBeenFirst=true;
@@ -154,37 +179,8 @@ function [ ellResVec ] = minkSumIa(ellObjVec, dirMat )
         end
     end
 end
-function dimsMat=ellSpaceDimension(ellObjMat)
-    import elltool.core.Ellipsoid;
-    [mSize kSize]=size(ellObjMat);
-    dimsMat=zeros(mSize,kSize);
-    for iInd=1:mSize
-        for jInd=1:kSize
-            dimsMat(iInd,jInd)=size(ellObjMat(iInd,jInd).diagMat,1);
-        end
-    end
-end       
 function [isInfVec infDirEigMat] = findAllInfDir(ellObj)
     isInfVec=(diag(ellObj.diagMat)==Inf);
     eigvMat=ellObj.eigvMat;
     infDirEigMat=eigvMat(:,isInfVec);
 end
-function sqMat=findSqrtOfMatrix(qMat,absTol)
-    [eigvMat diagMat]=eig(qMat);
-    isZeroVec=diag(abs(diagMat)<absTol);
-    diagMat(isZeroVec,isZeroVec)=0;
-    sqMat=eigvMat*diagMat.^(1/2)*eigvMat.';
-end
-function [orthBasMat rang]=findBasRang(qMat,absTol)
-    [orthBasMat rBasMat]=qr(qMat);
-    if size(rBasMat,2)==1
-        isNeg=rBasMat(1)<0;
-        orthBasMat(:,isNeg)=-orthBasMat(:,isNeg);
-    else
-        isNegVec=diag(rBasMat)<0;
-        orthBasMat(:,isNegVec)=-orthBasMat(:,isNegVec);
-    end
-    tolerance = absTol*norm(qMat,'fro');
-    rang = sum(abs(diag(rBasMat)) > tolerance);
-    rang = rang(1); %for case where rBasZMat is vector.
-end              
