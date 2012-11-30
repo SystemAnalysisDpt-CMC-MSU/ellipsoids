@@ -1,4 +1,4 @@
-function checkgen(x,typeSpec,varName)
+function checkgen(x,typeSpec,varargin)
 % CHECKGEN checks a generic condition provided by typeSpec string in the
 % following format: 'isnumeric(x)&&isa(x,'int32')||isscalar(x)' etc
 % In case validation fails an exception is thrown
@@ -13,7 +13,16 @@ function checkgen(x,typeSpec,varName)
 %
 %   optional:
 %       varName: char[1,] - variable name - used optionally instead of
-%           variable name determined auotmatically via inputname(10
+%           variable name determined auotmatically via inputname(1)
+%   properties:
+%
+%       errorTag: char[1,] - tag for MException object thrown
+%           in case of error. If not specified 
+%           '<CALLER_NAME>wrongInput' tag is used
+%
+%       errorMessage: char[1,] - error message for MException object
+%           thrown in case of error. If not specified the message 
+%           is generated automatically.
 %
 %
 % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2012-05-24 $ 
@@ -22,28 +31,4 @@ function checkgen(x,typeSpec,varName)
 %            System Analysis Department 2012 $
 %
 %
-import modgen.common.type.simple.lib.*;
-import modgen.common.throwerror;
-%
-if nargin>2
-    if ~modgen.common.type.simple.lib.isstring(varName)
-        error([upper(mfilename),':wrongInput'],...
-            'varName is expected to be a string');
-    end
-end
-isChar=ischar(typeSpec);
-if isChar&&~eval(typeSpec)||~isChar&&~feval(typeSpec,x)
-    if nargin==2
-        varName=inputname(1);
-    end
-    if ischar(typeSpec)
-        checkName=typeSpec;
-    else
-        checkName=func2str(typeSpec);
-    end
-    %
-    throwerror('wrongInput',...
-        ['%s is expected to comply with all of the following ',...
-        'conditions: %s'],...
-        varName,checkName);
-end
+modgen.common.checkvar(x,typeSpec,varargin{:});

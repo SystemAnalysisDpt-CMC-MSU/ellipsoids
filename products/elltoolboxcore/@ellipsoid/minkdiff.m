@@ -1,254 +1,262 @@
-function [y, Y] = minkdiff(varargin)
+function [centVec, boundPointMat] = minkdiff(varargin)
 %
-% MINKDIFF - computes geometric (Minkowski) difference of two ellipsoids in 2D or 3D.
+% MINKDIFF - computes geometric (Minkowski) difference of two
+%            ellipsoids in 2D or 3D.
 %
+%   MINKDIFF(fstEll, secEll, Options) - Computes geometric difference
+%       of two ellipsoids fstEll - secEll, if 1 <= dimension(fstEll) =
+%       = dimension(secEll) <= 3, and plots it if no output arguments
+%       are specified.
+%   [centVec, boundPointMat] = MINKDIFF(fstEll, secEll)  Computes
+%       geometric difference of two ellipsoids fstEll - secEll.
+%       Here centVec is the center, and boundPointMat - matrix
+%       whose colums are boundary points.
+%   MINKDIFF(fstEll, secEll)  Plots geometric difference of two
+%       ellipsoids fstEll - secEll in default (red) color.
+%   MINKDIFF(fstEll, secEll, Options)  Plots geometric difference
+%       fstEll - secEll using options given in the Options structure.
 %
-% Description:
-% ------------
+%   In order for the geometric difference to be nonempty set,
+%   ellipsoid fstEll must be bigger than secEll in the sense that
+%   if fstEll and secEll had the same center, secEll would be
+%   contained inside fstEll.
 %
-% MINKDIFF(E1, E2, OPTIONS)  Computes geometric difference of two ellipsoids
-%                            E1 - E2, if 1 <= dimension(E1) = dimension(E2) <= 3,
-%                            and plots it if no output arguments are specified.
+% Input:
+%   regular:
+%       fstEll: ellipsoid [1, 1] - first ellipsoid. Suppose
+%           nDim - space dimension, nDim = 2 or 3.
+%       secEll: ellipsoid [1, 1] - second ellipsoid
+%           of the same dimention.
 %
-%    [y, Y] = MINKDIFF(E1, E2)  Computes geometric difference of two ellipsoids
-%                               E1 - E2.
-%                               Here y is the center, and Y - array of
-%                               boundary points.
-%             MINKDIFF(E1, E2)  Plots geometric difference of two ellipsoids
-%                               E1 - E2 in default (red) color.
-%    MINKDIFF(E1, E2, Options)  Plots geometric difference E1 - E2 using options
-%                               given in the Options structure.
-%
-%    In order for the geometric difference to be nonempty set, ellipsoid E1
-%    must be bigger than E2 in the sense that if E1 and E2 had the same center,
-%    E2 would be contained inside E1.
-%
-%
-% Options.show_all     - if 1, displays also ellipsoids E1 and E2.
-% Options.newfigure    - if 1, each plot command will open a new figure window.
-% Options.fill         - if 1, the resulting set in 2D will be filled with color.
-% Options.color        - sets default colors in the form [x y z].
-% Options.shade = 0-1  - level of transparency (0 - transparent, 1 - opaque).
-%
+%   optional:
+%       Options: structure[1, 1] - fields:
+%           show_all: double[1, 1] - if 1, displays
+%               also ellipsoids fstEll and secEll.
+%           newfigure: double[1, 1] - if 1, each plot
+%               command will open a new figure window.
+%           fill: double[1, 1] - if 1, the resulting
+%               set in 2D will be filled with color.
+%           color: double[1, 3] - sets default colors
+%               in the form [x y z].
+%           shade: double[1, 1] = 0-1 - level of transparency
+%               (0 - transparent, 1 - opaque).
 %
 % Output:
-% -------
+%   centVec: double[nDim, 1]/double[0, 0] - center of the resulting set.
+%       centVec may be empty if ellipsoid fsrEll isn't bigger
+%       than secEll.
+%   boundPointMat: double[nDim, nBoundPoints]/double[0, 0] - set of
+%       boundary points (vertices) of resulting set. boundPointMat
+%       may be empty if  ellipsoid fstEll isn't bigger than secEll.
 %
-%    y - center of the resulting set.
-%    Y - set of boundary points (vertices) of resulting set.
-%
-%
-% See also:
-% ---------
-%
-%    ELLIPSOID/ELLIPSOID, MINKDIFF_EA, MINKDIFF_IA, ISBIGGER, ISBADDIRECTION,
-%                         MINKSUM, MINKSUM_EA, MINKSUM_IA.
-%
+% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+% $Copyright:  The Regents of the University of California 2004-2008 $
 
-% 
-% Author:
-% -------
-%
-%    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-%
+import elltool.conf.Properties;
+import modgen.common.throwerror;
 
-  import elltool.conf.Properties;
+if nargin < 2
+    fstStr = 'MINKDIFF: first and second arguments must be ';
+    secStr = 'single ellipsoids.';
+    throwerror('wrongInput', [fstStr secStr]);
+end
 
-  if nargin < 2
-    error('MINKDIFF: first and second arguments must be single ellipsoids.');
-  end
+fstEll = varargin{1};
+secEll = varargin{2};
 
-  E1 = varargin{1};
-  E2 = varargin{2};
+if ~(isa(fstEll, 'ellipsoid')) || ~(isa(secEll, 'ellipsoid'))
+    fstStr = 'MINKDIFF: first and second arguments must be ';
+    secStr = 'single ellipsoids.';
+    throwerror('wrongInput', [fstStr secStr]);
+end
 
-  if ~(isa(E1, 'ellipsoid')) || ~(isa(E2, 'ellipsoid'))
-    error('MINKDIFF: first and second arguments must be single ellipsoids.');
-  end
-
-  if isbigger(E1, E2) == 0
+if isbigger(fstEll, secEll) == 0
     switch nargout
-      case 0,
-        fprintf('Geometric difference of these two ellipsoids is empty set.');
-        return;
-
-      case 1,
-        y = [];
-        return;
-
-      otherwise,
-        y = [];
-        Y = [];
-        return;
-
+        case 0,
+            fstStr = 'Geometric difference of these two ellipsoids';
+            secStr = ' is empty set.';
+            fprintf([fstStr secStr]);
+            return;
+        case 1,
+            centVec = [];
+            return;
+            
+        otherwise,
+            centVec = [];
+            boundPointMat = [];
+            return;
     end
-  end
+end
 
-  if nargin > 2
+if nargin > 2
     if isstruct(varargin{3})
-      Options = varargin{3};
+        Options = varargin{3};
     else
-      Options = [];
+        Options = [];
     end
-  else
+else
     Options = [];
-  end
+end
 
-  if ~isfield(Options, 'newfigure')
+if ~isfield(Options, 'newfigure')
     Options.newfigure = 0;
-  end
+end
 
-  if ~isfield(Options, 'fill')
+if ~isfield(Options, 'fill')
     Options.fill = 0;
-  end
+end
 
-  if ~isfield(Options, 'show_all')
+if ~isfield(Options, 'show_all')
     Options.show_all = 0;
-  end
+end
 
-  if ~isfield(Options, 'color')
+if ~isfield(Options, 'color')
     Options.color = [1 0 0];
-  end
+end
 
-  if ~isfield(Options, 'shade')
+if ~isfield(Options, 'shade')
     Options.shade = 0.4;
-  else
+else
     Options.shade = Options.shade(1, 1);
-  end
+end
 
-  clr  = Options.color;
-  m    = dimension(E1);
-  n    = dimension(E2);
-  if m ~= n
-    error('MINKDIFF: ellipsoids must be of the same dimension.');
-  end
-  if n > 3
-    error('MINKDIFF: ellipsoid dimension must be not higher than 3.');
-  end
+clrVec  = Options.color;
+fstEllDim = dimension(fstEll);
+secEllDim = dimension(secEll);
+if fstEllDim ~= secEllDim
+    throwerror('wrongSizes', ...
+        'MINKDIFF: ellipsoids must be of the same dimension.');
+end
+if secEllDim > 3
+    throwerror('wrongSizes', ...
+        'MINKDIFF: ellipsoid dimension must be not higher than 3.');
+end
 
-  %opts.fill          = Options.fill;
-  %opts.shade(1, 1:2) = Options.shade;
+if nargout == 0
+    isHld = ishold;
+end
 
-  if nargout == 0
-    ih = ishold;
-  end
-
-  if (Options.show_all ~= 0) && (nargout == 0)
-    plot([E1 E2], 'b');
+if (Options.show_all ~= 0) && (nargout == 0)
+    plot([fstEll secEll], 'b');
     hold on;
     if Options.newfigure ~= 0
-      figure;
+        figure;
     else
-      newplot;
+        newplot;
     end
-  end
+end
 
-  if Properties.getIsVerbose()
+if Properties.getIsVerbose()
     if nargout == 0
-      fprintf('Computing and plotting geometric difference of two ellipsoids...\n');
+        fstStr = 'Computing and plotting geometric difference ';
+        secStr = 'of two ellipsoids...\n';
+        fprintf([fstStr secStr]);
     else
-      fprintf('Computing geometric difference of two ellipsoids...\n');
+        fprintf('Computing geometric difference of two ellipsoids...\n');
     end
-  end
-	
-  Q1 = E1.shape;
-  if rank(Q1) < size(Q1, 1)
-    Q1 = ellipsoid.regularize(Q1,E1.absTol);
-  end
-  Q2 = E2.shape;
-  if rank(Q2) < size(Q2, 1)
-    Q2 = ellipsoid.regularize(Q2,E2.absTol);
-  end
-  switch n
+end
+
+fstEllShMat = fstEll.shape;
+if rank(fstEllShMat) < size(fstEllShMat, 1)
+    fstEllShMat = ellipsoid.regularize(fstEllShMat,fstEll.absTol);
+end
+secEllShMat = secEll.shape;
+if rank(secEllShMat) < size(secEllShMat, 1)
+    secEllShMat = ellipsoid.regularize(secEllShMat,secEll.absTol);
+end
+switch secEllDim
     case 2,
-      y      = E1.center - E2.center;
-      phi    = linspace(0, 2*pi, E1.nPlot2dPoints);
-      l = ellipsoid.rm_bad_directions(Q1, Q2, [cos(phi); sin(phi)]);
-      if size(l, 2) > 0
-        [~, Y] = rho(E1, l);
-        [~, X] = rho(E2, l);
-        Y      = Y - X;
-        Y      = [Y Y(:, 1)];
-      else
-        Y = y;
-      end
-      if nargout == 0
-        if Options.fill ~= 0
-          fill(Y(1, :), Y(2, :), clr);
-          hold on;
-        end
-        h = ell_plot(Y);
-        hold on;
-        set(h, 'Color', clr, 'LineWidth', 2);
-        h = ell_plot(y, '.');
-        set(h, 'Color', clr);
-      end
-
-    case 3,
-      y   = E1.center - E2.center;
-      M   = E1.nPlot3dPoints()/2;
-      N   = M/2;
-      psy = linspace(0, pi, N);
-      phi = linspace(0, 2*pi, M);
-      l   = zeros(3,M*(N-2));
-      for i = 2:(N - 1)
-        arr = cos(psy(i))*ones(1, M);
-        l(:,(M*(i-2))+(1:M))   = [cos(phi)*sin(psy(i)); sin(phi)*sin(psy(i)); arr];
-      end
-      l = ellipsoid.rm_bad_directions(Q1, Q2, l);
-      if size(l, 2) > 0
-        [~, Y] = rho(E1, l);
-        [~, X] = rho(E2, l);
-        Y      = Y - X;
-      else
-        Y = y;
-      end
-      if nargout == 0
-        vs   = size(Y, 2);
-        if vs > 1
-          chll = convhulln(Y');
-          patch('Vertices', Y', 'Faces', chll, ...
-                'FaceVertexCData', clr(ones(1, vs), :), 'FaceColor', 'flat', ...
-                'FaceAlpha', Options.shade(1, 1));
+        centVec = fstEll.center - secEll.center;
+        phiVec = linspace(0, 2*pi, fstEll.nPlot2dPoints);
+        lMat = ellipsoid.rm_bad_directions(fstEllShMat, ...
+            secEllShMat, [cos(phiVec); sin(phiVec)]);
+        if size(lMat, 2) > 0
+            [~, boundPointMat] = rho(fstEll, lMat);
+            [~, subBoundPointMat] = rho(secEll, lMat);
+            boundPointMat = boundPointMat - subBoundPointMat;
+            boundPointMat = [boundPointMat boundPointMat(:, 1)];
         else
-          h = ell_plot(y, '*');
-          set(h, 'Color', clr);
+            boundPointMat = centVec;
         end
-        hold on;
-        shading interp;
-        lighting phong;
-        material('metal');
-        view(3);
-        %camlight('headlight','local');
-        %camlight('headlight','local');
-        %camlight('right','local');
-        %camlight('left','local');
-      end
-
+        if nargout == 0
+            if Options.fill ~= 0
+                fill(boundPointMat(1, :), boundPointMat(2, :), clrVec);
+                hold on;
+            end
+            hPlot = ell_plot(boundPointMat);
+            hold on;
+            set(hPlot, 'Color', clrVec, 'LineWidth', 2);
+            hPlot = ell_plot(centVec, '.');
+            set(hPlot, 'Color', clrVec);
+        end
+        
+    case 3,
+        centVec   = fstEll.center - secEll.center;
+        fstEll3dPnt = fstEll.nPlot3dPoints()/2;
+        fstEll3dPntSub = fstEll3dPnt/2;
+        psyVec = linspace(0, pi, fstEll3dPntSub);
+        phiVec = linspace(0, 2*pi, fstEll3dPnt);
+        lMat   = zeros(3,fstEll3dPnt*(fstEll3dPntSub-2));
+        for iFstEll3dPnt = 2:(fstEll3dPntSub - 1)
+            arrVec = cos(psyVec(iFstEll3dPnt))*ones(1, fstEll3dPnt);
+            lMat(:,(fstEll3dPnt*(iFstEll3dPnt-2))+(1:fstEll3dPnt)) ...
+                = [cos(phiVec)*sin(psyVec(iFstEll3dPnt)); ...
+                sin(phiVec)*sin(psyVec(iFstEll3dPnt)); arrVec];
+        end
+        lMat = ellipsoid.rm_bad_directions(fstEllShMat,...
+            secEllShMat, lMat);
+        if size(lMat, 2) > 0
+            [~, boundPointMat] = rho(fstEll, lMat);
+            [~, subBoundPointMat] = rho(secEll, lMat);
+            boundPointMat      = boundPointMat - subBoundPointMat;
+        else
+            boundPointMat = centVec;
+        end
+        if nargout == 0
+            nBoundPonts = size(boundPointMat, 2);
+            if nBoundPonts > 1
+                chllMat = convhulln(boundPointMat');
+                patch('Vertices', boundPointMat', 'Faces', ...
+                    chllMat, 'FaceVertexCData', ...
+                    clrVec(ones(1, nBoundPonts), :), ...
+                    'FaceColor', 'flat', ...
+                    'FaceAlpha', Options.shade(1, 1));
+            else
+                hPlot = ell_plot(centVec, '*');
+                set(hPlot, 'Color', clrVec);
+            end
+            hold on;
+            shading interp;
+            lighting phong;
+            material('metal');
+            view(3);
+        end
+        
     otherwise,
-      y       = E1.center - E2.center;
-      Y(1, 1) = E1.center - E2.center + sqrt(E2.shape) - sqrt(E1.shape);
-      Y(1, 2) = E1.center - E2.center + sqrt(E1.shape) - sqrt(E2.shape);
-      if nargout == 0
-        h = ell_plot(Y);
-        hold on;
-        set(h, 'Color', clr, 'LineWidth', 2);
-        h = ell_plot(y, '*');
-        set(h, 'Color', clr);
-      end
+        centVec = fstEll.center - secEll.center;
+        boundPointMat(1, 1) = fstEll.center - secEll.center + ...
+            sqrt(secEll.shape) - sqrt(fstEll.shape);
+        boundPointMat(1, 2) = fstEll.center - secEll.center + ...
+            sqrt(fstEll.shape) - sqrt(secEll.shape);
+        if nargout == 0
+            hPlot = ell_plot(boundPointMat);
+            hold on;
+            set(hPlot, 'Color', clrVec, 'LineWidth', 2);
+            hPlot = ell_plot(centVec, '*');
+            set(hPlot, 'Color', clrVec);
+        end
+        
+end
 
-  end
-
-  if nargout == 0
-    if ih == 0
-      hold off;
+if nargout == 0
+    if isHld == 0
+        hold off;
     end
-  end
+end
 
-  if nargout == 1
-    y = Y;
-  end
-  if nargout == 0
-    clear y Y;
-  end
-
+if nargout == 1
+    centVec = boundPointMat;
+end
+if nargout == 0
+    clear centVec boundPointMat;
 end

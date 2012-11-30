@@ -1,52 +1,39 @@
-function M = mineig(E)
+function minEigMat = mineig(inpEllMat)
 %
 % MINEIG - return the minimal eigenvalue of the ellipsoid.
 %
-%
-% Description:
-% ------------
-%
-%    M = MINEIG(E)  Returns the smallest eigenvalues of ellipsoids in the array E.
-%
+% Input:
+%   regular:
+%       inpEllMat: ellipsoid [mRows, nCols] - matrix of ellipsoids.
 %
 % Output:
-% -------
+%   minEigMat: double[mRows, nCols] - array of minimal eigenvalues
+%       of ellipsoids in the input array inpEllMat.
 %
-%    M - array of minimal eigenvalues of ellipsoids in the input array E.
-%
-%
-% See also:
-% ---------
-%
-%    ELLIPSOID/ELLIPSOID, ISDEGENERATE, MAXEIG.
-%
+% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+% $Copyright:  The Regents of the University of California 2004-2008 $
 
-%
-% Author:
-% -------
-%
-%    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-%
-  import modgen.common.throwerror;
-  import elltool.conf.Properties;
+import modgen.common.throwerror;
+import elltool.conf.Properties;
 
-  if ~(isa(E, 'ellipsoid'))
-    error('MINEIG: input argument must be ellipsoid.')
-  end
+if ~(isa(inpEllMat, 'ellipsoid'))
+    throwerror('wrongInput', ...
+        'MINEIG: input argument must be ellipsoid.');
+end
 
-  [m, n] = size(E);
-  M = zeros(m,n);
-  for i = 1:m
-    for j = 1:n
-      if isempty(E(i,j))
-          throwerror('wrongInput:emptyEllipsoid','MINEIG: input argument is empty.');
-      end
-      if isdegenerate(E(i, j))
-        M(i,j)=0;
-      else
-        M(i,j) = min(eig(E(i, j).shape));
-      end
+[mRows, nCols] = size(inpEllMat);
+minEigMat = zeros(mRows,nCols);
+for iRow = 1:mRows
+    for jCol = 1:nCols
+        if isempty(inpEllMat(iRow,jCol))
+            throwerror('wrongInput:emptyEllipsoid', ...
+                'MINEIG: input argument is empty.');
+        end
+        if isdegenerate(inpEllMat(iRow, jCol))
+            minEigMat(iRow,jCol)=0;
+        else
+            minEigMat(iRow,jCol) = ...
+                min(eig(inpEllMat(iRow, jCol).shape));
+        end
     end
-  end
-
 end

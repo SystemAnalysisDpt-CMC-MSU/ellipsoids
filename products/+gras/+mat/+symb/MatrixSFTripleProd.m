@@ -17,7 +17,7 @@ classdef MatrixSFTripleProd<gras.mat.IMatrixFunction
         end
         function nRows=getNRows(self)
             nRows=self.nRows;
-        end        
+        end
         function self=MatrixSFTripleProd(formula1CMat,formula2CMat,...
                 formula3CMat)
             %
@@ -47,11 +47,11 @@ classdef MatrixSFTripleProd<gras.mat.IMatrixFunction
                 %
                 self.formula1Func=cellstr2func(formula1CMat,'t');
                 self.formula2Func=cellstr2func(formula2CMat,'t');
-                self.formula3Func=cellstr2func(formula3CMat,'t');                
+                self.formula3Func=cellstr2func(formula3CMat,'t');
             end
         end
         function mSize=getMatrixSize(self)
-            mSize=size(self.mSizeVec);
+            mSize=self.mSizeVec;
         end
         function resArray=evaluate(self,timeVec)
             import gras.gen.MatVector;

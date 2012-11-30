@@ -35,9 +35,9 @@ classdef test_case < mlunit.test_case
             %              file
             %
             %
-            %      marker: char[1,] - marker for the tests, 
-            %          it is displayed in the messages indicating start and 
-            %          end of test runs     
+            %      marker: char[1,] - marker for the tests,
+            %          it is displayed in the messages indicating start and
+            %          end of test runs
             %
             % $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
             % Faculty of Computational Mathematics and Cybernetics, System Analysis
@@ -68,7 +68,7 @@ classdef test_case < mlunit.test_case
                             error([upper(mfilename),':wrongInput'],...
                                 'marker is expected to be a string');
                         end
-                        isMarkerSet=true;                        
+                        isMarkerSet=true;
                 end
             end
             if ~isProfSpec
@@ -76,7 +76,7 @@ classdef test_case < mlunit.test_case
             end
             if isMarkerSet
                 self.set_marker(markerStr);
-            end            
+            end
             self.profMode=profMode;
             self.profDir=fileparts(which(class(self)));
             %
@@ -109,7 +109,7 @@ classdef test_case < mlunit.test_case
             %   regular:
             %       self:
             %       commandStr: char[1,]/function_handle[1,1] - command to execute
-            %       expIdentifier: char[1,] - expected exeption 
+            %       expIdentifier: char[1,] - expected exeption
             %           identifier marker
             %
             %   optional:
@@ -132,7 +132,7 @@ classdef test_case < mlunit.test_case
                 [0,1],...
                 'regDefList',{''},...
                 'regCheckList',{'isstring(x)'});
-            msgCodeStr=reg{1};    
+            msgCodeStr=reg{1};
             %
             try
                 if ischar(commandStr)
@@ -151,15 +151,17 @@ classdef test_case < mlunit.test_case
             end
             mlunit.assert_equals(true,false);
             function checkCode(inpMeObj,fieldName,codeStr)
-                 mlunit.assert_equals(true,...
-                     getIsCodeMatch(meObj,causeCheckDepth,...
-                        fieldName,codeStr),...
-                        sprintf(...
-                        ['\n no match found for field %s ',...
-                        'with pattern %s, ',...
-                        ' exception details: \n %s'],...
-                        fieldName,codeStr,....
-                        modgen.exception.me.obj2plainstr(inpMeObj)))                
+                %
+                errMsg=modgen.exception.me.obj2hypstr(inpMeObj);
+                
+                mlunit.assert_equals(true,...
+                    getIsCodeMatch(meObj,causeCheckDepth,...
+                    fieldName,codeStr),...
+                    sprintf(...
+                    ['\n no match found for field %s ',...
+                    'with pattern %s, ',...
+                    ' exception details: \n %s'],...
+                    fieldName,codeStr,errMsg));
             end
             function isPositive=getIsCodeMatch(inpMeObj,checkDepth,fieldName,codeStr)
                 isPositive=~isempty(strfind(inpMeObj.(fieldName),codeStr));

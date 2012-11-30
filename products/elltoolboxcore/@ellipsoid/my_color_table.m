@@ -1,37 +1,45 @@
-function res = my_color_table(ch)
+function codeVec = my_color_table(colorChar)
 %
-% MY_COLOR_TABLE - returns the code of the color defined by single letter.
+% MY_COLOR_TABLE - returns the code of the color
+%                  defined by single letter.
 %
+% Input:
+%   regular:
+%       colorChar: char[1, 1] - letter defining color.
+%
+% Output:
+%   codeVec: double [1, 3] - code of the color.
+%
+% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+% $Copyright:  The Regents of the University of California 2004-2008 $
 
-  if ~(ischar(ch))
-    res = [0 0 0];
+if ~(ischar(colorChar))
+    codeVec = [0 0 0];
     return;
-  end
+end
 
-  switch ch
+switch colorChar
     case 'r',
-      res = [1 0 0];
-
+        codeVec = [1 0 0];
+        
     case 'g',
-      res = [0 1 0];
-
+        codeVec = [0 1 0];
+        
     case 'b',
-      res = [0 0 1];
-
+        codeVec = [0 0 1];
+        
     case 'y',
-      res = [1 1 0];
-
+        codeVec = [1 1 0];
+        
     case 'c',
-      res = [0 1 1];
-
+        codeVec = [0 1 1];
+        
     case 'm',
-      res = [1 0 1];
-      
+        codeVec = [1 0 1];
+        
     case 'w',
-      res = [1 1 1];
-
+        codeVec = [1 1 1];
+        
     otherwise,
-      res = [0 0 0];
-  end
-
-  return;
+        codeVec = [0 0 0];
+end

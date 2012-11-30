@@ -1,57 +1,44 @@
-function isBadDirVec = isbaddirection(minEll, subEll, dirsMat)
+function isBadDirVec = isbaddirection(fstEll, secEll, dirsMat)
 %
-% ISBADDIRECTION - checks if ellipsoidal approximations of geometric difference
-%                  of two ellipsoids can be computed for given directions.
+% ISBADDIRECTION - checks if ellipsoidal approximations of geometric
+%                  difference of two ellipsoids can be computed for
+%                  given directions.
+%   isBadDirVec = ISBADDIRECTION(fstEll, secEll, dirsMat) - Checks if
+%       it is possible to build ellipsoidal approximation of the
+%       geometric difference of two ellipsoids fstEll - secEll in
+%       directions specified by matrix dirsMat (columns of dirsMat
+%       are direction vectors). Type 'help minkdiff_ea' or
+%       'help minkdiff_ia' for more information.
 %
-%
-% Description:
-% ------------
-%
-%    RES = ISBADDIRECTION(E1, E2, L)  Checks if it is possible to build ellipsoidal
-%                                     approximation of the geometric difference
-%                                     of two ellipsoids E1 - E2 in directions
-%                                     specified by matrix L (columns of L are
-%                                     direction vectors).
-%
-%    Type 'help minkdiff_ea' or 'help minkdiff_ia' for more information.
-%
+% Input:
+%   regular:
+%       fstEll: ellipsoid [1, 1] - first ellipsoid. Suppose nDim - space
+%           dimension.
+%       secEll: ellipsoid [1, 1] - second ellipsoid of the same dimention.
+%       dirsMat: numeric[nDims, nCols] - matrix whose columns are
+%           direction vectors that need to be checked.
 %
 % Output:
-% -------
+%    isBadDirVec: logical[1, nCols] - array of true or false with length
+%       being equal to the number of columns in matrix dirsMat.
+%       ture marks direction vector as bad - ellipsoidal approximation
+%       cannot be computed for this direction. false means the opposite.
 %
-%    isBadDirVec - logical array with length being equal to the number of columns
-%                  in matrix L.
-%                  true marks direction vector as bad - ellipsoidal approximation cannot
-%                  be computed for this direction.
-%                  false means the opposite.
+% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+% $Copyright:  The Regents of the University of California 2004-2008 $
 %
-%
-% See also:
-% ---------
-%
-%    ELLIPSOID/ELLIPSOID, MINKDIFF, MINKDIFF_EA, MINKDIFF_IA.
-%
+% $Author: Rustam Guliev <glvrst@gmail.com>> $  $Date: 10-11-2012$
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2012 $
 
-%
-% Author:
-% -------
-%
-%    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-%    Rustam Guliev <glvrst@gmail.com>
+import modgen.common.throwwarn;
 
+if ~isbigger(fstEll, secEll)
+    fstErrMsg = 'ISBADDIRECTION: geometric difference of these ';
+    secErrMsg = 'two ellipsoids is empty set.\n';
+    throwwarn('wrongInput:emptyGeomDiff', [fstErrMsg secErrMsg]);
+end
 
-  import modgen.common.throwwarn;
-  %import elltool.conf.Properties;
-
-  if ~isbigger(minEll, subEll)
-    %if Properties.getIsVerbose() > 0
-    %  fprintf('ISBADDIRECTION: geometric difference of these two ellipsoids is empty set.\n');
-    %  fprintf('                All directions are bad.\n'); 
-    %end
-    throwwarn('wrongInput:emptyGeomDiff',...
-        'ISBADDIRECTION: geometric difference of these two ellipsoids is empty set.\n');  
-  end
-
-  isBadDirVec=ellipsoid.isbaddirectionmat(minEll.shape, subEll.shape, dirsMat);
-
-
+isBadDirVec=ellipsoid.isbaddirectionmat(fstEll.shape,...
+    secEll.shape, dirsMat);

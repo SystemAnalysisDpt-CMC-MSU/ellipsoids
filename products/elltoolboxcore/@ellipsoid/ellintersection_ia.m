@@ -1,7 +1,8 @@
 function outEll = ellintersection_ia(inpEllMat)
 %
-% ELLINTERSECTION_IA - computes maximum volume ellipsoid that is contained
-%                      in the intersection of given ellipsoids.
+% ELLINTERSECTION_IA - computes maximum volume ellipsoid that is
+%                      contained in the intersection of
+%                      given ellipsoids.
 %
 % Input:
 %   regular:
@@ -15,7 +16,7 @@ function outEll = ellintersection_ia(inpEllMat)
 % $Copyright:  The Regents of the University of California 2004-2008 $
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
-% $Author: Vadim Kaushanskiy <vkaushanskiy@gmail.com> $  $Date: 10-11-2012$
+% $Author: Vadim Kaushanskiy <vkaushanskiy@gmail.com>$ $Date: 10-11-2012$
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
@@ -29,8 +30,9 @@ minEllDim   = min(min(ellDimensions));
 maxEllDim   = max(max(ellDimensions));
 
 if minEllDim ~= maxEllDim
-    throwerror('wrongSizes',...
-        'ELLINTERSECTION_IA: all ellipsoids must be of the same dimension.');
+    fstStr = 'ELLINTERSECTION_IA: all ellipsoids must ';
+    secStr = 'be of the same dimension.';
+    throwerror('wrongSizes', [fstStr secStr]);
 end
 
 [mRows, nCols] = size(inpEllMat);
@@ -52,7 +54,8 @@ subject to
 for iEllipsoid = 1:nEllipsoids
     [inpEllcenrVec, inpEllShMat] = double(inpEllMat(iEllipsoid));
     if rank(inpEllShMat) < minEllDim
-        inpEllShMat = ellipsoid.regularize(inpEllShMat,absTolVec(iEllipsoid));
+        inpEllShMat = ...
+            ellipsoid.regularize(inpEllShMat,absTolVec(iEllipsoid));
     end
     invShMat     = ell_inv(inpEllShMat);
     bVec     = -invShMat * inpEllcenrVec;
@@ -60,8 +63,10 @@ for iEllipsoid = 1:nEllipsoids
     [ (-cvxDirVec(iEllipsoid)-constraint+bVec'*inpEllShMat*bVec), ...
         zeros(minEllDim,1)', (cvxEllCenterVec + inpEllShMat*bVec)' ;
         
-        zeros(minEllDim,1), cvxDirVec(iEllipsoid)*eye(minEllDim), cvxEllMat;
-        (cvxEllCenterVec + inpEllShMat*bVec), cvxEllMat, inpEllShMat] >= 0;
+        zeros(minEllDim,1), ...
+        cvxDirVec(iEllipsoid)*eye(minEllDim), cvxEllMat;
+        (cvxEllCenterVec + inpEllShMat*bVec), ...
+        cvxEllMat, inpEllShMat] >= 0;
 end
 
 cvx_end
@@ -73,7 +78,8 @@ if strcmp(cvx_status,'Infeasible') || ...
 end;
 
 if rank(cvxEllMat) < minEllDim
-    cvxEllMat = ellipsoid.regularize(cvxEllMat,min(getAbsTol(inpEllMat(:))));
+    cvxEllMat = ...
+        ellipsoid.regularize(cvxEllMat,min(getAbsTol(inpEllMat(:))));
 end
 
 ellMat = cvxEllMat * cvxEllMat';

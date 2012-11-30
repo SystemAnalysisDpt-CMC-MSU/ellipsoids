@@ -31,60 +31,13 @@ function checkgenext(typeSpec,nPlaceHolders,varargin)
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2011 $
 %
-%
-import modgen.common.type.simple.lib.*;
-import modgen.common.throwerror;
-%
-nVarArgs=length(varargin);
-if isempty(nPlaceHolders)
-    nPlaceHolders=nVarArgs;
+nArgs=nargin;
+nVarNames=nArgs-2-nPlaceHolders;
+nExtVars=nPlaceHolders-nVarNames;
+varNameList=[varargin(nPlaceHolders+1:end),cell(1,nExtVars)];
+for iVar=nVarNames+1:nPlaceHolders
+    varNameList{iVar}=inputname(2+iVar);
 end
-%
-if nVarArgs<nPlaceHolders
-    throwerror('wrongInput',['Values are expected to be provided for ',...
-        'each placeholder exceed a number of place holders']);
-end
-%
-nVarNames=nVarArgs-nPlaceHolders;
-%
-if nVarNames>0
-    modgen.common.type.simple.checkcellofstr(varargin(nPlaceHolders+1:end));
-end
-%
-if nVarNames>nPlaceHolders
-    throwerror('wrongInput',['Number of variable names cannot ',...
-        'exceed a number of place holders']);
-end
-%
-isChar=ischar(typeSpec);
-if isChar
-    for iVar=1:nPlaceHolders
-        assignIn(sprintf('x%d',iVar),varargin{iVar});
-    end
-    isOk=eval(typeSpec);
-else
-    isOk=feval(typeSpec,varargin{1:nPlaceHolders});
-end
-if ~isOk
-    %
-    varNameList=cell(1,nPlaceHolders);
-    varNameList(1:nVarNames)=varargin(nPlaceHolders+1:end);
-    for iVar=nVarNames+1:nPlaceHolders
-        varNameList{iVar}=inputname(2+iVar);
-    end
-    %
-    if ischar(typeSpec)
-        checkName=typeSpec;
-    else
-        checkName=func2str(typeSpec);
-    end
-    %
-    throwerror('wrongInput',...
-        ['%s is expected to comply with all of the following ',...
-        'conditions: %s'],...
-        cell2sepstr([],varNameList,','),checkName);
-end
-end
-function assignIn(varName,varValue)
-assignin('caller',varName,varValue);
-end
+modgen.common.checkmultvar(typeSpec,nPlaceHolders,...
+    varargin{1:min(nPlaceHolders,nArgs)},...
+    'varNameList',varNameList);

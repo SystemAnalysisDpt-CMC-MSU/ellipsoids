@@ -40,18 +40,15 @@ classdef MatVector
             Y=MatVector.fromExpression(expStr,t);
         end
         %
-        function Y=fromFunc(fHandle,t)
-            if numel(t)==1
-                Y=fHandle(t);
-            else
-                t=shiftdim(t,-1);
-                Y=fHandle(t);
-                nTimePoints=numel(t);
-                if size(Y,3)==1&&nTimePoints>1
-                    Y=repmat(Y,[1,1,nTimePoints]);
-                end
+        function yArray=fromFunc(fHandle,t)
+            nTimePoints = numel(t);
+            mMat = fHandle(t(1));
+            yArray = zeros([size(mMat) nTimePoints]);
+            yArray(:,:,1) = mMat;
+            for iTimePoint = 2:nTimePoints
+                yArray(:,:,iTimePoint) = fHandle(t(iTimePoint));
             end
-        end         
+        end
         %
         function Y=fromExpression(expStr,t)
             if numel(t)==1
@@ -64,7 +61,7 @@ classdef MatVector
                     Y=repmat(Y,[1,1,nTimePoints]);
                 end
             end
-        end        
+        end
         %
         function Bpt_data=rMultiplyByVec(Bt_data,pt_data)
             import modgen.common.throwerror;
@@ -102,7 +99,7 @@ classdef MatVector
                         for t=1:1:nElems
                             Bpt_data(:,:,t)=Bt_data(:,:,t)*pt_data;
                         end
-                    end                        
+                    end
                 case 3,
                     qsize=size(qt_data);
                     Bpt_data=zeros([bsize(1) qsize(2) psize(3)]);

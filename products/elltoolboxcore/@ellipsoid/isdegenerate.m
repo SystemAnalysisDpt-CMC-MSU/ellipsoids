@@ -1,45 +1,31 @@
-function res = isdegenerate(E)
+function isPositiveMat = isdegenerate(myEllMat)
 %
 % ISDEGENERATE - checks if the ellipsoid is degenerate.
 %
-%
-% Description:
-% ------------
-%
-%          RES = ISDEGENERATE(E)  Returns 1 if ellipsoid E is degenerate,
-%                                 0 - otherwise.
-%
+% Input:
+%   regular:
+%       myEllMat: ellipsoid [mRows, nCols] - single ellipsoid.
 %
 % Output:
-% -------
+%   isResMat: logical[mRows, nCols], isPositiveMat(iRow, jCol) = true 
+%       if ellipsoid myEllMat(iRow, jCol) is degenerate,
+%       false - otherwise.
 %
-%    true - if ellipsoid E is degenerate, false - otherwise.
-%
-%
-% See also:
-% ---------
-%
-%    ELLIPSOID/ELLIPSOID, DIMENSION.
-%
+% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+% $Copyright:  The Regents of the University of California 2004-2008 $
 
-%
-% Author:
-% -------
-%
-%    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-%
-  import modgen.common.throwerror;  
-  [m, n] = size(E);
-  res = false(m, n);
-  for i = 1:m
-    for j = 1:n
-      if isempty(E(i,j))
-          throwerror('wrongInput:emptyEllipsoid','ISDEGENERATE: input argument is empty.');
-      end
-      if rank(E(i, j).shape) < size(E(i, j).shape, 1)
-          res(i, j) = true;
-      end
+import modgen.common.throwerror;
+[mRows, nCols] = size(myEllMat);
+isPositiveMat = false(mRows, nCols);
+for iRow = 1:mRows
+    for jCol = 1:nCols
+        if isempty(myEllMat(iRow,jCol))
+            throwerror('wrongInput:emptyEllipsoid', ...
+                'ISDEGENERATE: input argument is empty.');
+        end
+        if rank(myEllMat(iRow, jCol).shape) ...
+                < size(myEllMat(iRow, jCol).shape, 1)
+            isPositiveMat(iRow, jCol) = true;
+        end
     end
-  end
-
 end

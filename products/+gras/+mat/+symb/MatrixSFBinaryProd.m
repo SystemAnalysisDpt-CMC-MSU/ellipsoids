@@ -57,7 +57,7 @@ classdef MatrixSFBinaryProd<gras.mat.IMatrixFunction
             end
         end
         function mSize=getMatrixSize(self)
-            mSize=size(self.mSizeVec);
+            mSize=self.mSizeVec;
         end
         function resArray=evaluate(self,timeVec)
             import gras.gen.MatVector;
