@@ -18,16 +18,18 @@ function [normVec, hypScal] = double(myHyp)
 %
 % $Author: Aushkap Nikolay <n.aushkap@gmail.com> $  $Date: 30-11-2012$
 % $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Computer Science,
-%            System Analysis Department 2012 $
+%   Faculty of Computational Mathematics and Computer Science,
+%   System Analysis Department 2012 $
 
-modgen.common.checkvar(myHyp, 'isa(x,''hyperplane'')',...
+import modgen.common.checkvar;
+
+checkvar(myHyp, 'isa(x,''hyperplane'')',...
     'errorTag', 'wrongInput',...
-    'errorMessage', 'DOUBLE: input argument must be hyperplanes.');
+    'errorMessage', 'Input argument must be hyperplanes.');
 
-modgen.common.checkvar(myHyp, '~(min(size(x) == [1 1]) < 1)',...
+checkvar(myHyp, '~(min(size(x) == [1 1]) < 1)',...
     'errorTag', 'wrongInput', 'errorMessage', ...
-    'DOUBLE: input argument must be single hyperplane.');
+    'Input argument must be single hyperplane.');
 
 normVec = myHyp.normal;
 if ~(nargout < 2)

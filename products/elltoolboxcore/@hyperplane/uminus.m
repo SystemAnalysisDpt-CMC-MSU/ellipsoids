@@ -18,12 +18,12 @@ function outHypArr = uminus(inpHypArr)
 %
 % $Author: Aushkap Nikolay <n.aushkap@gmail.com> $  $Date: 30-11-2012$
 % $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Computer Science,
-%            System Analysis Department 2012 $
+%   Faculty of Computational Mathematics and Computer Science,
+%   System Analysis Department 2012 $
 
 modgen.common.checkvar(inpHypArr, 'isa(x,''hyperplane'')',...
     'errorTag', 'wrongInput',...
-    'errorMessage', 'UMINUS: input argument must be hyperplanes.');
+    'errorMessage', 'Input argument must be hyperplanes.');
 
 sizeVec = size(inpHypArr);
 hypCellArr = arrayfun(@(x) hyperplane(-x.normal, -x.shift), inpHypArr,...

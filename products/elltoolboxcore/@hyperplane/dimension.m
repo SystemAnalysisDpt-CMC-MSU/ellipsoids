@@ -19,12 +19,12 @@ function dimsArr = dimension(inpHypArr);
 %
 % $Author: Aushkap Nikolay <n.aushkap@gmail.com> $  $Date: 30-11-2012$
 % $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Computer Science,
-%            System Analysis Department 2012 $
+%   Faculty of Computational Mathematics and Computer Science,
+%   System Analysis Department 2012 $
 
 modgen.common.checkvar(inpHypArr, 'isa(x,''hyperplane'')',...
     'errorTag', 'wrongInput',...
-    'errorMessage', 'DIMENSION: input must be array of hyperplanes.');
+    'errorMessage', 'Input must be array of hyperplanes.');
 
 dimsArr = arrayfun(@(x) subDimFunc(x), inpHypArr,...
     'UniformOutput', true);
@@ -44,12 +44,12 @@ function nDim = subDimFunc(myHyp)
 %
 % $Author: Aushkap Nikolay <n.aushkap@gmail.com> $  $Date: 30-11-2012$
 % $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Computer Science,
-%            System Analysis Department 2012 $
+%   Faculty of Computational Mathematics and Computer Science,
+%   System Analysis Department 2012 $
 
 subDim = size(myHyp.normal, 1);
 if subDim < 2
-    if (abs(myHyp.normal) <= myHyp.absTol) && ...
+    if (abs(myHyp.normal) <= myHyp.absTol) & ...
             (abs(myHyp.shift) <= myHyp.absTol)
         nDim = 0;
     else

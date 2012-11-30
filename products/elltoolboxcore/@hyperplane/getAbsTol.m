@@ -12,8 +12,8 @@ function absTolArr = getAbsTol(hplaneArr)
 % 
 % $Author: Zakharov Eugene <justenterrr@gmail.com>$ $Date: 17-11-2012$
 % $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Computer Science,
-%            System Analysis Department 2012 $
+%   Faculty of Computational Mathematics and Computer Science,
+%   System Analysis Department 2012 $
 % 
  absTolArr=arrayfun(@(x)x.absTol,hplaneArr);
  
