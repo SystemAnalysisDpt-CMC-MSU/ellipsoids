@@ -1,58 +1,62 @@
-function D = dimension(H);
+function dimsArr = dimension(inpHypArr);
 %
 % DIMENSION - returns dimensions of hyperplanes in the array.
 %
+%   dimsArr = DIMENSION(hypArr) - returns dimensions of hyperplanes
+%       described by hyperplane structures in the array hypArr.
 %
-% Description:
-% ------------
-%
-%    D = DIMENSION(H)  Returns dimensions of hyperplanes described by
-%                      hyperplane structures in the array H.
-%
+% Input:
+%   regular:
+%       hypArr: hyperplane [nDims1, nDims2, ...] - array
+%           of hyperplanes.
 %
 % Output:
-% -------
+%       dimsArr: double[nDims1, nDims2, ...] - dimensions
+%           of hyperplanes.
 %
-%    D - array with dimension data of the same size as the size of input 
-%        array of hyperplane structures.
+% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+% $Copyright:  The Regents of the University of California 2004-2008 $
 %
-%
-% See also:
-% ---------
-%
-%    HYPERPLANE.
-%
+% $Author: Aushkap Nikolay <n.aushkap@gmail.com> $  $Date: 30-11-2012$
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2012 $
 
-%
-% Author:
-% -------
-%
-%    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-%
+modgen.common.checkvar(inpHypArr, 'isa(x,''hyperplane'')',...
+    'errorTag', 'wrongInput',...
+    'errorMessage', 'DIMENSION: input must be array of hyperplanes.');
 
-  if ~isa(H, 'hyperplane')
-    error('DIMENSION: input must be array of hyperplanes.');
-  end
+dimsArr = arrayfun(@(x) subDimFunc(x), inpHypArr,...
+    'UniformOutput', true);
 
-  [m, n] = size(H);
-  D      = [];
-  for i = 1:m
-    r = [];
-    for j = 1:n
-      h = H(i, j);
-      s = size(h.normal, 1);
-      if s < 2
-        if (abs(h.normal) <= h.absTol) & ...
-           (abs(h.shift) <= h.absTol)
-          r = [r 0];
-        else
-          r = [r s];
-        end
-      else
-        r = [r s];
-      end
+end
+
+function nDim = subDimFunc(myHyp)
+%
+% SUBDIMFUNC - returns dimension of single hyperplane in.
+%
+% Input:
+%   regular:
+%       myHyp: hyperplane [1, 1] - single hyperplane.
+%
+% Output:
+%       nDim: double[1, 1] - dimension of hyperplane.
+%
+% $Author: Aushkap Nikolay <n.aushkap@gmail.com> $  $Date: 30-11-2012$
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2012 $
+
+subDim = size(myHyp.normal, 1);
+if subDim < 2
+    if (abs(myHyp.normal) <= myHyp.absTol) && ...
+            (abs(myHyp.shift) <= myHyp.absTol)
+        nDim = 0;
+    else
+        nDim = subDim;
     end
-    D = [D; r];
-  end
+else
+    nDim = subDim;
+end
 
-  return;
+end

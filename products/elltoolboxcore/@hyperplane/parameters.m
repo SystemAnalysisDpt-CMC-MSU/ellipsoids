@@ -1,46 +1,35 @@
-function [v, c] = parameters(H)
+function [normVec, hypScal] = parameters(myHyp)
 %
 % PARAMETERS - return parameters of hyperplane - normal vector and shift.
 %
+%   [normVec, hypScal] = PARAMETERS(myHyp) - returns normal vector
+%       and scalar value of the hyperplane.
 %
-% Description:
-% ------------
-%
-%    [V, C] = PARAMETERS(H)  Returns normal vector and scalar value of the hyperplane.
+% Input:
+%   regular:
+%       myHyp: hyperplane [1, 1] - single hyperplane of dimention nDims.
 %
 % Output:
-% -------
+%   normVec: double[nDims, 1] - normal vector of the hyperplane myHyp.
+%   hypScal: double[1, 1] - scalar of the hyperplane myHyp.
 %
-%    V - normal vector,
-%    C - scalar constant.
+% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+% $Copyright:  The Regents of the University of California 2004-2008 $
 %
-%
-% See also:
-% ---------
-%
-%    HYPERPLANE/HYPERPLANE.
-%
+% $Author: Aushkap Nikolay <n.aushkap@gmail.com> $  $Date: 30-11-2012$
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2012 $
 
-%
-% Author:
-% -------
-%
-%    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-%
-  if ~(isa(H, 'hyperplane'))
-    error('PARAMETERS: input argument must be hyperplane.');
-  end
+modgen.common.checkvar(myHyp, 'isa(x,''hyperplane'')',...
+    'errorTag', 'wrongInput',...
+    'errorMessage', 'PARAMETERS: input argument must be hyperplanes.');
 
-  if min(size(H) == [1 1]) < 1
-    error('PARAMETERS: input argument must be single hyperplane.');
-  end
+modgen.common.checkvar(myHyp, '~(min(size(x) == [1 1]) < 1)',...
+    'errorTag', 'wrongInput', 'errorMessage', ...
+    'PARAMETERS: input argument must be single hyperplane.');
 
-  v = H.normal;
-  
-  if nargout < 2
-    return;
-  end
-
-  c = H.shift;
-
-  return;
+normVec = myHyp.normal;
+if ~(nargout < 2)
+    hypScal = myHyp.shift;
+end
