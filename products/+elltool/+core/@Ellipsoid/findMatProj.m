@@ -10,7 +10,7 @@ function [ projQMat ] = findMatProj( eigvMat,diagMat,basMat )
 % Output:
 %   orthBasMat: double: [nDim,nDim] - orthogonal matrix whose
 %       columns form a basis in R^nDim
-%   rang: double: [1,1] - rang of the convex hull of input vectors
+%   Rank: double: [1,1] - rank of the subspace of input vectors
 %
 % $Author: Vitaly Baranov  <vetbar42@gmail.com> $    $Date: Nov-2012$
 % $Copyright: Moscow State University,

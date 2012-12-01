@@ -10,7 +10,8 @@ function resQMat=findDiffEaND(ellQ1Mat, ellQ2Mat,curDirVec,absTol)
 %       absTol: double: [1,1] - absolute tolerance
 %
 % Output:
-%   resQMat: double: [kSize,kSize] - matrix of approximation ellipsoid
+%   resQMat: double: [kSize,kSize]/[0,0] - matrix of approximating 
+%       ellipsoid. Empty if the direction is bad.
 %
 % $Author: Vitaly Baranov  <vetbar42@gmail.com> $    $Date: Nov-2012$
 % $Copyright: Moscow State University,

@@ -424,7 +424,7 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
             ansDMat(1,1)=Inf;
             ansDMat(2:3,2:3)=diaOMat;
             mlunit.assert_equals(1,isEllEll2Equal...
-                (Ellipsoid(resEllipsoid.diagMat),...
+                (Ellipsoid(resEllipsoid.getDiagMat()),...
                 Ellipsoid(ansDMat)));
             %
             %Difference between 3-dimension ellipsoids.
@@ -675,7 +675,7 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
             ansDMat(1,1)=Inf;
             ansDMat(2:3,2:3)=diaOMat;
             mlunit.assert_equals(1,isEllEll2Equal...
-                (Ellipsoid(resEllipsoid.diagMat),...
+                (Ellipsoid(resEllipsoid.getDiagMat()),...
                 Ellipsoid(ansDMat)));
             %
             %Difference between 3-dimension ellipsoids.
@@ -750,10 +750,10 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
                 ell2=Ellipsoid(zeros(nDims,1),diag(d2Vec),oMat);
                 ellVec=[ell1,ell2];
                 ellApx=fMethod(ellVec,lVec);
-                eigVMat=ellApx.eigvMat;
+                eigVMat=ellApx.getEigvMat();
                 if ~isempty(eigVMat)
                     eigVMat=oMat.'*eigVMat;
-                    ellApx=Ellipsoid(ellApx.centerVec,ellApx.diagMat,...
+                    ellApx=Ellipsoid(ellApx.getCenter(),ellApx.getDiagMat(),...
                         eigVMat);
                 end
             end
@@ -950,11 +950,11 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
                 if  findIsGoodDir(ellVec(1),ellVec(2),rotDirVec)
                     checkDiffTight(resR2Ell,ellObjRotVec,rotDirVec)
                 end
-                if (~isempty(resR2Ell.diagMat))
+                if (~isempty(resR2Ell.getDiagMat()))
                     resR3Ell=rotateEll(resR2Ell,oMat.');
                     isEqual=isEllEll2Equal(resR1Ell,resR3Ell);
                 else
-                    if (isempty(resR1Ell.diagMat))
+                    if (isempty(resR1Ell.getDiagMat()))
                         isEqual=true;
                     else
                         isEqual=false;
@@ -1043,9 +1043,9 @@ end
 
 function resEllObj=rotateEll(ellObj,oMat)
 import elltool.core.Ellipsoid;
-eigvMat=ellObj.eigvMat;
+eigvMat=ellObj.getEigvMat();
 newVMat=oMat*eigvMat;
-resEllObj=Ellipsoid(ellObj.centerVec,ellObj.diagMat,newVMat);
+resEllObj=Ellipsoid(ellObj.getCenter(),ellObj.getDiagMat(),newVMat);
 end
 %
 function isEqual=isEqM( objMat1, objMat2,absTol)
@@ -1063,9 +1063,9 @@ end
 function isEqual=isEqElM(resEllipsoid,ansVMat,ansDVec,ansCenVec)
 import elltool.core.Ellipsoid;
 absTol=Ellipsoid.getCheckTol();
-eigvMat=resEllipsoid.eigvMat;
-diagVec=diag(resEllipsoid.diagMat);
-cenVec=resEllipsoid.centerVec;
+eigvMat=resEllipsoid.getEigvMat();
+diagVec=diag(resEllipsoid.getDiagMat());
+cenVec=resEllipsoid.getCenter();
 %sort in increasing eigenvalue order
 [diagVec indVec]=sort(diagVec);
 eigvMat=eigvMat(:,indVec);
@@ -1085,11 +1085,11 @@ function isEqual=isEllEll2Equal(ellObj1, ellObj2)
 % eig vectors corresponding to the same eig values are collinear
 import elltool.core.Ellipsoid;
 absTol=Ellipsoid.getCheckTol();
-eigv1Mat=ellObj1.eigvMat;
-diag1Vec=diag(ellObj1.diagMat);
-cen1Vec=ellObj1.centerVec;
-eigv2Mat=ellObj2.eigvMat;
-diag2Vec=diag(ellObj2.diagMat);
+eigv1Mat=ellObj1.getEigvMat();
+diag1Vec=diag(ellObj1.getDiagMat());
+cen1Vec=ellObj1.getCenter();
+eigv2Mat=ellObj2.getEigvMat();
+diag2Vec=diag(ellObj2.getDiagMat());
 isEmpt1=isempty(diag1Vec);
 isEmpt2=isempty(diag2Vec);
 if isEmpt1 && isEmpt2
@@ -1097,7 +1097,7 @@ if isEmpt1 && isEmpt2
 elseif isEmpt1 || isEmpt2
     isEqual=false;
 else
-    cen2Vec=ellObj2.centerVec;
+    cen2Vec=ellObj2.getCenter();
     isInf1Vec=diag1Vec==Inf;
     isInf2Vec=diag2Vec==Inf;
     eigvFin1Mat=eigv1Mat(:,~isInf1Vec);
@@ -1163,10 +1163,10 @@ end
 function resRho=rho(ellObj,dirVec)
 import elltool.core.Ellipsoid;
 absTol=Ellipsoid.getCheckTol();
-eigvMat=ellObj.eigvMat;
-diagMat=ellObj.diagMat;
+eigvMat=ellObj.getEigvMat();
+diagMat=ellObj.getDiagMat();
 diagVec=diag(diagMat);
-cenVec=ellObj.centerVec;
+cenVec=ellObj.getCenter();
 isInfVec=diagVec==Inf;
 dirInfProjVec=0;
 if ~all(~isInfVec)
@@ -1211,10 +1211,10 @@ end
 function isOk=findIsGoodDir(ellObj1,ellObj2,curDirVec)
 import elltool.core.Ellipsoid;
 absTol=Ellipsoid.getCheckTol();
-eigv1Mat=ellObj1.eigvMat;
-eigv2Mat=ellObj2.eigvMat;
-diag1Vec=diag(ellObj1.diagMat);
-diag2Vec=diag(ellObj2.diagMat);
+eigv1Mat=ellObj1.getEigvMat();
+eigv2Mat=ellObj2.getEigvMat();
+diag1Vec=diag(ellObj1.getDiagMat());
+diag2Vec=diag(ellObj2.getDiagMat());
 isInf1Vec=diag1Vec==Inf;
 if ~all(~isInf1Vec)
     %Infinite case
@@ -1225,7 +1225,7 @@ if ~all(~isInf1Vec)
     finIndVec=(rangInf+1):nDimSpace;
     finBasMat = orthBasMat(:,finIndVec);
     %Find projections on nonInf directions
-    isInf2Vec=diag(ellObj2.diagMat)==Inf;
+    isInf2Vec=diag(ellObj2.getDiagMat())==Inf;
     diag1Vec(isInf1Vec)=0;
     diag2Vec(isInf2Vec)=0;
     curEllMat=eigv1Mat*diag(diag1Vec)*eigv1Mat.';

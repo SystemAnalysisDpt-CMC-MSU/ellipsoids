@@ -3,8 +3,8 @@ function isBigger=checkBigger(ellObj1,ellObj2,nDimSpace,absTol)
 % Input:
 %   regular:
 %       ellObj1: Ellipsoid: [1,1] - first generalized ellipsoid
-%       ellObj2: Ellipsoid: [1,1] - first generalized ellipsoid
-%       nDimSpace: double: [1,1] - dimension of the space
+%       ellObj2: Ellipsoid: [1,1] - second generalized ellipsoid
+%       nDimSpace: double: [1,1] - dimension of space
 %       absTol: double: [1,1] - absolute tolerance
 % Output:
 %   isBigger: logical: [1,1] - true if second ellipsoid is inside the
@@ -16,7 +16,7 @@ function isBigger=checkBigger(ellObj1,ellObj2,nDimSpace,absTol)
 %            System Analysis Department 2012 $
 %
 %Algorithm:
-%First construct orthogonal basises of infinite directions for both
+%First, construct orthogonal bases of infinite directions for both
 %ellipsoids and then check that these directions are collinear.
 %Then find projections on nonifinite basis, which is the same for two
 %ellipsoids. Then find zero directions among this basis for each of the
@@ -37,12 +37,12 @@ isInf2DirVec=diag(diag2Mat)==Inf;
 allInfDir1Mat=eigv1Mat(:,isInf1DirVec);
 allInfDir2Mat=eigv2Mat(:,isInf2DirVec);
 %Find basis for first ell
-[orthBas1Mat rang1Inf]=Ellipsoid.findBasRang(allInfDir1Mat,absTol);
+[orthBas1Mat rang1Inf]=Ellipsoid.findBasRank(allInfDir1Mat,absTol);
 %rangZ>0 since there is at least one zero e.v. Q1
 finInd1Vec=(rang1Inf+1):nDimSpace;
 finBas1Mat = orthBas1Mat(:,finInd1Vec);
 %Find basis for second ell
-[orthBas2Mat rang2Inf]=Ellipsoid.findBasRang(allInfDir2Mat,absTol);
+[orthBas2Mat rang2Inf]=Ellipsoid.findBasRank(allInfDir2Mat,absTol);
 %rangZ>0 since there is at least one zero e.v. Q1
 infInd2Vec=1:rang2Inf;
 infBas2Mat=orthBas2Mat(:,infInd2Vec);

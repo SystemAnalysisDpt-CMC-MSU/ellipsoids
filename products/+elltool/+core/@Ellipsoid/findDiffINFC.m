@@ -1,6 +1,6 @@
 function [ resQMat diagQVec ] = findDiffINFC(fMethod, ellObj1,ellObj2,...
     curDirVec,isInf1Vec,absTol)
-% FINDDIFFFC - find approximation for Minkowsky difference
+% FINDDIFFINFC - find approximation for Minkowsky difference
 % of ellipsoids (first ellipsoid is exactly infinite)
 %
 % Input:
@@ -9,21 +9,24 @@ function [ resQMat diagQVec ] = findDiffINFC(fMethod, ellObj1,ellObj2,...
 %           approximation
 %       ellObj1: Ellipsoid: [1,1] - generalized ellipsoid
 %       ellObj2: Ellipsoid: [1,1] - generalized ellipsoid
-%       isInf1Vec: logical: [nSize,1] - specify which direction are
-%           infinite for the first ellipsoid
 %       curDirVec: double: [nSize,1] - direction of calculation
+%       isInf1Vec: logical: [nSize,1] - specify which directions are
+%           infinite for the first ellipsoid
 %       absTol: double: [1,1] - absolute tolerance
 %
 % Output:
-%   resQMat: double: [nSize,nSize] - matrix of eigenvectors of
-%       approximation ellipsoid
-%   diagQMat: double: [nSize,nSize] - matrix of eigenvalue of
-%       approximatiod ellipsoid
+%   resQMat: double: [nSize,nSize]/[0,0] - matrix of eigenvectors of
+%       approximation ellipsoid. Empty when for external approximation the
+%       specified direction is bad.
+%   diagQMat: double: [nSize,nSize]/[0,0] - matrix of eigenvalues of
+%       approximation ellipsoid. Empty when for external approximation the
+%       specified direction is bad.
 %
 % $Author: Vitaly Baranov  <vetbar42@gmail.com> $    $Date: Nov-2012$
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Cybernetics,
 %            System Analysis Department 2012 $
+%
 import elltool.core.Ellipsoid;
 eigv1Mat=ellObj1.eigvMat;
 eigv2Mat=ellObj2.eigvMat;

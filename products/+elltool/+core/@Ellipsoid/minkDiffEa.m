@@ -46,8 +46,8 @@ end
 %
 if mSize~=nDimSpace
     throwerror('wrongDir',...
-        'dimension of the direction vectors',...
-        'must be the same as dimension of ellipsoids');
+        ['dimension of the direction vectors ',...
+        'must be the same as dimension of ellipsoids']);
 end
 %
 resCenterVec=ellObj1.centerVec-ellObj2.centerVec;

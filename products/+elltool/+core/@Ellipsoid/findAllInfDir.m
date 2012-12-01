@@ -8,7 +8,8 @@ function [isInfVec infDirEigMat] = findAllInfDir(ellObj)
 % Output:
 %   isInfVec: logical: [nDim,1] - logical vector, whose i-th component is
 %       true if i-th direction in ellipsoid is infinite
-%   infDirEigMat: double: [nDim,rSize] - matrix of eigenvectors of ellipsoid matrix corresponding to infinite elements
+%   infDirEigMat: double: [nDim,rSize] - matrix of eigenvectors of 
+%       ellipsoid matrix corresponding to infinite elements
 %
 % $Author: Vitaly Baranov  <vetbar42@gmail.com> $    $Date: Nov-2012$
 % $Copyright: Moscow State University,

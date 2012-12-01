@@ -13,7 +13,9 @@ function [ resEllMat ] = findDiffFC( fMethod, ellQ1Mat, ellQ2Mat,...
 %       absTol: double: [1,1] - absolute tolerance
 %
 % Output:
-%   resEllMat: double: [kSize,kSize] - matrix of approximation ellipsoid
+%   resEllMat: double: [kSize,kSize]\[0,0] - matrix of approximating 
+%       ellipsoid. Empty when for external approximation the
+%       specified direction is bad.
 %
 % $Author: Vitaly Baranov  <vetbar42@gmail.com> $    $Date: Nov-2012$
 % $Copyright: Moscow State University,

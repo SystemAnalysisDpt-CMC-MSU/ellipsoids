@@ -33,8 +33,8 @@ minDimSpace=min(min(dimsSpaceVec));
 maxDimSpace=max(max(dimsSpaceVec));
 if (minDimSpace~=maxDimSpace)
     throwerror('wrongSizes',...
-        'ellipsoids of the array',...
-        'must be in the same vector space');
+        ['ellipsoids of the array ',...
+        'must be in the same vector space']);
 end
 dimSpace=maxDimSpace;
 %
