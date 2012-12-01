@@ -4,14 +4,17 @@ classdef Ellipsoid < handle
         diagMat
         eigvMat
     end
-    properties (Constant)
+    properties (Constant,GetAccess = private)
         CHECK_TOL=1e-09;
     end
     methods
         function ellObj = Ellipsoid(varargin)
             import modgen.common.throwerror
             import elltool.core.Ellipsoid;
-            absTol=Ellipsoid.CHECK_TOL;
+            %
+            %ellObj.CHECK_TOL=1e-09;
+            %
+            absTol=ellObj.CHECK_TOL;
             %
             nInput=nargin;
             if  nInput>3
@@ -167,11 +170,22 @@ classdef Ellipsoid < handle
             end
         end
     end
-    methods ( Access = private)
-      isOk = isGoodDir(ellQ1Mat,ellQ2Mat,dirVec)     
+    methods (Static)
+        function tol=getCheckTol()
+            import elltool.core.Ellipsoid;
+            tol=Ellipsoid.CHECK_TOL;
+        end
+    end
+    
+    methods (Static,Access = private)
+      isOk = findIsGoodDir(ellQ1Mat,ellQ2Mat,dirVec)     
       sqMat = findSqrtOfMatrix(qMat,absTol)
       isBigger=checkBigger(ellObj1,ellObj2,nDimSpace,absTol)
       [isInfVec infDirEigMat] = findAllInfDir(ellObj)
+       [orthBasMat rang]=findBasRang(qMat,absTol)
+       [ spaceBasMat,  oSpaceBasMat, spaceIndVec, oSpaceIndVec] = findSpaceBas( dirMat,absTol )
+       [ projQMat ] = findMatProj( eigvMat,diagMat,basMat )
+        [diagQVec, resQMat]=findConstruction(firstEllMat,firstBasMat,secBasMat,firstIndVec,secIndVec,secDiagVec)
     end
 end
 
