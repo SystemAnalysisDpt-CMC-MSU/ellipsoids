@@ -32,7 +32,7 @@ minDimSpace=min(min(dimsSpaceVec));
 maxDimSpace=max(max(dimsSpaceVec));
 if (minDimSpace~=maxDimSpace)
     throwerror('wrongSizes',...
-        'MINKSUM_IA: ellipsoids of the array must',...
+        'ellipsoids of the array must',...
         'be in the same vector space');
 end
 dimSpace=maxDimSpace;
@@ -40,7 +40,7 @@ dimSpace=maxDimSpace;
 [mDirSize nDirSize]=size(dirMat);
 if (mDirSize~=dimSpace)
     msgStr=sprintf(...
-        'MINKSUM_IA: second argument must be vector(s) in R^%d',...
+        'second argument must be vector(s) in R^%d',...
         dimSpace);
     throwerror('wrongDir',msgStr);
 end
@@ -57,7 +57,8 @@ else
         curDirVec=dirMat(:,iDir);
         %find all Inf directions
         ellObjCVec=num2cell(ellObjVec);
-        [isInfCMat allInfDirCMat]=cellfun(@findAllInfDir,ellObjCVec,...
+        [isInfCMat allInfDirCMat]=cellfun(...
+            @Ellipsoid.findAllInfDir,ellObjCVec,...
             'UniformOutput', false);
         isInfMat=cell2mat(isInfCMat);
         allInfDirMat=cell2mat(allInfDirCMat);
@@ -88,7 +89,8 @@ else
                     %add to the total sum of projection, finding a
                     %proper approximation
                     nNonInf=size(nonInfBasMat,2);
-                    projQMat=Ellipsoid.findSqrtOfMatrix(projQMat,absTol);
+                    projQMat=Ellipsoid.findSqrtOfMatrix(...
+                        projQMat,absTol);
                     if (iEll==1)
                         qNICenVec=projCenVec;
                         firstVec=projQMat*projCurDirVec;
@@ -168,9 +170,4 @@ else
         end
     end
 end
-end
-function [isInfVec infDirEigMat] = findAllInfDir(ellObj)
-isInfVec=(diag(ellObj.diagMat)==Inf);
-eigvMat=ellObj.eigvMat;
-infDirEigMat=eigvMat(:,isInfVec);
 end

@@ -759,28 +759,67 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
             end
         end
         %
-        function testBadDirections(self)
+        function testDirections(self)
+            load(strcat(self.testDataRootDir,filesep,...
+                'testNewEllRandM.mat'),'testOrth50Mat',...
+                'testOrth20Mat','testOrth100Mat','testOrth3Mat',...
+                'testOrth2Mat');
             import elltool.core.Ellipsoid;
             load(strcat(self.testDataRootDir,filesep,...
                 'testEllEllRMat.mat'),'testOrth3Mat');
+            %Test1.
             testEllipsoid1=Ellipsoid([4;3]);
             testEllipsoid2=Ellipsoid([1;0]);
             dirVec=[0,1].';
             dirVec=dirVec/norm(dirVec);
             checkRes();
             %
+            %Test2.
             testEllipsoid1=Ellipsoid([0;0;0],[4;3;4],testOrth3Mat.');
             testEllipsoid2=Ellipsoid([0;0;0],[1;0;0],testOrth3Mat.');
             dirVec=testOrth3Mat.'*[0,0,1].';
             dirVec=dirVec/norm(dirVec);
             checkRes();
             %
+            %Test3.
+            %q1Mat=[
+            delta1=pi/2-atan(4);
+            delta2=atan(3);
+            nDir=10;
+            nDim=20;
+            angleBadVec=pi/2-delta1:2*delta1/(nDir-1):pi/2+delta1;
+            angleGoodVec=-delta2:2*delta2/(nDir-1):delta2;
+            %
+            badDirMat=[cos(angleBadVec);sin(angleBadVec);...
+                zeros(nDim-2,nDir)];
+            goodDirMat=[cos(angleGoodVec);sin(angleGoodVec);...
+                zeros(nDim-2,nDir)];
+            badDirMat=testOrth20Mat*badDirMat;
+            goodDirMat=testOrth20Mat*goodDirMat;
+            %
+            testEllipsoid1=Ellipsoid(zeros(nDim,1),...
+                [16;3;Inf;(1:17)'],testOrth20Mat);
+            testEllipsoid2=Ellipsoid(zeros(nDim,1),...
+                [4;0;0.1*(1:18)'],testOrth20Mat);
+            %
+            ell1Vec=minkDiffEa(testEllipsoid1,testEllipsoid2,badDirMat);
+            ell2Vec=minkDiffEa(testEllipsoid1,testEllipsoid2,goodDirMat);
+            %
+            fCheckGood=@(ellObj)checkEllEmpty(ellObj,1);
+            fCheckBad=@(ellObj)checkEllEmpty(ellObj,0);
+            arrayfun(fCheckGood,ell1Vec);
+            arrayfun(fCheckBad,ell2Vec);
+            function checkEllEmpty(ellObj,isCheckEmpty)
+                import elltool.core.Ellipsoid;
+                isOk=isEllEll2Equal(ellObj,Ellipsoid());
+                if ~isCheckEmpty
+                    isOk=~isOk;
+                end
+                mlunitext.assert(isOk);
+            end
             function checkRes()
                 resEll=minkDiffEa(testEllipsoid1,testEllipsoid2,dirVec);
-                isEmptyEll=isempty(resEll.eigvMat);
-                isGoodDir=findIsGoodDir(testEllipsoid1,...
-                    testEllipsoid2,dirVec);
-                mlunitext.assert(isEmptyEll && ~isGoodDir);
+                checkEllEmpty(resEll,1);
             end
         end
         
@@ -824,8 +863,7 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
                 test10x50DirMat,testOrth50Mat);
         end
     end
-    methods (Static)
-        
+    methods(Static)
         function auxCheckAllbV(nEllObj,nDim,dirMat,oMat)
             import elltool.core.Ellipsoid;
             %Massives of ellipsoid size of nEllObj
@@ -1002,6 +1040,7 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
         end
     end
 end
+
 function resEllObj=rotateEll(ellObj,oMat)
 import elltool.core.Ellipsoid;
 eigvMat=ellObj.eigvMat;

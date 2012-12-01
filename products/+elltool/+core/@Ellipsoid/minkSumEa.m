@@ -33,7 +33,7 @@ minDimSpace=min(min(dimsSpaceVec));
 maxDimSpace=max(max(dimsSpaceVec));
 if (minDimSpace~=maxDimSpace)
     throwerror('wrongSizes',...
-        'MINKSUM_EA: ellipsoids of the array',...
+        'ellipsoids of the array',...
         'must be in the same vector space');
 end
 dimSpace=maxDimSpace;
@@ -41,7 +41,7 @@ dimSpace=maxDimSpace;
 [mDirSize nDirSize]=size(dirMat);
 if (mDirSize~=dimSpace)
     msgStr=sprintf(...
-        'MINKSUM_EA: second argument must be vector(s) in R^%d',...
+        'second argument must be vector(s) in R^%d',...
         dimSpace);
     throwerror('wrongDir',msgStr);
 end
@@ -56,7 +56,8 @@ else
     for iDir=1:nDirSize;
         curDirVec=dirMat(:,iDir);
         ellObjCVec=num2cell(ellObjVec);
-        [isInfCMat allInfDirCMat]=cellfun(@findAllInfDir,ellObjCVec,...
+        [isInfCMat allInfDirCMat]=cellfun(...
+            @Ellipsoid.findAllInfDir,ellObjCVec,...
             'UniformOutput', false);
         isInfMat=cell2mat(isInfCMat);
         allInfDirMat=cell2mat(allInfDirCMat);
@@ -74,8 +75,8 @@ else
                 ellResVec(iDir)=findFND(ellObjVec,curDirVec);
             else
                 %Finite, degenerate
-                ellResVec(iDir)=findFD(ellObjVec,curDirVec,dimSpace,...
-                    isDirInKerVec,absTol);
+                ellResVec(iDir)=findFD(ellObjVec,curDirVec,...
+                    dimSpace,isDirInKerVec,absTol);
             end
         end
     end
@@ -108,83 +109,49 @@ else
             ellObjCVec,'UniformOutput', false);
         allZeroFDirMat=cell2mat(allZeroDirFCMat);
         if ~isempty(allZeroFDirMat)
-            [ zeroBasMat,  nonZeroBasMat, zeroIndVec, nonZeroIndVec] =...
+            [ finBasMat,  infBasMat, finIndVec, infIndVec] =...
                 Ellipsoid.findSpaceBas( allZeroFDirMat,absTol );
-            projCurDirVec=zeroBasMat.'*curDirVec;
-            %find projection of all ellipsoids on zeroBasMat
-            isBeenFirstNonDeg=false;
-            for iEll=1:nEllObj
-                eigviMat=ellObjVec(iEll).eigvMat;
-                diagiMat=ellObjVec(iEll).diagMat;
-                projQMat=Ellipsoid.findMatProj(eigviMat,diagiMat,...
-                    zeroBasMat);                
-                projCenVec=zeroBasMat.'*ellObjVec(iEll).centerVec;
-                curPNum=...
-                    sqrt(projCurDirVec.'*projQMat*projCurDirVec);
-                if (abs(curPNum)>absTol)
-                    if (~isBeenFirstNonDeg)
-                        cenVec=projCenVec;
-                        sumMat=1/(curPNum)*projQMat;
-                        sumPNum=curPNum;
-                        isBeenFirstNonDeg=true;
-                    else
-                        cenVec=cenVec+projCenVec;
-                        sumMat=sumMat+1/(curPNum)*projQMat;
-                        sumPNum=sumPNum+curPNum;
-                    end
-                end
-            end
-            resEllMat=0.5*sumPNum*(sumMat+sumMat.');
-            zeroDimSpace=size(zeroBasMat,2);
-            [resDiagVec, resFinMat]=Ellipsoid.findConstruction(...
-                resEllMat,zeroBasMat,nonZeroBasMat,zeroIndVec,...
-                nonZeroIndVec,Inf*ones(1,zeroDimSpace));
-            resFinMat=resFinMat/norm(resFinMat);
-            qCenVec=zeros(dimSpace,1);
-            qCenVec(zeroIndVec)=cenVec;
-            resFinMat=0.5*(resFinMat+resFinMat);
-            resEllObj=Ellipsoid(qCenVec,resDiagVec,resFinMat);
-        else
-            %find projection of all ellipsoids on zeroBasMat
-            isBeenFirstNonDeg=false;
-            for iEll=1:nEllObj
-                eigviMat=ellObjVec(iEll).eigvMat;
-                diagiMat=ellObjVec(iEll).diagMat;
-                isInfHereVec=diag(diagiMat)==Inf;
-                diagiMat(isInfHereVec,isInfHereVec)=0;
-                projQMat=Ellipsoid.findMatProj(eigviMat,diagiMat,...
-                    finBasMat);
-                projCenVec=...
-                    finBasMat.'*ellObjVec(iEll).centerVec;
-                curPNum=...
-                    sqrt(projCurDirVec.'*projQMat*projCurDirVec);
-                if (abs(curPNum)>absTol)
-                    if (~isBeenFirstNonDeg)
-                        cenVec=projCenVec;
-                        sumMat=1/(curPNum)*projQMat;
-                        sumPNum=curPNum;
-                        isBeenFirstNonDeg=true;
-                    else
-                        cenVec=cenVec+projCenVec;
-                        sumMat=sumMat+1/(curPNum)*projQMat;
-                        sumPNum=sumPNum+curPNum;
-                    end
-                end
-            end
-            resEllMat=0.5*sumPNum*(sumMat+sumMat.');      
-            infDimSpace=size(infBasMat,2);
-            [resDiagVec, resFinMat]=Ellipsoid.findConstruction(...
-                resEllMat,finBasMat,infBasMat,finIndVec,infIndVec,...
-                Inf*ones(1,infDimSpace));
-            resFinMat=resFinMat/norm(resFinMat);
-            qCenVec=zeros(dimSpace,1);
-            qCenVec(finIndVec)=cenVec;
-            resFinMat=0.5*(resFinMat+resFinMat);
-            resEllObj=Ellipsoid(qCenVec,resDiagVec,resFinMat);
+            projCurDirVec=finBasMat.'*curDirVec;
         end
+        isBeenFirstNonDeg=false;
+        for iEll=1:nEllObj
+            eigviMat=ellObjVec(iEll).eigvMat;
+            diagiMat=ellObjVec(iEll).diagMat;
+            isInfHereVec=diag(diagiMat)==Inf;
+            diagiMat(isInfHereVec,isInfHereVec)=0;
+            projQMat=Ellipsoid.findMatProj(eigviMat,diagiMat,...
+                finBasMat);
+            projCenVec=...
+                finBasMat.'*ellObjVec(iEll).centerVec;
+            curPNum=...
+                sqrt(projCurDirVec.'*projQMat*projCurDirVec);
+            if (abs(curPNum)>absTol)
+                if (~isBeenFirstNonDeg)
+                    cenVec=projCenVec;
+                    sumMat=1/(curPNum)*projQMat;
+                    sumPNum=curPNum;
+                    isBeenFirstNonDeg=true;
+                else
+                    cenVec=cenVec+projCenVec;
+                    sumMat=sumMat+1/(curPNum)*projQMat;
+                    sumPNum=sumPNum+curPNum;
+                end
+            end
+        end
+        resEllMat=0.5*sumPNum*(sumMat+sumMat.');
+        infDimSpace=size(infBasMat,2);
+        [resDiagVec, resFinMat]=Ellipsoid.findConstruction(...
+            resEllMat,finBasMat,infBasMat,finIndVec,infIndVec,...
+            Inf*ones(1,infDimSpace));
+        resFinMat=resFinMat/norm(resFinMat);
+        qCenVec=zeros(dimSpace,1);
+        qCenVec(finIndVec)=cenVec;
+        resFinMat=0.5*(resFinMat+resFinMat);
+        resEllObj=Ellipsoid(qCenVec,resDiagVec,resFinMat);
     end
 end
 end
+%
 function resEllObj=findFND(ellObjVec,curDirVec)
 import elltool.core.Ellipsoid;
 nEllObj=length(ellObjVec);
@@ -278,11 +245,6 @@ else
     zeroDirEigMat=[];
 end
 
-end
-function [isInfVec infDirEigMat] = findAllInfDir(ellObj)
-isInfVec=(diag(ellObj.diagMat)==Inf);
-eigvMat=ellObj.eigvMat;
-infDirEigMat=eigvMat(:,isInfVec);
 end
 function isDirInKer=findDirInKer(ellObj,curDir,absTol)
 ellQMat=ellObj.eigvMat*ellObj.diagMat*...

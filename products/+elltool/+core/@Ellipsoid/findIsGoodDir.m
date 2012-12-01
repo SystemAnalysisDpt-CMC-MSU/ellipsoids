@@ -1,4 +1,4 @@
-function [ isOk ] = findIsGoodDir( ellQ1Mat, ellQ2Mat,dirVec )
+function [ isOk, pPar] = findIsGoodDir( ellQ1Mat, ellQ2Mat,dirVec )
 % FINDISGOODDIR - check whether specified direction is appropriate for
 % computing tight extrenal approximation of the difference
 % of two generalized ellipsoids
@@ -14,6 +14,7 @@ function [ isOk ] = findIsGoodDir( ellQ1Mat, ellQ2Mat,dirVec )
 %   isOk: logical: [1,1] - true if direction is good, i.e. if for this
 %       direction p=p2/p1>lamMax and p<1, where lamMax is the maximal root
 %       of equation det(Q2-pQ1)=0.
+%   pPar: double: [1,1] - parameter for internal approximation
 %
 % $Author: Vitaly Baranov  <vetbar42@gmail.com> $    $Date: Nov-2012$
 % $Copyright: Moscow State University,
@@ -27,5 +28,6 @@ p1Par=sqrt(dirVec.'*ellQ1Mat*dirVec);
 p2Par=sqrt(dirVec.'*ellQ2Mat*dirVec);
 pPar=p2Par/p1Par;
 isOk=(pPar>lamMax && pPar<1);
+pPar=max(pPar,lamMax);
 end
 

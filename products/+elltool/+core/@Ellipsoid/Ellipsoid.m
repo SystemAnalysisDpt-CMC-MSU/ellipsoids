@@ -51,7 +51,7 @@ classdef Ellipsoid < handle
                 if isPar2Vector
                     ellObj.diagMat=diag(ellMat);
                     ellObj.eigvMat=eye(size(ellObj.diagMat));
-                elseif (mSize~=nSize)  
+                elseif (mSize~=nSize)
                     throwerror('wrongMatrix',...
                         'Input should be a symmetric matrix or a vector.');
                 else
@@ -59,12 +59,12 @@ classdef Ellipsoid < handle
                     if  all(isDiagonalMat(:))
                         ellObj.diagMat=ellMat;
                         ellObj.eigvMat=eye(mSize);
-                    else 
+                    else
                         if ~(all(all(( ellMat - ellMat.')<absTol)))
                             %matrix should be symmetric
                             throwerror('wrongMatrix',...
                                 'Input should be a symmetric matrix or a vector.');
-                        else   
+                        else
                             [ellObj.eigvMat ellObj.diagMat]=eig(ellMat);
                         end
                     end
@@ -90,17 +90,21 @@ classdef Ellipsoid < handle
                 end
                 if (mCenSize ~=mDSize || mCenSize~=mWSize)
                     throwerror('wrongDimensions',...
-                        'Input matrices and center vector must be of the same dimension');
+                        'Input matrices and center vector must',...
+                        'be of the same dimension');
                 end
                 if (nDSize>1)
                     if nDSize~=mDSize
                         throwerror('wrongDiagonal',...
-                            'Second argument should be either diagonal matrix or a vector');
+                            'Second argument should be either',...
+                            'diagonal matrix or a vector');
                     end
-                    isDiagonal=all(all(ellDiagMat==(ellDiagMat.*eye(mDSize))));
+                    isDiagonal=all(all(ellDiagMat==...
+                        (ellDiagMat.*eye(mDSize))));
                     if ~isDiagonal
                         throwerror('wrongDiagonal',...
-                            'Second argument should be either diagonal matrix or a vector');
+                            'Second argument should be either',...
+                            'diagonal matrix or a vector');
                     end
                 end
                 if (nWSize~=mWSize)
@@ -165,7 +169,8 @@ classdef Ellipsoid < handle
                 minEigVal=min(diag(ellObj.diagMat));
                 if (minEigVal<0 && abs(minEigVal)> absTol)
                     throwerror('wrongMatrix',...
-                        'Ellipsoid matrix should be positive semi-definite.')
+                        'Ellipsoid matrix should be positive',... 
+                        'semi-definite.')
                 end
             end
         end
@@ -178,14 +183,22 @@ classdef Ellipsoid < handle
     end
     
     methods (Static,Access = private)
-      isOk = findIsGoodDir(ellQ1Mat,ellQ2Mat,dirVec)     
-      sqMat = findSqrtOfMatrix(qMat,absTol)
-      isBigger=checkBigger(ellObj1,ellObj2,nDimSpace,absTol)
-      [isInfVec infDirEigMat] = findAllInfDir(ellObj)
-       [orthBasMat rang]=findBasRang(qMat,absTol)
-       [ spaceBasMat,  oSpaceBasMat, spaceIndVec, oSpaceIndVec] = findSpaceBas( dirMat,absTol )
-       [ projQMat ] = findMatProj( eigvMat,diagMat,basMat )
-        [diagQVec, resQMat]=findConstruction(firstEllMat,firstBasMat,secBasMat,firstIndVec,secIndVec,secDiagVec)
+        [isOk, pPar] = findIsGoodDir(ellQ1Mat,ellQ2Mat,dirVec)
+        sqMat = findSqrtOfMatrix(qMat,absTol)
+        isBigger=checkBigger(ellObj1,ellObj2,nDimSpace,absTol)
+        [isInfVec infDirEigMat] = findAllInfDir(ellObj)
+        [orthBasMat rang]=findBasRang(qMat,absTol)
+        [ spaceBasMat,  oSpaceBasMat, spaceIndVec, oSpaceIndVec] =...
+            findSpaceBas( dirMat,absTol )
+        [ projQMat ] = findMatProj( eigvMat,diagMat,basMat )
+        [diagQVec, resQMat]=findConstruction(firstEllMat,...
+            firstBasMat,secBasMat,firstIndVec,secIndVec,secDiagVec)
+        resQMat=findDiffEaND(ellQ1Mat, ellQ2Mat,curDirVec,absTol)
+        [resEllMat ] = findDiffFC( fMethod, ellQ1Mat, ellQ2Mat,...
+            curDirVec,absTol )
+        [ resQMat diagQVec ] = findDiffINFC(fMethod, ellObj1,...
+            ellObj2,curDirVec,isInf1Vec,absTol)
+        resQMat=findDiffIaND(ellQ1Mat, ellQ2Mat,curDirVec,absTol)
     end
 end
 
