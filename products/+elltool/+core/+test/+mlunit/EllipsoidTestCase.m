@@ -1484,19 +1484,19 @@ classdef EllipsoidTestCase < mlunitext.test_case
             self.runAndCheckError('minkpm_ia([testEllipsoid1 testEllipsoid2], testEllipsoid3, testLVec)', 'wrongSizes');
             
             [testEllHighDim1 testLVec] = createTypicalHighDimEll(10);
-            resEll = minkpm_ea([testEllHighDim1 testEllHighDim1], testEllHighDim1, testLVec);
+            resEll = minkpm_ia([testEllHighDim1 testEllHighDim1], testEllHighDim1, testLVec);
             ansEll = ellipsoid(zeros(12, 1), eye(12));
             [isEq, reportStr] = eq(resEll, ansEll);
             mlunit.assert_equals(true, isEq, reportStr);
             
             [testEllHighDim1 testLVec] = createTypicalHighDimEll(11);
-            resEll = minkpm_ea([testEllHighDim1 testEllHighDim1], testEllHighDim1, testLVec);
+            resEll = minkpm_ia([testEllHighDim1 testEllHighDim1], testEllHighDim1, testLVec);
             ansEll = ellipsoid(zeros(20, 1), eye(20));
             [isEq, reportStr] = eq(resEll, ansEll);
             mlunit.assert_equals(true, isEq, reportStr);
             
             [testEllHighDim1 testLVec] = createTypicalHighDimEll(12);
-            resEll = minkpm_ea([testEllHighDim1 testEllHighDim1], testEllHighDim1, testLVec);
+            resEll = minkpm_ia([testEllHighDim1 testEllHighDim1], testEllHighDim1, testLVec);
             ansEll = ellipsoid(zeros(100, 1), eye(100));
             [isEq, reportStr] = eq(resEll, ansEll);
             mlunit.assert_equals(true, isEq, reportStr);

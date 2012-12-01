@@ -60,8 +60,8 @@ else
     for iRow = 1:mRowsSecEllMatrix
         isPositivePartVec = logical([]);
         for jCol = 1:nColsSecEllMatrix
-            isPositivePartVec = logical([isPositivePartVec isbigger(firsrEllMat,...
-                secondEllMat(iRow, jCol))]);
+            isPositivePartVec = logical([isPositivePartVec ...
+                isbigger(firsrEllMat, secondEllMat(iRow, jCol))]);
         end
         isPositiveMat = logical([isPositiveMat; isPositivePartVec]);
     end

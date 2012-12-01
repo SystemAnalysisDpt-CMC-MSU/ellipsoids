@@ -3,7 +3,7 @@ function [centVec, boundPointMat] = minkdiff(varargin)
 % MINKDIFF - computes geometric (Minkowski) difference of two
 %            ellipsoids in 2D or 3D.
 %
-%   MINKDIFF(fstEll, secEll, OPTIONS) - Computes geometric difference
+%   MINKDIFF(fstEll, secEll, Options) - Computes geometric difference
 %       of two ellipsoids fstEll - secEll, if 1 <= dimension(fstEll) =
 %       = dimension(secEll) <= 3, and plots it if no output arguments
 %       are specified.
@@ -17,14 +17,14 @@ function [centVec, boundPointMat] = minkdiff(varargin)
 %       fstEll - secEll using options given in the Options structure.
 %
 %   In order for the geometric difference to be nonempty set,
-%   ellipsoid fstEll must be bigger than E2 in the sense that if fstEll
-%   and secEll had the same center, secEll would be contained
-%   inside fstEll.
+%   ellipsoid fstEll must be bigger than secEll in the sense that
+%   if fstEll and secEll had the same center, secEll would be
+%   contained inside fstEll.
 %
 % Input:
 %   regular:
-%       fstEll: ellipsoid [1, 1] - first ellipsoid. Suppose nDim - space
-%           dimension, nDim = 2 or 3.
+%       fstEll: ellipsoid [1, 1] - first ellipsoid. Suppose
+%           nDim - space dimension, nDim = 2 or 3.
 %       secEll: ellipsoid [1, 1] - second ellipsoid
 %           of the same dimention.
 %
@@ -42,10 +42,10 @@ function [centVec, boundPointMat] = minkdiff(varargin)
 %               (0 - transparent, 1 - opaque).
 %
 % Output:
-%   centVec: double[nDim, 1]/double[] - center of the resulting set.
+%   centVec: double[nDim, 1]/double[0, 0] - center of the resulting set.
 %       centVec may be empty if ellipsoid fsrEll isn't bigger
 %       than secEll.
-%   boundPointMat: double[nDim, nBoundPoints]/double[] - set of
+%   boundPointMat: double[nDim, nBoundPoints]/double[0, 0] - set of
 %       boundary points (vertices) of resulting set. boundPointMat
 %       may be empty if  ellipsoid fstEll isn't bigger than secEll.
 %
@@ -56,16 +56,18 @@ import elltool.conf.Properties;
 import modgen.common.throwerror;
 
 if nargin < 2
-    throwerror('wrongInput', ...
-        'MINKDIFF: first and second arguments must be single ellipsoids.');
+    fstStr = 'MINKDIFF: first and second arguments must be ';
+    secStr = 'single ellipsoids.';
+    throwerror('wrongInput', [fstStr secStr]);
 end
 
 fstEll = varargin{1};
 secEll = varargin{2};
 
 if ~(isa(fstEll, 'ellipsoid')) || ~(isa(secEll, 'ellipsoid'))
-    throwerror('wrongInput', ...
-        'MINKDIFF: first and second arguments must be single ellipsoids.');
+    fstStr = 'MINKDIFF: first and second arguments must be ';
+    secStr = 'single ellipsoids.';
+    throwerror('wrongInput', [fstStr secStr]);
 end
 
 if isbigger(fstEll, secEll) == 0
@@ -73,8 +75,7 @@ if isbigger(fstEll, secEll) == 0
         case 0,
             fstStr = 'Geometric difference of these two ellipsoids';
             secStr = ' is empty set.';
-            fprintf([fstStr ...
-                secStr]);
+            fprintf([fstStr secStr]);
             return;
         case 1,
             centVec = [];
@@ -132,7 +133,7 @@ if secEllDim > 3
 end
 
 if nargout == 0
-    ih = ishold;
+    isHld = ishold;
 end
 
 if (Options.show_all ~= 0) && (nargout == 0)
@@ -149,8 +150,7 @@ if Properties.getIsVerbose()
     if nargout == 0
         fstStr = 'Computing and plotting geometric difference ';
         secStr = 'of two ellipsoids...\n';
-        fprintf([fstStr ...
-            secStr]);
+        fprintf([fstStr secStr]);
     else
         fprintf('Computing geometric difference of two ellipsoids...\n');
     end
@@ -203,7 +203,8 @@ switch secEllDim
                 = [cos(phiVec)*sin(psyVec(iFstEll3dPnt)); ...
                 sin(phiVec)*sin(psyVec(iFstEll3dPnt)); arrVec];
         end
-        lMat = ellipsoid.rm_bad_directions(fstEllShMat, secEllShMat, lMat);
+        lMat = ellipsoid.rm_bad_directions(fstEllShMat,...
+            secEllShMat, lMat);
         if size(lMat, 2) > 0
             [~, boundPointMat] = rho(fstEll, lMat);
             [~, subBoundPointMat] = rho(secEll, lMat);
@@ -215,8 +216,9 @@ switch secEllDim
             nBoundPonts = size(boundPointMat, 2);
             if nBoundPonts > 1
                 chllMat = convhulln(boundPointMat');
-                patch('Vertices', boundPointMat', 'Faces', chllMat, ...
-                    'FaceVertexCData', clrVec(ones(1, nBoundPonts), :), ...
+                patch('Vertices', boundPointMat', 'Faces', ...
+                    chllMat, 'FaceVertexCData', ...
+                    clrVec(ones(1, nBoundPonts), :), ...
                     'FaceColor', 'flat', ...
                     'FaceAlpha', Options.shade(1, 1));
             else
@@ -247,7 +249,7 @@ switch secEllDim
 end
 
 if nargout == 0
-    if ih == 0
+    if isHld == 0
         hold off;
     end
 end

@@ -14,7 +14,7 @@ function outEll = ellunion_ea(inpEllMat)
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
 %
-% $Author: Vadim Kaushanskiy <vkaushanskiy@gmail.com> $  $Date: 10-11-2012$
+% $Author: Vadim Kaushanskiy <vkaushanskiy@gmail.com>$ $Date: 10-11-2012$
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
@@ -52,7 +52,8 @@ for iEllipsoid = 1:nEllipsoids
     [inpEllcenrVec, inpEllShMat] = double(inpEllVec(iEllipsoid));
     inpEllShMat = (inpEllShMat + inpEllShMat')*0.5;
     if rank(inpEllShMat) < minEllDim
-        inpEllShMat = ellipsoid.regularize(inpEllShMat,absTolVec(iEllipsoid));
+        inpEllShMat = ...
+            ellipsoid.regularize(inpEllShMat,absTolVec(iEllipsoid));
     end
     
     inpEllShMat     = inv(inpEllShMat);
@@ -60,8 +61,9 @@ for iEllipsoid = 1:nEllipsoids
     bVec    = -inpEllShMat * inpEllcenrVec;
     constraint    = inpEllcenrVec' * inpEllShMat * inpEllcenrVec - 1;
     
-    [ -(cvxEllMat - cvxDirVec(iEllipsoid)*inpEllShMat), -(cvxEllCenterVec...
-        - cvxDirVec(iEllipsoid)*bVec), zeros(minEllDim, minEllDim);
+    [ -(cvxEllMat - cvxDirVec(iEllipsoid)*inpEllShMat), ...
+        -(cvxEllCenterVec- cvxDirVec(iEllipsoid)*bVec), ...
+        zeros(minEllDim, minEllDim);
         -(cvxEllCenterVec - cvxDirVec(iEllipsoid)*bVec)', -(- 1 - ...
         cvxDirVec(iEllipsoid)*constraint), -cvxEllCenterVec';
         zeros(minEllDim, minEllDim), -cvxEllCenterVec, cvxEllMat] >= 0;

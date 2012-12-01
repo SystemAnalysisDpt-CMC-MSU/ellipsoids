@@ -1,7 +1,7 @@
 function propValArr = getProperty(ellArr,propName)
 % GETPROPERTY - gives array the same size as ellArr with values of
-%   propName properties for each ellipsoid in ellArr. Private method, used 
-%   in every public property getter.
+%               propName properties for each ellipsoid in ellArr.
+%               Private method, used in every public property getter.
 %
 % Input:
 %   regular:

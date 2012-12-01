@@ -2,14 +2,17 @@ function isPositive = isbigger(fstEll, secEll)
 %
 % ISBIGGER - checks if one ellipsoid would contain the other if their
 %            centers would coincide.
-%   RES = ISBIGGER(E1, E2)  Given two single ellipsoids of the same
-%       dimension, E1 and E2, check if E1 would contain E2 inside if
-%       they were both centered at origin.
+%
+%   isPositive = ISBIGGER(fstEll, secEll) - Given two single ellipsoids
+%       of the same dimension, fstEll and secEll, check if fstEll
+%       would contain secEll inside if they were both
+%       centered at origin.
 %
 % Input:
 %   regular:
-%       fstEll: ellipsod [1, 1] - first ellipsoid.
-%       secEll: ellipsod [1, 1] - second ellipsoid of the same dimention.
+%       fstEll: ellipsoid [1, 1] - first ellipsoid.
+%       secEll: ellipsoid [1, 1] - second ellipsoid
+%           of the same dimention.
 %
 % Output:
 %   isPositive: logical[1, 1], true - if ellipsoid fstEll

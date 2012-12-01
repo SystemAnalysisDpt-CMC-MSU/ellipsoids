@@ -1,12 +1,13 @@
 function resMat = contains(firstEllMat, secondEllMat)
 % CONTAINS - checks if one ellipsoid contains the other.
-%            The condition for E1 to contain E2 is 
-%            min(rho(l | E1) - rho(l | E2)) > 0,
-%            subject to <l, l> = 1.
+%            The condition for E1 = firstEllMat to contain
+%            E2 = secondEllMat is
+%            min(rho(l | E1) - rho(l | E2)) > 0, subject to <l, l> = 1.
 %
 % Input:
 %   regular:
-%       firstEllMat: ellipsoid [mRows, nCols] - first matrix of ellipsoids.
+%       firstEllMat: ellipsoid [mRows, nCols] - first matrix
+%           of ellipsoids.
 %       secondEllMat: ellipsoid [mRows, nCols] - second matrix
 %           of ellipsoids.
 %

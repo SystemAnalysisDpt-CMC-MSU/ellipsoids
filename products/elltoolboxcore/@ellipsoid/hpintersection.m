@@ -1,4 +1,5 @@
-function [intEllMat, isnIntersectedMat] = hpintersection(myEllMat, myHypMat)
+function [intEllMat, isnIntersectedMat] = ...
+    hpintersection(myEllMat, myHypMat)
 %
 % HPINTERSECTION - computes the intersection of ellipsoid with hyperplane.
 %

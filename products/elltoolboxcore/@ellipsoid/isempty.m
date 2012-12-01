@@ -4,7 +4,7 @@ function isPositiveMat = isempty(myEllMat)
 %
 % Input:
 %   regular:
-%       myEllMat: ellipsod [mRows, nCols] - matrix of ellipsoids.
+%       myEllMat: ellipsoid [mRows, nCols] - matrix of ellipsoids.
 %
 % Output:
 %   isPositiveMat: logical[1mRows, nCols], 

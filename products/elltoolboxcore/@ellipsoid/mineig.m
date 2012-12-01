@@ -32,7 +32,8 @@ for iRow = 1:mRows
         if isdegenerate(inpEllMat(iRow, jCol))
             minEigMat(iRow,jCol)=0;
         else
-            minEigMat(iRow,jCol) = min(eig(inpEllMat(iRow, jCol).shape));
+            minEigMat(iRow,jCol) = ...
+                min(eig(inpEllMat(iRow, jCol).shape));
         end
     end
 end

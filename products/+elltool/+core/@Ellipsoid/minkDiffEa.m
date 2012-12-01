@@ -40,8 +40,8 @@ absTol=ellObj1.CHECK_TOL;
 isFirstBigger=Ellipsoid.checkBigger(ellObj1,ellObj2,nDimSpace,absTol);
 if ~isFirstBigger
     throwerror('wrongElls',...
-        'geometric difference of these two',...
-        'ellipsoids is an empty set');
+        ['geometric difference of these two ',...
+        'ellipsoids is an empty set']);
 end
 %
 if mSize~=nDimSpace
