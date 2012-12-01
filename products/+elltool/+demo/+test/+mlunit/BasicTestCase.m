@@ -3,21 +3,18 @@ classdef BasicTestCase < mlunitext.test_case
         function self=BasicTestCase(varargin)
             self=self@mlunitext.test_case(varargin{:});
         end
-        function testDemo1(~)
-            runDemo(@ell_demo1);
+        function testDemoEllCalc(~)
+            s_ell_demo_ellcalc;
         end
-        function testDemo2(~)
-            runDemo(@ell_demo2);
+        function testDemoEllVis(~)
+            s_ell_demo_ellvis;
         end
-        function testDemo3(~)
-            runDemo(@ell_demo3);
+        function testDemoReach(~)
+            s_ell_demo_reach;
         end
         
         function tear_down(~)
             close all;
         end
     end
-end
-function runDemo(fDemo)
-arrayfun(@(x)evalin('caller',[x.code{:}]),fDemo());
 end
