@@ -6,6 +6,10 @@ classdef hyperplane < handle
         absTol
     end
     methods
+        function absTol = getAbsTol(myHyp)
+           absTol = myHyp.absTol; 
+        end
+        
         function HA = hyperplane(v, c,varargin)
         % HYPERPLANE - creates hyperplane structure (or array of hyperplane structures).
         %

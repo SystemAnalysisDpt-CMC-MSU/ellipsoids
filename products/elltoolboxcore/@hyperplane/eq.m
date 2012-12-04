@@ -1,102 +1,100 @@
-function res = eq(H1, H2)
+function isPosArr = eq(fstHypArr, secHypArr)
 %
-% Description:
-% ------------
+% EQ - check if two hyperplanes are the same.
 %
-%    Check if two hyperplanes are the same.
+% Input:
+%   regular:
+%       fstHypArr: hyperplane [nDims1, nDims2, ...]/hyperplane [1, 1] -
+%           first array of hyperplanes.
+%       secHypArr: hyperplane [nDims1, nDims2, ...]/hyperplane [1, 1] -
+%           second array of hyperplanes.
 %
-
+% Output:
+%    isPosArr: logical[nDims1, nDims2, ...] - true -
+%       if fstHypArr(iDim1, iDim2, ...) == secHypArr(iDim1, iDim2, ...),
+%       false - otherwise. If size of fstHypArr is [1, 1], then checks
+%       if fstHypArr == secHypArr(iDim1, iDim2, ...)
+%       for all iDim1, iDim2, ... , and vice versa.
 %
-% Author:
-% -------
+% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+% $Copyright:  The Regents of the University of California 2004-2008 $
 %
-%    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-%
-  if ~(isa(H1, 'hyperplane')) | ~(isa(H2, 'hyperplane'))
-    error('==: input arguments must be hyperplanes.');
-  end
+% $Author: Aushkap Nikolay <n.aushkap@gmail.com> $  $Date: 30-11-2012$
+% $Copyright: Moscow State University,
+%   Faculty of Computational Mathematics and Computer Science,
+%   System Analysis Department 2012 $
 
-  [k, l] = size(H1);
-  s      = k * l;
-  [m, n] = size(H2);
-  t      = m * n;
+import modgen.common.checkmultvar;
 
-  if ((k ~= m) | (l ~= n)) & (s > 1) & (t > 1)
-    error('==: sizes of hyperplane arrays do not match.');
-  end
+checkmultvar('isa(x1,''hyperplane'') && isa(x2,''hyperplane'')', 2, ...
+    fstHypArr, secHypArr, 'errorTag', 'wrongInput', 'errorMessage', ...
+    '==: input arguments must be hyperplanes.');
 
-  res = [];
-  if (s > 1) & (t > 1)
-    for i = 1:k
-      r = [];
-      for j = 1:l
-        r = [r l_hpeq(H1(i, j), H2(i, j))];
-      end
-      res = [res; r];
-    end
-  elseif (s > 1)
-    for i = 1:k
-      r = [];
-      for j = 1:l
-        r = [r l_hpeq(H1(i, j), H2)];
-      end
-      res = [res; r];
-    end
-  else
-    for i = 1:m
-      r = [];
-      for j = 1:n
-        r = [r l_hpeq(H1, H2(i, j))];
-      end
-      res = [res; r];
-    end
-  end
-
-  return;
+checkmultvar('isequal(size(x1), size(x2)) | numel(x1) == 1 | numel(x2) == 1', ...
+    2, fstHypArr, secHypArr, 'errorTag', 'wrongSizes', 'errorMessage', ...
+    'Sizes of hyperplane arrays do not match.');
 
 
+if (numel(fstHypArr) == 1)
+    fstHypArr = repmat(fstHypArr, size(secHypArr));
+elseif (numel(secHypArr) == 1)
+    secHypArr = repmat(secHypArr, size(fstHypArr));
+end
 
+isPosArr = arrayfun(@(x, y) l_hpeq(x, y), fstHypArr, secHypArr, ...
+    'UniformOutput', true);
 
+end
 
-%%%%%%%%
-
-function res = l_hpeq(H1, H2)
+function isPos = l_hpeq(fstHyp, secHyp)
 %
 % L_HPEQ - check if two single hyperplanes are equal.
 %
-  [x, a] = parameters(H1);
-  [y, b] = parameters(H2);
-  res    = 0;
-  if min(size(x) == size(y)) < 1
-    return;
-  end
+% Input:
+%   regular:
+%       fstHyp: hyperplane [1, 1] - first hyperplane.
+%       secHyp: hyperplane [1, 1] - second hyperplane.
+%
+% Output:
+%   isPos: logical[1, 1] - isPos = true -  if fstHyp == secHyp,
+%       false - otherwise.
+%
+% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+% $Copyright:  The Regents of the University of California 2004-2008 $
 
-  nx = norm(x);
-  ny = norm(y);
-  x  = x/nx;
-  a  = a/nx;
-  y  = y/ny;
-  b  = b/ny;
+[fstNormVec, fstHypScal] = parameters(fstHyp);
+[secNormVec, secHypScal] = parameters(secHyp);
+isPos    = false;
+if min(size(fstNormVec) == size(secNormVec)) < 1
+    return;
+end
 
-  if a < 0
-    a = -a;
-    x = -x;
-  end
-  if b < 0
-    b = -b;
-    y = -y;
-  end
-  if abs(a - b) > H1.absTol
+fstNorm = norm(fstNormVec);
+secNorm = norm(secNormVec);
+fstNormVec  = fstNormVec/fstNorm;
+fstHypScal  = fstHypScal/fstNorm;
+secNormVec  = secNormVec/secNorm;
+secHypScal  = secHypScal/secNorm;
+
+if fstHypScal < 0
+    fstHypScal = -fstHypScal;
+    fstNormVec = -fstNormVec;
+end
+if secHypScal < 0
+    secHypScal = -secHypScal;
+    secNormVec = -secNormVec;
+end
+if abs(fstHypScal - secHypScal) > fstHyp.absTol
     return;
-  end
-  if max(abs(x - y)) < H1.absTol()
-    res = 1;
+end
+if max(abs(fstNormVec - secNormVec)) < fstHyp.absTol()
+    isPos = true;
     return;
-  end
-  if a < H1.absTol
-    if max(abs(x + y)) < H1.absTol
-      res = 1;
+end
+if fstHypScal < fstHyp.absTol
+    if max(abs(fstNormVec + secNormVec)) < fstHyp.absTol
+        isPos = true;
     end
-  end
-    
-  return;  
+end
+
+end

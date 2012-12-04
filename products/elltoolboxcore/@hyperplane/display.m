@@ -1,36 +1,30 @@
-function display(H)
+function display(myHypMat)
 %
-% Description:
-% ------------
+% DISPLAY - Displays hyperplane object.
 %
-%    Displays hyperplane object.
+% Input:
+%   regular:
+%       myHypMat: hyperplane [mRows, nCols] - matrix of hyperplanes.
 %
+% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+% $Copyright:  The Regents of the University of California 2004-2008 $
 
-%
-% Author:
-% -------
-%
-%    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-%
+fprintf('\n');
+disp([inputname(1) ' =']);
 
-  fprintf('\n');
-  disp([inputname(1) ' =']);
-
-  [m, n] = size(H);
-  if (m > 1) | (n > 1)
-    fprintf('%dx%d array of hyperplanes.\n\n', m, n);
+[mRows, nCols] = size(myHypMat);
+if (mRows > 1) | (nCols > 1)
+    fprintf('%dx%d array of hyperplanes.\n\n', mRows, nCols);
     return;
-  end
+end
 
-  fprintf('\n');
-  fprintf('Normal:\n'); disp(H.normal);
-  fprintf('Shift:\n'); disp(H.shift);
+fprintf('\n');
+fprintf('Normal:\n'); disp(myHypMat.normal);
+fprintf('Shift:\n'); disp(myHypMat.shift);
 
-  d = dimension(H);  
-  if d < 1
+nDims = dimension(myHypMat);
+if nDims < 1
     fprintf('Empty hyperplane.\n\n');
-  else
-    fprintf('Hyperplane in R^%d.\n\n', d);
-  end
-  
-  return;
+else
+    fprintf('Hyperplane in R^%d.\n\n', nDims);
+end
