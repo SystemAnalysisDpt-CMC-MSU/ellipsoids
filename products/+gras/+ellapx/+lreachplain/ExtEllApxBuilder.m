@@ -44,7 +44,7 @@ classdef ExtEllApxBuilder<gras.ellapx.lreachplain.ATightEllApxBuilder
     methods (Access=private)
         function self=prepareODEData(self)
             import gras.ellapx.common.*;
-            import gras.ellapx.uncertcalc.MatrixOperationsFactory;
+            import gras.mat.MatrixOperationsFactory;
             import gras.ellapx.lreachplain.IntEllApxBuilder;
             %
             nGoodDirs=self.getNGoodDirs();

@@ -156,7 +156,7 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
         function self=prepareODEData(self)
             import gras.ellapx.common.*;
             import gras.ellapx.lreachplain.IntEllApxBuilder;
-            import gras.ellapx.uncertcalc.MatrixOperationsFactory;
+            import gras.mat.MatrixOperationsFactory;
             %
             nGoodDirs=self.getNGoodDirs();
             pDefObj=self.getProblemDef();

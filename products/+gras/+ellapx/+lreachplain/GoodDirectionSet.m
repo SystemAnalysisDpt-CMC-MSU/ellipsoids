@@ -36,7 +36,7 @@ classdef GoodDirectionSet
         function self=GoodDirectionSet(pDefObj,sTime,lsGoodDirMat,...
                 calcPrecision)
             import gras.ellapx.common.*;
-            import gras.ellapx.uncertcalc.MatrixOperationsFactory;
+            import gras.mat.MatrixOperationsFactory;
             import gras.mat.fcnlib.ConstMatrixFunction;
             import gras.mat.fcnlib.ConstColFunction;
             import modgen.common.throwerror;
