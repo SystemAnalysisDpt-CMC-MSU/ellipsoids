@@ -73,7 +73,7 @@ classdef ReachContinious < handle
             if nargin < 4
                 throwerror('REACH: insufficient number of input arguments.');
             end
-            if ~(isa(linSys, 'elltool.core.control.LinSys'))
+            if ~(isa(linSys, 'elltool.linsys.LinSys'))
                 throwerror(['REACH: first input argument ',...
                     'must be linear system object.']);
             end
