@@ -8,7 +8,7 @@ classdef MatrixOperationsFactory<modgen.common.obj.StaticPropStorage
             import gras.mat.MatrixOperationsFactory;
             import modgen.common.throwerror;
             [isSplineUsed,isThere]=MatrixOperationsFactory.getProp(...
-                MatrixOperationsFactory.IS_SPLINE_OP_PROP_NAME);
+                MatrixOperationsFactory.IS_SPLINE_OP_PROP_NAME,true);
             if ~isThere
                 isSplineUsed=MatrixOperationsFactory.DEFAULT_IS_SPLINE_USED;
             end
