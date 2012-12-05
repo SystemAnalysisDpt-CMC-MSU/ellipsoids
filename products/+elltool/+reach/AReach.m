@@ -1,4 +1,4 @@
-classdef AReach < IReach
+classdef AReach < elltool.reach.IReach
     properties (Access = protected)
         linSys
         isCut

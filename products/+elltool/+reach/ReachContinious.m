@@ -1,13 +1,13 @@
-classdef ReachContinious < handle
+classdef ReachContinious < elltool.reach.AReach
     properties (Constant,GetAccess = private)
         MIN_EIG = 0.1
     end
     properties (Access = protected)
-        linSys
+        %linSys
         smartLinSys
         ellTubeRel
-        isCut
-        projectionBasisMat
+        %isCut
+        %projectionBasisMat
     end
     methods (Access = private)
         function projSet = getProjSet(self, projMat)
@@ -38,7 +38,7 @@ classdef ReachContinious < handle
             %%
             isEqGMat = strcmp(GtStrCMat, GSizeZeroCMat);
             isEqQMat = strcmp(QtStrCMat, QSizeZeroCMat);
-            if (all(isEqGMat(:)) && all(isEqQMat(:)))
+            if (all(isEqGMat(:)) || all(isEqQMat(:)))
                 linSys =...
                     gras.ellapx.lreachplain.probdyn.LReachProblemDynamicsFactory.createByParams(...
                     AtStrCMat, BtStrCMat,...
