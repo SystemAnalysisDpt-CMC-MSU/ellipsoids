@@ -34,7 +34,8 @@ checkmultvar('isa(x1, ''hyperplane'') || isa(x2, ''hyperplane'')', ...
     2, fstHypArr, secHypArr, 'errorTag', 'wrongSizes', 'errorMessage', ...
     'Input arguments must be hyperplanes.');
 
-checkmultvar('isequal(size(x1), size(x2)) | numel(x1) == 1 | numel(x2) == 1', ...
+checkmultvar(...
+    'isequal(size(x1), size(x2)) || numel(x1) == 1 || numel(x2) == 1', ...
     2, fstHypArr, secHypArr, 'errorTag', 'wrongSizes', 'errorMessage', ...
     'Sizes of hyperplane arrays do not match.');
 
@@ -44,19 +45,21 @@ elseif (numel(secHypArr) == 1)
     secHypArr = repmat(secHypArr, size(fstHypArr));
 end
 
-isPosArr = arrayfun(@(x, y) l_hpparallel(x, y), fstHypArr, secHypArr, ...
-    'UniformOutput', true);
+fstHypAbsTolArr = getAbsTol(fstHypArr);
+isPosArr = arrayfun(@(x, y, z) issnglparallel(x, y, z), ...
+    fstHypArr, secHypArr, fstHypAbsTolArr, 'UniformOutput', true);
 
 end
 
-function isPos = l_hpparallel(fstHyp, secHyp)
+function isPos = issnglparallel(fstHyp, secHyp, fstHypAbsTol)
 %
-% L_HPPARALLEL - check if two single hyperplanes are equal.
+% ISSNGLPARALLEL - check if two single hyperplanes are equal.
 %
 % Input:
 %   regular:
 %       fstHyp: hyperplane [1, 1] - first hyperplane.
 %       secHyp: hyperplane [1, 1] - second hyperplane.
+%       fstHypAbsTol: double[1, 1] - absTol properties.
 %
 % Output:
 %   isPos: logical[1, 1] - isPos = true -  if fstHyp is parallel 
@@ -78,9 +81,9 @@ function isPos = l_hpparallel(fstHyp, secHyp)
   if min(size(fstHypNormVec) == size(secHypNormVec)) < 1
     return;
   end
-  if max(abs(fstHypNormVec - secHypNormVec)) < fstHyp.absTol()
+  if max(abs(fstHypNormVec - secHypNormVec)) < fstHypAbsTol
     isPos = true;
-  elseif max(abs(fstHypNormVec + secHypNormVec)) < fstHyp.absTol()
+  elseif max(abs(fstHypNormVec + secHypNormVec)) < fstHypAbsTol
     isPos = true;
   end
 

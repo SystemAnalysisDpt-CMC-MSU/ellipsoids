@@ -1,4 +1,4 @@
-function res = ne(H1, H2)
+function isPosArr = ne(fstHypArr, secHypArr)
 %
 % NE - The opposite of EQ.
 %
@@ -19,4 +19,4 @@ function res = ne(H1, H2)
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
 
-res = ~(eq(H1, H2));
+isPosArr = ~(eq(fstHypArr, secHypArr));

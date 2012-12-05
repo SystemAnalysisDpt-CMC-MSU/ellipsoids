@@ -1,10 +1,11 @@
-function display(myHypMat)
+function display(hypArr)
 %
 % DISPLAY - Displays hyperplane object.
 %
 % Input:
 %   regular:
-%       myHypMat: hyperplane [mRows, nCols] - matrix of hyperplanes.
+%       myHypArr: hyperplane [hpDim1, hpDim2, ...] - array
+%           of hyperplanes.
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
@@ -12,17 +13,19 @@ function display(myHypMat)
 fprintf('\n');
 disp([inputname(1) ' =']);
 
-[mRows, nCols] = size(myHypMat);
-if (mRows > 1) | (nCols > 1)
-    fprintf('%dx%d array of hyperplanes.\n\n', mRows, nCols);
+hpSizeVec = size(hypArr);
+if ~isequal(hpSizeVec, [1, 1])
+    fprintf('hyperplane [');
+    fprintf('%d ', hpSizeVec);
+    fprintf('\b] - array of hyperplanes.\n\n');
     return;
 end
 
 fprintf('\n');
-fprintf('Normal:\n'); disp(myHypMat.normal);
-fprintf('Shift:\n'); disp(myHypMat.shift);
+fprintf('Normal:\n'); disp(hypArr.normal);
+fprintf('Shift:\n'); disp(hypArr.shift);
 
-nDims = dimension(myHypMat);
+nDims = dimension(hypArr);
 if nDims < 1
     fprintf('Empty hyperplane.\n\n');
 else

@@ -1,4 +1,4 @@
-function isPosArr = eq(fstHypArr, secHypArr)
+function [isPosArr reportStrArr] = eq(fstHypArr, secHypArr)
 %
 % EQ - check if two hyperplanes are the same.
 %
@@ -10,11 +10,13 @@ function isPosArr = eq(fstHypArr, secHypArr)
 %           second array of hyperplanes.
 %
 % Output:
-%    isPosArr: logical[nDims1, nDims2, ...] - true -
+%   isPosArr: logical[nDims1, nDims2, ...] - true -
 %       if fstHypArr(iDim1, iDim2, ...) == secHypArr(iDim1, iDim2, ...),
 %       false - otherwise. If size of fstHypArr is [1, 1], then checks
 %       if fstHypArr == secHypArr(iDim1, iDim2, ...)
 %       for all iDim1, iDim2, ... , and vice versa.
+%   reportStrArr: cell[nDims1, nDims2, ...] of char[1, nLetters] -
+%       report strings.
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
@@ -30,44 +32,52 @@ checkmultvar('isa(x1,''hyperplane'') && isa(x2,''hyperplane'')', 2, ...
     fstHypArr, secHypArr, 'errorTag', 'wrongInput', 'errorMessage', ...
     '==: input arguments must be hyperplanes.');
 
-checkmultvar('isequal(size(x1), size(x2)) | numel(x1) == 1 | numel(x2) == 1', ...
+checkmultvar(...
+    'isequal(size(x1), size(x2)) | numel(x1) == 1 | numel(x2) == 1', ...
     2, fstHypArr, secHypArr, 'errorTag', 'wrongSizes', 'errorMessage', ...
     'Sizes of hyperplane arrays do not match.');
 
 
 if (numel(fstHypArr) == 1)
-    fstHypArr = repmat(fstHypArr, size(secHypArr));
+    absTolArr = getAbsTol(secHypArr);
+    [isPosCArr reportStrArr] = arrayfun(@(y, z) ...
+        issngleq(fstHypArr, y, z), secHypArr, absTolArr, ...
+        'UniformOutput', false);
 elseif (numel(secHypArr) == 1)
-    secHypArr = repmat(secHypArr, size(fstHypArr));
+    absTolArr = getAbsTol(fstHypArr);
+    [isPosCArr reportStrArr] = arrayfun(@(x, z) ...
+        issngleq(x, secHypArr, z), fstHypArr, absTolArr, ...
+        'UniformOutput', false);
+else
+    absTolArr = getAbsTol(fstHypArr);
+    [isPosCArr reportStrArr] = arrayfun(@(x, y, z) issngleq(x, y, z), ...
+        fstHypArr, secHypArr, absTolArr, 'UniformOutput', false);
 end
 
-isPosArr = arrayfun(@(x, y) l_hpeq(x, y), fstHypArr, secHypArr, ...
-    'UniformOutput', true);
+isPosArr = cell2mat(isPosCArr);
 
 end
 
-function isPos = l_hpeq(fstHyp, secHyp)
+function [isPos reportStr] = issngleq(fstHyp, secHyp, absTol)
 %
-% L_HPEQ - check if two single hyperplanes are equal.
+% ISSNGLEQ - check if two single hyperplanes are equal.
 %
 % Input:
 %   regular:
 %       fstHyp: hyperplane [1, 1] - first hyperplane.
 %       secHyp: hyperplane [1, 1] - second hyperplane.
+%       absTol: double[1, 1] - absTol properies of hyperplane.
 %
 % Output:
 %   isPos: logical[1, 1] - isPos = true -  if fstHyp == secHyp,
 %       false - otherwise.
+%   reportStr: char[1, nLetters] - report string.
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
 
 [fstNormVec, fstHypScal] = parameters(fstHyp);
 [secNormVec, secHypScal] = parameters(secHyp);
-isPos    = false;
-if min(size(fstNormVec) == size(secNormVec)) < 1
-    return;
-end
 
 fstNorm = norm(fstNormVec);
 secNorm = norm(secNormVec);
@@ -84,17 +94,11 @@ if secHypScal < 0
     secHypScal = -secHypScal;
     secNormVec = -secNormVec;
 end
-if abs(fstHypScal - secHypScal) > fstHyp.absTol
-    return;
-end
-if max(abs(fstNormVec - secNormVec)) < fstHyp.absTol()
-    isPos = true;
-    return;
-end
-if fstHypScal < fstHyp.absTol
-    if max(abs(fstNormVec + secNormVec)) < fstHyp.absTol
-        isPos = true;
-    end
-end
+
+fstStruct = struct('normal', fstNormVec, 'shift', fstHypScal);
+secStruct = struct('normal', secNormVec, 'shift', secHypScal);
+
+[isPos, reportStr] = ...
+    modgen.struct.structcomparevec(fstStruct, secStruct, absTol);
 
 end

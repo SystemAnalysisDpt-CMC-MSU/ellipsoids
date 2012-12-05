@@ -2,25 +2,28 @@ function isPosArr = contains(myHypArr, xArr)
 %
 % CONTAINS - checks if given vectors belong to the hyperplanes.
 %
-%   resMat = CONTAINS(myHyp, xMat) - Checks if vectors specified by
-%       columns of matrix xMat belong to hyperplanes in myHyp.
+%   isPosArr = CONTAINS(myHypArr, xArr) - Checks if vectors specified
+%       by columns xArr(:, hpDim1, hpDim2, ...) belong
+%       to hyperplanes in myHypArr.
 %
 % Input:
 %   regular:
-%       myHypArr: hyperplane [nDims1, nDims2, ...]/hyperplane [1, 1] -
+%       myHypArr: hyperplane [hpDim1, hpDim2, ...]/hyperplane [1, 1] -
 %           array of hyperplanes of the same dimentions nDims.
-%       xArr: double[nDims, nDims1, nDims2, ...]/double[nDims, 1] /
-%           / double[nDims, mDims1, mDims2, ...] - array
+%       xArr: double[nDims, hpDim1, hpDim2, ...]/double[nDims, 1] /
+%           / double[nDims, nVecArrDim1, nVecArrDim2, ...] - array
 %           whose columns represent the vectors needed to be checked.
 %
-%           note: if size of myHypArr is [nDims1, nDims2, ...], then size of
-%               xArr is [nDims, nDims1, nDims2, ...] or [nDims, 1],
-%               if size of myHypArr [1, 1], then xArr can be any size
-%               [nDims, mDims1, mDims2, ...], in this case output
-%               variable will has size [1, mDims1, mDims2, ...].
+%           note: if size of myHypArr is [hpDim1, hpDim2, ...], then
+%               size of xArr is [nDims, hpDim1, hpDim2, ...]
+%               or [nDims, 1], if size of myHypArr [1, 1], then xArr
+%               can be any size [nDims, nVecArrDim1, nVecArrDim2, ...],
+%               in this case output variable will has
+%               size [1, nVecArrDim1, nVecArrDim2, ...].
 %
 % Output:
-%   isPosArr: logical[nDims1, nDims2,...]/logical[1, mDims1, mDims2,...]
+%   isPosArr: logical[hpDim1, hpDim2,...] / 
+%       / logical[1, nVecArrDim1, nVecArrDim2, ...],
 %       isPosArr(iDim1, iDim2, ...) = true - myHypArr(iDim1, iDim2, ...)
 %       contains xArr(:, iDim1, iDim2, ...), false - otherwise.
 %
@@ -53,10 +56,9 @@ checkvar(xArr, '~any(isnan(x(:)))',...
     'errorTag', 'wrongInput',...
     'errorMessage', 'Second input argument is not correct.');
 
-myHypVec = reshape(myHypArr, [1, numel(myHypArr)]);
-nDimVec = dimension(myHypVec);
-maxDim = max(nDimVec(:));
-minDim = min(nDimVec(:));
+nDimArr = dimension(myHypArr);
+maxDim = max(nDimArr(:));
+minDim = min(nDimArr(:));
 
 checkmultvar('~(x1 ~= x2)', 2, maxDim, minDim, ...
     'errorTag', 'wrongInput:wrongSizes', 'errorMessage', ...
@@ -69,32 +71,42 @@ checkmultvar('~(x1 ~= x2)', 2, sizeXVec(1), nDims, ...
     'errorTag', 'wrongInput:wrongSizes', 'errorMessage', ...
     'Vector dimension does not match the dimension of hyperplanes.');
 
-xVec = reshape(xArr, [nDims, numel(xArr)/nDims]);
-xCVec = mat2cell(xVec, nDims, ones(1, numel(xArr)/nDims));
-
 checkmultvar('~((x1 ~= x2) && (x1 > 1) && (x2 > 1))',...
-    2, size(xCVec, 2), size(myHypVec, 2), 'errorTag', ...
+    2, numel(xArr)/nDims, numel(myHypArr), 'errorTag', ...
     'wrongInput:wrongSizes', 'errorMessage', ...
     'Number of vectors does not match the number of hyperplanes.');
 
-if (numel(myHypArr) == 1)
-    myHypVec = repmat(myHypVec, [1 size(xCVec, 2)]);
-elseif (numel(xCVec) == 1)
-    xCVec = repmat(xCVec, [1 size(myHypVec, 2)]);
-end
-
-isPosArr = arrayfun(@(x, y) isContain(x, y{1}), myHypVec, xCVec, ...
-    'UniformOutput', true);
-
-if (numel(myHypArr) == 1)   
-    isPosArr = reshape(isPosArr, [1 sizeXVec(2:end)]);
+if (numel(xArr)/nDims == 1)
+    isPosArr = arrayfun(@(x) iscontain(x, xArr), myHypArr, ...
+        'UniformOutput', true);
+elseif (numel(myHypArr) == 1)
+    otherDimVec = sizeXVec;
+    % otherDimVec = [nVecArrDim1, nVecArrDim2, ...]
+    otherDimVec(:, 1) = [];
+    indCVec = arrayfun(@(x) ones(1, x), otherDimVec, ...
+        'UniformOutput', false);
+    xCArr = mat2cell(xArr, nDims, indCVec{:});
+    xCArr = shiftdim(xCArr,1);
+    isPosArr = arrayfun(@(x) iscontain(myHypArr, x{1}),xCArr, ...
+        'UniformOutput', true);
 else
-    isPosArr = reshape(isPosArr, size(myHypArr));
+    hypSizeVec = size(myHypArr);
+    indCVec = arrayfun(@(x) ones(1, x), hypSizeVec, ...
+        'UniformOutput', false);
+    if (size(sizeXVec, 2))
+        subXArr = zeros(sizeXVec(1), 1, sizeXVec(2));
+        subXArr(:, 1, :) = xArr;
+        xArr = subXArr;
+    end
+    xCArr = mat2cell(xArr, nDims, indCVec{:});
+    xCArr = shiftdim(xCArr,1);
+    isPosArr = arrayfun(@(x, y) iscontain(x, y{1}), myHypArr, xCArr, ...
+        'UniformOutput', true);
 end
 
 end
 
-function isPos = isContain(myHyp, xVec)
+function isPos = iscontain(myHyp, xVec)
 %
 % CONTAINS - checks if given vector belong to the hyperplane.
 %
