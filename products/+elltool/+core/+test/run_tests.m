@@ -19,7 +19,7 @@ loader = mlunitext.test_loader;
  resList{3}=runner.run(suite);
 
  suite = loader.load_tests_from_test_case(...
- 'elltool.core.test.mlunit.NewEllipsoidTestCase',varargin{:});
+ 'elltool.core.test.mlunit.GenEllipsoidTestCase',varargin{:});
  resList{4}=runner.run(suite);
 
 result=[resList{:}];

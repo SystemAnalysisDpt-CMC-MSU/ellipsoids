@@ -4,12 +4,12 @@ function [ resEllVec ] = minkDiffIa( ellObj1, ellObj2, dirMat)
 %
 % Input:
 %   regular:
-%       ellObj1: Ellipsoid: [1,1] - first generalized ellipsoid
-%       ellObj2: Ellipsoid: [1,1] - second generalized ellipsoid
+%       ellObj1: GenEllipsoid: [1,1] - first generalized ellipsoid
+%       ellObj2: GenEllipsoid: [1,1] - second generalized ellipsoid
 %       dirMat: double[nDim,nDir] - matrix whose columns specify
 %           directions for which approximations should be computed
 % Output:
-%   resEllVec: Ellipsoid[1,nDir] - vector of generalized ellipsoids of
+%   resEllVec: GenEllipsoid[1,nDir] - vector of generalized ellipsoids of
 %       internal approximation of the dirrence of first and second generalized
 %       ellipsoids
 %
@@ -19,17 +19,17 @@ function [ resEllVec ] = minkDiffIa( ellObj1, ellObj2, dirMat)
 %            Faculty of Computational Mathematics and Cybernetics,
 %            System Analysis Department 2012 $
 %
-% Literature:
+% Bibliography:
 % V.V.Shiryaev, 'About internal ellipsoidal approximations of attainability
 % sets of linear systems under uncertanty'. Moscow University Vestnik,
 % Ser.15, Computational mathematics and cybernetics, 2012, N3, p. 20-27.
 %
 import modgen.common.throwerror
-import elltool.core.Ellipsoid;
+import elltool.core.GenEllipsoid;
 %
 modgen.common.type.simple.checkgenext(@(x,y)isa(x,...
-    'elltool.core.Ellipsoid')&&...
-    isa(y,'elltool.core.Ellipsoid'),2,ellObj1,ellObj2)
+    'elltool.core.GenEllipsoid')&&...
+    isa(y,'elltool.core.GenEllipsoid'),2,ellObj1,ellObj2)
 %
 modgen.common.type.simple.checkgenext('isscalar(x1)&&isscalar(x2)',...
     2,ellObj1,ellObj2);
@@ -39,7 +39,7 @@ ell1DiagVec=diag(ellObj1.diagMat);
 nDimSpace=length(ell1DiagVec);
 %Check whether one ellipsoid is bigger then the other
 absTol=ellObj1.CHECK_TOL;
-isFirstBigger=Ellipsoid.checkBigger(ellObj1,ellObj2,nDimSpace,absTol);
+isFirstBigger=GenEllipsoid.checkBigger(ellObj1,ellObj2,nDimSpace,absTol);
 if ~isFirstBigger
     throwerror('wrongElls',...
         ['geometric difference of these ',...
@@ -53,21 +53,20 @@ if mSize~=nDimSpace
 end
 %
 resCenterVec=ellObj1.centerVec-ellObj2.centerVec;
-resEllVec(nDirs)=Ellipsoid();
+resEllVec(nDirs)=GenEllipsoid();
 for iDir=1:nDirs
     curDirVec=dirMat(:,iDir);
     isInf1Vec=ell1DiagVec==Inf;
     if ~all(~isInf1Vec)
-        [ resQMat diagQVec ] = Ellipsoid.findDiffINFC(@Ellipsoid.findDiffIaND, ellObj1,ellObj2,curDirVec,isInf1Vec,...
+        [ resQMat diagQVec ] = GenEllipsoid.findDiffINFC(@GenEllipsoid.findDiffIaND, ellObj1,ellObj2,curDirVec,isInf1Vec,...
             absTol);
-        resEllVec(iDir)=Ellipsoid(resCenterVec,diagQVec,resQMat);
+        resEllVec(iDir)=GenEllipsoid(resCenterVec,diagQVec,resQMat);
     else
         %Finite case
         ellQ1Mat=ellObj1.eigvMat*ellObj1.diagMat*ellObj1.eigvMat.';
         ellQ2Mat=ellObj2.eigvMat*ellObj2.diagMat*ellObj2.eigvMat.';
-        resQMat=Ellipsoid.findDiffFC(@Ellipsoid.findDiffIaND,ellQ1Mat,ellQ2Mat,...
+        resQMat=GenEllipsoid.findDiffFC(@GenEllipsoid.findDiffIaND,ellQ1Mat,ellQ2Mat,...
             curDirVec,absTol);
-        resEllVec(iDir)=Ellipsoid(resCenterVec,resQMat);
+        resEllVec(iDir)=GenEllipsoid(resCenterVec,resQMat);
     end
-end
 end

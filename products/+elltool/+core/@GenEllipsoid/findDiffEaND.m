@@ -17,11 +17,12 @@ function resQMat=findDiffEaND(ellQ1Mat, ellQ2Mat,curDirVec,absTol)
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Cybernetics,
 %            System Analysis Department 2012 $
-import elltool.core.Ellipsoid;
-isGoodDir= Ellipsoid.findIsGoodDir(ellQ1Mat,ellQ2Mat,curDirVec);
+%
+import elltool.core.GenEllipsoid;
+isGoodDir= GenEllipsoid.getIsGoodDirForMat(ellQ1Mat,ellQ2Mat,curDirVec);
 if isGoodDir
-    ellSQR1Mat=Ellipsoid.findSqrtOfMatrix(ellQ1Mat,absTol);
-    ellSQR2Mat=Ellipsoid.findSqrtOfMatrix(ellQ2Mat,absTol);
+    ellSQR1Mat=GenEllipsoid.findSqrtOfMatrix(ellQ1Mat,absTol);
+    ellSQR2Mat=GenEllipsoid.findSqrtOfMatrix(ellQ2Mat,absTol);
     sOrthMat=  gras.la.orthtransl(ellSQR2Mat*curDirVec,...
         ellSQR1Mat*curDirVec);
     auxMat=ellSQR1Mat-sOrthMat*ellSQR2Mat;
@@ -29,5 +30,4 @@ if isGoodDir
     resQMat=0.5*(resQMat+resQMat.');
 else
     resQMat=[];
-end
 end

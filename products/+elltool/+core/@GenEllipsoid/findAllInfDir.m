@@ -3,7 +3,7 @@ function [isInfVec infDirEigMat] = findAllInfDir(ellObj)
 %
 % Input:
 %   regular:
-%       ellObj: Ellipsoid: [1,1] - generalized ellipsoid
+%       ellObj: GenEllipsoid: [1,1] - generalized ellipsoid
 %
 % Output:
 %   isInfVec: logical: [nDim,1] - logical vector, whose i-th component is
@@ -19,4 +19,3 @@ function [isInfVec infDirEigMat] = findAllInfDir(ellObj)
 isInfVec=(diag(ellObj.diagMat)==Inf);
 eigvMat=ellObj.eigvMat;
 infDirEigMat=eigvMat(:,isInfVec);
-end

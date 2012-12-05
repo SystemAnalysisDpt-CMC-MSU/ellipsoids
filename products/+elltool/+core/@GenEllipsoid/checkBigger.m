@@ -2,8 +2,8 @@ function isBigger=checkBigger(ellObj1,ellObj2,nDimSpace,absTol)
 % CHECKBIGGER - check whether one generalized ellipsoid is inside the other
 % Input:
 %   regular:
-%       ellObj1: Ellipsoid: [1,1] - first generalized ellipsoid
-%       ellObj2: Ellipsoid: [1,1] - second generalized ellipsoid
+%       ellObj1: GenEllipsoid: [1,1] - first generalized ellipsoid
+%       ellObj2: GenEllipsoid: [1,1] - second generalized ellipsoid
 %       nDimSpace: double: [1,1] - dimension of space
 %       absTol: double: [1,1] - absolute tolerance
 % Output:
@@ -26,7 +26,7 @@ function isBigger=checkBigger(ellObj1,ellObj2,nDimSpace,absTol)
 %then use simultaneos diagonalization.
 %
 %Find infinite directions for each of the ellipsoids
-import elltool.core.Ellipsoid;
+import elltool.core.GenEllipsoid;
 
 eigv1Mat=ellObj1.eigvMat;
 eigv2Mat=ellObj2.eigvMat;
@@ -37,14 +37,14 @@ isInf2DirVec=diag(diag2Mat)==Inf;
 allInfDir1Mat=eigv1Mat(:,isInf1DirVec);
 allInfDir2Mat=eigv2Mat(:,isInf2DirVec);
 %Find basis for first ell
-[orthBas1Mat rang1Inf]=Ellipsoid.findBasRank(allInfDir1Mat,absTol);
-%rangZ>0 since there is at least one zero e.v. Q1
-finInd1Vec=(rang1Inf+1):nDimSpace;
+[orthBas1Mat rank1Inf]=GenEllipsoid.findBasRank(allInfDir1Mat,absTol);
+%rankZ>0 since there is at least one zero e.v. Q1
+finInd1Vec=(rank1Inf+1):nDimSpace;
 finBas1Mat = orthBas1Mat(:,finInd1Vec);
 %Find basis for second ell
-[orthBas2Mat rang2Inf]=Ellipsoid.findBasRank(allInfDir2Mat,absTol);
-%rangZ>0 since there is at least one zero e.v. Q1
-infInd2Vec=1:rang2Inf;
+[orthBas2Mat rank2Inf]=GenEllipsoid.findBasRank(allInfDir2Mat,absTol);
+%rankZ>0 since there is at least one zero e.v. Q1
+infInd2Vec=1:rank2Inf;
 infBas2Mat=orthBas2Mat(:,infInd2Vec);
 %
 if isempty(finBas1Mat)
