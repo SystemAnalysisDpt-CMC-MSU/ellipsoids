@@ -44,9 +44,7 @@ function isPosArr = contains(myHypArr, xArr)
 import modgen.common.checkvar;
 import modgen.common.checkmultvar;
 
-checkvar(myHypArr, 'isa(x,''hyperplane'')',...
-    'errorTag', 'wrongInput',...
-    'errorMessage', 'First input argument must be hyperplane.');
+hyperplane.checkIsMe(myHypArr);
 
 checkvar(xArr, 'isa(x,''double'')',...
     'errorTag', 'wrongInput',...
@@ -71,15 +69,34 @@ checkmultvar('~(x1 ~= x2)', 2, sizeXVec(1), nDims, ...
     'errorTag', 'wrongInput:wrongSizes', 'errorMessage', ...
     'Vector dimension does not match the dimension of hyperplanes.');
 
-checkmultvar('~((x1 ~= x2) && (x1 > 1) && (x2 > 1))',...
-    2, numel(xArr)/nDims, numel(myHypArr), 'errorTag', ...
-    'wrongInput:wrongSizes', 'errorMessage', ...
-    'Number of vectors does not match the number of hyperplanes.');
+sizeHypArr = size(myHypArr);
+isColumn = false;
+if ((size(sizeXVec, 2) == 2) && (sizeXVec(2) ~= 1))
+    if (size(sizeHypArr, 2) == 2 && ...
+            ((sizeHypArr(1) == 1) || (sizeHypArr(2) == 1)))
+        subXArr = zeros(sizeXVec(1), 1, sizeXVec(2));
+        subXArr(:, 1, :) = xArr;
+        xArr = subXArr;
+        sizeXVec = size(xArr);
+        if (sizeHypArr(2) == 1)
+            isColumn = true;
+            myHypArr = myHypArr';
+            sizeHypArr = size(myHypArr);
+        end
+    end
+end
 
-if (numel(xArr)/nDims == 1)
-    isPosArr = arrayfun(@(x) iscontain(x, xArr), myHypArr, ...
+fstCompStr = 'isequal(x1, x2) || (isscalar(x4) && ';
+secCompStr = '~isempty(x3)) || (isscalar(x1))';
+checkmultvar([fstCompStr secCompStr], 4, sizeXVec(2:end), ...
+    sizeHypArr, xArr,  myHypArr, 'errorTag', 'wrongSizes', ...
+    'errorMessage', ...
+    'Array of normal vectors and array of constants has wrong sizes.');
+
+if ((size(sizeXVec, 2) == 2) && (sizeXVec(2) == 1))
+    isPosArr = arrayfun(@(x) isSingContains(x, xArr), myHypArr, ...
         'UniformOutput', true);
-elseif (numel(myHypArr) == 1)
+elseif (isscalar(myHypArr))
     otherDimVec = sizeXVec;
     % otherDimVec = [nVecArrDim1, nVecArrDim2, ...]
     otherDimVec(:, 1) = [];
@@ -87,26 +104,25 @@ elseif (numel(myHypArr) == 1)
         'UniformOutput', false);
     xCArr = mat2cell(xArr, nDims, indCVec{:});
     xCArr = shiftdim(xCArr,1);
-    isPosArr = arrayfun(@(x) iscontain(myHypArr, x{1}),xCArr, ...
+    isPosArr = arrayfun(@(x) isSingContains(myHypArr, x{1}),xCArr, ...
         'UniformOutput', true);
 else
     hypSizeVec = size(myHypArr);
     indCVec = arrayfun(@(x) ones(1, x), hypSizeVec, ...
         'UniformOutput', false);
-    if (size(sizeXVec, 2))
-        subXArr = zeros(sizeXVec(1), 1, sizeXVec(2));
-        subXArr(:, 1, :) = xArr;
-        xArr = subXArr;
-    end
     xCArr = mat2cell(xArr, nDims, indCVec{:});
     xCArr = shiftdim(xCArr,1);
-    isPosArr = arrayfun(@(x, y) iscontain(x, y{1}), myHypArr, xCArr, ...
-        'UniformOutput', true);
+    isPosArr = arrayfun(@(x, y) isSingContains(x, y{1}), ...
+        myHypArr, xCArr, 'UniformOutput', true);
+end
+
+if (isColumn)
+    isPosArr = isPosArr';
 end
 
 end
 
-function isPos = iscontain(myHyp, xVec)
+function isPos = isSingContains(myHyp, xVec)
 %
 % CONTAINS - checks if given vector belong to the hyperplane.
 %
@@ -135,12 +151,12 @@ function isPos = iscontain(myHyp, xVec)
 [hypNormVec,hypConst] = parameters(myHyp);
 absTol = getAbsTol(myHyp);
 isPos = false;
-isInfComponent = (xVec == inf) | (xVec == -inf);
-if any(hypNormVec(isInfComponent) ~= 0)
+isFinVec = isfinite(xVec);
+if any(hypNormVec(~isFinVec) ~= 0)
     return;
 else
-    hypNormVec = hypNormVec(~isInfComponent);
-    xVec = xVec(~isInfComponent);
+    hypNormVec = hypNormVec(isFinVec);
+    xVec = xVec(isFinVec);
     if abs((hypNormVec'*xVec) - hypConst) < absTol;
         isPos = true;
     end

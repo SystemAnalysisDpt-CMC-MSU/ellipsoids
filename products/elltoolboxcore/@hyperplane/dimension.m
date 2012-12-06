@@ -22,16 +22,13 @@ function dimsArr = dimension(inpHypArr);
 %   Faculty of Computational Mathematics and Computer Science,
 %   System Analysis Department 2012 $
 
-modgen.common.checkvar(inpHypArr, 'isa(x,''hyperplane'')',...
-    'errorTag', 'wrongInput',...
-    'errorMessage', 'Input must be array of hyperplanes.');
-
-dimsArr = arrayfun(@(x) subDimFunc(x), inpHypArr,...
+hyperplane.checkIsMe(inpHypArr);
+dimsArr = arrayfun(@(x) singDimension(x), inpHypArr,...
     'UniformOutput', true);
 
 end
 
-function nDim = subDimFunc(myHyp)
+function nDim = singDimension(myHyp)
 %
 % SUBDIMFUNC - returns dimension of single hyperplane in.
 %

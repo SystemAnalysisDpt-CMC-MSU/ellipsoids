@@ -9,25 +9,34 @@ function display(hypArr)
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
+%
+% $Author: Aushkap Nikolay <n.aushkap@gmail.com> $  $Date: 07-12-2012$
+% $Copyright: Moscow State University,
+%   Faculty of Computational Mathematics and Computer Science,
+%   System Analysis Department 2012 $
 
 fprintf('\n');
-disp([inputname(1) ' =']);
+if (isscalar(hypArr))
+    disp([inputname(1) ' =']);
+else
+    fprintf('array of hyperplanes: \n');
+end
+    
+arrayfun(@(x) subDisplay(x), hypArr);
 
-hpSizeVec = size(hypArr);
-if ~isequal(hpSizeVec, [1, 1])
-    fprintf('hyperplane [');
-    fprintf('%d ', hpSizeVec);
-    fprintf('\b] - array of hyperplanes.\n\n');
-    return;
 end
 
-fprintf('\n');
-fprintf('Normal:\n'); disp(hypArr.normal);
-fprintf('Shift:\n'); disp(hypArr.shift);
+function subDisplay(inpHyp)
 
-nDims = dimension(hypArr);
+fprintf('\n');
+fprintf('Normal:\n'); disp(inpHyp.normal);
+fprintf('Shift:\n'); disp(inpHyp.shift);
+
+nDims = dimension(inpHyp);
 if nDims < 1
     fprintf('Empty hyperplane.\n\n');
 else
     fprintf('Hyperplane in R^%d.\n\n', nDims);
+end
+
 end

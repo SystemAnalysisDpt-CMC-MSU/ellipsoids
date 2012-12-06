@@ -30,28 +30,27 @@ function isPosArr = isparallel(fstHypArr, secHypArr)
 
 import modgen.common.checkmultvar;
 
-checkmultvar('isa(x1, ''hyperplane'') || isa(x2, ''hyperplane'')', ...
-    2, fstHypArr, secHypArr, 'errorTag', 'wrongSizes', 'errorMessage', ...
-    'Input arguments must be hyperplanes.');
+hyperplane.checkIsMe(fstHypArr);
+hyperplane.checkIsMe(secHypArr);
 
 checkmultvar(...
     'isequal(size(x1), size(x2)) || numel(x1) == 1 || numel(x2) == 1', ...
     2, fstHypArr, secHypArr, 'errorTag', 'wrongSizes', 'errorMessage', ...
     'Sizes of hyperplane arrays do not match.');
 
-if (numel(fstHypArr) == 1)
+if (isscalar(fstHypArr))
     fstHypArr = repmat(fstHypArr, size(secHypArr));
-elseif (numel(secHypArr) == 1)
+elseif (isscalar(secHypArr))
     secHypArr = repmat(secHypArr, size(fstHypArr));
 end
 
 fstHypAbsTolArr = getAbsTol(fstHypArr);
-isPosArr = arrayfun(@(x, y, z) issnglparallel(x, y, z), ...
+isPosArr = arrayfun(@(x, y, z) isSingParallel(x, y, z), ...
     fstHypArr, secHypArr, fstHypAbsTolArr, 'UniformOutput', true);
 
 end
 
-function isPos = issnglparallel(fstHyp, secHyp, fstHypAbsTol)
+function isPos = isSingParallel(fstHyp, secHyp, fstHypAbsTol)
 %
 % ISSNGLPARALLEL - check if two single hyperplanes are equal.
 %

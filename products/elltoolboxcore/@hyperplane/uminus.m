@@ -21,9 +21,7 @@ function outHypArr = uminus(inpHypArr)
 %   Faculty of Computational Mathematics and Computer Science,
 %   System Analysis Department 2012 $
 
-modgen.common.checkvar(inpHypArr, 'isa(x,''hyperplane'')',...
-    'errorTag', 'wrongInput',...
-    'errorMessage', 'Input argument must be hyperplanes.');
+hyperplane.checkIsMe(inpHypArr);
 
 sizeVec = size(inpHypArr);
 hypCellArr = arrayfun(@(x) hyperplane(-x.normal, -x.shift), inpHypArr,...
