@@ -129,7 +129,7 @@ classdef GenEllipsoidTestCase < mlunitext.test_case
             
         end
         %
-        function self = FAILS_testMinkSumEa(self)
+        function self = testMinkSumEa(self)
             import elltool.core.GenEllipsoid;
             import elltool.conf.Properties;
             %
@@ -479,7 +479,7 @@ classdef GenEllipsoidTestCase < mlunitext.test_case
         %
         %
         %
-        function self = FAILS_testMinkSumIa(self)
+        function self = testMinkSumIa(self)
             import elltool.core.GenEllipsoid;
             %
             load(strcat(self.testDataRootDir,filesep,'testNewEll.mat'),...
@@ -598,7 +598,7 @@ classdef GenEllipsoidTestCase < mlunitext.test_case
                 ansEllipsoid,dirVec);
         end
         %
-        function self = FAILS_testMinkDiffEa(self)
+        function self = testMinkDiffEa(self)
             %
             import elltool.core.GenEllipsoid;
             %
@@ -694,8 +694,8 @@ classdef GenEllipsoidTestCase < mlunitext.test_case
             dirVec=dirVec/norm(dirVec);
             %FIXME - this doesn't seem to be correct
             ansEllObj=GenEllipsoid(diag([Inf;Inf;Inf]));
-            
-            checkAns(@(x,y)minkDiffIa(x(1),x(2),y),...
+            %
+            checkAns(@(x,y)minkDiffEa(x(1),x(2),y),...
                 [testEllipsoid1,testEllipsoid2],ansEllObj,dirVec);
             %
             function compEll(ellObj,varargin)
@@ -1119,7 +1119,7 @@ else
     checkDiffTight(ansEllObj,testEllVec,testDirObj(:,1));
 end
 end
-
+%
 function checkSumTight(ellResObj, ellVec, dirVec)
 import elltool.core.GenEllipsoid;
 absTol=GenEllipsoid.getCheckTol();

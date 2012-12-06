@@ -110,6 +110,7 @@ classdef GenEllipsoid < handle
                 diagMat=ellObj.diagMat;
                 if isempty(diagMat)
                     qMat=[];
+                    qInfMat=[];
                     centerVec=[];
                     isnInfVec=logical.empty(0,0);
                 else
@@ -120,9 +121,11 @@ classdef GenEllipsoid < handle
                     isnInfVec=diagVec~=Inf;
                     eigvFinMat=eigvMat(:,isnInfVec);
                     qMat=eigvFinMat*diag(diagVec(isnInfVec))*eigvFinMat.';
+                    isInfVec=~isnInfVec;
+                    eigvInfMat=eigvMat(:,isInfVec);
+                    qInfMat=eigvInfMat*eigvInfMat.';
                 end
-                SComp=struct('Q',qMat,'q',centerVec.',...
-                    'isInfVec',double(~isnInfVec.'));
+                SComp=struct('Q',qMat,'q',centerVec.','QInf',qInfMat);
             end
         end
     end
@@ -333,7 +336,7 @@ classdef GenEllipsoid < handle
         [resEllMat ] = findDiffFC( fMethod, ellQ1Mat, ellQ2Mat,...
             curDirVec,absTol )
         [ resQMat diagQVec ] = findDiffINFC(fMethod, ellObj1,...
-            ellObj2,curDirVec,isInf1Vec,absTol)
+            ellObj2,curDirVec,isInf1Vec,isInfForFinBas,absTol)
         resQMat=findDiffIaND(ellQ1Mat, ellQ2Mat,curDirVec,absTol)
     end
 end

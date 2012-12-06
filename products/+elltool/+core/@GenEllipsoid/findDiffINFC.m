@@ -1,5 +1,5 @@
 function [ resQMat diagQVec ] = findDiffINFC(fMethod, ellObj1,ellObj2,...
-    curDirVec,isInf1Vec,absTol)
+    curDirVec,isInf1Vec,isInfForFinBas,absTol)
 % FINDDIFFINFC - find approximation for Minkowsky difference
 % of ellipsoids (first ellipsoid is exactly infinite)
 %
@@ -12,6 +12,12 @@ function [ resQMat diagQVec ] = findDiffINFC(fMethod, ellObj1,ellObj2,...
 %       curDirVec: double: [nSize,1] - direction of calculation
 %       isInf1Vec: logical: [nSize,1] - specify which directions are
 %           infinite for the first ellipsoid
+%       isInfForFinBas: logical[1,1] - this flag is accounted for only when
+%           curDirVec is completely in the infinite subspace of the
+%           approximation. Then, if isInfForFinBas=true, the approximation
+%           for this finite subspace is set te be infinite 
+%           (this is used for external approximations) and finite
+%           otherwise.
 %       absTol: double: [1,1] - absolute tolerance
 %
 % Output:
@@ -51,6 +57,9 @@ if all(abs(curProjDirVec)<absTol)
     resQMat(:,finIndVec)=finBasMat;
     diagQVec=zeros(nDimSpace,1);
     diagQVec(infIndVec)=Inf;
+    if isInfForFinBas
+        diagQVec(finIndVec)=Inf;
+    end
 else
     %Find result in finite projection
     finDimSpace=length(finIndVec);

@@ -59,7 +59,7 @@ for iDir=1:nDirs
           %Infinite case
         [resEllMat diagQVec] = GenEllipsoid.findDiffINFC(...
             @GenEllipsoid.findDiffEaND,ellObj1,ellObj2,...
-            curDirVec,isInf1Vec,absTol);
+            curDirVec,isInf1Vec,true,absTol);
         if isempty(resEllMat)
             resEllVec(iDir)=GenEllipsoid();
         else

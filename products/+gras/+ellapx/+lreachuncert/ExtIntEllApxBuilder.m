@@ -79,16 +79,6 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
                     regQIntMat=QIntMat;
                     regQExtMat=QExtMat;
                 end
-                %                 %making sure that regMatrix > originalMatrix
-                %                 if any(eig(regQIntMat-QIntMat)<0)
-                %                     modgen.common.throwerror('wrongState',...
-                %                         'Oops, we shouldn''t be here');
-                %                 end
-                %                 %
-                %                 if any(eig(regQExtMat-QExtMat)<0)
-                %                     modgen.common.throwerror('wrongState',...
-                %                         'Oops, we shouldn''t be here');
-                %                 end
             else
                 regQIntMat=nan(size(QIntMat));
                 regQExtMat=nan(size(QIntMat));
@@ -242,15 +232,15 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             QExtArrayList=cell(1,nLDirs);
             MExtArrayList=cell(1,nLDirs);
             %
-            %% Calculating internal approximation
-            for l=1:1:nLDirs
+            %% Calculating approximations
+            for iDir=1:1:nLDirs
                 logStr=sprintf(...
                     'solving ode for direction \n %s  defined at time %f',...
-                    mat2str(lsGoodDirMat(:,l).'),sTime);
+                    mat2str(lsGoodDirMat(:,iDir).'),sTime);
                 tStart=tic;
                 logger.info([logStr,'...']);
-                fHandle=self.getEllApxMatrixDerivFunc(l);
-                initValueMat=self.getEllApxMatrixInitValue(l);
+                fHandle=self.getEllApxMatrixDerivFunc(iDir);
+                initValueMat=self.getEllApxMatrixInitValue(iDir);
                 %
                 [~,QStarIntArray,QStarExtArray,MIntArray,MExtArray]=...
                     solverObj.solve({fHandle,fOdeReg},...
@@ -260,10 +250,10 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
                     QStarExtArray(:,:,1)=[];
                 end
                 %
-                QIntArrayList{l}=self.adjustEllApxMatrixVec(QStarIntArray);
-                MIntArrayList{l}=MIntArray;
-                QExtArrayList{l}=self.adjustEllApxMatrixVec(QStarExtArray);
-                MExtArrayList{l}=MExtArray;
+                QIntArrayList{iDir}=self.adjustEllApxMatrixVec(QStarIntArray);
+                MIntArrayList{iDir}=MIntArray;
+                QExtArrayList{iDir}=self.adjustEllApxMatrixVec(QStarExtArray);
+                MExtArrayList{iDir}=MExtArray;
                 logger.info(sprintf([logStr,':done, %.3f sec. elapsed'],...
                     toc(tStart)));
             end

@@ -39,7 +39,6 @@ SEll1Array=ellFirstArr.toStruct();
 SEll2Array=ellSecArr.toStruct();
 %
 if isnFirstScalar&&isnSecScalar
-    
     if ~isequal(firstSizeVec, secSizeVec)
         throwerror('wrongSizes',...
             'sizes of ellipsoidal arrays do not... match');

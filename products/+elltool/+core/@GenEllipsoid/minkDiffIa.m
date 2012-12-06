@@ -58,8 +58,10 @@ for iDir=1:nDirs
     curDirVec=dirMat(:,iDir);
     isInf1Vec=ell1DiagVec==Inf;
     if ~all(~isInf1Vec)
-        [ resQMat diagQVec ] = GenEllipsoid.findDiffINFC(@GenEllipsoid.findDiffIaND, ellObj1,ellObj2,curDirVec,isInf1Vec,...
-            absTol);
+        [ resQMat diagQVec ] = GenEllipsoid.findDiffINFC(...
+            @GenEllipsoid.findDiffIaND, ellObj1,ellObj2,curDirVec,...
+            isInf1Vec,false,absTol);
+        %
         resEllVec(iDir)=GenEllipsoid(resCenterVec,diagQVec,resQMat);
     else
         %Finite case
