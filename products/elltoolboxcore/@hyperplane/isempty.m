@@ -21,4 +21,4 @@ function isPositiveArr = isempty(myHypArr)
 %   System Analysis Department 2012 $
 
 hyperplane.checkIsMe(myHypArr);
-isPositiveArr = ~dimension(myHypArr);
+isPositiveArr = (dimension(myHypArr) == 0);

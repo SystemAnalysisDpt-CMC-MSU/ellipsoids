@@ -61,29 +61,25 @@ function isPos = isSingParallel(fstHyp, secHyp, fstHypAbsTol)
 %       fstHypAbsTol: double[1, 1] - absTol properties.
 %
 % Output:
-%   isPos: logical[1, 1] - isPos = true -  if fstHyp is parallel 
+%   isPos: logical[1, 1] - isPos = true -  if fstHyp is parallel
 %       secHyp, false - otherwise.
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
 
-  fstHypNormVec = parameters(fstHyp);
-  secHypNormVec = parameters(secHyp);
-  isPos = false;
-  if min(size(fstHypNormVec) == size(secHypNormVec)) < 1
-    return;
-  end
-  
-  fstHypNormVec = fstHypNormVec/norm(fstHypNormVec);
-  secHypNormVec = secHypNormVec/norm(secHypNormVec);
-
-  if min(size(fstHypNormVec) == size(secHypNormVec)) < 1
-    return;
-  end
-  if max(abs(fstHypNormVec - secHypNormVec)) < fstHypAbsTol
-    isPos = true;
-  elseif max(abs(fstHypNormVec + secHypNormVec)) < fstHypAbsTol
-    isPos = true;
-  end
+fstHypNormVec = parameters(fstHyp);
+secHypNormVec = parameters(secHyp);
+isPos = false;
+if (min(size(fstHypNormVec) == size(secHypNormVec)) >= 1)
+    fstHypNormVec = fstHypNormVec/norm(fstHypNormVec);
+    secHypNormVec = secHypNormVec/norm(secHypNormVec);
+    if (min(size(fstHypNormVec) == size(secHypNormVec)) >= 1)
+        if max(abs(fstHypNormVec - secHypNormVec)) < fstHypAbsTol
+            isPos = true;
+        elseif max(abs(fstHypNormVec + secHypNormVec)) < fstHypAbsTol
+            isPos = true;
+        end
+    end
+end
 
 end

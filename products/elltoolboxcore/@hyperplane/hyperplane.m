@@ -29,7 +29,7 @@ classdef hyperplane < handle
             %           hypH.shift = hypConst.
             %
             %   hypH = HYPERPLANE(hypNormVec, hypConst, ...
-            %   'absTol', absTolVal) - create
+            %       'absTol', absTolVal) - create
             %       hyperplane object hypH with properties:
             %           hypH.normal = hypNormVec,
             %           hypH.shift = hypConst.
@@ -40,24 +40,42 @@ classdef hyperplane < handle
             %       hyperplane(hypNormVec, hypConst).
             %
             %   hypObjArr = HYPERPLANE(hypNormArr, hypConstArr, ...
-            %   'absTol', absTolValArr) - create
+            %       'absTol', absTolValArr) - create
             %       array of hyperplanes object just as
             %       hyperplane(hypNormVec, hypConst, 'absTol', absTolVal).
             %
             % Input:
-            %   regular:
-            %       hypNormArr: double[hpDims, nDims1, nDims2,...] /
-            %           / double[hpDims, 1] - array of vectors
-            %           in R^hpDims. There hpDims - hyperplane dimension.
+            %   Case1:
+            %     regular:
+            %       hypNormArr: double[hpDims, nDims1, nDims2,...] -
+            %           array of vectors in R^hpDims. There hpDims -
+            %           hyperplane dimension.
             %
-            %   optional:
-            %       hypConstArr: double[nDims1, nDims2, ...] /
-            %           / double[VecArrDim1, nVecArrDim2, ...] -
+            %   Case2:
+            %     regular:
+            %       hypNormArr: double[hpDims, nCols] /
+            %           / [hpDims, nDims1, nDims2,...] /
+            %           / [hpDims, 1] - array of vectors
+            %           in R^hpDims. There hpDims - hyperplane dimension.
+            %       hypConstArr: double[1, nCols] / [nCols, 1] /
+            %           / [nDims1, nDims2,...] /
+            %           / [nVecArrDim1, nVecArrDim2,...] -
+            %           array of scalar.
+            %
+            %   Case3:
+            %     regular:
+            %       hypNormArr: double[hpDims, nCols] /
+            %           / [hpDims, nDims1, nDims2,...] /
+            %           / [hpDims, 1] - array of vectors
+            %           in R^hpDims. There hpDims - hyperplane dimension.
+            %       hypConstArr: double[1, nCols] / [nCols, 1] /
+            %           / [nDims1, nDims2,...] /
+            %           / [nVecArrDim1, nVecArrDim2,...] -
             %           array of scalar.
             %       absTolValArr: double[1, 1] - value of
             %           absTol propeties.
             %
-            %   properties:
+            %     properties:
             %       propMode: char[1,] - property mode, the following
             %           modes are supported:
             %           'absTol' - name of absTol properties.
@@ -69,11 +87,16 @@ classdef hyperplane < handle
             %               then hypConstArr can be any size
             %               [nVecArrDim1, nVecArrDim2, ...],
             %               in this case output variable will has
-            %               size [VecArrDim1, nVecArrDim2, ...].
+            %               size [nVecArrDim1, nVecArrDim2, ...].
+            %               If size of hypNormArr is [hpDims, nCols],
+            %               then size of hypConstArr may be
+            %               [1, nCols] or [nCols, 1],
+            %               output variable will has size
+            %               respectively [1, nCols] or [nCols, 1].
             %
             % Output:
             %   hypObjArr: hyperplane [nDims1, nDims2...] /
-            %       / hyperplane [VecArrDim1, nVecArrDim2, ...] -
+            %       / hyperplane [nVecArrDim1, nVecArrDim2, ...] -
             %       array of hyperplane structure hypH:
             %           hypH.normal - vector in R^hpDims,
             %           hypH.shift  - scalar.
@@ -93,107 +116,102 @@ classdef hyperplane < handle
             
             if nargin == 0
                 hypObjArr = hyperplane(0, 0);
-                return;
-            end
-            
-            neededPropNameList = {'absTol'};
-            absTolVal = elltool.conf.Properties.parseProp(varargin, ...
-                neededPropNameList);
-            
-            if nargin < 2
-                hypConstArr = 0;
-            end
-            
-            checkmultvar('isa(x1,''double'') && isa(x2,''double'')', 2,...
-                hypNormArr, hypConstArr, 'errorTag', ...
-                'wrongInput', 'errorMessage', ...
-                'Both arguments must be of type ''double''.');
-            
-            fstCompStr = '~(any(isnan(x1(:))) || any(isinf(x1(:))) || ';
-            secCompStr = 'any(isnan(x2(:))) || any(isinf(x2(:))))';
-            checkmultvar([fstCompStr secCompStr], 2, hypNormArr, ...
-                hypConstArr,  'errorTag', 'wrongInput', 'errorMessage',...
-                'Wrong values of input arguments.');
-            
-            sizeArrNormVec = size(hypNormArr);
-            sizeArrConstVec = size(hypConstArr);
-            
-            if (isscalar(sizeArrNormVec(2:end)) && isscalar(hypConstArr)...
-                    && (sizeArrNormVec(2) == 1))
-                hypObjArr.normal = hypNormArr;
-                hypObjArr.shift  = hypConstArr;
-                hypObjArr.absTol = absTolVal;
-                return;
-            end
-            
-            if ((size(sizeArrNormVec, 2) == 2) && ...
-                    (sizeArrNormVec(2) ~= 1))
-                if ((size(sizeArrConstVec, 2) == 2)  && ...
-                        (sizeArrConstVec(1) == 1))
-                    subHypNormArr = zeros(sizeArrNormVec(1), 1, ...
-                        sizeArrNormVec(2));
-                    subHypNormArr(:, 1, :) = hypNormArr;
-                    hypNormArr = subHypNormArr;
-                    sizeArrNormVec = size(hypNormArr);
-                end
-            end
-            
-            fstCompStr = 'isequal(x1, x2) || (isscalar(x4) && ';
-            secCompStr = '~isempty(x3))|| (isscalar(x1) && ~isempty(x4))';
-            fstErrStr = 'Array of normal vectors and array of constants ';
-            secErrStr = 'has wrong sizes.';
-            checkmultvar([fstCompStr secCompStr], ...
-                4, sizeArrNormVec(2:end), sizeArrConstVec, hypNormArr, ...
-                hypConstArr, 'errorTag', 'wrongSizes', ...
-                'errorMessage', [fstErrStr secErrStr]);
-            
-            if (isscalar(sizeArrNormVec(2:end)) &&...
-                    (sizeArrNormVec(2) == 1))
-                nElems = numel(hypConstArr);
-                indVec = 1:nElems;
-                hypObjArr(nElems) = hyperplane();
-                hypConstVec = reshape(hypConstArr, [1 nElems]);
-                arrayfun(@(x, y) setProp(x, hypNormArr, y, absTolVal), ...
-                    indVec, hypConstVec);
-                hypObjArr = reshape(hypObjArr, size(hypConstArr));
-            elseif (isscalar(hypConstArr))
-                otherDimVec = sizeArrNormVec;
-                otherDimVec(:, 1) = [];
-                indCVec = arrayfun(@(x) ones(1, x), otherDimVec, ...
-                    'UniformOutput', false);
-                nDims = sizeArrNormVec(1);
-                hypNormCArr = mat2cell(hypNormArr, nDims, indCVec{:});
-                hypNormCArr = shiftdim(hypNormCArr,1);
-                nElems = numel(hypNormCArr);
-                indVec = 1:nElems;
-                nElems = numel(hypNormCArr);
-                hypObjArr(nElems) = hyperplane();
-                hypNormCVec = reshape(hypNormCArr, [1 nElems]);
-                arrayfun(@(x, y) setProp(x, y{1}, ...
-                    hypConstArr, absTolVal), indVec, hypNormCVec);
-                hypObjArr = reshape(hypObjArr, size(hypNormCArr));
             else
-                otherDimVec = sizeArrNormVec;
-                otherDimVec(:, 1) = [];
-                indCVec = arrayfun(@(x) ones(1, x), otherDimVec, ...
-                    'UniformOutput', false);
-                nDims = sizeArrNormVec(1);
-                hypNormCArr = mat2cell(hypNormArr, nDims, indCVec{:});
-                hypNormCArr = shiftdim(hypNormCArr,1);
-                nElems = numel(hypNormCArr);
-                indVec = 1:nElems;
-                hypNormCVec = reshape(hypNormCArr, [1 nElems]);
-                hypConstVec = reshape(hypConstArr, [1 nElems]);
-                hypObjArr(nElems) = hyperplane();
-                arrayfun(@(x, y, z) setProp(x, y{1}, z, absTolVal), ...
-                    indVec, hypNormCVec, hypConstVec);
-                hypObjArr = reshape(hypObjArr, size(hypNormCArr));
+                neededPropNameList = {'absTol'};
+                absTolVal = elltool.conf.Properties.parseProp(varargin,...
+                    neededPropNameList);
+                
+                if nargin < 2
+                    hypConstArr = 0;
+                end
+                
+                checkmultvar('isa(x1,''double'') && isa(x2,''double'')',...
+                    2, hypNormArr, hypConstArr, 'errorTag', ...
+                    'wrongInput', 'errorMessage', ...
+                    'Both arguments must be of type ''double''.');
+                
+                fstCompStr = '~(any(isnan(x1(:))) || any(isinf(x1(:))) ';
+                secCompStr = '|| any(isnan(x2(:))) || any(isinf(x2(:))))';
+                checkmultvar([fstCompStr secCompStr], 2, hypNormArr, ...
+                    hypConstArr,  'errorTag', 'wrongInput', ...
+                    'errorMessage', 'Wrong values of input arguments.');
+                
+                sizeArrNormVec = size(hypNormArr);
+                sizeArrConstVec = size(hypConstArr);
+                
+                isOnes = (isscalar(sizeArrNormVec(2:end)) ...
+                    && (sizeArrNormVec(2) == 1));
+                isConstScal = isscalar(hypConstArr);
+                if (isOnes && isConstScal)
+                    hypObjArr.normal = hypNormArr;
+                    hypObjArr.shift  = hypConstArr;
+                    hypObjArr.absTol = absTolVal;
+                else
+                    if ((size(sizeArrNormVec, 2) == 2) && ...
+                            (sizeArrNormVec(2) ~= 1))
+                        if ((size(sizeArrConstVec, 2) == 2)  && ...
+                                (sizeArrConstVec(1) == 1))
+                            subHypNormArr = zeros(sizeArrNormVec(1), 1,...
+                                sizeArrNormVec(2));
+                            subHypNormArr(:, 1, :) = hypNormArr;
+                            hypNormArr = subHypNormArr;
+                            sizeArrNormVec = size(hypNormArr);
+                        end
+                    end
+                    
+                    fstCompStr = 'isequal(x1, x2) ||';
+                    secCompStr = '(isscalar(x4) && ~isempty(x3)) ||';
+                    thrCompStr = '(isscalar(x1) && ~isempty(x4))';
+                    fstErrStr = 'Array of normal vectors and array';
+                    secErrStr = ' of constants has wrong sizes.';
+                    checkmultvar([fstCompStr secCompStr thrCompStr], ...
+                        4, sizeArrNormVec(2:end), sizeArrConstVec, ...
+                        hypNormArr, hypConstArr, 'errorTag', ...
+                        'wrongSizes', 'errorMessage', ...
+                        [fstErrStr secErrStr]);
+                    
+                    if (isOnes)
+                        [nElems outSizeVec] = setSizes(hypConstArr);
+                        build();
+                        arrayfun(@(x, y) setProp(x, hypNormArr, y, ...
+                            absTolVal), indArr, hypConstArr);
+                    elseif (isConstScal)
+                        cellBuild();
+                        [nElems outSizeVec] = setSizes(hypNormCArr);
+                        build();
+                        arrayfun(@(x, y) setProp(x, y{1}, ...
+                            hypConstArr, absTolVal), indArr, hypNormCArr);
+                    else
+                        cellBuild();
+                        [nElems outSizeVec] = setSizes(hypNormCArr);
+                        build();
+                        arrayfun(@(x, y, z) setProp(x, y{1}, z, ...
+                            absTolVal), indArr, hypNormCArr, hypConstArr);
+                    end
+                end
             end
             
             function setProp(iObj, nrmVec, shft, curAbsTol)
                 hypObjArr(iObj).normal = nrmVec;
                 hypObjArr(iObj).shift = shft;
                 hypObjArr(iObj).absTol = curAbsTol;
+            end
+            
+            function build()
+                indArr = reshape(1:nElems, outSizeVec);
+                hypObjArr(nElems) = hyperplane();
+                hypObjArr = reshape(hypObjArr, outSizeVec);
+            end
+            
+            function cellBuild()
+                otherDimVec = sizeArrNormVec;
+                otherDimVec(:, 1) = [];
+                indCVec = arrayfun(@(x) ones(1, x), otherDimVec,...
+                    'UniformOutput', false);
+                nDims = sizeArrNormVec(1);
+                hypNormCArr = mat2cell(hypNormArr, nDims, ...
+                    indCVec{:});
+                hypNormCArr = shiftdim(hypNormCArr,1);
             end
             
         end
@@ -206,4 +224,11 @@ classdef hyperplane < handle
         
     end
     
+end
+
+function [nElems outSizeVec] = setSizes(inpObjArr)
+
+nElems = numel(inpObjArr);
+outSizeVec = size(inpObjArr);
+
 end

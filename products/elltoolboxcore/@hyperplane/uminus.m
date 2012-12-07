@@ -24,7 +24,16 @@ function outHypArr = uminus(inpHypArr)
 hyperplane.checkIsMe(inpHypArr);
 
 sizeVec = size(inpHypArr);
-hypCellArr = arrayfun(@(x) hyperplane(-x.normal, -x.shift), inpHypArr,...
-    'UniformOutput',false);
+nElems = numel(inpHypArr);
+outHypArr(nElems)=hyperplane();
+outHypArr = reshape(outHypArr, sizeVec);
+indArr = reshape(1:nElems, sizeVec);
+arrayfun(@(x) setProp(x), indArr);
 
-outHypArr = reshape([hypCellArr{:}], sizeVec);
+    function setProp(iObj)
+        outHypArr(iObj).normal = -inpHypArr(iObj).normal;
+        outHypArr(iObj).shift = -inpHypArr(iObj).shift;
+        outHypArr(iObj).absTol = inpHypArr(iObj).absTol;
+    end
+
+end

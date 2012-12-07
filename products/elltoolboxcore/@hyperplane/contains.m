@@ -8,10 +8,11 @@ function isPosArr = contains(myHypArr, xArr)
 %
 % Input:
 %   regular:
-%       myHypArr: hyperplane [hpDim1, hpDim2, ...]/hyperplane [1, 1] -
-%           array of hyperplanes of the same dimentions nDims.
-%       xArr: double[nDims, hpDim1, hpDim2, ...]/double[nDims, 1] /
-%           / double[nDims, nVecArrDim1, nVecArrDim2, ...] - array
+%       myHypArr: hyperplane [nCols, 1]/[1, nCols]/
+%           /[hpDim1, hpDim2, ...]/[1, 1] - array of hyperplanes
+%           of the same dimentions nDims.
+%       xArr: double[nDims, nCols]/[nDims, hpDim1, hpDim2, ...]/
+%           /[nDims, 1]/[nDims, nVecArrDim1, nVecArrDim2, ...] - array
 %           whose columns represent the vectors needed to be checked.
 %
 %           note: if size of myHypArr is [hpDim1, hpDim2, ...], then
@@ -19,10 +20,14 @@ function isPosArr = contains(myHypArr, xArr)
 %               or [nDims, 1], if size of myHypArr [1, 1], then xArr
 %               can be any size [nDims, nVecArrDim1, nVecArrDim2, ...],
 %               in this case output variable will has
-%               size [1, nVecArrDim1, nVecArrDim2, ...].
+%               size [1, nVecArrDim1, nVecArrDim2, ...]. If size of
+%               xArr is [nDims, nCols], then size of myHypArr may be
+%               [nCols, 1] or [1, nCols] or [1, 1], output variable
+%               will has size respectively
+%               [nCols, 1] or [1, nCols] or [nCols, 1].
 %
 % Output:
-%   isPosArr: logical[hpDim1, hpDim2,...] / 
+%   isPosArr: logical[hpDim1, hpDim2,...] /
 %       / logical[1, nVecArrDim1, nVecArrDim2, ...],
 %       isPosArr(iDim1, iDim2, ...) = true - myHypArr(iDim1, iDim2, ...)
 %       contains xArr(:, iDim1, iDim2, ...), false - otherwise.
@@ -80,7 +85,7 @@ if ((size(sizeXVec, 2) == 2) && (sizeXVec(2) ~= 1))
         sizeXVec = size(xArr);
         if (sizeHypArr(2) == 1)
             isColumn = true;
-            myHypArr = myHypArr';
+            myHypArr = myHypArr.';
             sizeHypArr = size(myHypArr);
         end
     end
@@ -100,25 +105,26 @@ elseif (isscalar(myHypArr))
     otherDimVec = sizeXVec;
     % otherDimVec = [nVecArrDim1, nVecArrDim2, ...]
     otherDimVec(:, 1) = [];
-    indCVec = arrayfun(@(x) ones(1, x), otherDimVec, ...
-        'UniformOutput', false);
-    xCArr = mat2cell(xArr, nDims, indCVec{:});
-    xCArr = shiftdim(xCArr,1);
-    isPosArr = arrayfun(@(x) isSingContains(myHypArr, x{1}),xCArr, ...
+    process();
+    isPosArr = arrayfun(@(x) isSingContains(myHypArr, x{1}), xCArr, ...
         'UniformOutput', true);
 else
-    hypSizeVec = size(myHypArr);
-    indCVec = arrayfun(@(x) ones(1, x), hypSizeVec, ...
-        'UniformOutput', false);
-    xCArr = mat2cell(xArr, nDims, indCVec{:});
-    xCArr = shiftdim(xCArr,1);
+    otherDimVec = size(myHypArr);
+    process();
     isPosArr = arrayfun(@(x, y) isSingContains(x, y{1}), ...
         myHypArr, xCArr, 'UniformOutput', true);
 end
 
 if (isColumn)
-    isPosArr = isPosArr';
+    isPosArr = isPosArr.';
 end
+
+    function process()
+        indCVec = arrayfun(@(x) ones(1, x), otherDimVec, ...
+            'UniformOutput', false);
+        xCArr = mat2cell(xArr, nDims, indCVec{:});
+        xCArr = shiftdim(xCArr,1);
+    end
 
 end
 

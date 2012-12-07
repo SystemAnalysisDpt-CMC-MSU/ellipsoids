@@ -21,15 +21,4 @@ function [normVec, hypScal] = parameters(myHyp)
 %   Faculty of Computational Mathematics and Computer Science,
 %   System Analysis Department 2012 $
 
-import modgen.common.checkvar;
-
-hyperplane.checkIsMe(myHyp);
-
-checkvar(myHyp, '~(min(size(x) == [1 1]) < 1)',...
-    'errorTag', 'wrongInput', 'errorMessage', ...
-    'Input argument must be single hyperplane.');
-
-normVec = myHyp.normal;
-if ~(nargout < 2)
-    hypScal = myHyp.shift;
-end
+[normVec, hypScal] = double(myHyp);
