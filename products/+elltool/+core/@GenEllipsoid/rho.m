@@ -6,6 +6,7 @@ diagMat=ellObj.getDiagMat();
 diagVec=diag(diagMat);
 cenVec=ellObj.getCenter();
 isInfVec=diagVec==Inf;
+sDirVec = dirVec;
 dirInfProjVec=0;
 if ~all(~isInfVec)
     nDimSpace=length(diagVec);
@@ -40,7 +41,7 @@ if ~all(abs(dirInfProjVec)<absTol)
  
     IndProjInfVec = find(abs(infBasMat*dirInfProjVec) > eps);
     if numel(IndProjInfVec) > 0
-        bndPVec(IndProjInfVec) = Inf*sign(dirInfProjVec);
+        bndPVec(IndProjInfVec) = Inf*sign(dirInfProjVec(abs(dirInfProjVec) > eps));
     end
 else
     dirVec=dirVec/norm(dirVec);

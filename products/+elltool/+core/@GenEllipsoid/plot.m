@@ -204,29 +204,29 @@ for iEll = 1:ell_count
             end
 
         case 3,
-            curEllMax = rho(ell, [1, 0, 0]');
-            curEllMin = rho(ell, [-1, 0, 0]');
-            if (curEllMin < minx) && (curEllMin > -Inf)
-                minx = curEllMin;
+            [supportFun, curEllMax] = rho(ell, [1, 0, 0]');
+            [supportFun, curEllMin] = rho(ell, [-1, 0, 0]');
+            if (curEllMin(1) < minx) && (curEllMin(1) > -Inf)
+                minx = curEllMin(1);
             end
-            if (curEllMax > maxx) && (curEllMax < Inf)
-                maxx = curEllMax;
+            if (curEllMax(1) > maxx) && (curEllMax(1) < Inf)
+                maxx = curEllMax(1);
             end
-            curEllMax = rho(ell, [0, 1, 0]');
-            curEllMin = rho(ell, [0, -1, 0]');
-            if (curEllMin < miny) && (curEllMin > -Inf)
-                miny = curEllMin;
+            [supportFun, curEllMax] = rho(ell, [0, 1, 0]');
+            [supportFun, curEllMin] = rho(ell, [0, -1, 0]');
+            if (curEllMin(2) < miny) && (curEllMin(2) > -Inf)
+                miny = curEllMin(2);
             end
-            if (curEllMax > maxy) && (curEllMin < Inf)
-                maxy = curEllMax;
+            if (curEllMax(2) > maxy) && (curEllMax(2) < Inf)
+                maxy = curEllMax(2);
             end
-            curEllMax = rho(ell, [0, 0, 1]');
-            curEllMin = rho(ell, [0, 0, -1]');
-            if curEllMin < miny
-                miny = curEllMin;
+            [supportFun, curEllMax] = rho(ell, [0, 0, 1]');
+            [supportFun, curEllMin] = rho(ell, [0, 0, -1]');
+            if (curEllMin(3) < minz) && (curEllMin(2) > -Inf)
+                minz = curEllMin(3);
             end
-            if curEllMax > maxy
-                maxy = curEllMax;
+            if (curEllMax(3) > maxz) && (curEllMax(2) < Inf)
+                maxz = curEllMax(3);
             end
 
         otherwise
@@ -274,7 +274,7 @@ for iEll = 1:ell_count
                 isNegInfMat = xMat(2, :) == -Inf;
 
                 maxEig = diagVec(1);
-                if minx < Inf
+                if miny < Inf
                     maxVal = maxy;
                     minVal = miny;
                 else
@@ -288,6 +288,70 @@ for iEll = 1:ell_count
             SData.x2CMat{iEll} = xMat(2,:);
             SData.qCMat{iEll} = qVec;
         case 3,
+            [xMat, fMat] = ellPoints3d(plotEll);
+            isInf = max(xMat == Inf, [], 2);
+            diagVec = diag(plotEll.getDiagMat());
+
+            nPoints = size(xMat, 2);
+            if isInf(1)
+                isInfMat = xMat(1, :) == Inf;
+                isNegInfMat = xMat(1, :) == -Inf;
+
+                maxEig = max(diagVec(diagVec < Inf));
+                maxEig = max(maxEig, 1);
+                if minx < Inf
+                    maxVal = maxx;
+                    minVal = minx;
+                else
+                    maxVal = 3*maxEig;
+                    minVal = -3*maxEig;
+                end
+                xMat(1, isInfMat) = maxVal;
+                xMat(1, isNegInfMat) = minVal;
+            end
+            if isInf(2)
+                isInfMat = xMat(2, :) == Inf;
+                isNegInfMat = xMat(2, :) == -Inf;
+
+                maxEig = max(diagVec(diagVec < Inf));
+                maxEig = max(maxEig, 1);
+                if miny < Inf
+                    maxVal = maxy;
+                    minVal = miny;
+                else
+                    maxVal = 3*maxEig;
+                    minVal = -3*maxEig;
+                end
+                xMat(2, isInfMat) = maxVal;
+                xMat(2, isNegInfMat) = minVal;
+            end
+            if isInf(3)
+                isInfMat = xMat(3, :) == Inf;
+                isNegInfMat = xMat(3, :) == -Inf;
+
+                maxEig = max(diagVec(diagVec < Inf));
+                maxEig = max(maxEig, 1);
+                if minz < Inf
+                    maxVal = maxz;
+                    minVal = minz;
+                else
+                    maxVal = 3*maxEig;
+                    minVal = -3*maxEig;
+                end
+                xMat(3, isInfMat) = maxVal;
+                xMat(3, isNegInfMat) = minVal;
+            end
+            SData.verXCMat{iEll} = xMat(1,:);
+            SData.verYCMat{iEll} = xMat(2,:);
+            SData.verZCMat{iEll} = xMat(3,:);
+            SData.faceXCMat{iEll} = fMat(:,1);
+            SData.faceYCMat{iEll} = fMat(:,2);
+            SData.faceZCMat{iEll} = fMat(:,3);  
+            col = clr(ones(1, nPoints), :);
+            SData.faceVertexCDataXCMat{iEll} = col(:,1);
+            SData.faceVertexCDataYCMat{iEll} = col(:,2);
+            SData.faceVertexCDataZCMat{iEll} = col(:,3);
+
         otherwise
     end
 end
