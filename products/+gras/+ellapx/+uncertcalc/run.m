@@ -8,7 +8,7 @@ import gras.ellapx.uncertcalc.EllTubeProjectorBuilder;
 import gras.ellapx.uncertcalc.ApproxProblemPropertyBuilder;
 import modgen.common.throwerror;
 %% Constants
-MAX_SUPPORTED_PRECISION=0.01;
+MAX_SUPPORTED_PRECISION=0.001;
 %%
 tStartGlobal=tic;
 %% Parse input
