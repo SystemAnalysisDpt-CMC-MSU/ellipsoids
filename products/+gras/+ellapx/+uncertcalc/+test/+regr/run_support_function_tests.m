@@ -9,6 +9,10 @@ loader = mlunitext.test_loader;
 BAD_TEST_NAME_LIST = {};
 %
 crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
+if ischar(inpConfNameList)
+    inpConfNameList={inpConfNameList};
+end
+%
 if nargin==0
     confNameList=crm.deployConfTemplate('*');    
     confNameList = setdiff(confNameList, BAD_TEST_NAME_LIST);    
