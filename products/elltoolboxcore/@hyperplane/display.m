@@ -15,7 +15,7 @@ function display(hypArr)
 %   Faculty of Computational Mathematics and Computer Science,
 %   System Analysis Department 2012 $
 
-MAX_DISP_ELEM = 2000;
+MAX_DISP_ELEM = 15;
 
 fprintf('\n');
 if (isscalar(hypArr))

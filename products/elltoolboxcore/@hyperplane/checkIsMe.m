@@ -6,7 +6,7 @@ function checkIsMe(someObjArr)
 %
 % Input:
 %   regular:
-%       someObjArr: any type array of objects.
+%       someObjArr: any[] - any type array of objects.
 %
 % $Author: Aushkap Nikolay <n.aushkap@gmail.com> $  $Date: 30-11-2012$
 % $Copyright: Moscow State University,

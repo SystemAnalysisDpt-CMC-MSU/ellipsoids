@@ -48,7 +48,6 @@ fstHypAbsTolArr = getAbsTol(fstHypArr);
 isPosArr = arrayfun(@(x, y, z) isSingParallel(x, y, z), ...
     fstHypArr, secHypArr, fstHypAbsTolArr, 'UniformOutput', true);
 
-end
 
 function isPos = isSingParallel(fstHyp, secHyp, fstHypAbsTol)
 %
@@ -80,6 +79,4 @@ if (min(size(fstHypNormVec) == size(secHypNormVec)) >= 1)
             isPos = true;
         end
     end
-end
-
 end

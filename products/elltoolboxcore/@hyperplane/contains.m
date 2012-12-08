@@ -36,12 +36,9 @@ function isPosArr = contains(myHypArr, xArr)
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
 %
-% $Author: <Zakharov Eugene>  <justenterrr@gmail.com>$ $Date: <31 october>$
-% $Copyright: Moscow State University,
-%   Faculty of Computational Mathematics and Computer Science,
-%   System Analysis Department <2012> $
-%
-% $Author: Aushkap Nikolay <n.aushkap@gmail.com> $  $Date: 30-11-2012$
+% $Authors:
+%   Zakharov Eugene <justenterrr@gmail.com>$ $Date: <31 october>$
+%   Aushkap Nikolay <n.aushkap@gmail.com> $  $Date: 30-11-2012$
 % $Copyright: Moscow State University,
 %   Faculty of Computational Mathematics and Computer Science,
 %   System Analysis Department 2012 $
@@ -144,12 +141,9 @@ function isPos = isSingContains(myHyp, xVec)
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
 %
-% $Author: <Zakharov Eugene>  <justenterrr@gmail.com>$ $Date: <31 october>$
-% $Copyright: Moscow State University,
-%   Faculty of Computational Mathematics and Computer Science,
-%   System Analysis Department <2012> $
-%
-% $Author: Aushkap Nikolay <n.aushkap@gmail.com> $  $Date: 30-11-2012$
+% $Authors:
+%   Zakharov Eugene <justenterrr@gmail.com>$ $Date: <31 october>$
+%   Aushkap Nikolay <n.aushkap@gmail.com> $  $Date: 30-11-2012$
 % $Copyright: Moscow State University,
 %   Faculty of Computational Mathematics and Computer Science,
 %   System Analysis Department 2012 $
@@ -158,9 +152,7 @@ function isPos = isSingContains(myHyp, xVec)
 absTol = getAbsTol(myHyp);
 isPos = false;
 isFinVec = isfinite(xVec);
-if any(hypNormVec(~isFinVec) ~= 0)
-    return;
-else
+if all(hypNormVec(~isFinVec) == 0)
     hypNormVec = hypNormVec(isFinVec);
     xVec = xVec(isFinVec);
     if abs((hypNormVec'*xVec) - hypConst) < absTol;

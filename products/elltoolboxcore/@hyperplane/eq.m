@@ -23,12 +23,9 @@ function [isPosArr reportStr] = eq(fstHypArr, secHypArr)
 %            Faculty of Computational Mathematics and Cybernetics,
 %            System Analysis Department 2012 $
 %
-% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $ $Date: Dec-2012$
-% $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Cybernetics,
-%            System Analysis Department 2012 $
-%
-% $Author: Aushkap Nikolay <n.aushkap@gmail.com> $ $Date: Dec-2012$
+% $Authors:
+%   Peter Gagarinov  <pgagarinov@gmail.com> $ $Date: Dec-2012$
+%   Aushkap Nikolay <n.aushkap@gmail.com> $ $Date: Dec-2012$
 % $Copyright: Moscow State University,
 %   Faculty of Computational Mathematics and Computer Science,
 %   System Analysis Department 2012 $

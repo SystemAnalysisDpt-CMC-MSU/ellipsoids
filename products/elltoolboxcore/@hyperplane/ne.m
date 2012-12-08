@@ -19,6 +19,13 @@ function [isPosArr reportStr] = ne(fstHypArr, secHypArr)
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
+%
+% $Authors:
+%   Peter Gagarinov  <pgagarinov@gmail.com> $ $Date: Dec-2012$
+%   Aushkap Nikolay <n.aushkap@gmail.com> $ $Date: Dec-2012$
+% $Copyright: Moscow State University,
+%   Faculty of Computational Mathematics and Computer Science,
+%   System Analysis Department 2012 $
 
 [isPosArr reportStr] = eq(fstHypArr, secHypArr);
 isPosArr = ~isPosArr;
