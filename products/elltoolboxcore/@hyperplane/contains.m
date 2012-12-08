@@ -59,35 +59,32 @@ checkvar(xArr, '~any(isnan(x(:)))',...
 nDimArr = dimension(myHypArr);
 maxDim = max(nDimArr(:));
 minDim = min(nDimArr(:));
-
+%
 checkmultvar('~(x1 ~= x2)', 2, maxDim, minDim, ...
     'errorTag', 'wrongInput:wrongSizes', 'errorMessage', ...
     'Hyperplanes must be of the same dimension.');
-
+%
 nDims = maxDim;
 sizeXVec = size(xArr);
-
+%
 checkmultvar('~(x1 ~= x2)', 2, sizeXVec(1), nDims, ...
     'errorTag', 'wrongInput:wrongSizes', 'errorMessage', ...
     'Vector dimension does not match the dimension of hyperplanes.');
 
 sizeHypArr = size(myHypArr);
 isColumn = false;
-if ((size(sizeXVec, 2) == 2) && (sizeXVec(2) ~= 1))
-    if (size(sizeHypArr, 2) == 2 && ...
-            ((sizeHypArr(1) == 1) || (sizeHypArr(2) == 1)))
-        subXArr = zeros(sizeXVec(1), 1, sizeXVec(2));
-        subXArr(:, 1, :) = xArr;
-        xArr = subXArr;
-        sizeXVec = size(xArr);
-        if (sizeHypArr(2) == 1)
-            isColumn = true;
-            myHypArr = myHypArr.';
-            sizeHypArr = size(myHypArr);
-        end
+if (numel(sizeXVec)==2)&& ~iscolumn(xArr)&&(numel(sizeHypArr)==2)&&...
+        (iscolumn(myHypArr)||isrow(myHypArr))
+    sizeXVec=[sizeXVec(1),1,sizeXVec(2)];
+    xArr=reshape(xArr,sizeXVec);
+    %
+    if sizeHypArr(2)== 1
+        isColumn = true;
+        myHypArr = myHypArr.';
+        sizeHypArr = size(myHypArr);
     end
 end
-
+%
 fstCompStr = 'isequal(x1, x2) || (isscalar(x4) && ';
 secCompStr = '~isempty(x3)) || (isscalar(x1))';
 checkmultvar([fstCompStr secCompStr], 4, sizeXVec(2:end), ...
@@ -100,7 +97,6 @@ if ((size(sizeXVec, 2) == 2) && (sizeXVec(2) == 1))
         'UniformOutput', true);
 elseif (isscalar(myHypArr))
     otherDimVec = sizeXVec;
-    % otherDimVec = [nVecArrDim1, nVecArrDim2, ...]
     otherDimVec(:, 1) = [];
     process();
     isPosArr = arrayfun(@(x) isSingContains(myHypArr, x{1}), xCArr, ...
