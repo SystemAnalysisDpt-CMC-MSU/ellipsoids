@@ -1,4 +1,4 @@
-function resRho=rho(ellObj,dirVec)
+function [resRho, bndPVec] = rho(ellObj,dirVec)
 import elltool.core.GenEllipsoid;
 absTol=GenEllipsoid.getCheckTol();
 eigvMat=ellObj.getEigvMat();
@@ -28,8 +28,26 @@ else
 end
 if ~all(abs(dirInfProjVec)<absTol)
     resRho=Inf;
+    scMul = sqrt(dirVec'*ellQMat*dirVec);
+    if scMul > 0
+        bndPFinVec = cenVec + (ellQMat*dirVec)/scMul;
+    else
+        bndPFinVec = cenVec;
+    end
+    bndPVec = finBasMat*bndPFinVec;
+ 
+    IndProjInfVec = find(infBasMat*dirInfProjVec > 0);
+    if numel(IndProjInfVec) > 0
+        bndPVec(IndProjInfVec) = Inf;
+    end
 else
     dirVec=dirVec/norm(dirVec);
-    resRho=cenVec.'*dirVec+sqrt(dirVec.'*ellQMat*dirVec);
+    scMul = sqrt(dirVec'*ellQMat*dirVec);
+    resRho=cenVec.'*dirVec+scMul;
+    if scMul > 0
+        bndPVec = cenVec + (ellQMat*dirVec)/scMul;
+    else
+        bndPVec = cenVec;
+    end
 end
 end
