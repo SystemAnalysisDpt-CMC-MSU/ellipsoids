@@ -23,6 +23,8 @@ if ~all(~isInfVec)
     dirVec=finBasMat.'*dirVec;
     cenVec=finBasMat.'*cenVec;
 else
+    nDimSpace=length(diagVec);
+    finBasMat = eye(nDimSpace);
     ellQMat=eigvMat*diag(diagVec)*eigvMat.';
     ellQMat=0.5*(ellQMat+ellQMat);
 end
@@ -36,9 +38,9 @@ if ~all(abs(dirInfProjVec)<absTol)
     end
     bndPVec = finBasMat*bndPFinVec;
  
-    IndProjInfVec = find(infBasMat*dirInfProjVec > 0);
+    IndProjInfVec = find(abs(infBasMat*dirInfProjVec) > eps);
     if numel(IndProjInfVec) > 0
-        bndPVec(IndProjInfVec) = Inf;
+        bndPVec(IndProjInfVec) = Inf*sign(dirInfProjVec);
     end
 else
     dirVec=dirVec/norm(dirVec);
@@ -49,5 +51,6 @@ else
     else
         bndPVec = cenVec;
     end
+    bndPVec = finBasMat*bndPVec;
 end
 end
