@@ -65,6 +65,18 @@ classdef HyperplaneTestCase < mlunitext.test_case
                     testConstant, testingHyraplaneVec(iHyperplane));
             end
             mlunit.assert_equals(nHypeplanes, nRes);
+            
+            testNormArr = ones(10, 2, 2);
+            testConstArr = 2*ones(2, 2);
+            testHypArr = hyperplane(testNormArr, testConstArr);
+            isPos = all(size(testHypArr) == [2, 2]);
+            isPos = (isPos && ...
+                (self.isNormalAndConstantRight(testNormArr(:, 1, 1), ...
+                testConstArr(1, 1), testHypArr(1))));
+            isPos = (isPos && ...
+                (self.isNormalAndConstantRight(testNormArr(:, 1, 2), ...
+                testConstArr(1, 2), testHypArr(3))));
+            mlunit.assert(isPos);
         end
         %
         function self = testContains(self)
@@ -76,6 +88,35 @@ classdef HyperplaneTestCase < mlunitext.test_case
             isContainedTestedVec = contains(testHyperplanesVec,testVectorsMat);
             isOk = all(isContainedVec == isContainedTestedVec);
             %
+            mlunit.assert(isOk);
+            
+            testHyp = hyperplane([1; 0; 0], 1);
+            testVectorsMat = [1 0 0 2; 0 1 0 0; 0 0 1 0];
+            isContainedVec = contains(testHyp, testVectorsMat);
+            isContainedTestedVec = [true; 0; 0; 0];
+            isOk = all(isContainedVec == isContainedTestedVec);
+            mlunit.assert(isOk);
+            
+            testFstHyp = hyperplane([1; 0], 1);
+            testSecHyp = hyperplane([1; 1], 1);
+            testThrHyp = hyperplane([0; 1], 1);
+            testHypMat = [testFstHyp testSecHyp; testFstHyp testThrHyp];
+            testVectors = [1; 0];
+            isContainedMat = contains(testHypMat, testVectors);
+            isContainedTestedMat = [true false; true false];
+            isOk = all(isContainedMat == isContainedTestedMat);
+            mlunit.assert(isOk);
+            
+            nElems = 24;
+            testHypArr(nElems) = hyperplane();
+            testHypArr(:) = hyperplane([1; 1], 1);
+            testHypArr = reshape(testHypArr, [2 3 4]);
+            testVectorsArr = zeros(2, 2, 3, 4);
+            testVectorsArr(:, 2, 3 ,4) = [1; 1];
+            isContainedArr = contains(testHypArr, testVectorsArr);
+            isContainedTestedArr = false(2, 3, 4);
+            isContainedTestedArr(end) = true;
+            isOk = all(isContainedArr == isContainedTestedArr);
             mlunit.assert(isOk);
         end
         %
@@ -103,6 +144,19 @@ classdef HyperplaneTestCase < mlunitext.test_case
             %
             isOk =  all(isEqVec ~= testedNeVec);
             mlunit.assert(isOk);
+            %
+            testHypHighDimFst = hyperplane([1:1:75]', 1);
+            testHypHighDimSec = hyperplane([1:1:75]', 2);
+            checkHypEqual(testHypHighDimFst, testHypHighDimSec, false, ...
+                '(1).shift-->Max. difference (2.640278e-03) is greater than the specified tolerance(1.000000e-07)');
+            %
+            testFstHyp = hyperplane([1; 0], 0);
+            testSecHyp = hyperplane([1; 0], 0);
+            testThrHyp = hyperplane([2; 1], 0);
+            str = ['(1).shift-->Max. difference (2.640278e-03) is greater than the specified tolerance(1.000000e-07)' char(10) '(3).normal-->Max. difference (4.472136e-01) is greater than the specified tolerance(1.000000e-07)'];
+            checkHypEqual([testHypHighDimFst testFstHyp testFstHyp], ...
+                [testHypHighDimSec testSecHyp testThrHyp], ...
+                [false true false], str);
         end
         %
         function self = testIsEmpty(self)
@@ -111,6 +165,14 @@ classdef HyperplaneTestCase < mlunitext.test_case
             isEmptyVec = SInpData.isEmptyVec;
             isEmptyTestedVec = isempty(testHyperplanesVec);
             isOk = all(isEmptyVec == isEmptyTestedVec);
+            mlunit.assert(isOk);
+            
+            nFstDim = 10;
+            nSecDim = 20;
+            nThrDim = 30;
+            testHypArr(nFstDim, nSecDim, nThrDim) = hyperplane();
+            isEmptyArr = isempty(testHypArr);
+            isOk = all(isEmptyArr);
             mlunit.assert(isOk);
         end
         %
@@ -175,12 +237,12 @@ classdef HyperplaneTestCase < mlunitext.test_case
             nanVec = SInpData.nanVector;
             infVec = SInpData.infVector;
             %
-            self.runAndCheckError('contains(testHyperplane,nanVec)','wrongInput',...
-                'X is expected');
-            self.runAndCheckError('hyperplane(infVec,testConstant)','wrongInput',...
-                'v,c is');
-            self.runAndCheckError('hyperplane(nanVec,testConstant)','wrongInput',...
-                'v,c is');
+            self.runAndCheckError('contains(testHyperplane,nanVec)',...
+                'wrongInput');
+            self.runAndCheckError('hyperplane(infVec,testConstant)',...
+                'wrongInput');
+            self.runAndCheckError('hyperplane(nanVec,testConstant)',...
+                'wrongInput');
         end
        %
        function self = testGetAbsTol(self)
@@ -229,4 +291,10 @@ classdef HyperplaneTestCase < mlunitext.test_case
          end
 
     end
+end
+
+function checkHypEqual(testFstHypArr, testSecHypArr, isEqualArr, ansStr)
+    [isEqArr, reportStr] = eq(testFstHypArr, testSecHypArr);
+    mlunit.assert_equals(isEqArr, isEqualArr);
+    mlunit.assert_equals(reportStr, ansStr);
 end
