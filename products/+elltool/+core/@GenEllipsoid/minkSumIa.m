@@ -4,12 +4,12 @@ function [ ellResVec ] = minkSumIa(ellObjVec, dirMat )
 %
 % Input:
 %   regular:
-%       ellObjVec: Ellipsoid: [kSize,mSize] - vector of  generalized
+%       ellObjVec: GenEllipsoid: [kSize,mSize] - vector of  generalized
 %                                           ellipsoid
 %       dirMat: double[nDim,nDir] - matrix whose columns specify
 %           directions for which approximations should be computed
 % Output:
-%   ellResVec: Ellipsoid[1,nDir] - vector of generalized ellipsoids of
+%   ellResVec: GenEllipsoid[1,nDir] - vector of generalized ellipsoids of
 %       internal approximation of the dirrence of first and second
 %       generalized ellipsoids
 %
@@ -19,11 +19,11 @@ function [ ellResVec ] = minkSumIa(ellObjVec, dirMat )
 %            System Analysis Department 2012 $
 %
 %
-import elltool.core.Ellipsoid;
+import elltool.core.GenEllipsoid;
 import modgen.common.throwerror
 %
 modgen.common.type.simple.checkgenext(@(x,y)isa(x,...
-    'elltool.core.Ellipsoid')&&ismatrix(y),2,ellObjVec,dirMat)
+    'elltool.core.GenEllipsoid')&&ismatrix(y),2,ellObjVec,dirMat)
 %
 ellObjVec=ellObjVec(:).';
 fSizeFirst=@(ellObj)size(ellObj.diagMat,1);
@@ -52,28 +52,28 @@ if (mSize==1) && (kSize==1)
     ellResVec=ellObjVec;
 else
     nEllObj=length(ellObjVec);
-    ellResVec(nDirSize)=Ellipsoid(1);
+    ellResVec(nDirSize)=GenEllipsoid(1);
     for iDir=1:nDirSize
         curDirVec=dirMat(:,iDir);
         %find all Inf directions
         ellObjCVec=num2cell(ellObjVec);
         [isInfCMat allInfDirCMat]=cellfun(...
-            @Ellipsoid.findAllInfDir,ellObjCVec,...
+            @GenEllipsoid.findAllInfDir,ellObjCVec,...
             'UniformOutput', false);
         isInfMat=cell2mat(isInfCMat);
         allInfDirMat=cell2mat(allInfDirCMat);
         if all(all(isInfMat==1))
             %all are infinite
-            ellResVec(iDir)=Ellipsoid(Inf*ones(dimSpace,1));
+            ellResVec(iDir)=GenEllipsoid(Inf*ones(dimSpace,1));
         elseif ~all(isInfMat(:)==0)
             %Infinite eigenvalues present
             %Construnct orthogonal basis
             [ infBasMat,  nonInfBasMat, infIndVec, finIndVec] = ...
-                Ellipsoid.findSpaceBas( allInfDirMat,absTol );
+                GenEllipsoid.findSpaceBas( allInfDirMat,absTol );
             projCurDirVec=nonInfBasMat.'*curDirVec;
             if all(abs(projCurDirVec)<absTol)
                 %direction lies in the space of infinite directions
-                ellResVec(iDir)=Ellipsoid(Inf*ones(dimSpace,1));
+                ellResVec(iDir)=GenEllipsoid(Inf*ones(dimSpace,1));
             else
                 %find projection of all ellipsoids on this
                 isBeenFirst=false;
@@ -82,14 +82,14 @@ else
                     diagMat=ellObjVec(iEll).diagMat;
                     isInfHereVec=diag(diagMat)==Inf;
                     diagMat(isInfHereVec,isInfHereVec)=0;
-                    projQMat=Ellipsoid.findMatProj(eigvMat,diagMat,...
+                    projQMat=GenEllipsoid.findMatProj(eigvMat,diagMat,...
                         nonInfBasMat);
                     projCenVec=nonInfBasMat.'*...
                         ellObjVec(iEll).centerVec;
                     %add to the total sum of projection, finding a
                     %proper approximation
                     nNonInf=size(nonInfBasMat,2);
-                    projQMat=Ellipsoid.findSqrtOfMatrix(...
+                    projQMat=GenEllipsoid.findSqrtOfMatrix(...
                         projQMat,absTol);
                     if (iEll==1)
                         qNICenVec=projCenVec;
@@ -122,14 +122,14 @@ else
                 sumNIMat=sumNIMat.'*sumNIMat;
                 sumNIMat=0.5*(sumNIMat+sumNIMat);
                 infDimSpace=size(infBasMat,2);
-                [resDiagVec, resEllMat]=Ellipsoid.findConstruction(...
+                [resDiagVec, resEllMat]=GenEllipsoid.findConstruction(...
                     sumNIMat,nonInfBasMat,infBasMat,finIndVec,...
                     infIndVec,Inf*ones(1,infDimSpace));
                 resEllMat=resEllMat/norm(resEllMat);
                 qCenVec=zeros(dimSpace,1);
                 qCenVec(finIndVec)=qNICenVec;
                 resEllMat=0.5*(resEllMat+resEllMat);
-                ellResVec(iDir)=Ellipsoid(qCenVec,...
+                ellResVec(iDir)=GenEllipsoid(qCenVec,...
                     resDiagVec,resEllMat);
             end
         else %finite case, degenerate included
@@ -166,8 +166,7 @@ else
             end
             sumMat=sumMat.'*sumMat;
             sumMat=0.5*(sumMat+sumMat.');
-            ellResVec(iDir)=Ellipsoid(qCenVec,sumMat);
+            ellResVec(iDir)=GenEllipsoid(qCenVec,sumMat);
         end
     end
-end
 end

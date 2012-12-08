@@ -20,5 +20,3 @@ function [ projQMat ] = findMatProj( eigvMat,diagMat,basMat )
 curEllMat=eigvMat*diagMat*eigvMat.';
 projQMat=basMat.'*curEllMat*basMat;
 projQMat=0.5*(projQMat+projQMat.');
-end
-

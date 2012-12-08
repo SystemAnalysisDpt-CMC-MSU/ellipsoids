@@ -1,19 +1,19 @@
-classdef NewEllipsoidTestCase < mlunitext.test_case
+classdef GenEllipsoidTestCase < mlunitext.test_case
     properties (Access=private)
         testDataRootDir
     end
     methods
-        function self=NewEllipsoidTestCase(varargin)
+        function self=GenEllipsoidTestCase(varargin)
             self=self@mlunitext.test_case(varargin{:});
             [~,className]=modgen.common.getcallernameext(1);
             shortClassName=mfilename('classname');
             self.testDataRootDir=[fileparts(which(className)),...
                 filesep,'TestData',...
                 filesep,shortClassName];
-            import elltool.core.Ellipsoid;
+            import elltool.core.GenEllipsoid;
         end
         function self = testConstructor(self)
-            import elltool.core.Ellipsoid;
+            import elltool.core.GenEllipsoid;
             %
             load(strcat(self.testDataRootDir,filesep,...
                 'testNewEllRandM.mat'),...
@@ -21,115 +21,116 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
                 'testOrth20Mat','testOrth50Mat',...
                 'testOrth100Mat');
             %
-            % Test#1. Ellipsoid(q,D,W)
+            % Test#1. GenEllipsoid(q,D,W)
             wMat=[1 1;1 2];
             dMat=[Inf 1].';
-            resEllipsoid=Ellipsoid([0,0].',dMat,wMat);
+            resEllipsoid=GenEllipsoid([0,0].',dMat,wMat);
             ansVMat=[-1 1; 1 1];
             ansVMat=ansVMat/norm(ansVMat);
             ansDMat=[0.5 Inf].';
             ansCenVec=[0 0].';
             %
-            mlunit.assert_equals(1,isEqElM(resEllipsoid,...
-                ansVMat,ansDMat,ansCenVec));
+            check();
             %
-            % Test#2. Ellipsoid(q,D,W)
+            % Test#2. GenEllipsoid(q,D,W)
             wMat=[1 2;1 2];
             dMat=[1 Inf].';
-            resEllipsoid=Ellipsoid([0,0].',dMat,wMat);
+            resEllipsoid=GenEllipsoid([0,0].',dMat,wMat);
             %
             ansVMat=[-1 1; 1 1];
             ansVMat=ansVMat/norm(ansVMat);
             ansDMat=[0 Inf].';
             ansCenVec=[0 0].';
             %
-            mlunit.assert_equals(1,isEqElM(resEllipsoid,...
-                ansVMat,ansDMat,ansCenVec));
-            %
-            % Test#3. Ellipsoid(q,D,W)
+            check();
+            % Test#3. GenEllipsoid(q,D,W)
             wMat=testOrth2Mat;
             dMat=[5 Inf].';
-            resEllipsoid=Ellipsoid([1,2].',dMat,wMat);
+            resEllipsoid=GenEllipsoid([1,2].',dMat,wMat);
             %
             ansVMat=testOrth2Mat;
             ansDMat=[5 Inf].';
             ansCenVec=[1 2].';
             %
-            mlunit.assert_equals(1,isEqElM(resEllipsoid,...
-                ansVMat,ansDMat,ansCenVec));
+            check();
             %
-            % Test#4. Ellipsoid(q,D,W) 3d-case.
+            % Test#4. GenEllipsoid(q,D,W) 3d-case.
             % Orthogonal Matrix. Finite eigenvalues.
             nDims=3;
             wMat=testOrth3Mat;
             dMat=(1:nDims).';
-            resEllipsoid=Ellipsoid(ones(nDims,1),dMat,wMat);
+            resEllipsoid=GenEllipsoid(ones(nDims,1),dMat,wMat);
             %
             ansVMat=testOrth3Mat;
             ansDMat=(1:nDims).';
             ansCenVec=ones(nDims,1);
             %
-            mlunit.assert_equals(1,isEqElM(resEllipsoid,...
-                ansVMat,ansDMat,ansCenVec));
+            check();
             %
-            % Test#5. Ellipsoid(q,D,W)
+            % Test#5. GenEllipsoid(q,D,W)
             % 100-d case. Orthogonal matrix. Infinite eigenvalues.
             nDims=100;
             wMat=testOrth100Mat;
             dMat=[ Inf; Inf; (0:(nDims-4)).'; Inf];
-            resEllipsoid=Ellipsoid(ones(nDims,1),dMat,wMat);
+            resEllipsoid=GenEllipsoid(ones(nDims,1),dMat,wMat);
             %
             ansVMat=testOrth100Mat;
             ansDMat=[ Inf; Inf; (0:(nDims-4)).'; Inf];
             ansCenVec=ones(nDims,1);
             %
-            mlunit.assert_equals(1,isEqElM(resEllipsoid,...
-                ansVMat,ansDMat,ansCenVec));
-            % Test#6. Ellipsoid(q,D,W)
+            check();
+            % Test#6. GenEllipsoid(q,D,W)
             wMat=[1 0;2 0];
             dMat=[0 1].';
-            resEllipsoid=Ellipsoid([0,0].',dMat,wMat);
+            resEllipsoid=GenEllipsoid([0,0].',dMat,wMat);
             ansVMat=[-1 0; 0 -1];
             ansVMat=ansVMat/norm(ansVMat);
             ansDMat=[0 0].';
             ansCenVec=[0 0].';
             %
-            mlunit.assert_equals(1,isEqElM(resEllipsoid,...
-                ansVMat,ansDMat,ansCenVec));
+            function check()
+                mlunit.assert_equals(1,isEqElM(resEllipsoid,...
+                    ansVMat,ansDMat,ansCenVec));
+            end
         end
         %
         function self = testInv(self)
-            import elltool.core.Ellipsoid;
+            import elltool.core.GenEllipsoid;
             %
             load(strcat(self.testDataRootDir,filesep,...
                 'testNewEllRandM.mat'),...
                 'testOrth2Mat','testOrth3Mat',...
                 'testOrth20Mat','testOrth50Mat',...
                 'testOrth100Mat');
-            %import elltool.core.Ellipsoid;
+            %import elltool.core.GenEllipsoid;
             %Test#1.
             nDim=100;
             cenVec=zeros(nDim,1);
             ellMat=testOrth100Mat*diag(1:nDim)*testOrth100Mat.';
             ellMat=0.5*(ellMat+ellMat.');
-            testEll=Ellipsoid(cenVec,ellMat);
+            testEll=GenEllipsoid(cenVec,ellMat);
             resInvEll=testEll.inv();
             ansEll=ellipsoid(cenVec,ellMat);
             ansInvEll=inv(ansEll);
             [ansCenVec ansMat]=double(ansInvEll);
             %
-            mlunit.assert_equals(1,isEllEll2Equal(resInvEll,...
-                Ellipsoid(ansCenVec,ansMat)));
+            compEll(resInvEll,ansCenVec,ansMat);
             %Test#2.
-            testEll=Ellipsoid([0 5 Inf].');
+            testEll=GenEllipsoid([0 5 Inf].');
             resInvEll=testEll.inv();
-            mlunit.assert_equals(1,isEllEll2Equal(resInvEll,...
-                Ellipsoid([Inf 0.2 0].')));
+            compEll(resInvEll,[Inf 0.2 0].');
+            %
+            function compEll(ellObj,varargin)
+                import elltool.core.GenEllipsoid;
+                ellSecObj=GenEllipsoid(varargin{:});
+                [isOk,reportStr]=eq(ellObj,ellSecObj);
+                mlunit.assert_equals(true,isOk,reportStr);
+            end
             
         end
         %
         function self = testMinkSumEa(self)
-            import elltool.core.Ellipsoid;
+            import elltool.core.GenEllipsoid;
             import elltool.conf.Properties;
             %
             load(strcat(self.testDataRootDir,filesep,'testNewEll.mat'),...
@@ -203,106 +204,106 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
             %
             % Test#8. Two ellipsoids. Degenerate case.
             % Bounded result.
-            testEllVec(1)=Ellipsoid([1 0; 0 1]);
-            testEllVec(2)=Ellipsoid([1 0; 0 0]);
+            testEllVec(1)=GenEllipsoid([1 0; 0 1]);
+            testEllVec(2)=GenEllipsoid([1 0; 0 0]);
             testDirVec=[1 0].';
-            ansEllObj=Ellipsoid([4 0; 0 2]);
+            ansEllObj=GenEllipsoid([4 0; 0 2]);
             checkAns(@minkSumEa,testEllVec,ansEllObj,testDirVec);
             clear testEllVec
             %
             % Test#8. Two ellipsoids. Degenerate case.
             % Unbounded result.
-            testEllVec(1)=Ellipsoid([1 0; 0 1]);
-            testEllVec(2)=Ellipsoid([1 0; 0 0]);
+            testEllVec(1)=GenEllipsoid([1 0; 0 1]);
+            testEllVec(2)=GenEllipsoid([1 0; 0 0]);
             testDirVec=[0 1].';
-            ansEllObj=Ellipsoid([Inf 1].');
+            ansEllObj=GenEllipsoid([Inf 1].');
             checkAns(@minkSumEa,testEllVec,ansEllObj,testDirVec);
             clear testEllVec
             %
             % Test#9. Two ellipsoids. Degenerate case.
             % Zero Matrix.
-            testEllVec(1)=Ellipsoid([1 2; 2 5]);
-            testEllVec(2)=Ellipsoid([0 0; 0 0]);
+            testEllVec(1)=GenEllipsoid([1 2; 2 5]);
+            testEllVec(2)=GenEllipsoid([0 0; 0 0]);
             testDirVec=[cos(0.7) sin(0.7)].';
-            ansEllObj=Ellipsoid([1 2;2 5].');
+            ansEllObj=GenEllipsoid([1 2;2 5].');
             checkAns(@minkSumEa,testEllVec,ansEllObj,testDirVec);
             clear testEllVec
             %
             % Test#10. Two ellipsoids. Degenerate case.
             % Two directions. 2D case.
-            testEllVec(1)=Ellipsoid([10 0; 0 0]);
-            testEllVec(2)=Ellipsoid([0 0; 0 20]);
+            testEllVec(1)=GenEllipsoid([10 0; 0 0]);
+            testEllVec(2)=GenEllipsoid([0 0; 0 20]);
             testDirMat=[0,1;1,0];
-            ansEllVec=[ Ellipsoid([Inf 0; 0 20]), ...
-                Ellipsoid([10 0; 0 Inf])];
+            ansEllVec=[ GenEllipsoid([Inf 0; 0 20]), ...
+                GenEllipsoid([10 0; 0 Inf])];
             checkAns(@minkSumEa,testEllVec,ansEllVec,testDirMat);
             clear testEllVec
             %
             % Test#11. Three ellipsoids. Degenerate case.
             % One directions. 3D case.
-            testEllVec(1)=Ellipsoid([10;25;30]);
-            testEllVec(2)=Ellipsoid([2 0 0;0 0 0;0 0 0]);
-            testEllVec(3)=Ellipsoid([0 0 0;0 9 0;0 0 0]);
+            testEllVec(1)=GenEllipsoid([10;25;30]);
+            testEllVec(2)=GenEllipsoid([2 0 0;0 0 0;0 0 0]);
+            testEllVec(3)=GenEllipsoid([0 0 0;0 9 0;0 0 0]);
             testDirVec=[0,1,0].';
-            ansEllObj=Ellipsoid([Inf 0 0; 0 64 0;0 0 48]);
+            ansEllObj=GenEllipsoid([Inf 0 0; 0 64 0;0 0 48]);
             checkAns(@minkSumEa,testEllVec,ansEllObj,testDirVec);
             clear testEllVec
             %
             % Test#12. Two. Infinite, non-degenerate case.
             % One directions. 2D case.
-            testEllVec(1)=Ellipsoid([1;Inf]);
-            testEllVec(2)=Ellipsoid([1 1].');
+            testEllVec(1)=GenEllipsoid([1;Inf]);
+            testEllVec(2)=GenEllipsoid([1 1].');
             testDirVec=[1,1].';
             testDirVec=testDirVec/norm(testDirVec);
-            ansEllObj=Ellipsoid([4 0; 0 Inf]);
+            ansEllObj=GenEllipsoid([4 0; 0 Inf]);
             checkAns(@minkSumEa,testEllVec,ansEllObj,testDirVec);
             clear testEllVec
             %
             % Test#13. Two. Infinite, degenerate case.
             % One directions. 2D case.
-            testEllVec(1)=Ellipsoid([0;Inf]);
-            testEllVec(2)=Ellipsoid([1 1].');
+            testEllVec(1)=GenEllipsoid([0;Inf]);
+            testEllVec(2)=GenEllipsoid([1 1].');
             testDirVec=[1,1].';
             testDirVec=testDirVec/norm(testDirVec);
-            ansEllObj=Ellipsoid([1 0; 0 Inf]);
+            ansEllObj=GenEllipsoid([1 0; 0 Inf]);
             checkAns(@minkSumEa,testEllVec,ansEllObj,testDirVec);
             clear testEllVec
             %
             % Test#14. Two. Infinite, degenerate case.
             % One directions. 2D case. Another direction
-            testEllVec(1)=Ellipsoid([0;Inf]);
-            testEllVec(2)=Ellipsoid([1 1].');
+            testEllVec(1)=GenEllipsoid([0;Inf]);
+            testEllVec(2)=GenEllipsoid([1 1].');
             testDirVec=[1,0].';
             testDirVec=testDirVec/norm(testDirVec);
-            ansEllObj=Ellipsoid([1 0; 0 Inf]);
+            ansEllObj=GenEllipsoid([1 0; 0 Inf]);
             checkAns(@minkSumEa,testEllVec,ansEllObj,testDirVec);
             clear testEllVec
             %
             % Test#15. Two. Infinite, degenerate case.
             % One directions. 3D case.
-            testEllVec(1)=Ellipsoid([0;Inf;1]);
-            testEllVec(2)=Ellipsoid([3 2 1].');
+            testEllVec(1)=GenEllipsoid([0;Inf;1]);
+            testEllVec(2)=GenEllipsoid([3 2 1].');
             testDirVec=[1,1,1].';
             testDirVec=testDirVec/norm(testDirVec);
-            ansEllObj=Ellipsoid([4.5; Inf; 4.5]);
+            ansEllObj=GenEllipsoid([4.5; Inf; 4.5]);
             checkAns(@minkSumEa,testEllVec,ansEllObj,testDirVec);
             clear testEllVec
             %
             % Test#16. Two. Infinite, degenerate case.
             % One directions. 3D case. Degenerate direction
-            testEllVec(1)=Ellipsoid([0;Inf;1]);
-            testEllVec(2)=Ellipsoid([3 2 1].');
+            testEllVec(1)=GenEllipsoid([0;Inf;1]);
+            testEllVec(2)=GenEllipsoid([3 2 1].');
             testDirVec=[0,1,0].';
             testDirVec=testDirVec/norm(testDirVec);
-            ansEllObj=Ellipsoid([Inf; Inf; Inf]);
+            ansEllObj=GenEllipsoid([Inf; Inf; Inf]);
             checkAns(@minkSumEa,testEllVec,ansEllObj,testDirVec);
             clear testEllVec
             %
             function checkWOld(dirMat)
                 %Compare to old function
-                import elltool.core.Ellipsoid;
-                ellNew1Obj=Ellipsoid(cen1Vec,q1Mat);
-                ellNew2Obj=Ellipsoid(cen2Vec,q2Mat);
+                import elltool.core.GenEllipsoid;
+                ellNew1Obj=GenEllipsoid(cen1Vec,q1Mat);
+                ellNew2Obj=GenEllipsoid(cen2Vec,q2Mat);
                 resNewEllVec=minkSumEa([ellNew1Obj,ellNew2Obj],dirMat);
                 resOldEllVec=minksum_ea([ellipsoid(cen1Vec,q1Mat),...
                     ellipsoid(cen2Vec,q2Mat)],dirMat);
@@ -314,13 +315,13 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
             %
             function checkMellMdir(testEllMat,nElems,nDim)
                 %check multiple directions and multiple ellipsoids
-                import elltool.core.Ellipsoid;
-                testEllNewVec(nElems)=Ellipsoid();
+                import elltool.core.GenEllipsoid;
+                testEllNewVec(nElems)=GenEllipsoid();
                 testEllOldVec(nElems)=ellipsoid();
                 for iElem=1:nElems
                     centerVec=iElem*(1:nDim).';
                     qMat=testEllMat{iElem};
-                    testEllNewVec(iElem)=Ellipsoid(centerVec,qMat);
+                    testEllNewVec(iElem)=GenEllipsoid(centerVec,qMat);
                     testEllOldVec(iElem)=ellipsoid(centerVec,qMat);
                 end
                 nDirs=5;
@@ -340,7 +341,7 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
         %
         %
         function self = testMinkDiffIa(self)
-            import elltool.core.Ellipsoid;
+            import elltool.core.GenEllipsoid;
             %
             load(strcat(self.testDataRootDir,filesep,'testNewEll.mat'),...
                 'testEll2x2Mat','testEll2x3Mat','testEll10x2Mat',...
@@ -385,8 +386,8 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
             %Degenerate case
             test1Mat=diag([1;2;0]);
             test2Mat=diag([0.5;1;0]);
-            testEllipsoid1=Ellipsoid(test1Mat);
-            testEllipsoid2=Ellipsoid(test2Mat);
+            testEllipsoid1=GenEllipsoid(test1Mat);
+            testEllipsoid2=GenEllipsoid(test2Mat);
             phi=pi/2.1;
             dirVec=[cos(phi);sin(phi);zeros(1,1)];
             resOldEllipsoid=minkdiff_ia(ellipsoid(test1Mat(1:2,1:2)),...
@@ -398,7 +399,7 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
             ansWMat(3,3)=1;
             ansDMat=zeros(3);
             ansDMat(1:2,1:2)=diaOMat;
-            ansEllObj=Ellipsoid([oldCenVec; 0],ansDMat,ansWMat);
+            ansEllObj=GenEllipsoid([oldCenVec; 0],ansDMat,ansWMat);
             %
             checkAns(@(x,y)minkDiffIa(x(1),x(2),y),...
                 [testEllipsoid1,testEllipsoid2],ansEllObj,dirVec);
@@ -409,8 +410,8 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
             test1Mat=diag([Inf;5;5]);
             test2Mat=diag([Inf;1;1]);
             cenVec=zeros(3,1);
-            testEllipsoid1=Ellipsoid(cenVec,test1Mat,testOrth3Mat);
-            testEllipsoid2=Ellipsoid(cenVec,test2Mat,testOrth3Mat);
+            testEllipsoid1=GenEllipsoid(cenVec,test1Mat,testOrth3Mat);
+            testEllipsoid2=GenEllipsoid(cenVec,test2Mat,testOrth3Mat);
             dirVec=[0;10;-1];
             dirVec=dirVec/norm(dirVec);
             dirVec=testOrth3Mat*dirVec;
@@ -423,28 +424,33 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
             ansDMat=zeros(3);
             ansDMat(1,1)=Inf;
             ansDMat(2:3,2:3)=diaOMat;
-            mlunit.assert_equals(1,isEllEll2Equal...
-                (Ellipsoid(resEllipsoid.getDiagMat()),...
-                Ellipsoid(ansDMat)));
+            %
+            compEll(GenEllipsoid(resEllipsoid.getDiagMat()),ansDMat);
             %
             %Difference between 3-dimension ellipsoids.
             %Infinite and degenerate
             test1Mat=diag([Inf;Inf;1]);
             test2Mat=diag([1;1;0]);
             cenVec=zeros(3,1);
-            testEllipsoid1=Ellipsoid(cenVec,test1Mat,testOrth3Mat.');
-            testEllipsoid2=Ellipsoid(cenVec,test2Mat,testOrth3Mat.');
+            testEllipsoid1=GenEllipsoid(cenVec,test1Mat,testOrth3Mat.');
+            testEllipsoid2=GenEllipsoid(cenVec,test2Mat,testOrth3Mat.');
             dirVec=[1;1;1];
             dirVec=dirVec/norm(dirVec);
-            ansEllObj=Ellipsoid([0;0;0], diag([Inf,Inf,1]),testOrth3Mat.');
+            ansEllObj=GenEllipsoid([0;0;0], diag([Inf,Inf,1]),testOrth3Mat.');
             checkAns(@(x,y)minkDiffIa(x(1),x(2),y),...
                 [testEllipsoid1,testEllipsoid2],ansEllObj,dirVec);
             %
+            function compEll(ellObj,varargin)
+                import elltool.core.GenEllipsoid;
+                ellSecObj=GenEllipsoid(varargin{:});
+                [isOk,reportStr]=eq(ellObj,ellSecObj);
+                mlunit.assert_equals(true,isOk,reportStr);
+            end
             function checkWOld(dirMat)
                 %Compare with old function
-                import elltool.core.Ellipsoid;
-                ellNew1Obj=Ellipsoid(cen1Vec,q1Mat);
-                ellNew2Obj=Ellipsoid(cen2Vec,q2Mat);
+                import elltool.core.GenEllipsoid;
+                ellNew1Obj=GenEllipsoid(cen1Vec,q1Mat);
+                ellNew2Obj=GenEllipsoid(cen2Vec,q2Mat);
                 resNewEllVec=minkDiffIa(ellNew1Obj,ellNew2Obj,dirMat);
                 resOldEllVec=minkdiff_ia(ellipsoid(cen1Vec,q1Mat),...
                     ellipsoid(cen2Vec,q2Mat),dirMat);
@@ -474,7 +480,7 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
         %
         %
         function self = testMinkSumIa(self)
-            import elltool.core.Ellipsoid;
+            import elltool.core.GenEllipsoid;
             %
             load(strcat(self.testDataRootDir,filesep,'testNewEll.mat'),...
                 'testEll2x2Mat','testEll2x3Mat','testEll10x2Mat',...
@@ -492,8 +498,8 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
             test1WMat=test1WMat/norm(test1WMat);
             test1DVec=[Inf 0].';
             test2DVec=[1 1].';
-            testEllipsoid1=Ellipsoid([0,0].',test1DVec,test1WMat);
-            testEllipsoid2=Ellipsoid(test2DVec);
+            testEllipsoid1=GenEllipsoid([0,0].',test1DVec,test1WMat);
+            testEllipsoid2=GenEllipsoid(test2DVec);
             dirVec=[1 10].';
             dirVec=dirVec/norm(dirVec);
             %
@@ -501,7 +507,7 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
             ansEigvMat=[1 -1; 1 1];
             ansEigvMat=ansEigvMat/norm(ansEigvMat);
             ansCenVec=[0 0].';
-            ansEllipsoid=Ellipsoid(ansCenVec,ansDiagVec,ansEigvMat);
+            ansEllipsoid=GenEllipsoid(ansCenVec,ansDiagVec,ansEigvMat);
             %
             checkAns(@minkSumIa,[testEllipsoid1, testEllipsoid2],...
                 ansEllipsoid,dirVec);
@@ -512,15 +518,15 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
             test1WMat=test1WMat/norm(test1WMat);
             test1DVec=[Inf 0].';
             test2DVec=[1 1].';
-            testEllipsoid1=Ellipsoid([0,0].',test1DVec,test1WMat);
-            testEllipsoid2=Ellipsoid(test2DVec);
+            testEllipsoid1=GenEllipsoid([0,0].',test1DVec,test1WMat);
+            testEllipsoid2=GenEllipsoid(test2DVec);
             dirVec=[1 1].';
             dirVec=dirVec/norm(dirVec);
             %
             ansDiagVec=[Inf Inf].';
             ansEigvMat=[1 0; 0 1];
             ansCenVec=[0 0].';
-            ansEllipsoid=Ellipsoid(ansCenVec,ansDiagVec,ansEigvMat);
+            ansEllipsoid=GenEllipsoid(ansCenVec,ansDiagVec,ansEigvMat);
             %
             checkAns(@minkSumIa,[testEllipsoid1, testEllipsoid2],...
                 ansEllipsoid,dirVec);
@@ -530,8 +536,8 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
             test1WMat=eye(nDim);
             test1DVec=[1 2 Inf].';
             test2DVec=[3 4 5].';
-            testEllipsoid1=Ellipsoid([0,0,0].',test1DVec,test1WMat);
-            testEllipsoid2=Ellipsoid(test2DVec);
+            testEllipsoid1=GenEllipsoid([0,0,0].',test1DVec,test1WMat);
+            testEllipsoid2=GenEllipsoid(test2DVec);
             dirVec=[1 1 0].';
             dirVec=dirVec/norm(dirVec);
             %
@@ -548,7 +554,7 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
             ansEigvMat(1:2, 1:2)=auxEigvMat;
             ansDiagVec(1:2)=diag(auxDiagMat);
             ansDiagVec(3)=Inf;
-            ansEllipsoid=Ellipsoid(ansCenVec,ansDiagVec,ansEigvMat);
+            ansEllipsoid=GenEllipsoid(ansCenVec,ansDiagVec,ansEigvMat);
             %
             checkAns(@minkSumIa,[testEllipsoid1, testEllipsoid2],...
                 ansEllipsoid,dirVec);
@@ -560,15 +566,15 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
             test2WMat=[1 -10; 10 1];
             test2WMat=test2WMat/norm(test2WMat);
             test2DVec=[Inf 1].';
-            testEllipsoid1=Ellipsoid([0,0].',test1DVec,test1WMat);
-            testEllipsoid2=Ellipsoid([0,0].',test2DVec,test2WMat);
+            testEllipsoid1=GenEllipsoid([0,0].',test1DVec,test1WMat);
+            testEllipsoid2=GenEllipsoid([0,0].',test2DVec,test2WMat);
             dirVec=[-1 10].';
             dirVec=dirVec/norm(dirVec);
             %
             ansDiagVec=[Inf Inf].';
             ansEigvMat=[1 0; 0 1];
             ansCenVec=[0 0].';
-            ansEllipsoid=Ellipsoid(ansCenVec,ansDiagVec,ansEigvMat);
+            ansEllipsoid=GenEllipsoid(ansCenVec,ansDiagVec,ansEigvMat);
             %
             checkAns(@minkSumIa,[testEllipsoid1, testEllipsoid2],...
                 ansEllipsoid,dirVec);
@@ -578,15 +584,15 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
             test2QMat=[0 0 0;0 2 0;0 0 0];
             cen1Vec=[1 1 1].';
             cen2Vec=[1 -1 10].';
-            testEllipsoid1=Ellipsoid(cen1Vec,test1QMat);
-            testEllipsoid2=Ellipsoid(cen2Vec,test2QMat);
+            testEllipsoid1=GenEllipsoid(cen1Vec,test1QMat);
+            testEllipsoid2=GenEllipsoid(cen2Vec,test2QMat);
             dirVec=[1 0 0].';
             dirVec=dirVec/norm(dirVec);
             %
             ansCenVec=[2; 0; 11];
             ansEigvMat=eye(3);
             ansDiagVec=diag([1 0 0]);
-            ansEllipsoid=Ellipsoid(ansCenVec,ansDiagVec,ansEigvMat);
+            ansEllipsoid=GenEllipsoid(ansCenVec,ansDiagVec,ansEigvMat);
             %
             checkAns(@minkSumIa,[testEllipsoid1, testEllipsoid2],...
                 ansEllipsoid,dirVec);
@@ -594,7 +600,7 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
         %
         function self = testMinkDiffEa(self)
             %
-            import elltool.core.Ellipsoid;
+            import elltool.core.GenEllipsoid;
             %
             load(strcat(self.testDataRootDir,filesep,'testNewEll.mat'),...
                 'testEll2x2Mat','testEll2x3Mat','testEll10x2Mat',...
@@ -637,8 +643,8 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
             %Degenerate case
             test1Mat=diag([1;2;0]);
             test2Mat=diag([0.5;1;0]);
-            testEllipsoid1=Ellipsoid(test1Mat);
-            testEllipsoid2=Ellipsoid(test2Mat);
+            testEllipsoid1=GenEllipsoid(test1Mat);
+            testEllipsoid2=GenEllipsoid(test2Mat);
             phi=pi/2.1;
             dirVec=[cos(phi);sin(phi);zeros(1,1)];
             %
@@ -651,7 +657,7 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
             ansWMat(3,3)=1;
             ansDMat=zeros(3);
             ansDMat(1:2,1:2)=diaOMat;
-            ansEllipsoid=Ellipsoid([oldCenVec; 0],ansDMat,ansWMat);
+            ansEllipsoid=GenEllipsoid([oldCenVec; 0],ansDMat,ansWMat);
             checkAns(@(x,y)minkDiffEa(x(1),x(2),y),...
                 [testEllipsoid1,testEllipsoid2],ansEllipsoid,dirVec);
             %
@@ -660,8 +666,8 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
             test1Mat=diag([Inf;5;5]);
             test2Mat=diag([Inf;1;1]);
             cenVec=zeros(3,1);
-            testEllipsoid1=Ellipsoid(cenVec,test1Mat,testOrth3Mat);
-            testEllipsoid2=Ellipsoid(cenVec,test2Mat,testOrth3Mat);
+            testEllipsoid1=GenEllipsoid(cenVec,test1Mat,testOrth3Mat);
+            testEllipsoid2=GenEllipsoid(cenVec,test2Mat,testOrth3Mat);
             dirVec=[0;10;-1];
             dirVec=dirVec/norm(dirVec);
             dirVec=testOrth3Mat*dirVec;
@@ -674,23 +680,30 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
             ansDMat=zeros(3);
             ansDMat(1,1)=Inf;
             ansDMat(2:3,2:3)=diaOMat;
-            mlunit.assert_equals(1,isEllEll2Equal...
-                (Ellipsoid(resEllipsoid.getDiagMat()),...
-                Ellipsoid(ansDMat)));
+           %
+            compEll(GenEllipsoid(resEllipsoid.getDiagMat()),ansDMat);
             %
             %Difference between 3-dimension ellipsoids.
             %Infinite and degenerate
             test1Mat=diag([Inf;Inf;1]);
             test2Mat=diag([1;1;0.1]);
             cenVec=zeros(3,1);
-            testEllipsoid1=Ellipsoid(cenVec,test1Mat);
-            testEllipsoid2=Ellipsoid(cenVec,test2Mat);
+            testEllipsoid1=GenEllipsoid(cenVec,test1Mat);
+            testEllipsoid2=GenEllipsoid(cenVec,test2Mat);
             dirVec=[1;0;0];
             dirVec=dirVec/norm(dirVec);
-            ansEllObj=Ellipsoid(diag([Inf;Inf;Inf]));
-            checkAns(@(x,y)minkDiffIa(x(1),x(2),y),...
+            %FIXME - this doesn't seem to be correct
+            ansEllObj=GenEllipsoid(diag([Inf;Inf;Inf]));
+            %
+            checkAns(@(x,y)minkDiffEa(x(1),x(2),y),...
                 [testEllipsoid1,testEllipsoid2],ansEllObj,dirVec);
             %
+            function compEll(ellObj,varargin)
+                import elltool.core.GenEllipsoid;
+                ellSecObj=GenEllipsoid(varargin{:});
+                [isOk,reportStr]=eq(ellObj,ellSecObj);
+                mlunit.assert_equals(true,isOk,reportStr);
+            end
             function checkHighDim(nDim, oMat, isZeroCenter)
                 q1Mat=rotateM(10*diag(1:nDim),oMat);
                 q2Mat=rotateM(diag(1:nDim),oMat);
@@ -709,9 +722,9 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
             %
             function checkWOld(dirMat)
                 %Compare to old function
-                import elltool.core.Ellipsoid;
-                ellNew1Obj=Ellipsoid(cen1Vec,q1Mat);
-                ellNew2Obj=Ellipsoid(cen2Vec,q2Mat);
+                import elltool.core.GenEllipsoid;
+                ellNew1Obj=GenEllipsoid(cen1Vec,q1Mat);
+                ellNew2Obj=GenEllipsoid(cen2Vec,q2Mat);
                 resNewEllVec=minkDiffEa(ellNew1Obj,ellNew2Obj,dirMat);
                 resOldEllVec=minkdiff_ea(ellipsoid(cen1Vec,q1Mat),...
                     ellipsoid(cen2Vec,q2Mat),dirMat);
@@ -741,19 +754,19 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
             function check(oMat,fMethod,lVec)
                 ell1Apx=build(oMat,fMethod,oMat*lVec);
                 ell2Apx=build(eye(numel(lVec)),fMethod,lVec);
-                isEqual=isEllEll2Equal(ell1Apx, ell2Apx);
-                mlunitext.assert(isEqual);
+                [isEqual,reportStr]=eq(ell1Apx, ell2Apx);
+                mlunitext.assert(isEqual,reportStr);
             end
             function ellApx=build(oMat,fMethod,lVec)
-                import elltool.core.Ellipsoid;
-                ell1=Ellipsoid(zeros(nDims,1),diag(d1Vec),oMat);
-                ell2=Ellipsoid(zeros(nDims,1),diag(d2Vec),oMat);
+                import elltool.core.GenEllipsoid;
+                ell1=GenEllipsoid(zeros(nDims,1),diag(d1Vec),oMat);
+                ell2=GenEllipsoid(zeros(nDims,1),diag(d2Vec),oMat);
                 ellVec=[ell1,ell2];
                 ellApx=fMethod(ellVec,lVec);
                 eigVMat=ellApx.getEigvMat();
                 if ~isempty(eigVMat)
                     eigVMat=oMat.'*eigVMat;
-                    ellApx=Ellipsoid(ellApx.getCenter(),ellApx.getDiagMat(),...
+                    ellApx=GenEllipsoid(ellApx.getCenter(),ellApx.getDiagMat(),...
                         eigVMat);
                 end
             end
@@ -764,19 +777,19 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
                 'testNewEllRandM.mat'),'testOrth50Mat',...
                 'testOrth20Mat','testOrth100Mat','testOrth3Mat',...
                 'testOrth2Mat');
-            import elltool.core.Ellipsoid;
+            import elltool.core.GenEllipsoid;
             load(strcat(self.testDataRootDir,filesep,...
                 'testEllEllRMat.mat'),'testOrth3Mat');
             %Test1.
-            testEllipsoid1=Ellipsoid([4;3]);
-            testEllipsoid2=Ellipsoid([1;0]);
+            testEllipsoid1=GenEllipsoid([4;3]);
+            testEllipsoid2=GenEllipsoid([1;0]);
             dirVec=[0,1].';
             dirVec=dirVec/norm(dirVec);
             checkRes();
             %
             %Test2.
-            testEllipsoid1=Ellipsoid([0;0;0],[4;3;4],testOrth3Mat.');
-            testEllipsoid2=Ellipsoid([0;0;0],[1;0;0],testOrth3Mat.');
+            testEllipsoid1=GenEllipsoid([0;0;0],[4;3;4],testOrth3Mat.');
+            testEllipsoid2=GenEllipsoid([0;0;0],[1;0;0],testOrth3Mat.');
             dirVec=testOrth3Mat.'*[0,0,1].';
             dirVec=dirVec/norm(dirVec);
             checkRes();
@@ -797,9 +810,9 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
             badDirMat=testOrth20Mat*badDirMat;
             goodDirMat=testOrth20Mat*goodDirMat;
             %
-            testEllipsoid1=Ellipsoid(zeros(nDim,1),...
+            testEllipsoid1=GenEllipsoid(zeros(nDim,1),...
                 [16;3;Inf;(1:17)'],testOrth20Mat);
-            testEllipsoid2=Ellipsoid(zeros(nDim,1),...
+            testEllipsoid2=GenEllipsoid(zeros(nDim,1),...
                 [4;0;0.1*(1:18)'],testOrth20Mat);
             %
             ell1Vec=minkDiffEa(testEllipsoid1,testEllipsoid2,badDirMat);
@@ -810,12 +823,12 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
             arrayfun(fCheckGood,ell1Vec);
             arrayfun(fCheckBad,ell2Vec);
             function checkEllEmpty(ellObj,isCheckEmpty)
-                import elltool.core.Ellipsoid;
-                isOk=isEllEll2Equal(ellObj,Ellipsoid());
+                import elltool.core.GenEllipsoid;
+                [isOk,reportStr]=eq(ellObj,GenEllipsoid());
                 if ~isCheckEmpty
                     isOk=~isOk;
                 end
-                mlunitext.assert(isOk);
+                mlunitext.assert(isOk,reportStr);
             end
             function checkRes()
                 resEll=minkDiffEa(testEllipsoid1,testEllipsoid2,dirVec);
@@ -824,13 +837,13 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
         end
         
         function testAllDirRand(self)
-            import elltool.core.test.mlunit.NewEllipsoidTestCase;
-            import elltool.core.Ellipsoid;
+            import elltool.core.test.mlunit.GenEllipsoidTestCase;
+            import elltool.core.GenEllipsoid;
             load(strcat(self.testDataRootDir,filesep,...
                 'testEllEllRMat.mat'),'testOrth50Mat',...
                 'testOrth100Mat','testOrth3Mat','testOrth2Mat');
             %
-            import elltool.core.Ellipsoid;
+            import elltool.core.GenEllipsoid;
             nEllObj=10;
             nDim=50;
             nDir=10;
@@ -840,12 +853,12 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
                 dirVec=dirVec/norm(dirVec);
                 dirRandMat(:,iDir)=dirVec;
             end
-            NewEllipsoidTestCase.auxCheckAllbV(nEllObj,nDim,...
+            GenEllipsoidTestCase.auxCheckAllbV(nEllObj,nDim,...
                 dirRandMat,testOrth50Mat);
         end
         function testAllDirFixed(self)
-            import elltool.core.test.mlunit.NewEllipsoidTestCase;
-            import elltool.core.Ellipsoid;
+            import elltool.core.test.mlunit.GenEllipsoidTestCase;
+            import elltool.core.GenEllipsoid;
             load(strcat(self.testDataRootDir,filesep,...
                 'testNewEllRandM.mat'),'testOrth50Mat',...
                 'testOrth20Mat','testOrth100Mat','testOrth3Mat',...
@@ -859,13 +872,13 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
             nEllObj=10;
             nDim=50;
             %
-            NewEllipsoidTestCase.auxCheckAllbV(nEllObj,nDim,...
+            GenEllipsoidTestCase.auxCheckAllbV(nEllObj,nDim,...
                 test10x50DirMat,testOrth50Mat);
         end
     end
     methods(Static)
         function auxCheckAllbV(nEllObj,nDim,dirMat,oMat)
-            import elltool.core.Ellipsoid;
+            import elltool.core.GenEllipsoid;
             %Massives of ellipsoid size of nEllObj
             %For Sum
             ellNINDCSumVec=buildNINDCSum(); %Non-Infinite Non-Degenerate Case
@@ -921,38 +934,38 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
                 mlunitext.assert(isOk);
             end
             %
-            function isEqual=isSumCorrect(fMethod,ellVec,dirVec,oMat)
-                import elltool.core.Ellipsoid;
+            function [isEqual,reportStr]=isSumCorrect(fMethod,ellVec,dirVec,oMat)
+                import elltool.core.GenEllipsoid;
                 resR1Ell=fMethod(ellVec,dirVec);
                 checkSumTight(resR1Ell,ellVec,dirVec)
-                ellObjRotVec(nEllObj)=Ellipsoid();
+                ellObjRotVec(nEllObj)=GenEllipsoid();
                 for iEll=1:nEllObj
                     ellObjRotVec(iEll)=rotateEll(ellVec(iEll),oMat);
                 end
                 resR2Ell=fMethod(ellObjRotVec,oMat*dirVec);
                 checkSumTight(resR2Ell,ellObjRotVec,oMat*dirVec);
                 resR3Ell=rotateEll(resR2Ell,oMat.');
-                isEqual=isEllEll2Equal(resR1Ell,resR3Ell);
+                [isEqual,reportStr]=eq(resR1Ell,resR3Ell);
             end
-            function isEqual=isDiffCorrect(fMethod,ellVec,dirVec,oMat)
-                import elltool.core.Ellipsoid;
+            function [isEqual,reportStr]=isDiffCorrect(fMethod,ellVec,dirVec,oMat)
+                import elltool.core.GenEllipsoid;
                 resR1Ell=fMethod(ellVec(1),ellVec(2),dirVec);
-                if findIsGoodDir(ellVec(1),ellVec(2),dirVec)
+                if getIsGoodDir(ellVec(1),ellVec(2),dirVec)
                     checkDiffTight(resR1Ell,ellVec,dirVec)
                 end
-                ellObjRotVec(nEllObj)=Ellipsoid();
+                ellObjRotVec(nEllObj)=GenEllipsoid();
                 for iEll=1:2
                     ellObjRotVec(iEll)=rotateEll(ellVec(iEll),oMat);
                 end
                 rotDirVec=oMat*dirVec;
                 resR2Ell=fMethod(ellObjRotVec(1),ellObjRotVec(2),...
                     rotDirVec);
-                if  findIsGoodDir(ellVec(1),ellVec(2),rotDirVec)
+                if  getIsGoodDir(ellVec(1),ellVec(2),rotDirVec)
                     checkDiffTight(resR2Ell,ellObjRotVec,rotDirVec)
                 end
                 if (~isempty(resR2Ell.getDiagMat()))
                     resR3Ell=rotateEll(resR2Ell,oMat.');
-                    isEqual=isEllEll2Equal(resR1Ell,resR3Ell);
+                    [isEqual,reportStr]=eq(resR1Ell,resR3Ell);
                 else
                     if (isempty(resR1Ell.getDiagMat()))
                         isEqual=true;
@@ -962,59 +975,59 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
                 end
             end
             function [ellVec]=buildNINDCSum()
-                import elltool.core.Ellipsoid;
-                ellVec(nEllObj)=Ellipsoid();
+                import elltool.core.GenEllipsoid;
+                ellVec(nEllObj)=GenEllipsoid();
                 cenVec=zeros(nDim,1);
                 for iEll=1:nEllObj
                     diagVec=(1:nDim).'*iEll/10;
-                    ellVec(iEll)=Ellipsoid(cenVec,diagVec);
+                    ellVec(iEll)=GenEllipsoid(cenVec,diagVec);
                 end
             end
             function [ellVec]=buildNIDCSum()
-                import elltool.core.Ellipsoid;
-                ellVec(nEllObj)=Ellipsoid();
+                import elltool.core.GenEllipsoid;
+                ellVec(nEllObj)=GenEllipsoid();
                 cenVec=zeros(nDim,1);
                 for iEll=1:nEllObj
                     diagVec=(1:nDim).'*iEll/10;
                     diagVec(max(1,floor(nDim*iEll/nEllObj)))=0;
-                    ellVec(iEll)=Ellipsoid(cenVec,diagVec);
+                    ellVec(iEll)=GenEllipsoid(cenVec,diagVec);
                 end
             end
             function [ellVec]=buildINDCSum()
-                import elltool.core.Ellipsoid;
-                ellVec(nEllObj)=Ellipsoid();
+                import elltool.core.GenEllipsoid;
+                ellVec(nEllObj)=GenEllipsoid();
                 cenVec=zeros(nDim,1);
                 diagVec=(1:nDim).'/10;
                 diagVec(1)=Inf;
-                ellVec(1)=Ellipsoid(cenVec,diagVec);
+                ellVec(1)=GenEllipsoid(cenVec,diagVec);
                 diagVec=(1:nDim).'/10;
                 diagVec(end)=Inf;
-                ellVec(end)=Ellipsoid(cenVec,diagVec);
+                ellVec(end)=GenEllipsoid(cenVec,diagVec);
                 for iEll=2:(nEllObj-1)
                     diagVec=(1:nDim).'*iEll/10;
-                    ellVec(iEll)=Ellipsoid(cenVec,diagVec);
+                    ellVec(iEll)=GenEllipsoid(cenVec,diagVec);
                 end
             end
             %
             function [ellVec]=buildIDCSum()
-                import elltool.core.Ellipsoid;
-                ellVec(nEllObj)=Ellipsoid();
+                import elltool.core.GenEllipsoid;
+                ellVec(nEllObj)=GenEllipsoid();
                 cenVec=zeros(nDim,1);
                 diagVec=(1:nDim).'/10;
                 diagVec(1)=Inf;
-                ellVec(1)=Ellipsoid(cenVec,diagVec);
+                ellVec(1)=GenEllipsoid(cenVec,diagVec);
                 diagVec=(1:nDim).'/10;
                 diagVec(end)=Inf;
-                ellVec(end)=Ellipsoid(cenVec,diagVec);
+                ellVec(end)=GenEllipsoid(cenVec,diagVec);
                 for iEll=2:(nEllObj-1)
                     diagVec=(1:nDim).'*iEll/10;
                     diagVec(max(1,floor(nDim*iEll/nEllObj)))=0;
-                    ellVec(iEll)=Ellipsoid(cenVec,diagVec);
+                    ellVec(iEll)=GenEllipsoid(cenVec,diagVec);
                 end
             end
             %
             function ellVec=buildDiff(complStr)
-                import elltool.core.Ellipsoid;
+                import elltool.core.GenEllipsoid;
                 diag1Vec=(1:nDim).';
                 diag2Vec=(1:nDim).'/3;
                 cen1Vec=ones(nDim,1);
@@ -1034,18 +1047,18 @@ classdef NewEllipsoidTestCase < mlunitext.test_case
                     diag2Vec(2)=0;
                     diag2Vec(end-3:end)=0;
                 end
-                ellVec(1)=Ellipsoid(cen1Vec,diag1Vec);
-                ellVec(2)=Ellipsoid(cen2Vec,diag2Vec);
+                ellVec(1)=GenEllipsoid(cen1Vec,diag1Vec);
+                ellVec(2)=GenEllipsoid(cen2Vec,diag2Vec);
             end
         end
     end
 end
 
 function resEllObj=rotateEll(ellObj,oMat)
-import elltool.core.Ellipsoid;
+import elltool.core.GenEllipsoid;
 eigvMat=ellObj.getEigvMat();
 newVMat=oMat*eigvMat;
-resEllObj=Ellipsoid(ellObj.getCenter(),ellObj.getDiagMat(),newVMat);
+resEllObj=GenEllipsoid(ellObj.getCenter(),ellObj.getDiagMat(),newVMat);
 end
 %
 function isEqual=isEqM( objMat1, objMat2,absTol)
@@ -1061,8 +1074,8 @@ isEqual=isEqualInf && isEqualFin;
 end
 %
 function isEqual=isEqElM(resEllipsoid,ansVMat,ansDVec,ansCenVec)
-import elltool.core.Ellipsoid;
-absTol=Ellipsoid.getCheckTol();
+import elltool.core.GenEllipsoid;
+absTol=GenEllipsoid.getCheckTol();
 eigvMat=resEllipsoid.getEigvMat();
 diagVec=diag(resEllipsoid.getDiagMat());
 cenVec=resEllipsoid.getCenter();
@@ -1076,38 +1089,12 @@ isEqual=isEqV(diagVec,ansDVec,absTol)&&...
     isEqM(eigvMat,ansVMat,absTol);
 end
 %
-function isEqual=isEllNewOldEqual(ellNewObj, ellOldObj)
-import elltool.core.Ellipsoid;
+function [isEqual,reportStr]=isEllNewOldEqual(ellNewObj, ellOldObj)
+import elltool.core.GenEllipsoid;
 [cenOldVec qOldMat]=double(ellOldObj);
-isEqual=isEllEll2Equal(ellNewObj,Ellipsoid(cenOldVec, qOldMat));
+[isEqual,reportStr]=ellNewObj.eq(GenEllipsoid(cenOldVec, qOldMat));
 end
-function isEqual=isEllEll2Equal(ellObj1, ellObj2)
-% eig vectors corresponding to the same eig values are collinear
-import elltool.core.Ellipsoid;
-absTol=Ellipsoid.getCheckTol();
-eigv1Mat=ellObj1.getEigvMat();
-diag1Vec=diag(ellObj1.getDiagMat());
-cen1Vec=ellObj1.getCenter();
-eigv2Mat=ellObj2.getEigvMat();
-diag2Vec=diag(ellObj2.getDiagMat());
-isEmpt1=isempty(diag1Vec);
-isEmpt2=isempty(diag2Vec);
-if isEmpt1 && isEmpt2
-    isEqual=true;
-elseif isEmpt1 || isEmpt2
-    isEqual=false;
-else
-    cen2Vec=ellObj2.getCenter();
-    isInf1Vec=diag1Vec==Inf;
-    isInf2Vec=diag2Vec==Inf;
-    eigvFin1Mat=eigv1Mat(:,~isInf1Vec);
-    eigvFin2Mat=eigv2Mat(:,~isInf2Vec);
-    ellQ1Mat=eigvFin1Mat*diag(diag1Vec(~isInf1Vec))*eigvFin1Mat.';
-    ellQ2Mat=eigvFin2Mat*diag(diag2Vec(~isInf2Vec))*eigvFin2Mat.';
-    isEqual=isEqM(ellQ1Mat,ellQ2Mat,absTol)...
-        && isEqV(cen1Vec,cen2Vec,absTol);
-end
-end
+%
 function resMat=rotateM(qMat, oMat)
 resMat=oMat*qMat*oMat.';
 resMat=0.5*(resMat+resMat.');
@@ -1115,18 +1102,27 @@ end
 %
 function checkAns(fMethod,testEllVec,ansEllObj,testDirObj)
 resEllObj=fMethod(testEllVec,testDirObj);
-isOkVec=arrayfun(@isEllEll2Equal,resEllObj,ansEllObj);
-mlunit.assert_equals(1,all(isOkVec));
+[isOkCVec,reportCVec]=arrayfun(@eq,resEllObj,ansEllObj,...
+    'UniformOutput',false);
+isOkVec=[isOkCVec{:}];
+reportBadCVec=reportCVec(~isOkVec);
+isOk=all(isOkVec);
+if ~isOk
+    reportStr=reportBadCVec{1};
+else
+    reportStr='';
+end
+mlunit.assert_equals(true,isOk,reportStr);
 if (isequal(fMethod,@minkSumIa) || isequal(fMethod,@minkSumEa))
     checkSumTight(ansEllObj,testEllVec,testDirObj(:,1));
 else
     checkDiffTight(ansEllObj,testEllVec,testDirObj(:,1));
 end
 end
-
+%
 function checkSumTight(ellResObj, ellVec, dirVec)
-import elltool.core.Ellipsoid;
-absTol=Ellipsoid.getCheckTol();
+import elltool.core.GenEllipsoid;
+absTol=GenEllipsoid.getCheckTol();
 nEll=length(ellVec);
 sumOfRho=0;
 for iEll=1:nEll;
@@ -1142,8 +1138,8 @@ end
 mlunitext.assert(isTight);
 end
 function checkDiffTight(ellResObj, ellVec, dirVec)
-import elltool.core.Ellipsoid;
-absTol=Ellipsoid.getCheckTol();
+import elltool.core.GenEllipsoid;
+absTol=GenEllipsoid.getCheckTol();
 rho1=rho(ellVec(1),dirVec);
 rho2=rho(ellVec(2),dirVec);
 if rho1==Inf
@@ -1159,115 +1155,4 @@ else
     isTight=isInf;
 end
 mlunitext.assert(isTight);
-end
-function resRho=rho(ellObj,dirVec)
-import elltool.core.Ellipsoid;
-absTol=Ellipsoid.getCheckTol();
-eigvMat=ellObj.getEigvMat();
-diagMat=ellObj.getDiagMat();
-diagVec=diag(diagMat);
-cenVec=ellObj.getCenter();
-isInfVec=diagVec==Inf;
-dirInfProjVec=0;
-if ~all(~isInfVec)
-    nDimSpace=length(diagVec);
-    allInfDirMat=eigvMat(:,isInfVec);
-    [orthBasMat rangInf]=findBasRang(allInfDirMat,absTol);
-    infIndVec=1:rangInf;
-    finIndVec=(rangInf+1):nDimSpace;
-    infBasMat = orthBasMat(:,infIndVec);
-    finBasMat = orthBasMat(:,finIndVec);
-    diagVec(isInfVec)=0;
-    curEllMat=eigvMat*diag(diagVec)*eigvMat.';
-    resProjQMat=finBasMat.'*curEllMat*finBasMat;
-    ellQMat=0.5*(resProjQMat+resProjQMat.');
-    dirInfProjVec=infBasMat.'*dirVec;
-    dirVec=finBasMat.'*dirVec;
-    cenVec=finBasMat.'*cenVec;
-else
-    ellQMat=eigvMat*diag(diagVec)*eigvMat.';
-    ellQMat=0.5*(ellQMat+ellQMat);
-end
-if ~all(abs(dirInfProjVec)<absTol)
-    resRho=Inf;
-else
-    dirVec=dirVec/norm(dirVec);
-    resRho=cenVec.'*dirVec+sqrt(dirVec.'*ellQMat*dirVec);
-end
-end
-function [orthBasMat rang]=findBasRang(qMat,absTol)
-[orthBasMat rBasMat]=qr(qMat);
-if size(rBasMat,2)==1
-    isNeg=rBasMat(1)<0;
-    orthBasMat(:,isNeg)=-orthBasMat(:,isNeg);
-else
-    isNegVec=diag(rBasMat)<0;
-    orthBasMat(:,isNegVec)=-orthBasMat(:,isNegVec);
-end
-tolerance = absTol*norm(qMat,'fro');
-rang = sum(abs(diag(rBasMat)) > tolerance);
-rang = rang(1); %for case where rBasZMat is vector.
-end
-function isOk=findIsGoodDir(ellObj1,ellObj2,curDirVec)
-import elltool.core.Ellipsoid;
-absTol=Ellipsoid.getCheckTol();
-eigv1Mat=ellObj1.getEigvMat();
-eigv2Mat=ellObj2.getEigvMat();
-diag1Vec=diag(ellObj1.getDiagMat());
-diag2Vec=diag(ellObj2.getDiagMat());
-isInf1Vec=diag1Vec==Inf;
-if ~all(~isInf1Vec)
-    %Infinite case
-    allInfDirMat=eigv1Mat(:,isInf1Vec);
-    [orthBasMat rangInf]=findBasRang(allInfDirMat,absTol);
-    %    infIndVec=1:rangInf;
-    nDimSpace=length(diag1Vec);
-    finIndVec=(rangInf+1):nDimSpace;
-    finBasMat = orthBasMat(:,finIndVec);
-    %Find projections on nonInf directions
-    isInf2Vec=diag(ellObj2.getDiagMat())==Inf;
-    diag1Vec(isInf1Vec)=0;
-    diag2Vec(isInf2Vec)=0;
-    curEllMat=eigv1Mat*diag(diag1Vec)*eigv1Mat.';
-    ellQ1Mat=finBasMat.'*curEllMat*finBasMat;
-    ellQ1Mat=0.5*(ellQ1Mat+ellQ1Mat.');
-    curEllMat=eigv2Mat*diag(diag2Vec)*eigv2Mat.';
-    ellQ2Mat=finBasMat.'*curEllMat*finBasMat;
-    ellQ2Mat=0.5*(ellQ2Mat+ellQ2Mat.');
-    curDirVec=finBasMat.'*curDirVec;
-    [eigv1Mat diag1Mat]=eig(ellQ1Mat);
-    diag1Vec=diag(diag1Mat);
-else
-    ellQ1Mat=eigv1Mat*diag(diag1Vec)*eigv1Mat.';
-    ellQ2Mat=eigv2Mat*diag(diag2Vec)*eigv2Mat.';
-end
-if all(abs(curDirVec)<absTol)
-    isOk=true;
-else
-    %find projection on nonzero space for ell1
-    isZeroVec=abs(diag1Vec)<absTol;
-    if ~all(~isZeroVec)
-        zeroDirMat=eigv1Mat(:,isZeroVec);
-        % Find basis in all space
-        [orthBasMat rangZ]=findBasRang(zeroDirMat,absTol);
-        %rangZ>0 since there is at least one zero e.v. Q1
-        %zeroIndVec=1:rangZ;
-        nDimSpace=length(diag1Vec);
-        nonZeroIndVec=(rangZ+1):nDimSpace;
-        nonZeroBasMat = orthBasMat(:,nonZeroIndVec);
-        curDirVec=nonZeroBasMat.'*curDirVec;
-        ellQ1Mat=nonZeroBasMat.'*ellQ1Mat*nonZeroBasMat;
-        ellQ2Mat=nonZeroBasMat.'*ellQ2Mat*nonZeroBasMat;
-        ellQ1Mat=0.5*(ellQ1Mat+ellQ1Mat.');
-        ellQ2Mat=0.5*(ellQ2Mat+ellQ2Mat.');
-    end
-    ellInvQ1Mat=ellQ1Mat\eye(size(ellQ1Mat));
-    [~,diagMat]=eig(ellQ2Mat*ellInvQ1Mat);
-    lamMax=max(diag(diagMat));
-    %
-    p1Par=sqrt(curDirVec.'*ellQ1Mat*curDirVec);
-    p2Par=sqrt(curDirVec.'*ellQ2Mat*curDirVec);
-    pPar=p2Par/p1Par;
-    isOk=(pPar>lamMax) && (pPar<1);
-end
 end

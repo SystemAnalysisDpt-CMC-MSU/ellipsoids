@@ -16,8 +16,8 @@ function resQMat=findDiffIaND(ellQ1Mat, ellQ2Mat,curDirVec,absTol)
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Cybernetics,
 %            System Analysis Department 2012 $
-import elltool.core.Ellipsoid;
-[~, pPar]=Ellipsoid.findIsGoodDir(ellQ1Mat,ellQ2Mat,curDirVec);
+import elltool.core.GenEllipsoid;
+[~, pPar]=GenEllipsoid.getIsGoodDirForMat(ellQ1Mat,ellQ2Mat,curDirVec);
 if (pPar<absTol)
     resQMat=ellQ1Mat;
 else

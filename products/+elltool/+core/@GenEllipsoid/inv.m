@@ -4,10 +4,10 @@ function ellInvObj = inv( ellObj )
 %
 % Input:
 %   regular:
-%       ellObj: Ellipsoid: [1,1] - generalized ellipsoid
+%       ellObj: GenEllipsoid: [1,1] - generalized ellipsoid
 %
 % Output:
-%   ellInvObj: Ellipsoid: [1,1] - inverse generalized ellipsoid
+%   ellInvObj: GenEllipsoid: [1,1] - inverse generalized ellipsoid
 %
 % $Author: Vitaly Baranov  <vetbar42@gmail.com> $    $Date: Nov-2012$
 % $Copyright: Moscow State University,
@@ -15,9 +15,9 @@ function ellInvObj = inv( ellObj )
 %            System Analysis Department 2012 $
 %
 %
-import elltool.core.Ellipsoid;
+import elltool.core.GenEllipsoid;
 import elltool.conf.Properties;
-modgen.common.type.simple.checkgenext(@(x)isa(x,'elltool.core.Ellipsoid'),...
+modgen.common.type.simple.checkgenext(@(x)isa(x,'elltool.core.GenEllipsoid'),...
     1,ellObj);
 modgen.common.type.simple.checkgenext('isscalar(x1)',1,ellObj);
 %
@@ -30,5 +30,4 @@ isFinNZVec=(~isInfVec) | (~isZeroVec);
 diagVec(isFinNZVec)=1./diagVec(isFinNZVec);
 diagVec(isInfVec)=0;
 diagVec(isZeroVec)=Inf;
-ellInvObj=Ellipsoid(ellObj.centerVec,diagVec,ellObj.eigvMat);
-end
+ellInvObj=GenEllipsoid(ellObj.centerVec,diagVec,ellObj.eigvMat);

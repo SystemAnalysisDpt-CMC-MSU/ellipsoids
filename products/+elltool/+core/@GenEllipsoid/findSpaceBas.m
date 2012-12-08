@@ -19,12 +19,11 @@ function [ spaceBasMat,  oSpaceBasMat, spaceIndVec, oSpaceIndVec] = ...
 %            Faculty of Computational Mathematics and Cybernetics,
 %            System Analysis Department 2012 $
 %
-import elltool.core.Ellipsoid;
+import elltool.core.GenEllipsoid;
 nDimSpace=size(dirMat,1);
-[orthBasMat rangL]=Ellipsoid.findBasRank(dirMat,absTol);
-spaceIndVec=1:rangL;
-oSpaceIndVec=(rangL+1):nDimSpace;
+[orthBasMat rankL]=GenEllipsoid.findBasRank(dirMat,absTol);
+spaceIndVec=1:rankL;
+oSpaceIndVec=(rankL+1):nDimSpace;
 spaceBasMat=orthBasMat(:,spaceIndVec);
 oSpaceBasMat = orthBasMat(:,oSpaceIndVec);
-end
 

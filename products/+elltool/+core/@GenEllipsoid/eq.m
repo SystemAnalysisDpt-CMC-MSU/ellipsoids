@@ -14,24 +14,19 @@ function [isEqualArr, reportStr] = eq(ellFirstArr, ellSecArr)
 %
 %   reportStr: char[1,] - comparison report
 %
-% $Author: Vadim Kaushansky  <vkaushanskiy@gmail.com> $    $Date: Nov-2012$
-% $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Cybernetics,
-%            System Analysis Department 2012 $
 % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $    $Date: Dec-2012$
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Cybernetics,
 %            System Analysis Department 2012 $
-
+%
 import modgen.common.throwerror;
 import modgen.struct.structcomparevec;
 import gras.la.sqrtm;
-import elltool.conf.Properties;
-import modgen.common.checkvar;
-%
-checkvar(ellFirstArr,@(x)isa(x,'ellipsoid'));
-checkvar(ellSecArr,@(x)isa(x,'ellipsoid'));
-%
+import elltool.core.GenEllipsoid;
+relTol=GenEllipsoid.getCheckTol();
+
+GenEllipsoid.checkIsMe(ellFirstArr);
+GenEllipsoid.checkIsMe(ellSecArr);
 nFirstElems = numel(ellFirstArr);
 nSecElems = numel(ellSecArr);
 
@@ -39,14 +34,11 @@ firstSizeVec = size(ellFirstArr);
 secSizeVec = size(ellSecArr);
 isnFirstScalar=nFirstElems > 1;
 isnSecScalar=nSecElems > 1;
-relTolArr = ellFirstArr.getRelTol;
-relTol=min(relTolArr(:));
 %
-SEll1Array=arrayfun(@formCompStruct,ellFirstArr);
-SEll2Array=arrayfun(@formCompStruct,ellSecArr);
+SEll1Array=ellFirstArr.toStruct();
+SEll2Array=ellSecArr.toStruct();
 %
 if isnFirstScalar&&isnSecScalar
-    
     if ~isequal(firstSizeVec, secSizeVec)
         throwerror('wrongSizes',...
             'sizes of ellipsoidal arrays do not... match');
@@ -67,7 +59,4 @@ end
         [isEqualArr,reportStr]=modgen.struct.structcomparevec(SEll1Array,...
             SEll2Array,relTol);
     end
-end
-function SComp=formCompStruct(ellObj)
-SComp=struct('Q',gras.la.sqrtm(ellObj.shape),'q',ellObj.center.');
 end
