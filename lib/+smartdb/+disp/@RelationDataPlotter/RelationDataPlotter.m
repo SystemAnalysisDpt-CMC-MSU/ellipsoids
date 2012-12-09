@@ -255,6 +255,8 @@ classdef RelationDataPlotter<handle
             %           the first argument is axes handle, the
             %           second one is axes key while the rest of them are
             %           defined by axesSetPropFieldNameList
+            %       isAutoHoldOn: logical[1,1] - if true, hold(hAxes,'on')
+            %           is called automatically for every axes
             %
             %
             import modgen.logging.log4j.Log4jConfigurator;
@@ -264,9 +266,13 @@ classdef RelationDataPlotter<handle
             import modgen.struct.updateleaves;
             import modgen.common.type.simple.checkcelloffunc;
             %
-            [~,~,axesPostPlotFunc,isAxesPostPlotFuncSpec]=...
+            [~,~,axesPostPlotFunc,isAutoHoldOn,isAxesPostPlotFuncSpec]=...
                 modgen.common.parseparext(...
-                varargin,{'axesPostPlotFunc'},0);
+                varargin,...
+                {'axesPostPlotFunc','isAutoHoldOn';...
+                [],true;...
+                'true','isscalar(x)&&islogical(x)'},...
+                0);
             logger=Log4jConfigurator.getLogger();
             %
             checkcellofstr(figureGetGroupKeyFieldNameList,true);
@@ -330,38 +336,39 @@ classdef RelationDataPlotter<handle
                         %
                     end
                 end
-            end
-            %% fill figToAxesToPlotHMap with the plot handles
-            %  not registered in the RelationDataPlotter
-            %
-            figureKeyUList=self.figToAxesToHMap.keys;
-            nUniqueFigureKeys=length(figureKeyUList);
-            for iFigureKey=1:nUniqueFigureKeys
-                figureKey=figureKeyUList{iFigureKey};
+                
+                %% fill figToAxesToPlotHMap with the plot handles
+                %  not registered in the RelationDataPlotter
                 %
-                axesMap=self.figToAxesToHMap(figureKey);
-                axisUKeyList=axesMap.keys;
-                nUAxis=length(axisUKeyList);
-                if self.figToAxesToPlotHMap.isKey(figureKey);
-                    axisToPlotMap=self.figToAxesToPlotHMap(figureKey);
-                else
-                    axisToPlotMap=modgen.containers.MapExtended();
-                    self.figToAxesToPlotHMap(figureKey)=axisToPlotMap;
+                figureKeyUList=self.figToAxesToHMap.keys;
+                nUniqueFigureKeys=length(figureKeyUList);
+                for iFigureKey=1:nUniqueFigureKeys
+                    figureKey=figureKeyUList{iFigureKey};
+                    %
+                    axesMap=self.figToAxesToHMap(figureKey);
+                    axisUKeyList=axesMap.keys;
+                    nUAxis=length(axisUKeyList);
+                    if self.figToAxesToPlotHMap.isKey(figureKey);
+                        axisToPlotMap=self.figToAxesToPlotHMap(figureKey);
+                    else
+                        axisToPlotMap=modgen.containers.MapExtended();
+                        self.figToAxesToPlotHMap(figureKey)=axisToPlotMap;
+                    end
+                    for iAxes=1:nUAxis
+                        axesKey=axisUKeyList{iAxes};
+                        hAxes=axesMap(axesKey);
+                        axisToPlotMap(axesKey)=findobj('Parent',hAxes).';
+                    end
                 end
-                for iAxes=1:nUAxis
-                    axesKey=axisUKeyList{iAxes};
-                    hAxes=axesMap(axesKey);
-                    axisToPlotMap(axesKey)=findobj('Parent',hAxes).';
-                end
-            end
-            if nEntries>0
+                
                 %
                 for iEntry=1:nEntries
                     for iFunc=1:nFuncs
                         hPlotCMat{iEntry,iFunc}=setAxesProp(self,...
                             figureKeyCMat{iEntry,iFunc},...
                             axesKeyCMat{iEntry,iFunc},....
-                            axesSetPropFunc{iFunc},axesPropCMat(iEntry,:));
+                            axesSetPropFunc{iFunc},...
+                            axesPropCMat(iEntry,:),isAutoHoldOn);
                     end
                 end
                 %
@@ -381,11 +388,11 @@ classdef RelationDataPlotter<handle
                                 figureKeyCMat{iEntry,iFunc},...
                                 axesKeyCMat{iEntry,iFunc},....
                                 axesPostPlotFunc{iFunc},...
-                                axesPropCMat(iEntry,:))];
+                                axesPropCMat(iEntry,:),isAutoHoldOn)];
                         end
                     end
                 end
-                %% Complement figToAxesToPlotHMap with the plot 
+                %% Complement figToAxesToPlotHMap with the plot
                 % handles of newly created graphs
                 %
                 [figureKeyUList,~,indUVec]=unique(figureKeyCMat(:));
@@ -578,12 +585,15 @@ classdef RelationDataPlotter<handle
         end
         %%
         function hPlotVec=setAxesProp(self,figureKey,axesKey,...
-                axesSetPropFunc,axesPropValList)
+                axesSetPropFunc,axesPropValList,isAutoHoldOn)
+            
             mp=self.getAxesHandleMap(figureKey);
             hAxes=mp(axesKey);
             hPlotVec=feval(axesSetPropFunc,hAxes,axesKey,...
                 axesPropValList{:});
-            hold(hAxes,'on');
+            if isAutoHoldOn
+                hold(hAxes,'on');
+            end
         end
         %%
         function res=getAxesHandleMap(self,figureKey)
