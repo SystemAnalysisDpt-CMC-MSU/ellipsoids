@@ -1,4 +1,4 @@
-function [centVec, boundPointMat] = minksum(varargin)
+function [varargout] = minksum(varargin)
 %
 % MINKSUM - computes geometric (Minkowski) sum of ellipsoids in 2D or 3D.
 %
@@ -44,14 +44,29 @@ function [centVec, boundPointMat] = minksum(varargin)
 import elltool.conf.Properties;
 import modgen.common.throwerror;
 
-nAi = nargin;
-fstInpArg = varargin{1};
+[reg,~,plObj,isNewFigure,isFill,lineWidth,colorVec,shad,isShowAll...
+    isRelPlotterSpec,~,isIsFill,isLineWidth,isColorVec,isShad]=modgen.common.parseparext(varargin,...
+    {'relDataPlotter','newFigure','fill','lineWidth','color','shade','showAll';...
+    [],0,0,1,[1 0 0],0.4,0;@(x)isa(x,'smartdb.disp.RelationDataPlotter'),...
+    @(x)isnumeric(x),@(x)isnumeric(x),@(x)isnumeric(x),@(x)isnumeric(x),@(x)isnumeric(x),@(x)isnumeric(x)});
+
+% nAi = nargin;
+if ~isRelPlotterSpec
+        plObj=smartdb.disp.RelationDataPlotter('figureGetNewHandleFunc', @(varargin)gcf,'axesGetNewHandleFunc',@(varargin)gca);
+end
+if ~ishold
+    isHold = false;
+    cla
+else
+    isHold = true;
+end
+fstInpArg = reg{1};
 if ~isa(fstInpArg, 'ellipsoid')
     throwerror('wrongInput', ...
         'MINKSUM: input argument must be an array of ellipsoids.');
 end
 
-inpEllMat   = varargin{1};
+inpEllMat   = reg{1};
 [mRows, nCols] = size(inpEllMat);
 nInpEllip = mRows * nCols;
 inpEllVec   = reshape(inpEllMat, 1, nInpEllip);
@@ -68,55 +83,12 @@ if maxDim > 3
         'MINKSUM: ellipsoid dimension must be not higher than 3.');
 end
 
-if nAi > 1
-    if isstruct(varargin{nAi})
-        Options = varargin{nAi};
-        nAi     = nAi - 1;
-    else
-        Options = [];
-    end
-else
-    Options = [];
-end
-
-if ~isfield(Options, 'newfigure')
-    Options.newfigure = 0;
-end
-
-if ~isfield(Options, 'fill')
-    Options.fill = 0;
-end
-
-if ~isfield(Options, 'show_all')
-    Options.show_all = 0;
-end
-
-if ~isfield(Options, 'color')
-    Options.color = [1 0 0];
-end
-
-if ~isfield(Options, 'shade')
-    Options.shade = 0.4*ones(1, nInpEllip);
-else
-    Options.shade = Options.shade(1, 1);
-end
-
-if nargout == 0
-    ih = ishold;
-end
-
-if (Options.show_all ~= 0) && (nargout == 0)
-    plot(inpEllVec, 'b');
-    hold on;
-    if Options.newfigure ~= 0
-        figure;
-    else
-        newplot;
-    end
+if (isShowAll ~= 0) && (nargout == 1) && (nargout == 0)
+     plObj = plot(inpEllVec, 'b');
 end
 
 if (Properties.getIsVerbose()) && (nInpEllip > 1)
-    if nargout == 0
+    if nargout == 1
         fstStr = 'Computing and plotting geometric sum ';
         secStr = 'of %d ellipsoids...\n';
         fprintf([fstStr secStr], nInpEllip);
@@ -125,12 +97,15 @@ if (Properties.getIsVerbose()) && (nInpEllip > 1)
             nInpEllip);
     end
 end
-
-clrVec = Options.color;
-
+SData.figureNameCMat={'figure'};
+SData.axesNameCMat = {'ax'};
+SData.axesNumCMat = {1};
+SData.figureNumCMat = {1};
+SData.clrVec = colorVec;
+SData.widVec = lineWidth;
+SData.shadVec = shad
 for iEllip = 1:nInpEllip
-    myEll = inpEllVec(iEllip);
-    
+    myEll = inpEllVec(iEllip);    
     switch maxDim
         case 2,
             if iEllip == 1
@@ -140,17 +115,17 @@ for iEllip = 1:nInpEllip
                 boundPointMat = boundPointMat + ellbndr_2d(myEll);
                 centVec = centVec + myEll.center;
             end
-            if (iEllip == nInpEllip) && (nargout == 0)
-                if Options.fill ~= 0
-                    fill(boundPointMat(1, :), boundPointMat(2, :), ...
-                        clrVec);
-                    hold on;
+            if (iEllip == nInpEllip) && ((nargout == 1) || (nargout == 0))
+                if isFill
+%                     fill(boundPointMat(1, :), boundPointMat(2, :), ...
+%                         clrVec);
+%                     hold on;
                 end
-                hPlot = ell_plot(boundPointMat);
-                hold on;
-                set(hPlot, 'Color', clrVec, 'LineWidth', 2);
-                hPlot = ell_plot(centVec, '.');
-                set(hPlot, 'Color', clrVec);
+%                 hPlot = ell_plot(boundPointMat);
+%                 hold on;
+%                 set(hPlot, 'Color', clrVec, 'LineWidth', 2);
+%                 hPlot = ell_plot(centVec, '.');
+%                 set(hPlot, 'Color', clrVec);
             end
             
         case 3,
@@ -161,18 +136,18 @@ for iEllip = 1:nInpEllip
                 boundPointMat = boundPointMat + ellbndr_3d(myEll);
                 centVec = centVec + myEll.center;
             end
-            if (iEllip == nInpEllip) && (nargout == 0)
-                chllMat = convhulln(boundPointMat');
-                nBoundPoints = size(boundPointMat, 2);
-                patch('Vertices', boundPointMat', 'Faces', chllMat, ...
-                    'FaceVertexCData', clrVec(ones(1, nBoundPoints), :),...
-                    'FaceColor', 'flat', 'FaceAlpha', ...
-                    Options.shade(1, 1));
-                hold on;
-                shading interp;
-                lighting phong;
-                material('metal');
-                view(3);
+            if (iEllip == nInpEllip) && ((nargout == 1) || (nargout == 0))
+%                 chllMat = convhulln(boundPointMat');
+%                 nBoundPoints = size(boundPointMat, 2);
+%                 patch('Vertices', boundPointMat', 'Faces', chllMat, ...
+%                     'FaceVertexCData', clrVec(ones(1, nBoundPoints), :),...
+%                     'FaceColor', 'flat', 'FaceAlpha', ...
+%                     Options.shade(1, 1));
+%                 hold on;
+%                 shading interp;
+%                 lighting phong;
+%                 material('metal');
+%                 view(3);
             end
             
         otherwise,
@@ -187,27 +162,21 @@ for iEllip = 1:nInpEllip
                 boundPointMat(1, 2) = boundPointMat(1, 2) + myEll.center...
                     + sqrt(myEll.shape);
             end
-            if (iEllip == nInpEllip) && (nargout == 0)
-                hPlot = ell_plot(boundPointMat);
-                hold on;
-                set(hPlot, 'Color', clrVec, 'LineWidth', 2);
-                hPlot = ell_plot(centVec, '*');
-                set(hPlot, 'Color', clrVec);
+            if (iEllip == nInpEllip) && ((nargout == 1) || (nargout == 0))
+%                 hPlot = ell_plot(boundPointMat);
+%                 hold on;
+%                 set(hPlot, 'Color', clrVec, 'LineWidth', 2);
+%                 hPlot = ell_plot(centVec, '*');
+%                 set(hPlot, 'Color', clrVec);
             end
             
     end
 end
-
-if nargout == 0
-    if ih == 0
-        hold off;
-    end
+if (nargout == 1)||(nargout == 0)
+    varargout = {plObj};
+else
+    varargout = {centVec, boundPointMat};
 end
-
-if nargout == 1
-    centVec = boundPointMat;
-    clear boundPointMat;
-end
-if nargout == 0
-    clear centVec boundPointMat;
+if ~isHold
+    hold off
 end
