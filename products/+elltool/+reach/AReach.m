@@ -1,7 +1,7 @@
 classdef AReach < elltool.reach.IReach
     properties (Access = protected)
         switchSysTimeVec
-        X0Ellipsoid
+        x0Ellipsoid
         linSysVec
         isCut
         projectionBasisMat
