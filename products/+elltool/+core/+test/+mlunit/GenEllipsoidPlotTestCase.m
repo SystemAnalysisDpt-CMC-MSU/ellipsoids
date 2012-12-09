@@ -160,13 +160,13 @@ for iEll = 1:size(testEll, 1)
     for jEll = 1:size(testEll, 2)
         dMat = testEll(iEll, jEll).getDiagMat();
         if dMat(1, 1) == 0
-            isBoundEll = check2dFirDimZero(testEll(iEll, jEll), cellPoints);
+            isBoundEll = check2dDimZero(testEll(iEll, jEll), cellPoints, 1);
         elseif dMat(1, 1) == Inf
-            isBoundEll = check2dFirDimInf(testEll(iEll, jEll), cellPoints);
+            isBoundEll = check2dDimInf(testEll(iEll, jEll), cellPoints, 1);
         elseif dMat(2, 2) == 0
-            isBoundEll = check2dSecDimZero(testEll(iEll, jEll), cellPoints);
+            isBoundEll = check2dDimZero(testEll(iEll, jEll), cellPoints, 2);
         elseif dMat(2, 2) == Inf
-            isBoundEll = check2dSecDimInf(testEll(iEll, jEll), cellPoints);
+            isBoundEll = check2dDimInf(testEll(iEll, jEll), cellPoints, 2);
         else
             isBoundEll = check2dNorm(testEll(iEll, jEll), cellPoints);
         end
@@ -190,60 +190,37 @@ function isBoundEll = check2dNorm(testEll, cellPoints)
 
 end
 
-function isBoundEll = check2dFirDimZero(testEll, cellPoints)
+function isBoundEll = check2dDimZero(testEll, cellPoints, dim)
     absTol = elltool.conf.Properties.getAbsTol();
     qCen = testEll.getCenter();
-    qCen = qCen(2);
+    qCen = qCen(3-dim);
     dMat = testEll.getDiagMat();
     eigMat = testEll.getEigvMat();
-    secDim = @(x) x(2);
+    secDim = @(x) x(3-dim);
     eigPoint = @(x) secDim(eigMat*(x-qCen)+qCen);
-    isBoundEll = cellfun(@(x) abs(((eigPoint(x) - qCen).'/dMat(2, 2))*...
+    isBoundEll = cellfun(@(x) abs(((eigPoint(x) - qCen).'/dMat(3-dim, 3-dim))*...
         (eigPoint(x) - qCen)-1) < absTol, cellPoints);
     isBoundEll = isBoundEll | cellfun(@(x) norm(x - qCen) < ...
     absTol, cellPoints);    
 end
 
-function isBoundEll = check2dSecDimZero(testEll, cellPoints)
-    absTol = elltool.conf.Properties.getAbsTol();
-    qCen = testEll.getCenter();
-    qCen = qCen(1);
-    dMat = testEll.getDiagMat();
-    eigMat = testEll.getEigvMat();
-    firDim = @(x) x(1);
-    eigPoint = @(x) firDim(eigMat*(x-qCen)+qCen);
-    isBoundEll = cellfun(@(x) abs(((eigPoint(x) - qCen).'/dMat(1, 1))*...
-        (eigPoint(x) - qCen)-1)< absTol, cellPoints);
-    isBoundEll = isBoundEll | cellfun(@(x) norm(x - qCen) < ...
-    absTol, cellPoints);    
-end
 
-function isBoundEll = check2dFirDimInf(testEll, cellPoints)
+function isBoundEll = check2dDimInf(testEll, cellPoints, dim)
     absTol = elltool.conf.Properties.getAbsTol();
     qCen = testEll.getCenter();
     dMat = testEll.getDiagMat();
     eigMat = testEll.getEigvMat();
     eigPoint = @(x) eigMat*(x-qCen) + qCen;
-    secDim = @(x) x(2);
-    invMat = [0, 0; 0, 1/dMat(2,2)];
+    secDim = @(x) x(3-dim);
+    if dim == 1
+        invMat = [0, 0; 0, 1/dMat(2,2)];
+    else
+        invMat = [1/dMat(1, 1), 0; 0, 0];
+    end
     isBoundEll = cellfun(@(x) abs(((eigPoint(x) - qCen).'*invMat)*...
         (eigPoint(x) - qCen)-1) < absTol || ...
-        abs(secDim(eigPoint(x)) - qCen(2)) <  absTol, cellPoints);
+        abs(secDim(eigPoint(x)) - qCen(3-dim)) <  absTol, cellPoints);
     isBoundEll = isBoundEll | cellfun(@(x) norm(x - qCen) < ...
         absTol, cellPoints);        
 end
 
-function isBoundEll = check2dSecDimInf(testEll, cellPoints)
-    absTol = elltool.conf.Properties.getAbsTol();
-    qCen = testEll.getCenter();
-    dMat = testEll.getDiagMat();
-    eigMat = testEll.getEigvMat();
-    eigPoint = @(x) eigMat*(x-qCen) + qCen;
-    firDim = @(x) x(1);
-    invMat = [1/dMat(1,1), 0; 0, 0];
-    isBoundEll = cellfun(@(x) abs(((eigPoint(x) - qCen).'*invMat)*...
-        (eigPoint(x) - qCen)-1) < absTol || ...
-        abs(firDim(eigPoint(x)) - qCen(1)) <  absTol, cellPoints);
-    isBoundEll = isBoundEll | cellfun(@(x) norm(x - qCen) < ...
-        absTol, cellPoints);        
-end

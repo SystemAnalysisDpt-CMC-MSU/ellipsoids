@@ -32,8 +32,6 @@ SData.clrVec = colorVec;
 
 rel=smartdb.relations.DynamicRelation(SData);
 if (nDim==2)
-    
-    
     if isFill(iEll) ~= 0
         plObj.plotGeneric(rel,@figureGetGroupNameFunc,{'figureNameCMat'},...
             @figureSetPropFunc,{},...
