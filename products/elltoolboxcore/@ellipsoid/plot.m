@@ -1,4 +1,4 @@
-function plObj = plot(varargin)
+function plot(varargin)
 %
 % PLOT - plots ellipsoids in 2D or 3D.
 %
@@ -6,25 +6,25 @@ function plObj = plot(varargin)
 % Description:
 % ------------
 %
-% PLOT(E, 'Property',PropValue) plots ellipsoid E if 1 <= dimension(E) <= 3.
+% PLOT(E, OPTIONS) plots ellipsoid E if 1 <= dimension(E) <= 3.
 %
 %                  PLOT(E)  Plots E in default (red) color.
 %              PLOT(EA, E)  Plots array of ellipsoids EA and single ellipsoid E.
 %   PLOT(E1, 'g', E2, 'b')  Plots E1 in green and E2 in blue color.
-%        PLOT(EA, 'Property',PropValue)  Plots EA  by setting properties.
+%        PLOT(EA, Options)  Plots EA using options given in the Options structure.
 %
-% Properties:
-% 'newFigure'    - if 1, each plot command will open a new figure window.
-% 'fill'         - if 1, ellipsoids in 2D will be filled with color.
-% 'lineWidth'        - line width for 1D and 2D plots.
-% 'color'        - sets default colors in the form [x y z].
-% 'shade' = 0-1  - level of transparency (0 - transparent, 1 - opaque).
-%  'relDataPlotter' - relation data plotter object
+%
+% Options.newfigure    - if 1, each plot command will open a new figure window.
+% Options.fill         - if 1, ellipsoids in 2D will be filled with color.
+% Options.width        - line width for 1D and 2D plots.
+% Options.color        - sets default colors in the form [x y z].
+% Options.shade = 0-1  - level of transparency (0 - transparent, 1 - opaque).
+%
 %
 % Output:
 % -------
 %
-%     plObj - returns the relation data plotter object
+%    None.
 %
 %
 % See also:
@@ -33,53 +33,65 @@ function plObj = plot(varargin)
 %    ELLIPSOID/ELLIPSOID.
 %
 
-%
+% 
 % Author:
 % -------
 %
-%    $Author: Ilya Lubich  <justenterrr@gmail.com> $    $Date: 1-december-2012 $
-%$Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Computer Science,
-%            System Analysis Department 2012 $
+%    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-import elltool.conf.Properties;
+  import elltool.conf.Properties;
 
-[reg,~,plObj,isNewFigure,isFill,lineWidth,colorVec,shad,...
-    isRelPlotterSpec,~,isIsFill,isLineWidth,isColorVec,isShad]=modgen.common.parseparext(varargin,...
-    {'relDataPlotter','newFigure','fill','lineWidth','color','shade';...
-    [],0,[],[],[],0;@(x)isa(x,'smartdb.disp.RelationDataPlotter'),...
-    @(x)isnumeric(x),@(x)isnumeric(x),@(x)isnumeric(x),@(x)isnumeric(x),@(x)isnumeric(x)});
 
-if ~isRelPlotterSpec
-        plObj=smartdb.disp.RelationDataPlotter('figureGetNewHandleFunc', @(varargin)gcf,'axesGetNewHandleFunc',@(varargin)gca);
-end
-ucolor    = [];
-vcolor    = [];
-ells      = [];
-ell_count = 0;
-for iReg = 1:size(reg,2)
-    if isa(reg{iReg}, 'ellipsoid')
-        Ell      = reg{iReg};
-        [mEll, nEll] = size(Ell);
-        cnt    = mEll * nEll;
-        Ell1     = reshape(Ell, 1, cnt);
-        ells   = [ells Ell1];
-        if (iReg < size(reg,2)) && ischar(reg{iReg+1})
-            clr = ellipsoid.my_color_table(reg{iReg+1});
-            val = 1;
-        else
-            clr = [0 0 0];
-            val = 0;
-        end
-        for jReg = (ell_count + 1):(ell_count + cnt)
-            ucolor(jReg) = val;
-            vcolor    = [vcolor; clr];
-        end
-        ell_count = ell_count + cnt;
+  nai = nargin;
+  E   = varargin{1};
+  if ~isa(E, 'ellipsoid')
+    error('PLOT: input argument must be an ellipsoid.');
+  end
+
+  if nai > 1
+    if isstruct(varargin{nai})
+      Options = varargin{nai};
+      nai     = nai - 1;
+    else
+      Options = [];
     end
-end
-if ~isColorVec
+  else
+    Options = [];
+  end
+
+  if ~isfield(Options, 'newfigure')
+    Options.newfigure = 0;
+  end
+
+  ucolor    = [];
+  vcolor    = [];
+  ells      = [];
+  ell_count = 0;
+
+  for i = 1:nai
+    if isa(varargin{i}, 'ellipsoid')
+      E      = varargin{i};
+      [m, n] = size(E);
+      cnt    = m * n;
+      E1     = reshape(E, 1, cnt);
+      ells   = [ells E1];
+      if (i < nai) && ischar(varargin{i + 1})
+        clr = ellipsoid.my_color_table(varargin{i + 1});
+        val = 1;
+      else
+        clr = [0 0 0];
+        val = 0;
+      end
+      for j = (ell_count + 1):(ell_count + cnt)
+        ucolor(j) = val;
+        vcolor    = [vcolor; clr];
+      end
+      ell_count = ell_count + cnt;
+    end
+  end
+
+  if ~isfield(Options, 'color')
     % Color maps:
     %    hsv       - Hue-saturation-value color map.
     %    hot       - Black-red-yellow-white color map.
@@ -104,235 +116,157 @@ if ~isColorVec
     colors     = auxcolors;
     multiplier = 7;
     if mod(size(auxcolors, 1), multiplier) == 0
-        multiplier = multiplier + 1;
+      multiplier = multiplier + 1;
     end
-    for iEll = 1:ell_count
-        jj           = mod(iEll*multiplier, size(auxcolors, 1)) + 1;
-        colors(iEll, :) = auxcolors(jj, :);
+    
+    for i = 1:ell_count
+      jj           = mod(i*multiplier, size(auxcolors, 1)) + 1;
+      colors(i, :) = auxcolors(jj, :);
     end
     colors        = flipud(colors);
-    colorVec = colors;
-else
-    if size(colorVec, 1) ~= ell_count
-        if size(colorVec, 1) > ell_count
-            colorVec = colorVec(1:ell_count, :);
-        else
-            colorVec = repmat(colorVec, ell_count, 1);
-        end
+    Options.color = colors;
+  else
+    if size(Options.color, 1) ~= ell_count
+      if size(Options.color, 1) > ell_count
+        Options.color = Options.color(1:ell_count, :);
+      else
+        Options.color = repmat(Options.color, ell_count, 1);
+      end
     end
-end
+  end
 
-if ~isShad
-    shad = 0.4*ones(1, ell_count);
-else
-    [mDim, nDim] = size(shad);
-    mDim      = mDim * nDim;
-    if mDim == 1
-        shad = shad * ones(1, ell_count);
+  if ~isfield(Options, 'shade')
+    Options.shade = 0.4*ones(1, ell_count);
+  else
+    [m, n] = size(Options.shade);
+    m      = m * n;
+    if m == 1
+      Options.shade = Options.shade * ones(1, ell_count);
     else
-        shad = reshape(shad, 1, mDim);
-        if mDim < ell_count
-            for iEll = (mDim + 1):ell_count
-                shad = [shad 0.4];
-            end
+      Options.shade = reshape(Options.shade, 1, m);
+      if m < ell_count
+        for i = (m + 1):ell_count
+          Options.shade = [Options.shade 0.4];
         end
+      end
     end
-end
-if ~isLineWidth
-    lineWidth = ones(1, ell_count);
-else
-    [mDim, nDim] = size(lineWidth);
-    mDim      = mDim * nDim;
-    if mDim == 1
-        lineWidth = lineWidth * ones(1, ell_count);
+  end
+
+  if ~isfield(Options, 'width')
+    Options.width = ones(1, ell_count);
+  else
+    [m, n] = size(Options.width);
+    m      = m * n;
+    if m == 1
+      Options.width = Options.width * ones(1, ell_count);
     else
-        lineWidth = reshape(lineWidth, 1, mDim);
-        if mDim < ell_count
-            for iEll = (mDim + 1):ell_count
-                lineWidth = [lineWidth 1];
-            end
+      Options.width = reshape(Options.width, 1, m);
+      if m < ell_count
+        for i = (m + 1):ell_count
+          Options.width = [Options.width 1];
         end
+      end
     end
-end
-if ~isIsFill
-    isFill = zeros(1, ell_count);
-else
-    [mDim, nDim] = size(isFill);
-    mDim      = mDim * nDim;
-    if mDim == 1
-        isFill = isFill * ones(1, ell_count);
+  end
+
+  if ~isfield(Options, 'fill')
+    Options.fill = zeros(1, ell_count);
+  else
+    [m, n] = size(Options.fill);
+    m      = m * n;
+    if m == 1
+      Options.fill = Options.fill * ones(1, ell_count);
     else
-        isFill = reshape(isFill, 1, mDim);
-        if mDim < ell_count
-            for iEll = (mDim + 1):ell_count
-                isFill = [isFill 0];
-            end
+      Options.fill = reshape(Options.fill, 1, m);
+      if m < ell_count
+        for i = (m + 1):ell_count
+          Options.fill = [Options.fill 0];
         end
+      end
     end
-end
-if size(colorVec, 1) < ell_count
+  end
+
+  if size(Options.color, 1) < ell_count
     error('PLOT: not enough colors.');
-end
+  end
 
-dims = dimension(ells);
-mDim    = min(dims);
-nDim    = max(dims);
-if mDim ~= nDim
+  dims = dimension(ells);
+  m    = min(dims);
+  n    = max(dims);
+  if m ~= n
     error('PLOT: ellipsoids must be of the same dimension.');
-end
-if (nDim > 3) || (nDim < 1)
+  end
+  if (n > 3) || (n < 1)
     error('PLOT: ellipsoid dimension can be 1, 2 or 3.');
-end
+  end
 
-if Properties.getIsVerbose()
+  if Properties.getIsVerbose()
     if ell_count == 1
-        fprintf('Plotting ellipsoid...\n');
+      fprintf('Plotting ellipsoid...\n');
     else
-        fprintf('Plotting %d ellipsoids...\n', ell_count);
+      fprintf('Plotting %d ellipsoids...\n', ell_count);
     end
-end
-SData.figureNameCMat=repmat({'figure'},ell_count,1);
-SData.axesNameCMat = repmat({'ax'},ell_count,1);
-SData.x1CMat = repmat({1},ell_count,1);
-SData.x2CMat = repmat({1},ell_count,1);
-SData.qCMat = repmat({1},ell_count,1);
-SData.verXCMat = repmat({1},ell_count,1);
-SData.verYCMat = repmat({1},ell_count,1);
-SData.verZCMat = repmat({1},ell_count,1);
-SData.faceXCMat = repmat({1},ell_count,1);
-SData.faceYCMat = repmat({1},ell_count,1);
-SData.faceZCMat = repmat({1},ell_count,1);
-SData.axesNumCMat = repmat({1},ell_count,1);
-SData.figureNumCMat = repmat({1},ell_count,1);
-SData.faceVertexCDataXCMat = repmat({1},ell_count,1);
-SData.faceVertexCDataYCMat = repmat({1},ell_count,1);
-SData.faceVertexCDataZCMat = repmat({1},ell_count,1);
-SData.clrVec = repmat({1},ell_count,1);
-SData.widVec = lineWidth.';
-SData.shadVec = shad.';
-for iEll = 1:ell_count
-    if isNewFigure
-        SData.figureNameCMat{iEll}=sprintf('figure%d',iEll);
-        SData.axesNameCMat{iEll} = sprintf('ax%d',iEll);
-    end
-    ell = ells(iEll);
-    q = ell.center;
-    qMat = ell.shape;
-    
-    if ucolor(iEll) == 1
-        colorVec(iEll,:) = vcolor(iEll, :);    
-    end
-    switch nDim
-        case 2,
-            x = ellbndr_2d(ell);
-            SData.x1CMat{iEll} = x(1,:);
-            SData.x2CMat{iEll} = x(2,:);
-            SData.qCMat{iEll} = q;
-            %             h = ell_plot(x);
-            %             set(h, 'Color', clr, 'LineWidth', Options.width(i));
-            %             h = ell_plot(q, '.');
-            %             set(h, 'Color', clr);
-            
-        case 3,
-            x    = ellbndr_3d(ell);
-            chll = convhulln(x');
-            vs   = size(x, 2);
-            SData.verXCMat{iEll} = x(1,:);
-            SData.verYCMat{iEll} = x(2,:);
-            SData.verZCMat{iEll} = x(3,:);
-            SData.faceXCMat{iEll} = chll(:,1);
-            SData.faceYCMat{iEll} = chll(:,2);
-            SData.faceZCMat{iEll} = chll(:,3);  
-            clr = colorVec(iEll,:);
-            col = clr(ones(1, vs), :);
-            SData.faceVertexCDataXCMat{iEll} = col(:,1);
-            SData.faceVertexCDataYCMat{iEll} = col(:,2);
-            SData.faceVertexCDataZCMat{iEll} = col(:,3);
-        otherwise,
-            SData.x1CMat{iEll} = q-sqrt(qMat);
-            SData.x2CMat{iEll} = q+sqrt(qMat);
-            SData.qCMat{iEll} = q(1, 1);
-    end
-    SData.clrVec{iEll} = colorVec(iEll,:);
-end
-SData.fill = (isFill~=0)';
-rel=smartdb.relations.DynamicRelation(SData);
-if (nDim==2)
-    if isFill(iEll) ~= 0
-        plObj.plotGeneric(rel,@figureGetGroupNameFunc,{'figureNameCMat'},...
-            @figureSetPropFunc,{},...
-            @axesGetNameSurfFunc,{'axesNameCMat','axesNumCMat'},...
-            @axesSetPropDoNothingFunc,{},...
-            @plotCreateFillPlotFunc,...
-            {'x1CMat','x2CMat','clrVec','fill','shadVec'});
-    end
-    plObj.plotGeneric(rel,@figureGetGroupNameFunc,{'figureNameCMat'},...
-        @figureSetPropFunc,{},...
-        @axesGetNameSurfFunc,{'axesNameCMat','axesNumCMat'},...
-        @axesSetPropDoNothingFunc,{},...
-        @plotCreateElPlotFunc,...
-        {'x1CMat','x2CMat','qCMat','clrVec','widVec'});
-elseif (nDim==3)
-    plObj.plotGeneric(rel,@figureGetGroupNameFunc,{'figureNameCMat'},...
-        @figureSetPropFunc,{},...
-        @axesGetNameSurfFunc,{'axesNameCMat','axesNumCMat'},...
-        @axesSetPropDoNothingFunc,{},...
-        @plotCreatePatchFunc,...
-        {'verXCMat','verYCMat','verZCMat','faceXCMat','faceYCMat','faceZCMat','faceVertexCDataXCMat','faceVertexCDataYCMat',...
-        'faceVertexCDataZCMat','shadVec','clrVec'});
-else
-    plObj.plotGeneric(rel,@figureGetGroupNameFunc,{'figureNameCMat'},...
-        @figureSetPropFunc,{},...
-        @axesGetNameSurfFunc,{'axesNameCMat','axesNumCMat'},...
-        @axesSetPropDoNothingFunc,{},...
-        @plotCreateEl2PlotFunc,...
-        {'x1CMat','x2CMat','qCMat','clrVec','widVec'});
-end
-end
+  end
 
+  ih = ishold;
 
-function hVec=plotCreateElPlotFunc(hAxes,X,Y,q,clr,wid,varargin)
-h1 = ell_plot([X;Y],'Parent',hAxes);
-set(h1, 'Color', clr, 'LineWidth', wid);
-h2 = ell_plot(q, '.','Parent',hAxes);
-set(h2, 'Color', clr);
-hVec = [h1,h2];
-end
-function hVec=plotCreateEl2PlotFunc(hAxes,X,Y,q,clr,wid,varargin)
-h1 = ell_plot([(X) (Y)],'Parent',hAxes);
-set(h1, 'Color', clr, 'LineWidth', wid);
-h2 = ell_plot(q, '*','Parent',hAxes);
-set(h2, 'Color', clr);
-hVec = [h1,h2];
-end
-function hVec=plotCreateFillPlotFunc(hAxes,X,Y,clr,fil,shad,varargin)
-if fil
-    hVec = fill(X, Y, clr,'FaceAlpha',shad,'Parent',hAxes);
-end
-end
-function figureSetPropFunc(hFigure,figureName,~)
-set(hFigure,'Name',figureName);
-end
-function figureGroupName=figureGetGroupNameFunc(figureName)
-figureGroupName=figureName;
-end
-function hVec=axesSetPropDoNothingFunc(~,~)
-hVec=[];
-end
-function axesName=axesGetNameSurfFunc(name,~)
-axesName=name;
-end
-function hVec=plotCreatePatchFunc(hAxes,verticesX,verticesY,verticesZ,facesX,facesY,facesZ,...
-    faceVertexCDataX,faceVertexCDataY,faceVertexCDataZ,faceAlpha,clr)
-vertices = [verticesX;verticesY;verticesZ];
-faces = [facesX,facesY,facesZ];
-faceVertexCData = [faceVertexCDataX,faceVertexCDataY,faceVertexCDataZ];
-h0 = patch('Vertices',vertices', 'Faces', faces, ...
-    'FaceVertexCData', faceVertexCData, 'FaceColor','flat', ...
-    'FaceAlpha', faceAlpha,'EdgeColor',clr,'Parent',hAxes);
-shading interp;
-lighting phong;
-material('metal');
-view(3);
-hVec  = h0;
+  for i = 1:ell_count
+    if Options.newfigure ~= 0
+      figure;
+    else
+      newplot;
+    end
+
+    hold on;
+
+    E = ells(i);
+    q = E.center;
+    Q = E.shape;
+
+    if ucolor(i) == 1
+      clr = vcolor(i, :);
+    else
+      clr = Options.color(i, :);
+    end
+      
+    switch n
+      case 2,
+        x = ellbndr_2d(E);
+        if Options.fill(i) ~= 0
+          fill(x(1, :), x(2, :), clr);
+        end
+        h = ell_plot(x);
+        set(h, 'Color', clr, 'LineWidth', Options.width(i));
+        h = ell_plot(q, '.');
+        set(h, 'Color', clr);
+
+      case 3,
+        x    = ellbndr_3d(E);
+        chll = convhulln(x');
+        vs   = size(x, 2);
+        patch('Vertices', x', 'Faces', chll, ...
+              'FaceVertexCData', clr(ones(1, vs), :), 'FaceColor', 'flat', ...
+              'FaceAlpha', Options.shade(1, i));
+        shading interp;
+        lighting phong;
+        material('metal');
+        view(3);
+        %camlight('headlight','local');
+        %camlight('headlight','local');
+        %camlight('right','local');
+        %camlight('left','local');
+
+      otherwise,
+        h = ell_plot([(q-sqrt(Q)) (q+sqrt(Q))]);
+        set(h, 'Color', clr, 'LineWidth', Options.width(i));
+        h = ell_plot(q(1, 1), '*');
+        set(h, 'Color', clr);
+
+    end
+  end
+
+  if ih == 0;
+    hold off;
+  end
+
 end
