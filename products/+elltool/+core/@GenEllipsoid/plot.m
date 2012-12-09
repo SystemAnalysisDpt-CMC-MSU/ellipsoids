@@ -2,6 +2,7 @@ function plObj = plot(varargin)
 
 import elltool.conf.Properties;
 import modgen.common.throwerror;
+import elltool.core.GenEllipsoid;
 
 [reg,~,plObj,isNewFigure,isFill,lineWidth,colorVec,shad,...
     isRelPlotterSpec,~,isIsFill,isLineWidth,isColorVec,isShad]=modgen.common.parseparext(varargin,...
@@ -184,6 +185,9 @@ maxz = -Inf;
 
 for iEll = 1:ell_count
     ell = ells(iEll);
+    qCen = ell.getCenter();
+    dMat = ell.getDiagMat();
+    ell = GenEllipsoid(qCen, dMat);
     switch nDim
         case 2,
             [supportFun, curEllMax] = rho(ell, [1, 0]');
@@ -242,7 +246,7 @@ for iEll = 1:ell_count
     qVec = plotEll.getCenter();
     diagMat = plotEll.getDiagMat();
     eigvMat = plotEll.getEigvMat();
-    
+    plotEll = GenEllipsoid(diagMat);
     if ucolor(iEll) == 1
         clr = vcolor(iEll, :);
     else
@@ -252,6 +256,7 @@ for iEll = 1:ell_count
     switch nDim
         case 2,
             xMat = ellPoints2d(plotEll);
+            nPoints = size(xMat, 2);
             isInf = max(xMat == Inf, [], 2);
             diagVec = diag(plotEll.getDiagMat());
             if isInf(1)
@@ -263,7 +268,7 @@ for iEll = 1:ell_count
                     maxVal = maxx;
                     minVal = minx;
                 else
-                    maxVal = 3*maxEig;
+                    maxVal = 3*maxEig ;
                     minVal = -3*maxEig;
                 end
                 xMat(1, isInfMat) = maxVal;
@@ -284,6 +289,7 @@ for iEll = 1:ell_count
                 xMat(2, isInfMat) = maxVal;
                 xMat(2, isNegInfMat) = minVal;
             end
+            xMat = eigvMat.'*xMat + repmat(qVec, 1, nPoints);
             SData.x1CMat{iEll} = xMat(1,:);
             SData.x2CMat{iEll} = xMat(2,:);
             SData.qCMat{iEll} = qVec;
@@ -341,6 +347,7 @@ for iEll = 1:ell_count
                 xMat(3, isInfMat) = maxVal;
                 xMat(3, isNegInfMat) = minVal;
             end
+            xMat = eigvMat*xMat;
             SData.verXCMat{iEll} = xMat(1,:);
             SData.verYCMat{iEll} = xMat(2,:);
             SData.verZCMat{iEll} = xMat(3,:);
@@ -354,6 +361,7 @@ for iEll = 1:ell_count
 
         otherwise
     end
+   
 end
 
 SData.fill = (isFill~=0)';

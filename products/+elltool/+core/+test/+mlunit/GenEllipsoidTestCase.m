@@ -12,6 +12,7 @@ classdef GenEllipsoidTestCase < mlunitext.test_case
                 filesep,shortClassName];
             import elltool.core.GenEllipsoid;
         end
+
         function self = testConstructor(self)
             import elltool.core.GenEllipsoid;
             %
