@@ -37,8 +37,6 @@ classdef GenEllipsoid < handle
     end
     properties (Constant,GetAccess = private)
         CHECK_TOL=1e-09;
-        N_PLOT_POINTS = 500;
-        RECURSE_LEVEL = 5;
     end
     methods (Static,Access=private)
         function checkIsMe(objArr)

@@ -66,7 +66,6 @@ classdef GenEllipsoidPlotTestCase < mlunitext.test_case
             testEllArr(6) = GenEllipsoid([-10, -10].', qMat);
             check(testEllArr);
          
-            self.tear_down();
         end
         
         function self = testDegeneratePlot2d(self)
@@ -139,7 +138,6 @@ classdef GenEllipsoidPlotTestCase < mlunitext.test_case
             testEllArr(8) = GenEllipsoid([1, -5].', dMat, eMat);
             check(testEllArr);
             
-            self.tear_down();
         end
     end
 end
