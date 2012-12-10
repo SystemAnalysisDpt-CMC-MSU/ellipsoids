@@ -44,15 +44,15 @@ function [varargout] = minksum(varargin)
 import elltool.conf.Properties;
 import modgen.common.throwerror;
 
-[reg,~,plObj,isNewFigure,isFill,lineWidth,colorVec,shad,isShowAll...
-    isRelPlotterSpec,~,isIsFill,isLineWidth,isColorVec,isShad]=modgen.common.parseparext(varargin,...
-    {'relDataPlotter','newFigure','fill','lineWidth','color','shade','showAll';...
-    [],0,0,1,[1 0 0],0.4,0;@(x)isa(x,'smartdb.disp.RelationDataPlotter'),...
-    @(x)isnumeric(x),@(x)isnumeric(x),@(x)isnumeric(x),@(x)isnumeric(x),@(x)isnumeric(x),@(x)isnumeric(x)});
+[reg,~,plObj,isFill,lineWidth,colorVec,shad,isShowAll...
+    isRelPlotterSpec,isIsFill,isLineWidth,isColorVec,isShad,isIsShowAll]=modgen.common.parseparext(varargin,...
+    {'relDataPlotter','fill','lineWidth','color','shade','showAll';...
+    [],0,1,[1 0 0],0.4,0;@(x)isa(x,'smartdb.disp.RelationDataPlotter'),...
+    @(x)isnumeric(x),@(x)isnumeric(x),@(x)isnumeric(x),@(x)isnumeric(x),@(x)isnumeric(x)});
 
 % nAi = nargin;
 if ~isRelPlotterSpec
-        plObj=smartdb.disp.RelationDataPlotter('figureGetNewHandleFunc', @(varargin)gcf,'axesGetNewHandleFunc',@(varargin)gca);
+    plObj=smartdb.disp.RelationDataPlotter('figureGetNewHandleFunc', @(varargin)gcf,'axesGetNewHandleFunc',@(varargin)gca);
 end
 if ~ishold
     isHold = false;
@@ -60,6 +60,7 @@ if ~ishold
 else
     isHold = true;
 end
+hold on;
 fstInpArg = reg{1};
 if ~isa(fstInpArg, 'ellipsoid')
     throwerror('wrongInput', ...
@@ -83,8 +84,8 @@ if maxDim > 3
         'MINKSUM: ellipsoid dimension must be not higher than 3.');
 end
 
-if (isShowAll ~= 0) && (nargout == 1) && (nargout == 0)
-     plObj = plot(inpEllVec, 'b');
+if (isShowAll ~= 0) && ((nargout == 1) || (nargout == 0))
+    plObj = plot(inpEllVec, 'b','relDataPlotter',plObj);
 end
 
 if (Properties.getIsVerbose()) && (nInpEllip > 1)
@@ -97,37 +98,29 @@ if (Properties.getIsVerbose()) && (nInpEllip > 1)
             nInpEllip);
     end
 end
+SData = [];
 SData.figureNameCMat={'figure'};
 SData.axesNameCMat = {'ax'};
 SData.axesNumCMat = {1};
 SData.figureNumCMat = {1};
-SData.clrVec = colorVec;
+SData.clrVec = {colorVec};
 SData.widVec = lineWidth;
-SData.shadVec = shad
+SData.shadVec = shad;
 for iEllip = 1:nInpEllip
-    myEll = inpEllVec(iEllip);    
+    myEll = inpEllVec(iEllip);
     switch maxDim
         case 2,
             if iEllip == 1
                 boundPointMat = ellbndr_2d(myEll);
-                centVec = myEll.center;
+                SData.boundPointXVec = boundPointMat(1,:);
+                SData.boundPointYVec = boundPointMat(2,:);
+                SData.centVec = myEll.center';
             else
                 boundPointMat = boundPointMat + ellbndr_2d(myEll);
-                centVec = centVec + myEll.center;
+                SData.boundPointXVec = boundPointMat(1,:);
+                SData.boundPointYVec = boundPointMat(2,:);
+                SData.centVec = SData.centVec + myEll.center';
             end
-            if (iEllip == nInpEllip) && ((nargout == 1) || (nargout == 0))
-                if isFill
-%                     fill(boundPointMat(1, :), boundPointMat(2, :), ...
-%                         clrVec);
-%                     hold on;
-                end
-%                 hPlot = ell_plot(boundPointMat);
-%                 hold on;
-%                 set(hPlot, 'Color', clrVec, 'LineWidth', 2);
-%                 hPlot = ell_plot(centVec, '.');
-%                 set(hPlot, 'Color', clrVec);
-            end
-            
         case 3,
             if iEllip == 1
                 boundPointMat = ellbndr_3d(myEll);
@@ -136,41 +129,66 @@ for iEllip = 1:nInpEllip
                 boundPointMat = boundPointMat + ellbndr_3d(myEll);
                 centVec = centVec + myEll.center;
             end
-            if (iEllip == nInpEllip) && ((nargout == 1) || (nargout == 0))
-%                 chllMat = convhulln(boundPointMat');
-%                 nBoundPoints = size(boundPointMat, 2);
-%                 patch('Vertices', boundPointMat', 'Faces', chllMat, ...
-%                     'FaceVertexCData', clrVec(ones(1, nBoundPoints), :),...
-%                     'FaceColor', 'flat', 'FaceAlpha', ...
-%                     Options.shade(1, 1));
-%                 hold on;
-%                 shading interp;
-%                 lighting phong;
-%                 material('metal');
-%                 view(3);
-            end
-            
         otherwise,
             if iEllip == 1
-                centVec = myEll.center;
-                boundPointMat(1, 1) = myEll.center - sqrt(myEll.shape);
-                boundPointMat(1, 2) = myEll.center + sqrt(myEll.shape);
+                SData.centVec = myEll.center';
+                SData.boundPointXVec = myEll.center - sqrt(myEll.shape);
+                SData.boundPointYVec = myEll.center + sqrt(myEll.shape);
             else
-                centVec = centVec + myEll.center;
-                boundPointMat(1, 1) = boundPointMat(1, 1) + myEll.center...
+                SData.centVec = SData.centVec + myEll.center';
+                SData.boundPointXVec = SData.boundPointXVec + myEll.center...
                     - sqrt(myEll.shape);
-                boundPointMat(1, 2) = boundPointMat(1, 2) + myEll.center...
+                SData.boundPointYVec = SData.boundPointYVec + myEll.center...
                     + sqrt(myEll.shape);
             end
-            if (iEllip == nInpEllip) && ((nargout == 1) || (nargout == 0))
-%                 hPlot = ell_plot(boundPointMat);
-%                 hold on;
-%                 set(hPlot, 'Color', clrVec, 'LineWidth', 2);
-%                 hPlot = ell_plot(centVec, '*');
-%                 set(hPlot, 'Color', clrVec);
-            end
-            
     end
+end
+SData.fill = (isFill~=0);
+rel=smartdb.relations.DynamicRelation(SData);
+if (maxDim==2)
+    if isFill ~= 0
+        plObj.plotGeneric(rel,@figureGetGroupNameFunc,{'figureNameCMat'},...
+            @figureSetPropFunc,{},...
+            @axesGetNameSurfFunc,{'axesNameCMat','axesNumCMat'},...
+            @axesSetPropDoNothingFunc,{},...
+            @plotCreateFillPlotFunc,...
+            {'boundPointXVec','boundPointYVec','clrVec','fill','shadVec'});
+    end
+    plObj.plotGeneric(rel,@figureGetGroupNameFunc,{'figureNameCMat'},...
+        @figureSetPropFunc,{},...
+        @axesGetNameSurfFunc,{'axesNameCMat','axesNumCMat'},...
+        @axesSetPropDoNothingFunc,{},...
+        @plotCreateElPlotFunc,...
+        {'boundPointXVec','boundPointYVec','centVec','clrVec','widVec'});
+elseif (maxDim==3)
+    chllMat = convhulln(boundPointMat');
+    nBoundPoints = size(boundPointMat, 2);
+    SData.verXCMat = {boundPointMat(1,:)};
+    SData.verYCMat = {boundPointMat(2,:)};
+    SData.verZCMat = {boundPointMat(3,:)};
+    SData.faceXCMat = {chllMat(:,1)};
+    SData.faceYCMat = {chllMat(:,2)};
+    SData.faceZCMat = {chllMat(:,3)};
+    clr = colorVec(ones(1, nBoundPoints),:);
+    SData.faceVertexCDataXCMat = {clr(:,1)};
+    size(SData.faceVertexCDataXCMat{1})
+    SData.faceVertexCDataYCMat = {clr(:,2)};
+    SData.faceVertexCDataZCMat = {clr(:,3)};
+    rel=smartdb.relations.DynamicRelation(SData);
+    plObj.plotGeneric(rel,@figureGetGroupNameFunc,{'figureNameCMat'},...
+        @figureSetPropFunc,{},...
+        @axesGetNameSurfFunc,{'axesNameCMat','axesNumCMat'},...
+        @axesSetPropDoNothingFunc,{},...
+        @plotCreatePatchFunc,...
+        {'verXCMat','verYCMat','verZCMat','faceXCMat','faceYCMat','faceZCMat','faceVertexCDataXCMat','faceVertexCDataYCMat',...
+        'faceVertexCDataZCMat','shadVec','clrVec'});
+else
+    plObj.plotGeneric(rel,@figureGetGroupNameFunc,{'figureNameCMat'},...
+        @figureSetPropFunc,{},...
+        @axesGetNameSurfFunc,{'axesNameCMat','axesNumCMat'},...
+        @axesSetPropDoNothingFunc,{},...
+        @plotCreateEl2PlotFunc,...
+        {'boundPointXVec','boundPointYVec','centVec','clrVec','widVec'});
 end
 if (nargout == 1)||(nargout == 0)
     varargout = {plObj};
@@ -179,4 +197,50 @@ else
 end
 if ~isHold
     hold off
+end
+end
+function hVec=plotCreateElPlotFunc(hAxes,X,Y,q,clr,wid,varargin)
+h1 = ell_plot([X;Y],'Parent',hAxes);
+set(h1, 'Color', clr, 'LineWidth', wid);
+h2 = ell_plot(q', '.','Parent',hAxes);
+set(h2, 'Color', clr);
+hVec = [h1,h2];
+end
+function hVec=plotCreateEl2PlotFunc(hAxes,X,Y,q,clr,wid,varargin)
+h1 = ell_plot([(X) (Y)],'Parent',hAxes);
+set(h1, 'Color', clr, 'LineWidth', wid);
+h2 = ell_plot(q, '*','Parent',hAxes);
+set(h2, 'Color', clr);
+hVec = [h1,h2];
+end
+function hVec=plotCreateFillPlotFunc(hAxes,X,Y,clr,fil,shad,varargin)
+if fil
+    hVec = fill(X, Y, clr,'FaceAlpha',shad,'Parent',hAxes);
+end
+end
+function figureSetPropFunc(hFigure,figureName,~)
+set(hFigure,'Name',figureName);
+end
+function figureGroupName=figureGetGroupNameFunc(figureName)
+figureGroupName=figureName;
+end
+function hVec=axesSetPropDoNothingFunc(~,~)
+hVec=[];
+end
+function axesName=axesGetNameSurfFunc(name,~)
+axesName=name;
+end
+function hVec=plotCreatePatchFunc(hAxes,verticesX,verticesY,verticesZ,facesX,facesY,facesZ,...
+    faceVertexCDataX,faceVertexCDataY,faceVertexCDataZ,faceAlpha,clr)
+vertices = [verticesX;verticesY;verticesZ];
+faces = [facesX,facesY,facesZ];
+faceVertexCData = [faceVertexCDataX,faceVertexCDataY,faceVertexCDataZ];
+h0 = patch('Vertices',vertices', 'Faces', faces, ...
+    'FaceVertexCData', faceVertexCData, 'FaceColor','flat', ...
+    'FaceAlpha', faceAlpha,'EdgeColor',clr,'Parent',hAxes);
+shading interp;
+lighting phong;
+material('metal');
+view(3);
+hVec  = h0;
 end
