@@ -69,7 +69,7 @@
 		<backtest type="struct" >
 			<output type="struct" >
 				<gen type="struct" >
-					<dumpDir type="char" >.\DumpBKT\</dumpDir>
+					<dumpDir type="char" >./DumpBKT/</dumpDir>
 				</gen>
 			</output>
 			<input type="struct" >
