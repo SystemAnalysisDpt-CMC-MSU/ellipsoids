@@ -199,9 +199,8 @@ function isBoundEll = check2dDimZero(testEll, cellPoints, dim)
     secDim = @(x) x(3-dim);
     eigPoint = @(x) secDim(eigMat*(x-qCen)+qCen);
     isBoundEll = cellfun(@(x) abs(((eigPoint(x) - qCen).'/dMat(3-dim, 3-dim))*...
-        (eigPoint(x) - qCen)-1) < absTol, cellPoints);
-    isBoundEll = isBoundEll | cellfun(@(x) norm(x - qCen) < ...
-    absTol, cellPoints);    
+        (eigPoint(x) - qCen)) < 1 +  absTol, cellPoints);
+
 end
 
 
@@ -218,9 +217,7 @@ function isBoundEll = check2dDimInf(testEll, cellPoints, dim)
         invMat = [1/dMat(1, 1), 0; 0, 0];
     end
     isBoundEll = cellfun(@(x) abs(((eigPoint(x) - qCen).'*invMat)*...
-        (eigPoint(x) - qCen)-1) < absTol || ...
-        abs(secDim(eigPoint(x)) - qCen(3-dim)) <  absTol, cellPoints);
-    isBoundEll = isBoundEll | cellfun(@(x) norm(x - qCen) < ...
-        absTol, cellPoints);        
+        (eigPoint(x) - qCen)) < 1 + absTol, cellPoints) ;
+  
 end
 

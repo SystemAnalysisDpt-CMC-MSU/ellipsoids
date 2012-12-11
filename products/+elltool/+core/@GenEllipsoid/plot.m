@@ -18,17 +18,13 @@ if ~isRelPlotterSpec
 end
 
 [ellsArr, ellNum, uColor, vColor] = getEllParams(reg);
-colorVec = setColorVec(colorVec);
-shad = setShad(shad);
-lineWidth = setLineWidth(lineWidth);
-isFill = setFill(isFill);
+[colorVec, shad, lineWidth, isFill] = getPlotParams(colorVec, shad,... 
+    lineWidth, isFill);
 checkDimensions();
 SData = setUpSData();
-
-[minVal, maxVal] = findMinAndMaxInEachDim(ellsArr, ellNum);
+[minVal, maxVal] = findMinAndMaxInEachDim(ellsArr);
 SData = calcEllPoints(SData);
-SData.fill = (isFill~=0)';
-SData.clrVec = colorVec;
+
 
 rel=smartdb.relations.DynamicRelation(SData);
 if (nDim==2)
@@ -38,135 +34,98 @@ if (nDim==2)
             @axesGetNameSurfFunc,{'axesNameCMat','axesNumCMat'},...
             @axesSetPropDoNothingFunc,{},...
             @plotCreateFillPlotFunc,...
-            {'x1CMat','x2CMat','clrVec','fill','shadVec'});
+            {'xCMat''clrVec','fill','shadVec'});
     end
     plObj.plotGeneric(rel,@figureGetGroupNameFunc,{'figureNameCMat'},...
         @figureSetPropFunc,{},...
         @axesGetNameSurfFunc,{'axesNameCMat','axesNumCMat'},...
         @axesSetPropDoNothingFunc,{},...
         @plotCreateElPlotFunc,...
-        {'x1CMat','x2CMat','qCMat','clrVec','widVec'});
+        {'xCMat','qCMat','clrVec','widVec'});
 elseif (nDim==3)
     plObj.plotGeneric(rel,@figureGetGroupNameFunc,{'figureNameCMat'},...
         @figureSetPropFunc,{},...
         @axesGetNameSurfFunc,{'axesNameCMat','axesNumCMat'},...
         @axesSetPropDoNothingFunc,{},...
         @plotCreatePatchFunc,...
-        {'verXCMat','verYCMat','verZCMat','faceXCMat','faceYCMat','faceZCMat','faceVertexCDataXCMat','faceVertexCDataYCMat',...
-        'faceVertexCDataZCMat','shadVec','clrVec'});
+        {'verCMat','faceCMat','faceVertexCDataCMat',...
+        'shadVec','clrVec'});
 else
     plObj.plotGeneric(rel,@figureGetGroupNameFunc,{'figureNameCMat'},...
         @figureSetPropFunc,{},...
         @axesGetNameSurfFunc,{'axesNameCMat','axesNumCMat'},...
         @axesSetPropDoNothingFunc,{},...
         @plotCreateEl2PlotFunc,...
-        {'x1CMat','x2CMat','qCMat','clrVec','widVec'});
+        {'xCMat','qCMat','clrVec','widVec'});
 end
 
-
-    function SData = calcEllPoints(SData)
+   function SData = calcEllPoints(SData)
         import elltool.core.GenEllipsoid;
         nDim = max(dimension(ellsArr));
-        for iEll = 1:ellNum
-            if isNewFigure
-                SData.figureNameCMat{iEll}=sprintf('figure%d',iEll);
-                SData.axesNameCMat{iEll} = sprintf('ax%d',iEll);
+        if isNewFigure
+            [SData.figureNameCMat, SData.axesNameCMat] = arrayfun(@(x)getSDataParams(x), 1:ellNum);
+        end
+        [xMat, fMat] = arrayfun(@(x) calcOneEllPoints(x), ellsArr);
+        colMat = cellfun(@(x, y, z) getColor(x, y, z), num2cell(colorVec, 2), num2cell(vColor, 2), num2cell(uColor));
+        SData.verCMat = xMat;
+        SData.xCMat = xMat;
+        SData.faceCMat = fMat;
+        SData.faceVertexCDataCMat = colMat;
+        SData.qCMat = arrayfun(@(x) {x.getCenter()}, ellsArr);
+        function colMat = getColor(colorVec, vColor, uColor)
+            if uColor == 1
+                clr = vColor;
+            else
+                clr = colorVec;
             end
-            plotEll = ellsArr(iEll);
+            colMat = clr(ones(1, size(xMat{1}, 2)), :);
+            colMat = {colMat};
+        end
+        function [xMat, fMat] = calcOneEllPoints(plotEll)
+            import elltool.core.GenEllipsoid;
             qVec = plotEll.getCenter();
             diagMat = plotEll.getDiagMat();
             eigvMat = plotEll.getEigvMat();
-            plotEll = GenEllipsoid(diagMat);
-            if uColor(iEll) == 1
-                clr = vColor(iEll, :);
-            else
-                clr = colorVec(iEll, :);
+            ell = GenEllipsoid(diagMat);
+ 
+            [xMat, fMat] = ellPoints(ell, nDim);
+            nPoints = size(xMat, 2);
+            for iDim = 1:nDim
+                xMat(iDim, :) = getRidOfInfVal(xMat(iDim, :), qVec, nDim);
             end
-            switch nDim
-                case 2,
-                    xMat = ellPoints2d(plotEll, N_PLOT_POINTS);
-                    nPoints = size(xMat, 2);
-                    isInf = max(xMat == Inf, [], 2);
-                    diagVec = diag(plotEll.getDiagMat());
-                    if isInf(1)
-                        xMat = getRidOfInfVal(xMat, 1);
-                    end
-                    if isInf(2)
-                        xMat = getRidOfInfVal(xMat, 2);
-                    end
-                    xMat = eigvMat.'*xMat + repmat(qVec, 1, nPoints);
-                    SData.x1CMat{iEll} = xMat(1,:);
-                    SData.x2CMat{iEll} = xMat(2,:);
-                    SData.qCMat{iEll} = qVec;
-                    
-                case 3,
-                    [xMat, fMat] = ellPoints3d(plotEll, SPHERE_TRIANG_CONST);
-                    isInf = max(xMat == Inf, [], 2);
-                    diagVec = diag(plotEll.getDiagMat());
-                    
-                    nPoints = size(xMat, 2);
-                    if isInf(1)
-                        xMat = getRidOfInfVal(xMat, 1);
-                    end
-                    if isInf(2)
-                        xMat = getRidOfInfVal(xMat, 2);
-                    end
-                    if isInf(3)
-                        xMat = getRidOfInfVal(xMat, 3);
-                    end
-                    xMat = eigvMat.'*xMat + repmat(qVec, 1, nPoints);
-                    SData.verXCMat{iEll} = xMat(1,:);
-                    SData.verYCMat{iEll} = xMat(2,:);
-                    SData.verZCMat{iEll} = xMat(3,:);
-                    SData.faceXCMat{iEll} = fMat(:,1);
-                    SData.faceYCMat{iEll} = fMat(:,2);
-                    SData.faceZCMat{iEll} = fMat(:,3);
-                    col = clr(ones(1, nPoints), :);
-                    SData.faceVertexCDataXCMat{iEll} = col(:,1);
-                    SData.faceVertexCDataYCMat{iEll} = col(:,2);
-                    SData.faceVertexCDataZCMat{iEll} = col(:,3);
-                    
-                otherwise
-            end
+            xMat = eigvMat.'*xMat + repmat(qVec, 1, nPoints);
+            xMat = {xMat};
+            fMat = {fMat};
         end
-        function xMat = getRidOfInfVal(xMat, dim)
-            isInfMat = xMat(dim, :) == Inf;
-            isNegInfMat = xMat(dim, :) == -Inf;
-            
-            maxEig = max(diagVec(diagVec < Inf));
-            maxEig = max(maxEig, 1);
-            if minVal(dim) < Inf
-                maxCurVal = maxVal(dim);
-                minCurVal = minVal(dim);
-            else
-                maxCurVal = 3*maxEig;
-                minCurVal = -3*maxEig;
-            end
-            xMat(dim, isInfMat) = maxCurVal;
-            xMat(dim, isNegInfMat) = minCurVal;
-            
+        function [figureNameCMat, axesNameCMat] = getSDataParams(iEll)
+            figureNameCMat = sprintf('figure%d',iEll);
+            axesNameCMat = sprintf('ax%d',iEll);
+        end
+        function xMat = getRidOfInfVal(xMat, qVec, dim)
+            isInfMat = xMat == Inf;
+            isNegInfMat = xMat == -Inf;
+            maxCurVal = maxVal(dim) - qVec(dim);
+            minCurVal = minVal(dim) - qVec(dim);
+            xMat(isInfMat) = maxCurVal;
+            xMat(isNegInfMat) = minCurVal;
         end
     end
+
     function SData = setUpSData()
         SData.figureNameCMat=repmat({'figure'},ellNum,1);
         SData.axesNameCMat = repmat({'ax'},ellNum,1);
-        SData.x1CMat = repmat({1},ellNum,1);
-        SData.x2CMat = repmat({1},ellNum,1);
+        SData.xCMat = repmat({1},ellNum,1);
         SData.qCMat = repmat({1},ellNum,1);
-        SData.verXCMat = repmat({1},ellNum,1);
-        SData.verYCMat = repmat({1},ellNum,1);
-        SData.verZCMat = repmat({1},ellNum,1);
-        SData.faceXCMat = repmat({1},ellNum,1);
-        SData.faceYCMat = repmat({1},ellNum,1);
-        SData.faceZCMat = repmat({1},ellNum,1);
+        SData.verCMat = repmat({1},ellNum,1);
+        SData.faceCMat = repmat({1},ellNum,1);
         SData.axesNumCMat = repmat({1},ellNum,1);
         SData.figureNumCMat = repmat({1},ellNum,1);
-        SData.faceVertexCDataXCMat = repmat({1},ellNum,1);
-        SData.faceVertexCDataYCMat = repmat({1},ellNum,1);
-        SData.faceVertexCDataZCMat = repmat({1},ellNum,1);
+        SData.faceVertexCDataCMat = repmat({1},ellNum,1);
         
         SData.widVec = lineWidth.';
         SData.shadVec = shad.';
+        SData.fill = (isFill~=0)';
+        SData.clrVec = colorVec;
     end
     function checkDimensions()
         import elltool.conf.Properties;
@@ -187,7 +146,13 @@ end
             end
         end
     end
-    function shad = setShad(shad)
+    function [colorVec, shad, lineWidth, isFill] = getPlotParams(colorVec, shad, lineWidth, isFill)
+        shad = getShad(shad);
+        lineWidth = getLineWidth(lineWidth);
+        colorVec = getColorVec(colorVec);
+        isFill = getFill(isFill);
+    end
+    function shad = getShad(shad)
         
         if ~isShad
             shad = 0.4*ones(1, ellNum);
@@ -208,7 +173,7 @@ end
         
     end
 
-    function lineWidth = setLineWidth(lineWidth)
+    function lineWidth = getLineWidth(lineWidth)
         if ~isLineWidth
             lineWidth = ones(1, ellNum);
         else
@@ -228,7 +193,7 @@ end
         
     end
 
-    function isFill = setFill(isFill)
+    function isFill = getFill(isFill)
         if ~isIsFill
             isFill = zeros(1, ellNum);
         else
@@ -247,7 +212,7 @@ end
         end
     end
 
-    function colorVec = setColorVec(colorVec)
+    function colorVec = getColorVec(colorVec)
         
         if ~isColorVec
             % Color maps:
@@ -294,14 +259,27 @@ end
         
         
     end
-
-
+    function [xMat, fMat] = ellPoints(ell, nDim)
+        if nDim == 2
+            lMat = gras.geom.circlepart(N_PLOT_POINTS);
+            fMat = 1:N_PLOT_POINTS+1;
+        else
+            [lMat, fMat] = gras.geom.tri.spheretri(SPHERE_TRIANG_CONST);
+        end
+        lMat(lMat == 0) = eps;
+        nPoints = size(lMat, 1);
+        xMat = zeros(nDim, nPoints+1);
+        dMat = ell.getDiagMat();
+        qCen = ell.getCenter();
+        xMat(:, 1:end-1) = dMat.^0.5*lMat.' + repmat(qCen, 1, nPoints);
+        xMat(:, end) = xMat(:, 1);
+    end
 
 end
 
 
-function hVec=plotCreateElPlotFunc(hAxes,X,Y,q,clr,wid,varargin)
-h1 = ell_plot([X;Y],'Parent',hAxes);
+function hVec=plotCreateElPlotFunc(hAxes,X,q,clr,wid,varargin)
+h1 = ell_plot(X,'Parent',hAxes);
 set(h1, 'Color', clr, 'LineWidth', wid);
 h2 = ell_plot(q, '.','Parent',hAxes);
 set(h2, 'Color', clr);
@@ -331,11 +309,8 @@ end
 function axesName=axesGetNameSurfFunc(name,~)
 axesName=name;
 end
-function hVec=plotCreatePatchFunc(hAxes,verticesX,verticesY,verticesZ,facesX,facesY,facesZ,...
-    faceVertexCDataX,faceVertexCDataY,faceVertexCDataZ,faceAlpha,clr)
-vertices = [verticesX;verticesY;verticesZ];
-faces = [facesX,facesY,facesZ];
-faceVertexCData = [faceVertexCDataX,faceVertexCDataY,faceVertexCDataZ];
+function hVec=plotCreatePatchFunc(hAxes,vertices,faces,...
+    faceVertexCData,faceAlpha,clr)
 h0 = patch('Vertices',vertices', 'Faces', faces, ...
     'FaceVertexCData', faceVertexCData, 'FaceColor','flat', ...
     'FaceAlpha', faceAlpha,'EdgeColor',clr,'Parent',hAxes);
@@ -349,65 +324,63 @@ hVec  = h0;
 end
 
 function [ellsArr, ellNum, uColor, vColor] = getEllParams(reg)
-uColor    = [];
-vColor    = [];
-ellsArr      = [];
-ellNum = 0;
-for iReg = 1:size(reg,2)
-    if isa(reg{iReg}, 'elltool.core.GenEllipsoid')
-        ellArr      = reg{iReg};
-        [mEll, nEll] = size(ellArr);
-        cnt    = mEll * nEll;
-        ellVec     = reshape(ellArr, 1, cnt);
-        ellsArr   = [ellsArr ellVec];
-        if (iReg < size(reg,2)) && ischar(reg{iReg+1})
+
+if numel(reg) == 1
+    isLast = {0};
+else
+    isLast = {ones(1, numel(reg)-1), 0};
+end
+
+[uColor, vColor, ellsArr] = cellfun(@(x, y)getParams(x, y), reg, isLast);
+uColor = vertcat(uColor{:});
+vColor = vertcat(vColor{:});
+ellsArr = vertcat(ellsArr{:});
+ellNum = numel(ellsArr);
+
+    function [uColor, vColor, ellArr] = getParams(ellArr, isLast)
+         [mEll, nEll] = size(ellArr);
+         cnt    = mEll * nEll;
+         ellArr = reshape(ellArr, cnt, 1);
+         ellArr = {ellArr};
+        if isLast
             clr = ellipsoid.my_color_table(reg{iReg+1});
             val = 1;
         else
             clr = [0 0 0];
             val = 0;
         end
-        for jReg = (ellNum + 1):(ellNum + cnt)
-            uColor(jReg) = val;
-            vColor    = [vColor; clr];
-        end
-        ellNum = ellNum + cnt;
+        uColor = {repmat(val, cnt, 1)};
+        vColor = {repmat(clr, cnt, 1)};
     end
 end
 
-end
 
 
-
-function [minVal, maxVal] = findMinAndMaxInEachDim(ellsArr, ellNum)
+function [minVal, maxVal] = findMinAndMaxInEachDim(ellsArr)
 
 nDim = max(dimension(ellsArr));
-minVal = [0, 0, 0].';
-maxVal = [0, 0, 0].';
-switch nDim
-    case 2,
-        [minVal(1), maxVal(1)] = findMinAndMaxDim(ellsArr, ellNum, 1, 2);
-        [minVal(2), maxVal(2)] = findMinAndMaxDim(ellsArr, ellNum, 2, 2);
-    case 3,
-        [minVal(1), maxVal(1)] = findMinAndMaxDim(ellsArr, ellNum, 1, 3);
-        [minVal(2), maxVal(2)] = findMinAndMaxDim(ellsArr, ellNum, 2, 3);
-        [minVal(3), maxVal(3)] = findMinAndMaxDim(ellsArr, ellNum, 3, 3);
-    otherwise
-end
+[minVal, maxVal] = arrayfun(@(x, y) findMinAndMaxDim(ellsArr, x, y), 1:nDim, repmat(nDim, 1, nDim));
 
-    function [minVal, maxVal] = findMinAndMaxDim(ellsArr, ellNum, dim, nDims)
+
+    function [minVal, maxVal] = findMinAndMaxDim(ellsArr, dim, nDims)
         import elltool.core.GenEllipsoid;
-        minVal = Inf;
-        maxVal = -Inf;
+
         minlVec = zeros(nDims, 1);
         minlVec(dim) = -1;
         maxlVec = zeros(nDims, 1);
         maxlVec(dim) = 1;
-        for iEll = 1:ellNum
-            ell = ellsArr(iEll);
+        [minVal, maxVal] = arrayfun(@(x)findMinAndMaxDimEll(x), ellsArr);
+        minVal = min(minVal);
+        maxVal = max(maxVal);
+        
+        function [minVal, maxVal] = findMinAndMaxDimEll(ell)
+            import elltool.core.GenEllipsoid;
             qCen = ell.getCenter();
             dMat = ell.getDiagMat();
             ell = GenEllipsoid(qCen, dMat);
+            minVal = Inf;
+            maxVal = -Inf;
+            
             [~, curEllMax] = rho(ell, maxlVec);
             [~, curEllMin] = rho(ell, minlVec);
             if (curEllMin(dim) < minVal)&& (curEllMin(dim) > -Inf)
@@ -416,30 +389,14 @@ end
             if (curEllMax(dim) > maxVal) && (curEllMax(dim) < Inf)
                 maxVal = curEllMax(dim);
             end
-            
+            diagVec = diag(dMat);
+            maxEig = max(diagVec(diagVec < Inf));
+            if (-3*maxEig+qCen(dim) < minVal) && (curEllMin(dim) == -Inf)
+                minVal = -3*maxEig+qCen(dim);
+            end
+            if (3*maxEig+qCen(dim) > maxVal) && (curEllMax(dim) == Inf)
+                maxVal = 3*maxEig+qCen(dim);
+            end            
         end
     end
-end
-
-function xMat = ellPoints2d(ell, nPoints)
-lMat = gras.geom.circlepart(nPoints);
-nDim = numel(ell.getCenter());
-xMat = zeros(nDim, nPoints+1);
-for iPoint = 1:nPoints
-    [rVec, xVec] = rho(ell, lMat(iPoint, :).');
-    xMat(:, iPoint) = xVec;
-end
-xMat(:, end) = xMat(:, 1);
-end
-
-function [xMat, fMat] = ellPoints3d(ell, recLevel)
-[vMat, fMat] = gras.geom.tri.spheretri(recLevel);
-nPoints = size(vMat, 1);
-nDim = numel(ell.getCenter());
-xMat = zeros(nDim, nPoints+1);
-for iPoint = 1:nPoints
-    [rVec, xVec] = rho(ell, vMat(iPoint, :).');
-    xMat(:, iPoint) = xVec;
-end
-xMat(:, end) = xMat(:, 1);
 end
