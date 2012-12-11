@@ -27,7 +27,7 @@ function resStr=struct2str(SInp,varargin)
 %       printValues: logical[1,1] -  flag that states if the field values
 %           should be printed  as well. The default value is 1 (print values)
 %
-%       maxArrayLength: numberic[1,1] - a positive integer,
+%       maxArrayLength: numeric[1,1] - a positive integer,
 %           which determines up to which length or size the values of
 %           a vector or matrix are printed. For a  vector holds that
 %           if the length of the vector is smaller or equal to

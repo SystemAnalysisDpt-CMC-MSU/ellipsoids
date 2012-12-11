@@ -14,7 +14,7 @@ SPHERE_TRIANG_CONST = 5;
 
 
 if ~isRelPlotterSpec
-    plObj=smartdb.disp.RelationDataPlotter();
+        plObj=smartdb.disp.RelationDataPlotter('figureGetNewHandleFunc', @(varargin)gcf,'axesGetNewHandleFunc',@(varargin)gca);
 end
 
 [ellsArr, ellNum, uColor, vColor] = getEllParams(reg);
@@ -23,7 +23,9 @@ end
 checkDimensions();
 SData = setUpSData();
 [minVal, maxVal] = findMinAndMaxInEachDim(ellsArr);
-SData = calcEllPoints(SData);
+minVal = reshape(minVal, numel(minVal), 1);
+maxVal = reshape(maxVal, numel(maxVal), 1);
+calcEllPoints();
 
 
 rel=smartdb.relations.DynamicRelation(SData);
@@ -59,14 +61,15 @@ else
         {'xCMat','qCMat','clrVec','widVec'});
 end
 
-   function SData = calcEllPoints(SData)
+   function calcEllPoints()
         import elltool.core.GenEllipsoid;
         nDim = max(dimension(ellsArr));
         if isNewFigure
             [SData.figureNameCMat, SData.axesNameCMat] = arrayfun(@(x)getSDataParams(x), 1:ellNum);
         end
-        [xMat, fMat] = arrayfun(@(x) calcOneEllPoints(x), ellsArr);
-        colMat = cellfun(@(x, y, z) getColor(x, y, z), num2cell(colorVec, 2), num2cell(vColor, 2), num2cell(uColor));
+        [xMat, fMat] = arrayfun(@(x) calcOneEllElem(x), ellsArr, 'UniformOutput', false);
+        colMat = cellfun(@(x, y, z) getColor(x, y, z), num2cell(colorVec, 2), ...
+            num2cell(vColor, 2), num2cell(uColor), 'UniformOutput', false);
         SData.verCMat = xMat;
         SData.xCMat = xMat;
         SData.faceCMat = fMat;
@@ -79,9 +82,9 @@ end
                 clr = colorVec;
             end
             colMat = clr(ones(1, size(xMat{1}, 2)), :);
-            colMat = {colMat};
+      
         end
-        function [xMat, fMat] = calcOneEllPoints(plotEll)
+        function [xMat, fMat] = calcOneEllElem(plotEll)
             import elltool.core.GenEllipsoid;
             qVec = plotEll.getCenter();
             diagMat = plotEll.getDiagMat();
@@ -90,38 +93,30 @@ end
  
             [xMat, fMat] = ellPoints(ell, nDim);
             nPoints = size(xMat, 2);
-            for iDim = 1:nDim
-                xMat(iDim, :) = getRidOfInfVal(xMat(iDim, :), qVec, nDim);
-            end
+            xMat = getRidOfInfVal(xMat, qVec);
             xMat = eigvMat.'*xMat + repmat(qVec, 1, nPoints);
-            xMat = {xMat};
-            fMat = {fMat};
         end
         function [figureNameCMat, axesNameCMat] = getSDataParams(iEll)
             figureNameCMat = sprintf('figure%d',iEll);
             axesNameCMat = sprintf('ax%d',iEll);
         end
-        function xMat = getRidOfInfVal(xMat, qVec, dim)
-            isInfMat = xMat == Inf;
-            isNegInfMat = xMat == -Inf;
-            maxCurVal = maxVal(dim) - qVec(dim);
-            minCurVal = minVal(dim) - qVec(dim);
-            xMat(isInfMat) = maxCurVal;
-            xMat(isNegInfMat) = minCurVal;
-        end
+       function xMat = getRidOfInfVal(xMat, qVec)
+           maxVec = maxVal - qVec;
+           minVec=minVal-qVec;
+           isInfMat=xMat==Inf;
+           isNegInfMat=xMat==-Inf;
+           maxMat=repmat(maxVec,1,size(xMat, 2));
+           minMat=repmat(minVec,1,size(xMat, 2));
+           xMat(isInfMat)=maxMat(isInfMat);
+           xMat(isNegInfMat)=minMat(isNegInfMat);
+       end
     end
 
     function SData = setUpSData()
         SData.figureNameCMat=repmat({'figure'},ellNum,1);
-        SData.axesNameCMat = repmat({'ax'},ellNum,1);
-        SData.xCMat = repmat({1},ellNum,1);
-        SData.qCMat = repmat({1},ellNum,1);
-        SData.verCMat = repmat({1},ellNum,1);
-        SData.faceCMat = repmat({1},ellNum,1);
+        SData.axesNameCMat = repmat({'ax'},ellNum,1);  
         SData.axesNumCMat = repmat({1},ellNum,1);
         SData.figureNumCMat = repmat({1},ellNum,1);
-        SData.faceVertexCDataCMat = repmat({1},ellNum,1);
-        
         SData.widVec = lineWidth.';
         SData.shadVec = shad.';
         SData.fill = (isFill~=0)';
@@ -147,70 +142,30 @@ end
         end
     end
     function [colorVec, shad, lineWidth, isFill] = getPlotParams(colorVec, shad, lineWidth, isFill)
-        shad = getShad(shad);
-        lineWidth = getLineWidth(lineWidth);
+        
+        shad = getPlotInitParam(shad, isShad, 0.4);
+        lineWidth = getPlotInitParam(lineWidth, isLineWidth, 1);
+        isFill = getPlotInitParam(isFill, isFill, 0);
         colorVec = getColorVec(colorVec);
-        isFill = getFill(isFill);
-    end
-    function shad = getShad(shad)
-        
-        if ~isShad
-            shad = 0.4*ones(1, ellNum);
-        else
-            [mDim, nDim] = size(shad);
-            mDim      = mDim * nDim;
-            if mDim == 1
-                shad = shad * ones(1, ellNum);
-            else
-                shad = reshape(shad, 1, mDim);
-                if mDim < ellNum
-                    for iEll = (mDim + 1):ellNum
-                        shad = [shad 0.4];
-                    end
-                end
-            end
-        end
-        
     end
 
-    function lineWidth = getLineWidth(lineWidth)
-        if ~isLineWidth
-            lineWidth = ones(1, ellNum);
+    function outParam = getPlotInitParam(inParam, isFilledParam, multConst)
+        if ~isFilledParam
+            outParam = multConst*ones(1, ellNum);
         else
-            [mDim, nDim] = size(lineWidth);
+            [mDim, nDim] = size(inParam);
             mDim      = mDim * nDim;
             if mDim == 1
-                lineWidth = lineWidth * ones(1, ellNum);
+                outParam = inParam*ones(1, ellNum);
             else
-                lineWidth = reshape(lineWidth, 1, mDim);
+                outParam = reshape(inParam, 1, mDim);
                 if mDim < ellNum
-                    for iEll = (mDim + 1):ellNum
-                        lineWidth = [lineWidth 1];
-                    end
-                end
-            end
-        end
-        
-    end
-
-    function isFill = getFill(isFill)
-        if ~isIsFill
-            isFill = zeros(1, ellNum);
-        else
-            [mDim, nDim] = size(isFill);
-            mDim      = mDim * nDim;
-            if mDim == 1
-                isFill = isFill * ones(1, ellNum);
-            else
-                isFill = reshape(isFill, 1, mDim);
-                if mDim < ellNum
-                    for iEll = (mDim + 1):ellNum
-                        isFill = [isFill 0];
-                    end
+                    outParam = [outParam, multConst*ones(1, ellNum-mDim)];
                 end
             end
         end
     end
+ 
 
     function colorVec = getColorVec(colorVec)
         
@@ -311,46 +266,50 @@ axesName=name;
 end
 function hVec=plotCreatePatchFunc(hAxes,vertices,faces,...
     faceVertexCData,faceAlpha,clr)
-h0 = patch('Vertices',vertices', 'Faces', faces, ...
+hVec = patch('Vertices',vertices', 'Faces', faces, ...
     'FaceVertexCData', faceVertexCData, 'FaceColor','flat', ...
     'FaceAlpha', faceAlpha,'EdgeColor',clr,'Parent',hAxes);
 shading interp;
 lighting phong;
 material('metal');
 view(3);
-hVec  = h0;
-
-
 end
 
 function [ellsArr, ellNum, uColor, vColor] = getEllParams(reg)
 
 if numel(reg) == 1
-    isLast = {0};
+    isnLastElem = {0};
 else
-    isLast = {ones(1, numel(reg)-1), 0};
+    isnLastElem = num2cell([ones(1, numel(reg)-1), 0]);
 end
 
-[uColor, vColor, ellsArr] = cellfun(@(x, y)getParams(x, y), reg, isLast);
+[ellsArr, uColor, vColor] = cellfun(@(x, y, z)getParams(x, y, z), reg, {reg{2:end}, []}, isnLastElem, 'UniformOutput', false);
 uColor = vertcat(uColor{:});
 vColor = vertcat(vColor{:});
 ellsArr = vertcat(ellsArr{:});
 ellNum = numel(ellsArr);
 
-    function [uColor, vColor, ellArr] = getParams(ellArr, isLast)
-         [mEll, nEll] = size(ellArr);
-         cnt    = mEll * nEll;
-         ellArr = reshape(ellArr, cnt, 1);
-         ellArr = {ellArr};
-        if isLast
-            clr = ellipsoid.my_color_table(reg{iReg+1});
-            val = 1;
+    function [ellVec, uColor, vColor] = getParams(ellArr, ellNextArr, isnLastElem)
+        import elltool.core.GenEllipsoid;
+        if isa(ellArr, 'elltool.core.GenEllipsoid')
+            [mEll, nEll] = size(ellArr);
+            cnt    = mEll * nEll;
+            ellVec = reshape(ellArr, cnt, 1);
+         
+            if isnLastElem && ischar(ellNextArr)
+                colorVec = GenEllipsoid.colorTable(ellNextArr);
+                val = 1;
+            else
+                colorVec = [0 0 0];
+                val = 0;
+            end
+            uColor = repmat(val, cnt, 1);
+            vColor = repmat(colorVec, cnt, 1);
         else
-            clr = [0 0 0];
-            val = 0;
+            ellVec = [];
+            uColor = [];
+            vColor = [];
         end
-        uColor = {repmat(val, cnt, 1)};
-        vColor = {repmat(clr, cnt, 1)};
     end
 end
 
@@ -362,13 +321,13 @@ nDim = max(dimension(ellsArr));
 [minVal, maxVal] = arrayfun(@(x, y) findMinAndMaxDim(ellsArr, x, y), 1:nDim, repmat(nDim, 1, nDim));
 
 
-    function [minVal, maxVal] = findMinAndMaxDim(ellsArr, dim, nDims)
+    function [minVal, maxVal] = findMinAndMaxDim(ellsArr, dirDim, nDims)
         import elltool.core.GenEllipsoid;
 
         minlVec = zeros(nDims, 1);
-        minlVec(dim) = -1;
+        minlVec(dirDim) = -1;
         maxlVec = zeros(nDims, 1);
-        maxlVec(dim) = 1;
+        maxlVec(dirDim) = 1;
         [minVal, maxVal] = arrayfun(@(x)findMinAndMaxDimEll(x), ellsArr);
         minVal = min(minVal);
         maxVal = max(maxVal);
@@ -383,19 +342,19 @@ nDim = max(dimension(ellsArr));
             
             [~, curEllMax] = rho(ell, maxlVec);
             [~, curEllMin] = rho(ell, minlVec);
-            if (curEllMin(dim) < minVal)&& (curEllMin(dim) > -Inf)
-                minVal = curEllMin(dim);
+            if (curEllMin(dirDim) < minVal)&& (curEllMin(dirDim) > -Inf)
+                minVal = curEllMin(dirDim);
             end
-            if (curEllMax(dim) > maxVal) && (curEllMax(dim) < Inf)
-                maxVal = curEllMax(dim);
+            if (curEllMax(dirDim) > maxVal) && (curEllMax(dirDim) < Inf)
+                maxVal = curEllMax(dirDim);
             end
             diagVec = diag(dMat);
             maxEig = max(diagVec(diagVec < Inf));
-            if (-3*maxEig+qCen(dim) < minVal) && (curEllMin(dim) == -Inf)
-                minVal = -3*maxEig+qCen(dim);
+            if (-3*maxEig+qCen(dirDim) < minVal) && (curEllMin(dirDim) == -Inf)
+                minVal = -3*maxEig+qCen(dirDim);
             end
-            if (3*maxEig+qCen(dim) > maxVal) && (curEllMax(dim) == Inf)
-                maxVal = 3*maxEig+qCen(dim);
+            if (3*maxEig+qCen(dirDim) > maxVal) && (curEllMax(dirDim) == Inf)
+                maxVal = 3*maxEig+qCen(dirDim);
             end            
         end
     end
