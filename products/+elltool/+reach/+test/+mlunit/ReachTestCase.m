@@ -2,8 +2,8 @@ classdef ReachTestCase < mlunit.test_case
     %
     properties (Constant, GetAccess = private)
         N_TIME_GRID_POINTS = 200;
-        REL_TOL = 1e-6;
-        ABS_TOL = 1e-7;
+        REL_TOL = 1e-5;
+        ABS_TOL = 1e-6;
     end
     %
     properties (Access = private)
@@ -137,10 +137,10 @@ classdef ReachTestCase < mlunit.test_case
         function self = testNonStationarySystem(self)
             %
             %% system initialization
-            linsysACMat = {'exp(t)' '-t'; 't^2' 'cos(t)'};
-            linsysBCMat = {'2' '1'; '1' '2'};
-            configQVec = [1; 1];
-            configQMat = [1 0; 0 1];
+            linsysACMat = {'0' '-10'; '2' '-8'};
+            linsysBCMat = {'10' '0'; '0' '2'};
+            configQVec = [0; 0];
+            configQMat = [1e-4 0; 0 1e-4];
             controlBoundsMat = eye(2);
             controlBoundsUEll = ellipsoid(controlBoundsMat);
             nonStationaryLinsys =...
@@ -152,7 +152,7 @@ classdef ReachTestCase < mlunit.test_case
             initDirectionsMat = [1 0; 0 1];
             %% time interval:
             t0 = 0;
-            t1 = 2;
+            t1 = 10;
             timeIntervalVec = [t0 t1];
             %% approximation from Reach class
             reachSet = elltool.reach.ReachContinious(nonStationaryLinsys,...
@@ -163,8 +163,9 @@ classdef ReachTestCase < mlunit.test_case
             intApprMat = get_ia(reachSet);
             apprDirCMat = get_directions(reachSet);
             %% other initialization
-            fAMatCalc = @(t) [exp(t) -t; t^2 cos(t)];
-            fBMatCalc = @(t) [2 1; 1 2];
+            fAMatCalc = @(t) [0 -10; 2 -8];
+            fBMatCalc = @(t) [10 0; 0 2];
+            % control bounds:
             fPVecCalc = @(t) [0; 0];
             fPMatCalc = @(t) [1 0; 0 1];
             nElem = size(initDirectionsMat, 1);
@@ -186,16 +187,25 @@ classdef ReachTestCase < mlunit.test_case
                     [t0 t1], [initDirectionsMat(:, iDirect).', supFun0],...
                     OdeOptionsStruct);
                 gridNum = size(timeGridVec, 1);
-                %% checking equality  
+                %% checking equality
+                % need to check error
+                expResNorm = norm(expResVec(gridNum, 1 : nElem));
+                expResNormVec = expResVec(gridNum, 1 : nElem).' ./...
+                    expResNorm;
+                apprDirNorm = norm(apprDirCMat{iDirect}(:, end));
+                apprDirNormVec = apprDirCMat{iDirect}(:, end) ./...
+                    apprDirNorm;
+                apprNormExtSupFun = rho(extApprMat(iDirect, end),...
+                    apprDirCMat{iDirect}(:, end)) ./ apprDirNorm;
+                apprNormIntSupFun = rho(intApprMat(iDirect, end),...
+                    apprDirCMat{iDirect}(:, end)) ./ apprDirNorm;
+                expNormSupFun = expResVec(gridNum, nElem + 1) ./...
+                    apprDirNorm;             
                 isTestOk = isTestOk &&...
-                    (norm(expResVec(gridNum, 1 : nElem).' -...
-                    apprDirCMat{iDirect}(:, end)) <= self.REL_TOL) &&...
-                    (norm(rho(extApprMat(iDirect, end),...
-                    apprDirCMat{iDirect}(:, end)) -...
-                    expResVec(gridNum, nElem + 1)) <= self.REL_TOL) &&...
-                    (norm(rho(intApprMat(iDirect, end),...
-                    apprDirCMat{iDirect}(:, end)) -...
-                    expResVec(gridNum, nElem + 1)) <= self.REL_TOL);
+                    (norm(expResNormVec -...
+                    apprDirNormVec) <= self.REL_TOL) &&...
+                    (apprNormExtSupFun - expNormSupFun <= self.REL_TOL) &&...
+                    (apprNormIntSupFun - expNormSupFun <= self.REL_TOL);
             end
             mlunit.assert_equals(true, isTestOk);
         end
