@@ -5,7 +5,7 @@ import modgen.common.throwerror;
 import elltool.core.GenEllipsoid;
 N_PLOT_POINTS = 500;
 SPHERE_TRIANG_CONST = 5;
-
+isHold = ishold;
 [reg,~,plObj,isNewFigure,isFill,lineWidth,colorVec,shad,...
     isRelPlotterSpec,~,isIsFill,isLineWidth,isColorVec,isShad]=modgen.common.parseparext(varargin,...
     {'relDataPlotter','newFigure','fill','lineWidth','color','shade';...
@@ -22,13 +22,16 @@ end
     lineWidth, isFill);
 checkDimensions();
 SData = setUpSData();
-[minVal, maxVal] = findMinAndMaxInEachDim(ellsArr);
-minVal = reshape(minVal, numel(minVal), 1);
-maxVal = reshape(maxVal, numel(maxVal), 1);
+[minValVec, maxValVec] = findMinAndMaxInEachDim(ellsArr);
+minValVec = reshape(minValVec, numel(minValVec), 1);
+maxValVec = reshape(maxValVec, numel(maxValVec), 1);
 calcEllPoints();
 
 
 rel=smartdb.relations.DynamicRelation(SData);
+if ~isHold
+    cla;
+end
 if (nDim==2)
     if isFill(iEll) ~= 0
         plObj.plotGeneric(rel,@figureGetGroupNameFunc,{'figureNameCMat'},...
@@ -60,7 +63,11 @@ else
         @plotCreateEl2PlotFunc,...
         {'xCMat','qCMat','clrVec','widVec'});
 end
-
+if  isHold
+    hold on;
+else
+    hold off;
+end
    function calcEllPoints()
         import elltool.core.GenEllipsoid;
         nDim = max(dimension(ellsArr));
@@ -101,8 +108,8 @@ end
             axesNameCMat = sprintf('ax%d',iEll);
         end
        function xMat = getRidOfInfVal(xMat, qVec)
-           maxVec = maxVal - qVec;
-           minVec=minVal-qVec;
+           maxVec = maxValVec - qVec;
+           minVec=minValVec-qVec;
            isInfMat=xMat==Inf;
            isNegInfMat=xMat==-Inf;
            maxMat=repmat(maxVec,1,size(xMat, 2));
@@ -278,12 +285,12 @@ end
 function [ellsArr, ellNum, uColor, vColor] = getEllParams(reg)
 
 if numel(reg) == 1
-    isnLastElem = {0};
+    isnLastElemCMat = {0};
 else
-    isnLastElem = num2cell([ones(1, numel(reg)-1), 0]);
+    isnLastElemCMat = num2cell([ones(1, numel(reg)-1), 0]);
 end
 
-[ellsArr, uColor, vColor] = cellfun(@(x, y, z)getParams(x, y, z), reg, {reg{2:end}, []}, isnLastElem, 'UniformOutput', false);
+[ellsArr, uColor, vColor] = cellfun(@(x, y, z)getParams(x, y, z), reg, {reg{2:end}, []}, isnLastElemCMat, 'UniformOutput', false);
 uColor = vertcat(uColor{:});
 vColor = vertcat(vColor{:});
 ellsArr = vertcat(ellsArr{:});
@@ -292,8 +299,7 @@ ellNum = numel(ellsArr);
     function [ellVec, uColor, vColor] = getParams(ellArr, ellNextArr, isnLastElem)
         import elltool.core.GenEllipsoid;
         if isa(ellArr, 'elltool.core.GenEllipsoid')
-            [mEll, nEll] = size(ellArr);
-            cnt    = mEll * nEll;
+            cnt    = numel(ellArr);
             ellVec = reshape(ellArr, cnt, 1);
          
             if isnLastElem && ischar(ellNextArr)
@@ -315,22 +321,22 @@ end
 
 
 
-function [minVal, maxVal] = findMinAndMaxInEachDim(ellsArr)
+function [minValVec, maxValVec] = findMinAndMaxInEachDim(ellsArr)
 
 nDim = max(dimension(ellsArr));
-[minVal, maxVal] = arrayfun(@(x, y) findMinAndMaxDim(ellsArr, x, y), 1:nDim, repmat(nDim, 1, nDim));
+[minValVec, maxValVec] = arrayfun(@(x, y) findMinAndMaxDim(ellsArr, x, y), 1:nDim, repmat(nDim, 1, nDim));
 
 
-    function [minVal, maxVal] = findMinAndMaxDim(ellsArr, dirDim, nDims)
+    function [minValVec, maxValVec] = findMinAndMaxDim(ellsArr, dirDim, nDims)
         import elltool.core.GenEllipsoid;
 
         minlVec = zeros(nDims, 1);
         minlVec(dirDim) = -1;
         maxlVec = zeros(nDims, 1);
         maxlVec(dirDim) = 1;
-        [minVal, maxVal] = arrayfun(@(x)findMinAndMaxDimEll(x), ellsArr);
-        minVal = min(minVal);
-        maxVal = max(maxVal);
+        [minValVec, maxValVec] = arrayfun(@(x)findMinAndMaxDimEll(x), ellsArr);
+        minValVec = min(minValVec);
+        maxValVec = max(maxValVec);
         
         function [minVal, maxVal] = findMinAndMaxDimEll(ell)
             import elltool.core.GenEllipsoid;

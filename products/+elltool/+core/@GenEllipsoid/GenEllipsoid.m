@@ -322,7 +322,7 @@ classdef GenEllipsoid < handle
         end
     end
     methods (Static,Access = private)
-        resVec = colorTable(ch);
+        resVec = getColorTable(ch);
         [isOk, pPar] = getIsGoodDirForMat(ellQ1Mat,ellQ2Mat,dirVec)
         sqMat = findSqrtOfMatrix(qMat,absTol)
         isBigger=checkBigger(ellObj1,ellObj2,nDimSpace,absTol)

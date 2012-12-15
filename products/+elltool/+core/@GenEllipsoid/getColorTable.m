@@ -1,4 +1,4 @@
-function codeVec = colorTable(colorChar)
+function codeVec = getColorTable(colorChar)
 %
 % colorTable - returns the code of the color
 %              defined by single letter.

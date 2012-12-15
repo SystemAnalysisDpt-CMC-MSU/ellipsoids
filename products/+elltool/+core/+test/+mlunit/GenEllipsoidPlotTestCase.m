@@ -8,141 +8,142 @@ classdef GenEllipsoidPlotTestCase < mlunitext.test_case
         function self = tear_down(self,varargin)
             close all;
         end
-
+        function self = testNewAxis(self)
+            import elltool.core.GenEllipsoid;
+            subplot(3,2,2);
+            testEll = GenEllipsoid(eye(2));
+            plot(testEll);
+        end
+        
+        function self = testHoldOn(self)
+            import elltool.core.GenEllipsoid;
+            plot(1:10,sin(1:10));
+            hold on;
+            testEll = GenEllipsoid(eye(2));
+            plot(testEll);
+            
+            hold off;
+            plot(1:10,sin(1:10));
+            plot(testEll);
+        end
+        
         function self = testOrdinaryPlot2d(self)
             import elltool.core.GenEllipsoid;
-            qMat = [cos(pi/4), sin(pi/4); -sin(pi/4), cos(pi/4)]* ...
-                [1, 0; 0, 4]*[cos(pi/4), sin(pi/4); -sin(pi/4), cos(pi/4)].';
-            testEll = GenEllipsoid(qMat);
-            check(testEll);
-
-            qMat = [1, 2; 2, 5];
-            testEll = GenEllipsoid(qMat);
-            check(testEll);
-
-            qMat = diag([1e-4, 1e-5]);
-            testEll = GenEllipsoid(qMat);
-            check(testEll);
-
-            qMat = diag([10000, 1e-5]);
-            testEll = GenEllipsoid(qMat);
-            check(testEll);
-
-            qMat = diag([3, 0.1]);
-            testEll = GenEllipsoid([4, 5].', qMat);
-            check(testEll);
-
-            qMat = diag([10000, 10000]);
-            testEll = GenEllipsoid(qMat);
-            check(testEll);
-
-            qMat = diag([1e-5, 4]);
-            testEll = GenEllipsoid(qMat);
-            check(testEll);
+            nDims = 2;
+            inpArgCList = {[cos(pi/4), sin(pi/4); -sin(pi/4), cos(pi/4)]* ...
+                [1, 0; 0, 4]*[cos(pi/4), sin(pi/4); -sin(pi/4), cos(pi/4)].', ...
+                [1, 2; 2, 5], diag([10000, 1e-5]), diag([3, 0.1]), diag([10000, 10000]), ...
+                diag([1e-5, 4])};
+            inpCenCList = {[0, 0].', [100, 100].', [0, 0].', [4, 5].', [0, 0].', [-10, -10].'};
+            nElem = numel(inpArgCList);
+            for iElem = 1:nElem
+                testEll=GenEllipsoid(inpCenCList{iElem}, inpArgCList{iElem});
+                check(testEll, nDims);
+            end
             
+            testEllArr(1) = GenEllipsoid(inpCenCList{1}, inpArgCList{1});
+            testEllArr(2) = GenEllipsoid(inpCenCList{2}, inpArgCList{2});
+            check(testEllArr, nDims);
             
-            qMat = diag([1e-5, 4]);
-            testEllArr(1) = GenEllipsoid(qMat);
-            qMat = diag([1000, 1e-3]);
-            testEllArr(2) = GenEllipsoid(qMat);
-            check(testEllArr);
+            for iElem = 1:nElem
+                testEllArr(iElem) = GenEllipsoid(inpCenCList{iElem}, inpArgCList{iElem});
+            end
+            check(testEllArr, nDims);
             
-            qMat = [1, 2; 2, 5];
-            testEllArr(1) = GenEllipsoid(qMat);
-
-            qMat = diag([1e-4, 1e-5]);
-            testEllArr(2) = GenEllipsoid([100, 100].', qMat);
-
-            qMat = diag([10000, 1e-5]);
-            testEllArr(3) = GenEllipsoid(qMat);
-            
-            qMat = diag([3, 0.1]);
-            testEllArr(4) = GenEllipsoid([4, 5].', qMat);
-        
-            qMat = diag([10000, 10000]);
-            testEllArr(5) = GenEllipsoid(qMat);
-          
-            qMat = diag([1e-5, 4]);
-            testEllArr(6) = GenEllipsoid([-10, -10].', qMat);
-            check(testEllArr);
-         
         end
         
         function self = testDegeneratePlot2d(self)
             import elltool.core.GenEllipsoid;
-            qMat = [0, 0; 0, 4];
-            testEll = GenEllipsoid(qMat);
-            check(testEll);
+            nDims = 2;
+            inpArgCList = {[0, 0; 0, 4], [0, 0; 0, 9], [0.25, 0; 0, 0], ...
+                [9, 0; 0, 0], [Inf, 0; 0, 4], [4, 0; 0, Inf], [9, 0; 0, Inf]};
+            inpRotCList = {eye(2), [cos(pi/3), -sin(pi/3); sin(pi/3), cos(pi/3)], ...
+                eye(2), [cos(pi/3), -sin(pi/3); sin(pi/3), cos(pi/3)], ...
+                eye(2), [cos(pi/3), -sin(pi/3); sin(pi/3), cos(pi/3)], ...
+                eye(2), [cos(pi/3), sin(pi/3); -sin(pi/3), cos(pi/3)]};
+            inpCenCList = {[0, 0].', [0, 0].', [0, 0].', [10, 7].', ...
+                [1, -5].', [10, 7].', [1, -5].'};
+            nElem = numel(inpCenCList);
+            for iElem = 1:nElem
+                testEll=GenEllipsoid(inpCenCList{iElem}, inpArgCList{iElem}, ...
+                    inpRotCList{iElem});
+                check(testEll, nDims);
+            end
             
-            dMat = [0, 0; 0, 9];
-            eMat = [cos(pi/3), -sin(pi/3); sin(pi/3), cos(pi/3)];
-            testEll = GenEllipsoid([0, 0].', dMat, eMat);
-            check(testEll);
+            for iElem = 1:nElem
+                testEllArr(iElem)=GenEllipsoid(inpCenCList{iElem}, inpArgCList{iElem}, ...
+                    inpRotCList{iElem});
+            end
+            check(testEllArr, nDims);
             
-            qMat = [0.25, 0; 0, 0];
-            testEll = GenEllipsoid(qMat);
-            check(testEll);
+        end
+        
+        function self = testOrdinaryPlot3d(self)
+            import elltool.core.GenEllipsoid;
+            nDims = 3;
+            inpArgCList = {eye(3), diag([2, 1, 0.1]), diag([3, 1, 1]), ...
+                diag([0.1, 0.1, 0.01]), diag([1, 100, 0.1])};
+            inpCenCList = {[0, 0, 0].', [1, 10, -1].', [0, 0, 0].', ...
+                [1, 1, 0].', [10, -10, 10].'};
+            inpRotCList = {eye(3), [1, 0, 0; 0, cos(pi/3), -sin(pi/3); 0, sin(pi/3), cos(pi/3)], ...
+                eye(3), [cos(pi/3), 0, -sin(pi/3); 0, 1, 0; sin(pi/3), 0, cos(pi/3)], ...
+                eye(3), [cos(pi/3), -sin(pi/3), 0; sin(pi/3), cos(pi/3), 0; 0, 0, 1], ...
+                eye(3)};
+            nElem = numel(inpArgCList);
+            for iElem = 1:nElem
+                testEll=GenEllipsoid(inpCenCList{iElem}, inpArgCList{iElem}, ...
+                    inpRotCList{iElem});
+                check(testEll, nDims);
+            end
             
-            dMat = [9, 0; 0, 0];
-            eMat = [cos(pi/3), -sin(pi/3); sin(pi/3), cos(pi/3)];
-            testEll = GenEllipsoid([0, 0].', dMat, eMat);
-            check(testEll);
-
-            qMat = [Inf, 0; 0, 4];
-            testEll = GenEllipsoid([10, 7].', qMat);
-            check(testEll);
-
+            for iElem = 1:nElem
+                testEllArr(iElem)=GenEllipsoid(inpCenCList{iElem}, inpArgCList{iElem}, ...
+                    inpRotCList{iElem});
+            end
+            check(testEllArr, nDims);
+        end
+        
+        function self = testDegeneratePlot3d(self)
+            import elltool.core.GenEllipsoid;
+            nDims = 3;
+            inpArgCList = {diag([Inf, 1, 1]), diag([0.25, Inf, 3]), diag([0, 5, Inf]), ...
+                diag([Inf, 4, 0.5]), diag([Inf, Inf, 1]), diag([Inf, 4, Inf]), diag([3, Inf, Inf]), ...
+                diag([0, 1, 1]), diag([1.1, 0, 4]), diag([3, 1, 0]), diag([1, Inf, 0]), ...
+                diag([Inf, 1, 0]), diag([0, Inf, 3]), diag([0, 3, Inf]), diag([0.01, Inf, 1])};
+            inpCenCList = {[1, 0, 0].', [0, 0, 1].', [0, 0, 0].', [1, 1, 1].', [1, 1, 0].', ...
+                [-1, 1, 0].', [-1, -1, 0].', [0, 0, -1].', [0, -1, 1].', [1, 1, 0].', [-1, 1, 0].', ...
+                [0, 0, 0].', [0, 0, 0].', [1, 0, 0].', [-1, 1, -1].'};
+            inpRotCList = {eye(3), [1, 0, 0; 0, cos(pi/3), -sin(pi/3); 0, sin(pi/3), cos(pi/3)], ...
+                eye(3), [cos(pi/3), 0, -sin(pi/3); 0, 1, 0; sin(pi/3), 0, cos(pi/3)], ...
+                eye(3), [cos(pi/3), -sin(pi/3), 0; sin(pi/3), cos(pi/3), 0; 0, 0, 1], ...
+                eye(3), eye(3), [cos(pi/6), -sin(pi/6), 0; sin(pi/6), cos(pi/6), 0; 0, 0, 1], ...
+                [1, 0, 0; 0, cos(pi/4), -sin(pi/4); 0, sin(pi/4), cos(pi/4)], ... 
+                [cos(pi/4), 0, sin(pi/4); 0, 1, 0; -sin(pi/4), 0, cos(pi/4)], eye(3), ...
+                eye(3),  [cos(pi/3), 0, -sin(pi/3); 0, 1, 0; sin(pi/3), 0, cos(pi/3)], ...
+                [cos(pi/3), -sin(pi/3), 0; sin(pi/3), cos(pi/3), 0; 0, 0, 1]};
+            nElem = numel(inpArgCList);
+            for iElem = 1:nElem
+                testEll=GenEllipsoid(inpCenCList{iElem}, inpArgCList{iElem}, ...
+                    inpRotCList{iElem});
+                check(testEll, nDims);
+            end
             
-            dMat = [Inf, 0; 0, 9];
-            eMat = [cos(pi/3), -sin(pi/3); sin(pi/3), cos(pi/3)];
-            testEll = GenEllipsoid([1, -5].', dMat, eMat);
-            check(testEll);
-
-            qMat = [4, 0; 0, Inf];
-            testEll = GenEllipsoid([10, 7].', qMat);
-            check(testEll);
-
-            
-            dMat = [9, 0; 0, Inf];
-            eMat = [cos(pi/3), sin(pi/3); -sin(pi/3), cos(pi/3)];
-            testEll = GenEllipsoid([1, -5].', dMat, eMat);
-            check(testEll);
-
-            
-            qMat = [0, 0; 0, 4];
-            testEllArr(1) = GenEllipsoid(qMat);
-            
-            dMat = [0, 0; 0, 9];
-            eMat = [cos(pi/3), -sin(pi/3); sin(pi/3), cos(pi/3)];
-            testEllArr(2) = GenEllipsoid([0, 0].', dMat, eMat);
-            
-            qMat = [0.25, 0; 0, 0];
-            testEllArr(3) = GenEllipsoid(qMat);
-            
-            dMat = [9, 0; 0, 0];
-            eMat = [cos(pi/3), -sin(pi/3); sin(pi/3), cos(pi/3)];
-            testEllArr(4) = GenEllipsoid([0, 0].', dMat, eMat);
-
-            qMat = [Inf, 0; 0, 4];
-            testEllArr(5) = GenEllipsoid([10, 7].', qMat);
-
-            dMat = [Inf, 0; 0, 9];
-            eMat = [cos(pi/3), -sin(pi/3); sin(pi/3), cos(pi/3)];
-            testEllArr(6) = GenEllipsoid([1, -5].', dMat, eMat);
-          
-            qMat = [4, 0; 0, Inf];
-            testEllArr(7) = GenEllipsoid([10, 7].', qMat);
-
-            dMat = [9, 0; 0, Inf];
-            eMat = [cos(pi/3), sin(pi/3); -sin(pi/3), cos(pi/3)];
-            testEllArr(8) = GenEllipsoid([1, -5].', dMat, eMat);
-            check(testEllArr);
-            
+            for iElem = 1:5
+                testEllArr(iElem)=GenEllipsoid(inpCenCList{iElem}, inpArgCList{iElem}, ...
+                    inpRotCList{iElem});
+            end
+            check(testEllArr, nDims);
+      
+            for iElem = 1:nElem
+                testEllArr(iElem)=GenEllipsoid(inpCenCList{iElem}, inpArgCList{iElem}, ...
+                    inpRotCList{iElem});
+            end
+            check(testEllArr, nDims);
         end
     end
 end
 
-function check(testEll)
+function check(testEll, nDims)
 
 import elltool.core.GenEllipsoid;
 isBound = 0;
@@ -152,23 +153,53 @@ hPlot =  toStruct(plotStructure.figToAxesToPlotHMap);
 num = hPlot.figure_g1;
 [xData] = get(num.ax,'XData');
 [yData] = get(num.ax,'YData');
+if iscell(xData)
+    xData = xData{:};
+end
+if iscell(yData)
+    yData = yData{:};
+end
 
-points = [xData{:}; yData{:}];
+if nDims == 3
+    [zData] = get(num.ax,'ZData');
+    if iscell(zData)
+        zData = zData{:};
+    end
+    xData = reshape(xData, 1, numel(xData));
+    yData = reshape(yData, 1, numel(yData));
+    zData = reshape(zData, 1, numel(zData));
+    points = [xData; yData; zData];
+else
+    points = [xData; yData];
+end
+
 cellPoints = num2cell(points(:, :), 1);
-
 for iEll = 1:size(testEll, 1)
     for jEll = 1:size(testEll, 2)
         dMat = testEll(iEll, jEll).getDiagMat();
-        if dMat(1, 1) == 0
-            isBoundEll = check2dDimZero(testEll(iEll, jEll), cellPoints, 1);
-        elseif dMat(1, 1) == Inf
-            isBoundEll = check2dDimInf(testEll(iEll, jEll), cellPoints, 1);
-        elseif dMat(2, 2) == 0
-            isBoundEll = check2dDimZero(testEll(iEll, jEll), cellPoints, 2);
-        elseif dMat(2, 2) == Inf
-            isBoundEll = check2dDimInf(testEll(iEll, jEll), cellPoints, 2);
-        else
-            isBoundEll = check2dNorm(testEll(iEll, jEll), cellPoints);
+        if nDims == 2
+            if dMat(1, 1) == 0
+                isBoundEll = check2dDimZero(testEll(iEll, jEll), cellPoints, 1);
+            elseif dMat(2, 2) == 0
+                isBoundEll = check2dDimZero(testEll(iEll, jEll), cellPoints, 2);
+                
+            elseif max(dMat(:)) == Inf
+                isBoundEll = checkDimInf(testEll(iEll, jEll), cellPoints);
+            else
+                isBoundEll = checkNorm(testEll(iEll, jEll), cellPoints);
+            end
+        elseif nDims == 3
+            if dMat(1, 1) == 0
+                 isBoundEll = check3dDimZero(testEll(iEll, jEll), cellPoints, 1);
+            elseif dMat(2, 2) == 0
+                 isBoundEll = check3dDimZero(testEll(iEll, jEll), cellPoints, 2);
+            elseif dMat(3, 3) == 0
+                 isBoundEll = check3dDimZero(testEll(iEll, jEll), cellPoints, 3);
+            elseif max(dMat(:)) == Inf
+                isBoundEll = checkDimInf(testEll(iEll, jEll), cellPoints);
+            else
+                isBoundEll = checkNorm(testEll(iEll, jEll), cellPoints);
+            end
         end
         isBound = isBound | isBoundEll;
     end
@@ -177,47 +208,67 @@ end
 mlunit.assert_equals(isBound, ones(size(isBound)));
 end
 
-function isBoundEll = check2dNorm(testEll, cellPoints)  
-    absTol = elltool.conf.Properties.getAbsTol();
-    qCen = testEll.getCenter();
-    dMat = testEll.getDiagMat();
-    eigMat = testEll.getEigvMat();
-    qMat = eigMat*dMat*eigMat.';
-    isBoundEll = cellfun(@(x) abs(((x - qCen).'/qMat)*(x-qCen)-1)< ...
+
+
+function isBoundEll = checkNorm(testEll, cellPoints)
+absTol = elltool.conf.Properties.getAbsTol();
+qCen = testEll.getCenter();
+dMat = testEll.getDiagMat();
+eigMat = testEll.getEigvMat();
+qMat = eigMat.'*dMat*eigMat;
+isBoundEll = cellfun(@(x) abs(((x - qCen).'/qMat)*(x-qCen)-1)< ...
     absTol, cellPoints);
-    isBoundEll = isBoundEll | cellfun(@(x) norm(x - qCen) < ...
-        absTol, cellPoints);
+isBoundEll = isBoundEll | cellfun(@(x) norm(x - qCen) < ...
+    absTol, cellPoints);
 
 end
+
+
 
 function isBoundEll = check2dDimZero(testEll, cellPoints, dim)
-    absTol = elltool.conf.Properties.getAbsTol();
-    qCen = testEll.getCenter();
-    qCen = qCen(3-dim);
-    dMat = testEll.getDiagMat();
-    eigMat = testEll.getEigvMat();
-    secDim = @(x) x(3-dim);
-    eigPoint = @(x) secDim(eigMat*(x-qCen)+qCen);
-    isBoundEll = cellfun(@(x) abs(((eigPoint(x) - qCen).'/dMat(3-dim, 3-dim))*...
-        (eigPoint(x) - qCen)) < 1 +  absTol, cellPoints);
+absTol = elltool.conf.Properties.getAbsTol();
+qCen = testEll.getCenter();
+dMat = testEll.getDiagMat();
+eigMat = testEll.getEigvMat();
+secDim = @(x) x(3-dim);
+eigPoint = @(x) secDim(eigMat*(x-qCen)+qCen);
+qCen = qCen(3-dim);
+isBoundEll = cellfun(@(x) abs(((eigPoint(x) - qCen).'/dMat(3-dim, 3-dim))*...
+    (eigPoint(x) - qCen)) < 1 +  absTol, cellPoints);
+
+end
+
+function isBoundEll = check3dDimZero(testEll, cellPoints, dim)
+absTol = elltool.conf.Properties.getAbsTol();
+qCen = testEll.getCenter();
+dMat = testEll.getDiagMat();
+eigMat = testEll.getEigvMat();
+if dim == 1
+    secDim = @(x) [x(2), x(3)].';
+    invMat = diag([1/dMat(2,2), 1/dMat(3,3)]);
+elseif dim == 2
+    secDim = @(x) [x(1), x(3)].';
+    invMat = diag([1/dMat(1,1), 1/dMat(3,3)]);
+else
+    secDim = @(x) [x(1), x(2)].';
+    invMat = diag([1/dMat(1,1), 1/dMat(2,2)]);
+end
+eigPoint = @(x) secDim(eigMat*(x-qCen)+qCen);
+qCen = secDim(qCen);
+isBoundEll = cellfun(@(x) abs(((eigPoint(x) - qCen).'*invMat)*...
+    (eigPoint(x) - qCen)) < 1 +  absTol, cellPoints);
 
 end
 
 
-function isBoundEll = check2dDimInf(testEll, cellPoints, dim)
-    absTol = elltool.conf.Properties.getAbsTol();
-    qCen = testEll.getCenter();
-    dMat = testEll.getDiagMat();
-    eigMat = testEll.getEigvMat();
-    eigPoint = @(x) eigMat*(x-qCen) + qCen;
-    secDim = @(x) x(3-dim);
-    if dim == 1
-        invMat = [0, 0; 0, 1/dMat(2,2)];
-    else
-        invMat = [1/dMat(1, 1), 0; 0, 0];
-    end
-    isBoundEll = cellfun(@(x) abs(((eigPoint(x) - qCen).'*invMat)*...
-        (eigPoint(x) - qCen)) < 1 + absTol, cellPoints) ;
-  
-end
+function isBoundEll = checkDimInf(testEll, cellPoints)
+absTol = elltool.conf.Properties.getAbsTol();
+qCen = testEll.getCenter();
+dMat = testEll.getDiagMat();
+eigMat = testEll.getEigvMat();
+eigPoint = @(x) eigMat*(x-qCen) + qCen;
+invMat = inv(dMat);
+isBoundEll = cellfun(@(x) abs(((eigPoint(x) - qCen).'*invMat)*...
+    (eigPoint(x) - qCen)) < 1 + absTol, cellPoints) ;
 
+end
