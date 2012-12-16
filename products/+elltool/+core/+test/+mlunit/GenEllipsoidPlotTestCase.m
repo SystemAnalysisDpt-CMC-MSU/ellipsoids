@@ -10,9 +10,14 @@ classdef GenEllipsoidPlotTestCase < mlunitext.test_case
         end
         function self = testNewAxis(self)
             import elltool.core.GenEllipsoid;
-            subplot(3,2,2);
+            axesSubPlHandle = subplot(3,2,2);
+            
             testEll = GenEllipsoid(eye(2));
-            plot(testEll);
+            plotObj = plot(testEll);
+            SHPlot =  plotObj.getPlotStructure().figToAxesToHMap.toStruct();
+            SAxes = SHPlot.figure_g1;
+            axesHandle = SAxes.ax;
+            mlunit.assert_equals(axesHandle, axesSubPlHandle);
         end
         
         function self = testHoldOn(self)
@@ -20,11 +25,20 @@ classdef GenEllipsoidPlotTestCase < mlunitext.test_case
             plot(1:10,sin(1:10));
             hold on;
             testEll = GenEllipsoid(eye(2));
-            plot(testEll);
+            plotObj = plot(testEll);
+            SHPlot =  plotObj.getPlotStructure().figToAxesToHMap.toStruct();
+            SAxes = SHPlot.figure_g1;
+            plotFig = get(SAxes.ax, 'Children');
+            mlunit.assert_equals(numel(plotFig), 3);
             
             hold off;
             plot(1:10,sin(1:10));
-            plot(testEll);
+            plotObj = plot(testEll);
+            SHPlot =  plotObj.getPlotStructure().figToAxesToHMap.toStruct();
+            SAxes = SHPlot.figure_g1;
+            plotFig = get(SAxes.ax, 'Children');
+            mlunit.assert_equals(numel(plotFig), 2);
+
         end
         
         function self = testOrdinaryPlot2d(self)
@@ -143,104 +157,113 @@ classdef GenEllipsoidPlotTestCase < mlunitext.test_case
     end
 end
 
-function check(testEll, nDims)
+function check(testEllArr, nDims)
 
 import elltool.core.GenEllipsoid;
-isBound = 0;
-plotObj = plot(testEll);
-plotStructure = plotObj.getPlotStructure;
-hPlot =  toStruct(plotStructure.figToAxesToPlotHMap);
-num = hPlot.figure_g1;
-[xData] = get(num.ax,'XData');
-[yData] = get(num.ax,'YData');
-if iscell(xData)
-    xData = xData{:};
+isBoundVec = 0;
+plotObj = plot(testEllArr);
+SPlotStructure = plotObj.getPlotStructure;
+SHPlot =  toStruct(SPlotStructure.figToAxesToPlotHMap);
+num = SHPlot.figure_g1;
+
+[xDataCell] = get(num.ax,'XData');
+[yDataCell] = get(num.ax,'YData');
+if iscell(xDataCell)
+    xDataArr = xDataCell{:};
+else
+    xDataArr = xDataCell;
 end
-if iscell(yData)
-    yData = yData{:};
+if iscell(yDataCell)
+    yDataArr = yDataCell{:};
+else
+    yDataArr = yDataCell;
 end
 
 if nDims == 3
-    [zData] = get(num.ax,'ZData');
-    if iscell(zData)
-        zData = zData{:};
+    [zDataCell] = get(num.ax,'ZData');
+    if iscell(zDataCell)
+        zDataArr = zDataCell{:};
+    else
+        zDataArr = zDataCell;
     end
-    xData = reshape(xData, 1, numel(xData));
-    yData = reshape(yData, 1, numel(yData));
-    zData = reshape(zData, 1, numel(zData));
-    points = [xData; yData; zData];
+    nPoints = numel(xDataArr);
+    xDataVec = reshape(xDataArr, 1, nPoints);
+    yDataVec = reshape(yDataArr, 1, nPoints);
+    zDataVec = reshape(zDataArr, 1, nPoints);
+    pointsMat = [xDataVec; yDataVec; zDataVec];
 else
-    points = [xData; yData];
+    pointsMat = [xDataArr; yDataArr];
 end
 
-cellPoints = num2cell(points(:, :), 1);
-for iEll = 1:size(testEll, 1)
-    for jEll = 1:size(testEll, 2)
-        dMat = testEll(iEll, jEll).getDiagMat();
+cellPoints = num2cell(pointsMat(:, :), 1);
+
+testEllVec = reshape(testEllArr, 1, numel(testEllArr));
+nEll = numel(testEllVec);
+for iEll = 1:nEll
+        dMat = testEllVec(iEll).getDiagMat();
         if nDims == 2
             if dMat(1, 1) == 0
-                isBoundEll = check2dDimZero(testEll(iEll, jEll), cellPoints, 1);
+                isBoundEllVec = check2dDimZero(testEllVec(iEll), cellPoints, 1);
             elseif dMat(2, 2) == 0
-                isBoundEll = check2dDimZero(testEll(iEll, jEll), cellPoints, 2);
+                isBoundEllVec = check2dDimZero(testEllVec(iEll), cellPoints, 2);
                 
             elseif max(dMat(:)) == Inf
-                isBoundEll = checkDimInf(testEll(iEll, jEll), cellPoints);
+                isBoundEllVec = checkDimInf(testEllVec(iEll), cellPoints);
             else
-                isBoundEll = checkNorm(testEll(iEll, jEll), cellPoints);
+                isBoundEllVec = checkNorm(testEllVec(iEll), cellPoints);
             end
         elseif nDims == 3
             if dMat(1, 1) == 0
-                 isBoundEll = check3dDimZero(testEll(iEll, jEll), cellPoints, 1);
+                 isBoundEllVec = check3dDimZero(testEllVec(iEll), cellPoints, 1);
             elseif dMat(2, 2) == 0
-                 isBoundEll = check3dDimZero(testEll(iEll, jEll), cellPoints, 2);
+                 isBoundEllVec = check3dDimZero(testEllVec(iEll), cellPoints, 2);
             elseif dMat(3, 3) == 0
-                 isBoundEll = check3dDimZero(testEll(iEll, jEll), cellPoints, 3);
+                 isBoundEllVec = check3dDimZero(testEllVec(iEll), cellPoints, 3);
             elseif max(dMat(:)) == Inf
-                isBoundEll = checkDimInf(testEll(iEll, jEll), cellPoints);
+                isBoundEllVec = checkDimInf(testEllVec(iEll), cellPoints);
             else
-                isBoundEll = checkNorm(testEll(iEll, jEll), cellPoints);
+                isBoundEllVec = checkNorm(testEllVec(iEll), cellPoints);
             end
         end
-        isBound = isBound | isBoundEll;
-    end
+        isBoundVec = isBoundVec | isBoundEllVec;
 end
 
-mlunit.assert_equals(isBound, ones(size(isBound)));
+mlunit.assert_equals(isBoundVec, ones(size(isBoundVec)));
 end
 
 
 
-function isBoundEll = checkNorm(testEll, cellPoints)
+function isBoundEllVec = checkNorm(testEll, cellPoints)
 absTol = elltool.conf.Properties.getAbsTol();
-qCen = testEll.getCenter();
+qCenVec = testEll.getCenter();
 dMat = testEll.getDiagMat();
 eigMat = testEll.getEigvMat();
 qMat = eigMat.'*dMat*eigMat;
-isBoundEll = cellfun(@(x) abs(((x - qCen).'/qMat)*(x-qCen)-1)< ...
+isBoundEllVec = cellfun(@(x) abs(((x - qCenVec).'/qMat)*(x-qCenVec)-1)< ...
     absTol, cellPoints);
-isBoundEll = isBoundEll | cellfun(@(x) norm(x - qCen) < ...
+isBoundEllVec = isBoundEllVec | cellfun(@(x) norm(x - qCenVec) < ...
     absTol, cellPoints);
 
 end
 
 
 
-function isBoundEll = check2dDimZero(testEll, cellPoints, dim)
+function isBoundEllVec = check2dDimZero(testEll, cellPoints, dim)
 absTol = elltool.conf.Properties.getAbsTol();
-qCen = testEll.getCenter();
+qCenVec = testEll.getCenter();
 dMat = testEll.getDiagMat();
 eigMat = testEll.getEigvMat();
 secDim = @(x) x(3-dim);
-eigPoint = @(x) secDim(eigMat*(x-qCen)+qCen);
-qCen = qCen(3-dim);
-isBoundEll = cellfun(@(x) abs(((eigPoint(x) - qCen).'/dMat(3-dim, 3-dim))*...
-    (eigPoint(x) - qCen)) < 1 +  absTol, cellPoints);
+eigPoint = @(x) secDim(eigMat*(x-qCenVec)+qCenVec);
+qCenVec = qCenVec(3-dim);
+isBoundEllVec = cellfun(@(x) abs(((eigPoint(x) - qCenVec).'/dMat(3-dim, 3-dim))*...
+    (eigPoint(x) - qCenVec)) < 1 +  absTol, cellPoints);
 
 end
 
-function isBoundEll = check3dDimZero(testEll, cellPoints, dim)
+function isBoundEllVec = check3dDimZero(testEll, cellPoints, dim)
 absTol = elltool.conf.Properties.getAbsTol();
-qCen = testEll.getCenter();
+qCenVec = testEll.getCenter();
 dMat = testEll.getDiagMat();
 eigMat = testEll.getEigvMat();
 if dim == 1
@@ -253,22 +276,22 @@ else
     secDim = @(x) [x(1), x(2)].';
     invMat = diag([1/dMat(1,1), 1/dMat(2,2)]);
 end
-eigPoint = @(x) secDim(eigMat*(x-qCen)+qCen);
-qCen = secDim(qCen);
-isBoundEll = cellfun(@(x) abs(((eigPoint(x) - qCen).'*invMat)*...
-    (eigPoint(x) - qCen)) < 1 +  absTol, cellPoints);
+eigPoint = @(x) secDim(eigMat*(x-qCenVec)+qCenVec);
+qCenVec = secDim(qCenVec);
+isBoundEllVec = cellfun(@(x) abs(((eigPoint(x) - qCenVec).'*invMat)*...
+    (eigPoint(x) - qCenVec)) < 1 +  absTol, cellPoints);
 
 end
 
 
-function isBoundEll = checkDimInf(testEll, cellPoints)
+function isBoundEllVec = checkDimInf(testEll, cellPoints)
 absTol = elltool.conf.Properties.getAbsTol();
-qCen = testEll.getCenter();
+qCenVec = testEll.getCenter();
 dMat = testEll.getDiagMat();
 eigMat = testEll.getEigvMat();
-eigPoint = @(x) eigMat*(x-qCen) + qCen;
+eigPoint = @(x) eigMat*(x-qCenVec) + qCenVec;
 invMat = inv(dMat);
-isBoundEll = cellfun(@(x) abs(((eigPoint(x) - qCen).'*invMat)*...
-    (eigPoint(x) - qCen)) < 1 + absTol, cellPoints) ;
+isBoundEllVec = cellfun(@(x) abs(((eigPoint(x) - qCenVec).'*invMat)*...
+    (eigPoint(x) - qCenVec)) < 1 + absTol, cellPoints) ;
 
 end
