@@ -273,13 +273,17 @@ axesName=name;
 end
 function hVec=plotCreatePatchFunc(hAxes,vertices,faces,...
     faceVertexCData,faceAlpha,clr)
+import modgen.graphics.camlight;
+LIGHT_TYPE_LIST={{'left'},{40,-65},{-20,25}};
 hVec = patch('Vertices',vertices', 'Faces', faces, ...
     'FaceVertexCData', faceVertexCData, 'FaceColor','flat', ...
     'FaceAlpha', faceAlpha,'EdgeColor',clr,'Parent',hAxes);
-shading interp;
-lighting phong;
-material('metal');
-view(3);
+hLightVec=cellfun(@(x)camlight(hAxes,x{:}),LIGHT_TYPE_LIST);
+hVec=[hVec,hLightVec]; 
+shading(hAxes,'interp');
+lighting(hAxes,'phong');
+material(hAxes,'metal');
+view(hAxes,3);
 end
 
 function [ellsArr, ellNum, uColor, vColor] = getEllParams(reg)
