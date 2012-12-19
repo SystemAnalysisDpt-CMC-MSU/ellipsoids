@@ -10,14 +10,35 @@ classdef GenEllipsoidPlotTestCase < mlunitext.test_case
         end
         function self = testNewAxis(self)
             import elltool.core.GenEllipsoid;
-            axesSubPlHandle = subplot(3,2,2);
             
             testEll = GenEllipsoid(eye(2));
-            plotObj = plot(testEll);
-            SHPlot =  plotObj.getPlotStructure().figToAxesToHMap.toStruct();
-            SAxes = SHPlot.figure_g1;
-            axesHandle = SAxes.ax;
-            mlunit.assert_equals(axesHandle, axesSubPlHandle);
+            checkNewAxis(testEll);
+            
+            testEllArr = [GenEllipsoid(eye(2)), GenEllipsoid([1, 0].', eye(2))];
+            checkNewAxis(testEllArr);
+            
+            testFirEll = GenEllipsoid(eye(3));
+            testSecEll = GenEllipsoid([1, 0, 0].', eye(3));
+            testEllArr = [testFirEll, testSecEll; testFirEll, testSecEll];
+            checkNewAxis(testEllArr);
+            
+            for iEll = 1:2
+                for jEll = 1:2
+                    testEllArr(iEll, jEll, 1) = testFirEll;
+                    testEllArr(iEll, jEll, 2) = testSecEll;
+                end
+            end
+            checkNewAxis(testEllArr);
+            
+            function checkNewAxis(testEllArr)
+                axesSubPlHandle = subplot(3,2,2);
+                plotObj = plot(testEllArr);
+                SHPlot =  plotObj.getPlotStructure().figToAxesToHMap.toStruct();
+                SAxes = SHPlot.figure_g1;
+                axesHandle = SAxes.ax;
+                mlunit.assert_equals(axesHandle, axesSubPlHandle);
+                
+            end
         end
         
         function self = testHoldOn(self)
@@ -166,8 +187,7 @@ SPlotStructure = plotObj.getPlotStructure;
 SHPlot =  toStruct(SPlotStructure.figToAxesToPlotHMap);
 num = SHPlot.figure_g1;
 
-[xDataCell] = get(num.ax,'XData');
-[yDataCell] = get(num.ax,'YData');
+[xDataCell, yDataCell, zDataCell] = arrayfun(@(x) getData(num.ax(x)), 1:numel(num.ax), 'UniformOutput', false);
 if iscell(xDataCell)
     xDataArr = xDataCell{:};
 else
@@ -180,7 +200,6 @@ else
 end
 
 if nDims == 3
-    [zDataCell] = get(num.ax,'ZData');
     if iscell(zDataCell)
         zDataArr = zDataCell{:};
     else
@@ -229,6 +248,19 @@ for iEll = 1:nEll
 end
 
 mlunit.assert_equals(isBoundVec, ones(size(isBoundVec)));
+
+    function [outXData, outYData, outZData] = getData(hObj)
+        objType = get(hObj, 'type');
+        if strcmp(objType, 'patch')
+            outXData = get(hObj, 'XData');
+            outYData = get(hObj, 'YData');
+            outZData = get(hObj, 'ZData');
+        else
+            outXData = [];
+            outYData = [];
+            outZData = [];
+        end
+    end
 end
 
 
@@ -290,7 +322,7 @@ qCenVec = testEll.getCenter();
 dMat = testEll.getDiagMat();
 eigMat = testEll.getEigvMat();
 eigPoint = @(x) eigMat*(x-qCenVec) + qCenVec;
-invMat = inv(dMat);
+invMat = diag(1./diag(dMat));
 isBoundEllVec = cellfun(@(x) abs(((eigPoint(x) - qCenVec).'*invMat)*...
     (eigPoint(x) - qCenVec)) < 1 + absTol, cellPoints) ;
 

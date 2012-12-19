@@ -6,7 +6,7 @@ import elltool.core.GenEllipsoid;
 N_PLOT_POINTS = 500;
 SPHERE_TRIANG_CONST = 5;
 isHold = ishold;
-[reg,~,plObj,isNewFigure,isFill,lineWidth,colorVec,shad,...
+[reg,~,plObj,isNewFigure,isFill,lineWidth,colorVec,shadVec,...
     isRelPlotterSpec,~,isIsFill,isLineWidth,isColorVec,isShad]=modgen.common.parseparext(varargin,...
     {'relDataPlotter','newFigure','fill','lineWidth','color','shade';...
     [],0,[],[],[],0;@(x)isa(x,'smartdb.disp.RelationDataPlotter'),...
@@ -16,9 +16,10 @@ isHold = ishold;
 if ~isRelPlotterSpec
         plObj=smartdb.disp.RelationDataPlotter('figureGetNewHandleFunc', @(varargin)gcf,'axesGetNewHandleFunc',@(varargin)gca);
 end
-
-[ellsArr, ellNum, uColor, vColor] = getEllParams(reg);
-[colorVec, shad, lineWidth, isFill] = getPlotParams(colorVec, shad,... 
+[ellsArr, ellNum, uColorVec, vColorVec] = getEllParams(reg);
+nDim = max(dimension(ellsArr));
+[lGetGrid, fGetGrid] = calcGrid();
+[colorVec, shadVec, lineWidth, isFill] = getPlotParams(colorVec, shadVec,... 
     lineWidth, isFill);
 checkDimensions();
 SData = setUpSData();
@@ -33,20 +34,13 @@ if ~isHold
     cla;
 end
 if (nDim==2)
-    if isFill(iEll) ~= 0
-        plObj.plotGeneric(rel,@figureGetGroupNameFunc,{'figureNameCMat'},...
-            @figureSetPropFunc,{},...
-            @axesGetNameSurfFunc,{'axesNameCMat','axesNumCMat'},...
-            @axesSetPropDoNothingFunc,{},...
-            @plotCreateFillPlotFunc,...
-            {'xCMat''clrVec','fill','shadVec'});
-    end
     plObj.plotGeneric(rel,@figureGetGroupNameFunc,{'figureNameCMat'},...
         @figureSetPropFunc,{},...
         @axesGetNameSurfFunc,{'axesNameCMat','axesNumCMat'},...
         @axesSetPropDoNothingFunc,{},...
-        @plotCreateElPlotFunc,...
-        {'xCMat','qCMat','clrVec','widVec'});
+        @plotCreateFillPlotFunc,...
+        {'xCMat','qCMat', 'clrVec','fill','shadVec', 'widVec'});
+
 elseif (nDim==3)
     plObj.plotGeneric(rel,@figureGetGroupNameFunc,{'figureNameCMat'},...
         @figureSetPropFunc,{},...
@@ -70,13 +64,13 @@ else
 end
    function calcEllPoints()
         import elltool.core.GenEllipsoid;
-        nDim = max(dimension(ellsArr));
         if isNewFigure
-            [SData.figureNameCMat, SData.axesNameCMat] = arrayfun(@(x)getSDataParams(x), 1:ellNum);
+            [SData.figureNameCMat, SData.axesNameCMat] = arrayfun(@(x)getSDataParams(x), (1:ellNum).', 'UniformOutput', false);
+            
         end
         [xMat, fMat] = arrayfun(@(x) calcOneEllElem(x), ellsArr, 'UniformOutput', false);
         colMat = cellfun(@(x, y, z) getColor(x, y, z), num2cell(colorVec, 2), ...
-            num2cell(vColor, 2), num2cell(uColor), 'UniformOutput', false);
+            num2cell(vColorVec, 2), num2cell(uColorVec), 'UniformOutput', false);
         SData.verCMat = xMat;
         SData.xCMat = xMat;
         SData.faceCMat = fMat;
@@ -84,11 +78,11 @@ end
         SData.qCMat = arrayfun(@(x) {x.getCenter()}, ellsArr);
         function colMat = getColor(colorVec, vColor, uColor)
             if uColor == 1
-                clr = vColor;
+                clrVec = vColor;
             else
-                clr = colorVec;
+                clrVec = colorVec;
             end
-            colMat = clr(ones(1, size(xMat{1}, 2)), :);
+            colMat = clrVec(ones(1, size(xMat{1}, 2)), :);
       
         end
         function [xMat, fMat] = calcOneEllElem(plotEll)
@@ -123,9 +117,11 @@ end
         SData.figureNameCMat=repmat({'figure'},ellNum,1);
         SData.axesNameCMat = repmat({'ax'},ellNum,1);  
         SData.axesNumCMat = repmat({1},ellNum,1);
+       
         SData.figureNumCMat = repmat({1},ellNum,1);
+        
         SData.widVec = lineWidth.';
-        SData.shadVec = shad.';
+        SData.shadVec = shadVec.';
         SData.fill = (isFill~=0)';
         SData.clrVec = colorVec;
     end
@@ -152,29 +148,28 @@ end
         
         shad = getPlotInitParam(shad, isShad, 0.4);
         lineWidth = getPlotInitParam(lineWidth, isLineWidth, 1);
-        isFill = getPlotInitParam(isFill, isFill, 0);
+        isFill = getPlotInitParam(isFill, isIsFill, 0);
         colorVec = getColorVec(colorVec);
     end
 
-    function outParam = getPlotInitParam(inParam, isFilledParam, multConst)
+    function outParamVec = getPlotInitParam(inParamArr, isFilledParam, multConst)
         if ~isFilledParam
-            outParam = multConst*ones(1, ellNum);
+            outParamVec = multConst*ones(1, ellNum);
         else
-            [mDim, nDim] = size(inParam);
-            mDim      = mDim * nDim;
-            if mDim == 1
-                outParam = inParam*ones(1, ellNum);
+            nParams = numel(inParamArr);
+            if nParams == 1
+                outParamVec = inParamArr*ones(1, ellNum);
             else
-                outParam = reshape(inParam, 1, mDim);
-                if mDim < ellNum
-                    outParam = [outParam, multConst*ones(1, ellNum-mDim)];
+                outParamVec = reshape(inParamArr, 1, mDim);
+                if nParams < ellNum
+                    outParamVec = [outParamVec, multConst*ones(1, ellNum-mDim)];
                 end
             end
         end
     end
  
 
-    function colorVec = getColorVec(colorVec)
+    function colorArr = getColorVec(colorArr)
         
         if ~isColorVec
             % Color maps:
@@ -198,66 +193,74 @@ end
             %    summer    - Shades of green and yellow color map.
             
             auxcolors  = hsv(ellNum);
-            colors     = auxcolors;
+            colorsArr     = auxcolors;
             multiplier = 7;
             if mod(size(auxcolors, 1), multiplier) == 0
                 multiplier = multiplier + 1;
             end
-            for iEll = 1:ellNum
-                jj = mod(iEll*multiplier, size(auxcolors, 1)) + 1;
-                colors(iEll, :) = auxcolors(jj, :);
-            end
-            colors = flipud(colors);
-            colorVec = colors;
+            colCell = arrayfun(@(x) auxcolors(mod(x*multiplier, ...
+                size(auxcolors, 1)) + 1, :), 1:ellNum, 'UniformOutput', false);
+            colorsArr = vertcat(colCell{:});
+            colorsArr = flipud(colorsArr);
+            colorArr = colorsArr;
         else
-            if size(colorVec, 1) ~= ellNum
-                if size(colorVec, 1) > ellNum
-                    colorVec = colorVec(1:ellNum, :);
+            if size(colorArr, 1) ~= ellNum
+                if size(colorArr, 1) > ellNum
+                    colorArr = colorArr(1:ellNum, :);
                 else
-                    colorVec = repmat(colorVec, ellNum, 1);
+                    colorArr = repmat(colorArr, ellNum, 1);
                 end
             end
         end
         
         
     end
-    function [xMat, fMat] = ellPoints(ell, nDim)
+    function [lGetGrid, fGetGrid] = calcGrid()
         if nDim == 2
-            lMat = gras.geom.circlepart(N_PLOT_POINTS);
-            fMat = 1:N_PLOT_POINTS+1;
+            lGetGrid = gras.geom.circlepart(N_PLOT_POINTS);
+            fGetGrid = 1:N_PLOT_POINTS+1;
         else
-            [lMat, fMat] = gras.geom.tri.spheretri(SPHERE_TRIANG_CONST);
+            [lGetGrid, fGetGrid] = gras.geom.tri.spheretri(SPHERE_TRIANG_CONST);
         end
-        lMat(lMat == 0) = eps;
-        nPoints = size(lMat, 1);
+        lGetGrid(lGetGrid == 0) = eps;
+    end
+    function [xMat, fMat] = ellPoints(ell, nDim)
+        nPoints = size(lGetGrid, 1);
         xMat = zeros(nDim, nPoints+1);
         dMat = ell.getDiagMat();
-        qCen = ell.getCenter();
-        xMat(:, 1:end-1) = dMat.^0.5*lMat.' + repmat(qCen, 1, nPoints);
+        qCenVec = ell.getCenter();
+        xMat(:, 1:end-1) = dMat.^0.5*lGetGrid.' + repmat(qCenVec, 1, nPoints);
         xMat(:, end) = xMat(:, 1);
+        fMat = fGetGrid;
     end
 
 end
 
 
-function hVec=plotCreateElPlotFunc(hAxes,X,q,clr,wid,varargin)
+function hVec=plotCreateElPlotFunc(hAxes,X,q,clrVec,wid,varargin)
 h1 = ell_plot(X,'Parent',hAxes);
-set(h1, 'Color', clr, 'LineWidth', wid);
+set(h1, 'Color', clrVec, 'LineWidth', wid);
 h2 = ell_plot(q, '.','Parent',hAxes);
-set(h2, 'Color', clr);
+set(h2, 'Color', clrVec);
 hVec = [h1,h2];
 end
-function hVec=plotCreateEl2PlotFunc(hAxes,X,Y,q,clr,wid,varargin)
+function hVec=plotCreateEl2PlotFunc(hAxes,X,Y,q,clrVec,wid,varargin)
 h1 = ell_plot([(X) (Y)],'Parent',hAxes);
-set(h1, 'Color', clr, 'LineWidth', wid);
+set(h1, 'Color', clrVec, 'LineWidth', wid);
 h2 = ell_plot(q, '*','Parent',hAxes);
-set(h2, 'Color', clr);
+set(h2, 'Color', clrVec);
 hVec = [h1,h2];
 end
-function hVec=plotCreateFillPlotFunc(hAxes,X,Y,clr,fil,shad,varargin)
-if fil
-    hVec = fill(X, Y, clr,'FaceAlpha',shad,'Parent',hAxes);
+function hVec=plotCreateFillPlotFunc(hAxes,X,q,clrVec,fil,shad,widVec,varargin)
+if ~fil
+    shad = 0;
 end
+h1 = ell_plot(q, '*','Parent',hAxes);
+h2 = fill(X(1, :), X(2, :), clrVec,'FaceAlpha',shad,'Parent',hAxes);
+set(h1, 'Color', clrVec);
+h3 = ell_plot(X,'Parent',hAxes);
+set(h3, 'Color', clrVec, 'LineWidth', widVec);
+hVec = [h1,h2,h3];
 end
 function figureSetPropFunc(hFigure,figureName,~)
 set(hFigure,'Name',figureName);
@@ -272,12 +275,12 @@ function axesName=axesGetNameSurfFunc(name,~)
 axesName=name;
 end
 function hVec=plotCreatePatchFunc(hAxes,vertices,faces,...
-    faceVertexCData,faceAlpha,clr)
+    faceVertexCData,faceAlpha,clrVec)
 import modgen.graphics.camlight;
 LIGHT_TYPE_LIST={{'left'},{40,-65},{-20,25}};
 hVec = patch('Vertices',vertices', 'Faces', faces, ...
     'FaceVertexCData', faceVertexCData, 'FaceColor','flat', ...
-    'FaceAlpha', faceAlpha,'EdgeColor',clr,'Parent',hAxes);
+    'FaceAlpha', faceAlpha,'EdgeColor',clrVec,'Parent',hAxes);
 hLightVec=cellfun(@(x)camlight(hAxes,x{:}),LIGHT_TYPE_LIST);
 hVec=[hVec,hLightVec]; 
 shading(hAxes,'interp');
@@ -286,7 +289,7 @@ material(hAxes,'metal');
 view(hAxes,3);
 end
 
-function [ellsArr, ellNum, uColor, vColor] = getEllParams(reg)
+function [ellsArr, ellNum, uColorVec, vColorVec] = getEllParams(reg)
 
 if numel(reg) == 1
     isnLastElemCMat = {0};
@@ -294,31 +297,31 @@ else
     isnLastElemCMat = num2cell([ones(1, numel(reg)-1), 0]);
 end
 
-[ellsArr, uColor, vColor] = cellfun(@(x, y, z)getParams(x, y, z), reg, {reg{2:end}, []}, isnLastElemCMat, 'UniformOutput', false);
-uColor = vertcat(uColor{:});
-vColor = vertcat(vColor{:});
-ellsArr = vertcat(ellsArr{:});
+[ellsCMat, uColorCMat, vColorCMat] = cellfun(@(x, y, z)getParams(x, y, z), reg, {reg{2:end}, []}, isnLastElemCMat, 'UniformOutput', false);
+uColorVec = vertcat(uColorCMat{:});
+vColorVec = vertcat(vColorCMat{:});
+ellsArr = vertcat(ellsCMat{:});
 ellNum = numel(ellsArr);
 
-    function [ellVec, uColor, vColor] = getParams(ellArr, ellNextArr, isnLastElem)
+    function [ellVec, uColorVec, vColorVec] = getParams(ellArr, ellNextObjArr, isnLastElem)
         import elltool.core.GenEllipsoid;
         if isa(ellArr, 'elltool.core.GenEllipsoid')
             cnt    = numel(ellArr);
             ellVec = reshape(ellArr, cnt, 1);
          
-            if isnLastElem && ischar(ellNextArr)
-                colorVec = GenEllipsoid.colorTable(ellNextArr);
+            if isnLastElem && ischar(ellNextObjArr)
+                colorVec = GenEllipsoid.getColorTable(ellNextObjArr);
                 val = 1;
             else
                 colorVec = [0 0 0];
                 val = 0;
             end
-            uColor = repmat(val, cnt, 1);
-            vColor = repmat(colorVec, cnt, 1);
+            uColorVec = repmat(val, cnt, 1);
+            vColorVec = repmat(colorVec, cnt, 1);
         else
             ellVec = [];
-            uColor = [];
-            vColor = [];
+            uColorVec = [];
+            vColorVec = [];
         end
     end
 end
@@ -328,25 +331,25 @@ end
 function [minValVec, maxValVec] = findMinAndMaxInEachDim(ellsArr)
 
 nDim = max(dimension(ellsArr));
-[minValVec, maxValVec] = arrayfun(@(x, y) findMinAndMaxDim(ellsArr, x, y), 1:nDim, repmat(nDim, 1, nDim));
+[minValVec, maxValVec] = arrayfun(@(x) findMinAndMaxDim(ellsArr, x, nDim), 1:nDim);
 
 
-    function [minValVec, maxValVec] = findMinAndMaxDim(ellsArr, dirDim, nDims)
+    function [minValVec, maxValVec] = findMinAndMaxDim(ellVec, dirDim, nDims)
         import elltool.core.GenEllipsoid;
 
         minlVec = zeros(nDims, 1);
         minlVec(dirDim) = -1;
         maxlVec = zeros(nDims, 1);
         maxlVec(dirDim) = 1;
-        [minValVec, maxValVec] = arrayfun(@(x)findMinAndMaxDimEll(x), ellsArr);
+        [minValVec, maxValVec] = arrayfun(@(x)findMinAndMaxDimEll(x), ellVec);
         minValVec = min(minValVec);
         maxValVec = max(maxValVec);
         
         function [minVal, maxVal] = findMinAndMaxDimEll(ell)
             import elltool.core.GenEllipsoid;
-            qCen = ell.getCenter();
+            qCenVec = ell.getCenter();
             dMat = ell.getDiagMat();
-            ell = GenEllipsoid(qCen, dMat);
+            ell = GenEllipsoid(qCenVec, dMat);
             minVal = Inf;
             maxVal = -Inf;
             
@@ -360,11 +363,11 @@ nDim = max(dimension(ellsArr));
             end
             diagVec = diag(dMat);
             maxEig = max(diagVec(diagVec < Inf));
-            if (-3*maxEig+qCen(dirDim) < minVal) && (curEllMin(dirDim) == -Inf)
-                minVal = -3*maxEig+qCen(dirDim);
+            if (-3*maxEig+qCenVec(dirDim) < minVal) && (curEllMin(dirDim) == -Inf)
+                minVal = -3*maxEig+qCenVec(dirDim);
             end
-            if (3*maxEig+qCen(dirDim) > maxVal) && (curEllMax(dirDim) == Inf)
-                maxVal = 3*maxEig+qCen(dirDim);
+            if (3*maxEig+qCenVec(dirDim) > maxVal) && (curEllMax(dirDim) == Inf)
+                maxVal = 3*maxEig+qCenVec(dirDim);
             end            
         end
     end
