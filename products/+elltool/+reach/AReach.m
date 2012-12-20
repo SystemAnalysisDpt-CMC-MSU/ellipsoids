@@ -7,6 +7,12 @@ classdef AReach < elltool.reach.IReach
         projectionBasisMat
     end
     %
+    properties (Access = private)
+        EXTERNAL = 'e'
+        INTERNAL = 'i'
+        UNION = 'u'
+    end
+    %
     methods
         function isProj = isprojection(self)
             isProj = ~isempty(self.projectionBasisMat);
@@ -16,12 +22,12 @@ classdef AReach < elltool.reach.IReach
             isCut = self.isCut;
         end
         %
-        function [RSdim SSdim] = dimension(self)
-            RSdim = self.linSysCVec{end}.dimension();
+        function [rSdim sSdim] = dimension(self)
+            rSdim = self.linSysCVec{end}.dimension();
             if isempty(self.projectionBasisMat)
-                SSdim = RSdim;
+                sSdim = rSdim;
             else
-                SSdim = size(self.projectionBasisMat, 2);
+                sSdim = size(self.projectionBasisMat, 2);
             end
         end
         %% returns the last lin system
@@ -38,21 +44,24 @@ classdef AReach < elltool.reach.IReach
                     'ellipsoid, hyperplane or polytope.']);
             end
             if (nargin < 3) || ~(ischar(approxTypeChar))
-                approxTypeChar = 'e';
-            elseif approxTypeChar ~= 'i'
-                approxTypeChar = 'e';
+                approxTypeChar = self.EXTERNAL;
+            elseif approxTypeChar ~= self.INTERNAL
+                approxTypeChar = self.EXTERNAL;
             end
-            if approxTypeChar == 'i'
-                approx = self.get_ia();
-                isEmptyIntersect = intersect(approx, intersectObj, 'u');
+            if approxTypeChar == self.INTERNAL
+                approxCVec = self.get_ia();
+                isEmptyIntersect =...
+                    intersect(approxCVec, intersectObj, self.UNION);
             else
-                approx = self.get_ea();
-                n = size(approx, 2);
-                isEmptyIntersect = intersect(approx(:, 1), intersectObj, 'i');
-                for i = 2 : n
+                approxCVec = self.get_ea();
+                approxNum = size(approxCVec, 2);
+                isEmptyIntersect =...
+                    intersect(approxCVec(:, 1), intersectObj, self.INTERNAL);
+                for iApprox = 2 : approxNum
                     isEmptyIntersect =...
                         isEmptyIntersect |...
-                        intersect(approx(:, i), intersectObj, 'i');
+                        intersect(approxCVec(:, iApprox),...
+                        intersectObj, self.INTERNAL);
                 end
             end
         end
