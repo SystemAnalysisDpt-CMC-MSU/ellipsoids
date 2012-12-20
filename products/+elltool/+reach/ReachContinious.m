@@ -24,7 +24,7 @@ classdef ReachContinious < elltool.reach.AReach
                 localEllTubeRel = self.ellTubeRel.getTuplesFilteredBy(...
                     'approxType', approxType);
             else
-                localEllTubeRel = self.ellTubeRel;
+                localEllTubeRel = self.ellTubeRel.getCopy();
             end
             if nargin == 4
                 localEllTubeRel.scale(@(x) scaleFactor, {'approxType'});
@@ -84,15 +84,9 @@ classdef ReachContinious < elltool.reach.AReach
     end
     methods (Access = private, Static)
         function isDisturb = isDisturbance(gtStrCMat, qtStrCMat)
-            gSizeZeroMat = zeros(size(gtStrCMat));
-            qSizeZeroMat = zeros(size(qtStrCMat));
-            gSizeZeroCMat =...
-                reshape(cellstr(num2str(gSizeZeroMat(:))), size(gtStrCMat));
-            qSizeZeroCMat =...
-                reshape(cellstr(num2str(qSizeZeroMat(:))), size(qtStrCMat));
-            isEqGMat = strcmp(gtStrCMat, gSizeZeroCMat);
-            isEqQMat = strcmp(qtStrCMat, qSizeZeroCMat);
-            if (all(isEqGMat(:)) || all(isEqQMat(:)))
+            gtMat = gras.gen.MatVector.fromFormulaMat(gtStrCMat, 0);
+            qtMat = gras.gen.MatVector.fromFormulaMat(qtStrCMat, 0);
+            if (all(gtMat(:) == 0) || all(qtMat(:) == 0))
                 isDisturb = false;
             else
                 isDisturb = true;
@@ -136,11 +130,12 @@ classdef ReachContinious < elltool.reach.AReach
         %
         function outMat = getNormMat(inpMat, dim)
             matSqNormVec = sum(inpMat .* inpMat);
-            matSqNormVec(matSqNormVec > 0) =...
-                sqrt(matSqNormVec(matSqNormVec > 0));
-            outMat(:, matSqNormVec > 0) =...
-                inpMat(:, matSqNormVec > 0) ./...
-                matSqNormVec(ones(1, dim), matSqNormVec > 0);
+            isNormGrZero = matSqNormVec > 0;
+            matSqNormVec(isNormGrZero) =...
+                sqrt(matSqNormVec(isNormGrZero));
+            outMat(:, isNormGrZero) =...
+                inpMat(:, isNormGrZero) ./...
+                matSqNormVec(ones(1, dim), isNormGrZero);
         end
         %
         function [atStrCMat btStrCMat gtStrCMat...

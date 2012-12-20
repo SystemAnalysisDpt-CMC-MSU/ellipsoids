@@ -143,11 +143,6 @@ classdef F
         SCALE_FACTOR='scaleFactor';
         SCALE_FACTOR_D='Tube scale factor';
         SCALE_FACTOR_T={'double'};
-        %
-        FIELDS_NOT_TO_CAT_OR_CUT={'APPROX_SCHEMA_DESCR';'DIM';...
-            'APPROX_SCHEMA_NAME';'APPROX_TYPE';'CALC_PRECISION';...
-            'IND_S_TIME';'LS_GOOD_DIR_NORM';'LS_GOOD_DIR_VEC';'S_TIME';...
-            'SCALE_FACTOR';'XS_TOUCH_OP_VEC';'XS_TOUCH_VEC'};
     end
     methods (Static)
         function nameList=getNameList(idList)
