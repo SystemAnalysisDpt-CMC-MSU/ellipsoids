@@ -5,7 +5,10 @@ import modgen.common.throwerror;
 import elltool.core.GenEllipsoid;
 N_PLOT_POINTS = 500;
 SPHERE_TRIANG_CONST = 5;
-isHold = ishold;
+DEFAULT_LINE_WIDTH = 1;
+DEFAULT_SHAD = 0.4;
+DEFAULT_FILL = 0;
+
 [reg,~,plObj,isNewFigure,isFill,lineWidth,colorVec,shadVec,...
     isRelPlotterSpec,~,isIsFill,isLineWidth,isColorVec,isShad]=modgen.common.parseparext(varargin,...
     {'relDataPlotter','newFigure','fill','lineWidth','color','shade';...
@@ -14,11 +17,15 @@ isHold = ishold;
 
 
 if ~isRelPlotterSpec
+    if isNewFigure
+        plObj=smartdb.disp.RelationDataPlotter();
+    else
         plObj=smartdb.disp.RelationDataPlotter('figureGetNewHandleFunc', @(varargin)gcf,'axesGetNewHandleFunc',@(varargin)gca);
+    end
 end
 [ellsArr, ellNum, uColorVec, vColorVec] = getEllParams(reg);
 nDim = max(dimension(ellsArr));
-[lGetGrid, fGetGrid] = calcGrid();
+[lGetGridMat, fGetGridMat] = calcGrid();
 [colorVec, shadVec, lineWidth, isFill] = getPlotParams(colorVec, shadVec,... 
     lineWidth, isFill);
 checkDimensions();
@@ -30,8 +37,15 @@ calcEllPoints();
 
 
 rel=smartdb.relations.DynamicRelation(SData);
-if ~isHold
-    cla;
+if ~ishold
+    isHold = false;
+    if isNewFigure
+        close;
+    else
+        cla;
+    end
+else
+    isHold = true;
 end
 if (nDim==2)
     plObj.plotGeneric(rel,@figureGetGroupNameFunc,{'figureNameCMat'},...
@@ -146,9 +160,9 @@ end
     end
     function [colorVec, shad, lineWidth, isFill] = getPlotParams(colorVec, shad, lineWidth, isFill)
         
-        shad = getPlotInitParam(shad, isShad, 0.4);
-        lineWidth = getPlotInitParam(lineWidth, isLineWidth, 1);
-        isFill = getPlotInitParam(isFill, isIsFill, 0);
+        shad = getPlotInitParam(shad, isShad, DEFAULT_SHAD);
+        lineWidth = getPlotInitParam(lineWidth, isLineWidth, DEFAULT_LINE_WIDTH);
+        isFill = getPlotInitParam(isFill, isIsFill, DEFAULT_FILL);
         colorVec = getColorVec(colorVec);
     end
 
@@ -225,13 +239,13 @@ end
         lGetGrid(lGetGrid == 0) = eps;
     end
     function [xMat, fMat] = ellPoints(ell, nDim)
-        nPoints = size(lGetGrid, 1);
+        nPoints = size(lGetGridMat, 1);
         xMat = zeros(nDim, nPoints+1);
         dMat = ell.getDiagMat();
         qCenVec = ell.getCenter();
-        xMat(:, 1:end-1) = dMat.^0.5*lGetGrid.' + repmat(qCenVec, 1, nPoints);
+        xMat(:, 1:end-1) = dMat.^0.5*lGetGridMat.' + repmat(qCenVec, 1, nPoints);
         xMat(:, end) = xMat(:, 1);
-        fMat = fGetGrid;
+        fMat = fGetGridMat;
     end
 
 end
@@ -256,11 +270,18 @@ if ~fil
     shad = 0;
 end
 h1 = ell_plot(q, '*','Parent',hAxes);
-h2 = fill(X(1, :), X(2, :), clrVec,'FaceAlpha',shad,'Parent',hAxes);
-set(h1, 'Color', clrVec);
+if fil == 1
+    h2 = fill(X(1, :), X(2, :), clrVec,'FaceAlpha',shad,'Parent',hAxes);
+end
 h3 = ell_plot(X,'Parent',hAxes);
+
+set(h1, 'Color', clrVec);
 set(h3, 'Color', clrVec, 'LineWidth', widVec);
-hVec = [h1,h2,h3];
+if fil == 1
+    hVec = [h1,h2,h3];
+else
+    hVec = [h1, h3];
+end
 end
 function figureSetPropFunc(hFigure,figureName,~)
 set(hFigure,'Name',figureName);
