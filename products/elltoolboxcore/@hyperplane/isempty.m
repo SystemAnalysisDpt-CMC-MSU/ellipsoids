@@ -20,8 +20,5 @@ function isPositiveArr = isempty(myHypArr)
 %   Faculty of Computational Mathematics and Computer Science,
 %   System Analysis Department 2012 $
 
-modgen.common.checkvar(myHypArr, 'isa(x,''hyperplane'')',...
-    'errorTag', 'wrongInput',...
-    'errorMessage', 'Input argument must be hyperplanes.');
-
-isPositiveArr = ~dimension(myHypArr);
+hyperplane.checkIsMe(myHypArr);
+isPositiveArr = (dimension(myHypArr) == 0);

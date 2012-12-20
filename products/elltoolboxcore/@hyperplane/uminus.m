@@ -21,12 +21,19 @@ function outHypArr = uminus(inpHypArr)
 %   Faculty of Computational Mathematics and Computer Science,
 %   System Analysis Department 2012 $
 
-modgen.common.checkvar(inpHypArr, 'isa(x,''hyperplane'')',...
-    'errorTag', 'wrongInput',...
-    'errorMessage', 'Input argument must be hyperplanes.');
+hyperplane.checkIsMe(inpHypArr);
 
 sizeVec = size(inpHypArr);
-hypCellArr = arrayfun(@(x) hyperplane(-x.normal, -x.shift), inpHypArr,...
-    'UniformOutput',false);
+nElems = numel(inpHypArr);
+outHypArr(nElems)=hyperplane();
+outHypArr = reshape(outHypArr, sizeVec);
+indArr = reshape(1:nElems, sizeVec);
+arrayfun(@(x) setProp(x), indArr);
 
-outHypArr = reshape([hypCellArr{:}], sizeVec);
+    function setProp(iObj)
+        outHypArr(iObj).normal = -inpHypArr(iObj).normal;
+        outHypArr(iObj).shift = -inpHypArr(iObj).shift;
+        outHypArr(iObj).absTol = inpHypArr(iObj).absTol;
+    end
+
+end

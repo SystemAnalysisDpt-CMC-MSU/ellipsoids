@@ -1,102 +1,91 @@
-function res = eq(H1, H2)
+function [isPosArr reportStr] = eq(fstHypArr, secHypArr)
 %
-% Description:
-% ------------
+% EQ - check if two hyperplanes are the same.
 %
-%    Check if two hyperplanes are the same.
+% Input:
+%   regular:
+%       fstHypArr: hyperplane [nDims1, nDims2, ...]/hyperplane [1, 1] -
+%           first array of hyperplanes.
+%       secHypArr: hyperplane [nDims1, nDims2, ...]/hyperplane [1, 1] -
+%           second array of hyperplanes.
 %
-
+% Output:
+%   isPosArr: logical[nDims1, nDims2, ...] - true -
+%       if fstHypArr(iDim1, iDim2, ...) == secHypArr(iDim1, iDim2, ...),
+%       false - otherwise. If size of fstHypArr is [1, 1], then checks
+%       if fstHypArr == secHypArr(iDim1, iDim2, ...)
+%       for all iDim1, iDim2, ... , and vice versa.
+%   reportStr: char[1,] - comparison report
 %
-% Author:
-% -------
 %
-%    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+% $Author: Vadim Kaushansky  <vkaushanskiy@gmail.com> $ $Date: Nov-2012$
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Cybernetics,
+%            System Analysis Department 2012 $
 %
-  if ~(isa(H1, 'hyperplane')) | ~(isa(H2, 'hyperplane'))
-    error('==: input arguments must be hyperplanes.');
-  end
+% $Authors:
+%   Peter Gagarinov  <pgagarinov@gmail.com> $ $Date: Dec-2012$
+%   Aushkap Nikolay <n.aushkap@gmail.com> $ $Date: Dec-2012$
+% $Copyright: Moscow State University,
+%   Faculty of Computational Mathematics and Computer Science,
+%   System Analysis Department 2012 $
 
-  [k, l] = size(H1);
-  s      = k * l;
-  [m, n] = size(H2);
-  t      = m * n;
-
-  if ((k ~= m) | (l ~= n)) & (s > 1) & (t > 1)
-    error('==: sizes of hyperplane arrays do not match.');
-  end
-
-  res = [];
-  if (s > 1) & (t > 1)
-    for i = 1:k
-      r = [];
-      for j = 1:l
-        r = [r l_hpeq(H1(i, j), H2(i, j))];
-      end
-      res = [res; r];
-    end
-  elseif (s > 1)
-    for i = 1:k
-      r = [];
-      for j = 1:l
-        r = [r l_hpeq(H1(i, j), H2)];
-      end
-      res = [res; r];
-    end
-  else
-    for i = 1:m
-      r = [];
-      for j = 1:n
-        r = [r l_hpeq(H1, H2(i, j))];
-      end
-      res = [res; r];
-    end
-  end
-
-  return;
-
-
-
-
-
-%%%%%%%%
-
-function res = l_hpeq(H1, H2)
+import modgen.common.throwerror;
+import modgen.struct.structcomparevec;
+import elltool.conf.Properties;
 %
-% L_HPEQ - check if two single hyperplanes are equal.
+hyperplane.checkIsMe(fstHypArr);
+hyperplane.checkIsMe(secHypArr);
 %
-  [x, a] = parameters(H1);
-  [y, b] = parameters(H2);
-  res    = 0;
-  if min(size(x) == size(y)) < 1
-    return;
-  end
+nFirstElems = numel(fstHypArr);
+nSecElems = numel(secHypArr);
 
-  nx = norm(x);
-  ny = norm(y);
-  x  = x/nx;
-  a  = a/nx;
-  y  = y/ny;
-  b  = b/ny;
-
-  if a < 0
-    a = -a;
-    x = -x;
-  end
-  if b < 0
-    b = -b;
-    y = -y;
-  end
-  if abs(a - b) > H1.absTol
-    return;
-  end
-  if max(abs(x - y)) < H1.absTol()
-    res = 1;
-    return;
-  end
-  if a < H1.absTol
-    if max(abs(x + y)) < H1.absTol
-      res = 1;
-    end
-  end
+firstSizeVec = size(fstHypArr);
+secSizeVec = size(secHypArr);
+isnFirstScalar=nFirstElems > 1;
+isnSecScalar=nSecElems > 1;
+relTolArr = getAbsTol(fstHypArr);
+relTol=min(relTolArr(:));
+%
+SEll1Array=arrayfun(@formCompStruct,fstHypArr);
+SEll2Array=arrayfun(@formCompStruct,secHypArr);
+%
+if isnFirstScalar&&isnSecScalar
     
-  return;  
+    if ~isequal(firstSizeVec, secSizeVec)
+        throwerror('wrongSizes',...
+            'sizes of ellipsoidal arrays do not... match');
+    end;
+    compare();
+    isPosArr = reshape(isPosArr, firstSizeVec);
+elseif isnFirstScalar
+    SEll2Array=repmat(SEll2Array, firstSizeVec);
+    compare();
+    
+    isPosArr = reshape(isPosArr, firstSizeVec);
+else
+    SEll1Array=repmat(SEll1Array, secSizeVec);
+    compare();
+    isPosArr = reshape(isPosArr, secSizeVec);
+end
+    function compare()
+        [isPosArr,reportStr]=modgen.struct.structcomparevec(SEll1Array,...
+            SEll2Array,relTol);
+    end
+end
+
+function SComp=formCompStruct(hypObj)
+
+[hypNormVec, hypScal] = parameters(hypObj);
+
+normMult = 1/norm(hypNormVec);
+hypNormVec  = hypNormVec*normMult;
+hypScal  = hypScal*normMult;
+if hypScal < 0
+    hypScal = -hypScal;
+    hypNormVec = -hypNormVec;
+end
+
+SComp = struct('normal', hypNormVec, 'shift', hypScal);
+
+end
