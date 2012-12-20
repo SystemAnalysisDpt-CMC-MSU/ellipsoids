@@ -2,7 +2,7 @@ classdef AReach < elltool.reach.IReach
     properties (Access = protected)
         switchSysTimeVec
         x0Ellipsoid
-        linSysVec
+        linSysCVec
         isCut
         projectionBasisMat
     end
@@ -17,7 +17,7 @@ classdef AReach < elltool.reach.IReach
         end
         %
         function [RSdim SSdim] = dimension(self)
-            RSdim = self.linSysVec(end).dimension();
+            RSdim = self.linSysCVec{end}.dimension();
             if isempty(self.projectionBasisMat)
                 SSdim = RSdim;
             else
@@ -26,7 +26,7 @@ classdef AReach < elltool.reach.IReach
         end
         %% returns the last lin system
         function linSys = get_system(self)
-            linSys = self.linSysVec(end);
+            linSys = self.linSysCVec{end};
         end
         %
         function isEmptyIntersect =...

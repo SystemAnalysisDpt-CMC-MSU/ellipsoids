@@ -1,8 +1,8 @@
 classdef ReachContinious < elltool.reach.AReach
     properties (Constant, GetAccess = private)
-        MIN_EIG = 0.1
+        MIN_EIG_Q_REG_UNCERT = 0.1
     end
-    properties (Access = protected)
+    properties (Access = private)
         ellTubeRel
     end
     methods (Access = private)
@@ -20,12 +20,9 @@ classdef ReachContinious < elltool.reach.AReach
                 projSpaceList, fProj);
         end
         %
-        function ellTubeRel = getEllTubeRel(self, atStrCMat, btStrCMat,...
-                ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat, qtStrCVec,...
-                x0Mat, x0Vec, l0Mat, timeVec, isDisturb, calcPrecision)
-            smartLinSys = self.getSmartLinSys(atStrCMat, btStrCMat,...
-                ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat, qtStrCVec,...
-                x0Mat, x0Vec, timeVec, calcPrecision, isDisturb);
+        function ellTubeRel = getEllTubeRel(self, smartLinSys, l0Mat,...
+                timeVec, isDisturb, calcPrecision, approxTypeVec)
+            import gras.ellapx.enums.EApproxType;
             goodDirSetObj =...
                 gras.ellapx.lreachplain.GoodDirectionSet(...
                 smartLinSys, timeVec(1), l0Mat, calcPrecision);
@@ -34,31 +31,42 @@ classdef ReachContinious < elltool.reach.AReach
                     gras.ellapx.lreachuncert.ExtIntEllApxBuilder(...
                     smartLinSys, goodDirSetObj, timeVec,...
                     elltool.conf.Properties.getRelTol(),...
-                    'volume', self.MIN_EIG);
+                    'volume', self.MIN_EIG_Q_REG_UNCERT);
                 EllTubeBuilder =...
                     gras.ellapx.gen.EllApxCollectionBuilder({extIntBuilder});
                 ellTubeRel = EllTubeBuilder.getEllTubes();
             else
-                extBuilder =...
-                    gras.ellapx.lreachplain.ExtEllApxBuilder(...
-                    smartLinSys, goodDirSetObj, timeVec,...
-                    elltool.conf.Properties.getRelTol());
-                intBuilder =...
-                    gras.ellapx.lreachplain.IntEllApxBuilder(...
-                    smartLinSys, goodDirSetObj, timeVec,...
-                    elltool.conf.Properties.getRelTol(), 'volume');
-                extEllTubeBuilder =...
-                    gras.ellapx.gen.EllApxCollectionBuilder({extBuilder});
-                extEllTubeRel = extEllTubeBuilder.getEllTubes();
-                intEllTubeBuilder =...
-                    gras.ellapx.gen.EllApxCollectionBuilder({intBuilder});
-                intEllTubeRel = intEllTubeBuilder.getEllTubes();
-                extEllTubeRel.unionWith(intEllTubeRel);
-                ellTubeRel = extEllTubeRel;
+                if (~isempty(find(approxTypeVec == EApproxType.Internal, 1)))
+                    intBuilder =...
+                        gras.ellapx.lreachplain.IntEllApxBuilder(...
+                        smartLinSys, goodDirSetObj, timeVec,...
+                        elltool.conf.Properties.getRelTol(), 'volume');
+                    intEllTubeBuilder =...
+                        gras.ellapx.gen.EllApxCollectionBuilder({intBuilder});
+                    intEllTubeRel = intEllTubeBuilder.getEllTubes();
+                    if (isempty(find(approxTypeVec ==...
+                            EApproxType.External, 1)))
+                        ellTubeRel = intEllTubeRel;
+                    end
+                end
+                if (~isempty(find(approxTypeVec == EApproxType.External, 1)))
+                    extBuilder =...
+                        gras.ellapx.lreachplain.ExtEllApxBuilder(...
+                        smartLinSys, goodDirSetObj, timeVec,...
+                        elltool.conf.Properties.getRelTol());
+                    extEllTubeBuilder =...
+                        gras.ellapx.gen.EllApxCollectionBuilder({extBuilder});
+                    extEllTubeRel = extEllTubeBuilder.getEllTubes();
+                    if (~isempty(find(approxTypeVec ==...
+                            EApproxType.Internal, 1)))
+                        extEllTubeRel.unionWith(intEllTubeRel);
+                    end
+                    ellTubeRel = extEllTubeRel;
+                end
             end
         end
     end
-    methods (Access = private, Static)  
+    methods (Access = private, Static)
         function isDisturb = isDisturbance(gtStrCMat, qtStrCMat)
             gSizeZeroMat = zeros(size(gtStrCMat));
             qSizeZeroMat = zeros(size(qtStrCMat));
@@ -78,8 +86,8 @@ classdef ReachContinious < elltool.reach.AReach
                 ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat, qtStrCVec,...
                 x0Mat, x0Vec, timeVec, calcPrecision, isDisturb)
             function linSys = getSysWithDisturb(atStrCMat, btStrCMat,...
-                ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat, qtStrCVec,...
-                x0Mat, x0Vec, timeVec, calcPrecision)
+                    ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat, qtStrCVec,...
+                    x0Mat, x0Vec, timeVec, calcPrecision)
                 import gras.ellapx.lreachuncert.probdyn.*;
                 linSys =...
                     LReachProblemDynamicsFactory.createByParams(...
@@ -90,7 +98,7 @@ classdef ReachContinious < elltool.reach.AReach
             end
             %
             function linSys = getSysWithoutDisturb(atStrCMat, btStrCMat,...
-                ptStrCMat, ptStrCVec, x0Mat, x0Vec, timeVec, calcPrecision)
+                    ptStrCMat, ptStrCVec, x0Mat, x0Vec, timeVec, calcPrecision)
                 import gras.ellapx.lreachplain.probdyn.*;
                 linSys =...
                     LReachProblemDynamicsFactory.createByParams(...
@@ -101,11 +109,11 @@ classdef ReachContinious < elltool.reach.AReach
             if isDisturb
                 linSys = getSysWithDisturb(atStrCMat, btStrCMat,...
                     ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat,...
-                    qtStrCVec, x0Mat, x0Vec, timeVec, calcPrecision);          
+                    qtStrCVec, x0Mat, x0Vec, timeVec, calcPrecision);
             else
                 linSys = getSysWithoutDisturb(atStrCMat, btStrCMat,...
                     ptStrCMat, ptStrCVec, x0Mat, x0Vec,...
-                timeVec, calcPrecision);
+                    timeVec, calcPrecision);
             end
         end
         %
@@ -120,8 +128,8 @@ classdef ReachContinious < elltool.reach.AReach
         end
         %
         function [atStrCMat btStrCMat gtStrCMat...
-                  ptStrCMat ptStrCVec...
-                  qtStrCMat qtStrCVec] = prepareSysParam(linSys)
+                ptStrCMat ptStrCVec...
+                qtStrCMat qtStrCVec] = prepareSysParam(linSys)
             atMat = linSys.getAtMat();
             btMat = linSys.getBtMat();
             gtMat = linSys.getGtMat();
@@ -192,13 +200,14 @@ classdef ReachContinious < elltool.reach.AReach
             import modgen.common.type.simple.checkgenext;
             import modgen.common.throwerror;
             import gras.ellapx.uncertcalc.EllApxBuilder;
+            import gras.ellapx.enums.EApproxType;
             %%
             if (nargin == 0) || isempty(linSys)
                 return;
             end
             self.switchSysTimeVec = timeVec;
             self.x0Ellipsoid = x0Ell;
-            self.linSysVec = linSys;
+            self.linSysCVec = {linSys};
             self.isCut = false;
             self.projectionBasisMat = [];
             %% check and analize input
@@ -253,10 +262,14 @@ classdef ReachContinious < elltool.reach.AReach
             sysDim = size(atStrCMat, 1);
             l0Mat = self.getNormMat(l0Mat, sysDim);
             %%
-            self.ellTubeRel = self.getEllTubeRel(atStrCMat, btStrCMat,...
+            smartLinSys = self.getSmartLinSys(atStrCMat, btStrCMat,...
                 ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat, qtStrCVec,...
-                x0Mat, x0Vec, l0Mat, timeVec, isDisturbance,...
-                elltool.conf.Properties.getRelTol());
+                x0Mat, x0Vec, timeVec,...
+                elltool.conf.Properties.getRelTol(), isDisturbance);
+            approxTypeVec = [EApproxType.External EApproxType.Internal];
+            self.ellTubeRel = self.getEllTubeRel(smartLinSys, l0Mat,...
+                timeVec, isDisturbance,...
+                elltool.conf.Properties.getRelTol(), approxTypeVec);
         end
         %%
         function plot_ea(self)
@@ -297,7 +310,7 @@ classdef ReachContinious < elltool.reach.AReach
                 fprintf('Empty reach set object.\n\n');
                 return;
             end
-            if isdiscrete(self.linSysVec(end))
+            if isdiscrete(self.linSysCVec{end})
                 sysTypeStr = 'discrete-time';
                 sysTimeStartStr = 'k0 = ';
                 sysTimeEndStr = 'k1 = ';
@@ -339,12 +352,20 @@ classdef ReachContinious < elltool.reach.AReach
                 sum(self.ellTubeRel.approxType == EApproxType.Internal));
             fprintf('\n');
         end
-        %% change
+        %%
         function cutObj = cut(self, cutTimeVec)
             cutObj = elltool.reach.ReachContinious();
-            cutObj.linSysVec = self.linSysVec(end);
             cutObj.ellTubeRel = self.ellTubeRel.cut(cutTimeVec);
+            switchTimeIndVec =...
+                self.switchSysTimeVec > cutTimeVec(1) &...
+                self.switchSysTimeVec < cutTimeVec(end);
+            cutObj.switchSysTimeVec = [cutTimeVec(1)...
+                self.switchSysTimeVec(switchTimeIndVec) cutTimeVec(end)];
+            switchTimeIndVec(find(switchTimeIndVec == 1, 1) - 1) = 1;
+            cutObj.linSysCVec = self.linSysCVec(switchTimeIndVec);
+            cutObj.x0Ellipsoid = self.x0Ellipsoid;
             cutObj.isCut = true;
+            cutObj.projectionBasisMat = self.projectionBasisMat;
         end
         %%
         function [directionsCVec timeVec] = get_directions(self)
@@ -421,14 +442,14 @@ classdef ReachContinious < elltool.reach.AReach
                 timeVec = cell2mat(SData.timeVec(1));
             end
         end
-        %% change
+        %%
         function projObj = projection(self, projMat)
             projSet = self.getProjSet(projMat);
             projObj = elltool.reach.ReachContinious();
             projObj.switchSysTimeVec = self.switchSysTimeVec;
             projObj.x0Ellipsoid = self.x0Ellipsoid;
             projObj.ellTubeRel = projSet;
-            projObj.linSysVec = self.linSysVec;
+            projObj.linSysCVec = self.linSysCVec;
             projObj.isCut = self.isCut;
             projObj.projectionBasisMat = projMat;
         end
@@ -480,7 +501,7 @@ classdef ReachContinious < elltool.reach.AReach
             newReachObj.switchSysTimeVec =...
                 [self.switchSysTimeVec newEndTime];
             newReachObj.x0Ellipsoid = self.x0Ellipsoid;
-            newReachObj.linSysVec = [self.linSysVec newLinSys];
+            newReachObj.linSysCVec = [self.linSysCVec {newLinSys}];
             newReachObj.isCut = false;
             newReachObj.projectionBasisMat = [];
             %% prepare ext/int data to evolve
@@ -490,17 +511,19 @@ classdef ReachContinious < elltool.reach.AReach
             oldIntData =...
                 self.ellTubeRel.getTuplesFilteredBy('approxType',...
                 EApproxType.Internal);
+            sysExtDimRows = size(oldExtData.QArray{1}, 1);
+            sysExtDimCols = size(oldExtData.QArray{1}, 2);
+            sysIntDimRows = size(oldIntData.QArray{1}, 1);
+            sysIntDimCols = size(oldIntData.QArray{1}, 2);
             % as we have the same number of ext and int approximations
             dataDimVec = oldExtData.dim;
             l0VecNum = size(dataDimVec, 1);
             l0ExtMat = zeros(dataDimVec(1), l0VecNum);
-            x0ExtVecMat = zeros(size(oldExtData.aMat{1}, 1), l0VecNum);
-            x0ExtMatArray = zeros(size(oldExtData.QArray{1}, 1),...
-                size(oldExtData.QArray{1}, 2), l0VecNum);
+            x0ExtVecMat = zeros(sysExtDimRows, l0VecNum);
+            x0ExtMatArray = zeros(sysExtDimRows, sysExtDimCols, l0VecNum);
             l0IntMat = zeros(dataDimVec(1), l0VecNum);
-            x0IntVecMat = zeros(size(oldIntData.aMat{1}, 1), l0VecNum);
-            x0IntMatArray = zeros(size(oldIntData.QArray{1}, 1),...
-                size(oldIntData.QArray{1}, 2), l0VecNum);
+            x0IntVecMat = zeros(sysIntDimRows, l0VecNum);
+            x0IntMatArray = zeros(sysIntDimRows, sysIntDimCols, l0VecNum);
             for il0Num = 1 : l0VecNum
                 l0ExtMat(:, il0Num) =...
                     oldExtData.ltGoodDirMat{il0Num}(:, end);
@@ -515,7 +538,7 @@ classdef ReachContinious < elltool.reach.AReach
             end
             newTimeVec = newReachObj.switchSysTimeVec(end - 1 : end);
             [atStrCMat btStrCMat gtStrCMat ptStrCMat ptStrCVec...
-                  qtStrCMat qtStrCVec] = self.prepareSysParam(newLinSys);
+                qtStrCMat qtStrCVec] = self.prepareSysParam(newLinSys);
             %% Normalize good ext/int-directions
             sysDim = size(atStrCMat, 1);
             l0ExtMat = self.getNormMat(l0ExtMat, sysDim);
@@ -524,29 +547,35 @@ classdef ReachContinious < elltool.reach.AReach
             dataCVec = cell(1, 2 * l0VecNum);
             isDisturbance = self.isDisturbance(gtStrCMat, qtStrCMat);
             for il0Num = l0VecNum: -1 : 1
-                ellTubeExtRelVec{il0Num} = self.getEllTubeRel(atStrCMat,...
+                smartExtLinSys = self.getSmartLinSys(atStrCMat,...
                     btStrCMat, ptStrCMat, ptStrCVec, gtStrCMat,...
                     qtStrCMat, qtStrCVec, x0ExtMatArray(:, :, il0Num),...
-                    x0ExtVecMat(:, il0Num), l0ExtMat(:, il0Num),...
-                    newTimeVec, isDisturbance,...
-                    elltool.conf.Properties.getRelTol());
-                ellTubeIntRelVec{il0Num} = self.getEllTubeRel(atStrCMat,...
+                    x0ExtVecMat(:, il0Num), newTimeVec,...
+                    elltool.conf.Properties.getRelTol(), isDisturbance);
+                smartIntLinSys = self.getSmartLinSys(atStrCMat,...
                     btStrCMat, ptStrCMat, ptStrCVec, gtStrCMat,...
                     qtStrCMat, qtStrCVec, x0IntMatArray(:, :, il0Num),...
-                    x0IntVecMat(:, il0Num), l0IntMat(:, il0Num),...
-                    newTimeVec, isDisturbance,...
-                    elltool.conf.Properties.getRelTol());
+                    x0IntVecMat(:, il0Num), newTimeVec,...
+                    elltool.conf.Properties.getRelTol(), isDisturbance);
+                ellTubeExtRelVec{il0Num} = self.getEllTubeRel(...
+                    smartExtLinSys, l0ExtMat(:, il0Num), newTimeVec,...
+                    isDisturbance, elltool.conf.Properties.getRelTol(),...
+                    EApproxType.External);
+                ellTubeIntRelVec{il0Num} = self.getEllTubeRel(...
+                    smartIntLinSys, l0IntMat(:, il0Num), newTimeVec,...
+                    isDisturbance, elltool.conf.Properties.getRelTol(),...
+                    EApproxType.Internal);
                 dataCVec{il0Num} = ...
                     ellTubeExtRelVec{il0Num}.getTuplesFilteredBy(...
                     'approxType', EApproxType.External).getData();
                 dataCVec{l0VecNum + il0Num} = ...
                     ellTubeIntRelVec{il0Num}.getTuplesFilteredBy(...
                     'approxType', EApproxType.Internal).getData();
-            end            
+            end
             %% cat old and new ellTubeRel
             newEllTubeRel =...
                 gras.ellapx.smartdb.rels.EllTube.fromStructList(...
-                    'gras.ellapx.smartdb.rels.EllTube', dataCVec);
+                'gras.ellapx.smartdb.rels.EllTube', dataCVec);
             newReachObj.ellTubeRel =...
                 self.ellTubeRel.cat(newEllTubeRel);
         end
