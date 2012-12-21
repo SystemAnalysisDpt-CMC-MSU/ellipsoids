@@ -39,8 +39,8 @@ function plObj = plot(varargin)
 import elltool.conf.Properties;
 import modgen.common.throwerror;
 import elltool.core.GenEllipsoid;
-N_PLOT_POINTS = 500;
-SPHERE_TRIANG_CONST = 5;
+N_PLOT_POINTS = 80;
+SPHERE_TRIANG_CONST = 3;
 DEFAULT_LINE_WIDTH = 1;
 DEFAULT_SHAD = 0.4;
 DEFAULT_FILL = 0;
