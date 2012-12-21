@@ -1,41 +1,36 @@
 function plObj = plot(varargin)
 %
-% PLOT - plots General Ellipsoids in 2D or 3D.
+% PLOT - plots ellipsoids in 2D or 3D.
 %
 %
-% Description:
-% ------------
+% Usage:
+%       plot(ELL) - plots generic ellipsoid ELL in default (red) color.
+%       plot(ellArr) - plots an array of generic ellipsoids.
+%       plot(ellArr, 'Property',PropValue,...) - plots ellArr with setting
+%       properties.
 %
-% PLOT(E, 'Property',PropValue) plots ellipsoid E if 2 <= dimension(E) <= 3.
-%
-%                  PLOT(E)  Plots E in default (red) color.
-%              PLOT(EA, E)  Plots array of ellipsoids EA and single ellipsoid E.
-%   PLOT(E1, 'g', E2, 'b')  Plots E1 in green and E2 in blue color.
-%        PLOT(EA, 'Property',PropValue)  Plots EA  by setting properties.
-%
-% Properties:
-% 'newFigure'    - if 1, each plot command will open a new figure window.
-% 'fill'         - if 1, ellipsoids in 2D will be filled with color.
-% 'lineWidth'        - line width for 1D and 2D plots.
-% 'color'        - sets default colors in the form [x y z].
-% 'shade' = 0-1  - level of transparency (0 - transparent, 1 - opaque).
-%  'relDataPlotter' - relation data plotter object
-%
+% Input:
+%   regular:
+%       ellArr:  array[,] - array of 2D or 3D GenEllipsoids. All ellipsoid
+%             in ellArr must be either 2D or 3D simutaneously.
+%   optional:
+%       'newFigure'    - if 1, each plot command will open a new figure window.
+%       'fill'         - if 1, ellipsoids in 2D will be filled with color.
+%       'lineWidth'        - line width for 1D and 2D plots.
+%       'color'        - sets default colors in the form [x y z].
+%       'shade' = 0-1  - level of transparency (0 - transparent, 1 - opaque).
+%       'relDataPlotter' - relation data plotter object
 % Output:
-% -------
+%   regular:
+%       plObj - returns the relation data plotter object
 %
-%     plObj - returns the relation data plotter object
-%
+% 
 
-%
-% Author:
-% -------
-%
-%    $Author: Vadim Kaushanskiy  <vkaushanskiy@gmail.com> $    $Date: 21-December-2012 $
-%$Copyright: Moscow State University,
+% $Author: <Vadim Kaushanskiy>  <vkaushanskiy@gmail.com> $    $Date: <21 December 2012> $
+% $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Cybernetics,
-%            System Analysis Department 2012 $
-%
+%            System Analysis Department <2012> $
+
 import elltool.conf.Properties;
 import modgen.common.throwerror;
 import elltool.core.GenEllipsoid;
