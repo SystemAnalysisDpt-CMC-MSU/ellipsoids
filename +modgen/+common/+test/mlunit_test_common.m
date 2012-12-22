@@ -721,8 +721,11 @@ classdef mlunit_test_common < mlunitext.test_case
             end
             function check1()
             modgen.common.parseparext(...
-                {1,2,'prop1',1,'prop2',2,'prop2',3},[],[0 2],'propRetMode','list');
-            end            
+                {1,2,'prop1',1,'prop2',2,'prop2',3},[],[0 2],...
+                'propRetMode','list');
+            end
+            modgen.common.parseparext({'prop0',1,'prop1',1,'prop2',2},...
+                {'prop1','prop2'},[0 2]);
         end
         function self=test_parseparext_simple(self)
             %

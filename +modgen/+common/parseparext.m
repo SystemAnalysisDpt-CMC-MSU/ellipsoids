@@ -214,8 +214,8 @@ propResValList=prop(2:2:nElems);
 if ~isUnique
     nResProps=nElems*0.5;    
     [~,indThereVec]=ismember(propResNameList,propUResNameList);
-    nResPropSpecVec=accumarray(indThereVec.',(1:nResProps).');
-    isPropDupVec=nResPropSpecVec>0;
+    nResPropSpecVec=accumarray(indThereVec.',ones(nResProps,1));
+    isPropDupVec=nResPropSpecVec>1;
     dupPropListStr=modgen.cell.cellstr2expression(...
         propUResNameList(isPropDupVec));
     throwerror('wrongInput:duplicatePropertiesSpec',...
