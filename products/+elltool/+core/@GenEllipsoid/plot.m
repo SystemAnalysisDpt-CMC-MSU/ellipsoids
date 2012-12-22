@@ -4,36 +4,38 @@ function plObj = plot(varargin)
 %
 %
 % Usage:
-%       plot(ell) - plots generic ellipsoid ELL in default (red) color.
+%       plot(ell) - plots generic ellipsoid ell in default (red) color.
 %       plot(ellArr) - plots an array of generic ellipsoids.
 %       plot(ellArr, 'Property',PropValue,...) - plots ellArr with setting 
-%       properties.
+%                                                properties.
 %
 % Input:
 %   regular:
-%       ellArr:  ellipsoid: [dim11Size,dim12Size,...,dim1kSize] - array of 2D or
-%                3D GenEllipsoids objects. All ellipsoids in ellArr 
+%       ellArr:  elltool.core.GenEllipsoid: [dim11Size,dim12Size,...,dim1kSize] - 
+%                array of 2D or 3D GenEllipsoids objects. All ellipsoids in ellArr 
 %                must be either 2D or 3D simutaneously.
 %   optional:
 %       color1Spec: char[1,1] - color specification code, can be 'r','g',
 %                               etc (any code supported by built-in Matlab function).
-%       ell2Arr: [dim21Size,dim22Size,...,dim2kSize] - second ellipsoid array...
+%       ell2Arr: elltool.core.GenEllipsoid: [dim21Size,dim22Size,...,dim2kSize] -
+%                                           second ellipsoid array...
 %       color2Spec: char[1,1] - same as color1Spec but for ell2Arr
 %       ....
-%       ellNArr: [dimN1Size,dim22Size,...,dimNkSize] - N-th ellipsoid array
+%       ellNArr: elltool.core.GenEllipsoid: [dimN1Size,dim22Size,...,dimNkSize] - 
+%                                            N-th ellipsoid array
 %       colorNSpec - same as color1Spec but for ellNArr.
 %   properties:
 %       'newFigure': numeric[1,1] - if 1, each plot command will open a new figure window.
 %                    Default value is 0.
-%       'fill': numeric[1,1] - if 1, ellipsoids in 2D will be filled with color.
-%                              Default value is 0.
-%       'lineWidth': numeric[1,1] - line width for 1D and 2D plots. Default
-%                                   value is 1.
-%       'color': numeric[1,3] - sets default colors in the form [x y z].
-%                               Default value is [1 0 0].
-%       'shade': numeric[1,1] - level of transparency between 0 and 1
-%                               (0 - transparent, 1 - opaque). Default
-%                               value is 0.4.
+%       'fill': double[1,1]/double[dim11Size,dim12Size,...,dim1kSize]  - 
+%               if 1, ellipsoids in 2D will be filled with color. Default value is 0.
+%       'lineWidth': double[1,1]/double[dim11Size,dim12Size,...,dim1kSize]  - 
+%                    line width for 1D and 2D plots. Default value is 1.
+%       'color': double[1,3]//double[dim11Size,dim12Size,...,dim1kSize,3] - 
+%                sets default colors in the form [x y z]. Default value is [1 0 0].
+%       'shade': double[1,1]/double[dim11Size,dim12Size,...,dim1kSize]  - 
+%                level of transparency between 0 and 1 (0 - transparent, 1 - opaque).
+%                Default value is 0.4.
 %       'relDataPlotter' - relation data plotter object.
 % Output:
 %   regular:
@@ -58,9 +60,11 @@ DEFAULT_FILL = 0;
 
 [reg,~,plObj,isNewFigure,isFill,lineWidth,colorVec,shadVec,...
     isRelPlotterSpec,~,isIsFill,isLineWidth,isColorVec,isShad]=modgen.common.parseparext(varargin,...
-    {'relDataPlotter','newFigure','fill','lineWidth','color','shade', ;...
+    {'relDataPlotter','newFigure','fill','lineWidth','color','shade' ;...
     [],0,[],[],[],0;@(x)isa(x,'smartdb.disp.RelationDataPlotter'),...
-    @(x)isnumeric(x),@(x)isnumeric(x),@(x)isnumeric(x),@(x)isnumeric(x),@(x)isnumeric(x) && (x >= 0) && (x <= 1)});
+    @(x)isnumeric(x),@(x)isnumeric(x),@(x)isnumeric(x),@(x)isnumeric(x),...
+    @(x)isnumeric(x)});
+checkIsWrongInput();
 
 
 if ~isRelPlotterSpec
@@ -78,6 +82,7 @@ end
 [lGetGridMat, fGetGridMat] = calcGrid();
 [colorVec, shadVec, lineWidth, isFill] = getPlotParams(colorVec, shadVec,...
     lineWidth, isFill);
+checkIsWrongParams();
 checkDimensions();
 SData = setUpSData();
 [minValVec, maxValVec] = findMinAndMaxInEachDim(ellsArr);
@@ -212,9 +217,9 @@ end
             end
         end
     end
-    function [colorVec, shad, lineWidth, isFill] = getPlotParams(colorVec, shad, lineWidth, isFill)
+    function [colorVec, shade, lineWidth, isFill] = getPlotParams(colorVec, shade, lineWidth, isFill)
         
-        shad = getPlotInitParam(shad, isShad, DEFAULT_SHAD);
+        shade = getPlotInitParam(shade, isShad, DEFAULT_SHAD);
         lineWidth = getPlotInitParam(lineWidth, isLineWidth, DEFAULT_LINE_WIDTH);
         isFill = getPlotInitParam(isFill, isIsFill, DEFAULT_FILL);
         colorVec = getColorVec(colorVec);
@@ -240,28 +245,7 @@ end
     function colorArr = getColorVec(colorArr)
         
         if ~isColorVec
-            % Color maps:
-            %    hsv       - Hue-saturation-value color map.
-            %    hot       - Black-red-yellow-white color map.
-            %    gray      - Linear gray-scale color map.
-            %    bone      - Gray-scale with tinge of blue color map.
-            %    copper    - Linear copper-tone color map.
-            %    pink      - Pastel shades of pink color map.
-            %    white     - All white color map.
-            %    flag      - Alternating red, white, blue, and black color map.
-            %    lines     - Color map with the line colors.
-            %    colorcube - Enhanced color-cube color map.
-            %    vga       - Windows colormap for 16 colors.
-            %    jet       - Variant of HSV.
-            %    prism     - Prism color map.
-            %    cool      - Shades of cyan and magenta color map.
-            %    autumn    - Shades of red and yellow color map.
-            %    spring    - Shades of magenta and yellow color map.
-            %    winter    - Shades of blue and green color map.
-            %    summer    - Shades of green and yellow color map.
-            
             auxcolors  = hsv(ellNum);
-            colorsArr     = auxcolors;
             multiplier = 7;
             if mod(size(auxcolors, 1), multiplier) == 0
                 multiplier = multiplier + 1;
@@ -301,17 +285,82 @@ end
         xMat(:, end) = xMat(:, 1);
         fMat = fGetGridMat;
     end
+    function checkIsWrongParams()
+        import modgen.common.throwerror;
+        if lineWidth <= 0
+            throwerror('wrongLineWidth', 'LineWidth must be greater than 0');
+        end
+        if (any(shadVec < 0)) || (any(shadVec > 1))
+            throwerror('wrongShade', 'Shade must be between 0 and 1');
+        end
+        if (any(colorVec(:) < 0)) || (any(colorVec(:) > 1))
+            throwerror('wrongColorVec', 'Color must be between 0 and 1');
+        end
+        if size(colorVec, 2) ~= 3
+            throwerror('wrongColorVecSize', 'ColorVec is a vector of length 3');
+        end
+        if any((isFill ~= 0) & (isFill ~= 1))
+            throwerror('wrongFillProperty', 'Fill must be either 0 or 1');
+        end
+        if any((isNewFigure ~= 0) & (isNewFigure ~= 1))
+            throwerror('wrongNewFigureProperty', 'NewFigure must be either 0 or 1');
+        end
+    end
+    function checkIsWrongInput()
+        import modgen.common.throwerror;
+        cellfun(@(x)checkIfNoColorCharPresent(x),reg);
+        linewidthNum = 0;
+        fillNum = 0;
+        shadeNum = 0;
+        colorNum = 0;
+        newFigureNum = 0;
+        cellfun(@(x)checkRightPropName(x),reg);
+        if (linewidthNum > 1) || (fillNum > 1) || (shadeNum > 1) || ...
+                (colorNum > 1) || (newFigureNum > 1)
+            throwerror('wrongProperty', 'Each property must be written only once');
+        end
+        function checkIfNoColorCharPresent(value)
+            import modgen.common.throwerror;
+            if ischar(value)&&(numel(value)==1)&&~isColorDef(value)
+                import modgen.common.throwerror;
+                throwerror('wrongColorChar', 'You can''t use this symbol as a color');
+            end
+            function isColor = isColorDef(value)
+                isColor = eq(value, 'r') | eq(value, 'g') | eq(value, 'b') | ...
+                    eq(value, 'y') | eq(value, 'c') | eq(value, 'm') | eq(value, 'w');
+            end
+        end
+        function checkRightPropName(value)
+            if ischar(value)&&(numel(value)>1)&&~isRightProp(value)
+                import modgen.common.throwerror;
+                throwerror('wrongProperty', 'This property doesn''t exist');
+            end
+            function isRProp = isRightProp(value)
+                isRProp = strcmp(value, 'fill') | strcmp(value, 'linewidth') | ...
+                    strcmp(value, 'shade') | strcmp(value, 'color') | ...
+                    strcmp(value, 'newfigure');
+                if strcmp(value, 'fill')
+                    isRProp = true;
+                    fillNum = fillNum + 1;
+                elseif strcmp(value, 'linewidth')
+                    isRProp = true;
+                    linewidthNum = linewidthNum + 1;
+                elseif strcmp(value, 'shade')
+                    isRProp = true;
+                    shadeNum = shadeNum + 1;
+                elseif strcmp(value, 'color')
+                    isRProp = true;
+                    colorNum = colorNum + 1;
+                elseif strcmp(value, 'newfigure')
+                    isRProp = true;
+                    newFigureNum = newFigureNum + 1;
+                end
+            end
+        end
+    end
 
 end
 
-
-function hVec=plotCreateElPlotFunc(hAxes,X,q,clrVec,wid,varargin)
-h1 = ell_plot(X,'Parent',hAxes);
-set(h1, 'Color', clrVec, 'LineWidth', wid);
-h2 = ell_plot(q, '.','Parent',hAxes);
-set(h2, 'Color', clrVec);
-hVec = [h1,h2];
-end
 function hVec=plotCreateEl2PlotFunc(hAxes,X,Y,q,clrVec,wid,varargin)
 h1 = ell_plot([(X) (Y)],'Parent',hAxes);
 set(h1, 'Color', clrVec, 'LineWidth', wid);
@@ -319,13 +368,13 @@ h2 = ell_plot(q, '*','Parent',hAxes);
 set(h2, 'Color', clrVec);
 hVec = [h1,h2];
 end
-function hVec=plotCreateFillPlotFunc(hAxes,X,q,clrVec,fil,shad,widVec,varargin)
+function hVec=plotCreateFillPlotFunc(hAxes,X,q,clrVec,fil,shade,widVec,varargin)
 if ~fil
-    shad = 0;
+    shade = 0;
 end
 h1 = ell_plot(q, '*','Parent',hAxes);
 if fil == 1
-    h2 = fill(X(1, :), X(2, :), clrVec,'FaceAlpha',shad,'Parent',hAxes);
+    h2 = fill(X(1, :), X(2, :), clrVec,'FaceAlpha',shade,'Parent',hAxes);
 end
 h3 = ell_plot(X,'Parent',hAxes);
 
