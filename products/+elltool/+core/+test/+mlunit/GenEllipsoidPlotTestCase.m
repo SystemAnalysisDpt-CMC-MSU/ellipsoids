@@ -8,6 +8,28 @@ classdef GenEllipsoidPlotTestCase < mlunitext.test_case
         function self = tear_down(self,varargin)
             close all;
         end
+        function self = testWrongInput(self)
+            import elltool.core.GenEllipsoid;
+            testFirEll = GenEllipsoid(eye(2));
+            testSecEll = GenEllipsoid([1, 0].', eye(2));
+            testThirdEll = GenEllipsoid([0, -1].', eye(2));
+            self.runAndCheckError...
+               ('plot(testFirEll,''r'',testSecEll,''g'',''shade'',1,''fill'',0,''lineWidth'',0)','wrongLineWidth');
+            self.runAndCheckError...
+               ('plot(testFirEll,''r'',testSecEll,''g'',''color'',[0,0,0,1])','wrongColorVecSize');
+            self.runAndCheckError...
+               ('plot(testFirEll,''color'',[0,0,1].'')','wrongColorVecSize');
+            self.runAndCheckError...
+               ('plot(testFirEll,''color'',[0,0,-1])','wrongColorVec');
+            self.runAndCheckError...
+               ('plot(testFirEll,testSecEll,''lineWidth'',2,''color'',[0,0,1],testThirdEll,''color'',[1 0 1])',...
+               'wrongInput:duplicatePropertiesSpec');
+            self.runAndCheckError...
+               ('plot(testFirEll, testSecEll,''r'',testThirdEll,''g'',''g'')','wrongColorChar');
+            plot([testFirEll,testSecEll,testThirdEll],'shade',[0 0 1]);
+            plot([testFirEll,testSecEll,testThirdEll],'lineWidth',[1 1 2]);
+            plot([testFirEll,testSecEll,testThirdEll],'fill',[0 0 1]);
+        end
         function self = testColorChar(self)
             import elltool.core.GenEllipsoid;
             testEll = GenEllipsoid(eye(2));

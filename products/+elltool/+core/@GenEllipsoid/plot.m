@@ -71,7 +71,8 @@ if ~isRelPlotterSpec
     if isNewFigure
         plObj=smartdb.disp.RelationDataPlotter();
     else
-        plObj=smartdb.disp.RelationDataPlotter('figureGetNewHandleFunc', @(varargin)gcf,'axesGetNewHandleFunc',@(varargin)gca);
+        plObj=smartdb.disp.RelationDataPlotter('figureGetNewHandleFunc',...
+            @(varargin)gcf,'axesGetNewHandleFunc',@(varargin)gca);
     end
 end
 [ellsArr, ellNum, uColorVec, vColorVec] = getEllParams(reg);
@@ -134,17 +135,23 @@ end
     function calcEllPoints()
         import elltool.core.GenEllipsoid;
         if isNewFigure
-            [SData.figureNameCMat, SData.axesNameCMat] = arrayfun(@(x)getSDataParams(x), (1:ellNum).', 'UniformOutput', false);
+            [SData.figureNameCMat, SData.axesNameCMat] =...
+                arrayfun(@(x)getSDataParams(x), (1:ellNum).',...
+                'UniformOutput', false);
             
         end
-        [xMat, fMat] = arrayfun(@(x) calcOneEllElem(x), ellsArr, 'UniformOutput', false);
-        clrCVec = cellfun(@(x, y, z) getColor(x, y, z), num2cell(colorVec, 2), ...
-            num2cell(vColorVec, 2), num2cell(uColorVec), 'UniformOutput', false);
+        [xMat, fMat] = arrayfun(@(x) calcOneEllElem(x), ellsArr, ...
+            'UniformOutput', false);
+        clrCVec = cellfun(@(x, y, z) getColor(x, y, z),...
+            num2cell(colorVec, 2), ...
+            num2cell(vColorVec, 2), num2cell(uColorVec),...
+            'UniformOutput', false);
         SData.verCMat = xMat;
         SData.xCMat = xMat;
         SData.faceCMat = fMat;
         SData.clrVec = clrCVec;
-        colCMat = cellfun(@(x) getColCMat(x), clrCVec, 'UniformOutput', false);
+        colCMat = cellfun(@(x) getColCMat(x), clrCVec, ...
+            'UniformOutput', false);
         SData.faceVertexCDataCMat = colCMat;
         SData.qCMat = arrayfun(@(x) {x.getCenter()}, ellsArr);
         function clrVec = getColor(colorVec, vColor, uColor)
@@ -204,7 +211,8 @@ end
         mDim    = min(ellsArrDims);
         nDim    = max(ellsArrDims);
         if mDim ~= nDim
-            throwerror('dimMismatch','Ellipsoids must be of the same dimension.');
+            throwerror('dimMismatch', ...
+                'Ellipsoids must be of the same dimension.');
         end
         if (mDim < 1) || (nDim > 3)
             throwerror('wrongDim','ellipsoid dimension can be 1, 2 or 3');
@@ -217,15 +225,18 @@ end
             end
         end
     end
-    function [colorVec, shade, lineWidth, isFill] = getPlotParams(colorVec, shade, lineWidth, isFill)
+    function [colorVec, shade, lineWidth, isFill] = ...
+            getPlotParams(colorVec, shade, lineWidth, isFill)
         
         shade = getPlotInitParam(shade, isShad, DEFAULT_SHAD);
-        lineWidth = getPlotInitParam(lineWidth, isLineWidth, DEFAULT_LINE_WIDTH);
+        lineWidth = getPlotInitParam(lineWidth, ...
+            isLineWidth, DEFAULT_LINE_WIDTH);
         isFill = getPlotInitParam(isFill, isIsFill, DEFAULT_FILL);
         colorVec = getColorVec(colorVec);
     end
 
-    function outParamVec = getPlotInitParam(inParamArr, isFilledParam, multConst)
+    function outParamVec = getPlotInitParam(inParamArr, ...
+            isFilledParam, multConst)
         if ~isFilledParam
             outParamVec = multConst*ones(1, ellNum);
         else
@@ -233,9 +244,10 @@ end
             if nParams == 1
                 outParamVec = inParamArr*ones(1, ellNum);
             else
-                outParamVec = reshape(inParamArr, 1, mDim);
+                outParamVec = reshape(inParamArr, 1, nParams);
                 if nParams < ellNum
-                    outParamVec = [outParamVec, multConst*ones(1, ellNum-mDim)];
+                    outParamVec = [outParamVec, multConst*ones(1, ...
+                        ellNum-nParams)];
                 end
             end
         end
@@ -251,7 +263,8 @@ end
                 multiplier = multiplier + 1;
             end
             colCell = arrayfun(@(x) auxcolors(mod(x*multiplier, ...
-                size(auxcolors, 1)) + 1, :), 1:ellNum, 'UniformOutput', false);
+                size(auxcolors, 1)) + 1, :), 1:ellNum, 'UniformOutput',...
+                false);
             colorsArr = vertcat(colCell{:});
             colorsArr = flipud(colorsArr);
             colorArr = colorsArr;
@@ -272,7 +285,8 @@ end
             lGetGrid = gras.geom.circlepart(N_PLOT_POINTS);
             fGetGrid = 1:N_PLOT_POINTS+1;
         else
-            [lGetGrid, fGetGrid] = gras.geom.tri.spheretri(SPHERE_TRIANG_CONST);
+            [lGetGrid, fGetGrid] = ...
+                gras.geom.tri.spheretri(SPHERE_TRIANG_CONST);
         end
         lGetGrid(lGetGrid == 0) = eps;
     end
@@ -281,7 +295,8 @@ end
         xMat = zeros(nDim, nPoints+1);
         dMat = ell.getDiagMat();
         qCenVec = ell.getCenter();
-        xMat(:, 1:end-1) = dMat.^0.5*lGetGridMat.' + repmat(qCenVec, 1, nPoints);
+        xMat(:, 1:end-1) = dMat.^0.5*lGetGridMat.' + ...
+            repmat(qCenVec, 1, nPoints);
         xMat(:, end) = xMat(:, 1);
         fMat = fGetGridMat;
     end
@@ -297,37 +312,34 @@ end
             throwerror('wrongColorVec', 'Color must be between 0 and 1');
         end
         if size(colorVec, 2) ~= 3
-            throwerror('wrongColorVecSize', 'ColorVec is a vector of length 3');
+            throwerror('wrongColorVecSize', ...
+                'ColorVec is a vector of length 3');
         end
         if any((isFill ~= 0) & (isFill ~= 1))
             throwerror('wrongFillProperty', 'Fill must be either 0 or 1');
         end
         if any((isNewFigure ~= 0) & (isNewFigure ~= 1))
-            throwerror('wrongNewFigureProperty', 'NewFigure must be either 0 or 1');
+            throwerror('wrongNewFigureProperty', ...
+                'NewFigure must be either 0 or 1');
         end
     end
     function checkIsWrongInput()
         import modgen.common.throwerror;
+        rNum = 0; gNum = 0; bNum = 0; yNum = 0; cNum = 0; wNum = 0;
         cellfun(@(x)checkIfNoColorCharPresent(x),reg);
-        linewidthNum = 0;
-        fillNum = 0;
-        shadeNum = 0;
-        colorNum = 0;
-        newFigureNum = 0;
         cellfun(@(x)checkRightPropName(x),reg);
-        if (linewidthNum > 1) || (fillNum > 1) || (shadeNum > 1) || ...
-                (colorNum > 1) || (newFigureNum > 1)
-            throwerror('wrongProperty', 'Each property must be written only once');
-        end
+   
         function checkIfNoColorCharPresent(value)
             import modgen.common.throwerror;
             if ischar(value)&&(numel(value)==1)&&~isColorDef(value)
                 import modgen.common.throwerror;
-                throwerror('wrongColorChar', 'You can''t use this symbol as a color');
+                throwerror('wrongColorChar', ...
+                    'You can''t use this symbol as a color');
             end
             function isColor = isColorDef(value)
                 isColor = eq(value, 'r') | eq(value, 'g') | eq(value, 'b') | ...
-                    eq(value, 'y') | eq(value, 'c') | eq(value, 'm') | eq(value, 'w');
+                    eq(value, 'y') | eq(value, 'c') | ...
+                    eq(value, 'm') | eq(value, 'w');
             end
         end
         function checkRightPropName(value)
@@ -339,22 +351,6 @@ end
                 isRProp = strcmp(value, 'fill') | strcmp(value, 'linewidth') | ...
                     strcmp(value, 'shade') | strcmp(value, 'color') | ...
                     strcmp(value, 'newfigure');
-                if strcmp(value, 'fill')
-                    isRProp = true;
-                    fillNum = fillNum + 1;
-                elseif strcmp(value, 'linewidth')
-                    isRProp = true;
-                    linewidthNum = linewidthNum + 1;
-                elseif strcmp(value, 'shade')
-                    isRProp = true;
-                    shadeNum = shadeNum + 1;
-                elseif strcmp(value, 'color')
-                    isRProp = true;
-                    colorNum = colorNum + 1;
-                elseif strcmp(value, 'newfigure')
-                    isRProp = true;
-                    newFigureNum = newFigureNum + 1;
-                end
             end
         end
     end
@@ -420,21 +416,26 @@ if numel(reg) == 1
 else
     isnLastElemCMat = num2cell([ones(1, numel(reg)-1), 0]);
 end
-
-[ellsCMat, uColorCMat, vColorCMat] = cellfun(@(x, y, z)getParams(x, y, z), reg, {reg{2:end}, []}, isnLastElemCMat, 'UniformOutput', false);
+if ischar(reg{1})
+    import modgen.common.throwerror;
+    throwerror('wrongColorChar', 'Color char can''t be the first');
+end
+[ellsCMat, uColorCMat, vColorCMat] = cellfun(@(x, y, z)getParams(x, y, z),...
+    reg, {reg{2:end}, []}, isnLastElemCMat, 'UniformOutput', false);
 uColorVec = vertcat(uColorCMat{:});
 vColorVec = vertcat(vColorCMat{:});
 ellsArr = vertcat(ellsCMat{:});
 ellNum = numel(ellsArr);
 
-    function [ellVec, uColorVec, vColorVec] = getParams(ellArr, ellNextObjArr, isnLastElem)
+    function [ellVec, uColorVec, vColorVec] = getParams(ellArr, ...
+            nextObjArr, isnLastElem)
         import elltool.core.GenEllipsoid;
         if isa(ellArr, 'elltool.core.GenEllipsoid')
             cnt    = numel(ellArr);
             ellVec = reshape(ellArr, cnt, 1);
             
-            if isnLastElem && ischar(ellNextObjArr)
-                colorVec = GenEllipsoid.getColorTable(ellNextObjArr);
+            if isnLastElem && ischar(nextObjArr)
+                colorVec = GenEllipsoid.getColorTable(nextObjArr);
                 val = 1;
             else
                 colorVec = [0 0 0];
@@ -446,6 +447,10 @@ ellNum = numel(ellsArr);
             ellVec = [];
             uColorVec = [];
             vColorVec = [];
+            if ischar(ellArr) && ischar(nextObjArr)
+                import modgen.common.throwerror;
+                throwerror('wrongColorChar', 'Wrong combination of color chars');
+            end
         end
     end
 end
@@ -455,7 +460,8 @@ end
 function [minValVec, maxValVec] = findMinAndMaxInEachDim(ellsArr)
 
 nDim = max(dimension(ellsArr));
-[minValVec, maxValVec] = arrayfun(@(x) findMinAndMaxDim(ellsArr, x, nDim), 1:nDim);
+[minValVec, maxValVec] = arrayfun(@(x) findMinAndMaxDim(ellsArr, x, nDim),...
+    1:nDim);
 
 
     function [minValVec, maxValVec] = findMinAndMaxDim(ellVec, dirDim, nDims)
