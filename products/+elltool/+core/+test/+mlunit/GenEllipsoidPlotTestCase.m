@@ -8,6 +8,143 @@ classdef GenEllipsoidPlotTestCase < mlunitext.test_case
         function self = tear_down(self,varargin)
             close all;
         end
+        function self = testColorChar(self)
+            import elltool.core.GenEllipsoid;
+            testEll = GenEllipsoid(eye(2));
+            plObj = plot(testEll, 'b');
+            check2dCol(plObj, [0, 0, 1]);
+            testSecEll = GenEllipsoid([1, 0].', eye(2));
+            plObj = plot(testEll, 'g', testSecEll, 'b');
+            check2dCol(plObj, [0, 1, 0], [0, 0, 1]);
+            testThirdEll = GenEllipsoid([0, 1].', eye(2));
+            plObj = plot(testEll, 'g', testSecEll, 'b', testThirdEll, 'y');
+            check2dCol(plObj, [0, 1, 0], [0, 0, 1], [1, 1, 0]);
+            testEll = GenEllipsoid(eye(3));
+            plObj = plot(testEll, 'y');
+            check3dCol(plObj, [1, 1, 0]);
+            testSecEll = GenEllipsoid([1, 1, 0].', eye(3));
+            plObj = plot(testEll, 'g', testSecEll, 'b');
+            check3dCol(plObj, [0, 1, 0], [0, 0, 1]);
+            testThirdEll = GenEllipsoid([-1, -1, -1].', eye(3));
+            plObj = plot(testEll, 'c', testSecEll, 'm', testThirdEll, 'w');
+            check3dCol(plObj, [0, 1, 1], [1, 0, 1], [1, 1, 1]);
+            
+            function check2dCol(plObj, varargin)
+                colMat = vertcat(varargin{:});
+                colMat = [colMat; colMat];
+                colMat = sortrows(colMat);
+                SHPlot =  plObj.getPlotStructure().figToAxesToHMap.toStruct();
+                plEllObjVec = get(SHPlot.figure_g1.ax, 'Children');
+                plEllColCMat = get(plEllObjVec, 'Color');
+                plEllColMat = vertcat(plEllColCMat{:});
+                plEllColMat = sortrows(plEllColMat);
+                mlunit.assert_equals(plEllColMat, colMat); 
+            end
+            function check3dCol(plObj, varargin)
+                colMat = vertcat(varargin{:});
+                colMat = sortrows(colMat);
+                SHPlot =  plObj.getPlotStructure().figToAxesToHMap.toStruct();
+                plEllObjVec = get(SHPlot.figure_g1.ax, 'Children');
+                plEllColCMat = arrayfun(@(x) getColVec(x), plEllObjVec, 'UniformOutput', false);
+                plEllColMat = vertcat(plEllColCMat{:});
+                plEllColMat = sortrows(plEllColMat);
+                mlunit.assert_equals(plEllColMat, colMat); 
+                function clrVec = getColVec(plEllObj)
+                    if ~eq(get(plEllObj, 'Type'), 'patch')
+                        clrVec = [];
+                    else
+                        clrMat = get(plEllObj, 'FaceVertexCData');
+                        clrVec = clrMat(1, :);
+                    end
+                end
+            end            
+        end
+        function self = testNewFigure(self)
+            import elltool.core.GenEllipsoid;
+            testEll = GenEllipsoid(eye(3));
+            checkNewFig(testEll, 1);
+            checkNotNewFig(testEll);
+            testEllArr(1) = GenEllipsoid(eye(3));
+            testEllArr(2) = GenEllipsoid([1, 1, 1].', eye(3));
+            testEllArr(3) = GenEllipsoid([-1, 0, 1].', eye(3));
+            checkNewFig(testEllArr, 3);
+            checkNotNewFig(testEllArr);
+            function checkNewFig(testEllArr, numEll)
+                plObj = plot(testEllArr, 'newfigure', 1);
+                SHPlot =  plObj.getPlotStructure().figToAxesToHMap.toStruct();
+                mlunit.assert_equals(numel(fields(SHPlot)), numEll); 
+            end
+            function checkNotNewFig(testEllArr)
+                plObj = plot(testEllArr, 'newfigure', 0);
+                SHPlot =  plObj.getPlotStructure().figToAxesToHMap.toStruct();
+                mlunit.assert_equals(numel(SHPlot), 1); 
+            end
+        end
+        function self = testProperties(self)
+            import elltool.core.GenEllipsoid;
+            testFirEll = GenEllipsoid(eye(2));
+            testSecEll = GenEllipsoid([1, 0].', eye(2));
+            plObj = plot([testFirEll, testSecEll], 'linewidth', 4, 'fill', 1, 'shade', 0.8);
+            checkParams(plObj, 4, 1, 0.8, []);
+            testEll = GenEllipsoid(eye(3));
+            plObj = plot(testEll, 'fill', 1, 'shade', 0.1, 'color', [0, 1, 1]);
+            checkParams(plObj, [], 1, 0.1, [0, 1, 1]);
+            testEllArr(1) = GenEllipsoid([1, 1, 0].', eye(3));
+            testEllArr(2) = GenEllipsoid([0, 0, 0].', eye(3));
+            testEllArr(3) = GenEllipsoid([-1, -1, -1].', eye(3));
+            plObj = plot(testEllArr, 'fill', 1, 'color', [1, 0, 1]);
+            checkParams(plObj, [], 1, [], [1, 0, 1]);
+            plObj = plot(testEllArr, 'fill', 1);
+            checkParams(plObj, [], 1, [], []);
+            testEll = GenEllipsoid(eye(3));
+            self.runAndCheckError...
+               ('plot(testEll, ''LineWidth'', 2)','wrongProperty');
+            function checkParams(plObj, linewidth, fill, shade, colorVec)
+                SHPlot =  plObj.getPlotStructure().figToAxesToHMap.toStruct();
+                plEllObjVec = get(SHPlot.figure_g1.ax, 'Children');
+                isEqVec = arrayfun(@(x) checkEllParams(x), plEllObjVec);
+                mlunit.assert_equals(isEqVec, ones(size(isEqVec))); 
+                isFillVec = arrayfun(@(x) checkIsFill(x), plEllObjVec, 'UniformOutput', false);
+                mlunit.assert_equals(numel(isFillVec) > 0, fill); 
+                function isFill = checkIsFill(plObj)
+                    if strcmp(get(plObj, 'type'), 'patch')
+                        if get(plObj, 'FaceAlpha') > 0
+                            isFill = true;
+                        else
+                            isFill = [];
+                        end
+                    else
+                        isFill = [];
+                    end
+                end
+                function isEq = checkEllParams(plObj)
+                    isEq = true;
+                    if strcmp(get(plObj, 'type'), 'line') && (~strcmp(get(plObj, 'Marker'), '*'))
+                        linewidthPl = get(plObj, 'linewidth');
+                        colorPlVec = get(plObj, 'Color');
+                        if numel(linewidth) > 0
+                            isEq = isEq & eq(linewidth, linewidthPl);
+                        end
+                        if numel(colorVec) > 0
+                            isEq = isEq & eq(colorVec, colorPlVec);
+                        end
+                    elseif strcmp(get(plObj, 'type'), 'patch')
+                        shadePl = get(plObj, 'FaceAlpha');
+                        if numel(shade) > 0
+                            isEq = isEq & eq(shade, shadePl);
+                        end
+                        colorPlMat = get(plObj, 'FaceVertexCData');
+                        if numel(colorPlMat) > 0
+                            colorPlVec = colorPlMat(1, :);
+                            if numel(colorVec) > 0
+                                isEq = isEq & all(colorVec == colorPlVec);
+                            end
+                        end
+
+                    end
+                end
+            end
+        end
         function self = testNewAxis(self)
             import elltool.core.GenEllipsoid;
             

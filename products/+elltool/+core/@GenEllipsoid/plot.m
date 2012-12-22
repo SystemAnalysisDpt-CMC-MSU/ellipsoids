@@ -4,32 +4,48 @@ function plObj = plot(varargin)
 %
 %
 % Usage:
-%       plot(ELL) - plots generic ellipsoid ELL in default (red) color.
+%       plot(ell) - plots generic ellipsoid ELL in default (red) color.
 %       plot(ellArr) - plots an array of generic ellipsoids.
-%       plot(ellArr, 'Property',PropValue,...) - plots ellArr with setting
+%       plot(ellArr, 'Property',PropValue,...) - plots ellArr with setting 
 %       properties.
 %
 % Input:
 %   regular:
-%       ellArr:  array[,] - array of 2D or 3D GenEllipsoids. All ellipsoid
-%             in ellArr must be either 2D or 3D simutaneously.
+%       ellArr:  ellipsoid: [dim11Size,dim12Size,...,dim1kSize] - array of 2D or
+%                3D GenEllipsoids objects. All ellipsoids in ellArr 
+%                must be either 2D or 3D simutaneously.
 %   optional:
-%       'newFigure'    - if 1, each plot command will open a new figure window.
-%       'fill'         - if 1, ellipsoids in 2D will be filled with color.
-%       'lineWidth'        - line width for 1D and 2D plots.
-%       'color'        - sets default colors in the form [x y z].
-%       'shade' = 0-1  - level of transparency (0 - transparent, 1 - opaque).
-%       'relDataPlotter' - relation data plotter object
+%       color1Spec: char[1,1] - color specification code, can be 'r','g',
+%                               etc (any code supported by built-in Matlab function).
+%       ell2Arr: [dim21Size,dim22Size,...,dim2kSize] - second ellipsoid array...
+%       color2Spec: char[1,1] - same as color1Spec but for ell2Arr
+%       ....
+%       ellNArr: [dimN1Size,dim22Size,...,dimNkSize] - N-th ellipsoid array
+%       colorNSpec - same as color1Spec but for ellNArr.
+%   properties:
+%       'newFigure': numeric[1,1] - if 1, each plot command will open a new figure window.
+%                    Default value is 0.
+%       'fill': numeric[1,1] - if 1, ellipsoids in 2D will be filled with color.
+%                              Default value is 0.
+%       'lineWidth': numeric[1,1] - line width for 1D and 2D plots. Default
+%                                   value is 1.
+%       'color': numeric[1,3] - sets default colors in the form [x y z].
+%                               Default value is [1 0 0].
+%       'shade': numeric[1,1] - level of transparency between 0 and 1
+%                               (0 - transparent, 1 - opaque). Default
+%                               value is 0.4.
+%       'relDataPlotter' - relation data plotter object.
 % Output:
 %   regular:
-%       plObj - returns the relation data plotter object
+%       plObj: smartdb.disp.RelationDataPlotter[1,1] - returns the relation
+%       data plotter object.
 %
-% 
+%
 
 % $Author: <Vadim Kaushanskiy>  <vkaushanskiy@gmail.com> $    $Date: <21 December 2012> $
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Cybernetics,
-%            System Analysis Department <2012> $
+%            System Analysis Department 2012 $
 
 import elltool.conf.Properties;
 import modgen.common.throwerror;
@@ -42,9 +58,9 @@ DEFAULT_FILL = 0;
 
 [reg,~,plObj,isNewFigure,isFill,lineWidth,colorVec,shadVec,...
     isRelPlotterSpec,~,isIsFill,isLineWidth,isColorVec,isShad]=modgen.common.parseparext(varargin,...
-    {'relDataPlotter','newFigure','fill','lineWidth','color','shade';...
+    {'relDataPlotter','newFigure','fill','lineWidth','color','shade', ;...
     [],0,[],[],[],0;@(x)isa(x,'smartdb.disp.RelationDataPlotter'),...
-    @(x)isnumeric(x),@(x)isnumeric(x),@(x)isnumeric(x),@(x)isnumeric(x),@(x)isnumeric(x)});
+    @(x)isnumeric(x),@(x)isnumeric(x),@(x)isnumeric(x),@(x)isnumeric(x),@(x)isnumeric(x) && (x >= 0) && (x <= 1)});
 
 
 if ~isRelPlotterSpec
@@ -56,8 +72,11 @@ if ~isRelPlotterSpec
 end
 [ellsArr, ellNum, uColorVec, vColorVec] = getEllParams(reg);
 nDim = max(dimension(ellsArr));
+if nDim == 3 && isLineWidth
+    throwerror('wrongProperty', 'LineWidth is not supported by 3D Ellipsoids');
+end
 [lGetGridMat, fGetGridMat] = calcGrid();
-[colorVec, shadVec, lineWidth, isFill] = getPlotParams(colorVec, shadVec,... 
+[colorVec, shadVec, lineWidth, isFill] = getPlotParams(colorVec, shadVec,...
     lineWidth, isFill);
 checkDimensions();
 SData = setUpSData();
@@ -70,10 +89,10 @@ calcEllPoints();
 rel=smartdb.relations.DynamicRelation(SData);
 hFigure = get(0,'CurrentFigure');
 if isempty(hFigure)
-  isHold=false;
-elseif ~ishold
-  cla;
-  isHold = false;
+    isHold=false;
+elseif ~ishold(get(hFigure,'currentaxes'))
+    cla;
+    isHold = false;
 else
     isHold = true;
 end
@@ -85,7 +104,7 @@ if (nDim==2)
         @axesSetPropDoNothingFunc,{},...
         @plotCreateFillPlotFunc,...
         {'xCMat','qCMat', 'clrVec','fill','shadVec', 'widVec'});
-
+    
 elseif (nDim==3)
     plObj.plotGeneric(rel,@figureGetGroupNameFunc,{'figureNameCMat'},...
         @figureSetPropFunc,{},...
@@ -107,28 +126,32 @@ if  isHold
 else
     hold off;
 end
-   function calcEllPoints()
+    function calcEllPoints()
         import elltool.core.GenEllipsoid;
         if isNewFigure
             [SData.figureNameCMat, SData.axesNameCMat] = arrayfun(@(x)getSDataParams(x), (1:ellNum).', 'UniformOutput', false);
             
         end
         [xMat, fMat] = arrayfun(@(x) calcOneEllElem(x), ellsArr, 'UniformOutput', false);
-        colMat = cellfun(@(x, y, z) getColor(x, y, z), num2cell(colorVec, 2), ...
+        clrCVec = cellfun(@(x, y, z) getColor(x, y, z), num2cell(colorVec, 2), ...
             num2cell(vColorVec, 2), num2cell(uColorVec), 'UniformOutput', false);
         SData.verCMat = xMat;
         SData.xCMat = xMat;
         SData.faceCMat = fMat;
-        SData.faceVertexCDataCMat = colMat;
+        SData.clrVec = clrCVec;
+        colCMat = cellfun(@(x) getColCMat(x), clrCVec, 'UniformOutput', false);
+        SData.faceVertexCDataCMat = colCMat;
         SData.qCMat = arrayfun(@(x) {x.getCenter()}, ellsArr);
-        function colMat = getColor(colorVec, vColor, uColor)
+        function clrVec = getColor(colorVec, vColor, uColor)
             if uColor == 1
                 clrVec = vColor;
             else
                 clrVec = colorVec;
             end
-            colMat = clrVec(ones(1, size(xMat{1}, 2)), :);
-      
+            
+        end
+        function colCMat = getColCMat(clrVec)
+            colCMat = clrVec(ones(1, size(xMat{1}, 2)), :);
         end
         function [xMat, fMat] = calcOneEllElem(plotEll)
             import elltool.core.GenEllipsoid;
@@ -136,7 +159,7 @@ end
             diagMat = plotEll.getDiagMat();
             eigvMat = plotEll.getEigvMat();
             ell = GenEllipsoid(diagMat);
- 
+            
             [xMat, fMat] = ellPoints(ell, nDim);
             nPoints = size(xMat, 2);
             xMat = getRidOfInfVal(xMat, qVec);
@@ -146,23 +169,23 @@ end
             figureNameCMat = sprintf('figure%d',iEll);
             axesNameCMat = sprintf('ax%d',iEll);
         end
-       function xMat = getRidOfInfVal(xMat, qVec)
-           maxVec = maxValVec - qVec;
-           minVec=minValVec-qVec;
-           isInfMat=xMat==Inf;
-           isNegInfMat=xMat==-Inf;
-           maxMat=repmat(maxVec,1,size(xMat, 2));
-           minMat=repmat(minVec,1,size(xMat, 2));
-           xMat(isInfMat)=maxMat(isInfMat);
-           xMat(isNegInfMat)=minMat(isNegInfMat);
-       end
+        function xMat = getRidOfInfVal(xMat, qVec)
+            maxVec = maxValVec - qVec;
+            minVec=minValVec-qVec;
+            isInfMat=xMat==Inf;
+            isNegInfMat=xMat==-Inf;
+            maxMat=repmat(maxVec,1,size(xMat, 2));
+            minMat=repmat(minVec,1,size(xMat, 2));
+            xMat(isInfMat)=maxMat(isInfMat);
+            xMat(isNegInfMat)=minMat(isNegInfMat);
+        end
     end
 
     function SData = setUpSData()
         SData.figureNameCMat=repmat({'figure'},ellNum,1);
-        SData.axesNameCMat = repmat({'ax'},ellNum,1);  
+        SData.axesNameCMat = repmat({'ax'},ellNum,1);
         SData.axesNumCMat = repmat({1},ellNum,1);
-       
+        
         SData.figureNumCMat = repmat({1},ellNum,1);
         
         SData.widVec = lineWidth.';
@@ -212,7 +235,7 @@ end
             end
         end
     end
- 
+
 
     function colorArr = getColorVec(colorArr)
         
@@ -334,7 +357,7 @@ hVec = patch('Vertices',vertices', 'Faces', faces, ...
     'FaceVertexCData', faceVertexCData, 'FaceColor','flat', ...
     'FaceAlpha', faceAlpha,'EdgeColor',clrVec,'Parent',hAxes);
 hLightVec=cellfun(@(x)camlight(hAxes,x{:}),LIGHT_TYPE_LIST);
-hVec=[hVec,hLightVec]; 
+hVec=[hVec,hLightVec];
 shading(hAxes,'interp');
 lighting(hAxes,'phong');
 material(hAxes,'metal');
@@ -360,7 +383,7 @@ ellNum = numel(ellsArr);
         if isa(ellArr, 'elltool.core.GenEllipsoid')
             cnt    = numel(ellArr);
             ellVec = reshape(ellArr, cnt, 1);
-         
+            
             if isnLastElem && ischar(ellNextObjArr)
                 colorVec = GenEllipsoid.getColorTable(ellNextObjArr);
                 val = 1;
@@ -388,7 +411,7 @@ nDim = max(dimension(ellsArr));
 
     function [minValVec, maxValVec] = findMinAndMaxDim(ellVec, dirDim, nDims)
         import elltool.core.GenEllipsoid;
-
+        
         minlVec = zeros(nDims, 1);
         minlVec(dirDim) = -1;
         maxlVec = zeros(nDims, 1);
@@ -420,7 +443,7 @@ nDim = max(dimension(ellsArr));
             end
             if (3*maxEig+qCenVec(dirDim) > maxVal) && (curEllMax(dirDim) == Inf)
                 maxVal = 3*maxEig+qCenVec(dirDim);
-            end            
+            end
         end
     end
 end
