@@ -83,6 +83,19 @@ if isempty(indPropVec)
     prop={};
 else
     prop=args(sort([indPropVec,indPropVec+1]));
+    propResNameList=args(isPropCandidateVec);
+    [isUnique,propUResNameList]=modgen.common.isunique(propResNameList);
+    if ~isUnique
+        nResProps=length(propResNameList);
+        [~,indThereVec]=ismember(propResNameList,propUResNameList);
+        nResPropSpecVec=accumarray(indThereVec.',(1:nResProps).');
+        isPropDupVec=nResPropSpecVec>0;
+        dupPropListStr=modgen.cell.cellstr2expression(...
+            propUResNameList(isPropDupVec));
+        throwerror('wrongInput:duplicatePropertiesSpec',...
+            sprintf('properties %s are specified more than once',...
+            dupPropListStr));
+    end
     isPropCandidateVec(indPropVec+1)=true;
     reg=args(~isPropCandidateVec);
 end
