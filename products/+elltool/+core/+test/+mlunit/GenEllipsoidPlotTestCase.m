@@ -14,9 +14,9 @@ classdef GenEllipsoidPlotTestCase < mlunitext.test_case
             testSecEll = GenEllipsoid([1, 0].', eye(2));
             testThirdEll = GenEllipsoid([0, -1].', eye(2));
             self.runAndCheckError...
-               ('plot(testFirEll,''r'',testSecEll,''g'',''shade'',1,''fill'',0,''lineWidth'',0)','wrongLineWidth');
+               ('plot(testFirEll,''r'',testSecEll,''g'',''shade'',1,''fill'',false,''lineWidth'',0)','wrongLineWidth');
             self.runAndCheckError...
-               ('plot(testFirEll,''r'',testSecEll,''g'',''color'',[0,0,0,1])','wrongColorVecSize');
+               ('plot(testFirEll,''color'',[0,0,0,1])','wrongColorVecSize');
             self.runAndCheckError...
                ('plot(testFirEll,''color'',[0,0,1].'')','wrongColorVecSize');
             self.runAndCheckError...
@@ -28,7 +28,27 @@ classdef GenEllipsoidPlotTestCase < mlunitext.test_case
                ('plot(testFirEll, testSecEll,''r'',testThirdEll,''g'',''g'')','wrongColorChar');
             plot([testFirEll,testSecEll,testThirdEll],'shade',[0 0 1]);
             plot([testFirEll,testSecEll,testThirdEll],'lineWidth',[1 1 2]);
-            plot([testFirEll,testSecEll,testThirdEll],'fill',[0 0 1]);
+            plot([testFirEll,testSecEll,testThirdEll],'fill',[false false true]);
+            self.runAndCheckError...
+                ('plot([testFirEll,testSecEll,testThirdEll;testFirEll,testSecEll,testThirdEll],''fill'',[false false true false])', 'wrongParamsNumber');
+            self.runAndCheckError...
+                ('plot([testFirEll,testSecEll,testThirdEll;testFirEll,testSecEll,testThirdEll],''fill'',[false false true false].'')', 'wrongParamsNumber');
+            plot([testFirEll,testSecEll,testThirdEll;testFirEll,testSecEll...
+                ,testThirdEll],'fill',[true; true; true;true; true; true]);
+            plot([testFirEll,testSecEll,testThirdEll;testFirEll,testSecEll...
+                ,testThirdEll],'color',[1 0 0;0 1 0;0 0 1;1 0 0;0 1 0;0 0 1]) ;
+            plot([testFirEll,testSecEll,testThirdEll;testFirEll,testSecEll...
+                ,testThirdEll],'fill',[true; true; true;true; true; true].');
+            self.runAndCheckError...
+                ('plot(testFirEll,''color'',[0 1 0],''r'')', 'ConflictingColor');
+            self.runAndCheckError...
+                ('plot([testFirEll,testSecEll,testThirdEll],''lineWidth'',[0 1 0])', 'wrongLineWidth');
+            self.runAndCheckError...
+                ('plot([testFirEll,testSecEll,testThirdEll],''shade'',nan)', 'wrongShade');
+            self.runAndCheckError...
+                ('plot([testFirEll,testSecEll,testThirdEll],''color'',[nan, nan, nan])', 'wrongColorVec');
+            self.runAndCheckError...
+                ('plot([testFirEll,testSecEll,testThirdEll],''lineWidth'',[nan, inf, -inf])', 'wrongLineWidth');
         end
         function self = testColorChar(self)
             import elltool.core.GenEllipsoid;
@@ -92,12 +112,12 @@ classdef GenEllipsoidPlotTestCase < mlunitext.test_case
             checkNewFig(testEllArr, 3);
             checkNotNewFig(testEllArr);
             function checkNewFig(testEllArr, numEll)
-                plObj = plot(testEllArr, 'newfigure', 1);
+                plObj = plot(testEllArr, 'newfigure', true);
                 SHPlot =  plObj.getPlotStructure().figToAxesToHMap.toStruct();
                 mlunit.assert_equals(numel(fields(SHPlot)), numEll); 
             end
             function checkNotNewFig(testEllArr)
-                plObj = plot(testEllArr, 'newfigure', 0);
+                plObj = plot(testEllArr, 'newfigure', false);
                 SHPlot =  plObj.getPlotStructure().figToAxesToHMap.toStruct();
                 mlunit.assert_equals(numel(SHPlot), 1); 
             end
@@ -106,17 +126,17 @@ classdef GenEllipsoidPlotTestCase < mlunitext.test_case
             import elltool.core.GenEllipsoid;
             testFirEll = GenEllipsoid(eye(2));
             testSecEll = GenEllipsoid([1, 0].', eye(2));
-            plObj = plot([testFirEll, testSecEll], 'linewidth', 4, 'fill', 1, 'shade', 0.8);
+            plObj = plot([testFirEll, testSecEll], 'linewidth', 4, 'fill', true, 'shade', 0.8);
             checkParams(plObj, 4, 1, 0.8, []);
             testEll = GenEllipsoid(eye(3));
-            plObj = plot(testEll, 'fill', 1, 'shade', 0.1, 'color', [0, 1, 1]);
+            plObj = plot(testEll, 'fill', true, 'shade', 0.1, 'color', [0, 1, 1]);
             checkParams(plObj, [], 1, 0.1, [0, 1, 1]);
             testEllArr(1) = GenEllipsoid([1, 1, 0].', eye(3));
             testEllArr(2) = GenEllipsoid([0, 0, 0].', eye(3));
             testEllArr(3) = GenEllipsoid([-1, -1, -1].', eye(3));
-            plObj = plot(testEllArr, 'fill', 1, 'color', [1, 0, 1]);
+            plObj = plot(testEllArr, 'fill', true, 'color', [1, 0, 1]);
             checkParams(plObj, [], 1, [], [1, 0, 1]);
-            plObj = plot(testEllArr, 'fill', 1);
+            plObj = plot(testEllArr, 'fill', true);
             checkParams(plObj, [], 1, [], []);
             testEll = GenEllipsoid(eye(3));
             self.runAndCheckError...
@@ -199,7 +219,7 @@ classdef GenEllipsoidPlotTestCase < mlunitext.test_case
             end
             function checkNewAxisNewFig(testEllArr)
                 axesSubPlHandle = subplot(3,2,2);
-                plotObj = plot(testEllArr, 'newfigure', 1);
+                plotObj = plot(testEllArr, 'newfigure', true);
                 SHPlot =  plotObj.getPlotStructure().figToAxesToHMap.toStruct();
                 SAxes = SHPlot.figure1_g1;
                 axesHandle = SAxes.ax1;
@@ -249,7 +269,7 @@ classdef GenEllipsoidPlotTestCase < mlunitext.test_case
             function checkHoldOffNewFig(testEllArr, testAns)
                 plot(1:10,sin(1:10));
                 hold off;
-                plotObj = plot(testEllArr, 'newfigure', 1);
+                plotObj = plot(testEllArr, 'newfigure', true);
                 SHPlot =  plotObj.getPlotStructure().figToAxesToHMap.toStruct();
                 SAxes = SHPlot.figure1_g1;
                 plotFig = get(SAxes.ax1, 'Children');
@@ -258,7 +278,7 @@ classdef GenEllipsoidPlotTestCase < mlunitext.test_case
             function checkHoldOnNewFig(testEllArr, testAns)
                 plot(1:10,sin(1:10));
                 hold on;
-                plotObj = plot(testEllArr, 'newfigure', 1);
+                plotObj = plot(testEllArr, 'newfigure', true);
                 SHPlot =  plotObj.getPlotStructure().figToAxesToHMap.toStruct();
                 SAxes = SHPlot.figure1_g1;
                 plotFig = get(SAxes.ax1, 'Children');
