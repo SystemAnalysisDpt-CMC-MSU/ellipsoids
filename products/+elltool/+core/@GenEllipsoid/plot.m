@@ -6,13 +6,13 @@ function plObj = plot(varargin)
 % Usage:
 %       plot(ell) - plots generic ellipsoid ell in default (red) color.
 %       plot(ellArr) - plots an array of generic ellipsoids.
-%       plot(ellArr, 'Property',PropValue,...) - plots ellArr with setting 
+%       plot(ellArr, 'Property',PropValue,...) - plots ellArr with setting
 %                                                properties.
 %
 % Input:
 %   regular:
-%       ellArr:  elltool.core.GenEllipsoid: [dim11Size,dim12Size,...,dim1kSize] - 
-%                array of 2D or 3D GenEllipsoids objects. All ellipsoids in ellArr 
+%       ellArr:  elltool.core.GenEllipsoid: [dim11Size,dim12Size,...,dim1kSize] -
+%                array of 2D or 3D GenEllipsoids objects. All ellipsoids in ellArr
 %                must be either 2D or 3D simutaneously.
 %   optional:
 %       color1Spec: char[1,1] - color specification code, can be 'r','g',
@@ -21,19 +21,19 @@ function plObj = plot(varargin)
 %                                           second ellipsoid array...
 %       color2Spec: char[1,1] - same as color1Spec but for ell2Arr
 %       ....
-%       ellNArr: elltool.core.GenEllipsoid: [dimN1Size,dim22Size,...,dimNkSize] - 
+%       ellNArr: elltool.core.GenEllipsoid: [dimN1Size,dim22Size,...,dimNkSize] -
 %                                            N-th ellipsoid array
 %       colorNSpec - same as color1Spec but for ellNArr.
 %   properties:
 %       'newFigure': logical[1,1] - if 1, each plot command will open a new figure window.
 %                    Default value is 0.
-%       'fill': logical[1,1]/logical[dim11Size,dim12Size,...,dim1kSize]  - 
+%       'fill': logical[1,1]/logical[dim11Size,dim12Size,...,dim1kSize]  -
 %               if 1, ellipsoids in 2D will be filled with color. Default value is 0.
-%       'lineWidth': double[1,1]/double[dim11Size,dim12Size,...,dim1kSize]  - 
+%       'lineWidth': double[1,1]/double[dim11Size,dim12Size,...,dim1kSize]  -
 %                    line width for 1D and 2D plots. Default value is 1.
-%       'color': double[1,3]/double[dim11Size,dim12Size,...,dim1kSize,3] - 
+%       'color': double[1,3]/double[dim11Size,dim12Size,...,dim1kSize,3] -
 %                sets default colors in the form [x y z]. Default value is [1 0 0].
-%       'shade': double[1,1]/double[dim11Size,dim12Size,...,dim1kSize]  - 
+%       'shade': double[1,1]/double[dim11Size,dim12Size,...,dim1kSize]  -
 %                level of transparency between 0 and 1 (0 - transparent, 1 - opaque).
 %                Default value is 0.4.
 %       'relDataPlotter' - relation data plotter object.
@@ -70,10 +70,12 @@ DEFAULT_SHAD = 0.4;
 DEFAULT_FILL = false;
 
 [reg,~,plObj,isNewFigure,isFill,lineWidth,colorVec,shadVec,...
-    isRelPlotterSpec,~,isIsFill,isLineWidth,isColorVec,isShad]=modgen.common.parseparext(varargin,...
+    isRelPlotterSpec,~,isIsFill,isLineWidth,isColorVec,isShad]=...
+    modgen.common.parseparext(varargin,...
     {'relDataPlotter','newFigure','fill','lineWidth','color','shade' ;...
     [],0,[],[],[],0;@(x)isa(x,'smartdb.disp.RelationDataPlotter'),...
-    @(x)isa(x,'logical'),@(x)isa(x,'logical'),@(x)isa(x,'double'),@(x)isa(x,'double'),...
+    @(x)isa(x,'logical'),@(x)isa(x,'logical'),@(x)isa(x,'double'),...
+    @(x)isa(x,'double'),...
     @(x)isa(x,'double')});
 checkIsWrongInput();
 if ~isRelPlotterSpec
@@ -91,6 +93,9 @@ end
 nDim = max(dimension(ellsArr));
 if nDim == 3 && isLineWidth
     throwerror('wrongProperty', 'LineWidth is not supported by 3D Ellipsoids');
+end
+if nDim == 1
+    rebuildOneDim2TwoDim();
 end
 [lGetGridMat, fGetGridMat] = calcGrid();
 [colorVec, shadVec, lineWidth, isFill] = getPlotParams(colorVec, shadVec,...
@@ -131,13 +136,6 @@ elseif (nDim==3)
         @plotCreatePatchFunc,...
         {'verCMat','faceCMat','faceVertexCDataCMat',...
         'shadVec','clrVec'});
-else
-    plObj.plotGeneric(rel,@figureGetGroupNameFunc,{'figureNameCMat'},...
-        @figureSetPropFunc,{},...
-        @axesGetNameSurfFunc,{'axesNameCMat','axesNumCMat'},...
-        @axesSetPropDoNothingFunc,{},...
-        @plotCreateEl2PlotFunc,...
-        {'xCMat','qCMat','clrVec','widVec'});
 end
 if  isHold
     hold on;
@@ -219,11 +217,11 @@ end
     end
     function checkDimensions()
         import elltool.conf.Properties;
+        import modgen.common.throwerror;
         ellsArrDims = dimension(ellsArr);
         mDim    = min(ellsArrDims);
         nDim    = max(ellsArrDims);
         if mDim ~= nDim
-            import modgen.common.throwerror;
             throwerror('dimMismatch', ...
                 'Ellipsoids must have the same dimensions.');
         end
@@ -250,6 +248,7 @@ end
 
     function outParamVec = getPlotInitParam(inParamArr, ...
             isFilledParam, multConst)
+        import modgen.common.throwerror;
         if ~isFilledParam
             outParamVec = multConst*ones(1, ellNum);
         else
@@ -258,7 +257,6 @@ end
                 outParamVec = inParamArr*ones(1, ellNum);
             else
                 if nParams ~= ellNum
-                    import modgen.common.throwerror;
                     throwerror('wrongParamsNumber',...
                         'Number of params is not equal to number of ellipsoids');
                 end
@@ -269,7 +267,7 @@ end
 
 
     function colorArr = getColorVec(colorArr)
-        
+        import modgen.common.throwerror;
         if ~isColorVec
             auxcolors  = hsv(ellNum);
             multiplier = 7;
@@ -285,7 +283,6 @@ end
         else
             if size(colorArr, 1) ~= ellNum
                 if size(colorArr, 1) ~= 1
-                    import modgen.common.throwerror;
                     throwerror('wrongColorVecSize',...
                         'Wrong size of color array');
                 else
@@ -318,13 +315,17 @@ end
     end
     function checkIsWrongParams()
         import modgen.common.throwerror;
-        if any(lineWidth <= 0) || any(isnan(lineWidth)) || any(isinf(lineWidth))
-            throwerror('wrongLineWidth', 'LineWidth must be greater than 0 and finite');
+        if any(lineWidth <= 0) || any(isnan(lineWidth)) || ...
+                any(isinf(lineWidth))
+            throwerror('wrongLineWidth', ...
+                'LineWidth must be greater than 0 and finite');
         end
-        if (any(shadVec < 0)) || (any(shadVec > 1)) || any(isnan(shadVec)) || any(isinf(shadVec))
+        if (any(shadVec < 0)) || (any(shadVec > 1)) || any(isnan(shadVec))...
+                || any(isinf(shadVec))
             throwerror('wrongShade', 'Shade must be between 0 and 1');
         end
-        if (any(colorVec(:) < 0)) || (any(colorVec(:) > 1)) || any(isnan(colorVec(:))) || any(isinf(colorVec(:)))
+        if (any(colorVec(:) < 0)) || (any(colorVec(:) > 1)) || ...
+                any(isnan(colorVec(:))) || any(isinf(colorVec(:)))
             throwerror('wrongColorVec', 'Color must be between 0 and 1');
         end
         if size(colorVec, 2) ~= 3
@@ -337,11 +338,10 @@ end
         rNum = 0; gNum = 0; bNum = 0; yNum = 0; cNum = 0; wNum = 0;
         cellfun(@(x)checkIfNoColorCharPresent(x),reg);
         cellfun(@(x)checkRightPropName(x),reg);
-   
+        
         function checkIfNoColorCharPresent(value)
             import modgen.common.throwerror;
             if ischar(value)&&(numel(value)==1)&&~isColorDef(value)
-                import modgen.common.throwerror;
                 throwerror('wrongColorChar', ...
                     'You can''t use this symbol as a color');
             end
@@ -352,23 +352,38 @@ end
             end
         end
         function checkRightPropName(value)
+            import modgen.common.throwerror;
             if ischar(value)&&(numel(value)>1)
                 if~isRightProp(value)
-                    import modgen.common.throwerror;
-                    throwerror('wrongProperty', 'This property doesn''t exist');
+                    throwerror('wrongProperty', ...
+                        'This property doesn''t exist');
                 else
-                    import modgen.common.throwerror;
-                    throwerror('wrongPropertyValue', 'There is no value for property.');
+                    throwerror('wrongPropertyValue', ...
+                        'There is no value for property.');
                 end
             elseif ~isa(value, 'elltool.core.GenEllipsoid') && ~ischar(value)
-                import modgen.common.throwerror;
                 throwerror('wrongPropertyType', 'Property must be a string.');
             end
             function isRProp = isRightProp(value)
-                isRProp = strcmpi(value, 'fill') | strcmpi(value, 'linewidth') | ...
+                isRProp = strcmpi(value, 'fill') |...
+                    strcmpi(value, 'linewidth') | ...
                     strcmpi(value, 'shade') | strcmpi(value, 'color') | ...
                     strcmpi(value, 'newfigure');
             end
+        end
+    end
+    function rebuildOneDim2TwoDim()
+        ellsCMat = arrayfun(@(x) oneDim2TwoDim(x), ellsArr, ...
+            'UniformOutput', false);
+        ellsArr = vertcat(ellsCMat{:});
+        nDim = 2;
+        function ellTwoDim = oneDim2TwoDim(ell)
+            import elltool.core.GenEllipsoid;
+            ellCenVec = ell.getCenter();
+            ellEigMat = ell.getEigvMat();
+            ellDiagMat = ell.getDiagMat();
+            ellTwoDim = GenEllipsoid([ellCenVec, 0].', ...
+                diag([ellDiagMat, 0]), diag([ellEigMat, 0]));
         end
     end
 
@@ -381,7 +396,8 @@ h2 = ell_plot(q, '*','Parent',hAxes);
 set(h2, 'Color', clrVec);
 hVec = [h1,h2];
 end
-function hVec=plotCreateFillPlotFunc(hAxes,X,q,clrVec,fil,shade,widVec,varargin)
+function hVec=plotCreateFillPlotFunc(hAxes,X,q,clrVec,fil,...
+    shade,widVec,varargin)
 if ~fil
     shade = 0;
 end
@@ -426,15 +442,15 @@ material(hAxes,'metal');
 view(hAxes,3);
 end
 
-function [ellsArr, ellNum, uColorVec, vColorVec, isCharColor] = getEllParams(reg)
-
+function [ellsArr, ellNum, uColorVec, vColorVec, isCharColor] = ...
+    getEllParams(reg)
+import modgen.common.throwerror;
 if numel(reg) == 1
     isnLastElemCMat = {0};
 else
     isnLastElemCMat = num2cell([ones(1, numel(reg)-1), 0]);
 end
 if ischar(reg{1})
-    import modgen.common.throwerror;
     throwerror('wrongColorChar', 'Color char can''t be the first');
 end
 isCharColor = false;
@@ -448,6 +464,7 @@ ellNum = numel(ellsArr);
     function [ellVec, uColorVec, vColorVec] = getParams(ellArr, ...
             nextObjArr, isnLastElem)
         import elltool.core.GenEllipsoid;
+        import modgen.common.throwerror;
         if isa(ellArr, 'elltool.core.GenEllipsoid')
             cnt    = numel(ellArr);
             ellVec = reshape(ellArr, cnt, 1);
@@ -467,8 +484,8 @@ ellNum = numel(ellsArr);
             uColorVec = [];
             vColorVec = [];
             if ischar(ellArr) && ischar(nextObjArr)
-                import modgen.common.throwerror;
-                throwerror('wrongColorChar', 'Wrong combination of color chars');
+                throwerror('wrongColorChar', ...
+                    'Wrong combination of color chars');
             end
         end
     end
@@ -483,14 +500,16 @@ nDim = max(dimension(ellsArr));
     1:nDim);
 
 
-    function [minValVec, maxValVec] = findMinAndMaxDim(ellVec, dirDim, nDims)
+    function [minValVec, maxValVec] = findMinAndMaxDim(ellVec, ...
+            dirDim, nDims)
         import elltool.core.GenEllipsoid;
         
         minlVec = zeros(nDims, 1);
         minlVec(dirDim) = -1;
         maxlVec = zeros(nDims, 1);
         maxlVec(dirDim) = 1;
-        [minValVec, maxValVec] = arrayfun(@(x)findMinAndMaxDimEll(x), ellVec);
+        [minValVec, maxValVec] = arrayfun(@(x)findMinAndMaxDimEll(x),...
+            ellVec);
         minValVec = min(minValVec);
         maxValVec = max(maxValVec);
         
@@ -512,10 +531,12 @@ nDim = max(dimension(ellsArr));
             end
             diagVec = diag(dMat);
             maxEig = max(diagVec(diagVec < Inf));
-            if (-3*maxEig+qCenVec(dirDim) < minVal) && (curEllMin(dirDim) == -Inf)
+            if (-3*maxEig+qCenVec(dirDim) < minVal) &&...
+                    (curEllMin(dirDim) == -Inf)
                 minVal = -3*maxEig+qCenVec(dirDim);
             end
-            if (3*maxEig+qCenVec(dirDim) > maxVal) && (curEllMax(dirDim) == Inf)
+            if (3*maxEig+qCenVec(dirDim) > maxVal) && ...
+                    (curEllMax(dirDim) == Inf)
                 maxVal = 3*maxEig+qCenVec(dirDim);
             end
         end
