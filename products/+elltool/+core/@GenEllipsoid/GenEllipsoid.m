@@ -131,7 +131,7 @@ classdef GenEllipsoid < handle
     end
     methods
         function display(ellArr)
-            strucdisp(ellArr.toStruct());
+            strucdisp(ellArr(:).toStruct());
         end
     end
     methods
