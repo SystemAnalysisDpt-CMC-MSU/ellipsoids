@@ -88,8 +88,8 @@ else
     if ~isUnique
         nResProps=length(propResNameList);
         [~,indThereVec]=ismember(propResNameList,propUResNameList);
-        nResPropSpecVec=accumarray(indThereVec.',(1:nResProps).');
-        isPropDupVec=nResPropSpecVec>0;
+        nResPropSpecVec=accumarray(indThereVec.',ones(nResProps,1));
+        isPropDupVec=nResPropSpecVec>1;
         dupPropListStr=modgen.cell.cellstr2expression(...
             propUResNameList(isPropDupVec));
         throwerror('wrongInput:duplicatePropertiesSpec',...
