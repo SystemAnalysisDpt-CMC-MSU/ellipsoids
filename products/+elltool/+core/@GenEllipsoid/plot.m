@@ -394,14 +394,14 @@ if ~fil
     shade = 0;
 end
 h1 = ell_plot(q, '*','Parent',hAxes);
-if fil == 1
+if fil
     h2 = fill(X(1, :), X(2, :), clrVec,'FaceAlpha',shade,'Parent',hAxes);
 end
 h3 = ell_plot(X,'Parent',hAxes);
 
 set(h1, 'Color', clrVec);
 set(h3, 'Color', clrVec, 'LineWidth', widVec);
-if fil == 1
+if fil
     hVec = [h1,h2,h3];
 else
     hVec = [h1, h3];
