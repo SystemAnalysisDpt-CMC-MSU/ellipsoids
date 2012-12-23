@@ -14,18 +14,18 @@ classdef GenEllipsoidPlotTestCase < mlunitext.test_case
             testSecEll = GenEllipsoid([1, 0].', eye(2));
             testThirdEll = GenEllipsoid([0, -1].', eye(2));
             self.runAndCheckError...
-               ('plot(testFirEll,''r'',testSecEll,''g'',''shade'',1,''fill'',false,''lineWidth'',0)','wrongLineWidth');
+                ('plot(testFirEll,''r'',testSecEll,''g'',''shade'',1,''fill'',false,''lineWidth'',0)','wrongLineWidth');
             self.runAndCheckError...
-               ('plot(testFirEll,''color'',[0,0,0,1])','wrongColorVecSize');
+                ('plot(testFirEll,''color'',[0,0,0,1])','wrongColorVecSize');
             self.runAndCheckError...
-               ('plot(testFirEll,''color'',[0,0,1].'')','wrongColorVecSize');
+                ('plot(testFirEll,''color'',[0,0,1].'')','wrongColorVecSize');
             self.runAndCheckError...
-               ('plot(testFirEll,''color'',[0,0,-1])','wrongColorVec');
+                ('plot(testFirEll,''color'',[0,0,-1])','wrongColorVec');
             self.runAndCheckError...
-               ('plot(testFirEll,testSecEll,''lineWidth'',2,''color'',[0,0,1],testThirdEll,''color'',[1 0 1])',...
-               'wrongInput:duplicatePropertiesSpec');
+                ('plot(testFirEll,testSecEll,''lineWidth'',2,''color'',[0,0,1],testThirdEll,''color'',[1 0 1])',...
+                'wrongInput:duplicatePropertiesSpec');
             self.runAndCheckError...
-               ('plot(testFirEll, testSecEll,''r'',testThirdEll,''g'',''g'')','wrongColorChar');
+                ('plot(testFirEll, testSecEll,''r'',testThirdEll,''g'',''g'')','wrongColorChar');
             plot([testFirEll,testSecEll,testThirdEll],'shade',[0 0 1]);
             plot([testFirEll,testSecEll,testThirdEll],'lineWidth',[1 1 2]);
             plot([testFirEll,testSecEll,testThirdEll],'fill',[false false true]);
@@ -49,7 +49,28 @@ classdef GenEllipsoidPlotTestCase < mlunitext.test_case
                 ('plot([testFirEll,testSecEll,testThirdEll],''color'',[nan, nan, nan])', 'wrongColorVec');
             self.runAndCheckError...
                 ('plot([testFirEll,testSecEll,testThirdEll],''lineWidth'',[nan, inf, -inf])', 'wrongLineWidth');
+            self.runAndCheckError...
+                ('plot([testFirEll,testSecEll,testThirdEll],''lineWidth'')', 'wrongPropertyValue');
+            self.runAndCheckError...
+                ('plot([testFirEll,testSecEll,testThirdEll],''color'')', 'wrongPropertyValue');
+            self.runAndCheckError...
+                ('plot([testFirEll,testSecEll,testThirdEll],''shade'')', 'wrongPropertyValue');
+            self.runAndCheckError...
+                ('plot([testFirEll,testSecEll,testThirdEll],''newfigure'')', 'wrongPropertyValue');
+            self.runAndCheckError...
+                ('plot([testFirEll,testSecEll,testThirdEll],''fill'')', 'wrongPropertyValue');
+            self.runAndCheckError...
+                ('plot([testFirEll,testSecEll,testThirdEll], 1)', 'wrongPropertyType');
+            testFirEll = GenEllipsoid(eye(3));
+            self.runAndCheckError...
+                ('plot([testFirEll,testSecEll,testThirdEll])', 'dimMismatch');
+            self.runAndCheckError...
+                ('plot([testFirEll,testSecEll,testThirdEll], ''fill'', [false, true, true])', 'dimMismatch');
+            testFirEll = GenEllipsoid(eye(2));
+            self.runAndCheckError...
+                ('plot([testFirEll,testSecEll,testThirdEll], ''color'',[0 1 1;0 1 0])', 'wrongColorVecSize');
         end
+        
         function self = testColorChar(self)
             import elltool.core.GenEllipsoid;
             testEll = GenEllipsoid(eye(2));
@@ -80,7 +101,7 @@ classdef GenEllipsoidPlotTestCase < mlunitext.test_case
                 plEllColCMat = get(plEllObjVec, 'Color');
                 plEllColMat = vertcat(plEllColCMat{:});
                 plEllColMat = sortrows(plEllColMat);
-                mlunit.assert_equals(plEllColMat, colMat); 
+                mlunit.assert_equals(plEllColMat, colMat);
             end
             function check3dCol(plObj, varargin)
                 colMat = vertcat(varargin{:});
@@ -90,7 +111,7 @@ classdef GenEllipsoidPlotTestCase < mlunitext.test_case
                 plEllColCMat = arrayfun(@(x) getColVec(x), plEllObjVec, 'UniformOutput', false);
                 plEllColMat = vertcat(plEllColCMat{:});
                 plEllColMat = sortrows(plEllColMat);
-                mlunit.assert_equals(plEllColMat, colMat); 
+                mlunit.assert_equals(plEllColMat, colMat);
                 function clrVec = getColVec(plEllObj)
                     if ~eq(get(plEllObj, 'Type'), 'patch')
                         clrVec = [];
@@ -99,7 +120,7 @@ classdef GenEllipsoidPlotTestCase < mlunitext.test_case
                         clrVec = clrMat(1, :);
                     end
                 end
-            end            
+            end
         end
         function self = testNewFigure(self)
             import elltool.core.GenEllipsoid;
@@ -114,12 +135,12 @@ classdef GenEllipsoidPlotTestCase < mlunitext.test_case
             function checkNewFig(testEllArr, numEll)
                 plObj = plot(testEllArr, 'newfigure', true);
                 SHPlot =  plObj.getPlotStructure().figToAxesToHMap.toStruct();
-                mlunit.assert_equals(numel(fields(SHPlot)), numEll); 
+                mlunit.assert_equals(numel(fields(SHPlot)), numEll);
             end
             function checkNotNewFig(testEllArr)
                 plObj = plot(testEllArr, 'newfigure', false);
                 SHPlot =  plObj.getPlotStructure().figToAxesToHMap.toStruct();
-                mlunit.assert_equals(numel(SHPlot), 1); 
+                mlunit.assert_equals(numel(SHPlot), 1);
             end
         end
         function self = testProperties(self)
@@ -140,14 +161,14 @@ classdef GenEllipsoidPlotTestCase < mlunitext.test_case
             checkParams(plObj, [], 1, [], []);
             testEll = GenEllipsoid(eye(3));
             self.runAndCheckError...
-               ('plot(testEll, ''LineWidth'', 2)','wrongProperty');
+                ('plot(testEll, ''LineWidth'', 2)','wrongProperty');
             function checkParams(plObj, linewidth, fill, shade, colorVec)
                 SHPlot =  plObj.getPlotStructure().figToAxesToHMap.toStruct();
                 plEllObjVec = get(SHPlot.figure_g1.ax, 'Children');
                 isEqVec = arrayfun(@(x) checkEllParams(x), plEllObjVec);
-                mlunit.assert_equals(isEqVec, ones(size(isEqVec))); 
+                mlunit.assert_equals(isEqVec, ones(size(isEqVec)));
                 isFillVec = arrayfun(@(x) checkIsFill(x), plEllObjVec, 'UniformOutput', false);
-                mlunit.assert_equals(numel(isFillVec) > 0, fill); 
+                mlunit.assert_equals(numel(isFillVec) > 0, fill);
                 function isFill = checkIsFill(plObj)
                     if strcmp(get(plObj, 'type'), 'patch')
                         if get(plObj, 'FaceAlpha') > 0
@@ -182,7 +203,7 @@ classdef GenEllipsoidPlotTestCase < mlunitext.test_case
                                 isEq = isEq & all(colorVec == colorPlVec);
                             end
                         end
-
+                        
                     end
                 end
             end
@@ -264,7 +285,7 @@ classdef GenEllipsoidPlotTestCase < mlunitext.test_case
                 SAxes = SHPlot.figure_g1;
                 plotFig = get(SAxes.ax, 'Children');
                 mlunit.assert_equals(numel(plotFig), testAns);
-
+                
             end
             function checkHoldOffNewFig(testEllArr, testAns)
                 plot(1:10,sin(1:10));
@@ -283,9 +304,9 @@ classdef GenEllipsoidPlotTestCase < mlunitext.test_case
                 SAxes = SHPlot.figure1_g1;
                 plotFig = get(SAxes.ax1, 'Children');
                 mlunit.assert_equals(numel(plotFig), testAns);
-
+                
             end
-
+            
         end
         
         function self = testOrdinaryPlot2d(self)
@@ -378,7 +399,7 @@ classdef GenEllipsoidPlotTestCase < mlunitext.test_case
                 eye(3), [cos(pi/3), 0, -sin(pi/3); 0, 1, 0; sin(pi/3), 0, cos(pi/3)], ...
                 eye(3), [cos(pi/3), -sin(pi/3), 0; sin(pi/3), cos(pi/3), 0; 0, 0, 1], ...
                 eye(3), eye(3), [cos(pi/6), -sin(pi/6), 0; sin(pi/6), cos(pi/6), 0; 0, 0, 1], ...
-                [1, 0, 0; 0, cos(pi/4), -sin(pi/4); 0, sin(pi/4), cos(pi/4)], ... 
+                [1, 0, 0; 0, cos(pi/4), -sin(pi/4); 0, sin(pi/4), cos(pi/4)], ...
                 [cos(pi/4), 0, sin(pi/4); 0, 1, 0; -sin(pi/4), 0, cos(pi/4)], eye(3), ...
                 eye(3),  [cos(pi/3), 0, -sin(pi/3); 0, 1, 0; sin(pi/3), 0, cos(pi/3)], ...
                 [cos(pi/3), -sin(pi/3), 0; sin(pi/3), cos(pi/3), 0; 0, 0, 1]};
@@ -394,7 +415,7 @@ classdef GenEllipsoidPlotTestCase < mlunitext.test_case
                     inpRotCList{iElem});
             end
             check(testEllArr, nDims);
-      
+            
             for iElem = 1:nElem
                 testEllArr(iElem)=GenEllipsoid(inpCenCList{iElem}, inpArgCList{iElem}, ...
                     inpRotCList{iElem});
@@ -445,32 +466,32 @@ cellPoints = num2cell(pointsMat(:, :), 1);
 testEllVec = reshape(testEllArr, 1, numel(testEllArr));
 nEll = numel(testEllVec);
 for iEll = 1:nEll
-        dMat = testEllVec(iEll).getDiagMat();
-        if nDims == 2
-            if dMat(1, 1) == 0
-                isBoundEllVec = check2dDimZero(testEllVec(iEll), cellPoints, 1);
-            elseif dMat(2, 2) == 0
-                isBoundEllVec = check2dDimZero(testEllVec(iEll), cellPoints, 2);
-                
-            elseif max(dMat(:)) == Inf
-                isBoundEllVec = checkDimInf(testEllVec(iEll), cellPoints);
-            else
-                isBoundEllVec = checkNorm(testEllVec(iEll), cellPoints);
-            end
-        elseif nDims == 3
-            if dMat(1, 1) == 0
-                 isBoundEllVec = check3dDimZero(testEllVec(iEll), cellPoints, 1);
-            elseif dMat(2, 2) == 0
-                 isBoundEllVec = check3dDimZero(testEllVec(iEll), cellPoints, 2);
-            elseif dMat(3, 3) == 0
-                 isBoundEllVec = check3dDimZero(testEllVec(iEll), cellPoints, 3);
-            elseif max(dMat(:)) == Inf
-                isBoundEllVec = checkDimInf(testEllVec(iEll), cellPoints);
-            else
-                isBoundEllVec = checkNorm(testEllVec(iEll), cellPoints);
-            end
+    dMat = testEllVec(iEll).getDiagMat();
+    if nDims == 2
+        if dMat(1, 1) == 0
+            isBoundEllVec = check2dDimZero(testEllVec(iEll), cellPoints, 1);
+        elseif dMat(2, 2) == 0
+            isBoundEllVec = check2dDimZero(testEllVec(iEll), cellPoints, 2);
+            
+        elseif max(dMat(:)) == Inf
+            isBoundEllVec = checkDimInf(testEllVec(iEll), cellPoints);
+        else
+            isBoundEllVec = checkNorm(testEllVec(iEll), cellPoints);
         end
-        isBoundVec = isBoundVec | isBoundEllVec;
+    elseif nDims == 3
+        if dMat(1, 1) == 0
+            isBoundEllVec = check3dDimZero(testEllVec(iEll), cellPoints, 1);
+        elseif dMat(2, 2) == 0
+            isBoundEllVec = check3dDimZero(testEllVec(iEll), cellPoints, 2);
+        elseif dMat(3, 3) == 0
+            isBoundEllVec = check3dDimZero(testEllVec(iEll), cellPoints, 3);
+        elseif max(dMat(:)) == Inf
+            isBoundEllVec = checkDimInf(testEllVec(iEll), cellPoints);
+        else
+            isBoundEllVec = checkNorm(testEllVec(iEll), cellPoints);
+        end
+    end
+    isBoundVec = isBoundVec | isBoundEllVec;
 end
 
 mlunit.assert_equals(isBoundVec, ones(size(isBoundVec)));

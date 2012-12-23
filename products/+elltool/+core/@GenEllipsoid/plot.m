@@ -223,8 +223,9 @@ end
         mDim    = min(ellsArrDims);
         nDim    = max(ellsArrDims);
         if mDim ~= nDim
+            import modgen.common.throwerror;
             throwerror('dimMismatch', ...
-                'Ellipsoids must be of the same dimension.');
+                'Ellipsoids must have the same dimensions.');
         end
         if (mDim < 1) || (nDim > 3)
             throwerror('wrongDim','ellipsoid dimension can be 1, 2 or 3');
@@ -283,8 +284,10 @@ end
             colorArr = colorsArr;
         else
             if size(colorArr, 1) ~= ellNum
-                if size(colorArr, 1) > ellNum
-                    colorArr = colorArr(1:ellNum, :);
+                if size(colorArr, 1) ~= 1
+                    import modgen.common.throwerror;
+                    throwerror('wrongColorVecSize',...
+                        'Wrong size of color array');
                 else
                     colorArr = repmat(colorArr, ellNum, 1);
                 end
@@ -349,14 +352,22 @@ end
             end
         end
         function checkRightPropName(value)
-            if ischar(value)&&(numel(value)>1)&&~isRightProp(value)
+            if ischar(value)&&(numel(value)>1)
+                if~isRightProp(value)
+                    import modgen.common.throwerror;
+                    throwerror('wrongProperty', 'This property doesn''t exist');
+                else
+                    import modgen.common.throwerror;
+                    throwerror('wrongPropertyValue', 'There is no value for property.');
+                end
+            elseif ~isa(value, 'elltool.core.GenEllipsoid') && ~ischar(value)
                 import modgen.common.throwerror;
-                throwerror('wrongProperty', 'This property doesn''t exist');
+                throwerror('wrongPropertyType', 'Property must be a string.');
             end
             function isRProp = isRightProp(value)
-                isRProp = strcmp(value, 'fill') | strcmp(value, 'linewidth') | ...
-                    strcmp(value, 'shade') | strcmp(value, 'color') | ...
-                    strcmp(value, 'newfigure');
+                isRProp = strcmpi(value, 'fill') | strcmpi(value, 'linewidth') | ...
+                    strcmpi(value, 'shade') | strcmpi(value, 'color') | ...
+                    strcmpi(value, 'newfigure');
             end
         end
     end
