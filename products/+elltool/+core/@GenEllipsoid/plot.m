@@ -335,7 +335,6 @@ end
     end
     function checkIsWrongInput()
         import modgen.common.throwerror;
-        rNum = 0; gNum = 0; bNum = 0; yNum = 0; cNum = 0; wNum = 0;
         cellfun(@(x)checkIfNoColorCharPresent(x),reg);
         cellfun(@(x)checkRightPropName(x),reg);
         
@@ -389,13 +388,6 @@ end
 
 end
 
-function hVec=plotCreateEl2PlotFunc(hAxes,X,Y,q,clrVec,wid,varargin)
-h1 = ell_plot([(X) (Y)],'Parent',hAxes);
-set(h1, 'Color', clrVec, 'LineWidth', wid);
-h2 = ell_plot(q, '*','Parent',hAxes);
-set(h2, 'Color', clrVec);
-hVec = [h1,h2];
-end
 function hVec=plotCreateFillPlotFunc(hAxes,X,q,clrVec,fil,...
     shade,widVec,varargin)
 if ~fil
