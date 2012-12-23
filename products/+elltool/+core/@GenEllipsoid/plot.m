@@ -68,7 +68,6 @@ SPHERE_TRIANG_CONST = 3;
 DEFAULT_LINE_WIDTH = 1;
 DEFAULT_SHAD = 0.4;
 DEFAULT_FILL = false;
-
 [reg,~,plObj,isNewFigure,isFill,lineWidth,colorVec,shadVec,...
     isRelPlotterSpec,~,isIsFill,isLineWidth,isColorVec,isShad]=...
     modgen.common.parseparext(varargin,...
@@ -437,6 +436,7 @@ end
 function [ellsArr, ellNum, uColorVec, vColorVec, isCharColor] = ...
     getEllParams(reg)
 import modgen.common.throwerror;
+BLACK_COLOR = [0, 0, 0];
 if numel(reg) == 1
     isnLastElemCMat = {0};
 else
@@ -466,7 +466,7 @@ ellNum = numel(ellsArr);
                 colorVec = GenEllipsoid.getColorTable(nextObjArr);
                 val = 1;
             else
-                colorVec = [0 0 0];
+                colorVec = BLACK_COLOR;
                 val = 0;
             end
             uColorVec = repmat(val, cnt, 1);
