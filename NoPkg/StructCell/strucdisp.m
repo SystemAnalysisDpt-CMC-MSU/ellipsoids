@@ -59,7 +59,7 @@ DEFAULT_PRINT_VALUES=true;
 DEFAULT_NUMBER_FORMAT='%g';
 %% Main program
 %%%%% start program %%%%%
-checkgen(SInp,'isstruct(x)&&isvec(x)');
+checkgen(SInp,'isstruct(x)');
 [reg,~,depth,inpPrintValues,maxArrayLength,numberFormat]=parseparext(varargin,...
     {'depth','printValues','maxArrayLength','numberFormat';...
     DEFAULT_DEPTH,...
@@ -113,19 +113,28 @@ end
         % output, as this is much faster then directly printing it to screen.
         listStr = {};
         
-        % "Structure" can be a scalar or a vector.
+        % "Structure" can be a scalar or an array
         % In case of a vector, this recursive function is recalled for each of
         % the vector elements. But if the values don't have to be printed, only
         % the size of the structure and its fields are printed.
-        if length(Structure) > 1
+        if numel(Structure) > 1
             if (printValues == 0)
                 varStr = createArraySize(Structure, 'Structure');
                 listStr = [{' '}; {['Structure', varStr]}];
                 body = recFieldPrint(Structure(1), indent);
                 listStr = [listStr; body; {'   O'}];
             else
-                for iStruc = 1 : length(Structure)
-                    listStr = [listStr; {' '}; {sprintf('Structure(%d)', iStruc)}];
+                sizeVec=size(Structure);
+                nElems=prod(sizeVec);
+                nDims=length(sizeVec);
+                indList=cell(1,nDims);
+                %
+                for iStruc = 1 : nElems
+                    [indList{:}]=ind2sub(sizeVec,iStruc);
+                    indStr=sprintf('%d,',indList{:});
+                    indStr=indStr(1:end-1);
+                    listStr = [listStr; {' '}; {sprintf('Structure(%s)',...
+                        indStr)}];
                     body = recFieldPrint(Structure(iStruc), indent);
                     listStr = [listStr; body; {'   O'}];
                 end
@@ -347,14 +356,41 @@ end
             Field = cell2mat(logicalFields(iField));
             filler = char(ones(1, maxFieldLength - length(Field) + 2)...
                 * DASH_SYMBOL_CODE);
-            if isscalar(Structure.(Field))
-                logicalValue = {'False', 'True'};
-                varStr = sprintf(' %s', logicalValue{Structure.(Field) + 1});
+%             if isscalar(Structure.(Field))
+%                 logicalValue = {'false', 'true'};
+%                 varStr = sprintf(' %s', logicalValue{Structure.(Field) + 1});
+%             else
+%                 
+            if numel(Structure.(Field)) > maxArrayLength
+                varStr = createArraySize(Structure.(Field), 'Logical array');
+                varCell={[strIndent '   |' filler ' ' Field ' :' varStr]};
             else
-                varStr = createArraySize(Structure.(Field), 'Logic array');
+                curPrintFormat=numberFormat;
+                printedFieldValue=cellfun(@(x)sprintf(curPrintFormat,x),...
+                    num2cell(Structure.(Field)),'UniformOutput',false);
+                varCell=formCellOfString(strIndent,printedFieldValue,...
+                    maxFieldLength,[filler ' '  Field]);
             end
-            listStr = [listStr; {[strIndent '   |' filler ' ' Field ' :' varStr]}];
+            listStr = [listStr; varCell];
         end
+
+        
+%         for iField = 1 : length(matrixFields)
+%             Field = cell2mat(matrixFields(iField));
+%             filler = char(ones(1, maxFieldLength - length(Field) + 2)...
+%                 * DASH_SYMBOL_CODE);
+%             if numel(Structure.(Field)) > maxArrayLength
+%                 varStr = createArraySize(Structure.(Field), 'Array');
+%                 varCell = {[strIndent '   |' filler ' ' Field ' :' varStr]};
+%             else
+%                 curPrintFormat=numberFormat;
+%                 printedFieldValue=cellfun(@(x)sprintf(curPrintFormat,x),...
+%                     num2cell(Structure.(Field)),'UniformOutput',false);
+%                 varCell=formCellOfString(strIndent,printedFieldValue,...
+%                     maxFieldLength,[filler ' '  Field]);
+%             end
+%             listStr = [listStr; varCell];
+%         end        
         
         % Print numeric scalar field. The %g format is used, so that integers,
         % floats and exponential numbers are printed in their own format.
@@ -404,9 +440,6 @@ end
                 varStr = createArraySize(Structure.(Field), 'Array');
                 varCell = {[strIndent '   |' filler ' ' Field ' :' varStr]};
             else
-%                matrixSize = size(Structure.(Field));
-%                 filler2 = char(ones(1, maxFieldLength + 6) * FILLER_SYMBOL_CODE);
-%                 dashes = char(ones(1, 12 * matrixSize(2) + 1) * DASH_SYMBOL_CODE);
                 curPrintFormat=numberFormat;
                 printedFieldValue=cellfun(@(x)sprintf(curPrintFormat,x),...
                     num2cell(Structure.(Field)),'UniformOutput',false);
@@ -491,7 +524,7 @@ end
 % like: "[1x5 Array]" or "[2x3x5 Structure]" where 'Structure' and 'Array'
 % are defined by the type parameter
 
-function varStr = createArraySize(varName, type)
+function [varStr,varSize] = createArraySize(varName, type)
 varSize = size(varName);
 arraySizeStr = sprintf('%gx', varSize);
 arraySizeStr(length(arraySizeStr)) = [];

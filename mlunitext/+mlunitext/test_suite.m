@@ -8,6 +8,42 @@ classdef test_suite<mlunit.test_suite
         parallelMode='blockBased'
     end
     %
+    methods (Static)
+        function suite=fromTestCaseNameList(testCaseNameList,...
+                testCaseConstrArgList)
+            % FROMTESTCASENAMELIST creates a test suite from the test cases
+            % specified by name
+            %
+            % Input:
+            %   regular:
+            %       self:
+            %       testCaseNameList: cell[1,nTestCases] of char[1,] - list
+            %           of test case names
+            %   optional:
+            %       testCaseConstrArgList: any[1,] - an arbitrary list of
+            %           arguments passed into a test case constructor.
+            %            
+            import modgen.common.type.simple.checkcellofstr;
+            import modgen.common.throwerror;
+            checkcellofstr(testCaseNameList);
+            loaderObj = mlunitext.test_loader;
+            nTestCases=length(testCaseNameList);
+            if nargin<2
+                testCaseConstrArgList={};
+            end
+            if nTestCases<1
+                throwerror('wrongInput',...
+                    'at least one test case name is expected');
+            end
+            suite = loaderObj.load_tests_from_test_case(...
+                testCaseNameList{1},testCaseConstrArgList{:});
+            %
+            for iTestCase=2:nTestCases
+                suite.add_test(loaderObj.load_tests_from_test_case(...
+                    testCaseNameList{iTestCase},testCaseConstrArgList{:}));
+            end
+        end        
+    end    
     methods
         function self = test_suite(varargin)
             % TEST_SUITE constructor
