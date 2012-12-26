@@ -45,24 +45,22 @@ function intApprEllVec = minkdiff_ia(fstEll, secEll, directionsMat)
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
+%
+% $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
+% $Copyright: Moscow State University,
+%             Faculty of Computational Mathematics and Cybernetics,
+%             Science, System Analysis Department 2012 $
+%
 
 import modgen.common.throwerror;
+import modgen.common.checkmultvar;
 import elltool.conf.Properties;
 
-if ~(isa(fstEll, 'ellipsoid')) || ~(isa(secEll, 'ellipsoid'))
-    fstStr = 'MINKDIFF_IA: first and second arguments must ';
-    secStr = 'be single ellipsoids.';
-    throwerror('wrongInput', [fstStr secStr]);
-end
-
-[mRowsFstEll, nColsFstEll] = size(fstEll);
-[mRowsSecEll, nColsSecEll] = size(secEll);
-if (mRowsFstEll ~= 1) || (nColsFstEll ~= 1) || ...
-        (mRowsSecEll ~= 1) || (nColsSecEll ~= 1)
-    fstStr = 'MINKDIFF_IA: first and second arguments must ';
-    secStr = 'be single ellipsoids.';
-    throwerror('wrongInput', [fstStr secStr]);
-end
+ellipsoid.checkIsMe(fstEll,'first');
+ellipsoid.checkIsMe(secEll,'second');
+checkmultvar('isscalar(x1)&&isscalar(x2)',2,fstEll,secEll,...
+    'errorTag','wrongInput','errorMessage',...
+    'first and second arguments must be single ellipsoids.')
 
 intApprEllVec = [];
 
@@ -75,36 +73,40 @@ if ~isbigger(fstEll, secEll)
     return;
 end
 
-nRowsDirMat = size(directionsMat, 1);
-nDims = dimension(fstEll);
-if nRowsDirMat ~= nDims
-    fstStr = 'MINKDIFF_IA: dimension of the direction vectors must ';
-    secStr = 'be the same as dimension of ellipsoids.';
-    throwerror('wrongSizes', [fstStr secStr]);
-end
+checkmultvar('(x1==x2)',2,dimension(fstEll),size(directionsMat, 1),...
+    'errorTag','wrongSizes','errorMessage',...
+    'direction vectors ans ellipsoids dimensions mismatch.');
+
 centVec = fstEll.center - secEll.center;
 fstEllShMat = fstEll.shape;
-if rank(fstEllShMat) < size(fstEllShMat, 1)
+if isdegenerate(fstEll)
     fstEllShMat = ellipsoid.regularize(fstEllShMat,fstEll.absTol);
 end
 secEllShMat = secEll.shape;
-if rank(secEllShMat) < size(secEllShMat, 1)
+if isdegenerate(secEll)
     secEllShMat = ellipsoid.regularize(secEllShMat,secEll.absTol);
 end
 directionsMat  = ellipsoid.rm_bad_directions(fstEllShMat, ...
     secEllShMat, directionsMat);
-nColsDirMat  = size(directionsMat, 2);
-if nColsDirMat < 1
+nDirs  = size(directionsMat, 2);
+if nDirs < 1
     if Properties.getIsVerbose()
         fprintf('MINKDIFF_IA: cannot compute internal approximation');
         fprintf(' for any\n             of the specified directions.\n');
     end
     return;
 end
-for iCol = 1:nColsDirMat
-    nColsFstEll  = directionsMat(:, iCol);
-    coef = (sqrt(nColsFstEll'*fstEllShMat*nColsFstEll))/...
-        (sqrt(nColsFstEll'*secEllShMat*nColsFstEll));
-    shMat = (1 - (1/coef))*fstEllShMat + (1 - coef)*secEllShMat;
-    intApprEllVec = [intApprEllVec ellipsoid(centVec, shMat)];
+
+numVec=sum((fstEllShMat*directionsMat).*directionsMat,1);
+denomVec=sum((secEllShMat*directionsMat).*directionsMat,1);
+coefVec=numVec./denomVec;
+
+intApprEllVec = repmat(ellipsoid,1, nDirs);
+arrayfun(@(x) fSingleDir(x), 1:nDirs)
+    function fSingleDir(index)
+        coef = sqrt(coefVec(index));
+        shMat = (1 - (1/coef))*fstEllShMat + (1 - coef)*secEllShMat;
+        intApprEllVec(index).center = centVec;
+        intApprEllVec(index).shape = shMat;
+    end
 end
