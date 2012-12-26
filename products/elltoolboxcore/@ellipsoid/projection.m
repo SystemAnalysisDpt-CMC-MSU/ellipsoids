@@ -1,82 +1,62 @@
-function EP = projection(E, B)
+function projEllArr = projection(ellArr, basisMat)
 %
 % PROJECTION - computes projection of the ellipsoid onto the given subspace.
 %
+%   projEllArr = projection(ellArr, basisMat)  Computes projection of the 
+%       ellipsoid ellArr onto a subspace, specified by orthogonal 
+%       basis vectors basisMat. ellArr can be an array of ellipsoids of 
+%       the same dimension. Columns of B must be orthogonal vectors.
 %
-% Description:
-% ------------
-%
-%    EP = PROJECTION(E, B)  Computes projection of the ellipsoid E onto a subspace,
-%                           specified by orthogonal basis vectors B.
-%                           E can be an array of ellipsoids of the same dimension.
-%                           Columns of B must be orthogonal vectors.
-%
+% Input:
+%   regular:
+%       ellArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array
+%           of ellipsoids.
+%       basisMat: double[nDim, nSubSpDim] - matrix of orthogonal basis
+%           vectors
 %
 % Output:
-% -------
+%   projEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of
+%       projected ellipsoids, generally, of lower dimension.
 %
-%    EP - projected ellipsoid (or array of ellipsoids), generally, of lower dimension.
+% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+% $Copyright:  The Regents of the University of California 2004-2008 $
 %
-%
-% See also:
-% ---------
-%
-%    ELLIPSOID/ELLIPSOID.
+% $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
+% $Copyright: Moscow State University,
+%             Faculty of Computational Mathematics and Cybernetics,
+%             Science, System Analysis Department 2012 $
 %
 
-%
-% Author:
-% -------
-%
-%    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-%
-  if ~(isa(E, 'ellipsoid')) || ~(isa(B, 'double'))
-    error('PROJECTION: arguments must be array of ellipsoids and matrix with orthogonal columns.');
-  end
+ellipsoid.checkIsMe(ellArr,'first');
+modgen.common.checkvar(basisMat, @(x)isa(x,'double'),'errorMessage',...
+    'second input argument must be matrix with orthogonal columns.');
 
-  [k, l] = size(B);
-  dims   = dimension(E);
-  m      = min(dims); m = min(m);
-  n      = max(dims); n = max(n);
-  if (m ~= n)
-    error('PROJECTION: ellipsoids in the array must be of the same dimenion.');
-  end
-  if (k ~= n)
-    error('PROJECTION: dimension of basis vectors does not dimension of ellipsoids.');
-  end
-  if (k < l)
-    msg = sprintf('PROJECTION: number of basis vectors must be less or equal to %d.', n);
-    error(msg);
-  end
+[nDim, nBasis] = size(basisMat);
+nDimsArr   = dimension(ellArr);
+modgen.common.checkmultvar('(x2<=x1) && all(x3(:)==x1)',...
+    3,nDim,nBasis,nDimsArr, 'errorMessage',...
+    'dimensions mismatch or number of basis vectors too large.');
 
-  % check the orthogonality of the columns of B
-  for i = 1:(l - 1)
-    v = B(:, i);
-    for j = (i + 1):l
-      if abs(v'*B(:, j)) > E.getAbsTol()
-        error('PROJECTION: basis vectors must be orthogonal.');
-      end
+% check the orthogonality of the columns of basisMat
+scalProdMat = basisMat' * basisMat;
+normSqVec = diag(scalProdMat);
+
+absTolArr = ellArr.getAbsTol();
+absTol = max(absTolArr(:));
+isOrtogonalMat =(scalProdMat - diag(normSqVec))> absTol;
+if any(isOrtogonalMat(:))
+    error('basis vectors must be orthogonal.');
+end
+
+% normalize the basis vectors
+normMat = repmat( sqrt(normSqVec.'), nDim, 1);
+ortBasisMat = basisMat./normMat;
+
+% compute projection
+sizeCVec = num2cell(size(ellArr));
+projEllArr(sizeCVec{:}) = ellipsoid;
+arrayfun(@(x) fSingleProj(x), 1:numel(ellArr));
+    function fSingleProj(index)
+        projEllArr(index) = ortBasisMat' * ellArr(index);
     end
-  end
-
-  % normalize the basis vectors
-  BB = zeros(k,l);
-  for i = 1:l
-    BB(:, i) = B(:, i)/norm(B(:, i));
-  end
-
-  % compute projection
-  [m, n] = size(E);
-  for i = 1:m
-    for j = 1:n
-      r(j) = BB'*E(i, j);
-    end
-    if i == 1
-      EP = r;
-    else
-      EP = [EP; r];
-    end
-    clear r;
-  end
-
 end

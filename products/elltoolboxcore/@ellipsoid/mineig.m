@@ -1,39 +1,29 @@
-function minEigMat = mineig(inpEllMat)
+function minEigArr = mineig(inpEllArr)
 %
 % MINEIG - return the minimal eigenvalue of the ellipsoid.
 %
 % Input:
-%   regular:
-%       inpEllMat: ellipsoid [mRows, nCols] - matrix of ellipsoids.
+%	regular:
+%       inpEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of ellipsoids.
 %
 % Output:
-%   minEigMat: double[mRows, nCols] - array of minimal eigenvalues
+%	minEigArr: double[nDims1,nDims2,...,nDimsN] - array of minimal eigenvalues
 %       of ellipsoids in the input array inpEllMat.
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
+%
+% $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
+% $Copyright: Moscow State University,
+%             Faculty of Computational Mathematics and Cybernetics,
+%             Science, System Analysis Department 2012 $
+%
 
-import modgen.common.throwerror;
 import elltool.conf.Properties;
 
-if ~(isa(inpEllMat, 'ellipsoid'))
-    throwerror('wrongInput', ...
-        'MINEIG: input argument must be ellipsoid.');
-end
+ellipsoid.checkIsMe(inpEllArr);
+modgen.common.checkvar(inpEllArr,'~any(isempty(x(:)))',...
+    'errorTag','wrongInput:emptyEllipsoid','errorMessage',...
+    'input argument contains empty ellipsoid');
 
-[mRows, nCols] = size(inpEllMat);
-minEigMat = zeros(mRows,nCols);
-for iRow = 1:mRows
-    for jCol = 1:nCols
-        if isempty(inpEllMat(iRow,jCol))
-            throwerror('wrongInput:emptyEllipsoid', ...
-                'MINEIG: input argument is empty.');
-        end
-        if isdegenerate(inpEllMat(iRow, jCol))
-            minEigMat(iRow,jCol)=0;
-        else
-            minEigMat(iRow,jCol) = ...
-                min(eig(inpEllMat(iRow, jCol).shape));
-        end
-    end
-end
+minEigArr = arrayfun(@(x) min(eig(x.shape)),inpEllArr);

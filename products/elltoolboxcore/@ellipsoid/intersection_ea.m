@@ -1,27 +1,27 @@
-function outEllMat = intersection_ea(myEllMat, objMat)
+function outEllArr = intersection_ea(myEllArr, objArr)
 %
 % INTERSECTION_EA - external ellipsoidal approximation of the
 %                   intersection of two ellipsoids, or ellipsoid and
 %                   halfspace, or ellipsoid and polytope.
 %
-%   outEllMat = INTERSECTION_EA(myEllMat, objMat) Given two ellipsoidal
-%       matrixes of equal sizes, myEllMat and objMat = ellMat, or,
-%       alternatively, myEllMat or ellMat must be a single ellipsoid,
+%   outEllArr = INTERSECTION_EA(myEllArr, objArr) Given two ellipsoidal
+%       matrixes of equal sizes, myEllArr and objArr = ellArr, or,
+%       alternatively, myEllArr or ellMat must be a single ellipsoid,
 %       computes the ellipsoid that contains the intersection of two
-%       corresponding ellipsoids from myEllMat and from ellMat.
-%   outEllMat = INTERSECTION_EA(myEllMat, objMat) Given matrix of
-%       ellipsoids myEllMat and matrix of hyperplanes objMat = hypMat
+%       corresponding ellipsoids from myEllArr and from ellArr.
+%   outEllArr = INTERSECTION_EA(myEllArr, objArr) Given matrix of
+%       ellipsoids myEllArr and matrix of hyperplanes objArr = hypArr
 %       whose sizes match, computes the external ellipsoidal
 %       approximations of intersections of ellipsoids
-%       and halfspaces defined by hyperplanes in hypMat.
+%       and halfspaces defined by hyperplanes in hypArr.
 %       If v is normal vector of hyperplane and c - shift,
 %       then this hyperplane defines halfspace
 %               <v, x> <= c.
-%   outEllMat = INTERSECTION_EA(myEllMat, objMat) Given matrix of
-%       ellipsoids myEllMat and matrix of polytopes objMat = polyMat
+%   outEllArr = INTERSECTION_EA(myEllArr, objArr) Given matrix of
+%       ellipsoids myEllArr and matrix of polytopes objArr = polyArr
 %       whose sizes match, computes the external ellipsoidal
 %       approximations of intersections of ellipsoids myEllMat and
-%       polytopes polyMat.
+%       polytopes polyArr.
 %
 %   The method used to compute the minimal volume overapproximating
 %   ellipsoid is described in "Ellipsoidal Calculus Based on
@@ -32,134 +32,82 @@ function outEllMat = intersection_ea(myEllMat, objMat)
 %
 % Input:
 %   regular:
-%       myEllMat: ellipsoid [mRows, nCols] - matrix of ellipsoids.
-%       objMat: ellipsoid [mRows, nCols] / hyperplane [mRows, nCols] /
-%           / polytope [mRows, nCols]  - matrix of ellipsoids or
-%           hyperplanes or polytopes of the same sizes.
+%       myEllArr: ellipsoid [nDims1,nDims2,...,nDimsN]/[1,1] - array 
+%           of ellipsoids.
+%       objArr: ellipsoid / hyperplane /
+%           / polytope [nDims1,nDims2,...,nDimsN]/[1,1]  - array of 
+%           ellipsoids or hyperplanes or polytopes of the same sizes.
 %
 % Output:
-%    outEllMat: ellipsoid [mRows, nCols] - matrix of external
+%    outEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of external
 %       approximating ellipsoids; entries can be empty ellipsoids
 %       if the corresponding intersection is empty.
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
+%
+% $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
+% $Copyright: Moscow State University,
+%             Faculty of Computational Mathematics and Cybernetics,
+%             Science, System Analysis Department 2012 $
+%
 
 import modgen.common.throwerror;
+import modgen.common.checkmultvar;
 
-if ~(isa(myEllMat, 'ellipsoid'))
-    throwerror('wrongInput', ...
-        'INTERSECTION_EA: first input argument must be ellipsoid.');
-end
-if ~(isa(objMat, 'ellipsoid')) && ~(isa(objMat, 'hyperplane')) ...
-        && ~(isa(objMat, 'polytope'))
-    fstErrMsg = 'INTERSECTION_EA: second input argument must be ';
-    secErrMsg = 'ellipsoid, hyperplane or polytope.';
-    throwerror('wrongInput', [fstErrMsg secErrMsg]);
-end
+ellipsoid.checkIsMe(myEllArr,'first');
+modgen.common.checkvar(objArr,@(x) isa(x, 'ellipsoid') ||...
+    isa(x, 'hyperplane') || isa(x, 'polytope'),...
+    'errorTag','wrongInput', 'errorMessage',...
+    'second input argument must be ellipsoid,hyperplane or polytope.');
 
-[mEllRows, nEllCols] = size(myEllMat);
-[mObjRows, nObjCols] = size(objMat);
-nDimsMat  = dimension(myEllMat);
+isPoly = isa(objArr, 'polytope');
 
-if isa(objMat, 'polytope')
-    nObjDimsMat = [];
-    for iRow = 1:mObjRows
-        nObjDimsPartVec = [];
-        for jCol = 1:nObjCols
-            nObjDimsPartVec = [nObjDimsPartVec dimension(objMat(jCol))];
-        end
-        nObjDimsMat = [nObjDimsMat; nObjDimsPartVec];
-    end
+nDimsArr  = dimension(myEllArr);
+if isPoly
+    nObjDimsArr = arrayfun(@(x) dimension(x),objArr);
 else
-    nObjDimsMat = dimension(objMat);
+    nObjDimsArr = dimension(objArr);
 end
+isEllScal = isscalar(myEllArr);
+isObjScal = isscalar(objArr);
 
-minDim   = min(min(nDimsMat));
-minObjDim   = min(min(nObjDimsMat));
-maxDim   = max(max(nDimsMat));
-maxObjDim   = max(max(nObjDimsMat));
+checkmultvar( 'all(size(x1)==size(x2))|| x3 || x4 ',...
+	4,myEllArr,objArr,isEllScal,isObjScal,...
+    'errorTag','wrongSizes',...
+    'errorMessage','sizes of input arrays do not match.');
+checkmultvar('(x1(1)==x2(1))&&all(x1(:)==x1(1))&&all(x2(:)==x2(1))',...
+	2,nDimsArr,nObjDimsArr,...
+    'errorTag','wrongSizes',...
+    'errorMessage','input arguments must be of the same dimension.');
 
-if (minDim ~= maxDim) || (minObjDim ~= maxObjDim) ...
-        || (maxDim ~= maxObjDim)
-    if isa(objMat, 'hyperplane')
-        fstErrMsg = 'INTERSECTION_EA: ellipsoids and hyperplanes ';
-        secErrMsg = 'must be of the same dimension.';
-        throwerror('wrongSizes', [fstErrMsg secErrMsg]);
-    elseif isa(objMat, 'polytope')
-        fstErrMsg = 'INTERSECTION_EA: ellipsoids and polytopes ';
-        secErrMsg = 'must be of the same dimension.';
-        throwerror('wrongSizes', [fstErrMsg secErrMsg]);
-    else
-        throwerror('wrongSizes', ...
-            'INTERSECTION_EA: ellipsoids must be of the same dimension.');
-    end
-end
-
-nEllipsoids = mEllRows * nEllCols;
-nObjects = mObjRows * nObjCols;
-if (nEllipsoids > 1) && (nObjects > 1) && ((mEllRows ~= mObjRows) ...
-        || (nEllCols ~= nObjCols))
-    if isa(objMat, 'hyperplane')
-        fstErrMsg = 'INTERSECTION_EA: sizes of ellipsoidal and';
-        secErrMsg = ' hyperplane arrays do not match.';
-        throwerror('wrongSizes', [fstErrMsg secErrMsg]);
-    elseif isa(objMat, 'polytope')
-        fstErrMsg = 'INTERSECTION_EA: sizes of ellipsoidal and';
-        secErrMsg = ' polytope arrays do not match.';
-        throwerror('wrongSizes', [fstErrMsg secErrMsg]);
-    else
-        throwerror('wrongSizes', ...
-            'INTERSECTION_EA: sizes of ellipsoidal arrays do not match.');
-    end
-end
-
-outEllMat = [];
-if (nEllipsoids > 1) && (nObjects > 1)
-    for iRow = 1:mEllRows
-        ellPartVec = [];
-        for jCol = 1:nEllCols
-            if isa(objMat, 'polytope')
-                ellPartVec = [ellPartVec ...
-                    l_polyintersect(myEllMat, objMat(jCol))];
-            else
-                ellPartVec = [ellPartVec ...
-                    l_intersection_ea(myEllMat(iRow, jCol), ...
-                    objMat(iRow, jCol))];
-            end
-        end
-        outEllMat = [outEllMat; ellPartVec];
-    end
-elseif nEllipsoids > 0
-    for iRow = 1:mEllRows
-        ellPartVec = [];
-        for jCol = 1:nEllCols
-            if isa(objMat, 'polytope')
-                ellPartVec = [ellPartVec ...
-                    l_polyintersect(myEllMat, objMat)];
-            else
-                ellPartVec = [ellPartVec ...
-                    l_intersection_ea(myEllMat(iRow, jCol), objMat)];
-            end
-        end
-        outEllMat = [outEllMat; ellPartVec];
-    end
+if isObjScal
+    nAmount = numel(myEllArr);
+    sizeCVec = num2cell(size(myEllArr));
 else
-    for iRow = 1:mObjRows
-        ellPartVec = [];
-        for jCol = 1:nObjCols
-            if isa(objMat, 'polytope')
-                ellPartVec = [ellPartVec ...
-                    l_polyintersect(myEllMat, objMat(jCol))];
-            else
-                ellPartVec = [ellPartVec ...
-                    l_intersection_ea(myEllMat, objMat(iRow, jCol))];
-            end
-        end
-        outEllMat = [outEllMat; ellPartVec];
-    end
+    nAmount = numel(objArr);
+    sizeCVec = num2cell(size(objArr));
 end
+outEllArr(sizeCVec{:}) = ellipsoid;
+indexVec = 1:nAmount;
 
+if ~(isEllScal || isObjScal)
+    arrayfun(@(x,y) fCoose(x, y),indexVec,indexVec);
+elseif isObjScal
+    arrayfun(@(x) fCoose(x, 1),indexVec);
+else
+    arrayfun(@(x) fCoose(1, x), indexVec);
+end
+    function fCoose(ellIndex, objIndex)
+        singEll = myEllArr(ellIndex);
+        obj = objArr(objIndex);
+        index = max(ellIndex,objIndex);
+        if isPoly
+            outEllArr(index) = l_polyintersect(singEll, obj);
+        else
+            outEllArr(index) = l_intersection_ea(singEll, obj);
+        end
+    end
 end
 
 
@@ -197,8 +145,9 @@ end
 
 if isa(secObj, 'hyperplane')
     [normHypVec, hypScalar] = parameters(-secObj);
-    hypScalar      = hypScalar/sqrt(normHypVec'*normHypVec);
-    normHypVec      = normHypVec/sqrt(normHypVec'*normHypVec);
+    hypNormInv = 1/sqrt(normHypVec'*normHypVec);
+    hypScalar = hypScalar*hypNormInv;
+    normHypVec = normHypVec*hypNormInv;
     if (normHypVec'*fstEllCentVec > hypScalar) ...
             && ~(intersect(fstEll, secObj))
         outEll = fstEll;

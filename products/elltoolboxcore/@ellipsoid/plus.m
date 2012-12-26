@@ -1,74 +1,63 @@
-function res = plus(X, Y)
+function outEllArr = plus(varargin)
 %
+% PLUS - overloaded operator '+'
 %
-% Description:
-% ------------
+%   outEllArr = PLUS(inpEllArr, inpVec) implements E(q, Q) + b
+%       for each ellipsoid E(q, Q) in inpEllArr.
+%   outEllArr = PLUS(inpVec, inpEllArr) implements b + E(q, Q)
+%       for each ellipsoid E(q, Q) in inpEllArr.
 %
-%    Operation
-%              E + b
-%    where E is an ellipsoid in R^n, and b - vector in R^n.
-%    If E(q, Q) is an ellipsoid with center q and shape matrix Q, then
-%          E(q, Q) + b = E(q + b, Q).
+%	Operation E + b (or b+E) where E = inpEll is an ellipsoid in R^n,
+%   and b=inpVec - vector in R^n. If E(q, Q) is an ellipsoid
+%   with center q and shape matrix Q, then
+%   E(q, Q) + b = b + E(q,Q) = E(q + b, Q).
 %
+% Input:
+%   regular:
+%       ellArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of ellipsoids
+%           of the same dimentions nDims.
+%       bVec: double[nDims, 1] - vector.
 %
 % Output:
-% -------
+%   outEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of ellipsoids 
+%       with same shapes as ellVec, but with centers shifted by vectors 
+%       in inpVec.
 %
-%    Resulting ellipsoid E(q + b, Q).
+% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+% $Copyright:  The Regents of the University of California 2004-2008 $
 %
-%
-% See also:
-% ---------
-%
-%    ELLIPSOID/ELLIPSOID.
-%
-
-%
-% Author:
-% -------
-%
-%    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+% $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
+% $Copyright: Moscow State University,
+%             Faculty of Computational Mathematics and Cybernetics,
+%             Science, System Analysis Department 2012 $
 %
 
-  if isa(X, 'ellipsoid') && ~(isa(Y, 'double'))
-    error('PLUS: this operation is only permitted between ellipsoid and vector in R^n.');
-  end
-  if isa(Y, 'ellipsoid') && ~(isa(X, 'double'))
-    error('PLUS: this operation is only permitted between ellipsoid and vector in R^n.');
-  end
+import modgen.common.throwerror;
+import modgen.common.checkvar;
+import modgen.common.checkmultvar;
+errMsg =...
+    'this operation is only permitted between ellipsoid and vector in R^n.';
+checkvar(nargin,'x==2','errorTag','wrongInput',...
+    'errorMessage',errMsg)
+if isa(varargin{1}, 'ellipsoid')&&isa(varargin{2}, 'double')
+    inpEllVec = varargin{1};
+    inpVec = varargin{2};
+elseif isa(varargin{2}, 'ellipsoid')&&isa(varargin{1}, 'double')
+    inpEllVec = varargin{2};
+    inpVec = varargin{1};
+else
+    throwerror('wrongInput',errMsg);
+end
 
-  if isa(X, 'ellipsoid')
-    E = X;
-    b = Y;
-  else
-    E = Y;
-    b = X;
-  end
+dimsVec = dimension(inpEllVec);
+checkmultvar('iscolumn(x1)&&all(x2(:)==length(x1))',2,inpVec,dimsVec,...
+    'errorMessage','dimensions mismatch');
 
-  d = dimension(E);
-  m = max(d);
-  n = min(d);
-  if m ~= n
-    error('PLUS: all ellipsoids in the array must be of the same dimension.');
-  end
-
-  [k, l] = size(b);
-  if (l ~= 1) || (k ~= n)
-    error('PLUS: vector dimension does not match.');
-  end
-
-  [m, n] = size(E);
-  for i = 1:m
-    for j = 1:n
-      r(j)        = E(i, j);
-      r(j).center = E(i, j).center + b;
+sizeCVec = num2cell(size(inpEllVec));
+outEllArr(sizeCVec{:})=ellipsoid;
+arrayfun(@(x) fSinglePlus(x),1:numel(inpEllVec));
+    function fSinglePlus(index)
+        outEllArr(index).center =inpEllVec(index).center + inpVec;
+        outEllArr(index).shape = inpEllVec(index).shape;
     end
-    if i == 1
-      res = r;
-    else
-      res = [res; r];
-    end
-    clear r;
-  end
-
 end
