@@ -1,25 +1,27 @@
-function isPositiveMat = isempty(myEllMat)
+function isPositiveArr = isempty(myEllArr)
 %
 % ISEMPTY - checks if the ellipsoid object is empty.
 %
 % Input:
 %   regular:
-%       myEllMat: ellipsoid [mRows, nCols] - matrix of ellipsoids.
+%       myEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of ellipsoids.
 %
 % Output:
-%   isPositiveMat: logical[1mRows, nCols], 
-%       isPositiveMat(iRow, jCol) = true - if ellipsoid
-%       myEllMat(iRow, jCol) is empty, false - otherwise.
+%   isPositiveArr: logical[nDims1,nDims2,...,nDimsN], 
+%       isPositiveArr(iCount) = true - if ellipsoid
+%       myEllMat(iCount) is empty, false - otherwise.
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
+%
+% $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
+% $Copyright: Moscow State University,
+%             Faculty of Computational Mathematics and Cybernetics,
+%             Science, System Analysis Department 2012 $
+%
 
 import elltool.conf.Properties;
-import modgen.common.throwerror;
 
-if ~(isa(myEllMat, 'ellipsoid'))
-    throwerror('wrongInput', ...
-        'ISEMPTY: input argument must be ellipsoid.');
-end
+ellipsoid.checkIsMe(myEllArr);
 
-isPositiveMat = ~dimension(myEllMat);
+isPositiveArr = ~dimension(myEllArr);

@@ -1,12 +1,12 @@
-function outEll = ellunion_ea(inpEllMat)
+function outEll = ellunion_ea(inpEllArr)
 %
 % ELLUNION_EA - computes minimum volume ellipsoid that contains union
 %               of given ellipsoids.
 %
 % Input:
 %   regular:
-%       inpEllMat: ellipsoid [mRows, nCols] - matrix of ellipsoids
-%           of the same dimentions.
+%       inpEllMat: ellipsoid [nDims1,nDims2,...,nDimsN] - array of
+%           ellipsoids of the same dimentions.
 %
 % Output:
 %   outEll: ellipsoid [1, 1] - resulting minimum volume ellipsoid.
@@ -22,18 +22,15 @@ function outEll = ellunion_ea(inpEllMat)
 import elltool.conf.Properties;
 import modgen.common.throwerror;
 
-ellDimensions = dimension(inpEllMat);
-minEllDim   = min(min(ellDimensions));
-maxEllDim   = max(max(ellDimensions));
+dimsArr = dimension(inpEllArr);
+minEllDim   = min(dimsArr(:));
 
-if minEllDim ~= maxEllDim
-    throwerror('wrongSizes', ...
-        'ELLUNION_EA: all ellipsoids must be of the same dimension.');
-end
+modgen.common.checkvar(dimsArr,'all(x(:)==x(1))',...
+    'errorTag','wrongSizes',...
+    'errorMessage','all ellipsoids must be of the same dimension.');
 
-[mRows, nCols] = size(inpEllMat);
-nEllipsoids = mRows * nCols;
-inpEllVec  = reshape(inpEllMat, 1, nEllipsoids);
+nEllipsoids = numel(inpEllArr);
+inpEllVec  = reshape(inpEllArr, 1, nEllipsoids);
 
 if Properties.getIsVerbose()
     fprintf('Invoking CVX...\n');

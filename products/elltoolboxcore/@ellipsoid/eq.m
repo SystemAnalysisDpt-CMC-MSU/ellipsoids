@@ -23,14 +23,13 @@ function [isEqualArr, reportStr] = eq(ellFirstArr, ellSecArr)
 %            Faculty of Computational Mathematics and Cybernetics,
 %            System Analysis Department 2012 $
 
-import modgen.common.throwerror;
 import modgen.struct.structcomparevec;
 import gras.la.sqrtm;
 import elltool.conf.Properties;
-import modgen.common.checkvar;
+import modgen.common.throwerror;
 %
-checkvar(ellFirstArr,@(x)isa(x,'ellipsoid'));
-checkvar(ellSecArr,@(x)isa(x,'ellipsoid'));
+ellipsoid.checkIsMe(ellFirstArr,'first');
+ellipsoid.checkIsMe(ellSecArr,'second');
 %
 nFirstElems = numel(ellFirstArr);
 nSecElems = numel(ellSecArr);

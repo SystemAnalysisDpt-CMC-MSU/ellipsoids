@@ -1,32 +1,32 @@
-function [centVec, boundPntMat] = minkmp(varargin)
+function [centVec, boundPntMat] = minkmp(fstEll, secEll, sumEllArr,varargin)
 %
 % MINKMP - computes and plots geometric (Minkowski) sum of the
 %          geometric difference of two ellipsoids and the geometric
 %          sum of n ellipsoids in 2D or 3D:
 %          (E - Em) + (E1 + E2 + ... + En),
 %          where E = firstEll, Em = secondEll,
-%          E1, E2, ..., En - are ellipsoids in sumEllMat
+%          E1, E2, ..., En - are ellipsoids in sumEllArr
 %
-%   MINKMP(firstEll, secondEll, sumEllMat, Options) - Computes
+%   MINKMP(firstEll, secondEll, sumEllArr, Options) - Computes
 %       geometric sum of the geometric difference of two ellipsoids
 %       firstEll - secondEll and the geometric sum of ellipsoids in
-%       the ellipsoidal array sumEllMat, if
+%       the ellipsoidal array sumEllArr, if
 %       1 <= dimension(firstEll) = dimension(secondEll) =
-%       = dimension(sumEllMat) <= 3, and plots it if no output
+%       = dimension(sumEllArr) <= 3, and plots it if no output
 %       arguments are specified.
 %
-%   [centVec, boundPntMat] = MINKMP(firstEll, secondEll, sumEllMat) -
+%   [centVec, boundPntMat] = MINKMP(firstEll, secondEll, sumEllArr) -
 %       computes: (firstEll - secondEll) +
-%       + (geometric sum of ellipsoids in sumEllMat).
+%       + (geometric sum of ellipsoids in sumEllArr).
 %       Here centVec is the center, and
 %       boundPntMat - array of boundary points.
-%   MINKMP(firstEll, secondEll, sumEllMat) - plots
+%   MINKMP(firstEll, secondEll, sumEllArr) - plots
 %       (firstEll - secondEll) +
-%       +(geometric sum of ellipsoids in sumEllMat)
+%       +(geometric sum of ellipsoids in sumEllArr)
 %       in default (red) color.
 %   MINKMP(firstEll, secondEll, sumEllMat, Options) - plots
 %       (firstEll - secondEll) +
-%       +(geometric sum of ellipsoids in sumEllMat)
+%       +(geometric sum of ellipsoids in sumEllArr)
 %       using options given in the Options structure.
 %
 % Input:
@@ -35,7 +35,8 @@ function [centVec, boundPntMat] = minkmp(varargin)
 %           nDim - space dimension, nDim = 2 or 3.
 %       secondEll: ellipsoid [1, 1] - second ellipsoid
 %           of the same dimention.
-%       sumEllMat: ellipsoid [mRows, nCols] - matrix of ellipsoids.
+%       sumEllArr: ellipsoid [nDims1, nDims2,...,nDimsN] - array of 
+%           ellipsoids.
 %
 %   optional:
 %       Options: structure[1, 1] - fields:
@@ -58,55 +59,35 @@ function [centVec, boundPntMat] = minkmp(varargin)
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
 %
-% $Author: Rustam Guliev <glvrst@gmail.com> $  $Date: 23-10-2012$
+% $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Nov-2012$
 % $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Computer Science,
-%            System Analysis Department 2012 $
+%             Faculty of Computational Mathematics and Cybernetics,
+%             Science, System Analysis Department 2012 $
+%
 
 import modgen.common.throwerror;
+import modgen.common.checkmultvar;
+import modgen.common.checkvar;
 import elltool.conf.Properties;
 
-if nargin < 3
-    throwerror('wrongInput', ...
-        'MINKMP: first, second and third arguments must be ellipsoids.');
-end
-
-firstEll = varargin{1};
-secondEll = varargin{2};
-sumEllMat = varargin{3};
-
-if ~(isa(firstEll, 'ellipsoid')) || ~(isa(secondEll, 'ellipsoid')) ...
-        || ~(isa(sumEllMat, 'ellipsoid'))
-    throwerror('wrongInput', ...
-        'MINKMP: first, second and third arguments must be ellipsoids.');
-end
-
-if (~isscalar(firstEll)) || (~isscalar(secondEll))
-    throwerror('wrongInput', ...
-        'MINKMP: first and second arguments must be single ellipsoid.');
-end
-
-nDim    = dimension(firstEll);
-nDimsMat = dimension(sumEllMat);
-
-if (~all(nDimsMat(:)==nDim)) || (dimension(secondEll) ~= nDim)
-    throwerror('wrongInput', ...
-        'MINKMP: all ellipsoids must be of the same dimension.');
-end
-
-if nDim > 3
-    throwerror('wrongInput', ...
-        'MINKMP: ellipsoid dimension must be not higher than 3.');
-end
-
-if isdegenerate(firstEll)
-    throwerror('wrongInput', ...
-        'MINKMP: minuend ellipsoid is degenerate.');
-end
+ellipsoid.checkIsMe(fstEll,'first');
+ellipsoid.checkIsMe(secEll,'second');
+ellipsoid.checkIsMe(sumEllArr,'third');
+checkmultvar('isscalar(x1)&&isscalar(x2)',2,fstEll,secEll,...
+    'errorTag','wrongInput','errorMessage',...
+    'first and second arguments must be single ellipsoids.')
+nDim    = dimension(fstEll);
+nDimsArr = dimension(sumEllArr);
+checkvar(fstEll,'~isdegenerate(x)','errorTag','wrongInput',...
+    'errorMessage','minuend ellipsoid is degenerate.')
+checkmultvar('(x1<4)&&all(x2(:)==x1)&&(x3==x1)',...
+    3,nDim,nDimsArr,dimension(secEll),...
+    'errorTag','wrongInput','errorMessage',...
+    'all ellipsoids must be of the same dimension which not higher than 3.');
 
 nArgOut=nargout;
 
-if ~isbigger(firstEll, secondEll)
+if ~isbigger(fstEll, secEll)
     %minkmp is empty
     switch nArgOut
         case 0,
@@ -132,19 +113,19 @@ else
     centVec=NaN(nDim,1);
     switch nDim
         case 1
-            [sumCentVec, sumBoundMat]=minksum(sumEllMat);
+            [sumCentVec, sumBoundMat]=minksum(sumEllArr);
             boundPntMat=NaN(1,2);
-            centVec=firstEll.center-secondEll.center;
-            boundPntMat(1)=-sqrt(firstEll.shape)+sqrt(secondEll.shape)+...
+            centVec=fstEll.center-secEll.center;
+            boundPntMat(1)=-sqrt(fstEll.shape)+sqrt(secEll.shape)+...
                 centVec+min(sumBoundMat);
-            boundPntMat(2)=sqrt(firstEll.shape)-sqrt(secondEll.shape)+...
+            boundPntMat(2)=sqrt(fstEll.shape)-sqrt(secEll.shape)+...
                 centVec+max(sumBoundMat);
             centVec=centVec+sumCentVec;
         case 2
-            phiVec = linspace(0, 2*pi, firstEll.nPlot2dPoints);
+            phiVec = linspace(0, 2*pi, fstEll.nPlot2dPoints);
             lDirsMat   = [cos(phiVec); sin(phiVec)];
         case 3
-            phiGrid   = firstEll.nPlot3dPoints/2;
+            phiGrid   = fstEll.nPlot3dPoints/2;
             psyGrid   = phiGrid/2;
             psyVec = linspace(0, pi, psyGrid);
             phiVec = linspace(0, 2*pi, phiGrid);
@@ -158,33 +139,33 @@ else
     end
     
     if nDim>1
-        if rank(secondEll.shape)==0
-            tmpEll=ellipsoid(firstEll.center-secondEll.center,...
-                firstEll.shape);
+        if rank(secEll.shape)==0
+            tmpEll=ellipsoid(fstEll.center-secEll.center,...
+                fstEll.shape);
             [centVec, boundPntMat] = ...
-                minksum([tmpEll; sumEllMat(:)]);
+                minksum([tmpEll; sumEllArr(:)]);
         else
-            if isdegenerate(secondEll)
-                secondEll.shape = regularize(secondEll.shape);
+            if isdegenerate(secEll)
+                secEll.shape = regularize(secEll.shape);
             end
-            q1Mat=firstEll.shape;
-            q2Mat=secondEll.shape;
+            q1Mat=fstEll.shape;
+            q2Mat=secEll.shape;
             isGoodDirVec = ~ellipsoid.isbaddirectionmat(q1Mat, q2Mat, ...
                 lDirsMat);
             if  ~any(isGoodDirVec)
-                tmpEll=ellipsoid(firstEll.center-secondEll.center, ...
+                tmpEll=ellipsoid(fstEll.center-secEll.center, ...
                     zeros(nDim,nDim));
                 [centVec, boundPntMat]=minksum([tmpEll; ...
-                    sumEllMat(:)]);
+                    sumEllArr(:)]);
             else
-                [sumCentVec, sumBoundMat]=minksum(sumEllMat);
-                [~, minEllPtsMat] = rho(firstEll, ...
+                [sumCentVec, sumBoundMat]=minksum(sumEllArr);
+                [~, minEllPtsMat] = rho(fstEll, ...
                     lDirsMat(:,isGoodDirVec));
-                [~, subEllPtsMat] = rho(secondEll, ...
+                [~, subEllPtsMat] = rho(secEll, ...
                     lDirsMat(:,isGoodDirVec));
                 diffBoundMat =  minEllPtsMat - subEllPtsMat;
-                centVec = firstEll.center-...
-                    secondEll.center+sumCentVec;
+                centVec = fstEll.center-...
+                    secEll.center+sumCentVec;
                 boundPntMat = diffBoundMat + ...
                     sumBoundMat(:,isGoodDirVec);
             end
@@ -201,8 +182,8 @@ else
     elseif (nArgOut == 0)
         %Read parameters
         SOptions = [];
-        if (nargin > 3) && (isstruct(varargin{4}))
-            SOptions = varargin{4};
+        if (nargin > 3) && (isstruct(varargin{1}))
+            SOptions = varargin{1};
         end
         isHolded=ishold;
         if ~isfield(SOptions, 'newfigure')
@@ -243,13 +224,13 @@ else
         if (SOptions.show_all)
             SOptionForPlot.width=2;
             try
-                plot(sumEllMat, 'b',SOptionForPlot);
+                plot(sumEllArr, 'b',SOptionForPlot);
             end
             try
-                plot(secondEll, 'k',SOptionForPlot);
+                plot(secEll, 'k',SOptionForPlot);
             end
             try
-                plot(firstEll, 'g',SOptionForPlot);
+                plot(fstEll, 'g',SOptionForPlot);
             end
         end
         switch nDim

@@ -676,34 +676,20 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             self.flexAssert([true, true; true, true], eq(resEllMat, ansEllMat));
             self.flexAssert(ansIsnIntersectedMat, isnIntersected);
             
-            %wrong dimension
-            for iDim = 1:2
-                for jDim = 1:2
-                    for kDim = 1:2
-                        testEllArr(iDim, jDim, kDim) = ellipsoid(eye(3));
-                    end;
-                end;
-            end;
+            %Arrays
+            testEllArr = repmat(ellipsoid(eye(3)),[2, 2, 2]);
+            testHp = hyperplane([1, 1, 1].', 0);
+            resEllArr = hpintersection(testEllArr, testHp);
+            ansEllArr = repmat(ellipsoid([2/3, -1/3, -1/3; -1/3, 2/3, -1/3; ...
+                -1/3, -1/3, 2/3]),[2, 2, 2]);
+            isEqArr = eq(resEllArr, ansEllArr);
+            self.flexAssert(true, all(isEqArr(:)));
             
-            testHp = hyperplane([0, 0, 1].', 2);
-            self.runAndCheckError ...
-                ('resEllVec = hpintersection(testEllArr, testHp)', ...
-                'wrongInput:wrongDim');
-            
-            for iDim = 1:2
-                for jDim = 1:2
-                    for kDim = 1:2
-                        testHpArr(iDim, jDim, kDim) = ...
-                            hyperplane([0, 0, 1].', 2);
-                    end;
-                end;
-            end;
-            
-            testEllVec = ellipsoid(eye(3));
-            self.runAndCheckError ...
-                ('resEllVec = hpintersection(testEllVec, testHpArr)', ...
-                'wrongInput:wrongDim');
-            
+            testHpArr = repmat(hyperplane([0, 0, 1].', 2),[2,2,2]);
+            testEll = ellipsoid(eye(3));
+            [resEllArr isnIntersecArr] = hpintersection(testEll, testHpArr);
+            self.flexAssert(true([2,2,2]), isempty(resEllArr));
+            self.flexAssert(true([2,2,2]), isnIntersecArr);
         end
         
         function self = testEllEnclose(self)

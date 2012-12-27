@@ -1,42 +1,45 @@
-function invEllMat = inv(myEllMat)
+function invEllArr = inv(myEllArr)
 %
 % INV - inverts shape matrices of ellipsoids in the given array.
 %
-%   invEllMat = INV(myEllMat)  Inverts shape matrices of ellipsoids
+%   invEllArr = INV(myEllArr)  Inverts shape matrices of ellipsoids
 %       in the array myEllMat. In case shape matrix is sigular, it is
 %       regularized before inversion.
 %
 % Input:
 %   regular:
-%       myEllMat: ellipsoid [mRows, nCols] - matrix of ellipsoids.
+%       myEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of ellipsoids.
 %
 % Output:
-%    invEllMat: ellipsoid [mRows, nCols] - matrix of ellipsoids with
-%       inverted shape matrices.
+%    invEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of ellipsoids
+%       with inverted shape matrices.
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
+%
+% $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
+% $Copyright: Moscow State University,
+%             Faculty of Computational Mathematics and Cybernetics,
+%             Science, System Analysis Department 2012 $
+%
 
-import modgen.common.throwerror;
+ellipsoid.checkIsMe(myEllArr);
 
-if ~(isa(myEllMat, 'ellipsoid'))
-    throwerror('wrongInput', ...
-        'INV: input argument must be array of ellipsoids.');
-end
+sizeCVec = num2cell(size(myEllArr));
+invEllArr(sizeCVec{:}) = ellipsoid;
+arrayfun(@(x) fSingleInv(x),1:numel(myEllArr));
 
-invEllMat = myEllMat;
-[mRows, nCols] = size(invEllMat);
-
-absTolMat = getAbsTol(invEllMat);
-for iRow = 1:mRows
-    for jCol = 1:nCols
-        if isdegenerate(invEllMat(iRow, jCol))
-            regShMat = ellipsoid.regularize(invEllMat(iRow, jCol).shape,...
-                absTolMat(iRow,jCol));
+    function fSingleInv(index)
+        
+        singEll = myEllArr(index);
+        if isdegenerate(singEll)
+            regShMat = ellipsoid.regularize(singEll.shape,...
+                getAbsTol(singEll));
         else
-            regShMat = invEllMat(iRow, jCol).shape;
+            regShMat = singEll.shape;
         end
         regShMat = ell_inv(regShMat);
-        invEllMat(iRow, jCol).shape = 0.5*(regShMat + regShMat');
+        invEllArr(index) = ellipsoid(singEll.center ,...
+            0.5*(regShMat + regShMat'));
     end
 end

@@ -47,69 +47,71 @@ function extApprEllVec = minkdiff_ea(fstEll, secEll, directionsMat)
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
+%
+% $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
+% $Copyright: Moscow State University,
+%             Faculty of Computational Mathematics and Cybernetics,
+%             Science, System Analysis Department 2012 $
+%
 
 import modgen.common.throwerror;
+import modgen.common.checkmultvar;
 import elltool.conf.Properties;
 
-if ~(isa(fstEll, 'ellipsoid')) || ~(isa(secEll, 'ellipsoid'))
-    fstStr = 'MINKDIFF_EA: first and second arguments must ';
-    secStr = 'be single ellipsoids.';
-    throwerror('wrongInput', [fstStr secStr]);
-end
-
-[mRowsFstEll, nColsFstEll] = size(fstEll);
-[mRowsSecEll, nColsSecEll] = size(secEll);
-if (mRowsFstEll ~= 1) || (nColsFstEll ~= 1) || ...
-        (mRowsSecEll ~= 1) || (nColsSecEll ~= 1)
-    fstStr = 'MINKDIFF_EA: first and second arguments must ';
-    secStr = 'be single ellipsoids.';
-    throwerror('wrongInput', [fstStr secStr]);
-end
+ellipsoid.checkIsMe(fstEll,'first');
+ellipsoid.checkIsMe(secEll,'second');
+checkmultvar('isscalar(x1)&&isscalar(x2)',2,fstEll,secEll,...
+    'errorTag','wrongInput','errorMessage',...
+    'first and second arguments must be single ellipsoids.');
 
 extApprEllVec = [];
 
 if ~isbigger(fstEll, secEll)
     if Properties.getIsVerbose()
         fstStr = 'MINKDIFF_EA: geometric difference of these two ';
-        secStr = 'ellipsoids is empty set.\n'
+        secStr = 'ellipsoids is empty set.\n';
         fprintf([fstStr secStr]);
     end
     return;
 end
 
-nRowsDirMat = size(directionsMat, 1);
-nDims = dimension(fstEll);
-if nRowsDirMat ~= nDims
-    fstStr = 'MINKDIFF_EA: dimension of the direction vectors must ';
-    secStr = 'be the same as dimension of ellipsoids.';
-    throwerror('wrongSizes', [fstStr secStr]);
-end
+checkmultvar('(x1==x2)',2,dimension(fstEll),size(directionsMat, 1),...
+    'errorTag','wrongSizes','errorMessage',...
+    'direction vectors ans ellipsoids dimensions mismatch.');
+
 centVec = fstEll.center - secEll.center;
 fstEllShMat = fstEll.shape;
 secEllShMat = secEll.shape;
 directionsMat  = ellipsoid.rm_bad_directions(fstEllShMat, ...
     secEllShMat, directionsMat);
-nColsDirMat  = size(directionsMat, 2);
-if nColsDirMat < 1
+nDirs  = size(directionsMat, 2);
+if nDirs < 1
     if Properties.getIsVerbose()
         fprintf('MINKDIFF_EA: cannot compute external approximation ');
         fprintf('for any\n             of the specified directions.\n');
     end
     return;
 end
-if rank(fstEllShMat) < size(fstEllShMat, 1)
+if isdegenerate(fstEll)
     fstEllShMat = ellipsoid.regularize(fstEllShMat,fstEll.absTol);
 end
-if rank(secEllShMat) < size(secEllShMat, 1)
+if isdegenerate(secEll)
     secEllShMat = ellipsoid.regularize(secEllShMat,secEll.absTol);
 end
 
-fstEllShMat = sqrtm(fstEllShMat);
-secEllShMat = sqrtm(secEllShMat);
+fstEllSqrtShMat = sqrtm(fstEllShMat);
+secEllSqrtShMat = sqrtm(secEllShMat);
 
-for iCol = 1:nColsDirMat
-    dirVec  = directionsMat(:, iCol);
-    rotMat = ell_valign(fstEllShMat*dirVec, secEllShMat*dirVec);
-    shMat = fstEllShMat - rotMat*secEllShMat;
-    extApprEllVec = [extApprEllVec ellipsoid(centVec, shMat'*shMat)];
+srcMat=fstEllSqrtShMat*directionsMat;
+dstMat=secEllSqrtShMat*directionsMat;
+rotArray=gras.la.mlorthtransl(dstMat, srcMat);
+
+extApprEllVec = repmat(ellipsoid,1,nDirs);
+arrayfun(@(x) fSingleDir(x), 1:nDirs)
+    function fSingleDir(index)
+        rotMat = rotArray(:,:,index);
+        shMat = fstEllSqrtShMat - rotMat*secEllSqrtShMat;
+        extApprEllVec(index).center = centVec;
+        extApprEllVec(index).shape = shMat'*shMat;
+    end
 end

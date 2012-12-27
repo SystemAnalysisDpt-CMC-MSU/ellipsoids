@@ -1,21 +1,22 @@
-function isPositiveMat = ge(firsrEllMat, secondEllMat)
+function isPositiveArr = ge(firsrEllArr, secondEllArr)
 %
 % GE - checks if the first ellipsoid is bigger than the second one.
 %      Same as GT.
 %
 % Input:
 %   regular:
-%       firsrEllMat: ellipsoid [mRows, nCols] - matrix of ellipsoids.
-%       secondEllMat: ellipsoid [mRows, nCols] - matrix of ellipsoids
-%           of the corresponding dimensions.
+%       firsrEllArr: ellipsoid [nDims1,nDims2,...,nDimsN]/[1,1] - array 
+%           of ellipsoids.
+%       secondEllArr: ellipsoid [nDims1,nDims2,...,nDimsN]/[1,1] - array
+%           of ellipsoids of the corresponding dimensions.
 %
 % Output:
-%   isPositiveMat: logical[mRows, nCols],
-%       resMat(iRows, jCols) = true - if firsrEllMat(iRows, jCols)
-%       contains secondEllMat(iRows, jCols)
+%   isPositiveArr: logical [nDims1,nDims2,...,nDimsN],
+%       isPositiveArr(iCount) = true - if firsrEllArr(iCount)
+%       contains secondEllArr(iCount)
 %       when both have same center, false - otherwise.
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
 
-isPositiveMat = gt(firsrEllMat, secondEllMat);
+isPositiveArr = gt(firsrEllArr, secondEllArr);
