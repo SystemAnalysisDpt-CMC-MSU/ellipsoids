@@ -1,29 +1,32 @@
-function I = uminus(E)
+function outEllArr = uminus(ellArr)
 %
-% Description:
-% ------------
+% VOLUME - changes the sign of the center of ellipsoid.
 %
-%    Changes the sign of the center of ellipsoid.
+% Input:
+%	regular:
+%       ellArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array
+%           of ellipsoids.
+%
+% Output:
+%	outEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of
+%    	ellipsoids, same size as ellArr.
+%
+% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+% $Copyright:  The Regents of the University of California 2004-2008 $
+%
+% $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
+% $Copyright: Moscow State University,
+%             Faculty of Computational Mathematics and Cybernetics,
+%             Science, System Analysis Department 2012 $
 %
 
-%
-% Author:
-% -------
-%
-%    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-%
+ellipsoid.checkIsMe(ellArr);
 
-  if ~(isa(E, 'ellipsoid'))
-    error('UMINUS: input argument must be array of ellipsoids.');
-  end
-
-  I      = E;
-  [m, n] = size(I);
-
-  for i = 1:m
-    for j = 1:n
-      I(i, j).center = - I(i, j).center;
+sizeCVec = num2cell(size(ellArr));
+outEllArr(sizeCVec{:}) = ellipsoid;
+arrayfun(@(x) fSingleUminus(x), 1:numel(ellArr));
+    function fSingleUminus(index)
+        outEllArr(index).center = -ellArr(index).center;
+        outEllArr(index).shape = ellArr(index).shape;
     end
-  end
-
 end

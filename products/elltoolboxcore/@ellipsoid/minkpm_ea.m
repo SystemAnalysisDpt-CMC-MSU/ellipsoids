@@ -1,20 +1,20 @@
-function ExtApprEllVec = minkpm_ea(inpEllMat, inpEll, dirMat)
+function extApprEllVec = minkpm_ea(inpEllArr, inpEll, dirMat)
 %
 % MINKPM_EA - computation of external approximating ellipsoids
 %             of (E1 + E2 + ... + En) - E along given directions.
 %             where E = inpEll,
-%             E1, E2, ... En - are ellipsoids in inpEllMat.
+%             E1, E2, ... En - are ellipsoids in inpEllArr.
 %
-%   ExtApprEllVec = MINKPM_EA(inpEllMat, inpEll, dirMat) - Computes
+%   ExtApprEllVec = MINKPM_EA(inpEllArr, inpEll, dirMat) - Computes
 %       external approximating ellipsoids of
 %       (E1 + E2 + ... + En) - E, where E1, E2, ..., En are ellipsoids
-%       in array inpEllMat, E = inpEll,
+%       in array inpEllArr, E = inpEll,
 %       along directions specified by columns of matrix dirMat.
 %
 % Input:
 %   regular:
-%       inpEllMat: ellipsoid [mRowsInpEllMat, nColsInpEllMat] -
-%           matrix of ellipsoids of the same dimentions.
+%       inpEllArr: ellipsoid [nDims1, nDims2,...,nDimsN] -
+%           array of ellipsoids of the same dimentions.
 %       inpEll: ellipsoid [1, 1] - ellipsoid of the same dimention.
 %       dirMat: double[nDim, nCols] - matrix whose columns specify
 %           the directions for which the approximations
@@ -27,70 +27,69 @@ function ExtApprEllVec = minkpm_ea(inpEllMat, inpEll, dirMat)
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
+%
+% $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
+% $Copyright: Moscow State University,
+%             Faculty of Computational Mathematics and Cybernetics,
+%             Science, System Analysis Department 2012 $
+%
 
 import modgen.common.throwerror;
+import modgen.common.checkvar;
+import modgen.common.checkmultvar;
 import elltool.conf.Properties;
 
-if ~(isa(inpEllMat, 'ellipsoid')) || ~(isa(inpEll, 'ellipsoid'))
-    throwerror('wrongInput', ...
-        'MINKPM_EA: first and second arguments must be ellipsoids.');
-end
+ellipsoid.checkIsMe(inpEllArr,'first');
+ellipsoid.checkIsMe(inpEll,'second');
 
-[mRowsInpEll, nColsInpEll] = size(inpEll);
-if (mRowsInpEll ~= 1) || (nColsInpEll ~= 1)
-    throwerror('wrongInput', ...
-        'MINKPM_EA: second argument must be single ellipsoid.');
-end
+checkvar(inpEll,@(x) isscalar(inpEll),'errorTag','wrongInput',...
+    'errorMessage','second argument must be single ellipsoid.');
 
-mRowsDirMatrix  = size(dirMat, 1);
-nDims = dimension(inpEll);
-minDimInpEll = min(min(dimension(inpEllMat)));
-maxDimInpEll = max(max(dimension(inpEllMat)));
-if (minDimInpEll ~= maxDimInpEll) || (minDimInpEll ~= nDims)
-    throwerror('wrongSizes', ...
-        'MINKPM_EA: all ellipsoids must be of the same dimension.');
-end
-if nDims ~= mRowsDirMatrix
-    fstStr = 'MINKPM_EA: dimension of the direction vectors must ';
-    secStr = 'be the same as dimension of ellipsoids.';
-    throwerror('wrongSizes', [fstStr secStr]);
-end
+[nDims, nCols]  = size(dirMat);
+checkmultvar('(x2==x3) && all(x1(:)==x3)',...
+    3,dimension(inpEllArr),dimension(inpEll),nDims,...
+    'errorTag','wrongSizes','errorMessage',...
+    'all ellipsoids and direction vectors must be of the same dimension');
 
-nCols = size(dirMat, 2);
-ExtApprEllVec = [];
+extApprEllVec =[];
 isVrb = Properties.getIsVerbose();
 Properties.setIsVerbose(false);
 
 % sanity check: the approximated set should be nonempty
-for iCol = 1:nCols
-    [svdUMat, ~, ~] = svd(dirMat(:, iCol));
-    fstExtApprEllVec = minksum_ea(inpEllMat, svdUMat);
-    if min(fstExtApprEllVec > inpEll) < 1
-        if isVrb > 0
-            fprintf('MINKPM_EA: the resulting set is empty.\n');
+isCheckVec = false(1,nCols);
+arrayfun (@(x) fSanityCheck(x), 1:nCols);
+if any(isCheckVec)
+    if isVrb > 0
+        fprintf('MINKPM_EA: the resulting set is empty.\n');
+    end
+    Properties.setIsVerbose(isVrb);
+else
+    
+    secExtApprEllVec = minksum_ea(inpEllArr, dirMat);
+    extApprEllVec = repmat(ellipsoid,1,nCols);
+    arrayfun(@(x) fSetExtApprEllVec(x), 1:nCols)
+    extApprEllVec = extApprEllVec(~isempty(extApprEllVec));
+    
+    Properties.setIsVerbose(isVrb);
+    
+    if isempty(extApprEllVec)
+        if Properties.getIsVerbose()
+            fprintf('MINKPM_EA: cannot compute external ');
+            fprintf('approximation for any\n           ');
+            fprintf('of the specified directions.\n');
         end
-        Properties.setIsVerbose(isVrb);
-        return;
     end
 end
-
-secExtApprEllVec = minksum_ea(inpEllMat, dirMat);
-
-for iCol = 1:nCols
-    extApprEll = secExtApprEllVec(iCol);
-    dirVec = dirMat(:, iCol);
-    if ~isbaddirection(extApprEll, inpEll, dirVec)
-        ExtApprEllVec = [ExtApprEllVec ...
-            minkdiff_ea(extApprEll, inpEll, dirVec)];
+    function fSanityCheck(index)
+        [svdUMat, ~, ~] = svd(dirMat(:, index));
+        fstExtApprEllVec = minksum_ea(inpEllArr, svdUMat);
+        isCheckVec(index) = min(fstExtApprEllVec > inpEll) < 1;
     end
-end
-
-Properties.setIsVerbose(isVrb);
-
-if isempty(ExtApprEllVec)
-    if Properties.getIsVerbose()
-        fprintf('MINKPM_EA: cannot compute external ');
-        fprintf('approximation for any\n           ');
-        fprintf('of the specified directions.\n');
+    function fSetExtApprEllVec(index)
+        dirVec = dirMat(:, index);
+        if ~isbaddirection(secExtApprEllVec(index), inpEll, dirVec)
+            extApprEllVec(index) = ...
+                minkdiff_ea(secExtApprEllVec(index), inpEll, dirVec);
+        end
     end
 end

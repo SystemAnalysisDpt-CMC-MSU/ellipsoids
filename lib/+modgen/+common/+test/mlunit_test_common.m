@@ -696,6 +696,37 @@ classdef mlunit_test_common < mlunitext.test_case
                 isObligatoryPropVec);
             end
         end
+        function test_parseparams_duplicate(self)
+            self.runAndCheckError(@check,...
+                'wrongInput:duplicatePropertiesSpec');
+            self.runAndCheckError(@check1,...
+                'wrongInput:duplicatePropertiesSpec');            
+            function check()
+            modgen.common.parseparams(...
+                {1,2,'prop1',1,'prop2',2,'prop2',3},{'prop1','prop2'},[0 2]);
+            end
+            function check1()
+            modgen.common.parseparams(...
+                {1,2,'prop1',1,'prop2',2,'prop2',3});
+            end            
+        end        
+        function test_parseparext_duplicate(self)
+            self.runAndCheckError(@check,...
+                'wrongInput:duplicatePropertiesSpec');
+            self.runAndCheckError(@check1,...
+                'wrongInput:duplicatePropertiesSpec');            
+            function check()
+            modgen.common.parseparext(...
+                {1,2,'prop1',1,'prop2',2,'prop2',3},{'prop1','prop2'},[0 2]);
+            end
+            function check1()
+            modgen.common.parseparext(...
+                {1,2,'prop1',1,'prop2',2,'prop2',3},[],[0 2],...
+                'propRetMode','list');
+            end
+            modgen.common.parseparext({'prop0',1,'prop1',1,'prop2',2},...
+                {'prop1','prop2'},[0 2]);
+        end
         function self=test_parseparext_simple(self)
             %
             inpReg={1};

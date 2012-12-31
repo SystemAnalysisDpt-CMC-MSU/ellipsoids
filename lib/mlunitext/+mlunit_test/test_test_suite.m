@@ -51,7 +51,36 @@ classdef test_test_suite < mlunitext.test_case
             assert(strcmp('mlunitext.test_result run=3 errors=1 failures=0', ...
                 summary(self.result)));
         end
+        function testFromTestCaseNameList(self)
+            % TEST_ADD_TESTS_AS_A_SUITE tests the method
+            %   test_suite.add_tests with a test_suite as its argument.
+            %
+            %  Example:
+            %         run(gui_test_runner,
+            %             'test_test_suite(''test_add_tests_as_a_suite'');');
+            %
+            %  See also MLUNIT_TEST.TEST_ADD_TESTS.
 
+            import mlunitext.*;
+            resultEth=mlunitext.test_result;
+            resultAlt=mlunitext.test_result;
+            suiteEth = load_tests_from_test_case(test_loader, ...
+                'mlunit_test.mock_test');
+            suiteEth.add_test(load_tests_from_test_case(test_loader, ...
+                'mlunit_test.mock_sec_test'));
+            
+            suiteAlt=mlunitext.test_suite.fromTestCaseNameList({...
+                'mlunit_test.mock_test','mlunit_test.mock_sec_test'});
+            resultEth = run(suiteEth, resultEth);
+            resultAlt = run(suiteAlt, resultAlt);
+            
+            assert_equals(get_tests_run(resultEth),...
+                get_tests_run(resultAlt));
+            assert_equals(get_errors(resultEth),...
+                get_errors(resultAlt));
+            assert_equals(get_failures(resultEth),...
+                get_failures(resultAlt));            
+        end
         function test_add_tests_as_a_suite(self)
             % TEST_ADD_TESTS_AS_A_SUITE tests the method
             %   test_suite.add_tests with a test_suite as its argument.

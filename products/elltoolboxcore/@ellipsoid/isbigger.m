@@ -22,35 +22,27 @@ function isPositive = isbigger(fstEll, secEll)
 % $Copyright:  The Regents of the University of California 2004-2008 $
 
 import elltool.conf.Properties;
-import modgen.common.throwerror;
+import modgen.common.checkmultvar;
 
-if ~(isa(fstEll, 'ellipsoid')) || ~(isa(secEll, 'ellipsoid'))
-    throwerror('wrongInput', ...
-        'ISBIGGER: both arguments must be single ellipsoids.');
-end
+ellipsoid.checkIsMe(fstEll,'first');
+ellipsoid.checkIsMe(secEll,'second');
 
-[mFstEllRows, nFstEllCols] = size(fstEll);
-[mSecEllRows, nSecEllCols] = size(secEll);
-if (mFstEllRows > 1) || (nFstEllCols > 1) || (mSecEllRows > 1) ...
-        || (nSecEllCols > 1)
-    throwerror('wrongInput', ...
-        'ISBIGGER: both arguments must be single ellipsoids.');
-end
+checkmultvar('isscalar(x1)&&isscalar(x2)&&(dimension(x1)==dimension(x2))',...
+    2,fstEll,secEll,...
+    'errorTag','wrongInput','errorMessage',...
+    'both arguments must be single ellipsoids of the same dimension.');
 
-[nFstEllSpaceDim, nFstEllDim] = dimension(fstEll);
-[nSecEllSpaceDim, nSecEllDim] = dimension(secEll);
-if nFstEllSpaceDim ~= nSecEllSpaceDim
-    throwerror('wrongSizes', ...
-        'ISBIGGER: both ellipsoids must be of the same dimension.');
-end
-if nFstEllDim < nSecEllDim
+[~, nFstRank] = dimension(fstEll);
+[~, nSecRank] = dimension(secEll);
+
+if nFstRank < nSecRank
     isPositive = false;
     return;
 end
 
 fstEllShMat = fstEll.shape;
 secEllShMat = secEll.shape;
-if nFstEllDim < nFstEllSpaceDim
+if isdegenerate(fstEll)
     if Properties.getIsVerbose()
         fprintf('ISBIGGER: Warning! First ellipsoid is degenerate.');
         fprintf('          Regularizing...');

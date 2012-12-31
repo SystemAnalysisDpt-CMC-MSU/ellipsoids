@@ -33,8 +33,46 @@ classdef test_suite < handle
         % tests when they are part of another suite
         marker = '';
     end
-    
+    %
+
     methods
+
+%         function unionWith(self,varargin)
+%             % UNIONWITH complements the tests of the test suite with
+%             % the tests from other tests suites
+%             %
+%             % Input:
+%             %   regular:
+%             %       self:
+%             %       suite1Obj: mlunit.test_suite[1,1] - the first additonal
+%             %           tests suite
+%             %       suite2Obj: mlunit.test_suite[1,1] - the second
+%             %           additional test suite
+%             %       suiteNObj: mlunit.test_suite[1,1] - the nth additional
+%             %           test suite
+%             %
+%             %
+%             nSuites=length(varargin);
+%             isOkVec=cellfun(@(x)isscalar(x)&&isa(x,'mlunit.test_suite'),...
+%                 varargin);
+%             if ~all(isOkVec)
+%                 modgen.common.throwerror('wrongInput',...
+%                     'all inputs are expected to be the scalar test suites');
+%             end
+%             %
+%             testNumVec=cellfun(@(x)numel(x.tests),varargin);
+%             
+%             nAddTests=sum(testNumVec);
+%             nCurTests=numel(self.tests);
+%             testList=[self.tests,cell(1,nAddTests)];
+%             testCumNumVec=cumsum([nCurTests,testNumVec]);
+%             for iSuite=1:nSuites
+%                 indLeft=testCumNumVec(iSuite)+1;
+%                 indRight=testCumNumVec(iSuite+1);
+%                 testList(indLeft:indRight)=varargin{iSuite}.tests;
+%             end
+%             self.tests=testList;
+%         end
         function set.tests(self,value)
             % SET.TESTS puts a list of test suites or test cases into the
             % suite

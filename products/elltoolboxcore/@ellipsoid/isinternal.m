@@ -1,18 +1,18 @@
-function isPositiveVec = isinternal(myEllMat, matrixOfVecMat, mode)
+function isPositiveVec = isinternal(myEllArr, matrixOfVecMat, mode)
 %
 % ISINTERNAL - checks if given points belong to the union or intersection
 %              of ellipsoids in the given array.
 %
-%   isPositiveVec = ISINTERNAL(myEllMat,  matrixOfVecMat, mode) - Checks
+%   isPositiveVec = ISINTERNAL(myEllArr,  matrixOfVecMat, mode) - Checks
 %       if vectors specified as columns of matrix matrixOfVecMat
 %       belong to the union (mode = 'u'), or intersection (mode = 'i')
-%       of the ellipsoids in myEllMat. If myEllMat is a single
+%       of the ellipsoids in myEllArr. If myEllMat is a single
 %       ellipsoid, then this function checks if points in matrixOfVecMat
-%       belong to myEllMat or not. Ellipsoids in E must be
+%       belong to myEllArr or not. Ellipsoids in E must be
 %       of the same dimension. Column size of matrix  matrixOfVecMat
 %       should match the dimension of ellipsoids.
 %
-%    Let myEllMat(iEll) = E(q, Q) be an ellipsoid with center q and shape
+%    Let myEllArr(iEll) = E(q, Q) be an ellipsoid with center q and shape
 %    matrix Q. Checking if given vector matrixOfVecMat = x belongs
 %    to E(q, Q) is equivalent to checking if inequality
 %                    <(x - q), Q^(-1)(x - q)> <= 1
@@ -27,7 +27,7 @@ function isPositiveVec = isinternal(myEllMat, matrixOfVecMat, mode)
 %
 % Input:
 %   regular:
-%       myEllMat: ellipsoid [mRowsOfEllMat, nColsOfEllMat] - matrix
+%       myEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array
 %           of ellipsoids.
 %       matrixOfVecMat: double [mRows, nColsOfVec] - matrix which
 %           specifiy points.
@@ -44,48 +44,32 @@ function isPositiveVec = isinternal(myEllMat, matrixOfVecMat, mode)
 % $Copyright:  The Regents of the University of California 2004-2008 $
 
 import elltool.conf.Properties;
-import modgen.common.throwerror;
+import modgen.common.checkvar;
+import modgen.common.checkmultvar;
 
-if ~isa(myEllMat, 'ellipsoid')
-    fstErrMsg = 'ISINTERNAL: first argument must be an ellipsoid, ';
-    secErrMsg = 'or an array of ellipsoids.';
-    throwerror('wrongInput', [fstErrMsg secErrMsg]);
-end
-
-nDimsMat = dimension(myEllMat);
-maxDim    = min(min(nDimsMat));
-minDim    = max(max(nDimsMat));
-if maxDim ~= minDim
-    throwerror('wrongSizes', ...
-        'ISINTERNAL: ellipsoids must be of the same dimension.');
-end
-
-if ~(isa(matrixOfVecMat, 'double'))
-    throwerror('wrongInput', ...
-        'ISINTERNAL: second argument must be an array of vectors.');
-end
+ellipsoid.checkIsMe(myEllArr,'first');
+checkvar(matrixOfVecMat,@(x) isa(matrixOfVecMat, 'double'),...
+    'errorTag','wrongInput',...
+    'errorMessage', 'first input argument must be ellipsoid.');
 
 if (nargin < 3) || ~(ischar(mode))
     mode = 'u';
 end
 
-if (mode ~= 'u') && (mode ~= 'i')
-    fstErrMsg = 'ISINTERNAL: third argument is expected ';
-    secErrMsg = 'to be either ''u'', or ''i''.';
-    throwerror('wrongInput', [fstErrMsg secErrMsg]);
-end
+checkvar(mode,@(x) (x=='u')||(x=='i'),...
+    'errorTag','wrongInput','errorMessage',...
+    'third argument is expected to be either ''u'', or ''i''.');
 
+nDimsMat = dimension(myEllArr);
 [mRows, nCols] = size(matrixOfVecMat);
-if mRows ~= minDim
-    throwerror('wrongInput', ...
-        'ISINTERNAL: dimensions of ellipsoid and vector do not match.');
-end
 
-isPositiveVec = logical(zeros(1,nCols));
-for iCol = 1:nCols
-    isPositiveVec(iCol) = isinternal_sub(myEllMat,...
-        matrixOfVecMat(:, iCol), mode, mRows);
-end
+checkmultvar('all(x1(:)==x2)',2,nDimsMat,mRows,...
+    'errorTag','wrongSizes',...
+    'errorMessage','dimensions mismath.');
+
+lCVec = mat2cell(matrixOfVecMat,mRows,ones(1,nCols));
+
+isPositiveVec = cellfun(@(x) isinternal_sub(myEllArr,x, mode),lCVec);
 
 end
 
@@ -93,7 +77,7 @@ end
 
 %%%%%%%%
 
-function isPositive = isinternal_sub(myEllMat, xVec, mode, mRows)
+function isPositive = isinternal_sub(myEllMat, xVec, mode)
 %
 % ISINTERNAL_SUB - compute result for single vector.
 %
@@ -118,20 +102,29 @@ function isPositive = isinternal_sub(myEllMat, xVec, mode, mRows)
 
 import elltool.conf.Properties;
 
+absTolMat = getAbsTol(myEllMat);
+
+isPosMat = arrayfun(@(x,y) fSingleCase(x,y),myEllMat,absTolMat);
+
 if mode == 'u'
     isPositive = false;
+    if any(isPosMat(:))
+        isPositive = true;
+    end
 else
     isPositive = true;
+    if ~all(isPosMat(:))
+        isPositive = false;
+    end
 end
 
-absTolMat = getAbsTol(myEllMat);
-[mEllRows, nEllCols] = size(myEllMat);
-for iEllRow = 1:mEllRows
-    for jEllCol = 1:nEllCols
-        myEllCentVec = xVec - myEllMat(iEllRow, jEllCol).center;
-        myEllShMat = myEllMat(iEllRow, jEllCol).shape;
+    function isPos = fSingleCase(singEll,absTol)
+        import elltool.conf.Properties;
+        isPos = false;
+        cVec = xVec - singEll.center;
+        shMat = singEll.shape;
         
-        if rank(myEllShMat) < mRows
+        if isdegenerate(singEll)
             if Properties.getIsVerbose()
                 fstFprintStr = ...
                     'ISINTERNAL: Warning! There is degenerate ';
@@ -139,25 +132,12 @@ for iEllRow = 1:mEllRows
                 fprintf([fstFprintStr secFprintStr]);
                 fprintf('            Regularizing...\n');
             end
-            myEllShMat = ellipsoid.regularize(myEllShMat,...
-                absTolMat(iEllRow,jEllCol));
+            shMat = ellipsoid.regularize(shMat, absTol);
         end
         
-        rScal = myEllCentVec' * ell_inv(myEllShMat) * myEllCentVec;
-        if (mode == 'u')
-            if (rScal < 1) || (abs(rScal - 1) ...
-                    < absTolMat(iEllRow,jEllCol))
-                isPositive = true;
-                return;
-            end
-        else
-            if (rScal > 1) && (abs(rScal - 1) ...
-                    > absTolMat(iEllRow,jEllCol))
-                isPositive = false;
-                return;
-            end
+        r = cVec' * ell_inv(shMat) * cVec;
+        if (r < 1) || (abs(r - 1) < absTol)
+            isPos = true;
         end
     end
-end
-
 end
