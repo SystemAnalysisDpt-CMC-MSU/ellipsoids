@@ -15,7 +15,8 @@ classdef NewReachTestCase < mlunitext.test_case
             self.testDataRootDir=[fileparts(which(className)),...
                 filesep,'TestData',filesep,shortClassName];
             % obtain the path of etalon data
-            regrClassName = 'gras.ellapx.uncertcalc.test.regr.mlunit.SuiteRegression';
+            regrClassName =...
+                'gras.ellapx.uncertcalc.test.regr.mlunit.SuiteRegression';
             shortRegrClassName='SuiteRegression';
             self.etalonDataRootDir=[fileparts(which(regrClassName)),...
                 filesep,'TestData',filesep,shortRegrClassName];
@@ -68,8 +69,7 @@ classdef NewReachTestCase < mlunitext.test_case
                 x0DefVec = crmSys.getParam('initial_set.a');
                 l0CMat = crm.getParam(...
                     'goodDirSelection.methodProps.manual.lsGoodDirSets.set1');
-                l0Mat = reshape(cell2mat(l0CMat),...
-                    numel(l0CMat), numel(l0CMat{1}));
+                l0Mat = cell2mat(l0CMat.').';
                 tLims = [crmSys.getParam('time_interval.t0'),...
                     crmSys.getParam('time_interval.t1')];
                 ControlBounds = struct();
@@ -83,6 +83,43 @@ classdef NewReachTestCase < mlunitext.test_case
                     ControlBounds, ctDefCMat, DistBounds);
                 reachObj = elltool.reach.ReachContinious(linSys,...
                     ellipsoid(x0DefVec, x0DefMat), l0Mat, tLims);
+                %
+                if strcmp(confName, 'demo3firstTest')
+                    pointCutReachObj =...
+                        reachObj.cut(0.5*(tLims(1) + tLims(2)));
+                    intervalCutReachObj =...
+                        reachObj.cut([0.75*tLims(1) + 0.25*tLims(2),...
+                        0.25*tLims(1) + 0.75*tLims(2)]);
+                    [directionCVec t1Vec] = reachObj.get_directions();
+                    [centerMat t2Vec] = reachObj.get_center();
+                    [eaEllMat t3Vec] = reachObj.get_ea();
+                    [iaEllMat t4Vec] = reachObj.get_ia();
+                    [goodCurvesCVec t5Vec] = reachObj.get_goodcurves();
+                    projObj = reachObj.projection([1; 0]);
+                    evolveObj = reachObj.evolve(tLims(2) + 1);
+                    isTimeEq =...
+                        all([all(t1Vec == t2Vec), all(t1Vec == t3Vec),...
+                        all(t1Vec == t4Vec), all(t1Vec == t5Vec)]);
+                    mlunit.assert_equals(true, isTimeEq);
+                    % and again for evolve object
+                    newTime = [tLims(1), tLims(2) + 1];
+                    pointCutReachObj =...
+                        evolveObj.cut(0.5*(newTime(1) + newTime(2)));
+                    intervalCutReachObj =...
+                        evolveObj.cut([0.75*newTime(1) + 0.25*newTime(2),...
+                        0.25*newTime(1) + 0.75*newTime(2)]);
+                    [directionCVec t1Vec] = evolveObj.get_directions();
+                    [centerMat t2Vec] = evolveObj.get_center();
+                    [eaEllMat t3Vec] = evolveObj.get_ea();
+                    [iaEllMat t4Vec] = evolveObj.get_ia();
+                    [goodCurvesCVec t5Vec] = evolveObj.get_goodcurves();
+                    projObj = evolveObj.projection([1; 0]);
+                    newEvolveObj = evolveObj.evolve(newTime(2) + 1);
+                    isTimeEq =...
+                        all([all(t1Vec == t2Vec), all(t1Vec == t3Vec),...
+                        all(t1Vec == t4Vec), all(t1Vec == t5Vec)]);
+                    mlunit.assert_equals(true, isTimeEq);
+                end
                 %
                 SRunProp = struct();
                 SRunProp.ellTubeRel = reachObj.getEllTubeRel();
@@ -123,7 +160,7 @@ classdef NewReachTestCase < mlunitext.test_case
                         mlunit.assert_equals(true,isOk,reportStr);
                     end
                 else
-                    % error
+                    throwerror('Do not exist configuration mat file.');
                 end 
             end
         end

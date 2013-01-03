@@ -65,10 +65,10 @@
 	</plottingProps>
 	<ellipsoidalApxProps type="struct" >
 		<internalApx type="struct" >
-			<isEnabled type="boolean" >1</isEnabled>
+			<isEnabled type="boolean" >0</isEnabled>
 			<schemas type="struct" >
 				<noUncertSqrtQ type="struct" >
-					<isEnabled type="boolean" >1</isEnabled>
+					<isEnabled type="boolean" >0</isEnabled>
 					<props type="struct" >
 						<selectionMethodForSMatrix type="char" >volume</selectionMethodForSMatrix>
 					</props>
@@ -83,19 +83,19 @@
 			<dispScaleFactor type="double" >1</dispScaleFactor>
 		</internalApx>
 		<externalApx type="struct" >
-			<isEnabled type="boolean" >1</isEnabled>
+			<isEnabled type="boolean" >0</isEnabled>
 			<schemas type="struct" >
 				<justQ type="struct" >
-					<isEnabled type="boolean" >1</isEnabled>
+					<isEnabled type="boolean" >0</isEnabled>
 				</justQ>
 			</schemas>
 			<dispScaleFactor type="double" >1</dispScaleFactor>
 		</externalApx>
 		<extIntApx type="struct" >
-			<isEnabled type="boolean" >0</isEnabled>
+			<isEnabled type="boolean" >1</isEnabled>
 			<schemas type="struct" >
 				<uncert type="struct" >
-					<isEnabled type="boolean" >0</isEnabled>
+					<isEnabled type="boolean" >1</isEnabled>
 					<props type="struct" >
 						<selectionMethodForSMatrix type="char" >volume</selectionMethodForSMatrix>
 						<minQSqrtMatEig type="double" >0.1</minQSqrtMatEig>

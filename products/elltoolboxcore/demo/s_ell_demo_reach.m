@@ -227,7 +227,7 @@ L = [1 0 -1 1; 0 -1 1 1]';
 %% 
 % Define the initial conditions and the end time:
 % 
-% >> X0 = [2; 3; 0; 0] + 0.00001*ell_unitball(4);
+% >> X0 = [2; 3; 0; 0] + 0.0001*ell_unitball(4);
 % >> T = 5;
 % 
 % Now we are ready to compute the reach set approximations and plot the reach tube projected onto (x1, x2) subspace. We shall compute the approximations for two directions.

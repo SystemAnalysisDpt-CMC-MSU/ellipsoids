@@ -6,7 +6,7 @@ loader = mlunitext.test_loader;
 crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
 crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
 
-confNameList = {'demo3firstTest', 'demo3secondTest'};
+confNameList = {'demo3firstTest'};
 
 nConfs=length(confNameList);
 suiteList=cell(1,nConfs);
