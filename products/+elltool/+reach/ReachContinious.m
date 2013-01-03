@@ -33,7 +33,7 @@ classdef ReachContinious < elltool.reach.AReach
                 isProjSpaceCList, fProj);
         end
         %
-        function ellTubeRel = getEllTubeRel(self, smartLinSys, l0Mat,...
+        function ellTubeRel = makeEllTubeRel(self, smartLinSys, l0Mat,...
                 timeVec, isDisturb, calcPrecision, approxTypeVec)
             import gras.ellapx.enums.EApproxType;
             relTol = elltool.conf.Properties.getRelTol();
@@ -84,12 +84,20 @@ classdef ReachContinious < elltool.reach.AReach
     end
     methods (Access = private, Static)
         function isDisturb = isDisturbance(gtStrCMat, qtStrCMat)
-            gtMat = gras.gen.MatVector.fromFormulaMat(gtStrCMat, 0);
-            qtMat = gras.gen.MatVector.fromFormulaMat(qtStrCMat, 0);
-            if (all(gtMat(:) == 0) || all(qtMat(:) == 0))
-                isDisturb = false;
-            else
-                isDisturb = true;
+            import gras.mat.symb.iscellofstringconst;
+            import gras.gen.MatVector;
+            isDisturb = true;
+            if iscellofstringconst(gtStrCMat)
+                gtMat = MatVector.fromFormulaMat(gtStrCMat, 0);
+                if all(gtMat(:) == 0)
+                    isDisturb = false;
+                end
+            end
+            if isDisturb && iscellofstringconst(qtStrCMat)
+                qtMat = MatVector.fromFormulaMat(qtStrCMat, 0);
+                if all(qtMat(:) == 0)
+                    isDisturb = false;
+                end
             end
         end
         function linSys = getSmartLinSys(atStrCMat, btStrCMat,...
@@ -130,12 +138,12 @@ classdef ReachContinious < elltool.reach.AReach
         %
         function outMat = getNormMat(inpMat, dim)
             matSqNormVec = sum(inpMat .* inpMat);
-            isNormGrZero = matSqNormVec > 0;
-            matSqNormVec(isNormGrZero) =...
-                sqrt(matSqNormVec(isNormGrZero));
-            outMat(:, isNormGrZero) =...
-                inpMat(:, isNormGrZero) ./...
-                matSqNormVec(ones(1, dim), isNormGrZero);
+            isNormGrZeroVec = matSqNormVec > 0;
+            matSqNormVec(isNormGrZeroVec) =...
+                sqrt(matSqNormVec(isNormGrZeroVec));
+            outMat(:, isNormGrZeroVec) =...
+                inpMat(:, isNormGrZeroVec) ./...
+                matSqNormVec(ones(1, dim), isNormGrZeroVec);
         end
         %
         function [atStrCMat btStrCMat gtStrCMat...
@@ -167,7 +175,20 @@ classdef ReachContinious < elltool.reach.AReach
             end
             uEll = linSys.getUBoundsEll();
             if ~isempty(uEll)
-                [ptVec ptMat] = double(uEll);
+                if isa(uEll, 'ellipsoid')
+                    [ptVec ptMat] = double(uEll);
+                else
+                    if isfield(uEll, 'center')
+                        ptVec = uEll.center;
+                    else
+                        ptVec = zeros(size(btMat, 2), 1);
+                    end
+                    if isfield(uEll, 'shape')
+                        ptMat = uEll.shape;
+                    else
+                        ptMat = zeros(size(btMat, 2));
+                    end
+                end
             else
                 ptMat = zeros(size(btMat, 2));
                 ptVec = zeros(size(btMat, 2), 1);
@@ -186,7 +207,20 @@ classdef ReachContinious < elltool.reach.AReach
             end
             vEll = linSys.getDistBoundsEll();
             if ~isempty(vEll)
-                [qtVec qtMat] = double(vEll);
+                if isa(vEll, 'ellipsoid')
+                    [qtVec qtMat] = double(vEll);
+                else
+                    if isfield(vEll, 'center')
+                        qtVec = vEll.center;
+                    else
+                        qtVec = zeros(size(gtMat, 2), 1);
+                    end
+                    if isfield(vEll, 'shape')
+                        qtMat = vEll.shape;
+                    else
+                        qtMat = zeros(size(gtMat, 2));
+                    end
+                end
             else
                 qtMat = zeros(size(gtMat, 2));
                 qtVec = zeros(size(gtMat, 2), 1);
@@ -279,7 +313,7 @@ classdef ReachContinious < elltool.reach.AReach
                 x0Mat, x0Vec, timeVec,...
                 relTol, isDisturbance);
             approxTypeVec = [EApproxType.External EApproxType.Internal];
-            self.ellTubeRel = self.getEllTubeRel(smartLinSys, l0Mat,...
+            self.ellTubeRel = self.makeEllTubeRel(smartLinSys, l0Mat,...
                 timeVec, isDisturbance,...
                 relTol, approxTypeVec);
         end
@@ -567,11 +601,11 @@ classdef ReachContinious < elltool.reach.AReach
                     qtStrCMat, qtStrCVec, x0IntMatArray(:, :, il0Num),...
                     x0IntVecMat(:, il0Num), newTimeVec,...
                     relTol, isDisturbance);
-                ellTubeExtRelVec{il0Num} = self.getEllTubeRel(...
+                ellTubeExtRelVec{il0Num} = self.makeEllTubeRel(...
                     smartExtLinSys, l0ExtMat(:, il0Num), newTimeVec,...
                     isDisturbance, relTol,...
                     EApproxType.External);
-                ellTubeIntRelVec{il0Num} = self.getEllTubeRel(...
+                ellTubeIntRelVec{il0Num} = self.makeEllTubeRel(...
                     smartIntLinSys, l0IntMat(:, il0Num), newTimeVec,...
                     isDisturbance, relTol,...
                     EApproxType.Internal);
@@ -588,6 +622,10 @@ classdef ReachContinious < elltool.reach.AReach
                 'gras.ellapx.smartdb.rels.EllTube', dataCVec);
             newReachObj.ellTubeRel =...
                 self.ellTubeRel.cat(newEllTubeRel);
+        end
+        %%
+        function ellTubeRel = getEllTubeRel(self)
+            ellTubeRel = self.ellTubeRel;
         end
     end
 end

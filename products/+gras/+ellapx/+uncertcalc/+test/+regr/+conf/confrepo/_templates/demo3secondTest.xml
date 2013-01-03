@@ -2,8 +2,8 @@
 <root version="18" xml_tb_version="2.0" type="struct" >
 <valueObj type="struct" >
 	<genericProps type="struct" >
-		<calcTimeLimVec type="double" >0 20</calcTimeLimVec>
-		<calcPrecision type="double" >0.0001</calcPrecision>
+		<calcTimeLimVec type="double" >0 4</calcTimeLimVec>
+		<calcPrecision type="double" >0.00001</calcPrecision>
 		<isSplineForMatrixCalcUsed type="boolean" >1</isSplineForMatrixCalcUsed>
 	</genericProps>
 	<projectionProps type="struct" >
@@ -33,7 +33,7 @@
 				<goodDirSpaceVec type="boolean" >1 1</goodDirSpaceVec>
 			</auto>
 		</methodProps>
-		<selectionTime type="double" >10</selectionTime>
+		<selectionTime type="double" >0</selectionTime>
 	</goodDirSelection>
 	<customResultDir type="struct" >
 		<isEnabled type="boolean" >0</isEnabled>
@@ -59,7 +59,7 @@
             </log4jSettings>
 	</logging>
 	<plottingProps type="struct" >
-		<isEnabled type="boolean" >0</isEnabled>
+		<isEnabled type="boolean" >1</isEnabled>
 		<viewAngleVec type="double" >37.5 30</viewAngleVec>
 		<isGoodCurvesSeparately type="boolean" >1</isGoodCurvesSeparately>
 	</plottingProps>
@@ -80,7 +80,7 @@
 					</props>
 				</noUncertJustQ>
 			</schemas>
-			<dispScaleFactor type="double" >0.97</dispScaleFactor>
+			<dispScaleFactor type="double" >1</dispScaleFactor>
 		</internalApx>
 		<externalApx type="struct" >
 			<isEnabled type="boolean" >1</isEnabled>
@@ -89,7 +89,7 @@
 					<isEnabled type="boolean" >1</isEnabled>
 				</justQ>
 			</schemas>
-			<dispScaleFactor type="double" >1.01</dispScaleFactor>
+			<dispScaleFactor type="double" >1</dispScaleFactor>
 		</externalApx>
 		<extIntApx type="struct" >
 			<isEnabled type="boolean" >0</isEnabled>
@@ -104,7 +104,7 @@
 			</schemas>
 		</extIntApx>
 	</ellipsoidalApxProps>
-	<systemDefinitionConfName type="char" >x2dsys</systemDefinitionConfName>
+	<systemDefinitionConfName type="char" >demo3secondTestSys</systemDefinitionConfName>
 </valueObj>
-<keyStr type="char" >x2dtest</keyStr>
+<keyStr type="char" >demo3secondTest</keyStr>
 </root>

@@ -12,6 +12,60 @@ classdef LinSys<handle
         isDiscr
         isConstantBoundsVec
     end
+    %
+    methods (Access = private, Static)
+       function isEllHaveNeededDim(InpEll, NDim)
+        % isEllHaveNeededDim - checks if given structure E represents an ellipsoid
+        %                      of dimension N.
+            qVec = InpEll.center;
+            QMat = InpEll.shape;
+            [kRows, lCols] = size(qVec);
+            [mRows, nCols] = size(QMat);
+            %%
+            if mRows ~= nCols
+                throwerror(sprintf('linsys:value:%s:shape', inputname(1)),...
+                    'shape matrix must be symmetric, positive definite');
+            elseif nCols ~= NDim
+                throwerror(sprintf('linsys:dimension:%s:shape', inputname(1)),...
+                    'shape matrix must be of dimension %dx%d', NDim, NDim);
+            elseif lCols > 1 || kRows ~= NDim
+                throwerror(sprintf('linsys:dimension:%s:center', inputname(1)),...
+                    'center must be a vector of dimension %d', NDim);  
+            end 
+            %%
+            if ~iscell(qVec) && ~iscell(QMat)
+                throwerror( sprintf('linsys:type:%s',inputname(1)), ...
+                    'for constant ellipsoids use ellipsoid object' );
+            end
+            %%
+            if ~iscell(qVec) && ~isa(qVec, 'double')
+                throwerror(sprintf('linsys:type:%s:center', inputname(1)),...
+                    'center must be of type ''cell'' or ''double''');        
+            end
+            %%
+            if iscell(QMat)
+                if elltool.conf.Properties.getIsVerbose() > 0
+                    fprintf('LINSYS: Warning! Cannot check if symbolic matrix is positive definite.\n');
+                end
+                isEqMat = strcmp(QMat, QMat.');
+                if ~all(isEqMat(:))
+                    throwerror(sprintf('linsys:value:%s:shape', inputname(1)),...
+                        'shape matrix must be symmetric, positive definite');
+                end
+            else
+                if isa(QMat, 'double')
+                    isnEqMat = (QMat ~= QMat.');
+                    if any(isnEqMat(:)) || min(eig(QMat)) <= 0
+                        throwerror(sprintf('linsys:value:%s:shape', inputname(1)),...
+                            'shape matrix must be symmetric, positive definite');
+                    end                    
+                else
+                    throwerror(sprintf('linsys:type:%s:shape', inputname(1)),...
+                        'shape matrix must be of type ''cell'' or ''double''');    
+                end        
+            end
+        end 
+    end
     methods
         %% get-methods
         function AMat = getAtMat(self)
@@ -246,58 +300,6 @@ classdef LinSys<handle
                 self.isDiscr = true;
             end
             self.isConstantBoundsVec = [isCBU isCBV isCBW];
-        end
-        %
-        function isEllHaveNeededDim(InpEll, NDim)
-        % isEllHaveNeededDim - checks if given structure E represents an ellipsoid
-        %                      of dimension N.
-            qVec = InpEll.center;
-            QMat = InpEll.shape;
-            [kRows, lCols] = size(qVec);
-            [mRows, nCols] = size(QMat);
-            %%
-            if mRows ~= nCols
-                throwerror(sprintf('linsys:value:%s:shape', inputname(1)),...
-                    'shape matrix must be symmetric, positive definite');
-            elseif nCols ~= NDim
-                throwerror(sprintf('linsys:dimension:%s:shape', inputname(1)),...
-                    'shape matrix must be of dimension %dx%d', NDim, NDim);
-            elseif lCols > 1 || kRows ~= NDim
-                throwerror(sprintf('linsys:dimension:%s:center', inputname(1)),...
-                    'center must be a vector of dimension %d', NDim);  
-            end 
-            %%
-            if ~iscell(qVec) && ~iscell(QMat)
-                throwerror( sprintf('linsys:type:%s',inputname(1)), ...
-                    'for constant ellipsoids use ellipsoid object' );
-            end
-            %%
-            if ~iscell(qVec) && ~isa(qVec, 'double')
-                throwerror(sprintf('linsys:type:%s:center', inputname(1)),...
-                    'center must be of type ''cell'' or ''double''');        
-            end
-            %%
-            if iscell(QMat)
-                if elltool.conf.Properties.getIsVerbose() > 0
-                    fprintf('LINSYS: Warning! Cannot check if symbolic matrix is positive definite.\n');
-                end
-                isEqMat = strcmp(QMat, QMat.');
-                if ~all(isEqMat(:))
-                    throwerror(sprintf('linsys:value:%s:shape', inputname(1)),...
-                        'shape matrix must be symmetric, positive definite');
-                end
-            else
-                if isa(QMat, 'double')
-                    isnEqMat = (QMat ~= QMat.');
-                    if any(isnEqMat(:)) || min(eig(QMat)) <= 0
-                        throwerror(sprintf('linsys:value:%s:shape', inputname(1)),...
-                            'shape matrix must be symmetric, positive definite');
-                    end                    
-                else
-                    throwerror(sprintf('linsys:type:%s:shape', inputname(1)),...
-                        'shape matrix must be of type ''cell'' or ''double''');    
-                end        
-            end
         end
         %
         function [stateDim, inpDim, outDim, distDim] = dimension(self)
