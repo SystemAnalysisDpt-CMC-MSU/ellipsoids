@@ -1,4 +1,4 @@
-function outEll = ellintersection_ia(inpEllMat)
+function outEll = ellintersection_ia(inpEllArr)
 %
 % ELLINTERSECTION_IA - computes maximum volume ellipsoid that is
 %                      contained in the intersection of
@@ -6,8 +6,8 @@ function outEll = ellintersection_ia(inpEllMat)
 %
 % Input:
 %   regular:
-%       inpEllMat: ellipsoid [mRows, nCols] - matrix of ellipsoids
-%           of the same dimentions.
+%       inpEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of
+%           ellipsoids of the same dimentions.
 %
 % Output:
 %   outEll: ellipsoid [1, 1] - resulting maximum volume ellipsoid.
@@ -25,24 +25,20 @@ import modgen.common.throwerror
 import elltool.conf.Properties;
 
 
-ellDimensions = dimension(inpEllMat);
-minEllDim   = min(min(ellDimensions));
-maxEllDim   = max(max(ellDimensions));
+dimsArr = dimension(inpEllArr);
+minEllDim   = min(dimsArr(:));
 
-if minEllDim ~= maxEllDim
-    fstStr = 'ELLINTERSECTION_IA: all ellipsoids must ';
-    secStr = 'be of the same dimension.';
-    throwerror('wrongSizes', [fstStr secStr]);
-end
+modgen.common.checkvar(dimsArr,'all(x(:)==x(1))',...
+    'errorTag','wrongSizes',...
+    'errorMessage','all ellipsoids must be of the same dimension.');
 
-[mRows, nCols] = size(inpEllMat);
-nEllipsoids = mRows * nCols;
-inpEllMat = reshape(inpEllMat, 1, nEllipsoids);
+nEllipsoids = numel(inpEllArr);
+inpEllVec = reshape(inpEllArr, 1, nEllipsoids);
 
 if Properties.getIsVerbose()
     fprintf('Invoking CVX...\n');
 end
-absTolVec = getAbsTol(inpEllMat);
+absTolVec = getAbsTol(inpEllVec);
 cvx_begin sdp
 variable cvxEllMat(minEllDim, minEllDim) symmetric
 variable cvxEllCenterVec(minEllDim)
@@ -52,7 +48,7 @@ maximize( det_rootn( cvxEllMat ) )
 subject to
 -cvxDirVec <= 0;
 for iEllipsoid = 1:nEllipsoids
-    [inpEllcenrVec, inpEllShMat] = double(inpEllMat(iEllipsoid));
+    [inpEllcenrVec, inpEllShMat] = double(inpEllVec(iEllipsoid));
     if rank(inpEllShMat) < minEllDim
         inpEllShMat = ...
             ellipsoid.regularize(inpEllShMat,absTolVec(iEllipsoid));
@@ -79,7 +75,7 @@ end;
 
 if rank(cvxEllMat) < minEllDim
     cvxEllMat = ...
-        ellipsoid.regularize(cvxEllMat,min(getAbsTol(inpEllMat(:))));
+        ellipsoid.regularize(cvxEllMat,min(absTolVec));
 end
 
 ellMat = cvxEllMat * cvxEllMat';

@@ -1,3 +1,3 @@
-function isPositive=isunique(inpVec)
-isPositive=length(inpVec)==length(unique(inpVec));
-end
+function [isPositive,outVec]=isunique(inpVec)
+outVec=unique(inpVec);
+isPositive=length(inpVec)==length(outVec);

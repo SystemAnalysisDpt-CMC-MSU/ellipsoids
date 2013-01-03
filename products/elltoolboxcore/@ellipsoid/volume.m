@@ -1,62 +1,54 @@
-function V = volume(E)
+function volArr = volume(ellArr)
 %
 % VOLUME - returns the volume of the ellipsoid.
 %
+%	volArr = VOLUME(ellArr)  Computes the volume of ellipsoids in
+%       ellipsoidal array ellArr.
 %
-% Description:
-% ------------
+%	The volume of ellipsoid E(q, Q) with center q and shape matrix Q 
+%	is given by V = S sqrt(det(Q)) where S is the volume of unit ball.
 %
-%    V = VOLUME(E)  Computes the volume of ellipsoids in ellipsoidal array E.
-%
-%    The volume of ellipsoid E(q, Q) with center q and shape matrix Q is given by
-%                  V = S sqrt(det(Q))
-%    where S is the volume of unit ball.
-%
+% Input:
+%   regular:
+%       ellArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array
+%           of ellipsoids.
 %
 % Output:
-% -------
+%	volArr: double [nDims1,nDims2,...,nDimsN] - array of
+%   	volume values, same size as ellArr.
 %
-%    V - array of volume values, same size as E.
+% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+% $Copyright:  The Regents of the University of California 2004-2008 $
 %
-%
-% See also:
-% ---------
-%
-%    ELLIPSOID/ELLIPSOID.
-%
+% $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
+% $Copyright: Moscow State University,
+%             Faculty of Computational Mathematics and Cybernetics,
+%             Science, System Analysis Department 2012 $
+%s
 
-%
-% Author:
-% -------
-%
-%    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-%
-  import modgen.common.throwerror;
-  
-  if ~(isa(E, 'ellipsoid'))
-    error('VOLUME: input argument must be ellipsoid.');
-  end
+ellipsoid.checkIsMe(ellArr); 
 
-  [m, n] = size(E);
-  V=zeros(m,n);
-  for i = 1:m
-    for j = 1:n
-      if isempty(E(i,j))
-          throwerror('wrongInput:emptyEllipsoid','VOLUME: input argument is empty.');
-      end
-      Q = E(i, j).shape;
-      if isdegenerate(E(i, j))
-        S = 0;
-      else
-        N = size(Q, 1) - 1;
-        if mod(N, 2) > 0
-          k = (N + 1)/2;
-          S = (pi^k)/factorial(k);
-        else
-          k = N/2;
-          S = ((2^(2*k + 1))*(pi^k)*factorial(k))/factorial(2*k + 1);
-        end
-      end
-      V(i,j)= S*sqrt(det(Q));
+modgen.common.checkvar(ellArr,'~any(isempty(x(:)))',...
+    'errorTag','wrongInput:emptyEllipsoid',...
+    'errorMessage','input argument is empty.');
+volArr = arrayfun(@(x) fSingleVolume(x), ellArr);
+
+end
+
+function vol = fSingleVolume(singEll)
+if isdegenerate(singEll)
+    vol = 0;
+else
+    qMat = singEll.shape;
+    nDim = size(qMat, 1);
+    
+    if mod(nDim,2)
+        k = (nDim-1)*0.5;
+        s = ((2^(2*k + 1))*(pi^k)*factorial(k))/factorial(2*k + 1);
+    else
+        k = nDim *0.5;
+        s = (pi^k)/factorial(k);
     end
-  end
+    vol = s*sqrt(det(qMat));
+end
+end

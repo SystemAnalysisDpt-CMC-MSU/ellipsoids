@@ -1,68 +1,47 @@
-function isPositiveMat = gt(firsrEllMat, secondEllMat)
+function isPositiveArr = gt(firstEllArr, secondEllArr)
 %
 % GT - checks if the first ellipsoid is bigger than the second one.
 %
 % Input:
 %   regular:
-%       firsrEllMat: ellipsoid [mRows, nCols] - array of ellipsoids.
-%       secondEllMat: ellipsoid [mRows, nCols] - array of ellipsoids
-%           of the corresponding dimensions.
+%       firsrEllArr: ellipsoid [nDims1,nDims2,...,nDimsN]/[1,1] - array
+%           of ellipsoids.
+%       secondEllArr: ellipsoid [nDims1,nDims2,...,nDimsN]/[1,1] - array
+%           of ellipsoids of the corresponding dimensions.
 %
 % Output:
-%   isPositiveMat: logical[mRows, nCols],
-%       resMat(iRows, jCols) = true - if firsrEllMat(iRows, jCols)
-%       contains secondEllMat(iRows, jCols)
+%   isPositiveArr: logical [nDims1,nDims2,...,nDimsN],
+%       isPositiveArr(iCount) = true - if firsrEllArr(iCount)
+%       contains secondEllArr(iCount)
 %       when both have same center, false - otherwise.
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
+%
+% $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
+% $Copyright: Moscow State University,
+%             Faculty of Computational Mathematics and Cybernetics,
+%             Science, System Analysis Department 2012 $
+%
+
 import modgen.common.throwerror;
+import modgen.common.checkmultvar;
 
-if ~(isa(firsrEllMat, 'ellipsoid')) || ...
-        ~(isa(secondEllMat, 'ellipsoid'))
-    throwerror('wrongInput', ...
-        '<>: both input arguments must be ellipsoids.');
-end
+ellipsoid.checkIsMe(firstEllArr,'first');
+ellipsoid.checkIsMe(secondEllArr,'second');
 
-[mRowsFstEllMatrix, nColsFstEllMatrix] = size(firsrEllMat);
-nFstEllipsoids = mRowsFstEllMatrix * nColsFstEllMatrix;
-[mRowsSecEllMatrix, nColsSecEllMatrix] = size(secondEllMat);
-nSecEllipsoids = mRowsSecEllMatrix * nColsSecEllMatrix;
+isFstScal = isscalar(firstEllArr);
+isSecScal = isscalar(secondEllArr);
 
-if ((mRowsFstEllMatrix ~= mRowsSecEllMatrix) || (nColsFstEllMatrix ~= ...
-        nColsSecEllMatrix)) && (nFstEllipsoids > 1) && ...
-        (nSecEllipsoids > 1)
-    throwerror('wrongSizes', ...
-        '<>: sizes of ellipsoidal arrays do not match.');
-end
+checkmultvar('x1 || x2 ||all(size(x3)==size(x4))',...
+    4,isFstScal,isSecScal,firstEllArr,secondEllArr,...
+    'errorTag','wrongSizes',...
+    'errorMessage','sizes of ellipsoidal arrays do not match.');
 
-isPositiveMat = logical([]);
-if (nFstEllipsoids > 1) && (nSecEllipsoids > 1)
-    for iRow = 1:mRowsSecEllMatrix
-        isPositivePartVec = logical([]);
-        for jCol = 1:nColsSecEllMatrix
-            isPositivePartVec = logical([isPositivePartVec ...
-                isbigger(firsrEllMat(iRow, jCol), ...
-                secondEllMat(iRow, jCol))]);
-        end
-        isPositiveMat = logical([isPositiveMat; isPositivePartVec]);
-    end
-elseif (nFstEllipsoids > 1)
-    for iRow = 1:mRowsFstEllMatrix
-        isPositivePartVec = logical([]);
-        for jCol = 1:nColsFstEllMatrix
-            isPositivePartVec = logical([isPositivePartVec ...
-                isbigger(firsrEllMat(iRow, jCol), secondEllMat)]);
-        end
-        isPositiveMat = logical([isPositiveMat; isPositivePartVec]);
-    end
+if ~(isFstScal || isSecScal)
+    isPositiveArr = arrayfun(@(x,y) isbigger(x,y),firstEllArr,secondEllArr);
+elseif isSecScal
+    isPositiveArr = arrayfun(@(x) isbigger(x,secondEllArr),firstEllArr);
 else
-    for iRow = 1:mRowsSecEllMatrix
-        isPositivePartVec = logical([]);
-        for jCol = 1:nColsSecEllMatrix
-            isPositivePartVec = logical([isPositivePartVec ...
-                isbigger(firsrEllMat, secondEllMat(iRow, jCol))]);
-        end
-        isPositiveMat = logical([isPositiveMat; isPositivePartVec]);
-    end
+    isPositiveArr = arrayfun(@(x) isbigger(firstEllArr,x),secondEllArr);
 end

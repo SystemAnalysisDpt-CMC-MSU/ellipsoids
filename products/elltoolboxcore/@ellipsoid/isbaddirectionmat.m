@@ -31,22 +31,15 @@ import modgen.common.throwwarn;
 
 [nDim, nDirs] = size(dirsMat);
 
-if ( ~all(size(q1Mat)==nDim) ) || (~all(size(q2Mat)==nDim))
-    throwerror('wrongInput:dimsMismatch',...
-        'ISBADDIRECTIONMAT: dimensions mismatch');
-end
-if det(q2Mat)==0
-    fstErrMsg = 'ISBADDIRECTIONMAT: argument must be symmetric ';
-    secErrMsg = 'positive definite matrix';
-    throwwarn('wrongInput:singularMat', [fstErrMsg secErrMsg]);
-end
+modgen.common.checkmultvar('all(size(x1)==x3)&&all(size(x2)==x3)',...
+    3,q1Mat,q2Mat,nDim,...
+    'errorTag','wrongInput:dimsMismatch',...
+    'errorMessage','dimensions mismatch.');
+modgen.common.checkvar(q2Mat,'det(x)~=0',...
+    'errorTag','wrongInput:singularMat',...
+    'errorMessage','argument must be symmetric positive definite matrix');
 
-isBadDirVec = true(1,nDirs);
-lambdaMin   = min(eig(q1Mat/q2Mat));
-for iDirCout = 1:nDirs
-    lVec = dirsMat(:, iDirCout);
-    checkVal = sqrt( (lVec'*q1Mat*lVec)/(lVec'*q2Mat*lVec) );
-    if lambdaMin >= checkVal
-        isBadDirVec(iDirCout) = false;
-    end
-end
+lamMin   = min(eig(q1Mat/q2Mat));
+dirsCVec = mat2cell(dirsMat,nDim,ones(1,nDirs));
+isBadDirVec = cellfun(@(x) lamMin < sqrt( (x'*q1Mat*x)/(x'*q2Mat*x) ),...
+    dirsCVec);

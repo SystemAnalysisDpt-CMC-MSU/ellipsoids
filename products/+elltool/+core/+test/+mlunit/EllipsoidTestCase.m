@@ -419,10 +419,10 @@ classdef EllipsoidTestCase < mlunitext.test_case
             fCheckForTestEllipsoidAndDouble(10*rand(100,1), diag(50*rand(1,100)));
             
             %Check wrong inputs
-            self.runAndCheckError('ellipsoid([1 1],eye(2,2))','wrongInput:wrongCenter');
-            self.runAndCheckError('ellipsoid([1 1;0 1])','wrongInput:wrongMat');
-            self.runAndCheckError('ellipsoid([-1 0;0 -1])','wrongInput:wrongMat');
-            self.runAndCheckError('ellipsoid([1;1],eye(3,3))','wrongInput:dimsMismatch');
+            self.runAndCheckError('ellipsoid([1 1],eye(2,2))','wrongInput');
+            self.runAndCheckError('ellipsoid([1 1;0 1])','wrongInput');
+            self.runAndCheckError('ellipsoid([-1 0;0 -1])','wrongInput');
+            self.runAndCheckError('ellipsoid([1;1],eye(3,3))','wrongInput');
             
             self.runAndCheckError('ellipsoid([1 -i;-i 1])','wrongInput:imagArgs');
             self.runAndCheckError('ellipsoid([1+i;1],eye(2,2))','wrongInput:imagArgs');

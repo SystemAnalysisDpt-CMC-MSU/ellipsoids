@@ -1,11 +1,11 @@
-function extApprEllVec = minksum_ea(inpEllMat, dirMat)
+function extApprEllVec = minksum_ea(inpEllArr, dirMat)
 %
 % MINKSUM_EA - computation of external approximating ellipsoids
 %              of the geometric sum of ellipsoids along given directions.
 %
-%   extApprEllVec = MINKSUM_EA(inpEllMat, dirMat) - Computes
+%   extApprEllVec = MINKSUM_EA(inpEllArr, dirMat) - Computes
 %       tight external approximating ellipsoids for the geometric
-%       sum of the ellipsoids in the array inpEllMat along directions
+%       sum of the ellipsoids in the array inpEllArr along directions
 %       specified by columns of dirMat.
 %       If ellipsoids in inpEllMat are n-dimensional, matrix
 %       dirMat must have dimension (n x k) where k can be
@@ -27,7 +27,7 @@ function extApprEllVec = minksum_ea(inpEllMat, dirMat)
 %
 % Input:
 %   regular:
-%       inpEllMat: ellipsoid [mRows, nColsInpEllMatrix] - matrix
+%       inpEllArr: ellipsoid [nDims1, nDims2,...,nDimsN] - array
 %           of ellipsoids of the same dimentions.
 %       dirMat: double[nDims, nCols] - matrix whose columns specify
 %           the directions for which the approximations
@@ -39,69 +39,62 @@ function extApprEllVec = minksum_ea(inpEllMat, dirMat)
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
+%
+% $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
+% $Copyright: Moscow State University,
+%             Faculty of Computational Mathematics and Cybernetics,
+%             Science, System Analysis Department 2012 $
+%
 
 import elltool.conf.Properties;
 import modgen.common.throwerror;
-%
-if ~(isa(inpEllMat, 'ellipsoid'))
-    throwerror('wrongInput', ...
-        'MINKSUM_EA: first argument must be array of ellipsoids.');
-end
+import modgen.common.checkmultvar;
 
-nDimsInpEllMat = dimension(inpEllMat);
-minDim = min(min(nDimsInpEllMat));
-maxDim = max(max(nDimsInpEllMat));
-if minDim ~= maxDim
-    fstStr = 'MINKSUM_EA: ellipsoids in the array must be ';
-    secStr = 'of the same dimension.';
-    throwerror('wrongSizes', [fstStr secStr]);
-end
+ellipsoid.checkIsMe(inpEllArr,'first');
 
 [nDims, nCols] = size(dirMat);
-if (nDims ~= maxDim)
-    fstStr = 'MINKSUM_EA: second argument must ';
-    secStr = 'be vector(s) in R^%d.';
-    msg = sprintf([fstStr secStr], maxDim);
-    throwerror(msg);
-end
-
-[mRows, nColsInpEllMatrix] = size(inpEllMat);
-if (mRows == 1) && (nColsInpEllMatrix == 1)
-    extApprEllVec = inpEllMat;
+nDimsInpEllArr = dimension(inpEllArr);
+checkmultvar('all(x2(:)==x1)',2,nDimsInpEllArr,nDims,...
+    'errorTag','wrongSizes','errrorMessage',...
+    'ellipsoids in the array and vector(s) must be of the same dimension.');
+if isscalar(inpEllArr)
+    extApprEllVec = inpEllArr;
     return;
 end
-%
-extApprEllVec(nCols) = ellipsoid();
-absTolMat = getAbsTol(inpEllMat);
-for iCol = 1:nCols
-    dirVec = dirMat(:, iCol);
-    for iRow = 1:mRows
-        for jColsInpEllMatrix = 1:nColsInpEllMatrix
-            shMat = inpEllMat(iRow, jColsInpEllMatrix).shape;
-            if size(shMat, 1) > rank(shMat)
+
+centVec =zeros(nDims,1);
+arrayfun(@(x) fAddCenter(x),inpEllArr);
+
+absTolArr = getAbsTol(inpEllArr);
+extApprEllVec(1,nCols) = ellipsoid;
+arrayfun(@(x) fSingleDirection(x),1:nCols);
+
+    function fAddCenter(singEll)
+        centVec = centVec + singEll.center;
+    end
+    function fSingleDirection(index)
+        secCoef = 0;
+        subShMat = zeros(nDims,nDims);
+        dirVec = dirMat(:, index);
+        arrayfun(@(x,y) fAddSh(x,y), inpEllArr, absTolArr);
+        subShMat  = 0.5*secCoef*(subShMat + subShMat');
+        extApprEllVec(index).center = centVec;
+        extApprEllVec(index).shape = subShMat;
+        
+        function fAddSh(singEll,absTol)
+            shMat = singEll.shape;
+            if isdegenerate(singEll)
                 if Properties.getIsVerbose()
                     fprintf('MINKSUM_EA: Warning!');
                     fprintf(' Degenerate ellipsoid.\n');
                     fprintf('            Regularizing...\n')
                 end
-                shMat = ellipsoid.regularize(shMat, ...
-                    absTolMat(iRow,jColsInpEllMatrix));
+                shMat = ellipsoid.regularize(shMat, absTol);
             end
-            
             fstCoef = sqrt(dirVec'*shMat*dirVec);
-            
-            if (iRow == 1) && (jColsInpEllMatrix == 1)
-                centVec = inpEllMat(iRow, jColsInpEllMatrix).center;
-                subShMat = (1/fstCoef) * shMat;
-                secCoef = fstCoef;
-            else
-                centVec = centVec + ...
-                    inpEllMat(iRow, jColsInpEllMatrix).center;
-                subShMat = subShMat + ((1/fstCoef) * shMat);
-                secCoef = secCoef + fstCoef;
-            end
+            subShMat = subShMat + ((1/fstCoef) * shMat);
+            secCoef = secCoef + fstCoef;
         end
+        
     end
-    subShMat  = 0.5*secCoef*(subShMat + subShMat');
-    extApprEllVec(iCol) = ellipsoid(centVec, subShMat);
 end

@@ -131,7 +131,7 @@ classdef GenEllipsoid < handle
     end
     methods
         function display(ellArr)
-            strucdisp(ellArr.toStruct());
+            strucdisp(ellArr(:).toStruct());
         end
     end
     methods
@@ -322,6 +322,7 @@ classdef GenEllipsoid < handle
         end
     end
     methods (Static,Access = private)
+        resVec = getColorTable(ch);
         [isOk, pPar] = getIsGoodDirForMat(ellQ1Mat,ellQ2Mat,dirVec)
         sqMat = findSqrtOfMatrix(qMat,absTol)
         isBigger=checkBigger(ellObj1,ellObj2,nDimSpace,absTol)
