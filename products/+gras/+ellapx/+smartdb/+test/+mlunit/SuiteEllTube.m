@@ -11,8 +11,8 @@ classdef SuiteEllTube < mlunitext.test_case
             
         end
         function testRegCreate(self)
-            nDims=2;   
-            nPoints=3;    
+            nDims=2;
+            nPoints=3;
             approxSchemaDescr=char.empty(1,0);
             approxSchemaName=char.empty(1,0);
             nTubes=3;
@@ -20,10 +20,10 @@ classdef SuiteEllTube < mlunitext.test_case
             checkAll();
             %%
             function checkAll()
-            checkMaster(@fGetDiffMArray);                            
-            checkMaster(@fGetSame);
-            checkMaster(@fGetDiffScale2);            
-            checkMaster(@fGetDiffScale);
+                checkMaster(@fGetDiffMArray);
+                checkMaster(@fGetSame);
+                checkMaster(@fGetDiffScale2);
+                checkMaster(@fGetDiffScale);
             end
             function [isScaleDiff,isMDiff,scaleFactor,MArrayList]=fGetSame(~,~)
                 isScaleDiff=false;
@@ -51,7 +51,7 @@ classdef SuiteEllTube < mlunitext.test_case
                 isScaleDiff=true;
                 isMDiff=false;
                 MArrayList=repmat({repmat(0.1*eye(nDims),[1,1,nPoints])},1,nTubes);
-            end            
+            end
             %
             function [isScaleDiff,isMDiff,scaleFactor,MArrayList]=fGetDiffMArray(~,isMDiff)
                 if isMDiff
@@ -168,12 +168,12 @@ classdef SuiteEllTube < mlunitext.test_case
             mlunit.assert_equals(true,isEqual,reportStr);
             %
             function [projOrthMatArray,projOrthMatTransArray]=...
-                        fGetProjMat(projSpaceVec,timeVec,sTime,dim,indSTime)
-                    nPoints=length(timeVec);
-                    projMat=eye(dim);
-                    projMat=projMat(logical(projSpaceVec),:);
-                    projOrthMatArray=repmat(projMat,[1,1,nPoints]);
-                    projOrthMatTransArray=repmat(projMat.',[1,1,nPoints]);                    
+                    fGetProjMat(projSpaceVec,timeVec,sTime,dim,indSTime)
+                nPoints=length(timeVec);
+                projMat=eye(dim);
+                projMat=projMat(logical(projSpaceVec),:);
+                projOrthMatArray=repmat(projMat,[1,1,nPoints]);
+                projOrthMatTransArray=repmat(projMat.',[1,1,nPoints]);
             end
             function rel=create()
                 ltGoodDirArray=repmat(lsGoodDirVec,[1,nTubes,nPoints]);
@@ -185,9 +185,9 @@ classdef SuiteEllTube < mlunitext.test_case
                 rel=gras.ellapx.smartdb.rels.EllTube.fromQMArrays(...
                     QArrayList,aMat,MArrayList,timeVec,...
                     ltGoodDirArray,sTime,approxType,approxSchemaName,...
-                    approxSchemaDescr,calcPrecision);                
-            end            
-        end        
+                    approxSchemaDescr,calcPrecision);
+            end
+        end
         function testSimpleNegRegCreate(self)
             nPoints=3;
             calcPrecision=0.001;
@@ -204,30 +204,30 @@ classdef SuiteEllTube < mlunitext.test_case
             MArrayList=repmat({repmat(diag([0.1 0.1]),[1,1,nPoints])},...
                 1,nTubes);
             QArrayList=repmat({repmat(diag([1 1]),[1,1,nPoints])},1,nTubes);
-            scaleFactor=1.01;            
+            scaleFactor=1.01;
             create();
             QArrayList=repmat({repmat(diag([-1 1]),[1,1,nPoints])},1,nTubes);
             scaleFactor=1.01;
             %
             check('wrongInput:QArray',@create);
             %
-            QArrayList=repmat({repmat(eye(nDims),[1,1,nPoints])},1,nTubes);            
+            QArrayList=repmat({repmat(eye(nDims),[1,1,nPoints])},1,nTubes);
             MArrayList=repmat({repmat(diag([-0.1 0.1]),[1,1,nPoints])},...
                 1,nTubes);
             %
             check('wrongInput:MArray',@create);
-            QArrayList=repmat({repmat(eye(nDims),[1,1,nPoints])},1,nTubes);            
+            QArrayList=repmat({repmat(eye(nDims),[1,1,nPoints])},1,nTubes);
             timeVec=1:nPoints-1;
             MArrayList=repmat({repmat(diag([0.1 0.1]),[1,1,nPoints])},...
-                1,nTubes);  
+                1,nTubes);
             sTime=1;
             check('wrongInput',@create);
             timeVec=1:nPoints;
             MArrayList=repmat({repmat(diag([0.1 0.1]),[1,1,nPoints-1])},...
-                1,nTubes);            
-            check('wrongInput',@create);            
+                1,nTubes);
+            check('wrongInput',@create);
             MArrayList=repmat({repmat(diag([0.1 0.1 0.1]),[1,1,nPoints])},...
-                1,nTubes);            
+                1,nTubes);
             %
             function rel=create()
                 ltGoodDirArray=repmat(lsGoodDirVec,[1,nTubes,nPoints]);
@@ -239,7 +239,7 @@ classdef SuiteEllTube < mlunitext.test_case
                 rel=gras.ellapx.smartdb.rels.EllTube.fromQMArrays(...
                     QArrayList,aMat,MArrayList,timeVec,...
                     ltGoodDirArray,sTime,approxType,approxSchemaName,...
-                    approxSchemaDescr,calcPrecision);                
+                    approxSchemaDescr,calcPrecision);
             end
             function check(errorTag,cmdStr)
                 CMD_STR='rel1.getCopy().unionWith(rel2)';
@@ -257,6 +257,70 @@ classdef SuiteEllTube < mlunitext.test_case
                 end
             end
         end
+        %
+        function testPlot(~)
+            nPoints=1;
+            checkMaster();
+            nPoints=10;
+            checkMaster();
+            function checkMaster()
+            calcPrecision=0.001;
+            approxSchemaDescr=char.empty(1,0);
+            approxSchemaName=char.empty(1,0);
+            nDims=2;
+            nTubes=3;
+            lsGoodDirVec=[1;0];
+            qMat=eye(nDims);
+            QArrayList=repmat({repmat(qMat,[1,1,nPoints])},1,nTubes);
+            aMat=zeros(nDims,nPoints);
+            timeVec=1:nPoints;
+            sTime=nPoints;
+            approxType=gras.ellapx.enums.EApproxType.Internal;
+            %
+            rel=create();
+            qMat=diag([1,2]);
+            QArrayList=repmat({repmat(qMat,[1,1,nPoints])},1,nTubes);
+            approxType=gras.ellapx.enums.EApproxType.External;
+            rel.unionWith(create());
+            relWithReg=rel.getCopy();
+            relWithReg.MArray=cellfun(@(x)x*0.1,relWithReg.QArray,...
+                'UniformOutput',false);
+            rel.unionWith(relWithReg);
+            %
+            projSpaceList={[true true]};
+            projType=gras.ellapx.enums.EProjType.Static;
+            relProj=rel.project(projType,projSpaceList,@fGetProjMat);
+            plObj=relProj.plot();
+            %
+            try 
+            projType=gras.ellapx.enums.EProjType.DynamicAlongGoodCurve;
+            relProj=rel.project(projType,projSpaceList,@fGetProjMat);
+            relProj.plot(plObj);
+            plObj.closeAllFigures();
+            catch meObj
+                plObj.closeAllFigures();
+                rethrow(meObj);
+            end
+            %
+            function [projOrthMatArray,projOrthMatTransArray]=...
+                    fGetProjMat(projSpaceVec,timeVec,sTime,dim,indSTime)
+                nPoints=length(timeVec);
+                projMat=eye(dim);
+                projMat=projMat(logical(projSpaceVec),:);
+                projOrthMatArray=repmat(projMat,[1,1,nPoints]);
+                projOrthMatTransArray=repmat(projMat.',[1,1,nPoints]);
+            end
+            function rel=create()
+                ltGoodDirArray=repmat(lsGoodDirVec,[1,nTubes,nPoints]);
+                rel=gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
+                    QArrayList,aMat,timeVec,...
+                    ltGoodDirArray,sTime,approxType,approxSchemaName,...
+                    approxSchemaDescr,calcPrecision);
+            end
+            end
+        end
+        %
+        
         function testSimpleCreate(self)
             nPoints=3;
             calcPrecision=0.001;
