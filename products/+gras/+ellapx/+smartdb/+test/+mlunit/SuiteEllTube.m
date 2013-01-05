@@ -290,11 +290,17 @@ classdef SuiteEllTube < mlunitext.test_case
             projSpaceList={[true true]};
             projType=gras.ellapx.enums.EProjType.Static;
             relProj=rel.project(projType,projSpaceList,@fGetProjMat);
-            relProj.plot();
+            plObj=relProj.plot();
             %
+            try 
             projType=gras.ellapx.enums.EProjType.DynamicAlongGoodCurve;
             relProj=rel.project(projType,projSpaceList,@fGetProjMat);
-            relProj.plot();
+            relProj.plot(plObj);
+            plObj.closeAllFigures();
+            catch meObj
+                plObj.closeAllFigures();
+                rethrow(meObj);
+            end
             %
             function [projOrthMatArray,projOrthMatTransArray]=...
                     fGetProjMat(projSpaceVec,timeVec,sTime,dim,indSTime)
