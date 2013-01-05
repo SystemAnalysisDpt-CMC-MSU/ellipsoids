@@ -1,4 +1,4 @@
-function figHandleVec = plot(varargin)
+function plObj = plot(varargin)
 %
 % PLOT - plots hyperplanes in 2D or 3D.
 %
@@ -33,7 +33,7 @@ function figHandleVec = plot(varargin)
 %       figHandleVec: double[1,n] - array with handles of figures hyperplanes
 %       were plotted in. Where n is number of figures.
 %
-% 
+%
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
 %
@@ -43,308 +43,129 @@ function figHandleVec = plot(varargin)
 %            System Analysis Department <2012> $
 
 
-  import elltool.conf.Properties;
+import elltool.plot.plotGeomBodyArr;
+[reg,centerVec,sizeVec,...
+    isCenterVec,isSizeVec]=...
+    modgen.common.parseparext(varargin,...
+    {'center','size' ;...
+    [],0;
+    @(x)isa(x,'double'),...
+    @(x)isa(x,'double')});
 
-  nai = nargin;
-  H   = varargin{1};
-  if ~(isa(H, 'hyperplane'))
-    error('PLOT: input argument must be hyperplane.');
-  end
-
-  if nai > 1
-    if isstruct(varargin{nai}) & ~(isa(varargin{nai}, 'hyperplane'))
-      Options = varargin{nai};
-      nai     = nai - 1;
-    else
-      Options = [];
-    end
-  else
-    Options = [];
-  end
-
-  if ~isfield(Options, 'newfigure')
-    Options.newfigure = 0;
-  end
-
-  ucolor   = [];
-  vcolor   = [];
-  hps      = [];
-  hp_count = 0;
-  for i = 1:nai
-    if isa(varargin{i}, 'hyperplane')
-      H      = varargin{i};
-      [m, n] = size(H);
-      cnt    = m * n;
-      H1     = reshape(H, 1, cnt);
-      hps    = [hps H1];
-      if (i < nai) & ischar(varargin{i + 1})
-        clr = my_color_table(varargin{i + 1});
-        val = 1;
-      else
-        clr = [0 0 0];
-        val = 0;
-      end
-      for j = (hp_count + 1):(hp_count + cnt)
-        ucolor(j) = val;
-        vcolor    = [vcolor; clr];
-      end
-      hp_count = hp_count + cnt;
-    end
-  end
-
-  if ~isfield(Options, 'color')
-    % Color maps:
-    %    hsv       - Hue-saturation-value color map.
-    %    hot       - Black-red-yellow-white color map.
-    %    gray      - Linear gray-scale color map.
-    %    bone      - Gray-scale with tinge of blue color map.
-    %    copper    - Linear copper-tone color map.
-    %    pink      - Pastel shades of pink color map.
-    %    white     - All white color map.
-    %    flag      - Alternating red, white, blue, and black color map.
-    %    lines     - Color map with the line colors.
-    %    colorcube - Enhanced color-cube color map.
-    %    vga       - Windows colormap for 16 colors.
-    %    jet       - Variant of HSV.
-    %    prism     - Prism color map.
-    %    cool      - Shades of cyan and magenta color map.
-    %    autumn    - Shades of red and yellow color map.
-    %    spring    - Shades of magenta and yellow color map.
-    %    winter    - Shades of blue and green color map.
-    %    summer    - Shades of green and yellow color map.
-    
-    auxcolors  = hsv(hp_count);
-    colors     = auxcolors;
-    multiplier = 7;
-    if mod(size(auxcolors, 1), multiplier) == 0
-      multiplier = multiplier + 1;
-    end
-    
-    for i = 1:hp_count
-      jj           = mod(i*multiplier, size(auxcolors, 1)) + 1;
-      colors(i, :) = auxcolors(jj, :);
-    end
-    colors        = flipud(colors);
-    Options.color = colors;
-  else
-    if size(Options.color, 1) ~= hp_count
-      if size(Options.color, 1) > hp_count
-        Options.color = Options.color(1:hp_count, :);
-      else
-        Options.color = repmat(Options.color, hp_count, 1);
-      end
-    end
-  end
-
-  if ~isfield(Options, 'shade')
-    Options.shade = 0.25 * ones(1, hp_count);
-  else
-    [m, n] = size(Options.shade);
-    m      = m * n;
-    if m == 1
-      Options.shade = Options.shade * ones(1, hp_count);
-    else
-      Options.shade = reshape(Options.shade, 1, m);
-      if m < hp_count
-        for i = (m + 1):hp_count
-          Options.shade = [Options.shade 0.25];
-        end
-      end
-    end
-  end
-
-  if ~isfield(Options, 'size')
-    Options.size = 100 * ones(1, hp_count);
-  else
-    [m, n] = size(Options.size);
-    m      = m * n;
-    if m == 1
-      Options.size = Options.size * ones(1, hp_count);
-    else
-      Options.size = reshape(Options.size, 1, m);
-      if m < hp_count
-        for i = (m + 1):hp_count
-          Options.size = [Options.size 100];
-        end
-      end
-    end
-  end
-
-  if ~isfield(Options, 'center')
-    Options.center = zeros(1, hp_count);
-    m = size(Options.center, 2);
-    if m < hp_count
-      for i = (m + 1):hp_count
-        Options.center = [Options.center (Options.center(:, 1) - Options.center(:, 1))];
-      end
-    end
-  end
-
-  if ~isfield(Options, 'width')
-    Options.width = ones(1, hp_count);
-  else
-    [m, n] = size(Options.width);
-    m      = m * n;
-    if m == 1
-      Options.width = Options.width * ones(1, hp_count);
-    else
-      Options.width = reshape(Options.width, 1, m);
-      if m < hp_count
-        for i = (m + 1):hp_count
-          Options.width = [Options.width 1];
-        end
-      end
-    end
-  end
-
-  if size(Options.color, 1) < hp_count
-    error('PLOT: not enough colors.');
-  end
-
-  dims = dimension(hps);
-  m    = min(dims);
-  n    = max(dims);
-  if m ~= n
-    error('PLOT: hyperplanes must be of the same dimension.');
-  end
-  if (n < 2) | (n > 3)
-    error('PLOT: hyperplane dimension must be 2 or 3.');
-  end
-
-  if Properties.getIsVerbose()
-    if hp_count == 1
-      fprintf('Plotting hyperplane...\n');
-    else
-      fprintf('Plotting %d hyperplanes...\n', hp_count);
-    end
-  end
-
-  if  ~isempty(findall(0,'Type','Figure')) && ~(Options.newfigure)
-    ih = ishold;
-  else
-    ih = false;
-  end 
-  
-  if Options.newfigure
-      figHandleVec = zeros(1,hp_count);
-  else 
-      figHandleVec = gcf;
-  end
-  
-  for i = 1:hp_count
-    if Options.newfigure ~= 0
-        figHandleVec(i) = figure();
-    else
-      newplot(figHandleVec);
-    end
-
+[plObj,nDim,isHold]= plotGeomBodyArr(false,[],'hyperplane',@rebuildOneDim2TwoDim,@calcHypPoints,@patch,varargin{:});
+if  isHold
     hold on;
-
-    H = hps(i);
-    q = H.normal;
-    g = H.shift;
-    if g < 0
-      g = -g;
-      q = -q;
-    end
-    c = Options.size(i)/2;
-
-    if ucolor(i) == 1
-      clr = vcolor(i, :);
-    else
-      clr = Options.color(i, :);
-    end
-      
-    if size(Options.center, 1) == n
-      x0 = Options.center(:, i);
-      if ~(contains(H, x0))
-        x0 = (g*q)/(q'*q);
-      end
-    else
-      x0 = (g*q)/(q'*q);
-    end
-    [U S V] = svd(q);
-    e1      = U(:, 2);
-    x1      = x0 - c*e1;
-    x2      = x0 + c*e1;
-    if n == 2
-      h = ell_plot([x1 x2]);
-      set(h, 'Color', clr, 'LineWidth', Options.width(i));
-    else
-      e2 = U(:, 3);
-      [nRows, nCols] = size(hps);
-      absTolMat = zeros(nRows,nCols);
-      for iRows = 1:nRows
-          for iCols = 1:nCols
-              absTolMat(iRows,iCols) = hps(iRows,iCols).absTol;
-          end
-      end
-      if min(min(abs(x0))) < min(absTolMat(:))
-        x0 = x0 + min(absTolMat(:)) * ones(3, 1);
-      end
-      x3 = x0 - c*e2;
-      x4 = x0 + c*e2;
-      if strcmp(version('-release'), '13')
-        ch = convhulln([x1 x3 x2 x4]');
-      else
-        ch = convhulln([x1 x3 x2 x4]', {'QJ', 'QbB', 'Qs', 'QR0', 'Pp'});
-      end
-      patch('Vertices', [x1 x3 x2 x4]', 'Faces', ch, ...
-            'FaceVertexCData', clr(ones(1, 4), :), 'FaceColor', 'flat', ...
-            'FaceAlpha', Options.shade(1, i));
-      shading interp;
-      lighting phong;
-      material('metal');
-      view(3);
-      %camlight('headlight','local');
-      %camlight('headlight','local');
-      %camlight('right','local');
-      %camlight('left','local');
-    end
-
-  end
-
-  if ~ih;
+else
     hold off;
-  end
+end
 
 
 
+    function [xMat,fMat] = calcHypPoints(hypArr,nDim,lGetGridMat, fGetGridMat)
+        hypNum = numel(hypArr);
+        DEFAULT_CENTER = zeros(1,nDim);
+        DEFAULT_SIZE = 100;
+        centerVec = getPlotInitParam(centerVec, isCenterVec, DEFAULT_CENTER);
+        sizeVec = getPlotInitParam(sizeVec, isSizeVec, DEFAULT_SIZE);
+        
+        import modgen.common.throwerror;
+        if  any(isnan(centerVec(:))) || ...
+                any(isinf(centerVec(:)))
+            throwerror('wrongCenterVec', ...
+                'CenterVec must be finite');
+        end
+        if (any(sizeVec < 0)) || any(isnan(sizeVec))...
+                || any(isinf(sizeVec))
+            throwerror('sizeVec', 'sizeVec must be greater than 0 and finite');
+        end
+        
+        
+        [xMat, fMat] = arrayfun(@(x,y,z) hypPoints(x,y,z, nDim), hypArr,num2cell(centerVec,2),sizeVec, ...
+            'UniformOutput', false);
+        
+        
+        function outParamVec = getPlotInitParam(inParamArr, ...
+                isFilledParam, multConst)
+            import modgen.common.throwerror;
+            if ~isFilledParam
+                outParamVec = repmat(multConst, hypNum,1);
+            else
+                nParams = numel(inParamArr);
+                if nParams == 1
+                    outParamVec = repmat(inParamArr, hypNum,1);
+                else
+                    if nParams ~= hypNum
+                        throwerror('wrongParamsNumber',...
+                            'Number of params is not equal to number of ellipsoids');
+                    end
+                    outParamVec = reshape(inParamArr, 1, nParams);
+                end
+            end
+        end
+        function [xMat, fMat] = hypPoints(hyp,center,size, nDim)
+            center = cell2mat(center);
+            q = hyp.normal;
+            g = hyp.shift;
+            if g < 0
+                g = -g;
+                q = -q;
+            end
+            x0 = center';
+            if ~(contains(hyp, x0))
+                x0 = (g*q)/(q'*q);
+            end
+            c = size/2;
+            [U,~,~] = svd(q);
+            e1      = U(:, 2);
+            x1      = x0 - c*e1;
+            x2      = x0 + c*e1;
+            if nDim == 2
+                xMat = [x1, x2];
+            else
+                e2 = U(:, 3);
+%                 absTolMat = zeros(1,nDim);
+%                 for iCols = 1:nDim
+%                     absTolMat(1,iCols) = hyp(1,iCols).absTol;
+%                 end
+%                 if min(min(abs(x0))) < min(absTolMat(:))
+%                     x0 = x0 + min(absTolMat(:)) * ones(3, 1);
+%                 end
+                x3 = x0 - c*e2;
+                x4 = x0 + c*e2;
+               
+                xMat = [x1,x2,x3,x4];
+%                
+%                 patch('Vertices', [x1 x3 x2 x4]', 'Faces', ch, ...
+%                     'FaceVertexCData', clr(ones(1, 4), :), 'FaceColor', 'flat', ...
+%                     'FaceAlpha', Options.shade(1, i));
+%                 shading interp;
+%                 lighting phong;
+%                 material('metal');
+%                 view(3);
+%                 %camlight('headlight','local');
+%                 %camlight('headlight','local');
+%                 %camlight('right','local');
+%                 %camlight('left','local');
+            end
+            
+            fMat = convhulln([x1 x3 x2 x4]', {'QJ', 'QbB', 'Qs', 'QR0', 'Pp'});
+        end
+    end
+    function [hypArr,nDim] = rebuildOneDim2TwoDim(hypArr)
+        throwerror('wrongDimension','hyperplane dimension must be 2 or 3.');
+        %         hypCMat = arrayfun(@(x) oneDim2TwoDim(x), hypArr, ...
+        %             'UniformOutput', false);
+        %         hypArr = vertcat(hypCMat{:});
+        %         nDim = 2;
+        %         function hypTwoDim = oneDim2TwoDim(hyp)
+        %             [normVec, hypScal] = hyp.double();
+        %             hypTwoDim = ellipsoid([normVec, 0].', ...
+        %                 diag([qMat, 0]));
+        %         end
+    end
+
+end
 
 
-function res = my_color_table(ch)
-%
-% MY_COLOR_TABLE - returns the code of the color defined by single letter.
-%
 
-  if ~(ischar(ch))
-    res = [0 0 0];
-    return;
-  end
-
-  switch ch
-    case 'r',
-      res = [1 0 0];
-
-    case 'g',
-      res = [0 1 0];
-
-    case 'b',
-      res = [0 0 1];
-
-    case 'y',
-      res = [1 1 0];
-
-    case 'c',
-      res = [0 1 1];
-
-    case 'm',
-      res = [1 0 1];
-
-    case 'w',
-      res = [1 1 1];
-
-    otherwise,
-      res = [0 0 0];
-  end
 

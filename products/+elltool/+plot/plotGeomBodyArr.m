@@ -1,11 +1,12 @@
-function  [SData,plObj,bodyArr,bodyNum,uColorVec,vColorVec,...
-    colorVec,nDim,isNewFigure] = plotPrepareGeomBodyArr(objClassName,varargin)
+function  [plObj,nDim,isHold] = plotGeomBodyArr(secondTime,oldPlObj,objClassName,rebuildOneDim2TwoDim,calcBodyPoints,plotPatch,varargin)
 
 
 import modgen.common.throwerror;
 DEFAULT_LINE_WIDTH = 1;
 DEFAULT_SHAD = 0.4;
 DEFAULT_FILL = false;
+N_PLOT_POINTS = 80;
+SPHERE_TRIANG_CONST = 3;
 [reg,~,plObj,isNewFigure,isFill,lineWidth,colorVec,shadVec,...
     isRelPlotterSpec,~,isIsFill,isLineWidth,isColorVec,isShad]=...
     modgen.common.parseparext(varargin,...
@@ -15,12 +16,16 @@ DEFAULT_FILL = false;
     @(x)isa(x,'double'),...
     @(x)isa(x,'double')});
 checkIsWrongInput();
-if ~isRelPlotterSpec
-    if isNewFigure
-        plObj=smartdb.disp.RelationDataPlotter();
-    else
-        plObj=smartdb.disp.RelationDataPlotter('figureGetNewHandleFunc',...
-            @(varargin)gcf,'axesGetNewHandleFunc',@(varargin)gca);
+if secondTime
+    plObj=oldPlObj;
+else
+    if ~isRelPlotterSpec
+        if isNewFigure
+            plObj=smartdb.disp.RelationDataPlotter();
+        else
+            plObj=smartdb.disp.RelationDataPlotter('figureGetNewHandleFunc',...
+                @(varargin)gcf,'axesGetNewHandleFunc',@(varargin)gca);
+        end
     end
 end
 [bodyArr, bodyNum, uColorVec, vColorVec, isCharColor] = getParams(reg);
@@ -36,13 +41,96 @@ end
 checkIsWrongParams();
 checkDimensions();
 SData = setUpSData();
-    
+if nDim == 1
+    [bodyArr,nDim] = rebuildOneDim2TwoDim(bodyArr);
+end
+[lGetGridMat, fGetGridMat] = calcGrid();
+prepareForPlot();
 
+rel=smartdb.relations.DynamicRelation(SData);
+hFigure = get(0,'CurrentFigure');
+if isempty(hFigure)
+    isHold=false;
+elseif ~ishold(get(hFigure,'currentaxes'))
+    cla;
+    isHold = false;
+else
+    isHold = true;
+end
+
+if (nDim==2)
+    plObj.plotGeneric(rel,@figureGetGroupNameFunc,{'figureNameCMat'},...
+        @figureSetPropFunc,{},...
+        @axesGetNameSurfFunc,{'axesNameCMat','axesNumCMat'},...
+        @axesSetPropDoNothingFunc,{},...
+        @plotCreateFillPlotFunc,...
+        {'xCMat','clrVec','fill','shadVec', 'widVec','plotPatch'});
+    
+elseif (nDim==3)
+    plObj.plotGeneric(rel,@figureGetGroupNameFunc,{'figureNameCMat'},...
+        @figureSetPropFunc,{},...
+        @axesGetNameSurfFunc,{'axesNameCMat','axesNumCMat'},...
+        @axesSetPropDoNothingFunc,{},...
+        @plotCreatePatchFunc,...
+        {'verCMat','faceCMat','faceVertexCDataCMat',...
+        'shadVec','clrVec'});
+end
+
+
+
+
+
+    function [lGetGrid, fGetGrid] = calcGrid()
+        if nDim == 2
+            lGetGrid = gras.geom.circlepart(N_PLOT_POINTS);
+            fGetGrid = 1:N_PLOT_POINTS+1;
+        else
+            [lGetGrid, fGetGrid] = ...
+                gras.geom.tri.spheretri(SPHERE_TRIANG_CONST);
+        end
+        lGetGrid(lGetGrid == 0) = eps;
+    end
+    function prepareForPlot()
+        if isNewFigure
+            [SData.figureNameCMat, SData.axesNameCMat] =...
+                arrayfun(@(x)getSDataParams(x), (1:bodyNum).',...
+                'UniformOutput', false);
+            
+        end
+        clrCVec = cellfun(@(x, y, z) getColor(x, y, z),...
+            num2cell(colorVec, 2), ...
+            num2cell(vColorVec, 2), num2cell(uColorVec),...
+            'UniformOutput', false);
+        [xMat,fMat] = calcBodyPoints(bodyArr,nDim,lGetGridMat, fGetGridMat);
+        SData.verCMat = xMat;
+        SData.xCMat = xMat;
+        SData.faceCMat = fMat;
+        SData.clrVec = clrCVec;
+        colCMat = cellfun(@(x) getColCMat(x), clrCVec, ...
+            'UniformOutput', false);
+        SData.faceVertexCDataCMat = colCMat;
+        
+        
+        function colCMat = getColCMat(clrVec)
+            colCMat = clrVec(ones(1, size(xMat{1}, 2)), :);
+        end
+        function [figureNameCMat, axesNameCMat] = getSDataParams(iEll)
+            figureNameCMat = sprintf('figure%d',iEll);
+            axesNameCMat = sprintf('ax%d',iEll);
+        end
+        function clrVec = getColor(colorVec, vColor, uColor)
+            if uColor == 1
+                clrVec = vColor;
+            else
+                clrVec = colorVec;
+            end
+        end
+    end
     function SData = setUpSData()
         SData.figureNameCMat=repmat({'figure'},bodyNum,1);
         SData.axesNameCMat = repmat({'ax'},bodyNum,1);
         SData.axesNumCMat = repmat({1},bodyNum,1);
-        
+        SData.plotPatch = repmat({plotPatch},bodyNum,1);
         SData.figureNumCMat = repmat({1},bodyNum,1);
         
         SData.widVec = lineWidth.';
@@ -266,4 +354,43 @@ SData = setUpSData();
             end
         end
     end
+end
+function hVec=plotCreateFillPlotFunc(hAxes,X,clrVec,isFill,...
+    shade,widVec,plotPatch,varargin)
+if ~isFill
+    shade = 0;
+end
+% h1 = ell_plot(q, '*','Parent',hAxes);
+h1 = plotPatch(X(1, :), X(2, :), clrVec,'FaceAlpha',shade,'Parent',hAxes);
+% h3 = ell_plot(X,'Parent',hAxes);
+% h3 = patch('vertices',X,'faces',[1:size(X,]
+% set(h1, 'Color', clrVec);
+set(h1, 'EdgeColor', clrVec, 'LineWidth', widVec);
+hVec = h1;
+end
+function figureSetPropFunc(hFigure,figureName,~)
+set(hFigure,'Name',figureName);
+end
+function figureGroupName=figureGetGroupNameFunc(figureName)
+figureGroupName=figureName;
+end
+function hVec=axesSetPropDoNothingFunc(~,~)
+hVec=[];
+end
+function axesName=axesGetNameSurfFunc(name,~)
+axesName=name;
+end
+function hVec=plotCreatePatchFunc(hAxes,vertices,faces,...
+    faceVertexCData,faceAlpha,clrVec)
+import modgen.graphics.camlight;
+LIGHT_TYPE_LIST={{'left'},{40,-65},{-20,25}};
+hVec = patch('Vertices',vertices', 'Faces', faces, ...
+    'FaceVertexCData', faceVertexCData, 'FaceColor','flat', ...
+    'FaceAlpha', faceAlpha,'EdgeColor',clrVec,'Parent',hAxes);
+hLightVec=cellfun(@(x)camlight(hAxes,x{:}),LIGHT_TYPE_LIST);
+hVec=[hVec,hLightVec];
+shading(hAxes,'interp');
+lighting(hAxes,'phong');
+material(hAxes,'metal');
+view(hAxes,3);
 end

@@ -124,7 +124,7 @@ classdef GenEllipsoidPlotTestCase < mlunitext.test_case
                 colMat = sortrows(colMat);
                 SHPlot =  plObj.getPlotStructure().figToAxesToHMap.toStruct();
                 plEllObjVec = get(SHPlot.figure_g1.ax, 'Children');
-                plEllColCMat = get(plEllObjVec, 'Color');
+                plEllColCMat = get(plEllObjVec, 'EdgeColor');
                 plEllColMat = vertcat(plEllColCMat{:});
                 plEllColMat = sortrows(plEllColMat);
                 mlunit.assert_equals(plEllColMat, colMat);
@@ -496,23 +496,22 @@ plotObj = plot(testEllArr);
 SPlotStructure = plotObj.getPlotStructure;
 SHPlot =  toStruct(SPlotStructure.figToAxesToPlotHMap);
 num = SHPlot.figure_g1;
-
 [xDataCell, yDataCell, zDataCell] = arrayfun(@(x) getData(num.ax(x)), ...
     1:numel(num.ax), 'UniformOutput', false);
 if iscell(xDataCell)
-    xDataArr = xDataCell{:};
+    xDataArr = horzcat(xDataCell{:});
 else
     xDataArr = xDataCell;
 end
 if iscell(yDataCell)
-    yDataArr = yDataCell{:};
+    yDataArr =  horzcat(yDataCell{:});
 else
     yDataArr = yDataCell;
 end
 
 if nDims == 3
     if iscell(zDataCell)
-        zDataArr = zDataCell{:};
+        zDataArr = horzcat(zDataCell{:});
     else
         zDataArr = zDataCell;
     end
@@ -521,10 +520,11 @@ if nDims == 3
     yDataVec = reshape(yDataArr, 1, nPoints);
     zDataVec = reshape(zDataArr, 1, nPoints);
     pointsMat = [xDataVec; yDataVec; zDataVec];
-else
+elseif nDims == 2
     pointsMat = [xDataArr; yDataArr];
+else
+    pointsMat = [xDataArr];
 end
-
 cellPoints = num2cell(pointsMat(:, :), 1);
 
 testEllVec = reshape(testEllArr, 1, numel(testEllArr));
@@ -564,10 +564,13 @@ mlunit.assert_equals(isBoundVec, ones(size(isBoundVec)));
 
     function [outXData, outYData, outZData] = getData(hObj)
         objType = get(hObj, 'type');
-        if strcmp(objType, 'patch')
+        if strcmp(objType, 'patch') || strcmp(objType, 'line')
             outXData = get(hObj, 'XData');
             outYData = get(hObj, 'YData');
             outZData = get(hObj, 'ZData');
+            outXData = outXData(:)';
+            outYData = outYData(:)';
+            outZData = outZData(:)';
         else
             outXData = [];
             outYData = [];
@@ -596,7 +599,8 @@ absTol = elltool.conf.Properties.getAbsTol();
 qCenVec = testEll.getCenter();
 dMat = testEll.getDiagMat();
 eigMat = testEll.getEigvMat();
-isBoundEllVec = cellfun(@(x) abs((x-qCenVec)*dMat*eigMat.^2) < 1 + absTol, ...
+qMat = eigMat.'*dMat*eigMat;
+isBoundEllVec = cellfun(@(x) abs((x-qCenVec)*(x-qCenVec).') <= qMat*(1 + absTol), ...
     cellPoints);
 end
 
