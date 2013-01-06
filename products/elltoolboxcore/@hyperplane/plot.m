@@ -43,7 +43,7 @@ function plObj = plot(varargin)
 %            System Analysis Department <2012> $
 
 
-import elltool.plot.plotGeomBodyArr;
+import elltool.plot.plotgeombodyarr;
 [reg,centerVec,sizeVec,...
     isCenterVec,isSizeVec]=...
     modgen.common.parseparext(varargin,...
@@ -52,7 +52,7 @@ import elltool.plot.plotGeomBodyArr;
     @(x)isa(x,'double'),...
     @(x)isa(x,'double')});
 
-[plObj,nDim,isHold]= plotGeomBodyArr(false,[],'hyperplane',@rebuildOneDim2TwoDim,@calcHypPoints,@patch,varargin{:});
+[plObj,nDim,isHold]= plotgeombodyarr(false,[],'hyperplane',@rebuildOneDim2TwoDim,@calcHypPoints,@patch,varargin{:});
 if  isHold
     hold on;
 else
@@ -121,34 +121,36 @@ end
             x2      = x0 + c*e1;
             if nDim == 2
                 xMat = [x1, x2];
+                fMat = [];
             else
                 e2 = U(:, 3);
-%                 absTolMat = zeros(1,nDim);
-%                 for iCols = 1:nDim
-%                     absTolMat(1,iCols) = hyp(1,iCols).absTol;
-%                 end
-%                 if min(min(abs(x0))) < min(absTolMat(:))
-%                     x0 = x0 + min(absTolMat(:)) * ones(3, 1);
-%                 end
+                %                 absTolMat = zeros(1,nDim);
+                %                 for iCols = 1:nDim
+                %                     absTolMat(1,iCols) = hyp(1,iCols).absTol;
+                %                 end
+                %                 if min(min(abs(x0))) < min(absTolMat(:))
+                %                     x0 = x0 + min(absTolMat(:)) * ones(3, 1);
+                %                 end
                 x3 = x0 - c*e2;
                 x4 = x0 + c*e2;
-               
+                
                 xMat = [x1,x2,x3,x4];
-%                
-%                 patch('Vertices', [x1 x3 x2 x4]', 'Faces', ch, ...
-%                     'FaceVertexCData', clr(ones(1, 4), :), 'FaceColor', 'flat', ...
-%                     'FaceAlpha', Options.shade(1, i));
-%                 shading interp;
-%                 lighting phong;
-%                 material('metal');
-%                 view(3);
-%                 %camlight('headlight','local');
-%                 %camlight('headlight','local');
-%                 %camlight('right','local');
-%                 %camlight('left','local');
+                %
+                %                 patch('Vertices', [x1 x3 x2 x4]', 'Faces', ch, ...
+                %                     'FaceVertexCData', clr(ones(1, 4), :), 'FaceColor', 'flat', ...
+                %                     'FaceAlpha', Options.shade(1, i));
+                %                 shading interp;
+                %                 lighting phong;
+                %                 material('metal');
+                %                 view(3);
+                %                 %camlight('headlight','local');
+                %                 %camlight('headlight','local');
+                %                 %camlight('right','local');
+                %                 %camlight('left','local');
+                fMat = convhulln([x1 x3 x2 x4]', {'QJ', 'QbB', 'Qs', 'QR0', 'Pp'});
             end
             
-            fMat = convhulln([x1 x3 x2 x4]', {'QJ', 'QbB', 'Qs', 'QR0', 'Pp'});
+            
         end
     end
     function [hypArr,nDim] = rebuildOneDim2TwoDim(hypArr)

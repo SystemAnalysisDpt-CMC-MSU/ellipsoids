@@ -61,11 +61,11 @@ function plObj = plot(varargin)
 %            System Analysis Department 2012 $
 
 
-import elltool.plot.plotGeomBodyArr;
-[plObj,nDim,isHold]= plotGeomBodyArr(false,[],'ellipsoid',@rebuildOneDim2TwoDim,@calcEllPoints,@patch,varargin{:});
+import elltool.plot.plotgeombodyarr;
+[plObj,nDim,isHold]= plotgeombodyarr(false,[],'ellipsoid',@rebuildOneDim2TwoDim,@calcEllPoints,@patch,varargin{:});
 if (nDim < 3)
     hold on
-    plObj= plotGeomBodyArr(true,plObj,'ellipsoid',@rebuildOneDim2TwoDim,@calcCenterEllPoints,@(varargin)patch(varargin{:},'marker','*'),varargin{:});
+    plObj= plotgeombodyarr(true,plObj,'ellipsoid',@rebuildOneDim2TwoDim,@calcCenterEllPoints,@(varargin)patch(varargin{:},'marker','*'),varargin{:});
     hold off
 end
 if  isHold

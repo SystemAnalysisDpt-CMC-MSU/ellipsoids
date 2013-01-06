@@ -1,4 +1,4 @@
-function  [plObj,nDim,isHold] = plotGeomBodyArr(secondTime,oldPlObj,objClassName,rebuildOneDim2TwoDim,calcBodyPoints,plotPatch,varargin)
+function  [plObj,nDim,isHold] = plotgeombodyarr(secondTime,oldPlObj,objClassName,rebuildOneDim2TwoDim,calcBodyPoints,plotPatch,varargin)
 
 
 import modgen.common.throwerror;
