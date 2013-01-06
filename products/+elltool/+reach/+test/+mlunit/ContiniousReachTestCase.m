@@ -1,4 +1,4 @@
-classdef NewReachTestCase < mlunitext.test_case
+classdef ContiniousReachTestCase < mlunitext.test_case
     properties (Access=private)
         testDataRootDir
         etalonDataRootDir
@@ -8,7 +8,7 @@ classdef NewReachTestCase < mlunitext.test_case
         crmSys
     end
     methods
-        function self = NewReachTestCase(varargin)
+        function self = ContiniousReachTestCase(varargin)
             self = self@mlunitext.test_case(varargin{:});
             [~,className]=modgen.common.getcallernameext(1);
             shortClassName=mfilename('classname');
@@ -96,13 +96,13 @@ classdef NewReachTestCase < mlunitext.test_case
                     [iaEllMat t4Vec] = reachObj.get_ia();
                     [goodCurvesCVec t5Vec] = reachObj.get_goodcurves();
                     projObj = reachObj.projection([1; 0]);
-                    evolveObj = reachObj.evolve(tLims(2) + 1);
+                    evolveObj = reachObj.evolve(2 * tLims(2));
                     isTimeEq =...
                         all([all(t1Vec == t2Vec), all(t1Vec == t3Vec),...
                         all(t1Vec == t4Vec), all(t1Vec == t5Vec)]);
                     mlunit.assert_equals(true, isTimeEq);
                     % and again for evolve object
-                    newTime = [tLims(1), tLims(2) + 1];
+                    newTime = [tLims(1), 2 * tLims(2)];
                     pointCutReachObj =...
                         evolveObj.cut(0.5*(newTime(1) + newTime(2)));
                     intervalCutReachObj =...
@@ -160,7 +160,7 @@ classdef NewReachTestCase < mlunitext.test_case
                         mlunit.assert_equals(true,isOk,reportStr);
                     end
                 else
-                    throwerror('Do not exist configuration mat file.');
+                    throwerror('Do not exist config mat file.');
                 end 
             end
         end

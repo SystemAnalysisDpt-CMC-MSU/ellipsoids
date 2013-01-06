@@ -134,7 +134,7 @@ classdef ReachTestCase < mlunit.test_case
         %
         %% testing non stationary system
         %% here you can save your test in mat-file
-        function self = testNonStationarySystem(self)
+        function self = DISABLED_testNonStationarySystem(self)
             %
             %% system initialization
             linsysACMat = {'0' '-10'; '2' '-8'};

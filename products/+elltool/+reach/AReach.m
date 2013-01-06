@@ -4,6 +4,7 @@ classdef AReach < elltool.reach.IReach
         x0Ellipsoid
         linSysCVec
         isCut
+        isProj
         projectionBasisMat
     end
     %
@@ -15,7 +16,7 @@ classdef AReach < elltool.reach.IReach
     %
     methods
         function isProj = isprojection(self)
-            isProj = ~isempty(self.projectionBasisMat);
+            isProj = self.isProj;
         end
         %
         function isCut = iscut(self)
@@ -24,7 +25,7 @@ classdef AReach < elltool.reach.IReach
         %
         function [rSdim sSdim] = dimension(self)
             rSdim = self.linSysCVec{end}.dimension();
-            if isempty(self.projectionBasisMat)
+            if ~self.isProj
                 sSdim = rSdim;
             else
                 sSdim = size(self.projectionBasisMat, 2);
@@ -56,7 +57,8 @@ classdef AReach < elltool.reach.IReach
                 approxCVec = self.get_ea();
                 approxNum = size(approxCVec, 2);
                 isEmptyIntersect =...
-                    intersect(approxCVec(:, 1), intersectObj, self.INTERNAL);
+                    intersect(approxCVec(:, 1),...
+                    intersectObj, self.INTERNAL);
                 for iApprox = 2 : approxNum
                     isEmptyIntersect =...
                         isEmptyIntersect |...

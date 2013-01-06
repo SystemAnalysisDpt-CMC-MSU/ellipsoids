@@ -254,6 +254,7 @@ classdef ReachContinious < elltool.reach.AReach
             self.x0Ellipsoid = x0Ell;
             self.linSysCVec = {linSys};
             self.isCut = false;
+            self.isProj = false;
             self.projectionBasisMat = [];
             %% check and analize input
             if nargin < 4
@@ -318,30 +319,49 @@ classdef ReachContinious < elltool.reach.AReach
                 relTol, approxTypeVec);
         end
         %%
-        function plot_ea(self)
+        function plot_ea(self, varargin)
             import gras.ellapx.enums.EApproxType;
             if self.dimension() > 2
                 projBasisMat = eye(3);
             else
                 projBasisMat = eye(self.dimension());
             end
-            projSetObj = self.getProjSet(projBasisMat,...
-                EApproxType.External, self.EXTERNAL_SCALE_FACTOR);
-            plotterObj = smartdb.disp.RelationDataPlotter();
-            projSetObj.plot(plotterObj);
+            if self.isProj
+                if self.getEllTubeRel().dim() > 3
+                    throwerror('Dimension of the projection must be leq 3');                    
+                else
+                    self.getEllTubeRel().getTuplesFilteredBy(...
+                        'approxType', EApproxType.External).plot();
+                end
+            else
+                projSetObj = self.getProjSet(projBasisMat,...
+                    EApproxType.External, self.EXTERNAL_SCALE_FACTOR);
+                plotterObj = smartdb.disp.RelationDataPlotter();
+                projSetObj.plot(plotterObj);
+            end
+            
         end
         %%
-        function plot_ia(self)
+        function plot_ia(self, varargin)
             import gras.ellapx.enums.EApproxType;
             if self.dimension() > 2
                 projBasisMat = eye(3);
             else
                 projBasisMat = eye(self.dimension());
             end
-            projSetObj = self.getProjSet(projBasisMat,...
-                EApproxType.Internal, self.INTERNAL_SCALE_FACTOR);
-            plotterObj = smartdb.disp.RelationDataPlotter();
-            projSetObj.plot(plotterObj);
+            if self.isProj
+                if self.getEllTubeRel().dim() > 3
+                    throwerror('Dimension of the projection must be leq 3');                    
+                else
+                    self.getEllTubeRel().getTuplesFilteredBy(...
+                        'approxType', EApproxType.Internal).plot();
+                end
+            else
+                projSetObj = self.getProjSet(projBasisMat,...
+                    EApproxType.Internal, self.INTERNAL_SCALE_FACTOR);
+                plotterObj = smartdb.disp.RelationDataPlotter();
+                projSetObj.plot(plotterObj);
+            end
         end
         %% displays only the last lin system
         function display(self)
@@ -375,7 +395,7 @@ classdef ReachContinious < elltool.reach.AReach
                     'in R^%d in the time interval [%d, %d].\n'],...
                     sysTypeStr, dim, timeVec(1), timeVec(end));
             end
-            if ~(isempty(self.projectionBasisMat))
+            if self.isProj
                 fprintf('Projected onto the basis:\n');
                 disp(self.projectionBasisMat);
             end
@@ -396,18 +416,29 @@ classdef ReachContinious < elltool.reach.AReach
         end
         %%
         function cutObj = cut(self, cutTimeVec)
-            cutObj = elltool.reach.ReachContinious();
-            cutObj.ellTubeRel = self.ellTubeRel.cut(cutTimeVec);
-            switchTimeIndVec =...
-                self.switchSysTimeVec > cutTimeVec(1) &...
-                self.switchSysTimeVec < cutTimeVec(end);
-            cutObj.switchSysTimeVec = [cutTimeVec(1)...
-                self.switchSysTimeVec(switchTimeIndVec) cutTimeVec(end)];
-            switchTimeIndVec(find(switchTimeIndVec == 1, 1) - 1) = 1;
-            cutObj.linSysCVec = self.linSysCVec(switchTimeIndVec);
-            cutObj.x0Ellipsoid = self.x0Ellipsoid;
-            cutObj.isCut = true;
-            cutObj.projectionBasisMat = self.projectionBasisMat;
+            if self.isProj
+                throwerror('Method cut does not work with projections');
+            else
+                cutObj = elltool.reach.ReachContinious();
+                cutObj.ellTubeRel = self.ellTubeRel.cut(cutTimeVec);
+                switchTimeIndVec =...
+                    self.switchSysTimeVec > cutTimeVec(1) &...
+                    self.switchSysTimeVec < cutTimeVec(end);
+                cutObj.switchSysTimeVec = [cutTimeVec(1)...
+                    self.switchSysTimeVec(switchTimeIndVec) cutTimeVec(end)];
+                firstIntInd = find(switchTimeIndVec == 1, 1);
+                if ~isempty(firstIntInd)
+                    switchTimeIndVec(firstIntInd - 1) = 1;
+                else
+                    switchTimeIndVec(find(self.switchSysTimeVec >=...
+                        cutTimeVec(end), 1) - 1) = 1;
+                end
+                cutObj.linSysCVec = self.linSysCVec(switchTimeIndVec);
+                cutObj.x0Ellipsoid = self.x0Ellipsoid;
+                cutObj.isCut = true;
+                cutObj.isProj = false;
+                cutObj.projectionBasisMat = self.projectionBasisMat;
+            end
         end
         %%
         function [directionsCVec timeVec] = get_directions(self)
@@ -494,6 +525,7 @@ classdef ReachContinious < elltool.reach.AReach
             projObj.ellTubeRel = projSet;
             projObj.linSysCVec = self.linSysCVec;
             projObj.isCut = self.isCut;
+            projObj.isProj = true;
             projObj.projectionBasisMat = projMat;
         end
         %%
@@ -510,7 +542,7 @@ classdef ReachContinious < elltool.reach.AReach
             if nargin > 3
                 throwerror('EVOLVE: too much arguments.');
             end
-            if self.isprojection()
+            if self.isProj
                 throwerror(['EVOLVE: cannot compute ',...
                     'the reach set for projection.']);
             end
@@ -546,6 +578,7 @@ classdef ReachContinious < elltool.reach.AReach
             newReachObj.x0Ellipsoid = self.x0Ellipsoid;
             newReachObj.linSysCVec = [self.linSysCVec {newLinSys}];
             newReachObj.isCut = false;
+            newReachObj.isProj = false;
             newReachObj.projectionBasisMat = [];
             %% prepare ext/int data to evolve
             oldExtData =...

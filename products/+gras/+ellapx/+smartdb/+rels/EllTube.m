@@ -286,8 +286,8 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
                     cutEndTime > sysEndTime
                 throwerror('Cut:wrong input format');
             end
-            isSysTimeLowerVec = timeVec < cutStartTime;
-            isSysTimeGreaterVec = timeVec > cutEndTime;
+            isSysTimeLowerVec = timeVec <= cutStartTime;
+            isSysTimeGreaterVec = timeVec >= cutEndTime;
             if cutTimeVec(1) == cutTimeVec(2)
                 indClosestVec = find(isSysTimeLowerVec, 1, 'last');
                 isSysNewTimeIndVec = false(size(isSysTimeLowerVec));
