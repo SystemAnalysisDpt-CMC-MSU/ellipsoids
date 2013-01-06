@@ -1,50 +1,60 @@
 function plObj = plot(varargin)
 %
-% PLOT - plots hyperplanes in 2D or 3D.
+% PLOT - plots hyperplaces in 2D or 3D.
 %
 %
 % Usage:
-%       plot(h) - plots hyperplane H in default (red) color.
-%       plot(hM) -plots hyperplanes contained in hyperplane matrix.
-%       plot(hM1, 'cSpec1', hM2, 'cSpec1',...) - plots hyperplanes in h1 in
-%           cSpec1 color, hyperplanes in h2 in cSpec2 color, etc.
-%       plot(hM1, hM2,..., hMn, option) - plots h1,...,hn using options given
-%           in the option structure.
+%       plot(hyp) - plots hyperplace hyp in default (red) color.
+%       plot(hypArr) - plots an array of hyperplaces.
+%       plot(hypArr, 'Property',PropValue,...) - plots hypArr with setting
+%                                                properties.
 %
 % Input:
 %   regular:
-%       hMat: hyperplane[m,n] - matrix of 2D or 3D hyperplanes. All hyperplanes
-%             in hM must be either 2D or 3D simutaneously.
+%       hypArr:  Hyperplace: [dim11Size,dim12Size,...,dim1kSize] -
+%                array of 2D or 3D hyperplace objects. All hyperplaces in hypArr
+%                must be either 2D or 3D simutaneously.
 %   optional:
-%       colorSpec: char[1,1] - specify wich color hyperplane plots will
-%                  have
-%       option: structure[1,1], containing some of follwing fields:
-%           option.newfigure: boolean[1,1]   - if 1, each plot command will open a new figure window.
-%           option.size: double[1,1] - length of the line segment in 2D, or square diagonal in 3D.
-%           option.center: double[1,1] - center of the line segment in 2D, of the square in 3D.
-%           option.width: double[1,1] - specifies the width (in points) of the line for 2D plots.
-%           option.color: double[1,3] - sets default colors in the form [x y z], .
-%           option.shade = 0-1 - level of transparency (0 - transparent, 1 - opaque).
-%           NOTE: if using options and colorSpec simutaneously, option.color is
-%           ignored
-%
+%       color1Spec: char[1,1] - color specification code, can be 'r','g',
+%                               etc (any code supported by built-in Matlab function).
+%       hyp2Arr: Hyperplane: [dim21Size,dim22Size,...,dim2kSize] -
+%                                           second Hyperplane array...
+%       color2Spec: char[1,1] - same as color1Spec but for hyp2Arr
+%       ....
+%       hypNArr: Hyperplane: [dimN1Size,dim22Size,...,dimNkSize] -
+%                                            N-th Hyperplane array
+%       colorNSpec - same as color1Spec but for hypNArr.
+%   properties:
+%       'newFigure': logical[1,1] - if 1, each plot command will open a new figure window.
+%                    Default value is 0.
+%       'fill': logical[1,1]/logical[dim11Size,dim12Size,...,dim1kSize]  -
+%               if 1, ellipsoids in 2D will be filled with color. Default value is 0.
+%       'lineWidth': double[1,1]/double[dim11Size,dim12Size,...,dim1kSize]  -
+%                    line width for 1D and 2D plots. Default value is 1.
+%       'color': double[1,3]/double[dim11Size,dim12Size,...,dim1kSize,3] -
+%                sets default colors in the form [x y z]. Default value is [1 0 0].
+%       'shade': double[1,1]/double[dim11Size,dim12Size,...,dim1kSize]  -
+%                level of transparency between 0 and 1 (0 - transparent, 1 - opaque).
+%                Default value is 0.4.
+%       'size': double[1,1] - length of the line segment in 2D, or square diagonal in 3D.
+%       'center': double[1,dimHyp] - center of the line segment in 2D, of the square in 3D
+%       'relDataPlotter' - relation data plotter object.
+%       Notice that property vector could have different dimensions, only
+%       total number of elements must be the same.
 % Output:
 %   regular:
-%       figHandleVec: double[1,n] - array with handles of figures hyperplanes
-%       were plotted in. Where n is number of figures.
+%       plObj: smartdb.disp.RelationDataPlotter[1,1] - returns the relation
+%       data plotter object.
 %
-%
-% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 2004-2008 $
-%
-% $Author: <Zakharov Eugene>  <justenterrr@gmail.com> $    $Date: <1 november> $
-% $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Computer Science,
-%            System Analysis Department <2012> $
 
+
+% $Author: <Ilya Lyubich>  <lubi4ig@gmail.com> $    $Date: <6 January  2013> $
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Cybernetics,
+%            System Analysis Department 2013 $
 
 import elltool.plot.plotgeombodyarr;
-[reg,centerVec,sizeVec,...
+[reg,~,centerVec,sizeVec,...
     isCenterVec,isSizeVec]=...
     modgen.common.parseparext(varargin,...
     {'center','size' ;...
@@ -52,7 +62,7 @@ import elltool.plot.plotgeombodyarr;
     @(x)isa(x,'double'),...
     @(x)isa(x,'double')});
 
-[plObj,nDim,isHold]= plotgeombodyarr(false,[],'hyperplane',@rebuildOneDim2TwoDim,@calcHypPoints,@patch,varargin{:});
+[plObj,nDim,isHold]= plotgeombodyarr(false,[],'hyperplane',@rebuildOneDim2TwoDim,@calcHypPoints,@patch,reg{:});
 if  isHold
     hold on;
 else
@@ -80,6 +90,11 @@ end
         end
         
         
+        absTolMat = zeros(1,hypNum);
+        for iCols = 1:hypNum
+            absTolMat(iCols) = hypArr(iCols).absTol;
+        end
+        minAbs = min(absTolMat);
         [xMat, fMat] = arrayfun(@(x,y,z) hypPoints(x,y,z, nDim), hypArr,num2cell(centerVec,2),sizeVec, ...
             'UniformOutput', false);
         
@@ -131,6 +146,9 @@ end
                 %                 if min(min(abs(x0))) < min(absTolMat(:))
                 %                     x0 = x0 + min(absTolMat(:)) * ones(3, 1);
                 %                 end
+                if min(min(abs(x0))) < minAbs
+                    x0 = x0 + min(absTolMat(:)) * ones(3, 1);
+                end
                 x3 = x0 - c*e2;
                 x4 = x0 + c*e2;
                 
@@ -154,16 +172,17 @@ end
         end
     end
     function [hypArr,nDim] = rebuildOneDim2TwoDim(hypArr)
-        throwerror('wrongDimension','hyperplane dimension must be 2 or 3.');
-        %         hypCMat = arrayfun(@(x) oneDim2TwoDim(x), hypArr, ...
-        %             'UniformOutput', false);
-        %         hypArr = vertcat(hypCMat{:});
-        %         nDim = 2;
-        %         function hypTwoDim = oneDim2TwoDim(hyp)
-        %             [normVec, hypScal] = hyp.double();
-        %             hypTwoDim = ellipsoid([normVec, 0].', ...
-        %                 diag([qMat, 0]));
-        %         end
+%         import modgen.common.throwerror;
+%         throwerror('wrongDimension','hyperplane dimension must be 2 or 3.');
+                hypCMat = arrayfun(@(x) oneDim2TwoDim(x), hypArr, ...
+                    'UniformOutput', false);
+                hypArr = vertcat(hypCMat{:});
+                nDim = 2;
+                function hypTwoDim = oneDim2TwoDim(hyp)
+                    [normVec, hypScal] = hyp.double();
+                    hypTwoDim = hyperplane([normVec, 0].', ...
+                        hypScal);
+                end
     end
 
 end

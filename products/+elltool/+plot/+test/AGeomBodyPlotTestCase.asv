@@ -227,6 +227,63 @@ classdef AGeomBodyPlotTestCase < mlunitext.test_case
             end
             
         end
-        
+        function self = testHoldOn(self)
+            
+            testEll = self.getInstance(eye(2));
+            checkHoldOff(testEll, 2);
+            checkHoldOn(testEll, 3);
+            testEllArr(1) = self.getInstance(eye(2));
+            testEllArr(2) = self.getInstance([1, 0].', eye(2));
+            checkHoldOff(testEllArr, 4);
+            checkHoldOn(testEllArr, 5);
+            
+            testEllArr(1) = self.getInstance(eye(2));
+            testEllArr(2) = self.getInstance([1, 0].', eye(2));
+            checkHoldOff(testEllArr, 4);
+            checkHoldOn(testEllArr, 5);
+            checkHoldOff(testEllArr, 4);
+            checkHoldOn(testEllArr, 5);
+            checkHoldOffNewFig(testEllArr, 2);
+            checkHoldOnNewFig(testEllArr, 2);
+            function checkHoldOff(testEllArr, testAns)
+                plot(1:10,sin(1:10));
+                hold off;
+                plotObj = plot(testEllArr);
+                SHPlot = plotObj.getPlotStructure().figToAxesToHMap.toStruct();
+                SAxes = SHPlot.figure_g1;
+                plotFig = get(SAxes.ax, 'Children');
+                mlunit.assert_equals(numel(plotFig), testAns);
+            end
+            function checkHoldOn(testEllArr, testAns)
+                plot(1:10,sin(1:10));
+                hold on;
+                plotObj = plot(testEllArr);
+                SHPlot = plotObj.getPlotStructure().figToAxesToHMap.toStruct();
+                SAxes = SHPlot.figure_g1;
+                plotFig = get(SAxes.ax, 'Children');
+                mlunit.assert_equals(numel(plotFig), testAns);
+                
+            end
+            function checkHoldOffNewFig(testEllArr, testAns)
+                plot(1:10,sin(1:10));
+                hold off;
+                plotObj = plot(testEllArr, 'newfigure', true);
+                SHPlot = plotObj.getPlotStructure().figToAxesToHMap.toStruct();
+                SAxes = SHPlot.figure1_g1;
+                plotFig = get(SAxes.ax1, 'Children');
+                mlunit.assert_equals(numel(plotFig), testAns);
+            end
+            function checkHoldOnNewFig(testEllArr, testAns)
+                plot(1:10,sin(1:10));
+                hold on;
+                plotObj = plot(testEllArr, 'newfigure', true);
+                SHPlot = plotObj.getPlotStructure().figToAxesToHMap.toStruct();
+                SAxes = SHPlot.figure1_g1;
+                plotFig = get(SAxes.ax1, 'Children');
+                mlunit.assert_equals(numel(plotFig), testAns);
+                
+            end
+            
+        end
     end
 end

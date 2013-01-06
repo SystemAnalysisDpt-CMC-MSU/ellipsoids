@@ -4,8 +4,8 @@ function plObj = plot(varargin)
 %
 %
 % Usage:
-%       plot(ell) - plots generic ellipsoid ell in default (red) color.
-%       plot(ellArr) - plots an array of generic ellipsoids.
+%       plot(ell) - plots ellipsoid ell in default (red) color.
+%       plot(ellArr) - plots an array of ellipsoids.
 %       plot(ellArr, 'Property',PropValue,...) - plots ellArr with setting
 %                                                properties.
 %
