@@ -6,13 +6,23 @@ classdef HyperplanePlotTestCase < elltool.plot.test.AGeomBodyPlotTestCase
     end
     %
     methods(Access=protected)
-        function self = getInstance(varargin)
+        function [plObj,numObj] = getInstance(varargin)
             if numel(varargin)==2
                 temp = varargin{2};
-                self = hyperplane(temp(:,1));
+                plObj = hyperplane(temp(:,1));
+                if size(varargin{2},1) == 2
+                    numObj = 1;
+                else
+                    numObj = 4;
+                end
             else
                 temp = varargin{3};
-                self = hyperplane(temp(:,1),sum(varargin{2}));
+                plObj = hyperplane(temp(:,1),sum(varargin{2}));
+                if size(varargin{3},1) == 2
+                    numObj = 1;
+                else
+                    numObj = 4;
+                end
             end
         end
     end

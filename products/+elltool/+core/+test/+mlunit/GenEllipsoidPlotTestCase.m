@@ -1,11 +1,21 @@
 classdef GenEllipsoidPlotTestCase < elltool.plot.test.AGeomBodyPlotTestCase
     methods(Access=protected)
-        function self = getInstance(varargin)
+        function [plObj,numObj] = getInstance(varargin)
             import elltool.core.GenEllipsoid;
             if numel(varargin)==2
-                self = GenEllipsoid(varargin{2});
+                plObj = GenEllipsoid(varargin{2});
+                if size(varargin{2},1) == 2
+                    numObj = 2;
+                else
+                    numObj = 4;
+                end
             else
-                self = GenEllipsoid(varargin{2},varargin{3});
+                plObj = GenEllipsoid(varargin{2},varargin{3});
+                if size(varargin{3},1) == 2
+                    numObj = 2;
+                else
+                    numObj = 4;
+                end
             end
         end
     end
@@ -25,118 +35,8 @@ classdef GenEllipsoidPlotTestCase < elltool.plot.test.AGeomBodyPlotTestCase
         
         
         
-        function self = testHoldOn(self)
-            import elltool.core.GenEllipsoid;
-            testEll = GenEllipsoid(eye(2));
-            checkHoldOff(testEll, 2);
-            checkHoldOn(testEll, 3);
-            testEllArr(1) = GenEllipsoid(eye(2));
-            testEllArr(2) = GenEllipsoid([1, 0].', eye(2));
-            checkHoldOff(testEllArr, 4);
-            checkHoldOn(testEllArr, 5);
-            
-            testEllArr(1) = GenEllipsoid(eye(2));
-            testEllArr(2) = GenEllipsoid([1, 0].', eye(2));
-            checkHoldOff(testEllArr, 4);
-            checkHoldOn(testEllArr, 5);
-            checkHoldOff(testEllArr, 4);
-            checkHoldOn(testEllArr, 5);
-            checkHoldOffNewFig(testEllArr, 2);
-            checkHoldOnNewFig(testEllArr, 2);
-            function checkHoldOff(testEllArr, testAns)
-                plot(1:10,sin(1:10));
-                hold off;
-                plotObj = plot(testEllArr);
-                SHPlot = plotObj.getPlotStructure().figToAxesToHMap.toStruct();
-                SAxes = SHPlot.figure_g1;
-                plotFig = get(SAxes.ax, 'Children');
-                mlunit.assert_equals(numel(plotFig), testAns);
-            end
-            function checkHoldOn(testEllArr, testAns)
-                plot(1:10,sin(1:10));
-                hold on;
-                plotObj = plot(testEllArr);
-                SHPlot = plotObj.getPlotStructure().figToAxesToHMap.toStruct();
-                SAxes = SHPlot.figure_g1;
-                plotFig = get(SAxes.ax, 'Children');
-                mlunit.assert_equals(numel(plotFig), testAns);
-                
-            end
-            function checkHoldOffNewFig(testEllArr, testAns)
-                plot(1:10,sin(1:10));
-                hold off;
-                plotObj = plot(testEllArr, 'newfigure', true);
-                SHPlot = plotObj.getPlotStructure().figToAxesToHMap.toStruct();
-                SAxes = SHPlot.figure1_g1;
-                plotFig = get(SAxes.ax1, 'Children');
-                mlunit.assert_equals(numel(plotFig), testAns);
-            end
-            function checkHoldOnNewFig(testEllArr, testAns)
-                plot(1:10,sin(1:10));
-                hold on;
-                plotObj = plot(testEllArr, 'newfigure', true);
-                SHPlot = plotObj.getPlotStructure().figToAxesToHMap.toStruct();
-                SAxes = SHPlot.figure1_g1;
-                plotFig = get(SAxes.ax1, 'Children');
-                mlunit.assert_equals(numel(plotFig), testAns);               
-            end           
-        end
-        function self = testColorChar(self)
-            import elltool.core.GenEllipsoid;
-            testEll = GenEllipsoid(eye(2));
-            plObj = plot(testEll, 'b');
-            check2dCol(plObj, [0, 0, 1]);
-            testSecEll = GenEllipsoid([1, 0].', eye(2));
-            plObj = plot(testEll, 'g', testSecEll, 'b');
-            check2dCol(plObj, [0, 1, 0], [0, 0, 1]);
-            testThirdEll = GenEllipsoid([0, 1].', eye(2));
-            plObj = plot(testEll, 'g', testSecEll, 'b', testThirdEll, 'y');
-            check2dCol(plObj, [0, 1, 0], [0, 0, 1], [1, 1, 0]);
-            testEll = GenEllipsoid(eye(3));
-            plObj = plot(testEll, 'y');
-            check3dCol(plObj, [1, 1, 0]);
-            testSecEll = GenEllipsoid([1, 1, 0].', eye(3));
-            plObj = plot(testEll, 'g', testSecEll, 'b');
-            check3dCol(plObj, [0, 1, 0], [0, 0, 1]);
-            testThirdEll = GenEllipsoid([-1, -1, -1].', eye(3));
-            plObj = plot(testEll, 'c', testSecEll, 'm', testThirdEll, 'w');
-            check3dCol(plObj, [0, 1, 1], [1, 0, 1], [1, 1, 1]);
-            
-            function check2dCol(plObj, varargin)
-                colMat = vertcat(varargin{:});
-                colMat = [colMat; colMat];
-                colMat = sortrows(colMat);
-                SHPlot =  plObj.getPlotStructure().figToAxesToHMap.toStruct();
-                plEllObjVec = get(SHPlot.figure_g1.ax, 'Children');
-                plEllColCMat = get(plEllObjVec, 'EdgeColor');
-                if iscell(plEllColCMat)
-                    plEllColMat = vertcat(plEllColCMat{:});
-                else
-                    plEllColMat = plEllColCMat;
-                end
-                plEllColMat = sortrows(plEllColMat);
-                mlunit.assert_equals(plEllColMat, colMat);
-            end
-            function check3dCol(plObj, varargin)
-                colMat = vertcat(varargin{:});
-                colMat = sortrows(colMat);
-                SHPlot =  plObj.getPlotStructure().figToAxesToHMap.toStruct();
-                plEllObjVec = get(SHPlot.figure_g1.ax, 'Children');
-                plEllColCMat = arrayfun(@(x) getColVec(x), plEllObjVec, ...
-                    'UniformOutput', false);
-                plEllColMat = vertcat(plEllColCMat{:});
-                plEllColMat = sortrows(plEllColMat);
-                mlunit.assert_equals(plEllColMat, colMat);
-                function clrVec = getColVec(plEllObj)
-                    if ~eq(get(plEllObj, 'Type'), 'patch')
-                        clrVec = [];
-                    else
-                        clrMat = get(plEllObj, 'FaceVertexCData');
-                        clrVec = clrMat(1, :);
-                    end
-                end
-            end
-        end
+        
+        
         function self = testPlot1d(self)
             import elltool.core.GenEllipsoid;
             nDims = 1;
@@ -210,13 +110,13 @@ classdef GenEllipsoidPlotTestCase < elltool.plot.test.AGeomBodyPlotTestCase
             import elltool.core.GenEllipsoid;
             nDims = 3;
             inpArgCList = {eye(3), diag([2, 1, 0.1]), diag([3, 1, 1]), ...
-                diag([0.1, 0.1, 0.01]), diag([1, 100, 0.1])};
+                diag([0.1, 0.1, 0.01]), diag([1, 100, 0.1]),[0 0 0;0 1 0; 0 0 1]};
             inpCenCList = {[0, 0, 0].', [1, 10, -1].', [0, 0, 0].', ...
-                [1, 1, 0].', [10, -10, 10].'};
+                [1, 1, 0].', [10, -10, 10].',[0 0 0]'};
             inpRotCList = {eye(3), [1, 0, 0; 0, cos(pi/3), -sin(pi/3); 0, sin(pi/3), cos(pi/3)], ...
-                eye(3), [cos(pi/3), 0, -sin(pi/3); 0, 1, 0; sin(pi/3), 0, cos(pi/3)], ...
-                eye(3), [cos(pi/3), -sin(pi/3), 0; sin(pi/3), cos(pi/3), 0; 0, 0, 1], ...
-                eye(3)};
+               [cos(pi/3), 0, -sin(pi/3); 0, 1, 0; sin(pi/3), 0, cos(pi/3)], ...
+               [cos(pi/3), -sin(pi/3), 0; sin(pi/3), cos(pi/3), 0; 0, 0, 1], ...
+                eye(3),[0 0 1;0 1 0; 1 0 0]};
             nElem = numel(inpArgCList);
             for iElem = 1:nElem
                 testEll=GenEllipsoid(inpCenCList{iElem}, inpArgCList{iElem}, ...
@@ -286,7 +186,6 @@ classdef GenEllipsoidPlotTestCase < elltool.plot.test.AGeomBodyPlotTestCase
 end
 
 function check(testEllArr, nDims)
-
 import elltool.core.GenEllipsoid;
 isBoundVec = 0;
 plotObj = plot(testEllArr);
@@ -374,77 +273,77 @@ mlunit.assert_equals(isBoundVec, ones(size(isBoundVec)));
             outZData = [];
         end
     end
+    function isBoundEllVec = checkNorm(testEll, cellPoints)
+        absTol = elltool.conf.Properties.getAbsTol();
+        qCenVec = testEll.getCenter();
+        dMat = testEll.getDiagMat();
+        eigMat = testEll.getEigvMat();
+        qMat = eigMat.'*dMat*eigMat;
+        isBoundEllVec = cellfun(@(x) abs(((x - qCenVec).'/qMat)*(x-qCenVec)-1)< ...
+            absTol, cellPoints);
+        isBoundEllVec = isBoundEllVec | cellfun(@(x) norm(x - qCenVec) < ...
+            absTol, cellPoints);
+        
+    end
+
+    function isBoundEllVec = check1d(testEll, cellPoints)
+        absTol = elltool.conf.Properties.getAbsTol();
+        qCenVec = testEll.getCenter();
+        dMat = testEll.getDiagMat();
+        eigMat = testEll.getEigvMat();
+        qMat = eigMat.'*dMat*eigMat;
+        isBoundEllVec = cellfun(@(x) abs((x-qCenVec)*(x-qCenVec).') <= qMat*(1 + absTol), ...
+            cellPoints);
+    end
+
+    function isBoundEllVec = check2dDimZero(testEll, cellPoints, dim)
+        absTol = elltool.conf.Properties.getAbsTol();
+        qCenVec = testEll.getCenter();
+        dMat = testEll.getDiagMat();
+        eigMat = testEll.getEigvMat();
+        secDim = @(x) x(3-dim);
+        eigPoint = @(x) secDim(eigMat*(x-qCenVec)+qCenVec);
+        qCenVec = qCenVec(3-dim);
+        isBoundEllVec = cellfun(@(x) abs(((eigPoint(x) - qCenVec).'/dMat(3-dim, 3-dim))*...
+            (eigPoint(x) - qCenVec)) < 1 +  absTol, cellPoints);
+        
+    end
+
+    function isBoundEllVec = check3dDimZero(testEll, cellPoints, dim)
+        absTol = elltool.conf.Properties.getAbsTol();
+        qCenVec = testEll.getCenter();
+        dMat = testEll.getDiagMat();
+        eigMat = testEll.getEigvMat();
+        if dim == 1
+            secDim = @(x) [x(2), x(3)].';
+            invMat = diag([1/dMat(2,2), 1/dMat(3,3)]);
+        elseif dim == 2
+            secDim = @(x) [x(1), x(3)].';
+            invMat = diag([1/dMat(1,1), 1/dMat(3,3)]);
+        else
+            secDim = @(x) [x(1), x(2)].';
+            invMat = diag([1/dMat(1,1), 1/dMat(2,2)]);
+        end
+        eigPoint = @(x) secDim(eigMat*(x-qCenVec)+qCenVec);
+        qCenVec = secDim(qCenVec);
+        isBoundEllVec = cellfun(@(x) abs(((eigPoint(x) - qCenVec).'*invMat)*...
+            (eigPoint(x) - qCenVec)) < 1 +  absTol, cellPoints);
+        
+    end
+
+
+    function isBoundEllVec = checkDimInf(testEll, cellPoints)
+        absTol = elltool.conf.Properties.getAbsTol();
+        qCenVec = testEll.getCenter();
+        dMat = testEll.getDiagMat();
+        eigMat = testEll.getEigvMat();
+        eigPoint = @(x) eigMat*(x-qCenVec) + qCenVec;
+        invMat = diag(1./diag(dMat));
+        isBoundEllVec = cellfun(@(x) abs(((eigPoint(x) - qCenVec).'*invMat)*...
+            (eigPoint(x) - qCenVec)) < 1 + absTol, cellPoints) ;
+        
+    end
 end
 
 
 
-function isBoundEllVec = checkNorm(testEll, cellPoints)
-absTol = elltool.conf.Properties.getAbsTol();
-qCenVec = testEll.getCenter();
-dMat = testEll.getDiagMat();
-eigMat = testEll.getEigvMat();
-qMat = eigMat.'*dMat*eigMat;
-isBoundEllVec = cellfun(@(x) abs(((x - qCenVec).'/qMat)*(x-qCenVec)-1)< ...
-    absTol, cellPoints);
-isBoundEllVec = isBoundEllVec | cellfun(@(x) norm(x - qCenVec) < ...
-    absTol, cellPoints);
-
-end
-
-function isBoundEllVec = check1d(testEll, cellPoints)
-absTol = elltool.conf.Properties.getAbsTol();
-qCenVec = testEll.getCenter();
-dMat = testEll.getDiagMat();
-eigMat = testEll.getEigvMat();
-qMat = eigMat.'*dMat*eigMat;
-isBoundEllVec = cellfun(@(x) abs((x-qCenVec)*(x-qCenVec).') <= qMat*(1 + absTol), ...
-    cellPoints);
-end
-
-function isBoundEllVec = check2dDimZero(testEll, cellPoints, dim)
-absTol = elltool.conf.Properties.getAbsTol();
-qCenVec = testEll.getCenter();
-dMat = testEll.getDiagMat();
-eigMat = testEll.getEigvMat();
-secDim = @(x) x(3-dim);
-eigPoint = @(x) secDim(eigMat*(x-qCenVec)+qCenVec);
-qCenVec = qCenVec(3-dim);
-isBoundEllVec = cellfun(@(x) abs(((eigPoint(x) - qCenVec).'/dMat(3-dim, 3-dim))*...
-    (eigPoint(x) - qCenVec)) < 1 +  absTol, cellPoints);
-
-end
-
-function isBoundEllVec = check3dDimZero(testEll, cellPoints, dim)
-absTol = elltool.conf.Properties.getAbsTol();
-qCenVec = testEll.getCenter();
-dMat = testEll.getDiagMat();
-eigMat = testEll.getEigvMat();
-if dim == 1
-    secDim = @(x) [x(2), x(3)].';
-    invMat = diag([1/dMat(2,2), 1/dMat(3,3)]);
-elseif dim == 2
-    secDim = @(x) [x(1), x(3)].';
-    invMat = diag([1/dMat(1,1), 1/dMat(3,3)]);
-else
-    secDim = @(x) [x(1), x(2)].';
-    invMat = diag([1/dMat(1,1), 1/dMat(2,2)]);
-end
-eigPoint = @(x) secDim(eigMat*(x-qCenVec)+qCenVec);
-qCenVec = secDim(qCenVec);
-isBoundEllVec = cellfun(@(x) abs(((eigPoint(x) - qCenVec).'*invMat)*...
-    (eigPoint(x) - qCenVec)) < 1 +  absTol, cellPoints);
-
-end
-
-
-function isBoundEllVec = checkDimInf(testEll, cellPoints)
-absTol = elltool.conf.Properties.getAbsTol();
-qCenVec = testEll.getCenter();
-dMat = testEll.getDiagMat();
-eigMat = testEll.getEigvMat();
-eigPoint = @(x) eigMat*(x-qCenVec) + qCenVec;
-invMat = diag(1./diag(dMat));
-isBoundEllVec = cellfun(@(x) abs(((eigPoint(x) - qCenVec).'*invMat)*...
-    (eigPoint(x) - qCenVec)) < 1 + absTol, cellPoints) ;
-
-end

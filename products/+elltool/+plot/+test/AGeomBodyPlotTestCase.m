@@ -98,7 +98,113 @@ classdef AGeomBodyPlotTestCase < mlunitext.test_case
             plot(testFirEll,'fill',true);
             plot(testFirEll,'fill',false);
         end
-        
+        function self = testHoldOn(self)
+            [testEll,numObj] = self.getInstance(eye(2));
+            checkHoldOff(testEll, numObj);
+            checkHoldOn(testEll, numObj+1);
+            [testEllArr(1),numObj1] = self.getInstance(eye(2));
+            [testEllArr(2),numObj2] = self.getInstance([1, 0].', eye(2));
+            checkHoldOff(testEllArr, numObj1+numObj2);
+            checkHoldOn(testEllArr, numObj1+numObj2+1);
+            [testEllArr(1),numObj1] = self.getInstance(eye(3));
+            [testEllArr(2),numObj2] = self.getInstance([1, 0, 0].', eye(3));
+            checkHoldOff(testEllArr, numObj1+numObj2);
+            checkHoldOn(testEllArr, numObj1+numObj2+1);
+           
+            checkHoldOffNewFig(testEllArr, numObj2);
+            checkHoldOnNewFig(testEllArr, numObj2);
+            function checkHoldOff(testEllArr, testAns)
+                plot(1:10,sin(1:10));
+                hold off;
+                plotObj = plot(testEllArr);
+                SHPlot = plotObj.getPlotStructure().figToAxesToHMap.toStruct();
+                SAxes = SHPlot.figure_g1;
+                plotFig = get(SAxes.ax, 'Children');
+                mlunit.assert_equals(numel(plotFig), testAns);
+            end
+            function checkHoldOn(testEllArr, testAns)
+                plot(1:10,sin(1:10));
+                hold on;
+                plotObj = plot(testEllArr);
+                SHPlot = plotObj.getPlotStructure().figToAxesToHMap.toStruct();
+                SAxes = SHPlot.figure_g1;
+                plotFig = get(SAxes.ax, 'Children');
+                mlunit.assert_equals(numel(plotFig), testAns);
+            end
+            function checkHoldOffNewFig(testEllArr, testAns)
+                plot(1:10,sin(1:10));
+                hold off;
+                plotObj = plot(testEllArr, 'newfigure', true);
+                SHPlot = plotObj.getPlotStructure().figToAxesToHMap.toStruct();
+                SAxes = SHPlot.figure1_g1;
+                plotFig = get(SAxes.ax1, 'Children');
+                mlunit.assert_equals(numel(plotFig), testAns);
+            end
+            function checkHoldOnNewFig(testEllArr, testAns)
+                plot(1:10,sin(1:10));
+                hold on;
+                plotObj = plot(testEllArr, 'newfigure', true);
+                SHPlot = plotObj.getPlotStructure().figToAxesToHMap.toStruct();
+                SAxes = SHPlot.figure1_g1;
+                plotFig = get(SAxes.ax1, 'Children');
+                mlunit.assert_equals(numel(plotFig), testAns);               
+            end           
+        end
+        function self = testColorChar(self)
+            [testEll,numObj] = self.getInstance(eye(2));
+            plObj = plot(testEll, 'b');
+            check2dCol(plObj, [0, 0, 1]);
+            [testSecEll,numObj] = self.getInstance([1, 0].', eye(2));
+            plObj = plot(testEll, 'g', testSecEll, 'b');
+            check2dCol(plObj, [0, 1, 0], [0, 0, 1]);
+            [testThirdEll,numObj] = self.getInstance([0, 1].', eye(2));
+            plObj = plot(testEll, 'g', testSecEll, 'b', testThirdEll, 'y');
+            check2dCol(plObj, [0, 1, 0], [0, 0, 1], [1, 1, 0]);
+            [testEll,numObj] = self.getInstance(eye(3));
+            plObj = plot(testEll, 'y');
+            check3dCol(plObj, [1, 1, 0]);
+            [testSecEll,numObj] = self.getInstance([1, 1, 0].', eye(3));
+            plObj = plot(testEll, 'g', testSecEll, 'b');
+            check3dCol(plObj, [0, 1, 0], [0, 0, 1]);
+            [testThirdEll,numObj] = self.getInstance([-1, -1, -1].', eye(3));
+            plObj = plot(testEll, 'c', testSecEll, 'm', testThirdEll, 'w');
+            check3dCol(plObj, [0, 1, 1], [1, 0, 1], [1, 1, 1]);
+            
+            function check2dCol(plObj, varargin)
+                colMat = vertcat(varargin{:});
+                colMat = repmat(colMat,numObj,1);
+                colMat = sortrows(colMat);
+                SHPlot =  plObj.getPlotStructure().figToAxesToHMap.toStruct();
+                plEllObjVec = get(SHPlot.figure_g1.ax, 'Children');
+                plEllColCMat = get(plEllObjVec, 'EdgeColor');
+                if iscell(plEllColCMat)
+                    plEllColMat = vertcat(plEllColCMat{:});
+                else
+                    plEllColMat = plEllColCMat;
+                end
+                plEllColMat = sortrows(plEllColMat);
+                mlunit.assert_equals(plEllColMat, colMat);
+            end
+            function check3dCol(plObj, varargin)
+                colMat = vertcat(varargin{:});
+                colMat = sortrows(colMat);
+                SHPlot =  plObj.getPlotStructure().figToAxesToHMap.toStruct();
+                plEllObjVec = get(SHPlot.figure_g1.ax, 'Children');
+                plEllColCMat = arrayfun(@(x) getColVec(x), plEllObjVec, ...
+                    'UniformOutput', false);
+                plEllColMat = vertcat(plEllColCMat{:});
+                plEllColMat = sortrows(plEllColMat);
+                mlunit.assert_equals(plEllColMat, colMat);
+                function clrVec = getColVec(plEllObj)
+                    if ~eq(get(plEllObj, 'Type'), 'patch')
+                        clrVec = [];
+                    else
+                        clrMat = get(plEllObj, 'FaceVertexCData');
+                        clrVec = clrMat(1, :);
+                    end
+                end
+            end
+        end
         function self = testNewFigure(self)
             testEll = self.getInstance(eye(3));
             checkNewFig(testEll, 1);
