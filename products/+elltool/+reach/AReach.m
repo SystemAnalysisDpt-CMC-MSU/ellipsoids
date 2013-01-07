@@ -23,17 +23,8 @@ classdef AReach < elltool.reach.IReach
             isCut = self.isCut;
         end
         %
-        function [rSdim sSdim] = dimension(self)
-            rSdim = self.linSysCVec{end}.dimension();
-            if ~self.isProj
-                sSdim = rSdim;
-            else
-                sSdim = size(self.projectionBasisMat, 2);
-            end
-        end
-        %% returns the last lin system
-        function linSys = get_system(self)
-            linSys = self.linSysCVec{end};
+        function isEmpty = isempty(self)
+            isEmpty = isempty(self.x0Ellipsoid);
         end
         %
         function isEmptyIntersect =...

@@ -303,5 +303,20 @@ classdef IReach < handle
         %            Faculty of Computational Mathematics and Computer Science,
         %            System Analysis Department 2012 $
         %
+        isEmpty = isempty(self)
+        %
+        % ISEMPTY - checks if given reach set is an empty object.
+        %
+        % Input:
+        %     self
+        %
+        % Output:
+        %     isEmpty: 1 - if self is empty, 0 - otherwise.
+        %
+        % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
+        % $Copyright: Moscow State University,
+        %            Faculty of Computational Mathematics and Computer Science,
+        %            System Analysis Department 2012 $
+        %
     end
 end
