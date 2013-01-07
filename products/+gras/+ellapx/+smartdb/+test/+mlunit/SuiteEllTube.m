@@ -258,17 +258,113 @@ classdef SuiteEllTube < mlunitext.test_case
             end
         end
         %
-        function testPlot(~)
-            nPoints=1;
-            checkMaster();
+        function testPlotProps(self)
+            import gras.ellapx.enums.EApproxType;
             nPoints=10;
-            checkMaster();
-            function checkMaster()
+            INTERNAL_COLOR_VEC=[0 1 1];
+            INTERNAL_ALPHA=0.1;
+            EXTERNAL_COLOR_VEC=[1 0 1];
+            EXTERNAL_ALPHA=0.3;
+            %
+            [~,rel]=auxGenSimpleTubeAndProj(...
+                self,nPoints);
+            plObj=smartdb.disp.RelationDataPlotter();
+            rel.plot(plObj,'fGetTubeColor',...
+                @getPatchColorByApxType);
+            %
+            SHandle=plObj.getPlotStructure().figToAxesToPlotHMap.toStruct();
+            [~,handleVecList]=modgen.struct.getleavelist(SHandle);
+            handleVec=[handleVecList{:}];
+            %
+            check(EApproxType.Internal,...
+                INTERNAL_ALPHA,INTERNAL_COLOR_VEC);
+            %
+            check(EApproxType.External,...
+                EXTERNAL_ALPHA,EXTERNAL_COLOR_VEC);            
+            %
+            plObj.closeAllFigures();
+            function check(apxType,apxAlpha,apxColorVec)
+                checkPropForApx(apxType,...
+                    rel.getReachTubeNamePrefix(),handleVec,...
+                    {'FaceAlpha','FaceVertexCData'},...
+                    {apxAlpha,apxColorVec},...
+                    {@isequal,@compareColor});
+            end
+            function checkPropForApx(apxType,namePrefix,handleVec,...
+                    propNameList,propValList,fPropCmpList)
+                apxTypeName=char(apxType);
+                nChars=length(namePrefix);
+                isApxVec=cellfun(@(x)~isempty(strfind(x,apxTypeName))&&...
+                    strcmp(namePrefix,x(1:nChars)),...
+                    get(handleVec,'DisplayName'));
+                apxHandleVec=handleVec(isApxVec);
+                nProps=length(propNameList);
+                for iProp=1:nProps
+                    fPropCmp=fPropCmpList{iProp};
+                    propVal=propValList{iProp};
+                    propName=propNameList{iProp};
+                    propValCVec=get(apxHandleVec,propName);
+                    isOkVec=cellfun(@(x)fPropCmp(propVal,x),propValCVec);
+                    mlunitext.assert(all(isOkVec));
+                end
+            end
+            function isOk=compareColor(colorVec,colorMat)
+                nRows=size(colorMat,1);
+                isOk=isequal(colorMat,repmat(colorVec,nRows,1));
+            end
+            function [patchColor,patchAlpha]=getPatchColorByApxType(...
+                    approxType)
+                import gras.ellapx.enums.EApproxType;
+                switch approxType
+                    case EApproxType.Internal
+                        patchColor=INTERNAL_COLOR_VEC;
+                        patchAlpha=INTERNAL_ALPHA;
+                    case EApproxType.External
+                        patchColor=EXTERNAL_COLOR_VEC;
+                        patchAlpha=EXTERNAL_ALPHA;
+                    otherwise,
+                        throwerror('wrongInput',...
+                            'ApproxType=%s is not supported',...
+                            char(approxType));
+                end
+            end
+        end
+        function testPlotTouch(self)
+            [relStatProj,relDynProj]=checkMaster(1);
+            [rel2StatProj,rel2DynProj]=checkMaster(10);
+            rel=smartdb.relationoperators.union(relStatProj,relDynProj,...
+                rel2StatProj,rel2DynProj);
+            plObj=rel.plot();
+            plObj.closeAllFigures();
+            function [relStatProj,relDynProj]=checkMaster(nPoints)
+                [~,relStatProj,relDynProj]=auxGenSimpleTubeAndProj(...
+                    self,nPoints);
+                %
+                check(relStatProj,relDynProj);
+                %
+            end
+            function check(relStatProj,relDynProj)
+                plObj=relStatProj.plot();
+                %
+                try
+                    relDynProj.plot(plObj);
+                    plObj.closeAllFigures();
+                catch meObj
+                    plObj.closeAllFigures();
+                    rethrow(meObj);
+                end
+            end
+        end
+        %
+        function [rel,relStatProj,relDynProj]=auxGenSimpleTubeAndProj(~,...
+                nPoints,nTubes)
             calcPrecision=0.001;
             approxSchemaDescr=char.empty(1,0);
             approxSchemaName=char.empty(1,0);
             nDims=2;
-            nTubes=3;
+            if nargin<3
+                nTubes=1;
+            end
             lsGoodDirVec=[1;0];
             qMat=eye(nDims);
             QArrayList=repmat({repmat(qMat,[1,1,nPoints])},1,nTubes);
@@ -283,25 +379,18 @@ classdef SuiteEllTube < mlunitext.test_case
             approxType=gras.ellapx.enums.EApproxType.External;
             rel.unionWith(create());
             relWithReg=rel.getCopy();
+            relWithReg.scale(@(varargin)0.5,{});
+            %
             relWithReg.MArray=cellfun(@(x)x*0.1,relWithReg.QArray,...
                 'UniformOutput',false);
             rel.unionWith(relWithReg);
             %
             projSpaceList={[true true]};
             projType=gras.ellapx.enums.EProjType.Static;
-            relProj=rel.project(projType,projSpaceList,@fGetProjMat);
-            plObj=relProj.plot();
+            relStatProj=rel.project(projType,projSpaceList,@fGetProjMat);
             %
-            try 
             projType=gras.ellapx.enums.EProjType.DynamicAlongGoodCurve;
-            relProj=rel.project(projType,projSpaceList,@fGetProjMat);
-            relProj.plot(plObj);
-            plObj.closeAllFigures();
-            catch meObj
-                plObj.closeAllFigures();
-                rethrow(meObj);
-            end
-            %
+            relDynProj=rel.project(projType,projSpaceList,@fGetProjMat);
             function [projOrthMatArray,projOrthMatTransArray]=...
                     fGetProjMat(projSpaceVec,timeVec,sTime,dim,indSTime)
                 nPoints=length(timeVec);
@@ -317,10 +406,7 @@ classdef SuiteEllTube < mlunitext.test_case
                     ltGoodDirArray,sTime,approxType,approxSchemaName,...
                     approxSchemaDescr,calcPrecision);
             end
-            end
         end
-        %
-        
         function testSimpleCreate(self)
             nPoints=3;
             calcPrecision=0.001;
