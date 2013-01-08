@@ -35,22 +35,6 @@ classdef EllipsoidPlotTestCase < elltool.plot.test.AGeomBodyPlotTestCase
         function self = tear_down(self,varargin)
             close all;
         end
-        %         function self = testPlot(self)
-        %             qMat1 = [3 2;2 5];
-        %             el1 = ellipsoid(qMat1);
-        %             plObj = plot(el1);
-        %             plotStructure = plObj.getPlotStructure;
-        %             hPlot =  toStruct(plotStructure.figToAxesToPlotHMap);
-        %             num = hPlot.figure_gr1;
-        %             for iEl =1:size(num.ax,2)
-        %                 [xData] = get(num.ax(iEl),'XData');
-        %                 [yData] = get(num.ax(iEl),'YData');
-        %                 for iPoint=1:size(xData,2)-1
-        %                     point = [xData(iPoint);yData(iPoint)];
-        %                     mlunit.assert_equals(abs((point.'/qMat1)*point-1)<elltool.conf.Properties.getAbsTol(),1);
-        %                 end
-        %             end
-        %         end
         function self = testPlot2d(self)
             nDims = 2;
             inpArgCList = {[cos(pi/4), sin(pi/4); -sin(pi/4), cos(pi/4)]* ...

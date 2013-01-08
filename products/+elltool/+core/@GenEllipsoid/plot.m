@@ -59,7 +59,10 @@ function plObj = plot(varargin)
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Cybernetics,
 %            System Analysis Department 2012 $
-
+% $Author: <Ilya Lyubich>  <lubi4ig@gmail.com> $    $Date: <8 January 2013> $
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Cybernetics,
+%            System Analysis Department 2013 $
 import elltool.conf.Properties;
 import modgen.common.throwerror;
 import elltool.core.GenEllipsoid;
@@ -76,7 +79,7 @@ if  isHold
 else
     hold off;
 end
-    function [xMat,fMat] = calcCenterEllPoints(ellsArr,nDim,lGetGridMat, fGetGridMat)
+    function [xMat,fMat] = calcCenterEllPoints(ellsArr,~,~, fGetGridMat)
         [xMat, fMat] = arrayfun(@(x) calcOneCenterEllElem(x), ellsArr, ...
             'UniformOutput', false);
         function [xMat, fMat] = calcOneCenterEllElem(plotEll)

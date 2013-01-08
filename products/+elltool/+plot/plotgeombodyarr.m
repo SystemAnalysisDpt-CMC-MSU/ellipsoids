@@ -1,6 +1,4 @@
 function  [plObj,nDim,isHold] = plotgeombodyarr(secondTime,oldPlObj,objClassName,rebuildOneDim2TwoDim,calcBodyPoints,plotPatch,varargin)
-
-
 import modgen.common.throwerror;
 DEFAULT_LINE_WIDTH = 1;
 DEFAULT_SHAD = 0.4;
@@ -95,7 +93,6 @@ end
             [SData.figureNameCMat, SData.axesNameCMat] =...
                 arrayfun(@(x)getSDataParams(x), (1:bodyNum).',...
                 'UniformOutput', false);
-            
         end
         clrCVec = cellfun(@(x, y, z) getColor(x, y, z),...
             num2cell(colorVec, 2), ...

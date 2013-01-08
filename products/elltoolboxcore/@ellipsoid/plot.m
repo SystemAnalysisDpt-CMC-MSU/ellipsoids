@@ -75,7 +75,7 @@ else
 end
 
 
-    function [xMat,fMat] = calcCenterEllPoints(ellsArr,nDim,lGetGridMat, fGetGridMat)
+    function [xMat,fMat] = calcCenterEllPoints(ellsArr,~,~, fGetGridMat)
         [xMat, fMat] = arrayfun(@(x) calcOneCenterEllElem(x), ellsArr, ...
             'UniformOutput', false);
         function [xMat, fMat] = calcOneCenterEllElem(plotEll)

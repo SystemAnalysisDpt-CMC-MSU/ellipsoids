@@ -151,8 +151,6 @@ end
         end
     end
     function [hypArr,nDim] = rebuildOneDim2TwoDim(hypArr)
-%         import modgen.common.throwerror;
-%         throwerror('wrongDimension','hyperplane dimension must be 2 or 3.');
                 hypCMat = arrayfun(@(x) oneDim2TwoDim(x), hypArr, ...
                     'UniformOutput', false);
                 hypArr = vertcat(hypCMat{:});
