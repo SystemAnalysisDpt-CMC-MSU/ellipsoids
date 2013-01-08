@@ -7,7 +7,7 @@ crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
 crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
 %
 confNameList = {'demo3firstTest', 'demo3secondTest',...
-    'demo3thirdTest', 'demo3fourthTest'};
+   'demo3thirdTest', 'demo3fourthTest'};
 %
 nConfs=length(confNameList);
 suiteList=cell(1,nConfs);

@@ -84,10 +84,13 @@ zlabel('i_L');
 % plots external (red) and internal (yellow) approximations of the reach set of the system for the time interval [10, 20] and the new dynamics.
 % Function 'evolve' can be used for computing the reach sets of switching systems.
 %
-% Colors in plot functions are not available this moment
 rs2 = rs.evolve(20, s2);
-rs2.plot_ea();
-rs2.plot_ia();
+ColorOptEa.color = [1 0 0];
+ColorOptEa.alpha = 0.3;
+ColorOptIa.color = [1 1 0];
+ColorOptIa.alpha = 0.1;
+rs2.plot_ea(ColorOptEa);
+rs2.plot_ia(ColorOptIa);
 %% 
 % To analyze the reachability of the system on some specific time segment within the computed time interval, use 'cut' function:
 % 
@@ -110,7 +113,6 @@ zlabel('i_L');
 % >> plot_ea(ct); hold on; plot_ia(ct);
 % 
 % plots the reach set approximations at time 5.
-% plot doesn't work in this case
 import elltool.conf.Properties;
 Properties.setNPlot2dPoints(800);
 cla;
@@ -366,7 +368,7 @@ clear U;
 U.center = {'(k+7)/100'; '2'};
 U.shape = [0.02 0; 0 1];
 X0 = ellipsoid([1; 0.5; -0.5; 1.10; 0.55; 0], eye(6));
-lsys = linsys(A, B, U, [], [], [], [], 'd');
+lsys = elltool.linsys.LinSys(A, B, U, [], [], [], [], 'd');
 L0 = [1 0 0 0 0 0; 0 1 0 0 0 0; 0 0 1 0 0 1; 0 1 0 1 1 0; 0 0 -1 1 0 1; 0 0 0 -1 1 1]';
 %% 
 % Now we compute the reach set for N = 4 time steps and plot the projection onto (V[k], Y[k]) subspace:
@@ -381,9 +383,9 @@ L0 = [1 0 0 0 0 0; 0 1 0 0 0 0; 0 0 1 0 0 1; 0 1 0 1 1 0; 0 0 -1 1 0 1; 0 0 0 -1
 % 
 % Forward reach sets can be computed for singular discrete-time systems as well. Backward reach sets, on the other hand, can be computed only for nonsingular discrete-time systems.
 N  = 4;
-rs = reach(lsys, X0, L0, N);
+rs = elltool.reach.ReachDiscrete(lsys, X0, L0, N);
 BB = [0 0 0 0 1 0; 0 0 0 0 0 1]';
-ps = projection(rs, BB);
+ps = rs.projection(BB);
 plot_ea(ps);
 hold on;
 plot_ia(ps);

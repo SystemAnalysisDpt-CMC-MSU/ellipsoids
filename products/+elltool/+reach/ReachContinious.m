@@ -338,46 +338,169 @@ classdef ReachContinious < elltool.reach.AReach
                 relTol, approxTypeVec);
         end
         %%
-        function plot_ea(self, varargin)
+        function plot_ea(self, ColorOpt)
+        %
+        % PLOT_EA - plots external approximations of 2D and 3D reach sets.
+        %
+        % Input:
+        %     Case1:
+        %         self
+        %
+        %     Case2:
+        %         self
+        %         ColorOpt: structure with fields described below
+        %
+        %     ColorOpt's fields:
+        %         ColorOpt.color - sets color of the picture in the form [x y z].
+        %         ColorOpt.alpha: 0-1 - sets transparency level (0 - transparent, 1 - opaque).
+        %
+        % Remark: in case1 ColorOpt's fields are:
+        %     ColorOpt.color = [0 0 1], ColorOpt.alpha = 0.3
+        %
+        % Output:
+        %     None.
+        %
+        % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
+        % $Copyright: Moscow State University,
+        %            Faculty of Computational Mathematics and Computer Science,
+        %            System Analysis Department 2012 $
+        %
             import gras.ellapx.enums.EApproxType;
-            if self.dimension() > 2
-                projBasisMat = eye(3);
+            if nargin > 2
+                throwerror('Too many arguments.');
+            elseif nargin == 2
+                if isfield(ColorOpt, 'color')
+                    colorVec = ColorOpt.color;
+                else
+                    throwerror('ColorOpt does not contain field "color"');
+                end
+                if isfield(ColorOpt, 'alpha')
+                    alpha = ColorOpt.alpha;
+                else
+                    throwerror('ColorOpt does not contain field "alpha"');
+                end
             else
-                projBasisMat = eye(self.dimension());
+                colorVec = [0 0 1];
+                alpha = 0.3;
+            end
+            if ~ismatrix(colorVec)
+                throwerror('Wrong field format ("color")');
+            else
+                [nRows nCols] = size(colorVec);
+                if nRows ~= 1 || nCols ~= 3
+                    throwerror('Wrong field format ("color")');
+                end
+            end
+            if ~isa(alpha, 'double')
+                throwerror('Wrong field format ("alpha")');
+            else
+                if alpha < 0 || alpha > 1
+                    throwerror('Wrong field format ("alpha")');
+                end
             end
             if self.isProj
                 if self.getEllTubeRel().dim() > 3
                     throwerror('Dimension of the projection must be leq 3');                    
                 else
+                    plObj = smartdb.disp.RelationDataPlotter();
                     self.getEllTubeRel().getTuplesFilteredBy(...
-                        'approxType', EApproxType.External).plot();
+                        'approxType', EApproxType.External).plot(plObj,...
+                        'fGetTubeColor', @(x) deal(colorVec, alpha));
                 end
             else
+                if self.dimension() > 2
+                    projBasisMat = eye(3);
+                else
+                    projBasisMat = eye(self.dimension());
+                end
+                plObj = smartdb.disp.RelationDataPlotter();
                 projSetObj = self.getProjSet(projBasisMat,...
                     EApproxType.External, self.EXTERNAL_SCALE_FACTOR);
-                projSetObj.plot();
+                projSetObj.plot(plObj, 'fGetTubeColor',...
+                    @(x) deal(colorVec, alpha));
             end
-            
         end
         %%
-        function plot_ia(self, varargin)
+        function plot_ia(self, ColorOpt)
+        %
+        % PLOT_IA - plots external approximations of 2D and 3D reach sets.
+        %
+        % Input:
+        %     Case1:
+        %         self
+        %
+        %     Case2:
+        %         self
+        %         ColorOpt: structure with fields described below
+        %
+        %     ColorOpt's fields:
+        %         ColorOpt.color - sets color of the picture in the form [x y z].
+        %         ColorOpt.alpha: 0-1 - sets transparency level (0 - transparent, 1 - opaque).
+        %
+        % Remark: in case1 ColorOpt's fields are:
+        %     ColorOpt.color = [0 1 0], ColorOpt.alpha = 0.1
+        %
+        % Output:
+        %     None.
+        %
+        % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
+        % $Copyright: Moscow State University,
+        %            Faculty of Computational Mathematics and Computer Science,
+        %            System Analysis Department 2012 $
+        %
             import gras.ellapx.enums.EApproxType;
-            if self.dimension() > 2
-                projBasisMat = eye(3);
+            if nargin > 2
+                throwerror('Too many arguments.');
+            elseif nargin == 2
+                if isfield(ColorOpt, 'color')
+                    colorVec = ColorOpt.color;
+                else
+                    throwerror('ColorOpt does not contain field "color"');
+                end
+                if isfield(ColorOpt, 'alpha')
+                    alpha = ColorOpt.alpha;
+                else
+                    throwerror('ColorOpt does not contain field "alpha"');
+                end
             else
-                projBasisMat = eye(self.dimension());
+                colorVec = [0 1 0];
+                alpha = 0.1;
+            end
+            if ~ismatrix(colorVec)
+                throwerror('Wrong field format ("color")');
+            else
+                [nRows nCols] = size(colorVec);
+                if nRows ~= 1 || nCols ~= 3
+                    throwerror('Wrong field format ("color")');
+                end
+            end
+            if ~isa(alpha, 'double')
+                throwerror('Wrong field format ("alpha")');
+            else
+                if alpha < 0 || alpha > 1
+                    throwerror('Wrong field format ("alpha")');
+                end
             end
             if self.isProj
                 if self.getEllTubeRel().dim() > 3
                     throwerror('Dimension of the projection must be leq 3');                    
                 else
+                    plObj = smartdb.disp.RelationDataPlotter();
                     self.getEllTubeRel().getTuplesFilteredBy(...
-                        'approxType', EApproxType.Internal).plot();
+                        'approxType', EApproxType.Internal).plot(plObj,...
+                        'fGetTubeColor', @(x) deal(colorVec, alpha));
                 end
             else
+                if self.dimension() > 2
+                    projBasisMat = eye(3);
+                else
+                    projBasisMat = eye(self.dimension());
+                end
+                plObj = smartdb.disp.RelationDataPlotter();
                 projSetObj = self.getProjSet(projBasisMat,...
                     EApproxType.Internal, self.INTERNAL_SCALE_FACTOR);
-                projSetObj.plot();
+                projSetObj.plot(plObj, 'fGetTubeColor',...
+                    @(x) deal(colorVec, alpha));
             end
         end
         %% displays only the last lin system
