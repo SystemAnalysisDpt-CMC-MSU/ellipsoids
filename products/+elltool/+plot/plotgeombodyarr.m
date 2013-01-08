@@ -34,7 +34,7 @@ if isCharColor && isColorVec
 end
 nDim = max(dimension(bodyArr));
 if nDim == 3 && isLineWidth
-    throwerror('wrongProperty', 'LineWidth is not supported by 3D Ellipsoids');
+    throwerror('wrongProperty', 'LineWidth is not supported by 3D objects');
 end
 [colorVec, shadVec, lineWidth, isFill] = getPlotParams(colorVec, shadVec,...
     lineWidth, isFill);
@@ -146,16 +146,16 @@ end
         nDim    = max(ellsArrDims);
         if mDim ~= nDim
             throwerror('dimMismatch', ...
-                'Ellipsoids must have the same dimensions.');
+                'Objects must have the same dimensions.');
         end
         if (mDim < 1) || (nDim > 3)
-            throwerror('wrongDim','ellipsoid dimension can be 1, 2 or 3');
+            throwerror('wrongDim','object dimension can be 1, 2 or 3');
         end
         if Properties.getIsVerbose()
             if bodyNum == 1
-                fprintf('Plotting ellipsoid...\n');
+                fprintf('Plotting object...\n');
             else
-                fprintf('Plotting %d ellipsoids...\n', bodyNum);
+                fprintf('Plotting %d objects...\n', bodyNum);
             end
         end
     end
@@ -199,7 +199,7 @@ end
             else
                 if nParams ~= bodyNum
                     throwerror('wrongParamsNumber',...
-                        'Number of params is not equal to number of ellipsoids');
+                        'Number of params is not equal to number of objects');
                 end
                 outParamVec = reshape(inParamArr, 1, nParams);
             end

@@ -86,7 +86,7 @@ end
         end
         if (any(sizeVec < 0)) || any(isnan(sizeVec))...
                 || any(isinf(sizeVec))
-            throwerror('sizeVec', 'sizeVec must be greater than 0 and finite');
+            throwerror('wrongSizeVec', 'sizeVec must be greater than 0 and finite');
         end
         
         
@@ -105,15 +105,15 @@ end
             if ~isFilledParam
                 outParamVec = repmat(multConst, hypNum,1);
             else
-                nParams = numel(inParamArr);
+                nParams = size(inParamArr,1);
                 if nParams == 1
                     outParamVec = repmat(inParamArr, hypNum,1);
                 else
                     if nParams ~= hypNum
                         throwerror('wrongParamsNumber',...
-                            'Number of params is not equal to number of ellipsoids');
+                            'Number of params is not equal to number of hyperplanes');
                     end
-                    outParamVec = reshape(inParamArr, 1, nParams);
+                    outParamVec = inParamArr;
                 end
             end
         end
@@ -139,33 +139,12 @@ end
                 fMat = [];
             else
                 e2 = U(:, 3);
-                %                 absTolMat = zeros(1,nDim);
-                %                 for iCols = 1:nDim
-                %                     absTolMat(1,iCols) = hyp(1,iCols).absTol;
-                %                 end
-                %                 if min(min(abs(x0))) < min(absTolMat(:))
-                %                     x0 = x0 + min(absTolMat(:)) * ones(3, 1);
-                %                 end
-                if min(min(abs(x0))) < minAbs
-                    x0 = x0 + min(absTolMat(:)) * ones(3, 1);
-                end
                 x3 = x0 - c*e2;
                 x4 = x0 + c*e2;
                 
                 xMat = [x1,x2,x3,x4];
-                %
-                %                 patch('Vertices', [x1 x3 x2 x4]', 'Faces', ch, ...
-                %                     'FaceVertexCData', clr(ones(1, 4), :), 'FaceColor', 'flat', ...
-                %                     'FaceAlpha', Options.shade(1, i));
-                %                 shading interp;
-                %                 lighting phong;
-                %                 material('metal');
-                %                 view(3);
-                %                 %camlight('headlight','local');
-                %                 %camlight('headlight','local');
-                %                 %camlight('right','local');
-                %                 %camlight('left','local');
-                fMat = convhulln([x1 x3 x2 x4]', {'QJ', 'QbB', 'Qs', 'QR0', 'Pp'});
+              
+                fMat = [1,3,2,4,1];
             end
             
             

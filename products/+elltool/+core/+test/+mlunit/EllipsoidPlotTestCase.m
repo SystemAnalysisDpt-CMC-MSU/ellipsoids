@@ -52,7 +52,6 @@ classdef EllipsoidPlotTestCase < elltool.plot.test.AGeomBodyPlotTestCase
         %             end
         %         end
         function self = testPlot2d(self)
-            import elltool.core.GenEllipsoid;
             nDims = 2;
             inpArgCList = {[cos(pi/4), sin(pi/4); -sin(pi/4), cos(pi/4)]* ...
                 [1, 0; 0, 4]*[cos(pi/4), sin(pi/4); -sin(pi/4), cos(pi/4)].', ...
