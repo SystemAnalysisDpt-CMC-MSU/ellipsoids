@@ -51,7 +51,6 @@ import modgen.common.throwerror;
 import modgen.common.checkmultvar;
 
 ellipsoid.checkIsMe(inpEllArr,'first');
-
 [nDims, nCols] = size(dirMat);
 nDimsInpEllArr = dimension(inpEllArr);
 checkmultvar('all(x2(:)==x1)',2,nDimsInpEllArr,nDims,...
@@ -64,7 +63,9 @@ end
 
 centVec =zeros(nDims,1);
 arrayfun(@(x) fAddCenter(x),inpEllArr);
-
+%
+isVerbose=Properties.getIsVerbose();
+%
 absTolArr = getAbsTol(inpEllArr);
 extApprEllVec(1,nCols) = ellipsoid;
 arrayfun(@(x) fSingleDirection(x),1:nCols);
@@ -84,7 +85,7 @@ arrayfun(@(x) fSingleDirection(x),1:nCols);
         function fAddSh(singEll,absTol)
             shMat = singEll.shape;
             if isdegenerate(singEll)
-                if Properties.getIsVerbose()
+                if isVerbose
                     fprintf('MINKSUM_EA: Warning!');
                     fprintf(' Degenerate ellipsoid.\n');
                     fprintf('            Regularizing...\n')
