@@ -511,6 +511,8 @@ classdef LinSys<handle
         function isDisturbance = hasdisturbance(self)
             if  ~isempty(self.disturbanceBoundsEll) && ~isempty(self.GtMat)
                 isDisturbance = true;
+            else
+                isDisturbance = false;
             end
         end
         %

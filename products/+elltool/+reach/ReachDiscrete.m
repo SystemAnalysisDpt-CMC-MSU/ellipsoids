@@ -426,7 +426,7 @@ classdef ReachDiscrete < elltool.reach.AReach
         %
             import elltool.conf.Properties;
             if nargin < 2
-                num = getNPlot2dPoints(ell);
+                num = elltool.reach.ReachDiscrete.getNPlot2dPoints(ell);
             end
             phi = linspace(0, 2*pi, num);
             l = [cos(phi); sin(phi)];
@@ -438,7 +438,7 @@ classdef ReachDiscrete < elltool.reach.AReach
         % ELLBNDR_3D - compute the boundary of 3D ellipsoid.
         %
             import elltool.conf.Properties;
-            M = getNPlot3dPoints(ell)/2;
+            M = elltool.reach.ReachDiscrete.getNPlot3dPoints(ell)/2;
             N = M/2;
             psy = linspace(0, pi, N);
             phi = linspace(0, 2*pi, M);
@@ -465,7 +465,8 @@ classdef ReachDiscrete < elltool.reach.AReach
         %            Faculty of Computational Arrhematics and Computer Science,
         %            System Analysis Department 2012 $
         % 
-            absTolArr = getProperty(rsArr,'absTol');
+            absTolArr =...
+                elltool.reach.ReachDiscrete.getProperty(rsArr,'absTol');
         end
         %
         function nPlot2dPointsArr = getNPlot2dPoints(rsArr)
@@ -486,7 +487,8 @@ classdef ReachDiscrete < elltool.reach.AReach
         %            Faculty of Computational Arrhematics and Computer Science,
         %            System Analysis Department 2012 $
         % 
-            nPlot2dPointsArr = getProperty(rsArr,'nPlot2dPoints');
+            nPlot2dPointsArr =...
+                elltool.reach.ReachDiscrete.getProperty(rsArr,'nPlot2dPoints');
         end
         %
         function nPlot3dPointsArr = getNPlot3dPoints(rsArr)
@@ -507,7 +509,8 @@ classdef ReachDiscrete < elltool.reach.AReach
         %            Faculty of Computational Arrhematics and Computer Science,
         %            System Analysis Department 2012 $
         % 
-            nPlot3dPointsArr = getProperty(rsArr,'nPlot3dPoints');
+            nPlot3dPointsArr =...
+                elltool.reach.ReachDiscrete.getProperty(rsArr,'nPlot3dPoints');
         end
         %
         function nTimeGridPointsArr = getNTimeGridPoints(rsArr)
@@ -528,7 +531,8 @@ classdef ReachDiscrete < elltool.reach.AReach
         %            Faculty of Computational Arrhematics and Computer Science,
         %            System Analysis Department 2012 $
         % 
-            nTimeGridPointsArr = getProperty(rsArr,'nTimeGridPoints');
+            nTimeGridPointsArr =...
+                elltool.reach.ReachDiscrete.getProperty(rsArr,'nTimeGridPoints');
         end
         %
         function relTolArr = getRelTol(rsArr)
@@ -546,7 +550,8 @@ classdef ReachDiscrete < elltool.reach.AReach
         %            Faculty of Computational Arrhematics and Computer Science,
         %            System Analysis Department 2012 $
         % 
-            relTolArr = getProperty(rsArr,'relTol');
+            relTolArr =...
+                elltool.reach.ReachDiscrete.getProperty(rsArr,'relTol');
         end
     end
     %
@@ -737,9 +742,9 @@ classdef ReachDiscrete < elltool.reach.AReach
                 AC = zeros(d1*d1, size(self.time_values, 2));
                 for i = 1:size(self.time_values, 2)
                     if (back > 0) && ~(linSys.isdiscrete()) && 0
-                        A  = reach.matrix_eval(aMat, -self.time_values(i));
+                        A  = self.matrix_eval(aMat, -self.time_values(i));
                     else
-                        A  = reach.matrix_eval(aMat, self.time_values(i));
+                        A  = self.matrix_eval(aMat, self.time_values(i));
                     end
                     AC(:, i) = reshape(A, d1*d1, 1);
                     if linSys.isdiscrete() && (rank(A) < d1)
@@ -773,7 +778,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             if iscell(bMat)
                 BB = zeros(d1*du, size(self.time_values, 2));
                 for i = 1:size(self.time_values, 2)
-                    B        = reach.matrix_eval(bMat, self.time_values(i));
+                    B        = self.matrix_eval(bMat, self.time_values(i));
                     BB(:, i) = reshape(B, d1*du, 1);
                 end
             else
@@ -784,7 +789,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             GG = zeros(d1*dd, size(self.time_values, 2));
             if iscell(gMat)
                 for i = 1:size(self.time_values, 2)
-                    B        = reach.matrix_eval(gMat, self.time_values(i));
+                    B        = self.matrix_eval(gMat, self.time_values(i));
                     GG(:, i) = reshape(B, d1*dd, 1);
                 end
             elseif ~(isempty(gMat))
@@ -795,7 +800,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             if iscell(cMat)
                 CC = zeros(d1*dy, size(self.time_values, 2));
                 for i = 1:size(self.time_values, 2)
-                    C        = reach.matrix_eval(cMat, self.time_values(i));
+                    C        = self.matrix_eval(cMat, self.time_values(i));
                     CC(:, i) = reshape(C, d1*dy, 1);
                 end
                 if linSys.isdiscrete()
@@ -864,7 +869,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                     else
                         B = reshape(BB(:, i), d1, du);
                     end
-                    Bp(:, i) = B*reach.matrix_eval(p, self.time_values(i));
+                    Bp(:, i) = B*self.matrix_eval(p, self.time_values(i));
                 end
                 if linSys.isdiscrete()
                     mydata.Bp = Bp;
@@ -879,10 +884,12 @@ classdef ReachDiscrete < elltool.reach.AReach
                         BPB   = zeros(d1*d1, size(self.time_values, 2));
                         BPBsr = zeros(d1*d1, size(self.time_values, 2));
                         for i = 1:size(self.time_values, 2)
-                            p = reach.matrix_eval(uEll.center, self.time_values(i));
-                            P = reach.matrix_eval(uEll.shape, self.time_values(i));
+                            p = self.matrix_eval(uEll.center, self.time_values(i));
+                            P = self.matrix_eval(uEll.shape, self.time_values(i));
                             if (P ~= P') | (min(eig(P)) < 0)
-                                error('REACH: shape matrix of ellipsoidal control bounds must be positive definite.')
+                                throwerror(['REACH: shape matrix of ',...
+                                    'ellipsoidal control bounds ',...
+                                    'must be positive definite.']);
                             end
                             Bp(:, i)    = B*p;
                             P           = B * P * B';
@@ -903,7 +910,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                     elseif iscell(uEll.center)
                         Bp  = zeros(d1, size(self.time_values, 2));
                         for i = 1:size(self.time_values, 2)
-                            p  = reach.matrix_eval(uEll.center, self.time_values(i));
+                            p  = self.matrix_eval(uEll.center, self.time_values(i));
                             Bp(:, i) = B*p;
                         end
                         if linSys.isdiscrete()
@@ -918,9 +925,11 @@ classdef ReachDiscrete < elltool.reach.AReach
                         BPB   = zeros(d1*d1, size(self.time_values, 2));
                         BPBsr = zeros(d1*d1, size(self.time_values, 2));
                         for i = 1:size(self.time_values, 2)
-                            P = reach.matrix_eval(uEll.shape, self.time_values(i));
+                            P = self.matrix_eval(uEll.shape, self.time_values(i));
                             if (P ~= P.') | (min(eig(P)) < 0)
-                                error('REACH: shape matrix of ellipsoidal control bounds must be positive definite.')
+                                throwerror(['REACH: shape matrix of ',...
+                                    'ellipsoidal control bounds ',...
+                                    'must be positive definite.']);
                             end
                             P           = B * P * B';
                             BPB(:, i)   = reshape(P, d1*d1, 1);
@@ -944,14 +953,16 @@ classdef ReachDiscrete < elltool.reach.AReach
                     for i = 1:size(self.time_values, 2)
                         B = reshape(BB(:, i), d1, du);
                         if iscell(uEll.center)
-                            p = reach.matrix_eval(uEll.center, self.time_values(i));
+                            p = self.matrix_eval(uEll.center, self.time_values(i));
                         else
                             p = uEll.center;
                         end
                         if iscell(uEll.shape)
-                            P = reach.matrix_eval(uEll.shape, self.time_values(i));
+                            P = self.matrix_eval(uEll.shape, self.time_values(i));
                             if (P ~= P.') | (min(eig(P)) < 0)
-                                error('REACH: shape matrix of ellipsoidal control bounds must be positive definite.')
+                                throwerror(['REACH: shape matrix of ',...
+                                    'ellipsoidal control bounds ',...
+                                    'must be positive definite.']);
                             end
                         else
                             P = uEll.shape;
@@ -1033,7 +1044,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                         else
                             G = reshape(GG(:, i), d1, dd);
                         end
-                        Gq(:, i) = G*reach.matrix_eval(q, self.time_values(i));
+                        Gq(:, i) = G*self.matrix_eval(q, self.time_values(i));
                     end
                     if linSys.isdiscrete()
                         mydata.Gq = Gq;
@@ -1049,10 +1060,12 @@ classdef ReachDiscrete < elltool.reach.AReach
                             GQG   = zeros(d1*d1, size(self.time_values, 2));
                             GQGsr = zeros(d1*d1, size(self.time_values, 2));
                             for i = 1:size(self.time_values, 2)
-                                q = reach.matrix_eval(vEll.center, self.time_values(i));
-                                Q = reach.matrix_eval(vEll.shape, self.time_values(i));
+                                q = self.matrix_eval(vEll.center, self.time_values(i));
+                                Q = self.matrix_eval(vEll.shape, self.time_values(i));
                                 if (Q ~= Q.') | (min(eig(Q)) < 0)
-                                    error('REACH: shape matrix of ellipsoidal disturbance bounds must be positive definite.')
+                                    throwerror(['REACH: shape matrix of ',...
+                                        'ellipsoidal disturbance bounds ',...
+                                        'must be positive definite.']);
                                 end
                                 Gq(:, i)    = G*q;
                                 Q           = G * Q * G';
@@ -1073,7 +1086,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                         elseif iscell(vEll.center)
                             Gq  = zeros(d1, size(self.time_values, 2));
                             for i = 1:size(self.time_values, 2)
-                                q  = reach.matrix_eval(vEll.center, self.time_values(i));
+                                q  = self.matrix_eval(vEll.center, self.time_values(i));
                                 Gq(:, i) = G*q;
                             end
                             if linSys.isdiscrete()
@@ -1088,9 +1101,11 @@ classdef ReachDiscrete < elltool.reach.AReach
                             GQG   = zeros(d1*d1, size(self.time_values, 2));
                             GQGsr = zeros(d1*d1, size(self.time_values, 2));
                             for i = 1:size(self.time_values, 2)
-                                Q = reach.matrix_eval(vEll.shape, self.time_values(i));
+                                Q = self.matrix_eval(vEll.shape, self.time_values(i));
                                 if (Q ~= Q.') | (min(eig(Q)) < 0)
-                                    error('REACH: shape matrix of ellipsoidal disturbance bounds must be positive definite.')
+                                    throwerror(['REACH: shape matrix of ',...
+                                        'ellipsoidal disturbance bounds ',...
+                                        'must be positive definite.']);
                                 end
                                 Q           = G * Q * G';
                                 GQG(:, i)   = reshape(Q, d1*d1, 1);
@@ -1114,14 +1129,16 @@ classdef ReachDiscrete < elltool.reach.AReach
                         for i = 1:size(self.time_values, 2)
                             G = reshape(GG(:, i), d1, dd);
                             if iscell(vEll.center)
-                                q = reach.matrix_eval(vEll.center, self.time_values(i));
+                                q = self.matrix_eval(vEll.center, self.time_values(i));
                             else
                                 q = vEll.center;
                             end
                             if iscell(vEll.shape)
-                                Q = reach.matrix_eval(vEll.shape, self.time_values(i));
+                                Q = self.matrix_eval(vEll.shape, self.time_values(i));
                                 if (Q ~= Q.') | (min(eig(Q)) < 0)
-                                    error('REACH: shape matrix of ellipsoidal disturbance bounds must be positive definite.')
+                                    throwerror(['REACH: shape matrix of ',...
+                                        'ellipsoidal disturbance bounds ',...
+                                        'must be positive definite.']);
                                 end
                             else
                                 Q = vEll.shape;
@@ -1157,7 +1174,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 elseif iscell(noiseEll)
                     w = [];
                     for i = 1:size(self.time_values, 2)
-                        w = [w reach.matrix_eval(noiseEll.center, self.time_values(i))];
+                        w = [w self.matrix_eval(noiseEll.center, self.time_values(i))];
                     end
                     if linSys.isdiscrete()
                         mydata.w = w;
@@ -1169,10 +1186,11 @@ classdef ReachDiscrete < elltool.reach.AReach
                         w = [];
                         W = [];
                         for i = 1:size(self.time_values, 2)
-                            w  = [w reach.matrix_eval(noiseEll.center, self.time_values(i))];
-                            ww = reach.matrix_eval(noiseEll.shape, self.time_values(i));
+                            w  = [w self.matrix_eval(noiseEll.center, self.time_values(i))];
+                            ww = self.matrix_eval(noiseEll.shape, self.time_values(i));
                             if (ww ~= ww.') | (min(eig(ww)) < 0)
-                                error('REACH: shape matrix of ellipsoidal noise bounds must be positive definite.')
+                                throwerror(['REACH: shape matrix of ',...
+                                    'ellipsoidal noise bounds must be positive definite.']);
                             end
                             W  = [W reshape(ww, dy*dy, 1)];
                         end
@@ -1186,7 +1204,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                     elseif iscell(noiseEll.center)
                         w = [];
                         for i = 1:size(self.time_values, 2)
-                            w = [w reach.matrix_eval(noiseEll.center, self.time_values(i))];
+                            w = [w self.matrix_eval(noiseEll.center, self.time_values(i))];
                         end
                         if linSys.isdiscrete()
                             mydata.w = w;
@@ -1197,9 +1215,10 @@ classdef ReachDiscrete < elltool.reach.AReach
                     else
                         W = [];
                         for i = 1:size(self.time_values, 2)
-                            ww = reach.matrix_eval(noiseEll.shape, self.time_values(i));
+                            ww = self.matrix_eval(noiseEll.shape, self.time_values(i));
                             if (ww ~= ww.') | (min(eig(ww)) < 0)
-                                error('REACH: shape matrix of ellipsoidal noise bounds must be positive definite.')
+                                throwerror(['REACH: shape matrix of ',...
+                                    'ellipsoidal noise bounds must be positive definite.']);
                             end
                             W  = [W reshape(ww, dy*dy, 1)];
                         end
@@ -1291,11 +1310,11 @@ classdef ReachDiscrete < elltool.reach.AReach
                     l0 = l0Mat(:, ii);
                     if linSys.isdiscrete()
                         if linSys.hasdisturbance()
-                            [Q, L] = reach.eedist_de(size(tvals, 2),...
-                                Q0, l0, mydata, d1, back, OptStruct.minmaxRS.absTol);
+                            [Q, L] = self.eedist_de(size(tvals, 2),...
+                                Q0, l0, mydata, d1, back, self.absTol);
                         elseif ~(isempty(mydata.BPB))
-                            [Q, L] = reach.eesm_de(size(tvals, 2),...
-                                Q0, l0, mydata, d1, back,self.absTol);
+                            [Q, L] = self.eesm_de(size(tvals, 2),...
+                                Q0, l0, mydata, d1, back, self.absTol);
                         else
                             Q = [];
                             L = [];
@@ -1332,10 +1351,10 @@ classdef ReachDiscrete < elltool.reach.AReach
                     l0 = l0Mat(:, ii);
                     if linSys.isdiscrete()
                         if linSys.hasdisturbance()
-                            [Q, L] = reach.iedist_de(size(tvals, 2),...
+                            [Q, L] = self.iedist_de(size(tvals, 2),...
                                 Q0, l0, mydata, d1, back, OptStruct.minmax, self.absTol);
                         elseif ~(isempty(mydata.BPB))
-                            [Q, L] = reach.iesm_de(size(tvals, 2),...
+                            [Q, L] = self.iesm_de(size(tvals, 2),...
                                 Q0, l0, mydata, d1, back,self.absTol);
                         else
                             Q = [];
@@ -1350,7 +1369,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                         elseif ~(isempty(mydata.BPB))
                             [tt, Q] = ell_ode_solver(@ell_iesm_ode,...
                                 tvals, reshape(M, d1*d1, 1), M*l0, l0, mydata, d1, back);
-                            Q = reach.fix_iesm(Q', d1);
+                            Q = self.fix_iesm(Q', d1);
                         else
                             Q = [];
                         end
@@ -1385,8 +1404,35 @@ classdef ReachDiscrete < elltool.reach.AReach
             end
         end
         %
+        function newReachObj = getCopy(self)
+            newReachObj = elltool.reach.ReachDiscrete();
+            newReachObj.absTol = self.absTol;
+            newReachObj.relTol = self.relTol;
+            newReachObj.nPlot2dPoints = self.nPlot2dPoints;
+            newReachObj.nPlot3dPoints = self.nPlot3dPoints;
+            newReachObj.nTimeGridPoints = self.nTimeGridPoints;
+            newReachObj.system = self.system;
+            newReachObj.t0 = self.t0;
+            newReachObj.initial_directions = self.initial_directions;
+            newReachObj.time_values = self.time_values;
+            newReachObj.center_values = self.center_values;
+            newReachObj.l_values = self.l_values;
+            newReachObj.ea_values = self.ea_values;
+            newReachObj.ia_values = self.ia_values;
+            newReachObj.mu_values = self.mu_values;
+            newReachObj.minmax = self.minmax;
+            newReachObj.projection_basis = self.projection_basis;
+            newReachObj.calc_data = self.calc_data;
+            newReachObj.switchSysTimeVec = self.switchSysTimeVec;
+            newReachObj.x0Ellipsoid = self.x0Ellipsoid;
+            newReachObj.linSysCVec = self.linSysCVec;
+            newReachObj.isCut = self.isCut;
+            newReachObj.isProj = self.isProj;
+            newReachObj.projectionBasisMat = self.projectionBasisMat; 
+        end
+        %
         function cutObj = cut(self, cutTimeVec)
-            cutObj = elltool.reach.ReachDiscrete();
+            cutObj = self.getCopy();
             if self.isempty()
                 return;
             end
@@ -1404,15 +1450,19 @@ classdef ReachDiscrete < elltool.reach.AReach
             if ~(isa(cutTimeVec, 'double')) || (m ~= 1) || ((n ~= 1) && (n ~= 2))
                 if linSys.isdiscrete()
                     if back > 0
-                        error('CUT: second input argument must specify time interval in the form ''[k1 k0]'', or ''k''.');
+                        throwerror(['CUT: second input argument must ',...
+                            'specify time interval in the form ''[k1 k0]'', or ''k''.']);
                     else
-                        error('CUT: second input argument must specify time interval in the form ''[k0 k1]'', or ''k''.');
+                        throwerror(['CUT: second input argument must ',...
+                            'specify time interval in the form ''[k0 k1]'', or ''k''.']);
                     end
                 else
                     if back > 0
-                        error('CUT: second input argument must specify time interval in the form ''[t1 t0]'', or ''t''.');
+                        throwerror(['CUT: second input argument must ',...
+                            'specify time interval in the form ''[t1 t0]'', or ''t''.']);
                     else
-                        error('CUT: second input argument must specify time interval in the form ''[t0 t1]'', or ''t''.');
+                        throwerror(['CUT: second input argument must ',...
+                            'specify time interval in the form ''[t0 t1]'', or ''t''.']);
                     end
                 end
             end
@@ -1425,7 +1475,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             smx = min([tmx Tmx]);
             smn = max([tmn Tmn]);
             if smn > smx
-                error('CUT: specified time interval is out of range.');
+                throwerror('CUT: specified time interval is out of range.');
             end
             TT = self.time_values;
             NV = size(TT, 2);
@@ -1859,7 +1909,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             end
             if ~(isempty(self.projection_basis))
                 if size(self.projection_basis, 2) < dimension(self.system)
-                    error(['GET_GOODCURVES: this function cannot ',...
+                    throwerror(['GET_GOODCURVES: this function cannot ',...
                         'be used with projected reach sets.']);
                 end
             end
@@ -1868,7 +1918,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             LL = get_directions(self);
             d  = dimension(self);
             if size(LL, 2) ~= N
-                error('GET_GOODCURVES: reach set object is malformed.');
+                throwerror('GET_GOODCURVES: reach set object is malformed.');
             end
             for i = 1:N
                 L  = LL{i};
@@ -1909,7 +1959,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 if d > 3
                     msg = sprintf('%s\nUse projection.', msg);
                 end
-                error(msg);
+                throwerror(msg);
             end
             if nargin > 1
                 if isstruct(varargin{nargin - 1})
@@ -1951,7 +2001,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 end
             end
             if (nargin > 1) && ischar(varargin{1})
-                Options.color = reach.my_color_table(varargin{1});
+                Options.color = self.my_color_table(varargin{1});
             end
             E   = get_ea(self);
             clr = Options.color;
@@ -2157,7 +2207,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 if d > 3
                     msg = sprintf('%s\nUse projection.', msg);
                 end
-                error(msg);
+                throwerror(msg);
             end
             if nargin > 1
                 if isstruct(varargin{nargin - 1})
@@ -2199,7 +2249,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 end
             end
             if (nargin > 1) && ischar(varargin{1})
-                Options.color = reach.my_color_table(varargin{1});
+                Options.color = self.my_color_table(varargin{1});
             end
             E   = get_ia(self);
             clr = Options.color;
@@ -2405,17 +2455,17 @@ classdef ReachDiscrete < elltool.reach.AReach
         function projObj = projection(self, projMat)
             import elltool.conf.Properties;
             if ~(isa(projMat, 'double'))
-              error(['PROJECTION: second input argument ',...
+              throwerror(['PROJECTION: second input argument ',...
                   'must be matrix of basis vectors.']);
             end
-            projObj  = self;
+            projObj  = self.getCopy();
             if isempty(self)
                 return;
             end
             d      = dimension(self);
             [m, n] = size(projMat);
             if m ~= d
-                error(['PROJECTION: dimensions of the reach set ',...
+                throwerror(['PROJECTION: dimensions of the reach set ',...
                     'and the basis vectors do not match.']);
             end
             EA = [];
@@ -2459,13 +2509,14 @@ classdef ReachDiscrete < elltool.reach.AReach
         %
         function newReachObj = evolve(self, newEndTime, linSys)
             import elltool.conf.Properties;
+            import modgen.common.throwerror;
             if nargin < 2
-                error('EVOLVE: insufficient number of input arguments.');
+                throwerror('EVOLVE: insufficient number of input arguments.');
             end
             if isprojection(self)
-                error('EVOLVE: cannot compute the reach set for projection.');
+                throwerror('EVOLVE: cannot compute the reach set for projection.');
             end
-            newReachObj = self;
+            newReachObj = self.getCopy();
             if nargin < 3
                 linSys = newReachObj.system;
             end
@@ -2474,827 +2525,800 @@ classdef ReachDiscrete < elltool.reach.AReach
             end
             [d1, du, dy, dd] = dimension(linSys);
             if d1 ~= dimension(self.system)
-                error(['EVOLVE: dimensions of the old and ',...
+                throwerror(['EVOLVE: dimensions of the old and ',...
                     'new linear systems do not match.']);
             end
             newReachObj.system = linSys;
             newEndTime = [newReachObj.time_values(end) newEndTime(1, 1)];
-
-          if (newReachObj.t0 > newEndTime(1)) & (newEndTime(1) < newEndTime(2))
-            error('EVOLVE: reach set must evolve backward in time.');
-          end
-          if (newReachObj.t0 < newEndTime(1)) & (newEndTime(1) > newEndTime(2))
-            error('EVOLVE: reach set must evolve forward in time.');
-          end
-
-          Options               = [];
-          Options.approximation = 2;
-          if isempty(get_ea(self))
-            Options.approximation = 1;
-          elseif isempty(get_ia(self))
-            Options.approximation = 0;
-          end
-          Options.minmax        = newReachObj.minmax;
-
-          if isempty(self.calc_data)
-            Options.save_all = 0;
-          else
-            Options.save_all = 1;
-          end
-
-          % Create time grid
-          if isdiscrete(linSys)
-            newEndTime(1) = round(newEndTime(1));
-            newEndTime(2) = round(newEndTime(2));
-            if newEndTime(1) > newEndTime(2)
-              newReachObj.time_values = fliplr(newEndTime(2):newEndTime(1));
+            if (newReachObj.t0 > newEndTime(1)) &&...
+                    (newEndTime(1) < newEndTime(2))
+                throwerror('EVOLVE: reach set must evolve backward in time.');
+            end
+            if (newReachObj.t0 < newEndTime(1)) &&...
+                    (newEndTime(1) > newEndTime(2))
+                throwerror('EVOLVE: reach set must evolve forward in time.');
+            end
+            Options = [];
+            Options.approximation = 2;
+            if isempty(get_ea(self))
+                Options.approximation = 1;
+            elseif isempty(get_ia(self))
+                Options.approximation = 0;
+            end
+            Options.minmax = newReachObj.minmax;
+            if isempty(self.calc_data)
+                Options.save_all = 0;
             else
-              newReachObj.time_values = newEndTime(1):newEndTime(2);
+                Options.save_all = 1;
             end
-          else
-            newReachObj.time_values = linspace(newEndTime(1), newEndTime(2), self.nTimeGridPoints());
-          end
-
-          if newReachObj.time_values(1) > newReachObj.time_values(end)
-            back = 1;
-            tvals = - newReachObj.time_values;
-          else
-            back = 0;
-            tvals = newReachObj.time_values;
-          end
-
-          www = warning;
-          warning off;
-
-          newReachObj.ea_values          = [];
-          newReachObj.ia_values          = [];
-          newReachObj.l_values           = [];
-          newReachObj.initial_directions = [];
-          newReachObj.center_values      = [];
-          newReachObj.calc_data          = [];
-
-          %%% Get new initial directions. %%%
-          LL = get_directions(self);
-          nn = size(LL, 2);
-          for i = 1:nn
-            L                     = LL{i};
-            newReachObj.initial_directions = [newReachObj.initial_directions L(:, end)];
-          end
-
-          %%% Perform matrix, control, disturbance and noise evaluations. %%%
-          %%% Create splines if needed.                                   %%%
-
-          if Properties.getIsVerbose()
-            fprintf('Performing preliminary function evaluations...\n');
-          end
-
-          mydata.A     = [];
-          mydata.Bp    = [];
-          mydata.BPB   = [];
-          mydata.BPBsr = [];
-          mydata.Gq    = [];
-          mydata.GQG   = [];
-          mydata.GQGsr = [];
-          mydata.C     = [];
-          mydata.w     = [];
-          mydata.W     = [];
-          mydata.Phi   = [];
-          mydata.Phinv = [];
-          mydata.delta = [];
-          mydata.mu    = [];
-
-          % matrix A
-          if iscell(linSys.A)
-            AA = [];
-            DD = [];
-            AC = [];
-            for i = 1:size(newReachObj.time_values, 2)
-              A  = reach.matrix_eval(linSys.A, newReachObj.time_values(i));
-              AC = [AC reshape(A, d1*d1, 1)];
-              if isdiscrete(linSys) & (rank(A) < d1)
-                A = ell_regularize(A);
-                DD = [DD 1];
-              elseif isdiscrete(linSys)
-                DD = [DD 0];
-              end
-              AA = [AA reshape(A, d1*d1, 1)];
-            end
+            % Create time grid
             if isdiscrete(linSys)
-              mydata.A     = AA;
-              mydata.delta = DD;
+                newEndTime(1) = round(newEndTime(1));
+                newEndTime(2) = round(newEndTime(2));
+                if newEndTime(1) > newEndTime(2)
+                    newReachObj.time_values = fliplr(newEndTime(2):newEndTime(1));
+                else
+                    newReachObj.time_values = newEndTime(1):newEndTime(2);
+                end
             else
-              mydata.A = spline(newReachObj.time_values, AA);
+                newReachObj.time_values =...
+                    linspace(newEndTime(1), newEndTime(2), self.nTimeGridPoints());
             end
-          else
-            AC = linSys.A;
-            if isdiscrete(linSys) & (rank(linSys.A) < d1)
-              mydata.A     = ell_regularize(linSys.A);
-              mydata.delta = 1;
-            elseif isdiscrete(linSys)
-              mydata.A     = linSys.A;
-              mydata.delta = 0;
+            if newReachObj.time_values(1) > newReachObj.time_values(end)
+                back = 1;
+                tvals = - newReachObj.time_values;
             else
-              mydata.A     = linSys.A;
+                back = 0;
+                tvals = newReachObj.time_values;
             end
-          end
-
-          % matrix B
-          if iscell(linSys.B)
-            BB = [];
-            for i = 1:size(newReachObj.time_values, 2)
-              B  = reach.matrix_eval(linSys.B, newReachObj.time_values(i));
-              BB = [BB reshape(B, d1*du, 1)];
+            www = warning;
+            warning off;
+            newReachObj.ea_values          = [];
+            newReachObj.ia_values          = [];
+            newReachObj.l_values           = [];
+            newReachObj.initial_directions = [];
+            newReachObj.center_values      = [];
+            newReachObj.calc_data          = [];
+            %%% Get new initial directions.
+            LL = get_directions(self);
+            nn = size(LL, 2);
+            for i = 1:nn
+                L = LL{i};
+                newReachObj.initial_directions =...
+                    [newReachObj.initial_directions L(:, end)];
             end
-          else
-            BB = reshape(linSys.B, d1*du, 1);
-          end
-
-          % matrix G
-          GG = [];
-          if iscell(linSys.G)
-            for i = 1:size(newReachObj.time_values, 2)
-              B  = reach.matrix_eval(linSys.G, newReachObj.time_values(i));
-              GG = [GG reshape(B, d1*dd, 1)];
+            %%% Perform matrix, control, disturbance and noise evaluations.
+            %%% Create splines if needed.
+            if Properties.getIsVerbose()
+                fprintf('Performing preliminary function evaluations...\n');
             end
-          elseif ~(isempty(linSys.G))
-            GG = reshape(linSys.G, d1*dd, 1);
-          end
-
-          % matrix C
-          if iscell(linSys.C)
-            CC = [];
-            for i = 1:size(newReachObj.time_values, 2)
-              C  = reach.matrix_eval(linSys.C, newReachObj.time_values(i));
-              CC = [CC reshape(C, d1*dy, 1)];
-            end
-            if isdiscrete(linSys)
-              mydata.C = CC;
-            else
-              mydata.C = spline(newReachObj.time_values, CC);
-            end
-          else
-            mydata.C = linSys.C;
-          end
-
-          % expressions Bp and BPB'
-          if isa(linSys.control, 'ellipsoid')
-            [p, P] = parameters(linSys.control);
-            if size(BB, 2) == 1
-              B            = reshape(BB, d1, du);
-              mydata.Bp    = B * p;
-              mydata.BPB   = B * P * B';
-              mydata.BPBsr = sqrtm(mydata.BPB);
-              mydata.BPBsr = 0.5*(mydata.BPBsr + (mydata.BPBsr)');
-            else
-              Bp    = [];
-              BPB   = [];
-              BPBsr = [];
-              for i = 1:size(newReachObj.time_values, 2)
-                B     = reshape(BB(:, i), d1, du);
-                Bp    = [Bp B*p];
-            B     = B * P * B';
-                BPB   = [BPB reshape(B, d1*d1, 1)];
-            B     = sqrtm(B);
-            B     = 0.5*(B + B');
-                BPBsr = [BPBsr reshape(B, d1*d1, 1)];
-              end
-              if isdiscrete(linSys)
-                mydata.Bp    = Bp;
-                mydata.BPB   = BPB;
-                mydata.BPBsr = BPBsr;
-              else
-                mydata.Bp    = spline(newReachObj.time_values, Bp);
-                mydata.BPB   = spline(newReachObj.time_values, BPB);
-                mydata.BPBsr = spline(newReachObj.time_values, BPBsr);
-              end
-            end
-          elseif isa(linSys.control, 'double')
-            p  = linSys.control;
-            if size(BB, 2) == 1
-              mydata.Bp = reshape(BB, d1, du) * p;
-            else
-              Bp = [];
-              for i = 1:size(newReachObj.time_values, 2)
-                B  = reshape(BB(:, i), d1, du);
-                Bp = [Bp B*p];
-              end
-              if isdiscrete(linSys)
-                mydata.Bp = Bp;
-              else
-                mydata.Bp = spline(newReachObj.time_values, Bp);
-              end
-            end
-          elseif iscell(linSys.control)
-            p  = linSys.control;
-            Bp = [];
-            for i = 1:size(newReachObj.time_values, 2)
-              if size(BB, 2) == 1
-                B = reshape(BB, d1, du);
-              else
-                B = reshape(BB(:, i), d1, du);
-              end
-              Bp = [Bp B*reach.matrix_eval(p, newReachObj.time_values(i))];
-            end
-            if isdiscrete(linSys)
-              mydata.Bp = Bp;
-            else
-              mydata.Bp = spline(newReachObj.time_values, Bp);
-            end
-          elseif isstruct(linSys.control)
-            if size(BB, 2) == 1
-              B = reshape(BB, d1, du);
-              if iscell(linSys.control.center) & iscell(linSys.control.shape)
-                Bp    = [];
-                BPB   = [];
-                BPBsr = [];
-                for i = 1:size(newReachObj.time_values, 2)
-                  p = reach.matrix_eval(linSys.control.center, newReachObj.time_values(i));
-                  P = reach.matrix_eval(linSys.control.shape, newReachObj.time_values(i));
-                  if (P ~= P') | (min(eig(P)) < 0)
-                    error('EVOLVE: shape matrix of ellipsoidal control bounds must be positive definite.')
-                  end
-                  Bp    = [Bp B*p];
-              P     = B * P * B';
-                  BPB   = [BPB reshape(P, d1*d1, 1)];
-                  P     = sqrtm(P);
-              P     = 0.5*(P + P');
-                  BPBsr = [BPBsr reshape(P, d1*d1, 1)];
-                end
-                if isdiscrete(linSys)
-                  mydata.Bp    = Bp;
-                  mydata.BPB   = BPB;
-                  mydata.BPBsr = BPBsr;
-                else
-                  mydata.Bp    = spline(newReachObj.time_values, Bp);
-                  mydata.BPB   = spline(newReachObj.time_values, BPB);
-                  mydata.BPBsr = spline(newReachObj.time_values, BPBsr);
-                end
-              elseif iscell(linSys.control.center)
-                Bp  = [];
-                for i = 1:size(newReachObj.time_values, 2)
-                  p  = reach.matrix_eval(linSys.control.center, newReachObj.time_values(i));
-                  Bp = [Bp B*p];
-                end
-                if isdiscrete(linSys)
-                  mydata.Bp  = Bp;
-                else
-                  mydata.Bp  = spline(newReachObj.time_values, Bp);
-                end
-                mydata.BPB   = B * linSys.control.shape * B';
-                mydata.BPBsr = sqrtm(mydata.BPB);
-                mydata.BPBsr = 0.5*(mydata.BPBsr + (mydata.BPBsr)');
-              else
-                BPB   = [];
-                BPBsr = [];
-                for i = 1:size(newReachObj.time_values, 2)
-                  P   = reach.matrix_eval(linSys.control.shape, newReachObj.time_values(i));
-                  if (P ~= P') | (min(eig(P)) < 0)
-                    error('EVOLVE: shape matrix of ellipsoidal control bounds must be positive definite.')
-                  end
-                  P     = B * P * B';
-                  BPB   = [BPB reshape(P, d1*d1, 1)];
-                  P     = sqrtm(P);
-                  P     = 0.5*(P + P');
-                  BPBsr = [BPBsr reshape(P, d1*d1, 1)];
-                end
-                mydata.Bp = B * linSys.control.center;
-                if isdiscrete(linSys)
-                  mydata.BPB   = BPB;
-                  mydata.BPBsr = BPBsr;
-                else
-                  mydata.BPB   = spline(newReachObj.time_values, BPB);
-                  mydata.BPBsr = spline(newReachObj.time_values, BPBsr);
-                end
-              end
-            else
-              Bp    = [];
-              BPB   = [];
-              BPBsr = [];
-              for i = 1:size(newReachObj.time_values, 2)
-                B = reshape(BB(:, i), d1, du);
-                if iscell(linSys.control.center)
-                  p = reach.matrix_eval(linSys.control.center, newReachObj.time_values(i));
-                else
-                  p = linSys.control.center;
-                end
-                if iscell(linSys.control.shape)
-                  P = reach.matrix_eval(linSys.control.shape, newReachObj.time_values(i));
-                  if (P ~= P') | (min(eig(P)) < 0)
-                    error('EVOLVE: shape matrix of ellipsoidal control bounds must be positive definite.')
-                  end
-                else
-                  P = linSys.control.shape;
-                end
-                Bp    = [Bp B*p];
-                P     = B * P * B';
-                BPB   = [BPB reshape(P, d1*d1, 1)];
-                P     = sqrtm(P);
-                P     = 0.5*(P + P');
-                BPBsr = [BPBsr reshape(P, d1*d1, 1)];
-              end
-              if isdiscrete(linSys)
-                mydata.Bp    = Bp;
-                mydata.BPB   = BPB;
-                mydata.BPBsr = BPBsr;
-              else
-                mydata.Bp    = spline(newReachObj.time_values, Bp);
-                mydata.BPB   = spline(newReachObj.time_values, BPB);
-                mydata.BPBsr = spline(newReachObj.time_values, BPBsr);
-              end
-            end
-          end
-
-          % expressions Gq and GQG'
-          if ~(isempty(GG))
-            if isa(linSys.disturbance, 'ellipsoid')
-              [q, Q] = parameters(linSys.disturbance);
-              if size(GG, 2) == 1
-                G            = reshape(GG, d1, dd);
-                mydata.Gq    = G * q;
-                mydata.GQG   = G * Q * G';
-                mydata.GQGsr = sqrtm(mydata.GQG);
-                mydata.GQGsr = 0.5*(mydata.GQGsr + (mydata.GQGsr)');
-              else
-                Gq    = [];
-                GQG   = [];
-                GQGsr = [];
-                for i = 1:size(newReachObj.time_values, 2)
-                  G     = reshape(GG(:, i), d1, dd);
-                  Gq    = [Gq G*q];
-                  G     = G * Q * G';
-                  GQG   = [GQG reshape(G, d1*d1, 1)];
-                  G     = sqrtm(G);
-                  G     = 0.5*(G + G');
-                  GQGsr = [GQGsr reshape(G, d1*d1, 1)];
-                end
-                if isdiscrete(linSys)
-                  mydata.Gq    = Gq;
-                  mydata.GQG   = GQG;
-                  mydata.GQGsr = GQGsr;
-                else
-                  mydata.Gq    = spline(newReachObj.time_values, Gq);
-                  mydata.GQG   = spline(newReachObj.time_values, GQG);
-                  mydata.GQGsr = spline(newReachObj.time_values, GQGsr);
-                end
-              end
-            elseif isa(linSys.disturbance, 'double')
-              q  = linSys.disturbance;
-              if size(GG, 2) == 1
-                mydata.Gq = reshape(GG, d1, dd) * q;
-              else
-                Gq = [];
-                for i = 1:size(newReachObj.time_values, 2)
-                  G  = reshape(GG(:, i), d1, dd);
-                  Gq = [Gq G*q];
-                end
-                if isdiscrete(linSys)
-                  mydata.Gq = Gq;
-                else
-                  mydata.Gq = spline(newReachObj.time_values, Gq);
-                end
-              end
-            elseif iscell(linSys.disturbance)
-              q  = linSys.disturbance;
-              Gq = [];
-              for i = 1:size(newReachObj.time_values, 2)
-                if size(GG, 2) == 1
-                  G = reshape(GG, d1, dd);
-                else
-                  G = reshape(GG(:, i), d1, dd);
-                end
-                Gq = [Gq G*reach.matrix_eval(q, newReachObj.time_values(i), isdiscrete(linSys))];
-              end
-              if isdiscrete(linSys)
-                mydata.Gq = Gq;
-              else
-                mydata.Gq = spline(newReachObj.time_values, Gq);
-              end
-            elseif isstruct(linSys.disturbance)
-              if size(GG, 2) == 1
-                G = reshape(GG, d1, dd);
-                if iscell(linSys.disturbance.center) & iscell(linSys.disturbance.shape)
-                  Gq    = [];
-                  GQG   = [];
-                  GQGsr = [];
-                  for i = 1:size(newReachObj.time_values, 2)
-                    q = reach.matrix_eval(linSys.disturbance.center, newReachObj.time_values(i));
-                    Q = reach.matrix_eval(linSys.disturbance.shape, newReachObj.time_values(i));
-                    if (Q ~= Q') | (min(eig(Q)) < 0)
-                      error('EVOLVE: shape matrix of ellipsoidal disturbance bounds must be positive definite.')
-                    end
-                    Gq    = [Gq G*q];
-                    Q     = G * Q * G';
-                    GQG   = [GQG reshape(Q, d1*d1, 1)];
-                    Q     = sqrtm(Q);
-                    Q     = 0.5*(Q + Q');
-                    GQGsr = [GQGsr reshape(Q, d1*d1, 1)];
-                  end
-                  if isdiscrete(linSys)
-                    mydata.Gq    = Gq;
-                    mydata.GQG   = GQG;
-                    mydata.GQGsr = GQGsr;
-                  else
-                    mydata.Gq    = spline(newReachObj.time_values, Gq);
-                    mydata.GQG   = spline(newReachObj.time_values, GQG);
-                    mydata.GQGsr = spline(newReachObj.time_values, GQGsr);
-                  end
-                elseif iscell(linSys.disturbance.center)
-                  Gq  = [];
-                  for i = 1:size(newReachObj.time_values, 2)
-                    q  = reach.matrix_eval(linSys.disturbance.center, newReachObj.time_values(i));
-                    Gq = [Gq G*q];
-                  end
-                  if isdiscrete(linSys)
-                    mydata.Gq  = Gq;
-                  else
-                    mydata.Gq  = spline(newReachObj.time_values, Gq);
-                  end
-                  mydata.GQG   = G * linSys.disturbance.shape * G';
-                  mydata.GQGsr = sqrtm(mydata.GQG);
-                  mydata.GQGsr = 0.5*(mydata.GQGsr + (mydata.GQGsr)');
-                else
-                  GQG   = [];
-                  GQGsr = [];
-                  for i = 1:size(newReachObj.time_values, 2)
-                    Q   = reach.matrix_eval(linSys.disturbance.shape, newReachObj.time_values(i));
-                    if (Q ~= Q') | (min(eig(Q)) < 0)
-                      error('EVOLVE: shape matrix of ellipsoidal disturbance bounds must be positive definite.')
-                    end
-                    Q     = G * Q * G';
-                    GQG   = [GQG reshape(Q, d1*d1, 1)];
-                    Q     = sqrtm(Q);
-                    Q     = 0.5*(Q + Q');
-                    GQGsr = [GQGsr reshape(Q, d1*d1, 1)];
-                  end
-                  mydata.Gq  = G * linSys.disturbance.center;
-                  if isdiscrete(linSys)
-                    mydata.GQG   = GQG;
-                    mydata.GQGsr = GQGsr;
-                  else
-                    mydata.GQG   = spline(newReachObj.time_values, GQG);
-                    mydata.GQGsr = spline(newReachObj.time_values, GQGsr);
-                  end
-                end
-              else
-                Gq    = [];
-                GQG   = [];
-                GQGsr = [];
-                for i = 1:size(newReachObj.time_values, 2)
-                  G = reshape(GG(:, i), d1, dd);
-                  if iscell(linSys.disturbance.center)
-                    q = reach.matrix_eval(linSys.disturbance.center, newReachObj.time_values(i));
-                  else
-                    q = linSys.disturbance.center;
-                  end
-                  if iscell(linSys.disturbance.shape)
-                    Q = reach.matrix_eval(linSys.disturbance.shape, newReachObj.time_values(i));
-                    if (Q ~= Q') | (min(eig(Q)) < 0)
-                      error('EVOLVE: shape matrix of ellipsoidal disturbance bounds must be positive definite.')
-                    end
-                  else
-                    Q = linSys.disturbance.shape;
-                  end
-                  Gq  = [Gq G*q];
-                  Q     = G * Q * G';
-                  GQG   = [GQG reshape(Q, d1*d1, 1)];
-                  Q     = sqrtm(Q);
-                  Q     = 0.5*(Q + Q');
-                  GQGsr = [GQGsr reshape(Q, d1*d1, 1)];
-                end
-                if isdiscrete(linSys)
-                  mydata.Gq    = Gq;
-                  mydata.GQG   = GQG;
-                  mydata.GQGsr = GQGsr;
-                else
-                  mydata.Gq    = spline(newReachObj.time_values, Gq);
-                  mydata.GQG   = spline(newReachObj.time_values, GQG);
-                  mydata.GQGsr = spline(newReachObj.time_values, GQGsr);
-                end
-              end
-            end
-          end
-
-          % expressions w and W
-          if ~(isempty(linSys.noise))
-            if isa(linSys.noise, 'ellipsoid')
-              [w, W]   = parameters(linSys.noise);
-              mydata.w = w;
-              mydata.W = W;
-            elseif isa(linSys.noise, 'double')
-              mydata.w = linSys.noise;
-            elseif iscell(linSys.noise)
-              w = [];
-              for i = 1:size(newReachObj.time_values, 2)
-                w = [w reach.matrix_eval(linSys.noise.center, newReachObj.time_values(i))];
-              end
-              if isdiscrete(linSys)
-                mydata.w = w;
-              else
-                mydata.w = spline(newReachObj.time_values, w);
-              end
-            elseif isstruct(linSys.noise)
-              if iscell(linSys.noise.center) & iscell(linSys.noise.shape)
-                w = [];
-                W = [];
-                for i = 1:size(newReachObj.time_values, 2)
-                  w  = [w reach.matrix_eval(linSys.noise.center, newReachObj.time_values(i))];
-                  ww = reach.matrix_eval(linSys.noise.shape, newReachObj.time_values(i));
-                  if (ww ~= ww') | (min(eig(ww)) < 0)
-                    error('EVOLVE: shape matrix of ellipsoidal noise bounds must be positive definite.')
-                  end
-                  W  = [W reshape(ww, dy*dy, 1)];
-                end
-                if isdiscrete(linSys)
-                  mydata.w = w;
-                  mydata.W = W
-                else
-                  mydata.w = spline(newReachObj.time_values, w);
-                  mydata.W = spline(newReachObj.time_values, W);
-                end
-              elseif iscell(linSys.noise.center)
-                w = [];
-                for i = 1:size(newReachObj.time_values, 2)
-                  w = [w reach.matrix_eval(linSys.noise.center, newReachObj.time_values(i))];
-                end
-                if isdiscrete(linSys)
-                  mydata.w = w;
-                else
-                  mydata.w = spline(newReachObj.time_values, w);
-                end
-                mydata.W = linSys.noise.shape;
-              else
-                W = [];
-                for i = 1:size(newReachObj.time_values, 2)
-                  ww = reach.matrix_eval(linSys.noise.shape, newReachObj.time_values(i));
-                  if (ww ~= ww') | (min(eig(ww)) < 0)
-                    error('EVOLVE: shape matrix of ellipsoidal noise bounds must be positive definite.')
-                  end
-                  W  = [W reshape(ww, dy*dy, 1)];
-                end
-                mydata.w = linSys.noise.center;
-                if isdiscrete(linSys)
-                  mydata.W = W;
-                else
-                  mydata.W = spline(newReachObj.time_values, W);
-                end
-              end
-            end
-          end
-          clear A B C AA BB CC DD Bp BPB Gq GQG p P q Q w W ww;
-
-
-
-
-
-          %%% Compute state transition matrix. %%%
-
-          if Properties.getIsVerbose()
-            fprintf('Computing state transition matrix...\n');
-          end
-
-          if isdiscrete(linSys)
-        %    if min(size(mydata.A) == [d1 d1]) > 0   % discrete system with constant A
-        %      t0    = RS.time_values(1);
-        %      Phi   = [];
-        %      Phinv = [];
-        %      for i = 1:size(RS.time_values, 2)
-        %        P     = (mydata.A)^(abs(RS.time_values(i) - t0));
-        %        PP    = ell_inv(P);
-        %        Phi   = [Phi reshape(P, d1*d1, 1)];
-        %        Phinv = [Phinv reshape(PP, d1*d1, 1)];
-        %      end
-        %      mydata.Phi   = Phi;
-        %      mydata.Phinv = Phinv;
-        %    else   % discrete system with A[k]
-        %      P     = eye(d1);
-        %      Phi   = reshape(P, d1*d1, 1);
-        %      Phinv = reshape(P, d1*d1, 1);
-        %      for i = 1:(size(RS.time_values, 2) - 1)
-        %        if back > 0
-        %          P = P * ell_value_extract(mydata.A, i+1, [d1 d1]);
-        %        else
-        %          P = ell_value_extract(mydata.A, i, [d1 d1]) * P;
-        %        end
-        %        PP    = ell_inv(P);
-        %        Phi   = [Phi reshape(P, d1*d1, 1)];
-        %        Phinv = [Phinv reshape(PP, d1*d1, 1)];
-        %      end
-        %      mydata.Phi   = Phi;
-        %      mydata.Phinv = Phinv;
-        %    end
+            mydata.A     = [];
+            mydata.Bp    = [];
+            mydata.BPB   = [];
+            mydata.BPBsr = [];
+            mydata.Gq    = [];
+            mydata.GQG   = [];
+            mydata.GQGsr = [];
+            mydata.C     = [];
+            mydata.w     = [];
+            mydata.W     = [];
             mydata.Phi   = [];
             mydata.Phinv = [];
-          else
-            if isa(mydata.A, 'double')   % continuous system with constant A
-              t0    = newReachObj.time_values(1);
-              Phi   = [];
-              Phinv = [];
-              for i = 1:size(newReachObj.time_values, 2)
-                P     = expm(mydata.A * abs(newReachObj.time_values(i) - t0));
-                PP    = ell_inv(P);
-                Phi   = [Phi reshape(P, d1*d1, 1)];
-                Phinv = [Phinv reshape(PP, d1*d1, 1)];
-              end
-              mydata.Phi   = spline(newReachObj.time_values, Phi);
-              mydata.Phinv = spline(newReachObj.time_values, Phinv);
-            else   % continuous system with A(t)
-              I0        = reshape(eye(d1), d1*d1, 1);
-              [tt, Phi] = ell_ode_solver(@ell_stm_ode, tvals, I0, mydata, d1, back);
-              Phi       = Phi';
-              Phinv     = [];
-              for i = 1:size(newReachObj.time_values, 2)
-                Phinv = [Phinv reshape(ell_inv(reshape(Phi(:, i), d1, d1)), d1*d1, 1)];
-              end
-              mydata.Phi   = spline(newReachObj.time_values, Phi);
-              mydata.Phinv = spline(newReachObj.time_values, Phinv);
+            mydata.delta = [];
+            mydata.mu    = [];
+            % matrix A
+            aMat = linSys.getAtMat();
+            if iscell(aMat)
+                AA = [];
+                DD = [];
+                AC = [];
+                for i = 1:size(newReachObj.time_values, 2)
+                    A = self.matrix_eval(aMat, newReachObj.time_values(i));
+                    AC = [AC reshape(A, d1*d1, 1)];
+                    if isdiscrete(linSys) && (rank(A) < d1)
+                        A = ell_regularize(A);
+                        DD = [DD 1];
+                    elseif isdiscrete(linSys)
+                        DD = [DD 0];
+                    end
+                    AA = [AA reshape(A, d1*d1, 1)];
+                end
+                if isdiscrete(linSys)
+                    mydata.A     = AA;
+                    mydata.delta = DD;
+                else
+                    mydata.A = spline(newReachObj.time_values, AA);
+                end
+            else
+                AC = aMat;
+                if isdiscrete(linSys) && (rank(aMat) < d1)
+                    mydata.A     = ell_regularize(aMat);
+                    mydata.delta = 1;
+                elseif isdiscrete(linSys)
+                    mydata.A     = aMat;
+                    mydata.delta = 0;
+                else
+                    mydata.A     = aMat;
+                end
             end
-          end
-          clear Phi Phinv P PP t0 I0;
-
-
-
-
-
-          %%% Compute the center of the reach set. %%%
-
-          if Properties.getIsVerbose()
-            fprintf('Computing the trajectory of the reach set center...\n');
-          end
-
-          x0 = self.center_values(:, end);
-
-          if isdiscrete(linSys)   % discrete-time system
-            xx = x0;
-            x  = x0;
-            for i = 1:(size(newReachObj.time_values, 2) - 1)
-              Bp = ell_value_extract(mydata.Bp, i+back, [d1 1]);
-              if ~(isempty(mydata.Gq))
-                Gq = ell_value_extract(mydata.Gq, i+back, [d1 1]);
-              else
-                Gq = zeros(d1, 1);
-              end
-              if back > 0
-                A = ell_value_extract(mydata.A, i+back, [d1 d1]);
-                x = ell_inv(A)*(x - Bp - Gq);
-              else
-                A = ell_value_extract(AC, i, [d1 d1]);
-                x = A*x + Bp + Gq;
-              end
-              xx = [xx x];
+            % matrix B
+            bMat = linSys.getBtMat();
+            if iscell(bMat)
+                BB = [];
+                for i = 1:size(newReachObj.time_values, 2)
+                    B  = self.matrix_eval(bMat, newReachObj.time_values(i));
+                    BB = [BB reshape(B, d1*du, 1)];
+                end
+            else
+                BB = reshape(bMat, d1*du, 1);
             end
-          else   % continuous-time system
-            [tt, xx] = ell_ode_solver(@ell_center_ode, tvals, x0, mydata, d1, back);
-            xx       = xx';
-          end
-          newReachObj.center_values = xx;
-          clear A AC xx;
-
-
-
-
-
-          %%% Compute external shape matrices. %%%
-
-          if (Options.approximation ~= 1)
+            % matrix G
+            gMat = linSys.getGtMat();
+            GG = [];
+            if iscell(gMat)
+                for i = 1:size(newReachObj.time_values, 2)
+                    B  = self.matrix_eval(gMat, newReachObj.time_values(i));
+                    GG = [GG reshape(B, d1*dd, 1)];
+                end
+            elseif ~(isempty(gMat))
+                GG = reshape(gMat, d1*dd, 1);
+            end
+            % matrix C
+            cMat = linSys.getCtMat();
+            if iscell(cMat)
+                CC = [];
+                for i = 1:size(newReachObj.time_values, 2)
+                    C  = self.matrix_eval(cMat, newReachObj.time_values(i));
+                    CC = [CC reshape(C, d1*dy, 1)];
+                end
+                if isdiscrete(linSys)
+                    mydata.C = CC;
+                else
+                    mydata.C = spline(newReachObj.time_values, CC);
+                end
+            else
+                mydata.C = cMat;
+            end
+            % expressions Bp and BPB'
+            uEll = linSys.getUBoundsEll();
+            if isa(uEll, 'ellipsoid')
+                [p, P] = parameters(uEll);
+                if size(BB, 2) == 1
+                    B            = reshape(BB, d1, du);
+                    mydata.Bp    = B * p;
+                    mydata.BPB   = B * P * B';
+                    mydata.BPBsr = sqrtm(mydata.BPB);
+                    mydata.BPBsr = 0.5*(mydata.BPBsr + (mydata.BPBsr)');
+                else
+                    Bp    = [];
+                    BPB   = [];
+                    BPBsr = [];
+                    for i = 1:size(newReachObj.time_values, 2)
+                        B     = reshape(BB(:, i), d1, du);
+                        Bp    = [Bp B*p];
+                        B     = B * P * B';
+                        BPB   = [BPB reshape(B, d1*d1, 1)];
+                        B     = sqrtm(B);
+                        B     = 0.5*(B + B');
+                        BPBsr = [BPBsr reshape(B, d1*d1, 1)];
+                    end
+                    if isdiscrete(linSys)
+                        mydata.Bp    = Bp;
+                        mydata.BPB   = BPB;
+                        mydata.BPBsr = BPBsr;
+                    else
+                        mydata.Bp    = spline(newReachObj.time_values, Bp);
+                        mydata.BPB   = spline(newReachObj.time_values, BPB);
+                        mydata.BPBsr = spline(newReachObj.time_values, BPBsr);
+                    end
+                end
+            elseif isa(uEll, 'double')
+                p  = uEll;
+                if size(BB, 2) == 1
+                    mydata.Bp = reshape(BB, d1, du) * p;
+                else
+                    Bp = [];
+                    for i = 1:size(newReachObj.time_values, 2)
+                        B  = reshape(BB(:, i), d1, du);
+                        Bp = [Bp B*p];
+                    end
+                    if isdiscrete(linSys)
+                        mydata.Bp = Bp;
+                    else
+                        mydata.Bp = spline(newReachObj.time_values, Bp);
+                    end
+                end
+            elseif iscell(uEll)
+                p  = uEll;
+                Bp = [];
+                for i = 1:size(newReachObj.time_values, 2)
+                    if size(BB, 2) == 1
+                        B = reshape(BB, d1, du);
+                    else
+                        B = reshape(BB(:, i), d1, du);
+                    end
+                    Bp = [Bp B*self.matrix_eval(p, newReachObj.time_values(i))];
+                end
+                if isdiscrete(linSys)
+                    mydata.Bp = Bp;
+                else
+                    mydata.Bp = spline(newReachObj.time_values, Bp);
+                end
+            elseif isstruct(uEll)
+                if size(BB, 2) == 1
+                    B = reshape(BB, d1, du);
+                    if iscell(uEll.center) & iscell(uEll.shape)
+                        Bp    = [];
+                        BPB   = [];
+                        BPBsr = [];
+                        for i = 1:size(newReachObj.time_values, 2)
+                            p = self.matrix_eval(uEll.center,...
+                                newReachObj.time_values(i));
+                            P = self.matrix_eval(uEll.shape,...
+                                newReachObj.time_values(i));
+                            if (P ~= P') | (min(eig(P)) < 0)
+                                throwerror(['EVOLVE: shape matrix of ',...
+                                    'ellipsoidal control bounds ',...
+                                    'must be positive definite.']);
+                            end
+                            Bp    = [Bp B*p];
+                            P     = B * P * B';
+                            BPB   = [BPB reshape(P, d1*d1, 1)];
+                            P     = sqrtm(P);
+                            P     = 0.5*(P + P');
+                            BPBsr = [BPBsr reshape(P, d1*d1, 1)];
+                        end
+                        if isdiscrete(linSys)
+                            mydata.Bp    = Bp;
+                            mydata.BPB   = BPB;
+                            mydata.BPBsr = BPBsr;
+                        else
+                            mydata.Bp    = spline(newReachObj.time_values, Bp);
+                            mydata.BPB   = spline(newReachObj.time_values, BPB);
+                            mydata.BPBsr = spline(newReachObj.time_values, BPBsr);
+                        end
+                    elseif iscell(uEll.center)
+                        Bp  = [];
+                        for i = 1:size(newReachObj.time_values, 2)
+                            p  = self.matrix_eval(uEll.center,...
+                                newReachObj.time_values(i));
+                            Bp = [Bp B*p];
+                        end
+                        if isdiscrete(linSys)
+                            mydata.Bp  = Bp;
+                        else
+                            mydata.Bp  = spline(newReachObj.time_values, Bp);
+                        end
+                        mydata.BPB   = B * uEll.shape * B';
+                        mydata.BPBsr = sqrtm(mydata.BPB);
+                        mydata.BPBsr = 0.5*(mydata.BPBsr + (mydata.BPBsr)');
+                    else
+                        BPB   = [];
+                        BPBsr = [];
+                        for i = 1:size(newReachObj.time_values, 2)
+                            P = self.matrix_eval(uEll.shape,...
+                            newReachObj.time_values(i));
+                            if (P ~= P') | (min(eig(P)) < 0)
+                            throwerror(['EVOLVE: shape matrix of ',...
+                                'ellipsoidal control bounds must ',...
+                                'be positive definite.']);
+                            end
+                            P     = B * P * B';
+                            BPB   = [BPB reshape(P, d1*d1, 1)];
+                            P     = sqrtm(P);
+                            P     = 0.5*(P + P');
+                            BPBsr = [BPBsr reshape(P, d1*d1, 1)];
+                        end
+                        mydata.Bp = B * uEll.center;
+                        if isdiscrete(linSys)
+                            mydata.BPB   = BPB;
+                            mydata.BPBsr = BPBsr;
+                        else
+                            mydata.BPB   = spline(newReachObj.time_values, BPB);
+                            mydata.BPBsr = spline(newReachObj.time_values, BPBsr);
+                        end
+                    end
+                else
+                    Bp    = [];
+                    BPB   = [];
+                    BPBsr = [];
+                    for i = 1:size(newReachObj.time_values, 2)
+                        B = reshape(BB(:, i), d1, du);
+                        if iscell(uEll.center)
+                            p = self.matrix_eval(uEll.center,...
+                                newReachObj.time_values(i));
+                        else
+                            p = uEll.center;
+                        end
+                        if iscell(uEll.shape)
+                            P = self.matrix_eval(uEll.shape,...
+                                newReachObj.time_values(i));
+                            if (P ~= P') | (min(eig(P)) < 0)
+                                throwerror(['EVOLVE: shape matrix of ',...
+                                    'ellipsoidal control bounds ',...
+                                    'must be positive definite.']);
+                            end
+                        else
+                            P = uEll.shape;
+                        end
+                        Bp    = [Bp B*p];
+                        P     = B * P * B';
+                        BPB   = [BPB reshape(P, d1*d1, 1)];
+                        P     = sqrtm(P);
+                        P     = 0.5*(P + P');
+                        BPBsr = [BPBsr reshape(P, d1*d1, 1)];
+                    end
+                    if isdiscrete(linSys)
+                        mydata.Bp    = Bp;
+                        mydata.BPB   = BPB;
+                        mydata.BPBsr = BPBsr;
+                    else
+                        mydata.Bp    = spline(newReachObj.time_values, Bp);
+                        mydata.BPB   = spline(newReachObj.time_values, BPB);
+                        mydata.BPBsr = spline(newReachObj.time_values, BPBsr);
+                    end
+                end
+            end
+            % expressions Gq and GQG'
+            vEll = linSys.getDistBoundsEll();
+            if ~(isempty(GG))
+                if isa(vEll, 'ellipsoid')
+                    [q, Q] = parameters(vEll);
+                    if size(GG, 2) == 1
+                        G = reshape(GG, d1, dd);
+                        mydata.Gq = G * q;
+                        mydata.GQG = G * Q * G';
+                        mydata.GQGsr = sqrtm(mydata.GQG);
+                        mydata.GQGsr = 0.5*(mydata.GQGsr + (mydata.GQGsr)');
+                    else
+                        Gq = [];
+                        GQG = [];
+                        GQGsr = [];
+                        for i = 1:size(newReachObj.time_values, 2)
+                            G     = reshape(GG(:, i), d1, dd);
+                            Gq    = [Gq G*q];
+                            G     = G * Q * G';
+                            GQG   = [GQG reshape(G, d1*d1, 1)];
+                            G     = sqrtm(G);
+                            G     = 0.5*(G + G');
+                            GQGsr = [GQGsr reshape(G, d1*d1, 1)];
+                        end
+                        if isdiscrete(linSys)
+                            mydata.Gq    = Gq;
+                            mydata.GQG   = GQG;
+                            mydata.GQGsr = GQGsr;
+                        else
+                            mydata.Gq    = spline(newReachObj.time_values, Gq);
+                            mydata.GQG   = spline(newReachObj.time_values, GQG);
+                            mydata.GQGsr = spline(newReachObj.time_values, GQGsr);
+                        end
+                    end
+                elseif isa(vEll, 'double')
+                    q  = vEll;
+                    if size(GG, 2) == 1
+                        mydata.Gq = reshape(GG, d1, dd) * q;
+                    else
+                        Gq = [];
+                        for i = 1:size(newReachObj.time_values, 2)
+                            G  = reshape(GG(:, i), d1, dd);
+                            Gq = [Gq G*q];
+                        end
+                        if isdiscrete(linSys)
+                            mydata.Gq = Gq;
+                        else
+                            mydata.Gq = spline(newReachObj.time_values, Gq);
+                        end
+                    end
+                elseif iscell(vEll)
+                    q  = vEll;
+                    Gq = [];
+                    for i = 1:size(newReachObj.time_values, 2)
+                        if size(GG, 2) == 1
+                            G = reshape(GG, d1, dd);
+                        else
+                            G = reshape(GG(:, i), d1, dd);
+                        end
+                        Gq = [Gq G*self.matrix_eval(q,...
+                            newReachObj.time_values(i), isdiscrete(linSys))];
+                    end
+                    if isdiscrete(linSys)
+                        mydata.Gq = Gq;
+                    else
+                        mydata.Gq = spline(newReachObj.time_values, Gq);
+                    end
+                elseif isstruct(vEll)
+                    if size(GG, 2) == 1
+                        G = reshape(GG, d1, dd);
+                        if iscell(vEll.center) &&...
+                                iscell(vEll.shape)
+                            Gq    = [];
+                            GQG   = [];
+                            GQGsr = [];
+                            for i = 1:size(newReachObj.time_values, 2)
+                                q = self.matrix_eval(...
+                                    vEll.center,...
+                                    newReachObj.time_values(i));
+                                Q = self.matrix_eval(...
+                                    vEll.shape,...
+                                    newReachObj.time_values(i));
+                                if (Q ~= Q') | (min(eig(Q)) < 0)
+                                    throwerror(['EVOLVE: shape matrix of ',...
+                                        'ellipsoidal disturbance ',...
+                                        'bounds must be positive definite.']);
+                                end
+                                Gq    = [Gq G*q];
+                                Q     = G * Q * G';
+                                GQG   = [GQG reshape(Q, d1*d1, 1)];
+                                Q     = sqrtm(Q);
+                                Q     = 0.5*(Q + Q');
+                                GQGsr = [GQGsr reshape(Q, d1*d1, 1)];
+                            end
+                            if isdiscrete(linSys)
+                                mydata.Gq    = Gq;
+                                mydata.GQG   = GQG;
+                                mydata.GQGsr = GQGsr;
+                            else
+                                mydata.Gq    = spline(newReachObj.time_values, Gq);
+                                mydata.GQG   = spline(newReachObj.time_values, GQG);
+                                mydata.GQGsr = spline(newReachObj.time_values, GQGsr);
+                            end
+                        elseif iscell(vEll.center)
+                            Gq  = [];
+                            for i = 1:size(newReachObj.time_values, 2)
+                                q  = self.matrix_eval(...
+                                    vEll.center,...
+                                    newReachObj.time_values(i));
+                                Gq = [Gq G*q];
+                            end
+                            if isdiscrete(linSys)
+                                mydata.Gq  = Gq;
+                            else
+                                mydata.Gq  = spline(newReachObj.time_values, Gq);
+                            end
+                            mydata.GQG   = G * vEll.shape * G';
+                            mydata.GQGsr = sqrtm(mydata.GQG);
+                            mydata.GQGsr = 0.5*(mydata.GQGsr + (mydata.GQGsr)');
+                        else
+                            GQG   = [];
+                            GQGsr = [];
+                            for i = 1:size(newReachObj.time_values, 2)
+                                Q = self.matrix_eval(...
+                                    vEll.shape,...
+                                    newReachObj.time_values(i));
+                                if (Q ~= Q') | (min(eig(Q)) < 0)
+                                    throwerror(['EVOLVE: shape matrix of ',...
+                                        'ellipsoidal disturbance bounds ',...
+                                        'must be positive definite.']);
+                                end
+                                Q     = G * Q * G';
+                                GQG   = [GQG reshape(Q, d1*d1, 1)];
+                                Q     = sqrtm(Q);
+                                Q     = 0.5*(Q + Q');
+                                GQGsr = [GQGsr reshape(Q, d1*d1, 1)];
+                            end
+                            mydata.Gq  = G * vEll.center;
+                            if isdiscrete(linSys)
+                                mydata.GQG   = GQG;
+                                mydata.GQGsr = GQGsr;
+                            else
+                                mydata.GQG   = spline(newReachObj.time_values, GQG);
+                                mydata.GQGsr = spline(newReachObj.time_values, GQGsr);
+                            end
+                        end
+                    else
+                        Gq    = [];
+                        GQG   = [];
+                        GQGsr = [];
+                        for i = 1:size(newReachObj.time_values, 2)
+                            G = reshape(GG(:, i), d1, dd);
+                            if iscell(vEll.center)
+                                q = self.matrix_eval(...
+                                    vEll.center,...
+                                    newReachObj.time_values(i));
+                            else
+                                q = vEll.center;
+                            end
+                            if iscell(vEll.shape)
+                                Q = self.matrix_eval(...
+                                    vEll.shape,...
+                                    newReachObj.time_values(i));
+                                if (Q ~= Q') | (min(eig(Q)) < 0)
+                                    throwerror(['EVOLVE: shape matrix of ',...
+                                        'ellipsoidal disturbance bounds ',...
+                                        'must be positive definite.']);
+                                end
+                            else
+                                Q = vEll.shape;
+                            end
+                            Gq  = [Gq G*q];
+                            Q     = G * Q * G';
+                            GQG   = [GQG reshape(Q, d1*d1, 1)];
+                            Q     = sqrtm(Q);
+                            Q     = 0.5*(Q + Q');
+                            GQGsr = [GQGsr reshape(Q, d1*d1, 1)];
+                        end
+                        if isdiscrete(linSys)
+                            mydata.Gq    = Gq;
+                            mydata.GQG   = GQG;
+                            mydata.GQGsr = GQGsr;
+                        else
+                            mydata.Gq    = spline(newReachObj.time_values, Gq);
+                            mydata.GQG   = spline(newReachObj.time_values, GQG);
+                            mydata.GQGsr = spline(newReachObj.time_values, GQGsr);
+                        end
+                    end
+                end
+            end
+            % expressions w and W
+            noiseEll = linSys.getNoiseBoundsEll();
+            if ~(isempty(noiseEll))
+                if isa(noiseEll, 'ellipsoid')
+                    [w, W]   = parameters(noiseEll);
+                    mydata.w = w;
+                    mydata.W = W;
+                elseif isa(noiseEll, 'double')
+                    mydata.w = noiseEll;
+                elseif iscell(noiseEll)
+                    w = [];
+                    for i = 1:size(newReachObj.time_values, 2)
+                        w = [w self.matrix_eval(noiseEll.center,...
+                            newReachObj.time_values(i))];
+                    end
+                    if isdiscrete(linSys)
+                        mydata.w = w;
+                    else
+                        mydata.w = spline(newReachObj.time_values, w);
+                    end
+                elseif isstruct(noiseEll)
+                    if iscell(noiseEll.center) && iscell(noiseEll.shape)
+                        w = [];
+                        W = [];
+                        for i = 1:size(newReachObj.time_values, 2)
+                            w  = [w self.matrix_eval(noiseEll.center,...
+                                newReachObj.time_values(i))];
+                            ww = self.matrix_eval(noiseEll.shape,...
+                                newReachObj.time_values(i));
+                            if (ww ~= ww') | (min(eig(ww)) < 0)
+                                throwerror(['EVOLVE: shape matrix of ',...
+                                    'ellipsoidal noise bounds ',...
+                                    'must be positive definite.']);
+                            end
+                            W  = [W reshape(ww, dy*dy, 1)];
+                        end
+                        if isdiscrete(linSys)
+                            mydata.w = w;
+                            mydata.W = W;
+                        else
+                            mydata.w = spline(newReachObj.time_values, w);
+                            mydata.W = spline(newReachObj.time_values, W);
+                        end
+                    elseif iscell(noiseEll.center)
+                        w = [];
+                        for i = 1:size(newReachObj.time_values, 2)
+                            w = [w self.matrix_eval(noiseEll.center,...
+                                newReachObj.time_values(i))];
+                        end
+                        if isdiscrete(linSys)
+                            mydata.w = w;
+                        else
+                            mydata.w = spline(newReachObj.time_values, w);
+                        end
+                        mydata.W = noiseEll.shape;
+                    else
+                        W = [];
+                        for i = 1:size(newReachObj.time_values, 2)
+                            ww = self.matrix_eval(noiseEll.shape,...
+                                newReachObj.time_values(i));
+                            if (ww ~= ww') | (min(eig(ww)) < 0)
+                                throwerror(['EVOLVE: shape matrix of ',...
+                                    'ellipsoidal noise bounds ',...
+                                    'must be positive definite.']);
+                            end
+                            W  = [W reshape(ww, dy*dy, 1)];
+                        end
+                        mydata.w = noiseEll.center;
+                        if isdiscrete(linSys)
+                            mydata.W = W;
+                        else
+                            mydata.W = spline(newReachObj.time_values, W);
+                        end
+                    end
+                end
+            end
+            clear A B C AA BB CC DD Bp BPB Gq GQG p P q Q w W ww;
+            %%% Compute state transition matrix.
             if Properties.getIsVerbose()
-              fprintf('Computing external shape matrices...\n');
+                fprintf('Computing state transition matrix...\n');
             end
-
-            LL = [];
-            QQ = [];
-            N  = size(self.ea_values, 2);
-            for ii = 1:N
-              EM = self.ea_values{ii};
-              Q0 = EM(:, end);
-              l0 = newReachObj.initial_directions(:, ii);
-              if isdiscrete(linSys)   % discrete-time system
-                if hasdisturbance(linSys)
-                  [Q, L] = reach.eedist_de(size(tvals, 2), ...
-                                     Q0, ...
-                                     l0, ...
-                                     mydata, ...
-                                     d1, ...
-                                     back, ...
-                                     Options.minmax, newReachObj.absTol);
-                elseif ~(isempty(mydata.BPB))
-                  [Q, L] = reach.eesm_de(size(tvals, 2), Q0, l0, mydata, d1, back,newReachObj.absTol);
+            if isdiscrete(linSys)
+                mydata.Phi   = [];
+                mydata.Phinv = [];
+            else
+                if isa(mydata.A, 'double')
+                    t0    = newReachObj.time_values(1);
+                    Phi   = [];
+                    Phinv = [];
+                    for i = 1:size(newReachObj.time_values, 2)
+                        P = expm(mydata.A * abs(newReachObj.time_values(i) - t0));
+                        PP    = ell_inv(P);
+                        Phi   = [Phi reshape(P, d1*d1, 1)];
+                        Phinv = [Phinv reshape(PP, d1*d1, 1)];
+                    end
+                    mydata.Phi   = spline(newReachObj.time_values, Phi);
+                    mydata.Phinv = spline(newReachObj.time_values, Phinv);
                 else
-                  Q = [];
-                  L = [];
+                    I0        = reshape(eye(d1), d1*d1, 1);
+                    [tt, Phi] = ell_ode_solver(@ell_stm_ode,...
+                        tvals, I0, mydata, d1, back);
+                    Phi       = Phi';
+                    Phinv     = [];
+                    for i = 1:size(newReachObj.time_values, 2)
+                        Phinv = [Phinv reshape(ell_inv(reshape(...
+                            Phi(:, i), d1, d1)), d1*d1, 1)];
+                    end
+                    mydata.Phi   = spline(newReachObj.time_values, Phi);
+                    mydata.Phinv = spline(newReachObj.time_values, Phinv);
                 end
-                LL = [LL {L}];
-              else   % continuous-time system
-                if hasdisturbance(linSys)
-                  [tt, Q] = ell_ode_solver(@ell_eedist_ode, tvals, Q0, l0, mydata, d1, back);
-                  Q       = Q';
-                elseif ~(isempty(mydata.BPB))
-                  [tt, Q] = ell_ode_solver(@ell_eesm_ode, tvals, Q0, l0, mydata, d1, back);
-                  Q       = Q';
-                else
-                  Q = [];
-                end
-              end
-              QQ = [QQ {Q}];
             end
-            newReachObj.ea_values = QQ;
-          end
-
-
-
-
-          %%% Compute internal shape matrices. %%%
-
-          if (Options.approximation ~= 0)
+            clear Phi Phinv P PP t0 I0;
+            %%% Compute the center of the self set.
             if Properties.getIsVerbose()
-              fprintf('Computing internal shape matrices...\n');
+                fprintf('Computing the trajectory of the reach set center...\n');
             end
-
-            LL = [];
-            QQ = [];
-            N  = size(self.ia_values, 2);
-            for ii = 1:N
-              EM = self.ia_values{ii};
-              Q0 = EM(:, end);
-              X0 = reshape(Q0, d1, d1);
-              X0 = sqrtm(X0);
-              X0 = 0.5*(X0 + X0');
-              l0 = newReachObj.initial_directions(:, ii);
-              if isdiscrete(linSys)   % discrete-time system
-                if hasdisturbance(linSys)
-                  [Q, L] = reach.iedist_de(size(tvals, 2), ...
-                                     Q0, ...
-                                     l0, ...
-                                     mydata, ...
-                                     d1, ...
-                                     back, ...
-                                     Options.minmax,newReachObj.absTol);
-                elseif ~(isempty(mydata.BPB))
-                  [Q, L] = reach.iesm_de(size(tvals, 2), Q0, l0, mydata, d1, back,newReachObj.absTol);
-                else
-                  Q = [];
-                  L = [];
-                end
-                LL = [LL {L}];
-              else   % continuous-time system
-                if hasdisturbance(linSys)
-                  [tt, Q] = ell_ode_solver(@ell_iedist_ode, tvals, reshape(Q0, d1*d1, 1), l0, mydata, d1, back);
-                  Q       = Q';
-                elseif ~(isempty(mydata.BPB))
-                  [tt, Q] = ell_ode_solver(@ell_iesm_ode, tvals, reshape(X0, d1*d1, 1), X0*l0, l0, mydata, d1, back);
-                  Q       = reach.fix_iesm(Q', d1);
-                else
-                  Q = [];
-                end
-              end
-              QQ = [QQ {Q}];
-            end
-            newReachObj.ia_values = QQ;
-          end
-
-          if Options.save_all > 0
-            newReachObj.calc_data = mydata;
-          end
-
-          LL = [];
-          for ii = 1:N
-            l0 = newReachObj.initial_directions(:, ii);
-            if isdiscrete(linSys)   % discrete-time system
-              L = l0;
-              l = l0;
-              if back > 0
-                for i = 2:size(newReachObj.time_values, 2)
-                  A = ell_value_extract(mydata.A, i, [d1 d1]);
-                  l = A' * l;
-                  L = [L l];
-                end
-              else
+            x0 = self.center_values(:, end);
+            if isdiscrete(linSys)
+                xx = x0;
+                x  = x0;
                 for i = 1:(size(newReachObj.time_values, 2) - 1)
-                  A = ell_inv(ell_value_extract(mydata.A, i, [d1 d1]));
-                  l = A' * l;
-                  L = [L l];
+                    Bp = ell_value_extract(mydata.Bp, i+back, [d1 1]);
+                    if ~(isempty(mydata.Gq))
+                        Gq = ell_value_extract(mydata.Gq, i+back, [d1 1]);
+                    else
+                        Gq = zeros(d1, 1);
+                    end
+                    if back > 0
+                        A = ell_value_extract(mydata.A, i+back, [d1 d1]);
+                        x = ell_inv(A)*(x - Bp - Gq);
+                    else
+                        A = ell_value_extract(AC, i, [d1 d1]);
+                        x = A*x + Bp + Gq;
+                    end
+                    xx = [xx x];
                 end
-              end
-            else   % continuous-time system
-              L = [];
-              for i = 1:size(newReachObj.time_values, 2)
-                t = newReachObj.time_values(i);
-                if back > 0
-                  F = ell_value_extract(mydata.Phi, t, [d1 d1]);
-                else
-                  F = ell_value_extract(mydata.Phinv, t, [d1 d1]);
-                end
-                L = [L F'*l0];
-              end
+            else
+                [tt, xx] = ell_ode_solver(@ell_center_ode,...
+                    tvals, x0, mydata, d1, back);
+                xx       = xx';
             end
-            LL = [LL {L}];
-          end
-
-          newReachObj.l_values = LL;
-
-          if www(1).state
-            warning on;
-          end
-            
+            newReachObj.center_values = xx;
+            clear A AC xx;
+            %%% Compute external shape matrices.
+            if (Options.approximation ~= 1)
+                if Properties.getIsVerbose()
+                    fprintf('Computing external shape matrices...\n');
+                end
+                LL = [];
+                QQ = [];
+                N  = size(self.ea_values, 2);
+                for ii = 1:N
+                    EM = self.ea_values{ii};
+                    Q0 = EM(:, end);
+                    l0 = newReachObj.initial_directions(:, ii);
+                    if isdiscrete(linSys)
+                        if hasdisturbance(linSys)
+                            [Q, L] = self.eedist_de(size(tvals, 2),...
+                                Q0, l0, mydata, d1, back,...
+                                Options.minmax, newReachObj.absTol);
+                        elseif ~(isempty(mydata.BPB))
+                            [Q, L] = self.eesm_de(size(tvals, 2),...
+                                Q0, l0, mydata, d1, back,newReachObj.absTol);
+                        else
+                            Q = [];
+                            L = [];
+                        end
+                        LL = [LL {L}];
+                    else
+                        if hasdisturbance(linSys)
+                            [tt, Q] = ell_ode_solver(@ell_eedist_ode,...
+                                tvals, Q0, l0, mydata, d1, back);
+                            Q       = Q';
+                        elseif ~(isempty(mydata.BPB))
+                            [tt, Q] = ell_ode_solver(@ell_eesm_ode,...
+                                tvals, Q0, l0, mydata, d1, back);
+                            Q       = Q';
+                        else
+                            Q = [];
+                        end
+                    end
+                    QQ = [QQ {Q}];
+                end
+                newReachObj.ea_values = QQ;
+            end
+            %%% Compute internal shape matrices.
+            if (Options.approximation ~= 0)
+                if Properties.getIsVerbose()
+                    fprintf('Computing internal shape matrices...\n');
+                end
+                LL = [];
+                QQ = [];
+                N  = size(self.ia_values, 2);
+                for ii = 1:N
+                    EM = self.ia_values{ii};
+                    Q0 = EM(:, end);
+                    X0 = reshape(Q0, d1, d1);
+                    X0 = sqrtm(X0);
+                    X0 = 0.5*(X0 + X0');
+                    l0 = newReachObj.initial_directions(:, ii);
+                    if isdiscrete(linSys)
+                        if hasdisturbance(linSys)
+                            [Q, L] = self.iedist_de(size(tvals, 2),...
+                                Q0, l0, mydata, d1, back,...
+                                Options.minmax,newReachObj.absTol);
+                        elseif ~(isempty(mydata.BPB))
+                            [Q, L] = self.iesm_de(size(tvals, 2),...
+                                Q0, l0, mydata, d1, back,newReachObj.absTol);
+                        else
+                            Q = [];
+                            L = [];
+                        end
+                        LL = [LL {L}];
+                    else
+                        if hasdisturbance(linSys)
+                            [tt, Q] = ell_ode_solver(@ell_iedist_ode,...
+                                tvals, reshape(Q0, d1*d1, 1), l0, mydata, d1, back);
+                            Q       = Q';
+                        elseif ~(isempty(mydata.BPB))
+                            [tt, Q] = ell_ode_solver(@ell_iesm_ode,...
+                                tvals, reshape(X0, d1*d1, 1), X0*l0, l0, mydata, d1, back);
+                            Q       = self.fix_iesm(Q', d1);
+                        else
+                            Q = [];
+                        end
+                    end
+                    QQ = [QQ {Q}];
+                end
+                newReachObj.ia_values = QQ;
+            end
+            if Options.save_all > 0
+                newReachObj.calc_data = mydata;
+            end
+            LL = [];
+            for ii = 1:N
+                l0 = newReachObj.initial_directions(:, ii);
+                if isdiscrete(linSys)
+                    L = l0;
+                    l = l0;
+                    if back > 0
+                        for i = 2:size(newReachObj.time_values, 2)
+                            A = ell_value_extract(mydata.A, i, [d1 d1]);
+                            l = A' * l;
+                            L = [L l];
+                        end
+                    else
+                        for i = 1:(size(newReachObj.time_values, 2) - 1)
+                            A = ell_inv(ell_value_extract(mydata.A, i, [d1 d1]));
+                            l = A' * l;
+                            L = [L l];
+                        end
+                    end
+                else
+                    L = [];
+                    for i = 1:size(newReachObj.time_values, 2)
+                        t = newReachObj.time_values(i);
+                        if back > 0
+                            F = ell_value_extract(mydata.Phi, t, [d1 d1]);
+                        else
+                            F = ell_value_extract(mydata.Phinv, t, [d1 d1]);
+                        end
+                        L = [L F'*l0];
+                    end
+                end
+                LL = [LL {L}];
+            end
+            newReachObj.l_values = LL;
+            if www(1).state
+                warning on;
+            end  
         end
         %
     end

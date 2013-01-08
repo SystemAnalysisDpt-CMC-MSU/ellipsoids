@@ -286,13 +286,13 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
                     cutEndTime > sysEndTime
                 throwerror('Cut:wrong input format');
             end
-            isSysTimeLowerVec = timeVec <= cutStartTime;
-            isSysTimeGreaterVec = timeVec >= cutEndTime;
             if cutTimeVec(1) == cutTimeVec(2)
-                indClosestVec = find(isSysTimeLowerVec, 1, 'last');
-                isSysNewTimeIndVec = false(size(isSysTimeLowerVec));
+                indClosestVec = find(timeVec <= cutStartTime, 1, 'last');
+                isSysNewTimeIndVec = false(size(timeVec));
                 isSysNewTimeIndVec(indClosestVec) = true;
             else
+                isSysTimeLowerVec = timeVec < cutStartTime;
+                isSysTimeGreaterVec = timeVec > cutEndTime;    
                 isSysNewTimeIndVec =...
                     ~(isSysTimeLowerVec | isSysTimeGreaterVec);
             end
@@ -303,6 +303,7 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
                 setdiff(fieldnames(SData), fieldsNotToCatVec);
             cellfun(@(field) cutStructField(field), fieldsToCutVec);
             SCutFunResult.sTime(:) = cutTimeVec(1);
+            SCutFunResult.indSTime(:) = 1;
             SCutFunResult.lsGoodDirVec = cellfun(@(field) field(:, 1),...
                 SCutFunResult.ltGoodDirMat, 'UniformOutput', false);
             SCutFunResult.lsGoodDirNorm = cellfun(@(field) field(1, 1),...

@@ -10,6 +10,77 @@ classdef SuiteEllTube < mlunitext.test_case
         function self = set_up_param(self,varargin)
             
         end
+        function testCutAndCat(self)
+            nDims=2;
+            nTubes=3;
+            calcPrecision=0.001;
+            % cut: test interval
+            rel = create(1:100);
+            cutRel = rel.cut([20,80]);
+            expRel = create(20:80);
+            check_data(cutRel.getData(), expRel.getData());
+            % cut: test point
+            rel = create(1:100);
+            cutRel = rel.cut(50);
+            expRel = create(50);
+            check_data(cutRel.getData(), expRel.getData());
+            % cat: test
+            firstRel = create(1:100);
+            secondRel = create(101:200);
+            expRel = create(1:200);
+            catRel = firstRel.cat(secondRel);
+            check_data(catRel.getData(), expRel.getData());
+            %
+            function rel = create(timeVec)
+                nPoints = numel(timeVec);
+                aMat=zeros(nDims,nPoints);
+                %
+                QArray = zeros(nDims,nDims,nPoints);
+                for iPoint = 1:nPoints
+                    QArray(:,:,iPoint) = timeVec(iPoint)*eye(nDims);
+                end
+                QArrayList=repmat({QArray},1,nTubes);
+                %
+                ltSingleGoodDirArray = zeros(nDims,1,nPoints);
+                for iPoint = 1:nPoints
+                    ltSingleGoodDirArray(:,:,iPoint) = ...
+                        timeVec(iPoint)*eye(nDims,1);
+                end
+                ltGoodDirArray=repmat(ltSingleGoodDirArray,1,nTubes);
+                %
+                rel = gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
+                    QArrayList,aMat,timeVec,ltGoodDirArray,timeVec(1),...
+                    gras.ellapx.enums.EApproxType.Internal,...
+                    char.empty(1,0),char.empty(1,0),calcPrecision);
+            end
+            %
+            function check_data(aData,bData)
+                fieldToExcludeList = {'sTime','lsGoodDirVec'};
+                fieldNameList = setdiff(fieldnames(aData),fieldToExcludeList);
+                nFields = numel(fieldNameList);
+                for iField = 1:nFields
+                    fieldName = fieldNameList{iField};
+                    aField = aData.(fieldName);
+                    bField = bData.(fieldName);
+                    if iscell(aField)
+                        for iTube = 1:nTubes
+                            check_field(aField{iTube}, bField{iTube});
+                        end
+                    else
+                        check_field(aField, bField);
+                    end
+                end
+            end
+            %
+            function check_field(aArray,bArray)
+                if isa(aArray, 'double')
+                    diffVec = abs(aArray(:)-bArray(:));
+                    mlunit.assert_equals(max(diffVec) < calcPrecision, true);
+                elseif isa(aArray, 'char')
+                    mlunit.assert_equals(strcmp(aArray,bArray), true);
+                end
+            end
+        end
         function testRegCreate(self)
             nDims=2;
             nPoints=3;
@@ -447,43 +518,6 @@ classdef SuiteEllTube < mlunitext.test_case
                         errorTag);
                 end
             end
-            function rel=create()
-                ltGoodDirArray=repmat(lsGoodDirVec,[1,nTubes,nPoints]);
-                rel=gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
-                    QArrayList,aMat,timeVec,...
-                    ltGoodDirArray,sTime,approxType,approxSchemaName,...
-                    approxSchemaDescr,calcPrecision);
-            end
-        end
-        
-        function DISABLED_testCut(self)
-            nPoints=3;
-            calcPrecision=0.001;
-            approxSchemaDescr=char.empty(1,0);
-            approxSchemaName=char.empty(1,0);
-            nDims=2;
-            nTubes=3;
-            lsGoodDirVec=[1;0];
-            QArrayList=repmat({repmat(eye(nDims),[1,1,nPoints])},1,nTubes);
-            aMat=zeros(nDims,nPoints);
-            timeVec=1:nPoints;
-            sTime=nPoints;
-            approxType=gras.ellapx.enums.EApproxType.Internal;
-            
-            rel1=create();
-            QArrayList=repmat({repmat(0.5*eye(nDims),[1,1,nPoints])},1,nTubes);
-            approxType=gras.ellapx.enums.EApproxType.External;
-            rel2=create();
-            %
-            QArrayList=repmat({repmat(diag([1 0.5]),[1,1,nPoints])},1,nTubes);
-            rel2=create();
-            %
-            lsGoodDirVec=[0;1];
-            QArrayList=repmat({repmat(diag([0.5 0.2]),[1,1,nPoints])},1,nTubes);
-            
-            rel1=create();
-            %
-            %
             function rel=create()
                 ltGoodDirArray=repmat(lsGoodDirVec,[1,nTubes,nPoints]);
                 rel=gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
