@@ -12,10 +12,9 @@ confNameList = {'demo3firstTest', 'demo3secondTest',...
 nConfs=length(confNameList);
 suiteList=cell(1,nConfs);
 for iConf=nConfs:-1:1
-    confName=confNameList{iConf};
     suiteList{iConf}=loader.load_tests_from_test_case(...
         'elltool.reach.test.mlunit.ContiniousReachTestCase',...
-        {confName},crm,crmSys);
+        confNameList{iConf},crm,crmSys);
 end
 testLists=cellfun(@(x)x.tests,suiteList,'UniformOutput',false);
 suite=mlunitext.test_suite(horzcat(testLists{:}));

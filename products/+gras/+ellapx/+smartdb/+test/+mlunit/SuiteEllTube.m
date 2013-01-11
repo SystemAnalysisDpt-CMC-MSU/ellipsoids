@@ -14,22 +14,36 @@ classdef SuiteEllTube < mlunitext.test_case
             nDims=2;
             nTubes=3;
             calcPrecision=0.001;
+            cutTimeVec = [20, 80];
+            timeVec = 1 : 100;
+            evolveTimeVec = 101 : 200;
+            fieldToExcludeList = {'sTime','lsGoodDirVec'};
             % cut: test interval
-            rel = create(1:100);
-            cutRel = rel.cut([20,80]);
-            expRel = create(20:80);
-            check_data(cutRel.getData(), expRel.getData());
+            rel = create(timeVec);
+            cutRel = rel.cut(cutTimeVec);
+            expRel = create(cutTimeVec(1) : cutTimeVec(2));
+            fieldList = setdiff(fieldnames(cutRel),fieldToExcludeList);
+            [isOk,reportStr] = ...
+                cutRel.getFieldProjection(fieldList).isEqual(...
+                expRel.getFieldProjection(fieldList));
+            mlunit.assert(isOk, reportStr);
             % cut: test point
-            rel = create(1:100);
-            cutRel = rel.cut(50);
-            expRel = create(50);
-            check_data(cutRel.getData(), expRel.getData());
+            rel = create(timeVec);
+            cutRel = rel.cut(timeVec(end) / 2);
+            expRel = create(timeVec(end) / 2);
+            [isOk,reportStr] = ...
+                cutRel.getFieldProjection(fieldList).isEqual(...
+                expRel.getFieldProjection(fieldList));
+            mlunit.assert(isOk, reportStr);
             % cat: test
-            firstRel = create(1:100);
-            secondRel = create(101:200);
-            expRel = create(1:200);
+            firstRel = create(timeVec);
+            secondRel = create(evolveTimeVec);
+            expRel = create([timeVec evolveTimeVec]);
             catRel = firstRel.cat(secondRel);
-            check_data(catRel.getData(), expRel.getData());
+            [isOk,reportStr] = ...
+                catRel.getFieldProjection(fieldList).isEqual(...
+                expRel.getFieldProjection(fieldList));
+            mlunit.assert(isOk, reportStr);
             %
             function rel = create(timeVec)
                 nPoints = numel(timeVec);
@@ -52,33 +66,6 @@ classdef SuiteEllTube < mlunitext.test_case
                     QArrayList,aMat,timeVec,ltGoodDirArray,timeVec(1),...
                     gras.ellapx.enums.EApproxType.Internal,...
                     char.empty(1,0),char.empty(1,0),calcPrecision);
-            end
-            %
-            function check_data(aData,bData)
-                fieldToExcludeList = {'sTime','lsGoodDirVec'};
-                fieldNameList = setdiff(fieldnames(aData),fieldToExcludeList);
-                nFields = numel(fieldNameList);
-                for iField = 1:nFields
-                    fieldName = fieldNameList{iField};
-                    aField = aData.(fieldName);
-                    bField = bData.(fieldName);
-                    if iscell(aField)
-                        for iTube = 1:nTubes
-                            check_field(aField{iTube}, bField{iTube});
-                        end
-                    else
-                        check_field(aField, bField);
-                    end
-                end
-            end
-            %
-            function check_field(aArray,bArray)
-                if isa(aArray, 'double')
-                    diffVec = abs(aArray(:)-bArray(:));
-                    mlunit.assert_equals(max(diffVec) < calcPrecision, true);
-                elseif isa(aArray, 'char')
-                    mlunit.assert_equals(strcmp(aArray,bArray), true);
-                end
             end
         end
         function testRegCreate(self)

@@ -3,166 +3,318 @@ classdef ContiniousReachTestCase < mlunitext.test_case
         testDataRootDir
         etalonDataRootDir
         etalonDataBranchKey
-        confNameList
+        confName
         crm
         crmSys
+        linSys
+        reachObj
+        tLims
+        calcPrecision
     end
     methods
         function self = ContiniousReachTestCase(varargin)
             self = self@mlunitext.test_case(varargin{:});
-            [~,className]=modgen.common.getcallernameext(1);
-            shortClassName=mfilename('classname');
-            self.testDataRootDir=[fileparts(which(className)),...
-                filesep,'TestData',filesep,shortClassName];
+            [~, className] = modgen.common.getcallernameext(1);
+            shortClassName = mfilename('classname');
+            self.testDataRootDir = [fileparts(which(className)),...
+                filesep, 'TestData', filesep, shortClassName];
             % obtain the path of etalon data
             regrClassName =...
                 'gras.ellapx.uncertcalc.test.regr.mlunit.SuiteRegression';
-            shortRegrClassName='SuiteRegression';
-            self.etalonDataRootDir=[fileparts(which(regrClassName)),...
-                filesep,'TestData',filesep,shortRegrClassName];
+            shortRegrClassName = 'SuiteRegression';
+            self.etalonDataRootDir = [fileparts(which(regrClassName)),...
+                filesep, 'TestData', filesep, shortRegrClassName];
             self.etalonDataBranchKey = 'testRegression_out';
         end
         %
-        function self = set_up_param(self,confNameList,crm,crmSys)
-            self.crm=crm;
-            self.crmSys=crmSys;
-            self.confNameList=confNameList;
+        function self = set_up_param(self, confName, crm, crmSys)
+            self.crm = crm;
+            self.crmSys = crmSys;
+            self.confName = confName;
+            %
+            self.crm.deployConfTemplate(self.confName);
+            self.crm.selectConf(self.confName);
+            sysDefConfName = self.crm.getParam('systemDefinitionConfName');
+            self.crmSys.selectConf(sysDefConfName, 'reloadIfSelected', false);
+            %
+            atDefCMat = self.crmSys.getParam('At');
+            btDefCMat = self.crmSys.getParam('Bt');
+            ctDefCMat = self.crmSys.getParam('Ct');
+            ptDefCMat = self.crmSys.getParam('control_restriction.Q');
+            ptDefCVec = self.crmSys.getParam('control_restriction.a');
+            qtDefCMat = self.crmSys.getParam('disturbance_restriction.Q');
+            qtDefCVec = self.crmSys.getParam('disturbance_restriction.a');
+            x0DefMat = self.crmSys.getParam('initial_set.Q');
+            x0DefVec = self.crmSys.getParam('initial_set.a');
+            l0CMat = self.crm.getParam(...
+                'goodDirSelection.methodProps.manual.lsGoodDirSets.set1');
+            l0Mat = cell2mat(l0CMat.').';
+            self.tLims = [self.crmSys.getParam('time_interval.t0'),...
+                self.crmSys.getParam('time_interval.t1')];
+            self.calcPrecision =...
+                self.crm.getParam('genericProps.calcPrecision');
+            ControlBounds = struct();
+            ControlBounds.center = ptDefCVec;
+            ControlBounds.shape = ptDefCMat;
+            DistBounds = struct();
+            DistBounds.center = qtDefCVec;
+            DistBounds.shape = qtDefCMat;
+            %
+            self.linSys = elltool.linsys.LinSys(atDefCMat, btDefCMat,...
+                ControlBounds, ctDefCMat, DistBounds);
+            self.reachObj = elltool.reach.ReachContinious(self.linSys,...
+                ellipsoid(x0DefVec, x0DefMat), l0Mat, self.tLims);
         end
         %
         function self = testSystem(self)
-            COMPARED_FIELD_LIST={'ellTubeRel'};
-            MAX_TOL=5*1e-5;
-            SSORT_KEYS.ellTubeRel={'approxSchemaName','lsGoodDirVec'};
-            ROUND_FIELD_LIST={'lsGoodDirOrigVec','lsGoodDirVec'};
-            nRoundDigits=-fix(log(MAX_TOL)/log(10));
-            crm=self.crm;
-            crmSys=self.crmSys;
-            confNameList=self.confNameList;
-            nConfs=length(self.confNameList);
-            for iConf=1:nConfs
-                crm.deployConfTemplate(confNameList{iConf});
+            import modgen.common.throwerror;
+            import elltool.reach.test.mlunit.ContiniousReachTestCase;
+            %
+            COMPARED_FIELD_LIST = {'ellTubeRel'};
+            MAX_TOL=5e-5;
+            SSORT_KEYS.ellTubeRel = {'approxSchemaName', 'lsGoodDirVec'};
+            ROUND_FIELD_LIST = {'lsGoodDirOrigVec', 'lsGoodDirVec'};
+            nRoundDigits = -fix(log(MAX_TOL) / log(10));
+            %
+            resMap = modgen.containers.ondisk.HashMapMatXML(...
+                'storageLocationRoot', self.etalonDataRootDir,...
+                'storageBranchKey', self.etalonDataBranchKey,...
+                'storageFormat', 'mat', 'useHashedPath', false,...
+                'useHashedKeys', true);
+            %
+            SRunProp = struct();
+            SRunProp.ellTubeRel = self.reachObj.getEllTubeRel();
+            %
+            isOk = all(SRunProp.ellTubeRel.calcPrecision <=...
+                self.calcPrecision);
+            mlunit.assert_equals(true, isOk);
+            %
+            SRunProp=pathfilterstruct(SRunProp, COMPARED_FIELD_LIST);
+            if resMap.isKey(self.confName);
+                SExpRes = resMap.get(self.confName);
+                nCmpFields = numel(COMPARED_FIELD_LIST);
+                for iField = 1 : nCmpFields
+                    fieldName = COMPARED_FIELD_LIST{iField};
+                    expRel = SExpRes.(fieldName);
+                    rel = SRunProp.(fieldName);
+                    %
+                    keyList = SSORT_KEYS.(fieldName);
+                    isRoundVec = ismember(keyList, ROUND_FIELD_LIST);
+                    roundKeyList = keyList(isRoundVec);
+                    nRoundKeys = length(roundKeyList);
+                    %
+                    for iRound = 1 : nRoundKeys
+                        roundKey = roundKeyList{iRound};
+                        rel.applySetFunc(@(x) roundn(x, -nRoundDigits),...
+                            roundKey);
+                        expRel.applySetFunc(@(x) roundn(x, -nRoundDigits),...
+                            roundKey);
+                    end
+                    rel.sortBy(SSORT_KEYS.(fieldName));
+                    expRel.sortBy(SSORT_KEYS.(fieldName));
+                   
+                    [isOk, reportStr] = expRel.isEqual(rel, 'maxTolerance',...
+                        MAX_TOL, 'checkTupleOrder', true);
+                    %
+                    reportStr = sprintf('confName=%s\n %s', self.confName,...
+                        reportStr);
+                    mlunit.assert_equals(true, isOk, reportStr);
+                end
+            else
+                throwerror('Do not exist config mat file.');
             end
+        end
+        %
+        function self = testDisplay(self)
+            rxDouble = '([\d.+\-e]+)';
             %
-            resMap=modgen.containers.ondisk.HashMapMatXML(...
-                'storageLocationRoot',self.etalonDataRootDir,...
-                'storageBranchKey',self.etalonDataBranchKey,...
-                'storageFormat','mat',...
-                'useHashedPath',false,'useHashedKeys',true);
+            resStr = evalc('self.reachObj.display');
+            % time interval
+            tokens = regexp(resStr,...
+                ['time interval \[' rxDouble ',\s' rxDouble '\]'],...
+                'tokens');
+            tLimsRead = str2double(tokens{1}.').';
+            difference = abs(tLimsRead(:) - self.tLims(:));
+            mlunit.assert_equals(max(difference) < self.calcPrecision, true);
+            % continuous-time
+            isOk = ~isempty(strfind(resStr, 'continuous-time'));
+            mlunit.assert_equals(isOk, true);
+            % dimension
+            tokens = regexp(resStr,...
+                ['linear system in R\^' rxDouble],...
+                'tokens');
+            dimRead = str2double(tokens{1}{1});
+            mlunit.assert_equals(dimRead, self.linSys.dimension());
+        end
+        %
+        function self = testPlotEa(self)
             %
-            for iConf=1:nConfs
-                confName=confNameList{iConf};
-                inpKey=confName;
-                crm = self.crm;
-                crm.selectConf(confName,'reloadIfSelected',false);
-                sysDefConfName = crm.getParam('systemDefinitionConfName');
-                crmSys = self.crmSys;
-                crmSys.selectConf(sysDefConfName,'reloadIfSelected',false);
+            ellArray = self.reachObj.get_ea;
+            ellTubes = self.reachObj.getEllTubeRel.getTuplesFilteredBy(...
+                'approxType', gras.ellapx.enums.EApproxType.External);
+            goodDirCVec = ellTubes.lsGoodDirVec;
+            nGoodDirs = numel(goodDirCVec);
+            %
+            plotter = self.reachObj.plot_ea;
+            plotter.closeAllFigures();
+            %
+            axesHMapList =...
+                plotter.getPlotStructure.figToAxesToPlotHMap.values;
+            nFigures = numel(axesHMapList);
+            for iAxesHMap = 1 : nFigures
+                axesHMap = axesHMapList{iAxesHMap};
+                axesHMapKeys = axesHMap.keys;
                 %
-                atDefCMat = crmSys.getParam('At');
-                btDefCMat = crmSys.getParam('Bt');
-                ctDefCMat = crmSys.getParam('Ct');
-                ptDefCMat = crmSys.getParam('control_restriction.Q');
-                ptDefCVec = crmSys.getParam('control_restriction.a');
-                qtDefCMat = crmSys.getParam('disturbance_restriction.Q');
-                qtDefCVec = crmSys.getParam('disturbance_restriction.a');
-                x0DefMat = crmSys.getParam('initial_set.Q');
-                x0DefVec = crmSys.getParam('initial_set.a');
-                l0CMat = crm.getParam(...
-                    'goodDirSelection.methodProps.manual.lsGoodDirSets.set1');
-                l0Mat = cell2mat(l0CMat.').';
-                tLims = [crmSys.getParam('time_interval.t0'),...
-                    crmSys.getParam('time_interval.t1')];
-                ControlBounds = struct();
-                ControlBounds.center = ptDefCVec;
-                ControlBounds.shape = ptDefCMat;
-                DistBounds = struct();
-                DistBounds.center = qtDefCVec;
-                DistBounds.shape = qtDefCMat;
+                indReachTubeAxes = ~cellfun(@isempty,...
+                    strfind(axesHMapKeys, 'Ellipsoidal tubes'));
+                indGoodDirsAxes = ~cellfun(@isempty,...
+                    strfind(axesHMapKeys, 'Good directions'));
                 %
-                linSys = elltool.linsys.LinSys(atDefCMat, btDefCMat,...
-                    ControlBounds, ctDefCMat, DistBounds);
-                reachObj = elltool.reach.ReachContinious(linSys,...
-                    ellipsoid(x0DefVec, x0DefMat), l0Mat, tLims);
+                rtObjectHandles = axesHMap(axesHMapKeys{indReachTubeAxes});
+                gdObjectHandles = axesHMap(axesHMapKeys{indGoodDirsAxes});
                 %
-                if strcmp(confName, 'demo3firstTest')
-                    pointCutReachObj =...
-                        reachObj.cut(0.5*(tLims(1) + tLims(2)));
-                    intervalCutReachObj =...
-                        reachObj.cut([0.75*tLims(1) + 0.25*tLims(2),...
-                        0.25*tLims(1) + 0.75*tLims(2)]);
-                    [directionCVec t1Vec] = reachObj.get_directions();
-                    [centerMat t2Vec] = reachObj.get_center();
-                    [eaEllMat t3Vec] = reachObj.get_ea();
-                    [iaEllMat t4Vec] = reachObj.get_ia();
-                    [goodCurvesCVec t5Vec] = reachObj.get_goodcurves();
-                    projObj = reachObj.projection([1; 0]);
-                    evolveObj = reachObj.evolve(2 * tLims(2));
-                    isTimeEq =...
-                        all([all(t1Vec == t2Vec), all(t1Vec == t3Vec),...
-                        all(t1Vec == t4Vec), all(t1Vec == t5Vec)]);
-                    mlunit.assert_equals(true, isTimeEq);
-                    % and again for evolve object
-                    newTime = [tLims(1), 2 * tLims(2)];
-                    pointCutReachObj =...
-                        evolveObj.cut(0.5*(newTime(1) + newTime(2)));
-                    intervalCutReachObj =...
-                        evolveObj.cut([0.75*newTime(1) + 0.25*newTime(2),...
-                        0.25*newTime(1) + 0.75*newTime(2)]);
-                    [directionCVec t1Vec] = evolveObj.get_directions();
-                    [centerMat t2Vec] = evolveObj.get_center();
-                    [eaEllMat t3Vec] = evolveObj.get_ea();
-                    [iaEllMat t4Vec] = evolveObj.get_ia();
-                    [goodCurvesCVec t5Vec] = evolveObj.get_goodcurves();
-                    projObj = evolveObj.projection([1; 0]);
-                    newEvolveObj = evolveObj.evolve(newTime(2) + 1);
-                    isTimeEq =...
-                        all([all(t1Vec == t2Vec), all(t1Vec == t3Vec),...
-                        all(t1Vec == t4Vec), all(t1Vec == t5Vec)]);
-                    mlunit.assert_equals(true, isTimeEq);
+                rtObjectNames = get(rtObjectHandles, 'DisplayName');
+                gdObjectNames = get(gdObjectHandles, 'DisplayName');
+                indRtObject = ~cellfun(@isempty,...
+                    strfind(rtObjectNames, 'Reach Tube'));
+                indGdObjects = ~cellfun(@isempty,...
+                    strfind(gdObjectNames, 'Good directions curve'));
+                rtObject = rtObjectHandles(indRtObject);
+                gdObjects = gdObjectHandles(indGdObjects);
+                %
+                rtVertices = get(rtObject, 'Vertices');
+                gdVerticesCVec = get(gdObjects, 'Vertices');
+                %
+                plottedGoodDirCVec = cellfun(@(x) x(1, 2 : 3).',...
+                    gdVerticesCVec, 'UniformOutput', false);
+                %
+                plottedGoodDirIndex = 0;
+                for iGoodDir = 1 : nGoodDirs
+                    goodDir = goodDirCVec{iGoodDir};
+                    for iPlottedGoodDir = 1 : numel(plottedGoodDirCVec)
+                        plottedGoodDir =...
+                            plottedGoodDirCVec{iPlottedGoodDir};
+                        if all(goodDir == plottedGoodDir)
+                            plottedGoodDirIndex = iGoodDir;
+                            break;
+                        end
+                    end
+                end
+                if plottedGoodDirIndex == 0
+                   throwerror('No good direction found.');
                 end
                 %
-                SRunProp = struct();
-                SRunProp.ellTubeRel = reachObj.getEllTubeRel();
+                reachTubeEllipsoids = ellArray(plottedGoodDirIndex, :);
+                timeVec = ellTubes.timeVec{plottedGoodDirIndex, :};
+                nTimePoints = numel(timeVec);
                 %
-                calcPrecision=crm.getParam('genericProps.calcPrecision');
-                isOk=all(SRunProp.ellTubeRel.calcPrecision<=calcPrecision);
-                mlunit.assert_equals(true,isOk);
-                %
-                SRunProp=pathfilterstruct(SRunProp,COMPARED_FIELD_LIST);
-                if resMap.isKey(inpKey);
-                    SExpRes = resMap.get(inpKey);
-                    nCmpFields=numel(COMPARED_FIELD_LIST);
-                    for iField=1:nCmpFields
-                        fieldName=COMPARED_FIELD_LIST{iField};
-                        expRel=SExpRes.(fieldName);
-                        rel=SRunProp.(fieldName);
-                        %
-                        keyList=SSORT_KEYS.(fieldName);
-                        isRoundVec=ismember(keyList,ROUND_FIELD_LIST);
-                        roundKeyList=keyList(isRoundVec);
-                        nRoundKeys=length(roundKeyList);
-                        %
-                        for iRound=1:nRoundKeys
-                            roundKey=roundKeyList{iRound};
-                            rel.applySetFunc(@(x)roundn(x,-nRoundDigits),...
-                                roundKey);
-                            expRel.applySetFunc(@(x)roundn(x,-nRoundDigits),...
-                                roundKey);
-                        end
-                        rel.sortBy(SSORT_KEYS.(fieldName));
-                        expRel.sortBy(SSORT_KEYS.(fieldName));
-   
-                        [isOk,reportStr]=expRel.isEqual(rel,'maxTolerance',...
-                            MAX_TOL,'checkTupleOrder',true);
-                        %
-                        reportStr=sprintf('confName=%s\n %s',confName,...
-                            reportStr);
-                        mlunit.assert_equals(true,isOk,reportStr);
-                    end
-                else
-                    throwerror('Do not exist config mat file.');
-                end 
+                for iTimePoint = 1 : nTimePoints
+                    ell = reachTubeEllipsoids(iTimePoint);
+                    curT = timeVec(iTimePoint);
+                    pointsMat = rtVertices(rtVertices(:, 1) == curT, 2 : 3);
+                    pointsMat =...
+                        pointsMat.' / self.reachObj.getEaScaleFactor;
+                    [centerVec shapeMat] = parameters(ell);
+                    centerPointsMat = pointsMat -...
+                        repmat(centerVec, 1, size(pointsMat, 2));
+                    sqrtScalProdVec = sqrt(abs(dot(centerPointsMat,...
+                        shapeMat\centerPointsMat) - 1));
+                    mlunit.assert_equals(...
+                        max(sqrtScalProdVec) < self.calcPrecision, true);
+                end
             end
+        end
+        %
+        function self = testPlotIa(self)
+            %
+            ellArray = self.reachObj.get_ia;
+            ellTubes = self.reachObj.getEllTubeRel.getTuplesFilteredBy(...
+                'approxType', gras.ellapx.enums.EApproxType.Internal);
+            goodDirCVec = ellTubes.lsGoodDirVec;
+            nGoodDirs = numel(goodDirCVec);
+            %
+            plotter = self.reachObj.plot_ia;
+            plotter.closeAllFigures();
+            %
+            axesHMapList =...
+                plotter.getPlotStructure.figToAxesToPlotHMap.values;
+            nFigures = numel(axesHMapList);
+            for iAxesHMap = 1 : nFigures
+                axesHMap = axesHMapList{iAxesHMap};
+                axesHMapKeys = axesHMap.keys;
+                %
+                indReachTubeAxes = ~cellfun(@isempty,...
+                    strfind(axesHMapKeys, 'Ellipsoidal tubes'));
+                indGoodDirsAxes = ~cellfun(@isempty,...
+                    strfind(axesHMapKeys, 'Good directions'));
+                %
+                rtObjectHandles = axesHMap(axesHMapKeys{indReachTubeAxes});
+                gdObjectHandles = axesHMap(axesHMapKeys{indGoodDirsAxes});
+                %
+                rtObjectNames = get(rtObjectHandles, 'DisplayName');
+                gdObjectNames = get(gdObjectHandles, 'DisplayName');
+                indRtObject = ~cellfun(@isempty,...
+                    strfind(rtObjectNames, 'Reach Tube'));
+                indGdObjects = ~cellfun(@isempty,...
+                    strfind(gdObjectNames, 'Good directions curve'));
+                rtObject = rtObjectHandles(indRtObject);
+                gdObjects = gdObjectHandles(indGdObjects);
+                %
+                rtVertices = get(rtObject, 'Vertices');
+                gdVerticesCVec = get(gdObjects, 'Vertices');
+                %
+                plottedGoodDirCVec = cellfun(@(x) x(1, 2 : 3).',...
+                    gdVerticesCVec, 'UniformOutput', false);
+                %
+                plottedGoodDirIndex = 0;
+                for iGoodDir = 1 : nGoodDirs
+                    goodDir = goodDirCVec{iGoodDir};
+                    for iPlottedGoodDir = 1 : numel(plottedGoodDirCVec)
+                        plottedGoodDir =...
+                            plottedGoodDirCVec{iPlottedGoodDir};
+                        if all(goodDir == plottedGoodDir)
+                            plottedGoodDirIndex = iGoodDir;
+                            break;
+                        end
+                    end
+                end
+                if plottedGoodDirIndex == 0
+                   throwerror('No good direction found.');
+                end
+                %
+                reachTubeEllipsoids = ellArray(plottedGoodDirIndex, :);
+                timeVec = ellTubes.timeVec{plottedGoodDirIndex, :};
+                nTimePoints = numel(timeVec);
+                %
+                for iTimePoint = 1 : nTimePoints
+                    ell = reachTubeEllipsoids(iTimePoint);
+                    curT = timeVec(iTimePoint);
+                    pointsMat = rtVertices(rtVertices(:, 1) == curT, 2 : 3);
+                    pointsMat =...
+                        pointsMat.' / self.reachObj.getIaScaleFactor;
+                    [centerVec shapeMat] = parameters(ell);
+                    centerPointsMat = pointsMat -...
+                        repmat(centerVec, 1, size(pointsMat, 2));
+                    sqrtScalProdVec = sqrt(abs(dot(centerPointsMat,...
+                        shapeMat\centerPointsMat) - 1));
+                    mlunit.assert_equals(...
+                        max(sqrtScalProdVec) < self.calcPrecision, true);
+                end
+            end
+        end
+        %
+        function self = testDimension(self)
+            expDim = self.crmSys.getParam('dim');
+            projReachSet = self.reachObj.projection(eye(expDim, 1));
+            [rsDim ssDim] = projReachSet.dimension();
+            isOk = (rsDim == expDim) && (ssDim == 1);
+            mlunit.assert_equals(true, isOk);
+        end
+        %
+        function self = testIsEmpty(self)
+            emptyRs = elltool.reach.ReachContinious();
+            mlunit.assert_equals(true, emptyRs.isempty);
+            mlunit.assert_equals(false, self.reachObj.isempty);
         end
     end
 end

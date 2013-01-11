@@ -1,4 +1,9 @@
 classdef IReach < handle
+% $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2012 $
+%
     methods (Abstract)
         cutObj = cut(self, cutTimeVec)
         %
@@ -11,17 +16,13 @@ classdef IReach < handle
         %   regular:
         %       self
         %
-        %       cutTimeVec: double[1, 2] or double[1, 1]  
+        %       cutTimeVec: double[1, 2]/double[1, 1] - time interval to
+        %           cut          
         %
         % Output:
         %   cutObj: reach[1, 1] - reach set resulting from the CUT operation.
         %
-        % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
-        % $Copyright: Moscow State University,
-        %            Faculty of Computational Mathematics and Computer Science,
-        %            System Analysis Department 2012 $
-        %
-        [RSdim SSdim] = dimension(self)
+        [rSdim sSdim] = dimension(self)
         %
         % DIMENSION - returns the dimension of the reach set.
         %
@@ -30,14 +31,9 @@ classdef IReach < handle
         %       self
         %
         % Output:
-        %   RSdim: double[1, 1] - reach set dimension.
+        %   rSdim: double[1, 1] - reach set dimension.
         %
-        %   SSdim: double[1, 1] - state space dimension.
-        %
-        % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
-        % $Copyright: Moscow State University,
-        %            Faculty of Computational Mathematics and Computer Science,
-        %            System Analysis Department 2012 $
+        %   sSdim: double[1, 1] - state space dimension.
         %
         display(self)
         %
@@ -49,11 +45,6 @@ classdef IReach < handle
         %
         % Output:
         %   None.
-        %
-        % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
-        % $Copyright: Moscow State University,
-        %            Faculty of Computational Mathematics and Computer Science,
-        %            System Analysis Department 2012 $
         %
         newReachObj = evolve(self, newEndTime, linSys)
         %
@@ -71,11 +62,6 @@ classdef IReach < handle
         % Output:	
         %   newReachObj: reach[1, 1] - reach set on time interval [oldT0 newEndTime]
         %
-        % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
-        % $Copyright: Moscow State University,
-        %            Faculty of Computational Mathematics and Computer Science,
-        %            System Analysis Department 2012 $
-        %
         [trCenterMat timeVec] = get_center(self)
         %
         % GET_CENTER - returns the trajectory of the center of the reach set.
@@ -91,11 +77,6 @@ classdef IReach < handle
         %       time grid.
         %
         %     timeVec: double[1, nPoints] - array of time values.
-        %
-        % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
-        % $Copyright: Moscow State University,
-        %            Faculty of Computational Mathematics and Computer Science,
-        %            System Analysis Department 2012 $
         %
         [directionsCVec timeVec] = get_directions(self)
         %
@@ -113,11 +94,6 @@ classdef IReach < handle
         %
         %   timeVec: double[1, nPoints] - array of time values.
         %
-        % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
-        % $Copyright: Moscow State University,
-        %            Faculty of Computational Mathematics and Computer Science,
-        %            System Analysis Department 2012 $
-        %
         [eaEllMat timeVec] = get_ea(self)
         %
         % GET_EA - returns array of ellipsoid objects representing
@@ -134,11 +110,6 @@ classdef IReach < handle
         %
         %   timeVec: double[1, nPoints] - array of time values.
         %
-        % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
-        % $Copyright: Moscow State University,
-        %            Faculty of Computational Mathematics and Computer Science,
-        %            System Analysis Department 2012 $
-        %
         [goodCurvesCVec timeVec] = get_goodcurves(self)
         %
         % WARNING! This function cannot be used with projected reach sets.
@@ -154,10 +125,6 @@ classdef IReach < handle
         %       cell is array of points that form a 'good curve'.
         %
         %   timeVec: double[1, nPoints] - array of time values.
-        % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
-        % $Copyright: Moscow State University,
-        %            Faculty of Computational Mathematics and Computer Science,
-        %            System Analysis Department 2012 $
         %
         [iaEllMat timeVec] = get_ia(self)
         %
@@ -175,11 +142,6 @@ classdef IReach < handle
         %
         %   timeVec: double[1, nPoints] - array of time values.
         %
-        % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
-        % $Copyright: Moscow State University,
-        %            Faculty of Computational Mathematics and Computer Science,
-        %            System Analysis Department 2012 $
-        %
         linSys = get_system(self)
         %
         % GET_SYSTEM - returns the linear system for which the reach set is computed.
@@ -191,11 +153,6 @@ classdef IReach < handle
         % Output:
         %   linSys: elltool.linsys.LinSys[1, 1] - linear system object.
         %
-        % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
-        % $Copyright: Moscow State University,
-        %            Faculty of Computational Mathematics and Computer Science,
-        %            System Analysis Department 2012 $
-        %
         isEmptyIntersect = intersect(self, intersectObj, approxTypeChar)
         %
         % INTERSECT - checks if its external (s = 'e'), or internal (s = 'i')
@@ -205,7 +162,7 @@ classdef IReach < handle
         %   regular:
         %       self
         %
-        %       intersectObj: ellipsoid[1, 1], hyperplane[1, 1] or polytop[1, 1].
+        %       intersectObj: ellipsoid[1, 1]/hyperplane[1, 1]/polytop[1, 1].
         %
         %       approxTypeChar: char[1, 1] -
         %           'e' (default) - external approximation,
@@ -213,12 +170,7 @@ classdef IReach < handle
         %
         % Output:
         %   isEmptyIntersect: logical[1, 1] -
-        %       1 - if intersection is nonempty, 0 - otherwise.
-        %
-        % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
-        % $Copyright: Moscow State University,
-        %            Faculty of Computational Mathematics and Computer Science,
-        %            System Analysis Department 2012 $
+        %       true - if intersection is nonempty, false - otherwise.
         %
         isCut = iscut(self)
         %
@@ -230,12 +182,7 @@ classdef IReach < handle
         %
         % Output:
         %   isCut: logical[1, 1] -
-        %       1 - if self is a cut of the reach set, 0 - otherwise.
-        %
-        % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
-        % $Copyright: Moscow State University,
-        %            Faculty of Computational Mathematics and Computer Science,
-        %            System Analysis Department 2012 $
+        %       true - if self is a cut of the reach set, false - otherwise.
         %
         isProj = isprojection(self)
         %
@@ -247,12 +194,7 @@ classdef IReach < handle
         %
         % Output:
         %   isProj: logical[1, 1] -
-        %       1 - if self is projection, 0 - otherwise.
-        %
-        % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
-        % $Copyright: Moscow State University,
-        %            Faculty of Computational Mathematics and Computer Science,
-        %            System Analysis Department 2012 $
+        %       true - if self is projection, false - otherwise.
         %
         plot_ea(self, varargin)
         %
@@ -263,24 +205,26 @@ classdef IReach < handle
         %       self
         %
         %   optional:
-        %       colorChar: char[1, 1] - set color to plot
+        %       colorSpec: char[1, 1] - set color to plot in following way:
+        %           'r' - red color
+        %           'g' - green color
+        %           'b' - blue color
+        %           'y' - yellow color
+        %           'c' - cyan color
+        %           'm' - magenta color
+        %           'w' - white color
         %
         %       OptStruct: struct[1, 1] with fields:
-        %           OptStruct.color: double[1, 3] - sets color of the
+        %           color: double[1, 3] - sets color of the
         %               picture in the form [x y z].
-        %         OptStruct.width: double[1, 1] - sets line width for 2D plots.
-        %         OptStruct.shade: double[1, 1] in [0; 1] interval - sets
+        %           width: double[1, 1] - sets line width for 2D plots.
+        %           shade: double[1, 1] in [0; 1] interval - sets
         %             transparency level (0 - transparent, 1 - opaque).
-        %         OptStruct.fill: double[1, 1] - if set to 1, reach set
+        %           fill: double[1, 1] - if set to 1, reach set
         %             will be filled with color.
         %
         % Output:
         %   None.
-        %
-        % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
-        % $Copyright: Moscow State University,
-        %            Faculty of Computational Mathematics and Computer Science,
-        %            System Analysis Department 2012 $
         %
         plot_ia(self, varargin)
         %
@@ -291,24 +235,26 @@ classdef IReach < handle
         %       self
         %
         %   optional:
-        %       colorChar: char[1, 1] - set color to plot
+        %       colorSpec: char[1, 1] - set color to plot in following way:
+        %           'r' - red color
+        %           'g' - green color
+        %           'b' - blue color
+        %           'y' - yellow color
+        %           'c' - cyan color
+        %           'm' - magenta color
+        %           'w' - white color
         %
         %       OptStruct: struct[1, 1] with fields:
-        %           OptStruct.color: double[1, 3] - sets color of the
+        %           color: double[1, 3] - sets color of the
         %               picture in the form [x y z].
-        %         OptStruct.width: double[1, 1] - sets line width for 2D plots.
-        %         OptStruct.shade: double[1, 1] in [0; 1] interval - sets
+        %           width: double[1, 1] - sets line width for 2D plots.
+        %           shade: double[1, 1] in [0; 1] interval - sets
         %             transparency level (0 - transparent, 1 - opaque).
-        %         OptStruct.fill: double[1, 1] - if set to 1, reach set
+        %           fill: double[1, 1] - if set to 1, reach set
         %             will be filled with color.
         %
         % Output:
         %   None.
-        %
-        % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
-        % $Copyright: Moscow State University,
-        %            Faculty of Computational Mathematics and Computer Science,
-        %            System Analysis Department 2012 $
         %
         projObj = projection(self, projMat)
         %
@@ -324,11 +270,6 @@ classdef IReach < handle
         % Output:
         %   projObj: reach[1, 1] - projected reach set.
         %
-        % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
-        % $Copyright: Moscow State University,
-        %            Faculty of Computational Mathematics and Computer Science,
-        %            System Analysis Department 2012 $
-        %
         isEmpty = isempty(self)
         %
         % ISEMPTY - checks if given reach set is an empty object.
@@ -339,12 +280,7 @@ classdef IReach < handle
         %
         % Output:
         %   isEmpty: logical[1, 1] -
-        %       1 - if self is empty, 0 - otherwise.
-        %
-        % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
-        % $Copyright: Moscow State University,
-        %            Faculty of Computational Mathematics and Computer Science,
-        %            System Analysis Department 2012 $
+        %       true - if self is empty, false - otherwise.
         %
     end
 end

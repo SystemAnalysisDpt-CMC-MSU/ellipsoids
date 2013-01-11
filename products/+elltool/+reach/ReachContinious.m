@@ -362,7 +362,7 @@ classdef ReachContinious < elltool.reach.AReach
                 relTol, approxTypeVec);
         end
         %%
-        function plot_ea(self, varargin)
+        function eaPlotter = plot_ea(self, varargin)
             import gras.ellapx.enums.EApproxType;
             colorVec = [0 0 1];
             lineWidth = 2;
@@ -420,22 +420,23 @@ classdef ReachContinious < elltool.reach.AReach
                     throwerror('Dimension of the projection must be leq 3');                    
                 else
                     plObj = smartdb.disp.RelationDataPlotter();
-                    self.getEllTubeRel().getTuplesFilteredBy(...
+                    eaPlotter = self.getEllTubeRel().getTuplesFilteredBy(...
                         'approxType', EApproxType.External).plot(plObj,...
                         'fGetTubeColor', @(x) deal(colorVec, shade));
                 end
             else
                 if self.dimension() > 2
-                    projBasisMat = eye(3);
+                    projBasisMat = eye(self.dimension(), 2);
                 else
                     projBasisMat = eye(self.dimension());
                 end
                 plObj = smartdb.disp.RelationDataPlotter();
                 projSetObj = self.getProjSet(projBasisMat,...
                     EApproxType.External, self.EXTERNAL_SCALE_FACTOR);
-                projSetObj.plot(plObj, 'fGetTubeColor',...
+                eaPlotter = projSetObj.plot(plObj, 'fGetTubeColor',...
                     @(x) deal(colorVec, shade));
             end
+            
             %
             function setPlotParams(ColorOpt)
                 if isfield(ColorOpt, 'color')
@@ -453,7 +454,7 @@ classdef ReachContinious < elltool.reach.AReach
             end
         end
         %%
-        function plot_ia(self, varargin)
+        function iaPlotter = plot_ia(self, varargin)
             import gras.ellapx.enums.EApproxType;
             colorVec = [0 1 0];
             lineWidth = 2;
@@ -511,20 +512,20 @@ classdef ReachContinious < elltool.reach.AReach
                     throwerror('Dimension of the projection must be leq 3');                    
                 else
                     plObj = smartdb.disp.RelationDataPlotter();
-                    self.getEllTubeRel().getTuplesFilteredBy(...
+                    iaPlotter = self.getEllTubeRel().getTuplesFilteredBy(...
                         'approxType', EApproxType.Internal).plot(plObj,...
                         'fGetTubeColor', @(x) deal(colorVec, shade));
                 end
             else
                 if self.dimension() > 2
-                    projBasisMat = eye(3);
+                    projBasisMat = eye(self.dimension(), 2);
                 else
                     projBasisMat = eye(self.dimension());
                 end
                 plObj = smartdb.disp.RelationDataPlotter();
                 projSetObj = self.getProjSet(projBasisMat,...
                     EApproxType.Internal, self.INTERNAL_SCALE_FACTOR);
-                projSetObj.plot(plObj, 'fGetTubeColor',...
+                iaPlotter = projSetObj.plot(plObj, 'fGetTubeColor',...
                     @(x) deal(colorVec, shade));
             end
             %
@@ -852,6 +853,14 @@ classdef ReachContinious < elltool.reach.AReach
         %%
         function ellTubeRel = getEllTubeRel(self)
             ellTubeRel = self.ellTubeRel;
+        end
+        %%
+        function eaScaleFactor = getEaScaleFactor(self)
+            eaScaleFactor = self.EXTERNAL_SCALE_FACTOR;
+        end
+        %%
+        function iaScaleFactor = getIaScaleFactor(self)
+            iaScaleFactor = self.INTERNAL_SCALE_FACTOR;
         end
     end
 end
