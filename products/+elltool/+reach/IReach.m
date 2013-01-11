@@ -2,17 +2,19 @@ classdef IReach < handle
     methods (Abstract)
         cutObj = cut(self, cutTimeVec)
         %
-        % CUT - extracts the piece of reach tube from given start time to given end time.
-        % Given reach set self, find states that are reachable within
-        %     time interval specified by cutTimeVec.
-        %     If cutTimeVec is a scalar, then reach set at given time is returned.
+        % CUT - extracts the piece of reach tube from given start time to
+        % given end time. Given reach set self, find states that are
+        % reachable within time interval specified by cutTimeVec. If
+        % cutTimeVec is a scalar, then reach set at given time is returned.
         %
         % Input:
-        %     self
-        %     cutTimeVec: double[1, 2] or double[1, 1]  
+        %   regular:
+        %       self
+        %
+        %       cutTimeVec: double[1, 2] or double[1, 1]  
         %
         % Output:
-        %     cutObj - reach set resulting from the CUT operation.
+        %   cutObj: reach[1, 1] - reach set resulting from the CUT operation.
         %
         % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
         % $Copyright: Moscow State University,
@@ -24,12 +26,13 @@ classdef IReach < handle
         % DIMENSION - returns the dimension of the reach set.
         %
         % Input:
-        %     self
+        %   regular:
+        %       self
         %
         % Output:
+        %   RSdim: double[1, 1] - reach set dimension.
         %
-        %     RSdim - reach set dimension.
-        %     SSdim - state space dimension (optionally).
+        %   SSdim: double[1, 1] - state space dimension.
         %
         % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
         % $Copyright: Moscow State University,
@@ -41,7 +44,11 @@ classdef IReach < handle
         % DISPLAY - displays the reach set object
         %
         % Input:
-        %     self
+        %   regular:
+        %       self
+        %
+        % Output:
+        %   None.
         %
         % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
         % $Copyright: Moscow State University,
@@ -53,17 +60,16 @@ classdef IReach < handle
         % EVOLVE - computes further evolution in time of the already existing reach set.
         %
         % Input:
-        %     Case1:
-        %         self
-        %         newEndTime: double[1, 1] - new end time
+        %   regular:
+        %       self
         %
-        %     Case2:
-        %         self
-        %         newEndTime: double[1, 1] - new end time
-        %         linSys: elltool.linsys.LinSys[1, 1] - new linear system
+        %       newEndTime: double[1, 1] - new end time
+        %
+        %   optional:
+        %       linSys: elltool.linsys.LinSys[1, 1] - new linear system
         %
         % Output:	
-        %     newReachObj - reach set on time interval [oldT0 newEndTime]
+        %   newReachObj: reach[1, 1] - reach set on time interval [oldT0 newEndTime]
         %
         % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
         % $Copyright: Moscow State University,
@@ -75,11 +81,16 @@ classdef IReach < handle
         % GET_CENTER - returns the trajectory of the center of the reach set.
         %
         % Input:
-        %     self
+        %   regular:
+        %       self
         %
         % Output:
-        %     trCenterMat - array of points that form the trajectory of the reach set center.
-        %     timeVec - array of time values (optionally).
+        %   trCenterMat: double[nDim, nPoints] - array of points that
+        %       form the trajectory of the reach set center, where
+        %       nDim is reach set dimentsion, nPoints - number of points in
+        %       time grid.
+        %
+        %     timeVec: double[1, nPoints] - array of time values.
         %
         % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
         % $Copyright: Moscow State University,
@@ -91,13 +102,16 @@ classdef IReach < handle
         % GET_DIRECTIONS - returns the values of direction vectors for time grid values.
         %
         % Input:
-        %     self
+        %   regular:
+        %       self
         %
         % Output:
-        %     directionsCVec - array of cells, where each cell is
-        %         a sequence of direction vector values that correspond
-        %         to the time values of the grid.
-        %     timeVec - array of time values (optionally).
+        %   directionsCVec: cell[1, nPoints] - array of cells, where each
+        %       cell is a sequence of direction vector values that
+        %       correspond to the time values of the grid, where nPoints is
+        %       number of points in time grid.
+        %
+        %   timeVec: double[1, nPoints] - array of time values.
         %
         % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
         % $Copyright: Moscow State University,
@@ -110,13 +124,15 @@ classdef IReach < handle
         %     external approximation of the reach tube.
         %
         % Input:
-        %     self
+        %   regular:
+        %       self
         %
         % Output:
-        %     eaEllMat - m x n array of ellipsoids, where m is the number
-        %         of approximations, and n - number of time values
-        %         for which the reach set approximation is computed.
-        %     timeVec - array of corresponding time values (optionally).
+        %   eaEllMat: ellipsoid[nAppr, nPoints] - array of ellipsoids,
+        %       where nAppr is the number of approximations, nPoints is
+        %       number of points in time grid.
+        %
+        %   timeVec: double[1, nPoints] - array of time values.
         %
         % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
         % $Copyright: Moscow State University,
@@ -130,12 +146,14 @@ classdef IReach < handle
         % GET_GOODCURVES - returns the 'good curve' trajectories of the reach set.
         %
         % Input:
-        %     self
+        %   regular:
+        %       self
         %
         % Output:
-        %     goodCurvesCVec - array of cells, where each cell is array
-        %     of points that form a 'good curve'.
-        %     timeVec - array of time values (optionally).
+        %   goodCurvesCVec: cell[1, nPoints] - array of cells, where each
+        %       cell is array of points that form a 'good curve'.
+        %
+        %   timeVec: double[1, nPoints] - array of time values.
         % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
         % $Copyright: Moscow State University,
         %            Faculty of Computational Mathematics and Computer Science,
@@ -147,13 +165,15 @@ classdef IReach < handle
         %     internal approximation of the reach tube.
         %
         % Input:
-        %     self
+        %   regular:
+        %       self
         %
         % Output:
-        %     iaEllMat - m x n array of ellipsoids, where m is the number
-        %         of approximations, and n - number of time values
-        %         for which the reach set approximation is computed.
-        %     timeVec - array of corresponding time values (optionally).
+        %   iaEllMat: ellipsoid[nAppr, nPoints] - array of ellipsoids,
+        %       where nAppr is the number of approximations, nPoints is
+        %       number of points in time grid.
+        %
+        %   timeVec: double[1, nPoints] - array of time values.
         %
         % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
         % $Copyright: Moscow State University,
@@ -165,10 +185,11 @@ classdef IReach < handle
         % GET_SYSTEM - returns the linear system for which the reach set is computed.
         %
         % Input:
-        %     self
+        %   regular:
+        %       self
         %
         % Output:
-        %     linSys - linear system object.
+        %   linSys: elltool.linsys.LinSys[1, 1] - linear system object.
         %
         % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
         % $Copyright: Moscow State University,
@@ -181,13 +202,18 @@ classdef IReach < handle
         %     approximation intersects with given ellipsoid, hyperplane or polytop.
         %
         % Input:
-        %     self
-        %     intersectObj: ellipsoid, hyperplane or polytop.
-        %     approxTypeChar: 'e' (default) - external approximation,
-        %         'i' - internal approximation.
+        %   regular:
+        %       self
+        %
+        %       intersectObj: ellipsoid[1, 1], hyperplane[1, 1] or polytop[1, 1].
+        %
+        %       approxTypeChar: char[1, 1] -
+        %           'e' (default) - external approximation,
+        %           'i' - internal approximation.
         %
         % Output:
-        %     isEmptyIntersect: 1 - if intersection is nonempty, 0 - otherwise.
+        %   isEmptyIntersect: logical[1, 1] -
+        %       1 - if intersection is nonempty, 0 - otherwise.
         %
         % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
         % $Copyright: Moscow State University,
@@ -199,10 +225,12 @@ classdef IReach < handle
         % ISCUT - checks if given reach set object is a cut of another reach set.
         %
         % Input:
-        %     self
+        %   regular:
+        %       self
         %
         % Output:
-        %     isCut: 1 - if RS is a cut of the reach set, 0 - otherwise.
+        %   isCut: logical[1, 1] -
+        %       1 - if self is a cut of the reach set, 0 - otherwise.
         %
         % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
         % $Copyright: Moscow State University,
@@ -214,10 +242,12 @@ classdef IReach < handle
         % ISPROJECTION - checks if given reach set object is a projection.
         %
         % Input:
-        %     self
+        %   regular:
+        %       self
         %
         % Output:
-        %     isProj: 1 - if self is projection, 0 - otherwise.
+        %   isProj: logical[1, 1] -
+        %       1 - if self is projection, 0 - otherwise.
         %
         % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
         % $Copyright: Moscow State University,
@@ -229,26 +259,23 @@ classdef IReach < handle
         % PLOT_EA - plots external approximations of 2D and 3D reach sets.
         %
         % Input:
-        %     Case1:
-        %         self
+        %   regular:
+        %       self
         %
-        %     Case2:
-        %         self
-        %         OptStruct: structure with fields described below
+        %   optional:
+        %       colorChar: char[1, 1] - set color to plot
         %
-        %     Case3:
-        %         self
-        %         'r': plot approximation in red color
-        %         OptStruct: structure with fields described below
-        %
-        %     OptStruct's fields:
-        %         OptStruct.color - sets color of the picture in the form [x y z].
-        %         OptStruct.width - sets line width for 2D plots.
-        %         OptStruct.shade: 0-1 - sets transparency level (0 - transparent, 1 - opaque).
-        %         OptStruct.fill - if set to 1, reach set will be filled with color.
+        %       OptStruct: struct[1, 1] with fields:
+        %           OptStruct.color: double[1, 3] - sets color of the
+        %               picture in the form [x y z].
+        %         OptStruct.width: double[1, 1] - sets line width for 2D plots.
+        %         OptStruct.shade: double[1, 1] in [0; 1] interval - sets
+        %             transparency level (0 - transparent, 1 - opaque).
+        %         OptStruct.fill: double[1, 1] - if set to 1, reach set
+        %             will be filled with color.
         %
         % Output:
-        %     None.
+        %   None.
         %
         % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
         % $Copyright: Moscow State University,
@@ -260,26 +287,23 @@ classdef IReach < handle
         % PLOT_IA - plots internal approximations of 2D and 3D reach sets.
         %
         % Input:
-        %     Case1:
-        %         self
+        %   regular:
+        %       self
         %
-        %     Case2:
-        %         self
-        %         OptStruct: structure with fields described below
+        %   optional:
+        %       colorChar: char[1, 1] - set color to plot
         %
-        %     Case3:
-        %         self
-        %         'r': plot approximation in red color
-        %         OptStruct: structure with fields described below
-        %
-        %     OptStruct's fields:
-        %         OptStruct.color - sets color of the picture in the form [x y z].
-        %         OptStruct.width - sets line width for 2D plots.
-        %         OptStruct.shade: 0-1 - sets transparency level (0 - transparent, 1 - opaque).
-        %         OptStruct.fill - if set to 1, reach set will be filled with color.
+        %       OptStruct: struct[1, 1] with fields:
+        %           OptStruct.color: double[1, 3] - sets color of the
+        %               picture in the form [x y z].
+        %         OptStruct.width: double[1, 1] - sets line width for 2D plots.
+        %         OptStruct.shade: double[1, 1] in [0; 1] interval - sets
+        %             transparency level (0 - transparent, 1 - opaque).
+        %         OptStruct.fill: double[1, 1] - if set to 1, reach set
+        %             will be filled with color.
         %
         % Output:
-        %     None.
+        %   None.
         %
         % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
         % $Copyright: Moscow State University,
@@ -289,14 +313,16 @@ classdef IReach < handle
         projObj = projection(self, projMat)
         %
         % PROJECTION - projects the reach set self onto the orthogonal
-        %     basis specified by the columns of matrix B.
+        %     basis specified by the columns of matrix projMat.
         %
         % Input:
-        %     self
-        %     projMat: matrix of double 
+        %   regular:
+        %       self
+        %       projMat: double[nRows, nCols] - projection matrix, where
+        %           nRows is dimension of reach set, nCols <= nRows.
         %
         % Output:
-        %     projObj - projected reach set.
+        %   projObj: reach[1, 1] - projected reach set.
         %
         % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
         % $Copyright: Moscow State University,
@@ -308,10 +334,12 @@ classdef IReach < handle
         % ISEMPTY - checks if given reach set is an empty object.
         %
         % Input:
-        %     self
+        %   regular:
+        %       self
         %
         % Output:
-        %     isEmpty: 1 - if self is empty, 0 - otherwise.
+        %   isEmpty: logical[1, 1] -
+        %       1 - if self is empty, 0 - otherwise.
         %
         % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
         % $Copyright: Moscow State University,

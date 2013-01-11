@@ -83,6 +83,30 @@ classdef ReachContinious < elltool.reach.AReach
         end
     end
     methods (Access = private, Static)
+        function colCodeVec = getColorVec(colChar)
+            if ~(ischar(colChar))
+                colCodeVec = [0 0 0];
+                return;
+            end
+            switch colChar
+                case 'r',
+                    colCodeVec = [1 0 0];
+                case 'g',
+                    colCodeVec = [0 1 0];
+                case 'b',
+                    colCodeVec = [0 0 1];
+                case 'y',
+                    colCodeVec = [1 1 0];
+                case 'c',
+                	colCodeVec = [0 1 1];
+                case 'm',
+                    colCodeVec = [1 0 1];
+                case 'w',
+                    colCodeVec = [1 1 1];
+                otherwise,
+                    colCodeVec = [0 0 0];
+            end
+        end
         function isDisturb = isDisturbance(gtStrCMat, qtStrCMat)
             import gras.mat.symb.iscellofstringconst;
             import gras.gen.MatVector;
@@ -338,51 +362,37 @@ classdef ReachContinious < elltool.reach.AReach
                 relTol, approxTypeVec);
         end
         %%
-        function plot_ea(self, ColorOpt)
-        %
-        % PLOT_EA - plots external approximations of 2D and 3D reach sets.
-        %
-        % Input:
-        %     Case1:
-        %         self
-        %
-        %     Case2:
-        %         self
-        %         ColorOpt: structure with fields described below
-        %
-        %     ColorOpt's fields:
-        %         ColorOpt.color - sets color of the picture in the form [x y z].
-        %         ColorOpt.alpha: 0-1 - sets transparency level (0 - transparent, 1 - opaque).
-        %
-        % Remark: in case1 ColorOpt's fields are:
-        %     ColorOpt.color = [0 0 1], ColorOpt.alpha = 0.3
-        %
-        % Output:
-        %     None.
-        %
-        % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
-        % $Copyright: Moscow State University,
-        %            Faculty of Computational Mathematics and Computer Science,
-        %            System Analysis Department 2012 $
-        %
+        function plot_ea(self, varargin)
             import gras.ellapx.enums.EApproxType;
-            if nargin > 2
+            colorVec = [0 0 1];
+            lineWidth = 2;
+            shade = 0.3;
+            fill = 0;
+            if nargin > 3
                 throwerror('Too many arguments.');
             elseif nargin == 2
-                if isfield(ColorOpt, 'color')
-                    colorVec = ColorOpt.color;
+                if ischar(varargin{1})
+                    colorVec = self.getColorVec(varargin{1});
+                elseif isstruct(varargin{1})
+                    ColorOpt = varargin{1};
+                    setPlotParams(ColorOpt);
                 else
-                    throwerror('ColorOpt does not contain field "color"');
+                    throwerror('Wrong argument format.');
                 end
-                if isfield(ColorOpt, 'alpha')
-                    alpha = ColorOpt.alpha;
+            elseif nargin == 3
+                if isstruct(varargin{2})
+                    ColorOpt = varargin{2};
+                    setPlotParams(ColorOpt);
                 else
-                    throwerror('ColorOpt does not contain field "alpha"');
+                    throwerror('Wrong argument format.');
                 end
-            else
-                colorVec = [0 0 1];
-                alpha = 0.3;
+                if ischar(varargin{1})
+                    colorVec = self.getColorVec(varargin{1});
+                else
+                    throwerror('Wrong argument format.');
+                end
             end
+            %
             if ~ismatrix(colorVec)
                 throwerror('Wrong field format ("color")');
             else
@@ -391,13 +401,20 @@ classdef ReachContinious < elltool.reach.AReach
                     throwerror('Wrong field format ("color")');
                 end
             end
-            if ~isa(alpha, 'double')
-                throwerror('Wrong field format ("alpha")');
+            if ~isa(lineWidth, 'double')
+                throwerror('Wrong field format ("width")');
+            end
+            if ~isa(shade, 'double')
+                throwerror('Wrong field format ("shade")');
             else
-                if alpha < 0 || alpha > 1
-                    throwerror('Wrong field format ("alpha")');
+                if shade < 0 || shade > 1
+                    throwerror('Wrong field format ("shade")');
                 end
             end
+            if ~isa(fill, 'double')
+                throwerror('Wrong field format ("fill")');
+            end
+            %
             if self.isProj
                 if self.getEllTubeRel().dim() > 3
                     throwerror('Dimension of the projection must be leq 3');                    
@@ -405,7 +422,7 @@ classdef ReachContinious < elltool.reach.AReach
                     plObj = smartdb.disp.RelationDataPlotter();
                     self.getEllTubeRel().getTuplesFilteredBy(...
                         'approxType', EApproxType.External).plot(plObj,...
-                        'fGetTubeColor', @(x) deal(colorVec, alpha));
+                        'fGetTubeColor', @(x) deal(colorVec, shade));
                 end
             else
                 if self.dimension() > 2
@@ -417,55 +434,56 @@ classdef ReachContinious < elltool.reach.AReach
                 projSetObj = self.getProjSet(projBasisMat,...
                     EApproxType.External, self.EXTERNAL_SCALE_FACTOR);
                 projSetObj.plot(plObj, 'fGetTubeColor',...
-                    @(x) deal(colorVec, alpha));
+                    @(x) deal(colorVec, shade));
+            end
+            %
+            function setPlotParams(ColorOpt)
+                if isfield(ColorOpt, 'color')
+                    colorVec = ColorOpt.color;
+                end
+                if isfield(ColorOpt, 'width')
+                    lineWidth = ColorOpt.width;
+                end
+                if isfield(ColorOpt, 'shade')
+                    shade = ColorOpt.shade;
+                end
+                if isfield(ColorOpt, 'fill')
+                    fill = ColorOpt.fill;
+                end
             end
         end
         %%
-        function plot_ia(self, ColorOpt)
-        %
-        % PLOT_IA - plots external approximations of 2D and 3D reach sets.
-        %
-        % Input:
-        %     Case1:
-        %         self
-        %
-        %     Case2:
-        %         self
-        %         ColorOpt: structure with fields described below
-        %
-        %     ColorOpt's fields:
-        %         ColorOpt.color - sets color of the picture in the form [x y z].
-        %         ColorOpt.alpha: 0-1 - sets transparency level (0 - transparent, 1 - opaque).
-        %
-        % Remark: in case1 ColorOpt's fields are:
-        %     ColorOpt.color = [0 1 0], ColorOpt.alpha = 0.1
-        %
-        % Output:
-        %     None.
-        %
-        % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
-        % $Copyright: Moscow State University,
-        %            Faculty of Computational Mathematics and Computer Science,
-        %            System Analysis Department 2012 $
-        %
+        function plot_ia(self, varargin)
             import gras.ellapx.enums.EApproxType;
-            if nargin > 2
+            colorVec = [0 1 0];
+            lineWidth = 2;
+            shade = 0.1;
+            fill = 0;
+            if nargin > 3
                 throwerror('Too many arguments.');
             elseif nargin == 2
-                if isfield(ColorOpt, 'color')
-                    colorVec = ColorOpt.color;
+                if ischar(varargin{1})
+                    colorVec = self.getColorVec(varargin{1});
+                elseif isstruct(varargin{1})
+                    ColorOpt = varargin{1};
+                    setPlotParams(ColorOpt);
                 else
-                    throwerror('ColorOpt does not contain field "color"');
+                    throwerror('Wrong argument format.');
                 end
-                if isfield(ColorOpt, 'alpha')
-                    alpha = ColorOpt.alpha;
+            elseif nargin == 3
+                if isstruct(varargin{2})
+                    ColorOpt = varargin{2};
+                    setPlotParams(ColorOpt);
                 else
-                    throwerror('ColorOpt does not contain field "alpha"');
+                    throwerror('Wrong argument format.');
                 end
-            else
-                colorVec = [0 1 0];
-                alpha = 0.1;
+                if ischar(varargin{1})
+                    colorVec = self.getColorVec(varargin{1});
+                else
+                    throwerror('Wrong argument format.');
+                end
             end
+            %
             if ~ismatrix(colorVec)
                 throwerror('Wrong field format ("color")');
             else
@@ -474,13 +492,20 @@ classdef ReachContinious < elltool.reach.AReach
                     throwerror('Wrong field format ("color")');
                 end
             end
-            if ~isa(alpha, 'double')
-                throwerror('Wrong field format ("alpha")');
+            if ~isa(lineWidth, 'double')
+                throwerror('Wrong field format ("width")');
+            end
+            if ~isa(shade, 'double')
+                throwerror('Wrong field format ("shade")');
             else
-                if alpha < 0 || alpha > 1
-                    throwerror('Wrong field format ("alpha")');
+                if shade < 0 || shade > 1
+                    throwerror('Wrong field format ("shade")');
                 end
             end
+            if ~isa(fill, 'double')
+                throwerror('Wrong field format ("fill")');
+            end
+            %
             if self.isProj
                 if self.getEllTubeRel().dim() > 3
                     throwerror('Dimension of the projection must be leq 3');                    
@@ -488,7 +513,7 @@ classdef ReachContinious < elltool.reach.AReach
                     plObj = smartdb.disp.RelationDataPlotter();
                     self.getEllTubeRel().getTuplesFilteredBy(...
                         'approxType', EApproxType.Internal).plot(plObj,...
-                        'fGetTubeColor', @(x) deal(colorVec, alpha));
+                        'fGetTubeColor', @(x) deal(colorVec, shade));
                 end
             else
                 if self.dimension() > 2
@@ -500,7 +525,22 @@ classdef ReachContinious < elltool.reach.AReach
                 projSetObj = self.getProjSet(projBasisMat,...
                     EApproxType.Internal, self.INTERNAL_SCALE_FACTOR);
                 projSetObj.plot(plObj, 'fGetTubeColor',...
-                    @(x) deal(colorVec, alpha));
+                    @(x) deal(colorVec, shade));
+            end
+            %
+            function setPlotParams(ColorOpt)
+                if isfield(ColorOpt, 'color')
+                    colorVec = ColorOpt.color;
+                end
+                if isfield(ColorOpt, 'width')
+                    lineWidth = ColorOpt.width;
+                end
+                if isfield(ColorOpt, 'shade')
+                    shade = ColorOpt.shade;
+                end
+                if isfield(ColorOpt, 'fill')
+                    fill = ColorOpt.fill;
+                end
             end
         end
         %% displays only the last lin system
