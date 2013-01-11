@@ -1,34 +1,96 @@
-function  [plObj,nDim,isHold] = plotgeombodyarr(secondTime,oldPlObj,objClassName,rebuildOneDim2TwoDim,calcBodyPoints,plotPatch,varargin)
+function  [plObj,nDim,isHold,bodyArr] = plotgeombodyarr(objClassName,rebuildOneDim2TwoDim,calcBodyPoints,plotPatch,varargin)
+%
+% plotgeombodyarr - plots objects in 2D or 3D.
+%
+%
+% Usage:
+%       plotgeombodyarr(objClassName,rebuildOneDim2TwoDim,calcBodyPoints,plotPatch,objArr,'Property',PropValue,...) - plots array of objClassName objects
+%           using calcBodyPoints function to calculate points,  rebuildOneDim2TwoDim to rebuild one dim ibjects to two dim if it is needed,
+%           plotPatch to plot objects with  setting properties
+%
+% Input:
+%   regular:
+%       objClassName:string - class of objects
+%       rebuildOneDim2TwoDim: function with input bodyArr and output bodyArr and nDim
+%       calcBodyPoints: function with input
+%           ellsArr,nDim,lGetGridMat,fGetGridMat and output [xMat,fMat]
+%       plotPatch: plotting function 
+%       bodyArr:  objects: [dim11Size,dim12Size,...,dim1kSize] -
+%                array of 2D or 3D objects. All objects in bodyArr
+%                must be either 2D or 3D simutaneously.
+%   optional:
+%       color1Spec: char[1,1] - color specification code, can be 'r','g',
+%                               etc (any code supported by built-in Matlab function).
+%       body2Arr: objClassName: [dim21Size,dim22Size,...,dim2kSize] -
+%                                           second ellipsoid array...
+%       color2Spec: char[1,1] - same as color1Spec but for body2Arr
+%       ....
+%       bodyNArr: objClassName: [dimN1Size,dim22Size,...,dimNkSize] -
+%                                            N-th objects array
+%       colorNSpec - same as color1Spec but for bodyNArr.
+%   properties:
+%       'newFigure': logical[1,1] - if 1, each plot command will open a new figure window.
+%                    Default value is 0.
+%       'fill': logical[1,1]/logical[dim11Size,dim12Size,...,dim1kSize]  -
+%               if 1, ellipsoids in 2D will be filled with color. Default value is 0.
+%       'lineWidth': double[1,1]/double[dim11Size,dim12Size,...,dim1kSize]  -
+%                    line width for 1D and 2D plots. Default value is 1.
+%       'color': double[1,3]/double[dim11Size,dim12Size,...,dim1kSize,3] -
+%                sets default colors in the form [x y z]. Default value is [1 0 0].
+%       'shade': double[1,1]/double[dim11Size,dim12Size,...,dim1kSize]  -
+%                level of transparency between 0 and 1 (0 - transparent, 1 - opaque).
+%                Default value is 0.4.
+%       'relDataPlotter' - relation data plotter object.
+%       'priorHold':logical[1,1] - if true plot with hold on,
+%       'postHold':logical[1,1] - if true, after plotting hold will be on ,
+%       'plotBodies': double[1,1] number of plottingg objects (using if this number doesn't match with number of input objects)
+%       Notice that property vector could have different dimensions, only
+%       total number of elements must be the same.
+% Output:
+%   regular:
+%       plObj: smartdb.disp.RelationDataPlotter[1,1] - returns the relation
+%       data plotter object.
+%       nDim: double[1,1] - dimension of objects,
+%       isHold: logical[1,1] - true, if before plotting was hold on,
+%       bodyArr: objClassName: [dim21Size,dim22Size,...,dim2kSize] - array of input objects
+%
+% $Author: <Ilya Lyubich>  <lubi4ig@gmail.com> $    $Date: <11 January 2013> $
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Cybernetics,
+%            System Analysis Department 2013 $
+
 import modgen.common.throwerror;
 DEFAULT_LINE_WIDTH = 1;
 DEFAULT_SHAD = 0.4;
 DEFAULT_FILL = false;
 N_PLOT_POINTS = 80;
 SPHERE_TRIANG_CONST = 3;
-[reg,~,plObj,isNewFigure,isFill,lineWidth,colorVec,shadVec,...
-    isRelPlotterSpec,~,isIsFill,isLineWidth,isColorVec,isShad]=...
+[reg,~,plObj,isNewFigure,isFill,lineWidth,colorVec,shadVec,priorHold,postHold,plotBodies...
+    isRelPlotterSpec,~,isIsFill,isLineWidth,isColorVec,isShad,~,isPostHold,isPlotBodies]=...
     modgen.common.parseparext(varargin,...
-    {'relDataPlotter','newFigure','fill','lineWidth','color','shade' ;...
-    [],0,[],[],[],0;@(x)isa(x,'smartdb.disp.RelationDataPlotter'),...
+    {'relDataPlotter','newFigure','fill','lineWidth','color','shade','priorHold','postHold',...
+    'plotBodies';...
+    [],0,[],[],[],0,false,false,0;@(x)isa(x,'smartdb.disp.RelationDataPlotter'),...
     @(x)isa(x,'logical'),@(x)isa(x,'logical'),@(x)isa(x,'double'),...
     @(x)isa(x,'double'),...
-    @(x)isa(x,'double')});
+    @(x)isa(x,'double'), @(x)isa(x,'logical'),@(x)isa(x,'logical'),@(x)isa(x,'double')});
 checkIsWrongInput();
-if secondTime
-    plObj=oldPlObj;
-else
-    if ~isRelPlotterSpec
+if ~isRelPlotterSpec
         if isNewFigure
             plObj=smartdb.disp.RelationDataPlotter();
         else
             plObj=smartdb.disp.RelationDataPlotter('figureGetNewHandleFunc',...
                 @(varargin)gcf,'axesGetNewHandleFunc',@(varargin)gca);
         end
-    end
 end
 [bodyArr, bodyNum, uColorVec, vColorVec, isCharColor] = getParams(reg);
 if isCharColor && isColorVec
     throwerror('ConflictingColor', 'Conflicting using of color property');
+end
+if isPlotBodies
+    bodyPlotNum = plotBodies;
+else
+    bodyPlotNum = bodyNum;
 end
 nDim = max(dimension(bodyArr));
 if nDim == 3 && isLineWidth
@@ -49,20 +111,43 @@ rel=smartdb.relations.DynamicRelation(SData);
 hFigure = get(0,'CurrentFigure');
 if isempty(hFigure)
     isHold=false;
-elseif ~ishold(get(hFigure,'currentaxes'))
-    cla;
-    isHold = false;
 else
+    hAx = get(hFigure,'currentaxes');
+    if isempty(hAx)
+        isHold=false;
+    elseif ~ishold(hAx)
+        if priorHold
+            isHold = true;
+        else
+            if ~isRelPlotterSpec
+                cla;
+            end
+            isHold = false;
+        end
+    else
     isHold = true;
+    end
 end
-
+if isPostHold
+    if postHold
+        postFun = @axesSetPropDoNothingFunc;
+    else
+        postFun = @axesSetPropDoNothing2Func;
+    end
+else
+    if isHold
+        postFun = @axesSetPropDoNothingFunc;
+    else
+        postFun = @axesSetPropDoNothing2Func;
+    end
+end
 if (nDim==2)
     plObj.plotGeneric(rel,@figureGetGroupNameFunc,{'figureNameCMat'},...
         @figureSetPropFunc,{},...
         @axesGetNameSurfFunc,{'axesNameCMat','axesNumCMat'},...
         @axesSetPropDoNothingFunc,{},...
         @plotCreateFillPlotFunc,...
-        {'xCMat','clrVec','fill','shadVec', 'widVec','plotPatch'});
+        {'xCMat','faceCMat','clrVec','fill','shadVec', 'widVec','plotPatch'},'axesPostPlotFunc',postFun,'isAutoHoldOn',false);
     
 elseif (nDim==3)
     plObj.plotGeneric(rel,@figureGetGroupNameFunc,{'figureNameCMat'},...
@@ -71,7 +156,7 @@ elseif (nDim==3)
         @axesSetPropDoNothingFunc,{},...
         @plotCreatePatchFunc,...
         {'verCMat','faceCMat','faceVertexCDataCMat',...
-        'shadVec','clrVec'});
+        'shadVec','clrVec'},'axesPostPlotFunc',postFun,'isAutoHoldOn',false);
 end
 
 
@@ -91,7 +176,7 @@ end
     function prepareForPlot()
         if isNewFigure
             [SData.figureNameCMat, SData.axesNameCMat] =...
-                arrayfun(@(x)getSDataParams(x), (1:bodyNum).',...
+                arrayfun(@(x)getSDataParams(x), (1:bodyPlotNum).',...
                 'UniformOutput', false);
         end
         clrCVec = cellfun(@(x, y, z) getColor(x, y, z),...
@@ -124,11 +209,11 @@ end
         end
     end
     function SData = setUpSData()
-        SData.figureNameCMat=repmat({'figure'},bodyNum,1);
-        SData.axesNameCMat = repmat({'ax'},bodyNum,1);
-        SData.axesNumCMat = repmat({1},bodyNum,1);
-        SData.plotPatch = repmat({plotPatch},bodyNum,1);
-        SData.figureNumCMat = repmat({1},bodyNum,1);
+        SData.figureNameCMat=repmat({'figure'},bodyPlotNum,1);
+        SData.axesNameCMat = repmat({'ax'},bodyPlotNum,1);
+        SData.axesNumCMat = repmat({1},bodyPlotNum,1);
+        SData.plotPatch = repmat({plotPatch},bodyPlotNum,1);
+        SData.figureNumCMat = repmat({1},bodyPlotNum,1);
         
         SData.widVec = lineWidth.';
         SData.shadVec = shadVec.';
@@ -149,10 +234,10 @@ end
             throwerror('wrongDim','object dimension can be 1, 2 or 3');
         end
         if Properties.getIsVerbose()
-            if bodyNum == 1
+            if bodyPlotNum == 1
                 fprintf('Plotting object...\n');
             else
-                fprintf('Plotting %d objects...\n', bodyNum);
+                fprintf('Plotting %d objects...\n', bodyPlotNum);
             end
         end
     end
@@ -188,13 +273,13 @@ end
             isFilledParam, multConst)
         import modgen.common.throwerror;
         if ~isFilledParam
-            outParamVec = multConst*ones(1, bodyNum);
+            outParamVec = multConst*ones(1, bodyPlotNum);
         else
             nParams = numel(inParamArr);
             if nParams == 1
-                outParamVec = inParamArr*ones(1, bodyNum);
+                outParamVec = inParamArr*ones(1, bodyPlotNum);
             else
-                if nParams ~= bodyNum
+                if nParams ~= bodyPlotNum
                     throwerror('wrongParamsNumber',...
                         'Number of params is not equal to number of objects');
                 end
@@ -205,24 +290,24 @@ end
     function colorArr = getColorVec(colorArr)
         import modgen.common.throwerror;
         if ~isColorVec
-            auxcolors  = hsv(bodyNum);
+            auxcolors  = hsv(bodyPlotNum);
             multiplier = 7;
             if mod(size(auxcolors, 1), multiplier) == 0
                 multiplier = multiplier + 1;
             end
             colCell = arrayfun(@(x) auxcolors(mod(x*multiplier, ...
-                size(auxcolors, 1)) + 1, :), 1:bodyNum, 'UniformOutput',...
+                size(auxcolors, 1)) + 1, :), 1:bodyPlotNum, 'UniformOutput',...
                 false);
             colorsArr = vertcat(colCell{:});
             colorsArr = flipud(colorsArr);
             colorArr = colorsArr;
         else
-            if size(colorArr, 1) ~= bodyNum
+            if size(colorArr, 1) ~= bodyPlotNum
                 if size(colorArr, 1) ~= 1
                     throwerror('wrongColorVecSize',...
                         'Wrong size of color array');
                 else
-                    colorArr = repmat(colorArr, bodyNum, 1);
+                    colorArr = repmat(colorArr, bodyPlotNum, 1);
                 end
             end
         end
@@ -286,6 +371,11 @@ end
         vColorVec = vertcat(vColorCMat{:});
         ellsArr = vertcat(ellsCMat{:});
         ellNum = numel(ellsArr);
+        if ~isPlotBodies 
+            plotBodies = ellNum;
+        end
+        uColorVec = uColorVec(1:plotBodies);
+        vColorVec = vColorVec(1:plotBodies,:);
         
         function [ellVec, uColorVec, vColorVec] = getParams(ellArr, ...
                 nextObjArr, isnLastElem)
@@ -352,16 +442,12 @@ end
         end
     end
 end
-function hVec=plotCreateFillPlotFunc(hAxes,X,clrVec,isFill,...
+function hVec=plotCreateFillPlotFunc(hAxes,X,faces,clrVec,isFill,...
     shade,widVec,plotPatch,varargin)
 if ~isFill
     shade = 0;
 end
-% h1 = ell_plot(q, '*','Parent',hAxes);
-h1 = plotPatch(X(1, :), X(2, :), clrVec,'FaceAlpha',shade,'Parent',hAxes);
-% h3 = ell_plot(X,'Parent',hAxes);
-% h3 = patch('vertices',X,'faces',[1:size(X,]
-% set(h1, 'Color', clrVec);
+h1 = plotPatch('Vertices',X','Faces',faces,'FaceAlpha',shade,'Parent',hAxes);
 set(h1, 'EdgeColor', clrVec, 'LineWidth', widVec);
 hVec = h1;
 end
@@ -371,7 +457,12 @@ end
 function figureGroupName=figureGetGroupNameFunc(figureName)
 figureGroupName=figureName;
 end
-function hVec=axesSetPropDoNothingFunc(~,~)
+function hVec=axesSetPropDoNothingFunc(hAxes,~)
+hold(hAxes,'on');
+hVec=[];
+end
+function hVec=axesSetPropDoNothing2Func(hAxes,~)
+hold(hAxes,'off');
 hVec=[];
 end
 function axesName=axesGetNameSurfFunc(name,~)

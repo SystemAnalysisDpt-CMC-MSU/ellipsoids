@@ -67,25 +67,26 @@ import elltool.conf.Properties;
 import modgen.common.throwerror;
 import elltool.core.GenEllipsoid;
 import elltool.plot.plotgeombodyarr;
-
-[plObj,nDim,isHold]= plotgeombodyarr(false,[],'elltool.core.GenEllipsoid',@rebuildOneDim2TwoDim,@calcEllPoints,@patch,varargin{:});
+[plObj,nDim,isHold]= plotgeombodyarr('elltool.core.GenEllipsoid',@rebuildOneDim2TwoDim,@calcEllPoints,@patch,varargin{:});
 if (nDim < 3)
-    hold on
-    plObj= plotgeombodyarr(true,plObj,'elltool.core.GenEllipsoid',@rebuildOneDim2TwoDim,@calcCenterEllPoints,@(varargin)patch(varargin{:},'marker','*'),varargin{:});
-    hold off
+    [reg,~,~]=...
+    modgen.common.parseparext(varargin,...
+    {'relDataPlotter';...
+    [],;@(x)isa(x,'smartdb.disp.RelationDataPlotter'),...
+    });
+    plObj= plotgeombodyarr('elltool.core.GenEllipsoid',@rebuildOneDim2TwoDim,@calcCenterEllPoints,...
+        @(varargin)patch(varargin{:},'marker','*'),reg{:},'relDataPlotter',plObj, 'priorHold',true,'postHold',isHold);
 end
-if  isHold
-    hold on;
-else
-    hold off;
-end
-    function [xMat,fMat] = calcCenterEllPoints(ellsArr,~,~, fGetGridMat)
+
+
+
+    function [xMat,fMat] = calcCenterEllPoints(ellsArr,~,~, ~)
         [xMat, fMat] = arrayfun(@(x) calcOneCenterEllElem(x), ellsArr, ...
             'UniformOutput', false);
         function [xMat, fMat] = calcOneCenterEllElem(plotEll)
             import elltool.core.GenEllipsoid;
             xMat = plotEll.getCenter();
-            fMat = fGetGridMat;
+            fMat = [1 1];
         end
     end
 

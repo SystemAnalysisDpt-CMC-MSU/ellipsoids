@@ -62,16 +62,12 @@ import elltool.plot.plotgeombodyarr;
     @(x)isa(x,'double'),...
     @(x)isa(x,'double')});
 
-[plObj,nDim,isHold]= plotgeombodyarr(false,[],'hyperplane',@rebuildOneDim2TwoDim,@calcHypPoints,@patch,reg{:});
-if  isHold
-    hold on;
-else
-    hold off;
-end
+[plObj,~,~]= plotgeombodyarr('hyperplane',@rebuildOneDim2TwoDim,@calcHypPoints,@patch,reg{:});
 
 
 
-    function [xMat,fMat] = calcHypPoints(hypArr,nDim,lGetGridMat, fGetGridMat)
+
+    function [xMat,fMat] = calcHypPoints(hypArr,nDim,~, ~)
         hypNum = numel(hypArr);
         DEFAULT_CENTER = zeros(1,nDim);
         DEFAULT_SIZE = 100;
@@ -94,7 +90,6 @@ end
         for iCols = 1:hypNum
             absTolMat(iCols) = hypArr(iCols).absTol;
         end
-        minAbs = min(absTolMat);
         [xMat, fMat] = arrayfun(@(x,y,z) hypPoints(x,y,z, nDim), hypArr,num2cell(centerVec,2),sizeVec, ...
             'UniformOutput', false);
         
@@ -136,7 +131,7 @@ end
             x2      = x0 + c*e1;
             if nDim == 2
                 xMat = [x1, x2];
-                fMat = [];
+                fMat = [1 2 1] ;
             else
                 e2 = U(:, 3);
                 x3 = x0 - c*e2;
