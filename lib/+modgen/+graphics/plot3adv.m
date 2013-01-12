@@ -25,10 +25,16 @@ function h=plot3adv(xVec,yVec,zVec,colorMat,varargin)
 modgen.common.type.simple.checkgenext(...
     ['iscol(x1)&&iscol(x2)&&iscol(x3)&&(numel(x1)==numel(x2))&&',...
     '(numel(x2)==numel(x3))'],3,xVec,yVec,zVec);
-vMat=[xVec,yVec,zVec];
-indVec=transpose(1:(size(vMat,1)-1));
-fMat=[indVec indVec indVec+1];
-%
-h=patch('FaceColor','interp','EdgeColor','interp',...
-    'FaceVertexCData',colorMat,...
-    'Faces',fMat,'Vertices',vMat,varargin{:});
+nPoints=length(xVec);
+if nPoints==1
+    h=line(xVec,yVec,zVec,...
+        varargin{:},'Color',colorMat,'Marker','.');
+else
+    vMat=[xVec,yVec,zVec];
+    indVec=transpose(1:(size(vMat,1)-1));
+    fMat=[indVec indVec indVec+1];
+    %
+    h=patch('FaceColor','interp','EdgeColor','interp',...
+        'FaceVertexCData',colorMat,...
+        'Faces',fMat,'Vertices',vMat,varargin{:});
+end
