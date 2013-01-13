@@ -598,6 +598,7 @@ classdef ReachDiscrete < elltool.reach.AReach
         %            System Analysis Department 2012 $
         %
             import elltool.conf.Properties;
+            import modgen.common.throwerror;
             neededPropNameList =...
                 {'absTol', 'relTol', 'nPlot2dPoints',...
                 'nPlot3dPoints','nTimeGridPoints'};
@@ -1432,6 +1433,7 @@ classdef ReachDiscrete < elltool.reach.AReach
         end
         %
         function cutObj = cut(self, cutTimeVec)
+            import modgen.common.throwerror;
             cutObj = self.getCopy();
             if self.isempty()
                 return;
@@ -1739,7 +1741,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 sSdim = [sSdim; nn];
             end
             if nargout < 2
-                clear('N');
+                clear('sSdim');
             end
         end
         %
@@ -1895,6 +1897,7 @@ classdef ReachDiscrete < elltool.reach.AReach
         %
         function [goodCurvesCVec timeVec] = get_goodcurves(self)
             import elltool.conf.Properties;
+            import modgen.common.throwerror;
             if isempty(self)
                 if nargout > 1
                     timeVec = [];
@@ -2454,6 +2457,7 @@ classdef ReachDiscrete < elltool.reach.AReach
         %
         function projObj = projection(self, projMat)
             import elltool.conf.Properties;
+            import modgen.common.throwerror;
             if ~(isa(projMat, 'double'))
               throwerror(['PROJECTION: second input argument ',...
                   'must be matrix of basis vectors.']);

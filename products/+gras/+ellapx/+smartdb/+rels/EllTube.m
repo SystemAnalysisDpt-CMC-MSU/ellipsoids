@@ -240,6 +240,55 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
         end
     end
     methods
+        function thinnedEllTubeRel =...
+                thinOutTuples(self, indVec)
+            import gras.ellapx.smartdb.F;
+            import modgen.common.throwerror;
+            SData = self.getData();
+            SCutFunResult = SData;
+            timeVec = SData.timeVec{1};
+            nPoints = numel(timeVec);
+            if min(indVec) < 1 || max(indVec) > nPoints
+                throwerror('Indexes are out of range.');
+            end
+            isNeededIndVec = false(size(timeVec));
+            isNeededIndVec(indVec) = true;
+            %
+            fieldsNotToCatVec =...
+                F.getNameList(self.FIELDS_NOT_TO_CAT_OR_CUT);
+            fieldsToCutVec =...
+                setdiff(fieldnames(SData), fieldsNotToCatVec);
+            cellfun(@(field) cutStructField(field), fieldsToCutVec);
+            SCutFunResult.sTime(:) =...
+                timeVec(find(isNeededIndVec == true, 1));
+            SCutFunResult.indSTime(:) = 1;
+            SCutFunResult.lsGoodDirVec = cellfun(@(field) field(:, 1),...
+                SCutFunResult.ltGoodDirMat, 'UniformOutput', false);
+            SCutFunResult.lsGoodDirNorm = cellfun(@(field) field(1, 1),...
+                SCutFunResult.ltGoodDirNormVec);
+            SCutFunResult.xsTouchVec = cellfun(@(field) field(:, 1),...
+                SCutFunResult.xTouchCurveMat, 'UniformOutput', false);
+            SCutFunResult.xsTouchOpVec = cellfun(@(field) field(:, 1),...
+                SCutFunResult.xTouchOpCurveMat, 'UniformOutput', false);
+            thinnedEllTubeRel = self.createInstance(SCutFunResult);
+            %
+            function cutResObj = getCutObj(whatToCutObj, isCutTimeVec)
+                dim = ndims(whatToCutObj);
+                if dim == 1
+                    cutResObj = whatToCutObj(isCutTimeVec);
+                elseif dim == 2
+                    cutResObj = whatToCutObj(:, isCutTimeVec);
+                elseif dim == 3
+                    cutResObj = whatToCutObj(:, :, isCutTimeVec);
+                end
+            end
+            %
+            function cutStructField(fieldName)
+                SCutFunResult.(fieldName) = cellfun(@(StructFieldVal)...
+                    getCutObj(StructFieldVal, isNeededIndVec),...
+                    SData.(fieldName), 'UniformOutput', false);
+            end
+        end
         function catEllTubeRel = cat(self, newEllTubeRel)
             import gras.ellapx.smartdb.F;
             SDataFirst = self.getData();
@@ -262,8 +311,7 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
         end
         function cutEllTubeRel = cut(self, cutTimeVec)
             import gras.ellapx.smartdb.F;
-            SData = self.getData();
-            SCutFunResult = SData;            
+            import modgen.common.throwerror;
             %
             if numel(cutTimeVec) == 1
                 cutTimeVec = [cutTimeVec(1) cutTimeVec(1)];
@@ -277,7 +325,7 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
             if cutStartTime > cutEndTime
                 throwerror('Cut:s0 must be LEQ than s1');
             end
-            timeVec = SData.timeVec{1};
+            timeVec = self.timeVec{1};
             sysStartTime = timeVec(1);
             sysEndTime = timeVec(end);
             if cutStartTime < sysStartTime ||...
@@ -297,39 +345,8 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
                     ~(isSysTimeLowerVec | isSysTimeGreaterVec);
             end
             %
-            fieldsNotToCatVec =...
-                F.getNameList(self.FIELDS_NOT_TO_CAT_OR_CUT);
-            fieldsToCutVec =...
-                setdiff(fieldnames(SData), fieldsNotToCatVec);
-            cellfun(@(field) cutStructField(field), fieldsToCutVec);
-            SCutFunResult.sTime(:) = cutTimeVec(1);
-            SCutFunResult.indSTime(:) = 1;
-            SCutFunResult.lsGoodDirVec = cellfun(@(field) field(:, 1),...
-                SCutFunResult.ltGoodDirMat, 'UniformOutput', false);
-            SCutFunResult.lsGoodDirNorm = cellfun(@(field) field(1, 1),...
-                SCutFunResult.ltGoodDirNormVec);
-            SCutFunResult.xsTouchVec = cellfun(@(field) field(:, 1),...
-                SCutFunResult.xTouchCurveMat, 'UniformOutput', false);
-            SCutFunResult.xsTouchOpVec = cellfun(@(field) field(:, 1),...
-                SCutFunResult.xTouchOpCurveMat, 'UniformOutput', false);
-            cutEllTubeRel = self.createInstance(SCutFunResult);
-            %
-            function cutResObj = getCutObj(whatToCutObj, isCutTimeVec)
-                dim = ndims(whatToCutObj);
-                if dim == 1
-                    cutResObj = whatToCutObj(isCutTimeVec);
-                elseif dim == 2
-                    cutResObj = whatToCutObj(:, isCutTimeVec);
-                elseif dim == 3
-                    cutResObj = whatToCutObj(:, :, isCutTimeVec);
-                end
-            end
-            %
-            function cutStructField(fieldName)
-                SCutFunResult.(fieldName) = cellfun(@(StructFieldVal)...
-                    getCutObj(StructFieldVal, isSysNewTimeIndVec),...
-                    SData.(fieldName), 'UniformOutput', false);
-            end
+            cutEllTubeRel =...
+                self.thinOutTuples(find(isSysNewTimeIndVec));
         end
         function scale(self,fCalcFactor,fieldNameList)
             import gras.ellapx.smartdb.rels.EllTubeBasic;
