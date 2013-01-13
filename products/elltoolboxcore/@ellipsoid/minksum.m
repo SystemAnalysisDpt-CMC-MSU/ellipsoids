@@ -48,31 +48,45 @@ function [varargout] = minksum(varargin)
 %            System Analysis Department 2013 $
 
 import elltool.plot.plotgeombodyarr;
+import modgen.common.throwerror;
+N_PLOT_POINTS = 80;
+SPHERE_TRIANG_CONST = 3;
 if (nargout == 1)||(nargout == 0)
     [reg,~,isShowAll]=...
         modgen.common.parseparext(varargin,...
         {'showAll' ;...
         false;
         @(x)isa(x,'logical')});
-    [plObj,nDim,isHold,ellsArr]= plotgeombodyarr('ellipsoid',@rebuildOneDim2TwoDim,@calcBodyPoints,@patch,reg{:},'plotBodies',1);
+    [plObj,nDim,isHold]= plotgeombodyarr('ellipsoid',@fCalcBodyTriArr,@patch,reg{:});
     if (nDim < 3)
         [reg,~,~]=...
             modgen.common.parseparext(reg,...
             {'relDataPlotter';...
             [],;@(x)isa(x,'smartdb.disp.RelationDataPlotter'),...
             });
-        plObj= plotgeombodyarr('ellipsoid',@rebuildOneDim2TwoDim,@calcCenterEllPoints,...
-            @(varargin)patch(varargin{:},'marker','*'),reg{:},'relDataPlotter',plObj, 'priorHold',true,'postHold',isHold,'plotBodies',1);
+        plObj= plotgeombodyarr('ellipsoid',@fCalcCenterTriArr,...
+            @(varargin)patch(varargin{:},'marker','*'),reg{:},'relDataPlotter',plObj, 'priorHold',true,'postHold',isHold);
     end
     if isShowAll
-        plot(ellsArr, 'color', [0 0 0],'relDataPlotter',plObj);
+        [reg,~,~,~,~,~,~,~,~,~]=...
+            modgen.common.parseparext(reg,...
+            {'relDataPlotter','newFigure','fill','lineWidth','color','shade','priorHold','postHold'});
+        ellArr = cellfun(@(x)getEllArr(x),reg,'UniformOutput', false);
+        ellArr = vertcat(ellArr{:});
+        ellArr.plot('color', [0 0 0],'relDataPlotter',plObj);
     end
     varargout = {plObj};
 else
-    import modgen.common.throwerror;
-    N_PLOT_POINTS = 80;
-    SPHERE_TRIANG_CONST = 3;
-    ellsCMat = cellfun(@(x)getEllArr(x),varargin,'UniformOutput', false);
+    
+    [reg,~,~,~,~,~,~,~,~,~,...
+        ~,~,~,~,~,~,~,~]=...
+        modgen.common.parseparext(varargin,...
+        {'relDataPlotter','newFigure','fill','lineWidth','color','shade','priorHold','postHold';...
+        [],0,[],[],[],0,false,false;@(x)isa(x,'smartdb.disp.RelationDataPlotter'),...
+        @(x)isa(x,'logical'),@(x)isa(x,'logical'),@(x)isa(x,'double'),...
+        @(x)isa(x,'double'),...
+        @(x)isa(x,'double'), @(x)isa(x,'logical'),@(x)isa(x,'logical')});
+    ellsCMat = cellfun(@(x)getEllArr(x),reg,'UniformOutput', false);
     ellsArr = vertcat(ellsCMat{:});
     ellsArrDims = dimension(ellsArr);
     mDim    = min(ellsArrDims);
@@ -81,58 +95,62 @@ else
         throwerror('dimMismatch', ...
             'Objects must have the same dimensions.');
     end
-    if nDim == 1
-        [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr);
-    end
-    if nDim == 2
-        lGetGrid = gras.geom.circlepart(N_PLOT_POINTS);
-        fGetGrid = 1:N_PLOT_POINTS+1;
-    else
-        [lGetGrid, fGetGrid] = ...
-            gras.geom.tri.spheretri(SPHERE_TRIANG_CONST);
-    end
-    lGetGrid(lGetGrid == 0) = eps;
-    xSumMat = calcBodyPoints(ellsArr,nDim,lGetGrid,fGetGrid);
-    qSumMat = calcCenterEllPoints(ellsArr,nDim,lGetGrid,fGetGrid);
-    varargout(1) = qSumMat;
-    varargout(2) = xSumMat;
+    
+    xSumCMat = fCalcBodyTriArr(ellsArr);
+    qSumCMat = fCalcCenterTriArr(ellsArr);
+    varargout(1) = qSumCMat;
+    varargout(2) = xSumCMat;
 end
+    function [lGetGrid, fGetGrid] = calcGrid(nDim)
+        if nDim == 2
+            lGetGrid = gras.geom.circlepart(N_PLOT_POINTS);
+            fGetGrid = 1:N_PLOT_POINTS+1;
+        else
+            [lGetGrid, fGetGrid] = ...
+                gras.geom.tri.spheretri(SPHERE_TRIANG_CONST);
+        end
+        lGetGrid(lGetGrid == 0) = eps;
+    end
     function ellsVec = getEllArr(ellsArr)
         if isa(ellsArr, 'ellipsoid')
             cnt    = numel(ellsArr);
             ellsVec = reshape(ellsArr, cnt, 1);
-            
-        else
-            import modgen.common.throwerror;
-            throwerror('wrongInput', ...
-                'if you don''t plot, all inputs must be ellipsoids');
         end
     end
-    function [xMat,fMat] = calcCenterEllPoints(ellsArr,~,~, fGetGridMat)
+    function [xCenterCMat,fCMat] = fCalcCenterTriArr(ellsArr)
         qSumMat = 0;
+        nDim = dimension(ellsArr(1));
+        if nDim == 1
+            [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr);
+        end
         qMat = arrayfun(@(x) {x.center}, ellsArr);
         for iQMat=1:numel(qMat)
             qSumMat = qSumMat + qMat{iQMat};
         end
-        xMat = {qSumMat};
-        fMat = fGetGridMat(1);
+        xCenterCMat = {qSumMat};
+        fCMat = {[1 1]};
     end
-    function [xSumMat,fMat] = calcBodyPoints(ellsArr,nDim,lGetGridMat, fGetGridMat)
-        [xMat, fMat] = arrayfun(@(x) ellPoints(x, nDim), ellsArr, ...
-            'UniformOutput', false);
-        xSumMat = 0;
-        for iXMat=1:numel(xMat)
-            xSumMat = xSumMat + xMat{iXMat};
+    function [xSumCMat,fCMat] = fCalcBodyTriArr(ellsArr)
+        nDim = dimension(ellsArr(1));
+        if nDim == 1
+            [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr);
         end
-        xSumMat = {xSumMat};
-        fMat = fMat(1);
-        function [xMat, fMat] = ellPoints(ell, nDim)
-            nPoints = size(lGetGridMat, 1);
+        [lGridMat, fGridMat] = calcGrid(nDim);
+        [xMat, fCMat] = arrayfun(@(x) fCalcBodyTri(x, nDim), ellsArr, ...
+            'UniformOutput', false);
+        xSumCMat = 0;
+        for iXMat=1:numel(xMat)
+            xSumCMat = xSumCMat + xMat{iXMat};
+        end
+        xSumCMat = {xSumCMat};
+        fCMat = fCMat(1);
+        function [xMat, fMat] = fCalcBodyTri(ell, nDim)
+            nPoints = size(lGridMat, 1);
             xMat = zeros(nDim, nPoints+1);
-            [~,xMat(:, 1:end-1)] = rho(ell,lGetGridMat.');
+            [~,xMat(:, 1:end-1)] = rho(ell,lGridMat.');
             xMat(:,1:end-1) = xMat(:,1:end-1) ;
             xMat(:, end) = xMat(:, 1);
-            fMat = fGetGridMat;
+            fMat = fGridMat;
         end
     end
     function [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr)

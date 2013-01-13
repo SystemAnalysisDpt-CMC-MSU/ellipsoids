@@ -62,13 +62,14 @@ import elltool.plot.plotgeombodyarr;
     @(x)isa(x,'double'),...
     @(x)isa(x,'double')});
 
-[plObj,~,~]= plotgeombodyarr('hyperplane',@rebuildOneDim2TwoDim,@calcHypPoints,@patch,reg{:});
+[plObj,~,~]= plotgeombodyarr('hyperplane',@fCalcBodyTriArr,@patch,reg{:});
 
 
 
 
-    function [xMat,fMat] = calcHypPoints(hypArr,nDim,~, ~)
+    function [xMat,fMat] = fCalcBodyTriArr(hypArr)
         hypNum = numel(hypArr);
+        nDim = dimension(hypArr(1));
         DEFAULT_CENTER = zeros(1,nDim);
         DEFAULT_SIZE = 100;
         centerVec = getPlotInitParam(centerVec, isCenterVec, DEFAULT_CENTER);
@@ -86,11 +87,8 @@ import elltool.plot.plotgeombodyarr;
         end
         
         
-        absTolMat = zeros(1,hypNum);
-        for iCols = 1:hypNum
-            absTolMat(iCols) = hypArr(iCols).absTol;
-        end
-        [xMat, fMat] = arrayfun(@(x,y,z) hypPoints(x,y,z, nDim), hypArr,num2cell(centerVec,2),sizeVec, ...
+        
+        [xMat, fMat] = arrayfun(@(x,y,z) fCalcBodyTri(x,y,z, nDim), hypArr,num2cell(centerVec,2),sizeVec, ...
             'UniformOutput', false);
         
         
@@ -112,50 +110,46 @@ import elltool.plot.plotgeombodyarr;
                 end
             end
         end
-        function [xMat, fMat] = hypPoints(hyp,center,size, nDim)
+        function [xMat, fMat] = fCalcBodyTri(hyp,center,size, nDim)
             center = cell2mat(center);
-            q = hyp.normal;
-            g = hyp.shift;
-            if g < 0
-                g = -g;
-                q = -q;
+            normal = hyp.normal;
+            shift = hyp.shift;
+            if shift < 0
+                shift = -shift;
+                normal = -normal;
             end
-            x0 = center';
-            if ~(contains(hyp, x0))
-                x0 = (g*q)/(q'*q);
+            centVec = center';
+            if ~(contains(hyp, centVec))
+                centVec = (shift*normal)/(normal'*normal);
             end
-            c = size/2;
-            [U,~,~] = svd(q);
-            e1      = U(:, 2);
-            x1      = x0 - c*e1;
-            x2      = x0 + c*e1;
-            if nDim == 2
-                xMat = [x1, x2];
-                fMat = [1 2 1] ;
+            if nDim == 1
+                xMat = [centVec ;0];
+                fMat = [1 1];
             else
-                e2 = U(:, 3);
-                x3 = x0 - c*e2;
-                x4 = x0 + c*e2;
+                side = size/2;
+                [U,~,~] = svd(normal);
+                eVec      = U(:, 2);
+                firstVec      = centVec - side*eVec;
+                secondVec      = centVec + side*eVec;
                 
-                xMat = [x1,x2,x3,x4];
-              
-                fMat = [1,3,2,4,1];
+                
+                if nDim ==2
+                    xMat = [firstVec, secondVec];
+                    fMat = [1 2 1] ;
+                else
+                    eVec2 = U(:, 3);
+                    thirdVec = centVec - side*eVec2;
+                    forthVec = centVec + side*eVec2;
+                    
+                    xMat = [firstVec,secondVec,thirdVec,forthVec];
+                    
+                    fMat = [1,3,2,4,1];
+                end
             end
-            
             
         end
     end
-    function [hypArr,nDim] = rebuildOneDim2TwoDim(hypArr)
-                hypCMat = arrayfun(@(x) oneDim2TwoDim(x), hypArr, ...
-                    'UniformOutput', false);
-                hypArr = vertcat(hypCMat{:});
-                nDim = 2;
-                function hypTwoDim = oneDim2TwoDim(hyp)
-                    [normVec, hypScal] = hyp.double();
-                    hypTwoDim = hyperplane([normVec, 0].', ...
-                        hypScal);
-                end
-    end
+
 
 end
 

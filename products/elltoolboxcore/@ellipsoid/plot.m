@@ -62,33 +62,39 @@ function plObj = plot(varargin)
 
 
 import elltool.plot.plotgeombodyarr;
-[plObj,nDim,isHold]= plotgeombodyarr('ellipsoid',@rebuildOneDim2TwoDim,@calcEllPoints,@patch,varargin{:});
+N_PLOT_POINTS = 80;
+SPHERE_TRIANG_CONST = 3;
+
+[plObj,nDim,isHold]= plotgeombodyarr('ellipsoid',@fCalcBodyTriArr,@patch,varargin{:});
 if (nDim < 3)
     [reg,~,~]=...
-    modgen.common.parseparext(varargin,...
-    {'relDataPlotter';...
-    [],;@(x)isa(x,'smartdb.disp.RelationDataPlotter'),...
-    });
-    plObj= plotgeombodyarr('ellipsoid',@rebuildOneDim2TwoDim,@calcCenterEllPoints,...
+        modgen.common.parseparext(varargin,...
+        {'relDataPlotter';...
+        [],;@(x)isa(x,'smartdb.disp.RelationDataPlotter'),...
+        });
+    plObj= plotgeombodyarr('ellipsoid',@fCalcCenterTriArr,...
         @(varargin)patch(varargin{:},'marker','*'),reg{:},'relDataPlotter',plObj, 'priorHold',true,'postHold',isHold);
 end
 
 
-
-    function [xMat,fMat] = calcCenterEllPoints(ellsArr,~,~, ~)
-        [xMat, fMat] = arrayfun(@(x) calcOneCenterEllElem(x), ellsArr, ...
-            'UniformOutput', false);
-        function [xMat, fMat] = calcOneCenterEllElem(plotEll)
-            xMat = plotEll.center();
-            fMat = [1 1];
+    function [lGetGrid, fGetGrid] = calcGrid(nDim)
+        if nDim == 2
+            lGetGrid = gras.geom.circlepart(N_PLOT_POINTS);
+            fGetGrid = 1:N_PLOT_POINTS+1;
+        else
+            [lGetGrid, fGetGrid] = ...
+                gras.geom.tri.spheretri(SPHERE_TRIANG_CONST);
         end
+        lGetGrid(lGetGrid == 0) = eps;
     end
-    function [xMat,fMat] = calcEllPoints(ellsArr,nDim,lGetGridMat, fGetGridMat)
-        [xMat, fMat] = arrayfun(@(x) ellPoints(x, nDim), ellsArr, ...
-            'UniformOutput', false);
-        
-        
-        function [xMat, fMat] = ellPoints(ell, nDim)
+    function [xCMat,fCMat] = fCalcBodyTriArr(bodyArr,varargin)
+        [xCMat,fCMat] = arrayfun(@(x)fCalcBodyTri(x),bodyArr,'UniformOutput',false);
+        function [xMat, fMat] = fCalcBodyTri(ell)
+            nDim = dimension(ell(1));
+            if nDim == 1
+                [ell,nDim] = rebuildOneDim2TwoDim(ell);
+            end
+            [lGetGridMat, fGetGridMat] = calcGrid(nDim);
             nPoints = size(lGetGridMat, 1);
             xMat = zeros(nDim, nPoints+1);
             [qCenVec,qMat] = ell.double();
@@ -98,6 +104,24 @@ end
             fMat = fGetGridMat;
         end
     end
+
+    function [xCMat,fCMat] = fCalcCenterTriArr(bodyArr,varargin)
+        [xCMat,fCMat] = arrayfun(@(x)fCalcCenterTri(x),bodyArr,'UniformOutput',false);
+        function [vCenterMat, fCenterMat] = fCalcCenterTri(plotEll)
+            if nDim == 1
+                [plotEll,nDim] = rebuildOneDim2TwoDim(plotEll);
+            end
+            vCenterMat = plotEll.center();
+            fCenterMat = [1 1];
+        end
+    end
+
+
+
+
+
+
+
     function [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr)
         ellsCMat = arrayfun(@(x) oneDim2TwoDim(x), ellsArr, ...
             'UniformOutput', false);

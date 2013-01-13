@@ -1,4 +1,4 @@
-function  [plObj,nDim,isHold,bodyArr] = plotgeombodyarr(objClassName,rebuildOneDim2TwoDim,calcBodyPoints,plotPatch,varargin)
+function  [plObj,nDim,isHold] = plotgeombodyarr(objClassName,calcBodyPoints,plotPatch,varargin)
 %
 % plotgeombodyarr - plots objects in 2D or 3D.
 %
@@ -11,10 +11,9 @@ function  [plObj,nDim,isHold,bodyArr] = plotgeombodyarr(objClassName,rebuildOneD
 % Input:
 %   regular:
 %       objClassName:string - class of objects
-%       rebuildOneDim2TwoDim: function with input bodyArr and output bodyArr and nDim
 %       calcBodyPoints: function with input
 %           ellsArr,nDim,lGetGridMat,fGetGridMat and output [xMat,fMat]
-%       plotPatch: plotting function 
+%       plotPatch: plotting function
 %       bodyArr:  objects: [dim11Size,dim12Size,...,dim1kSize] -
 %                array of 2D or 3D objects. All objects in bodyArr
 %                must be either 2D or 3D simutaneously.
@@ -43,7 +42,6 @@ function  [plObj,nDim,isHold,bodyArr] = plotgeombodyarr(objClassName,rebuildOneD
 %       'relDataPlotter' - relation data plotter object.
 %       'priorHold':logical[1,1] - if true plot with hold on,
 %       'postHold':logical[1,1] - if true, after plotting hold will be on ,
-%       'plotBodies': double[1,1] number of plottingg objects (using if this number doesn't match with number of input objects)
 %       Notice that property vector could have different dimensions, only
 %       total number of elements must be the same.
 % Output:
@@ -60,54 +58,42 @@ function  [plObj,nDim,isHold,bodyArr] = plotgeombodyarr(objClassName,rebuildOneD
 %            System Analysis Department 2013 $
 
 import modgen.common.throwerror;
+
+DEFAULT_FILL = false;
 DEFAULT_LINE_WIDTH = 1;
 DEFAULT_SHAD = 0.4;
-DEFAULT_FILL = false;
-N_PLOT_POINTS = 80;
-SPHERE_TRIANG_CONST = 3;
-[reg,~,plObj,isNewFigure,isFill,lineWidth,colorVec,shadVec,priorHold,postHold,plotBodies...
-    isRelPlotterSpec,~,isIsFill,isLineWidth,isColorVec,isShad,~,isPostHold,isPlotBodies]=...
+
+[reg,~,plObj,isNewFigure,isFill,lineWidth,colorVec,shadVec,priorHold,postHold,...
+    isRelPlotterSpec,~,isIsFill,isLineWidth,isColorVec,isShad,~,isPostHold]=...
     modgen.common.parseparext(varargin,...
-    {'relDataPlotter','newFigure','fill','lineWidth','color','shade','priorHold','postHold',...
-    'plotBodies';...
-    [],0,[],[],[],0,false,false,0;@(x)isa(x,'smartdb.disp.RelationDataPlotter'),...
+    {'relDataPlotter','newFigure','fill','lineWidth','color','shade','priorHold','postHold';...
+    [],0,[],[],[],0,false,false;@(x)isa(x,'smartdb.disp.RelationDataPlotter'),...
     @(x)isa(x,'logical'),@(x)isa(x,'logical'),@(x)isa(x,'double'),...
     @(x)isa(x,'double'),...
-    @(x)isa(x,'double'), @(x)isa(x,'logical'),@(x)isa(x,'logical'),@(x)isa(x,'double')});
+    @(x)isa(x,'double'), @(x)isa(x,'logical'),@(x)isa(x,'logical')});
 checkIsWrongInput();
+
 if ~isRelPlotterSpec
-        if isNewFigure
-            plObj=smartdb.disp.RelationDataPlotter();
-        else
-            plObj=smartdb.disp.RelationDataPlotter('figureGetNewHandleFunc',...
-                @(varargin)gcf,'axesGetNewHandleFunc',@(varargin)gca);
-        end
+    if isNewFigure
+        plObj=smartdb.disp.RelationDataPlotter();
+    else
+        plObj=smartdb.disp.RelationDataPlotter('figureGetNewHandleFunc',...
+            @(varargin)gcf,'axesGetNewHandleFunc',@(varargin)gca);
+    end
 end
-[bodyArr, bodyNum, uColorVec, vColorVec, isCharColor] = getParams(reg);
+[bodyArr, uColorVec, vColorVec, isCharColor] = getParams(reg);
 if isCharColor && isColorVec
     throwerror('ConflictingColor', 'Conflicting using of color property');
-end
-if isPlotBodies
-    bodyPlotNum = plotBodies;
-else
-    bodyPlotNum = bodyNum;
 end
 nDim = max(dimension(bodyArr));
 if nDim == 3 && isLineWidth
     throwerror('wrongProperty', 'LineWidth is not supported by 3D objects');
 end
-[colorVec, shadVec, lineWidth, isFill] = getPlotParams(colorVec, shadVec,...
-    lineWidth, isFill);
-checkIsWrongParams();
 checkDimensions();
-SData = setUpSData();
-if nDim == 1
-    [bodyArr,nDim] = rebuildOneDim2TwoDim(bodyArr);
-end
-[lGetGridMat, fGetGridMat] = calcGrid();
 prepareForPlot();
 
 rel=smartdb.relations.DynamicRelation(SData);
+
 hFigure = get(0,'CurrentFigure');
 if isempty(hFigure)
     isHold=false;
@@ -125,7 +111,7 @@ else
             isHold = false;
         end
     else
-    isHold = true;
+        isHold = true;
     end
 end
 if isPostHold
@@ -141,7 +127,7 @@ else
         postFun = @axesSetPropDoNothing2Func;
     end
 end
-if (nDim==2)
+if (nDim==2)||(nDim == 1)
     plObj.plotGeneric(rel,@figureGetGroupNameFunc,{'figureNameCMat'},...
         @figureSetPropFunc,{},...
         @axesGetNameSurfFunc,{'axesNameCMat','axesNumCMat'},...
@@ -156,45 +142,46 @@ elseif (nDim==3)
         @axesSetPropDoNothingFunc,{},...
         @plotCreatePatchFunc,...
         {'verCMat','faceCMat','faceVertexCDataCMat',...
-        'shadVec','clrVec'},'axesPostPlotFunc',postFun,'isAutoHoldOn',false);
+        'shadVec','clrVec','plotPatch'},'axesPostPlotFunc',postFun,'isAutoHoldOn',false);
 end
 
 
 
 
 
-    function [lGetGrid, fGetGrid] = calcGrid()
-        if nDim == 2
-            lGetGrid = gras.geom.circlepart(N_PLOT_POINTS);
-            fGetGrid = 1:N_PLOT_POINTS+1;
-        else
-            [lGetGrid, fGetGrid] = ...
-                gras.geom.tri.spheretri(SPHERE_TRIANG_CONST);
-        end
-        lGetGrid(lGetGrid == 0) = eps;
-    end
+
     function prepareForPlot()
+        [xCMat,fCMat] = calcBodyPoints(bodyArr);
+        bodyPlotNum = numel(xCMat);
+        uColorVec = uColorVec(1:bodyPlotNum);
+        vColorVec = vColorVec(1:bodyPlotNum,:);
+        [colorVec, shadVec, lineWidth, isFill] = getPlotParams(colorVec, shadVec,...
+            lineWidth, isFill,bodyPlotNum);
+        checkIsWrongParams();
+        SData = setUpSData();
         if isNewFigure
             [SData.figureNameCMat, SData.axesNameCMat] =...
                 arrayfun(@(x)getSDataParams(x), (1:bodyPlotNum).',...
                 'UniformOutput', false);
+        else
+            SData.figureNameCMat=repmat({'figure'},bodyPlotNum,1);
+            SData.axesNameCMat = repmat({'ax'},bodyPlotNum,1);
         end
+        
         clrCVec = cellfun(@(x, y, z) getColor(x, y, z),...
             num2cell(colorVec, 2), ...
             num2cell(vColorVec, 2), num2cell(uColorVec),...
             'UniformOutput', false);
-        [xMat,fMat] = calcBodyPoints(bodyArr,nDim,lGetGridMat, fGetGridMat);
-        SData.verCMat = xMat;
-        SData.xCMat = xMat;
-        SData.faceCMat = fMat;
+        
+        SData.verCMat = xCMat;
+        SData.xCMat = xCMat;
+        SData.faceCMat = fCMat;
         SData.clrVec = clrCVec;
         colCMat = cellfun(@(x) getColCMat(x), clrCVec, ...
             'UniformOutput', false);
         SData.faceVertexCDataCMat = colCMat;
-        
-        
         function colCMat = getColCMat(clrVec)
-            colCMat = clrVec(ones(1, size(xMat{1}, 2)), :);
+            colCMat = clrVec(ones(1, size(xCMat{1}, 2)), :);
         end
         function [figureNameCMat, axesNameCMat] = getSDataParams(iEll)
             figureNameCMat = sprintf('figure%d',iEll);
@@ -207,19 +194,18 @@ end
                 clrVec = colorVec;
             end
         end
+        function SData = setUpSData()
+            SData.axesNumCMat = repmat({1},bodyPlotNum,1);
+            SData.plotPatch = repmat({plotPatch},bodyPlotNum,1);
+            SData.figureNumCMat = repmat({1},bodyPlotNum,1);
+            
+            SData.widVec = lineWidth.';
+            SData.shadVec = shadVec.';
+            SData.fill = (isFill)';
+            SData.clrVec = colorVec;
+        end
     end
-    function SData = setUpSData()
-        SData.figureNameCMat=repmat({'figure'},bodyPlotNum,1);
-        SData.axesNameCMat = repmat({'ax'},bodyPlotNum,1);
-        SData.axesNumCMat = repmat({1},bodyPlotNum,1);
-        SData.plotPatch = repmat({plotPatch},bodyPlotNum,1);
-        SData.figureNumCMat = repmat({1},bodyPlotNum,1);
-        
-        SData.widVec = lineWidth.';
-        SData.shadVec = shadVec.';
-        SData.fill = (isFill)';
-        SData.clrVec = colorVec;
-    end
+
     function checkDimensions()
         import elltool.conf.Properties;
         import modgen.common.throwerror;
@@ -262,58 +248,59 @@ end
         end
     end
     function [colorVec, shade, lineWidth, isFill] = ...
-            getPlotParams(colorVec, shade, lineWidth, isFill)
+            getPlotParams(colorVec, shade, lineWidth, isFill,bodyPlotNum)
         shade = getPlotInitParam(shade, isShad, DEFAULT_SHAD);
         lineWidth = getPlotInitParam(lineWidth, ...
             isLineWidth, DEFAULT_LINE_WIDTH);
         isFill = getPlotInitParam(isFill, isIsFill, DEFAULT_FILL);
         colorVec = getColorVec(colorVec);
-    end
-    function outParamVec = getPlotInitParam(inParamArr, ...
-            isFilledParam, multConst)
-        import modgen.common.throwerror;
-        if ~isFilledParam
-            outParamVec = multConst*ones(1, bodyPlotNum);
-        else
-            nParams = numel(inParamArr);
-            if nParams == 1
-                outParamVec = inParamArr*ones(1, bodyPlotNum);
+        function outParamVec = getPlotInitParam(inParamArr, ...
+                isFilledParam, multConst)
+            import modgen.common.throwerror;
+            if ~isFilledParam
+                outParamVec = multConst*ones(1, bodyPlotNum);
             else
-                if nParams ~= bodyPlotNum
-                    throwerror('wrongParamsNumber',...
-                        'Number of params is not equal to number of objects');
-                end
-                outParamVec = reshape(inParamArr, 1, nParams);
-            end
-        end
-    end
-    function colorArr = getColorVec(colorArr)
-        import modgen.common.throwerror;
-        if ~isColorVec
-            auxcolors  = hsv(bodyPlotNum);
-            multiplier = 7;
-            if mod(size(auxcolors, 1), multiplier) == 0
-                multiplier = multiplier + 1;
-            end
-            colCell = arrayfun(@(x) auxcolors(mod(x*multiplier, ...
-                size(auxcolors, 1)) + 1, :), 1:bodyPlotNum, 'UniformOutput',...
-                false);
-            colorsArr = vertcat(colCell{:});
-            colorsArr = flipud(colorsArr);
-            colorArr = colorsArr;
-        else
-            if size(colorArr, 1) ~= bodyPlotNum
-                if size(colorArr, 1) ~= 1
-                    throwerror('wrongColorVecSize',...
-                        'Wrong size of color array');
+                nParams = numel(inParamArr);
+                if nParams == 1
+                    outParamVec = inParamArr*ones(1, bodyPlotNum);
                 else
-                    colorArr = repmat(colorArr, bodyPlotNum, 1);
+                    if nParams ~= bodyPlotNum
+                        throwerror('wrongParamsNumber',...
+                            'Number of params is not equal to number of objects');
+                    end
+                    outParamVec = reshape(inParamArr, 1, nParams);
                 end
             end
         end
-        
-        
+        function colorArr = getColorVec(colorArr)
+            import modgen.common.throwerror;
+            if ~isColorVec
+                auxcolors  = hsv(bodyPlotNum);
+                multiplier = 7;
+                if mod(size(auxcolors, 1), multiplier) == 0
+                    multiplier = multiplier + 1;
+                end
+                colCell = arrayfun(@(x) auxcolors(mod(x*multiplier, ...
+                    size(auxcolors, 1)) + 1, :), 1:bodyPlotNum, 'UniformOutput',...
+                    false);
+                colorsArr = vertcat(colCell{:});
+                colorsArr = flipud(colorsArr);
+                colorArr = colorsArr;
+            else
+                if size(colorArr, 1) ~= bodyPlotNum
+                    if size(colorArr, 1) ~= 1
+                        throwerror('wrongColorVecSize',...
+                            'Wrong size of color array');
+                    else
+                        colorArr = repmat(colorArr, bodyPlotNum, 1);
+                    end
+                end
+            end
+            
+            
+        end
     end
+
     function checkIsWrongInput()
         import modgen.common.throwerror;
         cellfun(@(x)checkIfNoColorCharPresent(x),reg);
@@ -352,7 +339,7 @@ end
             end
         end
     end
-    function [ellsArr, ellNum, uColorVec, vColorVec, isCharColor] = ...
+    function [ellsArr,  uColorVec, vColorVec, isCharColor] = ...
             getParams(reg)
         import modgen.common.throwerror;
         BLACK_COLOR = [0, 0, 0];
@@ -370,12 +357,6 @@ end
         uColorVec = vertcat(uColorCMat{:});
         vColorVec = vertcat(vColorCMat{:});
         ellsArr = vertcat(ellsCMat{:});
-        ellNum = numel(ellsArr);
-        if ~isPlotBodies 
-            plotBodies = ellNum;
-        end
-        uColorVec = uColorVec(1:plotBodies);
-        vColorVec = vColorVec(1:plotBodies,:);
         
         function [ellVec, uColorVec, vColorVec] = getParams(ellArr, ...
                 nextObjArr, isnLastElem)
@@ -447,7 +428,7 @@ function hVec=plotCreateFillPlotFunc(hAxes,X,faces,clrVec,isFill,...
 if ~isFill
     shade = 0;
 end
-h1 = plotPatch('Vertices',X','Faces',faces,'FaceAlpha',shade,'Parent',hAxes);
+h1 = plotPatch('Vertices',X','Faces',faces,'FaceAlpha',shade,'Parent',hAxes,'FaceColor',clrVec);
 set(h1, 'EdgeColor', clrVec, 'LineWidth', widVec);
 hVec = h1;
 end
@@ -469,10 +450,10 @@ function axesName=axesGetNameSurfFunc(name,~)
 axesName=name;
 end
 function hVec=plotCreatePatchFunc(hAxes,vertices,faces,...
-    faceVertexCData,faceAlpha,clrVec)
+    faceVertexCData,faceAlpha,clrVec,plotPatch)
 import modgen.graphics.camlight;
 LIGHT_TYPE_LIST={{'left'},{40,-65},{-20,25}};
-hVec = patch('Vertices',vertices', 'Faces', faces, ...
+hVec = plotPatch('Vertices',vertices', 'Faces', faces, ...
     'FaceVertexCData', faceVertexCData, 'FaceColor','flat', ...
     'FaceAlpha', faceAlpha,'EdgeColor',clrVec,'Parent',hAxes);
 hLightVec=cellfun(@(x)camlight(hAxes,x{:}),LIGHT_TYPE_LIST);

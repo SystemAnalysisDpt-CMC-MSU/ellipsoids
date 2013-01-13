@@ -67,41 +67,62 @@ import elltool.conf.Properties;
 import modgen.common.throwerror;
 import elltool.core.GenEllipsoid;
 import elltool.plot.plotgeombodyarr;
-[plObj,nDim,isHold]= plotgeombodyarr('elltool.core.GenEllipsoid',@rebuildOneDim2TwoDim,@calcEllPoints,@patch,varargin{:});
+N_PLOT_POINTS = 80;
+SPHERE_TRIANG_CONST = 3;
+[plObj,nDim,isHold]= plotgeombodyarr('elltool.core.GenEllipsoid',@fCalcBodyTriArr,@patch,varargin{:});
 if (nDim < 3)
     [reg,~,~]=...
-    modgen.common.parseparext(varargin,...
-    {'relDataPlotter';...
-    [],;@(x)isa(x,'smartdb.disp.RelationDataPlotter'),...
-    });
-    plObj= plotgeombodyarr('elltool.core.GenEllipsoid',@rebuildOneDim2TwoDim,@calcCenterEllPoints,...
+        modgen.common.parseparext(varargin,...
+        {'relDataPlotter';...
+        [],;@(x)isa(x,'smartdb.disp.RelationDataPlotter'),...
+        });
+    plObj= plotgeombodyarr('elltool.core.GenEllipsoid',@fCalcCenterTriArr,...
         @(varargin)patch(varargin{:},'marker','*'),reg{:},'relDataPlotter',plObj, 'priorHold',true,'postHold',isHold);
 end
 
 
 
-    function [xMat,fMat] = calcCenterEllPoints(ellsArr,~,~, ~)
-        [xMat, fMat] = arrayfun(@(x) calcOneCenterEllElem(x), ellsArr, ...
+
+    function [xMat,fMat] = fCalcCenterTriArr(ellsArr)
+        nDim = dimension(ellsArr(1));
+        if nDim == 1
+            [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr);
+        end
+        [xMat, fMat] = arrayfun(@(x) fCalcCenterTri(x), ellsArr, ...
             'UniformOutput', false);
-        function [xMat, fMat] = calcOneCenterEllElem(plotEll)
+        function [xMat, fMat] = fCalcCenterTri(plotEll)
             import elltool.core.GenEllipsoid;
             xMat = plotEll.getCenter();
             fMat = [1 1];
         end
     end
 
-    function [xMat,fMat] = calcEllPoints(ellsArr,nDim,lGetGridMat, fGetGridMat)
+    function [lGetGrid, fGetGrid] = calcGrid(nDim)
+        if nDim == 2
+            lGetGrid = gras.geom.circlepart(N_PLOT_POINTS);
+            fGetGrid = 1:N_PLOT_POINTS+1;
+        else
+            [lGetGrid, fGetGrid] = ...
+                gras.geom.tri.spheretri(SPHERE_TRIANG_CONST);
+        end
+        lGetGrid(lGetGrid == 0) = eps;
+    end
+    function [xMat,fMat] = fCalcBodyTriArr(ellsArr)
         import elltool.core.GenEllipsoid;
         [minValVec, maxValVec] = findMinAndMaxInEachDim(ellsArr);
         minValVec = reshape(minValVec, numel(minValVec), 1);
         maxValVec = reshape(maxValVec, numel(maxValVec), 1);
-        
-        [xMat, fMat] = arrayfun(@(x) calcOneEllElem(x), ellsArr, ...
+        nDim = dimension(ellsArr(1));
+        if nDim == 1
+            [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr);
+        end
+        [lGetGridMat, fGetGridMat] = calcGrid(nDim);
+        [xMat, fMat] = arrayfun(@(x) fCalcBodyTri(x), ellsArr, ...
             'UniformOutput', false);
         
         
         
-        function [xMat, fMat] = calcOneEllElem(plotEll)
+        function [xMat, fMat] = fCalcBodyTri(plotEll)
             import elltool.core.GenEllipsoid;
             qVec = plotEll.getCenter();
             diagMat = plotEll.getDiagMat();
@@ -143,29 +164,32 @@ end
 
 
 
-    function [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr)
-        ellsCMat = arrayfun(@(x) oneDim2TwoDim(x), ellsArr, ...
-            'UniformOutput', false);
-        ellsArr = vertcat(ellsCMat{:});
-        nDim = 2;
-        function ellTwoDim = oneDim2TwoDim(ell)
-            import elltool.core.GenEllipsoid;
-            ellCenVec = ell.getCenter();
-            ellEigMat = ell.getEigvMat();
-            ellDiagMat = ell.getDiagMat();
-            ellTwoDim = GenEllipsoid([ellCenVec, 0].', ...
-                diag([ellDiagMat, 0]), diag([ellEigMat, 0]));
-        end
-    end
+
 
 end
 
 
-
+function [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr)
+ellsCMat = arrayfun(@(x) oneDim2TwoDim(x), ellsArr, ...
+    'UniformOutput', false);
+ellsArr = vertcat(ellsCMat{:});
+nDim = 2;
+    function ellTwoDim = oneDim2TwoDim(ell)
+        import elltool.core.GenEllipsoid;
+        ellCenVec = ell.getCenter();
+        ellEigMat = ell.getEigvMat();
+        ellDiagMat = ell.getDiagMat();
+        ellTwoDim = GenEllipsoid([ellCenVec, 0].', ...
+            diag([ellDiagMat, 0]), diag([ellEigMat, 0]));
+    end
+end
 
 function [minValVec, maxValVec] = findMinAndMaxInEachDim(ellsArr)
 
 nDim = max(dimension(ellsArr));
+if nDim == 1
+    [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr);
+end
 [minValVec, maxValVec] = arrayfun(@(x) findMinAndMaxDim(ellsArr, x, nDim),...
     1:nDim);
 
