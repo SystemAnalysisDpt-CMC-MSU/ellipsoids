@@ -402,5 +402,97 @@ classdef ContiniousReachTestCase < mlunitext.test_case
                 mlunit.assert_equals(true, isEqual);
             end
         end
+        %
+        function self = DISABLED_testProjection(self)
+            import gras.ellapx.smartdb.F;
+            %
+            atDefCMat = self.crmSys.getParam('At');
+            zeroASizeCMat = arrayfun(@num2str, zeros(size(atDefCMat)),...
+                'UniformOutput', false);
+            newAtCMat = [atDefCMat zeroASizeCMat; zeroASizeCMat atDefCMat];
+            btDefCMat = self.crmSys.getParam('Bt');
+            zeroBSizeCMat = arrayfun(@num2str, zeros(size(btDefCMat)),...
+                'UniformOutput', false);
+            newBtCMat = [btDefCMat zeroBSizeCMat; zeroBSizeCMat btDefCMat];
+            ctDefCMat = self.crmSys.getParam('Ct');
+            zeroCSizeCMat = arrayfun(@num2str, zeros(size(ctDefCMat)),...
+                'UniformOutput', false);
+            newCtCMat = [ctDefCMat zeroCSizeCMat; zeroCSizeCMat ctDefCMat];
+            %
+            ptDefCMat = self.crmSys.getParam('control_restriction.Q');
+            zeroPSizeCMat = arrayfun(@num2str, zeros(size(ptDefCMat)),...
+                'UniformOutput', false);
+            newPtCMat = [ptDefCMat zeroPSizeCMat; zeroPSizeCMat ptDefCMat];
+            ptDefCVec = self.crmSys.getParam('control_restriction.a');
+            newPtCVec = [ptDefCVec; ptDefCVec];
+            qtDefCMat = self.crmSys.getParam('disturbance_restriction.Q');
+            zeroQSizeCMat = arrayfun(@num2str, zeros(size(qtDefCMat)),...
+                'UniformOutput', false);
+            newQtCMat = [qtDefCMat zeroQSizeCMat; zeroQSizeCMat qtDefCMat];
+            qtDefCVec = self.crmSys.getParam('disturbance_restriction.a');
+            newQtCVec = [qtDefCVec; qtDefCVec];
+            x0DefMat = self.crmSys.getParam('initial_set.Q');
+            newX0Mat = [x0DefMat zeros(size(x0DefMat));...
+                zeros(size(x0DefMat)) x0DefMat];
+            x0DefVec = self.crmSys.getParam('initial_set.a');
+            newX0Vec = [x0DefVec; x0DefVec];
+            l0CMat = self.crm.getParam(...
+                'goodDirSelection.methodProps.manual.lsGoodDirSets.set1');
+            l0Mat = cell2mat(l0CMat.').';
+            newL0Mat = [l0Mat zeros(size(l0Mat)); zeros(size(l0Mat)) l0Mat];
+            ControlBounds = struct();
+            ControlBounds.center = newPtCVec;
+            ControlBounds.shape = newPtCMat;
+            DistBounds = struct();
+            DistBounds.center = newQtCVec;
+            DistBounds.shape = newQtCMat;
+            %
+            oldDim = self.reachObj.dimension;
+            oldEllTube = self.reachObj.getEllTubeRel;
+            fieldsNotToCompVec =...
+                F.getNameList(self.FIELDS_NOT_TO_COMPARE);
+            fieldsToCompVec =...
+                setdiff(oldEllTube.getFieldNameList, fieldsNotToCompVec);
+            %
+            newLinSys = elltool.linsys.LinSys(newAtCMat, newBtCMat,...
+                ControlBounds, newCtCMat, DistBounds);
+            newReachObj = elltool.reach.ReachContinious(newLinSys,...
+                ellipsoid(newX0Vec, newX0Mat), newL0Mat, self.tLims);
+            firstProjReachObj =...
+                newReachObj.projection([eye(oldDim); zeros(oldDim)]);
+            secondProjReachObj =...
+                newReachObj.projection([zeros(oldDim); eye(oldDim)]);
+            firstEllTube =...
+                firstProjReachObj.getEllTubeRel.getTuplesFilteredBy(...
+                'lsGoodDirNorm', 1);
+            secondEllTube =...
+                secondProjReachObj.getEllTubeRel.getTuplesFilteredBy(...
+                'lsGoodDirNorm', 1);
+            isEqual = oldEllTube.getFieldProjection(...
+                fieldsToCompVec).isEqual(...
+                firstEllTube.getFieldProjection(fieldsToCompVec),...
+                'maxTolerance', self.COMP_PRECISION);
+            isEqual = isEqual && oldEllTube.getFieldProjection(...
+                fieldsToCompVec).isEqual(...
+                secondEllTube.getFieldProjection(fieldsToCompVec),...
+                'maxTolerance', self.COMP_PRECISION);
+            mlunit.assert_equals(true, isEqual);
+        end
+        %
+        function self = DISABLED_testIntersect(self)
+            if ~strcmp(self.confName, 'demo3firstTest')
+                return;
+            end
+            cutReachObj = self.reachObj.cut(self.tLims(2));
+            ell1 = ellipsoid([-2.5;1], 1.2 * eye(2));
+            ell2 = ellipsoid([-2.5;1], 1.25 * eye(2));
+            ell3 = ellipsoid([-2.5;1], 1.3 * eye(2));
+            mlunit.assert_equals(false, cutReachObj.intersect(ell1, 'e'));
+            mlunit.assert_equals(false, cutReachObj.intersect(ell1, 'i'));
+            mlunit.assert_equals(true, cutReachObj.intersect(ell2, 'e'));
+            mlunit.assert_equals(false, cutReachObj.intersect(ell2, 'i'));
+            mlunit.assert_equals(true, cutReachObj.intersect(ell3, 'e'));
+            mlunit.assert_equals(true, cutReachObj.intersect(ell3, 'i'));
+        end
     end
 end

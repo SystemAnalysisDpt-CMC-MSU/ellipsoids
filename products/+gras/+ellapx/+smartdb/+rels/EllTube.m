@@ -245,32 +245,49 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
             import gras.ellapx.smartdb.F;
             import modgen.common.throwerror;
             SData = self.getData();
-            SCutFunResult = SData;
+            SThinFunResult = SData;
             timeVec = SData.timeVec{1};
             nPoints = numel(timeVec);
-            if min(indVec) < 1 || max(indVec) > nPoints
-                throwerror('Indexes are out of range.');
+            if isa(indVec, 'double')
+                if min(indVec) < 1 || max(indVec) > nPoints
+                    throwerror('Indexes are out of range.');
+                end
+                isNeededIndVec = false(size(timeVec));
+                isNeededIndVec(indVec) = true;
+            elseif islogical(indVec)
+                if numel(indVec) ~= nPoints
+                    throwerror('Indexes are out of range.');
+                end
+                isNeededIndVec = indVec;
+            else
+                throwerror('indVec should be double or logical');
             end
-            isNeededIndVec = false(size(timeVec));
-            isNeededIndVec(indVec) = true;
             %
             fieldsNotToCatVec =...
                 F.getNameList(self.FIELDS_NOT_TO_CAT_OR_CUT);
             fieldsToCutVec =...
                 setdiff(fieldnames(SData), fieldsNotToCatVec);
+            fieldNameListTo = {'lsGoodDirVec';'lsGoodDirNorm';...
+                'xsTouchVec';'xsTouchOpVec'};
+            fieldNameListFrom = {'ltGoodDirMat';'ltGoodDirNormVec';...
+                'xTouchCurveMat';'xTouchOpCurveMat'};
             cellfun(@(field) cutStructField(field), fieldsToCutVec);
-            SCutFunResult.sTime(:) =...
-                timeVec(find(isNeededIndVec == true, 1));
-            SCutFunResult.indSTime(:) = 1;
-            SCutFunResult.lsGoodDirVec = cellfun(@(field) field(:, 1),...
-                SCutFunResult.ltGoodDirMat, 'UniformOutput', false);
-            SCutFunResult.lsGoodDirNorm = cellfun(@(field) field(1, 1),...
-                SCutFunResult.ltGoodDirNormVec);
-            SCutFunResult.xsTouchVec = cellfun(@(field) field(:, 1),...
-                SCutFunResult.xTouchCurveMat, 'UniformOutput', false);
-            SCutFunResult.xsTouchOpVec = cellfun(@(field) field(:, 1),...
-                SCutFunResult.xTouchOpCurveMat, 'UniformOutput', false);
-            thinnedEllTubeRel = self.createInstance(SCutFunResult);
+            cellfun(@cutStructSTimeField,...
+                fieldNameListTo, fieldNameListFrom);
+            SThinFunResult.lsGoodDirNorm =...
+                cell2mat(SThinFunResult.lsGoodDirNorm);
+            SThinFunResult.sTime(:) =...
+                timeVec(find(isNeededIndVec, 1));
+            SThinFunResult.indSTime(:) = 1;
+            %
+            thinnedEllTubeRel = self.createInstance(SThinFunResult);
+            %
+            function cutStructSTimeField(fieldNameTo, fieldNameFrom)
+                SCutFunResult.(fieldNameTo) =...
+                    cellfun(@(field) field(:, 1),...
+                    SThinFunResult.(fieldNameFrom),...
+                    'UniformOutput', false);
+            end
             %
             function cutResObj = getCutObj(whatToCutObj, isCutTimeVec)
                 dim = ndims(whatToCutObj);
@@ -284,7 +301,7 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
             end
             %
             function cutStructField(fieldName)
-                SCutFunResult.(fieldName) = cellfun(@(StructFieldVal)...
+                SThinFunResult.(fieldName) = cellfun(@(StructFieldVal)...
                     getCutObj(StructFieldVal, isNeededIndVec),...
                     SData.(fieldName), 'UniformOutput', false);
             end
@@ -346,7 +363,7 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
             end
             %
             cutEllTubeRel =...
-                self.thinOutTuples(find(isSysNewTimeIndVec));
+                self.thinOutTuples(isSysNewTimeIndVec);
         end
         function scale(self,fCalcFactor,fieldNameList)
             import gras.ellapx.smartdb.rels.EllTubeBasic;

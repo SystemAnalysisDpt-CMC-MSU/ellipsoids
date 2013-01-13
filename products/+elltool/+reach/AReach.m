@@ -8,7 +8,7 @@ classdef AReach < elltool.reach.IReach
         projectionBasisMat
     end
     %
-    properties (Access = private)
+    properties (Constant, Access = private)
         EXTERNAL = 'e'
         INTERNAL = 'i'
         UNION = 'u'

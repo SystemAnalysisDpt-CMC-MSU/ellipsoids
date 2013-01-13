@@ -17,7 +17,7 @@ classdef ReachContinious < elltool.reach.AReach
                 deal(repmat(projMat.', [1 1 numel(timeVec)]),...
                 repmat(projMat, [1 1 numel(timeVec)]));
             isProjSpaceList = false(1, size(projMat, 1));
-            isProjSpaceList(1 : size(projMat, 2)) = true;
+            isProjSpaceList((sum(projMat, 2) > 0).') = true;
             isProjSpaceCList = {isProjSpaceList};
             projType = EProjType.Static;
             if nargin > 2
@@ -808,6 +808,13 @@ classdef ReachContinious < elltool.reach.AReach
         %%
         function projObj = projection(self, projMat)
             import gras.ellapx.enums.EProjType;
+            import modgen.common.throwerror;
+            isOnesMat = flipud(sortrows(projMat)) == eye(size(projMat));
+            isOk = all(isOnesMat(:));
+            if ~isOk
+                throwerror(['Each column of projection matrix ',...
+                    'should be a unit vector.']);
+            end
             projSet = self.getProjSet(projMat);
             projObj = elltool.reach.ReachContinious();
             projObj.switchSysTimeVec = self.switchSysTimeVec;
