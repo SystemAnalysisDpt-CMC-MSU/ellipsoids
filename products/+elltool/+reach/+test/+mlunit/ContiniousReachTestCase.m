@@ -1,7 +1,8 @@
 classdef ContiniousReachTestCase < mlunitext.test_case
     properties (Access = private, Constant)
-        FIELDS_NOT_TO_COMPARE={'LT_GOOD_DIR_MAT';'LT_GOOD_DIR_NORM_VEC'};
-        EVOLVE_PRECISION = 5e-5;
+        FIELDS_NOT_TO_COMPARE={'LT_GOOD_DIR_MAT';'LT_GOOD_DIR_NORM_VEC';...
+            'LS_GOOD_DIR_NORM';'LS_GOOD_DIR_VEC'};
+        COMP_PRECISION = 5e-5;
     end
     properties (Access=private)
         testDataRootDir
@@ -77,7 +78,7 @@ classdef ContiniousReachTestCase < mlunitext.test_case
             COMPARED_FIELD_LIST = {'ellTubeRel'};
             SSORT_KEYS.ellTubeRel = {'approxSchemaName', 'lsGoodDirVec'};
             ROUND_FIELD_LIST = {'lsGoodDirOrigVec', 'lsGoodDirVec'};
-            nRoundDigits = -fix(log(self.EVOLVE_PRECISION) / log(10));
+            nRoundDigits = -fix(log(self.COMP_PRECISION) / log(10));
             %
             resMap = modgen.containers.ondisk.HashMapMatXML(...
                 'storageLocationRoot', self.etalonDataRootDir,...
@@ -118,7 +119,7 @@ classdef ContiniousReachTestCase < mlunitext.test_case
                    
                     [isOk, reportStr] =...
                         expRel.isEqual(rel, 'maxTolerance',...
-                        self.EVOLVE_PRECISION, 'checkTupleOrder', true);
+                        self.COMP_PRECISION, 'checkTupleOrder', true);
                     %
                     reportStr = sprintf('confName=%s\n %s', self.confName,...
                         reportStr);
@@ -350,7 +351,7 @@ classdef ContiniousReachTestCase < mlunitext.test_case
             isEqual = thinnedOutEvolveEllTube.getFieldProjection(...
                 fieldsToCompVec).isEqual(...
                 ellTube.getFieldProjection(fieldsToCompVec),...
-                'maxTolerance', self.EVOLVE_PRECISION);
+                'maxTolerance', self.COMP_PRECISION);
             mlunit.assert_equals(true, isEqual);
         end
         %
@@ -364,6 +365,42 @@ classdef ContiniousReachTestCase < mlunitext.test_case
             evolveReachObj = self.reachObj.evolve(self.tLims(2) + 1);
             isEqual = self.linSys == evolveReachObj.get_system;
             mlunit.assert_equals(true, isEqual);
+        end
+        %
+        function self = DISABLED_testCut(self)
+            import gras.ellapx.smartdb.F;
+            %
+            newTimeVec = [sum(self.tLims) / 2, self.tLims(2)];
+            cutReachObj = self.reachObj.cut(newTimeVec);
+            cutEllTubeRel = cutReachObj.getEllTubeRel;
+            nTuples = cutEllTubeRel.getNTuples;
+            fieldsNotToCompVec =...
+                F.getNameList(self.FIELDS_NOT_TO_COMPARE);
+            fieldsToCompVec =...
+                setdiff(cutEllTubeRel.getFieldNameList, fieldsNotToCompVec);
+            for iTuple = 1 : nTuples
+                compTuple = cutEllTubeRel.getTuples(iTuple);
+                pointsNum = numel(compTuple.timeVec{1});
+                timeDif = compTuple.timeVec{1}(1) - newTimeVec(1);
+                compTimeGridIndVec = 2 .* (1 : pointsNum) - 1;
+                x0DefVec = compTuple.aMat{1}(:, 1);
+                x0DefMat = compTuple.QArray{1}(:, :, 1);
+                x0Ell = ellipsoid(x0DefVec, x0DefMat);
+                l0Mat = compTuple.ltGoodDirMat{1}(:, 1) /...
+                    compTuple.ltGoodDirNormVec{1}(1);
+                newReachObj = elltool.reach.ReachContinious(self.linSys,...
+                    x0Ell, l0Mat, newTimeVec + timeDif);
+                newEllTube =...
+                    newReachObj.getEllTubeRel.getTuplesFilteredBy(...
+                    'approxType', compTuple.approxType);
+                thinnedOutEllTube =...
+                    newEllTube.thinOutTuples(compTimeGridIndVec);
+                isEqual = compTuple.getFieldProjection(...
+                    fieldsToCompVec).isEqual(...
+                    thinnedOutEllTube.getFieldProjection(fieldsToCompVec),...
+                    'maxTolerance', self.COMP_PRECISION);
+                mlunit.assert_equals(true, isEqual);
+            end
         end
     end
 end
