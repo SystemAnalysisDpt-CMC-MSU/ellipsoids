@@ -74,27 +74,21 @@ elseif numel(ellsArr) == 2
         varargout(2) = {boundPntMat};
     end
 else
-    if (nargout == 1)||(nargout == 0)
-        plObj = prepareminkoperation(@getEllArr,@fCalcBodyTriArr,@fCalcCenterTriArr,varargin{:});
+    if nargout == 0
+        minkCommonAction(@getEllArr,@fCalcBodyTriArr,@fCalcCenterTriArr,varargin{:});
+    elseif nargout == 1
+        plObj = minkCommonAction(@getEllArr,@fCalcBodyTriArr,@fCalcCenterTriArr,varargin{:});
         varargout = {plObj};
     else
-        ellsArrDims = dimension(ellsArr);
-        mDim    = min(ellsArrDims);
-        nDim    = max(ellsArrDims);
-        if mDim ~= nDim
-            throwerror('dimMismatch', ...
-                'Objects must have the same dimensions.');
-        end
-        xDifSumCMat = fCalcBodyTriArr(ellsArr);
-        qDifSumCMat = fCalcCenterTriArr(ellsArr);
-        varargout(1) = qDifSumCMat;
-        varargout(2) = xDifSumCMat;
+        [qDifSumMat,boundMat] = minkCommonAction(@getEllArr,@fCalcBodyTriArr,@fCalcCenterTriArr,varargin{:});
+        varargout(1) = {qDifSumMat};
+        varargout(2) = {boundMat};
     end
 end
     function [qSumDifCMat,fCMat] = fCalcCenterTriArr(ellsArr)
         nDim = dimension(ellsArr(1));
         if nDim == 1
-            [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr);
+            [ellsArr,~] = rebuildOneDim2TwoDim(ellsArr);
         end
         fstEll = ellsArr(1);
         secEll = ellsArr(2);
@@ -197,7 +191,7 @@ end
         else
             import modgen.common.throwerror;
             throwerror('wrongInput', ...
-                'if you don''t plot, all inputs must be ellipsoids');
+                'non property params must be ellipsoids');
         end
     end
     function [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr)

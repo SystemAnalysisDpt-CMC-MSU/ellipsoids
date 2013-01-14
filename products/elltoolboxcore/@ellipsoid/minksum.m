@@ -51,32 +51,15 @@ import elltool.plot.plotgeombodyarr;
 import modgen.common.throwerror;
 N_PLOT_POINTS = 80;
 SPHERE_TRIANG_CONST = 3;
-if (nargout == 1)||(nargout == 0)
-    plObj = prepareminkoperation(@getEllArr,@fCalcBodyTriArr,@fCalcCenterTriArr,varargin{:});
+if nargout == 0
+    minkCommonAction(@getEllArr,@fCalcBodyTriArr,@fCalcCenterTriArr,varargin{:});
+elseif nargout == 1
+    plObj = minkCommonAction(@getEllArr,@fCalcBodyTriArr,@fCalcCenterTriArr,varargin{:});
     varargout = {plObj};
 else
-    
-    [reg]=...
-        modgen.common.parseparext(varargin,...
-        {'relDataPlotter','newFigure','fill','lineWidth','color','shade','priorHold','postHold';...
-        [],0,[],[],[],0,false,false;@(x)isa(x,'smartdb.disp.RelationDataPlotter'),...
-        @(x)isa(x,'logical'),@(x)isa(x,'logical'),@(x)isa(x,'double'),...
-        @(x)isa(x,'double'),...
-        @(x)isa(x,'double'), @(x)isa(x,'logical'),@(x)isa(x,'logical')});
-    ellsCMat = cellfun(@(x)getEllArr(x),reg,'UniformOutput', false);
-    ellsArr = vertcat(ellsCMat{:});
-    ellsArrDims = dimension(ellsArr);
-    mDim    = min(ellsArrDims);
-    nDim    = max(ellsArrDims);
-    if mDim ~= nDim
-        throwerror('dimMismatch', ...
-            'Objects must have the same dimensions.');
-    end
-    
-    xSumCMat = fCalcBodyTriArr(ellsArr);
-    qSumCMat = fCalcCenterTriArr(ellsArr);
-    varargout(1) = qSumCMat;
-    varargout(2) = xSumCMat;
+    [qSumMat,boundMat] = minkCommonAction(@getEllArr,@fCalcBodyTriArr,@fCalcCenterTriArr,varargin{:});
+    varargout(1) = {qSumMat};
+    varargout(2) = {boundMat};
 end
     function [lGetGrid, fGetGrid] = calcGrid(nDim)
         if nDim == 2

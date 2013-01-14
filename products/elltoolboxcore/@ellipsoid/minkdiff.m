@@ -50,34 +50,34 @@ function [varargout] = minkdiff(varargin)
 import elltool.plot.plotgeombodyarr;
 import modgen.common.throwerror;
 onlyCenter = false;
-if (nargout == 1)||(nargout == 0)
-    [plObj,isHold] = prepareminkoperation(@getEllArr,@fCalcBodyTriArr,@fCalcCenterTriArr,varargin{:});
-    
+if nargout == 0
+    plObj = minkCommonAction(@getEllArr,@fCalcBodyTriArr,@fCalcCenterTriArr,varargin{:});
     if onlyCenter
         [reg]=...
             modgen.common.parseparext(varargin,...
             {'relDataPlotter';...
             [],;@(x)isa(x,'smartdb.disp.RelationDataPlotter'),...
             });
-        plObj= plotgeombodyarr('ellipsoid',@fCalcCenterTriArr,...
+         minkCommonAction('ellipsoid',@fCalcCenterTriArr,...
+            @(varargin)patch(varargin{:},'marker','*'),reg{:},'relDataPlotter',plObj, 'priorHold',true,'postHold',isHold);
+    end
+elseif nargout == 1
+    plObj = minkCommonAction(@getEllArr,@fCalcBodyTriArr,@fCalcCenterTriArr,varargin{:});
+    if onlyCenter
+        [reg]=...
+            modgen.common.parseparext(varargin,...
+            {'relDataPlotter';...
+            [],;@(x)isa(x,'smartdb.disp.RelationDataPlotter'),...
+            });
+         plObj = minkCommonAction('ellipsoid',@fCalcCenterTriArr,...
             @(varargin)patch(varargin{:},'marker','*'),reg{:},'relDataPlotter',plObj, 'priorHold',true,'postHold',isHold);
     end
     varargout = {plObj};
 else
-    ellsCMat = cellfun(@(x)getEllArr(x),varargin,'UniformOutput', false);
-    ellsArr = vertcat(ellsCMat{:});
-    ellsArrDims = dimension(ellsArr);
-    mDim    = min(ellsArrDims);
-    nDim    = max(ellsArrDims);
-    if mDim ~= nDim
-        throwerror('dimMismatch', ...
-            'Objects must have the same dimensions.');
-    end
-    xDifCMat = fCalcBodyTriArr(ellsArr);
-    qDifCMat = fCalcCenterTriArr(ellsArr);
-    varargout(1) = qDifCMat;
-    varargout(2) = xDifCMat;
-end
+    [qDifMat,boundMat] = minkCommonAction(@getEllArr,@fCalcBodyTriArr,@fCalcCenterTriArr,varargin{:});
+    varargout(1) = {qDifMat};
+    varargout(2) = {boundMat};
+end    
     function ellsVec = getEllArr(ellsArr)
         if isa(ellsArr, 'ellipsoid')
             cnt    = numel(ellsArr);
@@ -88,7 +88,7 @@ end
     function [qDifMat,fMat] = fCalcCenterTriArr(ellsArr)
         nDim = dimension(ellsArr(1));
         if nDim == 1
-            [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr);
+            [ellsArr,~] = rebuildOneDim2TwoDim(ellsArr);
         end
         fstEll = ellsArr(1);
         secEll = ellsArr(2);
@@ -161,11 +161,12 @@ end
                         boundPointMat = [];
                     end
             end
+            boundPointMat = unique(boundPointMat','rows')';
             if size(boundPointMat,2) < 2
                 onlyCenter = true;
             end
             xDifMat = {boundPointMat};
-            if size(boundPointMat,2)>0
+            if (size(boundPointMat,2)>0) && (nDim == 3)
                 fMat = {convhulln(boundPointMat')};
             else
                 fMat = {[]};
