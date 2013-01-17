@@ -54,8 +54,8 @@ SPHERE_TRIANG_CONST = 3;
 if nargout == 0
     minkCommonAction(@getEllArr,@fCalcBodyTriArr,@fCalcCenterTriArr,varargin{:});
 elseif nargout == 1
-    plObj = minkCommonAction(@getEllArr,@fCalcBodyTriArr,@fCalcCenterTriArr,varargin{:});
-    varargout = {plObj};
+    output = minkCommonAction(@getEllArr,@fCalcBodyTriArr,@fCalcCenterTriArr,varargin{:});
+    varargout = output(1);
 else
     [qSumMat,boundMat] = minkCommonAction(@getEllArr,@fCalcBodyTriArr,@fCalcCenterTriArr,varargin{:});
     varargout(1) = {qSumMat};
@@ -81,7 +81,7 @@ end
         qSumMat = 0;
         nDim = dimension(ellsArr(1));
         if nDim == 1
-            [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr);
+            [ellsArr,~] = rebuildOneDim2TwoDim(ellsArr);
         end
         qMat = arrayfun(@(x) {x.center}, ellsArr);
         for iQMat=1:numel(qMat)

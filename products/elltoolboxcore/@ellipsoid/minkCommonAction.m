@@ -22,9 +22,11 @@ if (nargout == 1)||(nargout == 0)
             {'relDataPlotter','newFigure','fill','lineWidth','color','shade','priorHold','postHold'});
         ellArr = cellfun(@(x)getEllArr(x),reg,'UniformOutput', false);
         ellArr = vertcat(ellArr{:});
-        plObj = ellArr.plot('color', [0 0 0],'relDataPlotter',plObj);
+        plObj = ellArr.plot('color', [0 0 0],'relDataPlotter',plObj,'priorHold',true);
     end
-    varargout = {plObj,isHold};
+    if nargout == 1 
+        varargout = {{plObj,isHold}};
+    end
 else
     [reg]=...
         modgen.common.parseparext(varargin,...

@@ -1,4 +1,4 @@
-function  [plObj,nDim,isHold] = plotgeombodyarr(objClassName,calcBodyPoints,plotPatch,varargin)
+function  [plObj,nDim,isHold] = plotgeombodyarr(objClassName,calcBodyPoints,fPlotPatch,varargin)
 %
 % plotgeombodyarr - plots objects in 2D or 3D.
 %
@@ -196,7 +196,7 @@ end
         end
         function SData = setUpSData()
             SData.axesNumCMat = repmat({1},bodyPlotNum,1);
-            SData.plotPatch = repmat({plotPatch},bodyPlotNum,1);
+            SData.plotPatch = repmat({fPlotPatch},bodyPlotNum,1);
             SData.figureNumCMat = repmat({1},bodyPlotNum,1);
             
             SData.widVec = lineWidth.';
@@ -458,7 +458,9 @@ hVec = plotPatch('Vertices',vertices', 'Faces', faces, ...
     'FaceAlpha', faceAlpha,'EdgeColor',clrVec,'Parent',hAxes);
 hLightVec=cellfun(@(x)camlight(hAxes,x{:}),LIGHT_TYPE_LIST);
 hVec=[hVec,hLightVec];
-shading(hAxes,'interp');
+if size(vertices,2) > 1
+    shading(hAxes,'interp');
+end
 lighting(hAxes,'phong');
 material(hAxes,'metal');
 view(hAxes,3);

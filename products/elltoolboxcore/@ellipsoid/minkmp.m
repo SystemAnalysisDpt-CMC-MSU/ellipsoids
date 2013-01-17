@@ -52,12 +52,16 @@ import elltool.plot.plotgeombodyarr;
 import modgen.common.throwerror;
 [reg]=...
     modgen.common.parseparext(varargin,...
-    {'relDataPlotter','newFigure','fill','lineWidth','color','shade','priorHold','postHold'});
+    {'relDataPlotter','newFigure','fill','lineWidth','color','shade','priorHold','postHold','showAll'});
 ellsArr = cellfun(@(x)getEllArr(x),reg,'UniformOutput', false);
 ellsArr = vertcat(ellsArr{:});
 if numel(ellsArr) == 1
     if (nargout == 1)||(nargout == 0)
-        plObj = plot(varargin{:});
+        [reg]=...
+            modgen.common.parseparext(varargin,...
+            {'showAll';...
+            [];});
+        plObj = plot(reg{:});
         varargout(1) = {plObj};
     else
         [centerVector, boundPntMat] = ellsArr.double();
@@ -66,7 +70,11 @@ if numel(ellsArr) == 1
     end
 elseif numel(ellsArr) == 2
     if (nargout == 1)||(nargout == 0)
-        plObj = minkdiff(varargin{:});
+        [reg]=...
+            modgen.common.parseparext(varargin,...
+            {'showAll';...
+            [];});
+        plObj = minkdiff(reg{:});
         varargout(1) = {plObj};
     else
         [centerVector, boundPntMat] = minkdiff(ellsArr(1),ellsArr(2));
@@ -77,8 +85,8 @@ else
     if nargout == 0
         minkCommonAction(@getEllArr,@fCalcBodyTriArr,@fCalcCenterTriArr,varargin{:});
     elseif nargout == 1
-        plObj = minkCommonAction(@getEllArr,@fCalcBodyTriArr,@fCalcCenterTriArr,varargin{:});
-        varargout = {plObj};
+        output = minkCommonAction(@getEllArr,@fCalcBodyTriArr,@fCalcCenterTriArr,varargin{:});
+        varargout = output(1);
     else
         [qDifSumMat,boundMat] = minkCommonAction(@getEllArr,@fCalcBodyTriArr,@fCalcCenterTriArr,varargin{:});
         varargout(1) = {qDifSumMat};
@@ -135,12 +143,17 @@ end
                             sin(phiVec)*sin(psyVec(i)); arrVec];
                     end
             end
-            if isdegenerate(secEll)
-                secEll.shape = regularize(secEll.shape);
+            absTol = elltool.conf.Properties.getAbsTol();
+            fstEllShMat = fstEll.shape;
+            if isdegenerate(fstEll)
+                fstEllShMat = ellipsoid.regularize(fstEllShMat,absTol);
             end
-            q1Mat=fstEll.shape;
-            q2Mat=secEll.shape;
-            isGoodDirVec = ~ellipsoid.isbaddirectionmat(q1Mat, q2Mat, ...
+            secEllShMat = secEll.shape;
+            if isdegenerate(secEll)
+                secEllShMat = ellipsoid.regularize(secEllShMat,absTol);
+            end
+            
+            isGoodDirVec = ~ellipsoid.isbaddirectionmat(fstEllShMat, secEllShMat, ...
                 lDirsMat);
             
             if  ~any(isGoodDirVec)

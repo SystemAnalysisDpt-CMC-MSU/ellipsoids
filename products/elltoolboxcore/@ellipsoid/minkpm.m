@@ -1,4 +1,4 @@
-function [centVec, boundPointMat] = minkpm(inpEllArr, inpEll, varargin)
+function [varargout] = minkpm(varargin)
 %
 % MINKPM - computes and plots geometric (Minkowski) difference
 %          of the geometric sum of ellipsoids and a single ellipsoid
@@ -24,7 +24,7 @@ function [centVec, boundPointMat] = minkpm(inpEllArr, inpEll, varargin)
 %
 % Input:
 %   regular:
-%       inpEllArr: ellipsoid [nDims1, nDims2,...,nDimsN] - array of 
+%       inpEllArr: ellipsoid [nDims1, nDims2,...,nDimsN] - array of
 %           ellipsoids of the same dimentions 2D or 3D.
 %       inpEll: ellipsoid [1, 1] - ellipsoid of the same
 %           dimention 2D or 3D.
@@ -57,247 +57,238 @@ function [centVec, boundPointMat] = minkpm(inpEllArr, inpEll, varargin)
 %             Science, System Analysis Department 2012 $
 %
 
-import elltool.conf.Properties;
+import elltool.plot.plotgeombodyarr;
 import modgen.common.throwerror;
-import modgen.common.checkvar;
-import modgen.common.checkmultvar;
-
-ellipsoid.checkIsMe(inpEllArr,'first');
-ellipsoid.checkIsMe(inpEll,'second');
-checkvar(inpEll,'isscalar(x)','errorTag','wrongInput',...
-    'errorMessage','second argument must be single ellipsoid.');
-
-nDimsArr = dimension(inpEllArr);
-nDims = dimension(inpEll);
-checkmultvar('all(x1(:)==x2)',2,nDimsArr,nDims,...
-    'errorTag','wrongSizes','errorMessage',...
-    'all ellipsoids must be of the same dimension which not higher than 3.');
-
-switch nDims
-    case 2,
-        nPlot2dPointsInpEllMat = inpEllArr.nPlot2dPoints;
-        nPlot2dPoints = max(nPlot2dPointsInpEllMat(:));
-        phiVec = linspace(0, 2*pi, nPlot2dPoints);
-        dirMat = [cos(phiVec); sin(phiVec)];
-        
-    case 3,
-        nPlot3dPnt = inpEllArr.nPlot3dPoints/2;
-        nPlot3dPntSub = nPlot3dPnt/2;
-        psyVec = linspace(0, pi, nPlot3dPntSub);
-        phiVec = linspace(0, 2*pi, nPlot3dPnt);
-        dirMat   = [];
-        for iCol = 2:(nPlot3dPntSub - 1)
-            subDirVec = cos(psyVec(iCol))*ones(1, nPlot3dPnt);
-            dirMat   = [dirMat [cos(phiVec)*sin(psyVec(iCol)); ...
-                sin(phiVec)*sin(psyVec(iCol)); subDirVec]];
-        end
-        
-    otherwise,
-        dirMat = [-1 1];
-        
-end
-
-isVrb = Properties.getIsVerbose();
-Properties.setIsVerbose(false);
-extApproxEllVec = minksum_ea(inpEllArr, dirMat);
-Properties.setIsVerbose(isVrb);
-
-if min(extApproxEllVec > inpEll) == 0
-    switch nargout
-        case 0,
-            fprintf('The resulting set is empty.');
-            return;
-            
-        case 1,
-            centVec = [];
-            return;
-            
-        otherwise,
-            centVec = [];
-            boundPointMat = [];
-            return;
-            
-    end
-end
-%
-if nargin > 2 && isstruct(varargin{1})
-	Options = varargin{1};
-else
-    Options = [];
-end
-
-if ~isfield(Options, 'newfigure')
-    Options.newfigure = 0;
-end
-
-if ~isfield(Options, 'fill')
-    Options.fill = 0;
-end
-
-if ~isfield(Options, 'show_all')
-    Options.show_all = 0;
-end
-
-if ~isfield(Options, 'color')
-    Options.color = [1 0 0];
-end
-
-if ~isfield(Options, 'shade')
-    Options.shade = 0.4;
-else
-    Options.shade = Options.shade(1, 1);
-end
-
-clrVec  = Options.color;
-
-nArgOut = nargout;
-if nArgOut == 0
-    ih = ishold;
-end
-
-if (Options.show_all ~= 0) && (nArgOut == 0)
-    plot(inpEllArr, 'b', inpEll, 'k');
-    hold on;
-    if Options.newfigure ~= 0
-        figure;
+isPlotCenter3d = false;
+[reg]=...
+    modgen.common.parseparext(varargin,...
+    {'relDataPlotter','newFigure','fill','lineWidth','color','shade','priorHold','postHold','showAll'});
+ellsArr = cellfun(@(x)getEllArr(x),reg,'UniformOutput', false);
+ellsArr = vertcat(ellsArr{:});
+if numel(ellsArr) == 1
+    if (nargout == 1)||(nargout == 0)
+        plObj = plot(varargin{:});
+        varargout(1) = {plObj};
     else
-        newplot;
+        [centerVector, boundPntMat] = ellsArr.double();
+        varargout(1) = {centerVector};
+        varargout(2) = {boundPntMat};
     end
-end
-
-if Properties.getIsVerbose()
-    if nArgOut == 0
-        fprintf('Computing and plotting (sum(E_i) - E) ...\n');
+elseif numel(ellsArr) == 2
+    if (nargout == 1)||(nargout == 0)
+        plObj = minkdiff(varargin{:});
+        varargout(1) = {plObj};
     else
-        fprintf('Computing (sum(E_i) - E) ...\n');
+        [centerVector, boundPntMat] = minkdiff(ellsArr(1),ellsArr(2));
+        varargout(1) = {centerVector};
+        varargout(2) = {boundPntMat};
+    end
+else
+    if nargout == 0
+        output = minkCommonAction(@getEllArr,@fCalcBodyTriArr,@fCalcCenterTriArr,varargin{:});
+        plObj = output{1};
+        isHold = output{2};
+        if isPlotCenter3d
+            [reg]=...
+                modgen.common.parseparext(varargin,...
+                {'relDataPlotter';...
+                [],;@(x)isa(x,'smartdb.disp.RelationDataPlotter'),...
+                });
+            plotgeombodyarr('ellipsoid',@fCalcCenterTriArr,...
+                @(varargin)patch(varargin{:},'marker','*'),reg{:},'relDataPlotter',plObj, 'priorHold',true,'postHold',isHold);
+        end
+    elseif nargout == 1
+        output = minkCommonAction(@getEllArr,@fCalcBodyTriArr,@fCalcCenterTriArr,varargin{:});
+        plObj = output{1};
+        isHold = output{2};
+        if isPlotCenter3d
+            [reg]=...
+                modgen.common.parseparext(varargin,...
+                {'relDataPlotter';...
+                [],;@(x)isa(x,'smartdb.disp.RelationDataPlotter'),...
+                });
+            plObj = minkCommonAction('ellipsoid',@fCalcCenterTriArr,...
+                @(varargin)patch(varargin{:},'marker','*'),reg{:},'relDataPlotter',plObj, 'priorHold',true,'postHold',isHold);
+        end
+        varargout = {plObj};
+    else
+        [qDifMat,boundMat] = minkCommonAction(@getEllArr,@fCalcBodyTriArr,@fCalcCenterTriArr,varargin{:});
+        varargout(1) = {qDifMat};
+        varargout(2) = {boundMat};
     end
 end
+    function ellsVec = getEllArr(ellsArr)
+        if isa(ellsArr, 'ellipsoid')
+            cnt    = numel(ellsArr);
+            ellsVec = reshape(ellsArr, cnt, 1);
+        end
+    end
 
-centVec= extApproxEllVec(1).center - inpEll.center;
-boundPointMat=[];
-nCols = size(dirMat, 2);
-Properties.setIsVerbose(false);
-%
-switch nDims
-    case 2
-        extApprEllVec(1,nCols) = ellipsoid();
-        arrayfun(@(x) fCase2extAppr(x),1:nCols);
-        
-        mValVec=zeros(1, nCols);
-        arrayfun(@(x) fCase2(x),find(~isempty(extApprEllVec)));
-        
-        isPosVec=mValVec>0;
-        nPos=sum(isPosVec);
-        mValMultVec = 1./sqrt(mValVec(isPosVec));
-        bpMat=dirMat(:,isPosVec).* ...
-            mValMultVec(ones(1,nDims),:)+centVec(:,ones(1,nPos));
-        if isempty(bpMat)
-            bpMat = centVec;
+    function [qSumDifMat,fMat] = fCalcCenterTriArr(ellsArr)
+        nDim = dimension(ellsArr(1));
+        if nDim == 1
+            [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr);
         end
-        boundPointMat = [bpMat bpMat(:, 1)];
-        if nArgOut == 0
-            if Options.fill ~= 0
-                fill(boundPointMat(1, :), boundPointMat(2, :), clrVec);
-                hold on;
-            end
-            hPlot = ell_plot(boundPointMat);
-            hold on;
-            set(hPlot, 'Color', clrVec, 'LineWidth', 2);
-            hPlot = ell_plot(centVec, '.');
-            set(hPlot, 'Color', clrVec);
+        inpEllArr = ellsArr(1:end-1);
+        inpEll = ellsArr(end);
+        switch nDim
+            case 2,
+                nPlot2dPointsInpEllMat = inpEllArr.nPlot2dPoints;
+                nPlot2dPoints = max(nPlot2dPointsInpEllMat(:));
+                phiVec = linspace(0, 2*pi, nPlot2dPoints);
+                dirMat = [cos(phiVec); sin(phiVec)];
+                
+            case 3,
+                nPlot3dPointsInpEllMat = inpEllArr.nPlot3dPoints;
+                nPlot3dPnt = max(nPlot3dPointsInpEllMat(:))/2;
+                nPlot3dPntSub = nPlot3dPnt/2;
+                psyVec = linspace(0, pi, nPlot3dPntSub);
+                phiVec = linspace(0, 2*pi, nPlot3dPnt);
+                dirMat   = [];
+                for iCol = 2:(nPlot3dPntSub - 1)
+                    subDirVec = cos(psyVec(iCol))*ones(1, nPlot3dPnt);
+                    dirMat   = [dirMat [cos(phiVec)*sin(psyVec(iCol)); ...
+                        sin(phiVec)*sin(psyVec(iCol)); subDirVec]];
+                end
+                
         end
-        
-    case 3
-        isGoodDir = false(1,nCols);
-        arrayfun(@(x) fFindGoodDir(x), 1:nCols);
-        if any(isGoodDir)
-            nGoodDirs = sum(isGoodDir);
-            goodIndexVec = find(isGoodDir);
-            boundPointMat = zeros(nDims, nGoodDirs);
-            arrayfun(@(x)  fCase3(x), 1:nGoodDirs);
+        extApproxEllVec = minksumEa(inpEllArr, dirMat);
+        if min(extApproxEllVec > inpEll) == 0
+            qSumDifMat = [];
+            fMat = [];
         else
-            boundPointMat = centVec;
+            [qSum,~] = minksum(inpEllArr);
+            qSumDifMat = {qSum - inpEll.center};
+            fMat = {[1 1]};
         end
-        if nArgOut == 0
-            nBoundPoints = size(boundPointMat, 2);
-            if nBoundPoints > 1
-                chll = convhulln(boundPointMat');
-                patch('Vertices', boundPointMat', 'Faces', chll, ...
-                    'FaceVertexCData', clrVec(ones(1, nBoundPoints), :),...
-                    'FaceColor', 'flat', ...
-                    'FaceAlpha', Options.shade(1, 1));
+    end
+
+    function [xSumDifMat,fMat] = fCalcBodyTriArr(ellsArr)
+        import modgen.common.throwerror;
+        nDim = dimension(ellsArr(1));
+        if nDim == 1
+            [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr);
+        end
+        absTol = elltool.conf.Properties.getAbsTol();
+        inpEllArr = ellsArr(1:end-1);
+        inpEll = ellsArr(end);
+        switch nDim
+            case 2,
+                nPlot2dPointsInpEllMat = inpEllArr.nPlot2dPoints;
+                nPlot2dPoints = max(nPlot2dPointsInpEllMat(:));
+                phiVec = linspace(0, 2*pi, nPlot2dPoints);
+                dirMat = [cos(phiVec); sin(phiVec)];
+                
+            case 3,
+                nPlot3dPointsInpEllMat = inpEllArr.nPlot3dPoints;
+                nPlot3dPnt = max(nPlot3dPointsInpEllMat(:))/2;
+                nPlot3dPntSub = nPlot3dPnt/2;
+                psyVec = linspace(0, pi, nPlot3dPntSub);
+                phiVec = linspace(0, 2*pi, nPlot3dPnt);
+                dirMat   = [];
+                for iCol = 2:(nPlot3dPntSub - 1)
+                    subDirVec = cos(psyVec(iCol))*ones(1, nPlot3dPnt);
+                    dirMat   = [dirMat [cos(phiVec)*sin(psyVec(iCol)); ...
+                        sin(phiVec)*sin(psyVec(iCol)); subDirVec]];
+                end
+                
+        end
+        extApproxEllVec = minksumEa(inpEllArr, dirMat);
+        if min(extApproxEllVec > inpEll) == 0
+            xSumDifMat = [];
+            fMat = [];
+        else
+            nCols = size(dirMat, 2);
+            secEllShMat = inpEll.shape;
+            if isdegenerate(inpEll)
+                secEllShMat = ellipsoid.regularize(secEllShMat,absTol);
+            end
+            
+            boundPointMat = arrayfun(@calcDifDir,1:nCols, 'UniformOutput',false);
+            boundPointMat = horzcat(boundPointMat{:});
+            ind = min(~isnan(boundPointMat),[],1);
+            index = 1:nCols;
+            boundPointMat = boundPointMat(:,index(ind));
+            
+            xSumDifMat = {boundPointMat};
+            if (size(boundPointMat,2)>0)
+                fMat = {convhulln(boundPointMat')};
             else
-                hPlot = ell_plot(centVec, '*');
-                set(hPlot, 'Color', clrVec);
+                fMat = {[]};
             end
-            hold on;
-            shading interp;
-            lighting phong;
-            material('metal');
-            view(3);
-        end
-        
-    otherwise,
-        boundPointMat = [centVec centVec];
-        boundPointMat(1, 1) = extApproxEllVec(1).center - ...
-            inpEll.center + sqrt(inpEll.shape) - ...
-            sqrt(extApproxEllVec(1).shape);
-        boundPointMat(1, 2) = extApproxEllVec(1).center - ...
-            inpEll.center + sqrt(extApproxEllVec(1).shape) - ...
-            sqrt(inpEll.shape);
-        if nArgOut == 0
-            hPlot = ell_plot(boundPointMat);
-            hold on;
-            set(hPlot, 'Color', clrVec, 'LineWidth', 2);
-            hPlot = ell_plot(centVec, '*');
-            set(hPlot, 'Color', clrVec);
-        end
-        
-end
-
-Properties.setIsVerbose(isVrb);
-
-if nArgOut == 0
-    if ih == 0
-        hold off;
-    end
-end
-
-if nArgOut == 1
-    centVec = boundPointMat;
-end
-if nArgOut == 0
-    clear centVec  boundPointMat;
-end
-    function fCase2extAppr(index)
-        dirVec = dirMat(:, index);
-        isGoodDirVec =~isbaddirection(extApproxEllVec(index), inpEll, dirVec);
-        if any(isGoodDirVec)
-            extApprEllVec(index)=minkdiff_ea(extApproxEllVec(index), ...
-                inpEll, dirMat(:,index));
-        end
-    end
-    function fCase2(index)
-        eaShMat = extApprEllVec(index).shape;
-        invShMat = ell_inv(eaShMat);
-        valVec = sum((invShMat*dirMat).*dirMat,1);
-        mValVec = max(valVec, mValVec);
-    end
-    function fFindGoodDir(index)
-        dirVec = dirMat(:, index);
-        if ~isbaddirection(extApproxEllVec(index), inpEll, dirVec)
-            intApprEll = minksum_ia(inpEllArr, dirVec);
-            if ~isbaddirection(intApprEll, inpEll, dirVec)
-                isGoodDir(index) = true;
+            if (size(boundPointMat,2) < 2)&&(nDim == 3)
+                isPlotCenter3d = true;
             end
         end
+        function bpMat = calcDifDir(index)
+            dirVec = dirMat(:, index);
+            inpEllT = extApproxEllVec(index);
+            extApproxShEllMat = inpEllT.shape;
+            if isdegenerate(inpEllT)
+                extApproxShEllMat  = ellipsoid.regularize(extApproxShEllMat ,absTol);
+            end
+            lVec = ellipsoid.rm_bad_directions(extApproxShEllMat, ...
+                secEllShMat, dirVec);
+            if size(lVec, 2) > 0
+                [~, bpMat] = rho(inpEllT, lVec);
+                [~, subBoundPointMat] = rho(inpEll, lVec);
+                bpMat = bpMat - subBoundPointMat;
+            else
+                bpMat = NaN(1,size(lVec,1));
+            end
+            
+            
+        end
+        
+        
     end
-    function fCase3(iCount)
-        index = goodIndexVec(iCount);
+
+    function [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr)
+        ellsCMat = arrayfun(@(x) oneDim2TwoDim(x), ellsArr, ...
+            'UniformOutput', false);
+        ellsArr = vertcat(ellsCMat{:});
+        nDim = 2;
+        function ellTwoDim = oneDim2TwoDim(ell)
+            [ellCenVec, qMat] = ell.double();
+            ellTwoDim = ellipsoid([ellCenVec, 0].', ...
+                diag([qMat, 0]));
+        end
+    end
+
+end
+function extApprEllVec = minksumEa(inpEllArr, dirMat)
+[nDims, nCols] = size(dirMat);
+if isscalar(inpEllArr)
+    extApprEllVec = inpEllArr;
+    return;
+end
+centVec =zeros(nDims,1);
+arrayfun(@(x) fAddCenter(x),inpEllArr);
+absTolArr = getAbsTol(inpEllArr);
+extApprEllVec(1,nCols) = ellipsoid;
+arrayfun(@(x) fSingleDirection(x),1:nCols);
+
+    function fAddCenter(singEll)
+        centVec = centVec + singEll.center;
+    end
+    function fSingleDirection(index)
+        secCoef = 0;
+        subShMat = zeros(nDims,nDims);
         dirVec = dirMat(:, index);
-        [~, boundPointSubVec] = ...
-            rho(minkdiff_ea(extApproxEllVec(index), inpEll, ...
-            dirVec), dirVec);
-        boundPointMat(:,iCount) = boundPointSubVec;
+        arrayfun(@(x,y) fAddSh(x,y), inpEllArr,absTolArr);
+        subShMat  = 0.5*secCoef*(subShMat + subShMat');
+        extApprEllVec(index).center = centVec;
+        extApprEllVec(index).shape = subShMat;
+        
+        function fAddSh(singEll,absTol)
+            shMat = singEll.shape;
+            if isdegenerate(singEll)
+                shMat = ellipsoid.regularize(shMat, absTol);
+            end
+            fstCoef = sqrt(dirVec'*shMat*dirVec);
+            subShMat = subShMat + ((1/fstCoef) * shMat);
+            secCoef = secCoef + fstCoef;
+        end
+        
     end
 end

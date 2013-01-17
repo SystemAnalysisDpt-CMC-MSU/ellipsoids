@@ -49,27 +49,31 @@ function [varargout] = minkdiff(varargin)
 
 import elltool.plot.plotgeombodyarr;
 import modgen.common.throwerror;
-onlyCenter = false;
+isPlotCenter3d = false;
 if nargout == 0
-    plObj = minkCommonAction(@getEllArr,@fCalcBodyTriArr,@fCalcCenterTriArr,varargin{:});
-    if onlyCenter
+    output = minkCommonAction(@getEllArr,@fCalcBodyTriArr,@fCalcCenterTriArr,varargin{:});
+    plObj = output{1};
+    isHold = output{2};
+    if isPlotCenter3d
         [reg]=...
             modgen.common.parseparext(varargin,...
             {'relDataPlotter';...
             [],;@(x)isa(x,'smartdb.disp.RelationDataPlotter'),...
             });
-         minkCommonAction('ellipsoid',@fCalcCenterTriArr,...
+         plotgeombodyarr('ellipsoid',@fCalcCenterTriArr,...
             @(varargin)patch(varargin{:},'marker','*'),reg{:},'relDataPlotter',plObj, 'priorHold',true,'postHold',isHold);
     end
 elseif nargout == 1
-    plObj = minkCommonAction(@getEllArr,@fCalcBodyTriArr,@fCalcCenterTriArr,varargin{:});
-    if onlyCenter
+    output = minkCommonAction(@getEllArr,@fCalcBodyTriArr,@fCalcCenterTriArr,varargin{:});
+    plObj = output{1};
+    isHold = output{2};
+    if isPlotCenter3d
         [reg]=...
             modgen.common.parseparext(varargin,...
             {'relDataPlotter';...
             [],;@(x)isa(x,'smartdb.disp.RelationDataPlotter'),...
             });
-         plObj = minkCommonAction('ellipsoid',@fCalcCenterTriArr,...
+         plObj = plotgeombodyarr('ellipsoid',@fCalcCenterTriArr,...
             @(varargin)patch(varargin{:},'marker','*'),reg{:},'relDataPlotter',plObj, 'priorHold',true,'postHold',isHold);
     end
     varargout = {plObj};
@@ -163,10 +167,10 @@ end
             end
             boundPointMat = unique(boundPointMat','rows')';
             if size(boundPointMat,2) < 2
-                onlyCenter = true;
+                isPlotCenter3d = true;
             end
             xDifMat = {boundPointMat};
-            if (size(boundPointMat,2)>0) && (nDim == 3)
+            if (size(boundPointMat,2)>0) 
                 fMat = {convhulln(boundPointMat')};
             else
                 fMat = {[]};
