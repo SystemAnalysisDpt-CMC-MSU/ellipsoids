@@ -14,10 +14,10 @@ classdef IReach < handle
         %
         % Input:
         %   regular:
-        %       self
+        %       self.
         %
-        %       cutTimeVec: double[1, 2]/double[1, 1] - time interval to
-        %           cut          
+        %       cutTimeVec: double[1, 2]/double[1, 1] - time
+        %           interval to cut.          
         %
         % Output:
         %   cutObj: reach[1, 1] - reach set resulting from the CUT operation.
@@ -28,7 +28,7 @@ classdef IReach < handle
         %
         % Input:
         %   regular:
-        %       self
+        %       self.
         %
         % Output:
         %   rSdim: double[1, 1] - reach set dimension.
@@ -37,11 +37,11 @@ classdef IReach < handle
         %
         display(self)
         %
-        % DISPLAY - displays the reach set object
+        % DISPLAY - displays the reach set object.
         %
         % Input:
         %   regular:
-        %       self
+        %       self.
         %
         % Output:
         %   None.
@@ -52,15 +52,16 @@ classdef IReach < handle
         %
         % Input:
         %   regular:
-        %       self
+        %       self.
         %
-        %       newEndTime: double[1, 1] - new end time
+        %       newEndTime: double[1, 1] - new end time.
         %
         %   optional:
-        %       linSys: elltool.linsys.LinSys[1, 1] - new linear system
+        %       linSys: elltool.linsys.LinSys[1, 1] - new linear system.
         %
         % Output:	
-        %   newReachObj: reach[1, 1] - reach set on time interval [oldT0 newEndTime]
+        %   newReachObj: reach[1, 1] - reach set on time
+        %       interval [oldT0 newEndTime].
         %
         [trCenterMat timeVec] = get_center(self)
         %
@@ -68,7 +69,7 @@ classdef IReach < handle
         %
         % Input:
         %   regular:
-        %       self
+        %       self.
         %
         % Output:
         %   trCenterMat: double[nDim, nPoints] - array of points that
@@ -76,7 +77,7 @@ classdef IReach < handle
         %       nDim is reach set dimentsion, nPoints - number of points in
         %       time grid.
         %
-        %     timeVec: double[1, nPoints] - array of time values.
+        %   timeVec: double[1, nPoints] - array of time values.
         %
         [directionsCVec timeVec] = get_directions(self)
         %
@@ -84,7 +85,7 @@ classdef IReach < handle
         %
         % Input:
         %   regular:
-        %       self
+        %       self.
         %
         % Output:
         %   directionsCVec: cell[1, nPoints] - array of cells, where each
@@ -101,7 +102,7 @@ classdef IReach < handle
         %
         % Input:
         %   regular:
-        %       self
+        %       self.
         %
         % Output:
         %   eaEllMat: ellipsoid[nAppr, nPoints] - array of ellipsoids,
@@ -118,7 +119,7 @@ classdef IReach < handle
         %
         % Input:
         %   regular:
-        %       self
+        %       self.
         %
         % Output:
         %   goodCurvesCVec: cell[1, nPoints] - array of cells, where each
@@ -133,7 +134,7 @@ classdef IReach < handle
         %
         % Input:
         %   regular:
-        %       self
+        %       self.
         %
         % Output:
         %   iaEllMat: ellipsoid[nAppr, nPoints] - array of ellipsoids,
@@ -148,7 +149,7 @@ classdef IReach < handle
         %
         % Input:
         %   regular:
-        %       self
+        %       self.
         %
         % Output:
         %   linSys: elltool.linsys.LinSys[1, 1] - linear system object.
@@ -160,7 +161,7 @@ classdef IReach < handle
         %
         % Input:
         %   regular:
-        %       self
+        %       self.
         %
         %       intersectObj: ellipsoid[1, 1]/hyperplane[1, 1]/polytop[1, 1].
         %
@@ -178,7 +179,7 @@ classdef IReach < handle
         %
         % Input:
         %   regular:
-        %       self
+        %       self.
         %
         % Output:
         %   isCut: logical[1, 1] -
@@ -190,7 +191,7 @@ classdef IReach < handle
         %
         % Input:
         %   regular:
-        %       self
+        %       self.
         %
         % Output:
         %   isProj: logical[1, 1] -
@@ -202,17 +203,17 @@ classdef IReach < handle
         %
         % Input:
         %   regular:
-        %       self
+        %       self.
         %
         %   optional:
         %       colorSpec: char[1, 1] - set color to plot in following way:
-        %           'r' - red color
-        %           'g' - green color
-        %           'b' - blue color
-        %           'y' - yellow color
-        %           'c' - cyan color
-        %           'm' - magenta color
-        %           'w' - white color
+        %           'r' - red color,
+        %           'g' - green color,
+        %           'b' - blue color,
+        %           'y' - yellow color,
+        %           'c' - cyan color,
+        %           'm' - magenta color,
+        %           'w' - white color.
         %
         %       OptStruct: struct[1, 1] with fields:
         %           color: double[1, 3] - sets color of the
@@ -232,17 +233,17 @@ classdef IReach < handle
         %
         % Input:
         %   regular:
-        %       self
+        %       self.
         %
         %   optional:
         %       colorSpec: char[1, 1] - set color to plot in following way:
-        %           'r' - red color
-        %           'g' - green color
-        %           'b' - blue color
-        %           'y' - yellow color
-        %           'c' - cyan color
-        %           'm' - magenta color
-        %           'w' - white color
+        %           'r' - red color,
+        %           'g' - green color,
+        %           'b' - blue color,
+        %           'y' - yellow color,
+        %           'c' - cyan color,
+        %           'm' - magenta color,
+        %           'w' - white color.
         %
         %       OptStruct: struct[1, 1] with fields:
         %           color: double[1, 3] - sets color of the
@@ -263,7 +264,7 @@ classdef IReach < handle
         %
         % Input:
         %   regular:
-        %       self
+        %       self.
         %       projMat: double[nRows, nCols] - projection matrix, where
         %           nRows is dimension of reach set, nCols <= nRows.
         %
@@ -276,7 +277,7 @@ classdef IReach < handle
         %
         % Input:
         %   regular:
-        %       self
+        %       self.
         %
         % Output:
         %   isEmpty: logical[1, 1] -

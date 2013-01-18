@@ -1,5 +1,9 @@
 classdef LinSys<handle
-    %
+% $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2012 $
+%
     properties (Access = private)
         atMat
         btMat
@@ -14,54 +18,64 @@ classdef LinSys<handle
     end
     %
     methods (Access = private, Static)
-        function isEllHaveNeededDim(inpEll, nDim)
-            import modgen.common.throwerror;           
-        % isEllHaveNeededDim - checks if given structure E represents
-        %     an ellipsoid of dimension N.
-            qVec = inpEll.center;
-            QMat = inpEll.shape;
+        function isEllHaveNeededDim(InpEll, nDim)
+        % isEllHaveNeededDim - checks if given structure InpEll represents
+        %     an ellipsoid of dimension nDim.
+        %
+        % Input:
+        %   regular:
+        %       InpEll: struct[1, 1]
+        %
+        %       nDim: double[1, 1]
+        %
+        % Output:
+        %   None.
+        %
+            import modgen.common.throwerror;
+            qVec = InpEll.center;
+            QMat = InpEll.shape;
             [kRows, lCols] = size(qVec);
             [mRows, nCols] = size(QMat);
             %%
             if mRows ~= nCols
-                throwerror(sprintf('linsys:value:%s:shape', inputname(1)),...
+                throwerror(sprintf('value:%s:shape', inputname(1)),...
                     'shape matrix must be symmetric, positive definite');
             elseif nCols ~= nDim
-                throwerror(sprintf('linsys:dimension:%s:shape', inputname(1)),...
+                throwerror(sprintf('dimension:%s:shape', inputname(1)),...
                     'shape matrix must be of dimension %dx%d', nDim, nDim);
             elseif lCols > 1 || kRows ~= nDim
-                throwerror(sprintf('linsys:dimension:%s:center', inputname(1)),...
+                throwerror(sprintf('dimension:%s:center', inputname(1)),...
                     'center must be a vector of dimension %d', nDim);  
             end 
             %%
             if ~iscell(qVec) && ~iscell(QMat)
-                throwerror( sprintf('linsys:type:%s',inputname(1)), ...
+                throwerror( sprintf('type:%s',inputname(1)), ...
                     'for constant ellipsoids use ellipsoid object' );
             end
             %%
             if ~iscell(qVec) && ~isa(qVec, 'double')
-                throwerror(sprintf('linsys:type:%s:center', inputname(1)),...
+                throwerror(sprintf('type:%s:center', inputname(1)),...
                     'center must be of type ''cell'' or ''double''');        
             end
             %%
             if iscell(QMat)
                 if elltool.conf.Properties.getIsVerbose() > 0
-                    fprintf('LINSYS: Warning! Cannot check if symbolic matrix is positive definite.\n');
+                    fprintf('Warning! Cannot check if symbolic matrix is positive definite.\n');
                 end
                 isEqMat = strcmp(QMat, QMat.');
                 if ~all(isEqMat(:))
-                    throwerror(sprintf('linsys:value:%s:shape', inputname(1)),...
+                    throwerror(sprintf('value:%s:shape', inputname(1)),...
                         'shape matrix must be symmetric, positive definite');
                 end
             else
                 if isa(QMat, 'double')
                     isnEqMat = (QMat ~= QMat.');
                     if any(isnEqMat(:)) || min(eig(QMat)) <= 0
-                        throwerror(sprintf('linsys:value:%s:shape', inputname(1)),...
+                        throwerror(sprintf('value:%s:shape', inputname(1)),...
                             'shape matrix must be symmetric, positive definite');
                     end                    
                 else
-                    throwerror(sprintf('linsys:type:%s:shape', inputname(1)),...
+                    throwerror(sprintf('type:%s:shape', inputname(1)),...
                         'shape matrix must be of type ''cell'' or ''double''');    
                 end        
             end
@@ -70,21 +84,63 @@ classdef LinSys<handle
     methods
         %% get-methods
         function aMat = getAtMat(self)
+        % Input:
+        %   regular:
+        %       self.
+        %
+        % Output:
+        %   aMat: double[aMatDim, aMatDim].
+        %
             aMat = self.atMat;
         end
         function bMat = getBtMat(self)
+        % Input:
+        %   regular:
+        %       self.
+        %
+        % Output:
+        %   bMat: double[bMatDim, bMatDim].
+        %
             bMat = self.btMat;
         end
         function uEll = getUBoundsEll(self)
+        % Input:
+        %   regular:
+        %       self.
+        %
+        % Output:
+        %   uEll: ellipsoid[1, 1].
+        %
             uEll = self.controlBoundsEll;
         end
         function gMat = getGtMat(self)
+        % Input:
+        %   regular:
+        %       self.
+        %
+        % Output:
+        %   gMat: double[gMatDim, gMatDim].
+        %
             gMat = self.gtMat;
         end
         function distEll = getDistBoundsEll(self)
+        % Input:
+        %   regular:
+        %       self.
+        %
+        % Output:
+        %   distEll: ellipsoid[1, 1].
+        %
             distEll = self.disturbanceBoundsEll;
         end
         function cMat = getCtMat(self)
+        % Input:
+        %   regular:
+        %       self.
+        %
+        % Output:
+        %   cMat: double[cMatDim, cMatDim].
+        %
             cMat = self.ctMat;
         end
         function noiseEll = getNoiseBoundsEll(self)
@@ -93,6 +149,40 @@ classdef LinSys<handle
         %%
         function self = LinSys(atInpMat, btInpMat, uBoundsEll, gtInpMat,...
                 distBoundsEll, ctInpMat, noiseBoundsEll, discrFlag)
+        %
+        % LINSYS - constructor for linear system object.
+        %
+        % Continuous-time linear system:
+        %                   dx/dt  =  A(t) x(t)  +  B(t) u(t)  +  G(t) v(t)
+        %                    y(t)  =  C(t) x(t)  +  w(t)
+        %
+        % Discrete-time linear system:
+        %                  x[k+1]  =  A[k] x[k]  +  B[k] u[k]  +  G[k] v[k]
+        %                    y[k]  =  C[k] x[k]  +  w[k]
+        %
+        % Input:
+        %   regular:
+        %       atInpMat: double[nDim, nDim]/cell[nDim, nDim].
+        %
+        %       btInpMat: double[nDim, kDim]/cell[nDim, kDim].
+        %
+        %       uBoundsEll: ellipsoid[1, 1]/struct[1, 1].
+        %
+        %       gtInpMat: double[nDim, lDim]/cell[nDim, lDim].
+        %
+        %       distBoundsEll: ellipsoid[1, 1]/struct[1, 1].
+        %
+        %       ctInpMat: double[mDim, nDim]/cell[mDim, nDim].
+        %
+        %       noiseBoundsEll: ellipsoid[1, 1]/struct[1, 1].
+        %
+        %       discrFlag: char[1, 1] - if discrFlag set:
+        %           'd' - to discrete-time linSys
+        %           not 'd' - to continuous-time linSys.
+        %
+        % Output:
+        %   self: elltool.linsys.LinSys[1, 1].
+        %
             import modgen.common.throwerror;
             if nargin == 0
                 self.atMat = [];
@@ -305,6 +395,22 @@ classdef LinSys<handle
         end
         %
         function [stateDim, inpDim, outDim, distDim] = dimension(self)
+        %
+        % DIMENSION - returns dimensions of state,
+        %     input, output and disturbance spaces.
+        % Input:
+        %   regular:
+        %       self.
+        %
+        % Output:
+        %   stateDim: double[1, 1] - state space.
+        %
+        %   inpDim: double[1, 1] - number of inputs.
+        %
+        %   outDim: double[1, 1] - number of outputs.
+        %
+        %   distDim: double[1, 1] - number of disturbance inputs.
+        %
             stateDim = size(self.atMat, 1);
             inpDim = size(self.btMat, 2);
             outDim = size(self.ctMat, 1);
@@ -323,6 +429,16 @@ classdef LinSys<handle
         end
         %
         function display(self)
+        %
+        % Displays the details of linear system object.
+        %
+        % Input:
+        %   regular:
+        %       self.
+        %
+        % Output:
+        %   None.
+        %
             fprintf('\n');
             disp([inputname(1) ' =']);
             %%
@@ -511,6 +627,18 @@ classdef LinSys<handle
         end
         %
         function isDisturbance = hasdisturbance(self)
+        %
+        % HASDISTURBANCE checks if linear system has unknown bounded disturbance.
+        %
+        % Input:
+        %   regular:
+        %       self.
+        %
+        % Output:
+        %   isDisturbance: logical[1, 1] -
+        %       true - if there is disturbance,
+        %       false - if there isn't.
+        %
             if  ~isempty(self.disturbanceBoundsEll) && ~isempty(self.gtMat)
                 isDisturbance = true;
             else
@@ -519,6 +647,18 @@ classdef LinSys<handle
         end
         %
         function isNoise = hasnoise(self)
+        %
+        % HASNOISE checks if linear system has unknown bounded noise.
+        %
+        % Input:
+        %   regular:
+        %       self.
+        %
+        % Output:
+        %   isNoise: logical[1, 1] -
+        %       true - if there is noise,
+        %       false - if there isn't.
+        %
             isNoise = false;
             if ~isempty(self.noiseBoundsEll) 
                 isNoise = true;
@@ -526,10 +666,34 @@ classdef LinSys<handle
         end
         %
         function isDiscrete = isdiscrete(self)
+        %
+        % ISDISCRETE checks if linear system is discrete-time.
+        %
+        % Input:
+        %   regular:
+        %       self.
+        %
+        % Output:
+        %   isDiscrete: logical[1, 1] -
+        %       true - if self is discrete-time linSys,
+        %       false - if self is continuous-time linSys.
+        %
             isDiscrete = self.isDiscr;
         end
         %
         function isEmpty = isempty(self)
+        %
+        % ISEMPTY checks if linear system is empty.
+        %
+        % Input:
+        %   regular:
+        %       self.
+        %
+        % Output:
+        %   isEmpty: logical[1, 1] -
+        %       true - if self is empty,
+        %       false - otherwise.
+        %
             isEmpty = false;
             if isempty(self.atMat) 
                 isEmpty = true;
@@ -537,6 +701,18 @@ classdef LinSys<handle
         end
         %
         function isLti = islti(self)
+        %
+        % ISLTI checks if linear system is time-invariant.
+        %
+        % Input:
+        %   regular:
+        %       self.
+        %
+        % Output:
+        %   isLti: logical[1, 1] -
+        %       true - if self is time-invariant,
+        %       false - otherwise.
+        %
             isLti = self.isTimeInv;
         end
     end

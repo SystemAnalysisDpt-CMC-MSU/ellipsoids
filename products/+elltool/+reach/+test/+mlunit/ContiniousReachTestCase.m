@@ -13,8 +13,118 @@ classdef ContiniousReachTestCase < mlunitext.test_case
         crmSys
         linSys
         reachObj
-        tLims
+        tVec
         calcPrecision
+    end
+    methods (Access = private)
+        function plotApproxTest(self, reachObj, approxType)
+            import gras.ellapx.enums.EApproxType;
+            import modgen.common.throwerror;
+            import gras.ellapx.smartdb.F;
+            APPROX_TYPE = F.APPROX_TYPE;
+            if approxType == EApproxType.External
+                ellArray = reachObj.get_ea;
+                plotter = reachObj.plot_ea;
+                scaleFactor = reachObj.getEaScaleFactor;
+            elseif approxType == EApproxType.Internal
+                ellArray = reachObj.get_ia;
+                plotter = reachObj.plot_ia;
+                scaleFactor = reachObj.getIaScaleFactor;
+            end
+            ellTubes = reachObj.getEllTubeRel.getTuplesFilteredBy(...
+                APPROX_TYPE, approxType);
+            goodDirCVec = ellTubes.lsGoodDirVec;
+            nGoodDirs = numel(goodDirCVec);
+            plotter.closeAllFigures();
+            %
+            axesHMapList =...
+                plotter.getPlotStructure.figToAxesToPlotHMap.values;
+            nFigures = numel(axesHMapList);
+            for iAxesHMap = 1 : nFigures
+                axesHMap = axesHMapList{iAxesHMap};
+                axesHMapKeys = axesHMap.keys;
+                %
+                indReachTubeAxes = ~cellfun(@isempty,...
+                    strfind(axesHMapKeys, 'Ellipsoidal tubes'));
+                indGoodDirsAxes = ~cellfun(@isempty,...
+                    strfind(axesHMapKeys, 'Good directions'));
+                %
+                rtObjectHandles = axesHMap(axesHMapKeys{indReachTubeAxes});
+                gdObjectHandles = axesHMap(axesHMapKeys{indGoodDirsAxes});
+                %
+                rtObjectNames = get(rtObjectHandles, 'DisplayName');
+                gdObjectNames = get(gdObjectHandles, 'DisplayName');
+                indRtObject = ~cellfun(@isempty,...
+                    strfind(rtObjectNames, 'Reach Tube'));
+                indGdObjects = ~cellfun(@isempty,...
+                    strfind(gdObjectNames, 'Good directions curve'));
+                rtObject = rtObjectHandles(indRtObject);
+                gdObjects = gdObjectHandles(indGdObjects);
+                %
+                rtVertices = get(rtObject, 'Vertices');
+                gdVerticesCVec = get(gdObjects, 'Vertices');
+                %
+                plottedGoodDirCVec = cellfun(@(x) x(1, 2 : 3).',...
+                    gdVerticesCVec, 'UniformOutput', false);
+                %
+                plottedGoodDirIndex = 0;
+                for iGoodDir = 1 : nGoodDirs
+                    goodDir = goodDirCVec{iGoodDir};
+                    for iPlottedGoodDir = 1 : numel(plottedGoodDirCVec)
+                        plottedGoodDir =...
+                            plottedGoodDirCVec{iPlottedGoodDir};
+                        if all(goodDir == plottedGoodDir)
+                            plottedGoodDirIndex = iGoodDir;
+                            break;
+                        end
+                    end
+                end
+                if plottedGoodDirIndex == 0
+                   throwerror('wrongData', 'No good direction found.');
+                end
+                %
+                reachTubeEllipsoids = ellArray(plottedGoodDirIndex, :);
+                timeVec = ellTubes.timeVec{plottedGoodDirIndex, :};
+                nTimePoints = numel(timeVec);
+                %
+                for iTimePoint = 1 : nTimePoints
+                    ell = reachTubeEllipsoids(iTimePoint);
+                    curT = timeVec(iTimePoint);
+                    pointsMat = rtVertices(rtVertices(:, 1) == curT, 2 : 3);
+                    pointsMat =...
+                        pointsMat.' / scaleFactor;
+                    [centerVec shapeMat] = parameters(ell);
+                    centerPointsMat = pointsMat -...
+                        repmat(centerVec, 1, size(pointsMat, 2));
+                    sqrtScalProdVec = sqrt(abs(dot(centerPointsMat,...
+                        shapeMat\centerPointsMat) - 1));
+                    mlunit.assert_equals(...
+                        max(sqrtScalProdVec) < self.calcPrecision, true);
+                end
+            end
+        end
+        %
+        function displayTest(self, reachObj, timeVec)
+            rxDouble = '([\d.+\-e]+)';
+            %
+            resStr = evalc('reachObj.display');
+            % time interval
+            tokens = regexp(resStr,...
+                ['time interval \[' rxDouble ',\s' rxDouble '\]'],...
+                'tokens');
+            tLimsRead = str2double(tokens{1}.').';
+            difference = abs(tLimsRead(:) - timeVec(:));
+            mlunit.assert_equals(max(difference) < self.calcPrecision, true);
+            % continuous-time
+            isOk = ~isempty(strfind(resStr, 'continuous-time'));
+            mlunit.assert_equals(isOk, true);
+            % dimension
+            tokens = regexp(resStr,...
+                ['linear system in R\^' rxDouble],...
+                'tokens');
+            dimRead = str2double(tokens{1}{1});
+            mlunit.assert_equals(dimRead, reachObj.dimension);
+        end
     end
     methods
         function self = ContiniousReachTestCase(varargin)
@@ -54,7 +164,7 @@ classdef ContiniousReachTestCase < mlunitext.test_case
             l0CMat = self.crm.getParam(...
                 'goodDirSelection.methodProps.manual.lsGoodDirSets.set1');
             l0Mat = cell2mat(l0CMat.').';
-            self.tLims = [self.crmSys.getParam('time_interval.t0'),...
+            self.tVec = [self.crmSys.getParam('time_interval.t0'),...
                 self.crmSys.getParam('time_interval.t1')];
             self.calcPrecision =...
                 self.crm.getParam('genericProps.calcPrecision');
@@ -68,10 +178,10 @@ classdef ContiniousReachTestCase < mlunitext.test_case
             self.linSys = elltool.linsys.LinSys(atDefCMat, btDefCMat,...
                 ControlBounds, ctDefCMat, DistBounds);
             self.reachObj = elltool.reach.ReachContinious(self.linSys,...
-                ellipsoid(x0DefVec, x0DefMat), l0Mat, self.tLims);
+                ellipsoid(x0DefVec, x0DefMat), l0Mat, self.tVec);
         end
         %
-        function self = DISABLED_testSystem(self)
+        function self = testSystem(self)
             import modgen.common.throwerror;
             import elltool.reach.test.mlunit.ContiniousReachTestCase;
             %
@@ -130,204 +240,74 @@ classdef ContiniousReachTestCase < mlunitext.test_case
             end
         end
         %
-        function self = DISABLED_testDisplay(self)
-            rxDouble = '([\d.+\-e]+)';
-            %
-            resStr = evalc('self.reachObj.display');
-            % time interval
-            tokens = regexp(resStr,...
-                ['time interval \[' rxDouble ',\s' rxDouble '\]'],...
-                'tokens');
-            tLimsRead = str2double(tokens{1}.').';
-            difference = abs(tLimsRead(:) - self.tLims(:));
-            mlunit.assert_equals(max(difference) < self.calcPrecision, true);
-            % continuous-time
-            isOk = ~isempty(strfind(resStr, 'continuous-time'));
-            mlunit.assert_equals(isOk, true);
-            % dimension
-            tokens = regexp(resStr,...
-                ['linear system in R\^' rxDouble],...
-                'tokens');
-            dimRead = str2double(tokens{1}{1});
-            mlunit.assert_equals(dimRead, self.linSys.dimension());
+        function self = testDisplay(self)
+            self.displayTest(self.reachObj, self.tVec);
+            newTimeVec = [sum(self.tVec) / 2, self.tVec(2)];
+            cutReachObj = self.reachObj.cut(newTimeVec);
+            self.displayTest(cutReachObj, newTimeVec);
+            projReachObj =...
+                self.reachObj.projection(eye(self.reachObj.dimension, 2));
+            self.displayTest(projReachObj, self.tVec);
+            evolveReachObj = self.reachObj.evolve(self.tVec(2) + 1);
+            self.displayTest(evolveReachObj, ...
+                [self.tVec(1) self.tVec(2) + 1]);
         end
         %
-        function self = DISABLED_testPlotEa(self)
-            import modgen.common.throwerror;
-            %
-            ellArray = self.reachObj.get_ea;
-            ellTubes = self.reachObj.getEllTubeRel.getTuplesFilteredBy(...
-                'approxType', gras.ellapx.enums.EApproxType.External);
-            goodDirCVec = ellTubes.lsGoodDirVec;
-            nGoodDirs = numel(goodDirCVec);
-            %
-            plotter = self.reachObj.plot_ea;
-            plotter.closeAllFigures();
-            %
-            axesHMapList =...
-                plotter.getPlotStructure.figToAxesToPlotHMap.values;
-            nFigures = numel(axesHMapList);
-            for iAxesHMap = 1 : nFigures
-                axesHMap = axesHMapList{iAxesHMap};
-                axesHMapKeys = axesHMap.keys;
-                %
-                indReachTubeAxes = ~cellfun(@isempty,...
-                    strfind(axesHMapKeys, 'Ellipsoidal tubes'));
-                indGoodDirsAxes = ~cellfun(@isempty,...
-                    strfind(axesHMapKeys, 'Good directions'));
-                %
-                rtObjectHandles = axesHMap(axesHMapKeys{indReachTubeAxes});
-                gdObjectHandles = axesHMap(axesHMapKeys{indGoodDirsAxes});
-                %
-                rtObjectNames = get(rtObjectHandles, 'DisplayName');
-                gdObjectNames = get(gdObjectHandles, 'DisplayName');
-                indRtObject = ~cellfun(@isempty,...
-                    strfind(rtObjectNames, 'Reach Tube'));
-                indGdObjects = ~cellfun(@isempty,...
-                    strfind(gdObjectNames, 'Good directions curve'));
-                rtObject = rtObjectHandles(indRtObject);
-                gdObjects = gdObjectHandles(indGdObjects);
-                %
-                rtVertices = get(rtObject, 'Vertices');
-                gdVerticesCVec = get(gdObjects, 'Vertices');
-                %
-                plottedGoodDirCVec = cellfun(@(x) x(1, 2 : 3).',...
-                    gdVerticesCVec, 'UniformOutput', false);
-                %
-                plottedGoodDirIndex = 0;
-                for iGoodDir = 1 : nGoodDirs
-                    goodDir = goodDirCVec{iGoodDir};
-                    for iPlottedGoodDir = 1 : numel(plottedGoodDirCVec)
-                        plottedGoodDir =...
-                            plottedGoodDirCVec{iPlottedGoodDir};
-                        if all(goodDir == plottedGoodDir)
-                            plottedGoodDirIndex = iGoodDir;
-                            break;
-                        end
-                    end
-                end
-                if plottedGoodDirIndex == 0
-                   throwerror('No good direction found.');
-                end
-                %
-                reachTubeEllipsoids = ellArray(plottedGoodDirIndex, :);
-                timeVec = ellTubes.timeVec{plottedGoodDirIndex, :};
-                nTimePoints = numel(timeVec);
-                %
-                for iTimePoint = 1 : nTimePoints
-                    ell = reachTubeEllipsoids(iTimePoint);
-                    curT = timeVec(iTimePoint);
-                    pointsMat = rtVertices(rtVertices(:, 1) == curT, 2 : 3);
-                    pointsMat =...
-                        pointsMat.' / self.reachObj.getEaScaleFactor;
-                    [centerVec shapeMat] = parameters(ell);
-                    centerPointsMat = pointsMat -...
-                        repmat(centerVec, 1, size(pointsMat, 2));
-                    sqrtScalProdVec = sqrt(abs(dot(centerPointsMat,...
-                        shapeMat\centerPointsMat) - 1));
-                    mlunit.assert_equals(...
-                        max(sqrtScalProdVec) < self.calcPrecision, true);
-                end
-            end
+        function self = testPlotEa(self)
+            import gras.ellapx.enums.EApproxType;
+            self.plotApproxTest(self.reachObj, EApproxType.External);
+            newTimeVec = [sum(self.tVec) / 2, self.tVec(2)];
+            cutReachObj = self.reachObj.cut(newTimeVec);
+            self.plotApproxTest(cutReachObj, EApproxType.External);
+            projReachObj =...
+                self.reachObj.projection(eye(self.reachObj.dimension, 2));
+            self.plotApproxTest(projReachObj, EApproxType.External);
+            evolveReachObj = self.reachObj.evolve(self.tVec(2) + 1);
+            self.plotApproxTest(evolveReachObj, EApproxType.External);
         end
         %
-        function self = DISABLED_testPlotIa(self)
-            import modgen.common.throwerror;
-            %
-            ellArray = self.reachObj.get_ia;
-            ellTubes = self.reachObj.getEllTubeRel.getTuplesFilteredBy(...
-                'approxType', gras.ellapx.enums.EApproxType.Internal);
-            goodDirCVec = ellTubes.lsGoodDirVec;
-            nGoodDirs = numel(goodDirCVec);
-            %
-            plotter = self.reachObj.plot_ia;
-            plotter.closeAllFigures();
-            %
-            axesHMapList =...
-                plotter.getPlotStructure.figToAxesToPlotHMap.values;
-            nFigures = numel(axesHMapList);
-            for iAxesHMap = 1 : nFigures
-                axesHMap = axesHMapList{iAxesHMap};
-                axesHMapKeys = axesHMap.keys;
-                %
-                indReachTubeAxes = ~cellfun(@isempty,...
-                    strfind(axesHMapKeys, 'Ellipsoidal tubes'));
-                indGoodDirsAxes = ~cellfun(@isempty,...
-                    strfind(axesHMapKeys, 'Good directions'));
-                %
-                rtObjectHandles = axesHMap(axesHMapKeys{indReachTubeAxes});
-                gdObjectHandles = axesHMap(axesHMapKeys{indGoodDirsAxes});
-                %
-                rtObjectNames = get(rtObjectHandles, 'DisplayName');
-                gdObjectNames = get(gdObjectHandles, 'DisplayName');
-                indRtObject = ~cellfun(@isempty,...
-                    strfind(rtObjectNames, 'Reach Tube'));
-                indGdObjects = ~cellfun(@isempty,...
-                    strfind(gdObjectNames, 'Good directions curve'));
-                rtObject = rtObjectHandles(indRtObject);
-                gdObjects = gdObjectHandles(indGdObjects);
-                %
-                rtVertices = get(rtObject, 'Vertices');
-                gdVerticesCVec = get(gdObjects, 'Vertices');
-                %
-                plottedGoodDirCVec = cellfun(@(x) x(1, 2 : 3).',...
-                    gdVerticesCVec, 'UniformOutput', false);
-                %
-                plottedGoodDirIndex = 0;
-                for iGoodDir = 1 : nGoodDirs
-                    goodDir = goodDirCVec{iGoodDir};
-                    for iPlottedGoodDir = 1 : numel(plottedGoodDirCVec)
-                        plottedGoodDir =...
-                            plottedGoodDirCVec{iPlottedGoodDir};
-                        if all(goodDir == plottedGoodDir)
-                            plottedGoodDirIndex = iGoodDir;
-                            break;
-                        end
-                    end
-                end
-                if plottedGoodDirIndex == 0
-                   throwerror('No good direction found.');
-                end
-                %
-                reachTubeEllipsoids = ellArray(plottedGoodDirIndex, :);
-                timeVec = ellTubes.timeVec{plottedGoodDirIndex, :};
-                nTimePoints = numel(timeVec);
-                %
-                for iTimePoint = 1 : nTimePoints
-                    ell = reachTubeEllipsoids(iTimePoint);
-                    curT = timeVec(iTimePoint);
-                    pointsMat = rtVertices(rtVertices(:, 1) == curT, 2 : 3);
-                    pointsMat =...
-                        pointsMat.' / self.reachObj.getIaScaleFactor;
-                    [centerVec shapeMat] = parameters(ell);
-                    centerPointsMat = pointsMat -...
-                        repmat(centerVec, 1, size(pointsMat, 2));
-                    sqrtScalProdVec = sqrt(abs(dot(centerPointsMat,...
-                        shapeMat\centerPointsMat) - 1));
-                    mlunit.assert_equals(...
-                        max(sqrtScalProdVec) < self.calcPrecision, true);
-                end
-            end
+        function self = testPlotIa(self)
+            import gras.ellapx.enums.EApproxType;
+            self.plotApproxTest(self.reachObj, EApproxType.Internal);
+            newTimeVec = [sum(self.tVec) / 2, self.tVec(2)];
+            cutReachObj = self.reachObj.cut(newTimeVec);
+            self.plotApproxTest(cutReachObj, EApproxType.Internal);
+            projReachObj =...
+                self.reachObj.projection(eye(self.reachObj.dimension, 2));
+            self.plotApproxTest(projReachObj, EApproxType.Internal);
+            evolveReachObj = self.reachObj.evolve(self.tVec(2) + 1);
+            self.plotApproxTest(evolveReachObj, EApproxType.Internal);
         end
         %
-        function self = DISABLED_testDimension(self)
+        function self = testDimension(self)
             expDim = self.crmSys.getParam('dim');
+            newTimeVec = [sum(self.tVec) / 2, self.tVec(2)];
+            cutReachObj = self.reachObj.cut(newTimeVec);
+            cutDim = cutReachObj.dimension;
+            evolveReachObj = self.reachObj.evolve(self.tVec(2) + 1);
+            evolveDim = evolveReachObj.dimension;
             projReachSet = self.reachObj.projection(eye(expDim, 1));
             [rsDim ssDim] = projReachSet.dimension();
-            isOk = (rsDim == expDim) && (ssDim == 1);
+            isOk = (rsDim == expDim) && (ssDim == 1) &&...
+                (cutDim == expDim) && (evolveDim == expDim);
             mlunit.assert_equals(true, isOk);
         end
         %
-        function self = DISABLED_testIsEmpty(self)
+        function self = testIsEmpty(self)
             emptyRs = elltool.reach.ReachContinious();
+            newTimeVec = [sum(self.tVec) / 2, self.tVec(2)];
+            cutReachObj = self.reachObj.cut(newTimeVec);
+            evolveReachObj = self.reachObj.evolve(self.tVec(2) + 1);
             mlunit.assert_equals(true, emptyRs.isempty);
             mlunit.assert_equals(false, self.reachObj.isempty);
+            mlunit.assert_equals(false, cutReachObj.isempty);
+            mlunit.assert_equals(false, evolveReachObj.isempty);
         end
         %
-        function self = DISABLED_testEvolve(self)
+        function self = testEvolve(self)
             import gras.ellapx.smartdb.F;
             %
-            timeVec = [self.tLims(1), self.tLims(2) / 2];
+            timeVec = [self.tVec(1), self.tVec(2) / 2];
             x0DefMat = self.crmSys.getParam('initial_set.Q');
             x0DefVec = self.crmSys.getParam('initial_set.a');
             l0CMat = self.crm.getParam(...
@@ -335,7 +315,7 @@ classdef ContiniousReachTestCase < mlunitext.test_case
             l0Mat = cell2mat(l0CMat.').';
             newReachObj = elltool.reach.ReachContinious(self.linSys,...
                 ellipsoid(x0DefVec, x0DefMat), l0Mat, timeVec);
-            evolveReachObj = newReachObj.evolve(self.tLims(2));
+            evolveReachObj = newReachObj.evolve(self.tVec(2));
             pointsNum = numel(self.reachObj.getEllTubeRel.timeVec{1});
             compTimeGridIndVec = 2 .* (1 : pointsNum) - 1;
             compTimeGridIndVec = compTimeGridIndVec +...
@@ -355,22 +335,22 @@ classdef ContiniousReachTestCase < mlunitext.test_case
             mlunit.assert_equals(true, isEqual);
         end
         %
-        function self = DISABLED_testGetSystem(self)
+        function self = testGetSystem(self)
             isEqual = self.linSys == self.reachObj.get_system;
             mlunit.assert_equals(true, isEqual);
             projReachObj = self.reachObj.projection(...
                 eye(self.reachObj.dimension, 2));
             isEqual = self.linSys == projReachObj.get_system;
             mlunit.assert_equals(true, isEqual);
-            evolveReachObj = self.reachObj.evolve(self.tLims(2) + 1);
+            evolveReachObj = self.reachObj.evolve(self.tVec(2) + 1);
             isEqual = self.linSys == evolveReachObj.get_system;
             mlunit.assert_equals(true, isEqual);
         end
         %
-        function self = DISABLED_testCut(self)
+        function self = testCut(self)
             import gras.ellapx.smartdb.F;
             %
-            newTimeVec = [sum(self.tLims) / 2, self.tLims(2)];
+            newTimeVec = [sum(self.tVec) / 2, self.tVec(2)];
             cutReachObj = self.reachObj.cut(newTimeVec);
             cutEllTubeRel = cutReachObj.getEllTubeRel;
             nTuples = cutEllTubeRel.getNTuples;
@@ -403,7 +383,15 @@ classdef ContiniousReachTestCase < mlunitext.test_case
             end
         end
         %
-        function self = DISABLED_testProjection(self)
+        function self = testNegativeCut(self)
+            projReachObj =...
+                self.reachObj.projection(eye(self.reachObj.dimension, 2));
+            newTimeVec = [sum(self.tVec) / 2, self.tVec(2)];
+            self.runAndCheckError('projReachObj.cut(newTimeVec)',...
+                'wrongInput');
+        end
+        %
+        function self = testProjection(self)
             import gras.ellapx.smartdb.F;
             %
             atDefCMat = self.crmSys.getParam('At');
@@ -457,7 +445,7 @@ classdef ContiniousReachTestCase < mlunitext.test_case
             newLinSys = elltool.linsys.LinSys(newAtCMat, newBtCMat,...
                 ControlBounds, newCtCMat, DistBounds);
             newReachObj = elltool.reach.ReachContinious(newLinSys,...
-                ellipsoid(newX0Vec, newX0Mat), newL0Mat, self.tLims);
+                ellipsoid(newX0Vec, newX0Mat), newL0Mat, self.tVec);
             firstProjReachObj =...
                 newReachObj.projection([eye(oldDim); zeros(oldDim)]);
             secondProjReachObj =...
@@ -479,20 +467,64 @@ classdef ContiniousReachTestCase < mlunitext.test_case
             mlunit.assert_equals(true, isEqual);
         end
         %
-        function self = DISABLED_testIntersect(self)
+        function self = testIntersect(self)
             if ~strcmp(self.confName, 'demo3firstTest')
                 return;
             end
-            cutReachObj = self.reachObj.cut(self.tLims(2));
+            cutReachObj = self.reachObj.cut(self.tVec(2));
+            projCutReachObj =...
+                cutReachObj.projection(eye(self.reachObj.dimension));
+            newTimeVec = [sum(self.tVec) / 2, self.tVec(2)];
+            cutIntReachObj = self.reachObj.cut(newTimeVec);
+            cut2ReachObj = cutIntReachObj.cut(newTimeVec(2));
+            evolveReachObj = self.reachObj.evolve(self.tVec(2) + 1);
+            cutEvolveReachObj = evolveReachObj.cut(self.tVec(2) + 1);
             ell1 = ellipsoid([-2.5;1], 1.2 * eye(2));
             ell2 = ellipsoid([-2.5;1], 1.25 * eye(2));
             ell3 = ellipsoid([-2.5;1], 1.3 * eye(2));
+            ell4 = ellipsoid([-2.5;1], 0.8 * eye(2));
+            ell5 = ellipsoid([-2.5;1], 1.2 * eye(2));
+            ell6 = ellipsoid([-2.5;1], 1.6 * eye(2));
+            %
             mlunit.assert_equals(false, cutReachObj.intersect(ell1, 'e'));
             mlunit.assert_equals(false, cutReachObj.intersect(ell1, 'i'));
             mlunit.assert_equals(true, cutReachObj.intersect(ell2, 'e'));
             mlunit.assert_equals(false, cutReachObj.intersect(ell2, 'i'));
             mlunit.assert_equals(true, cutReachObj.intersect(ell3, 'e'));
             mlunit.assert_equals(true, cutReachObj.intersect(ell3, 'i'));
+            %
+            mlunit.assert_equals(false,...
+                projCutReachObj.intersect(ell1, 'e'));
+            mlunit.assert_equals(false,...
+                projCutReachObj.intersect(ell1, 'i'));
+            mlunit.assert_equals(true,...
+                projCutReachObj.intersect(ell2, 'e'));
+            mlunit.assert_equals(false,...
+                projCutReachObj.intersect(ell2, 'i'));
+            mlunit.assert_equals(true,...
+                projCutReachObj.intersect(ell3, 'e'));
+            mlunit.assert_equals(true,...
+                projCutReachObj.intersect(ell3, 'i'));
+            %
+            mlunit.assert_equals(false, cut2ReachObj.intersect(ell1, 'e'));
+            mlunit.assert_equals(false, cut2ReachObj.intersect(ell1, 'i'));
+            mlunit.assert_equals(true, cut2ReachObj.intersect(ell2, 'e'));
+            mlunit.assert_equals(false, cut2ReachObj.intersect(ell2, 'i'));
+            mlunit.assert_equals(true, cut2ReachObj.intersect(ell3, 'e'));
+            mlunit.assert_equals(true, cut2ReachObj.intersect(ell3, 'i'));
+            %
+            mlunit.assert_equals(false,...
+                cutEvolveReachObj.intersect(ell4, 'e'));
+            mlunit.assert_equals(false,...
+                cutEvolveReachObj.intersect(ell4, 'i'));
+            mlunit.assert_equals(true,...
+                cutEvolveReachObj.intersect(ell5, 'e'));
+            mlunit.assert_equals(false,...
+                cutEvolveReachObj.intersect(ell5, 'i'));
+            mlunit.assert_equals(true,...
+                cutEvolveReachObj.intersect(ell6, 'e'));
+            mlunit.assert_equals(true,...
+                cutEvolveReachObj.intersect(ell6, 'i'));
         end
     end
 end

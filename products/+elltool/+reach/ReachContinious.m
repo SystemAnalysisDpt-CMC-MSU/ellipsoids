@@ -12,6 +12,8 @@ classdef ReachContinious < elltool.reach.AReach
         function projSet = getProjSet(self, projMat,...
                 approxType, scaleFactor)
             import gras.ellapx.enums.EProjType;
+            import gras.ellapx.smartdb.F;
+            APPROX_TYPE = F.APPROX_TYPE;
             fProj =...
                 @(~, timeVec, varargin)...
                 deal(repmat(projMat.', [1 1 numel(timeVec)]),...
@@ -21,18 +23,153 @@ classdef ReachContinious < elltool.reach.AReach
             isProjSpaceCList = {isProjSpaceList};
             projType = EProjType.Static;
             if nargin > 2
-                localEllTubeRel = self.ellTubeRel.getTuplesFilteredBy(...
-                    'approxType', approxType);
+                localEllTubeRel =...
+                    self.getEllTubeRel.getTuplesFilteredBy(...
+                    APPROX_TYPE, approxType);
             else
-                localEllTubeRel = self.ellTubeRel.getCopy();
+                localEllTubeRel = self.getEllTubeRel;
             end
             if nargin == 4
-                localEllTubeRel.scale(@(x) scaleFactor, {'approxType'});
+                localEllTubeRel.scale(@(x) scaleFactor, {APPROX_TYPE});
             end
             projSet = localEllTubeRel.project(projType,...
                 isProjSpaceCList, fProj);
         end
-        %
+        function plotter = plotApprox(self, approxType, varargin)
+            import gras.ellapx.enums.EApproxType;
+            import modgen.common.throwerror;
+            import gras.ellapx.smartdb.F;
+            APPROX_TYPE = F.APPROX_TYPE;
+            DEFAULT_EA_COLOR_VEC = [0 0 1];
+            DEFAULT_IA_COLOR_VEC = [0 1 0];
+            DEFAULT_LINE_WIDTH = 2;
+            DEFAULT_EA_SHADE = 0.3;
+            DEFAULT_IA_SHADE = 0.1;
+            DEFAULT_FILL = 0;
+            %
+            if approxType == EApproxType.External
+                colorVec = DEFAULT_EA_COLOR_VEC;
+                shade = DEFAULT_EA_SHADE;
+                scaleFactor = self.EXTERNAL_SCALE_FACTOR;
+            else
+                colorVec = DEFAULT_IA_COLOR_VEC;
+                shade = DEFAULT_IA_SHADE;
+                scaleFactor = self.INTERNAL_SCALE_FACTOR;
+            end
+            lineWidth = DEFAULT_LINE_WIDTH;
+            fill = DEFAULT_FILL;
+            if nargin > 4
+                throwerror('wrongInput', 'Too many arguments.');
+            elseif nargin == 3
+                if ischar(varargin{1})
+                    colorVec = self.getColorVec(varargin{1});
+                elseif isstruct(varargin{1})
+                    ColorOpt = varargin{1};
+                    setPlotParams(ColorOpt);
+                else
+                    throwerror('wrongInput', 'Wrong argument format.');
+                end
+            elseif nargin == 4
+                if isstruct(varargin{2})
+                    ColorOpt = varargin{2};
+                    setPlotParams(ColorOpt);
+                else
+                    throwerror('wrongInput', 'Wrong argument format.');
+                end
+                if ischar(varargin{1})
+                    colorVec = self.getColorVec(varargin{1});
+                else
+                    throwerror('wrongInput', 'Wrong argument format.');
+                end
+            end
+            %
+            if ~ismatrix(colorVec)
+                throwerror('wrongInput', 'Wrong field format ("color")');
+            else
+                [nRows nCols] = size(colorVec);
+                if nRows ~= 1 || nCols ~= 3
+                    throwerror('wrongInput',...
+                        'Wrong field format ("color")');
+                end
+            end
+            if ~isa(lineWidth, 'double')
+                throwerror('wrongInput', 'Wrong field format ("width")');
+            end
+            if ~isa(shade, 'double')
+                throwerror('wrongInput', 'Wrong field format ("shade")');
+            else
+                if shade < 0 || shade > 1
+                    throwerror('wrongInput',...
+                        'Wrong field format ("shade")');
+                end
+            end
+            if ~isa(fill, 'double')
+                throwerror('Wrong field format ("fill")');
+            end
+            %
+            if self.isProj
+                if self.getEllTubeRel().dim() > 3
+                    throwerror('wrongData',...
+                        'Dimension of the projection must be leq 3');                    
+                else
+                    plObj = smartdb.disp.RelationDataPlotter();
+                    plotter = self.getEllTubeRel().getTuplesFilteredBy(...
+                        APPROX_TYPE, approxType).plot(plObj,...
+                        'fGetTubeColor', @(x) deal(colorVec, shade));
+                end
+            else
+                if self.dimension() > 2
+                    projBasisMat = eye(self.dimension(), 2);
+                else
+                    projBasisMat = eye(self.dimension());
+                end
+                plObj = smartdb.disp.RelationDataPlotter();
+                projSetObj = self.getProjSet(projBasisMat,...
+                    approxType, scaleFactor);
+                plotter = projSetObj.plot(plObj, 'fGetTubeColor',...
+                    @(x) deal(colorVec, shade));
+            end
+            %
+            function setPlotParams(ColorOpt)
+                if isfield(ColorOpt, 'color')
+                    colorVec = ColorOpt.color;
+                end
+                if isfield(ColorOpt, 'width')
+                    lineWidth = ColorOpt.width;
+                end
+                if isfield(ColorOpt, 'shade')
+                    shade = ColorOpt.shade;
+                end
+                if isfield(ColorOpt, 'fill')
+                    fill = ColorOpt.fill;
+                end
+            end
+        end
+        function [apprEllMat timeVec] = getApprox(self, approxType)
+            import gras.ellapx.enums.EApproxType;
+            import gras.ellapx.smartdb.F;
+            APPROX_TYPE = F.APPROX_TYPE;
+            SData = self.getEllTubeRel.getTuplesFilteredBy(APPROX_TYPE,...
+                approxType);
+            nTuples = SData.getNTuples();
+            if nTuples > 0
+                nTimes = numel(SData.timeVec{1});
+                for iTuple = nTuples : -1 : 1
+                    tupleCentMat = SData.aMat{iTuple};
+                    tupleMatArray = SData.QArray{iTuple};
+                    for jTime = nTimes : -1 : 1
+                        apprEllMat(iTuple, jTime) =...
+                            ellipsoid(tupleCentMat(:, jTime),...
+                            tupleMatArray(:, :, jTime));
+                    end
+                end
+            else
+                apprEllMat = [];
+            end
+            if nargout > 1
+                timeVec = SData.timeVec{1};
+            end
+        end
         function ellTubeRel = makeEllTubeRel(self, smartLinSys, l0Mat,...
                 timeVec, isDisturb, calcPrecision, approxTypeVec)
             import gras.ellapx.enums.EApproxType;
@@ -108,6 +245,70 @@ classdef ReachContinious < elltool.reach.AReach
                     colCodeVec = [0 0 0];
             end
         end
+        function backwardStrCMat = getBackwardCMat(strCMat, tSum, isMinus)
+            t = sym('t');
+            t = tSum-t;
+            %
+            evCMat = cellfun(@eval, strCMat, 'UniformOutput', false);
+            symIndMat = cellfun(@(x) isa(x, 'sym'), evCMat);
+            backwardStrCMat = cell(size(strCMat));
+            backwardStrCMat(symIndMat) = cellfun(@char,...
+                evCMat(symIndMat), 'UniformOutput', false);
+            backwardStrCMat(~symIndMat) = cellfun(@num2str,...
+            	evCMat(~symIndMat), 'UniformOutput', false);
+            if isMinus
+                backwardStrCMat = strcat('-(', backwardStrCMat, ')');
+            end
+        end
+        function outStrCMat = getStrCMat(inpMat)
+            outStrCMat =...
+                arrayfun(@num2str, inpMat, 'UniformOutput', false);
+        end
+        function [centerVec shapeMat] = getEllParams(inpEll, relMat)
+            if ~isempty(inpEll)
+                if isa(inpEll, 'ellipsoid')
+                    [centerVec shapeMat] = double(inpEll);
+                else
+                    if isfield(inpEll, 'center')
+                        centerVec = inpEll.center;
+                    else
+                        centerVec = zeros(size(relMat, 2), 1);
+                    end
+                    if isfield(inpEll, 'shape')
+                        shapeMat = inpEll.shape;
+                    else
+                        shapeMat = zeros(size(relMat, 2));
+                    end
+                end
+            else
+                shapeMat = zeros(size(relMat, 2));
+                centerVec = zeros(size(relMat, 2), 1);
+            end
+        end
+        function rotatedEllTubeRel = rotateEllTubeRel(oldEllTubeRel)
+            import gras.ellapx.smartdb.F;
+            FIELD_NAME_LIST_TO = {F.LS_GOOD_DIR_VEC;F.LS_GOOD_DIR_NORM;...
+                F.XS_TOUCH_VEC;F.XS_TOUCH_OP_VEC};
+            FIELD_NAME_LIST_FROM = {F.LT_GOOD_DIR_MAT;...
+                F.LT_GOOD_DIR_NORM_VEC;F.X_TOUCH_CURVE_MAT;...
+                F.X_TOUCH_OP_CURVE_MAT};
+            SData = oldEllTubeRel.getData();
+            SData.timeVec = cellfun(@wrev, SData.timeVec,...
+               'UniformOutput', false);
+            indSTime = numel(SData.timeVec(1));
+            SData.indSTime(:) = indSTime;
+            cellfun(@cutStructSTimeField,...
+                FIELD_NAME_LIST_TO, FIELD_NAME_LIST_FROM);
+            SData.lsGoodDirNorm =...
+                cell2mat(SData.lsGoodDirNorm);
+            rotatedEllTubeRel = oldEllTubeRel.createInstance(SData);
+            %
+            function cutStructSTimeField(fieldNameTo, fieldNameFrom)
+                SData.(fieldNameTo) =...
+                    cellfun(@(field) field(:, 1),...
+                    SData.(fieldNameFrom), 'UniformOutput', false);
+            end
+        end
         function isDisturb = isDisturbance(gtStrCMat, qtStrCMat)
             import gras.mat.symb.iscellofstringconst;
             import gras.gen.MatVector;
@@ -160,7 +361,6 @@ classdef ReachContinious < elltool.reach.AReach
                     timeVec, calcPrecision);
             end
         end
-        %
         function outMat = getNormMat(inpMat, dim)
             matSqNormVec = sum(inpMat .* inpMat);
             isNormGrZeroVec = matSqNormVec > 0;
@@ -170,7 +370,6 @@ classdef ReachContinious < elltool.reach.AReach
                 inpMat(:, isNormGrZeroVec) ./...
                 matSqNormVec(ones(1, dim), isNormGrZeroVec);
         end
-        %
         function [atStrCMat btStrCMat gtStrCMat...
                 ptStrCMat ptStrCVec...
                 qtStrCMat qtStrCVec] = prepareSysParam(linSys, timeVec)
@@ -178,14 +377,12 @@ classdef ReachContinious < elltool.reach.AReach
             btMat = linSys.getBtMat();
             gtMat = linSys.getGtMat();
             if ~iscell(atMat) && ~isempty(atMat)
-                atStrCMat =...
-                    arrayfun(@num2str, atMat, 'UniformOutput', false);
+                atStrCMat = elltool.reach.ReachContinious.getStrCMat(atMat);
             else
                 atStrCMat = atMat;
             end
             if ~iscell(btMat) && ~isempty(btMat)
-                btStrCMat =...
-                    arrayfun(@num2str, btMat, 'UniformOutput', false);
+                btStrCMat = elltool.reach.ReachContinious.getStrCMat(btMat);
             else
                 btStrCMat = btMat;
             end
@@ -193,145 +390,60 @@ classdef ReachContinious < elltool.reach.AReach
                 gtMat = zeros(size(btMat));
             end
             if ~iscell(gtMat)
-                gtStrCMat =...
-                    arrayfun(@num2str, gtMat, 'UniformOutput', false);
+                gtStrCMat = elltool.reach.ReachContinious.getStrCMat(gtMat);
             else
                 gtStrCMat = gtMat;
             end
             uEll = linSys.getUBoundsEll();
-            if ~isempty(uEll)
-                if isa(uEll, 'ellipsoid')
-                    [ptVec ptMat] = double(uEll);
-                else
-                    if isfield(uEll, 'center')
-                        ptVec = uEll.center;
-                    else
-                        ptVec = zeros(size(btMat, 2), 1);
-                    end
-                    if isfield(uEll, 'shape')
-                        ptMat = uEll.shape;
-                    else
-                        ptMat = zeros(size(btMat, 2));
-                    end
-                end
-            else
-                ptMat = zeros(size(btMat, 2));
-                ptVec = zeros(size(btMat, 2), 1);
-            end
+            [ptVec ptMat] =...
+                elltool.reach.ReachContinious.getEllParams(uEll, btMat);
             if ~iscell(ptMat)
-                ptStrCMat =...
-                    arrayfun(@num2str, ptMat, 'UniformOutput', false);
+                ptStrCMat = elltool.reach.ReachContinious.getStrCMat(ptMat);
             else
                 ptStrCMat = ptMat;
             end
             if ~iscell(ptVec)
-                ptStrCVec =...
-                    arrayfun(@num2str, ptVec, 'UniformOutput', false);
+                ptStrCVec = elltool.reach.ReachContinious.getStrCMat(ptVec);
             else
                 ptStrCVec = ptVec;
             end
             vEll = linSys.getDistBoundsEll();
-            if ~isempty(vEll)
-                if isa(vEll, 'ellipsoid')
-                    [qtVec qtMat] = double(vEll);
-                else
-                    if isfield(vEll, 'center')
-                        qtVec = vEll.center;
-                    else
-                        qtVec = zeros(size(gtMat, 2), 1);
-                    end
-                    if isfield(vEll, 'shape')
-                        qtMat = vEll.shape;
-                    else
-                        qtMat = zeros(size(gtMat, 2));
-                    end
-                end
-            else
-                qtMat = zeros(size(gtMat, 2));
-                qtVec = zeros(size(gtMat, 2), 1);
-            end
+            [qtVec qtMat] =...
+                elltool.reach.ReachContinious.getEllParams(vEll, gtMat);
             if ~iscell(qtMat)
-                qtStrCMat =...
-                    arrayfun(@num2str, qtMat, 'UniformOutput', false);
+                qtStrCMat = elltool.reach.ReachContinious.getStrCMat(qtMat);
             else
                 qtStrCMat = qtMat;
             end
             if ~iscell(qtVec)
-                qtStrCVec =...
-                    arrayfun(@num2str, qtVec, 'UniformOutput', false);
+                qtStrCVec = elltool.reach.ReachContinious.getStrCMat(qtVec);
             else
                 qtStrCVec = qtVec;
             end
             if timeVec(1) > timeVec(2)
                 tSum = sum(timeVec);
-                t = sym('t');
-                t = tSum-t;
                 %
-                evAtCMat =...
-                    cellfun(@eval, atStrCMat, 'UniformOutput', false);
-                symIndMat = cellfun(@(x) isa(x, 'sym'), evAtCMat);
-                atStrCMat = cell(size(atStrCMat));
-                atStrCMat(symIndMat) = cellfun(@char,...
-                    evAtCMat(symIndMat), 'UniformOutput', false);
-                atStrCMat(~symIndMat) = cellfun(@num2str,...
-                    evAtCMat(~symIndMat), 'UniformOutput', false);
-                atStrCMat = strcat('-(', atStrCMat, ')');
-                %
-                evBtCMat =...
-                    cellfun(@eval, btStrCMat, 'UniformOutput', false);
-                symIndMat = cellfun(@(x) isa(x, 'sym'), evBtCMat);
-                btStrCMat = cell(size(btStrCMat));
-                btStrCMat(symIndMat) = cellfun(@char,...
-                    evBtCMat(symIndMat), 'UniformOutput', false);
-                btStrCMat(~symIndMat) = cellfun(@num2str,...
-                    evBtCMat(~symIndMat), 'UniformOutput', false);
-                btStrCMat = strcat('-(', btStrCMat, ')');
-                %
-                evGtCMat =...
-                    cellfun(@eval, gtStrCMat, 'UniformOutput', false);
-                symIndMat = cellfun(@(x) isa(x, 'sym'), evGtCMat);
-                gtStrCMat = cell(size(gtStrCMat));
-                gtStrCMat(symIndMat) = cellfun(@char,...
-                    evGtCMat(symIndMat), 'UniformOutput', false);
-                gtStrCMat(~symIndMat) = cellfun(@num2str,...
-                    evGtCMat(~symIndMat), 'UniformOutput', false);
-                gtStrCMat = strcat('-(', gtStrCMat, ')');
-                %
-                evPtCMat =...
-                    cellfun(@eval, ptStrCMat, 'UniformOutput', false);
-                symIndMat = cellfun(@(x) isa(x, 'sym'), evPtCMat);
-                ptStrCMat = cell(size(ptStrCMat));
-                ptStrCMat(symIndMat) = cellfun(@char,...
-                    evPtCMat(symIndMat), 'UniformOutput', false);
-                ptStrCMat(~symIndMat) = cellfun(@num2str,...
-                    evPtCMat(~symIndMat), 'UniformOutput', false);
-                %
-                evPtCVec =...
-                    cellfun(@eval, ptStrCVec, 'UniformOutput', false);
-                symIndMat = cellfun(@(x) isa(x, 'sym'), evPtCVec);
-                ptStrCVec = cell(size(ptStrCVec));
-                ptStrCVec(symIndMat) = cellfun(@char,...
-                    evPtCVec(symIndMat), 'UniformOutput', false);
-                ptStrCVec(~symIndMat) = cellfun(@num2str,...
-                    evPtCVec(~symIndMat), 'UniformOutput', false);
-                %
-                evQtCMat =...
-                    cellfun(@eval, qtStrCMat, 'UniformOutput', false);
-                symIndMat = cellfun(@(x) isa(x, 'sym'), evQtCMat);
-                qtStrCMat = cell(size(qtStrCMat));
-                qtStrCMat(symIndMat) = cellfun(@char,...
-                    evQtCMat(symIndMat), 'UniformOutput', false);
-                qtStrCMat(~symIndMat) = cellfun(@num2str,...
-                    evQtCMat(~symIndMat), 'UniformOutput', false);
-                %
-                evQtCVec =...
-                    cellfun(@eval, qtStrCVec, 'UniformOutput', false);
-                symIndMat = cellfun(@(x) isa(x, 'sym'), evQtCVec);
-                qtStrCVec = cell(size(qtStrCVec));
-                qtStrCVec(symIndMat) = cellfun(@char,...
-                    evQtCVec(symIndMat), 'UniformOutput', false);
-                qtStrCVec(~symIndMat) = cellfun(@num2str,...
-                    evQtCVec(~symIndMat), 'UniformOutput', false);
+                atStrCMat =...
+                    elltool.reach.ReachContinious.getBackwardCMat(...
+                    atStrCMat, tSum, true);
+                btStrCMat =...
+                    elltool.reach.ReachContinious.getBackwardCMat(...
+                    btStrCMat, tSum, true);
+                gtStrCMat =...
+                    elltool.reach.ReachContinious.getBackwardCMat(...
+                    gtStrCMat, tSum, true);
+                ptStrCMat =...
+                    elltool.reach.ReachContinious.getBackwardCMat(...
+                    ptStrCMat, tSum, false);
+                ptStrCVec =...
+                    elltool.reach.ReachContinious.getBackwardCMat(...
+                    ptStrCVec, tSum, false);
+                qtStrCMat =...
+                    elltool.reach.ReachContinious.getBackwardCMat(...
+                    qtStrCMat, tSum, false);
+                qtStrCVec =...
+                    elltool.reach.ReachContinious.getBackwardCMat(...
+                    qtStrCVec, tSum, false);
             end
         end
     end
@@ -370,18 +482,19 @@ classdef ReachContinious < elltool.reach.AReach
             self.linSysCVec = {linSys};
             self.isCut = false;
             self.isProj = false;
+            self.isBackward = timeVec(1) > timeVec(2);
             self.projectionBasisMat = [];
             %% check and analize input
             if nargin < 4
-                throwerror(['REACH: insufficient ',...
+                throwerror('wrongInput', ['insufficient ',...
                     'number of input arguments.']);
             end
             if ~(isa(linSys, 'elltool.linsys.LinSys'))
-                throwerror(['REACH: first input argument ',...
+                throwerror('wrongInput', ['first input argument ',...
                     'must be linear system object.']);
             end
             if ~(isa(x0Ell, 'ellipsoid'))
-                throwerror(['REACH: set of initial ',...
+                throwerror('wrongInput', ['set of initial ',...
                     'conditions must be ellipsoid.']);
             end
             checkgenext('x1==x2&&x2==x3', 3,...
@@ -390,8 +503,8 @@ classdef ReachContinious < elltool.reach.AReach
             [timeRows, timeCols] = size(timeVec);
             if ~(isa(timeVec, 'double')) ||...
                     (timeRows ~= 1) || (timeCols ~= 2)
-                throwerror(['REACH: time interval must be specified ',...
-                    'as ''[t0 t1]'', or, in ',...
+                throwerror('wrongInput', ['time interval must be ',...
+                    'specified as ''[t0 t1]'', or, in ',...
                     'discrete-time - as ''[k0 k1]''.']);
             end
             if (nargin < 5) || ~(isstruct(OptStruct))
@@ -433,210 +546,36 @@ classdef ReachContinious < elltool.reach.AReach
             self.ellTubeRel = self.makeEllTubeRel(smartLinSys, l0Mat,...
                 [min(timeVec) max(timeVec)], isDisturbance,...
                 relTol, approxTypeVec);
-            if timeVec(1) > timeVec(2)
-                SData = self.ellTubeRel.getData();
-                SData.timeVec = cellfun(@wrev, SData.timeVec,...
-                   'UniformOutput', false);
-                indSTime = numel(SData.timeVec(1));
-                SData.indSTime(:) = indSTime;
-                SData.lsGoodDirVec =...
-                    cellfun(@(field) field(:, indSTime),...
-                    SData.ltGoodDirMat, 'UniformOutput', false);
-                SData.lsGoodDirNorm =...
-                    cellfun(@(field) field(1, indSTime),...
-                    SData.ltGoodDirNormVec);
-                SData.xsTouchVec =...
-                    cellfun(@(field) field(:, indSTime),...
-                    SData.xTouchCurveMat, 'UniformOutput', false);
-                SData.xsTouchOpVec =...
-                    cellfun(@(field) field(:, indSTime),...
-                    SData.xTouchOpCurveMat, 'UniformOutput', false);
-                self.ellTubeRel = self.ellTubeRel.createInstance(SData);
+            if self.isBackward
+                self.ellTubeRel = self.rotateEllTubeRel(self.getEllTubeRel);
             end
         end
         %%
         function eaPlotter = plot_ea(self, varargin)
             import gras.ellapx.enums.EApproxType;
-            import modgen.common.throwerror;
-            colorVec = [0 0 1];
-            lineWidth = 2;
-            shade = 0.3;
-            fill = 0;
-            if nargin > 3
-                throwerror('Too many arguments.');
+            if nargin == 1
+                eaPlotter =...
+                    self.plotApprox(EApproxType.External);
             elseif nargin == 2
-                if ischar(varargin{1})
-                    colorVec = self.getColorVec(varargin{1});
-                elseif isstruct(varargin{1})
-                    ColorOpt = varargin{1};
-                    setPlotParams(ColorOpt);
-                else
-                    throwerror('Wrong argument format.');
-                end
+                eaPlotter =...
+                    self.plotApprox(EApproxType.External, varargin{1});
             elseif nargin == 3
-                if isstruct(varargin{2})
-                    ColorOpt = varargin{2};
-                    setPlotParams(ColorOpt);
-                else
-                    throwerror('Wrong argument format.');
-                end
-                if ischar(varargin{1})
-                    colorVec = self.getColorVec(varargin{1});
-                else
-                    throwerror('Wrong argument format.');
-                end
-            end
-            %
-            if ~ismatrix(colorVec)
-                throwerror('Wrong field format ("color")');
-            else
-                [nRows nCols] = size(colorVec);
-                if nRows ~= 1 || nCols ~= 3
-                    throwerror('Wrong field format ("color")');
-                end
-            end
-            if ~isa(lineWidth, 'double')
-                throwerror('Wrong field format ("width")');
-            end
-            if ~isa(shade, 'double')
-                throwerror('Wrong field format ("shade")');
-            else
-                if shade < 0 || shade > 1
-                    throwerror('Wrong field format ("shade")');
-                end
-            end
-            if ~isa(fill, 'double')
-                throwerror('Wrong field format ("fill")');
-            end
-            %
-            if self.isProj
-                if self.getEllTubeRel().dim() > 3
-                    throwerror('Dimension of the projection must be leq 3');                    
-                else
-                    plObj = smartdb.disp.RelationDataPlotter();
-                    eaPlotter = self.getEllTubeRel().getTuplesFilteredBy(...
-                        'approxType', EApproxType.External).plot(plObj,...
-                        'fGetTubeColor', @(x) deal(colorVec, shade));
-                end
-            else
-                if self.dimension() > 2
-                    projBasisMat = eye(self.dimension(), 2);
-                else
-                    projBasisMat = eye(self.dimension());
-                end
-                plObj = smartdb.disp.RelationDataPlotter();
-                projSetObj = self.getProjSet(projBasisMat,...
-                    EApproxType.External, self.EXTERNAL_SCALE_FACTOR);
-                eaPlotter = projSetObj.plot(plObj, 'fGetTubeColor',...
-                    @(x) deal(colorVec, shade));
-            end
-            
-            %
-            function setPlotParams(ColorOpt)
-                if isfield(ColorOpt, 'color')
-                    colorVec = ColorOpt.color;
-                end
-                if isfield(ColorOpt, 'width')
-                    lineWidth = ColorOpt.width;
-                end
-                if isfield(ColorOpt, 'shade')
-                    shade = ColorOpt.shade;
-                end
-                if isfield(ColorOpt, 'fill')
-                    fill = ColorOpt.fill;
-                end
+                eaPlotter = self.plotApprox(EApproxType.External,...
+                    varargin{1}, varargin{2});
             end
         end
         %%
         function iaPlotter = plot_ia(self, varargin)
             import gras.ellapx.enums.EApproxType;
-            import modgen.common.throwerror;
-            colorVec = [0 1 0];
-            lineWidth = 2;
-            shade = 0.1;
-            fill = 0;
-            if nargin > 3
-                throwerror('Too many arguments.');
+            if nargin == 1
+                iaPlotter =...
+                    self.plotApprox(EApproxType.Internal);
             elseif nargin == 2
-                if ischar(varargin{1})
-                    colorVec = self.getColorVec(varargin{1});
-                elseif isstruct(varargin{1})
-                    ColorOpt = varargin{1};
-                    setPlotParams(ColorOpt);
-                else
-                    throwerror('Wrong argument format.');
-                end
+                iaPlotter =...
+                    self.plotApprox(EApproxType.Internal, varargin{1});
             elseif nargin == 3
-                if isstruct(varargin{2})
-                    ColorOpt = varargin{2};
-                    setPlotParams(ColorOpt);
-                else
-                    throwerror('Wrong argument format.');
-                end
-                if ischar(varargin{1})
-                    colorVec = self.getColorVec(varargin{1});
-                else
-                    throwerror('Wrong argument format.');
-                end
-            end
-            %
-            if ~ismatrix(colorVec)
-                throwerror('Wrong field format ("color")');
-            else
-                [nRows nCols] = size(colorVec);
-                if nRows ~= 1 || nCols ~= 3
-                    throwerror('Wrong field format ("color")');
-                end
-            end
-            if ~isa(lineWidth, 'double')
-                throwerror('Wrong field format ("width")');
-            end
-            if ~isa(shade, 'double')
-                throwerror('Wrong field format ("shade")');
-            else
-                if shade < 0 || shade > 1
-                    throwerror('Wrong field format ("shade")');
-                end
-            end
-            if ~isa(fill, 'double')
-                throwerror('Wrong field format ("fill")');
-            end
-            %
-            if self.isProj
-                if self.getEllTubeRel().dim() > 3
-                    throwerror('Dimension of the projection must be leq 3');                    
-                else
-                    plObj = smartdb.disp.RelationDataPlotter();
-                    iaPlotter = self.getEllTubeRel().getTuplesFilteredBy(...
-                        'approxType', EApproxType.Internal).plot(plObj,...
-                        'fGetTubeColor', @(x) deal(colorVec, shade));
-                end
-            else
-                if self.dimension() > 2
-                    projBasisMat = eye(self.dimension(), 2);
-                else
-                    projBasisMat = eye(self.dimension());
-                end
-                plObj = smartdb.disp.RelationDataPlotter();
-                projSetObj = self.getProjSet(projBasisMat,...
-                    EApproxType.Internal, self.INTERNAL_SCALE_FACTOR);
-                iaPlotter = projSetObj.plot(plObj, 'fGetTubeColor',...
-                    @(x) deal(colorVec, shade));
-            end
-            %
-            function setPlotParams(ColorOpt)
-                if isfield(ColorOpt, 'color')
-                    colorVec = ColorOpt.color;
-                end
-                if isfield(ColorOpt, 'width')
-                    lineWidth = ColorOpt.width;
-                end
-                if isfield(ColorOpt, 'shade')
-                    shade = ColorOpt.shade;
-                end
-                if isfield(ColorOpt, 'fill')
-                    fill = ColorOpt.fill;
-                end
+                iaPlotter = self.plotApprox(EApproxType.Internal,...
+                    varargin{1}, varargin{2});
             end
         end
         %% displays only the last lin system
@@ -671,7 +610,7 @@ classdef ReachContinious < elltool.reach.AReach
                     'in R^%d in the time interval [%d, %d].\n'],...
                     sysTypeStr, dim, timeVec(1), timeVec(end));
             end
-            if self.isProj
+            if self.isprojection
                 fprintf('Projected onto the basis:\n');
                 disp(self.projectionBasisMat);
             end
@@ -683,37 +622,53 @@ classdef ReachContinious < elltool.reach.AReach
                 fprintf('Initial set at time %s%d:\n',...
                     sysTimeStartStr, timeVec(1));
             end
-            disp(self.x0Ellipsoid);
+            disp(self.getInitialSet);
             fprintf('Number of external approximations: %d\n',...
-                sum(self.ellTubeRel.approxType == EApproxType.External));
+                sum(self.getEllTubeRel.approxType == EApproxType.External));
             fprintf('Number of internal approximations: %d\n',...
-                sum(self.ellTubeRel.approxType == EApproxType.Internal));
+                sum(self.getEllTubeRel.approxType == EApproxType.Internal));
             fprintf('\n');
         end
         %%
         function cutObj = cut(self, cutTimeVec)
             import modgen.common.throwerror;
-            if self.isProj
-                throwerror('Method cut does not work with projections');
+            if self.isprojection()
+                throwerror('wrongInput',...
+                    'Method cut does not work with projections');
             else
                 cutObj = elltool.reach.ReachContinious();
-                cutObj.ellTubeRel = self.ellTubeRel.cut(cutTimeVec);
+                if self.isbackward()
+                    rotEllTubeRel =...
+                        self.rotateEllTubeRel(self.getEllTubeRel);
+                    cutObj.ellTubeRel =...
+                        self.rotateEllTubeRel(...
+                        rotEllTubeRel.cut(cutTimeVec));
+                    switchTimeVec = wrev(self.switchSysTimeVec);
+                else
+                    cutObj.ellTubeRel = self.getEllTubeRel.cut(cutTimeVec);
+                    switchTimeVec = self.switchSysTimeVec;
+                end
                 switchTimeIndVec =...
-                    self.switchSysTimeVec > cutTimeVec(1) &...
-                    self.switchSysTimeVec < cutTimeVec(end);
+                    switchTimeVec > cutTimeVec(1) &...
+                    switchTimeVec < cutTimeVec(end);
                 cutObj.switchSysTimeVec = [cutTimeVec(1)...
-                    self.switchSysTimeVec(switchTimeIndVec) cutTimeVec(end)];
+                    switchTimeVec(switchTimeIndVec) cutTimeVec(end)];
+                if self.isbackward()
+                    cutObj.switchSysTimeVec =...
+                        wrev(cutObj.switchSysTimeVec);
+                end
                 firstIntInd = find(switchTimeIndVec == 1, 1);
                 if ~isempty(firstIntInd)
                     switchTimeIndVec(firstIntInd - 1) = 1;
                 else
-                    switchTimeIndVec(find(self.switchSysTimeVec >=...
+                    switchTimeIndVec(find(switchTimeVec >=...
                         cutTimeVec(end), 1) - 1) = 1;
                 end
                 cutObj.linSysCVec = self.linSysCVec(switchTimeIndVec);
                 cutObj.x0Ellipsoid = self.x0Ellipsoid;
                 cutObj.isCut = true;
                 cutObj.isProj = false;
+                cutObj.isBackward = self.isbackward();
                 cutObj.projectionBasisMat = self.projectionBasisMat;
             end
         end
@@ -733,76 +688,42 @@ classdef ReachContinious < elltool.reach.AReach
         %%
         function [directionsCVec timeVec] = get_directions(self)
             import gras.ellapx.enums.EApproxType;
-            SData = self.ellTubeRel.getTuplesFilteredBy('approxType',...
+            import gras.ellapx.smartdb.F;
+            APPROX_TYPE = F.APPROX_TYPE;
+            SData = self.getEllTubeRel.getTuplesFilteredBy(APPROX_TYPE,...
                 EApproxType.External);
             directionsCVec = SData.ltGoodDirMat.';
             if nargout > 1
-                timeVec = cell2mat(SData.timeVec(1));
+                timeVec = SData.timeVec{1};
             end
         end
         %%
         function [trCenterMat timeVec] = get_center(self)
-            trCenterMat = cell2mat(self.ellTubeRel.aMat(1));
+            trCenterMat = self.getEllTubeRel.aMat{1};
             if nargout > 1
-                timeVec = cell2mat(self.ellTubeRel.timeVec(1));
+                timeVec = self.getEllTubeRel.timeVec{1};
             end
         end
         %%
         function [eaEllMat timeVec] = get_ea(self)
             import gras.ellapx.enums.EApproxType;
-            SData = self.ellTubeRel.getTuplesFilteredBy('approxType',...
-                EApproxType.External);
-            nTuples = SData.getNTuples();
-            if nTuples > 0
-                nTimes = numel(SData.timeVec{1});
-                for iTuple = nTuples : -1 : 1
-                    tupleCentMat = cell2mat(SData.aMat(iTuple));
-                    tupleMatArray = cell2mat(SData.QArray(iTuple));
-                    for jTime = nTimes : -1 : 1
-                        eaEllMat(iTuple, jTime) =...
-                            ellipsoid(tupleCentMat(:, jTime),...
-                            tupleMatArray(:, :, jTime));
-                    end
-                end
-            else
-                eaEllMat = [];
-            end
-            if nargout > 1
-                timeVec = cell2mat(SData.timeVec(1));
-            end
+            [eaEllMat timeVec] = self.getApprox(EApproxType.External);
         end
         %%
         function [iaEllMat timeVec] = get_ia(self)
             import gras.ellapx.enums.EApproxType;
-            SData = self.ellTubeRel.getTuplesFilteredBy('approxType',...
-                EApproxType.Internal);
-            nTuples = SData.getNTuples();
-            if nTuples > 0
-                nTimes = numel(SData.timeVec{1});
-                for iTuple = nTuples : -1 : 1
-                    tupleCentMat = cell2mat(SData.aMat(iTuple));
-                    tupleMatArray = cell2mat(SData.QArray(iTuple));
-                    for jTime = nTimes : -1 : 1
-                        iaEllMat(iTuple, jTime) =...
-                            ellipsoid(tupleCentMat(:, jTime),...
-                            tupleMatArray(:, :, jTime));
-                    end
-                end
-            else
-                iaEllMat = [];
-            end
-            if nargout > 1
-                timeVec = cell2mat(SData.timeVec(1));
-            end
+            [iaEllMat timeVec] = self.getApprox(EApproxType.Internal);
         end
         %
         function [goodCurvesCVec timeVec] = get_goodcurves(self)
             import gras.ellapx.enums.EApproxType;
-            SData = self.ellTubeRel.getTuplesFilteredBy('approxType',...
+            import gras.ellapx.smartdb.F;
+            APPROX_TYPE = F.APPROX_TYPE;
+            SData = self.getEllTubeRel.getTuplesFilteredBy(APPROX_TYPE,...
                 EApproxType.External);
             goodCurvesCVec = SData.xTouchCurveMat.';
             if nargout > 1
-                timeVec = cell2mat(SData.timeVec(1));
+                timeVec = SData.timeVec{1};
             end
         end
         %%
@@ -812,8 +733,8 @@ classdef ReachContinious < elltool.reach.AReach
             isOnesMat = flipud(sortrows(projMat)) == eye(size(projMat));
             isOk = all(isOnesMat(:));
             if ~isOk
-                throwerror(['Each column of projection matrix ',...
-                    'should be a unit vector.']);
+                throwerror('wrongInput', ['Each column of projection ',...
+                    'matrix should be a unit vector.']);
             end
             projSet = self.getProjSet(projMat);
             projObj = elltool.reach.ReachContinious();
@@ -823,6 +744,7 @@ classdef ReachContinious < elltool.reach.AReach
             projObj.linSysCVec = self.linSysCVec;
             projObj.isCut = self.isCut;
             projObj.isProj = true;
+            projObj.isBackward = self.isbackward();
             projObj.projectionBasisMat = projMat;
         end
         %%
@@ -832,16 +754,17 @@ classdef ReachContinious < elltool.reach.AReach
             import gras.ellapx.lreachuncert.probdyn.LReachProblemDynamicsFactory;
             import gras.ellapx.uncertcalc.EllApxBuilder;
             import modgen.common.throwerror;
+            import gras.ellapx.smartdb.F;
             %% check and analize input
             if nargin < 2
-                throwerror(['EVOLVE: insufficient number ',...
+                throwerror('wrongInput', ['insufficient number ',...
                     'of input arguments.']);
             end
             if nargin > 3
-                throwerror('EVOLVE: too much arguments.');
+                throwerror('wrongInput', 'too much arguments.');
             end
-            if self.isProj
-                throwerror(['EVOLVE: cannot compute ',...
+            if self.isprojection()
+                throwerror('wrongInput', ['cannot compute ',...
                     'the reach set for projection.']);
             end
             if nargin < 3
@@ -849,7 +772,7 @@ classdef ReachContinious < elltool.reach.AReach
                 oldLinSys = newLinSys;
             else
                 if ~(isa(linSys, 'elltool.linsys.LinSys'))
-                    throwerror(['REACH: first input argument ',...
+                    throwerror('wrongInput', ['first input argument ',...
                         'must be linear system object.']);
                 end
                 newLinSys = linSys;
@@ -859,17 +782,22 @@ classdef ReachContinious < elltool.reach.AReach
                 return;
             end
             if ~isa(newEndTime, 'double')
-                throwerror('EVOLVE: second argument must be double.');
+                throwerror('wrongInput',...
+                    'second argument must be double.');
             end
-            if newEndTime < self.switchSysTimeVec(end)
-                throwerror(['EVOLVE: new end time ',...
-                    'must be more than old one.']);
+            if (newEndTime < self.switchSysTimeVec(end) &&...
+                    ~self.isbackward()) ||...
+                    (newEndTime > self.switchSysTimeVec(end) &&...
+                    self.isbackward())
+                throwerror('wrongInput', ['new end time must be more ',...
+                    '(if forward) or less (if backward) than the old one.']);
             end
             if newLinSys.dimension() ~= oldLinSys.dimension()
-                throwerror(['EVOLVE: dimensions of the ',...
+                throwerror('wrongInput', ['dimensions of the ',...
                     'old and new linear systems do not match.']);
             end
             %%
+            APPROX_TYPE = F.APPROX_TYPE;
             newReachObj = elltool.reach.ReachContinious();
             newReachObj.switchSysTimeVec =...
                 [self.switchSysTimeVec newEndTime];
@@ -877,13 +805,14 @@ classdef ReachContinious < elltool.reach.AReach
             newReachObj.linSysCVec = [self.linSysCVec {newLinSys}];
             newReachObj.isCut = false;
             newReachObj.isProj = false;
+            newReachObj.isBackward = self.isbackward();
             newReachObj.projectionBasisMat = [];
             %% prepare ext/int data to evolve
             OldExtData =...
-                self.ellTubeRel.getTuplesFilteredBy('approxType',...
+                self.getEllTubeRel.getTuplesFilteredBy(APPROX_TYPE,...
                 EApproxType.External);
             OldIntData =...
-                self.ellTubeRel.getTuplesFilteredBy('approxType',...
+                self.getEllTubeRel.getTuplesFilteredBy(APPROX_TYPE,...
                 EApproxType.Internal);
             sysExtDimRows = size(OldExtData.QArray{1}, 1);
             sysExtDimCols = size(OldExtData.QArray{1}, 2);
@@ -926,38 +855,41 @@ classdef ReachContinious < elltool.reach.AReach
                 smartExtLinSys = self.getSmartLinSys(atStrCMat,...
                     btStrCMat, ptStrCMat, ptStrCVec, gtStrCMat,...
                     qtStrCMat, qtStrCVec, x0ExtMatArray(:, :, il0Num),...
-                    x0ExtVecMat(:, il0Num), newTimeVec,...
-                    relTol, isDisturbance);
+                    x0ExtVecMat(:, il0Num), [min(newTimeVec),...
+                    max(newTimeVec)], relTol, isDisturbance);
                 smartIntLinSys = self.getSmartLinSys(atStrCMat,...
                     btStrCMat, ptStrCMat, ptStrCVec, gtStrCMat,...
                     qtStrCMat, qtStrCVec, x0IntMatArray(:, :, il0Num),...
-                    x0IntVecMat(:, il0Num), newTimeVec,...
-                    relTol, isDisturbance);
+                    x0IntVecMat(:, il0Num), [min(newTimeVec),...
+                    max(newTimeVec)], relTol, isDisturbance);
                 ellTubeExtRelVec{il0Num} = self.makeEllTubeRel(...
-                    smartExtLinSys, l0ExtMat(:, il0Num), newTimeVec,...
-                    isDisturbance, relTol,...
-                    EApproxType.External);
+                    smartExtLinSys, l0ExtMat(:, il0Num),...
+                    [min(newTimeVec) max(newTimeVec)], isDisturbance,...
+                    relTol, EApproxType.External);
                 ellTubeIntRelVec{il0Num} = self.makeEllTubeRel(...
-                    smartIntLinSys, l0IntMat(:, il0Num), newTimeVec,...
-                    isDisturbance, relTol,...
-                    EApproxType.Internal);
+                    smartIntLinSys, l0IntMat(:, il0Num),...
+                    [min(newTimeVec) max(newTimeVec)], isDisturbance,...
+                    relTol, EApproxType.Internal);
                 dataCVec{il0Num} = ...
                     ellTubeIntRelVec{il0Num}.getTuplesFilteredBy(...
-                    'approxType', EApproxType.Internal).getData();
+                    APPROX_TYPE, EApproxType.Internal).getData();
                 dataCVec{l0VecNum + il0Num} = ...
                     ellTubeExtRelVec{il0Num}.getTuplesFilteredBy(...
-                    'approxType', EApproxType.External).getData();
+                    APPROX_TYPE, EApproxType.External).getData();
             end
             %% cat old and new ellTubeRel
             newEllTubeRel =...
                 gras.ellapx.smartdb.rels.EllTube.fromStructList(...
                 'gras.ellapx.smartdb.rels.EllTube', dataCVec);
+            if self.isbackward()
+                newEllTubeRel = self.rotateEllTubeRel(newEllTubeRel);
+            end
             newReachObj.ellTubeRel =...
-                self.ellTubeRel.cat(newEllTubeRel);
+                self.getEllTubeRel.cat(newEllTubeRel);
         end
         %%
         function ellTubeRel = getEllTubeRel(self)
-            ellTubeRel = self.ellTubeRel;
+            ellTubeRel = self.ellTubeRel.getCopy;
         end
         %%
         function eaScaleFactor = getEaScaleFactor(self)
@@ -966,6 +898,14 @@ classdef ReachContinious < elltool.reach.AReach
         %%
         function iaScaleFactor = getIaScaleFactor(self)
             iaScaleFactor = self.INTERNAL_SCALE_FACTOR;
+        end
+        %%
+        function x0Ell = getInitialSet(self)
+            x0Ell = self.x0Ellipsoid;
+        end
+        %%
+        function isBackward = isbackward(self)
+            isBackward = self.isBackward;
         end
     end
 end

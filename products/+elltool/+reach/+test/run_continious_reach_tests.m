@@ -10,7 +10,7 @@ confNameList = {'demo3firstTest', 'demo3secondTest',...
    'demo3thirdTest', 'demo3fourthTest'};
 % confNameList = {'demo3secondTest',...
 %    'demo3thirdTest', 'demo3fourthTest'};
-%confNameList = {'demo3firstTest'};
+confNameList = {'demo3firstTest'};
 %
 nConfs=length(confNameList);
 suiteList=cell(1,nConfs);

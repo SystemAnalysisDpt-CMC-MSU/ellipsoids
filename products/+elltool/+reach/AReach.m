@@ -5,6 +5,7 @@ classdef AReach < elltool.reach.IReach
         linSysCVec
         isCut
         isProj
+        isBackward
         projectionBasisMat
     end
     %
