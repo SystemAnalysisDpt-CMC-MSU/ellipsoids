@@ -22,7 +22,7 @@ function checkmultvar(typeSpec,nPlaceHolders,varargin)
 %           Moreover the condition nVars<=nPlaceHolders must hold.
 %       errorTag: char[1,] - tag for MException object thrown
 %           in case of error. If not specified
-%           '<CALLER_NAME>wrongInput' tag is used
+%           '<CALLER_NAME>:wrongInput' tag is used
 %       errorMessage: char[1,] - error message for MException object
 %           thrown in case of error. If not specified the message
 %           is generated automatically.
