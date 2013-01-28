@@ -32,6 +32,12 @@ classdef EllipsoidSecTestCase < mlunitext.test_case
             compareForIsInside([test1Ell test2Ell], test1Ell, 'i', 0);
             compareForIsInside([test1Ell test2Ell], [test1Ell test2Ell],...
                 [], 0);
+            [test1Ell, test2Ell] = createTypicalHighDimEll(11);
+            compareForIsInside([test1Ell test2Ell], test1Ell, 'i', 0);
+            compareForIsInside([test1Ell test2Ell], [test1Ell test2Ell],...
+                [], 0);
+            compareForIsInside([test1Ell test2Ell], [test1Ell test2Ell],...
+                'u', 0);
         end
         function self = testIsBadDirection(self)
             [test1Ell, test2Ell] = createTypicalEll(15);
@@ -46,6 +52,8 @@ classdef EllipsoidSecTestCase < mlunitext.test_case
             compareExpForIsBadDir(test1Ell, test2Ell,...
             [1, -1, 1000, 1000; 0, 0, 0.5, 0.5; 0, 0, -0.5, -1],...
             [1, -1, 0, 0; 1, -2, 1, 2; 7, 3, 2, 1]);
+            [test1Ell, test2Ell, aMat, bMat] = createTypicalHighDimEll(12);
+            compareExpForIsBadDir(test1Ell, test2Ell, aMat, bMat);
         end
         function self = testMinkmp_ea(self)
             compareAnalyticForMinkMp(true, false, 18, 5, 0, [])
@@ -179,6 +187,14 @@ end
 
 function [varargout] = createTypicalHighDimEll(flag)
     switch flag
+        case 11
+            varargout{1} = ellipsoid( zeros(100, 1), diag([5 * ones(1, 50), 2 * ones(1, 50)]));
+            varargout{2} = ellipsoid( ones(100, 1), diag([0.2 * ones(1, 50), 0.5 * ones(1, 50)]));
+        case 12
+            varargout{1} = ellipsoid( zeros(100, 1), diag([5 * ones(1, 50), 2 * ones(1, 50)]));
+            varargout{2} = ellipsoid( ones(100, 1), diag([0.2 * ones(1, 50), 0.5 * ones(1, 50)]));
+            varargout{3} = eye(100, 50);
+            varargout{4} = [zeros(50); eye(50)];        
         case 13
             varargout{1} = rand(100, 1);
             varargout{2} = diag([5 * ones(1, 50), 2 * ones(1, 50)]);
