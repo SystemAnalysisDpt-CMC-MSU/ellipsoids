@@ -54,6 +54,11 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             
             [isEqual, reportStr] = eq(resEllVec, resSensEllVec);
             mlunit.assert_equals(true, isEqual, reportStr);
+            
+            [testEllVec, resultEll] = createTypicalArray(1);
+            resEllVec = ellunion_ea(testEllVec);
+            [isEqual, reportStr] = eq(resEllVec, resultEll);
+            mlunit.assert_equals(true, isEqual, reportStr);
         end
         
         function self = testEllIntersectionIaSensitivity(self)
@@ -81,6 +86,11 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             resSensEllVec = ellintersection_ia(testEllVec);
             
             [isEqual, reportStr] = eq(resEllVec, resSensEllVec);
+            mlunit.assert_equals(true, isEqual, reportStr);
+            
+            [testEllVec, resultEll] = createTypicalArray(1);
+            resEllVec = ellintersection_ia(testEllVec);
+            [isEqual, reportStr] = eq(resEllVec, resultEll);
             mlunit.assert_equals(true, isEqual, reportStr);
         end
 
@@ -130,6 +140,11 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             testResVec = contains(testEll1Vec, testEll2Vec);
             mlunit.assert_equals(1, testResVec);
             
+            [testEll1Vec, testEll2Vec] = createTypicalArray(2);
+            testResVec = contains(testEll1Vec, testEll2Vec);
+            mlunit.assert_equals(0, any(testResVec(:)));
+            testResVec = contains(testEll2Vec, testEll1Vec);
+            mlunit.assert_equals(1, all(testResVec(:)));         
         end
         
         function self = testSqrtm(self)
@@ -227,7 +242,9 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             testResVec = isinternal(testEllVec, testPointVec, 'u');
             self.flexAssert(1, testResVec);
             
-            
+            [testEllVec, testPointVec] = createTypicalArray(3);
+            testResVec = isinternal(testEllVec, testPointVec, 'i');
+            self.flexAssert([1, 1, 1, 1, 0, 0, 0, 0], testResVec);
         end
         function self = testPolar(self)
 
@@ -463,6 +480,11 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             self.runAndCheckError ...
                 ('ellintersection_ia(testEllVec)','cvxError');
             
+            [testEllVec, resultEll] = createTypicalArray(1);
+            resEllVec = ellintersection_ia(testEllVec);
+            [isEqual, reportStr] = eq(resEllVec, resultEll);
+            mlunit.assert_equals(true, isEqual, reportStr);
+            
         end
         function self = testEllunionEa(self)
             self.setUpCheckSettings();
@@ -560,6 +582,11 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             self.flexAssert(true, contains(resEllVec, testEllVec(2)));
             [isEq, reportStr] = eq(resEllVec, ansEllVec);
             self.flexAssert(true, isEq, reportStr);
+            
+            [testEllVec, resultEll] = createTypicalArray(1);
+            resEllVec = ellunion_ea(testEllVec);
+            [isEqual, reportStr] = eq(resEllVec, resultEll);
+            mlunit.assert_equals(true, isEqual, reportStr);
         end
         function self = testHpIntersection(self)
             %empty intersection
@@ -672,7 +699,8 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             ansEllMat(1, 2) = ellipsoid([1, 0; 0, 0]);
             ansEllMat(2, 1) = ellipsoid([1, 0; 0, 0]);
             ansIsnIntersectedMat = [true, false; false, true];
-            self.flexAssert([true, true; true, true], eq(resEllMat, ansEllMat));
+            self.flexAssert([true, true; true, true], eq(resEllMat, ...
+                ansEllMat));
             self.flexAssert(ansIsnIntersectedMat, isnIntersected);
             
             %Arrays
@@ -689,6 +717,12 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             [resEllArr isnIntersecArr] = hpintersection(testEll, testHpArr);
             self.flexAssert(true([2,2,2]), isempty(resEllArr));
             self.flexAssert(true([2,2,2]), isnIntersecArr);
+            
+            [testEllArray, testHpArray, ansEllArray] = ...
+                createTypicalArray(4);
+            resEllArray = hpintersection(testEllArray, testHpArray);
+            testResArray = eq(resEllArray, ansEllArray);
+            self.flexAssert(true, all(testResArray(:)));
         end
         
         function self = testEllEnclose(self)
@@ -735,4 +769,50 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
     end
         
 end
-
+function [varargout] = createTypicalArray(flag)
+    switch flag
+        case 1
+            myInt = 3;
+            myEllArray(myInt, myInt, myInt, myInt, myInt, myInt, myInt) ...
+                = ellipsoid;
+            myEllArray(:, :, :, :, :, :, :) = ell_unitball(4);
+            varargout{1} = myEllArray;
+            varargout{2} = ell_unitball(4);
+        case 2
+            myInt = 3;
+            my1EllArray(myInt, myInt, myInt, myInt, myInt, myInt, myInt) ...
+                = ellipsoid;
+            my1EllArray(:, :, :, :, :, :, :) = ell_unitball(4);
+            my2EllArray(myInt, myInt, myInt, myInt, myInt, myInt, myInt) ...
+                = ellipsoid;
+            my2EllArray(:, :, :, :, :, :, :) = ellipsoid(zeros(4, 1), ...
+                diag( 2 * ones(1, 4)));
+            varargout{1} = my1EllArray;
+            varargout{2} = my2EllArray;
+        case 3
+            myInt = 3;
+            myEllArray(myInt, myInt, myInt, myInt, myInt, myInt) = ...
+                ellipsoid;
+            myEllArray( :, :, :, :, :, :) = ell_unitball(4);
+            myMat = 0.8 * eye(4);
+            myMat = [myMat, 1.2 * eye(4)];
+            varargout{1} = myEllArray;
+            varargout{2} = myMat;    
+        case 4
+            myInt = 3;
+            myEllArray(myInt, myInt, myInt, myInt, myInt, myInt, myInt) ...
+                = ellipsoid;
+            myEllArray(:, :, :, :, :, :, :) = ellipsoid(eye(3));
+            myHpArray(myInt, myInt, myInt, myInt, myInt, myInt, myInt) ...
+                = hyperplane;
+            myHpArray(:, :, :, :, :, :, :) = hyperplane([0, 0, 1].', 0);
+            ansEllArray(myInt, myInt, myInt, myInt, myInt, myInt, ...
+                myInt) = ellipsoid;
+            ansEllArray(:, :, :, :, :, :, :) = ...
+                ellipsoid([1, 0, 0; 0, 1, 0; 0, 0, 0]);
+            varargout{1} = myEllArray;
+            varargout{2} = myHpArray;    
+            varargout{3} = ansEllArray;
+        otherwise
+    end
+end
