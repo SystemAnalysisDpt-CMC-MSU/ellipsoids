@@ -62,7 +62,7 @@ if isscalar(inpEllArr)
     intApprEllVec = inpEllArr;
     return;
 end
-
+isVerbose=Properties.getIsVerbose();
 centVec =zeros(nDims,1);
 arrayfun(@(x) fAddCenter(x),inpEllArr);
 absTolArr = getAbsTol(inpEllArr);
@@ -86,7 +86,7 @@ arrayfun(@(x) fSingleDirection(x),1:nCols);
         import gras.la.mlorthtransl;
         shMat = inpEllArr(ellIndex).shape;
         if isdegenerate(inpEllArr(ellIndex))
-            if Properties.getIsVerbose()
+            if isVerbose
                 fprintf('MINKSUM_IA: Warning!');
                 fprintf(' Degenerate ellipsoid.\n');
                 fprintf('            Regularizing...\n')

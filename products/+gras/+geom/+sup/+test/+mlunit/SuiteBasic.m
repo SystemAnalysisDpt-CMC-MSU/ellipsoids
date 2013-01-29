@@ -11,6 +11,51 @@ classdef SuiteBasic < mlunitext.test_case
             
         end
         %
+        function testSupGeomDiff2dNegative(self)
+            N_DIRS=200;
+            import gras.geom.sup.supgeomdiff2d;
+            lMat=gras.geom.circlepart(N_DIRS).';
+            rho1Vec=ones(1,N_DIRS);
+            rho2Vec=ones(1,N_DIRS)*0.5;
+            %
+            check(@()supgeomdiff2d(rho2Vec,rho1Vec,lMat));
+            check(@()supgeomdiff2d(rho2Vec,rho1Vec,lMat.'));
+            check(@()supgeomdiff2d(rho2Vec,rho1Vec.',lMat));
+            check(@()supgeomdiff2d(rho2Vec.',rho1Vec.',lMat.'));
+            function check(fFail)
+            self.runAndCheckError(fFail,'wrongInput');
+            end
+            
+        end
+        function testSupGeomDiff2d(~)
+            N_DIRS=200;
+            EXP_TOL=1e-15;
+            EXP_MAX=0.612493409916315;
+            EXP_MIN=0.105572809000084;
+            
+            lMat=gras.geom.circlepart(N_DIRS).';
+            import gras.geom.sup.supgeomdiff2d;
+            import gras.geom.sup.sup2boundary2;
+            q1Mat=diag([1 2]);
+            q2Mat=diag([0.8 0.1]);
+            rho1Vec=rho(q1Mat);
+            rho2Vec=rho(q2Mat);
+            rhoDiffVec=supgeomdiff2d(rho1Vec,rho2Vec,lMat);
+            xBoundMat=sup2boundary2(lMat.',rhoDiffVec.');
+            line(xBoundMat([1:end,1],1),...
+                xBoundMat([1:end,1],2),'Color','g');
+            nDirsShift=fix(N_DIRS*0.5);
+            maxPeriodTol=max(abs(circshift(rhoDiffVec,[1 nDirsShift])...
+                -rhoDiffVec));
+            mlunit.assert(maxPeriodTol<=EXP_TOL);
+            mlunit.assert(abs(EXP_MAX-max(rhoDiffVec))<=EXP_TOL);
+            mlunit.assert(abs(EXP_MIN-min(rhoDiffVec))<=EXP_TOL);
+            %
+            function rhoVec=rho(qMat)
+                rhoVec=sqrt(sum((qMat*lMat).*lMat,1));
+            end
+        end
+        %
         function self=testSup2Boundary2(self)
             qMat=diag([1,2]);
             sMat=gras.la.orthtransl([1;0],[1;1]);
