@@ -428,8 +428,8 @@ function hVec=plotCreateFillPlotFunc(hAxes,X,faces,clrVec,isFill,...
 if ~isFill
     shade = 0;
 end
-h1 = plotPatch('Vertices',X','Faces',faces,'FaceAlpha',shade,'Parent',hAxes,'FaceColor',clrVec);
-set(h1, 'EdgeColor', clrVec, 'LineWidth', widVec);
+h1 = plotPatch('Vertices',X','Faces',faces,'Parent',hAxes);
+set(h1, 'EdgeColor', clrVec, 'LineWidth', widVec,'FaceAlpha',shade,'FaceColor',clrVec);
 hVec = h1;
 end
 function figureSetPropFunc(hFigure,figureName,~)

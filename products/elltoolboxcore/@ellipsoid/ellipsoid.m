@@ -138,7 +138,7 @@ classdef ellipsoid < handle
         res = my_color_table(ch)
         regQMat = regularize(qMat,absTol)
         clrDirsMat = rm_bad_directions(q1Mat, q2Mat, dirsMat)
-        isBadDirVec = isbaddirectionmat(q1Mat, q2Mat, dirsMat)
+        [isBadDirVec,pUniversal] = isbaddirectionmat(q1Mat, q2Mat, dirsMat)
     end
     methods(Access = private)
         propValMat = getProperty(hplaneMat,propName)

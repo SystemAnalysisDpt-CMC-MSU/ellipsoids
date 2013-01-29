@@ -1,4 +1,4 @@
-function isBadDirVec = isbaddirection(fstEll, secEll, dirsMat)
+function [isBadDirVec,pUniversalVec] = isbaddirection(fstEll, secEll, dirsMat)
 %
 % ISBADDIRECTION - checks if ellipsoidal approximations of geometric
 %                  difference of two ellipsoids can be computed for
@@ -41,6 +41,6 @@ if ~isbigger(fstEll, secEll)
     throwwarn('wrongInput:emptyGeomDiff', [fstErrMsg secErrMsg]);
     isBadDirVec = true(1,size(dirsMat,2));
 else    
-    isBadDirVec=ellipsoid.isbaddirectionmat(fstEll.shape,...
+    [isBadDirVec,pUniversalVec] = ellipsoid.isbaddirectionmat(fstEll.shape,...
         secEll.shape, dirsMat);
 end

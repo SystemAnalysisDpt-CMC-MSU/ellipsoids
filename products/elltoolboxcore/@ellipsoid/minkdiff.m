@@ -135,7 +135,7 @@ end
                     phiVec = linspace(0, 2*pi, fstEll.nPlot2dPoints);
                     lMat = ellipsoid.rm_bad_directions(fstEllShMat, ...
                         secEllShMat, [cos(phiVec); sin(phiVec)]);
-                    if size(lMat, 2) > 0
+                    if size(lMat, 2) > 1
                         [~, bpMat] = rho(fstEll, lMat);
                         [~, subBoundPointMat] = rho(secEll, lMat);
                         bpMat = bpMat - subBoundPointMat;
@@ -157,7 +157,7 @@ end
                     end
                     lMat = ellipsoid.rm_bad_directions(fstEllShMat,...
                         secEllShMat, lMat);
-                    if size(lMat, 2) > 0
+                    if size(lMat, 2) > 1
                         [~, boundPointMat] = rho(fstEll, lMat);
                         [~, subBoundPointMat] = rho(secEll, lMat);
                         boundPointMat = boundPointMat - subBoundPointMat;
@@ -166,14 +166,45 @@ end
                     end
             end
             boundPointMat = unique(boundPointMat','rows')';
+            ind = 0;
+            bndPntShMat = boundPointMat;
+            while ind < size(boundPointMat,2)-1
+                ind = ind+1;
+                bndPntShMat = circshift(bndPntShMat,[0 1]);
+                epsMat = bndPntShMat - boundPointMat;
+                isNulMat = abs(epsMat) > absTol;
+                indNulMat = sum(isNulMat) == 0;
+                indNul = find(indNulMat,1,'first');
+                if size(indNul,2)>0
+                    boundPointMat(:,indNul) = [];
+                    ind = 0;
+                    bndPntShMat = boundPointMat;
+                end
+                
+                
+            end
             if size(boundPointMat,2) < 2
+                boundPointMat = [];
+            end
+            if (size(boundPointMat,2) < 2)&&(nDim == 3)
                 isPlotCenter3d = true;
             end
-            xDifMat = {boundPointMat};
             if (size(boundPointMat,2)>0) 
-                fMat = {convhulln(boundPointMat')};
+                if nDim == 2
+                    temp = convhull(boundPointMat(1,:)',boundPointMat(2,:)');
+                    boundPointMat = boundPointMat(:,temp)';
+                    fMat = {[1:size(boundPointMat,1),1]};
+                    xDifMat = {boundPointMat'};
+                else
+                    xDifMat = {boundPointMat};
+                    fMat = {convhulln(boundPointMat')};
+                end
+                    
+                
+                
             else
                 fMat = {[]};
+                xDifMat = {[]};
             end
         end
     end

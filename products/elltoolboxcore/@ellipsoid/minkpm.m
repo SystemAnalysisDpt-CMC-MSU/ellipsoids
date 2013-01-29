@@ -209,12 +209,40 @@ end
             ind = min(~isnan(boundPointMat),[],1);
             index = 1:nCols;
             boundPointMat = boundPointMat(:,index(ind));
-            
-            xSumDifMat = {boundPointMat};
-            if (size(boundPointMat,2)>0)
-                fMat = {convhulln(boundPointMat')};
+            boundPointMat = unique(boundPointMat','rows')';
+            ind = 0;
+            bndPntShMat = boundPointMat;
+            while ind < size(boundPointMat,2)-1
+                ind = ind+1;
+                bndPntShMat = circshift(bndPntShMat,[0 1]);
+                epsMat = bndPntShMat - boundPointMat;
+                isNulMat = abs(epsMat) > absTol;
+                indNulMat = sum(isNulMat) == 0;
+                indNul = find(indNulMat,1,'first');
+                if size(indNul,2)>0
+                    boundPointMat(:,indNul) = [];
+                    ind = 0;
+                    bndPntShMat = boundPointMat;
+                end
+                
+                
+            end
+            if isempty(boundPointMat)
+                boundPointMat = [];
+            end
+            if (size(boundPointMat,2)>0) 
+                if nDim == 2
+                    temp = convhull(boundPointMat(1,:)',boundPointMat(2,:)');
+                else
+                    temp = convhull(boundPointMat(1,:)',boundPointMat(2,:)',boundPointMat(3,:)');
+                end
+                boundPointMat = boundPointMat(:,temp)';
+                plot(boundPointMat(:,1),boundPointMat(:,2))      
+                xSumDifMat = {boundPointMat'};
+                fMat = {[1:size(boundPointMat,1),1]};
             else
                 fMat = {[]};
+                xSumDifMat = {[]};
             end
             if (size(boundPointMat,2) < 2)&&(nDim == 3)
                 isPlotCenter3d = true;

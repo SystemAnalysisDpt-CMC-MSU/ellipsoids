@@ -64,7 +64,6 @@ function plObj = plot(varargin)
 import elltool.plot.plotgeombodyarr;
 N_PLOT_POINTS = 80;
 SPHERE_TRIANG_CONST = 3;
-varargin{:}
 [plObj,nDim,isHold]= plotgeombodyarr('ellipsoid',@fCalcBodyTriArr,@patch,varargin{:});
 if (nDim < 3)
     [reg]=...
