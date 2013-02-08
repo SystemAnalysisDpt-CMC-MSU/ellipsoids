@@ -116,19 +116,19 @@ classdef ElliIntUnionTCMultiDim < mlunitext.test_case
             self.flexAssert(true, all(testResArray(:)));
             [testEllArray, testHpArray, ansEllArray, ...
                 isnAnsIntersectedArray] = createTypicalArray(18);
-            [isnIntersectedArray, resEllArray] = ...
+            [resEllArray, isnIntersectedArray] = ...
                 hpintersection(testEllArray, testHpArray);
             testResArray = eq(resEllArray, ansEllArray);
             self.flexAssert(true, all(testResArray(:)));
             testResArray = eq(isnIntersectedArray, isnAnsIntersectedArray);
-            self.flexAssert(false, any(testResArray(:)));
+            self.flexAssert(true, all(testResArray(:)));
             [testEllArray, testHpArray, ansEllArray] = ...
                 createTypicalArray(19);
             resEllArray = hpintersection(testEllArray, testHpArray);
             testResArray = eq(resEllArray, ansEllArray);
             self.flexAssert(true, all(testResArray(:)));
             [testEllArray, testHpArray, errorStr] = ...
-                createTypicalArray(16);
+                createTypicalArray(20);
             self.runAndCheckError ...
                 ('resEllVec = hpintersection(testEllArray, testHpArray)',...
                 errorStr);
@@ -145,7 +145,14 @@ function [varargout] = createTypicalArray(flag)
     switch flag
         case 1
             myEllArray(2, 7, 3, 8, 4, 1, 4) = ellipsoid;
-            myEllArray(:, :, :, :, :, :, :) = ell_unitball(3);
+            nPosition = 2 * 7 * 3 * 8 * 4 * 1 * 4;
+            myCArray = cell(1, nPosition);
+            for indPosition = 1 : nPosition
+                myCArray{indPosition} = 3;
+            end
+            myEllCArray = cellfun(@ell_unitball, myCArray, ...
+                'UniformOutput', false);
+            myEllArray = reshape([myEllCArray{:}], size(myEllArray));
             varargout{1} = myEllArray;
             varargout{2} = ell_unitball(3);
         case 2
@@ -284,9 +291,11 @@ function [varargout] = createTypicalArray(flag)
             myEllArray(1, 1, 1, 1, 1, 7, 1, 1, 7) = ellipsoid;
             myEllArray(:, :, :, :, :, :, :, :, :) = ell_unitball(4);
             myHpArray(1, 1, 1, 1, 1, 7, 1, 1, 7) = hyperplane;
-            myHpArray(:, :, :, :, :, :, :) = hyperplane([0, 0, 0, 1].', 0);
-            ansEllArray(3, 3, 3, 3, 3, 3, 3) = ellipsoid;
-            ansEllArray(:, :, :, :, :, :, :) = ellipsoid([1, 0, 0, 0; 0, 1, 0, 0; 0, 0, 1, 0; 0, 0, 0, 0]);
+            myHpArray(:, :, :, :, :, :, :, :, :) = ...
+                hyperplane([0, 0, 0, 1].', 0);
+            ansEllArray(1, 1, 1, 1, 1, 7, 1, 1, 7) = ellipsoid;
+            ansEllArray(:, :, :, :, :, :, :, :, :) = ...
+                ellipsoid([1, 0, 0, 0; 0, 1, 0, 0; 0, 0, 1, 0; 0, 0, 0, 0]);
             varargout{1} = myEllArray;
             varargout{2} = myHpArray;    
             varargout{3} = ansEllArray;
@@ -306,8 +315,17 @@ function [varargout] = createTypicalArray(flag)
             myHpArray(3, 3, 3, 3, 3, 3) = hyperplane;
             myHpArray(:, :, :, :, :, :) = hyperplane([0, 0, 1, 0].', 0);
             ansEllArray(3, 3, 3, 3, 3, 3) = ellipsoid;
-            ansEllArray(:, :, :, :, :, :) = ellipsoid([1, 0, 0, 0; 0, 1, 0, 0; 0, 0, 0, 0; 0, 0, 0, 1]);
-            ansEllArray(1, 1, 1, 1, 1, 3) = ellipsoid([0 0 0 0].', diag( zeros(1, 4)));
+            myMat = [1, 0, 0, 0; 0, 1, 0, 0; 0, 0, 0, 0; 0, 0, 0, 1];
+            ansEllArray(:, :, :, :, :, :) = ellipsoid(myMat);
+            ansEllArray(1, 1, 1, 1, 1, 1) = ellipsoid([0 0 0 1].', myMat);
+            ansEllArray(1, 1, 1, 1, 1, 2) = ellipsoid([0 0 0 -1].', myMat);
+            ansEllArray(1, 1, 1, 1, 1, 3) = ellipsoid([0 0 0 0].', ...
+                diag( zeros(1, 4)));
+            ansEllArray(1, 1, 1, 1, 2, 1) = ellipsoid([0 0 0 0].', zeros(4));
+            ansEllArray(1, 1, 1, 1, 2, 2) = ellipsoid([0 1 0 0].', myMat);
+            ansEllArray(1, 1, 1, 1, 2, 3) = ellipsoid([0 -1 0 0].', myMat);
+            ansEllArray(1, 1, 1, 1, 3, 1) = ellipsoid([1 0 0 0].', myMat);
+            ansEllArray(1, 1, 1, 1, 3, 2) = ellipsoid([-1 0 0 0].', myMat);
             varargout{1} = myEllArray;
             varargout{2} = myHpArray;    
             varargout{3} = ansEllArray;
