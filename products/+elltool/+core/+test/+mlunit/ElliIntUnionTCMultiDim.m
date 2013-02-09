@@ -144,8 +144,8 @@ end
 function [varargout] = createTypicalArray(flag)
     switch flag
         case 1
-            myEllArray(2, 7, 3, 8, 4, 1, 4) = ellipsoid;
-            nPosition = 2 * 7 * 3 * 8 * 4 * 1 * 4;
+            myEllArray(2, 1, 3, 2, 1, 1, 4) = ellipsoid;
+            nPosition = 2 * 3 * 2 * 4;
             myCArray = cell(1, nPosition);
             for indPosition = 1 : nPosition
                 myCArray{indPosition} = 3;
@@ -156,7 +156,7 @@ function [varargout] = createTypicalArray(flag)
             varargout{1} = myEllArray;
             varargout{2} = ell_unitball(3);
         case 2
-            myEllArray(1, 2, 7, 3, 8) = ellipsoid;
+            myEllArray(1, 2, 4, 3, 2) = ellipsoid;
             myEllArray(:, :, :, :, :) = ell_unitball(2);
             varargout{1} = myEllArray;
             varargout{2} = ell_unitball(2);
@@ -167,7 +167,7 @@ function [varargout] = createTypicalArray(flag)
             varargout{2} = ell_unitball(4);
         case 4
             myMat = diag(ones(1, 4));
-            myEllArray(3, 3, 3, 3, 3, 3) = ellipsoid;
+            myEllArray(2, 1, 1, 2, 3, 3) = ellipsoid;
             myEllArray(:, :, :, :, :, :) = ell_unitball(4);
             myEllArray(1, 1, 1, 1, 1, 1) = ellipsoid([0 0 0 1].', myMat);
             myEllArray(1, 1, 1, 1, 1, 2) = ellipsoid([0 0 0 -1].', myMat);
@@ -181,7 +181,7 @@ function [varargout] = createTypicalArray(flag)
             varargout{2} = ellipsoid([0; 0; 0; 0], diag(4 * ones(1, 4)));
         case 5
             myMat = diag(ones(1, 4));
-            myEllArray(3, 3, 3, 3, 3, 3) = ellipsoid;
+            myEllArray(2, 1, 1, 2, 3, 3) = ellipsoid;
             myEllArray(:, :, :, :, :, :) = ell_unitball(4);
             myEllArray(1, 1, 1, 1, 1, 1) = ellipsoid([0 0 0 1].', myMat);
             myEllArray(1, 1, 1, 1, 1, 2) = ellipsoid([0 0 0 -1].', myMat);
@@ -202,41 +202,41 @@ function [varargout] = createTypicalArray(flag)
             varargout{1} = myEllArray;
             varargout{2} = 'cvxError';
         case 7
-            myEllArray(2, 7, 3, 8, 4, 1, 4) = ellipsoid;
+            myEllArray(2, 1, 1, 1, 3, 1, 1) = ellipsoid;
             myEllArray(:, :, :, :, :, :, :) = ell_unitball(3);
             varargout{1} = myEllArray;
             varargout{2} = myEllArray;
         case 8
-            my1EllArray(1, 2, 7, 3, 8, 4) = ellipsoid;
+            my1EllArray(1, 2, 3, 1, 2, 1) = ellipsoid;
             my1EllArray(:, :, :, :, :, :) = ell_unitball(2);
-            my2EllArray(1, 2, 7, 3, 8, 4) = ellipsoid;
+            my2EllArray(1, 2, 3, 1, 2, 1) = ellipsoid;
             my2EllArray(:, :, :, :, :, :) = ellipsoid(zeros(2, 1), ...
                 diag( 1.1 * ones(1, 2)));
             varargout{1} = my1EllArray;
             varargout{2} = my2EllArray;
         case 9
-            my1EllArray(1, 1, 1, 1, 1, 7, 1, 1, 7) = ellipsoid;
+            my1EllArray(1, 1, 1, 1, 1, 4, 1, 1, 3) = ellipsoid;
             my1EllArray(:, :, :, :, :, :, :, :, :) = ell_unitball(4);
-            my2EllArray(1, 1, 1, 1, 1, 7, 1, 1, 7) = ellipsoid;
+            my2EllArray(1, 1, 1, 1, 1, 4, 1, 1, 3) = ellipsoid;
             my2EllArray(:, :, :, :, :, :, :, :, :) = ellipsoid(3 * ones(4, 1), ...
                 diag( 64 * ones(1, 4)));
             varargout{1} = my1EllArray;
             varargout{2} = my2EllArray;
         case 10
-            my1EllArray(3, 3, 3, 3, 3, 3, 3) = ellipsoid;
+            my1EllArray(2, 1, 1, 1, 1, 3, 1) = ellipsoid;
             my1EllArray(:, :, :, :, :, :, :) = ell_unitball(4);
-            my2EllArray(3, 3, 3, 3, 3, 3, 3) = ellipsoid;
+            my2EllArray(2, 1, 1, 1, 1, 3, 1) = ellipsoid;
             my2EllArray(:, :, :, :, :, :, :) = ellipsoid(5 * ones(4, 1), ...
                 diag( 2 * ones(1, 4)));
             varargout{1} = my1EllArray;
             varargout{2} = my2EllArray;
         case 11
-            myEllArray(2, 7, 3, 8, 4, 1, 4) = ellipsoid;
+            myEllArray(2, 3, 2, 1, 1, 1, 4) = ellipsoid;
             myEllArray(:, :, :, :, :, :, :) = ell_unitball(3);
             varargout{1} = myEllArray;
             varargout{2} = 0.9 * eye(3);
         case 12
-            myEllArray(1, 2, 7, 3, 8, 4) = ellipsoid;
+            myEllArray(1, 2, 2, 3, 1, 4) = ellipsoid;
             myEllArray(:, :, :, :, :, :) = ell_unitball(2);
             varargout{1} = myEllArray;
             varargout{2} = 1.1 * eye(2);
@@ -246,7 +246,7 @@ function [varargout] = createTypicalArray(flag)
             varargout{1} = myEllArray;
             varargout{2} = 0.9 * eye(5);
         case 14
-            myEllArray(3, 3, 3, 3, 3, 3) = ellipsoid;
+            myEllArray(2, 1, 2, 1, 3, 3) = ellipsoid;
             myEllArray( :, :, :, :, :, :) = ell_unitball(4);
             myMat = 0.9 * eye(4);
             myMat = [myMat, 1.1 * eye(4)];
@@ -254,7 +254,7 @@ function [varargout] = createTypicalArray(flag)
             varargout{2} = myMat;
         case 15
             myMat = eye(4);
-            myEllArray(3, 3, 3, 3, 3, 3) = ellipsoid;
+            myEllArray(2, 1, 2, 1, 3, 3) = ellipsoid;
             myEllArray(:, :, :, :, :, :) = ell_unitball(4);
             myEllArray(1, 1, 1, 1, 1, 1) = ellipsoid([0 0 0 1].', myMat);
             myEllArray(1, 1, 1, 1, 1, 2) = ellipsoid([0 0 0 -1].', myMat);
@@ -268,21 +268,21 @@ function [varargout] = createTypicalArray(flag)
             varargout{1} = myEllArray;
             varargout{2} = myMat;
         case 16
-            myEllArray(2, 7, 3, 8, 4, 1, 4) = ellipsoid;
+            myEllArray(2, 2, 3, 1, 1, 1, 4) = ellipsoid;
             myEllArray(:, :, :, :, :, :, :) = ell_unitball(3);
-            myHpArray(2, 7, 3, 8, 4, 1, 4) = hyperplane;
+            myHpArray(2, 2, 3, 1, 1, 1, 4) = hyperplane;
             myHpArray(:, :, :, :, :, :, :) = hyperplane([0, 0, 1].', 0);
-            ansEllArray(2, 7, 3, 8, 4, 1, 4) = ellipsoid;
+            ansEllArray(2, 2, 3, 1, 1, 1, 4) = ellipsoid;
             ansEllArray(:, :, :, :, :, :, :) = ellipsoid([1, 0, 0; 0, 1, 0; 0, 0, 0]);
             varargout{1} = myEllArray;
             varargout{2} = myHpArray;    
             varargout{3} = ansEllArray;
         case 17
-            myEllArray(1, 2, 7, 3, 8, 4) = ellipsoid;
+            myEllArray(1, 2, 2, 3, 1, 4) = ellipsoid;
             myEllArray(:, :, :, :, :, :) = ell_unitball(2);
-            myHpArray(1, 2, 7, 3, 8, 4) = hyperplane;
+            myHpArray(1, 2, 2, 3, 1, 4) = hyperplane;
             myHpArray(:, :, :, :, :, :) = hyperplane([0, 1].', 0);
-            ansEllArray(1, 2, 7, 3, 8, 4) = ellipsoid;
+            ansEllArray(1, 2, 2, 3, 1, 4) = ellipsoid;
             ansEllArray(:, :, :, :, :, :) = ellipsoid([1, 0; 0, 0]);
             varargout{1} = myEllArray;
             varargout{2} = myHpArray;    
@@ -302,7 +302,7 @@ function [varargout] = createTypicalArray(flag)
             varargout{4} = false(1, 1, 1, 1, 1, 7, 1, 1, 7);
         case 19
             myMat = diag(ones(1, 4));
-            myEllArray(3, 3, 3, 3, 3, 3) = ellipsoid;
+            myEllArray(2, 1, 1, 3, 3, 3) = ellipsoid;
             myEllArray(:, :, :, :, :, :) = ell_unitball(4);
             myEllArray(1, 1, 1, 1, 1, 1) = ellipsoid([0 0 0 1].', myMat);
             myEllArray(1, 1, 1, 1, 1, 2) = ellipsoid([0 0 0 -1].', myMat);
@@ -312,9 +312,9 @@ function [varargout] = createTypicalArray(flag)
             myEllArray(1, 1, 1, 1, 2, 3) = ellipsoid([0 -1 0 0].', myMat);
             myEllArray(1, 1, 1, 1, 3, 1) = ellipsoid([1 0 0 0].', myMat);
             myEllArray(1, 1, 1, 1, 3, 2) = ellipsoid([-1 0 0 0].', myMat);
-            myHpArray(3, 3, 3, 3, 3, 3) = hyperplane;
+            myHpArray(2, 1, 1, 3, 3, 3) = hyperplane;
             myHpArray(:, :, :, :, :, :) = hyperplane([0, 0, 1, 0].', 0);
-            ansEllArray(3, 3, 3, 3, 3, 3) = ellipsoid;
+            ansEllArray(2, 1, 1, 3, 3, 3) = ellipsoid;
             myMat = [1, 0, 0, 0; 0, 1, 0, 0; 0, 0, 0, 0; 0, 0, 0, 1];
             ansEllArray(:, :, :, :, :, :) = ellipsoid(myMat);
             ansEllArray(1, 1, 1, 1, 1, 1) = ellipsoid([0 0 0 1].', myMat);
@@ -330,9 +330,9 @@ function [varargout] = createTypicalArray(flag)
             varargout{2} = myHpArray;    
             varargout{3} = ansEllArray;
         case 20
-            myEllArray(3, 3, 3, 3, 3, 3, 3) = ellipsoid;
+            myEllArray(2, 2, 3, 1, 1, 1, 4) = ellipsoid;
             myEllArray(:, :, :, :, :, :, :) = ellipsoid(eye(3));
-            myHpArray(3, 3, 3, 3, 3, 3, 3) = hyperplane;
+            myHpArray(2, 2, 3, 1, 1, 1, 4) = hyperplane;
             myHpArray(:, :, :, :, :, :, :) = hyperplane([0, 0, 1].', -2);
             varargout{1} = myEllArray;
             varargout{2} = myHpArray;    
