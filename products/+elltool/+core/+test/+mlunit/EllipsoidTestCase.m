@@ -714,7 +714,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
             
             %Check dim=5
             testEllipsoid=ellipsoid(4*ones(5,1),eye(5,5));
-            isTestRes=( (volume(testEllipsoid)-(256*pi*pi/15)<=absTol ) );
+            isTestRes=( (volume(testEllipsoid)-(8*pi*pi/15)<=absTol ) );
             mlunit.assert_equals(true, isTestRes);
             
             %Check dim=6
