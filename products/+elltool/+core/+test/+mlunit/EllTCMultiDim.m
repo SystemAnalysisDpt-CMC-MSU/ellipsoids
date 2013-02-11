@@ -416,6 +416,17 @@ classdef EllTCMultiDim < mlunitext.test_case
             testResArray = le(test1EllArray, test2EllArray);
             mlunit.assert_equals(~ansLogicalArray, testResArray);
         end
+        function self = testPropertyGetters(self)
+            [myEllArray, testAbsTolArray, testRelTolArray, ...
+                testNPlot2dPointsArray, testNPlot3dPointsArray] = ...
+                createTypicalArray(18);
+            mlunit.assert_equals(testAbsTolArray, myEllArray.getAbsTol());
+            mlunit.assert_equals(testRelTolArray, myEllArray.getRelTol());
+            mlunit.assert_equals(testNPlot2dPointsArray, ...
+                myEllArray.getNPlot2dPoints());
+            mlunit.assert_equals(testNPlot3dPointsArray, ...
+                myEllArray.getNPlot3dPoints());
+        end
     end
 end
 function [varargout] = createTypicalArray(flag)
@@ -614,7 +625,36 @@ function [varargout] = createTypicalArray(flag)
             varargout{1} = my1EllArray;
             varargout{2} = my2EllArray;
             varargout{3} = ansLogicalArray;
-            varargout{4} = reportStr;          
+            varargout{4} = reportStr;
+        case 18
+            arraySize = [1, 1, 2, 1, 1, 1, 1, 1, 2, 1];
+            ellCenter = ones(10, 1);
+            ellMat = rand(10);
+            ellMat = ellMat * ellMat.';
+            testAbsTol = 3;
+            testRelTol = 0.4;
+            testNPlot2dPoints = 40;
+            testNPlot3dPoints = 100;
+            args = {ellCenter, ellMat, 'absTol', testAbsTol, 'relTol', ...
+                testRelTol, 'nPlot2dPoints', testNPlot2dPoints,...
+                'nPlot3dPoints', testNPlot3dPoints};
+            myEllArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1) = ellipsoid(args{:});
+            myEllArray(1, 1, 1, 1, 1, 1, 1, 1, 2, 1) = ellipsoid(args{:});
+            myEllArray(1, 1, 2, 1, 1, 1, 1, 1, 1, 1) = ellipsoid(args{:});
+            myEllArray(1, 1, 2, 1, 1, 1, 1, 1, 2, 1) = ellipsoid(args{:});
+            testAbsTolArray = createObjectArray(arraySize, @repmat, ... 
+                testAbsTol, 1, 2);
+            testRelTolArray = createObjectArray(arraySize, @repmat, ... 
+                testRelTol, 1, 2);
+            testNPlot2dPointsArray = createObjectArray(arraySize, @repmat, ... 
+                testNPlot2dPoints, 1, 2);
+            testNPlot3dPointsArray = createObjectArray(arraySize, @repmat, ... 
+                testNPlot3dPoints, 1, 2);
+            varargout{1} = myEllArray;
+            varargout{2} = testAbsTolArray;
+            varargout{3} = testRelTolArray;
+            varargout{4} = testNPlot2dPointsArray;
+            varargout{5} = testNPlot3dPointsArray;
         otherwise
     end
 end
