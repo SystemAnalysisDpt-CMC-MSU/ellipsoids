@@ -416,11 +416,6 @@ classdef EllTCMultiDim < mlunitext.test_case
             testResArray = le(test1EllArray, test2EllArray);
             mlunit.assert_equals(~ansLogicalArray, testResArray);
         end
-        function self = testMinkpm_ea(self)
-%             resEll = minkmp_ea(test1EllArray, test2EllArray, eye(5));
-         
-            
-        end
     end
 end
 function [varargout] = createTypicalArray(flag)
@@ -619,105 +614,7 @@ function [varargout] = createTypicalArray(flag)
             varargout{1} = my1EllArray;
             varargout{2} = my2EllArray;
             varargout{3} = ansLogicalArray;
-            varargout{4} = reportStr;            
-            
-%         case 14
-%             arraySize = [2, 1, 2, 1, 3, 3];
-%             myEllArray = createObjectArray(arraySize, @ell_unitball, ... 
-%                 4, 1, 1);
-%             myMat = 0.9 * eye(4);
-%             myMat = [myMat, 1.1 * eye(4)];
-%             varargout{1} = myEllArray;
-%             varargout{2} = myMat;
-%         case 15
-%             myMat = eye(4);
-%             arraySize = [2, 1, 2, 1, 3, 3];
-%             myEllArray = createObjectArray(arraySize, @ell_unitball, ... 
-%                 4, 1, 1);
-%             myEllArray(1, 1, 1, 1, 1, 1) = ellipsoid([0 0 0 1].', myMat);
-%             myEllArray(1, 1, 1, 1, 1, 2) = ellipsoid([0 0 0 -1].', myMat);
-%             myEllArray(1, 1, 1, 1, 1, 3) = ellipsoid([0 0 1 0].', myMat);
-%             myEllArray(1, 1, 1, 1, 2, 1) = ellipsoid([0 0 -1 0].', myMat);
-%             myEllArray(1, 1, 1, 1, 2, 2) = ellipsoid([0 1 0 0].', myMat);
-%             myEllArray(1, 1, 1, 1, 2, 3) = ellipsoid([0 -1 0 0].', myMat);
-%             myEllArray(1, 1, 1, 1, 3, 1) = ellipsoid([1 0 0 0].', myMat);
-%             myEllArray(1, 1, 1, 1, 3, 2) = ellipsoid([-1 0 0 0].', myMat);
-%             myMat = [0.9 * eye(4), 1.9 * eye(4), zeros(4, 1)];
-%             varargout{1} = myEllArray;
-%             varargout{2} = myMat;
-%         case 16
-%             arraySize = [2, 2, 3, 1, 1, 1, 4];
-%             myEllArray = createObjectArray(arraySize, @ell_unitball, ... 
-%                 3, 1, 1);
-%             myHpArray = createObjectArray(arraySize, @hyperplane, ... 
-%                 [0, 0, 1].', 0, 2);
-%             ansEllArray = createObjectArray(arraySize, @ellipsoid, ... 
-%                 [1, 0, 0; 0, 1, 0; 0, 0, 0], 1, 1);
-%             varargout{1} = myEllArray;
-%             varargout{2} = myHpArray;    
-%             varargout{3} = ansEllArray;
-%         case 17
-%             arraySize = [1, 2, 2, 3, 1, 4];
-%             myEllArray = createObjectArray(arraySize, @ell_unitball, ... 
-%                 2, 1, 1);
-%             myHpArray = createObjectArray(arraySize, @hyperplane, ... 
-%                 [0, 1].', 0, 2);
-%             ansEllArray = createObjectArray(arraySize, @ellipsoid, ... 
-%                 [1, 0; 0, 0], 1, 1);
-%             varargout{1} = myEllArray;
-%             varargout{2} = myHpArray;    
-%             varargout{3} = ansEllArray;
-%         case 18
-%             arraySize = [1, 1, 1, 1, 1, 7, 1, 1, 7];
-%             myEllArray = createObjectArray(arraySize, @ell_unitball, ... 
-%                 4, 1, 1);
-%             myHpArray = createObjectArray(arraySize, @hyperplane, ... 
-%                 [0, 0, 0, 1].', 0, 2);
-%             ansEllArray = createObjectArray(arraySize, @ellipsoid, ... 
-%                 [1, 0, 0, 0; 0, 1, 0, 0; 0, 0, 1, 0; 0, 0, 0, 0], 1, 1);
-%             varargout{1} = myEllArray;
-%             varargout{2} = myHpArray;    
-%             varargout{3} = ansEllArray;
-%             varargout{4} = false(1, 1, 1, 1, 1, 7, 1, 1, 7);
-%         case 19
-%             myMat = diag(ones(1, 4));
-%             arraySize = [2, 1, 1, 3, 3, 3];
-%             myEllArray = createObjectArray(arraySize, @ell_unitball, ... 
-%                 4, 1, 1);
-%             myEllArray(1, 1, 1, 1, 1, 1) = ellipsoid([0 0 0 1].', myMat);
-%             myEllArray(1, 1, 1, 1, 1, 2) = ellipsoid([0 0 0 -1].', myMat);
-%             myEllArray(1, 1, 1, 1, 1, 3) = ellipsoid([0 0 1 0].', myMat);
-%             myEllArray(1, 1, 1, 1, 2, 1) = ellipsoid([0 0 -1 0].', myMat);
-%             myEllArray(1, 1, 1, 1, 2, 2) = ellipsoid([0 1 0 0].', myMat);
-%             myEllArray(1, 1, 1, 1, 2, 3) = ellipsoid([0 -1 0 0].', myMat);
-%             myEllArray(1, 1, 1, 1, 3, 1) = ellipsoid([1 0 0 0].', myMat);
-%             myEllArray(1, 1, 1, 1, 3, 2) = ellipsoid([-1 0 0 0].', myMat);
-%             myHpArray = createObjectArray(arraySize, @hyperplane, ... 
-%                 [0, 0, 1, 0].', 0, 2);
-%             myMat = [1, 0, 0, 0; 0, 1, 0, 0; 0, 0, 0, 0; 0, 0, 0, 1];
-%             ansEllArray = createObjectArray(arraySize, @ellipsoid, ... 
-%                 myMat, 1, 1);
-%             ansEllArray(1, 1, 1, 1, 1, 1) = ellipsoid([0 0 0 1].', myMat);
-%             ansEllArray(1, 1, 1, 1, 1, 2) = ellipsoid([0 0 0 -1].', myMat);
-%             ansEllArray(1, 1, 1, 1, 1, 3) = ellipsoid([0 0 0 0].', ...
-%                 diag( zeros(1, 4)));
-%             ansEllArray(1, 1, 1, 1, 2, 1) = ellipsoid([0 0 0 0].', zeros(4));
-%             ansEllArray(1, 1, 1, 1, 2, 2) = ellipsoid([0 1 0 0].', myMat);
-%             ansEllArray(1, 1, 1, 1, 2, 3) = ellipsoid([0 -1 0 0].', myMat);
-%             ansEllArray(1, 1, 1, 1, 3, 1) = ellipsoid([1 0 0 0].', myMat);
-%             ansEllArray(1, 1, 1, 1, 3, 2) = ellipsoid([-1 0 0 0].', myMat);
-%             varargout{1} = myEllArray;
-%             varargout{2} = myHpArray;    
-%             varargout{3} = ansEllArray;
-%         case 20
-%             arraySize = [2, 2, 3, 1, 1, 1, 4];
-%             myEllArray = createObjectArray(arraySize, @ell_unitball, ... 
-%                 3, 1, 1);
-%             myHpArray = createObjectArray(arraySize, @hyperplane, ... 
-%                 [0, 0, 1].', -2, 2);
-%             varargout{1} = myEllArray;
-%             varargout{2} = myHpArray;    
-%             varargout{3} = 'degenerateEllipsoid';
+            varargout{4} = reportStr;          
         otherwise
     end
 end
