@@ -335,22 +335,31 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
                 cutTimeVec = [cutTimeVec(1) cutTimeVec(1)];
             end
             if numel(cutTimeVec) ~= 2
-                throwerror(['Cut:input vector should ',...
-                    'contain 1 or 2 elements']);
+                throwerror('wrongInput', ['input vector should ',...
+                    'contain 1 or 2 elements.']);
             end
             cutStartTime = cutTimeVec(1);
             cutEndTime = cutTimeVec(2);
             if cutStartTime > cutEndTime
-                throwerror('Cut:s0 must be LEQ than s1');
+                throwerror('wrongInput', 's0 must be LEQ than s1.');
             end
             timeVec = self.timeVec{1};
             sysStartTime = timeVec(1);
             sysEndTime = timeVec(end);
-            if cutStartTime < sysStartTime ||...
-                    cutStartTime > sysEndTime ||...
-                    cutEndTime < sysStartTime ||...
-                    cutEndTime > sysEndTime
-                throwerror('Cut:wrong input format');
+            if sysStartTime < sysEndTime
+                if cutStartTime < sysStartTime ||...
+                        cutStartTime > sysEndTime ||...
+                        cutEndTime < sysStartTime ||...
+                        cutEndTime > sysEndTime
+                    throwerror('wrongInput', 'wrong input format.');
+                end
+            else
+                if cutStartTime > sysStartTime ||...
+                        cutStartTime < sysEndTime ||...
+                        cutEndTime > sysStartTime ||...
+                        cutEndTime < sysEndTime
+                    throwerror('wrongInput', 'wrong input format.');
+                end
             end
             if cutTimeVec(1) == cutTimeVec(2)
                 indClosestVec = find(timeVec <= cutStartTime, 1, 'last');
@@ -358,8 +367,11 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
                 isSysNewTimeIndVec(indClosestVec) = true;
             else
                 isSysTimeLowerVec = timeVec < cutStartTime;
-                isSysTimeGreaterVec = timeVec > cutEndTime;    
-                isSysNewTimeIndVec =...
+                isSysTimeGreaterVec = timeVec > cutEndTime;  
+                [unTimeVec, unVec, notUnVec] = unique(timeVec);
+                isSysNewTimeIndVec = false(size(timeVec));
+                isSysNewTimeIndVec(unVec) = true;
+                isSysNewTimeIndVec = isSysNewTimeIndVec &...
                     ~(isSysTimeLowerVec | isSysTimeGreaterVec);
             end
             %
