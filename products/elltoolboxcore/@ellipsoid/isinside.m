@@ -116,6 +116,9 @@ if isa(secObjArr, 'polytope')
     return;
 end
 
+nEllipsoids = numel(secObjArr);
+secObjArr  = reshape(secObjArr, 1, nEllipsoids);
+
 if mode == 'u'
     res = 1;
     isContain = arrayfun(@(x) all(all(contains(x, secObjArr))), fstEllArr);
