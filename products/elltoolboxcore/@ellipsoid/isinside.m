@@ -204,15 +204,15 @@ minimize(xVec'*invQMat*xVec + 2*(-invQMat*qVec)'*xVec + ...
     (qVec'*invQMat*qVec - 1))
 subject to
 for iCount = 1:nNumel
-        [qVec, invQMat] = parameters(fstEllArr(iCount));
+        [qiVec, invQiMat] = parameters(fstEllArr(iCount));
         if isdegenerate(fstEllArr(iCount))
-            invQMat = ...
-                ellipsoid.regularize(invQMat,getAbsTol(fstEllArr(iCount)));
+            invQiMat = ...
+                ellipsoid.regularize(invQiMat,getAbsTol(fstEllArr(iCount)));
         end
-        invQMat = ell_inv(invQMat);
-        invQMat = 0.5*(invQMat + invQMat');
-        xVec'*invQMat*xVec + 2*(-invQMat*qVec)'*xVec + ...
-            (qVec'*invQMat*qVec - 1) <= 0;
+        invQiMat = ell_inv(invQiMat);
+        invQiMat = 0.5*(invQiMat + invQiMat');
+        xVec'*invQiMat*xVec + 2*(-invQiMat*qiVec)'*xVec + ...
+            (qiVec'*invQiMat*qiVec - 1) <= 0;
 end
 cvx_end
 

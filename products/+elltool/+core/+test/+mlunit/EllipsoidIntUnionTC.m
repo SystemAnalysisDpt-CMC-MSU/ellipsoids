@@ -182,6 +182,17 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             
         end
         
+        function testIsInternalCenter(~)
+            my1EllVec(2) = ellipsoid([5; 5; 5; 5], ...
+                [4, 1, 1, 1; 1, 2, 1, 1; 1, 1, 5, 1; 1, 1, 1, 6], 2);
+            my1EllVec(1) = ellipsoid([5; 5; 5; 5], ...
+                [4, 1, 1, 1; 1, 2, 1, 1; 1, 1, 5, 1; 1, 1, 1, 6], 2);
+            my2EllVec(2) = ell_unitball(4);
+            my2EllVec(1) = ell_unitball(4);
+            isOk = isinside(my2EllVec, my1EllVec, 'i');
+            mlunit.assert_equals(isOk,false);
+        end
+        
         function self = testIsInternal(self)
             nDim = 100;
             testEllVec = ellipsoid(zeros(nDim, 1), eye(nDim));
