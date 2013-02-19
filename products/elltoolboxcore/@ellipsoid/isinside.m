@@ -97,11 +97,14 @@ end
 
 status = [];
 
-if isa(secObjArr, 'polytope')
+nElem = numel(secObjArr);
+secObjVec  = reshape(secObjArr, 1, nElem);
+
+if isa(secObjVec, 'polytope')
     if mode == 'i'
-        xVec = extreme(and(secObjArr));
+        xVec = extreme(and(secObjVec));
     else
-        xVec = arrayfun(@(x) extreme(x), secObjArr);
+        xVec = arrayfun(@(x) extreme(x), secObjVec);
     end
     if isempty(xVec)
         res = -1;
@@ -116,24 +119,21 @@ if isa(secObjArr, 'polytope')
     return;
 end
 
-nEllipsoids = numel(secObjArr);
-secObjArr  = reshape(secObjArr, 1, nEllipsoids);
-
 if mode == 'u'
     res = 1;
-    isContain = arrayfun(@(x) all(all(contains(x, secObjArr))), fstEllArr);
+    isContain = arrayfun(@(x) all(all(contains(x, secObjVec))), fstEllArr);
     if ~all( isContain(:) )
         res=0;
         return;
     end
-elseif isscalar(secObjArr)
+elseif isscalar(secObjVec)
     res = 1;
-    if ~all(all(contains(fstEllArr, secObjArr)))
+    if ~all(all(contains(fstEllArr, secObjVec)))
         res = 0;
     end
 else
     nFstEllDimsMat = dimension(fstEllArr);
-    nSecEllDimsMat = dimension(secObjArr);
+    nSecEllDimsMat = dimension(secObjVec);
     checkmultvar('(x1(1)==x2(1))&&all(x1(:)==x1(1))&&all(x2(:)==x2(1))',...
         2,nFstEllDimsMat,nSecEllDimsMat,...
         'errorTag','wrongSizes',...
@@ -142,7 +142,7 @@ else
         fprintf('Invoking CVX...\n');
     end
     res = 1;
-    resMat  =arrayfun (@(x) qcqp(secObjArr,x), fstEllArr);
+    resMat  =arrayfun (@(x) qcqp(secObjVec,x), fstEllArr);
     if any(resMat(:)<1)
         res = 0;
         if any(resMat(:)==-1)

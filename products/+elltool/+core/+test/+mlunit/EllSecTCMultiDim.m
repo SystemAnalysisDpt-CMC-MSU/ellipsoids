@@ -19,6 +19,13 @@ classdef EllSecTCMultiDim < mlunitext.test_case
                 'TestData', filesep,shortClassName];
         end
     function self = testIsInside(self)
+%             my1EllArray(2) = ellipsoid;
+%             my1EllArray(:) = ellipsoid([5; 5; 5; 5], ...
+%                 [4, 1, 1, 1; 1, 2, 1, 1; 1, 1, 5, 1; 1, 1, 1, 6], 2);
+%             my2EllArray(2) = ellipsoid;
+%             my2EllArray(1) = ell_unitball(4);
+%             testRes = isinside(my2EllArray, my1EllArray, 'i');
+%             mlunit.assert_equals(testRes, 0);
             [test1EllArray, test2EllArray] = createTypicalEll(1);
             compareForIsInside(test1EllArray, test1EllArray, 'i', 1);
             compareForIsInside(test1EllArray, test2EllArray, [], 0);
@@ -392,11 +399,11 @@ function [varargout] = createTypicalHighDimEll(flag)
         otherwise
     end
 end
-function compareForIsInside(test1EllVec, test2EllVec, myString, myResult)
+function compareForIsInside(test1EllArray, test2EllArray, myString, myResult)
     if isempty(myString)
-        testRes = isinside(test1EllVec, test2EllVec);
+        testRes = isinside(test1EllArray, test2EllArray);
     else
-        testRes = isinside(test1EllVec, test2EllVec, myString);
+        testRes = isinside(test1EllArray, test2EllArray, myString);
     end
     mlunit.assert_equals(myResult, testRes);
 end
