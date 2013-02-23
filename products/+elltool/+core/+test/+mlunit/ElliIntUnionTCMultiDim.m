@@ -48,6 +48,18 @@ classdef ElliIntUnionTCMultiDim < mlunitext.test_case
             resEllVec = ellunion_ea(testEllArray);
             [isEqual, reportStr] = eq(resEllVec, resultEll);
             mlunit.assert_equals(true, isEqual, reportStr);
+            [testEllArray, ~, errorStr] = createTypicalArray(4);
+            self.runAndCheckError...
+               ('ellunion_ea(testEllArray)', errorStr);
+            [testEllArray, ~, errorStr] = createTypicalArray(5);
+            self.runAndCheckError...
+               ('ellunion_ea(testEllArray)', errorStr);
+            [testEllArray, ~, errorStr] = createTypicalArray(6);
+            self.runAndCheckError...
+               ('ellunion_ea(testEllArray)', errorStr);
+           [testEllArray, ~, errorStr] = createTypicalArray(7);
+            self.runAndCheckError...
+               ('ellunion_ea(testEllArray)', errorStr);
         end
         function self = testEllintersectionIa(self)
             [testEllArray, resultEll] = createTypicalArray(1);
@@ -280,7 +292,54 @@ function [varargout] = createTypicalArray(flag)
             varargout{2} = ell_unitball(4);
         case 4
             testEllArray = ellipsoid.empty(1, 0, 0, 1, 5);
-            
+            arraySizeVec = [2, 1, 1, 2, 1, 3, 1];
+            test2EllArray = createObjectArray(arraySizeVec, @ell_unitball, ...
+                3, 1, 1);
+            errorStr = 'wrongInput:emptyArray';
+            varargout{1} = testEllArray;
+            varargout{2} = test2EllArray;
+            varargout{3} = errorStr;
+        case 5
+            arraySizeVec = [2, 1, 1, 2, 1, 3, 1];
+            testEllArray = createObjectArray(arraySizeVec, @ell_unitball, ...
+                3, 1, 1);
+            testEllArray(2, 1, 1, 2, 1, 3, 1) = ellipsoid;
+            test2EllArray = createObjectArray(arraySizeVec, @ell_unitball, ...
+                3, 1, 1);
+            errorStr = 'wrongInput:emptyElement';
+            varargout{1} = testEllArray;
+            varargout{2} = test2EllArray;
+            varargout{3} = errorStr;
+        case 6
+            arraySizeVec = [2, 1, 1, 2, 1, 1, 1];
+            testEllArray(arraySizeVec) = ellipsoid;
+            test2EllArray = createObjectArray(arraySizeVec, @ell_unitball, ...
+                3, 1, 1);
+            errorStr = 'wrongInput:emptyElement';
+            varargout{1} = testEllArray;
+            varargout{2} = test2EllArray;
+            varargout{3} = errorStr;
+        case 7
+            arraySizeVec = [2, 1, 1, 2, 1, 3, 1];
+            testEllArray = createObjectArray(arraySizeVec, @ell_unitball, ...
+                3, 1, 1);
+            testEllArray(2, 1, 1, 1, 1, 1, 1) = ell_unitball(7);
+            test2EllArray = createObjectArray(arraySizeVec, @ell_unitball, ...
+                3, 1, 1);
+            errorStr = 'wrongSizes';
+            varargout{1} = testEllArray;
+            varargout{2} = test2EllArray;
+            varargout{3} = errorStr;
+
+        case 8
+            testHpArray = hyperplane.empty(1, 0, 0, 2, 5);
+            arraySizeVec = [2, 1, 1, 2, 1, 3, 1];
+            test2HpArray = createObjectArray(arraySizeVec, @hyperplane, ... 
+                [0, 0, 1].', -2, 2);   
+            errorStr = 'wrongInput:emptyArray';
+            varargout{1} = testHpArray;
+            varargout{2} = test2HpArray;
+            varargout{3} = errorStr;
         otherwise
     end
 end
