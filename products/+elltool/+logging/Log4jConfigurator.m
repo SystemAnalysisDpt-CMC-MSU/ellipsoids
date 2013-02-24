@@ -20,7 +20,7 @@ classdef Log4jConfigurator<modgen.logging.log4j.Log4jConfigurator
         SP_LOG_DIR_WITH_SEP='elltool.log4j.logfile.dirwithsep'
         SP_LOG_FILE_EXP='elltool.log4j.logfile.ext'
         CONF_REPO_MGR_CLASS=...
-            'elltool.configuration.AdaptiveConfRepoManager';
+            'elltool.conf.ConfRepoMgr';
     end
     methods (Access=private)
         function self=Log4jConfigurator()
