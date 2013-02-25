@@ -363,7 +363,7 @@ function [varargout] = createTypicalArray(flag)
             testEllArray(2, 1, 1, 2, 1, 3, 1) = ellipsoid;
             test2EllArray = createObjectArray(arraySizeVec, @ell_unitball, ...
                 3, 1, 1);
-            errorStr = 'wrongInput:emptyElement';
+            errorStr = 'wrongInput:emptyEllipsoid';
             varargout{1} = testEllArray;
             varargout{2} = test2EllArray;
             varargout{3} = errorStr;
@@ -372,7 +372,7 @@ function [varargout] = createTypicalArray(flag)
                 3, 1, 1);
             test2EllArray = createObjectArray(arraySizeVec, @ell_unitball, ...
                 3, 1, 1);
-            errorStr = 'wrongInput:emptyElement';
+            errorStr = 'wrongInput:emptyEllipsoid';
             varargout{1} = testEllArray;
             varargout{2} = test2EllArray;
             varargout{3} = errorStr;
