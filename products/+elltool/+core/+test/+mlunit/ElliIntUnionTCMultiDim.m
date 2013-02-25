@@ -244,8 +244,8 @@ classdef ElliIntUnionTCMultiDim < mlunitext.test_case
             arraySizeVec = [2, 2, 3, 1, 1, 1, 4];
             testEllArray = createObjectArray(arraySizeVec, @ell_unitball, ... 
                 3, 1, 1);
-            testHpArray = createObjectArray(arraySizeVec, @hyperplane, ... 
-                [0, 0, 1].', 0, 2);
+            testHpArray = createObjectArray(arraySizeVec, ...
+                @(varargin)hyperplane(varargin{:}), [0, 0, 1].', 0, 2);
             ansEllArray = createObjectArray(arraySizeVec, @ellipsoid, ... 
                 [1, 0, 0; 0, 1, 0; 0, 0, 0], 1, 1);
             resEllArray = hpintersection(testEllArray, testHpArray);
@@ -254,8 +254,8 @@ classdef ElliIntUnionTCMultiDim < mlunitext.test_case
             arraySizeVec = [1, 2, 2, 3, 1, 4];
             testEllArray = createObjectArray(arraySizeVec, @ell_unitball, ... 
                 2, 1, 1);
-            testHpArray = createObjectArray(arraySizeVec, @hyperplane, ... 
-                [0, 1].', 0, 2);
+            testHpArray = createObjectArray(arraySizeVec, ...
+                @(varargin)hyperplane(varargin{:}), [0, 1].', 0, 2);
             ansEllArray = createObjectArray(arraySizeVec, @ellipsoid, ... 
                 [1, 0; 0, 0], 1, 1);
             resEllArray = hpintersection(testEllArray, testHpArray);
@@ -264,8 +264,8 @@ classdef ElliIntUnionTCMultiDim < mlunitext.test_case
             arraySizeVec = [1, 1, 1, 1, 1, 7, 1, 1, 7];
             testEllArray = createObjectArray(arraySizeVec, @ell_unitball, ... 
                 4, 1, 1);
-            testHpArray = createObjectArray(arraySizeVec, @hyperplane, ... 
-                [0, 0, 0, 1].', 0, 2);
+            testHpArray = createObjectArray(arraySizeVec, ...
+                @(varargin)hyperplane(varargin{:}), [0, 0, 0, 1].', 0, 2);
             ansEllArray = createObjectArray(arraySizeVec, @ellipsoid, ... 
                 [1, 0, 0, 0; 0, 1, 0, 0; 0, 0, 1, 0; 0, 0, 0, 0], 1, 1);
             isnAnsIntersectedArray = false(1, 1, 1, 1, 1, 7, 1, 1, 7);
@@ -287,8 +287,8 @@ classdef ElliIntUnionTCMultiDim < mlunitext.test_case
             testEllArray(1, 1, 1, 1, 2, 3) = ellipsoid([0 -1 0 0].', testMat);
             testEllArray(1, 1, 1, 1, 3, 1) = ellipsoid([1 0 0 0].', testMat);
             testEllArray(1, 1, 1, 1, 3, 2) = ellipsoid([-1 0 0 0].', testMat);
-            testHpArray = createObjectArray(arraySizeVec, @hyperplane, ... 
-                [0, 0, 1, 0].', 0, 2);
+            testHpArray = createObjectArray(arraySizeVec,  ...
+                @(varargin)hyperplane(varargin{:}), [0, 0, 1, 0].', 0, 2);
             testMat = [1, 0, 0, 0; 0, 1, 0, 0; 0, 0, 0, 0; 0, 0, 0, 1];
             ansEllArray = createObjectArray(arraySizeVec, @ellipsoid, ... 
                 testMat, 1, 1);
@@ -307,8 +307,8 @@ classdef ElliIntUnionTCMultiDim < mlunitext.test_case
             arraySizeVec = [2, 2, 3, 1, 1, 1, 4];
             testEllArray = createObjectArray(arraySizeVec, @ell_unitball, ... 
                 3, 1, 1);
-            testHpArray = createObjectArray(arraySizeVec, @hyperplane, ... 
-                [0, 0, 1].', -2, 2);   
+            testHpArray = createObjectArray(arraySizeVec,  ...
+                @(varargin)hyperplane(varargin{:}), [0, 0, 1].', -2, 2);   
             errorStr = 'degenerateEllipsoid';
             self.runAndCheckError ...
                 ('hpintersection(testEllArray, testHpArray)',...
@@ -319,7 +319,7 @@ classdef ElliIntUnionTCMultiDim < mlunitext.test_case
             self.runAndCheckError...
                ('hpintersection(testEllArray, testHpArray)', errorStr);
             testHpArray = createObjectArray(arraySizeVec, ...
-                @hyperplane, [0, 0, 1].', -2, 2);
+                @(varargin)hyperplane(varargin{:}),  [0, 0, 1].', -2, 2);
             testHpArray(1, 1, 1, 2, 1, 1, 1) = hyperplane();
             [~, ~, errorStr] = createTypicalArray(5);
             self.runAndCheckError...
@@ -330,7 +330,7 @@ classdef ElliIntUnionTCMultiDim < mlunitext.test_case
             self.runAndCheckError...
                ('hpintersection(testEllArray, testHpArray)', errorStr);
             testHpArray = createObjectArray(arraySizeVec, ...
-                @hyperplane, [0, 0, 1].', 1, 2);
+                @(varargin)hyperplane(varargin{:}), [0, 0, 1].', 1, 2);
             testHpArray(1, 1, 1, 2, 1, 1, 1) = hyperplane([0, 1].', 1);
             [~, ~, errorStr] = createTypicalArray(7);
             self.runAndCheckError...
@@ -358,6 +358,7 @@ classdef ElliIntUnionTCMultiDim < mlunitext.test_case
     end    
 end
 function [varargout] = createTypicalArray(flag)
+    arraySizeVec = [2, 1, 1, 2, 1, 3, 1];
     switch flag
         case 1
             arraySizeVec = [2, 1, 3, 2, 1, 1, 4];
@@ -379,7 +380,6 @@ function [varargout] = createTypicalArray(flag)
             varargout{2} = ell_unitball(4);
         case 4
             testEllArray = ellipsoid.empty(1, 0, 0, 1, 5);
-            arraySizeVec = [2, 1, 1, 2, 1, 3, 1];
             test2EllArray = createObjectArray(arraySizeVec, @ell_unitball, ...
                 3, 1, 1);
             errorStr = 'wrongInput:emptyArray';
@@ -387,7 +387,6 @@ function [varargout] = createTypicalArray(flag)
             varargout{2} = test2EllArray;
             varargout{3} = errorStr;
         case 5
-            arraySizeVec = [2, 1, 1, 2, 1, 3, 1];
             testEllArray = createObjectArray(arraySizeVec, @ell_unitball, ...
                 3, 1, 1);
             testEllArray(2, 1, 1, 2, 1, 3, 1) = ellipsoid;
@@ -398,7 +397,6 @@ function [varargout] = createTypicalArray(flag)
             varargout{2} = test2EllArray;
             varargout{3} = errorStr;
         case 6
-            arraySizeVec = [2, 1, 1, 2, 1, 3, 1];
             testEllArray = createObjectArray(arraySizeVec, @(x)ellipsoid(), ...
                 3, 1, 1);
             test2EllArray = createObjectArray(arraySizeVec, @ell_unitball, ...
@@ -408,7 +406,6 @@ function [varargout] = createTypicalArray(flag)
             varargout{2} = test2EllArray;
             varargout{3} = errorStr;
         case 7
-            arraySizeVec = [2, 1, 1, 2, 1, 3, 1];
             testEllArray = createObjectArray(arraySizeVec, @ell_unitball, ...
                 3, 1, 1);
             testEllArray(2, 1, 1, 1, 1, 1, 1) = ell_unitball(7);
