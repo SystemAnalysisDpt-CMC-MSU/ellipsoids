@@ -145,7 +145,8 @@ if mode == 'u'
     end
 elseif isscalar(secObjVec)
     res = 1;
-    if ~all(all(contains(fstEllArr, secObjVec)))
+    isContain = arrayfun(@(x) all(all(contains(x, secObjVec))), fstEllArr);
+    if ~all( isContain(:) )
         res = 0;
     end
 else

@@ -117,34 +117,35 @@ classdef ElliIntUnionTCMultiDim < mlunitext.test_case
                 2, 1, 1);
             test2EllArray = createObjectArray(arraySizeVec, @ellipsoid, ...
                 zeros(2, 1), diag( 1.1 * ones(1, 2)), 2);
-            test1Correct();
-            test2Correct();
+            testCorrect(false);
+            testCorrect(true);
             arraySizeVec = [1, 2, 3, 1, 2, 1];
             test1EllArray = createObjectArray(arraySizeVec, @ell_unitball, ... 
                 2, 1, 1);
             test2EllArray = createObjectArray(arraySizeVec, @ellipsoid, ...
                 zeros(2, 1), diag( 1.1 * ones(1, 2)), 2);
-            test1Correct();
-            test2Correct();
+            testCorrect(false);
+            testCorrect(true);
             arraySizeVec = [2, 1, 1, 1, 1, 3, 1];
             test1EllArray = createObjectArray(arraySizeVec, @ell_unitball, ... 
                 4, 1, 1);
             test2EllArray = createObjectArray(arraySizeVec, @ellipsoid, ...
                 5 * ones(4, 1), diag( 2 * ones(1, 4)), 2);
-            test1Correct();
+            testCorrect(false);
             testResVec = contains(test2EllArray, test1EllArray);
                 mlunit.assert_equals(0, any(testResVec(:)));
             testError(4);
             testError(5);
             testError(6);
             testError(7);
-            function test1Correct()
-                testResVec = contains(test1EllArray, test2EllArray);
-                mlunit.assert_equals(0, any(testResVec(:)));
-            end
-            function test2Correct()
-                testResVec = contains(test2EllArray, test1EllArray);
-                mlunit.assert_equals(1, all(testResVec(:)));
+            function testCorrect(isAllCheck)
+                if (isAllCheck)
+                    testResVec = contains(test2EllArray, test1EllArray);
+                    mlunit.assert_equals(1, all(testResVec(:)));
+                else
+                    testResVec = contains(test1EllArray, test2EllArray);
+                    mlunit.assert_equals(0, any(testResVec(:)));
+                end
             end
             function testError(flag)
                 [test1EllArray, test2EllArray, errorStr] = ...
@@ -163,24 +164,24 @@ classdef ElliIntUnionTCMultiDim < mlunitext.test_case
             testEllArray = createObjectArray(arraySizeVec, @ell_unitball, ... 
                 3, 1, 1);
             testPointVec = 0.9 * eye(3);
-            testCorrect([1, 1, 1]);
+            testCorrect(true, [1, 1, 1]);
             arraySizeVec = [1, 2, 2, 3, 1, 4];
             testEllArray = createObjectArray(arraySizeVec, @ell_unitball, ... 
                 2, 1, 1);
             testPointVec = 1.1 * eye(2);
-            testCorrect([0, 0]);
+            testCorrect(true, [0, 0]);
             arraySizeVec = [1, 1, 1, 1, 1, 7, 1, 1, 7];
             testEllArray = createObjectArray(arraySizeVec, @ell_unitball, ... 
                 5, 1, 1);
             testPointVec = 0.9 * eye(5);
-            testCorrect([1, 1, 1, 1, 1]);
+            testCorrect(true, [1, 1, 1, 1, 1]);
             arraySizeVec = [2, 1, 2, 1, 3, 3];
             testEllArray = createObjectArray(arraySizeVec, @ell_unitball, ... 
                 4, 1, 1);
             testMat = 0.9 * eye(4);
             testMat = [testMat, 1.1 * eye(4)];
             testPointVec = testMat;
-            testInternalCorrect([1, 1, 1, 1, 0, 0, 0, 0]);
+            testCorrect(false, [1, 1, 1, 1, 0, 0, 0, 0]);
             testMat = eye(4);
             arraySizeVec = [2, 1, 2, 1, 3, 3];
             testEllArray = createObjectArray(arraySizeVec, @ell_unitball, ... 
@@ -195,22 +196,20 @@ classdef ElliIntUnionTCMultiDim < mlunitext.test_case
             testEllArray(1, 1, 1, 1, 3, 2) = ellipsoid([-1 0 0 0].', testMat);
             testMat = [0.9 * eye(4), 1.9 * eye(4), zeros(4, 1)];
             testPointVec = testMat;
-            testInternalCorrect([0, 0, 0, 0, 0, 0, 0, 0, 1]);
+            testCorrect(false, [0, 0, 0, 0, 0, 0, 0, 0, 1]);
             testResVec = isinternal(testEllArray, testPointVec, 'u');
             self.flexAssert([1, 1, 1, 1, 1, 1, 1, 1, 1], testResVec);   
             testError(4);
             testError(5);
             testError(6);
             testError(7);
-            function testCorrect(AnsVec)
+            function testCorrect(isTwoCheck, AnsVec)
                 testResVec = isinternal(testEllArray, testPointVec, 'i');
                 self.flexAssert(AnsVec, testResVec);
-                testResVec = isinternal(testEllArray, testPointVec, 'u');
-                self.flexAssert(AnsVec, testResVec);
-            end
-            function testInternalCorrect(AnsVec)
-                testResVec = isinternal(testEllArray, testPointVec, 'i');
-                self.flexAssert(AnsVec, testResVec);
+                if (isTwoCheck)
+                    testResVec = isinternal(testEllArray, testPointVec, 'u');
+                    self.flexAssert(AnsVec, testResVec);
+                end
             end
             function testError(flag)
                 [testEllArray, ~, errorStr] = createTypicalArray(flag);
