@@ -31,5 +31,3 @@ resQMat(:,secIndVec)=secBasMat;
 diagQVec=zeros(nDimSpace,1);
 diagQVec(firstIndVec)=diag(diaPMat);
 diagQVec(secIndVec)=secDiagVec;
-end
-

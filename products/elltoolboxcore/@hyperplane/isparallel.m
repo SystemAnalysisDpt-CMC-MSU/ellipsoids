@@ -1,105 +1,82 @@
-function res = isparallel(H1, H2)
+function isPosArr = isparallel(fstHypArr, secHypArr)
 %
 % ISPARALLEL - check if two hyperplanes are parallel.
 %
-% Description:
-% ------------
+%   isResArr = ISPARALLEL(fstHypArr, secHypArr) - Checks if hyperplanes
+%       in fstHypArr are parallel to hyperplanes in secHypArr and
+%       returns array of true and false of the size corresponding
+%       to the sizes of fstHypArr and secHypArr.
 %
-%    RES = ISPARALLEL(H1, H2)  Checks if hyperplanes in H1 are parallel to
-%                              hyperplanes in H2 and returns array of ones
-%                              and zeros of the size corresponding to the sizs
-%                              of H1 and H2.
-%
+% Input:
+%   regular:
+%       fstHypArr: hyperplane [nDims1, nDims2, ...] - first array
+%           of hyperplanes
+%       secHypArr: hyperplane [nDims1, nDims2, ...] - second array
+%           of hyperplanes
 %
 % Output:
-% -------
+%   isPosArr: logical[nDims1, nDims2, ...] - 
+%       isPosArr(iFstDim, iSecDim, ...) = true - 
+%       if fstHypArr(iFstDim, iSecDim, ...) is parallel 
+%       secHypArr(iFstDim, iSecDim, ...), false - otherwise.
 %
-%    1 - if hyperplanes are parallel, 0 - otherwise.
+% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+% $Copyright:  The Regents of the University of California 2004-2008 $
 %
-%
-% See also:
-% ---------
-%
-%    HYPERPLANE/HYPERPLANE.
-%
+% $Author: Aushkap Nikolay <n.aushkap@gmail.com> $  $Date: 30-11-2012$
+% $Copyright: Moscow State University,
+%   Faculty of Computational Mathematics and Computer Science,
+%   System Analysis Department 2012 $
 
+import modgen.common.checkmultvar;
+
+hyperplane.checkIsMe(fstHypArr);
+hyperplane.checkIsMe(secHypArr);
+
+checkmultvar(...
+    'isequal(size(x1), size(x2)) || numel(x1) == 1 || numel(x2) == 1', ...
+    2, fstHypArr, secHypArr, 'errorTag', 'wrongSizes', 'errorMessage', ...
+    'Sizes of hyperplane arrays do not match.');
+
+if (isscalar(fstHypArr))
+    fstHypArr = repmat(fstHypArr, size(secHypArr));
+elseif (isscalar(secHypArr))
+    secHypArr = repmat(secHypArr, size(fstHypArr));
+end
+
+fstHypAbsTolArr = getAbsTol(fstHypArr);
+isPosArr = arrayfun(@(x, y, z) isSingParallel(x, y, z), ...
+    fstHypArr, secHypArr, fstHypAbsTolArr, 'UniformOutput', true);
+
+
+function isPos = isSingParallel(fstHyp, secHyp, fstHypAbsTol)
 %
-% Author:
-% -------
+% ISSNGLPARALLEL - check if two single hyperplanes are equal.
 %
-%    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+% Input:
+%   regular:
+%       fstHyp: hyperplane [1, 1] - first hyperplane.
+%       secHyp: hyperplane [1, 1] - second hyperplane.
+%       fstHypAbsTol: double[1, 1] - absTol properties.
 %
+% Output:
+%   isPos: logical[1, 1] - isPos = true -  if fstHyp is parallel
+%       secHyp, false - otherwise.
+%
+% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+% $Copyright:  The Regents of the University of California 2004-2008 $
 
-
-  if ~(isa(H1, 'hyperplane')) | ~(isa(H2, 'hyperplane'))
-    error('ISPARALLEL: input arguments must be hyperplanes.');
-  end
-
-  [k, l] = size(H1);
-  s      = k * l;
-  [m, n] = size(H2);
-  t      = m * n;
-
-  if ((k ~= m) | (l ~= n)) & (s > 1) & (t > 1)
-    error('ISPARALLEL: sizes of hyperplane arrays do not match.');
-  end
-
-  res = [];
-  if (s > 1) & (t > 1)
-    for i = 1:k
-      r = [];
-      for j = 1:l
-        r = [r l_hpparallel(H1(i, j), H2(i, j))];
-      end
-      res = [res; r];
+fstHypNormVec = parameters(fstHyp);
+secHypNormVec = parameters(secHyp);
+isPos = false;
+if (min(size(fstHypNormVec) == size(secHypNormVec)) >= 1)
+    fstHypNormVec = fstHypNormVec/norm(fstHypNormVec);
+    secHypNormVec = secHypNormVec/norm(secHypNormVec);
+    if (min(size(fstHypNormVec) == size(secHypNormVec)) >= 1)
+        if max(abs(fstHypNormVec - secHypNormVec)) < fstHypAbsTol
+            isPos = true;
+        elseif max(abs(fstHypNormVec + secHypNormVec)) < fstHypAbsTol
+            isPos = true;
+        end
     end
-  elseif (s > 1)
-    for i = 1:k
-      r = [];
-      for j = 1:l
-        r = [r l_hpparallel(H1(i, j), H2)];
-      end
-      res = [res; r];
-    end
-  else
-    for i = 1:m
-      r = [];
-      for j = 1:n
-        r = [r l_hpparallel(H1, H2(i, j))];
-      end
-      res = [res; r];
-    end
-  end
-
-  return;
-
-
-
-
-
-%%%%%%%%
-
-function res = l_hpparallel(H1, H2)
-%
-% L_HPPARALLEL - check if two single hyperplanes are equal.
-%
-  x   = parameters(H1);
-  y   = parameters(H2);
-  res = 0;
-  if min(size(x) == size(y)) < 1
-    return;
-  end
-  
-  x = x/norm(x);
-  y = y/norm(y);
-
-  if min(size(x) == size(y)) < 1
-    return;
-  end
-  if max(abs(x - y)) < H1.absTol()
-    res = 1;
-  elseif max(abs(x + y)) < H1.absTol()
-    res = 1;
-  end
-
-  return;  
+end

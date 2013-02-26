@@ -1,34 +1,37 @@
-function outEllMat = move2origin(inpEllMat)
+function outEllArr = move2origin(inpEllArr)
 %
 % MOVE2ORIGIN - moves ellipsoids in the given array to the origin.
 %
-%   outEllMat = MOVE2ORIGIN(inpEll) - Replaces the centers of
-%       ellipsoids in inpEllMat with zero vectors.
+%   outEllArr = MOVE2ORIGIN(inpEll) - Replaces the centers of
+%       ellipsoids in inpEllArr with zero vectors.
 %
 % Input:
 %   regular:
-%       inpEllMat: ellipsoid [mRows, nCols] - matrix of ellipsoids.
+%       inpEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of 
+%           ellipsoids.
 %
 % Output:
-%   outEllMat: ellipsoid [mRows, nCols] - matrix of ellipsoids
-%       with the same shapes as in inpEllMat centered at the origin.
+%   outEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of ellipsoids
+%       with the same shapes as in inpEllArr centered at the origin.
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
+%
+% $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
+% $Copyright: Moscow State University,
+%             Faculty of Computational Mathematics and Cybernetics,
+%             Science, System Analysis Department 2012 $
+%
 
-import modgen.common.throwerror;
-
-if ~(isa(inpEllMat, 'ellipsoid'))
-    throwerror('wrongInput', ...
-        'MOVE2ORIGIN: argument must be array of ellipsoids.');
-end
-
-outEllMat = inpEllMat;
-[mRows, nCols] = size(outEllMat);
-
-for iRow = 1:mRows
-    for jCol = 1:nCols
-        nDims = dimension(outEllMat(iRow, jCol));
-        outEllMat(iRow, jCol).center = zeros(nDims, 1);
+ellipsoid.checkIsMe(inpEllArr,...
+    'errorTag','wrongInput',...
+    'errorMessage','argument must be array of ellipsoid.');
+sizeCVec = num2cell(size(inpEllArr));
+outEllArr(sizeCVec{:}) = ellipsoid;
+arrayfun(@(x) fSingleMove(x), 1:numel(inpEllArr));
+    function fSingleMove(index)
+        nDim = dimension(inpEllArr(index));
+        outEllArr(index).center = zeros(nDim,1);
+        outEllArr(index).shape = inpEllArr(index).shape;
     end
 end

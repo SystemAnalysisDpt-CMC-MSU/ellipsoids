@@ -6,7 +6,7 @@ classdef AReachProblemDynamicsInterp<...
             import gras.interp.MatrixInterpolantFactory;
             import gras.ellapx.lreachplain.probdyn.LReachProblemDynamicsInterp;
             import gras.ode.MatrixODESolver;
-            import gras.ellapx.uncertcalc.MatrixOperationsFactory;
+            import gras.mat.MatrixOperationsFactory;
             %
             self.problemDef = problemDef;
             %

@@ -22,7 +22,7 @@ function [ resEllMat ] = findDiffFC( fMethod, ellQ1Mat, ellQ2Mat,...
 %            Faculty of Computational Mathematics and Cybernetics,
 %            System Analysis Department 2012 $
 %
-import elltool.core.Ellipsoid;
+import elltool.core.GenEllipsoid;
 [eigv1Mat dia1Mat]=eig(ellQ1Mat);
 ell1DiagVec=diag(dia1Mat);
 if min(ell1DiagVec)>absTol
@@ -34,18 +34,18 @@ else
     zeroDirMat=eigv1Mat(:,isZeroVec);
     % Find basis in all space
     [ zeroBasMat,  nonZeroBasMat, zeroIndVec, nonZeroIndVec] =...
-        Ellipsoid.findSpaceBas( zeroDirMat,absTol );
+        GenEllipsoid.findSpaceBas( zeroDirMat,absTol );
     projCurDirVec=nonZeroBasMat.'*curDirVec;
-    projQ1Mat=Ellipsoid.findMatProj(eye(size(ellQ1Mat)),...
+    projQ1Mat=GenEllipsoid.findMatProj(eye(size(ellQ1Mat)),...
         ellQ1Mat,nonZeroBasMat);
-    projQ2Mat=Ellipsoid.findMatProj(eye(size(ellQ2Mat)),...
+    projQ2Mat=GenEllipsoid.findMatProj(eye(size(ellQ2Mat)),...
         ellQ2Mat,nonZeroBasMat);
     resProjQMat=fMethod(projQ1Mat,projQ2Mat,projCurDirVec,absTol);
     if isempty(resProjQMat)
         resEllMat=[];
     else
         zeroDimSpace=size(zeroBasMat,2);
-        [diagQVec, resQMat]=Ellipsoid.findConstruction(...
+        [diagQVec, resQMat]=GenEllipsoid.findConstruction(...
             resProjQMat,nonZeroBasMat,zeroBasMat,nonZeroIndVec,...
             zeroIndVec,zeros(1,zeroDimSpace));
         resEllMat=resQMat*diag(diagQVec)*resQMat.';

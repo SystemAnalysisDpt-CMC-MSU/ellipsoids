@@ -18,4 +18,3 @@ function sqMat=findSqrtOfMatrix(qMat,absTol)
 isZeroVec=diag(abs(diagMat)<absTol);
 diagMat(isZeroVec,isZeroVec)=0;
 sqMat=eigvMat*sqrt(diagMat)*eigvMat.';
-end

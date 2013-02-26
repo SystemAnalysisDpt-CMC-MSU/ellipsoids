@@ -1,20 +1,20 @@
-function intApprEllVec = minkpm_ia(inpEllMat, inpEll, dirMat)
+function intApprEllVec = minkpm_ia(inpEllArr, inpEll, dirMat)
 %
 % MINKPM_IA - computation of internal approximating ellipsoids
 %             of (E1 + E2 + ... + En) - E along given directions.
 %             where E = inpEll,
-%             E1, E2, ... En - are ellipsoids in inpEllMat.
+%             E1, E2, ... En - are ellipsoids in inpEllArr.
 %
-%   intApprEllVec = MINKPM_IA(inpEllMat, inpEll, dirMat) - Computes
+%   intApprEllVec = MINKPM_IA(inpEllArr, inpEll, dirMat) - Computes
 %       internal approximating ellipsoids of
 %       (E1 + E2 + ... + En) - E, where E1, E2, ..., En are ellipsoids
 %       in array inpEllMat, E = inpEll,
-%       along directions specified by columns of matrix dirMat.
+%       along directions specified by columns of matrix dirArr.
 %
 % Input:
 %   regular:
-%       inpEllMat: ellipsoid [mRowsInpEllMat, nColsInpEllMat] -
-%           matrix of ellipsoids of the same dimentions.
+%       inpEllArr: ellipsoid [nDims1, nDims2,...,nDimsN] -
+%           array of ellipsoids of the same dimentions.
 %       inpEll: ellipsoid [1, 1] - ellipsoid of the same dimention.
 %       dirMat: double[nDim, nCols] - matrix whose columns specify
 %           the directions for which the approximations
@@ -27,52 +27,38 @@ function intApprEllVec = minkpm_ia(inpEllMat, inpEll, dirMat)
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
+%
+% $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
+% $Copyright: Moscow State University,
+%             Faculty of Computational Mathematics and Cybernetics,
+%             Science, System Analysis Department 2012 $
+%
 
 import modgen.common.throwerror;
+import modgen.common.checkvar;
+import modgen.common.checkmultvar;
 import elltool.conf.Properties;
 
+ellipsoid.checkIsMe(inpEllArr,'first');
+ellipsoid.checkIsMe(inpEll,'second');
 
-if ~(isa(inpEllMat, 'ellipsoid')) || ~(isa(inpEll, 'ellipsoid'))
-    throwerror('wrongInput', ...
-        'MINKPM_IA: first and second arguments must be ellipsoids.');
-end
+checkvar(inpEll,@(x) isscalar(inpEll),'errorTag','wrongInput',...
+    'errorMessage','second argument must be single ellipsoid.');
 
-[mRowsInpEll, nColsInpEll] = size(inpEll);
-if (mRowsInpEll ~= 1) || (nColsInpEll ~= 1)
-    throwerror('wrongInput', ...
-        'MINKPM_IA: second argument must be single ellipsoid.');
-end
+[nDims, nCols]  = size(dirMat);
+checkmultvar('(x2==x3) && all(x1(:)==x3)',...
+    3,dimension(inpEllArr),dimension(inpEll),nDims,...
+    'errorTag','wrongSizes','errorMessage',...
+    'all ellipsoids and direction vectors must be of the same dimension');
 
-mRowsDirMatrix = size(dirMat, 1);
-nDims = dimension(inpEll);
-minDimInpEll = min(min(dimension(inpEllMat)));
-maxDimInpEll = max(max(dimension(inpEllMat)));
-if (minDimInpEll ~= maxDimInpEll) || (minDimInpEll ~= nDims)
-    throwerror('wrongSizes', ...
-        'MINKPM_IA: all ellipsoids must be of the same dimension.');
-end
-if nDims ~= mRowsDirMatrix
-    fstStr = 'MINKPM_IA: dimension of the direction vectors must ';
-    secStr = 'be the same as dimension of ellipsoids.';
-    throwerror('wrongSizes', [fstStr secStr]);
-end
-
-nCols = size(dirMat, 2);
 intApprEllVec = [];
-fstIntApprEllMat = minksum_ia(inpEllMat, dirMat);
+fstIntApprEllMat = minksum_ia(inpEllArr, dirMat);
 isVrb = Properties.getIsVerbose();
 Properties.setIsVerbose(false);
 
-for i = 1:nCols
-    fstIntApprEll = fstIntApprEllMat(i);
-    dirVec = dirMat(:, i);
-    if isbigger(fstIntApprEll, inpEll)
-        if ~isbaddirection(fstIntApprEll, inpEll, dirVec)
-            intApprEllVec = [intApprEllVec ...
-                minkdiff_ia(fstIntApprEll, inpEll, dirVec)];
-        end
-    end
-end
+intApprEllVec = repmat(ellipsoid,1,nCols);
+arrayfun(@(x) fSetIntApprVec(x),1:nCols);
+intApprEllVec = intApprEllVec(~isempty(intApprEllVec));
 
 Properties.setIsVerbose(isVrb);
 
@@ -81,5 +67,16 @@ if isempty(intApprEllVec)
         fprintf('MINKPM_IA: cannot compute internal ');
         fprintf('approximation for any\n           ');
         fprintf('of the specified directions.\n')
+    end
+end
+    function fSetIntApprVec(index)
+    	fstIntApprEll = fstIntApprEllMat(index);
+        dirVec = dirMat(:, index);
+        if isbigger(fstIntApprEll, inpEll)
+            if ~isbaddirection(fstIntApprEll, inpEll, dirVec)
+                intApprEllVec(index) = ...
+                    minkdiff_ia(fstIntApprEll, inpEll, dirVec);
+            end
+        end 
     end
 end

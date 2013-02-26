@@ -1,11 +1,11 @@
-function intApprEllVec = minksum_ia(inpEllMat, dirMat)
+function intApprEllVec = minksum_ia(inpEllArr, dirMat)
 %
 % MINKSUM_IA - computation of internal approximating ellipsoids
 %              of the geometric sum of ellipsoids along given directions.
 %
-%   intApprEllVec = MINKSUM_IA(inpEllMat, dirMat) - Computes
+%   intApprEllVec = MINKSUM_IA(inpEllArr, dirMat) - Computes
 %       tight internal approximating ellipsoids for the geometric
-%       sum of the ellipsoids in the array inpEllMat along directions
+%       sum of the ellipsoids in the array inpEllArr along directions
 %       specified by columns of dirMat. If ellipsoids in
 %       inpEllMat are n-dimensional, matrix dirMat must have
 %       dimension (n x k) where k can be arbitrarily chosen.
@@ -28,7 +28,7 @@ function intApprEllVec = minksum_ia(inpEllMat, dirMat)
 %
 % Input:
 %   regular:
-%       inpEllMat: ellipsoid [mRows, nColsInpEllMatrix] - matrix
+%       inpEllArr: ellipsoid [nDims1, nDims2,...,nDimsN] - array
 %           of ellipsoids of the same dimentions.
 %       dirMat: double[nDim, nCols] - matrix whose columns specify the
 %           directions for which the approximations should be computed.
@@ -39,68 +39,91 @@ function intApprEllVec = minksum_ia(inpEllMat, dirMat)
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
+%
+% $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
+% $Copyright: Moscow State University,
+%             Faculty of Computational Mathematics and Cybernetics,
+%             Science, System Analysis Department 2012 $
+%
 
 import elltool.conf.Properties;
 import modgen.common.throwerror;
+import modgen.common.checkmultvar;
 
+ellipsoid.checkIsMe(inpEllArr,'first');
 
-if ~(isa(inpEllMat, 'ellipsoid'))
-    throwerror('wrongInput', ...
-        'MINKSUM_IA: first argument must be array of ellipsoids.');
-end
-
-nDimsInpEllMat = dimension(inpEllMat);
-minDim = min(min(nDimsInpEllMat));
-maxDim = max(max(nDimsInpEllMat));
-if minDim ~= maxDim
-    fstStr = 'MINKSUM_IA: ellipsoids in the array must be ';
-    secStr = 'of the same dimension.';
-    throwerror('wrongSizes', [fstStr secStr]);
-end
-
+nNumel = numel(inpEllArr);
 [nDims, nCols] = size(dirMat);
-if (nDims ~= maxDim)
-    fstStr = 'MINKSUM_IA: second argument must ';
-    secStr = 'be vector(s) in R^%d.';
-    msg = sprintf([fstStr secStr], maxDim);
-    throwerror(msg);
-end
-
-[mRows, nColsInpEllMatrix] = size(inpEllMat);
-if (mRows == 1) && (nColsInpEllMatrix == 1)
-    intApprEllVec = inpEllMat;
+nDimsInpEllArr = dimension(inpEllArr);
+checkmultvar('all(x2(:)==x1)',2,nDimsInpEllArr,nDims,...
+    'errorTag','wrongSizes','errrorMessage',...
+    'ellipsoids in the array and vector(s) must be of the same dimension.');
+if isscalar(inpEllArr)
+    intApprEllVec = inpEllArr;
     return;
 end
+isVerbose=Properties.getIsVerbose();
+centVec =zeros(nDims,1);
+arrayfun(@(x) fAddCenter(x),inpEllArr);
+absTolArr = getAbsTol(inpEllArr);
 
-intApprEllVec = [];
-absTolMat = getAbsTol(inpEllMat);
-for iCol = 1:nCols
-    dirVec = dirMat(:, iCol);
-    for iRow = 1:mRows
-        for jColsInpEllMatrix = 1:nColsInpEllMatrix
-            shMat = inpEllMat(iRow, jColsInpEllMatrix).shape;
-            if size(shMat, 1) > rank(shMat)
-                if Properties.getIsVerbose()
-                    fprintf('MINKSUM_IA: Warning!');
-                    fprintf(' Degenerate ellipsoid.\n');
-                    fprintf('            Regularizing...\n')
-                end
-                shMat = ellipsoid.regularize(shMat, ...
-                    absTolMat(iRow,jColsInpEllMatrix));
+srcMat = sqrtm(inpEllArr(1).shape) * dirMat;
+%dstArr = zeros(nDims, nCols, nNumel);
+sqrtShArr = zeros(nDims, nDims, nNumel);
+rotArr = zeros(nDims,nDims,nNumel,nCols);
+arrayfun(@(x) fSetRotArr(x), 1:nNumel);
+%rotArr = gras.la.mlorthtransl(srcMat,dstArr);
+
+
+intApprEllVec(1,nCols) = ellipsoid;
+arrayfun(@(x) fSingleDirection(x),1:nCols);
+
+    function fAddCenter(singEll)
+        centVec = centVec + singEll.center;
+    end
+    
+    function fSetRotArr(ellIndex)
+        import gras.la.mlorthtransl;
+        shMat = inpEllArr(ellIndex).shape;
+        if isdegenerate(inpEllArr(ellIndex))
+            if isVerbose
+                fprintf('MINKSUM_IA: Warning!');
+                fprintf(' Degenerate ellipsoid.\n');
+                fprintf('            Regularizing...\n')
             end
-            shMat = sqrtm(shMat);
-            if (iRow == 1) && (jColsInpEllMatrix == 1)
-                centVec = inpEllMat(iRow, jColsInpEllMatrix).center;
-                subVec = shMat * dirVec;
-                subShMat = shMat;
-            else
-                centVec = centVec + inpEllMat(iRow, ...
-                    jColsInpEllMatrix).center;
-                rotMat = ell_valign(subVec, shMat*dirVec);
-                subShMat = subShMat + rotMat*shMat;
-            end
+            shMat = ellipsoid.regularize(shMat, absTolArr(ellIndex));
+        end
+        shSqrtMat = sqrtm(shMat);
+        sqrtShArr(:,:,ellIndex) = shSqrtMat;
+        dstMat = shSqrtMat*dirMat;
+        rotArr(:,:,ellIndex,:) = mlorthtransl(dstMat,srcMat);
+    end
+    
+%     function fGetDstArr(index)
+%         shMat = inpEllArr(index).shape;
+%         if isdegenerate(inpEllArr(index))
+%             if Properties.getIsVerbose()
+%                 fprintf('MINKSUM_IA: Warning!');
+%                 fprintf(' Degenerate ellipsoid.\n');
+%                 fprintf('            Regularizing...\n')
+%             end
+%             shMat = ellipsoid.regularize(shMat, absTolArr(index));
+%         end
+%         shMat = sqrtm(shMat);
+%         sqrtShArr(:,:,index) = shMat;
+%         dstArr(:,:,index) = shMat*dirMat;
+%     end
+
+    function fSingleDirection(dirIndex)
+        subShMat = zeros(nDims,nDims);
+        arrayfun(@(x) fAddSh(x), 1:nNumel);
+        intApprEllVec(dirIndex).center = centVec;
+        intApprEllVec(dirIndex).shape = subShMat'*subShMat;
+        
+        function fAddSh(ellIndex)
+            subShMat = subShMat + ...
+                rotArr(:,:,ellIndex,dirIndex) * sqrtShArr(:,:,ellIndex);
         end
     end
-    intApprEllVec = [intApprEllVec ...
-        ellipsoid(centVec, subShMat'*subShMat)];
 end
+

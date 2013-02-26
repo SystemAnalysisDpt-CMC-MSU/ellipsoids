@@ -18,36 +18,50 @@ function outEllVec = mtimes(multMat, inpEllVec)
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
+%
+% $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
+% $Copyright: Moscow State University,
+%             Faculty of Computational Mathematics and Cybernetics,
+%             Science, System Analysis Department 2012 $
+%
 
-import modgen.common.throwerror;
-if ~(isa(multMat, 'double')) || ~(isa(inpEllVec, 'ellipsoid'))
-    fstStr = 'MTIMES: first multiplier is expected';
-    secStr = ' to be a matrix or a scalar,\n        ';
-    thdStr = 'and second multiplier - an ellipsoid.';
-    throwerror('wrongInput', [fstStr secStr thdStr]);
+import modgen.common.checkvar
+
+ellipsoid.checkIsMe(inpEllVec,'second');
+checkvar(multMat,@(x) isa(x,'double'),...
+    'errorTag','wrongInput','errorMessage',...
+    'first input argument must be matrix or sacalar.');
+checkvar(inpEllVec,'~any(isempty(x(:)))',...
+    'errorTag','wrongInput','errorMessage',...
+    'array of ellipsoids contains empty ellipsoid');
+
+
+isFstScal=isscalar(multMat);
+
+nDims = size(multMat,2);
+nDimsVec = dimension(inpEllVec);
+
+modgen.common.checkmultvar...
+    ('all(x2(:)==x2(1)) && (x1 || (~x1)&&(x2(1)==x3))',...
+    3,isFstScal,nDimsVec,nDims,...
+    'errorTag','wrongSizes',...
+    'errorMessage','dimensions not match.');
+
+if isFstScal
+    multMatSq = multMat*multMat;
 end
-
-[mRows, nDims] = size(multMat);
-nDimsInpEll = dimension(inpEllVec);
-maxDims = max(max(nDimsInpEll));
-minDims = min(min(nDimsInpEll));
-if ((maxDims ~= minDims) && (nDims ~= 1) && (mRows ~= 1)) ...
-        || ((maxDims ~= nDims) && (nDims ~= 1) && (mRows ~= 1))
-    throwerror('wrongSizes', 'MTIMES: dimensions do not match.');
-end
-
-[mRowsInpEll, nCols] = size(inpEllVec);
-for iRow = 1:mRowsInpEll
-    for jCol = 1:nCols
-        shMat = multMat*(inpEllVec(iRow, jCol).shape)*multMat';
-        shMat = 0.5*(shMat + shMat');
-        subOutEll(jCol) = ellipsoid(multMat *...
-            (inpEllVec(iRow, jCol).center), shMat);
+sizeCVec = num2cell(size(inpEllVec)); 
+outEllVec(sizeCVec{:}) = ellipsoid;
+arrayfun(@(x) fSingleMtimes(x), 1:numel(inpEllVec));
+    function fSingleMtimes(index)
+        singEll = inpEllVec(index);
+        if isFstScal
+            shMat = multMatSq*singEll.shape;
+        else
+            shMat = multMat*(singEll.shape)*multMat';
+            shMat = 0.5*(shMat + shMat');
+        end
+        outEllVec(index).center = multMat *singEll.center;
+        outEllVec(index).shape = shMat;
     end
-    if iRow == 1
-        outEllVec = subOutEll;
-    else
-        outEllVec = [outEllVec; subOutEll];
-    end
-    clear subOutEll;
 end

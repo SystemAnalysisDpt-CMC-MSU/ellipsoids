@@ -1,30 +1,27 @@
 classdef MatrixOperationsFactory<modgen.common.obj.StaticPropStorage
     properties (Constant,GetAccess=public)
-        USE_SPLINE_INTERPOLATION = true;
-        CONF_REPO_MGR_PROP='confRepoMgr';
+        DEFAULT_IS_SPLINE_USED = true;
+        IS_SPLINE_OP_PROP_NAME='isSplineUsed';
     end
     methods(Static)
         function obj =create(timeVec)
-            import gras.ellapx.uncertcalc.MatrixOperationsFactory;
+            import gras.mat.MatrixOperationsFactory;
             import modgen.common.throwerror;
-            [crmObj,isThere]=MatrixOperationsFactory.getProp(...
-                MatrixOperationsFactory.CONF_REPO_MGR_PROP);
+            [isSplineUsed,isThere]=MatrixOperationsFactory.getProp(...
+                MatrixOperationsFactory.IS_SPLINE_OP_PROP_NAME,true);
             if ~isThere
-                throwerror('confRepoMgrNotSet',['Configuration repo ',...
-                    'manager is not set via setConfRepoMgr method']);
+                isSplineUsed=MatrixOperationsFactory.DEFAULT_IS_SPLINE_USED;
             end
-            isSplineUsed=crmObj.getParam(...
-                'genericProps.isSplineForMatrixCalcUsed');
             if isSplineUsed
                 obj = gras.interp.SplineMatrixOperations(timeVec);
             else
                 obj = gras.mat.CompositeMatrixOperations();
             end
         end
-        function setConfRepoMgr(crmObj)
-            import gras.ellapx.uncertcalc.MatrixOperationsFactory;
+        function setIsSplineUsed(isSplineUsed)
+            import gras.mat.MatrixOperationsFactory;
             MatrixOperationsFactory.setProp(...
-                MatrixOperationsFactory.CONF_REPO_MGR_PROP,crmObj);
+                MatrixOperationsFactory.IS_SPLINE_OP_PROP_NAME,isSplineUsed);
         end
     end
     methods (Static, Access=private)

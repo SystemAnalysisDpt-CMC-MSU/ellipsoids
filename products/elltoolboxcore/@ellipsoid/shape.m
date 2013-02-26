@@ -1,66 +1,60 @@
-function EM = shape(E, A)
+function modEllArr = shape(ellArr, modMat)
 %
-% SHAPE - modifies the shape matrix of the ellipsoid without changing its center.
+% SHAPE - modifies the shape matrix of the ellipsoid without
+%   changing its center.
 %
+%	modEllArr = SHAPE(ellArr, modMat)  Modifies the shape matrices of
+%       the ellipsoids in the ellipsoidal array ellArr. The centers
+%       remain untouched - that is the difference of the function SHAPE and
+%       linear transformation modMat*ellArr. modMat is expected to be a
+%       scalar or a square matrix of suitable dimension.
 %
-% Description:
-% ------------
-%
-%    EM = SHAPE(E, A)  Modifies the shape matrices of the ellipsoids in the
-%                      ellipsoidal array E. The centers remain untouched -
-%                      that is the difference of the function SHAPE and
-%                      linear transformation A*E.
-%                      A is expected to be a scalar or a square matrix
-%                      of suitable dimension.
-%        
+% Input:
+%   regular:
+%       ellArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array
+%           of ellipsoids.
+%       modMat: double[nDim, nDim]/[1,1] - square matrix or scalar
 %
 % Output:
-% -------
+%	modEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of modified
+%       ellipsoids.
 %
-%    EM - array of modified ellipsoids.
+% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+% $Copyright:  The Regents of the University of California 2004-2008 $
 %
-%
-% See also:
-% ---------
-%
-%    ELLIPSOID/ELLIPSOID.
-%
-
-%
-% Author:
-% -------
-%
-%    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+% $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
+% $Copyright: Moscow State University,
+%             Faculty of Computational Mathematics and Cybernetics,
+%             Science, System Analysis Department 2012 $
 %
 
-  if ~(isa(A, 'double')) || ~(isa(E, 'ellipsoid'))
-    msg = sprintf('SHAPE: expected arguments are:\n');
-    msg = sprintf('%s       - array of ellipsoids of the same dimension,\n', msg);
-    msg = sprintf('%s       - scalar, or square matrix of the same dimension as ellipsoids.\n', msg);
-    error(msg);
-  end
 
-  [m, n] = size(A); 
-  if m ~= n
-    error('SHAPE: only square matrices are allowed.');
-  end
-  d      = dimension(E);
-  k      = max(max(d));
-  l      = min(min(d));
-  if ((k ~= l) && (n ~= 1) && (m ~= 1)) || ((k ~= n) && (n ~= 1) && (m ~= 1))
-    error('SHAPE: dimensions do not match.');
-  end
+ellipsoid.checkIsMe(ellArr,'first');
+modgen.common.checkvar(modMat, @(x)isa(x,'double'),...
+    'errorMessage','second input argument must be double');
 
-  EM     = [];
-  [m, n] = size(E);
-  for i = 1:m
-    for j = 1:n
-     Q    = A*(E(i, j).shape)*A';
-     Q    = 0.5*(Q + Q');
-     r(j) = ellipsoid(E(i, j).center, Q);
+isModScal = isscalar(modMat);
+if isModScal
+    modMatSq = modMat*modMat;
+else
+    [nRows, nDim] = size(modMat);
+    nDimsVec = dimension(ellArr);
+    modgen.common.checkmultvar('(x1==x2)&&all(x3==x2)',...
+        3,nRows,nDim,nDimsVec,'errorMessage',...
+        'input matrix not square or dimensions do not match');
+end
+sizeCVec = num2cell(size(ellArr));
+modEllArr(sizeCVec{:}) = ellipsoid;
+arrayfun(@(x) fSingleShape(x), 1:numel(ellArr) );
+    function fSingleShape(index)
+        singEll = ellArr(index);
+        if isModScal
+            qMat = modMatSq*singEll.shape;
+        else
+            qMat    = modMat*(singEll.shape)*modMat';
+            qMat    = 0.5*(qMat + qMat');
+        end
+        modEllArr(index).center = singEll.center;
+        modEllArr(index).shape = qMat;
     end
-    EM = [EM; r];
-    clear r;
-  end
-
 end

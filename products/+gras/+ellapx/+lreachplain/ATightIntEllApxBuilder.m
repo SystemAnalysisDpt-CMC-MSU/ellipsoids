@@ -44,7 +44,7 @@ classdef ATightIntEllApxBuilder<gras.ellapx.lreachplain.ATightEllApxBuilder
     end
     methods (Access=private)
         function self=prepareODEData(self)
-            import gras.ellapx.uncertcalc.MatrixOperationsFactory;
+            import gras.mat.MatrixOperationsFactory;
             %
             pDefObj=self.getProblemDef();
             timeVec=pDefObj.getTimeVec;

@@ -78,7 +78,7 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
                 'ztickmode','auto','xgrid','on','ygrid','on','zgrid','on'); 
             hVec=[];
             %
-            lightTypeList={{'left'},{40,-65},{-20,25}};
+            lightTypeList={{'left'},{40,65},{-20,25}};
             hLightVec=cellfun(@(x)camlight(hAxes,x{:}),lightTypeList);
             hVec=[hVec,hLightVec];            
         end
@@ -178,9 +178,10 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
                 import modgen.graphics.plot3adv;
                 plotName=['Good curve: ',...
                     self.goodDirProp2Str(lsGoodDirOrigVec,sTime)];
+                propList={'lineWidth',2,...
+                    'Parent',hAxes,'DisplayName',plotName};
                 hVec=plot3adv(timeVec.',xTouchCurveMat(1,:).',...
-                    xTouchCurveMat(2,:).',cMat,'lineWidth',2,...
-                    'Parent',hAxes,'DisplayName',plotName);
+                    xTouchCurveMat(2,:).',cMat,propList{:});
             end
         end
         %

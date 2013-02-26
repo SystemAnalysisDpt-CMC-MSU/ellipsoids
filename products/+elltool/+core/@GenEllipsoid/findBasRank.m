@@ -1,6 +1,6 @@
-function [orthBasMat rang]=findBasRang(qMat,absTol)
-% FINDBASRANG - find basis of space that is linear hull of
-%               input vector and find rang of that linear hull
+function [orthBasMat rankVal]=findBasRank(qMat,absTol)
+% FINDBASrankVal - find basis of space that is linear hull of
+%               input vector and find rankVal of that linear hull
 % Input:
 %   regular:
 %       qMat: double: [nDim,nCol] - matrix whose columns form some subspace
@@ -9,7 +9,7 @@ function [orthBasMat rang]=findBasRang(qMat,absTol)
 % Output:
 %   orthBasMat: double: [nDim,nDim] - orthogonal matrix whose
 %       columns form a basis in R^nDim
-%   rang: double: [1,1] - rang of the convex hull of input vectors
+%   rankVal: double: [1,1] - rank of the convex hull of input vectors
 %
 % $Author: Vitaly Baranov  <vetbar42@gmail.com> $    $Date: Nov-2012$
 % $Copyright: Moscow State University,
@@ -25,6 +25,5 @@ else
     orthBasMat(:,isNegVec)=-orthBasMat(:,isNegVec);
 end
 tolerance = absTol*norm(qMat,'fro');
-rang = sum(abs(diag(rBasMat)) > tolerance);
-rang = rang(1); %for case where rBasZMat is vector.
-end
+rankVal = sum(abs(diag(rBasMat)) > tolerance);
+rankVal = rankVal(1); %for case where rBasZMat is vector.

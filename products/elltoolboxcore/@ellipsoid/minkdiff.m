@@ -1,4 +1,4 @@
-function [centVec, boundPointMat] = minkdiff(varargin)
+function [centVec, boundPointMat] = minkdiff(fstEll,secEll,varargin)
 %
 % MINKDIFF - computes geometric (Minkowski) difference of two
 %            ellipsoids in 2D or 3D.
@@ -54,24 +54,20 @@ function [centVec, boundPointMat] = minkdiff(varargin)
 
 import elltool.conf.Properties;
 import modgen.common.throwerror;
+import modgen.common.checkmultvar;
 
-if nargin < 2
-    fstStr = 'MINKDIFF: first and second arguments must be ';
-    secStr = 'single ellipsoids.';
-    throwerror('wrongInput', [fstStr secStr]);
-end
-
-fstEll = varargin{1};
-secEll = varargin{2};
-
-if ~(isa(fstEll, 'ellipsoid')) || ~(isa(secEll, 'ellipsoid'))
-    fstStr = 'MINKDIFF: first and second arguments must be ';
-    secStr = 'single ellipsoids.';
-    throwerror('wrongInput', [fstStr secStr]);
-end
-
-if isbigger(fstEll, secEll) == 0
-    switch nargout
+ellipsoid.checkIsMe(fstEll,'first');
+ellipsoid.checkIsMe(secEll,'second');
+checkmultvar('isscalar(x1)&&isscalar(x2)',2,fstEll,secEll,...
+    'errorTag','wrongInput','errorMessage',...
+    'first and second arguments must be single ellipsoids.');
+nDim = dimension(fstEll);
+checkmultvar('(x1==x2)&&(x1<4)',2,nDim,dimension(secEll),...
+    'errorTag','wrongSizes','errorMessage',...
+    'ellipsoids must be of the same dimension, which not higher than 3.');
+nArgOut = nargout;
+if ~isbigger(fstEll, secEll)
+    switch nArgOut
         case 0,
             fstStr = 'Geometric difference of these two ellipsoids';
             secStr = ' is empty set.';
@@ -88,12 +84,8 @@ if isbigger(fstEll, secEll) == 0
     end
 end
 
-if nargin > 2
-    if isstruct(varargin{3})
-        Options = varargin{3};
-    else
-        Options = [];
-    end
+if nargin > 2 && isstruct(varargin{1})
+	Options = varargin{1};
 else
     Options = [];
 end
@@ -121,18 +113,8 @@ else
 end
 
 clrVec  = Options.color;
-fstEllDim = dimension(fstEll);
-secEllDim = dimension(secEll);
-if fstEllDim ~= secEllDim
-    throwerror('wrongSizes', ...
-        'MINKDIFF: ellipsoids must be of the same dimension.');
-end
-if secEllDim > 3
-    throwerror('wrongSizes', ...
-        'MINKDIFF: ellipsoid dimension must be not higher than 3.');
-end
 
-if nargout == 0
+if ~nArgOut
     isHld = ishold;
 end
 
@@ -147,7 +129,7 @@ if (Options.show_all ~= 0) && (nargout == 0)
 end
 
 if Properties.getIsVerbose()
-    if nargout == 0
+    if nArgOut == 0
         fstStr = 'Computing and plotting geometric difference ';
         secStr = 'of two ellipsoids...\n';
         fprintf([fstStr secStr]);
@@ -157,28 +139,28 @@ if Properties.getIsVerbose()
 end
 
 fstEllShMat = fstEll.shape;
-if rank(fstEllShMat) < size(fstEllShMat, 1)
+if isdegenerate(fstEll)
     fstEllShMat = ellipsoid.regularize(fstEllShMat,fstEll.absTol);
 end
 secEllShMat = secEll.shape;
-if rank(secEllShMat) < size(secEllShMat, 1)
+if isdegenerate(secEll)
     secEllShMat = ellipsoid.regularize(secEllShMat,secEll.absTol);
 end
-switch secEllDim
+switch nDim
     case 2,
         centVec = fstEll.center - secEll.center;
         phiVec = linspace(0, 2*pi, fstEll.nPlot2dPoints);
         lMat = ellipsoid.rm_bad_directions(fstEllShMat, ...
             secEllShMat, [cos(phiVec); sin(phiVec)]);
         if size(lMat, 2) > 0
-            [~, boundPointMat] = rho(fstEll, lMat);
+            [~, bpMat] = rho(fstEll, lMat);
             [~, subBoundPointMat] = rho(secEll, lMat);
-            boundPointMat = boundPointMat - subBoundPointMat;
-            boundPointMat = [boundPointMat boundPointMat(:, 1)];
+            bpMat = bpMat - subBoundPointMat;
+            boundPointMat = [bpMat bpMat(:, 1)];
         else
             boundPointMat = centVec;
         end
-        if nargout == 0
+        if nArgOut == 0
             if Options.fill ~= 0
                 fill(boundPointMat(1, :), boundPointMat(2, :), clrVec);
                 hold on;
@@ -212,7 +194,7 @@ switch secEllDim
         else
             boundPointMat = centVec;
         end
-        if nargout == 0
+        if nArgOut == 0
             nBoundPonts = size(boundPointMat, 2);
             if nBoundPonts > 1
                 chllMat = convhulln(boundPointMat');
@@ -238,7 +220,7 @@ switch secEllDim
             sqrt(secEll.shape) - sqrt(fstEll.shape);
         boundPointMat(1, 2) = fstEll.center - secEll.center + ...
             sqrt(fstEll.shape) - sqrt(secEll.shape);
-        if nargout == 0
+        if nArgOut == 0
             hPlot = ell_plot(boundPointMat);
             hold on;
             set(hPlot, 'Color', clrVec, 'LineWidth', 2);
@@ -248,15 +230,15 @@ switch secEllDim
         
 end
 
-if nargout == 0
+if nArgOut == 0
     if isHld == 0
         hold off;
     end
 end
 
-if nargout == 1
+if nArgOut == 1
     centVec = boundPointMat;
 end
-if nargout == 0
+if nArgOut == 0
     clear centVec boundPointMat;
 end

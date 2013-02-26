@@ -27,10 +27,11 @@ function isBadDirVec = isbaddirection(fstEll, secEll, dirsMat)
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
 %
-% $Author: Rustam Guliev <glvrst@gmail.com>> $  $Date: 10-11-2012$
+% $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
 % $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Computer Science,
-%            System Analysis Department 2012 $
+%             Faculty of Computational Mathematics and Cybernetics,
+%             Science, System Analysis Department 2012 $
+%
 
 import modgen.common.throwwarn;
 
@@ -38,7 +39,8 @@ if ~isbigger(fstEll, secEll)
     fstErrMsg = 'ISBADDIRECTION: geometric difference of these ';
     secErrMsg = 'two ellipsoids is empty set.\n';
     throwwarn('wrongInput:emptyGeomDiff', [fstErrMsg secErrMsg]);
+    isBadDirVec = true(1,size(dirsMat,2));
+else    
+    isBadDirVec=ellipsoid.isbaddirectionmat(fstEll.shape,...
+        secEll.shape, dirsMat);
 end
-
-isBadDirVec=ellipsoid.isbaddirectionmat(fstEll.shape,...
-    secEll.shape, dirsMat);

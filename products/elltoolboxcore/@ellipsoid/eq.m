@@ -1,54 +1,72 @@
 function [isEqualArr, reportStr] = eq(ellFirstArr, ellSecArr)
+% EQ - compares two arrays of ellipsoids
+%
+% Input:
+%   regular:
+%       ellFirstArr: ellipsoid: [nDims1,nDims2,...,nDimsN]/[1,1]- the first
+%           array of ellipsoid objects
+%       ellSecArr: ellipsoid: [nDims1,nDims2,...,nDimsN]/[1,1] - the second
+%           array of ellipsoid objects
+%
+% Output:
+%   isEqualArr: logical: [nDims1,nDims2,...,nDimsN]- array of comparison
+%       results
+%
+%   reportStr: char[1,] - comparison report
+%
+% $Author: Vadim Kaushansky  <vkaushanskiy@gmail.com> $    $Date: Nov-2012$
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Cybernetics,
+%            System Analysis Department 2012 $
+% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $    $Date: Dec-2012$
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Cybernetics,
+%            System Analysis Department 2012 $
 
-import modgen.common.throwerror;
 import modgen.struct.structcomparevec;
 import gras.la.sqrtm;
 import elltool.conf.Properties;
-import modgen.common.type.simple.*;
+import modgen.common.throwerror;
+%
+ellipsoid.checkIsMe(ellFirstArr,'first');
+ellipsoid.checkIsMe(ellSecArr,'second');
+%
+nFirstElems = numel(ellFirstArr);
+nSecElems = numel(ellSecArr);
 
-checkgen(ellFirstArr,@(x)isa(x,'ellipsoid'));
-checkgen(ellSecArr,@(x)isa(x,'ellipsoid'));
-
-[kDim, lDim] = size(ellFirstArr);
-nFirstElems = kDim * lDim;
-[mDim, nDim] = size(ellSecArr);
-nSecElems = mDim * nDim;
-
-firstSizeVec = [kDim, lDim];
-secSizeVec = [mDim, nDim];
-relTol = ellFirstArr(1, 1).relTol;
-if (nFirstElems > 1) & (nSecElems > 1)
- 
+firstSizeVec = size(ellFirstArr);
+secSizeVec = size(ellSecArr);
+isnFirstScalar=nFirstElems > 1;
+isnSecScalar=nSecElems > 1;
+relTolArr = ellFirstArr.getRelTol;
+relTol=min(relTolArr(:));
+%
+SEll1Array=arrayfun(@formCompStruct,ellFirstArr);
+SEll2Array=arrayfun(@formCompStruct,ellSecArr);
+%
+if isnFirstScalar&&isnSecScalar
+    
     if ~isequal(firstSizeVec, secSizeVec)
-        throwerror...
-        ('wrongSizes', '==: sizes of ellipsoidal arrays do not... match.');
+        throwerror('wrongSizes',...
+            'sizes of ellipsoidal arrays do not... match');
     end;
-    SEll1Array=arrayfun(@(x)struct('Q',gras.la.sqrtm(x.shape),'q',...
-        x.center'),ellFirstArr(:, :));
-    SEll2Array=arrayfun(@(x)struct('Q',gras.la.sqrtm(x.shape),'q',...
-        x.center'),ellSecArr(:, :));
-    [isEqualArr,reportStr]=modgen.struct.structcomparevec(SEll1Array,...
-        SEll2Array,relTol);
+    compare();
     isEqualArr = reshape(isEqualArr, firstSizeVec);
-elseif (nFirstElems > 1)
-
-    SScalar = arrayfun(@(x)struct('Q',gras.la.sqrtm(x.shape),'q',...
-        x.center'), ellSecArr);   
-    SEll1Array=arrayfun(@(x)struct('Q',gras.la.sqrtm(x.shape),'q',...
-        x.center'),ellFirstArr(:, :));
-    SEll2Array=repmat(SScalar, firstSizeVec);
-    [isEqualArr,reportStr]=modgen.struct.structcomparevec(SEll1Array,...
-        SEll2Array,relTol);
+elseif isnFirstScalar
+    SEll2Array=repmat(SEll2Array, firstSizeVec);
+    compare();
     
     isEqualArr = reshape(isEqualArr, firstSizeVec);
 else
-    SScalar = arrayfun(@(x)struct('Q',gras.la.sqrtm(x.shape),'q',...
-        x.center'), ellFirstArr);   
-    SEll1Array=repmat(SScalar, secSizeVec);
-    SEll2Array=arrayfun(@(x)struct('Q',gras.la.sqrtm(x.shape),'q',...
-        x.center'),ellSecArr(:, :));
-    [isEqualArr,reportStr]=modgen.struct.structcomparevec(SEll1Array,...
-        SEll2Array,relTol);
+    SEll1Array=repmat(SEll1Array, secSizeVec);
+    compare();
     isEqualArr = reshape(isEqualArr, secSizeVec);
 end
-
+    function compare()
+        [isEqualArr,reportStr]=modgen.struct.structcomparevec(SEll1Array,...
+            SEll2Array,relTol);
+    end
+end
+function SComp=formCompStruct(ellObj)
+SComp=struct('Q',gras.la.sqrtm(ellObj.shape),'q',ellObj.center.');
+end

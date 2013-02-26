@@ -9,7 +9,7 @@ classdef LReachProblemDynamicsInterp<...
             import gras.ellapx.common.*;
             import gras.interp.MatrixInterpolantFactory;
             import gras.ode.MatrixODESolver;
-            import gras.ellapx.uncertcalc.MatrixOperationsFactory;
+            import gras.mat.MatrixOperationsFactory;
             %
             if ~isa(problemDef,...
                     'gras.ellapx.lreachuncert.probdef.IReachContProblemDef')
