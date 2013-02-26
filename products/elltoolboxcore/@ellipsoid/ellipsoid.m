@@ -120,10 +120,9 @@ classdef ellipsoid < handle
             % We cannot just check the condition 'min(eig(Q)) < 0'
             % because the zero eigenvalue may be internally represented
             % as something like -10^(-15).
-            minEig = min(eig(shMat));
-            checkmultvar('(x1 >= 0) || (abs(x1) < x2)',2,minEig, absTolVal,...
+            checkmultvar('gras.la.ismatpossemdef(x1,x2)',2,shMat, absTolVal,...
                 'errorTag','wrongInput','errorMessage',...
-                'shape matrix must be positive semi-definute.');
+                'shape matrix must be positive semi-definite.');
             ell.center = centVec;
             ell.shape  = shMat;
             ell.absTol = absTolVal;
