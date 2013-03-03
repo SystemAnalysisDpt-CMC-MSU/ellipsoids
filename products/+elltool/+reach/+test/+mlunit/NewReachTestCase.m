@@ -4,45 +4,58 @@ classdef NewReachTestCase < mlunitext.test_case
            self=self@mlunitext.test_case(varargin{:});
         end
         %
+        function self=testConstructor(self)
+            import reach;
+            timeVec=[0 0.1];
+            fMethod=@(lSys) reach(lSys,ellipsoid(eye(2)),...
+                [1 0]', timeVec);
+            %
+            checkUVW2(self,'U',fMethod);
+            checkUVW2(self,'V',fMethod);
+            checkUVW2(self,'W',fMethod);
+        end
+        %
         function self = testEvolve(self)
             import reach;
             lSys=linsys(eye(2),eye(2),ellipsoid(eye(2)));
             rSet=reach(lSys,ellipsoid(eye(2)),[1 0]', [0 0.1]);
+            timeVec=[0.2 0.5];
+            fMethod=@(lSys) evolve(rSet,timeVec,lSys);
             %
-            checkUVW('V');
-            checkUVW('U');
-            checkUVW('W');
-            %
-            function checkUVW(typeUVW)
+            checkUVW2(self,'V',fMethod);
+            checkUVW2(self,'U',fMethod);
+            checkUVW2(self,'W',fMethod);
+        end
+        %
+        function checkUVW2(self,typeUVW,fMethod)
+                import reach;
                 % U - control, V - disturbance, W - noise
                 % Center of ellipsoid is of type double
                 lSysRight=formVLinSys(typeUVW,1,false,false);
                 lSysWrong=formVLinSys(typeUVW,2,false,false);
-                evolve(rSet,[0.2 0.5],lSysRight);       
+                fMethod(lSysRight);       
                 self.runAndCheckError(@check,...
-                     'wrongDistMat');
+                     'wrongMat');
                 %
                 % Center of ellipsoid is of type cell
                 lSysRight=formVLinSys(typeUVW,1,false,true);
                 lSysWrong=formVLinSys(typeUVW,2,false,true);
-                evolve(rSet,[0.2 0.5],lSysRight);       
+                fMethod(lSysRight);       
                 self.runAndCheckError(@check,...
-                     'wrongDistMat');
+                     'wrongMat');
                 %
                 if typeUVW~='W'
                     % Matrix is of type cell
                     lSysRight=formVLinSys(typeUVW,1,true,true);
                     lSysWrong=formVLinSys(typeUVW,2,true,true);
-                    evolve(rSet,[0.2 0.5],lSysRight);       
+                    fMethod(lSysRight);       
                     self.runAndCheckError(@check,...
-                          'wrongDistMat');  
+                          'wrongMat');  
                 end
                 function check()
-                    evolve(rSet,[0.2 0.5],lSysWrong);
+                    fMethod(lSysWrong);
                 end
-            end
-            %    
-            function lSys=formVLinSys(typeUVW,typeMatShape,isGCell,isCenterCell)
+                    function lSys=formVLinSys(typeUVW,typeMatShape,isGCell,isCenterCell)
                 if isCenterCell
                     testStruct.center={'0';'0'};
                 else
@@ -68,7 +81,8 @@ classdef NewReachTestCase < mlunitext.test_case
                     lSys=linsys(eye(2),eye(2),ellipsoid(eye(2)),...
                         eye(2),ellipsoid(eye(2)),eye(2),testStruct);
                 end
-            end            
-        end
-    end
+            end 
+            end
+            %          
+    end    
 end

@@ -59,7 +59,7 @@ function [E, T] = get_ea(rs)
     for j = 1:n
       q  = rs.center_values(:, j);
       Q  = (1 + rs.relTol()) * reshape(QQ(:, j), d, d);
-      if min(eig(Q)) < (- rs.absTol())
+      if ~gras.la.ismatposdef(Q,rs.absTol)
         Q = rs.absTol() * eye(d);
       end
       ee = [ee ellipsoid(q, Q)];

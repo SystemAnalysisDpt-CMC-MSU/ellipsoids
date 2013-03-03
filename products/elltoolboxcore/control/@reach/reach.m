@@ -77,6 +77,8 @@ classdef reach
         %
         %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
         %
+          import modgen.common.checkvar;
+          import modgen.common.checkmultvar;
           import elltool.conf.Properties;
           neededPropNameList = {'absTol','relTol','nPlot2dPoints','nPlot3dPoints','nTimeGridPoints'};
           [absTolVal, relTolVal, nPlot2dPointsVal,nPlot3dPointsVal,nTimeGridPointsVal] =...
@@ -373,10 +375,15 @@ classdef reach
                 for i = 1:size(RS.time_values, 2)
                   p = reach.matrix_eval(lsys.control.center, RS.time_values(i));
                   P = reach.matrix_eval(lsys.control.shape, RS.time_values(i));
-                  if (P ~= P') | (min(eig(P)) < 0)
-                    error('REACH: shape matrix of ellipsoidal control bounds must be positive definite.')
-                  end
-                  Bp(:, i)    = B*p;
+                  checkvar(P,'gras.la.ismatsymm(x)',...
+                   'errorTag','wrongMat', 'errorMessage',...
+                   strcat('shape matrix of ellipsoidal control bounds must',... '
+                   'be symmetric.'));            
+                  checkmultvar('gras.la.ismatposdef(x1,x2)',2,P, RS.absTol,...
+                   'errorTag','wrongMat','errorMessage',...
+                   strcat('shape matrix of ellipsoidal control bounds',...
+                   ' must be positive definite.'));
+                   Bp(:, i)    = B*p;
                   P           = B * P * B';
                   BPB(:, i)   = reshape(P, d1*d1, 1);
               P           = sqrtm(P);
@@ -411,9 +418,14 @@ classdef reach
                 BPBsr = zeros(d1*d1, size(RS.time_values, 2));
                 for i = 1:size(RS.time_values, 2)
                   P = reach.matrix_eval(lsys.control.shape, RS.time_values(i));
-                  if (P ~= P') | (min(eig(P)) < 0)
-                    error('REACH: shape matrix of ellipsoidal control bounds must be positive definite.')
-                  end
+                  checkvar(P,'gras.la.ismatsymm(x)',...
+                   'errorTag','wrongMat', 'errorMessage',...
+                   strcat('shape matrix of ellipsoidal control bounds must',... '
+                   'be symmetric.'));            
+                  checkmultvar('gras.la.ismatposdef(x1,x2)',2,P, RS.absTol,...
+                   'errorTag','wrongMat','errorMessage',...
+                   strcat('shape matrix of ellipsoidal control bounds',...
+                   ' must be positive definite.'));
                   P           = B * P * B';
                   BPB(:, i)   = reshape(P, d1*d1, 1);
                   P           = sqrtm(P);
@@ -442,10 +454,15 @@ classdef reach
                 end
                 if iscell(lsys.control.shape)
                   P = reach.matrix_eval(lsys.control.shape, RS.time_values(i));
-                  if (P ~= P') | (min(eig(P)) < 0)
-                    error('REACH: shape matrix of ellipsoidal control bounds must be positive definite.')
-                  end
-                else
+                  checkvar(P,'gras.la.ismatsymm(x)',...
+                   'errorTag','wrongMat', 'errorMessage',...
+                   strcat('shape matrix of ellipsoidal control bounds must',... '
+                   'be symmetric.'));            
+                  checkmultvar('gras.la.ismatposdef(x1,x2)',2,P, RS.absTol,...
+                   'errorTag','wrongMat','errorMessage',...
+                   strcat('shape matrix of ellipsoidal control bounds',...
+                   ' must be positive definite.'));
+                  else
                   P = lsys.control.shape;
                 end
                 Bp(:, i)    = B*p;
@@ -542,9 +559,14 @@ classdef reach
                   for i = 1:size(RS.time_values, 2)
                     q = reach.matrix_eval(lsys.disturbance.center, RS.time_values(i));
                     Q = reach.matrix_eval(lsys.disturbance.shape, RS.time_values(i));
-                    if (Q ~= Q') | (min(eig(Q)) < 0)
-                      error('REACH: shape matrix of ellipsoidal disturbance bounds must be positive definite.')
-                    end
+                    checkvar(Q,'gras.la.ismatsymm(x)',...
+                        'errorTag','wrongMat', 'errorMessage',...
+                        strcat('shape matrix of ellipsoidal disturbance',...
+                        ' must be symmetric.'));            
+                    checkmultvar('gras.la.ismatposdef(x1,x2)',2,Q, RS.absTol,...
+                        'errorTag','wrongMat','errorMessage',...
+                        strcat('shape matrix of ellipsoidal disturbance',...
+                        ' bounds must be positive definite.'));
                     Gq(:, i)    = G*q;
                     Q           = G * Q * G';
                     GQG(:, i)   = reshape(Q, d1*d1, 1);
@@ -580,9 +602,14 @@ classdef reach
                   GQGsr = zeros(d1*d1, size(RS.time_values, 2));
                   for i = 1:size(RS.time_values, 2)
                     Q = reach.matrix_eval(lsys.disturbance.shape, RS.time_values(i));
-                    if (Q ~= Q') | (min(eig(Q)) < 0)
-                      error('REACH: shape matrix of ellipsoidal disturbance bounds must be positive definite.')
-                    end
+                    checkvar(Q,'gras.la.ismatsymm(x)',...
+                        'errorTag','wrongMat', 'errorMessage',...
+                        strcat('shape matrix of ellipsoidal disturbance',...
+                        ' must be symmetric.'));            
+                    checkmultvar('gras.la.ismatposdef(x1,x2)',2,Q, RS.absTol,...
+                        'errorTag','wrongMat','errorMessage',...
+                        strcat('shape matrix of ellipsoidal disturbance',...
+                        ' bounds must be positive definite.'));
                     Q           = G * Q * G';
                     GQG(:, i)   = reshape(Q, d1*d1, 1);
                     Q           = sqrtm(Q);
@@ -611,9 +638,14 @@ classdef reach
                   end
                   if iscell(lsys.disturbance.shape)
                     Q = reach.matrix_eval(lsys.disturbance.shape, RS.time_values(i));
-                    if (Q ~= Q') | (min(eig(Q)) < 0)
-                      error('REACH: shape matrix of ellipsoidal disturbance bounds must be positive definite.')
-                    end
+                    checkvar(Q,'gras.la.ismatsymm(x)',...
+                        'errorTag','wrongMat', 'errorMessage',...
+                        strcat('shape matrix of ellipsoidal disturbance',...
+                        ' must be symmetric.'));            
+                    checkmultvar('gras.la.ismatposdef(x1,x2)',2,Q, RS.absTol,...
+                        'errorTag','wrongMat','errorMessage',...
+                        strcat('shape matrix of ellipsoidal disturbance',...
+                        ' bounds must be positive definite.'));
                   else
                     Q = lsys.disturbance.shape;
                   end
@@ -662,9 +694,14 @@ classdef reach
                 for i = 1:size(RS.time_values, 2)
                   w  = [w reach.matrix_eval(lsys.noise.center, RS.time_values(i))];
                   ww = reach.matrix_eval(lsys.noise.shape, RS.time_values(i));
-                  if (ww ~= ww') | (min(eig(ww)) < 0)
-                    error('REACH: shape matrix of ellipsoidal noise bounds must be positive definite.')
-                  end
+                  checkvar(ww,'gras.la.ismatsymm(x)',...
+                    'errorTag','wrongMat', 'errorMessage',...
+                    strcat('shape matrix of ellipsoidal noise',...
+                    ' bounds must be symmetric.'));            
+                  checkmultvar('gras.la.ismatposdef(x1,x2)',2,ww, absTolVal,...
+                    'errorTag','wrongMat','errorMessage',...
+                    strcat('shape matrix of ellipsoidal noise bounds',...
+                    ' must be positive definite.'));
                   W  = [W reshape(ww, dy*dy, 1)];
                 end
                 if isdiscrete(lsys)
@@ -689,9 +726,14 @@ classdef reach
                 W = [];
                 for i = 1:size(RS.time_values, 2)
                   ww = reach.matrix_eval(lsys.noise.shape, RS.time_values(i));
-                  if (ww ~= ww') | (min(eig(ww)) < 0)
-                    error('REACH: shape matrix of ellipsoidal noise bounds must be positive definite.')
-                  end
+                  checkvar(ww,'gras.la.ismatsymm(x)',...
+                    'errorTag','wrongMat', 'errorMessage',...
+                    strcat('shape matrix of ellipsoidal noise',...
+                    ' bounds must be symmetric.'));            
+                  checkmultvar('gras.la.ismatposdef(x1,x2)',2,ww, absTolVal,...
+                    'errorTag','wrongMat','errorMessage',...
+                    strcat('shape matrix of ellipsoidal noise bounds',...
+                    ' must be positive definite.'));
                   W  = [W reshape(ww, dy*dy, 1)];
                 end
                 mydata.w = lsys.noise.center;

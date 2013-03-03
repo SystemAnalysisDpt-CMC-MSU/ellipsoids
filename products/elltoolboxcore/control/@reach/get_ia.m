@@ -61,7 +61,7 @@ function [I, T] = get_ia(rs)
       q  = rs.center_values(:, j);
       Q  = (1 - rs.relTol()) * reshape(QQ(:, j), d, d);
       Q  = real(Q);
-      if min(eig(Q)) < (- rs.absTol())
+      if ~gras.la.ismatposdef(Q,rs.absTol)
         Q = rs.absTol() * eye(d);
       end
       ee = [ee ellipsoid(q, Q)];
