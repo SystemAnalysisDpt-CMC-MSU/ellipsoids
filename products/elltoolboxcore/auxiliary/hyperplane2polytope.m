@@ -29,18 +29,19 @@ function P = hyperplane2polytope(HA)
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
-
+  
+  import modgen.common.throwerror;
   import elltool.conf.Properties;
 
   if ~(isa(HA, 'hyperplane'))
-    error('HYPERPLANE2POLYTOPE: input argument must be array of hyperplanes.');
+    throwerror('wrongInput:class','Input argument must be array of hyperplanes.');
   end
 
   dm = dimension(HA);
   mn = min(min(dm));
   mx = max(max(dm));
   if mn ~= mx
-    error('HYPERPLANE2POLYTOPE: hyperplanes in the array must be of the same dimension.');
+    throwerror('wrongInput:dimensions','Hyperplanes in the array must be of the same dimension.');
   end
   
   [m, n] = size(HA);

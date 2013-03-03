@@ -457,6 +457,7 @@ function [distEllEllArray, timeOfCalculationArray] = l_elldist(ellObj1Array, ell
     else
         fCompositeOneEll1FlagOn=@(ellObj2,absTol)findEllMetDistance(ellObj1Array,ellObj2,N_MAX_ITER,absTol);
         fCompositeOneEll1FlagOff=@(ellObj2,absTol)computeEllEllDistance(ellObj1Array,ellObj2,N_MAX_ITER,absTol);
+        absTolArray = ones(size(ellObj2Array))*absTolArray;
         if flag
             [distEllEllArray timeOfCalculationArray] =arrayfun(fCompositeOneEll1FlagOn,ellObj2Array,absTolArray);
         else
@@ -499,7 +500,10 @@ function [d, status] = l_hpdist(E, X, flag)
   if (mn2 ~= mx2)
     error('DISTANCE: hyperplanes must be of the same dimension.');
   end
-
+  if (mn1 ~= mn2)
+    error('DISTANCE: ellipsoids and hyperplanes must be of the same dimension.');
+  end
+  
   if Properties.getIsVerbose()
     if (t1 > 1) || (t2 > 1)
       fprintf('Computing %d ellipsoid-to-hyperplane distances...\n', max([t1 t2]));
@@ -654,13 +658,13 @@ function [d, status] = l_polydist(E, X)
             variable x(mx1, 1)
             variable y(mx1, 1)
             if flag
-                f = (x - y)'*Qi*(x - y);
+                f = (x - y)'*Q*(x - y);
             else
                 f = (x - y)'*(x - y);
             end
             minimize(f)
             subject to
-                x'*Qi*x + 2*(-Qi*q)'*x + (q'*Qi*q - 1) <= 0
+                x'*Q*x + 2*(-Q*q)'*x + (q'*Q*q - 1) <= 0
                 A*y - b <= 0
         cvx_end
 
@@ -691,13 +695,13 @@ function [d, status] = l_polydist(E, X)
             variable x(mx1, 1)
             variable y(mx1, 1)
             if flag
-                f = (x - y)'*Qi*(x - y);
+                f = (x - y)'*Q*(x - y);
             else
                 f = (x - y)'*(x - y);
             end
             minimize(f)
             subject to
-                x'*Qi*x + 2*(-Qi*q)'*x + (q'*Qi*q - 1) <= 0
+                x'*Q*x + 2*(-Q*q)'*x + (q'*Q*q - 1) <= 0
                 A*y - b <= 0
         cvx_end
 
