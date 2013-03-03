@@ -1,0 +1,98 @@
+Traditional control theory is concerned with the design
+of linear feedback control with desirable asymptotic behavior,
+such as stability and small steady state and tracking errors,
+while properties of transient behavior are expressed in terms
+of overshoot and speed of response.
+External disturbances can be handled by modeling these as random processes,
+leading to the Linear Quadratic Gaussian (LQG) problem formulation.
+This theory has some limitations.  
+
+Because the feedback law is specified to be linear,
+it is not possible for design methods to explicitly incorporate hard bounds
+on the control values, e.g.,
+the requirement that the applied force should not exceed a specified limit.
+Second, it is not possible to express finite time requirements, e.g.,
+the requirement that the system state reach a pre-specified value
+at a pre-specified time.
+Third, it is not possible to demand guaranteed performance in the face
+of disturbances, e.g, the requirement that a certain target state be reached,
+no matter what the disturbance.
+Thus control problems with hard bounds on the control values,
+restrictions on the state trajectory over a finite time horizon,
+and guaranteed behavior despite the disturbances,
+are difficult to solve using frequency based design methods.
+
+In order to address these problems one needs to study system evolution
+in the time domain.
+The central concept that emerges in  such studies is that of the \emph{reach}
+set, which is the set of states that can be reached by using all possible
+controls. 
+This chapter is devoted to the formulation and computation
+of the reach set of a linear system with disturbances.
+The concept of reachability was introduced in \cite{leemarkus};
+\cite{leitmann82} shows the reach set can be computed by solving
+the forward Hamilton-Jacobi-Bellman-Isaacs (HJBI) partial differential
+equation; and the notion of backward reachability with its application
+to aiming at a specified target set is described in \cite{krasovski}.
+Reachability of hybrid systems is addressed in \cite{purvar94, lygeros99}.
+Over the last decade, significant advances were made in
+the characterization of reach sets and their computation for linear systems.
+
+
+
+
+
+
+
+
+
+{\it Ellipsoidal Toolbox} (ET) implements in MATLAB
+the ellipsoidal calculus \cite{kurvalyi}
+and its application to the reachability analysis of continuous-time
+\cite{kurvar01}, discrete-time \cite{kurvar07}, possibly time-varying linear systems,
+and linear systems with disturbances \cite{kurvar2},
+for which ET calculates both open-loop and close-loop reach sets.
+The ellipsoidal calculus provides the following benefits:
+\begin{itemize}
+\item The complexity of the
+ellipsoidal representation is quadratic in the dimension of
+the state space, and linear in the number of time steps.
+\item It is possible to exactly represent the reach set of
+linear system through both external and internal ellipsoids.
+\item It is possible to single out individual external and internal
+approximating ellipsoids that are optimal to some given criterion
+(e.g. trace, volume, diameter), or combination of such criteria.
+\item We obtain simple analytical expressions for the control
+that steers the state to a desired target.
+\end{itemize}
+The report is organized as follows.
+\newline
+Chapter \ref{ch_ellcalc} describes the operations of the
+ellipsoidal calculus: affine transformation, geometric sum,
+geometric difference, intersections with
+hyperplane, ellipsoid, halfspace and polytope.
+\newline
+Chapter \ref{ch_reachability} presents the reachability problem and
+ellipsoidal methods for the reach set approximation.
+\newline
+Chapter \ref{ch_install} contains {\it Ellipsoidal Toolbox} installation
+and quick start instructions, and lists the software packages
+used by the toolbox.
+\newline
+Chapter \ref{ch_implementation} describes the implementation of methods
+from Chapters \ref{ch_ellcalc} and \ref{ch_reachability}
+and visualization routines.
+\newline
+Chapter \ref{ch_objects} describes structures and objects implemented and
+used in the toolbox.
+\newline
+Chapter \ref{ch_examples} gives examples of how to use the toolbox.
+\newline
+Chapter \ref{ch_summary} collects some conclusions and plans for future
+toolbox development.
+\newline
+The functions provided by the toolbox together with their descriptions
+are listed in Appendix A.
+
+
+

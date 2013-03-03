@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<root version="1" xml_tb_version="2.0" type="struct" >
+<valueObj type="struct" >
+	<dataLogging type="struct" >
+		<isEnabled type="boolean" >0</isEnabled>
+		<functionNameList type="cell" size="0 0"/> 
+	</dataLogging>
+</valueObj>
+<keyStr type="char" >default</keyStr>
+</root>
