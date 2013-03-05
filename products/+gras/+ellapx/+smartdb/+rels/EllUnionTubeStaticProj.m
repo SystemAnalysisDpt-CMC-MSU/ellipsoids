@@ -267,7 +267,8 @@ classdef EllUnionTubeStaticProj<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&
             function refineFactor=getRefineFactorByNeighborQMat(...
                     aLeftVec,qLeftMat,tLeft,aRightVec,qRightMat,tRight)
                     tDeltaInv=1./(tRight-tLeft);
-                    aDiff=abs(norm(aRightVec-aLeftVec)*tDeltaInv);
+                    aDiffVec = aRightVec-aLeftVec;
+                    aDiff=abs(sqrt(sum(aDiffVec.*aDiffVec))*tDeltaInv);
                     qDiff=sqrt(max(abs(eig(qRightMat-qLeftMat))))*tDeltaInv;
                     eigLeftVec=eig(qLeftMat);
                     eigRightVec=eig(qRightMat);
