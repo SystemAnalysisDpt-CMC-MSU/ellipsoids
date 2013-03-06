@@ -309,14 +309,14 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 reasonStr='';
                 isOk=false;
                 absTol =  elltool.conf.Properties.getAbsTol();
-                isNotPosDefVec=SquareMatVector.evalMFunc(@(x)~isposdef(x,absTol),QArray);
+                isNotPosDefVec=SquareMatVector.evalMFunc(@(x)~gras.la.ismatposdef(x,absTol),QArray);
                 if any(isNotPosDefVec)
                     errTagStr='QArrayNotPos';
                     reasonStr='QArray is not positively defined';
                     return;
                 end
                 %                
-                isNotPosDefVec=SquareMatVector.evalMFunc(@(x)~isposdef(x,MIN_M_EIG_ALLOWED),MArray);
+                isNotPosDefVec=SquareMatVector.evalMFunc(@(x)~gras.la.ismatposdef(x,MIN_M_EIG_ALLOWED),MArray);
                 if any(isNotPosDefVec)
                     errTagStr='MArrayNeg';
                     reasonStr='MArray is negatively defined';

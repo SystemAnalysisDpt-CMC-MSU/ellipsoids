@@ -90,6 +90,7 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
                 BPBTransSqrtLDynamics,CQCTransSqrtLDynamics,...
                 ltSpline,t,QIntMat,QExtMat)
             import modgen.common.throwerror;
+            import gras.la.ismatposdef;
             A=AtDynamics.evaluate(t);
             ltVec=ltSpline.evaluate(t);
             %
@@ -103,7 +104,7 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             %
             [VMat,DMat]=eig(QIntMat);
             absTol =  elltool.conf.Properties.getAbsTol();
-            if ~ispossemdef(QIntMat,absTol)
+            if ~ismatpossemdef(QIntMat,absTol)
                 throwerror('wrongState','internal approx has degraded');
             end
             Q_star=VMat*sqrt(DMat)*transpose(VMat);
@@ -113,7 +114,7 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             piDenominator=sqrt(sum((QIntMat*ltVec).*ltVec));
             absTol =  elltool.conf.Properties.getAbsTol();
             if (piNumerator<=0)||(piDenominator<=0)
-                if ~isposdef(D,absTol)
+                if ~ismatposdef(D,absTol)
                     throwerror('wrongInput',...
                         ['degenerate matrices C,Q for disturbance ',...
                         'contraints are not supported']);

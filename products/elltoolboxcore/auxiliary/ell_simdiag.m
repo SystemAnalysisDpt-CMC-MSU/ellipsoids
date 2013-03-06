@@ -42,6 +42,7 @@ function T = ell_simdiag(A, B)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %    Rustam Guliev
   import gras.la.ismatsymm;
+  import gras.la.ismatposdef;
   absTol =  elltool.conf.Properties.getAbsTol();
   %  
   if ~(isa(A, 'double')) || ~(isa(B, 'double'))
