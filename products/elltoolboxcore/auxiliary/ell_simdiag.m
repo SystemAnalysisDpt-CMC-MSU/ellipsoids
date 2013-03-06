@@ -42,10 +42,12 @@ function T = ell_simdiag(A, B)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %    Rustam Guliev
   import gras.la.ismatsymm;
+  absTol =  elltool.conf.Properties.getAbsTol();
+  %  
   if ~(isa(A, 'double')) || ~(isa(B, 'double'))
     error('ELL_SIMDIAG: both arguments must be symmetric matrices of the same dimension.');
   end
-  if (~ismatsymm(A)) || (min(eig(A)) <= 0)
+  if (~ismatsymm(A) || ~ismatposdef(A,absTol))
     error('ELL_SIMDIAG: first argument must be symmetric positive definite matrix.');
   end
   if (~ismatsymm(B))
@@ -56,9 +58,6 @@ function T = ell_simdiag(A, B)
   n = size(B, 1);
   if m ~= n
     error('ELL_SIMDIAG: both matrices must be of the same dimension.');
-  end
-  if m > rank(A)
-    error('ELL_SIMDIAG: first argument must be strictly positive definite matrix.');
   end
 
   [U1, S, ~] = svd(A);

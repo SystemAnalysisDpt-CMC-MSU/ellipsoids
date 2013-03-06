@@ -102,7 +102,8 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             D_sqrt=sqrtm(D);
             %
             [VMat,DMat]=eig(QIntMat);
-            if any(diag(DMat)<0)
+            absTol =  elltool.conf.Properties.getAbsTol();
+            if ~ispossemdef(QIntMat,absTol)
                 throwerror('wrongState','internal approx has degraded');
             end
             Q_star=VMat*sqrt(DMat)*transpose(VMat);
@@ -110,8 +111,9 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             %
             piNumerator=slCQClSqrtDynamics.evaluate(t);
             piDenominator=sqrt(sum((QIntMat*ltVec).*ltVec));
+            absTol =  elltool.conf.Properties.getAbsTol();
             if (piNumerator<=0)||(piDenominator<=0)
-                if min(eig(D))<=0
+                if ~isposdef(D,absTol)
                     throwerror('wrongInput',...
                         ['degenerate matrices C,Q for disturbance ',...
                         'contraints are not supported']);
@@ -128,7 +130,8 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             %
             %% External approximation
             [VMat,DMat]=eig(QExtMat);
-            if any(diag(DMat)<0)
+            absTol =  elltool.conf.Properties.getAbsTol();
+            if ~ispossemdef(QExtMat,absTol)
                 throwerror('wrongState','external approx has degraded');
             end
             Q_star=VMat*sqrt(DMat)*transpose(VMat);
