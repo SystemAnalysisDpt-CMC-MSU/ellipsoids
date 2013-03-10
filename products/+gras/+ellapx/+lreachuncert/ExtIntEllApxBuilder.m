@@ -91,6 +91,7 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
                 ltSpline,t,QIntMat,QExtMat)
             import modgen.common.throwerror;
             import gras.la.ismatposdef;
+            import gras.la.ismatpossemdef;
             A=AtDynamics.evaluate(t);
             ltVec=ltSpline.evaluate(t);
             %
@@ -132,7 +133,7 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             %% External approximation
             [VMat,DMat]=eig(QExtMat);
             absTol =  elltool.conf.Properties.getAbsTol();
-            if ~ispossemdef(QExtMat,absTol)
+            if ~ismatpossemdef(QExtMat,absTol)
                 throwerror('wrongState','external approx has degraded');
             end
             Q_star=VMat*sqrt(DMat)*transpose(VMat);

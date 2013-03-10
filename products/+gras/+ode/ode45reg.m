@@ -1,7 +1,7 @@
 function [tout,yout,dyRegMat] = ode45reg(fOdeDeriv,fOdeReg,tspan,y0,...
     options,varargin)
 % ODE45REG is an extension of built-in ode45 solver capable of solving ODEs
-% with right hand-side functions having a limited defenition area
+% with right hand-side functions having a limited definition area
 %
 % Input:
 %   regular:
