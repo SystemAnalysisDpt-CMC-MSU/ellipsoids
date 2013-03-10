@@ -479,13 +479,14 @@ function [d, status] = l_hpdist(E, X, flag)
 %
 
   import elltool.conf.Properties;
+  import modgen.common.throwerror
 
   [m, n] = size(E);
   [k, l] = size(X);
   t1     = m * n;
   t2     = k * l;
   if (t1 > 1) && (t2 > 1) && ((m ~= k) || (n ~= l))
-    error('DISTANCE: sizes of ellipsoidal and hyperplane arrays do not match.');
+    throwerror('sizeMismatch','sizes of ellipsoidal and hyperplane arrays do not match.');
   end
 
   dims1 = dimension(E);
@@ -495,13 +496,13 @@ function [d, status] = l_hpdist(E, X, flag)
   mx1   = max(max(dims1));
   mx2   = max(max(dims2));
   if (mn1 ~= mx1)
-    error('DISTANCE: ellipsoids must be of the same dimension.');
+    throwerror('dimensionMismatch','ellipsoids must be of the same dimension.');
   end
   if (mn2 ~= mx2)
-    error('DISTANCE: hyperplanes must be of the same dimension.');
+    throwerror('dimensionMismatch','hyperplanes must be of the same dimension.');
   end
   if (mn1 ~= mn2)
-    error('DISTANCE: ellipsoids and hyperplanes must be of the same dimension.');
+    throwerror('dimensionMismatch','ellipsoids and hyperplanes must be of the same dimension.');
   end
   
   if Properties.getIsVerbose()

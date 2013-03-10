@@ -67,7 +67,11 @@ isPoly = isa(objArr, 'polytope');
 
 nDimsArr  = dimension(myEllArr);
 if isPoly
-    nObjDimsArr = arrayfun(@(x) dimension(x), objArr);
+    [~,nCols] = size(objArr);
+    nObjDimsArr = zeros(1, nCols);
+    for iCols = 1:nCols
+        nObjDimsArr(iCols) = dimension(objArr(iCols));
+    end
 else
     nObjDimsArr = dimension(objArr);
 end

@@ -50,7 +50,6 @@ classdef MTPIntegrationTestCase < mlunitext.test_case
             dist60D = distance(testEll60D,testPoly60);
             mlunit.assert(max(dist60D - testDist60D) <= absTol);
             %
-            %error test
         end
         %
         function self = testIntersect(self)
@@ -86,47 +85,56 @@ classdef MTPIntegrationTestCase < mlunitext.test_case
         %
         function self = testIsInside(self)
             ellConstrMat = eye(2);
-            ellConstr60DMat = eye(60);
+            ellConstr15DMat = eye(15);
             ellShift1 = [0.05; 0];
             ellShift2 = [0; 4];
             %
             ell1 = ellipsoid(ellConstrMat);
             ell2 = ellipsoid(ellShift1,ellConstrMat);
             ell3 = ellipsoid(ellShift2,ellConstrMat);
-            ell60D = ellipsoid(ellConstr60DMat);
+            ell15D = ellipsoid(ellConstr15DMat);
             %
             %
             polyConstrMat = [-1 0; 1 0; 0 1; 0 -1];
             polyConstr3DMat = [-1 0 0; 1 0 0; 0 1 0; 0 -1 0; 0 0 1; 0 0 -1];
-            polyConstr60DMat = [eye(60);-eye(60)];
+            polyConstr15DMat = [eye(15);-eye(15)];
             %
             polyK1Vec = [0; 0.1; 0.1; 0.1];
             polyK2Vec = [0.5; 0.05; sqrt(3)/2; 0];
             polyK3Vec = [1; 0.05; 0.8; 0.8];
             polyK4Vec = [0.5; -0.1; 0.1; 0.1];
             polyK3DVec = 0.1 * ones(6,1);
-            polyK60DVec = (1/sqrt(2))*ones(120,1);
+            nDims = 15;
+            polyK15DVec = (1/sqrt(nDims))*ones(30,1);
             %
             poly1 = self.makePolytope(polyConstrMat,polyK1Vec);
             poly2 = self.makePolytope(polyConstrMat,polyK2Vec);
             poly3 = self.makePolytope(polyConstrMat,polyK3Vec);
             poly4 = self.makePolytope(polyConstrMat,polyK4Vec);
             poly3D = self.makePolytope(polyConstr3DMat,polyK3DVec);
-            poly60D = self.makePolytope(polyConstr60DMat,polyK60DVec);
+            poly15D = self.makePolytope(polyConstr15DMat,polyK15DVec);
             %
-            isTestInsideVec = [true, false, true, true, true, false, true, false, true];
-            isInsideVec = false(1,9);
-            isInsideVec(1) = isinside(ell1, [poly1, poly2], 'u');
-            isInsideVec(2) = isinside(ell1, [poly1, poly3], 'u');
-            isInsideVec(3) = isinside(ell1, [poly1, poly2], 'i');
-            isInsideVec(4) = isinside(ell1, [poly1, poly3], 'i');
-            isInsideVec(5) = isinside([ell1, ell2], [poly1, poly3], 'i');
-            isInsideVec(6) = isinside([ell1, ell2], [poly1, poly2], 'u');
-            isInsideVec(7) = isinside(ell60D, poly60D);
-            isInsideVec(8) = isinside([ell1, ell3], poly1);
-            isInsideVec(9) = isinside(ell1, [poly1, poly4]);
+            isTestInsideVec = [1, 0, 1, 1, 1, 0, 1, 0, -1];
+            
+            isInside = isinside(ell1, [poly1, poly2], 'u');
+            mlunit.assert(all(isTestInsideVec(1) == isInside));
+            isInside = isinside(ell1, [poly1, poly3], 'u');
+            mlunit.assert(all(isTestInsideVec(2) == isInside));
+            isInside = isinside(ell1, [poly1, poly2], 'i');
+            mlunit.assert(all(isTestInsideVec(3) == isInside));
+            isInside = isinside(ell1, [poly1, poly3], 'i');
+            mlunit.assert(all(isTestInsideVec(4) == isInside));
+            isInside = isinside([ell1, ell2], [poly1, poly3], 'i');
+            mlunit.assert(all(isTestInsideVec(5) == isInside));
+            isInside = isinside([ell1, ell2], [poly1, poly2], 'u');
+            mlunit.assert(all(isTestInsideVec(6) == isInside));
+            isInside = isinside(ell15D, poly15D);
+            mlunit.assert(all(isTestInsideVec(7) == isInside));
+            isInside = isinside([ell1, ell3], poly1);
+            mlunit.assert(all(isTestInsideVec(8) == isInside));
+            isInside = isinside(ell1, [poly1, poly4],'i');
+            mlunit.assert(all(isTestInsideVec(9) == isInside));
             %
-            mlunit.assert(all(isTestInsideVec == isInsideVec)); 
             %
             self.runAndCheckError('isinside(ell1, poly3D)','wrongSizes');
         end
