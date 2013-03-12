@@ -1,4 +1,4 @@
-classdef ReachContinious < elltool.reach.AReach
+classdef ReachContinuous < elltool.reach.AReach
     properties (Constant, GetAccess = private)
         MIN_EIG_Q_REG_UNCERT = 0.1
         EXTERNAL_SCALE_FACTOR = 1.02
@@ -13,6 +13,9 @@ classdef ReachContinious < elltool.reach.AReach
         ellTubeRel
     end
     methods (Access = private)
+        function ellTubeRel = getEllTubeRel(self)
+            ellTubeRel = self.ellTubeRel.getCopy;
+        end
         function projSet = getProjSet(self, projMat,...
                 approxType, scaleFactor)
             import gras.ellapx.enums.EProjType;
@@ -426,12 +429,12 @@ classdef ReachContinious < elltool.reach.AReach
             btMat = linSys.getBtMat();
             gtMat = linSys.getGtMat();
             if ~iscell(atMat) && ~isempty(atMat)
-                atStrCMat = elltool.reach.ReachContinious.getStrCMat(atMat);
+                atStrCMat = elltool.reach.ReachContinuous.getStrCMat(atMat);
             else
                 atStrCMat = atMat;
             end
             if ~iscell(btMat) && ~isempty(btMat)
-                btStrCMat = elltool.reach.ReachContinious.getStrCMat(btMat);
+                btStrCMat = elltool.reach.ReachContinuous.getStrCMat(btMat);
             else
                 btStrCMat = btMat;
             end
@@ -439,33 +442,33 @@ classdef ReachContinious < elltool.reach.AReach
                 gtMat = zeros(size(btMat));
             end
             if ~iscell(gtMat)
-                gtStrCMat = elltool.reach.ReachContinious.getStrCMat(gtMat);
+                gtStrCMat = elltool.reach.ReachContinuous.getStrCMat(gtMat);
             else
                 gtStrCMat = gtMat;
             end
             uEll = linSys.getUBoundsEll();
             [ptVec ptMat] =...
-                elltool.reach.ReachContinious.getEllParams(uEll, btMat);
+                elltool.reach.ReachContinuous.getEllParams(uEll, btMat);
             if ~iscell(ptMat)
-                ptStrCMat = elltool.reach.ReachContinious.getStrCMat(ptMat);
+                ptStrCMat = elltool.reach.ReachContinuous.getStrCMat(ptMat);
             else
                 ptStrCMat = ptMat;
             end
             if ~iscell(ptVec)
-                ptStrCVec = elltool.reach.ReachContinious.getStrCMat(ptVec);
+                ptStrCVec = elltool.reach.ReachContinuous.getStrCMat(ptVec);
             else
                 ptStrCVec = ptVec;
             end
             vEll = linSys.getDistBoundsEll();
             [qtVec qtMat] =...
-                elltool.reach.ReachContinious.getEllParams(vEll, gtMat);
+                elltool.reach.ReachContinuous.getEllParams(vEll, gtMat);
             if ~iscell(qtMat)
-                qtStrCMat = elltool.reach.ReachContinious.getStrCMat(qtMat);
+                qtStrCMat = elltool.reach.ReachContinuous.getStrCMat(qtMat);
             else
                 qtStrCMat = qtMat;
             end
             if ~iscell(qtVec)
-                qtStrCVec = elltool.reach.ReachContinious.getStrCMat(qtVec);
+                qtStrCVec = elltool.reach.ReachContinuous.getStrCMat(qtVec);
             else
                 qtStrCVec = qtVec;
             end
@@ -473,33 +476,33 @@ classdef ReachContinious < elltool.reach.AReach
                 tSum = sum(timeVec);
                 %
                 atStrCMat =...
-                    elltool.reach.ReachContinious.getBackwardCMat(...
+                    elltool.reach.ReachContinuous.getBackwardCMat(...
                     atStrCMat, tSum, true);
                 btStrCMat =...
-                    elltool.reach.ReachContinious.getBackwardCMat(...
+                    elltool.reach.ReachContinuous.getBackwardCMat(...
                     btStrCMat, tSum, true);
                 gtStrCMat =...
-                    elltool.reach.ReachContinious.getBackwardCMat(...
+                    elltool.reach.ReachContinuous.getBackwardCMat(...
                     gtStrCMat, tSum, true);
                 ptStrCMat =...
-                    elltool.reach.ReachContinious.getBackwardCMat(...
+                    elltool.reach.ReachContinuous.getBackwardCMat(...
                     ptStrCMat, tSum, false);
                 ptStrCVec =...
-                    elltool.reach.ReachContinious.getBackwardCMat(...
+                    elltool.reach.ReachContinuous.getBackwardCMat(...
                     ptStrCVec, tSum, false);
                 qtStrCMat =...
-                    elltool.reach.ReachContinious.getBackwardCMat(...
+                    elltool.reach.ReachContinuous.getBackwardCMat(...
                     qtStrCMat, tSum, false);
                 qtStrCVec =...
-                    elltool.reach.ReachContinious.getBackwardCMat(...
+                    elltool.reach.ReachContinuous.getBackwardCMat(...
                     qtStrCVec, tSum, false);
             end
         end
     end
     methods
         function self =...
-                ReachContinious(linSys, x0Ell, l0Mat, timeVec, OptStruct)
-        % ReachContinious - computes reach set approximation of the continious
+                ReachContinuous(linSys, x0Ell, l0Mat, timeVec, OptStruct)
+        % ReachContinuous - computes reach set approximation of the continuous
         %     linear system for the given time interval.
         % Input:
         %     linSys: elltool.linsys.LinSys object - given linear system
@@ -685,7 +688,7 @@ classdef ReachContinious < elltool.reach.AReach
                 throwerror('wrongInput',...
                     'Method cut does not work with projections');
             else
-                cutObj = elltool.reach.ReachContinious();
+                cutObj = elltool.reach.ReachContinuous();
                 if self.isbackward()
                     cutTimeVec = wrev(cutTimeVec);
                     switchTimeVec = wrev(self.switchSysTimeVec);
@@ -782,7 +785,7 @@ classdef ReachContinious < elltool.reach.AReach
                     'matrix should be a unit vector.']);
             end
             projSet = self.getProjSet(projMat);
-            projObj = elltool.reach.ReachContinious();
+            projObj = elltool.reach.ReachContinuous();
             projObj.switchSysTimeVec = self.switchSysTimeVec;
             projObj.x0Ellipsoid = self.x0Ellipsoid;
             projObj.ellTubeRel = projSet;
@@ -841,7 +844,7 @@ classdef ReachContinious < elltool.reach.AReach
                     'old and new linear systems do not match.']);
             end
             %%
-            newReachObj = elltool.reach.ReachContinious();
+            newReachObj = elltool.reach.ReachContinuous();
             newReachObj.switchSysTimeVec =...
                 [self.switchSysTimeVec newEndTime];
             newReachObj.x0Ellipsoid = self.x0Ellipsoid;
@@ -866,10 +869,6 @@ classdef ReachContinious < elltool.reach.AReach
             end
             newReachObj.ellTubeRel =...
                 self.getEllTubeRel.cat(newEllTubeRel);
-        end
-        %%
-        function ellTubeRel = getEllTubeRel(self)
-            ellTubeRel = self.ellTubeRel.getCopy;
         end
         %%
         function eaScaleFactor = getEaScaleFactor(self)

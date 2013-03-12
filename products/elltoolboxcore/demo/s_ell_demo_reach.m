@@ -59,7 +59,7 @@ s2 = elltool.linsys.LinSys(A2, B2, CB);
 % Option 'save_all' set to 1 (by default, it is 0) indicates that the whole intermediate computation information should be saved in the reach set object. This information can be later used for refinement of the reach set approximation.
 % On your screen you see the reach set evolving in time from 0 to 10 (reach tube). Its external and internal approximations are computed for two directions specified by matrix L0. Function 'plot_ea' plots external (blue by default), and function 'plot_ia' - internal (green by default) approximations.
 o.save_all = 1;
-rs = elltool.reach.ReachContinious(s, X0, L0, [0 T], o);
+rs = elltool.reach.ReachContinuous(s, X0, L0, [0 T], o);
 ell_plot([0; 0; 0], 'k.');
 cla;
 rs.plot_ea();
@@ -147,8 +147,6 @@ o.center = [0 -2; 0 0];
 plot(HA, 'r', o);
 hold off;
 %% 
-% refine function has been deleted
-%% 
 % Function 'intersect' works with ellipsoids as well as with hyperplanes:
 % 
 % >> E1 = ellipsoid([2; -1], [4 -2; -2 2]);
@@ -188,14 +186,14 @@ ylabel('i_L');
 % 
 % Now the reach set of the system can be computed and plotted just as before:
 % 
-% >> rs = reach(lsys, X0, L0, 10);
+% >> rs = reach(lsys, X0, L0, [0 4]);
 % >> plot_ea(rs); hold on; plot_ia(rs);
 import elltool.conf.Properties;
 Properties.setNPlot2dPoints(200);
 A = {'0' '-10'; '1/(2 + sin(t))' '-4/(2 + sin(t))'};
 B = {'10' '0'; '0' '1/(2 + sin(t))'};
 s = elltool.linsys.LinSys(A, B, CB);
-rs = elltool.reach.ReachContinious(s, X0, L0, [0 4]);
+rs = elltool.reach.ReachContinuous(s, X0, L0, [0 4]);
 cla;
 ell_plot([0; 0; 0], '.');
 cla;
@@ -235,13 +233,13 @@ hold off;
 % 
 % Compute and plot the reach tube approximations:
 % 
-% >> rs = reach(s, X0, L0, 10);
+% >> rs = reach(s, X0, L0, [0 4]);
 % >> plot_ea(rs); hold on; plot_ia(rs);
 G = eye(2);
 V.center = {'2*cos(t)'; '0'};
 V.shape = {'0.0001+0.09*(sin(t))^2', '0'; '0', '0.0001'};
 s = elltool.linsys.LinSys(A, B, CB, G, V);
-rs = elltool.reach.ReachContinious(s, X0, L0, [0 4]);
+rs = elltool.reach.ReachContinuous(s, X0, L0, [0 4]);
 cla;
 rs.plot_ea();
 hold on;
@@ -300,7 +298,7 @@ L = [1 0 -1 1; 0 -1 1 1]';
 % >> rs = reach(lsys, X0, L, T);
 % >> ps = projection(rs, [1 0 0 0; 0 1 0 0]');
 % >> plot_ea(ps); hold on; plot_ia(ps);
-rs = elltool.reach.ReachContinious(s, X0, L, [0 T]);
+rs = elltool.reach.ReachContinuous(s, X0, L, [0 T]);
 ps = rs.projection([1 0 0 0; 0 1 0 0]');
 ell_plot([0; 0; 0], 'k.');
 cla;
@@ -319,21 +317,19 @@ cnt = [tt; cnt];
 ell_plot(cnt, 'r', 'LineWidth', 2);
 hold off;
 %%
-% Backward systems are not available now
-%
 % We can also compute backward reach set of the system:
 % 
 % >> T = [1 0];
 % >> brs = reach(lsys, X0, L, T);
 % >> bps = projection(brs, [1 0 0 0; 0 1 0 0]');
 % >> plot_ea(bps); hold on; plot_ia(bps);
-% 
-% plots approximations of backward reach tube of the system for target point [2; 3] (used to be initial condition in the previous example, hence, is still denoted X0 in the code), terminating time 5 and initial time 0.
-%T = [1 0];
-%rs = elltool.reach.ReachContinious(s, X0, L, T);
-%ps = rs.projection([1 0 0 0; 0 1 0 0]');
-%cla;
-%ps.plot_ea(); hold on; ps.plot_ia(); hold off;
+
+% plots approximations of backward reach tube of the system for target point [2; 3] (used to be initial condition in the previous example, hence, is still denoted X0 in the code), terminating time 1 and initial time 0.
+T = [1 0];
+rs = elltool.reach.ReachContinuous(s, X0, L, T);
+ps = rs.projection([1 0 0 0; 0 1 0 0]');
+cla;
+ps.plot_ea(); hold on; ps.plot_ia(); hold off;
 %% 
 % As an example of discrete-time linear system, we shall consider economic model entitled 'multiplier-accelerator', which is due to Samuelson (1939). It addresses the problem of income determination and business cycle.
 % Denote:

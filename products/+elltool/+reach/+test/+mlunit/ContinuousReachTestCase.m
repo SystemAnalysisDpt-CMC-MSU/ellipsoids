@@ -1,8 +1,9 @@
-classdef ContiniousReachTestCase < mlunitext.test_case
+classdef ContinuousReachTestCase < mlunitext.test_case
     properties (Access = private, Constant)
         FIELDS_NOT_TO_COMPARE={'LT_GOOD_DIR_MAT';'LT_GOOD_DIR_NORM_VEC';...
             'LS_GOOD_DIR_NORM';'LS_GOOD_DIR_VEC';'IND_S_TIME';'S_TIME'};
         COMP_PRECISION = 5e-3;
+        REL_TOL = 1e-5;
     end
     properties (Access=private)
         testDataRootDir
@@ -14,12 +15,10 @@ classdef ContiniousReachTestCase < mlunitext.test_case
         expDim
     end
     methods (Access = private)
-        % change:
+        %
         function plotApproxTest(self, reachObj, approxType)
             import gras.ellapx.enums.EApproxType;
             import modgen.common.throwerror;
-            import gras.ellapx.smartdb.F;
-            %APPROX_TYPE = F.APPROX_TYPE;
             if approxType == EApproxType.External
                 ellArray = reachObj.get_ea;
                 plotter = reachObj.plot_ea;
@@ -29,12 +28,15 @@ classdef ContiniousReachTestCase < mlunitext.test_case
                 plotter = reachObj.plot_ia;
                 scaleFactor = reachObj.getIaScaleFactor;
             end
-            %ellTubes = reachObj.getEllTubeRel.getTuplesFilteredBy(...
-            %    APPROX_TYPE, approxType);
             [dirCVec timeVec] = reachObj.get_directions;
             goodDirCVec =...
                 cellfun(@(x) x(:, 1), dirCVec.', 'UniformOutput', false);
-            %goodDirCVec = ellTubes.lsGoodDirVec;
+            dim = ellArray(1, 1).dimension;
+            if dim > 2
+                ellArray = ellArray.projection(eye(dim, 2));
+                goodDirCVec = cellfun(@(x) x(1:2), goodDirCVec,...
+                    'UniformOutput', false);
+            end
             nGoodDirs = numel(goodDirCVec);
             %
             axesHMapList =...
@@ -67,13 +69,18 @@ classdef ContiniousReachTestCase < mlunitext.test_case
                 plottedGoodDirCVec = cellfun(@(x) x(1, 2 : 3).',...
                     gdVerticesCVec, 'UniformOutput', false);
                 %
+                normalizeCVecFunc =...
+                    @(v)cellfun(@(x) x / sqrt(sum(x.*x)),...
+                    v, 'UniformOutput', false);
+                goodDirCVec = normalizeCVecFunc(goodDirCVec);
+                plottedGoodDirCVec = normalizeCVecFunc(plottedGoodDirCVec);
                 plottedGoodDirIndex = 0;
                 for iGoodDir = 1 : nGoodDirs
                     goodDir = goodDirCVec{iGoodDir};
                     for iPlottedGoodDir = 1 : numel(plottedGoodDirCVec)
                         plottedGoodDir =...
                             plottedGoodDirCVec{iPlottedGoodDir};
-                        if all(goodDir == plottedGoodDir)
+                        if max(abs(goodDir - plottedGoodDir)) < self.REL_TOL
                             plottedGoodDirIndex = iGoodDir;
                             break;
                         end
@@ -84,25 +91,26 @@ classdef ContiniousReachTestCase < mlunitext.test_case
                 end
                 %
                 reachTubeEllipsoids = ellArray(plottedGoodDirIndex, :);
-                %timeVec = ellTubes.timeVec{plottedGoodDirIndex, :};
                 nTimePoints = numel(timeVec);
                 %
                 for iTimePoint = 1 : nTimePoints
                     ell = reachTubeEllipsoids(iTimePoint);
                     curT = timeVec(iTimePoint);
                     pointsMat = rtVertices(rtVertices(:, 1) == curT, 2 : 3);
-                    pointsMat =...
-                        pointsMat.' / scaleFactor;
+                    pointsMat = pointsMat.';
                     [centerVec shapeMat] = parameters(ell);
                     centerPointsMat = pointsMat -...
                         repmat(centerVec, 1, size(pointsMat, 2));
+                    if ~reachObj.isprojection
+                        centerPointsMat = centerPointsMat / scaleFactor;
+                    end
                     sqrtScalProdVec = sqrt(abs(dot(centerPointsMat,...
                         shapeMat\centerPointsMat) - 1));
                     mlunit.assert_equals(...
                         max(sqrtScalProdVec) < self.COMP_PRECISION, true);
                 end
             end
-            %plotter.closeAllFigures();
+            plotter.closeAllFigures();
         end
         %
         function displayTest(self, reachObj, timeVec)
@@ -128,7 +136,7 @@ classdef ContiniousReachTestCase < mlunitext.test_case
         end
     end
     methods
-        function self = ContiniousReachTestCase(varargin)
+        function self = ContinuousReachTestCase(varargin)
             self = self@mlunitext.test_case(varargin{:});
             [~, className] = modgen.common.getcallernameext(1);
             shortClassName = mfilename('classname');
@@ -145,7 +153,7 @@ classdef ContiniousReachTestCase < mlunitext.test_case
             self.l0Mat = reachFactObj.getL0Mat();
         end
         %
-        function self = DISABLED_testDisplay(self)
+        function self = testDisplay(self)
             self.displayTest(self.reachObj, self.tVec);
             newTimeVec = [sum(self.tVec)/2, self.tVec(2)];
             cutReachObj = self.reachObj.cut(newTimeVec);
@@ -166,7 +174,7 @@ classdef ContiniousReachTestCase < mlunitext.test_case
             self.plotApproxTest(projReachObj, EApproxType.External);
         end
         %
-        function self = DISABLED_testPlotIa(self)
+        function self = testPlotIa(self)
             import gras.ellapx.enums.EApproxType;
             self.plotApproxTest(self.reachObj, EApproxType.Internal);
             newTimeVec = [sum(self.tVec) / 2, self.tVec(2)];
@@ -177,7 +185,7 @@ classdef ContiniousReachTestCase < mlunitext.test_case
             self.plotApproxTest(projReachObj, EApproxType.Internal);
         end
         %
-        function self = DISABLED_testDimension(self)
+        function self = testDimension(self)
             newTimeVec = [sum(self.tVec) / 2, self.tVec(2)];
             cutReachObj = self.reachObj.cut(newTimeVec);
             cutDim = cutReachObj.dimension;
@@ -189,8 +197,8 @@ classdef ContiniousReachTestCase < mlunitext.test_case
             mlunit.assert_equals(true, isOk);
         end
         %
-        function self = DISABLED_testIsEmpty(self)
-            emptyRs = elltool.reach.ReachContinious();
+        function self = testIsEmpty(self)
+            emptyRs = elltool.reach.ReachContinuous();
             newTimeVec = [sum(self.tVec)/2, self.tVec(2)];
             cutReachObj = self.reachObj.cut(newTimeVec);
             projReachObj =...
@@ -201,11 +209,11 @@ classdef ContiniousReachTestCase < mlunitext.test_case
             mlunit.assert_equals(false, projReachObj.isempty);
         end
         %
-        function self = DISABLED_testEvolve(self)
+        function self = testEvolve(self)
             import gras.ellapx.smartdb.F;
             %
             timeVec = [self.tVec(1), sum(self.tVec)/2];
-            newReachObj = elltool.reach.ReachContinious(self.linSys,...
+            newReachObj = elltool.reach.ReachContinuous(self.linSys,...
                 self.x0Ell, self.l0Mat, timeVec);
             evolveReachObj = newReachObj.evolve(self.tVec(2));
             %
@@ -213,7 +221,7 @@ classdef ContiniousReachTestCase < mlunitext.test_case
             mlunit.assert_equals(true, isEqual);
         end
         %
-        function self = DISABLED_testGetSystem(self)
+        function self = testGetSystem(self)
             isEqual = self.linSys == self.reachObj.get_system;
             mlunit.assert_equals(true, isEqual);
             projReachObj = self.reachObj.projection(...
@@ -223,7 +231,7 @@ classdef ContiniousReachTestCase < mlunitext.test_case
             mlunit.assert_equals(true, isEqual);
         end
         %
-        function self = DISABLED_testCut(self)
+        function self = testCut(self)
             import gras.ellapx.enums.EApproxType;
             %
             newTimeVec = [sum(self.tVec)/2, self.tVec(2)];
@@ -237,9 +245,9 @@ classdef ContiniousReachTestCase < mlunitext.test_case
                 x0EaEll = eaEllMat(iTuple, 1);
                 l0Mat = cutReachObj.get_directions{iTuple}(:, 1);
                 l0Mat = l0Mat ./ norm(l0Mat);
-                newIaReachObj = elltool.reach.ReachContinious(self.linSys,...
+                newIaReachObj = elltool.reach.ReachContinuous(self.linSys,...
                     x0IaEll, l0Mat, newTimeVec + timeDif);
-                newEaReachObj = elltool.reach.ReachContinious(self.linSys,...
+                newEaReachObj = elltool.reach.ReachContinuous(self.linSys,...
                     x0EaEll, l0Mat, newTimeVec + timeDif);
                 isIaEqual = cutReachObj.isEqual(newIaReachObj, iTuple,...
                     EApproxType.Internal);
@@ -250,7 +258,7 @@ classdef ContiniousReachTestCase < mlunitext.test_case
             end
         end
         %
-        function self = DISABLED_testNegativeCut(self)
+        function self = testNegativeCut(self)
             projReachObj =...
                 self.reachObj.projection(eye(self.reachObj.dimension, 2));
             newTimeVec = [sum(self.tVec)/2, self.tVec(2)];
