@@ -326,19 +326,17 @@ function l_check_ell_struct(E, N, typeStr)
 import elltool.conf.Properties;
 import modgen.common.checkmultvar;
 import modgen.common.checkvar;          
+import gras.la.ismatsymm;
 
 q   = E.center;
 Q   = E.shape;
 
 [k, l] = size(q);
-[m, n] = size(Q);
+[~, n] = size(Q);
 
 absTol=elltool.conf.Properties.getAbsTol();
 
-if m ~= n
-    error( sprintf('linsys:value:%s:shape',inputname(1)), ...
-        'shape matrix must be symmetric, positive definite' );
-elseif n ~= N
+if n ~= N
     error( sprintf('linsys:dimension:%s:shape',inputname(1)), ...
         'shape matrix must be of dimension %dx%d', N, N );
 elseif l > 1 || k ~= N
