@@ -76,10 +76,11 @@ classdef EllApxBuilder<handle
         function self=EllApxBuilder(confRepoMgr,pDefObj,goodDirSetObj)
             import gras.ellapx.uncertcalc.EllApxBuilder;
             %% Define constants
-            INTERNAL_SCHEMA_NAME_LIST={'noUncertSqrtQ','noUncertJustQ'};
+            INTERNAL_SCHEMA_NAME_LIST={'noUncertSqrtQ','noUncertJustQ','noUncertMixed'};
             INTERNAL_CLASS_NAME_LIST={...
                 'gras.ellapx.lreachplain.IntEllApxBuilder',...
-                'gras.ellapx.lreachplain.IntProperEllApxBuilder'};
+                'gras.ellapx.lreachplain.IntProperEllApxBuilder',...
+                'gras.ellapx.lreachplain.MixedIntEllApxBuilder'};
             %
             EXTERNAL_SCHEMA_NAME_LIST={'justQ'};
             EXTERNAL_CLASS_NAME_LIST={...
