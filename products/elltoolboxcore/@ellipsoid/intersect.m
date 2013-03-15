@@ -53,10 +53,8 @@ function [resArr, statusArr] = intersect(myEllArr, objArr, mode)
 %                     <v, x> - c = 0.
 %
 %   Checking the intersection of ellipsoids with polytope
-%   objArr = P(A, b) reduces to checking the feasibility
-%   of the problem
-%                       1'x --> min
-%   with constraints (1)-(n), plus
+%   objArr = P(A, b) reduces to checking if there any x, satisfying
+%   constraints (1)-(n) and
 %                        Ax <= b.
 %
 % Input:
@@ -93,6 +91,11 @@ function [resArr, statusArr] = intersect(myEllArr, objArr, mode)
 %             Faculty of Computational Mathematics and Cybernetics,
 %             Science, System Analysis Department 2012 $
 %
+% $Author: <Zakharov Eugene>  <justenterrr@gmail.com> $    $Date: March-2013 $
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department$
+%
 
 import elltool.conf.Properties;
 import modgen.common.throwerror;
@@ -111,36 +114,52 @@ absTolArr = getAbsTol(myEllArr);
 resArr = [];
 statusArr = [];
 if mode == 'u'
-    auxArr = arrayfun(@(x,y) distance(x, objArr)<= y, myEllArr,absTolArr);
-    res = double(any(auxArr(:)));
+    if ~isa(objArr,'polytope')
+        auxArr = arrayfun(@(x,y) distance(myEllArr, x), objArr,'UniformOutput',false);
+    else
+        auxArr = cell(size(objArr));
+        [nRows nCols] = size(objArr);%actually nRows always equals to one
+        for iCols = 1:nCols
+            auxArr{iCols} = distance(myEllArr,objArr(iCols));
+        end
+    end
+    res = cellfun(@(x) double(any(x(:) <= absTolArr(:))),auxArr);
     status = [];
 elseif isa(objArr, 'ellipsoid')
-    
+   
     fCheckDims(dimension(myEllArr),dimension(objArr));
-    
+   
     if Properties.getIsVerbose()
         fprintf('Invoking CVX...\n');
     end
-    
+   
     [resArr statusArr] = arrayfun(@(x) qcqp(myEllArr, x), objArr);
 elseif isa(objArr, 'hyperplane')
-    
+   
     fCheckDims(dimension(myEllArr),dimension(objArr));
-    
+   
     if Properties.getIsVerbose()
         fprintf('Invoking CVX...\n');
     end
-    
+   
     [resArr statusArr] = arrayfun(@(x) lqcqp(myEllArr, x), objArr);
 else
-    nDimsArr = arrayfun(@(x) dimension(x), objArr);
+    nDimsArr = zeros(size(objArr));
+    [nRows nCols] = size(objArr);%actually nRows always equals to one
+    for iCols = 1:nCols
+        nDimsArr(iCols) = dimension(objArr(iCols));
+    end
     fCheckDims(dimension(myEllArr),nDimsArr);
-    
+   
     if Properties.getIsVerbose()
         fprintf('Invoking CVX...\n');
     end
-    
-    [resArr statusArr] = arrayfun(@(x) lqcqp2(myEllArr, x), objArr);
+   
+    resArr = zeros(size(objArr));
+    statusArr = zeros(size(objArr));
+    for iCols = 1:nCols
+        [resArr(iCols) statusArr(iCols)] = lqcqp2(myEllArr, objArr(iCols));
+    end
 end
 
 if isempty(resArr)
@@ -337,6 +356,7 @@ function [res, status] = lqcqp2(myEllArr, polyt)
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
+%
 
 import modgen.common.throwerror;
 import elltool.conf.Properties;
@@ -347,7 +367,7 @@ nNumel = numel(myEllArr);
 absTolArr = getAbsTol(myEllArr);
 cvx_begin sdp
 variable cvxExprVec(size(aMat, 2), 1)
-minimize(aMat(1, :)*cvxExprVec)
+minimize(max(aMat*cvxExprVec-bVec))
 subject to
 for iCount = 1:nNumel
         [ellCentVec, ellShMat] = parameters(myEllArr(iCount));
@@ -372,9 +392,10 @@ if strcmp(cvx_status,'Infeasible') || ...
     res = -1;
     return;
 end;
-if aMat(1, :)*cvxExprVec <= min(getAbsTol(myEllArr(:)))
+if max(aMat*cvxExprVec-bVec) <= min(getAbsTol(myEllArr(:)))
     res = 1;
 else
     res = 0;
 end;
 end
+

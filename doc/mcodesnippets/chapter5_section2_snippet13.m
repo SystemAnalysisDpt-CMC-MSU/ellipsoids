@@ -3,4 +3,4 @@ intersect(ct, P)
 
 % ans =
 % 
-%      0
+%      1

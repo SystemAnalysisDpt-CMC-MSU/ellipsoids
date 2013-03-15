@@ -99,22 +99,27 @@ status = [];
 
 if isa(secObjArr, 'polytope')
     if mode == 'i'
-        xVec = extreme(and(secObjArr));
+        xVec = {extreme(and(secObjArr))};
     else
-        xVec = arrayfun(@(x) extreme(x), secObjArr);
+        [nRows nCols] = size(secObjArr);
+        xVec = cell(nRows,nCols);
+        for iCols = 1:nCols
+            xVec{iCols} = extreme(secObjArr(iCols));
+        end;
     end
-    if isempty(xVec)
+    if all(cellfun(@(x) isempty(x), xVec))
         res = -1;
     else
-        res = min(isinternal(fstEllArr, xVec', 'i'));
+        res = min(cellfun(@(x) min(isinternal(fstEllArr, x', 'i')),xVec));
     end
-    
+   
     if nargout < 2
         clear status;
     end
-    
+   
     return;
 end
+
 
 if mode == 'u'
     res = 1;
@@ -234,3 +239,4 @@ else
 end
 
 end
+

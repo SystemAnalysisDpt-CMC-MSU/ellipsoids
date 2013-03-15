@@ -1,4 +1,4 @@
-intersect(EE, HH)
+intersect(EE, HH, 'u')
 
 % ans =
 % 

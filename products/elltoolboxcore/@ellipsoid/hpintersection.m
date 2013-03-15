@@ -85,13 +85,9 @@ end
         myHyp = myHypArr(hypIndex);
         index = max(ellIndex,hypIndex);
         if distance(myEll, myHyp) > 0
-            if (~isSecondOutput)
-                modgen.common.throwerror('degenerateEllipsoid',...
-                    'Hypeplane doesn''t intersect ellipsoid');
-            else
-                intEllArr(index) = ellipsoid;
-                isnIntersectedArr(index) = true;
-            end
+            intEllArr(index) = ellipsoid;
+            isnIntersectedArr(index) = true;
+
         else
             intEllArr(index) = l_compute1intersection(myEll,myHyp,...
                 maxEllDim);
