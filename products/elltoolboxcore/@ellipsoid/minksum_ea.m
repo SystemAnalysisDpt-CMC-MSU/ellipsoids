@@ -49,6 +49,9 @@ function extApprEllVec = minksum_ea(inpEllArr, dirMat)
 import elltool.conf.Properties;
 import modgen.common.throwerror;
 import modgen.common.checkmultvar;
+import elltool.logging.Log4jConfigurator;
+
+persistent logger;
 
 ellipsoid.checkIsMe(inpEllArr,'first');
 [nDims, nCols] = size(dirMat);
@@ -86,9 +89,12 @@ arrayfun(@(x) fSingleDirection(x),1:nCols);
             shMat = singEll.shape;
             if isdegenerate(singEll)
                 if isVerbose
-                    fprintf('MINKSUM_EA: Warning!');
-                    fprintf(' Degenerate ellipsoid.\n');
-                    fprintf('            Regularizing...\n')
+                    if isempty(logger)
+                        logger=Log4jConfigurator.getLogger();
+                    end
+                    logger.info('MINKSUM_EA: Warning!');
+                    logger.info('Degenerate ellipsoid.');
+                    logger.info('Regularizing...')
                 end
                 shMat = ellipsoid.regularize(shMat, absTol);
             end

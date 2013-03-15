@@ -41,7 +41,7 @@ if Properties.getIsVerbose()
     if isempty(logger)
         logger=Log4jConfigurator.getLogger();
     end
-    logger.info(sprintf('Invoking CVX...'));
+    logger.info('Invoking CVX...');
 end
 absTolVec = getAbsTol(inpEllVec);
 cvx_begin sdp

@@ -58,7 +58,7 @@ if Properties.getIsVerbose()
         logger=Log4jConfigurator.getLogger();
     end
     if isFirScal && isSecScal
-        logger.info(sprintf('Checking ellipsoid-in-ellipsoid containment...'));
+        logger.info('Checking ellipsoid-in-ellipsoid containment...');
     else
         logger.info(sprintf('Checking %d ellipsoid-in-ellipsoid containments...',...
             max([nSizeFirst nSizeSecond])));
@@ -127,7 +127,7 @@ if Properties.getIsVerbose()
     if isempty(logger)
         logger=Log4jConfigurator.getLogger();
     end
-    logger.info(sprintf('Invoking CVX...'));
+    logger.info('Invoking CVX...');
 end
 cvx_begin sdp
 variable cvxxVec(1, 1)

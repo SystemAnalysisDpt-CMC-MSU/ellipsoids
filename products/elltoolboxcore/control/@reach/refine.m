@@ -53,6 +53,10 @@ function RRS = refine(RS, L0, Options)
 %
 
   import elltool.conf.Properties;
+  import elltool.logging.Log4jConfigurator;
+  
+  persistent logger;
+  
   RRS = RS(1, 1);
   if isempty(RRS)
     return;
@@ -129,7 +133,10 @@ function RRS = refine(RS, L0, Options)
   if (Options.approximation ~= 1)
     if Properties.getIsVerbose()
       if (N - EN) > 0
-        fprintf('Computing external shape matrices...\n');
+        if isempty(logger)
+          logger=Log4jConfigurator.getLogger();
+        end
+        logger.info('Computing external shape matrices...');
       end
     end
 
@@ -179,7 +186,10 @@ function RRS = refine(RS, L0, Options)
   if (Options.approximation ~= 0)
     if Properties.getIsVerbose()
       if (N - IN) > 0
-        fprintf('Computing internal shape matrices...\n');
+        if isempty(logger)
+          logger=Log4jConfigurator.getLogger();
+        end
+        logger.info('Computing internal shape matrices...');
       end
     end
 

@@ -2,7 +2,6 @@
 function bign
 
 import elltool.conf.Properties;
-import elltool.logging.Log4jConfigurator;
 
 Properties.setIsVerbose(false);
 Properties.setNTimeGridPoints(135);
@@ -56,5 +55,4 @@ X0 = ell_unitball(n);
 L = randn(n, NL);
 reach(ls, X0, L, -10);
 
-logger=Log4jConfigurator.getLogger()
 disp(sprintf('Passed test for N = %d: %.1f s', N, (now-time0)*86400));

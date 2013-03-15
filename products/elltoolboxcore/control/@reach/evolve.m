@@ -32,6 +32,10 @@ function RS = evolve(CRS, T, lsys)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
   import elltool.conf.Properties;
+  import elltool.logging.Log4jConfigurator;
+    
+  persistent logger;
+
   if nargin < 2
     error('EVOLVE: insufficient number of input arguments.');
   end
@@ -122,7 +126,10 @@ function RS = evolve(CRS, T, lsys)
   %%% Create splines if needed.                                   %%%
 
   if Properties.getIsVerbose()
-    fprintf('Performing preliminary function evaluations...\n');
+    if isempty(logger)
+      logger=Log4jConfigurator.getLogger();
+    end
+    logger.info('Performing preliminary function evaluations...');
   end
 
   mydata.A     = [];
@@ -626,7 +633,10 @@ function RS = evolve(CRS, T, lsys)
   %%% Compute state transition matrix. %%%
 
   if Properties.getIsVerbose()
-    fprintf('Computing state transition matrix...\n');
+    if isempty(logger)
+      logger=Log4jConfigurator.getLogger();
+    end
+    logger.info('Computing state transition matrix...');
   end
 
   if isdiscrete(lsys)
@@ -695,7 +705,10 @@ function RS = evolve(CRS, T, lsys)
   %%% Compute the center of the reach set. %%%
 
   if Properties.getIsVerbose()
-    fprintf('Computing the trajectory of the reach set center...\n');
+    if isempty(logger)
+      logger=Log4jConfigurator.getLogger();
+    end
+    logger.info('Computing the trajectory of the reach set center...');
   end
 
   x0 = CRS.center_values(:, end);
@@ -734,7 +747,10 @@ function RS = evolve(CRS, T, lsys)
 
   if (Options.approximation ~= 1)
     if Properties.getIsVerbose()
-      fprintf('Computing external shape matrices...\n');
+      if isempty(logger)
+        logger=Log4jConfigurator.getLogger();
+      end
+      logger.info('Computing external shape matrices...');
     end
 
     LL = [];
@@ -783,7 +799,10 @@ function RS = evolve(CRS, T, lsys)
 
   if (Options.approximation ~= 0)
     if Properties.getIsVerbose()
-      fprintf('Computing internal shape matrices...\n');
+      if isempty(logger)
+        logger=Log4jConfigurator.getLogger();
+      end
+      logger.info('Computing internal shape matrices...');
     end
 
     LL = [];

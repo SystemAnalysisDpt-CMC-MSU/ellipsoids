@@ -78,6 +78,10 @@ classdef reach
         %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
         %
           import elltool.conf.Properties;
+          import elltool.logging.Log4jConfigurator;
+          
+          logger=Log4jConfigurator.getLogger();
+          
           neededPropNameList = {'absTol','relTol','nPlot2dPoints','nPlot3dPoints','nTimeGridPoints'};
           [absTolVal, relTolVal, nPlot2dPointsVal,nPlot3dPointsVal,nTimeGridPointsVal] =...
                             elltool.conf.Properties.parseProp(varargin,neededPropNameList);
@@ -204,7 +208,7 @@ classdef reach
           %%% Create splines if needed.                                   %%%
 
           if Properties.getIsVerbose()
-            fprintf('Performing preliminary function evaluations...\n');
+            logger.info('Performing preliminary function evaluations...');
           end
 
           mydata.A     = [];
@@ -712,7 +716,7 @@ classdef reach
           %%% Compute state transition matrix. %%%
 
           if Properties.getIsVerbose()
-            fprintf('Computing state transition matrix...\n');
+            logger.info('Computing state transition matrix...');
           end
 
           if isdiscrete(lsys)
@@ -781,7 +785,7 @@ classdef reach
           %%% Compute the center of the reach set. %%%
 
           if Properties.getIsVerbose()
-            fprintf('Computing the trajectory of the reach set center...\n');
+            logger.info('Computing the trajectory of the reach set center...');
           end
 
           [x0, X0] = parameters(X0);
@@ -820,7 +824,7 @@ classdef reach
 
           if (Options.approximation ~= 1)
             if Properties.getIsVerbose()
-              fprintf('Computing external shape matrices...\n');
+              logger.info('Computing external shape matrices...');
             end
 
             LL = [];
@@ -869,7 +873,7 @@ classdef reach
 
           if (Options.approximation ~= 0)
             if Properties.getIsVerbose()
-              fprintf('Computing internal shape matrices...\n');
+              logger.info('Computing internal shape matrices...');
             end
 
             LL = [];

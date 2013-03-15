@@ -39,7 +39,7 @@ if Properties.getIsVerbose()
     if isempty(logger)
         logger=Log4jConfigurator.getLogger();
     end
-    logger.info(sprintf('Invoking CVX...\n'));
+    logger.info('Invoking CVX...\n');
 end
 
 

@@ -97,6 +97,9 @@ function [resArr, statusArr] = intersect(myEllArr, objArr, mode)
 import elltool.conf.Properties;
 import modgen.common.throwerror;
 import modgen.common.checkmultvar;
+import elltool.logging.Log4jConfigurator;
+
+persistent logger;
 
 ellipsoid.checkIsMe(myEllArr,'first');
 modgen.common.checkvar(objArr,@(x) isa(x, 'ellipsoid') ||...
@@ -110,6 +113,11 @@ end
 absTolArr = getAbsTol(myEllArr);
 resArr = [];
 statusArr = [];
+
+if isempty(logger)
+    logger=Log4jConfigurator.getLogger();
+end
+
 if mode == 'u'
     auxArr = arrayfun(@(x,y) distance(x, objArr)<= y, myEllArr,absTolArr);
     res = double(any(auxArr(:)));
@@ -119,7 +127,7 @@ elseif isa(objArr, 'ellipsoid')
     fCheckDims(dimension(myEllArr),dimension(objArr));
     
     if Properties.getIsVerbose()
-        fprintf('Invoking CVX...\n');
+        logger.info('Invoking CVX...\n');
     end
     
     [resArr statusArr] = arrayfun(@(x) qcqp(myEllArr, x), objArr);
@@ -128,7 +136,7 @@ elseif isa(objArr, 'hyperplane')
     fCheckDims(dimension(myEllArr),dimension(objArr));
     
     if Properties.getIsVerbose()
-        fprintf('Invoking CVX...\n');
+        logger.info('Invoking CVX...\n');
     end
     
     [resArr statusArr] = arrayfun(@(x) lqcqp(myEllArr, x), objArr);
@@ -137,7 +145,7 @@ else
     fCheckDims(dimension(myEllArr),nDimsArr);
     
     if Properties.getIsVerbose()
-        fprintf('Invoking CVX...\n');
+        logger.info('Invoking CVX...\n');
     end
     
     [resArr statusArr] = arrayfun(@(x) lqcqp2(myEllArr, x), objArr);
@@ -187,13 +195,21 @@ function [res, status] = qcqp(fstEllArr, secEll)
 
 import modgen.common.throwerror;
 import elltool.conf.Properties;
+import elltool.logging.Log4jConfigurator;
+
+persistent logger;
+
 status = 1;
 [secEllCentVec, secEllShMat] = parameters(secEll);
 
+if isempty(logger)
+    logger=Log4jConfigurator.getLogger();
+end
+
 if isdegenerate(secEll)
     if Properties.getIsVerbose()
-        fprintf('QCQP: Warning! Degenerate ellipsoid.\n');
-        fprintf('      Regularizing...\n');
+        logger.info('QCQP: Warning! Degenerate ellipsoid.\n');
+        logger.info('      Regularizing...\n');
     end
     secEllShMat = ...
         ellipsoid.regularize(secEllShMat,getAbsTol(secEll));

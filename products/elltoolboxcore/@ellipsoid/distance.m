@@ -393,9 +393,9 @@ function [distArray, timeArray] = computePointsEllDist(ellObjArray, vecArray, fl
             logger=Log4jConfigurator.getLogger();
         end
         if (nEllObj > 1) || (nVec > 1)
-            logger.info(sprintf('Computing %d ellipsoid-to-vector distances...\n', max([nEllObj nVec])));
+            logger.info(sprintf('Computing %d ellipsoid-to-vector distances...', max([nEllObj nVec])));
         else
-            logger.info(sprintf('Computing ellipsoid-to-vector distance...'));
+            logger.info('Computing ellipsoid-to-vector distance...');
         end
     end
 %
@@ -441,9 +441,9 @@ function [distEllEllArray, timeOfCalculationArray] = l_elldist(ellObj1Array, ell
             logger=Log4jConfigurator.getLogger();
         end
         if (nEllObj1 > 1) || (nEllObj2 > 1)
-          logger.info(sprintf('Computing %d ellipsoid-to-ellipsoid distances...\n', max([nEllObj1 nEllObj2])));
+          logger.info(sprintf('Computing %d ellipsoid-to-ellipsoid distances...', max([nEllObj1 nEllObj2])));
         else
-          logger.info(sprintf('Computing ellipsoid-to-ellipsoid distance...'));
+          logger.info('Computing ellipsoid-to-ellipsoid distance...');
         end
     end
     N_MAX_ITER=10000;
@@ -517,9 +517,9 @@ function [d, status] = l_hpdist(E, X, flag)
         logger=Log4jConfigurator.getLogger();
     end
     if (t1 > 1) || (t2 > 1)
-      logger.info(sprintf('Computing %d ellipsoid-to-hyperplane distances...\n', max([t1 t2])));
+      logger.info(sprintf('Computing %d ellipsoid-to-hyperplane distances...', max([t1 t2])));
     else
-      logger.info(sprintf('Computing ellipsoid-to-hyperplane distance...'));
+      logger.info('Computing ellipsoid-to-hyperplane distance...');
     end
   end
 
@@ -647,11 +647,11 @@ function [d, status] = l_polydist(E, X)
       logger=Log4jConfigurator.getLogger();
     end
     if (t1 > 1) || (t2 > 1)
-      logger.info(sprintf('Computing %d ellipsoid-to-polytope distances...\n', max([t1 t2])));
+      logger.info(sprintf('Computing %d ellipsoid-to-polytope distances...', max([t1 t2])));
     else
-      logger.info(sprintf('Computing ellipsoid-to-polytope distance...'));
+      logger.info('Computing ellipsoid-to-polytope distance...');
     end
-    logger.info(sprintf('Invoking CVX...'));
+    logger.info('Invoking CVX...');
   end
   
   absTolMat = getAbsTol(E);

@@ -37,6 +37,10 @@ function plot_ea(rs, varargin)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 import elltool.conf.Properties;
+import elltool.logging.Log4jConfigurator;
+
+logger=Log4jConfigurator.getLogger();
+
 if ~(isa(rs, 'reach'))
     error('PLOT_EA: first input argument must be reach set.');
 end
@@ -110,7 +114,7 @@ else
 end
 
 if Properties.getIsVerbose()
-    fprintf('Plotting reach set external approximation...\n');
+    logger.info('Plotting reach set external approximation...');
 end
 
 if d == 3

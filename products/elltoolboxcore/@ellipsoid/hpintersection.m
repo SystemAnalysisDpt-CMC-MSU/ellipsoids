@@ -71,10 +71,10 @@ if Properties.getIsVerbose()
         logger=Log4jConfigurator.getLogger();
     end
     if ~(isEllScal&&isHypScal)
-        logger.info(sprintf('Computing %d ellipsoid-hyperplane intersections...\n',...
+        logger.info(sprintf('Computing %d ellipsoid-hyperplane intersections...',...
             nAmount));
     else
-        logger.info(sprintf('Computing ellipsoid-hyperplane intersection...'));
+        logger.info('Computing ellipsoid-hyperplane intersection...');
     end
 end
 
@@ -150,8 +150,8 @@ if rank(myEllShMat) < maxEllDim
             if isempty(logger)
                 logger=Log4jConfigurator.getLogger();
             end
-        logger.info(sprintf('HPINTERSECTION: Warning! Degenerate ellipsoid.'));
-        logger.info(sprintf('                Regularizing...'));
+        logger.info('HPINTERSECTION: Warning! Degenerate ellipsoid.');
+        logger.info('                Regularizing...');
     end
     myEllShMat = ellipsoid.regularize(myEllShMat,myEll.absTol);
 end

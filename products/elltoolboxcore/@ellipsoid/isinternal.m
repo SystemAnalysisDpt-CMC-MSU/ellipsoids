@@ -101,6 +101,9 @@ function isPositive = isinternal_sub(myEllMat, xVec, mode)
 % $Copyright:  The Regents of the University of California 2004-2008 $
 
 import elltool.conf.Properties;
+import elltool.logging.Log4jConfigurator;
+
+persistent logger;
 
 absTolMat = getAbsTol(myEllMat);
 
@@ -126,11 +129,14 @@ end
         
         if isdegenerate(singEll)
             if Properties.getIsVerbose()
+                if isempty(logger)
+                    logger=Log4jConfigurator.getLogger();
+                end
                 fstFprintStr = ...
                     'ISINTERNAL: Warning! There is degenerate ';
-                secFprintStr = 'ellipsoid in the array.\n';
-                fprintf([fstFprintStr secFprintStr]);
-                fprintf('            Regularizing...\n');
+                secFprintStr = 'ellipsoid in the array.';
+                logger.info([fstFprintStr secFprintStr]);
+                logger.info('            Regularizing...');
             end
             shMat = ellipsoid.regularize(shMat, absTol);
         end

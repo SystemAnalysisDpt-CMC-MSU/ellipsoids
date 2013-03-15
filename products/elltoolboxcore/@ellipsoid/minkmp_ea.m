@@ -40,6 +40,9 @@ function extApprEllVec = minkmp_ea(fstEll, secEll, sumEllArr, dirMat)
 import elltool.conf.Properties;
 import modgen.common.throwerror;
 import modgen.common.checkmultvar;
+import elltool.logging.Log4jConfigurator;
+
+persistent logger;
 
 ellipsoid.checkIsMe(fstEll,'first');
 ellipsoid.checkIsMe(secEll,'second');
@@ -58,7 +61,10 @@ extApprEllVec = [];
 
 if ~isbigger(fstEll, secEll)
     if Properties.getIsVerbose()
-        fprintf('MINKMP_EA: the resulting set is empty.\n');
+        if isempty(logger)
+            logger=Log4jConfigurator.getLogger();
+        end
+        logger.info('MINKMP_EA: the resulting set is empty.');
     end
     return;
 end
@@ -77,8 +83,11 @@ arrayfun(@(x) fSingleMP(x),1:nGoodDirs)
 Properties.setIsVerbose(isVrb);
 if isempty(extApprEllVec)
     if Properties.getIsVerbose()
-        fprintf('MINKMP_EA: cannot compute external approximation ');
-        fprintf('for any\n           of the specified directions.\n');
+        if isempty(logger)
+            logger=Log4jConfigurator.getLogger();
+        end
+        logger.info('MINKMP_EA: cannot compute external approximation ');
+        logger.info('for any of the specified directions.');
     end
 end
     function fSingleMP(index)

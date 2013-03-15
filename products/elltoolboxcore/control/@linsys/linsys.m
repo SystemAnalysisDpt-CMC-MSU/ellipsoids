@@ -124,8 +124,13 @@ classdef linsys < handle
         %            Faculty of Computational Mathematics and Computer Science,
         %            System Analysis Department 2012 $
         %
-           import elltool.conf.Properties;
-           neededPropNameList = {'absTol'};
+          import elltool.conf.Properties;
+           
+          import elltool.logging.Log4jConfigurator;
+
+          persistent logger;
+
+          neededPropNameList = {'absTol'};
           absTolVal =  elltool.conf.Properties.parseProp(varargin,neededPropNameList);
 
           if nargin == 0
@@ -177,7 +182,10 @@ classdef linsys < handle
                 error('linsys:dimension:U', 'LINSYS: dimensions of control bounds U and matrix B do not match.');
               end
               if (d > r) && (Properties.getIsVerbose())
-                fprintf('LINSYS: Warning! Control bounds U represented by degenerate ellipsoid.\n');
+                if isempty(logger)
+                  logger=Log4jConfigurator.getLogger();
+                end
+                logger.info('LINSYS: Warning! Control bounds U represented by degenerate ellipsoid.\n');
               end
             elseif isa(U, 'double') || iscell(U)
               [k, m] = size(U);
@@ -352,7 +360,10 @@ function l_check_ell_struct(E, N)
 
   if iscell(Q)
     if Properties.getIsVerbose()
-      fprintf('LINSYS: Warning! Cannot check if symbolic matrix is positive definite.\n');
+      if isempty(logger)
+        logger=Log4jConfigurator.getLogger();
+      end
+      logger.info('LINSYS: Warning! Cannot check if symbolic matrix is positive definite.');
     end
     isEqMat = strcmp(Q, Q.');
     if ~all( isEqMat(:) )
