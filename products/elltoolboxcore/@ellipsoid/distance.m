@@ -377,10 +377,6 @@ function [distArray, timeArray] = computePointsEllDist(ellObjArray, vecArray, fl
         'wrongInput', 'errorMessage', ...
         'Ellipsoid array size and vectors size must be identical or one of this size must be [1 1]');
     [mSize, lSize] = size(ellObjArray);
-    modgen.common.checkmultvar('(x1 == (x2 * x3)) || (x1 == 1) || (x2 * x3 == 1)',3,nVec,mSize,lSize,...
-        'errorTag','wrongInput','errrorMessage',...
-        'Ellipsoid array size and vectors size must be identical or one of this size must be [1 1]');
-    
     nEllObj      = mSize * lSize;
     if (nEllObj > 1) && (nVec > 1) && (nEllObj ~= nVec)
         error('DISTANCE: number of ellipsoids does not match the number of vectors.');

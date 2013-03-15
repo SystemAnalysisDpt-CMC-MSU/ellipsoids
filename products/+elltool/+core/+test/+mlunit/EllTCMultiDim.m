@@ -18,7 +18,7 @@ classdef EllTCMultiDim < mlunitext.test_case
             self.testDataRootDir=[fileparts(which(className)),filesep,'TestData',...
                 filesep,shortClassName];
         end
-%         function self = testDistance(self)
+        function self = testDistance(self)
 %             
 %             import elltool.conf.Properties;
 %             load(strcat(self.testDataRootDir,filesep,'testEllEllRMat.mat'),...
@@ -26,6 +26,17 @@ classdef EllTCMultiDim < mlunitext.test_case
 %             %
 %             %testing vector-ellipsoid distance
 %             %
+    arraySizeVec = [2, 2];
+    testEllArray = createObjectArray(arraySizeVec, @ell_unitball, ...
+        3, 1, 1);
+    testDoubleArray = ones(3, 3, 3);
+    errorStr = 'wrongInput';
+    self.runAndCheckError('testEllArray.distance(testDoubleArray)', errorStr);
+    arraySizeVec = [3, 3, 3];
+    testEllArray = createObjectArray(arraySizeVec, @ell_unitball, ...
+        3, 1, 1);
+    testDoubleMat = ones(3, 4);
+    self.runAndCheckError('testEllArray.distance(testDoubleMat)', errorStr);
 %             %distance between ellipsoid and two vectors
 %             absTol = Properties.getAbsTol();
 %             testEllipsoid = ellipsoid([1,0,0;0,5,0;0,0,10]);
@@ -373,7 +384,7 @@ classdef EllTCMultiDim < mlunitext.test_case
 %             ansResVec(2)=distance(testEllipsoid1Vec(2),testEllipsoid2Vec(2),1);
 %             mlunit.assert_equals(1, all(abs(testResVec-ansResVec)<...
 %                 elltool.conf.Properties.getAbsTol()));
-%         end
+        end
         function self = testDimension(self)
             %Chek for one output argument
             %1: Empty ellipsoid
