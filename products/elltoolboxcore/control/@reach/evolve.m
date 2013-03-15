@@ -34,7 +34,6 @@ function RS = evolve(CRS, T, lsys)
   import elltool.conf.Properties;
   import modgen.common.checkvar;
   import modgen.common.checkmultvar;
-  absTolVal =  elltool.conf.Properties.getAbsTol();
        
   if nargin < 2
     error('EVOLVE: insufficient number of input arguments.');
@@ -45,6 +44,7 @@ function RS = evolve(CRS, T, lsys)
   end
 
   RS = CRS;
+  absTolVal =  RS.getAbsTol();
   if nargin < 3
     lsys = RS.system;
   end

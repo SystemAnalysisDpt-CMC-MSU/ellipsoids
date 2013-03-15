@@ -139,7 +139,7 @@ classdef GenEllipsoid < handle
             import modgen.common.throwerror
             import elltool.core.GenEllipsoid;
             import gras.la.ismatsymm;
-            import gras.la.ismatpossemdef;
+            import gras.la.ismatposdef;
             %
             absTol=ellObj.CHECK_TOL;
             %
@@ -299,8 +299,8 @@ classdef GenEllipsoid < handle
             if (nInput~=0)
                 isNotInfIndVec = ~(diag(ellObj.diagMat)==Inf);
                 if any(isNotInfIndVec)
-                    if ~ismatpossemdef(ellObj.diagMat(isNotInfIndVec,...
-                        isNotInfIndVec),absTol)
+                    if ~ismatposdef(ellObj.diagMat(isNotInfIndVec,...
+                        isNotInfIndVec),absTol,1)
                     throwerror('wrongInputMat',...
                         ['GenEllipsoid matrix should be positive ',...
                         'semi-definite.'])

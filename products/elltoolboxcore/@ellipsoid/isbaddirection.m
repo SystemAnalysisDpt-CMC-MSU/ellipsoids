@@ -1,4 +1,4 @@
-function isBadDirVec = isbaddirection(fstEll, secEll, dirsMat)
+function isBadDirVec = isbaddirection(fstEll, secEll, dirsMat,absTol)
 %
 % ISBADDIRECTION - checks if ellipsoidal approximations of geometric
 %                  difference of two ellipsoids can be computed for
@@ -17,6 +17,7 @@ function isBadDirVec = isbaddirection(fstEll, secEll, dirsMat)
 %       secEll: ellipsoid [1, 1] - second ellipsoid of the same dimention.
 %       dirsMat: numeric[nDims, nCols] - matrix whose columns are
 %           direction vectors that need to be checked.
+%       absTol: double [1,1] - absolute tolerance
 %
 % Output:
 %    isBadDirVec: logical[1, nCols] - array of true or false with length
@@ -42,5 +43,5 @@ if ~isbigger(fstEll, secEll)
     isBadDirVec = true(1,size(dirsMat,2));
 else    
     isBadDirVec=ellipsoid.isbaddirectionmat(fstEll.shape,...
-        secEll.shape, dirsMat);
+        secEll.shape, dirsMat,absTol);
 end

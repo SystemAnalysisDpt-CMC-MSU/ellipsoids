@@ -1,6 +1,10 @@
-classdef NewReachTestCase < mlunitext.test_case
+classdef SymmPosReachTestCase < mlunitext.test_case
+% SYMMPOSREACHTESTCASE - tests for checking symmetry and positive
+% definitness in reach class.
+%
+%
     methods
-        function self = NewReachTestCase(varargin)
+        function self = SymmPosReachTestCase(varargin)
            self=self@mlunitext.test_case(varargin{:});
         end
         %

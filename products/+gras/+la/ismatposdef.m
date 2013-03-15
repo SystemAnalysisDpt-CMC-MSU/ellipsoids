@@ -1,4 +1,4 @@
-function isPosDef = ismatposdef( qMat, absTol)
+function isPosDef = ismatposdef( qMat, absTol, flagSemDef)
 % ISMATPOSDEF  checks if qMat is positive definite
 %
 % Input:
@@ -17,18 +17,28 @@ function isPosDef = ismatposdef( qMat, absTol)
 %
 %
 import modgen.common.throwerror;
+import gras.la.ismatsymm;
 %
-[nRows, nCols] = size(qMat);
-if (nRows~=nCols)
-    throwerror('wrongInput:nonSquareMat',...
-        'ISMATPOSDEF: Input matrix must be square.');
+if ~ismatsymm(qMat)
+    throwerror('wrongInput:nonSymmMat',...
+        'ISMATPOSDEF: Input matrix must be symmetric');
 end
 %
 minEig=min(eig(qMat));
 %
 isPosDef=false;
-if (minEig>absTol)
-    isPosDef=true;
+if nargin<3
+    flagSemDef=0;
 end
+if flagSemDef
+    if (minEig>=0 || abs(minEig)<absTol)
+        isPosDef=true;
+    end
+else
+    if (minEig>absTol)
+        isPosDef=true;
+    end
+end
+
 
 

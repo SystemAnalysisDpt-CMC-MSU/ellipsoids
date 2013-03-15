@@ -271,7 +271,8 @@ if nArgOut == 0
 end
     function fCase2extAppr(index)
         dirVec = dirMat(:, index);
-        isGoodDirVec =~isbaddirection(extApproxEllVec(index), inpEll, dirVec);
+        isGoodDirVec =~isbaddirection(extApproxEllVec(index), inpEll,...
+            dirVec,Properties.getAbsTol());
         if any(isGoodDirVec)
             extApprEllVec(index)=minkdiff_ea(extApproxEllVec(index), ...
                 inpEll, dirMat(:,index));

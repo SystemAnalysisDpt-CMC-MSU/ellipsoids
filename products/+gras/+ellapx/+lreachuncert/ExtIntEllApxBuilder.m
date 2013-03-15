@@ -16,6 +16,7 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
         minQMatEig
         %
         goodDirSetObj
+        absTol
     end
     methods (Access=protected)
         function S=getOrthTranslMatrix(self,Q_star,R_sqrt,b,a)
@@ -91,7 +92,6 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
                 ltSpline,t,QIntMat,QExtMat)
             import modgen.common.throwerror;
             import gras.la.ismatposdef;
-            import gras.la.ismatpossemdef;
             A=AtDynamics.evaluate(t);
             ltVec=ltSpline.evaluate(t);
             %
@@ -105,7 +105,7 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             %
             [VMat,DMat]=eig(QIntMat);
             absTol =  elltool.conf.Properties.getAbsTol();
-            if ~ismatpossemdef(QIntMat,absTol)
+            if ~ismatposdef(QIntMat,absTol,1)
                 throwerror('wrongState','internal approx has degraded');
             end
             Q_star=VMat*sqrt(DMat)*transpose(VMat);
@@ -132,8 +132,8 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             %
             %% External approximation
             [VMat,DMat]=eig(QExtMat);
-            absTol =  elltool.conf.Properties.getAbsTol();
-            if ~ismatpossemdef(QExtMat,absTol)
+            %absTol =  elltool.conf.Properties.getAbsTol();
+            if ~ismatposdef(QExtMat,self.absTol)
                 throwerror('wrongState','external approx has degraded');
             end
             Q_star=VMat*sqrt(DMat)*transpose(VMat);
@@ -309,6 +309,7 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             self.goodDirSetObj=goodDirSetObj;
             self.sMethodName=sMethodName;
             self.prepareODEData();
+            self.absTol=elltool.conf.Properties();
         end
         function ellTubeRel=getEllTubes(self)
             import gras.gen.SquareMatVector;

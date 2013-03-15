@@ -42,6 +42,8 @@ import elltool.conf.Properties;
 ellipsoid.checkIsMe(inpEllArr,'first');
 ellipsoid.checkIsMe(inpEll,'second');
 
+absTol=Properties.getAbsTol();
+
 checkvar(inpEll,@(x) isscalar(inpEll),'errorTag','wrongInput',...
     'errorMessage','second argument must be single ellipsoid.');
 
@@ -73,7 +75,7 @@ end
     	fstIntApprEll = fstIntApprEllMat(index);
         dirVec = dirMat(:, index);
         if isbigger(fstIntApprEll, inpEll)
-            if ~isbaddirection(fstIntApprEll, inpEll, dirVec)
+            if ~isbaddirection(fstIntApprEll, inpEll, dirVec,absTol)
                 intApprEllVec(index) = ...
                     minkdiff_ia(fstIntApprEll, inpEll, dirVec);
             end

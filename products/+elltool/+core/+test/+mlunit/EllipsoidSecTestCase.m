@@ -34,18 +34,21 @@ classdef EllipsoidSecTestCase < mlunitext.test_case
                 [], 0);
         end
         function self = testIsBadDirection(self)
+            import elltool.conf.Properties;
+            absTol=Properties.getAbsTol();
             [test1Ell, test2Ell] = createTypicalEll(15);
             aMat = [diag(ones(6, 1)), [1; 2; 3; 3; 4; 5]];
-            isTestResVec = isbaddirection(test1Ell, test2Ell, aMat);
+            isTestResVec = isbaddirection(test1Ell, test2Ell, aMat,...
+                absTol);
             isTestRes = any(isTestResVec);
             mlunit.assert_equals(0, isTestRes);
             [test1Ell, test2Ell] = createTypicalEll(16);
             compareExpForIsBadDir(test1Ell, test2Ell, [1, -1; 0, 0], ...
-                [1, -1; 2, 3]);
+                [1, -1; 2, 3],absTol);
             [test1Ell, test2Ell] = createTypicalEll(17);
             compareExpForIsBadDir(test1Ell, test2Ell,...
             [1, -1, 1000, 1000; 0, 0, 0.5, 0.5; 0, 0, -0.5, -1],...
-            [1, -1, 0, 0; 1, -2, 1, 2; 7, 3, 2, 1]);
+            [1, -1, 0, 0; 1, -2, 1, 2; 7, 3, 2, 1],absTol);
         end
         function self = testMinkmp_ea(self)
             compareAnalyticForMinkMp(true, false, 18, 5, 0, [])
@@ -305,11 +308,11 @@ function compareForIsInside(test1EllVec, test2EllVec, myString, myResult)
     end
     mlunit.assert_equals(myResult, testRes);
 end
-function compareExpForIsBadDir(test1Ell, test2Ell, a1Mat, a2Mat)
-    isTestResVec = isbaddirection(test1Ell, test2Ell, a1Mat);
+function compareExpForIsBadDir(test1Ell, test2Ell, a1Mat, a2Mat,absTol)
+    isTestResVec = isbaddirection(test1Ell, test2Ell, a1Mat,absTol);
     isTestRes = all(isTestResVec);
     mlunit.assert_equals(true, isTestRes);
-    isTestResVec = isbaddirection(test1Ell, test2Ell, a2Mat);
+    isTestResVec = isbaddirection(test1Ell, test2Ell, a2Mat,absTol);
     isTestRes = any(isTestResVec);
     mlunit.assert_equals(false, isTestRes);
 end

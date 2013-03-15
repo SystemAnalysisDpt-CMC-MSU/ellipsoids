@@ -120,7 +120,7 @@ classdef ellipsoid < handle
             % We cannot just check the condition 'min(eig(Q)) < 0'
             % because the zero eigenvalue may be internally represented
             % as something like -10^(-15).
-            checkmultvar('gras.la.ismatpossemdef(x1,x2)',2,shMat, absTolVal,...
+            checkmultvar('gras.la.ismatposdef(x1,x2,1)',2,shMat, absTolVal,...
                 'errorTag','wrongInput','errorMessage',...
                 'shape matrix must be positive semi-definite.');
             ell.center = centVec;
@@ -137,7 +137,7 @@ classdef ellipsoid < handle
         res = my_color_table(ch)
         regQMat = regularize(qMat,absTol)
         clrDirsMat = rm_bad_directions(q1Mat, q2Mat, dirsMat)
-        isBadDirVec = isbaddirectionmat(q1Mat, q2Mat, dirsMat)
+        isBadDirVec = isbaddirectionmat(q1Mat, q2Mat, dirsMat,absTol)
     end
     methods(Access = private)
         propValMat = getProperty(hplaneMat,propName)

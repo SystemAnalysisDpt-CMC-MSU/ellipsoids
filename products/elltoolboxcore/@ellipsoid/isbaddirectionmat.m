@@ -1,4 +1,4 @@
-function isBadDirVec = isbaddirectionmat(q1Mat, q2Mat, dirsMat)
+function isBadDirVec = isbaddirectionmat(q1Mat, q2Mat, dirsMat,absTol)
 % ISBADDIRECTIONMAT - Checks if it is possible to build ellipsoidal
 %                     approximation of the geometric difference of two
 %                     ellipsoids with shape matrices q1Mat and q2Mat
@@ -10,6 +10,7 @@ function isBadDirVec = isbaddirectionmat(q1Mat, q2Mat, dirsMat)
 %       q2Mat: double[nDims, nDims] - shape matrix of subtrahend ellipsoid
 %       dirsMat: double[nDims,nDirs] - columns of dirsMat are
 %           direction vectors
+%       absTol: double[1,1] - absolute tolerance
 %
 % Output:
 %   isBadDirVec: logical[1,nDirs] - true marks direction vector
@@ -28,7 +29,6 @@ function isBadDirVec = isbaddirectionmat(q1Mat, q2Mat, dirsMat)
 %            System Analysis Department 2012 $
 %
 import modgen.common.throwwarn;
-absTol=elltool.conf.Properties.getAbsTol();
 
 [nDim, nDirs] = size(dirsMat);
 

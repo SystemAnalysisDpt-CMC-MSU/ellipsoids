@@ -1,4 +1,4 @@
-function T = ell_simdiag(A, B)
+function T = ell_simdiag(A, B, absTol)
 %
 % ELL_SIMDIAG - computes the transformation matrix that simultaneously
 %               diagonalizes two symmetric matrices.
@@ -43,7 +43,6 @@ function T = ell_simdiag(A, B)
 %    Rustam Guliev
   import gras.la.ismatsymm;
   import gras.la.ismatposdef;
-  absTol =  elltool.conf.Properties.getAbsTol();
   %  
   if ~(isa(A, 'double')) || ~(isa(B, 'double'))
     error('ELL_SIMDIAG: both arguments must be symmetric matrices of the same dimension.');

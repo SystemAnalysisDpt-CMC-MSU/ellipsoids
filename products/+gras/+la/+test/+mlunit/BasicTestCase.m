@@ -94,40 +94,36 @@ classdef BasicTestCase < mlunitext.test_case
         
         function self = testIsMatPosAndPosSemDef(self)
             import gras.la.ismatposdef;
-            import gras.la.ismatpossemdef;
             %
             absTol=elltool.conf.Properties.getAbsTol();
             %
+            fIsMatPosSemDef=@(qMat,absTol)ismatposdef(qMat,absTol,1);
             check(@ismatposdef);
-            check(@ismatpossemdef)
+            check(fIsMatPosSemDef)
             %
             testMat=rand(10,10);
-            mlunit.assert(ismatpossemdef(testMat.'*testMat,absTol));
+            mlunit.assert(fIsMatPosSemDef(testMat.'*testMat,absTol));
             %
-            testMat=[1 2; 1 2];
+            testMat=[1 5; 5 25];
             mlunit.assert(~ismatposdef(testMat,absTol));
-            mlunit.assert(ismatpossemdef(testMat,absTol));
+            mlunit.assert(fIsMatPosSemDef(testMat,absTol));
             %
             testMat=rand(10,10);
             testMat=-testMat.'*testMat;
-            mlunit.assert(~ismatpossemdef(testMat,absTol));
+            mlunit.assert(~fIsMatPosSemDef(testMat,absTol));
             %
             self.runAndCheckError('gras.la.ismatposdef(eye(3,5))',...
                 'wrongInput:nonSquareMat');
-            self.runAndCheckError('gras.la.ismatpossemdef(eye(3,5))',...
-                'wrongInput:nonSquareMat');
+            self.runAndCheckError('gras.la.ismatposdef([1 -1; 1 1])',...
+                'wrongInput:nonSymmMat');            
             %
             function check(fHandle)
                 import gras.la.ismatposdef;
-                import gras.la.ismatpossemdef;
                 %
                 mlunit.assert(fHandle(1,absTol));
                 %
                 testMat=rand(10,10);
                 mlunit.assert(fHandle(testMat.'*testMat,absTol));
-                %
-                testMat=[1 2;3 4];
-                mlunit.assert(~fHandle(testMat,absTol));
                 %
             end
         end
