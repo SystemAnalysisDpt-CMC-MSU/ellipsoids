@@ -53,7 +53,7 @@ classdef ElliIntUnionTCMultiDim < mlunitext.test_case
             function testError(flag)
                 [testEllArray, ~, errorStr] = createTypicalArray(flag);
                 self.runAndCheckError...
-                    ('ellunion_ea(testEllArray)', errorStr);
+                    ('testEllArray.ellunion_ea()', errorStr);
             end
             
         end
@@ -100,7 +100,7 @@ classdef ElliIntUnionTCMultiDim < mlunitext.test_case
                     [testEllArray, ~, errorStr] = createTypicalArray(flag);
                 end
                 self.runAndCheckError...
-                   ('ellintersection_ia(testEllArray)', errorStr);
+                   ('testEllArray.ellintersection_ia()', errorStr);
             end
 
         end
@@ -151,11 +151,11 @@ classdef ElliIntUnionTCMultiDim < mlunitext.test_case
                 [test1EllArray, test2EllArray, errorStr] = ...
                     createTypicalArray(flag);
                 self.runAndCheckError...
-                   ('contains(test1EllArray, test2EllArray)', errorStr);
+                   ('test1EllArray.contains(test2EllArray)', errorStr);
                 self.runAndCheckError...
-                   ('contains(test2EllArray, test1EllArray)', errorStr);
+                   ('test2EllArray.contains(test1EllArray)', errorStr);
                 self.runAndCheckError...
-                   ('contains(test1EllArray, test1EllArray)', errorStr);
+                   ('test1EllArray.contains(test1EllArray)', errorStr);
             end
         end
 
@@ -214,7 +214,7 @@ classdef ElliIntUnionTCMultiDim < mlunitext.test_case
             function testError(flag)
                 [testEllArray, ~, errorStr] = createTypicalArray(flag);
                 self.runAndCheckError...
-                   ('isinternal(testEllArray, testPointVec)', errorStr);
+                   ('testEllArray.isinternal(testPointVec)', errorStr);
             end
         end  
         function self = testHpIntersection(self)
@@ -314,7 +314,7 @@ classdef ElliIntUnionTCMultiDim < mlunitext.test_case
                     [testEllArray, ~, errorStr] = createTypicalArray(flag);
                 end
                 self.runAndCheckError...
-                    ('hpintersection(testEllArray, testHpArray)', errorStr);
+                    ('testEllArray.hpintersection(testHpArray)', errorStr);
             end
 
         end

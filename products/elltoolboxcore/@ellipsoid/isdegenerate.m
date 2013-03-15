@@ -22,11 +22,11 @@ function isPositiveArr = isdegenerate(myEllArr)
 
 ellipsoid.checkIsMe(myEllArr);
 
-modgen.common.checkvar( myEllArr , 'numel(x) > 0', 'errorTag', ...
-    'wrongInput:emptyArray', 'errorMessage', ...
-    'Each array must be not empty.');
-
 modgen.common.checkvar(myEllArr,'~any(isempty(x(:)))',...
     'errorTag','wrongInput:emptyEllipsoid',...
     'errorMessage','input argument contains empty ellipsoid.');
-isPositiveArr = arrayfun(@(x) rank(x.shape) < size(x.shape,1) ,myEllArr);
+if (numel(myEllArr) == 0)
+    isPositiveArr = true(size(myEllArr));
+else
+    isPositiveArr = arrayfun(@(x) rank(x.shape) < size(x.shape,1) ,myEllArr);
+end
