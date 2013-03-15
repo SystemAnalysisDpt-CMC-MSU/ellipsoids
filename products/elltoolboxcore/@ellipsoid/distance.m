@@ -369,6 +369,10 @@ function [distArray, timeArray] = computePointsEllDist(ellObjArray, vecArray, fl
 %
     import elltool.conf.Properties;
     %
+    modgen.common.checkvar( vecArray,'ismatrix(x)','errorTag', ...
+        'wrongInput', 'errorMessage', ...
+        'The third argument must be a matrix.');
+
     [mSize, lSize] = size(ellObjArray);
     [kSize, nVec] = size(vecArray);
     nEllObj      = mSize * lSize;
