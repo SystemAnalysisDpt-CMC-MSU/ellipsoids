@@ -11,10 +11,16 @@ classdef EllTubeStaticSpaceProjector<gras.ellapx.proj.AEllTubePlainProjector
             projType=gras.ellapx.enums.EProjType.Static;            
         end
         function [projOrthMatArray,projOrthMatTransArray]=...
-                getProjectionMatrix(~,projMat,timeVec,varargin)
+                getProjectionMatrix(~,projSpaceVec,timeVec,varargin)
+            nDims=length(projSpaceVec);
             nTimes=length(timeVec);
-            projOrthMatArray=repmat(projMat,[1 1 nTimes]);
-            projOrthMatTransArray=repmat(projMat.',[1 1 nTimes]);            
+            projDimNumVec=find(projSpaceVec);
+            nProjDims=length(projDimNumVec);
+            indVec=sub2ind([nProjDims, nDims],1:nProjDims,projDimNumVec);
+            projOrthSTimeMat=zeros(nProjDims,nDims);
+            projOrthSTimeMat(indVec)=1;
+            projOrthMatArray=repmat(projOrthSTimeMat,[1 1 nTimes]);
+            projOrthMatTransArray=repmat(projOrthSTimeMat.',[1 1 nTimes]);            
         end
     end
 end

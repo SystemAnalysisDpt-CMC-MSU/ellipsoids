@@ -360,7 +360,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
     end
     methods
         function [ellTubeProjRel,indProj2OrigVec]=project(self,projType,...
-                projMatList,fGetProjMat)
+                projSpaceList,fGetProjMat)
             %
             % fProj(projSpaceVec,timeVec,sTime,dim,indSTime)
             %
@@ -369,12 +369,12 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             import gras.ellapx.common.*;
             import import gras.ellapx.enums.EProjType;
             import gras.gen.SquareMatVector;
-            import gras.ellapx.smartdb.rels.EllTubeBasic; 
+            import gras.ellapx.smartdb.rels.EllTubeBasic;
             %
             projDependencyFieldNameList=...
                 self.getProjectionDependencyFieldList();
             %
-            nProj=length(projMatList);
+            nProj=length(projSpaceList);
             [SUData,~,~,indForwardVec,indBackwardVec]=...
                 self.getUniqueData('fieldNameList',...
                 projDependencyFieldNameList);
@@ -396,16 +396,16 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 nLDirs=length(indLDirs);
                 %
                 for iProj=nProj:-1:1
-                    projMat=projMatList{iProj};
+                    projSpaceVec=projSpaceList{iProj};
                     %% Create projection matrix vector
                     [projOrthMatArray,projOrthMatTransArray]=...
-                        fGetProjMat(projMat,timeVec,sTime,dim,indSTime);
+                        fGetProjMat(projSpaceVec,timeVec,sTime,dim,indSTime);
                     %%
                     %
                     tubeProjDataCMat{iGroup,iProj}.dim=...
-                        repmat(sum(sum(projMat)),nLDirs,1);
+                        repmat(sum(projSpaceVec),nLDirs,1);
                     tubeProjDataCMat{iGroup,iProj}.projSpecDimVec=...
-                        repmat({sum(projMat)==1},nLDirs,1); 
+                        repmat({projSpaceVec},nLDirs,1);
                     tubeProjDataCMat{iGroup,iProj}.projType=...
                         repmat(projType,nLDirs,1);
                     %
