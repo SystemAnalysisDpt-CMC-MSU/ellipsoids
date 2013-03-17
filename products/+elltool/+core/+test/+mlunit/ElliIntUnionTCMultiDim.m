@@ -203,15 +203,6 @@ classdef ElliIntUnionTCMultiDim < mlunitext.test_case
             testError(5);
             testError(6);
             testError(7);
-            testEllArray = createObjectArray(arraySizeVec, @ell_unitball, ...
-                3, 1, 1);
-            testDoubleArray = ones(3, 3, 3);
-            errorStr = 'wrongInput';
-            self.runAndCheckError...
-                ('testEllArray.isinternal(testDoubleArray)', errorStr);
-            testStr = 'asdf';
-            self.runAndCheckError...
-                ('testEllArray.isinternal(testStr)', errorStr);
             function testCorrect(isTwoCheck, AnsVec)
                 testResVec = isinternal(testEllArray, testPointVec, 'i');
                 self.flexAssert(AnsVec, testResVec);

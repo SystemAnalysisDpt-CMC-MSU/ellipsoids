@@ -973,7 +973,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
             self.runAndCheckError('gt(testEllipsoidEmpty, testNotEllipsoid)','wrongInput');
             
             %'sizes of ellipsoidal arrays do not match.'
-            self.runAndCheckError('gt([testEllipsoidEmpty testEllipsoidEmpty], [testEllipsoidEmpty; testEllipsoidEmpty])','wrongSizes');
+            self.runAndCheckError('gt([testEllipsoidEmpty testEllipsoidEmpty], [testEllipsoidEmpty; testEllipsoidEmpty])','wrongInput:emptyEllipsoid');
             
             testRes = gt([testEllipsoid2 testEllipsoid1], [testEllipsoid1 testEllipsoid2]);
             if (testRes == [1 0])
