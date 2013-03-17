@@ -7,8 +7,8 @@ function isPosDef = ismatposdef( qMat, absTol, flagSemDef)
 %       absTol: double - precision
 %
 %   optional:
-%       flagSemDef: logical[1,1] - if true than qMat is checking for 
-%                   positive semi-deifiniteness
+%       flagSemDef: logical[1,1] - if true than qMat is checked for 
+%                   positive semi-definiteness
 % Output:
 %   isPosDef: logical[1,1] - true iff matrix is positive definite
 % 
@@ -42,9 +42,3 @@ else
         isPosDef=true;
     end
 end
-
-if ~isPosDef
-    b=1;
-end
-
-
