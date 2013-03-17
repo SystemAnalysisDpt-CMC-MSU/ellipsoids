@@ -104,8 +104,7 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             D_sqrt=sqrtm(D);
             %
             [VMat,DMat]=eig(QIntMat);
-            absTol =  elltool.conf.Properties.getAbsTol();
-            if ~ismatposdef(QIntMat,absTol,1)
+            if ~ismatposdef(QIntMat,self.absTol,1)
                 throwerror('wrongState','internal approx has degraded');
             end
             Q_star=VMat*sqrt(DMat)*transpose(VMat);
@@ -113,9 +112,8 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             %
             piNumerator=slCQClSqrtDynamics.evaluate(t);
             piDenominator=sqrt(sum((QIntMat*ltVec).*ltVec));
-            absTol =  elltool.conf.Properties.getAbsTol();
             if (piNumerator<=0)||(piDenominator<=0)
-                if ~ismatposdef(D,absTol)
+                if ~ismatposdef(D,self.absTol)
                     throwerror('wrongInput',...
                         ['degenerate matrices C,Q for disturbance ',...
                         'contraints are not supported']);
@@ -309,7 +307,7 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             self.goodDirSetObj=goodDirSetObj;
             self.sMethodName=sMethodName;
             self.prepareODEData();
-            self.absTol=elltool.conf.Properties();
+            self.absTol=elltool.conf.Properties.getAbsTol();
         end
         function ellTubeRel=getEllTubes(self)
             import gras.gen.SquareMatVector;
