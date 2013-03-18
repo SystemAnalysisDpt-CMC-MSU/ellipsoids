@@ -125,219 +125,23 @@ classdef EllSecTCMultiDim < mlunitext.test_case
                 end
             end
         end
-        function self = testMinkmp_ea(self)
-            testCorrect(true, 1);
-            testCorrect(true, 2);
-            testCorrect(true, 3);
-            testCorrect(false, 1);
-            testError(10);
-            testError(11);
-            testError(12);
-            testError(13);
-            function testCorrect(isnHighDim, flag)
-                if (isnHighDim)
-                    [my1Ell, my2Ell, myEllArray, myMat, ansEllVec] = ...
-                        createTypicalArray(flag);
-                else
-                    [my1Ell, my2Ell, myEllArray, myMat, ansEllVec] = ...
-                        createTypicalHighDimArray(flag);
-                end
-                compareForMinkFunc(@minkmp_ea, 4, ansEllVec, my1Ell, my2Ell, ...
-                    myEllArray, myMat)
-            end
-            function testError(flag)
-                [test1EllArray, test2EllArray, errorStr] = ...
-                    createTypicalArray(flag);
-                self.runAndCheckError...
-                    ('test1EllArray.minkmp_ea(ell_unitball(3), test2EllArray, eye(3))', ...
-                    'wrongInput');
-                self.runAndCheckError...
-                    ('ell_unitball(3).minkmp_ea(test1EllArray, test2EllArray, eye(3))', ...
-                    'wrongInput');
-                if (flag ~= 10)
-                    self.runAndCheckError...
-                        ('ell_unitball(3).minkmp_ea(ell_unitball(3), test1EllArray, eye(3))', ...
-                        errorStr);
-                end
-            end
-        end
-        function self = testMinkmp_ia(self)
-            testCorrect(true, 1);
-            testCorrect(true, 2);
-            testCorrect(true, 3);
-            testCorrect(false, 1);
-            testError(10);
-            testError(11);
-            testError(12);
-            testError(13);
-            function testCorrect(isnHighDim, flag)
-                if (isnHighDim)
-                    if (flag == 2)
-                        [my1Ell, my2Ell, myEllArray, myMat, ~, ansEllVec] = ...
-                            createTypicalArray(flag);
-                    else
-                    [my1Ell, my2Ell, myEllArray, myMat, ansEllVec] = ...
-                        createTypicalArray(flag);
-                    end
-                else
-                    [my1Ell, my2Ell, myEllArray, myMat, ansEllVec] = ...
-                        createTypicalHighDimArray(flag);
-                end
-                compareForMinkFunc(@minkmp_ia, 4, ansEllVec, my1Ell, my2Ell, ...
-                    myEllArray, myMat)
-            end
-            function testError(flag)
-                [test1EllArray, test2EllArray, errorStr] = ...
-                    createTypicalArray(flag);
-                self.runAndCheckError...
-                    ('test1EllArray.minkmp_ia(ell_unitball(3), test2EllArray, eye(3))', ...
-                    'wrongInput');
-                self.runAndCheckError...
-                    ('ell_unitball(3).minkmp_ia(test1EllArray, test2EllArray, eye(3))', ...
-                    'wrongInput');
-                if (flag ~= 10)
-                    self.runAndCheckError...
-                        ('ell_unitball(3).minkmp_ia(ell_unitball(3), test1EllArray, eye(3))', ...
-                        errorStr);
-                end
-            end
-        end
         function self = testMinksum_ea(self)
-            testCorrect(true, 4);
-            testCorrect(true, 5);
-            testCorrect(true, 6);
-            testCorrect(false, 2);
-            testError(10);
-            testError(11);
-            testError(12);
-            testError(13);
-            function testCorrect(isnHighDim, flag)
-                if (isnHighDim)
-                    [myEllArray, myMat, ansEllVec] = ...
-                        createTypicalArray(flag);
-                else
-                    [myEllArray, myMat, ansEllVec] = ...
-                        createTypicalHighDimArray(flag);
-                end
-                compareForMinkFunc(@minksum_ea, 2, ansEllVec, ...
-                    myEllArray, myMat)
-            end
-            function testError(flag)
-                [test1EllArray, ~, errorStr] = createTypicalArray(flag);
-                self.runAndCheckError...
-                   ('test1EllArray.minksum_ea(eye(3))', errorStr);
-            end
+            checkMinksum_eaAndMinksum_ia(self, true);
         end
         function self = testMinksum_ia(self)
-            testCorrect(true, 4);
-            testCorrect(true, 5);
-            testCorrect(true, 6);
-            testCorrect(false, 2);
-            testError(10);
-            testError(11);
-            testError(12);
-            testError(13);
-            function testCorrect(isnHighDim, flag)
-                if (isnHighDim)
-                    [myEllArray, myMat, ansEllVec] = ...
-                        createTypicalArray(flag);
-                else
-                    [myEllArray, myMat, ansEllVec] = ...
-                        createTypicalHighDimArray(flag);
-                end
-                compareForMinkFunc(@minksum_ia, 2, ansEllVec, ...
-                    myEllArray, myMat)
-            end
-            function testError(flag)
-                [test1EllArray, ~, errorStr] = createTypicalArray(flag);
-                self.runAndCheckError...
-                   ('test1EllArray.minksum_ia(eye(3))', errorStr);
-            end
+            checkMinksum_eaAndMinksum_ia(self, false);
+        end
+        function self = testMinkmp_ea(self)
+            checkMinkmp_eaAndMinkmp_ia(self, true);
+        end
+        function self = testMinkmp_ia(self)
+            checkMinkmp_eaAndMinkmp_ia(self, false);
         end
         function self = testMinkpm_ea(self)
-            testCorrect(true, 7);
-            testCorrect(true, 8);
-            testCorrect(true, 9);
-            testCorrect(false, 3);
-            testError(10);
-            testError(11);
-            testError(12);
-            testError(13);
-            function testCorrect(isnHighDim, flag)
-                if (isnHighDim)
-                    [myEllArray, myEll, myMat, ansEllVec] = ...
-                        createTypicalArray(flag);
-                else
-                    [myEllArray, myEll, myMat, ansEllVec] = ...
-                        createTypicalHighDimArray(flag);
-                end
-                compareForMinkFunc(@minkpm_ea, 3, ansEllVec, myEllArray, ...
-                    myEll, myMat);
-            end
-            function testError(flag)
-                [test1EllArray, test2EllArray, errorStr] = ...
-                    createTypicalArray(flag);
-                self.runAndCheckError...
-                    ('test2EllArray.minkpm_ea(test1EllArray, eye(3))', ...
-                    'wrongInput');
-                self.runAndCheckError...
-                    ('test1EllArray.minkpm_ea(test2EllArray, eye(3))', ...
-                    'wrongInput');
-                if (flag == 10) || (flag == 13)
-                    self.runAndCheckError...
-                        ('test1EllArray.minkpm_ea(ell_unitball(3), eye(3))', ...
-                        errorStr);
-                else
-                    self.runAndCheckError...
-                        ('test1EllArray.minkpm_ea(ell_unitball(3), eye(3))', ...
-                        'wrongSizes');
-                end
-            end
+            checkMinkpm_eaAndMinkpm_ia(self, true);
         end
         function self = testMinkpm_ia(self)
-            testCorrect(true, 7);
-            testCorrect(true, 8);
-            testCorrect(true, 9);
-            testCorrect(false, 3);
-            testError(10);
-            testError(11);
-            testError(12);
-            testError(13);
-            function testCorrect(isnHighDim, flag)
-                if (isnHighDim)
-                    if (flag == 8)
-                        [myEllArray, myEll, myMat, ~, ansEllVec] = ...
-                            createTypicalArray(flag);
-                    else
-                        [myEllArray, myEll, myMat, ansEllVec] = ...
-                            createTypicalArray(flag);
-                    end
-                else
-                    [myEllArray, myEll, myMat, ansEllVec] = ...
-                        createTypicalHighDimArray(flag);
-                end
-                compareForMinkFunc(@minkpm_ia, 3, ansEllVec, myEllArray, ...
-                    myEll, myMat);
-            end
-            function testError(flag)
-                [test1EllArray, test2EllArray, errorStr] = ...
-                    createTypicalArray(flag);
-                self.runAndCheckError...
-                    ('test2EllArray.minkpm_ia(test1EllArray, eye(3))', ...
-                    'wrongInput');
-                self.runAndCheckError...
-                    ('test1EllArray.minkpm_ia(test2EllArray, eye(3))', ...
-                    'wrongInput');
-                if (flag == 10) || (flag == 13)
-                    self.runAndCheckError...
-                        ('test1EllArray.minkpm_ia(ell_unitball(3), eye(3))', ...
-                        errorStr);
-                else
-                    self.runAndCheckError...
-                        ('test1EllArray.minkpm_ia(ell_unitball(3), eye(3))', ...
-                        'wrongSizes');
-                end
-            end
+            checkMinkpm_eaAndMinkpm_ia(self, false);
         end
      end
 end
@@ -596,4 +400,171 @@ secondArg, nArg)
         otherwise
     end
     objectArray = reshape([objectCArray{:}], arraySize);
+end
+function checkMinksum_eaAndMinksum_ia(self, isMinksum_ea)
+    testCorrect(true, 4);
+    testCorrect(true, 5);
+    testCorrect(true, 6);
+    testCorrect(false, 2);
+    testError(10);
+    testError(11);
+    testError(12);
+    testError(13);
+    function testCorrect(isnHighDim, flag)
+        if (isnHighDim)
+            [myEllArray, myMat, ansEllVec] = ...
+                createTypicalArray(flag);
+        else
+            [myEllArray, myMat, ansEllVec] = ...
+                createTypicalHighDimArray(flag);
+        end
+        if isMinksum_ea
+            compareForMinkFunc(@minksum_ea, 2, ansEllVec, ...
+                myEllArray, myMat);
+        else
+            compareForMinkFunc(@minksum_ia, 2, ansEllVec, ...
+                myEllArray, myMat)
+        end
+    end
+    function testError(flag)
+        [test1EllArray, ~, errorStr] = createTypicalArray(flag);
+        if isMinksum_ea
+            self.runAndCheckError...
+                ('test1EllArray.minksum_ea(eye(3))', errorStr);
+        else
+            self.runAndCheckError...
+                ('test1EllArray.minksum_ia(eye(3))', errorStr);
+        end
+    end
+end
+function checkMinkmp_eaAndMinkmp_ia(self, isMinkmp_ea)
+    testCorrect(true, 1);
+    testCorrect(true, 2);
+    testCorrect(true, 3);
+    testCorrect(false, 1);
+    testError(10);
+    testError(11);
+    testError(12);
+    testError(13);
+    function testCorrect(isnHighDim, flag)
+        if (isnHighDim)
+            if (flag == 2) && (~isMinkmp_ea)
+                [my1Ell, my2Ell, myEllArray, myMat, ~, ansEllVec] = ...
+                    createTypicalArray(flag);
+            else
+            [my1Ell, my2Ell, myEllArray, myMat, ansEllVec] = ...
+                createTypicalArray(flag);
+            end
+        else
+            [my1Ell, my2Ell, myEllArray, myMat, ansEllVec] = ...
+                createTypicalHighDimArray(flag);
+        end
+        if isMinkmp_ea
+            compareForMinkFunc(@minkmp_ea, 4, ansEllVec, my1Ell, my2Ell, ...
+                myEllArray, myMat);
+        else
+            compareForMinkFunc(@minkmp_ia, 4, ansEllVec, my1Ell, my2Ell, ...
+                myEllArray, myMat);
+        end
+    end
+    function testError(flag)
+        [test1EllArray, test2EllArray, errorStr] = ...
+            createTypicalArray(flag);
+        if isMinkmp_ea
+            self.runAndCheckError...
+                ('test1EllArray.minkmp_ea(ell_unitball(3), test2EllArray, eye(3))', ...
+                'wrongInput');
+            self.runAndCheckError...
+                ('ell_unitball(3).minkmp_ea(test1EllArray, test2EllArray, eye(3))', ...
+                'wrongInput');
+            if (flag ~= 10)
+                self.runAndCheckError...
+                    ('ell_unitball(3).minkmp_ea(ell_unitball(3), test1EllArray, eye(3))', ...
+                    errorStr);
+            end
+        else
+            self.runAndCheckError...
+                ('test1EllArray.minkmp_ia(ell_unitball(3), test2EllArray, eye(3))', ...
+                'wrongInput');
+            self.runAndCheckError...
+                ('ell_unitball(3).minkmp_ia(test1EllArray, test2EllArray, eye(3))', ...
+                'wrongInput');
+            if (flag ~= 10)
+                self.runAndCheckError...
+                    ('ell_unitball(3).minkmp_ia(ell_unitball(3), test1EllArray, eye(3))', ...
+                    errorStr);
+            end    
+        end
+    end
+end
+function checkMinkpm_eaAndMinkpm_ia(self, isMinkpm_ea)
+    testCorrect(true, 7);
+    testCorrect(true, 8);
+    testCorrect(true, 9);
+    testCorrect(false, 3);
+    testError(10);
+    testError(11);
+    testError(12);
+    testError(13);
+    function testCorrect(isnHighDim, flag)
+        if (isnHighDim)
+            if (flag == 8) && (~isMinkpm_ea)
+                [myEllArray, myEll, myMat, ~, ansEllVec] = ...
+                    createTypicalArray(flag);
+            else
+                [myEllArray, myEll, myMat, ansEllVec] = ...
+                    createTypicalArray(flag);
+            end
+        else
+            [myEllArray, myEll, myMat, ansEllVec] = ...
+                createTypicalHighDimArray(flag);
+        end
+        if isMinkpm_ea
+            compareForMinkFunc(@minkpm_ea, 3, ansEllVec, myEllArray, ...
+                myEll, myMat);
+        else
+            compareForMinkFunc(@minkpm_ia, 3, ansEllVec, myEllArray, ...
+                myEll, myMat);
+        end
+    end
+    function testError(flag)
+        [test1EllArray, test2EllArray, errorStr] = ...
+            createTypicalArray(flag);
+        if isMinkpm_ea
+            self.runAndCheckError...
+                ('test2EllArray.minkpm_ea(test1EllArray, eye(3))', ...
+                'wrongInput');
+            self.runAndCheckError...
+                ('test1EllArray.minkpm_ea(test2EllArray, eye(3))', ...
+                'wrongInput');
+        else
+            self.runAndCheckError...
+                ('test2EllArray.minkpm_ia(test1EllArray, eye(3))', ...
+                'wrongInput');
+            self.runAndCheckError...
+                ('test1EllArray.minkpm_ia(test2EllArray, eye(3))', ...
+                'wrongInput');
+        end
+        if (flag == 10) || (flag == 13)
+            if isMinkpm_ea
+                self.runAndCheckError...
+                    ('test1EllArray.minkpm_ea(ell_unitball(3), eye(3))', ...
+                    errorStr);
+            else
+                self.runAndCheckError...
+                    ('test1EllArray.minkpm_ia(ell_unitball(3), eye(3))', ...
+                    errorStr);
+            end    
+        else
+            if isMinkpm_ea
+                self.runAndCheckError...
+                    ('test1EllArray.minkpm_ea(ell_unitball(3), eye(3))', ...
+                    'wrongSizes');
+            else
+                self.runAndCheckError...
+                    ('test1EllArray.minkpm_ia(ell_unitball(3), eye(3))', ...
+                    'wrongSizes');
+            end
+        end
+    end
 end

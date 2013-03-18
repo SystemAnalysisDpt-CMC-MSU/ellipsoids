@@ -341,7 +341,6 @@ function checkEllunionEaAndEllintersectionIa(self, isEllunionEa)
     testError(5);
     testError(6);
     testError(7);
-
     function testCorrect(flag)
         if (flag > 0)
             [testEllArray, resultEll] = createTypicalArray(flag);
