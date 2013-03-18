@@ -357,9 +357,10 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             self.flexAssert(1, testResVec);
             %test intersect(ell1Arr,ell2Arr), where ell1Arr and ell2Arr have
             %same sizes, and non-scalar
-            testEll = ellipsoid(eye(3));
-            testEllArr = [testEll, testEll, testEll; testEll, testEll, testEll];
-            testEllArr(:,:,2) = testEllArr;
+            for iEll = 12:-1:1
+                testEllArr(iEll) = ellipsoid(eye(3));
+            end
+            testEllArr = reshape(testEllArr,2,3,2);
             testIntResArr = ones(size(testEllArr));
             intResArr = intersect(testEllArr,testEllArr);
             isOkArr = testIntResArr == intResArr;

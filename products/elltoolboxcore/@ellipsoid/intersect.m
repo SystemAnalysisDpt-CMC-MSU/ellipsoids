@@ -118,7 +118,7 @@ if mode == 'u'
         auxArr = arrayfun(@(x,y) distance(myEllArr, x), objArr,'UniformOutput',false);
     else
         auxArr = cell(size(objArr));
-        [nRows nCols] = size(objArr);%actually nRows always equals to one
+        [~, nCols] = size(objArr);
         for iCols = 1:nCols
             auxArr{iCols} = distance(myEllArr,objArr(iCols));
         end
@@ -145,7 +145,7 @@ elseif isa(objArr, 'hyperplane')
     [resArr statusArr] = arrayfun(@(x) lqcqp(myEllArr, x), objArr);
 else
     nDimsArr = zeros(size(objArr));
-    [nRows nCols] = size(objArr);%actually nRows always equals to one
+    [~, nCols] = size(objArr);
     for iCols = 1:nCols
         nDimsArr(iCols) = dimension(objArr(iCols));
     end

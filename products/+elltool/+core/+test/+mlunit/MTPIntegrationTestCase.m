@@ -73,9 +73,6 @@ classdef MTPIntegrationTestCase < mlunitext.test_case
             isInterU2DVec = intersect(testEll2DVec([2,3]),testPoly2DVec,'u');
             mlunit.assert(all(isInterU2DVec == isTestInterU2DVec));
             isInterI2D = intersect(testEll2DVec([2,3]),testPoly2DVec(3),'i');
-            plot(testEll2DVec([2,3]));
-            hold on;
-            plot(testPoly2DVec(3));
             mlunit.assert(isInterI2D == isTestInterI2D);
             isInterI2DVec = intersect(testEll2DVec([4,3]),testPoly2DVec,'i');
             mlunit.assert(all(isInterI2DVec == isTestInterI2DVec));
