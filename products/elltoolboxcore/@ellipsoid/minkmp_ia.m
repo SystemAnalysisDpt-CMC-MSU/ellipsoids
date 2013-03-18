@@ -68,8 +68,8 @@ Properties.setIsVerbose(false);
 
 nSumAmount  = numel(sumEllArr);
 sumEllVec = reshape(sumEllArr, 1, nSumAmount);
-isGoodDirVec = ~isbaddirection(fstEll, secEll, dirMat,...
-    Properties.getAbsTol());
+absTolVal=min(fstEll.absTol, secEll.absTol);     
+isGoodDirVec = ~isbaddirection(fstEll, secEll, dirMat,absTolVal);
 nGoodDirs = sum(isGoodDirVec);
 goodDirsMat = dirMat(:,isGoodDirVec);
 intApprEllVec = repmat(ellipsoid,1,nGoodDirs);

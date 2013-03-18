@@ -42,7 +42,7 @@ import elltool.conf.Properties;
 ellipsoid.checkIsMe(inpEllArr,'first');
 ellipsoid.checkIsMe(inpEll,'second');
 
-absTol=Properties.getAbsTol();
+absTol=inpEll.getAbsTol();
 
 checkvar(inpEll,@(x) isscalar(inpEll),'errorTag','wrongInput',...
     'errorMessage','second argument must be single ellipsoid.');

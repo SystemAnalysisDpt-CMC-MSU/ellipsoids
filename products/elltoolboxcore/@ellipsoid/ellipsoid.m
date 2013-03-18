@@ -136,7 +136,7 @@ classdef ellipsoid < handle
     methods(Static,Access = private)
         res = my_color_table(ch)
         regQMat = regularize(qMat,absTol)
-        clrDirsMat = rm_bad_directions(q1Mat, q2Mat, dirsMat)
+        clrDirsMat = rm_bad_directions(q1Mat, q2Mat, dirsMat,absTol)
         isBadDirVec = isbaddirectionmat(q1Mat, q2Mat, dirsMat,absTol)
     end
     methods(Access = private)

@@ -41,7 +41,6 @@ import elltool.conf.Properties;
 
 ellipsoid.checkIsMe(inpEllArr,'first');
 ellipsoid.checkIsMe(inpEll,'second');
-absTol=Properties.getAbsTol();
 
 checkvar(inpEll,@(x) isscalar(inpEll),'errorTag','wrongInput',...
     'errorMessage','second argument must be single ellipsoid.');
@@ -67,6 +66,7 @@ if any(isCheckVec)
 else
     
     secExtApprEllVec = minksum_ea(inpEllArr, dirMat);
+    absTol=min(min(secExtApprEllVec.getAbsTol()),inpEll.absTol);
     extApprEllVec = repmat(ellipsoid,1,nCols);
     arrayfun(@(x) fSetExtApprEllVec(x), 1:nCols)
     extApprEllVec = extApprEllVec(~isempty(extApprEllVec));

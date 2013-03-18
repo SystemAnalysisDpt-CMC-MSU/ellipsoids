@@ -150,8 +150,9 @@ switch nDim
     case 2,
         centVec = fstEll.center - secEll.center;
         phiVec = linspace(0, 2*pi, fstEll.nPlot2dPoints);
+        absTolVal=min(fstEll.absTol, secEll.absTol);
         lMat = ellipsoid.rm_bad_directions(fstEllShMat, ...
-            secEllShMat, [cos(phiVec); sin(phiVec)]);
+            secEllShMat, [cos(phiVec); sin(phiVec)],absTolVal);
         if size(lMat, 2) > 0
             [~, bpMat] = rho(fstEll, lMat);
             [~, subBoundPointMat] = rho(secEll, lMat);
@@ -185,8 +186,9 @@ switch nDim
                 = [cos(phiVec)*sin(psyVec(iFstEll3dPnt)); ...
                 sin(phiVec)*sin(psyVec(iFstEll3dPnt)); arrVec];
         end
+        absTolVal=min(fstEll.absTol, secEll.absTol);
         lMat = ellipsoid.rm_bad_directions(fstEllShMat,...
-            secEllShMat, lMat);
+            secEllShMat, lMat,absTolVal);
         if size(lMat, 2) > 0
             [~, boundPointMat] = rho(fstEll, lMat);
             [~, subBoundPointMat] = rho(secEll, lMat);
