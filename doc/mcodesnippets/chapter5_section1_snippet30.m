@@ -1,3 +1,4 @@
+H
 I = hpintersection(EE(:, 2), H(1))% compute the intersections of ellipsoids
                                   % in the second column of EE
                                   % with hyperplane H(1): 

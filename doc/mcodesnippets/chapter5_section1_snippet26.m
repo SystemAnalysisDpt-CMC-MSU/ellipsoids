@@ -8,5 +8,5 @@ distance(EE, P)  % distance from each of the ellipsoids in EE to the polytope P
 
 % ans =
 % 
-%     0.0945    0.5181
-%     0.0617    0.5231
+%      0     0
+%      0     0
