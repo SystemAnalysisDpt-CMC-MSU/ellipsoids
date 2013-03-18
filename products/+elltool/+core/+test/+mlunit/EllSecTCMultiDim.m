@@ -20,6 +20,7 @@ classdef EllSecTCMultiDim < mlunitext.test_case
         end
     function self = testIsInside(self)
             array1Size = [1, 2, 1, 1, 2, 1];
+            myMat = [4, 1, 1; 1, 2, 1; 1, 1, 5];
             test1EllArray = createObjectArray(array1Size, @ellipsoid, ... 
                 [2; 1], [4, 1; 1, 1], 2);
             array2Size = [1, 1];
@@ -30,22 +31,22 @@ classdef EllSecTCMultiDim < mlunitext.test_case
             testCorrect(1, [], 0);
             array1Size = [1, 1, 1, 1, 1, 3, 1, 1, 2];
             test1EllArray = createObjectArray(array1Size, @ellipsoid, ... 
-                [2; 1; 0], [4, 1, 1; 1, 2, 1; 1, 1, 5], 2);
+                [2; 1; 0], myMat, 2);
             array2Size = [1, 2, 1, 1, 1, 3, 1];
             test2EllArray = createObjectArray(array2Size, @ell_unitball, ... 
                 3, 1, 1);
             test2EllArray(1, 2, 1, 1, 1, 3, 1) = ellipsoid([2; 1; 0], ...
-                [4, 1, 1; 1, 2, 1; 1, 1, 5]);
+                myMat);
             testCorrect(1, 'i', 1);
             testCorrect(1, 'u', 0);
             array1Size = [1, 1, 1, 1, 1, 3, 1, 1, 3, 1, 1];
             test1EllArray = createObjectArray(array1Size, @ellipsoid, ... 
-                [5; 5; 5], [4, 1, 1; 1, 2, 1; 1, 1, 5], 2);
+                [5; 5; 5], myMat, 2);
             array2Size = [1, 2, 1, 1, 1, 1, 1];
             test2EllArray = createObjectArray(array2Size, @ell_unitball, ... 
                 3, 1, 1);
             test2EllArray(1, 2, 1, 1, 1, 1, 1) = ellipsoid([5; 5; 5], ...
-                [4, 1, 1; 1, 2, 1; 1, 1, 5], 2);
+                myMat, 2);
             testCorrect(1, 'i', -1);
             testCorrect(1, 'u', 0);
             array1Size = [1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1];

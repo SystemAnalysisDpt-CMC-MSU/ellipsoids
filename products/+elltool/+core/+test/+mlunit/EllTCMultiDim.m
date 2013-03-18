@@ -143,61 +143,10 @@ classdef EllTCMultiDim < mlunitext.test_case
             end
         end
         function self = testMaxEig(self)
-            %Check degenerate matrix
-            testCorrect(6);
-            testCorrect(2);
-            testCorrect(7);
-            testCorrect(8);
-            testCorrect(16);
-            mlunit.assert_equals(class(ansNumArray), class(testNumArray)); 
-            %Check empty ellipsoid
-            testError(1);
-            testError(14);
-            testError(15);
-            function testCorrect(flag)
-                [testEllArray ansNumArray] = createTypicalArray(flag);
-                [testNumArray] = maxeig(testEllArray);
-                mlunit.assert_equals(ansNumArray, testNumArray);
-            end
-            function testError(flag)
-                [testEllArray, ~, errorStr] = createTypicalArray(flag);
-                if (flag == 1)
-                    self.runAndCheckError('testEllArray.maxeig()','wrongInput:emptyEllipsoid');
-                else
-                    self.runAndCheckError('testEllArray.maxeig()', errorStr);
-                end
-            end
-            
+            checkMaxeigAndMineig(self, true);
         end
         function self = testMinEig(self)
-            %Check degenerate matrix
-            testCorrect(6);
-            testCorrect(2);
-            testCorrect(7);
-            testCorrect(8);
-            testCorrect(16);
-            mlunit.assert_equals(class(ansNumArray), class(testNumArray)); 
-            %Check empty ellipsoid
-            testError(1);
-            testError(14);
-            testError(15);
-            function testCorrect(flag)
-                if (flag == 2) || (flag == 6) || (flag == 16)
-                    [testEllArray ansNumArray] = createTypicalArray(flag);
-                else
-                    [testEllArray, ~, ansNumArray] = createTypicalArray(flag);
-                end
-                [testNumArray] = mineig(testEllArray);
-                mlunit.assert_equals(ansNumArray, testNumArray);
-            end
-            function testError(flag)
-                [testEllArray, ~, errorStr] = createTypicalArray(flag);
-                if (flag == 1)
-                    self.runAndCheckError('testEllArray.mineig()','wrongInput:emptyEllipsoid');
-                else
-                    self.runAndCheckError('testEllArray.mineig()', errorStr);
-                end
-            end
+            checkMaxeigAndMineig(self, false);
         end
         function self = testTrace(self)
             %Check degenerate matrix
@@ -263,296 +212,22 @@ classdef EllTCMultiDim < mlunitext.test_case
             end
         end
         function self = testEq(self)
-            isAnsArray = [];
-            testCorrect(1);
-            testCorrect(2);
-            testCorrect(9);
-            testCheckCorrect()
-            testCorrect(10);
-            testCheckCorrect()
-            testCorrect(11);
-            testCorrect(12);
-            [test1EllArray, test2EllArray, errorStr] = createTypicalArray(13);
-            self.runAndCheckError('eq(test1EllArray, test2EllArray)', ...
-                errorStr);
-            self.runAndCheckError('eq(test2EllArray, test1EllArray)', ... 
-                errorStr);
-            function testCheckCorrect()
-                mlunit.assert_equals(isAnsArray, ...
-                    test1EllArray.eq(test2EllArray));
-                mlunit.assert_equals(isAnsArray, ...
-                    test2EllArray.eq(test1EllArray));
-            end
-            function testCorrect(flag)
-                reportStr = '';
-                if (flag == 1)
-                    [test1EllArray, ~, isAnsArray, ~] = ...
-                        createTypicalArray(flag);
-                    [test2EllArray, ~, ~, ~] = createTypicalArray(flag);
-                elseif (flag == 2)
-                    [test1EllArray, ~, ~, ~] = createTypicalArray(flag);
-                    [test2EllArray, ~, ~, isAnsArray] = createTypicalArray(flag);
-                elseif (flag == 9)
-                    [test1EllArray, test2EllArray, isAnsArray] = ...
-                        createTypicalArray(flag);
-                else
-                    [test1EllArray, test2EllArray, isAnsArray, ...
-                        reportStr] = createTypicalArray(flag);
-                end
-                [isEqArray, reportStr] = eq(test1EllArray, test2EllArray);
-                mlunit.assert_equals(isEqArray, isAnsArray);
-                mlunit.assert_equals(reportStr, reportStr);
-            end
+            checkEqAndNq(self, true);
         end
         function self = testNe(self)
-            isAnsArray = [];
-            testCorrect(1);
-            testCorrect(2);
-            testCorrect(9);
-            testCorrect(10);
-            testCorrect(11);
-            testCorrect(12);
-            [test1EllArray, test2EllArray, errorStr] = createTypicalArray(13);
-            self.runAndCheckError('test1EllArray.ne(test2EllArray)', ...
-                errorStr);
-            self.runAndCheckError('test2EllArray.ne(test1EllArray)', ... 
-                errorStr);
-            function testCheckCorrect()
-                mlunit.assert_equals(isAnsArray, ...
-                    test1EllArray.ne(test2EllArray));
-                mlunit.assert_equals(isAnsArray, ...
-                    test2EllArray.ne(test1EllArray));
-            end
-            function testCorrect(flag)
-                if (flag == 1)
-                    [test1EllArray, ~, isAnsArray, ~] = ...
-                        createTypicalArray(flag);
-                    [test2EllArray, ~, ~, ~] = createTypicalArray(flag);
-                elseif (flag == 2)
-                    [test1EllArray, ~, ~, ~] = createTypicalArray(flag);
-                    [test2EllArray, ~, ~, isAnsArray] = createTypicalArray(flag);
-                elseif (flag == 9)
-                    [test1EllArray, test2EllArray, isAnsArray] = ...
-                        createTypicalArray(flag);
-                else
-                    [test1EllArray, test2EllArray, isAnsArray, ~] ...
-                        = createTypicalArray(flag);
-                end
-                isAnsArray = ~isAnsArray;
-                if (flag == 9) || (flag == 10)
-                    testCheckCorrect();
-                end
-                testResArray = ne(test1EllArray, test2EllArray);
-                mlunit.assert_equals(isAnsArray, testResArray);
-            end
+            checkEqAndNq(self, false);
         end
         function self = testGe(self)
-            isAnsArray = [];
-            test1EllArray = [];
-            test2EllArray = [];
-            testCorrect(2);
-            testCorrect(9);
-            testCorrect(10);
-            testCorrect(12);
-            testError(1);
-            testError(11);
-            testError(13);
-            testError(14);
-            testError(15);
-            function testCheckCorrect()
-                mlunit.assert_equals(isAnsArray, ...
-                    test1EllArray.ge(test2EllArray));
-                mlunit.assert_equals(~isAnsArray, ...
-                    test2EllArray.ge(test1EllArray));
-            end
-            function testCorrect(flag)
-                if (flag == 2)
-                    [test1EllArray, ~, ~, ~] = createTypicalArray(flag);
-                    [test2EllArray, ~, ~, isAnsArray] = createTypicalArray(flag);
-                else
-                    [test1EllArray, test2EllArray, isAnsArray] = ...
-                        createTypicalArray(flag);
-                end
-                if (flag == 9) || (flag == 12)
-                    isAnsArray = ~isAnsArray;
-                end
-                if (flag == 9) || (flag == 10)
-                    testCheckCorrect();
-                end
-                testResArray = ge(test1EllArray, test2EllArray);
-                mlunit.assert_equals(isAnsArray, testResArray);
-            end
-            function testError(flag)
-                if (flag == 1)
-                    [test1EllArray, ~, ~, errorStr] = ...
-                        createTypicalArray(flag);
-                    [test2EllArray, ~, ~, ~] = createTypicalArray(flag);
-                elseif (flag == 11)
-                    [test1EllArray, test2EllArray, ~, ~, errorStr] = ...
-                        createTypicalArray(flag);
-                else
-                    [test1EllArray, test2EllArray, errorStr] = ...
-                        createTypicalArray(flag);
-                end
-                self.runAndCheckError('test1EllArray.ge(test2EllArray)',...
-                    errorStr);
-            end
+            checkGeAndGtAndLeAndLt(self, true, true);
         end 
         function self = testGt(self)
-            isAnsArray = [];
-            test1EllArray = [];
-            test2EllArray = [];
-            testCorrect(2);
-            testCorrect(9);
-            testCorrect(10);
-            testCorrect(12);
-            testError(1);
-            testError(11);
-            testError(13);
-            testError(14);
-            testError(15);
-            function testCheckCorrect()
-                mlunit.assert_equals(isAnsArray, ...
-                    test1EllArray.gt(test2EllArray));
-                mlunit.assert_equals(~isAnsArray, ...
-                    test2EllArray.gt(test1EllArray));
-            end
-            function testCorrect(flag)
-                if (flag == 2)
-                    [test1EllArray, ~, ~, ~] = createTypicalArray(flag);
-                    [test2EllArray, ~, ~, isAnsArray] = createTypicalArray(flag);
-                else
-                    [test1EllArray, test2EllArray, isAnsArray] = ...
-                        createTypicalArray(flag);
-                end
-                if (flag == 9) || (flag == 12)
-                    isAnsArray = ~isAnsArray;
-                end
-                if (flag == 9) || (flag == 10)
-                    testCheckCorrect();
-                end
-                testResArray = gt(test1EllArray, test2EllArray);
-                mlunit.assert_equals(isAnsArray, testResArray);
-            end
-            function testError(flag)
-                if (flag == 1)
-                    [test1EllArray, ~, ~, errorStr] = ...
-                        createTypicalArray(flag);
-                    [test2EllArray, ~, ~, ~] = createTypicalArray(flag);
-                elseif (flag == 11)
-                    [test1EllArray, test2EllArray, ~, ~, errorStr] = ...
-                        createTypicalArray(flag);
-                else
-                    [test1EllArray, test2EllArray, errorStr] = ...
-                        createTypicalArray(flag);
-                end
-                self.runAndCheckError('test1EllArray.gt(test2EllArray)',...
-                    errorStr);
-            end
-        end
-        function self = testLt(self)
-            isAnsArray = [];
-            test1EllArray = [];
-            test2EllArray = [];
-            testCorrect(2);
-            testCorrect(9);
-            testCorrect(10);
-            testCorrect(12);
-            testError(1);
-            testError(11);
-            testError(13);
-            testError(14);
-            testError(15);
-            function testCheckCorrect()
-                mlunit.assert_equals(isAnsArray, ...
-                    test1EllArray.lt(test2EllArray));
-                mlunit.assert_equals(~isAnsArray, ...
-                    test2EllArray.lt(test1EllArray));
-            end
-            function testCorrect(flag)
-                if (flag == 2)
-                    [test1EllArray, ~, ~, ~] = createTypicalArray(flag);
-                    [test2EllArray, ~, ~, isAnsArray] = createTypicalArray(flag);
-                else
-                    [test1EllArray, test2EllArray, isAnsArray] = ...
-                        createTypicalArray(flag);
-                end
-                if (flag == 10) || (flag == 12)
-                    isAnsArray = ~isAnsArray;
-                end
-                if (flag == 9) || (flag == 10)
-                    testCheckCorrect();
-                end
-                testResArray = lt(test1EllArray, test2EllArray);
-                mlunit.assert_equals(isAnsArray, testResArray);
-            end
-            function testError(flag)
-                if (flag == 1)
-                    [test1EllArray, ~, ~, errorStr] = ...
-                        createTypicalArray(flag);
-                    [test2EllArray, ~, ~, ~] = createTypicalArray(flag);
-                elseif (flag == 11)
-                    [test1EllArray, test2EllArray, ~, ~, errorStr] = ...
-                        createTypicalArray(flag);
-                else
-                    [test1EllArray, test2EllArray, errorStr] = ...
-                        createTypicalArray(flag);
-                end
-                self.runAndCheckError('test1EllArray.lt(test2EllArray)',...
-                    errorStr);
-            end
+            checkGeAndGtAndLeAndLt(self, true, false);
         end
         function self = testLe(self)
-            isAnsArray = [];
-            test1EllArray = [];
-            test2EllArray = [];
-            testCorrect(2);
-            testCorrect(9);
-            testCorrect(10);
-            testCorrect(12);
-            testError(1);
-            testError(11);
-            testError(13);
-            testError(14);
-            testError(15);
-            function testCheckCorrect()
-                mlunit.assert_equals(isAnsArray, ...
-                    test1EllArray.le(test2EllArray));
-                mlunit.assert_equals(~isAnsArray, ...
-                    test2EllArray.le(test1EllArray));
-            end
-            function testCorrect(flag)
-                if (flag == 2)
-                    [test1EllArray, ~, ~, ~] = createTypicalArray(flag);
-                    [test2EllArray, ~, ~, isAnsArray] = createTypicalArray(flag);
-                else
-                    [test1EllArray, test2EllArray, isAnsArray] = ...
-                        createTypicalArray(flag);
-                end
-                if (flag == 10) || (flag == 12)
-                    isAnsArray = ~isAnsArray;
-                end
-                if (flag == 9) || (flag == 10)
-                    testCheckCorrect();
-                end
-                testResArray = le(test1EllArray, test2EllArray);
-                mlunit.assert_equals(isAnsArray, testResArray);
-            end
-            function testError(flag)
-                if (flag == 1)
-                    [test1EllArray, ~, ~, errorStr] = ...
-                        createTypicalArray(flag);
-                    [test2EllArray, ~, ~, ~] = createTypicalArray(flag);
-                elseif (flag == 11)
-                    [test1EllArray, test2EllArray, ~, ~, errorStr] = ...
-                        createTypicalArray(flag);
-                else
-                    [test1EllArray, test2EllArray, errorStr] = ...
-                        createTypicalArray(flag);
-                end
-                self.runAndCheckError('test1EllArray.le(test2EllArray)',...
-                    errorStr);
-            end
+            checkGeAndGtAndLeAndLt(self, false, true);
+        end
+        function self = testLt(self)
+            checkGeAndGtAndLeAndLt(self, false, false);
         end
         function self = testPropertyGetters(self)
             arraySizeVec = [1, 1, 2, 1, 1, 1, 1, 1, 2, 1];
@@ -708,11 +383,9 @@ function [varargout] = createTypicalArray(flag)
             my2EllArray = createObjectArray(arraySizeVec, @ellipsoid, ... 
                 diag(repmat(1 + 100 * MAX_TOL, 1, 5)), 1, 1);
             isAnsArray = false(arraySizeVec);
-            reportStr = sprintf('(1).Q-->Max. difference (4.998751e-04) is greater than the specified tolerance(1.000000e-05)\n(2).Q-->Max. difference (4.998751e-04) is greater than the specified tolerance(1.000000e-05)\n(3).Q-->Max. difference (4.998751e-04) is greater than the specified tolerance(1.000000e-05)\n(4).Q-->Max. difference (4.998751e-04) is greater than the specified tolerance(1.000000e-05)');
             varargout{1} = my1EllArray;
             varargout{2} = my2EllArray;
             varargout{3} = isAnsArray;
-            varargout{4} = reportStr;            
         case 11
             arraySizeVec = [1, 1, 3, 1, 1, 1, 2, 1, 1];
             my1EllArray = createObjectArray(arraySizeVec, @ell_unitball, ... 
@@ -720,13 +393,11 @@ function [varargout] = createTypicalArray(flag)
             my2EllArray = createObjectArray(arraySizeVec, @ell_unitball, ... 
                 4, 1, 1);
             isAnsArray = false(arraySizeVec);
-            report1Str = sprintf('(1).Q-->Different sizes (left: [5 5], right: [4 4])\n(1).q-->Different sizes (left: [1 5], right: [1 4])\n(2).Q-->Different sizes (left: [5 5], right: [4 4])\n(2).q-->Different sizes (left: [1 5], right: [1 4])\n(3).Q-->Different sizes (left: [5 5], right: [4 4])\n(3).q-->Different sizes (left: [1 5], right: [1 4])\n(4).Q-->Different sizes (left: [5 5], right: [4 4])\n(4).q-->Different sizes (left: [1 5], right: [1 4])\n(5).Q-->Different sizes (left: [5 5], right: [4 4])\n(5).q-->Different sizes (left: [1 5], right: [1 4])\n(6).Q-->Different sizes (left: [5 5], right: [4 4])\n(6).q-->Different sizes (left: [1 5], right: [1 4])');
-            report2Str = 'wrongInput';
+            reportStr = 'wrongInput';
             varargout{1} = my1EllArray;
             varargout{2} = my2EllArray;
             varargout{3} = isAnsArray;
-            varargout{4} = report1Str;
-            varargout{5} = report2Str;
+            varargout{4} = reportStr;
         case 12
             import elltool.conf.Properties;
             MAX_TOL = Properties.getRelTol();
@@ -736,11 +407,9 @@ function [varargout] = createTypicalArray(flag)
             my2EllArray = createObjectArray(arraySizeVec, @ellipsoid, ... 
                 (2 * MAX_TOL) * ones(10, 1), eye(10), 2);
             isAnsArray = false(arraySizeVec);
-            reportStr = sprintf('(1).q-->Max. difference (2.000000e-05) is greater than the specified tolerance(1.000000e-05)\n(2).q-->Max. difference (2.000000e-05) is greater than the specified tolerance(1.000000e-05)\n(3).q-->Max. difference (2.000000e-05) is greater than the specified tolerance(1.000000e-05)\n(4).q-->Max. difference (2.000000e-05) is greater than the specified tolerance(1.000000e-05)');
             varargout{1} = my1EllArray;
             varargout{2} = my2EllArray;
             varargout{3} = isAnsArray;
-            varargout{4} = reportStr;
         case 13
             testEllArray = ellipsoid.empty(1, 0, 0, 1, 5);
             test2EllArray = createObjectArray(arraySizeVec, @ell_unitball, ...
@@ -799,3 +468,200 @@ function objectArray = createObjectArray(arraySizeVec, func, firstArg, ...
     end
     objectArray = reshape([objectCArray{:}], arraySizeVec);
 end
+function checkMaxeigAndMineig(self, isMaxeigCheck)
+    %Check degenerate matrix
+    testCorrect(6);
+    testCorrect(2);
+    testCorrect(7);
+    testCorrect(8);
+    testCorrect(16);
+    mlunit.assert_equals(class(ansNumArray), class(testNumArray)); 
+    %Check empty ellipsoid
+    testError(1);
+    testError(14);
+    testError(15);
+    function testCorrect(flag)
+        if isMaxeigCheck
+            [testEllArray ansNumArray] = createTypicalArray(flag);
+            [testNumArray] = maxeig(testEllArray);
+        else
+            if (flag == 2) || (flag == 6) || (flag == 16)
+                [testEllArray ansNumArray] = createTypicalArray(flag);
+            else
+                [testEllArray, ~, ansNumArray] = createTypicalArray(flag);
+            end
+            [testNumArray] = mineig(testEllArray);
+        end
+        mlunit.assert_equals(ansNumArray, testNumArray);
+    end
+    function testError(flag)
+        [testEllArray, ~, errorStr] = createTypicalArray(flag);
+        if isMaxeigCheck
+            if (flag == 1)
+                self.runAndCheckError('testEllArray.maxeig()','wrongInput:emptyEllipsoid');
+            else
+                self.runAndCheckError('testEllArray.maxeig()', errorStr);
+            end
+        else
+            if (flag == 1)
+                self.runAndCheckError('testEllArray.mineig()','wrongInput:emptyEllipsoid');
+            else
+                self.runAndCheckError('testEllArray.mineig()', errorStr);
+            end
+        end
+    end
+end
+function checkEqAndNq(self, isEqCheck)
+    isAnsArray = [];
+    testCorrect(1);
+    testCorrect(2);
+    testCorrect(9);
+    testCheckCorrect()
+    testCorrect(10);
+    testCheckCorrect()
+    testCorrect(11);
+    testCorrect(12);
+    [test1EllArray, test2EllArray, errorStr] = createTypicalArray(13);
+    if isEqCheck
+        self.runAndCheckError('eq(test1EllArray, test2EllArray)', ...
+            errorStr);
+        self.runAndCheckError('eq(test2EllArray, test1EllArray)', ... 
+            errorStr);
+    else
+        self.runAndCheckError('ne(test1EllArray, test2EllArray)', ...
+            errorStr);
+        self.runAndCheckError('ne(test2EllArray, test1EllArray)', ... 
+            errorStr);
+    end
+    function testCheckCorrect()
+        if isEqCheck
+            mlunit.assert_equals(isAnsArray, ...
+                test1EllArray.eq(test2EllArray));
+            mlunit.assert_equals(isAnsArray, ...
+                test2EllArray.eq(test1EllArray));
+        else
+            mlunit.assert_equals(isAnsArray, ...
+                test1EllArray.ne(test2EllArray));
+            mlunit.assert_equals(isAnsArray, ...
+                test2EllArray.ne(test1EllArray));
+        end
+    end
+    function testCorrect(flag)
+        myReportStr = '';
+        if (flag == 1)
+            [test1EllArray, ~, isAnsArray, ~] = ...
+                createTypicalArray(flag);
+            [test2EllArray, ~, ~, ~] = createTypicalArray(flag);
+        elseif (flag == 2)
+            [test1EllArray, ~, ~, ~] = createTypicalArray(flag);
+            [test2EllArray, ~, ~, isAnsArray] = createTypicalArray(flag);
+        else
+            [test1EllArray, test2EllArray, isAnsArray] = ...
+                createTypicalArray(flag);
+        end
+        if isEqCheck
+            [isTestArray, reportStr] = eq(test1EllArray, test2EllArray);
+        else
+            isAnsArray = ~isAnsArray;
+            isTestArray = ne(test1EllArray, test2EllArray);
+        end
+        mlunit.assert_equals(isTestArray, isAnsArray);
+        if isEqCheck && ((flag == 1) || (flag == 2) || (flag == 9))
+            mlunit.assert_equals(myReportStr, reportStr);
+        end
+    end
+end
+function checkGeAndGtAndLeAndLt(self, isG, isE)
+    isAnsArray = [];
+    test1EllArray = [];
+    test2EllArray = [];
+    testCorrect(2);
+    testCorrect(9);
+    testCorrect(10);
+    testCorrect(12);
+    testError(1);
+    testError(11);
+    testError(13);
+    testError(14);
+    testError(15);
+    function testCheckCorrect()
+        if isG
+            if isE
+                mlunit.assert_equals(isAnsArray, ...
+                    test1EllArray.ge(test2EllArray));
+                mlunit.assert_equals(~isAnsArray, ...
+                    test2EllArray.ge(test1EllArray));
+            else
+                mlunit.assert_equals(isAnsArray, ...
+                    test1EllArray.gt(test2EllArray));
+                mlunit.assert_equals(~isAnsArray, ...
+                    test2EllArray.gt(test1EllArray));
+            end
+        elseif isE
+            mlunit.assert_equals(isAnsArray, ...
+                test1EllArray.le(test2EllArray));
+            mlunit.assert_equals(~isAnsArray, ...
+                test2EllArray.le(test1EllArray));
+        else
+            mlunit.assert_equals(isAnsArray, ...
+                test1EllArray.lt(test2EllArray));
+            mlunit.assert_equals(~isAnsArray, ...
+                test2EllArray.lt(test1EllArray));
+        end
+    end
+    function testCorrect(flag)
+        if (flag == 2)
+            [test1EllArray, ~, ~, ~] = createTypicalArray(flag);
+            [test2EllArray, ~, ~, isAnsArray] = createTypicalArray(flag);
+        else
+            [test1EllArray, test2EllArray, isAnsArray] = ...
+                createTypicalArray(flag);
+        end
+        if (flag == 12) || (isG && (flag == 9)) || (~isG && (flag == 10))
+            isAnsArray = ~isAnsArray;
+        end
+        if (flag == 9) || (flag == 10)
+            testCheckCorrect();
+        end
+        if isG
+            if isE
+                testResArray = ge(test1EllArray, test2EllArray);
+            else
+                testResArray = gt(test1EllArray, test2EllArray);
+            end
+        elseif isE
+            testResArray = le(test1EllArray, test2EllArray);
+        else
+            testResArray = le(test1EllArray, test2EllArray);
+        end
+        mlunit.assert_equals(isAnsArray, testResArray);
+    end
+    function testError(flag)
+        if (flag == 1)
+            [test1EllArray, ~, ~, errorStr] = ...
+                createTypicalArray(flag);
+            [test2EllArray, ~, ~, ~] = createTypicalArray(flag);
+        elseif (flag == 11)
+            [test1EllArray, test2EllArray, ~, errorStr] = ...
+                createTypicalArray(flag);
+        else
+            [test1EllArray, test2EllArray, errorStr] = ...
+                createTypicalArray(flag);
+        end
+        if isG
+            if isE
+                self.runAndCheckError('test1EllArray.ge(test2EllArray)',...
+                    errorStr);
+            else
+                self.runAndCheckError('test1EllArray.gt(test2EllArray)',...
+                    errorStr);
+            end
+        elseif isE
+            self.runAndCheckError('test1EllArray.le(test2EllArray)',...
+                errorStr);
+        else
+            self.runAndCheckError('test1EllArray.lt(test2EllArray)',...
+                errorStr);
+        end
+    end
+ end 
