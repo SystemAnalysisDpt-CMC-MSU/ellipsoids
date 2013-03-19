@@ -41,9 +41,9 @@ classdef F
         F_MAT_D='Face matrix';
         F_MAT_T={'cell','double'}
         %
-        PROJ_S_DIM_VEC='projSpecDimVec';
+        PROJ_S_DIM_VEC='projSTimeMat';
         PROJ_S_DIM_VEC_D='Dimensions on which projection is performed at time s';
-        PROJ_S_DIM_VEC_T={'cell','logical'};
+        PROJ_S_DIM_VEC_T={'cell','double'};
         %
         PROJ_MAT_ARRAY='projMatArray';
         PROJ_MAT_ARRAY_D='Array of projection matrices for each time moment';
