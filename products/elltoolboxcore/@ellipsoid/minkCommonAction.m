@@ -1,12 +1,18 @@
 function varargout = minkCommonAction(getEllArr,fCalcBodyTriArr,fCalcCenterTriArr,varargin)
 import elltool.plot.plotgeombodyarr;
 if (nargout == 1)||(nargout == 0)
+    charColor = 'empty';
+    cellfun(@(x)findColorChar(x),varargin);
     [reg,~,isShowAll]=...
         modgen.common.parseparext(varargin,...
         {'showAll' ;...
         false;
         @(x)isa(x,'logical')});
-    [plObj,nDim,isHold]= plotgeombodyarr('ellipsoid',fCalcBodyTriArr,@patch,reg{:});
+    if strcmp(charColor,'empty')
+            [plObj,nDim,isHold]= plotgeombodyarr('ellipsoid',fCalcBodyTriArr,@patch,reg{:});
+    else
+        [plObj,nDim,isHold]= plotgeombodyarr('ellipsoid',fCalcBodyTriArr,@patch,reg{1},charColor,reg{2:end});
+    end
     if (nDim < 3)
         [reg]=...
             modgen.common.parseparext(reg,...
@@ -24,7 +30,7 @@ if (nargout == 1)||(nargout == 0)
         ellArr = vertcat(ellArr{:});
         plObj = ellArr.plot('color', [0 0 0],'relDataPlotter',plObj,'priorHold',true);
     end
-    if nargout == 1 
+    if nargout == 1
         varargout = {{plObj,isHold}};
     end
 else
@@ -50,4 +56,14 @@ else
     varargout(1) = qSumCMat;
     varargout(2) = xSumCMat;
 end
+    function findColorChar(value)
+        if ischar(value)&&isColorDef(value)
+            charColor = value;
+        end
+        function isColor = isColorDef(value)
+            isColor = eq(value, 'r') | eq(value, 'g') | eq(value, 'b') | ...
+                eq(value, 'y') | eq(value, 'c') | ...
+                eq(value, 'm') | eq(value, 'w');
+        end
+    end
 end

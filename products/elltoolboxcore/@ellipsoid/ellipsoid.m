@@ -139,6 +139,9 @@ classdef ellipsoid < handle
         regQMat = regularize(qMat,absTol)
         clrDirsMat = rm_bad_directions(q1Mat, q2Mat, dirsMat)
         [isBadDirVec,pUniversal] = isbaddirectionmat(q1Mat, q2Mat, dirsMat)
+        [supArr, bpMat] = rhomat(ellShapeMat,ellCenterVec,absTol, dirsMat)
+        [lGetGrid, fGetGrid] = calcGrid(nDim,nPlotPoints,sphereTriang)
+        [diffBoundMat, isPlotCenter3d] = calcdiffonedir(fstEll,secEll,lMat,pUniversalVec,isGoodDirVec)
     end
     methods(Access = private)
         propValMat = getProperty(hplaneMat,propName)

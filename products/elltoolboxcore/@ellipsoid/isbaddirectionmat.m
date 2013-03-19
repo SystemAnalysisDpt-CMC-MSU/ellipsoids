@@ -41,8 +41,6 @@ modgen.common.checkvar(q2Mat,'det(x)~=0',...
 
 lamMin   = min(eig(q1Mat/q2Mat));
 dirsCVec = mat2cell(dirsMat,nDim,ones(1,nDirs));
-% isBadDirVec = cellfun(@(x) lamMin < sqrt( (x'*q1Mat*x)/(x'*q2Mat*x) ),...
-%     dirsCVec);
 [isBadDirVec,pUniversalVec] = cellfun(@(x) culcPUniversal(x), dirsCVec);
 
 

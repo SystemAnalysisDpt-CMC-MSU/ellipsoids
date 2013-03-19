@@ -49,6 +49,8 @@ function [varargout] = minkdiff(varargin)
 
 import elltool.plot.plotgeombodyarr;
 import modgen.common.throwerror;
+N_PLOT_POINTS = 80;
+SPHERE_TRIANG_CONST = 3;
 isPlotCenter3d = false;
 if nargout == 0
     output = minkCommonAction(@getEllArr,@fCalcBodyTriArr,@fCalcCenterTriArr,varargin{:});
@@ -60,7 +62,7 @@ if nargout == 0
             {'relDataPlotter';...
             [],;@(x)isa(x,'smartdb.disp.RelationDataPlotter'),...
             });
-         plotgeombodyarr('ellipsoid',@fCalcCenterTriArr,...
+        plotgeombodyarr('ellipsoid',@fCalcCenterTriArr,...
             @(varargin)patch(varargin{:},'marker','*'),reg{:},'relDataPlotter',plObj, 'priorHold',true,'postHold',isHold);
     end
 elseif nargout == 1
@@ -73,7 +75,7 @@ elseif nargout == 1
             {'relDataPlotter';...
             [],;@(x)isa(x,'smartdb.disp.RelationDataPlotter'),...
             });
-         plObj = plotgeombodyarr('ellipsoid',@fCalcCenterTriArr,...
+        plObj = plotgeombodyarr('ellipsoid',@fCalcCenterTriArr,...
             @(varargin)patch(varargin{:},'marker','*'),reg{:},'relDataPlotter',plObj, 'priorHold',true,'postHold',isHold);
     end
     varargout = {plObj};
@@ -81,7 +83,7 @@ else
     [qDifMat,boundMat] = minkCommonAction(@getEllArr,@fCalcBodyTriArr,@fCalcCenterTriArr,varargin{:});
     varargout(1) = {qDifMat};
     varargout(2) = {boundMat};
-end    
+end
     function ellsVec = getEllArr(ellsArr)
         if isa(ellsArr, 'ellipsoid')
             cnt    = numel(ellsArr);
@@ -102,12 +104,13 @@ end
         else
             centVec = fstEll.center - secEll.center;
             boundPointMat = centVec;
-            qDifMat = {boundPointMat};            
+            qDifMat = {boundPointMat};
             fMat = {[1 1]};
         end
     end
     function [xDifMat,fMat] = fCalcBodyTriArr(ellsArr)
         import modgen.common.throwerror;
+%         import calcdiffonedir;
         nDim = dimension(ellsArr(1));
         if nDim == 1
             [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr);
@@ -122,6 +125,7 @@ end
             xDifMat = {[]};
             fMat = {[]};
         else
+            isPlotCenter3d = true;
             fstEllShMat = fstEll.shape;
             if isdegenerate(fstEll)
                 fstEllShMat = ellipsoid.regularize(fstEllShMat,absTol);
@@ -130,84 +134,21 @@ end
             if isdegenerate(secEll)
                 secEllShMat = ellipsoid.regularize(secEllShMat,absTol);
             end
-            switch nDim
-                case 2,
-                    phiVec = linspace(0, 2*pi, fstEll.nPlot2dPoints);
-                    lMat = ellipsoid.rm_bad_directions(fstEllShMat, ...
-                        secEllShMat, [cos(phiVec); sin(phiVec)]);
-                    if size(lMat, 2) > 1
-                        [~, bpMat] = rho(fstEll, lMat);
-                        [~, subBoundPointMat] = rho(secEll, lMat);
-                        bpMat = bpMat - subBoundPointMat;
-                        boundPointMat = [bpMat bpMat(:, 1)];
-                    else
-                        boundPointMat = [];
-                    end
-                case 3,
-                    fstEll3dPnt = fstEll.nPlot3dPoints()/2;
-                    fstEll3dPntSub = fstEll3dPnt/2;
-                    psyVec = linspace(0, pi, fstEll3dPntSub);
-                    phiVec = linspace(0, 2*pi, fstEll3dPnt);
-                    lMat   = zeros(3,fstEll3dPnt*(fstEll3dPntSub-2));
-                    for iFstEll3dPnt = 2:(fstEll3dPntSub - 1)
-                        arrVec = cos(psyVec(iFstEll3dPnt))*ones(1, fstEll3dPnt);
-                        lMat(:,(fstEll3dPnt*(iFstEll3dPnt-2))+(1:fstEll3dPnt)) ...
-                            = [cos(phiVec)*sin(psyVec(iFstEll3dPnt)); ...
-                            sin(phiVec)*sin(psyVec(iFstEll3dPnt)); arrVec];
-                    end
-                    lMat = ellipsoid.rm_bad_directions(fstEllShMat,...
-                        secEllShMat, lMat);
-                    if size(lMat, 2) > 1
-                        [~, boundPointMat] = rho(fstEll, lMat);
-                        [~, subBoundPointMat] = rho(secEll, lMat);
-                        boundPointMat = boundPointMat - subBoundPointMat;
-                    else
-                        boundPointMat = [];
-                    end
-            end
-            boundPointMat = unique(boundPointMat','rows')';
-            ind = 0;
-            bndPntShMat = boundPointMat;
-            while ind < size(boundPointMat,2)-1
-                ind = ind+1;
-                bndPntShMat = circshift(bndPntShMat,[0 1]);
-                epsMat = bndPntShMat - boundPointMat;
-                isNulMat = abs(epsMat) > absTol;
-                indNulMat = sum(isNulMat) == 0;
-                indNul = find(indNulMat,1,'first');
-                if size(indNul,2)>0
-                    boundPointMat(:,indNul) = [];
-                    ind = 0;
-                    bndPntShMat = boundPointMat;
-                end
-                
-                
-            end
-            if size(boundPointMat,2) < 2
-                boundPointMat = [];
-            end
-            if (size(boundPointMat,2) < 2)&&(nDim == 3)
-                isPlotCenter3d = true;
-            end
-            if (size(boundPointMat,2)>0) 
-                if nDim == 2
-                    temp = convhull(boundPointMat(1,:)',boundPointMat(2,:)');
-                    boundPointMat = boundPointMat(:,temp)';
-                    fMat = {[1:size(boundPointMat,1),1]};
-                    xDifMat = {boundPointMat'};
-                else
-                    xDifMat = {boundPointMat};
-                    fMat = {convhulln(boundPointMat')};
-                end
-                    
-                
-                
-            else
-                fMat = {[]};
-                xDifMat = {[]};
-            end
+            [lMat, fMat] = ellipsoid.calcGrid(nDim,N_PLOT_POINTS,SPHERE_TRIANG_CONST);
+            lMat = lMat';
+            [isBadDirVec,pUniversalVec] = ellipsoid.isbaddirectionmat(fstEllShMat, secEllShMat, ...
+                lMat);
+            isGoodDirVec = ~isBadDirVec;
+            [diffBoundMat,isPlotCenter3d] = ellipsoid.calcdiffonedir(fstEll,secEll,lMat,...
+                pUniversalVec,isGoodDirVec);
+            boundPointMat = cell2mat(diffBoundMat);
+            boundPointMat = [boundPointMat, boundPointMat(:, 1)];
+            fMat = {fMat};
+            
+            xDifMat = {boundPointMat};
         end
     end
+
     function [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr)
         ellsCMat = arrayfun(@(x) oneDim2TwoDim(x), ellsArr, ...
             'UniformOutput', false);

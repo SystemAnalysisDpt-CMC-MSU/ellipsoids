@@ -51,6 +51,7 @@ import elltool.plot.plotgeombodyarr;
 import modgen.common.throwerror;
 N_PLOT_POINTS = 80;
 SPHERE_TRIANG_CONST = 3;
+
 if nargout == 0
     minkCommonAction(@getEllArr,@fCalcBodyTriArr,@fCalcCenterTriArr,varargin{:});
 elseif nargout == 1
@@ -61,16 +62,7 @@ else
     varargout(1) = {qSumMat};
     varargout(2) = {boundMat};
 end
-    function [lGetGrid, fGetGrid] = calcGrid(nDim)
-        if nDim == 2
-            lGetGrid = gras.geom.circlepart(N_PLOT_POINTS);
-            fGetGrid = 1:N_PLOT_POINTS+1;
-        else
-            [lGetGrid, fGetGrid] = ...
-                gras.geom.tri.spheretri(SPHERE_TRIANG_CONST);
-        end
-        lGetGrid(lGetGrid == 0) = eps;
-    end
+    
     function ellsVec = getEllArr(ellsArr)
         if isa(ellsArr, 'ellipsoid')
             cnt    = numel(ellsArr);
@@ -95,7 +87,7 @@ end
         if nDim == 1
             [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr);
         end
-        [lGridMat, fGridMat] = calcGrid(nDim);
+        [lGridMat, fGridMat] = ellipsoid.calcGrid(nDim,N_PLOT_POINTS,SPHERE_TRIANG_CONST);
         [xMat, fCMat] = arrayfun(@(x) fCalcBodyTri(x, nDim), ellsArr, ...
             'UniformOutput', false);
         xSumCMat = 0;
@@ -108,7 +100,6 @@ end
             nPoints = size(lGridMat, 1);
             xMat = zeros(nDim, nPoints+1);
             [~,xMat(:, 1:end-1)] = rho(ell,lGridMat.');
-            xMat(:,1:end-1) = xMat(:,1:end-1) ;
             xMat(:, end) = xMat(:, 1);
             fMat = fGridMat;
         end

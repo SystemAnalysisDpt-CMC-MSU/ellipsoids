@@ -57,7 +57,7 @@ checkmultvar('isscalar(x1)||(size(x2,2)==1)',...
     2,ellArr, dirsMat, 'errorMessage',...
     'arguments must be single ellipsoid or single direction vector.');
 
-[nDim, nDirs] = size(dirsMat);
+[nDim, ~] = size(dirsMat);
 isOneEll = isscalar(ellArr);
 
 nDimsArr = dimension(ellArr);
@@ -73,12 +73,7 @@ else % one ellipsoid, multiple directions
     qVec = ellArr.center;
     shMat = ellArr.shape;
     absTol = getAbsTol(ellArr);
-    dirsCVec = mat2cell(dirsMat,nDim,ones(1,nDirs));
-    
-    [resCArr xCArr] =cellfun(@(x) fSingleRhoForOneEll(x),dirsCVec,...
-        'UniformOutput',false);
-    supArr = cell2mat(resCArr);
-    bpMat = cell2mat(xCArr);
+    [supArr,bpMat] = ellipsoid.rhomat(shMat,qVec,absTol,dirsMat);
 end
 
     function [supFun xVec] = fSingleRhoForOneDir(singEll)
@@ -87,10 +82,5 @@ end
         sq = max(sqrt(dirsMat'*shpMat*dirsMat), getAbsTol(singEll));
         supFun = cVec'*dirsMat + sq;
         xVec =((shpMat*dirsMat)/sq) + cVec;
-    end
-    function [supFun xVec] = fSingleRhoForOneEll(lVec)
-        sq  = max(sqrt(lVec'*shMat*lVec), absTol);
-        supFun = qVec'*lVec + sq;
-        xVec = ((shMat*lVec)/sq) + qVec;
     end
 end

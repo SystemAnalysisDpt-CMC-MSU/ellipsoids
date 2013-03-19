@@ -8,7 +8,8 @@ function varargout = minkmp(varargin)
 %          E1, E2, ..., En - are ellipsoids in sumEllArr
 %
 % Usage:
-%   MINKMP(firEll,secEll,ellMat,'Property',PropValue,...) - Computes (E1 - E2) + (E3 + E4+ ... + En), if
+%   MINKMP(firEll,secEll,ellMat,'Property',PropValue,...) -
+%           Computes (E1 - E2) + (E3 + E4+ ... + En), if
 %       1 <= min(dimension(inpEllMat)) = max(dimension(inpEllMat)) <= 3,
 %       and plots it if no output arguments are specified.
 %
@@ -50,9 +51,13 @@ function varargout = minkmp(varargin)
 
 import elltool.plot.plotgeombodyarr;
 import modgen.common.throwerror;
+N_PLOT_POINTS = 80;
+SPHERE_TRIANG_CONST = 3;
+ABS_TOL = 1e-14;
 [reg]=...
     modgen.common.parseparext(varargin,...
-    {'relDataPlotter','newFigure','fill','lineWidth','color','shade','priorHold','postHold','showAll'});
+    {'relDataPlotter','newFigure','fill','lineWidth','color','shade',...
+    'priorHold','postHold','showAll'});
 ellsArr = cellfun(@(x)getEllArr(x),reg,'UniformOutput', false);
 ellsArr = vertcat(ellsArr{:});
 if numel(ellsArr) == 1
@@ -88,7 +93,8 @@ else
         output = minkCommonAction(@getEllArr,@fCalcBodyTriArr,@fCalcCenterTriArr,varargin{:});
         varargout = output(1);
     else
-        [qDifSumMat,boundMat] = minkCommonAction(@getEllArr,@fCalcBodyTriArr,@fCalcCenterTriArr,varargin{:});
+        [qDifSumMat,boundMat] = minkCommonAction(@getEllArr,@fCalcBodyTriArr,...
+            @fCalcCenterTriArr,varargin{:});
         varargout(1) = {qDifSumMat};
         varargout(2) = {boundMat};
     end
@@ -104,45 +110,27 @@ end
         [centerDif,~] = minkdiff(fstEll,secEll);
         [centerSum,~] = minksum(arrEll);
         if isempty(centerDif)
-            qSumDifCMat = {centerSum};
+            qSumDifCMat = {[]};
+            fCMat = {[]};
         else
             qSumDifCMat = {centerSum + centerDif};
+            fCMat = {[1 1]};
         end
-        fCMat = {[1 1]};
+        
     end
     function [xSumDifMat,fMat] = fCalcBodyTriArr(ellsArr)
         nDim = dimension(ellsArr(1));
+        [lDirsMat, fGridMat] = ellipsoid.calcGrid(nDim,N_PLOT_POINTS,SPHERE_TRIANG_CONST);   
+        lDirsMat = lDirsMat';
         if nDim == 1
             [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr);
         end
         fstEll = ellsArr(1);
         secEll = ellsArr(2);
         if ~isbigger(fstEll, secEll)
-            [~,boundPointMat]  = minksum(ellsArr(3:end));
-            xSumDifMat = {boundPointMat};
-            if size(boundPointMat,2)>0
-                fMat = {convhulln(boundPointMat')};
-            else
-                fMat = {[]};
-            end
+            xSumDifMat = {[]};
+            fMat = {[]};
         else
-            switch nDim
-                case 2
-                    phiVec = linspace(0, 2*pi, fstEll.nPlot2dPoints);
-                    lDirsMat   = [cos(phiVec); sin(phiVec)];
-                case 3
-                    phiGrid   = fstEll.nPlot3dPoints/2;
-                    psyGrid   = phiGrid/2;
-                    psyVec = linspace(0, pi, psyGrid);
-                    phiVec = linspace(0, 2*pi, phiGrid);
-                    lDirsMat   = zeros(3,phiGrid*(psyGrid-2));
-                    for i = 2:(psyGrid - 1)
-                        arrVec = cos(psyVec(i))*ones(1, phiGrid);
-                        lDirsMat(:,(i-2)*phiGrid+(1:phiGrid)) = ...
-                            [cos(phiVec)*sin(psyVec(i)); ...
-                            sin(phiVec)*sin(psyVec(i)); arrVec];
-                    end
-            end
             absTol = elltool.conf.Properties.getAbsTol();
             fstEllShMat = fstEll.shape;
             if isdegenerate(fstEll)
@@ -151,61 +139,29 @@ end
             secEllShMat = secEll.shape;
             if isdegenerate(secEll)
                 secEllShMat = ellipsoid.regularize(secEllShMat,absTol);
-            end
-            
+            end            
             [isBadDirVec,pUniversalVec] = ellipsoid.isbaddirectionmat(fstEllShMat, secEllShMat, ...
                 lDirsMat);
             isGoodDirVec = ~isBadDirVec;
-%              lMat = ellipsoid.rm_bad_directions(fstEllShMat, ...
-%                         secEllShMat, lDirsMat);
-            if  ~any(isGoodDirVec)
-                tmpEll=ellipsoid(fstEll.center-secEll.center, ...
-                    zeros(nDim,nDim));
-                [~, boundPointMat]=minksum([tmpEll; ...
-                    ellsArr(3:end)]);
-            else
-                xCMat = arrayfun(@(x) fCalcSumTri(x, nDim), ellsArr(3:end), ...
-                    'UniformOutput', false);
-                xSumMat = 0;
-                for iXMat=1:numel(xCMat)
-                    xSumMat = xSumMat + xCMat{iXMat};
-                end
-                [~, minEllPtsMat] = rho(fstEll, ...
-                    lDirsMat);
-                [~, subEllPtsMat] = rho(secEll, ...
-                    lDirsMat);
-                diffBoundMat = arrayfun(@(x,y) culcDiff(x,y),isGoodDirVec,1:size(lDirsMat,2), 'UniformOutput',false);
-                boundPointMat = cell2mat(diffBoundMat) + ...
-                    xSumMat;
-                
+            
+            xCMat = arrayfun(@(x) fCalcSumTri(x, nDim), ellsArr(3:end), ...
+                'UniformOutput', false);
+            xSumMat = 0;
+            for iXMat=1:numel(xCMat)
+                xSumMat = xSumMat + xCMat{iXMat};
             end
-            if nDim==2
-                boundPointMat=[boundPointMat boundPointMat(:,1)];
-            end
-            if (size(boundPointMat,2)>0) 
-                if nDim == 2
-                    temp = convhull(boundPointMat(1,:)',boundPointMat(2,:)');
-                else
-                    temp = convhull(boundPointMat(1,:)',boundPointMat(2,:)',boundPointMat(3,:)');
-                end
-                boundPointMat = boundPointMat(:,temp)';    
-                xSumDifMat = {boundPointMat'};
-                fMat = {[1:size(boundPointMat,1),1]};
-            else
-                fMat = {[]};
-                xSumDifMat = {[]};
-            end
+            [diffBoundMat] = ellipsoid.calcdiffonedir(fstEll,secEll,lDirsMat,...
+                pUniversalVec,isGoodDirVec);
+            boundPointMat = cell2mat(diffBoundMat) + ...
+                xSumMat;        
+            
+            boundPointMat=[boundPointMat boundPointMat(:,1)];
+           
+            fMat = {fGridMat};
+            
+            xSumDifMat = {boundPointMat};
         end
         
-        function [diffBoundMat] = culcDiff(isGood, ind)
-            if isGood
-                diffBoundMat = minEllPtsMat(:,ind) - subEllPtsMat(:,ind);
-            else
-                ellTemp = ellipsoid(fstEll.center-secEll.center,(1-pUniversalVec(ind))*secEll.shape + (1-1/pUniversalVec(ind))*fstEll.shape);
-                [~, diffBoundMat] = rho(ellTemp, ...
-                    lDirsMat(:,ind));
-            end
-        end
         function [xMat] = fCalcSumTri(ell, nDim)
             nPoints = size(lDirsMat, 2);
             xMat = zeros(nDim, nPoints);
