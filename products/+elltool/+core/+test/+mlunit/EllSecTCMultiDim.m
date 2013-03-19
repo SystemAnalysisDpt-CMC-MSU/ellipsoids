@@ -2,7 +2,7 @@ classdef EllSecTCMultiDim < mlunitext.test_case
     
 % $Author: Igor Samokhin, Lomonosov Moscow State University,
 % Faculty of Computational Mathematics and Cybernetics, System Analysis
-% Department, 02-November-2012, <igorian.vmk@gmail.com>$
+% Department, 31-January-2013, <igorian.vmk@gmail.com>$
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
