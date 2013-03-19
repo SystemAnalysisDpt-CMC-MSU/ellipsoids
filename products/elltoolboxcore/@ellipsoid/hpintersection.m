@@ -51,7 +51,6 @@ checkmultvar('all(x1(:)==x1(1))&&all(x2(:)==x2(1))',...
     'errorTag','wrongSizes','errorMessage',...
     'ellipsoids and hyperplanes must be of the same dimension.');
 
-isSecondOutput = nargout==2;
 if isHypScal
     nAmount = numel(myEllArr);
     sizeCVec = num2cell(size(myEllArr));

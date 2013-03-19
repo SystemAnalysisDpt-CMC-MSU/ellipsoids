@@ -1726,29 +1726,28 @@ the toolbox to be.
 \item In MATLAB command window change the working directory to the one where
 you unzipped the toolbox and type
 \newline
-\verbmcodef[Installation]{mcodesnippets/chapter4_section1_snippet01.m}
+\verbmcodef[Installation]{mcodesnippets/s_chapter04_section01_snippet01.m}
 \item At this point, the directory tree of the {\it Ellipsoidal Toolbox} is
 added to the MATLAB path list. In order to save the updated path list,
 in your MATLAB window menu go to {\tt File} $\rightarrow$ {\tt Set Path...} and
 click {\tt Save}.
 \item To get an idea of what the toolbox is about, type
 \newline
-\verbmcodef[Basic functionality]{mcodesnippets/chapter4_section1_snippet02.m}
-\newline
+\verbmcodef[Basic functionality]{mcodesnippets/s_chapter04_section01_snippet02.m}
+
 This will produce a demo of basic {\it ET} functionality: how to create
 and manipulate ellipsoids.
 \newline
 Type
 \newline
-\verbmcodef[Plot ellypsoids and hyperplanes]{mcodesnippets/chapter4_section1_snippet03.m}
-\newline
+\verbmcodef[Plot ellypsoids and hyperplanes]{mcodesnippets/s_chapter04_section01_snippet03.m}
 to learn how to plot ellipsoids and hyperplanes in 2 and 3D.
 \newline
 For a quick tutorial on how to use the toolbox for reachability analysis
 and verification, type
 \newline
 \verbmcodef[Tutorial for reachability analysis
-and verification]{mcodesnippets/chapter4_section1_snippet04.m}
+and verification]{mcodesnippets/s_chapter04_section01_snippet04.m}
 \end{enumerate}
 
 
@@ -1761,7 +1760,7 @@ In the {\it Ellipsoidal Toolbox} we define a new class {\tt ellipsoid} inside
 the MATLAB programming environment. The following three commands
 define the same ellipsoid $\EE(q,Q)$, with $q\in{\bf R}^n$ and
 $Q\in{\bf R}^{n\times n}$ being symmetric positive semidefinite:
-\verbmcodef[Definition of the ellipsoid]{mcodesnippets/chapter5_section1_snippet01.m}
+\verbmcodef[Definition of the ellipsoid]{mcodesnippets/s_chapter05_section01_snippet01.m}
 For the {\tt ellipsoid} class we overload the following functions and operators:
 \begin{itemize}
 \item {\tt isempty(E)} - checks if {\tt E} is an empty ellipsoid.
@@ -1789,56 +1788,56 @@ the ellipsoid $\EE(q_2,Q_2)$, or equivalently $\EE(0,Q_1)\subseteq\EE(0,Q_2)$.
 All the listed operations can be applied to a single ellipsoid as well as to
 a two-dimensional array of ellipsoids.
 For example,
-\verbmcodef[Examples of the operation]{mcodesnippets/chapter5_section1_snippet02.m}
+\verbmcodef[Examples of the operation]{mcodesnippets/s_chapter05_section01_snippet02.m}
 To access individual elements of the array, the usual MATLAB subindexing
 is used:
-\verbmcodef[Access to individual elements]{mcodesnippets/chapter5_section1_snippet03.m}
+\verbmcodef[Access to individual elements]{mcodesnippets/s_chapter05_section01_snippet03.m}
 Sometimes it may be useful to modify the shape of the ellipsoid without
 affecting its center. Say, we would like to bloat or squeeze the ellipsoid:
-\verbmcodef[Modification of the ellipsoid's shape]{mcodesnippets/chapter5_section1_snippet04.m}
+\verbmcodef[Modification of the ellipsoid's shape]{mcodesnippets/s_chapter05_section01_snippet04.m}
 Since function {\tt shape} does not change the center of the ellipsoid,
 it only accepts scalars or square matrices as its second input parameter.
 \newpage
 Several functions  access the internal data of
 the ellipsoid object:
-\verbmcodef[Get the center and the shape matrix of ellipsoid]{mcodesnippets/chapter5_section1_snippet05.m}
-\verbmcodef[Check if given ellipsoids are degenerate]{mcodesnippets/chapter5_section1_snippet06.m}
-\verbmcodef[Get space dimensions and ranks of the shape matrices]{mcodesnippets/chapter5_section1_snippet07.m}
+\verbmcodef[Get the center and the shape matrix of ellipsoid]{mcodesnippets/s_chapter05_section01_snippet05.m}
+\verbmcodef[Check if given ellipsoids are degenerate]{mcodesnippets/s_chapter05_section01_snippet06.m}
+\verbmcodef[Get space dimensions and ranks of the shape matrices]{mcodesnippets/s_chapter05_section01_snippet07.m}
 One way to check if two ellipsoids intersect, is to compute
 the distance between them:
-\verbmcodef[Computation of the distance between ellipsoids]{mcodesnippets/chapter5_section1_snippet08.m}
+\verbmcodef[Computation of the distance between ellipsoids]{mcodesnippets/s_chapter05_section01_snippet08.m}
 This result indicates that the ellipsoid {\tt E3} does not intersect with
 the ellipsoid {\tt EE(2, 2)}, with all the other ellipsoids in {\tt EE}
 it has nonempty intersection. If the intersection of the two ellipsoids is
 nonempty, it can be approximated by ellipsoids from the outside as well as
 from the inside:
-\verbmcodef[Approximation of the ellipsoids' intersection]{mcodesnippets/chapter5_section1_snippet09.m}
+\verbmcodef[Approximation of the ellipsoids' intersection]{mcodesnippets/s_chapter05_section01_snippet09.m}
 It can be checked that resulting ellipsoid {\tt EA} contains the given
 intersection, whereas {\tt IA} is contained in this intersection:
-\verbmcodef[Check if the ellipsoid contains the intersection]{mcodesnippets/chapter5_section1_snippet10.m}
-\verbmcodef[Check if the internal approximation is contained in the intersection]{mcodesnippets/chapter5_section1_snippet11.m}
+\verbmcodef[Check if the ellipsoid contains the intersection]{mcodesnippets/s_chapter05_section01_snippet10.m}
+\verbmcodef[Check if the internal approximation is contained in the intersection]{mcodesnippets/s_chapter05_section01_snippet11.m}
 Function {\tt isinside} in general checks if the intersection of ellipsoids
 in the given array contains the union or intersection of ellipsoids or
 polytopes.
 
 It is also possible to solve the feasibility problem, that is, to check
 if the intersection of more than two ellipsoids is empty:
-\verbmcodef[Check if the intersection of more than two ellipsoids is empty]{mcodesnippets/chapter5_section1_snippet12.m}
+\verbmcodef[Check if the intersection of more than two ellipsoids is empty]{mcodesnippets/s_chapter05_section01_snippet12.m}
 In this particular example the result $-1$ indicates that the intersection
 of ellipsoids in {\tt EE} is empty.
 Function {\tt intersect} in general checks if an ellipsoid,
 hyperplane or polytope intersects the union or the intersection
 of ellipsoids in the given array:
-\verbmcodef[Check if ellipsoid intersects the ellipsoids' intersection]{mcodesnippets/chapter5_section1_snippet13.m}
-\verbmcodef[Check if ellipsoid intersects the ellipsoids' union]{mcodesnippets/chapter5_section1_snippet14.m}
+\verbmcodef[Check if ellipsoid intersects the ellipsoids' intersection]{mcodesnippets/s_chapter05_section01_snippet13.m}
+\verbmcodef[Check if ellipsoid intersects the ellipsoids' union]{mcodesnippets/s_chapter05_section01_snippet14.m}
 For the ellipsoids in ${\bf R}$, ${\bf R}^2$ and ${\bf R}^3$ the geometric
 sum can be computed explicitely and plotted:
-\verbmcodef[Compute and plot the geometric sum of ellipsoids]{mcodesnippets/chapter5_section1_snippet15.m}
+\verbmcodef[Compute and plot the geometric sum of ellipsoids]{mcodesnippets/s_chapter05_section01_snippet15.m}
 If the dimension of the space in which the ellipsoids are defined exceeds $3$,
 an error is returned. The result of the geometric sum operation is
 not generally an ellipsoid, but it can be approximated by families
 of external and internal ellipsoids parametrized by the direction vector:
-\verbmcodef[Approximation of the geometric sum's result]{mcodesnippets/chapter5_section1_snippet16.m}
+\verbmcodef[Approximation of the geometric sum's result]{mcodesnippets/s_chapter05_section01_snippet16.m}
 
 Functions {\tt minksum\_ea} and {\tt minksum\_ia} work for ellipsoids of
 arbitrary dimension. They should be used for general computations
@@ -1848,29 +1847,29 @@ If the geometric difference of two ellipsoids is not an empty set, it can
 be computed explicitely and plotted for ellipsoids in ${\bf R}$,
 ${\bf R}^2$ and ${\bf R}^3$:
 \newpage
-\verbmcodef[Geometric difference]{mcodesnippets/chapter5_section1_snippet17.m}
+\verbmcodef[Geometric difference]{mcodesnippets/s_chapter05_section01_snippet17.m}
 Similar to {\tt minksum}, {\tt minkdiff} is there for visualization
 purpose. It works only for dimensions $1$, $2$ and $3$, and for higher
 dimensions it returns an error. For arbitrary dimensions, the geometric
 difference can be approximated by  families of external and internal
 ellipsoids parametrized by the direction vector, provided this direction
 is not bad:
-\verbmcodef[Approximation of the geometric difference's result]{mcodesnippets/chapter5_section1_snippet18.m}
+\verbmcodef[Approximation of the geometric difference's result]{mcodesnippets/s_chapter05_section01_snippet18.m}
 Operation 'difference-sum' described in section 2.2.4 is implemented in
 functions {\tt minkmp}, {\tt minkmp\_ea}, {\tt minkmp\_ia}, the first one of
 which is used for visualization and works for dimensions not higher than $3$,
 whereas the last two can deal with ellipsoids of arbitrary dimension.
-\verbmcodef[Implementation of an operation 'difference-sum']{mcodesnippets/chapter5_section1_snippet19.m}
+\verbmcodef[Implementation of an operation 'difference-sum']{mcodesnippets/s_chapter05_section01_snippet19.m}
 Similarly, operation 'sum-difference' described in section 2.2.5
 is implemented in
 functions {\tt minkpm}, {\tt minkpm\_ea}, {\tt minkpm\_ia}, the first one of
 which is used for visualization and works for dimensions not higher than $3$,
 whereas the last two can deal with ellipsoids of arbitrary dimension.
-\verbmcodef[Implementation of an operation 'sum-difference']{mcodesnippets/chapter5_section1_snippet20.m}
+\verbmcodef[Implementation of an operation 'sum-difference']{mcodesnippets/s_chapter05_section01_snippet20.m}
 The class {\tt hyperplane} of the {\it Ellipsoidal Toolbox} is used
 to describe hyperplanes and halfspaces. The following two commands
 define one and the same hyperplane but two different halfspaces:
-\verbmcodef[Definition of the hyperplane]{mcodesnippets/chapter5_section1_snippet21.m}
+\verbmcodef[Definition of the hyperplane]{mcodesnippets/s_chapter05_section01_snippet21.m}
 
 The following functions and operators are overloaded for the
 {\tt hyperplane} class:
@@ -1894,9 +1893,9 @@ as $H(c,\gamma)$ but specifies different halfspace.
 \newpage
 There are several ways to access the internal data of the {\tt hyperplane}
 object:
-\verbmcodef[Get the normal and the scalar that define hyperplane H]{mcodesnippets/chapter5_section1_snippet22.m}
-\verbmcodef[Get the dimension of the space where H is defined]{mcodesnippets/chapter5_section1_snippet23.m}
-\verbmcodef[Check which of two hyperplanes in array H0 is parallel to H]{mcodesnippets/chapter5_section1_snippet24.m}
+\verbmcodef[Get the normal and the scalar that define hyperplane H]{mcodesnippets/s_chapter05_section01_snippet22.m}
+\verbmcodef[Get the dimension of the space where H is defined]{mcodesnippets/s_chapter05_section01_snippet23.m}
+\verbmcodef[Check which of two hyperplanes in array H0 is parallel to H]{mcodesnippets/s_chapter05_section01_snippet24.m}
 All the functions of {\it Ellipsoidal Toolbox} that accept {\tt hyperplane}
 object as parameter, work with single hyperplanes as well as with hyperplane
 arrays. One exception is the function {\tt parameters} that allows only
@@ -1904,12 +1903,12 @@ single {\tt hyperplane} object.
 
 An array of hyperplanes can be converted to the {\tt polytope} object of the
 Multi-Parametric Toolbox (\cite{morari}, \cite{mpt}), and back:
-\verbmcodef[Convertation an array of hyperplanes to the {\tt polytope} object]{mcodesnippets/chapter5_section1_snippet25.m}
+\verbmcodef[Convertation an array of hyperplanes to the {\tt polytope} object]{mcodesnippets/s_chapter05_section01_snippet25.m}
 Functions {\tt hyperplane2polytope} and {\tt polytope2hyperplane} require
 the Multi-Parametric Toolbox to be installed.
 
 We can compute distance from ellipsoids to hyperplanes and polytopes:
-\verbmcodef[Computation of the distance from ellipsoids to hyperplanes and polytopes]{mcodesnippets/chapter5_section1_snippet26.m}
+\verbmcodef[Computation of the distance from ellipsoids to hyperplanes and polytopes]{mcodesnippets/s_chapter05_section01_snippet26.m}
 A negative distance value in the case of ellipsoid and hyperplane means that
 the ellipsoid intersects the hyperplane. As we see in this example, ellipsoid
 {\tt E1} intersects  hyperplanes {\tt H(1)} and {\tt H(3)} and has
@@ -1921,27 +1920,27 @@ nonempty intersection with polytope {\tt P}.
 
 It can be checked if the union or intersection of given ellipsoids intersects
 given hyperplanes or polytopes:
-\verbmcodef[Check if the union of ellipsoids intersects  hyperplane]{mcodesnippets/chapter5_section1_snippet27.m}
+\verbmcodef[Check if the union of ellipsoids intersects  hyperplane]{mcodesnippets/s_chapter05_section01_snippet27.m}
 \verbmcodef[Check if the intersection of ellipsoids intersects with
-hyperplane]{mcodesnippets/chapter5_section1_snippet28.m}
-\verbmcodef[Check if the intersection of ellipsoids intersects with polytope]{mcodesnippets/chapter5_section1_snippet29.m}
+hyperplane]{mcodesnippets/s_chapter05_section01_snippet28.m}
+\verbmcodef[Check if the intersection of ellipsoids intersects with polytope]{mcodesnippets/s_chapter05_section01_snippet29.m}
 
 
 
 The intersection of ellipsoid and hyperplane can be computed exactly:
-\verbmcodef[Computation of the intersection of ellipsoid and hyperplane]{mcodesnippets/chapter5_section1_snippet30.m}
+\verbmcodef[Computation of the intersection of ellipsoid and hyperplane]{mcodesnippets/s_chapter05_section01_snippet30.m}
 Functions {\tt intersection\_ea} and {\tt intersection\_ia} can be used
 with {\tt hyperplane} objects, which in this case define {\tt halfspaces} and
 {\tt polytope} objects:
-\verbmcodef[Computation of external and internal ellipsoidal approximations]{mcodesnippets/chapter5_section1_snippet31.m}
+\verbmcodef[Computation of external and internal ellipsoidal approximations]{mcodesnippets/s_chapter05_section01_snippet31.m}
 
 Function {\tt isinside} can be used to check if a polytope or union of
 polytopes is contained in the intersection of given ellipsoids:
 \verbmcodef[Check if the intersection of ellipsoids contains the union of polytopes]
-{mcodesnippets/chapter5_section1_snippet32.m}
+{mcodesnippets/s_chapter05_section01_snippet32.m}
 
 \verbmcodef[Check if the ellipsoid contains the intersection of polytopes]
-{mcodesnippets/chapter5_section1_snippet33.m}
+{mcodesnippets/s_chapter05_section01_snippet33.m}
 Functions {\tt distance}, {\tt intersect}, {\tt intersection\_ia} and
 {\tt isinside} use the YALMIP interface (\cite{yalmip}, \cite{yalmiphp}) to the
 external optimization package. The default optimization package included
@@ -1976,12 +1975,12 @@ with
 0 & 2\end{array}\right], \]
 is done by the following sequence of commands:
 \verbmcodef[Description of the system]
-{mcodesnippets/chapter5_section2_snippet01.m}
+{mcodesnippets/s_chapter05_section02_snippet01.m}
 If matrices $A$ or $B$ depend on time, say $A(t)=\left[\begin{array}{cc}
 0 & 1-\cos(2t)\\
 -\frac{1}{t} & 0\end{array}\right]$, then matrix {\tt A} should be symbolic:
 \verbmcodef[A(t) -- time-variant]
-{mcodesnippets/chapter5_section2_snippet02.m}
+{mcodesnippets/s_chapter05_section02_snippet02.m}
 To describe the system with disturbance
 \[ \left[\begin{array}{cc}
 \dot{x}_1\\
@@ -1997,7 +1996,7 @@ u_2(t)\end{array}\right] + \left[\begin{array}{c}
 with bounds on control as before, and disturbance being $-1\leq v(t)\leq1$,
 we type:
 \verbmcodef[Description of the system with disturbance]
-{mcodesnippets/chapter5_section2_snippet03.m}
+{mcodesnippets/s_chapter05_section02_snippet03.m}
 Control and disturbance bounds {\tt U} and {\tt V} can have different types.
 If the bound is constant, it should be described by {\tt ellipsoid} object.
 If the bound depends on time, then it is represented by a structure with
@@ -2019,16 +2018,16 @@ x_2[k]\end{array}\right] + \left[\begin{array}{c}
 1\end{array}\right]u[k], ~~~ -1\leq u[k]\leq 1,\]
 we use the same {\tt linsys} constructor:
 \verbmcodef[Description of the discrete-time system]
-{mcodesnippets/chapter5_section2_snippet04.m}
+{mcodesnippets/s_chapter05_section02_snippet04.m}
 Once the {\tt linsys} object is created, we need to specify the set
 of initial conditions, the time interval and values of the direction vector,
 for which the reach set approximations must be computed:
 \verbmcodef[Description of an initial data]
-{mcodesnippets/chapter5_section2_snippet05.m}
+{mcodesnippets/s_chapter05_section02_snippet05.m}
 The reach set approximation is computed by calling the constructor
 of the {\tt reach} object:
 \verbmcodef[Computation of the reach set approximation]
-{mcodesnippets/chapter5_section2_snippet06.m}
+{mcodesnippets/s_chapter05_section02_snippet06.m}
 The {\tt options} parameter in the {\tt reach()} call is optional.
 We shall soon explain why we used it here.
 At this point, variable {\tt rs} contains the reach set approximations for the
@@ -2041,7 +2040,7 @@ For only external approximations, this field
 must be set to $0$, for only internal approximations, it must be set to $1$.
 The reach set approximation data can be
 extracted in the form of arrays of ellipsoids:
-\verbmcodef[Extraction of the reach set approximation data]{mcodesnippets/chapter5_section2_snippet07.m}
+\verbmcodef[Extraction of the reach set approximation data]{mcodesnippets/s_chapter05_section02_snippet07.m}
 
 Ellipsoidal arrays {\tt EA} and {\tt IA} have $4$ rows because we computed
 the reach set approximations for $4$ directions. Each row of ellipsoids
@@ -2061,21 +2060,21 @@ particular time interval, smaller than the one for which the reach set was
 computed, say $3\leq t\leq5$.
 This data can be extracted and returned in the form of {\tt reach}
 object by the {\tt cut} function:
-\verbmcodef[Get the reachability data in the time interval]{mcodesnippets/chapter5_section2_snippet08.m}
+\verbmcodef[Get the reachability data in the time interval]{mcodesnippets/s_chapter05_section02_snippet08.m}
 
 To obtain a snap shot of the reach set at given time, the same function
 {\tt cut} is used:
-\verbmcodef[Obtaining of the snap shot at given time]{mcodesnippets/chapter5_section2_snippet09.m}
+\verbmcodef[Obtaining of the snap shot at given time]{mcodesnippets/s_chapter05_section02_snippet09.m}
 It can be checked if the external or internal reach set approximation
 intersects with given ellipsoids, hyperplanes or polytopes:
-\verbmcodef[Check if ellipsoid intersects with external approximation]{mcodesnippets/chapter5_section2_snippet10.m}
-\verbmcodef[Check if ellipsoid intersects with internal approximation]{mcodesnippets/chapter5_section2_snippet11.m}
-\verbmcodef[Check if hyperplanes intersect with internal approximation]{mcodesnippets/chapter5_section2_snippet12.m}
-\verbmcodef[Check if polytope intersects with external approximation]{mcodesnippets/chapter5_section2_snippet13.m}
+\verbmcodef[Check if ellipsoid intersects with external approximation]{mcodesnippets/s_chapter05_section02_snippet10.m}
+\verbmcodef[Check if ellipsoid intersects with internal approximation]{mcodesnippets/s_chapter05_section02_snippet11.m}
+\verbmcodef[Check if hyperplanes intersect with internal approximation]{mcodesnippets/s_chapter05_section02_snippet12.m}
+\verbmcodef[Check if polytope intersects with external approximation]{mcodesnippets/s_chapter05_section02_snippet13.m}
 
 
 
-\end{verbatim} }
+
 If a given set intersects with the internal approximation of the reach set,
 then this set intersects with the actual reach set.
 If the given set does not
@@ -2086,7 +2085,7 @@ with the internal one. In our example above, ellipsoid {\tt E} is such a case:
 the quality of the approximation does not allow us to determine whether or not
 {\tt E} intersects with the actual reach set. To improve the quality
 of approximation, {\tt refine} function should be used:
-\verbmcodef[Check if the ellipsoid intersects the internal approximation]{mcodesnippets/chapter5_section2_snippet14.m}
+\verbmcodef[Check if the ellipsoid intersects the internal approximation]{mcodesnippets/s_chapter05_section02_snippet14.m}
 
 Now we are sure that ellipsoid {\tt E} intersects with the actual reach set.
 Recall that when we computed reach set {\tt rs} the first time, we did it
@@ -2108,7 +2107,7 @@ Having a reach set object resulting from the {\tt reach}, {\tt cut} or
 of the reach set and the good curves along which the actual reach set
 is touched by its ellipsoidal approximations:
 \verbmcodef[Obtaining the trajectory of the center
-of the reach set and the good curves]{mcodesnippets/chapter5_section2_snippet15.m}
+of the reach set and the good curves]{mcodesnippets/s_chapter05_section02_snippet15.m}
 
 Variable {\tt ctr} here is a matrix whose columns are the points ofthe
 reach set center trajectory evaluated at time values returned in the
@@ -2128,19 +2127,19 @@ reach set may evolve in time according to the time-variant system {\tt sys\_t}
 defined above. Switched systems are a special case of this situation.
 To compute the further evolution in time of the existing reach set,
 function {\tt evolve} should be used:
-\verbmcodef[Computation of the further evolution in time of the reach set]{mcodesnippets/chapter5_section2_snippet16.m}
+\verbmcodef[Computation of the further evolution in time of the reach set]{mcodesnippets/s_chapter05_section02_snippet16.m}
 Function {\tt evolve} can be viewed as an implementation of the semigroup
 property.
 
 To compute the backward reach set for some specified target set,
 we declare the time interval so that the terminating time comes first:
-\verbmcodef[Computation of the backward reach set]{mcodesnippets/chapter5_section2_snippet17.m}
+\verbmcodef[Computation of the backward reach set]{mcodesnippets/s_chapter05_section02_snippet17.m}
 
 Reach set and backward reach set computation for discrete-time systems and
 manipulations with the resulting reach set object are performed using
 the same functions as for continuous-time systems:
 \verbmcodef[Computation of reach set and backward reach set for discrete-time systems]
-{mcodesnippets/chapter5_section2_snippet18.m}
+{mcodesnippets/s_chapter05_section02_snippet18.m}
 
 Number of columns in the ellipsoidal arrays {\tt EA} and {\tt IA} is $51$
 because the backward reach set is computed for $50$ time steps, and the first
@@ -2185,7 +2184,7 @@ Ellipsoids of dimensions higher than three must be
 projected onto a two- or three-dimensional subspace before being plotted.
 This is done by means of {\tt projection} function:
 \verbmcodef[Projection of the ellipsoids onto a two- or three-dimensional subspace]
-{mcodesnippets/chapter5_section3_snippet01.m}
+{mcodesnippets/s_chapter05_section03_snippet01.m}
 
 Since the operation of projection is linear, the projection of the geometric
 sum of ellipsoids equals the geometric sum of the projected ellipsoids.
@@ -2193,7 +2192,7 @@ The same is true for the geometric difference of two ellipsoids.
 
 Function {\tt projection} exists also for the {\tt reach} objects:
 \verbmcodef[Projection of the reach set tube]
-{mcodesnippets/chapter5_section3_snippet02.m}
+{mcodesnippets/s_chapter05_section03_snippet02.m}
 
 The quality of the ellipsoid and reach set plots is controlled by the
 parameters {\tt plot2d\_grid} and {\tt plot3d\_grid} of the global
@@ -2252,13 +2251,13 @@ This parameter also affects the quality of 3D reach set plots.
 These parameters can be modified by editing {\it ellipsoids/ellipsoids\_init.m}
 file. After you finished editing, for changes to take effect, type
 \verbmcodef[Changes to take effect]
-{mcodesnippets/chapter6_section1_snippet01.m}
+{mcodesnippets/s_chapter06_section01_snippet01.m}
 
 If you would like to change certain parameters temporarily, without
 modifying the {\it ellipsoids\_init.m} file, say, turn the verbosity off,
 you should type
 \verbmcodef[Changing parameters]
-{mcodesnippets/chapter6_section1_snippet02.m}
+{mcodesnippets/s_chapter06_section01_snippet02.m}
 
 and proceed with your work. Before you modify {\tt ellOptions} structure
 this way however, make sure it is initialized.
@@ -2328,7 +2327,7 @@ either an {\tt ellipsoid}
 object of dimension $m$, or structure {\tt U} with fields {\tt U.center} and
 {\tt U.shape} to represent the ellipsoid that depends on time. For example,
 \verbmcodef[Definition of the ellipsoid]
-{mcodesnippets/chapter6_section4_snippet01.m}
+{mcodesnippets/s_chapter06_section04_snippet01.m}
 
 This example defines ellipsoid $\EE(p, P(t))$ with $p=\left[\begin{array}{c}
 0\\
@@ -2443,7 +2442,7 @@ of initial direction values that corresponds to the number of ellipsoidal
 approximations, and obtain external and internal ellipsoidal approximations
 of the reach set:
 \verbmcodef[Computation of the reach set]
-{mcodesnippets/chapter7_section1_snippet01.m}
+{mcodesnippets/s_chapter07_section01_snippet01.m}
 
 In figure \ref{ellpolyfig}, the time required to compute both external
 and internal ellipsoidal approximations, with $32$ ellipsoids each,
@@ -2508,7 +2507,7 @@ for given time by computing the reach set of the linear system (\ref{spmassls})
 and taking its projection onto $(x_1, x_2)$ subspace.
 \newpage
 \verbmcodef[Computation and projection of the reach set]
-{mcodesnippets/chapter7_section2_snippet01.m}
+{mcodesnippets/s_chapter07_section02_snippet01.m}
 Figure \ref{mechreachfig}(a) shows the reach set of the system
 (\ref{spmass1}-\ref{spmass2}) evolving in time from $t=0$ to $t=4$.
 Figure \ref{mechreachfig}(b) presents a snapshot of this reach set at time
@@ -2542,7 +2541,7 @@ Assuming that $[v_1 ~~ v_2]^T$ is unknown but bounded by ellipsoid
 $\EE(0, \frac{1}{4}I)$, we can compute the closed-loop reach set of the system
 with disturbance.
 \verbmcodef[Computation of the closed-loop reach set]
-{mcodesnippets/chapter7_section2_snippet02.m}
+{mcodesnippets/s_chapter07_section02_snippet02.m}
 
 Figure \ref{mechreachfig}(c) shows the reach set of the system
 (\ref{smdist1}-\ref{smdist2}) evolving in time from $t=0$ to $t=4$.
@@ -2629,7 +2628,7 @@ x_3\end{array}\right] + \left[\begin{array}{c}
 We can compute the reach set of (\ref{rlceq2}) for some time $t>2$, say, $t=3$.
 
 \verbmcodef[Computation of the reach set for time interval]
-{mcodesnippets/chapter7_section3_snippet01.m}
+{mcodesnippets/s_chapter07_section03_snippet01.m}
 
 Figure \ref{rlcreachfig}(a) shows how the reach set projection
 onto $(x_1, x_2)$ of system (\ref{rlceq2})
@@ -2663,7 +2662,7 @@ To find out where the system should start at time $t=0$ in order to reach
 a neighborhood {\tt M} of the origin at time $t=3$,
 we compute the backward reach set from $t=3$ to $t=0$.
 \verbmcodef[Computation of the backward reach set]
-{mcodesnippets/chapter7_section3_snippet02.m}
+{mcodesnippets/s_chapter07_section03_snippet02.m}
 
 Figure \ref{rlcreachfig}(c) presents the evolution of the reach set
 projection onto $(x_1, x_2)$ in backward time.
@@ -2780,7 +2779,7 @@ $H([0 ~ 1 ~ 0 ~ 0]^T, x_{M2})$ is the guard.
 We indicate how to implement the reach set computation of this hybrid system.
 We first define the two linear systems and the guard.
 \verbmcodef[Reach set computation of the hybrid system]
-{mcodesnippets/chapter7_section4_snippet01.m}
+{mcodesnippets/s_chapter07_section04_snippet01.m}
 
 We assume that initially the system is in free-flow mode.
 Given a set of initial conditions, we  compute the reach set according
@@ -2788,12 +2787,12 @@ to dynamics (\ref{fflow}) for certain number of time steps.
 We will consider the external approximation of the reach set by a single
 ellipsoid.
 \verbmcodef[Get the external approximation of the reach set by a single
-ellipsoid]{mcodesnippets/chapter7_section4_snippet02.m}
+ellipsoid]{mcodesnippets/s_chapter07_section04_snippet02.m}
 
 Having obtained the ellipsoidal array {\tt EA} representing the reach set
 evolving in time, we  determine the  ellipsoids in the array that
 intersect the guard.
-\verbmcodef[Determination of  the  ellipsoids as an array that intersect the guard]{mcodesnippets/chapter7_section4_snippet03.m}
+\verbmcodef[Determination of  the  ellipsoids as an array that intersect the guard]{mcodesnippets/s_chapter07_section04_snippet03.m}
 
 Analyzing the values in array {\tt D}, we conclude that the free-flow reach set
 has nonempty intersection with hyperplane {\tt GRD} at $t=18$
@@ -2830,7 +2829,7 @@ guard is nonempty, we establish a new initial time and a set of initial
 conditions for the reach set computation according to dynamics (\ref{cflow}).
 The initial time is the array index minus one, and the set of initial
 conditions is the intersection of the free-flow reach set with the guard.
-\verbmcodef[The union of reach sets in array]{mcodesnippets/chapter7_section4_snippet04.m}
+\verbmcodef[The union of reach sets in array]{mcodesnippets/s_chapter07_section04_snippet04.m}
 
 The union of reach sets in array {\tt crs} forms the reach set for
 the congested dynamics.
@@ -3026,7 +3025,7 @@ Returns:
 is optional.
 \end{itemize}
 
-\verbmcodef[Example]{mcodesnippets/appendixA_section1_snippet01.m}
+\verbmcodef[Example]{mcodesnippets/s_appendixA_section01_snippet01.m}
 
 
 \newpage
@@ -3069,7 +3068,7 @@ Returns:
 \item {\tt D} - distance or array of distances.
 \end{itemize}
 
-\verbmcodef[Example]{mcodesnippets/appendixA_section1_snippet02.m}
+\verbmcodef[Example]{mcodesnippets/s_appendixA_section01_snippet02.m}
 
 
 \newpage
@@ -3105,7 +3104,7 @@ Returns:
 \begin{itemize}
 \item {\tt E} - object of type {\tt ellipsoid class}.
 \end{itemize}
-\verbmcodef[Example]{mcodesnippets/appendixA_section1_snippet03.m}
+\verbmcodef[Example]{mcodesnippets/s_appendixA_section01_snippet03.m}
 
 This example creates a ball of radius $3$ in ${\bf R}^4$ centered at $[1 ~ 0 ~ -1 ~ 6]^T$.
 
@@ -3122,7 +3121,7 @@ Parameters:
 
 Returns $1$ if two ellipsoids are equal, $0$ - otherwise.
 
-\verbmcodef[Example]{mcodesnippets/appendixA_section1_snippet04.m}
+\verbmcodef[Example]{mcodesnippets/s_appendixA_section01_snippet04.m}
 
 
 \newpage
@@ -3139,7 +3138,7 @@ Parameters:
 Returns $1$ if {\tt E1} contains {\tt E2} when both have the same center,
 $0$ - otherwise.
 
-\verbmcodef[Example]{mcodesnippets/appendixA_section1_snippet05.m}
+\verbmcodef[Example]{mcodesnippets/s_appendixA_section01_snippet05.m}
 
 This example illustrates the fact that an ellipsoid is always bigger than itself.
 
@@ -3161,7 +3160,7 @@ Returns:
 ellipsoids in {\tt E} with hyperplanes in {\tt H}.
 \end{itemize}
 
-\verbmcodef[Example]{mcodesnippets/appendixA_section1_snippet06.m}
+\verbmcodef[Example]{mcodesnippets/s_appendixA_section01_snippet06.m}
 
 
 \newpage
@@ -3186,7 +3185,7 @@ the object in {\tt X},\\
 $1$ if the union or intersection of ellipsoids in {\tt E} and the object
 in {\tt X} have nonempty intersection.
 
-\verbmcodef[Example]{mcodesnippets/appendixA_section1_snippet07.m}
+\verbmcodef[Example]{mcodesnippets/s_appendixA_section01_snippet07.m}
 
 Here two ellipsoids {\tt E1} and {\tt E2} do not intersect but both are
 intersected by hyperplane {\tt H}.
@@ -3210,7 +3209,7 @@ Returns:
 the intersection.
 \end{itemize}
 
-\verbmcodef[Example]{mcodesnippets/appendixA_section1_snippet08.m}
+\verbmcodef[Example]{mcodesnippets/s_appendixA_section01_snippet08.m}
 
 
 \newpage
@@ -3232,7 +3231,7 @@ Returns:
 the intersection.
 \end{itemize}
 
-\verbmcodef[Example]{mcodesnippets/appendixA_section1_snippet09.m}
+\verbmcodef[Example]{mcodesnippets/s_appendixA_section01_snippet09.m}
 
 
 \newpage
@@ -3267,7 +3266,7 @@ checked.
 Returns $1$ if given direction is bad and ellipsoidal approximation cannot
 be computed for it, $0$ - otherwise.
 
-\verbmcodef[Example]{mcodesnippets/appendixA_section1_snippet10.m}
+\verbmcodef[Example]{mcodesnippets/s_appendixA_section01_snippet10.m}
 
 Means that for vectors $[1 ~ 1]^T$ and $[0 ~ 1]^T$ the ellipsoidal approximation
 of the geometric difference ${\tt B}\dot{-}{\tt E}$ cannot be computed.
@@ -3315,7 +3314,7 @@ of ellipsoids or polytopes in {\tt X} is empty,\\
 $0$ - if the intersection {\tt E} does not cover {\tt X},\\
 $1$ - if {\tt E} contains {\tt X}.
 
-\verbmcodef[Example]{mcodesnippets/appendixA_section1_snippet11.m}
+\verbmcodef[Example]{mcodesnippets/s_appendixA_section01_snippet11.m}
 
 This example illustrates the fact that any ellipsoid contains its intersection with
 another ellipsoid.
@@ -3338,7 +3337,7 @@ is optional, its default value is {\tt 'u'}.
 Returns $1$ if vector in {\tt X} belongs to union or intersection {\tt E},
 $0$ - otherwise.
 
-\verbmcodef[Example]{mcodesnippets/appendixA_section1_snippet12.m}
+\verbmcodef[Example]{mcodesnippets/s_appendixA_section01_snippet12.m}
 
 
 Here the intersection of {\tt E1} and {\tt E2} is empty, and thus, cannot
@@ -3447,7 +3446,7 @@ Returns:
 all the directions specified in {\tt L} are bad.
 \end{itemize}
 
-\verbmcodef[Example]{mcodesnippets/appendixA_section1_snippet13.m}
+\verbmcodef[Example]{mcodesnippets/s_appendixA_section01_snippet13.m}
 
 The resulting array {\tt EA} contains only two ellipsoids because two
 of the four directions specified in {\tt L} are bad.
@@ -3472,7 +3471,7 @@ Returns:
 all the directions specified in {\tt L} are bad.
 \end{itemize}
 
-\verbmcodef[Example]{mcodesnippets/appendixA_section1_snippet14.m}
+\verbmcodef[Example]{mcodesnippets/s_appendixA_section01_snippet14.m}
 
 The resulting array {\tt IA} contains only two ellipsoids because two
 of the four directions specified in {\tt L} are bad.
@@ -3536,7 +3535,7 @@ Returns:
 all the directions specified in {\tt L} are bad.
 \end{itemize}
 
-\verbmcodef[Example]{mcodesnippets/appendixA_section1_snippet15.m}
+\verbmcodef[Example]{mcodesnippets/s_appendixA_section01_snippet15.m}
 
 The resulting array {\tt EA} contains only two ellipsoids because two
 of the four directions specified in {\tt L} are bad.
@@ -3562,7 +3561,7 @@ Returns:
 all the directions specified in {\tt L} are bad.
 \end{itemize}
 
-\verbmcodef[Example]{mcodesnippets/appendixA_section1_snippet16.m}
+\verbmcodef[Example]{mcodesnippets/s_appendixA_section01_snippet16.m}
 
 The resulting array {\tt IA} contains only two ellipsoids because two
 of the four directions specified in {\tt L} are bad.
@@ -3623,7 +3622,7 @@ Returns:
 all the directions specified in {\tt L} are bad.
 \end{itemize}
 
-\verbmcodef[Example]{mcodesnippets/appendixA_section1_snippet17.m}
+\verbmcodef[Example]{mcodesnippets/s_appendixA_section01_snippet17.m}
 
 
 \newpage
@@ -3646,7 +3645,7 @@ Returns:
 all the directions specified in {\tt L} are bad.
 \end{itemize}
 
-\verbmcodef[Example]{mcodesnippets/appendixA_section1_snippet18.m}
+\verbmcodef[Example]{mcodesnippets/s_appendixA_section01_snippet18.m}
 
 The resulting array {\tt IA} contains only two ellipsoids because two
 of the four directions specified in {\tt L} are bad.
@@ -3706,7 +3705,7 @@ Returns:
 as the number of columns of matrix {\tt L}.
 \end{itemize}
 
-\verbmcodef[Example]{mcodesnippets/appendixA_section1_snippet19.m}
+\verbmcodef[Example]{mcodesnippets/s_appendixA_section01_snippet19.m}
 
 
 \newpage
@@ -3729,7 +3728,7 @@ Returns:
 as the number of columns of matrix {\tt L}.
 \end{itemize}
 
-\verbmcodef[Example]{mcodesnippets/appendixA_section1_snippet20.m}
+\verbmcodef[Example]{mcodesnippets/s_appendixA_section01_snippet20.m}
 
 
 \newpage
@@ -3749,7 +3748,7 @@ Returns:
 but with centers shifted by vectors in {\tt -b}.
 \end{itemize}
 
-\verbmcodef[Example]{mcodesnippets/appendixA_section1_snippet21.m}
+\verbmcodef[Example]{mcodesnippets/s_appendixA_section01_snippet21.m}
 
 
 \newpage
@@ -3767,7 +3766,7 @@ Returns:
 but all centered at the origin.
 \end{itemize}
 
-\verbmcodef[Example]{mcodesnippets/appendixA_section1_snippet22.m}
+\verbmcodef[Example]{mcodesnippets/s_appendixA_section01_snippet22.m}
 
 
 \newpage
@@ -3786,7 +3785,7 @@ Returns:
 transformation of {\tt E}.
 \end{itemize}
 
-\verbmcodef[Example]{mcodesnippets/appendixA_section1_snippet23.m}
+\verbmcodef[Example]{mcodesnippets/s_appendixA_section01_snippet23.m}
 
 
 \newpage
@@ -3802,7 +3801,7 @@ Parameters:
 
 Returns $1$ if two ellipsoids are not equal, $0$ - otherwise.
 
-\verbmcodef[Example]{mcodesnippets/appendixA_section1_snippet24.m}
+\verbmcodef[Example]{mcodesnippets/s_appendixA_section01_snippet24.m}
 
 
 \newpage
@@ -3877,7 +3876,7 @@ Returns:
 but with centers shifted by vectors in {\tt b}.
 \end{itemize}
 
-\verbmcodef[Example]{mcodesnippets/appendixA_section1_snippet25.m}
+\verbmcodef[Example]{mcodesnippets/s_appendixA_section01_snippet25.m}
 
 
 \newpage
@@ -3897,7 +3896,7 @@ in {\tt E}.
 
 For ellipsoids that do not contain the origin, this function returns empty
 ellipsoid.
-\verbmcodef[Example]{mcodesnippets/appendixA_section1_snippet26.m}
+\verbmcodef[Example]{mcodesnippets/s_appendixA_section01_snippet26.m}
 
 Illustrates the fact that polar set of an ellipsoid centered at the origin
 equals to inverse of this ellipsoid.
@@ -3917,7 +3916,7 @@ Returns:
 \begin{itemize}
 \item {\tt P} - array of projected ellipsoids.
 \end{itemize}
-\verbmcodef[Example]{mcodesnippets/appendixA_section1_snippet27.m}
+\verbmcodef[Example]{mcodesnippets/s_appendixA_section01_snippet27.m}
 
 
 \newpage
@@ -3958,7 +3957,7 @@ Returns:
 of the shape matrices of ellipsoids in {\tt E}.
 \end{itemize}
 
-\verbmcodef[Example]{mcodesnippets/appendixA_section1_snippet28.m}
+\verbmcodef[Example]{mcodesnippets/s_appendixA_section01_snippet28.m}
 
 
 \newpage
@@ -3975,7 +3974,7 @@ Returns:
 \item {\tt T} - array of trace values whose size matches the size of {\tt E}.
 \end{itemize}
 
-\verbmcodef[Example]{mcodesnippets/appendixA_section1_snippet29.m}
+\verbmcodef[Example]{mcodesnippets/s_appendixA_section01_snippet29.m}
 
 
 \newpage
@@ -3994,7 +3993,7 @@ Returns:
 are multilied by $-1$.
 \end{itemize}
 
-\verbmcodef[Example]{mcodesnippets/appendixA_section1_snippet30.m}
+\verbmcodef[Example]{mcodesnippets/s_appendixA_section01_snippet30.m}
 
 
 \newpage
@@ -4011,7 +4010,7 @@ Returns:
 \item {\tt V} - array of volume values whose size matches the size of {\tt E}.
 \end{itemize}
 
-\verbmcodef[Example]{mcodesnippets/appendixA_section1_snippet31.m}
+\verbmcodef[Example]{mcodesnippets/s_appendixA_section01_snippet31.m}
 
 \newpage
 
@@ -4028,7 +4027,7 @@ The number of columns must match the number of hyperplanes in {\tt H}.
 Returns $1$ if the vector in {\tt X} belongs to the hyperplane in {\tt H},
 $0$ - otherwise.
 
-\verbmcodef[Example]{mcodesnippets/appendixA_section2_snippet01.m}
+\verbmcodef[Example]{mcodesnippets/s_appendixA_section02_snippet01.m}
 
 
 \newpage
@@ -4046,7 +4045,7 @@ Returns:
 \item {\tt D} - array of dimension values of the same size as {\tt H}.
 \end{itemize}
 
-\verbmcodef[Example]{mcodesnippets/appendixA_section2_snippet02.m}
+\verbmcodef[Example]{mcodesnippets/s_appendixA_section02_snippet02.m}
 
 
 \newpage
@@ -4089,7 +4088,7 @@ Parameters:
 
 Returns $1$ if two hyperplanes are equal, $0$ - otherwise.
 
-\verbmcodef[Example]{mcodesnippets/appendixA_section2_snippet03.m}
+\verbmcodef[Example]{mcodesnippets/s_appendixA_section02_snippet03.m}
 
 
 \newpage
@@ -4111,7 +4110,7 @@ Returns:
 array of hyperplanes.
 \end{itemize}
 
-\verbmcodef[Example]{mcodesnippets/appendixA_section2_snippet04.m}
+\verbmcodef[Example]{mcodesnippets/s_appendixA_section02_snippet04.m}
 
 This example defines three parallel hyperplanes and returns them in the array {\tt H}.
 
@@ -4138,7 +4137,7 @@ Parameters:
 
 Returns $1$ if two hyperplanes are equal, $0$ - otherwise.
 
-\verbmcodef[Example]{mcodesnippets/appendixA_section2_snippet05.m}
+\verbmcodef[Example]{mcodesnippets/s_appendixA_section02_snippet05.m}
 
 
 \newpage
@@ -4154,7 +4153,7 @@ Parameters:
 
 Returns $1$ if two hyperplanes are not equal, $0$ - otherwise.
 
-\verbmcodef[Example]{mcodesnippets/appendixA_section2_snippet06.m}
+\verbmcodef[Example]{mcodesnippets/s_appendixA_section02_snippet06.m}
 
 
 \newpage
@@ -4228,7 +4227,7 @@ Returns:
 scalars are multiplied by $-1$.
 \end{itemize}
 
-\verbmcodef[Example]{mcodesnippets/appendixA_section2_snippet07.m}
+\verbmcodef[Example]{mcodesnippets/s_appendixA_section02_snippet07.m}
 
 
 \newpage
@@ -4356,7 +4355,7 @@ Returns:
 \item {\tt LSYS} - linear system object.
 \end{itemize}
 
-\verbmcodef[Example]{mcodesnippets/appendixA_section3_snippet01.m}
+\verbmcodef[Example]{mcodesnippets/s_appendixA_section03_snippet01.m}
 
 
 This example defines the following affine discrete-time system:
