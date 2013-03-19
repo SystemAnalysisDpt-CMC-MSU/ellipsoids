@@ -27,9 +27,8 @@ classdef CVXController
         function isPositive=isSetUp()
             import elltool.cvx.CVXController;
             if CVXController.isOnPath()
-                cvxPrefDir=modgen.path.rmlastnpathparts(prefdir,1);
-                cvxConfFileName = [cvxPrefDir, filesep,...
-                    CVXController.CVX_PREF_FILE_NAME ];
+                cvxConfFileName=[ prefdir, filesep,...
+                    CVXController.CVX_PREF_FILE_NAME];
                 isPositive=modgen.system.ExistanceChecker.isFile(...
                     cvxConfFileName);
             else
