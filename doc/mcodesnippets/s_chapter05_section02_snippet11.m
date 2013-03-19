@@ -1,6 +1,7 @@
 % check if ellipsoid E intersects with internal approximation:
-plot(E)
+hold on;
 intersect(ct, E, 'i')
+
 % 
 % ans =
 % 

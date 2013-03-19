@@ -1,7 +1,6 @@
-H
-I = hpintersection(EE(:, 2), H(1))% compute the intersections of ellipsoids
+I = hpintersection(EE(:, 2), H)% compute the intersections of ellipsoids
                                   % in the second column of EE
-                                  % with hyperplane H(1): 
+                                  % with hyperplane H: 
 
 % I =
 % 2x1 array of ellipsoids.

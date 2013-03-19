@@ -10,4 +10,3 @@ IA = minkpm_ia([E1 E2], E3, L)  % internal
 % 1x4 array of ellipsoids.
 
 minkpm(E1, E2, E3);  % plot the set (E1 + E2 - E3)
-% The resulting set is empty

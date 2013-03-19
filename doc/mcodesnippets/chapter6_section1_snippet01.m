@@ -1,1 +1,0 @@
- clear global ellOptions;
