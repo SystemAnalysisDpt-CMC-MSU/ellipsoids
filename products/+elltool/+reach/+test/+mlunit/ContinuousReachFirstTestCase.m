@@ -1,5 +1,5 @@
 classdef ContinuousReachFirstTestCase < mlunitext.test_case
-    properties (Access = private, Constant)
+    properties (Access=private, Constant)
         COMP_PRECISION = 5e-5;
     end
     properties (Access=private)
@@ -10,6 +10,16 @@ classdef ContinuousReachFirstTestCase < mlunitext.test_case
         linSys
         reachObj
         timeVec
+    end
+    methods (Access=private, Static)
+        function checkIntersection(reachObj, ellVec)
+            mlunit.assert_equals(false, reachObj.intersect(ellVec(1), 'e'));
+            mlunit.assert_equals(false, reachObj.intersect(ellVec(1), 'i'));
+            mlunit.assert_equals(true, reachObj.intersect(ellVec(2), 'e'));
+            mlunit.assert_equals(false, reachObj.intersect(ellVec(2), 'i'));
+            mlunit.assert_equals(true, reachObj.intersect(ellVec(3), 'e'));
+            mlunit.assert_equals(true, reachObj.intersect(ellVec(3), 'i'));
+        end
     end
     methods
         function self = ContinuousReachFirstTestCase(varargin)
@@ -60,7 +70,7 @@ classdef ContinuousReachFirstTestCase < mlunitext.test_case
         function self = testIntersect(self)
             cutReachObj = self.reachObj.cut(self.timeVec(2));
             projCutReachObj =...
-                cutReachObj.projection(eye(self.reachObj.dimension));
+                cutReachObj.projection(eye(self.reachObj.dimension()));
             newTimeVec = [sum(self.timeVec) / 2, self.timeVec(2)];
             cutIntReachObj = self.reachObj.cut(newTimeVec);
             cut2ReachObj = cutIntReachObj.cut(newTimeVec(2));
@@ -73,45 +83,10 @@ classdef ContinuousReachFirstTestCase < mlunitext.test_case
             ell5 = ellipsoid([-2.5;1], 1.2 * eye(2));
             ell6 = ellipsoid([-2.5;1], 1.6 * eye(2));
             %
-            mlunit.assert_equals(false, cutReachObj.intersect(ell1, 'e'));
-            mlunit.assert_equals(false, cutReachObj.intersect(ell1, 'i'));
-            mlunit.assert_equals(true, cutReachObj.intersect(ell2, 'e'));
-            mlunit.assert_equals(false, cutReachObj.intersect(ell2, 'i'));
-            mlunit.assert_equals(true, cutReachObj.intersect(ell3, 'e'));
-            mlunit.assert_equals(true, cutReachObj.intersect(ell3, 'i'));
-            %
-            mlunit.assert_equals(false,...
-                projCutReachObj.intersect(ell1, 'e'));
-            mlunit.assert_equals(false,...
-                projCutReachObj.intersect(ell1, 'i'));
-            mlunit.assert_equals(true,...
-                projCutReachObj.intersect(ell2, 'e'));
-            mlunit.assert_equals(false,...
-                projCutReachObj.intersect(ell2, 'i'));
-            mlunit.assert_equals(true,...
-                projCutReachObj.intersect(ell3, 'e'));
-            mlunit.assert_equals(true,...
-                projCutReachObj.intersect(ell3, 'i'));
-            %
-            mlunit.assert_equals(false, cut2ReachObj.intersect(ell1, 'e'));
-            mlunit.assert_equals(false, cut2ReachObj.intersect(ell1, 'i'));
-            mlunit.assert_equals(true, cut2ReachObj.intersect(ell2, 'e'));
-            mlunit.assert_equals(false, cut2ReachObj.intersect(ell2, 'i'));
-            mlunit.assert_equals(true, cut2ReachObj.intersect(ell3, 'e'));
-            mlunit.assert_equals(true, cut2ReachObj.intersect(ell3, 'i'));
-            %
-            mlunit.assert_equals(false,...
-                cutEvolveReachObj.intersect(ell4, 'e'));
-            mlunit.assert_equals(false,...
-                cutEvolveReachObj.intersect(ell4, 'i'));
-            mlunit.assert_equals(true,...
-                cutEvolveReachObj.intersect(ell5, 'e'));
-            mlunit.assert_equals(false,...
-                cutEvolveReachObj.intersect(ell5, 'i'));
-            mlunit.assert_equals(true,...
-                cutEvolveReachObj.intersect(ell6, 'e'));
-            mlunit.assert_equals(true,...
-                cutEvolveReachObj.intersect(ell6, 'i'));
+            self.checkIntersection(cutReachObj, [ell1, ell2, ell3]);
+            self.checkIntersection(projCutReachObj, [ell1, ell2, ell3]);
+            self.checkIntersection(cut2ReachObj, [ell1, ell2, ell3]);
+            self.checkIntersection(cutEvolveReachObj, [ell4, ell5, ell6]);
         end
         %
         function self = testBackward(self)

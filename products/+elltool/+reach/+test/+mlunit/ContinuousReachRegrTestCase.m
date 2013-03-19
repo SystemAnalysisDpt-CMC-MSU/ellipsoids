@@ -1,5 +1,5 @@
-classdef ContinuousReachReachabilityTestCase < mlunitext.test_case
-    properties (Access = private, Constant)
+classdef ContinuousReachRegrTestCase < mlunitext.test_case
+    properties (Access=private, Constant)
         FIELDS_NOT_TO_COMPARE={'LT_GOOD_DIR_MAT';'LT_GOOD_DIR_NORM_VEC';...
             'LS_GOOD_DIR_NORM';'LS_GOOD_DIR_VEC'};
         COMP_PRECISION = 5e-5;
@@ -41,9 +41,9 @@ classdef ContinuousReachReachabilityTestCase < mlunitext.test_case
             %
             SData = expRel.getTuplesFilteredBy(APPROX_TYPE, approxType);
             if approxType == EApproxType.External
-                approxEllMat = self.reachObj.get_ea;
+                approxEllMat = self.reachObj.get_ea();
             else
-                approxEllMat = self.reachObj.get_ia;
+                approxEllMat = self.reachObj.get_ia();
             end
             %
             nTuples = SData.getNTuples();
@@ -69,7 +69,7 @@ classdef ContinuousReachReachabilityTestCase < mlunitext.test_case
         end
     end
     methods
-        function self = ContinuousReachReachabilityTestCase(varargin)
+        function self = ContinuousReachRegrTestCase(varargin)
             self = self@mlunitext.test_case(varargin{:});
             [~, className] = modgen.common.getcallernameext(1);
             shortClassName = mfilename('classname');
@@ -117,7 +117,6 @@ classdef ContinuousReachReachabilityTestCase < mlunitext.test_case
         %
         function self = testSystem(self)
             import modgen.common.throwerror;
-            import elltool.reach.test.mlunit.ContinuousReachTestCase;
             import gras.ellapx.enums.EApproxType;
             %
             ELL_TUBE_REL = 'ellTubeRel';
@@ -171,7 +170,7 @@ classdef ContinuousReachReachabilityTestCase < mlunitext.test_case
             DistBounds.center = newQtCVec;
             DistBounds.shape = newQtCMat;
             %
-            oldDim = self.reachObj.dimension;
+            oldDim = self.reachObj.dimension();
             newLinSys = elltool.linsys.LinSys(newAtCMat, newBtCMat,...
                 ControlBounds, newCtCMat, DistBounds);
             newReachObj = elltool.reach.ReachContinuous(newLinSys,...

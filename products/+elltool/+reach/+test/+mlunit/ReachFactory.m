@@ -39,11 +39,9 @@ classdef ReachFactory
                 'goodDirSelection.methodProps.manual.lsGoodDirSets.set1');
             self.l0Mat = cell2mat(l0CMat.').';
             self.x0Ell = ellipsoid(x0DefVec, x0DefMat);
-            self.tVec = [crmSys.getParam('time_interval.t0'),...
-                crmSys.getParam('time_interval.t1')];
             if self.isBack
                 self.tVec = [crmSys.getParam('time_interval.t1'),...
-                crmSys.getParam('time_interval.t0')];
+                    crmSys.getParam('time_interval.t0')];
             else
                 self.tVec = [crmSys.getParam('time_interval.t0'),...
                 crmSys.getParam('time_interval.t1')];
@@ -58,11 +56,8 @@ classdef ReachFactory
             self.linSys = elltool.linsys.LinSys(atDefCMat, btDefCMat,...
                 ControlBounds, ctDefCMat, DistBounds);
         end
-        function reachObj = createInstence(self)
-            if self.isBack
-                reachObj = elltool.reach.ReachContinuous(self.linSys,...
-                    self.x0Ell, self.l0Mat, self.tVec);
-            elseif self.isEvolve
+        function reachObj = createInstance(self)
+            if self.isEvolve
                 halfReachObj = elltool.reach.ReachContinuous(self.linSys,...
                     self.x0Ell, self.l0Mat, [self.tVec(1) sum(self.tVec)/2]);
                 reachObj = halfReachObj.evolve(self.tVec(2));

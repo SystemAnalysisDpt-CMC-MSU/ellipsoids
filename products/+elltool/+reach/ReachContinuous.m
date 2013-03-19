@@ -31,10 +31,10 @@ classdef ReachContinuous < elltool.reach.AReach
             projType = EProjType.Static;
             if nargin > 2
                 localEllTubeRel =...
-                    self.getEllTubeRel.getTuplesFilteredBy(...
+                    self.ellTubeRel.getTuplesFilteredBy(...
                     APPROX_TYPE, approxType);
             else
-                localEllTubeRel = self.getEllTubeRel;
+                localEllTubeRel = self.ellTubeRel;
             end
             if nargin == 4
                 localEllTubeRel.scale(@(x) scaleFactor, {APPROX_TYPE});
@@ -115,12 +115,12 @@ classdef ReachContinuous < elltool.reach.AReach
             end
             %
             if self.isProj
-                if self.getEllTubeRel().dim() > 3
+                if self.ellTubeRel.dim() > 3
                     throwerror('wrongData',...
                         'Dimension of the projection must be leq 3');                    
                 else
                     plObj = smartdb.disp.RelationDataPlotter();
-                    plotter = self.getEllTubeRel().getTuplesFilteredBy(...
+                    plotter = self.ellTubeRel.getTuplesFilteredBy(...
                         APPROX_TYPE, approxType).plot(plObj,...
                         'fGetTubeColor', @(x) deal(colorVec, shade));
                 end
@@ -156,7 +156,7 @@ classdef ReachContinuous < elltool.reach.AReach
             import gras.ellapx.enums.EApproxType;
             import gras.ellapx.smartdb.F;
             APPROX_TYPE = F.APPROX_TYPE;
-            SData = self.getEllTubeRel.getTuplesFilteredBy(APPROX_TYPE,...
+            SData = self.ellTubeRel.getTuplesFilteredBy(APPROX_TYPE,...
                 approxType);
             nTuples = SData.getNTuples();
             if nTuples > 0
@@ -181,7 +181,7 @@ classdef ReachContinuous < elltool.reach.AReach
                 newTimeVec, newLinSys, approxType)
             import gras.ellapx.smartdb.F;
             APPROX_TYPE = F.APPROX_TYPE;
-            OldData = self.getEllTubeRel.getTuplesFilteredBy(...
+            OldData = self.ellTubeRel.getTuplesFilteredBy(...
                 APPROX_TYPE, approxType);
             sysDimRows = size(OldData.QArray{1}, 1);
             sysDimCols = size(OldData.QArray{1}, 2);
@@ -598,8 +598,8 @@ classdef ReachContinuous < elltool.reach.AReach
             self.ellTubeRel = self.makeEllTubeRel(smartLinSys, l0Mat,...
                 [min(timeVec) max(timeVec)], isDisturbance,...
                 relTol, approxTypeVec);
-            if self.isBackward
-                self.ellTubeRel = self.rotateEllTubeRel(self.getEllTubeRel);
+            if self.isbackward()
+                self.ellTubeRel = self.rotateEllTubeRel(self.ellTubeRel);
             end
         end
         %%
@@ -635,7 +635,7 @@ classdef ReachContinuous < elltool.reach.AReach
             import gras.ellapx.enums.EApproxType;
             fprintf('\n');
             disp([inputname(1) ' =']);
-            if isempty(self)
+            if self.isempty()
                 fprintf('Empty reach set object.\n\n');
                 return;
             end
@@ -662,7 +662,7 @@ classdef ReachContinuous < elltool.reach.AReach
                     'in R^%d in the time interval [%d, %d].\n'],...
                     sysTypeStr, dim, timeVec(1), timeVec(end));
             end
-            if self.isprojection
+            if self.isprojection()
                 fprintf('Projected onto the basis:\n');
                 disp(self.projectionBasisMat);
             end
@@ -674,11 +674,11 @@ classdef ReachContinuous < elltool.reach.AReach
                 fprintf('Initial set at time %s%d:\n',...
                     sysTimeStartStr, timeVec(1));
             end
-            disp(self.getInitialSet);
+            disp(self.getInitialSet());
             fprintf('Number of external approximations: %d\n',...
-                sum(self.getEllTubeRel.approxType == EApproxType.External));
+                sum(self.ellTubeRel.approxType == EApproxType.External));
             fprintf('Number of internal approximations: %d\n',...
-                sum(self.getEllTubeRel.approxType == EApproxType.Internal));
+                sum(self.ellTubeRel.approxType == EApproxType.Internal));
             fprintf('\n');
         end
         %%
@@ -695,7 +695,7 @@ classdef ReachContinuous < elltool.reach.AReach
                 else
                     switchTimeVec = self.switchSysTimeVec;
                 end
-                cutObj.ellTubeRel = self.getEllTubeRel.cut(cutTimeVec);
+                cutObj.ellTubeRel = self.getEllTubeRel().cut(cutTimeVec);
                 switchTimeIndVec =...
                     switchTimeVec > cutTimeVec(1) &...
                     switchTimeVec < cutTimeVec(end);
@@ -738,7 +738,7 @@ classdef ReachContinuous < elltool.reach.AReach
             import gras.ellapx.enums.EApproxType;
             import gras.ellapx.smartdb.F;
             APPROX_TYPE = F.APPROX_TYPE;
-            SData = self.getEllTubeRel.getTuplesFilteredBy(APPROX_TYPE,...
+            SData = self.ellTubeRel.getTuplesFilteredBy(APPROX_TYPE,...
                 EApproxType.External);
             directionsCVec = SData.ltGoodDirMat.';
             if nargout > 1
@@ -747,9 +747,9 @@ classdef ReachContinuous < elltool.reach.AReach
         end
         %%
         function [trCenterMat timeVec] = get_center(self)
-            trCenterMat = self.getEllTubeRel.aMat{1};
+            trCenterMat = self.ellTubeRel.aMat{1};
             if nargout > 1
-                timeVec = self.getEllTubeRel.timeVec{1};
+                timeVec = self.ellTubeRel.timeVec{1};
             end
         end
         %%
@@ -767,7 +767,7 @@ classdef ReachContinuous < elltool.reach.AReach
             import gras.ellapx.enums.EApproxType;
             import gras.ellapx.smartdb.F;
             APPROX_TYPE = F.APPROX_TYPE;
-            SData = self.getEllTubeRel.getTuplesFilteredBy(APPROX_TYPE,...
+            SData = self.ellTubeRel.getTuplesFilteredBy(APPROX_TYPE,...
                 EApproxType.External);
             goodCurvesCVec = SData.xTouchCurveMat.';
             if nargout > 1
@@ -868,7 +868,7 @@ classdef ReachContinuous < elltool.reach.AReach
                 newEllTubeRel = self.rotateEllTubeRel(newEllTubeRel);
             end
             newReachObj.ellTubeRel =...
-                self.getEllTubeRel.cat(newEllTubeRel);
+                self.getEllTubeRel().cat(newEllTubeRel);
         end
         %%
         function eaScaleFactor = getEaScaleFactor(self)
@@ -892,13 +892,8 @@ classdef ReachContinuous < elltool.reach.AReach
             import gras.ellapx.enums.EApproxType;
             APPROX_TYPE = F.APPROX_TYPE;
             %
-            ellTube = self.getEllTubeRel;
-            compEllTube = reachObj.getEllTubeRel;
-            %
-            if ellTube.getNElems ~= compEllTube.getNElems
-                compEllTube = compEllTube.getTuplesFilteredBy(...
-                    'lsGoodDirNorm', 1);
-            end
+            ellTube = self.getEllTubeRel();
+            compEllTube = reachObj.getEllTubeRel();
             %
             if nargin == 4
                 ellTube = ellTube.getTuplesFilteredBy(APPROX_TYPE,...
@@ -907,6 +902,12 @@ classdef ReachContinuous < elltool.reach.AReach
                 compEllTube = compEllTube.getTuplesFilteredBy(APPROX_TYPE,...
                     varargin{2});
             end
+            %
+            if ellTube.getNElems < compEllTube.getNElems
+                compEllTube = compEllTube.getTuplesFilteredBy(...
+                    'lsGoodDirNorm', 1);
+            end
+            %
             pointsNum = numel(ellTube.timeVec{1});
             newPointsNum = numel(compEllTube.timeVec{1});
             compTimeGridIndVec = 2 .* (1 : pointsNum) - 1;

@@ -28,7 +28,7 @@ C = 0.1;
 % >> A = [0 -1/C; 1/L -R/L];
 % >> B = [1/C 0; 0 1/L];
 % >> CB = ell_unitball(2);
-% >> lsys = linsys(A, B, CB);
+% >> lsys = elltool.linsys.LinSys(A, B, CB);
 cla;
 image(imread('circuitls.jpg'));
 axis off;
@@ -40,7 +40,6 @@ A2 = [0 -1/C; 1/L2 -R2/L2];
 B2 = [1/C 0; 0 1/L2];
 X0 = 0.1*ell_unitball(2);
 T = 10;
-o.save_all = 1;
 L0 = [1 0; 0 1]';
 s = elltool.linsys.LinSys(A, B, CB);
 s2 = elltool.linsys.LinSys(A2, B2, CB);
@@ -49,17 +48,14 @@ s2 = elltool.linsys.LinSys(A2, B2, CB);
 % 
 % >> X0 = 0.1*ell_unitball(2);
 % >> T = 10;
-% >> options.save_all = 1;
 % >> L0 = [1 0; 0 1]';
-% >> rs = reach(lsys, X0, L0, T);
+% >> rs = elltool.reach.ReachContinuous(lsys, X0, L0, T);
 % >> plot_ea(rs); hold on;
 % >> plot_ia(rs);
 % >> ylabel('V_C'); zlabel('i_L');
-% 
-% Option 'save_all' set to 1 (by default, it is 0) indicates that the whole intermediate computation information should be saved in the reach set object. This information can be later used for refinement of the reach set approximation.
+%
 % On your screen you see the reach set evolving in time from 0 to 10 (reach tube). Its external and internal approximations are computed for two directions specified by matrix L0. Function 'plot_ea' plots external (blue by default), and function 'plot_ia' - internal (green by default) approximations.
-o.save_all = 1;
-rs = elltool.reach.ReachContinuous(s, X0, L0, [0 T], o);
+rs = elltool.reach.ReachContinuous(s, X0, L0, [0 T]);
 ell_plot([0; 0; 0], 'k.');
 cla;
 rs.plot_ea();
@@ -74,11 +70,11 @@ zlabel('i_L');
 % >> R2 = 2;
 % >> A2 = [0 -1/C; 1/L2 -R2/L2];
 % >> B2 = [1/C 0; 0 1/L2];
-% >> lsys2 = linsys(A2, B2, CB);
+% >> lsys2 = elltool.linsys.LinSys(A2, B2, CB);
 % 
 % Now we continue computing the reach set for the time interval [10, 20] due to the new dynamics:
 % 
-% >> rs2 = evolve(rs, 20, s2); plot_ea(rs2, 'r'); plot_ia(rs2, 'y');
+% >> rs2 = rs.evolve(20, s2); plot_ea(rs2, 'r'); plot_ia(rs2, 'y');
 % >> plot_ea(rs2, 'r'); hold on; plot_ia(rs2, 'y');
 % 
 % plots external (red) and internal (yellow) approximations of the reach set of the system for the time interval [10, 20] and the new dynamics.
@@ -182,11 +178,11 @@ ylabel('i_L');
 % 
 % >> A = {'0' '-10'; '1/(2 + sin(t))' '-4/(2 + sin(t))'};
 % >> B = {'10' '0'; '0' '1/(2 + sin(t))'};
-% >> s = linsys(A, B, CB);
+% >> s = elltool.linsys.LinSys(A, B, CB);
 % 
 % Now the reach set of the system can be computed and plotted just as before:
 % 
-% >> rs = reach(lsys, X0, L0, [0 4]);
+% >> rs = elltool.reach.ReachContinuous(lsys, X0, L0, [0 4]);
 % >> plot_ea(rs); hold on; plot_ia(rs);
 import elltool.conf.Properties;
 Properties.setNPlot2dPoints(200);
@@ -229,11 +225,11 @@ hold off;
 % 
 % Now we declare the linear system object with disturbance:
 % 
-% >> lsys = linsys(A, B, CB, G, DB);
+% >> lsys = elltool.linsys.LinSys(A, B, CB, G, DB);
 % 
 % Compute and plot the reach tube approximations:
 % 
-% >> rs = reach(s, X0, L0, [0 4]);
+% >> rs = elltool.reach.ReachContinuous(s, X0, L0, [0 4]);
 % >> plot_ea(rs); hold on; plot_ia(rs);
 G = eye(2);
 V.center = {'2*cos(t)'; '0'};
@@ -270,7 +266,7 @@ grid off;
 % 
 % And create linear system object:
 % 
-% >> lsys = linsys(A, B, U);
+% >> lsys = elltool.linsys.LinSys(A, B, U);
 cla;
 image(imread('springmassls.jpg'));
 axis off;
@@ -295,8 +291,8 @@ L = [1 0 -1 1; 0 -1 1 1]';
 % Now we are ready to compute the reach set approximations and plot the reach tube projected onto (x1, x2) subspace. We shall compute the approximations for two directions.
 % 
 % >> L = [1 0 -1 0; 0 -1 1 1]';
-% >> rs = reach(lsys, X0, L, T);
-% >> ps = projection(rs, [1 0 0 0; 0 1 0 0]');
+% >> rs = elltool.reach.ReachContinuous(lsys, X0, L, T);
+% >> ps = prs.projection([1 0 0 0; 0 1 0 0]');
 % >> plot_ea(ps); hold on; plot_ia(ps);
 rs = elltool.reach.ReachContinuous(s, X0, L, [0 T]);
 ps = rs.projection([1 0 0 0; 0 1 0 0]');
@@ -320,16 +316,16 @@ hold off;
 % We can also compute backward reach set of the system:
 % 
 % >> T = [1 0];
-% >> brs = reach(lsys, X0, L, T);
-% >> bps = projection(brs, [1 0 0 0; 0 1 0 0]');
+% >> brs = elltool.reach.ReachContinuous(lsys, X0, L, T);
+% >> bps = brs.projection([1 0 0 0; 0 1 0 0]');
 % >> plot_ea(bps); hold on; plot_ia(bps);
 
 % plots approximations of backward reach tube of the system for target point [2; 3] (used to be initial condition in the previous example, hence, is still denoted X0 in the code), terminating time 1 and initial time 0.
 T = [1 0];
-rs = elltool.reach.ReachContinuous(s, X0, L, T);
-ps = rs.projection([1 0 0 0; 0 1 0 0]');
+brs = elltool.reach.ReachContinuous(s, X0, L, T);
+bps = brs.projection([1 0 0 0; 0 1 0 0]');
 cla;
-ps.plot_ea(); hold on; ps.plot_ia(); hold off;
+bps.plot_ea(); hold on; bps.plot_ia(); hold off;
 %% 
 % As an example of discrete-time linear system, we shall consider economic model entitled 'multiplier-accelerator', which is due to Samuelson (1939). It addresses the problem of income determination and business cycle.
 % Denote:
@@ -350,7 +346,7 @@ ps.plot_ea(); hold on; ps.plot_ia(); hold off;
 % >> B  = [zeros(3, 2); B1];
 % >> U.center = {'(k+7)/100'; '2'};
 % >> U.shape  = [0.02 0; 0 1];
-% >> lsys = linsys(A, B, U, [], [], [], [], 'd');
+% >> lsys = elltool.linsys.LinSys(A, B, U, [], [], [], [], 'd');
 cla;
 image(imread('econ.jpg'));
 axis off;
@@ -372,9 +368,9 @@ L0 = [1 0 0 0 0 0; 0 1 0 0 0 0; 0 0 1 0 0 1; 0 1 0 1 1 0; 0 0 -1 1 0 1; 0 0 0 -1
 % >> X0 = ellipsoid([1; 0.5; -0.5; 1.10; 0.55; 0], eye(6));
 % >> L0 = [1 0 0 0 0 0; 0 1 0 0 0 0; 0 0 1 0 0 1; 0 1 0 1 1 0; 0 0 -1 1 0 1; 0 0 0 -1 1 1]';
 % >> N  = 4;
-% >> rs = reach(lsys, X0, L0, N);
+% >> rs = elltool.reach.ReachDiscrete(lsys, X0, L0, N);
 % >> BB = [0 0 0 0 1 0; 0 0 0 0 0 1]';
-% >> ps = projection(rs, BB);
+% >> ps = rs.projection(BB);
 % >> plot_ea(ps); hold on; plot_ia(ps);
 % 
 % Forward reach sets can be computed for singular discrete-time systems as well. Backward reach sets, on the other hand, can be computed only for nonsingular discrete-time systems.
