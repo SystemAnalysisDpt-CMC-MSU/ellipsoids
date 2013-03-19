@@ -52,12 +52,27 @@ import modgen.common.checkmultvar;
 
 ellipsoid.checkIsMe(inpEllArr,'first');
 
+modgen.common.checkvar( inpEllArr , 'numel(x) > 0', 'errorTag', ...
+    'wrongInput:emptyArray', 'errorMessage', ...
+    'Each array must be not empty.');
+
+modgen.common.checkvar( inpEllArr,'all(~isempty(x(:)))','errorTag', ...
+    'wrongInput:emptyEllipsoid', 'errorMessage', ...
+    'Array should not have empty ellipsoid.');
+
 nNumel = numel(inpEllArr);
-[nDims, nCols] = size(dirMat);
 nDimsInpEllArr = dimension(inpEllArr);
-checkmultvar('all(x2(:)==x1)',2,nDimsInpEllArr,nDims,...
+
+[nDims, nCols] = size(dirMat);
+
+modgen.common.checkvar( nDimsInpEllArr,'all(x(:)==x(1))','errorTag', ...
+    'wrongSizes', 'errorMessage', ...
+    'ellipsoids in the array and vector(s) must be of the same dimension.');
+
+checkmultvar('x1(1)==x2',2,nDimsInpEllArr,nDims,...
     'errorTag','wrongSizes','errrorMessage',...
     'ellipsoids in the array and vector(s) must be of the same dimension.');
+
 if isscalar(inpEllArr)
     intApprEllVec = inpEllArr;
     return;
