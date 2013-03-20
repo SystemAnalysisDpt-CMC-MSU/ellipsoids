@@ -85,12 +85,17 @@
 						<selectionMethodForSMatrix type="char" >volume</selectionMethodForSMatrix>
 					</props>
 				</noUncertJustQ>
-				<noUncertMixed type="struct" >
+				<uncertMixed type="struct" >
 					<isEnabled type="boolean" >1</isEnabled>
 					<props type="struct" >
 						<selectionMethodForSMatrix type="char" >volume</selectionMethodForSMatrix>
+						<mixingStrength type="double">1</mixingStrength>
+						<mixingProportions type="cell" size="2 1">
+							<item type="char" >1/2  1/2</item>
+							<item type="char" >1/2  1/2</item>
+						</mixingProportions>
 					</props>
-				</noUncertMixed>
+				</uncertMixed>
 			</schemas>
 			<dispScaleFactor type="double" >0.99</dispScaleFactor>
 		</internalApx>

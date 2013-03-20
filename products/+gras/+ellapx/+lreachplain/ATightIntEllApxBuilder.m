@@ -61,9 +61,15 @@ classdef ATightIntEllApxBuilder<gras.ellapx.lreachplain.ATightEllApxBuilder
     end
     methods
         function self=ATightIntEllApxBuilder(pDefObj,goodDirSetObj,...
-                timeLimsVec,calcPrecision,sMethodName)
+                timeLimsVec,calcPrecision,varargin)
+            %
             self=self@gras.ellapx.lreachplain.ATightEllApxBuilder(...
                 pDefObj,goodDirSetObj,timeLimsVec,calcPrecision);
+            %
+            [~,~,sMethodName] = ...
+                modgen.common.parseparext(varargin, ...
+                {'selectionMethodForSMatrix'}, 0, 1);
+            %
             self.sMethodName=sMethodName;
             self.prepareODEData();
         end

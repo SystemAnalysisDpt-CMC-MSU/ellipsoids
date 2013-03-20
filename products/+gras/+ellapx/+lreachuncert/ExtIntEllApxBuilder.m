@@ -295,11 +295,17 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
     end
     methods
         function self=ExtIntEllApxBuilder(pDefObj,goodDirSetObj,...
-                timeLimsVec,calcPrecision,sMethodName,minQSqrtMatEig)
+                timeLimsVec,calcPrecision,varargin)
             import gras.ellapx.lreachuncert.ExtIntEllApxBuilder;
+            %
             self=self@gras.ellapx.gen.ATightEllApxBuilder(pDefObj,...
                 goodDirSetObj,timeLimsVec,...
                 ExtIntEllApxBuilder.N_TIME_POINTS,calcPrecision);
+            %
+            [~,~,sMethodName,minQSqrtMatEig] = ...
+                modgen.common.parseparext(varargin, ...
+                {'selectionMethodForSMatrix','minQSqrtMatEig'}, 0, 2);
+            %
             self.minQMatEig=minQSqrtMatEig*minQSqrtMatEig;
             self.goodDirSetObj=goodDirSetObj;
             self.sMethodName=sMethodName;

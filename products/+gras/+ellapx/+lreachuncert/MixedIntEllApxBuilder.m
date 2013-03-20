@@ -7,9 +7,12 @@ classdef MixedIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
     end
     properties (Access=private)
         sMethodName
+        mixingStrength
+        mixingProportionsMat
         ellTubeRel
         AtDynamics
-        BPBTransSqrtDynamics
+        BPBTransDynamics
+        CQCTransDynamics
         ltSplineList
         goodDirSetObj
     end
@@ -40,40 +43,65 @@ classdef MixedIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
         function varargout = calcEllApxMatrixDeriv(self,t,varargin)
             nGoodDirs = self.getNGoodDirs();
             AMat = self.AtDynamics.evaluate(t);
-            BPBTransSqrtMat = self.BPBTransSqrtDynamics.evaluate(t);
+            BPBTransMat = self.BPBTransDynamics.evaluate(t);
+            CQCTransMat = self.CQCTransDynamics.evaluate(t);
+            BPBTransSqrtMat = sqrtm(BPBTransMat);
             %
             varargout = cell(1,nGoodDirs);
             %
             for iGoodDir = 1:nGoodDirs
                 QMat = varargin{iGoodDir};
-                ltVec = self.ltSplineList{iGoodDir}.evaluate(t);
                 %
-                [VMat,DMat] = eig(QMat);
-                QSqrtMat = VMat*sqrt(DMat)*(VMat.');
+                % main component
+                %
+                QSqrtMat = sqrtm(QMat);
+                ltVec = self.ltSplineList{iGoodDir}.evaluate(t);
                 SMat = self.getOrthTranslMatrix(QSqrtMat,...
                     BPBTransSqrtMat,BPBTransSqrtMat*ltVec,QSqrtMat*ltVec);
-                tmp = (AMat*QSqrtMat+BPBTransSqrtMat*(SMat.'))*(QSqrtMat.');
-                varargout{iGoodDir} = tmp + (tmp.');
+                TMat = (AMat*QSqrtMat+BPBTransSqrtMat*(SMat.'))*QSqrtMat;
+                %
+                % disturbance component
+                %
+                piSqrNumerator = (ltVec.')*CQCTransMat*ltVec;
+                piSqrDenominator = (ltVec.')*QMat*ltVec;
+                if piSqrNumerator <= 0 || piSqrDenominator <= 0
+                    if min(eig(CQCTransMat)) <= 0
+                        modgen.common.throwerror('wrongInput',...
+                            ['degenerate matrices C,Q for disturbance ',...
+                            'contraints are not supported']);
+                    else
+                        modgen.common.throwerror('wrongInput',...
+                            'the estimate has degraded for unknown reason');
+                    end
+                end
+                pi = sqrt(piSqrNumerator/piSqrDenominator);
+                %
+                % regularization component
+                %
+                RMat = -QMat;
+                for jGoodDir = 1:nGoodDirs
+                    RMat = RMat + ...
+                        self.mixingProportionsMat(iGoodDir,jGoodDir)*varargin{jGoodDir};
+                end
+                %
+                % derivative
+                %
+                varargout{iGoodDir} = (TMat + TMat.') - ...
+                    (pi*QMat + CQCTransMat/pi) + ...
+                    (self.mixingStrength*RMat);
             end
         end
     end
     methods (Access=private)
         function self=prepareODEData(self)
-            import gras.ellapx.common.*;
-            import gras.mat.MatrixOperationsFactory;
-            %
             pDefObj = self.getProblemDef();
-            %
-            matOpFactory = MatrixOperationsFactory.create(pDefObj.getTimeVec());
-            %
             self.AtDynamics = pDefObj.getAtDynamics();
-            self.BPBTransSqrtDynamics = ...
-                matOpFactory.sqrtm(pDefObj.getBPBTransDynamics());
+            self.BPBTransDynamics = pDefObj.getBPBTransDynamics();
+            self.CQCTransDynamics = pDefObj.getCQCTransDynamics();
             self.ltSplineList = ...
                 self.getGoodDirSet().getGoodDirOneCurveSplineList();
         end
         function build(self)
-            import gras.ellapx.common.*;
             import gras.ode.MatrixSysODESolver;
             import modgen.logging.log4j.Log4jConfigurator;
             logger = Log4jConfigurator.getLogger();
@@ -100,9 +128,9 @@ classdef MixedIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             resTimeVec = self.getTimeVec;
             if solveTimeVec(1) ~= pStartTime
                 solveTimeVec = [pStartTime solveTimeVec];
-                isFirstPointToRemove = true;
+                removeFirstPoint = true;
             else
-                isFirstPointToRemove = false;
+                removeFirstPoint = false;
             end
             %
             % calculate approximations
@@ -114,7 +142,7 @@ classdef MixedIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             QArrayList = cell(1,nGoodDirs);
             [~,QArrayList{:}] = solverObj.solve(...
                 {@self.calcEllApxMatrixDeriv},solveTimeVec,initQMatList{:});
-            if isFirstPointToRemove
+            if removeFirstPoint
                 QArrayList = cellfun(@(x) x(:,:,2:end), QArrayList,...
                     'UniformOutput', false);
             end
@@ -134,13 +162,30 @@ classdef MixedIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
     end
     methods
         function self=MixedIntEllApxBuilder(pDefObj,goodDirSetObj,...
-                timeLimsVec,calcPrecision,sMethodName)
-            import gras.ellapx.lreachplain.MixedIntEllApxBuilder;
+                timeLimsVec,calcPrecision,varargin)
+            import gras.ellapx.lreachuncert.MixedIntEllApxBuilder;
+            import gras.gen.MatVector;
+            import modgen.common.type.simple.*;
+            %
             self = self@gras.ellapx.gen.ATightEllApxBuilder(pDefObj,...
                 goodDirSetObj,timeLimsVec,...
                 MixedIntEllApxBuilder.N_TIME_POINTS,calcPrecision);
-            self.goodDirSetObj = goodDirSetObj;
+            %
+            [~,~,sMethodName,mixingStrength,mixingProportionsCMat] = ...
+                modgen.common.parseparext(varargin, ...
+                {'selectionMethodForSMatrix','mixingStrength',...
+                'mixingProportions'}, 0, 3);
+            mMat = MatVector.fromFormulaMat(mixingProportionsCMat,0);
+            %
+            checkgen(mixingStrength,'x>0');
+            checkgenext(['size(x1,1)==size(x1,2) && size(x1,1)==x2 && '...
+                'all(x1(:)>=0) && max(abs(sum(x1,2)-ones(x2,1)))<x3'],...
+                3,mMat,goodDirSetObj.getNGoodDirs(),calcPrecision);
+            %
+            self.mixingStrength = mixingStrength;
+            self.mixingProportionsMat = mMat;
             self.sMethodName = sMethodName;
+            self.goodDirSetObj = goodDirSetObj;
             self.prepareODEData();
         end
         function ellTubeRel = getEllTubes(self)

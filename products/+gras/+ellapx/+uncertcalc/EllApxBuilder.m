@@ -6,7 +6,7 @@ classdef EllApxBuilder<handle
         intApxScaleFactor
         extApxScaleFactor
     end
-    %   
+    %
     methods (Access=private)
         function scaleFactor=getScaleFactorByApxType(self,apxType)
             import gras.ellapx.enums.EApproxType;
@@ -18,7 +18,7 @@ classdef EllApxBuilder<handle
             else
                 scaleFactor=1;
             end
-        end        
+        end
     end
     methods (Static,Access=private)
         function builderList=buildApxGroupGeneric(apxBranchName,...
@@ -41,46 +41,30 @@ classdef EllApxBuilder<handle
             end
             builderList=builderList(isBuilderActiveVec);
         end
-        function builderObj=buildOneInternalApx(confRepoMgr,...
+        function builderObj=buildOneApx(confRepoMgr,...
                 pDefObj,goodDirSetObj,...
                 calcTimeLimVec,calcPrecision,propBranchName,className)
             %
-            sMethodName=confRepoMgr.getParam([propBranchName,...
-                '.selectionMethodForSMatrix']);
+            SConf = confRepoMgr.getCurConf();
+            if structcheckpath(SConf,['.',propBranchName])
+                SParams = structgetpath(SConf,['.',propBranchName]);
+            else
+                SParams = struct;
+            end
+            paramsCMat = [fieldnames(SParams),struct2cell(SParams)].';
             builderObj=feval(className,pDefObj,goodDirSetObj,...
-                calcTimeLimVec,calcPrecision,sMethodName);
-        end
-        %
-        function builderObj=buildOneExtIntApx(confRepoMgr,...
-                pDefObj,goodDirSetObj,...
-                calcTimeLimVec,calcPrecision,propBranchName,className)
-            %
-            sMethodName=confRepoMgr.getParam([propBranchName,...
-                '.selectionMethodForSMatrix']);
-            minQSqrtMatEig=confRepoMgr.getParam([propBranchName,...
-                '.minQSqrtMatEig']);
-            %
-            builderObj=feval(className,pDefObj,goodDirSetObj,...
-                calcTimeLimVec,calcPrecision,sMethodName,...
-                minQSqrtMatEig);
-        end        
-        %
-        function builderObj=buildOneExternalApx(~,...
-                pDefObj,goodDirSetObj,...
-                calcTimeLimVec,calcPrecision,~,className)
-            builderObj=feval(className,pDefObj,goodDirSetObj,...
-                calcTimeLimVec,calcPrecision);
+                calcTimeLimVec,calcPrecision,paramsCMat{:});
         end
     end
     methods
         function self=EllApxBuilder(confRepoMgr,pDefObj,goodDirSetObj)
             import gras.ellapx.uncertcalc.EllApxBuilder;
             %% Define constants
-            INTERNAL_SCHEMA_NAME_LIST={'noUncertSqrtQ','noUncertJustQ','noUncertMixed'};
+            INTERNAL_SCHEMA_NAME_LIST={'noUncertSqrtQ','noUncertJustQ','uncertMixed'};
             INTERNAL_CLASS_NAME_LIST={...
                 'gras.ellapx.lreachplain.IntEllApxBuilder',...
                 'gras.ellapx.lreachplain.IntProperEllApxBuilder',...
-                'gras.ellapx.lreachplain.MixedIntEllApxBuilder'};
+                'gras.ellapx.lreachuncert.MixedIntEllApxBuilder'};
             %
             EXTERNAL_SCHEMA_NAME_LIST={'justQ'};
             EXTERNAL_CLASS_NAME_LIST={...
@@ -88,7 +72,7 @@ classdef EllApxBuilder<handle
             %
             EXTINT_SCHEMA_NAME_LIST={'uncert'};
             EXTINT_CLASS_NAME_LIST={...
-                'gras.ellapx.lreachuncert.ExtIntEllApxBuilder'};            
+                'gras.ellapx.lreachuncert.ExtIntEllApxBuilder'};
             %
             calcTimeLimVec=confRepoMgr.getParam(...
                 'genericProps.calcTimeLimVec');
@@ -96,7 +80,7 @@ classdef EllApxBuilder<handle
             calcPrecision=confRepoMgr.getParam(...
                 'genericProps.calcPrecision');
             %% Build internal approximations
-            fBuildIntOne=@(x,y)EllApxBuilder.buildOneInternalApx(...
+            fBuildIntOne=@(x,y)EllApxBuilder.buildOneApx(...
                 confRepoMgr,pDefObj,goodDirSetObj,calcTimeLimVec,...
                 calcPrecision,x,y);
             intBuilderList=EllApxBuilder.buildApxGroupGeneric(...
@@ -104,7 +88,7 @@ classdef EllApxBuilder<handle
                 INTERNAL_SCHEMA_NAME_LIST,INTERNAL_CLASS_NAME_LIST,...
                 fBuildIntOne);
             %% Build external approximations
-            fBuildExtOne=@(x,y)EllApxBuilder.buildOneExternalApx(...
+            fBuildExtOne=@(x,y)EllApxBuilder.buildOneApx(...
                 confRepoMgr,pDefObj,goodDirSetObj,calcTimeLimVec,...
                 calcPrecision,x,y);
             extBuilderList=EllApxBuilder.buildApxGroupGeneric(...
@@ -113,7 +97,7 @@ classdef EllApxBuilder<handle
                 fBuildExtOne);
             %%
             %% Build external-internal approximations
-            fBuildExtIntOne=@(x,y)EllApxBuilder.buildOneExtIntApx(...
+            fBuildExtIntOne=@(x,y)EllApxBuilder.buildOneApx(...
                 confRepoMgr,pDefObj,goodDirSetObj,calcTimeLimVec,...
                 calcPrecision,x,y);
             extIntBuilderList=EllApxBuilder.buildApxGroupGeneric(...
@@ -143,4 +127,3 @@ classdef EllApxBuilder<handle
         end
     end
 end
-        
