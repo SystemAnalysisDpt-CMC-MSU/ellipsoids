@@ -211,7 +211,7 @@ end
 
 %%%%%%%%
 
-function outEll = l_polyintersect(myEll, polyt)
+function outEll = l_polyintersect(ell, poly)
 %
 % L_POLYINTERSECT - computes internal ellipsoidal approximation of
 %                   intersection of single ellipsoid with single polytope.
@@ -226,19 +226,44 @@ function outEll = l_polyintersect(myEll, polyt)
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
+%
+% $Author: <Zakharov Eugene>  <justenterrr@gmail.com> $    $Date: March-2013 $
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department$
+%
 
+if isinside(ell, poly)
+    outEll = getInnerEllipsoid(poly);
+else
+    [ellVec ellMat] = double(ell);
+    [n,~] = size(ellMat);
+    polyDouble = double(poly);
+    polyMat = polyDouble(:,1:end-1);
+    polyVec = polyDouble(:,end);
+    polyCSize = size(polyMat,1);
+    if size(ellMat,2) > rank(ellMat)
+        ellMat = ellipsoid.regularize(ellMat,getAbsTol(ell));
+    end
+    invEllMat = inv(ellMat);
+    ellShift = -inv(ellMat)*ellVec;
+    ellConst = ellVec' * invEllMat * ellVec - 1;
+    cvx_begin sdp
+        variable B(n,n) symmetric
+        variable d(n)
+        variable l(1)
+        maximize( det_rootn( B ) )
+        subject to    
+            [-l - ellConst + (ellShift)'*(invEllMat\ellShift), zeros(1,n),  (d+invEllMat\ellShift)';...
+                zeros(n,1), l.*eye(n), B;...
+                d+ invEllMat\ellShift, B, inv(invEllMat)] >= 0;
+            for i = 1:polyCSize
+                norm(B*polyMat(i,:)',2) + polyMat(i,:)*d <= polyVec(i);
+            end
 
-outEll = myEll;
-hyp = polytope2hyperplane(polyt);
-nDimsHyp  = size(hyp, 2);
-
-for iDim = 1:nDimsHyp
-    outEll = intersection_ia(outEll, hyp(iDim));
+    cvx_end
+    Q = (B*B');
+    v = d;
+    outEll = ellipsoid(v,Q);
 end
-
-if isinside(myEll, polyt)
-    outEll = getInnerEllipsoid(polyt);
-    return;
-end
-
 end

@@ -82,7 +82,8 @@ classdef MTPIntegrationTestCase < mlunitext.test_case
         %
         function self = testIsInside(self)
             ellConstrMat = eye(2);
-            ellConstr15DMat = eye(15);
+            nDims = 15;
+            ellConstr15DMat = eye(nDims);
             ellShift1 = [0.05; 0];
             ellShift2 = [0; 4];
             %
@@ -94,15 +95,14 @@ classdef MTPIntegrationTestCase < mlunitext.test_case
             %
             polyConstrMat = [-1 0; 1 0; 0 1; 0 -1];
             polyConstr3DMat = [-1 0 0; 1 0 0; 0 1 0; 0 -1 0; 0 0 1; 0 0 -1];
-            polyConstr15DMat = [eye(15);-eye(15)];
+            polyConstr15DMat = [eye(nDims);-eye(nDims)];
             %
             polyK1Vec = [0; 0.1; 0.1; 0.1];
             polyK2Vec = [0.5; 0.05; sqrt(3)/2; 0];
             polyK3Vec = [1; 0.05; 0.8; 0.8];
             polyK4Vec = [0.5; -0.1; 0.1; 0.1];
             polyK3DVec = 0.1 * ones(6,1);
-            nDims = 15;
-            polyK15DVec = (1/sqrt(nDims))*ones(30,1);
+            polyK15DVec = (1/sqrt(nDims))*ones(nDims*2,1);
             %
             poly1 = self.makePolytope(polyConstrMat,polyK1Vec);
             poly2 = self.makePolytope(polyConstrMat,polyK2Vec);

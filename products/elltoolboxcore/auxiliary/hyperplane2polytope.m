@@ -7,7 +7,10 @@ function P = hyperplane2polytope(HA)
 % ------------
 %
 %    P = HYPERPLANE2POLYTOPE(HA)  Given array of hyperplane objects HA, 
-%                                 returns polytope object.
+%                                 returns polytope object according to the
+%                                 rule: if h is hyperplane from HA, with
+%                                 constant c and normal n, then P will have
+%                                 constraint: <x,n> <= c.
 %                                 Requires Multi-Parametric Toolbox.
 %
 %
