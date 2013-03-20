@@ -1,2 +1,2 @@
-global ellOptions;
-ellOptions.verbose = 0;
+elltool.editconf('default');
+elltool.conf.Properties.setIsVerbos = 0;

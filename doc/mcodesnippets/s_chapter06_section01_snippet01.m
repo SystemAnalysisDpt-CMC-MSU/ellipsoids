@@ -1,1 +1,1 @@
- clear global ellOptions;
+ clear elltool;
