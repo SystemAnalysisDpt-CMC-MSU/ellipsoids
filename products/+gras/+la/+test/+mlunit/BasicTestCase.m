@@ -97,9 +97,11 @@ classdef BasicTestCase < mlunitext.test_case
             %
             absTol=elltool.conf.Properties.getAbsTol();
             %
-            fIsMatPosSemDef=@(qMat,absTol)ismatposdef(qMat,absTol,1);
+            fIsMatPosSemDef=@(qMat,absTol)ismatposdef(qMat,absTol,true);
+            fIsMatPosDef=@(qMat,absTol)ismatposdef(qMat,absTol,false);
             check(@ismatposdef);
             check(fIsMatPosSemDef)
+            check(fIsMatPosDef);
             %
             testMat=rand(10,10);
             mlunit.assert(fIsMatPosSemDef(testMat.'*testMat,absTol));
@@ -107,6 +109,7 @@ classdef BasicTestCase < mlunitext.test_case
             testMat=[1 5; 5 25];
             mlunit.assert(~ismatposdef(testMat,absTol));
             mlunit.assert(fIsMatPosSemDef(testMat,absTol));
+            mlunit.assert(~fIsMatPosDef(testMat,absTol));
             %
             testMat=rand(10,10);
             testMat=-testMat.'*testMat;

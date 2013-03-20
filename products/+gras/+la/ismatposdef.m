@@ -1,13 +1,13 @@
-function isPosDef = ismatposdef( qMat, absTol, flagSemDef)
+function isPosDef = ismatposdef( qMat, absTol, isFlagSemDefOn)
 % ISMATPOSDEF  checks if qMat is positive definite
 %
 % Input:
-%	regular:
+%   regular:
 %       qMat: double[nDims, nDims] - inpute matrix
 %       absTol: double - precision
 %
 %   optional:
-%       flagSemDef: logical[1,1] - if true than qMat is checked for 
+%       isFlagSemDefOn: logical[1,1] - if true than qMat is checked for 
 %                   positive semi-definiteness
 % Output:
 %   isPosDef: logical[1,1] - true iff matrix is positive definite
@@ -31,9 +31,9 @@ minEig=min(eig(qMat));
 %
 isPosDef=false;
 if nargin<3
-    flagSemDef=0;
+    isFlagSemDefOn=false;
 end
-if flagSemDef
+if isFlagSemDefOn
     if (minEig>=0 || abs(minEig)<absTol)
         isPosDef=true;
     end

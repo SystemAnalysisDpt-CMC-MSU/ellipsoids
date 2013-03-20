@@ -104,7 +104,7 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             D_sqrt=sqrtm(D);
             %
             [VMat,DMat]=eig(QIntMat);
-            if ~ismatposdef(QIntMat,self.absTol,1)
+            if ~ismatposdef(QIntMat,self.absTol,true)
                 throwerror('wrongState','internal approx has degraded');
             end
             Q_star=VMat*sqrt(DMat)*transpose(VMat);
@@ -130,7 +130,6 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             %
             %% External approximation
             [VMat,DMat]=eig(QExtMat);
-            %absTol =  elltool.conf.Properties.getAbsTol();
             if ~ismatposdef(QExtMat,self.absTol)
                 throwerror('wrongState','external approx has degraded');
             end
