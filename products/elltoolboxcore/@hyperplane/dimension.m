@@ -1,4 +1,4 @@
-function dimsArr = dimension(inpHypArr);
+function dimsArr = dimension(inpHypArr)
 %
 % DIMENSION - returns dimensions of hyperplanes in the array.
 %
