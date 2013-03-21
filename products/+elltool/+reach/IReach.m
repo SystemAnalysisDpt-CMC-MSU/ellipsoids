@@ -1,5 +1,5 @@
 classdef IReach < handle
-% $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
+% $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: March-2012 $
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
@@ -112,8 +112,6 @@ classdef IReach < handle
         %   timeVec: double[1, nPoints] - array of time values.
         %
         [goodCurvesCVec timeVec] = get_goodcurves(self)
-        %
-        % WARNING! This function cannot be used with projected reach sets.
         %
         % GET_GOODCURVES - returns the 'good curve' trajectories of the reach set.
         %

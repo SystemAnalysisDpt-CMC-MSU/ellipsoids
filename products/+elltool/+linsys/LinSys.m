@@ -1,5 +1,22 @@
-classdef LinSys<handle
-% $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
+classdef LinSys < handle
+% Linear system object of the Ellipsoidal Toolbox.
+%
+% 
+%  LinSys         - Constructor of linear system object.
+%  dimension      - Returns state space dimension, number of inputs, number of
+%                   outputs and number of disturbance inputs.
+%  isempty        - Checks if the linear system object is empty.
+%  isdiscrete     - Returns 1 if linear system is discrete-time,
+%                   0 - if continuous-time.
+%  islti          - Returns 1 if the system is time-invariant, 0 - otherwise.
+%  hasdisturbance - Returns 1 if unknown bounded disturbance is present,
+%                   0 - if there is no disturbance, or disturbance vector is fixed.
+%  hasnoise       - Returns 1 if unknown bounded noise at the output is present,
+%                   0 - if there is no noise, or noise vector is fixed.
+%
+%
+% $Authors: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+%           Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: March-2012 $
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
@@ -82,7 +99,6 @@ classdef LinSys<handle
         end 
     end
     methods
-        %% get-methods
         function aMat = getAtMat(self)
         % Input:
         %   regular:
@@ -146,7 +162,7 @@ classdef LinSys<handle
         function noiseEll = getNoiseBoundsEll(self)
             noiseEll = self.noiseBoundsEll;
         end
-        %%
+        %
         function self = LinSys(atInpMat, btInpMat, uBoundsEll, gtInpMat,...
                 distBoundsEll, ctInpMat, noiseBoundsEll, discrFlag)
         %

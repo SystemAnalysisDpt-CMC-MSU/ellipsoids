@@ -50,8 +50,8 @@ s2 = elltool.linsys.LinSys(A2, B2, CB);
 % >> T = 10;
 % >> L0 = [1 0; 0 1]';
 % >> rs = elltool.reach.ReachContinuous(lsys, X0, L0, T);
-% >> plot_ea(rs); hold on;
-% >> plot_ia(rs);
+% >> rs.plot_ea(); hold on;
+% >> rs.plot_ia();
 % >> ylabel('V_C'); zlabel('i_L');
 %
 % On your screen you see the reach set evolving in time from 0 to 10 (reach tube). Its external and internal approximations are computed for two directions specified by matrix L0. Function 'plot_ea' plots external (blue by default), and function 'plot_ia' - internal (green by default) approximations.
@@ -74,8 +74,8 @@ zlabel('i_L');
 % 
 % Now we continue computing the reach set for the time interval [10, 20] due to the new dynamics:
 % 
-% >> rs2 = rs.evolve(20, s2); plot_ea(rs2, 'r'); plot_ia(rs2, 'y');
-% >> plot_ea(rs2, 'r'); hold on; plot_ia(rs2, 'y');
+% >> rs2 = rs.evolve(20, s2);
+% >> rs2.plot_ea('r'); hold on; rs2.plot_ia('y');
 % 
 % plots external (red) and internal (yellow) approximations of the reach set of the system for the time interval [10, 20] and the new dynamics.
 % Function 'evolve' can be used for computing the reach sets of switching systems.
@@ -90,8 +90,8 @@ rs2.plot_ia(ColorOptIa);
 %% 
 % To analyze the reachability of the system on some specific time segment within the computed time interval, use 'cut' function:
 % 
-% >> ct = cut(rs, [3 6]);
-% >> plot_ea(ct); hold on; plot_ia(ct);
+% >> ct = rs.cut([3 6]);
+% >> ct.plot_ea(); hold on; ct.plot_ia();
 % 
 % plots the reach tube approximations on the time interval [3, 6].
 ct = rs.cut([3 6]);
@@ -105,12 +105,10 @@ zlabel('i_L');
 %% 
 % Function 'cut' can also be used to obtain a snapshot of the reach set at given time within the computed time interval:
 % 
-% >> ct = cut(ct, 5);
-% >> plot_ea(ct); hold on; plot_ia(ct);
+% >> ct = ct.cut(5);
+% >> ct.plot_ea(); hold on; ct.plot_ia();
 % 
 % plots the reach set approximations at time 5.
-import elltool.conf.Properties;
-Properties.setNPlot2dPoints(800);
 cla;
 ct = ct.cut(5);
 %
@@ -123,13 +121,13 @@ ylabel('i_L');
 % Function 'intersect' is used to determine whether the reach set external or internal approximation intersects with given hyperplanes.
 % 
 % >> HA = hyperplanes([1 0; 1 -2]', [4 -2]);
-% >> intersect(ct, HA, 'e');
+% >> ct.intersect(HA, 'e');
 % 
 % ans =
 % 
 %      1     1
 % 
-% >> intersect(ct, HA, 'i');
+% >> ct.intersect(HA, 'i');
 % 
 % ans =
 % 
@@ -147,7 +145,7 @@ hold off;
 % 
 % >> E1 = ellipsoid([2; -1], [4 -2; -2 2]);
 % >> E2 = ell_unitball(2) - [6; -1];
-% >> intersect(ct, [E1 E2], 'i');
+% >> ct.intersect([E1 E2], 'i');
 % 
 % ans =
 % 
@@ -155,7 +153,7 @@ hold off;
 % 
 % We see that ellipsoid E1 (red) intersects with the internal approximation (green) - hence, with the actual reach set. Ellipsoid E2 (black) does not intersect the internal approximation, but does it intersect the actual reach set?
 % 
-% >> intersect(ct, E2, 'e');
+% >> ct.intersect(E2, 'e');
 % 
 % ans =
 % 
@@ -183,9 +181,7 @@ ylabel('i_L');
 % Now the reach set of the system can be computed and plotted just as before:
 % 
 % >> rs = elltool.reach.ReachContinuous(lsys, X0, L0, [0 4]);
-% >> plot_ea(rs); hold on; plot_ia(rs);
-import elltool.conf.Properties;
-Properties.setNPlot2dPoints(200);
+% >> rs.plot_ea(); hold on; rs.plot_ia();
 A = {'0' '-10'; '1/(2 + sin(t))' '-4/(2 + sin(t))'};
 B = {'10' '0'; '0' '1/(2 + sin(t))'};
 s = elltool.linsys.LinSys(A, B, CB);
@@ -201,7 +197,7 @@ zlabel('i_L');
 %% 
 % Function 'get_goodcurves' is used to obtain the trajectories formed by points where the approximating ellipsoids touch the boundary of the reach set. Each such trajectory is defined by the value of initial direction. For this example we computed approximations for two directions.
 % 
-% >> [XX, tt] = get_goodcurves(rs);
+% >> [XX, tt] = rs.get_goodcurves();
 % >> x1 = XX{1};
 % >> x2 = XX{2};
 % >> plot3(tt, x1(1, :), x1(2, :), 'r', 'LineWidth', 2); hold on;
@@ -230,7 +226,7 @@ hold off;
 % Compute and plot the reach tube approximations:
 % 
 % >> rs = elltool.reach.ReachContinuous(s, X0, L0, [0 4]);
-% >> plot_ea(rs); hold on; plot_ia(rs);
+% >> rs.plot_ea(); hold on; rs.plot_ia();
 G = eye(2);
 V.center = {'2*cos(t)'; '0'};
 V.shape = {'0.0001+0.09*(sin(t))^2', '0'; '0', '0.0001'};
@@ -293,7 +289,7 @@ L = [1 0 -1 1; 0 -1 1 1]';
 % >> L = [1 0 -1 0; 0 -1 1 1]';
 % >> rs = elltool.reach.ReachContinuous(lsys, X0, L, T);
 % >> ps = prs.projection([1 0 0 0; 0 1 0 0]');
-% >> plot_ea(ps); hold on; plot_ia(ps);
+% >> ps.plot_ea(); hold on; ps.plot_ia();
 rs = elltool.reach.ReachContinuous(s, X0, L, [0 T]);
 ps = rs.projection([1 0 0 0; 0 1 0 0]');
 ell_plot([0; 0; 0], 'k.');
@@ -304,7 +300,7 @@ ps.plot_ia();
 %% 
 % Function 'get_center' is used to obtain the trajectory of the center of the reach set:
 % 
-% >> [cnt, tt] = get_center(ps);
+% >> [cnt, tt] = ps.get_center();
 % >> plot3(tt, cnt(1, :), cnt(2, :), 'r', 'LineWidth', 2);
 % 
 % plots the trajectory of reach set center (red).
@@ -318,7 +314,7 @@ hold off;
 % >> T = [1 0];
 % >> brs = elltool.reach.ReachContinuous(lsys, X0, L, T);
 % >> bps = brs.projection([1 0 0 0; 0 1 0 0]');
-% >> plot_ea(bps); hold on; plot_ia(bps);
+% >> bps.plot_ea(); hold on; bps.plot_ia();
 
 % plots approximations of backward reach tube of the system for target point [2; 3] (used to be initial condition in the previous example, hence, is still denoted X0 in the code), terminating time 1 and initial time 0.
 T = [1 0];
@@ -371,7 +367,7 @@ L0 = [1 0 0 0 0 0; 0 1 0 0 0 0; 0 0 1 0 0 1; 0 1 0 1 1 0; 0 0 -1 1 0 1; 0 0 0 -1
 % >> rs = elltool.reach.ReachDiscrete(lsys, X0, L0, N);
 % >> BB = [0 0 0 0 1 0; 0 0 0 0 0 1]';
 % >> ps = rs.projection(BB);
-% >> plot_ea(ps); hold on; plot_ia(ps);
+% >> ps.plot_ea(); hold on; ps.plot_ia();
 % 
 % Forward reach sets can be computed for singular discrete-time systems as well. Backward reach sets, on the other hand, can be computed only for nonsingular discrete-time systems.
 N  = 4;
@@ -387,11 +383,15 @@ zlabel('Y[k]');
 %% 
 % For more information, type
 % 
-% >> help linsys
+% >> help elltool.linsys.LinSys
 % 
 % and
 % 
-% >> help reach/contents
+% >> help elltool.reach.ReachContinuous
+% >> help elltool.reach.ReachDiscrete
+%
+% or look into elltool.reach.IReach
+%
 cla;
 axis([-4 4 -2 2]);
 title('');
