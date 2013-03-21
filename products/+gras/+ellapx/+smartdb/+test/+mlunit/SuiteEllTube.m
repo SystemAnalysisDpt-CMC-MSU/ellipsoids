@@ -513,5 +513,30 @@ classdef SuiteEllTube < mlunitext.test_case
                     approxSchemaDescr,calcPrecision);
             end
         end
+        
+       function testCreateSTimeOutOfBounds(self)
+            nPoints=3;
+            calcPrecision=0.001;
+            approxSchemaDescr=char.empty(1,0);
+            approxSchemaName=char.empty(1,0);
+            nDims=2;
+            nTubes=3;
+            lsGoodDirVec=[1;0];
+            QArrayList=repmat({repmat(eye(nDims),[1,1,nPoints])},1,nTubes);
+            aMat=zeros(nDims,nPoints);
+            timeVec=1:nPoints;
+            sTime=nPoints+1;
+            approxType=gras.ellapx.enums.EApproxType.Internal;
+            
+            rel=create();
+            
+            function rel=create()
+                ltGoodDirArray=repmat(lsGoodDirVec,[1,nTubes,nPoints]);
+                rel=gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
+                    QArrayList,aMat,timeVec,...
+                    ltGoodDirArray,sTime,approxType,approxSchemaName,...
+                    approxSchemaDescr,calcPrecision);
+            end
+        end        
     end
 end
