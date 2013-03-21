@@ -1,1 +1,1 @@
- clear elltool;
+elltool.setconf('default');
