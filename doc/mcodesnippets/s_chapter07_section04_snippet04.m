@@ -1,8 +1,5 @@
 crs = [];
 for i = 1:size(D, 2)
-     if (isdegenerate(I(D(i)))) 
-           break;
-      end
-     rs = reach(s2, I(D(i)), L0, [1 N]);
+     rs = reach(s2, I(D(i)), L0, [D(i)-1 N]);
      crs = [crs rs];
  end

@@ -68,6 +68,7 @@ checkmultvar('all(x1(:)==x1(1))&&all(x2(:)==x2(1))',...
     'errorTag','wrongSizes','errorMessage',...
     'ellipsoids and hyperplanes must be of the same dimension.');
 
+
 if isHypScal
     nAmount = numel(myEllArr);
     sizeCVec = num2cell(size(myEllArr));
@@ -103,7 +104,6 @@ end
         if distance(myEll, myHyp) > 0
             intEllArr(index) = ellipsoid;
             isnIntersectedArr(index) = true;
-
         else
             intEllArr(index) = l_compute1intersection(myEll,myHyp,...
                 maxEllDim);
