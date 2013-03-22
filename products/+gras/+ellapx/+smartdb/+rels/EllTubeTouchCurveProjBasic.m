@@ -1,6 +1,6 @@
 classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
     properties (Constant,Hidden)
-        FCODE_PROJ_S_DIM_VEC
+        FCODE_PROJ_S_MAT
         FCODE_PROJ_TYPE
         FCODE_LT_GOOD_DIR_NORM_ORIG_VEC
         FCODE_LS_GOOD_DIR_NORM_ORIG
