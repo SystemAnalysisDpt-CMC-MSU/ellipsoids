@@ -2,8 +2,10 @@ function results=run_regr_tests(confNameList)
 runner = mlunit.text_test_runner(1, 1);
 loader = mlunitext.test_loader;
 crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
-if ischar(confNameList)
-    confNameList={confNameList};
+if nargin>0
+    if ischar(confNameList)
+        confNameList={confNameList};
+    end
 end
 %
 if nargin==0

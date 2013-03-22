@@ -9,8 +9,10 @@ loader = mlunitext.test_loader;
 BAD_TEST_NAME_LIST = {};
 %
 crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
-if ischar(inpConfNameList)
-    inpConfNameList={inpConfNameList};
+if nargin>0
+    if ischar(inpConfNameList)
+        inpConfNameList={inpConfNameList};
+    end
 end
 %
 if nargin==0

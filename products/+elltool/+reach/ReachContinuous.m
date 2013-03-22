@@ -11,6 +11,7 @@ classdef ReachContinuous < elltool.reach.AReach
 %                    if the reach set is a projection.
 %  get_system      - Returns the linear system object, for which the reach set
 %                    was computed.
+%                    Warning: returns the last lin system.
 %  get_directions  - Returns the values of the direction vectors corresponding
 %                    to the values of the time grid.
 %  get_center      - Returns points of the reach set center trajectory
@@ -41,6 +42,7 @@ classdef ReachContinuous < elltool.reach.AReach
 % Overloaded functions:
 % ---------------------
 %  display - Displays the reach set object.
+%            Warning: displays only the last linear system.
 %  
 %    
 % $Authors: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
@@ -62,9 +64,6 @@ classdef ReachContinuous < elltool.reach.AReach
         ellTubeRel
     end
     methods (Access = private)
-        function ellTubeRel = getEllTubeRel(self)
-            ellTubeRel = self.ellTubeRel.getCopy;
-        end
         function projSet = getProjSet(self, projMat,...
                 approxType, scaleFactor)
             import gras.ellapx.enums.EProjType;
@@ -679,7 +678,7 @@ classdef ReachContinuous < elltool.reach.AReach
                     varargin{1}, varargin{2});
             end
         end
-        %% displays only the last lin system
+        %%
         function display(self)
             import gras.ellapx.enums.EApproxType;
             fprintf('\n');
@@ -778,7 +777,7 @@ classdef ReachContinuous < elltool.reach.AReach
                 sSdim = size(self.projectionBasisMat, 2);
             end
         end
-        %% returns the last lin system:
+        %%
         function linSys = get_system(self)
             linSys = self.linSysCVec{end};
         end
@@ -941,8 +940,8 @@ classdef ReachContinuous < elltool.reach.AReach
             import gras.ellapx.enums.EApproxType;
             APPROX_TYPE = F.APPROX_TYPE;
             %
-            ellTube = self.getEllTubeRel();
-            compEllTube = reachObj.getEllTubeRel();
+            ellTube = self.ellTubeRel;
+            compEllTube = reachObj.ellTubeRel;
             %
             if nargin == 4
                 ellTube = ellTube.getTuplesFilteredBy(APPROX_TYPE,...
