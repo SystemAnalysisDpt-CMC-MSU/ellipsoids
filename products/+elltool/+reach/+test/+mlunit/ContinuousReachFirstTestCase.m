@@ -89,7 +89,7 @@ classdef ContinuousReachFirstTestCase < mlunitext.test_case
             self.checkIntersection(cutEvolveReachObj, [ell4, ell5, ell6]);
         end
         %
-        function self = testBackward(self)
+        function self = DISABLED_testBackward(self)
             CONF_NAME = 'demo3firstBackTest';
             crm = gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
             crmSys =...

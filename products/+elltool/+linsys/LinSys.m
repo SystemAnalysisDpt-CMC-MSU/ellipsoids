@@ -417,48 +417,47 @@ classdef LinSys < handle
             self.absTol = absTolVal;
         end
         %
-        function [stateDim, inpDim, outDim, distDim] = dimension(self)
+        function [stateDimArr, inpDimArr, outDimArr, distDimArr] =...
+                dimension(self)
         %
         % DIMENSION - returns dimensions of state,
         %     input, output and disturbance spaces.
         % Input:
         %   regular:
-        %       self: elltool.linsys.LinSys[mRows, nCols] - a matrix
+        %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array
         %             of linear systems.
         %
         % Output:
-        %   stateDim: double[mRows, nCols] - state space.
+        %   stateDimArr: double[nDims1, nDims2,...] - array of
+        %       state space dimensions.
         %
-        %   inpDim: double[mRows, nCols] - number of inputs.
+        %   inpDimArr: double[nDims1, nDims2,...] - array of input dimensions.
         %
-        %   outDim: double[mRows, nCols] - number of outputs.
+        %   outDimArr: double[nDims1, nDims2,...] - array of output dimensions.
         %
-        %   distDim: double[mRows, nCols] - number of disturbance inputs.
-        %
-            [mRows, nCols] = size(self);
-            stateDim = zeros(mRows, nCols);
-            inpDim = zeros(mRows, nCols);
-            outDim = zeros(mRows, nCols);
-            distDim = zeros(mRows, nCols);
-            for iRow = 1 : mRows
-                for jCol = 1 : nCols
-                    stateDim(iRow, jCol) = size(self(iRow, jCol).atMat, 1);
-                    inpDim(iRow, jCol) = size(self(iRow, jCol).btMat, 2);
-                    outDim(iRow, jCol) = size(self(iRow, jCol).ctMat, 1);
-                    distDim(iRow, jCol) = size(self(iRow, jCol).gtMat, 2);
-                end
-            end
+        %   distDimArr: double[nDims1, nDims2,...] - array of
+        %       disturbance dimensions.
+        %   
+            [stateDimArr, inpDimArr, outDimArr, distDimArr] =...
+                arrayfun(@(x) getDimensions(x), self);
             %
             if nargout < 4
-                clear('distDim');
+                clear('distDimArr');
                 if nargout < 3
-                    clear('outDim');
+                    clear('outDimArr');
                     if nargout < 2
-                        clear('inpDim');
+                        clear('inpDimArr');
                     end
                 end
             end
-            return;
+            %
+            function [stateDim, inpDim, outDim, distDim] =...
+                    getDimensions(linsys)
+                stateDim = size(linsys.atMat, 1);
+                inpDim = size(linsys.btMat, 2);
+                outDim = size(linsys.ctMat, 1);
+                distDim = size(linsys.gtMat, 2);
+            end
         end
         %
         function display(self)
@@ -659,140 +658,134 @@ classdef LinSys < handle
             return; 
         end
         %
-        function isDisturbanceMat = hasdisturbance(self)
+        function isDisturbanceArr = hasdisturbance(self)
         %
         % HASDISTURBANCE checks if linear system has unknown bounded disturbance.
         %
         % Input:
         %   regular:
-        %       self: elltool.linsys.LinSys[mRows, nCols] - a matrix
+        %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array
         %             of linear systems.
         %
         % Output:
-        %   isDisturbanceMat: logical[mRows, nCols] - a matrix such that
-        %       it's element at position (i, j) is true if corresponding
+        %   isDisturbanceArr: logical[nDims1, nDims2,...] - array such that
+        %       it's element at each position is true if corresponding
         %       linear system has disturbance, and false otherwise.
         %
-            [mRows, nCols] = size(self);
-            isDisturbanceMat = false(mRows, nCols);
-            for iRow = 1 : mRows
-                for jCol = 1 : nCols
-                    if  ~isempty(self(iRow, jCol).disturbanceBoundsEll) &&...
-                            ~isempty(self(iRow, jCol).gtMat)
-                        isDisturbanceMat(iRow, jCol) = true;
-                    end
+            isDisturbanceArr = arrayfun(@(x) isDisturb(x), self);
+            %
+            function isDisturb = isDisturb(linsys)
+                isDisturb = false;
+                if  ~isempty(linsys.disturbanceBoundsEll) &&...
+                        ~isempty(linsys.gtMat)
+                    isDisturb = true;
                 end
             end
         end
         %
-        function isNoiseMat = hasnoise(self)
+        function isNoiseArr = hasnoise(self)
         %
         % HASNOISE checks if linear system has unknown bounded noise.
         %
         % Input:
         %   regular:
-        %       self: elltool.linsys.LinSys[mRows, nCols] - a matrix
+        %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array
         %             of linear systems.
         %
         % Output:
-        %   isNoiseMat: logical[mRows, nCols] - a matrix such that it's
-        %       element at position (i, j) is true if corresponding
+        %   isNoiseMat: logical[nDims1, nDims2,...] - array such that it's
+        %       element at each position is true if corresponding
         %       linear system has noise, and false otherwise.
         %
-            [mRows, nCols] = size(self);
-            isNoiseMat = false(mRows, nCols);
-            for iRow = 1 : mRows
-                for jCol = 1 : nCols
-                    if ~isempty(self(iRow, jCol).noiseBoundsEll) 
-                        isNoiseMat(iRow, jCol) = true;
-                    end
+            isNoiseArr = arrayfun(@(x) isNoise(x), self);
+            %
+            function isNoise = isNoise(linsys)
+                isNoise = false;
+                if ~isempty(linsys.noiseBoundsEll)
+                    isNoise = true;
                 end
             end
         end
         %
-        function isDiscreteMat = isdiscrete(self)
+        function isDiscreteArr = isdiscrete(self)
         %
         % ISDISCRETE checks if linear system is discrete-time.
         %
         % Input:
         %   regular:
-        %       self: elltool.linsys.LinSys[mRows, nCols] - a matrix
+        %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array
         %             of linear systems.
         %
         % Output:
-        %   isDiscreteMat: logical[mRows, nCols] - a matrix such that it's
-        %       element at position (i, j) is true if corresponding
+        %   isDiscreteMat: logical[nDims1, nDims2,...] - array such that it's
+        %       element at each position is true if corresponding
         %       linear system is discrete-time, and false otherwise.
         %
-            [mRows, nCols] = size(self);
-            isDiscreteMat = false(mRows, nCols);
-            for iRow = 1 : mRows
-                for jCol = 1 : nCols
-                    isDiscreteMat(iRow, jCol) = self(iRow, jCol).isDiscr;
-                end
+            isDiscreteArr = arrayfun(@(x) isDiscrete(x), self);
+            %
+            function isDiscrete = isDiscrete(linsys)
+                isDiscrete = linsys.isDiscr;
             end
         end
         %
-        function isEmptyMat = isempty(self)
+        function isEmptyArr = isempty(self)
         %
         % ISEMPTY checks if linear system is empty.
         %
         % Input:
         %   regular:
-        %       self: elltool.linsys.LinSys[mRows, nCols] - a matrix
+        %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array
         %             of linear systems.
         %
         % Output:
-        %   isEmptyMat: logical[mRows, nCols] - a matrix such that it's
-        %       element at position (i, j) is true if corresponding
+        %   isEmptyMat: logical[nDims1, nDims2,...] - array such that it's
+        %       element at each position is true if corresponding
         %       linear system is empty, and false otherwise.
         %
-            [mRows, nCols] = size(self);
-            isEmptyMat = false(mRows, nCols);
-            for iRow = 1:mRows
-                for jCol = 1:nCols
-                    if isempty(self(iRow, jCol).atMat) 
-                        isEmptyMat(iRow, jCol) = true;
-                    end
+            isEmptyArr = arrayfun(@(x) isEmp(x), self);
+            %
+            function isEmp = isEmp(linsys)
+                isEmp = false;
+                if isempty(linsys.atMat) 
+                    isEmp = true;
                 end
             end
         end
         %
-        function isLtiMat = islti(self)
+        function isLtiArr = islti(self)
         %
         % ISLTI checks if linear system is time-invariant.
         %
         % Input:
         %   regular:
-        %       self: elltool.linsys.LinSys[mRows, nCols] - a matrix
+        %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array
         %             of linear systems.
         %
         % Output:
-        %   isLtiMat: logical[mRows, nCols] - a matrix such that it's
-        %       element at position (i, j) is true if corresponding
+        %   isLtiMat: logical[nDims1, nDims2,...] -array such that it's
+        %       element at each position is true if corresponding
         %       linear system is time-invariant, and false otherwise.
         %
-            [mRows, nCols] = size(self);
-            isLtiMat = false(mRows, nCols);
-            for iRow = 1 : mRows
-                for jCol = 1 : nCols
-                    isLtiMat(iRow, jCol) = self(iRow, jCol).isTimeInv;
-                end
+            isLtiArr = arrayfun(@(x) isLti(x), self);
+            %
+            function isLti = isLti(linsys)
+                isLti = linsys.isTimeInv;
             end
         end
         %
         function absTolArr = getAbsTol(self)
         %
-        % GETABSTOL gives array the same size as linsysArr with values of absTol properties
-        % for each hyperplane in hplaneArr.
+        % GETABSTOL gives array the same size as linsysArr with
+        % values of absTol properties for each hyperplane in hplaneArr.
+        %
         % Input:
         %   regular:
-        %       self: elltool.linsys.LinSys[mRows, nCols] - a matrix
+        %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array
         %             of linear systems.
         % 
         % Output:
-        %   absTolArr: double[nDims1, nDims2,...] - array of absTol properties for
-        %       linear systems in linsysArr
+        %   absTolArr: double[nDims1, nDims2,...] - array of absTol
+        %       properties for linear systems in self.
         %
         % $Author: Zakharov Eugene  <justenterrr@gmail.com> $    $Date: 17-november-2012 $
         % $Copyright: Moscow State University,
