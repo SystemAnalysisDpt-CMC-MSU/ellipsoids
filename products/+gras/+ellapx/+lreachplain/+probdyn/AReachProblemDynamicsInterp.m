@@ -40,13 +40,10 @@ classdef AReachProblemDynamicsInterp<...
             odeArgList=self.getOdePropList(calcPrecision);
             solverObj=MatrixODESolver(self.sizeAtVec,@ode45,odeArgList{:});
             %
-            % old code will be here for some time
-            %
-            %Xtt0DerivFunc = @(t,x) reshape(self.AtDynamics.evaluate(t)*...
-                %reshape(x,sizeAtVec),[numelAt 1]);
+            % we can just change Rtt0DerivFunc_body to Xtt0DerivFunc_body
             %
             Rtt0DerivFunc = @(t,x) self.Rtt0DerivFunc_body(t, x);
-            %            
+            %
             Rtt0InitialMat = eye(self.sizeAtVec);
             Rtt0InitialMat = normaliz(Rtt0InitialMat);
             %
@@ -64,6 +61,9 @@ classdef AReachProblemDynamicsInterp<...
     end
     
     methods (Access = private)
+        %
+        % new equation for R(t, t0)
+        %
         function dx = Rtt0DerivFunc_body(dyn_interp, t, x)
             %
             Rtt0Mat = reshape(x, dyn_interp.sizeAtVec);
@@ -73,6 +73,9 @@ classdef AReachProblemDynamicsInterp<...
             dx = reshape(dRtt0Mat, [dyn_interp.numelAt 1]);
             %
         end
+        %
+        % old equation for X(t, t0)
+        %
         function dx = Xtt0DerivFunc_body(dyn_interp, t, x)
             %
             Xtt0 = reshape(x, dyn_interp.sizeAtVec);
@@ -83,6 +86,9 @@ classdef AReachProblemDynamicsInterp<...
     end
 end
 
+%
+% normalizes matrix A (matrixnorm(nA) = 1)
+%
 function nA = normaliz(A)
     szVec = size(A);
     normMat = A .* A;
