@@ -79,7 +79,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             %
             indSTime=find(sTime==timeVec,1,'first');
             if isempty(indSTime)
-                throwerror('wrongInput',...
+                throwerror('wrongInput:sTimeOutOfBounds',...
                     'sTime is expected to be among elements of timeVec');
             end
             %

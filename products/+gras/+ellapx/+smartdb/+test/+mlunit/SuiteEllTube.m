@@ -528,7 +528,7 @@ classdef SuiteEllTube < mlunitext.test_case
             sTime=nPoints+1;
             approxType=gras.ellapx.enums.EApproxType.Internal;
             
-            rel=create();
+            self.runAndCheckError(@create,'wrongInput:sTimeOutOfBounds');
             
             function rel=create()
                 ltGoodDirArray=repmat(lsGoodDirVec,[1,nTubes,nPoints]);
