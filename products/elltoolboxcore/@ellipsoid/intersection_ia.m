@@ -32,6 +32,15 @@ function outEllArr = intersection_ia(myEllArr, objArr)
 %   Vol.32, No.4, pp.430-442, 2002. For more information, visit
 %   http://www-iri.upc.es/people/ros/ellipsoids.html
 %
+%   The method used to compute maximum volume ellipsoid inscribed in 
+%   intersection of ellipsoid and polytope, is modified version of algorithm
+%   of finding maximum volume ellipsoid inscribed in intersection of 
+%   ellipsoids discribed in Stephen Boyd and Lieven Vandenberghe "Convex
+%   Optimization". It works properly for nondegenerate ellipsoid, but for
+%   degenerate ellipsoid result would not lie in this ellipsoid. The result
+%   considered as empty ellipsoid, when maximum absolute velue of element 
+%   in its matrix is less than myEllipsoid.getAbsTol().
+%
 % Input:
 %   regular:
 %       myEllArr: ellipsoid [nDims1,nDims2,...,nDimsN]/[1,1] - array 
@@ -235,6 +244,8 @@ function outEll = l_polyintersect(ell, poly)
 
 if isinside(ell, poly)
     outEll = getInnerEllipsoid(poly);
+elseif ~intersect(ell,poly)
+    outEll = ellipsoid();
 else
     [ellVec ellMat] = double(ell);
     [n,~] = size(ellMat);
@@ -246,7 +257,7 @@ else
         ellMat = ellipsoid.regularize(ellMat,getAbsTol(ell));
     end
     invEllMat = inv(ellMat);
-    ellShift = -inv(ellMat)*ellVec;
+    ellShift = -invEllMat*ellVec;
     ellConst = ellVec' * invEllMat * ellVec - 1;
     cvx_begin sdp
         variable B(n,n) symmetric
@@ -264,6 +275,10 @@ else
     cvx_end
     Q = (B*B');
     v = d;
-    outEll = ellipsoid(v,Q);
+    if max(abs(Q(:))) <= getAbsTol(ell)
+        outEll = ellipsoid();
+    else
+        outEll = ellipsoid(v,Q);
+    end
 end
 end
