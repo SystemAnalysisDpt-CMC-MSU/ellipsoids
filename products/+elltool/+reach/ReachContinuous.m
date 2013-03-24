@@ -393,7 +393,7 @@ classdef ReachContinuous < elltool.reach.AReach
                 F.LT_GOOD_DIR_NORM_VEC;F.X_TOUCH_CURVE_MAT;...
                 F.X_TOUCH_OP_CURVE_MAT};
             SData = oldEllTubeRel.getData();
-            SData.timeVec = cellfun(@wrev, SData.timeVec,...
+            SData.timeVec = cellfun(@fliplr, SData.timeVec,...
                'UniformOutput', false);
             indSTime = numel(SData.timeVec(1));
             SData.indSTime(:) = indSTime;
@@ -738,8 +738,8 @@ classdef ReachContinuous < elltool.reach.AReach
             else
                 cutObj = elltool.reach.ReachContinuous();
                 if self.isbackward()
-                    cutTimeVec = wrev(cutTimeVec);
-                    switchTimeVec = wrev(self.switchSysTimeVec);
+                    cutTimeVec = fliplr(cutTimeVec);
+                    switchTimeVec = fliplr(self.switchSysTimeVec);
                 else
                     switchTimeVec = self.switchSysTimeVec;
                 end
@@ -751,7 +751,7 @@ classdef ReachContinuous < elltool.reach.AReach
                     switchTimeVec(switchTimeIndVec) cutTimeVec(end)];
                 if self.isbackward()
                     cutObj.switchSysTimeVec =...
-                        wrev(cutObj.switchSysTimeVec);
+                        fliplr(cutObj.switchSysTimeVec);
                 end
                 firstIntInd = find(switchTimeIndVec == 1, 1);
                 if ~isempty(firstIntInd)
