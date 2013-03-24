@@ -11,6 +11,7 @@ end
 if nargin==0
     confNameList=crm.deployConfTemplate('*');
 end
+%confNameList = {'advanced'};
 crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
 crmSys.deployConfTemplate('*');
 nConfs=length(confNameList);

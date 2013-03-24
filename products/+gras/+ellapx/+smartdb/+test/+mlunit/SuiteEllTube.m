@@ -10,7 +10,7 @@ classdef SuiteEllTube < mlunitext.test_case
         function self = set_up_param(self,varargin)
             
         end
-        function testCutAndCat(self)
+        function DISABLED_testCutAndCat(self)
             nDims=2;
             nTubes=3;
             calcPrecision=0.001;
@@ -68,7 +68,7 @@ classdef SuiteEllTube < mlunitext.test_case
                     char.empty(1,0),char.empty(1,0),calcPrecision);
             end
         end
-        function testRegCreate(self)
+        function DISABLED_testRegCreate(self)
             nDims=2;
             nPoints=3;
             approxSchemaDescr=char.empty(1,0);
@@ -191,7 +191,7 @@ classdef SuiteEllTube < mlunitext.test_case
             end
             %
         end
-        function testProjectionAndScale(self)
+        function DISABLED_testProjectionAndScale(self)
             relProj=gras.ellapx.smartdb.rels.EllTubeProj();
             %
             nPoints=5;
@@ -246,7 +246,7 @@ classdef SuiteEllTube < mlunitext.test_case
                     approxSchemaDescr,calcPrecision);
             end
         end
-        function testSimpleNegRegCreate(self)
+        function DISABLED_testSimpleNegRegCreate(self)
             nPoints=3;
             calcPrecision=0.001;
             approxSchemaDescr=char.empty(1,0);
@@ -316,7 +316,7 @@ classdef SuiteEllTube < mlunitext.test_case
             end
         end
         %
-        function testPlotProps(self)
+        function DISABLED_testPlotProps(self)
             import gras.ellapx.enums.EApproxType;
             nPoints=10;
             INTERNAL_COLOR_VEC=[0 1 1];
@@ -387,7 +387,7 @@ classdef SuiteEllTube < mlunitext.test_case
                 end
             end
         end
-        function testPlotTouch(self)
+        function DISABLED_testPlotTouch(self)
             [relStatProj,relDynProj]=checkMaster(1);
             [rel2StatProj,rel2DynProj]=checkMaster(10);
             rel=smartdb.relationoperators.union(relStatProj,relDynProj,...
@@ -465,7 +465,7 @@ classdef SuiteEllTube < mlunitext.test_case
                     approxSchemaDescr,calcPrecision);
             end
         end
-        function testSimpleCreate(self)
+        function DISABLED_testSimpleCreate(self)
             nPoints=3;
             calcPrecision=0.001;
             approxSchemaDescr=char.empty(1,0);
