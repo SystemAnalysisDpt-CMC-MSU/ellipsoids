@@ -5,8 +5,8 @@ function [resArr, statusArr] = intersect(myEllArr, objArr, mode)
 %
 %   resArr = INTERSECT(myEllArr, objArr, mode) - Checks if the union
 %       (mode = 'u') or intersection (mode = 'i') of ellipsoids
-%       in myEllMat intersects with objects in objArr.
-%       objMat can be array of ellipsoids, array of hyperplanes,
+%       in myEllArr intersects with objects in objArr.
+%       objArr can be array of ellipsoids, array of hyperplanes,
 %       or array of polytopes.
 %       Ellipsoids, hyperplanes or polytopes in objMat must have
 %       the same dimension as ellipsoids in myEllArr.
