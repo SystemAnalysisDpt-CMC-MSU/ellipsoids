@@ -1,1 +1,1 @@
-rs = reach(sys, X0, L, T, options);  % reach set of continuos-time system
+rs = elltool.reach.ReachContinuous(sys, X0, L, T);  % reach set of continuos-time system

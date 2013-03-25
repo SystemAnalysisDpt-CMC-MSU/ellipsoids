@@ -3,7 +3,7 @@ TT = 3;  % terminating time
 
 % compute backward reach set:
 % compute the reach set:
-brs2 = reach(s2, M, L0, [TT TS]);  % second system comes first
+brs2 = elltool.reach.ReachContinuous(s2, M, L0, [TT TS]);  % second system comes first
 brs1 = evolve(brs2, 0, s1);  % then the first system
 
 % obtain projections onto (x1, x2) subspace:
