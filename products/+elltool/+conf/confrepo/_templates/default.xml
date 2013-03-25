@@ -14,9 +14,11 @@
 	<logging type="struct" >
 		<log4jSettings type="char" >
 			log4j.rootLogger=INFO, stdout
-			#
-			log4j.logger.reach = INFO, A1
-			log4j.additivity.reach = FALSE
+			#                             
+			log4j.logger.elltool.reach = INFO, A1
+			log4j.additivity.elltool.reach = TRUE
+			log4j.logger.gras = INFO, A1
+			log4j.additivity.gras = TRUE
 			#
 			log4j.appender.stdout=org.apache.log4j.ConsoleAppender
 			log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
