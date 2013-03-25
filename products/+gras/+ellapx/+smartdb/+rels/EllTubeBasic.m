@@ -82,7 +82,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             %
             indSTime=find(sTime==timeVec,1,'first');
             if isempty(indSTime)
-                throwerror('wrongInput',...
+                throwerror('wrongInput:sTimeOutOfBounds',...
                     'sTime is expected to be among elements of timeVec');
             end
             %
@@ -120,7 +120,8 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             for iLDir=1:1:nLDirs
                 lsGoodDirVec=lsGoodDirMat(:,iLDir);
                 STubeData.lsGoodDirVec{iLDir}=lsGoodDirVec;
-                STubeData.lsGoodDirNorm(iLDir)=norm(lsGoodDirVec);
+                STubeData.lsGoodDirNorm(iLDir)=...
+                    sqrt(sum(lsGoodDirVec.*lsGoodDirVec));
                 %
                 ltGoodDirMat=squeeze(ltGoodDirArray(:,iLDir,:));
                 %
@@ -504,8 +505,9 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                         tubeProjDataCMat{iGroup,iProj}.lsGoodDirVec{iLDir}=projOrthSTimeMat*...
                             STubeData.lsGoodDirVec{iOLDir};
                         %calculate norms
+                        lsGoodDirVec = tubeProjDataCMat{iGroup,iProj}.lsGoodDirVec{iLDir};
                         tubeProjDataCMat{iGroup,iProj}.lsGoodDirNorm(iLDir)=...
-                            norm(tubeProjDataCMat{iGroup,iProj}.lsGoodDirVec{iLDir});
+                            sqrt(sum(lsGoodDirVec.*lsGoodDirVec));
                         %
                         tubeProjDataCMat{iGroup,iProj}.ltGoodDirNormVec{iLDir}=...
                             sqrt(sum(...

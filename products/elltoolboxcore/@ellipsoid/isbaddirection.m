@@ -22,7 +22,7 @@ function isBadDirVec = isbaddirection(fstEll, secEll, dirsMat,absTol)
 % Output:
 %    isBadDirVec: logical[1, nCols] - array of true or false with length
 %       being equal to the number of columns in matrix dirsMat.
-%       ture marks direction vector as bad - ellipsoidal approximation
+%       true marks direction vector as bad - ellipsoidal approximation
 %       cannot be computed for this direction. false means the opposite.
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
