@@ -371,8 +371,8 @@ function [distArray, timeArray] = computePointsEllDist(ellObjArray, vecArray, fl
     import elltool.logging.Log4jConfigurator;
     persistent logger;
     %
-    [mSize, lSize] = size(ellObjArray);
     [kSize, nVec] = size(vecArray);
+    [mSize, lSize] = size(ellObjArray);
     nEllObj      = mSize * lSize;
     if (nEllObj > 1) && (nVec > 1) && (nEllObj ~= nVec)
         error('DISTANCE: number of ellipsoids does not match the number of vectors.');

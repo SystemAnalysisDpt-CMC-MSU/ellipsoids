@@ -9,4 +9,5 @@ function listconfs()
 %
 %
 confRepoMgr=gras.ellapx.uncertcalc.test.comp.conf.ConfRepoMgr();
+confRepoMgr.deployConfTemplate('*');
 confRepoMgr.getConfNameList()

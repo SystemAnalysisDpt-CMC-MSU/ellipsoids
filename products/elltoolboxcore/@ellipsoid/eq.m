@@ -31,8 +31,17 @@ import modgen.common.throwerror;
 ellipsoid.checkIsMe(ellFirstArr,'first');
 ellipsoid.checkIsMe(ellSecArr,'second');
 %
+
 nFirstElems = numel(ellFirstArr);
 nSecElems = numel(ellSecArr);
+
+modgen.common.checkvar( ellFirstArr, 'numel(x) > 0', 'errorTag', ...
+    'wrongInput:emptyArray', 'errorMessage', ...
+    'Each array must be not empty.');
+
+modgen.common.checkvar( ellSecArr, 'numel(x) > 0', 'errorTag', ...
+    'wrongInput:emptyArray', 'errorMessage', ...
+    'Each array must be not empty.');
 
 firstSizeVec = size(ellFirstArr);
 secSizeVec = size(ellSecArr);

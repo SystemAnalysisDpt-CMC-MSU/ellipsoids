@@ -6,6 +6,9 @@ classdef BasicTestCase < mlunitext.test_case
         function testDemoEllCalc(~)
             s_ell_demo_ellcalc;
         end
+        function testDemoEllBasic(~)
+            s_ell_demo_ellbasic;
+        end
         function testDemoEllVis(~)
             s_ell_demo_ellvis;
         end
