@@ -276,7 +276,7 @@ else
     Q = (B*B');
     v = d;
     if max(abs(Q(:))) <= getAbsTol(ell)
-        outEll = ellipsoid();
+        outEll = ellipsoid(v,zeros(size(Q)));
     else
         outEll = ellipsoid(v,Q);
     end

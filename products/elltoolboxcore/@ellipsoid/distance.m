@@ -20,7 +20,7 @@ function [d, status] = distance(E, X, flag)
 %                          of the same size, or, alternatively, E being single
 %                          ellipsoid or H - single hyperplane structure, 
 %                          compute the distance from ellipsoids to hyperplanes pairwise.
-%      D = DISTANCE(E, P)  Given array of ellipsoids E, and array of polytopes P
+%      D = DISTANCE(E, P)  Given vector of ellipsoids E, and vector of polytopes P
 %                          of the same size, or, alternatively, E being single
 %                          ellipsoid or P - single polytope object, 
 %                          compute the distance from ellipsoids to polytopes pairwise.
@@ -109,7 +109,7 @@ function [d, status] = distance(E, X, flag)
   end
   
   if isa(X, 'polytope')
-    [d, status] = l_polydist(E, X);
+    [d, status] = l_polydist(E, X,flag);
     if nargout < 2
       clear status;
     end
@@ -595,39 +595,41 @@ end
 
 %%%%%%%%
 
-function [d, status] = l_polydist(E, X)
+function [d, status] = l_polydist(E, X,flag)
 %
 % L_POLYDIST - distance from ellipsoid to polytope.
 %
 
   import elltool.conf.Properties;
+  import modgen.common.throwerror
 
-  [m, n] = size(E);
+  ellSize = size(E);
   [k, l] = size(X);
-  t1     = m * n;
-  t2     = k * l;
-  if (t1 > 1) && (t2 > 1) && ((m ~= k) || (n ~= l))
-    error('DISTANCE: sizes of ellipsoidal and polytope arrays do not match.');
+  t1     = prod(ellSize);
+  t2     = l;
+  if (t1 > 1) && (t2 > 1) && ((size(ellSize,2) > 2) || (ellSize(1) ~= 1) || (ellSize(2) ~= l))
+    throwerror('sizeMismatch','sizes of ellipsoidal and polytope arrays do not match.');
   end
 
   dims1 = dimension(E);
-  dims2 = [];
-  for i = 1:k;
-    dd = [];
-    for j = 1:l
-      dd = [dd dimension(X(j))];
-    end
-    dims2 = [dims2; dd];
+  dims2 = zeros(1,l);
+
+  for j = 1:l
+    dims2(j) = dimension(X(j));
   end
-  mn1   = min(min(dims1));
-  mn2   = min(min(dims2));
-  mx1   = max(max(dims1));
-  mx2   = max(max(dims2));
+
+  mn1   = min(dims1(:));
+  mn2   = min(dims2(:));
+  mx1   = max(dims1(:));
+  mx2   = max(dims2(:));
   if (mn1 ~= mx1)
-    error('DISTANCE: ellipsoids must be of the same dimension.');
+      throwerror('dimensionMismatch','ellipsoids must be of the same dimension.');
   end
   if (mn2 ~= mx2)
-    error('DISTANCE: polytopes must be of the same dimension.');
+      throwerror('dimensionMismatch','polytops must be of the same dimension.');
+  end
+  if(mx1 ~= mx2)
+      throwerror('dimensionMismatch','ellipsoids and polytops must be of the same dimension.');
   end
 
   if Properties.getIsVerbose()
@@ -643,6 +645,8 @@ function [d, status] = l_polydist(E, X)
   d      = [];
   status = [];
   if (t1 > 1) && (t2 > 1)
+    m = 1;
+    n = ellSize(2);
     for i = 1:m
       dd  = [];
       sts = [];
@@ -680,43 +684,12 @@ function [d, status] = l_polydist(E, X)
       d      = [d; dd];
       status = [status sts];
     end
-  elseif (t1 > 1)
-    [A, b] = double(X);
-    for i = 1:m
-      dd  = [];
-      sts = [];
-      for j = 1:n
-        [q, Q] = parameters(E(i, j));
-        if size(Q, 2) > rank(Q)
-          Q = ellipsoid.regularize(Q,absTolMat(i,j));
-        end
-        Q  = ell_inv(Q);
-        Q  = 0.5*(Q + Q');
-        cvx_begin sdp
-            variable x(mx1, 1)
-            variable y(mx1, 1)
-            if flag
-                f = (x - y)'*Q*(x - y);
-            else
-                f = (x - y)'*(x - y);
-            end
-            minimize(f)
-            subject to
-                x'*Q*x + 2*(-Q*q)'*x + (q'*Q*q - 1) <= 0
-                A*y - b <= 0
-        cvx_end
-
-        d1 = f;
-        if d1 < absTolMat(i,j)
-          d1 = 0;
-        end
-        d1  = sqrt(d1);
-        dd  = [dd d1];
-        sts = [sts cvx_status];
-      end
-      d      = [d; dd];
-      status = [status sts];
-    end
+  elseif (t1 > 1)    
+    fGetEllPolyDist = @(ell) getEllPolyDist(ell,X,mx1,flag);
+    cellArr = arrayfun(fGetEllPolyDist,E, 'UniformOutput',false);
+    @(cArr,ind) cArr{ind};
+    d = cellfun(@(cArr) cArr{1},cellArr);
+    status = cellfun(@(cArr) cArr{2},cellArr,'UniformOutput',false);  
   else
     [q, Q] = parameters(E);
     if size(Q, 2) > rank(Q)
@@ -756,5 +729,36 @@ function [d, status] = l_polydist(E, X)
       status = [status sts];
     end
   end
+end
 
+function res = getEllPolyDist(ell,poly,nDims,flag)
+    [HMat, kVec] = double(poly);
+    [cVec, shMat] = parameters(ell);
+    absTol = getAbsTol(ell);
+    if size(shMat, 2) > rank(shMat)
+      shMat = ellipsoid.regularize(shMat,absTol);
+    end
+    shMat  = ell_inv(shMat);
+    shMat  = 0.5*(shMat + shMat');
+    cvx_begin sdp
+        variable x(nDims, 1)
+        variable y(nDims, 1)
+        if flag
+            func = (x - y)'*shMat*(x - y);
+        else
+            func = (x - y)'*(x - y);
+        end
+        minimize(func)
+        subject to
+            x'*shMat*x + 2*(-shMat*cVec)'*x + (cVec'*shMat*cVec - 1) <= 0
+            HMat*y - kVec <= 0
+    cvx_end
+
+    dist = func;
+    if dist < absTol
+      dist = 0;
+    end
+    dist  = sqrt(dist);
+    stat = cvx_status;
+    res = {dist,stat};
 end
