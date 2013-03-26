@@ -38,14 +38,20 @@ classdef AReachProblemDynamicsInterp<...
             % compute X(t,t0)
             %
             odeArgList=self.getOdePropList(calcPrecision);
-            solverObj=MatrixODESolver(self.sizeAtVec,@ode45,odeArgList{:});
             %
             % (temporary) setting algorithm:
-            %   0 - X(t, t0) / matrixnorm(X(t, t0))
-            %   1 - R(t, t0)
-            %   2 - [R(t, t0); matrixnorm(X(t, t0))]
+            %   0 - X(t, t0)
+            %   1 - X(t, t0) / matrixnorm(X(t, t0))
+            %   2 - R(t, t0)
+            %   3 - [R(t, t0); matrixnorm(X(t, t0))]
             %
-            algorithm = 2;            
+            algorithm = 2;
+            %
+            if (algorithm == 3)
+                solverObj=MatrixODESolver([self.numelAt + 1, 1],@ode45,odeArgList{:});
+            else
+                solverObj=MatrixODESolver(self.sizeAtVec,@ode45,odeArgList{:});
+            end            
             %
             % we can just change Rtt0DerivFunc_body to Xtt0DerivFunc_body
             %
@@ -53,8 +59,10 @@ classdef AReachProblemDynamicsInterp<...
                 case 0
                     Rtt0DerivFunc = @(t,x) self.Xtt0DerivFunc_body(t, x);
                 case 1
-                    Rtt0DerivFunc = @(t,x) self.Rtt0DerivFunc_body(t, x);
+                    Rtt0DerivFunc = @(t,x) self.Xtt0DerivFunc_body(t, x);
                 case 2
+                    Rtt0DerivFunc = @(t,x) self.Rtt0DerivFunc_body(t, x);
+                case 3
                     Rtt0DerivFunc = @(t,x) self.Rtt0ExtDerivFunc_body(t, x);
             end
             %
@@ -63,8 +71,10 @@ classdef AReachProblemDynamicsInterp<...
                     Rtt0InitialMat = eye(self.sizeAtVec);
                 case 1
                     Rtt0InitialMat = eye(self.sizeAtVec);
-                    Rtt0InitialMat = normaliz(Rtt0InitialMat);
                 case 2
+                    Rtt0InitialMat = eye(self.sizeAtVec);
+                    Rtt0InitialMat = normaliz(Rtt0InitialMat);
+                case 3
                     Rtt0InitialMat = eye(self.sizeAtVec);
                     norm = sqrt(sum(sum(Rtt0InitialMat, 2)));
                     Rtt0InitialMat = normaliz(Rtt0InitialMat);
@@ -79,13 +89,15 @@ classdef AReachProblemDynamicsInterp<...
             % then divide it by matrixnorm(X(t,t0))
             %
             switch (algorithm)
-                case 0
+                case 1
                     data_Rtt0 = normaliz(data_Rtt0);
-                case 2
+                case 3
                     sz = size(data_Rtt0);
-                    normVec = data_Rtt0(sz(1), :);
-                    data_Rtt0(sz(1), :) = [];
-                    data_Rtt0 = reshape(data_Rtt0, [dyn_interp.sizeAtVec, dyn_interp.sizeAtVec, self.N_TIME_POINTS]);
+                    normVec = data_Rtt0(sz(1), sz(2), :);
+                    normVec = repmat(normVec, [self.sizeAtVec, 1]);
+                    data_Rtt0 = data_Rtt0(1:(sz(1) - 1), :, :);
+                    data_Rtt0 = reshape(data_Rtt0, [self.sizeAtVec, self.N_TIME_POINTS]);
+                    data_Rtt0 = data_Rtt0 .* normVec;
             end
             %
             self.Xtt0Dynamics=MatrixInterpolantFactory.createInstance(...
