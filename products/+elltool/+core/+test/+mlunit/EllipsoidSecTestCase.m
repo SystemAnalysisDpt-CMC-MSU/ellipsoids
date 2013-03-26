@@ -41,6 +41,7 @@ classdef EllipsoidSecTestCase < mlunitext.test_case
         end
         function self = testIsBadDirection(self)
             [test1Ell, test2Ell] = createTypicalEll(5);
+            absTol=min(test1Ell.getAbsTol(),test2Ell.getAbsTol());
             aMat = [diag(ones(6, 1)), [1; 2; 3; 3; 4; 5]];
             isTestResVec = isbaddirection(test1Ell, test2Ell, aMat,...
                 absTol);
@@ -54,7 +55,7 @@ classdef EllipsoidSecTestCase < mlunitext.test_case
             [1, -1, 1000, 1000; 0, 0, 0.5, 0.5; 0, 0, -0.5, -1],...
             [1, -1, 0, 0; 1, -2, 1, 2; 7, 3, 2, 1],absTol);
             [test1Ell, test2Ell, aMat, bMat] = createTypicalHighDimEll(8);
-            compareExpForIsBadDir(test1Ell, test2Ell, aMat, bMat);
+            compareExpForIsBadDir(test1Ell, test2Ell, aMat, bMat,absTol);
         end
         function self = testMinkmp_ea(self)
             compareAnalyticForMinkMp(true, false, 8, 5, 0, [])
