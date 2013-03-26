@@ -72,9 +72,9 @@ elseif isa(objArr, 'hyperplane')
     [distValArray, statusArray] = computeEllHpDist(ellObjArr, objArr,...
         isFlagOn);
 elseif isa(objArr, 'polytope')
-    [distValArray, statusArray] = computeEllPolytDist(ellObjArr, objArr);
+    [distValArray, statusArray] = computeEllPolytDist(ellObjArr, objArr,isFlagOn);
 else
-    throwerror(strcat('second argument must be array of vectors, ',...
+    throwerror('wrongInput',strcat('second argument must be array of vectors, ',...
         'ellipsoids, hyperplanes or polytopes.'));
 end
 end
@@ -491,13 +491,13 @@ end
 %
 %%%%%%%%
 %
-function distEllHpVal = findEllHpDist(ellObj, hpObj,flag)
+function distEllHpVal = findEllHpDist(ellObj, hpObj,isFlagOn)
 [vPar, cPar] = parameters(hpObj);
 if cPar < 0
     cPar = -cPar;
     vPar = -vPar;
 end
-if flag
+if isFlagOn
     sr = sqrt(vPar' * (ellObj.shape) * vPar);
 else
     sr = sqrt(vPar' * vPar);
@@ -512,7 +512,7 @@ end
 %
 %
 function [distEllHpArray, status] = computeEllHpDist(ellObjArray, ...
-    hpObjArray, flag)
+    hpObjArray, isFlagOn)
 %
 %   COMPUTEELLHPDIST - compute distance between array of ellipsoids and
 %   array of hyperplanes.
@@ -529,7 +529,7 @@ if (nEllObj > 1) && (nHpObj > 1) && (~(nEllObj==nHpObj)||...
         ~(length(ellArrSizeVec)==length(hpArrSizeVec))||...
         ~all(ellArrSizeVec==hpArrSizeVec))
     throwerror('wrongInput',...
-        'DISTANCE: sizes of ellipsoidal and hyperplane arrays do not match.');
+        'sizes of ellipsoidal and hyperplane arrays do not match.');
 end
 
 ellDimArray = dimension(ellObjArray);
@@ -537,11 +537,11 @@ hpDimArray = dimension(hpObjArray);
 
 if (~all(ellDimArray(1)==ellDimArray(:)))
     throwerror('wrongInput',...
-        'DISTANCE: ellipsoids must be of the same dimension.');
+        'ellipsoids must be of the same dimension.');
 end
 if (~all(hpDimArray(1)==hpDimArray(:)))
     throwerror('wrongInput',...
-        'DISTANCE: hyperplanes must be of the same dimension.');
+        'hyperplanes must be of the same dimension.');
 end
 
 if Properties.getIsVerbose()
@@ -553,13 +553,13 @@ if Properties.getIsVerbose()
 end
 
 if (nEllObj > 1) && (nHpObj > 1)
-    fComputeDist=@(ellObj,hpObj) findEllHpDist(ellObj,hpObj,flag);
+    fComputeDist=@(ellObj,hpObj) findEllHpDist(ellObj,hpObj,isFlagOn);
     distEllHpArray=arrayfun(fComputeDist,ellObjArray,hpObjArray);
 elseif (nEllObj > 1)
-    fComputeDist=@(ellObj) findEllHpDist(ellObj,hpObjArray,flag);
+    fComputeDist=@(ellObj) findEllHpDist(ellObj,hpObjArray,isFlagOn);
     distEllHpArray=arrayfun(fComputeDist,ellObjArray);
 else
-    fComputeDist=@(hpObj) findEllHpDist(ellObjArray,hpObj,flag);
+    fComputeDist=@(hpObj) findEllHpDist(ellObjArray,hpObj,isFlagOn);
     distEllHpArray=arrayfun(fComputeDist,hpObjArray);
 end
 
@@ -568,11 +568,41 @@ status = [];
 end
 
 %%%%%%%%
+function [ distVal, cvxStat] = findEllPolDist(ellObj,polObj,isFlagOn)
+absTol=ellObj.getAbsTol();
+[qPar, QPar] = parameters(ellObj);
+[aMat, bVec] = double(polObj);
+if size(QPar, 2) > rank(QPar)
+    QPar = ellipsoid.regularize(QPar,absTol);
+end
+QPar  = ell_inv(QPar);
+QPar  = 0.5*(QPar + QPar');
+cvx_begin sdp
+variable x(mx1, 1)
+variable y(mx1, 1)
+if isFlagOn
+    f = (x - y)'*Qi*(x - y);
+else
+    f = (x - y)'*(x - y);
+end
+minimize(f)
+subject to
+x'*Qi*x + 2*(-Qi*qPar)'*x + (qPar'*Qi*qPar - 1) <= 0
+aMat*y - bVec <= 0
+cvx_end
 
-function [ellPolDistVal, status] = computeEllPolytDist(ellObjArray, X)
+distVal = f;
+if distVal <absTol
+    distVal = 0;
+end
+distVal  = sqrt(distVal);
+cvxStat=cvx_status;
+end
+
+function [distEllPolArray, statusArray] = computeEllPolytDist(ellObjArray, polObj,isFlagOn)
 %
 %   COMPUTEELLPOLYTDIST - compute distance between arrays of ellipsoids and 
-%   polytops.
+%   polytop.
 %   Distance between ellipsoid E and polytope X is the optimal value
 %   of the following problem:
 %                               min |x - y|
@@ -580,161 +610,49 @@ function [ellPolDistVal, status] = computeEllPolytDist(ellObjArray, X)
 %   Zero distance means that intersection of E and X is nonempty.
 %
 
-  import elltool.conf.Properties;
+import elltool.conf.Properties;
 
-  [m, n] = size(ellObjArray);
-  [k, l] = size(X);
-  t1     = m * n;
-  t2     = k * l;
-  if (t1 > 1) && (t2 > 1) && ((m ~= k) || (n ~= l))
-    error('DISTANCE: sizes of ellipsoidal and polytope arrays do not match.');
-  end
+ellArrSizeVec = size(ellObjArray);
+polArrSizeVec = size(polObj);
+nEllObj=numel(ellObjArray);
+nPolObj=numel(polObj);
+if (nEllObj > 1) && (nPolObj > 1) && (~(nEllObj==nPolObj)||...
+        ~(length(ellArrSizeVec)==length(polArrSizeVec))||...
+        ~all(ellArrSizeVec==hpArrSizeVec))
+    throwerror('wrongInput','sizes of ellipsoidal and polytope arrays do not match.');
+end
 
-  dims1 = dimension(ellObjArray);
-  dims2 = [];
-  for i = 1:k;
-    dd = [];
-    for j = 1:l
-      dd = [dd dimension(X(j))];
-    end
-    dims2 = [dims2; dd];
-  end
-  mn1   = min(min(dims1));
-  mn2   = min(min(dims2));
-  mx1   = max(max(dims1));
-  mx2   = max(max(dims2));
-  if (mn1 ~= mx1)
-    error('DISTANCE: ellipsoids must be of the same dimension.');
-  end
-  if (mn2 ~= mx2)
-    error('DISTANCE: polytopes must be of the same dimension.');
-  end
+dimEllArray=dimension(ellObjArray);
+dimPolArray=dimension(polObj);
 
-  if Properties.getIsVerbose()
+if ~all(dimEllArray(1)==dimEllArray(:))
+    throwerror('wrongInput','ellipsoids must be of the same dimension.');
+end
+if ~all(dimPolArray(1)==dimPolArray(:))
+    throwerror('wrongInput','polytopes must be of the same dimension.');
+end
+
+if Properties.getIsVerbose()
     if (t1 > 1) || (t2 > 1)
-      fprintf('Computing %d ellipsoid-to-polytope distances...\n', max([t1 t2]));
+        fprintf('Computing %d ellipsoid-to-polytope distances...\n', max([t1 t2]));
     else
-      fprintf('Computing ellipsoid-to-polytope distance...\n');
+        fprintf('Computing ellipsoid-to-polytope distance...\n');
     end
     fprintf('Invoking CVX...\n');
-  end
-  
-  absTolMat = getAbsTol(ellObjArray);
-  ellPolDistVal      = [];
-  status = [];
-  if (t1 > 1) && (t2 > 1)
-    for i = 1:m
-      dd  = [];
-      sts = [];
-      for j = 1:n
-        [q, Q] = parameters(ellObjArray(i, j));
-        %[A, b] = double(X(i, j));
-        [A, b] = double(X(j));
-        if size(Q, 2) > rank(Q)
-          Q = ellipsoid.regularize(Q,absTolMat(i,j));
-        end
-        Q  = ell_inv(Q);
-        Q  = 0.5*(Q + Q');
-        cvx_begin sdp
-            variable x(mx1, 1)
-            variable y(mx1, 1)
-            if flag
-                f = (x - y)'*Qi*(x - y);
-            else
-                f = (x - y)'*(x - y);
-            end
-            minimize(f)
-            subject to
-                x'*Qi*x + 2*(-Qi*q)'*x + (q'*Qi*q - 1) <= 0
-                A*y - b <= 0
-        cvx_end
+end
 
-        d1 = f;
-        if d1 <absTolMat(i,j)
-          d1 = 0;
-        end
-        d1  = sqrt(d1);
-        dd  = [dd d1];
-        sts = [sts cvx_status];
-      end
-      ellPolDistVal      = [ellPolDistVal; dd];
-      status = [status sts];
-    end
-  elseif (t1 > 1)
-    [A, b] = double(X);
-    for i = 1:m
-      dd  = [];
-      sts = [];
-      for j = 1:n
-        [q, Q] = parameters(ellObjArray(i, j));
-        if size(Q, 2) > rank(Q)
-          Q = ellipsoid.regularize(Q,absTolMat(i,j));
-        end
-        Q  = ell_inv(Q);
-        Q  = 0.5*(Q + Q');
-        cvx_begin sdp
-            variable x(mx1, 1)
-            variable y(mx1, 1)
-            if flag
-                f = (x - y)'*Qi*(x - y);
-            else
-                f = (x - y)'*(x - y);
-            end
-            minimize(f)
-            subject to
-                x'*Qi*x + 2*(-Qi*q)'*x + (q'*Qi*q - 1) <= 0
-                A*y - b <= 0
-        cvx_end
-
-        d1 = f;
-        if d1 < absTolMat(i,j)
-          d1 = 0;
-        end
-        d1  = sqrt(d1);
-        dd  = [dd d1];
-        sts = [sts cvx_status];
-      end
-      ellPolDistVal      = [ellPolDistVal; dd];
-      status = [status sts];
-    end
-  else
-    [q, Q] = parameters(ellObjArray);
-    if size(Q, 2) > rank(Q)
-      Q = ellipsoid.regularize(Q,ellObjArray.absTol);
-    end
-    Qi = ell_inv(Q);
-    Qi = 0.5*(Qi + Qi');
-    for i = 1:k
-      dd  = [];
-      sts = [];
-      for j = 1:l
-        %[A, b] = double(X(i, j));
-        [A, b] = double(X(j));
-        cvx_begin sdp
-            variable x(mx1, 1)
-            variable y(mx1, 1)
-            if flag
-                f = (x - y)'*Qi*(x - y);
-            else
-                f = (x - y)'*(x - y);
-            end
-            minimize(f)
-            subject to
-                x'*Qi*x + 2*(-Qi*q)'*x + (q'*Qi*q - 1) <= 0
-                A*y - b <= 0
-        cvx_end
-
-        d1 = f;
-        if d1 < ellObjArray.absTol
-          d1 = 0;
-        end
-        d1  = sqrt(d1);
-        dd  = [dd d1];
-        sts = [sts cvx_status];
-      end
-      ellPolDistVal      = [ellPolDistVal; dd];
-      status = [status sts];
-    end
-  end
+if (nEllObj > 1) && (nPolObj > 1)
+    fComputeDist=@(ellObj,polObj) findEllPolDist(ellObj,polObj,isFlagOn);
+    [distEllPolArray, statusArray]=...
+        arrayfun(fComputeDist,ellObjArray,polObj);
+elseif (nEllObj > 1)
+    fComputeDist=@(ellObj) findEllPolDist(ellObj,polObj,isFlagOn);
+    [distEllPolArray, statusArray]=...
+        arrayfun(fComputeDist,ellObjArray);
+else
+    fComputeDist=@(polObj) findEllHpDist(ellObjArray,polObj,isFlagOn);
+    [distEllPolArray, statusArray]=...
+        arrayfun(fComputeDist,polObj);
+end
 
 end
