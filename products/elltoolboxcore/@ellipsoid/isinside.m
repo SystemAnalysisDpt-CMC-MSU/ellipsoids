@@ -106,9 +106,20 @@ modgen.common.checkvar( secObjArr , 'numel(x) > 0', 'errorTag', ...
     'wrongInput:emptyArray', 'errorMessage', ...
     'Each array must be not empty.');
 
-modgen.common.checkvar( secObjArr,'all(~isempty(x(:)))','errorTag', ...
-    'wrongInput:emptyObject', 'errorMessage', ...
+if isa(secObjArr, 'polytope')
+    isEmptyArr = true(size(secObjArr));
+    [~, nCols] = size(secObjArr);
+    for iCols = 1:nCols
+        isEmptyArr(iCols) = isempty(secObjArr(iCols));
+    end
+    isAnyObjEmpty = any(isEmptyArr);
+else
+    isAnyObjEmpty = any(isempty(secObjArr(:)));
+end
+if isAnyObjEmpty
+    throwerror('wrongInput:emptyObject',...
     'Array should not have empty ellipsoid, hyperplane or polytope.');
+end;
 
 
 if (nargin < 3) || ~(ischar(mode))
@@ -122,22 +133,27 @@ secObjVec  = reshape(secObjArr, 1, nElem);
 
 if isa(secObjVec, 'polytope')
     if mode == 'i'
-        xVec = extreme(and(secObjVec));
+       xVec = {extreme(and(secObjVec))};
     else
-        xVec = arrayfun(@(x) extreme(x), secObjVec);
+        [nRows nCols] = size(secObjVec);
+        xVec = cell(nRows,nCols);
+        for iCols = 1:nCols
+            xVec{iCols} = extreme(secObjArr(iCols));
+        end;
     end
-    if isempty(xVec)
+    if all(cellfun(@(x) isempty(x), xVec))
         res = -1;
     else
-        res = min(isinternal(fstEllArr, xVec', 'i'));
+        res = min(cellfun(@(x) min(isinternal(fstEllArr, x', 'i')),xVec));
     end
-    
+   
     if nargout < 2
         clear status;
     end
-    
+   
     return;
 end
+
 
 if mode == 'u'
     res = 1;
@@ -269,3 +285,4 @@ else
 end
 
 end
+
