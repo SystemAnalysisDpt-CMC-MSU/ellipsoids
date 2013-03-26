@@ -649,6 +649,10 @@ classdef ReachDiscrete < elltool.reach.AReach
         %
             import elltool.conf.Properties;
             import modgen.common.throwerror;
+            import elltool.logging.Log4jConfigurator;
+
+            persistent logger;
+            	
             neededPropNameList =...
                 {'absTol', 'relTol', 'nPlot2dPoints',...
                 'nPlot3dPoints','nTimeGridPoints'};
@@ -688,33 +692,33 @@ classdef ReachDiscrete < elltool.reach.AReach
             self.projectionBasisMat = [];
             %% check and analize input
             if nargin < 4
-                throwerror('REACH: insufficient number of input arguments.');
+                throwerror('insufficient number of input arguments.');
             end
             if ~(isa(linSys, 'elltool.linsys.LinSys'))
-                throwerror(['REACH: first input argument ',...
+                throwerror(['first input argument ',...
                     'must be linear system object.']);
             end
             linSys = linSys(1, 1);
             [d1, du, dy, dd] = linSys.dimension();
             if ~(isa(x0Ell, 'ellipsoid'))
-                throwerror(['REACH: set of initial ',...
+                throwerror(['set of initial ',...
                     'conditions must be ellipsoid.']);
             end
             x0Ell = x0Ell(1, 1);
             d2 = dimension(x0Ell);
             if d1 ~= d2
-                throwerror(['REACH: dimensions of linear system and ',...
+                throwerror(['dimensions of linear system and ',...
                     'set of initial conditions do not match.']);
             end
             [k, l] = size(timeVec);
             if ~(isa(timeVec, 'double')) || (k ~= 1) || ((l ~= 2) && (l ~= 1))
-                throwerror(['REACH: time interval must be specified ',...
+                throwerror(['time interval must be specified ',...
                         'as ''[t0 t1]'', or, in ',...
                         'discrete-time - as ''[k0 k1]''.']);          
             end
             [m, N] = size(l0Mat);
             if m ~= d2
-                throwerror(['REACH: dimensions of state space ',...
+                throwerror(['dimensions of state space ',...
                     'and direction vector do not match.']);
             end
             if (nargin < 5) || ~(isstruct(OptStruct))
@@ -768,7 +772,10 @@ classdef ReachDiscrete < elltool.reach.AReach
             %%% Perform matrix, control, disturbance and noise evaluations.
             %%% Create splines if needed.
             if Properties.getIsVerbose()
-                fprintf('Performing preliminary function evaluations...\n');
+                if isempty(logger)
+                   logger=Log4jConfigurator.getLogger();
+                end
+                logger.info('Performing preliminary function evaluations...');
             end
             %
             mydata.A     = [];
@@ -937,8 +944,8 @@ classdef ReachDiscrete < elltool.reach.AReach
                         for i = 1:size(self.time_values, 2)
                             p = self.matrix_eval(uEll.center, self.time_values(i));
                             P = self.matrix_eval(uEll.shape, self.time_values(i));
-                            if (P ~= P') | (min(eig(P)) < 0)
-                                throwerror(['REACH: shape matrix of ',...
+                            if ~gras.la.ismatposdef(P,self.absTol,false)
+                                throwerror('wrongMat',['shape matrix of ',...
                                     'ellipsoidal control bounds ',...
                                     'must be positive definite.']);
                             end
@@ -977,8 +984,8 @@ classdef ReachDiscrete < elltool.reach.AReach
                         BPBsr = zeros(d1*d1, size(self.time_values, 2));
                         for i = 1:size(self.time_values, 2)
                             P = self.matrix_eval(uEll.shape, self.time_values(i));
-                            if (P ~= P.') | (min(eig(P)) < 0)
-                                throwerror(['REACH: shape matrix of ',...
+                            if ~gras.la.ismatposdef(P,self.absTol,false)
+                                throwerror('wrongMat',['shape matrix of ',...
                                     'ellipsoidal control bounds ',...
                                     'must be positive definite.']);
                             end
@@ -1010,8 +1017,8 @@ classdef ReachDiscrete < elltool.reach.AReach
                         end
                         if iscell(uEll.shape)
                             P = self.matrix_eval(uEll.shape, self.time_values(i));
-                            if (P ~= P.') | (min(eig(P)) < 0)
-                                throwerror(['REACH: shape matrix of ',...
+                            if ~gras.la.ismatposdef(P,self.absTol,false)
+                                throwerror('wrongMat',['shape matrix of ',...
                                     'ellipsoidal control bounds ',...
                                     'must be positive definite.']);
                             end
@@ -1113,8 +1120,8 @@ classdef ReachDiscrete < elltool.reach.AReach
                             for i = 1:size(self.time_values, 2)
                                 q = self.matrix_eval(vEll.center, self.time_values(i));
                                 Q = self.matrix_eval(vEll.shape, self.time_values(i));
-                                if (Q ~= Q.') | (min(eig(Q)) < 0)
-                                    throwerror(['REACH: shape matrix of ',...
+                                if ~gras.la.ismatposdef(Q,self.absTol,false)
+                                    throwerror('wrongMat',['shape matrix of ',...
                                         'ellipsoidal disturbance bounds ',...
                                         'must be positive definite.']);
                                 end
@@ -1153,8 +1160,8 @@ classdef ReachDiscrete < elltool.reach.AReach
                             GQGsr = zeros(d1*d1, size(self.time_values, 2));
                             for i = 1:size(self.time_values, 2)
                                 Q = self.matrix_eval(vEll.shape, self.time_values(i));
-                                if (Q ~= Q.') | (min(eig(Q)) < 0)
-                                    throwerror(['REACH: shape matrix of ',...
+                                if ~gras.la.ismatposdef(Q,self.absTol,false)
+                                    throwerror('wrongMat',['shape matrix of ',...
                                         'ellipsoidal disturbance bounds ',...
                                         'must be positive definite.']);
                                 end
@@ -1186,8 +1193,8 @@ classdef ReachDiscrete < elltool.reach.AReach
                             end
                             if iscell(vEll.shape)
                                 Q = self.matrix_eval(vEll.shape, self.time_values(i));
-                                if (Q ~= Q.') | (min(eig(Q)) < 0)
-                                    throwerror(['REACH: shape matrix of ',...
+                                if ~gras.la.ismatposdef(Q,self.absTol,false)
+                                    throwerror('wrongMat',['shape matrix of ',...
                                         'ellipsoidal disturbance bounds ',...
                                         'must be positive definite.']);
                                 end
@@ -1239,8 +1246,8 @@ classdef ReachDiscrete < elltool.reach.AReach
                         for i = 1:size(self.time_values, 2)
                             w  = [w self.matrix_eval(noiseEll.center, self.time_values(i))];
                             ww = self.matrix_eval(noiseEll.shape, self.time_values(i));
-                            if (ww ~= ww.') | (min(eig(ww)) < 0)
-                                throwerror(['REACH: shape matrix of ',...
+                            if ~gras.la.ismatposdef(ww,self.absTol,false)
+                                throwerror('wrongMat',['shape matrix of ',...
                                     'ellipsoidal noise bounds must be positive definite.']);
                             end
                             W  = [W reshape(ww, dy*dy, 1)];
@@ -1267,8 +1274,8 @@ classdef ReachDiscrete < elltool.reach.AReach
                         W = [];
                         for i = 1:size(self.time_values, 2)
                             ww = self.matrix_eval(noiseEll.shape, self.time_values(i));
-                            if (ww ~= ww.') | (min(eig(ww)) < 0)
-                                throwerror(['REACH: shape matrix of ',...
+                            if ~gras.la.ismatposdef(ww,self.absTol,false)
+                                throwerror('wrongMat',['shape matrix of ',...
                                     'ellipsoidal noise bounds must be positive definite.']);
                             end
                             W  = [W reshape(ww, dy*dy, 1)];
@@ -1286,7 +1293,10 @@ classdef ReachDiscrete < elltool.reach.AReach
                 'BPB', 'Gq', 'GQG', 'p', 'P', 'q', 'Q', 'w', 'W', 'ww');
             %%% Compute state transition matrix.
             if Properties.getIsVerbose()
-                fprintf('Computing state transition matrix...\n');
+                if isempty(logger)
+                    logger=Log4jConfigurator.getLogger();
+                end
+                logger.info('Computing state transition matrix...');
             end
             if linSys.isdiscrete()
                 mydata.Phi   = [];
@@ -1321,7 +1331,10 @@ classdef ReachDiscrete < elltool.reach.AReach
             clear('Phi', 'Phinv', 'P', 'PP', 't0', 'I0');
             %%% Compute the center of the reach set.
             if Properties.getIsVerbose()
-                fprintf('Computing the trajectory of the reach set center...\n');
+                if isempty(logger)
+                    logger=Log4jConfigurator.getLogger();
+                end
+                logger.info('Computing the trajectory of the reach set center...');
             end
             [x0, X0] = parameters(x0Ell);
             if linSys.isdiscrete()
@@ -1352,7 +1365,10 @@ classdef ReachDiscrete < elltool.reach.AReach
             %%% Compute external shape matrices.
             if (OptStruct.approximation ~= 1)
                 if Properties.getIsVerbose()
-                    fprintf('Computing external shape matrices...\n');
+                    if isempty(logger)
+                        logger=Log4jConfigurator.getLogger();
+                    end
+                    logger.info('Computing external shape matrices...');
                 end
                 LL = [];
                 QQ = [];
@@ -1391,7 +1407,10 @@ classdef ReachDiscrete < elltool.reach.AReach
             %%% Compute internal shape matrices.
             if (OptStruct.approximation ~= 0)
                 if Properties.getIsVerbose()
-                    fprintf('Computing internal shape matrices...\n');
+                    if isempty(logger)
+                        logger=Log4jConfigurator.getLogger();
+                    end
+                    logger.info('Computing internal shape matrices...');
                 end
                 LL = [];
                 QQ = [];
@@ -2005,6 +2024,10 @@ classdef ReachDiscrete < elltool.reach.AReach
         %
         function plot_ea(self, varargin)
             import elltool.conf.Properties;
+            import elltool.logging.Log4jConfigurator;
+
+            persistent logger;
+
             d  = dimension(self);
             N  = size(self.ea_values, 2);
             if (d < 2) || (d > 3)
@@ -2064,7 +2087,10 @@ classdef ReachDiscrete < elltool.reach.AReach
                 back = 'Reach set';
             end
             if Properties.getIsVerbose()
-                fprintf('Plotting reach set external approximation...\n');
+                if isempty(logger)
+                    logger=Log4jConfigurator.getLogger();
+                end
+                logger.info('Plotting reach set external approximation...');
             end
             if d == 3
                 EE  = move2origin(E(:, end));
@@ -2253,6 +2279,10 @@ classdef ReachDiscrete < elltool.reach.AReach
         %
         function plot_ia(self, varargin)
             import elltool.conf.Properties;
+            import elltool.logging.Log4jConfigurator;
+
+            persistent logger;
+            
             d  = dimension(self);
             N  = size(self.ia_values, 2);
             if (d < 2) || (d > 3)
@@ -2312,7 +2342,10 @@ classdef ReachDiscrete < elltool.reach.AReach
                 back = 'Reach set';
             end
             if Properties.getIsVerbose()
-                fprintf('Plotting reach set internal approximation...\n');
+                if isempty(logger)
+                    logger=Log4jConfigurator.getLogger();
+                end
+                logger.info('Plotting reach set internal approximation...');
             end
             if d == 3
                 EE         = move2origin(inv(E(:, end)));
@@ -2564,11 +2597,15 @@ classdef ReachDiscrete < elltool.reach.AReach
         function newReachObj = evolve(self, newEndTime, linSys)
             import elltool.conf.Properties;
             import modgen.common.throwerror;
+            import elltool.logging.Log4jConfigurator;
+
+            persistent logger;
+            
             if nargin < 2
-                throwerror('EVOLVE: insufficient number of input arguments.');
+                throwerror('insufficient number of input arguments.');
             end
             if isprojection(self)
-                throwerror('EVOLVE: cannot compute the reach set for projection.');
+                throwerror('cannot compute the reach set for projection.');
             end
             newReachObj = self.getCopy();
             if nargin < 3
@@ -2579,18 +2616,18 @@ classdef ReachDiscrete < elltool.reach.AReach
             end
             [d1, du, dy, dd] = dimension(linSys);
             if d1 ~= dimension(self.system)
-                throwerror(['EVOLVE: dimensions of the old and ',...
+                throwerror(['dimensions of the old and ',...
                     'new linear systems do not match.']);
             end
             newReachObj.system = linSys;
             newEndTime = [newReachObj.time_values(end) newEndTime(1, 1)];
             if (newReachObj.t0 > newEndTime(1)) &&...
                     (newEndTime(1) < newEndTime(2))
-                throwerror('EVOLVE: reach set must evolve backward in time.');
+                throwerror('reach set must evolve backward in time.');
             end
             if (newReachObj.t0 < newEndTime(1)) &&...
                     (newEndTime(1) > newEndTime(2))
-                throwerror('EVOLVE: reach set must evolve forward in time.');
+                throwerror('reach set must evolve forward in time.');
             end
             Options = [];
             Options.approximation = 2;
@@ -2644,7 +2681,10 @@ classdef ReachDiscrete < elltool.reach.AReach
             %%% Perform matrix, control, disturbance and noise evaluations.
             %%% Create splines if needed.
             if Properties.getIsVerbose()
-                fprintf('Performing preliminary function evaluations...\n');
+                if isempty(logger)
+                    logger=Log4jConfigurator.getLogger();
+                end
+                logger.info('Performing preliminary function evaluations...');
             end
             mydata.A     = [];
             mydata.Bp    = [];
@@ -2810,8 +2850,8 @@ classdef ReachDiscrete < elltool.reach.AReach
                                 newReachObj.time_values(i));
                             P = self.matrix_eval(uEll.shape,...
                                 newReachObj.time_values(i));
-                            if (P ~= P') | (min(eig(P)) < 0)
-                                throwerror(['EVOLVE: shape matrix of ',...
+                            if ~gras.la.ismatposdef(P,self.absTol,false)
+                                throwerror('wrongMat',['shape matrix of ',...
                                     'ellipsoidal control bounds ',...
                                     'must be positive definite.']);
                             end
@@ -2852,8 +2892,8 @@ classdef ReachDiscrete < elltool.reach.AReach
                         for i = 1:size(newReachObj.time_values, 2)
                             P = self.matrix_eval(uEll.shape,...
                             newReachObj.time_values(i));
-                            if (P ~= P') | (min(eig(P)) < 0)
-                            throwerror(['EVOLVE: shape matrix of ',...
+                            if ~gras.la.ismatposdef(P,self.absTol,false)
+                            throwerror('wrongMat',['shape matrix of ',...
                                 'ellipsoidal control bounds must ',...
                                 'be positive definite.']);
                             end
@@ -2887,8 +2927,8 @@ classdef ReachDiscrete < elltool.reach.AReach
                         if iscell(uEll.shape)
                             P = self.matrix_eval(uEll.shape,...
                                 newReachObj.time_values(i));
-                            if (P ~= P') | (min(eig(P)) < 0)
-                                throwerror(['EVOLVE: shape matrix of ',...
+                            if ~gras.la.ismatposdef(P,self.absTol,false)
+                                throwerror('wrongMat',['shape matrix of ',...
                                     'ellipsoidal control bounds ',...
                                     'must be positive definite.']);
                             end
@@ -2995,8 +3035,8 @@ classdef ReachDiscrete < elltool.reach.AReach
                                 Q = self.matrix_eval(...
                                     vEll.shape,...
                                     newReachObj.time_values(i));
-                                if (Q ~= Q') | (min(eig(Q)) < 0)
-                                    throwerror(['EVOLVE: shape matrix of ',...
+                                if ~gras.la.ismatposdef(Q,self.absTol,false)
+                                    throwerror('wrongMat',['shape matrix of ',...
                                         'ellipsoidal disturbance ',...
                                         'bounds must be positive definite.']);
                                 end
@@ -3039,8 +3079,8 @@ classdef ReachDiscrete < elltool.reach.AReach
                                 Q = self.matrix_eval(...
                                     vEll.shape,...
                                     newReachObj.time_values(i));
-                                if (Q ~= Q') | (min(eig(Q)) < 0)
-                                    throwerror(['EVOLVE: shape matrix of ',...
+                                if ~gras.la.ismatposdef(Q,self.absTol,false)
+                                    throwerror('wrongMat',['shape matrix of ',...
                                         'ellipsoidal disturbance bounds ',...
                                         'must be positive definite.']);
                                 end
@@ -3076,8 +3116,8 @@ classdef ReachDiscrete < elltool.reach.AReach
                                 Q = self.matrix_eval(...
                                     vEll.shape,...
                                     newReachObj.time_values(i));
-                                if (Q ~= Q') | (min(eig(Q)) < 0)
-                                    throwerror(['EVOLVE: shape matrix of ',...
+                                if ~gras.la.ismatposdef(Q,self.absTol,false)
+                                    throwerror('wrongMat',['shape matrix of ',...
                                         'ellipsoidal disturbance bounds ',...
                                         'must be positive definite.']);
                                 end
@@ -3132,8 +3172,8 @@ classdef ReachDiscrete < elltool.reach.AReach
                                 newReachObj.time_values(i))];
                             ww = self.matrix_eval(noiseEll.shape,...
                                 newReachObj.time_values(i));
-                            if (ww ~= ww') | (min(eig(ww)) < 0)
-                                throwerror(['EVOLVE: shape matrix of ',...
+                            if ~gras.la.ismatposdef(ww,self.absTol,false)
+                                throwerror('wrongMat',['shape matrix of ',...
                                     'ellipsoidal noise bounds ',...
                                     'must be positive definite.']);
                             end
@@ -3163,8 +3203,8 @@ classdef ReachDiscrete < elltool.reach.AReach
                         for i = 1:size(newReachObj.time_values, 2)
                             ww = self.matrix_eval(noiseEll.shape,...
                                 newReachObj.time_values(i));
-                            if (ww ~= ww') | (min(eig(ww)) < 0)
-                                throwerror(['EVOLVE: shape matrix of ',...
+                            if ~gras.la.ismatposdef(ww,self.absTol,false)
+                                throwerror('wrongMat',['shape matrix of ',...
                                     'ellipsoidal noise bounds ',...
                                     'must be positive definite.']);
                             end
@@ -3182,7 +3222,10 @@ classdef ReachDiscrete < elltool.reach.AReach
             clear A B C AA BB CC DD Bp BPB Gq GQG p P q Q w W ww;
             %%% Compute state transition matrix.
             if Properties.getIsVerbose()
-                fprintf('Computing state transition matrix...\n');
+                if isempty(logger)
+                    logger=Log4jConfigurator.getLogger();
+                end
+                logger.info('Computing state transition matrix...');
             end
             if isdiscrete(linSys)
                 mydata.Phi   = [];
@@ -3217,7 +3260,10 @@ classdef ReachDiscrete < elltool.reach.AReach
             clear Phi Phinv P PP t0 I0;
             %%% Compute the center of the self set.
             if Properties.getIsVerbose()
-                fprintf('Computing the trajectory of the reach set center...\n');
+                if isempty(logger)
+                    logger=Log4jConfigurator.getLogger();
+                end
+                logger.info('Computing the trajectory of the reach set center...');
             end
             x0 = self.center_values(:, end);
             if isdiscrete(linSys)
@@ -3249,7 +3295,10 @@ classdef ReachDiscrete < elltool.reach.AReach
             %%% Compute external shape matrices.
             if (Options.approximation ~= 1)
                 if Properties.getIsVerbose()
-                    fprintf('Computing external shape matrices...\n');
+                    if isempty(logger)
+                        logger=Log4jConfigurator.getLogger();
+                    end
+                    logger.info('Computing external shape matrices...');
                 end
                 LL = [];
                 QQ = [];
@@ -3291,7 +3340,10 @@ classdef ReachDiscrete < elltool.reach.AReach
             %%% Compute internal shape matrices.
             if (Options.approximation ~= 0)
                 if Properties.getIsVerbose()
-                    fprintf('Computing internal shape matrices...\n');
+                    if isempty(logger)
+                        logger=Log4jConfigurator.getLogger();
+                    end
+                    logger.info('Computing internal shape matrices...');
                 end
                 LL = [];
                 QQ = [];

@@ -41,8 +41,10 @@ function plot(varargin)
 %
 
   import elltool.conf.Properties;
+  import elltool.logging.Log4jConfigurator;
 
-
+  persistent logger;
+  
   nai = nargin;
   E   = varargin{1};
   if ~isa(E, 'ellipsoid')
@@ -201,10 +203,13 @@ function plot(varargin)
   end
 
   if Properties.getIsVerbose()
+    if isempty(logger)
+      logger=Log4jConfigurator.getLogger();
+    end
     if ell_count == 1
-      fprintf('Plotting ellipsoid...\n');
+      logger.info('Plotting ellipsoid...');
     else
-      fprintf('Plotting %d ellipsoids...\n', ell_count);
+      logger.info(sprintf('Plotting %d ellipsoids...', ell_count));
     end
   end
 

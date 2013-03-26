@@ -69,6 +69,9 @@ import modgen.common.throwerror;
 import modgen.common.checkmultvar;
 import modgen.common.checkvar;
 import elltool.conf.Properties;
+import elltool.logging.Log4jConfigurator;
+
+persistent logger;
 
 ellipsoid.checkIsMe(fstEll,'first');
 ellipsoid.checkIsMe(secEll,'second');
@@ -91,7 +94,10 @@ if ~isbigger(fstEll, secEll)
     %minkmp is empty
     switch nArgOut
         case 0,
-            fprintf('The resulting set is empty.');
+            if isempty(logger)
+                logger=Log4jConfigurator.getLogger();
+            end
+            logger.info('The resulting set is empty.');
         case 1,
             centVec = [];
         otherwise,
@@ -101,10 +107,13 @@ if ~isbigger(fstEll, secEll)
 else
     isVerb = Properties.getIsVerbose();
     if isVerb
+        if isempty(logger)
+            logger=Log4jConfigurator.getLogger();
+        end
         if nArgOut == 0
-            fprintf('Computing and plotting (E0 - E) + sum(E_i) ...\n');
+            logger.info('Computing and plotting (E0 - E) + sum(E_i) ...');
         else
-            fprintf('Computing (E0 - E) + sum(E_i) ...\n');
+            logger.info('Computing (E0 - E) + sum(E_i) ...');
         end
     end
     
@@ -150,8 +159,9 @@ else
             end
             q1Mat=fstEll.shape;
             q2Mat=secEll.shape;
+            absTol=elltool.conf.Properties.getAbsTol();
             isGoodDirVec = ~ellipsoid.isbaddirectionmat(q1Mat, q2Mat, ...
-                lDirsMat);
+                lDirsMat,absTol);
             if  ~any(isGoodDirVec)
                 tmpEll=ellipsoid(fstEll.center-secEll.center, ...
                     zeros(nDim,nDim));

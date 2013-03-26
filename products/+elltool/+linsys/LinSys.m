@@ -37,7 +37,7 @@ classdef LinSys < handle
     end
     %
     methods (Access = private, Static)
-        function isEllHaveNeededDim(InpEll, nDim)
+        function isEllHaveNeededDim(InpEll, nDim, absTol)
         % isEllHaveNeededDim - checks if given structure InpEll represents
         %     an ellipsoid of dimension nDim.
         %
@@ -47,10 +47,16 @@ classdef LinSys < handle
         %
         %       nDim: double[1, 1]
         %
+        %       absTol: doulbe[1,1]
+        %
         % Output:
         %   None.
         %
+            import elltool.logging.Log4jConfigurator;
             import modgen.common.throwerror;
+
+            persistent logger;
+
             qVec = InpEll.center;
             QMat = InpEll.shape;
             [kRows, lCols] = size(qVec);
@@ -58,7 +64,7 @@ classdef LinSys < handle
             %%
             if mRows ~= nCols
                 throwerror(sprintf('value:%s:shape', inputname(1)),...
-                    'shape matrix must be symmetric, positive definite');
+                    'shape matrix must be square');
             elseif nCols ~= nDim
                 throwerror(sprintf('linsys:dimension:%s:shape', inputname(1)),...
                     'shape matrix must be of dimension %dx%d', nDim, nDim);
@@ -79,7 +85,10 @@ classdef LinSys < handle
             %%
             if iscell(QMat)
                 if elltool.conf.Properties.getIsVerbose() > 0
-                    fprintf('Warning! Cannot check if symbolic matrix is positive definite.\n');
+                    if isempty(logger)
+                        logger=Log4jConfigurator.getLogger();
+                    end
+                    logger.info('Warning! Cannot check if symbolic matrix is positive definite.\n');
                 end
                 isEqMat = strcmp(QMat, QMat.');
                 if ~all(isEqMat(:))
@@ -88,10 +97,14 @@ classdef LinSys < handle
                 end
             else
                 if isa(QMat, 'double')
-                    isnEqMat = (QMat ~= QMat.');
-                    if any(isnEqMat(:)) || min(eig(QMat)) <= 0
-                        throwerror(sprintf('linsys:value:%s:shape', inputname(1)),...
-                            'shape matrix must be symmetric, positive definite');
+                    if ~gras.la.ismatsymm(QMat)
+                        throwerror(sprintf('linsys:value:%s:shape', ...
+                            inputname(1)),...
+                            'shape matrix must be symmetric');
+                    elseif ~gras.la.ismatposdef(QMat,absTol,false)
+                        throwerror(sprintf('linsys:value:%s:shape',...
+                            inputname(1)),...
+                            'shape matrix must be  positive definite');
                     end                    
                 else
                     throwerror(sprintf('type:%s:shape', inputname(1)),...
@@ -203,6 +216,10 @@ classdef LinSys < handle
         %
             import modgen.common.throwerror;
             import elltool.conf.Properties;
+            import elltool.logging.Log4jConfigurator;
+
+            persistent logger;
+
             neededPropNameList = {'absTol'};
             absTolVal = Properties.parseProp(varargin, neededPropNameList);
             if nargin == 0
@@ -219,6 +236,7 @@ classdef LinSys < handle
                 self.absTol = absTolVal;
                 return;
             end
+            self.absTol = absTolVal;
             %%
             isTimeInvar = true;
             [mRows, nCols] = size(atInpMat);
@@ -260,7 +278,10 @@ classdef LinSys < handle
                     end
                     if (dRows > rCols) &&...
                             (elltool.conf.Properties.getIsVerbose() > 0)
-                        fprintf('LINSYS: Warning! Control bounds U represented by degenerate ellipsoid.\n');
+                        if isempty(logger)
+                            logger=Log4jConfigurator.getLogger();
+                        end
+                        logger.info('LINSYS: Warning! Control bounds U represented by degenerate ellipsoid.');
                     end
                 elseif isa(uBoundsEll, 'double') || iscell(uBoundsEll)
                     [kRows, mRows] = size(uBoundsEll);
@@ -279,7 +300,7 @@ classdef LinSys < handle
                         isfield(uBoundsEll, 'shape')
                     isCBU = false;
                     uBoundsEll = uBoundsEll(1, 1);
-                    self.isEllHaveNeededDim(uBoundsEll, lCols);      
+                    self.isEllHaveNeededDim(uBoundsEll, lCols,self.absTol);      
                 else
                     throwerror('linsys:type:U',...
                         'LINSYS: control U must be an ellipsoid or a vector.')
@@ -338,7 +359,8 @@ classdef LinSys < handle
                         isfield(distBoundsEll, 'shape')
                     isCBV = false;
                     distBoundsEll = distBoundsEll(1, 1);
-                    self.isEllHaveNeededDim(distBoundsEll, lCols);
+                        self.isEllHaveNeededDim(distBoundsEll, lCols,...
+                        self.absTol);
                 else
                     throwerror('linsys:type:V',...
                         'LINSYS: disturbance V must be an ellipsoid or a vector.')
@@ -398,7 +420,8 @@ classdef LinSys < handle
                         isfield(noiseBoundsEll, 'shape')
                     isCBW = false;
                     noiseBoundsEll = noiseBoundsEll(1, 1);
-                    self.isEllHaveNeededDim(noiseBoundsEll, kRows);
+                    self.isEllHaveNeededDim(noiseBoundsEll, kRows, ...
+                        self.absTol);
                 else
                     throwerror('linsys:type:W',...
                         'LINSYS: noise W must be an ellipsoid or a vector.')
@@ -414,7 +437,6 @@ classdef LinSys < handle
                 self.isDiscr = true;
             end
             self.isConstantBoundsVec = [isCBU isCBV isCBW];
-            self.absTol = absTolVal;
         end
         %
         function [stateDimArr, inpDimArr, outDimArr, distDimArr] =...

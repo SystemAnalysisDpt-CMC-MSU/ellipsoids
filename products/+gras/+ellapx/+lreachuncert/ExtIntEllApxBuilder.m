@@ -16,6 +16,7 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
         minQMatEig
         %
         goodDirSetObj
+        absTol
     end
     methods (Access=protected)
         function S=getOrthTranslMatrix(self,Q_star,R_sqrt,b,a)
@@ -90,6 +91,7 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
                 BPBTransSqrtLDynamics,CQCTransSqrtLDynamics,...
                 ltSpline,t,QIntMat,QExtMat)
             import modgen.common.throwerror;
+            import gras.la.ismatposdef;
             A=AtDynamics.evaluate(t);
             ltVec=ltSpline.evaluate(t);
             %
@@ -102,7 +104,7 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             D_sqrt=sqrtm(D);
             %
             [VMat,DMat]=eig(QIntMat);
-            if any(diag(DMat)<0)
+            if ~ismatposdef(QIntMat,self.absTol,true)
                 throwerror('wrongState','internal approx has degraded');
             end
             Q_star=VMat*sqrt(DMat)*transpose(VMat);
@@ -111,7 +113,7 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             piNumerator=slCQClSqrtDynamics.evaluate(t);
             piDenominator=sqrt(sum((QIntMat*ltVec).*ltVec));
             if (piNumerator<=0)||(piDenominator<=0)
-                if min(eig(D))<=0
+                if ~ismatposdef(D,self.absTol)
                     throwerror('wrongInput',...
                         ['degenerate matrices C,Q for disturbance ',...
                         'contraints are not supported']);
@@ -128,7 +130,7 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             %
             %% External approximation
             [VMat,DMat]=eig(QExtMat);
-            if any(diag(DMat)<0)
+            if ~ismatposdef(QExtMat,self.absTol)
                 throwerror('wrongState','external approx has degraded');
             end
             Q_star=VMat*sqrt(DMat)*transpose(VMat);
@@ -304,6 +306,7 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             self.goodDirSetObj=goodDirSetObj;
             self.sMethodName=sMethodName;
             self.prepareODEData();
+            self.absTol=elltool.conf.Properties.getAbsTol();
         end
         function ellTubeRel=getEllTubes(self)
             import gras.gen.SquareMatVector;

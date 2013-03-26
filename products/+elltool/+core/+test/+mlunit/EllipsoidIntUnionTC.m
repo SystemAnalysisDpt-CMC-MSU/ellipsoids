@@ -573,10 +573,10 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             nDim = 2;
             testEllVec = ellipsoid([100, -100]', eye(nDim));
             testHpVec = hyperplane([0 -1]', 1);
-            self.runAndCheckError ...
-                ('resEllVec = hpintersection(testEllVec, testHpVec)',...
-                'degenerateEllipsoid');
-            
+            resEllVec = hpintersection(testEllVec, testHpVec);
+            ansEllVec = ellipsoid;
+            self.flexAssert(true, eq(resEllVec, ansEllVec));
+
             nDim = 2;
             testEllVec = ellipsoid(eye(nDim));
             testHpVec = hyperplane([1, 0].', 0);
