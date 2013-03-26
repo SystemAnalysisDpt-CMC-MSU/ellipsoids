@@ -159,8 +159,9 @@ else
             end
             q1Mat=fstEll.shape;
             q2Mat=secEll.shape;
+            absTol=elltool.conf.Properties.getAbsTol();
             isGoodDirVec = ~ellipsoid.isbaddirectionmat(q1Mat, q2Mat, ...
-                lDirsMat);
+                lDirsMat,absTol);
             if  ~any(isGoodDirVec)
                 tmpEll=ellipsoid(fstEll.center-secEll.center, ...
                     zeros(nDim,nDim));

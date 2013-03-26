@@ -103,6 +103,7 @@ end
 isVrb = Properties.getIsVerbose();
 Properties.setIsVerbose(false);
 extApproxEllVec = minksum_ea(inpEllArr, dirMat);
+absTolVal=min(min(extApproxEllVec.getAbsTol()),inpEll.absTol); 
 Properties.setIsVerbose(isVrb);
 
 if min(extApproxEllVec > inpEll) == 0
@@ -280,7 +281,8 @@ if nArgOut == 0
 end
     function fCase2extAppr(index)
         dirVec = dirMat(:, index);
-        isGoodDirVec =~isbaddirection(extApproxEllVec(index), inpEll, dirVec);
+        isGoodDirVec =~isbaddirection(extApproxEllVec(index), inpEll,...
+            dirVec,absTolVal);
         if any(isGoodDirVec)
             extApprEllVec(index)=minkdiff_ea(extApproxEllVec(index), ...
                 inpEll, dirMat(:,index));

@@ -41,19 +41,21 @@ classdef EllipsoidSecTestCase < mlunitext.test_case
         end
         function self = testIsBadDirection(self)
             [test1Ell, test2Ell] = createTypicalEll(5);
+            absTol=min(test1Ell.getAbsTol(),test2Ell.getAbsTol());
             aMat = [diag(ones(6, 1)), [1; 2; 3; 3; 4; 5]];
-            isTestResVec = isbaddirection(test1Ell, test2Ell, aMat);
+            isTestResVec = isbaddirection(test1Ell, test2Ell, aMat,...
+                absTol);
             isTestRes = any(isTestResVec);
             mlunit.assert_equals(0, isTestRes);
             [test1Ell, test2Ell] = createTypicalEll(6);
             compareExpForIsBadDir(test1Ell, test2Ell, [1, -1; 0, 0], ...
-                [1, -1; 2, 3]);
+                [1, -1; 2, 3],absTol);
             [test1Ell, test2Ell] = createTypicalEll(7);
             compareExpForIsBadDir(test1Ell, test2Ell,...
             [1, -1, 1000, 1000; 0, 0, 0.5, 0.5; 0, 0, -0.5, -1],...
-            [1, -1, 0, 0; 1, -2, 1, 2; 7, 3, 2, 1]);
+            [1, -1, 0, 0; 1, -2, 1, 2; 7, 3, 2, 1],absTol);
             [test1Ell, test2Ell, aMat, bMat] = createTypicalHighDimEll(8);
-            compareExpForIsBadDir(test1Ell, test2Ell, aMat, bMat);
+            compareExpForIsBadDir(test1Ell, test2Ell, aMat, bMat,absTol);
         end
         function self = testMinkmp_ea(self)
             compareAnalyticForMinkMp(true, false, 8, 5, 0, [])
@@ -633,11 +635,11 @@ function compareForIsInside(test1EllVec, test2EllVec, myString, myResult)
     end
     mlunit.assert_equals(myResult, testRes);
 end
-function compareExpForIsBadDir(test1Ell, test2Ell, a1Mat, a2Mat)
-    isTestResVec = isbaddirection(test1Ell, test2Ell, a1Mat);
+function compareExpForIsBadDir(test1Ell, test2Ell, a1Mat, a2Mat,absTol)
+    isTestResVec = isbaddirection(test1Ell, test2Ell, a1Mat,absTol);
     isTestRes = all(isTestResVec);
     mlunit.assert_equals(true, isTestRes);
-    isTestResVec = isbaddirection(test1Ell, test2Ell, a2Mat);
+    isTestResVec = isbaddirection(test1Ell, test2Ell, a2Mat,absTol);
     isTestRes = any(isTestResVec);
     mlunit.assert_equals(false, isTestRes);
 end

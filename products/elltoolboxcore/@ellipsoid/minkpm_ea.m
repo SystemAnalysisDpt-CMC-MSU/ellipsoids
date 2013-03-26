@@ -72,6 +72,7 @@ if any(isCheckVec)
 else
     
     secExtApprEllVec = minksum_ea(inpEllArr, dirMat);
+    absTol=min(min(secExtApprEllVec.getAbsTol()),inpEll.absTol);
     extApprEllVec = repmat(ellipsoid,1,nCols);
     arrayfun(@(x) fSetExtApprEllVec(x), 1:nCols)
     extApprEllVec = extApprEllVec(~isempty(extApprEllVec));
@@ -96,7 +97,7 @@ end
     end
     function fSetExtApprEllVec(index)
         dirVec = dirMat(:, index);
-        if ~isbaddirection(secExtApprEllVec(index), inpEll, dirVec)
+        if ~isbaddirection(secExtApprEllVec(index), inpEll, dirVec,absTol)
             extApprEllVec(index) = ...
                 minkdiff_ea(secExtApprEllVec(index), inpEll, dirVec);
         end

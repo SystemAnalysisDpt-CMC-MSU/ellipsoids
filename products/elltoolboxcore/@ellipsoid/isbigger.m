@@ -56,7 +56,8 @@ if isdegenerate(fstEll)
     fstEllShMat = ellipsoid.regularize(fstEllShMat,fstEll.absTol);
 end
 
-tMat = ell_simdiag(fstEllShMat, secEllShMat);
+absTolVal=min(fstEll.absTol, secEll.absTol);
+tMat = ell_simdiag(fstEllShMat, secEllShMat,absTolVal);
 if max(abs(diag(tMat*secEllShMat*tMat'))) < (1 + fstEll.absTol)
     isPositive = true;
 else

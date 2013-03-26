@@ -88,8 +88,9 @@ checkmultvar('(x1==x2)',2,dimension(fstEll),size(directionsMat, 1),...
 centVec = fstEll.center - secEll.center;
 fstEllShMat = fstEll.shape;
 secEllShMat = secEll.shape;
+absTolVal=min(fstEll.absTol, secEll.absTol);     
 directionsMat  = ellipsoid.rm_bad_directions(fstEllShMat, ...
-    secEllShMat, directionsMat);
+    secEllShMat, directionsMat,absTolVal);
 nDirs  = size(directionsMat, 2);
 if nDirs < 1
     if Properties.getIsVerbose()
