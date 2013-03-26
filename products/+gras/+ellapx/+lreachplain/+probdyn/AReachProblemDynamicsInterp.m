@@ -1,9 +1,5 @@
 classdef AReachProblemDynamicsInterp<...
         gras.ellapx.lreachplain.probdyn.AReachProblemDynamics
-    properties (Access = private)
-        sizeAtVec = [0 0];
-        numelAt = 0;
-    end
     methods
         function self=AReachProblemDynamicsInterp(problemDef,calcPrecision)          
             import gras.ellapx.common.*;
@@ -19,8 +15,8 @@ classdef AReachProblemDynamicsInterp<...
             AtDefCMat = problemDef.getAMatDef();
             t0 = problemDef.gett0();
             t1 = problemDef.gett1();
-            self.sizeAtVec = size(AtDefCMat);
-            self.numelAt = numel(AtDefCMat);
+            sizeAtVec = size(AtDefCMat);
+            numelAt = numel(AtDefCMat);
             %
             self.timeVec = linspace(t0,t1,self.N_TIME_POINTS);
             %
@@ -47,123 +43,107 @@ classdef AReachProblemDynamicsInterp<...
             %
             algorithm = 2;
             %
+            % the code here is a control code
+            %
             if (algorithm == 3)
-                solverObj=MatrixODESolver([self.numelAt + 1, 1],@ode45,odeArgList{:});
+                solverObj=MatrixODESolver([numelAt + 1, 1],@ode45,odeArgList{:});
             else
-                solverObj=MatrixODESolver(self.sizeAtVec,@ode45,odeArgList{:});
+                solverObj=MatrixODESolver(sizeAtVec,@ode45,odeArgList{:});
             end            
             %
-            % we can just change Rtt0DerivFunc_body to Xtt0DerivFunc_body
+            % the code here is a control code
             %
             switch (algorithm)
                 case 0
-                    Rtt0DerivFunc = @(t,x) self.Xtt0DerivFunc_body(t, x);
+                    fRtt0DerivFunc = @(t,x) fXtt0DerivFunc(t, x, @(u) self.AtDynamics.evaluate(u));
                 case 1
-                    Rtt0DerivFunc = @(t,x) self.Xtt0DerivFunc_body(t, x);
+                    fRtt0DerivFunc = @(t,x) fXtt0DerivFunc(t, x, @(u) self.AtDynamics.evaluate(u));
                 case 2
-                    Rtt0DerivFunc = @(t,x) self.Rtt0DerivFunc_body(t, x);
+                    fRtt0DerivFunc = @(t,x) fRtt0SimDerivFunc(t, x, @(u) self.AtDynamics.evaluate(u));
                 case 3
-                    Rtt0DerivFunc = @(t,x) self.Rtt0ExtDerivFunc_body(t, x);
+                    fRtt0DerivFunc = @(t,x) fRtt0ExtDerivFunc(t, x, @(u) self.AtDynamics.evaluate(u), sizeAtVec);
             end
+            %
+            % the code here is a control code
             %
             switch (algorithm)
                 case 0
-                    Rtt0InitialMat = eye(self.sizeAtVec);
+                    sRtt0InitialMat = eye(sizeAtVec);
                 case 1
-                    Rtt0InitialMat = eye(self.sizeAtVec);
+                    sRtt0InitialMat = eye(sizeAtVec);
                 case 2
-                    Rtt0InitialMat = eye(self.sizeAtVec);
-                    Rtt0InitialMat = normaliz(Rtt0InitialMat);
+                    sRtt0InitialMat = eye(sizeAtVec);
+                    sRtt0InitialMat = normaliz(sRtt0InitialMat);
                 case 3
-                    Rtt0InitialMat = eye(self.sizeAtVec);
-                    norm = sqrt(sum(sum(Rtt0InitialMat, 2)));
-                    Rtt0InitialMat = normaliz(Rtt0InitialMat);
-                    Rtt0InitialMat = [Rtt0InitialMat(:); norm];
+                    sRtt0InitialMat = eye(sizeAtVec);
+                    norm = sqrt(sum(sum(sRtt0InitialMat, 2)));
+                    sRtt0InitialMat = normaliz(sRtt0InitialMat);
+                    sRtt0InitialMat = [sRtt0InitialMat(:); norm];
             end
-            
             %
-            [timeRtt0Vec,data_Rtt0]=solverObj.solve(Rtt0DerivFunc,...
-                self.timeVec,Rtt0InitialMat);
+            [timeRtt0Vec,dataRtt0Array]=solverObj.solve(fRtt0DerivFunc,...
+                self.timeVec,sRtt0InitialMat);
             %
-            % the code here is control code (just calculates X(t, t0) and
-            % then divide it by matrixnorm(X(t,t0))
+            % the code here is a control code
             %
             switch (algorithm)
                 case 1
-                    data_Rtt0 = normaliz(data_Rtt0);
+                    dataRtt0Array = normaliz(dataRtt0Array);
                 case 3
-                    sz = size(data_Rtt0);
-                    normVec = data_Rtt0(sz(1), sz(2), :);
-                    normVec = repmat(normVec, [self.sizeAtVec, 1]);
-                    data_Rtt0 = data_Rtt0(1:(sz(1) - 1), :, :);
-                    data_Rtt0 = reshape(data_Rtt0, [self.sizeAtVec, self.N_TIME_POINTS]);
-                    data_Rtt0 = data_Rtt0 .* normVec;
+                    sz = size(dataRtt0Array);
+                    normVec = dataRtt0Array(sz(1), sz(2), :);
+                    normVec = repmat(normVec, [sizeAtVec, 1]);
+                    dataRtt0Array = dataRtt0Array(1:(sz(1) - 1), :, :);
+                    dataRtt0Array = reshape(dataRtt0Array, [sizeAtVec, self.N_TIME_POINTS]);
+                    dataRtt0Array = dataRtt0Array .* normVec;
             end
             %
             self.Xtt0Dynamics=MatrixInterpolantFactory.createInstance(...
-                'column',data_Rtt0,timeRtt0Vec);
-        end
-    end
-    
-    methods (Access = private)
-        %
-        % new equation for R(t, t0) and norm(X(t, t0))(t)
-        %
-        function dx = Rtt0ExtDerivFunc_body(dyn_interp, t, x)
-            norm = x(length(x)); x(length(x)) = [];
-            Rtt0Mat = reshape(x, dyn_interp.sizeAtVec);
-            %
-            cachedMat = dyn_interp.AtDynamics.evaluate(t) * Rtt0Mat;
-            %
-            dnorm = sum(Rtt0Mat(:) .* cachedMat(:)) * norm;
-            dRtt0Mat = cachedMat - Rtt0Mat * sum(Rtt0Mat(:) .* cachedMat(:));
-            dx = reshape(dRtt0Mat, [dyn_interp.numelAt 1]);
-            %
-            dx = [dx; dnorm];
-            %
-        end
-        %
-        % new equation for R(t, t0)
-        %
-        function dx = Rtt0DerivFunc_body(dyn_interp, t, x)
-            %
-            Rtt0Mat = reshape(x, dyn_interp.sizeAtVec);
-            cachedMat = dyn_interp.AtDynamics.evaluate(t) * Rtt0Mat;
-            %
-            dRtt0Mat = cachedMat - Rtt0Mat * sum(Rtt0Mat(:) .* cachedMat(:));
-            dx = reshape(dRtt0Mat, [dyn_interp.numelAt 1]);
-            %
-        end
-        %
-        % old equation for X(t, t0)
-        %
-        function dx = Xtt0DerivFunc_body(dyn_interp, t, x)
-            %
-            Xtt0 = reshape(x, dyn_interp.sizeAtVec);
-            dXtt0 = dyn_interp.AtDynamics.evaluate(t) * Xtt0;
-            dx = reshape(dXtt0, [dyn_interp.numelAt 1]);
-            %
+                'column',dataRtt0Array,timeRtt0Vec);
         end
     end
 end
 
 %
-% normalizes matrix A (matrixnorm(nA) = 1)
+% new equation for R(t, t0) and matrixnorm(X(t, t0))
 %
-function nA = normaliz(A)
-    szVec = size(A);
-    normMat = A .* A;
-    normMat = sum(normMat, 2);
-    normMat = sum(normMat, 1);
-    normMat = sqrt(normMat);
-    switch (length(szVec))
-        case 2
-            nA = A / normMat;
-        case 3
-            normMat = repmat(normMat, [szVec(1), szVec(2), 1]);
-            nA = A ./ normMat;
-    end
+function dx = fRtt0ExtDerivFunc(t, x, fAt, sizeAtVec)
+    norm = x(length(x)); x(length(x)) = [];
+    sRtt0Mat = reshape(x, sizeAtVec);
+    %
+    cachedMat = fAt(t) * sRtt0Mat;
+    scprod = sum(sRtt0Mat(:) .* cachedMat(:));
+    %
+    dnorm = scprod * norm;
+    dsRtt0Mat = cachedMat - sRtt0Mat * scprod;
+    %
+    dx = [dsRtt0Mat(:); dnorm];
+end
+%
+% new equation for R(t, t0)
+%
+function dx = fRtt0SimDerivFunc(t, x, fAt)
+    cachedMat = fAt(t) * x;
+    %
+    dx = cachedMat - x * sum(x(:) .* cachedMat(:));
+end
+%
+% old equation for X(t, t0)
+%
+function dx = fXtt0DerivFunc(t, x, fAt)
+    dx = fAt(t) * x;
 end
 
-
-
+%
+% normalizes matrix argMat (matrixnorm(normalizMat) = 1)
+%
+function normalizMat = normaliz(argMat)
+    szVec = size(argMat);
+    normMat = argMat .* argMat;
+    normMat = sqrt(sum(sum(normMat, 2), 1));
+    if (length(szVec) > 2)
+        szVec(3:length(szVec)) = 1;
+    end
+    normMat = repmat(normMat, szVec);
+    normalizMat = argMat ./ normMat;
+end
