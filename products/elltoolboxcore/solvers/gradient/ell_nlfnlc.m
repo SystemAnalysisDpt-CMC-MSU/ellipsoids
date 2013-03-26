@@ -55,6 +55,9 @@ function [X, FVAL] = ell_nlfnlc(objf, x0, nlcf, Options, varargin)
 %
 
   import elltool.conf.Properties;
+  import elltool.logging.Log4jConfigurator;
+  
+  persistent logger;
 
   if nargin < 3
     error('ELL_NLFNLC: function requires at least four input arguments.');
@@ -170,12 +173,15 @@ function [X, FVAL] = ell_nlfnlc(objf, x0, nlcf, Options, varargin)
                                  CHG, f, GRAD, c, ceq, cGRAD, ceqGRAD, varargin{:});
 
   if status < 0
+    if isempty(logger)
+      logger=Log4jConfigurator.getLogger();
+    end
     if Properties.getIsVerbose()
-      fprintf('ELL_NLFNLC: Warning! NLCP solver cannot compute the minimum.\n');
+      logger.info('ELL_NLFNLC: Warning! NLCP solver cannot compute the minimum.');
     end
   elseif status == 0
     if Properties.getIsVerbose()
-      fprintf('ELL_NLFNLC: Warning! Maximum of function evaluations exceeded.\n');
+      logger.info('ELL_NLFNLC: Warning! Maximum of function evaluations exceeded.');
     end
   end
 

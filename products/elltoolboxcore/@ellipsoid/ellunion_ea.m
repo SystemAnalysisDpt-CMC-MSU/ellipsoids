@@ -21,6 +21,9 @@ function outEll = ellunion_ea(inpEllArr)
 
 import elltool.conf.Properties;
 import modgen.common.throwerror;
+import elltool.logging.Log4jConfigurator;
+
+persistent logger;
 
 dimsArr = dimension(inpEllArr);
 minEllDim   = min(dimsArr(:));
@@ -41,7 +44,10 @@ modgen.common.checkvar(dimsArr,'all(x(:)==x(1))',...
     'errorMessage','all ellipsoids must be of the same dimension.');
 
 if Properties.getIsVerbose()
-    fprintf('Invoking CVX...\n');
+    if isempty(logger)
+        logger=Log4jConfigurator.getLogger();
+    end
+    logger.info('Invoking CVX...\n');
 end
 
 

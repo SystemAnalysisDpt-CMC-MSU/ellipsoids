@@ -32,6 +32,9 @@ function E = ell_enclose(V)
 
 import modgen.common.throwerror
 import elltool.conf.Properties;
+import elltool.logging.Log4jConfigurator;
+
+persistent logger;
 
 if nargin < 1
   E = ellipsoid;
@@ -41,7 +44,10 @@ end
 [m, n] = size(V);
 
 if Properties.getIsVerbose()
-  fprintf('Invoking CVX...\n');
+  if isempty(logger)
+    logger=Log4jConfigurator.getLogger();
+  end
+  logger.info('Invoking CVX...');
 end
 
 
