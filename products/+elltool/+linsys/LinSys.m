@@ -680,7 +680,7 @@ classdef LinSys < handle
             return; 
         end
         %
-        function isDisturbanceArr = hasdisturbance(self)
+        function isDisturbanceArr = hasdisturbance(self, varargin)
         %
         % HASDISTURBANCE checks if linear system has unknown bounded disturbance.
         %
@@ -688,18 +688,31 @@ classdef LinSys < handle
         %   regular:
         %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array
         %             of linear systems.
+        %   optional:
+        %       isMeaningful: treat constant disturbance vector
+        %                     as absence of disturbance
+        %           default: true
         %
         % Output:
         %   isDisturbanceArr: logical[nDims1, nDims2,...] - array such that
         %       it's element at each position is true if corresponding
         %       linear system has disturbance, and false otherwise.
         %
+            if (nargin == 1)
+                isMeaningful = true;
+            else
+                isMeaningful = varargin{1};
+            end
             isDisturbanceArr = arrayfun(@(x) isDisturb(x), self);
             %
             function isDisturb = isDisturb(linsys)
                 isDisturb = false;
-                if  ~isempty(linsys.disturbanceBoundsEll) &&...
-                        ~isempty(linsys.gtMat)
+                if  (~isempty(linsys.gtMat) &&...
+                           ~isempty(linsys.disturbanceBoundsEll)) &&...
+                        ((~isMeaningful && ...
+                           isa(linsys.disturbanceBoundsEll,'double')) ||...
+                        (isMeaningful &&...
+                           isa(linsys.disturbanceBoundsEll,'ellipsoid')))                       
                     isDisturb = true;
                 end
             end
