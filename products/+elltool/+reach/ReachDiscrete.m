@@ -649,6 +649,10 @@ classdef ReachDiscrete < elltool.reach.AReach
         %
             import elltool.conf.Properties;
             import modgen.common.throwerror;
+            import elltool.logging.Log4jConfigurator;
+
+            persistent logger;
+            	
             neededPropNameList =...
                 {'absTol', 'relTol', 'nPlot2dPoints',...
                 'nPlot3dPoints','nTimeGridPoints'};
@@ -768,7 +772,10 @@ classdef ReachDiscrete < elltool.reach.AReach
             %%% Perform matrix, control, disturbance and noise evaluations.
             %%% Create splines if needed.
             if Properties.getIsVerbose()
-                fprintf('Performing preliminary function evaluations...\n');
+                if isempty(logger)
+                   logger=Log4jConfigurator.getLogger();
+                end
+                logger.info('Performing preliminary function evaluations...');
             end
             %
             mydata.A     = [];
@@ -1286,7 +1293,10 @@ classdef ReachDiscrete < elltool.reach.AReach
                 'BPB', 'Gq', 'GQG', 'p', 'P', 'q', 'Q', 'w', 'W', 'ww');
             %%% Compute state transition matrix.
             if Properties.getIsVerbose()
-                fprintf('Computing state transition matrix...\n');
+                if isempty(logger)
+                    logger=Log4jConfigurator.getLogger();
+                end
+                logger.info('Computing state transition matrix...');
             end
             if linSys.isdiscrete()
                 mydata.Phi   = [];
@@ -1321,7 +1331,10 @@ classdef ReachDiscrete < elltool.reach.AReach
             clear('Phi', 'Phinv', 'P', 'PP', 't0', 'I0');
             %%% Compute the center of the reach set.
             if Properties.getIsVerbose()
-                fprintf('Computing the trajectory of the reach set center...\n');
+                if isempty(logger)
+                    logger=Log4jConfigurator.getLogger();
+                end
+                logger.info('Computing the trajectory of the reach set center...');
             end
             [x0, X0] = parameters(x0Ell);
             if linSys.isdiscrete()
@@ -1352,7 +1365,10 @@ classdef ReachDiscrete < elltool.reach.AReach
             %%% Compute external shape matrices.
             if (OptStruct.approximation ~= 1)
                 if Properties.getIsVerbose()
-                    fprintf('Computing external shape matrices...\n');
+                    if isempty(logger)
+                        logger=Log4jConfigurator.getLogger();
+                    end
+                    logger.info('Computing external shape matrices...');
                 end
                 LL = [];
                 QQ = [];
@@ -1391,7 +1407,10 @@ classdef ReachDiscrete < elltool.reach.AReach
             %%% Compute internal shape matrices.
             if (OptStruct.approximation ~= 0)
                 if Properties.getIsVerbose()
-                    fprintf('Computing internal shape matrices...\n');
+                    if isempty(logger)
+                        logger=Log4jConfigurator.getLogger();
+                    end
+                    logger.info('Computing internal shape matrices...');
                 end
                 LL = [];
                 QQ = [];
@@ -2005,6 +2024,10 @@ classdef ReachDiscrete < elltool.reach.AReach
         %
         function plot_ea(self, varargin)
             import elltool.conf.Properties;
+            import elltool.logging.Log4jConfigurator;
+
+            persistent logger;
+
             d  = dimension(self);
             N  = size(self.ea_values, 2);
             if (d < 2) || (d > 3)
@@ -2064,7 +2087,10 @@ classdef ReachDiscrete < elltool.reach.AReach
                 back = 'Reach set';
             end
             if Properties.getIsVerbose()
-                fprintf('Plotting reach set external approximation...\n');
+                if isempty(logger)
+                    logger=Log4jConfigurator.getLogger();
+                end
+                logger.info('Plotting reach set external approximation...');
             end
             if d == 3
                 EE  = move2origin(E(:, end));
@@ -2253,6 +2279,10 @@ classdef ReachDiscrete < elltool.reach.AReach
         %
         function plot_ia(self, varargin)
             import elltool.conf.Properties;
+            import elltool.logging.Log4jConfigurator;
+
+            persistent logger;
+            
             d  = dimension(self);
             N  = size(self.ia_values, 2);
             if (d < 2) || (d > 3)
@@ -2312,7 +2342,10 @@ classdef ReachDiscrete < elltool.reach.AReach
                 back = 'Reach set';
             end
             if Properties.getIsVerbose()
-                fprintf('Plotting reach set internal approximation...\n');
+                if isempty(logger)
+                    logger=Log4jConfigurator.getLogger();
+                end
+                logger.info('Plotting reach set internal approximation...');
             end
             if d == 3
                 EE         = move2origin(inv(E(:, end)));
@@ -2564,6 +2597,10 @@ classdef ReachDiscrete < elltool.reach.AReach
         function newReachObj = evolve(self, newEndTime, linSys)
             import elltool.conf.Properties;
             import modgen.common.throwerror;
+            import elltool.logging.Log4jConfigurator;
+
+            persistent logger;
+            
             if nargin < 2
                 throwerror('EVOLVE: insufficient number of input arguments.');
             end
@@ -2644,7 +2681,10 @@ classdef ReachDiscrete < elltool.reach.AReach
             %%% Perform matrix, control, disturbance and noise evaluations.
             %%% Create splines if needed.
             if Properties.getIsVerbose()
-                fprintf('Performing preliminary function evaluations...\n');
+                if isempty(logger)
+                    logger=Log4jConfigurator.getLogger();
+                end
+                logger.info('Performing preliminary function evaluations...');
             end
             mydata.A     = [];
             mydata.Bp    = [];
@@ -3182,7 +3222,10 @@ classdef ReachDiscrete < elltool.reach.AReach
             clear A B C AA BB CC DD Bp BPB Gq GQG p P q Q w W ww;
             %%% Compute state transition matrix.
             if Properties.getIsVerbose()
-                fprintf('Computing state transition matrix...\n');
+                if isempty(logger)
+                    logger=Log4jConfigurator.getLogger();
+                end
+                logger.info('Computing state transition matrix...');
             end
             if isdiscrete(linSys)
                 mydata.Phi   = [];
@@ -3217,7 +3260,10 @@ classdef ReachDiscrete < elltool.reach.AReach
             clear Phi Phinv P PP t0 I0;
             %%% Compute the center of the self set.
             if Properties.getIsVerbose()
-                fprintf('Computing the trajectory of the reach set center...\n');
+                if isempty(logger)
+                    logger=Log4jConfigurator.getLogger();
+                end
+                logger.info('Computing the trajectory of the reach set center...');
             end
             x0 = self.center_values(:, end);
             if isdiscrete(linSys)
@@ -3249,7 +3295,10 @@ classdef ReachDiscrete < elltool.reach.AReach
             %%% Compute external shape matrices.
             if (Options.approximation ~= 1)
                 if Properties.getIsVerbose()
-                    fprintf('Computing external shape matrices...\n');
+                    if isempty(logger)
+                        logger=Log4jConfigurator.getLogger();
+                    end
+                    logger.info('Computing external shape matrices...');
                 end
                 LL = [];
                 QQ = [];
@@ -3291,7 +3340,10 @@ classdef ReachDiscrete < elltool.reach.AReach
             %%% Compute internal shape matrices.
             if (Options.approximation ~= 0)
                 if Properties.getIsVerbose()
-                    fprintf('Computing internal shape matrices...\n');
+                    if isempty(logger)
+                        logger=Log4jConfigurator.getLogger();
+                    end
+                    logger.info('Computing internal shape matrices...');
                 end
                 LL = [];
                 QQ = [];

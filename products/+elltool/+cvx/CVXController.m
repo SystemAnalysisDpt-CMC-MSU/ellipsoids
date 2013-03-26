@@ -15,7 +15,7 @@ classdef CVXController
                 throwerror('cvxError',...
                     'wrong precision format for cvx beta version');
             end
-            cvx_precision([relTolVec(1), relTolVec(3)]);
+            cvx_precision([0.5*relTolVec(1), relTolVec(3)]);
             
         end
         %

@@ -38,6 +38,9 @@ import modgen.common.throwerror;
 import modgen.common.checkvar;
 import modgen.common.checkmultvar;
 import elltool.conf.Properties;
+import elltool.logging.Log4jConfigurator;
+
+persistent logger;
 
 ellipsoid.checkIsMe(inpEllArr,'first');
 ellipsoid.checkIsMe(inpEll,'second');
@@ -60,7 +63,10 @@ isCheckVec = false(1,nCols);
 arrayfun (@(x) fSanityCheck(x), 1:nCols);
 if any(isCheckVec)
     if isVrb > 0
-        fprintf('MINKPM_EA: the resulting set is empty.\n');
+        if isempty(logger)
+            logger=Log4jConfigurator.getLogger();
+        end
+        logger.info('MINKPM_EA: the resulting set is empty.');
     end
     Properties.setIsVerbose(isVrb);
 else
@@ -75,9 +81,12 @@ else
     
     if isempty(extApprEllVec)
         if Properties.getIsVerbose()
-            fprintf('MINKPM_EA: cannot compute external ');
-            fprintf('approximation for any\n           ');
-            fprintf('of the specified directions.\n');
+            if isempty(logger)
+                logger=Log4jConfigurator.getLogger();
+            end
+            logger.info('MINKPM_EA: cannot compute external ');
+            logger.info('approximation for any');
+            logger.info(' of the specified directions.');
         end
     end
 end

@@ -38,6 +38,9 @@ import modgen.common.throwerror;
 import modgen.common.checkvar;
 import modgen.common.checkmultvar;
 import elltool.conf.Properties;
+import elltool.logging.Log4jConfigurator;
+
+persistent logger;
 
 ellipsoid.checkIsMe(inpEllArr,'first');
 ellipsoid.checkIsMe(inpEll,'second');
@@ -66,9 +69,12 @@ Properties.setIsVerbose(isVrb);
 
 if isempty(intApprEllVec)
     if Properties.getIsVerbose()
-        fprintf('MINKPM_IA: cannot compute internal ');
-        fprintf('approximation for any\n           ');
-        fprintf('of the specified directions.\n')
+        if isempty(logger)
+            logger=Log4jConfigurator.getLogger();
+        end
+        logger.info('MINKPM_IA: cannot compute internal ');
+        logger.info('approximation for any');
+        logger.info(' of the specified directions.')
     end
 end
     function fSetIntApprVec(index)

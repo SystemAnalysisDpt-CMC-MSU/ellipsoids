@@ -55,6 +55,9 @@ function intApprEllVec = minkdiff_ia(fstEll, secEll, directionsMat)
 import modgen.common.throwerror;
 import modgen.common.checkmultvar;
 import elltool.conf.Properties;
+import elltool.logging.Log4jConfigurator;
+
+persistent logger;
 
 ellipsoid.checkIsMe(fstEll,'first');
 ellipsoid.checkIsMe(secEll,'second');
@@ -66,9 +69,12 @@ intApprEllVec = [];
 
 if ~isbigger(fstEll, secEll)
     if Properties.getIsVerbose()
+        if isempty(logger)
+            logger=Log4jConfigurator.getLogger();
+        end
         fstStr = 'MINKDIFF_IA: geometric difference of these two ';
-        secStr = 'ellipsoids is empty set.\n';
-        fprintf([fstStr secStr]);
+        secStr = 'ellipsoids is empty set.';
+        logger.info([fstStr secStr]);
     end
     return;
 end
@@ -92,8 +98,11 @@ directionsMat  = ellipsoid.rm_bad_directions(fstEllShMat, ...
 nDirs  = size(directionsMat, 2);
 if nDirs < 1
     if Properties.getIsVerbose()
-        fprintf('MINKDIFF_IA: cannot compute internal approximation');
-        fprintf(' for any\n             of the specified directions.\n');
+        if isempty(logger)
+            logger=Log4jConfigurator.getLogger();
+        end
+        logger.info('MINKDIFF_IA: cannot compute internal approximation');
+        logger.info(' for any of the specified directions.');
     end
     return;
 end
