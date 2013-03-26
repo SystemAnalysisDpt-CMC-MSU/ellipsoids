@@ -33,18 +33,22 @@ classdef EllTCMultiDim < mlunitext.test_case
             arrSizeVec=[2, 3, 2, 2];
             testEllArray=createObjectArray(arrSizeVec,@ell_unitball,2,1,1);
             nEll=numel(testEllArray);
-            vecMat=repmat([2;0],1,nEll);
+            %vecMat=repmat([2;0],1,nEll);
+            vecArrSizeVec=[2, arrSizeVec];
+            vecArray=zeros(vecArrSizeVec);
+            vecArray(1,:)=2;
             ansArray=ones(arrSizeVec);
             testEll3Array=testEllArray(:,:,:,1);
             testEll2Array=testEllArray;
             testEll2Array(1)=ell_unitball(3);
             %
             % Test ellipsoid-vector distance
-            checkCommonErrors('vecMat');
-            checkMultyInput(testEllArray,vecMat,true);
+            checkCommonErrors('vecArray');
+            checkMultyInput(testEllArray,vecArray,true);
             % Wrong dimension of vectors
-            vec3Mat=repmat([1;0;0],1,nEll);
-            self.runAndCheckError('distance(testEllArray,vec3Mat)',...
+            %vecArrSizeVec=[3, arrSizeVec];
+            vec3Array=zeros([3,arrSizeVec]);%repmat([1;0;0],1,nEll);
+            self.runAndCheckError('distance(testEllArray,vec3Array)',...
                 'wrongInput');           
             %
             % Test ellipsoid-ellipsoids distance 
