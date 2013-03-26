@@ -77,12 +77,11 @@ classdef EllTCMultiDim < mlunitext.test_case
             % Test ellipsoid-polytope distance 
             % Create data.
             hMat=-eye(2);
-            kVec=[-2 -1]';
+            kVec=[-2 1]';
             qStruct=struct('H',hMat,'K',kVec);
             testPolObj=polytope(qStruct);
-            
+            %
             checkMultyInput(testEllArray,testPolObj,false);
-      %      checkCommonErrors('testPolArray');
             %
             function checkDist(obj1Array, obj2Array)
                 resArray=distance(obj1Array, obj2Array);

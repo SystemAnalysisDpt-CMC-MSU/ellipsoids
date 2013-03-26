@@ -577,17 +577,19 @@ if size(QPar, 2) > rank(QPar)
 end
 QPar  = ell_inv(QPar);
 QPar  = 0.5*(QPar + QPar');
+mx1=dimension(ellObj);
+
 cvx_begin sdp
 variable x(mx1, 1)
 variable y(mx1, 1)
 if isFlagOn
-    f = (x - y)'*Qi*(x - y);
+    f = (x - y)'*QPar*(x - y);
 else
     f = (x - y)'*(x - y);
 end
 minimize(f)
 subject to
-x'*Qi*x + 2*(-Qi*qPar)'*x + (qPar'*Qi*qPar - 1) <= 0
+x'*QPar*x + 2*(-QPar*qPar)'*x + (qPar'*QPar*qPar - 1) <= 0
 aMat*y - bVec <= 0
 cvx_end
 
@@ -596,7 +598,7 @@ if distVal <absTol
     distVal = 0;
 end
 distVal  = sqrt(distVal);
-cvxStat=cvx_status;
+cvxStat={cvx_status};
 end
 
 function [distEllPolArray, statusArray] = computeEllPolytDist(ellObjArray, polObj,isFlagOn)
@@ -650,9 +652,8 @@ elseif (nEllObj > 1)
     [distEllPolArray, statusArray]=...
         arrayfun(fComputeDist,ellObjArray);
 else
-    fComputeDist=@(polObj) findEllHpDist(ellObjArray,polObj,isFlagOn);
     [distEllPolArray, statusArray]=...
-        arrayfun(fComputeDist,polObj);
+        findEllPolDist(ellObjArray,polObj,isFlagOn);
 end
 
 end
