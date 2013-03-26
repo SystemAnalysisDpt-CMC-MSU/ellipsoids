@@ -61,6 +61,9 @@ import elltool.conf.Properties;
 import modgen.common.throwerror;
 import modgen.common.checkvar;
 import modgen.common.checkmultvar;
+import elltool.logging.Log4jConfigurator;
+
+persistent logger;
 
 ellipsoid.checkIsMe(inpEllArr,'first');
 ellipsoid.checkIsMe(inpEll,'second');
@@ -100,12 +103,16 @@ end
 isVrb = Properties.getIsVerbose();
 Properties.setIsVerbose(false);
 extApproxEllVec = minksum_ea(inpEllArr, dirMat);
+absTolVal=min(min(extApproxEllVec.getAbsTol()),inpEll.absTol); 
 Properties.setIsVerbose(isVrb);
 
 if min(extApproxEllVec > inpEll) == 0
     switch nargout
         case 0,
-            fprintf('The resulting set is empty.');
+            if isempty(logger)
+                logger=Log4jConfigurator.getLogger();
+            end
+            logger.info('The resulting set is empty.');
             return;
             
         case 1,
@@ -166,10 +173,13 @@ if (Options.show_all ~= 0) && (nArgOut == 0)
 end
 
 if Properties.getIsVerbose()
+    if isempty(logger)
+        logger=Log4jConfigurator.getLogger();
+    end
     if nArgOut == 0
-        fprintf('Computing and plotting (sum(E_i) - E) ...\n');
+        logger.info('Computing and plotting (sum(E_i) - E) ...');
     else
-        fprintf('Computing (sum(E_i) - E) ...\n');
+        logger.info('Computing (sum(E_i) - E) ...');
     end
 end
 
@@ -271,7 +281,8 @@ if nArgOut == 0
 end
     function fCase2extAppr(index)
         dirVec = dirMat(:, index);
-        isGoodDirVec =~isbaddirection(extApproxEllVec(index), inpEll, dirVec);
+        isGoodDirVec =~isbaddirection(extApproxEllVec(index), inpEll,...
+            dirVec,absTolVal);
         if any(isGoodDirVec)
             extApprEllVec(index)=minkdiff_ea(extApproxEllVec(index), ...
                 inpEll, dirMat(:,index));

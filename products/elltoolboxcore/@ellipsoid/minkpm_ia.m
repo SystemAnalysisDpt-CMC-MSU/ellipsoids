@@ -38,9 +38,14 @@ import modgen.common.throwerror;
 import modgen.common.checkvar;
 import modgen.common.checkmultvar;
 import elltool.conf.Properties;
+import elltool.logging.Log4jConfigurator;
+
+persistent logger;
 
 ellipsoid.checkIsMe(inpEllArr,'first');
 ellipsoid.checkIsMe(inpEll,'second');
+
+absTol=inpEll.getAbsTol();
 
 checkvar(inpEll,@(x) isscalar(inpEll),'errorTag','wrongInput',...
     'errorMessage','second argument must be single ellipsoid.');
@@ -64,16 +69,19 @@ Properties.setIsVerbose(isVrb);
 
 if isempty(intApprEllVec)
     if Properties.getIsVerbose()
-        fprintf('MINKPM_IA: cannot compute internal ');
-        fprintf('approximation for any\n           ');
-        fprintf('of the specified directions.\n')
+        if isempty(logger)
+            logger=Log4jConfigurator.getLogger();
+        end
+        logger.info('MINKPM_IA: cannot compute internal ');
+        logger.info('approximation for any');
+        logger.info(' of the specified directions.')
     end
 end
     function fSetIntApprVec(index)
     	fstIntApprEll = fstIntApprEllMat(index);
         dirVec = dirMat(:, index);
         if isbigger(fstIntApprEll, inpEll)
-            if ~isbaddirection(fstIntApprEll, inpEll, dirVec)
+            if ~isbaddirection(fstIntApprEll, inpEll, dirVec,absTol)
                 intApprEllVec(index) = ...
                     minkdiff_ia(fstIntApprEll, inpEll, dirVec);
             end

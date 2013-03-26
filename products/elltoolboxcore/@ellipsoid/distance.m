@@ -368,6 +368,8 @@ function [distArray, timeArray] = computePointsEllDist(ellObjArray, vecArray, fl
 % L_POINTDIST - distance from ellipsoid to vector.
 %
     import elltool.conf.Properties;
+    import elltool.logging.Log4jConfigurator;
+    persistent logger;
     %
     [kSize, nVec] = size(vecArray);
     [mSize, lSize] = size(ellObjArray);
@@ -387,10 +389,13 @@ function [distArray, timeArray] = computePointsEllDist(ellObjArray, vecArray, fl
     end
     %
     if Properties.getIsVerbose()
+        if isempty(logger)
+            logger=Log4jConfigurator.getLogger();
+        end
         if (nEllObj > 1) || (nVec > 1)
-            fprintf('Computing %d ellipsoid-to-vector distances...\n', max([nEllObj nVec]));
+            logger.info(sprintf('Computing %d ellipsoid-to-vector distances...', max([nEllObj nVec])));
         else
-            fprintf('Computing ellipsoid-to-vector distance...\n');
+            logger.info('Computing ellipsoid-to-vector distance...');
         end
     end
 %
@@ -421,6 +426,8 @@ function [distEllEllArray, timeOfCalculationArray] = l_elldist(ellObj1Array, ell
 % L_ELLDIST - distance from ellipsoid to ellipsoid.
 %
     import elltool.conf.Properties;
+    import elltool.logging.Log4jConfigurator;
+    persistent logger;    
 
     [mSize1, kSize1] = size(ellObj1Array);
     [mSize2, kSize2] = size(ellObj2Array);
@@ -430,10 +437,13 @@ function [distEllEllArray, timeOfCalculationArray] = l_elldist(ellObj1Array, ell
         throwerror('DISTANCE: sizes of ellipsoidal arrays do not match.');
     end
     if Properties.getIsVerbose()
+        if isempty(logger)
+            logger=Log4jConfigurator.getLogger();
+        end
         if (nEllObj1 > 1) || (nEllObj2 > 1)
-          fprintf('Computing %d ellipsoid-to-ellipsoid distances...\n', max([nEllObj1 nEllObj2]));
+          logger.info(sprintf('Computing %d ellipsoid-to-ellipsoid distances...', max([nEllObj1 nEllObj2])));
         else
-          fprintf('Computing ellipsoid-to-ellipsoid distance...\n');
+          logger.info('Computing ellipsoid-to-ellipsoid distance...');
         end
     end
     N_MAX_ITER=10000;
@@ -478,6 +488,8 @@ function [d, status] = l_hpdist(E, X, flag)
 %
 
   import elltool.conf.Properties;
+  import elltool.logging.Log4jConfigurator;
+  persistent logger;
 
   [m, n] = size(E);
   [k, l] = size(X);
@@ -501,10 +513,13 @@ function [d, status] = l_hpdist(E, X, flag)
   end
 
   if Properties.getIsVerbose()
+    if isempty(logger)
+        logger=Log4jConfigurator.getLogger();
+    end
     if (t1 > 1) || (t2 > 1)
-      fprintf('Computing %d ellipsoid-to-hyperplane distances...\n', max([t1 t2]));
+      logger.info(sprintf('Computing %d ellipsoid-to-hyperplane distances...', max([t1 t2])));
     else
-      fprintf('Computing ellipsoid-to-hyperplane distance...\n');
+      logger.info('Computing ellipsoid-to-hyperplane distance...');
     end
   end
 
@@ -596,6 +611,8 @@ function [d, status] = l_polydist(E, X)
 %
 
   import elltool.conf.Properties;
+  import elltool.logging.Log4jConfigurator;
+  persistent logger;
 
   [m, n] = size(E);
   [k, l] = size(X);
@@ -626,12 +643,15 @@ function [d, status] = l_polydist(E, X)
   end
 
   if Properties.getIsVerbose()
-    if (t1 > 1) || (t2 > 1)
-      fprintf('Computing %d ellipsoid-to-polytope distances...\n', max([t1 t2]));
-    else
-      fprintf('Computing ellipsoid-to-polytope distance...\n');
+    if isempty(logger)
+      logger=Log4jConfigurator.getLogger();
     end
-    fprintf('Invoking CVX...\n');
+    if (t1 > 1) || (t2 > 1)
+      logger.info(sprintf('Computing %d ellipsoid-to-polytope distances...', max([t1 t2])));
+    else
+      logger.info('Computing ellipsoid-to-polytope distance...');
+    end
+    logger.info('Invoking CVX...');
   end
   
   absTolMat = getAbsTol(E);

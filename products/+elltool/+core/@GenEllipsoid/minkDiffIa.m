@@ -69,6 +69,7 @@ for iDir=1:nDirs
         ellQ2Mat=ellObj2.eigvMat*ellObj2.diagMat*ellObj2.eigvMat.';
         resQMat=GenEllipsoid.findDiffFC(@GenEllipsoid.findDiffIaND,ellQ1Mat,ellQ2Mat,...
             curDirVec,absTol);
+        resQMat=0.5*(resQMat+resQMat.');
         resEllVec(iDir)=GenEllipsoid(resCenterVec,resQMat);
     end
 end
