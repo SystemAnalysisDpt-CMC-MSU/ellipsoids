@@ -156,8 +156,10 @@ classdef ElliIntUnionTCMultiDim < mlunitext.test_case
                 hpintersection(testEllArray, testHpArray);
             testResArray = eq(resEllArray, ansEllArray);
             self.flexAssert(true, all(testResArray(:)));
+            
             testResArray = eq(isnIntersectedArray, isnAnsIntersectedArray);
             self.flexAssert(true, all(testResArray(:)));
+            
             [testEllArray, arraySizeVec] = createTypicalArray(8);
             testHpArray = createObjectArray(arraySizeVec,  ...
                 @(varargin)hyperplane(varargin{:}), [0, 0, 1, 0].', 0, 2);
@@ -176,11 +178,11 @@ classdef ElliIntUnionTCMultiDim < mlunitext.test_case
             testCorrect()
             arraySizeVec = [2, 2, 3, 1, 1, 1, 4];
             testEllArray = createObjectArray(arraySizeVec, @ell_unitball, ... 
-                3, 1, 1);
+                 3, 1, 1);
             testHpArray = createObjectArray(arraySizeVec,  ...
-                @(varargin)hyperplane(varargin{:}), [0, 0, 1].', -2, 2);   
-            errorStr = 'degenerateEllipsoid';
-            testError(0);
+                 @(varargin)hyperplane(varargin{:}), [0, 0, 1].', -2, 2);   
+            ansEllArray = ellipsoid();
+             testCorrect();
             testHpArray = hyperplane.empty(1, 0, 0, 2, 5);
             [~, testEllArray, errorStr, arraySizeVec] = ...
                 createTypicalArray(4);
@@ -197,13 +199,13 @@ classdef ElliIntUnionTCMultiDim < mlunitext.test_case
                 @(varargin)hyperplane(varargin{:}), [0, 0, 1].', 1, 2);
             testHpArray(1, 1, 1, 2, 1, 1, 1) = hyperplane([0, 1].', 1);
             [~, ~, errorStr] = createTypicalArray(7);
-            testError(0);
-            testHpArray(1, 1, 1, 2, 1, 1, 1) = hyperplane([0, 0, 1].', 1);
-            testError(4);
-            testError(5);
-            testError(6);
-            testError(7);       
-            function testCorrect()
+           testError(0);
+             testHpArray(1, 1, 1, 2, 1, 1, 1) = hyperplane([0, 0, 1].', 1);
+             testError(4);
+             testError(5);
+             testError(6);
+             testError(7);       
+             function testCorrect()
                 resEllArray = hpintersection(testEllArray, testHpArray);
                 testResArray = eq(resEllArray, ansEllArray);
                 self.flexAssert(true, all(testResArray(:)));
