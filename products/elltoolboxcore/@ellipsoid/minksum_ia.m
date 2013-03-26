@@ -49,6 +49,9 @@ function intApprEllVec = minksum_ia(inpEllArr, dirMat)
 import elltool.conf.Properties;
 import modgen.common.throwerror;
 import modgen.common.checkmultvar;
+import elltool.logging.Log4jConfigurator;
+
+persistent logger;
 
 ellipsoid.checkIsMe(inpEllArr,'first');
 
@@ -101,10 +104,13 @@ arrayfun(@(x) fSingleDirection(x),1:nCols);
         import gras.la.mlorthtransl;
         shMat = inpEllArr(ellIndex).shape;
         if isdegenerate(inpEllArr(ellIndex))
-            if isVerbose
-                fprintf('MINKSUM_IA: Warning!');
-                fprintf(' Degenerate ellipsoid.\n');
-                fprintf('            Regularizing...\n')
+            if isVerbose                
+                if isempty(logger)
+                    logger=Log4jConfigurator.getLogger();
+                end
+                logger.info('MINKSUM_IA: Warning!');
+                logger.info('Degenerate ellipsoid.');
+                logger.info('Regularizing...')
             end
             shMat = ellipsoid.regularize(shMat, absTolArr(ellIndex));
         end

@@ -82,8 +82,11 @@ function [res, status] = isinside(fstEllArr, secObjArr, mode)
 %            System Analysis Department 2012 $
 
 import elltool.conf.Properties;
+import elltool.logging.Log4jConfigurator;
 import modgen.common.throwerror;
 import modgen.common.checkmultvar;
+
+persistent logger;
 
 ellipsoid.checkIsMe(fstEllArr,'first');
 modgen.common.checkvar(secObjArr,@(x) isa(x, 'ellipsoid') ||...
@@ -172,8 +175,13 @@ else
         2,nFstEllDimsMat,nSecEllDimsMat,...
         'errorTag','wrongSizes',...
         'errorMessage','input arguments must be of the same dimension.');
+    
+    
     if Properties.getIsVerbose()
-        fprintf('Invoking CVX...\n');
+        if isempty(logger)
+            logger=Log4jConfigurator.getLogger();
+        end
+        logger.info('Invoking CVX...');
     end
     res = 1;
     resMat  =arrayfun (@(x) qcqp(secObjVec,x), fstEllArr);
@@ -216,13 +224,19 @@ function [res, status] = qcqp(fstEllArr, secObj)
 
 import modgen.common.throwerror;
 import elltool.conf.Properties;
+import elltool.logging.Log4jConfigurator;
+
+persistent logger;
 
 absTolScal = getAbsTol(secObj);
 [qVec, paramMat] = parameters(secObj);
 if size(paramMat, 2) > rank(paramMat)
     if Properties.getIsVerbose()
-        fprintf('QCQP: Warning! Degenerate ellipsoid.\n');
-        fprintf('      Regularizing...\n');
+        if isempty(logger)
+            logger=Log4jConfigurator.getLogger();
+        end
+        logger.info('QCQP: Warning! Degenerate ellipsoid.');
+        logger.info('      Regularizing...');
     end
     paramMat = ellipsoid.regularize(paramMat,absTolScal);
 end

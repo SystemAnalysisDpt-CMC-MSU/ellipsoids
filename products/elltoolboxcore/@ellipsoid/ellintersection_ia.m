@@ -23,7 +23,9 @@ function outEll = ellintersection_ia(inpEllArr)
 
 import modgen.common.throwerror
 import elltool.conf.Properties;
+import elltool.logging.Log4jConfigurator;
 
+persistent logger;
 
 dimsArr = dimension(inpEllArr);
 minEllDim   = min(dimsArr(:));
@@ -44,7 +46,10 @@ nEllipsoids = numel(inpEllArr);
 inpEllVec = reshape(inpEllArr, 1, nEllipsoids);
 
 if Properties.getIsVerbose()
-    fprintf('Invoking CVX...\n');
+    if isempty(logger)
+        logger=Log4jConfigurator.getLogger();
+    end
+    logger.info('Invoking CVX...');
 end
 absTolVec = getAbsTol(inpEllVec);
 cvx_begin sdp

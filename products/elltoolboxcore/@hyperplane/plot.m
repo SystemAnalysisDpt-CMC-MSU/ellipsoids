@@ -44,7 +44,10 @@ function figHandleVec = plot(varargin)
 
 
   import elltool.conf.Properties;
+  import elltool.logging.Log4jConfigurator;
 
+  logger=Log4jConfigurator.getLogger();
+  
   nai = nargin;
   H   = varargin{1};
   if ~(isa(H, 'hyperplane'))
@@ -213,9 +216,9 @@ function figHandleVec = plot(varargin)
 
   if Properties.getIsVerbose()
     if hp_count == 1
-      fprintf('Plotting hyperplane...\n');
+      logger.info('Plotting hyperplane...');
     else
-      fprintf('Plotting %d hyperplanes...\n', hp_count);
+      logger.info(sprintf('Plotting %d hyperplanes...', hp_count));
     end
   end
 

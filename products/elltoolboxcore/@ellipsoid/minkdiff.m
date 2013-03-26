@@ -53,8 +53,11 @@ function [centVec, boundPointMat] = minkdiff(fstEll,secEll,varargin)
 % $Copyright:  The Regents of the University of California 2004-2008 $
 
 import elltool.conf.Properties;
+import elltool.logging.Log4jConfigurator;
 import modgen.common.throwerror;
 import modgen.common.checkmultvar;
+
+persistent logger;
 
 ellipsoid.checkIsMe(fstEll,'first');
 ellipsoid.checkIsMe(secEll,'second');
@@ -69,9 +72,12 @@ nArgOut = nargout;
 if ~isbigger(fstEll, secEll)
     switch nArgOut
         case 0,
+            if isempty(logger)
+                logger=Log4jConfigurator.getLogger();
+            end
             fstStr = 'Geometric difference of these two ellipsoids';
             secStr = ' is empty set.';
-            fprintf([fstStr secStr]);
+            logger.info([fstStr secStr]);
             return;
         case 1,
             centVec = [];
@@ -129,12 +135,15 @@ if (Options.show_all ~= 0) && (nargout == 0)
 end
 
 if Properties.getIsVerbose()
+    if isempty(logger)
+        logger=Log4jConfigurator.getLogger();
+    end
     if nArgOut == 0
         fstStr = 'Computing and plotting geometric difference ';
-        secStr = 'of two ellipsoids...\n';
-        fprintf([fstStr secStr]);
+        secStr = 'of two ellipsoids...';
+        logger.info([fstStr secStr]);
     else
-        fprintf('Computing geometric difference of two ellipsoids...\n');
+        logger.info('Computing geometric difference of two ellipsoids...');
     end
 end
 

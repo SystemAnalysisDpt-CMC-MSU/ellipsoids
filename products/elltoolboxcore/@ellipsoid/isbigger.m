@@ -23,6 +23,9 @@ function isPositive = isbigger(fstEll, secEll)
 
 import elltool.conf.Properties;
 import modgen.common.checkmultvar;
+import elltool.logging.Log4jConfigurator;
+
+persistent logger;
 
 ellipsoid.checkIsMe(fstEll,'first');
 ellipsoid.checkIsMe(secEll,'second');
@@ -43,9 +46,12 @@ end
 fstEllShMat = fstEll.shape;
 secEllShMat = secEll.shape;
 if isdegenerate(fstEll)
+    if isempty(logger)
+        logger=Log4jConfigurator.getLogger();
+    end
     if Properties.getIsVerbose()
-        fprintf('ISBIGGER: Warning! First ellipsoid is degenerate.');
-        fprintf('          Regularizing...');
+        logger.info('ISBIGGER: Warning! First ellipsoid is degenerate.');
+        logger.info('          Regularizing...');
     end
     fstEllShMat = ellipsoid.regularize(fstEllShMat,fstEll.absTol);
 end

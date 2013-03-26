@@ -31,6 +31,9 @@ function [intEllArr, isnIntersectedArr] = ...
 import elltool.conf.Properties;
 import modgen.common.throwerror;
 import modgen.common.checkmultvar;
+import elltool.logging.Log4jConfigurator;
+  
+persistent logger;
 
 ellipsoid.checkIsMe(myEllArr,'first');
 modgen.common.checkvar(myHypArr,@(x) isa(x,'hyperplane'),...
@@ -81,11 +84,14 @@ isnIntersectedArr = false(sizeCVec{:});
 indexVec = 1:nAmount;
 
 if Properties.getIsVerbose()
+    if isempty(logger)
+        logger=Log4jConfigurator.getLogger();
+    end
     if ~(isEllScal&&isHypScal)
-        fprintf('Computing %d ellipsoid-hyperplane intersections...\n',...
-            nAmount);
+        logger.info(sprintf('Computing %d ellipsoid-hyperplane intersections...',...
+            nAmount));
     else
-        fprintf('Computing ellipsoid-hyperplane intersection...\n');
+        logger.info('Computing ellipsoid-hyperplane intersection...');
     end
 end
 
@@ -136,6 +142,9 @@ function intEll = l_compute1intersection(myEll, myHyp, maxEllDim)
 % $Copyright:  The Regents of the University of California 2004-2008 $
 
 import elltool.conf.Properties;
+import elltool.logging.Log4jConfigurator;
+  
+persistent logger;
 
 [normHypVec, hypScalar] = parameters(myHyp);
 if hypScalar < 0
@@ -150,8 +159,11 @@ myEllShMat = myEll.shape;
 
 if rank(myEllShMat) < maxEllDim
     if Properties.getIsVerbose()
-        fprintf('HPINTERSECTION: Warning! Degenerate ellipsoid.\n');
-        fprintf('                Regularizing...\n');
+            if isempty(logger)
+                logger=Log4jConfigurator.getLogger();
+            end
+        logger.info('HPINTERSECTION: Warning! Degenerate ellipsoid.');
+        logger.info('                Regularizing...');
     end
     myEllShMat = ellipsoid.regularize(myEllShMat,myEll.absTol);
 end

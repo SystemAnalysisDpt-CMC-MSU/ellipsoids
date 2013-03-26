@@ -50,7 +50,11 @@ classdef LinSys < handle
         % Output:
         %   None.
         %
+            import elltool.logging.Log4jConfigurator;
             import modgen.common.throwerror;
+
+            persistent logger;
+
             qVec = InpEll.center;
             QMat = InpEll.shape;
             [kRows, lCols] = size(qVec);
@@ -79,7 +83,10 @@ classdef LinSys < handle
             %%
             if iscell(QMat)
                 if elltool.conf.Properties.getIsVerbose() > 0
-                    fprintf('Warning! Cannot check if symbolic matrix is positive definite.\n');
+                    if isempty(logger)
+                        logger=Log4jConfigurator.getLogger();
+                    end
+                    logger.info('Warning! Cannot check if symbolic matrix is positive definite.\n');
                 end
                 isEqMat = strcmp(QMat, QMat.');
                 if ~all(isEqMat(:))
@@ -203,6 +210,10 @@ classdef LinSys < handle
         %
             import modgen.common.throwerror;
             import elltool.conf.Properties;
+            import elltool.logging.Log4jConfigurator;
+
+            persistent logger;
+
             neededPropNameList = {'absTol'};
             absTolVal = Properties.parseProp(varargin, neededPropNameList);
             if nargin == 0
@@ -260,7 +271,10 @@ classdef LinSys < handle
                     end
                     if (dRows > rCols) &&...
                             (elltool.conf.Properties.getIsVerbose() > 0)
-                        fprintf('LINSYS: Warning! Control bounds U represented by degenerate ellipsoid.\n');
+                        if isempty(logger)
+                            logger=Log4jConfigurator.getLogger();
+                        end
+                        logger.info('LINSYS: Warning! Control bounds U represented by degenerate ellipsoid.');
                     end
                 elseif isa(uBoundsEll, 'double') || iscell(uBoundsEll)
                     [kRows, mRows] = size(uBoundsEll);
