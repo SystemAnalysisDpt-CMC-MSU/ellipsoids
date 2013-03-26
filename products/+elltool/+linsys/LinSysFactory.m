@@ -1,12 +1,8 @@
 classdef LinSysFactory
     methods(Static)
         function linSys = create(varargin)
-            if nargin >= 8
-               if varargin{8} == 'd'
-                   linSys = elltool.linsys.LinSysDiscrete(varargin{:});
-               else
-                  linSys = elltool.linsys.LinSysContinuous(varargin{:});
-               end
+            if (nargin > 7)  && ischar(varargin{8}) && (varargin{8} == 'd')
+                linSys = elltool.linsys.LinSysDiscrete(varargin{:});
             else
                 linSys = elltool.linsys.LinSysContinuous(varargin{:});
             end

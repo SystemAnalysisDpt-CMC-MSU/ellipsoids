@@ -88,6 +88,258 @@ classdef ALinSys < elltool.linsys.ILinSys
     end
 
     methods
+        function self = ALinSys(atInpMat, btInpMat, uBoundsEll, gtInpMat,...
+                distBoundsEll, ctInpMat, noiseBoundsEll, discrFlag, varargin)
+        %
+        % LINSYS - constructor for linear system object.
+        %
+        % Continuous-time linear system:
+        %                   dx/dt  =  A(t) x(t)  +  B(t) u(t)  +  G(t) v(t)
+        %                    y(t)  =  C(t) x(t)  +  w(t)
+        %
+        % Discrete-time linear system:
+        %                  x[k+1]  =  A[k] x[k]  +  B[k] u[k]  +  G[k] v[k]
+        %                    y[k]  =  C[k] x[k]  +  w[k]
+        %
+        % Input:
+        %   regular:
+        %       atInpMat: double[nDim, nDim]/cell[nDim, nDim].
+        %
+        %       btInpMat: double[nDim, kDim]/cell[nDim, kDim].
+        %
+        %       uBoundsEll: ellipsoid[1, 1]/struct[1, 1].
+        %
+        %       gtInpMat: double[nDim, lDim]/cell[nDim, lDim].
+        %
+        %       distBoundsEll: ellipsoid[1, 1]/struct[1, 1].
+        %
+        %       ctInpMat: double[mDim, nDim]/cell[mDim, nDim].
+        %
+        %       noiseBoundsEll: ellipsoid[1, 1]/struct[1, 1].
+        %
+        %       discrFlag: char[1, 1] - if discrFlag set:
+        %           'd' - to discrete-time linSys
+        %           not 'd' - to continuous-time linSys.
+        %
+        % Output:
+        %   self: elltool.linsys.LinSys[1, 1].
+        %
+            import modgen.common.throwerror;
+            import elltool.conf.Properties;
+            neededPropNameList = {'absTol'};
+            absTolVal = Properties.parseProp(varargin, neededPropNameList);
+            if nargin == 0
+                self.atMat = [];
+                self.btMat = [];
+                self.controlBoundsEll = [];
+                self.gtMat = [];
+                self.disturbanceBoundsEll = [];
+                self.ctMat = [];
+                self.noiseBoundsEll = [];
+                self.isTimeInv = false;
+                self.isDiscr = false;
+                self.isConstantBoundsVec = false(1, 3);
+                self.absTol = absTolVal;
+                return;
+            end
+            %%
+            isTimeInvar = true;
+            [mRows, nCols] = size(atInpMat);
+            if mRows ~= nCols
+                throwerror('linsys:dimension:A',...
+                    'LINSYS: A must be square matrix.');
+            end
+            if iscell(atInpMat)
+                isTimeInvar = false;
+            elseif ~(isa(atInpMat, 'double'))
+                throwerror('linsys:type:A',...
+                    'LINSYS: matrix A must be of type ''cell'' or ''double''.');
+            end
+            self.atMat = atInpMat;
+            %%
+            [kRows, lCols] = size(btInpMat);
+            if kRows ~= nCols
+                throwerror('linsys:dimension:B',...
+                    'LINSYS: dimensions of A and B do not match.');
+            end
+            if iscell(btInpMat)
+                isTimeInvar = false;
+            elseif ~(isa(btInpMat, 'double'))
+                throwerror('linsys:type:B',...
+                    'LINSYS: matrix B must be of type ''cell'' or ''double''.');
+            end 
+            self.btMat = btInpMat;
+            %%
+            isCBU = true;
+            if nargin > 2
+                if isempty(uBoundsEll)
+                    % leave as is
+                elseif isa(uBoundsEll, 'ellipsoid')
+                    uBoundsEll = uBoundsEll(1, 1);
+                    [dRows, rCols] = dimension(uBoundsEll);
+                    if dRows ~= lCols
+                        throwerror('linsys:dimension:U',...
+                            'LINSYS: dimensions of control bounds U and matrix B do not match.');
+                    end
+                    if (dRows > rCols) &&...
+                            (elltool.conf.Properties.getIsVerbose() > 0)
+                        fprintf('LINSYS: Warning! Control bounds U represented by degenerate ellipsoid.\n');
+                    end
+                elseif isa(uBoundsEll, 'double') || iscell(uBoundsEll)
+                    [kRows, mRows] = size(uBoundsEll);
+                    if mRows > 1
+                        throwerror('linsys:type:U',...
+                            'LINSYS: control U must be an ellipsoid or a vector.')
+                    elseif kRows ~= lCols
+                        throwerror('linsys:dimension:U',...
+                            'LINSYS: dimensions of control vector U and matrix B do not match.');
+                    end
+                    if iscell(uBoundsEll)
+                        isCBU = false;
+                    end
+                elseif isstruct(uBoundsEll) &&...
+                        isfield(uBoundsEll, 'center') &&...
+                        isfield(uBoundsEll, 'shape')
+                    isCBU = false;
+                    uBoundsEll = uBoundsEll(1, 1);
+                    self.isEllHaveNeededDim(uBoundsEll, lCols);      
+                else
+                    throwerror('linsys:type:U',...
+                        'LINSYS: control U must be an ellipsoid or a vector.')
+                end
+            else
+                uBoundsEll = [];
+            end
+            self.controlBoundsEll = uBoundsEll;
+            %%
+            if nargin > 3
+                if isempty(gtInpMat)
+                    % leave as is
+                else
+                    [kRows, lCols] = size(gtInpMat);
+                    if kRows ~= nCols
+                        throwerror('linsys:dimension:G',...
+                            'LINSYS: dimensions of A and G do not match.');
+                    end
+                    if iscell(gtInpMat)
+                        isTimeInvar = false;
+                    elseif ~(isa(gtInpMat, 'double'))
+                        throwerror('linsys:type:G',...
+                            'LINSYS: matrix G must be of type ''cell'' or ''double''.');
+                    end 
+                end 
+            else
+                gtInpMat = [];
+            end
+            %%
+            isCBV = true;
+            if nargin > 4
+                if isempty(gtInpMat) || isempty(distBoundsEll)
+                    gtInpMat = [];
+                    distBoundsEll = [];
+                elseif isa(distBoundsEll, 'ellipsoid')
+                    distBoundsEll = distBoundsEll(1, 1);
+                    [dRows, rCols] = dimension(distBoundsEll);
+                    if dRows ~= lCols
+                        error('linsys:dimension:V',...
+                            'LINSYS: dimensions of disturbance bounds V and matrix G do not match.');
+                    end
+                elseif isa(distBoundsEll, 'double') || iscell(distBoundsEll)
+                    [kRows, mRows] = size(distBoundsEll);
+                    if mRows > 1
+                        throwerror('linsys:type:V',...
+                            'LINSYS: disturbance V must be an ellipsoid or a vector.')
+                    elseif kRows ~= lCols
+                        throwerror('linsys:dimension:V',...
+                            'LINSYS: dimensions of disturbance vector V and matrix G do not match.');
+                    end
+                    if iscell(distBoundsEll)
+                        isCBV = false;
+                    end
+                elseif isstruct(distBoundsEll) &&...
+                        isfield(distBoundsEll, 'center') &&...
+                        isfield(distBoundsEll, 'shape')
+                    isCBV = false;
+                    distBoundsEll = distBoundsEll(1, 1);
+                    self.isEllHaveNeededDim(distBoundsEll, lCols);
+                else
+                    throwerror('linsys:type:V',...
+                        'LINSYS: disturbance V must be an ellipsoid or a vector.')
+                end
+            else
+                distBoundsEll = [];
+            end
+            self.gtMat = gtInpMat;
+            self.disturbanceBoundsEll = distBoundsEll;
+            %%
+            if nargin > 5
+                if isempty(ctInpMat)
+                    ctInpMat = eye(nCols);
+                else
+                    [kRows, lCols] = size(ctInpMat);
+                    if lCols ~= nCols
+                        throwerror('linsys:dimension:C',...
+                            'LINSYS: dimensions of A and C do not match.');
+                    end
+                    if iscell(ctInpMat)
+                        isTimeInvar = false;
+                    elseif ~(isa(ctInpMat, 'double'))
+                        throwerror('linsys:type:C',...
+                            'LINSYS: matrix C must be of type ''cell'' or ''double''.');
+                    end 
+                end 
+            else
+                ctInpMat = eye(nCols);
+            end
+            self.ctMat = ctInpMat;
+            %%
+            isCBW = true;
+            if nargin > 6
+                if isempty(noiseBoundsEll)
+                    % leave as is
+                elseif isa(noiseBoundsEll, 'ellipsoid')
+                    noiseBoundsEll = noiseBoundsEll(1, 1);
+                    [dRows, rCols] = dimension(noiseBoundsEll);
+                    if dRows ~= kRows
+                        throwerror('linsys:dimension:W',...
+                            'LINSYS: dimensions of noise bounds W and matrix C do not match.');
+                    end
+                elseif isa(noiseBoundsEll, 'double') || iscell(noiseBoundsEll)
+                    [lCols, mRows] = size(noiseBoundsEll);
+                    if mRows > 1
+                        throwerror('linsys:type:W',...
+                            'LINSYS: noise W must be an ellipsoid or a vector.')
+                    elseif kRows ~= lCols
+                        throwerror('linsys:dimension:W',...
+                            'LINSYS: dimensions of noise vector W and matrix C do not match.');
+                    end
+                    if iscell(noiseBoundsEll)
+                        isCBW = false;
+                    end
+                elseif isstruct(noiseBoundsEll) &&...
+                        isfield(noiseBoundsEll, 'center') &&...
+                        isfield(noiseBoundsEll, 'shape')
+                    isCBW = false;
+                    noiseBoundsEll = noiseBoundsEll(1, 1);
+                    self.isEllHaveNeededDim(noiseBoundsEll, kRows);
+                else
+                    throwerror('linsys:type:W',...
+                        'LINSYS: noise W must be an ellipsoid or a vector.')
+                end
+            else
+                noiseBoundsEll = [];
+            end
+            self.noiseBoundsEll = noiseBoundsEll;
+            %%
+            self.isTimeInv = isTimeInvar;
+            self.isDiscr  = false;
+            if (nargin > 7)  && ischar(discrFlag) && (discrFlag == 'd')
+                self.isDiscr = true;
+            end
+            self.isConstantBoundsVec = [isCBU isCBV isCBW];
+            self.absTol = absTolVal;
+        end
+        
         function aMat = getAtMat(self)
             aMat = self.atMat;
         end

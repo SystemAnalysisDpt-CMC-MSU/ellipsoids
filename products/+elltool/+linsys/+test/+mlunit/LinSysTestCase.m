@@ -480,7 +480,6 @@ classdef LinSysTestCase < mlunitext.test_case
             };
             isDisc = @(linSys) linSys.isdiscrete();
             obtainedMat = cellfun(isDisc, systemCMat);
-%             obtainedMat = systemMat.isdiscrete();
             expectedMat = [false false false; false true true];
             eqMat = (obtainedMat == expectedMat);
             mlunit.assert_equals(all(eqMat(:)), true);
