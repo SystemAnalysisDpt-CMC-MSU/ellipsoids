@@ -1,4 +1,4 @@
-dimension(H)  
+H.dimension
 
 % ans =
 % 

@@ -1,4 +1,5 @@
-isinside([E1 E3], IA) 
+EL = [E1 E3]
+EL.isinside(IA) 
 
 % ans =
 % 

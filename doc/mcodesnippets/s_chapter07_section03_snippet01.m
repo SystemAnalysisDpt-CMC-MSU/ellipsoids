@@ -19,23 +19,24 @@ T = 3;  % terminating time
 rs1 = elltool.reach.ReachContinuous(s1, X0, L0, [0 T]);  % reach set of the first system
 % computation of the second reach set starts
 % where the first left off
-rs2 = evolve(rs1, T, s2);
+rs2 = rs1.evolve(T, s2);
 
 % obtain projections onto (x1, x2) subspace:
 BB = [1 0 0; 0 1 0]';  % (x1, x2) subspace basis
-ps1 = projection(rs1, BB);
-ps2 = projection(rs2, BB);
+ps1 = rs1.projection(BB);
+ps2 = rs2.projection(BB);
 
 % plot the results:
 subplot(2, 2, 1);
-plot_ea(ps1, 'r');  % external apprx. of reach set 1 (red)
+ps1.plot_ea('r');  % external apprx. of reach set 1 (red)
 hold on;
-plot_ia(ps1, 'g');  % internal apprx. of reach set 1 (green)
-plot_ea(ps2, 'y');  % external apprx. of reach set 2 (yellow)
-plot_ia(ps2, 'b');  % internal apprx. of reach set 2 (blue)
+ps1.plot_ia('g');  % internal apprx. of reach set 1 (green)
+ps2.plot_ea('y');  % external apprx. of reach set 2 (yellow)
+ps2.plot_ia('b');  % internal apprx. of reach set 2 (blue)
 
 % plot the 3-dimensional reach set at time t = 3:
 subplot(2, 2, 2);
-plot_ea(cut(rs2, 3), 'y');
+rs2.cut(3)
+rs2.plot_ea('y');
 hold on;
-plot_ia(cut(rs2, 3), 'b');
+rs2.plot_ia('b');

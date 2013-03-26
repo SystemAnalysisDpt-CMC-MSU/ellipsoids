@@ -1,4 +1,4 @@
-[q, Q] = double(E2)
+[q, Q] = E2.double
 % q =
 % 
 %    -0.5000

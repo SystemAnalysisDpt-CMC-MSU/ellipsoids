@@ -1,1 +1,1 @@
-ct = cut(rs, [3 5]);  % reach set for the time interval [3, 5]
+ct = rs.cut([3 5]);  % reach set for the time interval [3, 5]

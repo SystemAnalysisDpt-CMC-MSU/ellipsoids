@@ -1,4 +1,4 @@
-[c, g] = double(H)  
+[c, g] = H.double
 
 % c =
 % 

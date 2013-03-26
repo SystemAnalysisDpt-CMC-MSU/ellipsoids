@@ -1,6 +1,7 @@
 E = ellipsoid([4 -1; -1 1]);
 B = ell_unitball(2);
-T = trace([E B])
+E1 = [E B];
+T = E1.trace
 
 % T =
 % 

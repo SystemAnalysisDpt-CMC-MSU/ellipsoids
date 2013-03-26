@@ -1,6 +1,6 @@
 E = ellipsoid([-2; -1; 4], [4 -1 0; -1 1 0; 0 0 9]);
 B = [0 1 0; 0 0 1]';
-P = projection(E, B)
+P = E.projection(B)
 
 % P =
 % 

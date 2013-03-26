@@ -680,7 +680,7 @@ function [d, status] = l_polydist(E, X)
             end
             minimize(f)
             subject to
-                x'*Qi*x + 2*(-Qi*q)'*x + (q'*Qi*q - 1) <= 0
+                x'*Q*x + 2*(-Q*q)'*x + (q'*Q*q - 1) <= 0
                 A*y - b <= 0
         cvx_end
 

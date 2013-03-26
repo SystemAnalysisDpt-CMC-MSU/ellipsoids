@@ -1,5 +1,5 @@
 % check if hyperplanes in HH intersect with internal approximation:
-intersect(ct, HH, 'i')
+ct.intersect(HH, 'i')
 
 % ans =
 % 

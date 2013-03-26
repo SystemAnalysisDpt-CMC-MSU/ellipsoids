@@ -1,4 +1,4 @@
-I = hpintersection(EA, GRD);  % some of the intersections are empty
+I = EA.hpintersection(GRD);  % some of the intersections are empty
 D = find(~isempty(I));  % determine nonempty intersections
 min(D)
 

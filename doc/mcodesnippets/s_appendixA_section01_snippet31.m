@@ -1,6 +1,7 @@
 E = ellipsoid([4 -1; -1 1]);
 B = ell_unitball(2);
-V = volume([E B])
+E1 = [E B]
+V = E1.volume
 
 % V =
 % 

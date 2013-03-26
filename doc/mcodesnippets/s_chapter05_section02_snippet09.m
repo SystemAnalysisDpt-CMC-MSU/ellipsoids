@@ -1,2 +1,1 @@
-ct = cut(rs, 5);  % reach set at time t = 5
-
+ct = rs.cut(5);  % reach set at time t = 5

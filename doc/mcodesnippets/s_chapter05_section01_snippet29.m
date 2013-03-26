@@ -1,4 +1,5 @@
-intersect([E1 E2 E3], P, 'i')
+EL = [E1 E2 E3];
+EL.intersect(P, 'i')
 
 % ans =
 % 

@@ -1,4 +1,4 @@
-intersect(EE(:, 1), HH, 'i')
+EE(:, 1).intersect(HH, 'i')
 
 % ans =
 % 

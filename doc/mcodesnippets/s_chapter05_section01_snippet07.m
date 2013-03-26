@@ -1,4 +1,6 @@
-[n, r] = dimension([EE(1, :) D])  
+EL = [EE(1, :) D];
+[n, r] = EL.dimension 
+
 
 % n =
 % 
