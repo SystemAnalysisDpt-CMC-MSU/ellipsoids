@@ -84,13 +84,8 @@ classdef LinSysContinuous < elltool.linsys.ALinSys
             end
             disp(self.atMat);
             if iscell(self.btMat)
-%                 if self.isDiscr
-%                     fprintf('\nB[k]:\n');
-%                     s5 = '  +  B[k]';
-%                 else
-                    fprintf('\nB(t):\n');
-                    s5 = '  +  B(t)';
-%                 end
+                fprintf('\nB(t):\n');
+                s5 = '  +  B(t)';
             else
                 fprintf('\nB:\n');
                 s5 = '  +  B';
@@ -126,13 +121,8 @@ classdef LinSysContinuous < elltool.linsys.ALinSys
             %%
             if ~(isempty(self.gtMat)) && ~(isempty(self.disturbanceBoundsEll))
                 if iscell(self.gtMat)
-%                     if self.isDiscr
-%                         fprintf('\nG[k]:\n');
-%                         s7 = '  +  G[k]';
-%                     else
-                        fprintf('\nG(t):\n');
-                        s7 = '  +  G(t)';
-%                     end
+                    fprintf('\nG(t):\n');
+                    s7 = '  +  G(t)';
                 else
                     fprintf('\nG:\n');
                     s7 = '  +  G';
@@ -168,13 +158,8 @@ classdef LinSysContinuous < elltool.linsys.ALinSys
             end
             %%
             if iscell(self.ctMat)
-%                 if self.isDiscr
-%                     fprintf('\nC[k]:\n');
-%                     s9 = 'C[k]';
-%                 else
-                    fprintf('\nC(t):\n');
-                    s9 = 'C(t)';
-%                 end
+                fprintf('\nC(t):\n');
+                s9 = 'C(t)';
             else
                 fprintf('\nC:\n');
                 s9 = 'C';
@@ -212,11 +197,7 @@ classdef LinSysContinuous < elltool.linsys.ALinSys
             %%
             fprintf('%d-input, ', size(self.btMat, 2));
             fprintf('%d-output ', size(self.ctMat, 1));
-%             if self.isDiscr
-%                 fprintf('discrete-time linear ');
-%             else
-                fprintf('continuous-time linear ');
-%             end
+            fprintf('continuous-time linear ');
             if self.isTimeInv
                 fprintf('time-invariant system ');
             else

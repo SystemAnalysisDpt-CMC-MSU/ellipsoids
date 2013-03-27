@@ -694,7 +694,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             if nargin < 4
                 throwerror('insufficient number of input arguments.');
             end
-            if ~(isa(linSys, 'elltool.linsys.LinSys'))
+            if ~(isa(linSys, 'elltool.linsys.LinSysDiscrete'))
                 throwerror(['first input argument ',...
                     'must be linear system object.']);
             end

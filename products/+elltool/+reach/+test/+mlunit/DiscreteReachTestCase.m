@@ -21,7 +21,7 @@ classdef DiscreteReachTestCase < mlunitext.test_case
                 '/demo3DiscreteTest.mat');
             load(loadFileStr, 'aMat', 'bMat', 'ControlBounds',...
                 'x0Ell', 'l0Mat', 'timeVec');
-            linSysObj = elltool.linsys.LinSys(aMat, bMat,...
+            linSysObj = elltool.linsys.LinSysFactory.create(aMat, bMat,...
                 ControlBounds, [], [], [], [], 'd');
             reachSetObj = elltool.reach.ReachDiscrete(linSysObj,...
                 x0Ell, l0Mat, timeVec);
@@ -57,7 +57,7 @@ classdef DiscreteReachTestCase < mlunitext.test_case
                 '/distorbDiscreteTest.mat');
             load(loadFileStr, 'aMat', 'bMat', 'ControlBounds',...
                 'gMat', 'DistorbBounds', 'x0Ell', 'l0Mat', 'timeVec');
-            linSysObj = elltool.linsys.LinSys(aMat, bMat,...
+            linSysObj = elltool.linsys.LinSysFactory.create(aMat, bMat,...
                 ControlBounds, gMat, DistorbBounds, [], [], 'd');
             reachSetObj = elltool.reach.ReachDiscrete(linSysObj,...
                 x0Ell, l0Mat, timeVec);
@@ -99,8 +99,7 @@ classdef DiscreteReachTestCase < mlunitext.test_case
         end
         %
         function self = testEvolve(self)
-          
-            lSys=elltool.linsys.LinSys(eye(2),eye(2),ellipsoid(eye(2)));
+            lSys=elltool.linsys.LinSysDiscrete(eye(2),eye(2),ellipsoid(eye(2)));
             rSet=elltool.reach.ReachDiscrete(lSys,ellipsoid(eye(2)),[1 0]', [0 1]);
             timeVec=[2 5]';
             fMethod=@(lSys) evolve(rSet,timeVec,lSys);
@@ -158,12 +157,12 @@ classdef DiscreteReachTestCase < mlunitext.test_case
                 end
                 testStruct.shape=shapeCMat;
                 if typeUVW=='V'
-                    lSys=elltool.linsys.LinSys(eye(2),eye(2),ellipsoid(eye(2)),testMat,...
+                    lSys=elltool.linsys.LinSysDiscrete(eye(2),eye(2),ellipsoid(eye(2)),testMat,...
                         testStruct);
                 elseif typeUVW=='U'
-                    lSys=elltool.linsys.LinSys(eye(2),testMat,testStruct);
+                    lSys=elltool.linsys.LinSysDiscrete(eye(2),testMat,testStruct);
                 elseif typeUVW=='W'
-                    lSys=elltool.linsys.LinSys(eye(2),eye(2),ellipsoid(eye(2)),...
+                    lSys=elltool.linsys.LinSysDiscrete(eye(2),eye(2),ellipsoid(eye(2)),...
                         eye(2),ellipsoid(eye(2)),eye(2),testStruct);
                 end
             end

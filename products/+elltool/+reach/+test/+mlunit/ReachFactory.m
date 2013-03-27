@@ -53,7 +53,7 @@ classdef ReachFactory
             DistBounds.center = qtDefCVec;
             DistBounds.shape = qtDefCMat;
             %
-            self.linSys = elltool.linsys.LinSys(atDefCMat, btDefCMat,...
+            self.linSys = elltool.linsys.LinSysFactory.create(atDefCMat, btDefCMat,...
                 ControlBounds, ctDefCMat, DistBounds);
         end
         function reachObj = createInstance(self)
