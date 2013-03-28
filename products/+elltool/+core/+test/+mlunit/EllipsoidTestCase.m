@@ -1144,6 +1144,22 @@ classdef EllipsoidTestCase < mlunitext.test_case
             [isEq, reportStr] = eq(resEll, ansEll);
             mlunit.assert_equals(true, isEq, reportStr);
         end
+        function self=testIsBadDirection(self)
+            import elltool.conf.Properties;
+            absTol=Properties.getAbsTol();
+            %positive test
+            resObj=isbaddirection(ellipsoid(2*eye(2)),...
+                ellipsoid(eye(2)),[1 1]',absTol);
+            mlunit.assert(isa(resObj,'logical'));
+            %
+            %negative test
+            self.runAndCheckError(strcat('isbaddirection(',...
+                'ellipsoid(eye(2)),ellipsoid([1 0; 0 0]),',...
+                'eye(2),elltool.conf.Properties.getAbsTol())'),...
+                'wrongInput:singularMat');
+        end
+        
+        
      end
 end
 

@@ -8,5 +8,9 @@ function listconf()
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
 %
+import elltool.logging.Log4jConfigurator;
+logger=Log4jConfigurator.getLogger();
+
 confRepoMgr=elltool.conf.Properties.getConfRepoMgr();
-disp(confRepoMgr.getConfNameList().');
+confList=confRepoMgr.getConfNameList();
+logger.info([sprintf('%s, ',confList{1:end-1}), confList{end}]);

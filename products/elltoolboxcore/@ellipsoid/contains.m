@@ -27,8 +27,11 @@ function resArr = contains(firstEllArr, secondEllArr)
 %
 
 import elltool.conf.Properties;
+import elltool.logging.Log4jConfigurator;
 import modgen.common.throwerror;
 import modgen.common.checkmultvar;
+
+persistent logger;
 
 ellipsoid.checkIsMe(firstEllArr,'first');
 ellipsoid.checkIsMe(secondEllArr,'second');
@@ -67,11 +70,14 @@ checkmultvar('all(x1(:)==x1(1)) && all(x2(:)==x1(1))',2,dimFirArr,dimSecArr,...
     'errorMessage','ellipsoids must be of the same dimension.');
 
 if Properties.getIsVerbose()
+    if isempty(logger)
+        logger=Log4jConfigurator.getLogger();
+    end
     if isFirScal && isSecScal
-        fprintf('Checking ellipsoid-in-ellipsoid containment...\n');
+        logger.info('Checking ellipsoid-in-ellipsoid containment...');
     else
-        fprintf('Checking %d ellipsoid-in-ellipsoid containments...\n',...
-            max([nSizeFirst nSizeSecond]));
+        logger.info(sprintf('Checking %d ellipsoid-in-ellipsoid containments...',...
+            max([nSizeFirst nSizeSecond])));
     end
 end
 
@@ -107,7 +113,10 @@ function res = l_check_containment(firstEll, secondEll)
 % $Copyright:  The Regents of the University of California 2004-2008 $
 
 import elltool.conf.Properties;
+import elltool.logging.Log4jConfigurator;
 import modgen.common.throwerror;
+
+persistent logger;
 
 [fstEllCentVec, fstEllShMat] = double(firstEll);
 [secEllCentVec, secEllShMat] = double(secondEll);
@@ -131,7 +140,10 @@ BMat = [invSecEllShMat -invSecEllShMat*secEllCentVec;...
 AMat = 0.5*(AMat + AMat');
 BMat = 0.5*(BMat + BMat');
 if Properties.getIsVerbose()
-    fprintf('Invoking CVX...\n');
+    if isempty(logger)
+        logger=Log4jConfigurator.getLogger();
+    end
+    logger.info('Invoking CVX...');
 end
 cvx_begin sdp
 variable cvxxVec(1, 1)

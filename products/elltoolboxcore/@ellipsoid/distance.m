@@ -1,41 +1,41 @@
 function [distValArray, statusArray] = distance(ellObjArr, objArr, isFlagOn)
 %
-% DISTANCE - computes distance between the given ellipsoid (or array of 
+% DISTANCE - computes distance between the given ellipsoid (or array of
 %            ellipsoids) to the specified object (or arrays of objects):
 %            vector, ellipsoid, hyperplane or polytope.
 %
 % Input:
 %   regular:
 %       ellObjArr: ellipsoid [nDims1, nDims2,..., nDimsN] - array of
-%           ellipsoids of the same dimension. 
+%           ellipsoids of the same dimension.
 %       objArray: double / ellipsoid / hyperplane /
-%           polytope [nDims1, nDims2,..., nDimsN] - array of vectors or 
+%           polytope [nDims1, nDims2,..., nDimsN] - array of vectors or
 %           ellipsoids or hyperplanes or polytopes. If number of elements
 %           in objArray is more than 1, then it must be equal to the number
 %           of elements in ellObjArr.
 %
 %   optional:
 %       isFlagOn: logical[1,1] - if true then distance is computed in
-%           ellipsoidal metric, if false - in Euclidean metric 
+%           ellipsoidal metric, if false - in Euclidean metric
 %           (by default isFlagOn=false).
-%           
+%
 % Output:
 %   regular:
-%       distValArray: double [nDims1, nDims2,..., nDimsN] - array of 
-%           pairwise calculated distances. 
+%       distValArray: double [nDims1, nDims2,..., nDimsN] - array of
+%           pairwise calculated distances.
 %           Negative distance value means
 %               for ellipsoid and vector: vector belongs to the ellipsoid,
-%               for ellipsoid and hyperplane: ellipsoid 
+%               for ellipsoid and hyperplane: ellipsoid
 %                   intersects the hyperplane.
 %           Zero distance value means
-%               for ellipsoid and vector: vector is a 
+%               for ellipsoid and vector: vector is a
 %                   boundary point of the ellipsoid,
-%               for ellipsoid and hyperplane: ellipsoid 
+%               for ellipsoid and hyperplane: ellipsoid
 %                   touches the hyperplane.
 %   optional:
 %       statusArray: double [nDims1, nDims2,..., nDimsN] - array of time of
 %           computation of ellipsoids-vectors or ellipsoids-ellipsoids
-%           distances, or status of cvx solver for ellipsoids-polytopes 
+%           distances, or status of cvx solver for ellipsoids-polytopes
 %           distances.
 %
 %
@@ -46,8 +46,8 @@ function [distValArray, statusArray] = distance(ellObjArr, objArr, isFlagOn)
 % $Copyright: Lomonosov Moscow State University,
 %            Faculty of Computational Mathematics and Cybernetics,
 %            System Analysis Department 2012 $
-% Literature: 
-%    1. Lin, A. and Han, S. On the Distance between Two Ellipsoids. 
+% Literature:
+%    1. Lin, A. and Han, S. On the Distance between Two Ellipsoids.
 %       SIAM Journal on Optimization, 2002, Vol. 13, No. 1 : pp. 298-308
 %    2. Stanley Chan, "Numerical method for Finding Minimum Distance to an
 %       Ellipsoid". http://videoprocessing.ucsd.edu/~stanleychan/publication/unpublished/Ellipse.pdf
@@ -327,10 +327,10 @@ function [distArray, timeArray] = computeEllPointsDist(ellObjArray, ...
 %
 % COMPUTEELLPOINTSDIST - compute distance between array of ellipsoid and
 %                        array of vectors.
-%   
+%
 % input:
 %   regular:
-%       ellObjArray: ellipsoid / ellipsoid [nDims1, nDims2,..., nDimsN] - 
+%       ellObjArray: ellipsoid / ellipsoid [nDims1, nDims2,..., nDimsN] -
 %           single ellipsoid or array of ellipsoids
 %       vecArray: double[spaceDim,nDim1,nDim2,..., nDimN] - array of vectors,
 %           where spaceDim is the dimension of all the vectors in the
@@ -338,19 +338,20 @@ function [distArray, timeArray] = computeEllPointsDist(ellObjArray, ...
 %               1. If ellObjArray is single ellipsoid then vecArray is
 %               single vector or arbitrary array of vectors .
 %               2. If ellObjArray is an array of ellipsoids then vecArray
-%               is a single vector or array of vectors of the same dimensions 
+%               is a single vector or array of vectors of the same dimensions
 %               as ellObjArray.
-%           Distance is computed pairwise. 
-%       isFlagOn: logical[1,1] if true distance is computed in ellipsoidal 
+%           Distance is computed pairwise.
+%       isFlagOn: logical[1,1] if true distance is computed in ellipsoidal
 %           metric otherwise in Euclidean
-% output: 
-%   regular: 
-%       distArray: double[nDims1, nDims2,... nDimsN] - array of computed 
-%           pairwise distance between ellipsoids in the ellObjArray and 
+% output:
+%   regular:
+%       distArray: double[nDims1, nDims2,... nDimsN] - array of computed
+%           pairwise distance between ellipsoids in the ellObjArray and
 %           vectors in vecArray
 %       timeArray: double[nDims1, nDims2,..., nDimsN]
 import elltool.conf.Properties;
-import modgen.common.throwerror
+import modgen.common.throwerror;
+persistent logger;
 %
 vecArrSizeVec = size(vecArray);
 ellSizeVec=size(ellObjArray);
@@ -382,10 +383,13 @@ if dimSpace ~= vecDim
 end
 %
 if Properties.getIsVerbose()
+    if isempty(logger)
+        logger=Log4jConfigurator.getLogger();
+    end
     if (nEllObj > 1) || (nVec > 1)
-        fprintf('Computing %d ellipsoid-to-vector distances...\n', max([nEllObj nVec]));
+        logger.info(sprintf('Computing %d ellipsoid-to-vector distances...', max([nEllObj nVec])));
     else
-        fprintf('Computing ellipsoid-to-vector distance...\n');
+        logger.info('Computing ellipsoid-to-vector distance...');
     end
 end
 %
@@ -408,7 +412,7 @@ else
     vecCArray=num2cell(vecArray,1);
     if length(vecSizeVec)>1
         vecCArray=reshape(vecCArray(1,:),vecSizeVec);
-    end    
+    end
     fCompositeOneEll=@(xVec)computeEllVecDistance(ellObjArray,...
         xVec{1},N_MAX_ITER,absTolArray,relTolArray,isFlagOn);
     [distArray timeArray] =arrayfun(fCompositeOneEll,vecCArray);
@@ -424,6 +428,8 @@ function [distEllEllArray, timeOfCalculationArray] = computeEllEllDist(...
 %
 import elltool.conf.Properties;
 import modgen.common.throwerror
+import elltool.logging.Log4jConfigurator;
+persistent logger;
 
 ell1SizeVec = size(ellObj1Array);
 ell2SizeVec = size(ellObj2Array);
@@ -435,10 +441,14 @@ if (nEllObj1 > 1) && (nEllObj2 > 1) && ((~(nEllObj1==nEllObj2) || ...
     throwerror('wrongInput','DISTANCE: sizes of ellipsoidal arrays do not match.');
 end
 if Properties.getIsVerbose()
+    if isempty(logger)
+        logger=Log4jConfigurator.getLogger();
+    end
     if (nEllObj1 > 1) || (nEllObj2 > 1)
-        fprintf('Computing %d ellipsoid-to-ellipsoid distances...\n', max([nEllObj1 nEllObj2]));
+        logger.info(sprintf('Computing %d ellipsoid-to-ellipsoid distances...',...
+            max([nEllObj1 nEllObj2])));
     else
-        fprintf('Computing ellipsoid-to-ellipsoid distance...\n');
+        logger.info('Computing ellipsoid-to-ellipsoid distance...');
     end
 end
 dim1Array=dimension(ellObj1Array);
@@ -520,6 +530,8 @@ function [distEllHpArray, status] = computeEllHpDist(ellObjArray, ...
 
 import elltool.conf.Properties;
 import modgen.common.throwerror
+import elltool.logging.Log4jConfigurator;
+persistent logger;
 
 ellArrSizeVec=size(ellObjArray);
 hpArrSizeVec=size(hpObjArray);
@@ -545,10 +557,14 @@ if (~all(hpDimArray(1)==hpDimArray(:)))
 end
 
 if Properties.getIsVerbose()
+    if isempty(logger)
+        logger=Log4jConfigurator.getLogger();
+    end
     if (nEllObj > 1) || (nHpObj > 1)
-        fprintf('Computing %d ellipsoid-to-hyperplane distances...\n', max([nEllObj nHpObj]));
+        logger.info(sprintf('Computing %d ellipsoid-to-hyperplane distances...',...
+            max([nEllObj nHpObj])));
     else
-        fprintf('Computing ellipsoid-to-hyperplane distance...\n');
+        logger.info('Computing ellipsoid-to-hyperplane distance...');
     end
 end
 
@@ -603,7 +619,7 @@ end
 
 function [distEllPolArray, statusArray] = computeEllPolytDist(ellObjArray, polObj,isFlagOn)
 %
-%   COMPUTEELLPOLYTDIST - compute distance between arrays of ellipsoids and 
+%   COMPUTEELLPOLYTDIST - compute distance between arrays of ellipsoids and
 %   polytop.
 %   Distance between ellipsoid E and polytope X is the optimal value
 %   of the following problem:
@@ -613,6 +629,8 @@ function [distEllPolArray, statusArray] = computeEllPolytDist(ellObjArray, polOb
 %
 
 import elltool.conf.Properties;
+import elltool.logging.Log4jConfigurator;
+persistent logger;
 
 ellArrSizeVec = size(ellObjArray);
 polArrSizeVec = size(polObj);
@@ -635,12 +653,16 @@ if ~all(dimPolArray(1)==dimPolArray(:))
 end
 
 if Properties.getIsVerbose()
-    if (t1 > 1) || (t2 > 1)
-        fprintf('Computing %d ellipsoid-to-polytope distances...\n', max([t1 t2]));
-    else
-        fprintf('Computing ellipsoid-to-polytope distance...\n');
+    if isempty(logger)
+        logger=Log4jConfigurator.getLogger();
     end
-    fprintf('Invoking CVX...\n');
+    if (nEllObj > 1) || (nPolObj > 1)
+        logger.info(sprintf('Computing %d ellipsoid-to-polytope distances...', ...
+            max([nEllObj nPolObj])));
+    else
+        logger.info('Computing ellipsoid-to-polytope distance...');
+    end
+    logger.info('Invoking CVX...');
 end
 
 if (nEllObj > 1) && (nPolObj > 1)

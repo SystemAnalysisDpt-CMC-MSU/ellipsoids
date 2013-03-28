@@ -22,6 +22,8 @@ classdef Properties<modgen.common.obj.StaticPropStorage
             confRepoMgr=elltool.conf.ConfRepoMgr();
             confRepoMgr.selectConf(Properties.DEFAULT_CONF_NAME);
             Properties.setConfRepoMgr(confRepoMgr);
+            
+            elltool.logging.Log4jConfigurator.configure(confRepoMgr)
             % CVX settings.
             elltool.cvx.CVXController.setUpIfNot();
             CVXController.setSolver(Properties.DEFAULT_SOLVER);

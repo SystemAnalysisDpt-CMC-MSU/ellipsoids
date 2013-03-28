@@ -57,6 +57,8 @@ pp2 = p2/p1;
 %else
 %  gg2 = mu * mu * (g2/g1);
 %end
+  
+%  abs_tol_solver = ellOptions.conf.Properties.getAbsTol();
 
 l1 = Y * F' * l0;
 l2 = GQGsr * F' * l0;
