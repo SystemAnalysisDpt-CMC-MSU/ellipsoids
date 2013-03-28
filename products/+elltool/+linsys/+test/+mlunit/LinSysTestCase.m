@@ -569,5 +569,30 @@ classdef LinSysTestCase < mlunitext.test_case
            isOk = all(isOkArr(:));
            mlunit.assert(isOk);
         end
+        %
+        function self = testHasDisturbance(self)
+            constantDistLinSys = elltool.linsys.LinSys(eye(2), eye(2),... 
+                     ellipsoid([0; 0], eye(2)), eye(2), [1; 1], [], [], 'd');
+            boundedDistLinSys = elltool.linsys.LinSys(eye(2), eye(2),... 
+                     ellipsoid([0; 0], eye(2)), eye(2),...
+                     ellipsoid([0; 0], eye(2)), [], [], 'd');
+            noDistLinSys = elltool.linsys.LinSys(eye(2), eye(2),... 
+                     ellipsoid([0; 0], eye(2)), [], [], [], [], 'd');            
+            %                  
+            % test default behavior
+            %                  
+            mlunit.assert_equals(constantDistLinSys.hasdisturbance(), 0);                  
+            mlunit.assert_equals(boundedDistLinSys.hasdisturbance(), 1);
+            mlunit.assert_equals(noDistLinSys.hasdisturbance(), 0);
+            %                  
+            % test isMeaningful
+            %                  
+            mlunit.assert_equals(boundedDistLinSys.hasdisturbance(true), 1);
+            mlunit.assert_equals(boundedDistLinSys.hasdisturbance(false), 1);            
+            mlunit.assert_equals(constantDistLinSys.hasdisturbance(true), 0);
+            mlunit.assert_equals(constantDistLinSys.hasdisturbance(false), 1);          
+            mlunit.assert_equals(noDistLinSys.hasdisturbance(true), 0);
+            mlunit.assert_equals(noDistLinSys.hasdisturbance(false), 0);
+        end
     end
 end

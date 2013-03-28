@@ -689,9 +689,9 @@ classdef LinSys < handle
         %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array
         %             of linear systems.
         %   optional:
-        %       isMeaningful: treat constant disturbance vector
+        %       isMeaningful: logical[1,1] - if true(default), 
+        %                     treat constant disturbance vector
         %                     as absence of disturbance
-        %           default: true
         %
         % Output:
         %   isDisturbanceArr: logical[nDims1, nDims2,...] - array such that
@@ -711,8 +711,7 @@ classdef LinSys < handle
                            ~isempty(linsys.disturbanceBoundsEll)) &&...
                         ((~isMeaningful && ...
                            isa(linsys.disturbanceBoundsEll,'double')) ||...
-                        (isMeaningful &&...
-                           isa(linsys.disturbanceBoundsEll,'ellipsoid')))                       
+                        (isa(linsys.disturbanceBoundsEll,'ellipsoid')))                       
                     isDisturb = true;
                 end
             end

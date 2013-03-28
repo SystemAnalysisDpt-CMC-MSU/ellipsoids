@@ -58,6 +58,7 @@ import modgen.common.throwerror;
 import modgen.common.checkmultvar;
 import elltool.conf.Properties;
 import elltool.logging.Log4jConfigurator;
+import gras.la.sqrtm;
 
 persistent logger;
 
@@ -88,7 +89,7 @@ checkmultvar('(x1==x2)',2,dimension(fstEll),size(directionsMat, 1),...
 centVec = fstEll.center - secEll.center;
 fstEllShMat = fstEll.shape;
 secEllShMat = secEll.shape;
-absTolVal=min(fstEll.absTol, secEll.absTol);     
+absTolVal = min(fstEll.absTol, secEll.absTol);     
 directionsMat  = ellipsoid.rm_bad_directions(fstEllShMat, ...
     secEllShMat, directionsMat,absTolVal);
 nDirs  = size(directionsMat, 2);
@@ -109,8 +110,8 @@ if isdegenerate(secEll)
     secEllShMat = ellipsoid.regularize(secEllShMat,secEll.absTol);
 end
 
-fstEllSqrtShMat = sqrtm(fstEllShMat);
-secEllSqrtShMat = sqrtm(secEllShMat);
+fstEllSqrtShMat = sqrtm(fstEllShMat, absTolVal);
+secEllSqrtShMat = sqrtm(secEllShMat, absTolVal);
 
 srcMat=fstEllSqrtShMat*directionsMat;
 dstMat=secEllSqrtShMat*directionsMat;

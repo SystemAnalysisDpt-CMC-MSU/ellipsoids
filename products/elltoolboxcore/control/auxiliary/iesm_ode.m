@@ -17,7 +17,7 @@ function dXdt = ell_iesm_ode(t, X, xl0, l0, mydata, n, back)
   A     = ell_value_extract(mydata.A, t, [n n]);
   BPBsr = ell_value_extract(mydata.BPBsr, t, [n n]);
   X     = reshape(X, n, n);
-  Y     = sqrtm(X);
+  Y     = gras.la.sqrtm(X, Properties.getAbsTol());
 
   l = BPBsr * F' * l0;
   xl0 = Y * F' * l0;
