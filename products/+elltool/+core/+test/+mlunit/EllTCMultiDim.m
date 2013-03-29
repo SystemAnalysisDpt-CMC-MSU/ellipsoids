@@ -18,6 +18,92 @@ classdef EllTCMultiDim < mlunitext.test_case
             self.testDataRootDir=[fileparts(which(className)),filesep,'TestData',...
                 filesep,shortClassName];
         end
+        function self = testDistance(self)
+            absTol = elltool.conf.Properties.getAbsTol();
+            %
+            % Test input of distance().
+            arrSizeVec=[1, 2, 3];
+            testFirstArr=ones(arrSizeVec);
+            testSecArr=ellipsoid(1);
+            self.runAndCheckError(...
+                'distance(ones([1, 2, 3]),ellipsoid(1))',...
+                'wrongInput');
+            %
+            % Create Data for tests
+            arrSizeVec=[2, 3, 2, 2];
+            testEllArray=createObjectArray(arrSizeVec,@ell_unitball,2,1,1);
+            nEll=numel(testEllArray);
+            %vecMat=repmat([2;0],1,nEll);
+            vecArrSizeVec=[2, arrSizeVec];
+            vecArray=zeros(vecArrSizeVec);
+            vecArray(1,:)=2;
+            ansArray=ones(arrSizeVec);
+            testEll3Array=testEllArray(:,:,:,1);
+            testEll2Array=testEllArray;
+            testEll2Array(1)=ell_unitball(3);
+            %
+            % Test ellipsoid-vector distance
+            checkCommonErrors('vecArray');
+            checkMultyInput(testEllArray,vecArray,true);
+            % Wrong dimension of vectors
+            %vecArrSizeVec=[3, arrSizeVec];
+            vec3Array=zeros([3,arrSizeVec]);%repmat([1;0;0],1,nEll);
+            self.runAndCheckError('distance(testEllArray,vec3Array)',...
+                'wrongInput');           
+            %
+            % Test ellipsoid-ellipsoids distance 
+            testEll4Array=createObjectArray(arrSizeVec,@ellipsoid,[3;0],...
+                diag([1,1]),2);
+            %
+            checkMultyInput(testEllArray,testEll4Array,false);
+            checkCommonErrors('testEllArray');
+            % wrong number of one of dims
+            testEll4Array=createObjectArray(arrSizeVec(end:-1:1),...
+                @ell_unitball,2,1,1);
+            self.runAndCheckError('distance(testEllArray,testEll4Array)',...
+                'wrongInput');
+            %
+            % Test ellipsoid-hiperplane distance 
+            % Create data.
+            arrSize2Vec=[2 arrSizeVec];
+            testNormArray=zeros(arrSize2Vec);
+            testNormArray(1,:)=1;
+            testNormArray(2,:)=0;
+            testHpArray=hyperplane(testNormArray,2);
+            %
+            checkMultyInput(testEllArray,testHpArray,false);
+            checkCommonErrors('testHpArray');
+            %
+            % Test ellipsoid-polytope distance 
+            % Create data.
+            hMat=-eye(2);
+            kVec=[-2 1]';
+            qStruct=struct('H',hMat,'K',kVec);
+            testPolObj=polytope(qStruct);
+            %
+            checkMultyInput(testEllArray,testPolObj,false);
+            %
+            function checkDist(obj1Array, obj2Array)
+                resArray=distance(obj1Array, obj2Array);
+                difVec=abs(resArray(:)-ansArray(:))<absTol;
+                mlunit.assert(all(difVec));
+            end
+            function checkMultyInput(obj1Array, obj2Array, isVecDist)
+                checkDist(obj1Array,obj2Array);
+                checkDist(obj1Array(1),obj2Array);
+                if isVecDist
+                    checkDist(obj1Array,obj2Array(:,1));
+                else
+                    checkDist(obj1Array,obj2Array(1));
+                end
+            end
+            function checkCommonErrors(arrayStr)
+              self.runAndCheckError(strcat('distance(testEll3Array,',...
+                  arrayStr,')'),'wrongInput');
+             self.runAndCheckError(strcat('distance(testEll2Array,',...
+                  arrayStr,')'),'wrongInput');
+            end
+        end
         function self = testDimension(self)
             %Chek for one output argument
             %1: Empty ellipsoid
@@ -260,8 +346,8 @@ classdef EllTCMultiDim < mlunitext.test_case
             mlunit.assert_equals(testNPlot3dPointsArray, ...
                 testEllArray.getNPlot3dPoints());
         end
-    end
-end
+     end
+ end
 function [varargout] = createTypicalArray(flag)
     arraySizeVec = [2, 1, 1, 2, 1, 3, 1];
     switch flag
