@@ -1319,7 +1319,8 @@ classdef ReachDiscrete < elltool.reach.AReach
                 else
                     % continuous system with A(t)
                     I0        = reshape(eye(d1), d1*d1, 1);
-                    [tt, Phi] = ell_ode_solver(@ell_stm_ode, tvals, I0, mydata, d1, back);
+                    [tt, Phi] = ell_ode_solver(@ell_stm_ode, tvals, I0,...
+                        mydata, d1, back, self.absTol);
                     Phi       = Phi';
                     Phinv     = zeros(d1*d1, size(self.time_values, 2));
                     for i = 1:size(self.time_values, 2)
@@ -1358,7 +1359,8 @@ classdef ReachDiscrete < elltool.reach.AReach
                     xx = [xx x];
                 end
             else
-                [tt, xx] = ell_ode_solver(@ell_center_ode, tvals, x0, mydata, d1, back);
+                [tt, xx] = ell_ode_solver(@ell_center_ode, tvals, x0,...
+                    mydata, d1, back, self.absTol);
                 xx       = xx';
             end
             self.center_values = xx;
@@ -1391,11 +1393,13 @@ classdef ReachDiscrete < elltool.reach.AReach
                     else
                         if linSys.hasdisturbance()
                             [tt, Q] = ell_ode_solver(@ell_eedist_ode,...
-                                tvals, Q0, l0, mydata, d1, back);
+                                tvals, Q0, l0, mydata, d1, back,...
+                                self.absTol);
                             Q = Q';
                         elseif ~(isempty(mydata.BPB))
                             [tt, Q] = ell_ode_solver(@ell_eesm_ode,...
-                                tvals, Q0, l0, mydata, d1, back);
+                                tvals, Q0, l0, mydata, d1, back,...
+                                self.absTol);
                             Q = Q';
                         else
                             Q = [];
@@ -1435,11 +1439,13 @@ classdef ReachDiscrete < elltool.reach.AReach
                     else
                         if linSys.hasdisturbance()
                             [tt, Q] = ell_ode_solver(@ell_iedist_ode,...
-                                tvals, reshape(X0, d1*d1, 1), l0, mydata, d1, back);
+                                tvals, reshape(X0, d1*d1, 1), l0,...
+                                mydata, d1, back, self.absTol);
                             Q = Q';
                         elseif ~(isempty(mydata.BPB))
                             [tt, Q] = ell_ode_solver(@ell_iesm_ode,...
-                                tvals, reshape(M, d1*d1, 1), M*l0, l0, mydata, d1, back);
+                                tvals, reshape(M, d1*d1, 1), M*l0, l0,...
+                                mydata, d1, back, self.absTol);
                             Q = self.fix_iesm(Q', d1);
                         else
                             Q = [];
@@ -3248,7 +3254,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 else
                     I0        = reshape(eye(d1), d1*d1, 1);
                     [tt, Phi] = ell_ode_solver(@ell_stm_ode,...
-                        tvals, I0, mydata, d1, back);
+                        tvals, I0, mydata, d1, back, self.absTol);
                     Phi       = Phi';
                     Phinv     = [];
                     for i = 1:size(newReachObj.time_values, 2)
@@ -3289,7 +3295,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 end
             else
                 [tt, xx] = ell_ode_solver(@ell_center_ode,...
-                    tvals, x0, mydata, d1, back);
+                    tvals, x0, mydata, d1, back, self.absTol);
                 xx       = xx';
             end
             newReachObj.center_values = xx;
@@ -3325,11 +3331,13 @@ classdef ReachDiscrete < elltool.reach.AReach
                     else
                         if hasdisturbance(linSys)
                             [tt, Q] = ell_ode_solver(@ell_eedist_ode,...
-                                tvals, Q0, l0, mydata, d1, back);
+                                tvals, Q0, l0, mydata, d1,...
+                                back, self.absTol);
                             Q       = Q';
                         elseif ~(isempty(mydata.BPB))
                             [tt, Q] = ell_ode_solver(@ell_eesm_ode,...
-                                tvals, Q0, l0, mydata, d1, back);
+                                tvals, Q0, l0, mydata, d1,...
+                                back, self.absTol);
                             Q       = Q';
                         else
                             Q = [];
@@ -3373,11 +3381,13 @@ classdef ReachDiscrete < elltool.reach.AReach
                     else
                         if hasdisturbance(linSys)
                             [tt, Q] = ell_ode_solver(@ell_iedist_ode,...
-                                tvals, reshape(Q0, d1*d1, 1), l0, mydata, d1, back);
+                                tvals, reshape(Q0, d1*d1, 1), l0,...
+                                mydata, d1, back, self.absTol);
                             Q       = Q';
                         elseif ~(isempty(mydata.BPB))
                             [tt, Q] = ell_ode_solver(@ell_iesm_ode,...
-                                tvals, reshape(X0, d1*d1, 1), X0*l0, l0, mydata, d1, back);
+                                tvals, reshape(X0, d1*d1, 1), X0*l0, l0,...
+                                mydata, d1, back, self.absTol);
                             Q       = self.fix_iesm(Q', d1);
                         else
                             Q = [];

@@ -21,12 +21,12 @@ classdef BasicTestCase < mlunitext.test_case
             MAX_TOL = 1e-6;
             nDim = 1000;
             testMat = eye(nDim);
-            sqrtMat = sqrtm(testMat);
+            sqrtMat = sqrtm(testMat, MAX_TOL);
             mlunit.assert_equals(testMat, sqrtMat);
             
             nDim = 1000;
             testMat = diag(1:nDim);
-            sqrtMat = sqrtm(testMat);
+            sqrtMat = sqrtm(testMat, MAX_TOL);
             mlunit.assert_equals(sqrt(testMat), sqrtMat);
             
             nDim = 2;
@@ -34,35 +34,42 @@ classdef BasicTestCase < mlunitext.test_case
             vMat = [-1/sqrt(2), 1/sqrt(2); 1/sqrt(2), 1/sqrt(2)];
             dMat = diag([1, sqrt(3)]);
             sqrtTestMat = vMat*dMat*vMat';
-            sqrtMat = sqrtm(testMat);
+            sqrtMat = sqrtm(testMat, MAX_TOL);
             mlunit.assert_equals(sqrtTestMat, sqrtMat);
             
             nDim = 3;
             testMat = [5, -4, 1; -4, 6, -4; 1, -4, 5];
             sqrtTestMat = [2, -1, 0; -1, 2, -1; 0, -1, 2];
-            sqrtMat = sqrtm(testMat);
-            mlunit.assert(norm(sqrtm(sqrtTestMat)-sqrtm(sqrtMat)) < MAX_TOL);
+            sqrtMat = sqrtm(testMat, MAX_TOL);
+            mlunit.assert(norm(sqrtm(sqrtTestMat, MAX_TOL) -...
+                sqrtm(sqrtMat, MAX_TOL)) < MAX_TOL);
             
             nDim = 15;
-            load(strcat(self.testDataRootDir, strcat(filesep, 'testSqrtm1_inp.mat')), 'testMat');
-            sqrtMat = sqrtm(testMat);
-            mlunit.assert(norm(sqrtm(testMat)-sqrtm(sqrtMat*sqrtMat'))<MAX_TOL);
+            load(strcat(self.testDataRootDir,... 
+                strcat(filesep, 'testSqrtm1_inp.mat')), 'testMat');
+            sqrtMat = sqrtm(testMat, MAX_TOL);
+            mlunit.assert(norm(sqrtm(testMat, MAX_TOL)...
+                -sqrtm(sqrtMat*sqrtMat', MAX_TOL))<MAX_TOL);
             
             nDim = 15;
-            load(strcat(self.testDataRootDir, strcat(filesep, 'testSqrtm2_inp.mat')), 'testMat');
-            sqrtMat = sqrtm(testMat);
-            mlunit.assert(norm(sqrtm(testMat)-sqrtm(sqrtMat*sqrtMat')) < MAX_TOL);
+            load(strcat(self.testDataRootDir,...
+                strcat(filesep, 'testSqrtm2_inp.mat')), 'testMat');
+            sqrtMat = sqrtm(testMat, MAX_TOL);
+            mlunit.assert(norm(sqrtm(testMat,MAX_TOL) -...
+                sqrtm(sqrtMat*sqrtMat')) < MAX_TOL);
             
             
             test1Mat = eye(2);
             test2SqrtMat = eye(2) + 1.01*MAX_TOL;
             test2Mat = test2SqrtMat*test2SqrtMat.';
-            mlunit.assert(norm(sqrtm(test1Mat) - sqrtm(test2Mat)) > MAX_TOL);
+            mlunit.assert(norm(sqrtm(test1Mat, MAX_TOL) -...
+                sqrtm(test2Mat, MAX_TOL)) > MAX_TOL);
             
             test1Mat = eye(2);
             test2SqrtMat = eye(2) + 0.5*MAX_TOL;
             test2Mat = test2SqrtMat*test2SqrtMat.';
-            mlunit.assert(norm(sqrtm(test1Mat) - sqrtm(test2Mat)) < MAX_TOL);
+            mlunit.assert(norm(sqrtm(test1Mat, MAX_TOL) -...
+                sqrtm(test2Mat, MAX_TOL)) < MAX_TOL);
             
         end
         

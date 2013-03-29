@@ -6,7 +6,7 @@ function qSqrtMat = sqrtm(qMat, absTol)
 %         absTol: double[1, 1] - tolerance for eigenvalues
 %
 % Output:
-%   QsqrtMat: double[nDims, nDims]
+%   qSqrtMat: double[nDims, nDims]
 %
 %
 %
@@ -14,17 +14,16 @@ function qSqrtMat = sqrtm(qMat, absTol)
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Cybernetics,
 %            System Analysis Department 2012 $
-
 if (nargin == 1)
     absTol = 0;
 end
-
+%
 [vMat, dMat]=eig(qMat);
-dVec = diag(dMat);
-isZeroVec = abs(dVec) < absTol;
-dVec(isZeroVec) = 0;
-dMat = diag(dVec);
+if (absTol == 0)
+    dVec = diag(dMat);
+    isZeroVec = abs(dVec) < absTol;
+    dVec(isZeroVec) = 0;
+    dMat = diag(dVec);
+end   
 dMat = sqrt(dMat);
-
 qSqrtMat = vMat * dMat * vMat.';
-end

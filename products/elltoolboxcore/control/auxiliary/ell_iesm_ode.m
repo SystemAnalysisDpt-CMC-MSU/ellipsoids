@@ -3,7 +3,7 @@ function dXdt = ell_iesm_ode(t, X, xl0, l0, mydata, n, back, absTol)
 % ELL_IESM_ODE - ODE for the shape matrix of the internal ellipsoid.
 %
 import elltool.conf.Properties;
-if nargin<7
+if nargin < 8
     absTol=Properties.getAbsTol();
 end
 if back > 0
