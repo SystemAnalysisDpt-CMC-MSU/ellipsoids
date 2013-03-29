@@ -1,4 +1,4 @@
-function dXdt = ell_iesm_ode(t, X, xl0, l0, mydata, n, back,absTol)
+function dXdt = ell_iesm_ode(t, X, xl0, l0, mydata, n, back, absTol)
 %
 % ELL_IESM_ODE - ODE for the shape matrix of the internal ellipsoid.
 %

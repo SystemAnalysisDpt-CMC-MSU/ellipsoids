@@ -12,7 +12,7 @@ function intApprEllVec = minksum_ia(inpEllArr, dirMat)
 %       In this case, the output of the function will contain k
 %       ellipsoids computed for k directions specified in dirMat.
 %
-%   Let inpEllMat consists from: E(q1, Q1), E(q2, Q2), ..., E(qm, Qm) - 
+%   Let inpEllMat consists from: E(q1, Q1), E(q2, Q2), ..., E(qm, Qm) -
 %   ellipsoids in R^n, and dirMat(:, iCol) = l - some vector in R^n.
 %   Then tight internal approximating ellipsoid E(q, Q) for the
 %   geometric sum E(q1, Q1) + E(q2, Q2) + ... + E(qm, Qm) along
@@ -86,7 +86,7 @@ centVec =zeros(nDims,1);
 arrayfun(@(x) fAddCenter(x),inpEllArr);
 absTolArr = getAbsTol(inpEllArr);
 
-srcMat = sqrtm(inpEllArr(1).shape, absTolArr(1)) * dirMat;
+srcMat = sqrtm(inpEllArr(1).shape, min(absTolArr(:))) * dirMat;
 %dstArr = zeros(nDims, nCols, nNumel);
 sqrtShArr = zeros(nDims, nDims, nNumel);
 rotArr = zeros(nDims,nDims,nNumel,nCols);
@@ -100,13 +100,13 @@ arrayfun(@(x) fSingleDirection(x),1:nCols);
     function fAddCenter(singEll)
         centVec = centVec + singEll.center;
     end
-    
+
     function fSetRotArr(ellIndex)
         import gras.la.mlorthtransl;
         import gras.la.sqrtm;
         shMat = inpEllArr(ellIndex).shape;
         if isdegenerate(inpEllArr(ellIndex))
-            if isVerbose                
+            if isVerbose
                 if isempty(logger)
                     logger=Log4jConfigurator.getLogger();
                 end
@@ -121,7 +121,7 @@ arrayfun(@(x) fSingleDirection(x),1:nCols);
         dstMat = shSqrtMat*dirMat;
         rotArr(:,:,ellIndex,:) = mlorthtransl(dstMat,srcMat);
     end
-    
+
 %     function fGetDstArr(index)
 %         shMat = inpEllArr(index).shape;
 %         if isdegenerate(inpEllArr(index))
