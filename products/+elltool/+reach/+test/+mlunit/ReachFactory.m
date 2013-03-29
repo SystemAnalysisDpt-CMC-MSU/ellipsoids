@@ -10,6 +10,7 @@ classdef ReachFactory
         isBack
         isEvolve
         dim
+        reachObj
     end
     methods
         function self =...
@@ -57,13 +58,18 @@ classdef ReachFactory
                 ControlBounds, ctDefCMat, DistBounds);
         end
         function reachObj = createInstance(self)
-            if self.isEvolve
-                halfReachObj = elltool.reach.ReachContinuous(self.linSys,...
-                    self.x0Ell, self.l0Mat, [self.tVec(1) sum(self.tVec)/2]);
-                reachObj = halfReachObj.evolve(self.tVec(2));
+            if isempty(self.reachObj)
+                if self.isEvolve
+                    halfReachObj = elltool.reach.ReachContinuous(...
+                        self.linSys, self.x0Ell, self.l0Mat,...
+                        [self.tVec(1) sum(self.tVec)/2]);
+                    reachObj = halfReachObj.evolve(self.tVec(2));
+                else
+                    reachObj = elltool.reach.ReachContinuous(...
+                        self.linSys, self.x0Ell, self.l0Mat, self.tVec);
+                end
             else
-                reachObj = elltool.reach.ReachContinuous(self.linSys,...
-                    self.x0Ell, self.l0Mat, self.tVec);
+                reachObj = self.reachObj.getCopy();
             end
         end
         function linSys = getLinSys(self)

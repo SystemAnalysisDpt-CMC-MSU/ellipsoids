@@ -1,8 +1,8 @@
 classdef AReach < elltool.reach.IReach
-% $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: March-2012 $
+% $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: March-2013 $
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Computer Science,
-%            System Analysis Department 2012 $
+%            System Analysis Department 2013 $
 %
     properties (Access = protected)
         switchSysTimeVec
