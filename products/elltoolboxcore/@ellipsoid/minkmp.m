@@ -24,7 +24,7 @@ function [centVec, boundPntMat] = minkmp(fstEll, secEll, sumEllArr,varargin)
 %       (firstEll - secondEll) +
 %       +(geometric sum of ellipsoids in sumEllArr)
 %       in default (red) color.
-%   MINKMP(firstEll, secondEll, sumEllMat, Options) - plots
+%   MINKMP(firstEll, secondEll, sumEllArr, Options) - plots
 %       (firstEll - secondEll) +
 %       +(geometric sum of ellipsoids in sumEllArr)
 %       using options given in the Options structure.
