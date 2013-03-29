@@ -168,6 +168,33 @@ classdef DiscreteReachTestCase < mlunitext.test_case
                 end
             end
         end
+        %
+        function self = testSqrtmTolerance(self)
+            loadFileStr = strcat(self.testDataRootDir,...
+                '/constDisturbanceTest.mat');
+            load(loadFileStr, 'aMat', 'x0Ell', 'l0Mat', 'timeBounds');
+            linSysObj = elltool.linsys.LinSys(aMat, eye(size(aMat, 1)),...
+                ellipsoid(zeros(size(aMat, 2), 1), eye(size(aMat, 1))),...
+                [], [], [], [], 'd');
+            reachSetObj = elltool.reach.ReachDiscrete(linSysObj,...
+                x0Ell, l0Mat, timeBounds);
+            reachSetObj.display();
+            mlunit.assert_equals(true, true);
+        end
+        %
+        function self = testConstDisturbance(self)
+            loadFileStr = strcat(self.testDataRootDir,...
+                '/constDisturbanceTest.mat');
+            load(loadFileStr, 'aMat', 'x0Ell', 'l0Mat', 'timeBounds',...
+                'distVec', 'distMat');
+            linSysObj = elltool.linsys.LinSys(aMat, eye(size(aMat, 1)),...
+                ellipsoid(zeros(size(aMat, 2), 1), eye(size(aMat, 1))),...
+                distMat, distVec, [], [], 'd');
+            reachSetObj = elltool.reach.ReachDiscrete(linSysObj,...
+                x0Ell, l0Mat, timeBounds);
+            reachSetObj.display();
+            mlunit.assert_equals(true, true);
+        end
     end
     
 end
