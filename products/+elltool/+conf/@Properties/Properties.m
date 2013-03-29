@@ -12,6 +12,8 @@ classdef Properties<modgen.common.obj.StaticPropStorage
         DEFAULT_SOLVER = 'SeDuMi';
         DEFAULT_CONF_NAME='default'
         TOL_FACTOR = 2;
+        SETUP_METHOD_NAME_VEC = {'elltool.cvx.CVXController.setUpAll',...
+            'elltool.mpt.MPTController.setUpIfNot'};
     end
     %
     methods(Static)
@@ -22,13 +24,19 @@ classdef Properties<modgen.common.obj.StaticPropStorage
             confRepoMgr=elltool.conf.ConfRepoMgr();
             confRepoMgr.selectConf(Properties.DEFAULT_CONF_NAME);
             Properties.setConfRepoMgr(confRepoMgr);
-            % CVX settings.
-            elltool.cvx.CVXController.setUpIfNot();
-            CVXController.setSolver(Properties.DEFAULT_SOLVER);
-            CVXController.setPrecision(...
-                Properties.getPrecisionForCVXVec());
-            CVXController.setIsVerbosityEnabled(...
-                Properties.getIsVerbose());
+            %
+            %setup external toolboxes
+            cvxDataCVec = {Properties.DEFAULT_SOLVER,...
+                Properties.getPrecisionForCVXVec(),...
+                Properties.getIsVerbose()};
+            mptDataCVec = {Properties.getAbsTol(),Properties.getRelTol(),...
+                Properties.getIsVerbose()};
+            setUpDataCVec = {cvxDataCVec,mptDataCVec};
+            for iController = 1:size(Properties.SETUP_METHOD_NAME_VEC,2)
+                feval(Properties.SETUP_METHOD_NAME_VEC{iController},...
+                    setUpDataCVec{iController});
+            end
+            
         end
         %
         function checkSettings()
@@ -142,7 +150,7 @@ classdef Properties<modgen.common.obj.StaticPropStorage
         %
         varargout = parseProp(args,neededPropNameList)
     end
-    methods(Static,Access = private)
+    methods(Static, Access = private)
         function opt = getOption(optName)
             confRepMgr = elltool.conf.Properties.getConfRepoMgr();
             opt = confRepMgr.getParam(optName);

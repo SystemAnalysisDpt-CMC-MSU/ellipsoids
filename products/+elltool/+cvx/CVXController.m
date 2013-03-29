@@ -77,6 +77,17 @@ classdef CVXController
                 CVXController.setUp()
             end
         end
+        
+        function setUpAll(setUpDataCVec)
+            import elltool.cvx.CVXController;
+            elltool.cvx.CVXController.setUpIfNot();
+            defaultSolver = setUpDataCVec{1};
+            precisionForCVXVec = setUpDataCVec{2};
+            isVerbose = setUpDataCVec{3};
+            CVXController.setSolver(defaultSolver);
+            CVXController.setPrecision(precisionForCVXVec);
+            CVXController.setIsVerbosityEnabled(isVerbose);
+        end
         function solverStr = getSolver()
             solverStr = cvx_solver();
         end
