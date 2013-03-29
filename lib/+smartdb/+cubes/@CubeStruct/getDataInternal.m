@@ -329,6 +329,24 @@ if isNullReplaced
     [SData,SIsNull,SIsValueNull]=self.replaceNullsInStruct(...
         SData,SIsNull,SIsValueNull,replaceNullArgList{:});
 end
+
+SDataFields=fieldnames(SData);
+projSDimVecName={'projSpecDimVec'};
+if (ismember(projSDimVecName,SDataFields))&&(~isempty(SData.projSpecDimVec))&&...
+        (islogical(SData.projSpecDimVec{1})) %changing the essence of this field to matrix
+    nProj=length(SData.projSpecDimVec);
+    nDims=length(SData.projSpecDimVec{1});
+    for iProj=1:nProj
+        projVec=SData.projSpecDimVec{iProj};
+        projDimNumVec=find(projVec);
+        nProjDims=length(projDimNumVec);
+        indVec=sub2ind([nProjDims, nDims],1:nProjDims,projDimNumVec);
+        SData.projSpecDimVec{iProj}=zeros(nProjDims,nDims);
+        SData.projSpecDimVec{iProj}(indVec)=1;
+        SIsNull.projSpecDimVec{iProj}=zeros(2,nDims);
+    end
+end    
+
 varargout={SData,SIsNull,SIsValueNull};
 %
 if isStructNameListSpec
