@@ -7,12 +7,12 @@ function intApprEllVec = minksum_ia(inpEllArr, dirMat)
 %       tight internal approximating ellipsoids for the geometric
 %       sum of the ellipsoids in the array inpEllArr along directions
 %       specified by columns of dirMat. If ellipsoids in
-%       inpEllMat are n-dimensional, matrix dirMat must have
+%       inpEllArr are n-dimensional, matrix dirMat must have
 %       dimension (n x k) where k can be arbitrarily chosen.
 %       In this case, the output of the function will contain k
 %       ellipsoids computed for k directions specified in dirMat.
 %
-%   Let inpEllMat consists from: E(q1, Q1), E(q2, Q2), ..., E(qm, Qm) -
+%   Let inpEllArr consist of E(q1, Q1), E(q2, Q2), ..., E(qm, Qm) -
 %   ellipsoids in R^n, and dirMat(:, iCol) = l - some vector in R^n.
 %   Then tight internal approximating ellipsoid E(q, Q) for the
 %   geometric sum E(q1, Q1) + E(q2, Q2) + ... + E(qm, Qm) along
@@ -87,13 +87,10 @@ arrayfun(@(x) fAddCenter(x),inpEllArr);
 absTolArr = getAbsTol(inpEllArr);
 
 srcMat = sqrtm(inpEllArr(1).shape, min(absTolArr(:))) * dirMat;
-%dstArr = zeros(nDims, nCols, nNumel);
 sqrtShArr = zeros(nDims, nDims, nNumel);
 rotArr = zeros(nDims,nDims,nNumel,nCols);
 arrayfun(@(x) fSetRotArr(x), 1:nNumel);
-%rotArr = gras.la.mlorthtransl(srcMat,dstArr);
-
-
+%
 intApprEllVec(1,nCols) = ellipsoid;
 arrayfun(@(x) fSingleDirection(x),1:nCols);
 
@@ -121,21 +118,6 @@ arrayfun(@(x) fSingleDirection(x),1:nCols);
         dstMat = shSqrtMat*dirMat;
         rotArr(:,:,ellIndex,:) = mlorthtransl(dstMat,srcMat);
     end
-
-%     function fGetDstArr(index)
-%         shMat = inpEllArr(index).shape;
-%         if isdegenerate(inpEllArr(index))
-%             if Properties.getIsVerbose()
-%                 fprintf('MINKSUM_IA: Warning!');
-%                 fprintf(' Degenerate ellipsoid.\n');
-%                 fprintf('            Regularizing...\n')
-%             end
-%             shMat = ellipsoid.regularize(shMat, absTolArr(index));
-%         end
-%         shMat = sqrtm(shMat);
-%         sqrtShArr(:,:,index) = shMat;
-%         dstArr(:,:,index) = shMat*dirMat;
-%     end
 
     function fSingleDirection(dirIndex)
         subShMat = zeros(nDims,nDims);
