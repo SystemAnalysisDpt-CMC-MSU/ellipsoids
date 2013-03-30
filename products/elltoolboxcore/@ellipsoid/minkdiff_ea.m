@@ -58,7 +58,7 @@ import modgen.common.throwerror;
 import modgen.common.checkmultvar;
 import elltool.conf.Properties;
 import elltool.logging.Log4jConfigurator;
-import gras.la.sqrtm;
+import gras.la.sqrtmpos;
 
 persistent logger;
 
@@ -110,8 +110,8 @@ if isdegenerate(secEll)
     secEllShMat = ellipsoid.regularize(secEllShMat,secEll.absTol);
 end
 
-fstEllSqrtShMat = sqrtm(fstEllShMat, absTolVal);
-secEllSqrtShMat = sqrtm(secEllShMat, absTolVal);
+fstEllSqrtShMat = sqrtmpos(fstEllShMat, absTolVal);
+secEllSqrtShMat = sqrtmpos(secEllShMat, absTolVal);
 
 srcMat=fstEllSqrtShMat*directionsMat;
 dstMat=secEllSqrtShMat*directionsMat;

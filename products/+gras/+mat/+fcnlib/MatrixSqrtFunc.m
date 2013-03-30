@@ -3,7 +3,7 @@ classdef MatrixSqrtFunc<gras.mat.AMatrixUnaryOpFunc
         function self=MatrixSqrtFunc(lMatFunc)
             %
             self=self@gras.mat.AMatrixUnaryOpFunc(lMatFunc,...
-                @gras.la.sqrtm);
+                @gras.la.sqrtmpos);
             %
             modgen.common.type.simple.checkgen(lMatFunc.getMatrixSize(),...
                 'x(1)==x(2)');

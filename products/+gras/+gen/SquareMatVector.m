@@ -36,7 +36,7 @@ classdef SquareMatVector<gras.gen.MatVector
                 end
             end
         end
-        function sqrtDataArray=sqrtm(dataArray)
+        function sqrtDataArray=sqrtmpos(dataArray)
             sizeVec=size(dataArray);
             if length(sizeVec)==2
                 sizeVec(3)=1;

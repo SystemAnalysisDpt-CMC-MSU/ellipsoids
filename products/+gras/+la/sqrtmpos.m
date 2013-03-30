@@ -1,5 +1,5 @@
-function qSqrtMat = sqrtm(qMat, absTol)
-% SQRTM generates a square root from matrix QMat
+function qSqrtMat = sqrtmpos(qMat, absTol)
+% SQRTMPOS generates a square root from positive definite matrix QMat
 % Input:
 %     regular:
 %         qMat: double[nDims, nDims]
@@ -10,20 +10,24 @@ function qSqrtMat = sqrtm(qMat, absTol)
 %
 %
 %
-% $Author: Vadim Kaushanskiy  <vkaushanskiy@gmail.com> $	$Date: 2012-01-11$
+% $Authors: Vadim Kaushanskiy  <vkaushanskiy@gmail.com> $	$Date: 2012-01-11$
+%           Daniil Stepenskiy <reinkarn@gmail.com> $	$Date: 2013-03-29$
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Cybernetics,
-%            System Analysis Department 2012 $
+%            System Analysis Department 2012-2013 $
 if (nargin == 1)
     absTol = 0;
 end
 %
 [vMat, dMat]=eig(qMat);
+dVec = diag(dMat);
+if any(dVec < -absTol)
+    throwerror('wrongInput', 'input matrix is expected to be positive-definite');
+end
 if (absTol == 0)
-    dVec = diag(dMat);
     isZeroVec = abs(dVec) < absTol;
     dVec(isZeroVec) = 0;
     dMat = diag(dVec);
-end   
+end
 dMat = sqrt(dMat);
 qSqrtMat = vMat * dMat * vMat.';

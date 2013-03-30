@@ -43,7 +43,7 @@ function T = ell_simdiag(A, B, absTol)
 %    Rustam Guliev
   import gras.la.ismatsymm;
   import gras.la.ismatposdef;
-  import gras.la.sqrtm;
+  import gras.la.sqrtmpos;
   %  
   if ~(isa(A, 'double')) || ~(isa(B, 'double'))
     error('ELL_SIMDIAG: both arguments must be symmetric matrices of the same dimension.');
@@ -62,7 +62,7 @@ function T = ell_simdiag(A, B, absTol)
   end
 
   [U1, S, ~] = svd(A);
-  U        = U1 / (sqrtm(S, absTol));
+  U        = U1 / (sqrtmpos(S, absTol));
   [U2 , ~, ~] = svd(U'*B*U);
   T        = U2' * U';
 

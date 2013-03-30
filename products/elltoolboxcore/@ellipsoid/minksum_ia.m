@@ -50,7 +50,7 @@ import elltool.conf.Properties;
 import modgen.common.throwerror;
 import modgen.common.checkmultvar;
 import elltool.logging.Log4jConfigurator;
-import gras.la.sqrtm;
+import gras.la.sqrtmpos;
 
 persistent logger;
 
@@ -86,7 +86,7 @@ centVec =zeros(nDims,1);
 arrayfun(@(x) fAddCenter(x),inpEllArr);
 absTolArr = getAbsTol(inpEllArr);
 
-srcMat = sqrtm(inpEllArr(1).shape, min(absTolArr(:))) * dirMat;
+srcMat = sqrtmpos(inpEllArr(1).shape, min(absTolArr(:))) * dirMat;
 sqrtShArr = zeros(nDims, nDims, nNumel);
 rotArr = zeros(nDims,nDims,nNumel,nCols);
 arrayfun(@(x) fSetRotArr(x), 1:nNumel);
@@ -100,7 +100,7 @@ arrayfun(@(x) fSingleDirection(x),1:nCols);
 
     function fSetRotArr(ellIndex)
         import gras.la.mlorthtransl;
-        import gras.la.sqrtm;
+        import gras.la.sqrtmpos;
         shMat = inpEllArr(ellIndex).shape;
         if isdegenerate(inpEllArr(ellIndex))
             if isVerbose
@@ -113,7 +113,7 @@ arrayfun(@(x) fSingleDirection(x),1:nCols);
             end
             shMat = ellipsoid.regularize(shMat, absTolArr(ellIndex));
         end
-        shSqrtMat = sqrtm(shMat, absTolArr(ellIndex));
+        shSqrtMat = sqrtmpos(shMat, absTolArr(ellIndex));
         sqrtShArr(:,:,ellIndex) = shSqrtMat;
         dstMat = shSqrtMat*dirMat;
         rotArr(:,:,ellIndex,:) = mlorthtransl(dstMat,srcMat);

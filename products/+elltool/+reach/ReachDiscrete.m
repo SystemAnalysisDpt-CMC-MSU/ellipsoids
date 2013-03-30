@@ -647,7 +647,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             %            Faculty of Computational Mathematics and Computer Science,
             %            System Analysis Department 2012 $
             %
-            import gras.la.sqrtm;
+            import gras.la.sqrtmpos;
             import elltool.conf.Properties;
             import modgen.common.throwerror;
             import elltool.logging.Log4jConfigurator;
@@ -878,7 +878,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                     B            = reshape(BB, d1, du);
                     mydata.Bp    = B * p;
                     mydata.BPB   = B * P * B';
-                    mydata.BPBsr = sqrtm(full(mydata.BPB), self.absTol);
+                    mydata.BPBsr = sqrtmpos(full(mydata.BPB), self.absTol);
                     mydata.BPBsr = 0.5*(mydata.BPBsr + (mydata.BPBsr)');
                 else
                     Bp    = zeros(d1, size(self.time_values, 2));
@@ -889,7 +889,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                         Bp(:, i)    = B*p;
                         B           = B * P * B';
                         BPB(:, i)   = reshape(B, d1*d1, 1);
-                        B           = sqrtm(B, self.absTol);
+                        B           = sqrtmpos(B, self.absTol);
                         B           = 0.5*(B + B');
                         BPBsr(:, i) = reshape(B, d1*d1, 1);
                     end
@@ -953,7 +953,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                             Bp(:, i)    = B*p;
                             P           = B * P * B';
                             BPB(:, i)   = reshape(P, d1*d1, 1);
-                            P           = sqrtm(P, self.absTol);
+                            P           = sqrtmpos(P, self.absTol);
                             P           = 0.5*(P + P');
                             BPBsr(:, i) = reshape(P, d1*d1, 1);
                         end
@@ -978,7 +978,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                             mydata.Bp  = spline(self.time_values, Bp);
                         end
                         mydata.BPB   = B * uEll.shape * B';
-                        mydata.BPBsr = sqrtm(mydata.BPB, self.absTol);
+                        mydata.BPBsr = sqrtmpos(mydata.BPB, self.absTol);
                         mydata.BPBsr = 0.5*(mydata.BPBsr + (mydata.BPBsr)');
                     else
                         BPB   = zeros(d1*d1, size(self.time_values, 2));
@@ -992,7 +992,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                             end
                             P           = B * P * B';
                             BPB(:, i)   = reshape(P, d1*d1, 1);
-                            P           = sqrtm(P, self.absTol);
+                            P           = sqrtmpos(P, self.absTol);
                             P           = 0.5*(P + P');
                             BPBsr(:, i) = reshape(P, d1*d1, 1);
                         end
@@ -1029,7 +1029,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                         Bp(:, i)    = B*p;
                         P           = B * P * B';
                         BPB(:, i)   = reshape(P, d1*d1, 1);
-                        P           = sqrtm(P, self.absTol);
+                        P           = sqrtmpos(P, self.absTol);
                         P           = 0.5*(P + P');
                         BPBsr(:, i) = reshape(P, d1*d1, 1);
                     end
@@ -1053,7 +1053,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                         G            = reshape(GG, d1, dd);
                         mydata.Gq    = G * q;
                         mydata.GQG   = G * Q * G';
-                        mydata.GQGsr = sqrtm(mydata.GQG, self.absTol);
+                        mydata.GQGsr = sqrtmpos(mydata.GQG, self.absTol);
                         mydata.GQGsr = 0.5*(mydata.GQGsr + (mydata.GQGsr)');
                     else
                         Gq    = zeros(d1, size(self.time_values, 2));
@@ -1064,7 +1064,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                             Gq(:, i)    = G*q;
                             G           = G * Q * G';
                             GQG(:, i)   = reshape(G, d1*d1, 1);
-                            G           = sqrtm(G, self.absTol);
+                            G           = sqrtmpos(G, self.absTol);
                             G           = 0.5*(G + G');
                             GQGsr(:, i) = reshape(G, d1*d1, 1);
                         end
@@ -1129,7 +1129,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                                 Gq(:, i)    = G*q;
                                 Q           = G * Q * G';
                                 GQG(:, i)   = reshape(Q, d1*d1, 1);
-                                Q           = sqrtm(Q, self.absTol);
+                                Q           = sqrtmpos(Q, self.absTol);
                                 Q           = 0.5*(Q + Q');
                                 GQGsr(:, i) = reshape(Q, d1*d1, 1);
                             end
@@ -1154,7 +1154,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                                 mydata.Gq  = spline(self.time_values, Gq);
                             end
                             mydata.GQG   = G * vEll.shape * G';
-                            mydata.GQGsr = sqrtm(mydata.GQG, self.absTol);
+                            mydata.GQGsr = sqrtmpos(mydata.GQG, self.absTol);
                             mydata.GQGsr = 0.5*(mydata.GQGsr + (mydata.GQGsr)');
                         else
                             GQG   = zeros(d1*d1, size(self.time_values, 2));
@@ -1168,7 +1168,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                                 end
                                 Q           = G * Q * G';
                                 GQG(:, i)   = reshape(Q, d1*d1, 1);
-                                Q           = sqrtm(Q, self.absTol);
+                                Q           = sqrtmpos(Q, self.absTol);
                                 Q           = 0.5*(Q + Q');
                                 GQGsr(:, i) = reshape(Q, d1*d1, 1);
                             end
@@ -1205,7 +1205,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                             Gq(:, i)    = G*q;
                             Q           = G * Q * G';
                             GQG(:, i)   = reshape(Q, d1*d1, 1);
-                            Q           = sqrtm(Q, self.absTol);
+                            Q           = sqrtmpos(Q, self.absTol);
                             Q           = 0.5*(Q + Q');
                             GQGsr(:, i) = reshape(Q, d1*d1, 1);
                         end
@@ -1420,7 +1420,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 LL = [];
                 QQ = [];
                 Q0 = reshape(X0, d1*d1, 1);
-                M  = sqrtm(X0, self.absTol);
+                M  = sqrtmpos(X0, self.absTol);
                 M  = 0.5*(M + M');
                 for ii = 1:N
                     l0 = l0Mat(:, ii);
@@ -2605,7 +2605,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             import elltool.conf.Properties;
             import modgen.common.throwerror;
             import elltool.logging.Log4jConfigurator;
-            import gras.la.sqrtm;
+            import gras.la.sqrtmpos;
             
             persistent logger;
             
@@ -2789,7 +2789,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                     B            = reshape(BB, d1, du);
                     mydata.Bp    = B * p;
                     mydata.BPB   = B * P * B';
-                    mydata.BPBsr = sqrtm(mydata.BPB, self.absTol);
+                    mydata.BPBsr = sqrtmpos(mydata.BPB, self.absTol);
                     mydata.BPBsr = 0.5*(mydata.BPBsr + (mydata.BPBsr)');
                 else
                     Bp    = [];
@@ -2800,7 +2800,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                         Bp    = [Bp B*p];
                         B     = B * P * B';
                         BPB   = [BPB reshape(B, d1*d1, 1)];
-                        B     = sqrtm(B, self.absTol);
+                        B     = sqrtmpos(B, self.absTol);
                         B     = 0.5*(B + B');
                         BPBsr = [BPBsr reshape(B, d1*d1, 1)];
                     end
@@ -2866,7 +2866,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                             Bp    = [Bp B*p];
                             P     = B * P * B';
                             BPB   = [BPB reshape(P, d1*d1, 1)];
-                            P     = sqrtm(P, self.absTol);
+                            P     = sqrtmpos(P, self.absTol);
                             P     = 0.5*(P + P');
                             BPBsr = [BPBsr reshape(P, d1*d1, 1)];
                         end
@@ -2892,7 +2892,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                             mydata.Bp  = spline(newReachObj.time_values, Bp);
                         end
                         mydata.BPB   = B * uEll.shape * B';
-                        mydata.BPBsr = sqrtm(mydata.BPB, self.absTol);
+                        mydata.BPBsr = sqrtmpos(mydata.BPB, self.absTol);
                         mydata.BPBsr = 0.5*(mydata.BPBsr + (mydata.BPBsr)');
                     else
                         BPB   = [];
@@ -2907,7 +2907,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                             end
                             P     = B * P * B';
                             BPB   = [BPB reshape(P, d1*d1, 1)];
-                            P     = sqrtm(P, self.absTol);
+                            P     = sqrtmpos(P, self.absTol);
                             P     = 0.5*(P + P');
                             BPBsr = [BPBsr reshape(P, d1*d1, 1)];
                         end
@@ -2946,7 +2946,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                         Bp    = [Bp B*p];
                         P     = B * P * B';
                         BPB   = [BPB reshape(P, d1*d1, 1)];
-                        P     = sqrtm(P, self.absTol);
+                        P     = sqrtmpos(P, self.absTol);
                         P     = 0.5*(P + P');
                         BPBsr = [BPBsr reshape(P, d1*d1, 1)];
                     end
@@ -2970,7 +2970,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                         G = reshape(GG, d1, dd);
                         mydata.Gq = G * q;
                         mydata.GQG = G * Q * G';
-                        mydata.GQGsr = sqrtm(mydata.GQG, self.absTol);
+                        mydata.GQGsr = sqrtmpos(mydata.GQG, self.absTol);
                         mydata.GQGsr = 0.5*(mydata.GQGsr + (mydata.GQGsr)');
                     else
                         Gq = [];
@@ -2981,7 +2981,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                             Gq    = [Gq G*q];
                             G     = G * Q * G';
                             GQG   = [GQG reshape(G, d1*d1, 1)];
-                            G     = sqrtm(G, self.absTol);
+                            G     = sqrtmpos(G, self.absTol);
                             G     = 0.5*(G + G');
                             GQGsr = [GQGsr reshape(G, d1*d1, 1)];
                         end
@@ -3051,7 +3051,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                                 Gq    = [Gq G*q];
                                 Q     = G * Q * G';
                                 GQG   = [GQG reshape(Q, d1*d1, 1)];
-                                Q     = sqrtm(Q, self.absTol);
+                                Q     = sqrtmpos(Q, self.absTol);
                                 Q     = 0.5*(Q + Q');
                                 GQGsr = [GQGsr reshape(Q, d1*d1, 1)];
                             end
@@ -3078,7 +3078,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                                 mydata.Gq  = spline(newReachObj.time_values, Gq);
                             end
                             mydata.GQG   = G * vEll.shape * G';
-                            mydata.GQGsr = sqrtm(mydata.GQG, self.absTol);
+                            mydata.GQGsr = sqrtmpos(mydata.GQG, self.absTol);
                             mydata.GQGsr = 0.5*(mydata.GQGsr + (mydata.GQGsr)');
                         else
                             GQG   = [];
@@ -3094,7 +3094,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                                 end
                                 Q     = G * Q * G';
                                 GQG   = [GQG reshape(Q, d1*d1, 1)];
-                                Q     = sqrtm(Q, self.absTol);
+                                Q     = sqrtmpos(Q, self.absTol);
                                 Q     = 0.5*(Q + Q');
                                 GQGsr = [GQGsr reshape(Q, d1*d1, 1)];
                             end
@@ -3135,7 +3135,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                             Gq  = [Gq G*q];
                             Q     = G * Q * G';
                             GQG   = [GQG reshape(Q, d1*d1, 1)];
-                            Q     = sqrtm(Q, self.absTol);
+                            Q     = sqrtmpos(Q, self.absTol);
                             Q     = 0.5*(Q + Q');
                             GQGsr = [GQGsr reshape(Q, d1*d1, 1)];
                         end
@@ -3362,7 +3362,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                     EM = self.ia_values{ii};
                     Q0 = EM(:, end);
                     X0 = reshape(Q0, d1, d1);
-                    X0 = sqrtm(X0, self.absTol);
+                    X0 = sqrtmpos(X0, self.absTol);
                     X0 = 0.5*(X0 + X0');
                     l0 = newReachObj.initial_directions(:, ii);
                     if isdiscrete(linSys)
