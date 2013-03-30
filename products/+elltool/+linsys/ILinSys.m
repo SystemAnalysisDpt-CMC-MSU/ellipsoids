@@ -1,28 +1,15 @@
 classdef ILinSys < handle
-% Linear system object of the Ellipsoidal Toolbox.
-%
-% 
-%  LinSys         - Constructor of linear system object.
-%  dimension      - Returns state space dimension, number of inputs, number of
-%                   outputs and number of disturbance inputs.
-%  isempty        - Checks if the linear system object is empty.
-%  isdiscrete     - Returns 1 if linear system is discrete-time,
-%                   0 - if continuous-time.
-%  islti          - Returns 1 if the system is time-invariant, 0 - otherwise.
-%  hasdisturbance - Returns 1 if unknown bounded disturbance is present,
-%                   0 - if there is no disturbance, or disturbance vector is fixed.
-%  hasnoise       - Returns 1 if unknown bounded noise at the output is present,
-%                   0 - if there is no noise, or noise vector is fixed.
-%
-%
-% $Authors: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-%           Ivan Menshikov  <ivan.v.menshikov@gmail.com> $    $Date: 2012 $
-%           Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: March-2012 $
-% $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Computer Science,
-%            System Analysis Department 2012 $
-%
-
+    %  Interface class of linear system class of the Ellipsoidal Toolbox.
+    %
+    %
+    % $Authors: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+    %           Ivan Menshikov  <ivan.v.menshikov@gmail.com> $    $Date: 2012 $
+    %           Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: March-2012 $
+    %           Igor Kitsenko <kitsenko@gmail.com> $              $Date: March-2013 $
+    % $Copyright: Moscow State University,
+    %            Faculty of Computational Mathematics and Computer Science,
+    %            System Analysis Department 2012 $
+    
     methods (Abstract)
         aMat = getAtMat(self)
         %
@@ -52,7 +39,7 @@ classdef ILinSys < handle
         %
         % Output:
         %   uEll: ellipsoid[1, 1].
-        %        
+        %
         
         gMat = getGtMat(self)
         %
@@ -87,7 +74,7 @@ classdef ILinSys < handle
         noiseEll = getNoiseBoundsEll(self)
         
         [stateDimArr, inpDimArr, outDimArr, distDimArr] =...
-                dimension(self)
+            dimension(self)
         %
         % DIMENSION - returns dimensions of state,
         %     input, output and disturbance spaces.
@@ -106,7 +93,7 @@ classdef ILinSys < handle
         %
         %   distDimArr: double[nDims1, nDims2,...] - array of
         %       disturbance dimensions.
-        %   
+        %
         
         display(self)
         %
@@ -204,7 +191,7 @@ classdef ILinSys < handle
         %   regular:
         %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array
         %             of linear systems.
-        % 
+        %
         % Output:
         %   absTolArr: double[nDims1, nDims2,...] - array of absTol
         %       properties for linear systems in self.
@@ -213,7 +200,7 @@ classdef ILinSys < handle
         % $Copyright: Moscow State University,
         %            Faculty of Computational Mathematics and Computer Science,
         %            System Analysis Department 2012 $
-        % 
+        %
         
     end
 end

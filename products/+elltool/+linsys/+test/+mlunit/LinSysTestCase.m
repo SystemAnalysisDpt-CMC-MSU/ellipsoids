@@ -17,31 +17,31 @@ classdef LinSysTestCase < mlunitext.test_case
             %  
             self.runAndCheckError(...
                 'elltool.linsys.LinSysFactory.create(eye(3,4),eye(3),ell3d)',...
-                'linsys:dimension:A');
+                'dimension:A');
             %
             % wrong type of matrix A
             %
             self.runAndCheckError(...
                 'elltool.linsys.LinSysFactory.create(true(3),eye(3),ell3d)',...
-                'linsys:type:A');          
+                'type:A');          
             %
             % incorrect dimension of matrix B
             %
             self.runAndCheckError(...
                 'elltool.linsys.LinSysFactory.create(eye(3),eye(4,3),ell3d)',...
-                'linsys:dimension:B');
+                'dimension:B');
             %
             % incorrect type of matrix B
             %
             self.runAndCheckError(...
                 'elltool.linsys.LinSysFactory.create(eye(3),true(3),ell3d)',...
-                'linsys:type:B'); 
+                'type:B'); 
             %
             % incorrect dimension of U when U is a constant ellipsoid
             %
             self.runAndCheckError(...
                 'elltool.linsys.LinSysFactory.create(eye(3),eye(3),ell4d)',...
-                'linsys:dimension:U');
+                'dimension:U');
             %
             % incorrect dimension of U when U is a symbolic ellipsoid
             %
@@ -49,32 +49,32 @@ classdef LinSysTestCase < mlunitext.test_case
             uEllStruct.shape = eye(3);
             self.runAndCheckError(...
                 'elltool.linsys.LinSysFactory.create(eye(3),eye(3),uEllStruct)',...
-                'linsys:dimension:uBoundsEll:center');          
+                'dimension:uBoundsEll:center');          
             %
             uEllStruct.center = {'1';'1';'1'};
             uEllStruct.shape = ones(4);
             self.runAndCheckError(...
                 'elltool.linsys.LinSysFactory.create(eye(3),eye(3),uEllStruct)',...
-                'linsys:dimension:uBoundsEll:shape');          
+                'dimension:uBoundsEll:shape');          
             %
             % incorrect dimension of U when U is a constant vector
             %
             self.runAndCheckError(...
                 'elltool.linsys.LinSysFactory.create(eye(3),eye(3),eye(4,1))',...
-                'linsys:dimension:U'); 
+                'dimension:U'); 
             %
             % incorrect dimension of U when U is a symbolic vector
             %   
             uCVec = {'t';'t';'t';'t'};
             self.runAndCheckError(...
                 'elltool.linsys.LinSysFactory.create(eye(3),eye(3),uCVec)',...
-                'linsys:dimension:U');
+                'dimension:U');
             %
             % incorrect type of U when U is a vector
             %
             self.runAndCheckError(...
                 'elltool.linsys.LinSysFactory.create(eye(3),eye(3),true(3,1))',...
-                'linsys:type:U');
+                'type:U');
             %
             % incorrect type of U when U is a all-constant structure
             %         
@@ -82,7 +82,7 @@ classdef LinSysTestCase < mlunitext.test_case
             uEllStruct.shape = eye(3);
             self.runAndCheckError(...
                 'elltool.linsys.LinSysFactory.create(eye(3),eye(3),uEllStruct)',...
-                'linsys:type:uBoundsEll');
+                'type:uBoundsEll');
             %
             % incorrect value of U when U.shape is non-symmetric cell matrix
             %
@@ -90,7 +90,7 @@ classdef LinSysTestCase < mlunitext.test_case
             uEllStruct.shape = {'t','t^2';'t^3','t^4'};
             self.runAndCheckError(...
                 'elltool.linsys.LinSysFactory.create(eye(2),eye(2),uEllStruct)',...
-                'linsys:value:uBoundsEll:shape');
+                'value:uBoundsEll:shape');
             %
             % incorrect value of U when U.shape is non-symmetric 
             % negative-defined constant matrix
@@ -99,7 +99,7 @@ classdef LinSysTestCase < mlunitext.test_case
             uEllStruct.shape = [1 2; 3 4];
             self.runAndCheckError(...
                 'elltool.linsys.LinSysFactory.create(eye(2),eye(2),uEllStruct)',...
-                'linsys:value:uBoundsEll:shape');
+                'value:uBoundsEll:shape');
             %
             % incorrect value of U when U.shape is non-symmetric 
             % positive-defined constant matrix
@@ -108,7 +108,7 @@ classdef LinSysTestCase < mlunitext.test_case
             uEllStruct.shape = [2 1; 3 2];
             self.runAndCheckError(...
                 'elltool.linsys.LinSysFactory.create(eye(2),eye(2),uEllStruct)',...
-                'linsys:value:uBoundsEll:shape');            
+                'value:uBoundsEll:shape');            
             %
             % incorrect value of U when U.shape is symmetric but 
             % negative-defined constant matrix
@@ -117,7 +117,7 @@ classdef LinSysTestCase < mlunitext.test_case
             uEllStruct.shape = [1 2; 2 1];
             self.runAndCheckError(...
                 'elltool.linsys.LinSysFactory.create(eye(2),eye(2),uEllStruct)',...
-                'linsys:value:uBoundsEll:shape');
+                'value:uBoundsEll:shape');
             %
             % incorrect value of U when U.shape is symmetric but 
             % non-negative-defined constant matrix
@@ -126,7 +126,7 @@ classdef LinSysTestCase < mlunitext.test_case
             uEllStruct.shape = [1 0; 0 0];
             self.runAndCheckError(...
                 'elltool.linsys.LinSysFactory.create(eye(2),eye(2),uEllStruct)',...
-                'linsys:value:uBoundsEll:shape');
+                'value:uBoundsEll:shape');
             %
             % correct value of U when U.shape is symmetric and 
             % positive-defined constant matrix
@@ -139,19 +139,19 @@ classdef LinSysTestCase < mlunitext.test_case
             %
             self.runAndCheckError(...
                 'elltool.linsys.LinSysFactory.create(eye(3),eye(3),ell3d,eye(4),ell4d)',...
-                'linsys:dimension:G');
+                'dimension:G');
             %
             % incorrect type of matrix G
             %
             self.runAndCheckError(...
                 'elltool.linsys.LinSysFactory.create(eye(3),eye(3),ell3d,true(3),ell3d)',...
-                'linsys:type:G'); 
+                'type:G'); 
             %
             % incorrect dimension of V when V is a constant ellipsoid
             %
             self.runAndCheckError(...
                 'elltool.linsys.LinSysFactory.create(eye(3),eye(3),ell3d,eye(3),ell4d)',...
-                'linsys:dimension:V');
+                'dimension:V');
             %
             % incorrect dimension of V when V is a symbolic ellipsoid
             %
@@ -159,33 +159,33 @@ classdef LinSysTestCase < mlunitext.test_case
             vEllStruct.shape = ones(3);
             self.runAndCheckError(...
                 'elltool.linsys.LinSysFactory.create(eye(3),eye(3),ell3d,eye(3),vEllStruct)',...
-                'linsys:dimension:distBoundsEll:center');          
+                'dimension:distBoundsEll:center');          
             %
             vEllStruct.center = {'1';'1';'1'};
             vEllStruct.shape = ones(4);
             self.runAndCheckError(...
                 'elltool.linsys.LinSysFactory.create(eye(3),eye(3),ell3d,eye(3),vEllStruct)',...
-                'linsys:dimension:distBoundsEll:shape');          
+                'dimension:distBoundsEll:shape');          
             %
             % incorrect dimension of V when V is a constant vector
             %         
             vVec = eye(4,1);
             self.runAndCheckError(...
                 'elltool.linsys.LinSysFactory.create(eye(3),eye(3),ell3d,eye(3),vVec)',...
-                'linsys:dimension:V');
+                'dimension:V');
             %
             % incorrect dimension of V when V is a symbolic vector
             %
             vCVec = {'t';'t';'t';'t'};
             self.runAndCheckError(...
                 'elltool.linsys.LinSysFactory.create(eye(3),eye(3),ell3d,eye(3),vCVec)',...
-                'linsys:dimension:V'); 
+                'dimension:V'); 
             %
             % incorrect type of V when V is a vector
             %
             self.runAndCheckError(...
                 'elltool.linsys.LinSysFactory.create(eye(3),eye(3),ell3d,eye(3),true(3,1))',...
-                'linsys:type:V');
+                'type:V');
             %
             % incorrect type of V when V is a all-constant structure
             %
@@ -193,7 +193,7 @@ classdef LinSysTestCase < mlunitext.test_case
             vEllStruct.shape = eye(3);
             self.runAndCheckError(...
                 'elltool.linsys.LinSysFactory.create(eye(3),eye(3),ell3d,eye(3),vEllStruct)',...
-                'linsys:type:distBoundsEll');
+                'type:distBoundsEll');
             %
             % incorrect value of V when V.shape is non-symmetric cell matrix
             %                         
@@ -201,7 +201,7 @@ classdef LinSysTestCase < mlunitext.test_case
             vEllStruct.shape = {'t','t^2';'t^3','t^4'};
             self.runAndCheckError(...
                 'elltool.linsys.LinSysFactory.create(eye(2),eye(2),ell2d,eye(2),vEllStruct)',...
-                'linsys:value:distBoundsEll:shape');
+                'value:distBoundsEll:shape');
             %
             % incorrect value of V when V.shape is non-symmetric 
             % negative-defined constant matrix
@@ -210,7 +210,7 @@ classdef LinSysTestCase < mlunitext.test_case
             vEllStruct.shape = [1 2; 3 4];
             self.runAndCheckError(...
                 'elltool.linsys.LinSysFactory.create(eye(2),eye(2),ell2d,eye(2),vEllStruct)',...
-                'linsys:value:distBoundsEll:shape');
+                'value:distBoundsEll:shape');
             %
             % incorrect value of V when V.shape is non-symmetric 
             % positive-defined constant matrix
@@ -219,7 +219,7 @@ classdef LinSysTestCase < mlunitext.test_case
             vEllStruct.shape = [2 1; 3 2];
             self.runAndCheckError(...
                 'elltool.linsys.LinSysFactory.create(eye(2),eye(2),ell2d,eye(2),vEllStruct)',...
-                'linsys:value:distBoundsEll:shape');            
+                'value:distBoundsEll:shape');            
             %
             % incorrect value of V when V.shape is symmetric but
             % negative-defined constant matrix
@@ -228,7 +228,7 @@ classdef LinSysTestCase < mlunitext.test_case
             vEllStruct.shape = [1 2; 2 1];
             self.runAndCheckError(...
                 'elltool.linsys.LinSysFactory.create(eye(2),eye(2),ell2d,eye(2),vEllStruct)',...
-                'linsys:value:distBoundsEll:shape');
+                'value:distBoundsEll:shape');
             %
             % incorrect value of V when V.shape is symmetric but 
             % non-negative-defined constant matrix
@@ -237,7 +237,7 @@ classdef LinSysTestCase < mlunitext.test_case
             vEllStruct.shape = [1 0; 0 0];
             self.runAndCheckError(...
                 'elltool.linsys.LinSysFactory.create(eye(2),eye(2),ell2d,eye(2),vEllStruct)',...
-                'linsys:value:distBoundsEll:shape');
+                'value:distBoundsEll:shape');
             %
             % correct value of V when V.shape is symmetric and 
             % positive-defined constant matrix
@@ -250,19 +250,19 @@ classdef LinSysTestCase < mlunitext.test_case
             %
             self.runAndCheckError(...
                 'elltool.linsys.LinSysFactory.create(eye(3),eye(3),ell3d,[],[],eye(4))',...
-                'linsys:dimension:C');
+                'dimension:C');
             %
             % incorrect type of matrix C
             %
             self.runAndCheckError(...
                 'elltool.linsys.LinSysFactory.create(eye(3),eye(3),ell3d,[],[],true(3))',...
-                'linsys:type:C');
+                'type:C');
             %
             % incorrect dimension of W when W is a constant ellipsoid
             %
             self.runAndCheckError(...
                 'elltool.linsys.LinSysFactory.create(eye(3),eye(3),ell3d,eye(3),ell3d,eye(3),ell4d)',...
-                'linsys:dimension:W');
+                'dimension:W');
             %
             % incorrect dimension of W when W is a symbolic ellipsoid
             %
@@ -270,33 +270,33 @@ classdef LinSysTestCase < mlunitext.test_case
             wEllStruct.shape = ones(3);
             self.runAndCheckError(...
                 'elltool.linsys.LinSysFactory.create(eye(3),eye(3),ell3d,eye(3),ell3d,eye(3),wEllStruct)',...
-                'linsys:dimension:noiseBoundsEll:center');          
+                'dimension:noiseBoundsEll:center');          
             %
             wEllStruct.center = {'1';'1';'1'};
             wEllStruct.shape = ones(4);
             self.runAndCheckError(...
                 'elltool.linsys.LinSysFactory.create(eye(3),eye(3),ell3d,eye(3),ell3d,eye(3),wEllStruct)',...
-                'linsys:dimension:noiseBoundsEll:shape');          
+                'dimension:noiseBoundsEll:shape');          
             %
             % incorrect dimension of W when W is a constant vector
             %         
             wVec = eye(4,1);
             self.runAndCheckError(...
                 'elltool.linsys.LinSysFactory.create(eye(3),eye(3),ell3d,eye(3),ell3d,eye(3),wVec)',...
-                'linsys:dimension:W');
+                'dimension:W');
             %
             % incorrect dimension of W when W is a symbolic vector
             %
             wCVec = {'t';'t';'t';'t'};
             self.runAndCheckError(...
                 'elltool.linsys.LinSysFactory.create(eye(3),eye(3),ell3d,eye(3),ell3d,eye(3),wCVec)',...
-                'linsys:dimension:W'); 
+                'dimension:W'); 
             %
             % incorrect type of W when W is a vector
             %
             self.runAndCheckError(...
                 'elltool.linsys.LinSysFactory.create(eye(3),eye(3),ell3d,eye(3),ell3d,eye(3),true(3,1))',...
-                'linsys:type:W');
+                'type:W');
             %
             % incorrect type of W when W is a all-constant structure
             %
@@ -304,7 +304,7 @@ classdef LinSysTestCase < mlunitext.test_case
             wEllStruct.shape = eye(3);
             self.runAndCheckError(...
                 'elltool.linsys.LinSysFactory.create(eye(3),eye(3),ell3d,eye(3),ell3d,eye(3),wEllStruct)',...
-                'linsys:type:noiseBoundsEll');
+                'type:noiseBoundsEll');
             %
             % incorrect value of W when W.shape is non-symmetric cell matrix
             %                         
@@ -312,7 +312,7 @@ classdef LinSysTestCase < mlunitext.test_case
             wEllStruct.shape = {'t','t^2';'t^3','t^4'};
             self.runAndCheckError(...
                 'elltool.linsys.LinSysFactory.create(eye(2),eye(2),ell2d,eye(2),ell2d,eye(2),wEllStruct)',...
-                'linsys:value:noiseBoundsEll:shape');
+                'value:noiseBoundsEll:shape');
             %
             % incorrect value of W when W.shape is non-symmetric 
             % negative-defined constant matrix
@@ -321,7 +321,7 @@ classdef LinSysTestCase < mlunitext.test_case
             wEllStruct.shape = [1 2; 3 4];
             self.runAndCheckError(...
                 'elltool.linsys.LinSysFactory.create(eye(2),eye(2),ell2d,eye(2),ell2d,eye(2),wEllStruct)',...
-                'linsys:value:noiseBoundsEll:shape');
+                'value:noiseBoundsEll:shape');
             %
             % incorrect value of W when W.shape is non-symmetric 
             % positive-defined constant matrix
@@ -330,7 +330,7 @@ classdef LinSysTestCase < mlunitext.test_case
             wEllStruct.shape = [2 1; 3 2];
             self.runAndCheckError(...
                 'elltool.linsys.LinSysFactory.create(eye(2),eye(2),ell2d,eye(2),ell2d,eye(2),wEllStruct)',...
-                'linsys:value:noiseBoundsEll:shape');            
+                'value:noiseBoundsEll:shape');            
             %
             % incorrect value of W when W.shape is symmetric but 
             % negative-defined constant matrix
@@ -339,7 +339,7 @@ classdef LinSysTestCase < mlunitext.test_case
             wEllStruct.shape = [1 2; 2 1];
             self.runAndCheckError(...
                 'elltool.linsys.LinSysFactory.create(eye(2),eye(2),ell2d,eye(2),ell2d,eye(2),wEllStruct)',...
-                'linsys:value:noiseBoundsEll:shape');
+                'value:noiseBoundsEll:shape');
             %
             % incorrect value of W when W.shape is symmetric but 
             % non-negative-defined constant matrix
@@ -348,7 +348,7 @@ classdef LinSysTestCase < mlunitext.test_case
             wEllStruct.shape = [1 0; 0 0];
             self.runAndCheckError(...
                 'elltool.linsys.LinSysFactory.create(eye(2),eye(2),ell2d,eye(2),ell2d,eye(2),wEllStruct)',...
-                'linsys:value:noiseBoundsEll:shape');
+                'value:noiseBoundsEll:shape');
             %
             % correct value of W when W.shape is symmetric and 
             % positive-defined constant matrix

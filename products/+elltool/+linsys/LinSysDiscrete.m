@@ -1,49 +1,75 @@
 classdef LinSysDiscrete < elltool.linsys.ALinSys
-%
-% $Authors: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-%           Ivan Menshikov  <ivan.v.menshikov@gmail.com> $    $Date: 2012 $
-%           Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: March-2012 $
-% $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Computer Science,
-%            System Analysis Department 2012 $
-%
-
+    % Discrete linear system class of the Ellipsoidal Toolbox.
+    %
+    %
+    % Constructor and data accessing functions:
+    % -----------------------------------------
+    %  LinSysContinuous  - Constructor of discrete linear system object.
+    %  getAtMat          - Returns A matrix.
+    %  getBtMat          - Returns B matrix.
+    %  getUBoundsEll     - Returns control bounds ellipsoid.
+    %  getGtMat          - Returns G matrix.
+    %  getDistBoundsEll  - Returns disturbance bounds ellipsoid.
+    %  getCtMat          - Returns C matrix.
+    %  getNoiseBoundsEll - Returns noise bounds ellipsoid.
+    %  dimension         - Returns state space dimension, number of inputs, number of
+    %                      outputs and number of disturbance inputs.
+    %  isempty           - Checks if the linear system object is empty.
+    %  isdiscrete        - Returns 1 if linear system is discrete-time,
+    %                      0 - if continuous-time.
+    %  islti             - Returns 1 if the system is time-invariant, 0 - otherwise.
+    %  hasdisturbance    - Returns 1 if unknown bounded disturbance is present,
+    %                      0 - if there is no disturbance, or disturbance vector is fixed.
+    %  hasnoise          - Returns 1 if unknown bounded noise at the output is present,
+    %                      0 - if there is no noise, or noise vector is fixed.
+    %  getAbsTol         - Returns array the same size as linsysArr with
+    %                      values of absTol properties for each hyperplane in hplaneArr.
+    %
+    % Overloaded functions:
+    % ---------------------
+    %  display - Displays the details of linear system object.
+    %
+    %
+    % $Authors: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+    %           Ivan Menshikov  <ivan.v.menshikov@gmail.com> $    $Date: 2012 $
+    %           Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: March-2012 $
+    %           Igor Kitsenko <kitsenko@gmail.com> $              $Date: March-2013 $
+    % $Copyright: Moscow State University,
+    %            Faculty of Computational Mathematics and Computer Science,
+    %            System Analysis Department 2012 $
+    
     methods
         function self = LinSysDiscrete(varargin)
-        %
-        % LINSYS - constructor for linear system object.
-        %
-        % Continuous-time linear system:
-        %                   dx/dt  =  A(t) x(t)  +  B(t) u(t)  +  G(t) v(t)
-        %                    y(t)  =  C(t) x(t)  +  w(t)
-        %
-        % Discrete-time linear system:
-        %                  x[k+1]  =  A[k] x[k]  +  B[k] u[k]  +  G[k] v[k]
-        %                    y[k]  =  C[k] x[k]  +  w[k]
-        %
-        % Input:
-        %   regular:
-        %       atInpMat: double[nDim, nDim]/cell[nDim, nDim].
-        %
-        %       btInpMat: double[nDim, kDim]/cell[nDim, kDim].
-        %
-        %       uBoundsEll: ellipsoid[1, 1]/struct[1, 1].
-        %
-        %       gtInpMat: double[nDim, lDim]/cell[nDim, lDim].
-        %
-        %       distBoundsEll: ellipsoid[1, 1]/struct[1, 1].
-        %
-        %       ctInpMat: double[mDim, nDim]/cell[mDim, nDim].
-        %
-        %       noiseBoundsEll: ellipsoid[1, 1]/struct[1, 1].
-        %
-        %       discrFlag: char[1, 1] - if discrFlag set:
-        %           'd' - to discrete-time linSys
-        %           not 'd' - to continuous-time linSys.
-        %
-        % Output:
-        %   self: elltool.linsys.LinSys[1, 1].
-        %
+            %
+            % LINSYSDISCRETE - constructor of discrete linear system object.
+            %
+            % Discrete-time linear system:
+            %                  x[k+1]  =  A[k] x[k]  +  B[k] u[k]  +  G[k] v[k]
+            %                    y[k]  =  C[k] x[k]  +  w[k]
+            %
+            % Input:
+            %   regular:
+            %       atInpMat: double[nDim, nDim]/cell[nDim, nDim].
+            %
+            %       btInpMat: double[nDim, kDim]/cell[nDim, kDim].
+            %
+            %       uBoundsEll: ellipsoid[1, 1]/struct[1, 1].
+            %
+            %       gtInpMat: double[nDim, lDim]/cell[nDim, lDim].
+            %
+            %       distBoundsEll: ellipsoid[1, 1]/struct[1, 1].
+            %
+            %       ctInpMat: double[mDim, nDim]/cell[mDim, nDim].
+            %
+            %       noiseBoundsEll: ellipsoid[1, 1]/struct[1, 1].
+            %
+            %       discrFlag: char[1, 1] - if discrFlag set:
+            %           'd' - to discrete-time linSys
+            %           not 'd' - to continuous-time linSys.
+            %
+            % Output:
+            %   self: elltool.linsys.LinSysDiscrete[1, 1].
+            %
             self = self@elltool.linsys.ALinSys(varargin{:});
             self.isDiscr  = true;
         end
@@ -57,40 +83,23 @@ classdef LinSysDiscrete < elltool.linsys.ALinSys
                 return;
             end
             %%
-%             if self.isDiscr
-                s0 = '[k]';
-                s1 = 'x[k+1]  =  ';
-                s2 = '  y[k]  =  ';
-                s3 = ' x[k]';
-%             else
-%                 s0 = '(t)';
-%                 s1 = 'dx/dt  =  ';
-%                 s2 = ' y(t)  =  ';
-%                 s3 = ' x(t)';
-%             end
+            s0 = '[k]';
+            s1 = 'x[k+1]  =  ';
+            s2 = '  y[k]  =  ';
+            s3 = ' x[k]';
             %%
             fprintf('\n');
             if iscell(self.atMat)
-%                 if self.isDiscr
-                    fprintf('A[k]:\n');
-                    s4 = 'A[k]';
-%                 else
-%                     fprintf('A(t):\n');
-%                     s4 = 'A(t)';
-%                 end
+                fprintf('A[k]:\n');
+                s4 = 'A[k]';
             else
                 fprintf('A:\n');
                 s4 = 'A';
             end
             disp(self.atMat);
             if iscell(self.btMat)
-%                 if self.isDiscr
-                    fprintf('\nB[k]:\n');
-                    s5 = '  +  B[k]';
-%                 else
-%                     fprintf('\nB(t):\n');
-%                     s5 = '  +  B(t)';
-%                 end
+                fprintf('\nB[k]:\n');
+                s5 = '  +  B[k]';
             else
                 fprintf('\nB:\n');
                 s5 = '  +  B';
@@ -126,13 +135,8 @@ classdef LinSysDiscrete < elltool.linsys.ALinSys
             %%
             if ~(isempty(self.gtMat)) && ~(isempty(self.disturbanceBoundsEll))
                 if iscell(self.gtMat)
-%                     if self.isDiscr
-                        fprintf('\nG[k]:\n');
-                        s7 = '  +  G[k]';
-%                     else
-%                         fprintf('\nG(t):\n');
-%                         s7 = '  +  G(t)';
-%                     end
+                    fprintf('\nG[k]:\n');
+                    s7 = '  +  G[k]';
                 else
                     fprintf('\nG:\n');
                     s7 = '  +  G';
@@ -168,13 +172,8 @@ classdef LinSysDiscrete < elltool.linsys.ALinSys
             end
             %%
             if iscell(self.ctMat)
-%                 if self.isDiscr
-                    fprintf('\nC[k]:\n');
-                    s9 = 'C[k]';
-%                 else
-%                     fprintf('\nC(t):\n');
-%                     s9 = 'C(t)';
-%                 end
+                fprintf('\nC[k]:\n');
+                s9 = 'C[k]';
             else
                 fprintf('\nC:\n');
                 s9 = 'C';
@@ -212,11 +211,7 @@ classdef LinSysDiscrete < elltool.linsys.ALinSys
             %%
             fprintf('%d-input, ', size(self.btMat, 2));
             fprintf('%d-output ', size(self.ctMat, 1));
-%             if self.isDiscr
-                fprintf('discrete-time linear ');
-%             else
-%                 fprintf('continuous-time linear ');
-%             end
+            fprintf('discrete-time linear ');
             if self.isTimeInv
                 fprintf('time-invariant system ');
             else
@@ -233,7 +228,7 @@ classdef LinSysDiscrete < elltool.linsys.ALinSys
             end
             fprintf(':\n%s%s%s%s%s%s%s\n%s%s%s%s\n\n',...
                 s1, s4, s3, s5, s6, s7, s8, s2, s9, s3, s10);
-            return; 
+            return;
         end
     end
 end
