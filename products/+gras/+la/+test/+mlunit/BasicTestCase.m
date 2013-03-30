@@ -23,10 +23,14 @@ classdef BasicTestCase < mlunitext.test_case
             testMat = eye(nDim);
             sqrtMat = sqrtm(testMat, MAX_TOL);
             mlunit.assert_equals(testMat, sqrtMat);
+            sqrtMat = sqrtm(testMat);
+            mlunit.assert_equals(testMat, sqrtMat);
             
             nDim = 1000;
             testMat = diag(1:nDim);
             sqrtMat = sqrtm(testMat, MAX_TOL);
+            mlunit.assert_equals(sqrt(testMat), sqrtMat);
+            sqrtMat = sqrtm(testMat);
             mlunit.assert_equals(sqrt(testMat), sqrtMat);
             
             nDim = 2;
@@ -35,6 +39,8 @@ classdef BasicTestCase < mlunitext.test_case
             dMat = diag([1, sqrt(3)]);
             sqrtTestMat = vMat*dMat*vMat';
             sqrtMat = sqrtm(testMat, MAX_TOL);
+            mlunit.assert_equals(sqrtTestMat, sqrtMat);
+            sqrtMat = sqrtm(testMat);
             mlunit.assert_equals(sqrtTestMat, sqrtMat);
             
             nDim = 3;

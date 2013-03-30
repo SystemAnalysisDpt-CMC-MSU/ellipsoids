@@ -98,10 +98,10 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             %% Internal approximation
             rSqrtlVec=BPBTransSqrtLDynamics.evaluate(t);
             R=BPBTransDynamics.evaluate(t);
-            R_sqrt=sqrtm(R);
+            R_sqrt=gras.la.sqrtm(R);
             %
             D=CQCTransDynamics.evaluate(t);
-            D_sqrt=sqrtm(D);
+            D_sqrt=gras.la.sqrtm(D);
             %
             [VMat,DMat]=eig(QIntMat);
             if ~ismatposdef(QIntMat,self.absTol,true)
