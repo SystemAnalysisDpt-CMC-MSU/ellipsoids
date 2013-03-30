@@ -108,8 +108,8 @@ end
         myHyp = myHypArr(hypIndex);
         index = max(ellIndex,hypIndex);
         if distance(myEll, myHyp) > 0
-            intEllArr(index) = ellipsoid;
-            isnIntersectedArr(index) = true;
+           intEllArr(index) = ellipsoid;
+           isnIntersectedArr(index) = true;
         else
             intEllArr(index) = l_compute1intersection(myEll,myHyp,...
                 maxEllDim);
