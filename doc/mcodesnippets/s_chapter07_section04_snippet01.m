@@ -24,10 +24,8 @@ G2 = [(w1*Ts/d1) (-w2*Ts/d1) 0 0
          0 0 (w3*Ts/d3) ((-1/(1-b))*(w4*Ts/d3))
          0 0 0 (w4*Ts/d4)];
 V2 = [xM1; xM2; xM3; xM4];
-
 % define linear systems:
 s1 = elltool.linsys.LinSys(A1, B1, U1, [], [], [], [], 'd');  % free-flow mode
 s2 = elltool.linsys.LinSys(A2, B2, U2, G2, V2, [], [], 'd');  % congestion mode
-
 % define guard:
 GRD = hyperplane([0; 1; 0; 0], xM2);

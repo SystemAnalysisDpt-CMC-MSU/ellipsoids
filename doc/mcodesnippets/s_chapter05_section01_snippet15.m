@@ -1,1 +1,1 @@
-minksum(EE);
+EE.minksum;

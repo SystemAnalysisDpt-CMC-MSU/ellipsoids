@@ -1,6 +1,6 @@
 function outEllArr = uminus(ellArr)
 %
-% VOLUME - changes the sign of the center of ellipsoid.
+% UMINUS - changes the sign of the center of ellipsoid.
 %
 % Input:
 %	regular:

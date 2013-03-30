@@ -10,7 +10,8 @@
 
 
 \makeatletter
-% \@addtoreset{equation}{section}
+\@addtoreset{equation}{section}
+\renewcommand{\theequation}{\arabic{chapter}.\arabic{section}.\arabic{equation}}
 \makeatother
 \tolerance = 5000
 \hbadness = 5000
@@ -580,17 +581,22 @@ For proofs of formulas given in this section, see \cite{kurvalyi},
 
 One last comment is about how to find orthogonal matrices $S_2,\cdots,S_k$
 that align vectors $Q_2^{1/2}l, \cdots, Q_k^{1/2}l$ with $Q_1^{1/2}l$.
-Let $v$ and $w$ be some unit vectors in ${\bf R}^n$.
-We have to find matrix $S$ such that $Sv=w$. For that,
-we perform singular value decomposition (SVD) of vectors $v$ and $w$:
-\begin{equation}
-v = U_v\Sigma_vV_v^T, ~~~~ w = U_w\Sigma_wV_w^T . \label{valign1}
-\end{equation}
-Notice that $V_v$ and $V_w$ are $\pm1$ scalars.
-The matrix $S$ is now easily determined:
-\begin{equation}
-S U_vV_v = U_wV_w ~~~ \Rightarrow ~~~ S = U_wV_wV_vU_v^T. \label{valign2}
-\end{equation}
+Let $v_1$ and $v_2$ be some unit vectors in ${\bf R}^n$.
+We have to find matrix $S$ such that $Sv_2\uparrow\uparrow v_1$.
+We suggest explicit formulas for the calculation of this matrix:
+\begin{eqnarray}
+&&T = I + Q_1(S - I)Q_1^T,\\ \label{valign1}
+&& S = \begin{pmatrix}
+     c & s\\
+     -s & c
+    \end{pmatrix},\quad c = \langle\hat{v_1}, \hat{v_2}\rangle,\quad s = \sqrt{1 - c^2},\quad \hat{v_i} = \dfrac{v_i}{\|v_i\|}\\ \label{valign2}
+&&  Q_1 = [q_1 \,q_2]\in \mathbb{R}^{n\times2},\quad q_1 = \hat{v_1}, \quad
+q_2 = \begin{cases}
+s^{-1}(\hat{v_2} - c\hat{v_1}),& s\ne 0\\
+0,& s = 0.
+\end{cases} \label{valign3}
+\end{eqnarray}
+
 
 
 \subsection{Geometric Difference}
@@ -659,21 +665,20 @@ The center $q$ is
 q = q_1 - q_2;  \label{minkdiff_c}
 \end{equation}
 the shape matrix of the internal ellipsoid $Q^-_l$ is
-\begin{equation}
-Q^-_l = \left(1-\frac{\langle l,Q_1l\rangle^{1/2}}{\langle l,
-Q_2l\rangle^{1/2}}\right)Q_1 +
-\left(1 - \frac{\langle l, Q_2l\rangle^{1/2}}{\langle l,
-Q_1l\rangle^{1/2}}\right)Q_2; \label{minkdiff_ia}
-\end{equation}
+\begin{eqnarray}
+&& P = \frac{\sqrt{\langle l, Q_1 l\rangle}}{\sqrt{\langle l, Q_2 \rangle}};\nonumber\\
+&& Q^-_l = \left(1 - \dfrac{1}{P}\right)Q_1 + \left(1 - P\right)Q_2.
+\label{minkdiff_ia}
+\end{eqnarray}
 and the shape matrix of the external ellipsoid $Q^+_l$ is
 \begin{equation}
-Q^+_l = \left(Q_1^{1/2} + SQ_2^{1/2}\right)^T
-\left(Q_1^{1/2} + SQ_2^{1/2}\right).  \label{minkdiff_ea}
+Q^+_l = \left(Q_1^{1/2} - SQ_2^{1/2}\right)^T
+\left(Q_1^{1/2} - SQ_2^{1/2}\right).  \label{minkdiff_ea}
 \end{equation}
 Here $S$ is an orthogonal matrix such that vectors $Q_1^{1/2}l$
 and $SQ_2^{1/2}l$ are parallel.
- $S$ is found from (\ref{valign1}-\ref{valign2}), with
-$v=Q_2^{1/2}l$ and $w=Q_1^{1/2}l$.
+ $S$ is found from (\ref{valign1}-\ref{valign3}), with
+$v_1=Q_2^{1/2}l$ and $v_2=Q_1^{1/2}l$.
 
 Running $l$ over all unit directions that are not bad, we get
 \[ \bigcup_{\langle l,l\rangle=1} \EE(q,Q_l^-) =
@@ -772,8 +777,8 @@ ellipsoid. Here we show how to find it.
 First of all, we transform the hyperplane $H(c,\gamma)$
 into $H([1~0~\cdots~0]^T, 0)$ by the affine transformation
 \[ y = Sx - \frac{\gamma}{\langle c,c\rangle^{1/2}}Sc, \]
-where $S$ is an orthogonal matrix found by (\ref{valign1}-\ref{valign2}) with
-$v=c$ and $w=[1~0~\cdots~0]^T$.
+where $S$ is an orthogonal matrix found by (\ref{valign1}-\ref{valign3}) with
+$v_1=c$ and $v_2=[1~0~\cdots~0]^T$.
 The ellipsoid in the new coordinates becomes $\EE(q',Q')$ with
 \begin{eqnarray*}
 q' & = & q-\frac{\gamma}{\langle c,c\rangle^{1/2}}Sc, \\
@@ -1844,7 +1849,6 @@ whereas {\tt minksum} is there merely for visualization purposes.
 If the geometric difference of two ellipsoids is not an empty set, it can
 be computed explicitely and plotted for ellipsoids in ${\bf R}$,
 ${\bf R}^2$ and ${\bf R}^3$:
-\newpage
 \verbmcodef[Geometric difference]{mcodesnippets/s_chapter05_section01_snippet17.m}
 Similar to {\tt minksum}, {\tt minkdiff} is there for visualization
 purpose. It works only for dimensions $1$, $2$ and $3$, and for higher
@@ -1888,7 +1892,7 @@ $H(c_2,\gamma_2)$ are not equal.
 \item {\tt -H} - defines hyperplane $H(-c,-\gamma)$, which is the same
 as $H(c,\gamma)$ but specifies different halfspace.
 \end{itemize}
-\newpage
+
 There are several ways to access the internal data of the {\tt hyperplane}
 object:
 \verbmcodef[Get the normal and the scalar that define hyperplane H]{mcodesnippets/s_chapter05_section01_snippet22.m}
@@ -3008,18 +3012,29 @@ Princeton University Press.
 \appendix
 \chapter{Function Reference}
 \section{ellipsoid Methods}
-{\Large {\tt dimension}} - returns the dimension of the space in which
-the ellipsoid is defined and the rank of its shape matrix.
+{\Large {\tt contains}} -- checks if one ellipsoid contains the other.
 
 Parameters:
 \begin{itemize}
-\item {\tt E} - single ellipsoid or array of ellipsoids.
+\item {\tt E1} -- first ellipsoid or array of ellipsoids.
+\item {\tt E2} -- second ellipsoid or array of ellipsoids.
+\end{itemize}
+
+Returns $1$ if {\tt E1} contains {\tt E2}, 0 -- otherwise.
+\newpage
+
+{\Large {\tt dimension}} - returns the dimension of the space in which
+the ellipsoid is defined and the rank of it's shape matrix.
+
+Parameters:
+\begin{itemize}
+\item {\tt E} -- single ellipsoid or array of ellipsoids.
 \end{itemize}
 
 Returns:
 \begin{itemize}
-\item {\tt n} - dimension of the space.
-\item {\tt r} - rank of the ellipsoid's shape matrix. This output parameter
+\item {\tt n} -- dimension of the space.
+\item {\tt r} -- rank of the ellipsoid's shape matrix. This output parameter
 is optional.
 \end{itemize}
 
@@ -3028,24 +3043,24 @@ is optional.
 
 \newpage
 
-{\Large {\tt display}} - displays the details of the ellipsoid object.
+{\Large {\tt display}} -- displays the details of the ellipsoid object.
 
 Parameters:
 \begin{itemize}
-\item {\tt E} - ellipsoid or array of ellipsoids.
+\item {\tt E} -- ellipsoid or array of ellipsoids.
 \end{itemize}
 This function is rarely used explicitely. It is called automatically
 for the object {\tt E} when semicolon does not terminate the statement.
 
 \newpage
 
-{\Large {\tt distance}} - computes the distance from the given ellipsoid
-to the specified object - vector, ellipsoid, hyperplane or polytope.
+{\Large {\tt distance}} -- computes the distance from the given ellipsoid
+to the specified object -- vector, ellipsoid, hyperplane or polytope.
 
 Parameters:
 \begin{itemize}
-\item {\tt E} - ellipsoid or array of ellipsoids.
-\item {\tt X} - in case of vectors, it is a matrix, whose columns represent
+\item {\tt E} -- ellipsoid or array of ellipsoids.
+\item {\tt X} -- in case of vectors, it is a matrix, whose columns represent
 the vectors to which the distance is measured, number of columns must match
 the number of ellipsoids in the array {\tt E};\\
 in case of ellipsoids, it is array of ellipsoids whose size must match the
@@ -3063,7 +3078,7 @@ between ellipsoids and polytopes.
 
 Returns:
 \begin{itemize}
-\item {\tt D} - distance or array of distances.
+\item {\tt D} -- distance or array of distances.
 \end{itemize}
 
 \verbmcodef[Example]{mcodesnippets/s_appendixA_section01_snippet02.m}
@@ -3071,36 +3086,47 @@ Returns:
 
 \newpage
 
-{\Large {\tt double}} - returns parameters of the ellipsoid, its center
+{\Large {\tt double}} -- returns parameters of the ellipsoid, its center
 and shape matrix.
 
 Parameters:
 \begin{itemize}
-\item {\tt E} - single ellipsoid.
+\item {\tt E} -- single ellipsoid.
 \end{itemize}
 
 Returns:
 \begin{itemize}
-\item {\tt q} - center of the ellipsoid. It is optional output parameter.
-\item {\tt Q} - shape matrix of the ellipsoid.
+\item {\tt q} -- center of the ellipsoid. It is optional output parameter.
+\item {\tt Q} -- shape matrix of the ellipsoid.
 \end{itemize}
 
 \newpage
+{\Large {\tt ellintersection\_ia}} -- computes maximum volume ellipsoid that is
+contained in the intersection of given ellipsoids.
 
-{\Large {\tt ellipsoid}} - constructor for the ellipsoid object.
+Parameters:
+\begin{itemize}
+\item {\tt EL} -- array of ellipsoids of the same dimensions.
+\end{itemize}
+Returns:
+\begin{itemize}
+\item {\tt M} -- resulting maximum volume ellipsoid.
+\end{itemize}
+\newpage
+{\Large {\tt ellipsoid}} -- constructor for the ellipsoid object.
 If called without parameters, returns empty ellipsoid.
 
 Parameters:
 \begin{itemize}
-\item {\tt q} - center of the ellipsoid, vector in ${\bf R}^n$.
+\item {\tt q} -- center of the ellipsoid, vector in ${\bf R}^n$.
 This parameter is optional, and if omitted, it is assumed that the ellipsoid
 is centered at the origin.
-\item {\tt Q} - shape matrix of the ellipsoid, matrix in ${\bf R}^{n\times n}$,
+\item {\tt Q} -- shape matrix of the ellipsoid, matrix in ${\bf R}^{n\times n}$,
 symmetric positive semidefinite.
 \end{itemize}
 Returns:
 \begin{itemize}
-\item {\tt E} - object of type {\tt ellipsoid class}.
+\item {\tt E} -- object of type {\tt ellipsoid class}.
 \end{itemize}
 \verbmcodef[Example]{mcodesnippets/s_appendixA_section01_snippet03.m}
 
@@ -3108,53 +3134,127 @@ This example creates a ball of radius $3$ in ${\bf R}^4$ centered at $[1 ~ 0 ~ -
 
 \newpage
 
-{\Large {\tt eq}} - overloaded operator {\tt '=='},
+{\Large {\tt ellunion\_ea}} -- computes minimum volume ellipsoid that contains union
+of given ellipsoids.
+
+Parameters:
+\begin{itemize}
+\item {\tt EL} -- array of ellipsoids of the same dimensions.
+\end{itemize}
+Returns:
+\begin{itemize}
+\item {\tt m} -- resulting minimum volume ellipsoid.
+\end{itemize}
+
+\newpage
+{\Large {\tt eq}} -- overloaded operator {\tt '=='},
 it checks if two ellipsoids are equal.
 
 Parameters:
 \begin{itemize}
-\item {\tt E1} - first ellipsoid.
-\item {\tt E2} - second ellipsoid.
+\item {\tt E1} -- first ellipsoid or array of ellipsoids.
+\item {\tt E2} -- second ellipsoid or array of ellipsoids.
 \end{itemize}
 
-Returns $1$ if two ellipsoids are equal, $0$ - otherwise.
+Returns $1$ if two ellipsoids are equal, $0$ -- otherwise.
 
 \verbmcodef[Example]{mcodesnippets/s_appendixA_section01_snippet04.m}
 
 
 \newpage
 
-{\Large {\tt ge}}, {\Large {\tt gt}} - checks if the first ellipsoid is bigger
+{\Large {\tt ge}}, {\Large {\tt gt}} -- checks if the first ellipsoid is bigger
 than the second one.
 
 Parameters:
 \begin{itemize}
-\item {\tt E1} - first ellipsoid.
-\item {\tt E2} - second ellipsoid.
+\item {\tt E1} -- first ellipsoid or array of ellipsoids.
+\item {\tt E2} -- second ellipsoid or array of ellipsoids.
 \end{itemize}
 
 Returns $1$ if {\tt E1} contains {\tt E2} when both have the same center,
-$0$ - otherwise.
+$0$ -- otherwise.
 
 \verbmcodef[Example]{mcodesnippets/s_appendixA_section01_snippet05.m}
 
 This example illustrates the fact that an ellipsoid is always bigger than itself.
 
 \newpage
+{\Large {\tt getAbsTol}} -- gives array the same size as input array with values of {\tt absTol} properties for each ellipsoid in input array.
 
-{\Large {\tt hpintersection}} - computes the ellipsoid which results from
+Parameters:
+\begin{itemize}
+\item {\tt EL} -- array of ellipsoids.
+\end{itemize}
+
+Returns:
+\begin{itemize}
+\item {\tt A} -- array of absTol
+properties for ellipsoids in {\tt EL}.
+\end{itemize}
+
+\newpage
+
+{\Large {\tt getNPlot2dPoints}} -- gives value of {\tt nPlot2dPoints} property
+of ellipsoids in input array of ellipsoids.
+
+Parameters:
+\begin{itemize}
+\item {\tt EL} -- array of ellipsoids.
+\end{itemize}
+
+Returns:
+\begin{itemize}
+\item {\tt N2} -- array of {\tt nPlot2dPoints} property for ellipsoids
+ in {\tt EL}.
+\end{itemize}
+
+\newpage
+
+{\Large {\tt getNPlot3dPoints}} -- gives value of {\tt nPlot3dPoints} property
+of ellipsoids in input array of ellipsoids.
+
+Parameters:
+\begin{itemize}
+\item {\tt EL} -- array of ellipsoids.
+\end{itemize}
+
+Returns:
+\begin{itemize}
+\item {\tt N3} -- array of {\tt nPlot2dPoints} property for ellipsoids
+ in {\tt EL}.
+\end{itemize}
+
+\newpage
+
+{\Large {\tt getRelTol}} -- gives array the same size as input array with values of {\tt relTol}
+properties for each ellipsoid in input array.
+
+Parameters:
+\begin{itemize}
+\item {\tt EL} -- array of ellipsoids.
+\end{itemize}
+
+Returns:
+\begin{itemize}
+\item {\tt R} -- array of {\tt relTol} properties for ellipsoids in EL.
+\end{itemize}
+
+\newpage
+
+{\Large {\tt hpintersection}} -- computes the ellipsoid which results from
 intersection of given ellipsoid with given hyperplane.
 
 Parameters:
 \begin{itemize}
-\item {\tt E} - ellipsoid or array of ellipsoids.
-\item {\tt H} - hyperplane or array of hyperplanes.
+\item {\tt E} -- ellipsoid or array of ellipsoids.
+\item {\tt H} -- hyperplane or array of hyperplanes.
 \end{itemize}
 If {\tt E} and {\tt H} are arrays, then their sizes must match.
 
 Returns:
 \begin{itemize}
-\item {\tt I} - ellipsoid or array of ellipsoids that are intersections of
+\item {\tt I} -- ellipsoid or array of ellipsoids that are intersections of
 ellipsoids in {\tt E} with hyperplanes in {\tt H}.
 \end{itemize}
 
@@ -3163,15 +3263,15 @@ ellipsoids in {\tt E} with hyperplanes in {\tt H}.
 
 \newpage
 
-{\Large {\tt intersect}} - checks if the union or intersection of ellipsoids
+{\Large {\tt intersect}} -- checks if the union or intersection of ellipsoids
 intersects given ellipsoid, hyperplane or polytope.
 
 Parameters:
 \begin{itemize}
-\item {\tt E} - ellipsoid or array of ellipsoids whose union or intersection
+\item {\tt E} -- ellipsoid or array of ellipsoids whose union or intersection
 is considered.
-\item {\tt X} - can be single or array of ellipsoids, hyperplanes or polytopes.
-\item {\tt s} - if {\tt 'u'}, {\tt E} should be treated as union of ellipsoids,
+\item {\tt X} -- can be single or array of ellipsoids, hyperplanes or polytopes.
+\item {\tt s} -- if {\tt 'u'}, {\tt E} should be treated as union of ellipsoids,
 if {\tt 'i'}, {\tt E} should be treated as intersection of ellipsoids.
 This parameter is optional, its default value is {\tt 'u'}.
 \end{itemize}
@@ -3190,20 +3290,20 @@ intersected by hyperplane {\tt H}.
 
 \newpage
 
-{\Large {\tt intersection\_ea}} - computes the external ellipsoidal
+{\Large {\tt intersection\_ea}} -- computes the external ellipsoidal
 approximation of the intersection of the ellipsoid with given ellipsoid,
 halfspace or polytope.
 
 Parameters:
 \begin{itemize}
-\item {\tt E} - ellipsoid or array of ellipsoids.
-\item {\tt X} - can be single or array of ellipsoids, hyperplanes or polytopes.
+\item {\tt E} -- ellipsoid or array of ellipsoids.
+\item {\tt X} -- can be single or array of ellipsoids, hyperplanes or polytopes.
 \end{itemize}
 If {\tt E} and {\tt X} are arrays, then their sizes must match.
 
 Returns:
 \begin{itemize}
-\item {\tt EA} - ellipsoid or array of ellipsoids that externally approximate
+\item {\tt EA} -- ellipsoid or array of ellipsoids that externally approximate
 the intersection.
 \end{itemize}
 
@@ -3212,20 +3312,20 @@ the intersection.
 
 \newpage
 
-{\Large {\tt intersection\_ia}} - computes the internal ellipsoidal
+{\Large {\tt intersection\_ia}} -- computes the internal ellipsoidal
 approximation of the intersection of the ellipsoid with given ellipsoid,
 halfspace or polytope.
 
 Parameters:
 \begin{itemize}
-\item {\tt E} - ellipsoid or array of ellipsoids.
-\item {\tt X} - can be single or array of ellipsoids, hyperplanes or polytopes.
+\item {\tt E} -- ellipsoid or array of ellipsoids.
+\item {\tt X} -- can be single or array of ellipsoids, hyperplanes or polytopes.
 \end{itemize}
 If {\tt E} and {\tt X} are arrays, then their sizes must match.
 
 Returns:
 \begin{itemize}
-\item {\tt IA} - ellipsoid or array of ellipsoids that internally approximate
+\item {\tt IA} -- ellipsoid or array of ellipsoids that internally approximate
 the intersection.
 \end{itemize}
 
@@ -3234,35 +3334,35 @@ the intersection.
 
 \newpage
 
-{\Large {\tt inv}} - inverts the shape matrix of the ellipsoid if it is
+{\Large {\tt inv}} -- inverts the shape matrix of the ellipsoid if it is
 nonsingular.
 
 Parameters:
 \begin{itemize}
-\item {\tt E} - ellipsoid or array of ellipsoids.
+\item {\tt E} -- ellipsoid or array of ellipsoids.
 \end{itemize}
 
 Returns:
 \begin{itemize}
-\item {\tt I} - ellipsoid or array of ellipsoids with inverted shape matrices.
+\item {\tt I} -- ellipsoid or array of ellipsoids with inverted shape matrices.
 \end{itemize}
 
 \newpage
 
-{\Large {\tt isbaddirection}} - checks if ellipsoidal approximations of
+{\Large {\tt isbaddirection}} -- checks if ellipsoidal approximations of
 the geometric difference of two ellipsoids can be computed for given
 directions.
 
 Parameters:
 \begin{itemize}
-\item {\tt E1} - first ellipsoid.
-\item {\tt E2} - second ellipsoid.
-\item {\tt L} - matrix whose columns are direction vectors that need to be
+\item {\tt E1} -- first ellipsoid.
+\item {\tt E2} -- second ellipsoid.
+\item {\tt L} -- matrix whose columns are direction vectors that need to be
 checked.
 \end{itemize}
 
 Returns $1$ if given direction is bad and ellipsoidal approximation cannot
-be computed for it, $0$ - otherwise.
+be computed for it, $0$ -- otherwise.
 
 \verbmcodef[Example]{mcodesnippets/s_appendixA_section01_snippet10.m}
 
@@ -3271,46 +3371,60 @@ of the geometric difference ${\tt B}\dot{-}{\tt E}$ cannot be computed.
 
 \newpage
 
-{\Large {\tt isdegenerate}} - checks if given ellipsoid is degenerate.
+{\Large {\tt isbigger}} -- checks if one ellipsoid would contain the other if their
+centers would coincide.
 
 Parameters:
 \begin{itemize}
-\item {\tt E} - ellipsoid or array of ellipsoids.
+\item {\tt E1} -- first ellipsoid.
+\item {\tt E2} -- second ellipsoid.
 \end{itemize}
 
-Returns $1$ if the ellipsoid is degenerate, $0$ - otherwise.
+Returns $1$ if ellipsoid {\tt E1}
+would contain {\tt E2} inside, 0 -- otherwise.
 
 \newpage
 
-{\Large {\tt isempty}} - checks if given ellipsoid is an empty object.
+{\Large {\tt isdegenerate}} -- checks if given ellipsoid is degenerate.
 
 Parameters:
 \begin{itemize}
-\item {\tt E} - ellipsoid or array of ellipsoids.
+\item {\tt E} -- ellipsoid or array of ellipsoids.
 \end{itemize}
 
-Returns $1$ if empty, $0$ - otherwise.
+Returns $1$ if the ellipsoid is degenerate, $0$ -- otherwise.
 
 \newpage
 
-{\Large {\tt isinside}} - checks if the intersection of ellipsoids contains
+{\Large {\tt isempty}} -- checks if given ellipsoid is an empty object.
+
+Parameters:
+\begin{itemize}
+\item {\tt E} -- ellipsoid or array of ellipsoids.
+\end{itemize}
+
+Returns $1$ if empty, $0$ -- otherwise.
+
+\newpage
+
+{\Large {\tt isinside}} -- checks if the intersection of ellipsoids contains
 the union or intersection of given ellipsoids or polytopes.
 
 Parameters:
 \begin{itemize}
-\item {\tt E} - ellipsoid or array of ellipsoids whose intersection contains
+\item {\tt E} -- ellipsoid or array of ellipsoids whose intersection contains
 or not the union or intersection of other given objects.
-\item {\tt X} - can be array of ellipsoids or polytopes whose union or
+\item {\tt X} -- can be array of ellipsoids or polytopes whose union or
 intersection belongs or not to the intersection {\tt E}.
-\item {\tt s} - if {\tt 'u'}, {\tt X} should be treated as union,
+\item {\tt s} -- if {\tt 'u'}, {\tt X} should be treated as union,
 if {\tt 'i'}, {\tt X} should be treated as intersection. This parameter
 is optional, its default value is {\tt 'u'}.
 \end{itemize}
 
 Returns $-1$ if parameter {\tt s} is set to {\tt 'i'} and the intersection
 of ellipsoids or polytopes in {\tt X} is empty,\\
-$0$ - if the intersection {\tt E} does not cover {\tt X},\\
-$1$ - if {\tt E} contains {\tt X}.
+$0$ -- if the intersection {\tt E} does not cover {\tt X},\\
+$1$ -- if {\tt E} contains {\tt X}.
 
 \verbmcodef[Example]{mcodesnippets/s_appendixA_section01_snippet11.m}
 
@@ -3319,21 +3433,21 @@ another ellipsoid.
 
 \newpage
 
-{\Large {\tt isinternal}} - checks if the union or intersection of ellipsoids
+{\Large {\tt isinternal}} -- checks if the union or intersection of ellipsoids
 contains given vectors.
 
 Parameters:
 \begin{itemize}
-\item {\tt E} - ellipsoid or array of ellipsoids whose intersection contains
+\item {\tt E} -- ellipsoid or array of ellipsoids whose intersection contains
 or not given vectors or polytopes.
-\item {\tt X} - can be matrix whose columns represent vectors to be checked.
-\item {\tt s} - if {\tt 'u'}, {\tt E} should be treated as union,
+\item {\tt X} -- can be matrix whose columns represent vectors to be checked.
+\item {\tt s} -- if {\tt 'u'}, {\tt E} should be treated as union,
 if {\tt 'i'}, {\tt E} should be treated as intersection. This parameter
 is optional, its default value is {\tt 'u'}.
 \end{itemize}
 
 Returns $1$ if vector in {\tt X} belongs to union or intersection {\tt E},
-$0$ - otherwise.
+$0$ -- otherwise.
 
 \verbmcodef[Example]{mcodesnippets/s_appendixA_section01_snippet12.m}
 
@@ -3344,71 +3458,71 @@ of both ellipsoids.
 
 \newpage
 
-{\Large {\tt le}}, {\Large {\tt lt}} - checks if the second ellipsoid is bigger
+{\Large {\tt le}}, {\Large {\tt lt}} -- checks if the second ellipsoid is bigger
 than the first one.
 
 Parameters:
 \begin{itemize}
-\item {\tt E1} - first ellipsoid.
-\item {\tt E2} - second ellipsoid.
+\item {\tt E1} -- first ellipsoid or array of ellipsoids.
+\item {\tt E2} -- second ellipsoid or array of ellipsoids.
 \end{itemize}
 
 Returns $1$ if {\tt E2} contains {\tt E1} when both have the same center,
-$0$ - otherwise.
+$0$ -- otherwise.
 
 This operation is the mirror of {\tt ge}, {\tt gt}.
 
 \newpage
 
-{\Large {\tt maxeig}} - returns the biggest eigenvalue of the ellipsoid.
+{\Large {\tt maxeig}} -- returns the biggest eigenvalue of the ellipsoid.
 
 Parameters:
 \begin{itemize}
-\item {\tt E} - ellipsoid or array of ellipsoids.
+\item {\tt E} -- ellipsoid or array of ellipsoids.
 \end{itemize}
 
 Returns:
 \begin{itemize}
-\item {\tt a} - largest eigenvalue or array of largest eigenvalues of
+\item {\tt a} -- largest eigenvalue or array of largest eigenvalues of
 ellipsoids in {\tt E}.
 \end{itemize}
 
 \newpage
 
-{\Large {\tt mineig}} - returns the smallest eigenvalue of the ellipsoid.
+{\Large {\tt mineig}} -- returns the smallest eigenvalue of the ellipsoid.
 
 Parameters:
 \begin{itemize}
-\item {\tt E} - ellipsoid or array of ellipsoids.
+\item {\tt E} -- ellipsoid or array of ellipsoids.
 \end{itemize}
 
 Returns:
 \begin{itemize}
-\item {\tt a} - smallest eigenvalue or array of smallest eigenvalues of
+\item {\tt a} -- smallest eigenvalue or array of smallest eigenvalues of
 ellipsoids in {\tt E}.
 \end{itemize}
 
 \newpage
 
-{\Large {\tt minkdiff}} - computes and plots the geometric difference of
+{\Large {\tt minkdiff}} -- computes and plots the geometric difference of
 two ellipsoids in 2D and 3D.
 
 Parameters:
 \begin{itemize}
-\item {\tt E1} - first ellipsoid.
-\item {\tt E2} - second ellipsoid.
-\item {\tt o} - options structure whose fields describe how the geometric
+\item {\tt E1} -- first ellipsoid.
+\item {\tt E2} -- second ellipsoid.
+\item {\tt o} -- options structure whose fields describe how the geometric
 difference must be plotted. The fields of this structure are
 \begin{itemize}
-\item {\tt show\_all} - if set to $1$, also displays the ellipsoids
+\item {\tt show\_all} -- if set to $1$, also displays the ellipsoids
 {\tt E1} and {\tt E2};
-\item {\tt newfigure} - if set to $1$, each plot command will open a new
+\item {\tt newfigure} -- if set to $1$, each plot command will open a new
 figure window;
-\item {\tt fill} - if set to $1$, the resulting set and the ellipsoids,
+\item {\tt fill} -- if set to $1$, the resulting set and the ellipsoids,
 if plotted in 2D, will be filled with color;
-\item {\tt color} - specifies the color of the plot in the RGB format:
+\item {\tt color} -- specifies the color of the plot in the RGB format:
 {\tt [x y z]};
-\item {\tt shade} - the level of transparency for 3D plots, takes values
+\item {\tt shade} -- the level of transparency for 3D plots, takes values
 between $0$ and $1$ ($0$ - transparent, $1$ - opaque).
 \end{itemize}
 This parameter is optional.
@@ -3416,8 +3530,8 @@ This parameter is optional.
 
 Returns:
 \begin{itemize}
-\item {\tt x} - center of the resulting set.
-\item {\tt X} - matrix whose columns represent the boundary points of the
+\item {\tt x} -- center of the resulting set.
+\item {\tt X} -- matrix whose columns represent the boundary points of the
 resulting set. The number of points is defined by parameters
 {\tt plot2d\_grid} for 2D plots and {\tt plot3d\_grid} for 3D plots of the
 global {\tt ellOptions} structure.
@@ -3426,21 +3540,21 @@ Both output parameters are optional.
 
 \newpage
 
-{\Large {\tt minkdiff\_ea}} - computes external ellipsoidal approximations
+{\Large {\tt minkdiff\_ea}} -- computes external ellipsoidal approximations
 of the geometric difference of two ellipsoids of arbitrary dimension
 for given directions, if these directions are not bad.
 
 Parameters:
 \begin{itemize}
-\item {\tt E1} - first ellipsoid.
-\item {\tt E2} - second ellipsoid.
-\item {\tt L} - matrix whose columns specify the directions for which
+\item {\tt E1} -- first ellipsoid.
+\item {\tt E2} -- second ellipsoid.
+\item {\tt L} -- matrix whose columns specify the directions for which
 the approximations should be computed.
 \end{itemize}
 
 Returns:
 \begin{itemize}
-\item {\tt EA} - array of computed external ellipsoids. Can be empty, if
+\item {\tt EA} -- array of computed external ellipsoids. Can be empty, if
 all the directions specified in {\tt L} are bad.
 \end{itemize}
 
@@ -3451,21 +3565,21 @@ of the four directions specified in {\tt L} are bad.
 
 \newpage
 
-{\Large {\tt minkdiff\_ia}} - computes internal ellipsoidal approximations
+{\Large {\tt minkdiff\_ia}} -- computes internal ellipsoidal approximations
 of the geometric difference of two ellipsoids of arbitrary dimension
 for given directions, if these directions are not bad.
 
 Parameters:
 \begin{itemize}
-\item {\tt E1} - first ellipsoid.
-\item {\tt E2} - second ellipsoid.
-\item {\tt L} - matrix whose columns specify the directions for which
+\item {\tt E1} -- first ellipsoid.
+\item {\tt E2} -- second ellipsoid.
+\item {\tt L} -- matrix whose columns specify the directions for which
 the approximations should be computed.
 \end{itemize}
 
 Returns:
 \begin{itemize}
-\item {\tt EA} - array of computed internal ellipsoids. Can be empty, if
+\item {\tt EA} -- array of computed internal ellipsoids. Can be empty, if
 all the directions specified in {\tt L} are bad.
 \end{itemize}
 
@@ -3476,27 +3590,27 @@ of the four directions specified in {\tt L} are bad.
 
 \newpage
 
-{\Large {\tt minkmp}} - computes and plots geometric (Minkowski) sum of the
+{\Large {\tt minkmp}} -- computes and plots geometric (Minkowski) sum of the
 geometric difference of two ellipsoids and the geometric sum of $n$ ellipsoids
 in 2D or 3D.
 
 Parameters:
 \begin{itemize}
-\item {\tt E0} - first ellipsoid.
-\item {\tt E} - second ellipsoid.
-\item {\tt EE} - array of ellipsoids whose geometric sum needs to be computed.
-\item {\tt o} - options structure whose fields describe how the geometric
+\item {\tt E1} -- first ellipsoid.
+\item {\tt E2} -- second ellipsoid.
+\item {\tt EE} -- array of ellipsoids whose geometric sum needs to be computed.
+\item {\tt o} -- options structure whose fields describe how the geometric
 difference must be plotted. The fields of this structure are
 \begin{itemize}
-\item {\tt show\_all} - if set to $1$, also displays the ellipsoids
+\item {\tt show\_all} -- if set to $1$, also displays the ellipsoids
 {\tt E1} and {\tt E2};
-\item {\tt newfigure} - if set to $1$, each plot command will open a new
+\item {\tt newfigure} -- if set to $1$, each plot command will open a new
 figure window;
-\item {\tt fill} - if set to $1$, the resulting set and the ellipsoids,
+\item {\tt fill} -- if set to $1$, the resulting set and the ellipsoids,
 if plotted in 2D, will be filled with color;
-\item {\tt color} - specifies the color of the plot in the RGB format:
+\item {\tt color} -- specifies the color of the plot in the RGB format:
 {\tt [x y z]};
-\item {\tt shade} - the level of transparency for 3D plots, takes values
+\item {\tt shade} -- the level of transparency for 3D plots, takes values
 between $0$ and $1$ ($0$ - transparent, $1$ - opaque).
 \end{itemize}
 This parameter is optional.
@@ -3504,8 +3618,8 @@ This parameter is optional.
 
 Returns:
 \begin{itemize}
-\item {\tt x} - center of the resulting set.
-\item {\tt X} - matrix whose columns represent the boundary points of the
+\item {\tt x} -- center of the resulting set.
+\item {\tt X} -- matrix whose columns represent the boundary points of the
 resulting set. The number of points is defined by parameters
 {\tt plot2d\_grid} for 2D plots and {\tt plot3d\_grid} for 3D plots of the
 global {\tt ellOptions} structure.
@@ -3514,22 +3628,22 @@ Both output parameters are optional.
 
 \newpage
 
-{\Large {\tt minkmp\_ea}} - computes external ellipsoidal approximations
+{\Large {\tt minkmp\_ea}} -- computes external ellipsoidal approximations
 of the geometric (Minkowski) sum of the geometric difference of two ellipsoids
 and the geometric sum of $n$ ellipsoids.
 
 Parameters:
 \begin{itemize}
-\item {\tt E0} - first ellipsoid.
-\item {\tt E} - second ellipsoid.
-\item {\tt EE} - array of ellipsoids whose geometric sum needs to be computed.
-\item {\tt L} - matrix whose columns specify the directions for which
+\item {\tt E1} -- first ellipsoid.
+\item {\tt E2} -- second ellipsoid.
+\item {\tt EE} -- array of ellipsoids whose geometric sum needs to be computed.
+\item {\tt L} -- matrix whose columns specify the directions for which
 the approximations should be computed.
 \end{itemize}
 
 Returns:
 \begin{itemize}
-\item {\tt EA} - array of computed external ellipsoids. Can be empty, if
+\item {\tt EA} -- array of computed external ellipsoids. Can be empty, if
 all the directions specified in {\tt L} are bad.
 \end{itemize}
 
@@ -3540,22 +3654,22 @@ of the four directions specified in {\tt L} are bad.
 
 \newpage
 
-{\Large {\tt minkmp\_ia}} - computes internal ellipsoidal approximations
+{\Large {\tt minkmp\_ia}} -- computes internal ellipsoidal approximations
 of the geometric (Minkowski) sum of the geometric difference of two ellipsoids
 and the geometric sum of $n$ ellipsoids.
 
 Parameters:
 \begin{itemize}
-\item {\tt E0} - first ellipsoid.
-\item {\tt E} - second ellipsoid.
-\item {\tt EE} - array of ellipsoids whose geometric sum needs to be computed.
-\item {\tt L} - matrix whose columns specify the directions for which
+\item {\tt E1} -- first ellipsoid.
+\item {\tt E2} -- second ellipsoid.
+\item {\tt EE} -- array of ellipsoids whose geometric sum needs to be computed.
+\item {\tt L} -- matrix whose columns specify the directions for which
 the approximations should be computed.
 \end{itemize}
 
 Returns:
 \begin{itemize}
-\item {\tt IA} - array of computed internal ellipsoids. Can be empty, if
+\item {\tt IA} -- array of computed internal ellipsoids. Can be empty, if
 all the directions specified in {\tt L} are bad.
 \end{itemize}
 
@@ -3566,25 +3680,25 @@ of the four directions specified in {\tt L} are bad.
 
 \newpage
 
-{\Large {\tt minkpm}} - computes and plots geometric (Minkowski) difference of
+{\Large {\tt minkpm}} -- computes and plots geometric (Minkowski) difference of
 the geometric sum of ellipsoids and a single ellipsoid in 2D or 3D.
 
 Parameters:
 \begin{itemize}
-\item {\tt EE} - array of ellipsoids whose geometric sum needs to be computed.
-\item {\tt E} - single ellipsoid.
-\item {\tt o} - options structure whose fields describe how the geometric
+\item {\tt EE} -- array of ellipsoids whose geometric sum needs to be computed.
+\item {\tt E} -- single ellipsoid.
+\item {\tt o} -- options structure whose fields describe how the geometric
 difference must be plotted. The fields of this structure are
 \begin{itemize}
-\item {\tt show\_all} - if set to $1$, also displays the ellipsoids
+\item {\tt show\_all} -- if set to $1$, also displays the ellipsoids
 {\tt E1} and {\tt E2};
-\item {\tt newfigure} - if set to $1$, each plot command will open a new
+\item {\tt newfigure} -- if set to $1$, each plot command will open a new
 figure window;
-\item {\tt fill} - if set to $1$, the resulting set and the ellipsoids,
+\item {\tt fill} -- if set to $1$, the resulting set and the ellipsoids,
 if plotted in 2D, will be filled with color;
-\item {\tt color} - specifies the color of the plot in the RGB format:
+\item {\tt color} -- specifies the color of the plot in the RGB format:
 {\tt [x y z]};
-\item {\tt shade} - the level of transparency for 3D plots, takes values
+\item {\tt shade} -- the level of transparency for 3D plots, takes values
 between $0$ and $1$ ($0$ - transparent, $1$ - opaque).
 \end{itemize}
 This parameter is optional.
@@ -3592,8 +3706,8 @@ This parameter is optional.
 
 Returns:
 \begin{itemize}
-\item {\tt x} - center of the resulting set.
-\item {\tt X} - matrix whose columns represent the boundary points of the
+\item {\tt x} -- center of the resulting set.
+\item {\tt X} -- matrix whose columns represent the boundary points of the
 resulting set. The number of points is defined by parameters
 {\tt plot2d\_grid} for 2D plots and {\tt plot3d\_grid} for 3D plots of the
 global {\tt ellOptions} structure.
@@ -3602,21 +3716,21 @@ Both output parameters are optional.
 
 \newpage
 
-{\Large {\tt minkpm\_ea}} - computes external ellipsoidal approximations
+{\Large {\tt minkpm\_ea}} -- computes external ellipsoidal approximations
 of the geometric (Minkowski) difference of the geometric sum of ellipsoids
 and a single ellipsoid.
 
 Parameters:
 \begin{itemize}
-\item {\tt EE} - array of ellipsoids whose geometric sum needs to be computed.
-\item {\tt E} - single ellipsoid.
-\item {\tt L} - matrix whose columns specify the directions for which
+\item {\tt EE} -- array of ellipsoids whose geometric sum needs to be computed.
+\item {\tt E} -- single ellipsoid.
+\item {\tt L} -- matrix whose columns specify the directions for which
 the approximations should be computed.
 \end{itemize}
 
 Returns:
 \begin{itemize}
-\item {\tt EA} - array of computed external ellipsoids. Can be empty, if
+\item {\tt EA} -- array of computed external ellipsoids. Can be empty, if
 all the directions specified in {\tt L} are bad.
 \end{itemize}
 
@@ -3625,21 +3739,21 @@ all the directions specified in {\tt L} are bad.
 
 \newpage
 
-{\Large {\tt minkpm\_ia}} - computes internal ellipsoidal approximations
+{\Large {\tt minkpm\_ia}} -- computes internal ellipsoidal approximations
 of the geometric (Minkowski) difference of the geometric sum of ellipsoids
 and a single ellipsoid.
 
 Parameters:
 \begin{itemize}
-\item {\tt EE} - array of ellipsoids whose geometric sum needs to be computed.
-\item {\tt E} - single ellipsoid.
-\item {\tt L} - matrix whose columns specify the directions for which
+\item {\tt EE} -- array of ellipsoids whose geometric sum needs to be computed.
+\item {\tt E} -- single ellipsoid.
+\item {\tt L} -- matrix whose columns specify the directions for which
 the approximations should be computed.
 \end{itemize}
 
 Returns:
 \begin{itemize}
-\item {\tt IA} - array of computed internal ellipsoids. Can be empty, if
+\item {\tt IA} -- array of computed internal ellipsoids. Can be empty, if
 all the directions specified in {\tt L} are bad.
 \end{itemize}
 
@@ -3650,24 +3764,24 @@ of the four directions specified in {\tt L} are bad.
 
 \newpage
 
-{\Large {\tt minksum}} - computes and plots the geometric sum of finite
+{\Large {\tt minksum}} -- computes and plots the geometric sum of finite
 number of ellipsoids in 2D and 3D.
 
 Parameters:
 \begin{itemize}
-\item {\tt E} - array of ellipsoids whose geometric sum needs to be computed.
-\item {\tt o} - options structure whose fields describe how the geometric
+\item {\tt E} -- array of ellipsoids whose geometric sum needs to be computed.
+\item {\tt o} -- options structure whose fields describe how the geometric
 sum must be plotted. The fields of this structure are
 \begin{itemize}
-\item {\tt show\_all} - if set to $1$, also displays the ellipsoids in the
+\item {\tt show\_all} -- if set to $1$, also displays the ellipsoids in the
 array {\tt E};
-\item {\tt newfigure} - if set to $1$, each plot command will open a new
+\item {\tt newfigure} -- if set to $1$, each plot command will open a new
 figure window;
-\item {\tt fill} - if set to $1$, the resulting set and the ellipsoids,
+\item {\tt fill} -- if set to $1$, the resulting set and the ellipsoids,
 if plotted in 2D, will be filled with color;
-\item {\tt color} - specifies the color of the plot in the RGB format:
+\item {\tt color} -- specifies the color of the plot in the RGB format:
 {\tt [x y z]};
-\item {\tt shade} - the level of transparency for 3D plots, takes values
+\item {\tt shade} -- the level of transparency for 3D plots, takes values
 between $0$ and $1$ ($0$ - transparent, $1$ - opaque).
 \end{itemize}
 This parameter is optional.
@@ -3675,8 +3789,8 @@ This parameter is optional.
 
 Returns:
 \begin{itemize}
-\item {\tt x} - center of the resulting set.
-\item {\tt X} - matrix whose columns represent the boundary points of the
+\item {\tt x} -- center of the resulting set.
+\item {\tt X} -- matrix whose columns represent the boundary points of the
 resulting set. The number of points is defined by parameters
 {\tt plot2d\_grid} for 2D plots and {\tt plot3d\_grid} for 3D plots of the
 global {\tt ellOptions} structure.
@@ -3685,21 +3799,21 @@ Both output parameters are optional.
 
 \newpage
 
-{\Large {\tt minksum\_ea}} - computes external ellipsoidal approximations
+{\Large {\tt minksum\_ea}} -- computes external ellipsoidal approximations
 of the geometric sum of finite number of ellipsoids of arbitrary dimension
 for given directions.
 
 Parameters:
 \begin{itemize}
-\item {\tt E} - array of ellipsoids whose geometric sum needs to be
+\item {\tt E} -- array of ellipsoids whose geometric sum needs to be
 approximated.
-\item {\tt L} - matrix whose columns specify the directions for which
+\item {\tt L} -- matrix whose columns specify the directions for which
 the approximations should be computed.
 \end{itemize}
 
 Returns:
 \begin{itemize}
-\item {\tt EA} - array of computed external ellipsoids whose length is the same
+\item {\tt EA} -- array of computed external ellipsoids whose length is the same
 as the number of columns of matrix {\tt L}.
 \end{itemize}
 
@@ -3708,21 +3822,21 @@ as the number of columns of matrix {\tt L}.
 
 \newpage
 
-{\Large {\tt minksum\_ia}} - computes internal ellipsoidal approximations
+{\Large {\tt minksum\_ia}} -- computes internal ellipsoidal approximations
 of the geometric sum of finite number of ellipsoids of arbitrary dimension
 for given directions.
 
 Parameters:
 \begin{itemize}
-\item {\tt E} - array of ellipsoids whose geometric sum needs to be
+\item {\tt E} -- array of ellipsoids whose geometric sum needs to be
 approximated.
-\item {\tt L} - matrix whose columns specify the directions for which
+\item {\tt L} -- matrix whose columns specify the directions for which
 the approximations should be computed.
 \end{itemize}
 
 Returns:
 \begin{itemize}
-\item {\tt IA} - array of computed internal ellipsoids whose length is the same
+\item {\tt IA} -- array of computed internal ellipsoids whose length is the same
 as the number of columns of matrix {\tt L}.
 \end{itemize}
 
@@ -3731,18 +3845,18 @@ as the number of columns of matrix {\tt L}.
 
 \newpage
 
-{\Large {\tt minus}} - overloaded operator {\tt '-'}.
+{\Large {\tt minus}} -- overloaded operator {\tt '-'}.
 
 Parameters:
 \begin{itemize}
-\item {\tt E} - ellipsoid or array of ellipsoids defined in ${\bf R}^n$.
-\item {\tt b} - vector in ${\bf R}^n$ or matrix in ${\bf R}^{n\times m}$,
+\item {\tt E} -- ellipsoid or array of ellipsoids defined in ${\bf R}^n$.
+\item {\tt b} -- vector in ${\bf R}^n$ or matrix in ${\bf R}^{n\times m}$,
 where $m$ equals the number of ellipsoids in the array {\tt E}.
 \end{itemize}
 
 Returns:
 \begin{itemize}
-\item {\tt E1} - ellipsoid or array of ellipsoids with same shapes as {\tt E},
+\item {\tt E1} -- ellipsoid or array of ellipsoids with same shapes as {\tt E},
 but with centers shifted by vectors in {\tt -b}.
 \end{itemize}
 
@@ -3751,16 +3865,16 @@ but with centers shifted by vectors in {\tt -b}.
 
 \newpage
 
-{\Large {\tt move2origin}} - moves given ellipsoids to the origin.
+{\Large {\tt move2origin}} -- moves given ellipsoids to the origin.
 
 Parameters:
 \begin{itemize}
-\item {\tt E} - ellipsoid or array of ellipsoids.
+\item {\tt E} -- ellipsoid or array of ellipsoids.
 \end{itemize}
 
 Returns:
 \begin{itemize}
-\item {\tt O} - the same ellipsoid or array of ellipsoids as {\tt E},
+\item {\tt O} -- the same ellipsoid or array of ellipsoids as {\tt E},
 but all centered at the origin.
 \end{itemize}
 
@@ -3769,17 +3883,17 @@ but all centered at the origin.
 
 \newpage
 
-{\Large {\tt mtimes}} - overloaded operator {\tt '*'}.
+{\Large {\tt mtimes}} -- overloaded operator {\tt '*'}.
 
 Parameters:
 \begin{itemize}
-\item {\tt A} - scalar, or matrix in ${\bf R}^{m\times n}$.
-\item {\tt E} - ellipsoid or array of ellipsoids defined in ${\bf R}^n$.
+\item {\tt A} -- scalar, or matrix in ${\bf R}^{m\times n}$.
+\item {\tt E} -- ellipsoid or array of ellipsoids defined in ${\bf R}^n$.
 \end{itemize}
 
 Returns:
 \begin{itemize}
-\item {\tt E1} - ellipsoid or array of ellipsoids resulting from linear
+\item {\tt E1} -- ellipsoid or array of ellipsoids resulting from linear
 transformation of {\tt E}.
 \end{itemize}
 
@@ -3788,68 +3902,68 @@ transformation of {\tt E}.
 
 \newpage
 
-{\Large {\tt ne}} - overloaded operator {\tt '\~{ }='},
+{\Large {\tt ne}} -- overloaded operator {\tt '\~{ }='},
 it checks if two ellipsoids are not equal.
 
 Parameters:
 \begin{itemize}
-\item {\tt E1} - first ellipsoid.
-\item {\tt E2} - second ellipsoid.
+\item {\tt E1} -- first ellipsoid or array of ellipsoids.
+\item {\tt E2} -- second ellipsoid or array of ellipsoids.
 \end{itemize}
 
-Returns $1$ if two ellipsoids are not equal, $0$ - otherwise.
+Returns $1$ if two ellipsoids are not equal, $0$ -- otherwise.
 
 \verbmcodef[Example]{mcodesnippets/s_appendixA_section01_snippet24.m}
 
 
 \newpage
 
-{\Large {\tt parameters}} - returns parameters of the ellipsoid, its center
+{\Large {\tt parameters}} -- returns parameters of the ellipsoid, its center
 and shape matrix.
 
 Parameters:
 \begin{itemize}
-\item {\tt E} - single ellipsoid.
+\item {\tt E} -- single ellipsoid.
 \end{itemize}
 
 Returns:
 \begin{itemize}
-\item {\tt q} - center of the ellipsoid. It is optional output parameter.
-\item {\tt Q} - shape matrix of the ellipsoid.
+\item {\tt q} -- center of the ellipsoid. It is optional output parameter.
+\item {\tt Q} -- shape matrix of the ellipsoid.
 \end{itemize}
 
 {\bf Remark.} This function is obsolete. Use {\tt double} instead.
 
 \newpage
 
-{\Large {\tt plot}} - plots ellipsoids in 1D, 2D and 3D.
+{\Large {\tt plot}} -- plots ellipsoids in 1D, 2D and 3D.
 
 Parameters:
 \begin{itemize}
-\item {\tt E} - ellipsoid or array of ellipsoids.
-\item {\tt c} - specifies the color:
+\item {\tt E} -- ellipsoid or array of ellipsoids.
+\item {\tt c} -- specifies the color:
 \begin{itemize}
-\item {\tt 'b'} - blue;
-\item {\tt 'c'} - cyan;
-\item {\tt 'g'} - green;
-\item {\tt 'k'} - black;
-\item {\tt 'm'} - magenta;
-\item {\tt 'r'} - red;
-\item {\tt 'w'} - white;
-\item {\tt 'y'} - yellow.
+\item {\tt 'b'} -- blue;
+\item {\tt 'c'} -- cyan;
+\item {\tt 'g'} -- green;
+\item {\tt 'k'} -- black;
+\item {\tt 'm'} -- magenta;
+\item {\tt 'r'} -- red;
+\item {\tt 'w'} -- white;
+\item {\tt 'y'} -- yellow.
 \end{itemize}
 This parameter is optional.
-\item {\tt o} - options structure whose fields describe how the ellipsoids
+\item {\tt o} -- options structure whose fields describe how the ellipsoids
 must be plotted. The fields of this structure are
 \begin{itemize}
-\item {\tt newfigure} - if set to $1$, each plot command will open a new
+\item {\tt newfigure} -- if set to $1$, each plot command will open a new
 figure window;
-\item {\tt fill} - if set to $1$, the resulting set and the ellipsoids,
+\item {\tt fill} -- if set to $1$, the resulting set and the ellipsoids,
 if plotted in 2D, will be filled with color;
-\item {\tt width} - specifies line width for 1D and 2D plots;
-\item {\tt color} - specifies the color of the plot in the RGB format:
+\item {\tt width} -- specifies line width for 1D and 2D plots;
+\item {\tt color} -- specifies the color of the plot in the RGB format:
 {\tt [x y z]};
-\item {\tt shade} - the level of transparency for 3D plots, takes values
+\item {\tt shade} -- the level of transparency for 3D plots, takes values
 between $0$ and $1$ ($0$ - transparent, $1$ - opaque).
 \end{itemize}
 This parameter is optional.
@@ -3859,18 +3973,18 @@ Returns: None.
 
 \newpage
 
-{\Large {\tt plus}} - overloaded operator {\tt '+'}.
+{\Large {\tt plus}} -- overloaded operator {\tt '+'}.
 
 Parameters:
 \begin{itemize}
-\item {\tt E} - ellipsoid or array of ellipsoids defined in ${\bf R}^n$.
-\item {\tt b} - vector in ${\bf R}^n$ or matrix in ${\bf R}^{n\times m}$,
+\item {\tt E} -- ellipsoid or array of ellipsoids defined in ${\bf R}^n$.
+\item {\tt b} -- vector in ${\bf R}^n$ or matrix in ${\bf R}^{n\times m}$,
 where $m$ equals the number of ellipsoids in the array {\tt E}.
 \end{itemize}
 
 Returns:
 \begin{itemize}
-\item {\tt E1} - ellipsoid or array of ellipsoids with same shapes as {\tt E},
+\item {\tt E1} -- ellipsoid or array of ellipsoids with same shapes as {\tt E},
 but with centers shifted by vectors in {\tt b}.
 \end{itemize}
 
@@ -3879,16 +3993,16 @@ but with centers shifted by vectors in {\tt b}.
 
 \newpage
 
-{\Large {\tt polar}} - computes polars for ellipsoids which contain the origin.
+{\Large {\tt polar}} -- computes polars for ellipsoids which contain the origin.
 
 Parameters:
 \begin{itemize}
-\item {\tt E} - ellipsoid or array of ellipsoids.
+\item {\tt E} -- ellipsoid or array of ellipsoids.
 \end{itemize}
 
 Returns:
 \begin{itemize}
-\item {\tt P} - polar ellipsoid or array of polar ellipsoids for those
+\item {\tt P} -- polar ellipsoid or array of polar ellipsoids for those
 in {\tt E}.
 \end{itemize}
 
@@ -3901,31 +4015,31 @@ equals to inverse of this ellipsoid.
 
 \newpage
 
-{\Large {\tt projection}} - computes projection of ellipsoids onto given
+{\Large {\tt projection}} -- computes projection of ellipsoids onto given
 orthogonal basis.
 
 Parameters:
 \begin{itemize}
-\item {\tt E} - ellipsoid or array of ellipsoids defined in ${\bf R}^n$.
-\item {\tt B} - matrix in ${\bf R}^{n\times m}$ whose columns are orthogonal.
+\item {\tt E} -- ellipsoid or array of ellipsoids defined in ${\bf R}^n$.
+\item {\tt B} -- matrix in ${\bf R}^{n\times m}$ whose columns are orthogonal.
 \end{itemize}
 
 Returns:
 \begin{itemize}
-\item {\tt P} - array of projected ellipsoids.
+\item {\tt P} -- array of projected ellipsoids.
 \end{itemize}
 \verbmcodef[Example]{mcodesnippets/s_appendixA_section01_snippet27.m}
 
 
 \newpage
 
-{\Large {\tt rho}} - computes the support function of the ellipsoids for
+{\Large {\tt rho}} -- computes the support function of the ellipsoids for
 given directions and corresponding boundary points.
 
 Parameters:
 \begin{itemize}
-\item {\tt E} - ellipsoid or array of ellipsoids defined in ${\bf R}^n$.
-\item {\tt L} - vector in ${\bf R}^n$ if {\tt E} is an array of ellipsoids,
+\item {\tt E} -- ellipsoid or array of ellipsoids defined in ${\bf R}^n$.
+\item {\tt L} -- vector in ${\bf R}^n$ if {\tt E} is an array of ellipsoids,
 otherwise, if {\tt E} is a single ellipsoid, it can be matrix in
 ${\bf R}^{n\times m}$ whose columns represent the directions for which
 the support function needs to be computed.
@@ -3933,25 +4047,25 @@ the support function needs to be computed.
 
 Returns:
 \begin{itemize}
-\item {\tt R} - array of support function values.
-\item {\tt X} - matrix whose columns are boundary points corresponding
+\item {\tt R} -- array of support function values.
+\item {\tt X} -- matrix whose columns are boundary points corresponding
 to the directions in {\tt L}. This output parameter is optional.
 \end{itemize}
 
 \newpage
 
-{\Large {\tt shape}} - has the same functionality as {\tt mtimes} but
+{\Large {\tt shape}} -- has the same functionality as {\tt mtimes} but
 modifies only the shape matrix of the ellipsoid leaving its center as is.
 
 Parameters:
 \begin{itemize}
-\item {\tt A} - scalar, or matrix in ${\bf R}^{m\times n}$.
-\item {\tt E} - ellipsoid or array of ellipsoids defined in ${\bf R}^n$.
+\item {\tt A} -- scalar, or matrix in ${\bf R}^{m\times n}$.
+\item {\tt E} -- ellipsoid or array of ellipsoids defined in ${\bf R}^n$.
 \end{itemize}
 
 Returns:
 \begin{itemize}
-\item {\tt E1} - ellipsoid or array of ellipsoids resulting from modification
+\item {\tt E1} -- ellipsoid or array of ellipsoids resulting from modification
 of the shape matrices of ellipsoids in {\tt E}.
 \end{itemize}
 
@@ -3960,16 +4074,16 @@ of the shape matrices of ellipsoids in {\tt E}.
 
 \newpage
 
-{\Large {\tt trace}} - computes trace of given ellipsoids.
+{\Large {\tt trace}} -- computes trace of given ellipsoids.
 
 Parameters:
 \begin{itemize}
-\item {\tt E} - ellipsoid or array of ellipsoids.
+\item {\tt E} -- ellipsoid or array of ellipsoids.
 \end{itemize}
 
 Returns:
 \begin{itemize}
-\item {\tt T} - array of trace values whose size matches the size of {\tt E}.
+\item {\tt T} -- array of trace values whose size matches the size of {\tt E}.
 \end{itemize}
 
 \verbmcodef[Example]{mcodesnippets/s_appendixA_section01_snippet29.m}
@@ -3978,16 +4092,16 @@ Returns:
 \newpage
 
 
-{\Large {\tt uminus}} - overloaded operation unitary minus.
+{\Large {\tt uminus}} -- overloaded operation unitary minus.
 
 Parameters:
 \begin{itemize}
-\item {\tt E} - ellipsoid or array of ellipsoids.
+\item {\tt E} -- ellipsoid or array of ellipsoids.
 \end{itemize}
 
 Returns:
 \begin{itemize}
-\item {\tt E1} - array of the same ellipsoids as in {\tt E}, whose centers
+\item {\tt E1} -- array of the same ellipsoids as in {\tt E}, whose centers
 are multilied by $-1$.
 \end{itemize}
 
@@ -3996,16 +4110,16 @@ are multilied by $-1$.
 
 \newpage
 
-{\Large {\tt volume}} - computes volume of given ellipsoids.
+{\Large {\tt volume}} -- computes volume of given ellipsoids.
 
 Parameters:
 \begin{itemize}
-\item {\tt E} - ellipsoid or array of ellipsoids.
+\item {\tt E} -- ellipsoid or array of ellipsoids.
 \end{itemize}
 
 Returns:
 \begin{itemize}
-\item {\tt V} - array of volume values whose size matches the size of {\tt E}.
+\item {\tt V} -- array of volume values whose size matches the size of {\tt E}.
 \end{itemize}
 
 \verbmcodef[Example]{mcodesnippets/s_appendixA_section01_snippet31.m}
@@ -4013,34 +4127,34 @@ Returns:
 \newpage
 
 \section{hyperplane Methods}
-{\Large {\tt contains}} - checks if the hyperplanes contain given vectors.
+{\Large {\tt contains}} -- checks if the hyperplanes contain given vectors.
 
 Parameters:
 \begin{itemize}
-\item {\tt H} - hyperplane or array of hyperplanes.
-\item {\tt X} - matrix whose columns represent the vectors needed to be checked.
+\item {\tt H} -- hyperplane or array of hyperplanes.
+\item {\tt X} -- matrix whose columns represent the vectors needed to be checked.
 The number of columns must match the number of hyperplanes in {\tt H}.
 \end{itemize}
 
 Returns $1$ if the vector in {\tt X} belongs to the hyperplane in {\tt H},
-$0$ - otherwise.
+$0$ -- otherwise.
 
 \verbmcodef[Example]{mcodesnippets/s_appendixA_section02_snippet01.m}
 
 
 \newpage
 
-{\Large {\tt dimension}} - returns the dimension of the space in which
+{\Large {\tt dimension}} -- returns the dimension of the space in which
 the hyperplane is defined.
 
 Parameters:
 \begin{itemize}
-\item {\tt H} - hyperplane or array of hyperplanes.
+\item {\tt H} -- hyperplane or array of hyperplanes.
 \end{itemize}
 
 Returns:
 \begin{itemize}
-\item {\tt D} - array of dimension values of the same size as {\tt H}.
+\item {\tt D} -- array of dimension values of the same size as {\tt H}.
 \end{itemize}
 
 \verbmcodef[Example]{mcodesnippets/s_appendixA_section02_snippet02.m}
@@ -4048,23 +4162,23 @@ Returns:
 
 \newpage
 
-{\Large {\tt display}} - displays the details of the hyperplane object.
+{\Large {\tt display}} -- displays the details of the hyperplane object.
 
 Parameters:
 \begin{itemize}
-\item {\tt H} - hyperplane or array of hyperplanes.
+\item {\tt H} -- hyperplane or array of hyperplanes.
 \end{itemize}
 This function is rarely used explicitely. It is called automatically
 for the object {\tt H} when semicolon does not terminate the statement.
 
 \newpage
 
-{\Large {\tt double}} - returns parameters of the hyperplane object,
+{\Large {\tt double}} -- returns parameters of the hyperplane object,
 its normal and scalar.
 
 Parameters:
 \begin{itemize}
-\item {\tt H} - hyperplane object.
+\item {\tt H} -- hyperplane object.
 \end{itemize}
 
 Parameters:
@@ -4075,36 +4189,50 @@ Parameters:
 
 \newpage
 
-{\Large {\tt eq}} - overloaded operator {\tt '=='}.
+{\Large {\tt eq}} -- overloaded operator {\tt '=='}.
 it checks if two hyperplanes are equal.
 
 Parameters:
 \begin{itemize}
-\item {\tt H1} - first hyperplane.
-\item {\tt H2} - second hyperplane.
+\item {\tt H1} -- first hyperplane or array of hyperplanes.
+\item {\tt H2} -- second hyperplane or array of hyperplanes.
 \end{itemize}
 
-Returns $1$ if two hyperplanes are equal, $0$ - otherwise.
+Returns $1$ if two hyperplanes are equal, $0$ -- otherwise.
 
 \verbmcodef[Example]{mcodesnippets/s_appendixA_section02_snippet03.m}
 
 
 \newpage
+{\Large {\tt getAbsTol}} -- gives array the same size as input array with values
+of {\tt absTol} properties for each hyperplane in input array.
 
-{\Large {\tt hyperplane}} - constructor for the hyperplane object.
+Parameters:
+\begin{itemize}
+\item {\tt HP} -- multi - dimensional hyperplane array.
+\end{itemize}
+
+Returns:
+\begin{itemize}
+\item {\tt A} -- array of {\tt absTol} properties for hyperplanes in {\tt HP}.
+\end{itemize}
+
+\newpage
+
+{\Large {\tt hyperplane}} -- constructor for the hyperplane object.
 If called without parameters, returns empty hyperplane.
 
 Parameters:
 \begin{itemize}
-\item {\tt V} - vector in ${\bf R}^n$ or matrix in ${\bf R}^{n\times m}$ whose
+\item {\tt V} -- vector in ${\bf R}^n$ or matrix in ${\bf R}^{n\times m}$ whose
 columns define the normals to the hyperplanes that need to be created.
-\item {\tt C} - scalar value, or, in case {\tt V} has $m$ columns, it can be
+\item {\tt C} -- scalar value, or, in case {\tt V} has $m$ columns, it can be
 array with $m$ values.
 \end{itemize}
 
 Returns:
 \begin{itemize}
-\item {\tt H} - hyperplane, or, if {\tt V} has more than one column,
+\item {\tt H} -- hyperplane, or, if {\tt V} has more than one column,
 array of hyperplanes.
 \end{itemize}
 
@@ -4114,95 +4242,95 @@ This example defines three parallel hyperplanes and returns them in the array {\
 
 \newpage
 
-{\Large {\tt isempty}} - checks if the hyperplane object is empty.
+{\Large {\tt isempty}} -- checks if the hyperplane object is empty.
 
 Parameters:
 \begin{itemize}
-\item {\tt H} - hyperplane or array of hyperplanes.
+\item {\tt H} -- hyperplane or array of hyperplanes.
 \end{itemize}
 
-Returns: $1$ if the hyperplane object is empty, $0$ - otherwise.
+Returns: $1$ if the hyperplane object is empty, $0$ -- otherwise.
 
 \newpage
 
-{\Large {\tt isparallel}} - checks if the hyperplanes are parallel.
+{\Large {\tt isparallel}} -- checks if the hyperplanes are parallel.
 
 Parameters:
 \begin{itemize}
-\item {\tt H1} - first hyperplane.
-\item {\tt H2} - second hyperplane.
+\item {\tt H1} -- first hyperplane or array of hyperplanes.
+\item {\tt H2} -- second hyperplane or array of hyperplanes.
 \end{itemize}
 
-Returns $1$ if two hyperplanes are equal, $0$ - otherwise.
+Returns $1$ if two hyperplanes are equal, $0$ -- otherwise.
 
 \verbmcodef[Example]{mcodesnippets/s_appendixA_section02_snippet05.m}
 
 
 \newpage
 
-{\Large {\tt ne}} - overloaded operator {\tt '\~{ }='},
+{\Large {\tt ne}} -- overloaded operator {\tt '\~{ }='},
 it checks if two hyperplanes are not equal.
 
 Parameters:
 \begin{itemize}
-\item {\tt H1} - first hyperplane.
-\item {\tt H2} - second hyperplane.
+\item {\tt H1} -- first hyperplane or array of hyperplanes.
+\item {\tt H2} -- second hyperplane or array of hyperplanes.
 \end{itemize}
 
-Returns $1$ if two hyperplanes are not equal, $0$ - otherwise.
+Returns $1$ if two hyperplanes are not equal, $0$ -- otherwise.
 
 \verbmcodef[Example]{mcodesnippets/s_appendixA_section02_snippet06.m}
 
 
 \newpage
 
-{\Large {\tt parameters}} - returns parameters of the hyperplane object,
+{\Large {\tt parameters}} -- returns parameters of the hyperplane object,
 its normal and scalar.
 
 Parameters:
 \begin{itemize}
-\item {\tt H} - hyperplane object.
+\item {\tt H} -- hyperplane object.
 \end{itemize}
 
 Parameters:
 \begin{itemize}
-\item {\tt v} - normal vector.
-\item {\tt c} - scalar. This output parameter is optional.
+\item {\tt v} -- normal vector.
+\item {\tt c} -- scalar. This output parameter is optional.
 \end{itemize}
 
 {\bf Remark.} This function is obsolete. Use {\tt double} instead.
 
 \newpage
 
-{\Large {\tt plot}} - plots hyperplanes in 2D and 3D.
+{\Large {\tt plot}} -- plots hyperplanes in 2D and 3D.
 
 Parameters:
 \begin{itemize}
-\item {\tt H} - hyperplane or array of hyperplanes.
-\item {\tt c} - specifies the color:
+\item {\tt H} -- hyperplane or array of hyperplanes.
+\item {\tt c} -- specifies the color:
 \begin{itemize}
-\item {\tt 'b'} - blue;
-\item {\tt 'c'} - cyan;
-\item {\tt 'g'} - green;
-\item {\tt 'k'} - black;
-\item {\tt 'm'} - magenta;
-\item {\tt 'r'} - red;
-\item {\tt 'w'} - white;
-\item {\tt 'y'} - yellow.
+\item {\tt 'b'} -- blue;
+\item {\tt 'c'} -- cyan;
+\item {\tt 'g'} -- green;
+\item {\tt 'k'} -- black;
+\item {\tt 'm'} -- magenta;
+\item {\tt 'r'} -- red;
+\item {\tt 'w'} -- white;
+\item {\tt 'y'} -- yellow.
 \end{itemize}
 This parameter is optional.
-\item {\tt o} - options structure whose fields describe how the hyperplanes
+\item {\tt o} -- options structure whose fields describe how the hyperplanes
 must be plotted. The fields of this structure are
 \begin{itemize}
-\item {\tt newfigure} - if set to $1$, each plot command will open a new
+\item {\tt newfigure} -- if set to $1$, each plot command will open a new
 figure window;
-\item {\tt size} - length of the line segment in 2D or square diagonal in 3D.
-\item {\tt center} - center of the line segment in 2D or square diagonal in 3D.
-\item {\tt width} - specifies line width for 2D plots;
-\item {\tt color} - specifies the color of the plot in the RGB format:
+\item {\tt size} -- length of the line segment in 2D or square diagonal in 3D.
+\item {\tt center} -- center of the line segment in 2D or square diagonal in 3D.
+\item {\tt width} -- specifies line width for 2D plots;
+\item {\tt color} -- specifies the color of the plot in the RGB format:
 {\tt [x y z]};
-\item {\tt shade} - the level of transparency for 3D plots, takes values
-between $0$ and $1$ ($0$ - transparent, $1$ - opaque).
+\item {\tt shade} -- the level of transparency for 3D plots, takes values
+between $0$ and $1$ ($0$ -- transparent, $1$ -- opaque).
 \end{itemize}
 This parameter is optional.
 \end{itemize}
@@ -4211,17 +4339,17 @@ Returns: None.
 
 \newpage
 
-{\Large {\tt uminus}} - overloaded operator unitary minus. It does not change
+{\Large {\tt uminus}} -- overloaded operator unitary minus. It does not change
 the hyperplane, and affects only the halfspace this hyperplane defines.
 
 Parameters:
 \begin{itemize}
-\item {\tt H} - hyperplane or array of hyperplanes.
+\item {\tt H} -- hyperplane or array of hyperplanes.
 \end{itemize}
 
 Returns:
 \begin{itemize}
-\item {\tt H1} - array of the same hyperplanes as in {\tt H} whose normals and
+\item {\tt H1} -- array of the same hyperplanes as in {\tt H} whose normals and
 scalars are multiplied by $-1$.
 \end{itemize}
 
@@ -4231,126 +4359,126 @@ scalars are multiplied by $-1$.
 \newpage
 
 \section{linsys Methods}
-{\Large {\tt dimension}} - returns dimensions of state, input, output and
+{\Large {\tt dimension}} -- returns dimensions of state, input, output and
 disturbance input spaces.
 
 Parameters:
 \begin{itemize}
-\item {\tt LSYS} - linear system or array of linear systems.
+\item {\tt LSYS} -- linear system or array of linear systems.
 \end{itemize}
 
 Returns:
 \begin{itemize}
-\item {\tt N} - state space dimension.
-\item {\tt I} - dimension of the input space.
-\item {\tt O} - dimension of the output space.
-\item {\tt D} - dimension of the disturbance input space.
+\item {\tt N} -- state space dimension.
+\item {\tt I} -- dimension of the input space.
+\item {\tt O} -- dimension of the output space.
+\item {\tt D} -- dimension of the disturbance input space.
 \end{itemize}
 
 \newpage
 
-{\Large {\tt display}} - displays the details of the linear system object.
+{\Large {\tt display}} -- displays the details of the linear system object.
 
 Parameters:
 \begin{itemize}
-\item {\tt LSYS} - linear system or array of linear systems.
+\item {\tt LSYS} -- linear system or array of linear systems.
 \end{itemize}
 This function is rarely used explicitely. It is called automatically
 for the object {\tt LSYS} when semicolon does not terminate the statement.
 
 \newpage
 
-{\Large {\tt hasdisturbance}} - checks if given linear system is the system
+{\Large {\tt hasdisturbance}} -- checks if given linear system is the system
 with disturbance.
 
 Parameters:
 \begin{itemize}
-\item {\tt LSYS} - linear system or array of linear systems.
+\item {\tt LSYS} -- linear system or array of linear systems.
 \end{itemize}
 
-Returns $1$ if it is system with disturbance, $0$ - otherwise.
+Returns $1$ if it is system with disturbance, $0$ -- otherwise.
 
 \newpage
 
-{\Large {\tt hasnoise}} - checks if given linear system has noise at the
+{\Large {\tt hasnoise}} -- checks if given linear system has noise at the
 output.
 
 Parameters:
 \begin{itemize}
-\item {\tt LSYS} - linear system or array of linear systems.
+\item {\tt LSYS} -- linear system or array of linear systems.
 \end{itemize}
 
-Returns $1$ if it is system with noise, $0$ - otherwise.
+Returns $1$ if it is system with noise, $0$ -- otherwise.
 
 \newpage
 
-{\Large {\tt isdiscrete}} - checks if given linear system is discrete-time.
+{\Large {\tt isdiscrete}} -- checks if given linear system is discrete-time.
 
 Parameters:
 \begin{itemize}
-\item {\tt LSYS} - linear system or array of linear systems.
+\item {\tt LSYS} -- linear system or array of linear systems.
 \end{itemize}
 
-Returns $1$ if the system is discrete-time, $0$ - otherwise.
+Returns $1$ if the system is discrete-time, $0$ -- otherwise.
 
 \newpage
 
-{\Large {\tt isempty}} - checks if given linear system is an empty object.
+{\Large {\tt isempty}} -- checks if given linear system is an empty object.
 
 Parameters:
 \begin{itemize}
-\item {\tt LSYS} - linear system or array of linear systems.
+\item {\tt LSYS} -- linear system or array of linear systems.
 \end{itemize}
 
-Returns $1$ if {\tt LSYS} is an empty object, $0$ - otherwise.
+Returns $1$ if {\tt LSYS} is an empty object, $0$ -- otherwise.
 
 \newpage
 
-{\Large {\tt islti}} - checks if given linear system is time invariant.
+{\Large {\tt islti}} -- checks if given linear system is time invariant.
 
 Parameters:
 \begin{itemize}
-\item {\tt LSYS} - linear system or array of linear systems.
+\item {\tt LSYS} -- linear system or array of linear systems.
 \end{itemize}
 
-Returns $1$ if the system is time invariant, $0$ - otherwise.
+Returns $1$ if the system is time invariant, $0$ -- otherwise.
 
 \newpage
 
-{\Large {\tt linsys}} - constructor for the linear system object.
+{\Large {\tt linsys}} -- constructor for the linear system object.
 If called without parameters, creates an empty object.
 
 Parameters:
 \begin{itemize}
-\item {\tt A} - matrix $A\in{\bf R}^{n\times n}$, can be symbolic if it
+\item {\tt A} -- matrix $A\in{\bf R}^{n\times n}$, can be symbolic if it
 depends on time ($t$ - in continuous case, $k$ - in discrete case).
-\item {\tt B} - matrix $B\in{\bf R}^{n\times m}$, can by symbolic if it
+\item {\tt B} -- matrix $B\in{\bf R}^{n\times m}$, can by symbolic if it
 depends on time.
-\item {\tt U} - defines control bounds: it can be ellipsoid object with
+\item {\tt U} -- defines control bounds: it can be ellipsoid object with
 dimension $m$; or structure with fields {\tt center} - symbolic vector,
-and {\tt shape} - symbolic matrix, if the ellipsoidal bounds depend on time;
+and {\tt shape} -- symbolic matrix, if the ellipsoidal bounds depend on time;
 or, if the control is fixed, it can be single vector of type {\it double}
 or symbolic.
-\item {\tt G} - matrix $G\in{\bf R}^{n\times d}$, can by symbolic if it
+\item {\tt G} -- matrix $G\in{\bf R}^{n\times d}$, can by symbolic if it
 depends on time. This parameter is optional.
-\item {\tt V} - defines disturbance bounds: it can be ellipsoid object with
-dimension $d$; or structure with fields {\tt center} - symbolic vector,
-and {\tt shape} - symbolic matrix, if the ellipsoidal bounds depend on time;
+\item {\tt V} -- defines disturbance bounds: it can be ellipsoid object with
+dimension $d$; or structure with fields {\tt center} -- symbolic vector,
+and {\tt shape} -- symbolic matrix, if the ellipsoidal bounds depend on time;
 or, if the control is fixed, it can be single vector of type {\it double}
 or symbolic. This parameter is optional.
-\item {\tt C} - matrix $C\in{\bf R}^{o\times n}$, can by symbolic if it
+\item {\tt C} -- matrix $C\in{\bf R}^{o\times n}$, can by symbolic if it
 depends on time. This parameter is optional.
-\item {\tt W} - defines noise bounds: it can be ellipsoid object with
-dimension $o$; or structure with fields {\tt center} - symbolic vector,
-and {\tt shape} - symbolic matrix, if the ellipsoidal bounds depend on time;
+\item {\tt W} -- defines noise bounds: it can be ellipsoid object with
+dimension $o$; or structure with fields {\tt center} -- symbolic vector,
+and {\tt shape} -- symbolic matrix, if the ellipsoidal bounds depend on time;
 or, if the control is fixed, it can be single vector of type {\it double}
 or symbolic. This parameter is optional.
-\item {\tt s} - if set to {\tt 'd'}, indicates that the system is discrete-time.
+\item {\tt s} -- if set to {\tt 'd'}, indicates that the system is discrete-time.
 \end{itemize}
 
 Returns:
 \begin{itemize}
-\item {\tt LSYS} - linear system object.
+\item {\tt LSYS} -- linear system object.
 \end{itemize}
 
 \verbmcodef[Example]{mcodesnippets/s_appendixA_section03_snippet01.m}
@@ -4375,37 +4503,37 @@ x_2[k]\end{array}\right], ~~~ k\geq0.
 \newpage
 
 \section{reach Methods}
-{\Large {\tt cut}} - extracts a segment of the reach tube from the given start
+{\Large {\tt cut}} -- extracts a segment of the reach tube from the given start
 time to the given end time.
 
 Parameters:
 \begin{itemize}
-\item {\tt RS} - reach set object.
-\item {\tt T} - time interval of interest in the form {\tt [t1 t2]}.
+\item {\tt RS} -- reach set object.
+\item {\tt T} -- time interval of interest in the form {\tt [t1 t2]}.
 If {\tt T} is a single scalar, then the reach set for this particular time
 value is returned.
 \end{itemize}
 
 Returns:
 \begin{itemize}
-\item {\tt CRS} - the resulting reach set object.
+\item {\tt CRS} -- the resulting reach set object.
 \end{itemize}
 
 \newpage
 
-{\Large {\tt dimension}} - returns the dimension of the reach set and
+{\Large {\tt dimension}} -- returns the dimension of the reach set and
 the dimension of the state space for which the reach set was originally
 computed.
 
 Parameters:
 \begin{itemize}
-\item {\tt RS} - reach set object.
+\item {\tt RS} -- reach set object.
 \end{itemize}
 
 Returns:
 \begin{itemize}
-\item {\tt d} - dimension of the reach set.
-\item {\tt n} - dimension of the state space for which the reach set was
+\item {\tt d} -- dimension of the reach set.
+\item {\tt n} -- dimension of the state space for which the reach set was
 originally computed. Values of {\tt d} and {\tt n} can be different if
 the reach set object is a result of {\tt projection} operation.
 This parameter is optional.
@@ -4413,47 +4541,47 @@ This parameter is optional.
 
 \newpage
 
-{\Large {\tt display}} - displays the details of the reach set object.
+{\Large {\tt display}} -- displays the details of the reach set object.
 
 Parameters:
 \begin{itemize}
-\item {\tt RS} - reach set object.
+\item {\tt RS} -- reach set object.
 \end{itemize}
 This function is rarely used explicitely. It is called automatically
 for the object {\tt LSYS} when semicolon does not terminate the statement.
 
 \newpage
 
-{\Large {\tt evolve}} - computes further evolution in time of the already
+{\Large {\tt evolve}} -- computes further evolution in time of the already
 existing reach set.
 
 Parameters:
 \begin{itemize}
-\item {\tt CRS} - existing reach set.
-\item {\tt T} - new time horizon.
-\item {\tt LSYS} - linear system object that describes new dynamics.
+\item {\tt CRS} -- existing reach set.
+\item {\tt T} -- new time horizon.
+\item {\tt LSYS} -- linear system object that describes new dynamics.
 This parameter is optional.
 \end{itemize}
 
 Returns:
 \begin{itemize}
-\item {\tt RS} - reach set object.
+\item {\tt RS} -- reach set object.
 \end{itemize}
 
 \newpage
 
-{\Large {\tt get\_center}} - returns trajectory of the center of the reach set.
+{\Large {\tt get\_center}} -- returns trajectory of the center of the reach set.
 
 Parameters:
 \begin{itemize}
-\item {\tt RS} - reach set object.
+\item {\tt RS} -- reach set object.
 \end{itemize}
 
 Returns:
 \begin{itemize}
-\item {\tt X} - matrix whose columns represent the position of the center
+\item {\tt X} -- matrix whose columns represent the position of the center
 at times specified in the second output parameter, {\tt T}.
-\item {\tt T} - array of time values at which the trajectory of the reach set
+\item {\tt T} -- array of time values at which the trajectory of the reach set
 center is evaluated. This output parameter is optional.
 \end{itemize}
 The number of columns in {\tt X} and values in {\tt T}
@@ -4462,20 +4590,20 @@ is specified by the parameter
 
 \newpage
 
-{\Large {\tt get\_directions}} - returns the trajectories of the direction
+{\Large {\tt get\_directions}} -- returns the trajectories of the direction
 vectors for which the ellipsoidal approximations were computed.
 
 Parameters:
 \begin{itemize}
-\item {\tt RS} - reach set object.
+\item {\tt RS} -- reach set object.
 \end{itemize}
 
 Returns:
 \begin{itemize}
-\item {\tt X} - array of cells where each cell represents a trajectory
+\item {\tt X} -- array of cells where each cell represents a trajectory
 of the direction vector, for which the ellipsoidal approximations of the
 reach set were computed.
-\item {\tt T} - array of time values at which these trajectories
+\item {\tt T} -- array of time values at which these trajectories
 are evaluated. This output parameter is optional.
 \end{itemize}
 The number of columns in cells of {\tt X} and values in {\tt T} is specified by
@@ -4483,21 +4611,21 @@ the parameter {\tt time\_grid} of the {\tt ellOptions} structure.
 
 \newpage
 
-{\Large {\tt get\_ea}} - returns array of ellipsoids that represent the
+{\Large {\tt get\_ea}} -- returns array of ellipsoids that represent the
 external approximation of the reach set.
 
 Parameters:
 \begin{itemize}
-\item {\tt RS} - reach set object.
+\item {\tt RS} -- reach set object.
 \end{itemize}
 
 Returns:
 \begin{itemize}
-\item {\tt E} - array of ellipsoids that externally approximate the reach set.
+\item {\tt E} -- array of ellipsoids that externally approximate the reach set.
 The intersection of ellipsoids in the given column of this array is
 the external approximation of the reach set at the time spacified by the
 corresponding value in the array {\tt T}.
-\item {\tt T} - array of time values at which the approximations
+\item {\tt T} -- array of time values at which the approximations
 are evaluated. This output parameter is optional.
 \end{itemize}
 The number of columns in {\tt E} and values in {\tt T} is specified by
@@ -4505,20 +4633,20 @@ the parameter {\tt time\_grid} of the {\tt ellOptions} structure.
 
 \newpage
 
-{\Large {\tt get\_goodcurves}} - returns the trajectories along which
+{\Large {\tt get\_goodcurves}} -- returns the trajectories along which
 the ellipsoidal approximations are touching the actual reach set.
 
 Parameters:
 \begin{itemize}
-\item {\tt RS} - reach set object.
+\item {\tt RS} -- reach set object.
 \end{itemize}
 
 Returns:
 \begin{itemize}
-\item {\tt X} - array of cells where each cell represents a good trajectory
+\item {\tt X} -- array of cells where each cell represents a good trajectory
 along which one of the computed ellipsoidal approximations touches the
 reach set.
-\item {\tt T} - array of time values at which the good trajectories
+\item {\tt T} -- array of time values at which the good trajectories
 are evaluated. This output parameter is optional.
 \end{itemize}
 The number of columns in cells of {\tt X} and values in {\tt T} is specified by
@@ -4526,21 +4654,21 @@ the parameter {\tt time\_grid} of the {\tt ellOptions} structure.
 
 \newpage
 
-{\Large {\tt get\_ia}} - returns array of ellipsoids that represent the
+{\Large {\tt get\_ia}} -- returns array of ellipsoids that represent the
 internal approximation of the reach set.
 
 Parameters:
 \begin{itemize}
-\item {\tt RS} - reach set object.
+\item {\tt RS} -- reach set object.
 \end{itemize}
 
 Returns:
 \begin{itemize}
-\item {\tt E} - array of ellipsoids that internally approximate the reach set.
+\item {\tt E} -- array of ellipsoids that internally approximate the reach set.
 The union of ellipsoids in the given column of this array is
 the internal approximation of the reach set at the time specified by the
 corresponding value in the array {\tt T}.
-\item {\tt T} - array of time values at which the approximations
+\item {\tt T} -- array of time values at which the approximations
 are evaluated. This output parameter is optional.
 \end{itemize}
 The number of columns in {\tt E} and values in {\tt T} is specified by
@@ -4548,101 +4676,101 @@ the parameter {\tt time\_grid} of the {\tt ellOptions} structure.
 
 \newpage
 
-{\Large {\tt get\_system}} - returns the linear system object for which
+{\Large {\tt get\_system}} -- returns the linear system object for which
 the reach set was computed.
 
 Parameters:
 \begin{itemize}
-\item {\tt RS} - reach set object.
+\item {\tt RS} -- reach set object.
 \end{itemize}
 
 Returns:
 \begin{itemize}
-\item {\tt LSYS} - the linear system object, which was used for the reach
+\item {\tt LSYS} -- the linear system object, which was used for the reach
 set computation.
 \end{itemize}
 
 \newpage
 
-{\Large {\tt intersect}} - checks if the external or internal approximation
+{\Large {\tt intersect}} -- checks if the external or internal approximation
 of the reach set intersects with given ellipsoids, hyperplanes or
 polytopes.
 
 Parameters:
 \begin{itemize}
-\item {\tt RS} - reach set object.
-\item {\tt X} - can be array of ellipsoids, hyperplanes or polytopes.
-\item {\tt s} - if set to {\tt 'i'}, indicates that internal approximation
-should be checked, if set to {\tt 'e'} - external. This input parameter
+\item {\tt RS} -- reach set object.
+\item {\tt X} -- can be array of ellipsoids, hyperplanes or polytopes.
+\item {\tt s} -- if set to {\tt 'i'}, indicates that internal approximation
+should be checked, if set to {\tt 'e'} -- external. This input parameter
 is optional, its default value is {\tt 'e'}.
 \end{itemize}
 
-Returns $1$ if the intersection is nonempty, $0$ - otherwise.
+Returns $1$ if the intersection is nonempty, $0$ -- otherwise.
 
 \newpage
 
-{\Large {\tt iscut}} - checks if the given reach set object resulted
+{\Large {\tt iscut}} -- checks if the given reach set object resulted
 from {\tt cut} operation.
 
 Parameters:
 \begin{itemize}
-\item {\tt RS} - reach set object.
+\item {\tt RS} -- reach set object.
 \end{itemize}
 
-Returns $1$ if {\tt RS} is a result of {\tt cut} operation, $0$ - otherwise.
+Returns $1$ if {\tt RS} is a result of {\tt cut} operation, $0$ -- otherwise.
 
 \newpage
 
-{\Large {\tt isempty}} - checks if the given reach set object is empty.
+{\Large {\tt isempty}} -- checks if the given reach set object is empty.
 
 Parameters:
 \begin{itemize}
 \item {\tt RS} - reach set object.
 \end{itemize}
 
-Returns $1$ if it is an empty object, $0$ - otherwise.
+Returns $1$ if it is an empty object, $0$ -- otherwise.
 
 \newpage
 
-{\Large {\tt isprojection}} - checks if the given reach set is a result
+{\Large {\tt isprojection}} -- checks if the given reach set is a result
 of {\tt projection} operation.
 
 Parameters:
 \begin{itemize}
-\item {\tt RS} - reach set object.
+\item {\tt RS} -- reach set object.
 \end{itemize}
 
-Returns $1$ if {\tt RS} is a projection, $0$ - otherwise.
+Returns $1$ if {\tt RS} is a projection, $0$ -- otherwise.
 
 \newpage
 
-{\Large {\tt plot\_ea}} - plots external approximation of the reach set
+{\Large {\tt plot\_ea}} -- plots external approximation of the reach set
 in 2D and 3D.
 
 Parameters:
 \begin{itemize}
-\item {\tt RS} - reach set object.
-\item {\tt c} - specifies the color:
+\item {\tt RS} -- reach set object.
+\item {\tt c} -- specifies the color:
 \begin{itemize}
-\item {\tt 'b'} - blue;
-\item {\tt 'c'} - cyan;
-\item {\tt 'g'} - green;
-\item {\tt 'k'} - black;
-\item {\tt 'm'} - magenta;
-\item {\tt 'r'} - red;
-\item {\tt 'w'} - white;
-\item {\tt 'y'} - yellow.
+\item {\tt 'b'} -- blue;
+\item {\tt 'c'} -- cyan;
+\item {\tt 'g'} -- green;
+\item {\tt 'k'} -- black;
+\item {\tt 'm'} -- magenta;
+\item {\tt 'r'} -- red;
+\item {\tt 'w'} -- white;
+\item {\tt 'y'} -- yellow.
 \end{itemize}
 This parameter is optional.
-\item {\tt o} - options structure whose fields describe how the reach set
+\item {\tt o} -- options structure whose fields describe how the reach set
 must be plotted. The fields of this structure are
 \begin{itemize}
-\item {\tt width} - specifies line width for 2D plots;
-\item {\tt fill} - if set to $1$, the set, if plotted in 2D,
+\item {\tt width} -- specifies line width for 2D plots;
+\item {\tt fill} -- if set to $1$, the set, if plotted in 2D,
 will be filled with color;
-\item {\tt color} - specifies the color of the plot in the RGB format:
+\item {\tt color} -- specifies the color of the plot in the RGB format:
 {\tt [x y z]};
-\item {\tt shade} - the level of transparency for 3D plots, takes values
+\item {\tt shade} -- the level of transparency for 3D plots, takes values
 between $0$ and $1$ ($0$ - transparent, $1$ - opaque).
 \end{itemize}
 This parameter is optional.
@@ -4652,34 +4780,34 @@ Returns: None.
 
 \newpage
 
-{\Large {\tt plot\_ia}} - plots internal approximation of the reach set
+{\Large {\tt plot\_ia}} -- plots internal approximation of the reach set
 in 2D and 3D.
 
 Parameters:
 \begin{itemize}
-\item {\tt RS} - reach set object.
-\item {\tt c} - specifies the color:
+\item {\tt RS} -- reach set object.
+\item {\tt c} -- specifies the color:
 \begin{itemize}
-\item {\tt 'b'} - blue;
-\item {\tt 'c'} - cyan;
-\item {\tt 'g'} - green;
-\item {\tt 'k'} - black;
-\item {\tt 'm'} - magenta;
-\item {\tt 'r'} - red;
-\item {\tt 'w'} - white;
-\item {\tt 'y'} - yellow.
+\item {\tt 'b'} -- blue;
+\item {\tt 'c'} -- cyan;
+\item {\tt 'g'} -- green;
+\item {\tt 'k'} -- black;
+\item {\tt 'm'} -- magenta;
+\item {\tt 'r'} -- red;
+\item {\tt 'w'} -- white;
+\item {\tt 'y'} -- yellow.
 \end{itemize}
 This parameter is optional.
-\item {\tt o} - options structure whose fields describe how the reach set
+\item {\tt o} -- options structure whose fields describe how the reach set
 must be plotted. The fields of this structure are
 \begin{itemize}
-\item {\tt width} - specifies line width for 2D plots;
-\item {\tt fill} - if set to $1$, the set, if plotted in 2D,
+\item {\tt width} -- specifies line width for 2D plots;
+\item {\tt fill} -- if set to $1$, the set, if plotted in 2D,
 will be filled with color;
-\item {\tt color} - specifies the color of the plot in the RGB format:
+\item {\tt color} -- specifies the color of the plot in the RGB format:
 {\tt [x y z]};
-\item {\tt shade} - the level of transparency for 3D plots, takes values
-between $0$ and $1$ ($0$ - transparent, $1$ - opaque).
+\item {\tt shade} -- the level of transparency for 3D plots, takes values
+between $0$ and $1$ ($0$ -- transparent, $1$ -- opaque).
 \end{itemize}
 This parameter is optional.
 \end{itemize}
@@ -4688,73 +4816,73 @@ Returns: None.
 
 \newpage
 
-{\Large {\tt projection}} - projects the reach set onto the given orthogonal
+{\Large {\tt projection}} -- projects the reach set onto the given orthogonal
 basis.
 
 Parameters:
 \begin{itemize}
-\item {\tt RS} - reach set object with dimension $n$.
-\item {\tt B} - matrix in ${\bf R}^{n\times m}$ whose columns are orthogonal,
+\item {\tt RS} -- reach set object with dimension $n$.
+\item {\tt B} -- matrix in ${\bf R}^{n\times m}$ whose columns are orthogonal,
 they represent the basis vectors.
 \end{itemize}
 
 Returns:
 \begin{itemize}
-\item {\tt PRS} - reach set object with the projected reach set.
+\item {\tt PRS} -- reach set object with the projected reach set.
 \end{itemize}
 
 \newpage
 
-{\Large {\tt reach}} - constructor for the reach set object and the main
+{\Large {\tt reach}} -- constructor for the reach set object and the main
 function that computes the reach set.
 
 Parameters:
 \begin{itemize}
-\item {\tt LSYS} - the linear system object with state space dimension $n$.
-\item {\tt X0} - ellipsoid object with dimension $n$, it represents
+\item {\tt LSYS} -- the linear system object with state space dimension $n$.
+\item {\tt X0} -- ellipsoid object with dimension $n$, it represents
 the set of initial conditions.
-\item {\tt L0} - matrix in ${\bf R}^{n\times m}$ whose columns represent the
+\item {\tt L0} -- matrix in ${\bf R}^{n\times m}$ whose columns represent the
 directions for which the new approximations need to be computed.
-\item {\tt T} - time interval in the form {\tt [t0 t1]}. If {\tt t1} is
+\item {\tt T} -- time interval in the form {\tt [t0 t1]}. If {\tt t1} is
 smaller than {\tt t0}, then the backward reach set should be computed.
 If {\tt T} is a scalar, then it is assumed that {\tt t0 = 0}.
-\item {\tt o} - options structure with fields
+\item {\tt o} -- options structure with fields
 \begin{itemize}
-\item {\tt approximation} - if set to $0$, then only external approximation
+\item {\tt approximation} -- if set to $0$, then only external approximation
 is computed, if set to $1$, then only internal approximation is computed,
 if set to $2$ (default value), then both approximations are computed.
-\item {\tt save\_all} - if set to $0$ (default value), then the intermediate
+\item {\tt save\_all} -- if set to $0$ (default value), then the intermediate
 calculation data should not be saved, $1$ indicates the opposite.
-\item {\tt minmax} - for discrete-time systems, if set to $0$ (default value),
+\item {\tt minmax} -- for discrete-time systems, if set to $0$ (default value),
 then maxmin reach set must be computed, $1$ indicates that minmax reach set is
-to be computed; for continuous-time systems - ignored.
+to be computed; for continuous-time systems -- ignored.
 \end{itemize}
 This parameter is optional.
 \end{itemize}
 
 Returns:
 \begin{itemize}
-\item {\tt RS} - reach set object.
+\item {\tt RS} -- reach set object.
 \end{itemize}
 
 \newpage
 
-{\Large {\tt refine}} - adds new approximations for the specified directions
+{\Large {\tt refine}} -- adds new approximations for the specified directions
 to the given reach set object, thus improving the overall approximation.
 
 Parameters:
 \begin{itemize}
-\item {\tt RS} - reach set object with dimension $n$. This object must
+\item {\tt RS} -- reach set object with dimension $n$. This object must
 contain the intermediate calculation data, otherwise, the refinement
 is not possible.
-\item {\tt L0} - matrix in ${\bf R}^{n\times m}$ whose columns represent the
+\item {\tt L0} -- matrix in ${\bf R}^{n\times m}$ whose columns represent the
 directions for which the new approximations need to be computed.
-\item {\tt o} - options structure with fields
+\item {\tt o} -- options structure with fields
 \begin{itemize}
-\item {\tt approximation} - if set to $0$, then only external approximation
+\item {\tt approximation} -- if set to $0$, then only external approximation
 is computed, if set to $1$, then only internal approximation is computed,
 if set to $2$ (default value), then both approximations are computed.
-\item {\tt save\_all} - if set to $0$, then the intermediate calculation
+\item {\tt save\_all} -- if set to $0$, then the intermediate calculation
 data should not be saved, $1$ (default value) indicates the opposite.
 \end{itemize}
 This parameter is optional.
@@ -4762,89 +4890,89 @@ This parameter is optional.
 
 Returns:
 \begin{itemize}
-\item {\tt RRS} - reach set object with refined approximation.
+\item {\tt RRS} -- reach set object with refined approximation.
 \end{itemize}
 
 \newpage
 
 \section{Miscellaneous Functions}
-{\Large {\tt ell\_simdiag}} - computes the orthogonal transformation matrix
+{\Large {\tt ell\_simdiag}} -- computes the orthogonal transformation matrix
 that simultaneously diagonalizes two symmetric matrices.
 
 Parameters:
 \begin{itemize}
-\item {\tt A} - symmetric positive definite matrix in ${\bf R}^{n\times n}$.
-\item {\tt B} - symmetric positive semidefinite matrix in ${\bf R}^{n\times n}$.
+\item {\tt A} -- symmetric positive definite matrix in ${\bf R}^{n\times n}$.
+\item {\tt B} -- symmetric positive semidefinite matrix in ${\bf R}^{n\times n}$.
 \end{itemize}
 
 Returns:
 \begin{itemize}
-\item {\tt T} - orthogonal matrix in ${\bf R}^{n\times n}$, such that
+\item {\tt T} -- orthogonal matrix in ${\bf R}^{n\times n}$, such that
 $TAT^T$ is identity matrix, and $TBT^T$ is diagonal martrix.
 \end{itemize}
 
 \newpage
 
-{\Large {\tt ell\_unitball}} - creates the ellipsoid object that represents
+{\Large {\tt ell\_unitball}} -- creates the ellipsoid object that represents
 a unit ball of the given dimension.
 
 Parameters:
 \begin{itemize}
-\item {\tt n} - dimension of the space in which the unit ball is defined.
+\item {\tt n} -- dimension of the space in which the unit ball is defined.
 \end{itemize}
 
 Returns:
 \begin{itemize}
-\item {\tt B} - ellipsoid object with identity shape matrix centered at the
+\item {\tt B} -- ellipsoid object with identity shape matrix centered at the
 origin.
 \end{itemize}
 
 \newpage
 
-{\Large {\tt ell\_valign}} - computes the orthogonal matrix that aligns two
+{\Large {\tt ell\_valign}} -- computes the orthogonal matrix that aligns two
 vectors.
 
 Parameters:
 \begin{itemize}
-\item {\tt w} - vector in ${\bf R}^n$.
-\item {\tt v} - vector in ${\bf R}^n$ that needs to be rotated to be parallel
+\item {\tt w} -- vector in ${\bf R}^n$.
+\item {\tt v} -- vector in ${\bf R}^n$ that needs to be rotated to be parallel
 to {\tt w}.
 \end{itemize}
 
 Returns:
 \begin{itemize}
-\item {\tt S} - orthogonal matrix in ${\bf R}^{n\times n}$, such that
+\item {\tt S} -- orthogonal matrix in ${\bf R}^{n\times n}$, such that
 $Sv = \frac{\|v\|_2}{\|w\|_2}w$.
 \end{itemize}
 
 \newpage
 
-{\Large {\tt hyperplane2polytope}} - converts array of hyperplanes of the
+{\Large {\tt hyperplane2polytope}} -- converts array of hyperplanes of the
 same dimension into the polytope object of the Multi-Parametric Toolbox.
 
 Parameters:
 \begin{itemize}
-\item {\tt H} - array of hyperplanes, all of which must have the same dimension.
+\item {\tt H} -- array of hyperplanes, all of which must have the same dimension.
 \end{itemize}
 
 Returns:
 \begin{itemize}
-\item {\tt P} - polytope object as defined in the Multi-Parametric Toolbox.
+\item {\tt P} -- polytope object as defined in the Multi-Parametric Toolbox.
 \end{itemize}
 
 \newpage
 
-{\Large {\tt polytope2hyperplane}} - converts the polytope object of the
+{\Large {\tt polytope2hyperplane}} -- converts the polytope object of the
 Multi-Parametric Toolbox into the array of hyperplanes.
 
 Parameters:
 \begin{itemize}
-\item {\tt P} - polytope object as defined in the Multi-Parametric Toolbox.
+\item {\tt P} -- polytope object as defined in the Multi-Parametric Toolbox.
 \end{itemize}
 
 Returns:
 \begin{itemize}
-\item {\tt H} - array of hyperplanes.
+\item {\tt H} -- array of hyperplanes.
 \end{itemize}
 
 

@@ -1,7 +1,7 @@
-E = ellipsoid([-2; -1], [4 -1; -1 1]);
-B = 3*ell_unitball(2);
+E1 = ellipsoid([-2; -1], [4 -1; -1 1]);
+E2 = 3*ell_unitball(2);
 L = [1 0; 1 1; 0 1; -1 1]';
-IA = B.minkmp_ia(E, [B E], L)
+IA = E2.minkmp_ia(E, [E2 E], L)
 
 % IA =
 % 1x2 array of ellipsoids.

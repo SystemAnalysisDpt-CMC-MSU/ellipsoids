@@ -1,6 +1,6 @@
-H = -hyperplane([-1; 1], 1)
+H1 = -hyperplane([-1; 1], 1)
 
-% H =
+% H1 =
 % size: [1 1]
 % 
 % Element: [1 1]

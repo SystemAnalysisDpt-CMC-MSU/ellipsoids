@@ -16,11 +16,11 @@ bps1.plot_ea('r');  % external apprx. of backward reach set 1 (red)
 hold on;
 bps1.plot_ia('g');  % internal apprx. of backward reach set 1 (green)
 bps2.plot_ea('y');  % external apprx. of backward reach set 2 (yellow)
-bps2.plot_ia(bps2, 'b');  % internal apprx. of backward reach set 2 (blue)
+bps2.plot_ia('b');  % internal apprx. of backward reach set 2 (blue)
 
 % plot the 3-dimensional backward reach set at time t = 0:
 subplot(2, 2, 4);
-brs1 = cut(brs1, 0);
+brs1 = brs1.cut(0);
 brs1.plot_ea('r');
 hold on;
 brs1.plot_ia('g');

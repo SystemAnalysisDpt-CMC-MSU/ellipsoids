@@ -1,6 +1,6 @@
 E = ellipsoid([-2; -1], [4 -1; -1 1]);
-B = ell_unitball(2);
-E.isinside([E B], 'i')
+X = ell_unitball(2);
+E.isinside([E X], 'i')
 
 % ans =
 % 

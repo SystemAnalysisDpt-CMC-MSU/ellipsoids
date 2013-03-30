@@ -16,7 +16,7 @@ TS = 2;  % time of switch
 T = 3;  % terminating time
 
 % compute the reach set:
-rs1 = elltool.reach.ReachContinuous(s1, X0, L0, [0 T]);  % reach set of the first system
+rs1 = elltool.reach.ReachContinuous(s1, X0, L0, [0 TS]);  % reach set of the first system
 % computation of the second reach set starts
 % where the first left off
 rs2 = rs1.evolve(T, s2);
@@ -36,7 +36,7 @@ ps2.plot_ia('b');  % internal apprx. of reach set 2 (blue)
 
 % plot the 3-dimensional reach set at time t = 3:
 subplot(2, 2, 2);
-rs2.cut(3)
+rs2 = rs2.cut(3)
 rs2.plot_ea('y');
 hold on;
 rs2.plot_ia('b');

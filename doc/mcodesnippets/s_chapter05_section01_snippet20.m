@@ -10,4 +10,4 @@ IA = EL.minkpm_ia(E3, L)  % internal
 % IA =
 % 1x3 array of ellipsoids.
 
-minkpm(E1, E2, E3);  % plot the set (E1 + E2 - E3)
+E1.minkpm(E2, E3);  % plot the set (E1 + E2 - E3)

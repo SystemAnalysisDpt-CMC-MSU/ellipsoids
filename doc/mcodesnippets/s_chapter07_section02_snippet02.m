@@ -8,5 +8,5 @@ psd = rsd.projection(BB);  % reach set projection onto (x1, x2)
 subplot(2, 2, 3);
 ps.plot_ea;  % plot the whole reach tube
 subplot(2, 2, 4);
-ps.cut(4)
+ps = ps.cut(4)
 ps.plot_ea;  % plot reach set approximation at time t = 4

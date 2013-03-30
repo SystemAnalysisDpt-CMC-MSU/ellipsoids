@@ -16,5 +16,4 @@ IA2 = EE(:, 1).intersection_ia(-H(1));  % get internal ellipsoids
 % compute ellipsoidal approximations of the intersection
 % of ellipsoid E1 and polytope P:
 EA = EE(:, 1).intersection_ea(P);  % get external ellipsoid
-IA =EE(:, 1).intersection_ia(P);  % get internal ellipsoid
-
+IA = EE(:, 1).intersection_ia(P);  % get internal ellipsoid

@@ -1,8 +1,8 @@
 E = ellipsoid([-2; -1], [4 -1; -1 1]);
 A = [0 1; -1 0];
-shape(E, A)
+E1 = shape(E, A)
 
-% ans =
+% E1 =
 % 
 % Center:
 %     -2
