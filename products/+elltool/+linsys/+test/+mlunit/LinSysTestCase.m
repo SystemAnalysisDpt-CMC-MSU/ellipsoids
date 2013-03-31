@@ -569,5 +569,71 @@ classdef LinSysTestCase < mlunitext.test_case
            isOk = all(isOkArr(:));
            mlunit.assert(isOk);
         end
+        %
+        function self = testGetCopy(self)
+            aMat = eye(3);
+            bMat = eye(3);
+            uEll = ellipsoid([0; 1; 2], eye(3));
+            uStruct = struct();
+            uStruct.center = [1; 1; 1];
+            uStruct.shape = {'10' 't' '0'; 't' '2' '0'; '0' '0' '3'};
+            gMat = eye(3);
+            vEll = ellipsoid(0.5 * eye(3));
+            vStruct = struct();
+            vStruct.center = [-1; 0; 1];
+            vStruct.shape = {'1' '0' '0'; '0' 't' '0'; '0' '0' 't^3'};
+            cMat = eye(3);
+            nEll = ellipsoid([1; 2; 3], eye(3));
+            nStruct = struct();
+            nStruct.center = [0; 0; 0];
+            nStruct.shape = {'t' '0' '0'; '0' '1' '0'; '0' '0' 't'};
+            lsysMat(4, 4) = elltool.linsys.LinSys;
+            lsysMat(1) = elltool.linsys.LinSys(aMat, bMat, uEll);
+            lsysMat(2) = elltool.linsys.LinSys(aMat, bMat, uStruct);
+            lsysMat(3) = elltool.linsys.LinSys(aMat, bMat, uEll,...
+                gMat, vEll);
+            lsysMat(4) = elltool.linsys.LinSys(aMat, bMat, uEll,...
+                gMat, vStruct);
+            lsysMat(5) = elltool.linsys.LinSys(aMat, bMat, uStruct,...
+                gMat, vEll);
+            lsysMat(6) = elltool.linsys.LinSys(aMat, bMat, uStruct,...
+                gMat, vStruct);
+            lsysMat(7) = elltool.linsys.LinSys(aMat, bMat, uEll,...
+                gMat, vEll, cMat, nEll);
+            lsysMat(8) = elltool.linsys.LinSys(aMat, bMat, uEll,...
+                gMat, vEll, cMat, nStruct);
+            lsysMat(9) = elltool.linsys.LinSys(aMat, bMat, uEll,...
+                gMat, vStruct, cMat, nEll);
+            lsysMat(10) = elltool.linsys.LinSys(aMat, bMat, uEll,...
+                gMat, vStruct, cMat, nStruct);
+            lsysMat(11) = elltool.linsys.LinSys(aMat, bMat, uStruct,...
+                gMat, vEll, cMat, nEll);
+            lsysMat(12) = elltool.linsys.LinSys(aMat, bMat, uStruct,...
+                gMat, vEll, cMat, nStruct);
+            lsysMat(13) = elltool.linsys.LinSys(aMat, bMat, uStruct,...
+                gMat, vStruct, cMat, nEll);
+            lsysMat(14) = elltool.linsys.LinSys(aMat, bMat, uStruct,...
+                gMat, vStruct, cMat, nStruct);
+            lsysMat(15) = elltool.linsys.LinSys(aMat, bMat, uEll,...
+                [], [], [], [], 'd');
+            lsysMat(16) = elltool.linsys.LinSys(aMat, bMat, uEll,...
+                gMat, vEll, [], [], 'd');
+            copiedLsysMat = lsysMat.getCopy();
+            isEqualMat = copiedLsysMat.isEqual(lsysMat);
+            isOk = all(isEqualMat(:));
+            mlunit.assert_equals(true, isOk);
+            firstCutLsysMat = lsysMat(1 : 2, 1 : 2);
+            secondCutLsysMat = lsysMat(3 : 4, 3 : 4);
+            thirdCutLsysMat = lsysMat([1 3], [1 3]);
+            self.runAndCheckError(...
+                'copiedLsysMat.isEqual(firstCutLsysMat)', 'wrongInput');
+            isEqualMat = firstCutLsysMat.isEqual(secondCutLsysMat);
+            isOk = ~any(isEqualMat(:));
+            mlunit.assert_equals(true, isOk);
+            isEqualMat = firstCutLsysMat.isEqual(thirdCutLsysMat);
+            isOkMat = isEqualMat == [1 0; 0 0];
+            isOk = all(isOkMat(:));
+            mlunit.assert_equals(true, isOk);
+        end
     end
 end

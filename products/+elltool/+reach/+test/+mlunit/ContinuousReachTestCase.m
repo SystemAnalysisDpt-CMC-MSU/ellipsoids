@@ -270,5 +270,11 @@ classdef ContinuousReachTestCase < mlunitext.test_case
             self.runAndCheckError('projReachObj.cut(newTimeVec)',...
                 'wrongInput');
         end
+        %
+        function self = testGetCopy(self)
+            copiedReachObj = self.reachObj.getCopy();
+            isEqual = copiedReachObj.isEqual(self.reachObj);
+            mlunit.assert_equals(true, isEqual);
+        end
     end
 end

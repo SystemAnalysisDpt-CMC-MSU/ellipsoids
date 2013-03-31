@@ -816,5 +816,111 @@ classdef LinSys < handle
         % 
             absTolArr = arrayfun(@(x)x.absTol, self);
         end
+        %
+        function copyLinSysArr = getCopy(self)
+            sizeCVec = num2cell(size(self));
+            copyLinSysArr(sizeCVec{:}) = elltool.linsys.LinSys;
+            for i = numel(self): -1 : 1
+                curLinSys = self(i);
+                copyLinSysArr(i).atMat = curLinSys.atMat;
+                copyLinSysArr(i).btMat = curLinSys.btMat;
+                if ~isempty(curLinSys.controlBoundsEll)
+                    copyLinSysArr(i).controlBoundsEll =...
+                        getCopyEll(curLinSys.controlBoundsEll);
+                else
+                    copyLinSysArr(i).controlBoundsEll = [];
+                end
+                copyLinSysArr(i).gtMat = curLinSys.gtMat;
+                if ~isempty(curLinSys.disturbanceBoundsEll)
+                    copyLinSysArr(i).disturbanceBoundsEll =...
+                        getCopyEll(curLinSys.disturbanceBoundsEll);
+                else
+                    copyLinSysArr(i).disturbanceBoundsEll = [];
+                end
+                copyLinSysArr(i).ctMat = curLinSys.ctMat;
+                if ~isempty(curLinSys.noiseBoundsEll)
+                    copyLinSysArr(i).noiseBoundsEll =...
+                        getCopyEll(curLinSys.noiseBoundsEll);
+                else
+                    copyLinSysArr(i).noiseBoundsEll = [];
+                end
+                copyLinSysArr(i).isTimeInv = curLinSys.isTimeInv;
+                copyLinSysArr(i).isDiscr = curLinSys.isDiscr;
+                copyLinSysArr(i).isConstantBoundsVec =...
+                    curLinSys.isConstantBoundsVec;
+                copyLinSysArr(i).absTol = curLinSys.absTol;
+            end
+            %
+            function copyEll = getCopyEll(inpEll)
+                if isstruct(inpEll)
+                    copyEll = inpEll;
+                else
+                    copyEll = inpEll.getCopy();
+                end
+            end
+        end
+        %
+        function isEqualArr = isEqual(self, compLinSysArr)
+            import modgen.common.throwerror;
+            %
+            if ~all(size(self) == size(compLinSysArr))
+                throwerror('wrongInput', 'dimensions must be the same.');
+            end
+            %
+            isEqualArr = false(size(self));
+            %
+            [firstStateDimArr, firstInpDimArr, firstOutDimArr,...
+                firstDistDimArr] = self.dimension();
+            [secondStateDimArr, secondInpDimArr, secondOutDimArr,...
+                secondDistDimArr] = compLinSysArr.dimension();
+            isEqualArr(firstStateDimArr == secondStateDimArr &...
+                firstInpDimArr == secondInpDimArr &...
+                firstOutDimArr == secondOutDimArr &...
+                firstDistDimArr == secondDistDimArr) = true;
+            for i = 1 : numel(self)
+                if isEqualArr(i)
+                    absTolerance = min(self(i).getAbsTol(),...
+                        compLinSysArr(i).getAbsTol());
+                    firstAMat = self(i).getAtMat();
+                    secondAMat = compLinSysArr(i).getAtMat();
+                    firstBMat = self(i).getBtMat();
+                    secondBMat = compLinSysArr(i).getBtMat();
+                    firstUEll = self(i).getUBoundsEll();
+                    secondUEll = compLinSysArr(i).getUBoundsEll();
+                    firstGMat = self(i).getGtMat();
+                    secondGMat = compLinSysArr(i).getGtMat();
+                    firstDistEll = self(i).getDistBoundsEll();
+                    secondDistEll = compLinSysArr(i).getDistBoundsEll();
+                    firstCMat = self(i).getCtMat();
+                    secondCMat = compLinSysArr(i).getCtMat();
+                    firstNoiseEll = self(i).getNoiseBoundsEll();
+                    secondNoiseEll = compLinSysArr(i).getNoiseBoundsEll();
+                    %
+                    isEqualArr(i) =...
+                        norm(firstAMat - secondAMat) <= absTolerance &&...
+                        norm(firstBMat - secondBMat) <= absTolerance &&...
+                        isEqualEll(firstUEll, secondUEll) &&...
+                        norm(firstGMat - secondGMat) <= absTolerance &&...
+                        isEqualEll(firstDistEll, secondDistEll) &&...
+                        norm(firstCMat - secondCMat) <= absTolerance &&...
+                        isEqualEll(firstNoiseEll, secondNoiseEll);
+                end
+            end
+            %
+            function isEq = isEqualEll(firstEll, secondEll)
+                isEq = false;
+                if ~isempty(firstEll) && ~isempty(secondEll)
+                    if isstruct(firstEll) && isstruct(secondEll)
+                        isEq = isequal(firstEll, secondEll);
+                    end
+                    if ~isstruct(firstEll) && ~isstruct(secondEll)
+                        isEq = firstEll.isEqual(secondEll);
+                    end
+                end
+                if isempty(firstEll) && isempty(secondEll)
+                    isEq = true;
+                end
+            end
+        end
     end
 end

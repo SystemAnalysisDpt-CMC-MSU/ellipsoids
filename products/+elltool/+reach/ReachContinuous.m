@@ -928,7 +928,7 @@ classdef ReachContinuous < elltool.reach.AReach
         end
         %%
         function x0Ell = getInitialSet(self)
-            x0Ell = self.x0Ellipsoid;
+            x0Ell = self.x0Ellipsoid.getCopy();
         end
         %%
         function isBackward = isbackward(self)
@@ -986,8 +986,9 @@ classdef ReachContinuous < elltool.reach.AReach
         function copyReachObj = getCopy(self)
             copyReachObj = elltool.reach.ReachContinuous();
             copyReachObj.switchSysTimeVec = self.switchSysTimeVec;
-            copyReachObj.x0Ellipsoid = self.x0Ellipsoid;
-            copyReachObj.linSysCVec = self.linSysCVec;
+            copyReachObj.x0Ellipsoid = self.x0Ellipsoid.getCopy();
+            copyReachObj.linSysCVec = cellfun(@(x) x.getCopy(),...
+                self.linSysCVec, 'UniformOutput', false);
             copyReachObj.isCut = self.isCut;
             copyReachObj.isProj = self.isProj;
             copyReachObj.isBackward = self.isBackward;
