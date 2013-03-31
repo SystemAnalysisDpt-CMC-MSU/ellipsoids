@@ -77,5 +77,5 @@ end
     end
 end
 function SComp=formCompStruct(ellObj)
-SComp=struct('Q',gras.la.sqrtmpos(ellObj.shape),'q',ellObj.center.');
+    SComp=struct('Q',gras.la.sqrtmpos(ellObj.shape, ellObj.absTol),'q',ellObj.center.');
 end

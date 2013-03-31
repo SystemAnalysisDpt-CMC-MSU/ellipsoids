@@ -15,6 +15,8 @@ function qSqrtMat = sqrtmpos(qMat, absTol)
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Cybernetics,
 %            System Analysis Department 2012-2013 $
+import modgen.common.throwerror;
+
 if (nargin == 1)
     absTol = 0;
 end
@@ -22,7 +24,8 @@ end
 [vMat, dMat]=eig(qMat);
 dVec = diag(dMat);
 if any(dVec < -absTol)
-    throwerror('wrongInput', 'input matrix is expected to be positive-definite');
+    throwerror('wrongInput',...
+        'input matrix is expected to be positive-definite');
 end
 if (absTol == 0)
     isZeroVec = abs(dVec) < absTol;
