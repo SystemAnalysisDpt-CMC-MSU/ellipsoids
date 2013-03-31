@@ -24,12 +24,6 @@ classdef EllUnionTubeStaticProj<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&
         N_ISO_SURF_MIN_TIME_POINTS=200;
         N_ISO_SURF_MAX_TIME_POINTS=700;
     end
-    methods (Static,Access=protected)
-        function resObj=loadobj(inpObj)
-            resObj=gras.ellapx.smartdb.rels.EllUnionTubeStaticProj(inpObj);
-            renameFieldsInternal(resObj,{'projSpecDimVec'},{'projSTimeMat'},{'Projection matrix at time s'});
-        end
-    end
     methods
         function self=EllUnionTubeStaticProj(varargin)
             self=self@gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel(...
