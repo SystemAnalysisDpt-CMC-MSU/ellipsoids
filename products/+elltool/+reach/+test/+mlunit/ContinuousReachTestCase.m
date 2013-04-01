@@ -29,9 +29,9 @@ classdef ContinuousReachTestCase < mlunitext.test_case
             %
             objectNamesCVec = get(objectHandlesVec, 'DisplayName');
             isIndObjectVec = ~cellfun(@isempty,...
-                    strfind(objectNamesCVec, findStr));
+                strfind(objectNamesCVec, findStr));
             object = objectHandlesVec(isIndObjectVec);
-                %
+            %
             verticesCVec = get(object, 'Vertices');
         end
     end
@@ -91,7 +91,7 @@ classdef ContinuousReachTestCase < mlunitext.test_case
                     end
                 end
                 if plottedGoodDirIndex == 0
-                   throwerror('wrongData', 'No good direction found.');
+                    throwerror('wrongData', 'No good direction found.');
                 end
                 %
                 reachTubeEllipsoids = ellArray(plottedGoodDirIndex, :);
@@ -115,7 +115,7 @@ classdef ContinuousReachTestCase < mlunitext.test_case
                         max(sqrtScalProdVec) < self.COMP_PRECISION, true);
                 end
             end
-            plotter.closeAllFigures();  
+            plotter.closeAllFigures();
         end
         %
         function displayTest(self, reachObj, timeVec)

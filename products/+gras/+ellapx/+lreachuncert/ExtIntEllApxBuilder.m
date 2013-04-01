@@ -98,10 +98,10 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             %% Internal approximation
             rSqrtlVec=BPBTransSqrtLDynamics.evaluate(t);
             R=BPBTransDynamics.evaluate(t);
-            R_sqrt=sqrtm(R);
+            R_sqrt=gras.la.sqrtmpos(R);
             %
             D=CQCTransDynamics.evaluate(t);
-            D_sqrt=sqrtm(D);
+            D_sqrt=gras.la.sqrtmpos(D);
             %
             [VMat,DMat]=eig(QIntMat);
             if ~ismatposdef(QIntMat,self.absTol,true)
@@ -160,8 +160,8 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             %
             BPBTransDynamics = pDefObj.getBPBTransDynamics();
             CQCTransDynamics = pDefObj.getCQCTransDynamics();
-            BPBTransSqrtDynamics = matOpFactory.sqrtm(BPBTransDynamics);
-            CQCTransSqrtDynamics = matOpFactory.sqrtm(CQCTransDynamics);
+            BPBTransSqrtDynamics = matOpFactory.sqrtmpos(BPBTransDynamics);
+            CQCTransSqrtDynamics = matOpFactory.sqrtmpos(CQCTransDynamics);
             %
             self.ltSplineList = ...
                 self.getGoodDirSet().getGoodDirOneCurveSplineList();

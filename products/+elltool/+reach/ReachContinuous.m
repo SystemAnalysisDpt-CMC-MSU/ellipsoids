@@ -1,55 +1,55 @@
 classdef ReachContinuous < elltool.reach.AReach
-% Continuous reach set library of the Ellipsoidal Toolbox.
-%
-% 
-% Constructor and data accessing functions:
-% -----------------------------------------
-%  ReachContinuous - Constructor of the reach set object, performs the 
-%                    computation of the specified reach set approximations.
-%  dimension       - Returns the dimension of the reach set, which can be
-%                    different from the state space dimension of the system
-%                    if the reach set is a projection.
-%  get_system      - Returns the linear system object, for which the reach set
-%                    was computed.
-%                    Warning: returns the last lin system.
-%  get_directions  - Returns the values of the direction vectors corresponding
-%                    to the values of the time grid.
-%  get_center      - Returns points of the reach set center trajectory
-%                    corresponding to the values of the time grid.
-%  get_ea          - Returns external approximating ellipsoids corresponding
-%                    to the values of the time grid.
-%  get_ia          - Returns internal approximating ellipsoids corresponding
-%                    to the values of the time grid.
-%  get_goodcurves  - Returns points of the 'good curves' corresponding
-%                    to the values of the time grid.
-%  intersect       - Checks if external or internal reach set approximation
-%                    intersects with given ellipsoid, hyperplane or polytope.
-%  iscut           - Checks if given reach set object is a cut of another reach set.
-%  isprojection    - Checks if given reach set object is a projection.
-%  
-%
-% Reach set data manipulation and plotting functions:
-% ---------------------------------------------------
-%  cut        - Extracts a piece of the reach set that corresponds to the
-%               specified time value or time interval.
-%  projection - Projects the reach set onto a given orthogonal basis.
-%  evolve     - Computes further evolution in time for given reach set
-%               for the same or different dynamical system.
-%  plot_ea    - Plots external approximation of the reach set.
-%  plot_ia    - Plots internal approximation of the reach set.
-%
-%
-% Overloaded functions:
-% ---------------------
-%  display - Displays the reach set object.
-%            Warning: displays only the last linear system.
-%  
-%    
-% $Authors: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-%           Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: March-2013 $
-% $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Computer Science,
-%            System Analysis Department 2013 $
+    % Continuous reach set library of the Ellipsoidal Toolbox.
+    %
+    %
+    % Constructor and data accessing functions:
+    % -----------------------------------------
+    %  ReachContinuous - Constructor of the reach set object, performs the
+    %                    computation of the specified reach set approximations.
+    %  dimension       - Returns the dimension of the reach set, which can be
+    %                    different from the state space dimension of the system
+    %                    if the reach set is a projection.
+    %  get_system      - Returns the linear system object, for which the reach set
+    %                    was computed.
+    %                    Warning: returns the last lin system.
+    %  get_directions  - Returns the values of the direction vectors corresponding
+    %                    to the values of the time grid.
+    %  get_center      - Returns points of the reach set center trajectory
+    %                    corresponding to the values of the time grid.
+    %  get_ea          - Returns external approximating ellipsoids corresponding
+    %                    to the values of the time grid.
+    %  get_ia          - Returns internal approximating ellipsoids corresponding
+    %                    to the values of the time grid.
+    %  get_goodcurves  - Returns points of the 'good curves' corresponding
+    %                    to the values of the time grid.
+    %  intersect       - Checks if external or internal reach set approximation
+    %                    intersects with given ellipsoid, hyperplane or polytope.
+    %  iscut           - Checks if given reach set object is a cut of another reach set.
+    %  isprojection    - Checks if given reach set object is a projection.
+    %
+    %
+    % Reach set data manipulation and plotting functions:
+    % ---------------------------------------------------
+    %  cut        - Extracts a piece of the reach set that corresponds to the
+    %               specified time value or time interval.
+    %  projection - Projects the reach set onto a given orthogonal basis.
+    %  evolve     - Computes further evolution in time for given reach set
+    %               for the same or different dynamical system.
+    %  plot_ea    - Plots external approximation of the reach set.
+    %  plot_ia    - Plots internal approximation of the reach set.
+    %
+    %
+    % Overloaded functions:
+    % ---------------------
+    %  display - Displays the reach set object.
+    %            Warning: displays only the last linear system.
+    %
+    %
+    % $Authors: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+    %           Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: March-2013 $
+    % $Copyright: Moscow State University,
+    %            Faculty of Computational Mathematics and Computer Science,
+    %            System Analysis Department 2013 $
     properties (Constant, GetAccess = private)
         MIN_EIG_Q_REG_UNCERT = 0.1
         EXTERNAL_SCALE_FACTOR = 1.02
@@ -165,7 +165,7 @@ classdef ReachContinuous < elltool.reach.AReach
             if self.isProj
                 if self.ellTubeRel.dim() > 3
                     throwerror('wrongData',...
-                        'Dimension of the projection must be leq 3');                    
+                        'Dimension of the projection must be leq 3');
                 else
                     plObj = smartdb.disp.RelationDataPlotter();
                     plotter = self.ellTubeRel.getTuplesFilteredBy(...
@@ -336,7 +336,7 @@ classdef ReachContinuous < elltool.reach.AReach
                 case 'y',
                     colCodeVec = [1 1 0];
                 case 'c',
-                	colCodeVec = [0 1 1];
+                    colCodeVec = [0 1 1];
                 case 'm',
                     colCodeVec = [1 0 1];
                 case 'w',
@@ -355,7 +355,7 @@ classdef ReachContinuous < elltool.reach.AReach
             backwardStrCMat(symIndMat) = cellfun(@char,...
                 evCMat(symIndMat), 'UniformOutput', false);
             backwardStrCMat(~symIndMat) = cellfun(@num2str,...
-            	evCMat(~symIndMat), 'UniformOutput', false);
+                evCMat(~symIndMat), 'UniformOutput', false);
             if isMinus
                 backwardStrCMat = strcat('-(', backwardStrCMat, ')');
             end
@@ -394,7 +394,7 @@ classdef ReachContinuous < elltool.reach.AReach
                 F.X_TOUCH_OP_CURVE_MAT};
             SData = oldEllTubeRel.getData();
             SData.timeVec = cellfun(@fliplr, SData.timeVec,...
-               'UniformOutput', false);
+                'UniformOutput', false);
             indSTime = numel(SData.timeVec(1));
             SData.indSTime(:) = indSTime;
             cellfun(@cutStructSTimeField,...
@@ -550,25 +550,25 @@ classdef ReachContinuous < elltool.reach.AReach
     methods
         function self =...
                 ReachContinuous(linSys, x0Ell, l0Mat, timeVec, OptStruct)
-        % ReachContinuous - computes reach set approximation of the continuous
-        %     linear system for the given time interval.
-        % Input:
-        %     linSys: elltool.linsys.LinSys object - given linear system
-        %     x0Ell: ellipsoid[1, 1] - ellipsoidal set of initial conditions
-        %     l0Mat: matrix of double - l0Mat 
-        %     timeVec: double[1, 2] - time interval
-        %         timeVec(1) must be less then timeVec(2)
-        %     OptStruct: structure
-        %         In this class OptStruct doesn't matter anything
-        %
-        % Output:
-        %     self - reach set object.
-        %
-        % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
-        % $Copyright: Moscow State University,
-        %            Faculty of Computational Mathematics and Computer Science,
-        %            System Analysis Department 2012 $
-        %
+            % ReachContinuous - computes reach set approximation of the continuous
+            %     linear system for the given time interval.
+            % Input:
+            %     linSys: elltool.linsys.LinSys object - given linear system
+            %     x0Ell: ellipsoid[1, 1] - ellipsoidal set of initial conditions
+            %     l0Mat: matrix of double - l0Mat
+            %     timeVec: double[1, 2] - time interval
+            %         timeVec(1) must be less then timeVec(2)
+            %     OptStruct: structure
+            %         In this class OptStruct doesn't matter anything
+            %
+            % Output:
+            %     self - reach set object.
+            %
+            % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
+            % $Copyright: Moscow State University,
+            %            Faculty of Computational Mathematics and Computer Science,
+            %            System Analysis Department 2012 $
+            %
             import modgen.common.type.simple.checkgenext;
             import modgen.common.throwerror;
             import gras.ellapx.uncertcalc.EllApxBuilder;

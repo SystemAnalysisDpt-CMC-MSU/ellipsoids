@@ -45,7 +45,7 @@ classdef ReachFactory
                     crmSys.getParam('time_interval.t0')];
             else
                 self.tVec = [crmSys.getParam('time_interval.t0'),...
-                crmSys.getParam('time_interval.t1')];
+                    crmSys.getParam('time_interval.t1')];
             end
             ControlBounds = struct();
             ControlBounds.center = ptDefCVec;
