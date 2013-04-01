@@ -1,4 +1,5 @@
 classdef LinSysDiscrete < elltool.linsys.ALinSys
+    %
     % Discrete linear system class of the Ellipsoidal Toolbox.
     %
     %
@@ -37,198 +38,57 @@ classdef LinSysDiscrete < elltool.linsys.ALinSys
     % $Copyright: Moscow State University,
     %            Faculty of Computational Mathematics and Computer Science,
     %            System Analysis Department 2012 $
-    
+    %
     methods
         function self = LinSysDiscrete(varargin)
             %
-            % LINSYSDISCRETE - constructor of discrete linear system object.
+            % LINSYSDISCRETE - constructor of discrete linear 
+            %   system object.
             %
             % Discrete-time linear system:
-            %                  x[k+1]  =  A[k] x[k]  +  B[k] u[k]  +  G[k] v[k]
-            %                    y[k]  =  C[k] x[k]  +  w[k]
+            %           x[k+1]  =  A[k] x[k]  +  B[k] u[k]  +  G[k] v[k]
+            %             y[k]  =  C[k] x[k]  +  w[k]
             %
             % Input:
             %   regular:
-            %       atInpMat: double[nDim, nDim]/cell[nDim, nDim].
+            %       atInpMat: double[nDim, nDim]/cell[nDim, nDim] -
+            %           matrix A.
             %
-            %       btInpMat: double[nDim, kDim]/cell[nDim, kDim].
+            %       btInpMat: double[nDim, kDim]/cell[nDim, kDim] -
+            %           matrix B.
             %
-            %       uBoundsEll: ellipsoid[1, 1]/struct[1, 1].
+            %       uBoundsEll: ellipsoid[1, 1]/struct[1, 1] -
+            %           control bounds ellipsoid.
             %
-            %       gtInpMat: double[nDim, lDim]/cell[nDim, lDim].
+            %       gtInpMat: double[nDim, lDim]/cell[nDim, lDim] -
+            %           matrix G.
             %
-            %       distBoundsEll: ellipsoid[1, 1]/struct[1, 1].
+            %       distBoundsEll: ellipsoid[1, 1]/struct[1, 1] -
+            %           disturbance bounds ellipsoid.
             %
-            %       ctInpMat: double[mDim, nDim]/cell[mDim, nDim].
+            %       ctInpMat: double[mDim, nDim]/cell[mDim, nDim]-
+            %           matrix C.
             %
-            %       noiseBoundsEll: ellipsoid[1, 1]/struct[1, 1].
+            %       noiseBoundsEll: ellipsoid[1, 1]/struct[1, 1] -
+            %           noise bounds ellipsoid.
             %
             %       discrFlag: char[1, 1] - if discrFlag set:
             %           'd' - to discrete-time linSys
             %           not 'd' - to continuous-time linSys.
             %
             % Output:
-            %   self: elltool.linsys.LinSysDiscrete[1, 1].
+            %   self: elltool.linsys.LinSysDiscrete[1, 1] -
+            %       discrete linear system.
             %
             self = self@elltool.linsys.ALinSys(varargin{:});
             self.isDiscr  = true;
         end
         
         function display(self)
-            fprintf('\n');
-            disp([inputname(1) ' =']);
-            %%
-            if self.isempty()
-                fprintf('Empty linear system object.\n\n');
-                return;
-            end
-            %%
-            s0 = '[k]';
-            s1 = 'x[k+1]  =  ';
-            s2 = '  y[k]  =  ';
-            s3 = ' x[k]';
-            %%
-            fprintf('\n');
-            if iscell(self.atMat)
-                fprintf('A[k]:\n');
-                s4 = 'A[k]';
-            else
-                fprintf('A:\n');
-                s4 = 'A';
-            end
-            disp(self.atMat);
-            if iscell(self.btMat)
-                fprintf('\nB[k]:\n');
-                s5 = '  +  B[k]';
-            else
-                fprintf('\nB:\n');
-                s5 = '  +  B';
-            end
-            disp(self.btMat);
-            %%
-            fprintf('\nControl bounds:\n');
-            s6 = [' u' s0];
-            if isempty(self.controlBoundsEll)
-                fprintf('     Unbounded\n');
-            elseif isa(self.controlBoundsEll, 'ellipsoid')
-                [qVec, qMat] = parameters(self.controlBoundsEll);
-                fprintf('   %d-dimensional constant ellipsoid with center\n',...
-                    size(self.btMat, 2));
-                disp(qVec);
-                fprintf('   and shape matrix\n');
-                disp(qMat);
-            elseif isstruct(self.controlBoundsEll)
-                uEll = self.controlBoundsEll;
-                fprintf('   %d-dimensional ellipsoid with center\n',...
-                    size(self.btMat, 2));
-                disp(uEll.center);
-                fprintf('   and shape matrix\n');
-                disp(uEll.shape);
-            elseif isa(self.controlBoundsEll, 'double')
-                fprintf('   constant vector\n');
-                disp(self.controlBoundsEll);
-                s6 = ' u';
-            else
-                fprintf('   vector\n');
-                disp(self.controlBoundsEll);
-            end
-            %%
-            if ~(isempty(self.gtMat)) && ~(isempty(self.disturbanceBoundsEll))
-                if iscell(self.gtMat)
-                    fprintf('\nG[k]:\n');
-                    s7 = '  +  G[k]';
-                else
-                    fprintf('\nG:\n');
-                    s7 = '  +  G';
-                end
-                disp(self.gtMat);
-                fprintf('\nDisturbance bounds:\n');
-                s8 = [' v' s0];
-                if isa(self.disturbanceBoundsEll, 'ellipsoid')
-                    [qVec, qMat] = parameters(self.disturbanceBoundsEll);
-                    fprintf('   %d-dimensional constant ellipsoid with center\n',...
-                        size(self.gtMat, 2));
-                    disp(qVec);
-                    fprintf('   and shape matrix\n');
-                    disp(qMat);
-                elseif isstruct(self.disturbanceBoundsEll)
-                    uEll = self.disturbanceBoundsEll;
-                    fprintf('   %d-dimensional ellipsoid with center\n',...
-                        size(self.gtMat, 2));
-                    disp(uEll.center);
-                    fprintf('   and shape matrix\n');
-                    disp(uEll.shape);
-                elseif isa(self.disturbanceBoundsEll, 'double')
-                    fprintf('   constant vector\n');
-                    disp(self.disturbanceBoundsEll);
-                    s8 = ' v';
-                else
-                    fprintf('   vector\n');
-                    disp(self.disturbanceBoundsEll);
-                end
-            else
-                s7 = '';
-                s8 = '';
-            end
-            %%
-            if iscell(self.ctMat)
-                fprintf('\nC[k]:\n');
-                s9 = 'C[k]';
-            else
-                fprintf('\nC:\n');
-                s9 = 'C';
-            end
-            disp(self.ctMat);
-            %%
-            s10 = ['  +  w' s0];
-            if ~(isempty(self.noiseBoundsEll))
-                fprintf('\nNoise bounds:\n');
-                if isa(self.noiseBoundsEll, 'ellipsoid')
-                    [qVec, qMat] = parameters(self.noiseBoundsEll);
-                    fprintf('   %d-dimensional constant ellipsoid with center\n',...
-                        size(self.ctMat, 1));
-                    disp(qVec);
-                    fprintf('   and shape matrix\n');
-                    disp(qMat);
-                elseif isstruct(self.noiseBoundsEll)
-                    uEll = self.noiseBoundsEll;
-                    fprintf('   %d-dimensional ellipsoid with center\n',...
-                        size(self.ctMat, 1));
-                    disp(uEll.center);
-                    fprintf('   and shape matrix\n');
-                    disp(uEll.shape);
-                elseif isa(self.noiseBoundsEll, 'double')
-                    fprintf('   constant vector\n');
-                    disp(self.noiseBoundsEll);
-                    s10 = '  +  w';
-                else
-                    fprintf('   vector\n');
-                    disp(self.noiseBoundsEll);
-                end
-            else
-                s10 = '';
-            end
-            %%
-            fprintf('%d-input, ', size(self.btMat, 2));
-            fprintf('%d-output ', size(self.ctMat, 1));
-            fprintf('discrete-time linear ');
-            if self.isTimeInv
-                fprintf('time-invariant system ');
-            else
-                fprintf('system ');
-            end
-            fprintf('of dimension %d', size(self.atMat, 1));
-            if ~(isempty(self.gtMat))
-                if size(self.gtMat, 2) == 1
-                    fprintf('\nwith 1 disturbance input');
-                elseif size(self.gtMat, 2) > 1
-                    fprintf('\nwith %d disturbance input',...
-                        size(self.gtMat, 2));
-                end
-            end
-            fprintf(':\n%s%s%s%s%s%s%s\n%s%s%s%s\n\n',...
-                s1, s4, s3, s5, s6, s7, s8, s2, s9, s3, s10);
-            return;
+            %
+            % See description of DISPLAY in ILinSys class.
+            %
+            self.displayInternal(self)
         end
     end
 end

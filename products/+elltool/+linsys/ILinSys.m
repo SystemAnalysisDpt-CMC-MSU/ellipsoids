@@ -1,4 +1,5 @@
 classdef ILinSys < handle
+    %
     %  Interface class of linear system class of the Ellipsoidal Toolbox.
     %
     %
@@ -9,66 +10,70 @@ classdef ILinSys < handle
     % $Copyright: Moscow State University,
     %            Faculty of Computational Mathematics and Computer Science,
     %            System Analysis Department 2012 $
-    
+    %
     methods (Abstract)
         aMat = getAtMat(self)
         %
         % Input:
         %   regular:
-        %       self.
+        %       self: elltool.linsys.ILinSys[1, 1] - linear system.
         %
         % Output:
-        %   aMat: double[aMatDim, aMatDim].
+        %   aMat: double[aMatDim, aMatDim]/cell[nDim, nDim] - matrix A.
         %
         
         bMat = getBtMat(self)
         %
         % Input:
         %   regular:
-        %       self.
+        %       self: elltool.linsys.ILinSys[1, 1] - linear system.
         %
         % Output:
-        %   bMat: double[bMatDim, bMatDim].
+        %   bMat: double[bMatDim, bMatDim]/cell[bMatDim, bMatDim] -
+        %       matrix B.
         %
         
         uEll = getUBoundsEll(self)
         %
         % Input:
         %   regular:
-        %       self.
+        %       self: elltool.linsys.ILinSys[1, 1] - linear system.
         %
         % Output:
-        %   uEll: ellipsoid[1, 1].
+        %   uEll: ellipsoid[1, 1]/struct[1, 1] - control bounds ellipsoid.
         %
         
         gMat = getGtMat(self)
         %
         % Input:
         %   regular:
-        %       self.
+        %       self: elltool.linsys.ILinSys[1, 1] - linear system.
         %
         % Output:
-        %   gMat: double[gMatDim, gMatDim].
+        %   gMat: double[gMatDim, gMatDim]/cell[gMatDim, gMatDim] -
+        %       matrix G.
         %
         
         distEll = getDistBoundsEll(self)
         %
         % Input:
         %   regular:
-        %       self.
+        %       self: elltool.linsys.ILinSys[1, 1] - linear system.
         %
         % Output:
-        %   distEll: ellipsoid[1, 1].
+        %   distEll: ellipsoid[1, 1]/struct[1, 1] - disturbance bounds
+        %       ellipsoid.
         %
         
         cMat = getCtMat(self)
         %
         % Input:
         %   regular:
-        %       self.
+        %       self: elltool.linsys.ILinSys[1, 1] - linear system.
         %
         % Output:
-        %   cMat: double[cMatDim, cMatDim].
+        %   cMat: double[cMatDim, cMatDim]/cell[cMatDim, cMatDim] -
+        %       matrix C.
         %
         
         noiseEll = getNoiseBoundsEll(self)
@@ -87,9 +92,11 @@ classdef ILinSys < handle
         %   stateDimArr: double[nDims1, nDims2,...] - array of
         %       state space dimensions.
         %
-        %   inpDimArr: double[nDims1, nDims2,...] - array of input dimensions.
+        %   inpDimArr: double[nDims1, nDims2,...] - array of input
+        %       dimensions.
         %
-        %   outDimArr: double[nDims1, nDims2,...] - array of output dimensions.
+        %   outDimArr: double[nDims1, nDims2,...] - array of output
+        %       dimensions.
         %
         %   distDimArr: double[nDims1, nDims2,...] - array of
         %       disturbance dimensions.
@@ -97,11 +104,11 @@ classdef ILinSys < handle
         
         display(self)
         %
-        % Displays the details of linear system object.
+        % DISPLAY displays the details of linear system object.
         %
         % Input:
         %   regular:
-        %       self.
+        %       self: elltool.linsys.ILinSys[1, 1] - linear system.
         %
         % Output:
         %   None.
@@ -109,7 +116,8 @@ classdef ILinSys < handle
         
         isDisturbanceArr = hasdisturbance(self)
         %
-        % HASDISTURBANCE checks if linear system has unknown bounded disturbance.
+        % HASDISTURBANCE checks if linear system has unknown bounded
+        %   disturbance.
         %
         % Input:
         %   regular:
@@ -147,8 +155,8 @@ classdef ILinSys < handle
         %             of linear systems.
         %
         % Output:
-        %   isDiscreteMat: logical[nDims1, nDims2,...] - array such that it's
-        %       element at each position is true if corresponding
+        %   isDiscreteMat: logical[nDims1, nDims2,...] - array such that
+        %       it's element at each position is true if corresponding
         %       linear system is discrete-time, and false otherwise.
         %
         

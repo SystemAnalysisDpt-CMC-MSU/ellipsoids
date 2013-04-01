@@ -1,4 +1,5 @@
 classdef ALinSys < elltool.linsys.ILinSys
+    %
     %  Abstract class of linear system class of the Ellipsoidal Toolbox.
     %
     %
@@ -9,7 +10,7 @@ classdef ALinSys < elltool.linsys.ILinSys
     % $Copyright: Moscow State University,
     %            Faculty of Computational Mathematics and Computer Science,
     %            System Analysis Department 2012 $
-    
+    %
     properties (Access = protected)
         atMat
         btMat
@@ -26,16 +27,18 @@ classdef ALinSys < elltool.linsys.ILinSys
     
     methods (Access = protected, Static)
         function isEllHaveNeededDim(InpEll, nDim, absTol)
-            % isEllHaveNeededDim - checks if given structure InpEll represents
-            %     an ellipsoid of dimension nDim.
+            %
+            % ISELLHAVENEEDEDDIM checks if given structure InpEll
+            %     represents an ellipsoid of dimension nDim.
             %
             % Input:
             %   regular:
-            %       InpEll: struct[1, 1]
+            %       InpEll: struct[1, 1] - structure to check for being
+            %           an ellipsoid of dimension nDim.
             %
-            %       nDim: double[1, 1]
+            %       nDim: double[1, 1] - dimension of ellipsoid.
             %
-            %       absTol: doulbe[1,1]
+            %       absTol: doulbe[1,1] - absolute tolerance.
             %
             % Output:
             %   None.
@@ -76,12 +79,14 @@ classdef ALinSys < elltool.linsys.ILinSys
                     if isempty(logger)
                         logger=Log4jConfigurator.getLogger();
                     end
-                    logger.info('Warning! Cannot check if symbolic matrix is positive definite.\n');
+                    logger.info(['Warning! Cannot check if symbolic', ...
+                        'matrix is positive definite.\n']);
                 end
                 isEqMat = strcmp(qMat, qMat.');
                 if ~all(isEqMat(:))
                     throwerror(sprintf('value:%s:shape', inputname(1)),...
-                        'shape matrix must be symmetric, positive definite');
+                        ['shape matrix must be symmetric,', ...
+                        'positive definite']);
                 end
             else
                 if isa(qMat, 'double')
@@ -96,48 +101,260 @@ classdef ALinSys < elltool.linsys.ILinSys
                     end
                 else
                     throwerror(sprintf('type:%s:shape', inputname(1)),...
-                        'shape matrix must be of type ''cell'' or ''double''');
+                        ['shape matrix must be of type ''cell''', ...
+                        'or ''double''']);
                 end
             end
+        end
+        
+        function displayInternal(self)
+            %
+            % DISPLAYINTERNAL displays the details of linear system object.
+            %
+            % Input:
+            %   regular:
+            %       self: elltool.linsys.ALinSys[1, 1] - linear system.
+            %
+            % Output:
+            %   None.
+            %
+            fprintf('\n');
+            disp([inputname(1) ' =']);
+            %%
+            if self.isempty()
+                fprintf('Empty linear system object.\n\n');
+                return;
+            end
+            %%
+            if self.isDiscr
+                s0 = '[k]';
+                s1 = 'x[k+1]  =  ';
+                s2 = '  y[k]  =  ';
+                s3 = ' x[k]';
+            else
+                s0 = '(t)';
+                s1 = 'dx/dt  =  ';
+                s2 = ' y(t)  =  ';
+                s3 = ' x(t)';
+            end
+            %%
+            fprintf('\n');
+            if iscell(self.atMat)
+                if self.isDiscr
+                    fprintf('A[k]:\n');
+                    s4 = 'A[k]';
+                else
+                    fprintf('A(t):\n');
+                    s4 = 'A(t)';
+                end
+            else
+                fprintf('A:\n');
+                s4 = 'A';
+            end
+            disp(self.atMat);
+            if iscell(self.btMat)
+                if self.isDiscr
+                    fprintf('\nB[k]:\n');
+                    s5 = '  +  B[k]';
+                else
+                    fprintf('\nB(t):\n');
+                    s5 = '  +  B(t)';
+                end
+            else
+                fprintf('\nB:\n');
+                s5 = '  +  B';
+            end
+            disp(self.btMat);
+            %%
+            fprintf('\nControl bounds:\n');
+            s6 = [' u' s0];
+            if isempty(self.controlBoundsEll)
+                fprintf('     Unbounded\n');
+            elseif isa(self.controlBoundsEll, 'ellipsoid')
+                [qVec, qMat] = parameters(self.controlBoundsEll);
+                fprintf(['   %d-dimensional constant ellipsoid', ...
+                    'with center\n'],...
+                    size(self.btMat, 2));
+                disp(qVec);
+                fprintf('   and shape matrix\n');
+                disp(qMat);
+            elseif isstruct(self.controlBoundsEll)
+                uEll = self.controlBoundsEll;
+                fprintf('   %d-dimensional ellipsoid with center\n',...
+                    size(self.btMat, 2));
+                disp(uEll.center);
+                fprintf('   and shape matrix\n');
+                disp(uEll.shape);
+            elseif isa(self.controlBoundsEll, 'double')
+                fprintf('   constant vector\n');
+                disp(self.controlBoundsEll);
+                s6 = ' u';
+            else
+                fprintf('   vector\n');
+                disp(self.controlBoundsEll);
+            end
+            %%
+            if ~(isempty(self.gtMat)) && ...
+                    ~(isempty(self.disturbanceBoundsEll))
+                if iscell(self.gtMat)
+                    if self.isDiscr
+                        fprintf('\nG[k]:\n');
+                        s7 = '  +  G[k]';
+                    else
+                        fprintf('\nG(t):\n');
+                        s7 = '  +  G(t)';
+                    end
+                else
+                    fprintf('\nG:\n');
+                    s7 = '  +  G';
+                end
+                disp(self.gtMat);
+                fprintf('\nDisturbance bounds:\n');
+                s8 = [' v' s0];
+                if isa(self.disturbanceBoundsEll, 'ellipsoid')
+                    [qVec, qMat] = parameters(self.disturbanceBoundsEll);
+                    fprintf(['   %d-dimensional constant ellipsoid', ...
+                        'with center\n'],...
+                        size(self.gtMat, 2));
+                    disp(qVec);
+                    fprintf('   and shape matrix\n');
+                    disp(qMat);
+                elseif isstruct(self.disturbanceBoundsEll)
+                    uEll = self.disturbanceBoundsEll;
+                    fprintf('   %d-dimensional ellipsoid with center\n',...
+                        size(self.gtMat, 2));
+                    disp(uEll.center);
+                    fprintf('   and shape matrix\n');
+                    disp(uEll.shape);
+                elseif isa(self.disturbanceBoundsEll, 'double')
+                    fprintf('   constant vector\n');
+                    disp(self.disturbanceBoundsEll);
+                    s8 = ' v';
+                else
+                    fprintf('   vector\n');
+                    disp(self.disturbanceBoundsEll);
+                end
+            else
+                s7 = '';
+                s8 = '';
+            end
+            %%
+            if iscell(self.ctMat)
+                if self.isDiscr
+                    fprintf('\nC[k]:\n');
+                    s9 = 'C[k]';
+                else
+                    fprintf('\nC(t):\n');
+                    s9 = 'C(t)';
+                end
+            else
+                fprintf('\nC:\n');
+                s9 = 'C';
+            end
+            disp(self.ctMat);
+            %%
+            s10 = ['  +  w' s0];
+            if ~(isempty(self.noiseBoundsEll))
+                fprintf('\nNoise bounds:\n');
+                if isa(self.noiseBoundsEll, 'ellipsoid')
+                    [qVec, qMat] = parameters(self.noiseBoundsEll);
+                    fprintf(['   %d-dimensional constant ellipsoid', ...
+                        'with center\n'],...
+                        size(self.ctMat, 1));
+                    disp(qVec);
+                    fprintf('   and shape matrix\n');
+                    disp(qMat);
+                elseif isstruct(self.noiseBoundsEll)
+                    uEll = self.noiseBoundsEll;
+                    fprintf('   %d-dimensional ellipsoid with center\n',...
+                        size(self.ctMat, 1));
+                    disp(uEll.center);
+                    fprintf('   and shape matrix\n');
+                    disp(uEll.shape);
+                elseif isa(self.noiseBoundsEll, 'double')
+                    fprintf('   constant vector\n');
+                    disp(self.noiseBoundsEll);
+                    s10 = '  +  w';
+                else
+                    fprintf('   vector\n');
+                    disp(self.noiseBoundsEll);
+                end
+            else
+                s10 = '';
+            end
+            %%
+            fprintf('%d-input, ', size(self.btMat, 2));
+            fprintf('%d-output ', size(self.ctMat, 1));
+            if self.isDiscr
+                fprintf('discrete-time linear ');
+            else
+                fprintf('continuous-time linear ');
+            end
+            if self.isTimeInv
+                fprintf('time-invariant system ');
+            else
+                fprintf('system ');
+            end
+            fprintf('of dimension %d', size(self.atMat, 1));
+            if ~(isempty(self.gtMat))
+                if size(self.gtMat, 2) == 1
+                    fprintf('\nwith 1 disturbance input');
+                elseif size(self.gtMat, 2) > 1
+                    fprintf('\nwith %d disturbance input',...
+                        size(self.gtMat, 2));
+                end
+            end
+            fprintf(':\n%s%s%s%s%s%s%s\n%s%s%s%s\n\n',...
+                s1, s4, s3, s5, s6, s7, s8, s2, s9, s3, s10);
+            return;
         end
     end
     
     methods
-        function self = ALinSys(atInpMat, btInpMat, uBoundsEll, gtInpMat,...
-                distBoundsEll, ctInpMat, noiseBoundsEll, discrFlag, varargin)
+        function self = ALinSys(atInpMat, btInpMat, uBoundsEll, ...
+                gtInpMat, distBoundsEll, ctInpMat, noiseBoundsEll, ...
+                discrFlag, varargin)
             %
-            % LINSYS - constructor for linear system object.
+            % ALinSys - constructor abstract class of linear system.
             %
             % Continuous-time linear system:
-            %                   dx/dt  =  A(t) x(t)  +  B(t) u(t)  +  G(t) v(t)
-            %                    y(t)  =  C(t) x(t)  +  w(t)
+            %           dx/dt  =  A(t) x(t)  +  B(t) u(t)  +  G(t) v(t)
+            %            y(t)  =  C(t) x(t)  +  w(t)
             %
             % Discrete-time linear system:
-            %                  x[k+1]  =  A[k] x[k]  +  B[k] u[k]  +  G[k] v[k]
-            %                    y[k]  =  C[k] x[k]  +  w[k]
+            %           x[k+1]  =  A[k] x[k]  +  B[k] u[k]  +  G[k] v[k]
+            %             y[k]  =  C[k] x[k]  +  w[k]
             %
             % Input:
             %   regular:
-            %       atInpMat: double[nDim, nDim]/cell[nDim, nDim].
+            %       atInpMat: double[nDim, nDim]/cell[nDim, nDim] -
+            %           matrix A.
             %
-            %       btInpMat: double[nDim, kDim]/cell[nDim, kDim].
+            %       btInpMat: double[nDim, kDim]/cell[nDim, kDim] -
+            %           matrix B.
             %
-            %       uBoundsEll: ellipsoid[1, 1]/struct[1, 1].
+            %       uBoundsEll: ellipsoid[1, 1]/struct[1, 1] -
+            %           control bounds ellipsoid.
             %
-            %       gtInpMat: double[nDim, lDim]/cell[nDim, lDim].
+            %       gtInpMat: double[nDim, lDim]/cell[nDim, lDim] -
+            %           matrix G.
             %
-            %       distBoundsEll: ellipsoid[1, 1]/struct[1, 1].
+            %       distBoundsEll: ellipsoid[1, 1]/struct[1, 1] -
+            %           disturbance bounds ellipsoid.
             %
-            %       ctInpMat: double[mDim, nDim]/cell[mDim, nDim].
+            %       ctInpMat: double[mDim, nDim]/cell[mDim, nDim]-
+            %           matrix C.
             %
-            %       noiseBoundsEll: ellipsoid[1, 1]/struct[1, 1].
+            %       noiseBoundsEll: ellipsoid[1, 1]/struct[1, 1] -
+            %           noise bounds ellipsoid.
             %
             %       discrFlag: char[1, 1] - if discrFlag set:
             %           'd' - to discrete-time linSys
             %           not 'd' - to continuous-time linSys.
             %
             % Output:
-            %   self: elltool.linsys.LinSys[1, 1].
+            %   self: elltool.linsys.ALinSys[1, 1] -
+            %       linear system.
             %
             import modgen.common.throwerror;
             import elltool.conf.Properties;
@@ -199,14 +416,16 @@ classdef ALinSys < elltool.linsys.ILinSys
                     [dRows, rCols] = dimension(uBoundsEll);
                     if dRows ~= lCols
                         throwerror('dimension:U',...
-                            'dimensions of control bounds U and matrix B do not match.');
+                            ['dimensions of control bounds U and', ...
+                            'matrix B do not match.']);
                     end
                     if (dRows > rCols) &&...
                             (elltool.conf.Properties.getIsVerbose() > 0)
                         if isempty(logger)
                             logger=Log4jConfigurator.getLogger();
                         end
-                        logger.info('LINSYS: Warning! Control bounds U represented by degenerate ellipsoid.');
+                        logger.info(['LINSYS: Warning! Control bounds', ...
+                            'U represented by degenerate ellipsoid.']);
                     end
                 elseif isa(uBoundsEll, 'double') || iscell(uBoundsEll)
                     [kRows, mRows] = size(uBoundsEll);
@@ -215,7 +434,8 @@ classdef ALinSys < elltool.linsys.ILinSys
                             'control U must be an ellipsoid or a vector.')
                     elseif kRows ~= lCols
                         throwerror('dimension:U',...
-                            'dimensions of control vector U and matrix B do not match.');
+                            ['dimensions of control vector U and', ...
+                            'matrix B do not match.']);
                     end
                     if iscell(uBoundsEll)
                         isCBU = false;
@@ -248,7 +468,8 @@ classdef ALinSys < elltool.linsys.ILinSys
                         isTimeInvar = false;
                     elseif ~(isa(gtInpMat, 'double'))
                         throwerror('type:G',...
-                            'matrix G must be of type ''cell'' or ''double''.');
+                            ['matrix G must be of type ''cell''', ...
+                            'or ''double''.']);
                     end
                 end
             else
@@ -265,16 +486,19 @@ classdef ALinSys < elltool.linsys.ILinSys
                     [dRows, rCols] = dimension(distBoundsEll);
                     if dRows ~= lCols
                         error('dimension:V',...
-                            'dimensions of disturbance bounds V and matrix G do not match.');
+                            ['dimensions of disturbance bounds V and', ...
+                            'matrix G do not match.']);
                     end
                 elseif isa(distBoundsEll, 'double') || iscell(distBoundsEll)
                     [kRows, mRows] = size(distBoundsEll);
                     if mRows > 1
                         throwerror('type:V',...
-                            'disturbance V must be an ellipsoid or a vector.')
+                            ['disturbance V must be an ellipsoid', ...
+                            'or a vector.'])
                     elseif kRows ~= lCols
                         throwerror('dimension:V',...
-                            'dimensions of disturbance vector V and matrix G do not match.');
+                            ['dimensions of disturbance vector V and', ...
+                            'matrix G do not match.']);
                     end
                     if iscell(distBoundsEll)
                         isCBV = false;
@@ -309,7 +533,8 @@ classdef ALinSys < elltool.linsys.ILinSys
                         isTimeInvar = false;
                     elseif ~(isa(ctInpMat, 'double'))
                         throwerror('type:C',...
-                            'matrix C must be of type ''cell'' or ''double''.');
+                            ['matrix C must be of type ''cell''', ...
+                            'or ''double''.']);
                     end
                 end
             else
@@ -326,22 +551,25 @@ classdef ALinSys < elltool.linsys.ILinSys
                     [dRows, rCols] = dimension(noiseBoundsEll);
                     if dRows ~= kRows
                         throwerror('dimension:W',...
-                            'dimensions of noise bounds W and matrix C do not match.');
+                            ['dimensions of noise bounds W and', ...
+                            'matrix C do not match.']);
                     end
-                elseif isa(noiseBoundsEll, 'double') || iscell(noiseBoundsEll)
+                elseif isa(noiseBoundsEll, 'double') || ...
+                        iscell(noiseBoundsEll)
                     [lCols, mRows] = size(noiseBoundsEll);
                     if mRows > 1
                         throwerror('type:W',...
                             'noise W must be an ellipsoid or a vector.')
                     elseif kRows ~= lCols
                         throwerror('dimension:W',...
-                            'dimensions of noise vector W and matrix C do not match.');
+                            ['dimensions of noise vector W and', ...
+                            'matrix C do not match.']);
                     end
                     if iscell(noiseBoundsEll)
                         isCBW = false;
                     end
                 elseif isstruct(noiseBoundsEll) &&...
-                        isfield(noiseBoundsEll, 'center') &&...
+                        isfield(noiseBoundsEll, 'center') && ...
                         isfield(noiseBoundsEll, 'shape')
                     isCBW = false;
                     noiseBoundsEll = noiseBoundsEll(1, 1);
@@ -365,38 +593,60 @@ classdef ALinSys < elltool.linsys.ILinSys
         end
         
         function aMat = getAtMat(self)
-            %dsfs
-            %dsf
+            %
+            % See description of GETATMAT in ILinSys class.
+            %
             aMat = self.atMat;
         end
         
         function bMat = getBtMat(self)
+            %
+            % See description of GETBTMAT in ILinSys class.
+            %
             bMat = self.btMat;
         end
         
         function uEll = getUBoundsEll(self)
+            %
+            % See description of GETUBOUNDSELL in ILinSys class.
+            %
             uEll = self.controlBoundsEll;
         end
         
         function gMat = getGtMat(self)
+            %
+            % See description of GETGTMAT in ILinSys class.
+            %
             gMat = self.gtMat;
         end
         
         function distEll = getDistBoundsEll(self)
+            %
+            % See description of GETDISTBOUNDSELL in ILinSys class.
+            %
             distEll = self.disturbanceBoundsEll;
         end
         
         function cMat = getCtMat(self)
+            %
+            % See description of GETCTMAT in ILinSys class.
+            %
             cMat = self.ctMat;
         end
         
         function noiseEll = getNoiseBoundsEll(self)
+            %
+            % See description of GETNOISEBOUNDSELL in ILinSys class.
+            %
             noiseEll = self.noiseBoundsEll;
         end
         
-        function [stateDimArr, inpDimArr, outDimArr, distDimArr] =...
+        function [stateDimArr, inpDimArr, outDimArr, distDimArr] = ...
                 dimension(self)
-            [stateDimArr, inpDimArr, outDimArr, distDimArr] =...
+            %
+            % See description of DIMENSION in ILinSys class.
+            %
+            [stateDimArr, inpDimArr, outDimArr, distDimArr] = ...
                 arrayfun(@(x) getDimensions(x), self);
             %
             if nargout < 4
@@ -409,7 +659,7 @@ classdef ALinSys < elltool.linsys.ILinSys
                 end
             end
             %
-            function [stateDim, inpDim, outDim, distDim] =...
+            function [stateDim, inpDim, outDim, distDim] = ...
                     getDimensions(linsys)
                 stateDim = size(linsys.atMat, 1);
                 inpDim = size(linsys.btMat, 2);
@@ -419,11 +669,14 @@ classdef ALinSys < elltool.linsys.ILinSys
         end
         
         function isDisturbanceArr = hasdisturbance(self)
+            %
+            % See description of HASDISTURBANCE in ILinSys class.
+            %
             isDisturbanceArr = arrayfun(@(x) isDisturb(x), self);
             %
             function isDisturb = isDisturb(linsys)
                 isDisturb = false;
-                if  ~isempty(linsys.disturbanceBoundsEll) &&...
+                if  ~isempty(linsys.disturbanceBoundsEll) && ...
                         ~isempty(linsys.gtMat)
                     isDisturb = true;
                 end
@@ -431,6 +684,9 @@ classdef ALinSys < elltool.linsys.ILinSys
         end
         
         function isNoiseArr = hasnoise(self)
+            %
+            % See description of HASNOISE in ILinSys class.
+            %
             isNoiseArr = arrayfun(@(x) isNoise(x), self);
             %
             function isNoise = isNoise(linsys)
@@ -442,6 +698,9 @@ classdef ALinSys < elltool.linsys.ILinSys
         end
         
         function isDiscreteArr = isdiscrete(self)
+            %
+            % See description of ISDISCRETE in ILinSys class.
+            %
             isDiscreteArr = arrayfun(@(x) isDiscrete(x), self);
             %
             function isDiscrete = isDiscrete(linsys)
@@ -450,6 +709,9 @@ classdef ALinSys < elltool.linsys.ILinSys
         end
         
         function isEmptyArr = isempty(self)
+            %
+            % See description of ISEMPTY in ILinSys class.
+            %
             isEmptyArr = arrayfun(@(x) isEmp(x), self);
             %
             function isEmp = isEmp(linsys)
@@ -461,6 +723,9 @@ classdef ALinSys < elltool.linsys.ILinSys
         end
         
         function isLtiArr = islti(self)
+            %
+            % See description of ISLTI in ILinSys class.
+            %
             isLtiArr = arrayfun(@(x) isLti(x), self);
             %
             function isLti = isLti(linsys)
@@ -469,6 +734,9 @@ classdef ALinSys < elltool.linsys.ILinSys
         end
         
         function absTolArr = getAbsTol(self)
+            %
+            % See description of GETABSTOL in ILinSys class.
+            %
             absTolArr = arrayfun(@(x)x.absTol, self);
         end
     end
