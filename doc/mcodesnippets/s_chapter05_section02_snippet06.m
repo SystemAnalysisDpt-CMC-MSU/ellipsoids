@@ -1,1 +1,2 @@
-rs = elltool.reach.ReachContinuous(sys, X0, L, T);  % reach set of continuos-time system
+% reach set of continuos-time system
+firstRsObj = elltool.reach.ReachContinuous(sys, x0Ell, dirsMat, timeVec); 

@@ -1,1 +1,1 @@
-EE.minksum;
+ellArr.minksum;

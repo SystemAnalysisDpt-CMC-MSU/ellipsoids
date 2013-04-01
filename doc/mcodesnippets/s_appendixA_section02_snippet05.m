@@ -1,5 +1,5 @@
-H = hyperplane([-1 1 1; 1 1 1; 1 1 1], [2 1 0]);
-H.isparallel(H(2))
+hyp = hyperplane([-1 1 1; 1 1 1; 1 1 1], [2 1 0]);
+hyp.isparallel(hyp(2))
 
 % ans =
 % 

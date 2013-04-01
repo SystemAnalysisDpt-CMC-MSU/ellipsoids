@@ -1,4 +1,5 @@
-EE.distance(E3)  % distance between E3 and each of the ellipsoids in EE
+ % distance between thirdEll and each of the ellipsoids in ellArr
+ellArr.distance(thirdEll) 
 
 % ans =
 % 

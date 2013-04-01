@@ -1,2 +1,4 @@
-EA = E1.intersection_ea(E3);  % external approximation of intersection of E1 and E3
-IA = E1.intersection_ia(E3);  % internal approximation of intersection of E1 and E3
+% external approximation of intersection of firstEll and thirdEll
+externalEll = firstEll.intersection_ea(thirdEll); 
+% internal approximation of intersection of firstEll and thirdEll
+internalEll = firstEll.intersection_ia(thirdEll); 

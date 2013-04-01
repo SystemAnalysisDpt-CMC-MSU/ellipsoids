@@ -1,5 +1,5 @@
-EL = [E1 E3]
-EL.isinside(IA) 
+bufEllArr = [firstEll thirdEll]
+bufEllArr.isinside(internalEll) 
 
 % ans =
 % 

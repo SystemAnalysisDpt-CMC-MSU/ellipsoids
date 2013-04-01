@@ -1,9 +1,9 @@
-E1 = ellipsoid([2; -1], [9 -5; -5 4]);
-E2 = ellipsoid([-2; -1], [4 -1; -1 1]);
-B = ell_unitball(2);
-L = [1 0; 1 1; 0 1; -1 1]';
-EE = [B E1];
-EA = EE.minkpm_ea(E2, L)
+firstEll = ellipsoid([2; -1], [9 -5; -5 4]);
+secEll = ellipsoid([-2; -1], [4 -1; -1 1]);
+thirdEll = ell_unitball(2);
+dirsMat = [1 0; 1 1; 0 1; -1 1]';
+ellArr = [thirdEll firstEll];
+externalEllArr = ellArr.minkpm_ea(secEll, dirsMat)
 
-% EA =
+% externalEllArr =
 % 1x4 array of ellipsoids.

@@ -1,8 +1,9 @@
 %initial conditions:
-X0 = [170; 180; 175; 170] + 10*ell_unitball(4);
+x0Ell = [170; 180; 175; 170] + 10*ell_unitball(4);
 
-L0 = [1; 0; 0; 0];  % single initial direction
-N = 100;  % number of time steps
+dirsMat = [1; 0; 0; 0];  % single initial direction
+nSteps = 100;  % number of time steps
 
-ffrs = elltool.reach.ReachDiscrete(s1, X0, L0, N);  % free-flow reach set
-EA = ffrs.get_ea;  % 101x1 array of external ellipsoids
+% free-flow reach set
+ffrsObj = elltool.reach.ReachDiscrete(s1, x0Ell, dirsMat, nSteps);  
+externalEllArr = ffrsObj.get_ea;  % 101x1 array of external ellipsoids

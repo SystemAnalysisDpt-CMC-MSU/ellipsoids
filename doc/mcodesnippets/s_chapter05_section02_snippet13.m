@@ -1,5 +1,5 @@
-% check if polytope P intersects with external approximation:
-ct.intersect(P)
+% check if polytope pol intersects with external approximation:
+cutObj.intersect(pol)
 
 % ans =
 % 

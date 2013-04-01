@@ -1,1 +1,1 @@
-ct = rs.cut(5);  % reach set at time t = 5
+cutObj = firstRsObj.cut(5);  % reach set at time t = 5

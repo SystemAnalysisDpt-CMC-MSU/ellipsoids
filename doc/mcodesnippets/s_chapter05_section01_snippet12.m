@@ -1,4 +1,4 @@
-EE.intersect(EE(1, 1), 'i')  
+ellArr.intersect(ellArr(1, 1), 'i')  
 
 % ans =
 % 

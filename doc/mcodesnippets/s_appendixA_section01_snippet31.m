@@ -1,8 +1,8 @@
-E = ellipsoid([4 -1; -1 1]);
-B = ell_unitball(2);
-E1 = [E B]
-V = E1.volume
+firstEll = ellipsoid([4 -1; -1 1]);
+secEll = ell_unitball(2);
+ellArr = [firstEll secEll]
+volArr = ellArr.volume
 
-% V =
+% VolArr =
 % 
 %     5.4414     3.1416

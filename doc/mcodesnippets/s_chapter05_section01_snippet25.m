@@ -1,5 +1,5 @@
 %define array of four hyperplanes:
-HH = hyperplane([1 1; -1 -1; 1 -1; -1 1]', [2 2 2 2])
+hypArr = hyperplane([1 1; -1 -1; 1 -1; -1 1]', [2 2 2 2])
 
 % array of hyperplanes: 
 % size: [1 4]
@@ -47,10 +47,11 @@ HH = hyperplane([1 1; -1 -1; 1 -1; -1 1]', [2 2 2 2])
 % 
 % Hyperplane in R^2.
 
-
-P  = hyperplane2polytope(HH);  % convert array of hyperplanes to polytope
-HP = polytope2hyperplane(P);  % covert polytope to array of hyperplanes
-HP == HH
+% convert array of hyperplanes to polytope
+firstPol  = hyperplane2polytope(hypArr);
+% covert polytope to array of hyperplanes  
+convertedHypArr = polytope2hyperplane(firstPol);  
+convertedHypArr == hypArr
 
 % ans =
 % 

@@ -1,4 +1,4 @@
-H.dimension
+firstHyp.dimension
 
 % ans =
 % 

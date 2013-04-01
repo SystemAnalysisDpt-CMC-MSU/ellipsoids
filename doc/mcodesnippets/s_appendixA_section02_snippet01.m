@@ -1,6 +1,6 @@
-H = hyperplane([-1; 1]);
-X = [100 -1 2; 100 1 2];
-H.contains(X)
+hyp = hyperplane([-1; 1]);
+mat = [100 -1 2; 100 1 2];
+hyp.contains(mat)
 
 % ans =
 % 

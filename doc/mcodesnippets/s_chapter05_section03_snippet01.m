@@ -1,15 +1,18 @@
 % create two 4-dimensional ellipsoids:
-E1 = ellipsoid([14 -4 2 -5; -4 6 0 1; 2 0 6 -1; -5 1 -1 2]);
-E2 = E1.inv;
+firstEll = ellipsoid([14 -4 2 -5; -4 6 0 1; 2 0 6 -1; -5 1 -1 2]);
+secEll = firstEll.inv;
 
 % specify 3-dimensional subspace by its basis:
-BB = [1 0 0 0; 0 0 1 0; 0 1 0 1]';  % columns of BB must be orthogonal
 
-% get 3-dimensional projections of E1 and E2:
-EL = [E1 E2];
-PP = EL.projection(BB)  % array PP contains projections of E1 and E2
+% columns of basisMat must be orthogonal
+basisMat = [1 0 0 0; 0 0 1 0; 0 1 0 1]'; 
 
-% PP =
+% get 3-dimensional projections of firstEll and secEll:
+bufEllArr = [firstEll secEll];
+% array ellArr contains projections of firstEll and secEll
+ellArr = bufEllArr.projection(basisMat)  
+
+% ellArr =
 % 1x2 array of ellipsoids.
 
-PP.plot;  % plot ellipsoids in PP
+ellArr.plot;  % plot ellipsoids in ellArr

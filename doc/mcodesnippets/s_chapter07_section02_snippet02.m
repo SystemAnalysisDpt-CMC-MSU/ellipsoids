@@ -1,12 +1,14 @@
 % define disturbance:
-G = [0 0; 0 0; 1 0; 0 1];
-V = 0.5*ell_unitball(2);
-lsysd = elltool.linsys.LinSys(A, B, U, G, V);  % linear system with disturbance
-rsd = elltool.reach.ReachContinuous(lsysd, X0, L0, T);  % reach set
-psd = rsd.projection(BB);  % reach set projection onto (x1, x2)
+gMat = [0 0; 0 0; 1 0; 0 1];
+vEll = 0.5*ell_unitball(2);
+% linear system with disturbance
+lsysd = elltool.linsys.LinSys(aMat, bMat, uBoundsEll, gMat, vEll); 
+% reach set
+rsdObj = elltool.reach.ReachContinuous(lsysd, X0Ell, dirsMat, timeVec); 
+psdObj = rsdObj.projection(BB);  % reach set projection onto (x1, x2)
 % plot projection of reach set external approximation:
 subplot(2, 2, 3);
-ps.plot_ea;  % plot the whole reach tube
+psObj.plot_ea;  % plot the whole reach tube
 subplot(2, 2, 4);
-ps = ps.cut(4)
-ps.plot_ea;  % plot reach set approximation at time t = 4
+psObj = psObj.cut(4)
+psObj.plot_ea;  % plot reach set approximation at time t = 4

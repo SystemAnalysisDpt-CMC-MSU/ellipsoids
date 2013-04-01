@@ -1,11 +1,11 @@
-[c, g] = H.double
+[normVec, hypScal] = firstHyp.double
 
-% c =
+% normVec =
 % 
 %    -1
 %    -1
 % 
-% g =
+% hypScal =
 % 
 %    -1
 

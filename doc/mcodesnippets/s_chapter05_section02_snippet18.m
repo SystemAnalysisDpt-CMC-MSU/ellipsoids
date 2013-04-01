@@ -1,12 +1,16 @@
-T = [0 100];  % represents 100 time steps from 1 to 100
-dtrs = elltool.reach.ReachDiscrete(dtsys, X0, L, T);  % reach set for 100 time steps
-dtrs2 = dtrs.evolve(200);  % compute next 100 time steps
+timeVec = [0 100];  % represents 100 time steps from 1 to 100
+% reach set for 100 time steps
+secDtrsObj = elltool.reach.ReachDiscrete(dtsys, x0Ell, dirsMat, timeVec); 
+secDtrsObj = secDtrsObj.evolve(200);  % compute next 100 time steps
 
-Tb = [50 0];  % backward time interval
-dtbrs = elltool.reach.ReachDiscrete(dtsys, Y, L, Tb);  % backward reach set
-dtbrs = dtbrs.refine(L1);  % refine the approximation
-[EA, tt] = dtbrs.get_ea;  % get external approximating ellipsoids and time values
-IA = dtbrs.get_ia  % get internal approximating ellipsoids
+tbTimeVec = [50 0];  % backward time interval
+% backward reach set
+dtbrsObj = elltool.reach.ReachDiscrete(dtsys, yEll, dirsMat, tbTimeVec);  
+dtbrsObj = dtbrsObj.refine(L1);  % refine the approximation
+% get external approximating ellipsoids and time values
+[externallEllMat, timeVec] = dtbrsObj.get_ea;
+% get internal approximating ellipsoids
+internalEllMat = dtbrsObj.get_ia  
 
 % IA =
 % 3x51 array of ellipsoids.

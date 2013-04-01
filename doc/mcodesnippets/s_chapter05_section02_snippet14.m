@@ -1,7 +1,11 @@
-L1 = [1; -1];  % define new directions, in this case one, but could be more
-rs = rs.refine(L1)  % compute approximations for the new directions
-ct = rs.cut(5);  % snap shot of the reach set at time t = 5
-ct.intersect(E, 'i')  % check if E intersects the internal approximation
+% define new directions, in this case one, but could be more
+newDirsMat = [1; -1];
+% compute approximations for the new directions
+firstRsObj = firstRsObj.refine(newDirsMat);
+% snap shot of the reach set at time t = 5
+cutObj = firstRsObj.cut(5);
+% check if E intersects the internal approximation
+cutObj.intersect(ell, 'i')  
 
 % ans =
 % 

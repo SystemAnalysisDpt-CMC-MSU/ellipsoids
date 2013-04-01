@@ -1,8 +1,8 @@
-E = ellipsoid([4 -1; -1 1]);
-B = ell_unitball(2);
-E1 = [E B];
-T = E1.trace
+firstEll = ellipsoid([4 -1; -1 1]);
+secEll = ell_unitball(2);
+ellArr = [firstEll secEll];
+trArr = ellArr.trace
 
-% T =
+% trArr =
 % 
 %     5     2

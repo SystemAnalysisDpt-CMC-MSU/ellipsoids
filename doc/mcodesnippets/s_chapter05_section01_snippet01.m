@@ -1,5 +1,5 @@
- q = [1 2]';
- Q = eye(2, 2);
- E = ellipsoid(q, Q);
- E = ellipsoid(Q) + q;
- E = sqrtm(Q)*ell_unitball(size(Q, 1)) + q;
+ centVec = [1 2]';
+ shMat = eye(2, 2);
+ ell = ellipsoid(centVec, shMat);
+ ell = ellipsoid(shMat) + centVec;
+ ell = sqrtm(shMat)*ell_unitball(size(shMat, 1)) + centVec;

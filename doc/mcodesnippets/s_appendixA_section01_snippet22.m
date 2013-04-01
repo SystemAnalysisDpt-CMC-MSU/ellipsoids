@@ -1,7 +1,7 @@
-E = ellipsoid([-2; -1], [4 -1; -1 1]);
-O = E.move2origin
+ell = ellipsoid([-2; -1], [4 -1; -1 1]);
+outEll = ell.move2origin
 
-% O =
+% outEll =
 % 
 % Center:
 %      0

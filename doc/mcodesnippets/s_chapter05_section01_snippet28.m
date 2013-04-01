@@ -1,4 +1,4 @@
-EE(:, 1).intersect(HH, 'i')
+ellArr(:, 1).intersect(hypArr, 'i')
 
 % ans =
 % 

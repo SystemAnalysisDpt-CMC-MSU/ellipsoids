@@ -1,5 +1,5 @@
-% check if hyperplanes in HH intersect with internal approximation:
-ct.intersect(HH, 'i')
+% check if hyperplanes in hypArr intersect with internal approximation:
+cutObj.intersect(hypArr, 'i')
 
 % ans =
 % 

@@ -1,17 +1,17 @@
-E1 = ellipsoid;
-A = [3 1; 0 1; -2 1]; 
-E2 = ellipsoid([1; -1; 1], A*A');
-E3 = ellipsoid(eye(2));
-E4 = ellipsoid(0);
-E = [E1 E2; E3 E4];
-[n, r] = E.dimension
+firstEll = ellipsoid;
+mat = [3 1; 0 1; -2 1]; 
+secEll = ellipsoid([1; -1; 1], mat*mat');
+thirdEll = ellipsoid(eye(2));
+fourthEll = ellipsoid(0);
+ellMat = [firstEll secEll; thirdEll fourthEll];
+[dimArr, rankArr] = ellMat.dimension
 
-% n =
+% dimArr =
 % 
 %    0     3
 %    2     1
 % 
-% r =
+% rankArr =
 % 
 %    0     2
 %    2     0

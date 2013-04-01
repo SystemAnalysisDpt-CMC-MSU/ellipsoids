@@ -1,6 +1,6 @@
-E  = [ellipsoid([-2; -1], [4 -1; -1 1]) ell_unitball(2)];
-E1 = E - [1; 1];
-E1(1)
+ellArr  = [ellipsoid([-2; -1], [4 -1; -1 1]) ell_unitball(2)];
+outEllArr = ellArr - [1; 1];
+outEllArr(1)
 
 % ans =
 % 
@@ -14,7 +14,7 @@ E1(1)
 % 
 % Nondegenerate ellipsoid in R^2.
 
-E1(2)
+outEllArr(2)
 
 % ans =
 % 

@@ -1,3 +1,3 @@
- U = struct();
- U.center = [0; 1];
- U.shape ={'4' 'cos(t)'; 'cos(t)' '1'};
+ uBoundsEll = struct();
+ uBoundsEll.center = [0; 1];
+ uBoundsEll.shape ={'4' 'cos(t)'; 'cos(t)' '1'};

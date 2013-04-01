@@ -1,11 +1,11 @@
-EL = [EE(1, :) D];
-[n, r] = EL.dimension 
+bufEllArr = [ellArr(1, :) fourthEllArr];
+[dimArr, rankArr] = bufEllArr.dimension 
 
 
-% n =
+% dimArr =
 % 
 %    2     2     4
 % 
-% r =
+% rankArr =
 % 
 %    2     2     3

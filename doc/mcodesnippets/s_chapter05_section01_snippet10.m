@@ -1,4 +1,5 @@
-EA.isinside([E1 E3], 'i')  % array [E1 E3] should be treated as intersection
+% array [firstEll secEll] should be treated as intersection
+externalEll.isinside([firstEll secEll], 'i')  
 
 % ans =
 % 

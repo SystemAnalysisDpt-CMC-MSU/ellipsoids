@@ -1,5 +1,5 @@
-EL = [E1 E2 E3];
-EL.intersect(P, 'i')
+bufEllArr = [firstEll secEll thirdEll];
+bufEllArr.intersect(firstPol, 'i')
 
 % ans =
 % 

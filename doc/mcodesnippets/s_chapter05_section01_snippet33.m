@@ -1,4 +1,5 @@
-EE(2, 2).isinside([P Q], 'i')  % equivalent to: isinside(EE(2, 2), P & Q)
+% equivalent to: isinside(ellArr(2, 2), firstPol & secPol)
+ellArr(2, 2).isinside([firstPol secPol], 'i')  
 
 % ans =
 % 

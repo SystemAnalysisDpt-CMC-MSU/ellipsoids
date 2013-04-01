@@ -1,5 +1,5 @@
-% check if ellipsoid E intersects with internal approximation:
-ct.intersect(E, 'i')
+% check if ellipsoid ell intersects with internal approximation:
+cutObj.intersect(ell, 'i')
 
 % 
 % ans =

@@ -1,6 +1,6 @@
-E = -ellipsoid([-2; -1], [4 -1; -1 1])
+ell = -ellipsoid([-2; -1], [4 -1; -1 1])
 
-% E =
+% ell =
 % 
 % Center:
 %      2

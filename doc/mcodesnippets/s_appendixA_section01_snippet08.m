@@ -1,8 +1,8 @@
-E1 = ellipsoid([-2; -1], [4 -1; -1 1]);
-E2 = E1 + [5; 5];
-E = [E1 E2];
-X  = ell_unitball(2);
-EA = E.intersection_ea(X)
+firstEll = ellipsoid([-2; -1], [4 -1; -1 1]);
+secEll = firstEll + [5; 5];
+ellArr = [firstEll secEll];
+thirdEll  = ell_unitball(2);
+externalEllArr = ellArr.intersection_ea(thirdEll)
 
-% EA =
+% externalEllArr =
 % 1x2 array of ellipsoids.
