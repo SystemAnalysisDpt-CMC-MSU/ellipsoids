@@ -83,7 +83,7 @@ classdef SuiteOp < mlunitext.test_case
             %
             aMat = eye(10)*5;
             aMatFun = ConstMatrixFunction(aMat);
-            rMatFun = factory.sqrtm(aMatFun);
+            rMatFun = factory.sqrtmpos(aMatFun);
             expectedMatVec = sqrtm(aMat);
             obtainedMatVec = rMatFun.evaluate(0);
             self.isMatVecEq(expectedMatVec, obtainedMatVec);

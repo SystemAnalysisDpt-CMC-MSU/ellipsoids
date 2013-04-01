@@ -102,7 +102,7 @@ function [ellDist timeOfCalculation] = findEllMetDistance(ellObj1,ellObj2,nMaxIt
 if rank(ellQ1Mat) < size(ellQ1Mat, 2)
     ellQ1Mat = ellipsoid.regularize(ellQ1Mat,ellObj1.absTol);
 end
-sqrQ1Mat=sqrtm(ellQ1Mat);
+sqrQ1Mat=gras.la.sqrtmpos(ellQ1Mat,ellObj1.absTol);
 sqrInvQ1Mat=sqrQ1Mat\eye(size(sqrQ1Mat));
 newQ1Mat=eye(size(ellQ1Mat));
 newCen1Vec=sqrInvQ1Mat*cen1Vec;

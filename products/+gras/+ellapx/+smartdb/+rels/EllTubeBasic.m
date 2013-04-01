@@ -222,8 +222,8 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             function minEig=checkIntWithinExt(QExtArray,QIntArray,calcPrec)
                 import gras.gen.SquareMatVector;
                 import modgen.common.throwerror;                
-                QExtSqrtArray=SquareMatVector.sqrtm(QExtArray);
-                QIntSqrtArray=SquareMatVector.sqrtm(QIntArray);
+                QExtSqrtArray=SquareMatVector.sqrtmpos(QExtArray);
+                QIntSqrtArray=SquareMatVector.sqrtmpos(QIntArray);
                 minEig=min(SquareMatVector.evalMFunc(@(x)min(eig(x)),...
                     QExtSqrtArray-QIntSqrtArray));
                 if minEig+calcPrec<0
