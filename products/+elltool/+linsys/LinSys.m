@@ -1,27 +1,27 @@
 classdef LinSys < handle
-% Linear system object of the Ellipsoidal Toolbox.
-%
-% 
-%  LinSys         - Constructor of linear system object.
-%  dimension      - Returns state space dimension, number of inputs, number of
-%                   outputs and number of disturbance inputs.
-%  isempty        - Checks if the linear system object is empty.
-%  isdiscrete     - Returns 1 if linear system is discrete-time,
-%                   0 - if continuous-time.
-%  islti          - Returns 1 if the system is time-invariant, 0 - otherwise.
-%  hasdisturbance - Returns 1 if unknown bounded disturbance is present,
-%                   0 - if there is no disturbance, or disturbance vector is fixed.
-%  hasnoise       - Returns 1 if unknown bounded noise at the output is present,
-%                   0 - if there is no noise, or noise vector is fixed.
-%
-%
-% $Authors: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-%           Ivan Menshikov  <ivan.v.menshikov@gmail.com> $    $Date: 2012 $
-%           Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: March-2013 $
-% $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Computer Science,
-%            System Analysis Department 2013 $
-%
+    % Linear system object of the Ellipsoidal Toolbox.
+    %
+    %
+    %  LinSys         - Constructor of linear system object.
+    %  dimension      - Returns state space dimension, number of inputs, number of
+    %                   outputs and number of disturbance inputs.
+    %  isempty        - Checks if the linear system object is empty.
+    %  isdiscrete     - Returns 1 if linear system is discrete-time,
+    %                   0 - if continuous-time.
+    %  islti          - Returns 1 if the system is time-invariant, 0 - otherwise.
+    %  hasdisturbance - Returns 1 if unknown bounded disturbance is present,
+    %                   0 - if there is no disturbance, or disturbance vector is fixed.
+    %  hasnoise       - Returns 1 if unknown bounded noise at the output is present,
+    %                   0 - if there is no noise, or noise vector is fixed.
+    %
+    %
+    % $Authors: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+    %           Ivan Menshikov  <ivan.v.menshikov@gmail.com> $    $Date: 2012 $
+    %           Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: March-2013 $
+    % $Copyright: Moscow State University,
+    %            Faculty of Computational Mathematics and Computer Science,
+    %            System Analysis Department 2013 $
+    %
     properties (Access = private)
         atMat
         btMat
@@ -38,25 +38,25 @@ classdef LinSys < handle
     %
     methods (Access = private, Static)
         function isEllHaveNeededDim(InpEll, nDim, absTol)
-        % isEllHaveNeededDim - checks if given structure InpEll represents
-        %     an ellipsoid of dimension nDim.
-        %
-        % Input:
-        %   regular:
-        %       InpEll: struct[1, 1]
-        %
-        %       nDim: double[1, 1]
-        %
-        %       absTol: doulbe[1,1]
-        %
-        % Output:
-        %   None.
-        %
+            % isEllHaveNeededDim - checks if given structure InpEll represents
+            %     an ellipsoid of dimension nDim.
+            %
+            % Input:
+            %   regular:
+            %       InpEll: struct[1, 1]
+            %
+            %       nDim: double[1, 1]
+            %
+            %       absTol: doulbe[1,1]
+            %
+            % Output:
+            %   None.
+            %
             import elltool.logging.Log4jConfigurator;
             import modgen.common.throwerror;
-
+            
             persistent logger;
-
+            
             qVec = InpEll.center;
             QMat = InpEll.shape;
             [kRows, lCols] = size(qVec);
@@ -70,8 +70,8 @@ classdef LinSys < handle
                     'shape matrix must be of dimension %dx%d', nDim, nDim);
             elseif lCols > 1 || kRows ~= nDim
                 throwerror(sprintf('linsys:dimension:%s:center', inputname(1)),...
-                    'center must be a vector of dimension %d', nDim);  
-            end 
+                    'center must be a vector of dimension %d', nDim);
+            end
             %%
             if ~iscell(qVec) && ~iscell(QMat)
                 throwerror(sprintf('linsys:type:%s',inputname(1)),...
@@ -80,7 +80,7 @@ classdef LinSys < handle
             %%
             if ~iscell(qVec) && ~isa(qVec, 'double')
                 throwerror(sprintf('type:%s:center', inputname(1)),...
-                    'center must be of type ''cell'' or ''double''');        
+                    'center must be of type ''cell'' or ''double''');
             end
             %%
             if iscell(QMat)
@@ -105,73 +105,105 @@ classdef LinSys < handle
                         throwerror(sprintf('linsys:value:%s:shape',...
                             inputname(1)),...
                             'shape matrix must be  positive definite');
-                    end                    
+                    end
                 else
                     throwerror(sprintf('type:%s:shape', inputname(1)),...
-                        'shape matrix must be of type ''cell'' or ''double''');    
-                end        
+                        'shape matrix must be of type ''cell'' or ''double''');
+                end
             end
-        end 
+        end
+        %
+        function copyEll = getCopyOfNotEmptyEll(inpEll)
+            if isstruct(inpEll)
+                copyEll = inpEll;
+            else
+                copyEll = inpEll.getCopy();
+            end
+        end
+        %
+        function copyEll = getCopyEll(inpEll)
+            if ~isempty(inpEll)
+                copyEll =...
+                    elltool.linsys.LinSys.getCopyOfNotEmptyEll(inpEll);
+            else
+                copyEll = [];
+            end
+        end
+        %
+        function isEq = isEqualEll(firstEll, secondEll)
+            isEq = false;
+            if ~isempty(firstEll) && ~isempty(secondEll)
+                if isstruct(firstEll) && isstruct(secondEll)
+                    isEq = isequal(firstEll, secondEll);
+                end
+                if ~isstruct(firstEll) && ~isstruct(secondEll)
+                    isEq = firstEll.isEqual(secondEll);
+                end
+            end
+            if isempty(firstEll) && isempty(secondEll)
+                isEq = true;
+            end
+        end
     end
     methods
         function aMat = getAtMat(self)
-        % Input:
-        %   regular:
-        %       self.
-        %
-        % Output:
-        %   aMat: double[aMatDim, aMatDim].
-        %
+            % Input:
+            %   regular:
+            %       self.
+            %
+            % Output:
+            %   aMat: double[aMatDim, aMatDim].
+            %
             aMat = self.atMat;
         end
         function bMat = getBtMat(self)
-        % Input:
-        %   regular:
-        %       self.
-        %
-        % Output:
-        %   bMat: double[bMatDim, bMatDim].
-        %
+            % Input:
+            %   regular:
+            %       self.
+            %
+            % Output:
+            %   bMat: double[bMatDim, bMatDim].
+            %
             bMat = self.btMat;
         end
         function uEll = getUBoundsEll(self)
-        % Input:
-        %   regular:
-        %       self.
-        %
-        % Output:
-        %   uEll: ellipsoid[1, 1].
-        %
+            % Input:
+            %   regular:
+            %       self.
+            %
+            % Output:
+            %   uEll: ellipsoid[1, 1].
+            %
             uEll = self.controlBoundsEll;
         end
         function gMat = getGtMat(self)
-        % Input:
-        %   regular:
-        %       self.
-        %
-        % Output:
-        %   gMat: double[gMatDim, gMatDim].
-        %
+            % Input:
+            %   regular:
+            %       self.
+            %
+            % Output:
+            %   gMat: double[gMatDim, gMatDim].
+            %
             gMat = self.gtMat;
         end
         function distEll = getDistBoundsEll(self)
-        % Input:
-        %   regular:
-        %       self.
-        %
-        % Output:
-        %   distEll: ellipsoid[1, 1].
-        %
+            % Input:
+            %   regular:
+            %       self.
+            %
+            % Output:
+            %   distEll: ellipsoid[1, 1].
+            %
             distEll = self.disturbanceBoundsEll;
         end
         function cMat = getCtMat(self)
-        % Input:
-        %   regular:
-        %       self.
-        %
-        % Output:
-        %   cMat: double[cMatDim, cMatDim].
-        %
+            % Input:
+            %   regular:
+            %       self.
+            %
+            % Output:
+            %   cMat: double[cMatDim, cMatDim].
+            %
             cMat = self.ctMat;
         end
         function noiseEll = getNoiseBoundsEll(self)
@@ -180,46 +212,46 @@ classdef LinSys < handle
         %
         function self = LinSys(atInpMat, btInpMat, uBoundsEll, gtInpMat,...
                 distBoundsEll, ctInpMat, noiseBoundsEll, discrFlag, varargin)
-        %
-        % LINSYS - constructor for linear system object.
-        %
-        % Continuous-time linear system:
-        %                   dx/dt  =  A(t) x(t)  +  B(t) u(t)  +  G(t) v(t)
-        %                    y(t)  =  C(t) x(t)  +  w(t)
-        %
-        % Discrete-time linear system:
-        %                  x[k+1]  =  A[k] x[k]  +  B[k] u[k]  +  G[k] v[k]
-        %                    y[k]  =  C[k] x[k]  +  w[k]
-        %
-        % Input:
-        %   regular:
-        %       atInpMat: double[nDim, nDim]/cell[nDim, nDim].
-        %
-        %       btInpMat: double[nDim, kDim]/cell[nDim, kDim].
-        %
-        %       uBoundsEll: ellipsoid[1, 1]/struct[1, 1].
-        %
-        %       gtInpMat: double[nDim, lDim]/cell[nDim, lDim].
-        %
-        %       distBoundsEll: ellipsoid[1, 1]/struct[1, 1].
-        %
-        %       ctInpMat: double[mDim, nDim]/cell[mDim, nDim].
-        %
-        %       noiseBoundsEll: ellipsoid[1, 1]/struct[1, 1].
-        %
-        %       discrFlag: char[1, 1] - if discrFlag set:
-        %           'd' - to discrete-time linSys
-        %           not 'd' - to continuous-time linSys.
-        %
-        % Output:
-        %   self: elltool.linsys.LinSys[1, 1].
-        %
+            %
+            % LINSYS - constructor for linear system object.
+            %
+            % Continuous-time linear system:
+            %                   dx/dt  =  A(t) x(t)  +  B(t) u(t)  +  G(t) v(t)
+            %                    y(t)  =  C(t) x(t)  +  w(t)
+            %
+            % Discrete-time linear system:
+            %                  x[k+1]  =  A[k] x[k]  +  B[k] u[k]  +  G[k] v[k]
+            %                    y[k]  =  C[k] x[k]  +  w[k]
+            %
+            % Input:
+            %   regular:
+            %       atInpMat: double[nDim, nDim]/cell[nDim, nDim].
+            %
+            %       btInpMat: double[nDim, kDim]/cell[nDim, kDim].
+            %
+            %       uBoundsEll: ellipsoid[1, 1]/struct[1, 1].
+            %
+            %       gtInpMat: double[nDim, lDim]/cell[nDim, lDim].
+            %
+            %       distBoundsEll: ellipsoid[1, 1]/struct[1, 1].
+            %
+            %       ctInpMat: double[mDim, nDim]/cell[mDim, nDim].
+            %
+            %       noiseBoundsEll: ellipsoid[1, 1]/struct[1, 1].
+            %
+            %       discrFlag: char[1, 1] - if discrFlag set:
+            %           'd' - to discrete-time linSys
+            %           not 'd' - to continuous-time linSys.
+            %
+            % Output:
+            %   self: elltool.linsys.LinSys[1, 1].
+            %
             import modgen.common.throwerror;
             import elltool.conf.Properties;
             import elltool.logging.Log4jConfigurator;
-
+            
             persistent logger;
-
+            
             neededPropNameList = {'absTol'};
             absTolVal = Properties.parseProp(varargin, neededPropNameList);
             if nargin == 0
@@ -262,7 +294,7 @@ classdef LinSys < handle
             elseif ~(isa(btInpMat, 'double'))
                 throwerror('linsys:type:B',...
                     'LINSYS: matrix B must be of type ''cell'' or ''double''.');
-            end 
+            end
             self.btMat = btInpMat;
             %%
             isCBU = true;
@@ -300,7 +332,7 @@ classdef LinSys < handle
                         isfield(uBoundsEll, 'shape')
                     isCBU = false;
                     uBoundsEll = uBoundsEll(1, 1);
-                    self.isEllHaveNeededDim(uBoundsEll, lCols,self.absTol);      
+                    self.isEllHaveNeededDim(uBoundsEll, lCols,self.absTol);
                 else
                     throwerror('linsys:type:U',...
                         'LINSYS: control U must be an ellipsoid or a vector.')
@@ -324,8 +356,8 @@ classdef LinSys < handle
                     elseif ~(isa(gtInpMat, 'double'))
                         throwerror('linsys:type:G',...
                             'LINSYS: matrix G must be of type ''cell'' or ''double''.');
-                    end 
-                end 
+                    end
+                end
             else
                 gtInpMat = [];
             end
@@ -359,7 +391,7 @@ classdef LinSys < handle
                         isfield(distBoundsEll, 'shape')
                     isCBV = false;
                     distBoundsEll = distBoundsEll(1, 1);
-                        self.isEllHaveNeededDim(distBoundsEll, lCols,...
+                    self.isEllHaveNeededDim(distBoundsEll, lCols,...
                         self.absTol);
                 else
                     throwerror('linsys:type:V',...
@@ -385,8 +417,8 @@ classdef LinSys < handle
                     elseif ~(isa(ctInpMat, 'double'))
                         throwerror('linsys:type:C',...
                             'LINSYS: matrix C must be of type ''cell'' or ''double''.');
-                    end 
-                end 
+                    end
+                end
             else
                 ctInpMat = eye(nCols);
             end
@@ -441,25 +473,25 @@ classdef LinSys < handle
         %
         function [stateDimArr, inpDimArr, outDimArr, distDimArr] =...
                 dimension(self)
-        %
-        % DIMENSION - returns dimensions of state,
-        %     input, output and disturbance spaces.
-        % Input:
-        %   regular:
-        %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array
-        %             of linear systems.
-        %
-        % Output:
-        %   stateDimArr: double[nDims1, nDims2,...] - array of
-        %       state space dimensions.
-        %
-        %   inpDimArr: double[nDims1, nDims2,...] - array of input dimensions.
-        %
-        %   outDimArr: double[nDims1, nDims2,...] - array of output dimensions.
-        %
-        %   distDimArr: double[nDims1, nDims2,...] - array of
-        %       disturbance dimensions.
-        %   
+            %
+            % DIMENSION - returns dimensions of state,
+            %     input, output and disturbance spaces.
+            % Input:
+            %   regular:
+            %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array
+            %             of linear systems.
+            %
+            % Output:
+            %   stateDimArr: double[nDims1, nDims2,...] - an array of
+            %       state space dimensions.
+            %
+            %   inpDimArr: double[nDims1, nDims2,...] - array of input dimensions.
+            %
+            %   outDimArr: double[nDims1, nDims2,...] - array of output dimensions.
+            %
+            %   distDimArr: double[nDims1, nDims2,...] - array of
+            %       disturbance dimensions.
+            %
             [stateDimArr, inpDimArr, outDimArr, distDimArr] =...
                 arrayfun(@(x) getDimensions(x), self);
             %
@@ -483,16 +515,16 @@ classdef LinSys < handle
         end
         %
         function display(self)
-        %
-        % Displays the details of linear system object.
-        %
-        % Input:
-        %   regular:
-        %       self.
-        %
-        % Output:
-        %   None.
-        %
+            %
+            % Displays the details of linear system object.
+            %
+            % Input:
+            %   regular:
+            %       self: elltool.linsys.LinSys object.
+            %
+            % Output:
+            %   None.
+            %
             fprintf('\n');
             disp([inputname(1) ' =']);
             %%
@@ -677,23 +709,23 @@ classdef LinSys < handle
             end
             fprintf(':\n%s%s%s%s%s%s%s\n%s%s%s%s\n\n',...
                 s1, s4, s3, s5, s6, s7, s8, s2, s9, s3, s10);
-            return; 
+            return;
         end
         %
         function isDisturbanceArr = hasdisturbance(self)
-        %
-        % HASDISTURBANCE checks if linear system has unknown bounded disturbance.
-        %
-        % Input:
-        %   regular:
-        %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array
-        %             of linear systems.
-        %
-        % Output:
-        %   isDisturbanceArr: logical[nDims1, nDims2,...] - array such that
-        %       it's element at each position is true if corresponding
-        %       linear system has disturbance, and false otherwise.
-        %
+            %
+            % HASDISTURBANCE checks if linear system has unknown bounded disturbance.
+            %
+            % Input:
+            %   regular:
+            %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array
+            %             of linear systems.
+            %
+            % Output:
+            %   isDisturbanceArr: logical[nDims1, nDims2,...] - an array such
+            %       that it's element at each position is true if corresponding
+            %       linear system has disturbance, and false otherwise.
+            %
             isDisturbanceArr = arrayfun(@(x) isDisturb(x), self);
             %
             function isDisturb = isDisturb(linsys)
@@ -706,19 +738,19 @@ classdef LinSys < handle
         end
         %
         function isNoiseArr = hasnoise(self)
-        %
-        % HASNOISE checks if linear system has unknown bounded noise.
-        %
-        % Input:
-        %   regular:
-        %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array
-        %             of linear systems.
-        %
-        % Output:
-        %   isNoiseMat: logical[nDims1, nDims2,...] - array such that it's
-        %       element at each position is true if corresponding
-        %       linear system has noise, and false otherwise.
-        %
+            %
+            % HASNOISE checks if linear system has unknown bounded noise.
+            %
+            % Input:
+            %   regular:
+            %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array
+            %             of linear systems.
+            %
+            % Output:
+            %   isNoiseMat: logical[nDims1, nDims2,...] - an array such that
+            %       it's element at each position is true if corresponding
+            %       linear system has noise, and false otherwise.
+            %
             isNoiseArr = arrayfun(@(x) isNoise(x), self);
             %
             function isNoise = isNoise(linsys)
@@ -730,19 +762,19 @@ classdef LinSys < handle
         end
         %
         function isDiscreteArr = isdiscrete(self)
-        %
-        % ISDISCRETE checks if linear system is discrete-time.
-        %
-        % Input:
-        %   regular:
-        %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array
-        %             of linear systems.
-        %
-        % Output:
-        %   isDiscreteMat: logical[nDims1, nDims2,...] - array such that it's
-        %       element at each position is true if corresponding
-        %       linear system is discrete-time, and false otherwise.
-        %
+            %
+            % ISDISCRETE checks if linear system is discrete-time.
+            %
+            % Input:
+            %   regular:
+            %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array
+            %             of linear systems.
+            %
+            % Output:
+            %   isDiscreteMat: logical[nDims1, nDims2,...] - an array such
+            %       that it's element at each position is true if corresponding
+            %       linear system is discrete-time, and false otherwise.
+            %
             isDiscreteArr = arrayfun(@(x) isDiscrete(x), self);
             %
             function isDiscrete = isDiscrete(linsys)
@@ -751,43 +783,43 @@ classdef LinSys < handle
         end
         %
         function isEmptyArr = isempty(self)
-        %
-        % ISEMPTY checks if linear system is empty.
-        %
-        % Input:
-        %   regular:
-        %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array
-        %             of linear systems.
-        %
-        % Output:
-        %   isEmptyMat: logical[nDims1, nDims2,...] - array such that it's
-        %       element at each position is true if corresponding
-        %       linear system is empty, and false otherwise.
-        %
+            %
+            % ISEMPTY checks if linear system is empty.
+            %
+            % Input:
+            %   regular:
+            %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array
+            %             of linear systems.
+            %
+            % Output:
+            %   isEmptyMat: logical[nDims1, nDims2,...] - an array such that
+            %       it's element at each position is true if corresponding
+            %       linear system is empty, and false otherwise.
+            %
             isEmptyArr = arrayfun(@(x) isEmp(x), self);
             %
             function isEmp = isEmp(linsys)
                 isEmp = false;
-                if isempty(linsys.atMat) 
+                if isempty(linsys.atMat)
                     isEmp = true;
                 end
             end
         end
         %
         function isLtiArr = islti(self)
-        %
-        % ISLTI checks if linear system is time-invariant.
-        %
-        % Input:
-        %   regular:
-        %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array
-        %             of linear systems.
-        %
-        % Output:
-        %   isLtiMat: logical[nDims1, nDims2,...] -array such that it's
-        %       element at each position is true if corresponding
-        %       linear system is time-invariant, and false otherwise.
-        %
+            %
+            % ISLTI checks if linear system is time-invariant.
+            %
+            % Input:
+            %   regular:
+            %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array
+            %             of linear systems.
+            %
+            % Output:
+            %   isLtiMat: logical[nDims1, nDims2,...] - an array such that it's
+            %       element at each position is true if corresponding
+            %       linear system is time-invariant, and false otherwise.
+            %
             isLtiArr = arrayfun(@(x) isLti(x), self);
             %
             function isLti = isLti(linsys)
@@ -796,71 +828,84 @@ classdef LinSys < handle
         end
         %
         function absTolArr = getAbsTol(self)
-        %
-        % GETABSTOL gives array the same size as linsysArr with
-        % values of absTol properties for each hyperplane in hplaneArr.
-        %
-        % Input:
-        %   regular:
-        %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array
-        %             of linear systems.
-        % 
-        % Output:
-        %   absTolArr: double[nDims1, nDims2,...] - array of absTol
-        %       properties for linear systems in self.
-        %
-        % $Author: Zakharov Eugene  <justenterrr@gmail.com> $    $Date: 17-november-2012 $
-        % $Copyright: Moscow State University,
-        %            Faculty of Computational Mathematics and Computer Science,
-        %            System Analysis Department 2012 $
-        % 
+            %
+            % GETABSTOL gives array the same size as linsysArr with
+            % values of absTol properties for each hyperplane in hplaneArr.
+            %
+            % Input:
+            %   regular:
+            %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array
+            %             of linear systems.
+            %
+            % Output:
+            %   absTolArr: double[nDims1, nDims2,...] - an array of absTol
+            %       properties for linear systems in self.
+            %
+            % $Author: Zakharov Eugene  <justenterrr@gmail.com> $    $Date: 17-november-2012 $
+            % $Copyright: Moscow State University,
+            %            Faculty of Computational Mathematics and Computer Science,
+            %            System Analysis Department 2012 $
+            %
             absTolArr = arrayfun(@(x)x.absTol, self);
         end
         %
         function copyLinSysArr = getCopy(self)
-            sizeCVec = num2cell(size(self));
-            copyLinSysArr(sizeCVec{:}) = elltool.linsys.LinSys;
-            for i = numel(self): -1 : 1
-                curLinSys = self(i);
-                copyLinSysArr(i).atMat = curLinSys.atMat;
-                copyLinSysArr(i).btMat = curLinSys.btMat;
-                if ~isempty(curLinSys.controlBoundsEll)
-                    copyLinSysArr(i).controlBoundsEll =...
-                        getCopyEll(curLinSys.controlBoundsEll);
-                else
-                    copyLinSysArr(i).controlBoundsEll = [];
-                end
-                copyLinSysArr(i).gtMat = curLinSys.gtMat;
-                if ~isempty(curLinSys.disturbanceBoundsEll)
-                    copyLinSysArr(i).disturbanceBoundsEll =...
-                        getCopyEll(curLinSys.disturbanceBoundsEll);
-                else
-                    copyLinSysArr(i).disturbanceBoundsEll = [];
-                end
-                copyLinSysArr(i).ctMat = curLinSys.ctMat;
-                if ~isempty(curLinSys.noiseBoundsEll)
-                    copyLinSysArr(i).noiseBoundsEll =...
-                        getCopyEll(curLinSys.noiseBoundsEll);
-                else
-                    copyLinSysArr(i).noiseBoundsEll = [];
-                end
-                copyLinSysArr(i).isTimeInv = curLinSys.isTimeInv;
-                copyLinSysArr(i).isDiscr = curLinSys.isDiscr;
-                copyLinSysArr(i).isConstantBoundsVec =...
-                    curLinSys.isConstantBoundsVec;
-                copyLinSysArr(i).absTol = curLinSys.absTol;
-            end
             %
-            function copyEll = getCopyEll(inpEll)
-                if isstruct(inpEll)
-                    copyEll = inpEll;
-                else
-                    copyEll = inpEll.getCopy();
-                end
+            % GETCOPY gives array the same size as linsysArr with
+            % with copies of elements of self.
+            %
+            % Input:
+            %   regular:
+            %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array
+            %             of linear systems.
+            %
+            % Output:
+            %   copyLinSysArr: elltool.linsys.LinSys[nDims1, nDims2,...] - an
+            %       array of copies of elements of self.
+            %
+            sizeCVec = num2cell(size(self));
+            copyLinSysArr(sizeCVec{:}) = elltool.linsys.LinSys();
+            arrayfun(@(x) fSingleCopy(x), 1 : numel(self));
+            %
+            function fSingleCopy(index)
+                curLinSys = self(index);
+                copyLinSysArr(index).atMat = curLinSys.atMat;
+                copyLinSysArr(index).btMat = curLinSys.btMat;
+                copyLinSysArr(index).controlBoundsEll =...
+                    self.getCopyEll(curLinSys.controlBoundsEll);
+                copyLinSysArr(index).gtMat = curLinSys.gtMat;
+                copyLinSysArr(index).disturbanceBoundsEll =...
+                    self.getCopyEll(curLinSys.disturbanceBoundsEll);
+                copyLinSysArr(index).ctMat = curLinSys.ctMat;
+                copyLinSysArr(index).noiseBoundsEll =...
+                    self.getCopyEll(curLinSys.noiseBoundsEll);
+                copyLinSysArr(index).isTimeInv = curLinSys.isTimeInv;
+                copyLinSysArr(index).isDiscr = curLinSys.isDiscr;
+                copyLinSysArr(index).isConstantBoundsVec =...
+                    curLinSys.isConstantBoundsVec;
+                copyLinSysArr(index).absTol = curLinSys.absTol;
             end
         end
         %
         function isEqualArr = isEqual(self, compLinSysArr)
+            %
+            % ISEQUAL produces produces logical array the same size as
+            % self/compLinSysArr (if they have the same).
+            % isEqualArr[iDim1, iDim2,...] is true if corresponding
+            % linear systems are equal and false otherwise.
+            %
+            % Input:
+            %   regular:
+            %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array
+            %             of linear systems.
+            %       compLinSysArr: elltool.linsys.LinSys[nDims1, nDims2,...] - an array
+            %             of linear systems.
+            %
+            % Output:
+            %   isEqualArr: elltool.linsys.LinSys[nDims1, nDims2,...] - an
+            %       array of logical values. isEqualArr[iDim1, iDim2,...] is true
+            %       if corresponding linear systems are equal and false otherwise.
+            %
             import modgen.common.throwerror;
             %
             if ~all(size(self) == size(compLinSysArr))
@@ -877,48 +922,38 @@ classdef LinSys < handle
                 firstInpDimArr == secondInpDimArr &...
                 firstOutDimArr == secondOutDimArr &...
                 firstDistDimArr == secondDistDimArr) = true;
-            for i = 1 : numel(self)
-                if isEqualArr(i)
-                    absTolerance = min(self(i).getAbsTol(),...
-                        compLinSysArr(i).getAbsTol());
-                    firstAMat = self(i).getAtMat();
-                    secondAMat = compLinSysArr(i).getAtMat();
-                    firstBMat = self(i).getBtMat();
-                    secondBMat = compLinSysArr(i).getBtMat();
-                    firstUEll = self(i).getUBoundsEll();
-                    secondUEll = compLinSysArr(i).getUBoundsEll();
-                    firstGMat = self(i).getGtMat();
-                    secondGMat = compLinSysArr(i).getGtMat();
-                    firstDistEll = self(i).getDistBoundsEll();
-                    secondDistEll = compLinSysArr(i).getDistBoundsEll();
-                    firstCMat = self(i).getCtMat();
-                    secondCMat = compLinSysArr(i).getCtMat();
-                    firstNoiseEll = self(i).getNoiseBoundsEll();
-                    secondNoiseEll = compLinSysArr(i).getNoiseBoundsEll();
+            arrayfun(@(x) fSingleComp(x), 1 : numel(self));
+            %
+            function fSingleComp(index)
+                if isEqualArr(index)
+                    curLinSys = self(index);
+                    absTolerance = min(curLinSys.getAbsTol(),...
+                        compLinSysArr(index).getAbsTol());
+                    firstAMat = curLinSys.getAtMat();
+                    secondAMat = compLinSysArr(index).getAtMat();
+                    firstBMat = curLinSys.getBtMat();
+                    secondBMat = compLinSysArr(index).getBtMat();
+                    firstUEll = curLinSys.getUBoundsEll();
+                    secondUEll = compLinSysArr(index).getUBoundsEll();
+                    firstGMat = curLinSys.getGtMat();
+                    secondGMat = compLinSysArr(index).getGtMat();
+                    firstDistEll = curLinSys.getDistBoundsEll();
+                    secondDistEll =...
+                        compLinSysArr(index).getDistBoundsEll();
+                    firstCMat = curLinSys.getCtMat();
+                    secondCMat = compLinSysArr(index).getCtMat();
+                    firstNoiseEll = curLinSys.getNoiseBoundsEll();
+                    secondNoiseEll =...
+                        compLinSysArr(index).getNoiseBoundsEll();
                     %
-                    isEqualArr(i) =...
+                    isEqualArr(index) =...
                         norm(firstAMat - secondAMat) <= absTolerance &&...
                         norm(firstBMat - secondBMat) <= absTolerance &&...
-                        isEqualEll(firstUEll, secondUEll) &&...
+                        self.isEqualEll(firstUEll, secondUEll) &&...
                         norm(firstGMat - secondGMat) <= absTolerance &&...
-                        isEqualEll(firstDistEll, secondDistEll) &&...
+                        self.isEqualEll(firstDistEll, secondDistEll) &&...
                         norm(firstCMat - secondCMat) <= absTolerance &&...
-                        isEqualEll(firstNoiseEll, secondNoiseEll);
-                end
-            end
-            %
-            function isEq = isEqualEll(firstEll, secondEll)
-                isEq = false;
-                if ~isempty(firstEll) && ~isempty(secondEll)
-                    if isstruct(firstEll) && isstruct(secondEll)
-                        isEq = isequal(firstEll, secondEll);
-                    end
-                    if ~isstruct(firstEll) && ~isstruct(secondEll)
-                        isEq = firstEll.isEqual(secondEll);
-                    end
-                end
-                if isempty(firstEll) && isempty(secondEll)
-                    isEq = true;
+                        self.isEqualEll(firstNoiseEll, secondNoiseEll);
                 end
             end
         end

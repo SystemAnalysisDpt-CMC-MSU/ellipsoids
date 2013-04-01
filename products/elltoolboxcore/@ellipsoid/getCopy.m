@@ -16,11 +16,13 @@ function copyEllArr = getCopy(ellArr)
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2013 $
 %
-    sizeCVec = num2cell(size(ellArr));
-    copyEllArr(sizeCVec{:}) = ellipsoid;
-    for i = numel(ellArr): -1 : 1
-        curEll = ellArr(i);
+sizeCVec = num2cell(size(ellArr));
+copyEllArr(sizeCVec{:}) = ellipsoid();
+arrayfun(@(x) fSingleCopy(x), 1 : numel(ellArr));
+%
+    function fSingleCopy(index)
+        curEll = ellArr(index);
         [centerVec shapeMat] = curEll.parameters();
-        copyEllArr(i) = ellipsoid(centerVec, shapeMat);
+        copyEllArr(index) = ellipsoid(centerVec, shapeMat);
     end
 end

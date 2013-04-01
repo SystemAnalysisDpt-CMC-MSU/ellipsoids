@@ -588,36 +588,22 @@ classdef LinSysTestCase < mlunitext.test_case
             nStruct.center = [0; 0; 0];
             nStruct.shape = {'t' '0' '0'; '0' '1' '0'; '0' '0' 't'};
             lsysMat(4, 4) = elltool.linsys.LinSys;
-            lsysMat(1) = elltool.linsys.LinSys(aMat, bMat, uEll);
-            lsysMat(2) = elltool.linsys.LinSys(aMat, bMat, uStruct);
-            lsysMat(3) = elltool.linsys.LinSys(aMat, bMat, uEll,...
-                gMat, vEll);
-            lsysMat(4) = elltool.linsys.LinSys(aMat, bMat, uEll,...
-                gMat, vStruct);
-            lsysMat(5) = elltool.linsys.LinSys(aMat, bMat, uStruct,...
-                gMat, vEll);
-            lsysMat(6) = elltool.linsys.LinSys(aMat, bMat, uStruct,...
-                gMat, vStruct);
-            lsysMat(7) = elltool.linsys.LinSys(aMat, bMat, uEll,...
-                gMat, vEll, cMat, nEll);
-            lsysMat(8) = elltool.linsys.LinSys(aMat, bMat, uEll,...
-                gMat, vEll, cMat, nStruct);
-            lsysMat(9) = elltool.linsys.LinSys(aMat, bMat, uEll,...
-                gMat, vStruct, cMat, nEll);
-            lsysMat(10) = elltool.linsys.LinSys(aMat, bMat, uEll,...
-                gMat, vStruct, cMat, nStruct);
-            lsysMat(11) = elltool.linsys.LinSys(aMat, bMat, uStruct,...
-                gMat, vEll, cMat, nEll);
-            lsysMat(12) = elltool.linsys.LinSys(aMat, bMat, uStruct,...
-                gMat, vEll, cMat, nStruct);
-            lsysMat(13) = elltool.linsys.LinSys(aMat, bMat, uStruct,...
-                gMat, vStruct, cMat, nEll);
-            lsysMat(14) = elltool.linsys.LinSys(aMat, bMat, uStruct,...
-                gMat, vStruct, cMat, nStruct);
-            lsysMat(15) = elltool.linsys.LinSys(aMat, bMat, uEll,...
-                [], [], [], [], 'd');
-            lsysMat(16) = elltool.linsys.LinSys(aMat, bMat, uEll,...
-                gMat, vEll, [], [], 'd');
+            lsysMat(1) = create(uEll);
+            lsysMat(2) = create(uStruct);
+            lsysMat(3) = create(uEll, gMat, vEll);
+            lsysMat(4) = create(uEll, gMat, vStruct);
+            lsysMat(5) = create(uStruct, gMat, vEll);
+            lsysMat(6) = create(uStruct, gMat, vStruct);
+            lsysMat(7) = create(uEll, gMat, vEll, cMat, nEll);
+            lsysMat(8) = create(uEll, gMat, vEll, cMat, nStruct);
+            lsysMat(9) = create(uEll, gMat, vStruct, cMat, nEll);
+            lsysMat(10) = create(uEll, gMat, vStruct, cMat, nStruct);
+            lsysMat(11) = create(uStruct, gMat, vEll, cMat, nEll);
+            lsysMat(12) = create(uStruct, gMat, vEll, cMat, nStruct);
+            lsysMat(13) = create(uStruct, gMat, vStruct, cMat, nEll);
+            lsysMat(14) = create(uStruct, gMat, vStruct, cMat, nStruct);
+            lsysMat(15) = create(uEll, [], [], [], [], 'd');
+            lsysMat(16) = create(uEll, gMat, vEll, [], [], 'd');
             copiedLsysMat = lsysMat.getCopy();
             isEqualMat = copiedLsysMat.isEqual(lsysMat);
             isOk = all(isEqualMat(:));
@@ -634,6 +620,10 @@ classdef LinSysTestCase < mlunitext.test_case
             isOkMat = isEqualMat == [1 0; 0 0];
             isOk = all(isOkMat(:));
             mlunit.assert_equals(true, isOk);
+            %
+            function linsysObj = create(varargin)
+                linsysObj = elltool.linsys.LinSys(aMat, bMat, varargin{:});
+            end
         end
     end
 end
