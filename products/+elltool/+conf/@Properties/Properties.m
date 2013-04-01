@@ -12,13 +12,11 @@ classdef Properties<modgen.common.obj.StaticPropStorage
         DEFAULT_SOLVER = 'SeDuMi';
         DEFAULT_CONF_NAME='default'
         TOL_FACTOR = 2;
-        SETUP_METHOD_NAME_VEC = {'elltool.cvx.CVXController.setUpAll',...
-            'elltool.mpt.MPTController.setUpIfNot'};
+        SETUP_METHOD_NAME_VEC = {'CVXController','MPTController'};
     end
     %
     methods(Static)
         function init()
-            import elltool.cvx.CVXController;
             import elltool.conf.Properties;
             %
             confRepoMgr=elltool.conf.ConfRepoMgr();
@@ -32,16 +30,30 @@ classdef Properties<modgen.common.obj.StaticPropStorage
             mptDataCVec = {Properties.getAbsTol(),Properties.getRelTol(),...
                 Properties.getIsVerbose()};
             setUpDataCVec = {cvxDataCVec,mptDataCVec};
-            for iController = 1:size(Properties.SETUP_METHOD_NAME_VEC,2)
-                feval(Properties.SETUP_METHOD_NAME_VEC{iController},...
-                    setUpDataCVec{iController});
+            cellfun(@setUpToolbox,Properties.SETUP_METHOD_NAME_VEC,setUpDataCVec);
+            %
+            %
+            function res = setUpToolbox(name,arg)
+                import modgen.common.throwerror;
+                import elltool.controllers.cvx.CVXController;
+                import elltool.controllers.mpt.MPTController;
+                %
+                switch name
+                    case 'CVXController'
+                        obj = CVXController();
+                    case 'MPTController'
+                        obj = MPTController();
+                    otherwise
+                        throwerror('wrongController','no such controller exist');
+                end
+                obj.fullSetup(arg);
+                res = 0;
             end
-            
         end
         %
         function checkSettings()
             import modgen.common.throwerror;
-            import elltool.cvx.CVXController;
+            import elltool.controllers.cvx.CVXController;
             import elltool.conf.Properties;
             precisionVec = CVXController.getPrecision();
             solverStr = CVXController.getSolver();
