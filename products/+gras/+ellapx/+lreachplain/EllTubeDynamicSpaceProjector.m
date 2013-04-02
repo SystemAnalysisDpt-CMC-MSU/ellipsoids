@@ -20,8 +20,8 @@ classdef EllTubeDynamicSpaceProjector<gras.ellapx.proj.AEllTubePlainProjector
             import gras.gen.SquareMatVector;
             projDimNumVec=find(projSpaceVec);
             nTimePoints=length(timeVec);
-            sizeVec=self.goodDirSetObj.getXstTransDynamics.getMatrixSize();
-            xstTransArray=self.goodDirSetObj.getXstTransDynamics.evaluate(timeVec);
+            sizeVec=self.goodDirSetObj.getRstTransDynamics.getMatrixSize();
+            xstTransArray=self.goodDirSetObj.getRstTransDynamics.evaluate(timeVec);
             xstTransProjArray=xstTransArray(:,projDimNumVec,:);
             projOrthMatTransArray=zeros([sizeVec nTimePoints]);
             for iTime=1:1:nTimePoints
