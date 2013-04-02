@@ -16,8 +16,6 @@ classdef LinSysDiscrete < elltool.linsys.ALinSys
     %  dimension         - Returns state space dimension, number of inputs, number of
     %                      outputs and number of disturbance inputs.
     %  isempty           - Checks if the linear system object is empty.
-    %  isdiscrete        - Returns 1 if linear system is discrete-time,
-    %                      0 - if continuous-time.
     %  islti             - Returns 1 if the system is time-invariant, 0 - otherwise.
     %  hasdisturbance    - Returns 1 if unknown bounded disturbance is present,
     %                      0 - if there is no disturbance, or disturbance vector is fixed.
@@ -42,15 +40,6 @@ classdef LinSysDiscrete < elltool.linsys.ALinSys
     properties (Constant, Access = private)
         DISPLAY_PARAMETER_STRINGS = {'[k]', 'x[k+1]  =  ', ...
             '  y[k]  =  ', ' x[k]'}
-    end
-    
-    methods (Static)
-        function isDiscr = isdiscrete()
-            %
-            % See description of ISDISCRETE in ILinSys class.
-            %
-            isDiscr = true;
-        end
     end
     
     methods

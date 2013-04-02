@@ -450,8 +450,8 @@ classdef LinSysTestCase < mlunitext.test_case
                 elltool.linsys.LinSysFactory.create(aMat,bMat,uEllipsoid,[],[],cMat,[],'c'),...
                 elltool.linsys.LinSysFactory.create(aMat,bMat,uEllipsoid,[],[],cMat,[],'d'),...
                 elltool.linsys.LinSysFactory.create(aMat,bMat,uVec,[],vVec,cMat,wVec,'d')...
-                };
-            isDisc = @(linSys) linSys.isdiscrete();
+                }; 
+            isDisc = @(linSys) isa(linSys, 'elltool.linsys.LinSysDiscrete');
             obtainedMat = cellfun(isDisc, systemCMat);
             expectedMat = [false false false; false true true];
             eqMat = (obtainedMat == expectedMat);

@@ -674,17 +674,6 @@ classdef ALinSys < elltool.linsys.ILinSys
             end
         end
         
-        function isDiscrArr = isDiscreteArr(self)
-            %
-            % See description of ISDISCRETEARR in ILinSys class.
-            %
-            isDiscrArr = arrayfun(@(x) isDiscrete(x), self);
-            %
-            function isDiscrete = isDiscrete(linsys)
-                isDiscrete = linsys.isdiscrete();
-            end
-        end
-        
         function isEmptyArr = isempty(self)
             %
             % See description of ISEMPTY in ILinSys class.
