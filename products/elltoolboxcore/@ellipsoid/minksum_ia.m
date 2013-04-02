@@ -12,7 +12,7 @@ function intApprEllVec = minksum_ia(inpEllArr, dirMat)
 %       In this case, the output of the function will contain k
 %       ellipsoids computed for k directions specified in dirMat.
 %
-%   Let inpEllArr consists of E(q1, Q1), E(q2, Q2), ..., E(qm, Qm) -
+%   Let inpEllArr consist of E(q1, Q1), E(q2, Q2), ..., E(qm, Qm) -
 %   ellipsoids in R^n, and dirMat(:, iCol) = l - some vector in R^n.
 %   Then tight internal approximating ellipsoid E(q, Q) for the
 %   geometric sum E(q1, Q1) + E(q2, Q2) + ... + E(qm, Qm) along
@@ -50,6 +50,7 @@ import elltool.conf.Properties;
 import modgen.common.throwerror;
 import modgen.common.checkmultvar;
 import elltool.logging.Log4jConfigurator;
+import gras.la.sqrtmpos;
 
 persistent logger;
 
@@ -85,7 +86,7 @@ centVec =zeros(nDims,1);
 arrayfun(@(x) fAddCenter(x),inpEllArr);
 absTolArr = getAbsTol(inpEllArr);
 
-srcMat = sqrtm(inpEllArr(1).shape) * dirMat;
+srcMat = sqrtmpos(inpEllArr(1).shape, min(absTolArr(:))) * dirMat;
 sqrtShArr = zeros(nDims, nDims, nNumel);
 rotArr = zeros(nDims,nDims,nNumel,nCols);
 arrayfun(@(x) fSetRotArr(x), 1:nNumel);
@@ -99,6 +100,7 @@ arrayfun(@(x) fSingleDirection(x),1:nCols);
 
     function fSetRotArr(ellIndex)
         import gras.la.mlorthtransl;
+        import gras.la.sqrtmpos;
         shMat = inpEllArr(ellIndex).shape;
         if isdegenerate(inpEllArr(ellIndex))
             if isVerbose
@@ -111,7 +113,7 @@ arrayfun(@(x) fSingleDirection(x),1:nCols);
             end
             shMat = ellipsoid.regularize(shMat, absTolArr(ellIndex));
         end
-        shSqrtMat = sqrtm(shMat);
+        shSqrtMat = sqrtmpos(shMat, absTolArr(ellIndex));
         sqrtShArr(:,:,ellIndex) = shSqrtMat;
         dstMat = shSqrtMat*dirMat;
         rotArr(:,:,ellIndex,:) = mlorthtransl(dstMat,srcMat);
