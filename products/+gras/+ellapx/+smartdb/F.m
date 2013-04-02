@@ -142,7 +142,7 @@ classdef F
         %
         SCALE_FACTOR='scaleFactor';
         SCALE_FACTOR_D='Tube scale factor';
-        SCALE_FACTOR_T={'double'};        
+        SCALE_FACTOR_T={'double'};
     end
     methods (Static)
         function nameList=getNameList(idList)

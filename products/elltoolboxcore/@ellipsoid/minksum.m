@@ -3,7 +3,7 @@ function [centVec, boundPointMat] = minksum(inpEllArr,varargin)
 % MINKSUM - computes geometric (Minkowski) sum of ellipsoids in 2D or 3D.
 %
 %   MINKSUM(inpEllArr, Options) - Computes geometric sum of ellipsoids
-%       in the array inpEllMat, if
+%       in the array inpEllArr, if
 %       1 <= min(dimension(inpEllArr)) = max(dimension(inpEllArr)) <= 3,
 %       and plots it if no output arguments are specified.
 %
@@ -11,7 +11,7 @@ function [centVec, boundPointMat] = minksum(inpEllArr,varargin)
 %       geometric sum of ellipsoids in inpEllArr. Here centVec is
 %       the center, and boundPointMat - array of boundary points.
 %   MINKSUM(inpEllArr) - Plots geometric sum of ellipsoids in
-%       inpEllMat in default (red) color.
+%       inpEllArr in default (red) color.
 %   MINKSUM(inpEllArr, Options) - Plots geometric sum of inpEllMat
 %       using options given in the Options structure.
 %
@@ -50,6 +50,9 @@ function [centVec, boundPointMat] = minksum(inpEllArr,varargin)
 import elltool.conf.Properties;
 import modgen.common.throwerror;
 import modgen.common.checkmultvar;
+import elltool.logging.Log4jConfigurator;
+
+persistent logger;
 
 ellipsoid.checkIsMe(inpEllArr);
 
@@ -104,13 +107,16 @@ if (Options.show_all ~= 0) && (nArgOut == 0)
 end
 
 if (Properties.getIsVerbose()) && (nInpEllip > 1)
+    if isempty(logger)
+        logger=Log4jConfigurator.getLogger();
+    end
     if nArgOut == 0
         fstStr = 'Computing and plotting geometric sum ';
-        secStr = 'of %d ellipsoids...\n';
-        fprintf([fstStr secStr], nInpEllip);
+        secStr = 'of %d ellipsoids...';
+        logger.info(sprintf([fstStr secStr], nInpEllip));
     else
-        fprintf('Computing geometric sum of %d ellipsoids...\n', ...
-            nInpEllip);
+        logger.info(sprintf('Computing geometric sum of %d ellipsoids...', ...
+            nInpEllip));
     end
 end
 clrVec = Options.color;

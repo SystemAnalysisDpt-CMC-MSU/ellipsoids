@@ -10,7 +10,65 @@ classdef SuiteEllTube < mlunitext.test_case
         function self = set_up_param(self,varargin)
             
         end
-        function testRegCreate(self)
+        function DISABLED_testCutAndCat(self)
+            nDims=2;
+            nTubes=3;
+            calcPrecision=0.001;
+            cutTimeVec = [20, 80];
+            timeVec = 1 : 100;
+            evolveTimeVec = 101 : 200;
+            fieldToExcludeList = {'sTime','lsGoodDirVec'};
+            % cut: test interval
+            rel = create(timeVec);
+            cutRel = rel.cut(cutTimeVec);
+            expRel = create(cutTimeVec(1) : cutTimeVec(2));
+            fieldList = setdiff(fieldnames(cutRel),fieldToExcludeList);
+            [isOk,reportStr] = ...
+                cutRel.getFieldProjection(fieldList).isEqual(...
+                expRel.getFieldProjection(fieldList));
+            mlunit.assert(isOk, reportStr);
+            % cut: test point
+            rel = create(timeVec);
+            cutRel = rel.cut(timeVec(end) / 2);
+            expRel = create(timeVec(end) / 2);
+            [isOk,reportStr] = ...
+                cutRel.getFieldProjection(fieldList).isEqual(...
+                expRel.getFieldProjection(fieldList));
+            mlunit.assert(isOk, reportStr);
+            % cat: test
+            firstRel = create(timeVec);
+            secondRel = create(evolveTimeVec);
+            expRel = create([timeVec evolveTimeVec]);
+            catRel = firstRel.cat(secondRel);
+            [isOk,reportStr] = ...
+                catRel.getFieldProjection(fieldList).isEqual(...
+                expRel.getFieldProjection(fieldList));
+            mlunit.assert(isOk, reportStr);
+            %
+            function rel = create(timeVec)
+                nPoints = numel(timeVec);
+                aMat=zeros(nDims,nPoints);
+                %
+                QArray = zeros(nDims,nDims,nPoints);
+                for iPoint = 1:nPoints
+                    QArray(:,:,iPoint) = timeVec(iPoint)*eye(nDims);
+                end
+                QArrayList=repmat({QArray},1,nTubes);
+                %
+                ltSingleGoodDirArray = zeros(nDims,1,nPoints);
+                for iPoint = 1:nPoints
+                    ltSingleGoodDirArray(:,:,iPoint) = ...
+                        timeVec(iPoint)*eye(nDims,1);
+                end
+                ltGoodDirArray=repmat(ltSingleGoodDirArray,1,nTubes);
+                %
+                rel = gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
+                    QArrayList,aMat,timeVec,ltGoodDirArray,timeVec(1),...
+                    gras.ellapx.enums.EApproxType.Internal,...
+                    char.empty(1,0),char.empty(1,0),calcPrecision);
+            end
+        end
+        function DISABLED_testRegCreate(self)
             nDims=2;
             nPoints=3;
             approxSchemaDescr=char.empty(1,0);
@@ -133,7 +191,7 @@ classdef SuiteEllTube < mlunitext.test_case
             end
             %
         end
-        function testProjectionAndScale(self)
+        function DISABLED_testProjectionAndScale(self)
             relProj=gras.ellapx.smartdb.rels.EllTubeProj();
             %
             nPoints=5;
@@ -188,7 +246,7 @@ classdef SuiteEllTube < mlunitext.test_case
                     approxSchemaDescr,calcPrecision);
             end
         end
-        function testSimpleNegRegCreate(self)
+        function DISABLED_testSimpleNegRegCreate(self)
             nPoints=3;
             calcPrecision=0.001;
             approxSchemaDescr=char.empty(1,0);
@@ -258,7 +316,7 @@ classdef SuiteEllTube < mlunitext.test_case
             end
         end
         %
-        function testPlotProps(self)
+        function DISABLED_testPlotProps(self)
             import gras.ellapx.enums.EApproxType;
             nPoints=10;
             INTERNAL_COLOR_VEC=[0 1 1];
@@ -329,7 +387,7 @@ classdef SuiteEllTube < mlunitext.test_case
                 end
             end
         end
-        function testPlotTouch(self)
+        function DISABLED_testPlotTouch(self)
             [relStatProj,relDynProj]=checkMaster(1);
             [rel2StatProj,rel2DynProj]=checkMaster(10);
             rel=smartdb.relationoperators.union(relStatProj,relDynProj,...
@@ -407,7 +465,7 @@ classdef SuiteEllTube < mlunitext.test_case
                     approxSchemaDescr,calcPrecision);
             end
         end
-        function testSimpleCreate(self)
+        function DISABLED_testSimpleCreate(self)
             nPoints=3;
             calcPrecision=0.001;
             approxSchemaDescr=char.empty(1,0);
@@ -455,5 +513,30 @@ classdef SuiteEllTube < mlunitext.test_case
                     approxSchemaDescr,calcPrecision);
             end
         end
+        
+       function testCreateSTimeOutOfBounds(self)
+            nPoints=3;
+            calcPrecision=0.001;
+            approxSchemaDescr=char.empty(1,0);
+            approxSchemaName=char.empty(1,0);
+            nDims=2;
+            nTubes=3;
+            lsGoodDirVec=[1;0];
+            QArrayList=repmat({repmat(eye(nDims),[1,1,nPoints])},1,nTubes);
+            aMat=zeros(nDims,nPoints);
+            timeVec=1:nPoints;
+            sTime=nPoints+1;
+            approxType=gras.ellapx.enums.EApproxType.Internal;
+            
+            self.runAndCheckError(@create,'wrongInput:sTimeOutOfBounds');
+            
+            function rel=create()
+                ltGoodDirArray=repmat(lsGoodDirVec,[1,nTubes,nPoints]);
+                rel=gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
+                    QArrayList,aMat,timeVec,...
+                    ltGoodDirArray,sTime,approxType,approxSchemaName,...
+                    approxSchemaDescr,calcPrecision);
+            end
+        end        
     end
 end

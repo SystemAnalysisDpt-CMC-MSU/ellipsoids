@@ -36,20 +36,19 @@ classdef SquareMatVector<gras.gen.MatVector
                 end
             end
         end
-        function sqrtDataArray=sqrtm(dataArray)
+        function sqrtDataArray=sqrtmpos(dataArray)
             sizeVec=size(dataArray);
             if length(sizeVec)==2
                 sizeVec(3)=1;
             end;
             sqrtDataArray=zeros(sizeVec);
-            for t=1:1:sizeVec(3)
+            for t=1:sizeVec(3)
                 if isnan(dataArray(:,:,t))
                     sqrtDataArray(:,:,t)=nan;
                     continue;
                 end;
-                [V,D] = eig(squeeze(dataArray(:,:,t)));
-                d=diag(D);
-                sqrtDataArray(:,:,t)=real(V*diag(sqrt(abs(d)))*V');
+                sqrtDataArray(:,:,t) = ...
+                    gras.la.sqrtmpos(squeeze(dataArray(:,:,t)));
             end
         end
         function dataArray=makePosDefiniteOrNan(dataArray)

@@ -71,9 +71,9 @@ classdef AMatrixOperations<gras.mat.IMatrixOperations
                 obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
             end
         end
-        function obj=sqrtm(self,mMatFunc)
+        function obj=sqrtmpos(self,mMatFunc)
             if self.isMatFuncConst(mMatFunc)
-                obj = self.constUnaryOperation(@sqrtm,mMatFunc);
+                obj = self.constUnaryOperation(@gras.la.sqrtmpos,mMatFunc);
             else
                 obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
             end

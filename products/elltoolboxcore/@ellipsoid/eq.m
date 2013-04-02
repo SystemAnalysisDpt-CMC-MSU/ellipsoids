@@ -24,15 +24,24 @@ function [isEqualArr, reportStr] = eq(ellFirstArr, ellSecArr)
 %            System Analysis Department 2012 $
 
 import modgen.struct.structcomparevec;
-import gras.la.sqrtm;
+import gras.la.sqrtmpos;
 import elltool.conf.Properties;
 import modgen.common.throwerror;
 %
 ellipsoid.checkIsMe(ellFirstArr,'first');
 ellipsoid.checkIsMe(ellSecArr,'second');
 %
+
 nFirstElems = numel(ellFirstArr);
 nSecElems = numel(ellSecArr);
+
+modgen.common.checkvar( ellFirstArr, 'numel(x) > 0', 'errorTag', ...
+    'wrongInput:emptyArray', 'errorMessage', ...
+    'Each array must be not empty.');
+
+modgen.common.checkvar( ellSecArr, 'numel(x) > 0', 'errorTag', ...
+    'wrongInput:emptyArray', 'errorMessage', ...
+    'Each array must be not empty.');
 
 firstSizeVec = size(ellFirstArr);
 secSizeVec = size(ellSecArr);
@@ -68,5 +77,5 @@ end
     end
 end
 function SComp=formCompStruct(ellObj)
-SComp=struct('Q',gras.la.sqrtm(ellObj.shape),'q',ellObj.center.');
+    SComp=struct('Q',gras.la.sqrtmpos(ellObj.shape, ellObj.absTol),'q',ellObj.center.');
 end

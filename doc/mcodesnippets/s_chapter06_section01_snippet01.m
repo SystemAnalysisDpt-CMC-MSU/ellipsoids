@@ -1,0 +1,1 @@
+elltool.setconf('default');
