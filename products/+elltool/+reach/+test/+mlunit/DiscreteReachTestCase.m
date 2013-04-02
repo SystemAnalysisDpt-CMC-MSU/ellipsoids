@@ -1,8 +1,8 @@
 classdef DiscreteReachTestCase < mlunitext.test_case
-
+    
     %
     properties (Access = private)
-       testDataRootDir
+        testDataRootDir
     end
     %
     methods
@@ -15,7 +15,7 @@ classdef DiscreteReachTestCase < mlunitext.test_case
                 'TestData', filesep, shortClassName];
         end
         %
-      
+        
         function self = testFirstBasicTest(self)
             loadFileStr = strcat(self.testDataRootDir,...
                 '/demo3DiscreteTest.mat');
@@ -88,7 +88,7 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             mlunit.assert_equals(true, true);
         end
         %
-          function self=testConstructor(self)
+        function self=testConstructor(self)
             timeVec=[0 5.1];
             fMethod=@(lSys) elltool.reach.ReachDiscrete(lSys,ellipsoid(eye(2)),...
                 [1 0]', timeVec);
@@ -166,6 +166,50 @@ classdef DiscreteReachTestCase < mlunitext.test_case
                         eye(2),ellipsoid(eye(2)),eye(2),testStruct);
                 end
             end
+        end
+        %
+        function self = testSqrtmTolerance(self)
+            aMat = [0.997222222222222 0.00277777777777778 0 0;...
+                0 0.998148148148148 0.00185185185185185 0;...
+                0 0 0.998611111111111 0.00231481481481482;...
+                0 0 0 0.997222222222222];
+            x0Ell = ellipsoid(...
+                [3.0199 0 -0.0501 -0.0057;...
+                0 0 0 0;...
+                -0.0501 0 3.2646 0.5751;...
+                -0.0057 0 0.5751 2.4248]);
+            l0Mat = [1 0; 0 1; 0 0; 0 0];
+            timeBounds = [0 10];
+            linSysObj = elltool.linsys.LinSysFactory.create(aMat, ...
+                eye(size(aMat, 1)),...
+                ellipsoid(zeros(size(aMat, 2), 1), eye(size(aMat, 1))),...
+                [], [], [], [], 'd');
+            reachSetObj = elltool.reach.ReachDiscrete(linSysObj,...
+                x0Ell, l0Mat, timeBounds);
+            reachSetObj.display();
+        end
+        %
+        function self = testConstDisturbance(self)
+            aMat = [0.997222222222222 0.00277777777777778 0 0;...
+                0 0.998148148148148 0.00185185185185185 0;...
+                0 0 0.998611111111111 0.00231481481481482;...
+                0 0 0 0.997222222222222];
+            x0Ell = ellipsoid(...
+                [3.0199 0 -0.0501 -0.0057;...
+                0 0 0 0;...
+                -0.0501 0 3.2646 0.5751;...
+                -0.0057 0 0.5751 2.4248]);
+            l0Mat = [1 0; 0 1; 0 0; 0 0];
+            timeBounds = [0 10];
+            distVec = [1; 1; 1; 1];
+            distMat = [1 0 0 0; 0 1 0 0; 0 0 1 0; 0 0 0 1];
+            linSysObj = elltool.linsys.LinSysFactory.create(aMat, ...
+                eye(size(aMat, 1)),...
+                ellipsoid(zeros(size(aMat, 2), 1), eye(size(aMat, 1))),...
+                distMat, distVec, [], [], 'd');
+            reachSetObj = elltool.reach.ReachDiscrete(linSysObj,...
+                x0Ell, l0Mat, timeBounds);
+            reachSetObj.display();
         end
     end
     

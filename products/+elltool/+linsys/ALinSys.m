@@ -637,16 +637,24 @@ classdef ALinSys < elltool.linsys.ILinSys
             end
         end
         
-        function isDisturbanceArr = hasdisturbance(self)
+        function isDisturbanceArr = hasdisturbance(self, varargin)
             %
             % See description of HASDISTURBANCE in ILinSys class.
             %
+            if (nargin == 1)
+                isMeaningful = true;
+            else
+                isMeaningful = varargin{1};
+            end
             isDisturbanceArr = arrayfun(@(x) isDisturb(x), self);
             %
             function isDisturb = isDisturb(linsys)
                 isDisturb = false;
-                if  ~isempty(linsys.disturbanceBoundsEll) && ...
-                        ~isempty(linsys.gtMat)
+                if  (~isempty(linsys.gtMat) &&...
+                        ~isempty(linsys.disturbanceBoundsEll)) &&...
+                        ((~isMeaningful && ...
+                        isa(linsys.disturbanceBoundsEll,'double')) ||...
+                        (isa(linsys.disturbanceBoundsEll,'ellipsoid')))
                     isDisturb = true;
                 end
             end

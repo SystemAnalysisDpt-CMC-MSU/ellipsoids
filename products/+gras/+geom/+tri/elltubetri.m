@@ -27,7 +27,7 @@ import gras.gen.SquareMatVector;
 qSizeVec=[size(QArray),1];
 aMat=aMat(:).';
 aaMat=aMat(ones(1,nSPoints),:);
-QArray_sqrt=SquareMatVector.sqrtm(QArray);
+QArray_sqrt=SquareMatVector.sqrtmpos(QArray);
 QArray_united=QArray_sqrt(:,:);
 scoord=circlepart(nSPoints,[0 2*pi]);
 ecoord=transpose(scoord*QArray_united+aaMat);

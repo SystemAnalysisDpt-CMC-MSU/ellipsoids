@@ -131,13 +131,16 @@ classdef ILinSys < handle
         
         isDisturbanceArr = hasdisturbance(self)
         %
-        % HASDISTURBANCE checks if linear system has unknown bounded
-        %   disturbance.
+        % HASDISTURBANCE checks if linear system has unknown bounded disturbance.
         %
         % Input:
         %   regular:
         %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array
         %             of linear systems.
+        %   optional:
+        %       isMeaningful: logical[1,1] - if true(default),
+        %                     treat constant disturbance vector
+        %                     as absence of disturbance
         %
         % Output:
         %   isDisturbanceArr: logical[nDims1, nDims2,...] - array such that
