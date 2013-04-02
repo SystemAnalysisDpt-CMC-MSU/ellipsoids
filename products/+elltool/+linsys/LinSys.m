@@ -233,7 +233,6 @@ classdef LinSys < handle
             cMat = self.ctMat;
         end
         function noiseEll = getNoiseBoundsEll(self)
-<<<<<<< .mine
             % Input:
             %   regular:
             %       self.
@@ -242,15 +241,6 @@ classdef LinSys < handle
             %   noiseEll: ellipsoid[1, 1]/struct[1, 1].
             %
             self.checkScalar();
-=======
-            % Input:
-            %   regular:
-            %       self.
-            %
-            % Output:
-            %   noiseEll: ellipsoid[1, 1]/struct[1, 1].
-            %
->>>>>>> .r1121
             noiseEll = self.noiseBoundsEll;
         end
         %
@@ -293,9 +283,9 @@ classdef LinSys < handle
             import modgen.common.throwerror;
             import elltool.conf.Properties;
             import elltool.logging.Log4jConfigurator;
-            
+            %
             persistent logger;
-            
+            %
             neededPropNameList = {'absTol'};
             absTolVal = Properties.parseProp(varargin, neededPropNameList);
             if nargin == 0
