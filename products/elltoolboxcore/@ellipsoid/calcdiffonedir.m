@@ -5,6 +5,11 @@ absTol = elltool.conf.Properties.getAbsTol();
     lMat);
 [~, subEllPtsMat] = rho(secEll, ...
     lMat);
+if dimension(fstEll) == 3
+    isPlotCenter3d = true;
+else
+    isPlotCenter3d = false;
+end
 [diffBoundMat] = arrayfun(@(x,y) calcdiff(x,y),isGoodDirVec,...
     1:size(lMat,2), 'UniformOutput',false);
 

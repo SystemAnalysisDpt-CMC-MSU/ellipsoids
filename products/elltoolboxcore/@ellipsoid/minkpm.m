@@ -171,6 +171,7 @@ end
             [extApproxDiffCell] = arrayfun(@(x)minkdiffEa(x,inpEll,dirMat),extApproxEllVec,'UniformOutput',false);
             cellfun(@(x)diffcalcl1(x),extApproxDiffCell);
             xSumDiffCell ={[xSumDifMat,xSumDifMat(:,1)]};
+            fMat = {fMat};
             %             secEllShMat = inpEll.shape;
             %             if isdegenerate(inpEll)
             %                 secEllShMat = ellipsoid.regularize(secEllShMat,absTol);
@@ -278,8 +279,8 @@ end
                 [supMat, supDirMat] = rho(ellipsoidl1l2, ...
                     dirMat);
                 supAllMat = min(supAllMat,supMat);
-                ind = ((supAllMat-supMat) == 0).*(1:size(supMat,2));
-                if (ind > 0)
+                ind = find((supAllMat-supMat) == 0);
+                if (any(ind))
                     xSumDifMat(:,ind) = supDirMat(:,ind);
                 end
             end
@@ -317,7 +318,7 @@ function [extApprEllVec] = minkdiffEa(fstEll, secEll, directionsMat)
 import modgen.common.throwerror;
 import modgen.common.checkmultvar;
 import elltool.conf.Properties;
-extApprEllVec = [];
+clear extApprEllVec ;
 centVec = fstEll.center - secEll.center;
 fstEllShMat = fstEll.shape;
 secEllShMat = secEll.shape;
@@ -331,6 +332,7 @@ directionsMat  = ellipsoid.rm_bad_directions(fstEllShMat, ...
     secEllShMat, directionsMat);
 nDirs  = size(directionsMat, 2);
 if nDirs < 1
+    extApprEllVec = [];
     return;
 end
 fstEllSqrtShMat = sqrtm(fstEllShMat);
@@ -340,7 +342,7 @@ srcMat=fstEllSqrtShMat*directionsMat;
 dstMat=secEllSqrtShMat*directionsMat;
 rotArray=gras.la.mlorthtransl(dstMat, srcMat);
 
-extApprEllVec = repmat(ellipsoid,1,nDirs);
+extApprEllVec(nDirs) = ellipsoid();
 arrayfun(@(x) fSingleDir(x), 1:nDirs)
     function fSingleDir(index)
         rotMat = rotArray(:,:,index);

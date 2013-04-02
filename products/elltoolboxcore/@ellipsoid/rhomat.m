@@ -41,19 +41,8 @@ function [supArr, bpMat] = rhomat(ellShapeMat,ellCenterVec,absTol, dirsMat)
 
 
 
-[nDim, nDirs] = size(dirsMat);
-dirsCVec = mat2cell(dirsMat,nDim,ones(1,nDirs));
+tempMat  = max(sqrt(sum(dirsMat'*ellShapeMat.*dirsMat',2)), absTol);
+supArr = ellCenterVec'*dirsMat + tempMat';
+bpMat = ((ellShapeMat*dirsMat)./repmat(tempMat',size(ellShapeMat,1),1)) + repmat(ellCenterVec,1,size(dirsMat,2));
 
-[resCArr xCArr] =cellfun(@(x) fSingleRhoForOneEll(x),dirsCVec,...
-    'UniformOutput',false);
-supArr = cell2mat(resCArr);
-bpMat = cell2mat(xCArr);
-
-
-
-    function [supFun xVec] = fSingleRhoForOneEll(lVec)
-        sq  = max(sqrt(lVec'*ellShapeMat*lVec), absTol);
-        supFun = ellCenterVec'*lVec + sq;
-        xVec = ((ellShapeMat*lVec)/sq) + ellCenterVec;
-    end
 end

@@ -125,7 +125,9 @@ end
             xDifMat = {[]};
             fMat = {[]};
         else
-            isPlotCenter3d = true;
+            if nDim == 3
+                isPlotCenter3d = true;
+            end;
             fstEllShMat = fstEll.shape;
             if isdegenerate(fstEll)
                 fstEllShMat = ellipsoid.regularize(fstEllShMat,absTol);

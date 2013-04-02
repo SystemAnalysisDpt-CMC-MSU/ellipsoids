@@ -139,6 +139,8 @@ classdef ellipsoid < handle
         regQMat = regularize(qMat,absTol)
         clrDirsMat = rm_bad_directions(q1Mat, q2Mat, dirsMat)
         [isBadDirVec,pUniversal] = isbaddirectionmat(q1Mat, q2Mat, dirsMat)
+    end
+    methods (Static,Access = public)
         [supArr, bpMat] = rhomat(ellShapeMat,ellCenterVec,absTol, dirsMat)
         [lGetGrid, fGetGrid] = calcGrid(nDim,nPlotPoints,sphereTriang)
         [diffBoundMat, isPlotCenter3d] = calcdiffonedir(fstEll,secEll,lMat,pUniversalVec,isGoodDirVec)

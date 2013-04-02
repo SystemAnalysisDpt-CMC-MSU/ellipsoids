@@ -15,46 +15,29 @@ classdef EllipsoidMinksumPlotTestCase < mlunitext.test_case
         function self = tear_down(self,varargin)
             close all;
         end
-        function self = testFillAndShade(self)
+        function self = testSimpleOptions(self)
+            import elltool.plot.test.testMinkFillAndShade
+            import elltool.plot.test.testMinkColor
+            import elltool.plot.test.testMinkProperties
             testFirEll = ellipsoid(2*eye(2));
             testSecEll = ellipsoid([1, 0].', [9 2;2 4]);
             testThirdEll = ellipsoid([1 0; 0 0]);
             testForthEll = ellipsoid([0, -1, 3].', 1.5*eye(3));
             testFifthEll = ellipsoid([5,5,5]', [6 2 1; 2 4 3; 1 3 5]);
             testSixthEll = ellipsoid([1 0 0; 0 0 0; 0 0 1]);
-            
-            
-            minksum(testFirEll,testSecEll,'fill',false,'shade',0.7);
-            minksum(testFirEll,testSecEll,'fill',true,'shade',0.7);
-            minksum(testFirEll,testSecEll,testThirdEll,'fill',false,'shade',1);
-            minksum(testFirEll,testSecEll,testThirdEll,'fill',true,'shade',1);
-            self.runAndCheckError...
-                ('minksum([testFirEll,testSecEll,testThirdEll],''shade'',NaN)', ...
-                'wrongShade');
-            self.runAndCheckError...
-                ('minksum([testFirEll,testSecEll,testThirdEll],''shade'',[0 1])', ...
-                'wrongParamsNumber');
-            minksum(testForthEll,testFifthEll,'fill',false,'shade',0.7);
-            minksum(testForthEll,testFifthEll,'fill',true,'shade',0.3);
+            self = testMinkFillAndShade(self,@minksum,testFirEll,testSecEll);
+            self = testMinkFillAndShade(self,@minksum,testFirEll,[testSecEll,testThirdEll]);
+            self = testMinkFillAndShade(self,@minksum,testForthEll,testFifthEll);
+            self = testMinkFillAndShade(self,@minksum,testForthEll,[testFifthEll testSixthEll]);
+            self = testMinkColor(self,@minksum,testFirEll,testSecEll,2);
+            self = testMinkColor(self,@minksum,testFirEll,[testSecEll,testThirdEll],2);
+            self = testMinkColor(self,@minksum,testForthEll,testFifthEll,1);
+            self = testMinkColor(self,@minksum,testForthEll,[testFifthEll testSixthEll],1); 
+            self = testMinkProperties(self,@minksum,testFirEll,testSecEll);
+            self = testMinkProperties(self,@minksum,testFirEll,[testSecEll,testThirdEll]);
+            self = testMinkProperties(self,@minksum,testForthEll,testFifthEll);
+            self = testMinkProperties(self,@minksum,testForthEll,[testFifthEll testSixthEll]); 
         end
-        function self = testColor(self)
-            testFirEll = ellipsoid(2*eye(2));
-            testSecEll = ellipsoid([1, 0].', [9 2;2 4]);
-            plObj = minksum(testFirEll,testSecEll,'color',[0,1,0]);
-            check2dCol(plObj,2, [0, 1, 0]);
-            
-            function check2dCol(plObj,numObj, colMat)
-                colMat = repmat(colMat,numObj,1);
-                SHPlot =  plObj.getPlotStructure().figToAxesToHMap.toStruct();
-                plEllObjVec = get(SHPlot.figure_g1.ax, 'Children');
-                plEllColCMat = get(plEllObjVec, 'EdgeColor');
-                if iscell(plEllColCMat)
-                    plEllColMat = vertcat(plEllColCMat{:});
-                else
-                    plEllColMat = plEllColCMat;
-                end
-                mlunit.assert_equals(plEllColMat, colMat);
-            end
-        end
+        
     end
 end

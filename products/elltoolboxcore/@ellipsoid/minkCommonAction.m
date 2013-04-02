@@ -8,11 +8,11 @@ if (nargout == 1)||(nargout == 0)
         {'showAll' ;...
         false;
         @(x)isa(x,'logical')});
-    if strcmp(charColor,'empty')
-            [plObj,nDim,isHold]= plotgeombodyarr('ellipsoid',fCalcBodyTriArr,@patch,reg{:});
-    else
-        [plObj,nDim,isHold]= plotgeombodyarr('ellipsoid',fCalcBodyTriArr,@patch,reg{1},charColor,reg{2:end});
+    
+    if ~strcmp(charColor,'empty')
+        reg = {reg{1},charColor,reg{2:end}};
     end
+    [plObj,nDim,isHold]= plotgeombodyarr('ellipsoid',fCalcBodyTriArr,@patch,reg{:});
     if (nDim < 3)
         [reg]=...
             modgen.common.parseparext(reg,...
@@ -61,9 +61,9 @@ end
             charColor = value;
         end
         function isColor = isColorDef(value)
-            isColor = eq(value, 'r') | eq(value, 'g') | eq(value, 'b') | ...
-                eq(value, 'y') | eq(value, 'c') | ...
-                eq(value, 'm') | eq(value, 'w');
+            isColor = strcmp(value, 'r') || strcmp(value, 'g') || strcmp(value, 'b') || ...
+                strcmp(value, 'y') || strcmp(value, 'c') || ...
+                strcmp(value, 'm') || strcmp(value, 'w');
         end
     end
 end
