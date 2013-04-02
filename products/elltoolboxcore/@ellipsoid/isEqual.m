@@ -28,30 +28,23 @@ if ~all(size(ell1Arr) == size(ell2Arr))
     throwerror('wrongInput', 'dimensions must be the same.');
 end
 %
-isEqualArr = false(size(ell1Arr));
+isEqualArr = arrayfun(@(x, y) fSingleComp(x, y), ell1Arr, ell2Arr);
 %
-dim1Arr = ell1Arr.dimension();
-dim2Arr = ell2Arr.dimension();
-isEqualArr(dim1Arr == dim2Arr) = true;
-arrayfun(@(x) fSingleComp(x), 1 : numel(ellArr));
-%
-    function fSingleComp(index)
-        if isEqualArr(index)
-            isEqualArr(index) = false;
-            if ~ell1Arr(index).isempty() && ~ell2Arr(index).isempty()
+    function isEq = fSingleComp(firstEll, secondEll)
+        isEq = firstEll.dimension() == secondEll.dimension();
+        if isEq
+            isEq = false;
+            if ~firstEll.isempty() && ~secondEll.isempty()
                 relTol =...
-                    min(ell1Arr(index).getRelTol(),...
-                    ell2Arr(index).getRelTol());
-                [firstCenterVec, firstShapeMat] =...
-                    ell1Arr(index).parameters();
-                [secondCenterVec, secondShapeMat] =...
-                    ell2Arr(index).parameters();
-                isEqualArr(index) =...
+                    min(firstEll.getRelTol(), secondEll.getRelTol());
+                [firstCenterVec, firstShapeMat] = firstEll.parameters();
+                [secondCenterVec, secondShapeMat] = secondEll.parameters();
+                isEq =...
                     norm(firstCenterVec - secondCenterVec) <= relTol &&...
                     norm(firstShapeMat - secondShapeMat) <= relTol;
             end
-            if ell1Arr(index).isempty() && ell2Arr(index).isempty()
-                isEqualArr(index) = true;
+            if firstEll.isempty() && secondEll.isempty()
+                isEq = true;
             end
         end
     end

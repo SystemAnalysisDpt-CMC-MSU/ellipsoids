@@ -543,6 +543,7 @@ classdef LinSysTestCase < mlunitext.test_case
             mlunit.assert(isOk);
         end
         %
+<<<<<<< .mine
         function self = testHasDisturbance(self)
             constantDistLinSys = elltool.linsys.LinSys(eye(2), eye(2),...
                 ellipsoid([0; 0], eye(2)), eye(2), [1; 1], [], [], 'd');
@@ -574,6 +575,40 @@ classdef LinSysTestCase < mlunitext.test_case
             mlunit.assert_equals(...
                 noDistLinSys.hasdisturbance(false), false);
         end
+        %
+=======
+        function self = testHasDisturbance(self)
+            constantDistLinSys = elltool.linsys.LinSys(eye(2), eye(2),...
+                ellipsoid([0; 0], eye(2)), eye(2), [1; 1], [], [], 'd');
+            boundedDistLinSys = elltool.linsys.LinSys(eye(2), eye(2),...
+                ellipsoid([0; 0], eye(2)), eye(2),...
+                ellipsoid([0; 0], eye(2)), [], [], 'd');
+            noDistLinSys = elltool.linsys.LinSys(eye(2), eye(2),...
+                ellipsoid([0; 0], eye(2)), [], [], [], [], 'd');
+            %
+            % test default behavior
+            %
+            mlunit.assert_equals(...
+                constantDistLinSys.hasdisturbance(), false);
+            mlunit.assert_equals(boundedDistLinSys.hasdisturbance(), true);
+            mlunit.assert_equals(noDistLinSys.hasdisturbance(), false);
+            %
+            % test isMeaningful
+            %
+            mlunit.assert_equals(...
+                boundedDistLinSys.hasdisturbance(true), true);
+            mlunit.assert_equals(...
+                boundedDistLinSys.hasdisturbance(false), true);
+            mlunit.assert_equals(...
+                constantDistLinSys.hasdisturbance(true), false);
+            mlunit.assert_equals(...
+                constantDistLinSys.hasdisturbance(false), true);
+            mlunit.assert_equals(...
+                noDistLinSys.hasdisturbance(true), false);
+            mlunit.assert_equals(...
+                noDistLinSys.hasdisturbance(false), false);
+        end
+>>>>>>> .r1121
         function self = testGetCopy(self)
             aMat = eye(3);
             bMat = eye(3);

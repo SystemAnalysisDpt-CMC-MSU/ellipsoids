@@ -145,6 +145,26 @@ classdef LinSys < handle
             end
         end
     end
+    methods (Access = private)
+        function checkScalar(self)
+            import modgen.common.throwerror;
+            %
+            if numel(self) > 1
+                throwerror('wrongInput', 'Input argument must be scalar.');
+            end
+        end
+        %
+        function [aMat, bMat, uEll, gMat, distEll, cMat, noiseEll] =...
+                getParams(self)
+            aMat = self.getAtMat();
+            bMat = self.getBtMat();
+            uEll = self.getUBoundsEll();
+            gMat = self.getGtMat();
+            distEll = self.getDistBoundsEll();
+            cMat = self.getCtMat();
+            noiseEll = self.getNoiseBoundsEll();
+        end
+    end
     methods
         function aMat = getAtMat(self)
             % Input:
@@ -154,6 +174,7 @@ classdef LinSys < handle
             % Output:
             %   aMat: double[aMatDim, aMatDim].
             %
+            self.checkScalar();
             aMat = self.atMat;
         end
         function bMat = getBtMat(self)
@@ -164,6 +185,7 @@ classdef LinSys < handle
             % Output:
             %   bMat: double[bMatDim, bMatDim].
             %
+            self.checkScalar();
             bMat = self.btMat;
         end
         function uEll = getUBoundsEll(self)
@@ -174,6 +196,7 @@ classdef LinSys < handle
             % Output:
             %   uEll: ellipsoid[1, 1]/struct[1, 1].
             %
+            self.checkScalar();
             uEll = self.controlBoundsEll;
         end
         function gMat = getGtMat(self)
@@ -184,6 +207,7 @@ classdef LinSys < handle
             % Output:
             %   gMat: double[gMatDim, gMatDim].
             %
+            self.checkScalar();
             gMat = self.gtMat;
         end
         function distEll = getDistBoundsEll(self)
@@ -194,6 +218,7 @@ classdef LinSys < handle
             % Output:
             %   distEll: ellipsoid[1, 1]/struct[1, 1].
             %
+            self.checkScalar();
             distEll = self.disturbanceBoundsEll;
         end
         function cMat = getCtMat(self)
@@ -204,9 +229,11 @@ classdef LinSys < handle
             % Output:
             %   cMat: double[cMatDim, cMatDim].
             %
+            self.checkScalar();
             cMat = self.ctMat;
         end
         function noiseEll = getNoiseBoundsEll(self)
+<<<<<<< .mine
             % Input:
             %   regular:
             %       self.
@@ -214,6 +241,16 @@ classdef LinSys < handle
             % Output:
             %   noiseEll: ellipsoid[1, 1]/struct[1, 1].
             %
+            self.checkScalar();
+=======
+            % Input:
+            %   regular:
+            %       self.
+            %
+            % Output:
+            %   noiseEll: ellipsoid[1, 1]/struct[1, 1].
+            %
+>>>>>>> .r1121
             noiseEll = self.noiseBoundsEll;
         end
         %
@@ -532,6 +569,7 @@ classdef LinSys < handle
             % Output:
             %   None.
             %
+            self.checkScalar();
             fprintf('\n');
             disp([inputname(1) ' =']);
             %%
@@ -931,41 +969,30 @@ classdef LinSys < handle
                 throwerror('wrongInput', 'dimensions must be the same.');
             end
             %
-            isEqualArr = false(size(self));
+            isEqualArr =...
+                arrayfun(@(x, y) fSingleComp(x, y), self, compLinSysArr);
             %
-            [firstStateDimArr, firstInpDimArr, firstOutDimArr,...
-                firstDistDimArr] = self.dimension();
-            [secondStateDimArr, secondInpDimArr, secondOutDimArr,...
-                secondDistDimArr] = compLinSysArr.dimension();
-            isEqualArr(firstStateDimArr == secondStateDimArr &...
-                firstInpDimArr == secondInpDimArr &...
-                firstOutDimArr == secondOutDimArr &...
-                firstDistDimArr == secondDistDimArr) = true;
-            arrayfun(@(x) fSingleComp(x), 1 : numel(self));
-            %
-            function fSingleComp(index)
-                if isEqualArr(index)
-                    curLinSys = self(index);
-                    absTolerance = min(curLinSys.getAbsTol(),...
-                        compLinSysArr(index).getAbsTol());
-                    firstAMat = curLinSys.getAtMat();
-                    secondAMat = compLinSysArr(index).getAtMat();
-                    firstBMat = curLinSys.getBtMat();
-                    secondBMat = compLinSysArr(index).getBtMat();
-                    firstUEll = curLinSys.getUBoundsEll();
-                    secondUEll = compLinSysArr(index).getUBoundsEll();
-                    firstGMat = curLinSys.getGtMat();
-                    secondGMat = compLinSysArr(index).getGtMat();
-                    firstDistEll = curLinSys.getDistBoundsEll();
-                    secondDistEll =...
-                        compLinSysArr(index).getDistBoundsEll();
-                    firstCMat = curLinSys.getCtMat();
-                    secondCMat = compLinSysArr(index).getCtMat();
-                    firstNoiseEll = curLinSys.getNoiseBoundsEll();
-                    secondNoiseEll =...
-                        compLinSysArr(index).getNoiseBoundsEll();
+            function isEq = fSingleComp(firstLinSys, secondLinSys)
+                [firstStateDimArr, firstInpDimArr, firstOutDimArr,...
+                    firstDistDimArr] = firstLinSys.dimension();
+                [secondStateDimArr, secondInpDimArr, secondOutDimArr,...
+                    secondDistDimArr] = secondLinSys.dimension();
+                isEq = firstStateDimArr == secondStateDimArr &&...
+                    firstInpDimArr == secondInpDimArr &&...
+                    firstOutDimArr == secondOutDimArr &&...
+                    firstDistDimArr == secondDistDimArr;
+                if isEq
+                    absTolerance = min(firstLinSys.getAbsTol(),...
+                        secondLinSys.getAbsTol());
+                    [firstAMat, firstBMat, firstUEll, firstGMat,...
+                        firstDistEll, firstCMat, firstNoiseEll] =...
+                        firstLinSys.getParams();
                     %
-                    isEqualArr(index) =...
+                    [secondAMat, secondBMat, secondUEll, secondGMat,...
+                        secondDistEll, secondCMat, secondNoiseEll] =...
+                        secondLinSys.getParams();
+                    %
+                    isEq =...
                         norm(firstAMat - secondAMat) <= absTolerance &&...
                         norm(firstBMat - secondBMat) <= absTolerance &&...
                         self.isEqualEll(firstUEll, secondUEll) &&...
