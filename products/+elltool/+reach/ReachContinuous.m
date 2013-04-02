@@ -687,7 +687,7 @@ classdef ReachContinuous < elltool.reach.AReach
                 fprintf('Empty reach set object.\n\n');
                 return;
             end
-            if isdiscrete(self.linSysCVec{end})
+            if self.linSysCVec{end}.isdiscrete()
                 sysTypeStr = 'discrete-time';
                 sysTimeStartStr = 'k0 = ';
                 sysTimeEndStr = 'k1 = ';

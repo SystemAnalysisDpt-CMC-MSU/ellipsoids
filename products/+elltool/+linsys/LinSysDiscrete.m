@@ -39,10 +39,24 @@ classdef LinSysDiscrete < elltool.linsys.ALinSys
     %            Faculty of Computational Mathematics and Computer Science,
     %            System Analysis Department 2012 $
     %
+    properties (Constant, Access = private)
+        DISPLAY_PARAMETER_STRINGS = {'[k]', 'x[k+1]  =  ', ...
+            '  y[k]  =  ', ' x[k]'}
+    end
+    
+    methods (Static)
+        function isDiscr = isdiscrete()
+            %
+            % See description of ISDISCRETE in ILinSys class.
+            %
+            isDiscr = true;
+        end
+    end
+    
     methods
         function self = LinSysDiscrete(varargin)
             %
-            % LINSYSDISCRETE - constructor of discrete linear 
+            % LINSYSDISCRETE - constructor of discrete linear
             %   system object.
             %
             % Discrete-time linear system:
@@ -81,14 +95,13 @@ classdef LinSysDiscrete < elltool.linsys.ALinSys
             %       discrete linear system.
             %
             self = self@elltool.linsys.ALinSys(varargin{:});
-            self.isDiscr  = true;
         end
         
         function display(self)
             %
             % See description of DISPLAY in ILinSys class.
             %
-            self.displayInternal(self)
+            self.displayInternal(self.DISPLAY_PARAMETER_STRINGS)
         end
     end
 end

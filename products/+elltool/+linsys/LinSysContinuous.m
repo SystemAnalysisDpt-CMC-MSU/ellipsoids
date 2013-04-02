@@ -39,10 +39,24 @@ classdef LinSysContinuous < elltool.linsys.ALinSys
     %            Faculty of Computational Mathematics and Computer Science,
     %            System Analysis Department 2012 $
     %
+    properties (Constant, Access = private)
+        DISPLAY_PARAMETER_STRINGS = {'(t)', 'dx/dt  =  ', ...
+            ' y(t)  =  ', ' x(t)'}
+    end
+    
+    methods (Static)
+        function isDiscr = isdiscrete()
+            %
+            % See description of ISDISCRETE in ILinSys class.
+            %
+            isDiscr = false;
+        end
+    end
+    
     methods
         function self = LinSysContinuous(varargin)
             %
-            % LINSYSCONTINUOUS - Constructor of continuous linear 
+            % LINSYSCONTINUOUS - Constructor of continuous linear
             %   system object.
             %
             % Continuous-time linear system:
@@ -81,14 +95,13 @@ classdef LinSysContinuous < elltool.linsys.ALinSys
             %       continuous linear system.
             %
             self = self@elltool.linsys.ALinSys(varargin{:});
-            self.isDiscr  = false;
         end
         
         function display(self)
             %
             % See description of DISPLAY in ILinSys class.
             %
-            self.displayInternal(self)
+            self.displayInternal(self.DISPLAY_PARAMETER_STRINGS)
         end
     end
 end

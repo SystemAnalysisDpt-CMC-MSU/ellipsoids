@@ -20,7 +20,6 @@ classdef ALinSys < elltool.linsys.ILinSys
         ctMat
         noiseBoundsEll
         isTimeInv
-        isDiscr
         isConstantBoundsVec
         absTol
     end
@@ -70,7 +69,7 @@ classdef ALinSys < elltool.linsys.ILinSys
             end
             %%
             if ~iscell(qVec) && ~isa(qVec, 'double')
-                throwerror(sprintf('type:%s:center', inputname(1)),...
+                throwerror(sprintf('type:%s:center', inputname(1)), ...
                     'center must be of type ''cell'' or ''double''');
             end
             %%
@@ -79,13 +78,13 @@ classdef ALinSys < elltool.linsys.ILinSys
                     if isempty(logger)
                         logger=Log4jConfigurator.getLogger();
                     end
-                    logger.info(['Warning! Cannot check if symbolic', ...
+                    logger.info(['Warning! Cannot check if symbolic ', ...
                         'matrix is positive definite.\n']);
                 end
                 isEqMat = strcmp(qMat, qMat.');
                 if ~all(isEqMat(:))
-                    throwerror(sprintf('value:%s:shape', inputname(1)),...
-                        ['shape matrix must be symmetric,', ...
+                    throwerror(sprintf('value:%s:shape', inputname(1)), ...
+                        ['shape matrix must be symmetric, ', ...
                         'positive definite']);
                 end
             else
@@ -95,19 +94,21 @@ classdef ALinSys < elltool.linsys.ILinSys
                             inputname(1)),...
                             'shape matrix must be symmetric');
                     elseif ~gras.la.ismatposdef(qMat,absTol,false)
-                        throwerror(sprintf('value:%s:shape',...
+                        throwerror(sprintf('value:%s:shape', ...
                             inputname(1)),...
                             'shape matrix must be  positive definite');
                     end
                 else
                     throwerror(sprintf('type:%s:shape', inputname(1)),...
-                        ['shape matrix must be of type ''cell''', ...
+                        ['shape matrix must be of type ''cell'' ', ...
                         'or ''double''']);
                 end
             end
         end
-        
-        function displayInternal(self)
+    end
+    
+    methods (Access = protected)
+        function displayInternal(self, dispParamStringsCVec)
             %
             % DISPLAYINTERNAL displays the details of linear system object.
             %
@@ -120,59 +121,39 @@ classdef ALinSys < elltool.linsys.ILinSys
             %
             fprintf('\n');
             disp([inputname(1) ' =']);
-            %%
+            %
             if self.isempty()
                 fprintf('Empty linear system object.\n\n');
                 return;
             end
-            %%
-            if self.isDiscr
-                s0 = '[k]';
-                s1 = 'x[k+1]  =  ';
-                s2 = '  y[k]  =  ';
-                s3 = ' x[k]';
-            else
-                s0 = '(t)';
-                s1 = 'dx/dt  =  ';
-                s2 = ' y(t)  =  ';
-                s3 = ' x(t)';
-            end
-            %%
+            %
+            [s0 s1 s2 s3] = dispParamStringsCVec{:};
+            %
             fprintf('\n');
             if iscell(self.atMat)
-                if self.isDiscr
-                    fprintf('A[k]:\n');
-                    s4 = 'A[k]';
-                else
-                    fprintf('A(t):\n');
-                    s4 = 'A(t)';
-                end
+                fprintf(['A', s0, ':\n']);
+                s4 = ['A', s0];
             else
                 fprintf('A:\n');
                 s4 = 'A';
             end
             disp(self.atMat);
             if iscell(self.btMat)
-                if self.isDiscr
-                    fprintf('\nB[k]:\n');
-                    s5 = '  +  B[k]';
-                else
-                    fprintf('\nB(t):\n');
-                    s5 = '  +  B(t)';
-                end
+                fprintf(['\nB', s0, ':\n']);
+                s5 = ['  +  B', s0];
             else
                 fprintf('\nB:\n');
                 s5 = '  +  B';
             end
             disp(self.btMat);
-            %%
+            %
             fprintf('\nControl bounds:\n');
             s6 = [' u' s0];
             if isempty(self.controlBoundsEll)
                 fprintf('     Unbounded\n');
             elseif isa(self.controlBoundsEll, 'ellipsoid')
                 [qVec, qMat] = parameters(self.controlBoundsEll);
-                fprintf(['   %d-dimensional constant ellipsoid', ...
+                fprintf(['   %d-dimensional constant ellipsoid ', ...
                     'with center\n'],...
                     size(self.btMat, 2));
                 disp(qVec);
@@ -193,17 +174,12 @@ classdef ALinSys < elltool.linsys.ILinSys
                 fprintf('   vector\n');
                 disp(self.controlBoundsEll);
             end
-            %%
+            %
             if ~(isempty(self.gtMat)) && ...
                     ~(isempty(self.disturbanceBoundsEll))
                 if iscell(self.gtMat)
-                    if self.isDiscr
-                        fprintf('\nG[k]:\n');
-                        s7 = '  +  G[k]';
-                    else
-                        fprintf('\nG(t):\n');
-                        s7 = '  +  G(t)';
-                    end
+                    fprintf(['\nG', s0, ':\n']);
+                    s7 = ['  +  G', s0];
                 else
                     fprintf('\nG:\n');
                     s7 = '  +  G';
@@ -213,7 +189,7 @@ classdef ALinSys < elltool.linsys.ILinSys
                 s8 = [' v' s0];
                 if isa(self.disturbanceBoundsEll, 'ellipsoid')
                     [qVec, qMat] = parameters(self.disturbanceBoundsEll);
-                    fprintf(['   %d-dimensional constant ellipsoid', ...
+                    fprintf(['   %d-dimensional constant ellipsoid ', ...
                         'with center\n'],...
                         size(self.gtMat, 2));
                     disp(qVec);
@@ -238,27 +214,22 @@ classdef ALinSys < elltool.linsys.ILinSys
                 s7 = '';
                 s8 = '';
             end
-            %%
+            %
             if iscell(self.ctMat)
-                if self.isDiscr
-                    fprintf('\nC[k]:\n');
-                    s9 = 'C[k]';
-                else
-                    fprintf('\nC(t):\n');
-                    s9 = 'C(t)';
-                end
+                fprintf(['\nC', s0, ':\n']);
+                s9 = ['C', s0];
             else
                 fprintf('\nC:\n');
                 s9 = 'C';
             end
             disp(self.ctMat);
-            %%
+            %
             s10 = ['  +  w' s0];
             if ~(isempty(self.noiseBoundsEll))
                 fprintf('\nNoise bounds:\n');
                 if isa(self.noiseBoundsEll, 'ellipsoid')
                     [qVec, qMat] = parameters(self.noiseBoundsEll);
-                    fprintf(['   %d-dimensional constant ellipsoid', ...
+                    fprintf(['   %d-dimensional constant ellipsoid ', ...
                         'with center\n'],...
                         size(self.ctMat, 1));
                     disp(qVec);
@@ -282,14 +253,17 @@ classdef ALinSys < elltool.linsys.ILinSys
             else
                 s10 = '';
             end
-            %%
+            %
             fprintf('%d-input, ', size(self.btMat, 2));
             fprintf('%d-output ', size(self.ctMat, 1));
-            if self.isDiscr
+            %
+            isDiscr = s0 == '[k]';
+            if isDiscr
                 fprintf('discrete-time linear ');
             else
                 fprintf('continuous-time linear ');
             end
+            %
             if self.isTimeInv
                 fprintf('time-invariant system ');
             else
@@ -373,7 +347,6 @@ classdef ALinSys < elltool.linsys.ILinSys
                 self.ctMat = [];
                 self.noiseBoundsEll = [];
                 self.isTimeInv = false;
-                self.isDiscr = false;
                 self.isConstantBoundsVec = false(1, 3);
                 self.absTol = absTolVal;
                 return;
@@ -585,10 +558,6 @@ classdef ALinSys < elltool.linsys.ILinSys
             self.noiseBoundsEll = noiseBoundsEll;
             %%
             self.isTimeInv = isTimeInvar;
-            self.isDiscr  = false;
-            if (nargin > 7)  && ischar(discrFlag) && (discrFlag == 'd')
-                self.isDiscr = true;
-            end
             self.isConstantBoundsVec = [isCBU isCBV isCBW];
         end
         
@@ -697,14 +666,14 @@ classdef ALinSys < elltool.linsys.ILinSys
             end
         end
         
-        function isDiscreteArr = isdiscrete(self)
+        function isDiscrArr = isDiscreteArr(self)
             %
-            % See description of ISDISCRETE in ILinSys class.
+            % See description of ISDISCRETEARR in ILinSys class.
             %
-            isDiscreteArr = arrayfun(@(x) isDiscrete(x), self);
+            isDiscrArr = arrayfun(@(x) isDiscrete(x), self);
             %
             function isDiscrete = isDiscrete(linsys)
-                isDiscrete = linsys.isDiscr;
+                isDiscrete = linsys.isdiscrete();
             end
         end
         

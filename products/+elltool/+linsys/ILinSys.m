@@ -11,6 +11,21 @@ classdef ILinSys < handle
     %            Faculty of Computational Mathematics and Computer Science,
     %            System Analysis Department 2012 $
     %
+    methods (Abstract, Static)
+        isDiscr = isdiscrete()
+        %
+        % ISDISCRETE checks if linear system is discrete-time.
+        %
+        % Input:
+        %   regular:
+        %       self: elltool.linsys.ILinSys[1, 1] - 
+        %             linear systems.
+        %
+        % Output:
+        %   isDiscr: logical[1, 1] - true if linear system is 
+        %       discrete-time, and false otherwise.
+        %
+    end
     methods (Abstract)
         aMat = getAtMat(self)
         %
@@ -145,17 +160,17 @@ classdef ILinSys < handle
         %       linear system has noise, and false otherwise.
         %
         
-        isDiscreteArr = isdiscrete(self)
+        isDiscrArr = isDiscreteArr(self)
         %
-        % ISDISCRETE checks if linear system is discrete-time.
+        % ISDISCRETEMAT checks if linear system is discrete-time.
         %
         % Input:
         %   regular:
-        %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array
+        %       self: elltool.linsys.ILinSys[nDims1, nDims2,...] - an array
         %             of linear systems.
         %
         % Output:
-        %   isDiscreteMat: logical[nDims1, nDims2,...] - array such that
+        %   isDiscrMat: logical[nDims1, nDims2,...] - array such that
         %       it's element at each position is true if corresponding
         %       linear system is discrete-time, and false otherwise.
         %
