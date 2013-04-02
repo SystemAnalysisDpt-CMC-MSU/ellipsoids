@@ -1,8 +1,8 @@
 classdef GoodDirectionSet
     properties
-        %xstTransArray: double[nDims,nDims,nTimePoints] - X(s,t)' - transition
-        %       matrix for good directions l(t)=X(s,t)'l_0
-        XstTransDynamics
+        %rstTransArray: double[nDims,nDims,nTimePoints] - R(s,t)' - transition
+        %       matrix for good directions l(t)=R(s,t)'l_0
+        RstTransDynamics
         ltGoodDirCurveSpline
         ltGoodDirOneCurveSplineList
         sTime
@@ -58,16 +58,16 @@ classdef GoodDirectionSet
             %
             matOpFactory = MatrixOperationsFactory.create(timeVec);
             %
-            Xtt0Dynamics = pDefObj.getXtt0Dynamics();
+            Rtt0Dynamics = pDefObj.getRtt0Dynamics();
             Xt0tTransDynamics = ...
-                matOpFactory.transpose(matOpFactory.inv(Xtt0Dynamics));
+                matOpFactory.transpose(matOpFactory.inv(Rtt0Dynamics));
             Xst0TransConstMatFunc = ...
-                ConstMatrixFunction(Xtt0Dynamics.evaluate(sTime).');
-            XstTransDynamics = ...
+                ConstMatrixFunction(Rtt0Dynamics.evaluate(sTime).');
+            RstTransDynamics = ...
                 matOpFactory.rMultiply(Xt0tTransDynamics,...
-                Xst0TransConstMatFunc);
+                Rst0TransConstMatFunc);
             %
-            self.XstTransDynamics = XstTransDynamics;
+            self.RstTransDynamics = RstTransDynamics;
             self.sTime=sTime;
             %
             nGoodDirs = self.getNGoodDirs();
@@ -77,13 +77,13 @@ classdef GoodDirectionSet
                 lsGoodDirConstColFunc = ...
                     ConstColFunction(lsGoodDirMat(:,iGoodDir));
                 self.ltGoodDirOneCurveSplineList{iGoodDir} = ...
-                    matOpFactory.rMultiply(XstTransDynamics, ...
+                    matOpFactory.rMultiply(RstTransDynamics, ...
                     lsGoodDirConstColFunc);
             end
             %
             lsGoodDirConstMatFunc = ConstMatrixFunction(lsGoodDirMat);
             self.ltGoodDirCurveSpline = matOpFactory.rMultiply(...
-                XstTransDynamics, lsGoodDirConstMatFunc);
+                RstTransDynamics, lsGoodDirConstMatFunc);
         end
     end
 end

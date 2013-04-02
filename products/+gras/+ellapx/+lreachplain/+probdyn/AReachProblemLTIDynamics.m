@@ -40,7 +40,7 @@ classdef AReachProblemLTIDynamics<...
             if (oldcode)
                 % [oldcode]
                 matOpFactory = MatrixOperationsFactory.create(self.timeVec);
-                self.Xtt0Dynamics = matOpFactory.expmt(self.AtDynamics, t0);
+                self.Rtt0Dynamics = matOpFactory.expmt(self.AtDynamics, t0);
                 % [end]
             else
                 odeArgList = self.getOdePropList(calcPrecision);
@@ -122,7 +122,7 @@ classdef AReachProblemLTIDynamics<...
                         dataRtt0Array = dataRtt0Array .* normVec;
                 end
                 %
-                self.Xtt0Dynamics=MatrixInterpolantFactory.createInstance(...
+                self.Rtt0Dynamics=MatrixInterpolantFactory.createInstance(...
                     'column',dataRtt0Array,timeRtt0Vec);
             end
         end

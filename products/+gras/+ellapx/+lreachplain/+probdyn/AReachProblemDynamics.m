@@ -5,7 +5,7 @@ classdef AReachProblemDynamics<...
         AtDynamics
         BptDynamics
         BPBTransDynamics
-        Xtt0Dynamics
+        Rtt0Dynamics
         timeVec
     end
     properties (Abstract,Access=protected)
@@ -36,8 +36,8 @@ classdef AReachProblemDynamics<...
         function xtDynamics=getxtDynamics(self)
             xtDynamics=self.xtDynamics;
         end
-        function Xtt0Dynamics=getXtt0Dynamics(self)
-            Xtt0Dynamics=self.Xtt0Dynamics;
+        function Rtt0Dynamics=getRtt0Dynamics(self)
+            Rtt0Dynamics=self.Rtt0Dynamics;
         end
         function timeVec=getTimeVec(self)
             timeVec=self.timeVec;
