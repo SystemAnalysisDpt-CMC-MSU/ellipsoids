@@ -70,9 +70,10 @@ for iDir=1:nDirs
         %Finite case
         ellQ1Mat=ellObj1.eigvMat*ellObj1.diagMat*ellObj1.eigvMat.';
         ellQ2Mat=ellObj2.eigvMat*ellObj2.diagMat*ellObj2.eigvMat.';
-           resEllMat  = GenEllipsoid.findDiffFC( ...
-               @GenEllipsoid.findDiffEaND, ellQ1Mat, ellQ2Mat,...
-               curDirVec,absTol);
+        resEllMat  = GenEllipsoid.findDiffFC( ...
+            @GenEllipsoid.findDiffEaND, ellQ1Mat, ellQ2Mat,...
+            curDirVec,absTol);
+        resEllMat=0.5*(resEllMat+resEllMat.');
         if isempty(resEllMat)
             resEllVec(iDir)=GenEllipsoid();
         else

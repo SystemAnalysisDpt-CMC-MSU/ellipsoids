@@ -21,19 +21,33 @@ function outEll = ellunion_ea(inpEllArr)
 
 import elltool.conf.Properties;
 import modgen.common.throwerror;
+import elltool.logging.Log4jConfigurator;
+
+persistent logger;
 
 dimsArr = dimension(inpEllArr);
 minEllDim   = min(dimsArr(:));
+
+nEllipsoids = numel(inpEllArr);
+inpEllVec  = reshape(inpEllArr, 1, nEllipsoids);
+
+modgen.common.checkvar( inpEllArr , 'numel(x) > 0', 'errorTag', ...
+    'wrongInput:emptyArray', 'errorMessage', ...
+    'Each array must be not empty.');
+
+modgen.common.checkvar( inpEllArr,'all(~isempty(x(:)))','errorTag', ...
+    'wrongInput:emptyEllipsoid', 'errorMessage', ...
+    'Array should not have empty ellipsoid.');
 
 modgen.common.checkvar(dimsArr,'all(x(:)==x(1))',...
     'errorTag','wrongSizes',...
     'errorMessage','all ellipsoids must be of the same dimension.');
 
-nEllipsoids = numel(inpEllArr);
-inpEllVec  = reshape(inpEllArr, 1, nEllipsoids);
-
 if Properties.getIsVerbose()
-    fprintf('Invoking CVX...\n');
+    if isempty(logger)
+        logger=Log4jConfigurator.getLogger();
+    end
+    logger.info('Invoking CVX...\n');
 end
 
 

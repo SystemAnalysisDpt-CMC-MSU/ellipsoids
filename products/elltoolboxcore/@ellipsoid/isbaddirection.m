@@ -1,4 +1,4 @@
-function [isBadDirVec,pUniversalVec] = isbaddirection(fstEll, secEll, dirsMat)
+function [isBadDirVec,pUniversalVec] = isbaddirection(fstEll, secEll, dirsMat,absTol)
 %
 % ISBADDIRECTION - checks if ellipsoidal approximations of geometric
 %                  difference of two ellipsoids can be computed for
@@ -17,11 +17,13 @@ function [isBadDirVec,pUniversalVec] = isbaddirection(fstEll, secEll, dirsMat)
 %       secEll: ellipsoid [1, 1] - second ellipsoid of the same dimention.
 %       dirsMat: numeric[nDims, nCols] - matrix whose columns are
 %           direction vectors that need to be checked.
+%       absTol: double [1,1] - absolute tolerance
 %
 % Output:
 %    isBadDirVec: logical[1, nCols] - array of true or false with length
 %       being equal to the number of columns in matrix dirsMat.
 %       ture marks direction vector as bad - ellipsoidal approximation
+%       true marks direction vector as bad - ellipsoidal approximation
 %       cannot be computed for this direction. false means the opposite.
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
@@ -42,5 +44,5 @@ if ~isbigger(fstEll, secEll)
     isBadDirVec = true(1,size(dirsMat,2));
 else    
     [isBadDirVec,pUniversalVec] = ellipsoid.isbaddirectionmat(fstEll.shape,...
-        secEll.shape, dirsMat);
+        secEll.shape, dirsMat,absTol);
 end

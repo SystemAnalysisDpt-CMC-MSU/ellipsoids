@@ -67,6 +67,9 @@ import elltool.conf.Properties;
 import modgen.common.throwerror;
 import elltool.core.GenEllipsoid;
 import elltool.plot.plotgeombodyarr;
+import elltool.logging.Log4jConfigurator;
+
+logger=Log4jConfigurator.getLogger();
 N_PLOT_POINTS = 80;
 SPHERE_TRIANG_CONST = 3;
 [plObj,nDim,isHold]= plotgeombodyarr('elltool.core.GenEllipsoid',@fCalcBodyTriArr,@patch,varargin{:});
@@ -154,6 +157,16 @@ end
                 repmat(qCenVec, 1, nPoints);
             xMat(:, end) = xMat(:, 1);
             fMat = fGetGridMat;
+        end
+        if (mDim < 1) || (nDim > 3)
+            throwerror('wrongDim','ellipsoid dimension can be 1, 2 or 3');
+        end
+        if Properties.getIsVerbose()
+            if ellNum == 1
+                logger.info('Plotting ellipsoid...');
+            else
+                logger.info(sprintf('Plotting %d ellipsoids...', ellNum));
+            end
         end
     end
 

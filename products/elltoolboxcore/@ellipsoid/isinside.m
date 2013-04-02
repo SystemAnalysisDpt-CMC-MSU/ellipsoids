@@ -82,8 +82,11 @@ function [res, status] = isinside(fstEllArr, secObjArr, mode)
 %            System Analysis Department 2012 $
 
 import elltool.conf.Properties;
+import elltool.logging.Log4jConfigurator;
 import modgen.common.throwerror;
 import modgen.common.checkmultvar;
+
+persistent logger;
 
 ellipsoid.checkIsMe(fstEllArr,'first');
 modgen.common.checkvar(secObjArr,@(x) isa(x, 'ellipsoid') ||...
@@ -91,55 +94,97 @@ modgen.common.checkvar(secObjArr,@(x) isa(x, 'ellipsoid') ||...
     'errorTag','wrongInput', 'errorMessage',...
     'second input argument must be ellipsoid,hyperplane or polytope.');
 
+modgen.common.checkvar( fstEllArr , 'numel(x) > 0', 'errorTag', ...
+    'wrongInput:emptyArray', 'errorMessage', ...
+    'Each array must be not empty.');
+
+modgen.common.checkvar( fstEllArr,'all(~isempty(x(:)))','errorTag', ...
+    'wrongInput:emptyEllipsoid', 'errorMessage', ...
+    'Array should not have empty ellipsoid.');
+
+modgen.common.checkvar( secObjArr , 'numel(x) > 0', 'errorTag', ...
+    'wrongInput:emptyArray', 'errorMessage', ...
+    'Each array must be not empty.');
+
+if isa(secObjArr, 'polytope')
+    isEmptyArr = true(size(secObjArr));
+    [~, nCols] = size(secObjArr);
+    for iCols = 1:nCols
+        isEmptyArr(iCols) = isempty(secObjArr(iCols));
+    end
+    isAnyObjEmpty = any(isEmptyArr);
+else
+    isAnyObjEmpty = any(isempty(secObjArr(:)));
+end
+if isAnyObjEmpty
+    throwerror('wrongInput:emptyObject',...
+    'Array should not have empty ellipsoid, hyperplane or polytope.');
+end;
+
+
 if (nargin < 3) || ~(ischar(mode))
     mode = 'u';
 end
 
 status = [];
 
-if isa(secObjArr, 'polytope')
+nElem = numel(secObjArr);
+secObjVec  = reshape(secObjArr, 1, nElem);
+
+if isa(secObjVec, 'polytope')
     if mode == 'i'
-        xVec = extreme(and(secObjArr));
+       xVec = {extreme(and(secObjVec))};
     else
-        xVec = arrayfun(@(x) extreme(x), secObjArr);
+        [nRows nCols] = size(secObjVec);
+        xVec = cell(nRows,nCols);
+        for iCols = 1:nCols
+            xVec{iCols} = extreme(secObjArr(iCols));
+        end;
     end
-    if isempty(xVec)
+    if all(cellfun(@(x) isempty(x), xVec))
         res = -1;
     else
-        res = min(isinternal(fstEllArr, xVec', 'i'));
+        res = min(cellfun(@(x) min(isinternal(fstEllArr, x', 'i')),xVec));
     end
-    
+   
     if nargout < 2
         clear status;
     end
-    
+   
     return;
 end
 
+
 if mode == 'u'
     res = 1;
-    isContain = arrayfun(@(x) all(all(contains(x, secObjArr))), fstEllArr);
+    isContain = arrayfun(@(x) all(all(contains(x, secObjVec))), fstEllArr);
     if ~all( isContain(:) )
         res=0;
         return;
     end
-elseif isscalar(secObjArr)
+elseif isscalar(secObjVec)
     res = 1;
-    if ~all(all(contains(fstEllArr, secObjArr)))
+    isContain = arrayfun(@(x) all(all(contains(x, secObjVec))), fstEllArr);
+    if ~all( isContain(:) )
         res = 0;
     end
 else
     nFstEllDimsMat = dimension(fstEllArr);
-    nSecEllDimsMat = dimension(secObjArr);
+    nSecEllDimsMat = dimension(secObjVec);
     checkmultvar('(x1(1)==x2(1))&&all(x1(:)==x1(1))&&all(x2(:)==x2(1))',...
         2,nFstEllDimsMat,nSecEllDimsMat,...
         'errorTag','wrongSizes',...
         'errorMessage','input arguments must be of the same dimension.');
+    
+    
     if Properties.getIsVerbose()
-        fprintf('Invoking CVX...\n');
+        if isempty(logger)
+            logger=Log4jConfigurator.getLogger();
+        end
+        logger.info('Invoking CVX...');
     end
     res = 1;
-    resMat  =arrayfun (@(x) qcqp(secObjArr,x), fstEllArr);
+    resMat  =arrayfun (@(x) qcqp(secObjVec,x), fstEllArr);
     if any(resMat(:)<1)
         res = 0;
         if any(resMat(:)==-1)
@@ -179,13 +224,19 @@ function [res, status] = qcqp(fstEllArr, secObj)
 
 import modgen.common.throwerror;
 import elltool.conf.Properties;
+import elltool.logging.Log4jConfigurator;
+
+persistent logger;
 
 absTolScal = getAbsTol(secObj);
 [qVec, paramMat] = parameters(secObj);
 if size(paramMat, 2) > rank(paramMat)
     if Properties.getIsVerbose()
-        fprintf('QCQP: Warning! Degenerate ellipsoid.\n');
-        fprintf('      Regularizing...\n');
+        if isempty(logger)
+            logger=Log4jConfigurator.getLogger();
+        end
+        logger.info('QCQP: Warning! Degenerate ellipsoid.');
+        logger.info('      Regularizing...');
     end
     paramMat = ellipsoid.regularize(paramMat,absTolScal);
 end
@@ -201,15 +252,15 @@ minimize(xVec'*invQMat*xVec + 2*(-invQMat*qVec)'*xVec + ...
     (qVec'*invQMat*qVec - 1))
 subject to
 for iCount = 1:nNumel
-        [qVec, invQMat] = parameters(fstEllArr(iCount));
+        [qiVec, invQiMat] = parameters(fstEllArr(iCount));
         if isdegenerate(fstEllArr(iCount))
-            invQMat = ...
-                ellipsoid.regularize(invQMat,getAbsTol(fstEllArr(iCount)));
+            invQiMat = ...
+                ellipsoid.regularize(invQiMat,getAbsTol(fstEllArr(iCount)));
         end
-        invQMat = ell_inv(invQMat);
-        invQMat = 0.5*(invQMat + invQMat');
-        xVec'*invQMat*xVec + 2*(-invQMat*qVec)'*xVec + ...
-            (qVec'*invQMat*qVec - 1) <= 0;
+        invQiMat = ell_inv(invQiMat);
+        invQiMat = 0.5*(invQiMat + invQiMat');
+        xVec'*invQiMat*xVec + 2*(-invQiMat*qiVec)'*xVec + ...
+            (qiVec'*invQiMat*qiVec - 1) <= 0;
 end
 cvx_end
 
@@ -234,3 +285,4 @@ else
 end
 
 end
+
