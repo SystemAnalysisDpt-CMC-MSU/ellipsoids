@@ -24,8 +24,8 @@ classdef GoodDirectionSet
                 self.ltGoodDirOneCurveSplineList;
         end
         %
-        function XstTransDynamics=getXstTransDynamics(self)
-            XstTransDynamics=self.XstTransDynamics;
+        function RstTransDynamics=getRstTransDynamics(self)
+            RstTransDynamics=self.RstTransDynamics;
         end
         function sTime=getsTime(self)
             sTime=self.sTime;
@@ -61,7 +61,7 @@ classdef GoodDirectionSet
             Rtt0Dynamics = pDefObj.getRtt0Dynamics();
             Xt0tTransDynamics = ...
                 matOpFactory.transpose(matOpFactory.inv(Rtt0Dynamics));
-            Xst0TransConstMatFunc = ...
+            Rst0TransConstMatFunc = ...
                 ConstMatrixFunction(Rtt0Dynamics.evaluate(sTime).');
             RstTransDynamics = ...
                 matOpFactory.rMultiply(Xt0tTransDynamics,...
