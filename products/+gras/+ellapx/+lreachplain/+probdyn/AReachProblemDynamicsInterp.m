@@ -44,6 +44,9 @@ classdef AReachProblemDynamicsInterp<...
             algorithm = 2;
             %
             % the code here is a control code
+            % [realcode]
+            % solverObj=MatrixODESolver(sizeAtVec,@ode45,odeArgList{:});
+            % [end]
             %
             if (algorithm == 3)
                 solverObj=MatrixODESolver([numelAt + 1, 1],@ode45,odeArgList{:});
@@ -52,6 +55,9 @@ classdef AReachProblemDynamicsInterp<...
             end            
             %
             % the code here is a control code
+            % [realcode]
+            % fRtt0DerivFunc = @(t,x) fRtt0SimDerivFunc(t, x, @(u) self.AtDynamics.evaluate(u));
+            % [end]
             %
             switch (algorithm)
                 case 0
@@ -65,6 +71,10 @@ classdef AReachProblemDynamicsInterp<...
             end
             %
             % the code here is a control code
+            % [realcode]
+            % sRtt0InitialMat = eye(sizeAtVec);
+            % sRtt0InitialMat = normaliz(sRtt0InitialMat);
+            % [end]
             %
             switch (algorithm)
                 case 0
@@ -85,6 +95,8 @@ classdef AReachProblemDynamicsInterp<...
                 self.timeVec,sRtt0InitialMat);
             %
             % the code here is a control code
+            % [realcode]
+            % [end]
             %
             switch (algorithm)
                 case 1
