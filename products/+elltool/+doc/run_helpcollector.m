@@ -78,6 +78,7 @@ helpCellNew(~isEmptyHelp)=...
     helpCell(~isEmptyHelp),indAccumCell(~isEmptyHelp),'UniformOutput',false);
 %
 helpCellNew(~isEmptyHelp)=cellfun(@(x) [x{:}],helpCellNew(~isEmptyHelp),'UniformOutput',false);
+
 %
 % obtain briefHelpCell
 briefHelpCell=helpCellNew;
@@ -91,6 +92,7 @@ indFirstEmptyLine=cellfun(@(x,is) regexp(x(is),['[^%]',newLineSymbol,'%',newLine
 isExistEmptyLine=cellfun(@(x) ~isempty(x),indFirstEmptyLine);
 briefHelpCell(isExistEmptyLine)=cellfun(@(x,ind,is) x(1:max(find(is,ind(1),'first'))),...
     briefHelpCell(isExistEmptyLine),indFirstEmptyLine(isExistEmptyLine),isnSpace(isExistEmptyLine),'UniformOutput',false);
+briefHelpCell = cellfun(@(x)delete_procent(x),briefHelpCell, 'UniformOutput', false);
 % obtain authorListCell
 authorListCell=helpCellNew;
 %
@@ -100,8 +102,10 @@ indLastEmptyLine=cellfun(@(x,is) regexp(x(is),[newLineSymbol,'%',newLineSymbol,'
 isExistEmptyLine=cellfun(@(x) ~isempty(x),indLastEmptyLine);
 authorListCell(isExistEmptyLine)=cellfun(@(x,ind,is) x(min(find(is,max(1,sum(is)-ind(end)-2),'last')):end),...
     authorListCell(isExistEmptyLine),indLastEmptyLine(isExistEmptyLine),isnSpace(isExistEmptyLine),'UniformOutput',false);
+authorListCell = cellfun(@(x)delete_procent(x),authorListCell, 'UniformOutput', false);
 %
 helpOutputCell=helpCellNew;
+helpOutputCell = cellfun(@(x)delete_procent(x),helpOutputCell, 'UniformOutput', false);
 dirNameOutputCell=dirNameCell;
 funcOutputCell=uniqueFuncNameCell;
 %
@@ -248,4 +252,8 @@ fprintf(fid,'\\end{document}\n');
 fclose(fid);
 logger.info(sprintf('Job completed, the result is written to \n%s',...
     resultTexFileName));
-%
+
+end
+function result = delete_procent(str)
+result = regexprep(str, '(\%)', '');
+end
