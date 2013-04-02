@@ -5,7 +5,7 @@ Even for a simple 2-dimensional discrete-time linear time-invariant
 system, application of ellipsoidal methods may be more effective
 than using polytopes.
 
-Consider the system
+Consider the system from chapter 1:
 \[ \left[\begin{array}{c}
 x_1[k+1]\\
 x_2[k+1]\end{array}\right] = \left[\begin{array}{cc}
@@ -30,20 +30,9 @@ we assume $\XX_0$ and $U$ to be unit balls in ${\bf R}^2$, fix any number
 of initial direction values that corresponds to the number of ellipsoidal
 approximations, and obtain external and internal ellipsoidal approximations
 of the reach set:
-{\tt \begin{verbatim}
->> A = [cos(1) sin(1); -sin(1) cos(1)];
->> U = ell_unitball(2);  % control bounds
->>
->> % define linear discrete-time system:
->> lsys = linsys(A, eye(2), U, [], [], [], [], 'd');
->>
->> X0 = ell_unitball(2);  % set of initial conditions
->> L0 = [cos(0:0.1:pi); sin(0:0.1:pi)];  % 32 initial directions
->> N  = 100;  % number of time steps
->>
->> % compute the reach set:
->> rs = reach(lsys, X0, L0, N);
-\end{verbatim}}
+\verbmcodef[Computation of the reach set]
+{mcodesnippets/s_chapter07_section01_snippet01.m}
+
 In figure \ref{ellpolyfig}, the time required to compute both external
 and internal ellipsoidal approximations, with $32$ ellipsoids each,
 for different number of time steps is shown in blue.
@@ -105,36 +94,9 @@ u_2\end{array}\right]. \label{spmassls}
 Now we can compute the reach set of system (\ref{spmass1}-\ref{spmass2})
 for given time by computing the reach set of the linear system (\ref{spmassls})
 and taking its projection onto $(x_1, x_2)$ subspace.
-{\tt \begin{verbatim}
->> % specify parameters k1, k2 and masses m1, m2:
->> k1 = 24;  k2 = 32;
->> m1 = 1.5; m2 = 1;
->>
->> % define matrices A, B, and control bounds U:
->> A = [0 0 1 0; 0 0 0 1; -(k1+k2)/m1 k2/m1 0 0; k2/m2 -(k1+k2)/m2 0 0];
->> B = [0 0; 0 0; 1/m1 0; 0 1/m2];
->> U = ell_unitball(2);
->>
->> lsys = linsys(A, B, U);  % linear system
->> T = [0 4];  % time interval
->>
->> % initial conditions:
->> X0 = [0 2 0 0]' + ellipsoid([0.01 0 0 0; 0 0.01 0 0; 0 0 eps 0; 0 0 0 eps]);
->>
->> % initial directions (some random vectors in R^4):
->> L0 = [1 0 1 0; 1 -1 0 0; 0 -1 0 1; 1 1 -1 1 -1 1 1 0; -2 0 1 1]';
->>
->> rs = reach(lsys, X0, L0, T);  % reach set
->>
->> BB = [1 0 0 0; 0 1 0 0]';  % orthogonal basis of (x1, x2) subspace
->> ps = projection(rs, BB);  % reach set projection
->>
->> % plot projection of reach set external approximation:
->> subplot(2, 2, 1);
->> plot_ea(ps, 'g');  % plot the whole reach tube
->> subplot(2, 2, 2);
->> plot_ea(cut(ps, 4), 'g');  % plot reach set approximation at time t = 4
-\end{verbatim}}
+\newpage
+\verbmcodef[Computation and projection of the reach set]
+{mcodesnippets/s_chapter07_section02_snippet01.m}
 Figure \ref{mechreachfig}(a) shows the reach set of the system
 (\ref{spmass1}-\ref{spmass2}) evolving in time from $t=0$ to $t=4$.
 Figure \ref{mechreachfig}(b) presents a snapshot of this reach set at time
@@ -167,22 +129,9 @@ v_2\end{array}\right]. \]
 Assuming that $[v_1 ~~ v_2]^T$ is unknown but bounded by ellipsoid
 $\EE(0, \frac{1}{4}I)$, we can compute the closed-loop reach set of the system
 with disturbance.
-{\tt \begin{verbatim}
->> % define disturbance:
->> G = [0 0; 0 0; 1 0; 0 1];
->> V = 0.5*ell_unitball(2);
->>
->> lsysd = linsys(A, B, U, G, V);  % linear system with disturbance
->>
->> rsd = reach(lsysd, X0, L0, T);  % reach set
->> psd = projection(rsd, BB);  % reach set projection onto (x1, x2)
->>
->> % plot projection of reach set external approximation:
->> subplot(2, 2, 3);
->> plot_ea(ps);  % plot the whole reach tube
->> subplot(2, 2, 4);
->> plot_ea(cut(ps, 4));  % plot reach set approximation at time t = 4
-\end{verbatim}}
+\verbmcodef[Computation of the closed-loop reach set]
+{mcodesnippets/s_chapter07_section02_snippet02.m}
+
 Figure \ref{mechreachfig}(c) shows the reach set of the system
 (\ref{smdist1}-\ref{smdist2}) evolving in time from $t=0$ to $t=4$.
 Figure \ref{mechreachfig}(d) presents a snapshot of this reach set at time
@@ -266,49 +215,10 @@ x_3\end{array}\right] + \left[\begin{array}{c}
 \label{rlceq2}
 \end{equation}
 We can compute the reach set of (\ref{rlceq2}) for some time $t>2$, say, $t=3$.
-{\tt \begin{verbatim}
->> % define system 1:
->> A1 = [-1/6 0 -1/3; 0 0 1/7; 1/2 -1/2 -1/2];
->> B1 = [1/6 1/3; 0 0; 0 0];
->> U1 = ellipsoid(eye(2));
->> s1 = linsys(A1, B1, U1);
->>
->> % define system 2:
->> A2 = [-1/6 0 -1/3; 0 0 1/3; 1/6 -1/6 -1/3];
->> B2 = [1/6; 0; 0];
->> U2 = ellipsoid(1);
->> s2 = linsys(A2, B2, U2);
->>
->> X0 = ellipsoid(0.01*eye(3));  % set of initial states
->> L0 = eye(3);  % 3 initial directions
->> TS = 2;  % time of switch
->> T = 3;  % terminating time
->>
->> % compute the reach set:
->> rs1 = reach(s1, X0, L0, TS);  % reach set of the first system
->> % computation of the second reach set starts
->> % where the first left off
->> rs2 = evolve(rs1, T, s2);
->>
->> % obtain projections onto (x1, x2) subspace:
->> BB = [1 0 0; 0 1 0]';  % (x1, x2) subspace basis
->> ps1 = projection(rs1, BB);
->> ps2 = projection(rs2, BB);
->>
->> % plot the results:
->> subplot(2, 2, 1);
->> plot_ea(ps1, 'r');  % external apprx. of reach set 1 (red)
->> hold on;
->> plot_ia(ps1, 'g');  % internal apprx. of reach set 1 (green)
->> plot_ea(ps2, 'y');  % external apprx. of reach set 2 (yellow)
->> plot_ia(ps2, 'b');  % internal apprx. of reach set 2 (blue)
->>
->> % plot the 3-dimensional reach set at time t = 3:
->> subplot(2, 2, 2);
->> plot_ea(cut(rs2, 3), 'y');
->> hold on;
->> plot_ia(cut(rs2, 3), 'b');
-\end{verbatim}}
+
+\verbmcodef[Computation of the reach set for time interval]
+{mcodesnippets/s_chapter07_section03_snippet01.m}
+
 Figure \ref{rlcreachfig}(a) shows how the reach set projection
 onto $(x_1, x_2)$ of system (\ref{rlceq2})
 evolves in time from $t=0$  to $t=3$. The external reach set approximation
@@ -340,33 +250,9 @@ $(x_1,x_2)$ subspace.
 To find out where the system should start at time $t=0$ in order to reach
 a neighborhood {\tt M} of the origin at time $t=3$,
 we compute the backward reach set from $t=3$ to $t=0$.
-{\tt \begin{verbatim}
->> M  = ellipsoid(0.01*eye(3));  % terminating set
->> TT = 3;  % terminating time
->>
->> % compute backward reach set:
->> % compute the reach set:
->> brs2 = reach(s2, M, L0, [TT TS]);  % second system comes first
->> brs1 = evolve(brs2, 0, s1);  % then the first system
->>
->> % obtain projections onto (x1, x2) subspace:
->> bps1 = projection(brs1, BB);
->> bps2 = projection(brs2, BB);
->>
->> % plot the results:
->> subplot(2, 2, 3);
->> plot_ea(bps1, 'r');  % external apprx. of backward reach set 1 (red)
->> hold on;
->> plot_ia(bps1, 'g');  % internal apprx. of backward reach set 1 (green)
->> plot_ea(bps2, 'y');  % external apprx. of backward reach set 2 (yellow)
->> plot_ia(bps2, 'b');  % internal apprx. of backward reach set 2 (blue)
->>
->> % plot the 3-dimensional backward reach set at time t = 0:
->> subplot(2, 2, 4);
->> plot_ea(cut(brs1, 0), 'r');
->> hold on;
->> plot_ia(cut(brs1, 0), 'g');
-\end{verbatim}}
+\verbmcodef[Computation of the backward reach set]
+{mcodesnippets/s_chapter07_section03_snippet02.m}
+
 Figure \ref{rlcreachfig}(c) presents the evolution of the reach set
 projection onto $(x_1, x_2)$ in backward time.
 Again, external and internal approximations corresponding
@@ -387,13 +273,13 @@ hybrid systems with affine continuous dynamics whose guards are
 ellipsoids, hyperplanes, halfspaces or polytopes.
 
 We  consider the {\it switching-mode model} of highway traffic
-presented in \cite{munoz03}. The highway segment is divided into $N$ cells
+presented in \cite{xiaotian}. The highway segment is divided into $N$ cells
 as shown in figure \ref{hwfig}. In this particular case, $N=4$.
 The traffic density in cell $i$ is  $x_i$ vehicles per mile, $i=1,2,3,4$.
 \begin{figure}[htbp]
 \centerline{
 \includegraphics[height=5 cm]{hw.eps}}
-\caption{Highway model. Adapted from \cite{munoz03}.}
+\caption{Highway model. Adapted from \cite{xiaotian}.}
 \label{hwfig}
 \end{figure}
 
@@ -481,77 +367,24 @@ $H([0 ~ 1 ~ 0 ~ 0]^T, x_{M2})$ is the guard.
 
 We indicate how to implement the reach set computation of this hybrid system.
 We first define the two linear systems and the guard.
-{\tt \begin{verbatim}
->> % assign parameter values:
->> v1 = 65; v2 = 60; v3 = 63; v4 = 65;  % mph
->> w1 = 10; w2 = 10; w3 = 10; w4 = 10;  % mph
->> d1 = 2; d2 = 3; d3 = 4; d4 = 2;  % miles
->> Ts = 2/3600;  % sampling time in hours
->> xM1 = 200; xM2 = 200; xM3 = 200; xM4 = 200;  % vehicles per lane
->> b = 0.4;
->>
->> A1 = [(1-(v1*Ts/d1)) 0 0 0
-         (v1*Ts/d2) (1-(v2*Ts/d2)) 0 0
-         0 (v2*Ts/d3) (1-(v3*Ts/d3)) 0
-         0 0 ((1-b)*(v3*Ts/d4)) (1-(v4*Ts/d4))];
->> B1 = [v1*Ts/d1 0 0; 0 0 v2*Ts/d2; 0 0 0; 0 0 0];
->> U1 = ellipsoid([180; 150; 50], [100 0 0; 0 100 0; 0 0 25]);
->>
->> A2 = [(1-(w1*Ts/d1)) (w2*Ts/d1) 0 0
-         0 (1-(w2*Ts/d2)) (w3*Ts/d2) 0
-         0 0 (1-(w3*Ts/d3)) ((1/(1-b))*(w4*Ts/d3))
-         0 0 0 (1-(w4*Ts/d4))];
->> B2 = [0 0 w1*Ts/d1; 0 0 0; 0 0 0; 0 -w4*Ts/d4 0];
->> U2 = U1;
->> G2 = [(w1*Ts/d1) (-w2*Ts/d1) 0 0
-         0 (w2*Ts/d2) (-w3*Ts/d2) 0
-         0 0 (w3*Ts/d3) ((-1/(1-b))*(w4*Ts/d3))
-         0 0 0 (w4*Ts/d4)];
->> V2 = [xM1; xM2; xM3; xM4];
->>
->> % define linear systems:
->> s1 = linsys(A1, B1, U1, [], [], [], [], 'd');  % free-flow mode
->> s2 = linsys(A2, B2, U2, G2, V2, [], [], 'd');  % congestion mode
->>
->> % define guard:
->> GRD = hyperplane([0; 1; 0; 0], xM2);
-\end{verbatim}}
+\verbmcodef[Reach set computation of the hybrid system]
+{mcodesnippets/s_chapter07_section04_snippet01.m}
 
 We assume that initially the system is in free-flow mode.
 Given a set of initial conditions, we  compute the reach set according
 to dynamics (\ref{fflow}) for certain number of time steps.
 We will consider the external approximation of the reach set by a single
 ellipsoid.
-{\tt \begin{verbatim}
->> initial conditions:
->> X0 = [170; 180; 175; 170] + 10*ell_unitball(4);
->
->> L0 = [1; 0; 0; 0];  % single initial direction
->> N = 100;  % number of time steps
->>
->> ffrs = reach(s1, X0, L0, N);  % free-flow reach set
->> EA = get_ea(ffrs);  % 101x1 array of external ellipsoids
-\end{verbatim}}
-Having obtained the ellipsoidal array {\tt EA} representing the reach set
+\verbmcodef[Get the external approximation of the reach set by a single
+ellipsoid]{mcodesnippets/s_chapter07_section04_snippet02.m}
+
+Having obtained the ellipsoidal array {\tt externalEllMat} representing the reach set
 evolving in time, we  determine the  ellipsoids in the array that
 intersect the guard.
-{\tt \begin{verbatim}
->> I = hpintersection(EA, GRD);  % some of the intersections are empty
->> D = find(~isempty(I));  % determine nonempty intersections
->> min(D)
+\verbmcodef[Determination of  the  ellipsoids as an array that intersect the guard]{mcodesnippets/s_chapter07_section04_snippet03.m}
 
-ans =
-
-      19
-
->> max(D)
-
-ans =
-
-      69
-\end{verbatim}}
-Analyzing the values in array {\tt D}, we conclude that the free-flow reach set
-has nonempty intersection with hyperplane {\tt GRD} at $t=18$
+Analyzing the values in array {\tt dVec}, we conclude that the free-flow reach set
+has nonempty intersection with hyperplane {\tt grdHyp} at $t=18$
 for the first time, and at $t=68$ for the last time.
 Between $t=18$ and
 $t=68$ it crosses the guard. Figure \ref{hwreachfig}(a) shows the
@@ -585,17 +418,13 @@ guard is nonempty, we establish a new initial time and a set of initial
 conditions for the reach set computation according to dynamics (\ref{cflow}).
 The initial time is the array index minus one, and the set of initial
 conditions is the intersection of the free-flow reach set with the guard.
-{\tt \begin{verbatim}
->> crs = [];
->> for i = 1:size(D, 2)
-     rs = reach(s2, I(D(i)), L0, [(D(i)-1) N]);
-     crs = [crs rs];
-   end
-\end{verbatim}}
+\verbmcodef[The union of reach sets in array]{mcodesnippets/s_chapter07_section04_snippet04.m}
+
 The union of reach sets in array {\tt crs} forms the reach set for
 the congested dynamics.
 
-A summary of the reach set computation of the
+A summary of
+ the reach set computation of the
 linear hybrid system (\ref{fflow}-\ref{cflow}) for $N=100$ time steps
 with one guard crossing is given in figure \ref{hwreachfig}(d),
 which shows the projection of the reach set trace onto $(x_1,x_2)$ subspace.
@@ -612,8 +441,3 @@ Observe that in the congested mode, the density $x_2$ in the congested part
  increases.
 The blue  set above the guard is not actually reached,
 because the state evolves according to the green region.
-
-
-
-
-

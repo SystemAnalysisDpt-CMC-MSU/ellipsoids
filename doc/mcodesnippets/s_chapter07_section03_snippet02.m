@@ -1,9 +1,9 @@
-mEll  = ellipsoid(0.01*eye(3));  % terminating set
+mEllObj  = ellipsoid(0.01*eye(3));  % terminating set
 termTime = 3;  % terminating time
 
 % compute backward reach set:
 % compute the reach set:
-secBrsObj = elltool.reach.ReachContinuous(secSys, mEll, dirsMat,...
+secBrsObj = elltool.reach.ReachContinuous(secSys, mEllObj, dirsMat,...
  [termTime switchTime]);  % second system comes first
 firstBrsObj = secBrsObj.evolve(0, firstSys);  % then the first system
 

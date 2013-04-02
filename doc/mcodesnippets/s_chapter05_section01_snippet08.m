@@ -1,5 +1,5 @@
- % distance between thirdEll and each of the ellipsoids in ellArr
-ellArr.distance(thirdEll) 
+% distance between thirdEllObj and each of the ellipsoids in ellMat
+ellMat.distance(thirdEllObj) 
 
 % ans =
 % 

@@ -1,6 +1,6 @@
-crsObj = [];
+crsObjVec = [];
 for i = 1:size(D, 2)
-     rsObj = elltool.reach.ReachDiscrete(secSys, intersectEllArr(D(i)), ...
+     rsObj = elltool.reach.ReachDiscrete(secSys, intersectEllVec(D(i)), ...
              dirsMat, [D(i)-1 nSteps]);
-     crsObj = [crsObj rs];
+     crsObjVec = [crsObjVec rsObj];
 end

@@ -1,9 +1,9 @@
-firstEll = ellipsoid([2; -1], [9 -5; -5 4]);
-secEll = ellipsoid([-2; -1], [4 -1; -1 1]);
-thirdEll = ell_unitball(2);
-ellArr = [thirdEll firstEll];
+firstEllObj = ellipsoid([2; -1], [9 -5; -5 4]);
+secEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+thirdEllObj = ell_unitball(2);
+ellVec = [thirdEllObj firstEllObj];
 dirsMat = [1 0; 1 1; 0 1; -1 1]';
-internalEllArr = ellArr.minkpm_ia(secEll, dirsMat)
+internalEllVec = ellVec.minkpm_ia(secEllObj, dirsMat)
 
-% internalEllArr =
+% internalEllVec =
 % 1x3 array of ellipsoids.

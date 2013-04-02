@@ -1,7 +1,7 @@
-firstHyp = hyperplane([-1; 1]);
-secHyp = hyperplane([-1; 1; 8; -2; 3], 7);
-thirdHyp = hyperplane([1; 2; 0], -1);
-secHyp == [firstHyp secHyp thirdHyp]
+firstHypObj = hyperplane([-1; 1]);
+secHypObj = hyperplane([-1; 1; 8; -2; 3], 7);
+thirdHypObj = hyperplane([1; 2; 0], -1);
+secHypObj == [firstHypObj secHypObj thirdHypObj]
 
 % ans =
 % 

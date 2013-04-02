@@ -1,11 +1,11 @@
-bufEllArr = [ellArr(1, :) fourthEllArr];
-[dimArr, rankArr] = bufEllArr.dimension 
+bufEllVec = [ellMat(1, :) fourthEllObj];
+[dimVec, rankVec] = bufEllVec.dimension() 
 
 
-% dimArr =
+% dimVec =
 % 
 %    2     2     4
 % 
-% rankArr =
+% rankVec =
 % 
 %    2     2     3

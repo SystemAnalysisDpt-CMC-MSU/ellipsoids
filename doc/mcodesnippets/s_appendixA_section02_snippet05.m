@@ -1,5 +1,5 @@
-hyp = hyperplane([-1 1 1; 1 1 1; 1 1 1], [2 1 0]);
-hyp.isparallel(hyp(2))
+hypObj = hyperplane([-1 1 1; 1 1 1; 1 1 1], [2 1 0]);
+hypObj.isparallel(hypObj(2))
 
 % ans =
 % 

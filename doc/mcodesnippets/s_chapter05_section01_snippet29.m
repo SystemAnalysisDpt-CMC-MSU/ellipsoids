@@ -1,5 +1,5 @@
-bufEllArr = [firstEll secEll thirdEll];
-bufEllArr.intersect(firstPol, 'i')
+bufEllVec = [firstEllObj secEllObj thirdEllObj];
+bufEllVec.intersect(firstPolObj, 'i')
 
 % ans =
 % 

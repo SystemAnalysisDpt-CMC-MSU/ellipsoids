@@ -1,5 +1,5 @@
-bufEllArr = [firstEll thirdEll]
-bufEllArr.isinside(internalEll) 
+bufEllVec = [firstEllObj thirdEllObj]
+bufEllVec.isinside(internalEllObj) 
 
 % ans =
 % 

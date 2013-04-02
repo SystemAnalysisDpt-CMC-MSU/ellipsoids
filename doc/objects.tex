@@ -11,7 +11,7 @@ the function {\tt ellipsoids\_init} that performs the initialization.
 Here we list the fields of {\tt ellOptions} structure along with their
 default values.
 \begin{itemize}
-\item {\tt version = '1.1.1'} - current version of {\it ET}. A this time
+\item {\tt version = '1.02'} - current version of {\it ET}. A this time
 this parameter is harmless in the sense that it is not used by any of the
 routines. In the future, however, it may be used for version compatibility.
 \item {\tt verbose = 1} - if set to $0$, makes all the calls to {\it ET}
@@ -45,16 +45,14 @@ This parameter also affects the quality of 3D reach set plots.
 \end{itemize}
 These parameters can be modified by editing {\it ellipsoids/ellipsoids\_init.m}
 file. After you finished editing, for changes to take effect, type
-
-{\tt >> clear global ellOptions;}
+\verbmcodef[Changes to take effect]
+{mcodesnippets/s_chapter06_section01_snippet01.m}
 
 If you would like to change certain parameters temporarily, without
 modifying the {\it ellipsoids\_init.m} file, say, turn the verbosity off,
 you should type
-
-{\tt >> global ellOptions;
-\newline
->> ellOptions.verbose = 0;}
+\verbmcodef[Changing parameters]
+{mcodesnippets/s_chapter06_section01_snippet02.m}
 
 and proceed with your work. Before you modify {\tt ellOptions} structure
 this way however, make sure it is initialized.
@@ -121,14 +119,12 @@ if constant, or {\tt cell} to symbolically represent $A(t)$ or $A[k]$.
 {\tt cell} if symbolic.
 \item {\tt control} - ellipsoidal bounds on control $u$,
 either an {\tt ellipsoid}
-object of dimension $m$, or structure {\tt U} with fields {\tt U.center} and
+object of dimension $m$, or structure {\tt uBoundsEllObj} with fields {\tt U.center} and
 {\tt U.shape} to represent the ellipsoid that depends on time. For example,
-\newline
-{\tt >> U.center = [0; 1];}
-\newline
-{\tt >> U.shape = \{'4' 'cos(t)'; 'cos(t)' '1'\};}
-\newline
-defines ellipsoid $\EE(p, P(t))$ with $p=\left[\begin{array}{c}
+\verbmcodef[Definition of the ellipsoid]
+{mcodesnippets/s_chapter06_section04_snippet01.m}
+
+This example defines ellipsoid $\EE(p, P(t))$ with $p=\left[\begin{array}{c}
 0\\
 1\end{array}\right]$ and $P(t) = \left[\begin{array}{cc}
 4 & \cos(t)\\
@@ -176,8 +172,8 @@ is computed, in the form of {\tt linsys} object.
 reachability) conditions in the form of {\tt ellipsoid}
 object.
 \item {\tt initial\_directions} - matrix whose columns represent the values
-of direction vector $l$ (see Chapter \ref{ch_reachability}),
-for which the ellipsoidal approximations of the reach set are computed.
+of direction vector $l$ (see chapter 3), for which the ellipsoidal
+approximations of the reach set are computed.
 \item {\tt time\_values} - time interval, for which the reach set is computed,
 is split into the number of segments specified by the global
 {\tt ellOptions.time\_grid} parameter. This field contains the values
@@ -201,9 +197,4 @@ refinement. For more detail, see description of the function
 {\tt refine} in appendix A.4.
 \end{itemize}
 These fields can be accessed and modified only through {\tt reach} methods.
-For the list of {\tt reach} methods, see Appendix A.4.
-
-
-
-
-
+For the list of {\tt reach} methods, see appendix A.4.

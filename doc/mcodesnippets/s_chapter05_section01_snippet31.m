@@ -1,30 +1,30 @@
 % compute external and internal ellipsoidal approximations
-% of the intersections of ellipsoids in the first column of ellArr
+% of the intersections of ellipsoids in the first column of ellMat
 % with the halfspace x1 - x2 <= 2:
 
 % get external ellipsoids
-firstExternalEllArr = ellArr(:, 1).intersection_ea(firstHyp(1))  
-% firstExternalEllArr =
+firstExternalEllMat = ellMat(:, 1).intersection_ea(firstHypObj(1))  
+% firstExternalEllMat =
 % 2x1 array of ellipsoids.
 
 % get internal ellipsoids
-firstInternalEllArr = ellArr(:, 1).intersection_ia(firstHyp(1))  
-% firstInternalEllArr =
+firstInternalEllMat = ellMat(:, 1).intersection_ia(firstHypObj(1))  
+% firstInternalEllMat =
 % 2x1 array of ellipsoids.
 
 % compute external and internal ellipsoidal approximations
-% of the intersections of ellipsoids in the first column of EE
+% of the intersections of ellipsoids in the first column of ellMat
 % with the halfspace x1 - x2 >= 2:
 
 % get external ellipsoids
-secExternalEllArr = ellArr(:, 1).intersection_ea(-firstHyp(1));
+secExternalEllMat = ellMat(:, 1).intersection_ea(-firstHypObj(1));
   
 % get internal ellipsoids
-secInternalEllArr = ellArr(:, 1).intersection_ia(-firstHyp(1));  
+secInternalEllMat = ellMat(:, 1).intersection_ia(-firstHypObj(1));  
 % compute ellipsoidal approximations of the intersection
 % of ellipsoid firstEll and polytope firstPol:
 
 % get external ellipsoid
-externalEllArr = ellArr(:, 1).intersection_ea(firstPol);
+externalEllMat = ellMat(:, 1).intersection_ea(firstPolObj);
 % get internal ellipsoid
-internalEllArr = ellArr(:, 1).intersection_ia(firstPol); 
+internalEllMat = ellMat(:, 1).intersection_ia(firstPolObj); 

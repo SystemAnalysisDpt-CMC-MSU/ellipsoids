@@ -1,8 +1,8 @@
-ell = ellipsoid([-2; -1; 4], [4 -1 0; -1 1 0; 0 0 9]);
+ellObj = ellipsoid([-2; -1; 4], [4 -1 0; -1 1 0; 0 0 9]);
 basisMat = [0 1 0; 0 0 1]';
-outEll = ell.projection(basisMat)
+outEllObj = ellObj.projection(basisMat)
 
-% outEll =
+% outEllObj =
 % 
 % Center:
 %     -1

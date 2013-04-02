@@ -1,7 +1,7 @@
-ell = ellipsoid([-2; -1], [4 -1; -1 1]);
-mat = [1 1; 1 -1; -1 1; -1 -1]';
-distArray = ell.distance(mat)
+ellObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+tempMat = [1 1; 1 -1; -1 1; -1 -1]';
+distVec = ellObj.distance(tempMat)
 
-% distArray =
+% distVec =
 % 
 %      2.3428    1.0855    1.3799    -1.0000

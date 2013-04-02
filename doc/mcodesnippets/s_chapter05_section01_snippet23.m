@@ -1,4 +1,4 @@
-firstHyp.dimension
+firstHypObj.dimension()
 
 % ans =
 % 

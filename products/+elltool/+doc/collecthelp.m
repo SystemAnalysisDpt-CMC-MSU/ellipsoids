@@ -55,7 +55,7 @@ end;
 FuncData=[];
 %% find m files in current dir
 funcList=what(dirName);
-%
+
 if ~isempty(funcList)
     funcNameList=funcList.m;
     funcClassList=funcList.classes;
@@ -76,8 +76,8 @@ for iFunc=1:length(funcNameList)
     FuncData.help{iFunc}=help([funcList.path, '/', funcNameList{iFunc}]);
 end
 % is script
-possibleScript=regexp(funcNameList,scriptNamePattern,'once','match');
-FuncData.isScript=logical(cellfun(@(x,y) isequal(x,y),funcNameList,possibleScript));
+ possibleScript=regexp(funcNameList,scriptNamePattern,'once','match');
+ FuncData.isScript=logical(cellfun(@(x,y) isequal(x,y),funcNameList,possibleScript));
 %% find m files in subdirs
 contentsList=dir(dirName);
 dirList={contentsList.name};
@@ -88,6 +88,7 @@ classDir=cellfun(@(x) [classPrefix,x],funcClassList,'UniformOutput',false);
 isClassDir=isClass | ismember(dirList,classDir);
 % field names
 dataFieldNames=fieldnames(FuncData);
+length(dirList);
 for iSubDir=1:length(dirList)
     FuncDataCur=...
         collecthelp([dirName '/' dirList{iSubDir}],'ignorDirList',ignorDirList,...

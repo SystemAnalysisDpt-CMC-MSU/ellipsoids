@@ -1,5 +1,5 @@
-% equivalent to: isinside(ellArr(2, 2), firstPol & secPol)
-ellArr(2, 2).isinside([firstPol secPol], 'i')  
+% equivalent to: isinside(ellMat(2, 2), firstPolObj & secPolObj)
+ellMat(2, 2).isinside([firstPolObj secPolObj], 'i')  
 
 % ans =
 % 

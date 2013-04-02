@@ -1,17 +1,17 @@
-firstEll = ellipsoid;
-mat = [3 1; 0 1; -2 1]; 
-secEll = ellipsoid([1; -1; 1], mat*mat');
-thirdEll = ellipsoid(eye(2));
-fourthEll = ellipsoid(0);
-ellMat = [firstEll secEll; thirdEll fourthEll];
-[dimArr, rankArr] = ellMat.dimension
+firstEllObj = ellipsoid;
+tempMatObj = [3 1; 0 1; -2 1]; 
+secEllObj = ellipsoid([1; -1; 1], tempMatObj*tempMatObj');
+thirdEllObj = ellipsoid(eye(2));
+fourthEllObj = ellipsoid(0);
+ellMat = [firstEllObj secEllObj; thirdEllObj fourthEllObj];
+[dimMat, rankMat] = ellMat.dimension()
 
-% dimArr =
+% dimMat =
 % 
 %    0     3
 %    2     1
 % 
-% rankArr =
+% rankMat =
 % 
 %    0     2
 %    2     0

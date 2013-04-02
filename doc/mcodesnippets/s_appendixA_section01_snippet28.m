@@ -1,8 +1,8 @@
-ell = ellipsoid([-2; -1], [4 -1; -1 1]);
-mat = [0 1; -1 0];
-outEll = shape(ell, mat)
+ellObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+tempMat = [0 1; -1 0];
+outEllObj = shape(ellObj, tempMat)
 
-% outEll =
+% outEllObj =
 % 
 % Center:
 %     -2

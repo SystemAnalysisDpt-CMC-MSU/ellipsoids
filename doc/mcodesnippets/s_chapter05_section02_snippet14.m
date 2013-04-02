@@ -4,8 +4,8 @@ newDirsMat = [1; -1];
 firstRsObj = firstRsObj.refine(newDirsMat);
 % snap shot of the reach set at time t = 5
 cutObj = firstRsObj.cut(5);
-% check if E intersects the internal approximation
-cutObj.intersect(ell, 'i')  
+% check if ellObj intersects the internal approximation
+cutObj.intersect(ellObj, 'i')  
 
 % ans =
 % 

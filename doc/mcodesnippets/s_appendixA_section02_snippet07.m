@@ -1,6 +1,6 @@
-hyp = -hyperplane([-1; 1], 1)
+hypObj = -hyperplane([-1; 1], 1)
 
-% hyp =
+% hypObj =
 % size: [1 1]
 % 
 % Element: [1 1]

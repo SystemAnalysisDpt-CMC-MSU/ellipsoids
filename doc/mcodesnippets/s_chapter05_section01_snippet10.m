@@ -1,5 +1,5 @@
-% array [firstEll secEll] should be treated as intersection
-externalEll.isinside([firstEll secEll], 'i')  
+% array [firstEllObj secEllObj] should be treated as intersection
+externalEllObj.isinside([firstEllObj secEllObj], 'i')  
 
 % ans =
 % 

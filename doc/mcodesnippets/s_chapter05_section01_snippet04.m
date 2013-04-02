@@ -1,2 +1,2 @@
-bltEll = shape(firstEll, 2);  % bloats ellipsoid firstEll
-sqzEll = shape(firstEll, 0.5);  % squeezes ellipsoid firstEll
+bltEllObj = shape(firstEllObj, 2);  % bloats ellipsoid firstEllObj
+sqzEllObj = shape(firstEllObj, 0.5);  % squeezes ellipsoid firstEllObj

@@ -1,9 +1,9 @@
-firstHyp = hyperplane([-1; 1]);
-secHyp = hyperplane([-1; 1; 8; -2; 3], 7);
-thirdHyp = hyperplane([1; 2; 0], -1);
-hypArr = [firstHyp secHyp thirdHyp];
-dimsArr  = hypArr.dimension
+firstHypObj = hyperplane([-1; 1]);
+secHypObj = hyperplane([-1; 1; 8; -2; 3], 7);
+thirdHypObj = hyperplane([1; 2; 0], -1);
+hypVec = [firstHypObj secHypObj thirdHypObj];
+dimsVec  = hypVec.dimension()
 
-% dimsArr =
+% dimsVec =
 % 
 %    2     5     3

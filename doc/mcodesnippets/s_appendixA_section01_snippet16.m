@@ -1,7 +1,8 @@
-firstEll = ellipsoid([-2; -1], [4 -1; -1 1]);
-secEll = 3*ell_unitball(2);
+firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+secEllObj = 3*ell_unitball(2);
 dirsMat = [1 0; 1 1; 0 1; -1 1]';
-internalEllArr = secEll.minkmp_ia(firstEll, [secEll firstEll], dirsMat)
+bufEllVec = [secEllObj firstEllObj];
+internalEllVec = secEllObj.minkmp_ia(firstEllObj, bufEllVec, dirsMat)
 
-% internalEllArr =
+% internalEllVec =
 % 1x2 array of ellipsoids.

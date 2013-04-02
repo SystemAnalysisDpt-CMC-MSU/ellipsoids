@@ -1,5 +1,5 @@
-bufEllArr = [firstEll secEll thirdEll]
-bufEllArr.intersect(ellArr(2, 2), 'i')
+bufEllVec = [firstEllObj secEllObj thirdEllObj]
+bufEllVec.intersect(ellMat(2, 2), 'i')
 
 % ans =
 % 

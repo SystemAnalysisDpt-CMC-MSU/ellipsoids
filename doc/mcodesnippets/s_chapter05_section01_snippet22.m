@@ -1,4 +1,4 @@
-[normVec, hypScal] = firstHyp.double
+[normVec, hypScal] = firstHypObj.double()
 
 % normVec =
 % 

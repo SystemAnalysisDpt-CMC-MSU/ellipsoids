@@ -3,9 +3,9 @@ import modgen.logging.log4j.Log4jConfigurator;
 import modgen.common.throwerror;
 logger=Log4jConfigurator.getLogger();
 
-dataDirName='products';
+dataDirName='elltoolboxcore';
 % ignorDirList
-ignorDirList={'.svn','test'};
+ignorDirList={'auxiliary','control', 'demo', 'graphics', 'solvers'};
 % is current dir class or not
 isClass=false;
 % scriptNamePattern
@@ -24,7 +24,7 @@ mode=1;
 curPath=modgen.path.rmlastnpathparts(...
     fileparts(which('elltool.doc.run_helpcollector')),3);
 %
-dataDirNameCur=[curPath,filesep,dataDirName];
+dataDirNameCur=[curPath,filesep,'products',filesep,dataDirName];
 docDirNameCur=[curPath,filesep,docDirName];
 %%
 resultTexFileName=[docDirNameCur,filesep,texFileName];
@@ -48,7 +48,7 @@ end
 logger.info(sprintf('%d element(s) collected',nHelpElems));
 %
 % isChosenFunc=~(FuncData.isScript | FuncData.isClassMethod);
-isChosenFunc=~(FuncData.isScript);
+isChosenFunc =~(FuncData.isScript);
 dirNameCell=FuncData.dirName(isChosenFunc);
 funcNameCell=FuncData.funcName(isChosenFunc);
 helpCell=FuncData.help(isChosenFunc);
@@ -226,7 +226,7 @@ for iGroup=1:length(groupName)
     for idx=1:length(indFunc)
         iFunc=indFunc(idx);
         fprintf(fid,'\\item\\hypertarget{%s}{%s}\n',...
-            [groupName{iGroup},filesep,funcNameCell{iFunc}],funcNameCell{iFunc});
+            [groupName{iGroup},'/',funcNameCell{iFunc}],funcNameCell{iFunc});
                 % new font
         fprintf(fid,'\\fontfamily{%s}\n',font);
         fprintf(fid,'\\selectfont\n');

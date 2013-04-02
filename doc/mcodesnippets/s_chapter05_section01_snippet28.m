@@ -1,4 +1,4 @@
-ellArr(:, 1).intersect(hypArr, 'i')
+ellMat(:, 1).intersect(hypVec, 'i')
 
 % ans =
 % 

@@ -1,6 +1,6 @@
 % define two hyperplanes passing through the origin
-secHyp = hyperplane([1 -1; 1 1]); 
-firstHyp.isparallel(secHyp) 
+secHypObj = hyperplane([1 -1; 1 1]); 
+firstHypObj.isparallel(secHypObj) 
 
 % ans =
 % 

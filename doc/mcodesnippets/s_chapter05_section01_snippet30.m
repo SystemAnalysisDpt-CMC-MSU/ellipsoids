@@ -1,12 +1,12 @@
-% compute the intersections of ellipsoids in the second column of ellArr
-% with hyperplane firstHyp: 
+% compute the intersections of ellipsoids in the second column of ellMat
+% with hyperplane firstHypObj: 
 
-intersectEllArr = ellArr(:, 2).hpintersection(firstHyp)
+intersectEllMat = ellMat(:, 2).hpintersection(firstHypObj)
 
-% intersectEllArr =
+% intersectEllMat =
 % 2x1 array of ellipsoids.
 
-intersectEllArr.isdegenerate  % resulting ellipsoids should lose rank
+intersectEllMat.isdegenerate()  % resulting ellipsoids should lose rank
 
 % ans =
 % 

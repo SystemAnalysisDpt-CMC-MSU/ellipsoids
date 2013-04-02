@@ -11,23 +11,23 @@ firstAMat = [(1-(v1*Ts/d1)) 0 0 0
          0 (v2*Ts/d3) (1-(v3*Ts/d3)) 0
          0 0 ((1-b)*(v3*Ts/d4)) (1-(v4*Ts/d4))];
 firstBMat = [v1*Ts/d1 0 0; 0 0 v2*Ts/d2; 0 0 0; 0 0 0];
-firstUBoundsEll = ellipsoid([180; 150; 50], [100 0 0; 0 100 0; 0 0 25]);
+firstUBoundsEllObj = ellipsoid([180; 150; 50], [100 0 0; 0 100 0; 0 0 25]);
 
 secAMat = [(1-(w1*Ts/d1)) (w2*Ts/d1) 0 0
          0 (1-(w2*Ts/d2)) (w3*Ts/d2) 0
          0 0 (1-(w3*Ts/d3)) ((1/(1-b))*(w4*Ts/d3))
          0 0 0 (1-(w4*Ts/d4))];
 secBMat = [0 0 w1*Ts/d1; 0 0 0; 0 0 0; 0 -w4*Ts/d4 0];
-secUBoundsEll = firstUBoundsEll;
+secUBoundsEllObj = firstUBoundsEllObj;
 gMat = [(w1*Ts/d1) (-w2*Ts/d1) 0 0
          0 (w2*Ts/d2) (-w3*Ts/d2) 0
          0 0 (w3*Ts/d3) ((-1/(1-b))*(w4*Ts/d3))
          0 0 0 (w4*Ts/d4)];
 vMat = [xM1; xM2; xM3; xM4];
 % define linear systems:
-firstSys = elltool.linsys.LinSys(firstAMat, firstBMat, firstUBoundsEll,...
- [], [], [], [], 'd');  % free-flow mode
-secSys = elltool.linsys.LinSys(secAMat, secBMat, secUBoundsEll,...
+firstSys = elltool.linsys.LinSys(firstAMat, firstBMat,...
+ firstUBoundsEllObj, [], [], [], [], 'd');  % free-flow mode
+secSys = elltool.linsys.LinSys(secAMat, secBMat, secUBoundsEllObj,...
  gMat, vMat, [], [], 'd');  % congestion mode
 % define guard:
-grdHyp = hyperplane([0; 1; 0; 0], xM2);
+grdHypObj = hyperplane([0; 1; 0; 0], xM2);

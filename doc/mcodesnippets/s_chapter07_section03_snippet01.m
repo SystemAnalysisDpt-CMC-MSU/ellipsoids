@@ -1,22 +1,22 @@
 % define system 1
 firstAMat = [-1/6 0 -1/3; 0 0 1/7; 1/2 -1/2 -1/2];
 firstBMat = [1/6 1/3; 0 0; 0 0];
-firstUBoundsEll = ellipsoid(eye(2));
-firstSys = elltool.linsys.LinSys(firstAMat, firstBMat, firstUBoundsEll);
+firstUBoundsEllObj = ellipsoid(eye(2));
+firstSys = elltool.linsys.LinSys(firstAMat, firstBMat, firstUBoundsEllObj);
 
 % define system 2:
 secAMat = [-1/6 0 -1/3; 0 0 1/3; 1/6 -1/6 -1/3];
 secBMat = [1/6; 0; 0];
-secUBoundsEll = ellipsoid(1);
-secondSys = elltool.linsys.LinSys(secAMat, secBMat, secUBoundsEll);
+secUBoundsEllObj = ellipsoid(1);
+secondSys = elltool.linsys.LinSys(secAMat, secBMat, secUBoundsEllObj);
 
-x0Ell = ellipsoid(0.01*eye(3));  % set of initial states
+x0EllObj = ellipsoid(0.01*eye(3));  % set of initial states
 dirsMat = eye(3);  % 3 initial directions
 switchTime = 2;  % time of switch
 termTime = 3;  % terminating time
 
 % compute the reach set:
-firstRsObj = elltool.reach.ReachContinuous(firstSys, x0Ell, dirsMat,...
+firstRsObj = elltool.reach.ReachContinuous(firstSys, x0EllObj, dirsMat,...
  [0 switchTime]);  % reach set of the first system
 % computation of the second reach set starts
 % where the first left off

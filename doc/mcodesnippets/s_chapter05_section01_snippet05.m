@@ -1,4 +1,4 @@
-[centVec, shMat] = secEll.double
+[centVec, shMat] = secEllObj.double()
 % centVec =
 % 
 %    -0.5000

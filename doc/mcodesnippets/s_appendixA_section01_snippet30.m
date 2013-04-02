@@ -1,6 +1,6 @@
-ell = -ellipsoid([-2; -1], [4 -1; -1 1])
+ellObj = -ellipsoid([-2; -1], [4 -1; -1 1])
 
-% ell =
+% ellObj =
 % 
 % Center:
 %      2

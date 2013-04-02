@@ -1,4 +1,4 @@
-ell > ell
+ellObj > ellObj
 
 % ans =
 % 

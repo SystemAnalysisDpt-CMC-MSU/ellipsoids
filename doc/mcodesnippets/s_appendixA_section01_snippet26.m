@@ -1,5 +1,5 @@
-ell = ellipsoid([4 -1; -1 1]);
-ell.polar == ell.inv
+ellObj = ellipsoid([4 -1; -1 1]);
+ellObj.polar() == ellObj.inv()
 
 % ans =
 % 
