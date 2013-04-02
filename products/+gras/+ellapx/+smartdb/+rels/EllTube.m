@@ -238,6 +238,28 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
                 MArrayList,varargin{:});
             ellTubeRel=EllTube(STubeData);
         end
+        function ellTubeRel = fromEllArray(qEllArray, varargin)
+            import gras.ellapx.smartdb.rels.EllTube;
+            import gras.ellapx.smartdb.rels.EllTubeBasic;
+            nPoints = length(qEllArray);
+            qArrayList = cell(nPoints, 1);
+            qArrayList{1} = parameters(qEllArray{1});
+            nDims = size(qArrayList{1}, 1);
+            aMat = zeros(nDims, nPoints);
+            arrayfun(@(iPoint)fCalcAMatAndQArrayList(iPoint), 1:nPoints);
+            mArrayList=cellfun(@(x)zeros(size(x)),qArrayList,...
+                'UniformOutput',false);
+            %
+            STubeData=EllTubeBasic.fromQArraysInternal(qArrayList,aMat,...
+                mArrayList,varargin{:},...
+                EllTube.DEFAULT_SCALE_FACTOR(ones(size(mArrayList))));
+            ellTubeRel=EllTube(STubeData);            
+            %
+            function fCalcAMatAndQArrayList(iPoint)
+                [aMat(:, iPoint), qArrayList{iPoint}] =...
+                    parameters(qEllArray{iPoint});
+            end
+        end
     end
     methods
         function thinnedEllTubeRel =...
