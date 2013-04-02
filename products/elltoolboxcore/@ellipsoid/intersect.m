@@ -267,11 +267,12 @@ if strcmp(cvx_status,'Infeasible') ||...
         strcmp(cvx_status,'Inaccurate/Infeasible')
     res = -1;
     return;
-end;
+end
+[~, fstAbsTol] = fstEllArr.getAbsTol();
 if cvxExprVec'*secEllShDublMat*cvxExprVec + ...
         2*(-secEllShDublMat*secEllCentDublVec)'*cvxExprVec + ...
         (secEllCentDublVec'*secEllShDublMat*secEllCentDublVec - 1) ...
-        <= min(getAbsTol(fstEllArr(:)))
+        <= fstAbsTol
     res = 1;
 else
     res = 0;
@@ -340,9 +341,8 @@ if strcmp(cvx_status,'Infeasible') || ...
     return;
 end;
 
-
-if abs(normHypVec'*cvxExprVec - hypScalar) <= ...
-        min(getAbsTol(myEllArr(:)))
+[~, myAbsTol] = myEllArr.getAbsTol(); 
+if abs(normHypVec'*cvxExprVec - hypScalar) <= myAbsTol
     res = 1;
 else
     res = 0;
@@ -408,7 +408,8 @@ if strcmp(cvx_status,'Infeasible') || ...
     res = -1;
     return;
 end;
-if max(aMat*cvxExprVec-bVec) <= min(getAbsTol(myEllArr(:)))
+[~, myAbsTol] = myEllArr.getAbsTol();
+if aMat(1, :)*cvxExprVec <= myAbsTol
     res = 1;
 else
     res = 0;
