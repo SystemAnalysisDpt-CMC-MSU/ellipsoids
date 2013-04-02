@@ -158,10 +158,10 @@ end
             xMat(:, end) = xMat(:, 1);
             fMat = fGetGridMat;
         end
-        if (mDim < 1) || (nDim > 3)
+        if (nDim < 1) || (nDim > 3)
             throwerror('wrongDim','ellipsoid dimension can be 1, 2 or 3');
         end
-        if Properties.getIsVerbose()
+        if elltool.conf.Properties.getIsVerbose()
             if ellNum == 1
                 logger.info('Plotting ellipsoid...');
             else

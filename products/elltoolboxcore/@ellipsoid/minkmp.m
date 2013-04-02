@@ -131,17 +131,17 @@ end
             xSumDifMat = {[]};
             fMat = {[]};
         else
-            absTol = elltool.conf.Properties.getAbsTol();
             fstEllShMat = fstEll.shape;
             if isdegenerate(fstEll)
-                fstEllShMat = ellipsoid.regularize(fstEllShMat,absTol);
+                fstEllShMat = ellipsoid.regularize(fstEllShMat,fstEll.absTol);
             end
             secEllShMat = secEll.shape;
             if isdegenerate(secEll)
-                secEllShMat = ellipsoid.regularize(secEllShMat,absTol);
+                secEllShMat = ellipsoid.regularize(secEllShMat,secEll.absTol);
             end            
+            absTolVal=min(fstEll.absTol, secEll.absTol);
             [isBadDirVec,pUniversalVec] = ellipsoid.isbaddirectionmat(fstEllShMat, secEllShMat, ...
-                lDirsMat);
+                lDirsMat,absTolVal);
             isGoodDirVec = ~isBadDirVec;
             
             xCMat = arrayfun(@(x) fCalcSumTri(x, nDim), ellsArr(3:end), ...

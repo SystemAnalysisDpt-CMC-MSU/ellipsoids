@@ -63,7 +63,7 @@ end
         function isColor = isColorDef(value)
             isColor = strcmp(value, 'r') || strcmp(value, 'g') || strcmp(value, 'b') || ...
                 strcmp(value, 'y') || strcmp(value, 'c') || ...
-                strcmp(value, 'm') || strcmp(value, 'w');
+                strcmp(value, 'm') || strcmp(value, 'w')||strcmp(value, 'k');
         end
     end
 end

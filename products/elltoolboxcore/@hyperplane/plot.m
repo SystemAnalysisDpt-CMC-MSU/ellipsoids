@@ -81,8 +81,8 @@ import elltool.plot.plotgeombodyarr;
             throwerror('wrongCenterVec', ...
                 'CenterVec must be finite');
         end
-        if (any(sizeVec < 0)) || any(isnan(sizeVec))...
-                || any(isinf(sizeVec))
+        if (any(sizeVec(:) < 0)) || any(isnan(sizeVec(:)))...
+                || any(isinf(sizeVec(:)))
             throwerror('wrongSizeVec', 'sizeVec must be greater than 0 and finite');
         end
         

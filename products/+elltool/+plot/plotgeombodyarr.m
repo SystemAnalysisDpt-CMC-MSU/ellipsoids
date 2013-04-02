@@ -322,7 +322,7 @@ end
             function isColor = isColorDef(value)
                 isColor = eq(value, 'r') | eq(value, 'g') | eq(value, 'b') | ...
                     eq(value, 'y') | eq(value, 'c') | ...
-                    eq(value, 'm') | eq(value, 'w');
+                    eq(value, 'm') | eq(value, 'w')| eq(value, 'k');
             end
         end
         function checkRightPropName(value)

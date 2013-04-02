@@ -52,6 +52,7 @@ import modgen.common.throwerror;
 N_PLOT_POINTS = 80;
 SPHERE_TRIANG_CONST = 3;
 isPlotCenter3d = false;
+
 if nargout == 0
     output = minkCommonAction(@getEllArr,@fCalcBodyTriArr,@fCalcCenterTriArr,varargin{:});
     plObj = output{1};
@@ -118,7 +119,6 @@ end
         if numel(ellsArr) ~= 2
             throwerror('wrongInput','minkdiff needs 2 ellipsods');
         end
-        absTol = elltool.conf.Properties.getAbsTol();
         fstEll = ellsArr(1);
         secEll = ellsArr(2);
         if ~isbigger(fstEll, secEll)
@@ -130,16 +130,17 @@ end
             end;
             fstEllShMat = fstEll.shape;
             if isdegenerate(fstEll)
-                fstEllShMat = ellipsoid.regularize(fstEllShMat,absTol);
+                fstEllShMat = ellipsoid.regularize(fstEllShMat,fstEll.absTol);
             end
             secEllShMat = secEll.shape;
             if isdegenerate(secEll)
-                secEllShMat = ellipsoid.regularize(secEllShMat,absTol);
+                secEllShMat = ellipsoid.regularize(secEllShMat,secEll.absTol);
             end
             [lMat, fMat] = ellipsoid.calcGrid(nDim,N_PLOT_POINTS,SPHERE_TRIANG_CONST);
             lMat = lMat';
+            absTolVal=min(fstEll.absTol, secEll.absTol);
             [isBadDirVec,pUniversalVec] = ellipsoid.isbaddirectionmat(fstEllShMat, secEllShMat, ...
-                lMat);
+                lMat,absTolVal);
             isGoodDirVec = ~isBadDirVec;
             [diffBoundMat,isPlotCenter3d] = ellipsoid.calcdiffonedir(fstEll,secEll,lMat,...
                 pUniversalVec,isGoodDirVec);

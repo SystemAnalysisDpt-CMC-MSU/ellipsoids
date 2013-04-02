@@ -328,8 +328,9 @@ end
 if isdegenerate(secEll)
     secEllShMat = ellipsoid.regularize(secEllShMat,secEll.absTol);
 end
+absTolVal=min(fstEll.absTol, secEll.absTol);
 directionsMat  = ellipsoid.rm_bad_directions(fstEllShMat, ...
-    secEllShMat, directionsMat);
+    secEllShMat, directionsMat,absTolVal);
 nDirs  = size(directionsMat, 2);
 if nDirs < 1
     extApprEllVec = [];
