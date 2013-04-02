@@ -1,4 +1,4 @@
-classdef CVXController < elltool.controllers.interface.IntExtTBXController
+classdef CVXController < elltool.controllers.IExtTBXController
     properties (GetAccess=private,Constant)
         CVX_SETUP_FUNC_NAME='cvx_setup';
         CVX_PREF_FILE_NAME='cvx_prefs.mat';
@@ -14,9 +14,6 @@ classdef CVXController < elltool.controllers.interface.IntExtTBXController
             self.setPrecision(precisionForCVXVec);
             self.setIsVerbosityEnabled(isVerbose);
         end
-    end
-    %
-    methods(Access = private)
         %
         function isPositive=isSetUp(self)
             if self.isOnPath()

@@ -1,4 +1,4 @@
-classdef MPTController < elltool.controllers.interface.IntExtTBXController
+classdef MPTController < elltool.controllers.IExtTBXController
     properties (GetAccess=private,Constant)
         MPT_SETUP_FUNC_NAME='mpt_init';
         MPT_GLOBAL_OPT = 'mptOptions';
@@ -19,8 +19,6 @@ classdef MPTController < elltool.controllers.interface.IntExtTBXController
                 self.checkIfSetUp();
             end
         end
-    end
-    methods(Access = private)
         %
         function isPositive=isOnPath(self)
             isPositive=modgen.system.ExistanceChecker.isFile(...
