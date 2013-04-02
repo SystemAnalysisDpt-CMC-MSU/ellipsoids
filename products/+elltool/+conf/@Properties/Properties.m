@@ -12,7 +12,8 @@ classdef Properties<modgen.common.obj.StaticPropStorage
         DEFAULT_SOLVER = 'SeDuMi';
         DEFAULT_CONF_NAME='default'
         TOL_FACTOR = 2;
-        SETUP_METHOD_NAME_VEC = {'CVXController','MPTController'};
+        SETUP_METHOD_NAME_VEC = {'elltool.controllers.cvx.CVXController',...
+            'elltool.controllers.mpt.MPTController'};
     end
     %
     methods(Static)
@@ -33,21 +34,9 @@ classdef Properties<modgen.common.obj.StaticPropStorage
             cellfun(@setUpToolbox,Properties.SETUP_METHOD_NAME_VEC,setUpDataCVec);
             %
             %
-            function res = setUpToolbox(name,arg)
-                import modgen.common.throwerror;
-                import elltool.controllers.cvx.CVXController;
-                import elltool.controllers.mpt.MPTController;
-                %
-                switch name
-                    case 'CVXController'
-                        obj = CVXController();
-                    case 'MPTController'
-                        obj = MPTController();
-                    otherwise
-                        throwerror('wrongController','no such controller exist');
-                end
+            function setUpToolbox(name,arg)
+                obj = feval(name);
                 obj.fullSetup(arg);
-                res = 0;
             end
         end
         %
