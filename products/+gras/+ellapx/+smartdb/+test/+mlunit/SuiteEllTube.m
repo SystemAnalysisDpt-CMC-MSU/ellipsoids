@@ -338,7 +338,7 @@ classdef SuiteEllTube < mlunitext.test_case
                 INTERNAL_ALPHA,INTERNAL_COLOR_VEC);
             %
             check(EApproxType.External,...
-                EXTERNAL_ALPHA,EXTERNAL_COLOR_VEC);            
+                EXTERNAL_ALPHA,EXTERNAL_COLOR_VEC);
             %
             plObj.closeAllFigures();
             function check(apxType,apxAlpha,apxColorVec)
@@ -514,7 +514,7 @@ classdef SuiteEllTube < mlunitext.test_case
             end
         end
         
-       function testCreateSTimeOutOfBounds(self)
+        function testCreateSTimeOutOfBounds(self)
             nPoints=3;
             calcPrecision=0.001;
             approxSchemaDescr=char.empty(1,0);
@@ -537,6 +537,62 @@ classdef SuiteEllTube < mlunitext.test_case
                     ltGoodDirArray,sTime,approxType,approxSchemaName,...
                     approxSchemaDescr,calcPrecision);
             end
-        end        
+        end
+        function testEllTubeFromEllArray(self)
+            import gras.ellapx.smartdb.rels.EllTube.fromQArrays;
+            import gras.ellapx.smartdb.rels.EllTube.fromEllArray;
+            nPoints=5;
+            calcPrecision=0.001;
+            approxSchemaDescr=char.empty(1,0);
+            approxSchemaName=char.empty(1,0);
+            nDims=3;
+            nTubes=1;
+            lsGoodDirVec=[1;0;1];
+            aMat=zeros(nDims,nPoints);
+            timeVec=1:nPoints;
+            sTime=nPoints;
+            approxType=gras.ellapx.enums.EApproxType.Internal;
+            %
+            mArrayList=repmat({repmat(diag([0.1 0.2 0.3]),[1,1,nPoints])},...
+                1,nTubes);
+            qArrayList=repmat({repmat(diag([1 2 3]),[1,1,nPoints])},...
+                1,nTubes);
+            ltGoodDirArray=repmat(lsGoodDirVec,[1,nTubes,nPoints]);
+            %
+            ellArray(nPoints) = ellipsoid();
+            arrayfun(@(iElem)fMakeEllArrayElem(iElem), 1:nPoints);
+            %
+            fromMatEllTube=gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
+                qArrayList, aMat, timeVec,...
+                ltGoodDirArray, sTime, approxType, approxSchemaName,...
+                approxSchemaDescr, calcPrecision);
+            fromMatMEllTube=gras.ellapx.smartdb.rels.EllTube.fromQMArrays(...
+                qArrayList, aMat, mArrayList, timeVec,...
+                ltGoodDirArray, sTime, approxType, approxSchemaName,...
+                approxSchemaDescr, calcPrecision);
+            fromEllArrayEllTube = ...
+                gras.ellapx.smartdb.rels.EllTube.fromEllArray(...
+                ellArray, timeVec,...
+                ltGoodDirArray, sTime, approxType, approxSchemaName,...
+                approxSchemaDescr, calcPrecision);
+            fromEllMArrayEllTube=...
+                gras.ellapx.smartdb.rels.EllTube.fromEllMArray(...
+                ellArray, mArrayList{1}, timeVec,...
+                ltGoodDirArray, sTime, approxType, approxSchemaName,...
+                approxSchemaDescr, calcPrecision);
+            %
+            [isEqual,reportStr]=...
+                fromEllArrayEllTube.isEqual(fromMatEllTube);
+            mlunit.assert(isEqual,reportStr);    
+            [isEqual,reportStr]=...
+                fromEllMArrayEllTube.isEqual(fromMatMEllTube);
+            mlunit.assert(isEqual,reportStr);   
+            %
+            function fMakeEllArrayElem(iElem)
+                ellArray(iElem) = ellipsoid(...
+                    aMat(:,iElem), qArrayList{1}(:,:,iElem)); 
+            end
+            %fromArrayEllTube = ell
+        end
     end
 end

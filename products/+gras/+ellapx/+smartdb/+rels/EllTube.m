@@ -237,28 +237,28 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
             STubeData=EllTubeBasic.fromQArraysInternal(QArrayList,aMat,...
                 MArrayList,varargin{:});
             ellTubeRel=EllTube(STubeData);
-        end
+        end        
         function ellTubeRel = fromEllArray(qEllArray, varargin)
             import gras.ellapx.smartdb.rels.EllTube;
             import gras.ellapx.smartdb.rels.EllTubeBasic;
-            nPoints = length(qEllArray);
-            qArrayList = cell(nPoints, 1);
-            qArrayList{1} = parameters(qEllArray{1});
-            nDims = size(qArrayList{1}, 1);
-            aMat = zeros(nDims, nPoints);
-            arrayfun(@(iPoint)fCalcAMatAndQArrayList(iPoint), 1:nPoints);
-            mArrayList=cellfun(@(x)zeros(size(x)),qArrayList,...
+            [aMat, qArray] = ellArrayParameters(qEllArray);
+            mArrayList=cellfun(@(x)zeros(size(x)),{qArray},...
                 'UniformOutput',false);
             %
-            STubeData=EllTubeBasic.fromQArraysInternal(qArrayList,aMat,...
+            STubeData=EllTubeBasic.fromQArraysInternal({qArray},aMat,...
                 mArrayList,varargin{:},...
                 EllTube.DEFAULT_SCALE_FACTOR(ones(size(mArrayList))));
             ellTubeRel=EllTube(STubeData);            
+        end
+        function ellTubeRel = fromEllMArray(qEllArray, ellMArr, varargin)
+            import gras.ellapx.smartdb.rels.EllTube;
+            import gras.ellapx.smartdb.rels.EllTubeBasic;
+            [aMat, qArray] = ellArrayParameters(qEllArray);
             %
-            function fCalcAMatAndQArrayList(iPoint)
-                [aMat(:, iPoint), qArrayList{iPoint}] =...
-                    parameters(qEllArray{iPoint});
-            end
+            STubeData=EllTubeBasic.fromQArraysInternal({qArray},aMat,...
+                {ellMArr},varargin{:},...
+                EllTube.DEFAULT_SCALE_FACTOR(1));
+            ellTubeRel=EllTube(STubeData);            
         end
     end
     methods
