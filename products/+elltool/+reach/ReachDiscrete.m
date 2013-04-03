@@ -9,10 +9,10 @@ classdef ReachDiscrete < elltool.reach.AReach
 %  dimension      - Returns the dimension of the reach set, which can be
 %                   different from the state space dimension of the system
 %                   if the reach set is a projection.
-%  get_system     - Returns the linear system object, for which the reach set
-%                   was computed.
-%  get_directions - Returns the values of the direction vectors corresponding
-%                   to the values of the time grid.
+%  get_system     - Returns the linear system object, for which the reach 
+%                   set was computed.
+%  get_directions - Returns the values of the direction vectors 
+%                   corresponding to the values of the time grid.
 %  get_center     - Returns points of the reach set center trajectory
 %                   corresponding to the values of the time grid.
 %  get_ea         - Returns external approximating ellipsoids corresponding
@@ -23,8 +23,10 @@ classdef ReachDiscrete < elltool.reach.AReach
 %                   to the values of the time grid.
 %                   This function does not work with projections.
 %  intersect      - Checks if external or internal reach set approximation
-%                   intersects with given ellipsoid, hyperplane or polytope.
-%  iscut          - Checks if given reach set object is a cut of another reach set.
+%                   intersects with given ellipsoid, hyperplane or 
+%                   polytope.
+%  iscut          - Checks if given reach set object is a cut of another 
+%                   reach set.
 %  isprojection   - Checks if given reach set object is a projection.
 %  
 %
@@ -45,10 +47,12 @@ classdef ReachDiscrete < elltool.reach.AReach
 %  
 %
 % $Authors: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-%           Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: March-2012 $
+%           Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  
+% $Date: March-2012 $
 % $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Computer Science,
-%            System Analysis Department 2012 $
+%             Faculty of Computational Mathematics 
+%             and Computer Science,
+%             System Analysis Department 2012 $
     properties (Access = private)
         absTol
         relTol 
@@ -71,8 +75,26 @@ classdef ReachDiscrete < elltool.reach.AReach
     %
     methods (Static, Access = private)
         function colCodeVec = my_color_table(colChar)
+        % MY_COLOR_TABLE - returns the code of the color defined by single 
+        %   letter.
+        %   
+        % Input:
+        %   regular: 
+        %       colChar: char[1,1] - single letter, that define code of 
+        %           color.
         %
-        % MY_COLOR_TABLE - returns the code of the color defined by single letter.
+        % Output:
+        %   regular:
+        %       colCodeVec: double[1,3] - three-element row vector whose 
+        %           elements specify the intensities in the range [0 1] 
+        %           of the red, green and blue components of the color.
+        %
+        %$Authors: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  
+        % $Date: March-2012 $
+        % $Copyright: Moscow State University,
+        %             Faculty of Computational Mathematics 
+        %             and Computer Science,
+        %             System Analysis Department 2012 $
         %
             if ~(ischar(colChar))
                 colCodeVec = [0 0 0];
@@ -98,10 +120,11 @@ classdef ReachDiscrete < elltool.reach.AReach
             end
         end
         %
-        function [QQ, LL] = eedist_de(ntv, X0, l0, mydata, N, back, mnmx,absTol)
+        function [QQ, LL] = eedist_de(ntv, X0, l0, mydata, N, back,...
+                            mnmx,absTol)
         %
-        % EEDIST_DE - recurrence relation for the shape matrix of external ellipsoid
-        %             for discrete-time system with disturbance.
+        % EEDIST_DE - recurrence relation for the shape matrix of external 
+        %   ellipsoid for discrete-time system with disturbance.
         %
             import elltool.conf.Properties;
             LL = l0;
