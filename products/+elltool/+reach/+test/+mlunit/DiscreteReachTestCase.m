@@ -211,7 +211,7 @@ classdef DiscreteReachTestCase < mlunitext.test_case
         end
         %
         function self = set_up_param(self, reachFactObj)
-            self.reachObj = reachFactObj.createInstence();
+            self.reachObj = reachFactObj.createInstance();
             self.linSys = reachFactObj.getLinSys();
             self.expDim = reachFactObj.getDim();
             self.tIntervalVec = reachFactObj.getTVec();

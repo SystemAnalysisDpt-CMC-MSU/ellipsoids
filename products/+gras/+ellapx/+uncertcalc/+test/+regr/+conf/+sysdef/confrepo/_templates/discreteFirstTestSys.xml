@@ -49,8 +49,8 @@
 		</a>
 	</disturbance_restriction>
 	<Ct type="cell" size="2 1">
-		<item type="char" >1 0</item>
-		<item type="char" >0 1</item>
+		<item type="char" >0 0</item>
+		<item type="char" >0 0</item>
 	</Ct>
 </valueObj>
 <keyStr type="char" >discreteFirstTestSys</keyStr>

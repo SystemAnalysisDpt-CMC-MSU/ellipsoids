@@ -72,7 +72,7 @@ classdef ReachFactory
                     ControlBounds, ctDefCMat, DistBounds);
             end
         end
-        function reachObj = createInstence(self)
+        function reachObj = createInstance(self)
             if isa(self.linSys, 'elltool.linsys.LinSysDiscrete')
                 reachObj = elltool.reach.ReachDiscrete(self.linSys,...
                         self.x0Ell, self.l0Mat, self.tVec);
