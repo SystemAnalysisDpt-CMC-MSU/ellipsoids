@@ -7,12 +7,12 @@ function [centVec, boundPointMat] = minkpm(inpEllArr, inpEll, varargin)
 %          E1, E2, ... En - are ellipsoids in inpEllArr.
 %
 %   MINKPM(inpEllArr, inpEll, OPTIONS)  Computes geometric difference
-%       of the geometric sum of ellipsoids in inpEllMat and
+%       of the geometric sum of ellipsoids in inpEllArr and
 %       ellipsoid inpEll, if
 %       1 <= dimension(inpEllArr) = dimension(inpArr) <= 3,
 %       and plots it if no output arguments are specified.
 %
-%   [centVec, boundPointMat] = MINKPM(inpEllArr, inpEll) - pomputes
+%   [centVec, boundPointMat] = MINKPM(inpEllArr, inpEll) - computes
 %       (geometric sum of ellipsoids in inpEllArr) - inpEll.
 %       Here centVec is the center, and boundPointMat - array
 %       of boundary points.
@@ -78,8 +78,8 @@ checkmultvar('all(x1(:)==x2)',2,nDimsArr,nDims,...
 
 switch nDims
     case 2,
-        nPlot2dPointsInpEllMat = inpEllArr.nPlot2dPoints;
-        nPlot2dPoints = max(nPlot2dPointsInpEllMat(:));
+        nPlot2dPointsInpEllArr = inpEllArr.nPlot2dPoints;
+        nPlot2dPoints = max(nPlot2dPointsInpEllArr(:));
         phiVec = linspace(0, 2*pi, nPlot2dPoints);
         dirMat = [cos(phiVec); sin(phiVec)];
         

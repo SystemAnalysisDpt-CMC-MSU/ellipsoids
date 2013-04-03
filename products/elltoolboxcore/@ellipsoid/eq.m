@@ -24,7 +24,7 @@ function [isEqualArr, reportStr] = eq(ellFirstArr, ellSecArr)
 %            System Analysis Department 2012 $
 
 import modgen.struct.structcomparevec;
-import gras.la.sqrtm;
+import gras.la.sqrtmpos;
 import elltool.conf.Properties;
 import modgen.common.throwerror;
 %
@@ -47,8 +47,7 @@ firstSizeVec = size(ellFirstArr);
 secSizeVec = size(ellSecArr);
 isnFirstScalar=nFirstElems > 1;
 isnSecScalar=nSecElems > 1;
-relTolArr = ellFirstArr.getRelTol;
-relTol=min(relTolArr(:));
+[~, relTol] = ellFirstArr.getRelTol;
 %
 SEll1Array=arrayfun(@formCompStruct,ellFirstArr);
 SEll2Array=arrayfun(@formCompStruct,ellSecArr);
@@ -77,5 +76,5 @@ end
     end
 end
 function SComp=formCompStruct(ellObj)
-SComp=struct('Q',gras.la.sqrtm(ellObj.shape),'q',ellObj.center.');
+    SComp=struct('Q',gras.la.sqrtmpos(ellObj.shape, ellObj.absTol),'q',ellObj.center.');
 end

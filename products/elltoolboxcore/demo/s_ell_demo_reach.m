@@ -1,5 +1,5 @@
-%% 
-% 
+%%
+%
 % This demo presents functions for reachability analysis and verification of linear dynamical systems.
 import elltool.conf.Properties;
 cla;
@@ -8,8 +8,8 @@ axis([-4 4 -2 2]);
 grid off;
 axis off;
 text(-2, 0.5, 'REACHABILITY', 'FontSize', 16);
-%% 
-% 
+%%
+%
 % Consider simple RLC circuit with two bounded inputs - current i(t) and voltage v(t) sources, as shown in the picture.
 % The equations of this circuit are based on Ohm's and Kirchoff's laws.
 cla;
@@ -21,9 +21,9 @@ R2 = 2;
 L = 0.5;
 L2 = 1;
 C = 0.1;
-%% 
+%%
 % Using capacitor voltage and inductor current as state variables, we arrive at the linear system shown above. Now we assign A and B matrix values, define control bounds CB and declare a linear system object lsys:
-% 
+%
 % >> R = 4; L = 0.5; C = 0.1;
 % >> A = [0 -1/C; 1/L -R/L];
 % >> B = [1/C 0; 0 1/L];
@@ -43,9 +43,9 @@ T = 10;
 L0 = [1 0; 0 1]';
 s = elltool.linsys.LinSys(A, B, CB);
 s2 = elltool.linsys.LinSys(A2, B2, CB);
-%% 
+%%
 % We are ready to compute the reach set approximations of this system on some time interval, say T = [0, 10], for zero initial conditions and plot them:
-% 
+%
 % >> X0 = 0.1*ell_unitball(2);
 % >> T = 10;
 % >> L0 = [1 0; 0 1]';
@@ -63,20 +63,20 @@ hold on;
 rs.plot_ia();
 ylabel('V_C');
 zlabel('i_L');
-%% 
+%%
 % Function 'evolve' computes the further evolution in time of already existing reach set. We computed the reach tube of our circuit for the time interval [0, 10]. Now, suppose, the dynamics of our system switched. For example, the parameters induction L and resistance R have changed:
-% 
+%
 % >> L2 = 1;
 % >> R2 = 2;
 % >> A2 = [0 -1/C; 1/L2 -R2/L2];
 % >> B2 = [1/C 0; 0 1/L2];
 % >> lsys2 = elltool.linsys.LinSys(A2, B2, CB);
-% 
+%
 % Now we continue computing the reach set for the time interval [10, 20] due to the new dynamics:
-% 
+%
 % >> rs2 = rs.evolve(20, s2);
 % >> rs2.plot_ea('r'); hold on; rs2.plot_ia('y');
-% 
+%
 % plots external (red) and internal (yellow) approximations of the reach set of the system for the time interval [10, 20] and the new dynamics.
 % Function 'evolve' can be used for computing the reach sets of switching systems.
 %
@@ -87,12 +87,12 @@ ColorOptIa.color = [1 1 0];
 ColorOptIa.alpha = 0.1;
 rs2.plot_ea(ColorOptEa);
 rs2.plot_ia(ColorOptIa);
-%% 
+%%
 % To analyze the reachability of the system on some specific time segment within the computed time interval, use 'cut' function:
-% 
+%
 % >> ct = rs.cut([3 6]);
 % >> ct.plot_ea(); hold on; ct.plot_ia();
-% 
+%
 % plots the reach tube approximations on the time interval [3, 6].
 ct = rs.cut([3 6]);
 cla;
@@ -102,12 +102,12 @@ ct.plot_ia();
 hold off;
 ylabel('V_C');
 zlabel('i_L');
-%% 
+%%
 % Function 'cut' can also be used to obtain a snapshot of the reach set at given time within the computed time interval:
-% 
+%
 % >> ct = ct.cut(5);
 % >> ct.plot_ea(); hold on; ct.plot_ia();
-% 
+%
 % plots the reach set approximations at time 5.
 cla;
 ct = ct.cut(5);
@@ -117,22 +117,22 @@ hold on;
 ct.plot_ia();
 xlabel('V_C');
 ylabel('i_L');
-%% 
+%%
 % Function 'intersect' is used to determine whether the reach set external or internal approximation intersects with given hyperplanes.
-% 
+%
 % >> HA = hyperplanes([1 0; 1 -2]', [4 -2]);
 % >> ct.intersect(HA, 'e');
-% 
+%
 % ans =
-% 
+%
 %      1     1
-% 
+%
 % >> ct.intersect(HA, 'i');
-% 
+%
 % ans =
-% 
+%
 %      0     0
-% 
+%
 % Both hyperplanes (red) intersect the external approximation (blue) but do not intersect the internal approximation (green) of the reach set. It leaves the question whether the actual reach is intersected by these hyperplanes open.
 HA = hyperplane([1 0; 1 -2]', [4 -2]);
 o.width = 2;
@@ -140,25 +140,25 @@ o.size = [3 6.6];
 o.center = [0 -2; 0 0];
 plot(HA, 'r', o);
 hold off;
-%% 
+%%
 % Function 'intersect' works with ellipsoids as well as with hyperplanes:
-% 
+%
 % >> E1 = ellipsoid([2; -1], [4 -2; -2 2]);
 % >> E2 = ell_unitball(2) - [6; -1];
 % >> ct.intersect([E1 E2], 'i');
-% 
+%
 % ans =
-% 
+%
 %      1     0
-% 
+%
 % We see that ellipsoid E1 (red) intersects with the internal approximation (green) - hence, with the actual reach set. Ellipsoid E2 (black) does not intersect the internal approximation, but does it intersect the actual reach set?
-% 
+%
 % >> ct.intersect(E2, 'e');
-% 
+%
 % ans =
-% 
+%
 %      0
-% 
+%
 % Since ellipsoid E2 (black) does not intersect the external approximation (intersection of blue ellipsoids), it does not intersect the actual reach set.
 % To work directly with ellipsoidal representations of external and internal approximations, bypassing the reach set object, use functions 'get_ea' and 'get_ia'. They return ellipsoidal arrays that can be treated by the functions of ellipsoidal calculus (see ell_demo1).
 E1 = ellipsoid([2; -1], [4 -2; -2 2]);
@@ -171,15 +171,15 @@ plot(E1, 'r', E2, 'k', o);
 hold off;
 xlabel('V_C');
 ylabel('i_L');
-%% 
+%%
 % Suppose, induction L depends on t, for example, L = 2 + sin(t). Then, linear system object can be declared using symbolic matrices:
-% 
+%
 % >> A = {'0' '-10'; '1/(2 + sin(t))' '-4/(2 + sin(t))'};
 % >> B = {'10' '0'; '0' '1/(2 + sin(t))'};
 % >> s = elltool.linsys.LinSys(A, B, CB);
-% 
+%
 % Now the reach set of the system can be computed and plotted just as before:
-% 
+%
 % >> rs = elltool.reach.ReachContinuous(lsys, X0, L0, [0 4]);
 % >> rs.plot_ea(); hold on; rs.plot_ia();
 A = {'0' '-10'; '1/(2 + sin(t))' '-4/(2 + sin(t))'};
@@ -194,15 +194,15 @@ hold on;
 rs.plot_ia();
 ylabel('V_C');
 zlabel('i_L');
-%% 
+%%
 % Function 'get_goodcurves' is used to obtain the trajectories formed by points where the approximating ellipsoids touch the boundary of the reach set. Each such trajectory is defined by the value of initial direction. For this example we computed approximations for two directions.
-% 
+%
 % >> [XX, tt] = rs.get_goodcurves();
 % >> x1 = XX{1};
 % >> x2 = XX{2};
 % >> plot3(tt, x1(1, :), x1(2, :), 'r', 'LineWidth', 2); hold on;
 % >> plot3(tt, x2(1, :), x2(2, :), 'r', 'LineWidth', 2);
-% 
+%
 % plots the "good curve" trajectories (red) corresponding to the computed approximations.
 [XX, tt] = rs.get_goodcurves();
 x1 = [tt; XX{1}];
@@ -210,21 +210,21 @@ x2 = [tt; XX{2}];
 ell_plot(x1, 'r', 'LineWidth', 2);
 ell_plot(x2, 'r', 'LineWidth', 2);
 hold off;
-%% 
+%%
 % We can also compute the closed-loop reach set of the system in the presence of bounded disturbance. It is a guaranteed reach set. That is, no matter what the disturbance is (within its bounds), the system can reach one of those states. (Notice that such reach sets may be empty.)
-% 
+%
 % Let disturbance bounds depend on time:
-% 
+%
 % >> DB.center = {'2*cos(t)'};
 % >> DB.shape = {'0.09*(sin(t))^2'};
 % >> G = [1; 0];
-% 
+%
 % Now we declare the linear system object with disturbance:
-% 
+%
 % >> lsys = elltool.linsys.LinSys(A, B, CB, G, DB);
-% 
+%
 % Compute and plot the reach tube approximations:
-% 
+%
 % >> rs = elltool.reach.ReachContinuous(s, X0, L0, [0 4]);
 % >> rs.plot_ea(); hold on; rs.plot_ia();
 G = eye(2);
@@ -239,29 +239,29 @@ rs.plot_ia();
 hold off;
 ylabel('V_C');
 zlabel('i_L');
-%% 
+%%
 % Consider the spring-mass system displayed on the screen. It consists of two blocks, with masses m1 and m2, connected by three springs with spring constants k1 and k2 as shown. It is assumed that there is no friction between the blocks and the floor. The applied forces u1 and u2 must overcome the spring forces and remainder is used to accelerate the blocks.
-% 
+%
 % Thus, we arrive at equations shown in the picture.
 cla;
 image(imread('springmass.jpg'));
 axis off;
 grid off;
-%% 
+%%
 % Defining x3 = dx1/dt and x4 = dx2/dt, we get the linear system shown in the picture.
-% 
+%
 % For k1 = 50, k2 = 47, m1 = 1.5 and m2 = 2, we can assign the matrix values:
-% 
+%
 % >> k1 = 50; k2 = 47; m1 = 1.5; m2 = 2;
 % >> A = [0 0 1 0; 0 0 0 1; -(k1+k2)/m1 k2/m1 0 0; k2/m2 -(k1+k2)/m2 0 0];
 % >> B = [0 0; 0 0; 1/m1 0; 0 1/m2];
-% 
+%
 % Specify control bounds:
-% 
+%
 % >> U = 5 * ell_unitball(2);
-% 
+%
 % And create linear system object:
-% 
+%
 % >> lsys = elltool.linsys.LinSys(A, B, U);
 cla;
 image(imread('springmassls.jpg'));
@@ -278,14 +278,14 @@ s = elltool.linsys.LinSys(A, B, U);
 T = 1;
 X0 = 0.1*ell_unitball(4) + [2; 3; 0; 0];
 L = [1 0 -1 1; 0 -1 1 1]';
-%% 
+%%
 % Define the initial conditions and the end time:
-% 
+%
 % >> X0 = [2; 3; 0; 0] + 0.1*ell_unitball(4);
 % >> T = 1;
-% 
+%
 % Now we are ready to compute the reach set approximations and plot the reach tube projected onto (x1, x2) subspace. We shall compute the approximations for two directions.
-% 
+%
 % >> L = [1 0 -1 0; 0 -1 1 1]';
 % >> rs = elltool.reach.ReachContinuous(lsys, X0, L, T);
 % >> ps = prs.projection([1 0 0 0; 0 1 0 0]');
@@ -297,12 +297,12 @@ cla;
 ps.plot_ea();
 hold on;
 ps.plot_ia();
-%% 
+%%
 % Function 'get_center' is used to obtain the trajectory of the center of the reach set:
-% 
+%
 % >> [cnt, tt] = ps.get_center();
 % >> plot3(tt, cnt(1, :), cnt(2, :), 'r', 'LineWidth', 2);
-% 
+%
 % plots the trajectory of reach set center (red).
 [cnt, tt] = ps.get_center();
 cnt = [tt; cnt];
@@ -310,7 +310,7 @@ ell_plot(cnt, 'r', 'LineWidth', 2);
 hold off;
 %%
 % We can also compute backward reach set of the system:
-% 
+%
 % >> T = [1 0];
 % >> brs = elltool.reach.ReachContinuous(lsys, X0, L, T);
 % >> bps = brs.projection([1 0 0 0; 0 1 0 0]');
@@ -322,7 +322,7 @@ brs = elltool.reach.ReachContinuous(s, X0, L, T);
 bps = brs.projection([1 0 0 0; 0 1 0 0]');
 cla;
 bps.plot_ea(); hold on; bps.plot_ia(); hold off;
-%% 
+%%
 % As an example of discrete-time linear system, we shall consider economic model entitled 'multiplier-accelerator', which is due to Samuelson (1939). It addresses the problem of income determination and business cycle.
 % Denote:
 %         C - consumption,
@@ -331,10 +331,10 @@ bps.plot_ea(); hold on; bps.plot_ia(); hold off;
 %         Y - national income,
 %         R - interest rate,
 %         k - time period.
-% 
+%
 % The 6-dimensional linear system is shown in the picture.
 % Assign matrix values and define the linear system object (notice, it is discrete-time):
-% 
+%
 % >> A0 = [0.2 0 -0.4; 0 0 -0.6; 0 0.5 -1];
 % >> A1 = [0.54 0 0.4; 0.06 0 0.6; 0.6 0 1];
 % >> A  = [zeros(3, 3) eye(3); A0 A1];
@@ -358,9 +358,9 @@ U.shape = [0.02 0; 0 1];
 X0 = ellipsoid([1; 0.5; -0.5; 1.10; 0.55; 0], eye(6));
 lsys = elltool.linsys.LinSys(A, B, U, [], [], [], [], 'd');
 L0 = [1 0 0 0 0 0; 0 1 0 0 0 0; 0 0 1 0 0 1; 0 1 0 1 1 0; 0 0 -1 1 0 1; 0 0 0 -1 1 1]';
-%% 
+%%
 % Now we compute the reach set for N = 4 time steps and plot the projection onto (V[k], Y[k]) subspace:
-% 
+%
 % >> X0 = ellipsoid([1; 0.5; -0.5; 1.10; 0.55; 0], eye(6));
 % >> L0 = [1 0 0 0 0 0; 0 1 0 0 0 0; 0 0 1 0 0 1; 0 1 0 1 1 0; 0 0 -1 1 0 1; 0 0 0 -1 1 1]';
 % >> N  = 4;
@@ -368,7 +368,7 @@ L0 = [1 0 0 0 0 0; 0 1 0 0 0 0; 0 0 1 0 0 1; 0 1 0 1 1 0; 0 0 -1 1 0 1; 0 0 0 -1
 % >> BB = [0 0 0 0 1 0; 0 0 0 0 0 1]';
 % >> ps = rs.projection(BB);
 % >> ps.plot_ea(); hold on; ps.plot_ia();
-% 
+%
 % Forward reach sets can be computed for singular discrete-time systems as well. Backward reach sets, on the other hand, can be computed only for nonsingular discrete-time systems.
 N  = 4;
 rs = elltool.reach.ReachDiscrete(lsys, X0, L0, N);
@@ -380,13 +380,13 @@ plot_ia(ps);
 hold off;
 ylabel('V[k]');
 zlabel('Y[k]');
-%% 
+%%
 % For more information, type
-% 
+%
 % >> help elltool.linsys.LinSys
-% 
+%
 % and
-% 
+%
 % >> help elltool.reach.ReachContinuous
 % >> help elltool.reach.ReachDiscrete
 %

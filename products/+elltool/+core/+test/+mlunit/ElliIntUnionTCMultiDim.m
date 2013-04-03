@@ -179,8 +179,8 @@ classdef ElliIntUnionTCMultiDim < mlunitext.test_case
                 3, 1, 1);
             testHpArray = createObjectArray(arraySizeVec,  ...
                 @(varargin)hyperplane(varargin{:}), [0, 0, 1].', -2, 2);   
-            errorStr = 'degenerateEllipsoid';
-            testError(0);
+            ansEllArray = ellipsoid();
+            testCorrect();
             testHpArray = hyperplane.empty(1, 0, 0, 2, 5);
             [~, testEllArray, errorStr, arraySizeVec] = ...
                 createTypicalArray(4);

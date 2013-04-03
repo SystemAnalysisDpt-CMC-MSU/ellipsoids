@@ -11,7 +11,7 @@ if Properties.getIsODENormControl()
 else
     normControl = 'off';
 end
-absTol= Properties.getAbsTol();
+absTol = varargin{end};
 opt = odeset('NormControl', normControl, ...
     'RelTol', Properties.getRelTol(), ...
     'AbsTol', absTol);
@@ -21,4 +21,4 @@ solverName = Properties.getODESolverName();
 if strcmp(solverName,INIT_STEP_EXCLUSION_ODE_SOLVER)
     odeset(opt, 'InitialStep', abs(t(1)-t(2))/2);
 end
-[tt,xx]=feval(solverName,fn,t,x0,opt,varargin{:},absTol);
+[tt,xx]=feval(solverName,fn,t,x0,opt,varargin{:});

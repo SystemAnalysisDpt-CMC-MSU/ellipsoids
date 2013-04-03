@@ -71,7 +71,7 @@ checkmultvar('all(x1(:)==x1(1))&&all(x2(:)==x2(1))',...
     'errorTag','wrongSizes','errorMessage',...
     'ellipsoids and hyperplanes must be of the same dimension.');
 
-isSecondOutput = nargout==2;
+
 if isHypScal
     nAmount = numel(myEllArr);
     sizeCVec = num2cell(size(myEllArr));
@@ -108,13 +108,8 @@ end
         myHyp = myHypArr(hypIndex);
         index = max(ellIndex,hypIndex);
         if distance(myEll, myHyp) > 0
-            if (~isSecondOutput)
-                modgen.common.throwerror('degenerateEllipsoid',...
-                    'Hypeplane doesn''t intersect ellipsoid');
-            else
-                intEllArr(index) = ellipsoid;
-                isnIntersectedArr(index) = true;
-            end
+           intEllArr(index) = ellipsoid;
+           isnIntersectedArr(index) = true;
         else
             intEllArr(index) = l_compute1intersection(myEll,myHyp,...
                 maxEllDim);
