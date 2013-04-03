@@ -1,4 +1,4 @@
-classdef CVXController < elltool.controllers.IExtTBXController
+classdef CVXController < elltool.exttbx.IExtTBXController
     properties (GetAccess=private,Constant)
         CVX_SETUP_FUNC_NAME='cvx_setup';
         CVX_PREF_FILE_NAME='cvx_prefs.mat';

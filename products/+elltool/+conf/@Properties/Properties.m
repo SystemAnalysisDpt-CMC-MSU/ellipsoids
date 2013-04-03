@@ -12,8 +12,8 @@ classdef Properties<modgen.common.obj.StaticPropStorage
         DEFAULT_SOLVER = 'SeDuMi';
         DEFAULT_CONF_NAME='default'
         TOL_FACTOR = 2;
-        SETUP_METHOD_NAME_VEC = {'elltool.controllers.cvx.CVXController',...
-            'elltool.controllers.mpt.MPTController'};
+        SETUP_METHOD_NAME_VEC = {'elltool.exttbx.cvx.CVXController',...
+            'elltool.exttbx.mpt.MPTController'};
     end
     %
     methods(Static)
@@ -42,7 +42,7 @@ classdef Properties<modgen.common.obj.StaticPropStorage
         %
         function checkSettings()
             import modgen.common.throwerror;
-            import elltool.controllers.cvx.CVXController;
+            import elltool.exttbx.cvx.CVXController;
             import elltool.conf.Properties;
             precisionVec = CVXController.getPrecision();
             solverStr = CVXController.getSolver();

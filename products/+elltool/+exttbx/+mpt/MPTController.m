@@ -1,4 +1,4 @@
-classdef MPTController < elltool.controllers.IExtTBXController
+classdef MPTController < elltool.exttbx.IExtTBXController
     properties (GetAccess=private,Constant)
         MPT_SETUP_FUNC_NAME='mpt_init';
         MPT_GLOBAL_OPT = 'mptOptions';
