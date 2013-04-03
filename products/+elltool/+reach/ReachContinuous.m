@@ -803,12 +803,14 @@ classdef ReachContinuous < elltool.reach.AReach
         %%
         function [eaEllMat timeVec] = get_ea(self)
             import gras.ellapx.enums.EApproxType;
-            [eaEllMat timeVec] = self.getApprox(EApproxType.External);
+            [eaEllMat timeVec] =... 
+                self.ellTubeRel.getEllArray(EApproxType.External);
         end
         %%
         function [iaEllMat timeVec] = get_ia(self)
             import gras.ellapx.enums.EApproxType;
-            [iaEllMat timeVec] = self.getApprox(EApproxType.Internal);
+            [iaEllMat timeVec] =...
+                self.ellTubeRel.getEllArray(EApproxType.Internal);
         end
         %
         function [goodCurvesCVec timeVec] = get_goodcurves(self)
@@ -981,6 +983,13 @@ classdef ReachContinuous < elltool.reach.AReach
                 fieldsToCompVec).isEqual(...
                 ellTube.getFieldProjection(fieldsToCompVec),...
                 'maxTolerance', self.COMP_PRECISION);
+        end
+        function ellTubeRel = getEllTubeRel(self)
+            ellTubeRel = self.ellTubeRel;
+        end
+        function ellTubeUnionRel = getEllTubeUnionRel(self)
+            import gras.ellapx.smartdb.rels.EllUnionTube;
+            ellTubeUnionRel = EllUnionTube.fromEllTubes(self.ellTubeRel);
         end
     end
 end
