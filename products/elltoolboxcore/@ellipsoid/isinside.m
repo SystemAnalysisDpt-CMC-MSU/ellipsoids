@@ -227,8 +227,7 @@ import elltool.conf.Properties;
 import elltool.logging.Log4jConfigurator;
 
 persistent logger;
-
-absTolScal = getAbsTol(secObj);
+[~, absTolScal] = getAbsTol(secObj);
 [qVec, paramMat] = parameters(secObj);
 if size(paramMat, 2) > rank(paramMat)
     if Properties.getIsVerbose()
@@ -277,12 +276,12 @@ if strcmp(cvx_status,'Infeasible') ...
     return;
 end
 
+[~, fstAbsTol] = fstEllArr.getAbsTol();
 if (xVec'*invQMat*xVec + 2*(-invQMat*qVec)'*xVec + ...
-        (qVec'*invQMat*qVec - 1)) < min(getAbsTol(fstEllArr(:)))
+        (qVec'*invQMat*qVec - 1)) < fstAbsTol
     res = 1;
 else
     res = 0;
 end
 
 end
-
