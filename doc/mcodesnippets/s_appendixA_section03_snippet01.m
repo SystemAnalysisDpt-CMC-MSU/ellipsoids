@@ -5,6 +5,5 @@ for k = 1:20
    gtMat = [1; 0];
    distBounds = 1/(k+1);
    ctVec = [1 0];
-   lsys = elltool.linsys.LinSys(atMat, btMat, uBoundsEllObj, gtMat,...
-          distBounds, ctVec, [], 'd');
-end
+   lsys = elltool.linsys.LinSysFactory.create(atMat, btMat, uBoundsEllObj, gtMat,...
+          distBounds, ctVec, [], 'd');end

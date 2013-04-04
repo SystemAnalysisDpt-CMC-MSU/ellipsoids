@@ -4,4 +4,4 @@ uBoundsEllObj = struct();
 uBoundsEllObj.center = {'sin(t)'; 'cos(t)'};  
 uBoundsEllObj.shape = [9 0; 0 2];  % shape matrix of the ellipsoid is static
 % create linear system object
-sys = elltool.linsys.LinSys(aMat, bMat, uBoundsEllObj); 
+sys = elltool.linsys.LinSysFactory.create(aMat, bMat, uBoundsEllObj); 

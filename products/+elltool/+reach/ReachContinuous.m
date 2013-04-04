@@ -67,8 +67,7 @@ classdef ReachContinuous < elltool.reach.AReach
 % $Copyright: Moscow State University,
 %             Faculty of Computational Mathematics        
 %             and Computer Science,
-%             System Analysis Department 2012 $
-    properties (Constant, GetAccess = private)
+%             System Analysis Department 2012 $    properties (Constant, GetAccess = private)
         MIN_EIG_Q_REG_UNCERT = 0.1
         EXTERNAL_SCALE_FACTOR = 1.02
         INTERNAL_SCALE_FACTOR = 0.98
@@ -183,7 +182,7 @@ classdef ReachContinuous < elltool.reach.AReach
             if self.isProj
                 if self.ellTubeRel.dim() > 3
                     throwerror('wrongData',...
-                        'Dimension of the projection must be leq 3');                    
+                        'Dimension of the projection must be leq 3');
                 else
                     plObj = smartdb.disp.RelationDataPlotter();
                     plotter = self.ellTubeRel.getTuplesFilteredBy(...
@@ -354,7 +353,7 @@ classdef ReachContinuous < elltool.reach.AReach
                 case 'y',
                     colCodeVec = [1 1 0];
                 case 'c',
-                	colCodeVec = [0 1 1];
+                    colCodeVec = [0 1 1];
                 case 'm',
                     colCodeVec = [1 0 1];
                 case 'w',
@@ -373,7 +372,7 @@ classdef ReachContinuous < elltool.reach.AReach
             backwardStrCMat(symIndMat) = cellfun(@char,...
                 evCMat(symIndMat), 'UniformOutput', false);
             backwardStrCMat(~symIndMat) = cellfun(@num2str,...
-            	evCMat(~symIndMat), 'UniformOutput', false);
+                evCMat(~symIndMat), 'UniformOutput', false);
             if isMinus
                 backwardStrCMat = strcat('-(', backwardStrCMat, ')');
             end
@@ -412,7 +411,7 @@ classdef ReachContinuous < elltool.reach.AReach
                 F.X_TOUCH_OP_CURVE_MAT};
             SData = oldEllTubeRel.getData();
             SData.timeVec = cellfun(@fliplr, SData.timeVec,...
-               'UniformOutput', false);
+                'UniformOutput', false);
             indSTime = numel(SData.timeVec(1));
             SData.indSTime(:) = indSTime;
             cellfun(@cutStructSTimeField,...
@@ -568,30 +567,37 @@ classdef ReachContinuous < elltool.reach.AReach
     methods
         function self =...
                 ReachContinuous(linSys, x0Ell, l0Mat, timeVec, OptStruct)
-        % ReachContinuous - computes reach set approximation of the continuous
-        %     linear system for the given time interval.
-        % Input:
-        %     linSys: elltool.linsys.LinSys object - given linear system
-        %     x0Ell: ellipsoid[1, 1] - ellipsoidal set of initial conditions
-        %     l0Mat: matrix of double - l0Mat 
-        %     timeVec: double[1, 2] - time interval
-        %         timeVec(1) must be less then timeVec(2)
-        %     OptStruct: structure
-        %         In this class OptStruct doesn't matter anything
-        %
-        % Output:
-        %     self - reach set object.
-        %
-        % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
-        % $Copyright: Moscow State University,
-        %            Faculty of Computational Mathematics and Computer Science,
-        %            System Analysis Department 2012 $
-        %
+            % ReachContinuous - computes reach set approximation of the continuous
+            %     linear system for the given time interval.
+            % Input:
+            %     linSys: elltool.linsys.LinSys object - given linear system
+            %     x0Ell: ellipsoid[1, 1] - ellipsoidal set of initial conditions
+            %     l0Mat: matrix of double - l0Mat
+            %     timeVec: double[1, 2] - time interval
+            %         timeVec(1) must be less then timeVec(2)
+            %     OptStruct: structure
+            %         In this class OptStruct doesn't matter anything
+            %
+            % Output:
+            %     self - reach set object.
+            %
+            % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
+            % $Copyright: Moscow State University,
+            %            Faculty of Computational Mathematics and Computer Science,
+            %            System Analysis Department 2012 $
+            %
             import modgen.common.type.simple.checkgenext;
             import modgen.common.throwerror;
             import gras.ellapx.uncertcalc.EllApxBuilder;
             import gras.ellapx.enums.EApproxType;
+            import elltool.logging.Log4jConfigurator;
             %%
+            logger=Log4jConfigurator.getLogger(...
+                'elltool.ReachCont.constrCallCount');
+            logger.debug(sprintf('constructor is called %s',...
+                modgen.exception.me.printstack(...
+                dbstack,'useHyperlink',false)));
+            %
             if (nargin == 0) || isempty(linSys)
                 return;
             end
@@ -607,7 +613,7 @@ classdef ReachContinuous < elltool.reach.AReach
                 throwerror('wrongInput', ['insufficient ',...
                     'number of input arguments.']);
             end
-            if ~(isa(linSys, 'elltool.linsys.LinSys'))
+            if ~(isa(linSys, 'elltool.linsys.LinSysContinuous'))
                 throwerror('wrongInput', ['first input argument ',...
                     'must be linear system object.']);
             end
@@ -705,7 +711,7 @@ classdef ReachContinuous < elltool.reach.AReach
                 fprintf('Empty reach set object.\n\n');
                 return;
             end
-            if isdiscrete(self.linSysCVec{end})
+            if isa(self.linSysCVec{end}, 'elltool.linsys.LinSysDiscrete')
                 sysTypeStr = 'discrete-time';
                 sysTimeStartStr = 'k0 = ';
                 sysTimeEndStr = 'k1 = ';
@@ -884,7 +890,7 @@ classdef ReachContinuous < elltool.reach.AReach
                 newLinSys = self.get_system();
                 oldLinSys = newLinSys;
             else
-                if ~(isa(linSys, 'elltool.linsys.LinSys'))
+                if ~(isa(linSys, 'elltool.linsys.LinSysContinuous'))         
                     throwerror('wrongInput', ['first input argument ',...
                         'must be linear system object.']);
                 end

@@ -60,7 +60,6 @@ checkmultvar('(x2==x3) && all(x1(:)==x3)',...
     'errorTag','wrongSizes','errorMessage',...
     'all ellipsoids and direction vectors must be of the same dimension');
 
-extApprEllVec =[];
 isVrb = Properties.getIsVerbose();
 Properties.setIsVerbose(false);
 
@@ -68,6 +67,7 @@ Properties.setIsVerbose(false);
 isCheckVec = false(1,nCols);
 arrayfun (@(x) fSanityCheck(x), 1:nCols);
 if any(isCheckVec)
+    extApprEllVec =[];
     if isVrb > 0
         if isempty(logger)
             logger=Log4jConfigurator.getLogger();
@@ -79,7 +79,7 @@ else
     
     secExtApprEllVec = minksum_ea(inpEllArr, dirMat);
     absTol=min(min(secExtApprEllVec.getAbsTol()),inpEll.absTol);
-    extApprEllVec = repmat(ellipsoid,1,nCols);
+    extApprEllVec(nCols) = ellipsoid();
     arrayfun(@(x) fSetExtApprEllVec(x), 1:nCols)
     extApprEllVec = extApprEllVec(~isempty(extApprEllVec));
     

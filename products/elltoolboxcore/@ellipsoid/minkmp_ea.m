@@ -24,8 +24,7 @@ function extApprEllVec = minkmp_ea(fstEll, secEll, sumEllArr, dirMat)
 %           nDims.
 %       dirMat: double[nDims, nCols] - matrix whose columns 
 %           specify the directions for which the 
-%           approximations should be computed.
-%
+%           approximations should be computed.%
 % Output:
 %   extApprEllVec: ellipsoid [1, nCols] - array of external
 %       approximating ellipsoids (empty, if for all 
@@ -70,9 +69,9 @@ checkmultvar('(x1==x4)&&(x2==x4)&&all(x3(:)==x4)',...
     'errorTag','wrongSizes','errorMessage',...
     'all ellipsoids and direction vectors must be of the same dimension');
 
-extApprEllVec = [];
-
 if ~isbigger(fstEll, secEll)
+    extApprEllVec = [];
+    
     if Properties.getIsVerbose()
         if isempty(logger)
             logger=Log4jConfigurator.getLogger();
@@ -87,11 +86,11 @@ Properties.setIsVerbose(false);
 
 nSumAmount  = numel(sumEllArr);
 sumEllVec = reshape(sumEllArr, 1, nSumAmount);
-absTolVal=min(fstEll.absTol, secEll.absTol);     
+absTolVal=min(fstEll.absTol, secEll.absTol);
 isGoodDirVec = ~isbaddirection(fstEll, secEll, dirMat,absTolVal);
 nGoodDirs = sum(isGoodDirVec);
 goodDirsMat = dirMat(:,isGoodDirVec);
-extApprEllVec = repmat(ellipsoid,1,nGoodDirs);
+extApprEllVec(nGoodDirs) = ellipsoid();
 arrayfun(@(x) fSingleMP(x),1:nGoodDirs)
 
 Properties.setIsVerbose(isVrb);

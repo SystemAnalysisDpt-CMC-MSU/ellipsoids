@@ -1,4 +1,4 @@
-function propValArr = getProperty(ellArr,propName)
+function [propArr, propVal] = getProperty(ellArr,propName,fPropFun)
 %
 % GETPROPERTY - gives array the same size as ellArr with 
 %               values of propName properties for each 
@@ -9,17 +9,24 @@ function propValArr = getProperty(ellArr,propName)
 %  regular:
 %    ellArr: ellipsoid[nDim1, nDim2,...] - multidimensional
 %            array of ellipsoids
+%       propName: char[1,N] - name property
+%   optional: 
+%       fPropFun: function_handle[1,1] - function that apply
+%           to the propArr. The default is @min.
 %
 % Output:
-%   propValArr: double[nDim1, nDim2,...] - multidimension
-%     array of propName properties for ellipsoids in ellArr
-%
-%$Author: Zakharov Eugene  <justenterrr@gmail.com> $
-%$Date: 17-november-2012$
+%   regular:
+%       propArr: double[nDim1, nDim2,...] - multidimension array of
+%           propName properties for ellipsoids in rsArr
+%   optional:
+%       propVal: double[1, 1] - return result of work fPropFun with 
+%           the propArr%
+ $Author: Zakharov Eugene  <justenterrr@gmail.com> $
+ $Date: 17-november-2012$%$Author: Grachev Artem  <grachev.art@gmail.com> $
+%$Date: March-2013$
 %$Copyright: Moscow State University,
 %            Faculty of Computational Arrhematics
-%            and Computer Science,
-%            System Analysis Department 2012 $
+             and Computer Science,%            System Analysis Department 2012 $
 %
 import modgen.common.throwerror;
 propNameList = {'absTol','relTol','nPlot2dPoints','nPlot3dPoints',...
@@ -28,5 +35,14 @@ if ~any(strcmp(propName,propNameList))
     throwerror('wrongInput',[propName,':no such property']);
 end
 %
-propValArr= arrayfun(@(x)x.(propName),ellArr);
+if nargin == 2
+    fPropFun = @min;
+end
+
+propArr= arrayfun(@(x)x.(propName),ellArr);
+
+if nargout == 2
+    propVal = fPropFun(propArr(:));
+end
+
 end

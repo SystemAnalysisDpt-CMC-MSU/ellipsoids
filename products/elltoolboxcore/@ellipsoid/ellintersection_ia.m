@@ -55,7 +55,7 @@ if Properties.getIsVerbose()
     end
     logger.info('Invoking CVX...');
 end
-absTolVec = getAbsTol(inpEllVec);
+[absTolVec, absTol] = getAbsTol(inpEllVec);
 cvx_begin sdp
 variable cvxEllMat(minEllDim, minEllDim) symmetric
 variable cvxEllCenterVec(minEllDim)
@@ -92,7 +92,7 @@ end;
 
 if rank(cvxEllMat) < minEllDim
     cvxEllMat = ...
-        ellipsoid.regularize(cvxEllMat,min(absTolVec));
+        ellipsoid.regularize(cvxEllMat,absTol);
 end
 
 ellMat = cvxEllMat * cvxEllMat';

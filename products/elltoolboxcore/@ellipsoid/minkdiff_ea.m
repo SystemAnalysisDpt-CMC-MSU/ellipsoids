@@ -77,9 +77,10 @@ checkmultvar('isscalar(x1)&&isscalar(x2)',2,fstEll,secEll,...
     'errorTag','wrongInput','errorMessage',...
     'first and second arguments must be single ellipsoids.');
 
-extApprEllVec = [];
 
 if ~isbigger(fstEll, secEll)
+    extApprEllVec = [];
+    
     if Properties.getIsVerbose()
         if isempty(logger)
             logger=Log4jConfigurator.getLogger();
@@ -98,11 +99,12 @@ checkmultvar('(x1==x2)',2,dimension(fstEll),size(directionsMat, 1),...
 centVec = fstEll.center - secEll.center;
 fstEllShMat = fstEll.shape;
 secEllShMat = secEll.shape;
-absTolVal = min(fstEll.absTol, secEll.absTol);     
+absTolVal = min(fstEll.absTol, secEll.absTol);
 directionsMat  = ellipsoid.rm_bad_directions(fstEllShMat, ...
     secEllShMat, directionsMat,absTolVal);
 nDirs  = size(directionsMat, 2);
 if nDirs < 1
+    extApprEllVec = [];
     if Properties.getIsVerbose()
         if isempty(logger)
             logger=Log4jConfigurator.getLogger();
@@ -126,7 +128,7 @@ srcMat=fstEllSqrtShMat*directionsMat;
 dstMat=secEllSqrtShMat*directionsMat;
 rotArray=gras.la.mlorthtransl(dstMat, srcMat);
 
-extApprEllVec = repmat(ellipsoid,1,nDirs);
+extApprEllVec(nDirs) = ellipsoid();
 arrayfun(@(x) fSingleDir(x), 1:nDirs)
     function fSingleDir(index)
         rotMat = rotArray(:,:,index);
