@@ -75,7 +75,8 @@ checkmultvar('x1(1)==x2',2,nDimsInpEllArr,nDims,...
     'ellipsoids in the array and vector(s) must be of the same dimension.');
 
 if isscalar(inpEllArr)
-    extApprEllVec = inpEllArr;
+    extApprEllVec(1,nCols) = ellipsoid; 
+    arrayfun(@(x)fCopyEll(x,inpEllArr),1:nCols);
     return;
 end
 
@@ -88,6 +89,10 @@ absTolArr = getAbsTol(inpEllArr);
 extApprEllVec(1,nCols) = ellipsoid;
 arrayfun(@(x) fSingleDirection(x),1:nCols);
 
+    function fCopyEll(index,ellObj)
+        extApprEllVec(index).center=ellObj.center;
+        extApprEllVec(index).shape=ellObj.shape;
+    end
     function fAddCenter(singEll)
         centVec = centVec + singEll.center;
     end

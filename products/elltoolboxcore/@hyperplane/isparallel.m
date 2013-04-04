@@ -15,9 +15,9 @@ function isPosArr = isparallel(fstHypArr, secHypArr)
 %           of hyperplanes
 %
 % Output:
-%   isPosArr: logical[nDims1, nDims2, ...] - 
-%       isPosArr(iFstDim, iSecDim, ...) = true - 
-%       if fstHypArr(iFstDim, iSecDim, ...) is parallel 
+%   isPosArr: logical[nDims1, nDims2, ...] -
+%       isPosArr(iFstDim, iSecDim, ...) = true -
+%       if fstHypArr(iFstDim, iSecDim, ...) is parallel
 %       secHypArr(iFstDim, iSecDim, ...), false - otherwise.
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
@@ -39,16 +39,25 @@ checkmultvar(...
     'Sizes of hyperplane arrays do not match.');
 
 if (isscalar(fstHypArr))
-    fstHypArr = repmat(fstHypArr, size(secHypArr));
+    fstHypArr = fCopyHyp(fstHypArr,size(secHypArr));
 elseif (isscalar(secHypArr))
-    secHypArr = repmat(secHypArr, size(fstHypArr));
+    secHypArr = fCopyHyp(secHypArr,size(fstHypArr));
 end
 
 fstHypAbsTolArr = getAbsTol(fstHypArr);
 isPosArr = arrayfun(@(x, y, z) isSingParallel(x, y, z), ...
     fstHypArr, secHypArr, fstHypAbsTolArr, 'UniformOutput', true);
 
-
+    function resHypArr = fCopyHyp(hypObj, sizeVec)
+        nElem=prod(sizeVec);
+        resHypArr(nElem)=hyperplane();
+        arrayfun(@fInitArray,1:nElem)
+        resHypArr=reshape(resHypArr,sizeVec);
+        function fInitArray(index)
+            resHypArr(index)=hypObj;
+        end
+    end
+end
 function isPos = isSingParallel(fstHyp, secHyp, fstHypAbsTol)
 %
 % ISSNGLPARALLEL - check if two single hyperplanes are equal.
@@ -79,4 +88,5 @@ if (min(size(fstHypNormVec) == size(secHypNormVec)) >= 1)
             isPos = true;
         end
     end
+end
 end
