@@ -47,7 +47,7 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
                 logStr=sprintf(...
                     'solving ode for direction \n %s  defined at time %f',...
                     mat2str(lsGoodDirMat(:,l).'),sTime);
-                logger.info([logStr,'...']);
+                logger.debug([logStr,'...']);
                 fHandle=self.getEllApxMatrixDerivFunc(l);
                 initValueMat=self.getEllApxMatrixInitValue(l);
                 %
@@ -58,7 +58,7 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
                 end
                 %
                 QArrayList{l}=self.adjustEllApxMatrixVec(data_Q_star);
-                logger.info(sprintf([logStr,':done, %.3f sec. elapsed'],...
+                logger.debug(sprintf([logStr,':done, %.3f sec. elapsed'],...
                     toc(tStart)));
             end
             %

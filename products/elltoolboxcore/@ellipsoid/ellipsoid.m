@@ -140,7 +140,7 @@ classdef ellipsoid < handle
         isBadDirVec = isbaddirectionmat(q1Mat, q2Mat, dirsMat,absTol)
     end
     methods(Access = private)
-        propValMat = getProperty(hplaneMat,propName)
+        [propMat, propVal] = getProperty(hplaneMat,propName, fPropFun)
         x = ellbndr_2d(E)
         x = ellbndr_3d(E)
     end
