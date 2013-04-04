@@ -112,7 +112,7 @@ numVec=sum((fstEllShMat*directionsMat).*directionsMat,1);
 denomVec=sum((secEllShMat*directionsMat).*directionsMat,1);
 coefVec=numVec./denomVec;
 
-intApprEllVec(nDirs) = ellipsoid;
+intApprEllVec(nDirs) = ellipsoid();
 arrayfun(@(x) fSingleDir(x), 1:nDirs)
     function fSingleDir(index)
         coef = sqrt(coefVec(index));

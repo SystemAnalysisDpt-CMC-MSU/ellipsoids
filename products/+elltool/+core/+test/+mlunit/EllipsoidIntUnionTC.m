@@ -689,13 +689,13 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             testEll1=ellipsoid(eye(3));
             testEll2=ellipsoid([2/3, -1/3, -1/3; -1/3, 2/3, -1/3; ...
                 -1/3, -1/3, 2/3]);
-            ellArr(nElem)=ellipsoid;
+            ellArr(nElem)=ellipsoid();
             arrayfun(@(x)fCopyEll(x,testEll1),1:prod(arrSizeVec));
             ellArr=reshape(ellArr,arrSizeVec);
             
             testHp = hyperplane([1, 1, 1].', 0);
             resEllArr = hpintersection(ellArr, testHp);
-            ellArr(nElem)=ellipsoid;
+            ellArr(nElem)=ellipsoid();
             ellArr=reshape(ellArr,arrSizeVec);
             arrayfun(@(x)fCopyEll(x,testEll2),1:prod(arrSizeVec));
             

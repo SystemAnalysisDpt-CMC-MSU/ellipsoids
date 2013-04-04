@@ -50,7 +50,7 @@ isPosArr = arrayfun(@(x, y, z) isSingParallel(x, y, z), ...
 
     function resHypArr = fCopyHyp(hypObj, sizeVec)
         nElem=prod(sizeVec);
-        resHypArr(nElem)=hyperplane;
+        resHypArr(nElem)=hyperplane();
         arrayfun(@fInitArray,1:nElem)
         resHypArr=reshape(resHypArr,sizeVec);
         function fInitArray(index)
