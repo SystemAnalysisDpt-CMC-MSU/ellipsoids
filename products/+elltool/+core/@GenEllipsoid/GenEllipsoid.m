@@ -1,35 +1,41 @@
 classdef GenEllipsoid < handle
-    % GENELLIPSOID - class of generalized ellipsoids
-    %
-    % Input:
-    %   Case1:
-    %     regular:
-    %       qVec: double[nDim,1] - ellipsoid center
-    %       qMat: double[nDim,nDim] / qVec: double[nDim,1] - ellipsoid matrix
-    %           or diagonal vector of eigenvalues, that may contain infinite
-    %           or zero elements
-    %
-    %   Case2:
-    %     regular:
-    %       qMat: double[nDim,nDim] / qVec: double[nDim,1] - diagonal matrix or
-    %           vector, may contain infinite or zero elements
-    %
-    %   Case3:
-    %     regular:
-    %       qVec: double[nDim,1] - ellipsoid center
-    %       dMat: double[nDim,nDim] / dVec: double[nDim,1] - diagonal matrix or
-    %           vector, may contain infinite or zero elements
-    %       wMat: double[nDim,nDim] - any square matrix
-    %
-    %
-    % Output:
-    %   self: GenEllipsoid[1,1] - created generalized ellipsoid
-    %
-    % $Author: Vitaly Baranov  <vetbar42@gmail.com> $    $Date: Nov-2012$
-    % $Copyright: Moscow State University,
-    %            Faculty of Computational Mathematics and Cybernetics,
-    %            System Analysis Department 2012 $
-    %
+% GENELLIPSOID - class of generalized ellipsoids
+%
+% Input:
+%   Case1:
+%     regular:
+%       qVec: double[nDim,1] - ellipsoid center
+%       qMat: double[nDim,nDim] / qVec: double[nDim,1] - 
+%                               ellipsoid matrix or diagonal
+%                               vector of eigenvalues, that 
+%                               may contain infinite or zero
+%                               elements
+%
+%   Case2:
+%     regular:
+%       qMat: double[nDim,nDim] / qVec: double[nDim,1] - 
+%                               diagonal matrix or vector,
+%                               may contain infinite or zero
+%                               elements
+%
+%   Case3:
+%     regular:
+%       qVec: double[nDim,1] - ellipsoid center
+%       dMat: double[nDim,nDim] / dVec: double[nDim,1] - 
+%                              diagonal matrix or vector,
+%                              may contain infinite or zero
+%                              elements
+%       wMat: double[nDim,nDim] - any square matrix
+%
+%
+% Output:
+%   self: GenEllipsoid[1,1] - created generalized ellipsoid
+%
+%$Author: Vitaly Baranov  <vetbar42@gmail.com> $    
+%$Date: Nov-2012$
+%$Copyright: Moscow State University,
+%            System Analysis Department 2012 $
+%
     properties (Access = private)
         centerVec
         diagMat

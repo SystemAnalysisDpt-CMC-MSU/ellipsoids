@@ -1,8 +1,10 @@
 classdef IReach < handle
-% $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: March-2012 $
+% $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  
+% $Date: March-2012 $
 % $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Computer Science,
-%            System Analysis Department 2012 $
+%             Faculty of Computational Mathematics
+%             and Computer Science,
+%             System Analysis Department 2012 $
 %
     methods (Abstract)
         cutObj = cut(self, cutTimeVec)

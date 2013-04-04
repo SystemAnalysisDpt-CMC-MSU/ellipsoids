@@ -2,32 +2,37 @@ function polEllArr = polar(ellArr)
 %
 % POLAR - computes the polar ellipsoids.
 %
-%   polEllArr = POLAR(ellArr)  Computes the polar ellipsoids for those
-%       ellipsoids in ellArr, for which the origin is an interior point.
-%       For those ellipsoids in E, for which this condition does not hold,
-%       an empty ellipsoid is returned.
+%  polEllArr = POLAR(ellArr)  Computes the polar ellipsoids
+%      for those ellipsoids in ellArr, for which the origin
+%      is an interior point. For those ellipsoids in E,
+%      for which this condition does not hold, an empty
+%      ellipsoid is returned.
 %
-%   Given ellipsoid E(q, Q) where q is its center, and Q - its shape matrix,
-%   the polar set to E(q, Q) is defined as follows:
+%   Given ellipsoid E(q, Q) where q is its center, and 
+%   Q - its shape matrix, the polar set to E(q, Q) is 
+%   defined as follows:
 %   P = { l in R^n  | <l, q> + sqrt(<l, Q l>) <= 1 }
-%   If the origin is an interior point of ellipsoid E(q, Q),
-%   then its polar set P is an ellipsoid.
+%   If the origin is an interior point of ellipsoid 
+%   E(q, Q), then its polar set P is an ellipsoid.
 %
 % Input:
 %   regular:
-%       ellArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array
+%      ellArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array
 %           of ellipsoids.
 %
 % Output:
-%   polEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of
-%    	polar ellipsoids.
+%   polEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array 
+%    	  of polar ellipsoids.
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 2004-2008 $
+% $Copyright:  The Regents of the University of California 
+%              2004-2008 $
 %
-% $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
+% $Author: Guliev Rustam <glvrst@gmail.com> $   
+% $Date: Dec-2012$
 % $Copyright: Moscow State University,
-%             Faculty of Computational Mathematics and Cybernetics,
+%             Faculty of Computational Mathematics
+%             and Cybernetics,
 %             Science, System Analysis Department 2012 $
 %
 

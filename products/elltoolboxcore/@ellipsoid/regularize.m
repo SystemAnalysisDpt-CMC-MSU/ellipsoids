@@ -12,7 +12,8 @@ function regQMat = regularize(qMat,absTol)
 %       absTol tolerance    
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 2004-2008 $
+% $Copyright:  The Regents of the University of California 
+%              2004-2008 $
 
 modgen.common.checkvar(qMat,'gras.la.ismatsymm(x)',...
     'errorMessage','matrix must be symmetric.');

@@ -1,9 +1,11 @@
 classdef PropertiesTestCase < mlunitext.test_case
-    % $Author: <Zakharov Eugene>  <justenterrr@gmail.com> $    $Date: <5 november> $
-    % $Copyright: Moscow State University,
-    %            Faculty of Computational Mathematics and Computer Science,
-    %            System Analysis Department <2012> $
-    %
+%$Author: <Zakharov Eugene>  <justenterrr@gmail.com> $
+%$Date: <5 november> $
+%$Copyright: Moscow State University,
+%            Faculty of Computational Mathematics 
+%            and Computer Science,
+%            System Analysis Department <2012> $
+%
     properties (Access=private)
         confName
     end

@@ -1,9 +1,11 @@
 classdef HyperplaneTestCase < mlunitext.test_case
-    % $Author: <Zakharov Eugene>  <justenterrr@gmail.com> $    $Date: <31 october> $
-    % $Copyright: Moscow State University,
-    %            Faculty of Computational Mathematics and Computer Science,
-    %            System Analysis Department <2012> $
-    %
+%$Author: <Zakharov Eugene>  <justenterrr@gmail.com> $    
+%$Date: 2012-10-31 $
+%$Copyright: Moscow State University,
+%            Faculty of Computational Mathematics 
+%            and Computer Science,
+%            System Analysis Department <2012> $
+%
     properties (Access=private)
         testDataRootDir
     end

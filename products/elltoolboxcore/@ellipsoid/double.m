@@ -4,20 +4,25 @@ function [myEllCentVec, myEllShMat] = double(myEll)
 %
 % Input:
 %   regular:
-%       myEll: ellipsoid [1, 1] - single ellipsoid of dimention nDims.
+%       myEll: ellipsoid [1, 1] - single ellipsoid of 
+%         dimention nDims.
 %
 % Output:
-%   myEllCentVec: double[nDims, 1] - center of the ellipsoid myEll.
+%   myEllCentVec: double[nDims, 1] - center of the 
+%       ellipsoid myEll.
 %   myEllShMat: double[nDims, nDims] - shape matrix
 %       of the ellipsoid myEll.
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 2004-2008 $
+% $Copyright:  The Regents of the University of California 
+% 2004-2008 $
 %
-% $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
+% $Author: Guliev Rustam <glvrst@gmail.com> $   
+% $Date: Dec-2012 $
 % $Copyright: Moscow State University,
-%             Faculty of Computational Mathematics and Cybernetics,
-%             Science, System Analysis Department 2012 $
+%             Faculty of Computational Mathematics
+%             and Cybernetics,Science, 
+%             System Analysis Department 2012 $
 %
 
 ellipsoid.checkIsMe(myEll);

@@ -2,14 +2,15 @@ function resArr = contains(firstEllArr, secondEllArr)
 % CONTAINS - checks if one ellipsoid contains the other.
 %            The condition for E1 = firstEllArr to contain
 %            E2 = secondEllArr is
-%            min(rho(l | E1) - rho(l | E2)) > 0, subject to <l, l> = 1.
+%            min(rho(l | E1) - rho(l | E2)) > 0, 
+%            subject to <l, l> = 1.
 %
 % Input:
-%   regular:
-%       firstEllArr: ellipsoid [nDims1,nDims2,...,nDimsN]/[1,1] - first 
-%           array of ellipsoids.
-%       secondEllArr: ellipsoid [nDims1,nDims2,...,nDimsN]/[1,1] - second
-%           array of ellipsoids.
+%  regular:
+%   firstEllArr: ellipsoid [nDims1,nDims2,...,nDimsN]/[1,1] 
+%            - first array of ellipsoids.
+%   secondEllArr: ellipsoid [nDims1,nDims2,...,nDimsN]/[1,1]
+%            - second array of ellipsoids.
 %
 % Output:
 %   resArr: logical[nDims1,nDims2,...,nDimsN],
@@ -18,12 +19,15 @@ function resArr = contains(firstEllArr, secondEllArr)
 %
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 2004-2008 $
+% $Copyright:  The Regents of the University of California 
+%              2004-2008 $
 %
-% $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
+% $Author: Guliev Rustam <glvrst@gmail.com> $   
+% $Date: Dec-2012 $
 % $Copyright: Moscow State University,
-%             Faculty of Computational Mathematics and Cybernetics,
-%             Science, System Analysis Department 2012 $
+%             Faculty of Computational Mathematics 
+%             and Cybernetics, Science, 
+%             System Analysis Department 2012 $
 %
 
 import elltool.conf.Properties;

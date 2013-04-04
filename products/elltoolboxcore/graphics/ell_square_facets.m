@@ -1,12 +1,14 @@
 function facets = ell_square_facets(epoints_num, points_num)
 %
-% ELL_SQUARE_FACETS - generates square facets to be used in PATCH function call.
+% ELL_SQUARE_FACETS - generates square facets to be used
+%                     in PATCH function call.
 %
 %
 % Description:
 % ------------
 %
-%    ELL_SQUARE_FACETS(M, N)  Generates square facets for the PATCH call.
+%    ELL_SQUARE_FACETS(M, N)  Generates square facets for
+%              the PATCH call.
 %
 %
 % Output:

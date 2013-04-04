@@ -1,7 +1,7 @@
 function outHypArr = uminus(inpHypArr)
 %
-% UMINUS - switch signs of normal vector and the shift scalar
-%          to the opposite.
+% UMINUS - switch signs of normal vector and the shift 
+%          scalar to the opposite.
 %
 % Input:
 %   regular:
@@ -14,12 +14,15 @@ function outHypArr = uminus(inpHypArr)
 %       normals and scalars are multiplied by -1.
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 2004-2008 $
+% $Copyright:  The Regents of the University of California 
+%              2004-2008 $
 %
-% $Author: Aushkap Nikolay <n.aushkap@gmail.com> $  $Date: 30-11-2012$
+% $Author: Aushkap Nikolay <n.aushkap@gmail.com> $  
+% $Date: 30-11-2012$
 % $Copyright: Moscow State University,
-%   Faculty of Computational Mathematics and Computer Science,
-%   System Analysis Department 2012 $
+%             Faculty of Computational Mathematics
+%             and Computer Science,
+%             System Analysis Department 2012 $
 
 hyperplane.checkIsMe(inpHypArr);
 

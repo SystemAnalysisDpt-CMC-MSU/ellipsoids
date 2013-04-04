@@ -1,14 +1,15 @@
 function P = hyperplane2polytope(HA)
 %
-% HYPERPLANE2POLYTOPE - converts array of hyperplanes into polytope
+% HYPERPLANE2POLYTOPE - converts array of hyperplanes
+%                       into polytope
 %
 %
 % Description:
 % ------------
 %
-%    P = HYPERPLANE2POLYTOPE(HA)  Given array of hyperplane objects HA, 
-%                                 returns polytope object.
-%                                 Requires Multi-Parametric Toolbox.
+%    P = HYPERPLANE2POLYTOPE(HA)  Given array of hyperplane
+%               objects HA, returns polytope object.
+%               Requires Multi-Parametric Toolbox.
 %
 %
 % Output:
@@ -20,7 +21,8 @@ function P = hyperplane2polytope(HA)
 % See also:
 % ---------
 %
-%    HYPERPLANE/HYPERPLANE, POLYTOPE/POLYTOPE, POLYTOPE2HYPERPLANE.
+%    HYPERPLANE/HYPERPLANE, POLYTOPE/POLYTOPE,
+%    POLYTOPE2HYPERPLANE.
 %
 
 %

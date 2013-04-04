@@ -1,31 +1,33 @@
 function [centVec, boundPointMat] = minkpm(inpEllArr, inpEll, varargin)
 %
-% MINKPM - computes and plots geometric (Minkowski) difference
-%          of the geometric sum of ellipsoids and a single ellipsoid
-%          in 2D or 3D: (E1 + E2 + ... + En) - E,
-%          where E = inpEll,
+% MINKPM - computes and plots geometric (Minkowski) 
+%          difference of the geometric sum of ellipsoids 
+%          and a single ellipsoid in 2D or 3D: 
+%          (E1 + E2 + ... + En) - E, where E = inpEll,
 %          E1, E2, ... En - are ellipsoids in inpEllArr.
 %
-%   MINKPM(inpEllArr, inpEll, OPTIONS)  Computes geometric difference
-%       of the geometric sum of ellipsoids in inpEllArr and
-%       ellipsoid inpEll, if
+%   MINKPM(inpEllArr, inpEll, OPTIONS)  Computes geometric 
+%       difference of the geometric sum of ellipsoids in 
+%       inpEllArr and ellipsoid inpEll, if
 %       1 <= dimension(inpEllArr) = dimension(inpArr) <= 3,
 %       and plots it if no output arguments are specified.
 %
-%   [centVec, boundPointMat] = MINKPM(inpEllArr, inpEll) - computes
-%       (geometric sum of ellipsoids in inpEllArr) - inpEll.
-%       Here centVec is the center, and boundPointMat - array
-%       of boundary points.
-%   MINKPM(inpEllArr, inpEll) - plots (geometric sum of ellipsoids
-%       in inpEllArr) - inpEll in default (red) color.
+%   [centVec, boundPointMat] = MINKPM(inpEllArr, inpEll) - 
+%       computes (geometric sum of ellipsoids in inpEllArr)
+%        - inpEll. Here centVec is the center, and 
+%       boundPointMat - array of boundary points.
+%   MINKPM(inpEllArr, inpEll) - plots (geometric sum of
+%       ellipsoids in inpEllArr) - inpEll in default (red)
+%       color.
 %   MINKPM(inpEllArr, inpEll, Options) - plots
-%       (geometric sum of ellipsoids in inpEllArr) - inpEll using
-%       options given in the Options structure.
+%       (geometric sum of ellipsoids in inpEllArr) - inpEll 
+%       using options given in the Options structure.
 %
 % Input:
 %   regular:
-%       inpEllArr: ellipsoid [nDims1, nDims2,...,nDimsN] - array of 
-%           ellipsoids of the same dimentions 2D or 3D.
+%       inpEllArr: ellipsoid [nDims1, nDims2,...,nDimsN] - 
+%           array of  ellipsoids of the same dimentions 2D 
+%           or 3D.
 %       inpEll: ellipsoid [1, 1] - ellipsoid of the same
 %           dimention 2D or 3D.
 %
@@ -39,22 +41,26 @@ function [centVec, boundPointMat] = minkpm(inpEllArr, inpEll, varargin)
 %               set in 2D will be filled with color.
 %           color: double[1, 3] - sets default colors
 %               in the form [x y z].
-%           shade: double[1, 1] = 0-1 - level of transparency
-%               (0 - transparent, 1 - opaque).
+%           shade: double[1, 1] = 0-1 - level of 
+%               transparency (0 - transparent, 1 - opaque).
 %
 % Output:
-%    centVec: double[nDim, 1]/double[0, 0] - center of the resulting set.
-%       centerVec may be empty.
-%    boundPointMat: double[nDim, ]/double[0, 0] - set of boundary
-%       points (vertices) of resulting set. boundPointMat may be empty.
+%    centVec: double[nDim, 1]/double[0, 0] - center of the 
+%       resulting set. centerVec may be empty.
+%    boundPointMat: double[nDim, ]/double[0, 0] - set of 
+%       boundary points (vertices) of resulting set. 
+%       boundPointMat may be empty.
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 2004-2008 $
+% $Copyright:  The Regents of the University of California 
+%              2004-2008 $
 %
-% $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
+% $Author: Guliev Rustam <glvrst@gmail.com> $   
+% $Date: Dec-2012$
 % $Copyright: Moscow State University,
-%             Faculty of Computational Mathematics and Cybernetics,
-%             Science, System Analysis Department 2012 $
+%             Faculty of Computational Mathematics
+%             and Cybernetics, Science, 
+%             System Analysis Department 2012 $
 %
 
 import elltool.conf.Properties;

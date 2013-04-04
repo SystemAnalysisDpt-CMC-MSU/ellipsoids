@@ -1,31 +1,35 @@
 function [intEllArr, isnIntersectedArr] = ...
     hpintersection(myEllArr, myHypArr)
 %
-% HPINTERSECTION - computes the intersection of ellipsoid with hyperplane.
+% HPINTERSECTION - computes the intersection of ellipsoid
+%                  with hyperplane.
 %
 % Input:
 %   regular:
-%       myEllArr: ellipsoid [nDims1,nDims2,...,nDimsN]/[1,1] - array
-%           of ellipsoids.
-%       myHypArr: hyperplane [nDims1,nDims2,...,nDimsN]/[1,1] - array
-%           of hyperplanes of the same size.
+%     myEllArr: ellipsoid [nDims1,nDims2,...,nDimsN]/[1,1] 
+%           - array of ellipsoids.
+%     myHypArr: hyperplane [nDims1,nDims2,...,nDimsN]/[1,1]
+%            - array of hyperplanes of the same size.
 %
 % Output:
-%   intEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of ellipsoids
-%       resulting from intersections.
+%   intEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array 
+%       of ellipsoids resulting from intersections.
 %
 %   isnIntersectedArr: logical [nDims1,nDims2,...,nDimsN].
-%       isnIntersectedArr(iCount) = true, if myEllArr(iCount)
-%       doesn't intersect myHipArr(iCount),
-%       isnIntersectedArr(iCount) = false, otherwise.
+%     isnIntersectedArr(iCount) = true, if myEllArr(iCount)
+%     doesn't intersect myHipArr(iCount),
+%     isnIntersectedArr(iCount) = false, otherwise.
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 2004-2008 $
+% $Copyright:  The Regents of the University of California 
+%              2004-2008 $
 %
-% $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
+% $Author: Guliev Rustam <glvrst@gmail.com> $   
+% $Date: Dec-2012$
 % $Copyright: Moscow State University,
-%             Faculty of Computational Mathematics and Cybernetics,
-%             Science, System Analysis Department 2012 $
+%             Faculty of Computational Mathematics 
+%             and Cybernetics, Science, 
+%             System Analysis Department 2012 $
 %
 
 import elltool.conf.Properties;

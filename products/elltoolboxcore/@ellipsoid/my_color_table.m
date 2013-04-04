@@ -11,7 +11,8 @@ function codeVec = my_color_table(colorChar)
 %   codeVec: double [1, 3] - code of the color.
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 2004-2008 $
+% $Copyright:  The Regents of the University of California
+%              2004-2008 $
 
 if ~(ischar(colorChar))
     codeVec = [0 0 0];

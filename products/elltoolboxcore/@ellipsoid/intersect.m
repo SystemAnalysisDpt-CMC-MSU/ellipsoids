@@ -1,100 +1,115 @@
 function [resArr, statusArr] = intersect(myEllArr, objArr, mode)
 %
-% INTERSECT - checks if the union or intersection of ellipsoids intersects
-%             given ellipsoid, hyperplane or polytope.
-%
-%   resArr = INTERSECT(myEllArr, objArr, mode) - Checks if the union
-%       (mode = 'u') or intersection (mode = 'i') of ellipsoids
-%       in myEllArr intersects with objects in objArr.
-%       objArr can be array of ellipsoids, array of hyperplanes,
-%       or array of polytopes.
-%       Ellipsoids, hyperplanes or polytopes in objMat must have
-%       the same dimension as ellipsoids in myEllArr.
-%       mode = 'u' (default) - union of ellipsoids in myEllArr.
+% INTERSECT - checks if the union or intersection of 
+%             ellipsoids intersects given ellipsoid, 
+%             hyperplane or polytope.
+% 
+%   resArr = INTERSECT(myEllArr, objArr, mode) - Checks if 
+%       the union (mode = 'u') or intersection (mode = 'i') 
+%       of ellipsoids in myEllArr intersects with objects in
+%       objArr. objArr can be array of ellipsoids, array of
+%       hyperplanes,or array of polytopes.
+%       Ellipsoids, hyperplanes or polytopes in objMat must 
+%       have the same dimension as ellipsoids in myEllArr.
+%       mode = 'u' (default) - union of ellipsoids in 
+%                              myEllArr.
 %       mode = 'i' - intersection.
 %
-%   If we need to check the intersection of union of ellipsoids in
-%   myEllArr (mode = 'u'), or if myEllMat is a single ellipsoid,
-%   it can be done by calling distance function for each of the
-%   ellipsoids in myEllArr and objMat, and if it returns negative value,
-%   the intersection is nonempty. Checking if the intersection of
-%   ellipsoids in myEllArr (with size of myEllMat greater than 1)
-%   intersects with ellipsoids or hyperplanes in objArr is more
-%   difficult. This problem can be formulated as quadratically
-%   constrained quadratic programming (QCQP) problem.
+%   If we need to check the intersection of union of 
+%   ellipsoids in myEllArr (mode = 'u'), or if myEllMat is 
+%   a single ellipsoid, it can be done by calling distance 
+%   function for each of the ellipsoids in myEllArr and 
+%   objMat, and if it returns negative value, the 
+%   intersection is nonempty. Checking if the intersection 
+%   of ellipsoids in myEllArr (with size of myEllMat greater
+%   than 1)intersects with ellipsoids or hyperplanes in 
+%   objArr is more difficult. This problem can be formulated
+%   as quadratically constrained quadratic programming
+%   (QCQP) problem.
 %
-%   Let objArr(iObj) = E(q, Q) be an ellipsoid with center q and shape matrix Q.
-%   To check if this ellipsoid intersects (or touches) the intersection
-%   of ellipsoids in meEllArr: E(q1, Q1), E(q2, Q2), ..., E(qn, Qn),
+%   Let objArr(iObj) = E(q, Q) be an ellipsoid with center 
+%   q and shape matrix Q. To check if this ellipsoid 
+%   intersects (or touches) the intersection of ellipsoids 
+%   in meEllArr: E(q1, Q1), E(q2, Q2), ..., E(qn, Qn),
 %   we define the QCQP problem:
-%                     J(x) = <(x - q), Q^(-1)(x - q)> --> min
+%                J(x) = <(x - q), Q^(-1)(x - q)> --> min
 %   with constraints:
-%                      <(x - q1), Q1^(-1)(x - q1)> <= 1   (1)
-%                      <(x - q2), Q2^(-1)(x - q2)> <= 1   (2)
-%                      ................................
-%                      <(x - qn), Qn^(-1)(x - qn)> <= 1   (n)
+%                <(x - q1), Q1^(-1)(x - q1)> <= 1   (1)
+%                <(x - q2), Q2^(-1)(x - q2)> <= 1   (2)
+%                ................................
+%                <(x - qn), Qn^(-1)(x - qn)> <= 1   (n)
 %
-%   If this problem is feasible, i.e. inequalities (1)-(n) do not
-%   contradict, or, in other words, intersection of ellipsoids
-%   E(q1, Q1), E(q2, Q2), ..., E(qn, Qn) is nonempty, then we can find
-%   vector y such that it satisfies inequalities (1)-(n) and minimizes
-%   function J. If J(y) <= 1, then ellipsoid E(q, Q) intersects or touches
-%   the given intersection, otherwise, it does not. To check if E(q, Q)
-%   intersects the union of E(q1, Q1), E(q2, Q2), ..., E(qn, Qn),
-%   we compute the distances from this ellipsoids to those in the union.
-%   If at least one such distance is negative,
-%   then E(q, Q) does intersect the union.
+%   If this problem is feasible, i.e. inequalities (1)-(n)
+%   do not contradict, or, in other words, intersection of
+%   ellipsoids E(q1, Q1), E(q2, Q2), ..., E(qn, Qn) is 
+%   nonempty, then we can find vector y such that it 
+%   satisfies inequalities (1)-(n) and minimizes function J. 
+%   If J(y) <= 1, then ellipsoid E(q, Q) intersects or 
+%   touches the given intersection, otherwise, it does not.
+%   To check if E(q, Q) intersects the union of E(q1, Q1),
+%   E(q2, Q2), ..., E(qn, Qn),we compute the distances from 
+%   this ellipsoids to those in the union. If at least one
+%   such distance is negative,then E(q, Q) does intersect
+%   the union.
 %
-%   If we check the intersection of ellipsoids with hyperplane
-%   objArr = H(v, c), it is enough to check the feasibility
-%   of the problem
+%   If we check the intersection of ellipsoids with 
+%   hyperplane objArr = H(v, c), it is enough to check the
+%   feasibility of the problem
 %                       1'x --> min
 %   with constraints (1)-(n), plus
 %                     <v, x> - c = 0.
 %
 %   Checking the intersection of ellipsoids with polytope
-%   objArr = P(A, b) reduces to checking if there any x, satisfying
-%   constraints (1)-(n) and
+%   objArr = P(A, b) reduces to checking if there any x, 
+%   satisfying constraints (1)-(n) and
 %                        Ax <= b.
 %
 % Input:
 %   regular:
-%       myEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of ellipsoids.
+%       myEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - 
+%             array of ellipsoids.
 %       objArr: ellipsoid / hyperplane /
-%           / polytope [nDims1,nDims2,...,nDimsN] - array of ellipsoids or
-%           hyperplanes or polytopes of the same sizes.
+%           / polytope [nDims1,nDims2,...,nDimsN] - array 
+%           of ellipsoids or hyperplanes or polytopes of 
+%           the same sizes.
 %
 %   optional:
 %       mode: char[1, 1] - 'u' or 'i', go to description.
 %
-%           note: If mode == 'u', then mRows, nCols should be equal to 1.
+%           note: If mode == 'u', then mRows, nCols should
+%                  be equal to 1.
 %
 % Output:
-%   resArr: double[nDims1,nDims2,...,nDimsN] - return:
+%  resArr: double[nDims1,nDims2,...,nDimsN] - return:
 %       resArr(iCount) = -1 in case parameter mode is set
-%           to 'i' and the intersection of ellipsoids in myEllArr
-%           is empty.
+%           to 'i' and the intersection of ellipsoids in r
+%           myEllAr is empty.
 %       resArr(iCount) = 0 if the union or intersection of
-%           ellipsoids in myEllArr does not intersect the object
-%           in objArr(iCount).
+%           ellipsoids in myEllArr does not intersect the 
+%           object in objArr(iCount).
 %       resArr(iCount) = 1 if the union or intersection of
-%           ellipsoids in myEllArr and the object in objArr(iCount)
-%           have nonempty intersection.
-%   statusArr: double[0, 0]/double[nDims1,nDims2,...,nDimsN] - status
-%       variable. statusArr is empty if mode = 'u'.
+%           ellipsoids in myEllArr and the object in 
+%           objArr(iCount) have nonempty intersection.
+%  statusArr: double[0, 0]/double[nDims1,nDims2,...,nDimsN]
+%      - status variable. statusArr is empty if mode = 'u'.
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 2004-2008 $
+% $Copyright:  The Regents of the University of California 
+%              2004-2008 $
 %
-% $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
+% $Author: Guliev Rustam <glvrst@gmail.com> $   
+% $Date: Dec-2012$
 % $Copyright: Moscow State University,
-%             Faculty of Computational Mathematics and Cybernetics,
-%             Science, System Analysis Department 2012 $
+%             Faculty of Computational Mathematics 
+%             and Cybernetics, Science, 
+%             System Analysis Department 2012 $
 %
-% $Author: <Zakharov Eugene>  <justenterrr@gmail.com> $    $Date: March-2013 $
+% $Author: <Zakharov Eugene>  <justenterrr@gmail.com> $    
+% $Date: March-2013 $
 % $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Computer Science,
-%            System Analysis Department$
+%             Faculty of Computational Mathematics 
+%             and Computer Science,
+%             System Analysis Department$
 %
 
 import elltool.conf.Properties;

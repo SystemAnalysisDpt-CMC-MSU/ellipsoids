@@ -1,47 +1,56 @@
 function isPosArr = contains(myHypArr, xArr)
 %
-% CONTAINS - checks if given vectors belong to the hyperplanes.
+% CONTAINS - checks if given vectors belong to the 
+%            hyperplanes.
 %
-%   isPosArr = CONTAINS(myHypArr, xArr) - Checks if vectors specified
-%       by columns xArr(:, hpDim1, hpDim2, ...) belong
-%       to hyperplanes in myHypArr.
+%   isPosArr = CONTAINS(myHypArr, xArr) - Checks if vectors 
+%       specified by columns xArr(:, hpDim1, hpDim2, ...) 
+%       belong to hyperplanes in myHypArr.
 %
 % Input:
 %   regular:
-%       myHypArr: hyperplane [nCols, 1]/[1, nCols]/
-%           /[hpDim1, hpDim2, ...]/[1, 1] - array of hyperplanes
-%           of the same dimentions nDims.
-%       xArr: double[nDims, nCols]/[nDims, hpDim1, hpDim2, ...]/
-%           /[nDims, 1]/[nDims, nVecArrDim1, nVecArrDim2, ...] - array
-%           whose columns represent the vectors needed to be checked.
+%     myHypArr: hyperplane [nCols, 1]/[1, nCols]/
+%           /[hpDim1, hpDim2, ...]/[1, 1] - array of 
+%           hyperplanes of the same dimentions nDims.
+%     xArr: double[nDims, nCols]/[nDims,hpDim1,hpDim2,...]/
+%        /[nDims, 1]/[nDims, nVecArrDim1, nVecArrDim2, ...]
+%         - array whose columns represent the vectors
+%         needed to be checked.
 %
-%           note: if size of myHypArr is [hpDim1, hpDim2, ...], then
-%               size of xArr is [nDims, hpDim1, hpDim2, ...]
-%               or [nDims, 1], if size of myHypArr [1, 1], then xArr
-%               can be any size [nDims, nVecArrDim1, nVecArrDim2, ...],
-%               in this case output variable will has
-%               size [1, nVecArrDim1, nVecArrDim2, ...]. If size of
-%               xArr is [nDims, nCols], then size of myHypArr may be
-%               [nCols, 1] or [1, nCols] or [1, 1], output variable
-%               will has size respectively
-%               [nCols, 1] or [1, nCols] or [nCols, 1].
+%      note: if size of myHypArr is [hpDim1, hpDim2, ...], 
+%            then  size of xArr is [nDims, hpDim1, hpDim2,
+%             ...] or [nDims, 1], if size of 
+%            myHypArr [1, 1],  then xArr can be any size 
+%            [nDims, nVecArrDim1, nVecArrDim2, ...],
+%            in this case output variable will has
+%            size [1, nVecArrDim1, nVecArrDim2, ...].
+%            If size of xArr is [nDims, nCols], then size 
+%            of myHypArr may be  [nCols, 1] or [1, nCols] 
+%            or [1, 1], output variable will has size 
+%            respectively [nCols, 1] or [1, nCols] or 
+%            [nCols, 1].
 %
 % Output:
 %   isPosArr: logical[hpDim1, hpDim2,...] /
 %       / logical[1, nVecArrDim1, nVecArrDim2, ...],
-%       isPosArr(iDim1, iDim2, ...) = true - myHypArr(iDim1, iDim2, ...)
-%       contains xArr(:, iDim1, iDim2, ...), false - otherwise.
+%       isPosArr(iDim1, iDim2, ...) = true - 
+%       myHypArr(iDim1, iDim2, ...) contains 
+%       xArr(:, iDim1, iDim2, ...), false - otherwise.
 %
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 2004-2008 $
+% $Copyright:  The Regents of the University of California 
+%              2004-2008 $
 %
 % $Authors:
-%   Zakharov Eugene <justenterrr@gmail.com>$ $Date: <31 october>$
-%   Aushkap Nikolay <n.aushkap@gmail.com> $  $Date: 30-11-2012$
+%   Zakharov Eugene <justenterrr@gmail.com>$ 
+%   $Date: <31 october>$
+%   Aushkap Nikolay <n.aushkap@gmail.com> $  
+%   $Date: 30-11-2012$
 % $Copyright: Moscow State University,
-%   Faculty of Computational Mathematics and Computer Science,
-%   System Analysis Department 2012 $
+%             Faculty of Computational Mathematics
+%             and Computer Science,
+%             System Analysis Department 2012 $
 
 import modgen.common.checkvar;
 import modgen.common.checkmultvar;

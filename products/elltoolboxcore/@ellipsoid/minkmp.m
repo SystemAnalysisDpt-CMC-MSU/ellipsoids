@@ -1,22 +1,23 @@
 function [centVec, boundPntMat] = minkmp(fstEll, secEll, sumEllArr,varargin)
 %
-% MINKMP - computes and plots geometric (Minkowski) sum of the
-%          geometric difference of two ellipsoids and the geometric
-%          sum of n ellipsoids in 2D or 3D:
+% MINKMP - computes and plots geometric (Minkowski) sum of 
+%          the geometric difference of two ellipsoids and 
+%          the geometric sum of n ellipsoids in 2D or 3D:
 %          (E - Em) + (E1 + E2 + ... + En),
 %          where E = firstEll, Em = secondEll,
 %          E1, E2, ..., En - are ellipsoids in sumEllArr
 %
-%   MINKMP(firstEll, secondEll, sumEllArr, Options) - Computes
-%       geometric sum of the geometric difference of two ellipsoids
-%       firstEll - secondEll and the geometric sum of ellipsoids in
-%       the ellipsoidal array sumEllArr, if
+%   MINKMP(firstEll, secondEll, sumEllArr, Options) - 
+%       Computes geometric sum of the geometric difference
+%       of two ellipsoids firstEll - secondEll and the 
+%       geometric sum of ellipsoids in the ellipsoidal
+%       array sumEllArr, if
 %       1 <= dimension(firstEll) = dimension(secondEll) =
-%       = dimension(sumEllArr) <= 3, and plots it if no output
-%       arguments are specified.
+%       = dimension(sumEllArr) <= 3, and plots it if no 
+%       output arguments are specified.
 %
-%   [centVec, boundPntMat] = MINKMP(firstEll, secondEll, sumEllArr) -
-%       computes: (firstEll - secondEll) +
+%[centVec,boundPntMat]=MINKMP(firstEll,secondEll,sumEllArr)
+%       -computes: (firstEll - secondEll) +
 %       + (geometric sum of ellipsoids in sumEllArr).
 %       Here centVec is the center, and
 %       boundPntMat - array of boundary points.
@@ -31,12 +32,12 @@ function [centVec, boundPntMat] = minkmp(fstEll, secEll, sumEllArr,varargin)
 %
 % Input:
 %   regular:
-%       firstEll: ellipsoid [1, 1] - first ellipsoid. Suppose
-%           nDim - space dimension, nDim = 2 or 3.
+%       firstEll: ellipsoid [1, 1] - first ellipsoid.
+%            Suppose nDim - space dimension, nDim = 2 or 3.
 %       secondEll: ellipsoid [1, 1] - second ellipsoid
 %           of the same dimention.
-%       sumEllArr: ellipsoid [nDims1, nDims2,...,nDimsN] - array of 
-%           ellipsoids.
+%       sumEllArr: ellipsoid [nDims1, nDims2,...,nDimsN] - 
+%           array of  ellipsoids.
 %
 %   optional:
 %       Options: structure[1, 1] - fields:
@@ -48,21 +49,24 @@ function [centVec, boundPntMat] = minkmp(fstEll, secEll, sumEllArr,varargin)
 %               set in 2D will be filled with color.
 %           color: double[1, 3] - sets default colors
 %               in the form [x y z].
-%           shade: double[1, 1] = 0-1 - level of transparency
-%               (0 - transparent, 1 - opaque).
+%           shade: double[1, 1] = 0-1 - level of 
+%               transparency (0 - transparent, 1 - opaque).
 %
 % Output:
 %   centerVec: double[nDim, 1] - center of the resulting set.
-%   boundarPointsMat: double[nDim, nBoundPoints] - set of boundary
-%       points (vertices) of resulting set.
+%   boundarPointsMat: double[nDim, nBoundPoints] - set of 
+%       boundary points (vertices) of resulting set.
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 2004-2008 $
+% $Copyright:  The Regents of the University of California 
+%              2004-2008 $
 %
-% $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Nov-2012$
+% $Author: Guliev Rustam <glvrst@gmail.com> $  
+% $Date: Nov-2012$
 % $Copyright: Moscow State University,
-%             Faculty of Computational Mathematics and Cybernetics,
-%             Science, System Analysis Department 2012 $
+%             Faculty of Computational Mathematics
+%             and Cybernetics, Science, 
+%             System Analysis Department 2012 $
 %
 
 import modgen.common.throwerror;

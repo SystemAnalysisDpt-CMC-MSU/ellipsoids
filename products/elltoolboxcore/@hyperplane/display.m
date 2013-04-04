@@ -8,12 +8,15 @@ function display(hypArr)
 %           of hyperplanes.
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 2004-2008 $
+% $Copyright:  The Regents of the University of California 
+%              2004-2008 $
 %
-% $Author: Aushkap Nikolay <n.aushkap@gmail.com> $  $Date: 07-12-2012$
+% $Author: Aushkap Nikolay <n.aushkap@gmail.com> $  
+% $Date: 07-12-2012$
 % $Copyright: Moscow State University,
-%   Faculty of Computational Mathematics and Computer Science,
-%   System Analysis Department 2012 $
+%             Faculty of Computational Mathematics
+%             and Computer Science,
+%             System Analysis Department 2012 $
 
 MAX_DISP_ELEM = 15;
 

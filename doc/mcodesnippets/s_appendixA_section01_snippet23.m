@@ -1,6 +1,6 @@
 ellObj = ellipsoid([-2; -1], [4 -1; -1 1]);
-tenpMat = [0 1; -1 0];
-outEllObj = tenpMat*ellObj
+tempMat = [0 1; -1 0];
+outEllObj = tempMat*ellObj
 
 % outEllObj =
 % 

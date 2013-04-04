@@ -3,9 +3,11 @@ import modgen.logging.log4j.Log4jConfigurator;
 import modgen.common.throwerror;
 logger=Log4jConfigurator.getLogger();
 
-dataDirName='elltoolboxcore';
+dataDirName='products';
+firstSubdirName = '+elltool';
+secSubdirName = 'elltoolboxcore';
 % ignorDirList
-ignorDirList={'auxiliary','control', 'demo', 'graphics', 'solvers'};
+ignorDirList={'.svn','test'};
 % is current dir class or not
 isClass=false;
 % scriptNamePattern
@@ -24,22 +26,33 @@ mode=1;
 curPath=modgen.path.rmlastnpathparts(...
     fileparts(which('elltool.doc.run_helpcollector')),3);
 %
-dataDirNameCur=[curPath,filesep,'products',filesep,dataDirName];
-docDirNameCur=[curPath,filesep,docDirName];
+dataDirNameCur = [curPath,filesep,dataDirName];
+firstDirName = [curPath,filesep,dataDirName,filesep,firstSubdirName];
+secDirName = [curPath,filesep,dataDirName,filesep,secSubdirName];
+docDirNameCur = [curPath,filesep,docDirName];
 %%
 resultTexFileName=[docDirNameCur,filesep,texFileName];
 if modgen.system.ExistanceChecker.isFile(resultTexFileName)
     delete(resultTexFileName);
 end
 %
-msgBody=sprintf('Recursive scanning of \n%s',dataDirNameCur);
+msgBody=sprintf('Recursive scanning of \n%s',firstDirName);
 logger.info([msgBody,'...']);
 %
-FuncData=elltool.doc.collecthelp(dataDirNameCur,...
+firstFuncData=elltool.doc.collecthelp(firstDirName,...
+    'ignorDirList',ignorDirList,...
+    'isClass',isClass,'scriptNamePattern',scriptNamePattern);
+%
+%
+msgBody=sprintf('Recursive scanning of \n%s',secDirName);
+logger.info([msgBody,'...']);
+%
+secFuncData=elltool.doc.collecthelp(secDirName,...
     'ignorDirList',ignorDirList,...
     'isClass',isClass,'scriptNamePattern',scriptNamePattern);
 %
 logger.info([msgBody,': done']);
+FuncData = modgen.struct.unionstructsalongdim(1,firstFuncData,secFuncData);
 nHelpElems=numel(FuncData.funcName);
 if nHelpElems==0
     throwerror('wrongDir',...
@@ -48,7 +61,7 @@ end
 logger.info(sprintf('%d element(s) collected',nHelpElems));
 %
 % isChosenFunc=~(FuncData.isScript | FuncData.isClassMethod);
-isChosenFunc =~(FuncData.isScript);
+isChosenFunc=~(FuncData.isScript);
 dirNameCell=FuncData.dirName(isChosenFunc);
 funcNameCell=FuncData.funcName(isChosenFunc);
 helpCell=FuncData.help(isChosenFunc);
@@ -78,7 +91,6 @@ helpCellNew(~isEmptyHelp)=...
     helpCell(~isEmptyHelp),indAccumCell(~isEmptyHelp),'UniformOutput',false);
 %
 helpCellNew(~isEmptyHelp)=cellfun(@(x) [x{:}],helpCellNew(~isEmptyHelp),'UniformOutput',false);
-
 %
 % obtain briefHelpCell
 briefHelpCell=helpCellNew;
@@ -92,7 +104,7 @@ indFirstEmptyLine=cellfun(@(x,is) regexp(x(is),['[^%]',newLineSymbol,'%',newLine
 isExistEmptyLine=cellfun(@(x) ~isempty(x),indFirstEmptyLine);
 briefHelpCell(isExistEmptyLine)=cellfun(@(x,ind,is) x(1:max(find(is,ind(1),'first'))),...
     briefHelpCell(isExistEmptyLine),indFirstEmptyLine(isExistEmptyLine),isnSpace(isExistEmptyLine),'UniformOutput',false);
-briefHelpCell = cellfun(@(x)delete_procent(x),briefHelpCell, 'UniformOutput', false);
+briefHelpCell = cellfun(@(x)fDeletePercent(x),briefHelpCell, 'UniformOutput', false);
 % obtain authorListCell
 authorListCell=helpCellNew;
 %
@@ -102,10 +114,10 @@ indLastEmptyLine=cellfun(@(x,is) regexp(x(is),[newLineSymbol,'%',newLineSymbol,'
 isExistEmptyLine=cellfun(@(x) ~isempty(x),indLastEmptyLine);
 authorListCell(isExistEmptyLine)=cellfun(@(x,ind,is) x(min(find(is,max(1,sum(is)-ind(end)-2),'last')):end),...
     authorListCell(isExistEmptyLine),indLastEmptyLine(isExistEmptyLine),isnSpace(isExistEmptyLine),'UniformOutput',false);
-authorListCell = cellfun(@(x)delete_procent(x),authorListCell, 'UniformOutput', false);
+authorListCell = cellfun(@(x)fDeletePercent(x),authorListCell, 'UniformOutput', false);
 %
 helpOutputCell=helpCellNew;
-helpOutputCell = cellfun(@(x)delete_procent(x),helpOutputCell, 'UniformOutput', false);
+helpOutputCell = cellfun(@(x)fDeletePercent(x),helpOutputCell, 'UniformOutput', false);
 dirNameOutputCell=dirNameCell;
 funcOutputCell=uniqueFuncNameCell;
 %
@@ -252,8 +264,8 @@ fprintf(fid,'\\end{document}\n');
 fclose(fid);
 logger.info(sprintf('Job completed, the result is written to \n%s',...
     resultTexFileName));
-
 end
-function result = delete_procent(str)
+
+function result = fDeletePercent(str)
 result = regexprep(str, '(\%)', '');
 end

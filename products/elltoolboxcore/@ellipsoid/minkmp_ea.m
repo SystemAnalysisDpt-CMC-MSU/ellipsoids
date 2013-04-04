@@ -1,16 +1,17 @@
 function extApprEllVec = minkmp_ea(fstEll, secEll, sumEllArr, dirMat)
 %
-% MINKMP_EA - computation of external approximating ellipsoids
-%             of (E - Em) + (E1 + ... + En) along given directions.
-%             where E = fstEll, Em = secEll,
+% MINKMP_EA - computation of external approximating 
+%             ellipsoids of (E - Em) + (E1 + ... + En) 
+%             along given directions, where E = fstEll, 
+%             Em = secEll,
 %             E1, E2, ..., En - are ellipsoids in sumEllArr
 %
-%   extApprEllVec = MINKMP_EA(fstEll, secEll, sumEllArr, dirMat) -
+%extApprEllVec = MINKMP_EA(fstEll,secEll,sumEllArr,dirMat)-
 %       Computes external approximating
 %       ellipsoids of (E - Em) + (E1 + E2 + ... + En),
-%       where E1, E2, ..., En are ellipsoids in array sumEllArr,
-%       E = fstEll, Em = secEll,
-%       along directions specified by columns of matrix dirMat.
+%       where E1, E2, ..., En are ellipsoids in array 
+%       sumEllArr, E = fstEll, Em = secEll, along 
+%       directions specified by columns of matrix dirMat.
 %
 % Input:
 %   regular:
@@ -18,23 +19,29 @@ function extApprEllVec = minkmp_ea(fstEll, secEll, sumEllArr, dirMat)
 %           nDims - space dimension.
 %       secEll: ellipsoid [1, 1] - second ellipsoid
 %           of the same dimention.
-%       sumEllArr: ellipsoid [nDims1, nDims2,...,nDimsN] - array of 
-%           ellipsoids of the same dimentions nDims.
-%       dirMat: double[nDims, nCols] - matrix whose columns specify the
-%           directions for which the approximations should be computed.
+%       sumEllArr: ellipsoid [nDims1, nDims2,...,nDimsN] - 
+%           array of ellipsoids of the same dimentions 
+%           nDims.
+%       dirMat: double[nDims, nCols] - matrix whose columns 
+%           specify the directions for which the 
+%           approximations should be computed.
 %
 % Output:
 %   extApprEllVec: ellipsoid [1, nCols] - array of external
-%       approximating ellipsoids (empty, if for all specified
-%       directions approximations cannot be computed).
+%       approximating ellipsoids (empty, if for all 
+%       specified directions approximations cannot be 
+%       computed).
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 2004-2008 $
+% $Copyright:  The Regents of the University of California 
+%              2004-2008 $
 %
-% $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
+% $Author: Guliev Rustam <glvrst@gmail.com> $   
+% $Date: Dec-2012$
 % $Copyright: Moscow State University,
-%             Faculty of Computational Mathematics and Cybernetics,
-%             Science, System Analysis Department 2012 $
+%             Faculty of Computational Mathematics
+%             and Cybernetics, Science, 
+%             System Analysis Department 2012 $
 %
 
 import elltool.conf.Properties;

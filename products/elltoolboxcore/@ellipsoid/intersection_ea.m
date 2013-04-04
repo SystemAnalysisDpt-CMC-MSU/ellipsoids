@@ -1,55 +1,66 @@
 function outEllArr = intersection_ea(myEllArr, objArr)
 %
-% INTERSECTION_EA - external ellipsoidal approximation of the
-%                   intersection of two ellipsoids, or ellipsoid and
-%                   halfspace, or ellipsoid and polytope.
+% INTERSECTION_EA - external ellipsoidal approximation of 
+%                   the intersection of two ellipsoids, or 
+%                   ellipsoid and halfspace, or ellipsoid 
+%                   and polytope.
 %
-%   outEllArr = INTERSECTION_EA(myEllArr, objArr) Given two ellipsoidal
-%       matrixes of equal sizes, myEllArr and objArr = ellArr, or,
-%       alternatively, myEllArr or ellMat must be a single ellipsoid,
-%       computes the ellipsoid that contains the intersection of two
-%       corresponding ellipsoids from myEllArr and from ellArr.
-%   outEllArr = INTERSECTION_EA(myEllArr, objArr) Given matrix of
-%       ellipsoids myEllArr and matrix of hyperplanes objArr = hypArr
-%       whose sizes match, computes the external ellipsoidal
-%       approximations of intersections of ellipsoids
-%       and halfspaces defined by hyperplanes in hypArr.
-%       If v is normal vector of hyperplane and c - shift,
-%       then this hyperplane defines halfspace
+%   outEllArr = INTERSECTION_EA(myEllArr, objArr) Given two
+%       ellipsoidal matrixes of equal sizes, myEllArr and 
+%       objArr = ellArr, or, alternatively, myEllArr or 
+%       ellMat must be a single ellipsoid, computes the 
+%       ellipsoid that contains the intersection of two 
+%       corresponding ellipsoids from myEllArr and from 
+%       ellArr.
+%   outEllArr = INTERSECTION_EA(myEllArr, objArr) Given 
+%       matrix of ellipsoids myEllArr and matrix of 
+%       hyperplanes objArr = hypArr whose sizes match, 
+%       computes the external ellipsoidal approximations of 
+%       intersections of ellipsoids and halfspaces defined 
+%       by hyperplanes in hypArr. If v is normal vector of
+%       hyperplane and c - shift, then this hyperplane
+%       defines halfspace 
 %               <v, x> <= c.
-%   outEllArr = INTERSECTION_EA(myEllArr, objArr) Given matrix of
-%       ellipsoids myEllArr and matrix of polytopes objArr = polyArr
-%       whose sizes match, computes the external ellipsoidal
-%       approximations of intersections of ellipsoids myEllMat and
-%       polytopes polyArr.
+%   outEllArr = INTERSECTION_EA(myEllArr, objArr) Given 
+%       matrix of ellipsoids myEllArr and matrix of 
+%       polytopes objArr = polyArr whose sizes match,
+%       computes the external ellipsoidal approximations 
+%       of intersections of ellipsoids myEllMat andpolytopes 
+%       polyArr
 %
-%   The method used to compute the minimal volume overapproximating
-%   ellipsoid is described in "Ellipsoidal Calculus Based on
-%   Propagation and Fusion" by Lluis Ros, Assumpta Sabater and
-%   Federico Thomas; IEEE Transactions on Systems, Man and Cybernetics,
-%   Vol.32, No.4, pp.430-442, 2002. For more information, visit
+%   The method used to compute the minimal volume 
+%   overapproximating ellipsoid is described in "Ellipsoidal 
+%   Calculus Based on Propagation and Fusion" by Lluis Ros,
+%   Assumpta Sabater andFederico Thomas; IEEE Transactions 
+%   on Systems, Man and Cybernetics, Vol.32, No.4, 
+%   pp.430-442, 2002. For more information, visit
 %   http://www-iri.upc.es/people/ros/ellipsoids.html
 %
 % Input:
 %   regular:
-%       myEllArr: ellipsoid [nDims1,nDims2,...,nDimsN]/[1,1] - array
-%           of ellipsoids.
-%       objArr: ellipsoid / hyperplane /
-%           / polytope [nDims1,nDims2,...,nDimsN]/[1,1]  - array of
-%           ellipsoids or hyperplanes or polytopes of the same sizes.
+%      myEllArr: ellipsoid [nDims1,nDims2,...,nDimsN]/[1,1]
+%            - array of ellipsoids.
+%      objArr: ellipsoid / hyperplane /
+%           / polytope [nDims1,nDims2,...,nDimsN]/[1,1]
+%             - array of ellipsoids or hyperplanes or 
+%               polytopes of the same sizes.
 %
 % Output:
-%    outEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of external
-%       approximating ellipsoids; entries can be empty ellipsoids
-%       if the corresponding intersection is empty.
+%   outEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array 
+%       of external approximating ellipsoids; entries can 
+%       be empty ellipsoids if the corresponding 
+%       intersection is empty.
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 2004-2008 $
+% $Copyright:  The Regents of the University of California
+%              2004-2008 $
 %
-% $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
+% $Author: Guliev Rustam <glvrst@gmail.com> $   
+% $Date: Dec-2012$
 % $Copyright: Moscow State University,
-%             Faculty of Computational Mathematics and Cybernetics,
-%             Science, System Analysis Department 2012 $
+%             Faculty of Computational Mathematics
+%             and Cybernetics, Science, 
+%             System Analysis Department 2012 $
 %
 
 import modgen.common.throwerror;

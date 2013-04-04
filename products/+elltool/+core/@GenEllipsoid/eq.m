@@ -2,21 +2,27 @@ function [isEqualArr, reportStr] = eq(ellFirstArr, ellSecArr)
 % EQ - compares two arrays of ellipsoids
 %
 % Input:
-%   regular:
-%       ellFirstArr: ellipsoid: [nDims1,nDims2,...,nDimsN]/[1,1]- the first
-%           array of ellipsoid objects
-%       ellSecArr: ellipsoid: [nDims1,nDims2,...,nDimsN]/[1,1] - the second
-%           array of ellipsoid objects
+%  regular:
+%   ellFirstArr: ellipsoid: [nDims1,nDims2,...,nDimsN]/[1,1]-
+%                                        the first array of 
+%                                        ellipsoid objects
+%           
+%    ellSecArr: ellipsoid: [nDims1,nDims2,...,nDimsN]/[1,1]-
+%                                         the second array of
+%                                         ellipsoid objects
 %
 % Output:
-%   isEqualArr: logical: [nDims1,nDims2,...,nDimsN]- array of comparison
-%       results
+%   isEqualArr: logical: [nDims1,nDims2,...,nDimsN] - array
+%                                     of comparison results
+%       
 %
 %   reportStr: char[1,] - comparison report
 %
-% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $    $Date: Dec-2012$
-% $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Cybernetics,
+%$Author: Peter Gagarinov  <pgagarinov@gmail.com> $    
+%$Date: Dec-2012$
+%$Copyright: Moscow State University,
+%            Faculty of Computational Mathematics
+%            and Cybernetics,
 %            System Analysis Department 2012 $
 %
 import modgen.common.throwerror;

@@ -1,9 +1,11 @@
 function dimsArr = dimension(inpHypArr)
 %
-% DIMENSION - returns dimensions of hyperplanes in the array.
+% DIMENSION - returns dimensions of hyperplanes in the 
+%             array.
 %
-%   dimsArr = DIMENSION(hypArr) - returns dimensions of hyperplanes
-%       described by hyperplane structures in the array hypArr.
+%   dimsArr = DIMENSION(hypArr) - returns dimensions of 
+%       hyperplanes described by hyperplane structures in
+%       the array hypArr.
 %
 % Input:
 %   regular:
@@ -15,12 +17,15 @@ function dimsArr = dimension(inpHypArr)
 %           of hyperplanes.
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 2004-2008 $
+% $Copyright:  The Regents of the University of California 
+%              2004-2008 $
 %
-% $Author: Aushkap Nikolay <n.aushkap@gmail.com> $  $Date: 30-11-2012$
+% $Author: Aushkap Nikolay <n.aushkap@gmail.com> $  
+% $Date: 30-11-2012$
 % $Copyright: Moscow State University,
-%   Faculty of Computational Mathematics and Computer Science,
-%   System Analysis Department 2012 $
+%             Faculty of Computational Mathematics
+%             and Computer Science,
+%             System Analysis Department 2012 $
 
 hyperplane.checkIsMe(inpHypArr);
 dimsArr = arrayfun(@(x) singDimension(x), inpHypArr,...

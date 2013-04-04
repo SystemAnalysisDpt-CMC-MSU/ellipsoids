@@ -29,14 +29,14 @@ classdef ellipsoid < handle
             %
             %   ell = ELLIPSOID(centVec, shMat, 'propName1', propVal1,...,
             %       'propNameN',propValN) - creates an ellipsoid with shape
-            %       matrix shMat, center centVec and propName1 = propVal1,...,
-            %       propNameN = propValN. In other cases "Properties"
+            %       matrix shMat, center centVec and propName1 = propVal1,
+            %       ..., propNameN = propValN. In other cases "Properties"
             %       are taken from current values stored in
             %       elltool.conf.Properties.
             %
-            %   These parameters can be accessed by DOUBLE(E) function call.
-            %   Also, DIMENSION(E) function call returns the dimension of
-            %   the space in which ellipsoid E is defined and the actual
+            %   These parameters can be accessed by DOUBLE(E) function 
+            %   call.Also, DIMENSION(E) function call returns the dimension
+            %   of the space in which ellipsoid E is defined and the actual
             %   dimension of the ellipsoid; function ISEMPTY(E) checks if
             %   ellipsoid E is empty; function ISDEGENERATE(E) checks if
             %   ellipsoid E is degenerate.
@@ -44,22 +44,24 @@ classdef ellipsoid < handle
             % Input:
             %   Case1:
             %     regular:
-            %       shMat: double [nDim, nDim] - shape matrix of an ellipsoid
+            %       shMat: double [nDim, nDim] - shape matrix of an 
+            %           ellipsoid
             %
             %   Case2:
             %     regular:
             %       centVec: double [nDim,1] - center of an ellipsoid
-            %       shMat: double [nDim, nDim] - shape matrix of an ellipsoid
+            %       shMat: double [nDim, nDim] - shape matrix of an 
+            %           ellipsoid
             %
             %   properties:
             %       absTol: double [1,1] - absolute tolerance with default
             %           value 10^(-7)
             %       relTol: double [1,1] - relative tolerance with default
             %           value 10^(-5)
-            %       nPlot2dPoints: double [1,1] - number of points for 2D plot
-            %           with default value 200
-            %       nPlot3dPoints: double [1,1] - number of points for 3D plot
-            %           with default value 200.
+            %       nPlot2dPoints: double [1,1] - number of points for 2D 
+            %           plot with default value 200
+            %       nPlot3dPoints: double [1,1] - number of points for 3D 
+            %           plot with default value 200.
             %
             % Output:
             %   ell: ellipsoid [1,1] - ellipsoid with specified properties.
@@ -68,10 +70,12 @@ classdef ellipsoid < handle
             % $Copyright: The Regents of the University
             %   of California 2004-2008 $
             %
-            % $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
+            % $Author: Guliev Rustam <glvrst@gmail.com> $   
+            % $Date: Dec-2012$
             % $Copyright: Moscow State University,
-            %             Faculty of Computational Mathematics and Cybernetics,
-            %             Science, System Analysis Department 2012 $
+            %             Faculty of Computational Mathematics 
+            %             and Cybernetics, Science, 
+            %             System Analysis Department 2012 $
             %
             
             import modgen.common.throwerror;
@@ -141,8 +145,8 @@ classdef ellipsoid < handle
     end
     methods(Access = private)
         propValMat = getProperty(hplaneMat,propName)
-        x = ellbndr_2d(E)
-        x = ellbndr_3d(E)
+         x = ellbndr_2d(E)
+         x = ellbndr_3d(E)
     end
     methods (Static)
         checkIsMe(someObj,varargin)

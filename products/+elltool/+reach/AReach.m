@@ -1,7 +1,9 @@
 classdef AReach < elltool.reach.IReach
-% $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: March-2012 $
-% $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Computer Science,
+%$Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $
+%$Date: March-2012 $
+%$Copyright: Moscow State University,
+%            Faculty of Computational Mathematics
+%            and Computer Science,
 %            System Analysis Department 2012 $
 %
     properties (Access = protected)

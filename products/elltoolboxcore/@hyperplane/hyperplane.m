@@ -36,13 +36,13 @@ classdef hyperplane < handle
             %           hypH.absTol = absTolVal
             %
             %   hypObjArr = HYPERPLANE(hypNormArr, hypConstArr) - create
-            %       array of hyperplanes object just as
-            %       hyperplane(hypNormVec, hypConst).
+            %      array of hyperplanes object just as
+            %      hyperplane(hypNormVec, hypConst).
             %
             %   hypObjArr = HYPERPLANE(hypNormArr, hypConstArr, ...
-            %       'absTol', absTolValArr) - create
-            %       array of hyperplanes object just as
-            %       hyperplane(hypNormVec, hypConst, 'absTol', absTolVal).
+            %      'absTol', absTolValArr) - create
+            %      array of hyperplanes object just as
+            %      hyperplane(hypNormVec, hypConst, 'absTol', absTolVal)
             %
             % Input:
             %   Case1:
@@ -56,7 +56,7 @@ classdef hyperplane < handle
             %       hypNormArr: double[hpDims, nCols] /
             %           / [hpDims, nDims1, nDims2,...] /
             %           / [hpDims, 1] - array of vectors
-            %           in R^hpDims. There hpDims - hyperplane dimension.
+            %           in R^hpDims. There hpDims - hyperplane dimension
             %       hypConstArr: double[1, nCols] / [nCols, 1] /
             %           / [nDims1, nDims2,...] /
             %           / [nVecArrDim1, nVecArrDim2,...] -
@@ -67,7 +67,7 @@ classdef hyperplane < handle
             %       hypNormArr: double[hpDims, nCols] /
             %           / [hpDims, nDims1, nDims2,...] /
             %           / [hpDims, 1] - array of vectors
-            %           in R^hpDims. There hpDims - hyperplane dimension.
+            %           in R^hpDims. There hpDims - hyperplane dimension
             %       hypConstArr: double[1, nCols] / [nCols, 1] /
             %           / [nDims1, nDims2,...] /
             %           / [nVecArrDim1, nVecArrDim2,...] -
@@ -102,14 +102,15 @@ classdef hyperplane < handle
             %           hypH.shift  - scalar.
             %
             % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-            % $Copyright: The Regents of the University
-            %   of California 2004-2008 $
+            % $Copyright: The Regents of the University of California 
+            %             2004-2008 $
             %
             % $Author: Aushkap Nikolay <n.aushkap@gmail.com> $
-            %   $Date: 30-11-2012$
+            % $Date: 30-11-2012$
             % $Copyright: Moscow State University,
-            %   Faculty of Computational Mathematics and Computer
-            %   Science, System Analysis Department 2012 $
+            %             Faculty of Computational Mathematics
+            %             and Computer Science, 
+            %             System Analysis Department 2012 $
             
             import modgen.common.checkvar;
             import modgen.common.checkmultvar;

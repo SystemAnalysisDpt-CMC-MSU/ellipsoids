@@ -2,15 +2,17 @@ function volArr = volume(ellArr)
 %
 % VOLUME - returns the volume of the ellipsoid.
 %
-%	volArr = VOLUME(ellArr)  Computes the volume of ellipsoids in
-%       ellipsoidal array ellArr.
+%	volArr = VOLUME(ellArr) Computes the volume of 
+%                           ellipsoids in ellipsoidal
+%                           array ellArr.
 %
-%	The volume of ellipsoid E(q, Q) with center q and shape matrix Q 
-%	is given by V = S sqrt(det(Q)) where S is the volume of unit ball.
+%	The volume of ellipsoid E(q, Q) with center q and 
+%   shape matrix Q is given by V = S sqrt(det(Q)) where S
+%	is the volume of unit ball.
 %
 % Input:
 %   regular:
-%       ellArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array
+%      ellArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array
 %           of ellipsoids.
 %
 % Output:
@@ -18,13 +20,16 @@ function volArr = volume(ellArr)
 %   	volume values, same size as ellArr.
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 2004-2008 $
+% $Copyright:  The Regents of the University of California
+%              2004-2008 $
 %
-% $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
+% $Author: Guliev Rustam <glvrst@gmail.com> $   
+% $Date: Dec-2012$
 % $Copyright: Moscow State University,
-%             Faculty of Computational Mathematics and Cybernetics,
+%             Faculty of Computational Mathematics
+%             and Cybernetics,
 %             Science, System Analysis Department 2012 $
-%s
+%
 
 ellipsoid.checkIsMe(ellArr); 
 

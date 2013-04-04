@@ -4,10 +4,12 @@ function disp(myEllMat)
 %
 % Input:
 %   regular:
-%       myEllMat: ellipsoid [mRows, nCols] - matrix of ellipsoids.
+%     myEllMat: ellipsoid [mRows, nCols] - matrix of 
+%           ellipsoids.
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 2004-2008 $
+% $Copyright: The Regents of the University of California 
+%              2004-2008 $
 
 fprintf('Ellipsoid with parameters\n');
 

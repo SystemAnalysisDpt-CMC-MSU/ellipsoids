@@ -4,17 +4,19 @@ function nPlot2dPointsArr = getNPlot2dPoints(ellArr)
 %
 % Input:
 %   regular:
-%       ellArr: ellipsoid[nDim1, nDim2,...] - mltidimensional array
-%           of ellipsoids
+%     ellArr: ellipsoid[nDim1, nDim2,...] - mltidimensional
+%            array of ellipsoids
 %
 % Output:
-%       nPlot2dPointsArr: double[nDim1, nDim2,...] - multidimension array
-%           of nPlot2dPoints property for ellipsoids in ellArr
+%   nPlot2dPointsArr: double[nDim1, nDim2,...] - 
+%            multidimension array of nPlot2dPoints property 
+%            for ellipsoids in ellArr
 %
 % $Author: Zakharov Eugene  <justenterrr@gmail.com> $ 
-%   $Date: 17-november-2012$
+% $Date: 17-november-2012$
 % $Copyright: Moscow State University,
-%            Faculty of Computational Arrhematics and Computer Science,
-%            System Analysis Department 2012 $
+%             Faculty of Computational Arrhematics
+%             and Computer Science,
+%             System Analysis Department 2012 $
 %
 nPlot2dPointsArr = getProperty(ellArr,'nPlot2dPoints');

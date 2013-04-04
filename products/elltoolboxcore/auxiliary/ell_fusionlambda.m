@@ -1,10 +1,12 @@
 function f = ell_fusionlambda(a, q1, Q1, q2, Q2, n)
 %
-% ELL_FUSIONLAMBDA - function whose root in the interval (0, 1) determines
-%                    the minimal volume ellipsoid overapproximating the
+% ELL_FUSIONLAMBDA - function whose root in the interval
+%                    (0, 1) determines the minimal volume 
+%                    ellipsoid overapproximating the
 %                    intersection of two ellipsoids.
 %
-% This function is called from ELLIPSOID/INTERSECTION_EA by FZERO.
+% This function is called from ELLIPSOID/INTERSECTION_EA
+%      by FZERO.
 %
 
 %

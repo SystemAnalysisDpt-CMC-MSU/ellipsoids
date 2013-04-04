@@ -1,12 +1,12 @@
 function isPositive = isbigger(fstEll, secEll)
 %
-% ISBIGGER - checks if one ellipsoid would contain the other if their
-%            centers would coincide.
+% ISBIGGER - checks if one ellipsoid would contain the 
+%            other if their centers would coincide.
 %
-%   isPositive = ISBIGGER(fstEll, secEll) - Given two single ellipsoids
-%       of the same dimension, fstEll and secEll, check if fstEll
-%       would contain secEll inside if they were both
-%       centered at origin.
+%   isPositive = ISBIGGER(fstEll, secEll) - Given two 
+%       single ellipsoids of the same dimension, fstEll 
+%       and secEll, check if fstEll would contain secEll 
+%       inside if they were both centered at origin.
 %
 % Input:
 %   regular:
@@ -19,7 +19,8 @@ function isPositive = isbigger(fstEll, secEll)
 %       would contain secEll inside, false - otherwise.
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 2004-2008 $
+% $Copyright:  The Regents of the University of California 
+%              2004-2008 $
 
 import elltool.conf.Properties;
 import modgen.common.checkmultvar;

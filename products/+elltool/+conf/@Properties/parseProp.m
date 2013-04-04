@@ -1,14 +1,19 @@
 function varargout = parseProp(args,neededPropNameList)
-%PARSEPROP parses input into cell array with values of properties listed in
-%neededPropNameList. Values are taken from args or, if there no value for
-%some property in args, in current Properties.
+%PARSEPROP - parses input into cell array with values of
+%            properties listed in neededPropNameList. 
+%            Values are  taken from args or, if there no 
+%            value for some property in args, in current
+%            Properties.
 %
 % Input:
 %   regular:
-%       args:cell[1,] - cell array of arguments that should be parsed.
-%       neededPropNameList:cell[1,] or empty cell - cell array of strings, containing
-%           names of parameters, that output should consist of. Possible
-%           properties:
+%     args:cell[1,] - cell array of arguments that should
+%                     be parsed.
+%     neededPropNameList:cell[1,] or empty cell - cell array
+%                                 of strings, containing
+%                                 names of parameters, that  
+%                                 output should consist of. 
+%     Possible properties:
 %               version
 %               isVerbose
 %               absTol
@@ -19,17 +24,21 @@ function varargout = parseProp(args,neededPropNameList)
 %               isEnabledOdeSolverOptions
 %               nPlot2dPoints
 %               nPlot3dPoints
-%           trying to specify other properties would be regarded as an
-%           error.
+%     Trying to specify other properties would be regarded
+%     as an error.
 %
 % Output:
-%   varargout:cell array[1,] - cell array with values of properties listed
-%                              in neededPropNameList in the same order as they
+%   varargout:cell array[1,] - cell array with values of 
+%                              properties listed in 
+%                              neededPropNameList in the 
+%                              same order as they
 %                              listed in neededPropNameList
 %
-%$Author: Zakharov Eugene  <justenterrr@gmail.com> $    $Date: 5-november-2012 $
+%$Author: Zakharov Eugene  <justenterrr@gmail.com> $    
+%$Date: 5-november-2012 $
 %$Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Computer Science,
+%            Faculty of Computational Mathematics 
+%            and Computer Science,
 %            System Analysis Department 2012 $
 %
 import elltool.conf.Properties;

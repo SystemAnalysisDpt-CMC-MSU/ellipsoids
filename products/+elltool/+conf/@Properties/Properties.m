@@ -1,13 +1,16 @@
 classdef Properties<modgen.common.obj.StaticPropStorage
-    %PROPERTIES is a static class, providing emulation of static properties
-    %for toolbox.
-    %
-    %$Author: Zakharov Eugene  <justenterrr@gmail.com> $    $Date: 5-november-2012 $
-    %$Author: Peter Gagarinov  <pgagarinov@gmail.com> $    $Date: 25-november-2012 $    
-    %$Copyright: Moscow State University,
-    %            Faculty of Computational Mathematics and Computer Science,
-    %            System Analysis Department 2012 $
-    %
+%PROPERTIES - a static class, providing emulation of static
+%             properties for toolbox.
+%
+%$Author: Zakharov Eugene  <justenterrr@gmail.com> $    
+%$Date: 5-november-2012 $
+%$Author: Peter Gagarinov  <pgagarinov@gmail.com> $    
+%$Date: 25-november-2012 $    
+%$Copyright: Moscow State University,
+%            Faculty of Computational Mathematics 
+%            and Computer Science,
+%            System Analysis Department 2012 $
+%
     properties (GetAccess=private,Constant)
         DEFAULT_SOLVER = 'SeDuMi';
         DEFAULT_CONF_NAME='default'

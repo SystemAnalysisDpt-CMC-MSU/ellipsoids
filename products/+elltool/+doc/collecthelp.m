@@ -1,7 +1,7 @@
 function FuncData=collecthelp(dirName,varargin)
-% COLLECTHELP collects helps of m files in given directory
+%COLLECTHELP -  collects helps of m files in given directory
 %
-% Usage: FuncData=collecthelp(dirName,varargin)
+%Usage: FuncData=collecthelp(dirName,varargin)
 %
 % Input:
 %   regular
@@ -18,14 +18,17 @@ function FuncData=collecthelp(dirName,varargin)
 %       funcName: cell[nElems,1] - list of function names
 %       dirName: cell[nElems,1] - list of directory names
 %       help: cell[nElems,1] - list of help headers
-%       isClassMethod: logical[nElems,1] - a vector of "is class"
-%           indicators
-%       isScript: logical[nElems,1] - a vector of "is script" indicators
+%       isClassMethod: logical[nElems,1] - a vector of 
+%           "is class" indicators
+%       isScript: logical[nElems,1] - a vector of 
+%           "is script" indicators
 %
 %
-% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2013-04-01 $
-% $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Computer Science,
+%$Author: Peter Gagarinov  <pgagarinov@gmail.com> $
+%$Date: 2013-04-01 $
+%$Copyright: Moscow State University,
+%            Faculty of Computational Mathematics
+%            and Computer Science,
 %            System Analysis Department 2013 $
 
 import elltool.doc.collecthelp;
@@ -55,7 +58,7 @@ end;
 FuncData=[];
 %% find m files in current dir
 funcList=what(dirName);
-
+%
 if ~isempty(funcList)
     funcNameList=funcList.m;
     funcClassList=funcList.classes;
@@ -76,8 +79,8 @@ for iFunc=1:length(funcNameList)
     FuncData.help{iFunc}=help([funcList.path, '/', funcNameList{iFunc}]);
 end
 % is script
- possibleScript=regexp(funcNameList,scriptNamePattern,'once','match');
- FuncData.isScript=logical(cellfun(@(x,y) isequal(x,y),funcNameList,possibleScript));
+possibleScript=regexp(funcNameList,scriptNamePattern,'once','match');
+FuncData.isScript=logical(cellfun(@(x,y) isequal(x,y),funcNameList,possibleScript));
 %% find m files in subdirs
 contentsList=dir(dirName);
 dirList={contentsList.name};
@@ -88,7 +91,6 @@ classDir=cellfun(@(x) [classPrefix,x],funcClassList,'UniformOutput',false);
 isClassDir=isClass | ismember(dirList,classDir);
 % field names
 dataFieldNames=fieldnames(FuncData);
-length(dirList);
 for iSubDir=1:length(dirList)
     FuncDataCur=...
         collecthelp([dirName '/' dirList{iSubDir}],'ignorDirList',ignorDirList,...
@@ -99,3 +101,4 @@ for iSubDir=1:length(dirList)
             FuncDataCur.(dataFieldNames{iField})];
     end
 end
+

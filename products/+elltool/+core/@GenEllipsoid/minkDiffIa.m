@@ -1,28 +1,32 @@
 function [ resEllVec ] = minkDiffIa( ellObj1, ellObj2, dirMat)
-% MINKDIFFIA - computes tight internal ellipsoidal approximation for
-% Minkowsky difference of two generalized ellipsoids
+% MINKDIFFIA - computes tight internal ellipsoidal 
+%              approximation for Minkowsky difference
+%              of two generalized ellipsoids
 %
 % Input:
 %   regular:
-%       ellObj1: GenEllipsoid: [1,1] - first generalized ellipsoid
-%       ellObj2: GenEllipsoid: [1,1] - second generalized ellipsoid
-%       dirMat: double[nDim,nDir] - matrix whose columns specify
-%           directions for which approximations should be computed
+%       ellObj1: GenEllipsoid: [1,1] - first generalized 
+%                                      ellipsoid
+%       ellObj2: GenEllipsoid: [1,1] - second generalized
+%                                      ellipsoid
+%       dirMat: double[nDim,nDir] - matrix whose columns
+%                      specify directions for which
+%                      approximations should be computed
+%                                   
+%           
 % Output:
-%   resEllVec: GenEllipsoid[1,nDir] - vector of generalized ellipsoids of
-%       internal approximation of the dirrence of first and second generalized
-%       ellipsoids
+%   resEllVec: GenEllipsoid[1,nDir] - vector of generalized
+%                      ellipsoids of internal approximation
+%                      of the dirrence of first and second
+%                      generalized ellipsoids
 %
 %
-% $Author: Vitaly Baranov  <vetbar42@gmail.com> $    $Date: 2012-11$
-% $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Cybernetics,
+%$Author: Vitaly Baranov  <vetbar42@gmail.com> $    
+%$Date: 2012-11$
+%$Copyright: Moscow State University,
+%            Faculty of Computational Mathematics
+%            and Cybernetics,
 %            System Analysis Department 2012 $
-%
-% Bibliography:
-% V.V.Shiryaev, 'About internal ellipsoidal approximations of attainability
-% sets of linear systems under uncertanty'. Moscow University Vestnik,
-% Ser.15, Computational mathematics and cybernetics, 2012, N3, p. 20-27.
 %
 import modgen.common.throwerror
 import elltool.core.GenEllipsoid;

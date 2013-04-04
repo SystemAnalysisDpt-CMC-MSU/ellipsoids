@@ -1,29 +1,34 @@
 function projEllArr = projection(ellArr, basisMat)
 %
-% PROJECTION - computes projection of the ellipsoid onto the given subspace.
+% PROJECTION - computes projection of the ellipsoid onto
+%              the given subspace.
 %
-%   projEllArr = projection(ellArr, basisMat)  Computes projection of the 
-%       ellipsoid ellArr onto a subspace, specified by orthogonal 
-%       basis vectors basisMat. ellArr can be an array of ellipsoids of 
-%       the same dimension. Columns of B must be orthogonal vectors.
+%   projEllArr = projection(ellArr, basisMat) Computes 
+%       projection of the ellipsoid ellArr onto a subspace, 
+%       specified by orthogonal basis vectors basisMat. 
+%       ellArr can be an array of ellipsoids of the same 
+%       dimension. Columns of B must be orthogonal vectors.
 %
 % Input:
 %   regular:
-%       ellArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array
+%     ellArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array
 %           of ellipsoids.
-%       basisMat: double[nDim, nSubSpDim] - matrix of orthogonal basis
-%           vectors
-%
+%     basisMat: double[nDim, nSubSpDim] - matrix of 
+%           orthogonal basis vectors
+%           
 % Output:
-%   projEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of
-%       projected ellipsoids, generally, of lower dimension.
-%
+%  projEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array
+%       of projected ellipsoids, generally, 
+%       of lower dimension.
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 2004-2008 $
+% $Copyright:  The Regents of the University of California
+%              2004-2008 $
 %
-% $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
+% $Author: Guliev Rustam <glvrst@gmail.com> $   
+% $Date: Dec-2012$
 % $Copyright: Moscow State University,
-%             Faculty of Computational Mathematics and Cybernetics,
+%             Faculty of Computational Mathematics
+%             and Cybernetics,
 %             Science, System Analysis Department 2012 $
 %
 

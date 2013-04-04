@@ -1,11 +1,10 @@
 classdef EllipsoidSecTestCase < mlunitext.test_case
-    
-% $Author: Igor Samokhin, Lomonosov Moscow State University,
-% Faculty of Computational Mathematics and Cybernetics, System Analysis
-% Department, 02-November-2012, <igorian.vmk@gmail.com>$
-% $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Computer Science,
-%            System Analysis Department 2012 $
+%$Author: Igor Samokhin <igorian.vmk@gmail.com> $
+%$Date: 2012-11-02 $
+%$Copyright: Moscow State University,
+%            Faculty of Computational Mathematics
+%            and Computer Science,
+%            System Analysis Department 2013 $
 
      properties (Access=private)
         testDataRootDir
