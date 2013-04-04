@@ -92,8 +92,8 @@ classdef EllipsoidSecTestCase < mlunitext.test_case
             %
             %Minkdiff_ia, minkdiff_ea work incorrectly
             %
-            check(@minkdiff_ia,true);
-            check(@minkdiff_ea,true);
+            check(@minkdiff_ia,false);
+            check(@minkdiff_ea,false);
             %
             %All other functions work correctly by luck...
             %
@@ -106,6 +106,22 @@ classdef EllipsoidSecTestCase < mlunitext.test_case
                 ellipsoid(zeros(2)),dMat);
             check(fMmpEA,false);
             check(fMmpIA,false);
+            
+            %
+            %Hyperplane
+            %
+            arrSizeVec=[2,2,3,2];
+            testNormArr=zeros(arrSizeVec);
+            testNormArr(1,:)=1;
+            testNormArr(2,:)=0;
+            testHypArr=hyperplane(testNormArr,2);
+            %
+            testHyp=hyperplane([1;0],1);
+            %
+            isParrArr=isparallel(testHypArr,testHyp);
+            isParr2Arr=isparallel(testHyp,testHypArr);
+            mlunit.assert_equals(true,...
+                all(isParrArr(:))&&all(isParr2Arr(:)));
             
             function check(fMethod,isTrue)
             resEll1=fMethod(testEll1,testEll2, testDir1Vec);
