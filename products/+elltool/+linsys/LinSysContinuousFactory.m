@@ -1,10 +1,10 @@
-classdef LinSysFactory
+classdef LinSysContinuousFactory
     %
-    % Factory class of linear system objects of the Ellipsoidal Toolbox.
+    % Factory class of continuous linear system objects of
+    % the Ellipsoidal Toolbox.
     %
     %
-    %  create - Returns LinSysDiscrete object if discrFlag is equal 'd' and
-    %           LinSysContinuous object the other way.
+    %  create - Returns LinSysContinuous object.
     %
     % $Authors: Igor Kitsenko <kitsenko@gmail.com> $              $Date: March-2013 $
     % $Copyright: Moscow State University,
@@ -14,15 +14,11 @@ classdef LinSysFactory
     methods(Static)
         function linSys = create(varargin)
             %
-            % CREATE returns linear system object.
+            % CREATE returns continuous-time linear system object.
             %
             % Continuous-time linear system:
             %           dx/dt  =  A(t) x(t)  +  B(t) u(t)  +  G(t) v(t)
             %            y(t)  =  C(t) x(t)  +  w(t)
-            %
-            % Discrete-time linear system:
-            %           x[k+1]  =  A[k] x[k]  +  B[k] u[k]  +  G[k] v[k]
-            %             y[k]  =  C[k] x[k]  +  w[k]
             %
             % Input:
             %   regular:
@@ -52,14 +48,10 @@ classdef LinSysFactory
             %           not 'd' - to continuous-time linSys.
             %
             % Output:
-            %   linSys: elltool.linsys.LinSysContinuous[1, 1]/ 
-            %       elltool.linsys.LinSysDiscrete[1, 1] - linear system.
+            %   linSys: elltool.linsys.LinSysContinuous[1, 1] - 
+            %       continuous-time linear system.
             %
-            if (nargin > 7)  && ischar(varargin{8}) && (varargin{8} == 'd')
-                linSys = elltool.linsys.LinSysDiscrete(varargin{:});
-            else
-                linSys = elltool.linsys.LinSysContinuous(varargin{:});
-            end
+            linSys = elltool.linsys.LinSysContinuous(varargin{:});
         end
     end
 end
