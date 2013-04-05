@@ -1,19 +1,23 @@
 classdef LinSysFactory
-    %
-    % Factory class of linear system objects of the Ellipsoidal Toolbox.
-    %
-    %
-    %  create - Return LinSysDiscrete object if discrFlag is equal 'd' and
-    %           LinSysContinuous object the other way.
-    %
-    % $Authors: Igor Kitsenko <kitsenko@gmail.com> $              $Date: March-2013 $
-    % $Copyright: Moscow State University,
-    %            Faculty of Computational Mathematics and Computer Science,
-    %            System Analysis Department 2012 $
-    %
+%
+% Factory class of linear system objects of the Ellipsoidal
+% Toolbox.
+%
+%
+% create - Return LinSysDiscrete object if discrFlag is 
+%          equal 'd' and LinSysContinuous object
+%          the other way.
+%
+% $Authors: Igor Kitsenko <kitsenko@gmail.com> $              
+% $Date: March-2013 $
+% $Copyright: Moscow State University,
+%             Faculty of Computational Mathematics
+%             and Computer Science,
+%             System Analysis Department 2012 $
+%
     methods(Static)
         function linSys = create(varargin)
-            %
+%
             % CREATE returns linear system object.
             %
             % Continuous-time linear system:

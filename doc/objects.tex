@@ -1,61 +1,45 @@
-\section{ellOptions}
+\section{Properties}
 Functions of the {\it Ellipsoidal Toolbox} can be called with
-user-specified values of certain global parameters. These parameters
-are stored in the global structure {\tt ellOptions}, which is kept in the
-MATLAB workspace as global variable. This structure is initialized with
-default values of parameters upon the first call to almost any function
-of the {\it ET}. Before  execution, the {\it ET} routine checks
-if global structure {\tt ellOptions} already exists, and if not, it calls
-the function {\tt ellipsoids\_init} that performs the initialization.
-
-Here we list the fields of {\tt ellOptions} structure along with their
-default values.
-\begin{itemize}
-\item {\tt version = '1.02'} - current version of {\it ET}. A this time
-this parameter is harmless in the sense that it is not used by any of the
-routines. In the future, however, it may be used for version compatibility.
-\item {\tt verbose = 1} - if set to $0$, makes all the calls to {\it ET}
-routines silent, and no information except errors is displayed. Otherwise,
-it is assumed to be $1$. Currently, there are no other levels of verbosity.
-\item {\tt abs\_tol = 1e-9} - absolute tolerance.
-\item {\tt rel\_tol = 1e-7} - relative tolerance.
-\item {\tt time\_grid = 200} - density of the time grid for the
+user-specified values of certain global parameters. System of the parameters
+are configured using xml files, which  available from a set of command-line
+utilities:
+\verbmcodef[Configuration download]
+{mcodesnippets/s_chapter06_section01_snippet01.m}
+Here we list system parameters available from the 'default' configuration:
+\begin{enumerate}
+\item {\tt version = '1.4dev'} - current version of {\it ET}.
+\item {\tt isVerbose = 0} - makes all the calls to {\it ET}
+routines silent, and no information except errors is displayed.
+\item {\tt abs\_tol = 1e-7} - absolute tolerance.
+\item {\tt rel\_tol = 1e-5} - relative tolerance.
+\item {\tt nTimeGridPoints = 200} - density of the time grid for the
 continuous time reach set computation.
 This parameter directly affects the number of ellipsoids to
 be stored in the {\tt reach} object.
-\item {\tt ode\_solver = 1} - specifies the ODE solver for continuous time
-reach set computation: $1$ = 'RK45', $2$ = 'RK23', $3$ = 'Adams'.
-\item {\tt norm\_control = 'on'} - switches on and off the norm control
+\item {\tt ODESolverName = ode45} - specifies the ODE solver for continuous time
+reach set computation.
+\item {\tt isODENormControl = 'on'} - switches on and off the norm control
 in the ODE solver. When turned on, it slows down the computation, but improves
 the accuracy.
-\item {\tt ode\_solver\_options = 0} - when set to $0$, calls the ODE solver
+\item {\tt isEnabledOdeSolverOptions = 0} - when set to $0$, calls the ODE solver
 without any additional options like norm control. It makes the computation
 faster but less accurate. Otherwise, it is assumed to be $1$, and only in this
 case the previous option makes a difference.
-\item {\tt nlcp\_solver = 0} - specifies which gradient method implementation
-to use. If set to $0$, it is {\tt ell\_nlfnlc}, which comes with {\it ET};
-if set to $1$, it is {\tt fmincon}, which is part of MATLAB Optimization Toolbox.
-\item {\tt plot2d\_grid = 200} - specifies number of points used to plot a
+\item {\tt nPlot2dPoints = 200} - the number of points used to plot a
 2D ellipsoid. This parameter also affects the quality of 2D reach tube
 and reach set plots.
-\item {\tt plot3d\_grid = 200} - the number of points used to plot
-a 3D ellipsoid is calculated as $\frac{{\tt plot3d\_grid}^2}{2}$.
-This parameter also affects the quality of 3D reach set plots.
-\item {\tt sdpsettings} - the settings used by YALMIP optimization toolbox.
-\end{itemize}
-These parameters can be modified by editing {\it ellipsoids/ellipsoids\_init.m}
-file. After you finished editing, for changes to take effect, type
-\verbmcodef[Changes to take effect]
-{mcodesnippets/s_chapter06_section01_snippet01.m}
-
-If you would like to change certain parameters temporarily, without
-modifying the {\it ellipsoids\_init.m} file, say, turn the verbosity off,
-you should type
+\item {\tt nPlot3dPoints = 200} - the number of points used to plot
+a 3D ellipsoid. This parameter also affects the quality of 3D reach set plots.
+\end{enumerate} 
+Once the configuration is loaded, the system parameters are available through
+elltool.conf.Properties.
+Elltool.conf.Properties is a static class, providing emulation of static
+properties for toolbox. It has two function types: setters and getters. 
+Using getters we obtain system parameters. Some of the parameters can be changed
+in run-time via setters.
 \verbmcodef[Changing parameters]
 {mcodesnippets/s_chapter06_section01_snippet02.m}
 
-and proceed with your work. Before you modify {\tt ellOptions} structure
-this way however, make sure it is initialized.
 
 
 

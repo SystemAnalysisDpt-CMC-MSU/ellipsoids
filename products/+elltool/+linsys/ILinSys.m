@@ -1,15 +1,20 @@
 classdef ILinSys < handle
     %
-    %  Interface class of linear system class of the Ellipsoidal Toolbox.
+    %  Interface class of linear system class of the Ellipsoidal
+    %  Toolbox.
     %
     %
     % $Authors: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-    %           Ivan Menshikov  <ivan.v.menshikov@gmail.com> $    $Date: 2012 $
-    %           Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: March-2012 $
-    %           Igor Kitsenko <kitsenko@gmail.com> $              $Date: March-2013 $
+    %           Ivan Menshikov  <ivan.v.menshikov@gmail.com> $    
+    %           $Date: 2012 $
+    %           Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  
+    %           $Date: March-2012 $
+    %           Igor Kitsenko <kitsenko@gmail.com> $              
+    %           $Date: March-2013 $
     % $Copyright: Moscow State University,
-    %            Faculty of Computational Mathematics and Computer Science,
-    %            System Analysis Department 2012 $
+    %             Faculty of Computational Mathematics
+    %             and Computer Science,
+    %             System Analysis Department 2012 $
     %
     methods (Abstract)
         aMat = getAtMat(self)
@@ -19,7 +24,8 @@ classdef ILinSys < handle
         %       self: elltool.linsys.ILinSys[1, 1] - linear system.
         %
         % Output:
-        %   aMat: double[aMatDim, aMatDim]/cell[nDim, nDim] - matrix A.
+        %   aMat: double[aMatDim, aMatDim]/cell[nDim, nDim] - 
+        %      matrix A.
         %
         
         bMat = getBtMat(self)
@@ -40,7 +46,8 @@ classdef ILinSys < handle
         %       self: elltool.linsys.ILinSys[1, 1] - linear system.
         %
         % Output:
-        %   uEll: ellipsoid[1, 1]/struct[1, 1] - control bounds ellipsoid.
+        %   uEll: ellipsoid[1, 1]/struct[1, 1] - control bounds 
+        %          ellipsoid.
         %
         
         gMat = getGtMat(self)
@@ -61,8 +68,8 @@ classdef ILinSys < handle
         %       self: elltool.linsys.ILinSys[1, 1] - linear system.
         %
         % Output:
-        %   distEll: ellipsoid[1, 1]/struct[1, 1] - disturbance bounds
-        %       ellipsoid.
+        %   distEll: ellipsoid[1, 1]/struct[1, 1] - disturbance 
+        %       bounds ellipsoid.
         %
         
         cMat = getCtMat(self)
@@ -85,8 +92,8 @@ classdef ILinSys < handle
         %     input, output and disturbance spaces.
         % Input:
         %   regular:
-        %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array
-        %             of linear systems.
+        %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an 
+        %             array of linear systems.
         %
         % Output:
         %   stateDimArr: double[nDims1, nDims2,...] - array of
@@ -116,21 +123,23 @@ classdef ILinSys < handle
         
         isDisturbanceArr = hasdisturbance(self)
         %
-        % HASDISTURBANCE checks if linear system has unknown bounded disturbance.
-        %
+        % HASDISTURBANCE checks if linear system has unknown bounded 
+        %          disturbance.
+        % 
         % Input:
         %   regular:
-        %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array
-        %             of linear systems.
+        %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an 
+        %             array of linear systems.
         %   optional:
         %       isMeaningful: logical[1,1] - if true(default),
         %                     treat constant disturbance vector
         %                     as absence of disturbance
         %
         % Output:
-        %   isDisturbanceArr: logical[nDims1, nDims2,...] - array such that
-        %       it's element at each position is true if corresponding
-        %       linear system has disturbance, and false otherwise.
+        %   isDisturbanceArr: logical[nDims1, nDims2,...] - array 
+        %       such that it's element at each position is true if 
+        %       corresponding linear system has disturbance, and 
+        %       false otherwise.
         %
         
         isNoiseArr = hasnoise(self)
@@ -139,13 +148,14 @@ classdef ILinSys < handle
         %
         % Input:
         %   regular:
-        %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array
-        %             of linear systems.
+        %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an 
+        %             array of linear systems.
         %
         % Output:
-        %   isNoiseMat: logical[nDims1, nDims2,...] - array such that it's
-        %       element at each position is true if corresponding
-        %       linear system has noise, and false otherwise.
+        %   isNoiseMat: logical[nDims1, nDims2,...] - array such that 
+        %       it's element at each position is true if 
+        %       corresponding linear system has noise, and false
+        %       otherwise.
         %
         
         isEmptyArr = isempty(self)
@@ -154,13 +164,14 @@ classdef ILinSys < handle
         %
         % Input:
         %   regular:
-        %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array
-        %             of linear systems.
+        %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an 
+        %             array of linear systems.
         %
         % Output:
-        %   isEmptyMat: logical[nDims1, nDims2,...] - array such that it's
-        %       element at each position is true if corresponding
-        %       linear system is empty, and false otherwise.
+        %   isEmptyMat: logical[nDims1, nDims2,...] - array such that 
+        %       it's element at each position is true if 
+        %       corresponding linear system is empty, and false 
+        %       otherwise.
         %
         
         isLtiArr = islti(self)
@@ -169,33 +180,37 @@ classdef ILinSys < handle
         %
         % Input:
         %   regular:
-        %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array
-        %             of linear systems.
+        %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an 
+        %             array of linear systems.
         %
         % Output:
-        %   isLtiMat: logical[nDims1, nDims2,...] -array such that it's
-        %       element at each position is true if corresponding
-        %       linear system is time-invariant, and false otherwise.
+        %   isLtiMat: logical[nDims1, nDims2,...] -array such that 
+        %       it's element at each position is true if 
+        %       corresponding linear system is time-invariant, and
+        %       false otherwise.
         %
         
         absTolArr = getAbsTol(self)
         %
         % GETABSTOL gives array the same size as linsysArr with
-        % values of absTol properties for each hyperplane in hplaneArr.
+        % values of absTol properties for each hyperplane in 
+        % hplaneArr.
         %
         % Input:
         %   regular:
-        %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array
-        %             of linear systems.
+        %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an 
+        %             array of linear systems.
         %
         % Output:
         %   absTolArr: double[nDims1, nDims2,...] - array of absTol
         %       properties for linear systems in self.
         %
-        % $Author: Zakharov Eugene  <justenterrr@gmail.com> $    $Date: 17-november-2012 $
+        % $Author: Zakharov Eugene  <justenterrr@gmail.com> $    
+        % $Date: 17-november-2012 $
         % $Copyright: Moscow State University,
-        %            Faculty of Computational Mathematics and Computer Science,
-        %            System Analysis Department 2012 $
+        %             Faculty of Computational Mathematics
+        %             and Computer Science,
+        %             System Analysis Department 2012 $
         %
         
     end

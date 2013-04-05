@@ -25,8 +25,11 @@ gMat = [(w1*Ts/d1) (-w2*Ts/d1) 0 0
          0 0 0 (w4*Ts/d4)];
 vMat = [xM1; xM2; xM3; xM4];
 % define linear systems:
-firstSys = elltool.linsys.LinSys(firstAMat, firstBMat,...
- firstUBoundsEllObj, [], [], [], [], 'd');  % free-flow mode
-secSys = elltool.linsys.LinSysFactory.create(secAMat, secBMat, secUBoundsEllObj,...
- gMat, vMat, [], [], 'd');  % congestion mode% define guard:
+% free-flow mode
+firstSys = elltool.linsys.LinSysFactory.create(firstAMat, firstBMat,...
+ firstUBoundsEllObj, [], [], [], [], 'd');
+% congestion mode 
+secSys = elltool.linsys.LinSysFactory.create(secAMat, secBMat,...
+ secUBoundsEllObj, gMat, vMat, [], [], 'd'); 
+% define guard:
 grdHypObj = hyperplane([0; 1; 0; 0], xM2);

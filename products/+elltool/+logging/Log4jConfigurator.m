@@ -11,7 +11,8 @@ classdef Log4jConfigurator<modgen.logging.log4j.Log4jConfigurator
 % $Copyright: Moscow State University,
 %             Faculty of Computational Mathematics
 %             and Computer Science,
-%             System Analysis Department 2011 $    properties (Constant)
+%             System Analysis Department 2011 $    
+properties (Constant)
         %
         MASTER_LOG_FILE_NAME='master';
         CHILD_LOG_FILE_NAME_PREFIX='child';

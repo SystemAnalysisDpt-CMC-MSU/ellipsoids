@@ -1,15 +1,20 @@
 classdef ALinSys < elltool.linsys.ILinSys
     %
-    %  Abstract class of linear system class of the Ellipsoidal Toolbox.
+    %  Abstract class of linear system class of the Ellipsoidal
+    %  Toolbox.
     %
     %
     % $Authors: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-    %           Ivan Menshikov  <ivan.v.menshikov@gmail.com> $    $Date: 2012 $
-    %           Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: March-2012 $
-    %           Igor Kitsenko <kitsenko@gmail.com> $              $Date: March-2013 $
+    %           Ivan Menshikov  <ivan.v.menshikov@gmail.com> $    
+    %           $Date: 2012 $
+    %           Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  
+    %           $Date: March-2012 $
+    %           Igor Kitsenko <kitsenko@gmail.com> $              
+    %           $Date: March-2013 $
     % $Copyright: Moscow State University,
-    %            Faculty of Computational Mathematics and Computer Science,
-    %            System Analysis Department 2012 $
+    %             Faculty of Computational Mathematics
+    %             and Computer Science,
+    %             System Analysis Department 2012 $
     %
     properties (Access = protected)
         atMat
