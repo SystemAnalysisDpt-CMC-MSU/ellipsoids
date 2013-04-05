@@ -130,6 +130,8 @@ classdef BasicTestCase < mlunitext.test_case
             testMat=-testMat.'*testMat;
             mlunit.assert(~fIsMatPosSemDef(testMat,absTol));
             %
+            gras.la.ismatposdef(eye(3));
+            %
             self.runAndCheckError('gras.la.ismatposdef(eye(3,5))',...
                 'wrongInput:nonSquareMat');
             self.runAndCheckError('gras.la.ismatposdef([1 -1; 1 1])',...
@@ -141,7 +143,8 @@ classdef BasicTestCase < mlunitext.test_case
                 mlunit.assert(fHandle(1,absTol));
                 %
                 testMat=rand(10,10);
-                mlunit.assert(fHandle(testMat.'*testMat,absTol));
+                isOk=fHandle(testMat.'*testMat,absTol);
+                mlunit.assert(isOk);
                 %
             end
         end
