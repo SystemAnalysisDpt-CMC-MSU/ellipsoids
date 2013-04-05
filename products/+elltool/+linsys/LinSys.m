@@ -144,6 +144,16 @@ classdef LinSys < handle
                 isEq = true;
             end
         end
+        %
+        function isEq = isEqualMat(firstMat, secondMat, absTol)
+            isEq = false;
+            if iscell(firstMat) && iscell(secondMat)
+                isEq = isequal(firstMat, secondMat);
+            end
+            if ~iscell(firstMat) && ~iscell(secondMat)
+                isEq = norm(firstMat - secondMat) <= absTol;
+            end
+        end
     end
     methods (Access = private)
         function checkScalar(self)
@@ -244,18 +254,19 @@ classdef LinSys < handle
             noiseEll = self.noiseBoundsEll;
         end
         %
-        function self = LinSys(atInpMat, btInpMat, uBoundsEll, gtInpMat,...
-                distBoundsEll, ctInpMat, noiseBoundsEll, discrFlag, varargin)
+        function self = LinSys(atInpMat, btInpMat, uBoundsEll,...
+                gtInpMat, distBoundsEll, ctInpMat, noiseBoundsEll,...
+                discrFlag, varargin)
             %
             % LINSYS - constructor for linear system object.
             %
             % Continuous-time linear system:
-            %                   dx/dt  =  A(t) x(t)  +  B(t) u(t)  +  G(t) v(t)
-            %                    y(t)  =  C(t) x(t)  +  w(t)
+            %   dx/dt  =  A(t) x(t)  +  B(t) u(t)  +  G(t) v(t)
+            %   y(t)  =  C(t) x(t)  +  w(t)
             %
             % Discrete-time linear system:
-            %                  x[k+1]  =  A[k] x[k]  +  B[k] u[k]  +  G[k] v[k]
-            %                    y[k]  =  C[k] x[k]  +  w[k]
+            %   x[k+1]  =  A[k] x[k]  +  B[k] u[k]  +  G[k] v[k]
+            %   y[k]  =  C[k] x[k]  +  w[k]
             %
             % Input:
             %   regular:
@@ -943,15 +954,16 @@ classdef LinSys < handle
             %
             % Input:
             %   regular:
-            %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array
-            %             of linear systems.
-            %       compLinSysArr: elltool.linsys.LinSys[nDims1, nDims2,...] - an array
-            %             of linear systems.
+            %       self: elltool.linsys.LinSys[nDims1, nDims2,...] -
+            %             an array of linear systems.
+            %       compLinSysArr: elltool.linsys.LinSys[nDims1,...
+            %             nDims2,...] - an array of linear systems.
             %
             % Output:
-            %   isEqualArr: elltool.linsys.LinSys[nDims1, nDims2,...] - an
-            %       array of logical values. isEqualArr[iDim1, iDim2,...] is true
-            %       if corresponding linear systems are equal and false otherwise.
+            %   isEqualArr: elltool.linsys.LinSys[nDims1, nDims2,...] -
+            %       an array of logical values.
+            %       isEqualArr[iDim1, iDim2,...] is true if corresponding
+            %       linear systems are equal and false otherwise.
             %
             import modgen.common.throwerror;
             %
@@ -963,16 +975,16 @@ classdef LinSys < handle
                 arrayfun(@(x, y) fSingleComp(x, y), self, compLinSysArr);
             %
             function isEq = fSingleComp(firstLinSys, secondLinSys)
-                [firstStateDimArr, firstInpDimArr, firstOutDimArr,...
-                    firstDistDimArr] = firstLinSys.dimension();
-                [secondStateDimArr, secondInpDimArr, secondOutDimArr,...
-                    secondDistDimArr] = secondLinSys.dimension();
-                isEq = firstStateDimArr == secondStateDimArr &&...
-                    firstInpDimArr == secondInpDimArr &&...
-                    firstOutDimArr == secondOutDimArr &&...
-                    firstDistDimArr == secondDistDimArr;
+                [firstStateDim, firstInpDim, firstOutDim,...
+                    firstDistDim] = firstLinSys.dimension();
+                [secondStateDim, secondInpDim, secondOutDim,...
+                    secondDistDim] = secondLinSys.dimension();
+                isEq = firstStateDim == secondStateDim &&...
+                    firstInpDim == secondInpDim &&...
+                    firstOutDim == secondOutDim &&...
+                    firstDistDim == secondDistDim;
                 if isEq
-                    absTolerance = min(firstLinSys.getAbsTol(),...
+                    absT = min(firstLinSys.getAbsTol(),...
                         secondLinSys.getAbsTol());
                     [firstAMat, firstBMat, firstUEll, firstGMat,...
                         firstDistEll, firstCMat, firstNoiseEll] =...
@@ -983,12 +995,12 @@ classdef LinSys < handle
                         secondLinSys.getParams();
                     %
                     isEq =...
-                        norm(firstAMat - secondAMat) <= absTolerance &&...
-                        norm(firstBMat - secondBMat) <= absTolerance &&...
+                        self.isEqualMat(firstAMat, secondAMat, absT) &&...
+                        self.isEqualMat(firstBMat, secondBMat, absT) &&...
                         self.isEqualEll(firstUEll, secondUEll) &&...
-                        norm(firstGMat - secondGMat) <= absTolerance &&...
+                        self.isEqualMat(firstGMat, secondGMat, absT) &&...
                         self.isEqualEll(firstDistEll, secondDistEll) &&...
-                        norm(firstCMat - secondCMat) <= absTolerance &&...
+                        self.isEqualMat(firstCMat, secondCMat, absT) &&...
                         self.isEqualEll(firstNoiseEll, secondNoiseEll);
                 end
             end

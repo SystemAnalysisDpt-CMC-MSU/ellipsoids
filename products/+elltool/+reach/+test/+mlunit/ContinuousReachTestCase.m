@@ -226,12 +226,11 @@ classdef ContinuousReachTestCase < mlunitext.test_case
         end
         %
         function self = testGetSystem(self)
-            isEqual = self.linSys == self.reachObj.get_system();
+            isEqual = self.linSys.isEqual(self.reachObj.get_system());
             mlunit.assert_equals(true, isEqual);
             projReachObj = self.reachObj.projection(...
                 eye(self.reachObj.dimension(), 2));
-            isEqual = self.linSys == projReachObj.get_system();
-            mlunit.assert_equals(true, isEqual);
+            isEqual = self.linSys.isEqual(projReachObj.get_system());
             mlunit.assert_equals(true, isEqual);
         end
         %

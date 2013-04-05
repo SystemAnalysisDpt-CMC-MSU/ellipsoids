@@ -779,7 +779,7 @@ classdef ReachContinuous < elltool.reach.AReach
         end
         %%
         function linSys = get_system(self)
-            linSys = self.linSysCVec{end};
+            linSys = self.linSysCVec{end}.getCopy();
         end
         %%
         function [directionsCVec timeVec] = get_directions(self)

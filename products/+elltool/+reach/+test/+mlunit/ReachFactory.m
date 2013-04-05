@@ -1,4 +1,4 @@
-classdef ReachFactory
+classdef ReachFactory < handle
     properties (Access = private)
         confName
         crm
@@ -68,6 +68,7 @@ classdef ReachFactory
                     reachObj = elltool.reach.ReachContinuous(...
                         self.linSys, self.x0Ell, self.l0Mat, self.tVec);
                 end
+                self.reachObj = reachObj;
             else
                 reachObj = self.reachObj.getCopy();
             end
