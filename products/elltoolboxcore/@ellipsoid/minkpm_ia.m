@@ -56,12 +56,11 @@ checkmultvar('(x2==x3) && all(x1(:)==x3)',...
     'errorTag','wrongSizes','errorMessage',...
     'all ellipsoids and direction vectors must be of the same dimension');
 
-intApprEllVec = [];
 fstIntApprEllVec = minksum_ia(inpEllArr, dirMat);
 isVrb = Properties.getIsVerbose();
 Properties.setIsVerbose(false);
 
-intApprEllVec = repmat(ellipsoid,1,nCols);
+intApprEllVec(nCols) = ellipsoid();
 arrayfun(@(x) fSetIntApprVec(x),1:nCols);
 intApprEllVec = intApprEllVec(~isempty(intApprEllVec));
 
