@@ -3,7 +3,7 @@ classdef LinSysFactory
     % Factory class of linear system objects of the Ellipsoidal Toolbox.
     %
     %
-    %  create - Returns LinSysDiscrete object if discrFlag is equal 'd' and
+    %  create - Return LinSysDiscrete object if discrFlag is equal 'd' and
     %           LinSysContinuous object the other way.
     %
     % $Authors: Igor Kitsenko <kitsenko@gmail.com> $              $Date: March-2013 $
@@ -25,6 +25,7 @@ classdef LinSysFactory
             %             y[k]  =  C[k] x[k]  +  w[k]
             %
             % Input:
+            %   regular:
             %   regular:
             %       atInpMat: double[nDim, nDim]/cell[nDim, nDim] -
             %           matrix A.
