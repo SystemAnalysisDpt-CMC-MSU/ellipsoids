@@ -4,6 +4,18 @@ classdef AReach < elltool.reach.IReach
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
 %
+    properties (Constant, GetAccess = protected)
+        MIN_EIG_Q_REG_UNCERT = 0.1
+        EXTERNAL_SCALE_FACTOR = 1.02
+        INTERNAL_SCALE_FACTOR = 0.98
+        DEFAULT_INTAPX_S_SELECTION_MODE = 'volume'
+        COMP_PRECISION = 5e-3
+        FIELDS_NOT_TO_COMPARE = {'LT_GOOD_DIR_MAT'; ...
+            'LT_GOOD_DIR_NORM_VEC'; 'LS_GOOD_DIR_NORM'; ...
+            'LS_GOOD_DIR_VEC';' IND_S_TIME';...
+            'S_TIME'; 'TIME_VEC'};
+    end
+    %
     properties (Access = protected)
         switchSysTimeVec
         x0Ellipsoid
@@ -12,6 +24,7 @@ classdef AReach < elltool.reach.IReach
         isProj
         isBackward
         projectionBasisMat
+        ellTubeRel
     end
     %
     properties (Constant, Access = private)
@@ -63,6 +76,54 @@ classdef AReach < elltool.reach.IReach
                         intersectObj, self.INTERNAL);
                 end
             end
+        end
+        %
+        function isEqual = isEqual(self, reachObj, varargin)
+            import gras.ellapx.smartdb.F;
+            import gras.ellapx.enums.EApproxType;
+            APPROX_TYPE = F.APPROX_TYPE;
+            %
+            ellTube = self.ellTubeRel;
+            compEllTube = reachObj.ellTubeRel;
+            %
+            if nargin == 4
+                ellTube = ellTube.getTuplesFilteredBy(APPROX_TYPE,...
+                    varargin{2});
+                ellTube = ellTube.getTuples(varargin{1});
+                compEllTube = compEllTube.getTuplesFilteredBy(APPROX_TYPE,...
+                    varargin{2});
+            end
+            %
+            if ellTube.getNElems < compEllTube.getNElems
+                compEllTube = compEllTube.getTuplesFilteredBy(...
+                    'lsGoodDirNorm', 1);
+            end
+            %
+            pointsNum = numel(ellTube.timeVec{1});
+            newPointsNum = numel(compEllTube.timeVec{1});
+            compTimeGridIndVec = 2 .* (1 : pointsNum) - 1;
+            firstTimeVec = ellTube.timeVec{1};
+            secondTimeVec = compEllTube.timeVec{1};
+            if pointsNum ~= newPointsNum
+                secondTimeVec = secondTimeVec(compTimeGridIndVec);
+            end
+            if max(abs(firstTimeVec - secondTimeVec) > self.COMP_PRECISION)
+                compTimeGridIndVec = compTimeGridIndVec +...
+                    double(compTimeGridIndVec > pointsNum);
+            end
+            fieldsNotToCompVec =...
+                F.getNameList(self.FIELDS_NOT_TO_COMPARE);
+            fieldsToCompVec =...
+                setdiff(ellTube.getFieldNameList, fieldsNotToCompVec);
+            
+            if pointsNum ~= newPointsNum
+                compEllTube =...
+                    compEllTube.thinOutTuples(compTimeGridIndVec);
+            end
+            isEqual = compEllTube.getFieldProjection(...
+                fieldsToCompVec).isEqual(...
+                ellTube.getFieldProjection(fieldsToCompVec),...
+                'maxTolerance', self.COMP_PRECISION);
         end
     end
 end
