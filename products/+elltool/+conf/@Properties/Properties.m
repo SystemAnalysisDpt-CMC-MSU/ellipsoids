@@ -12,31 +12,39 @@ classdef Properties<modgen.common.obj.StaticPropStorage
         DEFAULT_SOLVER = 'SeDuMi';
         DEFAULT_CONF_NAME='default'
         TOL_FACTOR = 2;
+        SETUP_METHOD_NAME_VEC = {'elltool.exttbx.cvx.CVXController',...
+            'elltool.exttbx.mpt.MPTController'};
     end
     %
     methods(Static)
         function init()
-            import elltool.cvx.CVXController;
             import elltool.conf.Properties;
             %
             confRepoMgr=elltool.conf.ConfRepoMgr();
             confRepoMgr.selectConf(Properties.DEFAULT_CONF_NAME);
             Properties.setConfRepoMgr(confRepoMgr);
             %
-            % CVX settings.
-            elltool.cvx.CVXController.setUpIfNot();
-            CVXController.setSolver(Properties.DEFAULT_SOLVER);
-            CVXController.setPrecision(...
-                Properties.getPrecisionForCVXVec());
-            CVXController.setIsVerbosityEnabled(...
-                Properties.getIsVerbose());
+            %setup external toolboxes
+            cvxDataCVec = {Properties.DEFAULT_SOLVER,...
+                Properties.getPrecisionForCVXVec(),...
+                Properties.getIsVerbose()};
+            mptDataCVec = {Properties.getAbsTol(),Properties.getRelTol(),...
+                Properties.getIsVerbose()};
+            setUpDataCVec = {cvxDataCVec,mptDataCVec};
+            cellfun(@setUpToolbox,Properties.SETUP_METHOD_NAME_VEC,setUpDataCVec);
+            %
+            %
+            function setUpToolbox(name,arg)
+                obj = feval(name);
+                obj.fullSetup(arg);
+            end
             elltool.logging.Log4jConfigurator.configure(confRepoMgr,...
                 'islockafterconfigure',true);
         end
         %
         function checkSettings()
             import modgen.common.throwerror;
-            import elltool.cvx.CVXController;
+            import elltool.exttbx.cvx.CVXController;
             import elltool.conf.Properties;
             precisionVec = CVXController.getPrecision();
             solverStr = CVXController.getSolver();
@@ -145,7 +153,7 @@ classdef Properties<modgen.common.obj.StaticPropStorage
         %
         varargout = parseProp(args,neededPropNameList)
     end
-    methods(Static,Access = private)
+    methods(Static, Access = private)
         function opt = getOption(optName)
             confRepMgr = elltool.conf.Properties.getConfRepoMgr();
             opt = confRepMgr.getParam(optName);
