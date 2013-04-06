@@ -1332,6 +1332,65 @@ classdef ReachDiscrete < elltool.reach.AReach
             if www(1).state
                 warning on;
             end
+            %%% create EllTube
+            k0 = self.time_values(1);
+            k1 = self.time_values(end);
+            %
+            nTimeStep = abs(k1 - k0) + 1;
+            nDirections = size(self.initial_directions, 2);
+            xDim = size(self.system.getAtMat(), 1);
+            %
+            goodDirCVec = self.l_values;
+            [eaEllMat ~] = self.get_ea();
+            [iaEllMat ~] = self.get_ia();
+            trCenterMat = self.center_values;
+            %
+            nPoints = nTimeStep;
+            calcPrecision = 0.001;
+            approxSchemaDescr = char.empty(1,0);
+            approxSchemaName = char.empty(1,0);
+            nDims = xDim;
+            nTubes = nDirections;
+            QArrayList = repmat({repmat(eye(nDims),[1,1,nPoints])},1,nTubes);
+            aMat = trCenterMat;
+            timeVec = self.time_values;
+            sTime = k1;
+            %
+            approxType = gras.ellapx.enums.EApproxType.External;
+            %
+            ltGoodDirArray = zeros(xDim, nTubes, nTimeStep);
+            for iTube = 1:nTubes
+                ltGoodDirArray(:, iTube, :) = goodDirCVec{iTube};
+            end
+            %
+            QArrayList = repmat({repmat(zeros(xDim), ...
+                [1, 1, nPoints])}, 1, nTubes);
+            %
+            for iTube = 1:nTubes
+                for iTime = 1:nTimeStep
+                    QArrayList{1, iTube}(:, :, iTime) = double(eaEllMat(iTube, iTime));
+                end
+            end
+            %
+            self.ellTubeRel = create();
+            %
+            approxType = gras.ellapx.enums.EApproxType.Internal;
+            %
+            for iTube = 1:nTubes
+                for iTime = 1:nTimeStep
+                    QArrayList{1, iTube}(:, :, iTime) = double(iaEllMat(iTube, iTime));
+                end
+            end
+            rel2 = create();
+            %
+            self.ellTubeRel.unionWith(rel2);
+            %
+            function rel = create()
+                rel = gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
+                    QArrayList, aMat, timeVec, ltGoodDirArray, ...
+                    sTime, approxType, approxSchemaName, ...
+                    approxSchemaDescr, calcPrecision);
+            end
         end
         %
         function newReachObj = getCopy(self)
