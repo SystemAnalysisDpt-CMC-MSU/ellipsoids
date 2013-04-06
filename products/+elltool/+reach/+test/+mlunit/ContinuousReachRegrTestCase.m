@@ -184,5 +184,22 @@ classdef ContinuousReachRegrTestCase < mlunitext.test_case
             isEqual = self.reachObj.isEqual(secondProjReachObj);
             mlunit.assert_equals(true, isEqual);
         end
+        function self = testGetEllTubeRel(self)
+            mlunit.assert(all(self.reachObj.get_ia() == ...
+                self.reachObj.getEllTubeRel.getEllArray(...
+                gras.ellapx.enums.EApproxType.Internal))); 
+            mlunit.assert(all(self.reachObj.get_ea() == ...
+                self.reachObj.getEllTubeRel.getEllArray(...
+                gras.ellapx.enums.EApproxType.External))); 
+        end
+        function self = testGetEllTubeUnionRel(self)
+            ellTubeRel = self.reachObj.getEllTubeRel();
+            ellTubeUnionRel = self.reachObj.getEllTubeUnionRel();
+            compFieldList = fieldnames(ellTubeRel());
+            [isOk, reportStr] = ...
+                ellTubeUnionRel.getFieldProjection(compFieldList). ...
+                isEqual(ellTubeRel.getFieldProjection(compFieldList));
+            mlunitext.assert(isOk,reportStr);
+        end        
     end
 end
