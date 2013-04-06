@@ -550,16 +550,9 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             SData = self.getTuplesFilteredBy(APPROX_TYPE, approxType);
             nTuples = SData.getNTuples();
             if nTuples > 0
-                nTimes = numel(SData.timeVec{1});
-                for iTuple = nTuples : -1 : 1
-                    tupleCentMat = SData.aMat{iTuple};
-                    tupleMatArray = SData.QArray{iTuple};
-                    for jTime = nTimes : -1 : 1
-                        apprEllMat(iTuple, jTime) =...
-                            ellipsoid(tupleCentMat(:, jTime),...
-                            tupleMatArray(:, :, jTime));
-                    end
-                end
+                apprEllMat = ellipsoid(...
+                    cat(3,SData.aMat{1:nTuples}),...
+                    cat(4,SData.QArray{1:nTuples}))';
             else
                 apprEllMat = [];
             end
