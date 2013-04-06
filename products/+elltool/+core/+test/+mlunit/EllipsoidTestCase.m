@@ -1158,8 +1158,39 @@ classdef EllipsoidTestCase < mlunitext.test_case
                 'eye(2),elltool.conf.Properties.getAbsTol())'),...
                 'wrongInput:singularMat');
         end
-        
-        
+        function self=testMultiDimensionalConstructor(self)
+            % one argument
+            testShape = [2,0;0,3];
+            testEll = ellipsoid(testShape);
+            testShMatArray = zeros(2,2,3,4);
+            testShMatArray(:,:,1,3) = testShape;
+            testEllArray = ellipsoid(testShMatArray);
+            mlunitext.assert(eq(testEllArray(1,3),testEll));
+            % two arguments and properties
+            testShape = [2,0;0,3];
+            testCent = [1;5];
+            testEll = ellipsoid(testCent, testShape);
+            testCentArray = zeros(2,3,4);
+            testCentArray(:,1,3) = testCent;
+            testEllArray1 = ellipsoid(testCentArray, testShMatArray);
+            testEllArray2 = ellipsoid(testCentArray, testShMatArray, ...
+                'absTol', 1e-3);
+            mlunitext.assert(eq(testEllArray1(1,3),testEll));
+            mlunitext.assert(eq(testEllArray2(1,3),testEll));
+            % bad dimensions
+            self.runAndCheckError(...
+                'ellipsoid(zeros(3,4,5,6),zeros(3,3,5,5,6))',...
+                'wrongInput');
+            self.runAndCheckError(...
+                'ellipsoid(zeros(3,4,5,6,7,8),zeros(3,3,5,5,6))',...
+                'wrongInput');
+            self.runAndCheckError(...
+                'ellipsoid(zeros(3,4,5,6,7,8),zeros(3,3,5,5,6,6,6))',...
+                'wrongInput');
+            self.runAndCheckError(...
+                'ellipsoid(zeros(3),zeros(3))',...
+                'wrongInput');
+        end
      end
 end
 
