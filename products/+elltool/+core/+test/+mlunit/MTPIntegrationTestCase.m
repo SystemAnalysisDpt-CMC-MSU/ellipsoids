@@ -41,8 +41,12 @@ classdef MTPIntegrationTestCase < mlunitext.test_case
             distTestArr = zeros(size(ellArr));
             myTestDist(ellArr,testPoly2DVec(4), distTestArr, absTol);
             %
-            self.runAndCheckError('distance(ellArr, testPoly2DVec(1:2))','sizeMismatch');
-            self.runAndCheckError('distance(testEll60D, testPoly2DVec(1:2))','dimensionMismatch');
+            %no test for dimension mismatch with different dimension of
+            %polytopes, becuse polytope class forbid to create vector of
+            %polytopes with different dimensions
+            self.runAndCheckError('distance(ellArr, testPoly2DVec(1:2))','wrongInput');
+            self.runAndCheckError('distance([testEll60D testEll2DVec(1)], testPoly2DVec(1:2))','wrongInput');
+            self.runAndCheckError('distance(testEll60D, testPoly2DVec(1:2))','wrongInput');
             %
             %
             function myTestDist(ellVec,polyVec, testDistVec, tol)
@@ -78,7 +82,7 @@ classdef MTPIntegrationTestCase < mlunitext.test_case
             %            
             myTestIntesect(ellArr,testPoly2DVec(1),'u',isTestInterWitharr); 
             %
-            self.runAndCheckError('intersect(testEll60D, testPoly2DVec(1))','dimensionMismatch');
+            self.runAndCheckError('intersect(testEll60D, testPoly2DVec(1))','wrongInput');
             %
             %
             function myTestIntesect(ellVec, polyVec, letter,isTestInterVec)

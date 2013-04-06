@@ -8,7 +8,7 @@ classdef IMatrixOperations<handle
         obj=rMultiply(self,lMatFunc,mMatFunc,rMatFunc)
         %
         obj=inv(self,mMatFunc)
-        obj=sqrtm(self,mMatFunc)
+        obj=sqrtmpos(self,mMatFunc)
         obj=expm(self,mMatFunc)
         obj=expmt(self,mMatFunc,t0)
         obj=lrMultiply(self,mMatFunc,lrMatFunc,flag)

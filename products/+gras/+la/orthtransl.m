@@ -15,7 +15,7 @@ function oMat=orthtransl(srcVec,dstVec)
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
 %
-ABS_TOL=1e-7;
+ABS_TOL=1e-6;
 nDims = size(dstVec, 1);
 dstVec = dstVec/sqrt(sum(dstVec.*dstVec));
 srcVec = srcVec/sqrt(sum(srcVec.*srcVec));

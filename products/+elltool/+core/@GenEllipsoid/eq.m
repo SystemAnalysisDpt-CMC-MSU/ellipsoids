@@ -21,7 +21,7 @@ function [isEqualArr, reportStr] = eq(ellFirstArr, ellSecArr)
 %
 import modgen.common.throwerror;
 import modgen.struct.structcomparevec;
-import gras.la.sqrtm;
+import gras.la.sqrtmpos;
 import elltool.core.GenEllipsoid;
 relTol=GenEllipsoid.getCheckTol();
 

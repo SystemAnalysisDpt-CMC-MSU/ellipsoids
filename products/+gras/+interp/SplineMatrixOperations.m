@@ -76,11 +76,11 @@ classdef SplineMatrixOperations<gras.mat.AMatrixOperations
                     mMatFunc); 
             end
         end
-        function obj=sqrtm(self,mMatFunc)
-            obj=sqrtm@gras.mat.AMatrixOperations(self,mMatFunc);
+        function obj=sqrtmpos(self,mMatFunc)
+            obj=sqrtmpos@gras.mat.AMatrixOperations(self,mMatFunc);
             if isempty(obj)
                 obj = self.interpolateUnary(...
-                    @gras.gen.SquareMatVector.sqrtm,...
+                    @gras.gen.SquareMatVector.sqrtmpos,...
                     mMatFunc);
             end
         end

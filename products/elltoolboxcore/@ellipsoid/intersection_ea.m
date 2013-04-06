@@ -35,10 +35,10 @@ function outEllArr = intersection_ea(myEllArr, objArr)
 %
 % Input:
 %   regular:
-%       myEllArr: ellipsoid [nDims1,nDims2,...,nDimsN]/[1,1] - array 
+%       myEllArr: ellipsoid [nDims1,nDims2,...,nDimsN]/[1,1] - array
 %           of ellipsoids.
 %       objArr: ellipsoid / hyperplane /
-%           / polytope [nDims1,nDims2,...,nDimsN]/[1,1]  - array of 
+%           / polytope [nDims1,nDims2,...,nDimsN]/[1,1]  - array of
 %           ellipsoids or hyperplanes or polytopes of the same sizes.
 %
 % Output:
@@ -80,11 +80,11 @@ isEllScal = isscalar(myEllArr);
 isObjScal = isscalar(objArr);
 
 checkmultvar( 'all(size(x1)==size(x2))|| x3 || x4 ',...
-	4,myEllArr,objArr,isEllScal,isObjScal,...
+        4,myEllArr,objArr,isEllScal,isObjScal,...
     'errorTag','wrongSizes',...
     'errorMessage','sizes of input arrays do not match.');
 checkmultvar('(x1(1)==x2(1))&&all(x1(:)==x1(1))&&all(x2(:)==x2(1))',...
-	2,nDimsArr,nObjDimsArr,...
+        2,nDimsArr,nObjDimsArr,...
     'errorTag','wrongSizes',...
     'errorMessage','input arguments must be of the same dimension.');
 
@@ -125,7 +125,7 @@ end
 
 function outEll = l_intersection_ea(fstEll, secObj)
 %
-% L_INTERSECTION_EA - computes external ellipsoidal approximation of 
+% L_INTERSECTION_EA - computes external ellipsoidal approximation of
 %                     intersection of single ellipsoid with single
 %                     ellipsoid or halfspace.
 %
@@ -168,7 +168,7 @@ if isa(secObj, 'hyperplane')
     hEig  = 2*sqrt(maxeig(fstEll));
     qSecVec = hypScalar*normHypVec + hEig*normHypVec;
     seqQMat = (normHypVec*normHypVec')/(hEig^2);
-    
+   
     [qCenterVec, shQMat] = parameters(hpintersection(fstEll, secObj));
     qSecVec     = qCenterVec + hEig*normHypVec;
 else
@@ -248,7 +248,7 @@ end
 
 function outEll = l_polyintersect(myEll, polyt)
 %
-% L_POLYINTERSECT - computes external ellipsoidal approximation of 
+% L_POLYINTERSECT - computes external ellipsoidal approximation of
 %                   intersection of single ellipsoid with single polytope.
 %
 % Input:
@@ -280,3 +280,4 @@ for iElem = 1:nDimsHyp
 end
 
 end
+

@@ -5,8 +5,8 @@ function [resArr, statusArr] = intersect(myEllArr, objArr, mode)
 %
 %   resArr = INTERSECT(myEllArr, objArr, mode) - Checks if the union
 %       (mode = 'u') or intersection (mode = 'i') of ellipsoids
-%       in myEllMat intersects with objects in objArr.
-%       objMat can be array of ellipsoids, array of hyperplanes,
+%       in myEllArr intersects with objects in objArr.
+%       objArr can be array of ellipsoids, array of hyperplanes,
 %       or array of polytopes.
 %       Ellipsoids, hyperplanes or polytopes in objMat must have
 %       the same dimension as ellipsoids in myEllArr.
@@ -100,6 +100,9 @@ function [resArr, statusArr] = intersect(myEllArr, objArr, mode)
 import elltool.conf.Properties;
 import modgen.common.throwerror;
 import modgen.common.checkmultvar;
+import elltool.logging.Log4jConfigurator;
+
+persistent logger;
 
 ellipsoid.checkIsMe(myEllArr,'first');
 modgen.common.checkvar(objArr,@(x) isa(x, 'ellipsoid') ||...
@@ -113,6 +116,11 @@ end
 absTolArr = getAbsTol(myEllArr);
 resArr = [];
 statusArr = [];
+
+if isempty(logger)
+    logger=Log4jConfigurator.getLogger();
+end
+
 if mode == 'u'
     if ~isa(objArr,'polytope')
         auxArr = arrayfun(@(x,y) distance(myEllArr, x), objArr,'UniformOutput',false);
@@ -126,22 +134,22 @@ if mode == 'u'
     res = cellfun(@(x) double(any(x(:) <= absTolArr(:))),auxArr);
     status = [];
 elseif isa(objArr, 'ellipsoid')
-    
+   
     fCheckDims(dimension(myEllArr),dimension(objArr));
-    
+   
     if Properties.getIsVerbose()
-        fprintf('Invoking CVX...\n');
+        logger.info('Invoking CVX...\n');
     end
-    
+   
     [resArr statusArr] = arrayfun(@(x) qcqp(myEllArr, x), objArr);
 elseif isa(objArr, 'hyperplane')
-    
+   
     fCheckDims(dimension(myEllArr),dimension(objArr));
-    
+   
     if Properties.getIsVerbose()
-        fprintf('Invoking CVX...\n');
+        logger.info('Invoking CVX...\n');
     end
-    
+   
     [resArr statusArr] = arrayfun(@(x) lqcqp(myEllArr, x), objArr);
 else
     nDimsArr = zeros(size(objArr));
@@ -150,9 +158,9 @@ else
         nDimsArr(iCols) = dimension(objArr(iCols));
     end
     fCheckDims(dimension(myEllArr),nDimsArr);
-    
+   
     if Properties.getIsVerbose()
-        fprintf('Invoking CVX...\n');
+        logger.info('Invoking CVX...\n');
     end
     
     resArr = zeros(size(objArr));
@@ -206,13 +214,21 @@ function [res, status] = qcqp(fstEllArr, secEll)
 
 import modgen.common.throwerror;
 import elltool.conf.Properties;
+import elltool.logging.Log4jConfigurator;
+
+persistent logger;
+
 status = 1;
 [secEllCentVec, secEllShMat] = parameters(secEll);
 
+if isempty(logger)
+    logger=Log4jConfigurator.getLogger();
+end
+
 if isdegenerate(secEll)
     if Properties.getIsVerbose()
-        fprintf('QCQP: Warning! Degenerate ellipsoid.\n');
-        fprintf('      Regularizing...\n');
+        logger.info('QCQP: Warning! Degenerate ellipsoid.\n');
+        logger.info('      Regularizing...\n');
     end
     secEllShMat = ...
         ellipsoid.regularize(secEllShMat,getAbsTol(secEll));
@@ -251,11 +267,12 @@ if strcmp(cvx_status,'Infeasible') ||...
         strcmp(cvx_status,'Inaccurate/Infeasible')
     res = -1;
     return;
-end;
+end
+[~, fstAbsTol] = fstEllArr.getAbsTol();
 if cvxExprVec'*secEllShDublMat*cvxExprVec + ...
         2*(-secEllShDublMat*secEllCentDublVec)'*cvxExprVec + ...
         (secEllCentDublVec'*secEllShDublMat*secEllCentDublVec - 1) ...
-        <= min(getAbsTol(fstEllArr(:)))
+        <= fstAbsTol
     res = 1;
 else
     res = 0;
@@ -324,9 +341,8 @@ if strcmp(cvx_status,'Infeasible') || ...
     return;
 end;
 
-
-if abs(normHypVec'*cvxExprVec - hypScalar) <= ...
-        min(getAbsTol(myEllArr(:)))
+[~, myAbsTol] = myEllArr.getAbsTol(); 
+if abs(normHypVec'*cvxExprVec - hypScalar) <= myAbsTol
     res = 1;
 else
     res = 0;

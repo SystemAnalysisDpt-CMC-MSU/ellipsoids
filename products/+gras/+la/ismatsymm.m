@@ -20,7 +20,7 @@ import modgen.common.throwerror;
 [nRows, nCols] = size(qMat);
 if (nRows~=nCols)
     throwerror('wrongInput:nonSquareMat',...
-        'ISMATSYMM: Input matrix mast be square.');
+        'ISMATSYMM: Input matrix must be square.');
 end
 isSymm=false;
 if (all(all(qMat == transpose(qMat))))

@@ -38,6 +38,8 @@ classdef Properties<modgen.common.obj.StaticPropStorage
                 obj = feval(name);
                 obj.fullSetup(arg);
             end
+            elltool.logging.Log4jConfigurator.configure(confRepoMgr,...
+                'islockafterconfigure',true);
         end
         %
         function checkSettings()

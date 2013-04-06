@@ -56,7 +56,7 @@ classdef test_text_test_runner < mlunitext.test_case
             while iLine <= numel(linesCVec) && isempty(findstr('Test case(s):',linesCVec{iLine}))
                 iLine = iLine + 1;
             end
-
+            iLine=iLine+1;
             nTests=length(suite.tests);
             for iTest=1:nTests,
                 methodStr=strcat(class(suite.tests{iTest}),'/',suite.tests{iTest}.name);
@@ -119,7 +119,7 @@ classdef test_text_test_runner < mlunitext.test_case
             assert(strfind(fliplr(linesCVec{iLine}),...
                 '----------------------------------------------------------------------') == 1);
 
-            iLine = iLine + 1;
+            iLine = iLine + 2;
             methodStr=strcat(class(test),'/',test.name,',');
             if ~strncmp(fliplr(linesCVec{iLine}),fliplr(methodStr),numel(methodStr)),
                 assert(0);
