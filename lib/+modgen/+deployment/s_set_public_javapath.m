@@ -1,1 +1,0 @@
-javaaddpath(which('log4j-1.2.15.jar'));
