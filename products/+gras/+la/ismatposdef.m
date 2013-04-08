@@ -35,14 +35,14 @@ end
 %
 minEig=min(eig(qMat));
 %
+isPosDef=false;
 %
-isPosDef=true;
 if isFlagSemDefOn
-    if minEig<-absTol
-        isPosDef=false;
+    if (minEig>=0 || abs(minEig)<absTol)
+        isPosDef=true;
     end
 else
-    if minEig<=absTol
-        isPosDef=false;
+    if (minEig>absTol)
+        isPosDef=true;
     end
 end
