@@ -14,15 +14,17 @@ classdef SuiteSupportFunction < mlunitext.test_case
         ABS_TOL_FACTOR = 1e-3;
     end
     methods (Static)
-        function difVec = derivativeSupportFunction(t, xVec, fAMat,...
+        function difVec = derivativeSupportFunction(t, ~, fxVec, fAMat,...
                 fBMat, fPVec, fPMat, nElem)
-            yVec = xVec(1 : nElem);
+            % [old code]
+            % yVec = xVec(1 : nElem);
             %
-            difVec = zeros(nElem + 1, 1);
-            difVec(1 : nElem) = -(fAMat(t).') * yVec;
-            difVec(nElem + 1) =...
-                (yVec.') * fBMat(t) * fPVec(t) +...
-                sqrt((yVec.') * fBMat(t) * fPMat(t) * (fBMat(t).') * yVec);
+            %difVec = zeros(nElem + 1, 1);
+            %difVec(1 : nElem) = -(fAMat(t).') * yVec;
+            % [end]
+            difVec =...
+                (fxVec(t).') * fBMat(t) * fPVec(t) +...
+                sqrt((fxVec(t).') * fBMat(t) * fPMat(t) * (fBMat(t).') * fxVec(t));
         end
         %
         function fMatCalc = getHandleFromCellMat(inputCMat)
@@ -132,6 +134,9 @@ classdef SuiteSupportFunction < mlunitext.test_case
                     curGoodDirMat = goodDirCMat{iTuple};
                     curEllMatArray = ellMatCArray{iTuple};
                     curEllCenterMat = ellCenterCMat{iTuple};
+                    %
+                    fxMat = @(t) SRunProp.goodDirSetObj.getGoodDirOneCurveSpline(iTuple).evaluate(t);
+                    %
                     supFun0 =...
                         curGoodDirMat(:, 1).' * curEllCenterMat(:, 1) +...
                         sqrt(curGoodDirMat(:, 1).' *...
@@ -139,23 +144,27 @@ classdef SuiteSupportFunction < mlunitext.test_case
                     %
                     [~, expResultMat] =...
                         ode45(@(t, x) self.derivativeSupportFunction(t,...
-                        x, fAtMatCalc, fBtMatCalc, fPtVecCalc,...
+                        x, fxMat, fAtMatCalc, fBtMatCalc, fPtVecCalc,...
                         fPtMatCalc, nElem), curTimeVec,...
-                        [curGoodDirMat(:, 1).', supFun0], OdeOptionsStruct);
+                        supFun0, OdeOptionsStruct);
+                    % 
+                    % Here is the good directions evaluation. But it's
+                    % useless, while we are using GoodDirectionSet methods
+                    % [old code]
+                    %expSupFuncMat = expResultMat(:, 1 : nElem);
+                    %expNormSupFuncMat =...
+                    %    expSupFuncMat ./ norm(expSupFuncMat);
+                    %supFuncMat = curGoodDirMat(:, :);
+                    %normSupFuncMat = supFuncMat.' ./ norm(supFuncMat);
+                    %errorMat = abs(expNormSupFuncMat - normSupFuncMat);
+                    %errTol = max(errorMat(:));
+                    %isOk = errTol <= calcPrecision;
                     %
-                    expSupFuncMat = expResultMat(:, 1 : nElem);
-                    expNormSupFuncMat =...
-                        expSupFuncMat ./ norm(expSupFuncMat);
-                    supFuncMat = curGoodDirMat(:, :);
-                    normSupFuncMat = supFuncMat.' ./ norm(supFuncMat);
-                    errorMat = abs(expNormSupFuncMat - normSupFuncMat);
-                    errTol = max(errorMat(:));
-                    isOk = errTol <= calcPrecision;
+                    %mlunit.assert_equals(true, isOk,...
+                        %sprintf('errTol=%g>calcPrecision=%g', errTol,...
+                        %calcPrecision));
                     %
-                    mlunit.assert_equals(true, isOk,...
-                        sprintf('errTol=%g>calcPrecision=%g', errTol,...
-                        calcPrecision));
-                    %
+                    % [end]
                     supFunVec =...
                         sqrt(gras.gen.SquareMatVector.lrMultiplyByVec(...
                         curEllMatArray,curGoodDirMat)) +...
