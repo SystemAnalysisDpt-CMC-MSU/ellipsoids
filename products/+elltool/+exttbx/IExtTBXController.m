@@ -4,5 +4,6 @@ classdef (Abstract) IExtTBXController
         isOnPath(self)
         checkIfSetUp(self)
         checkIfOnPath(self)
+        checkSettings(self)
     end
 end
