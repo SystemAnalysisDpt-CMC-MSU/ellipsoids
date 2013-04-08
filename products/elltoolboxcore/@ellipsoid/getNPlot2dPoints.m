@@ -13,10 +13,9 @@ function nPlot2dPointsArr = getNPlot2dPoints(ellArr)
 %            for ellipsoids in ellArr
 %
 % $Author: Zakharov Eugene  <justenterrr@gmail.com> $ 
-% $Date: 17-november-2012$
+% $Date: 2012-11-17$
 % $Copyright: Moscow State University,
-%             Faculty of Computational Arrhematics
-%             and Computer Science,
-%             System Analysis Department 2012 $
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2012 $
 %
 nPlot2dPointsArr = getProperty(ellArr,'nPlot2dPoints');

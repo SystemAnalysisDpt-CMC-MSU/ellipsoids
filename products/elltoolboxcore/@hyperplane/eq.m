@@ -22,9 +22,8 @@ function [isPosArr reportStr] = eq(fstHypArr, secHypArr)
 % $Author: Vadim Kaushansky  <vkaushanskiy@gmail.com> $ 
 % $Date: Nov-2012$
 % $Copyright: Moscow State University,
-%             Faculty of Computational Mathematics
-%             and Cybernetics,
-%             System Analysis Department 2012 $
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2012 $
 %
 % $Authors:
 %   Peter Gagarinov  <pgagarinov@gmail.com> $ 

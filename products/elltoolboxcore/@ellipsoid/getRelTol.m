@@ -25,11 +25,11 @@ function [relTolArr, relTolVal] = getRelTol(ellArr, varargin)
 % 
 %$Author: Zakharov Eugene  <justenterrr@gmail.com> $ 
 %$Author: Grachev Artem  <grachev.art@gmail.com> $
-%$Date: March-2013$
+%$Date: March-2013 $
 %$Copyright: Moscow State University,
 %             Faculty of Computational Mathematics
 %             and Computer Science,
-%             System Analysis Department 2013 $ 3 
+%             System Analysis Department 2013 $  
 %
 
 [relTolArr, relTolVal] = ellArr.getProperty('relTol',varargin{:});

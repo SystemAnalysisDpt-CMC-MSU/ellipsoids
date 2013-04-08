@@ -8,7 +8,7 @@ function copyconf(confName,toConfName)
 %       toConfName:char[1,] - name of new copy
 %
 %$Author: Zakharov Eugene  <justenterrr@gmail.com> $    
-%$Date: 17-november-2012 $
+%$Date: 2012-11-17 $
 %$Copyright: Moscow State University,
 %            Faculty of Computational Mathematics 
 %            and Computer Science,

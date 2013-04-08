@@ -69,10 +69,9 @@ function plObj = plot(varargin)
 %  plot([ell1, ell2, ell3], 'lineWidth', [1.5, 0.5, 3]);
 % 
 %$Author: <Vadim Kaushanskiy>  <vkaushanskiy@gmail.com> $
-%$Date: <21 December 2012> $
-%$Copyright: Moscow State University,
-%            Faculty of Computational Mathematics
-%            and Cybernetics,
+%$Date: 2012-12-21 $
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
 
 import elltool.conf.Properties;

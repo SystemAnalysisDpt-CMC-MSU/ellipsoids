@@ -28,9 +28,8 @@ function clrDirsMat = rm_bad_directions(q1Mat, q2Mat, dirsMat,absTol)
 % $Author: Guliev Rustam <glvrst@gmail.com> $   
 % $Date: Nov-2012$
 % $Copyright: Moscow State University,
-%             Faculty of Computational Mathematics
-%             and Cybernetics,
-%             Science, System Analysis Department 2012 $
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2012 $
 %
 isGoodDirVec=~ellipsoid.isbaddirectionmat(q1Mat,q2Mat,dirsMat,absTol);
 clrDirsMat=[];

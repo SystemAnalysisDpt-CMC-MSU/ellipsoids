@@ -30,7 +30,7 @@ function [ resQMat diagQVec ] = findDiffINFC(fMethod, ellObj1,ellObj2,...
 %
 % $Author: Vitaly Baranov  <vetbar42@gmail.com> $    $Date: Nov-2012$
 % $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Cybernetics,
+%            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
 %
 import elltool.core.GenEllipsoid;

@@ -50,8 +50,8 @@ function [distValArray, statusArray] = distance(ellObjArr, objArr, isFlagOn)
 %
 % $Author:  Vitaly Baranov  <vetbar42@gmail.com> $    
 % $Date: 31-10-2012 $
-% $Copyright: Lomonosov Moscow State University,
-%            Faculty of Computational Mathematics and Cybernetics,
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
 % Literature:
 %    1. Lin, A. and Han, S. On the Distance between Two Ellipsoids.

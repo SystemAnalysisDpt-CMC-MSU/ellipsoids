@@ -44,7 +44,7 @@ function isPosArr = contains(myHypArr, xArr)
 %
 % $Authors:
 %   Zakharov Eugene <justenterrr@gmail.com>$ 
-%   $Date: <31 october>$
+%   $Date: 2012-10-31$
 %   Aushkap Nikolay <n.aushkap@gmail.com> $  
 %   $Date: 30-11-2012$
 % $Copyright: Moscow State University,

@@ -21,9 +21,8 @@ function [ ellResVec ] = minkSumIa(ellObjVec, dirMat )
 % $Author: Vitaly Baranov  <vetbar42@gmail.com> $    
 % $Date: 2012-11$
 % $Copyright: Moscow State University,
-%             Faculty of Computational Mathematics
-%             and Cybernetics,
-%             System Analysis Department 2012 $
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2012 $
 %
 %
 import elltool.core.GenEllipsoid;

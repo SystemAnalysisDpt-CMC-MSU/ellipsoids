@@ -6,7 +6,7 @@ classdef ConfRepoMgr<modgen.configuration.AdaptiveConfRepoManager
 %             where information about properties is stored.
 %
 % $Author: <Zakharov Eugene>  <justenterrr@gmail.com> $    
-%          $Date: <5 november> $
+%          $Date: 2012-11-5 $
 % $Copyright: Moscow State University,
 %             Faculty of Computational Mathematics 
 %             and Computer Science,

@@ -14,9 +14,9 @@ function isPosDef = ismatposdef( qMat, absTol, isFlagSemDefOn)
 % 
 %
 % $Author: Vitaly Baranov  <vetbar42@gmail.com> $	$Date: 2013-01-Mar$
-% $Copyright: Lomonosov Moscow State University,
-%             Faculty of Computational Mathematics and Cybernetics,
-%             Department of System Analysis  2013 $
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2013 $
 %
 %
 import modgen.common.throwerror;

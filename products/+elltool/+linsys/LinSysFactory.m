@@ -13,7 +13,7 @@ classdef LinSysFactory
 % $Copyright: Moscow State University,
 %             Faculty of Computational Mathematics
 %             and Computer Science,
-%             System Analysis Department 2012 $
+%             System Analysis Department 2013 $
 %
     methods(Static)
         function linSys = create(varargin)

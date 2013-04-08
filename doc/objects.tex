@@ -30,15 +30,18 @@ case the previous option makes a difference.
 and reach set plots.
 \item {\tt nPlot3dPoints = 200} - the number of points used to plot
 a 3D ellipsoid. This parameter also affects the quality of 3D reach set plots.
-\end{enumerate} 
+\end{enumerate}
 Once the configuration is loaded, the system parameters are available through
 elltool.conf.Properties.
 Elltool.conf.Properties is a static class, providing emulation of static
-properties for toolbox. It has two function types: setters and getters. 
-Using getters we obtain system parameters. Some of the parameters can be changed
+properties for toolbox. It has two function types: setters and getters.
+Using getters we obtain system parameters.
+\verbmcodef[Getting parameters]
+{mcodesnippets/s_chapter06_section01_snippet02.m}
+ Some of the parameters can be changed
 in run-time via setters.
 \verbmcodef[Changing parameters]
-{mcodesnippets/s_chapter06_section01_snippet02.m}
+{mcodesnippets/s_chapter06_section01_snippet03.m}
 
 
 
@@ -130,7 +133,7 @@ if constant, or {\tt cell} if symbolic. Can be empty.
 {\tt ellipsoid} object of dimension $r$, or structure {\tt W} with
 fields {\tt W.center} and {\tt W.shape} for symbolic representation of
 ellipsoid, similar to the {\tt control} and {\tt disturbance} fields.
-\newline
+
 This field can be also a single $r$-dimensional vector, constant or symbolic,
 to represent an affine term.
 \item {\tt lti} - $1$ if the system is time-invariant, $0$ - otherwise.

@@ -3,9 +3,9 @@ classdef Properties<modgen.common.obj.StaticPropStorage
 %             properties for toolbox.
 %
 %$Author: Zakharov Eugene  <justenterrr@gmail.com> $    
-%$Date: 5-november-2012 $
+%$Date: 2012-11-05 $
 %$Author: Peter Gagarinov  <pgagarinov@gmail.com> $    
-%$Date: 25-november-2012 $    
+%$Date: 2012-11-25 $    
 %$Copyright: Moscow State University,
 %            Faculty of Computational Mathematics 
 %            and Computer Science,

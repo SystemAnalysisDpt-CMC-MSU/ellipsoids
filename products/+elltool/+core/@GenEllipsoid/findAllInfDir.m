@@ -13,7 +13,7 @@ function [isInfVec infDirEigMat] = findAllInfDir(ellObj)
 %
 % $Author: Vitaly Baranov  <vetbar42@gmail.com> $    $Date: Nov-2012$
 % $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Cybernetics,
+%            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
 %
 isInfVec=(diag(ellObj.diagMat)==Inf);

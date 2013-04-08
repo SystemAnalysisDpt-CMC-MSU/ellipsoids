@@ -67,7 +67,8 @@ classdef ReachContinuous < elltool.reach.AReach
 % $Copyright: Moscow State University,
 %             Faculty of Computational Mathematics        
 %             and Computer Science,
-%             System Analysis Department 2012 $    properties (Constant, GetAccess = private)
+%             System Analysis Department 2012 $    
+properties (Constant, GetAccess = private)
         MIN_EIG_Q_REG_UNCERT = 0.1
         EXTERNAL_SCALE_FACTOR = 1.02
         INTERNAL_SCALE_FACTOR = 0.98

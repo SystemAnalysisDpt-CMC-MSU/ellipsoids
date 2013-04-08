@@ -64,9 +64,8 @@ function [centVec, boundPntMat] = minkmp(fstEll, secEll, sumEllArr,varargin)
 % $Author: Guliev Rustam <glvrst@gmail.com> $  
 % $Date: Nov-2012$
 % $Copyright: Moscow State University,
-%             Faculty of Computational Mathematics
-%             and Cybernetics, Science, 
-%             System Analysis Department 2012 $
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2012 $
 %
 
 import modgen.common.throwerror;

@@ -35,7 +35,7 @@ function varargout = parseProp(args,neededPropNameList)
 %                              listed in neededPropNameList
 %
 %$Author: Zakharov Eugene  <justenterrr@gmail.com> $    
-%$Date: 5-november-2012 $
+%$Date: 2012-11-05 $
 %$Copyright: Moscow State University,
 %            Faculty of Computational Mathematics 
 %            and Computer Science,

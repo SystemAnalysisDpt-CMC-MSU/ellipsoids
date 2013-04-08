@@ -1,2 +1,10 @@
-elltool.editconf('default');
-elltool.conf.Properties.setIsVerbos = 0;
+elltool.conf.Properties.getAbsTol()
+% ans =
+% 
+%    1.0000e-07
+
+elltool.conf.Properties.getNPlot2dPoints()
+
+% ans =
+% 
+%    200

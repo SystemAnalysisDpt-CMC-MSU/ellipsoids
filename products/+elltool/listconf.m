@@ -4,7 +4,7 @@ function listconf()
 %No input or output, just displays list of configuration
 %
 %$Author: Zakharov Eugene  <justenterrr@gmail.com> $    
-%$Date: 17-november-2012 $
+%$Date: 2012-11-17 $
 %$Copyright: Moscow State University,
 %            Faculty of Computational Mathematics
 %            and Computer Science,

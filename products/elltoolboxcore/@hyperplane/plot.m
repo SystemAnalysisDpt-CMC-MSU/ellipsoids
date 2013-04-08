@@ -50,7 +50,7 @@ function figHandleVec = plot(varargin)
 %              2004-2008 $
 %
 % $Author: <Zakharov Eugene>  <justenterrr@gmail.com> $    
-% $Date: <1 november> $
+% $Date: 2012-11-01$
 % $Copyright: Moscow State University,
 %             Faculty of Computational Mathematics
 %             and Computer Science,

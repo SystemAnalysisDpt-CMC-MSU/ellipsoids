@@ -13,8 +13,8 @@ function qSqrtMat = sqrtmpos(qMat, absTol)
 % $Authors: Vadim Kaushanskiy  <vkaushanskiy@gmail.com> $	$Date: 2012-01-11$
 %           Daniil Stepenskiy <reinkarn@gmail.com> $	$Date: 2013-03-29$
 % $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Cybernetics,
-%            System Analysis Department 2012-2013 $
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2012 $
 import modgen.common.throwerror;
 
 if (nargin == 1)

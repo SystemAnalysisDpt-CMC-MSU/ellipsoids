@@ -20,9 +20,8 @@ function isPositiveArr = isdegenerate(myEllArr)
 % $Author: Guliev Rustam <glvrst@gmail.com> $  
 % $Date: Dec-2012$
 % $Copyright: Moscow State University,
-%             Faculty of Computational Mathematics
-%             and Cybernetics, Science, 
-%             System Analysis Department 2012 $
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2012 $
 %
 
 ellipsoid.checkIsMe(myEllArr);
