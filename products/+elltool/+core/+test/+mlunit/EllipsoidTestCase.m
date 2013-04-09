@@ -184,6 +184,14 @@ classdef EllipsoidTestCase < mlunitext.test_case
             %
             %
             %
+            %
+            % distance between single ellipsoid and array of ellipsoids
+            load(strcat(self.testDataRootDir,filesep,'testEllEllDist.mat'),...
+                 'testEllArr','testDistResArr');
+             testEll = ellipsoid(eye(2));
+             resArr = distance(testEll, testEllArr);
+             isOkArr = abs(resArr - testDistResArr) <= elltool.conf.Properties.getAbsTol();
+             mlunit.assert(all(isOkArr(:)));
             %distance between an ellipsoid (with nonzeros nondiagonal elements)
             %and a hyperplane in 2 dimensions
             testEllMat=[9 0; 0 4];
@@ -234,7 +242,11 @@ classdef EllipsoidTestCase < mlunitext.test_case
             testEll2=ellipsoid([-1 0].',[1 0;0 1]);
             testRes=distance(testEll1,testEll2);
             mlunit.assert_equals(1,abs(testRes)<elltool.conf.Properties.getAbsTol());   
-            
+            %negative test: ellipsoid and hyperplane have different dimensions
+            testEll = ellipsoid(eye(2));
+            testHyp = hyperplane(eye(3));
+            self.runAndCheckError('distance(testEll, testHyp)',...
+                'wrongInput');
             %
             %
             %DISTANCE FROM VECTOR TO ELLIPSOID 
@@ -365,7 +377,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
             ansResVec(1)=distance(testEllipsoid1Vec(1),testEllipsoid2Vec(1),true);
             ansResVec(2)=distance(testEllipsoid1Vec(2),testEllipsoid2Vec(2),true);
             mlunit.assert_equals(1, all(abs(testResVec-ansResVec)<...
-                elltool.conf.Properties.getAbsTol()));
+                elltool.conf.Properties.getAbsTol())); 
         end
         %
         function self = testPropertyGetters(self)
