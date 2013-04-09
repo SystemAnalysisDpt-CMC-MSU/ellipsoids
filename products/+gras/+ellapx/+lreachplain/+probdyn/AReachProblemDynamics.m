@@ -1,23 +1,19 @@
 classdef AReachProblemDynamics<...
         gras.ellapx.lreachplain.probdyn.IReachProblemDynamics
-    properties (SetAccess = protected)
-        AtDynamics
-        timeVec
-    end
     properties (Access = protected)
         problemDef
+        AtDynamics
         BptDynamics
         BPBTransDynamics
+        timeVec
     end
     properties (Abstract, Access = protected)
         xtDynamics
     end
-    properties (Constant)
-         N_TIME_POINTS=1000;
-    end
     properties (Constant, GetAccess = protected)
         ODE_NORM_CONTROL='on';
         CALC_PRECISION_FACTOR=0.001;
+        N_TIME_POINTS=1000;
     end
     methods
         function self = AReachProblemDynamics(problemDef)
@@ -65,6 +61,8 @@ classdef AReachProblemDynamics<...
         function problemDef=getProblemDef(self)
             problemDef=self.problemDef;
         end
+    end
+    methods (Access = protected)
         function odePropList=getOdePropList(self,calcPrecision)
             odePropList={'NormControl',self.ODE_NORM_CONTROL,'RelTol',...
                 calcPrecision*self.CALC_PRECISION_FACTOR,...

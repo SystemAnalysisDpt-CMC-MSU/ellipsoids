@@ -8,6 +8,10 @@ classdef GoodDirectionSet
         sTime
         lsGoodDirMat
     end
+    properties (Constant, GetAccess = protected)
+        ODE_NORM_CONTROL='on';
+        CALC_PRECISION_FACTOR=0.001;
+    end
     properties (Constant, GetAccess = private)
         % (temporary) algorithm:
         %   0 - X(t, t0)
@@ -67,14 +71,13 @@ classdef GoodDirectionSet
             %
             matOpFactory = MatrixOperationsFactory.create(timeVec);
             %
-            %Rtt0Dynamics = pDefObj.getRtt0Dynamics();
             Rtt0Dynamics = self.calcRtt0Dynamics(pDefObj, calcPrecision);
-            Xt0tTransDynamics = ...
+            Rt0tTransDynamics = ...
                 matOpFactory.transpose(matOpFactory.inv(Rtt0Dynamics));
             Rst0TransConstMatFunc = ...
                 ConstMatrixFunction(Rtt0Dynamics.evaluate(sTime).');
             RstTransDynamics = ...
-                matOpFactory.rMultiply(Xt0tTransDynamics,...
+                matOpFactory.rMultiply(Rt0tTransDynamics,...
                 Rst0TransConstMatFunc);
             %
             self.RstTransDynamics = RstTransDynamics;
@@ -96,25 +99,33 @@ classdef GoodDirectionSet
                 RstTransDynamics, lsGoodDirConstMatFunc);
         end
     end
+    methods (Access = protected)
+        function odePropList=getOdePropList(self,calcPrecision)
+            odePropList={'NormControl',self.ODE_NORM_CONTROL,'RelTol',...
+                calcPrecision*self.CALC_PRECISION_FACTOR,...
+                'AbsTol',calcPrecision*self.CALC_PRECISION_FACTOR};
+        end
+    end
     methods (Access = private)
         function Rtt0Dynamics = calcRtt0Dynamics(self, pDefObj, calcPrecision)
             %
             import gras.interp.MatrixInterpolantFactory;
             import gras.ode.MatrixODESolver;
             %
-            sizeSysVec = size(pDefObj.AtDynamics.evaluate(0));
+            fAtMat = @(t) pDefObj.getAtDynamics().evaluate(t);
+            sizeSysVec = size(fAtMat(0));
             %
             % (temporary) fRtt0DerivFunc selection
             %
             switch (self.CALC_ALGORITHM)
                 case 0
-                    fRtt0DerivFunc = @(t,x) fXtt0DerivFunc(t, x, @(u) pDefObj.AtDynamics.evaluate(u));
+                    fRtt0DerivFunc = @(t,x) fXtt0DerivFunc(t, x, @(u) fAtMat(u));
                 case 1
-                    fRtt0DerivFunc = @(t,x) fXtt0DerivFunc(t, x, @(u) pDefObj.AtDynamics.evaluate(u));
+                    fRtt0DerivFunc = @(t,x) fXtt0DerivFunc(t, x, @(u) fAtMat(u));
                 case 2
-                    fRtt0DerivFunc = @(t,x) fRtt0SimDerivFunc(t, x, @(u) pDefObj.AtDynamics.evaluate(u));
+                    fRtt0DerivFunc = @(t,x) fRtt0SimDerivFunc(t, x, @(u) fAtMat(u));
                 case 3
-                    fRtt0DerivFunc = @(t,x) fRtt0ExtDerivFunc(t, x, @(u) pDefObj.AtDynamics.evaluate(u), sizeSysVec);
+                    fRtt0DerivFunc = @(t,x) fRtt0ExtDerivFunc(t, x, @(u) fAtMat(u), sizeSysVec);
             end
             %
             % (temporary) sRtt0InitialMat selection
@@ -134,7 +145,7 @@ classdef GoodDirectionSet
                     sRtt0InitialMat = [sRtt0InitialMat(:); norm];
             end
             %
-            odeArgList = pDefObj.getOdePropList(calcPrecision);
+            odeArgList = self.getOdePropList(calcPrecision);
             %
             if (self.CALC_ALGORITHM == 3)
                 numelSys = prod(sizeSysVec);
@@ -144,7 +155,7 @@ classdef GoodDirectionSet
             end
             %
             [timeRtt0Vec,dataRtt0Array]=solverObj.solve(fRtt0DerivFunc,...
-                pDefObj.timeVec,sRtt0InitialMat);
+                pDefObj.getTimeVec(),sRtt0InitialMat);
             %
             % (temporary) postprocessing
             %
@@ -156,7 +167,7 @@ classdef GoodDirectionSet
                     normVec = dataRtt0Array(sizeRtt0ArrayVec(1), sizeRtt0ArrayVec(2), :);
                     normVec = repmat(normVec, [sizeSysVec, 1]);
                     dataRtt0Array = dataRtt0Array(1:(sizeRtt0ArrayVec(1) - 1), :, :);
-                    dataRtt0Array = reshape(dataRtt0Array, [sizeSysVec, pDefObj.N_TIME_POINTS]);
+                    dataRtt0Array = reshape(dataRtt0Array, [sizeSysVec, sizeRtt0ArrayVec(3)]);
                     dataRtt0Array = dataRtt0Array .* normVec;
             end
             %
