@@ -9,17 +9,24 @@ classdef ReachFactory < handle
         tVec
         isBack
         isEvolve
+        isDiscr
         dim
         reachObj
     end
     methods
         function self =...
-                ReachFactory(confName, crm, crmSys, isBack, isEvolve)
+                ReachFactory(confName, crm, crmSys, isBack, isEvolve,...
+                isDiscr)
+            if nargin < 6
+                isDiscr = false;
+            end
+  
             self.confName = confName;
             self.crm = crm;
             self.crmSys = crmSys;
             self.isBack = isBack;
             self.isEvolve = isEvolve;
+            self.isDiscr = isDiscr;
             %
             crm.deployConfTemplate(confName);
             crm.selectConf(confName);
@@ -40,9 +47,11 @@ classdef ReachFactory < handle
                 'goodDirSelection.methodProps.manual.lsGoodDirSets.set1');
             self.l0Mat = cell2mat(l0CMat.').';
             self.x0Ell = ellipsoid(x0DefVec, x0DefMat);
+            self.tVec = [crmSys.getParam('time_interval.t0'),...
+                crmSys.getParam('time_interval.t1')];
             if self.isBack
                 self.tVec = [crmSys.getParam('time_interval.t1'),...
-                    crmSys.getParam('time_interval.t0')];
+                crmSys.getParam('time_interval.t0')];
             else
                 self.tVec = [crmSys.getParam('time_interval.t0'),...
                     crmSys.getParam('time_interval.t1')];
@@ -54,20 +63,32 @@ classdef ReachFactory < handle
             DistBounds.center = qtDefCVec;
             DistBounds.shape = qtDefCMat;
             %
-            self.linSys = elltool.linsys.LinSys(atDefCMat, btDefCMat,...
-                ControlBounds, ctDefCMat, DistBounds);
+            if isDiscr
+                self.linSys = elltool.linsys.LinSysDiscrete(atDefCMat, ...
+                    btDefCMat,...
+                    ControlBounds, ctDefCMat, DistBounds, [], [], 'd');
+            else                
+                self.linSys = elltool.linsys.LinSysContinuous(atDefCMat, ...
+                    btDefCMat,...
+                    ControlBounds, ctDefCMat, DistBounds);
+            end
         end
         function reachObj = createInstance(self)
             if isempty(self.reachObj)
-                if self.isEvolve
-                    halfReachObj = elltool.reach.ReachContinuous(...
-                        self.linSys, self.x0Ell, self.l0Mat,...
-                        [self.tVec(1) sum(self.tVec)/2]);
-                    reachObj = halfReachObj.evolve(self.tVec(2));
-                else
-                    reachObj = elltool.reach.ReachContinuous(...
-                        self.linSys, self.x0Ell, self.l0Mat, self.tVec);
-                end
+				if isa(self.linSys, 'elltool.linsys.LinSysDiscrete')
+                	reachObj = elltool.reach.ReachDiscrete(self.linSys,...
+                        self.x0Ell, self.l0Mat, self.tVec);
+				else
+                	if self.isEvolve
+                    	halfReachObj = elltool.reach.ReachContinuous(...
+                        	self.linSys, self.x0Ell, self.l0Mat,...
+                        	[self.tVec(1) sum(self.tVec)/2]);
+                    	reachObj = halfReachObj.evolve(self.tVec(2));
+                	else
+                    	reachObj = elltool.reach.ReachContinuous(...
+                        	self.linSys, self.x0Ell, self.l0Mat, self.tVec);
+                	end
+				end
                 self.reachObj = reachObj;
             else
                 reachObj = self.reachObj.getCopy();

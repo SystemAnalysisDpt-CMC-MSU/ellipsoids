@@ -573,7 +573,14 @@ classdef ReachContinuous < elltool.reach.AReach
             import modgen.common.throwerror;
             import gras.ellapx.uncertcalc.EllApxBuilder;
             import gras.ellapx.enums.EApproxType;
+            import elltool.logging.Log4jConfigurator;
             %%
+            logger=Log4jConfigurator.getLogger(...
+                'elltool.ReachCont.constrCallCount');
+            logger.debug(sprintf('constructor is called %s',...
+                modgen.exception.me.printstack(...
+                dbstack,'useHyperlink',false)));
+            %
             if (nargin == 0) || isempty(linSys)
                 return;
             end
@@ -589,7 +596,7 @@ classdef ReachContinuous < elltool.reach.AReach
                 throwerror('wrongInput', ['insufficient ',...
                     'number of input arguments.']);
             end
-            if ~(isa(linSys, 'elltool.linsys.LinSys'))
+            if ~(isa(linSys, 'elltool.linsys.LinSysContinuous'))
                 throwerror('wrongInput', ['first input argument ',...
                     'must be linear system object.']);
             end
@@ -687,7 +694,7 @@ classdef ReachContinuous < elltool.reach.AReach
                 fprintf('Empty reach set object.\n\n');
                 return;
             end
-            if isdiscrete(self.linSysCVec{end})
+            if isa(self.linSysCVec{end}, 'elltool.linsys.LinSysDiscrete')
                 sysTypeStr = 'discrete-time';
                 sysTimeStartStr = 'k0 = ';
                 sysTimeEndStr = 'k1 = ';
@@ -866,7 +873,7 @@ classdef ReachContinuous < elltool.reach.AReach
                 newLinSys = self.get_system();
                 oldLinSys = newLinSys;
             else
-                if ~(isa(linSys, 'elltool.linsys.LinSys'))
+                if ~(isa(linSys, 'elltool.linsys.LinSysContinuous'))         
                     throwerror('wrongInput', ['first input argument ',...
                         'must be linear system object.']);
                 end

@@ -24,7 +24,7 @@ end
 [vMat, dMat]=eig(qMat);
 dVec = diag(dMat);
 if any(dVec < -absTol)
-    throwerror('wrongInput',...
+    throwerror('wrongInput:notPosDef',...
         'input matrix is expected to be positive-definite');
 end
 if (absTol == 0)

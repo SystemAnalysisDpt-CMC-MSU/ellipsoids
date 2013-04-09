@@ -2,13 +2,13 @@
 A1 = [-1/6 0 -1/3; 0 0 1/7; 1/2 -1/2 -1/2];
 B1 = [1/6 1/3; 0 0; 0 0];
 U1 = ellipsoid(eye(2));
-s1 = elltool.linsys.LinSys(A1, B1, U1);
+s1 = elltool.linsys.LinSysFactory.create(A1, B1, U1);
 
 % define system 2:
 A2 = [-1/6 0 -1/3; 0 0 1/3; 1/6 -1/6 -1/3];
 B2 = [1/6; 0; 0];
 U2 = ellipsoid(1);
-s2 = elltool.linsys.LinSys(A2, B2, U2);
+s2 = elltool.linsys.LinSysFactory.create(A2, B2, U2);
 
 X0 = ellipsoid(0.01*eye(3));  % set of initial states
 L0 = eye(3);  % 3 initial directions

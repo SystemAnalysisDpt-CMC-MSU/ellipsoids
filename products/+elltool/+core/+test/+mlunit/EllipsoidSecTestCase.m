@@ -81,6 +81,67 @@ classdef EllipsoidSecTestCase < mlunitext.test_case
             compareAnalyticForMinkSum(false, false, 13, 5, 5, true)
             compareAnalyticForMinkSum(false, true, 10, 100, 100, true)
         end
+        
+        function self=testRepmat(self)     
+            %
+            testEll1=ellipsoid([16 0;0 25]);
+            testEll2=ellipsoid([9 0; 0 4]);
+            testDir1Vec=[10;1]/sqrt(101);
+            testDir2Vec=[1;1]/sqrt(2);
+            testDirMat=[testDir1Vec, testDir2Vec];
+            %
+            %Minkdiff_ia, minkdiff_ea work incorrectly
+            %
+            check(@minkdiff_ia,false);
+            check(@minkdiff_ea,false);
+            %
+            %All other functions work correctly by luck...
+            %
+            check(@minkpm_ea,false);
+            check(@minkpm_ia,false);
+            %
+            fMmpEA=@(fEll,sEll,dMat)minkmp_ea(fEll,sEll,...
+                ellipsoid(zeros(2)),dMat);
+            fMmpIA=@(fEll,sEll,dMat)minkmp_ia(fEll,sEll,...
+                ellipsoid(zeros(2)),dMat);
+            check(fMmpEA,false);
+            check(fMmpIA,false);
+            
+            %
+            %Hyperplane
+            %
+            arrSizeVec=[2,2,3,2];
+            testNormArr=zeros(arrSizeVec);
+            testNormArr(1,:)=1;
+            testNormArr(2,:)=0;
+            testHypArr=hyperplane(testNormArr,2);
+            %
+            testHyp=hyperplane([1;0],1);
+            %
+            isParrArr=isparallel(testHypArr,testHyp);
+            isParr2Arr=isparallel(testHyp,testHypArr);
+            mlunit.assert_equals(true,...
+                all(isParrArr(:))&&all(isParr2Arr(:)));
+            
+            function check(fMethod,isTrue)
+            resEll1=fMethod(testEll1,testEll2, testDir1Vec);
+            resEll2=fMethod(testEll1,testEll2, testDir2Vec);
+            resEllVec=fMethod(testEll1,testEll2, testDirMat);
+            isEq1=eq(resEll1,resEllVec(1));
+            isEq2=eq(resEll2,resEllVec(2));
+            isEq3=eq(resEll1,resEll2);
+            isEq21=eq(resEll2,resEllVec(1));
+            %
+            % testEll1 and testEll2 are not the same
+            mlunit.assert_equals(true,~isEq3);
+            % 
+            % testEll2 equals testEllVec(1)
+            mlunit.assert_equals(isTrue,isEq21);
+            %
+            mlunit.assert_equals(~isTrue, isEq1 && isEq2);
+            end
+        end
+        
         function self = testMinkdiff_ea(self)
             [testEllipsoid1 ~] = createTypicalEll(14);
             testEllipsoid2 = ellipsoid([1; 0], eye(2));
