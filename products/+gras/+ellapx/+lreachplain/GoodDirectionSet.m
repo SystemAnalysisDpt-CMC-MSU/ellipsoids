@@ -8,6 +8,15 @@ classdef GoodDirectionSet
         sTime
         lsGoodDirMat
     end
+    properties (Constant, GetAccess = private)
+        % (temporary) algorithm:
+        %   0 - X(t, t0)
+        %   1 - X(t, t0) / matrixnorm(X(t, t0))
+        %   2 - R(t, t0)
+        %   3 - [R(t, t0); matrixnorm(X(t, t0))]
+        %
+        CALC_ALGORITHM = 2;
+    end
     methods
         function nGoodDirs=getNGoodDirs(self)
             nGoodDirs=size(self.lsGoodDirMat,2);
@@ -58,7 +67,8 @@ classdef GoodDirectionSet
             %
             matOpFactory = MatrixOperationsFactory.create(timeVec);
             %
-            Rtt0Dynamics = pDefObj.getRtt0Dynamics();
+            %Rtt0Dynamics = pDefObj.getRtt0Dynamics();
+            Rtt0Dynamics = self.calcRtt0Dynamics(pDefObj, calcPrecision);
             Xt0tTransDynamics = ...
                 matOpFactory.transpose(matOpFactory.inv(Rtt0Dynamics));
             Rst0TransConstMatFunc = ...
@@ -86,4 +96,114 @@ classdef GoodDirectionSet
                 RstTransDynamics, lsGoodDirConstMatFunc);
         end
     end
+    methods (Access = private)
+        function Rtt0Dynamics = calcRtt0Dynamics(self, pDefObj, calcPrecision)
+            %
+            import gras.interp.MatrixInterpolantFactory;
+            import gras.ode.MatrixODESolver;
+            %
+            sizeSysVec = size(pDefObj.AtDynamics.evaluate(0));
+            %
+            % (temporary) fRtt0DerivFunc selection
+            %
+            switch (self.CALC_ALGORITHM)
+                case 0
+                    fRtt0DerivFunc = @(t,x) fXtt0DerivFunc(t, x, @(u) pDefObj.AtDynamics.evaluate(u));
+                case 1
+                    fRtt0DerivFunc = @(t,x) fXtt0DerivFunc(t, x, @(u) pDefObj.AtDynamics.evaluate(u));
+                case 2
+                    fRtt0DerivFunc = @(t,x) fRtt0SimDerivFunc(t, x, @(u) pDefObj.AtDynamics.evaluate(u));
+                case 3
+                    fRtt0DerivFunc = @(t,x) fRtt0ExtDerivFunc(t, x, @(u) pDefObj.AtDynamics.evaluate(u), sizeSysVec);
+            end
+            %
+            % (temporary) sRtt0InitialMat selection
+            %
+            switch (self.CALC_ALGORITHM)
+                case 0
+                    sRtt0InitialMat = eye(sizeSysVec);
+                case 1
+                    sRtt0InitialMat = eye(sizeSysVec);
+                case 2
+                    sRtt0InitialMat = eye(sizeSysVec);
+                    sRtt0InitialMat = normaliz(sRtt0InitialMat);
+                case 3
+                    sRtt0InitialMat = eye(sizeSysVec);
+                    norm = sqrt(sum(sum(sRtt0InitialMat, 2)));
+                    sRtt0InitialMat = normaliz(sRtt0InitialMat);
+                    sRtt0InitialMat = [sRtt0InitialMat(:); norm];
+            end
+            %
+            odeArgList = pDefObj.getOdePropList(calcPrecision);
+            %
+            if (self.CALC_ALGORITHM == 3)
+                numelSys = prod(sizeSysVec);
+                solverObj=MatrixODESolver([numelSys + 1, 1],@ode45,odeArgList{:});
+            else
+                solverObj=MatrixODESolver(sizeSysVec,@ode45,odeArgList{:});
+            end
+            %
+            [timeRtt0Vec,dataRtt0Array]=solverObj.solve(fRtt0DerivFunc,...
+                pDefObj.timeVec,sRtt0InitialMat);
+            %
+            % (temporary) postprocessing
+            %
+            switch (self.CALC_ALGORITHM)
+                case 1
+                    dataRtt0Array = normaliz(dataRtt0Array);
+                case 3
+                    sizeRtt0ArrayVec = size(dataRtt0Array);
+                    normVec = dataRtt0Array(sizeRtt0ArrayVec(1), sizeRtt0ArrayVec(2), :);
+                    normVec = repmat(normVec, [sizeSysVec, 1]);
+                    dataRtt0Array = dataRtt0Array(1:(sizeRtt0ArrayVec(1) - 1), :, :);
+                    dataRtt0Array = reshape(dataRtt0Array, [sizeSysVec, pDefObj.N_TIME_POINTS]);
+                    dataRtt0Array = dataRtt0Array .* normVec;
+            end
+            %
+            Rtt0Dynamics=MatrixInterpolantFactory.createInstance(...
+                'column',dataRtt0Array,timeRtt0Vec);
+        end
+    end
+end
+%
+% new equation for R(t, t0)
+%
+function dx = fRtt0SimDerivFunc(t, x, fAt)
+    cachedMat = fAt(t) * x;
+    %
+    dx = cachedMat - x * sum(x(:) .* cachedMat(:));
+end
+%
+% (temporary) old equation for X(t, t0)
+%
+function dx = fXtt0DerivFunc(t, x, fAt)
+    dx = fAt(t) * x;
+end
+%
+% (temporary) new equation for R(t, t0) and matrixnorm(X(t, t0))
+%
+function dx = fRtt0ExtDerivFunc(t, x, fAt, sizeAtVec)
+    norm = x(length(x)); x(length(x)) = [];
+    sRtt0Mat = reshape(x, sizeAtVec);
+    %
+    cachedMat = fAt(t) * sRtt0Mat;
+    scprod = sum(sRtt0Mat(:) .* cachedMat(:));
+    %
+    dnorm = scprod * norm;
+    dsRtt0Mat = cachedMat - sRtt0Mat * scprod;
+    %
+    dx = [dsRtt0Mat(:); dnorm];
+end
+%
+% normalizes matrix argMat (matrixnorm(normalizMat) = 1)
+%
+function normalizMat = normaliz(argMat)
+    szVec = size(argMat);
+    normMat = argMat .* argMat;
+    normMat = sqrt(sum(sum(normMat, 2), 1));
+    if (length(szVec) > 2)
+        szVec(3:length(szVec)) = 1;
+    end
+    normMat = repmat(normMat, szVec);
+    normalizMat = argMat ./ normMat;
 end

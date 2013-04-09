@@ -26,10 +26,6 @@ classdef AReachProblemDynamicsInterp<...
                 BtDefCMat, problemDef.getPCMat(), BtDefCMat.');
             self.BptDynamics = matOpFactory.rSymbMultiplyByVec(...
                 BtDefCMat, problemDef.getpCVec());
-            %
-            % compute X(t,t0)
-            %
-            self.calcRtt0Dynamics(calcPrecision);
         end
     end
 end

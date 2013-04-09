@@ -26,21 +26,6 @@ classdef AReachProblemLTIDynamics<...
             self.AtDynamics = ConstMatrixFunction(AMat);
             self.BptDynamics = ConstColFunction(BMat*pVec);
             self.BPBTransDynamics = ConstMatrixFunction(BMat*PMat*(BMat.'));
-            %
-            % compute X(t,t0)
-            %          
-            % (temporary) switching old code usage:
-            %
-            oldcode = 0;
-            %
-            if (oldcode)
-                % [oldcode]
-                matOpFactory = MatrixOperationsFactory.create(self.timeVec);
-                self.Rtt0Dynamics = matOpFactory.expmt(self.AtDynamics, t0);
-                % [end]
-            else
-                self.calcRtt0Dynamics(calcPrecision);
-            end
         end
     end
 end
