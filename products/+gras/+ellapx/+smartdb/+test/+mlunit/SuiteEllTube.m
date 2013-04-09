@@ -632,6 +632,13 @@ classdef SuiteEllTube < mlunitext.test_case
             mlunit.assert(eq(intFromEllTubeEllArray(1),ellArray(1)));
             mlunit.assert(eq(intFromEllTubeEllArray(2),ellArray(2)));
             mlunit.assert(all(intTimeVec == [1 2]));
+            % no assertions, just error test            
+            intFromEllArrayEllTube.getEllArray(EApproxType.External);
+            [~, ~] =... 
+                intFromEllArrayEllTube.getEllArray(EApproxType.External);            
+            extFromEllArrayEllTube.getEllArray(EApproxType.Internal);
+            [~, ~] =... 
+                extFromEllArrayEllTube.getEllArray(EApproxType.Internal);
         end
     end
 end

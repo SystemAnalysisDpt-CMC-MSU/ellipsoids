@@ -557,7 +557,11 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 apprEllMat = [];
             end
             if nargout > 1
-                timeVec = SData.timeVec{1};
+                if (~isempty(SData.timeVec))
+                    timeVec = SData.timeVec{1};
+                else 
+                    timeVec = [];
+                end
             end
         end
     end
