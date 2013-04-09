@@ -159,8 +159,10 @@ classdef ellipsoid < handle
             
             if nShDims > 2
                 ellMat(prod(shDimsVec(3:end))) = ellipsoid();
-                arrayfun(@(iEll)fMakeEllipsoid(iEll), 1:numel(ellMat));                  
-                ellMat = reshape(ellMat, [shDimsVec(3:end)]);
+                arrayfun(@(iEll)fMakeEllipsoid(iEll), 1:numel(ellMat));
+                if (nShDims > 3)
+                    ellMat = reshape(ellMat, [shDimsVec(3:end)]);
+                end
             else
                 fMakeEllipsoid(1);
             end

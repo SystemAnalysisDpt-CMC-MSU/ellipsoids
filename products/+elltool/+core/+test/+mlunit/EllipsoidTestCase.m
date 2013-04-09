@@ -1189,6 +1189,13 @@ classdef EllipsoidTestCase < mlunitext.test_case
                 'absTol', 1e-3);
             mlunitext.assert(eq(testEllArray1(1,3),testEll));
             mlunitext.assert(eq(testEllArray2(1,3),testEll));
+            %3d constructor case
+            testShMatArray = zeros(2,2,3);            
+            testShMatArray(:,:,1) = testShape;
+            testCentArray = zeros(2,3);
+            testCentArray(:,1) = testCent;
+            testEllArray = ellipsoid(testCentArray, testShMatArray);
+            mlunitext.assert(eq(testEllArray(1),testEll));            
             % bad dimensions
             self.runAndCheckError(...
                 'ellipsoid(zeros(3,4,5,6),zeros(3,3,5,5,6))',...

@@ -592,7 +592,46 @@ classdef SuiteEllTube < mlunitext.test_case
                 ellArray(iElem) = ellipsoid(...
                     aMat(:,iElem), qArrayList{1}(:,:,iElem)); 
             end
-            %fromArrayEllTube = ell
+        end
+        function self = testEllArrayFromEllTube(self)
+            import gras.ellapx.enums.EApproxType;
+            %
+            qMatArray(:,:,2) = [1,0;0,2];
+            qMatArray(:,:,1) = [5,0;0,6];
+            aMat(:,2) = [1,2];
+            aMat(:,1) = [5,6];
+            ellArray = ellipsoid(aMat,qMatArray);
+            timeVec = [1,2];
+            sTime = 2;
+            lsGoodDirMat=[1,0;0,1];
+            lsGoodDirArray(:,:,1) = lsGoodDirMat;
+            lsGoodDirArray(:,:,2) = lsGoodDirMat;
+            approxSchemaDescr=char.empty(1,0);
+            approxSchemaName=char.empty(1,0);
+            calcPrecision=0.001;
+            extFromEllArrayEllTube = ...
+                gras.ellapx.smartdb.rels.EllTube.fromEllArray(...
+                ellArray, timeVec,...
+                lsGoodDirArray, sTime, EApproxType.External, ...
+                approxSchemaName,...
+                approxSchemaDescr, calcPrecision);
+            [extFromEllTubeEllArray extTimeVec] =... 
+                extFromEllArrayEllTube.getEllArray(EApproxType.External);
+            mlunit.assert(eq(extFromEllTubeEllArray(1),ellArray(1)));
+            mlunit.assert(eq(extFromEllTubeEllArray(2),ellArray(2)));
+            mlunit.assert(all(extTimeVec == [1 2]));
+            %
+            intFromEllArrayEllTube = ...
+                gras.ellapx.smartdb.rels.EllTube.fromEllArray(...
+                ellArray, timeVec,...
+                lsGoodDirArray, sTime, EApproxType.Internal, ...
+                approxSchemaName,...
+                approxSchemaDescr, calcPrecision);
+            [intFromEllTubeEllArray intTimeVec] =... 
+                intFromEllArrayEllTube.getEllArray(EApproxType.Internal);
+            mlunit.assert(eq(intFromEllTubeEllArray(1),ellArray(1)));
+            mlunit.assert(eq(intFromEllTubeEllArray(2),ellArray(2)));
+            mlunit.assert(all(intTimeVec == [1 2]));
         end
     end
 end
