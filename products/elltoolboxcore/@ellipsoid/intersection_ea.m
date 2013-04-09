@@ -199,7 +199,7 @@ const = 1 - lambda*(1 - lambda)*(qSecVec - ...
     fstEllCentVec)'*seqQMat*invXMat*fstEllShMat*(qSecVec - fstEllCentVec);
 qCenterVec = invXMat*(lambda*fstEllShMat*fstEllCentVec + ...
     (1 - lambda)*seqQMat*qSecVec);
-shQMat = (1+fstEll.absTol)*const*invXMat;
+shQMat = const*invXMat;
 outEll = ellipsoid(qCenterVec, shQMat);
 
 end

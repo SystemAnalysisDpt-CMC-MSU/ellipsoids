@@ -19,9 +19,14 @@ classdef MPTController < elltool.exttbx.IExtTBXController
         end
         %
         function checkSettings(self,absTol,relTol,isVerbose)
-            %here we make sure that the settings specified in fullSetup are
-            %not changed manually via direct mpt calls like mpt_init
+            import modgen.common.throwerror;
+            if~((absTol == self.getAbsTol()) && ...
+                (relTol == self.getRelTol()) && ...
+                (isVerbose == self.getIsVerbosityEnabled))
+                throwerror('mptError', 'wrong mpt properties');
+            end
         end
+        %
         function isPositive=isOnPath(self)
             isPositive=modgen.system.ExistanceChecker.isFile(...
                 self.MPT_SETUP_FUNC_NAME);
@@ -33,6 +38,7 @@ classdef MPTController < elltool.exttbx.IExtTBXController
                 throwerror('mptNotSetUp','MPT is not set up');
             end
         end
+        %
         function checkIfOnPath(self)
             N_HOR_LINE_CHARS=60;
             if ~self.isOnPath()
@@ -43,6 +49,24 @@ classdef MPTController < elltool.exttbx.IExtTBXController
                     'folder next to "products" folder ',horLineStr]);
                 modgen.common.throwerror('mptNotFound',msgStr);
             end
+        end
+    end
+    %
+    %
+    methods(Static)
+        function isVerb = getIsVerbosityEnabled()
+            global mptOptions;
+            isVerb = mptOptions.verbose > 1;
+        end
+        %
+        function absTol = getAbsTol()
+            global mptOptions;
+            absTol = mptOptions.abs_tol;
+        end
+        %
+        function relTol = getRelTol()
+            global mptOptions;
+            relTol = mptOptions.abs_tol;
         end
     end
 end

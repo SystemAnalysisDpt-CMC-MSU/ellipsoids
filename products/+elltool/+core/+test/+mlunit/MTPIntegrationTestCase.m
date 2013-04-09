@@ -242,7 +242,48 @@ classdef MTPIntegrationTestCase < mlunitext.test_case
                 mlunit.assert(diffNorm2 < diffNorm1);
            end
         end
-        
+        %
+        %
+        function self = testIntersectionEA(self)
+            %Analitically proved, that minimal volume ellipsoid, covering
+            %intersection of ell1 and poly1 is ell1. Checking if it right
+            %in our realisation
+            defaultShMat = eye(2);
+            ell1 = ellipsoid(defaultShMat);
+            defaultPolyMat = [0 1];
+            defaultConst = 0.25;
+            poly1 = self.makePolytope(defaultPolyMat,defaultConst);
+            ellEA1 = intersection_ea(ell1,poly1);
+            testIfEllEq(ell1,ellEA1);
+            %
+            %If we apply same linear tranform to both ell1 and poly1, than
+            %minimal volume ellipsoid shouldn't change.
+            transfMat =  [1 3; 2 2];
+            shiftVec = [1; 1];
+            shMat = transfMat*(transfMat)';
+            ell2 = ellipsoid(shiftVec,shMat);
+            poly2 = self.makePolytope(defaultPolyMat/(transfMat),...
+                defaultConst+(defaultPolyMat/(transfMat))*shiftVec);
+            ellEA2 = intersection_ea(ell2,poly2);
+            testIfEllEq(ell2,ellEA2);
+            %
+            %Checking, that amount of constraints in polytope does not
+            %affect accuracy of computation of external approximation
+            nConstr = 100;
+            angleVec = (0:2*pi/nConstr:2*pi*(1-1/nConstr))';
+            hMat = [cos(angleVec), sin(angleVec)];
+            kVec = ones(nConstr,1);
+            polyManyConstr = self.makePolytope(hMat,kVec);
+            ellEAManyConstr = intersection_ea(ell1,polyManyConstr);
+            testIfEllEq(ell1,ellEAManyConstr);
+            %
+            function testIfEllEq(ellipsoid1,ellipsoid2)
+                [cVec1 shMat1] = double(ellipsoid1);
+                [cVec2 shMat2] = double(ellipsoid2);
+                diffNorm = norm(cVec1 - cVec2) + norm(shMat1 - shMat2);
+                mlunit.assert(diffNorm <= ellipsoid1.getAbsTol);
+            end
+        end
     end
     %
     methods(Static)

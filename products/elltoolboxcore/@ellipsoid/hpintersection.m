@@ -107,7 +107,7 @@ end
         myEll = myEllArr(ellIndex);
         myHyp = myHypArr(hypIndex);
         index = max(ellIndex,hypIndex);
-        if distance(myEll, myHyp) > 0
+        if distance(myEll, myHyp) > myEll.getAbsTol()
            intEllArr(index) = ellipsoid;
            isnIntersectedArr(index) = true;
         else
