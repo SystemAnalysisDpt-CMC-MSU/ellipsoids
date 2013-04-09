@@ -187,7 +187,7 @@ end
                 
                 
             case 3
-                %fMat = {fMat};
+                fMat = {fMat};
                 isGoodDir = false(1,nCols);
                 arrayfun(@(x) fFindGoodDir(x), 1:nCols);
                 if any(isGoodDir)
