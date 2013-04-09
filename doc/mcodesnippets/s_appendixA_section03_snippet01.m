@@ -5,5 +5,5 @@ for k = 1:20
    G = [1; 0];
    V = 1/(k+1);
    C = [1 0];
-   lsys = elltool.linsys.LinSys(A, B, U, G, V, C, [], 'd');
+   lsys = elltool.linsys.LinSysFactory.create(A, B, U, G, V, C, [], 'd');
 end

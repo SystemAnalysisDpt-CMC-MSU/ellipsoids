@@ -78,7 +78,7 @@ classdef BasicTestCase < mlunitext.test_case
             %
             testMat = [1, 0; 0, -1];
             self.runAndCheckError('gras.la.sqrtmpos(testMat)',...
-                'wrongInput');            
+                'wrongInput');
         end
         
         function self = testIsMatSymm(self)
@@ -119,6 +119,8 @@ classdef BasicTestCase < mlunitext.test_case
             check(fIsMatPosDef);
             %
             testMat=rand(10,10);
+            testMat=testMat.'*testMat;
+            testMat=0.5*(testMat+testMat.');
             mlunit.assert(fIsMatPosSemDef(testMat.'*testMat,absTol));
             %
             testMat=[1 5; 5 25];
@@ -126,14 +128,55 @@ classdef BasicTestCase < mlunitext.test_case
             mlunit.assert(fIsMatPosSemDef(testMat,absTol));
             mlunit.assert(~fIsMatPosDef(testMat,absTol));
             %
-            testMat=rand(10,10);
-            testMat=-testMat.'*testMat;
-            mlunit.assert(~fIsMatPosSemDef(testMat,absTol));
+            gras.la.ismatposdef(eye(3));
             %
             self.runAndCheckError('gras.la.ismatposdef(eye(3,5))',...
                 'wrongInput:nonSquareMat');
             self.runAndCheckError('gras.la.ismatposdef([1 -1; 1 1])',...
                 'wrongInput:nonSymmMat');
+            %
+            %
+            nTimes=50;
+            for iInd=1:nTimes
+                checkMultTimes();
+            end
+            %
+            isPosOrSemDef=true;
+            orth3Mat=...
+                [-0.206734513608356,-0.439770172956299,0.873992583413099;
+                 0.763234588112547,0.486418086920488,0.425288617559045;
+                 -0.612155049306781,0.754983204908957,0.23508840021067];
+            %
+            diagVec=[1; 2; 3];
+            checkDeterm(isPosOrSemDef);
+            %
+            diagVec=[1; -1; 3];
+            checkDeterm(~isPosOrSemDef);
+            %
+            diagVec=[0;1; 1];
+            checkDeterm(~isPosOrSemDef)
+            %
+            diagVec=[0; 1; 2];
+            checkDeterm(isPosOrSemDef,true);
+            %
+            diagVec=[0; -1; 2];
+            checkDeterm(~isPosOrSemDef,true);
+            %
+            diagVec=[-1; 1; -2];
+            checkDeterm(~isPosOrSemDef,false);
+            checkDeterm(~isPosOrSemDef,true);
+            %
+            function checkDeterm(isTrue,isSemPosDef)
+                import gras.la.ismatposdef;
+                testMat=orth3Mat.'*diag(diagVec)*orth3Mat;
+                testMat=0.5*(testMat+testMat.');
+                if nargin<2
+                    isOk=ismatposdef(testMat,absTol);
+                else
+                    isOk=ismatposdef(testMat,absTol,isSemPosDef);
+                end
+                mlunit.assert_equals(isTrue,isOk);
+            end
             %
             function check(fHandle)
                 import gras.la.ismatposdef;
@@ -141,8 +184,31 @@ classdef BasicTestCase < mlunitext.test_case
                 mlunit.assert(fHandle(1,absTol));
                 %
                 testMat=rand(10,10);
-                mlunit.assert(fHandle(testMat.'*testMat,absTol));
+                testMat=testMat.'*testMat;
+                [vMat,~]=eig(testMat);
+                dMat=diag(1:10);
+                testMat=vMat.'*dMat*vMat;
+                testMat=0.5*(testMat.'+testMat);
+                isOk=fHandle(testMat,absTol);
+                mlunit.assert(isOk);
                 %
+            end
+            %
+            function checkMultTimes()
+                import gras.la.ismatposdef;
+                testMat=rand(5,5);
+                testMat=testMat.'*testMat;
+                [vMat,~]=eig(testMat);
+                dMat=diag(1:5);
+                testMat=vMat.'*dMat*vMat;
+                testMat=-0.5*(testMat.'+testMat);
+                isFalse=ismatposdef(testMat,absTol,true);
+                % Check that ismatposdef return false with
+                % isSemDefFlagOn=true and at the same time sqrtmpos throws
+                % notPosSemDef error:
+                mlunit.assert_equals(false,isFalse);
+                self.runAndCheckError('gras.la.sqrtmpos(testMat,absTol)',...
+                    'wrongInput:notPosSemDef');
             end
         end
     end

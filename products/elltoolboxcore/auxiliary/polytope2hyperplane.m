@@ -32,10 +32,10 @@ function HA = polytope2hyperplane(P)
 %
 
   import elltool.conf.Properties;
-
+  import modgen.common.throwerror;
 
   if ~(isa(P, 'polytope'))
-    error('POLYTOPE2HYPERPLANE: input argument must be single polytope.');
+    throwerror('wrongInput:class','input argument must be single polytope.');
   end
   
   P      = P(1, 1);

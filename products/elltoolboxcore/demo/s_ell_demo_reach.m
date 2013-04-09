@@ -28,7 +28,7 @@ C = 0.1;
 % >> A = [0 -1/C; 1/L -R/L];
 % >> B = [1/C 0; 0 1/L];
 % >> CB = ell_unitball(2);
-% >> lsys = elltool.linsys.LinSys(A, B, CB);
+% >> lsys = elltool.linsys.LinSysFactory.create(A, B, CB);
 cla;
 image(imread('circuitls.jpg'));
 axis off;
@@ -41,8 +41,8 @@ B2 = [1/C 0; 0 1/L2];
 X0 = 0.1*ell_unitball(2);
 T = 10;
 L0 = [1 0; 0 1]';
-s = elltool.linsys.LinSys(A, B, CB);
-s2 = elltool.linsys.LinSys(A2, B2, CB);
+s = elltool.linsys.LinSysFactory.create(A, B, CB);
+s2 = elltool.linsys.LinSysFactory.create(A2, B2, CB);
 %%
 % We are ready to compute the reach set approximations of this system on some time interval, say T = [0, 10], for zero initial conditions and plot them:
 %
@@ -70,7 +70,7 @@ zlabel('i_L');
 % >> R2 = 2;
 % >> A2 = [0 -1/C; 1/L2 -R2/L2];
 % >> B2 = [1/C 0; 0 1/L2];
-% >> lsys2 = elltool.linsys.LinSys(A2, B2, CB);
+% >> lsys2 = elltool.linsys.LinSysFactory.create(A2, B2, CB);
 %
 % Now we continue computing the reach set for the time interval [10, 20] due to the new dynamics:
 %
@@ -173,7 +173,7 @@ ylabel('i_L');
 %
 % >> A = {'0' '-10'; '1/(2 + sin(t))' '-4/(2 + sin(t))'};
 % >> B = {'10' '0'; '0' '1/(2 + sin(t))'};
-% >> s = elltool.linsys.LinSys(A, B, CB);
+% >> s = elltool.linsys.LinSysFactory.create(A, B, CB);
 %
 % Now the reach set of the system can be computed and plotted just as before:
 %
@@ -181,7 +181,7 @@ ylabel('i_L');
 % >> rs.plot_ea(); hold on; rs.plot_ia();
 A = {'0' '-10'; '1/(2 + sin(t))' '-4/(2 + sin(t))'};
 B = {'10' '0'; '0' '1/(2 + sin(t))'};
-s = elltool.linsys.LinSys(A, B, CB);
+s = elltool.linsys.LinSysFactory.create(A, B, CB);
 rs = elltool.reach.ReachContinuous(s, X0, L0, [0 4]);
 cla;
 ell_plot([0; 0; 0], '.');
@@ -218,7 +218,7 @@ hold off;
 %
 % Now we declare the linear system object with disturbance:
 %
-% >> lsys = elltool.linsys.LinSys(A, B, CB, G, DB);
+% >> lsys = elltool.linsys.LinSysFactory.create(A, B, CB, G, DB);
 %
 % Compute and plot the reach tube approximations:
 %
@@ -227,7 +227,7 @@ hold off;
 G = eye(2);
 V.center = {'2*cos(t)'; '0'};
 V.shape = {'0.0001+0.09*(sin(t))^2', '0'; '0', '0.0001'};
-s = elltool.linsys.LinSys(A, B, CB, G, V);
+s = elltool.linsys.LinSysFactory.create(A, B, CB, G, V);
 rs = elltool.reach.ReachContinuous(s, X0, L0, [0 4]);
 cla;
 rs.plot_ea();
@@ -259,7 +259,7 @@ grid off;
 %
 % And create linear system object:
 %
-% >> lsys = elltool.linsys.LinSys(A, B, U);
+% >> lsys = elltool.linsys.LinSysFactory.create(A, B, U);
 cla;
 image(imread('springmassls.jpg'));
 axis off;
@@ -271,7 +271,7 @@ m2 = 2;
 A = [0 0 1 0; 0 0 0 1; -(k1+k2)/m1 k2/m1 0 0; k2/m2 -(k1+k2)/m2 0 0];
 B = [0 0; 0 0; 1/m1 0; 0 1/m2];
 U = 5*ell_unitball(2);
-s = elltool.linsys.LinSys(A, B, U);
+s = elltool.linsys.LinSysFactory.create(A, B, U);
 T = 1;
 X0 = 0.1*ell_unitball(4) + [2; 3; 0; 0];
 L = [1 0 -1 1; 0 -1 1 1]';
@@ -339,7 +339,7 @@ bps.plot_ea(); hold on; bps.plot_ia(); hold off;
 % >> B  = [zeros(3, 2); B1];
 % >> U.center = {'(k+7)/100'; '2'};
 % >> U.shape  = [0.02 0; 0 1];
-% >> lsys = elltool.linsys.LinSys(A, B, U, [], [], [], [], 'd');
+% >> lsys = elltool.linsys.LinSysFactory.create(A, B, U, [], [], [], [], 'd');
 cla;
 image(imread('econ.jpg'));
 axis off;
@@ -353,7 +353,7 @@ clear U;
 U.center = {'(k+7)/100'; '2'};
 U.shape = [0.02 0; 0 1];
 X0 = ellipsoid([1; 0.5; -0.5; 1.10; 0.55; 0], eye(6));
-lsys = elltool.linsys.LinSys(A, B, U, [], [], [], [], 'd');
+lsys = elltool.linsys.LinSysFactory.create(A, B, U, [], [], [], [], 'd');
 L0 = [1 0 0 0 0 0; 0 1 0 0 0 0; 0 0 1 0 0 1; 0 1 0 1 1 0; 0 0 -1 1 0 1; 0 0 0 -1 1 1]';
 %%
 % Now we compute the reach set for N = 4 time steps and plot the projection onto (V[k], Y[k]) subspace:

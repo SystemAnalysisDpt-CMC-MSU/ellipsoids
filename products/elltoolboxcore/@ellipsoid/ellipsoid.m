@@ -145,7 +145,7 @@ classdef ellipsoid < handle
         [diffBoundMat, isPlotCenter3d] = calcdiffonedir(fstEll,secEll,lMat,pUniversalVec,isGoodDirVec)
     end
     methods(Access = private)
-        propValMat = getProperty(hplaneMat,propName)
+        [propMat, propVal] = getProperty(hplaneMat,propName, fPropFun)
         x = ellbndr_2d(E)
         x = ellbndr_3d(E)
     end

@@ -443,32 +443,55 @@ classdef ReachDiscrete < elltool.reach.AReach
             end
         end
         %
-        function propValArr = getProperty(rsArray, propName)
-            % GETPROPERTY gives array the same size as rsArray with values of propName properties
-            % for each reach set in rsArr. Private method, used in every public
-            % property getter.
-            %
-            % Input:
-            %   regular:
-            %       rsArray:reach[nDims1, nDims2,...] - multidimension array of reach sets
-            %
-            % Output:
-            %   propValArr:double[nDims1, nDims2,...]- multidimension array of propName properties for
-            %                                   reach sets in rsArray
-            %
-            % $Author: Zakharov Eugene  <justenterrr@gmail.com> $    $Date: 17-november-2012 $
-            % $Copyright: Moscow State University,
-            %            Faculty of Computational Arrhematics and Computer Science,
-            %            System Analysis Department 2012 $
-            %
+        function [propArr, propVal] = getProperty(rsArr,propName,fPropFun)
+        % GETPROPERTY gives array the same size as rsArray with values 
+        % of propName properties for each reach set in rsArr. 
+        % Private method, used in every public property getter.
+        %
+        % Input:
+        %   regular:
+        %       rsArray:reach[nDims1, nDims2,...] - multidimension array 
+        %           of reach sets propName: char[1,N] - name property
+        %   optional:
+        %       fPropFun: function_handle[1,1] - function that apply
+        %           to the propArr. The default is @min.
+        %
+        % Output:
+        %   regular:
+        %       propArr: double[nDim1, nDim2,...] - multidimension array of
+        %           propName properties for ellipsoids in rsArr
+        %   optional:
+        %       propVal: double[1, 1] - return result of work fPropFun with
+        %           the propArr
+        %
+        % $Author: Zakharov Eugene  <justenterrr@gmail.com> $
+        %   $Date: 17-november-2012$
+        % $Author: Grachev Artem  <grachev.art@gmail.com> $
+        %   $Date: March-2013$
+        % $Copyright: Moscow State University,
+        %            Faculty of Computational Arrhematics 
+        %               and Computer Science,
+        %            System Analysis Department 2012 $
+        %
             import modgen.common.throwerror;
             propNameList = {'absTol','relTol','nPlot2dPoints',...
                 'nPlot3dPoints','nTimeGridPoints'};
-            if ~any(strcmp(propName, propNameList))
+            if ~any(strcmp(propName,propNameList))
                 throwerror('wrongInput',[propName,':no such property']);
             end
-            propValArr=arrayfun(@(x)x.(propName),rsArray);
+            %
+            if nargin == 2
+                fPropFun = @min;
+            end
+            
+            propArr= arrayfun(@(x)x.(propName),rsArr);
+            
+            if nargout == 2
+                propVal = fPropFun(propArr(:));
+            end
+            
         end
+        
         %
         function x = ellbndr_2d(ell, num)
             %
@@ -500,23 +523,44 @@ classdef ReachDiscrete < elltool.reach.AReach
             [r, x] = rho(ell, l);
         end
         %
-        function absTolArr = getAbsTol(rsArr)
-            % GETABSTOL gives array the same size as rsArray with values of absTol properties
-            % for each reach set in rsArr.
-            % Input:
-            %   regular:
-            %       RS:reach[nDims1, nDims2,...] - reach set array
-            %
-            % Output:
-            %   absTol:double[nDims1, nDims2,...]- array of absTol propertis for for each reach set in rsArr
-            %
-            % $Author: Zakharov Eugene  <justenterrr@gmail.com> $    $Date: 17-november-2012 $
-            % $Copyright: Moscow State University,
-            %            Faculty of Computational Arrhematics and Computer Science,
-            %            System Analysis Department 2012 $
-            %
-            absTolArr =...
-                elltool.reach.ReachDiscrete.getProperty(rsArr,'absTol');
+        function [absTolArr, absTolVal] = getAbsTol(rsArr, varargin)
+        % GETABSTOL - gives the array of absTol for all elements in rsArr
+        %
+        % Input:
+        %   regular:
+        %       rsArr: elltool.reach.ReachDiscrete[nDim1, nDim2, ...] - 
+        %           multidimension array of reach sets 
+        %   optional 
+        %       fAbsTolFun: function_handle[1,1] - function that apply 
+        %           to the absTolArr. The default is @min.
+        %         
+        % Output:
+        %   regular:
+        %       absTolArr: double [absTol1, absTol2, ...] - return absTol
+        %           for each element in rsArr
+        %   optional:
+        %       absTol: double[1,1] - return result of work fAbsTolFun 
+        %           with the absTolArr
+        %
+        % Usage:
+        %   use [~,absTol] = rsArr.getAbsTol() if you want get only
+        %       absTol,
+        %   use [absTolArr,absTol] = rsArr.getAbsTol() if you want get 
+        %       absTolArr and absTol,
+        %   use absTolArr = rsArr.getAbsTol() if you want get only 
+        %       absTolArr
+        % 
+        %$Author: Zakharov Eugene  <justenterrr@gmail.com> $ 
+        % $Author: Grachev Artem  <grachev.art@gmail.com> $
+        %   $Date: March-2013$
+        % $Copyright: Moscow State University,
+        %            Faculty of Computational Arrhematics 
+        %            and Computer Science,
+        %            System Analysis Department 2013 $
+        % 
+        
+            [absTolArr,absTolVal]=rsArr.getProperty('absTol',varargin{:});
+        
         end
         %
         function nPlot2dPointsArr = getNPlot2dPoints(rsArr)
@@ -585,23 +629,43 @@ classdef ReachDiscrete < elltool.reach.AReach
                 elltool.reach.ReachDiscrete.getProperty(rsArr,'nTimeGridPoints');
         end
         %
-        function relTolArr = getRelTol(rsArr)
-            % GETRELTOL gives value of relTol property of reach set RS
-            %
-            % Input:
-            %   regular:
-            %       RS:reach[nDims1,nDims2,...] - reach set
-            %
-            % Output:
-            %   relTol:double[nDims1,nDims2,...]- array of relTol propertis for for each reach set in rsArr
-            %
-            % $Author: Zakharov Eugene  <justenterrr@gmail.com> $    $Date: 17-november-2012 $
-            % $Copyright: Moscow State University,
-            %            Faculty of Computational Arrhematics and Computer Science,
-            %            System Analysis Department 2012 $
-            %
-            relTolArr =...
-                elltool.reach.ReachDiscrete.getProperty(rsArr,'relTol');
+        function [relTolArr, relTolVal] = getRelTol(rsArr, varargin)
+        % GETRELTOL - gives the array of relTol for all elements in ellArr
+        %
+        % Input:
+        %   regular:
+        %       rsArr: elltool.reach.ReachDiscrete[nDim1, nDim2, ...] - 
+        %           multidimension array of reach sets. 
+        %   optional 
+        %       fRelTolFun: function_handle[1,1] - function that apply 
+        %           to the relTolArr. The default is @min.
+        %
+        % Output:
+        %   regular:
+        %       relTolArr: double [relTol1, relTol2, ...] - return relTol 
+        %           for each element in rsArr
+        %   optional:
+        %       relTol: double[1,1] - return result of work fRelTolFun 
+        %           with the relTolArr
+        %
+        % Usage:
+        %   use [~,relTol] = rsArr.getRelTol() if you want get only
+        %       relTol,
+        %   use [relTolArr,relTol] = rsArr.getRelTol() if you want get 
+        %       relTolArr and relTol,
+        %   use relTolArr = rsArr.getRelTol() if you want get only 
+        %        relTolArr
+        %
+        %$Author: Zakharov Eugene  <justenterrr@gmail.com> $ 
+        % $Author: Grachev Artem  <grachev.art@gmail.com> $
+        %   $Date: March-2013$
+        % $Copyright: Moscow State University,
+        %            Faculty of Computational Arrhematics 
+        %            and Computer Science,
+        %            System Analysis Department 2013 $
+        %
+            
+            [relTolArr,relTolVal]=rsArr.Property('relTol',varargin{:});
         end
     end
     %
@@ -695,7 +759,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             if nargin < 4
                 throwerror('insufficient number of input arguments.');
             end
-            if ~(isa(linSys, 'elltool.linsys.LinSys'))
+            if ~(isa(linSys, 'elltool.linsys.LinSysDiscrete'))
                 throwerror(['first input argument ',...
                     'must be linear system object.']);
             end
@@ -800,21 +864,23 @@ classdef ReachDiscrete < elltool.reach.AReach
                 DD = zeros(1, size(self.time_values, 2));
                 AC = zeros(d1*d1, size(self.time_values, 2));
                 for i = 1:size(self.time_values, 2)
-                    if (back > 0) && ~(linSys.isdiscrete()) && 0
+                    if (back > 0) && ~(isa(linSys, ...
+                            'elltool.linsys.LinSysDiscrete')) && 0
                         A  = self.matrix_eval(aMat, -self.time_values(i));
                     else
                         A  = self.matrix_eval(aMat, self.time_values(i));
                     end
                     AC(:, i) = reshape(A, d1*d1, 1);
-                    if linSys.isdiscrete() && (rank(A) < d1)
+                    if isa(linSys, 'elltool.linsys.LinSysDiscrete') ...
+                            && (rank(A) < d1)
                         A        = ell_regularize(A);
                         DD(1, i) = 1;
-                    elseif linSys.isdiscrete()
+                    elseif isa(linSys, 'elltool.linsys.LinSysDiscrete')
                         DD(1, i) = 0;
                     end
                     AA(:, i) = reshape(A, d1*d1, 1);
                 end
-                if linSys.isdiscrete()
+                if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                     mydata.A     = AA;
                     mydata.delta = DD;
                 else
@@ -822,10 +888,11 @@ classdef ReachDiscrete < elltool.reach.AReach
                 end
             else
                 AC = aMat;
-                if linSys.isdiscrete() && (rank(aMat) < d1)
+                if isa(linSys, 'elltool.linsys.LinSysDiscrete') ...
+                        && (rank(aMat) < d1)
                     mydata.A     = ell_regularize(aMat);
                     mydata.delta = 1;
-                elseif linSys.isdiscrete()
+                elseif isa(linSys, 'elltool.linsys.LinSysDiscrete')
                     mydata.A     = aMat;
                     mydata.delta = 0;
                 else
@@ -862,7 +929,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                     C        = self.matrix_eval(cMat, self.time_values(i));
                     CC(:, i) = reshape(C, d1*dy, 1);
                 end
-                if linSys.isdiscrete()
+                if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                     mydata.C = CC;
                 else
                     mydata.C = spline(self.time_values, CC);
@@ -893,7 +960,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                         B           = 0.5*(B + B');
                         BPBsr(:, i) = reshape(B, d1*d1, 1);
                     end
-                    if linSys.isdiscrete()
+                    if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                         mydata.Bp    = Bp;
                         mydata.BPB   = BPB;
                         mydata.BPBsr = BPBsr;
@@ -913,7 +980,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                         B        = reshape(BB(:, i), d1, du);
                         Bp(:, i) = B*p;
                     end
-                    if linSys.isdiscrete()
+                    if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                         mydata.Bp = Bp;
                     else
                         mydata.Bp = spline(self.time_values, Bp);
@@ -930,7 +997,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                     end
                     Bp(:, i) = B*self.matrix_eval(p, self.time_values(i));
                 end
-                if linSys.isdiscrete()
+                if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                     mydata.Bp = Bp;
                 else
                     mydata.Bp = spline(self.time_values, Bp);
@@ -957,7 +1024,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                             P           = 0.5*(P + P');
                             BPBsr(:, i) = reshape(P, d1*d1, 1);
                         end
-                        if linSys.isdiscrete()
+                        if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                             mydata.Bp    = Bp;
                             mydata.BPB   = BPB;
                             mydata.BPBsr = BPBsr;
@@ -972,7 +1039,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                             p  = self.matrix_eval(uEll.center, self.time_values(i));
                             Bp(:, i) = B*p;
                         end
-                        if linSys.isdiscrete()
+                        if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                             mydata.Bp  = Bp;
                         else
                             mydata.Bp  = spline(self.time_values, Bp);
@@ -997,7 +1064,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                             BPBsr(:, i) = reshape(P, d1*d1, 1);
                         end
                         mydata.Bp = B * uEll.center;
-                        if linSys.isdiscrete()
+                        if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                             mydata.BPB   = BPB;
                             mydata.BPBsr = BPBsr;
                         else
@@ -1033,7 +1100,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                         P           = 0.5*(P + P');
                         BPBsr(:, i) = reshape(P, d1*d1, 1);
                     end
-                    if linSys.isdiscrete()
+                    if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                         mydata.Bp    = Bp;
                         mydata.BPB   = BPB;
                         mydata.BPBsr = BPBsr;
@@ -1068,7 +1135,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                             G           = 0.5*(G + G');
                             GQGsr(:, i) = reshape(G, d1*d1, 1);
                         end
-                        if linSys.isdiscrete()
+                        if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                             mydata.Gq    = Gq;
                             mydata.GQG   = GQG;
                             mydata.GQGsr = GQGsr;
@@ -1088,7 +1155,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                             G  = reshape(GG(:, i), d1, dd);
                             Gq(:, i) = G*q;
                         end
-                        if linSys.isdiscrete()
+                        if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                             mydata.Gq = Gq;
                         else
                             mydata.Gq = spline(self.time_values, Gq);
@@ -1105,7 +1172,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                         end
                         Gq(:, i) = G*self.matrix_eval(q, self.time_values(i));
                     end
-                    if linSys.isdiscrete()
+                    if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                         mydata.Gq = Gq;
                     else
                         mydata.Gq = spline(self.time_values, Gq);
@@ -1133,7 +1200,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                                 Q           = 0.5*(Q + Q');
                                 GQGsr(:, i) = reshape(Q, d1*d1, 1);
                             end
-                            if linSys.isdiscrete()
+                            if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                                 mydata.Gq    = Gq;
                                 mydata.GQG   = GQG;
                                 mydata.GQGsr = GQGsr;
@@ -1148,7 +1215,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                                 q  = self.matrix_eval(vEll.center, self.time_values(i));
                                 Gq(:, i) = G*q;
                             end
-                            if linSys.isdiscrete()
+                            if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                                 mydata.Gq  = Gq;
                             else
                                 mydata.Gq  = spline(self.time_values, Gq);
@@ -1173,7 +1240,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                                 GQGsr(:, i) = reshape(Q, d1*d1, 1);
                             end
                             mydata.Gq  = G * vEll.center;
-                            if linSys.isdiscrete()
+                            if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                                 mydata.GQG   = GQG;
                                 mydata.GQGsr = GQGsr;
                             else
@@ -1209,7 +1276,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                             Q           = 0.5*(Q + Q');
                             GQGsr(:, i) = reshape(Q, d1*d1, 1);
                         end
-                        if linSys.isdiscrete()
+                        if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                             mydata.Gq    = Gq;
                             mydata.GQG   = GQG;
                             mydata.GQGsr = GQGsr;
@@ -1235,7 +1302,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                     for i = 1:size(self.time_values, 2)
                         w = [w self.matrix_eval(noiseEll.center, self.time_values(i))];
                     end
-                    if linSys.isdiscrete()
+                    if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                         mydata.w = w;
                     else
                         mydata.w = spline(self.time_values, w);
@@ -1253,7 +1320,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                             end
                             W  = [W reshape(ww, dy*dy, 1)];
                         end
-                        if linSys.isdiscrete()
+                        if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                             mydata.w = w;
                             mydata.W = W;
                         else
@@ -1265,7 +1332,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                         for i = 1:size(self.time_values, 2)
                             w = [w self.matrix_eval(noiseEll.center, self.time_values(i))];
                         end
-                        if linSys.isdiscrete()
+                        if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                             mydata.w = w;
                         else
                             mydata.w = spline(self.time_values, w);
@@ -1282,7 +1349,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                             W  = [W reshape(ww, dy*dy, 1)];
                         end
                         mydata.w = noiseEll.center;
-                        if linSys.isdiscrete()
+                        if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                             mydata.W = W;
                         else
                             mydata.W = spline(self.time_values, W);
@@ -1299,7 +1366,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 end
                 logger.info('Computing state transition matrix...');
             end
-            if linSys.isdiscrete()
+            if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                 mydata.Phi   = [];
                 mydata.Phinv = [];
             else
@@ -1339,7 +1406,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 logger.info('Computing the trajectory of the reach set center...');
             end
             [x0, X0] = parameters(x0Ell);
-            if linSys.isdiscrete()
+            if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                 xx = x0;
                 x  = x0;
                 for i = 1:(size(self.time_values, 2) - 1)
@@ -1378,7 +1445,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 Q0 = reshape(X0, d1*d1, 1);
                 for ii = 1:N
                     l0 = l0Mat(:, ii);
-                    if linSys.isdiscrete()
+                    if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                         if linSys.hasdisturbance()
                             [Q, L] = self.eedist_de(size(tvals, 2),...
                                 Q0, l0, mydata, d1, back, self.absTol);
@@ -1424,7 +1491,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 M  = 0.5*(M + M');
                 for ii = 1:N
                     l0 = l0Mat(:, ii);
-                    if linSys.isdiscrete()
+                    if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                         if linSys.hasdisturbance()
                             [Q, L] = self.iedist_de(size(tvals, 2),...
                                 Q0, l0, mydata, d1, back, OptStruct.minmax, self.absTol);
@@ -1458,7 +1525,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             if OptStruct.save_all > 0
                 self.calc_data = mydata;
             end
-            if ~linSys.isdiscrete()
+            if ~isa(linSys, 'elltool.linsys.LinSysDiscrete')
                 LL = [];
                 for ii = 1:N
                     l0 = l0Mat(:, ii);
@@ -1526,7 +1593,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             [m, n] = size(cutTimeVec);
             linSys = self.get_system();
             if ~(isa(cutTimeVec, 'double')) || (m ~= 1) || ((n ~= 1) && (n ~= 2))
-                if linSys.isdiscrete()
+                if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                     if back > 0
                         throwerror(['CUT: second input argument must ',...
                             'specify time interval in the form ''[k1 k0]'', or ''k''.']);
@@ -1546,7 +1613,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             end
             tmn = min(cutTimeVec);
             tmx = max(cutTimeVec);
-            if linSys.isdiscrete()
+            if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                 tmn = round(tmn);
                 tmx = round(tmx);
             end
@@ -1557,7 +1624,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             end
             TT = self.time_values;
             NV = size(TT, 2);
-            if linSys.isdiscrete()
+            if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                 indarr = find((TT == smn) | ((TT > smn) & (TT < smx)) | (TT == smx));
             else
                 indarr = find((TT > smn) & (TT < smx));
@@ -1565,7 +1632,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             N1 = size(self.ea_values, 2);
             N2 = size(self.ia_values, 2);
             d  = self.dimension();
-            if linSys.isdiscrete()
+            if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                 if size(indarr, 2) == 1
                     k = find(TT == smn);
                     cutObj.time_values = self.time_values(k);
@@ -1837,7 +1904,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 return;
             end
             linSys = self.get_system();
-            if linSys.isdiscrete()
+            if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                 ttyp = 'discrete-time';
                 ttst = 'k = ';
                 tts0 = 'k0 = ';
@@ -2137,7 +2204,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 lighting phong;
                 material('metal');
                 view(3);
-                if isdiscrete(self.system)
+                if isDiscreteArr(self.system)
                     title(sprintf('%s at time step K = %d', back, self.time_values(end)));
                 else
                     title(sprintf('%s at time T = %d', back, self.time_values(end)));
@@ -2173,7 +2240,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                     set(h, 'Color', Options.color, 'LineWidth', Options.width);
                     h = ell_plot(self.center_values, '.');
                     set(h, 'Color', Options.color);
-                    if isdiscrete(self.system)
+                    if isa(self.system, 'elltool.linsys.LinSysDiscrete')
                         title(sprintf('%s at time step K = %d', back, self.time_values));
                     else
                         title(sprintf('%s at time T = %d', back, self.time_values));
@@ -2192,7 +2259,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             s      = (1/2) * self.nPlot2dPoints();
             phi    = linspace(0, 2*pi, s);
             L      = [cos(phi); sin(phi)];
-            if isdiscrete(self.system)
+            if isa(self.system, 'elltool.linsys.LinSysDiscrete')
                 for ii = 1:n
                     EE = move2origin(E(:, ii));
                     EE = EE';
@@ -2394,7 +2461,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 lighting phong;
                 material('metal');
                 view(3);
-                if isdiscrete(self.system)
+                if isa(self.system, 'elltool.linsys.LinSysDiscrete')
                     title(sprintf('%s at time step K = %d', back, self.time_values(end)));
                 else
                     title(sprintf('%s at time T = %d', back, self.time_values(end)));
@@ -2437,7 +2504,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 set(h, 'Color', Options.color, 'LineWidth', Options.width);
                 h = ell_plot(self.center_values, '.');
                 set(h, 'Color', Options.color);
-                if isdiscrete(self.system)
+                if isa(self.system, 'elltool.linsys.LinSysDiscrete')
                     title(sprintf('%s at time step K = %d', back, self.time_values));
                 else
                     title(sprintf('%s at time T = %d', back, self.time_values));
@@ -2452,7 +2519,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             s      = (1/2) * self.nPlot2dPoints;
             phi    = linspace(0, 2*pi, s);
             L      = [cos(phi); sin(phi)];
-            if isdiscrete(self.system)
+            if isa(self.system, 'elltool.linsys.LinSysDiscrete')
                 for ii = 1:n
                     EE = move2origin(E(:, ii));
                     EE = EE';
@@ -2651,7 +2718,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 Options.save_all = 1;
             end
             % Create time grid
-            if isdiscrete(linSys)
+            if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                 newEndTime(1) = round(newEndTime(1));
                 newEndTime(2) = round(newEndTime(2));
                 if newEndTime(1) > newEndTime(2)
@@ -2717,15 +2784,15 @@ classdef ReachDiscrete < elltool.reach.AReach
                 for i = 1:size(newReachObj.time_values, 2)
                     A = self.matrix_eval(aMat, newReachObj.time_values(i));
                     AC = [AC reshape(A, d1*d1, 1)];
-                    if isdiscrete(linSys) && (rank(A) < d1)
+                    if isa(linSys, 'elltool.linsys.LinSysDiscrete') && (rank(A) < d1)
                         A = ell_regularize(A);
                         DD = [DD 1];
-                    elseif isdiscrete(linSys)
+                    elseif isa(linSys, 'elltool.linsys.LinSysDiscrete')
                         DD = [DD 0];
                     end
                     AA = [AA reshape(A, d1*d1, 1)];
                 end
-                if isdiscrete(linSys)
+                if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                     mydata.A     = AA;
                     mydata.delta = DD;
                 else
@@ -2733,10 +2800,11 @@ classdef ReachDiscrete < elltool.reach.AReach
                 end
             else
                 AC = aMat;
-                if isdiscrete(linSys) && (rank(aMat) < d1)
+                if isa(linSys, 'elltool.linsys.LinSysDiscrete') ...
+                        && (rank(aMat) < d1)
                     mydata.A     = ell_regularize(aMat);
                     mydata.delta = 1;
-                elseif isdiscrete(linSys)
+                elseif isa(linSys, 'elltool.linsys.LinSysDiscrete')
                     mydata.A     = aMat;
                     mydata.delta = 0;
                 else
@@ -2773,7 +2841,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                     C  = self.matrix_eval(cMat, newReachObj.time_values(i));
                     CC = [CC reshape(C, d1*dy, 1)];
                 end
-                if isdiscrete(linSys)
+                if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                     mydata.C = CC;
                 else
                     mydata.C = spline(newReachObj.time_values, CC);
@@ -2804,7 +2872,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                         B     = 0.5*(B + B');
                         BPBsr = [BPBsr reshape(B, d1*d1, 1)];
                     end
-                    if isdiscrete(linSys)
+                    if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                         mydata.Bp    = Bp;
                         mydata.BPB   = BPB;
                         mydata.BPBsr = BPBsr;
@@ -2824,7 +2892,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                         B  = reshape(BB(:, i), d1, du);
                         Bp = [Bp B*p];
                     end
-                    if isdiscrete(linSys)
+                    if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                         mydata.Bp = Bp;
                     else
                         mydata.Bp = spline(newReachObj.time_values, Bp);
@@ -2841,7 +2909,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                     end
                     Bp = [Bp B*self.matrix_eval(p, newReachObj.time_values(i))];
                 end
-                if isdiscrete(linSys)
+                if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                     mydata.Bp = Bp;
                 else
                     mydata.Bp = spline(newReachObj.time_values, Bp);
@@ -2870,7 +2938,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                             P     = 0.5*(P + P');
                             BPBsr = [BPBsr reshape(P, d1*d1, 1)];
                         end
-                        if isdiscrete(linSys)
+                        if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                             mydata.Bp    = Bp;
                             mydata.BPB   = BPB;
                             mydata.BPBsr = BPBsr;
@@ -2886,7 +2954,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                                 newReachObj.time_values(i));
                             Bp = [Bp B*p];
                         end
-                        if isdiscrete(linSys)
+                        if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                             mydata.Bp  = Bp;
                         else
                             mydata.Bp  = spline(newReachObj.time_values, Bp);
@@ -2912,7 +2980,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                             BPBsr = [BPBsr reshape(P, d1*d1, 1)];
                         end
                         mydata.Bp = B * uEll.center;
-                        if isdiscrete(linSys)
+                        if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                             mydata.BPB   = BPB;
                             mydata.BPBsr = BPBsr;
                         else
@@ -2950,7 +3018,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                         P     = 0.5*(P + P');
                         BPBsr = [BPBsr reshape(P, d1*d1, 1)];
                     end
-                    if isdiscrete(linSys)
+                    if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                         mydata.Bp    = Bp;
                         mydata.BPB   = BPB;
                         mydata.BPBsr = BPBsr;
@@ -2985,7 +3053,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                             G     = 0.5*(G + G');
                             GQGsr = [GQGsr reshape(G, d1*d1, 1)];
                         end
-                        if isdiscrete(linSys)
+                        if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                             mydata.Gq    = Gq;
                             mydata.GQG   = GQG;
                             mydata.GQGsr = GQGsr;
@@ -3005,7 +3073,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                             G  = reshape(GG(:, i), d1, dd);
                             Gq = [Gq G*q];
                         end
-                        if isdiscrete(linSys)
+                        if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                             mydata.Gq = Gq;
                         else
                             mydata.Gq = spline(newReachObj.time_values, Gq);
@@ -3020,10 +3088,11 @@ classdef ReachDiscrete < elltool.reach.AReach
                         else
                             G = reshape(GG(:, i), d1, dd);
                         end
-                        Gq = [Gq G*self.matrix_eval(q,...
-                            newReachObj.time_values(i), isdiscrete(linSys))];
+                        Gq = [Gq G*self.matrix_eval(q, ...
+                            newReachObj.time_values(i), ...
+                            isa(linSys, 'elltool.linsys.LinSysDiscrete'))];
                     end
-                    if isdiscrete(linSys)
+                    if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                         mydata.Gq = Gq;
                     else
                         mydata.Gq = spline(newReachObj.time_values, Gq);
@@ -3055,7 +3124,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                                 Q     = 0.5*(Q + Q');
                                 GQGsr = [GQGsr reshape(Q, d1*d1, 1)];
                             end
-                            if isdiscrete(linSys)
+                            if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                                 mydata.Gq    = Gq;
                                 mydata.GQG   = GQG;
                                 mydata.GQGsr = GQGsr;
@@ -3072,7 +3141,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                                     newReachObj.time_values(i));
                                 Gq = [Gq G*q];
                             end
-                            if isdiscrete(linSys)
+                            if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                                 mydata.Gq  = Gq;
                             else
                                 mydata.Gq  = spline(newReachObj.time_values, Gq);
@@ -3099,7 +3168,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                                 GQGsr = [GQGsr reshape(Q, d1*d1, 1)];
                             end
                             mydata.Gq  = G * vEll.center;
-                            if isdiscrete(linSys)
+                            if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                                 mydata.GQG   = GQG;
                                 mydata.GQGsr = GQGsr;
                             else
@@ -3139,7 +3208,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                             Q     = 0.5*(Q + Q');
                             GQGsr = [GQGsr reshape(Q, d1*d1, 1)];
                         end
-                        if isdiscrete(linSys)
+                        if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                             mydata.Gq    = Gq;
                             mydata.GQG   = GQG;
                             mydata.GQGsr = GQGsr;
@@ -3166,7 +3235,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                         w = [w self.matrix_eval(noiseEll.center,...
                             newReachObj.time_values(i))];
                     end
-                    if isdiscrete(linSys)
+                    if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                         mydata.w = w;
                     else
                         mydata.w = spline(newReachObj.time_values, w);
@@ -3187,7 +3256,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                             end
                             W  = [W reshape(ww, dy*dy, 1)];
                         end
-                        if isdiscrete(linSys)
+                        if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                             mydata.w = w;
                             mydata.W = W;
                         else
@@ -3200,7 +3269,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                             w = [w self.matrix_eval(noiseEll.center,...
                                 newReachObj.time_values(i))];
                         end
-                        if isdiscrete(linSys)
+                        if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                             mydata.w = w;
                         else
                             mydata.w = spline(newReachObj.time_values, w);
@@ -3219,7 +3288,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                             W  = [W reshape(ww, dy*dy, 1)];
                         end
                         mydata.w = noiseEll.center;
-                        if isdiscrete(linSys)
+                        if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                             mydata.W = W;
                         else
                             mydata.W = spline(newReachObj.time_values, W);
@@ -3235,7 +3304,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 end
                 logger.info('Computing state transition matrix...');
             end
-            if isdiscrete(linSys)
+            if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                 mydata.Phi   = [];
                 mydata.Phinv = [];
             else
@@ -3274,7 +3343,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 logger.info('Computing the trajectory of the reach set center...');
             end
             x0 = self.center_values(:, end);
-            if isdiscrete(linSys)
+            if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                 xx = x0;
                 x  = x0;
                 for i = 1:(size(newReachObj.time_values, 2) - 1)
@@ -3315,7 +3384,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                     EM = self.ea_values{ii};
                     Q0 = EM(:, end);
                     l0 = newReachObj.initial_directions(:, ii);
-                    if isdiscrete(linSys)
+                    if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                         if hasdisturbance(linSys)
                             [Q, L] = self.eedist_de(size(tvals, 2),...
                                 Q0, l0, mydata, d1, back,...
@@ -3365,7 +3434,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                     X0 = sqrtmpos(X0, self.absTol);
                     X0 = 0.5*(X0 + X0');
                     l0 = newReachObj.initial_directions(:, ii);
-                    if isdiscrete(linSys)
+                    if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                         if hasdisturbance(linSys)
                             [Q, L] = self.iedist_de(size(tvals, 2),...
                                 Q0, l0, mydata, d1, back,...
@@ -3403,7 +3472,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             LL = [];
             for ii = 1:N
                 l0 = newReachObj.initial_directions(:, ii);
-                if isdiscrete(linSys)
+                if isa(linSys, 'elltool.linsys.LinSysDiscrete')
                     L = l0;
                     l = l0;
                     if back > 0

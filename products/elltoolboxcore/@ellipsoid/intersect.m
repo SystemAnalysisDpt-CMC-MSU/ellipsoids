@@ -54,7 +54,7 @@ function [resArr, statusArr] = intersect(myEllArr, objArr, mode)
 %
 %   Checking the intersection of ellipsoids with polytope
 %   objArr = P(A, b) reduces to checking if there any x, satisfying
-%   constraints (1)-(n) and
+%   constraints (1)-(n) and 
 %                        Ax <= b.
 %
 % Input:
@@ -126,7 +126,7 @@ if mode == 'u'
         auxArr = arrayfun(@(x,y) distance(myEllArr, x), objArr,'UniformOutput',false);
     else
         auxArr = cell(size(objArr));
-        [nRows nCols] = size(objArr);%actually nRows always equals to one
+        [~, nCols] = size(objArr);
         for iCols = 1:nCols
             auxArr{iCols} = distance(myEllArr,objArr(iCols));
         end
@@ -153,7 +153,7 @@ elseif isa(objArr, 'hyperplane')
     [resArr statusArr] = arrayfun(@(x) lqcqp(myEllArr, x), objArr);
 else
     nDimsArr = zeros(size(objArr));
-    [nRows nCols] = size(objArr);%actually nRows always equals to one
+    [~, nCols] = size(objArr);
     for iCols = 1:nCols
         nDimsArr(iCols) = dimension(objArr(iCols));
     end
@@ -162,7 +162,7 @@ else
     if Properties.getIsVerbose()
         logger.info('Invoking CVX...\n');
     end
-   
+    
     resArr = zeros(size(objArr));
     statusArr = zeros(size(objArr));
     for iCols = 1:nCols
@@ -267,11 +267,12 @@ if strcmp(cvx_status,'Infeasible') ||...
         strcmp(cvx_status,'Inaccurate/Infeasible')
     res = -1;
     return;
-end;
+end
+[~, fstAbsTol] = fstEllArr.getAbsTol();
 if cvxExprVec'*secEllShDublMat*cvxExprVec + ...
         2*(-secEllShDublMat*secEllCentDublVec)'*cvxExprVec + ...
         (secEllCentDublVec'*secEllShDublMat*secEllCentDublVec - 1) ...
-        <= min(getAbsTol(fstEllArr(:)))
+        <= fstAbsTol
     res = 1;
 else
     res = 0;
@@ -340,9 +341,8 @@ if strcmp(cvx_status,'Infeasible') || ...
     return;
 end;
 
-
-if abs(normHypVec'*cvxExprVec - hypScalar) <= ...
-        min(getAbsTol(myEllArr(:)))
+[~, myAbsTol] = myEllArr.getAbsTol(); 
+if abs(normHypVec'*cvxExprVec - hypScalar) <= myAbsTol
     res = 1;
 else
     res = 0;
@@ -414,4 +414,3 @@ else
     res = 0;
 end;
 end
-

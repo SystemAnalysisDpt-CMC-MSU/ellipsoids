@@ -4,9 +4,9 @@ function isPosDef = ismatposdef( qMat, absTol, isFlagSemDefOn)
 % Input:
 %   regular:
 %       qMat: double[nDims, nDims] - inpute matrix
-%       absTol: double - precision
-%
 %   optional:
+%       absTol: double - precision of positive definiteness determination, 
+%           if minimum eigenvalue of qMat 
 %       isFlagSemDefOn: logical[1,1] - if true than qMat is checked for 
 %                   positive semi-definiteness
 % Output:
@@ -21,24 +21,28 @@ function isPosDef = ismatposdef( qMat, absTol, isFlagSemDefOn)
 %
 import modgen.common.throwerror;
 import gras.la.ismatsymm;
+if nargin<3
+    isFlagSemDefOn=false;
+    if nargin<2
+        absTol=0;
+    end
+end
 %
 if ~ismatsymm(qMat)
     throwerror('wrongInput:nonSymmMat',...
-        'ISMATPOSDEF: Input matrix must be symmetric');
+        'input matrix must be symmetric');
 end
 %
 minEig=min(eig(qMat));
 %
-isPosDef=false;
-if nargin<3
-    isFlagSemDefOn=false;
-end
+%
+isPosDef=true;
 if isFlagSemDefOn
-    if (minEig>=0 || abs(minEig)<absTol)
-        isPosDef=true;
+    if minEig<-absTol
+        isPosDef=false;
     end
 else
-    if (minEig>absTol)
-        isPosDef=true;
+    if minEig<=absTol
+        isPosDef=false;
     end
 end
