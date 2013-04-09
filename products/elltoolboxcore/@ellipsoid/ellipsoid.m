@@ -138,6 +138,9 @@ classdef ellipsoid < handle
         regQMat = regularize(qMat,absTol)
         clrDirsMat = rm_bad_directions(q1Mat, q2Mat, dirsMat,absTol)
         [isBadDirVec,pUniversal] = isbaddirectionmat(q1Mat, q2Mat, dirsMat,absTol)
+         bdMat = ellbndr_2dmat(cenVec,qMat,nPoints,absTol)
+         bdMat = ellbndr_3dmat(cenVec,qMat,sphereTriangNum,absTol)
+    
     end
     methods (Static,Access = public)
         [supArr, bpMat] = rhomat(ellShapeMat,ellCenterVec,absTol, dirsMat)
@@ -146,8 +149,7 @@ classdef ellipsoid < handle
     end
     methods(Access = private)
         [propMat, propVal] = getProperty(hplaneMat,propName, fPropFun)
-        x = ellbndr_2d(E)
-        x = ellbndr_3d(E)
+       % bdMat = ellbndr_3dmat(E)
     end
     methods (Static)
         checkIsMe(someObj,varargin)
