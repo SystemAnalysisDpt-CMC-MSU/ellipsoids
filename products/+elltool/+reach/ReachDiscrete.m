@@ -86,10 +86,12 @@ classdef ReachDiscrete < elltool.reach.AReach
 %
 % $Authors: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %           Kirill Mayantsev  <kirill.mayantsev@gmail.com>$
-% $Date: March-2012 $ $Copyright: Moscow State University,
-%             Faculty of Computational Mathematics and
-%             Computer Science, System Analysis Department
-%             2012 $
+% $Date: March-2012 $ 
+% $Copyright: Moscow State University,
+%             Faculty of Computational Mathematics
+%             and Computer Science, 
+%             System Analysis Department 2012 $
+%
     properties (Access = private)
         absTol
         relTol
@@ -130,13 +132,13 @@ classdef ReachDiscrete < elltool.reach.AReach
         %           range [0 1] of the red, green and blue
         %           components of the color.
         %
-        %$Authors: Kirill Mayantsev
-        %<kirill.mayantsev@gmail.com> $
-        % $Date: March-2012 $ $Copyright: Moscow State
-        % University,
+        % $Authors: Kirill Mayantsev
+        % <kirill.mayantsev@gmail.com> $
+        % $Date: March-2013 $ 
+        % $Copyright: Moscow State University,
         %             Faculty of Computational Mathematics
-        %             and Computer Science, System Analysis
-        %             Department 2012 $
+        %             and Computer Science, 
+        %             System Analysis Department 2013 $
         %
             if ~(ischar(colChar))
                 colCodeVec = [0 0 0];
@@ -525,36 +527,35 @@ classdef ReachDiscrete < elltool.reach.AReach
         %
         % Input:
         %   regular:
-        %       rsArray:reach[nDims1, nDims2,...] -
-        %       multidimension array
-        %           of reach sets propName: char[1,N] - name
-        %           property
+        %       rsArray: elltool.reach.ReachDiscrete 
+        %           [nDims1, nDims2,...] - multidimension 
+        %           array of reach sets 
+        %       propName: char[1,N] - name property
+        %
         %   optional:
         %       fPropFun: function_handle[1,1] - function
-        %       that apply
-        %           to the propArr. The default is @min.
+        %           that apply to the propArr. The default 
+        %           is @min.
         %
         % Output:
         %   regular:
         %       propArr: double[nDim1, nDim2,...] -
-        %       multidimension array of
-        %           propName properties for ellipsoids in
-        %           rsArr
+        %           multidimension array of properties for
+        %           reach object in rsArr
         %   optional:
         %       propVal: double[1, 1] - return result of
-        %       work fPropFun with
-        %           the propArr
+        %           work fPropFun with the propArr
         %
-        % $Author: Zakharov Eugene  <justenterrr@gmail.com>
-        % $
+        % $Author: Zakharov Eugene <justenterrr@gmail.com>$
         %   $Date: 17-november-2012$
         % $Author: Grachev Artem  <grachev.art@gmail.com> $
         %   $Date: March-2013$
         % $Copyright: Moscow State University,
-        %            Faculty of Computational Arrhematics
-        %               and Computer Science,
-        %            System Analysis Department 2012 $
+        %             Faculty of Computational Mathematics
+        %             and Computer Science,
+        %             System Analysis Department 2013 $
         %
+    
             import modgen.common.throwerror;
             propNameList = {'absTol','relTol','nPlot2dPoints',...
                 'nPlot3dPoints','nTimeGridPoints'};
@@ -565,15 +566,15 @@ classdef ReachDiscrete < elltool.reach.AReach
             if nargin == 2
                 fPropFun = @min;
             end
-            
-            propArr= arrayfun(@(x)x.(propName),rsArr);
-            
+                
+            propArr = arrayfun(@(x)x.(propName),rsArr);
+                
             if nargout == 2
                 propVal = fPropFun(propArr(:));
             end
-            
+                
         end
-        
+      
         %
         function x = ellbndr_2d(ell, num)
             %
@@ -613,42 +614,37 @@ classdef ReachDiscrete < elltool.reach.AReach
         %
         % Input:
         %   regular:
-        %       rsArr: elltool.reach.ReachDiscrete[nDim1,
-        %       nDim2, ...] -
-        %           multidimension array of reach sets
-        %   optional
+        %       rsArr: elltool.reach.ReachDiscrete
+        %           [nDim1, nDim2, ...] - multidimension 
+        %           array of reach sets
+        %   optional:
         %       fAbsTolFun: function_handle[1,1] - function
-        %       that apply
-        %           to the absTolArr. The default is @min.
+        %           that apply to the absTolArr. 
+        %           The default is @min.
         %         
         % Output:
         %   regular:
         %       absTolArr: double [absTol1, absTol2, ...] -
-        %       return absTol
-        %           for each element in rsArr
+        %           return absTol for each element in rsArr
         %   optional:
         %       absTol: double[1,1] - return result of work
-        %       fAbsTolFun
-        %           with the absTolArr
+        %           fAbsTolFun with the absTolArr
         %
         % Usage:
         %   use [~,absTol] = rsArr.getAbsTol() if you want
-        %   get only
-        %       absTol,
+        %       get only absTol,
         %   use [absTolArr,absTol] = rsArr.getAbsTol() if
-        %   you want get
-        %       absTolArr and absTol,
+        %       you want get absTolArr and absTol,
         %   use absTolArr = rsArr.getAbsTol() if you want
-        %   get only
-        %       absTolArr
+        %       get only absTolArr
         % 
         %$Author: Zakharov Eugene  <justenterrr@gmail.com> $
         % $Author: Grachev Artem  <grachev.art@gmail.com> $
         %   $Date: March-2013$
         % $Copyright: Moscow State University,
-        %            Faculty of Computational Arrhematics
-        %            and Computer Science, System Analysis
-        %            Department 2013 $
+        %             Faculty of Computational Mathematics
+        %             and Computer Science, 
+        %             System Analysis Department 2013 $
         % 
         
             [absTolArr,absTolVal]=rsArr.getProperty('absTol',varargin{:});
@@ -656,98 +652,84 @@ classdef ReachDiscrete < elltool.reach.AReach
         end
         %
         function nPlot2dPointsArr = getNPlot2dPoints(rsArr)
-            % GETNPLOT2DPOINTS gives array  the same size as
-            % rsArr of value of nPlot2dPoints property for
-            % each element in rsArr - array of reach sets
-            %
-            % Input:
-            %   regular:
-            %       rsArr:reach[nDims1,nDims2,...] - reach
-            %       set array
-            %
-            % Output:
-            %   nPlot2dPointsArr:double[nDims1,nDims2,...]-
-            %   array of values of nTimeGridPoints
-            %                                         property
-            %                                         for
-            %                                         each
-            %                                         reach
-            %                                         set in
-            %                                         rsArr
-            %
-            % $Author: Zakharov Eugene
-            % <justenterrr@gmail.com> $    $Date:
-            % 17-november-2012 $ $Copyright: Moscow State
-            % University,
-            %            Faculty of Computational
-            %            Arrhematics and Computer Science,
-            %            System Analysis Department 2012 $
-            %
+        % GETNPLOT2DPOINTS gives array  the same size as
+        % rsArr of value of nPlot2dPoints property for
+        % each element in rsArr - array of reach sets
+        %
+        % Input:
+        %   regular:
+        %       rsArr:elltool.reach.ReachDiscrete
+        %           [nDims1,nDims2,...] - reach set 
+        %           array
+        %
+        % Output:
+        %   nPlot2dPointsArr:double[nDims1,nDims2,...]-
+        %       array of values of nTimeGridPoints
+        %       property for each reach set in rsArr
+        %
+        % $Author: Zakharov Eugene
+        % <justenterrr@gmail.com> $    
+        % $Date: 17-november-2012 $ 
+        % $Copyright: Moscow State University,
+        %             Faculty of Computational Mathematics
+        %             and Computer Science,
+        %             System Analysis Department 2012 $
+        %
             nPlot2dPointsArr =...
                 elltool.reach.ReachDiscrete.getProperty(rsArr,'nPlot2dPoints');
         end
         %
         function nPlot3dPointsArr = getNPlot3dPoints(rsArr)
-            % GETNPLOT3DPOINTS gives array  the same size as
-            % rsArr of value of nPlot3dPoints property for
-            % each element in rsArr - array of reach sets
-            %
-            % Input:
-            %   regular:
-            %       rsArr:reach[nDims1,nDims2,...] - reach
-            %       set array
-            %
-            % Output:
-            %   nPlot3dPointsArr:double[nDims1,nDims2,...]-
-            %   array of values of nPlot3dPoints
-            %                                         property
-            %                                         for
-            %                                         each
-            %                                         reach
-            %                                         set in
-            %                                         rsArr
-            %
-            % $Author: Zakharov Eugene
-            % <justenterrr@gmail.com> $    $Date:
-            % 17-november-2012 $ $Copyright: Moscow State
-            % University,
-            %            Faculty of Computational
-            %            Arrhematics and Computer Science,
-            %            System Analysis Department 2012 $
-            %
+        % GETNPLOT3DPOINTS gives array  the same size as
+        % rsArr of value of nPlot3dPoints property for
+        % each element in rsArr - array of reach sets
+        %
+        % Input:
+        %   regular:
+        %       rsArr:reach[nDims1,nDims2,...] - reach
+        %           set array
+        %
+        % Output:
+        %   nPlot3dPointsArr:double[nDims1,nDims2,...]-
+        %       array of values of nPlot3dPoints property
+        %       for each reach set in rsArr
+        %
+        % $Author: Zakharov Eugene
+        % <justenterrr@gmail.com> $    
+        % $Date: 17-november-2012 $ 
+        % $Copyright: Moscow State University,
+        %             Faculty of Computational Mathematics
+        %             and Computer Science,
+        %             System Analysis Department 2012 $
+        %
             nPlot3dPointsArr =...
                 elltool.reach.ReachDiscrete.getProperty(rsArr,'nPlot3dPoints');
         end
         %
         function nTimeGridPointsArr = getNTimeGridPoints(rsArr)
-            % GETNTIMEGRIDPOINTS gives array  the same size
-            % as rsArr of value of nTimeGridPoints property
-            % for each element in rsArr - array of reach
-            % sets
-            %
-            % Input:
-            %   regular:
-            %       rsArr:reach[nDims1,nDims2,...] - reach
-            %       set array
-            %
-            % Output:
-            %   nTimeGridPointsArr:double[nDims1,nDims2,...]-
-            %   array of values of nTimeGridPoints
-            %                                         property
-            %                                         for
-            %                                         each
-            %                                         reach
-            %                                         set in
-            %                                         rsArr
-            %
-            % $Author: Zakharov Eugene
-            % <justenterrr@gmail.com> $    $Date:
-            % 17-november-2012 $ $Copyright: Moscow State
-            % University,
-            %            Faculty of Computational
-            %            Arrhematics and Computer Science,
-            %            System Analysis Department 2012 $
-            %
+        % GETNTIMEGRIDPOINTS gives array  the same size
+        % as rsArr of value of nTimeGridPoints property
+        % for each element in rsArr - array of reach
+        % sets
+        %
+        % Input:
+        %   regular:
+        %       rsArr: elltool.reach.ReachDiscrete
+        %           [nDims1,nDims2,...] - reach set array
+        %
+        % Output:
+        %   nTimeGridPointsArr: double[nDims1,nDims2,...]-
+        %       array of values of nTimeGridPoints 
+        %       property for each reach set in rsArr
+        %
+        % $Author: Zakharov Eugene
+        % <justenterrr@gmail.com> $    
+        % $Date: 17-november-2012 $ 
+        % $Copyright: Moscow State University,
+        %             Faculty of Computational Mathematics
+        %             and Computer Science,
+        %             System Analysis Department 2012 $
+        %
             nTimeGridPointsArr =...
                 elltool.reach.ReachDiscrete.getProperty(rsArr,'nTimeGridPoints');
         end
@@ -791,9 +773,9 @@ classdef ReachDiscrete < elltool.reach.AReach
         % $Author: Grachev Artem  <grachev.art@gmail.com> $
         %   $Date: March-2013$
         % $Copyright: Moscow State University,
-        %            Faculty of Computational Arrhematics
-        %            and Computer Science, System Analysis
-        %            Department 2013 $
+        %             Faculty of Computational Mathematics
+        %             and Computer Science, 
+        %             System Analysis Department 2013 $
         %
             
             [relTolArr,relTolVal]=rsArr.Property('relTol',varargin{:});
@@ -803,7 +785,7 @@ classdef ReachDiscrete < elltool.reach.AReach
     methods
         function self = ReachDiscrete(linSys, x0Ell, l0Mat,...
                 timeVec, OptStruct, varargin)
-            %
+        %
         % ReachDiscrete - computes reach set approximation
         %         of the discrete linear system for the 
         %         given time interval.
@@ -849,11 +831,10 @@ classdef ReachDiscrete < elltool.reach.AReach
         % $Author: Kirill Mayantsev
         % <kirill.mayantsev@gmail.com> $  
         % $Date: Jan-2012 $ 
-        % $Copyright: Moscow State
-        % University,
-        %            Faculty of Computational
-        %            Mathematics and Computer Science,
-        %            System Analysis Department 2012 $
+        % $Copyright: Moscow State University,
+        %             Faculty of Computational
+        %             Mathematics and Computer Science,
+        %             System Analysis Department 2012 $
         %
             import gras.la.sqrtmpos;
             import elltool.conf.Properties;
@@ -2242,12 +2223,11 @@ classdef ReachDiscrete < elltool.reach.AReach
         %  
         % $Author: Kirill Mayantsev
         % <kirill.mayantsev@gmail.com> $  
-        % $Date: Jan-2012 $ 
-        % $Copyright: 
-        % Moscow State University, 
-        % Faculty of Computational
-        % Mathematics and Computer Science,
-        % System Analysis Department 2012 $
+        % $Date: Jan-2013 $ 
+        % $Copyright: Moscow State University, 
+        %             Faculty of Computationa Mathematics 
+        %             and Computer Science,
+        %             System Analysis Department 2013 $
         %    
             if isempty(self)
                 return;
@@ -2289,12 +2269,11 @@ classdef ReachDiscrete < elltool.reach.AReach
         %  
         % $Author: Kirill Mayantsev
         % <kirill.mayantsev@gmail.com> $  
-        % $Date: Jan-2012 $ 
-        % $Copyright: 
-        % Moscow State University, 
-        % Faculty of Computational
-        % Mathematics and Computer Science,
-        % System Analysis Department 2012 $
+        % $Date: Jan-2013 $ 
+        % $Copyright: Moscow State University, 
+        %             Faculty of Computational
+        %             Mathematics and Computer Science,
+        %             System Analysis Department 2013 $
         %        
             if isempty(self)
                 return;
@@ -2338,12 +2317,11 @@ classdef ReachDiscrete < elltool.reach.AReach
         %  
         % $Author: Kirill Mayantsev
         % <kirill.mayantsev@gmail.com> $  
-        % $Date: Jan-2012 $ 
-        % $Copyright: 
-        % Moscow State University, 
-        % Faculty of Computational
-        % Mathematics and Computer Science,
-        % System Analysis Department 2012 $
+        % $Date: Jan-2013$ 
+        % $Copyright: Moscow State University, 
+        %             Faculty of Computational
+        %             Mathematics and Computer Science,
+        %             System Analysis Department 2013 $
         %            
             import elltool.conf.Properties;
             import modgen.common.throwerror;
@@ -2411,12 +2389,11 @@ classdef ReachDiscrete < elltool.reach.AReach
         %    
         % $Author: Kirill Mayantsev
         % <kirill.mayantsev@gmail.com> $  
-        % $Date: Jan-2012 $ 
-        % $Copyright: 
-        % Moscow State University, 
-        % Faculty of Computational
-        % Mathematics and Computer Science,
-        % System Analysis Department 2012 $
+        % $Date: Jan-2013$ 
+        % $Copyright: Moscow State University, 
+        %             Faculty of Computational
+        %             Mathematics and Computer Science,
+        %             System Analysis Department 2013 $
         %  
 
             import elltool.conf.Properties;
@@ -2682,12 +2659,11 @@ classdef ReachDiscrete < elltool.reach.AReach
         %    
         % $Author: Kirill Mayantsev
         % <kirill.mayantsev@gmail.com> $  
-        % $Date: Jan-2012 $ 
-        % $Copyright: 
-        % Moscow State University, 
-        % Faculty of Computational
-        % Mathematics and Computer Science,
-        % System Analysis Department 2012 $
+        % $Date: Jan-2013$ 
+        % $Copyright: Moscow State University, 
+        %             Faculty of Computational
+        %             Mathematics and Computer Science,
+        %             System Analysis Department 2013 $
         %  
             import elltool.conf.Properties;
             import elltool.logging.Log4jConfigurator;
@@ -2963,12 +2939,11 @@ classdef ReachDiscrete < elltool.reach.AReach
         %  
         % $Author: Kirill Mayantsev
         % <kirill.mayantsev@gmail.com> $  
-        % $Date: Jan-2012 $ 
-        % $Copyright: 
-        % Moscow State University, 
-        % Faculty of Computational
-        % Mathematics and Computer Science,
-        % System Analysis Department 2012 $
+        % $Date: Jan-2013$ 
+        % $Copyright: Moscow State University, 
+        %             Faculty of Computational
+        %             Mathematics and Computer Science,
+        %             System Analysis Department 2013 $
         %       
             import elltool.conf.Properties;
             import modgen.common.throwerror;
@@ -3041,12 +3016,11 @@ classdef ReachDiscrete < elltool.reach.AReach
         %  
         % $Author: Kirill Mayantsev
         % <kirill.mayantsev@gmail.com> $  
-        % $Date: Jan-2012 $ 
-        % $Copyright: 
-        % Moscow State University, 
-        % Faculty of Computational
-        % Mathematics and Computer Science,
-        % System Analysis Department 2012 $
+        % $Date: Jan-2013$ 
+        % $Copyright: Moscow State University, 
+        %             Faculty of Computational
+        %             Mathematics and Computer Science,
+        %             System Analysis Department 2013 $
         %       
             import elltool.conf.Properties;
             import modgen.common.throwerror;
