@@ -49,6 +49,10 @@ classdef ReachDiscrete < elltool.reach.AReach
     % $Copyright: Moscow State University,
     %            Faculty of Computational Mathematics and Computer Science,
     %            System Analysis Department 2012 $
+    properties (Constant, Access = private)
+        DISPLAY_PARAMETER_STRINGS = {'discrete-time', 'k0 = ', 'k1 = '}
+    end
+    %
     properties (Access = private)
         absTol
         relTol
@@ -66,7 +70,7 @@ classdef ReachDiscrete < elltool.reach.AReach
         minmax
         calc_data
     end
-    %
+    %    
     methods (Static, Access = private)
         function colCodeVec = my_color_table(colChar)
             %
@@ -792,6 +796,8 @@ classdef ReachDiscrete < elltool.reach.AReach
             self.isProj = false;
             self.isBackward = timeVec(1) > timeVec(2);
             self.projectionBasisMat = [];
+            self.reachObjFactory = ...
+                elltool.reach.ReachDiscreteFactory();
             %% check and analize input
             if nargin < 4
                 throwerror('insufficient number of input arguments.');
@@ -1773,78 +1779,8 @@ classdef ReachDiscrete < elltool.reach.AReach
             cutObj.isCut = true;
         end
         %
-        function display(self)
-            if self.isempty()
-                return;
-            end
-            fprintf('\n');
-            disp([inputname(1) ' =']);
-            [m, n] = size(self);
-            if (m > 1) || (n > 1)
-                fprintf('%dx%d array of reach set objects\n\n', m, n);
-                return;
-            end
-            if isempty(self)
-                fprintf('Empty reach set object.\n\n');
-                return;
-            end
-            linSys = self.get_system();
-            if isa(linSys, 'elltool.linsys.LinSysDiscrete')
-                ttyp = 'discrete-time';
-                ttst = 'k = ';
-                tts0 = 'k0 = ';
-                tts1 = 'k1 = ';
-            else
-                ttyp = 'continuous-time';
-                ttst = 't = ';
-                tts0 = 't0 = ';
-                tts1 = 't1 = ';
-            end
-            d = linSys.dimension();
-            if size(self.time_values, 2) == 1
-                if self.time_values < self.t0
-                    back = 1;
-                    fprintf(['Backward reach set of the %s linear ',...
-                        'system in R^%d at time %s%d.\n'], ttyp,...
-                        d, ttst, self.time_values);
-                else
-                    back = 0;
-                    fprintf(['Reach set of the %s linear system ',...
-                        'in R^%d at time %s%d.\n'], ttyp,...
-                        d, ttst, self.time_values);
-                end
-            else
-                if self.time_values(1) > self.time_values(end)
-                    back = 1;
-                    fprintf(['Backward reach set of the %s linear ',...
-                        'system in R^%d in the time interval [%d, %d].\n'],...
-                        ttyp, d, self.time_values(1), self.time_values(end));
-                else
-                    back = 0;
-                    fprintf(['Reach set of the %s linear system ',...
-                        'in R^%d in the time interval [%d, %d].\n'],...
-                        ttyp, d, self.time_values(1), self.time_values(end));
-                end
-            end
-            if ~(isempty(self.projectionBasisMat))
-                fprintf('Projected onto the basis:\n');
-                disp(self.projectionBasisMat);
-            end
-            fprintf('\n');
-            if back > 0
-                fprintf('Target set at time %s%d:\n', tts1, self.t0);
-            else
-                fprintf('Initial set at time %s%d:\n', tts0, self.t0);
-            end
-            disp(self.x0Ellipsoid);
-            fprintf('Number of external approximations: %d\n',...
-                size(self.ea_values, 2));
-            fprintf('Number of internal approximations: %d\n',...
-                size(self.ia_values, 2));
-            if ~(isempty(self.calc_data))
-                fprintf('\nCalculation data preserved.\n');
-            end
-            fprintf('\n');
+        function display(self)            
+            self.displayInternal(self.DISPLAY_PARAMETER_STRINGS);
         end
         %
         function [muMat timeVec] = get_mu(self)

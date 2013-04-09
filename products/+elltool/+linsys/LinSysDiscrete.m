@@ -90,7 +90,7 @@ classdef LinSysDiscrete < elltool.linsys.ALinSys
             %
             % See description of DISPLAY in ILinSys class.
             %
-            self.displayInternal(self.DISPLAY_PARAMETER_STRINGS)
+            self.displayInternal(self.DISPLAY_PARAMETER_STRINGS);
         end
     end
 end

@@ -25,6 +25,7 @@ classdef AReach < elltool.reach.IReach
         isBackward
         projectionBasisMat
         ellTubeRel
+        reachObjFactory
     end
     %
     properties (Constant, Access = private)
@@ -171,8 +172,7 @@ classdef AReach < elltool.reach.IReach
                 end
             end
         end
-        %
-        
+        %        
         function [apprEllMat timeVec] = getApprox(self, approxType)
             import gras.ellapx.enums.EApproxType;
             import gras.ellapx.smartdb.F;
@@ -197,6 +197,51 @@ classdef AReach < elltool.reach.IReach
             if nargout > 1
                 timeVec = SData.timeVec{1};
             end
+        end
+        %
+        %
+        function displayInternal(self, dispParamStringsCVec)
+            import gras.ellapx.enums.EApproxType;
+            fprintf('\n');
+            disp([inputname(1) ' =']);
+            if self.isempty()
+                fprintf('Empty reach set object.\n\n');
+                return;
+            end
+            [sysTypeStr sysTimeStartStr sysTimeEndStr] = ...
+                dispParamStringsCVec{:};
+            dim = self.dimension();
+            timeVec =...
+                [self.switchSysTimeVec(1) self.switchSysTimeVec(end)];
+            if timeVec(1) > timeVec(end)
+                isBack = true;
+                fprintf(['Backward reach set of the %s linear system ',...
+                    'in R^%d in the time interval [%d, %d].\n'],...
+                    sysTypeStr, dim, timeVec(1), timeVec(end));
+            else
+                isBack = false;
+                fprintf(['Reach set of the %s linear system ',...
+                    'in R^%d in the time interval [%d, %d].\n'],...
+                    sysTypeStr, dim, timeVec(1), timeVec(end));
+            end
+            if self.isprojection()
+                fprintf('Projected onto the basis:\n');
+                disp(self.projectionBasisMat);
+            end
+            fprintf('\n');
+            if isBack
+                fprintf('Target set at time %s%d:\n',...
+                    sysTimeEndStr, timeVec(1));
+            else
+                fprintf('Initial set at time %s%d:\n',...
+                    sysTimeStartStr, timeVec(1));
+            end
+            disp(self.getInitialSet());
+            fprintf('Number of external approximations: %d\n',...
+                sum(self.ellTubeRel.approxType == EApproxType.External));
+            fprintf('Number of internal approximations: %d\n',...
+                sum(self.ellTubeRel.approxType == EApproxType.Internal));
+            fprintf('\n');
         end
     end
     methods
@@ -375,7 +420,7 @@ classdef AReach < elltool.reach.IReach
                     'matrix should be a unit vector.']);
             end
             projSet = self.getProjSet(projMat);
-            projObj = elltool.reach.ReachContinuous();
+            projObj = self.reachObjFactory.create();
             projObj.switchSysTimeVec = self.switchSysTimeVec;
             projObj.x0Ellipsoid = self.x0Ellipsoid;
             projObj.ellTubeRel = projSet;

@@ -50,7 +50,10 @@ classdef ReachContinuous < elltool.reach.AReach
     % $Copyright: Moscow State University,
     %            Faculty of Computational Mathematics and Computer Science,
     %            System Analysis Department 2012 $
-    
+    properties (Constant, Access = private)
+        DISPLAY_PARAMETER_STRINGS = {'continuous-time', 'k0 = ', 'k1 = '}
+    end
+    %
     methods (Access = private)
         function dataCVec = evolveApprox(self,...
                 newTimeVec, newLinSys, approxType)
@@ -418,6 +421,8 @@ classdef ReachContinuous < elltool.reach.AReach
             self.isProj = false;
             self.isBackward = timeVec(1) > timeVec(2);
             self.projectionBasisMat = [];
+            self.reachObjFactory = ...
+                elltool.reach.ReachContinuousFactory();
             %% check and analize input
             if nargin < 4
                 throwerror('wrongInput', ['insufficient ',...
@@ -486,54 +491,7 @@ classdef ReachContinuous < elltool.reach.AReach
         end
         %%
         function display(self)
-            import gras.ellapx.enums.EApproxType;
-            fprintf('\n');
-            disp([inputname(1) ' =']);
-            if self.isempty()
-                fprintf('Empty reach set object.\n\n');
-                return;
-            end
-            if isa(self.linSysCVec{end}, 'elltool.linsys.LinSysDiscrete')
-                sysTypeStr = 'discrete-time';
-                sysTimeStartStr = 'k0 = ';
-                sysTimeEndStr = 'k1 = ';
-            else
-                sysTypeStr = 'continuous-time';
-                sysTimeStartStr = 't0 = ';
-                sysTimeEndStr = 't1 = ';
-            end
-            dim = self.dimension();
-            timeVec =...
-                [self.switchSysTimeVec(1) self.switchSysTimeVec(end)];
-            if timeVec(1) > timeVec(end)
-                isBack = true;
-                fprintf(['Backward reach set of the %s linear system ',...
-                    'in R^%d in the time interval [%d, %d].\n'],...
-                    sysTypeStr, dim, timeVec(1), timeVec(end));
-            else
-                isBack = false;
-                fprintf(['Reach set of the %s linear system ',...
-                    'in R^%d in the time interval [%d, %d].\n'],...
-                    sysTypeStr, dim, timeVec(1), timeVec(end));
-            end
-            if self.isprojection()
-                fprintf('Projected onto the basis:\n');
-                disp(self.projectionBasisMat);
-            end
-            fprintf('\n');
-            if isBack
-                fprintf('Target set at time %s%d:\n',...
-                    sysTimeEndStr, timeVec(1));
-            else
-                fprintf('Initial set at time %s%d:\n',...
-                    sysTimeStartStr, timeVec(1));
-            end
-            disp(self.getInitialSet());
-            fprintf('Number of external approximations: %d\n',...
-                sum(self.ellTubeRel.approxType == EApproxType.External));
-            fprintf('Number of internal approximations: %d\n',...
-                sum(self.ellTubeRel.approxType == EApproxType.Internal));
-            fprintf('\n');
+            self.displayInternal(self.DISPLAY_PARAMETER_STRINGS);
         end
         %%
         function cutObj = cut(self, cutTimeVec)
