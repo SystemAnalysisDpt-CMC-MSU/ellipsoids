@@ -129,13 +129,21 @@ classdef SuiteSupportFunction < mlunitext.test_case
                 OdeOptionsStruct = odeset(...
                     'RelTol', calcPrecision * self.REL_TOL_FACTOR,...
                     'AbsTol', calcPrecision * self.ABS_TOL_FACTOR);
+                goodDirN = SRunProp.goodDirSetObj.getNGoodDirs();
                 for iTuple = 1 : nTuples
                     curTimeVec = timeCVec{iTuple};
                     curGoodDirMat = goodDirCMat{iTuple};
                     curEllMatArray = ellMatCArray{iTuple};
                     curEllCenterMat = ellCenterCMat{iTuple};
                     %
-                    fxMat = @(t) SRunProp.goodDirSetObj.getGoodDirOneCurveSpline(iTuple).evaluate(t);
+                    % for different types of approximation
+                    %
+                    goodDirIndex = mod(iTuple, goodDirN);
+                    if (goodDirIndex == 0)
+                        goodDirIndex = goodDirN;
+                    end
+                    %
+                    fxMat = @(t) SRunProp.goodDirSetObj.getGoodDirOneCurveSpline(goodDirIndex).evaluate(t);
                     %
                     supFun0 =...
                         curGoodDirMat(:, 1).' * curEllCenterMat(:, 1) +...
