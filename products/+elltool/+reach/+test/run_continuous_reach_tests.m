@@ -1,5 +1,5 @@
 function results = run_continuous_reach_tests()
-import elltool.reach.test.mlunit.ReachFactory;
+import elltool.reach.ReachFactory;
 %
 runner = mlunit.text_test_runner(1, 1);
 loader = mlunitext.test_loader;
