@@ -4,7 +4,6 @@ classdef IReachProblemDynamics<handle
         AtDynamics=getAtDynamics(self)
         BptDynamics=getBptDynamics(self)
         xtDynamics=getxtDynamics(self)
-        Rtt0Dynamics=getRtt0Dynamics(self)
         problemDef=getProblemDef(self)
         timeVec=getTimeVec(self)
         X0Mat=getX0Mat(self)
