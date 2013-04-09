@@ -94,7 +94,7 @@ if Properties.getIsVerbose()
         logger.info('Computing ellipsoid-hyperplane intersection...');
     end
 end
-
+[~,absTol]=myEllArr.getAbsTol();
 if ~(isEllScal || isHypScal)
     arrayfun(@(x,y) fSingleCase(x,y), indexVec,indexVec);
 elseif isHypScal
@@ -107,7 +107,7 @@ end
         myEll = myEllArr(ellIndex);
         myHyp = myHypArr(hypIndex);
         index = max(ellIndex,hypIndex);
-        if distance(myEll, myHyp) > myEll.getAbsTol()
+        if distance(myEll, myHyp) > absTol
            intEllArr(index) = ellipsoid;
            isnIntersectedArr(index) = true;
         else

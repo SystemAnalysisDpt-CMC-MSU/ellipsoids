@@ -246,13 +246,12 @@ classdef MTPIntegrationTestCase < mlunitext.test_case
         %
         function self = testIntersectionEA(self)
             %Analitically proved, that minimal volume ellipsoid, covering
-            %intersection of ell1 and poly1 is ell1. Checking if it right
-            %in our realisation
+            %intersection of ell1 and poly1 is ell1.            
             defaultShMat = eye(2);
             ell1 = ellipsoid(defaultShMat);
             defaultPolyMat = [0 1];
-            defaultConst = 0.25;
-            poly1 = self.makePolytope(defaultPolyMat,defaultConst);
+            defaultPolyConst = 0.25;
+            poly1 = self.makePolytope(defaultPolyMat,defaultPolyConst);
             ellEA1 = intersection_ea(ell1,poly1);
             testIfEllEq(ell1,ellEA1);
             %
@@ -260,10 +259,10 @@ classdef MTPIntegrationTestCase < mlunitext.test_case
             %minimal volume ellipsoid shouldn't change.
             transfMat =  [1 3; 2 2];
             shiftVec = [1; 1];
-            shMat = transfMat*(transfMat)';
-            ell2 = ellipsoid(shiftVec,shMat);
+            transfShMat = transfMat*(transfMat)';
+            ell2 = ellipsoid(shiftVec,transfShMat);
             poly2 = self.makePolytope(defaultPolyMat/(transfMat),...
-                defaultConst+(defaultPolyMat/(transfMat))*shiftVec);
+                defaultPolyConst+(defaultPolyMat/(transfMat))*shiftVec);
             ellEA2 = intersection_ea(ell2,poly2);
             testIfEllEq(ell2,ellEA2);
             %
@@ -276,6 +275,36 @@ classdef MTPIntegrationTestCase < mlunitext.test_case
             polyManyConstr = self.makePolytope(hMat,kVec);
             ellEAManyConstr = intersection_ea(ell1,polyManyConstr);
             testIfEllEq(ell1,ellEAManyConstr);
+            %
+            %First example, but for nDims
+            nDims = 10;
+            shNMat = eye(nDims);
+            ellN = ellipsoid(shNMat);
+            polyNMat = [1, zeros(1,nDims-1)];
+            polyNConst = 1/(2*nDims);
+            polyN = self.makePolytope(polyNMat,polyNConst);
+            ellEAN = intersection_ea(ellN,polyN);
+            testIfEllEq(ellN,ellEAN);
+            %
+            transfNMat =  [0.8913 0.1763 0.1389 0.4660 0.8318 0.1509 0.8180 0.3704 0.1730 0.2987;...
+            0.7621 0.4057 0.2028 0.4186 0.5028 0.6979 0.6602 0.7027 0.9797 0.6614;...
+            0.4565 0.9355 0.1987 0.8462 0.7095 0.3784 0.3420 0.5466 0.2714 0.2844;...
+            0.0185 0.9169 0.6038 0.5252 0.4289 0.8600 0.2897 0.4449 0.2523 0.4692;...
+            0.8214 0.4103 0.2722 0.2026 0.3046 0.8537 0.3412 0.6946 0.8757 0.0648;...
+            0.4447 0.8936 0.1988 0.6721 0.1897 0.5936 0.5341 0.6213 0.7373 0.9883;...
+            0.6154 0.0579 0.0153 0.8381 0.1934 0.4966 0.7271 0.7948 0.1365 0.5828;...
+            0.7919 0.3529 0.7468 0.0196 0.6822 0.8998 0.3093 0.9568 0.0118 0.4235;...
+            0.9218 0.8132 0.4451 0.6813 0.3028 0.8216 0.8385 0.5226 0.8939 0.5155;...
+            0.7382 0.0099 0.9318 0.3795 0.5417 0.6449 0.5681 0.8801 0.1991 0.3340];
+            %
+            shiftNVec = [1; -1; zeros(nDims-2,1)];
+            %
+            transfShNMat = transfNMat*(transfNMat)';
+            ellN2 = ellipsoid(shiftNVec,transfShNMat);
+            polyN2 = self.makePolytope(polyNMat/(transfNMat),...
+                polyNConst+(polyNMat/(transfNMat))*shiftNVec);
+            ellEA2 = intersection_ea(ellN2,polyN2);
+            testIfEllEq(ellN2,ellEA2);
             %
             function testIfEllEq(ellipsoid1,ellipsoid2)
                 [cVec1 shMat1] = double(ellipsoid1);
