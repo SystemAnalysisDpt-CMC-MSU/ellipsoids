@@ -1170,8 +1170,64 @@ classdef EllipsoidTestCase < mlunitext.test_case
                 'eye(2),elltool.conf.Properties.getAbsTol())'),...
                 'wrongInput:singularMat');
         end
-        
-        
+        %
+        function self=testEllBndr_23d(self)
+            %
+            testEll=createEllObj(2,1);
+            %
+            checkForDim(@ellbndr_2d,2);
+            checkForDim(@ellbndr_3d,3);
+            %
+            function checkForDim(fHandle,nDim)
+                testEll=createEllObj(nDim,1);
+                bdPointsMat=fHandle(testEll);
+                checkOneObj(nDim);
+                testEll=createEllObj(nDim,2);
+                bdPointsMat=fHandle(testEll);
+                checkOneObj(nDim);
+                testEll=createEllObj(nDim,3);
+                bdPointsMat=fHandle(testEll);
+                checkOneObj(nDim);
+                function checkOneObj(nDim)
+                    nPoints=size(bdPointsMat,2);
+                    bdPointsCMat=...
+                        mat2cell(bdPointsMat,nDim,ones(nPoints,1));
+                    isOkVec=...
+                        arrayfun(@(x)checkBelong(x,testEll),bdPointsCMat);
+                    isAllOk=all(isOkVec);
+                    mlunit.assert(isAllOk);
+                end
+            end
+            %
+            function isBelong=checkBelong(xCVec, ellObj)
+                xVec=cell2mat(xCVec);
+                [cenVec qMat]=double(ellObj);
+                absTol=ellObj.getAbsTol();
+                isBelong=...
+                    abs((xVec-cenVec).'*qMat^(-1)*(xVec-cenVec)-1)<absTol;
+            end
+            %
+            function resObj=createEllObj(nDim, type)
+                switch type
+                    case 1
+                        cenVec=zeros(nDim,1);
+                        qMat=eye(nDim);
+                    case 2
+                        cenVec=[1:nDim]';
+                        qMat=eye(nDim);
+                    case 3
+                        cenVec=[1:nDim]';
+                        if nDim==2
+                            qMat=[1 2; 2 25];
+                        else
+                            qMat=[1 0 0;
+                                0 5 0;
+                                0 0 10];
+                        end
+                end
+                resObj=ellipsoid(cenVec,qMat);
+            end
+        end            
      end
 end
 

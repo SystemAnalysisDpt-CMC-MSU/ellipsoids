@@ -149,7 +149,6 @@ classdef ellipsoid < handle
     end
     methods(Access = private)
         [propMat, propVal] = getProperty(hplaneMat,propName, fPropFun)
-       % bdMat = ellbndr_3dmat(E)
     end
     methods (Static)
         checkIsMe(someObj,varargin)
