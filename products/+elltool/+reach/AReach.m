@@ -1,9 +1,9 @@
 classdef AReach < elltool.reach.IReach
-% $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: March-2012 $
-% $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Computer Science,
-%            System Analysis Department 2012 $
-%
+    % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: March-2012 $
+    % $Copyright: Moscow State University,
+    %            Faculty of Computational Mathematics and Computer Science,
+    %            System Analysis Department 2012 $
+    %
     properties (Constant, GetAccess = protected)
         MIN_EIG_Q_REG_UNCERT = 0.1
         EXTERNAL_SCALE_FACTOR = 1.02
@@ -33,6 +33,172 @@ classdef AReach < elltool.reach.IReach
         UNION = 'u'
     end
     %
+    methods (Access = protected)
+        function projSet = getProjSet(self, projMat,...
+                approxType, scaleFactor)
+            import gras.ellapx.enums.EProjType;
+            import gras.ellapx.smartdb.F;
+            APPROX_TYPE = F.APPROX_TYPE;
+            fProj =...
+                @(~, timeVec, varargin)...
+                deal(repmat(projMat.', [1 1 numel(timeVec)]),...
+                repmat(projMat, [1 1 numel(timeVec)]));
+            isProjSpaceList = false(1, size(projMat, 1));
+            isProjSpaceList((sum(projMat, 2) > 0).') = true;
+            isProjSpaceCList = {isProjSpaceList};
+            projType = EProjType.Static;
+            if nargin > 2
+                localEllTubeRel =...
+                    self.ellTubeRel.getTuplesFilteredBy(...
+                    APPROX_TYPE, approxType);
+            else
+                localEllTubeRel = self.ellTubeRel;
+            end
+            if nargin == 4
+                localEllTubeRel.scale(@(x) scaleFactor, {APPROX_TYPE});
+            end
+            projSet = localEllTubeRel.project(projType,...
+                isProjSpaceCList, fProj);
+        end
+        %
+        function plotter = plotApprox(self, approxType, varargin)
+            import gras.ellapx.enums.EApproxType;
+            import modgen.common.throwerror;
+            import gras.ellapx.smartdb.F;
+            APPROX_TYPE = F.APPROX_TYPE;
+            DEFAULT_EA_COLOR_VEC = [0 0 1];
+            DEFAULT_IA_COLOR_VEC = [0 1 0];
+            DEFAULT_LINE_WIDTH = 2;
+            DEFAULT_EA_SHADE = 0.3;
+            DEFAULT_IA_SHADE = 0.1;
+            DEFAULT_FILL = 0;
+            %
+            if approxType == EApproxType.External
+                colorVec = DEFAULT_EA_COLOR_VEC;
+                shade = DEFAULT_EA_SHADE;
+                scaleFactor = self.EXTERNAL_SCALE_FACTOR;
+            else
+                colorVec = DEFAULT_IA_COLOR_VEC;
+                shade = DEFAULT_IA_SHADE;
+                scaleFactor = self.INTERNAL_SCALE_FACTOR;
+            end
+            lineWidth = DEFAULT_LINE_WIDTH;
+            fill = DEFAULT_FILL;
+            if nargin > 4
+                throwerror('wrongInput', 'Too many arguments.');
+            elseif nargin == 3
+                if ischar(varargin{1})
+                    colorVec = self.getColorVec(varargin{1});
+                elseif isstruct(varargin{1})
+                    ColorOpt = varargin{1};
+                    setPlotParams(ColorOpt);
+                else
+                    throwerror('wrongInput', 'Wrong argument format.');
+                end
+            elseif nargin == 4
+                if isstruct(varargin{2})
+                    ColorOpt = varargin{2};
+                    setPlotParams(ColorOpt);
+                else
+                    throwerror('wrongInput', 'Wrong argument format.');
+                end
+                if ischar(varargin{1})
+                    colorVec = self.getColorVec(varargin{1});
+                else
+                    throwerror('wrongInput', 'Wrong argument format.');
+                end
+            end
+            %
+            if ~ismatrix(colorVec)
+                throwerror('wrongInput', 'Wrong field format ("color")');
+            else
+                [nRows nCols] = size(colorVec);
+                if nRows ~= 1 || nCols ~= 3
+                    throwerror('wrongInput',...
+                        'Wrong field format ("color")');
+                end
+            end
+            if ~isa(lineWidth, 'double')
+                throwerror('wrongInput', 'Wrong field format ("width")');
+            end
+            if ~isa(shade, 'double')
+                throwerror('wrongInput', 'Wrong field format ("shade")');
+            else
+                if shade < 0 || shade > 1
+                    throwerror('wrongInput',...
+                        'Wrong field format ("shade")');
+                end
+            end
+            if ~isa(fill, 'double')
+                throwerror('Wrong field format ("fill")');
+            end
+            %
+            if self.isProj
+                if self.ellTubeRel.dim() > 3
+                    throwerror('wrongData',...
+                        'Dimension of the projection must be leq 3');
+                else
+                    plObj = smartdb.disp.RelationDataPlotter();
+                    plotter = self.ellTubeRel.getTuplesFilteredBy(...
+                        APPROX_TYPE, approxType).plot(plObj,...
+                        'fGetTubeColor', @(x) deal(colorVec, shade));
+                end
+            else
+                if self.dimension() > 2
+                    projBasisMat = eye(self.dimension(), 2);
+                else
+                    projBasisMat = eye(self.dimension());
+                end
+                plObj = smartdb.disp.RelationDataPlotter();
+                projSetObj = self.getProjSet(projBasisMat,...
+                    approxType, scaleFactor);
+                plotter = projSetObj.plot(plObj, 'fGetTubeColor',...
+                    @(x) deal(colorVec, shade));
+            end
+            %
+            function setPlotParams(ColorOpt)
+                if isfield(ColorOpt, 'color')
+                    colorVec = ColorOpt.color;
+                end
+                if isfield(ColorOpt, 'width')
+                    lineWidth = ColorOpt.width;
+                end
+                if isfield(ColorOpt, 'shade')
+                    shade = ColorOpt.shade;
+                end
+                if isfield(ColorOpt, 'fill')
+                    fill = ColorOpt.fill;
+                end
+            end
+        end
+        %
+        
+        function [apprEllMat timeVec] = getApprox(self, approxType)
+            import gras.ellapx.enums.EApproxType;
+            import gras.ellapx.smartdb.F;
+            APPROX_TYPE = F.APPROX_TYPE;
+            SData = self.ellTubeRel.getTuplesFilteredBy(APPROX_TYPE,...
+                approxType);
+            nTuples = SData.getNTuples();
+            if nTuples > 0
+                nTimes = numel(SData.timeVec{1});
+                for iTuple = nTuples : -1 : 1
+                    tupleCentMat = SData.aMat{iTuple};
+                    tupleMatArray = SData.QArray{iTuple};
+                    for jTime = nTimes : -1 : 1
+                        apprEllMat(iTuple, jTime) =...
+                            ellipsoid(tupleCentMat(:, jTime),...
+                            tupleMatArray(:, :, jTime));
+                    end
+                end
+            else
+                apprEllMat = [];
+            end
+            if nargout > 1
+                timeVec = SData.timeVec{1};
+            end
+        end
+    end
     methods
         function isProj = isprojection(self)
             isProj = self.isProj;
@@ -124,6 +290,128 @@ classdef AReach < elltool.reach.IReach
                 fieldsToCompVec).isEqual(...
                 ellTube.getFieldProjection(fieldsToCompVec),...
                 'maxTolerance', self.COMP_PRECISION);
+        end
+        %
+        function linSys = get_system(self)
+            linSys = self.linSysCVec{end};
+        end
+        %
+        function [rSdim sSdim] = dimension(self)
+            rSdim = self.linSysCVec{end}.dimension();
+            if ~self.isProj
+                sSdim = rSdim;
+            else
+                sSdim = size(self.projectionBasisMat, 2);
+            end
+            if nargout < 2
+                clear('sSdim');
+            end
+        end
+        %
+        function [directionsCVec timeVec] = get_directions(self)
+            import gras.ellapx.enums.EApproxType;
+            import gras.ellapx.smartdb.F;
+            APPROX_TYPE = F.APPROX_TYPE;
+            SData = self.ellTubeRel.getTuplesFilteredBy(APPROX_TYPE,...
+                EApproxType.External);
+            directionsCVec = SData.ltGoodDirMat.';
+            if nargout > 1
+                timeVec = SData.timeVec{1};
+            end
+        end
+        %
+        function [trCenterMat timeVec] = get_center(self)
+            trCenterMat = self.ellTubeRel.aMat{1};
+            if nargout > 1
+                timeVec = self.ellTubeRel.timeVec{1};
+            end
+        end
+        %
+        function [eaEllMat timeVec] = get_ea(self)
+            import gras.ellapx.enums.EApproxType;
+            [eaEllMat timeVec] = self.getApprox(EApproxType.External);
+        end
+        %
+        function [iaEllMat timeVec] = get_ia(self)
+            import gras.ellapx.enums.EApproxType;
+            [iaEllMat timeVec] = self.getApprox(EApproxType.Internal);
+        end
+        %
+        function [goodCurvesCVec timeVec] = get_goodcurves(self)
+            import gras.ellapx.enums.EApproxType;
+            import gras.ellapx.smartdb.F;
+            APPROX_TYPE = F.APPROX_TYPE;
+            SData = self.ellTubeRel.getTuplesFilteredBy(APPROX_TYPE,...
+                EApproxType.External);
+            goodCurvesCVec = SData.xTouchCurveMat.';
+            if nargout > 1
+                timeVec = SData.timeVec{1};
+            end
+        end        
+        %
+        function eaScaleFactor = getEaScaleFactor(self)
+            eaScaleFactor = self.EXTERNAL_SCALE_FACTOR;
+        end
+        %
+        function iaScaleFactor = getIaScaleFactor(self)
+            iaScaleFactor = self.INTERNAL_SCALE_FACTOR;
+        end
+        %
+        function x0Ell = getInitialSet(self)
+            x0Ell = self.x0Ellipsoid;
+        end
+        %
+        function isBackward = isbackward(self)
+            isBackward = self.isBackward;
+        end
+        %
+        function projObj = projection(self, projMat)
+            import gras.ellapx.enums.EProjType;
+            import modgen.common.throwerror;
+            isOnesMat = flipud(sortrows(projMat)) == eye(size(projMat));
+            isOk = all(isOnesMat(:));
+            if ~isOk
+                throwerror('wrongInput', ['Each column of projection ',...
+                    'matrix should be a unit vector.']);
+            end
+            projSet = self.getProjSet(projMat);
+            projObj = elltool.reach.ReachContinuous();
+            projObj.switchSysTimeVec = self.switchSysTimeVec;
+            projObj.x0Ellipsoid = self.x0Ellipsoid;
+            projObj.ellTubeRel = projSet;
+            projObj.linSysCVec = self.linSysCVec;
+            projObj.isCut = self.isCut;
+            projObj.isProj = true;
+            projObj.isBackward = self.isbackward();
+            projObj.projectionBasisMat = projMat;
+        end
+        %
+        function eaPlotter = plot_ea(self, varargin)
+            import gras.ellapx.enums.EApproxType;
+            if nargin == 1
+                eaPlotter =...
+                    self.plotApprox(EApproxType.External);
+            elseif nargin == 2
+                eaPlotter =...
+                    self.plotApprox(EApproxType.External, varargin{1});
+            elseif nargin == 3
+                eaPlotter = self.plotApprox(EApproxType.External,...
+                    varargin{1}, varargin{2});
+            end
+        end
+        %
+        function iaPlotter = plot_ia(self, varargin)
+            import gras.ellapx.enums.EApproxType;
+            if nargin == 1
+                iaPlotter =...
+                    self.plotApprox(EApproxType.Internal);
+            elseif nargin == 2
+                iaPlotter =...
+                    self.plotApprox(EApproxType.Internal, varargin{1});
+            elseif nargin == 3
+                iaPlotter = self.plotApprox(EApproxType.Internal,...
+                    varargin{1}, varargin{2});
+            end
         end
     end
 end

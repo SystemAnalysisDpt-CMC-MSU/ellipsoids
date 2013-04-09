@@ -55,7 +55,6 @@ classdef ReachDiscrete < elltool.reach.AReach
         nPlot2dPoints
         nPlot3dPoints
         nTimeGridPoints
-        system
         t0
         initial_directions
         time_values
@@ -65,7 +64,6 @@ classdef ReachDiscrete < elltool.reach.AReach
         ia_values
         mu_values
         minmax
-        projection_basis
         calc_data
     end
     %
@@ -638,6 +636,76 @@ classdef ReachDiscrete < elltool.reach.AReach
         end
     end
     %
+    methods (Access = private)
+        function [directionsCVec timeVec] = getDirectionInternal(self)
+            import elltool.conf.Properties;
+            directionsCVec  = [];
+            if isempty(self)
+                if nargout > 1
+                    timeVec = [];
+                end
+                return;
+            end
+            directionsCVec = self.l_values;
+            if nargout > 1
+                timeVec = self.time_values;
+            end
+        end
+        %
+        function [eaEllMat timeVec] = getEaInternal(self)
+            if isempty(self)
+                return;
+            end
+            eaEllMat = [];
+            if nargout > 1
+                timeVec = self.time_values;
+            end
+            m = size(self.ea_values, 2);
+            n = size(self.time_values, 2);
+            d = self.dimension();
+            for i = 1:m
+                QQ = self.ea_values{i};
+                ee = [];
+                for j = 1:n
+                    q  = self.center_values(:, j);
+                    Q  = (1 + self.relTol()) * reshape(QQ(:, j), d, d);
+                    if min(eig(Q)) < (- self.absTol())
+                        Q = self.absTol() * eye(d);
+                    end
+                    ee = [ee ellipsoid(q, Q)];
+                end
+                eaEllMat = [eaEllMat; ee];
+            end
+        end
+        %
+        function [iaEllMat timeVec] = getIaInternal(self)
+            if isempty(self)
+                return;
+            end
+            iaEllMat = [];
+            if nargout > 1
+                timeVec = self.time_values;
+            end
+            m = size(self.ia_values, 2);
+            n = size(self.time_values, 2);
+            d = self.dimension();
+            for i = 1:m
+                QQ = self.ia_values{i};
+                ee = [];
+                for j = 1:n
+                    q  = self.center_values(:, j);
+                    Q  = (1 - self.relTol()) * reshape(QQ(:, j), d, d);
+                    Q  = real(Q);
+                    if min(eig(Q)) < (- self.absTol())
+                        Q = self.absTol() * eye(d);
+                    end
+                    ee = [ee ellipsoid(q, Q)];
+                end
+                iaEllMat = [iaEllMat; ee];
+            end
+        end
+    end
+    %
     methods
         function self = ReachDiscrete(linSys, x0Ell, l0Mat,...
                 timeVec, OptStruct, varargin)
@@ -705,7 +773,6 @@ classdef ReachDiscrete < elltool.reach.AReach
             if isstruct(linSys) && (nargin == 1)
                 return;
             end
-            self.system             = [];
             self.t0                 = [];
             self.x0Ellipsoid        = [];
             self.initial_directions = [];
@@ -716,13 +783,14 @@ classdef ReachDiscrete < elltool.reach.AReach
             self.ia_values          = [];
             self.mu_values          = [];
             self.minmax             = [];
-            self.projection_basis   = [];
             self.calc_data          = [];
-            %
-            self.switchSysTimeVec = [];
-            self.linSysCVec = [];
+            %            
+            self.switchSysTimeVec = timeVec;
+            self.x0Ellipsoid = x0Ell;
+            self.linSysCVec = {linSys};
             self.isCut = false;
             self.isProj = false;
+            self.isBackward = timeVec(1) > timeVec(2);
             self.projectionBasisMat = [];
             %% check and analize input
             if nargin < 4
@@ -776,7 +844,6 @@ classdef ReachDiscrete < elltool.reach.AReach
                 end
             end
             %
-            self.system             = linSys;
             self.x0Ellipsoid        = x0Ell;
             self.initial_directions = l0Mat;
             self.minmax             = OptStruct.minmax;
@@ -1332,17 +1399,17 @@ classdef ReachDiscrete < elltool.reach.AReach
             if www(1).state
                 warning on;
             end
-            %%% create EllTube
+            % create EllTube
             k0 = self.time_values(1);
             k1 = self.time_values(end);
-            %
+            % 
             nTimeStep = abs(k1 - k0) + 1;
             nDirections = size(self.initial_directions, 2);
-            xDim = size(self.system.getAtMat(), 1);
+            xDim = linSys.dimension();
             %
             goodDirCVec = self.l_values;
-            [eaEllMat ~] = self.get_ea();
-            [iaEllMat ~] = self.get_ia();
+            [eaEllMat ~] = self.getEaInternal();
+            [iaEllMat ~] = self.getIaInternal();
             trCenterMat = self.center_values;
             %
             nPoints = nTimeStep;
@@ -1400,7 +1467,6 @@ classdef ReachDiscrete < elltool.reach.AReach
             newReachObj.nPlot2dPoints = self.nPlot2dPoints;
             newReachObj.nPlot3dPoints = self.nPlot3dPoints;
             newReachObj.nTimeGridPoints = self.nTimeGridPoints;
-            newReachObj.system = self.system;
             newReachObj.t0 = self.t0;
             newReachObj.initial_directions = self.initial_directions;
             newReachObj.time_values = self.time_values;
@@ -1410,7 +1476,6 @@ classdef ReachDiscrete < elltool.reach.AReach
             newReachObj.ia_values = self.ia_values;
             newReachObj.mu_values = self.mu_values;
             newReachObj.minmax = self.minmax;
-            newReachObj.projection_basis = self.projection_basis;
             newReachObj.calc_data = self.calc_data;
             newReachObj.switchSysTimeVec = self.switchSysTimeVec;
             newReachObj.x0Ellipsoid = self.x0Ellipsoid;
@@ -1708,31 +1773,6 @@ classdef ReachDiscrete < elltool.reach.AReach
             cutObj.isCut = true;
         end
         %
-        function [rSdim sSdim] = dimension(self)
-            [m, n] = size(self);
-            rSdim = [];
-            sSdim = [];
-            for i = 1:m
-                dd = [];
-                nn = [];
-                for j = 1:n
-                    s = dimension(self(i, j).system);
-                    if isempty(self(i, j).projection_basis)
-                        d = s;
-                    else
-                        d = size(self(i, j).projection_basis, 2);
-                    end
-                    dd = [dd d];
-                    nn = [nn s];
-                end
-                rSdim = [rSdim; dd];
-                sSdim = [sSdim; nn];
-            end
-            if nargout < 2
-                clear('sSdim');
-            end
-        end
-        %
         function display(self)
             if self.isempty()
                 return;
@@ -1786,9 +1826,9 @@ classdef ReachDiscrete < elltool.reach.AReach
                         ttyp, d, self.time_values(1), self.time_values(end));
                 end
             end
-            if ~(isempty(self.projection_basis))
+            if ~(isempty(self.projectionBasisMat))
                 fprintf('Projected onto the basis:\n');
-                disp(self.projection_basis);
+                disp(self.projectionBasisMat);
             end
             fprintf('\n');
             if back > 0
@@ -1807,710 +1847,12 @@ classdef ReachDiscrete < elltool.reach.AReach
             fprintf('\n');
         end
         %
-        function [trCenterMat timeVec] = get_center(self)
-            import elltool.conf.Properties;
-            trCenterMat  = self.center_values;
-            if nargout > 1
-                timeVec = self.time_values;
-            end
-        end
-        %
-        function [directionsCVec timeVec] = get_directions(self)
-            import elltool.conf.Properties;
-            directionsCVec  = [];
-            if isempty(self)
-                if nargout > 1
-                    timeVec = [];
-                end
-                return;
-            end
-            directionsCVec = self.l_values;
-            if nargout > 1
-                timeVec = self.time_values;
-            end
-        end
-        %
-        function [eaEllMat timeVec] = get_ea(self)
-            if isempty(self)
-                return;
-            end
-            eaEllMat = [];
-            if nargout > 1
-                timeVec = self.time_values;
-            end
-            m = size(self.ea_values, 2);
-            n = size(self.time_values, 2);
-            d = dimension(self);
-            for i = 1:m
-                QQ = self.ea_values{i};
-                ee = [];
-                for j = 1:n
-                    q  = self.center_values(:, j);
-                    Q  = (1 + self.relTol()) * reshape(QQ(:, j), d, d);
-                    if min(eig(Q)) < (- self.absTol())
-                        Q = self.absTol() * eye(d);
-                    end
-                    ee = [ee ellipsoid(q, Q)];
-                end
-                eaEllMat = [eaEllMat; ee];
-            end
-        end
-        %
-        function [iaEllMat timeVec] = get_ia(self)
-            if isempty(self)
-                return;
-            end
-            iaEllMat = [];
-            if nargout > 1
-                timeVec = self.time_values;
-            end
-            m = size(self.ia_values, 2);
-            n = size(self.time_values, 2);
-            d = dimension(self);
-            for i = 1:m
-                QQ = self.ia_values{i};
-                ee = [];
-                for j = 1:n
-                    q  = self.center_values(:, j);
-                    Q  = (1 - self.relTol()) * reshape(QQ(:, j), d, d);
-                    Q  = real(Q);
-                    if min(eig(Q)) < (- self.absTol())
-                        Q = self.absTol() * eye(d);
-                    end
-                    ee = [ee ellipsoid(q, Q)];
-                end
-                iaEllMat = [iaEllMat; ee];
-            end
-        end
-        %
-        function [goodCurvesCVec timeVec] = get_goodcurves(self)
-            import elltool.conf.Properties;
-            import modgen.common.throwerror;
-            if isempty(self)
-                if nargout > 1
-                    timeVec = [];
-                end
-                return;
-            end
-            goodCurvesCVec  = [];
-            if size(self.ea_values, 2) < size(self.ia_values, 2)
-                QQ = self.ia_values;
-            else
-                QQ = self.ea_values;
-            end
-            if ~(isempty(self.projection_basis))
-                if size(self.projection_basis, 2) < dimension(self.system)
-                    throwerror(['GET_GOODCURVES: this function cannot ',...
-                        'be used with projected reach sets.']);
-                end
-            end
-            N  = size(QQ, 2);
-            M  = size(self.time_values, 2);
-            LL = get_directions(self);
-            d  = dimension(self);
-            if size(LL, 2) ~= N
-                throwerror('GET_GOODCURVES: reach set object is malformed.');
-            end
-            for i = 1:N
-                L  = LL{i};
-                Q  = QQ{i};
-                xx = [];
-                for j = 1:M
-                    E  = reshape(Q(:, j), d, d);
-                    l  = L(:, j);
-                    x  = (E * l)/sqrt(l' * E * l) + self.center_values(:, j);
-                    xx = [xx x];
-                end
-                goodCurvesCVec = [goodCurvesCVec {xx}];
-            end
-            if nargout > 1
-                timeVec  = self.time_values;
-            end
-        end
-        %
         function [muMat timeVec] = get_mu(self)
             import elltool.conf.Properties;
             muMat = self.mu_values;
             if nargout > 1
                 timeVec = self.time_values;
             end
-        end
-        %
-        function linSys = get_system(self)
-            import elltool.conf.Properties;
-            linSys = self.system;
-        end
-        %
-        function plot_ea(self, varargin)
-            import elltool.conf.Properties;
-            import elltool.logging.Log4jConfigurator;
-            
-            persistent logger;
-            
-            d  = dimension(self);
-            N  = size(self.ea_values, 2);
-            if (d < 2) || (d > 3)
-                msg = sprintf('PLOT_EA: cannot plot reach set of dimension %d.', d);
-                if d > 3
-                    msg = sprintf('%s\nUse projection.', msg);
-                end
-                throwerror(msg);
-            end
-            if nargin > 1
-                if isstruct(varargin{nargin - 1})
-                    Options = varargin{nargin - 1};
-                else
-                    Options = [];
-                end
-            else
-                Options = [];
-            end
-            if ~(isfield(Options, 'color'))
-                Options.color = [0 0 1];
-            end
-            if ~(isfield(Options, 'shade'))
-                Options.shade = 0.3;
-            else
-                Options.shade = Options.shade(1, 1);
-                if Options.shade > 1
-                    Options.shade = 1;
-                end
-                if Options.shade < 0
-                    Options.shade = 0;
-                end
-            end
-            if ~isfield(Options, 'width')
-                Options.width = 2;
-            else
-                Options.width = Options.width(1, 1);
-                if Options.width < 1
-                    Options.width = 2;
-                end
-            end
-            if ~isfield(Options, 'fill')
-                Options.fill = 0;
-            else
-                Options.fill = Options.fill(1, 1);
-                if Options.fill ~= 1
-                    Options.fill = 0;
-                end
-            end
-            if (nargin > 1) && ischar(varargin{1})
-                Options.color = self.my_color_table(varargin{1});
-            end
-            E   = get_ea(self);
-            clr = Options.color;
-            if self.t0 > self.time_values(end)
-                back = 'Backward reach set';
-            else
-                back = 'Reach set';
-            end
-            if Properties.getIsVerbose()
-                if isempty(logger)
-                    logger=Log4jConfigurator.getLogger();
-                end
-                logger.info('Plotting reach set external approximation...');
-            end
-            if d == 3
-                EE  = move2origin(E(:, end));
-                EE  = EE';
-                M   = self.nPlot3dPoints()/2;
-                N   = M/2;
-                psy = linspace(0, pi, N);
-                phi = linspace(0, 2*pi, M);
-                X   = [];
-                L   = [];
-                for i = 2:(N - 1)
-                    arr = cos(psy(i))*ones(1, M);
-                    L   = [L [cos(phi)*sin(psy(i)); sin(phi)*sin(psy(i)); arr]];
-                end
-                n = size(L, 2);
-                m = size(EE, 2);
-                for i = 1:n
-                    l    = L(:, i);
-                    mval = self.absTol();
-                    for j = 1:m
-                        if trace(EE(1, j)) > self.absTol()
-                            Q = parameters(inv(EE(1, j)));
-                            v = l' * Q * l;
-                            if v > mval
-                                mval = v;
-                            end
-                        end
-                    end
-                    x = (l/sqrt(mval)) + self.center_values(:, end);
-                    X = [X x];
-                end
-                chll = convhulln(X');
-                patch('Vertices', X', 'Faces', chll, ...
-                    'FaceVertexCData', clr(ones(1, n), :), 'FaceColor', 'flat', ...
-                    'FaceAlpha', Options.shade);
-                shading interp;
-                lighting phong;
-                material('metal');
-                view(3);
-                if isDiscreteArr(self.system)
-                    title(sprintf('%s at time step K = %d', back, self.time_values(end)));
-                else
-                    title(sprintf('%s at time T = %d', back, self.time_values(end)));
-                end
-                xlabel('x_1'); ylabel('x_2'); zlabel('x_3');
-                return;
-            end
-            ih = ishold;
-            if size(self.time_values, 2) == 1
-                E   = move2origin(E');
-                M   = size(E, 2);
-                N   = self.nPlot2dPoints;
-                phi = linspace(0, 2*pi, N);
-                L   = [cos(phi); sin(phi)];
-                X   = [];
-                for i = 1:N
-                    l      = L(:, i);
-                    [v, x] = rho(E, l);
-                    idx    = find(isinternal((1+self.absTol())*E, x, 'i') > 0);
-                    if ~isempty(idx)
-                        x = x(:, idx(1, 1)) + self.center_values;
-                        X = [X x];
-                    end
-                end
-                if ~isempty(X)
-                    X = [X X(:, 1)];
-                    if Options.fill ~= 0
-                        fill(X(1, :), X(2, :), Options.color);
-                        hold on;
-                    end
-                    h = ell_plot(X);
-                    hold on;
-                    set(h, 'Color', Options.color, 'LineWidth', Options.width);
-                    h = ell_plot(self.center_values, '.');
-                    set(h, 'Color', Options.color);
-                    if isa(self.system, 'elltool.linsys.LinSysDiscrete')
-                        title(sprintf('%s at time step K = %d', back, self.time_values));
-                    else
-                        title(sprintf('%s at time T = %d', back, self.time_values));
-                    end
-                    xlabel('x_1'); ylabel('x_2');
-                    if ih == 0
-                        hold off;
-                    end
-                else
-                    warning(['2D grid too sparse! Please, increase ',...
-                        'parameter nPlot2dPoints(self.nPlot2dPoints(value))...']);
-                end
-                return;
-            end
-            [m, n] = size(E);
-            s      = (1/2) * self.nPlot2dPoints();
-            phi    = linspace(0, 2*pi, s);
-            L      = [cos(phi); sin(phi)];
-            if isa(self.system, 'elltool.linsys.LinSysDiscrete')
-                for ii = 1:n
-                    EE = move2origin(E(:, ii));
-                    EE = EE';
-                    X  = [];
-                    cnt = 0;
-                    for i = 1:s
-                        l = L(:, i);
-                        [v, x] = rho(EE, l);
-                        idx    = find(isinternal((1+self.absTol())*EE, x, 'i') > 0);
-                        if ~isempty(idx)
-                            x = x(:, idx(1, 1)) + self.center_values(:, ii);
-                            X = [X x];
-                        end
-                    end
-                    tt = self.time_values(ii);
-                    if ~isempty(X)
-                        X  = [X X(:, 1)];
-                        tt = self.time_values(:, ii) * ones(1, size(X, 2));
-                        X  = [tt; X];
-                        if Options.fill ~= 0
-                            fill3(X(1, :), X(2, :), X(3, :), Options.color);
-                            hold on;
-                        end
-                        h = ell_plot(X);
-                        set(h, 'Color', Options.color, 'LineWidth', Options.width);
-                        hold on;
-                    else
-                        warning(['2D grid too sparse! Please, increase ',...
-                            'parameter nPlot2dPoints(self.nPlot2dPoints(value))...']);
-                    end
-                    h = ell_plot([tt(1, 1);
-                        self.center_values(:, ii)], '.');
-                    hold on;
-                    set(h, 'Color', clr);
-                end
-                xlabel('k');
-                if self.time_values(1) > self.time_values(end)
-                    title('Discrete-time backward reach tube');
-                else
-                    title('Discrete-time reach tube');
-                end
-            else
-                F = ell_triag_facets(s, size(self.time_values, 2));
-                V = [];
-                for ii = 1:n
-                    EE = move2origin(inv(E(:, ii)));
-                    EE = EE';
-                    X  = [];
-                    for i = 1:s
-                        l    = L(:, i);
-                        mval = self.absTol();
-                        for j = 1:m
-                            if 1
-                                Q  = parameters(EE(1, j));
-                                v  = l' * Q * l;
-                                if v > mval
-                                    mval = v;
-                                end
-                            end
-                        end
-                        x = (l/sqrt(mval)) + self.center_values(:, ii);
-                        X = [X x];
-                    end
-                    tt = self.time_values(ii) * ones(1, s);
-                    X  = [tt; X];
-                    V  = [V X];
-                end
-                vs = size(V, 2);
-                patch('Vertices', V', 'Faces', F, ...
-                    'FaceVertexCData', clr(ones(1, vs), :), 'FaceColor', 'flat', ...
-                    'FaceAlpha', Options.shade);
-                hold on;
-                shading interp;
-                lighting phong;
-                material('metal');
-                view(3);
-                xlabel('t');
-                if self.time_values(1) > self.time_values(end)
-                    title('Backward reach tube');
-                else
-                    title('Reach tube');
-                end
-            end
-            ylabel('x_1');
-            zlabel('x_2');
-            %
-            if ih == 0
-                hold off;
-            end
-        end
-        %
-        function plot_ia(self, varargin)
-            import elltool.conf.Properties;
-            import elltool.logging.Log4jConfigurator;
-            
-            persistent logger;
-            
-            d  = dimension(self);
-            N  = size(self.ia_values, 2);
-            if (d < 2) || (d > 3)
-                msg = sprintf('PLOT_IA: cannot plot reach set of dimension %d.', d);
-                if d > 3
-                    msg = sprintf('%s\nUse projection.', msg);
-                end
-                throwerror(msg);
-            end
-            if nargin > 1
-                if isstruct(varargin{nargin - 1})
-                    Options = varargin{nargin - 1};
-                else
-                    Options = [];
-                end
-            else
-                Options = [];
-            end
-            if ~(isfield(Options, 'color'))
-                Options.color = [0 1 0];
-            end
-            if ~(isfield(Options, 'shade'))
-                Options.shade = 0.3;
-            else
-                Options.shade = Options.shade(1, 1);
-                if Options.shade > 1
-                    Options.shade = 1;
-                end
-                if Options.shade < 0
-                    Options.shade = 0;
-                end
-            end
-            if ~isfield(Options, 'width')
-                Options.width = 2;
-            else
-                Options.width = Options.width(1, 1);
-                if Options.width < 1
-                    Options.width = 2;
-                end
-            end
-            if ~isfield(Options, 'fill')
-                Options.fill = 0;
-            else
-                Options.fill = Options.fill(1, 1);
-                if Options.fill ~= 1
-                    Options.fill = 0;
-                end
-            end
-            if (nargin > 1) && ischar(varargin{1})
-                Options.color = self.my_color_table(varargin{1});
-            end
-            E   = get_ia(self);
-            clr = Options.color;
-            if self.t0 > self.time_values(end)
-                back = 'Backward reach set';
-            else
-                back = 'Reach set';
-            end
-            if Properties.getIsVerbose()
-                if isempty(logger)
-                    logger=Log4jConfigurator.getLogger();
-                end
-                logger.info('Plotting reach set internal approximation...');
-            end
-            if d == 3
-                EE         = move2origin(inv(E(:, end)));
-                EE         = EE';
-                m          = size(EE, 2);
-                M          = self.nPlot3dPoints/2;
-                N          = M/2;
-                psy        = linspace(-pi/2, pi/2, N);
-                phi        = linspace(0, 2*pi, M);
-                [phi, psy] = meshgrid(phi, psy);
-                x          = ones(3, N, M);
-                X          = ones(N, M);
-                Y          = ones(N, M);
-                Z          = ones(N, M);
-                x(1, :, :) = cos(psy).*cos(phi);
-                x(2, :, :) = cos(psy).*sin(phi);
-                x(3, :, :) = sin(psy);
-                for i = 1:N
-                    for j = 1:M
-                        mval = inf;
-                        l    = [x(1, i, j); x(2, i, j); x(3, i, j)];
-                        for ii = 1:m
-                            Q = parameters(EE(1, ii));
-                            v = l' * Q * l;
-                            if v < mval
-                                mval = v;
-                            end
-                        end
-                        xx      = (l/sqrt(mval)) + self.center_values(:, end);
-                        X(i, j) = xx(1, 1);
-                        Y(i, j) = xx(2, 1);
-                        Z(i, j) = xx(3, 1);
-                    end
-                end
-                patch(surf2patch(X, Y, Z), ...
-                    'FaceVertexCData', clr(ones(1, M*N), :), 'FaceColor', 'flat', ...
-                    'FaceAlpha', Options.shade);
-                shading interp;
-                lighting phong;
-                material('metal');
-                view(3);
-                if isa(self.system, 'elltool.linsys.LinSysDiscrete')
-                    title(sprintf('%s at time step K = %d', back, self.time_values(end)));
-                else
-                    title(sprintf('%s at time T = %d', back, self.time_values(end)));
-                end
-                xlabel('x_1'); ylabel('x_2'); zlabel('x_3');
-                return;
-            end
-            ih = ishold;
-            if size(self.time_values, 2) == 1
-                E   = move2origin(E');
-                M   = size(E, 2);
-                N   = self.nPlot2dPoints;
-                phi = linspace(0, 2*pi, N);
-                L   = [cos(phi); sin(phi)];
-                X   = [];
-                for i = 1:N
-                    l    = L(:, i);
-                    mval =self.absTol;
-                    mQ   = [];
-                    for j = 1:M
-                        Q = parameters(E(1, j));
-                        if isempty(mQ)
-                            mQ = Q;
-                        end
-                        v = l' * Q * l;
-                        if v > mval
-                            mval = v;
-                            mQ   = Q;
-                        end
-                    end
-                    x = (mQ*l/sqrt(mval)) + self.center_values;
-                    X = [X x];
-                end
-                if Options.fill ~= 0
-                    fill(X(1, :), X(2, :), Options.color);
-                    hold on;
-                end
-                h = ell_plot(X);
-                hold on;
-                set(h, 'Color', Options.color, 'LineWidth', Options.width);
-                h = ell_plot(self.center_values, '.');
-                set(h, 'Color', Options.color);
-                if isa(self.system, 'elltool.linsys.LinSysDiscrete')
-                    title(sprintf('%s at time step K = %d', back, self.time_values));
-                else
-                    title(sprintf('%s at time T = %d', back, self.time_values));
-                end
-                xlabel('x_1'); ylabel('x_2');
-                if ih == 0
-                    hold off;
-                end
-                return;
-            end
-            [m, n] = size(E);
-            s      = (1/2) * self.nPlot2dPoints;
-            phi    = linspace(0, 2*pi, s);
-            L      = [cos(phi); sin(phi)];
-            if isa(self.system, 'elltool.linsys.LinSysDiscrete')
-                for ii = 1:n
-                    EE = move2origin(E(:, ii));
-                    EE = EE';
-                    X  = [];
-                    for i = 1:s
-                        l    = L(:, i);
-                        mval = self.absTol;
-                        mQ   = [];
-                        for j = 1:m
-                            Q  = parameters(EE(1, j));
-                            if isempty(mQ)
-                                mQ = Q;
-                            end
-                            v  = l' * Q * l;
-                            if v > mval
-                                mval = v;
-                                mQ   = Q;
-                            end
-                        end
-                        x = (mQ*l/sqrt(mval)) + self.center_values(:, ii);
-                        X = [X x];
-                    end
-                    tt = self.time_values(ii) * ones(1, s);
-                    X  = [tt; X];
-                    if Options.fill ~= 0
-                        fill3(X(1, :), X(2, :), X(3, :), Options.color);
-                        hold on;
-                    end
-                    h = ell_plot(X);
-                    set(h, 'Color', Options.color, 'LineWidth', Options.width);
-                    hold on;
-                    h = ell_plot([tt(1, 1); self.center_values(:, ii)], '.');
-                    set(h, 'Color', clr);
-                end
-                xlabel('k');
-                if self.time_values(1) > self.time_values(end)
-                    title('Discrete-time backward reach tube');
-                else
-                    title('Discrete-time reach tube');
-                end
-            else
-                F = ell_triag_facets(s, size(self.time_values, 2));
-                V = [];
-                for ii = 1:n
-                    EE = move2origin(E(:, ii));
-                    EE = EE';
-                    X  = [];
-                    for i = 1:s
-                        l    = L(:, i);
-                        mval = self.absTol;
-                        mQ   = [];
-                        for j = 1:m
-                            Q  = parameters(EE(1, j));
-                            if isempty(mQ)
-                                mQ = Q;
-                            end
-                            v  = l' * Q * l;
-                            if v > mval
-                                mval = v;
-                                mQ   = Q;
-                            end
-                        end
-                        x = (mQ*l/sqrt(mval)) + self.center_values(:, ii);
-                        X = [X x];
-                    end
-                    tt = self.time_values(ii) * ones(1, s);
-                    X  = [tt; X];
-                    V  = [V X];
-                end
-                vs = size(V, 2);
-                patch('Vertices', V', 'Faces', F, ...
-                    'FaceVertexCData', clr(ones(1, vs), :), 'FaceColor', 'flat', ...
-                    'FaceAlpha', Options.shade);
-                hold on;
-                shading interp;
-                lighting phong;
-                material('metal');
-                view(3);
-                xlabel('t');
-                if self.time_values(1) > self.time_values(end)
-                    title('Backward reach tube');
-                else
-                    title('Reach tube');
-                end
-            end
-            ylabel('x_1');
-            zlabel('x_2');
-            if ih == 0
-                hold off;
-            end
-        end
-        %
-        function projObj = projection(self, projMat)
-            import elltool.conf.Properties;
-            import modgen.common.throwerror;
-            if ~(isa(projMat, 'double'))
-                throwerror(['PROJECTION: second input argument ',...
-                    'must be matrix of basis vectors.']);
-            end
-            projObj  = self.getCopy();
-            if isempty(self)
-                return;
-            end
-            d      = dimension(self);
-            [m, n] = size(projMat);
-            if m ~= d
-                throwerror(['PROJECTION: dimensions of the reach set ',...
-                    'and the basis vectors do not match.']);
-            end
-            EA = [];
-            if ~(isempty(self.ea_values))
-                EA = projection(get_ea(self), projMat);
-            end
-            IA = [];
-            if ~(isempty(self.ia_values))
-                IA = projection(get_ia(self), projMat);
-            end
-            % normalize the basis vectors
-            for i = 1:n
-                BB(:, i) = projMat(:, i)/norm(projMat(:, i));
-            end
-            projObj.center_values    = BB' * self.center_values;
-            projObj.projection_basis = BB;
-            [m, k] = size(EA);
-            QQ     = [];
-            for i = 1:m
-                Q = [];
-                for j = 1:k
-                    E = parameters(EA(i, j));
-                    Q = [Q reshape(E, n*n, 1)];
-                end
-                QQ = [QQ {Q}];
-            end
-            projObj.ea_values = QQ;
-            [m, k] = size(IA);
-            QQ     = [];
-            for i = 1:m
-                Q = [];
-                for j = 1:k
-                    E = parameters(IA(i, j));
-                    Q = [Q reshape(E, n*n, 1)];
-                end
-                QQ = [QQ {Q}];
-            end
-            projObj.ia_values = QQ;
-            projObj.isProj = true;
         end
         %
         function newReachObj = evolve(self, newEndTime, linSys)
@@ -2529,17 +1871,17 @@ classdef ReachDiscrete < elltool.reach.AReach
             end
             newReachObj = self.getCopy();
             if nargin < 3
-                linSys = newReachObj.system;
+                linSys = newReachObj.linSysCVec{end};
             end
             if isempty(linSys)
                 return;
             end
             [d1, du, dy, dd] = dimension(linSys);
-            if d1 ~= dimension(self.system)
+            if d1 ~= dimension(self.linSysCVec{end})
                 throwerror(['dimensions of the old and ',...
                     'new linear systems do not match.']);
             end
-            newReachObj.system = linSys;
+            newReachObj.linSysCVec{end} = linSys;
             newEndTime = [newReachObj.time_values(end) newEndTime(1, 1)];
             if (newReachObj.t0 > newEndTime(1)) &&...
                     (newEndTime(1) < newEndTime(2))
@@ -2551,9 +1893,9 @@ classdef ReachDiscrete < elltool.reach.AReach
             end
             Options = [];
             Options.approximation = 2;
-            if isempty(get_ea(self))
+            if isempty(self.getEaInternal())
                 Options.approximation = 1;
-            elseif isempty(get_ia(self))
+            elseif isempty(self.getIaInternal())
                 Options.approximation = 0;
             end
             Options.minmax = newReachObj.minmax;
@@ -2591,7 +1933,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             newReachObj.center_values      = [];
             newReachObj.calc_data          = [];
             %%% Get new initial directions.
-            LL = get_directions(self);
+            LL = self.getDirectionInternal();
             nn = size(LL, 2);
             for i = 1:nn
                 L = LL{i};
