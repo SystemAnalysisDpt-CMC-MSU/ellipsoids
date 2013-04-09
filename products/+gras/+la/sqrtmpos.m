@@ -1,5 +1,5 @@
 function qSqrtMat = sqrtmpos(qMat, absTol)
-% SQRTMPOS generates a square root from positive definite matrix QMat
+% SQRTMPOS generates a square root from positive semi-definite matrix QMat
 % Input:
 %     regular:
 %         qMat: double[nDims, nDims]
@@ -24,8 +24,8 @@ end
 [vMat, dMat]=eig(qMat);
 dVec = diag(dMat);
 if any(dVec < -absTol)
-    throwerror('wrongInput:notPosDef',...
-        'input matrix is expected to be positive-definite');
+    throwerror('wrongInput:notPosSemDef',...
+        'input matrix is expected to be positive semi-definite');
 end
 if (absTol == 0)
     isZeroVec = abs(dVec) < absTol;
