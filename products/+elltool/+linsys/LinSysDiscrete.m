@@ -41,7 +41,7 @@ classdef LinSysDiscrete < elltool.linsys.ALinSys
         DISPLAY_PARAMETER_STRINGS = {'[k]', 'x[k+1]  =  ', ...
             '  y[k]  =  ', ' x[k]'}
     end
-    
+    %
     methods
         function self = LinSysDiscrete(varargin)
             %
@@ -85,7 +85,7 @@ classdef LinSysDiscrete < elltool.linsys.ALinSys
             %
             self = self@elltool.linsys.ALinSys(varargin{:});
         end
-        
+        %
         function display(self)
             %
             % See description of DISPLAY in ILinSys class.
