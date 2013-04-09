@@ -1,6 +1,6 @@
 classdef AReachProblemDynamics<...
         gras.ellapx.lreachplain.probdyn.IReachProblemDynamics
-    properties (Access=protected)
+    properties (Access = protected)
         problemDef
         AtDynamics
         BptDynamics
@@ -8,22 +8,69 @@ classdef AReachProblemDynamics<...
         Rtt0Dynamics
         timeVec
     end
-    properties (Abstract,Access=protected)
+    properties (Abstract, Access = protected)
         xtDynamics
     end
-    properties (Constant,GetAccess=protected)
+    properties (Constant, GetAccess = protected)
         N_TIME_POINTS=1000;
         ODE_NORM_CONTROL='on';
         CALC_PRECISION_FACTOR=0.001;
     end
-    methods (Access=protected)
-        function odePropList=getOdePropList(self,calcPrecision)
-            odePropList={'NormControl',self.ODE_NORM_CONTROL,'RelTol',...
-                calcPrecision*self.CALC_PRECISION_FACTOR,...
-                'AbsTol',calcPrecision*self.CALC_PRECISION_FACTOR};
-        end
+    properties (Access = private)
+        fRtt0DerivFunc
+        sRtt0InitialMat
+        sizeSysVec
+    end
+    properties (Constant, GetAccess = private)
+        % (temporary) algorithm:
+        %   0 - X(t, t0)
+        %   1 - X(t, t0) / matrixnorm(X(t, t0))
+        %   2 - R(t, t0)
+        %   3 - [R(t, t0); matrixnorm(X(t, t0))]
+        %
+        CALC_ALGORITHM = 2;
     end
     methods
+        function self = AReachProblemDynamics(problemDef)
+            if (nargin > 0)
+                self.problemDef = problemDef;
+                self.sizeSysVec = size(problemDef.getAMatDef());
+                %
+                t0 = problemDef.gett0();
+                t1 = problemDef.gett1();
+                self.timeVec = linspace(t0,t1,self.N_TIME_POINTS);
+                %
+                % (temporary) fRtt0DerivFunc selection
+                %
+                switch (self.CALC_ALGORITHM)
+                    case 0
+                        self.fRtt0DerivFunc = @(t,x) fXtt0DerivFunc(t, x, @(u) self.AtDynamics.evaluate(u));
+                    case 1
+                        self.fRtt0DerivFunc = @(t,x) fXtt0DerivFunc(t, x, @(u) self.AtDynamics.evaluate(u));
+                    case 2
+                        self.fRtt0DerivFunc = @(t,x) fRtt0SimDerivFunc(t, x, @(u) self.AtDynamics.evaluate(u));
+                    case 3
+                        self.fRtt0DerivFunc = @(t,x) fRtt0ExtDerivFunc(t, x, @(u) self.AtDynamics.evaluate(u), sizeAtVec);
+                end
+                %
+                % (temporary) sRtt0InitialMat selection
+                %
+                switch (self.CALC_ALGORITHM)
+                    case 0
+                        self.sRtt0InitialMat = eye(self.sizeSysVec);
+                    case 1
+                        self.sRtt0InitialMat = eye(self.sizeSysVec);
+                    case 2
+                        self.sRtt0InitialMat = eye(self.sizeSysVec);
+                        self.sRtt0InitialMat = normaliz(self.sRtt0InitialMat);
+                    case 3
+                        self.sRtt0InitialMat = eye(self.sizeSysVec);
+                        norm = sqrt(sum(sum(self.sRtt0InitialMat, 2)));
+                        self.sRtt0InitialMat = normaliz(self.sRtt0InitialMat);
+                        self.sRtt0InitialMat = [self.sRtt0InitialMat(:); norm];
+                end
+            end
+        end
         function BPBTransDynamics=getBPBTransDynamics(self)
             BPBTransDynamics=self.BPBTransDynamics;
         end
@@ -65,85 +112,44 @@ classdef AReachProblemDynamics<...
         end
     end
     methods (Access = protected)
+        function odePropList=getOdePropList(self,calcPrecision)
+            odePropList={'NormControl',self.ODE_NORM_CONTROL,'RelTol',...
+                calcPrecision*self.CALC_PRECISION_FACTOR,...
+                'AbsTol',calcPrecision*self.CALC_PRECISION_FACTOR};
+        end
         %
-        % method for R(t,t0) calculations
+        % We need this method because 
+        % gras.ellapx.lreachplain.probdyn.AReachProblem* subclass must 
+        % define AtDynamics and other funcions
         %
-        function calcRtt0Dyn(self, sizeAtVec, numelAt, odeArgList)
+        function calcRtt0Dynamics(self, calcPrecision)
             %
             import gras.interp.MatrixInterpolantFactory;
             import gras.ode.MatrixODESolver;
-            % (temporary) setting algorithm:
-            %   0 - X(t, t0)
-            %   1 - X(t, t0) / matrixnorm(X(t, t0))
-            %   2 - R(t, t0)
-            %   3 - [R(t, t0); matrixnorm(X(t, t0))]
             %
-            algorithm = 2;
+            odeArgList = self.getOdePropList(calcPrecision);
             %
-            % the code here is a control code
-            % [realcode]
-            % solverObj=MatrixODESolver(sizeAtVec,@ode45,odeArgList{:});
-            % [end]
-            %
-            if (algorithm == 3)
-                solverObj=MatrixODESolver([numelAt + 1, 1],@ode45,odeArgList{:});
+            if (self.CALC_ALGORITHM == 3)
+                numelSys = prod(self.sizeSysVec);
+                solverObj=MatrixODESolver([numelSys + 1, 1],@ode45,odeArgList{:});
             else
-                solverObj=MatrixODESolver(sizeAtVec,@ode45,odeArgList{:});
+                solverObj=MatrixODESolver(self.sizeSysVec,@ode45,odeArgList{:});
             end
             %
-            % the code here is a control code
-            % [realcode]
-            % fRtt0DerivFunc = @(t,x) fRtt0SimDerivFunc(t, x, @(u) self.AtDynamics.evaluate(u));
-            % [end]
+            [timeRtt0Vec,dataRtt0Array]=solverObj.solve(self.fRtt0DerivFunc,...
+                self.timeVec,self.sRtt0InitialMat);
             %
-            switch (algorithm)
-                case 0
-                    fRtt0DerivFunc = @(t,x) fXtt0DerivFunc(t, x, @(u) self.AtDynamics.evaluate(u));
-                case 1
-                    fRtt0DerivFunc = @(t,x) fXtt0DerivFunc(t, x, @(u) self.AtDynamics.evaluate(u));
-                case 2
-                    fRtt0DerivFunc = @(t,x) fRtt0SimDerivFunc(t, x, @(u) self.AtDynamics.evaluate(u));
-                case 3
-                    fRtt0DerivFunc = @(t,x) fRtt0ExtDerivFunc(t, x, @(u) self.AtDynamics.evaluate(u), sizeAtVec);
-            end
+            % (temporary) postprocessing
             %
-            % the code here is a control code
-            % [realcode]
-            % sRtt0InitialMat = eye(sizeAtVec);
-            % sRtt0InitialMat = normaliz(sRtt0InitialMat);
-            % [end]
-            %
-            switch (algorithm)
-                case 0
-                    sRtt0InitialMat = eye(sizeAtVec);
-                case 1
-                    sRtt0InitialMat = eye(sizeAtVec);
-                case 2
-                    sRtt0InitialMat = eye(sizeAtVec);
-                    sRtt0InitialMat = normaliz(sRtt0InitialMat);
-                case 3
-                    sRtt0InitialMat = eye(sizeAtVec);
-                    norm = sqrt(sum(sum(sRtt0InitialMat, 2)));
-                    sRtt0InitialMat = normaliz(sRtt0InitialMat);
-                    sRtt0InitialMat = [sRtt0InitialMat(:); norm];
-            end
-            %
-            [timeRtt0Vec,dataRtt0Array]=solverObj.solve(fRtt0DerivFunc,...
-                self.timeVec,sRtt0InitialMat);
-            %
-            % the code here is a control code
-            % [realcode]
-            % [end]
-            %
-            switch (algorithm)
+            switch (self.CALC_ALGORITHM)
                 case 1
                     dataRtt0Array = normaliz(dataRtt0Array);
                 case 3
-                    sz = size(dataRtt0Array);
-                    normVec = dataRtt0Array(sz(1), sz(2), :);
-                    normVec = repmat(normVec, [sizeAtVec, 1]);
-                    dataRtt0Array = dataRtt0Array(1:(sz(1) - 1), :, :);
-                    dataRtt0Array = reshape(dataRtt0Array, [sizeAtVec, self.N_TIME_POINTS]);
+                    sizeRtt0ArrayVec = size(dataRtt0Array);
+                    normVec = dataRtt0Array(sizeRtt0ArrayVec(1), sizeRtt0ArrayVec(2), :);
+                    normVec = repmat(normVec, [self.sizeSysVec, 1]);
+                    dataRtt0Array = dataRtt0Array(1:(sizeRtt0ArrayVec(1) - 1), :, :);
+                    dataRtt0Array = reshape(dataRtt0Array, [self.sizeSysVec, self.N_TIME_POINTS]);
                     dataRtt0Array = dataRtt0Array .* normVec;
             end
             %
@@ -152,9 +158,22 @@ classdef AReachProblemDynamics<...
         end
     end
 end
-
 %
-% new equation for R(t, t0) and matrixnorm(X(t, t0))
+% new equation for R(t, t0)
+%
+function dx = fRtt0SimDerivFunc(t, x, fAt)
+    cachedMat = fAt(t) * x;
+    %
+    dx = cachedMat - x * sum(x(:) .* cachedMat(:));
+end
+%
+% (temporary) old equation for X(t, t0)
+%
+function dx = fXtt0DerivFunc(t, x, fAt)
+    dx = fAt(t) * x;
+end
+%
+% (temporary) new equation for R(t, t0) and matrixnorm(X(t, t0))
 %
 function dx = fRtt0ExtDerivFunc(t, x, fAt, sizeAtVec)
     norm = x(length(x)); x(length(x)) = [];
@@ -168,21 +187,6 @@ function dx = fRtt0ExtDerivFunc(t, x, fAt, sizeAtVec)
     %
     dx = [dsRtt0Mat(:); dnorm];
 end
-%
-% new equation for R(t, t0)
-%
-function dx = fRtt0SimDerivFunc(t, x, fAt)
-    cachedMat = fAt(t) * x;
-    %
-    dx = cachedMat - x * sum(x(:) .* cachedMat(:));
-end
-%
-% old equation for X(t, t0)
-%
-function dx = fXtt0DerivFunc(t, x, fAt)
-    dx = fAt(t) * x;
-end
-
 %
 % normalizes matrix argMat (matrixnorm(normalizMat) = 1)
 %

@@ -4,14 +4,15 @@ classdef AReachProblemLTIDynamics<...
         function self=AReachProblemLTIDynamics(problemDef,calcPrecision)
             %
             import modgen.cell.cellstr2func;
-            import gras.interp.MatrixInterpolantFactory;
             import gras.gen.MatVector;
-            import gras.ode.MatrixODESolver;
             import gras.mat.fcnlib.ConstMatrixFunction;
             import gras.mat.fcnlib.ConstColFunction;
             import gras.mat.MatrixOperationsFactory;
             %
-            self.problemDef = problemDef;
+            % call superclass constructor
+            %
+            self=self@gras.ellapx.lreachplain.probdyn.AReachProblemDynamics(...
+                problemDef);
             %
             % copy necessary data to local variables
             %
@@ -19,10 +20,6 @@ classdef AReachProblemLTIDynamics<...
             BMat = MatVector.fromFormulaMat(problemDef.getBMatDef(),0);
             PMat = MatVector.fromFormulaMat(problemDef.getPCMat(),0);
             pVec = MatVector.fromFormulaMat(problemDef.getpCVec(),0);
-            t0 = problemDef.gett0();
-            t1 = problemDef.gett1();
-            %
-            self.timeVec = linspace(t0,t1,self.N_TIME_POINTS);
             %
             % compute A(t), B(t)p(t) and B(t)P(t)B'(t) dynamics
             %
@@ -31,8 +28,7 @@ classdef AReachProblemLTIDynamics<...
             self.BPBTransDynamics = ConstMatrixFunction(BMat*PMat*(BMat.'));
             %
             % compute X(t,t0)
-            %
-            
+            %          
             % (temporary) switching old code usage:
             %
             oldcode = 0;
@@ -43,8 +39,7 @@ classdef AReachProblemLTIDynamics<...
                 self.Rtt0Dynamics = matOpFactory.expmt(self.AtDynamics, t0);
                 % [end]
             else
-                odeArgList = self.getOdePropList(calcPrecision);
-                self.calcRtt0Dyn(size(AMat), numel(AMat), odeArgList);
+                self.calcRtt0Dynamics(calcPrecision);
             end
         end
     end
