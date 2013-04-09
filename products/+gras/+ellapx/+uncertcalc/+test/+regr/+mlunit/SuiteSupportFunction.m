@@ -129,19 +129,27 @@ classdef SuiteSupportFunction < mlunitext.test_case
                 OdeOptionsStruct = odeset(...
                     'RelTol', calcPrecision * self.REL_TOL_FACTOR,...
                     'AbsTol', calcPrecision * self.ABS_TOL_FACTOR);
-                goodDirN = SRunProp.goodDirSetObj.getNGoodDirs();
+                lsGoodDirMat = SRunProp.goodDirSetObj.getlsGoodDirMat();
+                lsGoodDirCMat = SRunProp.ellTubeRel.lsGoodDirVec();
                 for iTuple = 1 : nTuples
                     curTimeVec = timeCVec{iTuple};
                     curGoodDirMat = goodDirCMat{iTuple};
                     curEllMatArray = ellMatCArray{iTuple};
                     curEllCenterMat = ellCenterCMat{iTuple};
                     %
-                    % for different types of approximation
+                    % good directions' indexes mapping
                     %
-                    goodDirIndex = mod(iTuple, goodDirN);
-                    if (goodDirIndex == 0)
-                        goodDirIndex = goodDirN;
+                    curGoodDirVec = lsGoodDirCMat{iTuple};
+                    for iGoodDir = 1:size(lsGoodDirMat, 2)
+                        isFound = sqrt(sum(abs(curGoodDirVec - ...
+                            lsGoodDirMat(:, iGoodDir)).^2)) <= calcPrecision;
+                        if (isFound)
+                            break;
+                        end
                     end
+                    mlunit.assert_equals(true, isFound,...
+                        sprintf('good dir vector not found'));
+                    goodDirIndex = iGoodDir;
                     %
                     fxMat = @(t) SRunProp.goodDirSetObj.getGoodDirOneCurveSpline(goodDirIndex).evaluate(t);
                     %
