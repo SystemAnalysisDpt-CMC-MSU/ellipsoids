@@ -4,22 +4,24 @@ classdef MPTController < elltool.exttbx.IExtTBXController
         MPT_GLOBAL_OPT = 'mptOptions';
     end
     methods
-        function fullSetup(self,setUpDataCVec)
+        function fullSetup(self,absTol,relTol,isVerbose)
             self.checkIfOnPath();
             if isempty(whos('global',self.MPT_GLOBAL_OPT))
-                absTol = setUpDataCVec{1};
-                relTol = setUpDataCVec{2};
-                isVerbose = setUpDataCVec{3};
                 if isVerbose
                     verbose = 2;
                 else
                     verbose = 1;
                 end
-                mpt_init('abs_tol',absTol,'rel_tol',relTol,'verbose',verbose);
+                mpt_init('abs_tol',absTol,'rel_tol',relTol,'verbose',...
+                    verbose);
                 self.checkIfSetUp();
             end
         end
         %
+        function checkSettings(self,absTol,relTol,isVerbose)
+            %here we make sure that the settings specified in fullSetup are
+            %not changed manually via direct mpt calls like mpt_init
+        end
         function isPositive=isOnPath(self)
             isPositive=modgen.system.ExistanceChecker.isFile(...
                 self.MPT_SETUP_FUNC_NAME);

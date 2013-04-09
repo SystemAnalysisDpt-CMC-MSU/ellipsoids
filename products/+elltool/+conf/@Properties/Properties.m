@@ -9,14 +9,28 @@ classdef Properties<modgen.common.obj.StaticPropStorage
     %            System Analysis Department 2012 $
     %
     properties (GetAccess=private,Constant)
-        DEFAULT_SOLVER = 'SeDuMi';
         DEFAULT_CONF_NAME='default'
-        TOL_FACTOR = 2;
-        SETUP_METHOD_NAME_VEC = {'elltool.exttbx.cvx.CVXController',...
+        SETUP_CLASS_NAME_VEC = {'elltool.exttbx.cvx.CVXController',...
             'elltool.exttbx.mpt.MPTController'};
     end
     %
+    methods (Static,Access=private)
+        function argList=getBasicPropList()
+            import elltool.conf.Properties;             
+            argList={Properties.getAbsTol(),Properties.getRelTol(),...
+                Properties.getIsVerbose()};            
+        end
+    end
     methods(Static)
+        function checkSettings()
+            import elltool.conf.Properties;            
+            inpArgList=Properties.getBasicPropList();
+            cellfun(@check,Properties.SETUP_CLASS_NAME_VEC);            
+            function check(name)
+                obj = feval(name);
+                obj.checkSettings(inpArgList{:});
+            end            
+        end
         function init()
             import elltool.conf.Properties;
             %
@@ -24,38 +38,19 @@ classdef Properties<modgen.common.obj.StaticPropStorage
             confRepoMgr.selectConf(Properties.DEFAULT_CONF_NAME);
             Properties.setConfRepoMgr(confRepoMgr);
             %
+            inpArgList=Properties.getBasicPropList();
             %setup external toolboxes
-            cvxDataCVec = {Properties.DEFAULT_SOLVER,...
-                Properties.getPrecisionForCVXVec(),...
-                Properties.getIsVerbose()};
-            mptDataCVec = {Properties.getAbsTol(),Properties.getRelTol(),...
-                Properties.getIsVerbose()};
-            setUpDataCVec = {cvxDataCVec,mptDataCVec};
-            cellfun(@setUpToolbox,Properties.SETUP_METHOD_NAME_VEC,setUpDataCVec);
+            cellfun(@setUpToolbox,Properties.SETUP_CLASS_NAME_VEC);
             %
             %
-            function setUpToolbox(name,arg)
+            function setUpToolbox(name)
                 obj = feval(name);
-                obj.fullSetup(arg);
+                obj.fullSetup(inpArgList{:});
             end
             elltool.logging.Log4jConfigurator.configure(confRepoMgr,...
                 'islockafterconfigure',true);
         end
         %
-        function checkSettings()
-            import modgen.common.throwerror;
-            import elltool.exttbx.cvx.CVXController;
-            import elltool.conf.Properties;
-            precisionVec = CVXController.getPrecision();
-            solverStr = CVXController.getSolver();
-            isVerbosity = CVXController.getIsVerbosityEnabled();
-            if (~isequal(precisionVec, ...
-                    Properties.getPrecisionForCVXVec())) || ...
-                    (~(strcmp(solverStr, Properties.DEFAULT_SOLVER))) ...
-                    || (isVerbosity ~= Properties.getIsVerbose())
-                throwerror('cvxError', 'wrong cvx properties');
-            end
-        end
         %
         function ConfRepoMgr=getConfRepoMgr()
             import modgen.common.throwerror;
@@ -162,11 +157,6 @@ classdef Properties<modgen.common.obj.StaticPropStorage
         function setOption(optName,optVal)
             confRepMgr = elltool.conf.Properties.getConfRepoMgr();
             confRepMgr.setParam(optName,optVal);
-        end
-        function relTolVec = getPrecisionForCVXVec()
-            import elltool.conf.Properties;
-            relTol = Properties.getRelTol();
-            relTolVec = [0, 0, Properties.TOL_FACTOR*relTol];
         end
     end
 end
