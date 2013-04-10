@@ -421,8 +421,6 @@ classdef ReachContinuous < elltool.reach.AReach
             self.isProj = false;
             self.isBackward = timeVec(1) > timeVec(2);
             self.projectionBasisMat = [];
-            self.reachObjFactory = ...
-                elltool.reach.ReachContinuousFactory();
             %% check and analize input
             if nargin < 4
                 throwerror('wrongInput', ['insufficient ',...
@@ -606,18 +604,6 @@ classdef ReachContinuous < elltool.reach.AReach
             end
             newReachObj.ellTubeRel =...
                 self.ellTubeRel.cat(newEllTubeRel);
-        end
-        function copyReachObj = getCopy(self)
-            copyReachObj = elltool.reach.ReachContinuous();
-            copyReachObj.switchSysTimeVec = self.switchSysTimeVec;
-            copyReachObj.x0Ellipsoid = self.x0Ellipsoid.getCopy();
-            copyReachObj.linSysCVec = cellfun(@(x) x.getCopy(),...
-                self.linSysCVec, 'UniformOutput', false);
-            copyReachObj.isCut = self.isCut;
-            copyReachObj.isProj = self.isProj;
-            copyReachObj.isBackward = self.isBackward;
-            copyReachObj.projectionBasisMat = self.projectionBasisMat;
-            copyReachObj.ellTubeRel = self.ellTubeRel.getCopy();
         end
     end
 end
