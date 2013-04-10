@@ -1,6 +1,7 @@
 function [absTolArr, absTolVal] = getAbsTol(hplaneArr, fAbsTolFun)
 % GETABSTOL - gives the array of absTol for all elements 
 %             in hplaneArr
+% 
 % Input:
 %  regular:
 %   ellArr: hyperplane[nDim1, nDim2, ...] - multidimensional 

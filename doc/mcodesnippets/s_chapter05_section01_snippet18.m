@@ -1,4 +1,4 @@
-absTol = elltool.conf.Properties.getAbsTol();
+absTol = getAbsTol(firstEllObj);
 % find out which of the directions in dirsMat are bad
 firstEllObj.isbaddirection(fourthEllObj, dirsMat, absTol)  
 

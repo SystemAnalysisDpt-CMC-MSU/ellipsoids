@@ -187,7 +187,7 @@ Functions {\tt distance}, {\tt intersect}, {\tt intersection\_ia} and
 {\tt isinside} use the CVX interface (\cite{cvxhp}) to the
 external optimization package. The default optimization package included
 in the distribution of the {\it Ellipsoidal Toolbox} is SeDuMi
-(\cite{sedumi},\cite{sedumihp}). 
+(\cite{sedumi},\cite{sedumihp}).
 
 
 
@@ -284,8 +284,8 @@ extracted in the form of arrays of ellipsoids:
 Ellipsoidal arrays {\tt externallEllMat} and {\tt internalEllMat} have $4$ rows because we computed
 the reach set approximations for $4$ directions. Each row of ellipsoids
 corresponds to one direction. The number of columns in {\tt externallEllMat} and {\tt internalEllMat}
-is defined by the {\tt time\_grid} parameter of the global {\tt ellOptions}
-structure (see chapter 6 for details). It represents the number of time values
+is defined by the {\tt nTimeGridPoints} parameter, which is available from {\tt elltool.conf.Properties}
+static class (see chapter 6 for details). It represents the number of time values
 in our time interval, at which the approximations are evaluated. These
 time values are returned in the optinal output parameter, array {\tt timeVec},
 whose length is the same as the number of columns in {\tt externallEllMat} and {\tt internalEllMat}.
@@ -434,5 +434,5 @@ Function {\tt projection} exists also for the {\tt reach} objects:
 {mcodesnippets/s_chapter05_section03_snippet02.m}
 
 The quality of the ellipsoid and reach set plots is controlled by the
-parameters {\tt plot2d\_grid} and {\tt plot3d\_grid} of the global
-{\tt ellOptions} structure (see chapter 6).
+parameters {\tt nPlot2dPoints} and {\tt nPlot3dPoints}, which are available
+from getters of ellipsoid class.

@@ -10,8 +10,8 @@ Here we list system parameters available from the 'default' configuration:
 \item {\tt version = '1.4dev'} - current version of {\it ET}.
 \item {\tt isVerbose = 0} - makes all the calls to {\it ET}
 routines silent, and no information except errors is displayed.
-\item {\tt abs\_tol = 1e-7} - absolute tolerance.
-\item {\tt rel\_tol = 1e-5} - relative tolerance.
+\item {\tt abs\_Tol = 1e-7} - absolute tolerance.
+\item {\tt rel\_Tol = 1e-5} - relative tolerance.
 \item {\tt nTimeGridPoints = 200} - density of the time grid for the
 continuous time reach set computation.
 This parameter directly affects the number of ellipsoids to
@@ -32,8 +32,8 @@ and reach set plots.
 a 3D ellipsoid. This parameter also affects the quality of 3D reach set plots.
 \end{enumerate}
 Once the configuration is loaded, the system parameters are available through
-elltool.conf.Properties.
-Elltool.conf.Properties is a static class, providing emulation of static
+{\tt elltool.conf.Properties}.
+{\tt elltool.conf.Properties} is a static class, providing emulation of static
 properties for toolbox. It has two function types: setters and getters.
 Using getters we obtain system parameters.
 \verbmcodef[Getting parameters]
@@ -84,31 +84,31 @@ It is assumed that the halfspace is
 
 
 \section{linsys}
-{\it Ellipsoidal Toolbox}  supports both types of linear (affine)
+{\it Ellipsoidal Toolbox} supports both types of linear (affine)
 dynamical systems: continuous-time,
 \begin{eqnarray*}
 \dot{x}(t) & = & A(t)x(t) + B(t)u(t) + G(t)v(t),\\
-y(t) & = & C(t)x(t) + D(t)u(t) + w(t);
+y(t) & = & C(t)x(t) + w(t);
 \end{eqnarray*}
 and discrete-time,
 \begin{eqnarray*}
 x[k+1] & = & A[k]x[k] + B[k]u[k] + G[k]v[k], \\
-y[k] & = & C[k]x[k] + D[k]u[k] + w[k].
+y[k] & = & C[k]x[k] + w[k].
 \end{eqnarray*}
-Both can be time-invariant (have constant matrices $A$, $B$, $G$, $C$, $D$)
+Both can be time-invariant (have constant matrices $A$, $B$, $G$, $C$)
 or time-variant.
 \newline
-The {\tt linsys} object contains the fields:
+Both the {\tt LinSysContinuous} and the {\tt LinSysDiscrete} objects contain the fields:
 \begin{itemize}
-\item {\tt A} - $(n\times n)$-dimensional matrix $A$ of type {\tt double}
+\item {\tt atInpMat} - $(n\times n)$-dimensional matrix $A$ of type {\tt double}
 if constant, or {\tt cell} to symbolically represent $A(t)$ or $A[k]$.
-\item {\tt B} - $(n\times m)$-dimensional matrix $B$, {\tt double} if constant,
+\item {\tt btInpMat} - $(n\times m)$-dimensional matrix $B$, {\tt double} if constant,
 {\tt cell} if symbolic.
-\item {\tt control} - ellipsoidal bounds on control $u$,
+\item {\tt uBoundsEll} - ellipsoidal bounds on control $u$,
 either an {\tt ellipsoid}
-object of dimension $m$, or structure {\tt uBoundsEllObj} with fields {\tt U.center} and
-{\tt U.shape} to represent the ellipsoid that depends on time. For example,
-\verbmcodef[Definition of the ellipsoid]
+object of dimension $m$, or structure {\tt SUBounds} with fields {\tt SUBounds.center} and
+{\tt SUBounds.shape} to represent the ellipsoid that depends on time. For example,
+\verbmcodef[Definition of the ellipsoidal bounds]
 {mcodesnippets/s_chapter06_section04_snippet01.m}
 
 This example defines ellipsoid $\EE(p, P(t))$ with $p=\left[\begin{array}{c}
@@ -116,72 +116,59 @@ This example defines ellipsoid $\EE(p, P(t))$ with $p=\left[\begin{array}{c}
 1\end{array}\right]$ and $P(t) = \left[\begin{array}{cc}
 4 & \cos(t)\\
 \cos(t) & 1\end{array}\right]$.
-\item {\tt G} - $(n\times d)$-dimensional matrix $G$ of type {\tt double}
+\item {\tt gtInpMat} - $(n\times d)$-dimensional matrix $G$ of type {\tt double}
 if constant, or {\tt cell} if symbolic. Can be empty if the system has
 no disturbance or affine term.
-\item {\tt disturbance} - ellipsoidal bounds on disturbance $v$, either an
+\item {\tt distBoundsEll} - ellipsoidal bounds on disturbance $v$, either an
 {\tt ellipsoid} object of dimension $d$, or structure {\tt V} with
 fields {\tt V.center} and {\tt V.shape} for symbolic representation of
 ellipsoid, similar to the {\tt control} field.
 This field can be also a single $d$-dimensional vector - constant or symbolic -
 to represent an affine term.
-\item {\tt C} - $(r\times n)$-dimensional matrix $C$ of type {\tt double}
+\item {\tt ctInpMat} - $(r\times n)$-dimensional matrix $C$ of type {\tt double}
 if constant, or {\tt cell} if symbolic.
-\item {\tt D} - $(r\times m)$-dimensional matrix $D$ of type {\tt double}
-if constant, or {\tt cell} if symbolic. Can be empty.
-\item {\tt noise} - ellipsoidal bounds on the noise $w$, either an
+\item {\tt noiseBoundsEll} - ellipsoidal bounds on the noise $w$, either an
 {\tt ellipsoid} object of dimension $r$, or structure {\tt W} with
 fields {\tt W.center} and {\tt W.shape} for symbolic representation of
 ellipsoid, similar to the {\tt control} and {\tt disturbance} fields.
 
 This field can be also a single $r$-dimensional vector, constant or symbolic,
 to represent an affine term.
-\item {\tt lti} - $1$ if the system is time-invariant, $0$ - otherwise.
-\item {\tt dt} - $1$ if the system is discrete-time, $0$ - otherwise.
-\item {\tt constantbounds} - indicates if the bounds on control, disturbance
-and noise are constant.
+
+\item {\tt discrFlag} - {\tt 'd'} if the system is discrete-time, not {\tt 'd'}- otherwise.
 \end{itemize}
-The fields of {\tt linsys} object can be accessed but cannot be modified
+The fields of {\tt LinSysContinuous} or {\tt LinSysDiscrete} object can be accessed but cannot be modified
 directly by the user. The only way to modify these fields is through
-{\tt linsys/linsys} constructor.
+{\tt linsys/LinSysContinuous} or {\tt linsys/LinSysDiscrete} constructor.
+
+There is {\tt LinSysFactory} - the factory class of linear system objects. Through methods of this class
+user creates {\tt LinSysDiscrete} object if {\tt discrFlag} is equal {\tt 'd'} and {\tt LinSysContinuous} object
+the other way.
+
 For the list of {\tt linsys} methods, see appendix A.3.
 
 
 
 \section{reach}
-The {\tt reach} object represents the reach (or backward reach)
-set of an affine system. It contains the fields:
+The {\tt ReachContinuous} object represents the reach (or backward reach)
+set of an affine continuous-time system, the {\tt ReachDiscrete} object represents
+the reach (or backward reach) set of a discrete-time system . Both contain the fields:
 \begin{itemize}
-\item {\tt system} - the description of the system, for which the reach set
-is computed, in the form of {\tt linsys} object.
-\item {\tt t0} - initial time value.
-\item {\tt X0} - the set of initial (or terminating, in case of backward
+\item {\tt linSys} - the description of the system, for which the reach set
+is computed, in the form of {\tt LinSysContinuous} or {\tt LinSysDiscrete} object.
+
+\item {\tt x0Ell} - the set of initial (or terminating, in case of backward
 reachability) conditions in the form of {\tt ellipsoid}
 object.
-\item {\tt initial\_directions} - matrix whose columns represent the values
+\item {\tt dirsMat} - matrix whose columns represent the values
 of direction vector $l$ (see chapter 3), for which the ellipsoidal
 approximations of the reach set are computed.
-\item {\tt time\_values} - time interval, for which the reach set is computed,
-is split into the number of segments specified by the global
-{\tt ellOptions.time\_grid} parameter. This field contains the values
-of the time grid. If the last value of this array is less than the value
-of {\tt t0}, then the reach set is in fact backward reach set.
-\item {\tt center\_values} - matrix whose columns are values of the reach set
-center trajectory evaluated at times specified by {\tt time\_values}.
-\item {\tt l\_values} - array of directions vectors evaluated at times
-specified by {\tt time\_values}.
-\item {\tt ea\_values} - array of the shape matrices of the external ellipsoids
-evaluated at times specified by {\tt time\_values}.
-\item {\tt ia\_values} - array of the shape matrices of the internal ellipsoids
-evaluated at times specified by {\tt time\_values}.
-\item {\tt projection\_basis} - if the reach set is projected onto the given
-orthonormal basis, the columns of this field are the basis vectors, otherwise,
-this field is empty.
-\item {\tt calc\_data} - this field is empty unless the reach set is computed
-with the {\tt save\_all} option set to $1$. This field then contains the
-intermediate calculation data, which can be used for the approximation
-refinement. For more detail, see description of the function
-{\tt refine} in appendix A.4.
+\item {\tt timeVec} - time interval, for which the reach set is computed,
+is split into the number of segments specified by the 
+{\tt nTimeGridPoints} parameter. This field contains the values
+of the time grid. If the last value of this array is less than the first 
+value of this array, then the reach set is in fact backward reach set.
 \end{itemize}
-These fields can be accessed and modified only through {\tt reach} methods.
+These fields can be accessed and modified only through {\tt ReachContinuous} or
+{\tt ReachDiscrete} methods.
 For the list of {\tt reach} methods, see appendix A.4.
