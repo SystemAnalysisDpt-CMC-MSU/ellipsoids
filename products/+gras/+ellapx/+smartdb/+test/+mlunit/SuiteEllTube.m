@@ -617,8 +617,10 @@ classdef SuiteEllTube < mlunitext.test_case
                 approxSchemaDescr, calcPrecision);
             [extFromEllTubeEllArray extTimeVec] =... 
                 extFromEllArrayEllTube.getEllArray(EApproxType.External);
-            mlunit.assert(eq(extFromEllTubeEllArray(1),ellArray(1)));
-            mlunit.assert(eq(extFromEllTubeEllArray(2),ellArray(2)));
+            [isOk, reportStr] = extFromEllTubeEllArray(1).eq(ellArray(1));
+            mlunitext.assert(isOk,reportStr);
+            [isOk, reportStr] = extFromEllTubeEllArray(2).eq(ellArray(2));
+            mlunitext.assert(isOk,reportStr);
             mlunit.assert(all(extTimeVec == [1 2]));
             %
             intFromEllArrayEllTube = ...
@@ -629,8 +631,10 @@ classdef SuiteEllTube < mlunitext.test_case
                 approxSchemaDescr, calcPrecision);
             [intFromEllTubeEllArray intTimeVec] =... 
                 intFromEllArrayEllTube.getEllArray(EApproxType.Internal);
-            mlunit.assert(eq(intFromEllTubeEllArray(1),ellArray(1)));
-            mlunit.assert(eq(intFromEllTubeEllArray(2),ellArray(2)));
+            [isOk, reportStr] = intFromEllTubeEllArray(1).eq(ellArray(1));
+            mlunitext.assert(isOk,reportStr);
+            [isOk, reportStr] = intFromEllTubeEllArray(2).eq(ellArray(2));
+            mlunitext.assert(isOk,reportStr);
             mlunit.assert(all(intTimeVec == [1 2]));
             % no assertions, just error test            
             intFromEllArrayEllTube.getEllArray(EApproxType.External);
