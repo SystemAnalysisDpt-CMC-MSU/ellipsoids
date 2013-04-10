@@ -49,8 +49,6 @@ function [varargout] = minksum(varargin)
 
 import elltool.plot.plotgeombodyarr;
 import modgen.common.throwerror;
-N_PLOT_POINTS = 80;
-SPHERE_TRIANG_CONST = 3;
 
 if nargout == 0
     minkCommonAction(@getEllArr,@fCalcBodyTriArr,@fCalcCenterTriArr,varargin{:});
@@ -87,7 +85,12 @@ end
         if nDim == 1
             [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr);
         end
-        [lGridMat, fGridMat] = ellipsoid.calcGrid(nDim,N_PLOT_POINTS,SPHERE_TRIANG_CONST);
+        if nDim == 2
+            nPlotPoints=ellsArr(1).nPlot2dPoints;
+        else
+            nPlotPoints=ellsArr(1).nPlot3dPoints;
+        end
+        [lGridMat, fGridMat] = ellipsoid.calcGrid(nDim,nPlotPoints,0.8);
         [xMat, fCMat] = arrayfun(@(x) fCalcBodyTri(x, nDim), ellsArr, ...
             'UniformOutput', false);
         xSumCMat = 0;

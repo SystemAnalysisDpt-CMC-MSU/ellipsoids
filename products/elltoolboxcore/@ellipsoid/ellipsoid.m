@@ -144,8 +144,9 @@ classdef ellipsoid < handle
     end
     methods (Static,Access = public)
         [supArr, bpMat] = rhomat(ellShapeMat,ellCenterVec,absTol, dirsMat)
-        [lGetGrid, fGetGrid] = calcGrid(nDim,nPlotPoints,sphereTriang)
+        [lGetGrid, fGetGrid] = calcGrid(nDim,nPlotPoints,factor2d,factor3d)
         [diffBoundMat, isPlotCenter3d] = calcdiffonedir(fstEll,secEll,lMat,pUniversalVec,isGoodDirVec)
+        triangDepth = calcDepth(nPoints)
     end
     methods(Access = private)
         [propMat, propVal] = getProperty(hplaneMat,propName, fPropFun)

@@ -51,8 +51,6 @@ function varargout = minkmp(varargin)
 
 import elltool.plot.plotgeombodyarr;
 import modgen.common.throwerror;
-N_PLOT_POINTS = 80;
-SPHERE_TRIANG_CONST = 3;
 ABS_TOL = 1e-14;
 [reg]=...
     modgen.common.parseparext(varargin,...
@@ -120,7 +118,12 @@ end
     end
     function [xSumDifMat,fMat] = fCalcBodyTriArr(ellsArr)
         nDim = dimension(ellsArr(1));
-        [lDirsMat, fGridMat] = ellipsoid.calcGrid(nDim,N_PLOT_POINTS,SPHERE_TRIANG_CONST);   
+        if nDim==2
+            nPlotPoints=ellsArr(1).nPlot2dPoints;
+        else
+            nPlotPoints=ellsArr(1).nPlot3dPoints;
+        end    
+        [lDirsMat, fGridMat] = ellipsoid.calcGrid(nDim,nPlotPoints,0.8);   
         lDirsMat = lDirsMat';
         if nDim == 1
             [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr);

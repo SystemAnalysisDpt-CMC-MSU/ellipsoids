@@ -1,6 +1,6 @@
 function bpMat = ellbndr_3d(myEll)
 %
-% ELLBNDR_3D - compute the boundary of 3D ellipsoid. 
+% ELLBNDR_3D - compute the boundary of 3D ellipsoid.
 %
 % Input:
 %   regular:
@@ -22,7 +22,7 @@ function bpMat = ellbndr_3d(myEll)
 %             Faculty of Computational Mathematics and Cybernetics,
 %             System Analysis Department 2013$
 %
-sphereTriangNum=3;
+nPoints=myEll.nPlot3dPoints;
 [cenVec qMat]=double(myEll);
 absTol=myEll.getAbsTol();
-bpMat=ellipsoid.ellbndr_3dmat(cenVec,qMat,sphereTriangNum,absTol);
+bpMat=ellipsoid.ellbndr_3dmat(cenVec,qMat,nPoints,absTol);

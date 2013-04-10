@@ -49,8 +49,6 @@ function [varargout] = minkdiff(varargin)
 
 import elltool.plot.plotgeombodyarr;
 import modgen.common.throwerror;
-N_PLOT_POINTS = 80;
-SPHERE_TRIANG_CONST = 3;
 isPlotCenter3d = false;
 
 if nargout == 0
@@ -127,7 +125,10 @@ end
         else
             if nDim == 3
                 isPlotCenter3d = true;
-            end;
+                nPlotPoints=fstEll.nPlot3dPoints;
+            else
+                nPlotPoints=fstEll.nPlot2dPoints;
+            end
             fstEllShMat = fstEll.shape;
             if isdegenerate(fstEll)
                 fstEllShMat = ellipsoid.regularize(fstEllShMat,fstEll.absTol);
@@ -136,7 +137,7 @@ end
             if isdegenerate(secEll)
                 secEllShMat = ellipsoid.regularize(secEllShMat,secEll.absTol);
             end
-            [lMat, fMat] = ellipsoid.calcGrid(nDim,N_PLOT_POINTS,SPHERE_TRIANG_CONST);
+            [lMat, fMat] = ellipsoid.calcGrid(nDim,nPlotPoints,0.8);
             lMat = lMat';
             absTolVal=min(fstEll.absTol, secEll.absTol);
             [isBadDirVec,pUniversalVec] = ellipsoid.isbaddirectionmat(fstEllShMat, secEllShMat, ...

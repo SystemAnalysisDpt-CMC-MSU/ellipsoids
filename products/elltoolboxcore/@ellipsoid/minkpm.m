@@ -60,8 +60,6 @@ function [varargout] = minkpm(varargin)
 import elltool.plot.plotgeombodyarr;
 import modgen.common.throwerror;
 isPlotCenter3d = false;
-N_PLOT_POINTS = 100;
-SPHERE_TRIANG_CONST = 3;
 ABS_TOL = 1e-14;
 [reg]=...
     modgen.common.parseparext(varargin,...
@@ -139,7 +137,12 @@ end
         end
         inpEllArr = ellsArr(1:end-1);
         inpEll = ellsArr(end);
-        [dirMat, ~] = ellipsoid.calcGrid(nDim,N_PLOT_POINTS,SPHERE_TRIANG_CONST);
+        if nDim==2
+            nPlotPoints=inpEllArr(1).nPlot2dPoints;
+        else
+            nPlotPoints=inpEllArr(1).nPlot3dPoints;
+        end
+        [dirMat, ~] = ellipsoid.calcGrid(nDim,nPlotPoints);
         dirMat = dirMat';
         extApproxEllVec = minksumEa(inpEllArr, dirMat);
         if min(extApproxEllVec > inpEll) == 0
@@ -161,8 +164,12 @@ end
         inpEllArr = ellsArr(1:end-1);
         inpEll = ellsArr(end);
         elltool.conf.Properties.setIsVerbose(false)
-        
-        [dirMat, fMat] = ellipsoid.calcGrid(nDims,N_PLOT_POINTS,SPHERE_TRIANG_CONST);
+        if nDims==2
+            nPlotPoints=inpEllArr(1).nPlot2dPoints;
+        else
+            nPlotPoints=inpEllArr(1).nPlot3dPoints;
+        end    
+        [dirMat, fMat] = ellipsoid.calcGrid(nDims,nPlotPoints);
         dirMat = dirMat';
         extApproxEllVec = minksum_ea(inpEllArr, dirMat);
         centVec= extApproxEllVec(1).center - inpEll.center;

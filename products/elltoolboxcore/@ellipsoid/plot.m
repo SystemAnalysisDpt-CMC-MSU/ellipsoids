@@ -62,8 +62,6 @@ function plObj = plot(varargin)
 
 
 import elltool.plot.plotgeombodyarr;
-N_PLOT_POINTS = 80;
-SPHERE_TRIANG_CONST = 3;
 [plObj,nDim,isHold]= plotgeombodyarr('ellipsoid',@fCalcBodyTriArr,@patch,varargin{:});
 if (nDim < 3)
     [reg]=...
@@ -93,7 +91,13 @@ end
             if nDim == 1
                 [ell,nDim] = rebuildOneDim2TwoDim(ell);
             end
-            [lGetGridMat, fGetGridMat] = calcGrid(nDim);
+            if nDim == 2
+                nPlotPoints=ell.nPlot2dPoints;
+            else
+                nPlotPoints=ell.nPlot3dPoints;
+            end   
+            [lGetGridMat, fGetGridMat] = ...
+                ellipsoid.calcGrid(nDim,nPlotPoints,0.8);
             nPoints = size(lGetGridMat, 1);
             xMat = zeros(nDim, nPoints+1);
             [qCenVec,qMat] = ell.double();
