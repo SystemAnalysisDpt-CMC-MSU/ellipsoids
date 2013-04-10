@@ -741,33 +741,28 @@ classdef ReachDiscrete < elltool.reach.AReach
         % Input:
         %   regular:
         %       rsArr: elltool.reach.ReachDiscrete[nDim1,
-        %       nDim2, ...] -
-        %           multidimension array of reach sets.
+        %           nDim2, ...] - multidimension array of 
+        %           reach sets.
         %   optional
         %       fRelTolFun: function_handle[1,1] - function
-        %       that apply
-        %           to the relTolArr. The default is @min.
+        %           that apply to the relTolArr. The 
+        %           default is @min.
         %
         % Output:
         %   regular:
         %       relTolArr: double [relTol1, relTol2, ...] -
-        %       return relTol
-        %           for each element in rsArr
+        %           return relTol for each element in rsArr
         %   optional:
         %       relTol: double[1,1] - return result of work
-        %       fRelTolFun
-        %           with the relTolArr
+        %           fRelTolFun with the relTolArr
         %
         % Usage:
         %   use [~,relTol] = rsArr.getRelTol() if you want
-        %   get only
-        %       relTol,
+        %       get only relTol,
         %   use [relTolArr,relTol] = rsArr.getRelTol() if
-        %   you want get
-        %       relTolArr and relTol,
+        %       you want get relTolArr and relTol,
         %   use relTolArr = rsArr.getRelTol() if you want
-        %   get only
-        %        relTolArr
+        %       get only relTolArr
         %
         %$Author: Zakharov Eugene  <justenterrr@gmail.com> $
         % $Author: Grachev Artem  <grachev.art@gmail.com> $
@@ -830,11 +825,11 @@ classdef ReachDiscrete < elltool.reach.AReach
         %
         % $Author: Kirill Mayantsev
         % <kirill.mayantsev@gmail.com> $  
-        % $Date: Jan-2012 $ 
+        % $Date: Jan-2013 $ 
         % $Copyright: Moscow State University,
         %             Faculty of Computational
         %             Mathematics and Computer Science,
-        %             System Analysis Department 2012 $
+        %             System Analysis Department 2013 $
         %
             import gras.la.sqrtmpos;
             import elltool.conf.Properties;
@@ -1683,13 +1678,12 @@ classdef ReachDiscrete < elltool.reach.AReach
         %
         % $Author: Kirill Mayantsev
         % <kirill.mayantsev@gmail.com> $  
-        % $Date: Jan-2012 $ 
-        % $Copyright: 
-        % Moscow State University, 
-        % Faculty of Computational
-        % Mathematics and Computer Science,
-        % System Analysis Department 2012 $
-        %    
+        % $Date: Jan-2013 $ 
+        % $Copyright: Moscow State University,
+        %             Faculty of Computational
+        %             Mathematics and Computer Science,
+        %             System Analysis Department 2013 $
+        %
             
             newReachObj = elltool.reach.ReachDiscrete();
             newReachObj.absTol = self.absTol;
@@ -1733,13 +1727,12 @@ classdef ReachDiscrete < elltool.reach.AReach
         %   
         % $Author: Kirill Mayantsev
         % <kirill.mayantsev@gmail.com> $  
-        % $Date: Jan-2012 $ 
-        % $Copyright: 
-        % Moscow State University, 
-        % Faculty of Computational
-        % Mathematics and Computer Science,
-        % System Analysis Department 2012 $
-        %    
+        % $Date: Jan-2013 $ 
+        % $Copyright: Moscow State University,
+        %             Faculty of Computational
+        %             Mathematics and Computer Science,
+        %             System Analysis Department 2013 $
+        %
             import modgen.common.throwerror;
             cutObj = self.getCopy();
             if self.isempty()
@@ -2060,12 +2053,11 @@ classdef ReachDiscrete < elltool.reach.AReach
         %
         % $Author: Kirill Mayantsev
         % <kirill.mayantsev@gmail.com> $  
-        % $Date: Jan-2012 $ 
-        % $Copyright: 
-        % Moscow State University, 
-        % Faculty of Computational
-        % Mathematics and Computer Science,
-        % System Analysis Department 2012 $
+        % $Date: Jan-2013 $ 
+        % $Copyright: Moscow State University, 
+        %             Faculty of Computational Mathematics 
+        %             and Computer Science,
+        %             System Analysis Department 2013 $
         %    
             if self.isempty()
                 return;
@@ -2158,12 +2150,12 @@ classdef ReachDiscrete < elltool.reach.AReach
         %
         % $Author: Kirill Mayantsev
         % <kirill.mayantsev@gmail.com> $  
-        % $Date: Jan-2012 $ 
-        % $Copyright: 
-        % Moscow State University, 
-        % Faculty of Computational
-        % Mathematics and Computer Science,
-        % System Analysis Department 2012 $
+        % $Date: Jan-2013 $ 
+        % $Copyright: Moscow State University, 
+        %             Faculty of Computational Mathematics 
+        %             and Computer Science,
+        %             System Analysis Department 2013 $
+        %    
         %    
             import elltool.conf.Properties;
             trCenterMat  = self.center_values;
@@ -2187,12 +2179,12 @@ classdef ReachDiscrete < elltool.reach.AReach
         %  
         % $Author: Kirill Mayantsev
         % <kirill.mayantsev@gmail.com> $  
-        % $Date: Jan-2012 $ 
-        % $Copyright: 
-        % Moscow State University, 
-        % Faculty of Computational
-        % Mathematics and Computer Science,
-        % System Analysis Department 2012 $
+        % $Date: Jan-2013 $ 
+        % $Copyright: Moscow State University, 
+        %             Faculty of Computational Mathematics 
+        %             and Computer Science,
+        %             System Analysis Department 2013 $
+        %    
         %    
             import elltool.conf.Properties;
             directionsCVec  = [];
@@ -2364,14 +2356,6 @@ classdef ReachDiscrete < elltool.reach.AReach
             end
             if nargout > 1
                 timeVec  = self.time_values;
-            end
-        end
-        %
-        function [muMat timeVec] = get_mu(self)  
-            import elltool.conf.Properties;
-            muMat = self.mu_values;
-            if nargout > 1
-                timeVec = self.time_values;
             end
         end
         %
