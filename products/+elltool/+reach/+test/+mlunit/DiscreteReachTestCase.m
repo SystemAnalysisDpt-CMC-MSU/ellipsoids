@@ -449,7 +449,6 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             [eaEllMat tVec] = reachSetObj.get_ea();
             [iaEllMat tVec] = reachSetObj.get_ia();
             [goodCurvesCVec tVec] = reachSetObj.get_goodcurves();
-            [muMat tVec] = reachSetObj.get_mu();
             linSys = reachSetObj.get_system();
             projBasMat = [0 0 0 0 1 0; 0 0 0 0 0 1]';
             projReachSetObj = reachSetObj.projection(projBasMat);
@@ -485,7 +484,6 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             [eaEllMat tVec] = reachSetObj.get_ea();
             [iaEllMat tVec] = reachSetObj.get_ia();
             [goodCurvesCVec tVec] = reachSetObj.get_goodcurves();
-            [muMat tVec] = reachSetObj.get_mu();
             linSys = reachSetObj.get_system();
             projBasMat = [1 0 0; 0 0 1]';
             projReachSetObj = reachSetObj.projection(projBasMat);

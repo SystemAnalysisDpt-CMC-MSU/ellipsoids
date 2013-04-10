@@ -10,7 +10,7 @@ classdef EllTubeProj<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
     methods
         function self=EllTubeProj(varargin)
             self=self@gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel(...
-                varargin{:});
+                varargin{:}); 
         end
     end
 end

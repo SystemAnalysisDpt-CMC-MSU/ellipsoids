@@ -1,6 +1,5 @@
 function results = run_discrete_reach_tests(varargin)
-
-import elltool.reach.test.mlunit.ReachFactory;
+import elltool.reach.ReachFactory;
 %
 runner = mlunit.text_test_runner(1, 1);
 loader = mlunitext.test_loader;
@@ -9,7 +8,7 @@ crm = gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
 crmSys = gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
 %
 confList = {...
-    'demo3firstTest',  [1 0 1 1];
+    'demo3fourthTest',  [1 0 1 1];
     };
 %
 nConfs = size(confList, 1);

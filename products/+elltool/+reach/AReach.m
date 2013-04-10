@@ -1,8 +1,8 @@
 classdef AReach < elltool.reach.IReach
-    % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: March-2012 $
+    % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: March-2013 $
     % $Copyright: Moscow State University,
     %            Faculty of Computational Mathematics and Computer Science,
-    %            System Analysis Department 2012 $
+    %            System Analysis Department 2013 $
     %
     properties (Constant, GetAccess = protected)
         MIN_EIG_Q_REG_UNCERT = 0.1
@@ -44,9 +44,7 @@ classdef AReach < elltool.reach.IReach
                 @(~, timeVec, varargin)...
                 deal(repmat(projMat.', [1 1 numel(timeVec)]),...
                 repmat(projMat, [1 1 numel(timeVec)]));
-            isProjSpaceList = false(1, size(projMat, 1));
-            isProjSpaceList((sum(projMat, 2) > 0).') = true;
-            isProjSpaceCList = {isProjSpaceList};
+            ProjCMatList = {projMat'};
             projType = EProjType.Static;
             if nargin > 2
                 localEllTubeRel =...
@@ -59,7 +57,7 @@ classdef AReach < elltool.reach.IReach
                 localEllTubeRel.scale(@(x) scaleFactor, {APPROX_TYPE});
             end
             projSet = localEllTubeRel.project(projType,...
-                isProjSpaceCList, fProj);
+                ProjCMatList, fProj);
         end
         %
         function plotter = plotApprox(self, approxType, varargin)
@@ -210,7 +208,6 @@ classdef AReach < elltool.reach.IReach
             end
             [sysTypeStr sysTimeStartStr sysTimeEndStr] = ...
                 self.DISPLAY_PARAMETER_STRINGS{:};
-%                 dispParamStringsCVec{:};
             dim = self.dimension();
             timeVec =...
                 [self.switchSysTimeVec(1) self.switchSysTimeVec(end)];
@@ -339,7 +336,7 @@ classdef AReach < elltool.reach.IReach
         end
         %
         function linSys = get_system(self)
-            linSys = self.linSysCVec{end};
+            linSys = self.linSysCVec{end}.getCopy();
         end
         %
         function [rSdim sSdim] = dimension(self)
@@ -404,7 +401,7 @@ classdef AReach < elltool.reach.IReach
         end
         %
         function x0Ell = getInitialSet(self)
-            x0Ell = self.x0Ellipsoid;
+            x0Ell = self.x0Ellipsoid.getCopy();
         end
         %
         function isBackward = isbackward(self)

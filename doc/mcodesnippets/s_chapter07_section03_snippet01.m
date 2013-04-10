@@ -16,7 +16,7 @@ TS = 2;  % time of switch
 T = 3;  % terminating time
 
 % compute the reach set:
-rs1 = elltool.reach.ReachContinuous(s1, X0, L0, [0 T]);  % reach set of the first system
+rs1 = elltool.reach.ReachContinuous(s1, X0, L0, [0 TS]);  % reach set of the first system
 % computation of the second reach set starts
 % where the first left off
 rs2 = evolve(rs1, T, s2);
