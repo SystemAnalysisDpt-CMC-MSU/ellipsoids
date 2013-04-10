@@ -54,7 +54,8 @@ classdef ATightIntEllApxBuilder<gras.ellapx.lreachplain.ATightEllApxBuilder
             matOpFactory = MatrixOperationsFactory.create(timeVec);
             %
             BPBTransDynamics = pDefObj.getBPBTransDynamics();
-            self.BPBTransSqrtDynamics = matOpFactory.sqrtm(BPBTransDynamics);
+            self.BPBTransSqrtDynamics = ...
+                matOpFactory.sqrtmpos(BPBTransDynamics);
             self.ltSplineList = ...
                 self.getGoodDirSet().getGoodDirOneCurveSplineList();
         end

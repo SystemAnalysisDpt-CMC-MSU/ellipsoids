@@ -6,9 +6,9 @@ function isPositiveVec = isinternal(myEllArr, matrixOfVecMat, mode)
 %   isPositiveVec = ISINTERNAL(myEllArr,  matrixOfVecMat, mode) - Checks
 %       if vectors specified as columns of matrix matrixOfVecMat
 %       belong to the union (mode = 'u'), or intersection (mode = 'i')
-%       of the ellipsoids in myEllArr. If myEllMat is a single
+%       of the ellipsoids in myEllArr. If myEllArr is a single
 %       ellipsoid, then this function checks if points in matrixOfVecMat
-%       belong to myEllArr or not. Ellipsoids in E must be
+%       belong to myEllArr or not. Ellipsoids in myEllArr must be
 %       of the same dimension. Column size of matrix  matrixOfVecMat
 %       should match the dimension of ellipsoids.
 %
@@ -77,31 +77,27 @@ checkmultvar('all(x1(:)==x2)',2,nDimsMat,mRows,...
 
 lCVec = mat2cell(matrixOfVecMat,mRows,ones(1,nCols));
 
-isPositiveVec = cellfun(@(x) isinternal_sub(myEllArr,x, mode),lCVec);
+isPositiveVec = cellfun(@(x) isIntSingleVec(myEllArr,x, mode),lCVec);
 
 end
 
-
-
 %%%%%%%%
 
-function isPositive = isinternal_sub(myEllMat, xVec, mode)
+function isPositive = isIntSingleVec(myEllArr, xVec, mode)
 %
 % ISINTERNAL_SUB - compute result for single vector.
 %
 % Input:
 %   regular:
-%       myEllMat: ellipsod [mRowsOfEllMat, nColsOfEllMat] - matrix of
+%       myEllArr: ellipsod [nDims1,...,nDimsN] - array of
 %           ellipsoids.
-%       xVec: double [mRows, 1] - matrix which specifiy points.
-%       mRows: double[1, 1] - dimension of ellipsoids
-%           in myEllMat and xVec.
+%       xVec: double [dimSpace, 1] - vector.
 %
 %   properties:
 %       mode: char[1, 1] - 'u' or 'i', go to description.
 %
 % Output:
-%    isPositive: logical[1, nColsOfVec] -
+%    isPositive: logical[1,1] -
 %       true - if vector belongs to the union or intersection
 %       of ellipsoids, false - otherwise.
 %
@@ -109,23 +105,22 @@ function isPositive = isinternal_sub(myEllMat, xVec, mode)
 % $Copyright:  The Regents of the University of California 2004-2008 $
 
 import elltool.conf.Properties;
-
-absTolMat = getAbsTol(myEllMat);
-
-isPosMat = arrayfun(@(x,y) fSingleCase(x,y),myEllMat,absTolMat);
+import elltool.logging.Log4jConfigurator;
+persistent logger;
+absTolArr = getAbsTol(myEllArr);
+isPosArr = arrayfun(@(x,y) fSingleCase(x,y),myEllArr,absTolArr);
 
 if mode == 'u'
     isPositive = false;
-    if any(isPosMat(:))
+    if any(isPosArr(:))
         isPositive = true;
     end
 else
     isPositive = true;
-    if ~all(isPosMat(:))
+    if ~all(isPosArr(:))
         isPositive = false;
     end
 end
-
     function isPos = fSingleCase(singEll,absTol)
         import elltool.conf.Properties;
         isPos = false;
@@ -134,17 +129,20 @@ end
         
         if isdegenerate(singEll)
             if Properties.getIsVerbose()
+                if isempty(logger)
+                    logger=Log4jConfigurator.getLogger();
+                end
                 fstFprintStr = ...
                     'ISINTERNAL: Warning! There is degenerate ';
-                secFprintStr = 'ellipsoid in the array.\n';
-                fprintf([fstFprintStr secFprintStr]);
-                fprintf('            Regularizing...\n');
+                secFprintStr = 'ellipsoid in the array.';
+                logger.info([fstFprintStr secFprintStr]);
+                logger.info('            Regularizing...');
             end
             shMat = ellipsoid.regularize(shMat, absTol);
         end
         
-        r = cVec' * ell_inv(shMat) * cVec;
-        if (r < 1) || (abs(r - 1) < absTol)
+        rVal = cVec' * ell_inv(shMat) * cVec;
+        if (rVal < 1) || (abs(rVal - 1) < absTol)
             isPos = true;
         end
     end

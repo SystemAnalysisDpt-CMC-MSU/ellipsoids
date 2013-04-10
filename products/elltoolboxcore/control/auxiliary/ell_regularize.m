@@ -18,7 +18,7 @@ function R = ell_regularize(Q, delta)
   r = rank(Q);
 
   if r < n
-    if min(min(Q == Q')) > 0
+    if ~gras.la.ismatsymm(Q)
       R = Q  +  delta * eye(n);
     else
       [U S V] = svd(Q);

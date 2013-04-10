@@ -138,6 +138,8 @@ classdef GenEllipsoid < handle
         function ellObj = GenEllipsoid(varargin)
             import modgen.common.throwerror
             import elltool.core.GenEllipsoid;
+            import gras.la.ismatsymm;
+            import gras.la.ismatposdef;
             %
             absTol=ellObj.CHECK_TOL;
             %
@@ -148,15 +150,18 @@ classdef GenEllipsoid < handle
             elseif nInput==1
                 ellMat=varargin{1};
                 [mSize nSize]=size(ellMat);
-                isPar2Vector= nSize==1;
+                isPar2Vector = nSize==1;
+                isMatSquare = mSize == nSize;
                 %
                 if isPar2Vector
                     ellObj.diagMat=diag(ellMat);
                     ellObj.eigvMat=eye(size(ellObj.diagMat));
-                elseif (mSize~=nSize) ||...
-                        (min(min((ellMat == ellMat.'))) == 0)
-                    throwerror('wrongMatrix',...
-                        'Input should be a symmetric matrix or a vector.');
+                elseif ~isMatSquare
+                    throwerror('wrongInputMat',...
+                        'Input matrix must be square');
+                elseif ~ismatsymm(ellMat)
+                    throwerror('wrongInputMat',...
+                        'Input matrix must be symmetric.');
                 else
                     isDiagonalMat=ellMat==(ellMat.*eye(mSize));
                     if all(isDiagonalMat(:))
@@ -173,28 +178,25 @@ classdef GenEllipsoid < handle
                 ellMat=varargin{2};
                 [mCenSize nCenSize]=size(ellCenterVec);
                 [mSize nSize]=size(ellMat);
-                isPar2Vector= nSize==1;
+                isPar2Vector = nSize==1;
+                isMatSquare = mSize == nSize;
                 %
                 if isPar2Vector
                     ellObj.diagMat=diag(ellMat);
                     ellObj.eigvMat=eye(size(ellObj.diagMat));
-                elseif (mSize~=nSize)
-                    throwerror('wrongMatrix',...
-                        'Input should be a symmetric matrix or a vector.');
-                else
+                elseif ~isMatSquare
+                    throwerror('wrongInputMat',...
+                        'Input matrix must be square.');
+                elseif ~ismatsymm(ellMat)
+                    throwerror('wrongInputMat',...
+                        'Input matrix must be symmetric.');
+                else                 
                     isDiagonalMat=ellMat==(ellMat.*eye(mSize));
                     if  all(isDiagonalMat(:))
                         ellObj.diagMat=ellMat;
                         ellObj.eigvMat=eye(mSize);
                     else
-                        if ~(all(all(( ellMat - ellMat.')<absTol)))
-                            %matrix should be symmetric
-                            throwerror('wrongMatrix',...
-                                ['Input should be a ',...
-                                'symmetric matrix or a vector.']);
-                        else
-                            [ellObj.eigvMat ellObj.diagMat]=eig(ellMat);
-                        end
+                        [ellObj.eigvMat ellObj.diagMat]=eig(ellMat);
                     end
                 end
                 if nCenSize~=1
@@ -295,11 +297,14 @@ classdef GenEllipsoid < handle
                 ellObj.centerVec=ellCenterVec;
             end
             if (nInput~=0)
-                minEigVal=min(diag(ellObj.diagMat));
-                if (minEigVal<0 && abs(minEigVal)> absTol)
-                    throwerror('wrongMatrix',...
+                isNotInfIndVec = ~(diag(ellObj.diagMat)==Inf);
+                if any(isNotInfIndVec)
+                    if ~ismatposdef(ellObj.diagMat(isNotInfIndVec,...
+                        isNotInfIndVec),absTol,1)
+                    throwerror('wrongInputMat',...
                         ['GenEllipsoid matrix should be positive ',...
                         'semi-definite.'])
+                    end
                 end
             end
         end

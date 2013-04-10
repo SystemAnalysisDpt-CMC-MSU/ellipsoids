@@ -133,11 +133,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
         
         function self = testSqrtm(self)
             import elltool.conf.Properties;
-            
             MAX_TOL = Properties.getRelTol();
-            
-                        
-            
             test1Mat = eye(2);
             test2SqrtMat = eye(2) + 1.01*MAX_TOL; 
             test2Mat = test2SqrtMat*test2SqrtMat.';
@@ -161,9 +157,6 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
                 ellipsoid(test2Mat)); 
             mlunit.assert_equals(false, isEq);
             mlunit.assert_equals(reportStr, '(1).Q-->Max. difference (1.000000e-05) is greater than the specified tolerance(1.000000e-05)');
-           
-            
-            
         end
         
         function testIsInternalCenter(~)
@@ -362,7 +355,16 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             self.flexAssert(1, testResVec);
             testResVec = intersect(testEllVec, testHp, 'u');
             self.flexAssert(1, testResVec);
-            
+            %test intersect(ell1Arr,ell2Arr), where ell1Arr and ell2Arr have
+            %same sizes, and non-scalar
+            for iEll = 12:-1:1
+                testEllArr(iEll) = ellipsoid(eye(3));
+            end
+            testEllArr = reshape(testEllArr,2,3,2);
+            testIntResArr = ones(size(testEllArr));
+            intResArr = intersect(testEllArr,testEllArr);
+            isOkArr = testIntResArr == intResArr;
+            mlunit.assert(all(isOkArr(:)));
   
         end
 
@@ -573,10 +575,10 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             nDim = 2;
             testEllVec = ellipsoid([100, -100]', eye(nDim));
             testHpVec = hyperplane([0 -1]', 1);
-            self.runAndCheckError ...
-                ('resEllVec = hpintersection(testEllVec, testHpVec)',...
-                'degenerateEllipsoid');
-            
+            resEllVec = hpintersection(testEllVec, testHpVec);
+            ansEllVec = ellipsoid;
+            self.flexAssert(true, eq(resEllVec, ansEllVec));
+
             nDim = 2;
             testEllVec = ellipsoid(eye(nDim));
             testHpVec = hyperplane([1, 0].', 0);
@@ -684,12 +686,22 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             self.flexAssert(ansIsnIntersectedMat, isnIntersected);
             
             %Arrays
-            testEllArr = repmat(ellipsoid(eye(3)),[2, 2, 2]);
+            arrSizeVec=[2,2,2];
+            nElem=prod(arrSizeVec);
+            testEll1=ellipsoid(eye(3));
+            testEll2=ellipsoid([2/3, -1/3, -1/3; -1/3, 2/3, -1/3; ...
+                -1/3, -1/3, 2/3]);
+            ellArr(nElem)=ellipsoid();
+            arrayfun(@(x)fCopyEll(x,testEll1),1:prod(arrSizeVec));
+            ellArr=reshape(ellArr,arrSizeVec);
+            
             testHp = hyperplane([1, 1, 1].', 0);
-            resEllArr = hpintersection(testEllArr, testHp);
-            ansEllArr = repmat(ellipsoid([2/3, -1/3, -1/3; -1/3, 2/3, -1/3; ...
-                -1/3, -1/3, 2/3]),[2, 2, 2]);
-            isEqArr = eq(resEllArr, ansEllArr);
+            resEllArr = hpintersection(ellArr, testHp);
+            ellArr(nElem)=ellipsoid();
+            ellArr=reshape(ellArr,arrSizeVec);
+            arrayfun(@(x)fCopyEll(x,testEll2),1:prod(arrSizeVec));
+            
+            isEqArr = eq(resEllArr, ellArr);
             self.flexAssert(true, all(isEqArr(:)));
             
             testHpArr = repmat(hyperplane([0, 0, 1].', 2),[2,2,2]);
@@ -697,6 +709,9 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             [resEllArr isnIntersecArr] = hpintersection(testEll, testHpArr);
             self.flexAssert(true([2,2,2]), isempty(resEllArr));
             self.flexAssert(true([2,2,2]), isnIntersecArr);
+            function fCopyEll(index,ellObj)
+                ellArr(index)=ellObj;
+            end
         end
         
         function self = testEllEnclose(self)

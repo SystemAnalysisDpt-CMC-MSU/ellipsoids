@@ -28,12 +28,11 @@ function oMat=orthtranslmaxdir(srcVec,dstVec,srcMaxVec,dstMaxVec)
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2011 $
 %
-if numel(srcVec)>1
-    [oSrcMat,rSrcMat]=qr(srcVec);
-    [oDstMat,rDstMat]=qr(dstVec);
-    if xor(rSrcMat(1,1)>0,rDstMat(1,1)>0)
-        oDstMat(:,1)=-oDstMat(:,1);
-    end
+nDims=numel(srcVec);
+if nDims>1
+    oSrcMat=gras.la.orthtransl([1;zeros(nDims-1,1)],srcVec);
+    oDstMat=gras.la.orthtransl([1;zeros(nDims-1,1)],dstVec);
+
     %
     U0=oDstMat(:,2:end);
     V0=oSrcMat(:,2:end);
