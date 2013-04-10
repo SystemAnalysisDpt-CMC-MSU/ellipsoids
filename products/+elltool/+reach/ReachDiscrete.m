@@ -49,7 +49,7 @@ classdef ReachDiscrete < elltool.reach.AReach
     % $Copyright: Moscow State University,
     %            Faculty of Computational Mathematics and Computer Science,
     %            System Analysis Department 2012 $
-    properties (Constant, Access = private)
+    properties (Constant, GetAccess = ?elltool.reach.AReach)
         DISPLAY_PARAMETER_STRINGS = {'discrete-time', 'k0 = ', 'k1 = '}
     end
     %
@@ -66,7 +66,6 @@ classdef ReachDiscrete < elltool.reach.AReach
         l_values
         ea_values
         ia_values
-        mu_values
         minmax
         calc_data
     end
@@ -785,7 +784,6 @@ classdef ReachDiscrete < elltool.reach.AReach
             self.l_values           = [];
             self.ea_values          = [];
             self.ia_values          = [];
-            self.mu_values          = [];
             self.minmax             = [];
             self.calc_data          = [];
             %            
@@ -1480,7 +1478,6 @@ classdef ReachDiscrete < elltool.reach.AReach
             newReachObj.l_values = self.l_values;
             newReachObj.ea_values = self.ea_values;
             newReachObj.ia_values = self.ia_values;
-            newReachObj.mu_values = self.mu_values;
             newReachObj.minmax = self.minmax;
             newReachObj.calc_data = self.calc_data;
             newReachObj.switchSysTimeVec = self.switchSysTimeVec;
@@ -1780,15 +1777,7 @@ classdef ReachDiscrete < elltool.reach.AReach
         end
         %
         function display(self)            
-            self.displayInternal(self.DISPLAY_PARAMETER_STRINGS);
-        end
-        %
-        function [muMat timeVec] = get_mu(self)
-            import elltool.conf.Properties;
-            muMat = self.mu_values;
-            if nargout > 1
-                timeVec = self.time_values;
-            end
+            self.displayInternal();
         end
         %
         function newReachObj = evolve(self, newEndTime, linSys)

@@ -200,7 +200,7 @@ classdef AReach < elltool.reach.IReach
         end
         %
         %
-        function displayInternal(self, dispParamStringsCVec)
+        function displayInternal(self)
             import gras.ellapx.enums.EApproxType;
             fprintf('\n');
             disp([inputname(1) ' =']);
@@ -209,7 +209,8 @@ classdef AReach < elltool.reach.IReach
                 return;
             end
             [sysTypeStr sysTimeStartStr sysTimeEndStr] = ...
-                dispParamStringsCVec{:};
+                self.DISPLAY_PARAMETER_STRINGS{:};
+%                 dispParamStringsCVec{:};
             dim = self.dimension();
             timeVec =...
                 [self.switchSysTimeVec(1) self.switchSysTimeVec(end)];

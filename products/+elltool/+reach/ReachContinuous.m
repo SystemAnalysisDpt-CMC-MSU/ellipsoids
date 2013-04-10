@@ -50,7 +50,7 @@ classdef ReachContinuous < elltool.reach.AReach
     % $Copyright: Moscow State University,
     %            Faculty of Computational Mathematics and Computer Science,
     %            System Analysis Department 2012 $
-    properties (Constant, Access = private)
+    properties (Constant, GetAccess = ?elltool.reach.AReach)
         DISPLAY_PARAMETER_STRINGS = {'continuous-time', 'k0 = ', 'k1 = '}
     end
     %
@@ -491,7 +491,7 @@ classdef ReachContinuous < elltool.reach.AReach
         end
         %%
         function display(self)
-            self.displayInternal(self.DISPLAY_PARAMETER_STRINGS);
+            self.displayInternal();
         end
         %%
         function cutObj = cut(self, cutTimeVec)
