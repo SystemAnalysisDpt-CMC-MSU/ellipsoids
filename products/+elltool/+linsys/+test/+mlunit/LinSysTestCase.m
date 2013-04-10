@@ -510,9 +510,7 @@ classdef LinSysTestCase < mlunitext.test_case
             mlunit.assert_equals(all(eqMat(:)), true);
         end
         %
-        function self = testDisplay(self)            
-%             system = elltool.linsys.LinSysFactory.create(eye(3),eye(3,4),ell_unitball(4),...
-%                 eye(3,5),ell_unitball(5),eye(2,3),ell_unitball(2));
+        function self = testDisplay(self)
             uEll = struct();
             uEll.center = {'2 * cos(t)'; '0.5 * sin(t)'};
             uEll.shape = {'4 * t' '0'; '0' 't'};
@@ -584,5 +582,76 @@ classdef LinSysTestCase < mlunitext.test_case
             mlunit.assert_equals(...
                 noDistLinSys.hasdisturbance(false), false);
         end
+        %
+        function self = testGetCopy(self)
+            aMat = eye(3);
+            bMat = eye(3);
+            uEll = ellipsoid([0; 1; 2], eye(3));
+            uStruct = struct();
+            uStruct.center = [1; 1; 1];
+            uStruct.shape = {'10' 't' '0'; 't' '2' '0'; '0' '0' '3'};
+            gMat = eye(3);
+            gCMat = {'1' '0' '0'; '0' 'sin(t)' '0'; '0' '0' '2'};
+            vEll = ellipsoid(0.5 * eye(3));
+            vStruct = struct();
+            vStruct.center = [-1; 0; 1];
+            vStruct.shape = {'1' '0' '0'; '0' 't' '0'; '0' '0' 't^3'};
+            cMat = eye(3);
+            cCMat = {'1' '0' '0'; '0' 'cos(t)' '0'; '0' '0' '10'};
+            nEll = ellipsoid([1; 2; 3], eye(3));
+            nStruct = struct();
+            nStruct.center = [0; 0; 0];
+            nStruct.shape = {'t' '0' '0'; '0' '1' '0'; '0' '0' 't'};
+            lContsysMat(4, 4) = elltool.linsys.LinSysContinuous();
+            lContsysMat(1) = create(uEll);
+            lContsysMat(2) = create(uStruct);
+            lContsysMat(3) = create(uEll, gMat, vEll);
+            lContsysMat(4) = create(uEll, gMat, vStruct);
+            lContsysMat(5) = create(uStruct, gMat, vEll);
+            lContsysMat(6) = create(uStruct, gMat, vStruct);
+            lContsysMat(7) = create(uEll, gMat, vEll, cMat, nEll);
+            lContsysMat(8) = create(uEll, gMat, vEll, cMat, nStruct);
+            lContsysMat(9) = create(uEll, gMat, vStruct, cMat, nEll);
+            lContsysMat(10) = create(uEll, gMat, vStruct, cMat, nStruct);
+            lContsysMat(11) = create(uStruct, gMat, vEll, cMat, nEll);
+            lContsysMat(12) = create(uStruct, gMat, vEll, cMat, nStruct);
+            lContsysMat(13) = create(uStruct, gMat, vStruct, cMat, nEll);
+            lContsysMat(14) = create(uStruct, gMat, vStruct, cMat, nStruct);
+            lContsysMat(15) = create(uEll, gCMat, vStruct, cMat, nStruct);
+            lContsysMat(16) = create(uStruct, gCMat, vEll, cCMat, nEll);
+            lDiscrsysMat(2, 1) = elltool.linsys.LinSysDiscrete();
+            lDiscrsysMat(1) = create(uEll, [], [], [], [], 'd');
+            lDiscrsysMat(2) = create(uEll, gMat, vEll, [], [], 'd');
+            %
+            copiedLContsysMat = lContsysMat.getCopy();
+            isEqualMat = copiedLContsysMat.isEqual(lContsysMat);
+            isOk = all(isEqualMat(:));
+            mlunit.assert_equals(true, isOk);
+            %
+            copiedLDiscrsysMat = lDiscrsysMat.getCopy();
+            isEqualMat = copiedLDiscrsysMat.isEqual(lDiscrsysMat);
+            isOk = all(isEqualMat(:));
+            mlunit.assert_equals(true, isOk);
+            %
+            firstCutLsysMat = lContsysMat(1 : 2, 1 : 2);
+            secondCutLsysMat = lContsysMat(3 : 4, 3 : 4);
+            thirdCutLsysMat = lContsysMat([1 3], [1 3]);
+            self.runAndCheckError(...
+                'copiedLContsysMat.isEqual(firstCutLsysMat)',...
+                'wrongInput');
+            isEqualMat = firstCutLsysMat.isEqual(secondCutLsysMat);
+            isOk = ~any(isEqualMat(:));
+            mlunit.assert_equals(true, isOk);
+            isEqualMat = firstCutLsysMat.isEqual(thirdCutLsysMat);
+            isOkMat = isEqualMat == [1 0; 0 0];
+            isOk = all(isOkMat(:));
+            mlunit.assert_equals(true, isOk);
+            %
+            function linsysObj = create(varargin)
+                linsysObj = elltool.linsys.LinSysFactory.create(...
+                    aMat, bMat, varargin{:});
+            end
+        end
+
     end
 end
