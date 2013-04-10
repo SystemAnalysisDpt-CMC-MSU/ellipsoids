@@ -118,12 +118,7 @@ end
     end
     function [xSumDifMat,fMat] = fCalcBodyTriArr(ellsArr)
         nDim = dimension(ellsArr(1));
-        if nDim==2
-            nPlotPoints=ellsArr(1).nPlot2dPoints;
-        else
-            nPlotPoints=ellsArr(1).nPlot3dPoints;
-        end    
-        [lDirsMat, fGridMat] = ellipsoid.calcGrid(nDim,nPlotPoints,0.8);   
+        [lDirsMat, fGridMat] = calcGrid(ellsArr(1),0.8);   
         lDirsMat = lDirsMat';
         if nDim == 1
             [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr);

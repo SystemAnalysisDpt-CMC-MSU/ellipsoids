@@ -1,4 +1,4 @@
-function [ bpMat ] = ellbndr_2dmat( cenVec, qMat, nPoints,absTol)
+function [ bpMat ] = ellbndr_2dmat( cenVec, qMat,absTol, nPoints)
 %
 % ELLBNDR_2DMAT - computes the boudary of 2D ellipsoid given its center
 %                 and shape matrix

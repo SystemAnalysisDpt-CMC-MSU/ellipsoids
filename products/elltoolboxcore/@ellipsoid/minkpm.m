@@ -137,12 +137,7 @@ end
         end
         inpEllArr = ellsArr(1:end-1);
         inpEll = ellsArr(end);
-        if nDim==2
-            nPlotPoints=inpEllArr(1).nPlot2dPoints;
-        else
-            nPlotPoints=inpEllArr(1).nPlot3dPoints;
-        end
-        [dirMat, ~] = ellipsoid.calcGrid(nDim,nPlotPoints);
+        [dirMat, ~] = calcGrid(inpEllArr(1));
         dirMat = dirMat';
         extApproxEllVec = minksumEa(inpEllArr, dirMat);
         if min(extApproxEllVec > inpEll) == 0
@@ -164,12 +159,7 @@ end
         inpEllArr = ellsArr(1:end-1);
         inpEll = ellsArr(end);
         elltool.conf.Properties.setIsVerbose(false)
-        if nDims==2
-            nPlotPoints=inpEllArr(1).nPlot2dPoints;
-        else
-            nPlotPoints=inpEllArr(1).nPlot3dPoints;
-        end    
-        [dirMat, fMat] = ellipsoid.calcGrid(nDims,nPlotPoints);
+        [dirMat, fMat] = calcGrid(inpEllArr(1));
         dirMat = dirMat';
         extApproxEllVec = minksum_ea(inpEllArr, dirMat);
         centVec= extApproxEllVec(1).center - inpEll.center;

@@ -125,9 +125,6 @@ end
         else
             if nDim == 3
                 isPlotCenter3d = true;
-                nPlotPoints=fstEll.nPlot3dPoints;
-            else
-                nPlotPoints=fstEll.nPlot2dPoints;
             end
             fstEllShMat = fstEll.shape;
             if isdegenerate(fstEll)
@@ -137,7 +134,7 @@ end
             if isdegenerate(secEll)
                 secEllShMat = ellipsoid.regularize(secEllShMat,secEll.absTol);
             end
-            [lMat, fMat] = ellipsoid.calcGrid(nDim,nPlotPoints,0.8);
+            [lMat, fMat] = calcGrid(fstEll,0.8);
             lMat = lMat';
             absTolVal=min(fstEll.absTol, secEll.absTol);
             [isBadDirVec,pUniversalVec] = ellipsoid.isbaddirectionmat(fstEllShMat, secEllShMat, ...

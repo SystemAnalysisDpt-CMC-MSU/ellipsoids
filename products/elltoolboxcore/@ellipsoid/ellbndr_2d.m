@@ -1,10 +1,12 @@
-function bpMat = ellbndr_2d(myEll)
+function bpMat = ellbndr_2d(myEll,nPoints)
 %
 % ELLBNDR_2D - compute the boundary of 2D ellipsoid. Private method.
 %
 % Input:
 %   regular:
 %       myEll: ellipsoid [1, 1]- ellipsoid of the dimention 2.
+%   optional:
+%       nPoints: number of boundary points
 %
 % Output:
 %   bpMat: double[2, nPoints + 1] - boundary points of the ellipsoid myEll.
@@ -22,7 +24,9 @@ function bpMat = ellbndr_2d(myEll)
 %             Faculty of Computational Mathematics and Cybernetics,
 %             System Analysis Department 2013$
 %
-nPoints = myEll.nPlot2dPoints;
+if nargin<2
+    nPoints = myEll.nPlot2dPoints;
+end
 [cenVec qMat]=double(myEll);
 absTol=myEll.getAbsTol();
-bpMat=ellipsoid.ellbndr_2dmat(cenVec,qMat,nPoints,absTol);
+bpMat=ellipsoid.ellbndr_2dmat(cenVec,qMat,absTol,nPoints);

@@ -74,16 +74,6 @@ if (nDim < 3)
 end
 
 
-    function [lGetGrid, fGetGrid] = calcGrid(nDim)
-        if nDim == 2
-            lGetGrid = gras.geom.circlepart(N_PLOT_POINTS);
-            fGetGrid = 1:N_PLOT_POINTS+1;
-        else
-            [lGetGrid, fGetGrid] = ...
-                gras.geom.tri.spheretri(SPHERE_TRIANG_CONST);
-        end
-        lGetGrid(lGetGrid == 0) = eps;
-    end
     function [xCMat,fCMat] = fCalcBodyTriArr(bodyArr,varargin)
         [xCMat,fCMat] = arrayfun(@(x)fCalcBodyTri(x),bodyArr,'UniformOutput',false);
         function [xMat, fMat] = fCalcBodyTri(ell)
@@ -91,13 +81,7 @@ end
             if nDim == 1
                 [ell,nDim] = rebuildOneDim2TwoDim(ell);
             end
-            if nDim == 2
-                nPlotPoints=ell.nPlot2dPoints;
-            else
-                nPlotPoints=ell.nPlot3dPoints;
-            end   
-            [lGetGridMat, fGetGridMat] = ...
-                ellipsoid.calcGrid(nDim,nPlotPoints,0.8);
+            [lGetGridMat, fGetGridMat] = calcGrid(ell,0.8);
             nPoints = size(lGetGridMat, 1);
             xMat = zeros(nDim, nPoints+1);
             [qCenVec,qMat] = ell.double();

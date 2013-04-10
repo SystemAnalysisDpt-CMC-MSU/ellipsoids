@@ -85,12 +85,7 @@ end
         if nDim == 1
             [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr);
         end
-        if nDim == 2
-            nPlotPoints=ellsArr(1).nPlot2dPoints;
-        else
-            nPlotPoints=ellsArr(1).nPlot3dPoints;
-        end
-        [lGridMat, fGridMat] = ellipsoid.calcGrid(nDim,nPlotPoints,0.8);
+        [lGridMat, fGridMat] = calcGrid(ellsArr(1),0.8);
         [xMat, fCMat] = arrayfun(@(x) fCalcBodyTri(x, nDim), ellsArr, ...
             'UniformOutput', false);
         xSumCMat = 0;
