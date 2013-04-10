@@ -1,5 +1,5 @@
 function listconfs()
-% UPDATECONFTEMPLATE updates the specified template configuration
+% LISTCONFS list all available program configurations
 %
 %
 % $Author: Peter Gagarinov <pgagarinov@gmail.com> $	$Date: 2011-09-09 $ 
@@ -9,4 +9,5 @@ function listconfs()
 %
 %
 confRepoMgr=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
+confRepoMgr.deployConfTemplate('*');
 confRepoMgr.getConfNameList()

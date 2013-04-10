@@ -6,356 +6,356 @@ classdef LinSysTestCase < mlunitext.test_case
         end
         %
         function self = testConstructor(self)
-            clear uEllStuct;
-            clear vEllStuct;
-            clear wEllStuct;
+            clear uEllStruct;
+            clear vEllStruct;
+            clear wEllStruct;
             ell2d = ell_unitball(2);
             ell3d = ell_unitball(3);
             ell4d = ell_unitball(4);
             %
             % non-square matrix A
-            %            
+            %
             self.runAndCheckError(...
-                'linsys(eye(3,4), eye(3), ell3d)', ...
-                'linsys:dimension:A');
+                'elltool.linsys.LinSysFactory.create(eye(3,4),eye(3),ell3d)',...
+                'dimension:A');
             %
             % wrong type of matrix A
             %
             self.runAndCheckError(...
-                'linsys(true(3), eye(3),  ell3d)', ...
-                'linsys:type:A');          
+                'elltool.linsys.LinSysFactory.create(true(3),eye(3),ell3d)',...
+                'type:A');
             %
             % incorrect dimension of matrix B
             %
             self.runAndCheckError(...
-                'linsys(eye(3), eye(4,3), ell3d)', ...
-                'linsys:dimension:B');
+                'elltool.linsys.LinSysFactory.create(eye(3),eye(4,3),ell3d)',...
+                'dimension:B');
             %
             % incorrect type of matrix B
             %
             self.runAndCheckError(...
-                'linsys(eye(3), true(3), ell3d)', ...
-                'linsys:type:B'); 
+                'elltool.linsys.LinSysFactory.create(eye(3),true(3),ell3d)',...
+                'type:B');
             %
             % incorrect dimension of U when U is a constant ellipsoid
             %
             self.runAndCheckError(...
-                'linsys(eye(3), eye(3), ell4d)', ...
-                'linsys:dimension:U');
+                'elltool.linsys.LinSysFactory.create(eye(3),eye(3),ell4d)',...
+                'dimension:U');
             %
             % incorrect dimension of U when U is a symbolic ellipsoid
             %
-            uEllStuct.center = {'1';'1';'1';'1'};
-            uEllStuct.shape =  eye(3);
+            uEllStruct.center = {'1';'1';'1';'1'};
+            uEllStruct.shape = eye(3);
             self.runAndCheckError(...
-                'linsys(eye(3), eye(3), uEllStuct)', ...
-                'linsys:dimension:U:center');          
+                'elltool.linsys.LinSysFactory.create(eye(3),eye(3),uEllStruct)',...
+                'dimension:uBoundsEll:center');
             %
-            uEllStuct.center = {'1';'1';'1'};
-            uEllStuct.shape =  ones(4);
+            uEllStruct.center = {'1';'1';'1'};
+            uEllStruct.shape = ones(4);
             self.runAndCheckError(...
-                'linsys(eye(3), eye(3), uEllStuct)', ...
-                'linsys:dimension:U:shape');          
+                'elltool.linsys.LinSysFactory.create(eye(3),eye(3),uEllStruct)',...
+                'dimension:uBoundsEll:shape');
             %
             % incorrect dimension of U when U is a constant vector
             %
             self.runAndCheckError(...
-                'linsys(eye(3), eye(3), eye(4,1))', ...
-                'linsys:dimension:U'); 
+                'elltool.linsys.LinSysFactory.create(eye(3),eye(3),eye(4,1))',...
+                'dimension:U');
             %
             % incorrect dimension of U when U is a symbolic vector
-            %   
+            %
             uCVec = {'t';'t';'t';'t'};
             self.runAndCheckError(...
-                'linsys(eye(3), eye(3), uCVec)', ...
-                'linsys:dimension:U');
+                'elltool.linsys.LinSysFactory.create(eye(3),eye(3),uCVec)',...
+                'dimension:U');
             %
             % incorrect type of U when U is a vector
             %
             self.runAndCheckError(...
-                'linsys(eye(3), eye(3), true(3,1))', ...
-                'linsys:type:U');
+                'elltool.linsys.LinSysFactory.create(eye(3),eye(3),true(3,1))',...
+                'type:U');
             %
             % incorrect type of U when U is a all-constant structure
-            %         
-            uEllStuct.center = eye(3,1);
-            uEllStuct.shape =  eye(3);
+            %
+            uEllStruct.center = eye(3,1);
+            uEllStruct.shape = eye(3);
             self.runAndCheckError(...
-                'linsys(eye(3), eye(3), uEllStuct)', ...
-                'linsys:type:U');
+                'elltool.linsys.LinSysFactory.create(eye(3),eye(3),uEllStruct)',...
+                'type:uBoundsEll');
             %
             % incorrect value of U when U.shape is non-symmetric cell matrix
             %
-            uEllStuct.center = zeros(2,1);
-            uEllStuct.shape =  {'t','t^2';'t^3','t^4'};
+            uEllStruct.center = zeros(2,1);
+            uEllStruct.shape = {'t','t^2';'t^3','t^4'};
             self.runAndCheckError(...
-                'linsys(eye(2), eye(2), uEllStuct)', ...
-                'linsys:value:U:shape');
+                'elltool.linsys.LinSysFactory.create(eye(2),eye(2),uEllStruct)',...
+                'value:uBoundsEll:shape');
             %
-            % incorrect value of U when U.shape is non-symmetric 
+            % incorrect value of U when U.shape is non-symmetric
             % negative-defined constant matrix
             %
-            uEllStuct.center = {'t';'t'};
-            uEllStuct.shape =  [1 2; 3 4];
+            uEllStruct.center = {'t';'t'};
+            uEllStruct.shape = [1 2; 3 4];
             self.runAndCheckError(...
-                'linsys(eye(2), eye(2), uEllStuct)', ...
-                'linsys:value:U:shape');
+                'elltool.linsys.LinSysFactory.create(eye(2),eye(2),uEllStruct)',...
+                'value:uBoundsEll:shape');
             %
-            % incorrect value of U when U.shape is non-symmetric 
+            % incorrect value of U when U.shape is non-symmetric
             % positive-defined constant matrix
             %
-            uEllStuct.center = {'t';'t'};
-            uEllStuct.shape =  [2 1; 3 2];
+            uEllStruct.center = {'t';'t'};
+            uEllStruct.shape = [2 1; 3 2];
             self.runAndCheckError(...
-                'linsys(eye(2), eye(2), uEllStuct)', ...
-                'linsys:value:U:shape');            
+                'elltool.linsys.LinSysFactory.create(eye(2),eye(2),uEllStruct)',...
+                'value:uBoundsEll:shape');
             %
-            % incorrect value of U when U.shape is symmetric but 
+            % incorrect value of U when U.shape is symmetric but
             % negative-defined constant matrix
             %
-            uEllStuct.center = {'t';'t'};
-            uEllStuct.shape =  [1 2; 2 1];
+            uEllStruct.center = {'t';'t'};
+            uEllStruct.shape = [1 2; 2 1];
             self.runAndCheckError(...
-                'linsys(eye(2), eye(2), uEllStuct)', ...
-                'linsys:value:U:shape');
+                'elltool.linsys.LinSysFactory.create(eye(2),eye(2),uEllStruct)',...
+                'value:uBoundsEll:shape');
             %
-            % incorrect value of U when U.shape is symmetric but 
+            % incorrect value of U when U.shape is symmetric but
             % non-negative-defined constant matrix
             %
-            uEllStuct.center = {'t';'t'};
-            uEllStuct.shape =  [1 0; 0 0];
+            uEllStruct.center = {'t';'t'};
+            uEllStruct.shape = [1 0; 0 0];
             self.runAndCheckError(...
-                'linsys(eye(2), eye(2), uEllStuct)', ...
-                'linsys:value:U:shape');
+                'elltool.linsys.LinSysFactory.create(eye(2),eye(2),uEllStruct)',...
+                'value:uBoundsEll:shape');
             %
-            % correct value of U when U.shape is symmetric and 
+            % correct value of U when U.shape is symmetric and
             % positive-defined constant matrix
-            %         
-            uEllStuct.center = {'t';'t'};
-            uEllStuct.shape =  [1 0; 0 1];
-            linsys(eye(2), eye(2), uEllStuct);
+            %
+            uEllStruct.center = {'t';'t'};
+            uEllStruct.shape = [1 0; 0 1];
+            elltool.linsys.LinSysFactory.create(eye(2),eye(2),uEllStruct);
             %
             % incorrect dimension of matrix G
             %
             self.runAndCheckError(...
-                'linsys(eye(3), eye(3), ell3d, eye(4), ell4d)', ...
-                'linsys:dimension:G');
+                'elltool.linsys.LinSysFactory.create(eye(3),eye(3),ell3d,eye(4),ell4d)',...
+                'dimension:G');
             %
             % incorrect type of matrix G
             %
             self.runAndCheckError(...
-                'linsys(eye(3), eye(3), ell3d, true(3), ell3d)', ...
-                'linsys:type:G'); 
+                'elltool.linsys.LinSysFactory.create(eye(3),eye(3),ell3d,true(3),ell3d)',...
+                'type:G');
             %
             % incorrect dimension of V when V is a constant ellipsoid
             %
             self.runAndCheckError(...
-                'linsys(eye(3), eye(3), ell3d, eye(3), ell4d)', ...
-                'linsys:dimension:V');
+                'elltool.linsys.LinSysFactory.create(eye(3),eye(3),ell3d,eye(3),ell4d)',...
+                'dimension:V');
             %
             % incorrect dimension of V when V is a symbolic ellipsoid
             %
-            vEllStuct.center = {'1';'1';'1';'1'};
-            vEllStuct.shape =  ones(3);
+            vEllStruct.center = {'1';'1';'1';'1'};
+            vEllStruct.shape = ones(3);
             self.runAndCheckError(...
-                'linsys(eye(3), eye(3), ell3d, eye(3), vEllStuct)', ...
-                'linsys:dimension:V:center');          
+                'elltool.linsys.LinSysFactory.create(eye(3),eye(3),ell3d,eye(3),vEllStruct)',...
+                'dimension:distBoundsEll:center');
             %
-            vEllStuct.center = {'1';'1';'1'};
-            vEllStuct.shape =  ones(4);
+            vEllStruct.center = {'1';'1';'1'};
+            vEllStruct.shape = ones(4);
             self.runAndCheckError(...
-                'linsys(eye(3), eye(3), ell3d, eye(3), vEllStuct)', ...
-                'linsys:dimension:V:shape');          
+                'elltool.linsys.LinSysFactory.create(eye(3),eye(3),ell3d,eye(3),vEllStruct)',...
+                'dimension:distBoundsEll:shape');
             %
             % incorrect dimension of V when V is a constant vector
-            %         
+            %
             vVec = eye(4,1);
             self.runAndCheckError(...
-                'linsys(eye(3), eye(3), ell3d, eye(3),  vVec)', ...
-                'linsys:dimension:V');
+                'elltool.linsys.LinSysFactory.create(eye(3),eye(3),ell3d,eye(3),vVec)',...
+                'dimension:V');
             %
             % incorrect dimension of V when V is a symbolic vector
             %
             vCVec = {'t';'t';'t';'t'};
             self.runAndCheckError(...
-                'linsys(eye(3), eye(3), ell3d, eye(3), vCVec)', ...
-                'linsys:dimension:V'); 
+                'elltool.linsys.LinSysFactory.create(eye(3),eye(3),ell3d,eye(3),vCVec)',...
+                'dimension:V');
             %
             % incorrect type of V when V is a vector
             %
             self.runAndCheckError(...
-                'linsys(eye(3), eye(3), ell3d, eye(3), true(3,1))', ...
-                'linsys:type:V');
+                'elltool.linsys.LinSysFactory.create(eye(3),eye(3),ell3d,eye(3),true(3,1))',...
+                'type:V');
             %
             % incorrect type of V when V is a all-constant structure
             %
-            vEllStuct.center = eye(3,1);
-            vEllStuct.shape =  eye(3);
+            vEllStruct.center = eye(3,1);
+            vEllStruct.shape = eye(3);
             self.runAndCheckError(...
-                'linsys(eye(3), eye(3), ell3d, eye(3), vEllStuct)', ...
-                'linsys:type:V');
+                'elltool.linsys.LinSysFactory.create(eye(3),eye(3),ell3d,eye(3),vEllStruct)',...
+                'type:distBoundsEll');
             %
             % incorrect value of V when V.shape is non-symmetric cell matrix
-            %                         
-            vEllStuct.center = zeros(2,1);
-            vEllStuct.shape =  {'t','t^2';'t^3','t^4'};
-            self.runAndCheckError(...
-                'linsys(eye(2), eye(2), ell2d, eye(2), vEllStuct)', ...
-                'linsys:value:V:shape');
             %
-            % incorrect value of V when V.shape is non-symmetric 
+            vEllStruct.center = zeros(2,1);
+            vEllStruct.shape = {'t','t^2';'t^3','t^4'};
+            self.runAndCheckError(...
+                'elltool.linsys.LinSysFactory.create(eye(2),eye(2),ell2d,eye(2),vEllStruct)',...
+                'value:distBoundsEll:shape');
+            %
+            % incorrect value of V when V.shape is non-symmetric
             % negative-defined constant matrix
             %
-            vEllStuct.center = {'t';'t'};
-            vEllStuct.shape =  [1 2; 3 4];
+            vEllStruct.center = {'t';'t'};
+            vEllStruct.shape = [1 2; 3 4];
             self.runAndCheckError(...
-                'linsys(eye(2), eye(2), ell2d, eye(2), vEllStuct)', ...
-                'linsys:value:V:shape');
+                'elltool.linsys.LinSysFactory.create(eye(2),eye(2),ell2d,eye(2),vEllStruct)',...
+                'value:distBoundsEll:shape');
             %
-            % incorrect value of V when V.shape is non-symmetric 
+            % incorrect value of V when V.shape is non-symmetric
             % positive-defined constant matrix
             %
-            vEllStuct.center = {'t';'t'};
-            vEllStuct.shape =  [2 1; 3 2];
+            vEllStruct.center = {'t';'t'};
+            vEllStruct.shape = [2 1; 3 2];
             self.runAndCheckError(...
-                'linsys(eye(2), eye(2), ell2d, eye(2), vEllStuct)', ...
-                'linsys:value:V:shape');            
+                'elltool.linsys.LinSysFactory.create(eye(2),eye(2),ell2d,eye(2),vEllStruct)',...
+                'value:distBoundsEll:shape');
             %
             % incorrect value of V when V.shape is symmetric but
             % negative-defined constant matrix
             %
-            vEllStuct.center = {'t';'t'};
-            vEllStuct.shape =  [1 2; 2 1];
+            vEllStruct.center = {'t';'t'};
+            vEllStruct.shape = [1 2; 2 1];
             self.runAndCheckError(...
-                'linsys(eye(2), eye(2), ell2d, eye(2), vEllStuct)', ...
-                'linsys:value:V:shape');
+                'elltool.linsys.LinSysFactory.create(eye(2),eye(2),ell2d,eye(2),vEllStruct)',...
+                'value:distBoundsEll:shape');
             %
-            % incorrect value of V when V.shape is symmetric but 
+            % incorrect value of V when V.shape is symmetric but
             % non-negative-defined constant matrix
             %
-            vEllStuct.center = {'t';'t'};
-            vEllStuct.shape =  [1 0; 0 0];
+            vEllStruct.center = {'t';'t'};
+            vEllStruct.shape = [1 0; 0 0];
             self.runAndCheckError(...
-                'linsys(eye(2), eye(2), ell2d, eye(2), vEllStuct)', ...
-                'linsys:value:V:shape');
+                'elltool.linsys.LinSysFactory.create(eye(2),eye(2),ell2d,eye(2),vEllStruct)',...
+                'value:distBoundsEll:shape');
             %
-            % correct value of V when V.shape is symmetric and 
+            % correct value of V when V.shape is symmetric and
             % positive-defined constant matrix
-            %          
-            vEllStuct.center = {'t';'t'};
-            vEllStuct.shape =  [1 0; 0 1];  
-            linsys(eye(2), eye(2), ell2d, eye(2), vEllStuct);
+            %
+            vEllStruct.center = {'t';'t'};
+            vEllStruct.shape = [1 0; 0 1];
+            elltool.linsys.LinSysFactory.create(eye(2),eye(2),ell2d,eye(2),vEllStruct);
             %
             % incorrect dimension of matrix C
             %
             self.runAndCheckError(...
-                'linsys(eye(3), eye(3), ell3d, [], [], eye(4))', ...
-                'linsys:dimension:C');
+                'elltool.linsys.LinSysFactory.create(eye(3),eye(3),ell3d,[],[],eye(4))',...
+                'dimension:C');
             %
             % incorrect type of matrix C
             %
             self.runAndCheckError(...
-                'linsys(eye(3), eye(3), ell3d, [], [], true(3))', ...
-                'linsys:type:C');
+                'elltool.linsys.LinSysFactory.create(eye(3),eye(3),ell3d,[],[],true(3))',...
+                'type:C');
             %
             % incorrect dimension of W when W is a constant ellipsoid
             %
             self.runAndCheckError(...
-                'linsys(eye(3), eye(3), ell3d, eye(3), ell3d, eye(3), ell4d)', ...
-                'linsys:dimension:W');
+                'elltool.linsys.LinSysFactory.create(eye(3),eye(3),ell3d,eye(3),ell3d,eye(3),ell4d)',...
+                'dimension:W');
             %
             % incorrect dimension of W when W is a symbolic ellipsoid
             %
-            wEllStuct.center = {'1';'1';'1';'1'};
-            wEllStuct.shape =  ones(3);
+            wEllStruct.center = {'1';'1';'1';'1'};
+            wEllStruct.shape = ones(3);
             self.runAndCheckError(...
-                'linsys(eye(3), eye(3), ell3d, eye(3), ell3d, eye(3), wEllStuct)', ...
-                'linsys:dimension:W:center');          
+                'elltool.linsys.LinSysFactory.create(eye(3),eye(3),ell3d,eye(3),ell3d,eye(3),wEllStruct)',...
+                'dimension:noiseBoundsEll:center');
             %
-            wEllStuct.center = {'1';'1';'1'};
-            wEllStuct.shape =  ones(4);
+            wEllStruct.center = {'1';'1';'1'};
+            wEllStruct.shape = ones(4);
             self.runAndCheckError(...
-                'linsys(eye(3), eye(3), ell3d, eye(3), ell3d, eye(3), wEllStuct)', ...
-                'linsys:dimension:W:shape');          
+                'elltool.linsys.LinSysFactory.create(eye(3),eye(3),ell3d,eye(3),ell3d,eye(3),wEllStruct)',...
+                'dimension:noiseBoundsEll:shape');
             %
             % incorrect dimension of W when W is a constant vector
-            %         
+            %
             wVec = eye(4,1);
             self.runAndCheckError(...
-                'linsys(eye(3), eye(3), ell3d, eye(3), ell3d, eye(3), wVec)', ...
-                'linsys:dimension:W');
+                'elltool.linsys.LinSysFactory.create(eye(3),eye(3),ell3d,eye(3),ell3d,eye(3),wVec)',...
+                'dimension:W');
             %
             % incorrect dimension of W when W is a symbolic vector
             %
             wCVec = {'t';'t';'t';'t'};
             self.runAndCheckError(...
-                'linsys(eye(3), eye(3), ell3d, eye(3), ell3d, eye(3), wCVec)', ...
-                'linsys:dimension:W'); 
+                'elltool.linsys.LinSysFactory.create(eye(3),eye(3),ell3d,eye(3),ell3d,eye(3),wCVec)',...
+                'dimension:W');
             %
             % incorrect type of W when W is a vector
             %
             self.runAndCheckError(...
-                'linsys(eye(3), eye(3), ell3d, eye(3), ell3d, eye(3), true(3,1))', ...
-                'linsys:type:W');
+                'elltool.linsys.LinSysFactory.create(eye(3),eye(3),ell3d,eye(3),ell3d,eye(3),true(3,1))',...
+                'type:W');
             %
             % incorrect type of W when W is a all-constant structure
             %
-            wEllStuct.center = eye(3,1);
-            wEllStuct.shape =  eye(3);
+            wEllStruct.center = eye(3,1);
+            wEllStruct.shape = eye(3);
             self.runAndCheckError(...
-                'linsys(eye(3), eye(3), ell3d, eye(3), ell3d, eye(3), wEllStuct)', ...
-                'linsys:type:W');
+                'elltool.linsys.LinSysFactory.create(eye(3),eye(3),ell3d,eye(3),ell3d,eye(3),wEllStruct)',...
+                'type:noiseBoundsEll');
             %
             % incorrect value of W when W.shape is non-symmetric cell matrix
-            %                         
-            wEllStuct.center = zeros(2,1);
-            wEllStuct.shape =  {'t','t^2';'t^3','t^4'};
-            self.runAndCheckError(...
-                'linsys(eye(2), eye(2), ell2d, eye(2), ell2d, eye(2), wEllStuct)', ...
-                'linsys:value:W:shape');
             %
-            % incorrect value of W when W.shape is non-symmetric 
+            wEllStruct.center = zeros(2,1);
+            wEllStruct.shape = {'t','t^2';'t^3','t^4'};
+            self.runAndCheckError(...
+                'elltool.linsys.LinSysFactory.create(eye(2),eye(2),ell2d,eye(2),ell2d,eye(2),wEllStruct)',...
+                'value:noiseBoundsEll:shape');
+            %
+            % incorrect value of W when W.shape is non-symmetric
             % negative-defined constant matrix
             %
-            wEllStuct.center = {'t';'t'};
-            wEllStuct.shape =  [1 2; 3 4];
+            wEllStruct.center = {'t';'t'};
+            wEllStruct.shape = [1 2; 3 4];
             self.runAndCheckError(...
-                'linsys(eye(2), eye(2), ell2d, eye(2), ell2d, eye(2), wEllStuct)', ...
-                'linsys:value:W:shape');
+                'elltool.linsys.LinSysFactory.create(eye(2),eye(2),ell2d,eye(2),ell2d,eye(2),wEllStruct)',...
+                'value:noiseBoundsEll:shape');
             %
-            % incorrect value of W when W.shape is non-symmetric 
+            % incorrect value of W when W.shape is non-symmetric
             % positive-defined constant matrix
             %
-            wEllStuct.center = {'t';'t'};
-            wEllStuct.shape =  [2 1; 3 2];
+            wEllStruct.center = {'t';'t'};
+            wEllStruct.shape = [2 1; 3 2];
             self.runAndCheckError(...
-                'linsys(eye(2), eye(2), ell2d, eye(2), ell2d, eye(2), wEllStuct)', ...
-                'linsys:value:W:shape');            
+                'elltool.linsys.LinSysFactory.create(eye(2),eye(2),ell2d,eye(2),ell2d,eye(2),wEllStruct)',...
+                'value:noiseBoundsEll:shape');
             %
-            % incorrect value of W when W.shape is symmetric but 
+            % incorrect value of W when W.shape is symmetric but
             % negative-defined constant matrix
             %
-            wEllStuct.center = {'t';'t'};
-            wEllStuct.shape =  [1 2; 2 1];
+            wEllStruct.center = {'t';'t'};
+            wEllStruct.shape = [1 2; 2 1];
             self.runAndCheckError(...
-                'linsys(eye(2), eye(2), ell2d, eye(2), ell2d, eye(2), wEllStuct)', ...
-                'linsys:value:W:shape');
+                'elltool.linsys.LinSysFactory.create(eye(2),eye(2),ell2d,eye(2),ell2d,eye(2),wEllStruct)',...
+                'value:noiseBoundsEll:shape');
             %
-            % incorrect value of W when W.shape is symmetric but 
+            % incorrect value of W when W.shape is symmetric but
             % non-negative-defined constant matrix
             %
-            wEllStuct.center = {'t';'t'};
-            wEllStuct.shape =  [1 0; 0 0];
+            wEllStruct.center = {'t';'t'};
+            wEllStruct.shape = [1 0; 0 0];
             self.runAndCheckError(...
-                'linsys(eye(2), eye(2), ell2d, eye(2), ell2d, eye(2), wEllStuct)', ...
-                'linsys:value:W:shape');
+                'elltool.linsys.LinSysFactory.create(eye(2),eye(2),ell2d,eye(2),ell2d,eye(2),wEllStruct)',...
+                'value:noiseBoundsEll:shape');
             %
-            % correct value of W when W.shape is symmetric and 
+            % correct value of W when W.shape is symmetric and
             % positive-defined constant matrix
-            %          
-            wEllStuct.center = {'t';'t'};
-            wEllStuct.shape =  [1 0; 0 1];  
-            linsys(eye(2), eye(2), ell2d, eye(2), ell2d, eye(2), wEllStuct);         
+            %
+            wEllStruct.center = {'t';'t'};
+            wEllStruct.shape = [1 0; 0 1];
+            elltool.linsys.LinSysFactory.create(eye(2),eye(2),ell2d,eye(2),ell2d,eye(2),wEllStruct);
             %
         end
         %
@@ -363,37 +363,38 @@ classdef LinSysTestCase < mlunitext.test_case
             %
             % test empty system
             %
-            system = linsys([],[],[]);                        
-            [nStates, nInputs, nOutputs, nDistInputs] = dimension(system);
+            system = elltool.linsys.LinSysFactory.create([],[],[]);
+            [nStates, nInputs, nOutputs, nDistInputs] = system.dimension();
             obtainedVec = [nStates, nInputs, nOutputs, nDistInputs];
             expectedVec = [0 0 0 0];
-            mlunit.assert_equals( all(expectedVec == obtainedVec), true );
-            %                 
+            mlunit.assert_equals(all(expectedVec == obtainedVec), true);
+            %
             % test simple system without disturbance
             %
-            system = linsys(eye(2), eye(2,3), ell_unitball(3));                        
-            [nStates, nInputs, nOutputs, nDistInputs] = dimension(system);
+            system = elltool.linsys.LinSysFactory.create(eye(2), eye(2,3), ell_unitball(3));
+            [nStates, nInputs, nOutputs, nDistInputs] = system.dimension();
             obtainedVec = [nStates, nInputs, nOutputs, nDistInputs];
             expectedVec = [2 3 2 0];
-            mlunit.assert_equals( all(expectedVec == obtainedVec), true );   
+            mlunit.assert_equals(all(expectedVec == obtainedVec), true);
             %
-            % test complex system with disturbance and noise            
+            % test complex system with disturbance and noise
             %
-            system = linsys(eye(5),eye(5,10),ell_unitball(10), ...
+            system = elltool.linsys.LinSysFactory.create(eye(5),eye(5,10),ell_unitball(10),...
                 eye(5,11),ell_unitball(11),zeros(3,5),ell_unitball(3));
-            [nStates, nInputs, nOutputs, nDistInputs] = dimension(system);
+            [nStates, nInputs, nOutputs, nDistInputs] = system.dimension();
             obtainedVec = [nStates, nInputs, nOutputs, nDistInputs];
             expectedVec = [5 10 3 11];
-            mlunit.assert_equals( all(expectedVec == obtainedVec), true );   
-            %            
-            % test array of systems       
+            mlunit.assert_equals(all(expectedVec == obtainedVec), true);
+            %
+            % test array of systems
             %
             systemMat = [system system; system system];
-            [nStatesMat, nInputsMat, nOutputsMat, nDistInputsMat] = dimension(systemMat);
+            [nStatesMat, nInputsMat, nOutputsMat, nDistInputsMat] =...
+                systemMat.dimension();
             obtainedMat=[nStatesMat,nInputsMat,nOutputsMat,nDistInputsMat];
-            expectedMat=[ 5*ones(2), 10*ones(2), 3*ones(2), 11*ones(2) ];
+            expectedMat=[5*ones(2), 10*ones(2), 3*ones(2), 11*ones(2)];
             resultMat = (expectedMat(:) == obtainedMat(:));
-            mlunit.assert_equals( all(resultMat(:)), true ); 
+            mlunit.assert_equals(all(resultMat(:)), true);
             %
         end
         %
@@ -412,46 +413,24 @@ classdef LinSysTestCase < mlunitext.test_case
             %
             % test matrix of systems
             %
-            systemMat = [ ...
-                linsys([],[],[]), ...
-                linsys(aMat,bMat,uEllipsoid,gMat,vEllipsoid,cMat,[]), ...
-                linsys(aMat,bMat,uEllipsoid,gMat,vEllipsoid,cMat,wVec); ...
-                linsys(aMat,bMat,uEllipsoid,gMat,vEllipsoid,cMat,wCVec), ...
-                linsys(aMat,bMat,uEllipsoid,gMat,vEllipsoid,cMat,wEllipsoid),...
-                linsys(aMat,bMat,uEllipsoid,gMat,vEllipsoid,cMat,wEllStuct) ...
-            ];
-            obtainedMat = hasnoise(systemMat);
-            expectedMat = [ false false true; true true true ];
+            systemMat = [...
+                elltool.linsys.LinSysFactory.create([],[],[]),...
+                elltool.linsys.LinSysFactory.create(aMat,bMat,uEllipsoid,...
+                gMat,vEllipsoid,cMat,[]),...
+                elltool.linsys.LinSysFactory.create(aMat,bMat,uEllipsoid,...
+                gMat,vEllipsoid,cMat,wVec); ...
+                elltool.linsys.LinSysFactory.create(aMat,bMat,uEllipsoid,...
+                gMat,vEllipsoid,cMat,wCVec), ...
+                elltool.linsys.LinSysFactory.create(aMat,bMat,uEllipsoid,...
+                gMat,vEllipsoid,cMat,wEllipsoid),...
+                elltool.linsys.LinSysFactory.create(aMat,bMat,uEllipsoid,...
+                gMat,vEllipsoid,cMat,wEllStuct)...
+                ];
+            obtainedMat = systemMat.hasnoise();
+            expectedMat = [false false true; true true true];
             eqMat = (obtainedMat == expectedMat);
-            mlunit.assert_equals( all(eqMat(:)), true );              
+            mlunit.assert_equals(all(eqMat(:)), true);
         end
-        %
-        function self = testDisturbance(self)
-            aMat = eye(3);
-            bMat = eye(3);
-            gMat = eye(3);
-            uEllipsoid = ell_unitball(3);            
-            vVec = eye(3,1);
-            vCVec = {'t';'t';'t'};
-            vEllipsoid = ell_unitball(3);
-            vEllStuct.shape = {'t','t','t';'t','t','t';'t','t','t'};
-            vEllStuct.center = {'t';'t';'t'};
-            %
-            % test matrix of systems
-            %            
-            systemMat = [ ...
-                linsys([],[],[]), ...
-                linsys(aMat,bMat,uEllipsoid,gMat,vVec), ...
-                linsys(aMat,bMat,uEllipsoid,gMat,vCVec); ...
-                linsys(aMat,bMat,uEllipsoid,gMat,vEllipsoid), ...
-                linsys(aMat,bMat,uEllipsoid,gMat,vEllStuct), ...
-                linsys(aMat,bMat,uEllipsoid,[],vEllStuct) ...
-            ];
-            obtainedMat = hasdisturbance(systemMat);
-            expectedMat = [ false true true; true true false ];
-            eqMat = (obtainedMat == expectedMat);
-            mlunit.assert_equals( all(eqMat(:)), true );              
-        end 
         %
         function self = testIsDiscrete(self)
             aMat = eye(3);
@@ -460,98 +439,219 @@ classdef LinSysTestCase < mlunitext.test_case
             uEllipsoid = ell_unitball(3);
             uVec = {'k';'k';'k'};
             vVec = {'k';'k';'k'};
-            wVec = {'k';'k';'k'};            
+            wVec = {'k';'k';'k'};
             %
             % test matrix of systems
             %
-            systemMat = [ ...
-                linsys([],[],[]), ...
-                linsys(aMat,bMat,uEllipsoid), ...
-                linsys(aMat,bMat,uEllipsoid,[],[],cMat,[]); ...
-                linsys(aMat,bMat,uEllipsoid,[],[],cMat,[],'c'), ...
-                linsys(aMat,bMat,uEllipsoid,[],[],cMat,[],'d'), ...
-                linsys(aMat,bMat,uVec,[],vVec,cMat,wVec,'d') ...
-            ];
-            obtainedMat = isdiscrete(systemMat);
-            expectedMat = [ false false false; false true true ];
+            systemCMat = {...
+                elltool.linsys.LinSysFactory.create([],[],[]),...
+                elltool.linsys.LinSysFactory.create(aMat,bMat,uEllipsoid),...
+                elltool.linsys.LinSysFactory.create(aMat,bMat,uEllipsoid,[],[],cMat,[]);...
+                elltool.linsys.LinSysFactory.create(aMat,bMat,uEllipsoid,[],[],cMat,[],'c'),...
+                elltool.linsys.LinSysFactory.create(aMat,bMat,uEllipsoid,[],[],cMat,[],'d'),...
+                elltool.linsys.LinSysFactory.create(aMat,bMat,uVec,[],vVec,cMat,wVec,'d')...
+                }; 
+            isDisc = @(linSys) isa(linSys, 'elltool.linsys.LinSysDiscrete');
+            obtainedMat = cellfun(isDisc, systemCMat);
+            expectedMat = [false false false; false true true];
             eqMat = (obtainedMat == expectedMat);
-            mlunit.assert_equals( all(eqMat(:)), true );               
-        end   
+            mlunit.assert_equals(all(eqMat(:)), true);
+        end
         %
         function self = testIsLti(self)
             aMat = eye(3);
-            bMat = eye(3);            
+            bMat = eye(3);
             gMat = eye(3);
             cMat = eye(3);
-            vEllipsoid = ell_unitball(3);                        
+            vEllipsoid = ell_unitball(3);
             uEllipsoid = ell_unitball(3);
-            aCMat = {'t','t','t';'t','t','t';'t','t','t'};           
-            bCMat = {'t','t','t';'t','t','t';'t','t','t'};           
-            gCMat = {'t','t','t';'t','t','t';'t','t','t'};           
-            cCMat = {'t','t','t';'t','t','t';'t','t','t'};           
+            aCMat = {'t','t','t';'t','t','t';'t','t','t'};
+            bCMat = {'t','t','t';'t','t','t';'t','t','t'};
+            gCMat = {'t','t','t';'t','t','t';'t','t','t'};
+            cCMat = {'t','t','t';'t','t','t';'t','t','t'};
             %
             % test matrix of systems
             %
-            systemMat = [ ...
-                linsys([],[],[]), ...
-                linsys(aMat, bMat, uEllipsoid, gMat, vEllipsoid, cMat), ...
-                linsys(aCMat, bMat, uEllipsoid, gMat, vEllipsoid, cMat); ...
-                linsys(aMat, bCMat, uEllipsoid, gMat, vEllipsoid, cMat), ...
-                linsys(aMat, bMat, uEllipsoid, gCMat, vEllipsoid, cMat), ...
-                linsys(aMat, bMat, uEllipsoid, gMat, vEllipsoid, cCMat) ...
-            ];
-            obtainedMat = islti(systemMat);
-            expectedMat = [ true true false; false false false ];
+            systemMat = [...
+                elltool.linsys.LinSysFactory.create([],[],[]),...
+                elltool.linsys.LinSysFactory.create(aMat,bMat,uEllipsoid,...
+                gMat,vEllipsoid,cMat),...
+                elltool.linsys.LinSysFactory.create(aCMat,bMat,uEllipsoid,...
+                gMat,vEllipsoid,cMat);...
+                elltool.linsys.LinSysFactory.create(aMat,bCMat,uEllipsoid,...
+                gMat,vEllipsoid,cMat),...
+                elltool.linsys.LinSysFactory.create(aMat,bMat,uEllipsoid,...
+                gCMat,vEllipsoid,cMat),...
+                elltool.linsys.LinSysFactory.create(aMat,bMat,uEllipsoid,...
+                gMat,vEllipsoid,cCMat)...
+                ];
+            obtainedMat = systemMat.islti();
+            expectedMat = [true true false; false false false];
             eqMat = (obtainedMat == expectedMat);
-            mlunit.assert_equals( all(eqMat(:)), true );                 
+            mlunit.assert_equals(all(eqMat(:)), true);
         end
         %
         function self = testIsEmpty(self)
             aMat = eye(3);
-            bMat = eye(3); 
+            bMat = eye(3);
             uEllipsoid = ell_unitball(3);
             %
             % test matrix of systems
             %
-            systemMat = [ ...
-                linsys(), ...
-                linsys([],[],[]); ...
-                linsys(aMat,bMat,[]), ...
-                linsys(aMat,bMat,uEllipsoid) ...
-            ];
-            obtainedMat = isempty(systemMat);
-            expectedMat = [ true true; false false];
+            systemMat = [...
+                elltool.linsys.LinSysFactory.create(),...
+                elltool.linsys.LinSysFactory.create([],[],[]);...
+                elltool.linsys.LinSysFactory.create(aMat,bMat,[]),...
+                elltool.linsys.LinSysFactory.create(aMat,bMat,uEllipsoid)...
+                ];
+            obtainedMat = systemMat.isempty();
+            expectedMat = [true true; false false];
             eqMat = (obtainedMat == expectedMat);
-            mlunit.assert_equals( all(eqMat(:)), true );                 
-        end     
+            mlunit.assert_equals(all(eqMat(:)), true);
+        end
         %
         function self = testDisplay(self)
-            system = linsys( eye(3), eye(3,4), ell_unitball(4), ...
-                eye(3,5), ell_unitball(5), eye(2,3), ell_unitball(2), 'd');
+            uEll = struct();
+            uEll.center = {'2 * cos(t)'; '0.5 * sin(t)'};
+            uEll.shape = {'4 * t' '0'; '0' 't'};
+            
+            system = elltool.linsys.LinSysFactory.create(...
+                {'t', '1', 'cos(t)'; '1' '0' 't'; 'sin(t)', 't', '2'}, ...
+                {'t', 'cos(t)'; 'sin(t)', 't'; 'cos(t)', 'sin(t)'}, ...
+                uEll, eye(3,5),ell_unitball(5),eye(2,3),ell_unitball(2));
+            system.display();
             resStr = evalc('display(system)');
             isOk = ~isempty(strfind(resStr,'A'));
             isOk = ~isempty(strfind(resStr,'B')) && isOk;
             isOk = ~isempty(strfind(resStr,'Control bound')) && isOk;
             isOk = ~isempty(strfind(resStr,'Disturbance bounds')) && isOk;
             isOk = ~isempty(strfind(resStr,'Noise bounds')) && isOk;
-            mlunitext.assert(isOk);      
-        end   
+            mlunitext.assert(isOk);
+        end
         %
         function self = testGetAbsTol(self)
-           testAbsTol = 1e-8;
-           args = {eye(3), eye(3,4), ell_unitball(4), ...
-                eye(3,5), ell_unitball(5), eye(2,3), ell_unitball(2), 'd','absTol',testAbsTol};
-           systemArr = [linsys(args{:}),linsys(args{:});...
-                           linsys(args{:}),linsys(args{:})];
-           systemArr(:,:,2) = [linsys(args{:}),linsys(args{:});...
-                           linsys(args{:}),linsys(args{:})];
-           sizeArr = size(systemArr);
-           testAbsTolArr = repmat(testAbsTol,sizeArr);
-           %
-           isOkArr = (testAbsTolArr == systemArr.getAbsTol());
-           %  
-           isOk = all(isOkArr(:));
-           mlunit.assert(isOk);
+            testAbsTol = 1e-8;
+            args = {eye(3),eye(3,4),ell_unitball(4),...
+                eye(3,5),ell_unitball(5),eye(2,3),...
+                ell_unitball(2),'d','absTol',testAbsTol};
+            systemArr = [elltool.linsys.LinSysFactory.create(args{:}),...
+                elltool.linsys.LinSysFactory.create(args{:});...
+                elltool.linsys.LinSysFactory.create(args{:}),...
+                elltool.linsys.LinSysFactory.create(args{:})];
+            systemArr(:,:,2) = [elltool.linsys.LinSysFactory.create(args{:}),...
+                elltool.linsys.LinSysFactory.create(args{:});...
+                elltool.linsys.LinSysFactory.create(args{:}),...
+                elltool.linsys.LinSysFactory.create(args{:})];
+            sizeArr = size(systemArr);
+            testAbsTolArr = repmat(testAbsTol,sizeArr);
+            %
+            isOkArr = (testAbsTolArr == systemArr.getAbsTol());
+            %
+            isOk = all(isOkArr(:));
+            mlunit.assert(isOk);
         end
+        %
+        function self = testHasDisturbance(self)
+            constantDistLinSys = elltool.linsys.LinSysFactory.create(eye(2), eye(2),...
+                ellipsoid([0; 0], eye(2)), eye(2), [1; 1], [], [], 'd');
+            boundedDistLinSys = elltool.linsys.LinSysFactory.create(eye(2), eye(2),...
+                ellipsoid([0; 0], eye(2)), eye(2),...
+                ellipsoid([0; 0], eye(2)), [], [], 'd');
+            noDistLinSys = elltool.linsys.LinSysFactory.create(eye(2), eye(2),...
+                ellipsoid([0; 0], eye(2)), [], [], [], [], 'd');
+            %
+            % test default behavior
+            %
+            mlunit.assert_equals(...
+                constantDistLinSys.hasdisturbance(), false);
+            mlunit.assert_equals(boundedDistLinSys.hasdisturbance(), true);
+            mlunit.assert_equals(noDistLinSys.hasdisturbance(), false);
+            %
+            % test isMeaningful
+            %
+            mlunit.assert_equals(...
+                boundedDistLinSys.hasdisturbance(true), true);
+            mlunit.assert_equals(...
+                boundedDistLinSys.hasdisturbance(false), true);
+            mlunit.assert_equals(...
+                constantDistLinSys.hasdisturbance(true), false);
+            mlunit.assert_equals(...
+                constantDistLinSys.hasdisturbance(false), true);
+            mlunit.assert_equals(...
+                noDistLinSys.hasdisturbance(true), false);
+            mlunit.assert_equals(...
+                noDistLinSys.hasdisturbance(false), false);
+        end
+        %
+        function self = testGetCopy(self)
+            aMat = eye(3);
+            bMat = eye(3);
+            uEll = ellipsoid([0; 1; 2], eye(3));
+            uStruct = struct();
+            uStruct.center = [1; 1; 1];
+            uStruct.shape = {'10' 't' '0'; 't' '2' '0'; '0' '0' '3'};
+            gMat = eye(3);
+            gCMat = {'1' '0' '0'; '0' 'sin(t)' '0'; '0' '0' '2'};
+            vEll = ellipsoid(0.5 * eye(3));
+            vStruct = struct();
+            vStruct.center = [-1; 0; 1];
+            vStruct.shape = {'1' '0' '0'; '0' 't' '0'; '0' '0' 't^3'};
+            cMat = eye(3);
+            cCMat = {'1' '0' '0'; '0' 'cos(t)' '0'; '0' '0' '10'};
+            nEll = ellipsoid([1; 2; 3], eye(3));
+            nStruct = struct();
+            nStruct.center = [0; 0; 0];
+            nStruct.shape = {'t' '0' '0'; '0' '1' '0'; '0' '0' 't'};
+            lContsysMat(4, 4) = elltool.linsys.LinSysContinuous();
+            lContsysMat(1) = create(uEll);
+            lContsysMat(2) = create(uStruct);
+            lContsysMat(3) = create(uEll, gMat, vEll);
+            lContsysMat(4) = create(uEll, gMat, vStruct);
+            lContsysMat(5) = create(uStruct, gMat, vEll);
+            lContsysMat(6) = create(uStruct, gMat, vStruct);
+            lContsysMat(7) = create(uEll, gMat, vEll, cMat, nEll);
+            lContsysMat(8) = create(uEll, gMat, vEll, cMat, nStruct);
+            lContsysMat(9) = create(uEll, gMat, vStruct, cMat, nEll);
+            lContsysMat(10) = create(uEll, gMat, vStruct, cMat, nStruct);
+            lContsysMat(11) = create(uStruct, gMat, vEll, cMat, nEll);
+            lContsysMat(12) = create(uStruct, gMat, vEll, cMat, nStruct);
+            lContsysMat(13) = create(uStruct, gMat, vStruct, cMat, nEll);
+            lContsysMat(14) = create(uStruct, gMat, vStruct, cMat, nStruct);
+            lContsysMat(15) = create(uEll, gCMat, vStruct, cMat, nStruct);
+            lContsysMat(16) = create(uStruct, gCMat, vEll, cCMat, nEll);
+            lDiscrsysMat(2, 1) = elltool.linsys.LinSysDiscrete();
+            lDiscrsysMat(1) = create(uEll, [], [], [], [], 'd');
+            lDiscrsysMat(2) = create(uEll, gMat, vEll, [], [], 'd');
+            %
+            copiedLContsysMat = lContsysMat.getCopy();
+            isEqualMat = copiedLContsysMat.isEqual(lContsysMat);
+            isOk = all(isEqualMat(:));
+            mlunit.assert_equals(true, isOk);
+            %
+            copiedLDiscrsysMat = lDiscrsysMat.getCopy();
+            isEqualMat = copiedLDiscrsysMat.isEqual(lDiscrsysMat);
+            isOk = all(isEqualMat(:));
+            mlunit.assert_equals(true, isOk);
+            %
+            firstCutLsysMat = lContsysMat(1 : 2, 1 : 2);
+            secondCutLsysMat = lContsysMat(3 : 4, 3 : 4);
+            thirdCutLsysMat = lContsysMat([1 3], [1 3]);
+            self.runAndCheckError(...
+                'copiedLContsysMat.isEqual(firstCutLsysMat)',...
+                'wrongInput');
+            isEqualMat = firstCutLsysMat.isEqual(secondCutLsysMat);
+            isOk = ~any(isEqualMat(:));
+            mlunit.assert_equals(true, isOk);
+            isEqualMat = firstCutLsysMat.isEqual(thirdCutLsysMat);
+            isOkMat = isEqualMat == [1 0; 0 0];
+            isOk = all(isOkMat(:));
+            mlunit.assert_equals(true, isOk);
+            %
+            function linsysObj = create(varargin)
+                linsysObj = elltool.linsys.LinSysFactory.create(...
+                    aMat, bMat, varargin{:});
+            end
+        end
+
     end
 end

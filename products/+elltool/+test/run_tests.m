@@ -6,6 +6,7 @@ logger=modgen.logging.log4j.Log4jConfigurator.getLogger();
 % resList{4} = elltool.linsys.test.run_tests();
 resList{5} = elltool.reach.test.run_tests();
 % resList{6} = elltool.demo.test.run_tests();
+resList{7} = elltool.reach.test.run_continuous_reach_tests();
 %
 results=[resList{:}];
 [errorCount,failCount]=results.getErrorFailCount();

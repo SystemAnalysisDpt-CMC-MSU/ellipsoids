@@ -30,8 +30,8 @@ classdef CompositeMatrixOperations<gras.mat.AMatrixOperations
                 obj=gras.mat.fcnlib.MatrixInvFunc(mMatFunc);
             end
         end
-        function obj=sqrtm(self,mMatFunc)
-            obj=sqrtm@gras.mat.AMatrixOperations(self,mMatFunc);
+        function obj=sqrtmpos(self,mMatFunc)
+            obj=sqrtmpos@gras.mat.AMatrixOperations(self,mMatFunc);
             if isempty(obj)
                 obj=gras.mat.fcnlib.MatrixSqrtFunc(mMatFunc);
             end

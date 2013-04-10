@@ -18,7 +18,7 @@ function extApprEllVec = minkmp_ea(fstEll, secEll, sumEllArr, dirMat)
 %           nDims - space dimension.
 %       secEll: ellipsoid [1, 1] - second ellipsoid
 %           of the same dimention.
-%       sumEllArr: ellipsoid [nDims1, nDims2,...,nDimsN] - array of 
+%       sumEllArr: ellipsoid [nDims1, nDims2,...,nDimsN] - array of
 %           ellipsoids of the same dimentions nDims.
 %       dirMat: double[nDims, nCols] - matrix whose columns specify the
 %           directions for which the approximations should be computed.
@@ -40,25 +40,37 @@ function extApprEllVec = minkmp_ea(fstEll, secEll, sumEllArr, dirMat)
 import elltool.conf.Properties;
 import modgen.common.throwerror;
 import modgen.common.checkmultvar;
+import elltool.logging.Log4jConfigurator;
+
+persistent logger;
 
 ellipsoid.checkIsMe(fstEll,'first');
 ellipsoid.checkIsMe(secEll,'second');
 ellipsoid.checkIsMe(sumEllArr,'third');
 checkmultvar('isscalar(x1)&&isscalar(x2)',2,fstEll,secEll,...
     'errorTag','wrongInput','errorMessage',...
-    'first and second arguments must be single ellipsoids.')
+    'The first and the second arguments must be single ellipsoids.')
+modgen.common.checkvar( sumEllArr , 'numel(x) > 0', 'errorTag', ...
+    'wrongInput:emptyArray', 'errorMessage', ...
+    'Each array must be not empty.');
+modgen.common.checkvar( sumEllArr,'all(~isempty(x(:)))','errorTag', ...
+    'wrongInput:emptyEllipsoid', 'errorMessage', ...
+    'Array should not have empty ellipsoid.');
 
-[nDim nCols]  = size(dirMat);
+[nDim, ~]  = size(dirMat);
 checkmultvar('(x1==x4)&&(x2==x4)&&all(x3(:)==x4)',...
     4,dimension(fstEll),dimension(secEll),dimension(sumEllArr),nDim,...
     'errorTag','wrongSizes','errorMessage',...
     'all ellipsoids and direction vectors must be of the same dimension');
 
-extApprEllVec = [];
-
 if ~isbigger(fstEll, secEll)
+    extApprEllVec = [];
+    
     if Properties.getIsVerbose()
-        fprintf('MINKMP_EA: the resulting set is empty.\n');
+        if isempty(logger)
+            logger=Log4jConfigurator.getLogger();
+        end
+        logger.info('MINKMP_EA: the resulting set is empty.');
     end
     return;
 end
@@ -68,17 +80,21 @@ Properties.setIsVerbose(false);
 
 nSumAmount  = numel(sumEllArr);
 sumEllVec = reshape(sumEllArr, 1, nSumAmount);
-isGoodDirVec = ~isbaddirection(fstEll, secEll, dirMat);
+absTolVal=min(fstEll.absTol, secEll.absTol);
+isGoodDirVec = ~isbaddirection(fstEll, secEll, dirMat,absTolVal);
 nGoodDirs = sum(isGoodDirVec);
 goodDirsMat = dirMat(:,isGoodDirVec);
-extApprEllVec = repmat(ellipsoid,1,nGoodDirs);
+extApprEllVec(nGoodDirs) = ellipsoid();
 arrayfun(@(x) fSingleMP(x),1:nGoodDirs)
 
 Properties.setIsVerbose(isVrb);
 if isempty(extApprEllVec)
     if Properties.getIsVerbose()
-        fprintf('MINKMP_EA: cannot compute external approximation ');
-        fprintf('for any\n           of the specified directions.\n');
+        if isempty(logger)
+            logger=Log4jConfigurator.getLogger();
+        end
+        logger.info('MINKMP_EA: cannot compute external approximation ');
+        logger.info('for any of the specified directions.');
     end
 end
     function fSingleMP(index)

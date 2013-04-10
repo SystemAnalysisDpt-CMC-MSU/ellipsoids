@@ -1,4 +1,4 @@
-function clrDirsMat = rm_bad_directions(q1Mat, q2Mat, dirsMat)
+function clrDirsMat = rm_bad_directions(q1Mat, q2Mat, dirsMat,absTol)
 %
 % RM_BAD_DIRECTIONS - remove bad directions from the given list.
 %	Bad directions are those which should not be used for the support 
@@ -9,6 +9,7 @@ function clrDirsMat = rm_bad_directions(q1Mat, q2Mat, dirsMat)
 %       q1Mat: double[nDim, nDim] - shape matrix of minuend ellipsoid
 %       q2Mat: double[nDim, nDim] - shape matrix of subtrahend ellipsoid
 %       dirsMat: double[nDim, nDirs] - matrix of of checked directions
+%       absTol: double[1,1] - absolute tolerance
 %
 % Output:
 %   clrDirsMat: double[nDim, nClearDirs] - matrix of without bad directions
@@ -22,8 +23,7 @@ function clrDirsMat = rm_bad_directions(q1Mat, q2Mat, dirsMat)
 %             Faculty of Computational Mathematics and Cybernetics,
 %             Science, System Analysis Department 2012 $
 %
-
-isGoodDirVec=~ellipsoid.isbaddirectionmat(q1Mat,q2Mat,dirsMat);
+isGoodDirVec=~ellipsoid.isbaddirectionmat(q1Mat,q2Mat,dirsMat,absTol);
 clrDirsMat=[];
 if any(isGoodDirVec)
     clrDirsMat=dirsMat(:,isGoodDirVec);

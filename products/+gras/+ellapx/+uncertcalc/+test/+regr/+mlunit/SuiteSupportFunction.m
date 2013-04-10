@@ -14,8 +14,8 @@ classdef SuiteSupportFunction < mlunitext.test_case
         ABS_TOL_FACTOR = 1e-3;
     end
     methods (Static)
-        function difVec = derivativeSupportFunction(t, xVec, fAMat, fBMat,...
-                fPVec, fPMat, nElem)
+        function difVec = derivativeSupportFunction(t, xVec, fAMat,...
+                fBMat, fPVec, fPMat, nElem)
             yVec = xVec(1 : nElem);
             %
             difVec = zeros(nElem + 1, 1);
@@ -48,41 +48,42 @@ classdef SuiteSupportFunction < mlunitext.test_case
     methods
         function self = SuiteSupportFunction(varargin)
             self = self@mlunitext.test_case(varargin{:});
-            [~,className]=modgen.common.getcallernameext(1);
-            shortClassName=mfilename('classname');
-            self.testDataRootDir=[fileparts(which(className)),...
-                filesep,'TestData',filesep,shortClassName];
+            [~, className] = modgen.common.getcallernameext(1);
+            shortClassName = mfilename('classname');
+            self.testDataRootDir = [fileparts(which(className)),...
+                filesep, 'TestData', filesep, shortClassName];
         end
         %
-        function self = set_up_param(self,varargin)
-            if nargin>2
-                self.crm=varargin{2};
+        function self = set_up_param(self, varargin)
+            if nargin > 2
+                self.crm = varargin{2};
             else
-                self.crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
+                self.crm =...
+                    gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
             end
-            if nargin>3
-                self.crmSys=varargin{3};
+            if nargin > 3
+                self.crmSys = varargin{3};
             else
-                self.crmSys=...
+                self.crmSys =...
                     gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
             end
-            confNameList=varargin{1};
-            if strcmp(confNameList,'*')
+            confNameList = varargin{1};
+            if strcmp(confNameList, '*')
                 self.crm.deployConfTemplate('*');
-                confNameList=self.crm.getConfNameList();
+                confNameList = self.crm.getConfNameList();
             end
             if ischar(confNameList)
-                confNameList={confNameList};
+                confNameList = {confNameList};
             end
-            self.confNameList=confNameList;
+            self.confNameList = confNameList;
         end
         %
         function testSupportCompare(self)
-            crm=self.crm;
-            crmSys=self.crmSys;
-            confNameList=self.confNameList;
-            nConfs=length(confNameList);
-            for iConf=1:nConfs
+            crm = self.crm;
+            crmSys = self.crmSys;
+            confNameList = self.confNameList;
+            nConfs = length(confNameList);
+            for iConf = 1 : nConfs
                 crm.deployConfTemplate(confNameList{iConf});
             end
             %
@@ -124,8 +125,8 @@ classdef SuiteSupportFunction < mlunitext.test_case
                 %
                 nElem = size(x0Vec, 1);
                 OdeOptionsStruct = odeset(...
-                    'RelTol', calcPrecision*self.REL_TOL_FACTOR,...
-                    'AbsTol', calcPrecision*self.ABS_TOL_FACTOR);
+                    'RelTol', calcPrecision * self.REL_TOL_FACTOR,...
+                    'AbsTol', calcPrecision * self.ABS_TOL_FACTOR);
                 for iTuple = 1 : nTuples
                     curTimeVec = timeCVec{iTuple};
                     curGoodDirMat = goodDirCMat{iTuple};
@@ -143,24 +144,31 @@ classdef SuiteSupportFunction < mlunitext.test_case
                         [curGoodDirMat(:, 1).', supFun0], OdeOptionsStruct);
                     %
                     expSupFuncMat = expResultMat(:, 1 : nElem);
+                    expNormSupFuncMat =...
+                        expSupFuncMat ./ norm(expSupFuncMat);
                     supFuncMat = curGoodDirMat(:, :);
-                    errorMat = abs(expSupFuncMat - supFuncMat.');
-                    errTol=max(errorMat(:));
+                    normSupFuncMat = supFuncMat.' ./ norm(supFuncMat);
+                    errorMat = abs(expNormSupFuncMat - normSupFuncMat);
+                    errTol = max(errorMat(:));
                     isOk = errTol <= calcPrecision;
                     %
                     mlunit.assert_equals(true, isOk,...
-                        sprintf('errTol=%g>calcPrecision=%g',errTol,...
+                        sprintf('errTol=%g>calcPrecision=%g', errTol,...
                         calcPrecision));
                     %
                     supFunVec =...
                         sqrt(gras.gen.SquareMatVector.lrMultiplyByVec(...
                         curEllMatArray,curGoodDirMat)) +...
                         sum(curEllCenterMat .* curGoodDirMat, 1);
-                    errorSupFunMat = abs(expResultMat(:, end) - supFunVec.');
-                    errTol=max(errorSupFunMat(:));
+                    expNormResVec = expResultMat(:, end) ./...
+                        norm(expResultMat(:, end));
+                    normSupFunVec = supFunVec.' ./ norm(supFunVec);
+                    errorSupFunMat =...
+                        abs(expNormResVec - normSupFunVec);                    
+                    errTol = max(errorSupFunMat(:));
                     isOk = errTol <= calcPrecision;
                     mlunit.assert_equals(true, isOk,...
-                        sprintf('errTol=%g>calcPrecision=%g',errTol,...
+                        sprintf('errTol=%g>calcPrecision=%g', errTol,...
                         calcPrecision));
                 end
             end
