@@ -1,11 +1,9 @@
 classdef IReach < handle
-% $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  
-% $Date: March-2012 $
-% $Copyright: Moscow State University,
-%             Faculty of Computational Mathematics
-%             and Computer Science,
-%             System Analysis Department 2012 $
-%
+    % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: March-2013 $
+    % $Copyright: Moscow State University,
+    %            Faculty of Computational Mathematics and Computer Science,
+    %            System Analysis Department 2013 $
+    %
     methods (Abstract)
         cutObj = cut(self, cutTimeVec)
         %
@@ -19,7 +17,7 @@ classdef IReach < handle
         %       self.
         %
         %       cutTimeVec: double[1, 2]/double[1, 1] - time
-        %           interval to cut.          
+        %           interval to cut.
         %
         % Output:
         %   cutObj: reach[1, 1] - reach set resulting from the CUT operation.
@@ -61,7 +59,7 @@ classdef IReach < handle
         %   optional:
         %       linSys: elltool.linsys.LinSys[1, 1] - new linear system.
         %
-        % Output:	
+        % Output:
         %   newReachObj: reach[1, 1] - reach set on time
         %       interval [oldT0 newEndTime].
         %

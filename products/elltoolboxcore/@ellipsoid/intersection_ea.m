@@ -35,6 +35,9 @@ function outEllArr = intersection_ea(myEllArr, objArr)
 %   on Systems, Man and Cybernetics, Vol.32, No.4, 
 %   pp.430-442, 2002. For more information, visit
 %   http://www-iri.upc.es/people/ros/ellipsoids.html
+%   
+%   For polytopes this method won't give the minimal volume 
+%   overapproximating ellipsoid, but just some overapproximating ellipsoid.
 %
 % Input:
 %   regular:
@@ -279,7 +282,11 @@ if isinside(myEll, polyt)
 end
 
 for iElem = 1:nDimsHyp
-    outEll = intersection_ea(outEll, hyp(iElem));
+    if(isempty(outEll))
+        return;
+    else
+        outEll = intersection_ea(outEll, hyp(iElem));
+    end
 end
 
 end

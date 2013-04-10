@@ -51,10 +51,10 @@ classdef LinSysContinuous < elltool.linsys.ALinSys
     %             System Analysis Department 2012 $
     %
     properties (Constant, Access = private)
-        DISPLAY_PARAMETER_STRINGS = {'(t)', 'dx/dt  =  ', ...
+        DISPLAY_PARAMETER_STRINGS = {'(t)', 'dx/dt  =  ',...
             ' y(t)  =  ', ' x(t)'}
     end
-    
+    %
     methods
         function self = LinSysContinuous(varargin)
             %
@@ -98,7 +98,7 @@ classdef LinSysContinuous < elltool.linsys.ALinSys
             %
             self = self@elltool.linsys.ALinSys(varargin{:});
         end
-        
+        %
         function display(self)
             %
             % See description of DISPLAY in ILinSys class.

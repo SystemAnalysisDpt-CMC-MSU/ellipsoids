@@ -540,6 +540,7 @@ import elltool.conf.Properties;
 import modgen.common.throwerror
 import elltool.logging.Log4jConfigurator;
 persistent logger;
+  import modgen.common.throwerror
 
 ellArrSizeVec=size(ellObjArray);
 hpArrSizeVec=size(hpObjArray);
@@ -554,7 +555,7 @@ end
 
 ellDimArray = dimension(ellObjArray);
 hpDimArray = dimension(hpObjArray);
-
+  
 if (~all(ellDimArray(1)==ellDimArray(:)))
     throwerror('wrongInput',...
         'ellipsoids must be of the same dimension.');
@@ -562,6 +563,9 @@ end
 if (~all(hpDimArray(1)==hpDimArray(:)))
     throwerror('wrongInput',...
         'hyperplanes must be of the same dimension.');
+end
+if (hpDimArray(1) ~= ellDimArray(1))
+    throwerror('wrongInput','ellipsoids and hyperplanes must be of the same dimension.');
 end
 
 if Properties.getIsVerbose()
@@ -625,6 +629,7 @@ distVal  = sqrt(distVal);
 cvxStat={cvx_status};
 end
 
+
 function [distEllPolArray, statusArray] = computeEllPolytDist(ellObjArray, polObj,isFlagOn)
 %
 %   COMPUTEELLPOLYTDIST - compute distance between arrays of ellipsoids and
@@ -639,25 +644,32 @@ function [distEllPolArray, statusArray] = computeEllPolytDist(ellObjArray, polOb
 import elltool.conf.Properties;
 import elltool.logging.Log4jConfigurator;
 persistent logger;
+  import modgen.common.throwerror
 
 ellArrSizeVec = size(ellObjArray);
 polArrSizeVec = size(polObj);
 nEllObj=numel(ellObjArray);
-nPolObj=numel(polObj);
+nPolObj=prod(polArrSizeVec);
 if (nEllObj > 1) && (nPolObj > 1) && (~(nEllObj==nPolObj)||...
         ~(length(ellArrSizeVec)==length(polArrSizeVec))||...
-        ~all(ellArrSizeVec==hpArrSizeVec))
+        ~all(ellArrSizeVec==polArrSizeVec))
     throwerror('wrongInput','sizes of ellipsoidal and polytope arrays do not match.');
 end
 
 dimEllArray=dimension(ellObjArray);
-dimPolArray=dimension(polObj);
+dimPolArray=zeros(size(polObj));
+for iPolytopes = 1:size(dimPolArray,2)
+	dimPolArray(iPolytopes) = dimension(polObj(iPolytopes));
+end
 
 if ~all(dimEllArray(1)==dimEllArray(:))
     throwerror('wrongInput','ellipsoids must be of the same dimension.');
 end
 if ~all(dimPolArray(1)==dimPolArray(:))
     throwerror('wrongInput','polytopes must be of the same dimension.');
+end
+if ~(dimPolArray(1) == dimEllArray(1))
+	 throwerror('wrongInput','polytopes and ellips must be of the same dimension.');
 end
 
 if Properties.getIsVerbose()
@@ -674,16 +686,25 @@ if Properties.getIsVerbose()
 end
 
 if (nEllObj > 1) && (nPolObj > 1)
-    fComputeDist=@(ellObj,polObj) findEllPolDist(ellObj,polObj,isFlagOn);
-    [distEllPolArray, statusArray]=...
-        arrayfun(fComputeDist,ellObjArray,polObj);
-elseif (nEllObj > 1)
+    distEllPolArray = zeros(size(polArrSizeVec));
+    statusArray = cell(size(polArrSizeVec));
+    for iObj = 1:nPolObj
+    [distEllPolArray(iObj), statusArray{iObj}]=...
+        findEllPolDist(ellObjArray(iObj),polObj(iObj),isFlagOn);
+    end
+elseif (nPolObj > 1)
+    distEllPolArray = zeros(size(polArrSizeVec));
+    statusArray = cell(size(polArrSizeVec));
+    for iObj = 1:nPolObj
+    [distEllPolArray(iObj), statusArray{iObj}]=...
+        findEllPolDist(ellObjArray,polObj(iObj),isFlagOn);
+    end
+else
     fComputeDist=@(ellObj) findEllPolDist(ellObj,polObj,isFlagOn);
     [distEllPolArray, statusArray]=...
         arrayfun(fComputeDist,ellObjArray);
-else
-    [distEllPolArray, statusArray]=...
-        findEllPolDist(ellObjArray,polObj,isFlagOn);
+end
 end
 
-end
+
+

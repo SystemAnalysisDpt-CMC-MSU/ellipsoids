@@ -1,6 +1,6 @@
 classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
     properties (Constant,Hidden)
-        FCODE_PROJ_S_DIM_VEC
+        FCODE_PROJ_S_MAT
         FCODE_PROJ_TYPE
         FCODE_LT_GOOD_DIR_NORM_ORIG_VEC
         FCODE_LS_GOOD_DIR_NORM_ORIG
@@ -8,23 +8,23 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
         %
     end
     methods (Access=protected)
-        function resStr=projSpecVec2Str(~,projSpecDimVec)
+        function resStr=projSpecVec2Str(~,projSTimeMat)
             resStr=['[',modgen.string.catwithsep(...
                 cellfun(@(x)sprintf('x_%d',x),num2cell(...
-                find(projSpecDimVec)),'UniformOutput',false),','),']'];
+                find(projSTimeMat)),'UniformOutput',false),','),']'];
         end
         %
-        function axesName=axesGetKeyTubeFunc(self,~,projSpecDimVec,varargin)
+        function axesName=axesGetKeyTubeFunc(self,~,projSTimeMat,varargin)
             axesName=['Ellipsoidal tubes, proj. on subspace ',...
-                self.projSpecVec2Str(projSpecDimVec)];
+                self.projSpecVec2Str(projSTimeMat)];
         end
         %
-        function axesName=axesGetKeyGoodCurveFunc(self,~,projSpecDimVec,varargin)
+        function axesName=axesGetKeyGoodCurveFunc(self,~,projSTimeMat,varargin)
             axesName=['Good directions: proj. on subspace ',...
-                self.projSpecVec2Str(projSpecDimVec)];
+                self.projSpecVec2Str(projSTimeMat)];
         end
         function hVec=axesSetPropGoodCurveFunc(self,hAxes,axesName,...
-                projSpecDimVec,varargin)
+                projSTimeMat,varargin)
             import modgen.common.type.simple.checkgen;
             import gras.ellapx.smartdb.RelDispConfigurator;
             self.scaleAxesHeight(hAxes,0.9,false);
@@ -32,7 +32,7 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
             ylim(hAxes,[-1 1]);
             zlim(hAxes,[-1 1]);
             set(hAxes,'PlotBoxAspectRatio',[6 1 1]);            
-            hVec=self.axesSetPropBasic(hAxes,axesName,projSpecDimVec,varargin{:});
+            hVec=self.axesSetPropBasic(hAxes,axesName,projSTimeMat,varargin{:});
         end
         %
         function scaleAxesHeight(~,hAxes,scaleFactor,isShift)
@@ -46,21 +46,21 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
                 set(hAxes,'UserData',true);
             end
         end
-        function hVec=axesSetPropTubeFunc(self,hAxes,axesName,projSpecDimVec,varargin)
+        function hVec=axesSetPropTubeFunc(self,hAxes,axesName,projSTimeMat,varargin)
             import modgen.common.type.simple.checkgen;
             import gras.ellapx.smartdb.RelDispConfigurator;
             self.scaleAxesHeight(hAxes,1.1,true);
             axis(hAxes,'auto');            
-            hVec=self.axesSetPropBasic(hAxes,axesName,projSpecDimVec,varargin{:});
+            hVec=self.axesSetPropBasic(hAxes,axesName,projSTimeMat,varargin{:});
         end
-        function hVec=axesSetPropBasic(~,hAxes,axesName,projSpecDimVec,varargin)
+        function hVec=axesSetPropBasic(~,hAxes,axesName,projSTimeMat,varargin)
             import modgen.common.type.simple.checkgen;
             import gras.ellapx.smartdb.RelDispConfigurator;
             import modgen.graphics.camlight;
 
             title(hAxes,axesName);
-            checkgen(projSpecDimVec,@(x)sum(x)==2);
-            indDimVec=find(projSpecDimVec);
+            checkgen(projSTimeMat,@(x)sum(sum(x))==2);
+            indDimVec=find(sum(projSTimeMat));
             yLabel=sprintf('x_%d',indDimVec(1));
             zLabel=sprintf('x_%d',indDimVec(2));
             xLabel='time';
@@ -84,21 +84,21 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
         end
         %
         function figureGroupKeyName=figureGetGroupKeyFunc(self,projType,...
-                projSpecDimVec,sTime,varargin)
+                projSTimeMat,sTime,varargin)
             import gras.ellapx.enums.EProjType;
             figureGroupKeyName=self.figureGetNamedGroupKeyFunc('',...
-                projType,projSpecDimVec,sTime,varargin{:});
+                projType,projSTimeMat,sTime,varargin{:});
         end
         %
         function figureGroupKeyName=figureGetNamedGroupKeyFunc(self,...
-                groupName,projType,projSpecDimVec,sTime,...
+                groupName,projType,projSTimeMat,sTime,...
                 lsGoodDirOrigVec,varargin)
             import gras.ellapx.enums.EProjType;
             import gras.ellapx.smartdb.RelDispConfigurator;
             isGoodCurvesSeparately=...
                 RelDispConfigurator.getIsGoodCurvesSeparately();
             figureGroupKeyName=[groupName,'_',lower(char(projType)),...
-                '_sp',self.projSpecVec2Str(projSpecDimVec),'_st',...
+                '_sp',self.projSpecVec2Str(projSTimeMat),'_st',...
                 num2str(sTime)];
             if isGoodCurvesSeparately
                 goodCurveStr=self.goodDirProp2Str(lsGoodDirOrigVec,sTime);
@@ -107,9 +107,9 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
         end        
         %
         function figureSetPropFunc(self,hFigure,figName,indGroup,...
-                projType,projSpecDimVec,sTime,varargin)
+                projType,projSTimeMat,sTime,varargin)
             self.figureNamedSetPropFunc('',hFigure,figName,indGroup,...
-                projType,projSpecDimVec,sTime,varargin{:});
+                projType,projSTimeMat,sTime,varargin{:});
         end
         function figureNamedSetPropFunc(~,~,hFigure,...
                 figureGroupName,indGroup,...
@@ -197,8 +197,15 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
                 self.checkSVsTConsistency(num2cell(self.lsGoodDirNormOrig),...
                     self.ltGoodDirNormOrigVec,indSTime,'lsGoodDirNormOrig',...
                     'ltGoodDirNormOrigVec',fCheck);
+                nInd=length(self.projSTimeMat);
+                indList=cell(nInd,1);
+                for iInd=1:nInd
+                    projMat=self.projSTimeMat{iInd};
+                    indBinVec=sum(projMat);
+                    indList{iInd}=find(indBinVec);
+                end
                 self.checkSVsTConsistency(self.lsGoodDirVec,...
-                    self.lsGoodDirOrigVec,self.projSpecDimVec,...
+                    self.lsGoodDirOrigVec,indList,...
                     'lsGoodDirVec','lsGoodDirOrigVec',fCheck);
             end
         end

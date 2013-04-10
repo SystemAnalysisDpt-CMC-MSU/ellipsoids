@@ -28,7 +28,7 @@ classdef ALinSys < elltool.linsys.ILinSys
         isConstantBoundsVec
         absTol
     end
-    
+    %
     methods (Access = protected, Static)
         function isEllHaveNeededDim(InpEll, nDim, absTol)
             %
@@ -110,8 +110,50 @@ classdef ALinSys < elltool.linsys.ILinSys
                 end
             end
         end
+        %
+        function copyEll = getCopyOfNotEmptyEll(inpEll)
+            if isstruct(inpEll)
+                copyEll = inpEll;
+            else
+                copyEll = inpEll.getCopy();
+            end
+        end
+        %
+        function copyEll = getCopyEll(inpEll)
+            if ~isempty(inpEll)
+                copyEll =...
+                    elltool.linsys.ALinSys.getCopyOfNotEmptyEll(inpEll);
+            else
+                copyEll = [];
+            end
+        end
+        %
+        function isEq = isEqualEll(firstEll, secondEll)
+            isEq = false;
+            if ~isempty(firstEll) && ~isempty(secondEll)
+                if isstruct(firstEll) && isstruct(secondEll)
+                    isEq = isequal(firstEll, secondEll);
+                end
+                if ~isstruct(firstEll) && ~isstruct(secondEll)
+                    isEq = firstEll.isEqual(secondEll);
+                end
+            end
+            if isempty(firstEll) && isempty(secondEll)
+                isEq = true;
+            end
+        end
+        %
+        function isEq = isEqualMat(firstMat, secondMat, absTol)
+            isEq = false;
+            if iscell(firstMat) && iscell(secondMat)
+                isEq = isequal(firstMat, secondMat);
+            end
+            if ~iscell(firstMat) && ~iscell(secondMat)
+                isEq = norm(firstMat - secondMat) <= absTol;
+            end
+        end
     end
-    
+    %
     methods (Access = protected)
         function displayInternal(self, dispParamStringsCVec)
             %
@@ -287,8 +329,27 @@ classdef ALinSys < elltool.linsys.ILinSys
                 s1, s4, s3, s5, s6, s7, s8, s2, s9, s3, s10);
             return;
         end
+        %
+        function checkScalar(self)
+            import modgen.common.throwerror;
+            %
+            if numel(self) > 1
+                throwerror('wrongInput', 'Input argument must be scalar.');
+            end
+        end
+        %
+        function [aMat, bMat, uEll, gMat, distEll, cMat, noiseEll] =...
+                getParams(self)
+            aMat = self.getAtMat();
+            bMat = self.getBtMat();
+            uEll = self.getUBoundsEll();
+            gMat = self.getGtMat();
+            distEll = self.getDistBoundsEll();
+            cMat = self.getCtMat();
+            noiseEll = self.getNoiseBoundsEll();
+        end
     end
-    
+    %
     methods
         function self = ALinSys(atInpMat, btInpMat, uBoundsEll, ...
                 gtInpMat, distBoundsEll, ctInpMat, noiseBoundsEll, ...
@@ -570,6 +631,7 @@ classdef ALinSys < elltool.linsys.ILinSys
             %
             % See description of GETATMAT in ILinSys class.
             %
+            self.checkScalar();
             aMat = self.atMat;
         end
         
@@ -577,6 +639,7 @@ classdef ALinSys < elltool.linsys.ILinSys
             %
             % See description of GETBTMAT in ILinSys class.
             %
+            self.checkScalar();
             bMat = self.btMat;
         end
         
@@ -584,6 +647,7 @@ classdef ALinSys < elltool.linsys.ILinSys
             %
             % See description of GETUBOUNDSELL in ILinSys class.
             %
+            self.checkScalar();
             uEll = self.controlBoundsEll;
         end
         
@@ -591,6 +655,7 @@ classdef ALinSys < elltool.linsys.ILinSys
             %
             % See description of GETGTMAT in ILinSys class.
             %
+            self.checkScalar();
             gMat = self.gtMat;
         end
         
@@ -598,6 +663,7 @@ classdef ALinSys < elltool.linsys.ILinSys
             %
             % See description of GETDISTBOUNDSELL in ILinSys class.
             %
+            self.checkScalar();
             distEll = self.disturbanceBoundsEll;
         end
         
@@ -605,16 +671,18 @@ classdef ALinSys < elltool.linsys.ILinSys
             %
             % See description of GETCTMAT in ILinSys class.
             %
+            self.checkScalar();
             cMat = self.ctMat;
         end
-        
+        %
         function noiseEll = getNoiseBoundsEll(self)
             %
             % See description of GETNOISEBOUNDSELL in ILinSys class.
             %
+            self.checkScalar();
             noiseEll = self.noiseBoundsEll;
         end
-        
+        %
         function [stateDimArr, inpDimArr, outDimArr, distDimArr] = ...
                 dimension(self)
             %
@@ -641,7 +709,7 @@ classdef ALinSys < elltool.linsys.ILinSys
                 distDim = size(linsys.gtMat, 2);
             end
         end
-        
+        %
         function isDisturbanceArr = hasdisturbance(self, varargin)
             %
             % See description of HASDISTURBANCE in ILinSys class.
@@ -664,7 +732,7 @@ classdef ALinSys < elltool.linsys.ILinSys
                 end
             end
         end
-        
+        %
         function isNoiseArr = hasnoise(self)
             %
             % See description of HASNOISE in ILinSys class.
@@ -678,7 +746,7 @@ classdef ALinSys < elltool.linsys.ILinSys
                 end
             end
         end
-        
+        %
         function isEmptyArr = isempty(self)
             %
             % See description of ISEMPTY in ILinSys class.
@@ -692,7 +760,7 @@ classdef ALinSys < elltool.linsys.ILinSys
                 end
             end
         end
-        
+        %
         function isLtiArr = islti(self)
             %
             % See description of ISLTI in ILinSys class.
@@ -703,12 +771,110 @@ classdef ALinSys < elltool.linsys.ILinSys
                 isLti = linsys.isTimeInv;
             end
         end
-        
+        %
         function absTolArr = getAbsTol(self)
             %
             % See description of GETABSTOL in ILinSys class.
             %
             absTolArr = arrayfun(@(x)x.absTol, self);
+        end
+        %
+        function copyLinSysArr = getCopy(self)
+            %
+            % GETCOPY gives array the same size as linsysArr with
+            % with copies of elements of self.
+            %
+            % Input:
+            %   regular:
+            %       self: elltool.linsys.ALinSys[nDims1, nDims2,...] -
+            %             an array of linear systems.
+            %
+            % Output:
+            %   copyLinSysArr: elltool.linsys.LinSys[nDims1, nDims2,...] -
+            %       an array of copies of elements of self.
+            %
+            sizeCVec = num2cell(size(self));
+            copyLinSysArr(sizeCVec{:}) = feval(class(self));
+            arrayfun(@(x) fSingleCopy(x), 1 : numel(self));
+            %
+            function fSingleCopy(index)
+                curLinSys = self(index);
+                copyLinSysArr(index).atMat = curLinSys.atMat;
+                copyLinSysArr(index).btMat = curLinSys.btMat;
+                copyLinSysArr(index).controlBoundsEll =...
+                    self.getCopyEll(curLinSys.controlBoundsEll);
+                copyLinSysArr(index).gtMat = curLinSys.gtMat;
+                copyLinSysArr(index).disturbanceBoundsEll =...
+                    self.getCopyEll(curLinSys.disturbanceBoundsEll);
+                copyLinSysArr(index).ctMat = curLinSys.ctMat;
+                copyLinSysArr(index).noiseBoundsEll =...
+                    self.getCopyEll(curLinSys.noiseBoundsEll);
+                copyLinSysArr(index).isTimeInv = curLinSys.isTimeInv;
+                copyLinSysArr(index).isConstantBoundsVec =...
+                    curLinSys.isConstantBoundsVec;
+                copyLinSysArr(index).absTol = curLinSys.absTol;
+            end
+        end
+        %
+        function isEqualArr = isEqual(self, compLinSysArr)
+            %
+            % ISEQUAL produces produces logical array the same size as
+            % self/compLinSysArr (if they have the same).
+            % isEqualArr[iDim1, iDim2,...] is true if corresponding
+            % linear systems are equal and false otherwise.
+            %
+            % Input:
+            %   regular:
+            %       self: elltool.linsys.ALinSys[nDims1, nDims2,...] -
+            %             an array of linear systems.
+            %       compLinSysArr: elltool.linsys.LinSys[nDims1,...
+            %             nDims2,...] - an array of linear systems.
+            %
+            % Output:
+            %   isEqualArr: elltool.linsys.ALinSys[nDims1, nDims2,...] -
+            %       an array of logical values.
+            %       isEqualArr[iDim1, iDim2,...] is true if corresponding
+            %       linear systems are equal and false otherwise.
+            %
+            import modgen.common.throwerror;
+            %
+            if ~all(size(self) == size(compLinSysArr))
+                throwerror('wrongInput', 'dimensions must be the same.');
+            end
+            %
+            isEqualArr =...
+                arrayfun(@(x, y) fSingleComp(x, y), self, compLinSysArr);
+            %
+            function isEq = fSingleComp(firstLinSys, secondLinSys)
+                [firstStateDim, firstInpDim, firstOutDim,...
+                    firstDistDim] = firstLinSys.dimension();
+                [secondStateDim, secondInpDim, secondOutDim,...
+                    secondDistDim] = secondLinSys.dimension();
+                isEq = firstStateDim == secondStateDim &&...
+                    firstInpDim == secondInpDim &&...
+                    firstOutDim == secondOutDim &&...
+                    firstDistDim == secondDistDim;
+                if isEq
+                    absT = min(firstLinSys.getAbsTol(),...
+                        secondLinSys.getAbsTol());
+                    [firstAMat, firstBMat, firstUEll, firstGMat,...
+                        firstDistEll, firstCMat, firstNoiseEll] =...
+                        firstLinSys.getParams();
+                    %
+                    [secondAMat, secondBMat, secondUEll, secondGMat,...
+                        secondDistEll, secondCMat, secondNoiseEll] =...
+                        secondLinSys.getParams();
+                    %
+                    isEq =...
+                        self.isEqualMat(firstAMat, secondAMat, absT) &&...
+                        self.isEqualMat(firstBMat, secondBMat, absT) &&...
+                        self.isEqualEll(firstUEll, secondUEll) &&...
+                        self.isEqualMat(firstGMat, secondGMat, absT) &&...
+                        self.isEqualEll(firstDistEll, secondDistEll) &&...
+                        self.isEqualMat(firstCMat, secondCMat, absT) &&...
+                        self.isEqualEll(firstNoiseEll, secondNoiseEll);
+                end
+            end
         end
     end
 end

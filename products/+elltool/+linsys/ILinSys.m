@@ -27,7 +27,6 @@ classdef ILinSys < handle
         %   aMat: double[aMatDim, aMatDim]/cell[nDim, nDim] - 
         %      matrix A.
         %
-        
         bMat = getBtMat(self)
         %
         % Input:
@@ -38,7 +37,6 @@ classdef ILinSys < handle
         %   bMat: double[bMatDim, bMatDim]/cell[bMatDim, bMatDim] -
         %       matrix B.
         %
-        
         uEll = getUBoundsEll(self)
         %
         % Input:
@@ -49,7 +47,6 @@ classdef ILinSys < handle
         %   uEll: ellipsoid[1, 1]/struct[1, 1] - control bounds 
         %          ellipsoid.
         %
-        
         gMat = getGtMat(self)
         %
         % Input:
@@ -60,7 +57,6 @@ classdef ILinSys < handle
         %   gMat: double[gMatDim, gMatDim]/cell[gMatDim, gMatDim] -
         %       matrix G.
         %
-        
         distEll = getDistBoundsEll(self)
         %
         % Input:
@@ -71,7 +67,6 @@ classdef ILinSys < handle
         %   distEll: ellipsoid[1, 1]/struct[1, 1] - disturbance 
         %       bounds ellipsoid.
         %
-        
         cMat = getCtMat(self)
         %
         % Input:
@@ -82,9 +77,16 @@ classdef ILinSys < handle
         %   cMat: double[cMatDim, cMatDim]/cell[cMatDim, cMatDim] -
         %       matrix C.
         %
-        
         noiseEll = getNoiseBoundsEll(self)
-        
+        %
+        % Input:
+        %   regular:
+        %       self: elltool.linsys.ILinSys[1, 1] - linear system.
+        %
+        % Output:
+        %   noiseEll: ellipsoid[1, 1]/struct[1, 1] - noise bounds
+        %       ellipsoid.
+        %
         [stateDimArr, inpDimArr, outDimArr, distDimArr] =...
             dimension(self)
         %
@@ -108,7 +110,6 @@ classdef ILinSys < handle
         %   distDimArr: double[nDims1, nDims2,...] - array of
         %       disturbance dimensions.
         %
-        
         display(self)
         %
         % DISPLAY displays the details of linear system object.
@@ -120,7 +121,6 @@ classdef ILinSys < handle
         % Output:
         %   None.
         %
-        
         isDisturbanceArr = hasdisturbance(self)
         %
         % HASDISTURBANCE checks if linear system has unknown bounded 
@@ -141,7 +141,6 @@ classdef ILinSys < handle
         %       corresponding linear system has disturbance, and 
         %       false otherwise.
         %
-        
         isNoiseArr = hasnoise(self)
         %
         % HASNOISE checks if linear system has unknown bounded noise.
@@ -157,7 +156,6 @@ classdef ILinSys < handle
         %       corresponding linear system has noise, and false
         %       otherwise.
         %
-        
         isEmptyArr = isempty(self)
         %
         % ISEMPTY checks if linear system is empty.
@@ -173,7 +171,6 @@ classdef ILinSys < handle
         %       corresponding linear system is empty, and false 
         %       otherwise.
         %
-        
         isLtiArr = islti(self)
         %
         % ISLTI checks if linear system is time-invariant.
@@ -189,7 +186,6 @@ classdef ILinSys < handle
         %       corresponding linear system is time-invariant, and
         %       false otherwise.
         %
-        
         absTolArr = getAbsTol(self)
         %
         % GETABSTOL gives array the same size as linsysArr with
@@ -212,6 +208,39 @@ classdef ILinSys < handle
         %             and Computer Science,
         %             System Analysis Department 2012 $
         %
-        
+        copyLinSysArr = getCopy(self)
+        %
+        % GETCOPY gives array the same size as linsysArr with
+        % with copies of elements of self.
+        %
+        % Input:
+        %   regular:
+        %       self: elltool.linsys.ILinSys[nDims1, nDims2,...] - an array
+        %             of linear systems.
+        %
+        % Output:
+        %   copyLinSysArr: elltool.linsys.ILinSys[nDims1, nDims2,...] - an
+        %       array of copies of elements of self.
+        %
+        isEqualArr = isEqual(self, compLinSysArr)
+        %
+        % ISEQUAL produces produces logical array the same size as
+        % self/compLinSysArr (if they have the same).
+        % isEqualArr[iDim1, iDim2,...] is true if corresponding
+        % linear systems are equal and false otherwise.
+        %
+        % Input:
+        %   regular:
+        %       self: elltool.linsys.ILinSys[nDims1, nDims2,...] -
+        %             an array of linear systems.
+        %       compLinSysArr: elltool.linsys.ILinSys[nDims1,...
+        %             nDims2,...] - an array of linear systems.
+        %
+        % Output:
+        %   isEqualArr: elltool.linsys.LinSys[nDims1, nDims2,...] -
+        %       an array of logical values.
+        %       isEqualArr[iDim1, iDim2,...] is true if corresponding
+        %       linear systems are equal and false otherwise.
+        %
     end
 end
