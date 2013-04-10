@@ -20,14 +20,15 @@ classdef ReachDiscrTestCase < mlunit.test_case
                 'TestData', filesep, shortClassName];
         end
         
+        
         function self = DISABLED_testDisplay(self)
-            system = linsys( eye(3), eye(3,4), ell_unitball(4), ...
+            LS = linsys( eye(3), eye(3,4), ell_unitball(4), ...
                 [], [], [], [], 'd');
             X0Ell = ellipsoid(zeros(3, 1), eye(3));
             LMat = eye(3);
             TVec = [0, 5];
-            rs = reach(system, X0Ell, LMat, TVec);
-            resStr = evalc('display(rs)');
+            RS = reach(LS, X0Ell, LMat, TVec);
+            resStr = evalc('display(RS)');
             isOk = ~isempty(strfind(resStr,'Reach set'));
             isOk = isOk && ~isempty(strfind(resStr,'discrete'));
             isOk = isOk && ~isempty(strfind(resStr,'Center'));
@@ -37,145 +38,148 @@ classdef ReachDiscrTestCase < mlunit.test_case
             mlunitext.assert(isOk);      
         end
         
+        
         function self = DISABLED_testDimension(self)
             nSystemDimension = 4;
-            system = linsys( eye(nSystemDimension), eye(nSystemDimension,2), ell_unitball(2), ...
+            LS = linsys( eye(nSystemDimension), eye(nSystemDimension,2), ell_unitball(2), ...
                 [], [], [], [], 'd');
             X0Ell = ellipsoid(zeros(nSystemDimension, 1), eye(nSystemDimension));
             LMat = eye(nSystemDimension);
             TVec = [0, 5];
-            rs = reach(system, X0Ell, LMat, TVec);
-            [nObtainedReachDimension, nObtainedSystemDimension] = dimension(rs);
+            RS = reach(LS, X0Ell, LMat, TVec);
+            [nObtainedReachDimension, nObtainedSystemDimension] = dimension(RS);
             isOk = nObtainedSystemDimension == nSystemDimension;
             isOk = isOk && (nObtainedReachDimension == nSystemDimension);
             
-            ProjectionDimension = 2;
-            rsp = projection(rs, [1 0 0 0; 0 1 0 0]');
-            [nObtainedReachDimension, nObtainedSystemDimension] = dimension(rsp);
+            nProjectionDimension = 2;
+            ProjectedRS = projection(RS, [1 0 0 0; 0 1 0 0]');
+            [nObtainedReachDimension, nObtainedSystemDimension] = dimension(ProjectedRS);
             isOk = isOk && (nObtainedSystemDimension == nSystemDimension);
-            isOk = isOk && (nObtainedReachDimension == ProjectionDimension);
+            isOk = isOk && (nObtainedReachDimension == nProjectionDimension);
             mlunitext.assert(isOk);
         end
         
+        
         function self = DISABLED_testGetSystem(self)
-            firstSystem = linsys( eye(3), eye(3,4), ell_unitball(4), ...
+            FirstLS = linsys( eye(3), eye(3,4), ell_unitball(4), ...
                 eye(3), ell_unitball(3), eye(3), ell_unitball(3), 'd');
-            firstReach = reach(firstSystem, ...
+            FirstRS = reach(FirstLS, ...
                        ellipsoid(zeros(3, 1), eye(3)), ...
                        eye(3),...
                        [0, 5]);
-            secondSysmtem = linsys(eye(4), eye(4, 2), ell_unitball(2), ...
+            SecondLS = linsys(eye(4), eye(4, 2), ell_unitball(2), ...
                 [], [], [], [], 'd');
-            secondReach = reach(secondSysmtem, ...
+            SecondRS = reach(SecondLS, ...
                         ellipsoid(ones(4, 1), eye(4)), ...
                         eye(4), ...
                         [0, 3]);
-            isOk = firstSystem == get_system(firstReach);
-            isOk = isOk && (secondSysmtem == get_system(secondReach));
-            isOk = isOk && (get_system(firstReach) ~= get_system(secondReach));
+            isOk = FirstLS == get_system(FirstRS);
+            isOk = isOk && (SecondLS == get_system(SecondRS));
+            isOk = isOk && (get_system(FirstRS) ~= get_system(SecondRS));
             mlunitext.assert(isOk);
         end
+        
         
         function self = DISABLED_testIsCut(self)
             AMat = [1 2; 3 4];
             BMat = [3; 2];
             PEll = 2*ell_unitball(1);
-            system = linsys(AMat, BMat, PEll, [], [], [], [], 'd');
+            LS = linsys(AMat, BMat, PEll, [], [], [], [], 'd');
             X0Ell = ellipsoid([0; 0], [3 1; 1 2]);
             LMat = eye(2);
             TVec = [0, 5];
-            firstReach = reach(system, X0Ell, LMat, TVec);
-            secondReach = cut(firstReach, [2, 3]);
-            thirdReach = cut(firstReach, 3);
-            isOk = ~iscut(firstReach);
-            isOk = isOk && iscut(secondReach);
-            isOk = isOk && iscut(thirdReach);
+            FirstRS = reach(LS, X0Ell, LMat, TVec);
+            SecondRS = cut(FirstRS, [2, 3]);
+            ThirdRS = cut(FirstRS, 3);
+            isOk = ~iscut(FirstRS);
+            isOk = isOk && iscut(SecondRS);
+            isOk = isOk && iscut(ThirdRS);
             mlunitext.assert(isOk);
         end
+        
         
         function self = DISABLED_testIsProjection(self)
             AMat = eye(3);
             BMat = [1 0; 0 1; 1 1];
             PEll = ell_unitball(2);
-            system = linsys(AMat, BMat, PEll, [], [], [], [], 'd');
+            LS = linsys(AMat, BMat, PEll, [], [], [], [], 'd');
             X0Ell = ellipsoid([0; 1; 0], eye(3));
             LMat = eye(3);
             TVec = [0, 5];
-            firstReach = reach(system, X0Ell, LMat, TVec);
-            secondReach = projection(firstReach, [1 0 0; 0 1 0]');
+            FirstRS = reach(LS, X0Ell, LMat, TVec);
+            SecondRS = projection(FirstRS, [1 0 0; 0 1 0]');
             expectedVec = [false, true];
-            obtainedVec = isprojection([firstReach, secondReach]);
-            eqVec = expectedVec == obtainedVec;
-            mlunit.assert_equals( all(eqVec), true );  
+            obtainedVec = isprojection([FirstRS, SecondRS]);
+            isEqVec = expectedVec == obtainedVec;
+            mlunit.assert_equals( all(isEqVec), true );  
         end
+        
         
         function self = DISABLED_testIsEmpty(self)
             AMat = eye(3);
             BMat = ones(3);
             PEll = ell_unitball(3);
-            systemVec = [linsys(), ...
+            LSVec = [linsys(), ...
                          linsys([], [], [], [], [], [], [], 'd'),...
                          linsys(AMat, BMat, PEll, [], [], [], [], 'd')];
             X0Ell = ell_unitball(3);
             LMat = eye(3);
             TVec = [0, 5];
-            reachVec = [reach(systemVec(1), X0Ell, LMat, TVec),...
-                        reach(systemVec(2), X0Ell, LMat, TVec),...
-                        reach(systemVec(3), X0Ell, LMat, TVec)];
-            obtainedVec = isempty(reachVec);
+            RSVec = [reach(LSVec(1), X0Ell, LMat, TVec),...
+                        reach(LSVec(2), X0Ell, LMat, TVec),...
+                        reach(LSVec(3), X0Ell, LMat, TVec)];
+            obtainedVec = isempty(RSVec);
             expectedVec = [true, true, false];
-            eqVec = obtainedVec == expectedVec;
-            mlunit.assert_equals( all(eqVec), true );
+            isEqVec = obtainedVec == expectedVec;
+            mlunit.assert_equals( all(isEqVec), true );
         end
-        
         
         
         function self = DISABLED_testGetDirections(self)
             AMat = [1 0 0; 1 1 0; 1 1 1];
             BMat = eye(3);
             PEll = ell_unitball(3);
-            system = linsys(AMat, BMat, PEll, [], [], [], [], 'd');
+            LS = linsys(AMat, BMat, PEll, [], [], [], [], 'd');
             X0Ell = ell_unitball(3);
             LMat = eye(3);
             T = 15;
             TVec = [1, T];
-            rs = reach(system, X0Ell, LMat, TVec);
-            ExpectedDirections = cell(1, 3);
-            ExpectedDirections{1} = zeros(3, 15);
-            ExpectedDirections{2} = zeros(3, 15);
-            ExpectedDirections{3} = zeros(3, 15);
-            Dir = zeros(3, 15);
+            RS = reach(LS, X0Ell, LMat, TVec);
+            ExpectedDirectionsCVec = cell(1, 3);
+            ExpectedDirectionsCVec{1} = zeros(3, 15);
+            ExpectedDirectionsCVec{2} = zeros(3, 15);
+            ExpectedDirectionsCVec{3} = zeros(3, 15);
+            DirMat = zeros(3, 15);
             for j = 1 : 3
-                Dir(:, 1) = LMat(:, j);
+                DirMat(:, 1) = LMat(:, j);
                 for i = 2 : T
-                    Dir(:, i) = (AMat')^(-1) * Dir(:, i - 1);
+                    DirMat(:, i) = (AMat')^(-1) * DirMat(:, i - 1);
                 end
-                ExpectedDirections{j} = Dir;
+                ExpectedDirectionsCVec{j} = DirMat;
             end
-            ObservedDirections = get_directions(rs);
+            ObservedDirectionsCVec = get_directions(RS);
             isOk = true;
             for j = 1 : 3
-                CompareMat = abs(ExpectedDirections{j} - ObservedDirections{j}) < self.ABS_TOL;
-                isOk = isOk && all(CompareMat(:));
+                isOkMat = abs(ExpectedDirectionsCVec{j} - ObservedDirectionsCVec{j}) < self.ABS_TOL;
+                isOk = isOk && all(isOkMat(:));
             end
-            
-            
+                     
             AMat = {'2 + cos(t)' '0' '0'; '1' '0' 'sin(t)'; '0' '1' '0'};
             BMat = eye(3);
             PEll = ell_unitball(3);
-            system = linsys(AMat, BMat, PEll, [], [], [], [], 'd');
+            LS = linsys(AMat, BMat, PEll, [], [], [], [], 'd');
             X0Ell = ell_unitball(3);
             LMat = eye(3);
             T = 15;
             TVec = [1, T];
-            rs = reach(system, X0Ell, LMat, TVec);
-            ExpectedDirections = cell(1, 3);
-            ExpectedDirections{1} = zeros(3, 15);
-            ExpectedDirections{2} = zeros(3, 15);
-            ExpectedDirections{3} = zeros(3, 15);
-            Dir = zeros(3, 15);
+            RS = reach(LS, X0Ell, LMat, TVec);
+            ExpectedDirectionsCVec = cell(1, 3);
+            ExpectedDirectionsCVec{1} = zeros(3, 15);
+            ExpectedDirectionsCVec{2} = zeros(3, 15);
+            ExpectedDirectionsCVec{3} = zeros(3, 15);
+            DirMat = zeros(3, 15);
             for j = 1 : 3
-                Dir(:, 1) = LMat(:, j);
+                DirMat(:, 1) = LMat(:, j);
                 t = 1;
                 CurAMat = zeros(3);
                 for k = 1 : 3
@@ -184,7 +188,7 @@ classdef ReachDiscrTestCase < mlunit.test_case
                     end
                 end
                 for i = 2 : T
-                    Dir(:, i) = (CurAMat')^(-1) * Dir(:, i - 1);
+                    DirMat(:, i) = (CurAMat')^(-1) * DirMat(:, i - 1);
                     t = i;
                     CurAMat = zeros(3);
                     for k = 1 : 3
@@ -193,52 +197,51 @@ classdef ReachDiscrTestCase < mlunit.test_case
                         end
                     end
                 end
-                ExpectedDirections{j} = Dir;
+                ExpectedDirectionsCVec{j} = DirMat;
             end
             
-            ObservedDirections = get_directions(rs);
+            ObservedDirections = get_directions(RS);
             for j = 1 : 3
-                CompareMat = abs(ExpectedDirections{j} - ObservedDirections{j}) < self.ABS_TOL;
-                isOk = isOk && all(CompareMat(:));
+                isOkMat = abs(ExpectedDirectionsCVec{j} - ObservedDirections{j}) < self.ABS_TOL;
+                isOk = isOk && all(isOkMat(:));
             end
             
             mlunit.assert_equals(isOk, true);
         end
         
         
-        
         function self = DISABLED_testGetCenter(self)
             AMat = [1 0 1; -1 2 1; 0 1 -2];
             BMat = [2 0 1; 3 0 1; 2 2 2];
             PEll = ellipsoid([1 1 1]', [3 0 0; 0 4 0; 0 0 1]);
-            system = linsys(AMat, BMat, PEll, [], [], [], [], 'd');
+            LS = linsys(AMat, BMat, PEll, [], [], [], [], 'd');
             X0Ell = ell_unitball(3);
             LMat = eye(3);
-            rs = reach(system, X0Ell, LMat, [1, 20]);
-            ObservedCenterMat = get_center(rs);
+            RS = reach(LS, X0Ell, LMat, [1, 20]);
+            ObservedCenterMat = get_center(RS);
             
             ExpectedCenterMat = zeros(3, 20);
             [ExpectedCenterMat(:, 1), Q] = double(X0Ell);
-            [UCenter, Q] = double(PEll);
+            [PCenterVec, Q] = double(PEll);
             for i = 2 : 20
-                ExpectedCenterMat(:, i) = AMat * ExpectedCenterMat(:, i - 1) + BMat * UCenter;
+                ExpectedCenterMat(:, i) = AMat * ExpectedCenterMat(:, i - 1) + BMat * PCenterVec;
             end
             
-            result = abs(ExpectedCenterMat - ObservedCenterMat) < self.ABS_TOL;
-            isOk = all(result(:));
+            isOkMat = abs(ExpectedCenterMat - ObservedCenterMat) < self.ABS_TOL;
+            isOk = all(isOkMat(:));
             
             AMat = {'1', 'cos(t)', '0'; '1 - 1/t^2', '2', 'sin(t)'; '0', '1', '1'};
             BMat = eye(3);
             PEll = ellipsoid([0 -3 1]', [2 1 0; 1 2 0; 0 0 1]);
-            system = linsys(AMat, BMat, PEll, [], [], [], [], 'd');
+            LS = linsys(AMat, BMat, PEll, [], [], [], [], 'd');
             X0Ell = ell_unitball(3);
             LMat = eye(3);
-            rs = reach(system, X0Ell, LMat, [1, 20]);
-            ObservedCenterMat = get_center(rs);
+            RS = reach(LS, X0Ell, LMat, [1, 20]);
+            ObservedCenterMat = get_center(RS);
             
             ExpectedCenterMat = zeros(3, 20);
             [ExpectedCenterMat(:, 1), Q] = double(X0Ell);
-            [UCenter, Q] = double(PEll);
+            [PCenterVec, Q] = double(PEll);
             for i = 2 : 20
                 t = i -1;
                 ATempMat = zeros(3);
@@ -247,17 +250,17 @@ classdef ReachDiscrTestCase < mlunit.test_case
                         ATempMat(k, l) = eval(AMat{k, l});
                     end
                 end
-                ExpectedCenterMat(:, i) = ATempMat * ExpectedCenterMat(:, i - 1) + BMat * UCenter;
+                ExpectedCenterMat(:, i) = ATempMat * ExpectedCenterMat(:, i - 1) + BMat * PCenterVec;
             end
             
-            result = abs(ExpectedCenterMat - ObservedCenterMat) < self.ABS_TOL;
-            isOk = isOk && all(result(:));
+            isOkMat = abs(ExpectedCenterMat - ObservedCenterMat) < self.ABS_TOL;
+            isOk = isOk && all(isOkMat(:));
             
             mlunit.assert_equals(isOk, true);
         end
         
         
-        
+        % error with cut time
         function self = DISABLED_testCut(self)
             AMat = [3 0 2; 2 2 2; -1 0 3];
             BMat = [0 1 0; 0 1 0; 3 2 1];
@@ -314,33 +317,32 @@ classdef ReachDiscrTestCase < mlunit.test_case
         end
         
         
-        
         function self = DISABLED_testGetGoodCurves(self)
             eps = self.REL_TOL * 1000;
             
             AMat = [1 0 2; 2 1 2; -1 0 1];
             BMat = [0 1 0; 0 1 0; 3 2 1];
             PEll = 0.01 * ellipsoid([3 2 1]', [4 2 0; 2 4 0; 0 0 2]);
-            system = linsys(AMat, BMat, PEll, [], [], [], [], 'd');
+            LS = linsys(AMat, BMat, PEll, [], [], [], [], 'd');
             X0Ell = ellipsoid([-1 -2 1]', diag([3, 2, 1]));
             LMat = eye(3);
-            rs = reach(system, X0Ell, LMat, [1, 20]);
+            RS = reach(LS, X0Ell, LMat, [1, 20]);
             
-            LL = get_directions(rs);
-            EA = get_ea(rs);
-            GoodCurves = get_goodcurves(rs);
-            ExpectedGoodCurves = zeros(3, 20);
+            GoodDirectionsCVec = get_directions(RS);
+            EAEllMat = get_ea(RS);
+            GoodCurvesCVec = get_goodcurves(RS);
+            ExpectedGoodCurvesMat = zeros(3, 20);
             isOk = true;
-            for i = 1 : 3
-                L = LL{i};
-                for j = 1 : 20
-                    ApproximationEll = EA(i, j);
-                    [q Q] = double(ApproximationEll);
-                    l = L(:, j);
-                    ExpectedGoodCurves(:, j) =  q + Q*l/(l'*Q*l)^0.5;
+            for iDirection = 1 : 3
+                GoodDirectionsMat = GoodDirectionsCVec{iDirection};
+                for jTime = 1 : 20
+                    ApproximationEll = EAEllMat(iDirection, jTime);
+                    [qVec QMat] = double(ApproximationEll);
+                    lVec = GoodDirectionsMat(:, jTime);
+                    ExpectedGoodCurvesMat(:, jTime) =  qVec + QMat*lVec/(lVec'*QMat*lVec)^0.5;
                 end
-                Result = abs((ExpectedGoodCurves - GoodCurves{i})./ExpectedGoodCurves) < eps;
-                isOk = isOk && all(Result(:));
+                isOkMat = abs((ExpectedGoodCurvesMat - GoodCurvesCVec{iDirection})./ExpectedGoodCurvesMat) < eps;
+                isOk = isOk && all(isOkMat(:));
             end
             
             AMat = {'2 + cos(t)' '0' '0'; '1' '0' 'sin(t)'; '0' '1' '0'};
@@ -349,380 +351,369 @@ classdef ReachDiscrTestCase < mlunit.test_case
             system = linsys(AMat, BMat, PEll, [], [], [], [], 'd');
             X0Ell = ell_unitball(3);
             LMat = eye(3);
-            rs = reach(system, X0Ell, LMat, [1, 10]);
+            RS = reach(system, X0Ell, LMat, [1, 10]);
             
-            LL = get_directions(rs);
-            EA = get_ea(rs);
-            GoodCurves = get_goodcurves(rs);
-            ExpectedGoodCurves = zeros(3, 10);
-            for i = 1 : 3
-                L = LL{i};
-                for j = 1 : 10
-                    ApproximationEll = EA(i, j);
-                    [q Q] = double(ApproximationEll);
-                    l = L(:, j);
-                    ExpectedGoodCurves(:, j) =  q + Q*l/(l'*Q*l)^0.5;
+            GoodDirectionsCVec = get_directions(RS);
+            EAEllMat = get_ea(RS);
+            GoodCurvesCVec = get_goodcurves(RS);
+            ExpectedGoodCurvesMat = zeros(3, 10);
+            for iDirection = 1 : 3
+                GoodDirectionsMat = GoodDirectionsCVec{iDirection};
+                for jTime = 1 : 10
+                    ApproximationEll = EAEllMat(iDirection, jTime);
+                    [qVec QMat] = double(ApproximationEll);
+                    lVec = GoodDirectionsMat(:, jTime);
+                    ExpectedGoodCurvesMat(:, jTime) =  qVec + QMat*lVec/(lVec'*QMat*lVec)^0.5;
                 end
-                Result = abs((ExpectedGoodCurves - GoodCurves{i})) < eps * (abs(ExpectedGoodCurves) + 1);
-                isOk = isOk && all(Result(:));
+                isOkMat = abs((ExpectedGoodCurvesMat - GoodCurvesCVec{iDirection})) < eps * (abs(ExpectedGoodCurvesMat) + 1);
+                isOk = isOk && all(isOkMat(:));
             end
             
             mlunit.assert_equals(isOk, true);
         end
         
+         
         function self = DISABLED_testGetIA(self)
             
-            k0 = 1;
-            T = 5;
+            T0 = 1;
+            T1 = 5;
 
             AMat = [3 0 1; 2 1 0; 0 3 2];
             BMat = [0 1 2; 0 3 2; 1 1 1];
             X0Mat = eye(3);
             x0Vec = [0, 0, 0]';
-            X0 = ellipsoid(x0Vec, X0Mat);
+            X0Ell = ellipsoid(x0Vec, X0Mat);
             PMat = eye(3);
             PVec = [1 0 1]';
             PEll = ellipsoid(PVec, PMat);
             LMat = eye(3);
-            system = linsys(AMat, BMat, PEll, [], [], [], [], 'd');
+            LS = linsys(AMat, BMat, PEll, [], [], [], [], 'd');
 
-            rs = reach(system, X0, LMat, [k0, T]);
+            RS = reach(LS, X0Ell, LMat, [T0, T1]);
 
-            PhiMat = zeros(3, 3, T, T);
-            for i = 1 : T
-                PhiMat(:, :, i, i) = eye(3);
+            PhiArray = zeros(3, 3, T1, T1);
+            for i = 1 : T1
+                PhiArray(:, :, i, i) = eye(3);
             end
-
-            for i = 1 : T
-                for j = i + 1 : T
-                    PhiMat(:, :, j, i) = AMat * PhiMat(:, :, j - 1, i);
+            
+            for i = 1 : T1
+                for j = i + 1 : T1
+                    PhiArray(:, :, j, i) = AMat * PhiArray(:, :, j - 1, i);
                 end
             end
 
-            q = zeros(3, 3, T);
-            Q = zeros(3, 3, 3, T);
+            QArray = zeros(3, 3, 3, T1);
 
-            GoodDirections = get_directions(rs);
+            GoodDirectionsCVec = get_directions(RS);
 
-            % цикл по направлениям
-            for j = 1 : 3
-                S = zeros(3, 3, T);
-                % цикл по времени
+            for jDirection = 1 : 3
+                SArray = zeros(3, 3, T1);
 
-                Q(:, :, j, 1) = X0Mat;
-                L = GoodDirections{j};
-                for t = 2 : T
-                    l = L(:, t);
-                    aVec = sqrtm(PhiMat(:, :, t, 1) * X0Mat * PhiMat(:, :, t, 1)') * l;
+                QArray(:, :, jDirection, 1) = X0Mat;
+                GoodDirectionsMat = GoodDirectionsCVec{jDirection};
+                for t = 2 : T1
+                    lVec = GoodDirectionsMat(:, t);
+                    aVec = sqrtm(PhiArray(:, :, t, 1) * X0Mat * PhiArray(:, :, t, 1)') * lVec;
                     for i = 1 : t - 1
-                        bVec = sqrtm(PhiMat(:, :, t, i + 1) * BMat * PMat * BMat' * PhiMat(:, :, t, i + 1)') * l;
-                        S(:, :, i) = ell_valign(aVec, bVec);
+                        bVec = sqrtm(PhiArray(:, :, t, i + 1) * BMat * PMat * BMat' * PhiArray(:, :, t, i + 1)') * lVec;
+                        SArray(:, :, i) = ell_valign(aVec, bVec);
                     end
 
-                    QStar = sqrtm(PhiMat(:, :, t, 1) * X0Mat * PhiMat(:, :, t, 1)');
+                    QStarMat = sqrtm(PhiArray(:, :, t, 1) * X0Mat * PhiArray(:, :, t, 1)');
                     for i = 1 : t - 1
-                        QStar = QStar + S(:, :, i) * sqrtm(PhiMat(:, :, t, i + 1) * BMat * PMat * BMat' * PhiMat(:, :, t, i + 1)');
+                        QStarMat = QStarMat + SArray(:, :, i) * sqrtm(PhiArray(:, :, t, i + 1) * BMat * PMat * BMat' * PhiArray(:, :, t, i + 1)');
                     end
-                    Q(:, :, j, t) = QStar' * QStar;
+                    QArray(:, :, jDirection, t) = QStarMat' * QStarMat;
                 end
             end
-            result = zeros(3, T);
-            ObtainedValues = get_ia(rs);
-            for i = 1 : 3
-                directions = GoodDirections{i};
-                for j = 1 : T
-                    l = directions(:, j);
-                    Approximation = ObtainedValues(i, j);
-                    [qq QQ] = double(Approximation);
-                    result(i, j) = (abs((l' * QQ * l) -(l' * Q(:, :, i, j) * l)) < 0.001);
+            isOkMat = zeros(3, T1);
+            ObtainedValuesEllMat = get_ia(RS);
+            for iDirection = 1 : 3
+                GoodDirectionsMat = GoodDirectionsCVec{iDirection};
+                for j = 1 : T1
+                    lVec = GoodDirectionsMat(:, j);
+                    ApproximationEll = ObtainedValuesEllMat(iDirection, j);
+                    [qq QQ] = double(ApproximationEll);
+                    isOkMat(iDirection, j) = (abs((lVec' * QQ * lVec) -(lVec' * QArray(:, :, iDirection, j) * lVec)) < 0.001);
                 end
             end
-            isOk = all(result(:));
+            isOk = all(isOkMat(:));
             
             
-            
-            
-            k0 = 1;
-            T = 5;
+            T0 = 1;
+            T1 = 5;
 
             AMat = {'2 + cos(t)' '0' '0'; '1' '0' 'sin(t)'; '0' '1' '0'};
             BMat = diag([5, 2, 1]);
             X0Mat = diag([3, 2, 1]);
             x0Vec = [0, 0, 0]';
-            X0 = ellipsoid(x0Vec, X0Mat);
+            X0Ell = ellipsoid(x0Vec, X0Mat);
             PMat = diag([3 4 1]);
             PVec = zeros(3, 1);
             PEll = ellipsoid(PVec, PMat);
             LMat = eye(3);
-            system = linsys(AMat, BMat, PEll, [], [], [], [], 'd');
+            LS = linsys(AMat, BMat, PEll, [], [], [], [], 'd');
 
-            rs = reach(system, X0, LMat, [k0, T]);
+            RS = reach(LS, X0Ell, LMat, [T0, T1]);
 
-            PhiMat = zeros(3, 3, T, T);
-            for i = 1 : T
-                PhiMat(:, :, i, i) = eye(3);
+            PhiArray = zeros(3, 3, T1, T1);
+            for i = 1 : T1
+                PhiArray(:, :, i, i) = eye(3);
             end
-            AMatArray = zeros(3, 3, T);
-            for t = 1 : T
+            AArray = zeros(3, 3, T1);
+            for t = 1 : T1
                 for i = 1 : 3
                     for j = 1 : 3
-                        AMatArray(i, j, t) = eval(AMat{i, j});
+                        AArray(i, j, t) = eval(AMat{i, j});
                     end
                 end
             end
-            for i = 1 : T
-                for j = i + 1 : T
-                    PhiMat(:, :, j, i) = AMatArray(:, :, j - 1) * PhiMat(:, :, j - 1, i);
+            for i = 1 : T1
+                for j = i + 1 : T1
+                    PhiArray(:, :, j, i) = AArray(:, :, j - 1) * PhiArray(:, :, j - 1, i);
                 end
             end
 
-            q = zeros(3, 3, T);
-            Q = zeros(3, 3, 3, T);
+            QArray = zeros(3, 3, 3, T1);
 
-            GoodDirections = get_directions(rs);
+            GoodDirectionsCVec = get_directions(RS);
 
-            % цикл по направлениям
-            for j = 1 : 3
-                S = zeros(3, 3, T);
-                % цикл по времени
+            for jDirection = 1 : 3
+                SArray = zeros(3, 3, T1);
 
-                Q(:, :, j, 1) = X0Mat;
-                L = GoodDirections{j};
-                for t = 2 : T
-                    l = L(:, t);
-                    aVec = sqrtm(PhiMat(:, :, t, 1) * X0Mat * PhiMat(:, :, t, 1)') * l;
+                QArray(:, :, jDirection, 1) = X0Mat;
+                GoodDirectionsMat = GoodDirectionsCVec{jDirection};
+                for t = 2 : T1
+                    lVec = GoodDirectionsMat(:, t);
+                    aVec = sqrtm(PhiArray(:, :, t, 1) * X0Mat * PhiArray(:, :, t, 1)') * lVec;
                     for i = 1 : t - 1
-                        bVec = sqrtm(PhiMat(:, :, t, i + 1) * BMat * PMat * BMat' * PhiMat(:, :, t, i + 1)') * l;
-                        S(:, :, i) = ell_valign(aVec, bVec);
+                        bVec = sqrtm(PhiArray(:, :, t, i + 1) * BMat * PMat * BMat' * PhiArray(:, :, t, i + 1)') * lVec;
+                        SArray(:, :, i) = ell_valign(aVec, bVec);
                     end
 
-                    QStar = sqrtm(PhiMat(:, :, t, 1) * X0Mat * PhiMat(:, :, t, 1)');
+                    QStarMat = sqrtm(PhiArray(:, :, t, 1) * X0Mat * PhiArray(:, :, t, 1)');
                     for i = 1 : t - 1
-                        QStar = QStar + S(:, :, i) * sqrtm(PhiMat(:, :, t, i + 1) * BMat * PMat * BMat' * PhiMat(:, :, t, i + 1)');
+                        QStarMat = QStarMat + SArray(:, :, i) * sqrtm(PhiArray(:, :, t, i + 1) * BMat * PMat * BMat' * PhiArray(:, :, t, i + 1)');
                     end
-                    Q(:, :, j, t) = QStar' * QStar;
+                    QArray(:, :, jDirection, t) = QStarMat' * QStarMat;
                 end
             end
-            result = zeros(3, T);
-            ObtainedValues = get_ia(rs);
-            for i = 1 : 3
-                directions = GoodDirections{i};
-                for j = 1 : T
-                    l = directions(:, j);
-                    Approximation = ObtainedValues(i, j);
-                    [qq QQ] = double(Approximation);
-                    result(i, j) = (abs((l' * QQ * l) -(l' * Q(:, :, i, j) * l)) < 1);
+            isOkMat = zeros(3, T1);
+            ObtainedValuesEllMat = get_ia(RS);
+            for iDirection = 1 : 3
+                GoodDirectionMat = GoodDirectionsCVec{iDirection};
+                for t = 1 : T1
+                    lVec = GoodDirectionMat(:, t);
+                    ApproximationEll = ObtainedValuesEllMat(iDirection, t);
+                    [qq QQ] = double(ApproximationEll);
+                    isOkMat(iDirection, t) = (abs((lVec' * QQ * lVec) -(lVec' * QArray(:, :, iDirection, t) * lVec)) < 1);
                 end
             end
-            isOk = isOk && all(result(:));
+            isOk = isOk && all(isOkMat(:));
             
            
             mlunit.assert_equals(all(isOk(:)), true);
         end
         
         
-        function self = testGetEA(self)
-            k0 = 1;
-            T = 5;
+        function self = DISABLED_testGetEA(self)
+            T0 = 1;
+            T1 = 5;
 
             AMat = [3 0 1; 2 1 0; 0 3 2];
             BMat = [0 1 2; 0 3 2; 1 1 1];
             X0Mat = eye(3);
             x0Vec = [0, 0, 0]';
-            X0 = ellipsoid(x0Vec, X0Mat);
+            X0Ell = ellipsoid(x0Vec, X0Mat);
             PMat = eye(3);
             PVec = [1 0 1]';
             PEll = ellipsoid(PVec, PMat);
             LMat = eye(3);
-            system = linsys(AMat, BMat, PEll, [], [], [], [], 'd');
+            LS = linsys(AMat, BMat, PEll, [], [], [], [], 'd');
 
-            rs = reach(system, X0, LMat, [k0, T]);
+            RS = reach(LS, X0Ell, LMat, [T0, T1]);
 
-            PhiMat = zeros(3, 3, T, T);
-            for i = 1 : T
-                PhiMat(:, :, i, i) = eye(3);
+            PhiArray = zeros(3, 3, T1, T1);
+            for i = 1 : T1
+                PhiArray(:, :, i, i) = eye(3);
             end
 
-            for i = 1 : T
-                for j = i + 1 : T
-                    PhiMat(:, :, j, i) = AMat * PhiMat(:, :, j - 1, i);
+            for i = 1 : T1
+                for j = i + 1 : T1
+                    PhiArray(:, :, j, i) = AMat * PhiArray(:, :, j - 1, i);
                 end
             end
 
-            q = zeros(3, 3, T);
-            Q = zeros(3, 3, 3, T);
+            qArray = zeros(3, 3, T1);
+            QArray = zeros(3, 3, 3, T1);
 
-            GoodDirections = get_directions(rs);
+            GoodDirectionsCVec = get_directions(RS);
 
-            % цикл по направлениям
-            for j = 1 : 3
-                % цикл по времени
-
-                Q(:, :, j, 1) = X0Mat;
-                L = GoodDirections{j};
-                for t = 2 : T
-                    l = L(:, t);
-                    p = zeros(T, 1);
-                    p(1) = sqrt(l' * PhiMat(:, :, t, 1) * X0Mat * PhiMat(:, :, t, 1)' * l);
+            for jDirection = 1 : 3
+                
+                QArray(:, :, jDirection, 1) = X0Mat;
+                GoodDirectionsMat = GoodDirectionsCVec{jDirection};
+                for t = 2 : T1
+                    lVec = GoodDirectionsMat(:, t);
+                    pVec = zeros(T1, 1);
+                    pVec(1) = sqrt(lVec' * PhiArray(:, :, t, 1) * X0Mat * PhiArray(:, :, t, 1)' * lVec);
                     for i = 1 : t - 1
-                        p(i + 1) = sqrt(l'* PhiMat(:, :, t, i+1) * BMat * PMat * BMat' * PhiMat(:, :, t, i+1)' *l);
+                        pVec(i + 1) = sqrt(lVec' * PhiArray(:, :, t, i+1) * BMat * PMat * BMat' * PhiArray(:, :, t, i+1)' * lVec);
                     end
 
-                    Q(:, :, j, t) = PhiMat(:, :, t, 1) * X0Mat * PhiMat(:, :, t, 1)' /p(1);
+                    QArray(:, :, jDirection, t) = PhiArray(:, :, t, 1) * X0Mat * PhiArray(:, :, t, 1)' /pVec(1);
                     for i = 1 : t - 1
-                        Q(:, :, j, t) = Q(:, :, j, t) + PhiMat(:, :, t, i + 1) * BMat * PMat * BMat' * PhiMat(:, :, t, i + 1)'/p(i + 1);
+                        QArray(:, :, jDirection, t) = QArray(:, :, jDirection, t) + PhiArray(:, :, t, i + 1) * BMat * PMat * BMat' * PhiArray(:, :, t, i + 1)'/pVec(i + 1);
                     end
-                    Q(:, :, j, t) = Q(:, :, j, t) * sum(p);
+                    QArray(:, :, jDirection, t) = QArray(:, :, jDirection, t) * sum(pVec);
                 end
             end
             
-            result = zeros(3, T);
-            ObtainedValues = get_ea(rs);
-            for i = 1 : 3
-                directions = GoodDirections{i};
-                for j = 1 : T
-                    l = directions(:, j);
-                    Approximation = ObtainedValues(i, j);
-                    [qq QQ] = double(Approximation);
-                    result(i, j) = (abs((l' * QQ * l) -(l' * Q(:, :, i, j) * l)) < 0.001);
+            isOkMat = zeros(3, T1);
+            ObtainedValuesEllMat = get_ea(RS);
+            for iDirection = 1 : 3
+                directions = GoodDirectionsCVec{iDirection};
+                for t = 1 : T1
+                    lVec = directions(:, t);
+                    ApproximationEll = ObtainedValuesEllMat(iDirection, t);
+                    [qq QQ] = double(ApproximationEll);
+                    isOkMat(iDirection, t) = (abs((lVec' * QQ * lVec) -(lVec' * QArray(:, :, iDirection, t) * lVec)) < 0.001);
                 end
             end
-            isOk = all(result(:));
+            isOk = all(isOkMat(:));
             
-            k0 = 1;
-            T = 5;
+            T0 = 1;
+            T1 = 5;
 
             AMat = {'1', 'cos(t)', '0'; '1 - 1/t^2', '2', 'sin(t)'; '0', '1', '1'};
             BMat = [3 2 1; 0 0 1; 2 1 1];
             X0Mat = [5 1 0; 1 4 1; 0 1 3];
             x0Vec = [0, 0, 0]';
-            X0 = ellipsoid(x0Vec, X0Mat);
+            X0Ell = ellipsoid(x0Vec, X0Mat);
             PMat = eye(3);
             PVec = [1 0 1]';
             PEll = ellipsoid(PVec, PMat);
             LMat = eye(3);
-            system = linsys(AMat, BMat, PEll, [], [], [], [], 'd');
+            LS = linsys(AMat, BMat, PEll, [], [], [], [], 'd');
 
-            rs = reach(system, X0, LMat, [k0, T]);
+            RS = reach(LS, X0Ell, LMat, [T0, T1]);
 
-            PhiMat = zeros(3, 3, T, T);
-            for i = 1 : T
-                PhiMat(:, :, i, i) = eye(3);
+            PhiArray = zeros(3, 3, T1, T1);
+            for i = 1 : T1
+                PhiArray(:, :, i, i) = eye(3);
             end
 
-            AMatArray = zeros(3, 3, T);
-            for t = 1 : T
+            AArray = zeros(3, 3, T1);
+            for t = 1 : T1
                 for i = 1 : 3
                     for j = 1 : 3
-                        AMatArray(i, j, t) = eval(AMat{i, j});
+                        AArray(i, j, t) = eval(AMat{i, j});
                     end
                 end
             end
-            for i = 1 : T
-                for j = i + 1 : T
-                    PhiMat(:, :, j, i) = AMatArray(:, :, j - 1) * PhiMat(:, :, j - 1, i);
+            for i = 1 : T1
+                for j = i + 1 : T1
+                    PhiArray(:, :, j, i) = AArray(:, :, j - 1) * PhiArray(:, :, j - 1, i);
                 end
             end
 
-            q = zeros(3, 3, T);
-            Q = zeros(3, 3, 3, T);
+            QArray = zeros(3, 3, 3, T1);
 
-            GoodDirections = get_directions(rs);
+            GoodDirectionsCVec = get_directions(RS);
 
-            % цикл по направлениям
-            for j = 1 : 3
-                % цикл по времени
+            for jDirection = 1 : 3
 
-                Q(:, :, j, 1) = X0Mat;
-                L = GoodDirections{j};
-                for t = 2 : T
-                    l = L(:, t);
-                    p = zeros(T, 1);
-                    p(1) = sqrt(l' * PhiMat(:, :, t, 1) * X0Mat * PhiMat(:, :, t, 1)' * l);
+                QArray(:, :, jDirection, 1) = X0Mat;
+                GoodDirectionsMat = GoodDirectionsCVec{jDirection};
+                for t = 2 : T1
+                    lVec = GoodDirectionsMat(:, t);
+                    pVec = zeros(T1, 1);
+                    pVec(1) = sqrt(lVec' * PhiArray(:, :, t, 1) * X0Mat * PhiArray(:, :, t, 1)' * lVec);
                     for i = 1 : t - 1
-                        p(i + 1) = sqrt(l'* PhiMat(:, :, t, i+1) * BMat * PMat * BMat' * PhiMat(:, :, t, i+1)' *l);
+                        pVec(i + 1) = sqrt(lVec'* PhiArray(:, :, t, i+1) * BMat * PMat * BMat' * PhiArray(:, :, t, i+1)' *lVec);
                     end
 
-                    Q(:, :, j, t) = PhiMat(:, :, t, 1) * X0Mat * PhiMat(:, :, t, 1)' /p(1);
+                    QArray(:, :, jDirection, t) = PhiArray(:, :, t, 1) * X0Mat * PhiArray(:, :, t, 1)' /pVec(1);
                     for i = 1 : t - 1
-                        Q(:, :, j, t) = Q(:, :, j, t) + PhiMat(:, :, t, i + 1) * BMat * PMat * BMat' * PhiMat(:, :, t, i + 1)'/p(i + 1);
+                        QArray(:, :, jDirection, t) = QArray(:, :, jDirection, t) + PhiArray(:, :, t, i + 1) * BMat * PMat * BMat' * PhiArray(:, :, t, i + 1)'/pVec(i + 1);
                     end
-                    Q(:, :, j, t) = Q(:, :, j, t) * sum(p);
+                    QArray(:, :, jDirection, t) = QArray(:, :, jDirection, t) * sum(pVec);
                 end
             end
             
-            result = zeros(3, T);
-            ObtainedValues = get_ea(rs);
-            for i = 1 : 3
-                directions = GoodDirections{i};
-                for j = 1 : T
-                    l = directions(:, j);
-                    Approximation = ObtainedValues(i, j);
-                    [qq QQ] = double(Approximation);
-                    result(i, j) = (abs((l' * QQ * l) -(l' * Q(:, :, i, j) * l)) < 0.1);
+            isOkMat = zeros(3, T1);
+            ObtainedValuesEllMat = get_ea(RS);
+            for iDirection = 1 : 3
+                GoodDirectionsMat = GoodDirectionsCVec{iDirection};
+                for j = 1 : T1
+                    lVec = GoodDirectionsMat(:, j);
+                    ApproximationEll = ObtainedValuesEllMat(iDirection, j);
+                    [qq QQ] = double(ApproximationEll);
+                    isOkMat(iDirection, j) = (abs((lVec' * QQ * lVec) -(lVec' * QArray(:, :, iDirection, j) * lVec)) < 0.1);
                 end
             end
-            isOk = isOk && all(result(:));
+            isOk = isOk && all(isOkMat(:));
             
-            mlunit.assert_equals(all(isOk(:)), true);
+            mlunit.assert_equals(isOk, true);
         end
         
-        function self = testProjection(self)
-            k0 = 1;
-            T = 4;
+        
+        function self = DISABLED_testProjection(self)
+            T0 = 1;
+            T1 = 4;
             epsilon = 1;
 
             AMat = [3 0 1; 2 1 0; 0 3 2];
             BMat = [0 1 2; 0 3 2; 1 1 1];
             X0Mat = eye(3);
             x0Vec = [0, 0, 0]';
-            X0 = ellipsoid(x0Vec, X0Mat);
+            X0Ell = ellipsoid(x0Vec, X0Mat);
             PMat = eye(3);
             PVec = [1 0 1]';
             PEll = ellipsoid(PVec, PMat);
             LMat = eye(3);
-            system = linsys(AMat, BMat, PEll, [], [], [], [], 'd');
+            LS = linsys(AMat, BMat, PEll, [], [], [], [], 'd');
 
-            rs = reach(system, X0, LMat, [k0, T]);
+            RS = reach(LS, X0Ell, LMat, [T0, T1]);
             
             ProjectionMatrix = [1/2^0.5 0 1/2^0.5; 0 1 0]';
-            rs2 = projection(rs, ProjectionMatrix);
-            initApproximation = get_ia(rs);
-            finitApproximation = initApproximation;
-            for i = 1 : 3
-                for j = 1 : T
-                   [q Q] = double(initApproximation(i, j));
-                   finitApproximation(i, j) = ellipsoid(ProjectionMatrix' * q, ProjectionMatrix' * Q * ProjectionMatrix);
+            ProjectedRS = projection(RS, ProjectionMatrix);
+            initApproximationEllMat = get_ia(RS);
+            finitApproximationEllMat = initApproximationEllMat;
+            for iDirection = 1 : 3
+                for t = 1 : T1
+                   [q Q] = double(initApproximationEllMat(iDirection, t));
+                   finitApproximationEllMat(iDirection, t) = ellipsoid(ProjectionMatrix' * q, ProjectionMatrix' * Q * ProjectionMatrix);
                 end
             end
-            obtainedApproximation = get_ia(rs2);
+            obtainedApproximationEllMat = get_ia(ProjectedRS);
             isOk = 1;
-            for i = 1 : 3
-                for j = 1 : T
-                    [q1 Q1] = double(finitApproximation(i, j));
-                    [q2 Q2] = double(obtainedApproximation(i, j));
-                    isOk = isOk && sum(abs(q1 - q2)) < epsilon;
-                    result = abs(Q1 - Q2);
-                    isOk = isOk && sum(result(:)) < epsilon;
+            for iDirection = 1 : 3
+                for t = 1 : T1
+                    [q1 Q1] = double(finitApproximationEllMat(iDirection, t));
+                    [q2 Q2] = double(obtainedApproximationEllMat(iDirection, t));
+                    isOk = isOk && all(abs(q1 - q2) < epsilon);
+                    isOkMat = abs(Q1 - Q2) < epsilon;
+                    isOk = isOk && all(isOkMat(:));
                 end
             end
             
-            initApproximation = get_ea(rs);
-            finitApproximation = initApproximation;
-            for i = 1 : 3
-                for j = 1 : T
-                   [q Q] = double(initApproximation(i, j));
-                   finitApproximation(i, j) = ellipsoid(ProjectionMatrix' * q, ProjectionMatrix' * Q * ProjectionMatrix);
+            initApproximationEllMat = get_ea(RS);
+            finitApproximationEllMat = initApproximationEllMat;
+            for iDirection = 1 : 3
+                for t = 1 : T1
+                   [q Q] = double(initApproximationEllMat(iDirection, t));
+                   finitApproximationEllMat(iDirection, t) = ellipsoid(ProjectionMatrix' * q, ProjectionMatrix' * Q * ProjectionMatrix);
                 end
             end
-            obtainedApproximation = get_ea(rs2);
-            for i = 1 : 3
-                for j = 1 : T
-                    [q1 Q1] = double(finitApproximation(i, j));
-                    [q2 Q2] = double(obtainedApproximation(i, j));
-                    isOk = isOk && sum(abs(q1 - q2)) < epsilon;
-                    result = abs(Q1 - Q2);
-                    isOk = isOk && sum(result(:)) < epsilon;
+            obtainedApproximationEllMat = get_ea(ProjectedRS);
+            for iDirection = 1 : 3
+                for t = 1 : T1
+                    [q1 Q1] = double(finitApproximationEllMat(iDirection, t));
+                    [q2 Q2] = double(obtainedApproximationEllMat(iDirection, t));
+                    isOk = isOk && all(abs(q1 - q2) < epsilon);
+                    isOkMat = abs(Q1 - Q2) < epsilon;
+                    isOk = isOk && all(isOkMat(:));
                 end
             end
             
@@ -730,134 +721,134 @@ classdef ReachDiscrTestCase < mlunit.test_case
             
         end
         
-        function self = testIntersect(self)
-           k0 = 1;
-            T = 5;
+        function self = DISABLED_testIntersect(self)
+            T0 = 1;
+            T1 = 5;
 
             AMat = [3 0 1; 2 1 0; 0 3 2];
             BMat = [0 1 2; 0 3 2; 1 1 1];
             X0Mat = eye(3);
             x0Vec = [0, 0, 0]';
-            X0 = ellipsoid(x0Vec, X0Mat);
+            X0Ell = ellipsoid(x0Vec, X0Mat);
             PMat = eye(3);
             PVec = [1 0 1]';
             PEll = ellipsoid(PVec, PMat);
             LMat = eye(3);
-            system = linsys(AMat, BMat, PEll, [], [], [], [], 'd');
-            rs = reach(system, X0, LMat, [k0, T]);
-            rs = projection(rs, [1 0 0; 0 1 0]');
+            LS = linsys(AMat, BMat, PEll, [], [], [], [], 'd');
+            RS = reach(LS, X0Ell, LMat, [T0, T1]);
+            RS = projection(RS, [1 0 0; 0 1 0]');
             ell1 = ellipsoid([-200, -120]', 200*eye(2));
             ell2 = ellipsoid([-100, 250]', 100*eye(2));
             ell3 = ellipsoid([0, 0]', 100*eye(2));
             
-            obtainedValues = zeros(2, 3);
-            expectedValues = [1 0 1; 0 0 1];
+            obtainedValuesMat = zeros(2, 3);
+            expectedValuesMat = [1 0 1; 0 0 1];
             
-            obtainedValues(1, 1) = intersect(rs, ell1, 'e');
-            obtainedValues(1, 2) = intersect(rs, ell2, 'e');
-            obtainedValues(1, 3) = intersect(rs, ell3, 'e');
-            obtainedValues(2, 1) = intersect(rs, ell1, 'i');
-            obtainedValues(2, 2) = intersect(rs, ell2, 'i');
-            obtainedValues(2, 3) = intersect(rs, ell3, 'i');
+            obtainedValuesMat(1, 1) = intersect(RS, ell1, 'e');
+            obtainedValuesMat(1, 2) = intersect(RS, ell2, 'e');
+            obtainedValuesMat(1, 3) = intersect(RS, ell3, 'e');
+            obtainedValuesMat(2, 1) = intersect(RS, ell1, 'i');
+            obtainedValuesMat(2, 2) = intersect(RS, ell2, 'i');
+            obtainedValuesMat(2, 3) = intersect(RS, ell3, 'i');
            
-            res = obtainedValues == expectedValues;
-            isOk = all(res(:));
+            isOkMat = obtainedValuesMat == expectedValuesMat;
+            isOk = all(isOkMat(:));
 
             hp1 = hyperplane([6, 4]', 5000);
             hp2 = hyperplane([-1, 1]', 3000);
             hp3 = hyperplane([-1, -1]', 100);
 
-            obtainedValues = zeros(2, 3);
-            obtainedValues(1, 1) = intersect(rs, hp1, 'e');
-            obtainedValues(1, 2) = intersect(rs, hp2, 'e');
-            obtainedValues(1, 3) = intersect(rs, hp3, 'e');
-            obtainedValues(2, 1) = intersect(rs, hp1, 'i');
-            obtainedValues(2, 2) = intersect(rs, hp2, 'i');
-            obtainedValues(2, 3) = intersect(rs, hp3, 'i');
+            obtainedValuesMat = zeros(2, 3);
+            obtainedValuesMat(1, 1) = intersect(RS, hp1, 'e');
+            obtainedValuesMat(1, 2) = intersect(RS, hp2, 'e');
+            obtainedValuesMat(1, 3) = intersect(RS, hp3, 'e');
+            obtainedValuesMat(2, 1) = intersect(RS, hp1, 'i');
+            obtainedValuesMat(2, 2) = intersect(RS, hp2, 'i');
+            obtainedValuesMat(2, 3) = intersect(RS, hp3, 'i');
             
-            res = obtainedValues == expectedValues;
-            isOk = isOk && all(res(:));
+            isOkMat = obtainedValuesMat == expectedValuesMat;
+            isOk = isOk && all(isOkMat(:));
             
             mlunit.assert_equals(isOk, true);            
         end
         
         function self = testEvolve(self)
-            k0 = 1;
+            T0 = 1;
             T1 = 3;
             T2 = 5;
             epsilon = 0.1;
             
-            AMat1 = [3 0 1; 2 1 0; 0 3 2];
-            BMat1 = [0 1 2; 0 3 2; 1 1 1];
-            X0Mat1 = eye(3);
+            A1Mat = [3 0 1; 2 1 0; 0 3 2];
+            B1Mat = [0 1 2; 0 3 2; 1 1 1];
+            X01Mat = eye(3);
             x0Vec1 = [0, 0, 0]';
-            X01 = ellipsoid(x0Vec1, X0Mat1);
-            PMat1 = eye(3);
-            PVec1 = [1 0 1]';
-            PEll1 = ellipsoid(PVec1, PMat1);
+            X01Ell = ellipsoid(x0Vec1, X01Mat);
+            P1Mat = eye(3);
+            P1Vec = [1 0 1]';
+            P1Ell = ellipsoid(P1Vec, P1Mat);
             
-            AMat2 = [1 0 2; 2 1 2; -1 0 1];
-            BMat2 = [0 1 0; 0 1 0; 3 2 1];
-            PEll2 = 0.01 * ellipsoid([3 2 1]', [4 2 0; 2 4 0; 0 0 2]);
-            system2 = linsys(AMat2, BMat2, PEll2, [], [], [], [], 'd');
+            A2Mat = [1 0 2; 2 1 2; -1 0 1];
+            B2Mat = [0 1 0; 0 1 0; 3 2 1];
+            P2Ell = 0.01 * ellipsoid([3 2 1]', [4 2 0; 2 4 0; 0 0 2]);
+            LS2 = linsys(A2Mat, B2Mat, P2Ell, [], [], [], [], 'd');
             
             LMat = eye(3);
-            system1 = linsys(AMat1, BMat1, PEll1, [], [], [], [], 'd');
-            rs = reach(system1, X01, LMat, [k0, T1]);
-            obtainedRS = evolve(rs, T2);
-            expectedRS = reach(system1, X01, LMat, [k0, T2]);
+            LS1 = linsys(A1Mat, B1Mat, P1Ell, [], [], [], [], 'd');
+            RS = reach(LS1, X01Ell, LMat, [T0, T1]);
+            obtainedRS = evolve(RS, T2);
+            expectedRS = reach(LS1, X01Ell, LMat, [T0, T2]);
             
             isOk = 1;
-            expectedApprox = get_ia(expectedRS);
-            obtainedApprox = get_ia(obtainedRS);
-            for i = 1 : 3
-                for j = T1 : T2
-                    [q1 Q1] = double(expectedApprox(i, j));
-                    [q2 Q2] = double(obtainedApprox(i, j - T1 + 1));
+            expectedApproxEllMat = get_ia(expectedRS);
+            obtainedApproxEllMat = get_ia(obtainedRS);
+            for iDirection = 1 : 3
+                for t = T1 : T2
+                    [q1 Q1] = double(expectedApproxEllMat(iDirection, t));
+                    [q2 Q2] = double(obtainedApproxEllMat(iDirection, t - T1 + 1));
                     isOk = isOk && max(abs(q1 - q2)) < epsilon;
-                    res = abs(Q1 - Q2);
-                    isOk = isOk && max(res(:)) < epsilon;
+                    resMat = abs(Q1 - Q2);
+                    isOk = isOk && max(resMat(:)) < epsilon;
                 end
             end
             
-            expectedApprox = get_ea(expectedRS);
-            obtainedApprox = get_ea(obtainedRS);
-            for i = 1 : 3
-                for j = T1 : T2
-                    [q1 Q1] = double(expectedApprox(i, j));
-                    [q2 Q2] = double(obtainedApprox(i, j - T1 + 1));
+            expectedApproxEllMat = get_ea(expectedRS);
+            obtainedApproxEllMat = get_ea(obtainedRS);
+            for iDirection = 1 : 3
+                for t = T1 : T2
+                    [q1 Q1] = double(expectedApproxEllMat(iDirection, t));
+                    [q2 Q2] = double(obtainedApproxEllMat(iDirection, t - T1 + 1));
                     isOk = isOk && max(abs(q1 - q2)) < epsilon;
-                    res = abs(Q1 - Q2);
-                    isOk = isOk && max(res(:)) < epsilon;
+                    resMat = abs(Q1 - Q2);
+                    isOk = isOk && max(resMat(:)) < epsilon;
                 end
             end
             
             
-            obtainedRS = evolve(rs, T2, system2);
-            obtainedApprox = get_ia(obtainedRS);
-            initApprox = get_ia(rs);
+            obtainedRS = evolve(RS, T2, LS2);
+            obtainedApproxEllMat = get_ia(obtainedRS);
+            initApproxEllMat = get_ia(RS);
             
-            for i = 1 : 3
-                EvolvingRS = reach(system2, initApprox(i, T1), LMat(:, i), [T1 T2]);
-                expectedApprox = get_ia(EvolvingRS);
-                for j = 1 : T2 - T1 + 1
-                    [q1 Q1] = double(expectedApprox(1, j));
-                    [q2 Q2] = double(obtainedApprox(i, j));
+            for iDirection = 1 : 3
+                EvolvingRS = reach(LS2, initApproxEllMat(iDirection, T1), LMat(:, iDirection), [T1 T2]);
+                expectedApproxEllMat = get_ia(EvolvingRS);
+                for t = 1 : T2 - T1 + 1
+                    [q1 Q1] = double(expectedApproxEllMat(1, t));
+                    [q2 Q2] = double(obtainedApproxEllMat(iDirection, t));
                     isOk = isOk && max(abs(q1 - q2)) < epsilon;
                     res = abs(Q1 - Q2);
                     isOk = isOk && max(res(:))/max(abs(Q1(:))) < epsilon; 
                 end
             end
             
-            obtainedApprox = get_ea(obtainedRS);
-            initApprox = get_ea(rs);
+            obtainedApproxEllMat = get_ea(obtainedRS);
+            initApproxEllMat = get_ea(RS);
             
-            for i = 1 : 3
-                EvolvingRS = reach(system2, initApprox(i, T1), LMat(:, i), [T1 T2]);
-                expectedApprox = get_ea(EvolvingRS);
-                for j = 1 : T2 - T1 + 1
-                    [q1 Q1] = double(expectedApprox(1, j));
-                    [q2 Q2] = double(obtainedApprox(i, j));
+            for iDirection = 1 : 3
+                EvolvingRS = reach(LS2, initApproxEllMat(iDirection, T1), LMat(:, iDirection), [T1 T2]);
+                expectedApproxEllMat = get_ea(EvolvingRS);
+                for t = 1 : T2 - T1 + 1
+                    [q1 Q1] = double(expectedApproxEllMat(1, t));
+                    [q2 Q2] = double(obtainedApproxEllMat(iDirection, t));
                     isOk = isOk && max(abs(q1 - q2)) < epsilon;
                     res = abs(Q1 - Q2);
                     isOk = isOk && max(res(:))/max(abs(Q1(:))) < epsilon; 
