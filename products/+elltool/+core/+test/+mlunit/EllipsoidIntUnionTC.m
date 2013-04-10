@@ -133,11 +133,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
         
         function self = testSqrtm(self)
             import elltool.conf.Properties;
-            
             MAX_TOL = Properties.getRelTol();
-            
-                        
-            
             test1Mat = eye(2);
             test2SqrtMat = eye(2) + 1.01*MAX_TOL; 
             test2Mat = test2SqrtMat*test2SqrtMat.';
@@ -161,9 +157,6 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
                 ellipsoid(test2Mat)); 
             mlunit.assert_equals(false, isEq);
             mlunit.assert_equals(reportStr, '(1).Q-->Max. difference (1.000000e-05) is greater than the specified tolerance(1.000000e-05)');
-           
-            
-            
         end
         
         function testIsInternalCenter(~)

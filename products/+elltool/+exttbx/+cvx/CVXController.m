@@ -2,16 +2,33 @@ classdef CVXController < elltool.exttbx.IExtTBXController
     properties (GetAccess=private,Constant)
         CVX_SETUP_FUNC_NAME='cvx_setup';
         CVX_PREF_FILE_NAME='cvx_prefs.mat';
+        DEFAULT_SOLVER = 'SeDuMi';
+        TOL_FACTOR = 2;
     end
     %
-    methods   
-        function fullSetup(self,setUpDataCVec)
+    methods (Access=private)
+        function prepPrecVec=getPrepPrecision(self,absTol,relTol)
+            prepPrecVec=[0, 0, self.TOL_FACTOR*relTol];
+        end
+    end
+    methods
+        function checkSettings(self,absTol,relTol,isVerbose)
+            import modgen.common.throwerror;
+            precisionVec = self.getPrecision();
+            solverStr = self.getSolver();
+            isVerbosity = self.getIsVerbosityEnabled();
+            if (~isequal(precisionVec, ...
+                    self.getPrepPrecision(absTol,relTol))) || ...
+                    (~(strcmp(solverStr, self.DEFAULT_SOLVER))) ...
+                    || (isVerbosity ~= isVerbose)
+                throwerror('cvxError', 'wrong cvx properties');
+            end
+        end
+        function fullSetup(self,absTol,relTol,isVerbose)
             self.setUpIfNot();
-            defaultSolver = setUpDataCVec{1};
-            precisionForCVXVec = setUpDataCVec{2};
-            isVerbose = setUpDataCVec{3};
-            self.setSolver(defaultSolver);
-            self.setPrecision(precisionForCVXVec);
+            self.setSolver(self.DEFAULT_SOLVER);
+            prepPrecVec=self.getPrepPrecision(absTol,relTol);
+            self.setPrecision(prepPrecVec);
             self.setIsVerbosityEnabled(isVerbose);
         end
         %
@@ -74,13 +91,12 @@ classdef CVXController < elltool.exttbx.IExtTBXController
         end
         %
         function setPrecision(relTolVec)
+            import modgen.common.throwerror;
             if abs(relTolVec(1) - relTolVec(2)) > eps
-                import modgen.common.throwerror;
                 throwerror('cvxError',...
                     'wrong precision format for cvx beta version');
             end
             cvx_precision([relTolVec(1), relTolVec(3)]);
-            
         end
         %
         function setIsVerbosityEnabled(isQuiet)

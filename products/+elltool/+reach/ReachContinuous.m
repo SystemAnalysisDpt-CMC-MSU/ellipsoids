@@ -46,10 +46,10 @@ classdef ReachContinuous < elltool.reach.AReach
     %
     %
     % $Authors: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-    %           Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: March-2012 $
+    %           Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: March-2013 $
     % $Copyright: Moscow State University,
     %            Faculty of Computational Mathematics and Computer Science,
-    %            System Analysis Department 2012 $
+    %            System Analysis Department 2013 $
     properties (Constant, GetAccess = private)
         MIN_EIG_Q_REG_UNCERT = 0.1
         EXTERNAL_SCALE_FACTOR = 1.02
@@ -761,7 +761,7 @@ classdef ReachContinuous < elltool.reach.AReach
         end
         %%
         function linSys = get_system(self)
-            linSys = self.linSysCVec{end};
+            linSys = self.linSysCVec{end}.getCopy();
         end
         %%
         function [directionsCVec timeVec] = get_directions(self)
@@ -912,7 +912,7 @@ classdef ReachContinuous < elltool.reach.AReach
         end
         %%
         function x0Ell = getInitialSet(self)
-            x0Ell = self.x0Ellipsoid;
+            x0Ell = self.x0Ellipsoid.getCopy();
         end
         %%
         function isBackward = isbackward(self)
@@ -966,9 +966,24 @@ classdef ReachContinuous < elltool.reach.AReach
                 ellTube.getFieldProjection(fieldsToCompVec),...
                 'maxTolerance', self.COMP_PRECISION);
         end
+        %%
+        function copyReachObj = getCopy(self)
+            copyReachObj = elltool.reach.ReachContinuous();
+            copyReachObj.switchSysTimeVec = self.switchSysTimeVec;
+            copyReachObj.x0Ellipsoid = self.x0Ellipsoid.getCopy();
+            copyReachObj.linSysCVec = cellfun(@(x) x.getCopy(),...
+                self.linSysCVec, 'UniformOutput', false);
+            copyReachObj.isCut = self.isCut;
+            copyReachObj.isProj = self.isProj;
+            copyReachObj.isBackward = self.isBackward;
+            copyReachObj.projectionBasisMat = self.projectionBasisMat;
+            copyReachObj.ellTubeRel = self.ellTubeRel.getCopy();
+        end
+        %%
         function ellTubeRel = getEllTubeRel(self)
             ellTubeRel = self.ellTubeRel;
         end
+        %%
         function ellTubeUnionRel = getEllTubeUnionRel(self)
             import gras.ellapx.smartdb.rels.EllUnionTube;
             ellTubeUnionRel = EllUnionTube.fromEllTubes(self.ellTubeRel);

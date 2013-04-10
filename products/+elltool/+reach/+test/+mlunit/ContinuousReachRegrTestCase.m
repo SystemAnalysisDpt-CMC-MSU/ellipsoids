@@ -92,7 +92,8 @@ classdef ContinuousReachRegrTestCase < mlunitext.test_case
             self.crm.deployConfTemplate(self.confName);
             self.crm.selectConf(self.confName);
             sysDefConfName = self.crm.getParam('systemDefinitionConfName');
-            self.crmSys.selectConf(sysDefConfName, 'reloadIfSelected', false);
+            self.crmSys.selectConf(sysDefConfName,...
+                'reloadIfSelected', false);
             %
             [atDefCMat, btDefCMat, ctDefCMat, ptDefCMat,...
                 ptDefCVec, qtDefCMat, qtDefCVec,...
@@ -109,8 +110,8 @@ classdef ContinuousReachRegrTestCase < mlunitext.test_case
             DistBounds.center = qtDefCVec;
             DistBounds.shape = qtDefCMat;
             %
-            self.linSys = elltool.linsys.LinSysFactory.create(atDefCMat, btDefCMat,...
-                ControlBounds, ctDefCMat, DistBounds);
+            self.linSys = elltool.linsys.LinSysFactory.create(atDefCMat,...
+                btDefCMat, ControlBounds, ctDefCMat, DistBounds);
             self.reachObj = elltool.reach.ReachContinuous(self.linSys,...
                 ellipsoid(x0DefVec, x0DefMat), l0Mat, self.timeVec);
         end
@@ -136,53 +137,6 @@ classdef ContinuousReachRegrTestCase < mlunitext.test_case
             else
                 throwerror('WrongInput', 'Do not exist config mat file.');
             end
-        end
-        %
-        function self = testProjection(self)
-            [atDefCMat, btDefCMat, ctDefCMat, ptDefCMat,...
-                ptDefCVec, qtDefCMat, qtDefCVec,...
-                x0DefMat, x0DefVec, l0Mat] = self.getSysParams();
-            zeroASizeCMat = arrayfun(@num2str, zeros(size(atDefCMat)),...
-                'UniformOutput', false);
-            newAtCMat = [atDefCMat zeroASizeCMat; zeroASizeCMat atDefCMat];
-            zeroBSizeCMat = arrayfun(@num2str, zeros(size(btDefCMat)),...
-                'UniformOutput', false);
-            newBtCMat = [btDefCMat zeroBSizeCMat; zeroBSizeCMat btDefCMat];
-            zeroCSizeCMat = arrayfun(@num2str, zeros(size(ctDefCMat)),...
-                'UniformOutput', false);
-            newCtCMat = [ctDefCMat zeroCSizeCMat; zeroCSizeCMat ctDefCMat];
-            zeroPSizeCMat = arrayfun(@num2str, zeros(size(ptDefCMat)),...
-                'UniformOutput', false);
-            newPtCMat = [ptDefCMat zeroPSizeCMat; zeroPSizeCMat ptDefCMat];
-            newPtCVec = [ptDefCVec; ptDefCVec];
-            zeroQSizeCMat = arrayfun(@num2str, zeros(size(qtDefCMat)),...
-                'UniformOutput', false);
-            newQtCMat = [qtDefCMat zeroQSizeCMat; zeroQSizeCMat qtDefCMat];
-            newQtCVec = [qtDefCVec; qtDefCVec];
-            newX0Mat = [x0DefMat zeros(size(x0DefMat));...
-                zeros(size(x0DefMat)) x0DefMat];
-            newX0Vec = [x0DefVec; x0DefVec];
-            newL0Mat = [l0Mat zeros(size(l0Mat)); zeros(size(l0Mat)) l0Mat];
-            ControlBounds = struct();
-            ControlBounds.center = newPtCVec;
-            ControlBounds.shape = newPtCMat;
-            DistBounds = struct();
-            DistBounds.center = newQtCVec;
-            DistBounds.shape = newQtCMat;
-            %
-            oldDim = self.reachObj.dimension();
-            newLinSys = elltool.linsys.LinSysFactory.create(newAtCMat, newBtCMat,...
-                ControlBounds, newCtCMat, DistBounds);
-            newReachObj = elltool.reach.ReachContinuous(newLinSys,...
-                ellipsoid(newX0Vec, newX0Mat), newL0Mat, self.timeVec);
-            firstProjReachObj =...
-                newReachObj.projection([eye(oldDim); zeros(oldDim)]);
-            secondProjReachObj =...
-                newReachObj.projection([zeros(oldDim); eye(oldDim)]);
-            isEqual = self.reachObj.isEqual(firstProjReachObj);
-            mlunit.assert_equals(true, isEqual);
-            isEqual = self.reachObj.isEqual(secondProjReachObj);
-            mlunit.assert_equals(true, isEqual);
         end
         function self = testGetEllTubeRel(self)
             mlunit.assert(all(self.reachObj.get_ia() == ...
