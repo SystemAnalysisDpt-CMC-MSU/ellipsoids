@@ -529,6 +529,22 @@ classdef LinSysTestCase < mlunitext.test_case
             mlunitext.assert(isOk);
         end
         %
+        function self = testDisplayEmpty(self)
+            system = elltool.linsys.LinSysContinuous.empty();
+            system.display();
+            resStr = evalc('system.display()');
+            isOk = ~isempty(strfind(resStr, ...
+                'Empty linear system object.'));
+            %
+            system = elltool.linsys.LinSysDiscrete.empty(2, 0, 5);
+            system.display();
+            resStr = evalc('system.display()');
+            isOk = ~isempty(strfind(resStr, ...
+                'Empty linear system objects array.')) && isOk;
+            %
+            mlunitext.assert(isOk);
+        end
+        %
         function self = testGetAbsTol(self)
             testAbsTol = 1e-8;
             args = {eye(3),eye(3,4),ell_unitball(4),...
