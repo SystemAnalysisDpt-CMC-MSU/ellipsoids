@@ -73,9 +73,9 @@ classdef ReachContinuous < elltool.reach.AReach
                 @(~, timeVec, varargin)...
                 deal(repmat(projMat.', [1 1 numel(timeVec)]),...
                 repmat(projMat, [1 1 numel(timeVec)]));
-            isProjSpaceList = false(1, size(projMat, 1));
-            isProjSpaceList((sum(projMat, 2) > 0).') = true;
-            isProjSpaceCList = {isProjSpaceList};
+
+            ProjCMatList = {projMat'};
+            
             projType = EProjType.Static;
             if nargin > 2
                 localEllTubeRel =...
@@ -88,7 +88,7 @@ classdef ReachContinuous < elltool.reach.AReach
                 localEllTubeRel.scale(@(x) scaleFactor, {APPROX_TYPE});
             end
             projSet = localEllTubeRel.project(projType,...
-                isProjSpaceCList, fProj);
+                ProjCMatList, fProj);
         end
         function plotter = plotApprox(self, approxType, varargin)
             import gras.ellapx.enums.EApproxType;
