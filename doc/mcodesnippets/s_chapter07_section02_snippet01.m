@@ -5,7 +5,7 @@ aMat = [0 0 1 0; 0 0 0 1; -(k1+k2)/m1 k2/m1 0 0; k2/m2 -(k1+k2)/m2 0 0];
 bMat = [0 0; 0 0; 1/m1 0; 0 1/m2];
 uBoundsEllObj = ell_unitball(2);
 % linear system
-lsys = elltool.linsys.LinSysFactory.create(aMat, bMat, uBoundsEllObj);  
+lsys = elltool.linsys.LinSysContinious(aMat, bMat, uBoundsEllObj);  
 timeVec = [0 4];  % time interval% initial conditions:
 x0EllObj = [0 2 0 0]' + ellipsoid([0.01 0 0 0; 0 0.01 0 0; 0 0 eps 0;...
            0 0 0 eps]);

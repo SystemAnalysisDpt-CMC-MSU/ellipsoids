@@ -2,13 +2,13 @@
 firstAMat = [-1/6 0 -1/3; 0 0 1/7; 1/2 -1/2 -1/2];
 firstBMat = [1/6 1/3; 0 0; 0 0];
 firstUBoundsEllObj = ellipsoid(eye(2));
-firstSys = elltool.linsys.LinSysFactory.create(firstAMat, firstBMat,...
+firstSys = elltool.linsys.LinSysContinious(firstAMat, firstBMat,...
        firstUBoundsEllObj);
 % define system 2:
 secAMat = [-1/6 0 -1/3; 0 0 1/3; 1/6 -1/6 -1/3];
 secBMat = [1/6; 0; 0];
 secUBoundsEllObj = ellipsoid(1);
-secondSys = elltool.linsys.LinSysFactory.create(secAMat, secBMat,....
+secondSys = elltool.linsys.LinSysContinious(secAMat, secBMat,....
          secUBoundsEllObj);
 x0EllObj = ellipsoid(0.01*eye(3));  % set of initial states
 dirsMat = eye(3);  % 3 initial directions

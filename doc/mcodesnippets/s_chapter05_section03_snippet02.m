@@ -2,7 +2,7 @@ aMat = [0 1 0 0; -1 0 1 0; 0 0 0 1; 0 0 -1 0];
 bMat = [0; 0; 0; 1];
 uBoundsEllObj = ellipsoid(1);
 % 4-dimensional system
-sys = elltool.linsys.LinSysFactory.create(aMat, bMat, uBoundsEllObj);
+sys = elltool.linsys.LinSysContinious(aMat, bMat, uBoundsEllObj);
 dirsMat  = [1 1 0 1; 0 -1 1 0; -1 1 1 1; 0 0 -1 1]'; % matrix of directions
 % reach set from time 0 to 5
 rsObj = elltool.reach.ReachContinuous(sys, ell_unitball(4), dirsMat, [0 5]);

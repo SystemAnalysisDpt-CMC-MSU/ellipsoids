@@ -7,15 +7,15 @@ utilities:
 {mcodesnippets/s_chapter06_section01_snippet01.m}
 Here we list system parameters available from the 'default' configuration:
 \begin{enumerate}
-\item {\tt version = '1.4dev'} - current version of {\it ET}.
+\item {\tt version = '1.4'} - current version of {\it ET}.
 \item {\tt isVerbose = 0} - makes all the calls to {\it ET}
 routines silent, and no information except errors is displayed.
-\item {\tt abs\_Tol = 1e-7} - absolute tolerance.
-\item {\tt rel\_Tol = 1e-5} - relative tolerance.
+\item {\tt absTol = 1e-7} - absolute tolerance.
+\item {\tt relTol = 1e-5} - relative tolerance.
 \item {\tt nTimeGridPoints = 200} - density of the time grid for the
 continuous time reach set computation.
 This parameter directly affects the number of ellipsoids to
-be stored in the {\tt reach} object.
+be stored in the {\tt ReachContinious $\backslash$ReachDiscrete} object.
 \item {\tt ODESolverName = ode45} - specifies the ODE solver for continuous time
 reach set computation.
 \item {\tt isODENormControl = 'on'} - switches on and off the norm control
@@ -46,46 +46,31 @@ in run-time via setters.
 
 
 
-\section{ellipsoid}
-The main object of the {\it Ellipsoidal Toolbox}, {\tt ellipsoid}, is
-very simple. In accordance with definition \ref{ellipsoiddef}, it contains
-two fields:
-\begin{itemize}
-\item {\tt center} - $n$-dimensional vector specifying the center
-of the ellipsoid;
-\item {\tt shape} - $(n\times n)$-dimensional symmetric positive
-semidefinite matrix.
-\end{itemize}
-These fields cannot be accessed by the user directly. Their values
-can be obtained through {\tt ellipsoid/parameters} function, but they cannot
-be modified except by some allowed operation with the {\tt ellipsoid}
-object. For the list of {\tt ellipsoid} methods, see appendix A.1.
+\section{Ellipsoid}
+Each object represents a single ellipsoid with a center $q$ and a shape matrix $Q$.
+For this object there are a large number of operations. User can compute distance
+between ellipsoid and other objects in {\tt Ellipsoidal toolbox}, such as hyperplane
+or polytope. We can found the ellipsoid which is a result of intersection between ellipsoid
+and hyperplane or between two ellipsoids. Also an approximation of intersection can be found.
+There are methods related to the parameters of the ellipsoid. User can return a center and
+a shape matrix, can invert a shape matrix.
+There are few comparison operations. It could be checked which of two ellipsoids is bigger
+or less. Ellipsoid can be checked for emptiness. User can determine whether the 
+ellipsoids are equal. Ellipsoids could be plotted.
+Arrays of ellipsoids also can be constructed.
+For the full list of {\tt ellipsoid} methods, see appendix.
 
+\section{Hyperplane}
+Each object represents a single hyperplane with a normal $c$ and a shift $\gamma$.
+User can determine whether the hyperplanes are equal. Hyperplane can be checked 
+for emptiness. It could be checked if the two hyperplanes are parallel.
+We can return parameters of the hyperplane. Of course user can plot this object.
+Arrays of hyperplanes also can be constructed.
+For the full list of {\tt hyperplane} methods, see appendix.
 
-
-\section{hyperplane}
-According to  definition \ref{hyperplanedef}, the hyperplane object
-contains two fields:
-\begin{itemize}
-\item {\tt normal} - $n$-dimensional vector specifying the normal to
-the hyperplane ($c$ in \ref{hyperplane});
-\item {\tt shift} - the scalar ($\gamma$ in \ref{hyperplane}).
-\end{itemize}
-These fields cannot be accessed by the user directly. Their values
-can be obtained through {\tt hyperplane/parameters} function, but they cannot
-be modified other than by some allowed operation with the {\tt hyperplane}
-object. For the list of {\tt hyperplane} methods, see appendix A.2.
-
-In some {\it ET} functions, for example, in {\tt ellipsoid/intersection\_ea}
-and {\tt ellipsoid/intersection\_ia}, the hyperplane specifies the halfspace.
-It is assumed that the halfspace is
-\[ \{ x\in{\bf R}^n ~|~ \langle{\tt normal},x\rangle\leq{\tt shift}\}. \]
-
-
-
-\section{linsys}
-{\it Ellipsoidal Toolbox} supports both types of linear (affine)
-dynamical systems: continuous-time,
+\section{Linear system}
+The object represent a linear system. {\it Ellipsoidal Toolbox} supports both
+types of linear (affine) dynamical systems: continuous-time,
 \begin{eqnarray*}
 \dot{x}(t) & = & A(t)x(t) + B(t)u(t) + G(t)v(t),\\
 y(t) & = & C(t)x(t) + w(t);
@@ -97,78 +82,15 @@ y[k] & = & C[k]x[k] + w[k].
 \end{eqnarray*}
 Both can be time-invariant (have constant matrices $A$, $B$, $G$, $C$)
 or time-variant.
-\newline
-Both the {\tt LinSysContinuous} and the {\tt LinSysDiscrete} objects contain the fields:
-\begin{itemize}
-\item {\tt atInpMat} - $(n\times n)$-dimensional matrix $A$ of type {\tt double}
-if constant, or {\tt cell} to symbolically represent $A(t)$ or $A[k]$.
-\item {\tt btInpMat} - $(n\times m)$-dimensional matrix $B$, {\tt double} if constant,
-{\tt cell} if symbolic.
-\item {\tt uBoundsEll} - ellipsoidal bounds on control $u$,
-either an {\tt ellipsoid}
-object of dimension $m$, or structure {\tt SUBounds} with fields {\tt SUBounds.center} and
-{\tt SUBounds.shape} to represent the ellipsoid that depends on time. For example,
-\verbmcodef[Definition of the ellipsoidal bounds]
-{mcodesnippets/s_chapter06_section04_snippet01.m}
-
-This example defines ellipsoid $\EE(p, P(t))$ with $p=\left[\begin{array}{c}
-0\\
-1\end{array}\right]$ and $P(t) = \left[\begin{array}{cc}
-4 & \cos(t)\\
-\cos(t) & 1\end{array}\right]$.
-\item {\tt gtInpMat} - $(n\times d)$-dimensional matrix $G$ of type {\tt double}
-if constant, or {\tt cell} if symbolic. Can be empty if the system has
-no disturbance or affine term.
-\item {\tt distBoundsEll} - ellipsoidal bounds on disturbance $v$, either an
-{\tt ellipsoid} object of dimension $d$, or structure {\tt V} with
-fields {\tt V.center} and {\tt V.shape} for symbolic representation of
-ellipsoid, similar to the {\tt control} field.
-This field can be also a single $d$-dimensional vector - constant or symbolic -
-to represent an affine term.
-\item {\tt ctInpMat} - $(r\times n)$-dimensional matrix $C$ of type {\tt double}
-if constant, or {\tt cell} if symbolic.
-\item {\tt noiseBoundsEll} - ellipsoidal bounds on the noise $w$, either an
-{\tt ellipsoid} object of dimension $r$, or structure {\tt W} with
-fields {\tt W.center} and {\tt W.shape} for symbolic representation of
-ellipsoid, similar to the {\tt control} and {\tt disturbance} fields.
-
-This field can be also a single $r$-dimensional vector, constant or symbolic,
-to represent an affine term.
-
-\item {\tt discrFlag} - {\tt 'd'} if the system is discrete-time, not {\tt 'd'}- otherwise.
-\end{itemize}
-The fields of {\tt LinSysContinuous} or {\tt LinSysDiscrete} object can be accessed but cannot be modified
-directly by the user. The only way to modify these fields is through
-{\tt linsys/LinSysContinuous} or {\tt linsys/LinSysDiscrete} constructor.
-
-There is {\tt LinSysFactory} - the factory class of linear system objects. Through methods of this class
-user creates {\tt LinSysDiscrete} object if {\tt discrFlag} is equal {\tt 'd'} and {\tt LinSysContinuous} object
-the other way.
-
-For the list of {\tt linsys} methods, see appendix A.3.
+For the full list of linear system methods, see appendix.
 
 
 
-\section{reach}
-The {\tt ReachContinuous} object represents the reach (or backward reach)
-set of an affine continuous-time system, the {\tt ReachDiscrete} object represents
-the reach (or backward reach) set of a discrete-time system . Both contain the fields:
-\begin{itemize}
-\item {\tt linSys} - the description of the system, for which the reach set
-is computed, in the form of {\tt LinSysContinuous} or {\tt LinSysDiscrete} object.
-
-\item {\tt x0Ell} - the set of initial (or terminating, in case of backward
-reachability) conditions in the form of {\tt ellipsoid}
-object.
-\item {\tt dirsMat} - matrix whose columns represent the values
-of direction vector $l$ (see chapter 3), for which the ellipsoidal
-approximations of the reach set are computed.
-\item {\tt timeVec} - time interval, for which the reach set is computed,
-is split into the number of segments specified by the 
-{\tt nTimeGridPoints} parameter. This field contains the values
-of the time grid. If the last value of this array is less than the first 
-value of this array, then the reach set is in fact backward reach set.
-\end{itemize}
-These fields can be accessed and modified only through {\tt ReachContinuous} or
-{\tt ReachDiscrete} methods.
-For the list of {\tt reach} methods, see appendix A.4.
+\section{Reachability set}
+The object represents a reachability domain.
+User can project a reach set onto a given orthogonal basis.
+A further evolution could be computed in time for the given reachability
+domain. We can extracts a piece of the reach set that corresponds to the specified time
+value or the time interval. Also we can check an intersection of reachability domain with
+ellipsoid, hyperplane or polytope. User can plot an approximation of the reach set.
+For the full list of reachability set methods, see appendix.

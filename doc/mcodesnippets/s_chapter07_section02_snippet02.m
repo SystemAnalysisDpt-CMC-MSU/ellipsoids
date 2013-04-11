@@ -2,7 +2,7 @@
 gMat = [0 0; 0 0; 1 0; 0 1];
 vEllObj = 0.5*ell_unitball(2);
 % linear system with disturbance
-lsysd = elltool.linsys.LinSysFactory.create(aMat, bMat, uBoundsEllObj,...
+lsysd = elltool.linsys.LinSysContinious(aMat, bMat, uBoundsEllObj,...
     gMat, vEllObj); 
 % reach set
 rsdObj = elltool.reach.ReachContinuous(lsysd, X0EllObj, dirsMat, timeVec); 

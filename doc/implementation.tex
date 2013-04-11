@@ -193,9 +193,10 @@ in the distribution of the {\it Ellipsoidal Toolbox} is SeDuMi
 
 \section{Reachability}
 To compute the reach sets of the systems described in chapter 3, we define
-two new classes in the {\it Ellipsoidal Toolbox}: class {\tt linsys} for the
-system description, and class {\tt reach} for the reach set data.
-We start by explaining how to define a system using {\tt linsys} object.
+few new classes in the {\it Ellipsoidal Toolbox}: class {\tt LinSysContinuous} 
+for the continuous-time system description, class {\tt LinSysDiscrete}
+for the discrete-time system description and classes {\tt ReachContinious$\backslash$ReachDiscrete} for the reach set data. We start by explaining how to define a system
+using {\tt LinSysContinuous} object.
 For example, description of the system
 \[ \left[\begin{array}{cc}
 \dot{x}_1\\
@@ -236,11 +237,11 @@ with bounds on control as before, and disturbance being $-1\leq v(t)\leq1$,
 we type:
 \verbmcodef[Description of the system with disturbance]
 {mcodesnippets/s_chapter05_section02_snippet03.m}
-Control and disturbance bounds {\tt uBoundsEllObj} and {\tt vEllObj} can have different types.
+Control and disturbance bounds {\tt SUBounds} and {\tt vEllObj} can have different types.
 If the bound is constant, it should be described by {\tt ellipsoid} object.
 If the bound depends on time, then it is represented by a structure with
 fields {\tt center} and {\tt shape}, one or both of which are symbolic.
-In system {\tt sys}, the control bound {\tt uBoundsEllObj} is defined as such a structure.
+In system {\tt sys}, the control bound {\tt SUBounds} is defined as such a structure.
 Finally, if the control or disturbance is known and fixed, it should be
 defined as a vector, of type {\tt double} if constant, or symbolic, if
 it depends on time.
@@ -255,28 +256,22 @@ x_1[k]\\
 x_2[k]\end{array}\right] + \left[\begin{array}{c}
 0\\
 1\end{array}\right]u[k], ~~~ -1\leq u[k]\leq 1,\]
-we use the same {\tt linsys} constructor:
+we use {\tt LinSysDiscrete} constructor:
 \verbmcodef[Description of the discrete-time system]
 {mcodesnippets/s_chapter05_section02_snippet04.m}
-Once the {\tt linsys} object is created, we need to specify the set
+Once the {\tt LinSysDiscrete} object is created, we need to specify the set
 of initial conditions, the time interval and values of the direction vector,
 for which the reach set approximations must be computed:
 \verbmcodef[Description of an initial data]
 {mcodesnippets/s_chapter05_section02_snippet05.m}
 The reach set approximation is computed by calling the constructor
-of the {\tt reach} object:
+of the {\tt ReachContinuous} object:
 \verbmcodef[Computation of the reach set approximation]
 {mcodesnippets/s_chapter05_section02_snippet06.m}
-The {\tt options} parameter in the {\tt reach()} call is optional.
-We shall soon explain why we used it here.
 At this point, variable {\tt firstRsObj} contains the reach set approximations for the
 specified continuous-time system, time interval and set of initial conditions
-computed for given directions. By default, both external and internal
-approximations are computed. To compute only external or only internal
-approximations, {\tt options} structure must contain
-another field - {\tt approximation}.
-For only external approximations, this field
-must be set to $0$, for only internal approximations, it must be set to $1$.
+computed for given directions. Both external and internal
+approximations are computed. 
 The reach set approximation data can be
 extracted in the form of arrays of ellipsoids:
 \verbmcodef[Extraction of the reach set approximation data]{mcodesnippets/s_chapter05_section02_snippet07.m}
@@ -297,7 +292,7 @@ union of ellipsoids in the same column of {\tt internalEllMat}.
 We may be interested in the reachability data of our system in some
 particular time interval, smaller than the one for which the reach set was
 computed, say $3\leq t\leq5$.
-This data can be extracted and returned in the form of {\tt reach}
+This data can be extracted and returned in the form of {\tt ReachContinious}
 object by the {\tt cut} function:
 \verbmcodef[Get the reachability data in the time interval]{mcodesnippets/s_chapter05_section02_snippet08.m}
 
@@ -327,21 +322,22 @@ of approximation, {\tt refine} function should be used:
 \verbmcodef[Check if the ellipsoid intersects the internal approximation]{mcodesnippets/s_chapter05_section02_snippet14.m}
 
 Now we are sure that ellipsoid {\tt ellObj} intersects with the actual reach set.
-Recall that when we computed reach set {\tt firstRsObj} the first time, we did it
-with the option {\tt save\_all} set to $1$. This option indicated to the
-{\tt reach} constructor that it should save all intermediate calculations of
-data in the {\tt reach} object {\tt firstRsOb}. These data include evaluations
-of matrices $A$, $B$, $G$ at specific time values (in case these
-matrices depend on time) together with the control and disturbance
-bounds, the state transition matrix and its inverse evaluated at
-these time values.
-By default, {\tt save\_all} option is set to $0$, and all these intermediate
-data are not retained, which significantly reduces the memory used
-by the {\tt reach} object {\tt firstRsObj}. However, to use the {\tt refine} function,
+%Recall that when we computed reach set {\tt firstRsObj} the first time, we did it
+%with the option {\tt save\_all} set to $1$. This option indicated to the
+%{\tt reach} constructor that it should save all intermediate calculations of
+%data in the {\tt reach} object {\tt firstRsOb}. These data include evaluations
+%of matrices $A$, $B$, $G$ at specific time values (in case these
+%matrices depend on time) together with the control and disturbance
+%bounds, the state transition matrix and its inverse evaluated at
+%these time values.
+%By default, {\tt save\_all} option is set to $0$, and all these intermediate
+%data are not retained, which significantly reduces the memory used
+%by the {\tt reach} object {\tt firstRsObj}. 
+However, to use the {\tt refine} function,
 the reach set object must contain all calculated data, otherwise, an
 error is returned.
 
-Having a reach set object resulting from the {\tt reach}, {\tt cut} or
+Having a reach set object resulting from the {\tt ReachContinious}, {\tt cut} or
 {\tt refine} operations, we can obtain the trajectory of the center
 of the reach set and the good curves along which the actual reach set
 is touched by its ellipsoidal approximations:
@@ -429,7 +425,7 @@ Since the operation of projection is linear, the projection of the geometric
 sum of ellipsoids equals the geometric sum of the projected ellipsoids.
 The same is true for the geometric difference of two ellipsoids.
 
-Function {\tt projection} exists also for the {\tt reach} objects:
+Function {\tt projection} exists also for the {\tt ReachContinious$\backslash$ReachDiscrete} objects:
 \verbmcodef[Projection of the reach set tube]
 {mcodesnippets/s_chapter05_section03_snippet02.m}
 
