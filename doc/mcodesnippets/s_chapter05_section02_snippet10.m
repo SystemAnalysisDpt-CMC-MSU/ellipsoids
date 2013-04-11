@@ -1,10 +1,14 @@
-ellObj = ellipsoid([-17; 0], [4 -1; -1 1]);  % define ellipsoid
-% define 4 hyperplanes
-hypVec = hyperplane([1 1; -1 -1; 1 -1; -1 1]', [2 2 2 2]); 
-polObj = hyperplane2polytope(hypVec) + [2; 10];  % define polytope
-% check if ellipsoid ell intersects with external approximation:
-cutObj.intersect(ellObj, 'e')
+% compute the intersections of ellipsoids in the second column of ellMat
+% with hyperplane firstHypObj: 
+
+intersectEllMat = ellMat(:, 2).hpintersection(firstHypObj)
+
+% intersectEllMat =
+% 2x1 array of ellipsoids.
+
+intersectEllMat.isdegenerate()  % resulting ellipsoids should lose rank
 
 % ans =
 % 
+%      1
 %      1

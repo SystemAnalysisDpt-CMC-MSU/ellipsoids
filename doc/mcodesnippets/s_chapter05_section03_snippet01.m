@@ -1,18 +1,8 @@
-% create two 4-dimensional ellipsoids:
-firstEllObj = ellipsoid([14 -4 2 -5; -4 6 0 1; 2 0 6 -1; -5 1 -1 2]);
-secEllObj = firstEllObj.inv();
-
-% specify 3-dimensional subspace by its basis:
-
-% columns of basisMat must be orthogonal
-basisMat = [1 0 0 0; 0 0 1 0; 0 1 0 1]'; 
-
-% get 3-dimensional projections of firstEllObj and secEllObj:
-bufEllVec = [firstEllObj secEllObj];
-% array ellVec contains projections of firstEllObj and secEllObj
-ellVec = bufEllVec.projection(basisMat)  
-
-% ellVec =
-% 1x2 array of ellipsoids.
-
-ellVec.plot();  % plot ellipsoids in ellVec
+aMat = [0 1; 0 0]; bMat = eye(2);  % matrices A and B, B is identity
+SUBounds = struct();
+% center of the ellipsoid depends on t
+SUBounds.center = {'sin(t)'; 'cos(t)'};  
+SUBounds.shape = [9 0; 0 2]; % shape matrix of the ellipsoid is static
+% create linear system object
+sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds); 
+% is equal to sys = elltool.linsys.LinSysFactory.create(aMat, bMat, SUBounds)

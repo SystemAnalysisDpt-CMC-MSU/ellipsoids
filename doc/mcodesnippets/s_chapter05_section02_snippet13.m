@@ -1,6 +1,6 @@
-% check if polytope polObj intersects with external approximation:
-cutObj.intersect(polObj)
+% equivalent to: isinside(ellMat(2, 2), firstPolObj & secPolObj)
+ellMat(2, 2).isinside([firstPolObj secPolObj], 'i')  
 
 % ans =
 % 
-%      0
+%      1

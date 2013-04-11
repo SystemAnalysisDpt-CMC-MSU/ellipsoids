@@ -31,8 +31,8 @@ classdef ReachContinuous < elltool.reach.AReach
 %                    time grid.
 %  intersect       - Checks if external or internal reach
 %                    set approximation intersects with 
-%                    given ellipsoid, intersects with given
-%                    ellipsoid, hyperplane or polytope.
+%                    given ellipsoid, hyperplane or 
+%                    polytope.
 %  iscut           - Checks if given reach set object is a
 %                    cut of another reach set.
 %  isprojection    - Checks if given reach set object is a

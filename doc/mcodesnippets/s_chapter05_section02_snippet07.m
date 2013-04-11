@@ -1,7 +1,5 @@
-externallEllMat = firstRsObj.get_ea()  % external approximating ellipsoids
+ellMat.intersect(hypVec, 'u')
 
-% externallEllMat =
-% 2x100 array of ellipsoids.
-
-% internal approximating ellipsoids
-[internalEllMat, timeVec] = firstRsObj.get_ia();  
+% ans =
+% 
+%      1     1     1     1

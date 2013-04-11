@@ -1,1 +1,5 @@
-cutObj = firstRsObj.cut([3 5]);  % reach set for the time interval [3, 5]
+ellMat(:, 1).intersect(hypVec, 'i')
+
+% ans =
+% 
+%      0     0     1     0

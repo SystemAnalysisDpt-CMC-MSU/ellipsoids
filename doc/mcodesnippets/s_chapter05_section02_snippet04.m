@@ -1,5 +1,7 @@
-adMat = [0 1; -1 -0.5]; bdMat = [0; 1];  % matrices A and B
-udBoundsEllObj  = ellipsoid(1);  % control bounds: unit ball in R
-% discrete-time system
-dtsys = elltool.linsys.LinSysDiscrete(adMat, bdMat, udBoundsEllObj,...
-    [], [], [], [], 'd'); 
+% define two hyperplanes passing through the origin
+secHypObj = hyperplane([1 -1; 1 1]); 
+firstHypObj.isparallel(secHypObj) 
+
+% ans =
+% 
+%      1     0

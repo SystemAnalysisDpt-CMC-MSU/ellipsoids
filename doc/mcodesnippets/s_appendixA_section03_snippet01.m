@@ -6,5 +6,5 @@ for k = 1:20
    distBounds = 1/(k+1);
    ctVec = [1 0];
    lsys = elltool.linsys.LinSysDiscrete(atMat, btMat,...
-       uBoundsEllObj, gtMat,distBounds, ctVec, [], 'd');
+       uBoundsEllObj, gtMat,distBounds, ctVec);
 end
