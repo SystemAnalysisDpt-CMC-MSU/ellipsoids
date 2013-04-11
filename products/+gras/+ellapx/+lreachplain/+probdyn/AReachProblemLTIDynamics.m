@@ -11,7 +11,8 @@ classdef AReachProblemLTIDynamics<...
             %
             % call superclass constructor
             %
-            self=self@gras.ellapx.lreachplain.probdyn.AReachProblemDynamics(...
+            self = ...
+                self@gras.ellapx.lreachplain.probdyn.AReachProblemDynamics(...
                 problemDef);
             %
             % copy necessary data to local variables
@@ -25,7 +26,8 @@ classdef AReachProblemLTIDynamics<...
             %
             self.AtDynamics = ConstMatrixFunction(AMat);
             self.BptDynamics = ConstColFunction(BMat*pVec);
-            self.BPBTransDynamics = ConstMatrixFunction(BMat*PMat*(BMat.'));
+            self.BPBTransDynamics = ...
+                ConstMatrixFunction(BMat*PMat*(BMat.'));
         end
     end
 end

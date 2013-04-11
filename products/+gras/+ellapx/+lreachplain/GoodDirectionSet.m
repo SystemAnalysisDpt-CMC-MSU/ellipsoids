@@ -1,7 +1,7 @@
 classdef GoodDirectionSet
     properties
-        %rstTransArray: double[nDims,nDims,nTimePoints] - R(s,t)' - transition
-        %       matrix for good directions l(t)=R(s,t)'l_0
+        % rstTransArray: double[nDims,nDims,nTimePoints] - R(s,t)' is a
+        % transition matrix for good directions l(t)=R(s,t)'l_0
         RstTransDynamics
         ltGoodDirCurveSpline
         ltGoodDirOneCurveSplineList
@@ -107,7 +107,8 @@ classdef GoodDirectionSet
         end
     end
     methods (Access = private)
-        function Rtt0Dynamics = calcRtt0Dynamics(self, pDefObj, calcPrecision)
+        function Rtt0Dynamics = calcRtt0Dynamics(self, pDefObj, ...
+                calcPrecision)
             %
             import gras.interp.MatrixInterpolantFactory;
             import gras.ode.MatrixODESolver;
@@ -119,13 +120,18 @@ classdef GoodDirectionSet
             %
             switch (self.CALC_ALGORITHM)
                 case 0
-                    fRtt0DerivFunc = @(t,x) fXtt0DerivFunc(t, x, @(u) fAtMat(u));
+                    fRtt0DerivFunc = ...
+                        @(t,x) fXtt0DerivFunc(t, x, @(u) fAtMat(u));
                 case 1
-                    fRtt0DerivFunc = @(t,x) fXtt0DerivFunc(t, x, @(u) fAtMat(u));
+                    fRtt0DerivFunc = ...
+                        @(t,x) fXtt0DerivFunc(t, x, @(u) fAtMat(u));
                 case 2
-                    fRtt0DerivFunc = @(t,x) fRtt0SimDerivFunc(t, x, @(u) fAtMat(u));
+                    fRtt0DerivFunc = ...
+                        @(t,x) fRtt0SimDerivFunc(t, x, @(u) fAtMat(u));
                 case 3
-                    fRtt0DerivFunc = @(t,x) fRtt0ExtDerivFunc(t, x, @(u) fAtMat(u), sizeSysVec);
+                    fRtt0DerivFunc = ...
+                        @(t,x) fRtt0ExtDerivFunc(t, x, @(u) fAtMat(u), ...
+                        sizeSysVec);
             end
             %
             % (temporary) sRtt0InitialMat selection
@@ -149,9 +155,11 @@ classdef GoodDirectionSet
             %
             if (self.CALC_ALGORITHM == 3)
                 numelSys = prod(sizeSysVec);
-                solverObj=MatrixODESolver([numelSys + 1, 1],@ode45,odeArgList{:});
+                solverObj=MatrixODESolver([numelSys + 1, 1],@ode45, ...
+                    odeArgList{:});
             else
-                solverObj=MatrixODESolver(sizeSysVec,@ode45,odeArgList{:});
+                solverObj=MatrixODESolver(sizeSysVec,@ode45, ...
+                    odeArgList{:});
             end
             %
             [timeRtt0Vec,dataRtt0Array]=solverObj.solve(fRtt0DerivFunc,...
@@ -164,10 +172,13 @@ classdef GoodDirectionSet
                     dataRtt0Array = normaliz(dataRtt0Array);
                 case 3
                     sizeRtt0ArrayVec = size(dataRtt0Array);
-                    normVec = dataRtt0Array(sizeRtt0ArrayVec(1), sizeRtt0ArrayVec(2), :);
+                    normVec = dataRtt0Array(sizeRtt0ArrayVec(1), ...
+                        sizeRtt0ArrayVec(2), :);
                     normVec = repmat(normVec, [sizeSysVec, 1]);
-                    dataRtt0Array = dataRtt0Array(1:(sizeRtt0ArrayVec(1) - 1), :, :);
-                    dataRtt0Array = reshape(dataRtt0Array, [sizeSysVec, sizeRtt0ArrayVec(3)]);
+                    dataRtt0Array = ...
+                        dataRtt0Array(1:(sizeRtt0ArrayVec(1) - 1), :, :);
+                    dataRtt0Array = reshape(dataRtt0Array, [sizeSysVec, ...
+                        sizeRtt0ArrayVec(3)]);
                     dataRtt0Array = dataRtt0Array .* normVec;
             end
             %
