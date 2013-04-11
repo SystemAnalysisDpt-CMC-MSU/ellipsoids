@@ -84,6 +84,8 @@ classdef SuiteSupportFunction < mlunitext.test_case
                 crm.deployConfTemplate(confNameList{iConf});
             end
             %
+            matOpObj = gras.mat.CompositeMatrixOperations();
+            %
             for iConf = 1 : nConfs
                 confName = confNameList{iConf};
                 crm.selectConf(confName);
@@ -104,13 +106,17 @@ classdef SuiteSupportFunction < mlunitext.test_case
                 mlunit.assert_equals(true,isOk);
                 %
                 AtCMat = self.crmSys.getParam('At');
-                fAtMatCalc = self.getHandleFromCellMat(AtCMat);
+                fAtMatCalc = @(t) ...
+                    matOpObj.fromSymbMatrix(AtCMat).evaluate(t);
                 BtCMat = self.crmSys.getParam('Bt');
-                fBtMatCalc = self.getHandleFromCellMat(BtCMat);
+                fBtMatCalc = @(t) ...
+                    matOpObj.fromSymbMatrix(BtCMat).evaluate(t);
                 PtCVec = self.crmSys.getParam('control_restriction.a');
-                fPtVecCalc = self.getHandleFromCellMat(PtCVec);
+                fPtVecCalc = @(t) ...
+                    matOpObj.fromSymbMatrix(PtCVec).evaluate(t);
                 PtCMat = self.crmSys.getParam('control_restriction.Q');
-                fPtMatCalc = self.getHandleFromCellMat(PtCMat);
+                fPtMatCalc = @(t) ...
+                    matOpObj.fromSymbMatrix(PtCMat).evaluate(t);
                 x0Vec = self.crmSys.getParam('initial_set.a');
                 %
                 timeCVec = SRunProp.ellTubeRel.timeVec;
