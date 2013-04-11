@@ -45,17 +45,19 @@ for iConf=nConfs:-1:1
         isQt = crmSys.isParam('disturbance_restriction.Q');
         %
         if isCt
-            CtCMat = crmSys.getParam('Ct');
-            isEqCMat = ~any(MatVector.fromFormulaMat(CtCMat, 0));
-            isEqCMat(1) = isEqCMat(1) && iscellofstringconst(CtCMat);             
+            pCtCMat = crmSys.getParam('Ct');
+            pCtMat = MatVector.fromFormulaMat(pCtCMat, 0);
+            isCtZero = ~any(pCtMat(:));
+            isCtZero = isCtZero && iscellofstringconst(pCtCMat);             
         end
         if isQt
-            QtCMat = crmSys.getParam('disturbance_restriction.Q');
-            isEqQMat = ~any(MatVector.fromFormulaMat(QtCMat, 0));
-            isEqQMat(1) = isEqQMat(1) && iscellofstringconst(QtCMat); 
+            pQtCMat = crmSys.getParam('disturbance_restriction.Q');
+            pQtMat = MatVector.fromFormulaMat(pQtCMat, 0);
+            isQtZero = ~any(pQtMat(:));
+            isQtZero = isQtZero && iscellofstringconst(pQtCMat); 
         end
         isnDisturbance =...
-            ~isCt  || ~isQt || all(isEqCMat(:)) || all(isEqQMat(:));
+            ~isCt  || ~isQt || isCtZero || isQtZero;
         %
         if isnDisturbance
             suiteList{iConf}=loader.load_tests_from_test_case(...

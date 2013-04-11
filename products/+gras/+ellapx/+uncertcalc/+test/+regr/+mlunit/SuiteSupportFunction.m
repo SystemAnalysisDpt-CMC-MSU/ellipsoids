@@ -23,26 +23,6 @@ classdef SuiteSupportFunction < mlunitext.test_case
                 sqrt((cxVec.') * cBMat * fPMat(t) * (cBMat.') ...
                 * cxVec);
         end
-        %
-        function fMatCalc = getHandleFromCellMat(inputCMat)
-            localCMat = inputCMat;
-            [nRows, nColumn] = size(localCMat);
-            for iRow = 1 : nRows
-                for jColumn = 1 : nColumn
-                    if jColumn == nColumn
-                        localCMat(iRow, jColumn) =...
-                            strcat(localCMat(iRow, jColumn), ';');
-                    else
-                        localCMat(iRow, jColumn) =...
-                            strcat(localCMat(iRow, jColumn), ',');
-                    end
-                end
-            end
-            localCMat = localCMat.';
-            helpStr = strcat('fRes = @(t) [', localCMat{:}, '];');
-            eval(helpStr);
-            fMatCalc = fRes;
-        end
     end
     methods
         function self = SuiteSupportFunction(varargin)
