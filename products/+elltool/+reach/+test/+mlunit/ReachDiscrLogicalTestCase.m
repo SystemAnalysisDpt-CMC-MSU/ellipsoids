@@ -1,4 +1,4 @@
-classdef ReachDiscrTestCase < mlunit.test_case
+classdef ReachDiscrLogicalTestCase < mlunit.test_case
     %
     properties (Constant, GetAccess = private)
 %         N_TIME_GRID_POINTS = 200;
@@ -11,7 +11,7 @@ classdef ReachDiscrTestCase < mlunit.test_case
     end
     %
     methods
-        function self = ReachDiscrTestCase(varargin)
+        function self = ReachDiscrLogicalTestCase(varargin)
             self = self@mlunit.test_case(varargin{:});
             [~, className] = modgen.common.getcallernameext(1);
             shortClassName = mfilename('classname');
@@ -22,12 +22,12 @@ classdef ReachDiscrTestCase < mlunit.test_case
         
         
         function self = DISABLED_testDisplay(self)
-            LS = linsys( eye(3), eye(3,4), ell_unitball(4), ...
+            LS = elltool.linsys.LinSysFactory.create( eye(3), eye(3,4), ell_unitball(4), ...
                 [], [], [], [], 'd');
             X0Ell = ellipsoid(zeros(3, 1), eye(3));
             LMat = eye(3);
             TVec = [0, 5];
-            RS = reach(LS, X0Ell, LMat, TVec);
+            RS = elltool.reach.ReachDiscrete(LS, X0Ell, LMat, TVec);
             resStr = evalc('display(RS)');
             isOk = ~isempty(strfind(resStr,'Reach set'));
             isOk = isOk && ~isempty(strfind(resStr,'discrete'));
@@ -41,12 +41,12 @@ classdef ReachDiscrTestCase < mlunit.test_case
         
         function self = DISABLED_testDimension(self)
             nSystemDimension = 4;
-            LS = linsys( eye(nSystemDimension), eye(nSystemDimension,2), ell_unitball(2), ...
+            LS = elltool.linsys.LinSysFactory.create( eye(nSystemDimension), eye(nSystemDimension,2), ell_unitball(2), ...
                 [], [], [], [], 'd');
             X0Ell = ellipsoid(zeros(nSystemDimension, 1), eye(nSystemDimension));
             LMat = eye(nSystemDimension);
             TVec = [0, 5];
-            RS = reach(LS, X0Ell, LMat, TVec);
+            RS = elltool.reach.ReachDiscrete(LS, X0Ell, LMat, TVec);
             [nObtainedReachDimension, nObtainedSystemDimension] = dimension(RS);
             isOk = nObtainedSystemDimension == nSystemDimension;
             isOk = isOk && (nObtainedReachDimension == nSystemDimension);
@@ -61,15 +61,15 @@ classdef ReachDiscrTestCase < mlunit.test_case
         
         
         function self = DISABLED_testGetSystem(self)
-            FirstLS = linsys( eye(3), eye(3,4), ell_unitball(4), ...
+            FirstLS = elltool.linsys.LinSysFactory.create( eye(3), eye(3,4), ell_unitball(4), ...
                 eye(3), ell_unitball(3), eye(3), ell_unitball(3), 'd');
-            FirstRS = reach(FirstLS, ...
+            FirstRS = elltool.reach.ReachDiscrete(FirstLS, ...
                        ellipsoid(zeros(3, 1), eye(3)), ...
                        eye(3),...
                        [0, 5]);
-            SecondLS = linsys(eye(4), eye(4, 2), ell_unitball(2), ...
+            SecondLS = elltool.linsys.LinSysFactory.create(eye(4), eye(4, 2), ell_unitball(2), ...
                 [], [], [], [], 'd');
-            SecondRS = reach(SecondLS, ...
+            SecondRS = elltool.reach.ReachDiscrete(SecondLS, ...
                         ellipsoid(ones(4, 1), eye(4)), ...
                         eye(4), ...
                         [0, 3]);
@@ -84,11 +84,11 @@ classdef ReachDiscrTestCase < mlunit.test_case
             AMat = [1 2; 3 4];
             BMat = [3; 2];
             PEll = 2*ell_unitball(1);
-            LS = linsys(AMat, BMat, PEll, [], [], [], [], 'd');
+            LS = elltool.linsys.LinSysFactory.create(AMat, BMat, PEll, [], [], [], [], 'd');
             X0Ell = ellipsoid([0; 0], [3 1; 1 2]);
             LMat = eye(2);
             TVec = [0, 5];
-            FirstRS = reach(LS, X0Ell, LMat, TVec);
+            FirstRS = elltool.reach.ReachDiscrete(LS, X0Ell, LMat, TVec);
             SecondRS = cut(FirstRS, [2, 3]);
             ThirdRS = cut(FirstRS, 3);
             isOk = ~iscut(FirstRS);
@@ -102,32 +102,35 @@ classdef ReachDiscrTestCase < mlunit.test_case
             AMat = eye(3);
             BMat = [1 0; 0 1; 1 1];
             PEll = ell_unitball(2);
-            LS = linsys(AMat, BMat, PEll, [], [], [], [], 'd');
+            LS = elltool.linsys.LinSysFactory.create(AMat, BMat, PEll, [], [], [], [], 'd');
             X0Ell = ellipsoid([0; 1; 0], eye(3));
             LMat = eye(3);
             TVec = [0, 5];
-            FirstRS = reach(LS, X0Ell, LMat, TVec);
+            FirstRS = elltool.reach.ReachDiscrete(LS, X0Ell, LMat, TVec);
             SecondRS = projection(FirstRS, [1 0 0; 0 1 0]');
             expectedVec = [false, true];
-            obtainedVec = isprojection([FirstRS, SecondRS]);
+            obtainedVec = zeros(1, 2);
+            obtainedVec(1) = isprojection(FirstRS);
+            obtainedVec(2) = isprojection(SecondRS);
             isEqVec = expectedVec == obtainedVec;
             mlunit.assert_equals( all(isEqVec), true );  
         end
         
         
+        % ошибка
         function self = DISABLED_testIsEmpty(self)
             AMat = eye(3);
             BMat = ones(3);
             PEll = ell_unitball(3);
-            LSVec = [linsys(), ...
-                         linsys([], [], [], [], [], [], [], 'd'),...
-                         linsys(AMat, BMat, PEll, [], [], [], [], 'd')];
+            LSVec = [elltool.linsys.LinSysFactory.create(), ...
+                         elltool.linsys.LinSysFactory.create([], [], [], [], [], [], [], 'd'),...
+                         elltool.linsys.LinSysFactory.create(AMat, BMat, PEll, [], [], [], [], 'd')];
             X0Ell = ell_unitball(3);
             LMat = eye(3);
             TVec = [0, 5];
-            RSVec = [reach(LSVec(1), X0Ell, LMat, TVec),...
-                        reach(LSVec(2), X0Ell, LMat, TVec),...
-                        reach(LSVec(3), X0Ell, LMat, TVec)];
+            RSVec = [elltool.reach.ReachDiscrete(LSVec(1), X0Ell, LMat, TVec),...
+                        elltool.reach.ReachDiscrete(LSVec(2), X0Ell, LMat, TVec),...
+                        elltool.reach.ReachDiscrete(LSVec(3), X0Ell, LMat, TVec)];
             obtainedVec = isempty(RSVec);
             expectedVec = [true, true, false];
             isEqVec = obtainedVec == expectedVec;
@@ -139,12 +142,12 @@ classdef ReachDiscrTestCase < mlunit.test_case
             AMat = [1 0 0; 1 1 0; 1 1 1];
             BMat = eye(3);
             PEll = ell_unitball(3);
-            LS = linsys(AMat, BMat, PEll, [], [], [], [], 'd');
+            LS = elltool.linsys.LinSysFactory.create(AMat, BMat, PEll, [], [], [], [], 'd');
             X0Ell = ell_unitball(3);
             LMat = eye(3);
             T = 15;
             TVec = [1, T];
-            RS = reach(LS, X0Ell, LMat, TVec);
+            RS = elltool.reach.ReachDiscrete(LS, X0Ell, LMat, TVec);
             ExpectedDirectionsCVec = cell(1, 3);
             ExpectedDirectionsCVec{1} = zeros(3, 15);
             ExpectedDirectionsCVec{2} = zeros(3, 15);
@@ -164,15 +167,15 @@ classdef ReachDiscrTestCase < mlunit.test_case
                 isOk = isOk && all(isOkMat(:));
             end
                      
-            AMat = {'2 + cos(t)' '0' '0'; '1' '0' 'sin(t)'; '0' '1' '0'};
+            AMat = {'2 + cos(k)' '0' '0'; '1' '0' 'sin(k)'; '0' '1' '0'};
             BMat = eye(3);
             PEll = ell_unitball(3);
-            LS = linsys(AMat, BMat, PEll, [], [], [], [], 'd');
+            LS = elltool.linsys.LinSysFactory.create(AMat, BMat, PEll, [], [], [], [], 'd');
             X0Ell = ell_unitball(3);
             LMat = eye(3);
             T = 15;
             TVec = [1, T];
-            RS = reach(LS, X0Ell, LMat, TVec);
+            RS = elltool.reach.ReachDiscrete(LS, X0Ell, LMat, TVec);
             ExpectedDirectionsCVec = cell(1, 3);
             ExpectedDirectionsCVec{1} = zeros(3, 15);
             ExpectedDirectionsCVec{2} = zeros(3, 15);
@@ -180,20 +183,19 @@ classdef ReachDiscrTestCase < mlunit.test_case
             DirMat = zeros(3, 15);
             for j = 1 : 3
                 DirMat(:, 1) = LMat(:, j);
-                t = 1;
+                k = 1;
                 CurAMat = zeros(3);
-                for k = 1 : 3
+                for s = 1 : 3
                     for l = 1 : 3
-                        CurAMat(k, l)  = eval(AMat{k, l});
+                        CurAMat(s, l)  = eval(AMat{s, l});
                     end
                 end
-                for i = 2 : T
-                    DirMat(:, i) = (CurAMat')^(-1) * DirMat(:, i - 1);
-                    t = i;
+                for k = 2 : T
+                    DirMat(:, k) = (CurAMat')^(-1) * DirMat(:, k - 1);
                     CurAMat = zeros(3);
-                    for k = 1 : 3
+                    for s = 1 : 3
                         for l = 1 : 3
-                            CurAMat(k, l)  = eval(AMat{k, l});
+                            CurAMat(s, l)  = eval(AMat{s, l});
                         end
                     end
                 end
@@ -214,10 +216,10 @@ classdef ReachDiscrTestCase < mlunit.test_case
             AMat = [1 0 1; -1 2 1; 0 1 -2];
             BMat = [2 0 1; 3 0 1; 2 2 2];
             PEll = ellipsoid([1 1 1]', [3 0 0; 0 4 0; 0 0 1]);
-            LS = linsys(AMat, BMat, PEll, [], [], [], [], 'd');
+            LS = elltool.linsys.LinSysFactory.create(AMat, BMat, PEll, [], [], [], [], 'd');
             X0Ell = ell_unitball(3);
             LMat = eye(3);
-            RS = reach(LS, X0Ell, LMat, [1, 20]);
+            RS = elltool.reach.ReachDiscrete(LS, X0Ell, LMat, [1, 20]);
             ObservedCenterMat = get_center(RS);
             
             ExpectedCenterMat = zeros(3, 20);
@@ -230,24 +232,24 @@ classdef ReachDiscrTestCase < mlunit.test_case
             isOkMat = abs(ExpectedCenterMat - ObservedCenterMat) < self.ABS_TOL;
             isOk = all(isOkMat(:));
             
-            AMat = {'1', 'cos(t)', '0'; '1 - 1/t^2', '2', 'sin(t)'; '0', '1', '1'};
+            AMat = {'1', 'cos(k)', '0'; '1 - 1/k^2', '2', 'sin(k)'; '0', '1', '1'};
             BMat = eye(3);
             PEll = ellipsoid([0 -3 1]', [2 1 0; 1 2 0; 0 0 1]);
-            LS = linsys(AMat, BMat, PEll, [], [], [], [], 'd');
+            LS = elltool.linsys.LinSysFactory.create(AMat, BMat, PEll, [], [], [], [], 'd');
             X0Ell = ell_unitball(3);
             LMat = eye(3);
-            RS = reach(LS, X0Ell, LMat, [1, 20]);
+            RS = elltool.reach.ReachDiscrete(LS, X0Ell, LMat, [1, 20]);
             ObservedCenterMat = get_center(RS);
             
             ExpectedCenterMat = zeros(3, 20);
             [ExpectedCenterMat(:, 1), Q] = double(X0Ell);
             [PCenterVec, Q] = double(PEll);
             for i = 2 : 20
-                t = i -1;
+                k = i -1;
                 ATempMat = zeros(3);
-                for k = 1 : 3
+                for s = 1 : 3
                     for l = 1 : 3
-                        ATempMat(k, l) = eval(AMat{k, l});
+                        ATempMat(s, l) = eval(AMat{s, l});
                     end
                 end
                 ExpectedCenterMat(:, i) = ATempMat * ExpectedCenterMat(:, i - 1) + BMat * PCenterVec;
@@ -265,10 +267,10 @@ classdef ReachDiscrTestCase < mlunit.test_case
             AMat = [3 0 2; 2 2 2; -1 0 3];
             BMat = [0 1 0; 0 1 0; 3 2 1];
             PEll = ellipsoid([3 2 1]', [4 2 0; 2 4 0; 0 0 2]);
-            system = linsys(AMat, BMat, PEll, [], [], [], [], 'd');
+            system = elltool.linsys.LinSysFactory.create(AMat, BMat, PEll, [], [], [], [], 'd');
             X0Ell = ellipsoid([-1 -2 1]', diag([3, 2, 1]));
             LMat = eye(3);
-            rs = reach(system, X0Ell, LMat, [1, 20]);
+            rs = elltool.reach.ReachDiscrete(system, X0Ell, LMat, [1, 20]);
             SourceEA = get_ea(rs);
             SourceIA = get_ia(rs);
             rs2 = cut(rs, 5);
@@ -280,10 +282,10 @@ classdef ReachDiscrTestCase < mlunit.test_case
 %             AMat = [1 0 1; -1 2 1; 0 1 -2];
 %             BMat = eye(3);
 %             PEll = ellipsoid([-1 0 -1]', [3 2 1; 2 4 1; 1 1 2]);
-%             system = linsys(AMat, BMat, PEll, [], [], [], [], 'd');
+%             system = elltool.linsys.LinSysFactory.create(AMat, BMat, PEll, [], [], [], [], 'd');
 %             X0Ell = ellipsoid([5 5 5]', [2 1 0; 1 2 0; 0 0 1]);
 %             LMat = eye(3);
-%             rs = reach(system, X0Ell, LMat, [1, 20]);
+%             rs = elltool.reach.ReachDiscrete(system, X0Ell, LMat, [1, 20]);
 %             SourceEA = get_ea(rs);
 %             rs2 = cut(rs, [5, 10]);
 %             [CutEA T] = get_ea(rs2);
@@ -297,10 +299,10 @@ classdef ReachDiscrTestCase < mlunit.test_case
 %             AMat = {'1', 't', 'sin(t)'; '1/t', '0', '5'; '0', 'cos(t)', '1'};
 %             BMat = eye(3);
 %             PEll = ellipsoid([3 3 1]', [2 1 0; 1 2 0; 0 0 1]);
-%             system = linsys(AMat, BMat, PEll, [], [], [], [], 'd');
+%             system = elltool.linsys.LinSysFactory.create(AMat, BMat, PEll, [], [], [], [], 'd');
 %             X0Ell = ell_unitball(3);
 %             LMat = eye(3);
-%             rs = reach(system, X0Ell, LMat, [1, 20]);
+%             rs = elltool.reach.ReachDiscrete(system, X0Ell, LMat, [1, 20]);
 %             rs2 = cut(rs, [10, 15]);
 %             SourceEA = get_ea(rs);
 %             SourceIA = get_ia(rs);
@@ -323,10 +325,10 @@ classdef ReachDiscrTestCase < mlunit.test_case
             AMat = [1 0 2; 2 1 2; -1 0 1];
             BMat = [0 1 0; 0 1 0; 3 2 1];
             PEll = 0.01 * ellipsoid([3 2 1]', [4 2 0; 2 4 0; 0 0 2]);
-            LS = linsys(AMat, BMat, PEll, [], [], [], [], 'd');
+            LS = elltool.linsys.LinSysFactory.create(AMat, BMat, PEll, [], [], [], [], 'd');
             X0Ell = ellipsoid([-1 -2 1]', diag([3, 2, 1]));
             LMat = eye(3);
-            RS = reach(LS, X0Ell, LMat, [1, 20]);
+            RS = elltool.reach.ReachDiscrete(LS, X0Ell, LMat, [1, 20]);
             
             GoodDirectionsCVec = get_directions(RS);
             EAEllMat = get_ea(RS);
@@ -345,13 +347,13 @@ classdef ReachDiscrTestCase < mlunit.test_case
                 isOk = isOk && all(isOkMat(:));
             end
             
-            AMat = {'2 + cos(t)' '0' '0'; '1' '0' 'sin(t)'; '0' '1' '0'};
+            AMat = {'2 + cos(k)' '0' '0'; '1' '0' 'sin(k)'; '0' '1' '0'};
             BMat = diag([5, 2, 1]);
             PEll = 0.01 * ell_unitball(3);
-            system = linsys(AMat, BMat, PEll, [], [], [], [], 'd');
+            system = elltool.linsys.LinSysFactory.create(AMat, BMat, PEll, [], [], [], [], 'd');
             X0Ell = ell_unitball(3);
             LMat = eye(3);
-            RS = reach(system, X0Ell, LMat, [1, 10]);
+            RS = elltool.reach.ReachDiscrete(system, X0Ell, LMat, [1, 10]);
             
             GoodDirectionsCVec = get_directions(RS);
             EAEllMat = get_ea(RS);
@@ -387,9 +389,9 @@ classdef ReachDiscrTestCase < mlunit.test_case
             PVec = [1 0 1]';
             PEll = ellipsoid(PVec, PMat);
             LMat = eye(3);
-            LS = linsys(AMat, BMat, PEll, [], [], [], [], 'd');
+            LS = elltool.linsys.LinSysFactory.create(AMat, BMat, PEll, [], [], [], [], 'd');
 
-            RS = reach(LS, X0Ell, LMat, [T0, T1]);
+            RS = elltool.reach.ReachDiscrete(LS, X0Ell, LMat, [T0, T1]);
 
             PhiArray = zeros(3, 3, T1, T1);
             for i = 1 : T1
@@ -411,19 +413,19 @@ classdef ReachDiscrTestCase < mlunit.test_case
 
                 QArray(:, :, jDirection, 1) = X0Mat;
                 GoodDirectionsMat = GoodDirectionsCVec{jDirection};
-                for t = 2 : T1
-                    lVec = GoodDirectionsMat(:, t);
-                    aVec = sqrtm(PhiArray(:, :, t, 1) * X0Mat * PhiArray(:, :, t, 1)') * lVec;
-                    for i = 1 : t - 1
-                        bVec = sqrtm(PhiArray(:, :, t, i + 1) * BMat * PMat * BMat' * PhiArray(:, :, t, i + 1)') * lVec;
+                for k = 2 : T1
+                    lVec = GoodDirectionsMat(:, k);
+                    aVec = sqrtm(PhiArray(:, :, k, 1) * X0Mat * PhiArray(:, :, k, 1)') * lVec;
+                    for i = 1 : k - 1
+                        bVec = sqrtm(PhiArray(:, :, k, i + 1) * BMat * PMat * BMat' * PhiArray(:, :, k, i + 1)') * lVec;
                         SArray(:, :, i) = ell_valign(aVec, bVec);
                     end
 
-                    QStarMat = sqrtm(PhiArray(:, :, t, 1) * X0Mat * PhiArray(:, :, t, 1)');
-                    for i = 1 : t - 1
-                        QStarMat = QStarMat + SArray(:, :, i) * sqrtm(PhiArray(:, :, t, i + 1) * BMat * PMat * BMat' * PhiArray(:, :, t, i + 1)');
+                    QStarMat = sqrtm(PhiArray(:, :, k, 1) * X0Mat * PhiArray(:, :, k, 1)');
+                    for i = 1 : k - 1
+                        QStarMat = QStarMat + SArray(:, :, i) * sqrtm(PhiArray(:, :, k, i + 1) * BMat * PMat * BMat' * PhiArray(:, :, k, i + 1)');
                     end
-                    QArray(:, :, jDirection, t) = QStarMat' * QStarMat;
+                    QArray(:, :, jDirection, k) = QStarMat' * QStarMat;
                 end
             end
             isOkMat = zeros(3, T1);
@@ -443,7 +445,7 @@ classdef ReachDiscrTestCase < mlunit.test_case
             T0 = 1;
             T1 = 5;
 
-            AMat = {'2 + cos(t)' '0' '0'; '1' '0' 'sin(t)'; '0' '1' '0'};
+            AMat = {'2 + cos(k)' '0' '0'; '1' '0' 'sin(k)'; '0' '1' '0'};
             BMat = diag([5, 2, 1]);
             X0Mat = diag([3, 2, 1]);
             x0Vec = [0, 0, 0]';
@@ -452,19 +454,19 @@ classdef ReachDiscrTestCase < mlunit.test_case
             PVec = zeros(3, 1);
             PEll = ellipsoid(PVec, PMat);
             LMat = eye(3);
-            LS = linsys(AMat, BMat, PEll, [], [], [], [], 'd');
+            LS = elltool.linsys.LinSysFactory.create(AMat, BMat, PEll, [], [], [], [], 'd');
 
-            RS = reach(LS, X0Ell, LMat, [T0, T1]);
+            RS = elltool.reach.ReachDiscrete(LS, X0Ell, LMat, [T0, T1]);
 
             PhiArray = zeros(3, 3, T1, T1);
             for i = 1 : T1
                 PhiArray(:, :, i, i) = eye(3);
             end
             AArray = zeros(3, 3, T1);
-            for t = 1 : T1
+            for k = 1 : T1
                 for i = 1 : 3
                     for j = 1 : 3
-                        AArray(i, j, t) = eval(AMat{i, j});
+                        AArray(i, j, k) = eval(AMat{i, j});
                     end
                 end
             end
@@ -483,30 +485,30 @@ classdef ReachDiscrTestCase < mlunit.test_case
 
                 QArray(:, :, jDirection, 1) = X0Mat;
                 GoodDirectionsMat = GoodDirectionsCVec{jDirection};
-                for t = 2 : T1
-                    lVec = GoodDirectionsMat(:, t);
-                    aVec = sqrtm(PhiArray(:, :, t, 1) * X0Mat * PhiArray(:, :, t, 1)') * lVec;
-                    for i = 1 : t - 1
-                        bVec = sqrtm(PhiArray(:, :, t, i + 1) * BMat * PMat * BMat' * PhiArray(:, :, t, i + 1)') * lVec;
+                for k = 2 : T1
+                    lVec = GoodDirectionsMat(:, k);
+                    aVec = sqrtm(PhiArray(:, :, k, 1) * X0Mat * PhiArray(:, :, k, 1)') * lVec;
+                    for i = 1 : k - 1
+                        bVec = sqrtm(PhiArray(:, :, k, i + 1) * BMat * PMat * BMat' * PhiArray(:, :, k, i + 1)') * lVec;
                         SArray(:, :, i) = ell_valign(aVec, bVec);
                     end
 
-                    QStarMat = sqrtm(PhiArray(:, :, t, 1) * X0Mat * PhiArray(:, :, t, 1)');
-                    for i = 1 : t - 1
-                        QStarMat = QStarMat + SArray(:, :, i) * sqrtm(PhiArray(:, :, t, i + 1) * BMat * PMat * BMat' * PhiArray(:, :, t, i + 1)');
+                    QStarMat = sqrtm(PhiArray(:, :, k, 1) * X0Mat * PhiArray(:, :, k, 1)');
+                    for i = 1 : k - 1
+                        QStarMat = QStarMat + SArray(:, :, i) * sqrtm(PhiArray(:, :, k, i + 1) * BMat * PMat * BMat' * PhiArray(:, :, k, i + 1)');
                     end
-                    QArray(:, :, jDirection, t) = QStarMat' * QStarMat;
+                    QArray(:, :, jDirection, k) = QStarMat' * QStarMat;
                 end
             end
             isOkMat = zeros(3, T1);
             ObtainedValuesEllMat = get_ia(RS);
             for iDirection = 1 : 3
                 GoodDirectionMat = GoodDirectionsCVec{iDirection};
-                for t = 1 : T1
-                    lVec = GoodDirectionMat(:, t);
-                    ApproximationEll = ObtainedValuesEllMat(iDirection, t);
+                for k = 1 : T1
+                    lVec = GoodDirectionMat(:, k);
+                    ApproximationEll = ObtainedValuesEllMat(iDirection, k);
                     [qq QQ] = double(ApproximationEll);
-                    isOkMat(iDirection, t) = (abs((lVec' * QQ * lVec) -(lVec' * QArray(:, :, iDirection, t) * lVec)) < 1);
+                    isOkMat(iDirection, k) = (abs((lVec' * QQ * lVec) -(lVec' * QArray(:, :, iDirection, k) * lVec)) < 1);
                 end
             end
             isOk = isOk && all(isOkMat(:));
@@ -529,9 +531,9 @@ classdef ReachDiscrTestCase < mlunit.test_case
             PVec = [1 0 1]';
             PEll = ellipsoid(PVec, PMat);
             LMat = eye(3);
-            LS = linsys(AMat, BMat, PEll, [], [], [], [], 'd');
+            LS = elltool.linsys.LinSysFactory.create(AMat, BMat, PEll, [], [], [], [], 'd');
 
-            RS = reach(LS, X0Ell, LMat, [T0, T1]);
+            RS = elltool.reach.ReachDiscrete(LS, X0Ell, LMat, [T0, T1]);
 
             PhiArray = zeros(3, 3, T1, T1);
             for i = 1 : T1
@@ -553,19 +555,19 @@ classdef ReachDiscrTestCase < mlunit.test_case
                 
                 QArray(:, :, jDirection, 1) = X0Mat;
                 GoodDirectionsMat = GoodDirectionsCVec{jDirection};
-                for t = 2 : T1
-                    lVec = GoodDirectionsMat(:, t);
+                for k = 2 : T1
+                    lVec = GoodDirectionsMat(:, k);
                     pVec = zeros(T1, 1);
-                    pVec(1) = sqrt(lVec' * PhiArray(:, :, t, 1) * X0Mat * PhiArray(:, :, t, 1)' * lVec);
-                    for i = 1 : t - 1
-                        pVec(i + 1) = sqrt(lVec' * PhiArray(:, :, t, i+1) * BMat * PMat * BMat' * PhiArray(:, :, t, i+1)' * lVec);
+                    pVec(1) = sqrt(lVec' * PhiArray(:, :, k, 1) * X0Mat * PhiArray(:, :, k, 1)' * lVec);
+                    for i = 1 : k - 1
+                        pVec(i + 1) = sqrt(lVec' * PhiArray(:, :, k, i+1) * BMat * PMat * BMat' * PhiArray(:, :, k, i+1)' * lVec);
                     end
 
-                    QArray(:, :, jDirection, t) = PhiArray(:, :, t, 1) * X0Mat * PhiArray(:, :, t, 1)' /pVec(1);
-                    for i = 1 : t - 1
-                        QArray(:, :, jDirection, t) = QArray(:, :, jDirection, t) + PhiArray(:, :, t, i + 1) * BMat * PMat * BMat' * PhiArray(:, :, t, i + 1)'/pVec(i + 1);
+                    QArray(:, :, jDirection, k) = PhiArray(:, :, k, 1) * X0Mat * PhiArray(:, :, k, 1)' /pVec(1);
+                    for i = 1 : k - 1
+                        QArray(:, :, jDirection, k) = QArray(:, :, jDirection, k) + PhiArray(:, :, k, i + 1) * BMat * PMat * BMat' * PhiArray(:, :, k, i + 1)'/pVec(i + 1);
                     end
-                    QArray(:, :, jDirection, t) = QArray(:, :, jDirection, t) * sum(pVec);
+                    QArray(:, :, jDirection, k) = QArray(:, :, jDirection, k) * sum(pVec);
                 end
             end
             
@@ -573,11 +575,11 @@ classdef ReachDiscrTestCase < mlunit.test_case
             ObtainedValuesEllMat = get_ea(RS);
             for iDirection = 1 : 3
                 directions = GoodDirectionsCVec{iDirection};
-                for t = 1 : T1
-                    lVec = directions(:, t);
-                    ApproximationEll = ObtainedValuesEllMat(iDirection, t);
+                for k = 1 : T1
+                    lVec = directions(:, k);
+                    ApproximationEll = ObtainedValuesEllMat(iDirection, k);
                     [qq QQ] = double(ApproximationEll);
-                    isOkMat(iDirection, t) = (abs((lVec' * QQ * lVec) -(lVec' * QArray(:, :, iDirection, t) * lVec)) < 0.001);
+                    isOkMat(iDirection, k) = (abs((lVec' * QQ * lVec) -(lVec' * QArray(:, :, iDirection, k) * lVec)) < 0.001);
                 end
             end
             isOk = all(isOkMat(:));
@@ -585,7 +587,7 @@ classdef ReachDiscrTestCase < mlunit.test_case
             T0 = 1;
             T1 = 5;
 
-            AMat = {'1', 'cos(t)', '0'; '1 - 1/t^2', '2', 'sin(t)'; '0', '1', '1'};
+            AMat = {'1', 'cos(k)', '0'; '1 - 1/k^2', '2', 'sin(k)'; '0', '1', '1'};
             BMat = [3 2 1; 0 0 1; 2 1 1];
             X0Mat = [5 1 0; 1 4 1; 0 1 3];
             x0Vec = [0, 0, 0]';
@@ -594,9 +596,9 @@ classdef ReachDiscrTestCase < mlunit.test_case
             PVec = [1 0 1]';
             PEll = ellipsoid(PVec, PMat);
             LMat = eye(3);
-            LS = linsys(AMat, BMat, PEll, [], [], [], [], 'd');
+            LS = elltool.linsys.LinSysFactory.create(AMat, BMat, PEll, [], [], [], [], 'd');
 
-            RS = reach(LS, X0Ell, LMat, [T0, T1]);
+            RS = elltool.reach.ReachDiscrete(LS, X0Ell, LMat, [T0, T1]);
 
             PhiArray = zeros(3, 3, T1, T1);
             for i = 1 : T1
@@ -604,10 +606,10 @@ classdef ReachDiscrTestCase < mlunit.test_case
             end
 
             AArray = zeros(3, 3, T1);
-            for t = 1 : T1
+            for k = 1 : T1
                 for i = 1 : 3
                     for j = 1 : 3
-                        AArray(i, j, t) = eval(AMat{i, j});
+                        AArray(i, j, k) = eval(AMat{i, j});
                     end
                 end
             end
@@ -625,19 +627,19 @@ classdef ReachDiscrTestCase < mlunit.test_case
 
                 QArray(:, :, jDirection, 1) = X0Mat;
                 GoodDirectionsMat = GoodDirectionsCVec{jDirection};
-                for t = 2 : T1
-                    lVec = GoodDirectionsMat(:, t);
+                for k = 2 : T1
+                    lVec = GoodDirectionsMat(:, k);
                     pVec = zeros(T1, 1);
-                    pVec(1) = sqrt(lVec' * PhiArray(:, :, t, 1) * X0Mat * PhiArray(:, :, t, 1)' * lVec);
-                    for i = 1 : t - 1
-                        pVec(i + 1) = sqrt(lVec'* PhiArray(:, :, t, i+1) * BMat * PMat * BMat' * PhiArray(:, :, t, i+1)' *lVec);
+                    pVec(1) = sqrt(lVec' * PhiArray(:, :, k, 1) * X0Mat * PhiArray(:, :, k, 1)' * lVec);
+                    for i = 1 : k - 1
+                        pVec(i + 1) = sqrt(lVec'* PhiArray(:, :, k, i+1) * BMat * PMat * BMat' * PhiArray(:, :, k, i+1)' *lVec);
                     end
 
-                    QArray(:, :, jDirection, t) = PhiArray(:, :, t, 1) * X0Mat * PhiArray(:, :, t, 1)' /pVec(1);
-                    for i = 1 : t - 1
-                        QArray(:, :, jDirection, t) = QArray(:, :, jDirection, t) + PhiArray(:, :, t, i + 1) * BMat * PMat * BMat' * PhiArray(:, :, t, i + 1)'/pVec(i + 1);
+                    QArray(:, :, jDirection, k) = PhiArray(:, :, k, 1) * X0Mat * PhiArray(:, :, k, 1)' /pVec(1);
+                    for i = 1 : k - 1
+                        QArray(:, :, jDirection, k) = QArray(:, :, jDirection, k) + PhiArray(:, :, k, i + 1) * BMat * PMat * BMat' * PhiArray(:, :, k, i + 1)'/pVec(i + 1);
                     end
-                    QArray(:, :, jDirection, t) = QArray(:, :, jDirection, t) * sum(pVec);
+                    QArray(:, :, jDirection, k) = QArray(:, :, jDirection, k) * sum(pVec);
                 end
             end
             
@@ -672,9 +674,9 @@ classdef ReachDiscrTestCase < mlunit.test_case
             PVec = [1 0 1]';
             PEll = ellipsoid(PVec, PMat);
             LMat = eye(3);
-            LS = linsys(AMat, BMat, PEll, [], [], [], [], 'd');
+            LS = elltool.linsys.LinSysFactory.create(AMat, BMat, PEll, [], [], [], [], 'd');
 
-            RS = reach(LS, X0Ell, LMat, [T0, T1]);
+            RS = elltool.reach.ReachDiscrete(LS, X0Ell, LMat, [T0, T1]);
             
             ProjectionMatrix = [1/2^0.5 0 1/2^0.5; 0 1 0]';
             ProjectedRS = projection(RS, ProjectionMatrix);
@@ -721,6 +723,7 @@ classdef ReachDiscrTestCase < mlunit.test_case
             
         end
         
+        
         function self = DISABLED_testIntersect(self)
             T0 = 1;
             T1 = 5;
@@ -734,8 +737,8 @@ classdef ReachDiscrTestCase < mlunit.test_case
             PVec = [1 0 1]';
             PEll = ellipsoid(PVec, PMat);
             LMat = eye(3);
-            LS = linsys(AMat, BMat, PEll, [], [], [], [], 'd');
-            RS = reach(LS, X0Ell, LMat, [T0, T1]);
+            LS = elltool.linsys.LinSysFactory.create(AMat, BMat, PEll, [], [], [], [], 'd');
+            RS = elltool.reach.ReachDiscrete(LS, X0Ell, LMat, [T0, T1]);
             RS = projection(RS, [1 0 0; 0 1 0]');
             ell1 = ellipsoid([-200, -120]', 200*eye(2));
             ell2 = ellipsoid([-100, 250]', 100*eye(2));
@@ -772,7 +775,8 @@ classdef ReachDiscrTestCase < mlunit.test_case
             mlunit.assert_equals(isOk, true);            
         end
         
-        function self = testEvolve(self)
+        
+        function self = DISABLED_testEvolve(self)
             T0 = 1;
             T1 = 3;
             T2 = 5;
@@ -790,13 +794,13 @@ classdef ReachDiscrTestCase < mlunit.test_case
             A2Mat = [1 0 2; 2 1 2; -1 0 1];
             B2Mat = [0 1 0; 0 1 0; 3 2 1];
             P2Ell = 0.01 * ellipsoid([3 2 1]', [4 2 0; 2 4 0; 0 0 2]);
-            LS2 = linsys(A2Mat, B2Mat, P2Ell, [], [], [], [], 'd');
+            LS2 = elltool.linsys.LinSysFactory.create(A2Mat, B2Mat, P2Ell, [], [], [], [], 'd');
             
             LMat = eye(3);
-            LS1 = linsys(A1Mat, B1Mat, P1Ell, [], [], [], [], 'd');
-            RS = reach(LS1, X01Ell, LMat, [T0, T1]);
+            LS1 = elltool.linsys.LinSysFactory.create(A1Mat, B1Mat, P1Ell, [], [], [], [], 'd');
+            RS = elltool.reach.ReachDiscrete(LS1, X01Ell, LMat, [T0, T1]);
             obtainedRS = evolve(RS, T2);
-            expectedRS = reach(LS1, X01Ell, LMat, [T0, T2]);
+            expectedRS = elltool.reach.ReachDiscrete(LS1, X01Ell, LMat, [T0, T2]);
             
             isOk = 1;
             expectedApproxEllMat = get_ia(expectedRS);
@@ -829,7 +833,7 @@ classdef ReachDiscrTestCase < mlunit.test_case
             initApproxEllMat = get_ia(RS);
             
             for iDirection = 1 : 3
-                EvolvingRS = reach(LS2, initApproxEllMat(iDirection, T1), LMat(:, iDirection), [T1 T2]);
+                EvolvingRS = elltool.reach.ReachDiscrete(LS2, initApproxEllMat(iDirection, T1), LMat(:, iDirection), [T1 T2]);
                 expectedApproxEllMat = get_ia(EvolvingRS);
                 for t = 1 : T2 - T1 + 1
                     [q1 Q1] = double(expectedApproxEllMat(1, t));
@@ -844,7 +848,7 @@ classdef ReachDiscrTestCase < mlunit.test_case
             initApproxEllMat = get_ea(RS);
             
             for iDirection = 1 : 3
-                EvolvingRS = reach(LS2, initApproxEllMat(iDirection, T1), LMat(:, iDirection), [T1 T2]);
+                EvolvingRS = elltool.reach.ReachDiscrete(LS2, initApproxEllMat(iDirection, T1), LMat(:, iDirection), [T1 T2]);
                 expectedApproxEllMat = get_ea(EvolvingRS);
                 for t = 1 : T2 - T1 + 1
                     [q1 Q1] = double(expectedApproxEllMat(1, t));
