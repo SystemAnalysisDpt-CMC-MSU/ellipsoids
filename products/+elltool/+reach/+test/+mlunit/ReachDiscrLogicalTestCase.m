@@ -117,22 +117,21 @@ classdef ReachDiscrLogicalTestCase < mlunit.test_case
         end
         
         
-        % ошибка
         function self = DISABLED_testIsEmpty(self)
             AMat = eye(3);
-            BMat = ones(3);
+            BMat = diag([3, 2, 1]);
             PEll = ell_unitball(3);
-            LSVec = [elltool.linsys.LinSysFactory.create(), ...
-                         elltool.linsys.LinSysFactory.create([], [], [], [], [], [], [], 'd'),...
+            LSVec = [    elltool.linsys.LinSysFactory.create([], [], [], [], [], [], [], 'd'),...
                          elltool.linsys.LinSysFactory.create(AMat, BMat, PEll, [], [], [], [], 'd')];
             X0Ell = ell_unitball(3);
             LMat = eye(3);
             TVec = [0, 5];
             RSVec = [elltool.reach.ReachDiscrete(LSVec(1), X0Ell, LMat, TVec),...
-                        elltool.reach.ReachDiscrete(LSVec(2), X0Ell, LMat, TVec),...
-                        elltool.reach.ReachDiscrete(LSVec(3), X0Ell, LMat, TVec)];
-            obtainedVec = isempty(RSVec);
-            expectedVec = [true, true, false];
+                        elltool.reach.ReachDiscrete(LSVec(2), X0Ell, LMat, TVec)];
+            obtainedVec = zeros(1, 2);
+            obtainedVec(1) = isempty(RSVec(1));
+            obtainedVec(2) = isempty(RSVec(2));
+            expectedVec = [true, false];
             isEqVec = obtainedVec == expectedVec;
             mlunit.assert_equals( all(isEqVec), true );
         end
@@ -262,58 +261,51 @@ classdef ReachDiscrLogicalTestCase < mlunit.test_case
         end
         
         
-        % error with cut time
         function self = DISABLED_testCut(self)
-            AMat = [3 0 2; 2 2 2; -1 0 3];
-            BMat = [0 1 0; 0 1 0; 3 2 1];
-            PEll = ellipsoid([3 2 1]', [4 2 0; 2 4 0; 0 0 2]);
-            system = elltool.linsys.LinSysFactory.create(AMat, BMat, PEll, [], [], [], [], 'd');
-            X0Ell = ellipsoid([-1 -2 1]', diag([3, 2, 1]));
+            AMat = [1 0 1; -1 2 1; 0 1 -2];
+            BMat = [2 0 1; 3 0 1; 2 2 2];
+            PEll = ellipsoid([1 1 1]', [3 0 0; 0 4 0; 0 0 1]);
+            LS = elltool.linsys.LinSysFactory.create(AMat, BMat, PEll, [], [], [], [], 'd');
+            X0Ell = ell_unitball(3);
             LMat = eye(3);
-            rs = elltool.reach.ReachDiscrete(system, X0Ell, LMat, [1, 20]);
-            SourceEA = get_ea(rs);
-            SourceIA = get_ia(rs);
-            rs2 = cut(rs, 5);
-            CutEA = get_ea(rs2);
-            CutIA = get_ia(rs2);
-            isOk = all(SourceEA(:, 5) == CutEA(:));
-            isOk = isOk && all(SourceIA(:, 5) == CutIA(:));
+            RS = elltool.reach.ReachDiscrete(LS, X0Ell, LMat, [1, 20]);
+            SourceEAEllMat = get_ea(RS);
+            SourceIAEllMat = get_ia(RS);
+            RS2 = cut(RS, 5);
+            CutEAEll = get_ea(RS2);
+            CutIAEll = get_ia(RS2);
+            isOk = all(SourceEAEllMat(:, 5) == CutEAEll(:));
+            isOk = isOk && all(SourceIAEllMat(:, 5) == CutIAEll(:));
             
-%             AMat = [1 0 1; -1 2 1; 0 1 -2];
-%             BMat = eye(3);
-%             PEll = ellipsoid([-1 0 -1]', [3 2 1; 2 4 1; 1 1 2]);
-%             system = elltool.linsys.LinSysFactory.create(AMat, BMat, PEll, [], [], [], [], 'd');
-%             X0Ell = ellipsoid([5 5 5]', [2 1 0; 1 2 0; 0 0 1]);
-%             LMat = eye(3);
-%             rs = elltool.reach.ReachDiscrete(system, X0Ell, LMat, [1, 20]);
-%             SourceEA = get_ea(rs);
-%             rs2 = cut(rs, [5, 10]);
-%             [CutEA T] = get_ea(rs2);
-%             ResultMat = SourceEA(:, 5:10) == CutEA;
-%             isOk = isOk && all(ResultMat(:));
-%             SourceIA = get_ia(rs);
-%             CutIA = get_ia(rs2);
-%             ResultMat = SourceIA(:, 5:10) == CutIA;
-%             isOk = isOk && all(ResultMat(:));
 
-%             AMat = {'1', 't', 'sin(t)'; '1/t', '0', '5'; '0', 'cos(t)', '1'};
-%             BMat = eye(3);
-%             PEll = ellipsoid([3 3 1]', [2 1 0; 1 2 0; 0 0 1]);
-%             system = elltool.linsys.LinSysFactory.create(AMat, BMat, PEll, [], [], [], [], 'd');
-%             X0Ell = ell_unitball(3);
-%             LMat = eye(3);
-%             rs = elltool.reach.ReachDiscrete(system, X0Ell, LMat, [1, 20]);
-%             rs2 = cut(rs, [10, 15]);
-%             SourceEA = get_ea(rs);
-%             SourceIA = get_ia(rs);
-%             [CutEA T] = get_ea(rs2);
-%             isOk = isOk && all(T == 10:15);
-%             [CutIA T] = get_ia(rs2);
-%             isOk = isOk && all(T == 10:15);
-%             ResultMat = SourceEA(:, 10:15) == CutEA;
-%             isOk = isOk && all(ResultMat(:));
-%             ResultMat = SourceIA(:, 10:15) == CutIA;
-%             isOk = isOk && all(ResultMat(:));
+            RS2 = cut(RS, [5, 10]);
+            [CutEAEllMat TVec] = get_ea(RS2);
+            ResultMat = SourceEAEllMat(:, 5:10) == CutEAEllMat;
+            isOk = isOk && all(ResultMat(:));
+            isOk = isOk && all(TVec == 5:10);
+            [CutIAEllMat TVec] = get_ia(RS2);
+            ResultMat = SourceIAEllMat(:, 5:10) == CutIAEllMat;
+            isOk = isOk && all(ResultMat(:));           
+            isOk = isOk && all(TVec == 5:10);
+            
+            AMat = {'1', 'k', 'sin(k)'; '1/k', '0', '5'; '0', 'cos(k)', '1'};
+            BMat = eye(3);
+            PEll = ellipsoid([3 3 1]', [2 1 0; 1 2 0; 0 0 1]);
+            LS = elltool.linsys.LinSysFactory.create(AMat, BMat, PEll, [], [], [], [], 'd');
+            X0Ell = ell_unitball(3);
+            LMat = eye(3);
+            RS = elltool.reach.ReachDiscrete(LS, X0Ell, LMat, [1, 20]);
+            RS2 = cut(RS, [10, 15]);
+            SourceEAEllMat = get_ea(RS);
+            SourceIAEllMat = get_ia(RS);
+            [CutEAEllMat TVec] = get_ea(RS2);
+            isOk = isOk && all(TVec == 10:15);
+            [CutIAEllMat TVec] = get_ia(RS2);
+            isOk = isOk && all(TVec == 10:15);
+            ResultMat = SourceEAEllMat(:, 10:15) == CutEAEllMat;
+            isOk = isOk && all(ResultMat(:));
+            ResultMat = SourceIAEllMat(:, 10:15) == CutIAEllMat;
+            isOk = isOk && all(ResultMat(:));
 
             mlunit.assert_equals(isOk, true);
         end
@@ -321,6 +313,7 @@ classdef ReachDiscrLogicalTestCase < mlunit.test_case
         
         function self = DISABLED_testGetGoodCurves(self)
             eps = self.REL_TOL * 1000;
+            T = 7;
             
             AMat = [1 0 2; 2 1 2; -1 0 1];
             BMat = [0 1 0; 0 1 0; 3 2 1];
@@ -328,22 +321,22 @@ classdef ReachDiscrLogicalTestCase < mlunit.test_case
             LS = elltool.linsys.LinSysFactory.create(AMat, BMat, PEll, [], [], [], [], 'd');
             X0Ell = ellipsoid([-1 -2 1]', diag([3, 2, 1]));
             LMat = eye(3);
-            RS = elltool.reach.ReachDiscrete(LS, X0Ell, LMat, [1, 20]);
+            RS = elltool.reach.ReachDiscrete(LS, X0Ell, LMat, [1, T]);
             
             GoodDirectionsCVec = get_directions(RS);
             EAEllMat = get_ea(RS);
             GoodCurvesCVec = get_goodcurves(RS);
-            ExpectedGoodCurvesMat = zeros(3, 20);
+            ExpectedGoodCurvesMat = zeros(3, T);
             isOk = true;
             for iDirection = 1 : 3
                 GoodDirectionsMat = GoodDirectionsCVec{iDirection};
-                for jTime = 1 : 20
+                for jTime = 1 : T
                     ApproximationEll = EAEllMat(iDirection, jTime);
                     [qVec QMat] = double(ApproximationEll);
                     lVec = GoodDirectionsMat(:, jTime);
                     ExpectedGoodCurvesMat(:, jTime) =  qVec + QMat*lVec/(lVec'*QMat*lVec)^0.5;
                 end
-                isOkMat = abs((ExpectedGoodCurvesMat - GoodCurvesCVec{iDirection})./ExpectedGoodCurvesMat) < eps;
+                isOkMat = abs(ExpectedGoodCurvesMat - GoodCurvesCVec{iDirection}) < eps;
                 isOk = isOk && all(isOkMat(:));
             end
             
@@ -860,5 +853,6 @@ classdef ReachDiscrLogicalTestCase < mlunit.test_case
             end   
             mlunit.assert_equals(isOk, true);
         end
+        
     end
 end

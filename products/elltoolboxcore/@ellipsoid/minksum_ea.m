@@ -118,7 +118,11 @@ arrayfun(@(x) fSingleDirection(x),1:nCols);
                 end
                 shMat = ellipsoid.regularize(shMat, absTol);
             end
-            fstCoef = sqrt(dirVec'*shMat*dirVec);
+            % тут ошибка
+            disp('ooooooooooo');
+            dirVec
+            shMat
+            fstCoef = sqrt(dirVec'*shMat*dirVec)
             subShMat = subShMat + ((1/fstCoef) * shMat);
             secCoef = secCoef + fstCoef;
         end
