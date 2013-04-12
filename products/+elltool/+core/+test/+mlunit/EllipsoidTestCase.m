@@ -1193,6 +1193,16 @@ classdef EllipsoidTestCase < mlunitext.test_case
                 % Check optional parameter nPoints
                 checkNPoints(nDim);
                 %
+                % Check optional output
+                checkOptOut();
+                
+                function checkOptOut()
+                    [bp1Mat, fMat]=fHandle(testEll);
+                    bp2Mat=fHandle(testEll);
+                    isOk=all(bp1Mat(:)==bp2Mat(:));
+                    mlunit.assert(isOk);
+                end
+                
                 function checkNPoints(nDim)
                     if nDim==2
                         nEllPoints=testEll.getNPlot2dPoints();

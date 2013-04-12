@@ -138,11 +138,10 @@ classdef ellipsoid < handle
         regQMat = regularize(qMat,absTol)
         clrDirsMat = rm_bad_directions(q1Mat, q2Mat, dirsMat,absTol)
         [isBadDirVec,pUniversal] = isbaddirectionmat(q1Mat, q2Mat, dirsMat,absTol)
-        bdMat = ellbndr_2dmat(cenVec,qMat,nPoints,absTol)
-        [bdMat,fMat] = ellbndr_3dmat(cenVec,qMat,sphereTriangNum,absTol)
+        [bdMat,fMat] = ellbndr_2dmat(nPoints,cenVec,qMat,absTol)
+        [bdMat,fMat] = ellbndr_3dmat(nPoints,cenVec,qMat,absTol)
         [supArr, bpMat] = rhomat(ellShapeMat,ellCenterVec,absTol, dirsMat)
         [diffBoundMat, isPlotCenter3d] = calcdiffonedir(fstEll,secEll,lMat,pUniversalVec,isGoodDirVec)
-        triangDepth = calcDepth(nPoints)
     end
     methods(Access = private)
         [propMat, propVal] = getProperty(hplaneMat,propName, fPropFun)

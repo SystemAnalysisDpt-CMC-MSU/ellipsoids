@@ -1,4 +1,4 @@
-function bpMat = ellbndr_2d(myEll,nPoints)
+function [bpMat, fMat] = ellbndr_2d(myEll,nPoints)
 %
 % ELLBNDR_2D - compute the boundary of 2D ellipsoid. Private method.
 %
@@ -9,7 +9,11 @@ function bpMat = ellbndr_2d(myEll,nPoints)
 %       nPoints: number of boundary points
 %
 % Output:
-%   bpMat: double[2, nPoints + 1] - boundary points of the ellipsoid myEll.
+%   regular:
+%       bpMat: double[2,nPoints] - boundary points of ellipsoid
+%   optional:
+%       fMat: double[nFaces] - indices of points in each face of
+%           bpMat graph
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
@@ -29,4 +33,8 @@ if nargin<2
 end
 [cenVec qMat]=double(myEll);
 absTol=myEll.getAbsTol();
-bpMat=ellipsoid.ellbndr_2dmat(nPoints,cenVec,qMat,absTol);
+if nargout>1
+    [bpMat, fMat]=ellipsoid.ellbndr_2dmat(nPoints,cenVec,qMat,absTol);
+else
+    bpMat=ellipsoid.ellbndr_2dmat(nPoints,cenVec,qMat,absTol);
+end

@@ -1,4 +1,4 @@
-function bpMat = ellbndr_3d(myEll,nPoints)
+function [bpMat, fMat] = ellbndr_3d(myEll,nPoints)
 %
 % ELLBNDR_3D - compute the boundary of 3D ellipsoid.
 %
@@ -10,7 +10,10 @@ function bpMat = ellbndr_3d(myEll,nPoints)
 %       nPoints: number of boundary points
 %
 % Output:
-%   bpMat: double[3, nCols] - boundary points of the ellipsoid myEll.
+%   regular:
+%       bpMat: doulbe[3,nPoints] - boundary points of ellipsoid
+%   optional:
+%       fMat: double[3,nFaces] - indices of face verties in bpMat
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
@@ -30,4 +33,8 @@ if nargin<2
 end
 [cenVec qMat]=double(myEll);
 absTol=myEll.getAbsTol();
-bpMat=ellipsoid.ellbndr_3dmat(nPoints,cenVec,qMat,absTol);
+if nargout>1
+    [bpMat,fMat]=ellipsoid.ellbndr_3dmat(nPoints,cenVec,qMat,absTol);
+else
+    bpMat=ellipsoid.ellbndr_3dmat(nPoints,cenVec,qMat,absTol);
+end
