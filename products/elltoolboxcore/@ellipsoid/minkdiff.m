@@ -134,7 +134,7 @@ end
             if isdegenerate(secEll)
                 secEllShMat = ellipsoid.regularize(secEllShMat,secEll.absTol);
             end
-            [lMat, fMat] = calcGrid(fstEll,[0.8,1]);
+            [lMat, fMat] = calcGrid(fstEll);
             lMat = lMat';
             absTolVal=min(fstEll.absTol, secEll.absTol);
             [isBadDirVec,pUniversalVec] = ellipsoid.isbaddirectionmat(fstEllShMat, secEllShMat, ...

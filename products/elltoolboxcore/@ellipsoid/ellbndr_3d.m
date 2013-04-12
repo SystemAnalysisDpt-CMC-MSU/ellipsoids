@@ -11,9 +11,9 @@ function [bpMat, fMat] = ellbndr_3d(myEll,nPoints)
 %
 % Output:
 %   regular:
-%       bpMat: doulbe[3,nPoints] - boundary points of ellipsoid
+%       bpMat: double[nPoints,3] - boundary points of ellipsoid
 %   optional:
-%       fMat: double[3,nFaces] - indices of face verties in bpMat
+%       fMat: double[nFaces,3] - indices of face verties in bpMat
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $

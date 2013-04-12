@@ -19,8 +19,8 @@ function [vGridMat, fGridMat] = calcGrid(ellObj,factorVec)
 % Output:
 %   regular:
 %       vGridat: double[nPoints,nDim] - vertices of the grid
-%       fGridMat: double[nPoints,nDim] - indices of vertices in each face in
-%           the grid
+%       fGridMat: double[nFacePoints,nFacePoints] - indices of vertices in 
+%           each face in the grid
 %
 % $Author: Ilya Lyubich  <lubi4ig@gmail.com> $    $Date: <03-2013> $
 % $Author:  Vitaly Baranov  <vetbar42@gmail.com> $    $Date: <04-2013> $
@@ -47,5 +47,4 @@ else
     end
     [vGridMat, fGridMat]=ellObj.ellbndr_3dmat(nPlotPoints);
 end
-vGridMat=vGridMat.';
 vGridMat(vGridMat == 0) = eps;

@@ -81,7 +81,7 @@ end
             if nDim == 1
                 [ell,nDim] = rebuildOneDim2TwoDim(ell);
             end
-            [lGetGridMat, fGetGridMat] = calcGrid(ell,[0.8,1]);
+            [lGetGridMat, fGetGridMat] = calcGrid(ell);
             nPoints = size(lGetGridMat, 1);
             xMat = zeros(nDim, nPoints+1);
             [qCenVec,qMat] = ell.double();

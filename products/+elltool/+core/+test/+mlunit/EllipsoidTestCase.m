@@ -1213,12 +1213,13 @@ classdef EllipsoidTestCase < mlunitext.test_case
                     end
                     bdPoints1Mat=fHandle(testEll);
                     bdPoints2Mat=fHandle(testEll,nPoints);
-                    m1Size=size(bdPoints1Mat,2);
-                    m2Size=size(bdPoints2Mat,2);
+                    m1Size=size(bdPoints1Mat,1);
+                    m2Size=size(bdPoints2Mat,1);
                     isOk= (m1Size==nEllPoints) && (m2Size==nPoints);
                     mlunit.assert(isOk);
                 end
                 function checkOneObj(nDim)
+                    bdPointsMat=bdPointsMat.';
                     nPoints=size(bdPointsMat,2);
                     bdPointsCMat=...
                         mat2cell(bdPointsMat,nDim,ones(nPoints,1));

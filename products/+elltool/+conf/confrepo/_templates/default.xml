@@ -9,7 +9,7 @@
 	<ODESolverName type="char" >ode45</ODESolverName>
 	<isODENormControl type="char" >on</isODENormControl>
 	<isEnabledOdeSolverOptions type="boolean" >0</isEnabledOdeSolverOptions>
-	<nPlot2dPoints type="double" >100</nPlot2dPoints>
+	<nPlot2dPoints type="double" >80</nPlot2dPoints>
 	<nPlot3dPoints type="double" >642</nPlot3dPoints>
 	<logging type="struct" >
 		<log4jSettings type="char" >

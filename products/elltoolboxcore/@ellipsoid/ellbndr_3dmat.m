@@ -15,7 +15,7 @@ function [ bpMat, fMat] = ellbndr_3dmat(nPoints, cenVec, qMat,absTol)
 %
 % Output:
 %   regular:
-%       bpMat: doulbe[3,nPoints] - boundary points of ellipsoid
+%       bpMat: doulbe[nPoints,3] - boundary points of ellipsoid
 %   optional:
 %       fMat: double[3,nFaces] - indices of face verties in bpMat
 %
@@ -39,9 +39,13 @@ if nargout<2
     [dirMat, ~] = gras.geom.tri.spheretri(sphereTriangNum);
 else
     [dirMat, fMat] = gras.geom.tri.spheretri(sphereTriangNum);
-    fMat=fMat.';
 end
-[~, bpMat] = ellipsoid.rhomat(qMat,cenVec,absTol,dirMat');
+if nargin==1
+    bpMat=dirMat;
+else
+    [~, bpMat] = ellipsoid.rhomat(qMat,cenVec,absTol,dirMat');
+    bpMat=bpMat.';
+end
 
 function [ triangDepth ] = calcDepth( nPoints )
 %

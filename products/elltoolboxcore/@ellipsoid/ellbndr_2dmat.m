@@ -1,4 +1,4 @@
-function [ bpMat, fMat] = ellbndr_2dmat(  nPoints, cenVec, qMat,absTol)
+function [ bpMat, fVec] = ellbndr_2dmat(  nPoints, cenVec, qMat,absTol)
 %
 % ELLBNDR_2DMAT - computes the boudary of 2D ellipsoid given its center
 %                 and shape matrix
@@ -14,9 +14,9 @@ function [ bpMat, fMat] = ellbndr_2dmat(  nPoints, cenVec, qMat,absTol)
 %
 % Output:
 %   regular:
-%       bpMat: double[2,nPoints] - boundary points of ellipsoid
+%       bpMat: double[nPoints,2] - boundary points of ellipsoid
 %   optional:
-%       fMat: double[nFaces] - indices of points in each face of
+%       fVec: double[1,nFaces] - indices of points in each face of
 %           bpMat graph
 %
 % $Author:  Vitaly Baranov  <vetbar42@gmail.com> $    $Date: 04-2013 $
@@ -34,7 +34,12 @@ if nargin<4
     absTol=elltool.conf.Properties.getAbsTol();
 end
 if nargout>1
-    fMat = 1:nPoints+1;
+    fVec = 1:nPoints+1;
 end
 dirMat = gras.geom.circlepart(nPoints);
-[~,bpMat]=ellipsoid.rhomat(qMat,cenVec,absTol,dirMat');
+if nargin==1
+    bpMat=dirMat;
+else
+    [~,bpMat]=ellipsoid.rhomat(qMat,cenVec,absTol,dirMat');
+    bpMat=bpMat.';
+end

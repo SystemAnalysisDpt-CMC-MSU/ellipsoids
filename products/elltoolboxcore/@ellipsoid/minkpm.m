@@ -61,6 +61,7 @@ import elltool.plot.plotgeombodyarr;
 import modgen.common.throwerror;
 isPlotCenter3d = false;
 ABS_TOL = 1e-14;
+N_POINTS_FACTOR=[1.25 1];
 [reg]=...
     modgen.common.parseparext(varargin,...
     {'relDataPlotter','newFigure','fill','lineWidth','color','shade','priorHold','postHold','showAll'});
@@ -137,7 +138,7 @@ end
         end
         inpEllArr = ellsArr(1:end-1);
         inpEll = ellsArr(end);
-        [dirMat, ~] = calcGrid(inpEllArr(1));
+        [dirMat, ~] = calcGrid(inpEllArr(1),N_POINTS_FACTOR);
         dirMat = dirMat';
         extApproxEllVec = minksumEa(inpEllArr, dirMat);
         if min(extApproxEllVec > inpEll) == 0
