@@ -1173,6 +1173,47 @@ classdef EllipsoidTestCase < mlunitext.test_case
                 'wrongInput:singularMat');
         end
         %
+        function self=testMultiDimensionalConstructor(self)
+            % one argument
+            testShape = [2,0;0,3];
+            testEll = ellipsoid(testShape);
+            testShMatArray = zeros(2,2,3,4);
+            testShMatArray(:,:,1,3) = testShape;
+            testEllArray = ellipsoid(testShMatArray);
+            mlunitext.assert(eq(testEllArray(1,3),testEll));
+            % two arguments and properties
+            testShape = [2,0;0,3];
+            testCent = [1;5];
+            testEll = ellipsoid(testCent, testShape);
+            testCentArray = zeros(2,3,4);
+            testCentArray(:,1,3) = testCent;
+            testEllArray1 = ellipsoid(testCentArray, testShMatArray);
+            testEllArray2 = ellipsoid(testCentArray, testShMatArray, ...
+                'absTol', 1e-3);
+            mlunitext.assert(eq(testEllArray1(1,3),testEll));
+            mlunitext.assert(eq(testEllArray2(1,3),testEll));
+            %3d constructor case
+            testShMatArray = zeros(2,2,3);            
+            testShMatArray(:,:,1) = testShape;
+            testCentArray = zeros(2,3);
+            testCentArray(:,1) = testCent;
+            testEllArray = ellipsoid(testCentArray, testShMatArray);
+            mlunitext.assert(eq(testEllArray(1),testEll));            
+            % bad dimensions
+            self.runAndCheckError(...
+                'ellipsoid(zeros(3,4,5,6),zeros(3,3,5,5,6))',...
+                'wrongInput');
+            self.runAndCheckError(...
+                'ellipsoid(zeros(3,4,5,6,7,8),zeros(3,3,5,5,6))',...
+                'wrongInput');
+            self.runAndCheckError(...
+                'ellipsoid(zeros(3,4,5,6,7,8),zeros(3,3,5,5,6,6,6))',...
+                'wrongInput');
+            self.runAndCheckError(...
+                'ellipsoid(zeros(3),zeros(3))',...
+                'wrongInput');
+        end
+        %
         function self = testGetCopy(self)
             ellMat(3, 3) = ellipsoid;
             ellMat(1) = ellipsoid(eye(3));
@@ -1202,7 +1243,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
             isOk = all(isOkMat(:));
             mlunit.assert_equals(true, isOk);
         end
-     end
+    end
 end
 %
 function fCheckForTestEllipsoidAndDouble(qCenterVec, qShapeMat)

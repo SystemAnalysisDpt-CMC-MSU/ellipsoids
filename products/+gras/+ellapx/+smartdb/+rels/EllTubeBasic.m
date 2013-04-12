@@ -543,5 +543,26 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             indProj2OrigCMat=repmat(indProj2OrigCVec,1,nProj);
             indProj2OrigVec=vertcat(indProj2OrigCMat{:});
         end
+        function [apprEllMat timeVec] = getEllArray(self, approxType)
+            import gras.ellapx.enums.EApproxType;
+            import gras.ellapx.smartdb.F;
+            APPROX_TYPE = F.APPROX_TYPE;
+            SData = self.getTuplesFilteredBy(APPROX_TYPE, approxType);
+            nTuples = SData.getNTuples();
+            if nTuples > 0
+                apprEllMat = ellipsoid(...
+                    cat(3,SData.aMat{1:nTuples}),...
+                    cat(4,SData.QArray{1:nTuples}))';
+            else
+                apprEllMat = [];
+            end
+            if nargout > 1
+                if (~isempty(SData.timeVec))
+                    timeVec = SData.timeVec{1};
+                else 
+                    timeVec = [];
+                end
+            end
+        end
     end
 end
