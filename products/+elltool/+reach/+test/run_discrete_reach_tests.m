@@ -1,6 +1,5 @@
 function results = run_discrete_reach_tests(varargin)
-
-import elltool.reach.test.mlunit.ReachFactory;
+import elltool.reach.ReachFactory;
 %
 runner = mlunit.text_test_runner(1, 1);
 loader = mlunitext.test_loader;
