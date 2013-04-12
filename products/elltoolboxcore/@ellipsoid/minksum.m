@@ -85,7 +85,12 @@ end
         if nDim == 1
             [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr);
         end
-        [lGridMat, fGridMat] = calcGrid(ellsArr(1),0.8);
+        if nDim==2
+            factor=0.8;
+        else
+            factor=1;
+        end
+        [lGridMat, fGridMat] = calcGrid(ellsArr(1),factor);
         [xMat, fCMat] = arrayfun(@(x) fCalcBodyTri(x, nDim), ellsArr, ...
             'UniformOutput', false);
         xSumCMat = 0;

@@ -29,4 +29,4 @@ if nargin<2
 end
 [cenVec qMat]=double(myEll);
 absTol=myEll.getAbsTol();
-bpMat=ellipsoid.ellbndr_2dmat(cenVec,qMat,absTol,nPoints);
+bpMat=ellipsoid.ellbndr_2dmat(nPoints,cenVec,qMat,absTol);

@@ -1188,6 +1188,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
                 testEll=createEllObj(nDim,3);
                 bdPointsMat=fHandle(testEll);
                 checkOneObj(nDim);
+                bdPointsMat=fHandle(testEll);
                 %
                 % Check optional parameter nPoints
                 checkNPoints(nDim);
