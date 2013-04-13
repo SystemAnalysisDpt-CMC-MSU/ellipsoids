@@ -232,6 +232,120 @@ classdef AReach < elltool.reach.IReach
             
             [relTolArr,relTolVal]=rsArr.Property('relTol',varargin{:});
         end
+        %        
+        function outStrCMat = getStrCMat(inpMat)
+            outStrCMat =...
+                arrayfun(@num2str, inpMat, 'UniformOutput', false);
+        end
+        %
+        function [centerVec shapeMat] = getEllParams(inpEll, relMat)
+            if ~isempty(inpEll)
+                if isa(inpEll, 'ellipsoid')
+                    [centerVec shapeMat] = double(inpEll);
+                else
+                    if isfield(inpEll, 'center')
+                        centerVec = inpEll.center;
+                    else
+                        centerVec = zeros(size(relMat, 2), 1);
+                    end
+                    if isfield(inpEll, 'shape')
+                        shapeMat = inpEll.shape;
+                    else
+                        shapeMat = zeros(size(relMat, 2));
+                    end
+                end
+            else
+                shapeMat = zeros(size(relMat, 2));
+                centerVec = zeros(size(relMat, 2), 1);
+            end
+        end
+        %
+        function [atStrCMat btStrCMat gtStrCMat ptStrCMat ptStrCVec ...
+                qtStrCMat qtStrCVec] = prepareSysParamBasic(linSys)
+            atMat = linSys.getAtMat();
+            btMat = linSys.getBtMat();
+            gtMat = linSys.getGtMat();
+            if ~iscell(atMat) && ~isempty(atMat)
+                atStrCMat = elltool.reach.AReach.getStrCMat(atMat);
+            else
+                atStrCMat = atMat;
+            end
+            if ~iscell(btMat) && ~isempty(btMat)
+                btStrCMat = elltool.reach.AReach.getStrCMat(btMat);
+            else
+                btStrCMat = btMat;
+            end
+            if isempty(gtMat)
+                gtMat = zeros(size(btMat));
+            end
+            if ~iscell(gtMat)
+                gtStrCMat = elltool.reach.AReach.getStrCMat(gtMat);
+            else
+                gtStrCMat = gtMat;
+            end
+            uEll = linSys.getUBoundsEll();
+            [ptVec ptMat] =...
+                elltool.reach.AReach.getEllParams(uEll, btMat);
+            if ~iscell(ptMat)
+                ptStrCMat = elltool.reach.AReach.getStrCMat(ptMat);
+            else
+                ptStrCMat = ptMat;
+            end
+            if ~iscell(ptVec)
+                ptStrCVec = elltool.reach.AReach.getStrCMat(ptVec);
+            else
+                ptStrCVec = ptVec;
+            end
+            vEll = linSys.getDistBoundsEll();
+            [qtVec qtMat] =...
+                elltool.reach.AReach.getEllParams(vEll, gtMat);
+            if ~iscell(qtMat)
+                qtStrCMat = elltool.reach.AReach.getStrCMat(qtMat);
+            else
+                qtStrCMat = qtMat;
+            end
+            if ~iscell(qtVec)
+                qtStrCVec = elltool.reach.AReach.getStrCMat(qtVec);
+            else
+                qtStrCVec = qtVec;
+            end
+        end
+        %        
+        function isDisturb = isDisturbance(gtStrCMat, qtStrCMat)
+            import gras.mat.symb.iscellofstringconst;
+            import gras.gen.MatVector;
+            isDisturb = true;
+            if iscellofstringconst(gtStrCMat)
+                gtMat = MatVector.fromFormulaMat(gtStrCMat, 0);
+                if all(gtMat(:) == 0)
+                    isDisturb = false;
+                end
+            end
+            if isDisturb && iscellofstringconst(qtStrCMat)
+                qtMat = MatVector.fromFormulaMat(qtStrCMat, 0);
+                if all(qtMat(:) == 0)
+                    isDisturb = false;
+                end
+            end
+        end
+        %
+        function isDisturb = isNoise(gtStrCMat, wtStrCMat)
+            import gras.mat.symb.iscellofstringconst;
+            import gras.gen.MatVector;
+            isDisturb = true;
+            if iscellofstringconst(gtStrCMat)
+                gtMat = MatVector.fromFormulaMat(gtStrCMat, 0);
+                if all(gtMat(:) == 0)
+                    isDisturb = false;
+                end
+            end
+            if isDisturb && iscellofstringconst(qtStrCMat)
+                qtMat = MatVector.fromFormulaMat(qtStrCMat, 0);
+                if all(qtMat(:) == 0)
+                    isDisturb = false;
+                end
+            end
+        end
     end
     %
     methods (Access = protected)

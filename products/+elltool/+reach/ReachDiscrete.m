@@ -430,12 +430,42 @@ classdef ReachDiscrete < elltool.reach.AReach
                 return;
             end
             k = time;
+            t = time;
             [m, n] = size(XCMat);
             evalMat = zeros(m, n);
             for i = 1:m
                 for j = 1:n
                     evalMat(i, j) = eval(XCMat{i, j});
                 end
+            end
+        end
+        %
+        function [atStrCMat btStrCMat gtStrCMat ptStrCMat ptStrCVec ...
+                qtStrCMat qtStrCVec ctStrCMat wtStrCMat wtStrCVec] = ...
+                prepareSysParam(linSys)
+            [atStrCMat btStrCMat gtStrCMat ptStrCMat ptStrCVec ...
+                qtStrCMat qtStrCVec] = ...
+                elltool.reach.AReach.prepareSysParamBasic(linSys);
+            %
+            ctMat = linSys.getCtMat();
+            if ~iscell(ctMat) && ~isempty(ctMat)
+                ctStrCMat = elltool.reach.AReach.getStrCMat(ctMat);
+            else
+                ctStrCMat = ctMat;
+            end
+            %
+            wEll = linSys.getNoiseBoundsEll();
+            [wtVec wtMat] =...
+                elltool.reach.AReach.getEllParams(wEll, ctMat);
+            if ~iscell(wtMat)
+                wtStrCMat = elltool.reach.AReach.getStrCMat(wtMat);
+            else
+                wtStrCMat = wtMat;
+            end
+            if ~iscell(wtVec)
+                wtStrCVec = elltool.reach.AReach.getStrCMat(wtVec);
+            else
+                wtStrCVec = wtVec;
             end
         end
     end
@@ -595,7 +625,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             self.isProj = false;
             self.isBackward = timeVec(1) > timeVec(2);
             self.projectionBasisMat = [];
-            %% check and analize input
+            % check and analize input
             if nargin < 4
                 throwerror('insufficient number of input arguments.');
             end
@@ -673,8 +703,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             %
             www = warning;
             warning off;
-            %%% Perform matrix, control, disturbance and noise evaluations.
-            %%% Create splines if needed.
+            % Perform matrix, control, disturbance and noise evaluations.
             if Properties.getIsVerbose()
                 if isempty(logger)
                     logger=Log4jConfigurator.getLogger();
@@ -682,424 +711,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 logger.info('Performing preliminary function evaluations...');
             end
             %
-            mydata.A     = [];
-            mydata.Bp    = [];
-            mydata.BPB   = [];
-            mydata.BPBsr = [];
-            mydata.Gq    = [];
-            mydata.GQG   = [];
-            mydata.GQGsr = [];
-            mydata.C     = [];
-            mydata.w     = [];
-            mydata.W     = [];
-            mydata.Phi   = [];
-            mydata.Phinv = [];
-            mydata.delta = [];
-            mydata.mu    = [];
-            % matrix A
-            aMat = linSys.getAtMat();
-            if iscell(aMat)
-                AA = zeros(d1*d1, size(self.time_values, 2));
-                DD = zeros(1, size(self.time_values, 2));
-                AC = zeros(d1*d1, size(self.time_values, 2));
-                for i = 1:size(self.time_values, 2)
-                    if (back > 0) && ~(isa(linSys, ...
-                            'elltool.linsys.LinSysDiscrete')) && 0
-                        A  = self.matrix_eval(aMat, -self.time_values(i));
-                    else
-                        A  = self.matrix_eval(aMat, self.time_values(i));
-                    end
-                    AC(:, i) = reshape(A, d1*d1, 1);
-                    if isa(linSys, 'elltool.linsys.LinSysDiscrete') ...
-                            && (rank(A) < d1)
-                        A        = ell_regularize(A);
-                        DD(1, i) = 1;
-                    elseif isa(linSys, 'elltool.linsys.LinSysDiscrete')
-                        DD(1, i) = 0;
-                    end
-                    AA(:, i) = reshape(A, d1*d1, 1);
-                end
-                mydata.A     = AA;
-                mydata.delta = DD;
-            else
-                AC = aMat;
-                if rank(aMat) < d1
-                    mydata.A     = ell_regularize(aMat);
-                    mydata.delta = 1;
-                else
-                    mydata.A     = aMat;
-                    mydata.delta = 0;
-                end
-            end
-            % matrix B
-            bMat = linSys.getBtMat();
-            if iscell(bMat)
-                BB = zeros(d1*du, size(self.time_values, 2));
-                for i = 1:size(self.time_values, 2)
-                    B        = self.matrix_eval(bMat, self.time_values(i));
-                    BB(:, i) = reshape(B, d1*du, 1);
-                end
-            else
-                BB = reshape(bMat, d1*du, 1);
-            end
-            % matrix G
-            gMat = linSys.getGtMat();
-            GG = zeros(d1*dd, size(self.time_values, 2));
-            if iscell(gMat)
-                for i = 1:size(self.time_values, 2)
-                    B        = self.matrix_eval(gMat, self.time_values(i));
-                    GG(:, i) = reshape(B, d1*dd, 1);
-                end
-            elseif ~(isempty(gMat))
-                GG = reshape(gMat, d1*dd, 1);
-            end
-            % matrix C
-            cMat = linSys.getCtMat();
-            if iscell(cMat)
-                CC = zeros(d1*dy, size(self.time_values, 2));
-                for i = 1:size(self.time_values, 2)
-                    C        = self.matrix_eval(cMat, self.time_values(i));
-                    CC(:, i) = reshape(C, d1*dy, 1);
-                end
-                mydata.C = CC;
-            else
-                mydata.C = cMat;
-            end
-            % expressions Bp and BPB'
-            uEll = linSys.getUBoundsEll();
-            if isa(uEll, 'ellipsoid')
-                [p, P] = parameters(uEll);
-                if size(BB, 2) == 1
-                    B            = reshape(BB, d1, du);
-                    mydata.Bp    = B * p;
-                    mydata.BPB   = B * P * B';
-                    mydata.BPBsr = sqrtmpos(full(mydata.BPB), self.absTol);
-                    mydata.BPBsr = 0.5*(mydata.BPBsr + (mydata.BPBsr)');
-                else
-                    Bp    = zeros(d1, size(self.time_values, 2));
-                    BPB   = zeros(d1*d1, size(self.time_values, 2));
-                    BPBsr = zeros(d1*d1, size(self.time_values, 2));
-                    for i = 1:size(self.time_values, 2)
-                        B           = reshape(BB(:, i), d1, du);
-                        Bp(:, i)    = B*p;
-                        B           = B * P * B';
-                        BPB(:, i)   = reshape(B, d1*d1, 1);
-                        B           = sqrtmpos(B, self.absTol);
-                        B           = 0.5*(B + B');
-                        BPBsr(:, i) = reshape(B, d1*d1, 1);
-                    end
-                    mydata.Bp    = Bp;
-                    mydata.BPB   = BPB;
-                    mydata.BPBsr = BPBsr;
-                end
-            elseif isa(uEll, 'double')
-                p  = uEll;
-                if size(BB, 2) == 1
-                    mydata.Bp = reshape(BB, d1, du) * p;
-                else
-                    Bp = zeros(d1, size(self.time_values, 2));
-                    for i = 1:size(self.time_values, 2)
-                        B        = reshape(BB(:, i), d1, du);
-                        Bp(:, i) = B*p;
-                    end
-                    mydata.Bp = Bp;
-                end
-            elseif iscell(uEll)
-                p  = uEll;
-                Bp = zeros(d1, size(self.time_values, 2));
-                for i = 1:size(self.time_values, 2)
-                    if size(BB, 2) == 1
-                        B = reshape(BB, d1, du);
-                    else
-                        B = reshape(BB(:, i), d1, du);
-                    end
-                    Bp(:, i) = B*self.matrix_eval(p, self.time_values(i));
-                end
-                mydata.Bp = Bp;
-            elseif isstruct(uEll)
-                if size(BB, 2) == 1
-                    B = reshape(BB, d1, du);
-                    if iscell(uEll.center) && iscell(uEll.shape)
-                        Bp    = zeros(d1, size(self.time_values, 2));
-                        BPB   = zeros(d1*d1, size(self.time_values, 2));
-                        BPBsr = zeros(d1*d1, size(self.time_values, 2));
-                        for i = 1:size(self.time_values, 2)
-                            p = self.matrix_eval(uEll.center, self.time_values(i));
-                            P = self.matrix_eval(uEll.shape, self.time_values(i));
-                            if ~gras.la.ismatposdef(P,self.absTol,false)
-                                throwerror('wrongMat',['shape matrix of ',...
-                                    'ellipsoidal control bounds ',...
-                                    'must be positive definite.']);
-                            end
-                            Bp(:, i)    = B*p;
-                            P           = B * P * B';
-                            BPB(:, i)   = reshape(P, d1*d1, 1);
-                            P           = sqrtmpos(P, self.absTol);
-                            P           = 0.5*(P + P');
-                            BPBsr(:, i) = reshape(P, d1*d1, 1);
-                        end
-                        mydata.Bp    = Bp;
-                        mydata.BPB   = BPB;
-                        mydata.BPBsr = BPBsr;
-                    elseif iscell(uEll.center)
-                        Bp  = zeros(d1, size(self.time_values, 2));
-                        for i = 1:size(self.time_values, 2)
-                            p  = self.matrix_eval(uEll.center, self.time_values(i));
-                            Bp(:, i) = B*p;
-                        end
-                        mydata.Bp  = Bp;
-                        mydata.BPB   = B * uEll.shape * B';
-                        mydata.BPBsr = sqrtmpos(mydata.BPB, self.absTol);
-                        mydata.BPBsr = 0.5*(mydata.BPBsr + (mydata.BPBsr)');
-                    else
-                        BPB   = zeros(d1*d1, size(self.time_values, 2));
-                        BPBsr = zeros(d1*d1, size(self.time_values, 2));
-                        for i = 1:size(self.time_values, 2)
-                            P = self.matrix_eval(uEll.shape, self.time_values(i));
-                            if ~gras.la.ismatposdef(P,self.absTol,false)
-                                throwerror('wrongMat',['shape matrix of ',...
-                                    'ellipsoidal control bounds ',...
-                                    'must be positive definite.']);
-                            end
-                            P           = B * P * B';
-                            BPB(:, i)   = reshape(P, d1*d1, 1);
-                            P           = sqrtmpos(P, self.absTol);
-                            P           = 0.5*(P + P');
-                            BPBsr(:, i) = reshape(P, d1*d1, 1);
-                        end
-                        mydata.Bp = B * uEll.center;
-                        mydata.BPB   = BPB;
-                        mydata.BPBsr = BPBsr;
-                    end
-                else
-                    Bp    = zeros(d1, size(self.time_values, 2));
-                    BPB   = zeros(d1*d1, size(self.time_values, 2));
-                    BPBsr = zeros(d1*d1, size(self.time_values, 2));
-                    for i = 1:size(self.time_values, 2)
-                        B = reshape(BB(:, i), d1, du);
-                        if iscell(uEll.center)
-                            p = self.matrix_eval(uEll.center, self.time_values(i));
-                        else
-                            p = uEll.center;
-                        end
-                        if iscell(uEll.shape)
-                            P = self.matrix_eval(uEll.shape, self.time_values(i));
-                            if ~gras.la.ismatposdef(P,self.absTol,false)
-                                throwerror('wrongMat',['shape matrix of ',...
-                                    'ellipsoidal control bounds ',...
-                                    'must be positive definite.']);
-                            end
-                        else
-                            P = uEll.shape;
-                        end
-                        Bp(:, i)    = B*p;
-                        P           = B * P * B';
-                        BPB(:, i)   = reshape(P, d1*d1, 1);
-                        P           = sqrtmpos(P, self.absTol);
-                        P           = 0.5*(P + P');
-                        BPBsr(:, i) = reshape(P, d1*d1, 1);
-                    end
-                    mydata.Bp    = Bp;
-                    mydata.BPB   = BPB;
-                    mydata.BPBsr = BPBsr;
-                end
-            end
-            % expressions Gq and GQG'
-            vEll = linSys.getDistBoundsEll();
-            if ~(isempty(GG))
-                if isa(vEll, 'ellipsoid')
-                    [q, Q] = parameters(vEll);
-                    if size(GG, 2) == 1
-                        G            = reshape(GG, d1, dd);
-                        mydata.Gq    = G * q;
-                        mydata.GQG   = G * Q * G';
-                        mydata.GQGsr = sqrtmpos(mydata.GQG, self.absTol);
-                        mydata.GQGsr = 0.5*(mydata.GQGsr + (mydata.GQGsr)');
-                    else
-                        Gq    = zeros(d1, size(self.time_values, 2));
-                        GQG   = zeros(d1*d1, size(self.time_values, 2));
-                        GQGsr = zeros(d1*d1, size(self.time_values, 2));
-                        for i = 1:size(self.time_values, 2)
-                            G           = reshape(GG(:, i), d1, dd);
-                            Gq(:, i)    = G*q;
-                            G           = G * Q * G';
-                            GQG(:, i)   = reshape(G, d1*d1, 1);
-                            G           = sqrtmpos(G, self.absTol);
-                            G           = 0.5*(G + G');
-                            GQGsr(:, i) = reshape(G, d1*d1, 1);
-                        end
-                        mydata.Gq    = Gq;
-                        mydata.GQG   = GQG;
-                        mydata.GQGsr = GQGsr;
-                    end
-                elseif isa(vEll, 'double')
-                    q  = vEll;
-                    if size(GG, 2) == 1
-                        mydata.Gq = reshape(GG, d1, dd) * q;
-                    else
-                        Gq = zeros(d1, size(self.time_values, 2));
-                        for i = 1:size(self.time_values, 2)
-                            G  = reshape(GG(:, i), d1, dd);
-                            Gq(:, i) = G*q;
-                        end
-                        mydata.Gq = Gq;
-                    end
-                elseif iscell(vEll)
-                    q  = vEll;
-                    Gq = zeros(d1, size(self.time_values, 2));
-                    for i = 1:size(self.time_values, 2)
-                        if size(GG, 2) == 1
-                            G = reshape(GG, d1, dd);
-                        else
-                            G = reshape(GG(:, i), d1, dd);
-                        end
-                        Gq(:, i) = G*self.matrix_eval(q, self.time_values(i));
-                    end
-                    mydata.Gq = Gq;
-                elseif isstruct(vEll)
-                    if size(GG, 2) == 1
-                        G = reshape(GG, d1, dd);
-                        if iscell(vEll.center) &&...
-                                iscell(vEll.shape)
-                            Gq    = zeros(d1, size(self.time_values, 2));
-                            GQG   = zeros(d1*d1, size(self.time_values, 2));
-                            GQGsr = zeros(d1*d1, size(self.time_values, 2));
-                            for i = 1:size(self.time_values, 2)
-                                q = self.matrix_eval(vEll.center, self.time_values(i));
-                                Q = self.matrix_eval(vEll.shape, self.time_values(i));
-                                if ~gras.la.ismatposdef(Q,self.absTol,false)
-                                    throwerror('wrongMat',['shape matrix of ',...
-                                        'ellipsoidal disturbance bounds ',...
-                                        'must be positive definite.']);
-                                end
-                                Gq(:, i)    = G*q;
-                                Q           = G * Q * G';
-                                GQG(:, i)   = reshape(Q, d1*d1, 1);
-                                Q           = sqrtmpos(Q, self.absTol);
-                                Q           = 0.5*(Q + Q');
-                                GQGsr(:, i) = reshape(Q, d1*d1, 1);
-                            end
-                            mydata.Gq    = Gq;
-                            mydata.GQG   = GQG;
-                            mydata.GQGsr = GQGsr;
-                        elseif iscell(vEll.center)
-                            Gq  = zeros(d1, size(self.time_values, 2));
-                            for i = 1:size(self.time_values, 2)
-                                q  = self.matrix_eval(vEll.center, self.time_values(i));
-                                Gq(:, i) = G*q;
-                            end
-                            mydata.Gq  = Gq;
-                            mydata.GQG   = G * vEll.shape * G';
-                            mydata.GQGsr = sqrtmpos(mydata.GQG, self.absTol);
-                            mydata.GQGsr = 0.5*(mydata.GQGsr + (mydata.GQGsr)');
-                        else
-                            GQG   = zeros(d1*d1, size(self.time_values, 2));
-                            GQGsr = zeros(d1*d1, size(self.time_values, 2));
-                            for i = 1:size(self.time_values, 2)
-                                Q = self.matrix_eval(vEll.shape, self.time_values(i));
-                                if ~gras.la.ismatposdef(Q,self.absTol,false)
-                                    throwerror('wrongMat',['shape matrix of ',...
-                                        'ellipsoidal disturbance bounds ',...
-                                        'must be positive definite.']);
-                                end
-                                Q           = G * Q * G';
-                                GQG(:, i)   = reshape(Q, d1*d1, 1);
-                                Q           = sqrtmpos(Q, self.absTol);
-                                Q           = 0.5*(Q + Q');
-                                GQGsr(:, i) = reshape(Q, d1*d1, 1);
-                            end
-                            mydata.Gq  = G * vEll.center;
-                            mydata.GQG   = GQG;
-                            mydata.GQGsr = GQGsr;
-                        end
-                    else
-                        Gq    = zeros(d1, size(self.time_values, 2));
-                        GQG   = zeros(d1*d1, size(self.time_values, 2));
-                        GQGsr = zeros(d1*d1, size(self.time_values, 2));
-                        for i = 1:size(self.time_values, 2)
-                            G = reshape(GG(:, i), d1, dd);
-                            if iscell(vEll.center)
-                                q = self.matrix_eval(vEll.center, self.time_values(i));
-                            else
-                                q = vEll.center;
-                            end
-                            if iscell(vEll.shape)
-                                Q = self.matrix_eval(vEll.shape, self.time_values(i));
-                                if ~gras.la.ismatposdef(Q,self.absTol,false)
-                                    throwerror('wrongMat',['shape matrix of ',...
-                                        'ellipsoidal disturbance bounds ',...
-                                        'must be positive definite.']);
-                                end
-                            else
-                                Q = vEll.shape;
-                            end
-                            Gq(:, i)    = G*q;
-                            Q           = G * Q * G';
-                            GQG(:, i)   = reshape(Q, d1*d1, 1);
-                            Q           = sqrtmpos(Q, self.absTol);
-                            Q           = 0.5*(Q + Q');
-                            GQGsr(:, i) = reshape(Q, d1*d1, 1);
-                        end
-                        mydata.Gq    = Gq;
-                        mydata.GQG   = GQG;
-                        mydata.GQGsr = GQGsr;
-                    end
-                end
-            end
-            % expressions w and W
-            noiseEll = linSys.getNoiseBoundsEll();
-            if ~(isempty(noiseEll))
-                if isa(noiseEll, 'ellipsoid')
-                    [w, W]   = parameters(noiseEll);
-                    mydata.w = w;
-                    mydata.W = W;
-                elseif isa(noiseEll, 'double')
-                    mydata.w = noiseEll;
-                elseif iscell(noiseEll)
-                    w = [];
-                    for i = 1:size(self.time_values, 2)
-                        w = [w self.matrix_eval(noiseEll.center, self.time_values(i))];
-                    end
-                    mydata.w = w;
-                elseif isstruct(noiseEll)
-                    if iscell(noiseEll.center) && iscell(noiseEll.shape)
-                        w = [];
-                        W = [];
-                        for i = 1:size(self.time_values, 2)
-                            w  = [w self.matrix_eval(noiseEll.center, self.time_values(i))];
-                            ww = self.matrix_eval(noiseEll.shape, self.time_values(i));
-                            if ~gras.la.ismatposdef(ww,self.absTol,false)
-                                throwerror('wrongMat',['shape matrix of ',...
-                                    'ellipsoidal noise bounds must be positive definite.']);
-                            end
-                            W  = [W reshape(ww, dy*dy, 1)];
-                        end
-                        mydata.w = w;
-                        mydata.W = W;
-                    elseif iscell(noiseEll.center)
-                        w = [];
-                        for i = 1:size(self.time_values, 2)
-                            w = [w self.matrix_eval(noiseEll.center, self.time_values(i))];
-                        end
-                        mydata.w = w;
-                        mydata.W = noiseEll.shape;
-                    else
-                        W = [];
-                        for i = 1:size(self.time_values, 2)
-                            ww = self.matrix_eval(noiseEll.shape, self.time_values(i));
-                            if ~gras.la.ismatposdef(ww,self.absTol,false)
-                                throwerror('wrongMat',['shape matrix of ',...
-                                    'ellipsoidal noise bounds must be positive definite.']);
-                            end
-                            W  = [W reshape(ww, dy*dy, 1)];
-                        end
-                        mydata.w = noiseEll.center;
-                        mydata.W = W;
-                    end
-                end
-            end
-            clear('A', 'B', 'C', 'AA', 'BB', 'CC', 'DD', 'Bp',...
-                'BPB', 'Gq', 'GQG', 'p', 'P', 'q', 'Q', 'w', 'W', 'ww');
+            mydata = self.calculateData();
             %%% Compute state transition matrix.
             if Properties.getIsVerbose()
                 if isempty(logger)
@@ -1130,13 +742,13 @@ classdef ReachDiscrete < elltool.reach.AReach
                     A = ell_value_extract(mydata.A, i+back, [d1 d1]);
                     x = ell_inv(A)*(x - Bp - Gq);
                 else
-                    A = ell_value_extract(AC, i, [d1 d1]);
+                    A = ell_value_extract(mydata.AC, i, [d1 d1]);
                     x = A*x + Bp + Gq;
                 end
                 xx = [xx x];
             end
             self.center_values = xx;
-            clear('A', 'AC', 'xx');
+            clear('A', 'xx');
             %%% Compute external shape matrices.
             if (OptStruct.approximation ~= 1)
                 if Properties.getIsVerbose()
@@ -1261,6 +873,138 @@ classdef ReachDiscrete < elltool.reach.AReach
                     sTime, approxType, approxSchemaName, ...
                     approxSchemaDescr, calcPrecision);
             end
+        end
+        %
+        function mydata = calculateData(self)
+            import gras.la.sqrtmpos;
+            %
+            linSys = self.linSysCVec{1};
+            [atStrCMat btStrCMat gtStrCMat ptStrCMat ptStrCVec ...
+                qtStrCMat qtStrCVec ctStrCMat wtStrCMat wtStrCVec] = ...
+                self.prepareSysParam(linSys);
+            %
+            mydata.A     = [];
+            mydata.Bp    = [];
+            mydata.BPB   = [];
+            mydata.BPBsr = [];
+            mydata.Gq    = [];
+            mydata.GQG   = [];
+            mydata.GQGsr = [];
+            mydata.C     = [];
+            mydata.w     = [];
+            mydata.W     = [];
+            mydata.Phi   = [];
+            mydata.Phinv = [];
+            mydata.delta = [];
+            mydata.mu    = [];
+            %
+            [d1, du, dy, dd] = linSys.dimension();
+            % matrix A
+            AA = zeros(d1*d1, size(self.time_values, 2));
+            DD = zeros(1, size(self.time_values, 2));
+            AC = zeros(d1*d1, size(self.time_values, 2));
+            for i = 1:size(self.time_values, 2)
+                A  = self.matrix_eval(atStrCMat, self.time_values(i));
+                AC(:, i) = reshape(A, d1*d1, 1);
+                if (rank(A) < d1)
+                    A = ell_regularize(A);
+                    DD(1, i) = 1;
+                else
+                    DD(1, i) = 0;
+                end
+                AA(:, i) = reshape(A, d1*d1, 1);
+            end
+            mydata.A = AA;
+            mydata.AC = AC;
+            mydata.delta = DD;
+            % matrix B
+            BB = zeros(d1*du, size(self.time_values, 2));
+            for i = 1:size(self.time_values, 2)
+                B = self.matrix_eval(btStrCMat, self.time_values(i));
+                BB(:, i) = reshape(B, d1*du, 1);
+            end
+            % matrix G
+            for i = 1:size(self.time_values, 2)
+                B = self.matrix_eval(gtStrCMat, self.time_values(i));
+                GG(:, i) = reshape(B, d1*dd, 1);
+            end
+            % matrix C
+            CC = zeros(d1*dy, size(self.time_values, 2));
+            for i = 1:size(self.time_values, 2)
+                C = self.matrix_eval(ctStrCMat, self.time_values(i));
+                CC(:, i) = reshape(C, d1*dy, 1);
+            end
+            mydata.C = CC;
+            % expressions Bp and BPB'
+            Bp    = zeros(d1, size(self.time_values, 2));
+            BPB   = zeros(d1*d1, size(self.time_values, 2));
+            BPBsr = zeros(d1*d1, size(self.time_values, 2));
+            for i = 1:size(self.time_values, 2)
+                B = reshape(BB(:, i), d1, du);
+                p = self.matrix_eval(ptStrCVec, self.time_values(i));
+                P = self.matrix_eval(ptStrCMat, self.time_values(i));
+                if ~gras.la.ismatposdef(P, self.absTol, false)
+                    throwerror('wrongMat',['shape matrix of ',...
+                        'ellipsoidal control bounds ',...
+                        'must be positive definite.']);
+                end
+                Bp(:, i)    = B * p;
+                P           = B * P * B';
+                BPB(:, i)   = reshape(P, d1*d1, 1);
+                P           = sqrtmpos(P, self.absTol);
+                P           = 0.5*(P + P');
+                BPBsr(:, i) = reshape(P, d1*d1, 1);
+            end
+            mydata.Bp    = Bp;
+            mydata.BPB   = BPB;
+            mydata.BPBsr = BPBsr;
+            % expressions Gq and GQG'
+            isDisturbance = self.isDisturbance(gtStrCMat, qtStrCMat);
+            if isDisturbance
+                Gq    = zeros(d1, size(self.time_values, 2));
+                GQG   = zeros(d1*d1, size(self.time_values, 2));
+                GQGsr = zeros(d1*d1, size(self.time_values, 2));
+                for i = 1:size(self.time_values, 2)
+                    G = reshape(GG(:, i), d1, dd);
+                    q = self.matrix_eval(qtStrCVec, self.time_values(i));
+                    Q = self.matrix_eval(qtStrCMat, self.time_values(i));
+                    if ~gras.la.ismatposdef(Q,self.absTol,false)
+                        throwerror('wrongMat',['shape matrix of ',...
+                            'ellipsoidal disturbance bounds ',...
+                            'must be positive definite.']);
+                    end
+                    Gq(:, i)    = G * q;
+                    Q           = G * Q * G';
+                    GQG(:, i)   = reshape(Q, d1*d1, 1);
+                    Q           = sqrtmpos(Q, self.absTol);
+                    Q           = 0.5 * (Q + Q');
+                    GQGsr(:, i) = reshape(Q, d1*d1, 1);
+                end
+                mydata.Gq    = Gq;
+                mydata.GQG   = GQG;
+                mydata.GQGsr = GQGsr;
+            end
+            % expressions w and W
+            noiseStrCMat = self.getStrCMat(ones(size(wtStrCMat, 1)));
+            isNoise = self.isDisturbance(noiseStrCMat, wtStrCMat);
+            if isNoise
+                w = [];
+                W = [];
+                for i = 1:size(self.time_values, 2)
+                    w  = [w self.matrix_eval(wtStrCVec, self.time_values(i))];
+                    ww = self.matrix_eval(wtStrCMat, self.time_values(i));
+                    if ~gras.la.ismatposdef(ww,self.absTol,false)
+                        throwerror('wrongMat',['shape matrix of ',...
+                            'ellipsoidal noise bounds must be positive definite.']);
+                    end
+                    W  = [W reshape(ww, dy*dy, 1)];
+                end
+                mydata.w = w;
+                mydata.W = W;
+            end
+            %
+            clear('A', 'B', 'C', 'AC', 'AA', 'BB', 'CC', 'DD', 'Bp',...
+                'BPB', 'Gq', 'GQG', 'p', 'P', 'q', 'Q', 'w', 'W', 'ww');
         end
         %
         function copyReachObj = getCopy(self)
