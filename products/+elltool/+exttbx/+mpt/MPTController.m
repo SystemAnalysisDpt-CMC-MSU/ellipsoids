@@ -44,27 +44,27 @@ classdef MPTController < elltool.exttbx.IExtTBXController
             if ~self.isOnPath()
                 horLineStr=['\n',repmat('-',1,N_HOR_LINE_CHARS),'\n'];
                 msgStr=sprintf(['\n',horLineStr,...
-                    '\nMTP is not found!!! \n',...
-                    'Please put MTP into "mtp" ',...
+                    '\nMPT is not found!!! \n',...
+                    'Please put MPT into "mpt" ',...
                     'folder next to "products" folder ',horLineStr]);
                 modgen.common.throwerror('mptNotFound',msgStr);
             end
         end
-    end
-    %
-    %
-    methods(Static)
-        function isVerb = getIsVerbosityEnabled()
+        %
+        function isVerb = getIsVerbosityEnabled(self)
+            checkIfSetUp(self);
             global mptOptions;
             isVerb = mptOptions.verbose > 1;
         end
         %
-        function absTol = getAbsTol()
+        function absTol = getAbsTol(self)
+            checkIfSetUp(self);
             global mptOptions;
             absTol = mptOptions.abs_tol;
         end
         %
-        function relTol = getRelTol()
+        function relTol = getRelTol(self)
+            checkIfSetUp(self);
             global mptOptions;
             relTol = mptOptions.abs_tol;
         end
