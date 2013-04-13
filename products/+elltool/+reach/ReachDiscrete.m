@@ -1,96 +1,13 @@
 classdef ReachDiscrete < elltool.reach.AReach
 % Discrete reach set library of the Ellipsoidal Toolbox.
 %
-%
-% Constructor and data accessing functions:
-% -----------------------------------------
-%  ReachDiscrete  - Constructor of the reach set object,
-%                   performs the computation of the
-%                   specified reach set approximations.
-%  dimension      - Returns the dimension of the reach set,
-%                   which can be different from the state
-%                   space dimension of the system if the
-%                   reach set is a projection.
-%  get_system     - Returns the linear system object, for
-%                   which the reach set was computed.
-%  get_directions - Returns the values of the direction
-%                   vectors corresponding to the values of
-%                   the time grid.
-%  get_center     - Returns points of the reach set center
-%                   trajectory
-% Discrete reach set library of the Ellipsoidal Toolbox.
-%
-% 
-% Constructor and data accessing functions:
-% -----------------------------------------
-%  ReachDiscrete  - Constructor of the reach set object,
-%                   performs the
-%                   computation of the specified reach set
-%                   approximations.
-%  dimension      - Returns the dimension of the reach set,
-%                   which can be
-%                   different from the state space dimension
-%                   of the system if the reach set is a
-%                   projection.
-%  get_system     - Returns the linear system object, for
-%                   which the reach
-%                   set was computed.
-%  get_directions - Returns the values of the direction
-%                   vectors
-%                   corresponding to the values of the time
-%                   grid.
-%  get_center     - Returns points of the reach set center
-%                   trajectory
-%                   corresponding to the values of the time
-%                   grid.
-%  get_ea         - Returns external approximating
-%                   ellipsoids corresponding
-%                   to the values of the time grid.
-%  get_ia         - Returns internal approximating
-%                   ellipsoids corresponding
-%                   to the values of the time grid.
-%  get_goodcurves - Returns points of the 'good curves'
-%                   corresponding
-%                   to the values of the time grid. This
-%                   function does not work with projections.
-%  intersect      - Checks if external or internal reach set
-%                   approximation
-%                   intersects with given ellipsoid,
-%                   hyperplane or polytope.
-%  iscut          - Checks if given reach set object is a
-%                   cut of another
-%                   reach set.
-%  isprojection   - Checks if given reach set object is a
-%                   projection.
-%  
-%
-% Reach set data manipulation and plotting functions:
-% ---------------------------------------------------
-%  cut        - Extracts a piece of the reach set that
-%               corresponds to the
-%               specified time value or time interval.
-%  projection - Projects the reach set onto a given
-%               orthogonal basis. 
-%  evolve     - Computes further evolution
-%               in time for given reach set
-%               for the same or different dynamical system.
-%  plot_ea    - Plots external approximation of the reach
-%               set. 
-%  plot_ia    - Plots internal approximation of the
-%               reach set.
-%
-%
-% Overloaded functions: ---------------------
-%  display - Displays the reach set object.
-%  
-%
 % $Authors: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %           Kirill Mayantsev  <kirill.mayantsev@gmail.com>$
-% $Date: March-2012 $ 
+% $Date: March-2013 $ 
 % $Copyright: Moscow State University,
 %             Faculty of Computational Mathematics
 %             and Computer Science, 
-%             System Analysis Department 2012 $
+%             System Analysis Department 2013 $
 %
     properties (Access = private)
         absTol
@@ -1711,17 +1628,6 @@ classdef ReachDiscrete < elltool.reach.AReach
             newReachObj.projectionBasisMat = self.projectionBasisMat;
         end
         
-        %
-        % See elltool.reach.IReach for documentation
-        %
-        %   
-        % $Author: Kirill Mayantsev
-        % <kirill.mayantsev@gmail.com> $  
-        % $Date: Jan-2013 $ 
-        % $Copyright: Moscow State University,
-        %             Faculty of Computational
-        %             Mathematics and Computer Science,
-        %             System Analysis Department 2013 $
         function cutObj = cut(self, cutTimeVec)
             import modgen.common.throwerror;
             cutObj = self.getCopy();
@@ -2009,17 +1915,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             end
             cutObj.isCut = true;
         end
-        %
-        % See elltool.reach.IReach for documentation
-        %
-        % $Author: Kirill Mayantsev
-        % <kirill.mayantsev@gmail.com> $  
-        % $Date: Jan-2013 $ 
-        % $Copyright: Moscow State University, 
-        %             Faculty of Computational Mathematics 
-        %             and Computer Science,
-        %             System Analysis Department 2013 $
-        % 
+
         function [rSdim sSdim] = dimension(self)
             [m, n] = size(self);
             rSdim = [];
@@ -2044,17 +1940,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 clear('sSdim');
             end
         end
-        %
-        % See elltool.reach.IReach for documentation
-        %
-        % $Author: Kirill Mayantsev
-        % <kirill.mayantsev@gmail.com> $  
-        % $Date: Jan-2013 $ 
-        % $Copyright: Moscow State University, 
-        %             Faculty of Computational Mathematics 
-        %             and Computer Science,
-        %             System Analysis Department 2013 $
-        %    
+
         function display(self)
             if self.isempty()
                 return;
@@ -2128,18 +2014,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             end
             fprintf('\n');
         end
-        %
-        % See elltool.reach.IReach for documentation
-        %  
-        % $Author: Kirill Mayantsev
-        % <kirill.mayantsev@gmail.com> $  
-        % $Date: Jan-2013$ 
-        % $Copyright: Moscow State University, 
-        %             Faculty of Computational
-        %             Mathematics and Computer Science,
-        %             System Analysis Department 2013 $    
-        %  
-        
+
         function [trCenterMat timeVec] = get_center(self)
             import elltool.conf.Properties;
             trCenterMat  = self.center_values;
@@ -2147,18 +2022,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 timeVec = self.time_values;
             end
         end
-        %
-        % See elltool.reach.IReach for documentation
-        %  
-        %  
-        % $Author: Kirill Mayantsev
-        % <kirill.mayantsev@gmail.com> $  
-        % $Date: Jan-2013 $ 
-        % $Copyright: Moscow State University, 
-        %             Faculty of Computational Mathematics 
-        %             and Computer Science,
-        %             System Analysis Department 2013 $
-        %        
+
         function [directionsCVec timeVec] = get_directions(self)
             import elltool.conf.Properties;
             directionsCVec  = [];
@@ -2173,18 +2037,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 timeVec = self.time_values;
             end
         end
-        %
-        % See elltool.reach.IReach for documentation
-        %  
-        %  
-        % $Author: Kirill Mayantsev
-        % <kirill.mayantsev@gmail.com> $  
-        % $Date: Jan-2013 $ 
-        % $Copyright: Moscow State University, 
-        %             Faculty of Computational Mathematics 
-        %             and Computer Science,
-        %             System Analysis Department 2013 $
-        %    
+ 
         function [eaEllMat timeVec] = get_ea(self)
             if isempty(self)
                 return;
@@ -2210,18 +2063,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 eaEllMat = [eaEllMat; ee];
             end
         end
-        %
-        % See elltool.reach.IReach for documentation
-        %  
-        %  
-        % $Author: Kirill Mayantsev
-        % <kirill.mayantsev@gmail.com> $  
-        % $Date: Jan-2013 $ 
-        % $Copyright: Moscow State University, 
-        %             Faculty of Computational Mathematics 
-        %             and Computer Science,
-        %             System Analysis Department 2013 $
-        %       
+
         function [iaEllMat timeVec] = get_ia(self)
             if isempty(self)
                 return;
@@ -2248,19 +2090,8 @@ classdef ReachDiscrete < elltool.reach.AReach
                 iaEllMat = [iaEllMat; ee];
             end
         end
-        %
-        % See elltool.reach.IReach for documentation
-        %  
-        %  
-        % $Author: Kirill Mayantsev
-        % <kirill.mayantsev@gmail.com> $  
-        % $Date: Jan-2013 $ 
-        % $Copyright: Moscow State University, 
-        %             Faculty of Computational Mathematics 
-        %             and Computer Science,
-        %             System Analysis Department 2013 $
-        %           
-        function [goodCurvesCVec timeVec] = get_goodcurves(self)       
+   
+        function [goodCurvesCVec timeVec] = get_goodcurves(self)           
             import elltool.conf.Properties;
             import modgen.common.throwerror;
             if isempty(self)
@@ -2304,34 +2135,12 @@ classdef ReachDiscrete < elltool.reach.AReach
                 timeVec  = self.time_values;
             end
         end
-        %
-        % See elltool.reach.IReach for documentation
-        %  
-        %  
-        % $Author: Kirill Mayantsev
-        % <kirill.mayantsev@gmail.com> $  
-        % $Date: Jan-2013 $ 
-        % $Copyright: Moscow State University, 
-        %             Faculty of Computational Mathematics 
-        %             and Computer Science,
-        %             System Analysis Department 2013 $
-        %      
+
         function linSys = get_system(self)
             import elltool.conf.Properties;
             linSys = self.system;
         end
-        %
-        % See elltool.reach.IReach for documentation
-        %  
-        %  
-        % $Author: Kirill Mayantsev
-        % <kirill.mayantsev@gmail.com> $  
-        % $Date: Jan-2013 $ 
-        % $Copyright: Moscow State University, 
-        %             Faculty of Computational Mathematics 
-        %             and Computer Science,
-        %             System Analysis Department 2013 $
-        %      
+   
         function plot_ea(self, varargin)
             import elltool.conf.Properties;
             import elltool.logging.Log4jConfigurator;
@@ -2586,18 +2395,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 hold off;
             end
         end
-        %
-        % See elltool.reach.IReach for documentation
-        %  
-        %  
-        % $Author: Kirill Mayantsev
-        % <kirill.mayantsev@gmail.com> $  
-        % $Date: Jan-2013 $ 
-        % $Copyright: Moscow State University, 
-        %             Faculty of Computational Mathematics 
-        %             and Computer Science,
-        %             System Analysis Department 2013 $
-        %     
+
         function plot_ia(self, varargin) 
             import elltool.conf.Properties;
             import elltool.logging.Log4jConfigurator;
@@ -2858,18 +2656,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 hold off;
             end
         end
-        %
-        % See elltool.reach.IReach for documentation
-        %  
-        %  
-        % $Author: Kirill Mayantsev
-        % <kirill.mayantsev@gmail.com> $  
-        % $Date: Jan-2013 $ 
-        % $Copyright: Moscow State University, 
-        %             Faculty of Computational Mathematics 
-        %             and Computer Science,
-        %             System Analysis Department 2013 $
-        %      
+     
         function projObj = projection(self, projMat)
             import elltool.conf.Properties;
             import modgen.common.throwerror;
@@ -2925,17 +2712,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             projObj.ia_values = QQ;
             projObj.isProj = true;
         end
-        %
-        % See elltool.reach.IReach for documentation
-        %  
-        % $Author: Kirill Mayantsev
-        % <kirill.mayantsev@gmail.com> $  
-        % $Date: Jan-2013$ 
-        % $Copyright: Moscow State University, 
-        %             Faculty of Computational
-        %             Mathematics and Computer Science,
-        %             System Analysis Department 2013 $
-        %       
+ 
         function newReachObj = evolve(self, newEndTime, linSys)
             import elltool.conf.Properties;
             import modgen.common.throwerror;

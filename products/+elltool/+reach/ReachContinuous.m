@@ -3,65 +3,6 @@ classdef ReachContinuous < elltool.reach.AReach
 % Toolbox.
 %
 %
-% Constructor and data accessing functions:
-% -----------------------------------------
-%  ReachContinuous - Constructor of the reach set object,
-%                    performs the computation of the 
-%                    specified reach set approximations.
-%  dimension       - Returns the dimension of the reach
-%                    set, which can be different from the
-%                    state space dimension of the system if
-%                    the reach set is a projection.
-%  get_system      - Returns the linear system object,
-%                    for which the reach set was computed. 
-%                    Warning: returns the last lin system.
-%  get_directions  - Returns the values of the direction
-%                    vectors corresponding to the values of 
-%                    the time grid.
-%  get_center      - Returns points of the reach set center 
-%                    trajectory corresponding to the values
-%                    of the time grid.
-%  get_ea          - Returns external approximating
-%                    ellipsoids corresponding to the values 
-%                    of the time grid.
-%  get_ia          - Returns internal approximating
-%                    ellipsoids corresponding to the values 
-%                    of the time grid.
-%  get_goodcurves  - Returns points of the 'good curves'
-%                    corresponding to the values of the 
-%                    time grid.
-%  intersect       - Checks if external or internal
-%                    reach set approximation intersects 
-%                    with given ellipsoid, hyperplane 
-%                    or polytope.
-%  iscut           - Checks if given reach set object is
-%                    a cut of another reach set. 
-%  isprojection    - Checks if given reach set object is a 
-%                    projection.
-%
-%
-% Reach set data manipulation and plotting functions:
-% ---------------------------------------------------
-%  cut        - Extracts a piece of the reach set that
-%               corresponds to the specified time value or 
-%               time interval.
-%  projection - Projects the reach set onto a given
-%               orthogonal basis. 
-%  evolve     - Computes further evolution in time for 
-%               given reach set for the same or different 
-%               dynamical system.
-%  plot_ea    - Plots external approximation of the reach 
-%               set. 
-%  plot_ia    - Plots internal approximation of the reach 
-%               set.
-%
-%
-% Overloaded functions: ---------------------
-%  display - Displays the reach set object.
-%            Warning: displays only the last linear
-%            system.
-%
-%
 % $Authors: 
 % Alex Kurzhanskiy
 % <akurzhan@eecs.berkeley.edu>
@@ -686,17 +627,6 @@ classdef ReachContinuous < elltool.reach.AReach
         end
         %%
         function eaPlotter = plot_ea(self, varargin)
-        % See elltool.reach.IReach for documentation
-        %  
-        %  
-        % $Author: Kirill Mayantsev
-        % <kirill.mayantsev@gmail.com> $  
-        % $Date: Jan-2013 $ 
-        % $Copyright: Moscow State University, 
-        %             Faculty of Computational Mathematics 
-        %             and Computer Science,
-        %             System Analysis Department 2013 $
-        %      
             import gras.ellapx.enums.EApproxType;
             if nargin == 1
                 eaPlotter =...
@@ -711,17 +641,6 @@ classdef ReachContinuous < elltool.reach.AReach
         end
         %%
         function iaPlotter = plot_ia(self, varargin)
-        % See elltool.reach.IReach for documentation
-        %  
-        %  
-        % $Author: Kirill Mayantsev
-        % <kirill.mayantsev@gmail.com> $  
-        % $Date: Jan-2013 $ 
-        % $Copyright: Moscow State University, 
-        %             Faculty of Computational Mathematics 
-        %             and Computer Science,
-        %             System Analysis Department 2013 $
-        %      
             import gras.ellapx.enums.EApproxType;
             if nargin == 1
                 iaPlotter =...
@@ -734,16 +653,7 @@ classdef ReachContinuous < elltool.reach.AReach
                     varargin{1}, varargin{2});
             end
         end
-        %%
-        % See elltool.reach.IReach for documentation
-        %
-        % $Author: Kirill Mayantsev
-        % <kirill.mayantsev@gmail.com> $ $Date: Jan-2013 $
-        % $Copyright: Moscow State University,
-        %             Faculty of Computational Mathematics
-        %             and Computer Science, System Analysis
-        %             Department 2013 $
-        %    
+        %%  
         function display(self)
             import gras.ellapx.enums.EApproxType;
             fprintf('\n');
@@ -796,16 +706,6 @@ classdef ReachContinuous < elltool.reach.AReach
         end
         %%
         function cutObj = cut(self, cutTimeVec)
-        % See elltool.reach.IReach for documentation
-        %  
-        %
-        % $Author: Kirill Mayantsev
-        % <kirill.mayantsev@gmail.com> $ $Date: Jan-2013 $
-        % $Copyright: Moscow State University,
-        %             Faculty of Computational Mathematics
-        %             and Computer Science, System Analysis
-        %             Department 2013 $
-        %
             import modgen.common.throwerror;
             if self.isprojection()
                 throwerror('wrongInput',...
@@ -854,33 +754,10 @@ classdef ReachContinuous < elltool.reach.AReach
         end
         %%
         function linSys = get_system(self)
-        % See elltool.reach.IReach for documentation
-        %  
-        %  
-        % $Author: Kirill Mayantsev
-        % <kirill.mayantsev@gmail.com> $  
-        % $Date: Jan-2013 $ 
-        % $Copyright: Moscow State University, 
-        %             Faculty of Computational Mathematics 
-        %             and Computer Science,
-        %             System Analysis Department 2013 $
-        %      
             linSys = self.linSysCVec{end};
         end
         %%
         function [directionsCVec timeVec] = get_directions(self)
-        % See elltool.reach.IReach for documentation
-        %  
-        %  
-        % $Author: Kirill Mayantsev
-        % <kirill.mayantsev@gmail.com> $  
-        % $Date: Jan-2013 $ 
-        % $Copyright: Moscow State University, 
-        %             Faculty of Computational Mathematics 
-        %             and Computer Science,
-        %             System Analysis Department 2013 $
-        %    
-        %    
             import gras.ellapx.enums.EApproxType;
             import gras.ellapx.smartdb.F;
             APPROX_TYPE = F.APPROX_TYPE;
@@ -892,16 +769,6 @@ classdef ReachContinuous < elltool.reach.AReach
             end
         end
         %%
-        % See elltool.reach.IReach for documentation
-        %  
-        % $Author: Kirill Mayantsev
-        % <kirill.mayantsev@gmail.com> $  
-        % $Date: Jan-2013$ 
-        % $Copyright: Moscow State University, 
-        %             Faculty of Computational
-        %             Mathematics and Computer Science,
-        %             System Analysis Department 2013 $    
-        %    
         function [trCenterMat timeVec] = get_center(self)
             trCenterMat = self.ellTubeRel.aMat{1};
             if nargout > 1
@@ -909,49 +776,16 @@ classdef ReachContinuous < elltool.reach.AReach
             end
         end
         %%
-        % See elltool.reach.IReach for documentation
-        %  
-        %  
-        % $Author: Kirill Mayantsev
-        % <kirill.mayantsev@gmail.com> $  
-        % $Date: Jan-2013 $ 
-        % $Copyright: Moscow State University, 
-        %             Faculty of Computational Mathematics 
-        %             and Computer Science,
-        %             System Analysis Department 2013 $
-        %        
         function [eaEllMat timeVec] = get_ea(self)
             import gras.ellapx.enums.EApproxType;
             [eaEllMat timeVec] = self.getApprox(EApproxType.External);
         end
         %%
-        % See elltool.reach.IReach for documentation
-        %  
-        %  
-        % $Author: Kirill Mayantsev
-        % <kirill.mayantsev@gmail.com> $  
-        % $Date: Jan-2013 $ 
-        % $Copyright: Moscow State University, 
-        %             Faculty of Computational Mathematics 
-        %             and Computer Science,
-        %             System Analysis Department 2013 $
-        %   
         function [iaEllMat timeVec] = get_ia(self)
             import gras.ellapx.enums.EApproxType;
             [iaEllMat timeVec] = self.getApprox(EApproxType.Internal);
         end
         %
-        % See elltool.reach.IReach for documentation
-        %  
-        %  
-        % $Author: Kirill Mayantsev
-        % <kirill.mayantsev@gmail.com> $  
-        % $Date: Jan-2013 $ 
-        % $Copyright: Moscow State University, 
-        %             Faculty of Computational Mathematics 
-        %             and Computer Science,
-        %             System Analysis Department 2013 $
-        %     
         function [goodCurvesCVec timeVec] = get_goodcurves(self)
             import gras.ellapx.enums.EApproxType;
             import gras.ellapx.smartdb.F;
@@ -964,18 +798,6 @@ classdef ReachContinuous < elltool.reach.AReach
             end
         end
         %%
-        %
-        % See elltool.reach.IReach for documentation
-        %  
-        %  
-        % $Author: Kirill Mayantsev
-        % <kirill.mayantsev@gmail.com> $  
-        % $Date: Jan-2013 $ 
-        % $Copyright: Moscow State University, 
-        %             Faculty of Computational Mathematics 
-        %             and Computer Science,
-        %             System Analysis Department 2013 $
-        %     
         function projObj = projection(self, projMat)
             import gras.ellapx.enums.EProjType;
             import modgen.common.throwerror;
@@ -997,16 +819,6 @@ classdef ReachContinuous < elltool.reach.AReach
             projObj.projectionBasisMat = projMat;
         end
         %%
-        % See elltool.reach.IReach for documentation
-        %  
-        % $Author: Kirill Mayantsev
-        % <kirill.mayantsev@gmail.com> $  
-        % $Date: Jan-2013$ 
-        % $Copyright: Moscow State University, 
-        %             Faculty of Computational
-        %             Mathematics and Computer Science,
-        %             System Analysis Department 2013 $
-        %   
         function newReachObj = evolve(self, newEndTime, linSys)     
             import elltool.conf.Properties;
             import gras.ellapx.enums.EApproxType;
@@ -1083,22 +895,136 @@ classdef ReachContinuous < elltool.reach.AReach
         end
         %%
         function eaScaleFactor = getEaScaleFactor(self)
+        %
+        % GET_EASCALEFACTOR - return the scale factor for 
+        % external approximation of reach tube
+        %
+        % Input:
+        %   regular:
+        %       self.
+        %
+        % Output:
+        %   eaScaleFactor: double[1, 1] - scale factor. 
+        %     
+        %
+        % $Author: Kirill Mayantsev
+        % <kirill.mayantsev@gmail.com> $  
+        % $Date: March-2013 $ 
+        % $Copyright: Moscow State University,
+        %             Faculty of Computational
+        %             Mathematics and Computer Science,
+        %             System Analysis Department 2013 $
+        %
             eaScaleFactor = self.EXTERNAL_SCALE_FACTOR;
         end
         %%
         function iaScaleFactor = getIaScaleFactor(self)
+        %
+        % GET_IASCALEFACTOR - return the scale factor for 
+        % internal approximation of reach tube
+        %
+        % Input:
+        %   regular:
+        %       self.
+        %
+        % Output:
+        %   iaScaleFactor: double[1, 1] - scale factor. 
+        %     
+        %
+        % $Author: Kirill Mayantsev
+        % <kirill.mayantsev@gmail.com> $  
+        % $Date: March-2013 $ 
+        % $Copyright: Moscow State University,
+        %             Faculty of Computational
+        %             Mathematics and Computer Science,
+        %             System Analysis Department 2013 $
+        %
             iaScaleFactor = self.INTERNAL_SCALE_FACTOR;
         end
         %%
         function x0Ell = getInitialSet(self)
+        %
+        % GETINITIALSET - return the initial set for
+        % linear system, which is solved for building
+        % reach tube.
+        %
+        % Input:
+        %   regular:
+        %       self.
+        %
+        % Output:
+        %   x0Ell: ellipsoid[1, 1] - ellipsoid x0, which
+        %       was initial set for linear system. 
+        %     
+        %
+        % $Author: Kirill Mayantsev
+        % <kirill.mayantsev@gmail.com> $  
+        % $Date: March-2013 $ 
+        % $Copyright: Moscow State University,
+        %             Faculty of Computational
+        %             Mathematics and Computer Science,
+        %             System Analysis Department 2013 $
+        %
             x0Ell = self.x0Ellipsoid;
         end
         %%
         function isBackward = isbackward(self)
+        %
+        % ISBACKWARD - checks if given reach set object
+        % was obtained by solving the system in reverse
+        % time.
+        %
+        % Input:
+        %   regular:
+        %       self.
+        %
+        % Output:
+        %   isBackward: logical[1, 1] -
+        %       true - if self was obtained by solving in
+        %           reverse time.
+        %       false - otherwise.
+        %     
+        %
+        % $Author: Kirill Mayantsev
+        % <kirill.mayantsev@gmail.com> $  
+        % $Date: March-2013 $ 
+        % $Copyright: Moscow State University,
+        %             Faculty of Computational
+        %             Mathematics and Computer Science,
+        %             System Analysis Department 2013 $
+        %
             isBackward = self.isBackward;
         end
         %%
         function isEqual = isEqual(self, reachObj, varargin)
+        %
+        % ISEQUAL - checks for equality given reach set 
+        % objects
+        % 
+        %
+        % Input:
+        %   regular:
+        %       self.
+        %       reachObj - 
+        %           elltool.reach.ReachContinuous[1, 1] 
+        %           reach set object, which compare with
+        %           self.       
+        %
+        % Output:
+        %   regular:
+        %       ISEQUAL: logical[1, 1] -
+        %           true - if reach set objects are equal.s
+        %           false - otherwise.
+        %     
+        %
+        % $Author: Kirill Mayantsev
+        % <kirill.mayantsev@gmail.com> $  
+        % $Date: March-2013 $ 
+        % $Copyright: Moscow State University,
+        %             Faculty of Computational
+        %             Mathematics and Computer Science,
+        %             System Analysis Department 2013 $
+        %
             import gras.ellapx.smartdb.F;
             import gras.ellapx.enums.EApproxType;
             APPROX_TYPE = F.APPROX_TYPE;

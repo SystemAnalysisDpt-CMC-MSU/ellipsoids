@@ -130,6 +130,7 @@ classdef IReach < handle
         %       values.
         %
         [eaEllMat timeVec] = get_ea(self)
+        
         %
         % GET_GOODCURVES - returns the 'good curve'
         % trajectories of the reach set.
@@ -145,8 +146,8 @@ classdef IReach < handle
         %
         %   timeVec: double[1, nPoints] - array of time
         %       values.
+        [goodCurvesCVec timeVec] = get_goodcurves(self) 
         %
-        [goodCurvesCVec timeVec] = get_goodcurves(self)
         %
         % GET_IA - returns array of ellipsoid objects
         % representing internal approximation of the 
