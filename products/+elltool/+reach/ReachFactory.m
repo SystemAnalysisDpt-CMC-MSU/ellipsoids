@@ -47,8 +47,6 @@ classdef ReachFactory < handle
                 'goodDirSelection.methodProps.manual.lsGoodDirSets.set1');
             self.l0Mat = cell2mat(l0CMat.').';
             self.x0Ell = ellipsoid(x0DefVec, x0DefMat);
-            self.tVec = [crmSys.getParam('time_interval.t0'),...
-                crmSys.getParam('time_interval.t1')];
             if self.isBack
                 self.tVec = [crmSys.getParam('time_interval.t1'),...
                 crmSys.getParam('time_interval.t0')];

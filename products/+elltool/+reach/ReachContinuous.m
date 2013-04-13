@@ -492,45 +492,6 @@ classdef ReachContinuous < elltool.reach.AReach
             self.displayInternal();
         end
         %%
-        function cutObj = cut(self, cutTimeVec)
-            import modgen.common.throwerror;
-            if self.isprojection()
-                throwerror('wrongInput',...
-                    'Method cut does not work with projections');
-            else
-                cutObj = elltool.reach.ReachContinuous();
-                if self.isbackward()
-                    cutTimeVec = fliplr(cutTimeVec);
-                    switchTimeVec = fliplr(self.switchSysTimeVec);
-                else
-                    switchTimeVec = self.switchSysTimeVec;
-                end
-                cutObj.ellTubeRel = self.ellTubeRel.cut(cutTimeVec);
-                switchTimeIndVec =...
-                    switchTimeVec > cutTimeVec(1) &...
-                    switchTimeVec < cutTimeVec(end);
-                cutObj.switchSysTimeVec = [cutTimeVec(1)...
-                    switchTimeVec(switchTimeIndVec) cutTimeVec(end)];
-                if self.isbackward()
-                    cutObj.switchSysTimeVec =...
-                        fliplr(cutObj.switchSysTimeVec);
-                end
-                firstIntInd = find(switchTimeIndVec == 1, 1);
-                if ~isempty(firstIntInd)
-                    switchTimeIndVec(firstIntInd - 1) = 1;
-                else
-                    switchTimeIndVec(find(switchTimeVec >=...
-                        cutTimeVec(end), 1) - 1) = 1;
-                end
-                cutObj.linSysCVec = self.linSysCVec(switchTimeIndVec);
-                cutObj.x0Ellipsoid = self.x0Ellipsoid;
-                cutObj.isCut = true;
-                cutObj.isProj = false;
-                cutObj.isBackward = self.isbackward();
-                cutObj.projectionBasisMat = self.projectionBasisMat;
-            end
-        end
-        %%
         function newReachObj = evolve(self, newEndTime, linSys)
             import elltool.conf.Properties;
             import gras.ellapx.enums.EApproxType;

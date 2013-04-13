@@ -12,7 +12,7 @@ classdef AReach < elltool.reach.IReach
         COMP_PRECISION = 5e-3
         FIELDS_NOT_TO_COMPARE = {'LT_GOOD_DIR_MAT'; ...
             'LT_GOOD_DIR_NORM_VEC'; 'LS_GOOD_DIR_NORM'; ...
-            'LS_GOOD_DIR_VEC';' IND_S_TIME';...
+            'LS_GOOD_DIR_VEC';'IND_S_TIME';...
             'S_TIME'; 'TIME_VEC'};
     end
     %
@@ -545,13 +545,13 @@ classdef AReach < elltool.reach.IReach
         %
         function [eaEllMat timeVec] = get_ea(self)
             import gras.ellapx.enums.EApproxType;
-            [eaEllMat timeVec] =...
+            [eaEllMat timeVec] = ...
                 self.ellTubeRel.getEllArray(EApproxType.External);
         end
         %
         function [iaEllMat timeVec] = get_ia(self)
             import gras.ellapx.enums.EApproxType;
-            [iaEllMat timeVec] =...
+            [iaEllMat timeVec] = ...
                 self.ellTubeRel.getEllArray(EApproxType.Internal);
         end
         %
@@ -593,14 +593,9 @@ classdef AReach < elltool.reach.IReach
                     'matrix should be a unit vector.']);
             end
             projSet = self.getProjSet(projMat);
-            projObj = feval(class(self));
-            projObj.switchSysTimeVec = self.switchSysTimeVec;
-            projObj.x0Ellipsoid = self.x0Ellipsoid;
-            projObj.ellTubeRel = projSet;
-            projObj.linSysCVec = self.linSysCVec;
-            projObj.isCut = self.isCut;
+            projObj = self.getCopy();
+            projObj.ellTubeRel = projSet.getCopy();
             projObj.isProj = true;
-            projObj.isBackward = self.isbackward();
             projObj.projectionBasisMat = projMat;
         end
         %
@@ -632,6 +627,41 @@ classdef AReach < elltool.reach.IReach
             end
         end
         %
+        function cutObj = cut(self, cutTimeVec)
+            import modgen.common.throwerror;
+            if self.isprojection()
+                throwerror('wrongInput',...
+                    'Method cut does not work with projections');
+            else
+                cutObj = self.getCopy();
+                if self.isbackward()
+                    cutTimeVec = fliplr(cutTimeVec);
+                    switchTimeVec = fliplr(self.switchSysTimeVec);
+                else
+                    switchTimeVec = self.switchSysTimeVec;
+                end
+                cutObj.ellTubeRel = cutObj.ellTubeRel.cut(cutTimeVec);
+                switchTimeIndVec = ...
+                    switchTimeVec > cutTimeVec(1) & ...
+                    switchTimeVec < cutTimeVec(end);
+                cutObj.switchSysTimeVec = [cutTimeVec(1) ...
+                    switchTimeVec(switchTimeIndVec) cutTimeVec(end)];
+                if self.isbackward()
+                    cutObj.switchSysTimeVec = ...
+                        fliplr(cutObj.switchSysTimeVec);
+                end
+                firstIntInd = find(switchTimeIndVec == 1, 1);
+                if ~isempty(firstIntInd)
+                    switchTimeIndVec(firstIntInd - 1) = 1;
+                else
+                    switchTimeIndVec(find(switchTimeVec >= ...
+                        cutTimeVec(end), 1) - 1) = 1;
+                end
+                cutObj.linSysCVec = cutObj.linSysCVec(switchTimeIndVec);
+                cutObj.isCut = true;
+            end
+        end
+        %
         function copyReachObj = getCopy(self)
             copyReachObj = feval(class(self));
             copyReachObj.absTol = self.absTol;
@@ -658,13 +688,13 @@ classdef AReach < elltool.reach.IReach
             end
         end
         %
-		function ellTubeRel = getEllTubeRel(self)
-			ellTubeRel = self.ellTubeRel;
+        function ellTubeRel = getEllTubeRel(self)
+            ellTubeRel = self.ellTubeRel;
         end
         %
         function ellTubeUnionRel = getEllTubeUnionRel(self)
             import gras.ellapx.smartdb.rels.EllUnionTube;
-			ellTubeUnionRel = EllUnionTube.fromEllTubes(self.ellTubeRel);
+            ellTubeUnionRel = EllUnionTube.fromEllTubes(self.ellTubeRel);
         end
     end
 end
