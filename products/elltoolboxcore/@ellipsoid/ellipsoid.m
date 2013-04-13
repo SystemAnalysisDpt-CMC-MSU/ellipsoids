@@ -204,5 +204,7 @@ classdef ellipsoid < handle
     end
     methods (Static)
         checkIsMe(someObj,varargin)
+        [bpMat, fVec] = getGrid(nDim,nPoints)
+        [bpMat, fVec] = getGridByFactor(ellObj,factorVec)        
     end
 end

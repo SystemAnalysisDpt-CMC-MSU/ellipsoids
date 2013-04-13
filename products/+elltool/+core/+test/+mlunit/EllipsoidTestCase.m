@@ -1244,12 +1244,12 @@ classdef EllipsoidTestCase < mlunitext.test_case
             mlunit.assert_equals(true, isOk);
         end
         %
-        function self=testEllBndr_23d(self)
+        function self=testGetBoundary(self)
             %
             testEll=createEllObj(2,1);
             %
-            checkForDim(@ellbndr_2d,2);
-            checkForDim(@ellbndr_3d,3);
+            checkForDim(@getBoundary,2);
+            checkForDim(@getBoundary,3);
             %
             function checkForDim(fHandle,nDim)
                 testEll=createEllObj(nDim,1);

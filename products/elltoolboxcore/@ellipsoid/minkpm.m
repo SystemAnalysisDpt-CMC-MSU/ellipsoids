@@ -138,7 +138,8 @@ end
         end
         inpEllArr = ellsArr(1:end-1);
         inpEll = ellsArr(end);
-        [dirMat, ~] = calcGrid(inpEllArr(1),N_POINTS_FACTOR);
+        [dirMat, ~] = ...
+            ellipsoid.getGridByFactor(inpEllArr(1),N_POINTS_FACTOR);
         dirMat = dirMat';
         extApproxEllVec = minksumEa(inpEllArr, dirMat);
         if min(extApproxEllVec > inpEll) == 0
