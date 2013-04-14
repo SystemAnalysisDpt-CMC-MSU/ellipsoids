@@ -854,5 +854,14 @@ classdef ReachDiscrLogicalTestCase < mlunit.test_case
             mlunit.assert_equals(isOk, true);
         end
         
+        function self = testOverflow(self)
+            AMat = [4 5 1; 3 2 1; 0 1 3];
+            BMat = [2 0 1; 3 0 1; 2 2 2];
+            PEll = ellipsoid([1 1 1]', [3 0 0; 0 4 0; 0 0 1]);
+            LS = elltool.linsys.LinSysFactory.create(AMat, BMat, PEll, [], [], [], [], 'd');
+            X0Ell = ell_unitball(3);
+            LMat = eye(3);
+            RS = elltool.reach.ReachDiscrete(LS, X0Ell, LMat, [1, 20]);
+        end
     end
 end
