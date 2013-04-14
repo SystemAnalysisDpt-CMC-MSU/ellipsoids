@@ -922,6 +922,9 @@ classdef ReachContinuous < elltool.reach.AReach
         function isEqual = isEqual(self, reachObj, varargin)
             import gras.ellapx.smartdb.F;
             import gras.ellapx.enums.EApproxType;
+            import elltool.logging.Log4jConfigurator;
+            persistent logger;
+            %
             APPROX_TYPE = F.APPROX_TYPE;
             %
             ellTube = self.ellTubeRel;
@@ -933,38 +936,99 @@ classdef ReachContinuous < elltool.reach.AReach
                 ellTube = ellTube.getTuples(varargin{1});
                 compEllTube = compEllTube.getTuplesFilteredBy(APPROX_TYPE,...
                     varargin{2});
-            end
-            %
-            if ellTube.getNElems < compEllTube.getNElems
-                compEllTube = compEllTube.getTuplesFilteredBy(...
-                    'lsGoodDirNorm', 1);
-            end
+            end            
             %
             pointsNum = numel(ellTube.timeVec{1});
             newPointsNum = numel(compEllTube.timeVec{1});
-            compTimeGridIndVec = 2 .* (1 : pointsNum) - 1;
             firstTimeVec = ellTube.timeVec{1};
             secondTimeVec = compEllTube.timeVec{1};
-            if pointsNum ~= newPointsNum
-                secondTimeVec = secondTimeVec(compTimeGridIndVec);
+            %
+            if isempty(logger)
+                logger=Log4jConfigurator.getLogger();
             end
-            if max(abs(firstTimeVec - secondTimeVec) > self.COMP_PRECISION)
-                compTimeGridIndVec = compTimeGridIndVec +...
-                    double(compTimeGridIndVec > pointsNum);
+            %
+            if logger.isDebugEnabled
+                if pointsNum ~= newPointsNum
+                    logger.debug('Inequal time knots count');
+                else
+                    logger.debug('Equal time knots count');
+                end
+                
             end
+            %
+            % what tolerance to use here?
+            if (abs(firstTimeVec(end)-secondTimeVec(end)) > 0.1)
+                % should i return false here?
+                if logger.isDebugEnabled
+                    logger.debug(...
+                        sprintf('Ending times differ by %f',...
+                        abs(firstTimeVec(end)-secondTimeVec(end))));
+                end
+            end
+            if (abs(firstTimeVec(1)-secondTimeVec(1)) > 0.1)
+                % should i return false here?
+                if logger.isDebugEnabled
+                    logger.debug(...
+                        sprintf('Beginning times differ by %f',...
+                        abs(firstTimeVec(1)-secondTimeVec(1))));
+                end
+            end
+            % finding commot times
+            % what tolerance to use here?
+            [firstEqualIndVec, secondEqualIndVec] = ...
+                fIntersectSortedVecsWithTol(...
+                firstTimeVec, secondTimeVec, 1e-3);
+            if logger.isDebugEnabled
+                logger.debug(sprintf('Number of equal knots: %d',...
+                    numel(firstTimeVec)))
+            end
+            % removing everything except common times
+            ellTube = ellTube.thinOutTuples(firstEqualIndVec);
+            compEllTube = compEllTube.thinOutTuples(secondEqualIndVec);
+            %   
             fieldsNotToCompVec =...
                 F.getNameList(self.FIELDS_NOT_TO_COMPARE);
             fieldsToCompVec =...
                 setdiff(ellTube.getFieldNameList, fieldsNotToCompVec);
-            
-            if pointsNum ~= newPointsNum
-                compEllTube =...
-                    compEllTube.thinOutTuples(compTimeGridIndVec);
-            end
+            % 
             isEqual = compEllTube.getFieldProjection(...
                 fieldsToCompVec).isEqual(...
                 ellTube.getFieldProjection(fieldsToCompVec),...
                 'maxTolerance', self.COMP_PRECISION);
+            %
+            function [aIndVec, bIndVec] = ...
+                    fIntersectSortedVecsWithTol(aVec, bVec, tol)
+                aInd = 1;
+                bInd = 1;
+                aIndVec = [];
+                bIndVec = [];
+                while (aInd <= numel(aVec) && bInd <= numel(bVec))
+                    if (abs(aVec(aInd)-bVec(bInd))>tol)
+                        if (aVec(aInd) < bVec(bInd))
+                            aInd = aInd + 1;
+                        else
+                            bInd = bInd + 1;
+                        end
+                    else
+                        while (aVec(aInd) < bVec(bInd)&& ...
+                                aInd + 1 <= numel(aVec) &&...
+                                abs(aVec(aInd)-bVec(bInd)) >... 
+                                abs(aVec(aInd+1)-bVec(bInd)))
+                            aInd = aInd + 1;
+                        end
+                        while (aVec(aInd) > bVec(bInd)&& ...
+                                bInd + 1 <= numel(bVec) &&...
+                                abs(aVec(aInd)-bVec(bInd)) >... 
+                                abs(aVec(aInd)-bVec(bInd+1)))
+                            bInd = bInd + 1;
+                        end
+                        aIndVec = [aIndVec, aInd];
+                        bIndVec = [bIndVec, bInd];
+                        aInd = aInd + 1;
+                        bInd = bInd + 1;
+                    end
+                end
+            end
         end
         %%
         function copyReachObj = getCopy(self)
