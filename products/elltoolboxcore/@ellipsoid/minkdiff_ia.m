@@ -65,9 +65,9 @@ checkmultvar('isscalar(x1)&&isscalar(x2)',2,fstEll,secEll,...
     'errorTag','wrongInput','errorMessage',...
     'first and second arguments must be single ellipsoids.')
 
-intApprEllVec = [];
 
 if ~isbigger(fstEll, secEll)
+    intApprEllVec = [];
     if Properties.getIsVerbose()
         if isempty(logger)
             logger=Log4jConfigurator.getLogger();
@@ -92,11 +92,12 @@ secEllShMat = secEll.shape;
 if isdegenerate(secEll)
     secEllShMat = ellipsoid.regularize(secEllShMat,secEll.absTol);
 end
-absTolVal=min(fstEll.absTol, secEll.absTol);     
+absTolVal=min(fstEll.absTol, secEll.absTol);
 directionsMat  = ellipsoid.rm_bad_directions(fstEllShMat, ...
     secEllShMat, directionsMat,absTolVal);
 nDirs  = size(directionsMat, 2);
 if nDirs < 1
+    intApprEllVec = [];
     if Properties.getIsVerbose()
         if isempty(logger)
             logger=Log4jConfigurator.getLogger();
@@ -111,7 +112,7 @@ numVec=sum((fstEllShMat*directionsMat).*directionsMat,1);
 denomVec=sum((secEllShMat*directionsMat).*directionsMat,1);
 coefVec=numVec./denomVec;
 
-intApprEllVec = repmat(ellipsoid,1, nDirs);
+intApprEllVec(nDirs) = ellipsoid();
 arrayfun(@(x) fSingleDir(x), 1:nDirs)
     function fSingleDir(index)
         coef = sqrt(coefVec(index));

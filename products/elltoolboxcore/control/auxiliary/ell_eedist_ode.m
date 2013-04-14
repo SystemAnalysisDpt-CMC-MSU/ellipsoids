@@ -1,4 +1,4 @@
-function dXdt = ell_eedist_ode(t, X, l0, mydata, n, back,absTol)
+function dXdt = ell_eedist_ode(t, X, l0, mydata, n, back, absTol)
 %
 % ELL_EEDIST_ODE - ODE for the shape matrix of the external ellipsoid
 %                  for system with disturbance.
@@ -24,7 +24,7 @@ BPB   = ell_value_extract(mydata.BPB, t, [n n]);
 GQG   = ell_value_extract(mydata.GQG, t, [n n]);
 GQGsr = ell_value_extract(mydata.GQGsr, t, [n n]);
 X     = reshape(X, n, n);
-Y     = sqrtm(X);
+Y     = gras.la.sqrtmpos(X, absTol);
 Y     = 0.5*(Y + Y);
 mu    = 0;
 p1    = sqrt(l0' * F * BPB * F' * l0);

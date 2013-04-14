@@ -8,7 +8,7 @@ function intApprEllVec = minkpm_ia(inpEllArr, inpEll, dirMat)
 %   intApprEllVec = MINKPM_IA(inpEllArr, inpEll, dirMat) - Computes
 %       internal approximating ellipsoids of
 %       (E1 + E2 + ... + En) - E, where E1, E2, ..., En are ellipsoids
-%       in array inpEllMat, E = inpEll,
+%       in array inpEllArr, E = inpEll,
 %       along directions specified by columns of matrix dirArr.
 %
 % Input:
@@ -56,12 +56,11 @@ checkmultvar('(x2==x3) && all(x1(:)==x3)',...
     'errorTag','wrongSizes','errorMessage',...
     'all ellipsoids and direction vectors must be of the same dimension');
 
-intApprEllVec = [];
-fstIntApprEllMat = minksum_ia(inpEllArr, dirMat);
+fstIntApprEllVec = minksum_ia(inpEllArr, dirMat);
 isVrb = Properties.getIsVerbose();
 Properties.setIsVerbose(false);
 
-intApprEllVec = repmat(ellipsoid,1,nCols);
+intApprEllVec(nCols) = ellipsoid();
 arrayfun(@(x) fSetIntApprVec(x),1:nCols);
 intApprEllVec = intApprEllVec(~isempty(intApprEllVec));
 
@@ -78,7 +77,7 @@ if isempty(intApprEllVec)
     end
 end
     function fSetIntApprVec(index)
-    	fstIntApprEll = fstIntApprEllMat(index);
+    	fstIntApprEll = fstIntApprEllVec(index);
         dirVec = dirMat(:, index);
         if isbigger(fstIntApprEll, inpEll)
             if ~isbaddirection(fstIntApprEll, inpEll, dirVec,absTol)

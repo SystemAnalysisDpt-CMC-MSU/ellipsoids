@@ -61,8 +61,8 @@ classdef ContinuousReachFirstTestCase < mlunitext.test_case
             DistBounds.center = qtDefCVec;
             DistBounds.shape = qtDefCMat;
             %
-            self.linSys = elltool.linsys.LinSys(atDefCMat, btDefCMat,...
-                ControlBounds, ctDefCMat, DistBounds);
+            self.linSys = elltool.linsys.LinSysFactory.create(atDefCMat,...
+                btDefCMat, ControlBounds, ctDefCMat, DistBounds);
             self.reachObj = elltool.reach.ReachContinuous(self.linSys,...
                 ellipsoid(x0DefVec, x0DefMat), l0Mat, self.timeVec);
         end
@@ -119,7 +119,7 @@ classdef ContinuousReachFirstTestCase < mlunitext.test_case
             DistBounds = struct();
             DistBounds.center = qtDefCVec;
             DistBounds.shape = qtDefCMat;
-            linSys = elltool.linsys.LinSys(atDefCMat, btDefCMat,...
+            linSys = elltool.linsys.LinSysFactory.create(atDefCMat, btDefCMat,...
                 ControlBounds, ctDefCMat, DistBounds);
             backReachObj = elltool.reach.ReachContinuous(linSys,...
                 ellipsoid(x0DefVec, x0DefMat), l0Mat, timeVec);
