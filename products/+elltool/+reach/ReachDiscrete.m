@@ -32,22 +32,20 @@ classdef ReachDiscrete < elltool.reach.AReach
     methods (Static, Access = private)
         function colCodeVec = my_color_table(colChar)
         % MY_COLOR_TABLE - returns the code of the color
-        % defined by single
-        %   letter.
+        % defined by single letter.
         %   
         % Input:
         %   regular:
         %       colChar: char[1,1] - single letter, that
-        %       define code of
-        %           color.
+        %           define code of color.
         %
         % Output:
         %   regular:
         %       colCodeVec: double[1,3] - three-element row
-        %       vector whose
-        %           elements specify the intensities in the
-        %           range [0 1] of the red, green and blue
-        %           components of the color.
+        %           vector whose elements specify the 
+        %           intensities in the range [0 1] of the 
+        %           red, green and blue components of the 
+        %           color.
         %
         % $Authors: Kirill Mayantsev
         % <kirill.mayantsev@gmail.com> $
@@ -85,9 +83,8 @@ classdef ReachDiscrete < elltool.reach.AReach
                             mnmx,absTol)
         %
         % EEDIST_DE - recurrence relation for the shape
-        % matrix of external
-        %   ellipsoid for discrete-time system with
-        %   disturbance.
+        % matrix of external ellipsoid for discrete-time 
+        % system with disturbance.
         %
             import elltool.conf.Properties;
             LL = l0;
@@ -182,9 +179,8 @@ classdef ReachDiscrete < elltool.reach.AReach
         function [QQ, LL] = eesm_de(ntv, X0, l0, mydata, N, back,absTol)
             %
             % EESM_DE - recurrence relation for the shape
-            % matrix of external ellipsoid
-            %           for discrete-time system without
-            %           disturbance.
+            % matrix of external ellipsoid for 
+            % discrete-time system without disturbance.
             %
             import elltool.conf.Properties;
             LL = l0;
@@ -258,9 +254,8 @@ classdef ReachDiscrete < elltool.reach.AReach
         function [QQ, LL] = iedist_de(ntv, X0, l0, mydata, N, back, mnmx,absTol)
             %
             % IEDIST_DE - recurrence relation for the shape
-            % matrix of internal ellipsoid
-            %             for discrete-time system with
-            %             disturbance.
+            % matrix of internal ellipsoid for 
+            % discrete-time system with disturbance.
             %
             import elltool.conf.Properties;
             LL = l0;
@@ -355,9 +350,8 @@ classdef ReachDiscrete < elltool.reach.AReach
         function [QQ, LL] = iesm_de(ntv, X0, l0, mydata, N, back,absTol)
             %
             % IESM_DE - recurrence relation for the shape
-            % matrix of internal ellipsoid
-            %           for discrete-time system without
-            %           disturbance.
+            % matrix of internal ellipsoid for 
+            % discrete-time system without disturbance.
             %
             import elltool.conf.Properties;
             LL = l0;
@@ -494,10 +488,10 @@ classdef ReachDiscrete < elltool.reach.AReach
       
         %
         function x = ellbndr_2d(ell, num)
-            %
-            % ELLBNDR_2D - compute the boundary of 2D
-            % ellipsoid.
-            %
+        %
+        % ELLBNDR_2D - compute the boundary of 2D
+        % ellipsoid.
+        %
             import elltool.conf.Properties;
             if nargin < 2
                 num = elltool.reach.ReachDiscrete.getNPlot2dPoints(ell);
@@ -508,10 +502,10 @@ classdef ReachDiscrete < elltool.reach.AReach
         end
         %
         function x = ellbndr_3d(ell)
-            %
-            % ELLBNDR_3D - compute the boundary of 3D
-            % ellipsoid.
-            %
+        %
+        % ELLBNDR_3D - compute the boundary of 3D
+        % ellipsoid.
+        %
             import elltool.conf.Properties;
             M = elltool.reach.ReachDiscrete.getNPlot3dPoints(ell)/2;
             N = M/2;
@@ -699,8 +693,9 @@ classdef ReachDiscrete < elltool.reach.AReach
                 timeVec, OptStruct, varargin)
         %
         % ReachDiscrete - computes reach set approximation
-        %         of the discrete linear system for the 
-        %         given time interval.
+        % of the discrete linear system for the given time 
+        % interval.
+        % 
         % Input:
         %     linSys: elltool.linsys.LinSys object - given
         %       linear system 
@@ -708,19 +703,23 @@ classdef ReachDiscrete < elltool.reach.AReach
         %       initial conditions 
         %     l0Mat: matrix of double - l0Mat 
         %     timeVec: double[1, 2] - time interval 
-        %     OptStruct: structure with
+        %     OptStruct: struct[1, 1] - structure with
         %     fields:
-        %         approximation = 0 for external,
-        %                       = 1 for internal, 
-        %                       = 2 for both (default).
-        %         save_all = 1 to save intermediate
-        %                      calculation data,
-        %                  = 0 (default) to delete
-        %                       intermediate calculation
-        %                       data.
-        %         minmax = 1 compute minmax reach set,
-        %                = 0 (default) compute maxmin
-        %                    reach set.
+        %         approximation: int[1, 1] - field, which 
+        %           mean the following values for type 
+        %           approximation:
+        %           = 0 for external,
+        %           = 1 for internal, 
+        %           = 2 for both (default).
+        %         save_all: logical [1, 1] - field, which
+        %           = 1 if save intermediate calculation 
+        %               data,
+        %           = 0 (default) if delete intermediate 
+        %               calculation data.
+        %         minmax: logical[1, 1] - field, which:
+        %           = 1 compute minmax reach set,
+        %           = 0 (default) compute maxmin
+        %               reach set.
         %         This option makes sense only for
         %         discrete-time systems with disturbance.
         %
@@ -738,7 +737,8 @@ classdef ReachDiscrete < elltool.reach.AReach
         %   nPlot3dPoints nTimeGridPoints
         %
         % Output:
-        %     self - reach set object.
+        %   regular:
+        %       self - reach set object.
         %
         % $Author: Kirill Mayantsev
         % <kirill.mayantsev@gmail.com> $  
