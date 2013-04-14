@@ -81,7 +81,7 @@ end
             if nDim == 1
                 [ell,nDim] = rebuildOneDim2TwoDim(ell);
             end
-            [lGetGridMat, fGetGridMat] = ellipsoid.getGridByFactor(ell);
+            [lGetGridMat, fGetGridMat] = getGridByFactor(ell);
             nPoints = size(lGetGridMat, 1);
             xMat = zeros(nDim, nPoints+1);
             [qCenVec,qMat] = ell.double();

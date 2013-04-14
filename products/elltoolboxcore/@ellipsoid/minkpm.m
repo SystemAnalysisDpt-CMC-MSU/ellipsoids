@@ -138,8 +138,7 @@ end
         end
         inpEllArr = ellsArr(1:end-1);
         inpEll = ellsArr(end);
-        [dirMat, ~] = ...
-            ellipsoid.getGridByFactor(inpEllArr(1),N_POINTS_FACTOR);
+        [dirMat, ~] = getGridByFactor(inpEllArr(1),N_POINTS_FACTOR);
         dirMat = dirMat';
         extApproxEllVec = minksumEa(inpEllArr, dirMat);
         if min(extApproxEllVec > inpEll) == 0
@@ -161,7 +160,7 @@ end
         inpEllArr = ellsArr(1:end-1);
         inpEll = ellsArr(end);
         elltool.conf.Properties.setIsVerbose(false)
-        [dirMat, fMat] = calcGrid(inpEllArr(1));
+        [dirMat, fMat] =getGridByFactor(inpEllArr(1));
         dirMat = dirMat';
         extApproxEllVec = minksum_ea(inpEllArr, dirMat);
         centVec= extApproxEllVec(1).center - inpEll.center;

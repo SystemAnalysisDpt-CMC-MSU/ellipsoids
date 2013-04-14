@@ -118,7 +118,7 @@ end
     end
     function [xSumDifMat,fMat] = fCalcBodyTriArr(ellsArr)
         nDim = dimension(ellsArr(1));
-        [lDirsMat, fGridMat] = ellipsoid.getGridByFactor(ellsArr(1));
+        [lDirsMat, fGridMat] = getGridByFactor(ellsArr(1));
         lDirsMat = lDirsMat';
         if nDim == 1
             [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr);

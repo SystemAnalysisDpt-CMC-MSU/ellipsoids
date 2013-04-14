@@ -1266,14 +1266,27 @@ classdef EllipsoidTestCase < mlunitext.test_case
                 % Check optional parameter nPoints
                 checkNPoints(nDim);
                 %
-                % Check optional output
+                % Check optional output and number of points
+                testEll=createEllObj(nDim,1);
+                nPoints=200;
                 checkOptOut();
-                
+                %
+                nPoints=50;
+                checkOptOut();
+                %
                 function checkOptOut()
-                    [bp1Mat, fMat]=fHandle(testEll);
-                    bp2Mat=fHandle(testEll);
+                    [bp1Mat, fMat]=fHandle(testEll,nPoints);
+                    bp2Mat=fHandle(testEll,nPoints);
                     isOk=all(bp1Mat(:)==bp2Mat(:));
-                    mlunit.assert(isOk);
+                    if nDim==2
+                        isCorrSize=length(fMat)==(size(bp2Mat,1)+1);
+                    else
+                        depth=calcDepth(nPoints);
+                        nVert=4^(depth)*20;
+                        isCorrSize= nVert==size(fMat,1) && ...
+                            size(fMat,2)==3;
+                    end
+                    mlunit.assert(isOk && isCorrSize);
                 end
                 
                 function checkNPoints(nDim)
@@ -1461,6 +1474,7 @@ function checkEllEqual(testEll1Vec, testEll2Vec, isEqual, ansStr)
 mlunit.assert_equals(isEq, isEqual);
 mlunit.assert_equals(reportStr, ansStr);
 end
+
 %
 function [varargout] = createTypicalHighDimEll(flag)
 switch flag
@@ -1484,4 +1498,35 @@ switch flag
         varargout{2} = diag(11:0.1:20.9);
     otherwise
 end
+end
+%
+function [ triangDepth ] = calcDepth( nPoints )
+%
+% CALCDEPTH - calculate depth of sphere triangulation starting with icosaeder
+%   and given number of points
+%
+% $Author:  Vitaly Baranov  <vetbar42@gmail.com> $    $Date: 04-2013 $
+% $Copyright: Lomonosov Moscow State University,
+%            Faculty of Computational Mathematics and Cybernetics,
+%            System Analysis Department 2013 $
+%
+%
+% Initial icosaeder parameters:
+VERTICES_NUM=12;
+FACES_NUM=20;
+EDGES_NUM=30;
+vertNum=VERTICES_NUM;
+faceNum=FACES_NUM;
+edgeNum=EDGES_NUM;
+%
+curDepth=0;
+isStop=false;
+while ~isStop
+    curDepth=curDepth+1;
+    vertNum=vertNum+edgeNum;
+    edgeNum=2*edgeNum+3*faceNum;
+    faceNum=4*faceNum;
+    isStop=vertNum>=nPoints;
+end
+triangDepth=curDepth;
 end

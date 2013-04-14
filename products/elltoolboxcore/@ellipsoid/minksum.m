@@ -85,7 +85,7 @@ end
         if nDim == 1
             [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr);
         end
-        [lGridMat, fGridMat] = ellipsoid.getGridByFactor(ellsArr(1));
+        [lGridMat, fGridMat] = getGridByFactor(ellsArr(1));
         [xMat, fCMat] = arrayfun(@(x) fCalcBodyTri(x, nDim), ellsArr, ...
             'UniformOutput', false);
         xSumCMat = 0;

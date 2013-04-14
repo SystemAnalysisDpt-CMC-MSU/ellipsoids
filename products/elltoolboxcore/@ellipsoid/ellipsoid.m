@@ -198,13 +198,13 @@ classdef ellipsoid < handle
         [bdMat,fMat] = ellbndr_3dmat(nPoints,cenVec,qMat,absTol)
         [supArr, bpMat] = rhomat(ellShapeMat,ellCenterVec,absTol, dirsMat)
         [diffBoundMat, isPlotCenter3d] = calcdiffonedir(fstEll,secEll,lMat,pUniversalVec,isGoodDirVec)
+        [bpMat, fVec] = getGrid(nDim,nPoints)
     end
     methods(Access = private)
         [propMat, propVal] = getProperty(hplaneMat,propName, fPropFun)
+        [bpMat, fVec] = getGridByFactor(ellObj,factorVec)
     end
     methods (Static)
         checkIsMe(someObj,varargin)
-        [bpMat, fVec] = getGrid(nDim,nPoints)
-        [bpMat, fVec] = getGridByFactor(ellObj,factorVec)        
     end
 end
