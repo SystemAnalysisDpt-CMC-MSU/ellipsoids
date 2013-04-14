@@ -1013,10 +1013,17 @@ classdef ReachContinuous < elltool.reach.AReach
         % Input:
         %   regular:
         %       self.
-        %       reachObj - 
-        %           elltool.reach.ReachContinuous[1, 1] 
+        %       reachObj:
+        %           elltool.reach.ReachContinuous[1, 1] - 
         %           reach set object, which compare with
-        %           self.       
+        %           self.
+        %   optional:
+        %       tuple: int[1, 1] - number of tuple for 
+        %           which will be compared.
+        %       approxType: 
+        %           gras.ellapx.enums.EApproxType[1, 1] - 
+        %           type of approximation, which will be
+        %           compared.
         %
         % Output:
         %   regular:
