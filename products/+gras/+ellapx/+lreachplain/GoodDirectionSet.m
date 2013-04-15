@@ -19,7 +19,7 @@ classdef GoodDirectionSet
         %   2 - R(t, t0)
         %   3 - [R(t, t0); matrixnorm(X(t, t0))]
         %
-        CALC_ALGORITHM = 2;
+        CALC_ALGORITHM = 1;
     end
     methods
         function nGoodDirs=getNGoodDirs(self)
