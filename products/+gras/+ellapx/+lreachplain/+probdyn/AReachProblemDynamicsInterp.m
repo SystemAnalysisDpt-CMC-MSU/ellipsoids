@@ -4,7 +4,6 @@ classdef AReachProblemDynamicsInterp<...
         function self=AReachProblemDynamicsInterp(problemDef, calcPrecision)
             %
             import gras.ellapx.common.*;
-            import gras.ellapx.lreachplain.probdyn.LReachProblemDynamicsInterp;
             import gras.mat.MatrixOperationsFactory;
             %
             % call superclass constructor

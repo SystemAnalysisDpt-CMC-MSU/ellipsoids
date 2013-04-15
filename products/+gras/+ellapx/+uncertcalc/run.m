@@ -67,12 +67,12 @@ end
 saveConf(sysConfRepoMgr,confRepoMgr,resDir);
 %
 %% Build good directions
-[pDefObj,goodDirSetObj]=ApproxProblemPropertyBuilder.build(confRepoMgr,...
+[pDynObj,goodDirSetObj]=ApproxProblemPropertyBuilder.build(confRepoMgr,...
     sysConfRepoMgr);
 %
 %% Building internal ellipsoidal approximations
 [ellTubeRel,ellUnionTubeRel]=gras.ellapx.uncertcalc.EllApxBuilder(...
-    confRepoMgr,pDefObj,goodDirSetObj).build();
+    confRepoMgr,pDynObj,goodDirSetObj).build();
 %% Building projections
 tStart=tic;
 [projectorObj,staticProjectorObj]=...
