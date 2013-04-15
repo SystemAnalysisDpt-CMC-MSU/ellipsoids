@@ -1,8 +1,9 @@
 classdef MPTIntegrationTestCase < mlunitext.test_case
-    % $Author: <Zakharov Eugene>  <justenterrr@gmail.com> $    $Date: <28 february> $
+    % $Author: <Zakharov Eugene>  <justenterrr@gmail.com> $ 
+    % $Date: <28 february> $
     % $Copyright: Moscow State University,
-    %            Faculty of Computational Mathematics and Computer Science,
-    %            System Analysis Department <2013> $
+    % Faculty of Computational Mathematics and 
+    % Computer Science, System Analysis Department <2013> $
     %
     properties (Access=private)
         testDataRootDir
@@ -184,32 +185,29 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             ell3 = ellipsoid(c3Vec,sh3Mat);
             %
             depth1 = 1;
-            poly1 = self.triToPolytope(depth1,sh2Mat);
+            poly1 = elltool.exttbx.gen.tri2polytope(depth1,sh2Mat);
             %
             depth2 = 2;
-            poly2 = self.triToPolytope(depth2,sh2Mat);
+            poly2 = elltool.exttbx.gen.tri2polytope(depth2,sh2Mat);
             %
             %intersection with unit ball
-            testDiffNorm = 0.05;
-            myTestIntersectionIA(ell1,ell2,poly1,poly2,testDiffNorm)
+            EXP_MAX_TOL1 = 0.05;
+            myTestIntersectionIA(ell1,ell2,poly1,poly2,EXP_MAX_TOL1)
             %intersection with ellipsoid with different center
-            testDiffNorm2 = 0.25;
-            myTestIntersectionIA(ell3,ell2,poly1,poly2,testDiffNorm2)
+            EXP_MAX_TOL2 = 0.25;
+            myTestIntersectionIA(ell3,ell2,poly1,poly2,EXP_MAX_TOL2)
             %ellipsoid lies in polytope
             ell4 = ellipsoid(eye(2));
-            absTol = getAbsTol(ell4);
             poly4 = self.makePolytope([eye(2); -eye(2)], ones(4,1));
             ellPolyIA5 = intersection_ia(ell4,poly4);
-            [ellPoly5Vec ellPoly5Mat] = double(ellPolyIA5);
-            mlunit.assert(norm(ellPoly5Vec) + norm(ellPoly5Mat-eye(2)) <= absTol);
+            mlunit.assert(eq(ell4,ellPolyIA5));
             %
             %polytope lies in ellipsoid
             ell5 = ellipsoid(eye(2));
-            absTol = getAbsTol(ell5);
             poly5 = self.makePolytope([eye(2); -eye(2)], 1/4*ones(4,1));
+            expEll = ellipsoid(1/16*eye(2));
             ellPolyIA5 = intersection_ia(ell5,poly5);
-            [ellPoly5Vec ellPoly5Mat] = double(ellPolyIA5);
-            mlunit.assert(norm(ellPoly5Vec) + norm(ellPoly5Mat-1/16*eye(2)) <= absTol);
+            mlunit.assert(eq(expEll,ellPolyIA5));
             %
             %test if internal approximation is really internal
             c6Vec =  [0.8913;0.7621;0.4565;0.0185;0.8214];
@@ -238,17 +236,23 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             mlunit.assert(all(ellPoly8Mat(:) == 0));
             %
             %
-            function myTestIntersectionIA(ell1,ell2,triEll2,triEll2n2,testDiffNorm)
+            function myTestIntersectionIA(ell1,ell2,triEll2,triEll2n2,expTol)
                 ellEllIA = intersection_ia(ell1,ell2);
                 ellPolyIA1 = intersection_ia(ell1,triEll2);
                 ellPolyIA2 = intersection_ia(ell1,triEll2n2);
+                %
+                [isEq, reportStr] = ellEllIA.eq(ellPolyIA1,expTol);
+                mlunit.assert(isEq, reportStr);
+                %                
+                [isEq2, reportStr2] = ellEllIA.eq(ellPolyIA2,expTol);
+                mlunit.assert(isEq2, reportStr2);
+                %
                 [ellEllVec ellEllMat] = double(ellEllIA);
                 [ellPoly1Vec ellPoly1Mat] = double(ellPolyIA1);
-                [ellPoly2Vec ellPoly2Mat] = double(ellPolyIA2);
-                diffNorm1 = norm(ellEllVec - ellPoly1Vec) + norm(ellEllMat - ellPoly1Mat);
-                mlunit.assert(diffNorm1 <= testDiffNorm);
-                diffNorm2 = norm(ellEllVec - ellPoly2Vec) + norm(ellEllMat - ellPoly2Mat);
-                mlunit.assert(diffNorm2 < diffNorm1);
+                [ellPoly2Vec ellPoly2Mat] = double(ellPolyIA2);                
+                tol1 = norm(ellEllVec - ellPoly1Vec) + norm(ellEllMat - ellPoly1Mat);
+                tol2 = norm(ellEllVec - ellPoly2Vec) + norm(ellEllMat - ellPoly2Mat);
+                mlunit.assert(tol2 < tol1);
            end
         end
         %
@@ -262,7 +266,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             defaultPolyConst = 0.25;
             poly1 = self.makePolytope(defaultPolyMat,defaultPolyConst);
             ellEA1 = intersection_ea(ell1,poly1);
-            testIfEllEq(ell1,ellEA1);
+            mlunit.assert(eq(ell1,ellEA1));
             %
             %If we apply same linear tranform to both ell1 and poly1, than
             %minimal volume ellipsoid shouldn't change.
@@ -273,7 +277,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             poly2 = self.makePolytope(defaultPolyMat/(transfMat),...
                 defaultPolyConst+(defaultPolyMat/(transfMat))*shiftVec);
             ellEA2 = intersection_ea(ell2,poly2);
-            testIfEllEq(ell2,ellEA2);
+            mlunit.assert(eq(ell2,ellEA2));
             %
             %Checking, that amount of constraints in polytope does not
             %affect accuracy of computation of external approximation
@@ -283,7 +287,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             kVec = ones(nConstr,1);
             polyManyConstr = self.makePolytope(hMat,kVec);
             ellEAManyConstr = intersection_ea(ell1,polyManyConstr);
-            testIfEllEq(ell1,ellEAManyConstr);
+            mlunit.assert(eq(ell1,ellEAManyConstr));
             %
             %First example, but for nDims
             nDims = 10;
@@ -293,7 +297,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             polyNConst = 1/(2*nDims);
             polyN = self.makePolytope(polyNMat,polyNConst);
             ellEAN = intersection_ea(ellN,polyN);
-            testIfEllEq(ellN,ellEAN);
+            mlunit.assert(eq(ellN,ellEAN));
             %
             transfNMat =  [0.8913 0.1763 0.1389 0.4660 0.8318 0.1509 0.8180 0.3704 0.1730 0.2987;...
             0.7621 0.4057 0.2028 0.4186 0.5028 0.6979 0.6602 0.7027 0.9797 0.6614;...
@@ -313,14 +317,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             polyN2 = self.makePolytope(polyNMat/(transfNMat),...
                 polyNConst+(polyNMat/(transfNMat))*shiftNVec);
             ellEA2 = intersection_ea(ellN2,polyN2);
-            testIfEllEq(ellN2,ellEA2);
-            %
-            function testIfEllEq(ellipsoid1,ellipsoid2)
-                [cVec1 shMat1] = double(ellipsoid1);
-                [cVec2 shMat2] = double(ellipsoid2);
-                diffNorm = norm(cVec1 - cVec2) + norm(shMat1 - shMat2);
-                mlunit.assert(diffNorm <= ellipsoid1.getAbsTol);
-            end
+            mlunit.assert(eq(ellN2,ellEA2));
         end
     end
     %
@@ -332,38 +329,21 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
          end
          %
          %
-         function poly = makePolytope(H,K)
-             Q = struct('H',H,'K',K);
+         function poly = makePolytope(constrMat,constrValVec)
+             Q = struct('H',constrMat,'K',constrValVec);
              poly = polytope(Q);
-         end
-         
-         function poly = triToPolytope(depth,transfMat)
-            [vMat,fMat]=gras.geom.tri.spheretri(depth);
-            nFaces = size(fMat,1);
-            normMat = zeros(3,nFaces);
-            constVec = zeros(1,nFaces);
-            for iFaces = 1:nFaces
-                normMat(:,iFaces) = (cross(vMat(fMat(iFaces,3),:) - vMat(fMat(iFaces,2),:),vMat(fMat(iFaces,3),:) - vMat(fMat(iFaces,1),:)))';
-                constVec(iFaces) = vMat(fMat(iFaces,3),:)*normMat(:,iFaces);
-                if constVec(iFaces) < 0
-                    constVec(iFaces) = -constVec(iFaces);
-                     normMat(:,iFaces) = - normMat(:,iFaces);
-                end
-            end
-            normMat = normMat'/(transfMat);%normMat = normMa*inv(transfMat)
-            poly = polytope(struct('H',normMat,'K',constVec'));
          end
          %
          function res = isEllInsidePolytope(poly,ell)
-             [H K] = double(poly);
+             [constrMat constrValVec] = double(poly);
              [shiftVec shapeMat] = double(ell);
-             suppFuncVec = zeros(size(K));
-             [nRows, ~] = size(K);
+             suppFuncVec = zeros(size(constrValVec));
+             [nRows, ~] = size(constrValVec);
              absTol = getAbsTol(ell);
              for iRows = 1:nRows
-                 suppFuncVec(iRows) = H(iRows,:)*shiftVec + sqrt(H(iRows,:)*shapeMat*H(iRows,:)');
+                 suppFuncVec(iRows) = constrMat(iRows,:)*shiftVec + sqrt(constrMat(iRows,:)*shapeMat*constrMat(iRows,:)');
              end
-             res = all(suppFuncVec <= K+absTol);
+             res = all(suppFuncVec <= constrValVec+absTol);
          end
          %
          function [testEll2DVec,testPoly2DVec,testEll60D,testPoly60D,ellArr] = genDataDistAndInter()
