@@ -205,7 +205,7 @@ classdef ReachContinuous < elltool.reach.AReach
             import gras.ellapx.smartdb.F;
             APPROX_TYPE = F.APPROX_TYPE;
             OldData = self.ellTubeRel.getTuplesFilteredBy(...
-                APPROX_TYPE, approxType);
+                APPROX_TYPE, approxType).getData();
             sysDimRows = size(OldData.QArray{1}, 1);
             sysDimCols = size(OldData.QArray{1}, 2);
             %
@@ -259,9 +259,9 @@ classdef ReachContinuous < elltool.reach.AReach
                     relTol,...
                     self.DEFAULT_INTAPX_S_SELECTION_MODE,...
                     self.MIN_EIG_Q_REG_UNCERT);
-                EllTubeBuilder =...
+                ellTubeBuilder =...
                     gras.ellapx.gen.EllApxCollectionBuilder({extIntBuilder});
-                ellTubeRel = EllTubeBuilder.getEllTubes();
+                ellTubeRel = ellTubeBuilder.getEllTubes();
             else
                 isIntApprox = any(approxTypeVec == EApproxType.Internal);
                 isExtApprox = any(approxTypeVec == EApproxType.External);
@@ -270,9 +270,9 @@ classdef ReachContinuous < elltool.reach.AReach
                         gras.ellapx.lreachplain.ExtEllApxBuilder(...
                         smartLinSys, goodDirSetObj, timeVec,...
                         relTol);
-                    extEllTubeBuilder =...
+                    extellTubeBuilder =...
                         gras.ellapx.gen.EllApxCollectionBuilder({extBuilder});
-                    extEllTubeRel = extEllTubeBuilder.getEllTubes();
+                    extEllTubeRel = extellTubeBuilder.getEllTubes();
                     if ~isIntApprox
                         ellTubeRel = extEllTubeRel;
                     end
@@ -283,9 +283,9 @@ classdef ReachContinuous < elltool.reach.AReach
                         smartLinSys, goodDirSetObj, timeVec,...
                         relTol,...
                         self.DEFAULT_INTAPX_S_SELECTION_MODE);
-                    intEllTubeBuilder =...
+                    intellTubeBuilder =...
                         gras.ellapx.gen.EllApxCollectionBuilder({intBuilder});
-                    intEllTubeRel = intEllTubeBuilder.getEllTubes();
+                    intEllTubeRel = intellTubeBuilder.getEllTubes();
                     if isExtApprox
                         intEllTubeRel.unionWith(extEllTubeRel);
                     end
