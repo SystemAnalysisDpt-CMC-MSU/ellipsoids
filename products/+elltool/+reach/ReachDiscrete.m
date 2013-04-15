@@ -238,24 +238,16 @@ classdef ReachDiscrete < elltool.reach.AReach
                     else
                         dd = mydata.delta(1);
                     end
-                    disp('!!!');
-                    BPB
                     if dd > 0
                         e2 = sqrt(absTol*absTol + 2*max(eig(BPB))*absTol);
                         BPB = ell_regularize(BPB, e2);
                     elseif rank(BPB) < N
                         BPB = ell_regularize(BPB);
                     end
-%                     disp('!!!');
-%                     BPB
                     l = Ai' * l;
-%                     disp('!!!');
-                    Q
-                    BPB
                     E = minksum_ea([ellipsoid(0.5*(Q+Q'))...
                         ellipsoid(0.5*(BPB+BPB'))], l);
                     Q = parameters(E);
-                    Q
                     QQ = [QQ reshape(Q, N*N, 1)];
                     LL = [LL l];
                 end
@@ -1710,8 +1702,6 @@ classdef ReachDiscrete < elltool.reach.AReach
                         cutObj.l_values = LL;
                     end
                 else
-%                     is = indarr(1) - 1;
-%                     ie = indarr(end) - 1;
                     is = indarr(1);
                     ie = indarr(end);
                     cutObj.time_values = self.time_values(is:ie);

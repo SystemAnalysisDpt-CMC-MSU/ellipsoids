@@ -21,7 +21,7 @@ classdef ReachDiscrLogicalTestCase < mlunit.test_case
         end
         
         
-        function self = DISABLED_testDisplay(self)
+        function self = testDisplay(self)
             LS = elltool.linsys.LinSysFactory.create( eye(3), eye(3,4), ell_unitball(4), ...
                 [], [], [], [], 'd');
             X0Ell = ellipsoid(zeros(3, 1), eye(3));
@@ -39,7 +39,7 @@ classdef ReachDiscrLogicalTestCase < mlunit.test_case
         end
         
         
-        function self = DISABLED_testDimension(self)
+        function self = testDimension(self)
             nSystemDimension = 4;
             LS = elltool.linsys.LinSysFactory.create( eye(nSystemDimension), eye(nSystemDimension,2), ell_unitball(2), ...
                 [], [], [], [], 'd');
@@ -60,7 +60,7 @@ classdef ReachDiscrLogicalTestCase < mlunit.test_case
         end
         
         
-        function self = DISABLED_testGetSystem(self)
+        function self = testGetSystem(self)
             FirstLS = elltool.linsys.LinSysFactory.create( eye(3), eye(3,4), ell_unitball(4), ...
                 eye(3), ell_unitball(3), eye(3), ell_unitball(3), 'd');
             FirstRS = elltool.reach.ReachDiscrete(FirstLS, ...
@@ -80,7 +80,7 @@ classdef ReachDiscrLogicalTestCase < mlunit.test_case
         end
         
         
-        function self = DISABLED_testIsCut(self)
+        function self = testIsCut(self)
             AMat = [1 2; 3 4];
             BMat = [3; 2];
             PEll = 2*ell_unitball(1);
@@ -98,7 +98,7 @@ classdef ReachDiscrLogicalTestCase < mlunit.test_case
         end
         
         
-        function self = DISABLED_testIsProjection(self)
+        function self = testIsProjection(self)
             AMat = eye(3);
             BMat = [1 0; 0 1; 1 1];
             PEll = ell_unitball(2);
@@ -117,7 +117,7 @@ classdef ReachDiscrLogicalTestCase < mlunit.test_case
         end
         
         
-        function self = DISABLED_testIsEmpty(self)
+        function self = testIsEmpty(self)
             AMat = eye(3);
             BMat = diag([3, 2, 1]);
             PEll = ell_unitball(3);
@@ -137,7 +137,7 @@ classdef ReachDiscrLogicalTestCase < mlunit.test_case
         end
         
         
-        function self = DISABLED_testGetDirections(self)
+        function self = testGetDirections(self)
             AMat = [1 0 0; 1 1 0; 1 1 1];
             BMat = eye(3);
             PEll = ell_unitball(3);
@@ -211,7 +211,7 @@ classdef ReachDiscrLogicalTestCase < mlunit.test_case
         end
         
         
-        function self = DISABLED_testGetCenter(self)
+        function self = testGetCenter(self)
             AMat = [1 0 1; -1 2 1; 0 1 -2];
             BMat = [2 0 1; 3 0 1; 2 2 2];
             PEll = ellipsoid([1 1 1]', [3 0 0; 0 4 0; 0 0 1]);
@@ -261,7 +261,7 @@ classdef ReachDiscrLogicalTestCase < mlunit.test_case
         end
         
         
-        function self = DISABLED_testCut(self)
+        function self = testCut(self)
             AMat = [1 0 1; -1 2 1; 0 1 -2];
             BMat = [2 0 1; 3 0 1; 2 2 2];
             PEll = ellipsoid([1 1 1]', [3 0 0; 0 4 0; 0 0 1]);
@@ -311,7 +311,7 @@ classdef ReachDiscrLogicalTestCase < mlunit.test_case
         end
         
         
-        function self = DISABLED_testGetGoodCurves(self)
+        function self = testGetGoodCurves(self)
             eps = self.REL_TOL * 1000;
             T = 7;
             
@@ -368,7 +368,7 @@ classdef ReachDiscrLogicalTestCase < mlunit.test_case
         end
         
          
-        function self = DISABLED_testGetIA(self)
+        function self = testGetIA(self)
             
             T0 = 1;
             T1 = 5;
@@ -511,7 +511,7 @@ classdef ReachDiscrLogicalTestCase < mlunit.test_case
         end
         
         
-        function self = DISABLED_testGetEA(self)
+        function self = testGetEA(self)
             T0 = 1;
             T1 = 5;
 
@@ -653,7 +653,7 @@ classdef ReachDiscrLogicalTestCase < mlunit.test_case
         end
         
         
-        function self = DISABLED_testProjection(self)
+        function self = testProjection(self)
             T0 = 1;
             T1 = 4;
             epsilon = 1;
@@ -717,7 +717,7 @@ classdef ReachDiscrLogicalTestCase < mlunit.test_case
         end
         
         
-        function self = DISABLED_testIntersect(self)
+        function self = testIntersect(self)
             T0 = 1;
             T1 = 5;
 
@@ -769,7 +769,7 @@ classdef ReachDiscrLogicalTestCase < mlunit.test_case
         end
         
         
-        function self = DISABLED_testEvolve(self)
+        function self = testEvolve(self)
             T0 = 1;
             T1 = 3;
             T2 = 5;
@@ -853,6 +853,7 @@ classdef ReachDiscrLogicalTestCase < mlunit.test_case
             end   
             mlunit.assert_equals(isOk, true);
         end
+        
         
         function self = testOverflow(self)
             AMat = [4 5 1; 3 2 1; 0 1 3];
