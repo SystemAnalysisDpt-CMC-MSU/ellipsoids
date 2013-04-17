@@ -73,6 +73,7 @@ classdef Log4jConfigurator<handle
             import org.apache.log4j.Logger;
             import org.apache.log4j.spi.LoggerRepository;
             import modgen.logging.log4j.Log4jConfigurator;
+            import modgen.common.throwerror;
             %
             [~,prop]=modgen.common.parseparams(varargin,[],0);
             nProp=length(prop);
@@ -82,11 +83,11 @@ classdef Log4jConfigurator<handle
                     case 'islockafterconfigure',
                         isLock=prop{k+1};
                         if ~isscalar(isLock) || ~islogical(isLock)
-                            error([upper(mfilename),':wrongInput'], ...
+                            throwerror('wrongInput', ...
                                 'Invalid size or tipe of %s', prop{k});
                         end
                     otherwise
-                        error([upper(mfilename),':wrongInput'], ...
+                        throwerror('wrongInput', ...
                             'Property %s is not supported', prop{k});
                 end
             end
@@ -188,10 +189,10 @@ classdef Log4jConfigurator<handle
         function configureInternal(self,logPropStr,varargin)
             % CONFIGURE performs log4j configuration using a log4j property
             % string as a source
-            
             import modgen.system.ExistanceChecker;
             import org.apache.log4j.Logger;
             import org.apache.log4j.PropertyConfigurator;
+            import modgen.common.throwerror;
             %
             [~,prop]=modgen.common.parseparams(varargin,[],0);
             nProp=length(prop);
@@ -202,14 +203,14 @@ classdef Log4jConfigurator<handle
                     case 'islockafterconfigure',
                         isLock=prop{k+1};
                         if ~isscalar(isLock) || ~islogical(isLock)
-                            error([upper(mfilename),':wrongInput'], ...
+                            throwerror('wrongInput', ...
                                 'Invalid size or tipe of %s', prop{k});
                         end
                     case 'loggersuffix',
                         isLoggerSuffix=true;
                         loggerSuffix=prop{k+1};
                     otherwise
-                        error([upper(mfilename),':wrongInput'], ...
+                        throwerror('wrongInput', ...
                             'Property %s is not supported', prop{k});
                 end
             end
@@ -221,14 +222,16 @@ classdef Log4jConfigurator<handle
             %
             if self.isLocked()
                 logger=Logger.getLogger(loggerName);
-                logger.warn(['Attempt to change a locked Log4j configuration', sprintf('\n'), ...
+                logger.warn(...
+                    ['Attempt to change a locked Log4j configuration',...
+                    sprintf('\n'), ...
                     modgen.exception.me.printstack(dbstack('-completenames'),...
                     'useHyperlink',false,'prefixStr','  ')]);
                 return;
             end
             %
             if ~ischar(logPropStr)
-                error([upper(mfilename),':wrongInput'],...
+                throwerror('wrongInput',...
                     'configuration source should be a property string');
             end
             self.getSetLogPropStr(logPropStr);

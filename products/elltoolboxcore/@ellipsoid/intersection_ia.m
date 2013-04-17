@@ -32,12 +32,21 @@ function outEllArr = intersection_ia(myEllArr, objArr)
 %   Vol.32, No.4, pp.430-442, 2002. For more information, visit
 %   http://www-iri.upc.es/people/ros/ellipsoids.html
 %
+%   The method used to compute maximum volume ellipsoid inscribed in 
+%   intersection of ellipsoid and polytope, is modified version of algorithm
+%   of finding maximum volume ellipsoid inscribed in intersection of 
+%   ellipsoids discribed in Stephen Boyd and Lieven Vandenberghe "Convex
+%   Optimization". It works properly for nondegenerate ellipsoid, but for
+%   degenerate ellipsoid result would not lie in this ellipsoid. The result
+%   considered as empty ellipsoid, when maximum absolute velue of element 
+%   in its matrix is less than myEllipsoid.getAbsTol().
+%
 % Input:
 %   regular:
-%       myEllArr: ellipsoid [nDims1,nDims2,...,nDimsN]/[1,1] - array 
+%       myEllArr: ellipsoid [nDims1,nDims2,...,nDimsN]/[1,1] - array
 %           of ellipsoids.
 %       objArr: ellipsoid / hyperplane /
-%           / polytope [nDims1,nDims2,...,nDimsN]/[1,1]  - array of 
+%           / polytope [nDims1,nDims2,...,nDimsN]/[1,1]  - array of
 %           ellipsoids or hyperplanes or polytopes of the same sizes.
 %
 % Output:
@@ -67,7 +76,11 @@ isPoly = isa(objArr, 'polytope');
 
 nDimsArr  = dimension(myEllArr);
 if isPoly
-    nObjDimsArr = arrayfun(@(x) dimension(x), objArr);
+    [~,nCols] = size(objArr);
+    nObjDimsArr = zeros(1, nCols);
+    for iCols = 1:nCols
+        nObjDimsArr(iCols) = dimension(objArr(iCols));
+    end
 else
     nObjDimsArr = dimension(objArr);
 end
@@ -75,11 +88,11 @@ isEllScal = isscalar(myEllArr);
 isObjScal = isscalar(objArr);
 
 checkmultvar( 'all(size(x1)==size(x2)) || x3 || x4',...
-	4,myEllArr,objArr,isEllScal,isObjScal,...
+        4,myEllArr,objArr,isEllScal,isObjScal,...
     'errorTag','wrongSizes',...
     'errorMessage','sizes of input arrays do not match.');
 checkmultvar('(x1(1)==x2(1))&&all(x1(:)==x1(1))&&all(x2(:)==x2(1))',...
-	2,nDimsArr,nObjDimsArr,...
+        2,nDimsArr,nObjDimsArr,...
     'errorTag','wrongSizes',...
     'errorMessage','input arguments must be of the same dimension.');
 
@@ -207,7 +220,7 @@ end
 
 %%%%%%%%
 
-function outEll = l_polyintersect(myEll, polyt)
+function outEll = l_polyintersect(ell, poly)
 %
 % L_POLYINTERSECT - computes internal ellipsoidal approximation of
 %                   intersection of single ellipsoid with single polytope.
@@ -222,19 +235,50 @@ function outEll = l_polyintersect(myEll, polyt)
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
+%
+% $Author: <Zakharov Eugene>  <justenterrr@gmail.com> $    $Date: March-2013 $
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department$
+%
 
+if isinside(ell, poly)
+    outEll = getInnerEllipsoid(poly);
+elseif ~intersect(ell,poly)
+    outEll = ellipsoid();
+else
+    [ellVec ellMat] = double(ell);
+    [n,~] = size(ellMat);
+    polyDouble = double(poly);
+    polyMat = polyDouble(:,1:end-1);
+    polyVec = polyDouble(:,end);
+    polyCSize = size(polyMat,1);
+    if size(ellMat,2) > rank(ellMat)
+        ellMat = ellipsoid.regularize(ellMat,getAbsTol(ell));
+    end
+    invEllMat = inv(ellMat);
+    ellShift = -invEllMat*ellVec;
+    ellConst = ellVec' * invEllMat * ellVec - 1;
+    cvx_begin sdp
+        variable B(n,n) symmetric
+        variable d(n)
+        variable l(1)
+        maximize( det_rootn( B ) )
+        subject to    
+            [-l - ellConst + (ellShift)'*(invEllMat\ellShift), zeros(1,n),  (d+invEllMat\ellShift)';...
+                zeros(n,1), l.*eye(n), B;...
+                d+ invEllMat\ellShift, B, inv(invEllMat)] >= 0;
+            for i = 1:polyCSize
+                norm(B*polyMat(i,:)',2) + polyMat(i,:)*d <= polyVec(i);
+            end
 
-outEll = myEll;
-hyp = polytope2hyperplane(polyt);
-nDimsHyp  = size(hyp, 2);
-
-for iDim = 1:nDimsHyp
-    outEll = intersection_ia(outEll, hyp(iDim));
+    cvx_end
+    Q = (B*B');
+    v = d;
+    if max(abs(Q(:))) <= getAbsTol(ell)
+        outEll = ellipsoid(v,zeros(size(Q)));
+    else
+        outEll = ellipsoid(v,Q);
+    end
 end
-
-if isinside(myEll, polyt)
-    outEll = getInnerEllipsoid(polyt);
-    return;
-end
-
 end

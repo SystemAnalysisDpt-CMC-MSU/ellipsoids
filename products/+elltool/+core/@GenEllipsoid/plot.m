@@ -63,6 +63,10 @@ function plObj = plot(varargin)
 import elltool.conf.Properties;
 import modgen.common.throwerror;
 import elltool.core.GenEllipsoid;
+import elltool.logging.Log4jConfigurator;
+
+logger=Log4jConfigurator.getLogger();
+
 N_PLOT_POINTS = 80;
 SPHERE_TRIANG_CONST = 3;
 DEFAULT_LINE_WIDTH = 1;
@@ -229,9 +233,9 @@ end
         end
         if Properties.getIsVerbose()
             if ellNum == 1
-                fprintf('Plotting ellipsoid...\n');
+                logger.info('Plotting ellipsoid...');
             else
-                fprintf('Plotting %d ellipsoids...\n', ellNum);
+                logger.info(sprintf('Plotting %d ellipsoids...', ellNum));
             end
         end
     end

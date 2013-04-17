@@ -8,7 +8,7 @@ import gras.ellapx.uncertcalc.EllTubeProjectorBuilder;
 import gras.ellapx.uncertcalc.ApproxProblemPropertyBuilder;
 import modgen.common.throwerror;
 %% Constants
-MAX_SUPPORTED_PRECISION=0.01;
+MAX_SUPPORTED_PRECISION=0.001;
 %%
 tStartGlobal=tic;
 %% Parse input
@@ -67,12 +67,12 @@ end
 saveConf(sysConfRepoMgr,confRepoMgr,resDir);
 %
 %% Build good directions
-[pDefObj,goodDirSetObj]=ApproxProblemPropertyBuilder.build(confRepoMgr,...
+[pDynObj,goodDirSetObj]=ApproxProblemPropertyBuilder.build(confRepoMgr,...
     sysConfRepoMgr);
 %
 %% Building internal ellipsoidal approximations
 [ellTubeRel,ellUnionTubeRel]=gras.ellapx.uncertcalc.EllApxBuilder(...
-    confRepoMgr,pDefObj,goodDirSetObj).build();
+    confRepoMgr,pDynObj,goodDirSetObj).build();
 %% Building projections
 tStart=tic;
 [projectorObj,staticProjectorObj]=...
