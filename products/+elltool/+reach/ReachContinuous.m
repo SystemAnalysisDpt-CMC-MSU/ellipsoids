@@ -101,65 +101,42 @@ classdef ReachContinuous < elltool.reach.AReach
             DEFAULT_EA_SHADE = 0.3;
             DEFAULT_IA_SHADE = 0.1;
             DEFAULT_FILL = 0;
-            %
-            if approxType == EApproxType.External
-                colorVec = DEFAULT_EA_COLOR_VEC;
-                shade = DEFAULT_EA_SHADE;
-                scaleFactor = self.EXTERNAL_SCALE_FACTOR;
-            else
+            MAX_SHADE = 1;
+            MIN_SHADE = 0;
+
+            [reg, ~, colorVec, shade, lineWidth, fill] = ...
+                modgen.common.parseparext(varargin,...
+                {'color', 'shade', 'width', 'fill';... 
+                DEFAULT_EA_COLOR_VEC, DEFAULT_EA_SHADE, DEFAULT_LINE_WIDTH,...
+                DEFAULT_FILL; 'isvector(x)', @(x)isa(x, 'double'),...
+                @(x)isa(x, 'double'), 'isnumeric(x)'});
+
+            if approxType == IApproxType.Internal
                 colorVec = DEFAULT_IA_COLOR_VEC;
                 shade = DEFAULT_IA_SHADE;
                 scaleFactor = self.INTERNAL_SCALE_FACTOR;
+            else
+                scaleFactor = self.EXTERNAL_SCALE_FACTOR;
             end
-            lineWidth = DEFAULT_LINE_WIDTH;
-            fill = DEFAULT_FILL;
-            if nargin > 4
-                throwerror('wrongInput', 'Too many arguments.');
-            elseif nargin == 3
-                if ischar(varargin{1})
-                    colorVec = self.getColorVec(varargin{1});
-                elseif isstruct(varargin{1})
-                    ColorOpt = varargin{1};
-                    setPlotParams(ColorOpt);
-                else
-                    throwerror('wrongInput', 'Wrong argument format.');
-                end
-            elseif nargin == 4
-                if isstruct(varargin{2})
-                    ColorOpt = varargin{2};
-                    setPlotParams(ColorOpt);
-                else
-                    throwerror('wrongInput', 'Wrong argument format.');
-                end
-                if ischar(varargin{1})
-                    colorVec = self.getColorVec(varargin{1});
-                else
-                    throwerror('wrongInput', 'Wrong argument format.');
+
+            if (nargin > 2) && ~isempty(reg)
+                if ischar(reg{1})
+                    colorVec = self.my_color_table(reg{1});
                 end
             end
             %
-            if ~ismatrix(colorVec)
-                throwerror('wrongInput', 'Wrong field format ("color")');
-            else
-                [nRows nCols] = size(colorVec);
-                if nRows ~= 1 || nCols ~= 3
-                    throwerror('wrongInput',...
-                        'Wrong field format ("color")');
-                end
+            if shade > 1
+                shade = MAX_SHADE;
+            elseif shadeVal < 0
+                shade = MIN_SHADE;
             end
-            if ~isa(lineWidth, 'double')
-                throwerror('wrongInput', 'Wrong field format ("width")');
+            
+            if lineWidth < 1
+                lineWidth = DEFAULT_LINE_WIDTH;
             end
-            if ~isa(shade, 'double')
-                throwerror('wrongInput', 'Wrong field format ("shade")');
-            else
-                if shade < 0 || shade > 1
-                    throwerror('wrongInput',...
-                        'Wrong field format ("shade")');
-                end
-            end
-            if ~isa(fill, 'double')
-                throwerror('Wrong field format ("fill")');
+            
+            if fill ~= 1
+                fill = DEFAULT_FILL;
             end
             %
             if self.isProj
@@ -183,21 +160,6 @@ classdef ReachContinuous < elltool.reach.AReach
                     approxType, scaleFactor);
                 plotter = projSetObj.plot(plObj, 'fGetTubeColor',...
                     @(x) deal(colorVec, shade));
-            end
-            %
-            function setPlotParams(ColorOpt)
-                if isfield(ColorOpt, 'color')
-                    colorVec = ColorOpt.color;
-                end
-                if isfield(ColorOpt, 'width')
-                    lineWidth = ColorOpt.width;
-                end
-                if isfield(ColorOpt, 'shade')
-                    shade = ColorOpt.shade;
-                end
-                if isfield(ColorOpt, 'fill')
-                    fill = ColorOpt.fill;
-                end
             end
         end
         function dataCVec = evolveApprox(self,...

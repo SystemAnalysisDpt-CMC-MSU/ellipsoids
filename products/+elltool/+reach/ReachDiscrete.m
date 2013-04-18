@@ -2099,8 +2099,24 @@ classdef ReachDiscrete < elltool.reach.AReach
         function plot_ea(self, varargin)
             import elltool.conf.Properties;
             import elltool.logging.Log4jConfigurator;
-            
             persistent logger;
+            
+            DEFAULT_COLOR_VEC = [0 0 1];
+            DEFAULT_LINE_WIDTH = 2;
+            DEFAULT_SHADE = 0.3;
+            DEFAULT_FILL = 0;
+            MAX_SHADE = 1;
+            MIN_SHADE = 0;
+            
+            if nargin == 1
+                varargin = {};
+            end
+            [reg, ~, colorVec, shadeVal, widthVal, fillVal] = ...
+                modgen.common.parseparext(varargin,...
+                {'color', 'shade', 'width', 'fill';... 
+                DEFAULT_COLOR_VEC, DEFAULT_SHADE, DEFAULT_LINE_WIDTH,...
+                DEFAULT_FILL; 'isvector(x)', @(x)isa(x, 'double'),...
+                @(x)isa(x, 'double'), 'isnumeric(x)'});
             
             d  = dimension(self);
             N  = size(self.ea_values, 2);
@@ -2111,50 +2127,29 @@ classdef ReachDiscrete < elltool.reach.AReach
                 end
                 throwerror(msg);
             end
-            if nargin > 1
-                if isstruct(varargin{nargin - 1})
-                    Options = varargin{nargin - 1};
-                else
-                    Options = [];
-                end
-            else
-                Options = [];
+            
+            if shadeVal > 1
+                shadeVal = MAX_SHADE;
+            elseif shadeVal < 0
+                shadeVal = MIN_SHADE;
             end
-            if ~(isfield(Options, 'color'))
-                Options.color = [0 0 1];
+            
+            if widthVal < 1
+                widthVal = DEFAULT_LINE_WIDTH;
             end
-            if ~(isfield(Options, 'shade'))
-                Options.shade = 0.3;
-            else
-                Options.shade = Options.shade(1, 1);
-                if Options.shade > 1
-                    Options.shade = 1;
-                end
-                if Options.shade < 0
-                    Options.shade = 0;
+            
+            if fillVal ~= 1
+                fillVal = DEFAULT_FILL;
+            end
+            
+            if (nargin > 1) && ~isempty(reg)
+                if ischar(reg{1})
+                    colorVec = self.my_color_table(reg{1});
                 end
             end
-            if ~isfield(Options, 'width')
-                Options.width = 2;
-            else
-                Options.width = Options.width(1, 1);
-                if Options.width < 1
-                    Options.width = 2;
-                end
-            end
-            if ~isfield(Options, 'fill')
-                Options.fill = 0;
-            else
-                Options.fill = Options.fill(1, 1);
-                if Options.fill ~= 1
-                    Options.fill = 0;
-                end
-            end
-            if (nargin > 1) && ischar(varargin{1})
-                Options.color = self.my_color_table(varargin{1});
-            end
+            
             E   = get_ea(self);
-            clr = Options.color;
+            clr = colorVec;
             if self.t0 > self.time_values(end)
                 back = 'Backward reach set';
             else
@@ -2199,7 +2194,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 chll = convhulln(X');
                 patch('Vertices', X', 'Faces', chll, ...
                     'FaceVertexCData', clr(ones(1, n), :), 'FaceColor', 'flat', ...
-                    'FaceAlpha', Options.shade);
+                    'FaceAlpha', shadeVal);
                 shading interp;
                 lighting phong;
                 material('metal');
@@ -2231,15 +2226,15 @@ classdef ReachDiscrete < elltool.reach.AReach
                 end
                 if ~isempty(X)
                     X = [X X(:, 1)];
-                    if Options.fill ~= 0
-                        fill(X(1, :), X(2, :), Options.color);
+                    if fillVal ~= 0
+                        fill(X(1, :), X(2, :), colorVec);
                         hold on;
                     end
                     h = ell_plot(X);
                     hold on;
-                    set(h, 'Color', Options.color, 'LineWidth', Options.width);
+                    set(h, 'Color', colorVec, 'LineWidth', widthValVec);
                     h = ell_plot(self.center_values, '.');
-                    set(h, 'Color', Options.color);
+                    set(h, 'Color', colorVec);
                     if isa(self.system, 'elltool.linsys.LinSysDiscrete')
                         title(sprintf('%s at time step K = %d', back, self.time_values));
                     else
@@ -2279,12 +2274,12 @@ classdef ReachDiscrete < elltool.reach.AReach
                         X  = [X X(:, 1)];
                         tt = self.time_values(:, ii) * ones(1, size(X, 2));
                         X  = [tt; X];
-                        if Options.fill ~= 0
-                            fill3(X(1, :), X(2, :), X(3, :), Options.color);
+                        if fillVal ~= 0
+                            fill3(X(1, :), X(2, :), X(3, :), colorVec);
                             hold on;
                         end
                         h = ell_plot(X);
-                        set(h, 'Color', Options.color, 'LineWidth', Options.width);
+                        set(h, 'Color', colorVec, 'LineWidth', widthVal);
                         hold on;
                     else
                         warning(['2D grid too sparse! Please, increase ',...
@@ -2330,7 +2325,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 vs = size(V, 2);
                 patch('Vertices', V', 'Faces', F, ...
                     'FaceVertexCData', clr(ones(1, vs), :), 'FaceColor', 'flat', ...
-                    'FaceAlpha', Options.shade);
+                    'FaceAlpha', shadeVal);
                 hold on;
                 shading interp;
                 lighting phong;
@@ -2354,8 +2349,25 @@ classdef ReachDiscrete < elltool.reach.AReach
         function plot_ia(self, varargin)
             import elltool.conf.Properties;
             import elltool.logging.Log4jConfigurator;
-            
+          
             persistent logger;
+            
+            DEFAULT_COLOR_VEC = [0 0 1];
+            DEFAULT_LINE_WIDTH = 2;
+            DEFAULT_SHADE = 0.3;
+            DEFAULT_FILL = 0;
+            MAX_SHADE = 1;
+            MIN_SHADE = 0;
+            
+            if nargin == 1
+                varargin = {};
+            end
+            [reg, ~, colorVec, shadeVal, widthVal, fillVal] = ...
+                modgen.common.parseparext(varargin,...
+                {'color', 'shade', 'width', 'fill';... 
+                DEFAULT_COLOR_VEC, DEFAULT_SHADE, DEFAULT_LINE_WIDTH,...
+                DEFAULT_FILL; 'isvector(x)', @(x)isa(x, 'double'),...
+                @(x)isa(x, 'double'), 'isnumeric(x)'});
             
             d  = dimension(self);
             N  = size(self.ia_values, 2);
@@ -2366,50 +2378,29 @@ classdef ReachDiscrete < elltool.reach.AReach
                 end
                 throwerror(msg);
             end
-            if nargin > 1
-                if isstruct(varargin{nargin - 1})
-                    Options = varargin{nargin - 1};
-                else
-                    Options = [];
-                end
-            else
-                Options = [];
+            
+            if shadeVal > 1
+                shadeVal = MAX_SHADE;
+            elseif shadeVal < 0
+                shadeVal = MIN_SHADE;
             end
-            if ~(isfield(Options, 'color'))
-                Options.color = [0 1 0];
+            
+            if widthVal < 1
+                widthVal = DEFAULT_LINE_WIDTH;
             end
-            if ~(isfield(Options, 'shade'))
-                Options.shade = 0.3;
-            else
-                Options.shade = Options.shade(1, 1);
-                if Options.shade > 1
-                    Options.shade = 1;
-                end
-                if Options.shade < 0
-                    Options.shade = 0;
+            
+            if fillVal ~= 1
+                fillVal = DEFAULT_FILL;
+            end
+            
+            if (nargin > 1) && ~isempty(reg)
+                if ischar(reg{1})
+                    colorVec = self.my_color_table(reg{1});
                 end
             end
-            if ~isfield(Options, 'width')
-                Options.width = 2;
-            else
-                Options.width = Options.width(1, 1);
-                if Options.width < 1
-                    Options.width = 2;
-                end
-            end
-            if ~isfield(Options, 'fill')
-                Options.fill = 0;
-            else
-                Options.fill = Options.fill(1, 1);
-                if Options.fill ~= 1
-                    Options.fill = 0;
-                end
-            end
-            if (nargin > 1) && ischar(varargin{1})
-                Options.color = self.my_color_table(varargin{1});
-            end
+            
             E   = get_ia(self);
-            clr = Options.color;
+            clr = colorVec;
             if self.t0 > self.time_values(end)
                 back = 'Backward reach set';
             else
@@ -2456,7 +2447,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 end
                 patch(surf2patch(X, Y, Z), ...
                     'FaceVertexCData', clr(ones(1, M*N), :), 'FaceColor', 'flat', ...
-                    'FaceAlpha', Options.shade);
+                    'FaceAlpha', shadeVal);
                 shading interp;
                 lighting phong;
                 material('metal');
@@ -2495,15 +2486,15 @@ classdef ReachDiscrete < elltool.reach.AReach
                     x = (mQ*l/sqrt(mval)) + self.center_values;
                     X = [X x];
                 end
-                if Options.fill ~= 0
-                    fill(X(1, :), X(2, :), Options.color);
+                if fillVal ~= 0
+                    fill(X(1, :), X(2, :), colorVec);
                     hold on;
                 end
                 h = ell_plot(X);
                 hold on;
-                set(h, 'Color', Options.color, 'LineWidth', Options.width);
+                set(h, 'Color', colorVec, 'LineWidth', widthVal);
                 h = ell_plot(self.center_values, '.');
-                set(h, 'Color', Options.color);
+                set(h, 'Color', colorVec);
                 if isa(self.system, 'elltool.linsys.LinSysDiscrete')
                     title(sprintf('%s at time step K = %d', back, self.time_values));
                 else
@@ -2544,12 +2535,12 @@ classdef ReachDiscrete < elltool.reach.AReach
                     end
                     tt = self.time_values(ii) * ones(1, s);
                     X  = [tt; X];
-                    if Options.fill ~= 0
-                        fill3(X(1, :), X(2, :), X(3, :), Options.color);
+                    if fillValVec ~= 0
+                        fill3(X(1, :), X(2, :), X(3, :), colorVec);
                         hold on;
                     end
                     h = ell_plot(X);
-                    set(h, 'Color', Options.color, 'LineWidth', Options.width);
+                    set(h, 'Color', colorVec, 'LineWidth', widthVal);
                     hold on;
                     h = ell_plot([tt(1, 1); self.center_values(:, ii)], '.');
                     set(h, 'Color', clr);
@@ -2592,7 +2583,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 vs = size(V, 2);
                 patch('Vertices', V', 'Faces', F, ...
                     'FaceVertexCData', clr(ones(1, vs), :), 'FaceColor', 'flat', ...
-                    'FaceAlpha', Options.shade);
+                    'FaceAlpha', shadeVal);
                 hold on;
                 shading interp;
                 lighting phong;
