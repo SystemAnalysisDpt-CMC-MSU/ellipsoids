@@ -5,22 +5,16 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
     % Faculty of Computational Mathematics and 
     % Computer Science, System Analysis Department <2013> $
     %
-    properties (Access=private)
-        testDataRootDir
-    end
     methods
         function self = MPTIntegrationTestCase(varargin)
             self = self@mlunitext.test_case(varargin{:});
-            [~,className]=modgen.common.getcallernameext(1);
-            shortClassName=mfilename('classname');
-            self.testDataRootDir=[fileparts(which(className)),filesep,'TestData',...
-                filesep,shortClassName];     
         end
         function tear_down(~)
             close all;
         end
         function self = testDistance(self)  
-            [testEll2DVec,testPoly2DVec,testEll60D,testPoly60D,ellArr] = self.genDataDistAndInter();
+            [testEll2DVec,testPoly2DVec,testEll60D,testPoly60D,ellArr] =...
+                self.genDataDistAndInter();
             %
             absTol =  elltool.conf.Properties.getAbsTol();
             %
@@ -29,13 +23,16 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             myTestDist(testEll2DVec,testPoly2DVec, tesDist1Vec, absTol);
             %distance between testEll2DVec(1) and testPoly2Vec(1,2)
             tesDist2Vec =  [2, sqrt(2*(3/2 - 1/sqrt(2))^2)];
-            myTestDist(testEll2DVec(1),testPoly2DVec(1:2), tesDist2Vec, absTol);
+            myTestDist(testEll2DVec(1),testPoly2DVec(1:2), tesDist2Vec,...
+                absTol);
             %distance between testEll2DVec(1,2) and testPoly2Vec(2)            
             tesDist3Vec =  [sqrt(2*(3/2 - 1/sqrt(2))^2), sqrt(2)];
-            myTestDist(testEll2DVec(1:2),testPoly2DVec(2), tesDist3Vec, absTol);
+            myTestDist(testEll2DVec(1:2),testPoly2DVec(2), tesDist3Vec,...
+                absTol);
             %            
             testDist60D =  sqrt(2*(2-1/sqrt(2))^2);
-            myTestDist(testEll60D,testPoly60D, testDist60D, absTol);
+            myTestDist(testEll60D,testPoly60D, testDist60D,...
+                absTol);
             %test if distance(ellArr,poly) works properly, when ellArr -
             %more than two-dimensional ellipsoidal array and poly - single
             %polytope
@@ -45,9 +42,12 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             %no test for dimension mismatch with different dimension of
             %polytopes, becuse polytope class forbid to create vector of
             %polytopes with different dimensions
-            self.runAndCheckError('distance(ellArr, testPoly2DVec(1:2))','wrongInput');
-            self.runAndCheckError('distance([testEll60D testEll2DVec(1)], testPoly2DVec(1:2))','wrongInput');
-            self.runAndCheckError('distance(testEll60D, testPoly2DVec(1:2))','wrongInput');
+            self.runAndCheckError('distance(ellArr, testPoly2DVec(1:2))',...
+                'wrongInput');
+            self.runAndCheckError(strcat('distance([testEll60D, ',...
+                'testEll2DVec(1)], testPoly2DVec(1:2))'),'wrongInput');
+            self.runAndCheckError(strcat('distance(testEll60D,',...
+                ' testPoly2DVec(1:2))'),'wrongInput');
             %
             %
             function myTestDist(ellVec,polyVec, testDistVec, tol)
@@ -57,7 +57,8 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
         end
         %
         function self = testIntersect(self)
-            [testEll2DVec,testPoly2DVec,testEll60D,testPoly60D,ellArr] = self.genDataDistAndInter();
+            [testEll2DVec,testPoly2DVec,testEll60D,testPoly60D,ellArr] =...
+                self.genDataDistAndInter();
             %
             %
             isTestInterU2D1 = true;
@@ -69,26 +70,32 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             isTestInterWitharr = false;
             %
             %
-            myTestIntesect(testEll2DVec([1,4]),testPoly2DVec(1),'u',isTestInterU2D1);
+            myTestIntesect(testEll2DVec([1,4]),testPoly2DVec(1),'u',...
+                isTestInterU2D1);
             %
-            myTestIntesect(testEll2DVec([2,3]),testPoly2DVec(3),'u',isTestInterU2D2);
+            myTestIntesect(testEll2DVec([2,3]),testPoly2DVec(3),'u',...
+                isTestInterU2D2);
             %
-            myTestIntesect(testEll2DVec([2,3]),testPoly2DVec,'u',isTestInterU2DVec);
+            myTestIntesect(testEll2DVec([2,3]),testPoly2DVec,'u',...
+                isTestInterU2DVec);
             %
-            myTestIntesect(testEll2DVec([2,3]),testPoly2DVec(3),'i',isTestInterI2D);
+            myTestIntesect(testEll2DVec([2,3]),testPoly2DVec(3),'i',...
+                isTestInterI2D);
             %
-            myTestIntesect(testEll2DVec([4,3]),testPoly2DVec,'i',isTestInterI2DVec);
+            myTestIntesect(testEll2DVec([4,3]),testPoly2DVec,'i',...
+                isTestInterI2DVec);
             %
             myTestIntesect(testEll60D,testPoly60D,'u',isTestInter60D); 
             %            
             myTestIntesect(ellArr,testPoly2DVec(1),'u',isTestInterWitharr); 
             %
-            self.runAndCheckError('intersect(testEll60D, testPoly2DVec(1))','wrongInput');
+            self.runAndCheckError(strcat('intersect(testEll60D,',...
+                ' testPoly2DVec(1))'),'wrongInput');
             %
             %Intersection with reach
             reachObj = self.getReach();
-            polyVec = [self.makePolytope([0 -1],-1.7),...
-                self.makePolytope([0 -1],-1),self.makePolytope([0 -1],0)];
+            polyVec = [polytope([0 -1],-1.7),...
+                polytope([0 -1],-1),polytope([0 -1],0)];
             isTestExtResVec = [false, true,true];
             isTestIntResVec = [false, false,true];
             %
@@ -101,7 +108,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             end 
         end
         %
-        function self = testIsInside(self)
+        function self = testIsContainedInIntersection (self)
             ellConstrMat = eye(2);
             nDims = 15;
             ellConstr15DMat = eye(nDims);
@@ -125,41 +132,44 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             polyK3DVec = 0.1 * ones(6,1);
             polyK15DVec = (1/sqrt(nDims))*ones(nDims*2,1);
             %
-            poly1 = self.makePolytope(polyConstrMat,polyK1Vec);
-            poly2 = self.makePolytope(polyConstrMat,polyK2Vec);
-            poly3 = self.makePolytope(polyConstrMat,polyK3Vec);
-            poly4 = self.makePolytope(polyConstrMat,polyK4Vec);
-            poly3D = self.makePolytope(polyConstr3DMat,polyK3DVec);
-            poly15D = self.makePolytope(polyConstr15DMat,polyK15DVec);
+            poly1 = polytope(polyConstrMat,polyK1Vec);
+            poly2 = polytope(polyConstrMat,polyK2Vec);
+            poly3 = polytope(polyConstrMat,polyK3Vec);
+            poly4 = polytope(polyConstrMat,polyK4Vec);
+            poly3D = polytope(polyConstr3DMat,polyK3DVec);
+            poly15D = polytope(polyConstr15DMat,polyK15DVec);
             %
             isTestInsideVec = [1, 0, 1, 1, 1, 0, 1, 0, -1];
             
-            self.myTestIsinside(ell1, [poly1, poly2], 'u',isTestInsideVec(1))
+            self.myTestIsCII(ell1, [poly1, poly2], 'u',isTestInsideVec(1))
             %
-            self.myTestIsinside(ell1, [poly1, poly3], 'u',isTestInsideVec(2))
+            self.myTestIsCII(ell1, [poly1, poly3], 'u',isTestInsideVec(2))
             %
-            self.myTestIsinside(ell1, [poly1, poly2], 'i',isTestInsideVec(3))
+            self.myTestIsCII(ell1, [poly1, poly2], 'i',isTestInsideVec(3))
             %
-            self.myTestIsinside(ell1, [poly1, poly3], 'i',isTestInsideVec(4))
+            self.myTestIsCII(ell1, [poly1, poly3], 'i',isTestInsideVec(4))
             %
-            self.myTestIsinside([ell1, ell2], [poly1, poly3], 'i',isTestInsideVec(5))
+            self.myTestIsCII([ell1, ell2], [poly1, poly3], 'i',...
+                isTestInsideVec(5))
             %
-            self.myTestIsinside([ell1, ell2], [poly1, poly2], 'u',isTestInsideVec(6))
+            self.myTestIsCII([ell1, ell2], [poly1, poly2], 'u',...
+                isTestInsideVec(6))
             %
-            self.myTestIsinside(ell15D, poly15D, 'u',isTestInsideVec(7))
+            self.myTestIsCII(ell15D, poly15D, 'u',isTestInsideVec(7))
             %
-            self.myTestIsinside([ell1, ell3], poly1, 'u',isTestInsideVec(8))
+            self.myTestIsCII([ell1, ell3], poly1, 'u',isTestInsideVec(8))
             %
-            self.myTestIsinside(ell1, [poly1, poly4],'i',isTestInsideVec(9))
+            self.myTestIsCII(ell1, [poly1, poly4],'i',isTestInsideVec(9))
             %
-            self.runAndCheckError('isinside(ell1, poly3D)','wrongSizes');
+            self.runAndCheckError(strcat('isContainedInIntersection',...
+                '(ell1, poly3D)'),'wrongSizes');
         end
         %
         %
         function self = testPoly2HypAndHyp2Poly(self)
             polyConstMat = [-1 2 3; 3 4 2; 0 1 2];
             polyKVec = [1; 2; 3];
-            testPoly = self.makePolytope(polyConstMat,polyKVec);
+            testPoly = polytope(polyConstMat,polyKVec);
             testHyp = hyperplane(polyConstMat',polyKVec');
             hyp = polytope2hyperplane(testPoly);
             mlunit.assert(eq(testHyp,hyp));
@@ -176,6 +186,8 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
         end
         
         function self = testIntersectionIA(self)
+            import elltool.exttbx.mpt.gen.*;
+            %
             ell1 = ellipsoid(eye(3));
             sh2Mat = [1 3 0; 0 0 2; 0 3 1];
             ell2 = ellipsoid(sh2Mat*sh2Mat');
@@ -185,10 +197,10 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             ell3 = ellipsoid(c3Vec,sh3Mat);
             %
             depth1 = 1;
-            poly1 = elltool.exttbx.gen.tri2polytope(depth1,sh2Mat);
+            poly1 = tri2polytope(depth1,sh2Mat);
             %
             depth2 = 2;
-            poly2 = elltool.exttbx.gen.tri2polytope(depth2,sh2Mat);
+            poly2 = tri2polytope(depth2,sh2Mat);
             %
             %intersection with unit ball
             EXP_MAX_TOL1 = 0.05;
@@ -198,13 +210,13 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             myTestIntersectionIA(ell3,ell2,poly1,poly2,EXP_MAX_TOL2)
             %ellipsoid lies in polytope
             ell4 = ellipsoid(eye(2));
-            poly4 = self.makePolytope([eye(2); -eye(2)], ones(4,1));
+            poly4 = polytope([eye(2); -eye(2)], ones(4,1));
             ellPolyIA5 = intersection_ia(ell4,poly4);
             mlunit.assert(eq(ell4,ellPolyIA5));
             %
             %polytope lies in ellipsoid
             ell5 = ellipsoid(eye(2));
-            poly5 = self.makePolytope([eye(2); -eye(2)], 1/4*ones(4,1));
+            poly5 = polytope([eye(2); -eye(2)], 1/4*ones(4,1));
             expEll = ellipsoid(1/16*eye(2));
             ellPolyIA5 = intersection_ia(ell5,poly5);
             mlunit.assert(eq(expEll,ellPolyIA5));
@@ -217,26 +229,30 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
                        1.4706 1.1156 2.3271 2.9144 1.6438;...
                        0.6325 0.6908 1.7218 1.6438 1.6557];    
             ell6 = ellipsoid(c6Vec, sh6Mat);
-            poly6 = self.makePolytope(eye(5),c6Vec);
+            poly6 = polytope(eye(5),c6Vec);
             ellPolyIA6 = intersection_ia(ell6,poly6);
-            mlunit.assert(isinside(ell6,ellPolyIA6) && self.isEllInsidePolytope(poly6,ellPolyIA6));
+            mlunit.assert(isContainedInIntersection(ell6,ellPolyIA6) &&...
+                self.isEllInsidePolytope(poly6,ellPolyIA6));
             %
-            sh7Mat = [1.1954 0.3180 1.3183; 0.3180 0.2167 0.5039; 1.3183 0.5039 1.6320];
+            sh7Mat = [1.1954 0.3180 1.3183; 0.3180 0.2167 0.5039;...
+                1.3183 0.5039 1.6320];
             ell7 = ellipsoid(sh7Mat);
-            poly7 = self.makePolytope([1 1 1], 0.2);
+            poly7 = polytope([1 1 1], 0.2);
             ellPolyIA7 = intersection_ia(ell7,poly7);
-            mlunit.assert(isinside(ell7,ellPolyIA7) && self.isEllInsidePolytope(poly7,ellPolyIA7));
+            mlunit.assert(isContainedInIntersection(ell7,ellPolyIA7) &&...
+                self.isEllInsidePolytope(poly7,ellPolyIA7));
             %
             %test if internal approximation is an empty ellipsoid, when
             %ellipsoid and polytope aren't intersect
             ell8 = ellipsoid(eye(2));
-            poly8 = self.makePolytope([1 1], -sqrt(2));
+            poly8 = polytope([1 1], -sqrt(2));
             ellPolyIA8 = intersection_ia(ell8,poly8);
             [~,ellPoly8Mat] = double(ellPolyIA8);
             mlunit.assert(all(ellPoly8Mat(:) == 0));
             %
             %
-            function myTestIntersectionIA(ell1,ell2,triEll2,triEll2n2,expTol)
+            function myTestIntersectionIA(ell1,ell2,triEll2,triEll2n2,...
+                    expTol)
                 ellEllIA = intersection_ia(ell1,ell2);
                 ellPolyIA1 = intersection_ia(ell1,triEll2);
                 ellPolyIA2 = intersection_ia(ell1,triEll2n2);
@@ -250,8 +266,10 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
                 [ellEllVec ellEllMat] = double(ellEllIA);
                 [ellPoly1Vec ellPoly1Mat] = double(ellPolyIA1);
                 [ellPoly2Vec ellPoly2Mat] = double(ellPolyIA2);                
-                tol1 = norm(ellEllVec - ellPoly1Vec) + norm(ellEllMat - ellPoly1Mat);
-                tol2 = norm(ellEllVec - ellPoly2Vec) + norm(ellEllMat - ellPoly2Mat);
+                tol1 = norm(ellEllVec - ellPoly1Vec) + ...
+                    norm(ellEllMat - ellPoly1Mat);
+                tol2 = norm(ellEllVec - ellPoly2Vec) + ...
+                    norm(ellEllMat - ellPoly2Mat);
                 mlunit.assert(tol2 < tol1);
            end
         end
@@ -264,7 +282,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             ell1 = ellipsoid(defaultShMat);
             defaultPolyMat = [0 1];
             defaultPolyConst = 0.25;
-            poly1 = self.makePolytope(defaultPolyMat,defaultPolyConst);
+            poly1 = polytope(defaultPolyMat,defaultPolyConst);
             ellEA1 = intersection_ea(ell1,poly1);
             mlunit.assert(eq(ell1,ellEA1));
             %
@@ -274,7 +292,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             shiftVec = [1; 1];
             transfShMat = transfMat*(transfMat)';
             ell2 = ellipsoid(shiftVec,transfShMat);
-            poly2 = self.makePolytope(defaultPolyMat/(transfMat),...
+            poly2 = polytope(defaultPolyMat/(transfMat),...
                 defaultPolyConst+(defaultPolyMat/(transfMat))*shiftVec);
             ellEA2 = intersection_ea(ell2,poly2);
             mlunit.assert(eq(ell2,ellEA2));
@@ -285,7 +303,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             angleVec = (0:2*pi/nConstr:2*pi*(1-1/nConstr))';
             hMat = [cos(angleVec), sin(angleVec)];
             kVec = ones(nConstr,1);
-            polyManyConstr = self.makePolytope(hMat,kVec);
+            polyManyConstr = polytope(hMat,kVec);
             ellEAManyConstr = intersection_ea(ell1,polyManyConstr);
             mlunit.assert(eq(ell1,ellEAManyConstr));
             %
@@ -295,7 +313,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             ellN = ellipsoid(shNMat);
             polyNMat = [1, zeros(1,nDims-1)];
             polyNConst = 1/(2*nDims);
-            polyN = self.makePolytope(polyNMat,polyNConst);
+            polyN = polytope(polyNMat,polyNConst);
             ellEAN = intersection_ea(ellN,polyN);
             mlunit.assert(eq(ellN,ellEAN));
             %
@@ -314,25 +332,43 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             %
             transfShNMat = transfNMat*(transfNMat)';
             ellN2 = ellipsoid(shiftNVec,transfShNMat);
-            polyN2 = self.makePolytope(polyNMat/(transfNMat),...
+            polyN2 = polytope(polyNMat/(transfNMat),...
                 polyNConst+(polyNMat/(transfNMat))*shiftNVec);
             ellEA2 = intersection_ea(ellN2,polyN2);
             mlunit.assert(eq(ellN2,ellEA2));
+        end
+        %
+        %
+        function self = testIsInside(self)
+            ellVec = ellipsoid.fromRepMat(eye(2),[1,3]);
+            polyVec = [polytope([1,0],1), polytope([0, 1],2),...
+                polytope([1 0],0)];
+            isExpRes = true;
+            isExpRes1Vec = [true, true, false];
+            isExpRes2Vec = [false, false, false];
+            %
+            %
+            myTestIsInside(ellVec(1),polyVec(1),isExpRes);
+            %
+            myTestIsInside(ellVec,polyVec,isExpRes1Vec);
+            %
+            myTestIsInside(ellVec(1),polyVec,isExpRes1Vec);
+            %
+            myTestIsInside(ellVec,polyVec(3),isExpRes2Vec);
+            function myTestIsInside(ellVec,polyVec, expResVec)
+                resVec = isInside(ellVec,polyVec);
+                mlunit.assert(all(resVec == expResVec));
+            end
         end
     end
     %
     methods(Static)
          %
-         function myTestIsinside(ellVec,polyVec,letter,isInsideTest)
-                isInsideVec = isinside(ellVec,polyVec,letter);
-                mlunit.assert(all(isInsideVec == isInsideTest));
+         function myTestIsCII(ellVec,polyVec,letter,isCIIExpVec)
+                isCIIVec = isContainedInIntersection(ellVec,polyVec,letter);
+                mlunit.assert(all(isCIIVec == isCIIExpVec));
          end
          %
-         %
-         function poly = makePolytope(constrMat,constrValVec)
-             Q = struct('H',constrMat,'K',constrValVec);
-             poly = polytope(Q);
-         end
          %
          function res = isEllInsidePolytope(poly,ell)
              [constrMat constrValVec] = double(poly);
@@ -341,33 +377,30 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
              [nRows, ~] = size(constrValVec);
              absTol = getAbsTol(ell);
              for iRows = 1:nRows
-                 suppFuncVec(iRows) = constrMat(iRows,:)*shiftVec + sqrt(constrMat(iRows,:)*shapeMat*constrMat(iRows,:)');
+                 suppFuncVec(iRows) = constrMat(iRows,:)*shiftVec....
+                     + sqrt(constrMat(iRows,:)*shapeMat*...
+                     constrMat(iRows,:)');
              end
              res = all(suppFuncVec <= constrValVec+absTol);
          end
          %
-         function [testEll2DVec,testPoly2DVec,testEll60D,testPoly60D,ellArr] = genDataDistAndInter()
+         function [testEll2DVec,testPoly2DVec,testEll60D,....
+                 testPoly60D,ellArr] = genDataDistAndInter()
              testEll2DVec(4) = ellipsoid(16*eye(2));
              testEll2DVec(3) = ellipsoid([1.25 -0.75; -0.75 1.25]);
              testEll2DVec(2) = ellipsoid([1.25 0.75; 0.75 1.25]);
              testEll2DVec(1) = ellipsoid(eye(2));
              %
-             testPoly2DVec = [polytope(struct('H',[-1 0; 1 0; 0 1; 0 -1], 'K',[-3; 4; 1; 1])),...
-                 polytope(struct('H',[1 0; -1 0; 0 1; 0 -1], 'K',[2.5; -1.5; -1.5; 100])),...
-                 polytope(struct('H',[1 -1; -1 1; -1 0; 0 1], 'K',[-2; 2.5; 2; 2])),...
-                 polytope(struct('H',[1 0; -1 0; 0 1; 0 -1], 'K',[1; 0; 1; 0]))];
+             testPoly2DVec = [polytope([-1 0; 1 0; 0 1; 0 -1],[-3; 4; 1; 1]),...
+                 polytope([1 0; -1 0; 0 1; 0 -1], [2.5; -1.5; -1.5; 100]),...
+                 polytope([1 -1; -1 1; -1 0; 0 1], [-2; 2.5; 2; 2]),...
+                 polytope([1 0; -1 0; 0 1; 0 -1], [1; 0; 1; 0])];
              testEll60D = ellipsoid(eye(60));
              h60D = [eye(60); -eye(60)];
              h60D(121,:) = [-1 1 zeros(1,58)];
              k60D = [4; 0; ones(58,1); 0; 4; ones(58,1); -4];
              testPoly60D = polytope(struct('H',h60D,'K',k60D));
-             for i = 2:-1:1
-                for j = 2:-1:1
-                    for k = 2:-1:1
-                        ellArr(i,j,k) = ellipsoid(eye(2));
-                    end
-                end
-            end
+             ellArr = ellipsoid.fromRepMat(eye(2),[2,2,2]);
          end
          %
          function reachObj = getReach()
@@ -398,8 +431,8 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             DistBounds = struct();
             DistBounds.center = qtDefCVec;
             DistBounds.shape = qtDefCMat;
-            linSys = elltool.linsys.LinSysFactory.create(atDefCMat, btDefCMat,...
-                ControlBounds, ctDefCMat, DistBounds);
+            linSys = elltool.linsys.LinSysFactory.create(atDefCMat, ...
+                btDefCMat,ControlBounds, ctDefCMat, DistBounds);
             fullReachObj = elltool.reach.ReachContinuous(linSys,...
                 ellipsoid(x0DefVec, x0DefMat), l0Mat, timeVec);
             reachObj = fullReachObj.cut(timeVec(2));

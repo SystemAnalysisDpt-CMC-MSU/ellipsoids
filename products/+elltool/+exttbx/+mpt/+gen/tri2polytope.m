@@ -1,8 +1,8 @@
  function poly = tri2polytope(depth,transfMat)
-% TRI2POLYTOPE makes polytope object represanting the 
-% triangulation of unit ball in 3D,transformed with
-% matrix transfMat: 
-% y = transfMat*x; 
+% TRI2POLYTOPE -- makes polytope object represanting the 
+%                 triangulation of unit ball in 3D,
+%                 transformed with matrix transfMat: 
+%                 y = transfMat*x; 
 % 
 % Input:
 %       regular: 
@@ -39,12 +39,14 @@ normMat = zeros(3,nFaces);
 constVec = zeros(1,nFaces);
 %
 for iFaces = 1:nFaces
-    normMat(:,iFaces) = (cross(vMat(fMat(iFaces,3),:) - vMat(fMat(iFaces,2),:),vMat(fMat(iFaces,3),:) - vMat(fMat(iFaces,1),:)))';
+    normMat(:,iFaces) = (cross(vMat(fMat(iFaces,3),:) - ...
+        vMat(fMat(iFaces,2),:),vMat(fMat(iFaces,3),:) -...
+        vMat(fMat(iFaces,1),:)))';
     constVec(iFaces) = vMat(fMat(iFaces,3),:)*normMat(:,iFaces);
     if constVec(iFaces) < 0
         constVec(iFaces) = -constVec(iFaces);
          normMat(:,iFaces) = - normMat(:,iFaces);
     end
 end
-normMat = normMat'/(transfMat);%normMat = normMa*inv(transfMat)
+normMat = normMat'/(transfMat);
 poly = polytope(struct('H',normMat,'K',constVec'));

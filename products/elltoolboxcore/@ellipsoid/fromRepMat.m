@@ -1,28 +1,29 @@
 function ellArr = fromRepMat(varargin)
 % FROMREPMAT - returns array of equal ellipsoids the same
-%   size as stated in sizeArr argument
+%              size as stated in sizeVec argument
 %
-%   ellArr = fromRepMat(sizeArr) - creates an array  size 
-%   sizeArr of empty ellipsoids.
+%   ellArr = fromRepMat(sizeVec) - creates an array  size 
+%            sizeVec of empty ellipsoids.
 %   
-%   ellArr = fromRepMat(shMat,sizeArr) - creates an array  
-%   size sizeArr of ellipsoids with shape matrix shMat.
+%   ellArr = fromRepMat(shMat,sizeVec) - creates an array  
+%            size sizeVec of ellipsoids with shape matrix 
+%            shMat.
 %   
-%   ellArr = fromRepMat(cVec,shMat,sizeArr) - creates an
-%   array size sizeArr of ellipsoids with shape matrix 
-%   shMat and center cVec.
+%   ellArr = fromRepMat(cVec,shMat,sizeVec) - creates an
+%            array size sizeVec of ellipsoids with shape 
+%            matrix shMat and center cVec.
 %
 % Input:
 %   Case1:
 %       regular: 
-%           sizeArr: double[1,n] - vector of size, have 
+%           sizeVec: double[1,n] - vector of size, have 
 %           integer values.
 %
 %   Case2:
 %       regular:
 %           shMat: double[nDim, nDim] - shape matrix of 
 %           ellipsoids. 
-%           sizeArr: double[1,n] - vector of size, have 
+%           sizeVec: double[1,n] - vector of size, have 
 %           integer values.
 %
 %   Case3:
@@ -31,7 +32,7 @@ function ellArr = fromRepMat(varargin)
 %           ellipsoids
 %           shMat: double[nDim, nDim] - shape matrix of 
 %           ellipsoids. 
-%           sizeArr: double[1,n] - vector of size, have 
+%           sizeVec: double[1,n] - vector of size, have 
 %           integer values.
 %
 %   properties:
@@ -55,23 +56,23 @@ import modgen.common.checkvar;
 %
 if nargin > 3
     indVec = [1:2,4:nargin];
-    sizeArr = varargin{3};
+    sizeVec = varargin{3};
 else
-    sizeArr = varargin{nargin};
+    sizeVec = varargin{nargin};
     indVec = [1:nargin-1];
 end
 %
-checkvar(sizeArr,@(x) isa(x,'double')&&all(isreal(x(:)))&&...
-    all(mod(x(:),1) == 0) && all(x(:) > 0) && (size(x,1) == 1), 'errorTag',...
-    'wrongInput','errorMessage',...
+checkvar(sizeVec,@(x) isa(x,'double')&&all(isreal(x(:)))&&...
+    all(mod(x(:),1) == 0) && all(x(:) > 0) && (size(x,1) == 1),...
+    'errorTag','wrongInput','errorMessage',...
     'size array must contain positive integer values.');
 %
-nEllipsoids = prod(sizeArr);
+nEllipsoids = prod(sizeVec);
 ellArr(nEllipsoids) = ellipsoid();
 %
 fMakeEllipsoid = @(index)makeEllipsoid(index,varargin(indVec)); 
 arrayfun(fMakeEllipsoid,1:nEllipsoids);
-ellArr = reshape(ellArr,sizeArr);
+ellArr = reshape(ellArr,sizeVec);
 %
 function makeEllipsoid(index, args)
     ellArr(index) = ellipsoid(args{:});

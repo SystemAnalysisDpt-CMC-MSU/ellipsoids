@@ -769,14 +769,16 @@ classdef EllipsoidTestCase < mlunitext.test_case
             checkEllEqual(ellipsoid(test1Mat), ellipsoid(test2Mat), true, '');
             %
             %test for maxTolerance
-            mat1 = eye(2);
-            mat2 = eye(2)+1;
-            vec2 = [1;0];
+            firstMat = eye(2);
+            secMat = eye(2)+1;
+            secVec = [1;0];
             maxTol = 1;
-            ell1 = ellipsoid(mat1);
-            ell2 = ellipsoid(vec2,mat2);
-            mlunit.assert(ell1.eq(ell2) == 0);
-            mlunit.assert(ell1.eq(ell2,maxTol) == 1);
+            ell1 = ellipsoid(firstMat);
+            ell2 = ellipsoid(secVec,secMat);
+            [isOk,reportStr]=ell1.eq(ell2);
+            mlunit.assert([isOk,reportStr]);
+            [isOk,reportStr]=ell1.eq(ell2,maxTol);
+            mlunit.assert(isOk,reportStr);
             %
             %
             testEll = ellipsoid(eye(2));
