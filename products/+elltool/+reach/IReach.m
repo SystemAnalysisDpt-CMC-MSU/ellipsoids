@@ -24,8 +24,9 @@ classdef IReach < handle
         %           interval to cut.
         %
         % Output:
-        %   cutObj: reach[1, 1] - reach set resulting from
-        %       the CUT operation.
+        %   regular:
+        %       cutObj: elltool.reach.IReach[1, 1] - reach 
+        %           set resulting from the CUT operation.
         %
         cutObj = cut(self, cutTimeVec)     
         %
@@ -37,9 +38,10 @@ classdef IReach < handle
         %       self.
         %
         % Output:
-        %   rSdim: double[1, 1] - reach set dimension.
-        %
-        %   sSdim: double[1, 1] - state space dimension.
+        %   regular:
+        %       rSdim: double[1, 1] - reach set dimension.
+        %       sSdim: double[1, 1] - state space 
+        %           dimension.
         %
         [rSdim sSdim] = dimension(self)
 
@@ -51,7 +53,8 @@ classdef IReach < handle
         %       self.
         %
         % Output:
-        %   None.
+        %   regular:
+        %       None.
         %
         display(self)
         %
@@ -69,8 +72,9 @@ classdef IReach < handle
         %       linear system.
         %
         % Output:
-        %   newReachObj: reach[1, 1] - reach set on time
-        %       interval [oldT0 newEndTime].
+        %   regular:
+        %       newReachObj: reach[1, 1] - reach set on 
+        %           time interval [oldT0 newEndTime].
         %
         newReachObj = evolve(self, newEndTime, linSys)
         %
@@ -82,14 +86,15 @@ classdef IReach < handle
         %       self.
         %
         % Output:
-        %   trCenterMat: double[nDim, nPoints] - array of
-        %       points that form the trajectory of the 
-        %       reach set center, where nDim is reach set 
-        %       dimentsion, nPoints - number of points in 
-        %       time grid.
+        %   regular:
+        %       trCenterMat: double[nDim, nPoints] - array 
+        %           of points that form the trajectory of 
+        %           the reach set center, where nDim is 
+        %           reach set dimentsion, nPoints - number 
+        %           of points in time grid.
         %
-        %   timeVec: double[1, nPoints] - array of time
-        %       values.
+        %       timeVec: double[1, nPoints] - array of time
+        %           values.
         %
         [trCenterMat timeVec] = get_center(self)
         %
@@ -101,14 +106,16 @@ classdef IReach < handle
         %       self.
         %
         % Output:
-        %   directionsCVec: cell[1, nPoints] - array of
-        %       cells, where each cell is a sequence of 
-        %       direction vector values that correspond to 
-        %       the time values of the grid, where nPoints 
-        %       is number of points in time grid.
+        %   regular:
+        %       directionsCVec: cell[1, nPoints] of double
+        %           [nDim, nDir] - array of cells, where 
+        %           each cell is a sequence of direction 
+        %           vector values that correspond to the 
+        %           time values of the grid, where nPoints 
+        %           is number of points in time grid.
         %
-        %   timeVec: double[1, nPoints] - array of time
-        %       values.
+        %       timeVec: double[1, nPoints] - array of time
+        %           values.
         %
         [directionsCVec timeVec] = get_directions(self)
         %
@@ -121,13 +128,14 @@ classdef IReach < handle
         %       self.
         %
         % Output:
-        %   eaEllMat: ellipsoid[nAppr, nPoints] - array of
-        %       ellipsoids, where nAppr is the number of 
-        %       approximations, nPoints is number of points 
-        %       in time grid.
+        %   regular:
+        %       eaEllMat: ellipsoid[nAppr, nPoints] - array 
+        %           of ellipsoids, where nAppr is the 
+        %           number of approximations, nPoints is 
+        %           number of points in time grid.
         %
-        %   timeVec: double[1, nPoints] - array of time
-        %       values.
+        %       timeVec: double[1, nPoints] - array of time
+        %           values.
         %
         [eaEllMat timeVec] = get_ea(self)
         
@@ -140,12 +148,14 @@ classdef IReach < handle
         %       self.
         %
         % Output:
-        %   goodCurvesCVec: cell[1, nPoints] - array of
-        %       cells, where each cell is array of points 
-        %       that form a 'good curve'.
+        %   regular:
+        %       goodCurvesCVec: cell[1, nPoints] of double
+        %           [x, y] - array of cells, where each 
+        %           cell is array of points that form a 
+        %           'good curve'.
         %
-        %   timeVec: double[1, nPoints] - array of time
-        %       values.
+        %       timeVec: double[1, nPoints] - array of time
+        %           values.
         [goodCurvesCVec timeVec] = get_goodcurves(self) 
         %
         %
@@ -158,13 +168,14 @@ classdef IReach < handle
         %       self.
         %
         % Output:
-        %   iaEllMat: ellipsoid[nAppr, nPoints] - array of
-        %       ellipsoids, where nAppr is the number of 
-        %       approximations, nPoints is number of points 
-        %       in time grid.
+        %   regular:
+        %       iaEllMat: ellipsoid[nAppr, nPoints] - array 
+        %           of ellipsoids, where nAppr is the 
+        %           number of approximations, nPoints is 
+        %           number of points in time grid.
         %
-        %   timeVec: double[1, nPoints] - array of time
-        %       values.
+        %       timeVec: double[1, nPoints] - array of time
+        %           svalues.
         %
         [iaEllMat timeVec] = get_ia(self)
         %
@@ -176,8 +187,9 @@ classdef IReach < handle
         %       self.
         %
         % Output:
-        %   linSys: elltool.linsys.LinSys[1, 1] - linear
-        %       system object.
+        %   regular:
+        %       linSys: elltool.linsys.LinSys[1, 1] - 
+        %           linear system object.
         %
         linSys = get_system(self)
         %
@@ -190,16 +202,17 @@ classdef IReach < handle
         %       self.
         %
         %       intersectObj: ellipsoid[1, 1]/hyperplane[1,
-        %       1]/polytop[1, 1].
+        %           1]/polytop[1, 1].
         %
         %       approxTypeChar: char[1, 1] -
         %           'e' (default) - external approximation,
         %           'i' - internal approximation.
         %
         % Output:
-        %   isEmptyIntersect: logical[1, 1] -
-        %       true - if intersection is nonempty, false -
-        %       otherwise.
+        %   regular:
+        %       isEmptyIntersect: logical[1, 1] -
+        %           true - if intersection is nonempty, 
+        %           false - otherwise.
         %
         isEmptyIntersect = intersect(self, intersectObj, approxTypeChar)
         %
@@ -211,9 +224,10 @@ classdef IReach < handle
         %       self.
         %
         % Output:
-        %   isCut: logical[1, 1] -
-        %       true - if self is a cut of the reach set,
-        %       false - otherwise.
+        %   regular:
+        %       isCut: logical[1, 1] -
+        %           true - if self is a cut of the reach 
+        %           set, false - otherwise.
         %
         isCut = iscut(self)
         %
@@ -225,9 +239,10 @@ classdef IReach < handle
         %       self.
         %
         % Output:
-        %   isProj: logical[1, 1] -
-        %       true - if self is projection, false -
-        %       otherwise.
+        %   regular:
+        %       isProj: logical[1, 1] -
+        %           true - if self is projection, 
+        %           false - otherwise.
         %
         isProj = isprojection(self)
         %
@@ -257,7 +272,8 @@ classdef IReach < handle
         %               set will be filled with color.
         %
         % Output:
-        %   None.
+        %   regular:
+        %       None.
         %
         plot_ea(self, varargin)
         %
@@ -288,7 +304,8 @@ classdef IReach < handle
         %
         %
         % Output:
-        %   None.
+        %   regular:
+        %       None.
         %
         plot_ia(self, varargin)
         %
@@ -304,7 +321,9 @@ classdef IReach < handle
         %           reach set, nCols <= nRows.
         %
         % Output:
-        %   projObj: reach[1, 1] - projected reach set.
+        %   regular:
+        %       projObj: elltool.reach.IReach[1, 1] - 
+        %           projected reach set.
         %
         projObj = projection(self, projMat)
         %
@@ -316,9 +335,10 @@ classdef IReach < handle
         %       self.
         %
         % Output:
-        %   isEmpty: logical[1, 1] - 
-        %       true - if self is empty, 
-        %       false - otherwise.
+        %   regular:
+        %       isEmpty: logical[1, 1] - 
+        %           true - if self is empty, 
+        %           false - otherwise.
         %
         isEmpty = isempty(self)       
     end
