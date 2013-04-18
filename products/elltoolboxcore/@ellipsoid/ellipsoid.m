@@ -10,7 +10,7 @@ classdef ellipsoid < handle
     end
     
     methods
-        function [ell] = ellipsoid(varargin)
+        function [ellMat] = ellipsoid(varargin)
             %
             % ELLIPSOID - constructor of the ellipsoid object.
             %
@@ -26,29 +26,41 @@ classdef ellipsoid < handle
             %	ell = ELLIPSOID(centVec, shMat) - creates an ellipsoid with shape matrix 
             %       shMat and center centVec
             %
-            %   ell = ELLIPSOID(centVec, shMat, 'propName1', propVal1,...,'propNameN',
-            %        propValN) - creates an ellipsoid with shape matrix shMat, center 
-            %        centVec center centVec and propName1 = propVal1, ..., propNameN = 
-            %        propValN.  In other cases "Properties" are taken from current 
-            %        values are taken from current values stored in 
-            %        elltool.conf.Properties.
-            %       
-            %   These parameters can be accessed by DOUBLE(E) function call.Also, 
-            %   DIMENSION(E) function call returns the dimension of the space in which
-            %   ellipsoid E is defined and the actual dimension of the ellipsoid; 
-            %   function ISEMPTY(E) checks if ellipsoid E is empty; function 
-            %   ISDEGENERATE(E) checks if ellipsoid E is degenerate. 
-            %   
-            %   
-            %  Input:
+            %   ell = ELLIPSOID(centVec, shMat, 'propName1', propVal1,...,
+            %       'propNameN',propValN) - creates an ellipsoid with shape
+            %       matrix shMat, center centVec and propName1 = propVal1,...,
+            %       propNameN = propValN. In other cases "Properties"
+            %       are taken from current values stored in
+            %       elltool.conf.Properties.
+            %   ellMat = Ellipsoid(centVecArray, shMatArray, 
+            %       ['propName1', propVal1,...,'propNameN',propValN]) - 
+            %       creates an array (possibly multidimensional) of 
+            %       ellipsoids with centers centVecArray(:,dim1,...,dimn)
+            %       and matrices shMatArray(:,:,dim1,...dimn) with
+            %       properties if given.
+            %
+            %   These parameters can be accessed by DOUBLE(E) function call.
+            %   Also, DIMENSION(E) function call returns the dimension of
+            %   the space in which ellipsoid E is defined and the actual
+            %   dimension of the ellipsoid; function ISEMPTY(E) checks if
+            %   ellipsoid E is empty; function ISDEGENERATE(E) checks if
+            %   ellipsoid E is degenerate.
+            %
+            % Input:
             %   Case1:
             %     regular:
-            %       shMat: double [nDim, nDim] - shape matrix of an ellipsoid
+            %       shMatArray: double [nDim, nDim] / 
+            %           double [nDim, nDim, nDim1,...,nDimn] - 
+            %           shape matrices array
             %
             %   Case2:
             %     regular:
-            %       centVec: double [nDim,1] - center of an ellipsoid
-            %       shMat: double [nDim, nDim] - shape matrix of an ellipsoid
+            %       centVecArray: double [nDim,1] / 
+            %           double [nDim, 1, nDim1,...,nDimn] - 
+            %           centers array
+            %       shMatArray: double [nDim, nDim] / 
+            %           double [nDim, nDim, nDim1,...,nDimn] - 
+            %           shape matrices array
             %           
             %
             %   properties:
@@ -60,7 +72,9 @@ classdef ellipsoid < handle
             %            default value 200.
             %
             % Output:
-            %   ell: ellipsoid [1,1] - ellipsoid with specified properties.
+            %   ellMat: ellipsoid [1,1] / ellipsoid [nDim1,...nDimn] - 
+            %       ellipsoid with specified properties 
+            %       or multidimensional array of ellipsoids.
             % 
             % Example:
             % ellObj = ellipsoid([1 0 -1 6]', 9*eye(4));
@@ -71,9 +85,10 @@ classdef ellipsoid < handle
             %
             % $Author: Guliev Rustam <glvrst@gmail.com> $   
             % $Date: Dec-2012$
+            % $Author: Daniil Stepenskiy <reinkarn@gmail.com> $   $Date: Apr-2013$
             % $Copyright: Moscow State University,
-            %            Faculty of Computational Mathematics and Computer Science,
-            %            System Analysis Department 2012 $
+            %             Faculty of Computational Mathematics and and Computer Science,
+            %             System Analysis Department 2012-2013 $
             %
             
             import modgen.common.throwerror;
@@ -86,51 +101,92 @@ classdef ellipsoid < handle
                 elltool.conf.Properties.parseProp(varargin,neededPropNameList);
             
             if nargin == 0
-                ell.center = [];
-                ell.shape  = [];
-                ell.absTol = absTolVal;
-                ell.relTol = relTolVal;
-                ell.nPlot2dPoints = nPlot2dPointsVal;
-                ell.nPlot3dPoints = nPlot3dPointsVal;
+                ellMat.center = [];
+                ellMat.shape  = [];
+                ellMat.absTol = absTolVal;
+                ellMat.relTol = relTolVal;
+                ellMat.nPlot2dPoints = nPlot2dPointsVal;
+                ellMat.nPlot3dPoints = nPlot3dPointsVal;
                 return;
             end
             
             if nargin == 1
                 checkvar(varargin{1},@(x) isa(x,'double')&&isreal(x),...
                     'errorTag','wrongInput:imagArgs',...
-                    'errorMessage','shape matrix must be real.');
-                shMat = varargin{1};
-                [nShRows, nShCols] = size(shMat);
-                centVec = zeros(nShCols, 1);
+                    'errorMessage','shape matrix must be real.');                
+                shMatArray = varargin{1};                
+                nShDims = ndims(shMatArray);
+                shDimsVec(1:nShDims) = size(shMatArray);
+                nShRows = shDimsVec(1);
+                nShCols = shDimsVec(2);
                 nCentRows = nShCols;
                 nCentCols = 1;
+                if (nShDims > 2)
+                    centVecArray = zeros([nCentRows, shDimsVec(3:end)]);
+                else
+                    centVecArray = zeros(nCentRows, 1);
+                end
+                
             else
                 checkmultvar(@(x,y) isa(x,'double') && isa(y,'double') &&...
                     isreal(x) && isreal(y),2,varargin{1},varargin{2},...
                     'errorTag','wrongInput:imagArgs',...
                     'errorMessage','center and shape matrix must be real.');
-                centVec = varargin{1};
-                shMat = varargin{2};
-                [nCentRows, nCentCols] = size(centVec);
-                [nShRows, nShCols] = size(shMat);
+                centVecArray = varargin{1};
+                shMatArray = varargin{2};
+                nShDims = ndims(shMatArray);
+                nCentDims = ndims(centVecArray);
+                checkmultvar(...
+                    @(x,y)(x==2&&y==2)||x==y+1, 2, nShDims, nCentDims,...
+                    'errorTag','wrongInput',...
+                    'errorMessage', ['center and shape matrix must ',...
+                    'differ in dimensionality by 1.']);
+                centDimsVec(1:nCentDims) = size(centVecArray);
+                shDimsVec(1:nShDims) = size(shMatArray);
+                checkmultvar(@(x,y)all(x==y), 2, centDimsVec(2:end),...
+                    shDimsVec(3:end), 'errorTag','wrongInput',...
+                    'errorMessage',...
+                    'additional dimensions must agree');
+                nCentRows = centDimsVec(1);            
+                nCentCols = centDimsVec(2);                
+                nShRows = shDimsVec(1);
+                nShCols = shDimsVec(2);   
             end
-            
-            checkmultvar('(x1==x2)&&(x3==x1)&&(x4==1)&& gras.la.ismatsymm(x5)',...
-                5,nShRows,nShCols,nCentRows,nCentCols,shMat,...
+            %
+            checkmultvar('(x1==x2)&&(x3==x1)&&(x4==1||x5>2)',...
+                5,nShRows,nShCols,nCentRows,nCentCols,nShDims,...
                 'errorTag','wrongInput', 'errorMessage',...
-                'center must be vector and shape matrix must be symmetric.');
-            % We cannot just check the condition 'min(eig(Q)) < 0'
-            % because the zero eigenvalue may be internally represented
-            % as something like -10^(-15).
-            checkmultvar('gras.la.ismatposdef(x1,x2,1)',2,shMat, absTolVal,...
-                'errorTag','wrongInput','errorMessage',...
-                'shape matrix must be positive semi-definite.');
-            ell.center = centVec;
-            ell.shape  = shMat;
-            ell.absTol = absTolVal;
-            ell.relTol = relTolVal;
-            ell.nPlot2dPoints = nPlot2dPointsVal;
-            ell.nPlot3dPoints = nPlot3dPointsVal;
+                'center must be vector and dimesions must agree.');
+            %
+            
+            if nShDims > 2
+                ellMat(prod(shDimsVec(3:end))) = ellipsoid();
+                arrayfun(@(iEll)fMakeEllipsoid(iEll), 1:numel(ellMat));
+                if (nShDims > 3)
+                    ellMat = reshape(ellMat, [shDimsVec(3:end)]);
+                end
+            else
+                fMakeEllipsoid(1);
+            end
+            function fMakeEllipsoid(iEll)
+                %shape matrix must be symmetric.');
+                % We cannot just check the condition 'min(eig(Q)) < 0'
+                % because the zero eigenvalue may be internally represented
+                % as something like -10^(-15).
+                import modgen.common.checkmultvar;
+                checkmultvar(@(aMat, aAbsTolVal)gras.la.ismatsymm(aMat)...
+                    &&gras.la.ismatposdef(aMat,aAbsTolVal,1), 2,...
+                    shMatArray(:,:,iEll), absTolVal,...
+                    'errorTag','wrongInput',...
+                    'errorMessage', ['shape matrices must be symmetric',...
+                    'and positive semi-definite']);
+                ellMat(iEll).center = centVecArray(:,iEll);
+                ellMat(iEll).shape = shMatArray(:,:,iEll);
+                ellMat(iEll).absTol = absTolVal;
+                ellMat(iEll).relTol = relTolVal;
+                ellMat(iEll).nPlot2dPoints = nPlot2dPointsVal;
+                ellMat(iEll).nPlot3dPoints = nPlot3dPointsVal;
+            end
         end
     end
     
