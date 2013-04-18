@@ -100,6 +100,11 @@ classdef hyperplane < handle
             %       array of hyperplane structure hypH:
             %           hypH.normal - vector in R^hpDims,
             %           hypH.shift  - scalar.
+            %             
+            % Example:
+            % hypNormMat = [1 1 1; 1 1 1];
+            % hypConstVec = [1 -5 0];
+            % hypObj = hyperplane(hypNormMat, hypConstVec);
             %
             % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
             % $Copyright: The Regents of the University of California 

@@ -65,6 +65,9 @@ classdef ellipsoid < handle
             %
             % Output:
             %   ell: ellipsoid [1,1] - ellipsoid with specified properties.
+            % 
+            % Example:
+            % ellObj = ellipsoid([1 0 -1 6]', 9*eye(4));
             %
             % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
             % $Copyright: The Regents of the University

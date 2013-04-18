@@ -90,8 +90,8 @@ classdef ILinSys < handle
         [stateDimArr, inpDimArr, outDimArr, distDimArr] =...
             dimension(self)
         %
-        % DIMENSION - returns dimensions of state,
-        %     input, output and disturbance spaces.
+        % DIMENSION - returns dimensions of state, input, output
+        %             and disturbance spaces.
         % Input:
         %   regular:
         %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an 
@@ -112,7 +112,7 @@ classdef ILinSys < handle
         %
         display(self)
         %
-        % DISPLAY displays the details of linear system object.
+        % DISPLAY - displays the details of linear system object.
         %
         % Input:
         %   regular:
@@ -123,8 +123,8 @@ classdef ILinSys < handle
         %
         isDisturbanceArr = hasdisturbance(self)
         %
-        % HASDISTURBANCE checks if linear system has unknown bounded 
-        %          disturbance.
+        % HASDISTURBANCE - checks if linear system has unknown bounded 
+        %                  isturbance.
         % 
         % Input:
         %   regular:
@@ -143,7 +143,7 @@ classdef ILinSys < handle
         %
         isNoiseArr = hasnoise(self)
         %
-        % HASNOISE checks if linear system has unknown bounded noise.
+        % HASNOISE - checks if linear system has unknown bounded noise.
         %
         % Input:
         %   regular:
@@ -158,7 +158,7 @@ classdef ILinSys < handle
         %
         isEmptyArr = isempty(self)
         %
-        % ISEMPTY checks if linear system is empty.
+        % ISEMPTY - checks if linear system is empty.
         %
         % Input:
         %   regular:
@@ -173,7 +173,7 @@ classdef ILinSys < handle
         %
         isLtiArr = islti(self)
         %
-        % ISLTI checks if linear system is time-invariant.
+        % ISLTI - checks if linear system is time-invariant.
         %
         % Input:
         %   regular:
@@ -188,9 +188,10 @@ classdef ILinSys < handle
         %
         absTolArr = getAbsTol(self)
         %
-        % GETABSTOL gives array the same size as linsysArr with
-        % values of absTol properties for each hyperplane in 
-        % hplaneArr.
+        % GETABSTOL - gives array the same size as linsysArr with
+        %             values of absTol properties for each hyperplane
+        %             in hplaneArr.
+        % 
         %
         % Input:
         %   regular:
@@ -210,24 +211,25 @@ classdef ILinSys < handle
         %
         copyLinSysArr = getCopy(self)
         %
-        % GETCOPY gives array the same size as linsysArr with
-        % with copies of elements of self.
+        % GETCOPY - gives array the same size as linsysArr with
+        %           with copies of elements of self.
         %
         % Input:
         %   regular:
-        %       self: elltool.linsys.ILinSys[nDims1, nDims2,...] - an array
-        %             of linear systems.
+        %       self: elltool.linsys.ILinSys[nDims1, nDims2,...] - an 
+        %             array of linear systems.
         %
         % Output:
-        %   copyLinSysArr: elltool.linsys.ILinSys[nDims1, nDims2,...] - an
-        %       array of copies of elements of self.
+        %   copyLinSysArr: elltool.linsys.ILinSys[nDims1, nDims2,...] - 
+        %       an array of copies of elements of self.
         %
         isEqualArr = isEqual(self, compLinSysArr)
         %
-        % ISEQUAL produces produces logical array the same size as
-        % self/compLinSysArr (if they have the same).
-        % isEqualArr[iDim1, iDim2,...] is true if corresponding
-        % linear systems are equal and false otherwise.
+        % ISEQUAL - produces produces logical array the same size as
+        %           self/compLinSysArr (if they have the same).
+        %           isEqualArr[iDim1, iDim2,...] is true if 
+        %           corresponding linear systems are equal and false 
+        %           otherwise.
         %
         % Input:
         %   regular:

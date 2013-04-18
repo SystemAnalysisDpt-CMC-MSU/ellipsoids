@@ -781,8 +781,8 @@ classdef ALinSys < elltool.linsys.ILinSys
         %
         function copyLinSysArr = getCopy(self)
             %
-            % GETCOPY gives array the same size as linsysArr with
-            % with copies of elements of self.
+            % GETCOPY - gives array the same size as linsysArr with
+            %           with copies of elements of self.
             %
             % Input:
             %   regular:
@@ -818,10 +818,11 @@ classdef ALinSys < elltool.linsys.ILinSys
         %
         function isEqualArr = isEqual(self, compLinSysArr)
             %
-            % ISEQUAL produces produces logical array the same size as
-            % self/compLinSysArr (if they have the same).
-            % isEqualArr[iDim1, iDim2,...] is true if corresponding
-            % linear systems are equal and false otherwise.
+            % ISEQUAL - produces produces logical array the same size as
+            %           self/compLinSysArr (if they have the same).
+            %           isEqualArr[iDim1, iDim2,...] is true if 
+            %           corresponding linear systems are equal and false 
+            %           otherwise.
             %
             % Input:
             %   regular:

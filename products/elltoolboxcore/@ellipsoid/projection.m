@@ -20,6 +20,24 @@ function projEllArr = projection(ellArr, basisMat)
 %  projEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array
 %       of projected ellipsoids, generally, 
 %       of lower dimension.
+% 
+% Example:
+% ellObj = ellipsoid([-2; -1; 4], [4 -1 0; -1 1 0; 0 0 9]);
+% basisMat = [0 1 0; 0 0 1]';
+% outEllObj = ellObj.projection(basisMat)
+% 
+% outEllObj =
+% 
+% Center:
+%     -1
+%      4
+% 
+% Shape:
+%      1     0
+%      0     9
+% 
+% Nondegenerate ellipsoid in R^2.
+% 
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California
 %              2004-2008 $

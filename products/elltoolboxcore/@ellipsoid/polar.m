@@ -23,6 +23,14 @@ function polEllArr = polar(ellArr)
 % Output:
 %   polEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array 
 %    	  of polar ellipsoids.
+% 
+% Example:
+% ellObj = ellipsoid([4 -1; -1 1]);
+% ellObj.polar() == ellObj.inv()
+% 
+% ans =
+% 
+%      1
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 

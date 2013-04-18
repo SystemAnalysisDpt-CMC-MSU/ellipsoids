@@ -36,14 +36,17 @@ function outEllArr = intersection_ia(myEllArr, objArr)
 %   pp.430-442, 2002. For more information, visit
 %   http://www-iri.upc.es/people/ros/ellipsoids.html
 %
-%   The method used to compute maximum volume ellipsoid inscribed in 
-%   intersection of ellipsoid and polytope, is modified version of algorithm
-%   of finding maximum volume ellipsoid inscribed in intersection of 
-%   ellipsoids discribed in Stephen Boyd and Lieven Vandenberghe "Convex
-%   Optimization". It works properly for nondegenerate ellipsoid, but for
-%   degenerate ellipsoid result would not lie in this ellipsoid. The result
-%   considered as empty ellipsoid, when maximum absolute velue of element 
-%   in its matrix is less than myEllipsoid.getAbsTol().
+%   The method used to compute maximum volume ellipsoid 
+%   inscribed in intersection of ellipsoid and polytope, is
+%   modified version of algorithm of finding maximum volume
+%   ellipsoid inscribed in intersection of ellipsoids 
+%   discribed in Stephen Boyd and Lieven Vandenberghe 
+%   "Convex Optimization". It works properly for 
+%   nondegenerate ellipsoid, but for degenerate ellipsoid 
+%   result would not lie in this ellipsoid. The result
+%   considered as empty ellipsoid, when maximum absolute
+%   value of element in its matrix is less than 
+%   myEllipsoid.getAbsTol().
 %
 % Input:
 %   regular:
@@ -59,6 +62,17 @@ function outEllArr = intersection_ia(myEllArr, objArr)
 %       of internal approximating ellipsoids; entries can 
 %       be empty ellipsoids if the corresponding 
 %       intersection is empty.
+% 
+% Example:
+% firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+% secEllObj = firstEllObj + [5; 5];
+% ellVec = [firstEllObj secEllObj];
+% thirdEllObj  = ell_unitball(2);
+% internalEllVec = ellVec.intersection_ia(thirdEllObj)
+% 
+% internalEllVec =
+% 1x2 array of ellipsoids.
+% 
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 

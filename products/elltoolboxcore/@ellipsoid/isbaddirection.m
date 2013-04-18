@@ -29,6 +29,17 @@ function isBadDirVec = isbaddirection(fstEll, secEll, dirsMat,absTol)
 %       matrix dirsMat. true marks direction vector as bad
 %       - ellipsoidal approximation cannot be computed for
 %       this direction. false means the opposite.
+% 
+% Example:
+% firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+% secEllObj = 3*ell_unitball(2);
+% dirsMat = [1 0; 1 1; 0 1; -1 1]';
+% absTol = getAbsTol(secEllObj);
+% secEllObj.isbaddirection(firstEllObj, dirsMat, absTol)
+% 
+% ans =
+% 
+%      0     1     1     0
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 

@@ -92,6 +92,24 @@ function [resArr, statusArr] = intersect(myEllArr, objArr, mode)
 %           objArr(iCount) have nonempty intersection.
 %  statusArr: double[0, 0]/double[nDims1,nDims2,...,nDimsN]
 %      - status variable. statusArr is empty if mode = 'u'.
+% 
+% Example:
+% firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+% secEllObj = firstEllObj + [5; 5];
+% hypObj  = hyperplane([1; -1]);
+% ellVec = [firstEllObj secEllObj];
+% ellVec.intersect(hypObj)
+% 
+% ans =
+% 
+%      1
+% 
+% ellVec.intersect(hypObj, 'i')
+% 
+% ans =
+% 
+%     -1
+% 
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 

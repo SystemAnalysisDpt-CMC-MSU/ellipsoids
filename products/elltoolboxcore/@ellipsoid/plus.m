@@ -24,6 +24,37 @@ function outEllArr = plus(varargin)
 %   outEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array 
 %       of ellipsoids  ith same shapes as ellVec, but with 
 %       centers shifted by vectors in inpVec.
+% 
+% Example:
+% ellVec  = [ellipsoid([-2; -1], [4 -1; -1 1]) ell_unitball(2)];
+% outEllVec = ellVec + [1; 1];
+% outEllVec(1)
+% 
+% ans =
+% 
+% Center:
+%     -1
+%      0
+% 
+% Shape:
+%      4    -1
+%     -1     1
+% 
+% Nondegenerate ellipsoid in R^2.
+% 
+% outEllVec(2)
+% 
+% ans =
+% 
+% Center:
+%      1
+%      1
+% 
+% Shape:
+%      1     0
+%      0     1
+% 
+% Nondegenerate ellipsoid in R^2.
 %       
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>

@@ -19,7 +19,17 @@ function isPosArr = isparallel(fstHypArr, secHypArr)
 %   isPosArr: logical[nDims1, nDims2, ...] - 
 %      isPosArr(iFstDim, iSecDim, ...) = true - 
 %      if fstHypArr(iFstDim, iSecDim, ...) is parallel 
-%      secHypArr(iFstDim, iSecDim, ...), false - otherwise.%
+%      secHypArr(iFstDim, iSecDim, ...), false - otherwise.
+%
+% Example:
+% hypObj = hyperplane([-1 1 1; 1 1 1; 1 1 1], [2 1 0]);
+% hypObj.isparallel(hypObj(2))
+% 
+% ans =
+% 
+%      0     1     1
+% 
+% 
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 
 %              2004-2008 $

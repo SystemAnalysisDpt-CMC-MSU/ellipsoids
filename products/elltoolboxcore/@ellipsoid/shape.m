@@ -20,6 +20,22 @@ function modEllArr = shape(ellArr, modMat)
 % Output:
 %	modEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array 
 %        of modified ellipsoids.
+% 
+% ellObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+% tempMat = [0 1; -1 0];
+% outEllObj = shape(ellObj, tempMat)
+% 
+% outEllObj =
+% 
+% Center:
+%     -2
+%     -1
+% 
+% Shape:
+%      1     1
+%      1     4
+% 
+% Nondegenerate ellipsoid in R^2.
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California

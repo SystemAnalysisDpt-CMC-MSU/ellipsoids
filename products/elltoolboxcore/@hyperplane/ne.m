@@ -16,6 +16,16 @@ function [isPosArr reportStr] = ne(fstHypArr, secHypArr)
 %   then checks if fstHypArr==secHypArr(iDim1, iDim2, ...)
 %   for all iDim1, iDim2, ... , and vice versa.
 %  reportStr: char[1,] - comparison report
+% 
+% Example:
+% firstHypObj = hyperplane([-1; 1]);
+% secHypObj = hyperplane([-1; 1; 8; -2; 3], 7);
+% thirdHypObj = hyperplane([1; 2; 0], -1);
+% [secHypObj firstHypObj thirdHypObj] ~= [firstHypObj secHypObj thirdHypObj]
+% 
+% ans =
+% 
+%      1     1     0
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 

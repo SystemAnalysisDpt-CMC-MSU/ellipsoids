@@ -16,6 +16,13 @@ function isPositiveArr = ge(firsrEllArr, secondEllArr)
 %     isPositiveArr(iCount) = true - if firsrEllArr(iCount)
 %     contains secondEllArr(iCount)
 %     when both have same center, false - otherwise.
+% 
+% Example:
+% ellObj > ellObj
+% 
+% ans =
+% 
+%      1
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 

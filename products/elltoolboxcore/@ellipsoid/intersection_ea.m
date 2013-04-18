@@ -37,7 +37,8 @@ function outEllArr = intersection_ea(myEllArr, objArr)
 %   http://www-iri.upc.es/people/ros/ellipsoids.html
 %   
 %   For polytopes this method won't give the minimal volume 
-%   overapproximating ellipsoid, but just some overapproximating ellipsoid.
+%   overapproximating ellipsoid, but just some 
+%   overapproximating ellipsoid.
 %
 % Input:
 %   regular:
@@ -53,6 +54,17 @@ function outEllArr = intersection_ea(myEllArr, objArr)
 %       of external approximating ellipsoids; entries can 
 %       be empty ellipsoids if the corresponding 
 %       intersection is empty.
+% 
+% Example:
+% firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+% secEllObj = firstEllObj + [5; 5];
+% ellVec = [firstEllObj secEllObj];
+% thirdEllObj  = ell_unitball(2);
+% externalEllVec = ellVec.intersection_ea(thirdEllObj)
+% 
+% externalEllVec =
+% 1x2 array of ellipsoids.
+% 
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California

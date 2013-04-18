@@ -52,8 +52,7 @@
 %                       boundary point of the ellipsoid in
 %                       the given direction.
 %  polar              - Computes the polar ellipsoid to an
-%                       ellipsoid that contains
-%                       the origin.
+%                       ellipsoid that contains the origin.
 %  projection         - Projects the ellipsoid onto a 
 %                       subspace specified by 
 %                       orthogonal basis vectors.
@@ -78,8 +77,8 @@
 %                       difference of two ellipsoids in
 %                       given direction
 %  minkpm             - Computes and plots the geometric
-%                       (Minkowski) difference
-%                       of a geometric sum of ellipsoids
+%                       (Minkowski) difference of a 
+%                       geometric sum of ellipsoids
 %                       and a single ellipsoid in 1D, 2D  
 %                       and 3D.
 %  minkpm_ea          - Computes the external ellipsoidal
@@ -147,7 +146,7 @@
 %                       ellipsoid with hyperplane.
 %
 %
-% Author:
+% $Author:
 % -------
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %

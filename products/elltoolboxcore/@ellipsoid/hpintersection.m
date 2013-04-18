@@ -19,7 +19,15 @@ function [intEllArr, isnIntersectedArr] = ...
 %     isnIntersectedArr(iCount) = true, if myEllArr(iCount)
 %     doesn't intersect myHipArr(iCount),
 %     isnIntersectedArr(iCount) = false, otherwise.
-%
+% 
+% Example:
+% ellObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+% hypMat = [hyperplane([0 -1; -1 0]', 1); hyperplane([0 -2; -1 0]', 1)];
+% ellMat = ellObj.hpintersection(hypMat)
+% 
+% ellMat =
+% 2x2 array of ellipsoids.
+% 
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 
 %              2004-2008 $

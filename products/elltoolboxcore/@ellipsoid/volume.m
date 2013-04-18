@@ -18,6 +18,16 @@ function volArr = volume(ellArr)
 % Output:
 %	volArr: double [nDims1,nDims2,...,nDimsN] - array of
 %   	volume values, same size as ellArr.
+% 
+% Example:
+% firstEllObj = ellipsoid([4 -1; -1 1]);
+% secEllObj = ell_unitball(2);
+% ellVec = [firstEllObj secEllObj]
+% volVec = ellVec.volume()
+% 
+% volVec =
+% 
+%     5.4414     3.1416
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California

@@ -32,7 +32,7 @@ properties (Constant)
     end
     methods (Static)
         function configure(confSource,varargin)
-            % CONFIGURE performs log4j configuration
+            % CONFIGURE - performs log4j configuration
             %
             import modgen.common.throwerror;
             self=elltool.logging.Log4jConfigurator();

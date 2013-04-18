@@ -10,6 +10,21 @@ function outEllArr = uminus(ellArr)
 % Output:
 %	outEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array
 %           of ellipsoids, same size as ellArr.
+% 
+% Example:
+% ellObj = -ellipsoid([-2; -1], [4 -1; -1 1])
+% 
+% ellObj =
+% 
+% Center:
+%      2
+%      1
+% 
+% Shape:
+%      4    -1
+%     -1     1
+% 
+% Nondegenerate ellipsoid in R^2.
 %    	
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>

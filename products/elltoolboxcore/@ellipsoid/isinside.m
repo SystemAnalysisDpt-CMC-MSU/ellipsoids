@@ -81,6 +81,15 @@ function [res, status] = isinside(fstEllArr, secObjArr, mode)
 %   status: double[0, 0]/double[1, 1] - status variable. 
 %       status is empty if mode == 'u' or 
 %       mSecRows == nSecCols == 1.
+% 
+% Example:
+% firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+% secEllObj = ell_unitball(2);
+% firstEllObj.isinside([firstEllObj secEllObj], 'i')
+% 
+% ans =
+% 
+%      1
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 

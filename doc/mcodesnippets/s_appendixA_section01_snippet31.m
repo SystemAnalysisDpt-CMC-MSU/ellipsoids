@@ -3,6 +3,6 @@ secEllObj = ell_unitball(2);
 ellVec = [firstEllObj secEllObj]
 volVec = ellVec.volume()
 
-% VolVec =
+% volVec =
 % 
 %     5.4414     3.1416

@@ -13,6 +13,14 @@ function [isEqualArr, reportStr] = eq(ellFirstArr, ellSecArr)
 %        of comparison results
 %
 %   reportStr: char[1,] - comparison report
+% 
+% Example:
+% ellObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+% ellObj == [ellObj ellipsoid(eye(2))]
+% 
+% ans =
+% 
+%      1     0
 %
 % $Author: Vadim Kaushansky  <vkaushanskiy@gmail.com> $    
 % $Date: Nov-2012 $
