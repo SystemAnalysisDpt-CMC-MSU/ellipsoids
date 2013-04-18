@@ -13,8 +13,8 @@ classdef AMatrixCubicSpline<gras.mat.IMatrixFunction
         nRows
         nCols
     end
-    methods (Access=protected,Abstract)
-        resArray=evaluateInternal(self,timeVec)
+    methods (Access=public,Abstract)
+        resArray=evaluate(self,timeVec)
     end
     methods (Access=protected,Static)
         ppFormList=buildSplineCoeffs(dataArray,timeVec)
@@ -84,9 +84,6 @@ classdef AMatrixCubicSpline<gras.mat.IMatrixFunction
                 throwerror('wrongInput',...
                     'number of input arguments can be either 0 or 2');
             end
-        end
-        function resArray=evaluate(self,timeVec)
-            resArray=self.evaluateInternal(timeVec);
         end
     end
     methods (Access=protected, Static)

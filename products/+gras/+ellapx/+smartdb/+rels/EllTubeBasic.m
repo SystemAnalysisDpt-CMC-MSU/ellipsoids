@@ -10,14 +10,11 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
     methods (Static, Access=protected,Sealed)
         function [xTouchMat,xTouchOpMat]=calcTouchCurves(QArray,aMat,...
                 ltGoodDirMat)
-            import gras.ellapx.common.*;
             import gras.gen.SquareMatVector;
-            Qsize=size(QArray);
-            tmp=SquareMatVector.rMultiplyByVec(QArray,ltGoodDirMat);
-            denominator=sqrt(abs(sum(tmp.*ltGoodDirMat)));
-            temp=tmp./denominator(ones(1,Qsize(2)),:);
-            xTouchOpMat=aMat-temp;
-            xTouchMat=aMat+temp;
+            denVec = sqrt(SquareMatVector.lrDivideVec(QArray, ltGoodDirMat));
+            ltGoodDirMat = bsxfun(@rdivide, ltGoodDirMat, denVec);
+            xTouchMat=aMat+ltGoodDirMat;
+            xTouchOpMat=aMat-ltGoodDirMat;
         end
         %
         function STubeData=scaleTubeData(STubeData,scaleFactorVec)
@@ -164,12 +161,12 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                         scaleFactorRatio;
                     calcPrecision=(curveCalcPrecVec(iCurve)+...
                         tubeCalcPrecVec(iTube)*scaleFactorRatio);
-                    checkNorm(QArray,aMatList{iTube},...
-                        xTouchCurveMatList{iCurve},calcPrecision,...
-                        'xTouchCurveMat');
-                    checkNorm(QArray,aMatList{iTube},...
-                        xTouchOpCurveMatList{iCurve},calcPrecision,...
-                        'xTouchOpCurveMat');
+                    %checkNorm(QArray,aMatList{iTube},...
+                    %    xTouchCurveMatList{iCurve},calcPrecision,...
+                    %    'xTouchCurveMat');
+                    %checkNorm(QArray,aMatList{iTube},...
+                    %    xTouchOpCurveMatList{iCurve},calcPrecision,...
+                    %    'xTouchOpCurveMat');
                 end
             end
             function checkNorm(QArray,aMat,xTouchCurveMat,...

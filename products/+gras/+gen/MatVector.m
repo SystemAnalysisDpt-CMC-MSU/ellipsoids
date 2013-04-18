@@ -109,5 +109,26 @@ classdef MatVector
                     end
             end
         end
+        %
+        function cMat = rMultiplyByVec2(aArray, bMat)
+            [m, n, t] = size(aArray);
+            iVec = 1:n*t;
+            jVec = repmat(1:n,k,1);
+            bSparseMat = sparse(iVec,jVec,bMat,n*t,t,n*t);
+            cMat = reshape(aArray, m, n*t)*bSparseMat;      
+        end
+        %
+        function cArray = rMultiply2(aArray, bArray)
+            [m, n, t] = size(aArray);
+            k = size(bArray, 2);
+            iVec = repmat(1:n*t,k,1);
+            iVec = reshape(iVec,k,n,t);
+            iVec = permute(iVec,[2 1 3]);
+            iVec = reshape(iVec,n,k*t);
+            jVec = repmat(1:k*t,n,1);
+            bSparseMat = sparse(iVec,jVec,bArray(:),n*t,k*t,n*k*t);
+            cArray = reshape(aArray, m, n*t)*bSparseMat;
+            cArray = reshape(cArray, m, k, t);
+        end
     end
 end
