@@ -1,4 +1,8 @@
 function checkIsMe(ellArr,varargin)
+% Example:
+% ellObj = ellipsoid([1; 2], eye(2));
+% ellipsoid.checkIsMe(ellObj)
+% 
 
 nArgIn = nargin;
 if nArgIn == 1

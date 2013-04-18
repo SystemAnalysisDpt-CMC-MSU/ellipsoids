@@ -19,8 +19,9 @@ if modgen.system.ExistanceChecker.isFile(resultTexFileName)
     delete(resultTexFileName);
 end
 %
-FuncData=elltool.doc.collecthelp({'ellipsoid','hyperplane'},...
-    {'elltool'},{'test'});
+FuncData=elltool.doc.collecthelp({'ellipsoid','hyperplane', ...
+'elltool.conf.Properties', 'elltool.core.GenEllipsoid'},...
+ {'elltool.reach', 'elltool.linsys'},{'test'});
 %
 %
 nHelpElems=numel(FuncData.funcName);

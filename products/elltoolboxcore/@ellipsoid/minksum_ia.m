@@ -1,27 +1,23 @@
 function intApprEllVec = minksum_ia(inpEllArr, dirMat)
 %
-% MINKSUM_IA - computation of internal approximating 
-%              ellipsoids of the geometric sum of
-%              ellipsoids along given directions.
+% MINKSUM_IA - computation of internal approximating ellipsoids
+%              of the geometric sum of ellipsoids along given directions.
 %
-%  intApprEllVec = MINKSUM_IA(inpEllArr, dirMat) - Computes
-%       tight internal approximating ellipsoids for the 
-%       geometric sum of the ellipsoids in the array 
-%       inpEllArr along directions specified by columns of  
-%       dirMat. If ellipsoids in inpEllArr are
-%       n-dimensional, matrix dirMat must have dimension 
-%       (n x k) where k can be arbitrarily chosen.In this
-%       case, the output of the function will contain k
-%       ellipsoids computed for k directions specified in
-%       dirMat.
+%   intApprEllVec = MINKSUM_IA(inpEllArr, dirMat) - Computes
+%       tight internal approximating ellipsoids for the geometric
+%       sum of the ellipsoids in the array inpEllArr along directions
+%       specified by columns of dirMat. If ellipsoids in
+%       inpEllArr are n-dimensional, matrix dirMat must have
+%       dimension (n x k) where k can be arbitrarily chosen.
+%       In this case, the output of the function will contain k
+%       ellipsoids computed for k directions specified in dirMat.
 %
-%   Let inpEllArr consist of E(q1, Q1), E(q2, Q2), ...,
-%   E(qm, Qm) - ellipsoids in R^n, and dirMat(:, iCol) = 
-%   = l - some vector in R^n. Then tight internal 
-%   approximating ellipsoid E(q, Q) for the geometric sum 
-%   E(q1, Q1) + E(q2, Q2) + ... + E(qm, Qm) along
+%   Let inpEllArr consist of E(q1, Q1), E(q2, Q2), ..., E(qm, Qm) -
+%   ellipsoids in R^n, and dirMat(:, iCol) = l - some vector in R^n.
+%   Then tight internal approximating ellipsoid E(q, Q) for the
+%   geometric sum E(q1, Q1) + E(q2, Q2) + ... + E(qm, Qm) along
 %   direction l, is such that
-%   rho(l | E(q,Q)) = rho(l | (E(q1,Q1) + ... + E(qm,Qm)))
+%       rho(l | E(q, Q)) = rho(l | (E(q1, Q1) + ... + E(qm, Qm)))
 %   and is defined as follows:
 %       q = q1 + q2 + ... + qm,
 %       Q = (S1 Q1^(1/2) + ... + Sm Qm^(1/2))' *
@@ -31,17 +27,16 @@ function intApprEllVec = minksum_ia(inpEllArr, dirMat)
 %   (S1 Q1^(1/2) l), ..., (Sm Qm^(1/2) l) are parallel.
 %
 % Input:
-%  regular:
-%   inpEllArr: ellipsoid [nDims1, nDims2,...,nDimsN] - array
-%         of ellipsoids of the same dimentions.
-%   dirMat: double[nDim, nCols] - matrix whose columns 
-%          specify the  directions for which the 
-%          approximations should be computed.
+%   regular:
+%       inpEllArr: ellipsoid [nDims1, nDims2,...,nDimsN] - array
+%           of ellipsoids of the same dimentions.
+%       dirMat: double[nDim, nCols] - matrix whose columns specify the
+%           directions for which the approximations should be computed.
 %
 % Output:
 %   intApprEllVec: ellipsoid [1, nCols] - array of internal
 %       approximating ellipsoids.
-% 
+%
 % Example:
 % firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
 % secEllObj = ell_unitball(2);

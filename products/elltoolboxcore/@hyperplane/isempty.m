@@ -9,9 +9,16 @@ function isPositiveArr = isempty(myHypArr)
 %
 % Output:
 %   isPositiveArr: logical[nDims1, nDims2, ...],
-%       isPositiveArr(iDim1, iDim2, ...) = true - if 
-%       ellipsoid myHypArr(iDim1, iDim2, ...) 
-%       is empty, false - otherwise.
+%       isPositiveArr(iDim1, iDim2, ...) = true - if ellipsoid
+%       myHypArr(iDim1, iDim2, ...) is empty, false - otherwise.
+% 
+% Example:
+% hypObj = hyperplane();
+% isempty(hypObj)
+% 
+% ans =
+% 
+%      1
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 

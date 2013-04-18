@@ -1,25 +1,24 @@
 function [intEllArr, isnIntersectedArr] = ...
     hpintersection(myEllArr, myHypArr)
 %
-% HPINTERSECTION - computes the intersection of ellipsoid
-%                  with hyperplane.
+% HPINTERSECTION - computes the intersection of ellipsoid with hyperplane.
 %
 % Input:
 %   regular:
-%     myEllArr: ellipsoid [nDims1,nDims2,...,nDimsN]/[1,1] 
-%           - array of ellipsoids.
-%     myHypArr: hyperplane [nDims1,nDims2,...,nDimsN]/[1,1]
-%            - array of hyperplanes of the same size.
+%       myEllArr: ellipsoid [nDims1,nDims2,...,nDimsN]/[1,1] - array
+%           of ellipsoids.
+%       myHypArr: hyperplane [nDims1,nDims2,...,nDimsN]/[1,1] - array
+%           of hyperplanes of the same size.
 %
 % Output:
-%   intEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array 
-%       of ellipsoids resulting from intersections.
+%   intEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of ellipsoids
+%       resulting from intersections.
 %
 %   isnIntersectedArr: logical [nDims1,nDims2,...,nDimsN].
-%     isnIntersectedArr(iCount) = true, if myEllArr(iCount)
-%     doesn't intersect myHipArr(iCount),
-%     isnIntersectedArr(iCount) = false, otherwise.
-% 
+%       isnIntersectedArr(iCount) = true, if myEllArr(iCount)
+%       doesn't intersect myHipArr(iCount),
+%       isnIntersectedArr(iCount) = false, otherwise.
+%
 % Example:
 % ellObj = ellipsoid([-2; -1], [4 -1; -1 1]);
 % hypMat = [hyperplane([0 -1; -1 0]', 1); hyperplane([0 -2; -1 0]', 1)];

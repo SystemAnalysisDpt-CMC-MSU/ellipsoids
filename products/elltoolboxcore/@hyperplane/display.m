@@ -6,6 +6,23 @@ function display(hypArr)
 %   regular:
 %       myHypArr: hyperplane [hpDim1, hpDim2, ...] - array
 %           of hyperplanes.
+% 
+% Example:
+% hypObj = hyperplane([-1; 1]);
+% display(hypObj)
+% 
+% hypObj =
+% size: [1 1]
+% 
+% Element: [1 1]
+% Normal:
+%     -1
+%      1
+% 
+% Shift:
+%      0
+% 
+% Hyperplane in R^2.
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 

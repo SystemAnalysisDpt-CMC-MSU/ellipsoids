@@ -1,7 +1,7 @@
 function [diagQVec, resQMat]=findConstruction(firstEllMat,firstBasMat,...
     secBasMat,firstIndVec,secIndVec,secDiagVec)
 % FINDCONSTRUCTION - construct matrices from two matrices from orthogonal
-% subspaces
+%                    subspaces
 % Input:
 %   regular:
 %       firstEllMat: double: [nSDim,nSDim] - matrix from a subspace

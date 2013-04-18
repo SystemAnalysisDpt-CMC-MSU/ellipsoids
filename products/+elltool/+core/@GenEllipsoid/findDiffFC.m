@@ -1,7 +1,7 @@
 function [ resEllMat ] = findDiffFC( fMethod, ellQ1Mat, ellQ2Mat,...
     curDirVec,absTol )
 % FINDDIFFFC - find approximation for Minkowsky difference
-% of finite ellipsoids
+%              of finite ellipsoids
 %
 % Input:
 %   regular:

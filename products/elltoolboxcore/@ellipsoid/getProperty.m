@@ -1,14 +1,12 @@
 function [propArr, propVal] = getProperty(ellArr,propName,fPropFun)
-%
-% GETPROPERTY - gives array the same size as ellArr with 
-%               values of propName properties for each 
-%               ellipsoid in ellArr. Private method, used
-%               in every public property getter.
+% GETPROPERTY - gives array the same size as ellArr with values of
+%               propName properties for each ellipsoid in ellArr.
+%               Private method, used in every public property getter.
 %
 % Input:
-%  regular:
-%    ellArr: ellipsoid[nDim1, nDim2,...] - multidimensional
-%            array of ellipsoids
+%   regular:
+%       ellArr: ellipsoid[nDim1, nDim2,...] - mltidimensional array
+%           of ellipsoids
 %       propName: char[1,N] - name property
 %   optional: 
 %       fPropFun: function_handle[1,1] - function that apply
@@ -20,7 +18,8 @@ function [propArr, propVal] = getProperty(ellArr,propName,fPropFun)
 %           propName properties for ellipsoids in rsArr
 %   optional:
 %       propVal: double[1, 1] - return result of work fPropFun with 
-%           the propArr%
+%           the propArr
+%
 %$Author: Zakharov Eugene  <justenterrr@gmail.com> $
 %$Date: 2012-11-17$
 %$Author: Grachev Artem  <grachev.art@gmail.com> $

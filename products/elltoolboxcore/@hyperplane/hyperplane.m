@@ -8,7 +8,7 @@ classdef hyperplane < handle
     methods
         
         function hypObjArr = hyperplane(hypNormArr, hypConstArr, varargin)
-            %
+  %
             % HYPERPLANE - creates hyperplane structure
             %              (or array of hyperplane structures).
             %
@@ -36,13 +36,13 @@ classdef hyperplane < handle
             %           hypH.absTol = absTolVal
             %
             %   hypObjArr = HYPERPLANE(hypNormArr, hypConstArr) - create
-            %      array of hyperplanes object just as
-            %      hyperplane(hypNormVec, hypConst).
+            %       array of hyperplanes object just as
+            %       hyperplane(hypNormVec, hypConst).
             %
             %   hypObjArr = HYPERPLANE(hypNormArr, hypConstArr, ...
-            %      'absTol', absTolValArr) - create
-            %      array of hyperplanes object just as
-            %      hyperplane(hypNormVec, hypConst, 'absTol', absTolVal)
+            %       'absTol', absTolValArr) - create
+            %       array of hyperplanes object just as
+            %       hyperplane(hypNormVec, hypConst, 'absTol', absTolVal).
             %
             % Input:
             %   Case1:
@@ -56,7 +56,7 @@ classdef hyperplane < handle
             %       hypNormArr: double[hpDims, nCols] /
             %           / [hpDims, nDims1, nDims2,...] /
             %           / [hpDims, 1] - array of vectors
-            %           in R^hpDims. There hpDims - hyperplane dimension
+            %           in R^hpDims. There hpDims - hyperplane dimension.
             %       hypConstArr: double[1, nCols] / [nCols, 1] /
             %           / [nDims1, nDims2,...] /
             %           / [nVecArrDim1, nVecArrDim2,...] -
@@ -67,7 +67,7 @@ classdef hyperplane < handle
             %       hypNormArr: double[hpDims, nCols] /
             %           / [hpDims, nDims1, nDims2,...] /
             %           / [hpDims, 1] - array of vectors
-            %           in R^hpDims. There hpDims - hyperplane dimension
+            %           in R^hpDims. There hpDims - hyperplane dimension.
             %       hypConstArr: double[1, nCols] / [nCols, 1] /
             %           / [nDims1, nDims2,...] /
             %           / [nVecArrDim1, nVecArrDim2,...] -
@@ -100,7 +100,7 @@ classdef hyperplane < handle
             %       array of hyperplane structure hypH:
             %           hypH.normal - vector in R^hpDims,
             %           hypH.shift  - scalar.
-            %             
+            %
             % Example:
             % hypNormMat = [1 1 1; 1 1 1];
             % hypConstVec = [1 -5 0];

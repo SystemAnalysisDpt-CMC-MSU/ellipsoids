@@ -4,13 +4,13 @@ function outEllArr = uminus(ellArr)
 %
 % Input:
 %	regular:
-%      ellArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array
-%           of ellipsoids.
+%       ellArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of ellipsoids.
+%           
 %
 % Output:
-%	outEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array
-%           of ellipsoids, same size as ellArr.
-% 
+%	outEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of ellipsoids, 
+%    	same size as ellArr.
+%
 % Example:
 % ellObj = -ellipsoid([-2; -1], [4 -1; -1 1])
 % 

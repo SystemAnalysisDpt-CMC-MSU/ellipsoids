@@ -1,7 +1,7 @@
 function outHypArr = uminus(inpHypArr)
 %
-% UMINUS - switch signs of normal vector and the shift 
-%          scalar to the opposite.
+% UMINUS - switch signs of normal vector and the shift scalar
+%          to the opposite.
 %
 % Input:
 %   regular:
@@ -12,7 +12,7 @@ function outHypArr = uminus(inpHypArr)
 %   outHypArr: hyperplane [nDims1, nDims2, ...] - array
 %       of the same hyperplanes as in inpHypArr whose
 %       normals and scalars are multiplied by -1.
-% 
+%
 % Example:
 % hypObj = -hyperplane([-1; 1], 1)
 % 

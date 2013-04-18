@@ -2,22 +2,30 @@ function resArr = contains(firstEllArr, secondEllArr)
 % CONTAINS - checks if one ellipsoid contains the other.
 %            The condition for E1 = firstEllArr to contain
 %            E2 = secondEllArr is
-%            min(rho(l | E1) - rho(l | E2)) > 0, 
-%            subject to <l, l> = 1.
+%            min(rho(l | E1) - rho(l | E2)) > 0, subject to <l, l> = 1.
 %
 % Input:
-%  regular:
-%   firstEllArr: ellipsoid [nDims1,nDims2,...,nDimsN]/[1,1] 
-%            - first array of ellipsoids.
-%   secondEllArr: ellipsoid [nDims1,nDims2,...,nDimsN]/[1,1]
-%            - second array of ellipsoids.
+%   regular:
+%       firstEllArr: ellipsoid [nDims1,nDims2,...,nDimsN]/[1,1] - first 
+%           array of ellipsoids.
+%       secondEllArr: ellipsoid [nDims1,nDims2,...,nDimsN]/[1,1] - second
+%           array of ellipsoids.
 %
 % Output:
 %   resArr: logical[nDims1,nDims2,...,nDimsN],
 %       resArr(iCount) = true - firstEllArr(iCount)
 %       contains secondEllArr(iCount), false - otherwise.
 %
-%
+% Example:
+% firstEllObj = ellipsoid([-2; -1], [2 -1; -1 1]);
+% secEllObj = ellipsoid([-1;0], eye(2));
+% contains(firstEllObj,secEllObj)
+% 
+% ans =
+% 
+%      0
+% 
+% 
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 
 %              2004-2008 $

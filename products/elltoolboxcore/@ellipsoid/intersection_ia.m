@@ -1,68 +1,59 @@
 function outEllArr = intersection_ia(myEllArr, objArr)
 %
-% INTERSECTION_IA - internal ellipsoidal approximation of 
-%                   the intersection of ellipsoid and 
-%                   ellipsoid, or ellipsoid and halfspace,
-%                   or ellipsoid and polytope.
+% INTERSECTION_IA - internal ellipsoidal approximation of the
+%                   intersection of ellipsoid and ellipsoid,
+%                   or ellipsoid and halfspace, or ellipsoid
+%                   and polytope.
 %
-%   outEllArr = INTERSECTION_IA(myEllArr, objArr) - Given
-%       two ellipsoidal matrixes of equal sizes, myEllArr
-%       and objArr = ellArr, or, alternatively, myEllMat or 
-%       ellMat must be a single ellipsoid, comuptes the 
-%       internal ellipsoidal approximations of intersections
-%       of two corresponding ellipsoidsfrom myEllMat and
-%       from ellMat
-%   outEllArr = INTERSECTION_IA(myEllArr, objArr) - Given
-%       matrix of ellipsoids myEllArr and matrix of 
-%       hyperplanes objArr = hypArr whose sizes match, 
-%       computes the internal ellipsoidal approximations 
-%       of intersections of ellipsoids and halfspaces 
-%       defined by hyperplanes in hypMat. 
+%   outEllArr = INTERSECTION_IA(myEllArr, objArr) - Given two
+%       ellipsoidal matrixes of equal sizes, myEllArr and
+%       objArr = ellArr, or, alternatively, myEllMat or ellMat must be
+%       a single ellipsoid, comuptes the internal ellipsoidal
+%       approximations of intersections of two corresponding ellipsoids
+%       from myEllMat and from ellMat.
+%   outEllArr = INTERSECTION_IA(myEllArr, objArr) - Given matrix of
+%       ellipsoids myEllArr and matrix of hyperplanes objArr = hypArr
+%       whose sizes match, computes the internal ellipsoidal
+%       approximations of intersections of ellipsoids and halfspaces
+%       defined by hyperplanes in hypMat.
 %       If v is normal vector of hyperplane and c - shift,
 %       then this hyperplane defines halfspace
 %                  <v, x> <= c.
-%   outEllArr = INTERSECTION_IA(myEllArr, objArr) - Given
-%       matrix of ellipsoids  myEllArr and matrix of 
-%       polytopes objArr = polyArr whose sizes match, 
-%       computes the internal ellipsoidal approximations 
-%       of intersections of ellipsoids myEllArr and 
-%       polytopes polyArr.
+%   outEllArr = INTERSECTION_IA(myEllArr, objArr) - Given matrix of
+%       ellipsoids  myEllArr and matrix of polytopes objArr = polyArr
+%       whose sizes match, computes the internal ellipsoidal
+%       approximations of intersections of ellipsoids myEllArr
+%       and polytopes polyArr.
 %
-%   The method used to compute the minimal volume 
-%   overapproximating ellipsoid is described in "Ellipsoidal 
-%   Calculus Based on Propagation and Fusion" by Lluis Ros,
-%   Assumpta Sabater andFederico Thomas; IEEE Transactions 
-%   on Systems, Man and Cybernetics, Vol.32, No.4, 
-%   pp.430-442, 2002. For more information, visit
+%   The method used to compute the minimal volume overapproximating
+%   ellipsoid is described in "Ellipsoidal Calculus Based on
+%   Propagation and Fusion" by Lluis Ros, Assumpta Sabater and
+%   Federico Thomas; IEEE Transactions on Systems, Man and Cybernetics,
+%   Vol.32, No.4, pp.430-442, 2002. For more information, visit
 %   http://www-iri.upc.es/people/ros/ellipsoids.html
 %
-%   The method used to compute maximum volume ellipsoid 
-%   inscribed in intersection of ellipsoid and polytope, is
-%   modified version of algorithm of finding maximum volume
-%   ellipsoid inscribed in intersection of ellipsoids 
-%   discribed in Stephen Boyd and Lieven Vandenberghe 
-%   "Convex Optimization". It works properly for 
-%   nondegenerate ellipsoid, but for degenerate ellipsoid 
-%   result would not lie in this ellipsoid. The result
-%   considered as empty ellipsoid, when maximum absolute
-%   value of element in its matrix is less than 
-%   myEllipsoid.getAbsTol().
+%   The method used to compute maximum volume ellipsoid inscribed in 
+%   intersection of ellipsoid and polytope, is modified version of 
+%   algorithm of finding maximum volume ellipsoid inscribed in intersection 
+%   of ellipsoids discribed in Stephen Boyd and Lieven Vandenberghe "Convex
+%   Optimization". It works properly for nondegenerate ellipsoid, but for
+%   degenerate ellipsoid result would not lie in this ellipsoid. The result
+%   considered as empty ellipsoid, when maximum absolute velue of element 
+%   in its matrix is less than myEllipsoid.getAbsTol().
 %
 % Input:
 %   regular:
-%      myEllArr: ellipsoid [nDims1,nDims2,...,nDimsN]/[1,1]
-%            - array of ellipsoids.
-%      objArr: ellipsoid / hyperplane /
-%           / polytope [nDims1,nDims2,...,nDimsN]/[1,1]
-%             - array of ellipsoids or hyperplanes or 
-%               polytopes of the same sizes.
+%       myEllArr: ellipsoid [nDims1,nDims2,...,nDimsN]/[1,1] - array
+%           of ellipsoids.
+%       objArr: ellipsoid / hyperplane /
+%           / polytope [nDims1,nDims2,...,nDimsN]/[1,1]  - array of
+%           ellipsoids or hyperplanes or polytopes of the same sizes.
 %
 % Output:
-%   outEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array 
-%       of internal approximating ellipsoids; entries can 
-%       be empty ellipsoids if the corresponding 
-%       intersection is empty.
-% 
+%    outEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of internal
+%       approximating ellipsoids; entries can be empty ellipsoids
+%       if the corresponding intersection is empty.
+%
 % Example:
 % firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
 % secEllObj = firstEllObj + [5; 5];

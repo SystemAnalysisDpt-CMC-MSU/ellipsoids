@@ -2,29 +2,27 @@ function outEllArr = plus(varargin)
 %
 % PLUS - overloaded operator '+'
 %
-%   outEllArr = PLUS(inpEllArr, inpVec)implements 
-%         E(q, Q) + b for each ellipsoid E(q, Q) in
-%         inpEllArr.
-%   outEllArr = PLUS(inpVec, inpEllArr)implements 
-%         b + E(q, Q) for each ellipsoid E(q, Q) in
-%         inpEllArr.
-%	Operation E + b (or b+E) where E = inpEll is an 
-%   ellipsoid in R^n, and b=inpVec - vector in R^n.
-%   If E(q, Q) is an ellipsoid with center q and shape
-%   matrix Q, then
+%   outEllArr = PLUS(inpEllArr, inpVec) implements E(q, Q) + b
+%       for each ellipsoid E(q, Q) in inpEllArr.
+%   outEllArr = PLUS(inpVec, inpEllArr) implements b + E(q, Q)
+%       for each ellipsoid E(q, Q) in inpEllArr.
+%
+%	Operation E + b (or b+E) where E = inpEll is an ellipsoid in R^n,
+%   and b=inpVec - vector in R^n. If E(q, Q) is an ellipsoid
+%   with center q and shape matrix Q, then
 %   E(q, Q) + b = b + E(q,Q) = E(q + b, Q).
 %
 % Input:
 %   regular:
-%      ellArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array
-%           of ellipsoids  of the same dimentions nDims.
-%      bVec: double[nDims, 1] - vector.
+%       ellArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of ellipsoids
+%           of the same dimentions nDims.
+%       bVec: double[nDims, 1] - vector.
 %
 % Output:
-%   outEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array 
-%       of ellipsoids  ith same shapes as ellVec, but with 
-%       centers shifted by vectors in inpVec.
-% 
+%   outEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of ellipsoids 
+%       with same shapes as ellVec, but with centers shifted by vectors 
+%       in inpVec.
+%
 % Example:
 % ellVec  = [ellipsoid([-2; -1], [4 -1; -1 1]) ell_unitball(2)];
 % outEllVec = ellVec + [1; 1];

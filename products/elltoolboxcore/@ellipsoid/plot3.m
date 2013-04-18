@@ -42,7 +42,7 @@ function plot3(varargin)
 %
 
 % 
-% Author:
+% $Author:
 % -------
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>

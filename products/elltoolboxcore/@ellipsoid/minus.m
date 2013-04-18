@@ -2,30 +2,27 @@ function outEllArr = minus(varargin)
 %
 % MINUS - overloaded operator '-'
 %
-%   outEllArr = MINUS(inpEllArr, inpVec) implements 
-%       E(q, Q) - b for each ellipsoid E(q, Q)
-%       in inpEllArr.
-%   outEllArr = MINUS(inpVec, inpEllArr) implements
-%       b - E(q, Q) for each ellipsoid E(q, Q)
-%       in inpEllArr.
+%   outEllArr = MINUS(inpEllArr, inpVec) implements E(q, Q) - b
+%       for each ellipsoid E(q, Q) in inpEllArr.
+%   outEllArr = MINUS(inpVec, inpEllArr) implements b - E(q, Q)
+%       for each ellipsoid E(q, Q) in inpEllArr.
 %
-%   Operation E - b where E = inpEll is an ellipsoid in 
-%   R^n, and b = inpVec - vector in R^n. If E(q, Q) is an
-%   ellipsoid with center q and shape matrix Q, then
+%   Operation E - b where E = inpEll is an ellipsoid in R^n,
+%   and b = inpVec - vector in R^n. If E(q, Q) is an ellipsoid
+%   with center q and shape matrix Q, then
 %   E(q, Q) - b = E(q - b, Q).
 %
 % Input:
 %   regular:
-%       inpEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - 
-%           array of ellipsoids of the same dimentions 
-%           nDims.
+%       inpEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of 
+%           ellipsoids of the same dimentions nDims.
 %       inpVec: double[nDims, 1] - vector.
 %
 % Output:
-%	outEllVec: ellipsoid [nDims1,nDims2,...,nDimsN] - array
-%       of ellipsoids with same shapes as inpEllVec, but 
-%       with centers shifted by vectors in -inpVec.
-% 
+%	outEllVec: ellipsoid [nDims1,nDims2,...,nDimsN] - array of ellipsoids 
+%       with same shapes as inpEllVec, but with centers shifted by vectors 
+%       in -inpVec.
+%
 % Example:
 % ellVec  = [ellipsoid([-2; -1], [4 -1; -1 1]) ell_unitball(2)];
 % outEllVec = ellVec - [1; 1];

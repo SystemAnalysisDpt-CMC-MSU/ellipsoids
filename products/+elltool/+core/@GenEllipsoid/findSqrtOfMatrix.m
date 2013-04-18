@@ -1,6 +1,6 @@
 function sqMat=findSqrtOfMatrix(qMat,absTol)
 % FINDSQRTOFMATRIX - find square root of matrix using its eigenvalue
-% decomposition
+%                    decomposition
 %
 % Input:
 %   regular:

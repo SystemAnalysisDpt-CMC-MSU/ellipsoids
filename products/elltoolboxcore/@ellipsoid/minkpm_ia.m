@@ -1,34 +1,30 @@
 function intApprEllVec = minkpm_ia(inpEllArr, inpEll, dirMat)
 %
-% MINKPM_IA - computation of internal approximating 
-%             ellipsoids of (E1 + E2 + ... + En) - E along 
-%             given directions.
+% MINKPM_IA - computation of internal approximating ellipsoids
+%             of (E1 + E2 + ... + En) - E along given directions.
 %             where E = inpEll,
 %             E1, E2, ... En - are ellipsoids in inpEllArr.
 %
-%   intApprEllVec = MINKPM_IA(inpEllArr, inpEll, dirMat) - 
-%       Computes internal approximating ellipsoids of
-%       (E1 + E2 + ... + En) - E, where E1, E2, ..., En are 
-%       ellipsoids in array inpEllArr, E = inpEll,
-%       along directions specified by columns of matrix
-%       dirArr.
+%   intApprEllVec = MINKPM_IA(inpEllArr, inpEll, dirMat) - Computes
+%       internal approximating ellipsoids of
+%       (E1 + E2 + ... + En) - E, where E1, E2, ..., En are ellipsoids
+%       in array inpEllArr, E = inpEll,
+%       along directions specified by columns of matrix dirArr.
 %
 % Input:
 %   regular:
 %       inpEllArr: ellipsoid [nDims1, nDims2,...,nDimsN] -
 %           array of ellipsoids of the same dimentions.
-%       inpEll: ellipsoid [1, 1] - ellipsoid of the same 
-%           dimention.
-%       dirMat: double[nDim, nCols] - matrix whose columns 
-%           specify the directions for which the 
-%           approximations should be computed.
+%       inpEll: ellipsoid [1, 1] - ellipsoid of the same dimention.
+%       dirMat: double[nDim, nCols] - matrix whose columns specify
+%           the directions for which the approximations
+%           should be computed.
 %
 % Output:
-%   intApprEllVec: ellipsoid [1, nCols]/[0, 0] - array of 
-%       internal approximating ellipsoids. Empty, if for 
-%       all specified directions approximations cannot be 
-%       computed.
-% 
+%   intApprEllVec: ellipsoid [1, nCols]/[0, 0] - array of internal
+%       approximating ellipsoids. Empty, if for all specified
+%       directions approximations cannot be computed.
+%
 % Example:
 % firstEllObj = ellipsoid([2; -1], [9 -5; -5 4]);
 % secEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);

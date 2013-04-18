@@ -1,7 +1,7 @@
 function [ resQMat diagQVec ] = findDiffINFC(fMethod, ellObj1,ellObj2,...
     curDirVec,isInf1Vec,isInfForFinBas,absTol)
 % FINDDIFFINFC - find approximation for Minkowsky difference
-% of ellipsoids (first ellipsoid is exactly infinite)
+%                of ellipsoids (first ellipsoid is exactly infinite)
 %
 % Input:
 %   regular:

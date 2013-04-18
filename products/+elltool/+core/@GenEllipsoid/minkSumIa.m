@@ -1,22 +1,17 @@
 function [ ellResVec ] = minkSumIa(ellObjVec, dirMat )
-% MINKSUMIA - computes tight internal ellipsoidal 
-%             approximation for Minkowsky sum of the set
-%             of generalized ellipsoids
+% MINKSUMIA - computes tight internal ellipsoidal approximation for
+%             Minkowsky sum of the set of generalized ellipsoids
 %
 % Input:
 %   regular:
-%       ellObjVec: GenEllipsoid: [kSize,mSize] - vector of  
-%                           generalized ellipsoid
-%                                           
-%       dirMat: double[nDim,nDir] - matrix whose columns
-%                           specify directions for which
-%                           approximations should be
-%                           computed
+%       ellObjVec: GenEllipsoid: [kSize,mSize] - vector of  generalized
+%                                           ellipsoid
+%       dirMat: double[nDim,nDir] - matrix whose columns specify
+%           directions for which approximations should be computed
 % Output:
-%   ellResVec: GenEllipsoid[1,nDir] - vector of generalized
-%       ellipsoids of internal approximation of the dirrence
-%       of first and second generalized ellipsoids
-%       
+%   ellResVec: GenEllipsoid[1,nDir] - vector of generalized ellipsoids of
+%       internal approximation of the dirrence of first and second
+%       generalized ellipsoids
 %
 % $Author: Vitaly Baranov  <vetbar42@gmail.com> $    
 % $Date: 2012-11$

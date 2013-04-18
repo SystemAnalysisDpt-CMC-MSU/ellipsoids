@@ -1,29 +1,24 @@
 function [centVec, boundPointMat] = minksum(inpEllArr,varargin)
 %
-% MINKSUM - computes geometric (Minkowski) sum of 
-%           ellipsoids in 2D or 3D.
+% MINKSUM - computes geometric (Minkowski) sum of ellipsoids in 2D or 3D.
 %
-%  MINKSUM(inpEllArr, Options) - Computes geometric sum 
-%       of ellipsoids in the array inpEllArr, if
-%       1 <= min(dimension(inpEllArr)) = 
-%       max(dimension(inpEllArr)) <= 3,
+%   MINKSUM(inpEllArr, Options) - Computes geometric sum of ellipsoids
+%       in the array inpEllArr, if
+%       1 <= min(dimension(inpEllArr)) = max(dimension(inpEllArr)) <= 3,
 %       and plots it if no output arguments are specified.
 %
-%  [centVec, boundPointMat] = MINKSUM(inpEllArr) - Computes
-%       geometric sum of ellipsoids in inpEllArr. Here 
-%       centVec is the center, and boundPointMat - array of 
-%       boundary points.
-%   MINKSUM(inpEllArr) - Plots geometric sum of ellipsoids 
-%       in inpEllArr in default (red) color.
-%   MINKSUM(inpEllArr, Options) - Plots geometric sum of
-%        inpEllMat using options given in the Options 
-%        structure.
+%   [centVec, boundPointMat] = MINKSUM(inpEllArr) - Computes
+%       geometric sum of ellipsoids in inpEllArr. Here centVec is
+%       the center, and boundPointMat - array of boundary points.
+%   MINKSUM(inpEllArr) - Plots geometric sum of ellipsoids in
+%       inpEllArr in default (red) color.
+%   MINKSUM(inpEllArr, Options) - Plots geometric sum of inpEllMat
+%       using options given in the Options structure.
 %
 % Input:
 %   regular:
-%       inpEllArr: ellipsoid [nDims1, nDims2,...,nDimsN] - 
-%           array of ellipsoids of the same dimentions 2D 
-%           or 3D.
+%       inpEllArr: ellipsoid [nDims1, nDims2,...,nDimsN] - array of 
+%           ellipsoids of the same dimentions 2D or 3D.
 %
 %   optional:
 %       Options: structure[1, 1] - fields:
@@ -35,14 +30,19 @@ function [centVec, boundPointMat] = minksum(inpEllArr,varargin)
 %               set in 2D will be filled with color.
 %           color: double[1, 3] - sets default colors
 %               in the form [x y z].
-%           shade: double[1, 1] = 0-1 - level of 
-%               transparency (0 - transparent, 1 - opaque).
+%           shade: double[1, 1] = 0-1 - level of transparency
+%               (0 - transparent, 1 - opaque).
 %
 % Output:
 %   centVec: double[nDim, 1] - center of the resulting set.
-%   boundPointMat: double[nDim, nBoundPoints] - set of 
-%       boundary points (vertices) of resulting set.
+%   boundPointMat: double[nDim, nBoundPoints] - set of boundary
+%       points (vertices) of resulting set.
 %
+% Example:
+% firstEllObj = ellipsoid([-2; -1], [2 -1; -1 1]);
+% secEllObj = ell_unitball(2);
+% ellVec = [firstEllObj, secellObj]
+% sumVec = minksum(ellVec);
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 
 %              2004-2008 $

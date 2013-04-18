@@ -1,26 +1,18 @@
 function [ resEllVec ] = minkDiffEa( ellObj1, ellObj2, dirMat)
-% MINKDIFFEA - computes tight external ellipsoidal 
-%              approximation for Minkowsky difference
-%              of two generalized ellipsoids
+% MINKDIFFEA - computes tight external ellipsoidal approximation for
+%              Minkowsky difference of two generalized ellipsoids
 %
 % Input:
 %   regular:
-%       ellObj1: GenEllipsoid: [1,1] - first generalized
-%                                      ellipsoid
-%       ellObj2: GenEllipsoid: [1,1] - second generalized
-%                                      ellipsoid
-%       dirMat: double[nDim,nDir] - matrix whose columns
-%                                   specify directions for
-%                                   which approximations 
-%                                   should be computed
+%       ellObj1: GenEllipsoid: [1,1] - first generalized ellipsoid
+%       ellObj2: GenEllipsoid: [1,1] - second generalized ellipsoid
+%       dirMat: double[nDim,nDir] - matrix whose columns specify
+%           directions for which approximations should be computed
 % Output:
-%   resEllVec: GenEllipsoid[1,nDir] - vector of generalized
-%      ellipsoids of external approximation of the dirrence
-%      of first and second generalized ellipsoids (may 
-%      contain empty ellipsoids if in specified
-%      directions approximation cannot be computed) 
-%       
-%       
+%   resEllVec: GenEllipsoid[1,nDir] - vector of generalized ellipsoids of
+%       external approximation of the dirrence of first and second 
+%       generalized ellipsoids (may contain empty ellipsoids if in specified
+%       directions approximation cannot be computed)
 %
 %
 % $Author: Vitaly Baranov  <vetbar42@gmail.com> $    

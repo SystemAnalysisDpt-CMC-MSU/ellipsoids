@@ -1,24 +1,18 @@
-function FuncData=collecthelp(classNames, dirNames, ignorList)
-%COLLECTHELP -  collects helps of m files in given directory
-%
-%Usage: FuncData=collecthelp(classNames, dirNames, ignorList)
+function FuncData=collecthelp(classNames, packNames, ignorList)
+%COLLECTHELP -  collects helps of m files in given classes and packages
 %
 % Input:
-%   regular
-%       dirName: string - the path contained functions data;
-%   properties:
-%       ignorDirList: cell[1,nIgnor] of strings -
-%           list of ignored dir names (by default is empty),
-%       isClass: logic[1,1] - is current dir class or not,
-%           by default false.
-%       scriptNamePattern: string - regular expression
-%           by default equals 's_\w+\.m'
+%    classNames:cell[1, n] - the names of classes for scanning
+%    packNames:cell[1, n]  - the names of packages for scanning
+%    ignorList:cell[1, 1]  - the names of ignored subpackages.
 % Output:
 %   FuncData: struct[1,1] with the following fields
 %       funcName: cell[nElems,1] - list of function names
 %       help: cell[nElems,1] - list of help headers
 %       isScript: logical[nElems,1] - a vector of 
-%           "is script" indicators
+%                          "is script" indicators
+% 
+%Usage: FuncData=collecthelp(classNames, packNames, ignorList)
 %
 %
 %$Author: Peter Gagarinov  <pgagarinov@gmail.com> $
@@ -34,9 +28,9 @@ FuncData = [];
 scriptNamePattern = 's_\w+\.m';
 SfuncInfo = extractHelpFromClass(classNames);
 FuncData=modgen.struct.unionstructsalongdim(1,FuncData,SfuncInfo);
-dirLength = length(dirNames);
+dirLength = length(packNames);
 for iElem = 1:dirLength
-    mp = meta.package.fromName(char(dirNames(iElem)));
+    mp = meta.package.fromName(char(packNames(iElem)));
     if isempty(mp.FunctionList)
         SfuncInfo=struct();
     else

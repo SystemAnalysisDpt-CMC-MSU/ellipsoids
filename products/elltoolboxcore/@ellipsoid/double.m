@@ -1,18 +1,32 @@
-function [myEllCentVec, myEllShMat] = double(myEll)
+function [myEllCentVec,  myEllShMat] = double(myEll)
 %
 % DOUBLE - returns parameters of the ellipsoid.
 %
 % Input:
 %   regular:
-%       myEll: ellipsoid [1, 1] - single ellipsoid of 
-%         dimention nDims.
+%       myEll: ellipsoid [1, 1] - single ellipsoid of dimention nDims.
+%         
 %
 % Output:
-%   myEllCentVec: double[nDims, 1] - center of the 
-%       ellipsoid myEll.
-%   myEllShMat: double[nDims, nDims] - shape matrix
-%       of the ellipsoid myEll.
-%
+%   myEllCentVec: double[nDims, 1] - center of the ellipsoid myEll.
+%       
+%   myEllShMat: double[nDims, nDims] - shape matrix of the ellipsoid myEll.
+%       
+% Example:
+% ellObj = ellipsoid([-2; -1], [2 -1; -1 1]);
+% [centVec, shapeMat] = double(ellObj)
+% centVec =
+% 
+%     -2
+%     -1
+% 
+% 
+% shapeMat =
+% 
+%      2    -1
+%     -1     1
+% 
+% 
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 
 % 2004-2008 $
@@ -28,9 +42,9 @@ ellipsoid.checkIsMe(myEll);
 modgen.common.checkvar(myEll,'isscalar(x)',...
     'errorMessage','input argument must be single ellipsoid.');
 
-if nargout < 2
-    myEllCentVec = myEll.shape;
-else
+ if nargout < 2
+     myEllCentVec = myEll.shape;
+ else
     myEllCentVec = myEll.center;
     myEllShMat = myEll.shape;
-end
+ end

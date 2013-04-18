@@ -1,17 +1,16 @@
 function extApprEllVec = minkmp_ea(fstEll, secEll, sumEllArr, dirMat)
 %
-% MINKMP_EA - computation of external approximating 
-%             ellipsoids of (E - Em) + (E1 + ... + En) 
-%             along given directions, where E = fstEll, 
-%             Em = secEll,
+% MINKMP_EA - computation of external approximating ellipsoids
+%             of (E - Em) + (E1 + ... + En) along given directions.
+%             where E = fstEll, Em = secEll,
 %             E1, E2, ..., En - are ellipsoids in sumEllArr
 %
-%extApprEllVec = MINKMP_EA(fstEll,secEll,sumEllArr,dirMat)-
+%   extApprEllVec = MINKMP_EA(fstEll, secEll, sumEllArr, dirMat) -
 %       Computes external approximating
 %       ellipsoids of (E - Em) + (E1 + E2 + ... + En),
-%       where E1, E2, ..., En are ellipsoids in array 
-%       sumEllArr, E = fstEll, Em = secEll, along 
-%       directions specified by columns of matrix dirMat.
+%       where E1, E2, ..., En are ellipsoids in array sumEllArr,
+%       E = fstEll, Em = secEll,
+%       along directions specified by columns of matrix dirMat.
 %
 % Input:
 %   regular:
@@ -19,18 +18,16 @@ function extApprEllVec = minkmp_ea(fstEll, secEll, sumEllArr, dirMat)
 %           nDims - space dimension.
 %       secEll: ellipsoid [1, 1] - second ellipsoid
 %           of the same dimention.
-%       sumEllArr: ellipsoid [nDims1, nDims2,...,nDimsN] - 
-%           array of ellipsoids of the same dimentions 
-%           nDims.
-%       dirMat: double[nDims, nCols] - matrix whose columns 
-%           specify the directions for which the 
-%           approximations should be computed.%
+%       sumEllArr: ellipsoid [nDims1, nDims2,...,nDimsN] - array of
+%           ellipsoids of the same dimentions nDims.
+%       dirMat: double[nDims, nCols] - matrix whose columns specify the
+%           directions for which the approximations should be computed.
+%
 % Output:
 %   extApprEllVec: ellipsoid [1, nCols] - array of external
-%       approximating ellipsoids (empty, if for all 
-%       specified directions approximations cannot be 
-%       computed).
-% 
+%       approximating ellipsoids (empty, if for all specified
+%       directions approximations cannot be computed).
+%
 % Example:
 % firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
 % secEllObj = 3*ell_unitball(2);

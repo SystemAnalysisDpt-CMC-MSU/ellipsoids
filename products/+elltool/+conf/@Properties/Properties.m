@@ -1,6 +1,6 @@
 classdef Properties<modgen.common.obj.StaticPropStorage
-%PROPERTIES - a static class, providing emulation of static
-%             properties for toolbox.
+%PROPERTIES - a static class, providing emulation of static properties for 
+%             toolbox.
 %
 %$Author: Zakharov Eugene  <justenterrr@gmail.com> $    
 %$Date: 2012-11-05 $

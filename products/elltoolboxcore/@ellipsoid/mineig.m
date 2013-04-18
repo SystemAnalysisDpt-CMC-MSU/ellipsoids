@@ -4,14 +4,21 @@ function minEigArr = mineig(inpEllArr)
 %
 % Input:
 %	regular:
-%       inpEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - 
-%             array of ellipsoids.
+%       inpEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of 
+%         ellipsoids.
 %
 % Output:
-%	minEigArr: double[nDims1,nDims2,...,nDimsN] - array of
-%        minimal eigenvalues of ellipsoids in the input 
-%        array inpEllMat.
-%
+%	minEigArr: double[nDims1,nDims2,...,nDimsN] - array of minimal 
+%       eigenvalues of ellipsoids in the input array inpEllMat.
+% 
+% Example:
+% ellObj = ellipsoid([-2; 4], [4 -1; -1 5]);
+% minEig = mineig(ellObj)
+% 
+% minEig =
+% 
+%     3.3820 
+% 
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California
 %              2004-2008 $

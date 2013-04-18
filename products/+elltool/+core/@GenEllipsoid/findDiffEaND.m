@@ -1,6 +1,6 @@
 function resQMat=findDiffEaND(ellQ1Mat, ellQ2Mat,curDirVec,absTol)
 % FINDDIFFEAND - find external approximation for Minkowsky difference
-% of ellipsoids with matrices Q1>0, Q2>=0, in good direction
+%                of ellipsoids with matrices Q1>0, Q2>=0, in good direction
 %
 % Input:
 %   regular:

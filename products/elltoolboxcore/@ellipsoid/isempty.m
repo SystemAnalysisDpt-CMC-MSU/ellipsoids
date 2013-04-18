@@ -4,13 +4,21 @@ function isPositiveArr = isempty(myEllArr)
 %
 % Input:
 %   regular:
-%       myEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - 
-%            array of ellipsoids.
+%       myEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of 
+%            ellipsoids.
 %
 % Output:
 %   isPositiveArr: logical[nDims1,nDims2,...,nDimsN], 
 %       isPositiveArr(iCount) = true - if ellipsoid
 %       myEllMat(iCount) is empty, false - otherwise.
+% 
+% Example:
+% ellObj = ellipsoid();
+% isempty(ellObj)
+% 
+% ans =
+% 
+%      1
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 

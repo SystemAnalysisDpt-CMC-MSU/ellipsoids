@@ -1,32 +1,29 @@
 function extApprEllVec = minkpm_ea(inpEllArr, inpEll, dirMat)
 %
-% MINKPM_EA - computation of external approximating 
-%             ellipsoids of (E1 + E2 + ... + En) - E along 
-%             given directions, where E = inpEll,
+% MINKPM_EA - computation of external approximating ellipsoids
+%             of (E1 + E2 + ... + En) - E along given directions.
+%             where E = inpEll,
 %             E1, E2, ... En - are ellipsoids in inpEllArr.
 %
-%   ExtApprEllVec = MINKPM_EA(inpEllArr, inpEll, dirMat) - 
-%       Computes external approximating ellipsoids of
-%       (E1 + E2 + ... + En) - E, where E1, E2, ..., En 
-%       are ellipsoids in array inpEllArr, E = inpEll,
-%       along directions specified by columns of matrix 
-%       dirMat.
+%   ExtApprEllVec = MINKPM_EA(inpEllArr, inpEll, dirMat) - Computes
+%       external approximating ellipsoids of
+%       (E1 + E2 + ... + En) - E, where E1, E2, ..., En are ellipsoids
+%       in array inpEllArr, E = inpEll,
+%       along directions specified by columns of matrix dirMat.
 %
 % Input:
 %   regular:
 %       inpEllArr: ellipsoid [nDims1, nDims2,...,nDimsN] -
 %           array of ellipsoids of the same dimentions.
-%       inpEll: ellipsoid [1, 1] - ellipsoid of the same 
-%          dimention.
-%       dirMat: double[nDim, nCols] - matrix whose columns
-%           specify the directions for which the 
-%           approximations should be computed.
+%       inpEll: ellipsoid [1, 1] - ellipsoid of the same dimention.
+%       dirMat: double[nDim, nCols] - matrix whose columns specify
+%           the directions for which the approximations
+%           should be computed.
 %
 % Output:
-%   extApprEllVec: ellipsoid [1, nCols]/[0, 0] - array of 
-%       external approximating ellipsoids. Empty, if for 
-%       all specified directions approximations cannot be 
-%       computed.
+%   extApprEllVec: ellipsoid [1, nCols]/[0, 0] - array of external
+%       approximating ellipsoids. Empty, if for all specified
+%       directions approximations cannot be computed.
 % 
 % Example:
 % firstEllObj = ellipsoid([2; -1], [9 -5; -5 4]);

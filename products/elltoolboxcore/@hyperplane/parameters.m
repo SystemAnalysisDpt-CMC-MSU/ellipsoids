@@ -1,20 +1,31 @@
 function [normVec, hypScal] = parameters(myHyp)
 %
-% PARAMETERS - return parameters of hyperplane - normal 
-%              vector and shift.
+% PARAMETERS - return parameters of hyperplane - normal vector and shift.
 %
-%   [normVec, hypScal] = PARAMETERS(myHyp) - returns normal
-%        vector and scalar value of the hyperplane.
+%   [normVec, hypScal] = PARAMETERS(myHyp) - returns normal vector
+%       and scalar value of the hyperplane.
 %
 % Input:
 %   regular:
-%       myHyp: hyperplane [1, 1] - single hyperplane of 
-%          dimention nDims.
+%       myHyp: hyperplane [1, 1] - single hyperplane of dimention nDims.
 %
 % Output:
-%   normVec: double[nDims, 1] - normal vector of the 
-%      hyperplane myHyp.
+%   normVec: double[nDims, 1] - normal vector of the hyperplane myHyp.
 %   hypScal: double[1, 1] - scalar of the hyperplane myHyp.
+% 
+% Example:
+% hypObj = hyperplane([-1; 1]);
+% [normVec, hypScal] = parameters(hypObj)
+% 
+% normVec =
+% 
+%     -1
+%      1
+% 
+% 
+% hypScal =
+% 
+%      0
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 

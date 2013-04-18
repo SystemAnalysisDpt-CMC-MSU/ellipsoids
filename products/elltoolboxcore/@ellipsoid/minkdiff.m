@@ -1,29 +1,25 @@
 function [centVec, boundPointMat] = minkdiff(fstEll,secEll,varargin)
 %
-% MINKDIFF - computes geometric (Minkowski) difference of
-%            two ellipsoids in 2D or 3D.
+% MINKDIFF - computes geometric (Minkowski) difference of two
+%            ellipsoids in 2D or 3D.
 %
-%   MINKDIFF(fstEll, secEll, Options) - Computes geometric 
-%       difference of two ellipsoids fstEll - secEll, 
-%       if 1 <= dimension(fstEll)==dimension(secEll) <= 3,
-%        and plots it if no output arguments are specified.
-%       
-%   [centVec, boundPointMat] = MINKDIFF(fstEll, secEll)
-%       Computes geometric difference of two ellipsoids
-%       fstEll - secEll. Here centVec is the center, and 
-%       boundPointMat - matrix whose colums are boundary 
-%       points.
-%   MINKDIFF(fstEll, secEll)  Plots geometric difference of 
-%       two ellipsoids fstEll - secEll in default (red) 
-%       color.
-%   MINKDIFF(fstEll, secEll, Options)  Plots geometric 
-%       difference fstEll - secEll using options given in   
-%       the Options structure.
+%   MINKDIFF(fstEll, secEll, Options) - Computes geometric difference
+%       of two ellipsoids fstEll - secEll, if 1 <= dimension(fstEll) =
+%       = dimension(secEll) <= 3, and plots it if no output arguments
+%       are specified.
+%   [centVec, boundPointMat] = MINKDIFF(fstEll, secEll)  Computes
+%       geometric difference of two ellipsoids fstEll - secEll.
+%       Here centVec is the center, and boundPointMat - matrix
+%       whose colums are boundary points.
+%   MINKDIFF(fstEll, secEll)  Plots geometric difference of two
+%       ellipsoids fstEll - secEll in default (red) color.
+%   MINKDIFF(fstEll, secEll, Options)  Plots geometric difference
+%       fstEll - secEll using options given in the Options structure.
 %
-%   In order for the geometric difference to be nonempty
-%   set, ellipsoid fstEll must be bigger than secEll in the
-%   sense that if fstEll and secEll had the same center,
-%   secEll would be contained inside fstEll.
+%   In order for the geometric difference to be nonempty set,
+%   ellipsoid fstEll must be bigger than secEll in the sense that
+%   if fstEll and secEll had the same center, secEll would be
+%   contained inside fstEll.
 %
 % Input:
 %   regular:
@@ -42,19 +38,23 @@ function [centVec, boundPointMat] = minkdiff(fstEll,secEll,varargin)
 %               set in 2D will be filled with color.
 %           color: double[1, 3] - sets default colors
 %               in the form [x y z].
-%           shade: double[1, 1] = 0-1 - level of 
-%               transparency (0 - transparent, 1 - opaque).
+%           shade: double[1, 1] = 0-1 - level of transparency
+%               (0 - transparent, 1 - opaque).
 %
 % Output:
-%   centVec: double[nDim, 1]/double[0, 0] - center of the 
-%       resulting set.
-%       centVec may be empty if ellipsoid fsrEll isn't
-%        bigger than secEll.
-%   boundPointMat: double[nDim, nBoundPoints]/double[0, 0] 
-%       - set of boundary points (vertices) of resulting
-%       set. boundPointMat may be empty if  
-%       ellipsoid fstEll isn't bigger than secEll.
+%   centVec: double[nDim, 1]/double[0, 0] - center of the resulting set.
+%       centVec may be empty if ellipsoid fsrEll isn't bigger
+%       than secEll.
+%   boundPointMat: double[nDim, nBoundPoints]/double[0, 0] - set of
+%       boundary points (vertices) of resulting set. boundPointMat
+%       may be empty if  ellipsoid fstEll isn't bigger than secEll.
 %
+% Example:
+% firstEllObj = ellipsoid([-1; 1], [2 0; 0 3]);
+% secEllObj = ellipsoid([1 2], eye(2));
+% [centVec, boundPointMat] = minkdiff(firstEllObj, secEllObj);
+% 
+% 
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 
 %              2004-2008 $

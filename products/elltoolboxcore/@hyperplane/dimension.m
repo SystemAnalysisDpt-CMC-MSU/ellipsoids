@@ -1,11 +1,9 @@
 function dimsArr = dimension(inpHypArr)
 %
-% DIMENSION - returns dimensions of hyperplanes in the 
-%             array.
+% DIMENSION - returns dimensions of hyperplanes in the array.
 %
-%   dimsArr = DIMENSION(hypArr) - returns dimensions of 
-%       hyperplanes described by hyperplane structures in
-%       the array hypArr.
+%   dimsArr = DIMENSION(hypArr) - returns dimensions of hyperplanes
+%       described by hyperplane structures in the array hypArr.
 %
 % Input:
 %   regular:
@@ -15,7 +13,7 @@ function dimsArr = dimension(inpHypArr)
 % Output:
 %       dimsArr: double[nDims1, nDims2, ...] - dimensions
 %           of hyperplanes.
-% 
+%
 % Example:
 % firstHypObj = hyperplane([-1; 1]);
 % secHypObj = hyperplane([-1; 1; 8; -2; 3], 7);

@@ -3,23 +3,21 @@ function [isPosArr reportStr] = eq(fstHypArr, secHypArr)
 % EQ - check if two hyperplanes are the same.
 %
 % Input:
-%  regular:
-%   fstHypArr:hyperplane[nDims1,nDims2,...]/hyperplane[1,1]
-%            -first array of hyperplanes.
-%   secHypArr:hyperplane[nDims1,nDims2,...]/hyperplane[1,1]
-%            -second array of hyperplanes.
+%   regular:
+%       fstHypArr: hyperplane [nDims1, nDims2, ...]/hyperplane [1, 1] -
+%           first array of hyperplanes.
+%       secHypArr: hyperplane [nDims1, nDims2, ...]/hyperplane [1, 1] -
+%           second array of hyperplanes.
 %
 % Output:
-%  isPosArr: logical[nDims1, nDims2, ...] - true -
-%   if 
-%   fstHypArr(iDim1,iDim2,...)==secHypArr(iDim1,iDim2,...),
-%   false - otherwise. If size of fstHypArr is [1, 1], then 
-%   checks if fstHypArr == secHypArr(iDim1, iDim2, ...)
-%   for all iDim1, iDim2, ... , and vice versa.
+%   isPosArr: logical[nDims1, nDims2, ...] - true -
+%       if fstHypArr(iDim1, iDim2, ...) == secHypArr(iDim1, iDim2, ...),
+%       false - otherwise. If size of fstHypArr is [1, 1], then checks
+%       if fstHypArr == secHypArr(iDim1, iDim2, ...)
+%       for all iDim1, iDim2, ... , and vice versa.
 %   reportStr: char[1,] - comparison report
 %
-% 
-% Example:
+%Example:
 % firstHypObj = hyperplane([-1; 1]);
 % secHypObj = hyperplane([-1; 1; 8; -2; 3], 7);
 % thirdHypObj = hyperplane([1; 2; 0], -1);
