@@ -103,9 +103,10 @@ classdef AdaptiveConfRepoManager<modgen.configuration.ConfRepoManager
         end
         function selectConf(self,confName,varargin)
             % SELECTCONF - selects the specified plain configuration. If
-            % the one does not exist it is created from the template
-            % configuration. If the latter does not exist an exception is
-            % thrown
+            %              the one does not exist it is created from the
+            %              template configuration. If the latter does not 
+            %              exist an exception is thrown
+            % 
             %
             % Input:
             %   regular:
@@ -114,8 +115,8 @@ classdef AdaptiveConfRepoManager<modgen.configuration.ConfRepoManager
             %
             %   properties:
             %       reloadIfSelected: logical[1,1] - if false,
-            %           configuration is loaded from disk only if it wasn't
-            %           selected previously.
+            %           configuration is loaded from disk only if it 
+            %           wasn't selected previously.
             %
             %
             
@@ -151,26 +152,27 @@ classdef AdaptiveConfRepoManager<modgen.configuration.ConfRepoManager
         end        
         %
         function [SConf,confVersion,metaData]=getConf(self,confName)
-            % GETCONF returns a configuration by its name. In case the specified 
-            % configuration is not found, the class tries to create one
-            % from a template
-            %
-            %
+            % GETCONF - returns a configuration by its name. In case the 
+            %           specified configuration is not found , the class
+            %           tries to create one from a template
+            % 
+            % 
             self.deployConfTemplate(confName);
             [SConf,confVersion,metaData]=getConfInternal(self,confName);
             
         end
         function editConfTemplate(self,confName)
-            % EDITCONFTEMPLATE opens the specified template configuration
-            % for editing using a default editor
+            % EDITCONFTEMPLATE - opens the specified template configuration
+            %                    for editing using a default editor
             %
             %
             self.templateRepoMgr.editConf(confName);
         end
         %
         function confNameList=deployConfTemplate(self,inpConfName,varargin)
-            % DEPLOYCONFTEMPLATE deploys (i.e. transforms templates to 
-            % plain configurations)  the specified configuration(s)) 
+            % DEPLOYCONFTEMPLATE - deploys (i.e. transforms templates to 
+            %                      plain configurations) the specified
+            %                      onfiguration(s)) 
             %
             % Input: 
             %   regular:
