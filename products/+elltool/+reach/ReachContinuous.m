@@ -632,6 +632,41 @@ classdef ReachContinuous < elltool.reach.AReach
                 self.ellTubeRel = self.rotateEllTubeRel(self.ellTubeRel);
             end
         end
+        %
+        function refine(self,l0Mat)
+            import modgen.common.throwerror;
+            if isempty(self.ellTubeRel)
+                throwerror('wrongInput','empty reach set');
+            end
+            import gras.ellapx.enums.EApproxType;
+            
+            % Calculate additional tubes
+            linSys=self.linSysCVec{1};
+            timeVec= self.switchSysTimeVec;
+            x0Ell= self.x0Ellipsoid;
+            
+            [x0Vec x0Mat] = double(x0Ell);
+            [atStrCMat btStrCMat gtStrCMat ptStrCMat ptStrCVec...
+                qtStrCMat qtStrCVec] =...
+                self.prepareSysParam(linSys, timeVec);
+            isDisturbance = self.isDisturbance(gtStrCMat, qtStrCMat);
+            
+            % Normalize good directions
+            nDim = size(atStrCMat, 1);
+            l0Mat = self.getNormMat(l0Mat, nDim);
+            %
+            relTol = elltool.conf.Properties.getRelTol();
+            smartLinSys = self.getSmartLinSys(atStrCMat, btStrCMat,...
+                ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat, qtStrCVec,...
+                x0Mat, x0Vec, [min(timeVec) max(timeVec)],...
+                relTol, isDisturbance);
+            approxTypeVec = [EApproxType.External EApproxType.Internal];
+            ellTubeRelNew = self.makeEllTubeRel(smartLinSys, l0Mat,...
+                [min(timeVec) max(timeVec)], isDisturbance,...
+                relTol, approxTypeVec);
+            %Update self.ellTubRel
+            self.ellTubeRel.unionWith(ellTubeRelNew);
+        end
         %%
         function eaPlotter = plot_ea(self, varargin)
             import gras.ellapx.enums.EApproxType;
