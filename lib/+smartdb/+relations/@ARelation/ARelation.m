@@ -59,7 +59,6 @@ classdef ARelation<smartdb.cubes.CubeStruct
             isSortedBeforeCompare=true;
             sortDim=1;
             inpArgList={};
-            isMaxTolerancePresent = false;            
             for k=1:2:nProp-1
                 switch lower(prop{k})
                     case {'isfieldordercheck','checkfieldorder'},
@@ -72,16 +71,10 @@ classdef ARelation<smartdb.cubes.CubeStruct
                         isCompareCubeStructBackwardRef=prop{k+1};
                     case 'maxtolerance',
                         inpArgList={'maxTolerance',prop{k+1}};
-                        isMaxTolerancePresent = true;
                     otherwise,
                         error([upper(mfilename),':wrongInput'],...
                             'unidentified property name: %s ',prop{k});
                 end
-            end
-            if (~isMaxTolerancePresent)
-                inpArgList={'maxTolerance', ...
-                    max(max(self.calcPrecision),...
-                    max(otherObj.calcPrecision))};
             end
             inpArgList=[inpArgList,...
                 {'compareMetaDataBackwardRef',isCompareCubeStructBackwardRef}];
