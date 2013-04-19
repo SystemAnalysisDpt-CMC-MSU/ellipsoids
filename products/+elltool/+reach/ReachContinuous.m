@@ -919,11 +919,16 @@ classdef ReachContinuous < elltool.reach.AReach
             isBackward = self.isBackward;
         end
         %%
-        function isEqual = isEqual(self, reachObj, varargin)
+        function [isEqual, reportStr] = isEqual(self, reachObj, varargin)
             import gras.ellapx.smartdb.F;
             import gras.ellapx.enums.EApproxType;
             import elltool.logging.Log4jConfigurator;
+            % FIXME: change to self.getAbsTol in the future
+            import elltool.conf.Properties.getAbsTol;
             persistent logger;
+            if (nargout == 2)
+                reportStr = [];
+            end
             %
             APPROX_TYPE = F.APPROX_TYPE;
             %
@@ -952,49 +957,110 @@ classdef ReachContinuous < elltool.reach.AReach
                     logger.debug('Inequal time knots count');
                 else
                     logger.debug('Equal time knots count');
-                end
-                
+                end                
             end
             %
-            % what tolerance to use here?
-            if (abs(firstTimeVec(end)-secondTimeVec(end)) > 0.1)
-                % should i return false here?
-                if logger.isDebugEnabled
-                    logger.debug(...
-                        sprintf('Ending times differ by %f',...
-                        abs(firstTimeVec(end)-secondTimeVec(end))));
+            % Checking time bounds equality
+            %
+            if (abs(firstTimeVec(end)-secondTimeVec(end)) > getAbsTol())
+                isEqual = false;
+                if (nargout == 2)
+                    reportStr=[reportStr, ...
+                        sprintf('Ending times differ by %f. ',...
+                        abs(firstTimeVec(end)-secondTimeVec(end)))];
                 end
+                return;
             end
-            if (abs(firstTimeVec(1)-secondTimeVec(1)) > 0.1)
-                % should i return false here?
-                if logger.isDebugEnabled
-                    logger.debug(...
-                        sprintf('Beginning times differ by %f',...
-                        abs(firstTimeVec(1)-secondTimeVec(1))));
+            if (abs(firstTimeVec(1)-secondTimeVec(1)) > getAbsTol())
+                isEqual = false;
+                if (nargout == 2)
+                    reportStr=[reportStr, ...
+                        sprintf('Beginning times differ by %f. ',...
+                        abs(firstTimeVec(end)-secondTimeVec(end)))];
                 end
+                return;
+            end   
+            %
+            % Checking enclosion of time vectors
+            %
+            if (length(firstTimeVec) < length(secondTimeVec))
+                [isTimeVecsEnclosed, secondIndexVec] = ...
+                    fIsGridSubsetOfGrid(secondTimeVec, firstTimeVec);
+            else
+                [isTimeVecsEnclosed, firstIndexVec] = ...
+                    fIsGridSubsetOfGrid(firstTimeVec, secondTimeVec);
             end
-            % finding commot times
-            % what tolerance to use here?
-            [firstEqualIndVec, secondEqualIndVec] = ...
-                fIntersectSortedVecsWithTol(...
-                firstTimeVec, secondTimeVec, 1e-3);
-            if logger.isDebugEnabled
-                logger.debug(sprintf('Number of equal knots: %d',...
-                    numel(firstTimeVec)))
-            end
-            % removing everything except common times
-            ellTube = ellTube.thinOutTuples(firstEqualIndVec);
-            compEllTube = compEllTube.thinOutTuples(secondEqualIndVec);
-            %   
+            %
             fieldsNotToCompVec =...
                 F.getNameList(self.FIELDS_NOT_TO_COMPARE);
             fieldsToCompVec =...
                 setdiff(ellTube.getFieldNameList, fieldsNotToCompVec);
-            % 
+            %  
+            if (isTimeVecsEnclosed)
+                if (nargout == 2)
+                    reportStr = [reportSrt,...
+                        'Enclosed time vectors. Common times checked. ']
+                end
+                if (length(firstTimeVec) < length(secondTimeVec))
+                    compEllTube = ...
+                        compEllTube.thinOutTuples(secondIndexVec);
+                else                    
+                    ellTube = ellTube.thinOutTuples(firstIndexVec);
+                end
+                [isEqual, eqReportStr] = compEllTube.getFieldProjection(...
+                    fieldsToCompVec).isEqual(...
+                    ellTube.getFieldProjection(fieldsToCompVec));
+                if (nargout == 2)
+                    reportStr = [reportStr, eqReportStr];
+                end
+                return;
+            end
+            %
+            % Time vectors are not enclosed, 
+            % though start and finish at the same time
+            % So interpolating from common time knots
+            %
+            if (nargout == 2)
+                reportStr = [reportStr, 'Interpolated from common ',...
+                    'time points. '];
+            end
+            [firstEqualIndVec, secondEqualIndVec] = ...
+                fIntersectSortedVecsWithTol(...
+                firstTimeVec, secondTimeVec, getAbsTol());
+            if logger.isDebugEnabled
+                logger.debug(sprintf('Number of equal knots: %d',...
+                    numel(firstTimeVec)))
+            end
+            % TODO: complete this case after adding interp
             isEqual = compEllTube.getFieldProjection(...
                 fieldsToCompVec).isEqual(...
                 ellTube.getFieldProjection(fieldsToCompVec),...
                 'maxTolerance', self.COMP_PRECISION);
+            %
+            function [isSubset, indexVec] = ...
+                    fIsGridSubsetOfGrid(greaterVec, smallerVec)
+                if (length(greaterVec) < length(smallerVec))
+                    isSubset = false;
+                    indexVec = [];
+                    return;
+                end
+                greaterIndex = 1;
+                smallerIndex = 1;
+                while (smallerIndex <= length(smallerVec) &&...
+                        greaterIndex <= length(greaterVec))
+                    if (abs(smallerVec(smallerIndex)-...
+                            greaterVec(greaterIndex))<getAbsTol())
+                        smallerIndex = smallerIndex + 1;
+                        indexVec = [indexVec, greaterIndex];
+                    end
+                    greaterIndex = greaterIndex + 1;
+                end
+                if (smallerIndex > length(smallerVec))
+                    isSubset = true;
+                else
+                    isSubset = false;
+                end
+            end
             %
             function [aIndVec, bIndVec] = ...
                     fIntersectSortedVecsWithTol(aVec, bVec, tol)
