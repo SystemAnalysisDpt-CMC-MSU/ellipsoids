@@ -635,11 +635,14 @@ classdef ReachContinuous < elltool.reach.AReach
         %
         function refine(self,l0Mat)
             import modgen.common.throwerror;
+            import gras.ellapx.enums.EApproxType;
             if isempty(self.ellTubeRel)
                 throwerror('wrongInput','empty reach set');
             end
-            import gras.ellapx.enums.EApproxType;
-            
+            if ~isa(l0Mat,'double')
+                throwerror('wrongInput',strcat('second argument must ',...
+                    'be matrix of directions'));
+            end
             % Calculate additional tubes
             linSys=self.linSysCVec{1};
             timeVec= self.switchSysTimeVec;
@@ -664,6 +667,9 @@ classdef ReachContinuous < elltool.reach.AReach
             ellTubeRelNew = self.makeEllTubeRel(smartLinSys, l0Mat,...
                 [min(timeVec) max(timeVec)], isDisturbance,...
                 relTol, approxTypeVec);
+            if self.isbackward()
+               ellTubeRelNew = self.rotateEllTubeRel(ellTubeRelNew);
+            end
             %Update self.ellTubRel
             self.ellTubeRel.unionWith(ellTubeRelNew);
         end
