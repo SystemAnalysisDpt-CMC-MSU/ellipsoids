@@ -385,6 +385,10 @@ classdef EllipsoidSecTestCase < mlunitext.test_case
             mlunit.assert_equals(true, isEq, reportStr);
         end
         
+        function self = testRegularization(self)
+            shMat = [4 4 14; 4 4 14; 14 14 78];
+            Ell = ellipsoid(zeros(3, 1), ell_regularize(shMat));
+        end
         
      end
 end
