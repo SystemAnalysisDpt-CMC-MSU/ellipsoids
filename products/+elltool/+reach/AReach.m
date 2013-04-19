@@ -261,7 +261,7 @@ classdef AReach < elltool.reach.IReach
         end
         %
         function [atStrCMat btStrCMat gtStrCMat ptStrCMat ptStrCVec ...
-                qtStrCMat qtStrCVec] = prepareSysParamBasic(linSys)
+                qtStrCMat qtStrCVec] = prepareSysParam(linSys)
             atMat = linSys.getAtMat();
             btMat = linSys.getBtMat();
             gtMat = linSys.getGtMat();
@@ -345,6 +345,52 @@ classdef AReach < elltool.reach.IReach
                     isDisturb = false;
                 end
             end
+        end
+        %
+        function linSys = getSmartLinSys(atStrCMat, btStrCMat,...
+                ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat, qtStrCVec,...
+                x0Mat, x0Vec, timeVec, calcPrecision, isDisturb)
+            if isDisturb
+                linSys = getSysWithDisturb(atStrCMat, btStrCMat,...
+                    ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat,...
+                    qtStrCVec, x0Mat, x0Vec, timeVec, calcPrecision);
+            else
+                linSys = getSysWithoutDisturb(atStrCMat, btStrCMat,...
+                    ptStrCMat, ptStrCVec, x0Mat, x0Vec,...
+                    timeVec, calcPrecision);
+            end
+            %
+            function linSys = getSysWithDisturb(atStrCMat, btStrCMat,...
+                    ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat, qtStrCVec,...
+                    x0Mat, x0Vec, timeVec, calcPrecision)
+                import gras.ellapx.lreachuncert.probdyn.*;
+                linSys =...
+                    LReachProblemDynamicsFactory.createByParams(...
+                    atStrCMat, btStrCMat,...
+                    ptStrCMat, ptStrCVec, gtStrCMat,...
+                    qtStrCMat, qtStrCVec, x0Mat, x0Vec,...
+                    timeVec, calcPrecision);
+            end
+            %
+            function linSys = getSysWithoutDisturb(atStrCMat, btStrCMat,...
+                    ptStrCMat, ptStrCVec, x0Mat, x0Vec, timeVec, calcPrecision)
+                import gras.ellapx.lreachplain.probdyn.*;
+                linSys =...
+                    LReachProblemDynamicsFactory.createByParams(...
+                    atStrCMat, btStrCMat,...
+                    ptStrCMat, ptStrCVec, x0Mat, x0Vec,...
+                    timeVec, calcPrecision);
+            end
+        end
+        %
+        function outMat = getNormMat(inpMat, dim)
+            matSqNormVec = sum(inpMat .* inpMat);
+            isNormGrZeroVec = matSqNormVec > 0;
+            matSqNormVec(isNormGrZeroVec) =...
+                sqrt(matSqNormVec(isNormGrZeroVec));
+            outMat(:, isNormGrZeroVec) =...
+                inpMat(:, isNormGrZeroVec) ./...
+                matSqNormVec(ones(1, dim), isNormGrZeroVec);
         end
     end
     %
@@ -484,50 +530,6 @@ classdef AReach < elltool.reach.IReach
                 end
             end
         end
-        %
-        function displayInternal(self)
-            import gras.ellapx.enums.EApproxType;
-            fprintf('\n');
-            disp([inputname(1) ' =']);
-            if self.isempty()
-                fprintf('Empty reach set object.\n\n');
-                return;
-            end
-            [sysTypeStr sysTimeStartStr sysTimeEndStr] = ...
-                self.DISPLAY_PARAMETER_STRINGS{:};
-            dim = self.dimension();
-            timeVec =...
-                [self.switchSysTimeVec(1) self.switchSysTimeVec(end)];
-            if timeVec(1) > timeVec(end)
-                isBack = true;
-                fprintf(['Backward reach set of the %s linear system ',...
-                    'in R^%d in the time interval [%d, %d].\n'],...
-                    sysTypeStr, dim, timeVec(1), timeVec(end));
-            else
-                isBack = false;
-                fprintf(['Reach set of the %s linear system ',...
-                    'in R^%d in the time interval [%d, %d].\n'],...
-                    sysTypeStr, dim, timeVec(1), timeVec(end));
-            end
-            if self.isprojection()
-                fprintf('Projected onto the basis:\n');
-                disp(self.projectionBasisMat);
-            end
-            fprintf('\n');
-            if isBack
-                fprintf('Target set at time %s%d:\n',...
-                    sysTimeEndStr, timeVec(1));
-            else
-                fprintf('Initial set at time %s%d:\n',...
-                    sysTimeStartStr, timeVec(1));
-            end
-            disp(self.getInitialSet());
-            fprintf('Number of external approximations: %d\n',...
-                sum(self.ellTubeRel.approxType == EApproxType.External));
-            fprintf('Number of internal approximations: %d\n',...
-                sum(self.ellTubeRel.approxType == EApproxType.Internal));
-            fprintf('\n');
-        end
     end
     methods
         function isProj = isprojection(self)
@@ -620,6 +622,50 @@ classdef AReach < elltool.reach.IReach
                 fieldsToCompVec).isEqual(...
                 ellTube.getFieldProjection(fieldsToCompVec),...
                 'maxTolerance', self.COMP_PRECISION);
+        end
+        %
+        function display(self)
+            import gras.ellapx.enums.EApproxType;
+            fprintf('\n');
+            disp([inputname(1) ' =']);
+            if self.isempty()
+                fprintf('Empty reach set object.\n\n');
+                return;
+            end
+            [sysTypeStr sysTimeStartStr sysTimeEndStr] = ...
+                self.DISPLAY_PARAMETER_STRINGS{:};
+            dim = self.dimension();
+            timeVec =...
+                [self.switchSysTimeVec(1) self.switchSysTimeVec(end)];
+            if timeVec(1) > timeVec(end)
+                isBack = true;
+                fprintf(['Backward reach set of the %s linear system ',...
+                    'in R^%d in the time interval [%d, %d].\n'],...
+                    sysTypeStr, dim, timeVec(1), timeVec(end));
+            else
+                isBack = false;
+                fprintf(['Reach set of the %s linear system ',...
+                    'in R^%d in the time interval [%d, %d].\n'],...
+                    sysTypeStr, dim, timeVec(1), timeVec(end));
+            end
+            if self.isprojection()
+                fprintf('Projected onto the basis:\n');
+                disp(self.projectionBasisMat);
+            end
+            fprintf('\n');
+            if isBack
+                fprintf('Target set at time %s%d:\n',...
+                    sysTimeEndStr, timeVec(1));
+            else
+                fprintf('Initial set at time %s%d:\n',...
+                    sysTimeStartStr, timeVec(1));
+            end
+            disp(self.getInitialSet());
+            fprintf('Number of external approximations: %d\n',...
+                sum(self.ellTubeRel.approxType == EApproxType.External));
+            fprintf('Number of internal approximations: %d\n',...
+                sum(self.ellTubeRel.approxType == EApproxType.Internal));
+            fprintf('\n');
         end
         %
         function linSys = get_system(self)

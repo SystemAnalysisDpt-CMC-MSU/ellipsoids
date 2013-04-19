@@ -53,489 +53,313 @@ classdef ReachDiscrete < elltool.reach.AReach
         DISPLAY_PARAMETER_STRINGS = {'discrete-time', 'k0 = ', 'k1 = '}
     end
     %
-    properties (Access = private)
-        t0
-        initial_directions
-        time_values
-        center_values
-        l_values
-        ea_values
-        ia_values
-        minmax
-        calc_data
-    end
-    %
     methods (Static, Access = private)
-        function colCodeVec = my_color_table(colChar)
-            %
-            % MY_COLOR_TABLE - returns the code of the color defined by single letter.
-            %
-            if ~(ischar(colChar))
-                colCodeVec = [0 0 0];
-                return;
-            end
-            switch colChar
-                case 'r',
-                    colCodeVec = [1 0 0];
-                case 'g',
-                    colCodeVec = [0 1 0];
-                case 'b',
-                    colCodeVec = [0 0 1];
-                case 'y',
-                    colCodeVec = [1 1 0];
-                case 'c',
-                    colCodeVec = [0 1 1];
-                case 'm',
-                    colCodeVec = [1 0 1];
-                case 'w',
-                    colCodeVec = [1 1 1];
-                otherwise,
-                    colCodeVec = [0 0 0];
-            end
-        end
-        %
-        function [QQ, LL] = eedist_de(ntv, X0, l0, mydata, N, back, mnmx,absTol)
-            %
-            % EEDIST_DE - recurrence relation for the shape matrix of external ellipsoid
-            %             for discrete-time system with disturbance.
-            %
+        function [QArrayList ltGoodDirArray] = ...
+                calculateApproxShape(smartLinSys, l0Mat, timeVec, ...
+                isBack, relTol, approxType)
             import elltool.conf.Properties;
-            LL = l0;
-            l = l0;
-            QQ = X0;
-            Q = reshape(X0, N, N);
-            vrb = Properties.getIsVerbose();
+            import gras.ellapx.enums.EApproxType;
+            %
+            isVerbose = Properties.getIsVerbose();
             Properties.setIsVerbose(false);
-            if back > 0
-                for i = 2:ntv
-                    A = ell_value_extract(mydata.A, i, [N N]);
-                    Ai = ell_inv(A);
-                    BPB = Ai * ell_value_extract(mydata.BPB, i, [N N]) * Ai';
-                    GQG = Ai * ell_value_extract(mydata.GQG, i, [N N]) * Ai';
-                    BPB = 0.5 * (BPB + BPB');
-                    GQG = 0.5 * (GQG + GQG');
-                    Q   = Ai * Q * Ai';
-                    if rank(Q) < N
-                        Q = ell_regularize(Q);
+            %
+            xDim = smartLinSys.getDimensionality();
+            nTubes = size(l0Mat, 2);
+            qMat = smartLinSys.getX0Mat;
+            QArrayList = repmat({repmat(zeros(xDim), ...
+                [1, 1, length(timeVec)])}, 1, nTubes);
+            ltGoodDirArray = zeros(xDim, nTubes, length(timeVec));
+            lMat = zeros(xDim, length(timeVec));
+            %
+            if isBack
+                for iTube = 1:nTubes
+                    QArrayList{1, iTube}(:, :, 1) = qMat;
+                    lVec = l0Mat(:, iTube);
+                    lMat(:, 1) = lVec;
+                    for iTime = 2:length(timeVec)
+                        aMat = smartLinSys.getAtDynamics().evaluate(timeVec(iTime));
+                        invAMat = ell_inv(aMat);
+                        bpbMat = invAMat * ...
+                            smartLinSys.getBPBTransDynamics().evaluate(timeVec(iTime)) * ...
+                            invAMat';
+                        bpbMat = 0.5 * (bpbMat + bpbMat');
+                        qMat = invAMat * qMat * invAMat';
+                        qMat = ell_regularize(qMat);
+                        bpbMat = ell_regularize(bpbMat);
+                        lVec = aMat' * lVec;
+                        if approxType == EApproxType.Internal
+                            eEll = minksum_ia([ellipsoid(0.5 * (qMat + qMat')) ...
+                                ellipsoid(0.5 * (bpbMat + bpbMat'))], lVec);
+                        else
+                            eEll = minksum_ea([ellipsoid(0.5 * (qMat + qMat')) ...
+                                ellipsoid(0.5 * (bpbMat + bpbMat'))], lVec);
+                        end
+                        qMat = double(eEll);
+                        QArrayList{1, iTube}(:, :, iTime) = qMat;
+                        lMat(:, iTime) = lVec;
                     end
-                    if rank(BPB) < N
-                        BPB = ell_regularize(BPB);
-                    end
-                    if rank(GQG) < N
-                        GQG = ell_regularize(GQG);
-                    end
-                    l = A' * l;
-                    if mnmx > 0 % minmax case
-                        E = minkmp_ea(ellipsoid(0.5*(Q+Q')),...
-                            ellipsoid(0.5*(GQG+GQG')),...
-                            ellipsoid(0.5*(BPB+BPB')), l);
-                    else
-                        E = minkpm_ea([ellipsoid(0.5*(Q+Q'))...
-                            ellipsoid(0.5*(BPB+BPB'))],...
-                            ellipsoid(0.5*(GQG+GQG')), l);
-                    end
-                    if ~isempty(E)
-                        Q = parameters(E);
-                    else
-                        Q = zeros(N, N);
-                    end
-                    QQ = [QQ reshape(Q, N*N, 1)];
-                    LL = [LL l];
+                    ltGoodDirArray(:, iTube, :) = lMat;
                 end
             else
-                for i = 1:(ntv - 1)
-                    A = ell_value_extract(mydata.A, i, [N N]);
-                    Ai = ell_inv(A);
-                    BPB = ell_value_extract(mydata.BPB, i, [N N]);
-                    GQG = ell_value_extract(mydata.GQG, i, [N N]);
-                    BPB = 0.5 * (BPB + BPB');
-                    GQG = 0.5 * (GQG + GQG');
-                    Q = A * Q * A';
-                    if size(mydata.delta, 2) > 1
-                        dd = mydata.delta(i);
-                    elseif isempty(mydata.delta)
-                        dd = 0;
-                    else
-                        dd = mydata.delta(1);
+                for iTube = 1:nTubes
+                    QArrayList{1, iTube}(:, :, 1) = qMat;
+                    lVec = l0Mat(:, iTube);
+                    lMat(:, 1) = lVec;
+                    for iTime = 1:(length(timeVec) - 1)
+                        aMat = smartLinSys.getAtDynamics().evaluate(timeVec(iTime));
+                        invAMat = ell_inv(aMat);
+                        bpbMat = smartLinSys.getBPBTransDynamics().evaluate(timeVec(iTime));
+                        bpbMat = 0.5 * (bpbMat + bpbMat');
+                        qMat = aMat * qMat * aMat';
+                        bpbMat = ell_regularize(bpbMat);
+                        lVec = invAMat' * lVec;
+                        if approxType == EApproxType.Internal
+                            eEll = minksum_ia([ellipsoid(0.5 * (qMat + qMat')) ...
+                                ellipsoid(0.5 * (bpbMat + bpbMat'))], lVec);
+                        else
+                            eEll = minksum_ea([ellipsoid(0.5 * (qMat + qMat')) ...
+                                ellipsoid(0.5 * (bpbMat + bpbMat'))], lVec);
+                        end
+                        qMat = double(eEll);
+                        QArrayList{1, iTube}(:, :, iTime + 1) = qMat;
+                        lMat(:, iTime + 1) = lVec;
                     end
-                    if dd > 0
-                        e2 = sqrt(absTol*absTol + 2*max(eig(BPB))*absTol);
-                        BPB = ell_regularize(BPB, e2);
-                    elseif rank(BPB) < N
-                        BPB = ell_regularize(BPB);
-                    end
-                    if rank(GQG) < N
-                        GQG = ell_regularize(GQG);
-                    end
-                    l = Ai' * l;
-                    if mnmx > 0 % minmax case
-                        E = minkmp_ea(ellipsoid(0.5*(Q+Q')),...
-                            ellipsoid(0.5*(GQG+GQG')),...
-                            ellipsoid(0.5*(BPB+BPB')), l);
-                    else
-                        E = minkpm_ea([ellipsoid(0.5*(Q+Q'))...
-                            ellipsoid(0.5*(BPB+BPB'))],...
-                            ellipsoid(0.5*(GQG+GQG')), l);
-                    end
-                    if ~isempty(E)
-                        Q = parameters(E);
-                    else
-                        Q = zeros(N, N);
-                    end
-                    QQ  = [QQ reshape(Q, N*N, 1)];
-                    LL = [LL l];
+                    ltGoodDirArray(:, iTube, :) = lMat;
                 end
             end
-            Properties.setIsVerbose(vrb);
+            %
+            Properties.setIsVerbose(isVerbose);
         end
         %
-        function [QQ, LL] = eesm_de(ntv, X0, l0, mydata, N, back,absTol)
-            %
-            % EESM_DE - recurrence relation for the shape matrix of external ellipsoid
-            %           for discrete-time system without disturbance.
-            %
+        function [QArrayList ltGoodDirArray] = ...
+                calculateApproxShapeWithDist(smartLinSys, l0Mat, timeVec, ...
+                isBack, relTol, approxType)
             import elltool.conf.Properties;
-            LL = l0;
-            l = l0;
-            QQ = X0;
-            Q = reshape(X0, N, N);
-            vrb = Properties.getIsVerbose();
+            import gras.ellapx.enums.EApproxType;
+            %
+            isVerbose = Properties.getIsVerbose();
             Properties.setIsVerbose(false);
-            if back > 0
-                for i = 2:ntv
-                    A = ell_value_extract(mydata.A, i, [N N]);
-                    Ai = ell_inv(A);
-                    BPB = Ai * ell_value_extract(mydata.BPB, i, [N N]) * Ai';
-                    BPB = 0.5 * (BPB + BPB');
-                    Q = Ai * Q * Ai';
-                    if rank(Q) < N
-                        Q = ell_regularize(Q);
+            %
+            xDim = smartLinSys.getDimensionality();
+            nTubes = size(l0Mat, 2);
+            qMat = smartLinSys.getX0Mat;
+            QArrayList = repmat({repmat(zeros(xDim), ...
+                [1, 1, length(timeVec)])}, 1, nTubes);
+            ltGoodDirArray = zeros(xDim, nTubes, length(timeVec));
+            lMat = zeros(xDim, length(timeVec));
+            %
+            if isBack
+                for iTube = 1:nTubes
+                    QArrayList{1, iTube}(:, :, 1) = qMat;
+                    lVec = l0Mat(:, iTube);
+                    lMat(:, 1) = lVec;
+                    for iTime = 2:length(timeVec)
+                        aMat = smartLinSys.getAtDynamics().evaluate(timeVec(iTime));
+                        invAMat = ell_inv(aMat);
+                        bpbMat = invAMat * ...
+                            smartLinSys.getBPBTransDynamics().evaluate(timeVec(iTime)) * ...
+                            invAMat';
+                        gqgMat = invAMat * ...
+                            smartLinSys.getGQGTransDynamics().evaluate(timeVec(iTime)) * ...
+                            invAMat';
+                        bpbMat = 0.5 * (bpbMat + bpbMat');
+                        gqgMat = 0.5 * (gqgMat + gqgMat');
+                        qMat = invAMat * qMat * invAMat';
+                        qMat = ell_regularize(qMat);
+                        bpbMat = ell_regularize(bpbMat);
+                        gqgMat = ell_regularize(gqgMat);
+                        lVec = aMat' * lVec;
+                        if approxType == EApproxType.Internal
+                            if isMinMax
+                                eEll = minkmp_ia(ellipsoid(0.5 * (qMat + qMat')),...
+                                    ellipsoid(0.5 * (gqgMat + gqgMat')),...
+                                    ellipsoid(0.5 * (bpbMat + bpbMat')), lVec);
+                            else
+                                eEll = minkpm_ia([ellipsoid(0.5 * (qMat + qMat'))...
+                                    ellipsoid(0.5 * (bpbMat + bpbMat'))],...
+                                    ellipsoid(0.5 * (gqgMat + gqgMat')), lVec);
+                            end
+                        else
+                            if isMinMax
+                                eEll = minkmp_ea(ellipsoid(0.5 * (qMat + qMat')),...
+                                    ellipsoid(0.5 * (gqgMat + gqgMat')),...
+                                    ellipsoid(0.5 * (bpbMat + bpbMat')), lVec);
+                            else
+                                eEll = minkpm_ea([ellipsoid(0.5 * (qMat + qMat'))...
+                                    ellipsoid(0.5 * (bpbMat + bpbMat'))],...
+                                    ellipsoid(0.5 * (gqgMat + gqgMat')), lVec);
+                            end
+                        end
+                        
+                        if ~isempty(eEll)
+                            qMat = double(eEll);
+                        else
+                            qMat = zeros(xDim, xDim);
+                        end
+                        QArrayList{1, iTube}(:, :, iTime) = qMat;
+                        lMat(:, iTime) = lVec;
                     end
-                    if rank(BPB) < N
-                        BPB = ell_regularize(BPB);
-                    end
-                    l = A' * l;
-                    E = minksum_ea([ellipsoid(0.5*(Q+Q')) ellipsoid(0.5*(BPB+BPB'))], l);
-                    Q = parameters(E);
-                    QQ = [QQ reshape(Q, N*N, 1)];
-                    LL = [LL l];
+                    ltGoodDirArray(:, iTube, :) = lMat;
                 end
             else
-                for i = 1:(ntv - 1)
-                    A = ell_value_extract(mydata.A, i, [N N]);
-                    Ai = ell_inv(A);
-                    BPB = ell_value_extract(mydata.BPB, i, [N N]);
-                    BPB = 0.5 * (BPB + BPB');
-                    Q = A * Q * A';
-                    if size(mydata.delta, 2) > 1
-                        dd = mydata.delta(i);
-                    elseif isempty(mydata.delta)
-                        dd = 0;
-                    else
-                        dd = mydata.delta(1);
+                for iTube = 1:nTubes
+                    QArrayList{1, iTube}(:, :, 1) = qMat;
+                    lVec = l0Mat(:, iTube);
+                    lMat(:, 1) = lVec;
+                    for iTime = 1:(length(timeVec) - 1)
+                        aMat = smartLinSys.getAtDynamics().evaluate(timeVec(iTime));
+                        invAMat = ell_inv(aMat);
+                        bpbMat = smartLinSys.getBPBTransDynamics().evaluate(timeVec(iTime));
+                        gqgMat = smartLinSys.getGQGTransDynamics().evaluate(timeVec(iTime));
+                        bpbMat = 0.5 * (bpbMat + bpbMat');
+                        gqgMat = 0.5 * (gqgMat + gqgMat');
+                        qMat = aMat * qMat * aMat';
+                        qMat = ell_regularize(qMat);
+                        bpbMat = ell_regularize(bpbMat);
+                        gqgMat = ell_regularize(gqgMat);
+                        lVec = invAMat' * lVec;
+                        if approxType == EApproxType.Internal
+                            if isMinMax
+                                eEll = minkmp_ia(ellipsoid(0.5 * (qMat + qMat')),...
+                                    ellipsoid(0.5 * (gqgMat + gqgMat')),...
+                                    ellipsoid(0.5 * (bpbMat + bpbMat')), lVec);
+                            else
+                                eEll = minkpm_ia([ellipsoid(0.5 * (qMat + qMat'))...
+                                    ellipsoid(0.5 * (bpbMat + bpbMat'))],...
+                                    ellipsoid(0.5 * (gqgMat + gqgMat')), lVec);
+                            end
+                        else
+                            if isMinMax
+                                eEll = minkmp_ea(ellipsoid(0.5 * (qMat + qMat')),...
+                                    ellipsoid(0.5 * (gqgMat + gqgMat')),...
+                                    ellipsoid(0.5 * (bpbMat + bpbMat')), lVec);
+                            else
+                                eEll = minkpm_ea([ellipsoid(0.5 * (qMat + qMat'))...
+                                    ellipsoid(0.5 * (bpbMat + bpbMat'))],...
+                                    ellipsoid(0.5 * (gqgMat + gqgMat')), lVec);
+                            end
+                        end
+                        
+                        if ~isempty(eEll)
+                            qMat = double(eEll);
+                        else
+                            qMat = zeros(xDim, xDim);
+                        end
+                        QArrayList{1, iTube}(:, :, iTime) = qMat;
+                        lMat(:, iTime + 1) = lVec;
                     end
-                    if dd > 0
-                        e2 = sqrt(absTol*absTol + 2*max(eig(BPB))*absTol);
-                        BPB = ell_regularize(BPB, e2);
-                    elseif rank(BPB) < N
-                        BPB = ell_regularize(BPB);
-                    end
-                    l = Ai' * l;
-                    E = minksum_ea([ellipsoid(0.5*(Q+Q'))...
-                        ellipsoid(0.5*(BPB+BPB'))], l);
-                    Q = parameters(E);
-                    QQ = [QQ reshape(Q, N*N, 1)];
-                    LL = [LL l];
+                    ltGoodDirArray(:, iTube, :) = lMat;
                 end
             end
-            Properties.setIsVerbose(vrb);
+            %
+            Properties.setIsVerbose(isVerbose);
         end
         %
-        function QSquareMat = fix_iesm(QMat, dim)
-            %
-            % FIX_IESM - returns values for (QMat' * QMat).
-            %
-            n  = size(QMat, 2);
-            QSquareMat = zeros(dim*dim, n);
-            for i = 1:n
-                M = reshape(QMat(:, i), dim, dim);
-                QSquareMat(:, i) = reshape(M'*M, dim*dim, 1);
-            end
-        end
-        %
-        function [QQ, LL] = iedist_de(ntv, X0, l0, mydata, N, back, mnmx,absTol)
-            %
-            % IEDIST_DE - recurrence relation for the shape matrix of internal ellipsoid
-            %             for discrete-time system with disturbance.
-            %
+        function centerMat = calculateCenterMat(smartLinSys, timeVec, ...
+                isBack, isDisturb)
             import elltool.conf.Properties;
-            LL = l0;
-            l = l0;
-            QQ = X0;
-            Q = reshape(X0, N, N);
-            vrb = Properties.getIsVerbose();
+            import gras.ellapx.enums.EApproxType;
+            %
+            isVerbose = Properties.getIsVerbose();
             Properties.setIsVerbose(false);
-            if back > 0
-                for i = 2:ntv
-                    A = ell_value_extract(mydata.A, i, [N N]);
-                    Ai = ell_inv(A);
-                    BPB = Ai * ell_value_extract(mydata.BPB, i, [N N]) * Ai';
-                    GQG = Ai * ell_value_extract(mydata.GQG, i, [N N]) * Ai';
-                    BPB = 0.5 * (BPB + BPB');
-                    GQG = 0.5 * (GQG + GQG');
-                    Q = Ai * Q * Ai';
-                    if rank(Q) < N
-                        Q = ell_regularize(Q);
-                    end
-                    if rank(BPB) < N
-                        BPB = ell_regularize(BPB);
-                    end
-                    if rank(GQG) < N
-                        GQG = ell_regularize(GQG);
-                    end
-                    l = A' * l;
-                    if mnmx > 0 % minmax case
-                        E = minkmp_ia(ellipsoid(0.5*(Q+Q')),...
-                            ellipsoid(0.5*(GQG+GQG')),...
-                            ellipsoid(0.5*(BPB+BPB')), l);
-                    else
-                        E = minkpm_ia([ellipsoid(0.5*(Q+Q'))...
-                            ellipsoid(0.5*(BPB+BPB'))],...
-                            ellipsoid(0.5*(GQG+GQG')), l);
-                    end
-                    if ~isempty(E)
-                        Q = parameters(E);
-                    else
-                        Q = zeros(N, N);
-                    end
-                    QQ = [QQ reshape(Q, N*N, 1)];
-                    LL = [LL l];
+            %
+            xDim = smartLinSys.getDimensionality();
+            %
+            centerMat = zeros(xDim, length(timeVec));
+            centerVec = smartLinSys.getx0Vec;
+            centerMat(:, 1) = centerVec;
+            %
+            for iTime = 1:(length(timeVec) - 1)
+                bpVec = smartLinSys.getBptDynamics().evaluate(timeVec(iTime + isBack));
+                if isDisturb
+                    gqVec = smartLinSys.getGqtDynamics().evaluate(timeVec(iTime + isBack));
+                else
+                    gqVec = zeros(xDim, 1);
                 end
-            else
-                for i = 1:(ntv - 1)
-                    A = ell_value_extract(mydata.A, i, [N N]);
-                    Ai = ell_inv(A);
-                    BPB = ell_value_extract(mydata.BPB, i, [N N]);
-                    GQG = ell_value_extract(mydata.GQG, i, [N N]);
-                    BPB = 0.5 * (BPB + BPB');
-                    GQG = 0.5 * (GQG + GQG');
-                    Q = A * Q * A';
-                    if size(mydata.delta, 2) > 1
-                        dd = mydata.delta(i);
-                    elseif isempty(mydata.delta)
-                        dd = 0;
-                    else
-                        dd = mydata.delta(1);
-                    end
-                    if dd > 0
-                        e2  = sqrt(absTol*absTol + 2*max(eig(BPB))*absTol);
-                        BPB = ell_regularize(BPB, e2);
-                    elseif rank(BPB) < N
-                        BPB = ell_regularize(BPB);
-                    end
-                    if rank(GQG) < N
-                        GQG = ell_regularize(GQG);
-                    end
-                    l = Ai' * l;
-                    if mnmx > 0 % minmax case
-                        E = minkmp_ia(ellipsoid(0.5*(Q+Q')),...
-                            ellipsoid(0.5*(GQG+GQG')),...
-                            ellipsoid(0.5*(BPB+BPB')), l);
-                    else
-                        E = minkpm_ia([ellipsoid(0.5*(Q+Q'))...
-                            ellipsoid(0.5*(BPB+BPB'))],...
-                            ellipsoid(0.5*(GQG+GQG')), l);
-                    end
-                    if ~isempty(E)
-                        Q = parameters(E);
-                    else
-                        Q = zeros(N, N);
-                    end
-                    QQ = [QQ reshape(Q, N*N, 1)];
-                    LL = [LL l];
+                aMat = smartLinSys.getAtDynamics().evaluate(timeVec(iTime + isBack));
+                if isBack
+                    centerVec = ell_inv(aMat) * (centerVec - bpVec - gqVec);
+                else
+                    centerVec = aMat * centerVec + bpVec + gqVec;
                 end
+                centerMat(:, iTime + 1) = centerVec;
             end
-            Properties.setIsVerbose(vrb);
+            %
+            Properties.setIsVerbose(isVerbose);
         end
         %
-        function [QQ, LL] = iesm_de(ntv, X0, l0, mydata, N, back,absTol)
+        function ellTubeRel = makeEllTubeRel(smartLinSys, l0Mat,...
+                timeVec, isDisturb, calcPrecision, approxTypeVec)
+            import gras.ellapx.enums.EApproxType;
+            relTol = elltool.conf.Properties.getRelTol();
+            isBack = timeVec(1) > timeVec(end);
+            goodDirSetObj =...
+                gras.ellapx.lreachplain.GoodDirectionSet(...
+                smartLinSys, timeVec(1), l0Mat, calcPrecision);
+            aMat = elltool.reach.ReachDiscrete.calculateCenterMat(smartLinSys, timeVec, ...
+                isBack, isDisturb);
             %
-            % IESM_DE - recurrence relation for the shape matrix of internal ellipsoid
-            %           for discrete-time system without disturbance.
+            approxSchemaDescr = char.empty(1,0);
+            approxSchemaName = char.empty(1,0);
+            sTime = timeVec(1);
             %
-            import elltool.conf.Properties;
-            LL = l0;
-            l = l0;
-            QQ = X0;
-            Q = reshape(X0, N, N);
-            vrb = Properties.getIsVerbose();
-            Properties.setIsVerbose(false);
-            if back > 0
-                for i = 2:ntv
-                    A = ell_value_extract(mydata.A, i, [N N]);
-                    Ai = ell_inv(A);
-                    BPB = Ai * ell_value_extract(mydata.BPB, i, [N N]) * Ai';
-                    BPB = 0.5 * (BPB + BPB');
-                    Q = Ai * Q * Ai';
-                    if rank(Q) < N
-                        Q = ell_regularize(Q);
+            isIntApprox = any(approxTypeVec == EApproxType.Internal);
+            isExtApprox = any(approxTypeVec == EApproxType.External);
+            if isDisturb
+                if isExtApprox
+                    approxType = EApproxType.External;
+                    [QArrayList ltGoodDirArray] = ...
+                        elltool.reach.ReachDiscrete.calculateApproxShapeWithDist(...
+                        smartLinSys, l0Mat, timeVec, ...
+                        isBack, relTol, EApproxType.External);
+                    extEllTubeRel = create();
+                    if ~isIntApprox
+                        ellTubeRel = extEllTubeRel;
                     end
-                    if rank(BPB) < N
-                        BPB = ell_regularize(BPB);
+                end
+                if isIntApprox
+                    approxType = EApproxType.Internal;
+                    [QArrayList ltGoodDirArray] = ...
+                        elltool.reach.ReachDiscrete.calculateApproxShapeWithDist(...
+                        smartLinSys, l0Mat, timeVec, ...
+                        isBack, relTol, EApproxType.Internal);
+                    intEllTubeRel = create();
+                    if isExtApprox
+                        intEllTubeRel.unionWith(extEllTubeRel);
                     end
-                    l = A' * l;
-                    E = minksum_ia([ellipsoid(0.5*(Q+Q'))...
-                        ellipsoid(0.5*(BPB+BPB'))], l);
-                    Q = parameters(E);
-                    QQ = [QQ reshape(Q, N*N, 1)];
-                    LL = [LL l];
+                    ellTubeRel = intEllTubeRel;
                 end
             else
-                for i = 1:(ntv - 1)
-                    A = ell_value_extract(mydata.A, i, [N N]);
-                    Ai = ell_inv(A);
-                    BPB = ell_value_extract(mydata.BPB, i, [N N]);
-                    BPB = 0.5 * (BPB + BPB');
-                    Q = A * Q * A';
-                    if size(mydata.delta, 2) > 1
-                        dd = mydata.delta(i);
-                    elseif isempty(mydata.delta)
-                        dd = 0;
-                    else
-                        dd = mydata.delta(1);
+                if isExtApprox
+                    approxType = EApproxType.External;
+                    [QArrayList ltGoodDirArray] = ...
+                        elltool.reach.ReachDiscrete.calculateApproxShape(...
+                        smartLinSys, l0Mat, timeVec, ...
+                        isBack, relTol, EApproxType.External);
+                    extEllTubeRel = create();
+                    if ~isIntApprox
+                        ellTubeRel = extEllTubeRel;
                     end
-                    if dd > 0
-                        e2 = sqrt(absTol*absTol + 2*max(eig(BPB))*absTol);
-                        BPB = ell_regularize(BPB, e2);
-                    elseif rank(BPB) < N
-                        BPB = ell_regularize(BPB);
+                end
+                if isIntApprox
+                    approxType = EApproxType.Internal;
+                    [QArrayList ltGoodDirArray] = ...
+                        elltool.reach.ReachDiscrete.calculateApproxShape(...
+                        smartLinSys, l0Mat, timeVec, ...
+                        isBack, relTol, EApproxType.Internal);
+                    intEllTubeRel = create();
+                    if isExtApprox
+                        intEllTubeRel.unionWith(extEllTubeRel);
                     end
-                    l = Ai' * l;
-                    E = minksum_ia([ellipsoid(0.5*(Q+Q'))...
-                        ellipsoid(0.5*(BPB+BPB'))], l);
-                    Q = parameters(E);
-                    QQ = [QQ reshape(Q, N*N, 1)];
-                    LL = [LL l];
+                    ellTubeRel = intEllTubeRel;
                 end
-            end
-            Properties.setIsVerbose(vrb);
-        end
-        %
-        function evalMat = matrix_eval(XCMat, time)
-            %
-            % MATRIX_EVAL - evaluates symbolic matrix at given time instant.
-            %
-            if ~(iscell(XCMat))
-                evalMat = XCMat;
-                return;
-            end
-            k = time;
-            t = time;
-            [m, n] = size(XCMat);
-            evalMat = zeros(m, n);
-            for i = 1:m
-                for j = 1:n
-                    evalMat(i, j) = eval(XCMat{i, j});
-                end
-            end
-        end
-        %
-        function [atStrCMat btStrCMat gtStrCMat ptStrCMat ptStrCVec ...
-                qtStrCMat qtStrCVec ctStrCMat wtStrCMat wtStrCVec] = ...
-                prepareSysParam(linSys)
-            [atStrCMat btStrCMat gtStrCMat ptStrCMat ptStrCVec ...
-                qtStrCMat qtStrCVec] = ...
-                elltool.reach.AReach.prepareSysParamBasic(linSys);
-            %
-            ctMat = linSys.getCtMat();
-            if ~iscell(ctMat) && ~isempty(ctMat)
-                ctStrCMat = elltool.reach.AReach.getStrCMat(ctMat);
-            else
-                ctStrCMat = ctMat;
             end
             %
-            wEll = linSys.getNoiseBoundsEll();
-            [wtVec wtMat] =...
-                elltool.reach.AReach.getEllParams(wEll, ctMat);
-            if ~iscell(wtMat)
-                wtStrCMat = elltool.reach.AReach.getStrCMat(wtMat);
-            else
-                wtStrCMat = wtMat;
-            end
-            if ~iscell(wtVec)
-                wtStrCVec = elltool.reach.AReach.getStrCMat(wtVec);
-            else
-                wtStrCVec = wtVec;
-            end
-        end
-    end
-    %
-    methods (Access = private)
-        function [directionsCVec timeVec] = getDirectionInternal(self)
-            import elltool.conf.Properties;
-            directionsCVec  = [];
-            if isempty(self)
-                if nargout > 1
-                    timeVec = [];
-                end
-                return;
-            end
-            directionsCVec = self.l_values;
-            if nargout > 1
-                timeVec = self.time_values;
-            end
-        end
-        %
-        function [eaEllMat timeVec] = getEaInternal(self)
-            if isempty(self)
-                return;
-            end
-            eaEllMat = [];
-            if nargout > 1
-                timeVec = self.time_values;
-            end
-            m = size(self.ea_values, 2);
-            n = size(self.time_values, 2);
-            d = self.dimension();
-            for i = 1:m
-                QQ = self.ea_values{i};
-                ee = [];
-                for j = 1:n
-                    q  = self.center_values(:, j);
-                    Q  = (1 + self.relTol()) * reshape(QQ(:, j), d, d);
-                    if min(eig(Q)) < (- self.absTol())
-                        Q = self.absTol() * eye(d);
-                    end
-                    ee = [ee ellipsoid(q, Q)];
-                end
-                eaEllMat = [eaEllMat; ee];
-            end
-        end
-        %
-        function [iaEllMat timeVec] = getIaInternal(self)
-            if isempty(self)
-                return;
-            end
-            iaEllMat = [];
-            if nargout > 1
-                timeVec = self.time_values;
-            end
-            m = size(self.ia_values, 2);
-            n = size(self.time_values, 2);
-            d = self.dimension();
-            for i = 1:m
-                QQ = self.ia_values{i};
-                ee = [];
-                for j = 1:n
-                    q  = self.center_values(:, j);
-                    Q  = (1 - self.relTol()) * reshape(QQ(:, j), d, d);
-                    Q  = real(Q);
-                    if min(eig(Q)) < (- self.absTol())
-                        Q = self.absTol() * eye(d);
-                    end
-                    ee = [ee ellipsoid(q, Q)];
-                end
-                iaEllMat = [iaEllMat; ee];
+            function rel = create()
+                rel = gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
+                    QArrayList, aMat, timeVec, ltGoodDirArray, ...
+                    sTime, approxType, approxSchemaName, ...
+                    approxSchemaDescr, calcPrecision);
             end
         end
     end
@@ -584,54 +408,37 @@ classdef ReachDiscrete < elltool.reach.AReach
             %
             import gras.la.sqrtmpos;
             import elltool.conf.Properties;
+            import gras.ellapx.enums.EApproxType;
             import modgen.common.throwerror;
             import elltool.logging.Log4jConfigurator;
-            
+            %
             persistent logger;
-            
+            %
             neededPropNameList =...
                 {'absTol', 'relTol', 'nPlot2dPoints',...
                 'nPlot3dPoints','nTimeGridPoints'};
             [absTolVal, relTolVal, nPlot2dPointsVal,...
                 nPlot3dPointsVal, nTimeGridPointsVal] =...
                 Properties.parseProp(varargin, neededPropNameList);
-            %
             self.absTol = absTolVal;
             self.relTol = relTolVal;
             self.nPlot2dPoints = nPlot2dPointsVal;
             self.nPlot3dPoints = nPlot3dPointsVal;
             self.nTimeGridPoints = nTimeGridPointsVal;
+            %
             if (nargin == 0) || isempty(linSys)
                 return;
             end
             if isstruct(linSys) && (nargin == 1)
                 return;
             end
-            self.t0                 = [];
-            self.x0Ellipsoid        = [];
-            self.initial_directions = [];
-            self.time_values        = [];
-            self.center_values      = [];
-            self.l_values           = [];
-            self.ea_values          = [];
-            self.ia_values          = [];
-            self.minmax             = [];
-            self.calc_data          = [];
-            %
-            self.switchSysTimeVec = timeVec;
-            self.x0Ellipsoid = x0Ell;
-            self.linSysCVec = {linSys};
-            self.isCut = false;
-            self.isProj = false;
-            self.isBackward = timeVec(1) > timeVec(2);
-            self.projectionBasisMat = [];
             % check and analize input
             if nargin < 4
                 throwerror('insufficient number of input arguments.');
             end
             if ~(isa(linSys, 'elltool.linsys.LinSysDiscrete'))
                 throwerror(['first input argument ',...
-                    'must be linear system object.']);
+                    'must be discrete linear system object.']);
             end
             linSys = linSys(1, 1);
             [d1, du, dy, dd] = linSys.dimension();
@@ -645,11 +452,11 @@ classdef ReachDiscrete < elltool.reach.AReach
                 throwerror(['dimensions of linear system and ',...
                     'set of initial conditions do not match.']);
             end
-            [k, l] = size(timeVec);
-            if ~(isa(timeVec, 'double')) || (k ~= 1) || ((l ~= 2) && (l ~= 1))
-                throwerror(['time interval must be specified ',...
-                    'as ''[t0 t1]'', or, in ',...
-                    'discrete-time - as ''[k0 k1]''.']);
+            [timeRows, timeCols] = size(timeVec);
+            if ~(isa(timeVec, 'double')) || ...
+                    (timeRows ~= 1) || (timeCols ~= 2)
+                throwerror('wrongInput', ['time interval must be ',...
+                    'specified as ''[k0 k1]''.']);
             end
             [m, N] = size(l0Mat);
             if m ~= d2
@@ -677,1191 +484,53 @@ classdef ReachDiscrete < elltool.reach.AReach
                 end
             end
             %
+            self.switchSysTimeVec = timeVec;
+            self.x0Ellipsoid = x0Ell;
+            self.linSysCVec = {linSys};
+            self.isCut = false;
+            self.isProj = false;
+            self.isBackward = timeVec(1) > timeVec(2);
+            self.projectionBasisMat = [];
             self.x0Ellipsoid        = x0Ell;
-            self.initial_directions = l0Mat;
-            self.minmax             = OptStruct.minmax;
-            % Create time grid
-            if size(timeVec, 2) == 1
-                self.t0 = 0;
-                h     = round(timeVec);
+            %
+            % create time grid
+            %
+            k0 = round(timeVec(1));
+            k1 = round(timeVec(2));
+            if k0 < k1
+                tVec = k0:k1;
             else
-                self.t0 = round(timeVec(1));
-                h     = round(timeVec(2));
-            end
-            if h < self.t0
-                self.time_values = fliplr(h:(self.t0));
-            else
-                self.time_values = (self.t0):h;
-            end
-            if self.time_values(1) > self.time_values(end)
-                back  = 1;
-                tvals = - self.time_values;
-            else
-                back  = 0;
-                tvals = self.time_values;
+                tVec = fliplr(k0:k1);
             end
             %
-            www = warning;
-            warning off;
-            % Perform matrix, control, disturbance and noise evaluations.
-            if Properties.getIsVerbose()
-                if isempty(logger)
-                    logger=Log4jConfigurator.getLogger();
-                end
-                logger.info('Performing preliminary function evaluations...');
-            end
+            % create gras LinSys object
             %
-            mydata = self.calculateData();
-            %%% Compute state transition matrix.
-            if Properties.getIsVerbose()
-                if isempty(logger)
-                    logger=Log4jConfigurator.getLogger();
-                end
-                logger.info('Computing state transition matrix...');
-            end
-            mydata.Phi   = [];
-            mydata.Phinv = [];
-            %%% Compute the center of the reach set.
-            if Properties.getIsVerbose()
-                if isempty(logger)
-                    logger=Log4jConfigurator.getLogger();
-                end
-                logger.info('Computing the trajectory of the reach set center...');
-            end
-            [x0, X0] = parameters(x0Ell);
-            xx = x0;
-            x  = x0;
-            for i = 1:(size(self.time_values, 2) - 1)
-                Bp = ell_value_extract(mydata.Bp, i+back, [d1 1]);
-                if ~(isempty(mydata.Gq))
-                    Gq = ell_value_extract(mydata.Gq, i+back, [d1 1]);
-                else
-                    Gq = zeros(d1, 1);
-                end
-                if back > 0
-                    A = ell_value_extract(mydata.A, i+back, [d1 d1]);
-                    x = ell_inv(A)*(x - Bp - Gq);
-                else
-                    A = ell_value_extract(mydata.AC, i, [d1 d1]);
-                    x = A*x + Bp + Gq;
-                end
-                xx = [xx x];
-            end
-            self.center_values = xx;
-            clear('A', 'xx');
-            %%% Compute external shape matrices.
-            if (OptStruct.approximation ~= 1)
-                if Properties.getIsVerbose()
-                    if isempty(logger)
-                        logger=Log4jConfigurator.getLogger();
-                    end
-                    logger.info('Computing external shape matrices...');
-                end
-                LL = [];
-                QQ = [];
-                Q0 = reshape(X0, d1*d1, 1);
-                for ii = 1:N
-                    l0 = l0Mat(:, ii);
-                    if linSys.hasdisturbance()
-                        [Q, L] = self.eedist_de(size(tvals, 2),...
-                            Q0, l0, mydata, d1, back, self.absTol);
-                    elseif ~(isempty(mydata.BPB))
-                        [Q, L] = self.eesm_de(size(tvals, 2),...
-                            Q0, l0, mydata, d1, back, self.absTol);
-                    else
-                        Q = [];
-                        L = [];
-                    end
-                    LL = [LL {L}];
-                    QQ = [QQ {Q}];
-                end
-                self.ea_values = QQ;
-            end
-            %%% Compute internal shape matrices.
-            if (OptStruct.approximation ~= 0)
-                if Properties.getIsVerbose()
-                    if isempty(logger)
-                        logger=Log4jConfigurator.getLogger();
-                    end
-                    logger.info('Computing internal shape matrices...');
-                end
-                LL = [];
-                QQ = [];
-                Q0 = reshape(X0, d1*d1, 1);
-                M  = sqrtmpos(X0, self.absTol);
-                M  = 0.5*(M + M');
-                for ii = 1:N
-                    l0 = l0Mat(:, ii);
-                    if linSys.hasdisturbance()
-                        [Q, L] = self.iedist_de(size(tvals, 2),...
-                            Q0, l0, mydata, d1, back, OptStruct.minmax, self.absTol);
-                    elseif ~(isempty(mydata.BPB))
-                        [Q, L] = self.iesm_de(size(tvals, 2),...
-                            Q0, l0, mydata, d1, back,self.absTol);
-                    else
-                        Q = [];
-                        L = [];
-                    end
-                    LL = [LL {L}];
-                    QQ = [QQ {Q}];
-                end
-                self.ia_values = QQ;
-            end
-            if OptStruct.save_all > 0
-                self.calc_data = mydata;
-            end
-            self.l_values = LL;
-            if www(1).state
-                warning on;
-            end
-            % create EllTube
-            k0 = self.time_values(1);
-            k1 = self.time_values(end);
-            %
-            nTimeStep = abs(k1 - k0) + 1;
-            nDirections = size(self.initial_directions, 2);
-            xDim = linSys.dimension();
-            %
-            goodDirCVec = self.l_values;
-            [eaEllMat ~] = self.getEaInternal();
-            [iaEllMat ~] = self.getIaInternal();
-            trCenterMat = self.center_values;
-            %
-            nPoints = nTimeStep;
-            calcPrecision = 0.001;
-            approxSchemaDescr = char.empty(1,0);
-            approxSchemaName = char.empty(1,0);
-            nDims = xDim;
-            nTubes = nDirections;
-            QArrayList = repmat({repmat(eye(nDims),[1,1,nPoints])},1,nTubes);
-            aMat = trCenterMat;
-            timeVec = self.time_values;
-            sTime = k0;
-            %
-            approxType = gras.ellapx.enums.EApproxType.External;
-            %
-            ltGoodDirArray = zeros(xDim, nTubes, nTimeStep);
-            for iTube = 1:nTubes
-                ltGoodDirArray(:, iTube, :) = goodDirCVec{iTube};
-            end
-            %
-            QArrayList = repmat({repmat(zeros(xDim), ...
-                [1, 1, nPoints])}, 1, nTubes);
-            %
-            for iTube = 1:nTubes
-                for iTime = 1:nTimeStep
-                    QArrayList{1, iTube}(:, :, iTime) = double(eaEllMat(iTube, iTime));
-                end
-            end
-            %
-            self.ellTubeRel = create();
-            %
-            approxType = gras.ellapx.enums.EApproxType.Internal;
-            %
-            for iTube = 1:nTubes
-                for iTime = 1:nTimeStep
-                    QArrayList{1, iTube}(:, :, iTime) = double(iaEllMat(iTube, iTime));
-                end
-            end
-            rel2 = create();
-            %
-            self.ellTubeRel.unionWith(rel2);
-            %
-            function rel = create()
-                rel = gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
-                    QArrayList, aMat, timeVec, ltGoodDirArray, ...
-                    sTime, approxType, approxSchemaName, ...
-                    approxSchemaDescr, calcPrecision);
-            end
-        end
-        %
-        function mydata = calculateData(self)
-            import gras.la.sqrtmpos;
-            %
-            linSys = self.linSysCVec{1};
-            [atStrCMat btStrCMat gtStrCMat ptStrCMat ptStrCVec ...
-                qtStrCMat qtStrCVec ctStrCMat wtStrCMat wtStrCVec] = ...
+            [x0Vec x0Mat] = double(x0Ell);
+            [atStrCMat btStrCMat gtStrCMat ptStrCMat ptStrCVec...
+                qtStrCMat qtStrCVec] =...
                 self.prepareSysParam(linSys);
-            %
-            mydata.A     = [];
-            mydata.Bp    = [];
-            mydata.BPB   = [];
-            mydata.BPBsr = [];
-            mydata.Gq    = [];
-            mydata.GQG   = [];
-            mydata.GQGsr = [];
-            mydata.C     = [];
-            mydata.w     = [];
-            mydata.W     = [];
-            mydata.Phi   = [];
-            mydata.Phinv = [];
-            mydata.delta = [];
-            mydata.mu    = [];
-            %
-            [d1, du, dy, dd] = linSys.dimension();
-            % matrix A
-            AA = zeros(d1*d1, size(self.time_values, 2));
-            DD = zeros(1, size(self.time_values, 2));
-            AC = zeros(d1*d1, size(self.time_values, 2));
-            for i = 1:size(self.time_values, 2)
-                A  = self.matrix_eval(atStrCMat, self.time_values(i));
-                AC(:, i) = reshape(A, d1*d1, 1);
-                if (rank(A) < d1)
-                    A = ell_regularize(A);
-                    DD(1, i) = 1;
-                else
-                    DD(1, i) = 0;
-                end
-                AA(:, i) = reshape(A, d1*d1, 1);
-            end
-            mydata.A = AA;
-            mydata.AC = AC;
-            mydata.delta = DD;
-            % matrix B
-            BB = zeros(d1*du, size(self.time_values, 2));
-            for i = 1:size(self.time_values, 2)
-                B = self.matrix_eval(btStrCMat, self.time_values(i));
-                BB(:, i) = reshape(B, d1*du, 1);
-            end
-            % matrix G
-            for i = 1:size(self.time_values, 2)
-                B = self.matrix_eval(gtStrCMat, self.time_values(i));
-                GG(:, i) = reshape(B, d1*dd, 1);
-            end
-            % matrix C
-            CC = zeros(d1*dy, size(self.time_values, 2));
-            for i = 1:size(self.time_values, 2)
-                C = self.matrix_eval(ctStrCMat, self.time_values(i));
-                CC(:, i) = reshape(C, d1*dy, 1);
-            end
-            mydata.C = CC;
-            % expressions Bp and BPB'
-            Bp    = zeros(d1, size(self.time_values, 2));
-            BPB   = zeros(d1*d1, size(self.time_values, 2));
-            BPBsr = zeros(d1*d1, size(self.time_values, 2));
-            for i = 1:size(self.time_values, 2)
-                B = reshape(BB(:, i), d1, du);
-                p = self.matrix_eval(ptStrCVec, self.time_values(i));
-                P = self.matrix_eval(ptStrCMat, self.time_values(i));
-                if ~gras.la.ismatposdef(P, self.absTol, false)
-                    throwerror('wrongMat',['shape matrix of ',...
-                        'ellipsoidal control bounds ',...
-                        'must be positive definite.']);
-                end
-                Bp(:, i)    = B * p;
-                P           = B * P * B';
-                BPB(:, i)   = reshape(P, d1*d1, 1);
-                P           = sqrtmpos(P, self.absTol);
-                P           = 0.5*(P + P');
-                BPBsr(:, i) = reshape(P, d1*d1, 1);
-            end
-            mydata.Bp    = Bp;
-            mydata.BPB   = BPB;
-            mydata.BPBsr = BPBsr;
-            % expressions Gq and GQG'
             isDisturbance = self.isDisturbance(gtStrCMat, qtStrCMat);
-            if isDisturbance
-                Gq    = zeros(d1, size(self.time_values, 2));
-                GQG   = zeros(d1*d1, size(self.time_values, 2));
-                GQGsr = zeros(d1*d1, size(self.time_values, 2));
-                for i = 1:size(self.time_values, 2)
-                    G = reshape(GG(:, i), d1, dd);
-                    q = self.matrix_eval(qtStrCVec, self.time_values(i));
-                    Q = self.matrix_eval(qtStrCMat, self.time_values(i));
-                    if ~gras.la.ismatposdef(Q,self.absTol,false)
-                        throwerror('wrongMat',['shape matrix of ',...
-                            'ellipsoidal disturbance bounds ',...
-                            'must be positive definite.']);
-                    end
-                    Gq(:, i)    = G * q;
-                    Q           = G * Q * G';
-                    GQG(:, i)   = reshape(Q, d1*d1, 1);
-                    Q           = sqrtmpos(Q, self.absTol);
-                    Q           = 0.5 * (Q + Q');
-                    GQGsr(:, i) = reshape(Q, d1*d1, 1);
-                end
-                mydata.Gq    = Gq;
-                mydata.GQG   = GQG;
-                mydata.GQGsr = GQGsr;
-            end
-            % expressions w and W
-            noiseStrCMat = self.getStrCMat(ones(size(wtStrCMat, 1)));
-            isNoise = self.isDisturbance(noiseStrCMat, wtStrCMat);
-            if isNoise
-                w = [];
-                W = [];
-                for i = 1:size(self.time_values, 2)
-                    w  = [w self.matrix_eval(wtStrCVec, self.time_values(i))];
-                    ww = self.matrix_eval(wtStrCMat, self.time_values(i));
-                    if ~gras.la.ismatposdef(ww,self.absTol,false)
-                        throwerror('wrongMat',['shape matrix of ',...
-                            'ellipsoidal noise bounds must be positive definite.']);
-                    end
-                    W  = [W reshape(ww, dy*dy, 1)];
-                end
-                mydata.w = w;
-                mydata.W = W;
-            end
             %
-            clear('A', 'B', 'C', 'AC', 'AA', 'BB', 'CC', 'DD', 'Bp',...
-                'BPB', 'Gq', 'GQG', 'p', 'P', 'q', 'Q', 'w', 'W', 'ww');
-        end
-        %
-        function copyReachObj = getCopy(self)
-            copyReachObj = getCopy@elltool.reach.AReach(self);
-            copyReachObj.t0 = self.t0;
-            copyReachObj.initial_directions = self.initial_directions;
-            copyReachObj.time_values = self.time_values;
-            copyReachObj.center_values = self.center_values;
-            copyReachObj.l_values = self.l_values;
-            copyReachObj.ea_values = self.ea_values;
-            copyReachObj.ia_values = self.ia_values;
-            copyReachObj.minmax = self.minmax;
-            copyReachObj.calc_data = self.calc_data;
-        end
-        %
-        function display(self)
-            self.displayInternal();
+            % normalize good directions
+            %
+            sysDim = size(atStrCMat, 1);
+            l0Mat = self.getNormMat(l0Mat, sysDim);
+            %
+            % create approximation tube
+            %
+            relTol = elltool.conf.Properties.getRelTol();
+            smartLinSys = self.getSmartLinSys(atStrCMat, btStrCMat,...
+                ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat, qtStrCVec,...
+                x0Mat, x0Vec, [min(timeVec) max(timeVec)],...
+                relTol, isDisturbance);
+            approxTypeVec = [EApproxType.External EApproxType.Internal];
+            self.ellTubeRel = self.makeEllTubeRel(smartLinSys, l0Mat,...
+                tVec, isDisturbance,...
+                relTol, approxTypeVec);
         end
         %
         function newReachObj = evolve(self, newEndTime, linSys)
-            import elltool.conf.Properties;
-            import modgen.common.throwerror;
-            import elltool.logging.Log4jConfigurator;
-            import gras.la.sqrtmpos;
-            
-            persistent logger;
-            
-            if nargin < 2
-                throwerror('insufficient number of input arguments.');
-            end
-            if isprojection(self)
-                throwerror('cannot compute the reach set for projection.');
-            end
-            newReachObj = self.getCopy();
-            if nargin < 3
-                linSys = newReachObj.linSysCVec{end};
-            end
-            if isempty(linSys)
-                return;
-            end
-            [d1, du, dy, dd] = dimension(linSys);
-            if d1 ~= dimension(self.linSysCVec{end})
-                throwerror(['dimensions of the old and ',...
-                    'new linear systems do not match.']);
-            end
-            newReachObj.linSysCVec{end} = linSys;
-            newEndTime = [newReachObj.time_values(end) newEndTime(1, 1)];
-            if (newReachObj.t0 > newEndTime(1)) &&...
-                    (newEndTime(1) < newEndTime(2))
-                throwerror('reach set must evolve backward in time.');
-            end
-            if (newReachObj.t0 < newEndTime(1)) &&...
-                    (newEndTime(1) > newEndTime(2))
-                throwerror('reach set must evolve forward in time.');
-            end
-            Options = [];
-            Options.approximation = 2;
-            if isempty(self.getEaInternal())
-                Options.approximation = 1;
-            elseif isempty(self.getIaInternal())
-                Options.approximation = 0;
-            end
-            Options.minmax = newReachObj.minmax;
-            if isempty(self.calc_data)
-                Options.save_all = 0;
-            else
-                Options.save_all = 1;
-            end
-            % Create time grid
-            if isa(linSys, 'elltool.linsys.LinSysDiscrete')
-                newEndTime(1) = round(newEndTime(1));
-                newEndTime(2) = round(newEndTime(2));
-                if newEndTime(1) > newEndTime(2)
-                    newReachObj.time_values = fliplr(newEndTime(2):newEndTime(1));
-                else
-                    newReachObj.time_values = newEndTime(1):newEndTime(2);
-                end
-            else
-                newReachObj.time_values =...
-                    linspace(newEndTime(1), newEndTime(2), self.nTimeGridPoints());
-            end
-            if newReachObj.time_values(1) > newReachObj.time_values(end)
-                back = 1;
-                tvals = - newReachObj.time_values;
-            else
-                back = 0;
-                tvals = newReachObj.time_values;
-            end
-            www = warning;
-            warning off;
-            newReachObj.ea_values          = [];
-            newReachObj.ia_values          = [];
-            newReachObj.l_values           = [];
-            newReachObj.initial_directions = [];
-            newReachObj.center_values      = [];
-            newReachObj.calc_data          = [];
-            %%% Get new initial directions.
-            LL = self.getDirectionInternal();
-            nn = size(LL, 2);
-            for i = 1:nn
-                L = LL{i};
-                newReachObj.initial_directions =...
-                    [newReachObj.initial_directions L(:, end)];
-            end
-            %%% Perform matrix, control, disturbance and noise evaluations.
-            %%% Create splines if needed.
-            if Properties.getIsVerbose()
-                if isempty(logger)
-                    logger=Log4jConfigurator.getLogger();
-                end
-                logger.info('Performing preliminary function evaluations...');
-            end
-            mydata.A     = [];
-            mydata.Bp    = [];
-            mydata.BPB   = [];
-            mydata.BPBsr = [];
-            mydata.Gq    = [];
-            mydata.GQG   = [];
-            mydata.GQGsr = [];
-            mydata.C     = [];
-            mydata.w     = [];
-            mydata.W     = [];
-            mydata.Phi   = [];
-            mydata.Phinv = [];
-            mydata.delta = [];
-            mydata.mu    = [];
-            % matrix A
-            aMat = linSys.getAtMat();
-            if iscell(aMat)
-                AA = [];
-                DD = [];
-                AC = [];
-                for i = 1:size(newReachObj.time_values, 2)
-                    A = self.matrix_eval(aMat, newReachObj.time_values(i));
-                    AC = [AC reshape(A, d1*d1, 1)];
-                    if isa(linSys, 'elltool.linsys.LinSysDiscrete') && (rank(A) < d1)
-                        A = ell_regularize(A);
-                        DD = [DD 1];
-                    elseif isa(linSys, 'elltool.linsys.LinSysDiscrete')
-                        DD = [DD 0];
-                    end
-                    AA = [AA reshape(A, d1*d1, 1)];
-                end
-                if isa(linSys, 'elltool.linsys.LinSysDiscrete')
-                    mydata.A     = AA;
-                    mydata.delta = DD;
-                else
-                    mydata.A = spline(newReachObj.time_values, AA);
-                end
-            else
-                AC = aMat;
-                if isa(linSys, 'elltool.linsys.LinSysDiscrete') ...
-                        && (rank(aMat) < d1)
-                    mydata.A     = ell_regularize(aMat);
-                    mydata.delta = 1;
-                elseif isa(linSys, 'elltool.linsys.LinSysDiscrete')
-                    mydata.A     = aMat;
-                    mydata.delta = 0;
-                else
-                    mydata.A     = aMat;
-                end
-            end
-            % matrix B
-            bMat = linSys.getBtMat();
-            if iscell(bMat)
-                BB = [];
-                for i = 1:size(newReachObj.time_values, 2)
-                    B  = self.matrix_eval(bMat, newReachObj.time_values(i));
-                    BB = [BB reshape(B, d1*du, 1)];
-                end
-            else
-                BB = reshape(bMat, d1*du, 1);
-            end
-            % matrix G
-            gMat = linSys.getGtMat();
-            GG = [];
-            if iscell(gMat)
-                for i = 1:size(newReachObj.time_values, 2)
-                    B  = self.matrix_eval(gMat, newReachObj.time_values(i));
-                    GG = [GG reshape(B, d1*dd, 1)];
-                end
-            elseif ~(isempty(gMat))
-                GG = reshape(gMat, d1*dd, 1);
-            end
-            % matrix C
-            cMat = linSys.getCtMat();
-            if iscell(cMat)
-                CC = [];
-                for i = 1:size(newReachObj.time_values, 2)
-                    C  = self.matrix_eval(cMat, newReachObj.time_values(i));
-                    CC = [CC reshape(C, d1*dy, 1)];
-                end
-                if isa(linSys, 'elltool.linsys.LinSysDiscrete')
-                    mydata.C = CC;
-                else
-                    mydata.C = spline(newReachObj.time_values, CC);
-                end
-            else
-                mydata.C = cMat;
-            end
-            % expressions Bp and BPB'
-            uEll = linSys.getUBoundsEll();
-            if isa(uEll, 'ellipsoid')
-                [p, P] = parameters(uEll);
-                if size(BB, 2) == 1
-                    B            = reshape(BB, d1, du);
-                    mydata.Bp    = B * p;
-                    mydata.BPB   = B * P * B';
-                    mydata.BPBsr = sqrtmpos(mydata.BPB, self.absTol);
-                    mydata.BPBsr = 0.5*(mydata.BPBsr + (mydata.BPBsr)');
-                else
-                    Bp    = [];
-                    BPB   = [];
-                    BPBsr = [];
-                    for i = 1:size(newReachObj.time_values, 2)
-                        B     = reshape(BB(:, i), d1, du);
-                        Bp    = [Bp B*p];
-                        B     = B * P * B';
-                        BPB   = [BPB reshape(B, d1*d1, 1)];
-                        B     = sqrtmpos(B, self.absTol);
-                        B     = 0.5*(B + B');
-                        BPBsr = [BPBsr reshape(B, d1*d1, 1)];
-                    end
-                    if isa(linSys, 'elltool.linsys.LinSysDiscrete')
-                        mydata.Bp    = Bp;
-                        mydata.BPB   = BPB;
-                        mydata.BPBsr = BPBsr;
-                    else
-                        mydata.Bp    = spline(newReachObj.time_values, Bp);
-                        mydata.BPB   = spline(newReachObj.time_values, BPB);
-                        mydata.BPBsr = spline(newReachObj.time_values, BPBsr);
-                    end
-                end
-            elseif isa(uEll, 'double')
-                p  = uEll;
-                if size(BB, 2) == 1
-                    mydata.Bp = reshape(BB, d1, du) * p;
-                else
-                    Bp = [];
-                    for i = 1:size(newReachObj.time_values, 2)
-                        B  = reshape(BB(:, i), d1, du);
-                        Bp = [Bp B*p];
-                    end
-                    if isa(linSys, 'elltool.linsys.LinSysDiscrete')
-                        mydata.Bp = Bp;
-                    else
-                        mydata.Bp = spline(newReachObj.time_values, Bp);
-                    end
-                end
-            elseif iscell(uEll)
-                p  = uEll;
-                Bp = [];
-                for i = 1:size(newReachObj.time_values, 2)
-                    if size(BB, 2) == 1
-                        B = reshape(BB, d1, du);
-                    else
-                        B = reshape(BB(:, i), d1, du);
-                    end
-                    Bp = [Bp B*self.matrix_eval(p, newReachObj.time_values(i))];
-                end
-                if isa(linSys, 'elltool.linsys.LinSysDiscrete')
-                    mydata.Bp = Bp;
-                else
-                    mydata.Bp = spline(newReachObj.time_values, Bp);
-                end
-            elseif isstruct(uEll)
-                if size(BB, 2) == 1
-                    B = reshape(BB, d1, du);
-                    if iscell(uEll.center) & iscell(uEll.shape)
-                        Bp    = [];
-                        BPB   = [];
-                        BPBsr = [];
-                        for i = 1:size(newReachObj.time_values, 2)
-                            p = self.matrix_eval(uEll.center,...
-                                newReachObj.time_values(i));
-                            P = self.matrix_eval(uEll.shape,...
-                                newReachObj.time_values(i));
-                            if ~gras.la.ismatposdef(P,self.absTol,false)
-                                throwerror('wrongMat',['shape matrix of ',...
-                                    'ellipsoidal control bounds ',...
-                                    'must be positive definite.']);
-                            end
-                            Bp    = [Bp B*p];
-                            P     = B * P * B';
-                            BPB   = [BPB reshape(P, d1*d1, 1)];
-                            P     = sqrtmpos(P, self.absTol);
-                            P     = 0.5*(P + P');
-                            BPBsr = [BPBsr reshape(P, d1*d1, 1)];
-                        end
-                        if isa(linSys, 'elltool.linsys.LinSysDiscrete')
-                            mydata.Bp    = Bp;
-                            mydata.BPB   = BPB;
-                            mydata.BPBsr = BPBsr;
-                        else
-                            mydata.Bp    = spline(newReachObj.time_values, Bp);
-                            mydata.BPB   = spline(newReachObj.time_values, BPB);
-                            mydata.BPBsr = spline(newReachObj.time_values, BPBsr);
-                        end
-                    elseif iscell(uEll.center)
-                        Bp  = [];
-                        for i = 1:size(newReachObj.time_values, 2)
-                            p  = self.matrix_eval(uEll.center,...
-                                newReachObj.time_values(i));
-                            Bp = [Bp B*p];
-                        end
-                        if isa(linSys, 'elltool.linsys.LinSysDiscrete')
-                            mydata.Bp  = Bp;
-                        else
-                            mydata.Bp  = spline(newReachObj.time_values, Bp);
-                        end
-                        mydata.BPB   = B * uEll.shape * B';
-                        mydata.BPBsr = sqrtmpos(mydata.BPB, self.absTol);
-                        mydata.BPBsr = 0.5*(mydata.BPBsr + (mydata.BPBsr)');
-                    else
-                        BPB   = [];
-                        BPBsr = [];
-                        for i = 1:size(newReachObj.time_values, 2)
-                            P = self.matrix_eval(uEll.shape,...
-                                newReachObj.time_values(i));
-                            if ~gras.la.ismatposdef(P,self.absTol,false)
-                                throwerror('wrongMat',['shape matrix of ',...
-                                    'ellipsoidal control bounds must ',...
-                                    'be positive definite.']);
-                            end
-                            P     = B * P * B';
-                            BPB   = [BPB reshape(P, d1*d1, 1)];
-                            P     = sqrtmpos(P, self.absTol);
-                            P     = 0.5*(P + P');
-                            BPBsr = [BPBsr reshape(P, d1*d1, 1)];
-                        end
-                        mydata.Bp = B * uEll.center;
-                        if isa(linSys, 'elltool.linsys.LinSysDiscrete')
-                            mydata.BPB   = BPB;
-                            mydata.BPBsr = BPBsr;
-                        else
-                            mydata.BPB   = spline(newReachObj.time_values, BPB);
-                            mydata.BPBsr = spline(newReachObj.time_values, BPBsr);
-                        end
-                    end
-                else
-                    Bp    = [];
-                    BPB   = [];
-                    BPBsr = [];
-                    for i = 1:size(newReachObj.time_values, 2)
-                        B = reshape(BB(:, i), d1, du);
-                        if iscell(uEll.center)
-                            p = self.matrix_eval(uEll.center,...
-                                newReachObj.time_values(i));
-                        else
-                            p = uEll.center;
-                        end
-                        if iscell(uEll.shape)
-                            P = self.matrix_eval(uEll.shape,...
-                                newReachObj.time_values(i));
-                            if ~gras.la.ismatposdef(P,self.absTol,false)
-                                throwerror('wrongMat',['shape matrix of ',...
-                                    'ellipsoidal control bounds ',...
-                                    'must be positive definite.']);
-                            end
-                        else
-                            P = uEll.shape;
-                        end
-                        Bp    = [Bp B*p];
-                        P     = B * P * B';
-                        BPB   = [BPB reshape(P, d1*d1, 1)];
-                        P     = sqrtmpos(P, self.absTol);
-                        P     = 0.5*(P + P');
-                        BPBsr = [BPBsr reshape(P, d1*d1, 1)];
-                    end
-                    if isa(linSys, 'elltool.linsys.LinSysDiscrete')
-                        mydata.Bp    = Bp;
-                        mydata.BPB   = BPB;
-                        mydata.BPBsr = BPBsr;
-                    else
-                        mydata.Bp    = spline(newReachObj.time_values, Bp);
-                        mydata.BPB   = spline(newReachObj.time_values, BPB);
-                        mydata.BPBsr = spline(newReachObj.time_values, BPBsr);
-                    end
-                end
-            end
-            % expressions Gq and GQG'
-            vEll = linSys.getDistBoundsEll();
-            if ~(isempty(GG))
-                if isa(vEll, 'ellipsoid')
-                    [q, Q] = parameters(vEll);
-                    if size(GG, 2) == 1
-                        G = reshape(GG, d1, dd);
-                        mydata.Gq = G * q;
-                        mydata.GQG = G * Q * G';
-                        mydata.GQGsr = sqrtmpos(mydata.GQG, self.absTol);
-                        mydata.GQGsr = 0.5*(mydata.GQGsr + (mydata.GQGsr)');
-                    else
-                        Gq = [];
-                        GQG = [];
-                        GQGsr = [];
-                        for i = 1:size(newReachObj.time_values, 2)
-                            G     = reshape(GG(:, i), d1, dd);
-                            Gq    = [Gq G*q];
-                            G     = G * Q * G';
-                            GQG   = [GQG reshape(G, d1*d1, 1)];
-                            G     = sqrtmpos(G, self.absTol);
-                            G     = 0.5*(G + G');
-                            GQGsr = [GQGsr reshape(G, d1*d1, 1)];
-                        end
-                        if isa(linSys, 'elltool.linsys.LinSysDiscrete')
-                            mydata.Gq    = Gq;
-                            mydata.GQG   = GQG;
-                            mydata.GQGsr = GQGsr;
-                        else
-                            mydata.Gq    = spline(newReachObj.time_values, Gq);
-                            mydata.GQG   = spline(newReachObj.time_values, GQG);
-                            mydata.GQGsr = spline(newReachObj.time_values, GQGsr);
-                        end
-                    end
-                elseif isa(vEll, 'double')
-                    q  = vEll;
-                    if size(GG, 2) == 1
-                        mydata.Gq = reshape(GG, d1, dd) * q;
-                    else
-                        Gq = [];
-                        for i = 1:size(newReachObj.time_values, 2)
-                            G  = reshape(GG(:, i), d1, dd);
-                            Gq = [Gq G*q];
-                        end
-                        if isa(linSys, 'elltool.linsys.LinSysDiscrete')
-                            mydata.Gq = Gq;
-                        else
-                            mydata.Gq = spline(newReachObj.time_values, Gq);
-                        end
-                    end
-                elseif iscell(vEll)
-                    q  = vEll;
-                    Gq = [];
-                    for i = 1:size(newReachObj.time_values, 2)
-                        if size(GG, 2) == 1
-                            G = reshape(GG, d1, dd);
-                        else
-                            G = reshape(GG(:, i), d1, dd);
-                        end
-                        Gq = [Gq G*self.matrix_eval(q, ...
-                            newReachObj.time_values(i), ...
-                            isa(linSys, 'elltool.linsys.LinSysDiscrete'))];
-                    end
-                    if isa(linSys, 'elltool.linsys.LinSysDiscrete')
-                        mydata.Gq = Gq;
-                    else
-                        mydata.Gq = spline(newReachObj.time_values, Gq);
-                    end
-                elseif isstruct(vEll)
-                    if size(GG, 2) == 1
-                        G = reshape(GG, d1, dd);
-                        if iscell(vEll.center) &&...
-                                iscell(vEll.shape)
-                            Gq    = [];
-                            GQG   = [];
-                            GQGsr = [];
-                            for i = 1:size(newReachObj.time_values, 2)
-                                q = self.matrix_eval(...
-                                    vEll.center,...
-                                    newReachObj.time_values(i));
-                                Q = self.matrix_eval(...
-                                    vEll.shape,...
-                                    newReachObj.time_values(i));
-                                if ~gras.la.ismatposdef(Q,self.absTol,false)
-                                    throwerror('wrongMat',['shape matrix of ',...
-                                        'ellipsoidal disturbance ',...
-                                        'bounds must be positive definite.']);
-                                end
-                                Gq    = [Gq G*q];
-                                Q     = G * Q * G';
-                                GQG   = [GQG reshape(Q, d1*d1, 1)];
-                                Q     = sqrtmpos(Q, self.absTol);
-                                Q     = 0.5*(Q + Q');
-                                GQGsr = [GQGsr reshape(Q, d1*d1, 1)];
-                            end
-                            if isa(linSys, 'elltool.linsys.LinSysDiscrete')
-                                mydata.Gq    = Gq;
-                                mydata.GQG   = GQG;
-                                mydata.GQGsr = GQGsr;
-                            else
-                                mydata.Gq    = spline(newReachObj.time_values, Gq);
-                                mydata.GQG   = spline(newReachObj.time_values, GQG);
-                                mydata.GQGsr = spline(newReachObj.time_values, GQGsr);
-                            end
-                        elseif iscell(vEll.center)
-                            Gq  = [];
-                            for i = 1:size(newReachObj.time_values, 2)
-                                q  = self.matrix_eval(...
-                                    vEll.center,...
-                                    newReachObj.time_values(i));
-                                Gq = [Gq G*q];
-                            end
-                            if isa(linSys, 'elltool.linsys.LinSysDiscrete')
-                                mydata.Gq  = Gq;
-                            else
-                                mydata.Gq  = spline(newReachObj.time_values, Gq);
-                            end
-                            mydata.GQG   = G * vEll.shape * G';
-                            mydata.GQGsr = sqrtmpos(mydata.GQG, self.absTol);
-                            mydata.GQGsr = 0.5*(mydata.GQGsr + (mydata.GQGsr)');
-                        else
-                            GQG   = [];
-                            GQGsr = [];
-                            for i = 1:size(newReachObj.time_values, 2)
-                                Q = self.matrix_eval(...
-                                    vEll.shape,...
-                                    newReachObj.time_values(i));
-                                if ~gras.la.ismatposdef(Q,self.absTol,false)
-                                    throwerror('wrongMat',['shape matrix of ',...
-                                        'ellipsoidal disturbance bounds ',...
-                                        'must be positive definite.']);
-                                end
-                                Q     = G * Q * G';
-                                GQG   = [GQG reshape(Q, d1*d1, 1)];
-                                Q     = sqrtmpos(Q, self.absTol);
-                                Q     = 0.5*(Q + Q');
-                                GQGsr = [GQGsr reshape(Q, d1*d1, 1)];
-                            end
-                            mydata.Gq  = G * vEll.center;
-                            if isa(linSys, 'elltool.linsys.LinSysDiscrete')
-                                mydata.GQG   = GQG;
-                                mydata.GQGsr = GQGsr;
-                            else
-                                mydata.GQG   = spline(newReachObj.time_values, GQG);
-                                mydata.GQGsr = spline(newReachObj.time_values, GQGsr);
-                            end
-                        end
-                    else
-                        Gq    = [];
-                        GQG   = [];
-                        GQGsr = [];
-                        for i = 1:size(newReachObj.time_values, 2)
-                            G = reshape(GG(:, i), d1, dd);
-                            if iscell(vEll.center)
-                                q = self.matrix_eval(...
-                                    vEll.center,...
-                                    newReachObj.time_values(i));
-                            else
-                                q = vEll.center;
-                            end
-                            if iscell(vEll.shape)
-                                Q = self.matrix_eval(...
-                                    vEll.shape,...
-                                    newReachObj.time_values(i));
-                                if ~gras.la.ismatposdef(Q,self.absTol,false)
-                                    throwerror('wrongMat',['shape matrix of ',...
-                                        'ellipsoidal disturbance bounds ',...
-                                        'must be positive definite.']);
-                                end
-                            else
-                                Q = vEll.shape;
-                            end
-                            Gq  = [Gq G*q];
-                            Q     = G * Q * G';
-                            GQG   = [GQG reshape(Q, d1*d1, 1)];
-                            Q     = sqrtmpos(Q, self.absTol);
-                            Q     = 0.5*(Q + Q');
-                            GQGsr = [GQGsr reshape(Q, d1*d1, 1)];
-                        end
-                        if isa(linSys, 'elltool.linsys.LinSysDiscrete')
-                            mydata.Gq    = Gq;
-                            mydata.GQG   = GQG;
-                            mydata.GQGsr = GQGsr;
-                        else
-                            mydata.Gq    = spline(newReachObj.time_values, Gq);
-                            mydata.GQG   = spline(newReachObj.time_values, GQG);
-                            mydata.GQGsr = spline(newReachObj.time_values, GQGsr);
-                        end
-                    end
-                end
-            end
-            % expressions w and W
-            noiseEll = linSys.getNoiseBoundsEll();
-            if ~(isempty(noiseEll))
-                if isa(noiseEll, 'ellipsoid')
-                    [w, W]   = parameters(noiseEll);
-                    mydata.w = w;
-                    mydata.W = W;
-                elseif isa(noiseEll, 'double')
-                    mydata.w = noiseEll;
-                elseif iscell(noiseEll)
-                    w = [];
-                    for i = 1:size(newReachObj.time_values, 2)
-                        w = [w self.matrix_eval(noiseEll.center,...
-                            newReachObj.time_values(i))];
-                    end
-                    if isa(linSys, 'elltool.linsys.LinSysDiscrete')
-                        mydata.w = w;
-                    else
-                        mydata.w = spline(newReachObj.time_values, w);
-                    end
-                elseif isstruct(noiseEll)
-                    if iscell(noiseEll.center) && iscell(noiseEll.shape)
-                        w = [];
-                        W = [];
-                        for i = 1:size(newReachObj.time_values, 2)
-                            w  = [w self.matrix_eval(noiseEll.center,...
-                                newReachObj.time_values(i))];
-                            ww = self.matrix_eval(noiseEll.shape,...
-                                newReachObj.time_values(i));
-                            if ~gras.la.ismatposdef(ww,self.absTol,false)
-                                throwerror('wrongMat',['shape matrix of ',...
-                                    'ellipsoidal noise bounds ',...
-                                    'must be positive definite.']);
-                            end
-                            W  = [W reshape(ww, dy*dy, 1)];
-                        end
-                        if isa(linSys, 'elltool.linsys.LinSysDiscrete')
-                            mydata.w = w;
-                            mydata.W = W;
-                        else
-                            mydata.w = spline(newReachObj.time_values, w);
-                            mydata.W = spline(newReachObj.time_values, W);
-                        end
-                    elseif iscell(noiseEll.center)
-                        w = [];
-                        for i = 1:size(newReachObj.time_values, 2)
-                            w = [w self.matrix_eval(noiseEll.center,...
-                                newReachObj.time_values(i))];
-                        end
-                        if isa(linSys, 'elltool.linsys.LinSysDiscrete')
-                            mydata.w = w;
-                        else
-                            mydata.w = spline(newReachObj.time_values, w);
-                        end
-                        mydata.W = noiseEll.shape;
-                    else
-                        W = [];
-                        for i = 1:size(newReachObj.time_values, 2)
-                            ww = self.matrix_eval(noiseEll.shape,...
-                                newReachObj.time_values(i));
-                            if ~gras.la.ismatposdef(ww,self.absTol,false)
-                                throwerror('wrongMat',['shape matrix of ',...
-                                    'ellipsoidal noise bounds ',...
-                                    'must be positive definite.']);
-                            end
-                            W  = [W reshape(ww, dy*dy, 1)];
-                        end
-                        mydata.w = noiseEll.center;
-                        if isa(linSys, 'elltool.linsys.LinSysDiscrete')
-                            mydata.W = W;
-                        else
-                            mydata.W = spline(newReachObj.time_values, W);
-                        end
-                    end
-                end
-            end
-            clear A B C AA BB CC DD Bp BPB Gq GQG p P q Q w W ww;
-            %%% Compute state transition matrix.
-            if Properties.getIsVerbose()
-                if isempty(logger)
-                    logger=Log4jConfigurator.getLogger();
-                end
-                logger.info('Computing state transition matrix...');
-            end
-            if isa(linSys, 'elltool.linsys.LinSysDiscrete')
-                mydata.Phi   = [];
-                mydata.Phinv = [];
-            else
-                if isa(mydata.A, 'double')
-                    t0    = newReachObj.time_values(1);
-                    Phi   = [];
-                    Phinv = [];
-                    for i = 1:size(newReachObj.time_values, 2)
-                        P = expm(mydata.A * abs(newReachObj.time_values(i) - t0));
-                        PP    = ell_inv(P);
-                        Phi   = [Phi reshape(P, d1*d1, 1)];
-                        Phinv = [Phinv reshape(PP, d1*d1, 1)];
-                    end
-                    mydata.Phi   = spline(newReachObj.time_values, Phi);
-                    mydata.Phinv = spline(newReachObj.time_values, Phinv);
-                else
-                    I0        = reshape(eye(d1), d1*d1, 1);
-                    [tt, Phi] = ell_ode_solver(@ell_stm_ode,...
-                        tvals, I0, mydata, d1, back, self.absTol);
-                    Phi       = Phi';
-                    Phinv     = [];
-                    for i = 1:size(newReachObj.time_values, 2)
-                        Phinv = [Phinv reshape(ell_inv(reshape(...
-                            Phi(:, i), d1, d1)), d1*d1, 1)];
-                    end
-                    mydata.Phi   = spline(newReachObj.time_values, Phi);
-                    mydata.Phinv = spline(newReachObj.time_values, Phinv);
-                end
-            end
-            clear Phi Phinv P PP t0 I0;
-            %%% Compute the center of the self set.
-            if Properties.getIsVerbose()
-                if isempty(logger)
-                    logger=Log4jConfigurator.getLogger();
-                end
-                logger.info('Computing the trajectory of the reach set center...');
-            end
-            x0 = self.center_values(:, end);
-            if isa(linSys, 'elltool.linsys.LinSysDiscrete')
-                xx = x0;
-                x  = x0;
-                for i = 1:(size(newReachObj.time_values, 2) - 1)
-                    Bp = ell_value_extract(mydata.Bp, i+back, [d1 1]);
-                    if ~(isempty(mydata.Gq))
-                        Gq = ell_value_extract(mydata.Gq, i+back, [d1 1]);
-                    else
-                        Gq = zeros(d1, 1);
-                    end
-                    if back > 0
-                        A = ell_value_extract(mydata.A, i+back, [d1 d1]);
-                        x = ell_inv(A)*(x - Bp - Gq);
-                    else
-                        A = ell_value_extract(AC, i, [d1 d1]);
-                        x = A*x + Bp + Gq;
-                    end
-                    xx = [xx x];
-                end
-            else
-                [tt, xx] = ell_ode_solver(@ell_center_ode,...
-                    tvals, x0, mydata, d1, back, self.absTol);
-                xx       = xx';
-            end
-            newReachObj.center_values = xx;
-            clear A AC xx;
-            %%% Compute external shape matrices.
-            if (Options.approximation ~= 1)
-                if Properties.getIsVerbose()
-                    if isempty(logger)
-                        logger=Log4jConfigurator.getLogger();
-                    end
-                    logger.info('Computing external shape matrices...');
-                end
-                LL = [];
-                QQ = [];
-                N  = size(self.ea_values, 2);
-                for ii = 1:N
-                    EM = self.ea_values{ii};
-                    Q0 = EM(:, end);
-                    l0 = newReachObj.initial_directions(:, ii);
-                    if isa(linSys, 'elltool.linsys.LinSysDiscrete')
-                        if hasdisturbance(linSys)
-                            [Q, L] = self.eedist_de(size(tvals, 2),...
-                                Q0, l0, mydata, d1, back,...
-                                Options.minmax, newReachObj.absTol);
-                        elseif ~(isempty(mydata.BPB))
-                            [Q, L] = self.eesm_de(size(tvals, 2),...
-                                Q0, l0, mydata, d1, back,newReachObj.absTol);
-                        else
-                            Q = [];
-                            L = [];
-                        end
-                        LL = [LL {L}];
-                    else
-                        if hasdisturbance(linSys)
-                            [tt, Q] = ell_ode_solver(@ell_eedist_ode,...
-                                tvals, Q0, l0, mydata, d1,...
-                                back, self.absTol);
-                            Q       = Q';
-                        elseif ~(isempty(mydata.BPB))
-                            [tt, Q] = ell_ode_solver(@ell_eesm_ode,...
-                                tvals, Q0, l0, mydata, d1,...
-                                back, self.absTol);
-                            Q       = Q';
-                        else
-                            Q = [];
-                        end
-                    end
-                    QQ = [QQ {Q}];
-                end
-                newReachObj.ea_values = QQ;
-            end
-            %%% Compute internal shape matrices.
-            if (Options.approximation ~= 0)
-                if Properties.getIsVerbose()
-                    if isempty(logger)
-                        logger=Log4jConfigurator.getLogger();
-                    end
-                    logger.info('Computing internal shape matrices...');
-                end
-                LL = [];
-                QQ = [];
-                N  = size(self.ia_values, 2);
-                for ii = 1:N
-                    EM = self.ia_values{ii};
-                    Q0 = EM(:, end);
-                    X0 = reshape(Q0, d1, d1);
-                    X0 = sqrtmpos(X0, self.absTol);
-                    X0 = 0.5*(X0 + X0');
-                    l0 = newReachObj.initial_directions(:, ii);
-                    if isa(linSys, 'elltool.linsys.LinSysDiscrete')
-                        if hasdisturbance(linSys)
-                            [Q, L] = self.iedist_de(size(tvals, 2),...
-                                Q0, l0, mydata, d1, back,...
-                                Options.minmax,newReachObj.absTol);
-                        elseif ~(isempty(mydata.BPB))
-                            [Q, L] = self.iesm_de(size(tvals, 2),...
-                                Q0, l0, mydata, d1, back,newReachObj.absTol);
-                        else
-                            Q = [];
-                            L = [];
-                        end
-                        LL = [LL {L}];
-                    else
-                        if hasdisturbance(linSys)
-                            [tt, Q] = ell_ode_solver(@ell_iedist_ode,...
-                                tvals, reshape(Q0, d1*d1, 1), l0,...
-                                mydata, d1, back, self.absTol);
-                            Q       = Q';
-                        elseif ~(isempty(mydata.BPB))
-                            [tt, Q] = ell_ode_solver(@ell_iesm_ode,...
-                                tvals, reshape(X0, d1*d1, 1), X0*l0, l0,...
-                                mydata, d1, back, self.absTol);
-                            Q       = self.fix_iesm(Q', d1);
-                        else
-                            Q = [];
-                        end
-                    end
-                    QQ = [QQ {Q}];
-                end
-                newReachObj.ia_values = QQ;
-            end
-            if Options.save_all > 0
-                newReachObj.calc_data = mydata;
-            end
-            LL = [];
-            for ii = 1:N
-                l0 = newReachObj.initial_directions(:, ii);
-                if isa(linSys, 'elltool.linsys.LinSysDiscrete')
-                    L = l0;
-                    l = l0;
-                    if back > 0
-                        for i = 2:size(newReachObj.time_values, 2)
-                            A = ell_value_extract(mydata.A, i, [d1 d1]);
-                            l = A' * l;
-                            L = [L l];
-                        end
-                    else
-                        for i = 1:(size(newReachObj.time_values, 2) - 1)
-                            A = ell_inv(ell_value_extract(mydata.A, i, [d1 d1]));
-                            l = A' * l;
-                            L = [L l];
-                        end
-                    end
-                else
-                    L = [];
-                    for i = 1:size(newReachObj.time_values, 2)
-                        t = newReachObj.time_values(i);
-                        if back > 0
-                            F = ell_value_extract(mydata.Phi, t, [d1 d1]);
-                        else
-                            F = ell_value_extract(mydata.Phinv, t, [d1 d1]);
-                        end
-                        L = [L F'*l0];
-                    end
-                end
-                LL = [LL {L}];
-            end
-            newReachObj.l_values = LL;
-            if www(1).state
-                warning on;
-            end
+            %
         end
     end
 end
