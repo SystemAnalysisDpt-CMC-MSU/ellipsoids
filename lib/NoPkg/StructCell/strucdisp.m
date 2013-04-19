@@ -48,6 +48,7 @@ function resStr=strucdisp(SInp,varargin)
 %            System Analysis Department 2011 $
 %
 %
+
 import modgen.common.type.simple.checkgen;
 import modgen.common.parseparext;
 %% Constants
