@@ -924,7 +924,7 @@ classdef ReachContinuous < elltool.reach.AReach
             import gras.ellapx.enums.EApproxType;
             import elltool.logging.Log4jConfigurator;
             % FIXME: change to self.getAbsTol in the future
-            import elltool.conf.Properties.getAbsTol;
+            absTol = elltool.conf.Properties.getAbsTol();
             persistent logger;
             if (nargout == 2)
                 reportStr = [];
@@ -962,7 +962,7 @@ classdef ReachContinuous < elltool.reach.AReach
             %
             % Checking time bounds equality
             %
-            if (abs(firstTimeVec(end)-secondTimeVec(end)) > getAbsTol())
+            if (abs(firstTimeVec(end)-secondTimeVec(end)) > absTol)
                 isEqual = false;
                 if (nargout == 2)
                     reportStr=[reportStr, ...
@@ -971,7 +971,7 @@ classdef ReachContinuous < elltool.reach.AReach
                 end
                 return;
             end
-            if (abs(firstTimeVec(1)-secondTimeVec(1)) > getAbsTol())
+            if (abs(firstTimeVec(1)-secondTimeVec(1)) > absTol)
                 isEqual = false;
                 if (nargout == 2)
                     reportStr=[reportStr, ...
@@ -1026,7 +1026,7 @@ classdef ReachContinuous < elltool.reach.AReach
             end
             [firstEqualIndVec, secondEqualIndVec] = ...
                 fIntersectSortedVecsWithTol(...
-                firstTimeVec, secondTimeVec, getAbsTol());
+                firstTimeVec, secondTimeVec, absTol);
             if logger.isDebugEnabled
                 logger.debug(sprintf('Number of equal knots: %d',...
                     numel(firstTimeVec)))
@@ -1049,7 +1049,7 @@ classdef ReachContinuous < elltool.reach.AReach
                 while (smallerIndex <= length(smallerVec) &&...
                         greaterIndex <= length(greaterVec))
                     if (abs(smallerVec(smallerIndex)-...
-                            greaterVec(greaterIndex))<getAbsTol())
+                            greaterVec(greaterIndex))<absTol)
                         smallerIndex = smallerIndex + 1;
                         indexVec = [indexVec, greaterIndex];
                     end

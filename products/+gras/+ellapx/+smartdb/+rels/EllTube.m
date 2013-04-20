@@ -430,5 +430,19 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
                 ellTubeProjRel=EllTubeProj();
             end
         end
+        function obj = interp(self, timeVec)
+            import gras.interp.MatrixInterpolantFactory;
+            import gras.ellapx.smartdb.rels.EllTube;
+            matSpline = MatrixInterpolantFactory.CreateInstance(...
+                'posdef_chol', self.QArray, self.timeVec);
+            centSpline = MatrixInterpolantFactory.CreateInstance(...
+                'column', self.aMat, timeVec);
+            qArrayList = num2cell(matSpline.evaluate(timeVec),3);
+            aMat = centSpline.evaluate(timeVec);
+            obj = EllTube.fromQArrays(qArrayList, aMat, timeVec,...
+                self.ltGoodDirArray, self.sTime, self.approxType,...
+                self.approxSchemaName, self.approxSchemaDescr,...
+                self.calcPrecision);
+        end
     end
 end
