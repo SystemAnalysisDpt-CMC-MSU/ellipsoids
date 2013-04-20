@@ -138,5 +138,22 @@ classdef ContinuousReachRegrTestCase < mlunitext.test_case
                 throwerror('WrongInput', 'Do not exist config mat file.');
             end
         end
+        function self = testGetEllTubeRel(self)
+            mlunit.assert(all(self.reachObj.get_ia() == ...
+                self.reachObj.getEllTubeRel.getEllArray(...
+                gras.ellapx.enums.EApproxType.Internal))); 
+            mlunit.assert(all(self.reachObj.get_ea() == ...
+                self.reachObj.getEllTubeRel.getEllArray(...
+                gras.ellapx.enums.EApproxType.External))); 
+        end
+        function self = testGetEllTubeUnionRel(self)
+            ellTubeRel = self.reachObj.getEllTubeRel();
+            ellTubeUnionRel = self.reachObj.getEllTubeUnionRel();
+            compFieldList = fieldnames(ellTubeRel());
+            [isOk, reportStr] = ...
+                ellTubeUnionRel.getFieldProjection(compFieldList). ...
+                isEqual(ellTubeRel.getFieldProjection(compFieldList));
+            mlunitext.assert(isOk,reportStr);
+        end        
     end
 end
