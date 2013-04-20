@@ -2,7 +2,7 @@
 <root version="19" xml_tb_version="2.0" type="struct" >
 <valueObj type="struct" >
 	<genericProps type="struct" >
-		<calcTimeLimVec type="double" >0 100</calcTimeLimVec>
+		<calcTimeLimVec type="double" >0 4</calcTimeLimVec>
 		<calcPrecision type="double" >0.0001</calcPrecision>
 		<isSplineForMatrixCalcUsed type="boolean" >1</isSplineForMatrixCalcUsed>
 	</genericProps>
@@ -10,7 +10,7 @@
 		<projSpaceSetName type="char" >set1</projSpaceSetName>
 		<projSpaceSets type="struct" >
 			<set1 type="cell" >
-				<item type="boolean" >1 1</item>
+				<item type="boolean" >1 1 0 0</item>
 			</set1>
 		</projSpaceSets>
 		<isDynamicProjEnabled type="boolean" >1</isDynamicProjEnabled>
@@ -23,17 +23,16 @@
 				<lsGoodDirSetName type="char" >set1</lsGoodDirSetName>
 				<lsGoodDirSets type="struct" >
 					<set1 type="cell" >
-						<item type="double" >1 0</item>
-						<item type="double" >0 1</item>
+						<item type="double" >1 -1 0 0</item>
 					</set1>
 				</lsGoodDirSets>
 			</manual>
 			<auto type="struct" >
 				<nGoodDirs type="double" >1</nGoodDirs>
-				<goodDirSpaceVec type="boolean" >1 1</goodDirSpaceVec>
+				<goodDirSpaceVec type="boolean" >1 1 0 0</goodDirSpaceVec>
 			</auto>
 		</methodProps>
-		<selectionTime type="double" >10</selectionTime>
+		<selectionTime type="double" >0</selectionTime>
 	</goodDirSelection>
 	<customResultDir type="struct" >
 		<isEnabled type="boolean" >0</isEnabled>
@@ -104,11 +103,11 @@
 			</schemas>
 		</extIntApx>
 	</ellipsoidalApxProps>
-	<systemDefinitionConfName type="char" >2dsys</systemDefinitionConfName>
+	<systemDefinitionConfName type="char" >snippet722Sys</systemDefinitionConfName>
 	<regularizationProps type="struct" >
-		<isEnabled type="boolean" >0</isEnabled>
-		<regTol type="double" >1e-08</regTol>
+		<isEnabled type="boolean" >1</isEnabled>
+		<regTol type="double" >1e-8</regTol>
 	</regularizationProps>
 </valueObj>
-<keyStr type="char" >x2dtest</keyStr>
+<keyStr type="char" >snippet722</keyStr>
 </root>
