@@ -3,14 +3,6 @@ classdef MatrixPosReg < gras.mat.IMatrixFunction
         matFunc
         regTol
     end
-    methods (Access = private)
-        function regMat = getRegMat(self, inpMat)
-            [vMat, dMat] = eig(inpMat, 'nobalance');
-            mMat = diag(max(diag(dMat), self.regTol));
-            mMat = vMat * mMat * transpose(vMat);
-            regMat = 0.5 * (mMat + mMat.');
-        end
-    end
     methods
         function self = MatrixPosReg(matFunc, regTol)
             modgen.common.type.simple.checkgen(matFunc,...
@@ -32,14 +24,9 @@ classdef MatrixPosReg < gras.mat.IMatrixFunction
         end
         function resArray=evaluate(self, timeVec)
             resArray = self.matFunc.evaluate(timeVec);
-            nTimePoints = numel(timeVec);
-            for iTimePoint = 1 : nTimePoints
-                currMat = resArray(:, :, iTimePoint);
-                if ~gras.la.ismatposdef(currMat)
-                    resArray(:, :, iTimePoint) =...
-                        self.getRegMat(currMat);
-                end
-            end
+            resArray = gras.gen.SquareMatVector.evalMFunc(...
+                @(x) gras.la.getRegMat(x, self.regTol), resArray,...
+                'UniformOutput', true, 'keepSize', true);
         end
     end
 end

@@ -1,12 +1,14 @@
 classdef MatrixPosCheck < gras.mat.IMatrixFunction
     properties (Access = private)
         matFunc
+        regTol
     end
     methods
-        function self = MatrixPosCheck(matFunc)
+        function self = MatrixPosCheck(matFunc, regTol)
             modgen.common.type.simple.checkgen(matFunc,...
                 @(x)isa(x,'gras.mat.IMatrixFunction'));
             self.matFunc = matFunc;
+            self.regTol = regTol;
         end
         function mSizeVec = getMatrixSize(self)
             mSizeVec = self.matFunc.getMatrixSize();
@@ -22,11 +24,9 @@ classdef MatrixPosCheck < gras.mat.IMatrixFunction
         end
         function resArray=evaluate(self, timeVec)
             resArray = self.matFunc.evaluate(timeVec);
-            nTimePoints = numel(timeVec);
-            for iTimePoint = 1 : nTimePoints
-                modgen.common.type.simple.checkgen(...
-                    resArray(:, :, iTimePoint), @gras.la.ismatposdef);
-            end
+            isPosDefArray = gras.gen.SquareMatVector.evalMFunc(...
+                @(x) gras.la.ismatposdef(x, self.regTol), resArray);
+            modgen.common.type.simple.checkgen(isPosDefArray, 'all(x)');
         end
     end
 end

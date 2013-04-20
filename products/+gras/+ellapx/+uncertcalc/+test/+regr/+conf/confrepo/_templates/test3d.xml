@@ -120,7 +120,8 @@
 	<systemDefinitionConfName type="char" >simple3d</systemDefinitionConfName>
 	<regularizationProps type="struct" >
 		<isEnabled type="boolean" >0</isEnabled>
-		<regTol type="double" >1e-08</regTol>
+		<isJustCheck type="boolean" >0</isJustCheck>
+		<regTol type="double" >1e-05</regTol>
 	</regularizationProps>
 </valueObj>
 <keyStr type="char" >test3d</keyStr>

@@ -11,13 +11,8 @@ classdef RegProblemDynamics <...
             CqtDynamics = self.pDynObj.getCqtDynamics();
         end
         function CQCTransDynamics = getCQCTransDynamics(self)
-            if self.isRegTol
-                CQCTransDynamics = gras.mat.MatrixPosReg(...
-                    self.pDynObj.getCQCTransDynamics(), self.regTol);
-            else
-                CQCTransDynamics = gras.mat.MatrixPosCheck(...
-                    self.pDynObj.getCQCTransDynamics());
-            end
+            CQCTransDynamics =...
+                self.fMatPosHandle(self.pDynObj.getCQCTransDynamics());
         end
     end
 end

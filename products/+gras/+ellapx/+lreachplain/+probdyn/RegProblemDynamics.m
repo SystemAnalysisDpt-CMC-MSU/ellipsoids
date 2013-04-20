@@ -2,31 +2,24 @@ classdef RegProblemDynamics <...
         gras.ellapx.lreachplain.probdyn.IReachProblemDynamics
     properties (Access = protected)
         pDynObj
-        isRegTol
+        fMatPosHandle
+        isJustCheck
         regTol
     end
-    methods (Access = protected)
-        function regMat = getRegMat(self, inpMat)
-            [vMat, dMat] = eig(inpMat, 'nobalance');
-            mMat = diag(max(diag(dMat), self.regTol));
-            mMat = vMat * mMat * transpose(vMat);
-            regMat = 0.5 * (mMat + mMat.');
-        end
-    end
     methods
-        function self = RegProblemDynamics(pDynObj, isRegTol, regTol)
+        function self = RegProblemDynamics(pDynObj, isJustCheck, regTol)
             self.pDynObj = pDynObj;
-            self.isRegTol = isRegTol;
+            if isJustCheck
+                self.fMatPosHandle=@(x)gras.mat.MatrixPosCheck(x, regTol);
+            else
+                self.fMatPosHandle=@(x)gras.mat.MatrixPosReg(x, regTol);
+            end
+            self.isJustCheck = isJustCheck;
             self.regTol = regTol;
         end
         function BPBTransDynamics = getBPBTransDynamics(self)
-            if self.isRegTol
-                BPBTransDynamics = gras.mat.MatrixPosReg(...
-                    self.pDynObj.getBPBTransDynamics(), self.regTol);
-            else
-                BPBTransDynamics = gras.mat.MatrixPosCheck(...
-                    self.pDynObj.getBPBTransDynamics());
-            end
+            BPBTransDynamics =...
+                self.fMatPosHandle(self.pDynObj.getBPBTransDynamics());
         end
         function AtDynamics = getAtDynamics(self)
             AtDynamics = self.pDynObj.getAtDynamics();
@@ -47,7 +40,14 @@ classdef RegProblemDynamics <...
             timeVec = self.pDynObj.getTimeVec();
         end
         function X0Mat=getX0Mat(self)
-            X0Mat = self.getRegMat(self.pDynObj.getX0Mat());
+            if self.isJustCheck
+                X0Mat = self.pDynObj.getX0Mat();
+                modgen.common.type.simple.checkgen(X0Mat,...
+                    @(x) gras.la.ismatposdef(x, self.regTol));
+            else
+                X0Mat = gras.la.getRegMat(...
+                    self.pDynObj.getX0Mat(), self.regTol);
+            end
         end
         function x0Vec=getx0Vec(self)
             x0Vec = self.pDynObj.getx0Vec();
