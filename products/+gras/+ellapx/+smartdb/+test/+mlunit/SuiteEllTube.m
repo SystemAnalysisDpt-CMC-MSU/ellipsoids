@@ -10,7 +10,64 @@ classdef SuiteEllTube < mlunitext.test_case
         function self = set_up_param(self,varargin)
             
         end
-        function DISABLED_testCutAndCat(self)
+        function testTouchCurve(self)
+            import gras.gen.SquareMatVector;
+            %
+            nTubes = 1;
+            nDims = 3;
+            timeVec = 1:100;
+            calcPrecision=1e-6;
+            %
+            ellTubeRel = create(timeVec);
+            SData = ellTubeRel.getData();
+            %
+            for iTube = 1:nTubes
+                QArray = SData.QArray{iTube};
+                xCenteredTouchCurveMat = ...
+                    SData.xTouchCurveMat{iTube} - SData.aMat{iTube};
+                ltGoodDirMat = SData.ltGoodDirMat{iTube};
+                %
+                aVec = SquareMatVector.lrDivideVec(QArray, ...
+                    xCenteredTouchCurveMat);
+                bVec = SquareMatVector.lrDivideVec(QArray, ltGoodDirMat);
+                xCenteredTouchCurveExpectedMat = ...
+                    bsxfun(@rdivide,ltGoodDirMat,sqrt(bVec));
+                cMat = xCenteredTouchCurveExpectedMat - ...
+                    xCenteredTouchCurveMat;
+                %
+                mlunit.assert(max(abs(aVec - 1)) < calcPrecision,...
+                    'touch curve should touch elltube');
+                mlunit.assert(max(abs(cMat(:))) < calcPrecision,...
+                    'touch curve should touch elltube along good direction');
+            end
+            %
+            function rel = create(timeVec)
+                nTimePoints = numel(timeVec);
+                aMat = bsxfun(@mtimes, ones(nDims,nTimePoints), timeVec);
+                %
+                QArray = zeros(nDims,nDims,nTimePoints);
+                for iTimePoint = 1:nTimePoints
+                    mMat = magic(nDims);
+                    mMat = eye(nDims) + (mMat.')*mMat;
+                    QArray(:,:,iTimePoint) = mMat*timeVec(iTimePoint);
+                end
+                QArrayList=repmat({QArray},1,nTubes);
+                %
+                ltSingleGoodDirArray = zeros(nDims,1,nTimePoints);
+                for iTimePoint = 1:nTimePoints
+                    ltSingleGoodDirArray(:,:,iTimePoint) = ...
+                        timeVec(iTimePoint)*eye(nDims,1);
+                end
+                ltGoodDirArray=repmat(ltSingleGoodDirArray,1,nTubes);
+                %
+                rel = gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
+                    QArrayList,aMat,timeVec,ltGoodDirArray,timeVec(1),...
+                    gras.ellapx.enums.EApproxType.Internal,...
+                    char.empty(1,0),char.empty(1,0),calcPrecision);
+            end
+        end
+        %
+        function testCutAndCat(self)
             nDims=2;
             nTubes=3;
             calcPrecision=0.001;
@@ -68,7 +125,7 @@ classdef SuiteEllTube < mlunitext.test_case
                     char.empty(1,0),char.empty(1,0),calcPrecision);
             end
         end
-        function DISABLED_testRegCreate(self)
+        function testRegCreate(self)
             nDims=2;
             nPoints=3;
             approxSchemaDescr=char.empty(1,0);
@@ -191,7 +248,7 @@ classdef SuiteEllTube < mlunitext.test_case
             end
             %
         end
-        function DISABLED_testProjectionAndScale(self)
+        function testProjectionAndScale(self)
             relProj=gras.ellapx.smartdb.rels.EllTubeProj();
             %
             nPoints=5;
@@ -211,7 +268,7 @@ classdef SuiteEllTube < mlunitext.test_case
             QArrayList=repmat({repmat(diag([1 2 3]),[1,1,nPoints])},1,nTubes);
             scaleFactor=1.01;
             projType=gras.ellapx.enums.EProjType.Static;
-            projSpaceList={[true false true],[true true false]};
+            projSpaceList = {[1 0 0;0 0 1],[1 0 0;0 1 0]};
             rel=create();
             relProj=rel.project(projType,projSpaceList,@fGetProjMat);
             %
@@ -226,12 +283,10 @@ classdef SuiteEllTube < mlunitext.test_case
             mlunit.assert_equals(true,isEqual,reportStr);
             %
             function [projOrthMatArray,projOrthMatTransArray]=...
-                    fGetProjMat(projSpaceVec,timeVec,sTime,dim,indSTime)
-                nPoints=length(timeVec);
-                projMat=eye(dim);
-                projMat=projMat(logical(projSpaceVec),:);
-                projOrthMatArray=repmat(projMat,[1,1,nPoints]);
-                projOrthMatTransArray=repmat(projMat.',[1,1,nPoints]);
+                    fGetProjMat(projMat,timeVec,varargin)
+                nTimePoints=length(timeVec);
+                projOrthMatArray=repmat(projMat,[1,1,nTimePoints]);
+                projOrthMatTransArray=repmat(projMat.',[1,1,nTimePoints]);
             end
             function rel=create()
                 ltGoodDirArray=repmat(lsGoodDirVec,[1,nTubes,nPoints]);
@@ -246,7 +301,7 @@ classdef SuiteEllTube < mlunitext.test_case
                     approxSchemaDescr,calcPrecision);
             end
         end
-        function DISABLED_testSimpleNegRegCreate(self)
+        function testSimpleNegRegCreate(self)
             nPoints=3;
             calcPrecision=0.001;
             approxSchemaDescr=char.empty(1,0);
@@ -316,7 +371,7 @@ classdef SuiteEllTube < mlunitext.test_case
             end
         end
         %
-        function DISABLED_testPlotProps(self)
+        function testPlotProps(self)
             import gras.ellapx.enums.EApproxType;
             nPoints=10;
             INTERNAL_COLOR_VEC=[0 1 1];
@@ -338,7 +393,7 @@ classdef SuiteEllTube < mlunitext.test_case
                 INTERNAL_ALPHA,INTERNAL_COLOR_VEC);
             %
             check(EApproxType.External,...
-                EXTERNAL_ALPHA,EXTERNAL_COLOR_VEC);            
+                EXTERNAL_ALPHA,EXTERNAL_COLOR_VEC);
             %
             plObj.closeAllFigures();
             function check(apxType,apxAlpha,apxColorVec)
@@ -387,7 +442,7 @@ classdef SuiteEllTube < mlunitext.test_case
                 end
             end
         end
-        function DISABLED_testPlotTouch(self)
+        function testPlotTouch(self)
             [relStatProj,relDynProj]=checkMaster(1);
             [rel2StatProj,rel2DynProj]=checkMaster(10);
             rel=smartdb.relationoperators.union(relStatProj,relDynProj,...
@@ -443,19 +498,18 @@ classdef SuiteEllTube < mlunitext.test_case
                 'UniformOutput',false);
             rel.unionWith(relWithReg);
             %
-            projSpaceList={[true true]};
+            projSpaceList = {[1 0; 0 1].'};
+            %
             projType=gras.ellapx.enums.EProjType.Static;
             relStatProj=rel.project(projType,projSpaceList,@fGetProjMat);
             %
             projType=gras.ellapx.enums.EProjType.DynamicAlongGoodCurve;
             relDynProj=rel.project(projType,projSpaceList,@fGetProjMat);
             function [projOrthMatArray,projOrthMatTransArray]=...
-                    fGetProjMat(projSpaceVec,timeVec,sTime,dim,indSTime)
-                nPoints=length(timeVec);
-                projMat=eye(dim);
-                projMat=projMat(logical(projSpaceVec),:);
-                projOrthMatArray=repmat(projMat,[1,1,nPoints]);
-                projOrthMatTransArray=repmat(projMat.',[1,1,nPoints]);
+                    fGetProjMat(projMat,timeVec,varargin)
+                nTimePoints=length(timeVec);
+                projOrthMatArray=repmat(projMat,[1,1,nTimePoints]);
+                projOrthMatTransArray=repmat(projMat.',[1,1,nTimePoints]);
             end
             function rel=create()
                 ltGoodDirArray=repmat(lsGoodDirVec,[1,nTubes,nPoints]);
@@ -465,7 +519,7 @@ classdef SuiteEllTube < mlunitext.test_case
                     approxSchemaDescr,calcPrecision);
             end
         end
-        function DISABLED_testSimpleCreate(self)
+        function testSimpleCreate(self)
             nPoints=3;
             calcPrecision=0.001;
             approxSchemaDescr=char.empty(1,0);
@@ -514,7 +568,7 @@ classdef SuiteEllTube < mlunitext.test_case
             end
         end
         
-       function testCreateSTimeOutOfBounds(self)
+        function testCreateSTimeOutOfBounds(self)
             nPoints=3;
             calcPrecision=0.001;
             approxSchemaDescr=char.empty(1,0);
@@ -537,6 +591,6 @@ classdef SuiteEllTube < mlunitext.test_case
                     ltGoodDirArray,sTime,approxType,approxSchemaName,...
                     approxSchemaDescr,calcPrecision);
             end
-        end        
+        end
     end
 end

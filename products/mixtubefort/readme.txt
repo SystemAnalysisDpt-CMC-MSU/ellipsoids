@@ -1,14 +1,15 @@
-******************************* COMPILATION ***********************************
+***************************** COMPILATION *********************************
 
 To compile the program you will need:
 
 1.	Microsoft Visual Studio 2010 or greater
 2.	Intel Visual Fortran Compiler XE 12 or greater
 3.	Matlab R2012a or greater
-4.	MPICH2 library (can be downloaded from http://www.mpich.org/downloads)
-5.	BLAS and LAPACK libraries for Intel compiler (can be dowloaded from 
-	http://icl.cs.utk.edu/lapack-for-windows/lapack)
-6.	NAG library
+4.	MPICH2 library 1.4 or greater (can be downloaded from 
+    http://www.mpich.org/downloads)
+5.	BLAS and LAPACK libraries 3.4 or greater for Intel compiler (can be 
+    dowloaded from http://icl.cs.utk.edu/lapack-for-windows/lapack)
+6.	NAG library mark 21 (not greater than 21)
 
 Instructions:
 
@@ -19,7 +20,8 @@ Instructions:
 	%MATLAB_INSTALL_DIRECTORY%\R2012a\extern\lib\win32\microsoft into
 	dependencies directory
 4.	Add directory %MATLAB_INSTALL_DIRECTORY%\R2012a\bin\win32 to your PATH
-	variable or copy libmat.dll and libmx.dll from there into build directory
+	variable or copy libmat.dll and libmx.dll from there into build 
+    directory
 5.	Put the following NAG routines into libnag directory:
 	c05adft.f	d02pdtt.f	d02pvyt.f	g05fdft.f
 	c05azft.f	d02pdut.f	d02pvzt.f	p01abft.f
@@ -30,14 +32,14 @@ Instructions:
 	d02pdqt.f	d02pdzt.f	g05cayt.f	x02amft.f
 	d02pdrt.f	d02pvft.f	g05cazt.f	x04aaft.f
 	d02pdst.f	d02pvxt.f	g05cbft.f	x04baft.f
-6.	Add directory %MATLAB_INSTALL_DIRECTORY%\%MATLAB_VERSION%\extern\include
+6.	Add directory %MATLAB_INSTALL_DIRECTORY%\R2012a\extern\include
 	to Additional Include Directories of libsynthesis project
 7.	Add directory %MPICH2_INSTALL_DIRECTORY%\include
 	to Additional IncludeDirectories of libutil project
 8.	Build the solution
 
 
-********************************* RUNNING *************************************
+****************************** RUNNING ************************************
 
 To run the program use run.bat from run directory:
 
@@ -45,3 +47,5 @@ run tests				// will run test_all.exe
 
 run example_i j			// will run example_i.exe for configuration j, 
 						// where i = 1 or 2, and j = 1, 2, 3 or 4
+
+run example_i all       // will run example_i.exe for all configurations

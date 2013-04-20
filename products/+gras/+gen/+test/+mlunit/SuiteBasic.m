@@ -92,5 +92,39 @@ classdef SuiteBasic < mlunitext.test_case
             end
                 
         end
+        %
+        function testCompareMatVectorMultiply(self)
+            import gras.gen.MatVector;
+            %
+            absTol = elltool.conf.Properties.getAbsTol();
+            SData = load(['TestData', filesep, 'matvector_data.mat']);
+            aArray = SData.aArray;
+            bMat = squeeze(aArray(1,:,:));
+            %
+            cArray = MatVector.rMultiply(aArray,aArray,false);
+            dArray = MatVector.rMultiply(aArray,aArray,true);
+            check(cArray, dArray);
+            %
+            cArray = MatVector.rMultiply(aArray(1:5,1:6,:),...
+                aArray(1:6,1:7,:),aArray(1:7,1:8,:),false);
+            dArray = MatVector.rMultiply(aArray(1:5,1:6,:),...
+                aArray(1:6,1:7,:),aArray(1:7,1:8,:),true);
+            check(cArray, dArray);
+            %
+            cMat = MatVector.rMultiplyByVec(aArray,bMat,false);
+            dMat = MatVector.rMultiplyByVec(aArray,bMat,true);
+            check(cMat, dMat);
+            %
+            cMat = MatVector.rMultiplyByVec(aArray(1:7,1:10,1:100),...
+                bMat(1:10,1:100),false);
+            dMat = MatVector.rMultiplyByVec(aArray(1:7,1:10,1:100),...
+                bMat(1:10,1:100),true);
+            check(cMat, dMat);
+            %
+            function check(aArray, bArray)
+                rArray = aArray - bArray;
+                mlunit.assert(max(abs(rArray(:))) < absTol);
+            end
+        end
     end
 end

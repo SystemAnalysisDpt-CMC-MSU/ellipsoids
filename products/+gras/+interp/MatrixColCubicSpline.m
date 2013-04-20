@@ -22,22 +22,7 @@ classdef MatrixColCubicSpline<gras.interp.AMatrixCubicSpline
         end
     end
     methods (Access=public)
-        function resArray=evaluate(self,timeVec)
-            nDims=self.nDims;
-            nRows=self.nRows;
-            nCols=self.nCols;
-            nTimePoints=length(timeVec);
-            switch nDims
-                case 1
-                    resArray=fnval(self.ppFormList{1},timeVec);
-                case 2
-                    resArray=zeros(nRows,nCols,nTimePoints);
-                    for k=1:1:nCols
-                        resArray(:,k,:)=fnval(self.ppFormList{k},timeVec);
-                    end
-            end
-        end
-        function resArray = evaluate2(self, timeVec)
+        function resArray = evaluate(self, timeVec)
             nDims = self.nDims;
             nRows = self.nRows;
             nCols = self.nCols;
