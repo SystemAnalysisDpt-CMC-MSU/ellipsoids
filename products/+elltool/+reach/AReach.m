@@ -12,6 +12,7 @@ classdef AReach < elltool.reach.IReach
         isProj
         isBackward
         projectionBasisMat
+        dirMat
     end
     %
     properties (Constant, Access = private)

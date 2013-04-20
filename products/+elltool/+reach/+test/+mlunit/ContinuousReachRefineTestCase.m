@@ -33,6 +33,72 @@ classdef ContinuousReachRefineTestCase < mlunitext.test_case
             reachWholeObj.refine(self.l0P2Mat);
             isEqual = self.reachObj.isEqual(reachWholeObj);
             mlunit.assert_equals(true,isEqual);
-        end 
+        end
+        function self = testRefMisc(self)
+            lSys=buildLS();
+            lDirMat=[1,-1,0,0;
+                0,0,1,-1];
+            nN=2;
+            l1DirMat=lDirMat(:,1:nN);
+            l2DirMat=lDirMat(:,nN+1:end);
+            %
+            %Check Refine direct time
+            timeVec=[0 0.5];
+            reachSetObj=buildRS(l1DirMat);
+            checkRefine();
+            %
+            %Check refine reverse time
+            timeVec=[0.5 0];
+            reachSetObj=buildRS(l1DirMat);
+            checkRefine();
+            %
+            % Check after evolve
+            newEndTime=1;
+            timeVec=[0 0.5];
+            reachSetObj=buildRS(l1DirMat);
+            reachSetObj.evolve(newEndTime);
+            checkRefine();
+            %
+            % Check after evolve, reverse time
+            newEndTime=0;
+            timeVec=[1 0.5];
+            reachSetObj=buildRS(l1DirMat);
+            reachSetObj.evolve(newEndTime);
+            checkRefine();
+            %
+            % Check projection
+            timeVec=[0 0.5];
+            reachSetObj=buildRS(l1DirMat);
+            %
+            projMat=[1,0;0,1];
+            projSet=reachSetObj.projection(projMat);
+            %
+            projSetNew=projSet;
+            projSetNew.refine(l2DirMat);
+            %
+            reachSetObj=buildRS(lDirMat);
+            projReachSetObj=reachSetObj.projection(projMat);
+            isEqual = projSetNew.isEqual(projReachSetObj);
+            mlunit.assert_equals(true,isEqual);
+            %
+            function checkRefine()
+                reachObjNew=reachSetObj;
+                reachObjNew.refine(l2DirMat);
+                reachSetObj=buildRS(lDirMat);
+                isEqual = reachSetObj.isEqual(reachObjNew);
+                mlunit.assert_equals(true,isEqual);
+            end
+            function reachSet = buildRS(lDirMat)
+                x0EllObj=ellipsoid(eye(2));
+                reachSet=elltool.reach.ReachContinuous(...
+                    lSys,x0EllObj,lDirMat,timeVec);
+            end
+            function linSys = buildLS()
+                aMat=eye(2);
+                bMat=eye(2);
+                uEll=ellipsoid(eye(2));
+                linSys=elltool.linsys.LinSysContinuous(aMat,bMat,uEll);
+            end
+        end
     end
 end
