@@ -14,6 +14,21 @@ function [ resEllVec ] = minkDiffEa( ellObj1, ellObj2, dirMat)
 %       generalized ellipsoids (may contain empty ellipsoids if in specified
 %       directions approximation cannot be computed)
 %
+% Example:
+% firstEllObj = elltool.core.GenEllipsoid([10;0], 2*eye(2));
+% secEllObj = elltool.core.GenEllipsoid([0;0], [1 0; 0 0.1]);
+% dirsMat = [1,0].';
+% resEllVec  = minkDiffEa( firstEllObj, secEllObj, dirsMat)
+%    |    
+%    |----- q : [10 0]
+%    |          -------------------
+%    |----- Q : |0.171573|0       |
+%    |          |0       |1.20557 |
+%    |          -------------------
+%    |          -----
+%    |-- QInf : |0|0|
+%    |          |0|0|
+%    |          -----
 %
 % $Author: Vitaly Baranov  <vetbar42@gmail.com> $    
 % $Date: 2012-11$

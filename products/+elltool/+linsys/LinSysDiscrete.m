@@ -56,13 +56,33 @@ classdef LinSysDiscrete < elltool.linsys.ALinSys
             % Output:
             %   self: elltool.linsys.LinSysDiscrete[1, 1] -
             %       discrete linear system.
-            %
+            %             
+            % Example:
+            % for k = 1:20
+            %    atMat = {'0' '1 + cos(pi*k/2)'; '-2' '0'};
+            %    btMat =  [0; 1];
+            %    uBoundsEllObj = ellipsoid(4);
+            %    gtMat = [1; 0];
+            %    distBounds = 1/(k+1);
+            %    ctVec = [1 0];
+            %    lsys = elltool.linsys.LinSysDiscrete(atMat, btMat,...
+            %        uBoundsEllObj, gtMat,distBounds, ctVec);
+            % end
+            %             
             self = self@elltool.linsys.ALinSys(varargin{:});
         end
         %
         function display(self)
             %
             % See description of DISPLAY in ILinSys class.
+            %
+            % Examples:
+            % aMat = [0 1; 0 0]; bMat = eye(2);
+            % SUBounds = struct();
+            % SUBounds.center = {'sin(t)'; 'cos(t)'};  
+            % SUBounds.shape = [9 0; 0 2];
+            % dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+            % dsys.display();
             %
             self.displayInternal(self.DISPLAY_PARAMETER_STRINGS)
         end

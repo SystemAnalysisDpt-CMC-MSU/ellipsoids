@@ -1,4 +1,5 @@
 classdef PropertiesTestCase < mlunitext.test_case
+% PUTCOPYRIGHTHERE
 %$Author: <Zakharov Eugene>  <justenterrr@gmail.com> $
 %$Date: 2012-11-05$
 %$Copyright: Moscow State University,

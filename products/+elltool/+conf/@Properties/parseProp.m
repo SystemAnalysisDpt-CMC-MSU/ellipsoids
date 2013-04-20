@@ -28,6 +28,24 @@ function varargout = parseProp(args,neededPropNameList)
 %   varargout:cell array[1,] - cell array with values of properties listed
 %                              in neededPropNameList in the same order as 
 %                              they listed in neededPropNameList
+% 
+% Example:
+% testAbsTol = 1;
+% testRelTol = 2;
+% nPlot2dPoints = 3;
+% someArg = 4;
+% args = {'absTol',testAbsTol, 'relTol',testRelTol,'nPlot2dPoints',nPlot2dPoints, 'someOtherArg', someArg};
+% neededProp = {'absTol','relTol'};
+% [absTol, relTol] = elltool.conf.Properties.parseProp(args,neededProp)
+% 
+% absTol =
+% 
+%      1
+% 
+% 
+% relTol =
+% 
+%      2
 %
 %$Author: Zakharov Eugene  <justenterrr@gmail.com> $    
 %$Date: 2012-11-05 $

@@ -218,6 +218,7 @@ classdef ILinSys < handle
         %   copyLinSysArr: elltool.linsys.ILinSys[nDims1, nDims2,...] - 
         %       an array of copies of elements of self.
         %
+        %
         isEqualArr = isEqual(self, compLinSysArr)
         %
         % ISEQUAL - produces produces logical array the same size as
@@ -232,12 +233,13 @@ classdef ILinSys < handle
         %             an array of linear systems.
         %       compLinSysArr: elltool.linsys.ILinSys[nDims1,...
         %             nDims2,...] - an array of linear systems.
-        %
+        % 
         % Output:
         %   isEqualArr: elltool.linsys.LinSys[nDims1, nDims2,...] -
         %       an array of logical values.
         %       isEqualArr[iDim1, iDim2,...] is true if corresponding
         %       linear systems are equal and false otherwise.
         %
+        
     end
 end

@@ -53,9 +53,17 @@ classdef LinSysContinuous < elltool.linsys.ALinSys
             %           'd' - to discrete-time linSys
             %           not 'd' - to continuous-time linSys.
             %
+            %
             % Output:
             %   self: elltool.linsys.LinSysContinuous[1, 1] -
             %       continuous linear system.
+            %
+            % Example:
+            % aMat = [0 1; 0 0]; bMat = eye(2);
+            % SUBounds = struct();
+            % SUBounds.center = {'sin(t)'; 'cos(t)'};  
+            % SUBounds.shape = [9 0; 0 2];
+            % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
             %
             self = self@elltool.linsys.ALinSys(varargin{:});
         end
@@ -63,6 +71,14 @@ classdef LinSysContinuous < elltool.linsys.ALinSys
         function display(self)
             %
             % See description of DISPLAY in ILinSys class.
+            %
+            % Example:
+            % aMat = [0 1; 0 0]; bMat = eye(2);
+            % SUBounds = struct();
+            % SUBounds.center = {'sin(t)'; 'cos(t)'};  
+            % SUBounds.shape = [9 0; 0 2];
+            % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+            % sys.display()
             %
             self.displayInternal(self.DISPLAY_PARAMETER_STRINGS)
         end

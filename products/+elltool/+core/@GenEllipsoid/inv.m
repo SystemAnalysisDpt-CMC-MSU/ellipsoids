@@ -8,6 +8,21 @@ function ellInvObj = inv( ellObj )
 %
 % Output:
 %   ellInvObj: GenEllipsoid: [1,1] - inverse generalized ellipsoid
+% 
+% Example:
+% ellObj = elltool.core.GenEllipsoid([5;2], [1 0; 0 0.7]);
+% ellObj.inv()
+%    |    
+%    |----- q : [5 2]
+%    |          -----------------
+%    |----- Q : |1      |0      |
+%    |          |0      |1.42857|
+%    |          -----------------
+%    |          -----
+%    |-- QInf : |0|0|
+%    |          |0|0|
+%    |          -----
+% 
 %
 %$Author: Vitaly Baranov  <vetbar42@gmail.com> $
 %$Date: Nov-2012 $

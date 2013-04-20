@@ -22,6 +22,18 @@ classdef IReach < handle
         % Output:
         %   cutObj: reach[1, 1] - reach set resulting from the CUT operation.
         %
+        % Example:
+        % aMat = [0 1; 0 0]; bMat = eye(2);
+        % SUBounds = struct();
+        % SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        % SUBounds.shape = [9 0; 0 2];
+        % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds); 
+        % x0EllObj = ell_unitball(2);  
+        % timeVec = [0 10];  
+        % dirsMat = [1 0; 0 1]';
+        % rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+        % cutObj = rsObj.cut([3 5]);
+        %
         [rSdim sSdim] = dimension(self)
         %
         % DIMENSION - returns the dimension of the reach set.
@@ -35,6 +47,27 @@ classdef IReach < handle
         %
         %   sSdim: double[1, 1] - state space dimension.
         %
+        % Example:
+        % aMat = [0 1; 0 0]; bMat = eye(2);
+        % SUBounds = struct();
+        % SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        % SUBounds.shape = [9 0; 0 2];
+        % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds); 
+        % x0EllObj = ell_unitball(2);  
+        % timeVec = [0 10];  
+        % dirsMat = [1 0; 0 1]';
+        % rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+        % [rSdim sSdim] = rsObj.dimension()
+        %
+        % rSdim =
+        %
+        %          2
+        %
+        %
+        % sSdim =
+        %
+        %          2
+        %
         display(self)
         %
         % DISPLAY - displays the reach set object.
@@ -46,9 +79,39 @@ classdef IReach < handle
         % Output:
         %   None.
         %
+        % Example:
+        % aMat = [0 1; 0 0]; bMat = eye(2);
+        % SUBounds = struct();
+        % SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        % SUBounds.shape = [9 0; 0 2];
+        % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds); 
+        % x0EllObj = ell_unitball(2);  
+        % timeVec = [0 10];  
+        % dirsMat = [1 0; 0 1]';
+        % rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+        % rsObj.display()
+        %
+        % rsObj =
+        % Reach set of the continuous-time linear system in R^2 in the time...
+        %      interval [0, 10].
+        % 
+        % Initial set at time t0 = 0:
+        % Ellipsoid with parameters
+        % Center:
+        %      0
+        %      0
+        % 
+        % Shape Matrix:
+        %      1     0
+        %      0     1
+        % 
+        % Number of external approximations: 2
+        % Number of internal approximations: 2
+        %
         newReachObj = evolve(self, newEndTime, linSys)
         %
-        % EVOLVE - computes further evolution in time of the already existing reach set.
+        % EVOLVE - computes further evolution in time of the already existing
+        %          reach set.
         %
         % Input:
         %   regular:
@@ -62,6 +125,20 @@ classdef IReach < handle
         % Output:
         %   newReachObj: reach[1, 1] - reach set on time
         %       interval [oldT0 newEndTime].
+        %
+        % Example:
+        % aMat = [0 1; 0 0]; bMat = eye(2);
+        % SUBounds = struct();
+        % SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        % SUBounds.shape = [9 0; 0 2];
+        % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds); 
+        % dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);         
+        % x0EllObj = ell_unitball(2);  
+        % timeVec = [0 10];  
+        % dirsMat = [1 0; 0 1]';
+        % rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+        % dRsObj = elltool.reach.ReachDiscrete(dsys, x0EllObj, dirsMat, timeVec);
+        % newDRsObj = dRsObj.evolve(11);
         %
         [trCenterMat timeVec] = get_center(self)
         %
@@ -79,9 +156,22 @@ classdef IReach < handle
         %
         %   timeVec: double[1, nPoints] - array of time values.
         %
+        % Example:
+        % aMat = [0 1; 0 0]; bMat = eye(2);
+        % SUBounds = struct();
+        % SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        % SUBounds.shape = [9 0; 0 2];
+        % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds); 
+        % x0EllObj = ell_unitball(2);  
+        % timeVec = [0 10];  
+        % dirsMat = [1 0; 0 1]';
+        % rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+        % [trCenterMat timeVec] = rsObj.get_center();
+        %
         [directionsCVec timeVec] = get_directions(self)
         %
-        % GET_DIRECTIONS - returns the values of direction vectors for time grid values.
+        % GET_DIRECTIONS - returns the values of direction vectors for time grid 
+        %                  values.
         %
         % Input:
         %   regular:
@@ -95,6 +185,21 @@ classdef IReach < handle
         %
         %   timeVec: double[1, nPoints] - array of time values.
         %
+        % Example:
+        % aMat = [0 1; 0 0]; bMat = eye(2);
+        % SUBounds = struct();
+        % SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        % SUBounds.shape = [9 0; 0 2];
+        % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds); 
+        % x0EllObj = ell_unitball(2);  
+        % timeVec = [0 10];  
+        % dirsMat = [1 0; 0 1]';
+        % rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+        % [directionsCVec timeVec] = rsObj.get_directions();
+        %
+        % dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds); 
+        % dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
+        % [eaEllMat timeVec] = dRsObj.get_ia();
         [eaEllMat timeVec] = get_ea(self)
         %
         % GET_EA - returns array of ellipsoid objects representing
@@ -111,6 +216,21 @@ classdef IReach < handle
         %
         %   timeVec: double[1, nPoints] - array of time values.
         %
+        % Example:
+        % aMat = [0 1; 0 0]; bMat = eye(2);
+        % SUBounds = struct();
+        % SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        % SUBounds.shape = [9 0; 0 2];
+        % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds); 
+        % x0EllObj = ell_unitball(2);  
+        % timeVec = [0 10];  
+        % dirsMat = [1 0; 0 1]';
+        % rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+        % [eaEllMat timeVec] = rsObj.get_ea();
+        %
+        % dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds); 
+        % dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
+        % [eaEllMat timeVec] = dRsObj.get_ea();
         [goodCurvesCVec timeVec] = get_goodcurves(self)
         %
         % GET_GOODCURVES - returns the 'good curve' trajectories of the reach set.
@@ -125,6 +245,21 @@ classdef IReach < handle
         %
         %   timeVec: double[1, nPoints] - array of time values.
         %
+        % Example:
+        % aMat = [0 1; 0 0]; bMat = eye(2);
+        % SUBounds = struct();
+        % SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        % SUBounds.shape = [9 0; 0 2];
+        % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds); 
+        % x0EllObj = ell_unitball(2);  
+        % timeVec = [0 10];  
+        % dirsMat = [1 0; 0 1]';
+        % rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+        % [goodCurvesCVec timeVec] = rsObj.get_goodcurves();
+        % 
+        % dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds); 
+        % dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
+        % [goodCurvesCVec timeVec] = dRsObj.get_goodcurves(); 
         [iaEllMat timeVec] = get_ia(self)
         %
         % GET_IA - returns array of ellipsoid objects representing
@@ -141,9 +276,22 @@ classdef IReach < handle
         %
         %   timeVec: double[1, nPoints] - array of time values.
         %
+        % Example:
+        % aMat = [0 1; 0 0]; bMat = eye(2);
+        % SUBounds = struct();
+        % SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        % SUBounds.shape = [9 0; 0 2];
+        % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds); 
+        % x0EllObj = ell_unitball(2);  
+        % timeVec = [0 10];  
+        % dirsMat = [1 0; 0 1]';
+        % rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+        % [iaEllMat timeVec] = rsObj.get_ia();
+        %
         linSys = get_system(self)
         %
-        % GET_SYSTEM - returns the linear system for which the reach set is computed.
+        % GET_SYSTEM - returns the linear system for which the reach set is
+        %              computed.
         %
         % Input:
         %   regular:
@@ -152,6 +300,51 @@ classdef IReach < handle
         % Output:
         %   linSys: elltool.linsys.LinSys[1, 1] - linear system object.
         %
+        % Example:
+        % aMat = [0 1; 0 0]; bMat = eye(2);
+        % SUBounds = struct();
+        % SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        % SUBounds.shape = [9 0; 0 2];
+        % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds); 
+        % x0EllObj = ell_unitball(2);  
+        % timeVec = [0 10];  
+        % dirsMat = [1 0; 0 1]';
+        % rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+        % linSys = rsObj.get_system()
+        %
+        % self =
+        % A:
+        %      0     1
+        %      0     0
+        % 
+        % 
+        % B:
+        %      1     0
+        %      0     1
+        % 
+        % 
+        % Control bounds:
+        %    2-dimensional ellipsoid with center
+        %     'sin(t)'
+        %     'cos(t)'
+        % 
+        %    and shape matrix
+        %      9     0
+        %      0     2
+        % 
+        % 
+        % C:
+        %      1     0
+        %      0     1
+        % 
+        % 2-input, 2-output continuous-time linear time-invariant system of 
+        %         dimension 2:
+        % dx/dt  =  A x(t)  +  B u(t)
+        %  y(t)  =  C x(t)
+        %
+        % dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds); 
+        % dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
+        % dRsObj.get_system();       
         isEmptyIntersect = intersect(self, intersectObj, approxTypeChar)
         %
         % INTERSECT - checks if its external (s = 'e'), or internal (s = 'i')
@@ -171,6 +364,23 @@ classdef IReach < handle
         %   isEmptyIntersect: logical[1, 1] -
         %       true - if intersection is nonempty, false - otherwise.
         %
+        % Example:
+        % aMat = [0 1; 0 0]; bMat = eye(2);
+        % SUBounds = struct();
+        % SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        % SUBounds.shape = [9 0; 0 2];
+        % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds); 
+        % x0EllObj = ell_unitball(2);  
+        % timeVec = [0 10];  
+        % dirsMat = [1 0; 0 1]';
+        % rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+        % ellObj = ellipsoid([0; 0], 2*eye(2));
+        % isEmptyIntersect = intersect(rsObj, ellObj)
+        %
+        % sEmptyIntersect =
+        %
+        %                 1
+        %
         isCut = iscut(self)
         %
         % ISCUT - checks if given reach set object is a cut of another reach set.
@@ -183,6 +393,22 @@ classdef IReach < handle
         %   isCut: logical[1, 1] -
         %       true - if self is a cut of the reach set, false - otherwise.
         %
+        % Example:
+        % aMat = [0 1; 0 0]; bMat = eye(2);
+        % SUBounds = struct();
+        % SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        % SUBounds.shape = [9 0; 0 2];
+        % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+        % dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+        % x0EllObj = ell_unitball(2);  
+        % timeVec = [0 10];  
+        % dirsMat = [1 0; 0 1]';
+        % rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+        % dRsObj = elltool.reach.ReachRiscrete(dsys, x0EllObj, dirsMat, timeVec);
+        % cutObj = rsObj.cut([3 5]);
+        % iscut(cutObj);
+        % cutObj = dRsObj.cut([4 8]);
+        % iscut(cutObj);
         isProj = isprojection(self)
         %
         % ISPROJECTION - checks if given reach set object is a projection.
@@ -195,6 +421,23 @@ classdef IReach < handle
         %   isProj: logical[1, 1] -
         %       true - if self is projection, false - otherwise.
         %
+        % Example:
+        % aMat = [0 1; 0 0]; bMat = eye(2);
+        % SUBounds = struct();
+        % SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        % SUBounds.shape = [9 0; 0 2];
+        % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds); 
+        % dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+        % x0EllObj = ell_unitball(2);  
+        % timeVec = [0 10];  
+        % dirsMat = [1 0; 0 1]';
+        % rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+        % dRsObj = elltool.reach.ReachRiscrete(dsys, x0EllObj, dirsMat, timeVec);
+        % projMat = eye(2);
+        % projObj = rsObj.projection(projMat);
+        % isprojection(projObj);
+        % projObj = dRsObj.projection(projMat);
+        % isprojection(projObj);
         plot_ea(self, varargin)
         %
         % PLOT_EA - plots external approximations of 2D and 3D reach sets.
@@ -225,6 +468,20 @@ classdef IReach < handle
         % Output:
         %   None.
         %
+        % Example:
+        % aMat = [0 1; 0 0]; bMat = eye(2);
+        % SUBounds = struct();
+        % SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        % SUBounds.shape = [9 0; 0 2];
+        % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds); 
+        % x0EllObj = ell_unitball(2);  
+        % timeVec = [0 10];  
+        % dirsMat = [1 0; 0 1]';
+        % rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+        % rsObj.plot_ea();
+        % dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds); 
+        % dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
+        % dRsObj.plot_ea();
         plot_ia(self, varargin)
         %
         % PLOT_IA - plots internal approximations of 2D and 3D reach sets.
@@ -255,6 +512,20 @@ classdef IReach < handle
         % Output:
         %   None.
         %
+        % Example:
+        % aMat = [0 1; 0 0]; bMat = eye(2);
+        % SUBounds = struct();
+        % SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        % SUBounds.shape = [9 0; 0 2];
+        % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds); 
+        % x0EllObj = ell_unitball(2);  
+        % timeVec = [0 10];  
+        % dirsMat = [1 0; 0 1]';
+        % rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+        % rsObj.plot_ia();
+        % dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds); 
+        % dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
+        % dRsObj.plot_ia();
         projObj = projection(self, projMat)
         %
         % PROJECTION - projects the reach set self onto the orthogonal
@@ -269,6 +540,22 @@ classdef IReach < handle
         % Output:
         %   projObj: reach[1, 1] - projected reach set.
         %
+        % Examples:
+        % aMat = [0 1; 0 0]; bMat = eye(2);
+        % SUBounds = struct();
+        % SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        % SUBounds.shape = [9 0; 0 2];
+        % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+        % dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+        % x0EllObj = ell_unitball(2);  
+        % timeVec = [0 10];  
+        % dirsMat = [1 0; 0 1]';
+        % rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+        % dRsObj = elltool.reach.ReachRiscrete(dsys, x0EllObj, dirsMat, timeVec);
+        % projMat = eye(2);
+        % projObj = rsObj.projection(projMat);
+        % dProjObj = dRsObj.projection(projMat);
+        %
         isEmpty = isempty(self)
         %
         % ISEMPTY - checks if given reach set is an empty object.
@@ -280,6 +567,25 @@ classdef IReach < handle
         % Output:
         %   isEmpty: logical[1, 1] -
         %       true - if self is empty, false - otherwise.
+        %
+        % Example:
+        % aMat = [0 1; 0 0]; bMat = eye(2);
+        % SUBounds = struct();
+        % SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        % SUBounds.shape = [9 0; 0 2];
+        % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds); 
+        % dsys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds); 
+        % x0EllObj = ell_unitball(2);  
+        % timeVec = [0 10];  
+        % dirsMat = [1 0; 0 1]';
+        % rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+        % dRsObj = elltool.reach.ReachRiscrete(dsys, x0EllObj, dirsMat, timeVec);
+        % dRsObj.isempty();        
+        % rsObj.isempty()
+        %
+        % ans =
+        %
+        %      0
         %
     end
 end

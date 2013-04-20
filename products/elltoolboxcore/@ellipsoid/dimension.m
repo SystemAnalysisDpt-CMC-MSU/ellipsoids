@@ -34,6 +34,14 @@ function [dimArr, rankArr] = dimension(myEllArr)
 %    0     2
 %    2     0
 %
+%
+%
+% $Author: Irina Zhukova <irizka91@gmail.com> $	$Date: 2013-04-19 $ 
+% $Copyright: Moscow State University,
+%            Faculty of Applied Mathematics and Computer Science,
+%            System Analysis Department 2013 $
+%
+%
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 
 %              2004-2008 $
@@ -53,4 +61,3 @@ dimArr = arrayfun(@(x) size(x.shape,1), myEllArr);
 if nargout > 1
     rankArr = arrayfun(@(x) rank(x.shape), myEllArr);
 end
-

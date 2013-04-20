@@ -557,6 +557,17 @@ properties (Constant, GetAccess = private)
             % Output:
             %     self - reach set object.
             %
+            % Example:
+            % aMat = [0 1; 0 0]; bMat = eye(2);
+            % SUBounds = struct();
+            % SUBounds.center = {'sin(t)'; 'cos(t)'};  
+            % SUBounds.shape = [9 0; 0 2];
+            % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds); 
+            % x0EllObj = ell_unitball(2);  
+            % timeVec = [0 10];  
+            % dirsMat = [1 0; 0 1]';
+            % rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+            %
             % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
             % $Copyright: Moscow State University,
             %            Faculty of Computational Mathematics and Computer Science,
@@ -731,6 +742,17 @@ properties (Constant, GetAccess = private)
         end
         %%
         function cutObj = cut(self, cutTimeVec)
+        % Example:
+        % aMat = [0 1; 0 0]; bMat = eye(2);
+        % SUBounds = struct();
+        % SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        % SUBounds.shape = [9 0; 0 2];
+        % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds); 
+        % x0EllObj = ell_unitball(2);  
+        % timeVec = [0 10];  
+        % dirsMat = [1 0; 0 1]';
+        % rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+        % cutObj = rsObj.cut([3 5]);
             import modgen.common.throwerror;
             if self.isprojection()
                 throwerror('wrongInput',...
@@ -922,22 +944,109 @@ properties (Constant, GetAccess = private)
         end
         %%
         function eaScaleFactor = getEaScaleFactor(self)
+        % Example:
+        % aMat = [0 1; 0 0]; bMat = eye(2);
+        % SUBounds = struct();
+        % SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        % SUBounds.shape = [9 0; 0 2];
+        % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds); 
+        % x0EllObj = ell_unitball(2);  
+        % timeVec = [10 0];  
+        % dirsMat = [1 0; 0 1]';
+        % rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+        % rsObj.getEaScaleFactor()
+        % 
+        % ans =
+        % 
+        %     1.0200
             eaScaleFactor = self.EXTERNAL_SCALE_FACTOR;
         end
         %%
         function iaScaleFactor = getIaScaleFactor(self)
+        % Example:
+        % aMat = [0 1; 0 0]; bMat = eye(2);
+        % SUBounds = struct();
+        % SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        % SUBounds.shape = [9 0; 0 2];
+        % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds); 
+        % x0EllObj = ell_unitball(2);  
+        % timeVec = [10 0];  
+        % dirsMat = [1 0; 0 1]';
+        % rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+        % rsObj.getIaScaleFactor()
+        % 
+        % ans =
+        % 
+        %     1.0200
             iaScaleFactor = self.INTERNAL_SCALE_FACTOR;
         end
         %%
         function x0Ell = getInitialSet(self)
+        % Example:
+        % aMat = [0 1; 0 0]; bMat = eye(2);
+        % SUBounds = struct();
+        % SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        % SUBounds.shape = [9 0; 0 2];
+        % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds); 
+        % x0EllObj = ell_unitball(2);  
+        % timeVec = [10 0];  
+        % dirsMat = [1 0; 0 1]';
+        % rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+        % x0Ell = rsObj.getInitialSet()
+        % 
+        % x0Ell =
+        % 
+        % Center:
+        %      0
+        %      0
+        % 
+        % Shape Matrix:
+        %      1     0
+        %      0     1
+        % 
+        % Nondegenerate ellipsoid in R^2.
+
             x0Ell = self.x0Ellipsoid.getCopy();
         end
         %%
         function isBackward = isbackward(self)
+        % Example:
+        % aMat = [0 1; 0 0]; bMat = eye(2);
+        % SUBounds = struct();
+        % SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        % SUBounds.shape = [9 0; 0 2];
+        % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds); 
+        % x0EllObj = ell_unitball(2);  
+        % timeVec = [10 0];  
+        % dirsMat = [1 0; 0 1]';
+        % rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+        % rsObj.isbackward()
+        %
+        % ans =
+        % 
+        %      1
+        %
             isBackward = self.isBackward;
         end
         %%
         function isEqual = isEqual(self, reachObj, varargin)
+        % Example:
+        % aMat = [0 1; 0 0]; bMat = eye(2);
+        % SUBounds = struct();
+        % SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        % SUBounds.shape = [9 0; 0 2];
+        % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds); 
+        % x0EllObj = ell_unitball(2);  
+        % timeVec = [0 10];  
+        % dirsMat = [1 0; 0 1]';
+        % rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec); 
+        % copyRsObj = rsObj.getCopy();
+        % isEqual = isEqual(rsObj, copyRsObj)
+        %
+        % isEqual =
+        % 
+        %         1
+        %
             import gras.ellapx.smartdb.F;
             import gras.ellapx.enums.EApproxType;
             APPROX_TYPE = F.APPROX_TYPE;
@@ -986,6 +1095,34 @@ properties (Constant, GetAccess = private)
         end
         %%
         function copyReachObj = getCopy(self)
+        % Example:
+        % aMat = [0 1; 0 0]; bMat = eye(2);
+        % SUBounds = struct();
+        % SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        % SUBounds.shape = [9 0; 0 2];
+        % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds); 
+        % x0EllObj = ell_unitball(2);  
+        % timeVec = [0 10];  
+        % dirsMat = [1 0; 0 1]';
+        % rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec); 
+        % copyRsObj = rsObj.getCopy()
+        % copyRsObj =
+        % Reach set of the continuous-time linear system in R^2 in the time ...
+        %             interval [0, 10].
+        % 
+        % Initial set at time t0 = 0:
+        % Ellipsoid with parameters
+        % Center:
+        %      0
+        %      0
+        % 
+        % Shape Matrix:
+        %      1     0
+        %      0     1
+        % 
+        % Number of external approximations: 2
+        % Number of internal approximations: 2
+        %
             copyReachObj = elltool.reach.ReachContinuous();
             copyReachObj.switchSysTimeVec = self.switchSysTimeVec;
             copyReachObj.x0Ellipsoid = self.x0Ellipsoid.getCopy();
@@ -999,10 +1136,34 @@ properties (Constant, GetAccess = private)
         end
         %%
         function ellTubeRel = getEllTubeRel(self)
+        % Example:
+        % aMat = [0 1; 0 0]; bMat = eye(2);
+        % SUBounds = struct();
+        % SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        % SUBounds.shape = [9 0; 0 2];
+        % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds); 
+        % x0EllObj = ell_unitball(2);  
+        % timeVec = [0 10];  
+        % dirsMat = [1 0; 0 1]';
+        % rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec); 
+        % rsObj. getEllTubeRel();
+        %
             ellTubeRel = self.ellTubeRel;
         end
         %%
         function ellTubeUnionRel = getEllTubeUnionRel(self)
+        % Example:
+        % aMat = [0 1; 0 0]; bMat = eye(2);
+        % SUBounds = struct();
+        % SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        % SUBounds.shape = [9 0; 0 2];
+        % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds); 
+        % x0EllObj = ell_unitball(2);  
+        % timeVec = [0 10];  
+        % dirsMat = [1 0; 0 1]';
+        % rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec); 
+        % getEllTubeUnionRel(rsObj);
+        %
             import gras.ellapx.smartdb.rels.EllUnionTube;
             ellTubeUnionRel = EllUnionTube.fromEllTubes(self.ellTubeRel);
         end

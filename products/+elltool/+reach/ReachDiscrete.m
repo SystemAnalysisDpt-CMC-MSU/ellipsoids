@@ -701,18 +701,22 @@ classdef ReachDiscrete < elltool.reach.AReach
             %                       = 1 for internal,
             %                       = 2 for both (default).
             %         save_all = 1 to save intermediate calculation data,
-            %                  = 0 (default) to delete intermediate calculation data.
+            %                  = 0 (default) to delete intermediate 
+            %                       calculation data.
             %         minmax = 1 compute minmax reach set,
             %                = 0 (default) compute maxmin reach set.
             %             This option makes sense only for
             %             discrete-time systems with disturbance.
             %
-            % self = ReachDiscrete(linSys, x0Ell, l0Mat, timeVec, Options, prop) is the same as
-            % self = ReachDiscrete(linSys, x0Ell, l0Mat, timeVec, Options), but with "Properties"
-            %     specified in prop. In other cases "Properties" are taken
+            % self = ReachDiscrete(linSys, x0Ell, l0Mat, timeVec, Options, prop)
+            %    is the same as
+            % self = ReachDiscrete(linSys, x0Ell, l0Mat, timeVec, Options),
+            %     but with "Properties" specified in prop. 
+            %     In other cases "Properties" are taken
             %     from current values stored in elltool.conf.Properties
             %
-            %     As "Properties" we understand here such list of ellipsoid properties:
+            %     As "Properties" we understand here such list of ellipsoid 
+            %     properties:
             %         absTol
             %         relTol
             %         nPlot2dPoints
@@ -721,6 +725,16 @@ classdef ReachDiscrete < elltool.reach.AReach
             %
             % Output:
             %     self - reach set object.
+            %
+            % Example:
+            % adMat = [0 1; -1 -0.5]; 
+            % bdMat = [0; 1];  
+            % udBoundsEllObj  = ellipsoid(1);  
+            % dtsys = elltool.linsys.LinSysDiscrete(adMat, bdMat, udBoundsEllObj); 
+            % x0EllObj = ell_unitball(2);  
+            % timeVec = [0 10];  
+            % dirsMat = [1 0; 0 1]';
+            % dRsObj = elltool.reach.ReachDiscrete(dtsys, x0EllObj, dirsMat, timeVec);
             %
             % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
             % $Copyright: Moscow State University,
@@ -1565,6 +1579,16 @@ classdef ReachDiscrete < elltool.reach.AReach
         end
         %
         function newReachObj = getCopy(self)
+        % Example:
+        % adMat = [0 1; -1 -0.5]; 
+        % bdMat = [0; 1];  
+        % udBoundsEllObj  = ellipsoid(1);  
+        % dtsys = elltool.linsys.LinSysDiscrete(adMat, bdMat, udBoundsEllObj); 
+        % x0EllObj = ell_unitball(2);  
+        % timeVec = [0 10];  
+        % dirsMat = [1 0; 0 1]';
+        % dRsObj = elltool.reach.ReachDiscrete(dtsys, x0EllObj, dirsMat, timeVec);
+        % newDRsObj = dRsObj.getCopy();
             newReachObj = elltool.reach.ReachDiscrete();
             newReachObj.absTol = self.absTol;
             newReachObj.relTol = self.relTol;
@@ -1591,7 +1615,18 @@ classdef ReachDiscrete < elltool.reach.AReach
             newReachObj.projectionBasisMat = self.projectionBasisMat;
         end
         %
-        function cutObj = cut(self, cutTimeVec)
+        function cutObj = cut(self, cutTimeVec) 
+        % Example:
+        % adMat = [0 1; -1 -0.5]; 
+        % bdMat = [0; 1];  
+        % udBoundsEllObj  = ellipsoid(1);  
+        % dtsys = elltool.linsys.LinSysDiscrete(adMat, bdMat, udBoundsEllObj); 
+        % x0EllObj = ell_unitball(2);  
+        % timeVec = [0 10];  
+        % dirsMat = [1 0; 0 1]';
+        % dRsObj = elltool.reach.ReachDiscrete(dtsys, x0EllObj, dirsMat, timeVec);
+        % dCutObj = dRsObj.cut([3 5]);
+        %
             import modgen.common.throwerror;
             cutObj = self.getCopy();
             if self.isempty()
@@ -2100,6 +2135,17 @@ classdef ReachDiscrete < elltool.reach.AReach
         end
         %
         function [muMat timeVec] = get_mu(self)
+        % Example:
+        % adMat = [0 1; -1 -0.5]; 
+        % bdMat = [0; 1];  
+        % udBoundsEllObj  = ellipsoid(1);  
+        % dtsys = elltool.linsys.LinSysDiscrete(adMat, bdMat, udBoundsEllObj); 
+        % x0EllObj = ell_unitball(2);  
+        % timeVec = [0 10];  
+        % dirsMat = [1 0; 0 1]';
+        % dRsObj = elltool.reach.ReachDiscrete(dtsys, x0EllObj, dirsMat, timeVec);
+        % [muMat timeVec] = dRsObj.get_mu();
+        %
             import elltool.conf.Properties;
             muMat = self.mu_values;
             if nargout > 1
