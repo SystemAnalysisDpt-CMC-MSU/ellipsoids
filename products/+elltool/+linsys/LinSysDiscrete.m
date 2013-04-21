@@ -73,17 +73,6 @@ classdef LinSysDiscrete < elltool.linsys.ALinSys
         end
         %
         function display(self)
-            %
-            % See description of DISPLAY in ILinSys class.
-            %
-            % Examples:
-            % aMat = [0 1; 0 0]; bMat = eye(2);
-            % SUBounds = struct();
-            % SUBounds.center = {'sin(t)'; 'cos(t)'};  
-            % SUBounds.shape = [9 0; 0 2];
-            % dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-            % dsys.display();
-            %
             self.displayInternal(self.DISPLAY_PARAMETER_STRINGS)
         end
     end

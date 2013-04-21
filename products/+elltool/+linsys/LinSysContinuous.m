@@ -69,18 +69,7 @@ classdef LinSysContinuous < elltool.linsys.ALinSys
         end
         %
         function display(self)
-            %
-            % See description of DISPLAY in ILinSys class.
-            %
-            % Example:
-            % aMat = [0 1; 0 0]; bMat = eye(2);
-            % SUBounds = struct();
-            % SUBounds.center = {'sin(t)'; 'cos(t)'};  
-            % SUBounds.shape = [9 0; 0 2];
-            % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-            % sys.display()
-            %
-            self.displayInternal(self.DISPLAY_PARAMETER_STRINGS)
+           self.displayInternal(self.DISPLAY_PARAMETER_STRINGS)
         end
     end
 end

@@ -109,7 +109,11 @@ for iClass = 1:nLength
         publicMethodVec=methodVec(isPublicVec);
         fullNameList=arrayfun(@(x)[className,'.',x.Name],publicMethodVec,...
                       'UniformOutput',false);
+        bufFuncNameList = arrayfun(@(x)[className,'/',x.Name],publicMethodVec,...
+                      'UniformOutput',false);
         helpList=cellfun(@help,fullNameList,'UniformOutput',false);
+        helpList=cellfun(@(x, y)fDeleteHelpStr(x, y),helpList,...
+            bufFuncNameList, 'UniformOutput',false);
         bufFuncInfo.funcName=fullNameList;
         possibleScript=regexp(fullNameList,scriptNamePattern,'once','match');
         bufFuncInfo.isScript=logical(cellfun(@(x,y) isequal(x,y),...
@@ -132,5 +136,11 @@ function SFuncInfo=extractHelpFromFunc(mPack)
    SFuncInfo.isScript=logical(cellfun(@(x,y) isequal(x,y),funcNameList,...
         possibleScript));
    SFuncInfo.help=helpList;
+end
+
+function result = fDeleteHelpStr(helpText, helpStr)
+    indStartDel=strfind(helpText,sprintf('Help for %s', helpStr));
+    helpText(indStartDel:end)=[];
+    result = helpText;
 end
 end
