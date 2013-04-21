@@ -10,10 +10,6 @@ function R = ell_regularize(Q, delta)
     R = Q;
     return;
   end
-% 
-%   if nargin < 2
-%     delta = Properties.getAbsTol();
-%   end
 
   r = rank(Q);
 
