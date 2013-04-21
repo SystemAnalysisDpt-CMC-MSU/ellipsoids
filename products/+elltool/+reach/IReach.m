@@ -46,6 +46,27 @@ classdef IReach < handle
         % Output:
         %   None.
         %
+        reachObj = refine(self, l0Mat)
+        % 
+        % REFINE - adds new approximations computed for the specified directions
+        %          to the given reach set or to the projection of reach set.
+        %
+        % Input:
+        %   regular:
+        %       self.
+        %       l0Mat: double[nDim, nDir] - matrix of directions for new 
+        %           approximation
+        %
+        % Output:
+        %   regular:
+        %       reachObj: reach[1,1] - refine reach set for the directions
+        %           specified in l0Mat
+        %
+        % $Author: Vitaly Baranov <vetbar42@gmail.com> $ $Date: 21-04-2013$
+        % $Copyright: Lomonosov Moscow State University,
+        %            Faculty of Computational Mathematics and Cybernetics,
+        %            System Analysis Department 2013 $
+        %
         newReachObj = evolve(self, newEndTime, linSys)
         %
         % EVOLVE - computes further evolution in time of the already existing reach set.

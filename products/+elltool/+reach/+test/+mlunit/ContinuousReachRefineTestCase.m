@@ -36,8 +36,8 @@ classdef ContinuousReachRefineTestCase < mlunitext.test_case
         end
         function self = testRefMisc(self)
             lSys=buildLS();
-            lDirMat=[1,-1,0,0;
-                0,0,1,-1];
+            lDirMat=[1,-1,0,1;
+                0,2,1,-1];
             nN=2;
             l1DirMat=lDirMat(:,1:nN);
             l2DirMat=lDirMat(:,nN+1:end);
@@ -94,8 +94,8 @@ classdef ContinuousReachRefineTestCase < mlunitext.test_case
                     lSys,x0EllObj,lDirMat,timeVec);
             end
             function linSys = buildLS()
-                aMat=eye(2);
-                bMat=eye(2);
+                aMat=[1 2; 2 1];
+                bMat=[1 2;0 1];
                 uEll=ellipsoid(eye(2));
                 linSys=elltool.linsys.LinSysContinuous(aMat,bMat,uEll);
             end

@@ -35,6 +35,9 @@ classdef ReachContinuous < elltool.reach.AReach
     %  projection - Projects the reach set onto a given orthogonal basis.
     %  evolve     - Computes further evolution in time for given reach set
     %               for the same or different dynamical system.
+    %  refine     - Adds new approximations computed for the specified 
+    %               directions to the given reach set or to the projection 
+    %               of reach set.
     %  plot_ea    - Plots external approximation of the reach set.
     %  plot_ia    - Plots internal approximation of the reach set.
     %
@@ -656,9 +659,9 @@ classdef ReachContinuous < elltool.reach.AReach
                 projMat=self.projectionBasisMat;
                 newDirMat=[self.dirMat,l0Mat];
                 reachSetObj=elltool.reach.ReachContinuous(...
-                    linSys,x0Ell,newDirMat,timeVec);
+                    linSys,x0Ell,l0Mat,timeVec);
                 projSet = reachSetObj.getProjSet(projMat);
-                self.ellTubeRel=projSet;
+                self.ellTubeRel.unionWith(projSet);
                 self.dirMat=newDirMat;
             else
                 [x0Vec x0Mat] = double(x0Ell);
