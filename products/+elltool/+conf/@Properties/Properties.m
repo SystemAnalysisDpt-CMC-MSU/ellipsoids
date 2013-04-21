@@ -142,6 +142,10 @@ classdef Properties<modgen.common.obj.StaticPropStorage
                 nTimeGridPoints);
         end
         %
+        function setRelTol(value)
+            elltool.conf.Properties.setOption('relTol',value);
+        end    
+        %
         function SProp=getPropStruct()
             SProp=elltool.conf.Properties.getConfRepoMgr.getCurConf();
         end
