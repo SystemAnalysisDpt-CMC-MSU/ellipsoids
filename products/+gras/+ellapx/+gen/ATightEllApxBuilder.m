@@ -5,9 +5,11 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.IEllApxBuilder
         timeVec
         timeLimsVec
         nGoodDirs
-        calcPrecision
         odeAbsCalcPrecision
         odeRelCalcPrecision        
+    end
+    properties (SetAccess=private,GetAccess=protected)
+        calcPrecision
     end
     properties (Constant,GetAccess=private)
         MAX_PRECISION_FACTOR=0.003;

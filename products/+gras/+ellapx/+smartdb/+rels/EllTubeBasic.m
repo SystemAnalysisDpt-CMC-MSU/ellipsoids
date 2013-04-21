@@ -283,9 +283,8 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     approxType,timeVec,calcPrecision,indSTime,...
                     ltGoodDirMat,lsGoodDirVec,ltGoodDirNormVec,...
                     lsGoodDirNorm,xTouchCurveMat,xTouchOpCurveMat,...
-                    xsTouchVec,xsTouchOpVec,...
-                    elltool.conf.Properties.getAbsTol());
-             
+                    xsTouchVec,xsTouchOpVec);
+                %
                 [isOkList,errTagList,reasonList]=...
                     self.applyTupleGetFunc(fCheckTuple,checkFieldList,...
                     'UniformOutput',false);
@@ -320,20 +319,21 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     approxType,timeVec,calcPrecision,indSTime,...
                     ltGoodDirMat,lsGoodDirVec,ltGoodDirNormVec,...
                     lsGoodDirNorm,xTouchCurveMat,xTouchOpCurveMat,...
-                    xsTouchVec,xsTouchOpVec,absTol)
+                    xsTouchVec,xsTouchOpVec)
                 import gras.gen.SquareMatVector; 
-                MIN_M_EIG_ALLOWED=-5*eps;
                 errTagStr='';
                 reasonStr='';
                 isOk=false;
-                isNotPosDefVec=SquareMatVector.evalMFunc(@(x)~gras.la.ismatposdef(x,absTol),QArray);
+                isNotPosDefVec=SquareMatVector.evalMFunc(...
+                    @(x)~gras.la.ismatposdef(x,calcPrecision),QArray);
                 if any(isNotPosDefVec)
                     errTagStr='QArrayNotPos';
                     reasonStr='QArray is not positively defined';
                     return;
                 end
                 %                
-                isNotPosDefVec=SquareMatVector.evalMFunc(@(x)~gras.la.ismatposdef(x,MIN_M_EIG_ALLOWED),MArray);
+                isNotPosDefVec=SquareMatVector.evalMFunc(...
+                    @(x)~gras.la.ismatposdef(x,calcPrecision,true),MArray);
                 if any(isNotPosDefVec)
                     errTagStr='MArrayNeg';
                     reasonStr='MArray is negatively defined';
@@ -542,6 +542,27 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             %
             indProj2OrigCMat=repmat(indProj2OrigCVec,1,nProj);
             indProj2OrigVec=vertcat(indProj2OrigCMat{:});
+        end
+        function [apprEllMat timeVec] = getEllArray(self, approxType)
+            import gras.ellapx.enums.EApproxType;
+            import gras.ellapx.smartdb.F;
+            APPROX_TYPE = F.APPROX_TYPE;
+            SData = self.getTuplesFilteredBy(APPROX_TYPE, approxType);
+            nTuples = SData.getNTuples();
+            if nTuples > 0
+                apprEllMat = ellipsoid(...
+                    cat(3,SData.aMat{1:nTuples}),...
+                    cat(4,SData.QArray{1:nTuples}))';
+            else
+                apprEllMat = [];
+            end
+            if nargout > 1
+                if (~isempty(SData.timeVec))
+                    timeVec = SData.timeVec{1};
+                else 
+                    timeVec = [];
+                end
+            end
         end
     end
 end

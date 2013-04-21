@@ -851,6 +851,13 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
                 rs = createReach(argumentList{:});
             end         
         end
+        
+        function self = testSqrtmposToleranceFailure(self)
+            sh1Mat = diag(repmat(0.0000001, 1, 4)) + diag([1 1 0 0]);
+            sh2Mat = diag(ones(1, 4));
+            minksum_ia([ellipsoid(zeros(4, 1), sh1Mat),...
+                        ellipsoid(zeros(4, 1), sh2Mat)], [0 0 1 0]');
+        end
     end
 end
 

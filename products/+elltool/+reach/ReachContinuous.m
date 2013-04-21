@@ -200,37 +200,12 @@ classdef ReachContinuous < elltool.reach.AReach
                 end
             end
         end
-        function [apprEllMat timeVec] = getApprox(self, approxType)
-            import gras.ellapx.enums.EApproxType;
-            import gras.ellapx.smartdb.F;
-            APPROX_TYPE = F.APPROX_TYPE;
-            SData = self.ellTubeRel.getTuplesFilteredBy(APPROX_TYPE,...
-                approxType);
-            nTuples = SData.getNTuples();
-            if nTuples > 0
-                nTimes = numel(SData.timeVec{1});
-                for iTuple = nTuples : -1 : 1
-                    tupleCentMat = SData.aMat{iTuple};
-                    tupleMatArray = SData.QArray{iTuple};
-                    for jTime = nTimes : -1 : 1
-                        apprEllMat(iTuple, jTime) =...
-                            ellipsoid(tupleCentMat(:, jTime),...
-                            tupleMatArray(:, :, jTime));
-                    end
-                end
-            else
-                apprEllMat = [];
-            end
-            if nargout > 1
-                timeVec = SData.timeVec{1};
-            end
-        end
         function dataCVec = evolveApprox(self,...
                 newTimeVec, newLinSys, approxType)
             import gras.ellapx.smartdb.F;
             APPROX_TYPE = F.APPROX_TYPE;
             OldData = self.ellTubeRel.getTuplesFilteredBy(...
-                APPROX_TYPE, approxType);
+                APPROX_TYPE, approxType).getData();
             sysDimRows = size(OldData.QArray{1}, 1);
             sysDimCols = size(OldData.QArray{1}, 2);
             %
@@ -284,9 +259,9 @@ classdef ReachContinuous < elltool.reach.AReach
                     relTol,...
                     self.DEFAULT_INTAPX_S_SELECTION_MODE,...
                     self.MIN_EIG_Q_REG_UNCERT);
-                EllTubeBuilder =...
+                ellTubeBuilder =...
                     gras.ellapx.gen.EllApxCollectionBuilder({extIntBuilder});
-                ellTubeRel = EllTubeBuilder.getEllTubes();
+                ellTubeRel = ellTubeBuilder.getEllTubes();
             else
                 isIntApprox = any(approxTypeVec == EApproxType.Internal);
                 isExtApprox = any(approxTypeVec == EApproxType.External);
@@ -295,9 +270,9 @@ classdef ReachContinuous < elltool.reach.AReach
                         gras.ellapx.lreachplain.ExtEllApxBuilder(...
                         smartLinSys, goodDirSetObj, timeVec,...
                         relTol);
-                    extEllTubeBuilder =...
+                    extellTubeBuilder =...
                         gras.ellapx.gen.EllApxCollectionBuilder({extBuilder});
-                    extEllTubeRel = extEllTubeBuilder.getEllTubes();
+                    extEllTubeRel = extellTubeBuilder.getEllTubes();
                     if ~isIntApprox
                         ellTubeRel = extEllTubeRel;
                     end
@@ -308,9 +283,9 @@ classdef ReachContinuous < elltool.reach.AReach
                         smartLinSys, goodDirSetObj, timeVec,...
                         relTol,...
                         self.DEFAULT_INTAPX_S_SELECTION_MODE);
-                    intEllTubeBuilder =...
+                    intellTubeBuilder =...
                         gras.ellapx.gen.EllApxCollectionBuilder({intBuilder});
-                    intEllTubeRel = intEllTubeBuilder.getEllTubes();
+                    intEllTubeRel = intellTubeBuilder.getEllTubes();
                     if isExtApprox
                         intEllTubeRel.unionWith(extEllTubeRel);
                     end
@@ -810,12 +785,14 @@ classdef ReachContinuous < elltool.reach.AReach
         %%
         function [eaEllMat timeVec] = get_ea(self)
             import gras.ellapx.enums.EApproxType;
-            [eaEllMat timeVec] = self.getApprox(EApproxType.External);
+            [eaEllMat timeVec] =... 
+                self.ellTubeRel.getEllArray(EApproxType.External);
         end
         %%
         function [iaEllMat timeVec] = get_ia(self)
             import gras.ellapx.enums.EApproxType;
-            [iaEllMat timeVec] = self.getApprox(EApproxType.Internal);
+            [iaEllMat timeVec] =...
+                self.ellTubeRel.getEllArray(EApproxType.Internal);
         end
         %
         function [goodCurvesCVec timeVec] = get_goodcurves(self)
@@ -1001,6 +978,15 @@ classdef ReachContinuous < elltool.reach.AReach
             copyReachObj.isBackward = self.isBackward;
             copyReachObj.projectionBasisMat = self.projectionBasisMat;
             copyReachObj.ellTubeRel = self.ellTubeRel.getCopy();
+        end
+        %%
+        function ellTubeRel = getEllTubeRel(self)
+            ellTubeRel = self.ellTubeRel;
+        end
+        %%
+        function ellTubeUnionRel = getEllTubeUnionRel(self)
+            import gras.ellapx.smartdb.rels.EllUnionTube;
+            ellTubeUnionRel = EllUnionTube.fromEllTubes(self.ellTubeRel);
         end
     end
 end

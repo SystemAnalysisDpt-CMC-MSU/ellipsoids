@@ -104,7 +104,7 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             D_sqrt=gras.la.sqrtmpos(D);
             %
             [VMat,DMat]=eig(QIntMat);
-            if ~ismatposdef(QIntMat,self.absTol,true)
+            if ~ismatposdef(QIntMat,self.calcPrecision,true)
                 throwerror('wrongState','internal approx has degraded');
             end
             Q_star=VMat*sqrt(DMat)*transpose(VMat);
@@ -306,7 +306,6 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             self.goodDirSetObj=goodDirSetObj;
             self.sMethodName=sMethodName;
             self.prepareODEData();
-            self.absTol=elltool.conf.Properties.getAbsTol();
         end
         function ellTubeRel=getEllTubes(self)
             import gras.gen.SquareMatVector;
