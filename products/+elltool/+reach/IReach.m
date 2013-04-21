@@ -5,7 +5,6 @@ classdef IReach < handle
     %            System Analysis Department 2013 $
     %
     methods (Abstract)
-        cutObj = cut(self, cutTimeVec)
         %
         % CUT - extracts the piece of reach tube from given start time to
         % given end time. Given reach set self, find states that are
@@ -22,7 +21,7 @@ classdef IReach < handle
         % Output:
         %   cutObj: reach[1, 1] - reach set resulting from the CUT operation.
         %
-        [rSdim sSdim] = dimension(self)
+        cutObj = cut(self, cutTimeVec)
         %
         % DIMENSION - returns the dimension of the reach set.
         %
@@ -35,8 +34,8 @@ classdef IReach < handle
         %
         %   sSdim: double[1, 1] - state space dimension.
         %
-        display(self)
         %
+        [rSdim sSdim] = dimension(self)
         % DISPLAY - displays the reach set object.
         %
         % Input:
@@ -46,15 +45,15 @@ classdef IReach < handle
         % Output:
         %   None.
         %
-        reachObj = refine(self, l0Mat)
-        % 
+        %
+        display(self)
         % REFINE - adds new approximations computed for the specified directions
         %          to the given reach set or to the projection of reach set.
         %
         % Input:
         %   regular:
         %       self.
-        %       l0Mat: double[nDim, nDir] - matrix of directions for new 
+        %       l0Mat: double[nDim, nDir] - matrix of directions for new
         %           approximation
         %
         % Output:
@@ -67,7 +66,7 @@ classdef IReach < handle
         %            Faculty of Computational Mathematics and Cybernetics,
         %            System Analysis Department 2013 $
         %
-        newReachObj = evolve(self, newEndTime, linSys)
+        reachObj = refine(self, l0Mat)
         %
         % EVOLVE - computes further evolution in time of the already existing reach set.
         %
@@ -84,7 +83,7 @@ classdef IReach < handle
         %   newReachObj: reach[1, 1] - reach set on time
         %       interval [oldT0 newEndTime].
         %
-        [trCenterMat timeVec] = get_center(self)
+        newReachObj = evolve(self, newEndTime, linSys)
         %
         % GET_CENTER - returns the trajectory of the center of the reach set.
         %
@@ -100,7 +99,7 @@ classdef IReach < handle
         %
         %   timeVec: double[1, nPoints] - array of time values.
         %
-        [directionsCVec timeVec] = get_directions(self)
+        [trCenterMat timeVec] = get_center(self)
         %
         % GET_DIRECTIONS - returns the values of direction vectors for time grid values.
         %
@@ -116,7 +115,7 @@ classdef IReach < handle
         %
         %   timeVec: double[1, nPoints] - array of time values.
         %
-        [eaEllMat timeVec] = get_ea(self)
+        [directionsCVec timeVec] = get_directions(self)
         %
         % GET_EA - returns array of ellipsoid objects representing
         %     external approximation of the reach tube.
@@ -132,7 +131,7 @@ classdef IReach < handle
         %
         %   timeVec: double[1, nPoints] - array of time values.
         %
-        [goodCurvesCVec timeVec] = get_goodcurves(self)
+        [eaEllMat timeVec] = get_ea(self)
         %
         % GET_GOODCURVES - returns the 'good curve' trajectories of the reach set.
         %
@@ -146,7 +145,7 @@ classdef IReach < handle
         %
         %   timeVec: double[1, nPoints] - array of time values.
         %
-        [iaEllMat timeVec] = get_ia(self)
+        [goodCurvesCVec timeVec] = get_goodcurves(self)
         %
         % GET_IA - returns array of ellipsoid objects representing
         %     internal approximation of the reach tube.
@@ -162,7 +161,7 @@ classdef IReach < handle
         %
         %   timeVec: double[1, nPoints] - array of time values.
         %
-        linSys = get_system(self)
+        [iaEllMat timeVec] = get_ia(self)
         %
         % GET_SYSTEM - returns the linear system for which the reach set is computed.
         %
@@ -173,7 +172,7 @@ classdef IReach < handle
         % Output:
         %   linSys: elltool.linsys.LinSys[1, 1] - linear system object.
         %
-        isEmptyIntersect = intersect(self, intersectObj, approxTypeChar)
+        linSys = get_system(self)
         %
         % INTERSECT - checks if its external (s = 'e'), or internal (s = 'i')
         %     approximation intersects with given ellipsoid, hyperplane or polytop.
@@ -192,7 +191,7 @@ classdef IReach < handle
         %   isEmptyIntersect: logical[1, 1] -
         %       true - if intersection is nonempty, false - otherwise.
         %
-        isCut = iscut(self)
+        isEmptyIntersect = intersect(self, intersectObj, approxTypeChar)
         %
         % ISCUT - checks if given reach set object is a cut of another reach set.
         %
@@ -204,7 +203,7 @@ classdef IReach < handle
         %   isCut: logical[1, 1] -
         %       true - if self is a cut of the reach set, false - otherwise.
         %
-        isProj = isprojection(self)
+        isCut = iscut(self)
         %
         % ISPROJECTION - checks if given reach set object is a projection.
         %
@@ -216,7 +215,7 @@ classdef IReach < handle
         %   isProj: logical[1, 1] -
         %       true - if self is projection, false - otherwise.
         %
-        plot_ea(self, varargin)
+        isProj = isprojection(self)
         %
         % PLOT_EA - plots external approximations of 2D and 3D reach sets.
         %
@@ -246,7 +245,7 @@ classdef IReach < handle
         % Output:
         %   None.
         %
-        plot_ia(self, varargin)
+        plot_ea(self, varargin)
         %
         % PLOT_IA - plots internal approximations of 2D and 3D reach sets.
         %
@@ -276,7 +275,7 @@ classdef IReach < handle
         % Output:
         %   None.
         %
-        projObj = projection(self, projMat)
+        plot_ia(self, varargin)
         %
         % PROJECTION - projects the reach set self onto the orthogonal
         %     basis specified by the columns of matrix projMat.
@@ -290,7 +289,7 @@ classdef IReach < handle
         % Output:
         %   projObj: reach[1, 1] - projected reach set.
         %
-        isEmpty = isempty(self)
+        projObj = projection(self, projMat)
         %
         % ISEMPTY - checks if given reach set is an empty object.
         %
@@ -302,5 +301,6 @@ classdef IReach < handle
         %   isEmpty: logical[1, 1] -
         %       true - if self is empty, false - otherwise.
         %
+        isEmpty = isempty(self)
     end
 end

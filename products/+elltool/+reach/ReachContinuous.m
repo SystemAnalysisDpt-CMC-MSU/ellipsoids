@@ -683,6 +683,7 @@ classdef ReachContinuous < elltool.reach.AReach
                     ellTubeRelNew = self.rotateEllTubeRel(ellTubeRelNew);
                 end
                 %Update self.ellTubRel
+                self.dirMat=[self.dirMat, l0Mat];
                 self.ellTubeRel.unionWith(ellTubeRelNew);
             end
         end
@@ -940,6 +941,7 @@ classdef ReachContinuous < elltool.reach.AReach
             newReachObj.isProj = false;
             newReachObj.isBackward = self.isbackward();
             newReachObj.projectionBasisMat = [];
+            newReachObj.dirMat=self.dirMat;
             %
             newTimeVec = newReachObj.switchSysTimeVec(end - 1 : end);
             dataIntCVec = self.evolveApprox(newTimeVec,...
