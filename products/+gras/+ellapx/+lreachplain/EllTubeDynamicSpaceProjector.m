@@ -21,12 +21,12 @@ classdef EllTubeDynamicSpaceProjector<gras.ellapx.proj.AEllTubePlainProjector
             nTimePoints=length(timeVec);
             nProjDims=sum(sum(projMat));
             sizeVec=self.goodDirSetObj.getRstTransDynamics.getMatrixSize();
-            xstTransArray=self.goodDirSetObj.getRstTransDynamics.evaluate(timeVec);
-            xstTransProjArray=SquareMatVector.rMultiply(xstTransArray,projMat');   
+            rstTransArray=self.goodDirSetObj.getRstTransDynamics.evaluate(timeVec);
+            rstTransProjArray=SquareMatVector.rMultiply(rstTransArray,projMat');   
             projOrthMatTransArray=zeros([sizeVec nTimePoints]);
             for iTime=1:1:nTimePoints
                 projOrthMatTransArray(:,:,iTime)=gras.la.matorth(...
-                    xstTransProjArray(:,:,iTime));
+                    rstTransProjArray(:,:,iTime));
             end
             %
             projOrthMatTransArray=projOrthMatTransArray(:,1:nProjDims,:);
