@@ -11,7 +11,7 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
         end
         
         
-        function self = testDisplay(self)
+        function self =testDisplay(self)
             nDim = 3;
             x0Ell = ellipsoid(zeros(nDim, 1), eye(nDim));
             % used in @evalc
@@ -28,7 +28,7 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
         end
         
         
-        function self = testDimension(self)
+        function self =testDimension(self)
             nSystemDimension = 4;
             x0Ell = ellipsoid(zeros(nSystemDimension, 1), eye(nSystemDimension));
             lMat = eye(nSystemDimension);
@@ -49,7 +49,7 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
         end
         
         
-        function self = testGetSystem(self)
+        function self =testGetSystem(self)
             lsVec(1) = elltool.linsys.LinSysFactory.create( eye(3), ...
                 eye(3,4), ell_unitball(4), eye(3), ell_unitball(3), ...
                 eye(3), ell_unitball(3), 'd');
@@ -70,7 +70,7 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
         end
         
         
-        function self = testIsCut(self)
+        function self =testIsCut(self)
             aMat = [1 2; 3 4];
             bMat = [3; 2];
             pEll = 2*ell_unitball(1);
@@ -85,7 +85,7 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
         end
         
         
-        function self = testIsProjection(self)
+        function self =testIsProjection(self)
             nDim = 3;
             bMat = [1 0; 0 1; 1 1];
             pEll = ell_unitball(2);
@@ -100,7 +100,7 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
         end
         
         
-        function self = testIsEmpty(self)
+        function self =testIsEmpty(self)
             nDim = 3;
             aMat = eye(nDim);
             bMat = diag([3, 2, 1]);
@@ -116,7 +116,7 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
         end
         
         
-        function self = testGetDirections(self)
+        function self =testGetDirections(self)
             nDim = 3;
             aMat = [1 0 0; 1 1 0; 1 1 1];
             bMat = eye(nDim);
@@ -181,7 +181,7 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
         end
         
         
-        function self = testGetCenter(self)
+        function self =testGetCenter(self)
             nDim = 3;
             isOk = true;
             
@@ -270,35 +270,34 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
                 else
                     rs = createReach(aCMat, bMat, pEll, x0Ell, lMat, tVec);
                 end
-                sourceEaEllMat = rs.get_ea();
-                sourceIaEllMat = rs.get_ia();
-                if (numel(cutTVec) == 1)
-                    rs2 = rs.cut(cutTVec);
-                    cutEaEll = rs2.get_ea();
-                    cutIaEll = rs2.get_ia();
-                    isOk = isOk && all(sourceEaEllMat(:, cutTVec) ==...
-                        cutEaEll(:));
-                    isOk = isOk && all(sourceIaEllMat(:, cutTVec) ==...
-                        cutIaEll(:));
-                else
-                    rs2 = cut(rs, cutTVec);
-                    [cutEaEllMat tVec] = rs2.get_ea();
-                    isResultMat = sourceEaEllMat(:, cutTVec(1):cutTVec(2))...
-                        == cutEaEllMat;
-                    isOk = isOk && all(isResultMat(:));
-                    isOk = isOk && all(tVec == cutTVec(1):cutTVec(2));
-                    [cutIaEllMat tVec] = rs2.get_ia();
-                    isResultMat = sourceIaEllMat(:, cutTVec(1):cutTVec(2)) ...
-                        == cutIaEllMat;
-                    isOk = isOk && all(isResultMat(:));           
-                    isOk = isOk && all(tVec == cutTVec(1):cutTVec(2));
-                    
+                rs2 = rs.cut(cutTVec);
+                
+                isOk = isOk && isEqualApproximations('get_ea');
+                isOk = isOk && isEqualApproximations('get_ia');
+                
+                function isOk = isEqualApproximations(getApproxMethod)
+                    sourceEllMat = rs.(getApproxMethod)();
+                    isOk = true;
+                    if (numel(cutTVec) == 1)
+                        rs2 = rs.cut(cutTVec);
+                        [cutEll obtainedT]= rs2.(getApproxMethod)();
+                        isOk = isOk && all(sourceEllMat(:, cutTVec) ==...
+                            cutEll(:));
+                        isOk = isOk && (obtainedT(1) == cutTVec(1));
+                    else
+                        [cutEllMat obtainedTVec] = rs2.(getApproxMethod)();
+                        isResultMat = sourceEllMat(:, cutTVec(1):cutTVec(2))...
+                            == cutEllMat;
+                        isOk = isOk && all(isResultMat(:));
+                        isOk = isOk && all(obtainedTVec == ...
+                            cutTVec(1):cutTVec(2));
+                    end
                 end
             end
         end
         
         
-        function self = testGetGoodCurves(self)
+        function self =testGetGoodCurves(self)
             epsilon = self.REL_TOL * 1000;
             nDim = 3;
             isOk = true;
@@ -349,7 +348,7 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
         end
         
          
-        function self = testGetIa(self)
+        function self =testGetIa(self)
             
             t0 = 1;
             t1 = 5;
@@ -473,7 +472,7 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
         end
         
         
-        function self = testGetEa(self)
+        function self =testGetEa(self)
             t0 = 1;
             t1 = 5;
             nDim = 3;
@@ -644,55 +643,41 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
                     rs = createReach(aCMat, bMat, pEll, x0Ell, lMat, [t0, t1]);
                 end
                 projectedRs = rs.projection(projectionMatrix);
-                initApproximationEllMat = rs.get_ia();
-                finitApproximationEllMat = initApproximationEllMat;
-                for iDirection = 1 : 3
-                    for tTime = 1 : t1
-                       [qVec qMat] = ...
-                           double(initApproximationEllMat(iDirection, tTime));
-                       finitApproximationEllMat(iDirection, tTime) = ...
-                           ellipsoid(projectionMatrix' * qVec, projectionMatrix' *...
-                           qMat * projectionMatrix);
-                    end
-                end
-                obtainedApproximationEllMat = projectedRs.get_ia();
-                for iDirection = 1 : 3
-                    for tTime = 1 : t1
-                        [q1Vec q1Mat] = ...
-                            double(finitApproximationEllMat(iDirection, tTime));
-                        [q2Vec q2Mat] = ...
-                            double(obtainedApproximationEllMat(iDirection, tTime));
-                        isOk = isOk && all(abs(q1Vec - q2Vec) < epsilon);
-                        isOkMat = abs(q1Mat - q2Mat) < epsilon;
-                        isOk = isOk && all(isOkMat(:));
-                    end
-                end
 
-                initApproximationEllMat = rs.get_ea();
-                finitApproximationEllMat = initApproximationEllMat;
-                for iDirection = 1 : 3
-                    for tTime = 1 : t1
-                       [qVec qMat] = double(initApproximationEllMat(iDirection, tTime));
-                       finitApproximationEllMat(iDirection, tTime) = ...
-                           ellipsoid(projectionMatrix' * qVec, ...
-                           projectionMatrix' * qMat * projectionMatrix);
+                isOk = isOk && isEqualApproximations('get_ia');
+                isOk = isOk && isEqualApproximations('get_ea');
+                
+                function isOk = isEqualApproximations(getApproxMethod)
+                    isOk = true;
+                    initApproximationEllMat = rs.(getApproxMethod)();
+                    finitApproximationEllMat = initApproximationEllMat;
+                    for iDirection = 1 : 3
+                        for tTime = 1 : t1
+                           [qVec qMat] = ...
+                               double(initApproximationEllMat(iDirection, tTime));
+                           finitApproximationEllMat(iDirection, tTime) = ...
+                               ellipsoid(projectionMatrix' * qVec, ...
+                               projectionMatrix' * qMat * projectionMatrix);
+                        end
                     end
-                end
-                obtainedApproximationEllMat = projectedRs.get_ea();
-                for iDirection = 1 : 3
-                    for tTime = 1 : t1
-                        [q1Vec q1Mat] = finitApproximationEllMat(iDirection, tTime).double();
-                        [q2Vec q2Mat] = obtainedApproximationEllMat(iDirection, tTime).double();
-                        isOk = isOk && all(abs(q1Vec - q2Vec) < epsilon);
-                        isOkMat = abs(q1Mat - q2Mat) < epsilon;
-                        isOk = isOk && all(isOkMat(:));
+                    obtainedApproximationEllMat = projectedRs.(getApproxMethod)();
+                    for iDirection = 1 : 3
+                        for tTime = 1 : t1
+                            [q1Vec q1Mat] = ...
+                                double(finitApproximationEllMat(iDirection, tTime));
+                            [q2Vec q2Mat] = ...
+                                double(obtainedApproximationEllMat(iDirection, tTime));
+                            isOk = isOk && all(abs(q1Vec - q2Vec) < epsilon);
+                            isOkMat = abs(q1Mat - q2Mat) < epsilon;
+                            isOk = isOk && all(isOkMat(:));
+                        end
                     end
                 end
             end
         end
         
         
-        function self = testIntersect(self)
+        function self =testIntersect(self)
             t0 = 1;
             t1 = 5;
             nDim = 3;
@@ -781,48 +766,13 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
 
                     expectedRs = createReach(a1Mat, b1Mat, p1Ell, x01Ell,...
                                              lMat, [t0, t2]);
-                    
-                    expectedApproxEllMat = expectedRs.get_ia();
-                    obtainedApproxEllMat = obtainedRs.get_ia();
-                    isOkMat = expectedApproxEllMat(:, t1:t2) == obtainedApproxEllMat;
-                    isOk = isOk && all(isOkMat(:));
-
-                    expectedApproxEllMat = expectedRs.get_ea();
-                    obtainedApproxEllMat = obtainedRs.get_ea();
-                    isOkMat = expectedApproxEllMat(:, t1:t2) == obtainedApproxEllMat;
-                    isOk = isOk && all(isOkMat(:));
                 else
                     rs = createReach(a1Mat, b1Mat, p1Ell, x01Ell, lMat, [t0, t1]);
                     obtainedRs = rs.evolve(t2, ls2);
-                    obtainedApproxEllMat = obtainedRs.get_ia();
-                    initApproxEllMat = rs.get_ia();
-                    expectedApproxEllMat = obtainedApproxEllMat;
-                    for iDirection = 1 : 3
-                        evolvingRs = elltool.reach.ReachDiscrete(ls2, ...
-                            initApproxEllMat(iDirection, t1), lMat(:, iDirection),...
-                            [t1 t2]);
-                        expectedApproxEllMat(iDirection, :) = evolvingRs.get_ia();
-                    end
-                    
-                    isOkMat = arrayfun(@approxEllEq, expectedApproxEllMat, ...
-                                       obtainedApproxEllMat, ...
-                                       repmat(epsilon, t2 - t1 + 1, t2 - t1 + 1));
-                    isOk = isOk && all(isOkMat(:));
-
-                    obtainedApproxEllMat = obtainedRs.get_ea();
-                    initApproxEllMat = rs.get_ea();
-                    expectedApproxEllMat = obtainedApproxEllMat;
-                    for iDirection = 1 : 3
-                        evolvingRs = elltool.reach.ReachDiscrete(ls2, ...
-                            initApproxEllMat(iDirection, t1), lMat(:, iDirection),...
-                            [t1 t2]);
-                        expectedApproxEllMat(iDirection, :) = evolvingRs.get_ea();
-                    end  
-                    isOkMat = arrayfun(@approxEllEq, expectedApproxEllMat, ...
-                                       obtainedApproxEllMat, ...
-                                       repmat(epsilon, t2 - t1 + 1, t2 - t1 + 1));
-                    isOk = isOk && all(isOkMat(:));
                 end
+                
+                isOk = isOk && isEqualApproximation('get_ia');
+                isOk = isOk && isEqualApproximation('get_ea');
                 
                 function isOk = approxEllEq(x1Ell, x2Ell, epsilon)
                     [q1Vec q1Mat] = x1Ell.double();
@@ -831,11 +781,37 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
                     resMat = abs(q1Mat - q2Mat);
                     isOk = isOk && max(resMat(:))/max(abs(q1Mat(:))) < epsilon;
                 end
+                
+                function isOk = isEqualApproximation(getApproxMethod)
+                    isOk = true;
+                    if (~isWithAnotherSystem)
+                        expectedApproxEllMat = expectedRs.(getApproxMethod)();
+                        obtainedApproxEllMat = obtainedRs.(getApproxMethod)();
+                        isOkMat = expectedApproxEllMat(:, t1:t2) == obtainedApproxEllMat;
+                        isOk = isOk && all(isOkMat(:));
+                    else
+                        obtainedApproxEllMat = obtainedRs.(getApproxMethod)();
+                        initApproxEllMat = rs.(getApproxMethod)();
+                        expectedApproxEllMat = obtainedApproxEllMat;
+                        for iDirection = 1 : 3
+                            evolvingRs = elltool.reach.ReachDiscrete(ls2, ...
+                                initApproxEllMat(iDirection, t1), ...
+                                lMat(:, iDirection), [t1 t2]);
+                            expectedApproxEllMat(iDirection, :) =...
+                                       evolvingRs.(getApproxMethod)();
+                        end
+                        
+                        isOkMat = arrayfun(@approxEllEq, expectedApproxEllMat, ...
+                                           obtainedApproxEllMat, ...
+                                           repmat(epsilon, t2 - t1 + 1, t2 - t1 + 1));
+                        isOk = isOk && all(isOkMat(:));
+                    end
+                end
             end
         end
         
         
-        function self = testOverflow(self)
+        function self =testOverflow(self)
             aMat = [4 5 1; 3 2 1; 0 1 3];
             bMat = [2 0 1; 3 0 1; 2 2 2];
             nDim = 3;
@@ -852,7 +828,8 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
             end         
         end
         
-        function self = testSqrtmposToleranceFailure(self)
+        
+        function self =testSqrtmposToleranceFailure(self)
             sh1Mat = diag(repmat(0.0000001, 1, 4)) + diag([1 1 0 0]);
             sh2Mat = diag(ones(1, 4));
             minksum_ia([ellipsoid(zeros(4, 1), sh1Mat),...
