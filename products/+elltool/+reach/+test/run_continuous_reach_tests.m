@@ -1,5 +1,5 @@
-function results = run_continuous_reach_tests()
-import elltool.reach.test.mlunit.ReachFactory;
+function results = run_continuous_reach_tests(inpConfNameList)
+import elltool.reach.ReachFactory;
 %
 runner = mlunit.text_test_runner(1, 1);
 loader = mlunitext.test_loader;
@@ -7,19 +7,23 @@ loader = mlunitext.test_loader;
 crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
 crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
 %
-confList = {...
-    'demo3firstTest',  [1 0 1 0 1];...
-    'demo3secondTest', [1 1 1 1 1];...
-    'demo3thirdTest', [1 1 1 1 1];...
-    'demo3fourthTest', [1 1 1 1 1];
+confCMat = {...
+    'demo3firstTest',  [1 0 1 0 1 0];...
+    'demo3secondTest', [1 0 0 1 1 0];...
+    'demo3thirdTest',  [1 1 0 0 1 1];...
+    'demo3fourthTest', [1 1 1 1 1 1];
     };
 %
-nConfs = size(confList, 1);
+if nargin>0
+    isSpecVec=ismember(confCMat(:,1),inpConfNameList);
+    confCMat=confCMat(isSpecVec,:);
+end
+nConfs = size(confCMat, 1);
 suiteList = {};
 %
 for iConf = 1 : nConfs
-    confName = confList{iConf, 1};
-    confTestsVec = confList{iConf, 2};
+    confName = confCMat{iConf, 1};
+    confTestsVec = confCMat{iConf, 2};
     if confTestsVec(1)
         suiteList{end + 1} = loader.load_tests_from_test_case(...
             'elltool.reach.test.mlunit.ContinuousReachTestCase',...
@@ -45,6 +49,11 @@ for iConf = 1 : nConfs
             'elltool.reach.test.mlunit.ContinuousReachRegrTestCase',...
             confName, crm, crmSys);
     end
+    if confTestsVec(6)
+        suiteList{end + 1} = loader.load_tests_from_test_case(...
+            'elltool.reach.test.mlunit.ContinuousReachProjTestCase',...
+            confName, crm, crmSys);
+    end
 end
 suiteList{end + 1} = loader.load_tests_from_test_case(...
     'elltool.reach.test.mlunit.ContinuousReachFirstTestCase',...
@@ -53,4 +62,5 @@ suiteList{end + 1} = loader.load_tests_from_test_case(...
 testLists=cellfun(@(x)x.tests,suiteList,'UniformOutput',false);
 suite=mlunitext.test_suite(horzcat(testLists{:}));
 results=runner.run(suite);
+%
 end

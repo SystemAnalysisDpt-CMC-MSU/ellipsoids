@@ -119,8 +119,7 @@ end
 if isAnyObjEmpty
     throwerror('wrongInput:emptyObject',...
     'Array should not have empty ellipsoid, hyperplane or polytope.');
-end;
-
+end
 
 if (nargin < 3) || ~(ischar(mode))
     mode = 'u';
@@ -133,10 +132,27 @@ secObjVec  = reshape(secObjArr, 1, nElem);
 
 if isa(secObjVec, 'polytope')
     if mode == 'i'
-       xVec = {extreme(and(secObjVec))};
+        polyAnd = and(secObjVec);
+
+        if ~isbounded(polyAnd)
+            res = 0;
+            return;
+        end
+        
+        xVec = {extreme(polyAnd)};  
     else
-        [nRows nCols] = size(secObjVec);
-        xVec = cell(nRows,nCols);
+        [~, nCols] = size(secObjVec);
+        xVec = cell(1,nCols);
+        isBoundedVec = true(1,nCols);
+        for iCols = 1:nCols
+            isBoundedVec(iCols) = isbounded(secObjArr(iCols));
+        end;
+        
+        if ~all(isBoundedVec(:))
+            res = 0;
+            return;
+        end
+        
         for iCols = 1:nCols
             xVec{iCols} = extreme(secObjArr(iCols));
         end;
