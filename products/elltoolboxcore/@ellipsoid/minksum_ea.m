@@ -7,13 +7,13 @@ function extApprEllVec = minksum_ea(inpEllArr, dirMat)
 %       tight external approximating ellipsoids for the geometric
 %       sum of the ellipsoids in the array inpEllArr along directions
 %       specified by columns of dirMat.
-%       If ellipsoids in inpEllMat are n-dimensional, matrix
+%       If ellipsoids in inpEllArr are n-dimensional, matrix
 %       dirMat must have dimension (n x k) where k can be
 %       arbitrarily chosen.
 %       In this case, the output of the function will contain k
 %       ellipsoids computed for k directions specified in dirMat.
 %
-%   Let inpEllMat consists from: E(q1, Q1), E(q2, Q2), ..., E(qm, Qm) -
+%   Let inpEllArr consists of E(q1, Q1), E(q2, Q2), ..., E(qm, Qm) -
 %   ellipsoids in R^n, and dirMat(:, iCol) = l - some vector in R^n.
 %   Then tight external approximating ellipsoid E(q, Q) for the
 %   geometric sum E(q1, Q1) + E(q2, Q2) + ... + E(qm, Qm)
@@ -49,15 +49,34 @@ function extApprEllVec = minksum_ea(inpEllArr, dirMat)
 import elltool.conf.Properties;
 import modgen.common.throwerror;
 import modgen.common.checkmultvar;
+import elltool.logging.Log4jConfigurator;
+
+persistent logger;
 
 ellipsoid.checkIsMe(inpEllArr,'first');
-[nDims, nCols] = size(dirMat);
 nDimsInpEllArr = dimension(inpEllArr);
-checkmultvar('all(x2(:)==x1)',2,nDimsInpEllArr,nDims,...
+
+[nDims, nCols] = size(dirMat);
+
+modgen.common.checkvar( inpEllArr , 'numel(x) > 0', 'errorTag', ...
+    'wrongInput:emptyArray', 'errorMessage', ...
+    'Each array must be not empty.');
+
+modgen.common.checkvar( inpEllArr,'all(~isempty(x(:)))','errorTag', ...
+    'wrongInput:emptyEllipsoid', 'errorMessage', ...
+    'Array should not have empty ellipsoid.');
+
+modgen.common.checkvar( nDimsInpEllArr,'all(x(:)==x(1))','errorTag', ...
+    'wrongSizes', 'errorMessage', ...
+    'ellipsoids in the array and vector(s) must be of the same dimension.');
+
+checkmultvar('x1(1)==x2',2,nDimsInpEllArr,nDims,...
     'errorTag','wrongSizes','errrorMessage',...
     'ellipsoids in the array and vector(s) must be of the same dimension.');
+
 if isscalar(inpEllArr)
-    extApprEllVec = inpEllArr;
+    extApprEllVec(1,nCols) = ellipsoid; 
+    arrayfun(@(x)fCopyEll(x,inpEllArr),1:nCols);
     return;
 end
 
@@ -70,6 +89,10 @@ absTolArr = getAbsTol(inpEllArr);
 extApprEllVec(1,nCols) = ellipsoid;
 arrayfun(@(x) fSingleDirection(x),1:nCols);
 
+    function fCopyEll(index,ellObj)
+        extApprEllVec(index).center=ellObj.center;
+        extApprEllVec(index).shape=ellObj.shape;
+    end
     function fAddCenter(singEll)
         centVec = centVec + singEll.center;
     end
@@ -86,9 +109,12 @@ arrayfun(@(x) fSingleDirection(x),1:nCols);
             shMat = singEll.shape;
             if isdegenerate(singEll)
                 if isVerbose
-                    fprintf('MINKSUM_EA: Warning!');
-                    fprintf(' Degenerate ellipsoid.\n');
-                    fprintf('            Regularizing...\n')
+                    if isempty(logger)
+                        logger=Log4jConfigurator.getLogger();
+                    end
+                    logger.info('MINKSUM_EA: Warning!');
+                    logger.info('Degenerate ellipsoid.');
+                    logger.info('Regularizing...')
                 end
                 shMat = ellipsoid.regularize(shMat, absTol);
             end

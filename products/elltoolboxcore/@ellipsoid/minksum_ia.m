@@ -7,12 +7,12 @@ function intApprEllVec = minksum_ia(inpEllArr, dirMat)
 %       tight internal approximating ellipsoids for the geometric
 %       sum of the ellipsoids in the array inpEllArr along directions
 %       specified by columns of dirMat. If ellipsoids in
-%       inpEllMat are n-dimensional, matrix dirMat must have
+%       inpEllArr are n-dimensional, matrix dirMat must have
 %       dimension (n x k) where k can be arbitrarily chosen.
 %       In this case, the output of the function will contain k
 %       ellipsoids computed for k directions specified in dirMat.
 %
-%   Let inpEllMat consists from: E(q1, Q1), E(q2, Q2), ..., E(qm, Qm) - 
+%   Let inpEllArr consist of E(q1, Q1), E(q2, Q2), ..., E(qm, Qm) -
 %   ellipsoids in R^n, and dirMat(:, iCol) = l - some vector in R^n.
 %   Then tight internal approximating ellipsoid E(q, Q) for the
 %   geometric sum E(q1, Q1) + E(q2, Q2) + ... + E(qm, Qm) along
@@ -49,17 +49,37 @@ function intApprEllVec = minksum_ia(inpEllArr, dirMat)
 import elltool.conf.Properties;
 import modgen.common.throwerror;
 import modgen.common.checkmultvar;
+import elltool.logging.Log4jConfigurator;
+import gras.la.sqrtmpos;
+
+persistent logger;
 
 ellipsoid.checkIsMe(inpEllArr,'first');
 
+modgen.common.checkvar( inpEllArr , 'numel(x) > 0', 'errorTag', ...
+    'wrongInput:emptyArray', 'errorMessage', ...
+    'Each array must be not empty.');
+
+modgen.common.checkvar( inpEllArr,'all(~isempty(x(:)))','errorTag', ...
+    'wrongInput:emptyEllipsoid', 'errorMessage', ...
+    'Array should not have empty ellipsoid.');
+
 nNumel = numel(inpEllArr);
-[nDims, nCols] = size(dirMat);
 nDimsInpEllArr = dimension(inpEllArr);
-checkmultvar('all(x2(:)==x1)',2,nDimsInpEllArr,nDims,...
+
+[nDims, nCols] = size(dirMat);
+
+modgen.common.checkvar( nDimsInpEllArr,'all(x(:)==x(1))','errorTag', ...
+    'wrongSizes', 'errorMessage', ...
+    'ellipsoids in the array and vector(s) must be of the same dimension.');
+
+checkmultvar('x1(1)==x2',2,nDimsInpEllArr,nDims,...
     'errorTag','wrongSizes','errrorMessage',...
     'ellipsoids in the array and vector(s) must be of the same dimension.');
+
 if isscalar(inpEllArr)
-    intApprEllVec = inpEllArr;
+    intApprEllVec(1,nCols) = ellipsoid;
+    arrayfun(@(x)fCopyEll(x,inpEllArr),1:nCols);
     return;
 end
 isVerbose=Properties.getIsVerbose();
@@ -67,52 +87,43 @@ centVec =zeros(nDims,1);
 arrayfun(@(x) fAddCenter(x),inpEllArr);
 absTolArr = getAbsTol(inpEllArr);
 
-srcMat = sqrtm(inpEllArr(1).shape) * dirMat;
-%dstArr = zeros(nDims, nCols, nNumel);
+srcMat = sqrtmpos(inpEllArr(1).shape, min(absTolArr(:))) * dirMat;
 sqrtShArr = zeros(nDims, nDims, nNumel);
 rotArr = zeros(nDims,nDims,nNumel,nCols);
 arrayfun(@(x) fSetRotArr(x), 1:nNumel);
-%rotArr = gras.la.mlorthtransl(srcMat,dstArr);
-
-
+%
 intApprEllVec(1,nCols) = ellipsoid;
 arrayfun(@(x) fSingleDirection(x),1:nCols);
+
+    function fCopyEll(index,ellObj)
+        intApprEllVec(index).center=ellObj.center;
+        intApprEllVec(index).shape=ellObj.shape;
+    end
 
     function fAddCenter(singEll)
         centVec = centVec + singEll.center;
     end
-    
+
     function fSetRotArr(ellIndex)
         import gras.la.mlorthtransl;
+        import gras.la.sqrtmpos;
         shMat = inpEllArr(ellIndex).shape;
         if isdegenerate(inpEllArr(ellIndex))
             if isVerbose
-                fprintf('MINKSUM_IA: Warning!');
-                fprintf(' Degenerate ellipsoid.\n');
-                fprintf('            Regularizing...\n')
+                if isempty(logger)
+                    logger=Log4jConfigurator.getLogger();
+                end
+                logger.info('MINKSUM_IA: Warning!');
+                logger.info('Degenerate ellipsoid.');
+                logger.info('Regularizing...')
             end
             shMat = ellipsoid.regularize(shMat, absTolArr(ellIndex));
         end
-        shSqrtMat = sqrtm(shMat);
+        shSqrtMat = sqrtmpos(shMat, absTolArr(ellIndex));
         sqrtShArr(:,:,ellIndex) = shSqrtMat;
         dstMat = shSqrtMat*dirMat;
         rotArr(:,:,ellIndex,:) = mlorthtransl(dstMat,srcMat);
     end
-    
-%     function fGetDstArr(index)
-%         shMat = inpEllArr(index).shape;
-%         if isdegenerate(inpEllArr(index))
-%             if Properties.getIsVerbose()
-%                 fprintf('MINKSUM_IA: Warning!');
-%                 fprintf(' Degenerate ellipsoid.\n');
-%                 fprintf('            Regularizing...\n')
-%             end
-%             shMat = ellipsoid.regularize(shMat, absTolArr(index));
-%         end
-%         shMat = sqrtm(shMat);
-%         sqrtShArr(:,:,index) = shMat;
-%         dstArr(:,:,index) = shMat*dirMat;
-%     end
 
     function fSingleDirection(dirIndex)
         subShMat = zeros(nDims,nDims);

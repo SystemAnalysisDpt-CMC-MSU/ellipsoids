@@ -9,6 +9,10 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
     end
     properties (GetAccess=private,Constant)
         DEFAULT_SCALE_FACTOR=1;
+        FIELDS_NOT_TO_CAT_OR_CUT={'APPROX_SCHEMA_DESCR';'DIM';...
+            'APPROX_SCHEMA_NAME';'APPROX_TYPE';'CALC_PRECISION';...
+            'IND_S_TIME';'LS_GOOD_DIR_NORM';'LS_GOOD_DIR_VEC';'S_TIME';...
+            'SCALE_FACTOR';'XS_TOUCH_OP_VEC';'XS_TOUCH_VEC'};
     end
     methods (Access=protected)
         function figureGroupKeyName=figureGetGroupKeyFunc(self,sTime,lsGoodDirVec)
@@ -33,10 +37,10 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
         function axesName=axesGetKeyTraceFunc(self,sTime,lsGoodDirVec)
             axesName=sprintf('Ellipsoid matrix traces for\n %s',...
                 self.goodDirProp2Str(lsGoodDirVec,sTime));
-        end        
+        end
         function hVec=axesSetPropTraceFunc(self,hAxes,axesName)
             hVec=axesSetPropBasicFunc(self,hAxes,axesName,'trace');
-        end 
+        end
         %
         function hVec=axesSetPropBasicFunc(~,hAxes,axesName,yLabel)
             title(hAxes,axesName);
@@ -49,7 +53,7 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
             set(hAxes,'xtickmode','auto',...
                 'ytickmode','auto','xgrid','on','ygrid','on');
             hVec=[];
-        end 
+        end
         function hVec=plotTubeTraceFunc(~,hAxes,...
                 approxType,timeVec,QArray,MArray)
             import gras.ellapx.enums.EApproxType;
@@ -59,8 +63,8 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
             elseif approxType==EApproxType.External
                 tubeArgList={'b-.'};
             else
-               throwerror('wrongInput',...
-                   'Approximation type %s is not supported');
+                throwerror('wrongInput',...
+                    'Approximation type %s is not supported');
             end
             %
             hQVec=plotTrace(QArray,'tube',tubeArgList{:});
@@ -69,7 +73,7 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
             else
                 hMVec=[];
             end
-                
+            
             hVec=[hQVec,hMVec];
             %
             axis(hAxes,'tight');
@@ -82,11 +86,11 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
                 %
                 traceVec=SquareMatVector.evalMFunc(@trace,InpArray);
                 hVec=plot(hAxes,timeVec,traceVec,lineSpec,...
-                        varargin{:},...
-                        'DisplayName',...
-                        [namePrefix,', trace, ',char(approxType)]);  
-             end
-        end         
+                    varargin{:},...
+                    'DisplayName',...
+                    [namePrefix,', trace, ',char(approxType)]);
+            end
+        end
         function hVec=plotTubeDiamFunc(~,hAxes,...
                 approxType,timeVec,QArray,MArray)
             import gras.ellapx.enums.EApproxType;
@@ -96,8 +100,8 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
             elseif approxType==EApproxType.External
                 tubeArgList={'b-.'};
             else
-               throwerror('wrongInput',...
-                   'Approximation type %s is not supported');
+                throwerror('wrongInput',...
+                    'Approximation type %s is not supported');
             end
             %
             hQVec=plotEig(QArray,'tube',tubeArgList{:});
@@ -106,7 +110,7 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
             else
                 hMVec=[];
             end
-                
+            
             hVec=[hQVec,hMVec];
             %
             axis(hAxes,'tight');
@@ -118,11 +122,11 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
                 eMat=zeros(size(InpArray,1),nTimePoints);
                 oArray=get(hAxes,'UserData');
                 if isempty(oArray)
-                    oArray=zeros(size(InpArray));                
+                    oArray=zeros(size(InpArray));
                     for iTime=1:nTimePoints
                         inpMat=InpArray(:,:,iTime);
                         oMat=gras.la.matorth(inpMat);
-                        oArray(:,:,iTime)=oMat;                    
+                        oArray(:,:,iTime)=oMat;
                     end
                     set(hAxes,'UserData',oArray);
                 end
@@ -151,7 +155,7 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
                     sprintf('%s_eig_min_%s',namePrefix,...
                     char(approxType)));
             end
-        end         
+        end
     end
     methods
         function plObj=plot(self,plObj)
@@ -164,7 +168,7 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
             %       plObj: smartdb.disp.RelationDataPlotter[1,1] - plotter
             %           object used for displaying ellipsoidal tubes
             %
-            % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-12-19 $ 
+            % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-12-19 $
             % $Copyright: Moscow State University,
             %            Faculty of Computational Mathematics and Computer Science,
             %            System Analysis Department 2011 $
@@ -233,9 +237,176 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
             STubeData=EllTubeBasic.fromQArraysInternal(QArrayList,aMat,...
                 MArrayList,varargin{:});
             ellTubeRel=EllTube(STubeData);
+        end       
+        function ellTubeRel = fromEllMArray(qEllArray, ellMArr, varargin)
+            import gras.ellapx.smartdb.rels.EllTube;
+            import gras.ellapx.smartdb.rels.EllTubeBasic;
+            nPoints = length(qEllArray);
+            nDims = size(parameters(qEllArray(1)), 1);
+            qArray = zeros(nDims, nDims, nPoints);
+            aMat = zeros(nDims, nPoints);
+            arrayfun(@(iPoint)fCalcAMatAndQArray(iPoint), 1:nPoints);
+            %
+            STubeData=EllTubeBasic.fromQArraysInternal({qArray}, aMat,...
+                {ellMArr},varargin{:},...
+                EllTube.DEFAULT_SCALE_FACTOR(1));
+            ellTubeRel=EllTube(STubeData);           
+            %            
+            function fCalcAMatAndQArray(iPoint)
+                [aMat(:, iPoint), qArray(:,:,iPoint)] =...
+                    parameters(qEllArray(iPoint));
+            end
         end
+        function ellTubeRel = fromEllArray(qEllArray, varargin)
+            import gras.ellapx.smartdb.rels.EllTube;
+            import gras.ellapx.smartdb.rels.EllTubeBasic;
+            nPoints = length(qEllArray);
+            nDims = size(parameters(qEllArray(1)), 1);
+            mArray = zeros([nDims, nDims, nPoints]);
+            ellTubeRel = EllTube.fromEllMArray(...
+                qEllArray, mArray, varargin{:});                       
+        end
+        
     end
     methods
+        function thinnedEllTubeRel =...
+                thinOutTuples(self, indVec)
+            import gras.ellapx.smartdb.F;
+            import modgen.common.throwerror;
+            FIELD_NAME_LIST_TO = {F.LS_GOOD_DIR_VEC;F.LS_GOOD_DIR_NORM;...
+                F.XS_TOUCH_VEC;F.XS_TOUCH_OP_VEC};
+            FIELD_NAME_LIST_FROM = {F.LT_GOOD_DIR_MAT;...
+                F.LT_GOOD_DIR_NORM_VEC;F.X_TOUCH_CURVE_MAT;...
+                F.X_TOUCH_OP_CURVE_MAT};
+            SData = self.getData();
+            SThinFunResult = SData;
+            timeVec = SData.timeVec{1};
+            nPoints = numel(timeVec);
+            if isa(indVec, 'double')
+                if min(indVec) < 1 || max(indVec) > nPoints
+                    throwerror('Indexes are out of range.');
+                end
+                isNeededIndVec = false(size(timeVec));
+                isNeededIndVec(indVec) = true;
+            elseif islogical(indVec)
+                if numel(indVec) ~= nPoints
+                    throwerror('Indexes are out of range.');
+                end
+                isNeededIndVec = indVec;
+            else
+                throwerror('indVec should be double or logical');
+            end
+            %
+            fieldsNotToCatVec =...
+                F.getNameList(self.FIELDS_NOT_TO_CAT_OR_CUT);
+            fieldsToCutVec =...
+                setdiff(fieldnames(SData), fieldsNotToCatVec);
+            cellfun(@(field) cutStructField(field), fieldsToCutVec);
+            cellfun(@cutStructSTimeField,...
+                FIELD_NAME_LIST_TO, FIELD_NAME_LIST_FROM);
+            SThinFunResult.lsGoodDirNorm =...
+                cell2mat(SThinFunResult.lsGoodDirNorm);
+            SThinFunResult.sTime(:) =...
+                timeVec(find(isNeededIndVec, 1));
+            SThinFunResult.indSTime(:) = 1;
+            %
+            thinnedEllTubeRel = self.createInstance(SThinFunResult);
+            %
+            function cutStructSTimeField(fieldNameTo, fieldNameFrom)
+                SThinFunResult.(fieldNameTo) =...
+                    cellfun(@(field) field(:, 1),...
+                    SThinFunResult.(fieldNameFrom),...
+                    'UniformOutput', false);
+            end
+            %
+            function cutResObj = getCutObj(whatToCutObj, isCutTimeVec)
+                dim = ndims(whatToCutObj);
+                if dim == 1
+                    cutResObj = whatToCutObj(isCutTimeVec);
+                elseif dim == 2
+                    cutResObj = whatToCutObj(:, isCutTimeVec);
+                elseif dim == 3
+                    cutResObj = whatToCutObj(:, :, isCutTimeVec);
+                end
+            end
+            %
+            function cutStructField(fieldName)
+                SThinFunResult.(fieldName) = cellfun(@(StructFieldVal)...
+                    getCutObj(StructFieldVal, isNeededIndVec),...
+                    SData.(fieldName), 'UniformOutput', false);
+            end
+        end
+        function catEllTubeRel = cat(self, newEllTubeRel)
+            import gras.ellapx.smartdb.F;
+            SDataFirst = self.getData();
+            SDataSecond = newEllTubeRel.getData();
+            SCatFunResult = SDataFirst;
+            fieldsNotToCatVec =...
+                F.getNameList(self.FIELDS_NOT_TO_CAT_OR_CUT);
+            fieldsToCatVec =...
+                setdiff(fieldnames(SDataFirst), fieldsNotToCatVec);
+            cellfun(@(field) catStructField(field), fieldsToCatVec);
+            catEllTubeRel = self.createInstance(SCatFunResult);
+            %
+            function catStructField(fieldName)
+                SCatFunResult.(fieldName) =...
+                    cellfun(@(firstStructFieldVal, secondStructFieldVal)...
+                    cat(ndims(firstStructFieldVal), firstStructFieldVal,...
+                    secondStructFieldVal), SDataFirst.(fieldName),...
+                    SDataSecond.(fieldName), 'UniformOutput', false);
+            end
+        end
+        function cutEllTubeRel = cut(self, cutTimeVec)
+            import gras.ellapx.smartdb.F;
+            import modgen.common.throwerror;
+            %
+            if numel(cutTimeVec) == 1
+                cutTimeVec = [cutTimeVec(1) cutTimeVec(1)];
+            end
+            if numel(cutTimeVec) ~= 2
+                throwerror('wrongInput', ['input vector should ',...
+                    'contain 1 or 2 elements.']);
+            end
+            cutStartTime = cutTimeVec(1);
+            cutEndTime = cutTimeVec(2);
+            if cutStartTime > cutEndTime
+                throwerror('wrongInput', 's0 must be LEQ than s1.');
+            end
+            timeVec = self.timeVec{1};
+            sysStartTime = timeVec(1);
+            sysEndTime = timeVec(end);
+            if sysStartTime < sysEndTime
+                if cutStartTime < sysStartTime ||...
+                        cutStartTime > sysEndTime ||...
+                        cutEndTime < sysStartTime ||...
+                        cutEndTime > sysEndTime
+                    throwerror('wrongInput', 'wrong input format.');
+                end
+            else
+                if cutStartTime > sysStartTime ||...
+                        cutStartTime < sysEndTime ||...
+                        cutEndTime > sysStartTime ||...
+                        cutEndTime < sysEndTime
+                    throwerror('wrongInput', 'wrong input format.');
+                end
+            end
+            if cutTimeVec(1) == cutTimeVec(2)
+                indClosestVec = find(timeVec <= cutStartTime, 1, 'last');
+                isSysNewTimeIndVec = false(size(timeVec));
+                isSysNewTimeIndVec(indClosestVec) = true;
+            else
+                isSysTimeLowerVec = timeVec < cutStartTime;
+                isSysTimeGreaterVec = timeVec > cutEndTime;  
+                [unTimeVec, unVec, notUnVec] = unique(timeVec);
+                isSysNewTimeIndVec = false(size(timeVec));
+                isSysNewTimeIndVec(unVec) = true;
+                isSysNewTimeIndVec = isSysNewTimeIndVec &...
+                    ~(isSysTimeLowerVec | isSysTimeGreaterVec);
+            end
+            %
+            cutEllTubeRel =...
+                self.thinOutTuples(isSysNewTimeIndVec);
+        end
         function scale(self,fCalcFactor,fieldNameList)
             import gras.ellapx.smartdb.rels.EllTubeBasic;
             scaleFactorVec=self.applyTupleGetFunc(fCalcFactor,...

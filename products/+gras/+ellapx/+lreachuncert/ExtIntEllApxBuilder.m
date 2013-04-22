@@ -16,6 +16,7 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
         minQMatEig
         %
         goodDirSetObj
+        absTol
     end
     methods (Access=protected)
         function S=getOrthTranslMatrix(self,Q_star,R_sqrt,b,a)
@@ -90,19 +91,20 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
                 BPBTransSqrtLDynamics,CQCTransSqrtLDynamics,...
                 ltSpline,t,QIntMat,QExtMat)
             import modgen.common.throwerror;
+            import gras.la.ismatposdef;
             A=AtDynamics.evaluate(t);
             ltVec=ltSpline.evaluate(t);
             %
             %% Internal approximation
             rSqrtlVec=BPBTransSqrtLDynamics.evaluate(t);
             R=BPBTransDynamics.evaluate(t);
-            R_sqrt=sqrtm(R);
+            R_sqrt=gras.la.sqrtmpos(R);
             %
             D=CQCTransDynamics.evaluate(t);
-            D_sqrt=sqrtm(D);
+            D_sqrt=gras.la.sqrtmpos(D);
             %
             [VMat,DMat]=eig(QIntMat);
-            if any(diag(DMat)<0)
+            if ~ismatposdef(QIntMat,self.calcPrecision,true)
                 throwerror('wrongState','internal approx has degraded');
             end
             Q_star=VMat*sqrt(DMat)*transpose(VMat);
@@ -111,7 +113,7 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             piNumerator=slCQClSqrtDynamics.evaluate(t);
             piDenominator=sqrt(sum((QIntMat*ltVec).*ltVec));
             if (piNumerator<=0)||(piDenominator<=0)
-                if min(eig(D))<=0
+                if ~ismatposdef(D,self.absTol)
                     throwerror('wrongInput',...
                         ['degenerate matrices C,Q for disturbance ',...
                         'contraints are not supported']);
@@ -128,7 +130,7 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             %
             %% External approximation
             [VMat,DMat]=eig(QExtMat);
-            if any(diag(DMat)<0)
+            if ~ismatposdef(QExtMat,self.absTol)
                 throwerror('wrongState','external approx has degraded');
             end
             Q_star=VMat*sqrt(DMat)*transpose(VMat);
@@ -158,8 +160,8 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             %
             BPBTransDynamics = pDefObj.getBPBTransDynamics();
             CQCTransDynamics = pDefObj.getCQCTransDynamics();
-            BPBTransSqrtDynamics = matOpFactory.sqrtm(BPBTransDynamics);
-            CQCTransSqrtDynamics = matOpFactory.sqrtm(CQCTransDynamics);
+            BPBTransSqrtDynamics = matOpFactory.sqrtmpos(BPBTransDynamics);
+            CQCTransSqrtDynamics = matOpFactory.sqrtmpos(CQCTransDynamics);
             %
             self.ltSplineList = ...
                 self.getGoodDirSet().getGoodDirOneCurveSplineList();
