@@ -98,7 +98,7 @@ classdef ApproxProblemPropertyBuilder
                     end;
                     norm=sum(lsGoodDirMat.*lsGoodDirMat);
                     num=find(norm);
-                    norm(num)=sqrt(norm(num));
+                    norm(num)=realsqrt(norm(num));
                     lsGoodDirMat(:,num)=lsGoodDirMat(:,num)./...
                         norm(ones(1,sysDim),num);
                 otherwise,

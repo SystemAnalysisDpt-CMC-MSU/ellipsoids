@@ -75,7 +75,7 @@ nFaces=size(fMat,1);
 %
 %% Build edge distances
 dMat=vMat(eMat(:,1),:)-vMat(eMat(:,2),:);
-eLengthVec=sqrt(sum(dMat.*dMat,2));
+eLengthVec=realsqrt(sum(dMat.*dMat,2));
 %% Set up statistics collection
 if isStatCollected
     nVertVec=nVerts;
@@ -214,7 +214,7 @@ while true
             f2e3IsDirNewMat];
         %% Update edge length vec
         dMat=vMat(eMat(nEdges+1:1:end,1),:)-vMat(eMat(nEdges+1:1:end,2),:);
-        eLengthVec=[eLengthVec;sqrt(sum(dMat.*dMat,2))];
+        eLengthVec=[eLengthVec;realsqrt(sum(dMat.*dMat,2))];
         %% Update number of entities
         nVerts=size(vMat,1);
         nEdges=size(eMat,1);
