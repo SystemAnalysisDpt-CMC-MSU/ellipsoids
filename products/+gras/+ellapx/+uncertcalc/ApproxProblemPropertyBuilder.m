@@ -19,11 +19,12 @@ classdef ApproxProblemPropertyBuilder
         
     end
     methods (Static)
-        function [pDefObj,goodDirSetObj]=build(confRepoMgr,...
+        function [pDynObj,goodDirSetObj]=build(confRepoMgr,...
                 sysConfRepoMgr)
             import gras.ellapx.uncertcalc.ApproxProblemPropertyBuilder;
             import modgen.common.throwerror;
             import gras.ellapx.uncertcalc.log.Log4jConfigurator;
+            import gras.ellapx.lreachuncert.probdyn.LReachProblemDynamicsFactory;            
             %
             logger=Log4jConfigurator.getLogger();            
             %
@@ -53,8 +54,7 @@ classdef ApproxProblemPropertyBuilder
                 sysConfRepoMgr.getParam('time_interval.t1')];
             %
             tStart=tic;            
-            import gras.ellapx.lreachuncert.probdyn.LReachProblemDynamicsFactory;
-            pDefObj = LReachProblemDynamicsFactory.createByParams(...
+            pDynObj = LReachProblemDynamicsFactory.createByParams(...
                 AtDefMat,BtDefMat,PtDefMat,ptDefVec,CtDefMat,...
                 QtDefMat,qtDefVec,X0DefMat,x0DefVec,tLims,calcPrecision);
             logger.info(...
@@ -98,7 +98,7 @@ classdef ApproxProblemPropertyBuilder
                     end;
                     norm=sum(lsGoodDirMat.*lsGoodDirMat);
                     num=find(norm);
-                    norm(num)=sqrt(norm(num));
+                    norm(num)=realsqrt(norm(num));
                     lsGoodDirMat(:,num)=lsGoodDirMat(:,num)./...
                         norm(ones(1,sysDim),num);
                 otherwise,
@@ -107,7 +107,7 @@ classdef ApproxProblemPropertyBuilder
             end
             %% Build good direction curves
             goodDirSetObj=gras.ellapx.lreachplain.GoodDirectionSet(...
-                pDefObj,sTime,lsGoodDirMat,calcPrecision);
+                pDynObj,sTime,lsGoodDirMat,calcPrecision);
             logger.info(...
                 sprintf(['Building good directions at time %d, ',...
                 'calc. precision=%d, time elapsed =%s sec.'],...

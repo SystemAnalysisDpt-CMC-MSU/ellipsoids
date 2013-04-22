@@ -262,7 +262,7 @@ function plot3(varargin)
         %camlight('left','local');
 
       otherwise,
-        h = ell_plot([(q-sqrt(Q)) (q+sqrt(Q))]);
+        h = ell_plot([(q-realsqrt(Q)) (q+realsqrt(Q))]);
         set(h, 'Color', clr, 'LineWidth', Options.width(i));
         h = ell_plot(q(1, 1), '*');
         set(h, 'Color', clr);

@@ -1,9 +1,12 @@
 classdef AReach < elltool.reach.IReach
-    % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: March-2013 $
-    % $Copyright: Moscow State University,
-    %            Faculty of Computational Mathematics and Computer Science,
-    %            System Analysis Department 2013 $
-    %
+% Kirill Mayantsev
+% <kirill.mayantsev@gmail.com>$  
+% $Date: March-2013 $
+% $Copyright: Moscow State University,
+%             Faculty of Computational Mathematics 
+%             and Computer Science, 
+%             System Analysis Department 2013$
+%
     properties (Constant, GetAccess = protected)
         MIN_EIG_Q_REG_UNCERT = 0.1
         EXTERNAL_SCALE_FACTOR = 1.02

@@ -1,54 +1,14 @@
 classdef ReachDiscrete < elltool.reach.AReach
-    % Discrete reach set library of the Ellipsoidal Toolbox.
-    %
-    %
-    % Constructor and data accessing functions:
-    % -----------------------------------------
-    %  ReachDiscrete  - Constructor of the reach set object, performs the
-    %                   computation of the specified reach set approximations.
-    %  dimension      - Returns the dimension of the reach set, which can be
-    %                   different from the state space dimension of the system
-    %                   if the reach set is a projection.
-    %  get_system     - Returns the linear system object, for which the reach set
-    %                   was computed.
-    %  get_directions - Returns the values of the direction vectors corresponding
-    %                   to the values of the time grid.
-    %  get_center     - Returns points of the reach set center trajectory
-    %                   corresponding to the values of the time grid.
-    %  get_ea         - Returns external approximating ellipsoids corresponding
-    %                   to the values of the time grid.
-    %  get_ia         - Returns internal approximating ellipsoids corresponding
-    %                   to the values of the time grid.
-    %  get_goodcurves - Returns points of the 'good curves' corresponding
-    %                   to the values of the time grid.
-    %                   This function does not work with projections.
-    %  intersect      - Checks if external or internal reach set approximation
-    %                   intersects with given ellipsoid, hyperplane or polytope.
-    %  iscut          - Checks if given reach set object is a cut of another reach set.
-    %  isprojection   - Checks if given reach set object is a projection.
-    %
-    %
-    % Reach set data manipulation and plotting functions:
-    % ---------------------------------------------------
-    %  cut        - Extracts a piece of the reach set that corresponds to the
-    %               specified time value or time interval.
-    %  projection - Projects the reach set onto a given orthogonal basis.
-    %  evolve     - Computes further evolution in time for given reach set
-    %               for the same or different dynamical system.
-    %  plot_ea    - Plots external approximation of the reach set.
-    %  plot_ia    - Plots internal approximation of the reach set.
-    %
-    %
-    % Overloaded functions:
-    % ---------------------
-    %  display - Displays the reach set object.
-    %
-    %
-    % $Authors: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-    %           Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: March-2013 $
-    % $Copyright: Moscow State University,
-    %            Faculty of Computational Mathematics and Computer Science,
-    %            System Analysis Department 2013 $
+% Discrete reach set library of the Ellipsoidal Toolbox.
+%
+% $Authors: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+%           Kirill Mayantsev  <kirill.mayantsev@gmail.com>$
+% $Date: March-2013 $ 
+% $Copyright: Moscow State University,
+%             Faculty of Computational Mathematics
+%             and Computer Science, 
+%             System Analysis Department 2013 $
+%
     properties (Constant, GetAccess = ?elltool.reach.AReach)
         DISPLAY_PARAMETER_STRINGS = {'discrete-time', 'k0 = ', 'k1 = '}
     end
@@ -367,45 +327,63 @@ classdef ReachDiscrete < elltool.reach.AReach
     methods
         function self = ReachDiscrete(linSys, x0Ell, l0Mat,...
                 timeVec, OptStruct, varargin)
-            %
-            % ReachDiscrete - computes reach set approximation of the discrete
-            %     linear system for the given time interval.
-            % Input:
-            %     linSys: elltool.linsys.LinSys object - given linear system
-            %     x0Ell: ellipsoid[1, 1] - ellipsoidal set of initial conditions
-            %     l0Mat: matrix of double - l0Mat
-            %     timeVec: double[1, 2] - time interval
-            %     OptStruct: structure with fields:
-            %         approximation = 0 for external,
-            %                       = 1 for internal,
-            %                       = 2 for both (default).
-            %         save_all = 1 to save intermediate calculation data,
-            %                  = 0 (default) to delete intermediate calculation data.
-            %         minmax = 1 compute minmax reach set,
-            %                = 0 (default) compute maxmin reach set.
-            %             This option makes sense only for
-            %             discrete-time systems with disturbance.
-            %
-            % self = ReachDiscrete(linSys, x0Ell, l0Mat, timeVec, Options, prop) is the same as
-            % self = ReachDiscrete(linSys, x0Ell, l0Mat, timeVec, Options), but with "Properties"
-            %     specified in prop. In other cases "Properties" are taken
-            %     from current values stored in elltool.conf.Properties
-            %
-            %     As "Properties" we understand here such list of ellipsoid properties:
-            %         absTol
-            %         relTol
-            %         nPlot2dPoints
-            %         nPlot3dPoints
-            %         nTimeGridPoints
-            %
-            % Output:
-            %     self - reach set object.
-            %
-            % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: Jan-2012 $
-            % $Copyright: Moscow State University,
-            %            Faculty of Computational Mathematics and Computer Science,
-            %            System Analysis Department 2012 $
-            %
+        %
+        % ReachDiscrete - computes reach set approximation
+        % of the discrete linear system for the given time 
+        % interval.
+        % 
+        % Input:
+        %     linSys: elltool.linsys.LinSys object - given
+        %       linear system 
+        %     x0Ell: ellipsoid[1, 1] - ellipsoidal set of 
+        %       initial conditions 
+        %     l0Mat: matrix of double - l0Mat 
+        %     timeVec: double[1, 2] - time interval 
+        %     OptStruct: struct[1, 1] - structure with
+        %     fields:
+        %         approximation: int[1, 1] - field, which 
+        %           mean the following values for type 
+        %           approximation:
+        %           = 0 for external,
+        %           = 1 for internal, 
+        %           = 2 for both (default).
+        %         save_all: logical [1, 1] - field, which
+        %           = 1 if save intermediate calculation 
+        %               data,
+        %           = 0 (default) if delete intermediate 
+        %               calculation data.
+        %         minmax: logical[1, 1] - field, which:
+        %           = 1 compute minmax reach set,
+        %           = 0 (default) compute maxmin
+        %               reach set.
+        %         This option makes sense only for
+        %         discrete-time systems with disturbance.
+        %
+        % self = ReachDiscrete(linSys, x0Ell, l0Mat,
+        % timeVec, Options, prop) is the same as self =
+        % ReachDiscrete(linSys, x0Ell, l0Mat, timeVec,
+        % Options), but with "Properties"  specified in 
+        % prop. In other cases "Properties" are taken 
+        % from current values stored in 
+        % elltool.conf.Properties
+        %
+        % As "Properties" we understand here such
+        % list of ellipsoid properties:
+        %   absTol relTol nPlot2dPoints
+        %   nPlot3dPoints nTimeGridPoints
+        %
+        % Output:
+        %   regular:
+        %       self - reach set object.
+        %
+        % $Author: Kirill Mayantsev
+        % <kirill.mayantsev@gmail.com> $  
+        % $Date: Jan-2013 $ 
+        % $Copyright: Moscow State University,
+        %             Faculty of Computational
+        %             Mathematics and Computer Science,
+        %             System Analysis Department 2013 $
+        %
             import gras.la.sqrtmpos;
             import elltool.conf.Properties;
             import gras.ellapx.enums.EApproxType;

@@ -519,7 +519,7 @@ classdef LinSysTestCase < mlunitext.test_case
                 {'t', '1', 'cos(t)'; '1' '0' 't'; 'sin(t)', 't', '2'}, ...
                 {'t', 'cos(t)'; 'sin(t)', 't'; 'cos(t)', 'sin(t)'}, ...
                 uEll, eye(3,5),ell_unitball(5),eye(2,3),ell_unitball(2));
-            system.display();
+            evalc('system.display();');
             resStr = evalc('display(system)');
             isOk = ~isempty(strfind(resStr,'A'));
             isOk = ~isempty(strfind(resStr,'B')) && isOk;
