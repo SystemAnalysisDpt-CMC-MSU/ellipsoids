@@ -18,7 +18,7 @@ classdef SuiteSupportFunction < mlunitext.test_case
                 fBMat, fPVec, fPMat)
             cacheVec = (fxVec(t)') * fBMat(t);
             dSFunc = cacheVec * fPVec(t) + ...
-                sqrt(cacheVec * fPMat(t) * (cacheVec'));
+                realsqrt(cacheVec * fPMat(t) * (cacheVec'));
         end
     end
     methods
