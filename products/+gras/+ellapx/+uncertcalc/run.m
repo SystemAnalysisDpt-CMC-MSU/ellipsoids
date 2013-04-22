@@ -111,8 +111,6 @@ SRunProp.ellTubeRel=ellTubeRel;
 SRunProp.ellTubeProjRel=ellTubeProjRel;
 SRunProp.ellUnionTubeRel=ellUnionTubeRel;
 SRunProp.ellUnionTubeStaticProjRel=ellUnionTubeStaticProjRel;
-% new code
-SRunProp. goodDirSetObj = goodDirSetObj;
 %
 SRunProp.resDir=resDir;
 logger.info(['total time:',num2str(toc(tStartGlobal))]);
