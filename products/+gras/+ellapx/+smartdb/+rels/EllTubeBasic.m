@@ -283,8 +283,9 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     approxType,timeVec,calcPrecision,indSTime,...
                     ltGoodDirMat,lsGoodDirVec,ltGoodDirNormVec,...
                     lsGoodDirNorm,xTouchCurveMat,xTouchOpCurveMat,...
-                    xsTouchVec,xsTouchOpVec);
-                %
+                    xsTouchVec,xsTouchOpVec,...
+                    elltool.conf.Properties.getAbsTol());
+             
                 [isOkList,errTagList,reasonList]=...
                     self.applyTupleGetFunc(fCheckTuple,checkFieldList,...
                     'UniformOutput',false);
@@ -319,21 +320,20 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     approxType,timeVec,calcPrecision,indSTime,...
                     ltGoodDirMat,lsGoodDirVec,ltGoodDirNormVec,...
                     lsGoodDirNorm,xTouchCurveMat,xTouchOpCurveMat,...
-                    xsTouchVec,xsTouchOpVec)
+                    xsTouchVec,xsTouchOpVec,absTol)
                 import gras.gen.SquareMatVector; 
+                MIN_M_EIG_ALLOWED=-5*eps;
                 errTagStr='';
                 reasonStr='';
                 isOk=false;
-                isNotPosDefVec=SquareMatVector.evalMFunc(...
-                    @(x)~gras.la.ismatposdef(x,calcPrecision),QArray);
+                isNotPosDefVec=SquareMatVector.evalMFunc(@(x)~gras.la.ismatposdef(x,absTol),QArray);
                 if any(isNotPosDefVec)
                     errTagStr='QArrayNotPos';
                     reasonStr='QArray is not positively defined';
                     return;
                 end
                 %                
-                isNotPosDefVec=SquareMatVector.evalMFunc(...
-                    @(x)~gras.la.ismatposdef(x,calcPrecision,true),MArray);
+                isNotPosDefVec=SquareMatVector.evalMFunc(@(x)~gras.la.ismatposdef(x,MIN_M_EIG_ALLOWED),MArray);
                 if any(isNotPosDefVec)
                     errTagStr='MArrayNeg';
                     reasonStr='MArray is negatively defined';

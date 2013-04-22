@@ -3,8 +3,8 @@
 <valueObj type="struct" >
 	<genericProps type="struct" >
 		<calcTimeLimVec type="double" >0 10</calcTimeLimVec>
-		<calcPrecision type="double" >0.0001</calcPrecision>
-		<isSplineForMatrixCalcUsed type="boolean" >0</isSplineForMatrixCalcUsed>
+		<calcPrecision type="double" >0.00001</calcPrecision>
+		<isSplineForMatrixCalcUsed type="boolean" >1</isSplineForMatrixCalcUsed>
 	</genericProps>
 	<projectionProps type="struct" >
 		<projSpaceSetName type="char" >set1</projSpaceSetName>
@@ -80,7 +80,7 @@
 					</props>
 				</noUncertJustQ>
 			</schemas>
-			<dispScaleFactor type="double" >0.97</dispScaleFactor>
+			<dispScaleFactor type="double" >1</dispScaleFactor>
 		</internalApx>
 		<externalApx type="struct" >
 			<isEnabled type="boolean" >1</isEnabled>
@@ -89,7 +89,7 @@
 					<isEnabled type="boolean" >1</isEnabled>
 				</justQ>
 			</schemas>
-			<dispScaleFactor type="double" >1.01</dispScaleFactor>
+			<dispScaleFactor type="double" >1</dispScaleFactor>
 		</externalApx>
 		<extIntApx type="struct" >
 			<isEnabled type="boolean" >0</isEnabled>
@@ -104,7 +104,7 @@
 			</schemas>
 		</extIntApx>
 	</ellipsoidalApxProps>
-	<systemDefinitionConfName type="char" >ellDemo3sys</systemDefinitionConfName>
+	<systemDefinitionConfName type="char" >demo3firstBackTestSys</systemDefinitionConfName>
 </valueObj>
-<keyStr type="char" >ellDemo3test</keyStr>
+<keyStr type="char" >demo3firstBackTest</keyStr>
 </root>

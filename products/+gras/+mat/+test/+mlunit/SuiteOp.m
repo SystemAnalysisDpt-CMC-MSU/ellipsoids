@@ -1,7 +1,6 @@
 classdef SuiteOp < mlunitext.test_case
     methods(Static,Access=private)
         function isOk = isMatVecEq(aMatVec, bMatVec)
-            MAX_TOL=1e-7;
             aSize = size(aMatVec);
             bSize = size(bMatVec);
             mlunit.assert_equals(numel(aSize), numel(bSize));
@@ -17,7 +16,7 @@ classdef SuiteOp < mlunitext.test_case
             end
             %
             maxError = max(errorVec);
-            isOk = ( maxError < MAX_TOL);
+            isOk = ( maxError < elltool.conf.Properties.getAbsTol() );
             mlunit.assert_equals(isOk, true);
         end
     end

@@ -1,8 +1,5 @@
 function qSqrtMat = sqrtmpos(qMat, absTol)
 % SQRTMPOS generates a square root from positive semi-definite matrix QMat
-% The input matrix is allowed have slightly negative input values lambda
-% such that labmda>=-absTol. if lambda<=absTol it is assumed to be a zero
-%
 % Input:
 %     regular:
 %         qMat: double[nDims, nDims]
@@ -15,17 +12,13 @@ function qSqrtMat = sqrtmpos(qMat, absTol)
 %
 % $Authors: Vadim Kaushanskiy  <vkaushanskiy@gmail.com> $	$Date: 2012-01-11$
 %           Daniil Stepenskiy <reinkarn@gmail.com> $	$Date: 2013-03-29$
-%           Peter Gagarinov <pgagarinov@gmail.com> $	$Date: 2013-04-17$
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Cybernetics,
 %            System Analysis Department 2012-2013 $
 import modgen.common.throwerror;
-%
+
 if (nargin == 1)
     absTol = 0;
-elseif absTol<0
-    throwerror('wrongInput:absTolNegative',...
-        'absTol is expected to be not-negative');
 end
 %
 [vMat, dMat]=eig(qMat);
@@ -34,9 +27,10 @@ if any(dVec < -absTol)
     throwerror('wrongInput:notPosSemDef',...
         'input matrix is expected to be positive semi-definite');
 end
-%
-isZeroVec = dVec <= absTol;
-dVec(isZeroVec) = 0;
-dMat = diag(dVec);
-dMat = realsqrt(dMat);
+if (absTol == 0)
+    isZeroVec = abs(dVec) < absTol;
+    dVec(isZeroVec) = 0;
+    dMat = diag(dVec);
+end
+dMat = sqrt(dMat);
 qSqrtMat = vMat * dMat * vMat.';

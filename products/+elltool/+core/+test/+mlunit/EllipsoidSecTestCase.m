@@ -101,11 +101,12 @@ classdef EllipsoidSecTestCase < mlunitext.test_case
             check(@minkpm_ia,false);
             %
             fMmpEA=@(fEll,sEll,dMat)minkmp_ea(fEll,sEll,...
-                ellipsoid(eye(2)),dMat);
+                ellipsoid(zeros(2)),dMat);
             fMmpIA=@(fEll,sEll,dMat)minkmp_ia(fEll,sEll,...
-                ellipsoid(eye(2)),dMat);
+                ellipsoid(zeros(2)),dMat);
             check(fMmpEA,false);
             check(fMmpIA,false);
+            
             %
             %Hyperplane
             %
