@@ -48,7 +48,7 @@ if any(isOrtogonalMat(:))
 end
 
 % normalize the basis vectors
-normMat = repmat( sqrt(normSqVec.'), nDim, 1);
+normMat = repmat( realsqrt(normSqVec.'), nDim, 1);
 ortBasisMat = basisMat./normMat;
 
 % compute projection

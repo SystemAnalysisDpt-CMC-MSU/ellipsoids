@@ -107,11 +107,11 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             if ~ismatposdef(QIntMat,self.calcPrecision,true)
                 throwerror('wrongState','internal approx has degraded');
             end
-            Q_star=VMat*sqrt(DMat)*transpose(VMat);
+            Q_star=VMat*realsqrt(DMat)*transpose(VMat);
             S=self.getOrthTranslMatrix(Q_star,R_sqrt,rSqrtlVec,Q_star*ltVec);
             %
             piNumerator=slCQClSqrtDynamics.evaluate(t);
-            piDenominator=sqrt(sum((QIntMat*ltVec).*ltVec));
+            piDenominator=realsqrt(sum((QIntMat*ltVec).*ltVec));
             if (piNumerator<=0)||(piDenominator<=0)
                 if ~ismatposdef(D,self.absTol)
                     throwerror('wrongInput',...
@@ -133,9 +133,9 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             if ~ismatposdef(QExtMat,self.absTol)
                 throwerror('wrongState','external approx has degraded');
             end
-            Q_star=VMat*sqrt(DMat)*transpose(VMat);
+            Q_star=VMat*realsqrt(DMat)*transpose(VMat);
             piNumerator=slBPBlSqrtDynamics.evaluate(t);
-            piDenominator=sqrt(sum((QExtMat*ltVec).*ltVec));
+            piDenominator=realsqrt(sum((QExtMat*ltVec).*ltVec));
             dSqrtlVec=CQCTransSqrtLDynamics.evaluate(t);
             S=self.getOrthTranslMatrix(Q_star,D_sqrt,dSqrtlVec,Q_star*ltVec);
             tmp=(A*Q_star-D_sqrt*transpose(S))*transpose(Q_star);

@@ -178,17 +178,17 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             
             for iDirection = 1:nDirections
                 lVec = self.l0Mat(:, iDirection);
-                supFunMat(1, iDirection) = sqrt(lVec' * x0Mat * lVec);
+                supFunMat(1, iDirection) = realsqrt(lVec' * x0Mat * lVec);
                 for kTime = 1:nTimeStep - 1
                     if isBack
                         supFunMat(kTime + 1, iDirection) = ...
                             supFunMat(kTime, iDirection) + ...
-                            sqrt(lVec' * self.fundCMat{1, kTime} * ...
+                            realsqrt(lVec' * self.fundCMat{1, kTime} * ...
                             rMatCalc(tVec(kTime + 1)) * self.fundCMat{1, kTime}' * lVec);
                     else
                         supFunMat(kTime + 1, iDirection) = ...
                             supFunMat(kTime, iDirection) + ...
-                            sqrt(lVec' * self.fundCMat{1, kTime + 1} * ...
+                            realsqrt(lVec' * self.fundCMat{1, kTime + 1} * ...
                             rMatCalc(tVec(kTime + 1)) * self.fundCMat{1, kTime + 1}' * lVec);
                     end
                 end
@@ -424,15 +424,14 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             reachSetObj.display();
             firstCutReachObj =...
                 reachSetObj.cut([timeVec(1)+1 timeVec(end)-1]);
-            [~] = reachSetObj.cut(timeVec(1)+2);
-            [~, ~] = reachSetObj.dimension();
-            [~, ~] = reachSetObj.get_center();
-            [~, ~] = reachSetObj.get_directions();
-            [~, ~] = reachSetObj.get_ea();
-            [~, ~] = reachSetObj.get_ia();
-            [~, ~] = reachSetObj.get_goodcurves();
-            [~, ~] = reachSetObj.get_mu();
-            [~] = reachSetObj.get_system();
+            secondCutReachObj = reachSetObj.cut(timeVec(1)+2);
+            [rSdim sSdim] = reachSetObj.dimension();
+            [trCenterMat tVec] = reachSetObj.get_center();
+            [directionsCVec tVec] = reachSetObj.get_directions();
+            [eaEllMat tVec] = reachSetObj.get_ea();
+            [iaEllMat tVec] = reachSetObj.get_ia();
+            [goodCurvesCVec tVec] = reachSetObj.get_goodcurves();
+            linSys = reachSetObj.get_system();
             projBasMat = [0 0 0 0 1 0; 0 0 0 0 0 1]';
             projReachSetObj = reachSetObj.projection(projBasMat);
             fig = figure();
@@ -460,15 +459,14 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             reachSetObj.display();
             firstCutReachObj =...
                 reachSetObj.cut([timeVec(1)+1 timeVec(end)-1]);
-            [~] = reachSetObj.cut(timeVec(1)+2);
-            [~,~] = reachSetObj.dimension();
-            [~,~] = reachSetObj.get_center();
-            [~,~] = reachSetObj.get_directions();
-            [~,~] = reachSetObj.get_ea();
-            [~,~] = reachSetObj.get_ia();
-            [~,~] = reachSetObj.get_goodcurves();
-            [~,~] = reachSetObj.get_mu();
-            [~] = reachSetObj.get_system();
+            secondCutReachObj = reachSetObj.cut(timeVec(1)+2);
+            [rSdim sSdim] = reachSetObj.dimension();
+            [trCenterMat tVec] = reachSetObj.get_center();
+            [directionsCVec tVec] = reachSetObj.get_directions();
+            [eaEllMat tVec] = reachSetObj.get_ea();
+            [iaEllMat tVec] = reachSetObj.get_ia();
+            [goodCurvesCVec tVec] = reachSetObj.get_goodcurves();
+            linSys = reachSetObj.get_system();
             projBasMat = [1 0 0; 0 0 1]';
             projReachSetObj = reachSetObj.projection(projBasMat);
             fig = figure();
