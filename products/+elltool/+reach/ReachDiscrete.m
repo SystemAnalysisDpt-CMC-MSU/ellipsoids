@@ -146,7 +146,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                         dd = mydata.delta(1);
                     end
                     if dd > 0
-                        e2 = sqrt(absTol*absTol + 2*max(eig(BPB))*absTol);
+                        e2 = realsqrt(absTol*absTol + 2*max(eig(BPB))*absTol);
                         BPB = ell_regularize(BPB, e2);
                     elseif rank(BPB) < N
                         BPB = ell_regularize(BPB);
@@ -223,7 +223,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                         dd = mydata.delta(1);
                     end
                     if dd > 0
-                        e2 = sqrt(absTol*absTol + 2*max(eig(BPB))*absTol);
+                        e2 = realsqrt(absTol*absTol + 2*max(eig(BPB))*absTol);
                         BPB = ell_regularize(BPB, e2);
                     elseif rank(BPB) < N
                         BPB = ell_regularize(BPB);
@@ -317,7 +317,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                         dd = mydata.delta(1);
                     end
                     if dd > 0
-                        e2  = sqrt(absTol*absTol + 2*max(eig(BPB))*absTol);
+                        e2  = realsqrt(absTol*absTol + 2*max(eig(BPB))*absTol);
                         BPB = ell_regularize(BPB, e2);
                     elseif rank(BPB) < N
                         BPB = ell_regularize(BPB);
@@ -395,7 +395,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                         dd = mydata.delta(1);
                     end
                     if dd > 0
-                        e2 = sqrt(absTol*absTol + 2*max(eig(BPB))*absTol);
+                        e2 = realsqrt(absTol*absTol + 2*max(eig(BPB))*absTol);
                         BPB = ell_regularize(BPB, e2);
                     elseif rank(BPB) < N
                         BPB = ell_regularize(BPB);
@@ -2129,7 +2129,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 for j = 1:M
                     E  = reshape(Q(:, j), d, d);
                     l  = L(:, j);
-                    x  = (E * l)/sqrt(l' * E * l) + self.center_values(:, j);
+                    x  = (E * l)/realsqrt(l' * E * l) + self.center_values(:, j);
                     xx = [xx x];
                 end
                 goodCurvesCVec = [goodCurvesCVec {xx}];
@@ -2241,7 +2241,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                             end
                         end
                     end
-                    x = (l/sqrt(mval)) + self.center_values(:, end);
+                    x = (l/realsqrt(mval)) + self.center_values(:, end);
                     X = [X x];
                 end
                 chll = convhulln(X');
@@ -2368,7 +2368,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                                 end
                             end
                         end
-                        x = (l/sqrt(mval)) + self.center_values(:, ii);
+                        x = (l/realsqrt(mval)) + self.center_values(:, ii);
                         X = [X x];
                     end
                     tt = self.time_values(ii) * ones(1, s);
@@ -2496,7 +2496,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                                 mval = v;
                             end
                         end
-                        xx      = (l/sqrt(mval)) + self.center_values(:, end);
+                        xx      = (l/realsqrt(mval)) + self.center_values(:, end);
                         X(i, j) = xx(1, 1);
                         Y(i, j) = xx(2, 1);
                         Z(i, j) = xx(3, 1);
@@ -2540,7 +2540,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                             mQ   = Q;
                         end
                     end
-                    x = (mQ*l/sqrt(mval)) + self.center_values;
+                    x = (mQ*l/realsqrt(mval)) + self.center_values;
                     X = [X x];
                 end
                 if Options.fill ~= 0
@@ -2587,7 +2587,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                                 mQ   = Q;
                             end
                         end
-                        x = (mQ*l/sqrt(mval)) + self.center_values(:, ii);
+                        x = (mQ*l/realsqrt(mval)) + self.center_values(:, ii);
                         X = [X x];
                     end
                     tt = self.time_values(ii) * ones(1, s);
@@ -2630,7 +2630,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                                 mQ   = Q;
                             end
                         end
-                        x = (mQ*l/sqrt(mval)) + self.center_values(:, ii);
+                        x = (mQ*l/realsqrt(mval)) + self.center_values(:, ii);
                         X = [X x];
                     end
                     tt = self.time_values(ii) * ones(1, s);
