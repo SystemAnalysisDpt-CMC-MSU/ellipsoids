@@ -171,7 +171,7 @@ switch flag
         ansEaEllMat = diag([13 ^ 2, 13 * 16 * ones(1, 6)]);
         ansEaEllVec = createObjectArray([1, 2], @ellipsoid, ...
             13 * ones(7, 1), ansEaEllMat, 2);
-        ansIaEllMat = diag([13 ^ 2, (sqrt(2.5) + 12) ^ 2 * ones(1, 6)]);
+        ansIaEllMat = diag([13 ^ 2, (realsqrt(2.5) + 12) ^ 2 * ones(1, 6)]);
         ansIaEllVec = createObjectArray([1, 2], @ellipsoid, ...
             13 * ones(7, 1), ansIaEllMat, 2);
         varargout{1} = my1Ell;

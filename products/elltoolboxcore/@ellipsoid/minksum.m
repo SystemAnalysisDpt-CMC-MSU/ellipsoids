@@ -131,7 +131,7 @@ clrVec = Options.color;
 centVec = inpEllVec(1).center;
 switch nDim
     case 1
-        rad = sqrt(inpEllVec(1).shape);
+        rad = realsqrt(inpEllVec(1).shape);
         boundPointMat(1, 1) = centVec - rad;
         boundPointMat(1, 2) = centVec + rad;
     case 2
@@ -190,7 +190,7 @@ end
         centVec = centVec + myEll.center;
         switch nDim
             case 1
-                rad = sqrt(myEll.shape);
+                rad = realsqrt(myEll.shape);
                 boundPointMat(1, 1) =boundPointMat(1,1) + ...
                     myEll.center - rad;
                 boundPointMat(1, 2) = boundPointMat(1,2) + ...

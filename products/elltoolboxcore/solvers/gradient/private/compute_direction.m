@@ -15,7 +15,7 @@ function [sd, dirType] = compute_direction(Z, H, gf, nvars, f)
     dirType = Newton;
   else
     [L, sn] = choltr(projH);
-    if ~isempty(sn) & (sn'*projH*sn < -sqrt(eps))
+    if ~isempty(sn) & (sn'*projH*sn < -realsqrt(eps))
       sd      = Z*sn;
       dirType = NegCurv;
     else
@@ -51,7 +51,7 @@ function [L, sn] = choltr(A)
       elem(k, 1) = 1;
       sn         = L'\elem;
     else
-      L(k, k) = sqrt(A(k, k));
+      L(k, k) = realsqrt(A(k, k));
       s       = (k + 1):n;
       L(s, k) = A(s, k)/L(k, k);
       for j = (k + 1):n
@@ -65,7 +65,7 @@ function [L, sn] = choltr(A)
     elem(n, 1) = 1;
     sn         = L'\elem;
   else
-    L(n, n) = sqrt(A(n, n));
+    L(n, n) = realsqrt(A(n, n));
   end
 
   return;

@@ -184,7 +184,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             self.flexAssert(1, testResVec);
             
             for iDim = 1:nDim
-                testPointVec(iDim) = 1 / sqrt(nDim);
+                testPointVec(iDim) = 1 / realsqrt(nDim);
             end;
             testResVec = isinternal(testEllVec, testPointVec);
             self.flexAssert(1, testResVec);
@@ -194,7 +194,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             self.flexAssert(0, testResVec);
             
             for iDim = 1:nDim
-                testPointVec(iDim) = 1 / sqrt(nDim);
+                testPointVec(iDim) = 1 / realsqrt(nDim);
             end;
             testPointVec(1) = testPointVec(1) + 1e-4;
             testResVec = isinternal(testEllVec, testPointVec);

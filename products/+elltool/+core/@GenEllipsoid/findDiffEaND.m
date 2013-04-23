@@ -19,7 +19,8 @@ function resQMat=findDiffEaND(ellQ1Mat, ellQ2Mat,curDirVec,absTol)
 %            System Analysis Department 2012 $
 %
 import elltool.core.GenEllipsoid;
-isGoodDir= GenEllipsoid.getIsGoodDirForMat(ellQ1Mat,ellQ2Mat,curDirVec);
+isGoodDir= GenEllipsoid.getIsGoodDirForMat(ellQ1Mat,ellQ2Mat,curDirVec,...
+    absTol);
 if isGoodDir
     ellSQR1Mat=GenEllipsoid.findSqrtOfMatrix(ellQ1Mat,absTol);
     ellSQR2Mat=GenEllipsoid.findSqrtOfMatrix(ellQ2Mat,absTol);

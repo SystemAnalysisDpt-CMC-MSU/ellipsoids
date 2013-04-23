@@ -52,7 +52,7 @@ else
 end
 if ~all(abs(dirInfProjVec)<absTol)
     resRho=Inf;
-    scMul = sqrt(dirVec'*ellQMat*dirVec);
+    scMul = realsqrt(dirVec'*ellQMat*dirVec);
     if scMul > 0
         bndPFinVec = cenVec + (ellQMat*dirVec)/scMul;
     else
@@ -66,7 +66,7 @@ if ~all(abs(dirInfProjVec)<absTol)
     end
 else
     dirVec=dirVec/norm(dirVec);
-    scMul = sqrt(dirVec'*ellQMat*dirVec);
+    scMul = realsqrt(dirVec'*ellQMat*dirVec);
     resRho=cenVec.'*dirVec+scMul;
     if scMul > 0
         bndPVec = cenVec + (ellQMat*dirVec)/scMul;

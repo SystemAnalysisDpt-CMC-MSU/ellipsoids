@@ -96,12 +96,12 @@ end
         cVec  = singEll.center;
         shpMat  = singEll.shape;
         [~, singAbsTol] = getAbsTol(singEll);
-        sq = max(sqrt(dirsMat'*shpMat*dirsMat), singAbsTol);
+        sq = max(realsqrt(dirsMat'*shpMat*dirsMat), singAbsTol);
         supFun = cVec'*dirsMat + sq;
         xVec =((shpMat*dirsMat)/sq) + cVec;
     end
     function [supFun xVec] = fSingleRhoForOneEll(lVec)
-        sq  = max(sqrt(lVec'*shMat*lVec), absTol);
+        sq  = max(realsqrt(lVec'*shMat*lVec), absTol);
         supFun = qVec'*lVec + sq;
         xVec = ((shMat*lVec)/sq) + qVec;
     end

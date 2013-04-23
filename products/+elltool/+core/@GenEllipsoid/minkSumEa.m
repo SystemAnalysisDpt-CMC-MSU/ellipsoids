@@ -158,7 +158,7 @@ else
             projCenVec=...
                 finBasMat.'*ellObjVec(iEll).centerVec;
             curPNum=...
-                sqrt(projCurDirVec.'*projQMat*projCurDirVec);
+                realsqrt(projCurDirVec.'*projQMat*projCurDirVec);
             if (abs(curPNum)>absTol)
                 if (~isBeenFirstNonDeg)
                     cenVec=projCenVec;
@@ -193,7 +193,7 @@ for iEll=1:nEllObj;
     eigviMat=ellObjVec(iEll).eigvMat;
     diagiMat=ellObjVec(iEll).diagMat;
     auxVec=eigviMat.'*curDirVec;
-    curPNum=sqrt(auxVec.'*diagiMat*auxVec);
+    curPNum=realsqrt(auxVec.'*diagiMat*auxVec);
     if (iEll==1)
         cenVec=ellObjVec(iEll).centerVec;
         sumMat=1/(curPNum)*eigviMat*diagiMat*eigviMat.';
@@ -232,7 +232,7 @@ for iEll=1:nEllObj
     diagiMat=ellObjVec(iEll).diagMat;
     projQMat=GenEllipsoid.findMatProj(eigviMat,diagiMat,zeroBasMat);
     projCenVec=zeroBasMat.'*ellObjVec(iEll).centerVec;
-    curPNum=sqrt(projCurDirVec.'*projQMat*projCurDirVec);
+    curPNum=realsqrt(projCurDirVec.'*projQMat*projCurDirVec);
     if (abs(curPNum)>absTol)
         if (~isBeenFirstNonDeg)
             cenVec=projCenVec;

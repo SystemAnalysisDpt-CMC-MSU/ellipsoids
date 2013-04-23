@@ -235,9 +235,9 @@ switch nDim
     otherwise,
         centVec = fstEll.center - secEll.center;
         boundPointMat(1, 1) = fstEll.center - secEll.center + ...
-            sqrt(secEll.shape) - sqrt(fstEll.shape);
+            sqrt(secEll.shape) - realsqrt(fstEll.shape);
         boundPointMat(1, 2) = fstEll.center - secEll.center + ...
-            sqrt(fstEll.shape) - sqrt(secEll.shape);
+            sqrt(fstEll.shape) - realsqrt(secEll.shape);
         if nArgOut == 0
             hPlot = ell_plot(boundPointMat);
             hold on;

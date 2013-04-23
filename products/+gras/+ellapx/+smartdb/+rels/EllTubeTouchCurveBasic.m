@@ -76,7 +76,7 @@ classdef EllTubeTouchCurveBasic<handle
             import modgen.common.num2cell;
             TS_CHECK_TOL=1e-14;            
             %% Check for a consistency between lsGoodDirVec and lsGoodDirNorm
-            lsGoodDirNormExpVec=cellfun(@(x)sqrt(sum(x.*x)),self.lsGoodDirVec);
+            lsGoodDirNormExpVec=cellfun(@(x)realsqrt(sum(x.*x)),self.lsGoodDirVec);
             isOk=max(abs(self.lsGoodDirNorm-lsGoodDirNormExpVec))<=...
                 TS_CHECK_TOL;
             if ~isOk
@@ -84,7 +84,7 @@ classdef EllTubeTouchCurveBasic<handle
                     'failed check for lsGoodDirVec and lsGoodDirNorm');
             end
             %% Check for consistency between ltGoodDirMat and lsGoodDirNormVec
-            ltGoodDirNormVecExpCVec=cellfun(@(x)sqrt(sum(x.*x,1)),...
+            ltGoodDirNormVecExpCVec=cellfun(@(x)realsqrt(sum(x.*x,1)),...
                 self.ltGoodDirMat,'UniformOutput',false);
             if ~isequal(self.ltGoodDirNormVec,...
                     ltGoodDirNormVecExpCVec)

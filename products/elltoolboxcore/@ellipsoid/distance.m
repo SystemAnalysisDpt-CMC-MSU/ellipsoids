@@ -270,7 +270,7 @@ elseif ~isFlagOn
     qVec=unitaryMat*vectorVec;
     dMean=mean(distEllVec);
     vectorNorm=norm(vectorVec);
-    x0=sqrt((dMean*vectorNorm*vectorNorm)-1)/dMean;
+    x0=realsqrt((dMean*vectorNorm*vectorNorm)-1)/dMean;
     %%Bisection for interval estimation
     aPoint=0;
     bPoint=x0+x0;
@@ -294,7 +294,7 @@ elseif ~isFlagOn
         iIter=iIter+1;
     end
     %%Secant Method, search for zeros
-    intervalHalfLength=10*sqrt(relTol);
+    intervalHalfLength=10*realsqrt(relTol);
     xVec=zeros(1,nMaxIter);
     xVec(1)=cPoint-intervalHalfLength;
     xVec(2)=cPoint+intervalHalfLength;
@@ -320,8 +320,8 @@ else
     % A(y-x)+lambda Ax=0 => y=(1+lambda) x =>
     % 1+lambda=1/(y'Ay)^(1/2) => find lambda and
     % find (y-x)'A(y-x).
-    distPlus=(sqrt(vectorEllVal)+1);
-    distMinus=abs(sqrt(vectorEllVal)-1);
+    distPlus=(realsqrt(vectorEllVal)+1);
+    distMinus=abs(realsqrt(vectorEllVal)-1);
     distEllVec=min(distPlus, distMinus);
 end
 timeOfComputation=toc;
@@ -520,9 +520,9 @@ if cPar < 0
     vPar = -vPar;
 end
 if isFlagOn
-    sr = sqrt(vPar' * (ellObj.shape) * vPar);
+    sr = realsqrt(vPar' * (ellObj.shape) * vPar);
 else
-    sr = sqrt(vPar' * vPar);
+    sr = realsqrt(vPar' * vPar);
 end
 if (vPar' * ellObj.center) < cPar
     distEllHpVal = (cPar - rho(ellObj, vPar))/sr;
@@ -629,7 +629,7 @@ distVal = f;
 if distVal <absTol
     distVal = 0;
 end
-distVal  = sqrt(distVal);
+distVal  = realsqrt(distVal);
 cvxStat={cvx_status};
 end
 

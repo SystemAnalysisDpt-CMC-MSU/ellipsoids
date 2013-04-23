@@ -9,6 +9,19 @@ classdef ellipsoid < handle
         nPlot3dPoints
     end
     
+    methods 
+        function set.shape(self,shMat)
+            import modgen.common.throwerror;
+            if any(isnan(shMat(:)))
+                throwerror('wrongInput',...
+                    'configuration matrix cannot contain NaN values');
+            end
+            self.shape=shMat;
+        end
+    end
+    %
+    
+    
     methods
         function [ellMat] = ellipsoid(varargin)
             %
@@ -32,9 +45,9 @@ classdef ellipsoid < handle
             %       propNameN = propValN. In other cases "Properties"
             %       are taken from current values stored in
             %       elltool.conf.Properties.
-            %   ellMat = Ellipsoid(centVecArray, shMatArray, 
-            %       ['propName1', propVal1,...,'propNameN',propValN]) - 
-            %       creates an array (possibly multidimensional) of 
+            %   ellMat = Ellipsoid(centVecArray, shMatArray,
+            %       ['propName1', propVal1,...,'propNameN',propValN]) -
+            %       creates an array (possibly multidimensional) of
             %       ellipsoids with centers centVecArray(:,dim1,...,dimn)
             %       and matrices shMatArray(:,:,dim1,...dimn) with
             %       properties if given.
@@ -49,17 +62,17 @@ classdef ellipsoid < handle
             % Input:
             %   Case1:
             %     regular:
-            %       shMatArray: double [nDim, nDim] / 
-            %           double [nDim, nDim, nDim1,...,nDimn] - 
+            %       shMatArray: double [nDim, nDim] /
+            %           double [nDim, nDim, nDim1,...,nDimn] -
             %           shape matrices array
             %
             %   Case2:
             %     regular:
-            %       centVecArray: double [nDim,1] / 
-            %           double [nDim, 1, nDim1,...,nDimn] - 
+            %       centVecArray: double [nDim,1] /
+            %           double [nDim, 1, nDim1,...,nDimn] -
             %           centers array
-            %       shMatArray: double [nDim, nDim] / 
-            %           double [nDim, nDim, nDim1,...,nDimn] - 
+            %       shMatArray: double [nDim, nDim] /
+            %           double [nDim, nDim, nDim1,...,nDimn] -
             %           shape matrices array
             %           
             %
@@ -72,8 +85,8 @@ classdef ellipsoid < handle
             %            default value 200.
             %
             % Output:
-            %   ellMat: ellipsoid [1,1] / ellipsoid [nDim1,...nDimn] - 
-            %       ellipsoid with specified properties 
+            %   ellMat: ellipsoid [1,1] / ellipsoid [nDim1,...nDimn] -
+            %       ellipsoid with specified properties
             %       or multidimensional array of ellipsoids.
             % 
             % Example:
@@ -90,7 +103,6 @@ classdef ellipsoid < handle
             %             Faculty of Computational Mathematics and and Computer Science,
             %             System Analysis Department 2012-2013 $
             %
-            
             import modgen.common.throwerror;
             import modgen.common.checkvar;
             import modgen.common.checkmultvar;
@@ -113,8 +125,8 @@ classdef ellipsoid < handle
             if nargin == 1
                 checkvar(varargin{1},@(x) isa(x,'double')&&isreal(x),...
                     'errorTag','wrongInput:imagArgs',...
-                    'errorMessage','shape matrix must be real.');                
-                shMatArray = varargin{1};                
+                    'errorMessage','shape matrix must be real.');
+                shMatArray = varargin{1};
                 nShDims = ndims(shMatArray);
                 shDimsVec(1:nShDims) = size(shMatArray);
                 nShRows = shDimsVec(1);
@@ -147,10 +159,10 @@ classdef ellipsoid < handle
                     shDimsVec(3:end), 'errorTag','wrongInput',...
                     'errorMessage',...
                     'additional dimensions must agree');
-                nCentRows = centDimsVec(1);            
-                nCentCols = centDimsVec(2);                
+                nCentRows = centDimsVec(1);
+                nCentCols = centDimsVec(2);
                 nShRows = shDimsVec(1);
-                nShCols = shDimsVec(2);   
+                nShCols = shDimsVec(2);
             end
             %
             checkmultvar('(x1==x2)&&(x3==x1)&&(x4==1||x5>2)',...
@@ -179,7 +191,7 @@ classdef ellipsoid < handle
                     shMatArray(:,:,iEll), absTolVal,...
                     'errorTag','wrongInput',...
                     'errorMessage', ['shape matrices must be symmetric',...
-                    'and positive semi-definite']);
+                    ' and positive semi-definite']);
                 ellMat(iEll).center = centVecArray(:,iEll);
                 ellMat(iEll).shape = shMatArray(:,:,iEll);
                 ellMat(iEll).absTol = absTolVal;
