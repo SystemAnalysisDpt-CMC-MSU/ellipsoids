@@ -222,7 +222,7 @@ end
 function normalizMat = normaliz(argMat)
     szVec = size(argMat);
     normMat = argMat .* argMat;
-    normMat = sqrt(sum(sum(normMat, 2), 1));
+    normMat = realsqrt(sum(sum(normMat, 2), 1));
     if (length(szVec) > 2)
         szVec(3:length(szVec)) = 1;
     end
