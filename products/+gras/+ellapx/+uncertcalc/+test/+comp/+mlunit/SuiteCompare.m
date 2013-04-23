@@ -94,6 +94,10 @@ classdef SuiteCompare < mlunitext.test_case
             mlunit.assert_equals(all(isEqVec),true);
             %
             compFieldNameList = fieldnames(runResults{1});
+            % Field intersection prevents errors with new fields in
+            % structure which is returned by run()
+            compFieldNameList = intersect(compFieldNameList, fieldnames(SSORT_KEYS));
+            %
             nCmpFields = numel(compFieldNameList);
             %
             % compare results
