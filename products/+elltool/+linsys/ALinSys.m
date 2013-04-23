@@ -27,13 +27,13 @@ classdef ALinSys < elltool.linsys.ILinSys
     methods (Access = protected, Static)
         function isEllHaveNeededDim(InpEll, nDim, absTol)
             %
-            % ISELLHAVENEEDEDDIM - checks if given structure InpEll
-            %                      represents an ellipsoid of dimension nDim.
+            % ISELLHAVENEEDEDDIM - checks if given structure InpEll represents an 
+            %                      ellipsoid of dimension nDim.
             %
             % Input:
             %   regular:
-            %       InpEll: struct[1, 1] - structure to check for being
-            %           an ellipsoid of dimension nDim.
+            %       InpEll: struct[1, 1] - structure to check for being an ellipsoid 
+            %           of dimension nDim.
             %
             %       nDim: double[1, 1] - dimension of ellipsoid.
             %
@@ -362,26 +362,22 @@ classdef ALinSys < elltool.linsys.ILinSys
             %
             % Input:
             %   regular:
-            %       atInpMat: double[nDim, nDim]/cell[nDim, nDim] -
-            %           matrix A.
+            %       atInpMat: double[nDim, nDim]/cell[nDim, nDim] - matrix A.
             %
-            %       btInpMat: double[nDim, kDim]/cell[nDim, kDim] -
-            %           matrix B.
+            %       btInpMat: double[nDim, kDim]/cell[nDim, kDim] - matrix B.
             %
-            %       uBoundsEll: ellipsoid[1, 1]/struct[1, 1] -
-            %           control bounds ellipsoid.
+            %       uBoundsEll: ellipsoid[1, 1]/struct[1, 1] - control bounds 
+            %           ellipsoid.
             %
-            %       gtInpMat: double[nDim, lDim]/cell[nDim, lDim] -
-            %           matrix G.
+            %       gtInpMat: double[nDim, lDim]/cell[nDim, lDim] - matrix G.
             %
-            %       distBoundsEll: ellipsoid[1, 1]/struct[1, 1] -
-            %           disturbance bounds ellipsoid.
+            %       distBoundsEll: ellipsoid[1, 1]/struct[1, 1] - disturbance bounds 
+            %           ellipsoid.
             %
-            %       ctInpMat: double[mDim, nDim]/cell[mDim, nDim]-
-            %           matrix C.
+            %       ctInpMat: double[mDim, nDim]/cell[mDim, nDim]- matrix C.
             %
-            %       noiseBoundsEll: ellipsoid[1, 1]/struct[1, 1] -
-            %           noise bounds ellipsoid.
+            %       noiseBoundsEll: ellipsoid[1, 1]/struct[1, 1] -  noise bounds 
+            %          ellipsoid.
             %
             %       discrFlag: char[1, 1] - if discrFlag set:
             %           'd' - to discrete-time linSys

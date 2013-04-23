@@ -1,13 +1,9 @@
 classdef ReachContinuous < elltool.reach.AReach
-% Continuous reach set library of the Ellipsoidal
-% Toolbox.
+% Continuous reach set library of the Ellipsoidal Toolbox.
 %
 %
-% $Authors: 
-% Alex Kurzhanskiy
-% <akurzhan@eecs.berkeley.edu>
-% Kirill Mayantsev
-% <kirill.mayantsev@gmail.com>$  
+% $Authors: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+%           Kirill Mayantsev <kirill.mayantsev@gmail.com> $   
 % $Date: March-2013 $
 % $Copyright: Moscow State University,
 %             Faculty of Computational Mathematics 
@@ -488,20 +484,17 @@ classdef ReachContinuous < elltool.reach.AReach
     methods
         function self =...
                 ReachContinuous(linSys, x0Ell, l0Mat, timeVec, OptStruct)
-        % ReachContinuous - computes reach set 
-        % approximation of the continuous linear system 
-        % for the given time interval.
+        % ReachContinuous - computes reach set approximation of the continuous  
+        %                   linear system for the given time interval.
         % Input:
         %     regular:
-        %       linSys: elltool.linsys.LinSys object - 
-        %           given linear system 
-        %       x0Ell: ellipsoid[1, 1] - ellipsoidal set of 
-        %           initial conditions 
+        %       linSys: elltool.linsys.LinSys object - given linear system 
+        %       x0Ell: ellipsoid[1, 1] - ellipsoidal set of initial conditions 
         %       l0Mat: matrix of double - l0Mat 
-        %       timeVec: double[1, 2] - time interval
-        %           timeVec(1) must be less then timeVec(2)
-        %       OptStruct: structure[1,1] in this class 
-        %           OptStruct doesn't matter anything
+        %       timeVec: double[1, 2] - time interval; timeVec(1) must be less
+        %            then timeVec(2)
+        %       OptStruct: structure[1,1] in this class OptStruct doesn't matter
+        %           anything
         %
         % Output:
         %   regular:
@@ -695,17 +688,6 @@ classdef ReachContinuous < elltool.reach.AReach
         end
         %%
         function cutObj = cut(self, cutTimeVec)
-        % Example:
-        % aMat = [0 1; 0 0]; bMat = eye(2);
-        % SUBounds = struct();
-        % SUBounds.center = {'sin(t)'; 'cos(t)'};  
-        % SUBounds.shape = [9 0; 0 2];
-        % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds); 
-        % x0EllObj = ell_unitball(2);  
-        % timeVec = [0 10];  
-        % dirsMat = [1 0; 0 1]';
-        % rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-        % cutObj = rsObj.cut([3 5]);
             import modgen.common.throwerror;
             if self.isprojection()
                 throwerror('wrongInput',...
@@ -898,8 +880,8 @@ classdef ReachContinuous < elltool.reach.AReach
         %%
         function eaScaleFactor = getEaScaleFactor(self)
         %
-        % GET_EASCALEFACTOR - return the scale factor for 
-        % external approximation of reach tube
+        % GET_EASCALEFACTOR - return the scale factor for external approximation
+        %                     of reach tube
         %
         % Input:
         %   regular:
@@ -925,8 +907,7 @@ classdef ReachContinuous < elltool.reach.AReach
         % 
         %     1.0200        
         %
-        % $Author: Kirill Mayantsev
-        % <kirill.mayantsev@gmail.com> $  
+        % $Author: Kirill Mayantsev <kirill.mayantsev@gmail.com> $  
         % $Date: March-2013 $ 
         % $Copyright: Moscow State University,
         %             Faculty of Computational
@@ -938,8 +919,8 @@ classdef ReachContinuous < elltool.reach.AReach
         %%
         function iaScaleFactor = getIaScaleFactor(self)
         %
-        % GET_IASCALEFACTOR - return the scale factor for 
-        % internal approximation of reach tube
+        % GET_IASCALEFACTOR - return the scale factor for internal approximation
+        %                     of reach tube
         %
         % Input:
         %   regular:
@@ -965,8 +946,7 @@ classdef ReachContinuous < elltool.reach.AReach
         % 
         %     1.0200
         %
-        % $Author: Kirill Mayantsev
-        % <kirill.mayantsev@gmail.com> $  
+        % $Author: Kirill Mayantsev <kirill.mayantsev@gmail.com> $  
         % $Date: March-2013 $ 
         % $Copyright: Moscow State University,
         %             Faculty of Computational
@@ -978,9 +958,8 @@ classdef ReachContinuous < elltool.reach.AReach
         %%
         function x0Ell = getInitialSet(self)
         %
-        % GETINITIALSET - return the initial set for
-        % linear system, which is solved for building
-        % reach tube.
+        % GETINITIALSET - return the initial set for linear system, which is solved
+        %                 for building reach tube.
         %
         % Input:
         %   regular:
@@ -988,9 +967,8 @@ classdef ReachContinuous < elltool.reach.AReach
         %
         % Output:
         %   regular:
-        %       x0Ell: ellipsoid[1, 1] - ellipsoid x0, 
-        %           which was initial set for linear 
-        %           system. 
+        %       x0Ell: ellipsoid[1, 1] - ellipsoid x0, which was initial set for  
+        %           linear system. 
         %     
         % Example:
         % aMat = [0 1; 0 0]; bMat = eye(2);
@@ -1016,21 +994,20 @@ classdef ReachContinuous < elltool.reach.AReach
         % 
         % Nondegenerate ellipsoid in R^2.
         %
-        % $Author: Kirill Mayantsev
-        % <kirill.mayantsev@gmail.com> $  
+        % $Author: Kirill Mayantsev <kirill.mayantsev@gmail.com> $  
         % $Date: March-2013 $ 
         % $Copyright: Moscow State University,
         %             Faculty of Computational
         %             Mathematics and Computer Science,
         %             System Analysis Department 2013 $
         %
-            x0Ell = self.x0Ellipsoid.getCopy();        end
+            x0Ell = self.x0Ellipsoid.getCopy();        
+        end
         %%
         function isBackward = isbackward(self)
         %
-        % ISBACKWARD - checks if given reach set object
-        % was obtained by solving the system in reverse
-        % time.
+        % ISBACKWARD - checks if given reach set object was obtained by solving
+        %              the system in reverse time.
         %
         % Input:
         %   regular:
@@ -1038,10 +1015,8 @@ classdef ReachContinuous < elltool.reach.AReach
         %
         % Output:
         %   regular:
-        %       isBackward: logical[1, 1] -
-        %           true - if self was obtained by solving 
-        %               in reverse time.
-        %           false - otherwise.
+        %       isBackward: logical[1, 1] - true - if self was obtained by solving 
+        %           in reverse time, false - otherwise.
         %     
         % Example:
         % aMat = [0 1; 0 0]; bMat = eye(2);
@@ -1060,8 +1035,7 @@ classdef ReachContinuous < elltool.reach.AReach
         %      1
         %
         %
-        % $Author: Kirill Mayantsev
-        % <kirill.mayantsev@gmail.com> $  
+        % $Author: Kirill Mayantsev <kirill.mayantsev@gmail.com> $  
         % $Date: March-2013 $ 
         % $Copyright: Moscow State University,
         %             Faculty of Computational
@@ -1073,29 +1047,22 @@ classdef ReachContinuous < elltool.reach.AReach
         %%
         function isEqual = isEqual(self, reachObj, varargin)
         %
-        % ISEQUAL - checks for equality given reach set 
-        % objects
+        % ISEQUAL - checks for equality given reach set objects
         % 
-        %
         % Input:
         %   regular:
         %       self.
         %       reachObj:
-        %           elltool.reach.ReachContinuous[1, 1] - 
-        %           reach set object, which compare with
-        %           self.
+        %           elltool.reach.ReachContinuous[1, 1] - each set object, which
+        %            compare with self.
         %   optional:
-        %       tuple: int[1, 1] - number of tuple for 
-        %           which will be compared.
-        %       approxType: 
-        %           gras.ellapx.enums.EApproxType[1, 1] - 
-        %           type of approximation, which will be
-        %           compared.
+        %       tuple: int[1, 1] - number of tuple for which will be compared.
+        %       approxType: gras.ellapx.enums.EApproxType[1, 1] -  type of  
+        %           approximation, which will be compared.
         %
         % Output:
         %   regular:
-        %       ISEQUAL: logical[1, 1] -
-        %           true - if reach set objects are equal.s
+        %       ISEQUAL: logical[1, 1] - true - if reach set objects are equal.
         %           false - otherwise.
         %     
         % Example:
@@ -1115,8 +1082,7 @@ classdef ReachContinuous < elltool.reach.AReach
         % 
         %         1
         %
-        % $Author: Kirill Mayantsev
-        % <kirill.mayantsev@gmail.com> $  
+        % $Author: Kirill Mayantsev <kirill.mayantsev@gmail.com> $  
         % $Date: March-2013 $ 
         % $Copyright: Moscow State University,
         %             Faculty of Computational

@@ -18,8 +18,7 @@ classdef ILinSys < handle
         %       self: elltool.linsys.ILinSys[1, 1] - linear system.
         %
         % Output:
-        %   aMat: double[aMatDim, aMatDim]/cell[nDim, nDim] - 
-        %      matrix A.
+        %   aMat: double[aMatDim, aMatDim]/cell[nDim, nDim] - matrix A.
         %
         % Examples:
         % aMat = [0 1; 0 0]; bMat = eye(2);
@@ -37,8 +36,7 @@ classdef ILinSys < handle
         %       self: elltool.linsys.ILinSys[1, 1] - linear system.
         %
         % Output:
-        %   bMat: double[bMatDim, bMatDim]/cell[bMatDim, bMatDim] -
-        %       matrix B.
+        %   bMat: double[bMatDim, bMatDim]/cell[bMatDim, bMatDim] - matrix B.
         %
         % Examples:
         % aMat = [0 1; 0 0]; bMat = eye(2);
@@ -56,8 +54,7 @@ classdef ILinSys < handle
         %       self: elltool.linsys.ILinSys[1, 1] - linear system.
         %
         % Output:
-        %   uEll: ellipsoid[1, 1]/struct[1, 1] - control bounds 
-        %          ellipsoid.
+        %   uEll: ellipsoid[1, 1]/struct[1, 1] - control bounds ellipsoid.
         %
         % Examples:
         % aMat = [0 1; 0 0]; bMat = eye(2);
@@ -75,8 +72,7 @@ classdef ILinSys < handle
         %       self: elltool.linsys.ILinSys[1, 1] - linear system.
         %
         % Output:
-        %   gMat: double[gMatDim, gMatDim]/cell[gMatDim, gMatDim] -
-        %       matrix G.
+        %   gMat: double[gMatDim, gMatDim]/cell[gMatDim, gMatDim] - matrix G.
         %
         % Examples:
         % aMat = [0 1; 0 0]; bMat = eye(2);
@@ -94,8 +90,7 @@ classdef ILinSys < handle
         %       self: elltool.linsys.ILinSys[1, 1] - linear system.
         %
         % Output:
-        %   distEll: ellipsoid[1, 1]/struct[1, 1] - disturbance 
-        %       bounds ellipsoid.
+        %   distEll: ellipsoid[1, 1]/struct[1, 1] - disturbance bounds ellipsoid.
         %
         % Examples:
         % aMat = [0 1; 0 0]; bMat = eye(2);
@@ -113,8 +108,7 @@ classdef ILinSys < handle
         %       self: elltool.linsys.ILinSys[1, 1] - linear system.
         %
         % Output:
-        %   cMat: double[cMatDim, cMatDim]/cell[cMatDim, cMatDim] -
-        %       matrix C.
+        %   cMat: double[cMatDim, cMatDim]/cell[cMatDim, cMatDim] - matrix C.
         %
         % Examples:
         % aMat = [0 1; 0 0]; bMat = eye(2);
@@ -137,8 +131,7 @@ classdef ILinSys < handle
         %       self: elltool.linsys.ILinSys[1, 1] - linear system.
         %
         % Output:
-        %   noiseEll: ellipsoid[1, 1]/struct[1, 1] - noise bounds
-        %       ellipsoid.
+        %   noiseEll: ellipsoid[1, 1]/struct[1, 1] - noise bounds ellipsoid.
         %
         % Examples:
         % aMat = [0 1; 0 0]; bMat = eye(2);
@@ -155,25 +148,23 @@ classdef ILinSys < handle
         %
         noiseEll = getNoiseBoundsEll(self)
         %
-        % DIMENSION - returns dimensions of state, input, output
-        %             and disturbance spaces.
+        % DIMENSION - returns dimensions of state, input, output and disturbance
+        %             spaces.
         % Input:
         %   regular:
-        %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an 
-        %             array of linear systems.
+        %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array of 
+        %             linear systems.
         %
         % Output:
-        %   stateDimArr: double[nDims1, nDims2,...] - array of
-        %       state space dimensions.
-        %
-        %   inpDimArr: double[nDims1, nDims2,...] - array of input
+        %   stateDimArr: double[nDims1, nDims2,...] - array of state space 
         %       dimensions.
         %
-        %   outDimArr: double[nDims1, nDims2,...] - array of output
-        %       dimensions.
+        %   inpDimArr: double[nDims1, nDims2,...] - array of input dimensions.
         %
-        %   distDimArr: double[nDims1, nDims2,...] - array of
-        %       disturbance dimensions.
+        %   outDimArr: double[nDims1, nDims2,...] - array of output dimensions.
+        %
+        %   distDimArr: double[nDims1, nDims2,...] - array of disturbance
+        %         dimensions.
         %
         % Examples:
         % aMat = [0 1; 0 0]; bMat = eye(2);
@@ -232,18 +223,16 @@ classdef ILinSys < handle
         % 
         % Input:
         %   regular:
-        %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an 
-        %             array of linear systems.
+        %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array of 
+        %             linear systems.
         %   optional:
-        %       isMeaningful: logical[1,1] - if true(default),
-        %                     treat constant disturbance vector
-        %                     as absence of disturbance
+        %       isMeaningful: logical[1,1] - if true(default), treat constant 
+        %                     disturbance vector as absence of disturbance
         %
         % Output:
-        %   isDisturbanceArr: logical[nDims1, nDims2,...] - array 
-        %       such that it's element at each position is true if 
-        %       corresponding linear system has disturbance, and 
-        %       false otherwise.
+        %   isDisturbanceArr: logical[nDims1, nDims2,...] - array such that it's  
+        %       element at each position is true if corresponding linear system  
+        %       has disturbance, and false otherwise.
         %
         % Examples:
         % aMat = [0 1; 0 0]; bMat = eye(2);
@@ -265,14 +254,13 @@ classdef ILinSys < handle
         %
         % Input:
         %   regular:
-        %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an 
-        %             array of linear systems.
+        %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array of linear
+        %             systems.
         %
         % Output:
-        %   isNoiseMat: logical[nDims1, nDims2,...] - array such that 
-        %       it's element at each position is true if 
-        %       corresponding linear system has noise, and false
-        %       otherwise.
+        %   isNoiseMat: logical[nDims1, nDims2,...] - array such that it's element at  
+        %       each position is true if corresponding linear system has noise, and 
+        %       false otherwise.
         %
         % Examples:
         % aMat = [0 1; 0 0]; bMat = eye(2);
@@ -294,14 +282,13 @@ classdef ILinSys < handle
         %
         % Input:
         %   regular:
-        %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an 
-        %             array of linear systems.
+        %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array of linear 
+        %             systems.
         %
         % Output:
-        %   isEmptyMat: logical[nDims1, nDims2,...] - array such that 
-        %       it's element at each position is true if 
-        %       corresponding linear system is empty, and false 
-        %       otherwise.
+        %   isEmptyMat: logical[nDims1, nDims2,...] - array such that it's element at  
+        %       each position is true if corresponding linear system is empty, and  
+        %       false otherwise.
         %
         % Examples:
         % aMat = [0 1; 0 0]; bMat = eye(2);
@@ -323,14 +310,13 @@ classdef ILinSys < handle
         %
         % Input:
         %   regular:
-        %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an 
-        %             array of linear systems.
+        %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array of linear  
+        %             systems.
         %
         % Output:
-        %   isLtiMat: logical[nDims1, nDims2,...] -array such that 
-        %       it's element at each position is true if 
-        %       corresponding linear system is time-invariant, and
-        %       false otherwise.
+        %   isLtiMat: logical[nDims1, nDims2,...] -array such that it's element at  
+        %       each position is true if corresponding linear system is 
+        %       time-invariant, and false otherwise.
         %
         % Examples:
         % aMat = [0 1; 0 0]; bMat = eye(2);
@@ -344,19 +330,18 @@ classdef ILinSys < handle
         %
         isLtiArr = islti(self)
         %
-        % GETABSTOL - gives array the same size as linsysArr with
-        %             values of absTol properties for each hyperplane
-        %             in hplaneArr.
+        % GETABSTOL - gives array the same size as linsysArr with values of absTol  
+        %             properties for each hyperplane in hplaneArr.
         % 
         %
         % Input:
         %   regular:
-        %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an 
-        %             array of linear systems.
+        %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array of linear 
+        %             systems.
         %
         % Output:
-        %   absTolArr: double[nDims1, nDims2,...] - array of absTol
-        %       properties for linear systems in self.
+        %   absTolArr: double[nDims1, nDims2,...] - array of absTol properties for  
+        %       linear systems in self.
         %
         % Examples:
         % aMat = [0 1; 0 0]; bMat = eye(2);
@@ -378,17 +363,17 @@ classdef ILinSys < handle
         %
         absTolArr = getAbsTol(self)
         %
-        % GETCOPY - gives array the same size as linsysArr with
-        %           with copies of elements of self.
+        % GETCOPY - gives array the same size as linsysArr with with copies of 
+        %           elements of self.
         %
         % Input:
         %   regular:
-        %       self: elltool.linsys.ALinSys[nDims1, nDims2,...] -
-        %             an array of linear systems.
+        %       self: elltool.linsys.ALinSys[nDims1, nDims2,...] - an array of 
+        %             linear systems.
         %
         % Output:
-        %   copyLinSysArr: elltool.linsys.LinSys[nDims1, nDims2,...] -
-        %       an array of copies of elements of self.
+        %   copyLinSysArr: elltool.linsys.LinSys[nDims1, nDims2,...] -  an array of 
+        %      copies of elements of self.
         %
         % Examples:
         % aMat = [0 1; 0 0]; bMat = eye(2);
@@ -404,22 +389,21 @@ classdef ILinSys < handle
         %
         % ISEQUAL - produces produces logical array the same size as
         %           self/compLinSysArr (if they have the same).
-        %           isEqualArr[iDim1, iDim2,...] is true if 
-        %           corresponding linear systems are equal and false 
-        %           otherwise.
+        %           isEqualArr[iDim1, iDim2,...] is true if corresponding 
+        %           linear systems are equal and false otherwise.
         %
         % Input:
         %   regular:
-        %       self: elltool.linsys.ILinSys[nDims1, nDims2,...] -
-        %             an array of linear systems.
-        %       compLinSysArr: elltool.linsys.ILinSys[nDims1,...
-        %             nDims2,...] - an array of linear systems.
+        %       self: elltool.linsys.ILinSys[nDims1, nDims2,...] -  an array of 
+        %            linear systems.
+        %       compLinSysArr: elltool.linsys.ILinSys[nDims1,...nDims2,...] - an 
+        %            array of linear systems.
         % 
         % Output:
-        %   isEqualArr: elltool.linsys.LinSys[nDims1, nDims2,...] -
-        %       an array of logical values.
-        %       isEqualArr[iDim1, iDim2,...] is true if corresponding
-        %       linear systems are equal and false otherwise.
+        %   isEqualArr: elltool.linsys.LinSys[nDims1, nDims2,...] - an array of 
+        %       logical values.
+        %       isEqualArr[iDim1, iDim2,...] is true if corresponding linear systems 
+        %       are equal and false otherwise.
         %
         % Examples:
         % aMat = [0 1; 0 0]; bMat = eye(2);
