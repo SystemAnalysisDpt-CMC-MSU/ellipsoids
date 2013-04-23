@@ -220,7 +220,7 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             self.fundCMat = self.calculateFundamentalMatrix(self);
         end
         
-        function self = testConsistency(self)
+        function self = DISABLED_testConsistency(self)
             k0 = self.tIntervalVec(1);
             k1 = self.tIntervalVec(2);
             
@@ -482,7 +482,7 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             mlunit.assert_equals(true, true);
         end
         %
-        function self=testConstructor(self)
+        function self = testConstructor(self)
             timeVec=[0 5.1];
             fMethod=@(lSys) elltool.reach.ReachDiscrete(lSys,ellipsoid(eye(2)),...
                 [1 0]', timeVec);
