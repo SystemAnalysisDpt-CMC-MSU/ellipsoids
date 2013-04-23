@@ -71,7 +71,7 @@ classdef SuiteSupportFunction < mlunitext.test_case
                 crm.setParam('plottingProps.isEnabled',false,...
                     'writeDepth','cache');
                 %
-                SRunProp = gras.ellapx.uncertcalc.run(confName,...
+                [SRunProp, SRunAuxProp] = gras.ellapx.uncertcalc.run(confName,...
                     'confRepoMgr', crm, 'sysConfRepoMgr', crmSys);
                 %
                 fGetScaleFactor = @(x)1/x;
@@ -108,7 +108,7 @@ classdef SuiteSupportFunction < mlunitext.test_case
                 OdeOptionsStruct = odeset(...
                     'RelTol', calcPrecision * self.REL_TOL_FACTOR,...
                     'AbsTol', calcPrecision * self.ABS_TOL_FACTOR);
-                lsGoodDirMat = SRunProp.goodDirSetObj.getlsGoodDirMat();
+                lsGoodDirMat = SRunAuxProp.goodDirSetObj.getlsGoodDirMat();
                 lsGoodDirCMat = SRunProp.ellTubeRel.lsGoodDirVec();
                 for iTuple = 1 : nTuples
                     curTimeVec = timeCVec{iTuple};
@@ -130,7 +130,7 @@ classdef SuiteSupportFunction < mlunitext.test_case
                         'good dir vector not found');
                     %
                     curGoodDirDynamicsObj = ...
-                        SRunProp.goodDirSetObj.getGoodDirOneCurveSpline(...
+                        SRunAuxProp.goodDirSetObj.getGoodDirOneCurveSpline(...
                         iGoodDir);
                     fCalclVec = @(t) curGoodDirDynamicsObj.evaluate(t);
                     %
