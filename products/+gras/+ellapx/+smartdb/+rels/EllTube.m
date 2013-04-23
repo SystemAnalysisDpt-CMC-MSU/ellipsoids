@@ -139,7 +139,7 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
                         throwerror('wrongInput',...
                             'Oops, we shouldn''t be here');
                     end
-                    eMat(:,iTime)=sqrt(eSquaredVec);
+                    eMat(:,iTime)=realsqrt(eSquaredVec);
                 end
                 %
                 eMinVec=min(eMat,[],1);

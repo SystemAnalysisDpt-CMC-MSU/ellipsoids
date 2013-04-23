@@ -722,7 +722,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
             
             %Chek dim=3 with not diaganal matrix
             testEllipsoid=ellipsoid([1 1 -1; 1 4 -3; -1 -3 9]);
-            isTestRes=( (volume(testEllipsoid)-(8*sqrt(5)*pi/3)<=absTol ) );
+            isTestRes=( (volume(testEllipsoid)-(8*realsqrt(5)*pi/3)<=absTol ) );
             mlunit.assert_equals(true, isTestRes);
             
             %Check dim=5
@@ -740,9 +740,9 @@ classdef EllipsoidTestCase < mlunitext.test_case
                          ellipsoid(rand(20,1),9*diag(0:19)), ellipsoid(diag(1:21));
                          ellipsoid(diag(0.1:0.1:10)), ellipsoid(diag(0:0.0001:0.01))];
             testVolMat = volume(testEllMat); 
-            testRightVolMat = [(pi^6)*sqrt(prod(0.01:0.01:0.2))/prod(1:6), (pi^6)*(2^7)*sqrt(prod(0.1:0.1:1.3))/prod(1:2:13);
-                               0,                                          (pi^10)*(2^11)*sqrt(prod(1:21))/prod(1:2:21);
-                               (pi^50)*sqrt(prod(0.1:0.1:10))/prod(1:50), 0];
+            testRightVolMat = [(pi^6)*realsqrt(prod(0.01:0.01:0.2))/prod(1:6), (pi^6)*(2^7)*realsqrt(prod(0.1:0.1:1.3))/prod(1:2:13);
+                               0,                                          (pi^10)*(2^11)*realsqrt(prod(1:21))/prod(1:2:21);
+                               (pi^50)*realsqrt(prod(0.1:0.1:10))/prod(1:50), 0];
             
             isTestEqMat = (testVolMat-testRightVolMat)<=absTol;
             isTestRes = all(isTestEqMat(:));
@@ -1173,7 +1173,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
                 'wrongInput:singularMat');
         end
         %
-        function self=testMultiDimensionalConstructor(self)
+        function self = testMultiDimensionalConstructor(self)
             % one argument
             testShape = [2,0;0,3];
             testEll = ellipsoid(testShape);
@@ -1242,6 +1242,13 @@ classdef EllipsoidTestCase < mlunitext.test_case
             isOkMat = isEqualMat == [0 0; 0 1];
             isOk = all(isOkMat(:));
             mlunit.assert_equals(true, isOk);
+        end
+        %
+        function self = testSqrtmposToleranceFailure(self)
+            sh1Mat = diag(repmat(0.0000001, 1, 4)) + diag([1 1 0 0]);
+            sh2Mat = diag(ones(1, 4));
+            minksum_ia([ellipsoid(zeros(4, 1), sh1Mat),...
+                        ellipsoid(zeros(4, 1), sh2Mat)], [0 0 1 0]');
         end
     end
 end

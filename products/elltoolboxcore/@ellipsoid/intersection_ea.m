@@ -152,7 +152,7 @@ end
 
 if isa(secObj, 'hyperplane')
     [normHypVec, hypScalar] = parameters(-secObj);
-    hypNormInv = 1/sqrt(normHypVec'*normHypVec);
+    hypNormInv = 1/realsqrt(normHypVec'*normHypVec);
     hypScalar = hypScalar*hypNormInv;
     normHypVec = normHypVec*hypNormInv;
     if (normHypVec'*fstEllCentVec > hypScalar) ...
@@ -165,7 +165,7 @@ if isa(secObj, 'hyperplane')
         outEll = ellipsoid;
         return;
     end
-    hEig  = 2*sqrt(maxeig(fstEll));
+    hEig  = 2*realsqrt(maxeig(fstEll));
     qSecVec = hypScalar*normHypVec + hEig*normHypVec;
     seqQMat = (normHypVec*normHypVec')/(hEig^2);
    

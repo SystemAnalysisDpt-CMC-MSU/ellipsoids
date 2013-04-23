@@ -49,6 +49,6 @@ else
         k = nDim *0.5;
         s = (pi^k)/factorial(k);
     end
-    vol = s*sqrt(det(qMat));
+    vol = s*realsqrt(det(qMat));
 end
 end

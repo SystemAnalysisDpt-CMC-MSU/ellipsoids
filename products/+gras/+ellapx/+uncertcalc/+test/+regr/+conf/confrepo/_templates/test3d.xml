@@ -72,7 +72,7 @@
             </log4jSettings>
 	</logging>
 	<plottingProps type="struct" >
-		<isEnabled type="boolean" >1</isEnabled>
+		<isEnabled type="boolean" >0</isEnabled>
 		<viewAngleVec type="double" >-37.5 30</viewAngleVec>
 		<isGoodCurvesSeparately type="boolean" >1</isGoodCurvesSeparately>
 	</plottingProps>

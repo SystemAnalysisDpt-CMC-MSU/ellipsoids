@@ -10,34 +10,19 @@ function oArr= mlorthtransl(srcMat,dstArray)
 % Output:
 %   oArr: double[nDims,nDims,nElems,nVecs]
 %
-% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-05-01$
+% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2013-04-17$
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Computer Science,
-%            System Analysis Department 2011 $
+%            System Analysis Department 2013 $
 %
 nElems=size(dstArray,3);
 nDims=size(dstArray,1);
 nVecs=size(srcMat,2);
 oArr=zeros([nDims,nDims,nElems,nVecs]);
-ABS_TOL=1e-7;
-for l=1:1:nVecs
-    srcVec=srcMat(:,l);
-    for t=1:1:nElems
-        dstVec=dstArray(:,l,t);        
-        dstVec = dstVec/sqrt(sum(dstVec.*dstVec));
-        srcVec = srcVec/sqrt(sum(srcVec.*srcVec));
-        scalProd = sum(srcVec.*dstVec);
-        sVal = sqrt(1 - scalProd^2);
-        qMat = zeros(nDims, 2);
-        qMat(:, 1) = dstVec;
-        %
-        if abs(sVal) > ABS_TOL
-            qMat(:, 2) = (srcVec - scalProd * dstVec)/sVal;
-        else
-            qMat(:, 2) = 0; 
-        end;
-        sMat = [scalProd-1 sVal; -sVal scalProd-1];
-        %
-        oArr(:,:,t,l) = eye(nDims) + (qMat*sMat)*qMat';
+for iVec=1:1:nVecs
+    srcVec=srcMat(:,iVec);
+    for iElem=1:1:nElems
+        dstVec=dstArray(:,iVec,iElem);
+        oArr(:,:,iElem,iVec) = gras.la.orthtransl(srcVec,dstVec);
     end
 end
