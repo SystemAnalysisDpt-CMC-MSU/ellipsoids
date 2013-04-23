@@ -1,15 +1,13 @@
- function poly = tri2polytope(depth,transfMat)
+ function poly = tri2polytope(vMat,fMat)
 % TRI2POLYTOPE -- makes polytope object represanting the 
-%                 triangulation of unit ball in 3D,
-%                 transformed with matrix transfMat: 
-%                 y = transfMat*x; 
+%                 triangulation of convex object in 3D. 
 % 
 % Input:
 %       regular: 
-%           depth: double[1,1] - the depth of 
-%           triangulation.
-%           transfMat: double[3,3] - transformation 
-%           matrix.
+%           vMat: double[nVerts,3] - (x,y,z) coordinates of triangulation
+%                 vertices
+%           fMat: double[nFaces,3] - indices of face verties in vertMat
+%
 % Output:
 %       regular:
 %           poly: polytope[1,1] in 3D
@@ -23,17 +21,15 @@
 %
 import modgen.common.checkvar;
 %
-checkvar(depth,@(x) isa(x,'double')&&(numel(x) == 1)&&...
-    (mod(x,1) == 0) && (x > 0), 'errorTag',...
+checkvar(fMat,@(x) isa(x,'double')&&...
+    all(mod(x(:),1) == 0) && all(x(:) > 0), 'errorTag',...
     'wrongInput','errorMessage',...
-    'depth must have positive and have integer value.');
+    'indeces must have positive and integer value.');
 %
-checkvar(transfMat,@(x) isa(x,'double')&&all(size(x) == 3)&&...
-    numel(x) == 9 , 'errorTag',...
-    'wrongInput','errorMessage',...
-    'transfMat must be matrix from R^3x3.');
+checkvar(vMat,@(x) isa(x,'double')&&all(size(x,2) == 3),...
+     'errorTag','wrongInput','errorMessage',...
+    'Matrix of vertices must be matrix from R^nx3.');
 %
-[vMat,fMat]=gras.geom.tri.spheretri(depth);
 nFaces = size(fMat,1);
 normMat = zeros(3,nFaces);
 constVec = zeros(1,nFaces);
@@ -48,5 +44,5 @@ for iFaces = 1:nFaces
          normMat(:,iFaces) = - normMat(:,iFaces);
     end
 end
-normMat = normMat'/(transfMat);
-poly = polytope(struct('H',normMat,'K',constVec'));
+%
+poly = polytope(normMat',constVec');
