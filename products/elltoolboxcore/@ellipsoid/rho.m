@@ -80,8 +80,6 @@ end
         cVec  = singEll.center;
         shpMat  = singEll.shape;
         [~, singAbsTol] = getAbsTol(singEll);
-        sq = max(sqrt(dirsMat'*shpMat*dirsMat), singAbsTol);
-        supFun = cVec'*dirsMat + sq;
-        xVec =((shpMat*dirsMat)/sq) + cVec;
+        [supFun,xVec] = ellipsoid.rhomat(shpMat,cVec,singAbsTol,dirsMat);
     end
 end

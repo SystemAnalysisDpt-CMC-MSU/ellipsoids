@@ -61,13 +61,13 @@ import elltool.plot.plotgeombodyarr;
 import modgen.common.throwerror;
 isPlotCenter3d = false;
 ABS_TOL = 1e-14;
-N_POINTS_FACTOR=[1.25 1];
+N_POINTS_FACTOR=[1.5 1];
 [reg]=...
     modgen.common.parseparext(varargin,...
     {'relDataPlotter','newFigure','fill','lineWidth','color','shade','priorHold','postHold','showAll'});
 ellsArr = cellfun(@(x)getEllArr(x),reg,'UniformOutput', false);
 ellsArr = vertcat(ellsArr{:});
-ind = find(~isempty(ellsArr));
+ind = ~isempty(ellsArr);
 ellsArr = ellsArr(ind);
 if numel(ellsArr) == 1
     if (nargout == 1)||(nargout == 0)
@@ -160,13 +160,13 @@ end
         inpEllArr = ellsArr(1:end-1);
         inpEll = ellsArr(end);
         elltool.conf.Properties.setIsVerbose(false)
-        [dirMat, fMat] =getGridByFactor(inpEllArr(1));
+        [dirMat, fMat] =getGridByFactor(inpEllArr(1),N_POINTS_FACTOR);
         dirMat = dirMat';
         extApproxEllVec = minksum_ea(inpEllArr, dirMat);
         centVec= extApproxEllVec(1).center - inpEll.center;
         nCols = size(dirMat, 2);
-        switch nDims
-            case 2
+%         switch nDims
+%             case 2
                 extApprEllVec(1,nCols) = ellipsoid();
                 arrayfun(@(x) fCase2extAppr(x),1:nCols);
                 
@@ -184,24 +184,24 @@ end
                 xSumDiffCell = {[bpMat bpMat(:, 1)]};
                 
                 
-            case 3
+%             case 3
+%                 fMat = {fMat};
+%                 isGoodDir = false(1,nCols);
+%                 arrayfun(@(x) fFindGoodDir(x), 1:nCols);
+%                 if any(isGoodDir)
+%                     nGoodDirs = sum(isGoodDir);
+%                     goodIndexVec = find(isGoodDir);
+%                     boundPointMat = zeros(nDims, nGoodDirs);
+%                     arrayfun(@(x)  fCase3(x), 1:nGoodDirs);
+%                     xSumDiffCell = {boundPointMat};
+%                 else
+%                     xSumDiffCell = {centVec};
+%                 end
+               
                 fMat = {fMat};
-                isGoodDir = false(1,nCols);
-                arrayfun(@(x) fFindGoodDir(x), 1:nCols);
-                if any(isGoodDir)
-                    nGoodDirs = sum(isGoodDir);
-                    goodIndexVec = find(isGoodDir);
-                    boundPointMat = zeros(nDims, nGoodDirs);
-                    arrayfun(@(x)  fCase3(x), 1:nGoodDirs);
-                    xSumDiffCell = {boundPointMat};
-                else
-                    xSumDiffCell = {centVec};
-                end
                 
                 
-                
-                
-        end
+%         end
         function fCase2extAppr(index)
             dirVec = dirMat(:, index);
             absTolVal=min(extApproxEllVec(index).absTol, inpEll.absTol);

@@ -1,18 +1,21 @@
 function [varargout] = minkdiff(varargin)
 %
-% MINKSUM - computes geometric (Minkowski) sum of ellipsoids in 2D or 3D.
+%MINKDIFF - computes geometric (Minkowski) difference of two
+%            ellipsoids in 2D or 3D.
 % Usage:
-%   MINKSUM(inpEllMat,'Property',PropValue,...) - Computes geometric sum of ellipsoids
-%       in the array inpEllMat, if
-%       1 <= min(dimension(inpEllMat)) = max(dimension(inpEllMat)) <= 3,
+%MINKDIFF(inpEllMat,'Property',PropValue,...) - Computes
+%geometric difference of two ellipsoids in the array inpEllMat, if
+%1 <= min(dimension(inpEllMat)) = max(dimension(inpEllMat)) <= 3,
 %       and plots it if no output arguments are specified.
 %
-%   [centVec, boundPointMat] = MINKSUM(inpEllMat) - Computes
-%       geometric sum of ellipsoids in inpEllMat. Here centVec is
+%   [centVec, boundPointMat] = MINKDIFF(inpEllMat) - Computes
+%       geometric difference of two ellipsoids in inpEllMat. 
+%       Here centVec is
 %       the center, and boundPointMat - array of boundary points.
-%   MINKSUM(inpEllMat) - Plots geometric sum of ellipsoids in
-%       inpEllMat in default (red) color.
-%   MINKSUM(inpEllMat, 'Property',PropValue,...) - Plots geometric sum of inpEllMat
+%   MINKDIFF(inpEllMat) - Plots geometric differencr of two 
+%   ellipsoids in inpEllMat in default (red) color.
+%   MINKDIFF(inpEllMat, 'Property',PropValue,...) - 
+%    Plots geometric sum of inpEllMat
 %       with setting properties.
 %
 % Input:
@@ -50,7 +53,7 @@ function [varargout] = minkdiff(varargin)
 import elltool.plot.plotgeombodyarr;
 import modgen.common.throwerror;
 isPlotCenter3d = false;
-
+N_POINTS_FACTOR=[1.5 1];
 if nargout == 0
     output = minkCommonAction(@getEllArr,@fCalcBodyTriArr,@fCalcCenterTriArr,varargin{:});
     plObj = output{1};
@@ -134,7 +137,7 @@ end
             if isdegenerate(secEll)
                 secEllShMat = ellipsoid.regularize(secEllShMat,secEll.absTol);
             end
-            [lMat, fMat] = getGridByFactor(fstEll);
+            [lMat, fMat] = getGridByFactor(fstEll,N_POINTS_FACTOR);
             lMat = lMat';
             absTolVal=min(fstEll.absTol, secEll.absTol);
             [isBadDirVec,pUniversalVec] = ellipsoid.isbaddirectionmat(fstEllShMat, secEllShMat, ...

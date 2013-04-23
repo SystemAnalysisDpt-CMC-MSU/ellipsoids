@@ -51,13 +51,15 @@ function varargout = minkmp(varargin)
 
 import elltool.plot.plotgeombodyarr;
 import modgen.common.throwerror;
-ABS_TOL = 1e-14;
+N_POINTS_FACTOR=[1.5 1];
 [reg]=...
     modgen.common.parseparext(varargin,...
     {'relDataPlotter','newFigure','fill','lineWidth','color','shade',...
     'priorHold','postHold','showAll'});
 ellsArr = cellfun(@(x)getEllArr(x),reg,'UniformOutput', false);
 ellsArr = vertcat(ellsArr{:});
+ind = ~isempty(ellsArr);
+ellsArr = ellsArr(ind);
 if numel(ellsArr) == 1
     if (nargout == 1)||(nargout == 0)
         [reg]=...
@@ -118,7 +120,7 @@ end
     end
     function [xSumDifMat,fMat] = fCalcBodyTriArr(ellsArr)
         nDim = dimension(ellsArr(1));
-        [lDirsMat, fGridMat] = getGridByFactor(ellsArr(1));
+        [lDirsMat, fGridMat] = getGridByFactor(ellsArr(1),N_POINTS_FACTOR);
         lDirsMat = lDirsMat';
         if nDim == 1
             [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr);
@@ -167,14 +169,10 @@ end
         end
     end
     function ellsVec = getEllArr(ellsArr)
+        ellsVec = ellipsoid;
         if isa(ellsArr, 'ellipsoid')
             cnt    = numel(ellsArr);
             ellsVec = reshape(ellsArr, cnt, 1);
-            
-        else
-            import modgen.common.throwerror;
-            throwerror('wrongInput', ...
-                'non property params must be ellipsoids');
         end
     end
     function [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr)

@@ -37,7 +37,24 @@ classdef EllipsoidMinksumPlotTestCase < mlunitext.test_case
             self = testMinkProperties(self,@minksum,testFirEll,[testSecEll,testThirdEll]);
             self = testMinkProperties(self,@minksum,testForthEll,testFifthEll);
             self = testMinkProperties(self,@minksum,testForthEll,[testFifthEll testSixthEll]); 
+            minksum(testFirEll,testSecEll,testThirdEll,'showAll',true);
+            minksum(testForthEll,testFifthEll,testSixthEll,'showAll',true);
         end
-        
+        function self = test2d(self)
+            testFirEll = ellipsoid([1, 0].', [9 2;2 4]);
+            testSecEll = ellipsoid(eye(2));
+            check(testFirEll,testSecEll);
+            
+            function check(testFirEll,testSecEll)
+                absTol = 10^(-10);
+                [~,boundPoints] = minksum(testFirEll,testSecEll);
+                [lGridMat] = gras.geom.circlepart(200);
+                [supp1Arr,~] = rho(testFirEll,lGridMat.');
+                [supp2Arr,~] = rho(testSecEll,lGridMat.');
+                rhoDiffVec = supp1Arr+supp2Arr;
+                sup = max(lGridMat*boundPoints(:,1:end-1),[],2);
+                mlunit.assert_equals(abs(sup'-rhoDiffVec) < absTol,ones(1,size(sup,1)));      
+            end
+        end
     end
 end
