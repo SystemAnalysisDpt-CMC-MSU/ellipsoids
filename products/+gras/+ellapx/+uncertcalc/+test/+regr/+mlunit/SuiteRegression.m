@@ -87,10 +87,6 @@ classdef SuiteRegression < mlunitext.test_case
                     resMap.put(inpKey,SExpRes);
                 end
                 SExpRes=resMap.get(inpKey);
-                % Field intersection prevents errors with new fields in
-                % structure which is returned by run()
-                compFieldNameList = intersect(compFieldNameList, fieldnames(SExpRes));
-                %
                 nCmpFields=numel(compFieldNameList);
                 for iField=1:nCmpFields
                     fieldName=compFieldNameList{iField};
