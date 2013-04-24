@@ -5,7 +5,6 @@ classdef BasicTestCase < mlunitext.test_case
     properties (Access=private)
         testDataRootDir
     end
-    
     methods
         function self = BasicTestCase(varargin)
             self = self@mlunitext.test_case(varargin{:});
@@ -15,7 +14,7 @@ classdef BasicTestCase < mlunitext.test_case
                 filesep,shortClassName];
             
         end
-        function self=testSqrtMSimple(self)
+        function self = testSqrtMSimple(self)
             import gras.la.sqrtmpos;
             import gras.la.ismatposdef;
             import gras.gen.sqrtpos;
@@ -121,7 +120,6 @@ classdef BasicTestCase < mlunitext.test_case
             self.runAndCheckError('gras.la.sqrtmpos(testMat)',...
                 'wrongInput');
         end
-        
         function self = testIsMatSymm(self)
             import gras.la.ismatsymm;
             
@@ -263,7 +261,20 @@ classdef BasicTestCase < mlunitext.test_case
                     'wrongInput:notPosSemDef');
             end
         end
+        function self = testRegPosDef(self)
+            import gras.la.regposdefmat;
+            REG_TOL = 1e-5;
+            ABS_TOL = 1e-5;
+            matDim = 10;
+            % regularize zero matrix
+            zeroMat = zeros(matDim);
+            expRegZeroMat = REG_TOL * eye(matDim);
+            regZeroMat = regposdefmat(zeroMat, REG_TOL);
+            isEqual = norm(regZeroMat - expRegZeroMat) <= ABS_TOL;
+            mlunit.assert_equals(isEqual, true);
+            %
+            
+        end
     end
-    
 end
 

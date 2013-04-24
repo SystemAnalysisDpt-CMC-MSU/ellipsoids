@@ -536,6 +536,7 @@ classdef ReachContinuous < elltool.reach.AReach
             %     OptStruct: structure
             %         In this class OptStruct doesn't matter anything
             %
+            %
             % Output:
             %     self - reach set object.
             %

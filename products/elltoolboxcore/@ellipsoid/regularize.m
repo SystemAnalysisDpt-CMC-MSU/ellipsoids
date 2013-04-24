@@ -1,4 +1,4 @@
-function regQMat = regularize(qMat,absTol)
+function regQMat = regularize(qMat, regTol)
 %
 % REGULARIZE - regularization of singular symmetric matrix.
 %
@@ -13,20 +13,4 @@ function regQMat = regularize(qMat,absTol)
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
-
-modgen.common.checkvar(qMat,'gras.la.ismatsymm(x)',...
-    'errorMessage','matrix must be symmetric.');
-
-nDim = size(qMat,2);
-nRank = rank(qMat);
-
-if nRank < nDim
-    [uMat, ~, ~] = svd(qMat);
-    eMat = absTol * eye(nDim - nRank);
-    regQMat = qMat + (uMat *...
-        [zeros(nRank, nRank), zeros(nRank, (nDim-nRank));...
-         zeros((nDim-nRank), nRank), eMat]* uMat');
-    regQMat = 0.5*(regQMat + regQMat');
-else
-    regQMat = qMat;
-end
+regQMat = gras.la.regposdefmat(qMat, regTol);
