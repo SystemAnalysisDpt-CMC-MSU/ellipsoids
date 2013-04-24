@@ -1173,7 +1173,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
                 'wrongInput:singularMat');
         end
         %
-        function self=testMultiDimensionalConstructor(self)
+        function self = testMultiDimensionalConstructor(self)
             % one argument
             testShape = [2,0;0,3];
             testEll = ellipsoid(testShape);
@@ -1242,6 +1242,13 @@ classdef EllipsoidTestCase < mlunitext.test_case
             isOkMat = isEqualMat == [0 0; 0 1];
             isOk = all(isOkMat(:));
             mlunit.assert_equals(true, isOk);
+        end
+        %
+        function self = testSqrtmposToleranceFailure(self)
+            sh1Mat = diag(repmat(0.0000001, 1, 4)) + diag([1 1 0 0]);
+            sh2Mat = diag(ones(1, 4));
+            minksum_ia([ellipsoid(zeros(4, 1), sh1Mat),...
+                        ellipsoid(zeros(4, 1), sh2Mat)], [0 0 1 0]');
         end
     end
 end

@@ -69,6 +69,7 @@ nDimsInpEllArr = dimension(inpEllArr);
 
 [nDims, nCols] = size(dirMat);
 
+
 modgen.common.checkvar( nDimsInpEllArr,'all(x(:)==x(1))','errorTag', ...
     'wrongSizes', 'errorMessage', ...
     'ellipsoids in the array and vector(s) must be of the same dimension.');
@@ -87,7 +88,7 @@ centVec =zeros(nDims,1);
 arrayfun(@(x) fAddCenter(x),inpEllArr);
 absTolArr = getAbsTol(inpEllArr);
 
-srcMat = sqrtmpos(inpEllArr(1).shape, min(absTolArr(:))) * dirMat;
+srcMat = sqrtmpos(inpEllArr(1).shape, min(absTolArr(:)) * 1e-1 ) * dirMat;
 sqrtShArr = zeros(nDims, nDims, nNumel);
 rotArr = zeros(nDims,nDims,nNumel,nCols);
 arrayfun(@(x) fSetRotArr(x), 1:nNumel);
@@ -119,8 +120,10 @@ arrayfun(@(x) fSingleDirection(x),1:nCols);
             end
             shMat = ellipsoid.regularize(shMat, absTolArr(ellIndex));
         end
-        shSqrtMat = sqrtmpos(shMat, absTolArr(ellIndex));
+        shSqrtMat = sqrtmpos(shMat, absTolArr(ellIndex) * 1e-1 );
+        absTolArr(ellIndex);
         sqrtShArr(:,:,ellIndex) = shSqrtMat;
+        absTolArr(ellIndex);
         dstMat = shSqrtMat*dirMat;
         rotArr(:,:,ellIndex,:) = mlorthtransl(dstMat,srcMat);
     end

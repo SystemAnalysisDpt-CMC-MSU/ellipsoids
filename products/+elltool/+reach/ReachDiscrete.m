@@ -103,13 +103,13 @@ classdef ReachDiscrete < elltool.reach.AReach
                     GQG = 0.5 * (GQG + GQG');
                     Q   = Ai * Q * Ai';
                     if rank(Q) < N
-                        Q = ell_regularize(Q);
+                        Q = ell_regularize(Q, absTol);
                     end
                     if rank(BPB) < N
-                        BPB = ell_regularize(BPB);
+                        BPB = ell_regularize(BPB, absTol);
                     end
                     if rank(GQG) < N
-                        GQG = ell_regularize(GQG);
+                        GQG = ell_regularize(GQG, absTol);
                     end
                     l = A' * l;
                     if mnmx > 0 % minmax case
@@ -149,10 +149,10 @@ classdef ReachDiscrete < elltool.reach.AReach
                         e2 = realsqrt(absTol*absTol + 2*max(eig(BPB))*absTol);
                         BPB = ell_regularize(BPB, e2);
                     elseif rank(BPB) < N
-                        BPB = ell_regularize(BPB);
+                        BPB = ell_regularize(BPB, absTol);
                     end
                     if rank(GQG) < N
-                        GQG = ell_regularize(GQG);
+                        GQG = ell_regularize(GQG, absTol);
                     end
                     l = Ai' * l;
                     if mnmx > 0 % minmax case
@@ -197,10 +197,10 @@ classdef ReachDiscrete < elltool.reach.AReach
                     BPB = 0.5 * (BPB + BPB');
                     Q = Ai * Q * Ai';
                     if rank(Q) < N
-                        Q = ell_regularize(Q);
+                        Q = ell_regularize(Q, absTol);
                     end
                     if rank(BPB) < N
-                        BPB = ell_regularize(BPB);
+                        BPB = ell_regularize(BPB, absTol);
                     end
                     l = A' * l;
                     E = minksum_ea([ellipsoid(0.5*(Q+Q')) ellipsoid(0.5*(BPB+BPB'))], l);
@@ -226,7 +226,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                         e2 = realsqrt(absTol*absTol + 2*max(eig(BPB))*absTol);
                         BPB = ell_regularize(BPB, e2);
                     elseif rank(BPB) < N
-                        BPB = ell_regularize(BPB);
+                        BPB = ell_regularize(BPB, absTol);
                     end
                     l = Ai' * l;
                     E = minksum_ea([ellipsoid(0.5*(Q+Q'))...
@@ -274,13 +274,13 @@ classdef ReachDiscrete < elltool.reach.AReach
                     GQG = 0.5 * (GQG + GQG');
                     Q = Ai * Q * Ai';
                     if rank(Q) < N
-                        Q = ell_regularize(Q);
+                        Q = ell_regularize(Q, absTol);
                     end
                     if rank(BPB) < N
-                        BPB = ell_regularize(BPB);
+                        BPB = ell_regularize(BPB, absTol);
                     end
                     if rank(GQG) < N
-                        GQG = ell_regularize(GQG);
+                        GQG = ell_regularize(GQG, absTol);
                     end
                     l = A' * l;
                     if mnmx > 0 % minmax case
@@ -320,10 +320,10 @@ classdef ReachDiscrete < elltool.reach.AReach
                         e2  = realsqrt(absTol*absTol + 2*max(eig(BPB))*absTol);
                         BPB = ell_regularize(BPB, e2);
                     elseif rank(BPB) < N
-                        BPB = ell_regularize(BPB);
+                        BPB = ell_regularize(BPB, absTol);
                     end
                     if rank(GQG) < N
-                        GQG = ell_regularize(GQG);
+                        GQG = ell_regularize(GQG, absTol);
                     end
                     l = Ai' * l;
                     if mnmx > 0 % minmax case
@@ -368,10 +368,10 @@ classdef ReachDiscrete < elltool.reach.AReach
                     BPB = 0.5 * (BPB + BPB');
                     Q = Ai * Q * Ai';
                     if rank(Q) < N
-                        Q = ell_regularize(Q);
+                        Q = ell_regularize(Q, absTol);
                     end
                     if rank(BPB) < N
-                        BPB = ell_regularize(BPB);
+                        BPB = ell_regularize(BPB, absTol);
                     end
                     l = A' * l;
                     E = minksum_ia([ellipsoid(0.5*(Q+Q'))...
@@ -386,6 +386,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                     Ai = ell_inv(A);
                     BPB = ell_value_extract(mydata.BPB, i, [N N]);
                     BPB = 0.5 * (BPB + BPB');
+                    
                     Q = A * Q * A';
                     if size(mydata.delta, 2) > 1
                         dd = mydata.delta(i);
@@ -398,7 +399,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                         e2 = realsqrt(absTol*absTol + 2*max(eig(BPB))*absTol);
                         BPB = ell_regularize(BPB, e2);
                     elseif rank(BPB) < N
-                        BPB = ell_regularize(BPB);
+                        BPB = ell_regularize(BPB, absTol);
                     end
                     l = Ai' * l;
                     E = minksum_ia([ellipsoid(0.5*(Q+Q'))...
@@ -910,7 +911,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                     AC(:, i) = reshape(A, d1*d1, 1);
                     if isa(linSys, 'elltool.linsys.LinSysDiscrete') ...
                             && (rank(A) < d1)
-                        A        = ell_regularize(A);
+                        A        = ell_regularize(A, absTol);
                         DD(1, i) = 1;
                     elseif isa(linSys, 'elltool.linsys.LinSysDiscrete')
                         DD(1, i) = 0;
@@ -927,7 +928,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 AC = aMat;
                 if isa(linSys, 'elltool.linsys.LinSysDiscrete') ...
                         && (rank(aMat) < d1)
-                    mydata.A     = ell_regularize(aMat);
+                    mydata.A     = ell_regularize(aMat, absTol);
                     mydata.delta = 1;
                 elseif isa(linSys, 'elltool.linsys.LinSysDiscrete')
                     mydata.A     = aMat;
@@ -1757,8 +1758,8 @@ classdef ReachDiscrete < elltool.reach.AReach
                         cutObj.l_values = LL;
                     end
                 else
-                    is = indarr(1) - 1;
-                    ie = indarr(end) - 1;
+                    is = indarr(1);
+                    ie = indarr(end);
                     cutObj.time_values = self.time_values(is:ie);
                     cutObj.center_values = self.center_values(:, is:ie);
                     QQ = [];
@@ -2833,7 +2834,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                     A = self.matrix_eval(aMat, newReachObj.time_values(i));
                     AC = [AC reshape(A, d1*d1, 1)];
                     if isa(linSys, 'elltool.linsys.LinSysDiscrete') && (rank(A) < d1)
-                        A = ell_regularize(A);
+                        A = ell_regularize(A, absTol);
                         DD = [DD 1];
                     elseif isa(linSys, 'elltool.linsys.LinSysDiscrete')
                         DD = [DD 0];
@@ -2850,7 +2851,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 AC = aMat;
                 if isa(linSys, 'elltool.linsys.LinSysDiscrete') ...
                         && (rank(aMat) < d1)
-                    mydata.A     = ell_regularize(aMat);
+                    mydata.A     = ell_regularize(aMat, absTol);
                     mydata.delta = 1;
                 elseif isa(linSys, 'elltool.linsys.LinSysDiscrete')
                     mydata.A     = aMat;
