@@ -52,7 +52,7 @@ end
 
     function preparation()
         pi = 4 * atan(1.0);
-        tau = (sqrt(5.0) + 1)/2;
+        tau = (realsqrt(5.0) + 1)/2;
         r = tau - 0.5;
         vertMat(1,:)=[0.0, 0.0, 1.0];
         for iPoint=0:4
@@ -161,7 +161,7 @@ end
         end
     end
     function normalizeVert(indStart)
-        normVec=sqrt(sum(vertMat(indStart:nVerts,:).*...
+        normVec=realsqrt(sum(vertMat(indStart:nVerts,:).*...
             vertMat(indStart:nVerts,:),2));
         vertMat(indStart:nVerts,:)=vertMat(indStart:nVerts,:)./...
             repmat(normVec,1,3);

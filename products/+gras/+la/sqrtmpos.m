@@ -20,6 +20,7 @@ function qSqrtMat = sqrtmpos(qMat, absTol)
 %            Faculty of Computational Mathematics and Cybernetics,
 %            System Analysis Department 2012-2013 $
 import modgen.common.throwerror;
+
 %
 if (nargin == 1)
     absTol = 0;

@@ -73,13 +73,13 @@ classdef BasicTestCase < mlunitext.test_case
             nDim = 100;
             testMat = diag(1:nDim);
             sqrtMat = sqrtmpos(testMat, MAX_TOL);
-            mlunit.assert_equals(sqrt(testMat), sqrtMat);
+            mlunit.assert_equals(realsqrt(testMat), sqrtMat);
             sqrtMat = sqrtmpos(testMat);
-            mlunit.assert_equals(sqrt(testMat), sqrtMat);
+            mlunit.assert_equals(realsqrt(testMat), sqrtMat);
             %
             testMat = [2, 1; 1, 2];
-            vMat = [-1/sqrt(2), 1/sqrt(2); 1/sqrt(2), 1/sqrt(2)];
-            dMat = diag([1, sqrt(3)]);
+            vMat = [-1/realsqrt(2), 1/realsqrt(2); 1/realsqrt(2), 1/realsqrt(2)];
+            dMat = diag([1, realsqrt(3)]);
             sqrtTestMat = vMat*dMat*vMat';
             sqrtMat = sqrtmpos(testMat, MAX_TOL);
             mlunit.assert_equals(sqrtTestMat, sqrtMat);
