@@ -956,6 +956,15 @@ classdef ReachContinuous < elltool.reach.AReach
             if self.isbackward()
                 newEllTubeRel = self.rotateEllTubeRel(newEllTubeRel);
             end
+            %% TEMPORARY CHECK
+            absTol=elltool.conf.Properties.getAbsTol();
+            lVecLeftList=cellfun(@(x)x(:,end),self.ellTubeRel.ltGoodDirMat,'UniformOutput',false);
+            lVecRightList=cellfun(@(x)x(:,1),newEllTubeRel.ltGoodDirMat,'UniformOutput',false);
+            isCloseVec=cellfun(@(x,y)max(abs(x-y))<=absTol,lVecLeftList,lVecRightList);
+            if ~all(isCloseVec)
+                 throwerror('badState','Oops, we should not be here, directions are inconsistent');
+            end
+            %
             newReachObj.ellTubeRel =...
                 self.ellTubeRel.cat(newEllTubeRel);
         end
