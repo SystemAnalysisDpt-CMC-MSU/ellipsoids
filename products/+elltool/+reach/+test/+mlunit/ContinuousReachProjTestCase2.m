@@ -1,7 +1,7 @@
 classdef ContinuousReachProjTestCase2 < mlunitext.test_case
     properties (Access=private, Constant)
-        FIELDS_NOT_TO_COMPARE={'LT_GOOD_DIR_MAT';'LT_GOOD_DIR_NORM_VEC';...
-            'LS_GOOD_DIR_NORM';'LS_GOOD_DIR_VEC'};
+        FIELDS_NOT_TO_COMPARE={'LT_GOOD_DIR_NORM_ORIG_VEC';'PROJ_S_MAT';...
+        	'LS_GOOD_DIR_ORIG_VEC';'LS_GOOD_DIR_NORM_ORIG'};
         COMP_PRECISION = 5e-5;
     end
     properties (Access=private)
@@ -75,9 +75,6 @@ classdef ContinuousReachProjTestCase2 < mlunitext.test_case
                 self.crmSys.getParam('time_interval.t1')];
             self.calcPrecision =...
                 self.crm.getParam('genericProps.calcPrecision');
-            tmpVar = elltool.conf.Properties.getRelTol();
-            elltool.conf.Properties.setRelTol(self.calcPrecision);
-            self.calcPrecision = tmpVar; %save reltol
             ControlBounds = struct();
             ControlBounds.center = ptDefCVec;
             ControlBounds.shape = ptDefCMat;
@@ -91,10 +88,6 @@ classdef ContinuousReachProjTestCase2 < mlunitext.test_case
                 ellipsoid(x0DefVec, x0DefMat), l0Mat, self.timeVec);
         end
         %
-        function tear_down(self)
-            elltool.conf.Properties.setRelTol(self.calcPrecision);
-        end
-        %
         function self = testProjection(self)
             [atDefCMat, btDefCMat, ctDefCMat, ptDefCMat,...
                 ptDefCVec, qtDefCMat, qtDefCVec,...
@@ -103,7 +96,7 @@ classdef ContinuousReachProjTestCase2 < mlunitext.test_case
             newAtCMat = self.multiplyCMat(atDefCMat,oMat,inv(oMat));
             newBtCMat = self.multiplyCMat(btDefCMat,oMat);
             newCtCMat = self.multiplyCMat(ctDefCMat,oMat);
-            newPtCMat = ptDefCMat;
+            newPtCMat = ptDefCMat;       
             newQtCMat = qtDefCMat;
             newPtCVec = ptDefCVec;           
             newQtCVec = qtDefCVec;
@@ -118,7 +111,7 @@ classdef ContinuousReachProjTestCase2 < mlunitext.test_case
             DistBounds.shape = newQtCMat;
             AllDirections = eye(size(atDefCMat));
             oInvMat=inv(oMat);
-            indVec=[1,3,6];
+            indVec=[1 2];
             %
             newLinSys = elltool.linsys.LinSysFactory.create(newAtCMat,...
                 newBtCMat, ControlBounds, newCtCMat, DistBounds);
@@ -128,7 +121,8 @@ classdef ContinuousReachProjTestCase2 < mlunitext.test_case
                 newReachObj.projection(oInvMat(indVec,:)');
             firstProjReachObj =...
                 self.reachObj.projection(AllDirections(indVec,:)');
-            isEqual = secondProjReachObj.isEqual(firstProjReachObj);
+            isEqual = secondProjReachObj.isEqual(firstProjReachObj,...
+                self.FIELDS_NOT_TO_COMPARE);
             mlunit.assert_equals(true, isEqual);
         end
     end
