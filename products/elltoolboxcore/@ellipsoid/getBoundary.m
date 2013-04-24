@@ -42,6 +42,6 @@ else
 end
 %
 [cenVec qMat]=double(ellObj);
-bpMat=dirMat*sqrtm(qMat);
+bpMat=dirMat*gras.la.sqrtmpos(qMat,ellObj.getAbsTol());
 cenMat=repmat(cenVec',size(dirMat,1),1);
 bpMat=bpMat+cenMat;
