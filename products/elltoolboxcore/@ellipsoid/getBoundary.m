@@ -40,5 +40,8 @@ if nargout>1
 else
     dirMat=fGetGrid(nPoints);
 end
-[~,bpMat]=rho(ellObj,dirMat');
-bpMat=bpMat.'; 
+%
+[cenVec qMat]=double(ellObj);
+bpMat=dirMat*sqrtm(qMat);
+cenMat=repmat(cenVec',size(dirMat,1),1);
+bpMat=bpMat+cenMat;
