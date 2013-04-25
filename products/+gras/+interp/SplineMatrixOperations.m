@@ -176,7 +176,7 @@ classdef SplineMatrixOperations<gras.mat.AMatrixOperations
                     tmpArray(:,:,iTimePoint) = ...
                         mArray(:,:,iTimePoint)*xArray(:,:,iTimePoint);
                 end
-                resVec = shiftdim(sqrt(sum(tmpArray.*xArray,1)),1);
+                resVec = shiftdim(realsqrt(sum(tmpArray.*xArray,1)),1);
                 obj = gras.interp.MatrixInterpolantFactory.createInstance(...
                     'column',resVec,self.timeVec);
             end

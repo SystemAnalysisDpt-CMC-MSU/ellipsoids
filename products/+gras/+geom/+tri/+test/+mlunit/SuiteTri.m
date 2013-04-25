@@ -65,14 +65,14 @@ classdef SuiteTri < mlunitext.test_case
         function testShrinkFaceTri2Face1Part(self)
             vMat=self.TRI31_VERT;
             fMat=self.TRI31_FACE;
-            [~,~]=self.aux_shrinkfacetri(vMat,fMat,sqrt(2)-0.001,1);
+            [~,~]=self.aux_shrinkfacetri(vMat,fMat,realsqrt(2)-0.001,1);
         end
         %
         function testShrinkFaceTri3Face1Part(self)
             import gras.geom.tri.*;
             vMat=self.TRI3_VERT;
             fMat=self.TRI3_FACE;
-            [v1Mat,f1Mat]=self.aux_shrinkfacetri(vMat,fMat,sqrt(2)-0.001,...
+            [v1Mat,f1Mat]=self.aux_shrinkfacetri(vMat,fMat,realsqrt(2)-0.001,...
                 1,@(x)(x+repmat([0 0 0.2],size(x,1),1)));
             %
             %patch('Vertices',v1Mat,'Faces',f1Mat,'FaceColor','g',...
@@ -122,7 +122,7 @@ classdef SuiteTri < mlunitext.test_case
                 tr=TriRep(f1Mat,v1Mat);
                 e1Mat=tr.edges();
                 dMat=v1Mat(e1Mat(:,1),:)-v1Mat(e1Mat(:,2),:);
-                maxEdgeLength=max(sqrt(sum(dMat.*dMat,2)));
+                maxEdgeLength=max(realsqrt(sum(dMat.*dMat,2)));
                 mlunit.assert_equals(true,maxEdgeLength<=MAX_DIST);
                 %% regression test
                 [SOut.v0,SOut.f0]=deal(v1Mat,f1Mat);
@@ -196,13 +196,13 @@ classdef SuiteTri < mlunitext.test_case
                 function checkRegress(v1,f1,depth)
                     [vReg1,fReg1]=gras.geom.tri.test.srebuild3d(depth);
                     checkVert(vReg1);
-                    vReg1=vReg1./repmat(sqrt(sum(vReg1.*vReg1,2)),1,3);
+                    vReg1=vReg1./repmat(realsqrt(sum(vReg1.*vReg1,2)),1,3);
                     [isPos,reportStr]=gras.geom.tri.istriequal(...
                         vReg1,fReg1,v1,f1,MAX_TOL);
                     mlunit.assert_equals(true,isPos,reportStr);
                 end
                 function checkVert(v)
-                    normVec=sqrt(sum(v.*v,2));
+                    normVec=realsqrt(sum(v.*v,2));
                     isPos=max(abs(normVec-1))<=MAX_TOL;
                     mlunit.assert_equals(true,isPos,...
                         'not all vertices are on the unit sphere');

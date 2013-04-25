@@ -57,7 +57,7 @@ sizeCVec = num2cell(size(inpEllVec));
 outEllArr(sizeCVec{:})=ellipsoid;
 arrayfun(@(x) fSinglePlus(x),1:numel(inpEllVec));
     function fSinglePlus(index)
-        outEllArr(index).center =inpEllVec(index).center + inpVec;
-        outEllArr(index).shape = inpEllVec(index).shape;
+        outEllArr(index).centerVec =inpEllVec(index).centerVec + inpVec;
+        outEllArr(index).shapeMat = inpEllVec(index).shapeMat;
     end
 end

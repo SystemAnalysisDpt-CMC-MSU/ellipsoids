@@ -49,12 +49,12 @@ arrayfun(@(x) fSingleShape(x), 1:numel(ellArr) );
     function fSingleShape(index)
         singEll = ellArr(index);
         if isModScal
-            qMat = modMatSq*singEll.shape;
+            qMat = modMatSq*singEll.shapeMat;
         else
-            qMat    = modMat*(singEll.shape)*modMat';
+            qMat    = modMat*(singEll.shapeMat)*modMat';
             qMat    = 0.5*(qMat + qMat');
         end
-        modEllArr(index).center = singEll.center;
-        modEllArr(index).shape = qMat;
+        modEllArr(index).centerVec = singEll.centerVec;
+        modEllArr(index).shapeMat = qMat;
     end
 end

@@ -3,7 +3,7 @@
 <valueObj type="struct" >
 	<genericProps type="struct" >
 		<calcTimeLimVec type="double" >0 3</calcTimeLimVec>
-		<calcPrecision type="double" >0.00001</calcPrecision>
+		<calcPrecision type="double" >1e-05</calcPrecision>
 		<isSplineForMatrixCalcUsed type="boolean" >1</isSplineForMatrixCalcUsed>
 	</genericProps>
 	<projectionProps type="struct" >
@@ -59,7 +59,7 @@
             </log4jSettings>
 	</logging>
 	<plottingProps type="struct" >
-		<isEnabled type="boolean" >1</isEnabled>
+		<isEnabled type="boolean" >0</isEnabled>
 		<viewAngleVec type="double" >37.5 30</viewAngleVec>
 		<isGoodCurvesSeparately type="boolean" >1</isGoodCurvesSeparately>
 	</plottingProps>

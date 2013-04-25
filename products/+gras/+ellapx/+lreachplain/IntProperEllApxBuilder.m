@@ -6,12 +6,18 @@ classdef IntProperEllApxBuilder<gras.ellapx.lreachplain.ATightIntEllApxBuilder
     methods (Access=protected)
         function res=calcEllApxMatrixDeriv(self,AtDynamics,...
                 BPBSqrtDynamics,ltSpline,t,QMat)
+            import modgen.common.throwerror;
             A=AtDynamics.evaluate(t);
             ltVec=ltSpline.evaluate(t);
             %
             R_sqrt=BPBSqrtDynamics.evaluate(t);
             [VMat,DMat]=eig(QMat);
-            Q_star=VMat*sqrt(DMat)*transpose(VMat);
+            if any(diag(DMat)<0)
+                throwerror('cannotProceed:tubeIsDegenerate',...
+                    ['ellipsoidal tube has become degenerate, ',...
+                    'cannot proceed']);
+            end
+            Q_star=VMat*realsqrt(DMat)*transpose(VMat);
             S=self.getOrthTranslMatrix(Q_star,R_sqrt,R_sqrt*ltVec,Q_star*ltVec);
             tmp=(A*Q_star+R_sqrt*transpose(S))*transpose(Q_star);
             res=tmp+transpose(tmp);
