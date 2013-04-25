@@ -71,17 +71,21 @@ classdef GoodDirectionSet
             %
             matOpFactory = MatrixOperationsFactory.create(timeVec);
             %
-            Rtt0Dynamics = self.calcRtt0Dynamics(pDefObj, calcPrecision);
-            Rt0tTransDynamics = ...
-                matOpFactory.transpose(matOpFactory.inv(Rtt0Dynamics));
-            Rst0TransConstMatFunc = ...
-                ConstMatrixFunction(Rtt0Dynamics.evaluate(sTime).');
-            RstTransDynamics = ...
-                matOpFactory.rMultiply(Rt0tTransDynamics,...
-                Rst0TransConstMatFunc);
+            
+            %Rtt0Dynamics = self.calcRtt0Dynamics(pDefObj, calcPrecision);
+            %Rt0tTransDynamics = ...
+            %    matOpFactory.transpose(matOpFactory.inv(Rtt0Dynamics));
+            %Rst0TransConstMatFunc = ...
+            %    ConstMatrixFunction(Rtt0Dynamics.evaluate(sTime).');
+            %RstTransDynamics = ...
+            %    matOpFactory.rMultiply(Rt0tTransDynamics,...
+            %    Rst0TransConstMatFunc);
+            self.sTime=sTime;
+            %
+            RstDynamics = self.calcRstDynamics(pDefObj, calcPrecision);
+            RstTransDynamics = matOpFactory.transpose(RstDynamics);
             %
             self.RstTransDynamics = RstTransDynamics;
-            self.sTime=sTime;
             %
             nGoodDirs = self.getNGoodDirs();
             %
@@ -107,6 +111,61 @@ classdef GoodDirectionSet
         end
     end
     methods (Access = private)
+            function RstDynamics = calcRstDynamics(self, pDefObj, ...
+                calcPrecision)
+            %
+            import gras.interp.MatrixInterpolantFactory;
+            import gras.ode.MatrixODESolver;
+            %
+            fAtMat = @(t) pDefObj.getAtDynamics().evaluate(t);
+            sizeSysVec = size(fAtMat(0));
+            %
+            odeArgList = self.getOdePropList(calcPrecision);
+            %
+            solverObj=MatrixODESolver(sizeSysVec,@ode45, ...
+                odeArgList{:});
+            %
+            t0 = pDefObj.gett0();
+            t1 = pDefObj.gett1();
+            nTimes = length( pDefObj.getTimeVec());
+            sRstInitialMat = eye(sizeSysVec);
+            %
+            % calculation of R(s, t) if t > s
+            %
+            if (self.sTime < t1)
+                timeVec = linspace(self.sTime, t1, nTimes);
+                fXstDerivFunc = @(t, x) fXstDirectFunc(t, x, @(u) fAtMat(u));
+                [timeRstRightVec,dataRstRightArray] = ...
+                    solverObj.solve(fXstDerivFunc, timeVec, sRstInitialMat);
+            else
+                timeRstRightVec = [];
+                dataRstRightArray = [];
+            end
+            %
+            % calculation of R(s, t) if t < s
+            %
+            if (self.sTime > t0)
+                timeVec = linspace(0, self.sTime - t0, nTimes);
+                fXstDerivFunc = ...
+                    @(t, x) fXstOppositeFunc(t, x, @(u) fAtMat(u), self.sTime);
+                [timeRstLeftVec,dataRstLeftArray] = ...
+                    solverObj.solve(fXstDerivFunc, timeVec, sRstInitialMat);
+                %
+                timeRstLeftVec(end) = []; dataRstLeftArray(:,:,1) = [];
+                timeRstLeftVec = t0 + timeRstLeftVec;
+                dataRstLeftArray = flipdim(dataRstLeftArray, 3);
+            else
+                timeRstLeftVec = [];
+                dataRstLeftArray = [];
+            end        
+            %
+            timeRstVec = cat(2, timeRstLeftVec, timeRstRightVec);
+            dataRstArray = cat(3, dataRstLeftArray, dataRstRightArray);
+            %
+            RstDynamics=MatrixInterpolantFactory.createInstance(...
+                'column',dataRstArray,timeRstVec);
+        end
+        %
         function Rtt0Dynamics = calcRtt0Dynamics(self, pDefObj, ...
                 calcPrecision)
             %
@@ -186,6 +245,16 @@ classdef GoodDirectionSet
                 'column',dataRtt0Array,timeRtt0Vec);
         end
     end
+end
+%
+% equations for X(s, t)
+%
+function dx = fXstDirectFunc(t, x, fAt)
+    dx = -x * fAt(t);
+end
+%
+function dx = fXstOppositeFunc(t, x, fAt, sTime) % time will be t' = s - t
+    dx = x * fAt(sTime - t);
 end
 %
 % new equation for R(t, t0)
