@@ -40,28 +40,38 @@ end
 %
 sMat=lMat./repmat(rhoDiffVec,nDims,1);
 fSMat=convhulln(sMat.');
-%  trimesh(fSMat,sMat(1,:),sMat(2,:),sMat(3,:)) 
+%  trimesh(fSMat,sMat(1,:),sMat(2,:),sMat(3,:),'EdgeColor',[1,0,0],'FaceAlpha',0) 
+dist = zeros(1,size(lMat,2)); 
 for indL = 1:size(lMat,2)
-    A = [];
+%     lMat(:,indL)
     for indTri = 1:size(fSMat,1)
-        tri = sMat(:,fSMat(indTri,:));
-        x1 = tri(:,2)-tri(:,1);
-        x2 = tri(:,3)-tri(:,1);
-        norm1 = cross(x1,x2);
-        if abs(norm1'*lMat(:,indL)) > absTol           
-            mu = tri(:,1)'*norm1./(norm1'*lMat(:,indL));
+        triMat = sMat(:,fSMat(indTri,:));
+        x1Vec = triMat(:,2)-triMat(:,1);
+        x2Vec = triMat(:,3)-triMat(:,1);
+        normVec = cross(x1Vec,x2Vec);
+        if abs(normVec'*lMat(:,indL)) > absTol           
+            mu = triMat(:,1)'*normVec./(normVec'*lMat(:,indL));
         end
-%         if mu > 0
+        if mu > 0
+%             cla
+%             trimesh(fMat,sMat(1,:),sMat(2,:),sMat(3,:),'EdgeColor',[1,0,0],'FaceAlpha',0)
+%             trimesh(fSMat,sMat(1,:),sMat(2,:),sMat(3,:),'EdgeColor',[1,0,0],'FaceAlpha',0) 
+%             hold on
+%             plot3([triMat(1,1),triMat(1,2),triMat(1,3),triMat(1,1)],[triMat(2,1),triMat(2,2),triMat(2,3),triMat(2,1)],[triMat(3,1),triMat(3,2),triMat(3,3),triMat(3,1)],'*')
+%           
             point = mu*lMat(:,indL);
-            p1 = (tri(:,1)-point)/norm(tri(:,1)-point);
-            p2 = (tri(:,2)-point)/norm(tri(:,2)-point);
-            p3 = (tri(:,3)-point)/norm(tri(:,3)-point);
-            A = [A, acosd(p1'*p2)+acosd(p2'*p3)+acosd(p3'*p1)];
-            acosd(p1'*p2)
-            acosd(p2'*p3)
-            acosd(p3'*p1)
-            if abs(acosd(p1'*p2)+acosd(p2'*p3)+acosd(p3'*p1)-360) < absTol
-                1
+            p1 = (triMat(:,1)-point)/norm(triMat(:,1)-point);
+            p2 = (triMat(:,2)-point)/norm(triMat(:,2)-point);
+            p3 = (triMat(:,3)-point)/norm(triMat(:,3)-point);
+            if (abs(acosd(p1'*p2)+acosd(p2'*p3)+acosd(p3'*p1)-360) < absTol)...
+                    ||(min(abs(triMat(:,1)-point)<absTol*ones(3,1)))...
+                    ||(min(abs(triMat(:,2)-point)<absTol*ones(3,1)))...
+                    ||(min(abs(triMat(:,3)-point)<absTol*ones(3,1)))
+                    
+                dist(indL) = mu/norm(sMat(:,indL));
+                if abs(dist(indL)-1)>1e-3
+                    dist(indL)
+                end
             end
 %             i = inpolygon(x1'*(mu*lMat(:,indS)-tri(:,1)),x2'*(mu*lMat(:,indS)-tri(:,1)),[0,0,1]',[0,1,0]');
 %             if i>0
@@ -74,10 +84,10 @@ for indL = 1:size(lMat,2)
 % %                     trisurf(fSMat,sMat(1,:),sMat(2,:),sMat(3,:),'FaceAlpha',0)
 %                 hold off
 %             end
-%         end
+        end
         
     end
-    2
-    max(A)
+    indL
 end
+rhoDiffVec=rhoDiffVec./dist;
 end

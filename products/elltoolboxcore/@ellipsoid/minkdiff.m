@@ -53,7 +53,6 @@ function [varargout] = minkdiff(varargin)
 import elltool.plot.plotgeombodyarr;
 import modgen.common.throwerror;
 isPlotCenter3d = false;
-N_POINTS_FACTOR=[1.5 1];
 if nargout == 0
     output = minkCommonAction(@getEllArr,@fCalcBodyTriArr,@fCalcCenterTriArr,varargin{:});
     plObj = output{1};
@@ -137,7 +136,7 @@ end
             if isdegenerate(secEll)
                 secEllShMat = ellipsoid.regularize(secEllShMat,secEll.absTol);
             end
-            [lMat, fMat] = getGridByFactor(fstEll,N_POINTS_FACTOR);
+            [lMat, fMat] = getGridByFactor(fstEll);
             lMat = lMat';
             absTolVal=min(fstEll.absTol, secEll.absTol);
             [isBadDirVec,pUniversalVec] = ellipsoid.isbaddirectionmat(fstEllShMat, secEllShMat, ...
