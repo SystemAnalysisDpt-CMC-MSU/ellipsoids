@@ -31,6 +31,7 @@ classdef Properties<modgen.common.obj.StaticPropStorage
                 obj.checkSettings(inpArgList{:});
             end            
         end
+        %
         function init()
             import elltool.conf.Properties;
             %
@@ -50,7 +51,6 @@ classdef Properties<modgen.common.obj.StaticPropStorage
             elltool.logging.Log4jConfigurator.configure(confRepoMgr,...
                 'islockafterconfigure',true);
         end
-        %
         %
         function ConfRepoMgr=getConfRepoMgr()
             import modgen.common.throwerror;
@@ -79,7 +79,6 @@ classdef Properties<modgen.common.obj.StaticPropStorage
         end
         %%
         %Public getters
-        
         function version = getVersion()
             version = elltool.conf.Properties.getOption('version');
         end
@@ -92,8 +91,12 @@ classdef Properties<modgen.common.obj.StaticPropStorage
             absTol = elltool.conf.Properties.getOption('absTol');
         end
         %
-        function absRel = getRelTol()
-            absRel = elltool.conf.Properties.getOption('relTol');
+        function relTol = getRelTol()
+            relTol = elltool.conf.Properties.getOption('relTol');
+        end
+        %
+        function regTol = getRegTol()
+            regTol = elltool.conf.Properties.getOption('regTol');
         end
         %
         function nTimeGridPoints = getNTimeGridPoints()
@@ -127,7 +130,6 @@ classdef Properties<modgen.common.obj.StaticPropStorage
         end
         %%
         %Public setters
-        
         function setIsVerbose(isVerb)
             elltool.conf.Properties.setOption('isVerbose',isVerb);
         end

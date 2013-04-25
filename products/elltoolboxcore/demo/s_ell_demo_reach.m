@@ -38,7 +38,7 @@ B = [1/C 0; 0 1/L];
 CB = ell_unitball(2);
 A2 = [0 -1/C; 1/L2 -R2/L2];
 B2 = [1/C 0; 0 1/L2];
-X0 = 1e-4*ell_unitball(2);
+X0 = 1e-5*ell_unitball(2);
 T = 10;
 L0 = [1 0; 0 1]';
 s = elltool.linsys.LinSysFactory.create(A, B, CB);
@@ -56,7 +56,7 @@ s2 = elltool.linsys.LinSysFactory.create(A2, B2, CB);
 %
 % On your screen you see the reach set evolving in time from 0 to 10 (reach tube). Its external and internal approximations are computed for two directions specified by matrix L0. Function 'plot_ea' plots external (blue by default), and function 'plot_ia' - internal (green by default) approximations.
 rs = elltool.reach.ReachContinuous(s, X0, L0, [0 T],...
-    'isJustCheck', false, 'regTol', 1e-4);
+    'isRegEnabled', true, 'isJustCheck', false, 'regTol', 1e-4);
 ell_plot([0; 0; 0], 'k.');
 cla;
 rs.plot_ea();
@@ -187,7 +187,7 @@ A = {'0' '-10'; '1/(2 + sin(t))' '-4/(2 + sin(t))'};
 B = {'10' '0'; '0' '1/(2 + sin(t))'};
 s = elltool.linsys.LinSysFactory.create(A, B, CB);
 rs = elltool.reach.ReachContinuous(s, X0, L0, [0 4],...
-    'isJustCheck', false, 'regTol', 1e-4);
+    'isRegEnabled', true, 'isJustCheck', false, 'regTol', 1e-4);
 cla;
 ell_plot([0; 0; 0], '.');
 cla;
@@ -233,16 +233,15 @@ G = [1; 0];
 V.center = {'2*cos(t)'};
 V.shape = {'0.09*(sin(t))^2'};
 s = elltool.linsys.LinSysFactory.create(A, B, CB, G, V);
-% error:
-% rs = elltool.reach.ReachContinuous(s, X0, L0, [0 4],...
-%     'isJustCheck', false, 'regTol', 1e-4);
-% cla;
-% rs.plot_ea();
-% hold on;
-% rs.plot_ia();
-% hold off;
-% ylabel('V_C');
-% zlabel('i_L');
+rs = elltool.reach.ReachContinuous(s, X0, L0, [0 4],...
+    'isRegEnabled', true, 'isJustCheck', false, 'regTol', 1e-2);
+cla;
+rs.plot_ea();
+hold on;
+rs.plot_ia();
+hold off;
+ylabel('V_C');
+zlabel('i_L');
 %%
 % Consider the spring-mass system displayed on the screen. It consists of two blocks, with masses m1 and m2, connected by three springs with spring constants k1 and k2 as shown. It is assumed that there is no friction between the blocks and the floor. The applied forces u1 and u2 must overcome the spring forces and remainder is used to accelerate the blocks.
 %
@@ -295,7 +294,7 @@ L = [1 0 -1 1; 0 -1 1 1]';
 % >> ps = prs.projection([1 0 0 0; 0 1 0 0]');
 % >> ps.plot_ea(); hold on; ps.plot_ia();
 rs = elltool.reach.ReachContinuous(s, X0, L, [0 T],...
-    'isJustCheck', false, 'regTol', 1e-5);
+    'isRegEnabled', true, 'isJustCheck', false, 'regTol', 1e-5);
 ps = rs.projection([1 0 0 0; 0 1 0 0]');
 ell_plot([0; 0; 0], 'k.');
 cla;
@@ -324,7 +323,7 @@ hold off;
 % plots approximations of backward reach tube of the system for target point [2; 3] (used to be initial condition in the previous example, hence, is still denoted X0 in the code), terminating time 1 and initial time 0.
 T = [1 0];
 brs = elltool.reach.ReachContinuous(s, X0, L, T,...
-    'isJustCheck', false, 'regTol', 1e-5);
+    'isRegEnabled', true, 'isJustCheck', false, 'regTol', 1e-5);
 bps = brs.projection([1 0 0 0; 0 1 0 0]');
 cla;
 bps.plot_ea(); hold on; bps.plot_ia(); hold off;

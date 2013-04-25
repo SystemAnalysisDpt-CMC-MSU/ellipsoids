@@ -23,12 +23,7 @@
 				<lsGoodDirSetName type="char" >set1</lsGoodDirSetName>
 				<lsGoodDirSets type="struct" >
 					<set1 type="cell" >
-						<item type="double" >1 0 1 0</item>
                         <item type="double" >1 -1 0 0</item>
-                        <item type="double" >0 -1 0 1</item>
-                        <item type="double" >1 1 -1 1</item>
-                        <item type="double" >-1 1 1 0</item>
-                        <item type="double" >-2 0 1 1</item>
 					</set1>
 				</lsGoodDirSets>
 			</manual>
@@ -112,7 +107,7 @@
 	<regularizationProps type="struct" >
 		<isEnabled type="boolean" >1</isEnabled>
 		<isJustCheck type="boolean" >0</isJustCheck>
-		<regTol type="double" >1e-05</regTol>
+		<regTol type="double" >1e-3</regTol>
 	</regularizationProps>
 </valueObj>
 <keyStr type="char" >snippet721</keyStr>

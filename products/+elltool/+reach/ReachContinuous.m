@@ -503,9 +503,11 @@ classdef ReachContinuous < elltool.reach.AReach
         %
         %     optional:
         %       OptStruct: structure[1,1] - in this class 
-        %           OptStruct doesn't matter anything.
+        %           OptStruct doesn't mean anything.
         %
         %     properties:
+        %       isRegEnabled: logical[1, 1] - if it is 'true' constructor
+        %           is allowed to use regularization.
         %       isJustCheck: logical[1, 1] - if it is 'true' constructor
         %           just check if square matrices are degenerate, if it is
         %           'false' all degenerate matrices will be regularized.
@@ -528,6 +530,7 @@ classdef ReachContinuous < elltool.reach.AReach
             import gras.ellapx.uncertcalc.EllApxBuilder;
             import gras.ellapx.enums.EApproxType;
             import elltool.logging.Log4jConfigurator;
+            import  gras.ellapx.lreachuncert.probdyn.RegProblemDynamics;
             %%
             logger=Log4jConfigurator.getLogger(...
                 'elltool.ReachCont.constrCallCount');
@@ -568,9 +571,11 @@ classdef ReachContinuous < elltool.reach.AReach
                     'specified as ''[t0 t1]'', or, in ',...
                     'discrete-time - as ''[k0 k1]''.']);
             end
-            [reg, ~, isJustCheck, regTol] =...
+            regTolerance = elltool.conf.Properties.getRegTol();
+            [reg, ~, isRegEnabled, isJustCheck, regTol] =...
                 modgen.common.parseparext(varargin,...
-                {'isJustCheck', 'regTol'; true, 1e-5});
+                {'isRegEnabled', 'isJustCheck', 'regTol';...
+                false, false, regTolerance});
             if ~isempty(reg)
                 OptStruct = reg{1};
             else
@@ -611,9 +616,8 @@ classdef ReachContinuous < elltool.reach.AReach
                 ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat, qtStrCVec,...
                 x0Mat, x0Vec, [min(timeVec) max(timeVec)],...
                 relTol, isDisturbance);
-            smartLinSys =...
-                gras.ellapx.lreachuncert.probdyn.RegProblemDynamics(...
-                smartLinSys, isJustCheck, regTol);
+            smartLinSys = RegProblemDynamics.create(smartLinSys,...
+                isRegEnabled, isJustCheck, regTol);
             approxTypeVec = [EApproxType.External EApproxType.Internal];
             self.ellTubeRel = self.makeEllTubeRel(smartLinSys, l0Mat,...
                 [min(timeVec) max(timeVec)], isDisturbance,...

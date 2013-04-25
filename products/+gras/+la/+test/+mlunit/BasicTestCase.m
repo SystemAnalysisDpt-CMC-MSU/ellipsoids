@@ -10,8 +10,8 @@ classdef BasicTestCase < mlunitext.test_case
             self = self@mlunitext.test_case(varargin{:});
             [~,className]=modgen.common.getcallernameext(1);
             shortClassName=mfilename('classname');
-            self.testDataRootDir=[fileparts(which(className)),filesep,'TestData',...
-                filesep,shortClassName];
+            self.testDataRootDir=[fileparts(which(className)),...
+                filesep,'TestData', filesep,shortClassName];
         end
         %
         function testSqrtMCompare(~)
@@ -29,7 +29,7 @@ classdef BasicTestCase < mlunitext.test_case
             end
         end
         %
-        function self=testSqrtMSimple(self)
+        function self = testSqrtMSimple(self)
             import gras.la.sqrtmpos;
             import gras.la.ismatposdef;
             import gras.gen.sqrtpos;
@@ -76,6 +76,7 @@ classdef BasicTestCase < mlunitext.test_case
                 end
             end
         end
+        %
         function self = testSqrtM(self)
             import gras.la.sqrtmpos;
             MAX_TOL = 1e-6;
@@ -136,6 +137,7 @@ classdef BasicTestCase < mlunitext.test_case
             self.runAndCheckError('gras.la.sqrtmpos(testMat)',...
                 'wrongInput');
         end
+        %
         function self = testIsMatSymm(self)
             import gras.la.ismatsymm;
             
@@ -159,8 +161,10 @@ classdef BasicTestCase < mlunitext.test_case
             testAMat = 10*rand(20,20)+diag(1:19,1);
             mlunit.assert( ~ismatsymm(testAMat) );
             
-            self.runAndCheckError('gras.la.ismatsymm(eye(5,7))','wrongInput:nonSquareMat');
+            self.runAndCheckError('gras.la.ismatsymm(eye(5,7))',...
+                'wrongInput:nonSquareMat');
         end
+        %
         function testIsMatPosSimple(~)
             isOk=~gras.la.ismatposdef(zeros(2),1e-7);
             mlunit.assert(isOk);
@@ -169,10 +173,11 @@ classdef BasicTestCase < mlunitext.test_case
             isOk=~gras.la.ismatposdef(zeros(2),1e-7,false);
             mlunit.assert(isOk);
             isOk=~gras.la.ismatposdef(zeros(2));
-            mlunit.assert(isOk);    
+            mlunit.assert(isOk);
             isOk=gras.la.ismatposdef(zeros(2),0,true);
-            mlunit.assert(isOk);              
+            mlunit.assert(isOk);
         end
+        %
         function self = testIsMatPosAndPosSemDef(self)
             import gras.la.ismatposdef;
             %
@@ -277,10 +282,11 @@ classdef BasicTestCase < mlunitext.test_case
                     'wrongInput:notPosSemDef');
             end
         end
+        %
         function self = testRegPosDef(self)
             import gras.la.regposdefmat;
             REG_TOL = 1e-5;
-            ABS_TOL = 1e-5;
+            ABS_TOL = 1e-8;
             matDim = 10;
             % regularize zero matrix
             zeroMat = zeros(matDim);
@@ -288,8 +294,28 @@ classdef BasicTestCase < mlunitext.test_case
             regZeroMat = regposdefmat(zeroMat, REG_TOL);
             isEqual = norm(regZeroMat - expRegZeroMat) <= ABS_TOL;
             mlunit.assert_equals(isEqual, true);
+            % more complex test
+            shMat = [4 4 14; 4 4 14; 14 14 78];
+            isOk = gras.la.ismatposdef(shMat, ABS_TOL);
+            mlunitext.assert(~isOk);
+            shMat = regposdefmat(shMat, REG_TOL);
+            isOk = gras.la.ismatposdef(shMat, ABS_TOL);
+            mlunitext.assert(isOk);
+            % negative tests
+            wrongRelTol = -REG_TOL;
+            self.runAndCheckError(...
+                'gras.la.regposdefmat(zeroMat, wrongRelTol)',...
+                'wrongInput');
             %
-            
+            wrongRelTol = [REG_TOL REG_TOL];
+            self.runAndCheckError(...
+                'gras.la.regposdefmat(zeroMat, wrongRelTol)',...
+                'wrongInput');
+            %
+            nonSquareMat = zeros(2, 3);
+            self.runAndCheckError(...
+                'gras.la.regposdefmat(nonSquareMat, REG_TOL)',...
+                'wrongInput:nonSquareMat');
         end
     end
 end
