@@ -80,13 +80,14 @@ classdef ReachDiscrete < elltool.reach.AReach
         end
         %
         function [QQ, LL] = eedist_de(ntv, X0, l0, mydata, N, back,...
-                            mnmx,absTol)
+                            mnmx, absTol)
         %
         % EEDIST_DE - recurrence relation for the shape
         % matrix of external ellipsoid for discrete-time 
         % system with disturbance.
         %
             import elltool.conf.Properties;
+            import gras.la.regposdefmat;
             LL = l0;
             l = l0;
             QQ = X0;
@@ -103,13 +104,13 @@ classdef ReachDiscrete < elltool.reach.AReach
                     GQG = 0.5 * (GQG + GQG');
                     Q   = Ai * Q * Ai';
                     if rank(Q) < N
-                        Q = ell_regularize(Q, absTol);
+                        Q = regposdefmat(Q, absTol);
                     end
                     if rank(BPB) < N
-                        BPB = ell_regularize(BPB, absTol);
+                        BPB = regposdefmat(BPB, absTol);
                     end
                     if rank(GQG) < N
-                        GQG = ell_regularize(GQG, absTol);
+                        GQG = regposdefmat(GQG, absTol);
                     end
                     l = A' * l;
                     if mnmx > 0 % minmax case
@@ -147,12 +148,12 @@ classdef ReachDiscrete < elltool.reach.AReach
                     end
                     if dd > 0
                         e2 = realsqrt(absTol*absTol + 2*max(eig(BPB))*absTol);
-                        BPB = ell_regularize(BPB, e2);
+                        BPB = regposdefmat(BPB, e2);
                     elseif rank(BPB) < N
-                        BPB = ell_regularize(BPB, absTol);
+                        BPB = regposdefmat(BPB, absTol);
                     end
                     if rank(GQG) < N
-                        GQG = ell_regularize(GQG, absTol);
+                        GQG = regposdefmat(GQG, absTol);
                     end
                     l = Ai' * l;
                     if mnmx > 0 % minmax case
@@ -183,6 +184,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             % discrete-time system without disturbance.
             %
             import elltool.conf.Properties;
+            import gras.la.regposdefmat;
             LL = l0;
             l = l0;
             QQ = X0;
@@ -197,10 +199,10 @@ classdef ReachDiscrete < elltool.reach.AReach
                     BPB = 0.5 * (BPB + BPB');
                     Q = Ai * Q * Ai';
                     if rank(Q) < N
-                        Q = ell_regularize(Q, absTol);
+                        Q = regposdefmat(Q, absTol);
                     end
                     if rank(BPB) < N
-                        BPB = ell_regularize(BPB, absTol);
+                        BPB = regposdefmat(BPB, absTol);
                     end
                     l = A' * l;
                     E = minksum_ea([ellipsoid(0.5*(Q+Q')) ellipsoid(0.5*(BPB+BPB'))], l);
@@ -224,9 +226,9 @@ classdef ReachDiscrete < elltool.reach.AReach
                     end
                     if dd > 0
                         e2 = realsqrt(absTol*absTol + 2*max(eig(BPB))*absTol);
-                        BPB = ell_regularize(BPB, e2);
+                        BPB = regposdefmat(BPB, e2);
                     elseif rank(BPB) < N
-                        BPB = ell_regularize(BPB, absTol);
+                        BPB = regposdefmat(BPB, absTol);
                     end
                     l = Ai' * l;
                     E = minksum_ea([ellipsoid(0.5*(Q+Q'))...
@@ -258,6 +260,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             % discrete-time system with disturbance.
             %
             import elltool.conf.Properties;
+            import gras.la.regposdefmat;
             LL = l0;
             l = l0;
             QQ = X0;
@@ -274,13 +277,13 @@ classdef ReachDiscrete < elltool.reach.AReach
                     GQG = 0.5 * (GQG + GQG');
                     Q = Ai * Q * Ai';
                     if rank(Q) < N
-                        Q = ell_regularize(Q, absTol);
+                        Q = regposdefmat(Q, absTol);
                     end
                     if rank(BPB) < N
-                        BPB = ell_regularize(BPB, absTol);
+                        BPB = regposdefmat(BPB, absTol);
                     end
                     if rank(GQG) < N
-                        GQG = ell_regularize(GQG, absTol);
+                        GQG = regposdefmat(GQG, absTol);
                     end
                     l = A' * l;
                     if mnmx > 0 % minmax case
@@ -318,12 +321,12 @@ classdef ReachDiscrete < elltool.reach.AReach
                     end
                     if dd > 0
                         e2  = realsqrt(absTol*absTol + 2*max(eig(BPB))*absTol);
-                        BPB = ell_regularize(BPB, e2);
+                        BPB = regposdefmat(BPB, e2);
                     elseif rank(BPB) < N
-                        BPB = ell_regularize(BPB, absTol);
+                        BPB = regposdefmat(BPB, absTol);
                     end
                     if rank(GQG) < N
-                        GQG = ell_regularize(GQG, absTol);
+                        GQG = regposdefmat(GQG, absTol);
                     end
                     l = Ai' * l;
                     if mnmx > 0 % minmax case
@@ -354,6 +357,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             % discrete-time system without disturbance.
             %
             import elltool.conf.Properties;
+            import gras.la.regposdefmat;
             LL = l0;
             l = l0;
             QQ = X0;
@@ -368,10 +372,10 @@ classdef ReachDiscrete < elltool.reach.AReach
                     BPB = 0.5 * (BPB + BPB');
                     Q = Ai * Q * Ai';
                     if rank(Q) < N
-                        Q = ell_regularize(Q, absTol);
+                        Q = regposdefmat(Q, absTol);
                     end
                     if rank(BPB) < N
-                        BPB = ell_regularize(BPB, absTol);
+                        BPB = regposdefmat(BPB, absTol);
                     end
                     l = A' * l;
                     E = minksum_ia([ellipsoid(0.5*(Q+Q'))...
@@ -397,9 +401,9 @@ classdef ReachDiscrete < elltool.reach.AReach
                     end
                     if dd > 0
                         e2 = realsqrt(absTol*absTol + 2*max(eig(BPB))*absTol);
-                        BPB = ell_regularize(BPB, e2);
+                        BPB = regposdefmat(BPB, e2);
                     elseif rank(BPB) < N
-                        BPB = ell_regularize(BPB, absTol);
+                        BPB = regposdefmat(BPB, absTol);
                     end
                     l = Ai' * l;
                     E = minksum_ia([ellipsoid(0.5*(Q+Q'))...
@@ -753,9 +757,9 @@ classdef ReachDiscrete < elltool.reach.AReach
             import elltool.conf.Properties;
             import modgen.common.throwerror;
             import elltool.logging.Log4jConfigurator;
-            
+            import gras.la.regposdefmat;
+            %
             persistent logger;
-            
             neededPropNameList =...
                 {'absTol', 'relTol', 'nPlot2dPoints',...
                 'nPlot3dPoints','nTimeGridPoints'};
@@ -911,7 +915,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                     AC(:, i) = reshape(A, d1*d1, 1);
                     if isa(linSys, 'elltool.linsys.LinSysDiscrete') ...
                             && (rank(A) < d1)
-                        A        = ell_regularize(A, absTol);
+                        A        = regposdefmat(A, self.absTol);
                         DD(1, i) = 1;
                     elseif isa(linSys, 'elltool.linsys.LinSysDiscrete')
                         DD(1, i) = 0;
@@ -928,7 +932,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 AC = aMat;
                 if isa(linSys, 'elltool.linsys.LinSysDiscrete') ...
                         && (rank(aMat) < d1)
-                    mydata.A     = ell_regularize(aMat, absTol);
+                    mydata.A     = regposdefmat(aMat, self.absTol);
                     mydata.delta = 1;
                 elseif isa(linSys, 'elltool.linsys.LinSysDiscrete')
                     mydata.A     = aMat;
@@ -2722,9 +2726,9 @@ classdef ReachDiscrete < elltool.reach.AReach
             import modgen.common.throwerror;
             import elltool.logging.Log4jConfigurator;
             import gras.la.sqrtmpos;
-            
+            import gras.la.regposdefmat;
+            %
             persistent logger;
-            
             if nargin < 2
                 throwerror('insufficient number of input arguments.');
             end
@@ -2834,7 +2838,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                     A = self.matrix_eval(aMat, newReachObj.time_values(i));
                     AC = [AC reshape(A, d1*d1, 1)];
                     if isa(linSys, 'elltool.linsys.LinSysDiscrete') && (rank(A) < d1)
-                        A = ell_regularize(A, absTol);
+                        A = regposdefmat(A, self.absTol);
                         DD = [DD 1];
                     elseif isa(linSys, 'elltool.linsys.LinSysDiscrete')
                         DD = [DD 0];
@@ -2851,7 +2855,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 AC = aMat;
                 if isa(linSys, 'elltool.linsys.LinSysDiscrete') ...
                         && (rank(aMat) < d1)
-                    mydata.A     = ell_regularize(aMat, absTol);
+                    mydata.A     = regposdefmat(aMat, self.absTol);
                     mydata.delta = 1;
                 elseif isa(linSys, 'elltool.linsys.LinSysDiscrete')
                     mydata.A     = aMat;

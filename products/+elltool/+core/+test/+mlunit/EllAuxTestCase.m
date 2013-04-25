@@ -6,12 +6,12 @@ classdef EllAuxTestCase < mlunitext.test_case
          function self=EllAuxTestCase(varargin)
             self=self@mlunitext.test_case(varargin{:});
          end
-         
+         %
          function self = testRegularization(self)
              import modgen.common.checkmultvar;
-             
+             %
              shMat = [4 4 14; 4 4 14; 14 14 78];
-             shMat = ell_regularize(shMat, self.ABS_TOL);
+             shMat = gras.la.regposdefmat(shMat, self.ABS_TOL);
              checkmultvar('gras.la.ismatposdef(x1,x2,1)', 2, shMat,...
                  self.ABS_TOL, 'errorTag','wrongInput','errorMessage',...
                  'shape matrix must be positive semi-definite after ell_regularize.');

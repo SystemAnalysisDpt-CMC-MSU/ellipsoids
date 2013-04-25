@@ -487,21 +487,29 @@ classdef ReachContinuous < elltool.reach.AReach
     end
     methods
         function self =...
-                ReachContinuous(linSys, x0Ell, l0Mat, timeVec, OptStruct)
+                ReachContinuous(linSys, x0Ell, l0Mat, timeVec, varargin)
         % ReachContinuous - computes reach set 
         % approximation of the continuous linear system 
         % for the given time interval.
         % Input:
         %     regular:
         %       linSys: elltool.linsys.LinSys object - 
-        %           given linear system 
+        %           given linear system .
         %       x0Ell: ellipsoid[1, 1] - ellipsoidal set of 
-        %           initial conditions 
-        %       l0Mat: matrix of double - l0Mat 
-        %       timeVec: double[1, 2] - time interval
-        %           timeVec(1) must be less then timeVec(2)
-        %       OptStruct: structure[1,1] in this class 
-        %           OptStruct doesn't matter anything
+        %           initial conditions.
+        %       l0Mat: double[nRows, nColumns] - initial good directions
+        %           matrix. 
+        %       timeVec: double[1, 2] - time interval.
+        %
+        %     optional:
+        %       OptStruct: structure[1,1] - in this class 
+        %           OptStruct doesn't matter anything.
+        %
+        %     properties:
+        %       isJustCheck: logical[1, 1] - if it is 'true' constructor
+        %           just check if square matrices are degenerate, if it is
+        %           'false' all degenerate matrices will be regularized.
+        %       regTol: double[1, 1] - regularization precision.
         %
         % Output:
         %   regular:
@@ -525,7 +533,7 @@ classdef ReachContinuous < elltool.reach.AReach
                 'elltool.ReachCont.constrCallCount');
             logger.debug(sprintf('constructor is called %s',...
                 modgen.exception.me.printstack(...
-                dbstack,'useHyperlink',false)));
+                dbstack, 'useHyperlink', false)));
             %
             if (nargin == 0) || isempty(linSys)
                 return;
@@ -560,7 +568,15 @@ classdef ReachContinuous < elltool.reach.AReach
                     'specified as ''[t0 t1]'', or, in ',...
                     'discrete-time - as ''[k0 k1]''.']);
             end
-            if (nargin < 5) || ~(isstruct(OptStruct))
+            [reg, ~, isJustCheck, regTol] =...
+                modgen.common.parseparext(varargin,...
+                {'isJustCheck', 'regTol'; true, 1e-5});
+            if ~isempty(reg)
+                OptStruct = reg{1};
+            else
+                OptStruct = [];
+            end
+            if ~isstruct(OptStruct)
                 OptStruct = [];
                 OptStruct.approximation = 2;
                 OptStruct.saveAll = 0;
@@ -595,6 +611,9 @@ classdef ReachContinuous < elltool.reach.AReach
                 ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat, qtStrCVec,...
                 x0Mat, x0Vec, [min(timeVec) max(timeVec)],...
                 relTol, isDisturbance);
+            smartLinSys =...
+                gras.ellapx.lreachuncert.probdyn.RegProblemDynamics(...
+                smartLinSys, isJustCheck, regTol);
             approxTypeVec = [EApproxType.External EApproxType.Internal];
             self.ellTubeRel = self.makeEllTubeRel(smartLinSys, l0Mat,...
                 [min(timeVec) max(timeVec)], isDisturbance,...
