@@ -62,6 +62,7 @@ if isChar
 else
     isOk=feval(typeSpec,varargin{1:nPlaceHolders});
 end
+
 if ~isOk
     %
     if ischar(typeSpec)

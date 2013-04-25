@@ -27,5 +27,5 @@ end
 [vMat,fMat]=shrinkfacetri(vMat,fMat,0,depth,@normvert);
 end
 function x=normvert(x)
-x=x./repmat(sqrt(sum((x.*x),2)),1,3);
+x=x./repmat(realsqrt(sum((x.*x),2)),1,3);
 end

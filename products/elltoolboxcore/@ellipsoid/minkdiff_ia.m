@@ -115,7 +115,7 @@ coefVec=numVec./denomVec;
 intApprEllVec(nDirs) = ellipsoid();
 arrayfun(@(x) fSingleDir(x), 1:nDirs)
     function fSingleDir(index)
-        coef = sqrt(coefVec(index));
+        coef = realsqrt(coefVec(index));
         shMat = (1 - (1/coef))*fstEllShMat + (1 - coef)*secEllShMat;
         intApprEllVec(index).center = centVec;
         intApprEllVec(index).shape = shMat;

@@ -29,7 +29,7 @@ C =0.25;
           mval = v;
         end
       end
-      x = l/sqrt(mval);
+      x = l/realsqrt(mval);
       yy = [yy x];
     end
     yy = [T*ones(1, N); yy];
