@@ -23,7 +23,7 @@ classdef SuiteBasic < mlunitext.test_case
             check(@()supgeomdiff2d(rho2Vec,rho1Vec.',lMat));
             check(@()supgeomdiff2d(rho2Vec.',rho1Vec.',lMat.'));
             function check(fFail)
-            self.runAndCheckError(fFail,'wrongInput');
+                self.runAndCheckError(fFail,'wrongInput');
             end
             
         end
@@ -94,6 +94,6 @@ classdef SuiteBasic < mlunitext.test_case
             nVec=realsqrt(sum(yMat.*yMat,2));
             mlunit.assert_equals(true,max(nVec)<=MAX_NORM);
             mlunit.assert_equals(true,min(nVec)>=MIN_NORM);
-        end        
+        end
     end
 end

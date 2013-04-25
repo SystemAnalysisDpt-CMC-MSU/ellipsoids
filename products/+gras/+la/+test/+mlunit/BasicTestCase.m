@@ -12,14 +12,30 @@ classdef BasicTestCase < mlunitext.test_case
             shortClassName=mfilename('classname');
             self.testDataRootDir=[fileparts(which(className)),filesep,'TestData',...
                 filesep,shortClassName];
-            
         end
-        function self = testSqrtMSimple(self)
+        %
+        function testSqrtMCompare(~)
+            inpMat=eye(2);
+            check(1.5,0,true);
+            check(1.5,2,true);
+            check(1.5,1,true);
+            inpMat=diag([1;-1]);
+            check(1.5,1,true);
+            check(1.5,1.5,true);
+            function check(lTol,rTol,isExpOk)
+                import gras.la.sqrtmpos;
+                isOk=isequal(sqrtmpos(inpMat,lTol),sqrtmpos(inpMat,rTol));
+                mlunit.assert_equals(isOk,isExpOk);
+            end
+        end
+        %
+        function self=testSqrtMSimple(self)
             import gras.la.sqrtmpos;
             import gras.la.ismatposdef;
             import gras.gen.sqrtpos;
             self.runAndCheckError('gras.la.sqrtmpos(eye(2),-1)',...
                 'wrongInput:absTolNegative');
+            %
             mlunitext.assert(isreal(sqrtmpos(diag([0 -0.001]),0.001)));
             %
             minEigVal=-0.001;
