@@ -36,12 +36,11 @@ classdef ContinuousReachRefineTestCase < mlunitext.test_case
         end
         function self = testRefMisc(self)
             lSys=buildLS();
-            lDirMat=[1,-1,0,1;
-                0,2,1,-1];
-            nN=2;
-            l1DirMat=lDirMat(:,1:nN);
-            l2DirMat=lDirMat(:,nN+1:end);
+            %Check Evolve after Refine
+            checkEvRef(1);
+            checkEvRef(2);
             %
+            setDir(1);
             %Check Refine direct time
             timeVec=[0 0.5];
             reachSetObj=buildRS(l1DirMat);
@@ -85,9 +84,37 @@ classdef ContinuousReachRefineTestCase < mlunitext.test_case
                 reachObjNew=reachSetObj;
                 reachObjNew.refine(l2DirMat);
                 reachSetObj=buildRS(lDirMat);
+                checkRes(reachObjNew);
+            end
+            function checkRes(reachObjNew)
                 isEqual = reachSetObj.isEqual(reachObjNew);
                 mlunit.assert_equals(true,isEqual);
             end
+            function setDir(typeVal)
+                switch typeVal
+                    case 1
+                        lDirMat=[1,-1,0,1;
+                            0,1,1,-2];
+                        nN=2;
+                        l1DirMat=lDirMat(:,1:nN);
+                        l2DirMat=lDirMat(:,nN+1:end);
+                    case 2
+                        lDirMat=[1,-1,1,10,0,1;
+                            0,2,5,1,1,-1];
+                        nN=3;
+                        l1DirMat=lDirMat(:,1:nN);
+                        l2DirMat=lDirMat(:,nN+1:end);
+                end
+            end
+            function checkEvRef(typeVal)
+                setDir(typeVal);              
+                timeVec=[0 0.5];
+                reachObjNew=buildRS(l1DirMat);
+                reachObjNew.refine(l2DirMat);
+                timeVec=[0 1];
+                reachObjNew.evolve(timeVec(end));
+                reachSetObj=buildRS(lDirMat);
+            end            
             function reachSet = buildRS(lDirMat)
                 x0EllObj=ellipsoid(eye(2));
                 reachSet=elltool.reach.ReachContinuous(...

@@ -163,7 +163,7 @@ classdef ReachContinuous < elltool.reach.AReach
                 end
             end
         end
-        function dataCVec = evolveApprox(self,...
+        function [dataCVec, indVec]= evolveApprox(self,...
                 newTimeVec, newLinSys, approxType)
             import gras.ellapx.smartdb.F;
             APPROX_TYPE = F.APPROX_TYPE;
@@ -207,6 +207,10 @@ classdef ReachContinuous < elltool.reach.AReach
                     ellTubeRelVec{il0Num}.getTuplesFilteredBy(...
                     APPROX_TYPE, approxType).getData();
             end
+            [~,isThereVec]=self.ellTubeRel.getTuplesFilteredBy(...
+                APPROX_TYPE, approxType);
+            indVec=find(isThereVec);
+            indVec=indVec(end:-1:1);
         end
         function ellTubeRel = makeEllTubeRel(self, smartLinSys, l0Mat,...
                 timeVec, isDisturb, calcPrecision, approxTypeVec)
@@ -904,9 +908,9 @@ classdef ReachContinuous < elltool.reach.AReach
             newReachObj.dirMat=self.dirMat;
             %
             newTimeVec = newReachObj.switchSysTimeVec(end - 1 : end);
-            dataIntCVec = self.evolveApprox(newTimeVec,...
+            [dataIntCVec indIntVec] = self.evolveApprox(newTimeVec,...
                 newLinSys, EApproxType.Internal);
-            dataExtCVec = self.evolveApprox(newTimeVec,...
+            [dataExtCVec indExtVec] = self.evolveApprox(newTimeVec,...
                 newLinSys, EApproxType.External);
             dataCVec = [dataIntCVec dataExtCVec];
             %% cat old and new ellTubeRel
@@ -916,14 +920,10 @@ classdef ReachContinuous < elltool.reach.AReach
             if self.isbackward()
                 newEllTubeRel = self.rotateEllTubeRel(newEllTubeRel);
             end
-            %% TEMPORARY CHECK
-            absTol=elltool.conf.Properties.getAbsTol();
-            lVecLeftList=cellfun(@(x)x(:,end),self.ellTubeRel.ltGoodDirMat,'UniformOutput',false);
-            lVecRightList=cellfun(@(x)x(:,1),newEllTubeRel.ltGoodDirMat,'UniformOutput',false);
-            isCloseVec=cellfun(@(x,y)max(abs(x-y))<=absTol,lVecLeftList,lVecRightList);
-            if ~all(isCloseVec)
-                throwerror('badState','Oops, we should not be here, directions are inconsistent');
-            end
+            %
+            indVec=[indIntVec; indExtVec];
+            [~,indRelVec]=sort(indVec);
+            newEllTubeRel=newEllTubeRel.getTuples(indRelVec);
             %
             newReachObj.ellTubeRel =...
                 self.ellTubeRel.cat(newEllTubeRel);
