@@ -39,10 +39,10 @@
 	</initial_set>
 	<control_restriction type="struct" >
 		<Q type="cell" size="8 1">
-			<item type="char" >0.000000001 0 0 0 0 0 0 0</item>
-			<item type="char" >0 0.000000001 0 0 0 0 0 0</item>
-			<item type="char" >0 0 0.000000001 0 0 0 0 0</item>
-			<item type="char" >0 0 0 0.000000001 0 0 0 0</item>
+			<item type="char" >0.000001 0 0 0 0 0 0 0</item>
+			<item type="char" >0 0.000001 0 0 0 0 0 0</item>
+			<item type="char" >0 0 0.000001 0 0 0 0 0</item>
+			<item type="char" >0 0 0 0.000001 0 0 0 0</item>
 			<item type="char" >0 0 0 0 1 0 0 0</item>
 			<item type="char" >0 0 0 0 0 1 0 0</item>
 			<item type="char" >0 0 0 0 0 0 1 0</item>

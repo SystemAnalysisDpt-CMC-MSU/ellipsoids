@@ -7,4 +7,4 @@ function volVal = ellvolume(QMat)
 %            System Analysis Department 2011 $
 %
 nDims=size(QMat,1);
-volVal=pi^(nDims*0.5)*sqrt(det(QMat))./gamma(0.5*nDims+1);
+volVal=pi^(nDims*0.5)*realsqrt(det(QMat))./gamma(0.5*nDims+1);
