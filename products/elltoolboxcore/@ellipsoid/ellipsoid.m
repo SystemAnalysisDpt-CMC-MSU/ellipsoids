@@ -109,8 +109,6 @@ classdef ellipsoid < handle
             centerVecVec=self.centerVec;
         end
     end
-    
-    
     methods
         function [ellMat] = ellipsoid(varargin)
             %
@@ -308,15 +306,5 @@ classdef ellipsoid < handle
     end
     methods (Static)
         checkIsMe(someObj,varargin)
-        function outObj=loadobj(inpObj)
-            if isstruct(inpObj)
-                outObj=ellipsoid(inpObj.center,inpObj.shape,...
-                    'absTol',inpObj.absTol,'relTol',inpObj.relTol,...
-                    'nPlot2dPoints',inpObj.nPlot2dPoints,'nPlot3dPoints',...
-                    inpObj.nPlot2dPoints);
-            else
-                outObj=inpObj;
-            end
-        end
     end
 end
