@@ -11,13 +11,12 @@ classdef GoodDirectionSet
     properties (Constant, GetAccess = protected)
         ODE_NORM_CONTROL='on';
         CALC_PRECISION_FACTOR=0.001;
+        CALC_CGRID_COUNT = 2000;
     end
     properties (Constant, GetAccess = private)
         % (temporary) algorithm:
-        %   0 - X(t, t0)
-        %   1 - X(t, t0) / matrixnorm(X(t, t0))
-        %   2 - R(t, t0)
-        %   3 - [R(t, t0); matrixnorm(X(t, t0))]
+        %   0 - X(s, t)
+        %   1 - R(s, t)
         %
         CALC_ALGORITHM = 0;
     end
@@ -71,15 +70,6 @@ classdef GoodDirectionSet
             %
             matOpFactory = MatrixOperationsFactory.create(timeVec);
             %
-            
-            %Rtt0Dynamics = self.calcRtt0Dynamics(pDefObj, calcPrecision);
-            %Rt0tTransDynamics = ...
-            %    matOpFactory.transpose(matOpFactory.inv(Rtt0Dynamics));
-            %Rst0TransConstMatFunc = ...
-            %    ConstMatrixFunction(Rtt0Dynamics.evaluate(sTime).');
-            %RstTransDynamics = ...
-            %    matOpFactory.rMultiply(Rt0tTransDynamics,...
-            %    Rst0TransConstMatFunc);
             self.sTime=sTime;
             %
             RstDynamics = self.calcRstDynamics(pDefObj, calcPrecision);
@@ -111,7 +101,7 @@ classdef GoodDirectionSet
         end
     end
     methods (Access = private)
-            function RstDynamics = calcRstDynamics(self, pDefObj, ...
+        function RstDynamics = calcRstDynamics(self, pDefObj, ...
                 calcPrecision)
             %
             import gras.interp.MatrixInterpolantFactory;
@@ -127,16 +117,25 @@ classdef GoodDirectionSet
             %
             t0 = pDefObj.gett0();
             t1 = pDefObj.gett1();
-            nTimes = length( pDefObj.getTimeVec());
-            sRstInitialMat = eye(sizeSysVec);
+            switch (self.CALC_ALGORITHM)
+                case 0
+                    sRstInitialMat = eye(sizeSysVec);
+                case 1
+                    sRstInitialMat = normaliz(eye(sizeSysVec));
+            end
             %
             % calculation of R(s, t) if t > s
             %
             if (self.sTime < t1)
-                timeVec = linspace(self.sTime, t1, nTimes);
-                fXstDerivFunc = @(t, x) fXstDirectFunc(t, x, @(u) fAtMat(u));
+                timeVec = linspace(self.sTime, t1, self.CALC_CGRID_COUNT);
+                switch (self.CALC_ALGORITHM)
+                    case 0
+                        fRstDerivFunc = @(t, x) fXstDirectFunc(t, x, @(u) fAtMat(u));
+                    case 1
+                        fRstDerivFunc = @(t, x) fRstDirectFunc(t, x, @(u) fAtMat(u));
+                end
                 [timeRstRightVec,dataRstRightArray] = ...
-                    solverObj.solve(fXstDerivFunc, timeVec, sRstInitialMat);
+                    solverObj.solve(fRstDerivFunc, timeVec, sRstInitialMat);
             else
                 timeRstRightVec = [];
                 dataRstRightArray = [];
@@ -145,11 +144,19 @@ classdef GoodDirectionSet
             % calculation of R(s, t) if t < s
             %
             if (self.sTime > t0)
-                timeVec = linspace(0, self.sTime - t0, nTimes);
-                fXstDerivFunc = ...
-                    @(t, x) fXstOppositeFunc(t, x, @(u) fAtMat(u), self.sTime);
+                timeVec = linspace(0, self.sTime - t0, self.CALC_CGRID_COUNT);
+                switch (self.CALC_ALGORITHM)
+                    case 0
+                        fRstDerivFunc = ...
+                            @(t, x) fXstOppositeFunc(t, x, ...
+                            @(u) fAtMat(u), self.sTime);
+                    case 1
+                        fRstDerivFunc = ...
+                            @(t, x) fRstOppositeFunc(t, x, ...
+                            @(u) fAtMat(u), self.sTime);
+                end
                 [timeRstLeftVec,dataRstLeftArray] = ...
-                    solverObj.solve(fXstDerivFunc, timeVec, sRstInitialMat);
+                    solverObj.solve(fRstDerivFunc, timeVec, sRstInitialMat);
                 %
                 timeRstLeftVec(end) = []; dataRstLeftArray(:,:,1) = [];
                 timeRstLeftVec = t0 + timeRstLeftVec;
@@ -164,124 +171,43 @@ classdef GoodDirectionSet
             %
             RstDynamics=MatrixInterpolantFactory.createInstance(...
                 'column',dataRstArray,timeRstVec);
-        end
-        %
-        function Rtt0Dynamics = calcRtt0Dynamics(self, pDefObj, ...
-                calcPrecision)
-            %
-            import gras.interp.MatrixInterpolantFactory;
-            import gras.ode.MatrixODESolver;
-            %
-            fAtMat = @(t) pDefObj.getAtDynamics().evaluate(t);
-            sizeSysVec = size(fAtMat(0));
-            %
-            % (temporary) fRtt0DerivFunc selection
-            %
-            switch (self.CALC_ALGORITHM)
-                case 0
-                    fRtt0DerivFunc = ...
-                        @(t,x) fXtt0DerivFunc(t, x, @(u) fAtMat(u));
-                case 1
-                    fRtt0DerivFunc = ...
-                        @(t,x) fXtt0DerivFunc(t, x, @(u) fAtMat(u));
-                case 2
-                    fRtt0DerivFunc = ...
-                        @(t,x) fRtt0SimDerivFunc(t, x, @(u) fAtMat(u));
-                case 3
-                    fRtt0DerivFunc = ...
-                        @(t,x) fRtt0ExtDerivFunc(t, x, @(u) fAtMat(u), ...
-                        sizeSysVec);
-            end
-            %
-            % (temporary) sRtt0InitialMat selection
-            %
-            switch (self.CALC_ALGORITHM)
-                case 0
-                    sRtt0InitialMat = eye(sizeSysVec);
-                case 1
-                    sRtt0InitialMat = eye(sizeSysVec);
-                case 2
-                    sRtt0InitialMat = eye(sizeSysVec);
-                    sRtt0InitialMat = normaliz(sRtt0InitialMat);
-                case 3
-                    sRtt0InitialMat = eye(sizeSysVec);
-                    norm = sqrt(sum(sum(sRtt0InitialMat, 2)));
-                    sRtt0InitialMat = normaliz(sRtt0InitialMat);
-                    sRtt0InitialMat = [sRtt0InitialMat(:); norm];
-            end
-            %
-            odeArgList = self.getOdePropList(calcPrecision);
-            %
-            if (self.CALC_ALGORITHM == 3)
-                numelSys = prod(sizeSysVec);
-                solverObj=MatrixODESolver([numelSys + 1, 1],@ode45, ...
-                    odeArgList{:});
-            else
-                solverObj=MatrixODESolver(sizeSysVec,@ode45, ...
-                    odeArgList{:});
-            end
-            %
-            [timeRtt0Vec,dataRtt0Array]=solverObj.solve(fRtt0DerivFunc,...
-                pDefObj.getTimeVec(),sRtt0InitialMat);
-            %
-            % (temporary) postprocessing
-            %
-            switch (self.CALC_ALGORITHM)
-                case 1
-                    dataRtt0Array = normaliz(dataRtt0Array);
-                case 3
-                    sizeRtt0ArrayVec = size(dataRtt0Array);
-                    normVec = dataRtt0Array(sizeRtt0ArrayVec(1), ...
-                        sizeRtt0ArrayVec(2), :);
-                    normVec = repmat(normVec, [sizeSysVec, 1]);
-                    dataRtt0Array = ...
-                        dataRtt0Array(1:(sizeRtt0ArrayVec(1) - 1), :, :);
-                    dataRtt0Array = reshape(dataRtt0Array, [sizeSysVec, ...
-                        sizeRtt0ArrayVec(3)]);
-                    dataRtt0Array = dataRtt0Array .* normVec;
-            end
-            %
-            Rtt0Dynamics=MatrixInterpolantFactory.createInstance(...
-                'column',dataRtt0Array,timeRtt0Vec);
-        end
+        end 
     end
 end
 %
 % equations for X(s, t)
 %
-function dx = fXstDirectFunc(t, x, fAt)
-    dx = -x * fAt(t);
+function dxMat = fXstDirectFunc(t, xMat, fAtMat)
+    dxMat = -xMat * fAtMat(t);
 end
 %
-function dx = fXstOppositeFunc(t, x, fAt, sTime) % time will be t' = s - t
-    dx = x * fAt(sTime - t);
+function dxMat = fXstOppositeFunc(t, xMat, fAtMat, sTime) 
+    dxMat = xMat * fAtMat(sTime - t); % time will be t' = s - t
 end
 %
-% new equation for R(t, t0)
+% equations for R(s, t)
 %
-function dx = fRtt0SimDerivFunc(t, x, fAt)
-    cachedMat = fAt(t) * x;
-    %
-    dx = cachedMat - x * sum(x(:) .* cachedMat(:));
+function dxMat = fRstDirectFunc(t, xMat, fAtMat)
+    cachedMat = -xMat * fAtMat(t);
+    dxMat = cachedMat - xMat * dot(xMat(:), cachedMat(:));
 end
 %
-% (temporary) old equation for X(t, t0)
-%
-function dx = fXtt0DerivFunc(t, x, fAt)
-    dx = fAt(t) * x;
+function dxMat = fRstOppositeFunc(t, xMat, fAtMat, sTime) 
+    cachedMat = xMat * fAtMat(sTime - t); % time will be t' = s - t
+    dxMat = cachedMat - xMat * dot(xMat(:), cachedMat(:));
 end
 %
 % (temporary) new equation for R(t, t0) and matrixnorm(X(t, t0))
 %
-function dx = fRtt0ExtDerivFunc(t, x, fAt, sizeAtVec)
+function dx = fRtt0ExtDerivFunc(t, x, fAtMat, sizeAtVec)
     norm = x(length(x)); x(length(x)) = [];
     sRtt0Mat = reshape(x, sizeAtVec);
     %
-    cachedMat = fAt(t) * sRtt0Mat;
-    scprod = sum(sRtt0Mat(:) .* cachedMat(:));
+    cachedMat = fAtMat(t) * sRtt0Mat;
+    scProd = dot(sRtt0Mat(:), cachedMat(:));
     %
-    dnorm = scprod * norm;
-    dsRtt0Mat = cachedMat - sRtt0Mat * scprod;
+    dnorm = scProd * norm;
+    dsRtt0Mat = cachedMat - sRtt0Mat * scProd;
     %
     dx = [dsRtt0Mat(:); dnorm];
 end
@@ -292,8 +218,9 @@ function normalizMat = normaliz(argMat)
     szVec = size(argMat);
     normMat = argMat .* argMat;
     normMat = realsqrt(sum(sum(normMat, 2), 1));
-    if (length(szVec) > 2)
-        szVec(3:length(szVec)) = 1;
+    szVecNumel = numel(szVec);
+    if (szVecNumel > 2)
+        szVec(3:szVecNumel) = 1;
     end
     normMat = repmat(normMat, szVec);
     normalizMat = argMat ./ normMat;
