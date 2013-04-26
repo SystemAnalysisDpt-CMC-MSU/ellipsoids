@@ -167,21 +167,25 @@ classdef ReachContinuous < elltool.reach.AReach
                 newTimeVec, newLinSys, approxType)
             import gras.ellapx.smartdb.F;
             APPROX_TYPE = F.APPROX_TYPE;
-            OldData = self.ellTubeRel.getTuplesFilteredBy(...
-                APPROX_TYPE, approxType).getData();
-            sysDimRows = size(OldData.QArray{1}, 1);
-            sysDimCols = size(OldData.QArray{1}, 2);
+            [filteredTubes isThereVec]=self.ellTubeRel.getTuplesFilteredBy(...
+                APPROX_TYPE, approxType);
+            oldData=filteredTubes.getData();
+            indVec=find(isThereVec);
+            indVec=indVec(end:-1:1);
             %
-            dataDimVec = OldData.dim;
+            sysDimRows = size(oldData.QArray{1}, 1);
+            sysDimCols = size(oldData.QArray{1}, 2);
+            %
+            dataDimVec = oldData.dim;
             l0VecNum = size(dataDimVec, 1);
             l0Mat = zeros(dataDimVec(1), l0VecNum);
             x0VecMat = zeros(sysDimRows, l0VecNum);
             x0MatArray = zeros(sysDimRows, sysDimCols, l0VecNum);
             for il0Num = 1 : l0VecNum
-                l0Mat(:, il0Num) = OldData.ltGoodDirMat{il0Num}(:, end);
-                x0VecMat(:, il0Num) = OldData.aMat{il0Num}(:, end);
+                l0Mat(:, il0Num) = oldData.ltGoodDirMat{il0Num}(:, end);
+                x0VecMat(:, il0Num) = oldData.aMat{il0Num}(:, end);
                 x0MatArray(:, :, il0Num) =...
-                    OldData.QArray{il0Num}(:, :, end);
+                    oldData.QArray{il0Num}(:, :, end);
             end
             [atStrCMat btStrCMat gtStrCMat ptStrCMat ptStrCVec...
                 qtStrCMat qtStrCVec] =...
@@ -207,10 +211,6 @@ classdef ReachContinuous < elltool.reach.AReach
                     ellTubeRelVec{il0Num}.getTuplesFilteredBy(...
                     APPROX_TYPE, approxType).getData();
             end
-            [~,isThereVec]=self.ellTubeRel.getTuplesFilteredBy(...
-                APPROX_TYPE, approxType);
-            indVec=find(isThereVec);
-            indVec=indVec(end:-1:1);
         end
         function ellTubeRel = makeEllTubeRel(self, smartLinSys, l0Mat,...
                 timeVec, isDisturb, calcPrecision, approxTypeVec)
