@@ -109,6 +109,11 @@ classdef SuiteSupportFunction < mlunitext.test_case
                     'RelTol', calcPrecision * self.REL_TOL_FACTOR,...
                     'AbsTol', calcPrecision * self.ABS_TOL_FACTOR);
                 lsGoodDirMat = SRunAuxProp.goodDirSetObj.getlsGoodDirMat();
+                for iGoodDir = 1:size(lsGoodDirMat, 2)
+                    lsGoodDirMat(:, iGoodDir) = ...
+                        lsGoodDirMat(:, iGoodDir) / ...
+                        norm(lsGoodDirMat(:, iGoodDir));
+                end
                 lsGoodDirCMat = SRunProp.ellTubeRel.lsGoodDirVec();
                 for iTuple = 1 : nTuples
                     curTimeVec = timeCVec{iTuple};
@@ -119,6 +124,8 @@ classdef SuiteSupportFunction < mlunitext.test_case
                     % good directions' indexes mapping
                     %
                     curGoodDirVec = lsGoodDirCMat{iTuple};
+                    curGoodDirVec = curGoodDirVec / norm(curGoodDirVec);
+                    %
                     for iGoodDir = 1:size(lsGoodDirMat, 2)
                         isFound = norm(curGoodDirVec - ...
                             lsGoodDirMat(:, iGoodDir)) <= calcPrecision;
@@ -127,7 +134,7 @@ classdef SuiteSupportFunction < mlunitext.test_case
                         end
                     end
                     mlunit.assert_equals(true, isFound,...
-                        'good dir vector not found');
+                        'Vector mapping - good dir vector not found');
                     %
                     curGoodDirDynamicsObj = ...
                         SRunAuxProp.goodDirSetObj.getGoodDirOneCurveSpline(...
