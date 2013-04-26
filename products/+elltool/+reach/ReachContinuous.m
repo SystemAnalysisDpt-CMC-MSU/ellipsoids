@@ -585,8 +585,6 @@ classdef ReachContinuous < elltool.reach.AReach
             %% Normalize good directions
             sysDim = size(atStrCMat, 1);
             l0Mat = self.getNormMat(l0Mat, sysDim);
-            %%
-            self.dirMat=l0Mat;
             %
             relTol = elltool.conf.Properties.getRelTol();
             smartLinSys = self.getSmartLinSys(atStrCMat, btStrCMat,...
@@ -621,12 +619,10 @@ classdef ReachContinuous < elltool.reach.AReach
             l0Mat = self.getNormMat(l0Mat, nDim);
             if self.isprojection();
                 projMat=self.projectionBasisMat;
-                newDirMat=[self.dirMat,l0Mat];
                 reachSetObj=elltool.reach.ReachContinuous(...
                     linSys,x0Ell,l0Mat,timeVec);
                 projSet = reachSetObj.getProjSet(projMat);
                 self.ellTubeRel.unionWith(projSet);
-                self.dirMat=newDirMat;
             else
                 [x0Vec x0Mat] = double(x0Ell);
                 [atStrCMat btStrCMat gtStrCMat ptStrCMat ptStrCVec...
@@ -647,7 +643,6 @@ classdef ReachContinuous < elltool.reach.AReach
                     ellTubeRelNew = self.rotateEllTubeRel(ellTubeRelNew);
                 end
                 %Update self.ellTubRel
-                self.dirMat=[self.dirMat, l0Mat];
                 self.ellTubeRel.unionWith(ellTubeRelNew);
             end
         end
@@ -845,7 +840,6 @@ classdef ReachContinuous < elltool.reach.AReach
             projObj.isProj = true;
             projObj.isBackward = self.isbackward();
             projObj.projectionBasisMat = projMat;
-            projObj.dirMat=self.dirMat;
         end
         %%
         function newReachObj = evolve(self, newEndTime, linSys)
@@ -905,7 +899,6 @@ classdef ReachContinuous < elltool.reach.AReach
             newReachObj.isProj = false;
             newReachObj.isBackward = self.isbackward();
             newReachObj.projectionBasisMat = [];
-            newReachObj.dirMat=self.dirMat;
             %
             newTimeVec = newReachObj.switchSysTimeVec(end - 1 : end);
             [dataIntCVec indIntVec] = self.evolveApprox(newTimeVec,...
