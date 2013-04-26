@@ -68,7 +68,7 @@ inpEllVec   = reshape(inpEllArr, 1, nInpEllip);
 nDimsVec = dimension(inpEllVec);
 nDim = nDimsVec(1);
 checkmultvar('all(x2(:)==x1)',2,nDimsVec,nDim,...
-    'errorTag','wrongSizes','errrorMessage',...
+    'errorTag','wrongSizes','errorMessage',...
     'ellipsoids must be of the same dimension which not higher than 3.');
 
 if (nargin > 1)&&(isstruct(varargin{1}))
@@ -128,10 +128,10 @@ if (Properties.getIsVerbose()) && (nInpEllip > 1)
 end
 clrVec = Options.color;
 
-centVec = inpEllVec(1).center;
+centVec = inpEllVec(1).centerVec;
 switch nDim
     case 1
-        rad = realsqrt(inpEllVec(1).shape);
+        rad = realsqrt(inpEllVec(1).shapeMat);
         boundPointMat(1, 1) = centVec - rad;
         boundPointMat(1, 2) = centVec + rad;
     case 2
@@ -187,14 +187,14 @@ if nArgOut == 0
     clear centVec boundPointMat;
 end
     function fGetBndPnts(myEll)
-        centVec = centVec + myEll.center;
+        centVec = centVec + myEll.centerVec;
         switch nDim
             case 1
-                rad = realsqrt(myEll.shape);
+                rad = realsqrt(myEll.shapeMat);
                 boundPointMat(1, 1) =boundPointMat(1,1) + ...
-                    myEll.center - rad;
+                    myEll.centerVec - rad;
                 boundPointMat(1, 2) = boundPointMat(1,2) + ...
-                    myEll.center + rad;
+                    myEll.centerVec + rad;
             case 2
                 boundPointMat = boundPointMat + ellbndr_2d(myEll);
             case 3

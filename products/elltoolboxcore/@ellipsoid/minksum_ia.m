@@ -53,6 +53,7 @@ function intApprEllVec = minksum_ia(inpEllArr, dirMat)
 %
 % $Author: Guliev Rustam <glvrst@gmail.com> $   
 % $Date: Dec-2012$
+% $Author: Peter Gagarinov <pgagarinov@gmail.com> $   $Date: 25-04-2013$
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
@@ -86,40 +87,35 @@ modgen.common.checkvar( nDimsInpEllArr,'all(x(:)==x(1))','errorTag', ...
     'ellipsoids in the array and vector(s) must be of the same dimension.');
 
 checkmultvar('x1(1)==x2',2,nDimsInpEllArr,nDims,...
-    'errorTag','wrongSizes','errrorMessage',...
+    'errorTag','wrongSizes','errorMessage',...
     'ellipsoids in the array and vector(s) must be of the same dimension.');
 
 if isscalar(inpEllArr)
+    intApprEllVec=inpEllArr.repMat(1,nCols);
+else
+    %
+    isVerbose=Properties.getIsVerbose();
+    centVec =zeros(nDims,1);
+    arrayfun(@(x) fAddCenter(x),inpEllArr);
+    absTolArr = getAbsTol(inpEllArr);
+
+    srcMat = sqrtmpos(inpEllArr(1).shapeMat, min(absTolArr(:))) * dirMat;
+    sqrtShArr = zeros(nDims, nDims, nNumel);
+    rotArr = zeros(nDims,nDims,nNumel,nCols);
+    arrayfun(@(x) fSetRotArr(x), 1:nNumel);
+    %
     intApprEllVec(1,nCols) = ellipsoid;
-    arrayfun(@(x)fCopyEll(x,inpEllArr),1:nCols);
-    return;
+    arrayfun(@(x) fSingleDirection(x),1:nCols);
 end
-isVerbose=Properties.getIsVerbose();
-centVec =zeros(nDims,1);
-arrayfun(@(x) fAddCenter(x),inpEllArr);
-absTolArr = getAbsTol(inpEllArr);
-
-srcMat = sqrtmpos(inpEllArr(1).shape, min(absTolArr(:))) * dirMat;
-sqrtShArr = zeros(nDims, nDims, nNumel);
-rotArr = zeros(nDims,nDims,nNumel,nCols);
-arrayfun(@(x) fSetRotArr(x), 1:nNumel);
-%
-intApprEllVec(1,nCols) = ellipsoid;
-arrayfun(@(x) fSingleDirection(x),1:nCols);
-
-    function fCopyEll(index,ellObj)
-        intApprEllVec(index).center=ellObj.center;
-        intApprEllVec(index).shape=ellObj.shape;
-    end
 
     function fAddCenter(singEll)
-        centVec = centVec + singEll.center;
+        centVec = centVec + singEll.centerVec;
     end
 
     function fSetRotArr(ellIndex)
         import gras.la.mlorthtransl;
         import gras.la.sqrtmpos;
-        shMat = inpEllArr(ellIndex).shape;
+        shMat = inpEllArr(ellIndex).shapeMat;
         if isdegenerate(inpEllArr(ellIndex))
             if isVerbose
                 if isempty(logger)
@@ -132,7 +128,9 @@ arrayfun(@(x) fSingleDirection(x),1:nCols);
             shMat = ellipsoid.regularize(shMat, absTolArr(ellIndex));
         end
         shSqrtMat = sqrtmpos(shMat, absTolArr(ellIndex));
+        absTolArr(ellIndex);
         sqrtShArr(:,:,ellIndex) = shSqrtMat;
+        absTolArr(ellIndex);
         dstMat = shSqrtMat*dirMat;
         rotArr(:,:,ellIndex,:) = mlorthtransl(dstMat,srcMat);
     end
@@ -140,8 +138,8 @@ arrayfun(@(x) fSingleDirection(x),1:nCols);
     function fSingleDirection(dirIndex)
         subShMat = zeros(nDims,nDims);
         arrayfun(@(x) fAddSh(x), 1:nNumel);
-        intApprEllVec(dirIndex).center = centVec;
-        intApprEllVec(dirIndex).shape = subShMat'*subShMat;
+        intApprEllVec(dirIndex).centerVec = centVec;
+        intApprEllVec(dirIndex).shapeMat = subShMat'*subShMat;
         
         function fAddSh(ellIndex)
             subShMat = subShMat + ...

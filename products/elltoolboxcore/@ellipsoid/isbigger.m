@@ -53,8 +53,8 @@ if nFstRank < nSecRank
     return;
 end
 
-fstEllShMat = fstEll.shape;
-secEllShMat = secEll.shape;
+fstEllShMat = fstEll.shapeMat;
+secEllShMat = secEll.shapeMat;
 if isdegenerate(fstEll)
     if isempty(logger)
         logger=Log4jConfigurator.getLogger();

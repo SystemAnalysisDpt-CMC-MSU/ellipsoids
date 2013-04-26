@@ -52,7 +52,7 @@ function [centVec, boundPntMat] = minkmp(fstEll, secEll, sumEllArr,varargin)
 %               (0 - transparent, 1 - opaque).
 %
 % Output:
-%   centerVec: double[nDim, 1] - center of the resulting set.
+%   centerVecVec: double[nDim, 1] - centerVec of the resulting set.
 %   boundarPointsMat: double[nDim, nBoundPoints] - set of boundary
 %       points (vertices) of resulting set.
 %
@@ -132,10 +132,10 @@ else
         case 1
             [sumCentVec, sumBoundMat]=minksum(sumEllArr);
             boundPntMat=NaN(1,2);
-            centVec=fstEll.center-secEll.center;
-            boundPntMat(1)=-realsqrt(fstEll.shape)+realsqrt(secEll.shape)+...
+            centVec=fstEll.centerVec-secEll.centerVec;
+            boundPntMat(1)=-realsqrt(fstEll.shapeMat)+realsqrt(secEll.shapeMat)+...
                 centVec+min(sumBoundMat);
-            boundPntMat(2)=realsqrt(fstEll.shape)-realsqrt(secEll.shape)+...
+            boundPntMat(2)=realsqrt(fstEll.shapeMat)-realsqrt(secEll.shapeMat)+...
                 centVec+max(sumBoundMat);
             centVec=centVec+sumCentVec;
         case 2
@@ -156,22 +156,22 @@ else
     end
     
     if nDim>1
-        if rank(secEll.shape)==0
-            tmpEll=ellipsoid(fstEll.center-secEll.center,...
-                fstEll.shape);
+        if rank(secEll.shapeMat)==0
+            tmpEll=ellipsoid(fstEll.centerVec-secEll.centerVec,...
+                fstEll.shapeMat);
             [centVec, boundPntMat] = ...
                 minksum([tmpEll; sumEllArr(:)]);
         else
             if isdegenerate(secEll)
-                secEll.shape = regularize(secEll.shape);
+                secEll.shapeMat = regularize(secEll.shapeMat);
             end
-            q1Mat=fstEll.shape;
-            q2Mat=secEll.shape;
+            q1Mat=fstEll.shapeMat;
+            q2Mat=secEll.shapeMat;
             absTol=elltool.conf.Properties.getAbsTol();
             isGoodDirVec = ~ellipsoid.isbaddirectionmat(q1Mat, q2Mat, ...
                 lDirsMat,absTol);
             if  ~any(isGoodDirVec)
-                tmpEll=ellipsoid(fstEll.center-secEll.center, ...
+                tmpEll=ellipsoid(fstEll.centerVec-secEll.centerVec, ...
                     zeros(nDim,nDim));
                 [centVec, boundPntMat]=minksum([tmpEll; ...
                     sumEllArr(:)]);
@@ -182,8 +182,8 @@ else
                 [~, subEllPtsMat] = rho(secEll, ...
                     lDirsMat(:,isGoodDirVec));
                 diffBoundMat =  minEllPtsMat - subEllPtsMat;
-                centVec = fstEll.center-...
-                    secEll.center+sumCentVec;
+                centVec = fstEll.centerVec-...
+                    secEll.centerVec+sumCentVec;
                 boundPntMat = diffBoundMat + ...
                     sumBoundMat(:,isGoodDirVec);
             end

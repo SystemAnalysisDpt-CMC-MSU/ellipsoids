@@ -1,4 +1,4 @@
-function listconfs()
+function confNameList=listconfs()
 % LISTCONFS list all available program configurations
 %
 %
@@ -10,4 +10,4 @@ function listconfs()
 %
 confRepoMgr=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
 confRepoMgr.deployConfTemplate('*');
-confRepoMgr.getConfNameList()
+confNameList=confRepoMgr.getConfNameList();

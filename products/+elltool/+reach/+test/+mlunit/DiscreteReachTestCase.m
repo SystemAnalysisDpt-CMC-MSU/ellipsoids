@@ -66,7 +66,7 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             syms k;
             fAMatCalc = @(t)subs(self.linSys.getAtMat(), k, t);
             fBMatCalc = @(t)subs(self.linSys.getBtMat(), k, t);
-
+            
             pCVec = self.linSys.getUBoundsEll().center;
             
             fControlBoundsCenterVecCalc = @(t)subs(pCVec, k, t);
@@ -115,7 +115,7 @@ classdef DiscreteReachTestCase < mlunitext.test_case
                 directionsCVec{iDirection}(:, 1) = lVec;
                 for kTime = 1:nTimeStep - 1
                     directionsCVec{iDirection}(:, kTime + 1) = self.fundCMat{1, kTime + 1}' * lVec;
-                end                
+                end
             end
         end
         
@@ -133,7 +133,7 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             
             goodCurvesCVec = cell(1, nDirections);
             for iDirection = 1:nDirections
-                goodCurvesCVec{iDirection} = zeros(xDim, nTimeStep);                
+                goodCurvesCVec{iDirection} = zeros(xDim, nTimeStep);
                 
                 for kTime = 1:nTimeStep
                     lVec = directionsCVec{iDirection}(:, kTime);
@@ -156,7 +156,7 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             
             syms k;
             fBMatCalc = @(t)subs(self.linSys.getBtMat(), k, t);
-            fControlBoundsMatCalc = @(t)subs(pCMat, k, t);            
+            fControlBoundsMatCalc = @(t)subs(pCMat, k, t);
             rMatCalc = @(t) fBMatCalc(t) * fControlBoundsMatCalc(t) * fBMatCalc(t)';
             
             nTimeStep = abs(k1 - k0) + 1;
@@ -178,17 +178,17 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             
             for iDirection = 1:nDirections
                 lVec = self.l0Mat(:, iDirection);
-                supFunMat(1, iDirection) = realsqrt(lVec' * x0Mat * lVec);
+                supFunMat(1, iDirection) = sqrt(lVec' * x0Mat * lVec);
                 for kTime = 1:nTimeStep - 1
                     if isBack
                         supFunMat(kTime + 1, iDirection) = ...
                             supFunMat(kTime, iDirection) + ...
-                            realsqrt(lVec' * self.fundCMat{1, kTime} * ...
+                            sqrt(lVec' * self.fundCMat{1, kTime} * ...
                             rMatCalc(tVec(kTime + 1)) * self.fundCMat{1, kTime}' * lVec);
                     else
                         supFunMat(kTime + 1, iDirection) = ...
                             supFunMat(kTime, iDirection) + ...
-                            realsqrt(lVec' * self.fundCMat{1, kTime + 1} * ...
+                            sqrt(lVec' * self.fundCMat{1, kTime + 1} * ...
                             rMatCalc(tVec(kTime + 1)) * self.fundCMat{1, kTime + 1}' * lVec);
                     end
                 end
@@ -197,8 +197,8 @@ classdef DiscreteReachTestCase < mlunitext.test_case
                     curDirectionVec = directionsCVec{iDirection}(:, kTime);
                     supFunMat(kTime, iDirection) = supFunMat(kTime, iDirection) + ...
                         curDirectionVec' * trCenterMat(:, kTime);
-                end                
-            end  
+                end
+            end
         end
     end
     methods
@@ -268,7 +268,7 @@ classdef DiscreteReachTestCase < mlunitext.test_case
                 end
             end
             
-            rel1 = create();
+            rel1 = create(); %#ok<NASGU>
             
             approxType = gras.ellapx.enums.EApproxType.Internal;
             
@@ -277,11 +277,9 @@ classdef DiscreteReachTestCase < mlunitext.test_case
                     QArrayList{1, iTube}(:, :, iTime) = double(iaEllMat(iTube, iTime));
                 end
             end
-            rel2 = create();
-            
-%             check('wrongInput:internalWithinExternal');
+            rel2 = create(); %#ok<NASGU>
             check();
-
+            
             mlunit.assert_equals(true, true);
             
             function check(errorTag)
@@ -302,7 +300,7 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             end
         end
         
-        function self = DISABLED_testGetSystem(self)
+        function self = testGetSystem(self)
             isEqual = self.linSys == self.reachObj.get_system;
             mlunit.assert_equals(true, isEqual);
             projReachObj = self.reachObj.projection(...
@@ -311,7 +309,7 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             mlunit.assert_equals(true, isEqual);
         end
         
-        function self = DISABLED_testGetCenter(self)
+        function self = testGetCenter(self)
             [trCenterMat ~] = self.reachObj.get_center();
             expectedTrCenterMat = self.calculateTrajectoryCenterMat(self);
             
@@ -319,7 +317,7 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             mlunit.assert_equals(true, isEqual);
         end
         
-        function self = DISABLED_testGetDirections(self)
+        function self = testGetDirections(self)
             expectedDirectionsCVec = self.calculateDirectionsCVec(self);
             [directionsCVec ~] = self.reachObj.get_directions();
             
@@ -328,11 +326,11 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             for iDirection = 1:nDirections
                 isEqual = isEqual && ...
                     all(max(abs(expectedDirectionsCVec{iDirection} - directionsCVec{iDirection}), [], 1) < self.COMP_PRECISION);
-            end            
+            end
             mlunit.assert_equals(true, isEqual);
         end
         
-        function self = DISABLED_testGetGoodCurves(self)
+        function self = testGetGoodCurves(self)
             expectedGoodCurvesCVec = self.calculateGoodCurvesCVec(self);
             [goodCurvesCVec ~] = self.reachObj.get_goodcurves();
             
@@ -343,7 +341,7 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             nDirections = size(self.l0Mat, 2);
             
             isEqual = true;
-            for iDirection = 1:nDirections                
+            for iDirection = 1:nDirections
                 corRelTolMat = [max(abs(goodCurvesCVec{iDirection}), [], 1); ...
                     ones(1, nTimeStep)];
                 correctedRelTolVec = self.COMP_PRECISION * ...
@@ -351,17 +349,17 @@ classdef DiscreteReachTestCase < mlunitext.test_case
                 
                 isEqual = isEqual && ...
                     all(max(abs(expectedGoodCurvesCVec{iDirection} - goodCurvesCVec{iDirection}), [], 1) < correctedRelTolVec);
-            end         
+            end
             mlunit.assert_equals(true, isEqual);
         end
         
-        function self = DISABLED_testGetEa(self)
+        function self = testGetEa(self)
             expectedSupFunMat = self.calculateSupFunMat(self);
             
             k0 = self.tIntervalVec(1);
             k1 = self.tIntervalVec(2);
             
-            nTimeStep = abs(k1 - k0) + 1;            
+            nTimeStep = abs(k1 - k0) + 1;
             nDirections = size(self.l0Mat, 2);
             
             [directionsCVec ~] = self.reachObj.get_directions();
@@ -378,27 +376,19 @@ classdef DiscreteReachTestCase < mlunitext.test_case
                         rho(eaEllMat(iDirection, kTime), lVec);
                 end
             end
-            
-            corRelTolMat = [max(abs(eaSupFunValueMat), [], 2) ...
-                ones(nTimeStep, 1)];
-            correctedRelTolVec = self.COMP_PRECISION * ...
-                max(corRelTolMat, [], 2) * 10;
-            
-%             isEqual = all(max(abs(expectedSupFunMat - eaSupFunValueMat), [], 2) < ...
-%                 correctedRelTolVec);
             isEqual = all(max(abs(expectedSupFunMat - eaSupFunValueMat), [], 2) < ...
-                self.COMP_PRECISION);    
+                self.COMP_PRECISION);
             
             mlunit.assert_equals(true, isEqual);
         end
         
-        function self = DISABLED_testGetIa(self)
+        function self = testGetIa(self)
             expectedSupFunMat = self.calculateSupFunMat(self);
             
             k0 = self.tIntervalVec(1);
             k1 = self.tIntervalVec(2);
             
-            nTimeStep = abs(k1 - k0) + 1;            
+            nTimeStep = abs(k1 - k0) + 1;
             nDirections = size(self.l0Mat, 2);
             
             [directionsCVec ~] = self.reachObj.get_directions();
@@ -416,17 +406,9 @@ classdef DiscreteReachTestCase < mlunitext.test_case
                 end
             end
             
-            corRelTolMat = [max(abs(eaSupFunValueMat), [], 2) ...
-                ones(nTimeStep, 1)];
-            correctedRelTolVec = self.COMP_PRECISION * ...
-                max(corRelTolMat, [], 2) * 10;
-            
-%             isEqual = all(max(abs(expectedSupFunMat - eaSupFunValueMat), [], 2) < ...
-%                 correctedRelTolVec);
-                    
             isEqual = all(max(abs(expectedSupFunMat - eaSupFunValueMat), [], 2) < ...
                 self.COMP_PRECISION);
-
+            
             mlunit.assert_equals(true, isEqual);
         end
         
@@ -438,18 +420,18 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             linSysObj = elltool.linsys.LinSysFactory.create(aMat, bMat,...
                 ControlBounds, [], [], [], [], 'd');
             reachSetObj = elltool.reach.ReachDiscrete(linSysObj,...
-                x0Ell, l0Mat, timeVec);
+                x0Ell, l0Mat, timeVec); %#ok<CPROP>
             reachSetObj.display();
             firstCutReachObj =...
                 reachSetObj.cut([timeVec(1)+1 timeVec(end)-1]);
-            secondCutReachObj = reachSetObj.cut(timeVec(1)+2);
-            [rSdim sSdim] = reachSetObj.dimension();
-            [trCenterMat tVec] = reachSetObj.get_center();
-            [directionsCVec tVec] = reachSetObj.get_directions();
-            [eaEllMat tVec] = reachSetObj.get_ea();
-            [iaEllMat tVec] = reachSetObj.get_ia();
-            [goodCurvesCVec tVec] = reachSetObj.get_goodcurves();
-            linSys = reachSetObj.get_system();
+            [~] = reachSetObj.cut(timeVec(1)+2);
+            [~, ~] = reachSetObj.dimension();
+            [~, ~] = reachSetObj.get_center();
+            [~, ~] = reachSetObj.get_directions();
+            [~, ~] = reachSetObj.get_ea();
+            [~, ~] = reachSetObj.get_ia();
+            [~, ~] = reachSetObj.get_goodcurves();
+            [~] = reachSetObj.get_system();
             projBasMat = [0 0 0 0 1 0; 0 0 0 0 0 1]';
             projReachSetObj = reachSetObj.projection(projBasMat);
             fig = figure();
@@ -473,18 +455,18 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             linSysObj = elltool.linsys.LinSysFactory.create(aMat, bMat,...
                 ControlBounds, gMat, DistorbBounds, [], [], 'd');
             reachSetObj = elltool.reach.ReachDiscrete(linSysObj,...
-                x0Ell, l0Mat, timeVec);
+                x0Ell, l0Mat, timeVec); %#ok<CPROP>
             reachSetObj.display();
             firstCutReachObj =...
                 reachSetObj.cut([timeVec(1)+1 timeVec(end)-1]);
-            secondCutReachObj = reachSetObj.cut(timeVec(1)+2);
-            [rSdim sSdim] = reachSetObj.dimension();
-            [trCenterMat tVec] = reachSetObj.get_center();
-            [directionsCVec tVec] = reachSetObj.get_directions();
-            [eaEllMat tVec] = reachSetObj.get_ea();
-            [iaEllMat tVec] = reachSetObj.get_ia();
-            [goodCurvesCVec tVec] = reachSetObj.get_goodcurves();
-            linSys = reachSetObj.get_system();
+            [~] = reachSetObj.cut(timeVec(1)+2);
+            [~,~] = reachSetObj.dimension();
+            [~,~] = reachSetObj.get_center();
+            [~,~] = reachSetObj.get_directions();
+            [~,~] = reachSetObj.get_ea();
+            [~,~] = reachSetObj.get_ia();
+            [~,~] = reachSetObj.get_goodcurves();
+            [~] = reachSetObj.get_system();
             projBasMat = [1 0 0; 0 0 1]';
             projReachSetObj = reachSetObj.projection(projBasMat);
             fig = figure();
@@ -580,27 +562,6 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             end
         end
         %
-        function self = testSqrtmTolerance(self)
-            aMat = [0.997222222222222 0.00277777777777778 0 0;...
-                0 0.998148148148148 0.00185185185185185 0;...
-                0 0 0.998611111111111 0.00231481481481482;...
-                0 0 0 0.997222222222222];
-            x0Ell = ellipsoid(...
-                [3.0199 0 -0.0501 -0.0057;...
-                0 0 0 0;...
-                -0.0501 0 3.2646 0.5751;...
-                -0.0057 0 0.5751 2.4248]);
-            l0Mat = [1 0; 0 1; 0 0; 0 0];
-            timeBounds = [0 10];
-            linSysObj = elltool.linsys.LinSysFactory.create(aMat, ...
-                eye(size(aMat, 1)),...
-                ellipsoid(zeros(size(aMat, 2), 1), eye(size(aMat, 1))),...
-                [], [], [], [], 'd');
-            reachSetObj = elltool.reach.ReachDiscrete(linSysObj,...
-                x0Ell, l0Mat, timeBounds);
-            reachSetObj.display();
-        end
-        %
         function self = testConstDisturbance(self)
             aMat = [0.997222222222222 0.00277777777777778 0 0;...
                 0 0.998148148148148 0.00185185185185185 0;...
@@ -610,8 +571,8 @@ classdef DiscreteReachTestCase < mlunitext.test_case
                 [3.0199 0 -0.0501 -0.0057;...
                 0 0 0 0;...
                 -0.0501 0 3.2646 0.5751;...
-                -0.0057 0 0.5751 2.4248]);
-            l0Mat = [1 0; 0 1; 0 0; 0 0];
+                -0.0057 0 0.5751 2.4248]); %#ok<PROP>
+            l0Mat = [1 0; 0 1; 0 0; 0 0]; %#ok<PROP>
             timeBounds = [0 10];
             distVec = [1; 1; 1; 1];
             distMat = [1 0 0 0; 0 1 0 0; 0 0 1 0; 0 0 0 1];
@@ -620,8 +581,8 @@ classdef DiscreteReachTestCase < mlunitext.test_case
                 ellipsoid(zeros(size(aMat, 2), 1), eye(size(aMat, 1))),...
                 distMat, distVec, [], [], 'd');
             reachSetObj = elltool.reach.ReachDiscrete(linSysObj,...
-                x0Ell, l0Mat, timeBounds);
-            reachSetObj.display();
+                x0Ell, l0Mat, timeBounds); %#ok<PROP,NASGU>
+            evalc('reachSetObj.display();')
         end
     end
 end

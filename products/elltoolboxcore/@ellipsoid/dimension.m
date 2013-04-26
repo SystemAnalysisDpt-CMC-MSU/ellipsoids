@@ -57,7 +57,7 @@ import elltool.conf.Properties;
 
 ellipsoid.checkIsMe(myEllArr);
 
-dimArr = arrayfun(@(x) size(x.shape,1), myEllArr);
+dimArr = arrayfun(@(x) size(x.shapeMat,1), myEllArr);
 if nargout > 1
-    rankArr = arrayfun(@(x) rank(x.shape), myEllArr);
+    rankArr = arrayfun(@(x) rank(x.shapeMat), myEllArr);
 end

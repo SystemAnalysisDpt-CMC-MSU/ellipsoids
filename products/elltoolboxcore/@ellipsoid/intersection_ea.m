@@ -149,8 +149,8 @@ function outEll = l_intersection_ea(fstEll, secObj)
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
 
-fstEllCentVec = fstEll.center;
-fstEllShMat = fstEll.shape;
+fstEllCentVec = fstEll.centerVec;
+fstEllShMat = fstEll.shapeMat;
 if rank(fstEllShMat) < size(fstEllShMat, 1)
     fstEllShMat = ...
         ell_inv(ellipsoid.regularize(fstEllShMat,fstEll.absTol));
@@ -188,8 +188,8 @@ else
         outEll = ellipsoid;
         return;
     end
-    qSecVec = secObj.center;
-    seqQMat = secObj.shape;
+    qSecVec = secObj.centerVec;
+    seqQMat = secObj.shapeMat;
     if rank(seqQMat) < size(seqQMat, 1)
         seqQMat = ell_inv(ellipsoid.regularize(seqQMat,secObj.absTol));
     else

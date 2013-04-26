@@ -162,7 +162,7 @@ ellQ2Mat=ellQ2Mat\eye(size(ellQ2Mat));
 if (isinternal(ellObj1,ellCenter2Vec)||isinternal(ellObj2,ellCenter1Vec))
     ellDist=0;
 else
-    %initial centers of circle inside the ellipsoids
+    %initial centerVecs of circle inside the ellipsoids
     circleCenter1Vec=ellCenter1Vec;
     circleCenter2Vec=ellCenter2Vec;
     %
@@ -172,7 +172,7 @@ else
     isDone=false;
     ellDist=inf;
     %find stepsizes that determine the points on the interval formed by
-    %centers of circles, and that points should belong to the boundaries of
+    %centerVecs of circles, and that points should belong to the boundaries of
     %corresponding ellipsoids
     while (kIter<=nMaxIter) &&(~isDone)
         %solve two one dimentional qudratic equations of the type ax^2+bx+c=0 to get the stepsizes
@@ -189,7 +189,7 @@ else
         stepSize1=fzero(fSquareFunc(aCoeff1,bCoeff1,cCoeff1),[0,1]);
         stepSize2=fzero(fSquareFunc(aCoeff2,bCoeff2,cCoeff2),[0,1]);
         if (stepSize2-stepSize1<=absTol)
-            %in this case the interval between the centers of circles
+            %in this case the interval between the centerVecs of circles
             %belongs to the ellipsoids and we obtain intersection
             ellDist=0;
             isDone=true;
@@ -217,7 +217,7 @@ else
                 %at the title
                 gamma1Coeff=1/norm(2*ellQ1Mat);
                 gamma2Coeff=1/norm(2*ellQ2Mat);
-                %finally we calculate new centers of circles
+                %finally we calculate new centerVecs of circles
                 circleCenter1Vec=newPoint1Vec-gamma1Coeff*(newCircle1Vec);
                 circleCenter2Vec=newPoint2Vec-gamma2Coeff*(newCircle2Vec);
             end
@@ -520,11 +520,11 @@ if cPar < 0
     vPar = -vPar;
 end
 if isFlagOn
-    sr = realsqrt(vPar' * (ellObj.shape) * vPar);
+    sr = realsqrt(vPar' * (ellObj.shapeMat) * vPar);
 else
     sr = realsqrt(vPar' * vPar);
 end
-if (vPar' * ellObj.center) < cPar
+if (vPar' * ellObj.centerVec) < cPar
     distEllHpVal = (cPar - rho(ellObj, vPar))/sr;
 else
     distEllHpVal = (-cPar - rho(ellObj, -vPar))/sr;

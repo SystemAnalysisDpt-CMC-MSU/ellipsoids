@@ -35,8 +35,8 @@ fprintf('Ellipsoid with parameters\n');
 if (mRows > 1) || (nCols > 1)
     fprintf('%dx%d array of ellipsoids.\n\n', mRows, nCols);
 else
-    fprintf('Center:\n'); disp(myEllMat.center);
-    fprintf('Shape Matrix:\n'); disp(myEllMat.shape);
+    fprintf('Center:\n'); disp(myEllMat.centerVec);
+    fprintf('Shape Matrix:\n'); disp(myEllMat.shapeMat);
     if isempty(myEllMat)
         fprintf('Empty ellipsoid.\n\n');
     end

@@ -381,9 +381,7 @@ classdef EllipsoidSecTestCase < mlunitext.test_case
             ansEll = ellipsoid(zeros(100, 1), eye(100));
             [isEq, reportStr] = eq(resEll, ansEll);
             mlunit.assert_equals(true, isEq, reportStr);
-        end
-        
-        
+        end      
      end
 end
 function [varargout] = createTypicalEll(flag)

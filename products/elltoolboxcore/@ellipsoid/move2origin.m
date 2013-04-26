@@ -50,7 +50,7 @@ outEllArr(sizeCVec{:}) = ellipsoid;
 arrayfun(@(x) fSingleMove(x), 1:numel(inpEllArr));
     function fSingleMove(index)
         nDim = dimension(inpEllArr(index));
-        outEllArr(index).center = zeros(nDim,1);
-        outEllArr(index).shape = inpEllArr(index).shape;
+        outEllArr(index).centerVec = zeros(nDim,1);
+        outEllArr(index).shapeMat = inpEllArr(index).shapeMat;
     end
 end

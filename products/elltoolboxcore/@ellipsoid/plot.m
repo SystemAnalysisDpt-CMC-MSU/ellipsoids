@@ -228,8 +228,8 @@ function plot(varargin)
     hold on;
 
     E = ells(i);
-    q = E.center;
-    Q = E.shape;
+    q = E.centerVec;
+    Q = E.shapeMat;
 
     if ucolor(i) == 1
       clr = vcolor(i, :);

@@ -141,8 +141,8 @@ end
     function isPos = fSingleCase(singEll,absTol)
         import elltool.conf.Properties;
         isPos = false;
-        cVec = xVec - singEll.center;
-        shMat = singEll.shape;
+        cVec = xVec - singEll.centerVec;
+        shMat = singEll.shapeMat;
         
         if isdegenerate(singEll)
             if Properties.getIsVerbose()

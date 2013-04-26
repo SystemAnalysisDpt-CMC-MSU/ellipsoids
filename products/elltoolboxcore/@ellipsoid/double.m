@@ -39,12 +39,11 @@ function [myEllCentVec,  myEllShMat] = double(myEll)
 %
 
 ellipsoid.checkIsMe(myEll);
-modgen.common.checkvar(myEll,'isscalar(x)',...
-    'errorMessage','input argument must be single ellipsoid.');
-
- if nargout < 2
-     myEllCentVec = myEll.shape;
- else
-    myEllCentVec = myEll.center;
-    myEllShMat = myEll.shape;
+myEll.checkIfScalar();
+%
+if nargout < 2
+    myEllCentVec = myEll.shapeMat;
+else
+    myEllCentVec = myEll.centerVec;
+    myEllShMat = myEll.shapeMat;
  end

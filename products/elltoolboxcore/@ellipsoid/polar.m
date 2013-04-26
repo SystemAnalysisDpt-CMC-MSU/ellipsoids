@@ -54,8 +54,8 @@ arrayfun(@(x) fSinglePolar(x), 1:numel(ellArr));
 
     function fSinglePolar(index)
         singEll = ellArr(index);
-        qVec = singEll.center;
-        shMat = singEll.shape;
+        qVec = singEll.centerVec;
+        shMat = singEll.shapeMat;
         chk    = qVec' * ell_inv(shMat) * qVec;
         %chk checks if zero belongs to singEll ellipsoid
         if chk < 1
@@ -63,8 +63,8 @@ arrayfun(@(x) fSinglePolar(x), 1:numel(ellArr));
             auxMat  = 0.5*(auxMat + auxMat');
             polCenVec  = -auxMat * qVec;
             polShapeMat  = (1 + qVec'*auxMat*qVec)*auxMat;
-            polEllArr(index).center = polCenVec;
-            polEllArr(index).shape = polShapeMat;
+            polEllArr(index).centerVec = polCenVec;
+            polEllArr(index).shapeMat = polShapeMat;
         else
             throwerror('degenerateEllipsoid',...
                 'The resulting ellipsoid is not bounded');

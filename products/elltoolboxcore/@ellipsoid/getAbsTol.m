@@ -44,5 +44,4 @@ function [absTolArr, absTolVal] = getAbsTol(ellArr, varargin)
 %             Faculty of Computational Mathematics
 %             and Computer Science,
 %             System Analysis Department 2013 $ 
-
 [absTolArr, absTolVal] = ellArr.getProperty('absTol',varargin{:});

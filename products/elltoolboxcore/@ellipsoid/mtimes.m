@@ -75,12 +75,12 @@ arrayfun(@(x) fSingleMtimes(x), 1:numel(inpEllVec));
     function fSingleMtimes(index)
         singEll = inpEllVec(index);
         if isFstScal
-            shMat = multMatSq*singEll.shape;
+            shMat = multMatSq*singEll.shapeMat;
         else
-            shMat = multMat*(singEll.shape)*multMat';
+            shMat = multMat*(singEll.shapeMat)*multMat';
             shMat = 0.5*(shMat + shMat');
         end
-        outEllVec(index).center = multMat *singEll.center;
-        outEllVec(index).shape = shMat;
+        outEllVec(index).centerVec = multMat *singEll.centerVec;
+        outEllVec(index).shapeMat = shMat;
     end
 end
