@@ -1,5 +1,81 @@
 \section{List of all functions}
 \begin{enumerate}
+\item {ellipsoid.getCenterVec}
+\fontfamily{pcr}
+\selectfont
+\begin{lstlisting}
+GETCENTERVEC - returns centerVec vector of given ellipsoid
+
+Input:
+  regular:
+     self: ellipsoid[1,1]
+
+Output:
+  centerVecVec: double[nDims,1] - centerVec of ellipsoid
+
+Example:
+ellObj = ellipsoid([1; 2], eye(2));
+getCenterVec(ellObj)
+
+ans =
+
+     1
+     2
+
+
+
+\end{lstlisting}
+\fontfamily{\familydefault}
+\selectfont
+\item {ellipsoid.getShapeMat}
+\fontfamily{pcr}
+\selectfont
+\begin{lstlisting}
+GETSHAPEMAT - returns shapeMat matrix of given ellipsoid
+
+Input:
+  regular:
+     self: ellipsoid[1,1]
+
+Output:
+  shMat: double[nDims,nDims] - shapeMat matrix of ellipsoid
+
+Example:
+ellObj = ellipsoid([1; 2], eye(2));
+getShapeMat(ellObj)
+
+ans =
+
+     1     0
+     0     1
+
+
+
+\end{lstlisting}
+\fontfamily{\familydefault}
+\selectfont
+\item {ellipsoid.repMat}
+\fontfamily{pcr}
+\selectfont
+\begin{lstlisting}
+REPMAT - is analogous to built-in repmat function with one exception - it
+         copies the objects, not just the handles
+
+Example:
+firstEllObj = ellipsoid([1; 2], eye(2));
+secEllObj = ellipsoid([1; 1], 2*eye(2));
+ellVec = [firstEllObj secEllObj];
+repMat(ellVec)
+
+ans =
+1x2 array of ellipsoids.
+
+
+
+
+\end{lstlisting}
+\fontfamily{\familydefault}
+\selectfont
 \item {ellipsoid.ellipsoid}
 \fontfamily{pcr}
 \selectfont
@@ -70,6 +146,16 @@ Output:
 
 Example:
 ellObj = ellipsoid([1 0 -1 6]', 9*eye(4));
+
+
+
+\end{lstlisting}
+\fontfamily{\familydefault}
+\selectfont
+\item {ellipsoid.loadobj}
+\fontfamily{pcr}
+\selectfont
+\begin{lstlisting}
 
 
 
@@ -574,13 +660,13 @@ absTolVec =
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
-GETCOPY - gives array the same size as ellArr with copies of
-          elements of ellArr.
+GETCOPY - gives array the same size as ellArr with copies of elements of
+         ellArr.
 
 Input:
   regular:
-      ellArr: ellipsoid[nDim1, nDim2,...] - multidimensional array
-          of ellipsoids.
+      ellArr: ellipsoid[nDim1, nDim2,...] - multidimensional array of
+          ellipsoids.
 
 Output:
   copyEllArr: ellipsoid[nDim1, nDim2,...] - multidimension array of
@@ -605,13 +691,13 @@ copyEllVec =
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
-GETNPLOT2DPOINTS - gives value of nPlot2dPoints property
-                   of ellipsoids in ellArr
+GETNPLOT2DPOINTS - gives value of nPlot2dPoints property of ellipsoids
+                   in ellArr
 
 Input:
   regular:
-      ellArr: ellipsoid[nDim1, nDim2,...] - mltidimensional array
-          of ellipsoids
+      ellArr: ellipsoid[nDim1, nDim2,...] - mltidimensional array of
+          ellipsoids
 
 Output:
       nPlot2dPointsArr: double[nDim1, nDim2,...] - multidimension array
@@ -635,13 +721,13 @@ ans =
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
-GETNPLOT3DPOINTS - gives value of nPlot3dPoints property
-                   of ellipsoids in ellArr
+GETNPLOT3DPOINTS - gives value of nPlot3dPoints property of ellipsoids
+                   in ellArr
 
 Input:
   regular:
-      ellArr: ellipsoid[nDim1, nDim2,...] - mltidimensional array
-          of ellipsoids
+      ellArr: ellipsoid[nDim1, nDim2,...] - mltidimensional array  of
+         ellipsoids
 
 Output:
       nPlot2dPointsArr: double[nDim1, nDim2,...] - multidimension array
@@ -1437,7 +1523,7 @@ MINKDIFF - computes geometric (Minkowski) difference of two
 
   In order for the geometric difference to be nonempty set,
   ellipsoid fstEll must be bigger than secEll in the sense that
-  if fstEll and secEll had the same center, secEll would be
+  if fstEll and secEll had the same centerVec, secEll would be
   contained inside fstEll.
 
 Input:
@@ -1660,7 +1746,7 @@ Input:
               (0 - transparent, 1 - opaque).
 
 Output:
-  centerVec: double[nDim, 1] - center of the resulting set.
+  centerVecVec: double[nDim, 1] - centerVec of the resulting set.
   boundarPointsMat: double[nDim, nBoundPoints] - set of boundary
       points (vertices) of resulting set.
 
@@ -1816,8 +1902,8 @@ Input:
               (0 - transparent, 1 - opaque).
 
 Output:
-   centVec: double[nDim, 1]/double[0, 0] - center of the resulting set.
-      centerVec may be empty.
+   centVec: double[nDim, 1]/double[0, 0] - centerVec of the resulting set.
+      centerVecVec may be empty.
    boundPointMat: double[nDim, ]/double[0, 0] - set of boundary
       points (vertices) of resulting set. boundPointMat may be empty.
 
@@ -2650,7 +2736,7 @@ trVec =
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
-UMINUS - changes the sign of the center of ellipsoid.
+UMINUS - changes the sign of the centerVec of ellipsoid.
 
 Input:
    regular:
@@ -4087,145 +4173,6 @@ bndPVec =
 
      2
      1
-
-
-
-
-\end{lstlisting}
-\fontfamily{\familydefault}
-\selectfont
-\item {elltool.reach.ReachFactory.getL0Mat}
-\fontfamily{pcr}
-\selectfont
-\begin{lstlisting}
-Example:
-import elltool.reach.ReachFactory;
-crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
-crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
-rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
-l0Mat = rsObj.getL0Mat()
-
-l0Mat =
-
-     1     0
-     0     1
-
-
-
-
-\end{lstlisting}
-\fontfamily{\familydefault}
-\selectfont
-\item {elltool.reach.ReachFactory.getX0Ell}
-\fontfamily{pcr}
-\selectfont
-\begin{lstlisting}
-Example:
-import elltool.reach.ReachFactory;
-crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
-crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
-rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
-X0Ell = rsObj.getX0Ell()
-
-X0Ell =
-
-Center:
-     0
-     0
-
-Shape Matrix:
-    0.0100         0
-         0    0.0100
-
-Nondegenerate ellipsoid in R^2.
-
-
-
-
-\end{lstlisting}
-\fontfamily{\familydefault}
-\selectfont
-\item {elltool.reach.ReachFactory.getTVec}
-\fontfamily{pcr}
-\selectfont
-\begin{lstlisting}
-Example:
-import elltool.reach.ReachFactory;
-crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
-crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
-rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
-tVec = rsObj.getTVec()
-
-tVec =
-
-     0    10
-
-
-
-
-\end{lstlisting}
-\fontfamily{\familydefault}
-\selectfont
-\item {elltool.reach.ReachFactory.getDim}
-\fontfamily{pcr}
-\selectfont
-\begin{lstlisting}
-Example:
-import elltool.reach.ReachFactory;
-crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
-crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
-rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
-dim = rsObj.getDim();
-
-
-
-
-\end{lstlisting}
-\fontfamily{\familydefault}
-\selectfont
-\item {elltool.reach.ReachFactory.getLinSys}
-\fontfamily{pcr}
-\selectfont
-\begin{lstlisting}
-Example:
-import elltool.reach.ReachFactory;
-crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
-crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
-rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
-linSys = rsObj.getLinSys();
-
-
-
-
-\end{lstlisting}
-\fontfamily{\familydefault}
-\selectfont
-\item {elltool.reach.ReachFactory.createInstance}
-\fontfamily{pcr}
-\selectfont
-\begin{lstlisting}
-Example:
-import elltool.reach.ReachFactory;
-crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
-crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
-rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
-reachObj = rsObj.createInstance();
-
-
-
-
-\end{lstlisting}
-\fontfamily{\familydefault}
-\selectfont
-\item {elltool.reach.ReachFactory.ReachFactory}
-\fontfamily{pcr}
-\selectfont
-\begin{lstlisting}
-Example:
-import elltool.reach.ReachFactory;
-crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
-crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
-rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
 
 
 
@@ -6136,472 +6083,18 @@ isprojection(projObj);
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.linsys.LinSysDiscrete.display}
+\item {elltool.reach.ReachFactory.getL0Mat}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
-
-DISPLAY - displays the details of linear system object.
-
-Input:
-  regular:
-      self: elltool.linsys.ILinSys[1, 1] - linear system.
-
-Output:
-  None.
-
 Example:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-sys.display()
-
-
-
-
-
-\end{lstlisting}
-\fontfamily{\familydefault}
-\selectfont
-\item {elltool.linsys.LinSysDiscrete.LinSysDiscrete}
-\fontfamily{pcr}
-\selectfont
-\begin{lstlisting}
-LINSYSDISCRETE - constructor of discrete linear system object.
-
-Discrete-time linear system:
-          x[k+1]  =  A[k] x[k]  +  B[k] u[k]  +  G[k] v[k]
-            y[k]  =  C[k] x[k]  +  w[k]
-
-Input:
-  regular:
-      atInpMat: double[nDim, nDim]/cell[nDim, nDim] - matrix A.
-
-      btInpMat: double[nDim, kDim]/cell[nDim, kDim] - matrix B.
-
-      uBoundsEll: ellipsoid[1, 1]/struct[1, 1] - control bounds
-          ellipsoid.
-
-      gtInpMat: double[nDim, lDim]/cell[nDim, lDim] - matrix G.
-
-      distBoundsEll: ellipsoid[1, 1]/struct[1, 1] - disturbance bounds
-          ellipsoid.
-
-      ctInpMat: double[mDim, nDim]/cell[mDim, nDim]- matrix C.
-
-      noiseBoundsEll: ellipsoid[1, 1]/struct[1, 1] - noise bounds
-          ellipsoid.
-
-      discrFlag: char[1, 1] - if discrFlag set:
-           'd' - to discrete-time linSys
-           not 'd' - to continuous-time linSys.
-
-Output:
-  self: elltool.linsys.LinSysDiscrete[1, 1] - discrete linear system.
-
-Example:
-for k = 1:20
-   atMat = {'0' '1 + cos(pi*k/2)'; '-2' '0'};
-   btMat =  [0; 1];
-   uBoundsEllObj = ellipsoid(4);
-   gtMat = [1; 0];
-   distBounds = 1/(k+1);
-   ctVec = [1 0];
-   lsys = elltool.linsys.LinSysDiscrete(atMat, btMat,...
-       uBoundsEllObj, gtMat,distBounds, ctVec);
-end
-
-
-
-
-\end{lstlisting}
-\fontfamily{\familydefault}
-\selectfont
-\item {elltool.linsys.LinSysDiscrete.isEqual}
-\fontfamily{pcr}
-\selectfont
-\begin{lstlisting}
-
-ISEQUAL - produces produces logical array the same size as
-          self/compLinSysArr (if they have the same).
-          isEqualArr[iDim1, iDim2,...] is true if corresponding
-          linear systems are equal and false otherwise.
-
-Input:
-  regular:
-      self: elltool.linsys.ILinSys[nDims1, nDims2,...] -  an array of
-           linear systems.
-      compLinSysArr: elltool.linsys.ILinSys[nDims1,...nDims2,...] - an
-           array of linear systems.
-
-Output:
-  isEqualArr: elltool.linsys.LinSys[nDims1, nDims2,...] - an array of
-      logical values.
-      isEqualArr[iDim1, iDim2,...] is true if corresponding linear systems
-      are equal and false otherwise.
-
-Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-newSys = sys.getCopy();
-isEqual = sys.isEqual(newSys)
-
-isEqual =
-
-     1
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-newDSys = sys.getCopy();
-isEqual = dsys.isEqual(newDSys)
-
-isEqual =
-
-     1
-
-
-
-
-\end{lstlisting}
-\fontfamily{\familydefault}
-\selectfont
-\item {elltool.linsys.LinSysDiscrete.getCopy}
-\fontfamily{pcr}
-\selectfont
-\begin{lstlisting}
-
-GETCOPY - gives array the same size as linsysArr with with copies of
-          elements of self.
-
-Input:
-  regular:
-      self: elltool.linsys.ALinSys[nDims1, nDims2,...] - an array of
-            linear systems.
-
-Output:
-  copyLinSysArr: elltool.linsys.LinSys[nDims1, nDims2,...] -  an array of
-     copies of elements of self.
-
-Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-newSys = sys.getCopy();
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-newDSys = dsys.getCopy();
-
-
-
-
-
-\end{lstlisting}
-\fontfamily{\familydefault}
-\selectfont
-\item {elltool.linsys.LinSysDiscrete.getAbsTol}
-\fontfamily{pcr}
-\selectfont
-\begin{lstlisting}
-
-GETABSTOL - gives array the same size as linsysArr with values of absTol
-            properties for each hyperplane in hplaneArr.
-
-
-Input:
-  regular:
-      self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array of linear
-            systems.
-
-Output:
-  absTolArr: double[nDims1, nDims2,...] - array of absTol properties for
-      linear systems in self.
-
-Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-sys.getAbsTol();
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-dsys.getAbsTol();
-
-
-
-
-\end{lstlisting}
-\fontfamily{\familydefault}
-\selectfont
-\item {elltool.linsys.LinSysDiscrete.islti}
-\fontfamily{pcr}
-\selectfont
-\begin{lstlisting}
-
-ISLTI - checks if linear system is time-invariant.
-
-Input:
-  regular:
-      self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array of linear
-            systems.
-
-Output:
-  isLtiMat: logical[nDims1, nDims2,...] -array such that it's element at
-      each position is true if corresponding linear system is
-      time-invariant, and false otherwise.
-
-Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-isLtiArr = sys.islti();
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-isLtiArr = dsys.islti();
-
-
-
-
-
-\end{lstlisting}
-\fontfamily{\familydefault}
-\selectfont
-\item {elltool.linsys.LinSysDiscrete.isempty}
-\fontfamily{pcr}
-\selectfont
-\begin{lstlisting}
-
-ISEMPTY - checks if linear system is empty.
-
-Input:
-  regular:
-      self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array of linear
-            systems.
-
-Output:
-  isEmptyMat: logical[nDims1, nDims2,...] - array such that it's element at
-      each position is true if corresponding linear system is empty, and
-      false otherwise.
-
-Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-sys.isempty()
-
-ans =
-
-     0
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-dsys.isempty();
-
-
-
-
-
-\end{lstlisting}
-\fontfamily{\familydefault}
-\selectfont
-\item {elltool.linsys.LinSysDiscrete.hasnoise}
-\fontfamily{pcr}
-\selectfont
-\begin{lstlisting}
-
-HASNOISE - checks if linear system has unknown bounded noise.
-
-Input:
-  regular:
-      self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array of linear
-            systems.
-
-Output:
-  isNoiseMat: logical[nDims1, nDims2,...] - array such that it's element at
-      each position is true if corresponding linear system has noise, and
-      false otherwise.
-
-Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-sys.hasnoise()
-
-ans =
-
-     0
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-dsys.hasnoise();
-
-
-
-
-
-\end{lstlisting}
-\fontfamily{\familydefault}
-\selectfont
-\item {elltool.linsys.LinSysDiscrete.hasdisturbance}
-\fontfamily{pcr}
-\selectfont
-\begin{lstlisting}
-
-HASDISTURBANCE - checks if linear system has unknown bounded
-                 isturbance.
-
-Input:
-  regular:
-      self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array of
-            linear systems.
-  optional:
-      isMeaningful: logical[1,1] - if true(default), treat constant
-                    disturbance vector as absence of disturbance
-
-Output:
-  isDisturbanceArr: logical[nDims1, nDims2,...] - array such that it's
-      element at each position is true if corresponding linear system
-      has disturbance, and false otherwise.
-
-Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-sys.hasdisturbance()
-
-ans =
-
-     0
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-dsys.hasdisturbance();
-
-
-
-
-
-\end{lstlisting}
-\fontfamily{\familydefault}
-\selectfont
-\item {elltool.linsys.LinSysDiscrete.dimension}
-\fontfamily{pcr}
-\selectfont
-\begin{lstlisting}
-
-DIMENSION - returns dimensions of state, input, output and disturbance
-            spaces.
-Input:
-  regular:
-      self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array of
-            linear systems.
-
-Output:
-  stateDimArr: double[nDims1, nDims2,...] - array of state space
-      dimensions.
-
-  inpDimArr: double[nDims1, nDims2,...] - array of input dimensions.
-
-  outDimArr: double[nDims1, nDims2,...] - array of output dimensions.
-
-  distDimArr: double[nDims1, nDims2,...] - array of disturbance
-        dimensions.
-
-Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-[stateDimArr, inpDimArr, outDimArr, distDimArr] = sys.dimension()
-
-stateDimArr =
-
-     2
-
-
-inpDimArr =
-
-     2
-
-
-outDimArr =
-
-     2
-
-
-distDimArr =
-
-     0
-
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-dsys.dimension();
-
-
-
-
-
-\end{lstlisting}
-\fontfamily{\familydefault}
-\selectfont
-\item {elltool.linsys.LinSysDiscrete.getNoiseBoundsEll}
-\fontfamily{pcr}
-\selectfont
-\begin{lstlisting}
-
-Input:
-  regular:
-      self: elltool.linsys.ILinSys[1, 1] - linear system.
-
-Output:
-  noiseEll: ellipsoid[1, 1]/struct[1, 1] - noise bounds ellipsoid.
-
-Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-noiseEll = dsys.getNoiseBoundsEll()
-
-noiseEll =
-
-     []
-
-
-
-
-
-\end{lstlisting}
-\fontfamily{\familydefault}
-\selectfont
-\item {elltool.linsys.LinSysDiscrete.getCtMat}
-\fontfamily{pcr}
-\selectfont
-\begin{lstlisting}
-
-Input:
-  regular:
-      self: elltool.linsys.ILinSys[1, 1] - linear system.
-
-Output:
-  cMat: double[cMatDim, cMatDim]/cell[cMatDim, cMatDim] - matrix C.
-
-Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-cMat = sys.getCtMat()
-
-cMat =
+import elltool.reach.ReachFactory;
+crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
+crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
+rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
+l0Mat = rsObj.getL0Mat()
+
+l0Mat =
 
      1     0
      0     1
@@ -6609,59 +6102,31 @@ cMat =
 
 
 
-
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.linsys.LinSysDiscrete.getDistBoundsEll}
+\item {elltool.reach.ReachFactory.getX0Ell}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
+Example:
+import elltool.reach.ReachFactory;
+crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
+crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
+rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
+X0Ell = rsObj.getX0Ell()
 
-Input:
-  regular:
-      self: elltool.linsys.ILinSys[1, 1] - linear system.
+X0Ell =
 
-Output:
-  distEll: ellipsoid[1, 1]/struct[1, 1] - disturbance bounds ellipsoid.
+Center:
+     0
+     0
 
-Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-distEll = sys.getDistBoundsEll();
+Shape Matrix:
+    0.0100         0
+         0    0.0100
 
-
-
-
-
-\end{lstlisting}
-\fontfamily{\familydefault}
-\selectfont
-\item {elltool.linsys.LinSysDiscrete.getGtMat}
-\fontfamily{pcr}
-\selectfont
-\begin{lstlisting}
-
-Input:
-  regular:
-      self: elltool.linsys.ILinSys[1, 1] - linear system.
-
-Output:
-  gMat: double[gMatDim, gMatDim]/cell[gMatDim, gMatDim] - matrix G.
-
-Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-gMat = sys.getGtMat();
-
+Nondegenerate ellipsoid in R^2.
 
 
 
@@ -6669,27 +6134,20 @@ gMat = sys.getGtMat();
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.linsys.LinSysDiscrete.getUBoundsEll}
+\item {elltool.reach.ReachFactory.getTVec}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
+Example:
+import elltool.reach.ReachFactory;
+crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
+crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
+rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
+tVec = rsObj.getTVec()
 
-Input:
-  regular:
-      self: elltool.linsys.ILinSys[1, 1] - linear system.
+tVec =
 
-Output:
-  uEll: ellipsoid[1, 1]/struct[1, 1] - control bounds ellipsoid.
-
-Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-uEll = dsys.getUBoundsEll();
-
+     0    10
 
 
 
@@ -6697,27 +6155,16 @@ uEll = dsys.getUBoundsEll();
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.linsys.LinSysDiscrete.getBtMat}
+\item {elltool.reach.ReachFactory.getDim}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
-
-Input:
-  regular:
-      self: elltool.linsys.ILinSys[1, 1] - linear system.
-
-Output:
-  bMat: double[bMatDim, bMatDim]/cell[bMatDim, bMatDim] - matrix B.
-
-Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-bMat = dsys.getBtMat();
-
+Example:
+import elltool.reach.ReachFactory;
+crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
+crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
+rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
+dim = rsObj.getDim();
 
 
 
@@ -6725,27 +6172,49 @@ bMat = dsys.getBtMat();
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.linsys.LinSysDiscrete.getAtMat}
+\item {elltool.reach.ReachFactory.getLinSys}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
+Example:
+import elltool.reach.ReachFactory;
+crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
+crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
+rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
+linSys = rsObj.getLinSys();
 
-Input:
-  regular:
-      self: elltool.linsys.ILinSys[1, 1] - linear system.
 
-Output:
-  aMat: double[aMatDim, aMatDim]/cell[nDim, nDim] - matrix A.
 
-Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-aMat = dsys.getAtMat();
 
+\end{lstlisting}
+\fontfamily{\familydefault}
+\selectfont
+\item {elltool.reach.ReachFactory.createInstance}
+\fontfamily{pcr}
+\selectfont
+\begin{lstlisting}
+Example:
+import elltool.reach.ReachFactory;
+crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
+crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
+rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
+reachObj = rsObj.createInstance();
+
+
+
+
+\end{lstlisting}
+\fontfamily{\familydefault}
+\selectfont
+\item {elltool.reach.ReachFactory.ReachFactory}
+\fontfamily{pcr}
+\selectfont
+\begin{lstlisting}
+Example:
+import elltool.reach.ReachFactory;
+crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
+crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
+rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
 
 
 
@@ -7340,6 +6809,623 @@ bMat = dsys.getBtMat();
 \fontfamily{\familydefault}
 \selectfont
 \item {elltool.linsys.LinSysContinuous.getAtMat}
+\fontfamily{pcr}
+\selectfont
+\begin{lstlisting}
+
+Input:
+  regular:
+      self: elltool.linsys.ILinSys[1, 1] - linear system.
+
+Output:
+  aMat: double[aMatDim, aMatDim]/cell[nDim, nDim] - matrix A.
+
+Examples:
+aMat = [0 1; 0 0]; bMat = eye(2);
+SUBounds = struct();
+SUBounds.center = {'sin(t)'; 'cos(t)'};
+SUBounds.shape = [9 0; 0 2];
+sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+aMat = dsys.getAtMat();
+
+
+
+
+
+\end{lstlisting}
+\fontfamily{\familydefault}
+\selectfont
+\item {elltool.linsys.LinSysDiscrete.display}
+\fontfamily{pcr}
+\selectfont
+\begin{lstlisting}
+
+DISPLAY - displays the details of linear system object.
+
+Input:
+  regular:
+      self: elltool.linsys.ILinSys[1, 1] - linear system.
+
+Output:
+  None.
+
+Example:
+aMat = [0 1; 0 0]; bMat = eye(2);
+SUBounds = struct();
+SUBounds.center = {'sin(t)'; 'cos(t)'};
+SUBounds.shape = [9 0; 0 2];
+sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+sys.display()
+
+
+
+
+
+\end{lstlisting}
+\fontfamily{\familydefault}
+\selectfont
+\item {elltool.linsys.LinSysDiscrete.LinSysDiscrete}
+\fontfamily{pcr}
+\selectfont
+\begin{lstlisting}
+LINSYSDISCRETE - constructor of discrete linear system object.
+
+Discrete-time linear system:
+          x[k+1]  =  A[k] x[k]  +  B[k] u[k]  +  G[k] v[k]
+            y[k]  =  C[k] x[k]  +  w[k]
+
+Input:
+  regular:
+      atInpMat: double[nDim, nDim]/cell[nDim, nDim] - matrix A.
+
+      btInpMat: double[nDim, kDim]/cell[nDim, kDim] - matrix B.
+
+      uBoundsEll: ellipsoid[1, 1]/struct[1, 1] - control bounds
+          ellipsoid.
+
+      gtInpMat: double[nDim, lDim]/cell[nDim, lDim] - matrix G.
+
+      distBoundsEll: ellipsoid[1, 1]/struct[1, 1] - disturbance bounds
+          ellipsoid.
+
+      ctInpMat: double[mDim, nDim]/cell[mDim, nDim]- matrix C.
+
+      noiseBoundsEll: ellipsoid[1, 1]/struct[1, 1] - noise bounds
+          ellipsoid.
+
+      discrFlag: char[1, 1] - if discrFlag set:
+           'd' - to discrete-time linSys
+           not 'd' - to continuous-time linSys.
+
+Output:
+  self: elltool.linsys.LinSysDiscrete[1, 1] - discrete linear system.
+
+Example:
+for k = 1:20
+   atMat = {'0' '1 + cos(pi*k/2)'; '-2' '0'};
+   btMat =  [0; 1];
+   uBoundsEllObj = ellipsoid(4);
+   gtMat = [1; 0];
+   distBounds = 1/(k+1);
+   ctVec = [1 0];
+   lsys = elltool.linsys.LinSysDiscrete(atMat, btMat,...
+       uBoundsEllObj, gtMat,distBounds, ctVec);
+end
+
+
+
+
+\end{lstlisting}
+\fontfamily{\familydefault}
+\selectfont
+\item {elltool.linsys.LinSysDiscrete.isEqual}
+\fontfamily{pcr}
+\selectfont
+\begin{lstlisting}
+
+ISEQUAL - produces produces logical array the same size as
+          self/compLinSysArr (if they have the same).
+          isEqualArr[iDim1, iDim2,...] is true if corresponding
+          linear systems are equal and false otherwise.
+
+Input:
+  regular:
+      self: elltool.linsys.ILinSys[nDims1, nDims2,...] -  an array of
+           linear systems.
+      compLinSysArr: elltool.linsys.ILinSys[nDims1,...nDims2,...] - an
+           array of linear systems.
+
+Output:
+  isEqualArr: elltool.linsys.LinSys[nDims1, nDims2,...] - an array of
+      logical values.
+      isEqualArr[iDim1, iDim2,...] is true if corresponding linear systems
+      are equal and false otherwise.
+
+Examples:
+aMat = [0 1; 0 0]; bMat = eye(2);
+SUBounds = struct();
+SUBounds.center = {'sin(t)'; 'cos(t)'};
+SUBounds.shape = [9 0; 0 2];
+sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+newSys = sys.getCopy();
+isEqual = sys.isEqual(newSys)
+
+isEqual =
+
+     1
+dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+newDSys = sys.getCopy();
+isEqual = dsys.isEqual(newDSys)
+
+isEqual =
+
+     1
+
+
+
+
+\end{lstlisting}
+\fontfamily{\familydefault}
+\selectfont
+\item {elltool.linsys.LinSysDiscrete.getCopy}
+\fontfamily{pcr}
+\selectfont
+\begin{lstlisting}
+
+GETCOPY - gives array the same size as linsysArr with with copies of
+          elements of self.
+
+Input:
+  regular:
+      self: elltool.linsys.ALinSys[nDims1, nDims2,...] - an array of
+            linear systems.
+
+Output:
+  copyLinSysArr: elltool.linsys.LinSys[nDims1, nDims2,...] -  an array of
+     copies of elements of self.
+
+Examples:
+aMat = [0 1; 0 0]; bMat = eye(2);
+SUBounds = struct();
+SUBounds.center = {'sin(t)'; 'cos(t)'};
+SUBounds.shape = [9 0; 0 2];
+sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+newSys = sys.getCopy();
+dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+newDSys = dsys.getCopy();
+
+
+
+
+
+\end{lstlisting}
+\fontfamily{\familydefault}
+\selectfont
+\item {elltool.linsys.LinSysDiscrete.getAbsTol}
+\fontfamily{pcr}
+\selectfont
+\begin{lstlisting}
+
+GETABSTOL - gives array the same size as linsysArr with values of absTol
+            properties for each hyperplane in hplaneArr.
+
+
+Input:
+  regular:
+      self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array of linear
+            systems.
+
+Output:
+  absTolArr: double[nDims1, nDims2,...] - array of absTol properties for
+      linear systems in self.
+
+Examples:
+aMat = [0 1; 0 0]; bMat = eye(2);
+SUBounds = struct();
+SUBounds.center = {'sin(t)'; 'cos(t)'};
+SUBounds.shape = [9 0; 0 2];
+sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+sys.getAbsTol();
+dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+dsys.getAbsTol();
+
+
+
+
+\end{lstlisting}
+\fontfamily{\familydefault}
+\selectfont
+\item {elltool.linsys.LinSysDiscrete.islti}
+\fontfamily{pcr}
+\selectfont
+\begin{lstlisting}
+
+ISLTI - checks if linear system is time-invariant.
+
+Input:
+  regular:
+      self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array of linear
+            systems.
+
+Output:
+  isLtiMat: logical[nDims1, nDims2,...] -array such that it's element at
+      each position is true if corresponding linear system is
+      time-invariant, and false otherwise.
+
+Examples:
+aMat = [0 1; 0 0]; bMat = eye(2);
+SUBounds = struct();
+SUBounds.center = {'sin(t)'; 'cos(t)'};
+SUBounds.shape = [9 0; 0 2];
+sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+isLtiArr = sys.islti();
+dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+isLtiArr = dsys.islti();
+
+
+
+
+
+\end{lstlisting}
+\fontfamily{\familydefault}
+\selectfont
+\item {elltool.linsys.LinSysDiscrete.isempty}
+\fontfamily{pcr}
+\selectfont
+\begin{lstlisting}
+
+ISEMPTY - checks if linear system is empty.
+
+Input:
+  regular:
+      self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array of linear
+            systems.
+
+Output:
+  isEmptyMat: logical[nDims1, nDims2,...] - array such that it's element at
+      each position is true if corresponding linear system is empty, and
+      false otherwise.
+
+Examples:
+aMat = [0 1; 0 0]; bMat = eye(2);
+SUBounds = struct();
+SUBounds.center = {'sin(t)'; 'cos(t)'};
+SUBounds.shape = [9 0; 0 2];
+sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+sys.isempty()
+
+ans =
+
+     0
+dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+dsys.isempty();
+
+
+
+
+
+\end{lstlisting}
+\fontfamily{\familydefault}
+\selectfont
+\item {elltool.linsys.LinSysDiscrete.hasnoise}
+\fontfamily{pcr}
+\selectfont
+\begin{lstlisting}
+
+HASNOISE - checks if linear system has unknown bounded noise.
+
+Input:
+  regular:
+      self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array of linear
+            systems.
+
+Output:
+  isNoiseMat: logical[nDims1, nDims2,...] - array such that it's element at
+      each position is true if corresponding linear system has noise, and
+      false otherwise.
+
+Examples:
+aMat = [0 1; 0 0]; bMat = eye(2);
+SUBounds = struct();
+SUBounds.center = {'sin(t)'; 'cos(t)'};
+SUBounds.shape = [9 0; 0 2];
+sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+sys.hasnoise()
+
+ans =
+
+     0
+dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+dsys.hasnoise();
+
+
+
+
+
+\end{lstlisting}
+\fontfamily{\familydefault}
+\selectfont
+\item {elltool.linsys.LinSysDiscrete.hasdisturbance}
+\fontfamily{pcr}
+\selectfont
+\begin{lstlisting}
+
+HASDISTURBANCE - checks if linear system has unknown bounded
+                 isturbance.
+
+Input:
+  regular:
+      self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array of
+            linear systems.
+  optional:
+      isMeaningful: logical[1,1] - if true(default), treat constant
+                    disturbance vector as absence of disturbance
+
+Output:
+  isDisturbanceArr: logical[nDims1, nDims2,...] - array such that it's
+      element at each position is true if corresponding linear system
+      has disturbance, and false otherwise.
+
+Examples:
+aMat = [0 1; 0 0]; bMat = eye(2);
+SUBounds = struct();
+SUBounds.center = {'sin(t)'; 'cos(t)'};
+SUBounds.shape = [9 0; 0 2];
+sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+sys.hasdisturbance()
+
+ans =
+
+     0
+dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+dsys.hasdisturbance();
+
+
+
+
+
+\end{lstlisting}
+\fontfamily{\familydefault}
+\selectfont
+\item {elltool.linsys.LinSysDiscrete.dimension}
+\fontfamily{pcr}
+\selectfont
+\begin{lstlisting}
+
+DIMENSION - returns dimensions of state, input, output and disturbance
+            spaces.
+Input:
+  regular:
+      self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array of
+            linear systems.
+
+Output:
+  stateDimArr: double[nDims1, nDims2,...] - array of state space
+      dimensions.
+
+  inpDimArr: double[nDims1, nDims2,...] - array of input dimensions.
+
+  outDimArr: double[nDims1, nDims2,...] - array of output dimensions.
+
+  distDimArr: double[nDims1, nDims2,...] - array of disturbance
+        dimensions.
+
+Examples:
+aMat = [0 1; 0 0]; bMat = eye(2);
+SUBounds = struct();
+SUBounds.center = {'sin(t)'; 'cos(t)'};
+SUBounds.shape = [9 0; 0 2];
+sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+[stateDimArr, inpDimArr, outDimArr, distDimArr] = sys.dimension()
+
+stateDimArr =
+
+     2
+
+
+inpDimArr =
+
+     2
+
+
+outDimArr =
+
+     2
+
+
+distDimArr =
+
+     0
+
+dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+dsys.dimension();
+
+
+
+
+
+\end{lstlisting}
+\fontfamily{\familydefault}
+\selectfont
+\item {elltool.linsys.LinSysDiscrete.getNoiseBoundsEll}
+\fontfamily{pcr}
+\selectfont
+\begin{lstlisting}
+
+Input:
+  regular:
+      self: elltool.linsys.ILinSys[1, 1] - linear system.
+
+Output:
+  noiseEll: ellipsoid[1, 1]/struct[1, 1] - noise bounds ellipsoid.
+
+Examples:
+aMat = [0 1; 0 0]; bMat = eye(2);
+SUBounds = struct();
+SUBounds.center = {'sin(t)'; 'cos(t)'};
+SUBounds.shape = [9 0; 0 2];
+sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+noiseEll = dsys.getNoiseBoundsEll()
+
+noiseEll =
+
+     []
+
+
+
+
+
+\end{lstlisting}
+\fontfamily{\familydefault}
+\selectfont
+\item {elltool.linsys.LinSysDiscrete.getCtMat}
+\fontfamily{pcr}
+\selectfont
+\begin{lstlisting}
+
+Input:
+  regular:
+      self: elltool.linsys.ILinSys[1, 1] - linear system.
+
+Output:
+  cMat: double[cMatDim, cMatDim]/cell[cMatDim, cMatDim] - matrix C.
+
+Examples:
+aMat = [0 1; 0 0]; bMat = eye(2);
+SUBounds = struct();
+SUBounds.center = {'sin(t)'; 'cos(t)'};
+SUBounds.shape = [9 0; 0 2];
+sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+cMat = sys.getCtMat()
+
+cMat =
+
+     1     0
+     0     1
+
+
+
+
+
+\end{lstlisting}
+\fontfamily{\familydefault}
+\selectfont
+\item {elltool.linsys.LinSysDiscrete.getDistBoundsEll}
+\fontfamily{pcr}
+\selectfont
+\begin{lstlisting}
+
+Input:
+  regular:
+      self: elltool.linsys.ILinSys[1, 1] - linear system.
+
+Output:
+  distEll: ellipsoid[1, 1]/struct[1, 1] - disturbance bounds ellipsoid.
+
+Examples:
+aMat = [0 1; 0 0]; bMat = eye(2);
+SUBounds = struct();
+SUBounds.center = {'sin(t)'; 'cos(t)'};
+SUBounds.shape = [9 0; 0 2];
+sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+distEll = sys.getDistBoundsEll();
+
+
+
+
+
+\end{lstlisting}
+\fontfamily{\familydefault}
+\selectfont
+\item {elltool.linsys.LinSysDiscrete.getGtMat}
+\fontfamily{pcr}
+\selectfont
+\begin{lstlisting}
+
+Input:
+  regular:
+      self: elltool.linsys.ILinSys[1, 1] - linear system.
+
+Output:
+  gMat: double[gMatDim, gMatDim]/cell[gMatDim, gMatDim] - matrix G.
+
+Examples:
+aMat = [0 1; 0 0]; bMat = eye(2);
+SUBounds = struct();
+SUBounds.center = {'sin(t)'; 'cos(t)'};
+SUBounds.shape = [9 0; 0 2];
+sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+gMat = sys.getGtMat();
+
+
+
+
+
+\end{lstlisting}
+\fontfamily{\familydefault}
+\selectfont
+\item {elltool.linsys.LinSysDiscrete.getUBoundsEll}
+\fontfamily{pcr}
+\selectfont
+\begin{lstlisting}
+
+Input:
+  regular:
+      self: elltool.linsys.ILinSys[1, 1] - linear system.
+
+Output:
+  uEll: ellipsoid[1, 1]/struct[1, 1] - control bounds ellipsoid.
+
+Examples:
+aMat = [0 1; 0 0]; bMat = eye(2);
+SUBounds = struct();
+SUBounds.center = {'sin(t)'; 'cos(t)'};
+SUBounds.shape = [9 0; 0 2];
+sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+uEll = dsys.getUBoundsEll();
+
+
+
+
+
+\end{lstlisting}
+\fontfamily{\familydefault}
+\selectfont
+\item {elltool.linsys.LinSysDiscrete.getBtMat}
+\fontfamily{pcr}
+\selectfont
+\begin{lstlisting}
+
+Input:
+  regular:
+      self: elltool.linsys.ILinSys[1, 1] - linear system.
+
+Output:
+  bMat: double[bMatDim, bMatDim]/cell[bMatDim, bMatDim] - matrix B.
+
+Examples:
+aMat = [0 1; 0 0]; bMat = eye(2);
+SUBounds = struct();
+SUBounds.center = {'sin(t)'; 'cos(t)'};
+SUBounds.shape = [9 0; 0 2];
+sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+bMat = dsys.getBtMat();
+
+
+
+
+
+\end{lstlisting}
+\fontfamily{\familydefault}
+\selectfont
+\item {elltool.linsys.LinSysDiscrete.getAtMat}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}

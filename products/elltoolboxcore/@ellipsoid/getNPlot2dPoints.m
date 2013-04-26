@@ -1,11 +1,11 @@
 function nPlot2dPointsArr = getNPlot2dPoints(ellArr)
-% GETNPLOT2DPOINTS - gives value of nPlot2dPoints property
-%                    of ellipsoids in ellArr
+% GETNPLOT2DPOINTS - gives value of nPlot2dPoints property of ellipsoids 
+%                    in ellArr
 %
 % Input:
 %   regular:
-%       ellArr: ellipsoid[nDim1, nDim2,...] - mltidimensional array
-%           of ellipsoids
+%       ellArr: ellipsoid[nDim1, nDim2,...] - mltidimensional array of 
+%           ellipsoids
 %
 % Output:
 %       nPlot2dPointsArr: double[nDim1, nDim2,...] - multidimension array

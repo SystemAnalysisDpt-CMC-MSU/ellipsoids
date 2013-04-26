@@ -31,8 +31,17 @@ classdef ellipsoid < handle
     end
     methods
         function resArr=repMat(self,varargin)
-            % REPMAT is analogous to built-in repmat function with one
-            % exception - it copies the objects, not just the handles
+            % REPMAT - is analogous to built-in repmat function with one exception - it
+            %          copies the objects, not just the handles
+            %
+            % Example:
+            % firstEllObj = ellipsoid([1; 2], eye(2));
+            % secEllObj = ellipsoid([1; 1], 2*eye(2));
+            % ellVec = [firstEllObj secEllObj];
+            % repMat(ellVec)
+            %
+            % ans =
+            % 1x2 array of ellipsoids.
             %
             %
             % $Author: Peter Gagarinov <pgagarinov@gmail.com> $   $Date: 24-04-2013$
@@ -47,7 +56,7 @@ classdef ellipsoid < handle
         end
         %
         function shMat=getShapeMat(self)
-            % GETSHAPEMAT returns shapeMat matrix of given ellipsoid
+            % GETSHAPEMAT - returns shapeMat matrix of given ellipsoid
             %
             % Input:
             %   regular:
@@ -56,6 +65,14 @@ classdef ellipsoid < handle
             % Output:
             %   shMat: double[nDims,nDims] - shapeMat matrix of ellipsoid
             %
+            % Example:
+            % ellObj = ellipsoid([1; 2], eye(2));
+            % getShapeMat(ellObj)
+            %
+            % ans =
+            % 
+            %      1     0
+            %      0     1  
             %
             % $Author: Peter Gagarinov <pgagarinov@gmail.com> $   $Date: 24-04-2013$
             % $Copyright: Moscow State University,
@@ -66,7 +83,7 @@ classdef ellipsoid < handle
         end
         %
         function centerVecVec=getCenterVec(self)
-            % GETCENTERVEC returns shapeMat matrix of given ellipsoid
+            % GETCENTERVEC - returns centerVec vector of given ellipsoid
             %
             % Input:
             %   regular:
@@ -75,6 +92,14 @@ classdef ellipsoid < handle
             % Output:
             %   centerVecVec: double[nDims,1] - centerVec of ellipsoid
             %
+            % Example:
+            % ellObj = ellipsoid([1; 2], eye(2));
+            % getCenterVec(ellObj)
+            %
+            % ans =
+            % 
+            %      1     
+            %      2       
             %
             % $Author: Peter Gagarinov <pgagarinov@gmail.com> $   $Date: 24-04-2013$
             % $Copyright: Moscow State University,

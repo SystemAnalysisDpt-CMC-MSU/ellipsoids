@@ -1,14 +1,14 @@
 function copyEllArr = getCopy(ellArr)
-% GETCOPY - gives array the same size as ellArr with copies of
-%           elements of ellArr.
+% GETCOPY - gives array the same size as ellArr with copies of elements of 
+%          ellArr.
 %
 % Input:
 %   regular:
-%       ellArr: ellipsoid[nDim1, nDim2,...] - multidimensional array
-%           of ellipsoids.
+%       ellArr: ellipsoid[nDim1, nDim2,...] - multidimensional array of 
+%           ellipsoids.
 %
 % Output:
-%   copyEllArr: ellipsoid[nDim1, nDim2,...] - multidimension array of
+%   copyEllArr: ellipsoid[nDim1, nDim2,...] - multidimension array of  
 %       copies of elements of ellArr.
 % 
 % Example:
