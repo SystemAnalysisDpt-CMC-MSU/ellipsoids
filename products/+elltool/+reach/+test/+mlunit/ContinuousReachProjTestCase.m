@@ -5,9 +5,6 @@ classdef ContinuousReachProjTestCase < mlunitext.test_case
         COMP_PRECISION = 5e-5;
     end
     properties (Access=private)
-        testDataRootDir
-        etalonDataRootDir
-        etalonDataBranchKey
         confName
         crm
         crmSys
@@ -47,10 +44,6 @@ classdef ContinuousReachProjTestCase < mlunitext.test_case
     methods
         function self = ContinuousReachProjTestCase(varargin)
             self = self@mlunitext.test_case(varargin{:});
-            [~, className] = modgen.common.getcallernameext(1);
-            shortClassName = mfilename('classname');
-            self.testDataRootDir = [fileparts(which(className)),...
-                filesep, 'TestData', filesep, shortClassName];
         end
         %
         function self = set_up_param(self, confName, crm, crmSys)
@@ -72,6 +65,9 @@ classdef ContinuousReachProjTestCase < mlunitext.test_case
                 self.crmSys.getParam('time_interval.t1')];
             self.calcPrecision =...
                 self.crm.getParam('genericProps.calcPrecision');
+            isRegEnabled = crm.getParam('regularizationProps.isEnabled');
+            isJustCheck = crm.getParam('regularizationProps.isJustCheck');
+            regTol = crm.getParam('regularizationProps.regTol');
             ControlBounds = struct();
             ControlBounds.center = ptDefCVec;
             ControlBounds.shape = ptDefCMat;
@@ -82,7 +78,10 @@ classdef ContinuousReachProjTestCase < mlunitext.test_case
             self.linSys = elltool.linsys.LinSysFactory.create(atDefCMat,...
                 btDefCMat, ControlBounds, ctDefCMat, DistBounds);
             self.reachObj = elltool.reach.ReachContinuous(self.linSys,...
-                ellipsoid(x0DefVec, x0DefMat), l0Mat, self.timeVec);
+                ellipsoid(x0DefVec, x0DefMat), l0Mat, self.timeVec,...
+                'isRegEnabled', isRegEnabled,...
+                'isJustCheck', isJustCheck,...
+                'regTol', regTol);
         end
         %
         function self = testProjection(self)

@@ -530,7 +530,7 @@ classdef ReachContinuous < elltool.reach.AReach
             import gras.ellapx.uncertcalc.EllApxBuilder;
             import gras.ellapx.enums.EApproxType;
             import elltool.logging.Log4jConfigurator;
-            import  gras.ellapx.lreachuncert.probdyn.RegProblemDynamics;
+            import gras.ellapx.gen.RegProblemDynamicsFactory;
             %%
             logger=Log4jConfigurator.getLogger(...
                 'elltool.ReachCont.constrCallCount');
@@ -561,6 +561,10 @@ classdef ReachContinuous < elltool.reach.AReach
                 throwerror('wrongInput', ['set of initial ',...
                     'conditions must be ellipsoid.']);
             end
+            if x0Ell.isdegenerate()
+                throwerror('wrongInput', ['set of initial ',...
+                    'conditions must be nondegenerate ellipsoid.']);
+            end
             checkgenext('x1==x2&&x2==x3', 3,...
                 dimension(linSys), dimension(x0Ell), size(l0Mat, 1));
             %%
@@ -572,6 +576,7 @@ classdef ReachContinuous < elltool.reach.AReach
                     'discrete-time - as ''[k0 k1]''.']);
             end
             regTolerance = elltool.conf.Properties.getRegTol();
+            
             [reg, ~, isRegEnabled, isJustCheck, regTol] =...
                 modgen.common.parseparext(varargin,...
                 {'isRegEnabled', 'isJustCheck', 'regTol';...
@@ -616,7 +621,7 @@ classdef ReachContinuous < elltool.reach.AReach
                 ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat, qtStrCVec,...
                 x0Mat, x0Vec, [min(timeVec) max(timeVec)],...
                 relTol, isDisturbance);
-            smartLinSys = RegProblemDynamics.create(smartLinSys,...
+            smartLinSys = RegProblemDynamicsFactory.create(smartLinSys,...
                 isRegEnabled, isJustCheck, regTol);
             approxTypeVec = [EApproxType.External EApproxType.Internal];
             self.ellTubeRel = self.makeEllTubeRel(smartLinSys, l0Mat,...
@@ -960,9 +965,8 @@ classdef ReachContinuous < elltool.reach.AReach
         % Output:
         %   regular:
         %       x0Ell: ellipsoid[1, 1] - ellipsoid x0, 
-        %           which was initial set for linear 
-        %           system. 
-        %     
+        %           which was initial set for reach set. 
+        %
         %
         % $Author: Kirill Mayantsev
         % <kirill.mayantsev@gmail.com> $  
@@ -972,7 +976,8 @@ classdef ReachContinuous < elltool.reach.AReach
         %             Mathematics and Computer Science,
         %             System Analysis Department 2013 $
         %
-            x0Ell = self.x0Ellipsoid.getCopy();        end
+            x0Ell = self.x0Ellipsoid.getCopy();
+        end
         %%
         function isBackward = isbackward(self)
         %

@@ -1,8 +1,5 @@
 classdef ContinuousReachRegTestCase < mlunitext.test_case
     properties (Access=private)
-        testDataRootDir
-        etalonDataRootDir
-        etalonDataBranchKey
         confName
         crm
         crmSys
@@ -11,6 +8,7 @@ classdef ContinuousReachRegTestCase < mlunitext.test_case
         l0Mat
         timeVec
         calcPrecision
+        regTol
     end
     %
     methods (Access = private)
@@ -35,10 +33,6 @@ classdef ContinuousReachRegTestCase < mlunitext.test_case
     methods
         function self = ContinuousReachRegTestCase(varargin)
             self = self@mlunitext.test_case(varargin{:});
-            [~, className] = modgen.common.getcallernameext(1);
-            shortClassName = mfilename('classname');
-            self.testDataRootDir = [fileparts(which(className)),...
-                filesep, 'TestData', filesep, shortClassName];
         end
         %
         function self = set_up_param(self, confName, crm, crmSys)
@@ -62,6 +56,8 @@ classdef ContinuousReachRegTestCase < mlunitext.test_case
                 self.crmSys.getParam('time_interval.t1')];
             self.calcPrecision =...
                 self.crm.getParam('genericProps.calcPrecision');
+            self.regTol =...
+                self.crm.getParam('regularizationProps.regTol');
             ControlBounds = struct();
             ControlBounds.center = ptDefCVec;
             ControlBounds.shape = ptDefCMat;
@@ -77,6 +73,7 @@ classdef ContinuousReachRegTestCase < mlunitext.test_case
             x0Ell = self.x0Ell.getCopy();
             l0Mat = self.l0Mat;
             timeVec = self.timeVec;
+            regTol = self.regTol;
             self.runAndCheckError(...
                 ['elltool.reach.ReachContinuous(linSys, x0Ell,',...
                 'l0Mat, timeVec)'],...
@@ -91,7 +88,7 @@ classdef ContinuousReachRegTestCase < mlunitext.test_case
             elltool.reach.ReachContinuous(linSys, x0Ell, l0Mat, timeVec,...
                 'isRegEnabled', true,...
                 'isJustCheck', false,...
-                'regTol', 1e-3);
+                'regTol', regTol);
         end
     end
     

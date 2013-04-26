@@ -6,18 +6,6 @@ classdef RegProblemDynamics <...
         isJustCheck
         regTol
     end
-    methods (Static)
-        function outDynObj =...
-                create(pDynObj, isRegEnabled, isJustCheck, regTol)
-            if isRegEnabled
-                outDynObj =...
-                    gras.ellapx.lreachplain.probdyn.RegProblemDynamics(...
-                    pDynObj, isJustCheck, regTol);
-            else
-                outDynObj = pDynObj;
-            end
-        end
-    end
     methods
         function self = RegProblemDynamics(pDynObj, isJustCheck, regTol)
             self.pDynObj = pDynObj;
