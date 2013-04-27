@@ -9,8 +9,8 @@ classdef GoodDirectionSet
         lsGoodDirMat
     end
     properties (Constant, GetAccess = protected)
-        ODE_NORM_CONTROL='on';
-        CALC_PRECISION_FACTOR=0.001;
+        ODE_NORM_CONTROL = 'on';
+        CALC_PRECISION_FACTOR = 0.001;
         CALC_CGRID_COUNT = 2000;
     end
     properties (Constant, GetAccess = private)
@@ -21,31 +21,32 @@ classdef GoodDirectionSet
         CALC_ALGORITHM = 0;
     end
     methods
-        function nGoodDirs=getNGoodDirs(self)
-            nGoodDirs=size(self.lsGoodDirMat,2);
+        function nGoodDirs = getNGoodDirs(self)
+            nGoodDirs = size(self.lsGoodDirMat, 2);
         end
-        function ltGoodDirCurveSpline=getGoodDirCurveSpline(self)
-            ltGoodDirCurveSpline=self.ltGoodDirCurveSpline;
+        function ltGoodDirCurveSpline = getGoodDirCurveSpline(self)
+            ltGoodDirCurveSpline = self.ltGoodDirCurveSpline;
         end
-        function ltGoodDirCurveSpline=getGoodDirOneCurveSpline(self,dirNum)
-            ltGoodDirCurveSpline=...
+        function ltGoodDirCurveSpline = getGoodDirOneCurveSpline(...
+                self, dirNum)
+            ltGoodDirCurveSpline = ...
                 self.ltGoodDirOneCurveSplineList{dirNum};
         end
-        function ltGoodDirSplineList=getGoodDirOneCurveSplineList(self)
-            ltGoodDirSplineList=...
+        function ltGoodDirSplineList = getGoodDirOneCurveSplineList(self)
+            ltGoodDirSplineList= ...
                 self.ltGoodDirOneCurveSplineList;
         end
         %
-        function RstTransDynamics=getRstTransDynamics(self)
-            RstTransDynamics=self.RstTransDynamics;
+        function RstTransDynamics = getRstTransDynamics(self)
+            RstTransDynamics = self.RstTransDynamics;
         end
-        function sTime=getsTime(self)
-            sTime=self.sTime;
+        function sTime = getsTime(self)
+            sTime = self.sTime;
         end
-        function lsGoodDirMat=getlsGoodDirMat(self)
-            lsGoodDirMat=self.lsGoodDirMat;
+        function lsGoodDirMat = getlsGoodDirMat(self)
+            lsGoodDirMat = self.lsGoodDirMat;
         end
-        function self=GoodDirectionSet(pDefObj,sTime,lsGoodDirMat,...
+        function self = GoodDirectionSet(pDefObj, sTime, lsGoodDirMat, ...
                 calcPrecision)
             import gras.ellapx.common.*;
             import gras.mat.MatrixOperationsFactory;
@@ -53,51 +54,49 @@ classdef GoodDirectionSet
             import gras.mat.fcnlib.ConstColFunction;
             import modgen.common.throwerror;
             %
-            self.lsGoodDirMat=lsGoodDirMat;
+            self.lsGoodDirMat = lsGoodDirMat;
             %
-            timeLimsVec=pDefObj.getTimeLimsVec();
-            if (sTime>timeLimsVec(2))||(sTime<timeLimsVec(1))
+            timeLimsVec = pDefObj.getTimeLimsVec();
+            if (sTime > timeLimsVec(2)) || (sTime < timeLimsVec(1))
                 throwerror('wrongInput',...
-                    'sTime is expected to be within %s',...
+                    'sTime is expected to be within %s', ...
                     mat2str(timeLimsVec));
             end
-            timeVec=unique([pDefObj.getTimeVec(),sTime]);
-            indSTime=find(timeVec==sTime,1,'first');
+            timeVec = unique([pDefObj.getTimeVec(), sTime]);
+            indSTime = find(timeVec == sTime, 1, 'first');
             if isempty(indSTime)
-                throwerror('wrongInput',...
+                throwerror('wrongInput', ...
                     'sTime is expected to be among elements of timeVec');
             end
             %
             matOpFactory = MatrixOperationsFactory.create(timeVec);
             %
-            self.sTime=sTime;
+            self.sTime = sTime;
             %
             RstDynamics = self.calcRstDynamics(pDefObj, calcPrecision);
-            RstTransDynamics = matOpFactory.transpose(RstDynamics);
-            %
-            self.RstTransDynamics = RstTransDynamics;
+            self.RstTransDynamics = matOpFactory.transpose(RstDynamics);
             %
             nGoodDirs = self.getNGoodDirs();
             %
             self.ltGoodDirOneCurveSplineList = cell(nGoodDirs, 1);
             for iGoodDir = 1:nGoodDirs
                 lsGoodDirConstColFunc = ...
-                    ConstColFunction(lsGoodDirMat(:,iGoodDir));
+                    ConstColFunction(lsGoodDirMat(:, iGoodDir));
                 self.ltGoodDirOneCurveSplineList{iGoodDir} = ...
-                    matOpFactory.rMultiply(RstTransDynamics, ...
+                    matOpFactory.rMultiply(self.RstTransDynamics, ...
                     lsGoodDirConstColFunc);
             end
             %
             lsGoodDirConstMatFunc = ConstMatrixFunction(lsGoodDirMat);
             self.ltGoodDirCurveSpline = matOpFactory.rMultiply(...
-                RstTransDynamics, lsGoodDirConstMatFunc);
+                self.RstTransDynamics, lsGoodDirConstMatFunc);
         end
     end
     methods (Access = protected)
         function odePropList=getOdePropList(self,calcPrecision)
-            odePropList={'NormControl',self.ODE_NORM_CONTROL,'RelTol',...
-                calcPrecision*self.CALC_PRECISION_FACTOR,...
-                'AbsTol',calcPrecision*self.CALC_PRECISION_FACTOR};
+            odePropList={'NormControl', self.ODE_NORM_CONTROL, ...
+                'RelTol', calcPrecision*self.CALC_PRECISION_FACTOR, ...
+                'AbsTol', calcPrecision*self.CALC_PRECISION_FACTOR};
         end
     end
     methods (Access = private)
@@ -105,15 +104,9 @@ classdef GoodDirectionSet
                 calcPrecision)
             %
             import gras.interp.MatrixInterpolantFactory;
-            import gras.ode.MatrixODESolver;
             %
             fAtMat = @(t) pDefObj.getAtDynamics().evaluate(t);
             sizeSysVec = size(fAtMat(0));
-            %
-            odeArgList = self.getOdePropList(calcPrecision);
-            %
-            solverObj=MatrixODESolver(sizeSysVec,@ode45, ...
-                odeArgList{:});
             %
             t0 = pDefObj.gett0();
             t1 = pDefObj.gett1();
@@ -124,54 +117,85 @@ classdef GoodDirectionSet
                     sRstInitialMat = normaliz(eye(sizeSysVec));
             end
             %
-            % calculation of R(s, t) if t > s
+            % calculation of R(s, t) on [t0, s)
             %
-            if (self.sTime < t1)
-                timeVec = linspace(self.sTime, t1, self.CALC_CGRID_COUNT);
-                switch (self.CALC_ALGORITHM)
-                    case 0
-                        fRstDerivFunc = @(t, x) fXstDirectFunc(t, x, @(u) fAtMat(u));
-                    case 1
-                        fRstDerivFunc = @(t, x) fRstDirectFunc(t, x, @(u) fAtMat(u));
-                end
-                [timeRstRightVec,dataRstRightArray] = ...
-                    solverObj.solve(fRstDerivFunc, timeVec, sRstInitialMat);
-            else
-                timeRstRightVec = [];
-                dataRstRightArray = [];
+            switch (self.CALC_ALGORITHM)
+                case 0
+                    fRstDerivFunc = ...
+                        @(t, x) fXstOppositeFunc(t, x, ...
+                        @(u) fAtMat(u), self.sTime);
+                case 1
+                    fRstDerivFunc = ...
+                        @(t, x) fRstOppositeFunc(t, x, ...
+                        @(u) fAtMat(u), self.sTime);
             end
+            [timeRstVec, dataRstArray] = self.calcHalfRstDynamics(t0, ...
+                fRstDerivFunc, sRstInitialMat, calcPrecision);
             %
-            % calculation of R(s, t) if t < s
+            % concatenation with X(s, s) on time sTime
             %
-            if (self.sTime > t0)
-                timeVec = linspace(0, self.sTime - t0, self.CALC_CGRID_COUNT);
-                switch (self.CALC_ALGORITHM)
-                    case 0
-                        fRstDerivFunc = ...
-                            @(t, x) fXstOppositeFunc(t, x, ...
-                            @(u) fAtMat(u), self.sTime);
-                    case 1
-                        fRstDerivFunc = ...
-                            @(t, x) fRstOppositeFunc(t, x, ...
-                            @(u) fAtMat(u), self.sTime);
-                end
-                [timeRstLeftVec,dataRstLeftArray] = ...
-                    solverObj.solve(fRstDerivFunc, timeVec, sRstInitialMat);
-                %
-                timeRstLeftVec(end) = []; dataRstLeftArray(:,:,1) = [];
-                timeRstLeftVec = t0 + timeRstLeftVec;
-                dataRstLeftArray = flipdim(dataRstLeftArray, 3);
-            else
-                timeRstLeftVec = [];
-                dataRstLeftArray = [];
-            end        
+            timeRstVec = cat(2, timeRstVec, self.sTime);
+            dataRstArray = cat(3, dataRstArray, ...
+                repmat(sRstInitialMat, [1 1 1]));
             %
-            timeRstVec = cat(2, timeRstLeftVec, timeRstRightVec);
-            dataRstArray = cat(3, dataRstLeftArray, dataRstRightArray);
+            % calculation of R(s, t) on (s, t1)
+            %
+            switch (self.CALC_ALGORITHM)
+                case 0
+                    fRstDerivFunc = @(t, x) fXstDirectFunc(t, x, ...
+                        @(u) fAtMat(u));
+                case 1
+                    fRstDerivFunc = @(t, x) fRstDirectFunc(t, x, ...
+                        @(u) fAtMat(u));
+            end
+            [timeRstRightVec, dataRstRightArray] = ...
+                self.calcHalfRstDynamics(t1, fRstDerivFunc, ...
+                sRstInitialMat, calcPrecision);
+            %
+            timeRstVec = cat(2, timeRstVec, timeRstRightVec);
+            dataRstArray = cat(3, dataRstArray, dataRstRightArray);
             %
             RstDynamics=MatrixInterpolantFactory.createInstance(...
-                'column',dataRstArray,timeRstVec);
-        end 
+                'column', dataRstArray, timeRstVec);
+        end
+        %
+        % calculations for Xst on [t0, s) and (s, t1]
+        %
+        function [timeRstHalfVec, dataRstHalfArray] = ...
+                calcHalfRstDynamics(self, endTime, fRstDerivFunc, ...
+                sRstInitialMat, calcPrecision)
+            %
+            import gras.ode.MatrixODESolver;
+            %
+            odeArgList = self.getOdePropList(calcPrecision);
+            sizeSysVec = size(sRstInitialMat);
+            %
+            solverObj = MatrixODESolver(sizeSysVec, @ode45, ...
+                odeArgList{:});
+            if (self.sTime ~= endTime)
+                if (endTime < self.sTime)
+                    timeVec = linspace(0, self.sTime - endTime, ...
+                        self.CALC_CGRID_COUNT + 1);
+                else
+                    timeVec = linspace(self.sTime, endTime, ...
+                        self.CALC_CGRID_COUNT + 1);
+                end
+                [timeRstHalfVec, dataRstHalfArray] = solverObj.solve( ...
+                    fRstDerivFunc, timeVec, sRstInitialMat);
+                %
+                dataRstHalfArray(:,:,1) = [];
+                if (endTime < self.sTime)
+                    timeRstHalfVec(end) = [];
+                    timeRstHalfVec = endTime + timeRstHalfVec;
+                    dataRstHalfArray = flipdim(dataRstHalfArray, 3);
+                else
+                    timeRstHalfVec(1) = [];
+                end
+            else
+                timeRstHalfVec = [];
+                dataRstHalfArray = [];
+            end
+        end
     end
 end
 %
