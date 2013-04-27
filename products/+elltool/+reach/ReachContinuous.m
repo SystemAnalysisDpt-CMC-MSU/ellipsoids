@@ -167,7 +167,6 @@ classdef ReachContinuous < elltool.reach.AReach
                 APPROX_TYPE, approxType);
             oldData=filteredTubes.getData();
             indVec=find(isThereVec);
-            indVec=indVec(end:-1:1);
             %
             sysDimRows = size(oldData.QArray{1}, 1);
             sysDimCols = size(oldData.QArray{1}, 2);
