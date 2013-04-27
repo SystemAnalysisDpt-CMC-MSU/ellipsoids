@@ -360,6 +360,52 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
                 mlunit.assert(all(resVec == expResVec));
             end
         end
+        %
+        %
+        function self = testTri2Polytope(self)
+            tri2poly = @(x,y) elltool.exttbx.mpt.gen.tri2polytope(x,y);
+            % 3D Case
+            vMat = [1 0 0; 0 1 0; 0 0 1; -1 0 0; 0 -1 0; 0 0 -1];
+            fMat = [1 2 3; 2 3 4; 3 4 5; 1 3 5; 1 2 6; 2 4 6; 4 5 6; 1 5 6];
+            poly1 = tri2poly(vMat,fMat);
+            expPoly1NormMat = [1 1 1; -1 1 1; -1 -1 1; 1 -1 1; 1 1 -1;...
+             -1 1 -1; -1 -1 -1; 1 -1 -1];
+            expPoly1ConstVec = ones(8,1);
+            expPoly1 = polytope(expPoly1NormMat,expPoly1ConstVec);
+            mlunit.assert(poly1 == expPoly1);
+            %
+            transfMat = [1 2 3; 4 1 1; 0 -2 3];
+            transfVec = [1; -2; 0];
+            v2Mat = vMat*transfMat' + repmat(transfVec',[size(vMat,1),1]);
+            poly2 = tri2poly(v2Mat,fMat);
+            
+            expPoly2 = expPoly1*transfMat + transfVec;
+            mlunit.assert(poly2 == expPoly2);  
+            %
+            v3Mat = [1 0 0; 0 1 0; 0 0 1; 0 0 0];
+            f3Mat = [1 2 3; 1 4 3; 1 2 4; 2 3 4];
+            poly3 = tri2poly(v3Mat, f3Mat);
+            expPoly3NormMat = [1 1 1; -eye(3)];
+            expPoly3ConstVec = [1; zeros(3,1)];
+            expPoly3 = polytope(expPoly3NormMat,expPoly3ConstVec);
+            mlunit.assert(poly3 == expPoly3);
+            %
+            % 2D Case
+            v4Mat = [0 0; 2 0; 5 3; 4 6; 0 1];
+            f4Mat = [1; 2; 3; 4; 5];
+            poly4 = tri2poly(v4Mat,f4Mat);
+            expPoly4NormMat = [0 -1; 1 -1; 3 1; -5 4; -1 0];
+            expPoly4ConstVec = [0; 2; 18; 4; 0];
+            expPoly4 = polytope(expPoly4NormMat,expPoly4ConstVec);
+            mlunit.assert(poly4 == expPoly4);
+            %
+            transf2Mat = [1 2; 3 4];
+            transf2Vec = [-1; 1];
+            v5Mat = v4Mat*transf2Mat' + repmat(transf2Vec',[5,1]);
+            poly5 = tri2poly(v5Mat, f4Mat);
+            expPoly5 = expPoly4*transf2Mat+ transf2Vec;
+            mlunit.assert(poly5 == expPoly5);
+        end
     end
     %
     methods(Static)
