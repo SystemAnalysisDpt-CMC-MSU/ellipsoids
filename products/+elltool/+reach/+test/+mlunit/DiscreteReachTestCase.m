@@ -421,7 +421,7 @@ classdef DiscreteReachTestCase < mlunitext.test_case
                 ControlBounds, [], [], [], [], 'd');
             reachSetObj = elltool.reach.ReachDiscrete(linSysObj,...
                 x0Ell, l0Mat, timeVec); %#ok<CPROP>
-            reachSetObj.display();
+            evalc('reachSetObj.display();');
             firstCutReachObj =...
                 reachSetObj.cut([timeVec(1)+1 timeVec(end)-1]);
             [~] = reachSetObj.cut(timeVec(1)+2);
@@ -456,7 +456,7 @@ classdef DiscreteReachTestCase < mlunitext.test_case
                 ControlBounds, gMat, DistorbBounds, [], [], 'd');
             reachSetObj = elltool.reach.ReachDiscrete(linSysObj,...
                 x0Ell, l0Mat, timeVec); %#ok<CPROP>
-            reachSetObj.display();
+            evalc('reachSetObj.display();');
             firstCutReachObj =...
                 reachSetObj.cut([timeVec(1)+1 timeVec(end)-1]);
             [~] = reachSetObj.cut(timeVec(1)+2);
