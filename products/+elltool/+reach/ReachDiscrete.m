@@ -14,6 +14,29 @@ classdef ReachDiscrete < elltool.reach.AReach
     end
     %
     methods (Static, Access = protected)
+        function [atStrCMat btStrCMat gtStrCMat...
+                ptStrCMat ptStrCVec...
+                qtStrCMat qtStrCVec] = prepareSysParam(linSys, timeVec)
+            [atStrCMat btStrCMat gtStrCMat...
+                ptStrCMat ptStrCVec...
+                qtStrCMat qtStrCVec] = ...
+                prepareSysParam@elltool.reach.AReach(linSys);
+            %
+            atStrCMat = unifySym(atStrCMat);
+            btStrCMat = unifySym(btStrCMat);
+            gtStrCMat = unifySym(gtStrCMat);
+            ptStrCMat = unifySym(ptStrCMat);
+            ptStrCVec = unifySym(ptStrCVec);
+            qtStrCMat = unifySym(qtStrCMat);
+            qtStrCVec = unifySym(qtStrCVec);
+            %
+            function outStrCMat = unifySym(inStrCMat)
+               fChangeSymToT = @(str) strrep(str, 'k', 't');
+               outStrCMat = cellfun(fChangeSymToT, inStrCMat, ...
+                   'UniformOutput', false);
+            end
+        end
+        %
         function linSys = getSmartLinSys(atStrCMat, btStrCMat,...
                 ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat, qtStrCVec,...
                 x0Mat, x0Vec, timeVec, calcPrecision, isDisturb)
@@ -34,7 +57,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 import gras.ellapx.lreachplain.probdef.LReachContProblemDef;
                 import gras.ellapx.lreachuncert.probdyn.*;
                 pDefObj = LReachContProblemDef(atStrCMat, btStrCMat,...
-                    ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat,...
+                    ptStrCMat, ptStrCVec, gtStrCMat, ...
                     qtStrCVec, x0Mat, x0Vec, timeVec);
                 if isBack
                     linSys = LReachDiscrBackwardDynamics(pDefObj);
@@ -72,27 +95,29 @@ classdef ReachDiscrete < elltool.reach.AReach
             xDim = smartLinSys.getDimensionality();
             timeVec = smartLinSys.getTimeVec();
             nTubes = size(l0Mat, 2);
-            qMat = smartLinSys.getX0Mat;
             QArrayList = repmat({repmat(zeros(xDim), ...
                 [1, 1, length(timeVec)])}, 1, nTubes);
             ltGoodDirArray = zeros(xDim, nTubes, length(timeVec));
             lMat = zeros(xDim, length(timeVec));
             %
             for iTube = 1:nTubes
+                qMat = smartLinSys.getX0Mat;
                 QArrayList{iTube}(:, :, 1) = qMat;
                 lVec = l0Mat(:, iTube);
                 lMat(:, 1) = lVec;
                 for iTime = 1:(length(timeVec) - 1)
-                    aMat = smartLinSys.getAtDynamics() ...
-                        .evaluate(timeVec(iTime + isBack));
+                    aMat = smartLinSys.getAtDynamics(). ...
+                        evaluate(timeVec(iTime + isBack));
                     aInvMat = smartLinSys.getAtInvDynamics(). ...
                         evaluate(timeVec(iTime + isBack));
                     bpbMat = smartLinSys.getBPBTransDynamics(). ...
                         evaluate(timeVec(iTime + isBack));
                     bpbMat = 0.5 * (bpbMat + bpbMat');
                     qMat = aMat * qMat * aMat';
-                    bpbMat = ell_regularize(bpbMat);
+                    qMat = ell_regularize(qMat, relTol);
+                    bpbMat = ell_regularize(bpbMat, relTol);
                     lVec = aInvMat' * lVec;
+                    lVec = lVec / norm(lVec);
                     if approxType == EApproxType.Internal
                         eEll = minksum_ia([ellipsoid(0.5 * (qMat + qMat')) ...
                             ellipsoid(0.5 * (bpbMat + bpbMat'))], lVec);
@@ -125,13 +150,15 @@ classdef ReachDiscrete < elltool.reach.AReach
             xDim = smartLinSys.getDimensionality();
             timeVec = smartLinSys.getTimeVec();
             nTubes = size(l0Mat, 2);
-            qMat = smartLinSys.getX0Mat;
             QArrayList = repmat({repmat(zeros(xDim), ...
                 [1, 1, length(timeVec)])}, 1, nTubes);
             ltGoodDirArray = zeros(xDim, nTubes, length(timeVec));
             lMat = zeros(xDim, length(timeVec));
             %
+            isMinMax = true;
+            %
             for iTube = 1:nTubes
+                qMat = smartLinSys.getX0Mat;
                 QArrayList{iTube}(:, :, 1) = qMat;
                 lVec = l0Mat(:, iTube);
                 lMat(:, 1) = lVec;
@@ -147,10 +174,11 @@ classdef ReachDiscrete < elltool.reach.AReach
                     bpbMat = 0.5 * (bpbMat + bpbMat');
                     gqgMat = 0.5 * (gqgMat + gqgMat');
                     qMat = aMat * qMat * aMat';
-                    qMat = ell_regularize(qMat);
-                    bpbMat = ell_regularize(bpbMat);
-                    gqgMat = ell_regularize(gqgMat);
+                    qMat = ell_regularize(qMat, relTol);
+                    bpbMat = ell_regularize(bpbMat, relTol);
+                    gqgMat = ell_regularize(gqgMat, relTol);
                     lVec = aInvMat' * lVec;
+                    lVec = lVec / norm(lVec);
                     if approxType == EApproxType.Internal
                         if isMinMax
                             eEll = minkmp_ia(ellipsoid(0.5 * (qMat + qMat')),...
@@ -212,7 +240,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 end
                 aMat = smartLinSys.getAtDynamics().evaluate(timeVec(iTime + isBack));
                 if isBack
-                    centerVec = ell_inv(aMat) * (centerVec - bpVec - gqVec);
+                    centerVec = aMat * (centerVec - bpVec - gqVec);
                 else
                     centerVec = aMat * centerVec + bpVec + gqVec;
                 end
