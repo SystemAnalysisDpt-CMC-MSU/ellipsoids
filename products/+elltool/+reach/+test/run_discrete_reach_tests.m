@@ -1,6 +1,5 @@
 function results = run_discrete_reach_tests(varargin)
-
-import elltool.reach.test.mlunit.ReachFactory;
+import elltool.reach.ReachFactory;
 %
 runner = mlunit.text_test_runner(1, 1);
 loader = mlunitext.test_loader;
@@ -21,9 +20,8 @@ for iConf = 1 : nConfs
     suiteList{end + 1} = loader.load_tests_from_test_case(...
             'elltool.reach.test.mlunit.DiscreteReachTestCase',...
             ReachFactory(confName, crm, crmSys, false, false, true));
-%     suiteList{end + 1} = loader.load_tests_from_test_case(...
-%             'elltool.reach.test.mlunit.DiscreteReachTestCase',...
-%             ReachFactory(confName, crm, crmSys, true, false, true));
+    suiteList{end + 1} = loader.load_tests_from_test_case(...
+        'elltool.reach.test.mlunit.ReachDiscrLogicalTestCase',varargin{:});
 end
 %
 testLists=cellfun(@(x)x.tests,suiteList,'UniformOutput',false);

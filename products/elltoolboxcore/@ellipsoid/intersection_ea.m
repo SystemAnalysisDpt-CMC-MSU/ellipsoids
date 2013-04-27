@@ -141,8 +141,8 @@ function outEll = l_intersection_ea(fstEll, secObj)
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
 
-fstEllCentVec = fstEll.center;
-fstEllShMat = fstEll.shape;
+fstEllCentVec = fstEll.centerVec;
+fstEllShMat = fstEll.shapeMat;
 if rank(fstEllShMat) < size(fstEllShMat, 1)
     fstEllShMat = ...
         ell_inv(ellipsoid.regularize(fstEllShMat,fstEll.absTol));
@@ -152,7 +152,7 @@ end
 
 if isa(secObj, 'hyperplane')
     [normHypVec, hypScalar] = parameters(-secObj);
-    hypNormInv = 1/sqrt(normHypVec'*normHypVec);
+    hypNormInv = 1/realsqrt(normHypVec'*normHypVec);
     hypScalar = hypScalar*hypNormInv;
     normHypVec = normHypVec*hypNormInv;
     if (normHypVec'*fstEllCentVec > hypScalar) ...
@@ -165,7 +165,7 @@ if isa(secObj, 'hyperplane')
         outEll = ellipsoid;
         return;
     end
-    hEig  = 2*sqrt(maxeig(fstEll));
+    hEig  = 2*realsqrt(maxeig(fstEll));
     qSecVec = hypScalar*normHypVec + hEig*normHypVec;
     seqQMat = (normHypVec*normHypVec')/(hEig^2);
    
@@ -180,8 +180,8 @@ else
         outEll = ellipsoid;
         return;
     end
-    qSecVec = secObj.center;
-    seqQMat = secObj.shape;
+    qSecVec = secObj.centerVec;
+    seqQMat = secObj.shapeMat;
     if rank(seqQMat) < size(seqQMat, 1)
         seqQMat = ell_inv(ellipsoid.regularize(seqQMat,secObj.absTol));
     else

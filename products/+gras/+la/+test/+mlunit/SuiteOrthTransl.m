@@ -14,6 +14,25 @@ classdef SuiteOrthTransl < mlunitext.test_case
         function self = set_up_param(self,varargin)
         end
         %
+        function testOrthTransl(self)
+            import gras.la.orthtransl;
+            srcVec=[0 0];
+            dstVec=[1 0];
+            check('wrongInput:srcZero');
+            srcVec=[1 0];
+            dstVec=[0 0];
+            check('wrongInput:dstZero');
+            srcVec=[1 0]+1i*[1 0];
+            check('wrongInput:srcComplex');
+            srcVec=[1 0];
+            dstVec=[1 0]+1i*[1 0];
+            check('wrongInput:dstComplex');
+            %
+            function check(expErrorTag)
+            self.runAndCheckError('gras.la.orthtransl(srcVec,dstVec)',...
+                expErrorTag);                
+            end
+        end
         function test_matorth(self)
             inpMat=self.srcTlMat;
             %

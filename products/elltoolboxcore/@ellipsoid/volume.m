@@ -39,7 +39,7 @@ function vol = fSingleVolume(singEll)
 if isdegenerate(singEll)
     vol = 0;
 else
-    qMat = singEll.shape;
+    qMat = singEll.shapeMat;
     nDim = size(qMat, 1);
     
     if mod(nDim,2)
@@ -49,6 +49,6 @@ else
         k = nDim *0.5;
         s = (pi^k)/factorial(k);
     end
-    vol = s*sqrt(det(qMat));
+    vol = s*realsqrt(det(qMat));
 end
 end

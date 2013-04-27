@@ -86,8 +86,8 @@ classdef EllipsoidSecTestCase < mlunitext.test_case
             %
             testEll1=ellipsoid([16 0;0 25]);
             testEll2=ellipsoid([9 0; 0 4]);
-            testDir1Vec=[10;1]/sqrt(101);
-            testDir2Vec=[1;1]/sqrt(2);
+            testDir1Vec=[10;1]/realsqrt(101);
+            testDir2Vec=[1;1]/realsqrt(2);
             testDirMat=[testDir1Vec, testDir2Vec];
             %
             %Minkdiff_ia, minkdiff_ea work incorrectly
@@ -101,12 +101,11 @@ classdef EllipsoidSecTestCase < mlunitext.test_case
             check(@minkpm_ia,false);
             %
             fMmpEA=@(fEll,sEll,dMat)minkmp_ea(fEll,sEll,...
-                ellipsoid(zeros(2)),dMat);
+                ellipsoid(eye(2)),dMat);
             fMmpIA=@(fEll,sEll,dMat)minkmp_ia(fEll,sEll,...
-                ellipsoid(zeros(2)),dMat);
+                ellipsoid(eye(2)),dMat);
             check(fMmpEA,false);
             check(fMmpIA,false);
-            
             %
             %Hyperplane
             %
@@ -635,10 +634,10 @@ function analyticResEllVec = calcExpMinkMp(isExtApx, nDirs, aMat,...
     for iDir = 1 : nDirs
         lVec = aMat(:, iDir);
         if (isExtApx == 1) % minkmp_ea
-            supp1Mat = sqrt(e0Mat);
+            supp1Mat = realsqrt(e0Mat);
             supp1Mat = 0.5 * (supp1Mat + supp1Mat.');
             supp1Vec = supp1Mat * lVec;
-            supp2Mat = sqrt(qMat);
+            supp2Mat = realsqrt(qMat);
             supp2Mat = 0.5 * (supp2Mat + supp2Mat.');
             supp2Vec = supp2Mat * lVec;
             [unitaryU1Mat, ~, unitaryV1Mat] = svd(supp1Vec);
@@ -649,15 +648,15 @@ function analyticResEllVec = calcExpMinkMp(isExtApx, nDirs, aMat,...
             qStarMat = supp1Mat - sMat * supp2Mat;
             qPlusMat = qStarMat.' * qStarMat;
             qPlusMat = 0.5 * (qPlusMat + qPlusMat.');
-            aDouble = sqrt(dot(lVec, qPlusMat * lVec));
-            a1Double = sqrt(dot(lVec, e1Mat * lVec));
-            a2Double = sqrt(dot(lVec, e2Mat * lVec));
+            aDouble = realsqrt(dot(lVec, qPlusMat * lVec));
+            a1Double = realsqrt(dot(lVec, e1Mat * lVec));
+            a2Double = realsqrt(dot(lVec, e2Mat * lVec));
             analyticResMat = (aDouble + a1Double + a2Double) .* ...
                 ( qPlusMat ./ aDouble + e1Mat ./ a1Double + ...
                 e2Mat ./ a2Double);
         else % minkmp_ia
-            pDouble  = (sqrt(dot(lVec, e0Mat * lVec))) / ...
-                (sqrt(dot(lVec, qMat * lVec)));
+            pDouble  = (realsqrt(dot(lVec, e0Mat * lVec))) / ...
+                (realsqrt(dot(lVec, qMat * lVec)));
             qMinusMat  = (1 - (1 / pDouble)) * e0Mat + ...
                 (1 - pDouble) * qMat;
             qMinusMat = 0.5 * (qMinusMat + qMinusMat.');
@@ -690,9 +689,9 @@ function analyticResEllVec = calcExpMinkSum(isExtApx, nDirs, aMat, ...
     for iDir = 1 : nDirs
         lVec = aMat(:, iDir);
         if isExtApx % minksum_ea
-            a0Double = sqrt(dot(lVec, e0Mat * lVec));
-            a1Double = sqrt(dot(lVec, e1Mat * lVec));
-            a2Double = sqrt(dot(lVec, e2Mat * lVec));
+            a0Double = realsqrt(dot(lVec, e0Mat * lVec));
+            a1Double = realsqrt(dot(lVec, e1Mat * lVec));
+            a2Double = realsqrt(dot(lVec, e2Mat * lVec));
             analyticResMat = (a0Double + a1Double + a2Double) .* ...
                 ( e0Mat ./ a0Double + e1Mat ./ a1Double + ...
                 e2Mat ./ a2Double);

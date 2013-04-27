@@ -29,9 +29,9 @@ classdef ContinuousReachTestCase < mlunitext.test_case
             %
             objectNamesCVec = get(objectHandlesVec, 'DisplayName');
             isIndObjectVec = ~cellfun(@isempty,...
-                    strfind(objectNamesCVec, findStr));
+                strfind(objectNamesCVec, findStr));
             object = objectHandlesVec(isIndObjectVec);
-                %
+            %
             verticesCVec = get(object, 'Vertices');
         end
     end
@@ -74,7 +74,7 @@ classdef ContinuousReachTestCase < mlunitext.test_case
                     gdVerticesCVec, 'UniformOutput', false);
                 %
                 normalizeCVecFunc =...
-                    @(v)cellfun(@(x) x / sqrt(sum(x.*x)),...
+                    @(v)cellfun(@(x) x / realsqrt(sum(x.*x)),...
                     v, 'UniformOutput', false);
                 goodDirCVec = normalizeCVecFunc(goodDirCVec);
                 plottedGoodDirCVec = normalizeCVecFunc(plottedGoodDirCVec);
@@ -91,7 +91,7 @@ classdef ContinuousReachTestCase < mlunitext.test_case
                     end
                 end
                 if plottedGoodDirIndex == 0
-                   throwerror('wrongData', 'No good direction found.');
+                    throwerror('wrongData', 'No good direction found.');
                 end
                 %
                 reachTubeEllipsoids = ellArray(plottedGoodDirIndex, :);
@@ -109,13 +109,13 @@ classdef ContinuousReachTestCase < mlunitext.test_case
                     if ~reachObj.isprojection()
                         centerPointsMat = centerPointsMat / scaleFactor;
                     end
-                    sqrtScalProdVec = sqrt(abs(dot(centerPointsMat,...
+                    sqrtScalProdVec = realsqrt(abs(dot(centerPointsMat,...
                         shapeMat\centerPointsMat) - 1));
                     mlunit.assert_equals(...
                         max(sqrtScalProdVec) < self.COMP_PRECISION, true);
                 end
             end
-            plotter.closeAllFigures();  
+            plotter.closeAllFigures();
         end
         %
         function displayTest(self, reachObj, timeVec)
@@ -226,12 +226,11 @@ classdef ContinuousReachTestCase < mlunitext.test_case
         end
         %
         function self = testGetSystem(self)
-            isEqual = self.linSys == self.reachObj.get_system();
+            isEqual = self.linSys.isEqual(self.reachObj.get_system());
             mlunit.assert_equals(true, isEqual);
             projReachObj = self.reachObj.projection(...
                 eye(self.reachObj.dimension(), 2));
-            isEqual = self.linSys == projReachObj.get_system();
-            mlunit.assert_equals(true, isEqual);
+            isEqual = self.linSys.isEqual(projReachObj.get_system());
             mlunit.assert_equals(true, isEqual);
         end
         %
@@ -269,6 +268,12 @@ classdef ContinuousReachTestCase < mlunitext.test_case
             newTimeVec = [sum(self.tVec)/2, self.tVec(2)];
             self.runAndCheckError('projReachObj.cut(newTimeVec)',...
                 'wrongInput');
+        end
+        %
+        function self = testGetCopy(self)
+            copiedReachObj = self.reachObj.getCopy();
+            isEqual = copiedReachObj.isEqual(self.reachObj);
+            mlunit.assert_equals(true, isEqual);
         end
     end
 end
