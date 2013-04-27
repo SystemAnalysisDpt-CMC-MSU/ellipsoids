@@ -13,20 +13,10 @@ function regQMat = regularize(qMat,absTol)
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
+%
+% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 25-04-2013$
+% $Copyright: Lomonosov Moscow State University,
+%             Faculty of Computational Mathematics and Cybernetics,
+%             Department of System Analysis 2012-2013 $
 
-modgen.common.checkvar(qMat,'gras.la.ismatsymm(x)',...
-    'errorMessage','matrix must be symmetric.');
-
-nDim = size(qMat,2);
-nRank = rank(qMat);
-
-if nRank < nDim
-    [uMat, ~, ~] = svd(qMat);
-    eMat = absTol * eye(nDim - nRank);
-    regQMat = qMat + (uMat *...
-        [zeros(nRank, nRank), zeros(nRank, (nDim-nRank));...
-         zeros((nDim-nRank), nRank), eMat]* uMat');
-    regQMat = 0.5*(regQMat + regQMat');
-else
-    regQMat = qMat;
-end
+regQMat=ell_regularize(qMat,absTol);

@@ -70,8 +70,8 @@ if ~isOneEll % multiple ellipsoids, one direction
     supArr = cell2mat(resCArr);
     bpMat= horzcat(xCArr{:});
 else % one ellipsoid, multiple directions
-    qVec = ellArr.center;
-    shMat = ellArr.shape;
+    qVec = ellArr.centerVec;
+    shMat = ellArr.shapeMat;
     [~, absTol] = getAbsTol(ellArr);
     dirsCVec = mat2cell(dirsMat,nDim,ones(1,nDirs));
     
@@ -82,8 +82,8 @@ else % one ellipsoid, multiple directions
 end
 
     function [supFun xVec] = fSingleRhoForOneDir(singEll)
-        cVec  = singEll.center;
-        shpMat  = singEll.shape;
+        cVec  = singEll.centerVec;
+        shpMat  = singEll.shapeMat;
         [~, singAbsTol] = getAbsTol(singEll);
         sq = max(realsqrt(dirsMat'*shpMat*dirsMat), singAbsTol);
         supFun = cVec'*dirsMat + sq;

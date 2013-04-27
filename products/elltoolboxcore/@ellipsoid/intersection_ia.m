@@ -163,8 +163,8 @@ if isa(secObj, 'ellipsoid')
     return;
 end
 
-fstEllCentVec = fstEll.center;
-fstEllShMat = fstEll.shape;
+fstEllCentVec = fstEll.centerVec;
+fstEllShMat = fstEll.shapeMat;
 if rank(fstEllShMat) < size(fstEllShMat, 1)
     fstEllShMat = ell_inv(ellipsoid.regularize(fstEllShMat,...
         fstEll.absTol));

@@ -83,12 +83,12 @@ checkmultvar('(x1==x2)',2,dimension(fstEll),size(directionsMat, 1),...
     'errorTag','wrongSizes','errorMessage',...
     'direction vectors ans ellipsoids dimensions mismatch.');
 
-centVec = fstEll.center - secEll.center;
-fstEllShMat = fstEll.shape;
+centVec = fstEll.centerVec - secEll.centerVec;
+fstEllShMat = fstEll.shapeMat;
 if isdegenerate(fstEll)
     fstEllShMat = ellipsoid.regularize(fstEllShMat,fstEll.absTol);
 end
-secEllShMat = secEll.shape;
+secEllShMat = secEll.shapeMat;
 if isdegenerate(secEll)
     secEllShMat = ellipsoid.regularize(secEllShMat,secEll.absTol);
 end
@@ -117,7 +117,7 @@ arrayfun(@(x) fSingleDir(x), 1:nDirs)
     function fSingleDir(index)
         coef = realsqrt(coefVec(index));
         shMat = (1 - (1/coef))*fstEllShMat + (1 - coef)*secEllShMat;
-        intApprEllVec(index).center = centVec;
-        intApprEllVec(index).shape = shMat;
+        intApprEllVec(index).centerVec = centVec;
+        intApprEllVec(index).shapeMat = shMat;
     end
 end

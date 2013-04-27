@@ -33,13 +33,13 @@ arrayfun(@(x) fSingleInv(x),1:numel(myEllArr));
         
         singEll = myEllArr(index);
         if isdegenerate(singEll)
-            regShMat = ellipsoid.regularize(singEll.shape,...
+            regShMat = ellipsoid.regularize(singEll.shapeMat,...
                 getAbsTol(singEll));
         else
-            regShMat = singEll.shape;
+            regShMat = singEll.shapeMat;
         end
         regShMat = ell_inv(regShMat);
-        invEllArr(index) = ellipsoid(singEll.center ,...
+        invEllArr(index) = ellipsoid(singEll.centerVec ,...
             0.5*(regShMat + regShMat'));
     end
 end
