@@ -25,6 +25,9 @@ classdef ReachContinuous < elltool.reach.AReach
     end
     properties (Access = private)
         ellTubeRel
+        isRegEnabled
+        isJustCheck
+        regTol
     end
     methods (Access = private)
         function projSet = getProjSet(self, projMat,...
@@ -165,11 +168,11 @@ classdef ReachContinuous < elltool.reach.AReach
                 newTimeVec, newLinSys, approxType)
             import gras.ellapx.smartdb.F;
             APPROX_TYPE = F.APPROX_TYPE;
-            [filteredTubes isThereVec]=self.ellTubeRel.getTuplesFilteredBy(...
+            [filteredTubes isThereVec] =...
+                self.ellTubeRel.getTuplesFilteredBy(...
                 APPROX_TYPE, approxType);
-            oldData=filteredTubes.getData();
-            indVec=find(isThereVec);
-            indVec=indVec(end:-1:1);
+            oldData = filteredTubes.getData();
+            indVec = find(isThereVec);
             %
             sysDimRows = size(oldData.QArray{1}, 1);
             sysDimCols = size(oldData.QArray{1}, 2);
@@ -213,50 +216,115 @@ classdef ReachContinuous < elltool.reach.AReach
         function ellTubeRel = makeEllTubeRel(self, smartLinSys, l0Mat,...
                 timeVec, isDisturb, calcPrecision, approxTypeVec)
             import gras.ellapx.enums.EApproxType;
+            import gras.ellapx.gen.RegProblemDynamicsFactory;
+            %
+            smartLinSys = RegProblemDynamicsFactory.create(smartLinSys,...
+                self.isRegEnabled, self.isJustCheck, self.regTol);
             relTol = elltool.conf.Properties.getRelTol();
             goodDirSetObj =...
                 gras.ellapx.lreachplain.GoodDirectionSet(...
                 smartLinSys, timeVec(1), l0Mat, calcPrecision);
-            if (isDisturb)
-                extIntBuilder =...
-                    gras.ellapx.lreachuncert.ExtIntEllApxBuilder(...
-                    smartLinSys, goodDirSetObj, timeVec,...
-                    relTol,...
-                    self.DEFAULT_INTAPX_S_SELECTION_MODE,...
-                    self.MIN_EIG_Q_REG_UNCERT);
-                ellTubeBuilder =...
-                    gras.ellapx.gen.EllApxCollectionBuilder({extIntBuilder});
-                ellTubeRel = ellTubeBuilder.getEllTubes();
-            else
-                isIntApprox = any(approxTypeVec == EApproxType.Internal);
-                isExtApprox = any(approxTypeVec == EApproxType.External);
-                if isExtApprox
-                    extBuilder =...
-                        gras.ellapx.lreachplain.ExtEllApxBuilder(...
-                        smartLinSys, goodDirSetObj, timeVec,...
-                        relTol);
-                    extellTubeBuilder =...
-                        gras.ellapx.gen.EllApxCollectionBuilder({extBuilder});
-                    extEllTubeRel = extellTubeBuilder.getEllTubes();
-                    if ~isIntApprox
-                        ellTubeRel = extEllTubeRel;
-                    end
-                end
-                if isIntApprox
-                    intBuilder =...
-                        gras.ellapx.lreachplain.IntEllApxBuilder(...
+            try
+                if isDisturb
+                    extIntBuilder =...
+                        gras.ellapx.lreachuncert.ExtIntEllApxBuilder(...
                         smartLinSys, goodDirSetObj, timeVec,...
                         relTol,...
-                        self.DEFAULT_INTAPX_S_SELECTION_MODE);
-                    intellTubeBuilder =...
-                        gras.ellapx.gen.EllApxCollectionBuilder({intBuilder});
-                    intEllTubeRel = intellTubeBuilder.getEllTubes();
+                        self.DEFAULT_INTAPX_S_SELECTION_MODE,...
+                        self.MIN_EIG_Q_REG_UNCERT);
+                    ellTubeBuilder =...
+                        gras.ellapx.gen.EllApxCollectionBuilder({extIntBuilder});
+                    ellTubeRel = ellTubeBuilder.getEllTubes();
+                else
+                    isIntApprox = any(approxTypeVec == EApproxType.Internal);
+                    isExtApprox = any(approxTypeVec == EApproxType.External);
                     if isExtApprox
-                        intEllTubeRel.unionWith(extEllTubeRel);
+                        extBuilder =...
+                            gras.ellapx.lreachplain.ExtEllApxBuilder(...
+                            smartLinSys, goodDirSetObj, timeVec,...
+                            relTol);
+                        extellTubeBuilder =...
+                            gras.ellapx.gen.EllApxCollectionBuilder({extBuilder});
+                        extEllTubeRel = extellTubeBuilder.getEllTubes();
+                        if ~isIntApprox
+                            ellTubeRel = extEllTubeRel;
+                        end
                     end
-                    ellTubeRel = intEllTubeRel;
+                    if isIntApprox
+                        intBuilder =...
+                            gras.ellapx.lreachplain.IntEllApxBuilder(...
+                            smartLinSys, goodDirSetObj, timeVec,...
+                            relTol,...
+                            self.DEFAULT_INTAPX_S_SELECTION_MODE);
+                        intellTubeBuilder =...
+                            gras.ellapx.gen.EllApxCollectionBuilder({intBuilder});
+                        intEllTubeRel = intellTubeBuilder.getEllTubes();
+                        if isExtApprox
+                            intEllTubeRel.unionWith(extEllTubeRel);
+                        end
+                        ellTubeRel = intEllTubeRel;
+                    end
                 end
-                
+            catch exception
+                errorStr = '';
+                errorTag = '';
+                if strcmp(exception.identifier,...
+                        'MODGEN:COMMON:CHECKVAR:wrongInput')
+                    errorStr = 'Probably you need to use regularization.';
+                    errorTag = 'wrongInput:regDisabled';
+                end
+                if strcmp(exception.identifier,...
+                        'MATLAB:badsubscript')
+                    errorStr = ['Probably you need to increase ',...
+                      'regularization tolerance.'];
+                    errorTag = 'wrongInput:badRegTol';
+                end
+                if strcmp(exception.identifier,...
+                        'GRAS:ODE:ODE45REG:wrongState')
+                    errorStr = 'Problems with ode45reg found.';
+                    errorTag = 'wrongInput:badRegTolODE45Failed';
+                end
+                if strcmp(exception.identifier,...
+                        ['GRAS:ELLAPX:SMARTDB:RELS:ELLTUBEBASIC',...
+                        ':CHECKDATACONSISTENCY:wrongInput:QArrayNotPos'])
+                    errorStr = ['Probably you need to change initial ',...
+                        'set or regularization tolerance.'];
+                    errorTag = 'wrongInput:badInitSetOrRegTol';
+                end
+                if strcmp(exception.identifier,...
+                        ['GRAS:ELLAPX:SMARTDB:RELS:',...
+                        'ELLTUBETOUCHCURVEBASIC:',...
+                        'CHECKTOUCHCURVEINDEPENDENCE:',...
+                        'wrongInput:touchCurveDependency'])
+                    errorStr = 'Problems with calculation precision.';
+                    errorTag = 'wrongInput:badCalcPrec';
+                end
+                if strcmp(exception.identifier,...
+                        'GRAS:LA:ISMATPOSDEF:wrongInput:nonSymmMat')
+                    errorStr = 'Probably problems with time interval.';
+                    errorTag = 'wrongInput:badTimeVec';
+                end
+                if strcmp(exception.identifier,...
+                        ['GRAS:ELLAPX:LREACHUNCERT:EXTINTELLAPXBUILDER',...
+                        ':EXTINTELLAPXBUILDER:wrongInput'])
+                    errorStr = 'Problems with initial set.';
+                    errorTag = 'wrongInput:badInitSet';
+                end
+                if strcmp(exception.identifier,...
+                        ['GRAS:ELLAPX:LREACHUNCERT:EXTINTELLAPXBUILDER',...
+                        ':CALCELLAPXMATRIXDERIV:wrongInput'])
+                    errorStr = 'Problems with linear system.';
+                    errorTag = 'wrongInput:badLinSys';
+                end
+                if isempty(errorStr)
+                    throw(exception);
+                else
+                    newException =...
+                        MException(['REACHCONTINUOUS:', errorTag],...
+                        errorStr);
+                    newException = addCause(newException, exception);
+                    throw(newException);
+                end
             end
         end
     end
@@ -531,7 +599,6 @@ classdef ReachContinuous < elltool.reach.AReach
             import gras.ellapx.uncertcalc.EllApxBuilder;
             import gras.ellapx.enums.EApproxType;
             import elltool.logging.Log4jConfigurator;
-            import gras.ellapx.gen.RegProblemDynamicsFactory;
             %%
             logger=Log4jConfigurator.getLogger(...
                 'elltool.ReachCont.constrCallCount');
@@ -562,10 +629,6 @@ classdef ReachContinuous < elltool.reach.AReach
                 throwerror('wrongInput', ['set of initial ',...
                     'conditions must be ellipsoid.']);
             end
-            if x0Ell.isdegenerate()
-                throwerror('wrongInput', ['set of initial ',...
-                    'conditions must be nondegenerate ellipsoid.']);
-            end
             checkgenext('x1==x2&&x2==x3', 3,...
                 dimension(linSys), dimension(x0Ell), size(l0Mat, 1));
             %%
@@ -577,8 +640,7 @@ classdef ReachContinuous < elltool.reach.AReach
                     'discrete-time - as ''[k0 k1]''.']);
             end
             regTolerance = elltool.conf.Properties.getRegTol();
-            
-            [reg, ~, isRegEnabled, isJustCheck, regTol] =...
+            [reg, ~, self.isRegEnabled, self.isJustCheck, self.regTol] =...
                 modgen.common.parseparext(varargin,...
                 {'isRegEnabled', 'isJustCheck', 'regTol';...
                 false, false, regTolerance});
@@ -622,8 +684,6 @@ classdef ReachContinuous < elltool.reach.AReach
                 ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat, qtStrCVec,...
                 x0Mat, x0Vec, [min(timeVec) max(timeVec)],...
                 relTol, isDisturbance);
-            smartLinSys = RegProblemDynamicsFactory.create(smartLinSys,...
-                isRegEnabled, isJustCheck, regTol);
             approxTypeVec = [EApproxType.External EApproxType.Internal];
             self.ellTubeRel = self.makeEllTubeRel(smartLinSys, l0Mat,...
                 [min(timeVec) max(timeVec)], isDisturbance,...
@@ -632,7 +692,7 @@ classdef ReachContinuous < elltool.reach.AReach
                 self.ellTubeRel = self.rotateEllTubeRel(self.ellTubeRel);
             end
         end
-        %
+        %%
         function self = refine(self,l0Mat)
             import modgen.common.throwerror;
             import gras.ellapx.enums.EApproxType;
