@@ -398,22 +398,24 @@ classdef ReachDiscrete < elltool.reach.AReach
             end
             % check and analize input
             if nargin < 4
-                throwerror('insufficient number of input arguments.');
+                throwerror('wrongInput',...
+                    'insufficient number of input arguments.');
             end
             if ~(isa(linSys, 'elltool.linsys.LinSysDiscrete'))
-                throwerror(['first input argument ',...
+                throwerror('wrongInput',['first input argument ',...
                     'must be discrete linear system object.']);
             end
             linSys = linSys(1, 1);
             [d1, du, dy, dd] = linSys.dimension();
-            if ~(isa(x0Ell, 'ellipsoid'))
-                throwerror(['set of initial ',...
-                    'conditions must be ellipsoid.']);
+            if ~isa(x0Ell, 'ellipsoid')
+                throwerror('wrongInput',...
+                    'set of initial conditions must be ellipsoid.');
             end
             x0Ell = x0Ell(1, 1);
             d2 = dimension(x0Ell);
             if d1 ~= d2
-                throwerror(['dimensions of linear system and ',...
+                throwerror('wrongInput',...
+                    ['dimensions of linear system and ',...
                     'set of initial conditions do not match.']);
             end
             [timeRows, timeCols] = size(timeVec);
@@ -424,7 +426,8 @@ classdef ReachDiscrete < elltool.reach.AReach
             end
             [m, N] = size(l0Mat);
             if m ~= d2
-                throwerror(['dimensions of state space ',...
+                throwerror('wrongInput',...
+                    ['dimensions of state space ',...
                     'and direction vector do not match.']);
             end
             if (nargin < 5) || ~(isstruct(OptStruct))

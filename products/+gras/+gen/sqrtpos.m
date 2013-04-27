@@ -29,7 +29,7 @@ if isscalar(inpArr)
     if inpArr<-absTol
         throwerror('wrongInput:negativeInput',...
             'input value is under -absTol');
-    elseif inpArr<=absTol
+    elseif inpArr<0
         inpArr=0;
     end
     resArr=realsqrt(inpArr);
@@ -38,6 +38,6 @@ else
         throwerror('wrongInput:negativeInput',...
             'input array contains values under -absTol');
     end
-    inpArr(inpArr<=absTol)=0;
+    inpArr(inpArr<0)=0;
     resArr = realsqrt(inpArr);
 end

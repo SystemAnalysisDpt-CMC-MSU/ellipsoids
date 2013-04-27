@@ -760,6 +760,53 @@ classdef AReach < elltool.reach.IReach
             end
         end
         %
+        function self=refine(self,l0Mat)
+            import modgen.common.throwerror;
+            import gras.ellapx.enums.EApproxType;
+            if isempty(self.ellTubeRel)
+                throwerror('wrongInput','empty reach set');
+            end
+            if ~isa(l0Mat,'double')
+                throwerror('wrongInput',strcat('second argument must ',...
+                    'be matrix of directions'));
+            end
+            % Calculate additional tubes
+            linSys=self.linSysCVec{1};
+            timeVec= self.switchSysTimeVec;
+            x0Ell= self.x0Ellipsoid;
+            % Normalize good directions
+            nDim = dimension(x0Ell);
+            l0Mat = self.getNormMat(l0Mat, nDim);
+            if self.isprojection();
+                projMat=self.projectionBasisMat;
+                reachSetObj=elltool.reach.ReachContinuous(...
+                    linSys,x0Ell,l0Mat,timeVec);
+                projSet = reachSetObj.getProjSet(projMat);
+                self.ellTubeRel.unionWith(projSet);
+            else
+                [x0Vec x0Mat] = double(x0Ell);
+                [atStrCMat btStrCMat gtStrCMat ptStrCMat ptStrCVec...
+                    qtStrCMat qtStrCVec] =...
+                    self.prepareSysParam(linSys, timeVec);
+                isDisturbance = self.isDisturbance(gtStrCMat, qtStrCMat);
+                %
+                relTol = elltool.conf.Properties.getRelTol();
+                smartLinSys = self.getSmartLinSys(atStrCMat, btStrCMat,...
+                    ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat, qtStrCVec,...
+                    x0Mat, x0Vec, [min(timeVec) max(timeVec)],...
+                    relTol, isDisturbance);
+                approxTypeVec = [EApproxType.External EApproxType.Internal];
+                ellTubeRelNew = self.makeEllTubeRel(smartLinSys, l0Mat,...
+                    [min(timeVec) max(timeVec)], isDisturbance,...
+                    relTol, approxTypeVec);
+                if self.isbackward()
+                    ellTubeRelNew = self.rotateEllTubeRel(ellTubeRelNew);
+                end
+                %Update self.ellTubRel
+                self.ellTubeRel.unionWith(ellTubeRelNew);
+            end
+        end
+        %
         function cutObj = cut(self, cutTimeVec)
             import modgen.common.throwerror;
             if self.isprojection()
