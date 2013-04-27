@@ -18,6 +18,58 @@ classdef EllTCMultiDim < mlunitext.test_case
             self.testDataRootDir=[fileparts(which(className)),filesep,'TestData',...
                 filesep,shortClassName];
         end
+         %
+        function self = testRho(self)
+            %
+            dirMat=[1 1; 0 0];
+            ellObjMat=diag([9 25]);
+            ellObjCenVec=[2 0]';
+            ellObj=ellipsoid(ellObjCenVec,ellObjMat);
+            ellArr=[ellObj, ellObj, ellObj];
+            %
+            %Check one ell - multiple dirs
+            [supArr bpMat]=rho(ellObj,dirMat);
+            checkRhoRes(supArr,bpMat);
+            checkRhoSize(supArr,bpMat,dirMat,[1 2]);
+            %
+            %Check multiple ell - one dir
+            [supArr bpMat]=rho(ellArr,dirMat(:,1));
+            checkRhoRes(supArr,bpMat);
+            checkRhoSize(supArr,bpMat,ones(2,3),[1 3]);
+            %
+            %Check multiple ell - multiple dirs           
+            arrSizeVec=[2,3,4];
+            dirArr=zeros([2,arrSizeVec]);
+            dirArr(1,:)=1;
+            ellArr=createEllArr(ellObjCenVec,ellObjMat,arrSizeVec);
+            [supArr bpMat]=rho(ellArr,dirArr);
+            checkRhoRes(supArr,bpMat);
+            checkRhoSize(supArr,bpMat,dirArr,arrSizeVec);
+            %
+            %Check array ell - one dir
+            [supArr bpMat]=rho(ellArr,dirMat(:,1));
+            checkRhoRes(supArr,bpMat);
+            checkRhoSize(supArr,bpMat,dirArr,arrSizeVec);
+            %
+            %Check one ell - array dir
+            [supArr bpMat]=rho(ellObj,dirArr);
+            checkRhoRes(supArr,bpMat);
+            checkRhoSize(supArr,bpMat,dirArr,arrSizeVec);
+            %
+            % Negative tests for input
+            arr2SizeVec=[2,2,4];
+            dir2Arr=ones([2,arr2SizeVec]);
+            ell2Arr=createEllArr(ellObjCenVec,ellObjMat,arr2SizeVec);
+            self.runAndCheckError('rho(ell2Arr,dirArr)','wrongSizes');
+            self.runAndCheckError('rho(ellArr,dir2Arr)','wrongSizes');
+            ellVec=[ellObj, ellObj, ellObj];
+            dirMat=eye(2);
+            self.runAndCheckError('rho(ellVec,dirMat)','wrongSizes');
+            ellVec=[ellObj, ellObj, ellObj]';
+            dirMat=eye(2);
+            self.runAndCheckError('rho(ellVec,dirMat)','wrongSizes');
+        end
+        %
         function self = testDistance(self)
             absTol = elltool.conf.Properties.getAbsTol();
             %
@@ -750,4 +802,26 @@ function checkGeAndGtAndLeAndLt(self, isG, isE)
                 errorStr);
         end
     end
- end 
+end
+function checkRhoSize(supArr,bpMat,dirArr,arrSizeVec)
+isRhoOk=all(size(supArr)==arrSizeVec);
+[nSize mSize]=size(bpMat);
+dirSizeVec=size(dirArr);
+isBPOk=nSize==dirSizeVec(1) && ...
+    mSize==prod(dirSizeVec(2:end));
+mlunit.assert_equals(true,isRhoOk && isBPOk);
+end
+function checkRhoRes(supArr,bpArr)
+isRhoOk=all(supArr(:)==5);
+isBPOk=all(bpArr(1,:)==5) && all(bpArr(2,:)==0);
+mlunit.assert_equals(true,isRhoOk && isBPOk);
+end
+function ellArr=createEllArr(ellObjCenVec,ellObjMat,arrSize)
+nElems = prod(arrSize, 2);
+cenCArr = repmat({ellObjCenVec}, 1, nElems);
+matCArr = repmat({ellObjMat}, 1, nElems);
+ellCArr = cellfun(@ellipsoid, cenCArr, matCArr, ...
+    'UniformOutput', false);
+ellArr = reshape([ellCArr{:}], arrSize);
+end
+
