@@ -18,8 +18,8 @@ function [isEqualArr, reportStr] = eq(ellFirstArr, ellSecArr)
 %
 %   reportStr: char[1,] - comparison report
 %
-%$Author: Peter Gagarinov  <pgagarinov@gmail.com> $    
-%$Date: Dec-2012$
+% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $    
+% $Date: Dec-2012$
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $

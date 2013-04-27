@@ -9,6 +9,7 @@ texFileName='functions.tex';
 newLineSymbol=10;
 % TeX settings
 font='pcr';
+
 %% obtain full path
 curPath=modgen.path.rmlastnpathparts(...
     fileparts(which('elltool.doc.run_helpcollector')),3);
@@ -19,9 +20,9 @@ if modgen.system.ExistanceChecker.isFile(resultTexFileName)
     delete(resultTexFileName);
 end
 %
-FuncData=elltool.doc.collecthelp({'ellipsoid','hyperplane', ...
+FuncData=elltool.doc.collecthelp({'ellipsoid', 'hyperplane', ...
 'elltool.conf.Properties', 'elltool.core.GenEllipsoid'},...
- {'elltool.reach', 'elltool.linsys'},{'test'});
+     {'elltool.reach', 'elltool.linsys'},{'test'}, {'empty'});
 %
 %
 nHelpElems=numel(FuncData.funcName);
@@ -36,6 +37,9 @@ isChosenFunc=~(FuncData.isScript);
 
 funcNameCell=FuncData.funcName(isChosenFunc);
 helpCell=FuncData.help(isChosenFunc);
+classNameCell = FuncData.className;
+classNameCell=cellfun(@(x) x(1:end),classNameCell,'UniformOutput',false);
+numberOfFunctions = FuncData.numbOfFunc;
 
 % update funcNameCell (delete '.m')
 funcNameCell=cellfun(@(x) x(1:end),funcNameCell,'UniformOutput',false);
@@ -87,30 +91,35 @@ substListHelp={};
 for iSymb=1:length(symbList)
     funcOutputCell=strrep(funcOutputCell,symbList{iSymb},substList{iSymb});
     funcNameCell=strrep(funcNameCell,symbList{iSymb},substList{iSymb});
+
 end
 %
 for iSymb=1:length(symbListHelp)
     finalHelpCell=cellfun(@(x) strrep(x,symbListHelp{iSymb},substListHelp{iSymb}),...
         finalHelpCell,'UniformOutput',false);
 end
-
 %% create tex doc
 %
 fid = fopen(resultTexFileName, 'wt');
-% section 'List of all functions'
-fprintf(fid,'\\section{List of all functions}\n');
-fprintf(fid,'\\begin{enumerate}\n');
-for idx=1:length(funcOutputCell)
-    fprintf(fid,'\\item {%s}\n',funcOutputCell{idx});
-    fprintf(fid,'\\fontfamily{%s}\n',font);
-    fprintf(fid,'\\selectfont\n');
-    fprintf(fid,'\\begin{lstlisting}\n');
-    fprintf(fid,'%s\n',finalHelpCell{idx});
-    fprintf(fid,'\\end{lstlisting}\n');
-    fprintf(fid,'\\fontfamily{\\familydefault}\n');
-    fprintf(fid,'\\selectfont\n');
+indFunc = 1;
+for iClass=1:length(classNameCell)
+    fprintf(fid,'\\section{%s}\n',classNameCell{iClass});
+    numbFunc = indFunc + numberOfFunctions(iClass) - 1;
+    for iFunc = indFunc: numbFunc
+        fprintf(fid,'\\subsection{%s}\n',funcOutputCell{iFunc});
+        % new font
+        fprintf(fid,'\\fontfamily{%s}\n',font);
+        fprintf(fid,'\\selectfont\n');
+        % print function help
+        fprintf(fid,'\\begin{lstlisting}\n');
+        fprintf(fid,'%s\n',finalHelpCell{iFunc});
+        fprintf(fid,'\\end{lstlisting}\n');
+        % default font
+        fprintf(fid,'\\fontfamily{\\familydefault}\n');
+        fprintf(fid,'\\selectfont\n');
+        indFunc = indFunc + 1;
+    end
 end
-fprintf(fid,'\\end{enumerate}\n');
 % close file
 fclose(fid);
 logger.info(sprintf('Job completed, the result is written to \n%s',...

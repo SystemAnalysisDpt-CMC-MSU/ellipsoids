@@ -7,20 +7,20 @@ function display(myEllMat)
 %       myEllMat: ellipsoid [mRows, nCols] - matrix of ellipsoids.
 %           
 % Example:
-% ellObj = ellipsoid([-2; -1], [2 -1; -1 1]);
-% display(ellObj)
+%   ellObj = ellipsoid([-2; -1], [2 -1; -1 1]);
+%   display(ellObj)
 % 
-% ellObj =
+%   ellObj =
 % 
-% Center:
-%     -2
-%     -1
+%   Center:
+%       -2
+%       -1
 % 
-% Shape Matrix:
-%      2    -1
-%     -1     1
+%   Shape Matrix:
+%        2    -1
+%       -1     1
 % 
-% Nondegenerate ellipsoid in R^2.
+%   Nondegenerate ellipsoid in R^2.
 % 
 % 
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>

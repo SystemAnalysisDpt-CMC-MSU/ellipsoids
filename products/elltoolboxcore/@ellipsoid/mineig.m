@@ -12,12 +12,12 @@ function minEigArr = mineig(inpEllArr)
 %       eigenvalues of ellipsoids in the input array inpEllMat.
 % 
 % Example:
-% ellObj = ellipsoid([-2; 4], [4 -1; -1 5]);
-% minEig = mineig(ellObj)
+%   ellObj = ellipsoid([-2; 4], [4 -1; -1 5]);
+%   minEig = mineig(ellObj)
 % 
-% minEig =
+%   minEig =
 % 
-%     3.3820 
+%       3.3820 
 % 
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California

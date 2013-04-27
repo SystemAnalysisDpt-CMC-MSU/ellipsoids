@@ -50,9 +50,9 @@ function [centVec, boundPointMat] = minkdiff(fstEll,secEll,varargin)
 %       may be empty if  ellipsoid fstEll isn't bigger than secEll.
 %
 % Example:
-% firstEllObj = ellipsoid([-1; 1], [2 0; 0 3]);
-% secEllObj = ellipsoid([1 2], eye(2));
-% [centVec, boundPointMat] = minkdiff(firstEllObj, secEllObj);
+%   firstEllObj = ellipsoid([-1; 1], [2 0; 0 3]);
+%   secEllObj = ellipsoid([1 2], eye(2));
+%   [centVec, boundPointMat] = minkdiff(firstEllObj, secEllObj);
 % 
 % 
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>

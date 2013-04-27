@@ -57,10 +57,10 @@ function [centVec, boundPntMat] = minkmp(fstEll, secEll, sumEllArr,varargin)
 %       points (vertices) of resulting set.
 %
 % Example:
-% firstEllObj = ellipsoid([-2; -1], [2 -1; -1 1]);
-% secEllObj = ell_unitball(2);
-% ellVec = [firstEllObj secEllObj ellipsoid([-3; 1], eye(2))];
-% minkmp(firstEllObj, secEllObj, ellVec);
+%   firstEllObj = ellipsoid([-2; -1], [2 -1; -1 1]);
+%   secEllObj = ell_unitball(2);
+%   ellVec = [firstEllObj secEllObj ellipsoid([-3; 1], eye(2))];
+%   minkmp(firstEllObj, secEllObj, ellVec);
 % 
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 

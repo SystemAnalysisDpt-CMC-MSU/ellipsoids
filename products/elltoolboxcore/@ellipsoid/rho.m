@@ -40,13 +40,13 @@ function [supArr, bpMat] = rho(ellArr, dirsMat)
 %       boundary points
 % 
 % Example:
-% ellObj = ellipsoid([-2; 4], [4 -1; -1 1]);
-% dirsMat = [-2 5; 5 1];
-% suppFuncVec = rho(ellObj, dirsMat)
+%   ellObj = ellipsoid([-2; 4], [4 -1; -1 1]);
+%   dirsMat = [-2 5; 5 1];
+%   suppFuncVec = rho(ellObj, dirsMat)
 % 
-% suppFuncVec =
+%   suppFuncVec =
 % 
-%    31.8102    3.5394
+%       31.8102    3.5394
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regesnts of the University of California 

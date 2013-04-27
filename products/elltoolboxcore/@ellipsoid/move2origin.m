@@ -15,20 +15,20 @@ function outEllArr = move2origin(inpEllArr)
 %       with the same shapes as in inpEllArr centered at the origin.
 %
 % Example:
-% ellObj = ellipsoid([-2; -1], [4 -1; -1 1]);
-% outEllObj = ellObj.move2origin()
+%   ellObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+%   outEllObj = ellObj.move2origin()
 % 
-% outEllObj =
+%   outEllObj =
 % 
-% Center:
-%      0
-%      0
+%   Center:
+%        0
+%        0
 % 
-% Shape:
-%      4    -1
-%     -1     1
+%   Shape:
+%        4    -1
+%       -1     1
 % 
-% Nondegenerate ellipsoid in R^2.
+%   Nondegenerate ellipsoid in R^2.
 %
 %       
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>

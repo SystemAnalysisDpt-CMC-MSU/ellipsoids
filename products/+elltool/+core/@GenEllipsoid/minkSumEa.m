@@ -14,37 +14,37 @@ function [ ellResVec] = minkSumEa( ellObjVec, dirMat )
 %       generalized ellipsoids
 % 
 % Example:
-% firstEllObj = elltool.core.GenEllipsoid([1;1],eye(2));
-% secEllObj = elltool.core.GenEllipsoid([5;0],[3 0; 0 2]);
-% ellVec = [firstEllObj secEllObj];
-% dirsMat = [1 3; 2 4];
-% ellResVec  = minkSumEa(ellVec, dirsMat )
+%   firstEllObj = elltool.core.GenEllipsoid([1;1],eye(2));
+%   secEllObj = elltool.core.GenEllipsoid([5;0],[3 0; 0 2]);
+%   ellVec = [firstEllObj secEllObj];
+%   dirsMat = [1 3; 2 4];
+%   ellResVec  = minkSumEa(ellVec, dirsMat )
 %  
-% Structure(1)
-%    |    
-%    |----- q : [6 1]
-%    |          -----------------
-%    |----- Q : |7.50584|0      |
-%    |          |0      |5.83164|
-%    |          -----------------
-%    |          -----
-%    |-- QInf : |0|0|
-%    |          |0|0|
-%    |          -----
-%    O
+%   Structure(1)
+%      |    
+%      |----- q : [6 1]
+%      |          -----------------
+%      |----- Q : |7.50584|0      |
+%      |          |0      |5.83164|
+%      |          -----------------
+%      |          -----
+%      |-- QInf : |0|0|
+%      |          |0|0|
+%      |          -----
+%      O
 %  
-% Structure(2)
-%    |    
-%    |----- q : [6 1]
-%    |          -----------------
-%    |----- Q : |7.48906|0      |
-%    |          |0      |5.83812|
-%    |          -----------------
-%    |          -----
-%    |-- QInf : |0|0|
-%    |          |0|0|
-%    |          -----
-%    O
+%   Structure(2)
+%      |    
+%      |----- q : [6 1]
+%      |          -----------------
+%      |----- Q : |7.48906|0      |
+%      |          |0      |5.83812|
+%      |          -----------------
+%      |          -----
+%      |-- QInf : |0|0|
+%      |          |0|0|
+%      |          -----
+%      O
 %
 %
 % $Author: Vitaly Baranov  <vetbar42@gmail.com> $    

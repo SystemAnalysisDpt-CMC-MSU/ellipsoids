@@ -39,10 +39,11 @@ function [centVec, boundPointMat] = minksum(inpEllArr,varargin)
 %       points (vertices) of resulting set.
 %
 % Example:
-% firstEllObj = ellipsoid([-2; -1], [2 -1; -1 1]);
-% secEllObj = ell_unitball(2);
-% ellVec = [firstEllObj, secellObj]
-% sumVec = minksum(ellVec);
+%   firstEllObj = ellipsoid([-2; -1], [2 -1; -1 1]);
+%   secEllObj = ell_unitball(2);
+%   ellVec = [firstEllObj, secellObj]
+%   sumVec = minksum(ellVec);
+%
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 
 %              2004-2008 $

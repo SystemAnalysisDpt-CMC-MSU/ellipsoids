@@ -30,22 +30,22 @@ function varargout = parseProp(args,neededPropNameList)
 %                              they listed in neededPropNameList
 % 
 % Example:
-% testAbsTol = 1;
-% testRelTol = 2;
-% nPlot2dPoints = 3;
-% someArg = 4;
-% args = {'absTol',testAbsTol, 'relTol',testRelTol,'nPlot2dPoints',nPlot2dPoints, 'someOtherArg', someArg};
-% neededProp = {'absTol','relTol'};
-% [absTol, relTol] = elltool.conf.Properties.parseProp(args,neededProp)
+%   testAbsTol = 1;
+%   testRelTol = 2;
+%   nPlot2dPoints = 3;
+%   someArg = 4;
+%   args = {'absTol',testAbsTol, 'relTol',testRelTol,'nPlot2dPoints',nPlot2dPoints, 'someOtherArg', someArg};
+%   neededProp = {'absTol','relTol'};
+%   [absTol, relTol] = elltool.conf.Properties.parseProp(args,neededProp)
 % 
-% absTol =
+%   absTol =
 % 
-%      1
+%        1
 % 
 % 
-% relTol =
+%   relTol =
 % 
-%      2
+%        2
 %
 %$Author: Zakharov Eugene  <justenterrr@gmail.com> $    
 %$Date: 2012-11-05 $

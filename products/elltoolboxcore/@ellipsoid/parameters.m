@@ -12,18 +12,18 @@ function [myEllCenterVec, myEllShapeMat] = parameters(myEll)
 %       of the ellipsoid myEll.
 % 
 % Example:
-% ellObj = ellipsoid([-2; 4], [4 -1; -1 5]);
-% [centVec shapeMat] = parameters(ellObj)
-% centVec =
+%   ellObj = ellipsoid([-2; 4], [4 -1; -1 5]);
+%   [centVec shapeMat] = parameters(ellObj)
+%   centVec =
 % 
-%     -2
-%      4
+%       -2
+%        4
 % 
 % 
-% shapeMat =
+%   shapeMat =
 % 
-%      4    -1
-%     -1     5
+%       4    -1
+%      -1     5
 % 
 % 
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>

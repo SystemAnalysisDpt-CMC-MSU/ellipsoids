@@ -1,7 +1,7 @@
 function checkIsMe(ellArr,varargin)
 % Example:
-% ellObj = ellipsoid([1; 2], eye(2));
-% ellipsoid.checkIsMe(ellObj)
+%   ellObj = ellipsoid([1; 2], eye(2));
+%   ellipsoid.checkIsMe(ellObj)
 % 
 % 
 % % $Author: Rustam Galiev <glvrst@gmail.com> $	$Date: 2012-12-27 $ 

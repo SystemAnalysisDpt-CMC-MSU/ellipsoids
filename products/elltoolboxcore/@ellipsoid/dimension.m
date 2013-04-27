@@ -3,7 +3,7 @@ function [dimArr, rankArr] = dimension(myEllArr)
 % DIMENSION - returns the dimension of the space in which the ellipsoid is  
 %             defined and the actual dimension of the ellipsoid.
 %             
-%Input:
+% Input:
 %   regular:
 %     myEllArr: ellipsoid[nDims1,nDims2,...,nDimsN] - array of ellipsoids.
 %
@@ -16,23 +16,23 @@ function [dimArr, rankArr] = dimension(myEllArr)
 %            ellipsoids in myEllArr.
 % 
 % Example:
-% firstEllObj = ellipsoid();
-% tempMatObj = [3 1; 0 1; -2 1]; 
-% secEllObj = ellipsoid([1; -1; 1], tempMatObj*tempMatObj');
-% thirdEllObj = ellipsoid(eye(2));
-% fourthEllObj = ellipsoid(0);
-% ellMat = [firstEllObj secEllObj; thirdEllObj fourthEllObj];
-% [dimMat, rankMat] = ellMat.dimension()
+%   firstEllObj = ellipsoid();
+%   tempMatObj = [3 1; 0 1; -2 1]; 
+%   secEllObj = ellipsoid([1; -1; 1], tempMatObj*tempMatObj');
+%   thirdEllObj = ellipsoid(eye(2));
+%   fourthEllObj = ellipsoid(0);
+%   ellMat = [firstEllObj secEllObj; thirdEllObj fourthEllObj];
+%   [dimMat, rankMat] = ellMat.dimension()
 % 
-% dimMat =
+%   dimMat =
 % 
-%    0     3
-%    2     1
+%      0     3
+%      2     1
 % 
-% rankMat =
+%   rankMat =
 % 
-%    0     2
-%    2     0
+%      0     2
+%      2     0
 %
 %
 %

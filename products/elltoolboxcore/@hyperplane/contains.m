@@ -32,16 +32,16 @@ function isPosArr = contains(myHypArr, xArr)
 %       isPosArr(iDim1, iDim2, ...) = true - myHypArr(iDim1, iDim2, ...)
 %       contains xArr(:, iDim1, iDim2, ...), false - otherwise.
 %
-%Example:
-% hypObj = hyperplane([-1; 1]);
-% tempMat = [100 -1 2; 100 1 2];
-% hypObj.contains(tempMat)
+% Example:
+%   hypObj = hyperplane([-1; 1]);
+%   tempMat = [100 -1 2; 100 1 2];
+%   hypObj.contains(tempMat)
 % 
-% ans =
+%   ans =
 % 
-%      1
-%      0
-%      1
+%        1
+%        0
+%        1
 %
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>

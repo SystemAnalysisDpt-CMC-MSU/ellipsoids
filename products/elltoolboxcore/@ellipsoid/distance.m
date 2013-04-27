@@ -38,13 +38,13 @@ function [distValArray, statusArray] = distance(ellObjArr, objArr, isFlagOn)
 %           distances.
 % 
 % Example:
-% ellObj = ellipsoid([-2; -1], [4 -1; -1 1]);
-% tempMat = [1 1; 1 -1; -1 1; -1 -1]';
-% distVec = ellObj.distance(tempMat)
+%   ellObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+%   tempMat = [1 1; 1 -1; -1 1; -1 -1]';
+%   distVec = ellObj.distance(tempMat)
 % 
-% distVec =
+%   distVec =
 % 
-%      2.3428    1.0855    1.3799    -1.0000
+%        2.3428    1.0855    1.3799    -1.0000
 %
 %
 % $Author: Alex Kurzhanskiy  <akurzhan@eecs.berkeley.edu> $    

@@ -12,7 +12,7 @@ classdef LinSysFactory
     methods(Static)
         function linSys = create(varargin)
 %
-            % CREATE returns linear system object.
+            % CREATE - returns linear system object.
             %
             % Continuous-time linear system:
             %           dx/dt  =  A(t) x(t)  +  B(t) u(t)  +  G(t) v(t)
@@ -51,11 +51,11 @@ classdef LinSysFactory
             %       elltool.linsys.LinSysDiscrete[1, 1] - linear system.
             %
             % Examples:
-            % aMat = [0 1; 0 0]; bMat = eye(2);  
-            % SUBounds = struct();
-            % SUBounds.center = {'sin(t)'; 'cos(t)'};  
-            % SUBounds.shape = [9 0; 0 2]; 
-            % sys = elltool.linsys.LinSysFactory.create(aMat, bMat,SUBounds);
+            %   aMat = [0 1; 0 0]; bMat = eye(2);  
+            %   SUBounds = struct();
+            %   SUBounds.center = {'sin(t)'; 'cos(t)'};  
+            %   SUBounds.shape = [9 0; 0 2]; 
+            %   sys = elltool.linsys.LinSysFactory.create(aMat, bMat,SUBounds);
             %
             if (nargin > 7)  && ischar(varargin{8}) && (varargin{8} == 'd')
                 linSys = elltool.linsys.LinSysDiscrete(varargin{:});

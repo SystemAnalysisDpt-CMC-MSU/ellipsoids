@@ -11,14 +11,14 @@ function nPlot2dPointsArr = getNPlot2dPoints(ellArr)
 %       nPlot2dPointsArr: double[nDim1, nDim2,...] - multidimension array
 %           of nPlot2dPoints property for ellipsoids in ellArr
 % Example:
-% firstEllObj = ellipsoid([-1; 1], [2 0; 0 3]);
-% secEllObj = ellipsoid([1 ;2], eye(2));
-% ellVec = [firstEllObj secEllObj];
-% ellVec.getNPlot2dPoints()
+%   firstEllObj = ellipsoid([-1; 1], [2 0; 0 3]);
+%   secEllObj = ellipsoid([1 ;2], eye(2));
+%   ellVec = [firstEllObj secEllObj];
+%   ellVec.getNPlot2dPoints()
 % 
-% ans =
+%   ans =
 % 
-%    200   200
+%      200   200
 %
 % $Author: Zakharov Eugene  <justenterrr@gmail.com> $ 
 % $Date: 2012-11-17$

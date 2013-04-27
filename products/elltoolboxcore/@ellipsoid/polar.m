@@ -23,12 +23,12 @@ function polEllArr = polar(ellArr)
 %    	polar ellipsoids.
 %
 % Example:
-% ellObj = ellipsoid([4 -1; -1 1]);
-% ellObj.polar() == ellObj.inv()
+%   ellObj = ellipsoid([4 -1; -1 1]);
+%   ellObj.polar() == ellObj.inv()
 % 
-% ans =
+%   ans =
 % 
-%      1
+%       1
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 

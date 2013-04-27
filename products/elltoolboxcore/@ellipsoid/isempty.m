@@ -13,12 +13,12 @@ function isPositiveArr = isempty(myEllArr)
 %       myEllMat(iCount) is empty, false - otherwise.
 % 
 % Example:
-% ellObj = ellipsoid();
-% isempty(ellObj)
+%   ellObj = ellipsoid();
+%   isempty(ellObj)
 % 
-% ans =
+%   ans =
 % 
-%      1
+%        1
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 

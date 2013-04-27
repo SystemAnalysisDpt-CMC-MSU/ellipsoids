@@ -40,6 +40,7 @@ wherein matrix $Q$ is positive semidefinite
 ($Q=Q^T$ and $\langle x, Qx\rangle\geq0$ for all $x\in{\bf R}^n$).
 \label{ellipsoiddef}
 \ed
+\todo[inline]{Added this definition}
 The volume of ellipsoid $\EE(q,Q)$ is
 \begin{equation}
 {\bf Vol}(E(q,Q)) = {\bf Vol}_{\langle x,x\rangle\leq1}\sqrt{\det Q},
@@ -66,6 +67,7 @@ If ${\bf dist}(\EE(q,Q),a) > 0$, $a$ lies outside  $\EE(q,Q)$;
 if ${\bf dist}(\EE(q,Q),a) = 0$, $a$ is a boundary point of $\EE(q,Q)$;
 if ${\bf dist}(\EE(q,Q),a) < 0$, $a$ is an internal point of $\EE(q,Q)$.
 
+\todo[inline]{Added this definition}
 Given two ellipsoids, $\EE(q_1,Q_1)$ and $\EE(q_2,Q_2)$, the distance between
 them is
 \begin{eqnarray}
@@ -301,6 +303,7 @@ For proofs of formulas given in this section, see \cite{kurvalyi},
 One last comment is about how to find orthogonal matrices $S_2,\cdots,S_k$
 that align vectors $Q_2^{1/2}l, \cdots, Q_k^{1/2}l$ with $Q_1^{1/2}l$.
 Let $v_1$ and $v_2$ be some unit vectors in ${\bf R}^n$.
+\todo[inline]{Algorithms of S matrix calculation have been changed}
 We have to find matrix $S$ such that $Sv_2\uparrow\uparrow v_1$.
 We suggest explicit formulas for the calculation of this matrix:
 \begin{eqnarray}
@@ -384,6 +387,7 @@ The center $q$ is
 q = q_1 - q_2;  \label{minkdiff_c}
 \end{equation}
 the shape matrix of the internal ellipsoid $Q^-_l$ is
+\todo[inline]{Fixed misprints in 2.2.12, 2.2.13}
 \begin{eqnarray}
 && P = \frac{\sqrt{\langle l, Q_1 l\rangle}}{\sqrt{\langle l, Q_2 \rangle}};\nonumber\\
 && Q^-_l = \left(1 - \dfrac{1}{P}\right)Q_1 + \left(1 - P\right)Q_2.
@@ -700,6 +704,7 @@ The resulting ellipsoidal approximations are
 \[ \EE(q^+,Q^+)=\EE(q^+_m,Q^+_m), ~~~~ \EE(q^-,Q^-)=\EE(q^-_m,Q^-_m) .\]
 
 \subsection{Checking if \texorpdfstring{$\EE(q_1,Q_1)\subseteq\EE(q_2,Q_2)$}{Lg}}\label{subsec_ellcontainment}
+\todo[inline]{Added this section}
 Theorem of alternatives, also known as \emph{$S$-procedure} \cite{boyd2},
 states that the implication
 \[
@@ -742,6 +747,7 @@ where $\lambda\in{\bf R}$ is the variable.
 
 
 \subsection{Minimum Volume Ellipsoids}
+\todo[inline]{Added this section}
 The minimum volume ellipsoid that contains set $S$ is called
 \emph{L\"{o}wner-John ellipsoid} of the set $S$.
 To characterize it we rewrite general ellipsoid $\EE(q,Q)$ as
@@ -803,6 +809,7 @@ The results on the minimum volume ellipsoids are explained
 and proven in \cite{boyd2}.
 
 \subsection{Maximum Volume Ellipsoids}
+\todo[inline]{Added this section}
 Consider a problem of finding the maximum volume ellipsoid that lies inside
 a bounded convex set $S$ with nonempty interior.
 To formulate this problem we rewrite general ellipsoid $\EE(q,Q)$ as

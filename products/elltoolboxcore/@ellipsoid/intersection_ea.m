@@ -42,14 +42,14 @@ function outEllArr = intersection_ea(myEllArr, objArr)
 %           ellipsoids or hyperplanes or polytopes of the same sizes.
 %
 % Example:
-% firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
-% secEllObj = firstEllObj + [5; 5];
-% ellVec = [firstEllObj secEllObj];
-% thirdEllObj  = ell_unitball(2);
-% externalEllVec = ellVec.intersection_ea(thirdEllObj)
+%   firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+%   secEllObj = firstEllObj + [5; 5];
+%   ellVec = [firstEllObj secEllObj];
+%   thirdEllObj  = ell_unitball(2);
+%   externalEllVec = ellVec.intersection_ea(thirdEllObj)
 % 
-% externalEllVec =
-% 1x2 array of ellipsoids.
+%   externalEllVec =
+%   1x2 array of ellipsoids.
 % 
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>

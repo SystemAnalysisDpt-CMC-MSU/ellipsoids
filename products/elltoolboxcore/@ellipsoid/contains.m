@@ -17,13 +17,13 @@ function resArr = contains(firstEllArr, secondEllArr)
 %       contains secondEllArr(iCount), false - otherwise.
 %
 % Example:
-% firstEllObj = ellipsoid([-2; -1], [2 -1; -1 1]);
-% secEllObj = ellipsoid([-1;0], eye(2));
-% contains(firstEllObj,secEllObj)
+%   firstEllObj = ellipsoid([-2; -1], [2 -1; -1 1]);
+%   secEllObj = ellipsoid([-1;0], eye(2));
+%   contains(firstEllObj,secEllObj)
 % 
-% ans =
+%   ans =
 % 
-%      0
+%        0
 % 
 % 
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>

@@ -29,14 +29,14 @@ function extApprEllVec = minkmp_ea(fstEll, secEll, sumEllArr, dirMat)
 %       directions approximations cannot be computed).
 %
 % Example:
-% firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
-% secEllObj = 3*ell_unitball(2);
-% dirsMat = [1 0; 1 1; 0 1; -1 1]';
-% bufEllVec = [secEllObj firstEllObj];
-% externalEllVec = secEllObj.minkmp_ea(firstEllObj, bufEllVec, dirsMat)
+%   firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+%   secEllObj = 3*ell_unitball(2);
+%   dirsMat = [1 0; 1 1; 0 1; -1 1]';
+%   bufEllVec = [secEllObj firstEllObj];
+%   externalEllVec = secEllObj.minkmp_ea(firstEllObj, bufEllVec, dirsMat)
 % 
-% externalEllVec =
-% 1x2 array of ellipsoids.
+%   externalEllVec =
+%   1x2 array of ellipsoids.
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 

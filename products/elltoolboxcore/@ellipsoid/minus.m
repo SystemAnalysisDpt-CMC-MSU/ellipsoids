@@ -24,35 +24,35 @@ function outEllArr = minus(varargin)
 %       in -inpVec.
 %
 % Example:
-% ellVec  = [ellipsoid([-2; -1], [4 -1; -1 1]) ell_unitball(2)];
-% outEllVec = ellVec - [1; 1];
-% outEllVec(1)
+%   ellVec  = [ellipsoid([-2; -1], [4 -1; -1 1]) ell_unitball(2)];
+%   outEllVec = ellVec - [1; 1];
+%   outEllVec(1)
 % 
-% ans =
+%   ans =
 % 
-% Center:
-%     -3
-%     -2
+%   Center:
+%       -3
+%       -2
 % 
-% Shape:
-%      4    -1
-%     -1     1
+%   Shape:
+%        4    -1
+%       -1     1
 % 
-% Nondegenerate ellipsoid in R^2.
+%   Nondegenerate ellipsoid in R^2.
 % 
-% outEllVec(2)
+%   outEllVec(2)
 % 
-% ans =
+%   ans =
 % 
-% Center:
-%     -1
-%     -1
+%   Center:
+%       -1
+%       -1
 % 
-% Shape:
-%      1     0
-%      0     1
+%   Shape:
+%        1     0
+%        0     1
 % 
-% Nondegenerate ellipsoid in R^2.
+%   Nondegenerate ellipsoid in R^2.
 %       
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>

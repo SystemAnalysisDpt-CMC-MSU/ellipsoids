@@ -13,21 +13,22 @@ function outEll = ellintersection_ia(inpEllArr)
 %   outEll: ellipsoid [1, 1] - resulting maximum volume ellipsoid.
 %        
 % Example:
-% firstEllObj = ellipsoid([-1; 1], [2 0; 0 3]);
-% secEllObj = ellipsoid([1 2], eye(2);
-% ellVec = [firstEllObj secEllObj];
-% resEllObj = ellintersection_ia(ellVec)
-% resEllObj =
+%   firstEllObj = ellipsoid([-1; 1], [2 0; 0 3]);
+%   secEllObj = ellipsoid([1 2], eye(2);
+%   ellVec = [firstEllObj secEllObj];
+%   resEllObj = ellintersection_ia(ellVec)
+%
+%   resEllObj =
 % 
-% Center:
-%     0.1847
-%     1.6914
+%   Center:
+%       0.1847
+%       1.6914
 % 
-% Shape Matrix:
-%     0.0340   -0.0607
-%    -0.0607    0.1713
+%   Shape Matrix:
+%       0.0340   -0.0607
+%      -0.0607    0.1713
 % 
-% Nondegenerate ellipsoid in R^2.
+%   Nondegenerate ellipsoid in R^2.
 % 
 % 
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>

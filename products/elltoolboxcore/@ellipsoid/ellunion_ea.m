@@ -12,21 +12,21 @@ function outEll = ellunion_ea(inpEllArr)
 %   outEll: ellipsoid [1, 1] - resulting minimum volume ellipsoid.
 %
 % Example:
-% firstEllObj = ellipsoid([-1; 1], [2 0; 0 3]);
-% secEllObj = ellipsoid([1 2], eye(2));
-% ellVec = [firstEllObj secEllObj];
-% resEllObj = ellunion_ea(ellVec)
-% resEllObj =
+%   firstEllObj = ellipsoid([-1; 1], [2 0; 0 3]);
+%   secEllObj = ellipsoid([1 2], eye(2));
+%   ellVec = [firstEllObj secEllObj];
+%   resEllObj = ellunion_ea(ellVec)
+%   resEllObj =
 % 
-% Center:
-%    -0.3188
-%     1.2936
+%   Center:
+%      -0.3188
+%       1.2936
 % 
-% Shape Matrix:
-%     5.4573    1.3386
-%     1.3386    4.1037
+%   Shape Matrix:
+%       5.4573    1.3386
+%       1.3386    4.1037
 % 
-% Nondegenerate ellipsoid in R^2.
+%   Nondegenerate ellipsoid in R^2.
 % 
 % 
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>

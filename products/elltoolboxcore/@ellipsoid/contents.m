@@ -80,7 +80,7 @@
 %                       the geometric sum of a geometric difference of two
 %                       single ellipsoids and a geometric sum of ellipsoids  
 %                       in given direction.
-% minkmp_ia          -  Computes the internal ellipsoidal approximation of 
+%  minkmp_ia          -  Computes the internal ellipsoidal approximation of 
 %                       the geometric sum of a geometric difference of
 %                       two single ellipsoids and a geometric sum of 
 %                       ellipsoids in given direction.

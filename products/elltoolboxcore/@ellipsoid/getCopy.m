@@ -12,13 +12,13 @@ function copyEllArr = getCopy(ellArr)
 %       copies of elements of ellArr.
 % 
 % Example:
-% firstEllObj = ellipsoid([-1; 1], [2 0; 0 3]);
-% secEllObj = ellipsoid([1 2], eye(2));
-% ellVec = [firstEllObj secEllObj];
-% copyEllVec = getCopy(ellVec)
+%   firstEllObj = ellipsoid([-1; 1], [2 0; 0 3]);
+%   secEllObj = ellipsoid([1; 2], eye(2));
+%   ellVec = [firstEllObj secEllObj];
+%   copyEllVec = getCopy(ellVec)
 % 
-% copyEllVec =
-% 1x2 array of ellipsoids.
+%   copyEllVec =
+%   1x2 array of ellipsoids.
 % 
 %
 % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: March-2013 $

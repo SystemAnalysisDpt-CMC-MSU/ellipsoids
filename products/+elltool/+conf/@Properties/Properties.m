@@ -27,7 +27,7 @@ classdef Properties<modgen.common.obj.StaticPropStorage
     methods(Static)
         function checkSettings()
         % Example:
-        % elltool.conf.Properties.checkSettings()
+        %   elltool.conf.Properties.checkSettings()
         %
             import elltool.conf.Properties;            
             inpArgList=Properties.getBasicPropList();
@@ -38,8 +38,8 @@ classdef Properties<modgen.common.obj.StaticPropStorage
             end            
         end
         function init()
-            %Example:
-            % elltool.conf.Properties.init()
+            % Example:
+            %   elltool.conf.Properties.init()
             import elltool.conf.Properties;
             %
             confRepoMgr=elltool.conf.ConfRepoMgr();
@@ -61,16 +61,16 @@ classdef Properties<modgen.common.obj.StaticPropStorage
         %
         %
         function ConfRepoMgr=getConfRepoMgr()
-            %Example:
-            %elltool.conf.Properties.getConfRepoMgr()
+            % Example:
+            %   elltool.conf.Properties.getConfRepoMgr()
             % 
-            % ans = 
+            %   ans = 
             % 
-            %   elltool.conf.ConfRepoMgr handle
-            %   Package: elltool.conf
+            %     elltool.conf.ConfRepoMgr handle
+            %     Package: elltool.conf
             % 
-            %   Properties:
-            %     DEFAULT_STORAGE_BRANCH_KEY: '_default'
+            %     Properties:
+            %       DEFAULT_STORAGE_BRANCH_KEY: '_default'
             % 
            
             import modgen.common.throwerror;
@@ -93,10 +93,10 @@ classdef Properties<modgen.common.obj.StaticPropStorage
         end
         %
         function setConfRepoMgr(ConfRepoMgr)
-        %Example:
-        % prevConfRepo = Properties.getConfRepoMgr();
-        % prevAbsTol = prevConfRepo.getParam('absTol');
-        % elltool.conf.Properties.setConfRepoMgr(prevConfRepo);
+        % Example:
+        %   prevConfRepo = Properties.getConfRepoMgr();
+        %   prevAbsTol = prevConfRepo.getParam('absTol');
+        %   elltool.conf.Properties.setConfRepoMgr(prevConfRepo);
         %
             branchName=mfilename('class');
             modgen.common.obj.StaticPropStorage.setPropInternal(...
@@ -106,76 +106,76 @@ classdef Properties<modgen.common.obj.StaticPropStorage
         %Public getters
         
         function version = getVersion()
-        %Example:
-        %elltool.conf.Properties.getVersion();
+        % Example:
+        %   elltool.conf.Properties.getVersion();
         %
             version = elltool.conf.Properties.getOption('version');
         end
         %
         function isVerbose = getIsVerbose()
-        %Example:
-        %elltool.conf.Properties.getIsVerbose();
+        % Example:
+        %   elltool.conf.Properties.getIsVerbose();
         %
             isVerbose = elltool.conf.Properties.getOption('isVerbose');
         end
         %
         function absTol = getAbsTol()
-        %Example:
-        %elltool.conf.Properties.getAbsTol();
+        % Example:
+        %   elltool.conf.Properties.getAbsTol();
         %
             absTol = elltool.conf.Properties.getOption('absTol');
         end
         %
         function absRel = getRelTol()
-        %Example:
-        %elltool.conf.Properties.getRelTol();
+        % Example:
+        %   elltool.conf.Properties.getRelTol();
         %
             absRel = elltool.conf.Properties.getOption('relTol');
         end
         %
         function nTimeGridPoints = getNTimeGridPoints()
-        %Example:
-        %elltool.conf.Properties.getNTimeGridPoints();
+        % Example:
+        %   elltool.conf.Properties.getNTimeGridPoints();
         %
             nTimeGridPoints = elltool.conf.Properties.getOption(...
                 'nTimeGridPoints');
         end
         %
         function oDESolverName = getODESolverName()
-        %Example:
-        %elltool.conf.Properties.getODESolverName();
+        % Example:
+        %   elltool.conf.Properties.getODESolverName();
         %
             oDESolverName = elltool.conf.Properties.getOption(...
                 'ODESolverName');
         end
         %
         function isODENormControl = getIsODENormControl()
-        %Example:
-        %elltool.conf.Properties.getIsODENormControl();
+        % Example:
+        %   elltool.conf.Properties.getIsODENormControl();
         %
             isODENormControl = elltool.conf.Properties.getOption(...
                 'isODENormControl');
         end
         %
         function isEnabled = getIsEnabledOdeSolverOptions()
-        %Example:
-        %elltool.conf.Properties.getIsEnabledOdeSolverOptions();
+        % Example:
+        %   elltool.conf.Properties.getIsEnabledOdeSolverOptions();
         %
             isEnabled = elltool.conf.Properties.getOption(...
                 'isEnabledOdeSolverOptions');
         end
         %
         function nPlot2dPoints = getNPlot2dPoints()
-        %Example:
-        %elltool.conf.Properties.getNPlot2dPoints();
+        % Example:
+        %   elltool.conf.Properties.getNPlot2dPoints();
         %
             nPlot2dPoints = elltool.conf.Properties.getOption(...
                 'nPlot2dPoints');
         end
         %
         function nPlot3dPoints = getNPlot3dPoints()
-        %Example:
-        %elltool.conf.Properties.getNPlot3dPoints();
+        % Example:
+        %   elltool.conf.Properties.getNPlot3dPoints();
         %
             nPlot3dPoints = elltool.conf.Properties.getOption(...
                 'nPlot3dPoints');
@@ -185,14 +185,14 @@ classdef Properties<modgen.common.obj.StaticPropStorage
         
         function setIsVerbose(isVerb)
         % Example:
-        % elltool.conf.Properties.setIsVerbose(true);
+        %   elltool.conf.Properties.setIsVerbose(true);
         %
             elltool.conf.Properties.setOption('isVerbose',isVerb);
         end
         %
         function setNPlot2dPoints(nPlot2dPoints)
         % Example:
-        % elltool.conf.Properties.setNPlot2dPoints(300);
+        %   elltool.conf.Properties.setNPlot2dPoints(300);
         %
             elltool.conf.Properties.setOption('nPlot2dPoints',...
                 nPlot2dPoints);
@@ -200,7 +200,7 @@ classdef Properties<modgen.common.obj.StaticPropStorage
         %
         function setNTimeGridPoints(nTimeGridPoints)
         % Example:
-        % elltool.conf.Properties.setNTimeGridPoints(300);
+        %   elltool.conf.Properties.setNTimeGridPoints(300);
         %
             elltool.conf.Properties.setOption('nTimeGridPoints',...
                 nTimeGridPoints);
@@ -208,21 +208,21 @@ classdef Properties<modgen.common.obj.StaticPropStorage
         %
         function SProp=getPropStruct()
         % Example:
-        % elltool.conf.Properties.getConfRepoMgr.getCurConf()
+        %   elltool.conf.Properties.getConfRepoMgr.getCurConf()
         % 
-        % ans = 
+        %   ans = 
         % 
-        %                   version: '1.4dev'
-        %                 isVerbose: 0
-        %                    absTol: 1.0000e-07
-        %                    relTol: 1.0000e-05
-        %           nTimeGridPoints: 200
-        %             ODESolverName: 'ode45'
-        %          isODENormControl: 'on'
-        % isEnabledOdeSolverOptions: 0
-        %             nPlot2dPoints: 200
-        %             nPlot3dPoints: 200
-        %                   logging: [1x1 struct]
+        %                     version: '1.4dev'
+        %                   isVerbose: 0
+        %                      absTol: 1.0000e-07
+        %                      relTol: 1.0000e-05
+        %             nTimeGridPoints: 200
+        %               ODESolverName: 'ode45'
+        %            isODENormControl: 'on'
+        %   isEnabledOdeSolverOptions: 0
+        %               nPlot2dPoints: 200
+        %               nPlot3dPoints: 200
+        %                     logging: [1x1 struct]
         %         
              SProp=elltool.conf.Properties.getConfRepoMgr.getCurConf();
         end

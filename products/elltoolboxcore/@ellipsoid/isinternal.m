@@ -41,20 +41,20 @@ function isPositiveVec = isinternal(myEllArr, matrixOfVecMat, mode)
 %       of ellipsoids, false - otherwise.
 %
 % Example:
-% firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
-% secEllObj = firstEllObj + [5; 5];
-% ellVec = [firstEllObj secEllObj];
-% ellVec.isinternal([-2 3; -1 4], 'i')
+%   firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+%   secEllObj = firstEllObj + [5; 5];
+%   ellVec = [firstEllObj secEllObj];
+%   ellVec.isinternal([-2 3; -1 4], 'i')
 % 
-% ans =
+%   ans =
 % 
-%      0     0
+%        0     0
 % 
-% ellVec.isinternal([-2 3; -1 4])
+%   ellVec.isinternal([-2 3; -1 4])
 % 
-% ans =
+%   ans =
 % 
-%      1     1
+%        1     1
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 

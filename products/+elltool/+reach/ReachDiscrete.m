@@ -712,14 +712,14 @@ classdef ReachDiscrete < elltool.reach.AReach
         %       self - reach set object.
         %
         % Example:
-        % adMat = [0 1; -1 -0.5]; 
-        % bdMat = [0; 1];  
-        % udBoundsEllObj  = ellipsoid(1);  
-        % dtsys = elltool.linsys.LinSysDiscrete(adMat, bdMat, udBoundsEllObj); 
-        % x0EllObj = ell_unitball(2);  
-        % timeVec = [0 10];  
-        % dirsMat = [1 0; 0 1]';
-        % dRsObj = elltool.reach.ReachDiscrete(dtsys, x0EllObj, dirsMat, timeVec);
+        %   adMat = [0 1; -1 -0.5]; 
+        %   bdMat = [0; 1];  
+        %   udBoundsEllObj  = ellipsoid(1);  
+        %   dtsys = elltool.linsys.LinSysDiscrete(adMat, bdMat, udBoundsEllObj); 
+        %   x0EllObj = ell_unitball(2);  
+        %   timeVec = [0 10];  
+        %   dirsMat = [1 0; 0 1]';
+        %   dRsObj = elltool.reach.ReachDiscrete(dtsys, x0EllObj, dirsMat, timeVec);
         %
         %
         % $Author: Kirill Mayantsev
@@ -1588,15 +1588,15 @@ classdef ReachDiscrete < elltool.reach.AReach
         %     newReachObj - reach set object.
         %
         % Example:
-        % adMat = [0 1; -1 -0.5]; 
-        % bdMat = [0; 1];  
-        % udBoundsEllObj  = ellipsoid(1);  
-        % dtsys = elltool.linsys.LinSysDiscrete(adMat, bdMat, udBoundsEllObj); 
-        % x0EllObj = ell_unitball(2);  
-        % timeVec = [0 10];  
-        % dirsMat = [1 0; 0 1]';
-        % dRsObj = elltool.reach.ReachDiscrete(dtsys, x0EllObj, dirsMat, timeVec);
-        % newDRsObj = dRsObj.getCopy();
+        %   adMat = [0 1; -1 -0.5]; 
+        %   bdMat = [0; 1];  
+        %   udBoundsEllObj  = ellipsoid(1);  
+        %   dtsys = elltool.linsys.LinSysDiscrete(adMat, bdMat, udBoundsEllObj); 
+        %   x0EllObj = ell_unitball(2);  
+        %   timeVec = [0 10];  
+        %   dirsMat = [1 0; 0 1]';
+        %   dRsObj = elltool.reach.ReachDiscrete(dtsys, x0EllObj, dirsMat, timeVec);
+        %   newDRsObj = dRsObj.getCopy();
         %
         % $Author: Kirill Mayantsev
         % <kirill.mayantsev@gmail.com> $  

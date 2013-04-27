@@ -17,13 +17,13 @@ function isPositiveArr = le(fstEllArr, secEllArr)
 %       when both have same center, false - otherwise.
 %
 % Example:
-% firstEllObj = ellipsoid([-1; 1], [2 0; 0 3]);
-% secEllObj = ellipsoid([1 2], eye(2));
-% firstEllObj < secEllObj
+%   firstEllObj = ellipsoid([-1; 1], [2 0; 0 3]);
+%   secEllObj = ellipsoid([1 2], eye(2));
+%   firstEllObj < secEllObj
 % 
-% ans =
+%   ans =
 % 
-%      0
+%        0
 % 
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 

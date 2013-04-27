@@ -8,7 +8,7 @@ classdef hyperplane < handle
     methods
         
         function hypObjArr = hyperplane(hypNormArr, hypConstArr, varargin)
-  %
+            %
             % HYPERPLANE - creates hyperplane structure
             %              (or array of hyperplane structures).
             %
@@ -102,9 +102,9 @@ classdef hyperplane < handle
             %           hypH.shift  - scalar.
             %
             % Example:
-            % hypNormMat = [1 1 1; 1 1 1];
-            % hypConstVec = [1 -5 0];
-            % hypObj = hyperplane(hypNormMat, hypConstVec);
+            %   hypNormMat = [1 1 1; 1 1 1];
+            %   hypConstVec = [1 -5 0];
+            %   hypObj = hyperplane(hypNormMat, hypConstVec);
             %
             % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
             % $Copyright: The Regents of the University of California 

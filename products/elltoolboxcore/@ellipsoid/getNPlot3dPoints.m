@@ -12,14 +12,14 @@ function nPlot3dPointsArr = getNPlot3dPoints(ellArr)
 %           of nPlot3dPoints property for ellipsoids in ellArr
 % 
 % Example:
-% firstEllObj = ellipsoid([-1; 1], [2 0; 0 3]);
-% secEllObj = ellipsoid([1 ;2], eye(2));
-% ellVec = [firstEllObj secEllObj];
-% ellVec.getNPlot3dPoints()
+%   firstEllObj = ellipsoid([-1; 1], [2 0; 0 3]);
+%   secEllObj = ellipsoid([1 ;2], eye(2));
+%   ellVec = [firstEllObj secEllObj];
+%   ellVec.getNPlot3dPoints()
 % 
-% ans =
+%   ans =
 % 
-%    200   200
+%      200   200
 %
 % $Author: Zakharov Eugene  <justenterrr@gmail.com> $
 % $Date: 2012-11-17$

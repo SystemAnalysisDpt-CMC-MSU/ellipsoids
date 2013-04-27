@@ -15,20 +15,20 @@ function invEllArr = inv(myEllArr)
 %       with inverted shape matrices.
 % 
 % Example:
-% ellObj = ellipsoid([1; 1], [4 -1; -1 5]);
-% ellObj.inv()
+%   ellObj = ellipsoid([1; 1], [4 -1; -1 5]);
+%   ellObj.inv()
 % 
-% ans =
+%   ans =
 % 
-% Center:
-%      1
-%      1
+%   Center:
+%        1
+%        1
 % 
-% Shape Matrix:
-%     0.2632    0.0526
-%     0.0526    0.2105
+%   Shape Matrix:
+%       0.2632    0.0526
+%       0.0526    0.2105
 % 
-% Nondegenerate ellipsoid in R^2.
+%   Nondegenerate ellipsoid in R^2.
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 

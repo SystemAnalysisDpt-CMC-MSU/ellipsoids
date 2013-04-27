@@ -24,16 +24,16 @@ function [relTolArr, relTolVal] = getRelTol(ellArr, varargin)
 %   use relTolArr = ellArr.getRelTol() if you want get only relTolArr
 % 
 % Example:
-% firstEllObj = ellipsoid([-1; 1], [2 0; 0 3]);
-% secEllObj = ellipsoid([1 ;2], eye(2));
-% ellVec = [firstEllObj secEllObj];
-% ellVec.getRelTol()
+%   firstEllObj = ellipsoid([-1; 1], [2 0; 0 3]);
+%   secEllObj = ellipsoid([1 ;2], eye(2));
+%   ellVec = [firstEllObj secEllObj];
+%   ellVec.getRelTol()
 % 
-% ans =
+%   ans =
 % 
-%    1.0e-05 *
+%      1.0e-05 *
 % 
-%     1.0000    1.0000
+%       1.0000    1.0000
 % 
 % 
 %$Author: Zakharov Eugene  <justenterrr@gmail.com> $ 

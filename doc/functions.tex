@@ -1,6 +1,5 @@
-\section{List of all functions}
-\begin{enumerate}
-\item {ellipsoid.getCenterVec}
+\section{ellipsoid}
+\subsection{ellipsoid.getCenterVec}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -14,20 +13,20 @@ Output:
   centerVecVec: double[nDims,1] - centerVec of ellipsoid
 
 Example:
-ellObj = ellipsoid([1; 2], eye(2));
-getCenterVec(ellObj)
+  ellObj = ellipsoid([1; 2], eye(2));
+  getCenterVec(ellObj)
 
-ans =
+  ans =
 
-     1
-     2
+       1
+       2
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.getShapeMat}
+\subsection{ellipsoid.getShapeMat}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -41,20 +40,20 @@ Output:
   shMat: double[nDims,nDims] - shapeMat matrix of ellipsoid
 
 Example:
-ellObj = ellipsoid([1; 2], eye(2));
-getShapeMat(ellObj)
+  ellObj = ellipsoid([1; 2], eye(2));
+  getShapeMat(ellObj)
 
-ans =
+  ans =
 
-     1     0
-     0     1
+       1     0
+       0     1
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.repMat}
+\subsection{ellipsoid.repMat}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -62,13 +61,13 @@ REPMAT - is analogous to built-in repmat function with one exception - it
          copies the objects, not just the handles
 
 Example:
-firstEllObj = ellipsoid([1; 2], eye(2));
-secEllObj = ellipsoid([1; 1], 2*eye(2));
-ellVec = [firstEllObj secEllObj];
-repMat(ellVec)
+  firstEllObj = ellipsoid([1; 2], eye(2));
+  secEllObj = ellipsoid([1; 1], 2*eye(2));
+  ellVec = [firstEllObj secEllObj];
+  repMat(ellVec)
 
-ans =
-1x2 array of ellipsoids.
+  ans =
+  1x2 array of ellipsoids.
 
 
 
@@ -76,7 +75,7 @@ ans =
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.ellipsoid}
+\subsection{ellipsoid.ellipsoid}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -145,30 +144,20 @@ Output:
       or multidimensional array of ellipsoids.
 
 Example:
-ellObj = ellipsoid([1 0 -1 6]', 9*eye(4));
+  ellObj = ellipsoid([1 0 -1 6]', 9*eye(4));
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.loadobj}
-\fontfamily{pcr}
-\selectfont
-\begin{lstlisting}
-
-
-
-\end{lstlisting}
-\fontfamily{\familydefault}
-\selectfont
-\item {ellipsoid.checkIsMe}
+\subsection{ellipsoid.checkIsMe}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
 Example:
-ellObj = ellipsoid([1; 2], eye(2));
-ellipsoid.checkIsMe(ellObj)
+  ellObj = ellipsoid([1; 2], eye(2));
+  ellipsoid.checkIsMe(ellObj)
 
 
 
@@ -176,7 +165,7 @@ ellipsoid.checkIsMe(ellObj)
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.contains}
+\subsection{ellipsoid.contains}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -198,13 +187,13 @@ Output:
       contains secondEllArr(iCount), false - otherwise.
 
 Example:
-firstEllObj = ellipsoid([-2; -1], [2 -1; -1 1]);
-secEllObj = ellipsoid([-1;0], eye(2));
-contains(firstEllObj,secEllObj)
+  firstEllObj = ellipsoid([-2; -1], [2 -1; -1 1]);
+  secEllObj = ellipsoid([-1;0], eye(2));
+  contains(firstEllObj,secEllObj)
 
-ans =
+  ans =
 
-     0
+       0
 
 
 
@@ -212,7 +201,7 @@ ans =
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.contents}
+\subsection{ellipsoid.contents}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -298,7 +287,7 @@ Geometry functions:
                       the geometric sum of a geometric difference of two
                       single ellipsoids and a geometric sum of ellipsoids
                       in given direction.
-minkmp_ia          -  Computes the internal ellipsoidal approximation of
+ minkmp_ia          -  Computes the internal ellipsoidal approximation of
                       the geometric sum of a geometric difference of
                       two single ellipsoids and a geometric sum of
                       ellipsoids in given direction.
@@ -334,43 +323,43 @@ minkmp_ia          -  Computes the internal ellipsoidal approximation of
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.dimension}
+\subsection{ellipsoid.dimension}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
- DIMENSION - returns the dimension of the space in which the ellipsoid is
-             defined and the actual dimension of the ellipsoid.
+DIMENSION - returns the dimension of the space in which the ellipsoid is
+            defined and the actual dimension of the ellipsoid.
 
 Input:
-   regular:
-     myEllArr: ellipsoid[nDims1,nDims2,...,nDimsN] - array of ellipsoids.
+  regular:
+    myEllArr: ellipsoid[nDims1,nDims2,...,nDimsN] - array of ellipsoids.
 
- Output:
-   regular:
-     dimArr: double[nDims1,nDims2,...,nDimsN] - space dimensions.
+Output:
+  regular:
+    dimArr: double[nDims1,nDims2,...,nDimsN] - space dimensions.
 
-   optional:
-     rankArr: double[nDims1,nDims2,...,nDimsN] - dimensions of the
-            ellipsoids in myEllArr.
+  optional:
+    rankArr: double[nDims1,nDims2,...,nDimsN] - dimensions of the
+           ellipsoids in myEllArr.
 
- Example:
- firstEllObj = ellipsoid();
- tempMatObj = [3 1; 0 1; -2 1];
- secEllObj = ellipsoid([1; -1; 1], tempMatObj*tempMatObj');
- thirdEllObj = ellipsoid(eye(2));
- fourthEllObj = ellipsoid(0);
- ellMat = [firstEllObj secEllObj; thirdEllObj fourthEllObj];
- [dimMat, rankMat] = ellMat.dimension()
+Example:
+  firstEllObj = ellipsoid();
+  tempMatObj = [3 1; 0 1; -2 1];
+  secEllObj = ellipsoid([1; -1; 1], tempMatObj*tempMatObj');
+  thirdEllObj = ellipsoid(eye(2));
+  fourthEllObj = ellipsoid(0);
+  ellMat = [firstEllObj secEllObj; thirdEllObj fourthEllObj];
+  [dimMat, rankMat] = ellMat.dimension()
 
- dimMat =
+  dimMat =
 
-    0     3
-    2     1
+     0     3
+     2     1
 
- rankMat =
+  rankMat =
 
-    0     2
-    2     0
+     0     2
+     2     0
 
 
 
@@ -379,7 +368,7 @@ Input:
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.disp}
+\subsection{ellipsoid.disp}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -390,17 +379,17 @@ Input:
     myEllMat: ellipsoid [mRows, nCols] - matrix of ellipsoids.
 
 Example:
-ellObj = ellipsoid([-2; -1], [2 -1; -1 1]);
-disp(ellObj)
+  ellObj = ellipsoid([-2; -1], [2 -1; -1 1]);
+  disp(ellObj)
 
-Ellipsoid with parameters
-Center:
-    -2
-    -1
+  Ellipsoid with parameters
+  Center:
+      -2
+      -1
 
-Shape Matrix:
-     2    -1
-    -1     1
+  Shape Matrix:
+       2    -1
+      -1     1
 
 
 
@@ -408,7 +397,7 @@ Shape Matrix:
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.display}
+\subsection{ellipsoid.display}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -419,20 +408,20 @@ Input:
       myEllMat: ellipsoid [mRows, nCols] - matrix of ellipsoids.
 
 Example:
-ellObj = ellipsoid([-2; -1], [2 -1; -1 1]);
-display(ellObj)
+  ellObj = ellipsoid([-2; -1], [2 -1; -1 1]);
+  display(ellObj)
 
-ellObj =
+  ellObj =
 
-Center:
-    -2
-    -1
+  Center:
+      -2
+      -1
 
-Shape Matrix:
-     2    -1
-    -1     1
+  Shape Matrix:
+       2    -1
+      -1     1
 
-Nondegenerate ellipsoid in R^2.
+  Nondegenerate ellipsoid in R^2.
 
 
 
@@ -440,7 +429,7 @@ Nondegenerate ellipsoid in R^2.
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.distance}
+\subsection{ellipsoid.distance}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -482,13 +471,13 @@ Output:
           distances.
 
 Example:
-ellObj = ellipsoid([-2; -1], [4 -1; -1 1]);
-tempMat = [1 1; 1 -1; -1 1; -1 -1]';
-distVec = ellObj.distance(tempMat)
+  ellObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+  tempMat = [1 1; 1 -1; -1 1; -1 -1]';
+  distVec = ellObj.distance(tempMat)
 
-distVec =
+  distVec =
 
-     2.3428    1.0855    1.3799    -1.0000
+       2.3428    1.0855    1.3799    -1.0000
 
 
 
@@ -496,7 +485,7 @@ distVec =
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.double}
+\subsection{ellipsoid.double}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -513,18 +502,18 @@ Output:
   myEllShMat: double[nDims, nDims] - shape matrix of the ellipsoid myEll.
 
 Example:
-ellObj = ellipsoid([-2; -1], [2 -1; -1 1]);
-[centVec, shapeMat] = double(ellObj)
-centVec =
+  ellObj = ellipsoid([-2; -1], [2 -1; -1 1]);
+  [centVec, shapeMat] = double(ellObj)
+  centVec =
 
-    -2
-    -1
+      -2
+      -1
 
 
-shapeMat =
+  shapeMat =
 
-     2    -1
-    -1     1
+       2    -1
+      -1     1
 
 
 
@@ -532,7 +521,7 @@ shapeMat =
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.ellintersection\_ia}
+\subsection{ellipsoid.ellintersection\_ia}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -549,21 +538,22 @@ Output:
   outEll: ellipsoid [1, 1] - resulting maximum volume ellipsoid.
 
 Example:
-firstEllObj = ellipsoid([-1; 1], [2 0; 0 3]);
-secEllObj = ellipsoid([1 2], eye(2);
-ellVec = [firstEllObj secEllObj];
-resEllObj = ellintersection_ia(ellVec)
-resEllObj =
+  firstEllObj = ellipsoid([-1; 1], [2 0; 0 3]);
+  secEllObj = ellipsoid([1 2], eye(2);
+  ellVec = [firstEllObj secEllObj];
+  resEllObj = ellintersection_ia(ellVec)
 
-Center:
-    0.1847
-    1.6914
+  resEllObj =
 
-Shape Matrix:
-    0.0340   -0.0607
-   -0.0607    0.1713
+  Center:
+      0.1847
+      1.6914
 
-Nondegenerate ellipsoid in R^2.
+  Shape Matrix:
+      0.0340   -0.0607
+     -0.0607    0.1713
+
+  Nondegenerate ellipsoid in R^2.
 
 
 
@@ -571,7 +561,7 @@ Nondegenerate ellipsoid in R^2.
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.ellunion\_ea}
+\subsection{ellipsoid.ellunion\_ea}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -587,21 +577,21 @@ Output:
   outEll: ellipsoid [1, 1] - resulting minimum volume ellipsoid.
 
 Example:
-firstEllObj = ellipsoid([-1; 1], [2 0; 0 3]);
-secEllObj = ellipsoid([1 2], eye(2));
-ellVec = [firstEllObj secEllObj];
-resEllObj = ellunion_ea(ellVec)
-resEllObj =
+  firstEllObj = ellipsoid([-1; 1], [2 0; 0 3]);
+  secEllObj = ellipsoid([1 2], eye(2));
+  ellVec = [firstEllObj secEllObj];
+  resEllObj = ellunion_ea(ellVec)
+  resEllObj =
 
-Center:
-   -0.3188
-    1.2936
+  Center:
+     -0.3188
+      1.2936
 
-Shape Matrix:
-    5.4573    1.3386
-    1.3386    4.1037
+  Shape Matrix:
+      5.4573    1.3386
+      1.3386    4.1037
 
-Nondegenerate ellipsoid in R^2.
+  Nondegenerate ellipsoid in R^2.
 
 
 
@@ -609,7 +599,7 @@ Nondegenerate ellipsoid in R^2.
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.getAbsTol}
+\subsection{ellipsoid.getAbsTol}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -639,16 +629,16 @@ Usage:
   use absTolArr = ellArr.getAbsTol() if you want get only absTolArr
 
 Example:
-firstEllObj = ellipsoid([-1; 1], [2 0; 0 3]);
-secEllObj = ellipsoid([1 2], eye(2));
-ellVec = [firstEllObj secEllObj];
-absTolVec = ellVec.getAbsTol()
+  firstEllObj = ellipsoid([-1; 1], [2 0; 0 3]);
+  secEllObj = ellipsoid([1 2], eye(2));
+  ellVec = [firstEllObj secEllObj];
+  absTolVec = ellVec.getAbsTol()
 
-absTolVec =
+  absTolVec =
 
-   1.0e-07 *
+     1.0e-07 *
 
-    1.0000    1.0000
+      1.0000    1.0000
 
 
 
@@ -656,7 +646,7 @@ absTolVec =
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.getCopy}
+\subsection{ellipsoid.getCopy}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -673,13 +663,13 @@ Output:
       copies of elements of ellArr.
 
 Example:
-firstEllObj = ellipsoid([-1; 1], [2 0; 0 3]);
-secEllObj = ellipsoid([1 2], eye(2));
-ellVec = [firstEllObj secEllObj];
-copyEllVec = getCopy(ellVec)
+  firstEllObj = ellipsoid([-1; 1], [2 0; 0 3]);
+  secEllObj = ellipsoid([1; 2], eye(2));
+  ellVec = [firstEllObj secEllObj];
+  copyEllVec = getCopy(ellVec)
 
-copyEllVec =
-1x2 array of ellipsoids.
+  copyEllVec =
+  1x2 array of ellipsoids.
 
 
 
@@ -687,7 +677,7 @@ copyEllVec =
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.getNPlot2dPoints}
+\subsection{ellipsoid.getNPlot2dPoints}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -703,21 +693,21 @@ Output:
       nPlot2dPointsArr: double[nDim1, nDim2,...] - multidimension array
           of nPlot2dPoints property for ellipsoids in ellArr
 Example:
-firstEllObj = ellipsoid([-1; 1], [2 0; 0 3]);
-secEllObj = ellipsoid([1 ;2], eye(2));
-ellVec = [firstEllObj secEllObj];
-ellVec.getNPlot2dPoints()
+  firstEllObj = ellipsoid([-1; 1], [2 0; 0 3]);
+  secEllObj = ellipsoid([1 ;2], eye(2));
+  ellVec = [firstEllObj secEllObj];
+  ellVec.getNPlot2dPoints()
 
-ans =
+  ans =
 
-   200   200
+     200   200
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.getNPlot3dPoints}
+\subsection{ellipsoid.getNPlot3dPoints}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -734,21 +724,21 @@ Output:
           of nPlot3dPoints property for ellipsoids in ellArr
 
 Example:
-firstEllObj = ellipsoid([-1; 1], [2 0; 0 3]);
-secEllObj = ellipsoid([1 ;2], eye(2));
-ellVec = [firstEllObj secEllObj];
-ellVec.getNPlot3dPoints()
+  firstEllObj = ellipsoid([-1; 1], [2 0; 0 3]);
+  secEllObj = ellipsoid([1 ;2], eye(2));
+  ellVec = [firstEllObj secEllObj];
+  ellVec.getNPlot3dPoints()
 
-ans =
+  ans =
 
-   200   200
+     200   200
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.getRelTol}
+\subsection{ellipsoid.getRelTol}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -777,16 +767,16 @@ Usage:
   use relTolArr = ellArr.getRelTol() if you want get only relTolArr
 
 Example:
-firstEllObj = ellipsoid([-1; 1], [2 0; 0 3]);
-secEllObj = ellipsoid([1 ;2], eye(2));
-ellVec = [firstEllObj secEllObj];
-ellVec.getRelTol()
+  firstEllObj = ellipsoid([-1; 1], [2 0; 0 3]);
+  secEllObj = ellipsoid([1 ;2], eye(2));
+  ellVec = [firstEllObj secEllObj];
+  ellVec.getRelTol()
 
-ans =
+  ans =
 
-   1.0e-05 *
+     1.0e-05 *
 
-    1.0000    1.0000
+      1.0000    1.0000
 
 
 
@@ -794,7 +784,7 @@ ans =
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.hpintersection}
+\subsection{ellipsoid.hpintersection}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -817,19 +807,19 @@ Output:
       isnIntersectedArr(iCount) = false, otherwise.
 
 Example:
-ellObj = ellipsoid([-2; -1], [4 -1; -1 1]);
-hypMat = [hyperplane([0 -1; -1 0]', 1); hyperplane([0 -2; -1 0]', 1)];
-ellMat = ellObj.hpintersection(hypMat)
+  ellObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+  hypMat = [hyperplane([0 -1; -1 0]', 1); hyperplane([0 -2; -1 0]', 1)];
+  ellMat = ellObj.hpintersection(hypMat)
 
-ellMat =
-2x2 array of ellipsoids.
+  ellMat =
+  2x2 array of ellipsoids.
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.intersect}
+\subsection{ellipsoid.intersect}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -918,21 +908,21 @@ Output:
       variable. statusArr is empty if mode = 'u'.
 
 Example:
-firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
-secEllObj = firstEllObj + [5; 5];
-hypObj  = hyperplane([1; -1]);
-ellVec = [firstEllObj secEllObj];
-ellVec.intersect(hypObj)
+  firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+  secEllObj = firstEllObj + [5; 5];
+  hypObj  = hyperplane([1; -1]);
+  ellVec = [firstEllObj secEllObj];
+  ellVec.intersect(hypObj)
 
-ans =
+  ans =
 
-     1
+       1
 
-ellVec.intersect(hypObj, 'i')
+  ellVec.intersect(hypObj, 'i')
 
-ans =
+  ans =
 
-    -1
+      -1
 
 
 
@@ -940,7 +930,7 @@ ans =
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.intersection\_ea}
+\subsection{ellipsoid.intersection\_ea}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -986,14 +976,14 @@ Input:
           ellipsoids or hyperplanes or polytopes of the same sizes.
 
 Example:
-firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
-secEllObj = firstEllObj + [5; 5];
-ellVec = [firstEllObj secEllObj];
-thirdEllObj  = ell_unitball(2);
-externalEllVec = ellVec.intersection_ea(thirdEllObj)
+  firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+  secEllObj = firstEllObj + [5; 5];
+  ellVec = [firstEllObj secEllObj];
+  thirdEllObj  = ell_unitball(2);
+  externalEllVec = ellVec.intersection_ea(thirdEllObj)
 
-externalEllVec =
-1x2 array of ellipsoids.
+  externalEllVec =
+  1x2 array of ellipsoids.
 
 
 
@@ -1001,7 +991,7 @@ externalEllVec =
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.intersection\_ia}
+\subsection{ellipsoid.intersection\_ia}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -1060,14 +1050,14 @@ Output:
       if the corresponding intersection is empty.
 
 Example:
-firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
-secEllObj = firstEllObj + [5; 5];
-ellVec = [firstEllObj secEllObj];
-thirdEllObj  = ell_unitball(2);
-internalEllVec = ellVec.intersection_ia(thirdEllObj)
+  firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+  secEllObj = firstEllObj + [5; 5];
+  ellVec = [firstEllObj secEllObj];
+  thirdEllObj  = ell_unitball(2);
+  internalEllVec = ellVec.intersection_ia(thirdEllObj)
 
-internalEllVec =
-1x2 array of ellipsoids.
+  internalEllVec =
+  1x2 array of ellipsoids.
 
 
 
@@ -1075,7 +1065,7 @@ internalEllVec =
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.inv}
+\subsection{ellipsoid.inv}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -1094,27 +1084,27 @@ Output:
       with inverted shape matrices.
 
 Example:
-ellObj = ellipsoid([1; 1], [4 -1; -1 5]);
-ellObj.inv()
+  ellObj = ellipsoid([1; 1], [4 -1; -1 5]);
+  ellObj.inv()
 
-ans =
+  ans =
 
-Center:
-     1
-     1
+  Center:
+       1
+       1
 
-Shape Matrix:
-    0.2632    0.0526
-    0.0526    0.2105
+  Shape Matrix:
+      0.2632    0.0526
+      0.0526    0.2105
 
-Nondegenerate ellipsoid in R^2.
+  Nondegenerate ellipsoid in R^2.
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.isEqual}
+\subsection{ellipsoid.isEqual}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -1137,13 +1127,13 @@ Output:
       corresponding ellipsoids are equal and false otherwise.
 
 Example:
-firstEllObj = ellipsoid([-1; 1], [2 0; 0 3]);
-secEllObj = ellipsoid([1 2], eye(2));
-isEqual(firstEllObj, secEllObj)
+  firstEllObj = ellipsoid([-1; 1], [2 0; 0 3]);
+  secEllObj = ellipsoid([1 2], eye(2));
+  isEqual(firstEllObj, secEllObj)
 
-ans =
+  ans =
 
-     0
+       0
 
 
 
@@ -1151,7 +1141,7 @@ ans =
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.isbaddirection}
+\subsection{ellipsoid.isbaddirection}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -1181,22 +1171,22 @@ Output:
       cannot be computed for this direction. false means the opposite.
 
 Example:
-firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
-secEllObj = 3*ell_unitball(2);
-dirsMat = [1 0; 1 1; 0 1; -1 1]';
-absTol = getAbsTol(secEllObj);
-secEllObj.isbaddirection(firstEllObj, dirsMat, absTol)
+  firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+  secEllObj = 3*ell_unitball(2);
+  dirsMat = [1 0; 1 1; 0 1; -1 1]';
+  absTol = getAbsTol(secEllObj);
+  secEllObj.isbaddirection(firstEllObj, dirsMat, absTol)
 
-ans =
+  ans =
 
-     0     1     1     0
+       0     1     1     0
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.isbigger}
+\subsection{ellipsoid.isbigger}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -1219,20 +1209,20 @@ Output:
       would contain secEll inside, false - otherwise.
 
 Example:
-firstEllObj = ellipsoid([1; 1], eye(2));
-secEllObj = ellipsoid([1; 1], [4 -1; -1 5]);
-isbigger(firstEllObj, secEllObj)
+  firstEllObj = ellipsoid([1; 1], eye(2));
+  secEllObj = ellipsoid([1; 1], [4 -1; -1 5]);
+  isbigger(firstEllObj, secEllObj)
 
-ans =
+  ans =
 
-     0
+       0
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.isdegenerate}
+\subsection{ellipsoid.isdegenerate}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -1248,19 +1238,19 @@ Output:
       is degenerate, false - otherwise.
 
 Example:
-ellObj = ellipsoid([1; 1], eye(2));
-isdegenerate(ellObj)
+  ellObj = ellipsoid([1; 1], eye(2));
+  isdegenerate(ellObj)
 
-ans =
+  ans =
 
-     0
+       0
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.isempty}
+\subsection{ellipsoid.isempty}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -1277,19 +1267,19 @@ Output:
       myEllMat(iCount) is empty, false - otherwise.
 
 Example:
-ellObj = ellipsoid();
-isempty(ellObj)
+  ellObj = ellipsoid();
+  isempty(ellObj)
 
-ans =
+  ans =
 
-     1
+       1
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.isinside}
+\subsection{ellipsoid.isinside}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -1367,20 +1357,20 @@ Output:
       if mode == 'u' or mSecRows == nSecCols == 1.
 
 Example:
-firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
-secEllObj = ell_unitball(2);
-firstEllObj.isinside([firstEllObj secEllObj], 'i')
+  firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+  secEllObj = ell_unitball(2);
+  firstEllObj.isinside([firstEllObj secEllObj], 'i')
 
-ans =
+  ans =
 
-     1
+       1
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.isinternal}
+\subsection{ellipsoid.isinternal}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -1425,27 +1415,27 @@ Output:
       of ellipsoids, false - otherwise.
 
 Example:
-firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
-secEllObj = firstEllObj + [5; 5];
-ellVec = [firstEllObj secEllObj];
-ellVec.isinternal([-2 3; -1 4], 'i')
+  firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+  secEllObj = firstEllObj + [5; 5];
+  ellVec = [firstEllObj secEllObj];
+  ellVec.isinternal([-2 3; -1 4], 'i')
 
-ans =
+  ans =
 
-     0     0
+       0     0
 
-ellVec.isinternal([-2 3; -1 4])
+  ellVec.isinternal([-2 3; -1 4])
 
-ans =
+  ans =
 
-     1     1
+       1     1
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.maxeig}
+\subsection{ellipsoid.maxeig}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -1461,19 +1451,19 @@ Output:
       eigenvalues of ellipsoids in the input matrix inpEllMat.
 
 Example:
-ellObj = ellipsoid([-2; 4], [4 -1; -1 5]);
-maxEig = maxeig(ellObj)
+  ellObj = ellipsoid([-2; 4], [4 -1; -1 5]);
+  maxEig = maxeig(ellObj)
 
-maxEig =
+  maxEig =
 
-    5.6180
+      5.6180
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.mineig}
+\subsection{ellipsoid.mineig}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -1489,19 +1479,19 @@ Output:
       eigenvalues of ellipsoids in the input array inpEllMat.
 
 Example:
-ellObj = ellipsoid([-2; 4], [4 -1; -1 5]);
-minEig = mineig(ellObj)
+  ellObj = ellipsoid([-2; 4], [4 -1; -1 5]);
+  minEig = mineig(ellObj)
 
-minEig =
+  minEig =
 
-    3.3820
+      3.3820
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.minkdiff}
+\subsection{ellipsoid.minkdiff}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -1555,9 +1545,9 @@ Output:
       may be empty if  ellipsoid fstEll isn't bigger than secEll.
 
 Example:
-firstEllObj = ellipsoid([-1; 1], [2 0; 0 3]);
-secEllObj = ellipsoid([1 2], eye(2));
-[centVec, boundPointMat] = minkdiff(firstEllObj, secEllObj);
+  firstEllObj = ellipsoid([-1; 1], [2 0; 0 3]);
+  secEllObj = ellipsoid([1 2], eye(2));
+  [centVec, boundPointMat] = minkdiff(firstEllObj, secEllObj);
 
 
 
@@ -1565,7 +1555,7 @@ secEllObj = ellipsoid([1 2], eye(2));
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.minkdiff\_ea}
+\subsection{ellipsoid.minkdiff\_ea}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -1615,13 +1605,13 @@ Output:
       directions approximations cannot be computed).
 
 Example:
-firstEllObj= ellipsoid([-2; -1], [4 -1; -1 1]);
-secEllObj = 3*ell_unitball(2);
-dirsMat = [1 0; 1 1; 0 1; -1 1]';
-externalEllVec = secEllObj.minkdiff_ea(firstEllObj, dirsMat)
+  firstEllObj= ellipsoid([-2; -1], [4 -1; -1 1]);
+  secEllObj = 3*ell_unitball(2);
+  dirsMat = [1 0; 1 1; 0 1; -1 1]';
+  externalEllVec = secEllObj.minkdiff_ea(firstEllObj, dirsMat)
 
-externalEllVec =
-1x2 array of ellipsoids.
+  externalEllVec =
+  1x2 array of ellipsoids.
 
 
 
@@ -1629,7 +1619,7 @@ externalEllVec =
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.minkdiff\_ia}
+\subsection{ellipsoid.minkdiff\_ia}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -1677,20 +1667,20 @@ Output:
       approximations cannot be computed).
 
 Example:
-firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
-secEllObj = 3*ell_unitball(2);
-dirsMat = [1 0; 1 1; 0 1; -1 1]';
-internalEllVec = secEllObj.minkdiff_ia(firstEllObj, dirsMat)
+  firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+  secEllObj = 3*ell_unitball(2);
+  dirsMat = [1 0; 1 1; 0 1; -1 1]';
+  internalEllVec = secEllObj.minkdiff_ia(firstEllObj, dirsMat)
 
-internalEllVec =
-1x2 array of ellipsoids.
+  internalEllVec =
+  1x2 array of ellipsoids.
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.minkmp}
+\subsection{ellipsoid.minkmp}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -1751,17 +1741,17 @@ Output:
       points (vertices) of resulting set.
 
 Example:
-firstEllObj = ellipsoid([-2; -1], [2 -1; -1 1]);
-secEllObj = ell_unitball(2);
-ellVec = [firstEllObj secEllObj ellipsoid([-3; 1], eye(2))];
-minkmp(firstEllObj, secEllObj, ellVec);
+  firstEllObj = ellipsoid([-2; -1], [2 -1; -1 1]);
+  secEllObj = ell_unitball(2);
+  ellVec = [firstEllObj secEllObj ellipsoid([-3; 1], eye(2))];
+  minkmp(firstEllObj, secEllObj, ellVec);
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.minkmp\_ea}
+\subsection{ellipsoid.minkmp\_ea}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -1794,21 +1784,21 @@ Output:
       directions approximations cannot be computed).
 
 Example:
-firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
-secEllObj = 3*ell_unitball(2);
-dirsMat = [1 0; 1 1; 0 1; -1 1]';
-bufEllVec = [secEllObj firstEllObj];
-externalEllVec = secEllObj.minkmp_ea(firstEllObj, bufEllVec, dirsMat)
+  firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+  secEllObj = 3*ell_unitball(2);
+  dirsMat = [1 0; 1 1; 0 1; -1 1]';
+  bufEllVec = [secEllObj firstEllObj];
+  externalEllVec = secEllObj.minkmp_ea(firstEllObj, bufEllVec, dirsMat)
 
-externalEllVec =
-1x2 array of ellipsoids.
+  externalEllVec =
+  1x2 array of ellipsoids.
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.minkmp\_ia}
+\subsection{ellipsoid.minkmp\_ia}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -1841,21 +1831,21 @@ Output:
       directions approximations cannot be computed).
 
 Example:
-firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
-secEllObj = 3*ell_unitball(2);
-dirsMat = [1 0; 1 1; 0 1; -1 1]';
-bufEllVec = [secEllObj firstEllObj];
-internalEllVec = secEllObj.minkmp_ia(firstEllObj, bufEllVec, dirsMat)
+  firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+  secEllObj = 3*ell_unitball(2);
+  dirsMat = [1 0; 1 1; 0 1; -1 1]';
+  bufEllVec = [secEllObj firstEllObj];
+  internalEllVec = secEllObj.minkmp_ia(firstEllObj, bufEllVec, dirsMat)
 
-internalEllVec =
-1x2 array of ellipsoids.
+  internalEllVec =
+  1x2 array of ellipsoids.
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.minkpm}
+\subsection{ellipsoid.minkpm}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -1908,11 +1898,11 @@ Output:
       points (vertices) of resulting set. boundPointMat may be empty.
 
 Example:
-firstEllObj = ellipsoid([-2; -1], [2 -1; -1 1]);
-secEllObj = ell_unitball(2);
-thirdEllObj = ell_unitball(2);
-ellVec = [firstEllObj secEllObj];
-minkpm(ellVec, thirdEllObj);
+  firstEllObj = ellipsoid([-2; -1], [2 -1; -1 1]);
+  secEllObj = ell_unitball(2);
+  thirdEllObj = ell_unitball(2);
+  ellVec = [firstEllObj secEllObj];
+  minkpm(ellVec, thirdEllObj);
 
 
 
@@ -1920,7 +1910,7 @@ minkpm(ellVec, thirdEllObj);
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.minkpm\_ea}
+\subsection{ellipsoid.minkpm\_ea}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -1950,22 +1940,22 @@ Output:
       directions approximations cannot be computed.
 
 Example:
-firstEllObj = ellipsoid([2; -1], [9 -5; -5 4]);
-secEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
-thirdEllObj = ell_unitball(2);
-dirsMat = [1 0; 1 1; 0 1; -1 1]';
-ellVec = [thirdEllObj firstEllObj];
-externalEllVec = ellVec.minkpm_ea(secEllObj, dirsMat)
+  firstEllObj = ellipsoid([2; -1], [9 -5; -5 4]);
+  secEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+  thirdEllObj = ell_unitball(2);
+  dirsMat = [1 0; 1 1; 0 1; -1 1]';
+  ellVec = [thirdEllObj firstEllObj];
+  externalEllVec = ellVec.minkpm_ea(secEllObj, dirsMat)
 
-externalEllVec =
-1x4 array of ellipsoids.
+  externalEllVec =
+  1x4 array of ellipsoids.
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.minkpm\_ia}
+\subsection{ellipsoid.minkpm\_ia}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -1995,22 +1985,22 @@ Output:
       directions approximations cannot be computed.
 
 Example:
-firstEllObj = ellipsoid([2; -1], [9 -5; -5 4]);
-secEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
-thirdEllObj = ell_unitball(2);
-ellVec = [thirdEllObj firstEllObj];
-dirsMat = [1 0; 1 1; 0 1; -1 1]';
-internalEllVec = ellVec.minkpm_ia(secEllObj, dirsMat)
+  firstEllObj = ellipsoid([2; -1], [9 -5; -5 4]);
+  secEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+  thirdEllObj = ell_unitball(2);
+  ellVec = [thirdEllObj firstEllObj];
+  dirsMat = [1 0; 1 1; 0 1; -1 1]';
+  internalEllVec = ellVec.minkpm_ia(secEllObj, dirsMat)
 
-internalEllVec =
-1x3 array of ellipsoids.
+  internalEllVec =
+  1x3 array of ellipsoids.
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.minksum}
+\subsection{ellipsoid.minksum}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -2053,16 +2043,17 @@ Output:
       points (vertices) of resulting set.
 
 Example:
-firstEllObj = ellipsoid([-2; -1], [2 -1; -1 1]);
-secEllObj = ell_unitball(2);
-ellVec = [firstEllObj, secellObj]
-sumVec = minksum(ellVec);
+  firstEllObj = ellipsoid([-2; -1], [2 -1; -1 1]);
+  secEllObj = ell_unitball(2);
+  ellVec = [firstEllObj, secellObj]
+  sumVec = minksum(ellVec);
+
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.minksum\_ea}
+\subsection{ellipsoid.minksum\_ea}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -2104,21 +2095,21 @@ Output:
       approximating ellipsoids.
 
 Example:
-firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
-secEllObj = ell_unitball(2);
-ellVec = [firstEllObj secEllObj firstEllObj.inv()];
-dirsMat = [1 0; 1 1; 0 1; -1 1]';
-externalEllVec = ellVec.minksum_ea(dirsMat)
+  firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+  secEllObj = ell_unitball(2);
+  ellVec = [firstEllObj secEllObj firstEllObj.inv()];
+  dirsMat = [1 0; 1 1; 0 1; -1 1]';
+  externalEllVec = ellVec.minksum_ea(dirsMat)
 
-externalEllVec =
-1x4 array of ellipsoids.
+  externalEllVec =
+  1x4 array of ellipsoids.
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.minksum\_ia}
+\subsection{ellipsoid.minksum\_ia}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -2160,21 +2151,21 @@ Output:
       approximating ellipsoids.
 
 Example:
-firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
-secEllObj = ell_unitball(2);
-ellVec = [firstEllObj secEllObj firstEllObj.inv()];
-dirsMat = [1 0; 1 1; 0 1; -1 1]';
-internalEllVec = ellVec.minksum_ia(dirsMat)
+  firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+  secEllObj = ell_unitball(2);
+  ellVec = [firstEllObj secEllObj firstEllObj.inv()];
+  dirsMat = [1 0; 1 1; 0 1; -1 1]';
+  internalEllVec = ellVec.minksum_ia(dirsMat)
 
-internalEllVec =
-1x4 array of ellipsoids.
+  internalEllVec =
+  1x4 array of ellipsoids.
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.minus}
+\subsection{ellipsoid.minus}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -2202,35 +2193,35 @@ Output:
       in -inpVec.
 
 Example:
-ellVec  = [ellipsoid([-2; -1], [4 -1; -1 1]) ell_unitball(2)];
-outEllVec = ellVec - [1; 1];
-outEllVec(1)
+  ellVec  = [ellipsoid([-2; -1], [4 -1; -1 1]) ell_unitball(2)];
+  outEllVec = ellVec - [1; 1];
+  outEllVec(1)
 
-ans =
+  ans =
 
-Center:
-    -3
-    -2
+  Center:
+      -3
+      -2
 
-Shape:
-     4    -1
-    -1     1
+  Shape:
+       4    -1
+      -1     1
 
-Nondegenerate ellipsoid in R^2.
+  Nondegenerate ellipsoid in R^2.
 
-outEllVec(2)
+  outEllVec(2)
 
-ans =
+  ans =
 
-Center:
-    -1
-    -1
+  Center:
+      -1
+      -1
 
-Shape:
-     1     0
-     0     1
+  Shape:
+       1     0
+       0     1
 
-Nondegenerate ellipsoid in R^2.
+  Nondegenerate ellipsoid in R^2.
 
 
 
@@ -2238,7 +2229,7 @@ Nondegenerate ellipsoid in R^2.
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.move2origin}
+\subsection{ellipsoid.move2origin}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -2257,20 +2248,20 @@ Output:
       with the same shapes as in inpEllArr centered at the origin.
 
 Example:
-ellObj = ellipsoid([-2; -1], [4 -1; -1 1]);
-outEllObj = ellObj.move2origin()
+  ellObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+  outEllObj = ellObj.move2origin()
 
-outEllObj =
+  outEllObj =
 
-Center:
-     0
-     0
+  Center:
+       0
+       0
 
-Shape:
-     4    -1
-    -1     1
+  Shape:
+       4    -1
+      -1     1
 
-Nondegenerate ellipsoid in R^2.
+  Nondegenerate ellipsoid in R^2.
 
 
 
@@ -2278,7 +2269,7 @@ Nondegenerate ellipsoid in R^2.
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.mtimes}
+\subsection{ellipsoid.mtimes}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -2299,28 +2290,28 @@ Output:
   outEllVec: ellipsoid [1, nCols] - resulting ellipsoids.
 
 Example:
-ellObj = ellipsoid([-2; -1], [4 -1; -1 1]);
-tempMat = [0 1; -1 0];
-outEllObj = tempMat*ellObj
+  ellObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+  tempMat = [0 1; -1 0];
+  outEllObj = tempMat*ellObj
 
-outEllObj =
+  outEllObj =
 
-Center:
-    -1
-     2
+  Center:
+      -1
+       2
 
-Shape:
-     1     1
-     1     4
+  Shape:
+       1     1
+       1     4
 
-Nondegenerate ellipsoid in R^2.
+  Nondegenerate ellipsoid in R^2.
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.parameters}
+\subsection{ellipsoid.parameters}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -2336,18 +2327,18 @@ Output:
       of the ellipsoid myEll.
 
 Example:
-ellObj = ellipsoid([-2; 4], [4 -1; -1 5]);
-[centVec shapeMat] = parameters(ellObj)
-centVec =
+  ellObj = ellipsoid([-2; 4], [4 -1; -1 5]);
+  [centVec shapeMat] = parameters(ellObj)
+  centVec =
 
-    -2
-     4
+      -2
+       4
 
 
-shapeMat =
+  shapeMat =
 
-     4    -1
-    -1     5
+      4    -1
+     -1     5
 
 
 
@@ -2355,7 +2346,7 @@ shapeMat =
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.plot}
+\subsection{ellipsoid.plot}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -2400,7 +2391,7 @@ See also:
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.plot3}
+\subsection{ellipsoid.plot3}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -2450,7 +2441,7 @@ See also:
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.plus}
+\subsection{ellipsoid.plus}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -2478,35 +2469,35 @@ Output:
       in inpVec.
 
 Example:
-ellVec  = [ellipsoid([-2; -1], [4 -1; -1 1]) ell_unitball(2)];
-outEllVec = ellVec + [1; 1];
-outEllVec(1)
+  ellVec  = [ellipsoid([-2; -1], [4 -1; -1 1]) ell_unitball(2)];
+  outEllVec = ellVec + [1; 1];
+  outEllVec(1)
 
-ans =
+  ans =
 
-Center:
-    -1
-     0
+  Center:
+      -1
+       0
 
-Shape:
-     4    -1
-    -1     1
+  Shape:
+      4    -1
+     -1     1
 
-Nondegenerate ellipsoid in R^2.
+  Nondegenerate ellipsoid in R^2.
 
-outEllVec(2)
+  outEllVec(2)
 
-ans =
+  ans =
 
-Center:
-     1
-     1
+  Center:
+       1
+       1
 
-Shape:
-     1     0
-     0     1
+  Shape:
+      1     0
+      0     1
 
-Nondegenerate ellipsoid in R^2.
+  Nondegenerate ellipsoid in R^2.
 
 
 
@@ -2514,7 +2505,7 @@ Nondegenerate ellipsoid in R^2.
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.polar}
+\subsection{ellipsoid.polar}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -2541,19 +2532,19 @@ Output:
        polar ellipsoids.
 
 Example:
-ellObj = ellipsoid([4 -1; -1 1]);
-ellObj.polar() == ellObj.inv()
+  ellObj = ellipsoid([4 -1; -1 1]);
+  ellObj.polar() == ellObj.inv()
 
-ans =
+  ans =
 
-     1
+      1
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.projection}
+\subsection{ellipsoid.projection}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -2576,28 +2567,28 @@ Output:
       projected ellipsoids, generally, of lower dimension.
 
 Example:
-ellObj = ellipsoid([-2; -1; 4], [4 -1 0; -1 1 0; 0 0 9]);
-basisMat = [0 1 0; 0 0 1]';
-outEllObj = ellObj.projection(basisMat)
+  ellObj = ellipsoid([-2; -1; 4], [4 -1 0; -1 1 0; 0 0 9]);
+  basisMat = [0 1 0; 0 0 1]';
+  outEllObj = ellObj.projection(basisMat)
 
-outEllObj =
+  outEllObj =
 
-Center:
-    -1
-     4
+  Center:
+      -1
+       4
 
-Shape:
-     1     0
-     0     9
+  Shape:
+      1     0
+      0     9
 
-Nondegenerate ellipsoid in R^2.
+  Nondegenerate ellipsoid in R^2.
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.rho}
+\subsection{ellipsoid.rho}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -2641,20 +2632,20 @@ Output:
       boundary points
 
 Example:
-ellObj = ellipsoid([-2; 4], [4 -1; -1 1]);
-dirsMat = [-2 5; 5 1];
-suppFuncVec = rho(ellObj, dirsMat)
+  ellObj = ellipsoid([-2; 4], [4 -1; -1 1]);
+  dirsMat = [-2 5; 5 1];
+  suppFuncVec = rho(ellObj, dirsMat)
 
-suppFuncVec =
+  suppFuncVec =
 
-   31.8102    3.5394
+      31.8102    3.5394
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.shape}
+\subsection{ellipsoid.shape}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -2678,28 +2669,28 @@ Output:
       ellipsoids.
 
 Example:
-ellObj = ellipsoid([-2; -1], [4 -1; -1 1]);
-tempMat = [0 1; -1 0];
-outEllObj = shape(ellObj, tempMat)
+  ellObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+  tempMat = [0 1; -1 0];
+  outEllObj = shape(ellObj, tempMat)
 
-outEllObj =
+  outEllObj =
 
-Center:
-    -2
-    -1
+  Center:
+      -2
+      -1
 
-Shape:
-     1     1
-     1     4
+  Shape:
+      1     1
+      1     4
 
-Nondegenerate ellipsoid in R^2.
+  Nondegenerate ellipsoid in R^2.
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.trace}
+\subsection{ellipsoid.trace}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -2718,21 +2709,21 @@ Output:
       same size as ellArr.
 
 Example:
-firstEllObj = ellipsoid([4 -1; -1 1]);
-secEllObj = ell_unitball(2);
-ellVec = [firstEllObj secEllObj];
-trVec = ellVec.trace()
+  firstEllObj = ellipsoid([4 -1; -1 1]);
+  secEllObj = ell_unitball(2);
+  ellVec = [firstEllObj secEllObj];
+  trVec = ellVec.trace()
 
-trVec =
+  trVec =
 
-    5     2
+      5     2
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.uminus}
+\subsection{ellipsoid.uminus}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -2748,19 +2739,19 @@ Output:
        same size as ellArr.
 
 Example:
-ellObj = -ellipsoid([-2; -1], [4 -1; -1 1])
+  ellObj = -ellipsoid([-2; -1], [4 -1; -1 1])
 
-ellObj =
+  ellObj =
 
-Center:
-     2
-     1
+  Center:
+       2
+       1
 
-Shape:
-     4    -1
-    -1     1
+  Shape:
+       4    -1
+      -1     1
 
-Nondegenerate ellipsoid in R^2.
+  Nondegenerate ellipsoid in R^2.
 
 
 
@@ -2768,7 +2759,7 @@ Nondegenerate ellipsoid in R^2.
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {ellipsoid.volume}
+\subsection{ellipsoid.volume}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -2790,21 +2781,22 @@ Output:
       volume values, same size as ellArr.
 
 Example:
-firstEllObj = ellipsoid([4 -1; -1 1]);
-secEllObj = ell_unitball(2);
-ellVec = [firstEllObj secEllObj]
-volVec = ellVec.volume()
+  firstEllObj = ellipsoid([4 -1; -1 1]);
+  secEllObj = ell_unitball(2);
+  ellVec = [firstEllObj secEllObj]
+  volVec = ellVec.volume()
 
-volVec =
+  volVec =
 
-    5.4414     3.1416
+      5.4414     3.1416
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {hyperplane.hyperplane}
+\section{hyperplane}
+\subsection{hyperplane.hyperplane}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -2901,16 +2893,16 @@ Output:
           hypH.shift  - scalar.
 
 Example:
-hypNormMat = [1 1 1; 1 1 1];
-hypConstVec = [1 -5 0];
-hypObj = hyperplane(hypNormMat, hypConstVec);
+  hypNormMat = [1 1 1; 1 1 1];
+  hypConstVec = [1 -5 0];
+  hypObj = hyperplane(hypNormMat, hypConstVec);
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {hyperplane.checkIsMe}
+\subsection{hyperplane.checkIsMe}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -2923,60 +2915,60 @@ Input:
       someObjArr: any[] - any type array of objects.
 
 Example:
-hypObj = hyperplane([-2, 0]);
-hyperplane.checkIsMe(hypObj)
+  hypObj = hyperplane([-2, 0]);
+  hyperplane.checkIsMe(hypObj)
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {hyperplane.contains}
+\subsection{hyperplane.contains}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
- CONTAINS - checks if given vectors belong to the hyperplanes.
+CONTAINS - checks if given vectors belong to the hyperplanes.
 
-   isPosArr = CONTAINS(myHypArr, xArr) - Checks if vectors specified
-       by columns xArr(:, hpDim1, hpDim2, ...) belong
-       to hyperplanes in myHypArr.
+  isPosArr = CONTAINS(myHypArr, xArr) - Checks if vectors specified
+      by columns xArr(:, hpDim1, hpDim2, ...) belong
+      to hyperplanes in myHypArr.
 
- Input:
-   regular:
-       myHypArr: hyperplane [nCols, 1]/[1, nCols]/
-           /[hpDim1, hpDim2, ...]/[1, 1] - array of hyperplanes
-           of the same dimentions nDims.
-       xArr: double[nDims, nCols]/[nDims, hpDim1, hpDim2, ...]/
-           /[nDims, 1]/[nDims, nVecArrDim1, nVecArrDim2, ...] - array
-           whose columns represent the vectors needed to be checked.
+Input:
+  regular:
+      myHypArr: hyperplane [nCols, 1]/[1, nCols]/
+          /[hpDim1, hpDim2, ...]/[1, 1] - array of hyperplanes
+          of the same dimentions nDims.
+      xArr: double[nDims, nCols]/[nDims, hpDim1, hpDim2, ...]/
+          /[nDims, 1]/[nDims, nVecArrDim1, nVecArrDim2, ...] - array
+          whose columns represent the vectors needed to be checked.
 
-           note: if size of myHypArr is [hpDim1, hpDim2, ...], then
-               size of xArr is [nDims, hpDim1, hpDim2, ...]
-               or [nDims, 1], if size of myHypArr [1, 1], then xArr
-               can be any size [nDims, nVecArrDim1, nVecArrDim2, ...],
-               in this case output variable will has
-               size [1, nVecArrDim1, nVecArrDim2, ...]. If size of
-               xArr is [nDims, nCols], then size of myHypArr may be
-               [nCols, 1] or [1, nCols] or [1, 1], output variable
-               will has size respectively
-               [nCols, 1] or [1, nCols] or [nCols, 1].
+          note: if size of myHypArr is [hpDim1, hpDim2, ...], then
+              size of xArr is [nDims, hpDim1, hpDim2, ...]
+              or [nDims, 1], if size of myHypArr [1, 1], then xArr
+              can be any size [nDims, nVecArrDim1, nVecArrDim2, ...],
+              in this case output variable will has
+              size [1, nVecArrDim1, nVecArrDim2, ...]. If size of
+              xArr is [nDims, nCols], then size of myHypArr may be
+              [nCols, 1] or [1, nCols] or [1, 1], output variable
+              will has size respectively
+              [nCols, 1] or [1, nCols] or [nCols, 1].
 
- Output:
-   isPosArr: logical[hpDim1, hpDim2,...] /
-       / logical[1, nVecArrDim1, nVecArrDim2, ...],
-       isPosArr(iDim1, iDim2, ...) = true - myHypArr(iDim1, iDim2, ...)
-       contains xArr(:, iDim1, iDim2, ...), false - otherwise.
+Output:
+  isPosArr: logical[hpDim1, hpDim2,...] /
+      / logical[1, nVecArrDim1, nVecArrDim2, ...],
+      isPosArr(iDim1, iDim2, ...) = true - myHypArr(iDim1, iDim2, ...)
+      contains xArr(:, iDim1, iDim2, ...), false - otherwise.
 
 Example:
- hypObj = hyperplane([-1; 1]);
- tempMat = [100 -1 2; 100 1 2];
- hypObj.contains(tempMat)
+  hypObj = hyperplane([-1; 1]);
+  tempMat = [100 -1 2; 100 1 2];
+  hypObj.contains(tempMat)
 
- ans =
+  ans =
 
-      1
-      0
-      1
+       1
+       0
+       1
 
 
 
@@ -2984,7 +2976,7 @@ Example:
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {hyperplane.contents}
+\subsection{hyperplane.contents}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -3017,7 +3009,7 @@ Overloaded operators and functions:
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {hyperplane.dimension}
+\subsection{hyperplane.dimension}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -3036,22 +3028,22 @@ Output:
           of hyperplanes.
 
 Example:
-firstHypObj = hyperplane([-1; 1]);
-secHypObj = hyperplane([-1; 1; 8; -2; 3], 7);
-thirdHypObj = hyperplane([1; 2; 0], -1);
-hypVec = [firstHypObj secHypObj thirdHypObj];
-dimsVec  = hypVec.dimension()
+  firstHypObj = hyperplane([-1; 1]);
+  secHypObj = hyperplane([-1; 1; 8; -2; 3], 7);
+  thirdHypObj = hyperplane([1; 2; 0], -1);
+  hypVec = [firstHypObj secHypObj thirdHypObj];
+  dimsVec  = hypVec.dimension()
 
-dimsVec =
+  dimsVec =
 
-   2     5     3
+     2     5     3
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {hyperplane.display}
+\subsection{hyperplane.display}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -3063,28 +3055,28 @@ Input:
           of hyperplanes.
 
 Example:
-hypObj = hyperplane([-1; 1]);
-display(hypObj)
+  hypObj = hyperplane([-1; 1]);
+  display(hypObj)
 
-hypObj =
-size: [1 1]
+  hypObj =
+  size: [1 1]
 
-Element: [1 1]
-Normal:
-    -1
-     1
+  Element: [1 1]
+  Normal:
+      -1
+       1
 
-Shift:
-     0
+  Shift:
+       0
 
-Hyperplane in R^2.
+  Hyperplane in R^2.
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {hyperplane.double}
+\subsection{hyperplane.double}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -3102,25 +3094,25 @@ Output:
   hypScal: double[1, 1] - scalar of the hyperplane myHyp.
 
 Example:
-hypObj = hyperplane([-1; 1]);
-[normVec, hypScal] = double(hypObj)
+  hypObj = hyperplane([-1; 1]);
+  [normVec, hypScal] = double(hypObj)
 
-normVec =
+  normVec =
 
-    -1
-     1
+      -1
+       1
 
 
-hypScal =
+  hypScal =
 
-     0
+       0
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {hyperplane.getAbsTol}
+\subsection{hyperplane.getAbsTol}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -3150,23 +3142,23 @@ Usage:
   use absTolArr = hplaneArr.getAbsTol() if you want get only absTolArr
 
 Example:
-firstHypObj = hyperplane([-1; 1]);
-secHypObj = hyperplane([-2; 5]);
-hypVec = [firstHypObj secHypObj];
-hypVec.getAbsTol()
+  firstHypObj = hyperplane([-1; 1]);
+  secHypObj = hyperplane([-2; 5]);
+  hypVec = [firstHypObj secHypObj];
+  hypVec.getAbsTol()
 
-ans =
+  ans =
 
-   1.0e-07 *
+     1.0e-07 *
 
-    1.0000    1.0000
+      1.0000    1.0000
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {hyperplane.isempty}
+\subsection{hyperplane.isempty}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -3183,19 +3175,19 @@ Output:
       myHypArr(iDim1, iDim2, ...) is empty, false - otherwise.
 
 Example:
-hypObj = hyperplane();
-isempty(hypObj)
+  hypObj = hyperplane();
+  isempty(hypObj)
 
-ans =
+  ans =
 
-     1
+       1
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {hyperplane.isparallel}
+\subsection{hyperplane.isparallel}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -3220,12 +3212,12 @@ Output:
       secHypArr(iFstDim, iSecDim, ...), false - otherwise.
 
 Example:
-hypObj = hyperplane([-1 1 1; 1 1 1; 1 1 1], [2 1 0]);
-hypObj.isparallel(hypObj(2))
+  hypObj = hyperplane([-1 1 1; 1 1 1; 1 1 1], [2 1 0]);
+  hypObj.isparallel(hypObj(2))
 
-ans =
+  ans =
 
-     0     1     1
+       0     1     1
 
 
 
@@ -3233,7 +3225,7 @@ ans =
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {hyperplane.parameters}
+\subsection{hyperplane.parameters}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -3251,25 +3243,25 @@ Output:
   hypScal: double[1, 1] - scalar of the hyperplane myHyp.
 
 Example:
-hypObj = hyperplane([-1; 1]);
-[normVec, hypScal] = parameters(hypObj)
+  hypObj = hyperplane([-1; 1]);
+  [normVec, hypScal] = parameters(hypObj)
 
-normVec =
+  normVec =
 
-    -1
-     1
+      -1
+       1
 
 
-hypScal =
+  hypScal =
 
-     0
+       0
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {hyperplane.plot}
+\subsection{hyperplane.plot}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -3318,7 +3310,7 @@ Output:
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {hyperplane.uminus}
+\subsection{hyperplane.uminus}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -3336,27 +3328,28 @@ Output:
       normals and scalars are multiplied by -1.
 
 Example:
-hypObj = -hyperplane([-1; 1], 1)
+  hypObj = -hyperplane([-1; 1], 1)
 
-hypObj =
-size: [1 1]
+  hypObj =
+  size: [1 1]
 
-Element: [1 1]
-Normal:
-     1
-    -1
+  Element: [1 1]
+  Normal:
+       1
+      -1
 
-Shift:
-    -1
+  Shift:
+      -1
 
-Hyperplane in R^2.
+  Hyperplane in R^2.
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.conf.Properties.parseProp}
+\section{elltool.conf.Properties}
+\subsection{elltool.conf.Properties.parseProp}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -3391,48 +3384,48 @@ PARSEPROP - parses input into cell array with values of properties listed
                               they listed in neededPropNameList
 
  Example:
- testAbsTol = 1;
- testRelTol = 2;
- nPlot2dPoints = 3;
- someArg = 4;
- args = {'absTol',testAbsTol, 'relTol',testRelTol,'nPlot2dPoints',nPlot2dPoints, 'someOtherArg', someArg};
- neededProp = {'absTol','relTol'};
- [absTol, relTol] = elltool.conf.Properties.parseProp(args,neededProp)
+   testAbsTol = 1;
+   testRelTol = 2;
+   nPlot2dPoints = 3;
+   someArg = 4;
+   args = {'absTol',testAbsTol, 'relTol',testRelTol,'nPlot2dPoints',nPlot2dPoints, 'someOtherArg', someArg};
+   neededProp = {'absTol','relTol'};
+   [absTol, relTol] = elltool.conf.Properties.parseProp(args,neededProp)
 
- absTol =
+   absTol =
 
-      1
+        1
 
 
- relTol =
+   relTol =
 
-      2
+        2
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.conf.Properties.getPropStruct}
+\subsection{elltool.conf.Properties.getPropStruct}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
 Example:
-elltool.conf.Properties.getConfRepoMgr.getCurConf()
+  elltool.conf.Properties.getConfRepoMgr.getCurConf()
 
-ans =
+  ans =
 
-                  version: '1.4dev'
-                isVerbose: 0
-                   absTol: 1.0000e-07
-                   relTol: 1.0000e-05
-          nTimeGridPoints: 200
-            ODESolverName: 'ode45'
-         isODENormControl: 'on'
-isEnabledOdeSolverOptions: 0
-            nPlot2dPoints: 200
-            nPlot3dPoints: 200
-                  logging: [1x1 struct]
+                    version: '1.4dev'
+                  isVerbose: 0
+                     absTol: 1.0000e-07
+                     relTol: 1.0000e-05
+            nTimeGridPoints: 200
+              ODESolverName: 'ode45'
+           isODENormControl: 'on'
+  isEnabledOdeSolverOptions: 0
+              nPlot2dPoints: 200
+              nPlot3dPoints: 200
+                    logging: [1x1 struct]
 
 
 
@@ -3440,12 +3433,12 @@ isEnabledOdeSolverOptions: 0
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.conf.Properties.setNTimeGridPoints}
+\subsection{elltool.conf.Properties.setNTimeGridPoints}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
 Example:
-elltool.conf.Properties.setNTimeGridPoints(300);
+  elltool.conf.Properties.setNTimeGridPoints(300);
 
 
 
@@ -3453,12 +3446,12 @@ elltool.conf.Properties.setNTimeGridPoints(300);
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.conf.Properties.setNPlot2dPoints}
+\subsection{elltool.conf.Properties.setNPlot2dPoints}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
 Example:
-elltool.conf.Properties.setNPlot2dPoints(300);
+  elltool.conf.Properties.setNPlot2dPoints(300);
 
 
 
@@ -3466,12 +3459,12 @@ elltool.conf.Properties.setNPlot2dPoints(300);
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.conf.Properties.setIsVerbose}
+\subsection{elltool.conf.Properties.setIsVerbose}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
 Example:
-elltool.conf.Properties.setIsVerbose(true);
+  elltool.conf.Properties.setIsVerbose(true);
 
 
 
@@ -3479,12 +3472,12 @@ elltool.conf.Properties.setIsVerbose(true);
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.conf.Properties.getNPlot3dPoints}
+\subsection{elltool.conf.Properties.getNPlot3dPoints}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
 Example:
-elltool.conf.Properties.getNPlot3dPoints();
+  elltool.conf.Properties.getNPlot3dPoints();
 
 
 
@@ -3492,12 +3485,12 @@ elltool.conf.Properties.getNPlot3dPoints();
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.conf.Properties.getNPlot2dPoints}
+\subsection{elltool.conf.Properties.getNPlot2dPoints}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
 Example:
-elltool.conf.Properties.getNPlot2dPoints();
+  elltool.conf.Properties.getNPlot2dPoints();
 
 
 
@@ -3505,12 +3498,12 @@ elltool.conf.Properties.getNPlot2dPoints();
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.conf.Properties.getIsEnabledOdeSolverOptions}
+\subsection{elltool.conf.Properties.getIsEnabledOdeSolverOptions}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
 Example:
-elltool.conf.Properties.getIsEnabledOdeSolverOptions();
+  elltool.conf.Properties.getIsEnabledOdeSolverOptions();
 
 
 
@@ -3518,12 +3511,12 @@ elltool.conf.Properties.getIsEnabledOdeSolverOptions();
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.conf.Properties.getIsODENormControl}
+\subsection{elltool.conf.Properties.getIsODENormControl}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
 Example:
-elltool.conf.Properties.getIsODENormControl();
+  elltool.conf.Properties.getIsODENormControl();
 
 
 
@@ -3531,12 +3524,12 @@ elltool.conf.Properties.getIsODENormControl();
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.conf.Properties.getODESolverName}
+\subsection{elltool.conf.Properties.getODESolverName}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
 Example:
-elltool.conf.Properties.getODESolverName();
+  elltool.conf.Properties.getODESolverName();
 
 
 
@@ -3544,12 +3537,12 @@ elltool.conf.Properties.getODESolverName();
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.conf.Properties.getNTimeGridPoints}
+\subsection{elltool.conf.Properties.getNTimeGridPoints}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
 Example:
-elltool.conf.Properties.getNTimeGridPoints();
+  elltool.conf.Properties.getNTimeGridPoints();
 
 
 
@@ -3557,12 +3550,12 @@ elltool.conf.Properties.getNTimeGridPoints();
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.conf.Properties.getRelTol}
+\subsection{elltool.conf.Properties.getRelTol}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
 Example:
-elltool.conf.Properties.getRelTol();
+  elltool.conf.Properties.getRelTol();
 
 
 
@@ -3570,12 +3563,12 @@ elltool.conf.Properties.getRelTol();
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.conf.Properties.getAbsTol}
+\subsection{elltool.conf.Properties.getAbsTol}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
 Example:
-elltool.conf.Properties.getAbsTol();
+  elltool.conf.Properties.getAbsTol();
 
 
 
@@ -3583,12 +3576,12 @@ elltool.conf.Properties.getAbsTol();
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.conf.Properties.getIsVerbose}
+\subsection{elltool.conf.Properties.getIsVerbose}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
 Example:
-elltool.conf.Properties.getIsVerbose();
+  elltool.conf.Properties.getIsVerbose();
 
 
 
@@ -3596,12 +3589,12 @@ elltool.conf.Properties.getIsVerbose();
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.conf.Properties.getVersion}
+\subsection{elltool.conf.Properties.getVersion}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
 Example:
-elltool.conf.Properties.getVersion();
+  elltool.conf.Properties.getVersion();
 
 
 
@@ -3609,14 +3602,14 @@ elltool.conf.Properties.getVersion();
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.conf.Properties.setConfRepoMgr}
+\subsection{elltool.conf.Properties.setConfRepoMgr}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
 Example:
- prevConfRepo = Properties.getConfRepoMgr();
- prevAbsTol = prevConfRepo.getParam('absTol');
- elltool.conf.Properties.setConfRepoMgr(prevConfRepo);
+  prevConfRepo = Properties.getConfRepoMgr();
+  prevAbsTol = prevConfRepo.getParam('absTol');
+  elltool.conf.Properties.setConfRepoMgr(prevConfRepo);
 
 
 
@@ -3624,20 +3617,20 @@ Example:
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.conf.Properties.getConfRepoMgr}
+\subsection{elltool.conf.Properties.getConfRepoMgr}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
 Example:
-elltool.conf.Properties.getConfRepoMgr()
+  elltool.conf.Properties.getConfRepoMgr()
 
- ans =
+  ans =
 
-   elltool.conf.ConfRepoMgr handle
-   Package: elltool.conf
+    elltool.conf.ConfRepoMgr handle
+    Package: elltool.conf
 
-   Properties:
-     DEFAULT_STORAGE_BRANCH_KEY: '_default'
+    Properties:
+      DEFAULT_STORAGE_BRANCH_KEY: '_default'
 
 
 
@@ -3645,24 +3638,24 @@ elltool.conf.Properties.getConfRepoMgr()
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.conf.Properties.init}
+\subsection{elltool.conf.Properties.init}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
 Example:
- elltool.conf.Properties.init()
+  elltool.conf.Properties.init()
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.conf.Properties.checkSettings}
+\subsection{elltool.conf.Properties.checkSettings}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
 Example:
-elltool.conf.Properties.checkSettings()
+  elltool.conf.Properties.checkSettings()
 
 
 
@@ -3670,7 +3663,7 @@ elltool.conf.Properties.checkSettings()
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.conf.Properties.Properties}
+\subsection{elltool.conf.Properties.Properties}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -3682,19 +3675,20 @@ PROPERTIES - a static class, providing emulation of static properties for
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.core.GenEllipsoid.getIsGoodDir}
+\section{elltool.core.GenEllipsoid}
+\subsection{elltool.core.GenEllipsoid.getIsGoodDir}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
 Example:
-firstEllObj = elltool.core.GenEllipsoid([10;0], 2*eye(2));
-secEllObj = elltool.core.GenEllipsoid([0;0], [1 0; 0 0.1]);
-curDirMat = [1; 0];
-isOk=getIsGoodDir(firstEllObj,secEllObj,dirsMat)
+  firstEllObj = elltool.core.GenEllipsoid([10;0], 2*eye(2));
+  secEllObj = elltool.core.GenEllipsoid([0;0], [1 0; 0 0.1]);
+  curDirMat = [1; 0];
+  isOk=getIsGoodDir(firstEllObj,secEllObj,dirsMat)
 
-isOk =
+  isOk =
 
-     1
+       1
 
 
 
@@ -3702,30 +3696,30 @@ isOk =
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.core.GenEllipsoid.display}
+\subsection{elltool.core.GenEllipsoid.display}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
 Example:
-ellObj = elltool.core.GenEllipsoid([5;2], eye(2), [1 3; 4 5]);
-ellObj.display()
-   |
-   |----- q : [5 2]
-   |          -------
-   |----- Q : |10|19|
-   |          |19|41|
-   |          -------
-   |          -----
-   |-- QInf : |0|0|
-   |          |0|0|
-   |          -----
+  ellObj = elltool.core.GenEllipsoid([5;2], eye(2), [1 3; 4 5]);
+  ellObj.display()
+     |
+     |----- q : [5 2]
+     |          -------
+     |----- Q : |10|19|
+     |          |19|41|
+     |          -------
+     |          -----
+     |-- QInf : |0|0|
+     |          |0|0|
+     |          -----
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.core.GenEllipsoid.GenEllipsoid}
+\subsection{elltool.core.GenEllipsoid.GenEllipsoid}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -3756,26 +3750,26 @@ Output:
   self: GenEllipsoid[1,1] - created generalized ellipsoid
 
 Example:
-ellObj = elltool.core.GenEllipsoid([5;2], eye(2));
-ellObj = elltool.core.GenEllipsoid([5;2], eye(2), [1 3; 4 5]);
+  ellObj = elltool.core.GenEllipsoid([5;2], eye(2));
+  ellObj = elltool.core.GenEllipsoid([5;2], eye(2), [1 3; 4 5]);
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.core.GenEllipsoid.getDiagMat}
+\subsection{elltool.core.GenEllipsoid.getDiagMat}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
 Example:
-ellObj = elltool.core.GenEllipsoid([5;2], eye(2), [1 3; 4 5]);
-ellObj.getDiagMat()
+  ellObj = elltool.core.GenEllipsoid([5;2], eye(2), [1 3; 4 5]);
+  ellObj.getDiagMat()
 
-ans =
+  ans =
 
-    0.9796         0
-         0   50.0204
+      0.9796         0
+           0   50.0204
 
 
 
@@ -3783,18 +3777,18 @@ ans =
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.core.GenEllipsoid.getEigvMat}
+\subsection{elltool.core.GenEllipsoid.getEigvMat}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
 Example:
-ellObj = elltool.core.GenEllipsoid([5;2], eye(2), [1 3; 4 5]);
-ellObj.getEigvMat()
+  ellObj = elltool.core.GenEllipsoid([5;2], eye(2), [1 3; 4 5]);
+  ellObj.getEigvMat()
 
-ans =
+  ans =
 
-    0.9034   -0.4289
-   -0.4289   -0.9034
+      0.9034   -0.4289
+     -0.4289   -0.9034
 
 
 
@@ -3802,18 +3796,18 @@ ans =
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.core.GenEllipsoid.getCenter}
+\subsection{elltool.core.GenEllipsoid.getCenter}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
 Example:
-ellObj = elltool.core.GenEllipsoid([5;2], eye(2), [1 3; 4 5]);
-ellObj.getCenter()
+  ellObj = elltool.core.GenEllipsoid([5;2], eye(2), [1 3; 4 5]);
+  ellObj.getCenter()
 
-ans =
+  ans =
 
-     5
-     2
+       5
+       2
 
 
 
@@ -3821,17 +3815,17 @@ ans =
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.core.GenEllipsoid.getCheckTol}
+\subsection{elltool.core.GenEllipsoid.getCheckTol}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
 Example:
-ellObj = elltool.core.GenEllipsoid([5;2], eye(2), [1 3; 4 5]);
-ellObj.getCheckTol()
+  ellObj = elltool.core.GenEllipsoid([5;2], eye(2), [1 3; 4 5]);
+  ellObj.getCheckTol()
 
-ans =
+  ans =
 
-   1.0000e-09
+     1.0000e-09
 
 
 
@@ -3839,26 +3833,26 @@ ans =
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.core.GenEllipsoid.dimension}
+\subsection{elltool.core.GenEllipsoid.dimension}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
 Example:
-firstEllObj = elltool.core.GenEllipsoid([1; 1], eye(2));
-secEllObj = elltool.core.GenEllipsoid([0; 5], 2*eye(2));
-ellVec = [firstEllObj secEllObj];
-ellVec.dimension()
+  firstEllObj = elltool.core.GenEllipsoid([1; 1], eye(2));
+  secEllObj = elltool.core.GenEllipsoid([0; 5], 2*eye(2));
+  ellVec = [firstEllObj secEllObj];
+  ellVec.dimension()
 
-ans =
+  ans =
 
-     2     2
+       2     2
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.core.GenEllipsoid.inv}
+\subsection{elltool.core.GenEllipsoid.inv}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -3873,18 +3867,18 @@ Output:
   ellInvObj: GenEllipsoid: [1,1] - inverse generalized ellipsoid
 
 Example:
-ellObj = elltool.core.GenEllipsoid([5;2], [1 0; 0 0.7]);
-ellObj.inv()
-   |
-   |----- q : [5 2]
-   |          -----------------
-   |----- Q : |1      |0      |
-   |          |0      |1.42857|
-   |          -----------------
-   |          -----
-   |-- QInf : |0|0|
-   |          |0|0|
-   |          -----
+  ellObj = elltool.core.GenEllipsoid([5;2], [1 0; 0 0.7]);
+  ellObj.inv()
+     |
+     |----- q : [5 2]
+     |          -----------------
+     |----- Q : |1      |0      |
+     |          |0      |1.42857|
+     |          -----------------
+     |          -----
+     |-- QInf : |0|0|
+     |          |0|0|
+     |          -----
 
 
 
@@ -3892,7 +3886,7 @@ ellObj.inv()
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.core.GenEllipsoid.minkDiffEa}
+\subsection{elltool.core.GenEllipsoid.minkDiffEa}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -3912,27 +3906,27 @@ Output:
       directions approximation cannot be computed)
 
 Example:
-firstEllObj = elltool.core.GenEllipsoid([10;0], 2*eye(2));
-secEllObj = elltool.core.GenEllipsoid([0;0], [1 0; 0 0.1]);
-dirsMat = [1,0].';
-resEllVec  = minkDiffEa( firstEllObj, secEllObj, dirsMat)
-   |
-   |----- q : [10 0]
-   |          -------------------
-   |----- Q : |0.171573|0       |
-   |          |0       |1.20557 |
-   |          -------------------
-   |          -----
-   |-- QInf : |0|0|
-   |          |0|0|
-   |          -----
+  firstEllObj = elltool.core.GenEllipsoid([10;0], 2*eye(2));
+  secEllObj = elltool.core.GenEllipsoid([0;0], [1 0; 0 0.1]);
+  dirsMat = [1,0].';
+  resEllVec  = minkDiffEa( firstEllObj, secEllObj, dirsMat)
+     |
+     |----- q : [10 0]
+     |          -------------------
+     |----- Q : |0.171573|0       |
+     |          |0       |1.20557 |
+     |          -------------------
+     |          -----
+     |-- QInf : |0|0|
+     |          |0|0|
+     |          -----
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.core.GenEllipsoid.minkDiffIa}
+\subsection{elltool.core.GenEllipsoid.minkDiffIa}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -3951,27 +3945,27 @@ Output:
       generalized ellipsoids
 
 Example:
-firstEllObj = elltool.core.GenEllipsoid([10;0], 2*eye(2));
-secEllObj = elltool.core.GenEllipsoid([0;0], [1 0; 0 0.1]);
-dirsMat = [1,0].';
-resEllVec  = minkDiffIa( firstEllObj, secEllObj, dirsMat)
-   |
-   |----- q : [10 0]
-   |          -------------------
-   |----- Q : |0.171573|0       |
-   |          |0       |0.544365|
-   |          -------------------
-   |          -----
-   |-- QInf : |0|0|
-   |          |0|0|
-   |          -----
+  firstEllObj = elltool.core.GenEllipsoid([10;0], 2*eye(2));
+  secEllObj = elltool.core.GenEllipsoid([0;0], [1 0; 0 0.1]);
+  dirsMat = [1,0].';
+  resEllVec  = minkDiffIa( firstEllObj, secEllObj, dirsMat)
+     |
+     |----- q : [10 0]
+     |          -------------------
+     |----- Q : |0.171573|0       |
+     |          |0       |0.544365|
+     |          -------------------
+     |          -----
+     |-- QInf : |0|0|
+     |          |0|0|
+     |          -----
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.core.GenEllipsoid.minkSumEa}
+\subsection{elltool.core.GenEllipsoid.minkSumEa}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -3990,37 +3984,37 @@ Output:
       generalized ellipsoids
 
 Example:
-firstEllObj = elltool.core.GenEllipsoid([1;1],eye(2));
-secEllObj = elltool.core.GenEllipsoid([5;0],[3 0; 0 2]);
-ellVec = [firstEllObj secEllObj];
-dirsMat = [1 3; 2 4];
-ellResVec  = minkSumEa(ellVec, dirsMat )
+  firstEllObj = elltool.core.GenEllipsoid([1;1],eye(2));
+  secEllObj = elltool.core.GenEllipsoid([5;0],[3 0; 0 2]);
+  ellVec = [firstEllObj secEllObj];
+  dirsMat = [1 3; 2 4];
+  ellResVec  = minkSumEa(ellVec, dirsMat )
 
-Structure(1)
-   |
-   |----- q : [6 1]
-   |          -----------------
-   |----- Q : |7.50584|0      |
-   |          |0      |5.83164|
-   |          -----------------
-   |          -----
-   |-- QInf : |0|0|
-   |          |0|0|
-   |          -----
-   O
+  Structure(1)
+     |
+     |----- q : [6 1]
+     |          -----------------
+     |----- Q : |7.50584|0      |
+     |          |0      |5.83164|
+     |          -----------------
+     |          -----
+     |-- QInf : |0|0|
+     |          |0|0|
+     |          -----
+     O
 
-Structure(2)
-   |
-   |----- q : [6 1]
-   |          -----------------
-   |----- Q : |7.48906|0      |
-   |          |0      |5.83812|
-   |          -----------------
-   |          -----
-   |-- QInf : |0|0|
-   |          |0|0|
-   |          -----
-   O
+  Structure(2)
+     |
+     |----- q : [6 1]
+     |          -----------------
+     |----- Q : |7.48906|0      |
+     |          |0      |5.83812|
+     |          -----------------
+     |          -----
+     |-- QInf : |0|0|
+     |          |0|0|
+     |          -----
+     O
 
 
 
@@ -4028,7 +4022,7 @@ Structure(2)
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.core.GenEllipsoid.minkSumIa}
+\subsection{elltool.core.GenEllipsoid.minkSumIa}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -4047,37 +4041,37 @@ Output:
       generalized ellipsoids
 
 Example:
-firstEllObj = elltool.core.GenEllipsoid([1;1],eye(2));
-secEllObj = elltool.core.GenEllipsoid([5;0],[3 0; 0 2]);
-ellVec = [firstEllObj secEllObj];
-dirsMat = [1 3; 2 4];
-ellResVec  = minkSumIa(ellVec, dirsMat )
+  firstEllObj = elltool.core.GenEllipsoid([1;1],eye(2));
+  secEllObj = elltool.core.GenEllipsoid([5;0],[3 0; 0 2]);
+  ellVec = [firstEllObj secEllObj];
+  dirsMat = [1 3; 2 4];
+  ellResVec  = minkSumIa(ellVec, dirsMat )
 
-Structure(1)
-   |
-   |----- q : [6 1]
-   |          ---------------------
-   |----- Q : |7.45135  |0.0272432|
-   |          |0.0272432|5.81802  |
-   |          ---------------------
-   |          -----
-   |-- QInf : |0|0|
-   |          |0|0|
-   |          -----
-   O
+  Structure(1)
+     |
+     |----- q : [6 1]
+     |          ---------------------
+     |----- Q : |7.45135  |0.0272432|
+     |          |0.0272432|5.81802  |
+     |          ---------------------
+     |          -----
+     |-- QInf : |0|0|
+     |          |0|0|
+     |          -----
+     O
 
-Structure(2)
-   |
-   |----- q : [6 1]
-   |          ---------------------
-   |----- Q : |7.44698  |0.0315642|
-   |          |0.0315642|5.81445  |
-   |          ---------------------
-   |          -----
-   |-- QInf : |0|0|
-   |          |0|0|
-   |          -----
-   O
+  Structure(2)
+     |
+     |----- q : [6 1]
+     |          ---------------------
+     |----- Q : |7.44698  |0.0315642|
+     |          |0.0315642|5.81445  |
+     |          ---------------------
+     |          -----
+     |-- QInf : |0|0|
+     |          |0|0|
+     |          -----
+     O
 
 
 
@@ -4085,7 +4079,7 @@ Structure(2)
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.core.GenEllipsoid.plot}
+\subsection{elltool.core.GenEllipsoid.plot}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -4140,61 +4134,39 @@ Output:
       data plotter object.
 
 Examples:
-      plot([ell1, ell2, ell3], 'color', [1, 0, 1; 0, 0, 1; 1, 0, 0]);
-      plot([ell1, ell2, ell3], 'color', [1; 0; 1; 0; 0; 1; 1; 0; 0]);
-      plot([ell1, ell2, ell3; ell1, ell2, ell3], 'shade', [1, 1, 1; 1, 1,
+  plot([ell1, ell2, ell3], 'color', [1, 0, 1; 0, 0, 1; 1, 0, 0]);
+  plot([ell1, ell2, ell3], 'color', [1; 0; 1; 0; 0; 1; 1; 0; 0]);
+  plot([ell1, ell2, ell3; ell1, ell2, ell3], 'shade', [1, 1, 1; 1, 1,
+    1]);
+  plot([ell1, ell2, ell3; ell1, ell2, ell3], 'shade', [1; 1; 1; 1; 1;
       1]);
-      plot([ell1, ell2, ell3; ell1, ell2, ell3], 'shade', [1; 1; 1; 1; 1;
-      1]);
-      plot([ell1, ell2, ell3], 'shade', 0.5);
-      plot([ell1, ell2, ell3], 'lineWidth', 1.5);
-      plot([ell1, ell2, ell3], 'lineWidth', [1.5, 0.5, 3]);
+  plot([ell1, ell2, ell3], 'shade', 0.5);
+  plot([ell1, ell2, ell3], 'lineWidth', 1.5);
+  plot([ell1, ell2, ell3], 'lineWidth', [1.5, 0.5, 3]);
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.core.GenEllipsoid.rho}
+\subsection{elltool.core.GenEllipsoid.rho}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
 Example:
-ellObj = elltool.core.GenEllipsoid([1;1],eye(2));
-dirsVec = [1; 0];
-[resRho, bndPVec] = rho(ellObj, dirsVec)
+  ellObj = elltool.core.GenEllipsoid([1;1],eye(2));
+  dirsVec = [1; 0];
+  [resRho, bndPVec] = rho(ellObj, dirsVec)
 
-resRho =
+  resRho =
 
-     2
-
-
-bndPVec =
-
-     2
-     1
+       2
 
 
+  bndPVec =
 
-
-\end{lstlisting}
-\fontfamily{\familydefault}
-\selectfont
-\item {elltool.reach.ReachContinuous.getEllTubeUnionRel}
-\fontfamily{pcr}
-\selectfont
-\begin{lstlisting}
-Example:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-x0EllObj = ell_unitball(2);
-timeVec = [0 10];
-dirsMat = [1 0; 0 1]';
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-getEllTubeUnionRel(rsObj);
+       2
+       1
 
 
 
@@ -4202,21 +4174,22 @@ getEllTubeUnionRel(rsObj);
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.reach.ReachContinuous.getEllTubeRel}
+\section{elltool.reach.ReachFactory}
+\subsection{elltool.reach.ReachFactory.getL0Mat}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
 Example:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-x0EllObj = ell_unitball(2);
-timeVec = [0 10];
-dirsMat = [1 0; 0 1]';
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-rsObj. getEllTubeRel();
+  import elltool.reach.ReachFactory;
+  crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
+  crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
+  rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
+  l0Mat = rsObj.getL0Mat()
+
+  l0Mat =
+
+       1     0
+       0     1
 
 
 
@@ -4224,37 +4197,199 @@ rsObj. getEllTubeRel();
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.reach.ReachContinuous.getCopy}
+\subsection{elltool.reach.ReachFactory.getX0Ell}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
 Example:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-x0EllObj = ell_unitball(2);
-timeVec = [0 10];
-dirsMat = [1 0; 0 1]';
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-copyRsObj = rsObj.getCopy()
-copyRsObj =
-Reach set of the continuous-time linear system in R^2 in the time ...
+  import elltool.reach.ReachFactory;
+  crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
+  crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
+  rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
+  X0Ell = rsObj.getX0Ell()
+
+  X0Ell =
+
+  Center:
+       0
+       0
+
+  Shape Matrix:
+      0.0100         0
+           0    0.0100
+
+  Nondegenerate ellipsoid in R^2.
+
+
+
+
+\end{lstlisting}
+\fontfamily{\familydefault}
+\selectfont
+\subsection{elltool.reach.ReachFactory.getTVec}
+\fontfamily{pcr}
+\selectfont
+\begin{lstlisting}
+Example:
+  import elltool.reach.ReachFactory;
+  crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
+  crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
+  rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
+  tVec = rsObj.getTVec()
+
+  tVec =
+
+       0    10
+
+
+
+
+\end{lstlisting}
+\fontfamily{\familydefault}
+\selectfont
+\subsection{elltool.reach.ReachFactory.getDim}
+\fontfamily{pcr}
+\selectfont
+\begin{lstlisting}
+Example:
+  import elltool.reach.ReachFactory;
+  crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
+  crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
+  rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
+  dim = rsObj.getDim();
+
+
+
+
+\end{lstlisting}
+\fontfamily{\familydefault}
+\selectfont
+\subsection{elltool.reach.ReachFactory.getLinSys}
+\fontfamily{pcr}
+\selectfont
+\begin{lstlisting}
+Example:
+  import elltool.reach.ReachFactory;
+  crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
+  crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
+  rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
+  linSys = rsObj.getLinSys();
+
+
+
+
+\end{lstlisting}
+\fontfamily{\familydefault}
+\selectfont
+\subsection{elltool.reach.ReachFactory.createInstance}
+\fontfamily{pcr}
+\selectfont
+\begin{lstlisting}
+Example:
+  import elltool.reach.ReachFactory;
+  crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
+  crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
+  rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
+  reachObj = rsObj.createInstance();
+
+
+
+
+\end{lstlisting}
+\fontfamily{\familydefault}
+\selectfont
+\subsection{elltool.reach.ReachFactory.ReachFactory}
+\fontfamily{pcr}
+\selectfont
+\begin{lstlisting}
+Example:
+  import elltool.reach.ReachFactory;
+  crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
+  crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
+  rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
+
+
+
+
+\end{lstlisting}
+\fontfamily{\familydefault}
+\selectfont
+\section{elltool.reach.ReachContinuous}
+\subsection{elltool.reach.ReachContinuous.getEllTubeUnionRel}
+\fontfamily{pcr}
+\selectfont
+\begin{lstlisting}
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  getEllTubeUnionRel(rsObj);
+
+
+
+
+\end{lstlisting}
+\fontfamily{\familydefault}
+\selectfont
+\subsection{elltool.reach.ReachContinuous.getEllTubeRel}
+\fontfamily{pcr}
+\selectfont
+\begin{lstlisting}
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  rsObj. getEllTubeRel();
+
+
+
+
+\end{lstlisting}
+\fontfamily{\familydefault}
+\selectfont
+\subsection{elltool.reach.ReachContinuous.getCopy}
+\fontfamily{pcr}
+\selectfont
+\begin{lstlisting}
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  copyRsObj = rsObj.getCopy()
+  copyRsObj =
+  Reach set of the continuous-time linear system in R^2 in the time ...
             interval [0, 10].
 
-Initial set at time t0 = 0:
-Ellipsoid with parameters
-Center:
-     0
-     0
+  Initial set at time t0 = 0:
+  Ellipsoid with parameters
+  Center:
+       0
+       0
 
-Shape Matrix:
-     1     0
-     0     1
+  Shape Matrix:
+       1     0
+       0     1
 
-Number of external approximations: 2
-Number of internal approximations: 2
+  Number of external approximations: 2
+  Number of internal approximations: 2
 
 
 
@@ -4262,7 +4397,7 @@ Number of internal approximations: 2
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.reach.ReachContinuous.isEqual}
+\subsection{elltool.reach.ReachContinuous.isEqual}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -4285,28 +4420,28 @@ Output:
           false - otherwise.
 
 Example:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-x0EllObj = ell_unitball(2);
-timeVec = [0 10];
-dirsMat = [1 0; 0 1]';
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-copyRsObj = rsObj.getCopy();
-isEqual = isEqual(rsObj, copyRsObj)
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  copyRsObj = rsObj.getCopy();
+  isEqual = isEqual(rsObj, copyRsObj)
 
-isEqual =
+  isEqual =
 
-        1
+          1
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.reach.ReachContinuous.isbackward}
+\subsection{elltool.reach.ReachContinuous.isbackward}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -4323,20 +4458,20 @@ Output:
           in reverse time, false - otherwise.
 
 Example:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-x0EllObj = ell_unitball(2);
-timeVec = [10 0];
-dirsMat = [1 0; 0 1]';
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-rsObj.isbackward()
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [10 0];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  rsObj.isbackward()
 
-ans =
+  ans =
 
-     1
+       1
 
 
 
@@ -4344,7 +4479,7 @@ ans =
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.reach.ReachContinuous.getInitialSet}
+\subsection{elltool.reach.ReachContinuous.getInitialSet}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -4361,35 +4496,35 @@ Output:
           linear system.
 
 Example:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-x0EllObj = ell_unitball(2);
-timeVec = [10 0];
-dirsMat = [1 0; 0 1]';
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-x0Ell = rsObj.getInitialSet()
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [10 0];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  x0Ell = rsObj.getInitialSet()
 
-x0Ell =
+  x0Ell =
 
-Center:
-     0
-     0
+  Center:
+       0
+       0
 
-Shape Matrix:
-     1     0
-     0     1
+  Shape Matrix:
+       1     0
+       0     1
 
-Nondegenerate ellipsoid in R^2.
+  Nondegenerate ellipsoid in R^2.
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.reach.ReachContinuous.getIaScaleFactor}
+\subsection{elltool.reach.ReachContinuous.getIaScaleFactor}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -4405,27 +4540,27 @@ Output:
       iaScaleFactor: double[1, 1] - scale factor.
 
 Example:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-x0EllObj = ell_unitball(2);
-timeVec = [10 0];
-dirsMat = [1 0; 0 1]';
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-rsObj.getIaScaleFactor()
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [10 0];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  rsObj.getIaScaleFactor()
 
-ans =
+  ans =
 
-    1.0200
+      1.0200
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.reach.ReachContinuous.getEaScaleFactor}
+\subsection{elltool.reach.ReachContinuous.getEaScaleFactor}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -4441,27 +4576,27 @@ Output:
       eaScaleFactor: double[1, 1] - scale factor.
 
 Example:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-x0EllObj = ell_unitball(2);
-timeVec = [10 0];
-dirsMat = [1 0; 0 1]';
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-rsObj.getEaScaleFactor()
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [10 0];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  rsObj.getEaScaleFactor()
 
-ans =
+  ans =
 
-    1.0200
+      1.0200
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.reach.ReachContinuous.evolve}
+\subsection{elltool.reach.ReachContinuous.evolve}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -4483,18 +4618,18 @@ Output:
         [oldT0 newEndTime].
 
 Example:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-x0EllObj = ell_unitball(2);
-timeVec = [0 10];
-dirsMat = [1 0; 0 1]';
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-dRsObj = elltool.reach.ReachDiscrete(dsys, x0EllObj, dirsMat, timeVec);
-newDRsObj = dRsObj.evolve(11);
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  dRsObj = elltool.reach.ReachDiscrete(dsys, x0EllObj, dirsMat, timeVec);
+  newDRsObj = dRsObj.evolve(11);
 
 
 
@@ -4503,7 +4638,7 @@ newDRsObj = dRsObj.evolve(11);
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.reach.ReachContinuous.projection}
+\subsection{elltool.reach.ReachContinuous.projection}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -4521,20 +4656,20 @@ Output:
   projObj: elltool.reach.IReach[1, 1] - projected reach set.
 
 Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-x0EllObj = ell_unitball(2);
-timeVec = [0 10];
-dirsMat = [1 0; 0 1]';
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-dRsObj = elltool.reach.ReachRiscrete(dsys, x0EllObj, dirsMat, timeVec);
-projMat = eye(2);
-projObj = rsObj.projection(projMat);
-dProjObj = dRsObj.projection(projMat);
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  dRsObj = elltool.reach.ReachRiscrete(dsys, x0EllObj, dirsMat, timeVec);
+  projMat = eye(2);
+  projObj = rsObj.projection(projMat);
+  dProjObj = dRsObj.projection(projMat);
 
 
 
@@ -4543,7 +4678,7 @@ dProjObj = dRsObj.projection(projMat);
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.reach.ReachContinuous.get\_goodcurves}
+\subsection{elltool.reach.ReachContinuous.get\_goodcurves}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -4560,20 +4695,20 @@ Output:
   timeVec: double[1, nPoints] - array of time values.
 
 Example:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-x0EllObj = ell_unitball(2);
-timeVec = [0 10];
-dirsMat = [1 0; 0 1]';
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-[goodCurvesCVec timeVec] = rsObj.get_goodcurves();
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  [goodCurvesCVec timeVec] = rsObj.get_goodcurves();
 
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
-[goodCurvesCVec timeVec] = dRsObj.get_goodcurves();
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
+  [goodCurvesCVec timeVec] = dRsObj.get_goodcurves();
 
 
 
@@ -4582,7 +4717,7 @@ dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.reach.ReachContinuous.get\_ia}
+\subsection{elltool.reach.ReachContinuous.get\_ia}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -4602,16 +4737,16 @@ Output:
   timeVec: double[1, nPoints] - array of time values.
 
 Example:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-x0EllObj = ell_unitball(2);
-timeVec = [0 10];
-dirsMat = [1 0; 0 1]';
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-[iaEllMat timeVec] = rsObj.get_ia();
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  [iaEllMat timeVec] = rsObj.get_ia();
 
 
 
@@ -4620,7 +4755,7 @@ rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.reach.ReachContinuous.get\_ea}
+\subsection{elltool.reach.ReachContinuous.get\_ea}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -4640,20 +4775,20 @@ Output:
    timeVec: double[1, nPoints] - array of time values.
 
 Example:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-x0EllObj = ell_unitball(2);
-timeVec = [0 10];
-dirsMat = [1 0; 0 1]';
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-[eaEllMat timeVec] = rsObj.get_ea();
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  [eaEllMat timeVec] = rsObj.get_ea();
 
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
-[eaEllMat timeVec] = dRsObj.get_ea();
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
+  [eaEllMat timeVec] = dRsObj.get_ea();
 
 
 
@@ -4662,7 +4797,7 @@ dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.reach.ReachContinuous.get\_center}
+\subsection{elltool.reach.ReachContinuous.get\_center}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -4681,16 +4816,16 @@ Output:
   timeVec: double[1, nPoints] - array of time values.
 
 Example:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-x0EllObj = ell_unitball(2);
-timeVec = [0 10];
-dirsMat = [1 0; 0 1]';
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-[trCenterMat timeVec] = rsObj.get_center();
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  [trCenterMat timeVec] = rsObj.get_center();
 
 
 
@@ -4699,7 +4834,7 @@ rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.reach.ReachContinuous.get\_directions}
+\subsection{elltool.reach.ReachContinuous.get\_directions}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -4720,16 +4855,16 @@ Output:
   timeVec: double[1, nPoints] - array of time values.
 
 Example:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-x0EllObj = ell_unitball(2);
-timeVec = [0 10];
-dirsMat = [1 0; 0 1]';
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-[directionsCVec timeVec] = rsObj.get_directions();
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  [directionsCVec timeVec] = rsObj.get_directions();
 
 
 
@@ -4738,7 +4873,7 @@ rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.reach.ReachContinuous.get\_system}
+\subsection{elltool.reach.ReachContinuous.get\_system}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -4754,50 +4889,50 @@ Output:
   linSys: elltool.linsys.LinSys[1, 1] - linear system object.
 
 Example:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-x0EllObj = ell_unitball(2);
-timeVec = [0 10];
-dirsMat = [1 0; 0 1]';
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-linSys = rsObj.get_system()
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  linSys = rsObj.get_system()
 
-self =
-A:
-     0     1
-     0     0
-
-
-B:
-     1     0
-     0     1
+  self =
+  A:
+       0     1
+       0     0
 
 
-Control bounds:
-   2-dimensional ellipsoid with center
-    'sin(t)'
-    'cos(t)'
-
-   and shape matrix
-     9     0
-     0     2
+  B:
+       1     0
+       0     1
 
 
-C:
-     1     0
-     0     1
+  Control bounds:
+     2-dimensional ellipsoid with center
+      'sin(t)'
+      'cos(t)'
 
-2-input, 2-output continuous-time linear time-invariant system of
-        dimension 2:
-dx/dt  =  A x(t)  +  B u(t)
- y(t)  =  C x(t)
+     and shape matrix
+       9     0
+       0     2
 
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
-dRsObj.get_system();
+
+  C:
+       1     0
+       0     1
+
+  2-input, 2-output continuous-time linear time-invariant system of
+          dimension 2:
+  dx/dt  =  A x(t)  +  B u(t)
+   y(t)  =  C x(t)
+
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
+  dRsObj.get_system();
 
 
 
@@ -4806,7 +4941,7 @@ dRsObj.get_system();
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.reach.ReachContinuous.dimension}
+\subsection{elltool.reach.ReachContinuous.dimension}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -4822,25 +4957,25 @@ Output:
   sSdim: double[1, 1] - state space dimension.
 
 Example:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-x0EllObj = ell_unitball(2);
-timeVec = [0 10];
-dirsMat = [1 0; 0 1]';
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-[rSdim sSdim] = rsObj.dimension()
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  [rSdim sSdim] = rsObj.dimension()
 
-rSdim =
+  rSdim =
 
-         2
+           2
 
 
-sSdim =
+  sSdim =
 
-         2
+           2
 
 
 
@@ -4849,7 +4984,7 @@ sSdim =
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.reach.ReachContinuous.cut}
+\subsection{elltool.reach.ReachContinuous.cut}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -4869,18 +5004,18 @@ Output:
         operation.
 
 Example:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-x0EllObj = ell_unitball(2);
-timeVec = [0 10];
-dirsMat = [1 0; 0 1]';
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-cutObj = rsObj.cut([3 5]);
-dRsObj = elltool.reach.ReachDiscrete(dtsys, x0EllObj, dirsMat, timeVec);
-dCutObj = dRsObj.cut([3 5]);
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  cutObj = rsObj.cut([3 5]);
+  dRsObj = elltool.reach.ReachDiscrete(dtsys, x0EllObj, dirsMat, timeVec);
+  dCutObj = dRsObj.cut([3 5]);
 
 
 
@@ -4889,7 +5024,7 @@ dCutObj = dRsObj.cut([3 5]);
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.reach.ReachContinuous.display}
+\subsection{elltool.reach.ReachContinuous.display}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -4904,33 +5039,33 @@ Output:
   None.
 
 Example:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-x0EllObj = ell_unitball(2);
-timeVec = [0 10];
-dirsMat = [1 0; 0 1]';
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-rsObj.display()
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  rsObj.display()
 
-rsObj =
-Reach set of the continuous-time linear system in R^2 in the time...
-     interval [0, 10].
+  rsObj =
+  Reach set of the continuous-time linear system in R^2 in the time...
+       interval [0, 10].
 
-Initial set at time t0 = 0:
-Ellipsoid with parameters
-Center:
-     0
-     0
+  Initial set at time t0 = 0:
+  Ellipsoid with parameters
+  Center:
+       0
+       0
 
-Shape Matrix:
-     1     0
-     0     1
+  Shape Matrix:
+       1     0
+       0     1
 
-Number of external approximations: 2
-Number of internal approximations: 2
+  Number of external approximations: 2
+  Number of internal approximations: 2
 
 
 
@@ -4939,7 +5074,7 @@ Number of internal approximations: 2
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.reach.ReachContinuous.plot\_ia}
+\subsection{elltool.reach.ReachContinuous.plot\_ia}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -4970,19 +5105,19 @@ Input:
                 color.
 
 Example:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-x0EllObj = ell_unitball(2);
-timeVec = [0 10];
-dirsMat = [1 0; 0 1]';
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-rsObj.plot_ia();
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
-dRsObj.plot_ia();
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  rsObj.plot_ia();
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
+  dRsObj.plot_ia();
 
 
 
@@ -4991,7 +5126,7 @@ dRsObj.plot_ia();
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.reach.ReachContinuous.plot\_ea}
+\subsection{elltool.reach.ReachContinuous.plot\_ea}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -5025,19 +5160,19 @@ Output:
   None.
 
 Example:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-x0EllObj = ell_unitball(2);
-timeVec = [0 10];
-dirsMat = [1 0; 0 1]';
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-rsObj.plot_ea();
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
-dRsObj.plot_ea();
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  rsObj.plot_ea();
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
+  dRsObj.plot_ea();
 
 
 
@@ -5046,7 +5181,7 @@ dRsObj.plot_ea();
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.reach.ReachContinuous.ReachContinuous}
+\subsection{elltool.reach.ReachContinuous.ReachContinuous}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -5067,22 +5202,22 @@ Output:
     self - reach set object.
 
 Example:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-x0EllObj = ell_unitball(2);
-timeVec = [0 10];
-dirsMat = [1 0; 0 1]';
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.reach.ReachContinuous.intersect}
+\subsection{elltool.reach.ReachContinuous.intersect}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -5104,21 +5239,21 @@ Output:
                                      false - otherwise.
 
 Example:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-x0EllObj = ell_unitball(2);
-timeVec = [0 10];
-dirsMat = [1 0; 0 1]';
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-ellObj = ellipsoid([0; 0], 2*eye(2));
-isEmptyIntersect = intersect(rsObj, ellObj)
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  ellObj = ellipsoid([0; 0], 2*eye(2));
+  isEmptyIntersect = intersect(rsObj, ellObj)
 
-sEmptyIntersect =
+  isEmptyIntersect =
 
-                1
+                  1
 
 
 
@@ -5127,7 +5262,7 @@ sEmptyIntersect =
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.reach.ReachContinuous.isempty}
+\subsection{elltool.reach.ReachContinuous.isempty}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -5142,23 +5277,23 @@ Output:
   isEmpty: logical[1, 1] - true - if self is empty, Ffalse - otherwise.
 
 Example:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-dsys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-x0EllObj = ell_unitball(2);
-timeVec = [0 10];
-dirsMat = [1 0; 0 1]';
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-dRsObj = elltool.reach.ReachRiscrete(dsys, x0EllObj, dirsMat, timeVec);
-dRsObj.isempty();
-rsObj.isempty()
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  dsys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  dRsObj = elltool.reach.ReachRiscrete(dsys, x0EllObj, dirsMat, timeVec);
+  dRsObj.isempty();
+  rsObj.isempty()
 
-ans =
+  ans =
 
-     0
+       0
 
 
 
@@ -5167,7 +5302,7 @@ ans =
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.reach.ReachContinuous.iscut}
+\subsection{elltool.reach.ReachContinuous.iscut}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -5182,21 +5317,21 @@ Output:
                          false - otherwise.
 
 Example:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-x0EllObj = ell_unitball(2);
-timeVec = [0 10];
-dirsMat = [1 0; 0 1]';
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-dRsObj = elltool.reach.ReachRiscrete(dsys, x0EllObj, dirsMat, timeVec);
-cutObj = rsObj.cut([3 5]);
-iscut(cutObj);
-cutObj = dRsObj.cut([4 8]);
-iscut(cutObj);
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  dRsObj = elltool.reach.ReachRiscrete(dsys, x0EllObj, dirsMat, timeVec);
+  cutObj = rsObj.cut([3 5]);
+  iscut(cutObj);
+  cutObj = dRsObj.cut([4 8]);
+  iscut(cutObj);
 
 
 
@@ -5205,7 +5340,7 @@ iscut(cutObj);
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.reach.ReachContinuous.isprojection}
+\subsection{elltool.reach.ReachContinuous.isprojection}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -5221,22 +5356,22 @@ Output:
 
 
 Example:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-x0EllObj = ell_unitball(2);
-timeVec = [0 10];
-dirsMat = [1 0; 0 1]';
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-dRsObj = elltool.reach.ReachRiscrete(dsys, x0EllObj, dirsMat, timeVec);
-projMat = eye(2);
-projObj = rsObj.projection(projMat);
-isprojection(projObj);
-projObj = dRsObj.projection(projMat);
-isprojection(projObj);
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  dRsObj = elltool.reach.ReachRiscrete(dsys, x0EllObj, dirsMat, timeVec);
+  projMat = eye(2);
+  projObj = rsObj.projection(projMat);
+  isprojection(projObj);
+  projObj = dRsObj.projection(projMat);
+  isprojection(projObj);
 
 
 
@@ -5245,7 +5380,8 @@ isprojection(projObj);
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.reach.ReachDiscrete.evolve}
+\section{elltool.reach.ReachDiscrete}
+\subsection{elltool.reach.ReachDiscrete.evolve}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -5267,18 +5403,18 @@ Output:
         [oldT0 newEndTime].
 
 Example:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-x0EllObj = ell_unitball(2);
-timeVec = [0 10];
-dirsMat = [1 0; 0 1]';
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-dRsObj = elltool.reach.ReachDiscrete(dsys, x0EllObj, dirsMat, timeVec);
-newDRsObj = dRsObj.evolve(11);
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  dRsObj = elltool.reach.ReachDiscrete(dsys, x0EllObj, dirsMat, timeVec);
+  newDRsObj = dRsObj.evolve(11);
 
 
 
@@ -5287,7 +5423,7 @@ newDRsObj = dRsObj.evolve(11);
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.reach.ReachDiscrete.projection}
+\subsection{elltool.reach.ReachDiscrete.projection}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -5305,20 +5441,20 @@ Output:
   projObj: elltool.reach.IReach[1, 1] - projected reach set.
 
 Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-x0EllObj = ell_unitball(2);
-timeVec = [0 10];
-dirsMat = [1 0; 0 1]';
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-dRsObj = elltool.reach.ReachRiscrete(dsys, x0EllObj, dirsMat, timeVec);
-projMat = eye(2);
-projObj = rsObj.projection(projMat);
-dProjObj = dRsObj.projection(projMat);
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  dRsObj = elltool.reach.ReachRiscrete(dsys, x0EllObj, dirsMat, timeVec);
+  projMat = eye(2);
+  projObj = rsObj.projection(projMat);
+  dProjObj = dRsObj.projection(projMat);
 
 
 
@@ -5327,7 +5463,7 @@ dProjObj = dRsObj.projection(projMat);
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.reach.ReachDiscrete.plot\_ia}
+\subsection{elltool.reach.ReachDiscrete.plot\_ia}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -5358,19 +5494,19 @@ Input:
                 color.
 
 Example:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-x0EllObj = ell_unitball(2);
-timeVec = [0 10];
-dirsMat = [1 0; 0 1]';
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-rsObj.plot_ia();
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
-dRsObj.plot_ia();
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  rsObj.plot_ia();
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
+  dRsObj.plot_ia();
 
 
 
@@ -5379,7 +5515,7 @@ dRsObj.plot_ia();
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.reach.ReachDiscrete.plot\_ea}
+\subsection{elltool.reach.ReachDiscrete.plot\_ea}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -5413,19 +5549,19 @@ Output:
   None.
 
 Example:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-x0EllObj = ell_unitball(2);
-timeVec = [0 10];
-dirsMat = [1 0; 0 1]';
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-rsObj.plot_ea();
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
-dRsObj.plot_ea();
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  rsObj.plot_ea();
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
+  dRsObj.plot_ea();
 
 
 
@@ -5434,7 +5570,7 @@ dRsObj.plot_ea();
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.reach.ReachDiscrete.get\_system}
+\subsection{elltool.reach.ReachDiscrete.get\_system}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -5450,50 +5586,50 @@ Output:
   linSys: elltool.linsys.LinSys[1, 1] - linear system object.
 
 Example:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-x0EllObj = ell_unitball(2);
-timeVec = [0 10];
-dirsMat = [1 0; 0 1]';
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-linSys = rsObj.get_system()
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  linSys = rsObj.get_system()
 
-self =
-A:
-     0     1
-     0     0
-
-
-B:
-     1     0
-     0     1
+  self =
+  A:
+       0     1
+       0     0
 
 
-Control bounds:
-   2-dimensional ellipsoid with center
-    'sin(t)'
-    'cos(t)'
-
-   and shape matrix
-     9     0
-     0     2
+  B:
+       1     0
+       0     1
 
 
-C:
-     1     0
-     0     1
+  Control bounds:
+     2-dimensional ellipsoid with center
+      'sin(t)'
+      'cos(t)'
 
-2-input, 2-output continuous-time linear time-invariant system of
-        dimension 2:
-dx/dt  =  A x(t)  +  B u(t)
- y(t)  =  C x(t)
+     and shape matrix
+       9     0
+       0     2
 
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
-dRsObj.get_system();
+
+  C:
+       1     0
+       0     1
+
+  2-input, 2-output continuous-time linear time-invariant system of
+          dimension 2:
+  dx/dt  =  A x(t)  +  B u(t)
+   y(t)  =  C x(t)
+
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
+  dRsObj.get_system();
 
 
 
@@ -5502,7 +5638,7 @@ dRsObj.get_system();
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.reach.ReachDiscrete.get\_goodcurves}
+\subsection{elltool.reach.ReachDiscrete.get\_goodcurves}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -5519,20 +5655,20 @@ Output:
   timeVec: double[1, nPoints] - array of time values.
 
 Example:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-x0EllObj = ell_unitball(2);
-timeVec = [0 10];
-dirsMat = [1 0; 0 1]';
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-[goodCurvesCVec timeVec] = rsObj.get_goodcurves();
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  [goodCurvesCVec timeVec] = rsObj.get_goodcurves();
 
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
-[goodCurvesCVec timeVec] = dRsObj.get_goodcurves();
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
+  [goodCurvesCVec timeVec] = dRsObj.get_goodcurves();
 
 
 
@@ -5541,7 +5677,7 @@ dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.reach.ReachDiscrete.get\_ia}
+\subsection{elltool.reach.ReachDiscrete.get\_ia}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -5561,16 +5697,16 @@ Output:
   timeVec: double[1, nPoints] - array of time values.
 
 Example:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-x0EllObj = ell_unitball(2);
-timeVec = [0 10];
-dirsMat = [1 0; 0 1]';
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-[iaEllMat timeVec] = rsObj.get_ia();
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  [iaEllMat timeVec] = rsObj.get_ia();
 
 
 
@@ -5579,7 +5715,7 @@ rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.reach.ReachDiscrete.get\_ea}
+\subsection{elltool.reach.ReachDiscrete.get\_ea}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -5599,20 +5735,20 @@ Output:
    timeVec: double[1, nPoints] - array of time values.
 
 Example:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-x0EllObj = ell_unitball(2);
-timeVec = [0 10];
-dirsMat = [1 0; 0 1]';
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-[eaEllMat timeVec] = rsObj.get_ea();
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  [eaEllMat timeVec] = rsObj.get_ea();
 
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
-[eaEllMat timeVec] = dRsObj.get_ea();
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
+  [eaEllMat timeVec] = dRsObj.get_ea();
 
 
 
@@ -5621,7 +5757,7 @@ dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.reach.ReachDiscrete.get\_directions}
+\subsection{elltool.reach.ReachDiscrete.get\_directions}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -5642,16 +5778,16 @@ Output:
   timeVec: double[1, nPoints] - array of time values.
 
 Example:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-x0EllObj = ell_unitball(2);
-timeVec = [0 10];
-dirsMat = [1 0; 0 1]';
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-[directionsCVec timeVec] = rsObj.get_directions();
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  [directionsCVec timeVec] = rsObj.get_directions();
 
 
 
@@ -5660,7 +5796,7 @@ rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.reach.ReachDiscrete.get\_center}
+\subsection{elltool.reach.ReachDiscrete.get\_center}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -5679,16 +5815,16 @@ Output:
   timeVec: double[1, nPoints] - array of time values.
 
 Example:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-x0EllObj = ell_unitball(2);
-timeVec = [0 10];
-dirsMat = [1 0; 0 1]';
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-[trCenterMat timeVec] = rsObj.get_center();
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  [trCenterMat timeVec] = rsObj.get_center();
 
 
 
@@ -5697,7 +5833,7 @@ rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.reach.ReachDiscrete.display}
+\subsection{elltool.reach.ReachDiscrete.display}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -5712,33 +5848,33 @@ Output:
   None.
 
 Example:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-x0EllObj = ell_unitball(2);
-timeVec = [0 10];
-dirsMat = [1 0; 0 1]';
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-rsObj.display()
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  rsObj.display()
 
-rsObj =
-Reach set of the continuous-time linear system in R^2 in the time...
-     interval [0, 10].
+  rsObj =
+  Reach set of the continuous-time linear system in R^2 in the time...
+       interval [0, 10].
 
-Initial set at time t0 = 0:
-Ellipsoid with parameters
-Center:
-     0
-     0
+  Initial set at time t0 = 0:
+  Ellipsoid with parameters
+  Center:
+       0
+       0
 
-Shape Matrix:
-     1     0
-     0     1
+  Shape Matrix:
+       1     0
+       0     1
 
-Number of external approximations: 2
-Number of internal approximations: 2
+  Number of external approximations: 2
+  Number of internal approximations: 2
 
 
 
@@ -5747,7 +5883,7 @@ Number of internal approximations: 2
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.reach.ReachDiscrete.dimension}
+\subsection{elltool.reach.ReachDiscrete.dimension}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -5763,25 +5899,25 @@ Output:
   sSdim: double[1, 1] - state space dimension.
 
 Example:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-x0EllObj = ell_unitball(2);
-timeVec = [0 10];
-dirsMat = [1 0; 0 1]';
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-[rSdim sSdim] = rsObj.dimension()
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  [rSdim sSdim] = rsObj.dimension()
 
-rSdim =
+  rSdim =
 
-         2
+           2
 
 
-sSdim =
+  sSdim =
 
-         2
+           2
 
 
 
@@ -5790,7 +5926,7 @@ sSdim =
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.reach.ReachDiscrete.cut}
+\subsection{elltool.reach.ReachDiscrete.cut}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -5810,18 +5946,18 @@ Output:
         operation.
 
 Example:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-x0EllObj = ell_unitball(2);
-timeVec = [0 10];
-dirsMat = [1 0; 0 1]';
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-cutObj = rsObj.cut([3 5]);
-dRsObj = elltool.reach.ReachDiscrete(dtsys, x0EllObj, dirsMat, timeVec);
-dCutObj = dRsObj.cut([3 5]);
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  cutObj = rsObj.cut([3 5]);
+  dRsObj = elltool.reach.ReachDiscrete(dtsys, x0EllObj, dirsMat, timeVec);
+  dCutObj = dRsObj.cut([3 5]);
 
 
 
@@ -5830,7 +5966,7 @@ dCutObj = dRsObj.cut([3 5]);
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.reach.ReachDiscrete.getCopy}
+\subsection{elltool.reach.ReachDiscrete.getCopy}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -5843,22 +5979,22 @@ Output:
     newReachObj - reach set object.
 
 Example:
-adMat = [0 1; -1 -0.5];
-bdMat = [0; 1];
-udBoundsEllObj  = ellipsoid(1);
-dtsys = elltool.linsys.LinSysDiscrete(adMat, bdMat, udBoundsEllObj);
-x0EllObj = ell_unitball(2);
-timeVec = [0 10];
-dirsMat = [1 0; 0 1]';
-dRsObj = elltool.reach.ReachDiscrete(dtsys, x0EllObj, dirsMat, timeVec);
-newDRsObj = dRsObj.getCopy();
+  adMat = [0 1; -1 -0.5];
+  bdMat = [0; 1];
+  udBoundsEllObj  = ellipsoid(1);
+  dtsys = elltool.linsys.LinSysDiscrete(adMat, bdMat, udBoundsEllObj);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  dRsObj = elltool.reach.ReachDiscrete(dtsys, x0EllObj, dirsMat, timeVec);
+  newDRsObj = dRsObj.getCopy();
 
 
 
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.reach.ReachDiscrete.ReachDiscrete}
+\subsection{elltool.reach.ReachDiscrete.ReachDiscrete}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -5905,14 +6041,14 @@ Output:
       self - reach set object.
 
 Example:
-adMat = [0 1; -1 -0.5];
-bdMat = [0; 1];
-udBoundsEllObj  = ellipsoid(1);
-dtsys = elltool.linsys.LinSysDiscrete(adMat, bdMat, udBoundsEllObj);
-x0EllObj = ell_unitball(2);
-timeVec = [0 10];
-dirsMat = [1 0; 0 1]';
-dRsObj = elltool.reach.ReachDiscrete(dtsys, x0EllObj, dirsMat, timeVec);
+  adMat = [0 1; -1 -0.5];
+  bdMat = [0; 1];
+  udBoundsEllObj  = ellipsoid(1);
+  dtsys = elltool.linsys.LinSysDiscrete(adMat, bdMat, udBoundsEllObj);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  dRsObj = elltool.reach.ReachDiscrete(dtsys, x0EllObj, dirsMat, timeVec);
 
 
 
@@ -5920,7 +6056,7 @@ dRsObj = elltool.reach.ReachDiscrete(dtsys, x0EllObj, dirsMat, timeVec);
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.reach.ReachDiscrete.intersect}
+\subsection{elltool.reach.ReachDiscrete.intersect}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -5942,21 +6078,21 @@ Output:
                                      false - otherwise.
 
 Example:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-x0EllObj = ell_unitball(2);
-timeVec = [0 10];
-dirsMat = [1 0; 0 1]';
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-ellObj = ellipsoid([0; 0], 2*eye(2));
-isEmptyIntersect = intersect(rsObj, ellObj)
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  ellObj = ellipsoid([0; 0], 2*eye(2));
+  isEmptyIntersect = intersect(rsObj, ellObj)
 
-sEmptyIntersect =
+  isEmptyIntersect =
 
-                1
+                  1
 
 
 
@@ -5965,7 +6101,7 @@ sEmptyIntersect =
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.reach.ReachDiscrete.isempty}
+\subsection{elltool.reach.ReachDiscrete.isempty}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -5980,23 +6116,23 @@ Output:
   isEmpty: logical[1, 1] - true - if self is empty, Ffalse - otherwise.
 
 Example:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-dsys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-x0EllObj = ell_unitball(2);
-timeVec = [0 10];
-dirsMat = [1 0; 0 1]';
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-dRsObj = elltool.reach.ReachRiscrete(dsys, x0EllObj, dirsMat, timeVec);
-dRsObj.isempty();
-rsObj.isempty()
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  dsys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  dRsObj = elltool.reach.ReachRiscrete(dsys, x0EllObj, dirsMat, timeVec);
+  dRsObj.isempty();
+  rsObj.isempty()
 
-ans =
+  ans =
 
-     0
+       0
 
 
 
@@ -6005,7 +6141,7 @@ ans =
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.reach.ReachDiscrete.iscut}
+\subsection{elltool.reach.ReachDiscrete.iscut}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -6020,21 +6156,21 @@ Output:
                          false - otherwise.
 
 Example:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-x0EllObj = ell_unitball(2);
-timeVec = [0 10];
-dirsMat = [1 0; 0 1]';
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-dRsObj = elltool.reach.ReachRiscrete(dsys, x0EllObj, dirsMat, timeVec);
-cutObj = rsObj.cut([3 5]);
-iscut(cutObj);
-cutObj = dRsObj.cut([4 8]);
-iscut(cutObj);
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  dRsObj = elltool.reach.ReachRiscrete(dsys, x0EllObj, dirsMat, timeVec);
+  cutObj = rsObj.cut([3 5]);
+  iscut(cutObj);
+  cutObj = dRsObj.cut([4 8]);
+  iscut(cutObj);
 
 
 
@@ -6043,7 +6179,7 @@ iscut(cutObj);
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.reach.ReachDiscrete.isprojection}
+\subsection{elltool.reach.ReachDiscrete.isprojection}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -6059,22 +6195,22 @@ Output:
 
 
 Example:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-x0EllObj = ell_unitball(2);
-timeVec = [0 10];
-dirsMat = [1 0; 0 1]';
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-dRsObj = elltool.reach.ReachRiscrete(dsys, x0EllObj, dirsMat, timeVec);
-projMat = eye(2);
-projObj = rsObj.projection(projMat);
-isprojection(projObj);
-projObj = dRsObj.projection(projMat);
-isprojection(projObj);
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  dRsObj = elltool.reach.ReachRiscrete(dsys, x0EllObj, dirsMat, timeVec);
+  projMat = eye(2);
+  projObj = rsObj.projection(projMat);
+  isprojection(projObj);
+  projObj = dRsObj.projection(projMat);
+  isprojection(projObj);
 
 
 
@@ -6083,146 +6219,8 @@ isprojection(projObj);
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.reach.ReachFactory.getL0Mat}
-\fontfamily{pcr}
-\selectfont
-\begin{lstlisting}
-Example:
-import elltool.reach.ReachFactory;
-crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
-crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
-rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
-l0Mat = rsObj.getL0Mat()
-
-l0Mat =
-
-     1     0
-     0     1
-
-
-
-
-\end{lstlisting}
-\fontfamily{\familydefault}
-\selectfont
-\item {elltool.reach.ReachFactory.getX0Ell}
-\fontfamily{pcr}
-\selectfont
-\begin{lstlisting}
-Example:
-import elltool.reach.ReachFactory;
-crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
-crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
-rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
-X0Ell = rsObj.getX0Ell()
-
-X0Ell =
-
-Center:
-     0
-     0
-
-Shape Matrix:
-    0.0100         0
-         0    0.0100
-
-Nondegenerate ellipsoid in R^2.
-
-
-
-
-\end{lstlisting}
-\fontfamily{\familydefault}
-\selectfont
-\item {elltool.reach.ReachFactory.getTVec}
-\fontfamily{pcr}
-\selectfont
-\begin{lstlisting}
-Example:
-import elltool.reach.ReachFactory;
-crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
-crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
-rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
-tVec = rsObj.getTVec()
-
-tVec =
-
-     0    10
-
-
-
-
-\end{lstlisting}
-\fontfamily{\familydefault}
-\selectfont
-\item {elltool.reach.ReachFactory.getDim}
-\fontfamily{pcr}
-\selectfont
-\begin{lstlisting}
-Example:
-import elltool.reach.ReachFactory;
-crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
-crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
-rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
-dim = rsObj.getDim();
-
-
-
-
-\end{lstlisting}
-\fontfamily{\familydefault}
-\selectfont
-\item {elltool.reach.ReachFactory.getLinSys}
-\fontfamily{pcr}
-\selectfont
-\begin{lstlisting}
-Example:
-import elltool.reach.ReachFactory;
-crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
-crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
-rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
-linSys = rsObj.getLinSys();
-
-
-
-
-\end{lstlisting}
-\fontfamily{\familydefault}
-\selectfont
-\item {elltool.reach.ReachFactory.createInstance}
-\fontfamily{pcr}
-\selectfont
-\begin{lstlisting}
-Example:
-import elltool.reach.ReachFactory;
-crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
-crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
-rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
-reachObj = rsObj.createInstance();
-
-
-
-
-\end{lstlisting}
-\fontfamily{\familydefault}
-\selectfont
-\item {elltool.reach.ReachFactory.ReachFactory}
-\fontfamily{pcr}
-\selectfont
-\begin{lstlisting}
-Example:
-import elltool.reach.ReachFactory;
-crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
-crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
-rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
-
-
-
-
-\end{lstlisting}
-\fontfamily{\familydefault}
-\selectfont
-\item {elltool.linsys.LinSysContinuous.display}
+\section{elltool.linsys.LinSysContinuous}
+\subsection{elltool.linsys.LinSysContinuous.display}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -6237,12 +6235,12 @@ Output:
   None.
 
 Example:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-sys.display()
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  sys.display()
 
 
 
@@ -6251,7 +6249,7 @@ sys.display()
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.linsys.LinSysContinuous.LinSysContinuous}
+\subsection{elltool.linsys.LinSysContinuous.LinSysContinuous}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -6290,11 +6288,11 @@ Output:
             system.
 
 Example:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
 
 
 
@@ -6302,7 +6300,7 @@ sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.linsys.LinSysContinuous.isEqual}
+\subsection{elltool.linsys.LinSysContinuous.isEqual}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -6326,24 +6324,24 @@ Output:
       are equal and false otherwise.
 
 Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-newSys = sys.getCopy();
-isEqual = sys.isEqual(newSys)
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  newSys = sys.getCopy();
+  isEqual = sys.isEqual(newSys)
 
-isEqual =
+  isEqual =
 
-     1
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-newDSys = sys.getCopy();
-isEqual = dsys.isEqual(newDSys)
+       1
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  newDSys = sys.getCopy();
+  isEqual = dsys.isEqual(newDSys)
 
-isEqual =
+  isEqual =
 
-     1
+       1
 
 
 
@@ -6351,7 +6349,7 @@ isEqual =
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.linsys.LinSysContinuous.getCopy}
+\subsection{elltool.linsys.LinSysContinuous.getCopy}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -6369,14 +6367,14 @@ Output:
      copies of elements of self.
 
 Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-newSys = sys.getCopy();
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-newDSys = dsys.getCopy();
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  newSys = sys.getCopy();
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  newDSys = dsys.getCopy();
 
 
 
@@ -6385,7 +6383,7 @@ newDSys = dsys.getCopy();
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.linsys.LinSysContinuous.getAbsTol}
+\subsection{elltool.linsys.LinSysContinuous.getAbsTol}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -6404,14 +6402,14 @@ Output:
       linear systems in self.
 
 Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-sys.getAbsTol();
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-dsys.getAbsTol();
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  sys.getAbsTol();
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  dsys.getAbsTol();
 
 
 
@@ -6419,7 +6417,7 @@ dsys.getAbsTol();
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.linsys.LinSysContinuous.islti}
+\subsection{elltool.linsys.LinSysContinuous.islti}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -6437,14 +6435,14 @@ Output:
       time-invariant, and false otherwise.
 
 Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-isLtiArr = sys.islti();
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-isLtiArr = dsys.islti();
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  isLtiArr = sys.islti();
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  isLtiArr = dsys.islti();
 
 
 
@@ -6453,7 +6451,7 @@ isLtiArr = dsys.islti();
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.linsys.LinSysContinuous.isempty}
+\subsection{elltool.linsys.LinSysContinuous.isempty}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -6471,18 +6469,18 @@ Output:
       false otherwise.
 
 Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-sys.isempty()
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  sys.isempty()
 
-ans =
+  ans =
 
-     0
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-dsys.isempty();
+       0
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  dsys.isempty();
 
 
 
@@ -6491,7 +6489,7 @@ dsys.isempty();
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.linsys.LinSysContinuous.hasnoise}
+\subsection{elltool.linsys.LinSysContinuous.hasnoise}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -6509,18 +6507,18 @@ Output:
       false otherwise.
 
 Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-sys.hasnoise()
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  sys.hasnoise()
 
-ans =
+  ans =
 
-     0
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-dsys.hasnoise();
+       0
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  dsys.hasnoise();
 
 
 
@@ -6529,7 +6527,7 @@ dsys.hasnoise();
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.linsys.LinSysContinuous.hasdisturbance}
+\subsection{elltool.linsys.LinSysContinuous.hasdisturbance}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -6551,18 +6549,18 @@ Output:
       has disturbance, and false otherwise.
 
 Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-sys.hasdisturbance()
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  sys.hasdisturbance()
 
-ans =
+  ans =
 
-     0
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-dsys.hasdisturbance();
+       0
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  dsys.hasdisturbance();
 
 
 
@@ -6571,7 +6569,7 @@ dsys.hasdisturbance();
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.linsys.LinSysContinuous.dimension}
+\subsection{elltool.linsys.LinSysContinuous.dimension}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -6595,34 +6593,34 @@ Output:
         dimensions.
 
 Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-[stateDimArr, inpDimArr, outDimArr, distDimArr] = sys.dimension()
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  [stateDimArr, inpDimArr, outDimArr, distDimArr] = sys.dimension()
 
-stateDimArr =
+  stateDimArr =
 
-     2
-
-
-inpDimArr =
-
-     2
+       2
 
 
-outDimArr =
+  inpDimArr =
 
-     2
+       2
 
 
-distDimArr =
+  outDimArr =
 
-     0
+       2
 
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-dsys.dimension();
+
+  distDimArr =
+
+       0
+
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  dsys.dimension();
 
 
 
@@ -6631,7 +6629,7 @@ dsys.dimension();
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.linsys.LinSysContinuous.getNoiseBoundsEll}
+\subsection{elltool.linsys.LinSysContinuous.getNoiseBoundsEll}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -6644,17 +6642,17 @@ Output:
   noiseEll: ellipsoid[1, 1]/struct[1, 1] - noise bounds ellipsoid.
 
 Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-noiseEll = dsys.getNoiseBoundsEll()
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  noiseEll = dsys.getNoiseBoundsEll()
 
-noiseEll =
+  noiseEll =
 
-     []
+       []
 
 
 
@@ -6663,7 +6661,7 @@ noiseEll =
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.linsys.LinSysContinuous.getCtMat}
+\subsection{elltool.linsys.LinSysContinuous.getCtMat}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -6676,18 +6674,18 @@ Output:
   cMat: double[cMatDim, cMatDim]/cell[cMatDim, cMatDim] - matrix C.
 
 Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-cMat = sys.getCtMat()
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  cMat = sys.getCtMat()
 
-cMat =
+  cMat =
 
-     1     0
-     0     1
+       1     0
+       0     1
 
 
 
@@ -6696,7 +6694,7 @@ cMat =
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.linsys.LinSysContinuous.getDistBoundsEll}
+\subsection{elltool.linsys.LinSysContinuous.getDistBoundsEll}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -6709,13 +6707,13 @@ Output:
   distEll: ellipsoid[1, 1]/struct[1, 1] - disturbance bounds ellipsoid.
 
 Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-distEll = sys.getDistBoundsEll();
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  distEll = sys.getDistBoundsEll();
 
 
 
@@ -6724,7 +6722,7 @@ distEll = sys.getDistBoundsEll();
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.linsys.LinSysContinuous.getGtMat}
+\subsection{elltool.linsys.LinSysContinuous.getGtMat}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -6737,13 +6735,13 @@ Output:
   gMat: double[gMatDim, gMatDim]/cell[gMatDim, gMatDim] - matrix G.
 
 Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-gMat = sys.getGtMat();
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  gMat = sys.getGtMat();
 
 
 
@@ -6752,7 +6750,7 @@ gMat = sys.getGtMat();
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.linsys.LinSysContinuous.getUBoundsEll}
+\subsection{elltool.linsys.LinSysContinuous.getUBoundsEll}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -6765,13 +6763,13 @@ Output:
   uEll: ellipsoid[1, 1]/struct[1, 1] - control bounds ellipsoid.
 
 Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-uEll = dsys.getUBoundsEll();
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  uEll = dsys.getUBoundsEll();
 
 
 
@@ -6780,7 +6778,7 @@ uEll = dsys.getUBoundsEll();
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.linsys.LinSysContinuous.getBtMat}
+\subsection{elltool.linsys.LinSysContinuous.getBtMat}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -6793,13 +6791,13 @@ Output:
   bMat: double[bMatDim, bMatDim]/cell[bMatDim, bMatDim] - matrix B.
 
 Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-bMat = dsys.getBtMat();
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  bMat = dsys.getBtMat();
 
 
 
@@ -6808,7 +6806,7 @@ bMat = dsys.getBtMat();
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.linsys.LinSysContinuous.getAtMat}
+\subsection{elltool.linsys.LinSysContinuous.getAtMat}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -6821,13 +6819,13 @@ Output:
   aMat: double[aMatDim, aMatDim]/cell[nDim, nDim] - matrix A.
 
 Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-aMat = dsys.getAtMat();
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  aMat = dsys.getAtMat();
 
 
 
@@ -6836,7 +6834,8 @@ aMat = dsys.getAtMat();
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.linsys.LinSysDiscrete.display}
+\section{elltool.linsys.LinSysDiscrete}
+\subsection{elltool.linsys.LinSysDiscrete.display}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -6851,12 +6850,12 @@ Output:
   None.
 
 Example:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-sys.display()
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  sys.display()
 
 
 
@@ -6865,7 +6864,7 @@ sys.display()
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.linsys.LinSysDiscrete.LinSysDiscrete}
+\subsection{elltool.linsys.LinSysDiscrete.LinSysDiscrete}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -6902,16 +6901,16 @@ Output:
   self: elltool.linsys.LinSysDiscrete[1, 1] - discrete linear system.
 
 Example:
-for k = 1:20
-   atMat = {'0' '1 + cos(pi*k/2)'; '-2' '0'};
-   btMat =  [0; 1];
-   uBoundsEllObj = ellipsoid(4);
-   gtMat = [1; 0];
-   distBounds = 1/(k+1);
-   ctVec = [1 0];
-   lsys = elltool.linsys.LinSysDiscrete(atMat, btMat,...
-       uBoundsEllObj, gtMat,distBounds, ctVec);
-end
+  for k = 1:20
+     atMat = {'0' '1 + cos(pi*k/2)'; '-2' '0'};
+     btMat =  [0; 1];
+     uBoundsEllObj = ellipsoid(4);
+     gtMat = [1; 0];
+     distBounds = 1/(k+1);
+     ctVec = [1 0];
+     lsys = elltool.linsys.LinSysDiscrete(atMat, btMat,...
+         uBoundsEllObj, gtMat,distBounds, ctVec);
+  end
 
 
 
@@ -6919,7 +6918,7 @@ end
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.linsys.LinSysDiscrete.isEqual}
+\subsection{elltool.linsys.LinSysDiscrete.isEqual}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -6943,24 +6942,24 @@ Output:
       are equal and false otherwise.
 
 Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-newSys = sys.getCopy();
-isEqual = sys.isEqual(newSys)
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  newSys = sys.getCopy();
+  isEqual = sys.isEqual(newSys)
 
-isEqual =
+  isEqual =
 
-     1
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-newDSys = sys.getCopy();
-isEqual = dsys.isEqual(newDSys)
+       1
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  newDSys = sys.getCopy();
+  isEqual = dsys.isEqual(newDSys)
 
-isEqual =
+  isEqual =
 
-     1
+       1
 
 
 
@@ -6968,7 +6967,7 @@ isEqual =
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.linsys.LinSysDiscrete.getCopy}
+\subsection{elltool.linsys.LinSysDiscrete.getCopy}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -6986,14 +6985,14 @@ Output:
      copies of elements of self.
 
 Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-newSys = sys.getCopy();
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-newDSys = dsys.getCopy();
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  newSys = sys.getCopy();
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  newDSys = dsys.getCopy();
 
 
 
@@ -7002,7 +7001,7 @@ newDSys = dsys.getCopy();
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.linsys.LinSysDiscrete.getAbsTol}
+\subsection{elltool.linsys.LinSysDiscrete.getAbsTol}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -7021,14 +7020,14 @@ Output:
       linear systems in self.
 
 Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-sys.getAbsTol();
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-dsys.getAbsTol();
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  sys.getAbsTol();
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  dsys.getAbsTol();
 
 
 
@@ -7036,7 +7035,7 @@ dsys.getAbsTol();
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.linsys.LinSysDiscrete.islti}
+\subsection{elltool.linsys.LinSysDiscrete.islti}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -7054,14 +7053,14 @@ Output:
       time-invariant, and false otherwise.
 
 Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-isLtiArr = sys.islti();
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-isLtiArr = dsys.islti();
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  isLtiArr = sys.islti();
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  isLtiArr = dsys.islti();
 
 
 
@@ -7070,7 +7069,7 @@ isLtiArr = dsys.islti();
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.linsys.LinSysDiscrete.isempty}
+\subsection{elltool.linsys.LinSysDiscrete.isempty}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -7088,18 +7087,18 @@ Output:
       false otherwise.
 
 Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-sys.isempty()
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  sys.isempty()
 
-ans =
+  ans =
 
-     0
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-dsys.isempty();
+       0
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  dsys.isempty();
 
 
 
@@ -7108,7 +7107,7 @@ dsys.isempty();
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.linsys.LinSysDiscrete.hasnoise}
+\subsection{elltool.linsys.LinSysDiscrete.hasnoise}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -7126,18 +7125,18 @@ Output:
       false otherwise.
 
 Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-sys.hasnoise()
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  sys.hasnoise()
 
-ans =
+  ans =
 
-     0
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-dsys.hasnoise();
+       0
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  dsys.hasnoise();
 
 
 
@@ -7146,7 +7145,7 @@ dsys.hasnoise();
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.linsys.LinSysDiscrete.hasdisturbance}
+\subsection{elltool.linsys.LinSysDiscrete.hasdisturbance}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -7168,18 +7167,18 @@ Output:
       has disturbance, and false otherwise.
 
 Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-sys.hasdisturbance()
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  sys.hasdisturbance()
 
-ans =
+  ans =
 
-     0
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-dsys.hasdisturbance();
+       0
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  dsys.hasdisturbance();
 
 
 
@@ -7188,7 +7187,7 @@ dsys.hasdisturbance();
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.linsys.LinSysDiscrete.dimension}
+\subsection{elltool.linsys.LinSysDiscrete.dimension}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -7212,34 +7211,34 @@ Output:
         dimensions.
 
 Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-[stateDimArr, inpDimArr, outDimArr, distDimArr] = sys.dimension()
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  [stateDimArr, inpDimArr, outDimArr, distDimArr] = sys.dimension()
 
-stateDimArr =
+  stateDimArr =
 
-     2
-
-
-inpDimArr =
-
-     2
+       2
 
 
-outDimArr =
+  inpDimArr =
 
-     2
+       2
 
 
-distDimArr =
+  outDimArr =
 
-     0
+       2
 
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-dsys.dimension();
+
+  distDimArr =
+
+       0
+
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  dsys.dimension();
 
 
 
@@ -7248,7 +7247,7 @@ dsys.dimension();
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.linsys.LinSysDiscrete.getNoiseBoundsEll}
+\subsection{elltool.linsys.LinSysDiscrete.getNoiseBoundsEll}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -7261,17 +7260,17 @@ Output:
   noiseEll: ellipsoid[1, 1]/struct[1, 1] - noise bounds ellipsoid.
 
 Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-noiseEll = dsys.getNoiseBoundsEll()
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  noiseEll = dsys.getNoiseBoundsEll()
 
-noiseEll =
+  noiseEll =
 
-     []
+       []
 
 
 
@@ -7280,7 +7279,7 @@ noiseEll =
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.linsys.LinSysDiscrete.getCtMat}
+\subsection{elltool.linsys.LinSysDiscrete.getCtMat}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -7293,18 +7292,18 @@ Output:
   cMat: double[cMatDim, cMatDim]/cell[cMatDim, cMatDim] - matrix C.
 
 Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-cMat = sys.getCtMat()
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  cMat = sys.getCtMat()
 
-cMat =
+  cMat =
 
-     1     0
-     0     1
+       1     0
+       0     1
 
 
 
@@ -7313,7 +7312,7 @@ cMat =
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.linsys.LinSysDiscrete.getDistBoundsEll}
+\subsection{elltool.linsys.LinSysDiscrete.getDistBoundsEll}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -7326,13 +7325,13 @@ Output:
   distEll: ellipsoid[1, 1]/struct[1, 1] - disturbance bounds ellipsoid.
 
 Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-distEll = sys.getDistBoundsEll();
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  distEll = sys.getDistBoundsEll();
 
 
 
@@ -7341,7 +7340,7 @@ distEll = sys.getDistBoundsEll();
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.linsys.LinSysDiscrete.getGtMat}
+\subsection{elltool.linsys.LinSysDiscrete.getGtMat}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -7354,13 +7353,13 @@ Output:
   gMat: double[gMatDim, gMatDim]/cell[gMatDim, gMatDim] - matrix G.
 
 Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-gMat = sys.getGtMat();
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  gMat = sys.getGtMat();
 
 
 
@@ -7369,7 +7368,7 @@ gMat = sys.getGtMat();
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.linsys.LinSysDiscrete.getUBoundsEll}
+\subsection{elltool.linsys.LinSysDiscrete.getUBoundsEll}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -7382,13 +7381,13 @@ Output:
   uEll: ellipsoid[1, 1]/struct[1, 1] - control bounds ellipsoid.
 
 Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-uEll = dsys.getUBoundsEll();
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  uEll = dsys.getUBoundsEll();
 
 
 
@@ -7397,7 +7396,7 @@ uEll = dsys.getUBoundsEll();
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.linsys.LinSysDiscrete.getBtMat}
+\subsection{elltool.linsys.LinSysDiscrete.getBtMat}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -7410,13 +7409,13 @@ Output:
   bMat: double[bMatDim, bMatDim]/cell[bMatDim, bMatDim] - matrix B.
 
 Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-bMat = dsys.getBtMat();
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  bMat = dsys.getBtMat();
 
 
 
@@ -7425,7 +7424,7 @@ bMat = dsys.getBtMat();
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.linsys.LinSysDiscrete.getAtMat}
+\subsection{elltool.linsys.LinSysDiscrete.getAtMat}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -7438,13 +7437,13 @@ Output:
   aMat: double[aMatDim, aMatDim]/cell[nDim, nDim] - matrix A.
 
 Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-aMat = dsys.getAtMat();
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  aMat = dsys.getAtMat();
 
 
 
@@ -7453,11 +7452,12 @@ aMat = dsys.getAtMat();
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.linsys.LinSysFactory.create}
+\section{elltool.linsys.LinSysFactory}
+\subsection{elltool.linsys.LinSysFactory.create}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
-CREATE returns linear system object.
+CREATE - returns linear system object.
 
 Continuous-time linear system:
           dx/dt  =  A(t) x(t)  +  B(t) u(t)  +  G(t) v(t)
@@ -7496,11 +7496,11 @@ Output:
       elltool.linsys.LinSysDiscrete[1, 1] - linear system.
 
 Examples:
-aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {'sin(t)'; 'cos(t)'};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysFactory.create(aMat, bMat,SUBounds);
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysFactory.create(aMat, bMat,SUBounds);
 
 
 
@@ -7508,7 +7508,7 @@ sys = elltool.linsys.LinSysFactory.create(aMat, bMat,SUBounds);
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.linsys.LinSysFactory.LinSysFactory}
+\subsection{elltool.linsys.LinSysFactory.LinSysFactory}
 \fontfamily{pcr}
 \selectfont
 \begin{lstlisting}
@@ -7519,14 +7519,3 @@ Factory class of linear system objects of the Ellipsoidal Toolbox.
 \end{lstlisting}
 \fontfamily{\familydefault}
 \selectfont
-\item {elltool.linsys.LinSysFactory.empty}
-\fontfamily{pcr}
-\selectfont
-\begin{lstlisting}
-
-
-
-\end{lstlisting}
-\fontfamily{\familydefault}
-\selectfont
-\end{enumerate}

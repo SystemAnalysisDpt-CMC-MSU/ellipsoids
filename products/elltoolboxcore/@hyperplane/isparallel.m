@@ -21,12 +21,12 @@ function isPosArr = isparallel(fstHypArr, secHypArr)
 %       secHypArr(iFstDim, iSecDim, ...), false - otherwise.
 %
 % Example:
-% hypObj = hyperplane([-1 1 1; 1 1 1; 1 1 1], [2 1 0]);
-% hypObj.isparallel(hypObj(2))
+%   hypObj = hyperplane([-1 1 1; 1 1 1; 1 1 1], [2 1 0]);
+%   hypObj.isparallel(hypObj(2))
 % 
-% ans =
+%   ans =
 % 
-%      0     1     1
+%        0     1     1
 % 
 % 
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>

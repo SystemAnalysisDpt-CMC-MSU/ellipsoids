@@ -14,18 +14,18 @@ function [normVec, hypScal] = parameters(myHyp)
 %   hypScal: double[1, 1] - scalar of the hyperplane myHyp.
 % 
 % Example:
-% hypObj = hyperplane([-1; 1]);
-% [normVec, hypScal] = parameters(hypObj)
+%   hypObj = hyperplane([-1; 1]);
+%   [normVec, hypScal] = parameters(hypObj)
 % 
-% normVec =
+%   normVec =
 % 
-%     -1
-%      1
+%       -1
+%        1
 % 
 % 
-% hypScal =
+%   hypScal =
 % 
-%      0
+%        0
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 

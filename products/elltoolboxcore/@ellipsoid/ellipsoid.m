@@ -35,13 +35,13 @@ classdef ellipsoid < handle
             %          copies the objects, not just the handles
             %
             % Example:
-            % firstEllObj = ellipsoid([1; 2], eye(2));
-            % secEllObj = ellipsoid([1; 1], 2*eye(2));
-            % ellVec = [firstEllObj secEllObj];
-            % repMat(ellVec)
+            %   firstEllObj = ellipsoid([1; 2], eye(2));
+            %   secEllObj = ellipsoid([1; 1], 2*eye(2));
+            %   ellVec = [firstEllObj secEllObj];
+            %   repMat(ellVec)
             %
-            % ans =
-            % 1x2 array of ellipsoids.
+            %   ans =
+            %   1x2 array of ellipsoids.
             %
             %
             % $Author: Peter Gagarinov <pgagarinov@gmail.com> $   $Date: 24-04-2013$
@@ -66,13 +66,13 @@ classdef ellipsoid < handle
             %   shMat: double[nDims,nDims] - shapeMat matrix of ellipsoid
             %
             % Example:
-            % ellObj = ellipsoid([1; 2], eye(2));
-            % getShapeMat(ellObj)
+            %   ellObj = ellipsoid([1; 2], eye(2));
+            %   getShapeMat(ellObj)
             %
-            % ans =
+            %   ans =
             % 
-            %      1     0
-            %      0     1  
+            %        1     0
+            %        0     1  
             %
             % $Author: Peter Gagarinov <pgagarinov@gmail.com> $   $Date: 24-04-2013$
             % $Copyright: Moscow State University,
@@ -93,13 +93,13 @@ classdef ellipsoid < handle
             %   centerVecVec: double[nDims,1] - centerVec of ellipsoid
             %
             % Example:
-            % ellObj = ellipsoid([1; 2], eye(2));
-            % getCenterVec(ellObj)
+            %   ellObj = ellipsoid([1; 2], eye(2));
+            %   getCenterVec(ellObj)
             %
-            % ans =
+            %   ans =
             % 
-            %      1     
-            %      2       
+            %        1     
+            %        2       
             %
             % $Author: Peter Gagarinov <pgagarinov@gmail.com> $   $Date: 24-04-2013$
             % $Copyright: Moscow State University,
@@ -177,7 +177,7 @@ classdef ellipsoid < handle
             %       or multidimensional array of ellipsoids.
             % 
             % Example:
-            % ellObj = ellipsoid([1 0 -1 6]', 9*eye(4));
+            %   ellObj = ellipsoid([1 0 -1 6]', 9*eye(4));
             %
             % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
             % $Copyright: The Regents of the University

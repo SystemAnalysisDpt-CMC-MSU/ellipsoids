@@ -9,8 +9,8 @@ function checkIsMe(someObjArr)
 %       someObjArr: any[] - any type array of objects.
 % 
 % Example:
-% hypObj = hyperplane([-2, 0]);
-% hyperplane.checkIsMe(hypObj)
+%   hypObj = hyperplane([-2, 0]);
+%   hyperplane.checkIsMe(hypObj)
 %
 % $Author: Aushkap Nikolay <n.aushkap@gmail.com> $  
 % $Date: 30-11-2012$

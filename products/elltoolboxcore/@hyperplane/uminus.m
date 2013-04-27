@@ -14,20 +14,20 @@ function outHypArr = uminus(inpHypArr)
 %       normals and scalars are multiplied by -1.
 %
 % Example:
-% hypObj = -hyperplane([-1; 1], 1)
+%   hypObj = -hyperplane([-1; 1], 1)
 % 
-% hypObj =
-% size: [1 1]
+%   hypObj =
+%   size: [1 1]
 % 
-% Element: [1 1]
-% Normal:
-%      1
-%     -1
+%   Element: [1 1]
+%   Normal:
+%        1
+%       -1
 % 
-% Shift:
-%     -1
+%   Shift:
+%       -1
 % 
-% Hyperplane in R^2.
+%   Hyperplane in R^2.
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 

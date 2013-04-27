@@ -38,14 +38,14 @@ function extApprEllVec = minksum_ea(inpEllArr, dirMat)
 %       approximating ellipsoids.
 %
 % Example:
-% firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
-% secEllObj = ell_unitball(2);
-% ellVec = [firstEllObj secEllObj firstEllObj.inv()];
-% dirsMat = [1 0; 1 1; 0 1; -1 1]';
-% externalEllVec = ellVec.minksum_ea(dirsMat)
+%   firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+%   secEllObj = ell_unitball(2);
+%   ellVec = [firstEllObj secEllObj firstEllObj.inv()];
+%   dirsMat = [1 0; 1 1; 0 1; -1 1]';
+%   externalEllVec = ellVec.minksum_ea(dirsMat)
 % 
-% externalEllVec =
-% 1x4 array of ellipsoids.
+%   externalEllVec =
+%   1x4 array of ellipsoids.
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 

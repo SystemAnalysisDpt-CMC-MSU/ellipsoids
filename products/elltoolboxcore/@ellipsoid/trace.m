@@ -15,14 +15,14 @@ function trArr = trace(ellArr)
 %       same size as ellArr.
 %
 % Example:
-% firstEllObj = ellipsoid([4 -1; -1 1]);
-% secEllObj = ell_unitball(2);
-% ellVec = [firstEllObj secEllObj];
-% trVec = ellVec.trace()
+%   firstEllObj = ellipsoid([4 -1; -1 1]);
+%   secEllObj = ell_unitball(2);
+%   ellVec = [firstEllObj secEllObj];
+%   trVec = ellVec.trace()
 % 
-% trVec =
+%   trVec =
 % 
-%     5     2
+%       5     2
 %       
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California

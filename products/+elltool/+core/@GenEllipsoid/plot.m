@@ -51,15 +51,15 @@ function plObj = plot(varargin)
 %       data plotter object.
 %
 % Examples:
-%       plot([ell1, ell2, ell3], 'color', [1, 0, 1; 0, 0, 1; 1, 0, 0]);
-%       plot([ell1, ell2, ell3], 'color', [1; 0; 1; 0; 0; 1; 1; 0; 0]);
-%       plot([ell1, ell2, ell3; ell1, ell2, ell3], 'shade', [1, 1, 1; 1, 1,
+%   plot([ell1, ell2, ell3], 'color', [1, 0, 1; 0, 0, 1; 1, 0, 0]);
+%   plot([ell1, ell2, ell3], 'color', [1; 0; 1; 0; 0; 1; 1; 0; 0]);
+%   plot([ell1, ell2, ell3; ell1, ell2, ell3], 'shade', [1, 1, 1; 1, 1,
+%     1]);
+%   plot([ell1, ell2, ell3; ell1, ell2, ell3], 'shade', [1; 1; 1; 1; 1;
 %       1]);
-%       plot([ell1, ell2, ell3; ell1, ell2, ell3], 'shade', [1; 1; 1; 1; 1;
-%       1]);
-%       plot([ell1, ell2, ell3], 'shade', 0.5);
-%       plot([ell1, ell2, ell3], 'lineWidth', 1.5);
-%       plot([ell1, ell2, ell3], 'lineWidth', [1.5, 0.5, 3]);
+%   plot([ell1, ell2, ell3], 'shade', 0.5);
+%   plot([ell1, ell2, ell3], 'lineWidth', 1.5);
+%   plot([ell1, ell2, ell3], 'lineWidth', [1.5, 0.5, 3]);
 % 
 %$Author: <Vadim Kaushanskiy>  <vkaushanskiy@gmail.com> $
 %$Date: 2012-12-21 $

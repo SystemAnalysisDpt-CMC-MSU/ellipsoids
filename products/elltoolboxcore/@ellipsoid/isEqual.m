@@ -18,13 +18,13 @@ function isEqualArr = isEqual(ell1Arr, ell2Arr)
 %       corresponding ellipsoids are equal and false otherwise.
 %
 % Example:
-% firstEllObj = ellipsoid([-1; 1], [2 0; 0 3]);
-% secEllObj = ellipsoid([1 2], eye(2));
-% isEqual(firstEllObj, secEllObj)
+%   firstEllObj = ellipsoid([-1; 1], [2 0; 0 3]);
+%   secEllObj = ellipsoid([1 2], eye(2));
+%   isEqual(firstEllObj, secEllObj)
 % 
-% ans =
+%   ans =
 % 
-%      0
+%        0
 %      
 % 
 % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: March-2013 $

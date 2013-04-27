@@ -49,11 +49,11 @@ function [centVec, boundPointMat] = minkpm(inpEllArr, inpEll, varargin)
 %       points (vertices) of resulting set. boundPointMat may be empty.
 % 
 % Example:
-% firstEllObj = ellipsoid([-2; -1], [2 -1; -1 1]);
-% secEllObj = ell_unitball(2);
-% thirdEllObj = ell_unitball(2);
-% ellVec = [firstEllObj secEllObj];
-% minkpm(ellVec, thirdEllObj); 
+%   firstEllObj = ellipsoid([-2; -1], [2 -1; -1 1]);
+%   secEllObj = ell_unitball(2);
+%   thirdEllObj = ell_unitball(2);
+%   ellVec = [firstEllObj secEllObj];
+%   minkpm(ellVec, thirdEllObj); 
 % 
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>

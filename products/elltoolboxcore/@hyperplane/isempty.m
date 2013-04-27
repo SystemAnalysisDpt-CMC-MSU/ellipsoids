@@ -13,12 +13,12 @@ function isPositiveArr = isempty(myHypArr)
 %       myHypArr(iDim1, iDim2, ...) is empty, false - otherwise.
 % 
 % Example:
-% hypObj = hyperplane();
-% isempty(hypObj)
+%   hypObj = hyperplane();
+%   isempty(hypObj)
 % 
-% ans =
+%   ans =
 % 
-%      1
+%        1
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 

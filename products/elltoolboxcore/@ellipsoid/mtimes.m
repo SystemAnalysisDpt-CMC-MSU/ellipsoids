@@ -17,21 +17,21 @@ function outEllVec = mtimes(multMat, inpEllVec)
 %   outEllVec: ellipsoid [1, nCols] - resulting ellipsoids.
 %
 % Example:
-% ellObj = ellipsoid([-2; -1], [4 -1; -1 1]);
-% tempMat = [0 1; -1 0];
-% outEllObj = tempMat*ellObj
+%   ellObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+%   tempMat = [0 1; -1 0];
+%   outEllObj = tempMat*ellObj
 % 
-% outEllObj =
+%   outEllObj =
 % 
-% Center:
-%     -1
-%      2
+%   Center:
+%       -1
+%        2
 % 
-% Shape:
-%      1     1
-%      1     4
+%   Shape:
+%        1     1
+%        1     4
 % 
-% Nondegenerate ellipsoid in R^2.
+%   Nondegenerate ellipsoid in R^2.
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 

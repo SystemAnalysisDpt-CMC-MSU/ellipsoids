@@ -12,12 +12,12 @@ function isPositiveArr = isdegenerate(myEllArr)
 %       is degenerate, false - otherwise.
 % 
 % Example:
-% ellObj = ellipsoid([1; 1], eye(2));
-% isdegenerate(ellObj)
+%   ellObj = ellipsoid([1; 1], eye(2));
+%   isdegenerate(ellObj)
 % 
-% ans =
+%   ans =
 % 
-%      0
+%        0
 % 
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 

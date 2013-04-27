@@ -7,17 +7,17 @@ function disp(myEllMat)
 %     myEllMat: ellipsoid [mRows, nCols] - matrix of ellipsoids.
 %           
 % Example:
-% ellObj = ellipsoid([-2; -1], [2 -1; -1 1]);
-% disp(ellObj)
+%   ellObj = ellipsoid([-2; -1], [2 -1; -1 1]);
+%   disp(ellObj)
 % 
-% Ellipsoid with parameters
-% Center:
-%     -2
-%     -1
+%   Ellipsoid with parameters
+%   Center:
+%       -2
+%       -1
 % 
-% Shape Matrix:
-%      2    -1
-%     -1     1
+%   Shape Matrix:
+%        2    -1
+%       -1     1
 % 
 %
 % $Author: Irina Zhukova <irizka91@gmail.com> $	$Date: 2013-04-19 $ 

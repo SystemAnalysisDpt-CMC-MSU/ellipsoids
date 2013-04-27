@@ -19,13 +19,13 @@ function isPositive = isbigger(fstEll, secEll)
 %       would contain secEll inside, false - otherwise.
 % 
 % Example:
-% firstEllObj = ellipsoid([1; 1], eye(2));
-% secEllObj = ellipsoid([1; 1], [4 -1; -1 5]);
-% isbigger(firstEllObj, secEllObj)
+%   firstEllObj = ellipsoid([1; 1], eye(2));
+%   secEllObj = ellipsoid([1; 1], [4 -1; -1 5]);
+%   isbigger(firstEllObj, secEllObj)
 % 
-% ans =
+%   ans =
 % 
-%      0
+%        0
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 

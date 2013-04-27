@@ -12,12 +12,12 @@ function maxEigArr = maxeig(inpEllArr)
 %       eigenvalues of ellipsoids in the input matrix inpEllMat.
 % 
 % Example:
-% ellObj = ellipsoid([-2; 4], [4 -1; -1 5]);
-% maxEig = maxeig(ellObj)
+%   ellObj = ellipsoid([-2; 4], [4 -1; -1 5]);
+%   maxEig = maxeig(ellObj)
 % 
-% maxEig =
+%   maxEig =
 % 
-%     5.6180
+%       5.6180
 % 
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 

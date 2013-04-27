@@ -25,16 +25,16 @@ function [absTolArr, absTolVal] = getAbsTol(hplaneArr, fAbsTolFun)
 %   use absTolArr = hplaneArr.getAbsTol() if you want get only absTolArr
 % 
 % Example:
-% firstHypObj = hyperplane([-1; 1]);
-% secHypObj = hyperplane([-2; 5]);
-% hypVec = [firstHypObj secHypObj];
-% hypVec.getAbsTol()
+%   firstHypObj = hyperplane([-1; 1]);
+%   secHypObj = hyperplane([-2; 5]);
+%   hypVec = [firstHypObj secHypObj];
+%   hypVec.getAbsTol()
 % 
-% ans =
+%   ans =
 % 
-%    1.0e-07 *
+%      1.0e-07 *
 % 
-%     1.0000    1.0000
+%       1.0000    1.0000
 % 
 %$Author: Zakharov Eugene <justenterrr@gmail.com>$ 
 %$Date: 17-11-2012

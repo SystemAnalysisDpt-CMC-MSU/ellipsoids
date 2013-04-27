@@ -13,18 +13,18 @@ function [myEllCentVec,  myEllShMat] = double(myEll)
 %   myEllShMat: double[nDims, nDims] - shape matrix of the ellipsoid myEll.
 %       
 % Example:
-% ellObj = ellipsoid([-2; -1], [2 -1; -1 1]);
-% [centVec, shapeMat] = double(ellObj)
-% centVec =
+%   ellObj = ellipsoid([-2; -1], [2 -1; -1 1]);
+%   [centVec, shapeMat] = double(ellObj)
+%   centVec =
 % 
-%     -2
-%     -1
+%       -2
+%       -1
 % 
 % 
-% shapeMat =
+%   shapeMat =
 % 
-%      2    -1
-%     -1     1
+%        2    -1
+%       -1     1
 % 
 % 
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>

@@ -1,7 +1,8 @@
 \section{Additional Software}
-These packages aren't included in the ET distribution. 
-So, you need to download them separately. 
+These packages aren't included in the ET distribution.
+So, you need to download them separately.
 \subsection{CVX}
+\todo[inline]{Updated this section}
 Some methods of the {\it Ellipsoidal Toolbox}, namely,
 \begin{itemize}
 \item {\tt distance}
@@ -14,20 +15,21 @@ Some methods of the {\it Ellipsoidal Toolbox}, namely,
 require solving semidefinite programming (SDP) problems.
 We use CVX (\cite{cvxhp}) as an
 interface to an external SDP solver. CVX as a more reliable toolbox
-for solving SDP problems of high dimensionality. 
-CVX is implemented in Matlab, effectively turning Matlab into an 
+for solving SDP problems of high dimensionality.
+CVX is implemented in Matlab, effectively turning Matlab into an
 optimization modeling language. Model specifications are constructed
-using common Matlab operations and functions, and standard 
-Matlab code can be freely mixed with these specifications. 
-This combination makes it simple to perform the calculations needed 
+using common Matlab operations and functions, and standard
+Matlab code can be freely mixed with these specifications.
+This combination makes it simple to perform the calculations needed
 to form optimization problems, or to process the results
-obtained from their solution. CVX distribution includes two freeware 
+obtained from their solution. CVX distribution includes two freeware
 solvers: SeDuMi(\cite{sedumi}, \cite{sedumihp})
 and SDPT3(\cite{sdpt}). The default solver used in the toolbox is SeDuMi.
 
 \subsection{MPT}
+\todo[inline]{Added this section}
 Multi-Parametric Toolbox(\cite{mpt}) - a Matlab toolbox for multi-parametric
-optimization and computational geometry. MPT is a toolbox 
+optimization and computational geometry. MPT is a toolbox
 that defines polytope class
 used in {\it ET}.
 Here we list methods required MPT.
@@ -51,7 +53,8 @@ We need MPT for all methods operating with polytopes.
 \newline
 and download the {\it Ellipsoidal Toolbox}.
 \item Unzip the distribution file into the directory where you would like
-the toolbox to be.\todo{Create a zip archive with the latest version and upload it to the project web site}
+the toolbox to be.
+\todo[inline]{Create a zip archive with the latest version and upload it to the project web site}
 \item Unzip CVX into cvx folder next to products folder.
 \item Unzip MPT into mpt folder next to products folder.
 \item Read the copyright notice.

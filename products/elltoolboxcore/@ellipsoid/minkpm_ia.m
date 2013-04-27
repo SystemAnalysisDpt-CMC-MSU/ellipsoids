@@ -26,15 +26,15 @@ function intApprEllVec = minkpm_ia(inpEllArr, inpEll, dirMat)
 %       directions approximations cannot be computed.
 %
 % Example:
-% firstEllObj = ellipsoid([2; -1], [9 -5; -5 4]);
-% secEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
-% thirdEllObj = ell_unitball(2);
-% ellVec = [thirdEllObj firstEllObj];
-% dirsMat = [1 0; 1 1; 0 1; -1 1]';
-% internalEllVec = ellVec.minkpm_ia(secEllObj, dirsMat)
+%   firstEllObj = ellipsoid([2; -1], [9 -5; -5 4]);
+%   secEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+%   thirdEllObj = ell_unitball(2);
+%   ellVec = [thirdEllObj firstEllObj];
+%   dirsMat = [1 0; 1 1; 0 1; -1 1]';
+%   internalEllVec = ellVec.minkpm_ia(secEllObj, dirsMat)
 % 
-% internalEllVec =
-% 1x3 array of ellipsoids.
+%   internalEllVec =
+%   1x3 array of ellipsoids.
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 

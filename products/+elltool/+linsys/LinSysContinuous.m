@@ -54,11 +54,11 @@ classdef LinSysContinuous < elltool.linsys.ALinSys
             %             system.
             %
             % Example:
-            % aMat = [0 1; 0 0]; bMat = eye(2);
-            % SUBounds = struct();
-            % SUBounds.center = {'sin(t)'; 'cos(t)'};  
-            % SUBounds.shape = [9 0; 0 2];
-            % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+            %   aMat = [0 1; 0 0]; bMat = eye(2);
+            %   SUBounds = struct();
+            %   SUBounds.center = {'sin(t)'; 'cos(t)'};  
+            %   SUBounds.shape = [9 0; 0 2];
+            %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
             %
             self = self@elltool.linsys.ALinSys(varargin{:});
         end

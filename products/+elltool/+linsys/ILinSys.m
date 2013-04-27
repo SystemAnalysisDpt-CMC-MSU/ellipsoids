@@ -21,13 +21,13 @@ classdef ILinSys < handle
         %   aMat: double[aMatDim, aMatDim]/cell[nDim, nDim] - matrix A.
         %
         % Examples:
-        % aMat = [0 1; 0 0]; bMat = eye(2);
-        % SUBounds = struct();
-        % SUBounds.center = {'sin(t)'; 'cos(t)'};  
-        % SUBounds.shape = [9 0; 0 2];
-        % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-        % dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-        % aMat = dsys.getAtMat();
+        %   aMat = [0 1; 0 0]; bMat = eye(2);
+        %   SUBounds = struct();
+        %   SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        %   SUBounds.shape = [9 0; 0 2];
+        %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+        %   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+        %   aMat = dsys.getAtMat();
         %
         aMat = getAtMat(self)
         %
@@ -39,13 +39,13 @@ classdef ILinSys < handle
         %   bMat: double[bMatDim, bMatDim]/cell[bMatDim, bMatDim] - matrix B.
         %
         % Examples:
-        % aMat = [0 1; 0 0]; bMat = eye(2);
-        % SUBounds = struct();
-        % SUBounds.center = {'sin(t)'; 'cos(t)'};  
-        % SUBounds.shape = [9 0; 0 2];
-        % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-        % dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-        % bMat = dsys.getBtMat();
+        %   aMat = [0 1; 0 0]; bMat = eye(2);
+        %   SUBounds = struct();
+        %   SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        %   SUBounds.shape = [9 0; 0 2];
+        %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+        %   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+        %   bMat = dsys.getBtMat();
         %
         bMat = getBtMat(self)
         %
@@ -57,13 +57,13 @@ classdef ILinSys < handle
         %   uEll: ellipsoid[1, 1]/struct[1, 1] - control bounds ellipsoid.
         %
         % Examples:
-        % aMat = [0 1; 0 0]; bMat = eye(2);
-        % SUBounds = struct();
-        % SUBounds.center = {'sin(t)'; 'cos(t)'};  
-        % SUBounds.shape = [9 0; 0 2];
-        % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-        % dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-        % uEll = dsys.getUBoundsEll();
+        %   aMat = [0 1; 0 0]; bMat = eye(2);
+        %   SUBounds = struct();
+        %   SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        %   SUBounds.shape = [9 0; 0 2];
+        %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+        %   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+        %   uEll = dsys.getUBoundsEll();
         %
         uEll = getUBoundsEll(self)
         %
@@ -75,13 +75,13 @@ classdef ILinSys < handle
         %   gMat: double[gMatDim, gMatDim]/cell[gMatDim, gMatDim] - matrix G.
         %
         % Examples:
-        % aMat = [0 1; 0 0]; bMat = eye(2);
-        % SUBounds = struct();
-        % SUBounds.center = {'sin(t)'; 'cos(t)'};  
-        % SUBounds.shape = [9 0; 0 2];
-        % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-        % dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-        % gMat = sys.getGtMat();
+        %   aMat = [0 1; 0 0]; bMat = eye(2);
+        %   SUBounds = struct();
+        %   SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        %   SUBounds.shape = [9 0; 0 2];
+        %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+        %   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+        %   gMat = sys.getGtMat();
         %
         gMat = getGtMat(self)
         %
@@ -93,13 +93,13 @@ classdef ILinSys < handle
         %   distEll: ellipsoid[1, 1]/struct[1, 1] - disturbance bounds ellipsoid.
         %
         % Examples:
-        % aMat = [0 1; 0 0]; bMat = eye(2);
-        % SUBounds = struct();
-        % SUBounds.center = {'sin(t)'; 'cos(t)'};  
-        % SUBounds.shape = [9 0; 0 2];
-        % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-        % dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-        % distEll = sys.getDistBoundsEll();
+        %   aMat = [0 1; 0 0]; bMat = eye(2);
+        %   SUBounds = struct();
+        %   SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        %   SUBounds.shape = [9 0; 0 2];
+        %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+        %   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+        %   distEll = sys.getDistBoundsEll();
         %
         distEll = getDistBoundsEll(self)
         %
@@ -111,18 +111,18 @@ classdef ILinSys < handle
         %   cMat: double[cMatDim, cMatDim]/cell[cMatDim, cMatDim] - matrix C.
         %
         % Examples:
-        % aMat = [0 1; 0 0]; bMat = eye(2);
-        % SUBounds = struct();
-        % SUBounds.center = {'sin(t)'; 'cos(t)'};  
-        % SUBounds.shape = [9 0; 0 2];
-        % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-        % dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-        % cMat = sys.getCtMat()
+        %   aMat = [0 1; 0 0]; bMat = eye(2);
+        %   SUBounds = struct();
+        %   SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        %   SUBounds.shape = [9 0; 0 2];
+        %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+        %   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+        %   cMat = sys.getCtMat()
         %
-        % cMat =
+        %   cMat =
         % 
-        %      1     0
-        %      0     1
+        %        1     0
+        %        0     1
         %
         cMat = getCtMat(self)
         %
@@ -134,17 +134,17 @@ classdef ILinSys < handle
         %   noiseEll: ellipsoid[1, 1]/struct[1, 1] - noise bounds ellipsoid.
         %
         % Examples:
-        % aMat = [0 1; 0 0]; bMat = eye(2);
-        % SUBounds = struct();
-        % SUBounds.center = {'sin(t)'; 'cos(t)'};  
-        % SUBounds.shape = [9 0; 0 2];
-        % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-        % dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-        % noiseEll = dsys.getNoiseBoundsEll()
+        %   aMat = [0 1; 0 0]; bMat = eye(2);
+        %   SUBounds = struct();
+        %   SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        %   SUBounds.shape = [9 0; 0 2];
+        %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+        %   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+        %   noiseEll = dsys.getNoiseBoundsEll()
         %
-        % noiseEll =
+        %   noiseEll =
         % 
-        %      []
+        %        []
         %
         noiseEll = getNoiseBoundsEll(self)
         %
@@ -167,34 +167,34 @@ classdef ILinSys < handle
         %         dimensions.
         %
         % Examples:
-        % aMat = [0 1; 0 0]; bMat = eye(2);
-        % SUBounds = struct();
-        % SUBounds.center = {'sin(t)'; 'cos(t)'};  
-        % SUBounds.shape = [9 0; 0 2];
-        % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-        % [stateDimArr, inpDimArr, outDimArr, distDimArr] = sys.dimension()
+        %   aMat = [0 1; 0 0]; bMat = eye(2);
+        %   SUBounds = struct();
+        %   SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        %   SUBounds.shape = [9 0; 0 2];
+        %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+        %   [stateDimArr, inpDimArr, outDimArr, distDimArr] = sys.dimension()
         %
-        % stateDimArr = 
+        %   stateDimArr = 
         %      
-        %      2
+        %        2
         %
         %
-        % inpDimArr = 
+        %   inpDimArr = 
         %      
-        %      2
+        %        2
         %
         %
-        % outDimArr = 
+        %   outDimArr = 
         %      
-        %      2
+        %        2
         %
         %
-        % distDimArr = 
+        %   distDimArr = 
         %      
-        %      0
+        %        0
         %
-        % dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-        % dsys.dimension();
+        %   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+        %   dsys.dimension();
         %
         [stateDimArr, inpDimArr, outDimArr, distDimArr] =...
             dimension(self)
@@ -209,12 +209,12 @@ classdef ILinSys < handle
         %   None.
         %
         % Example:
-        % aMat = [0 1; 0 0]; bMat = eye(2);
-        % SUBounds = struct();
-        % SUBounds.center = {'sin(t)'; 'cos(t)'};  
-        % SUBounds.shape = [9 0; 0 2];
-        % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-        % sys.display()
+        %   aMat = [0 1; 0 0]; bMat = eye(2);
+        %   SUBounds = struct();
+        %   SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        %   SUBounds.shape = [9 0; 0 2];
+        %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+        %   sys.display()
         %
         display(self)
         %
@@ -235,18 +235,18 @@ classdef ILinSys < handle
         %       has disturbance, and false otherwise.
         %
         % Examples:
-        % aMat = [0 1; 0 0]; bMat = eye(2);
-        % SUBounds = struct();
-        % SUBounds.center = {'sin(t)'; 'cos(t)'};  
-        % SUBounds.shape = [9 0; 0 2];
-        % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-        % sys.hasdisturbance()
+        %   aMat = [0 1; 0 0]; bMat = eye(2);
+        %   SUBounds = struct();
+        %   SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        %   SUBounds.shape = [9 0; 0 2];
+        %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+        %   sys.hasdisturbance()
         %
-        % ans = 
+        %   ans = 
         %      
-        %      0
-        % dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-        % dsys.hasdisturbance();
+        %        0
+        %   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+        %   dsys.hasdisturbance();
         %
         isDisturbanceArr = hasdisturbance(self)
         %
@@ -263,18 +263,18 @@ classdef ILinSys < handle
         %       false otherwise.
         %
         % Examples:
-        % aMat = [0 1; 0 0]; bMat = eye(2);
-        % SUBounds = struct();
-        % SUBounds.center = {'sin(t)'; 'cos(t)'};  
-        % SUBounds.shape = [9 0; 0 2];
-        % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-        % sys.hasnoise()
+        %   aMat = [0 1; 0 0]; bMat = eye(2);
+        %   SUBounds = struct();
+        %   SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        %   SUBounds.shape = [9 0; 0 2];
+        %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+        %   sys.hasnoise()
         %
-        % ans = 
+        %   ans = 
         %      
-        %      0
-        % dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-        % dsys.hasnoise();
+        %        0
+        %   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+        %   dsys.hasnoise();
         %
         isNoiseArr = hasnoise(self)
         %
@@ -291,18 +291,18 @@ classdef ILinSys < handle
         %       false otherwise.
         %
         % Examples:
-        % aMat = [0 1; 0 0]; bMat = eye(2);
-        % SUBounds = struct();
-        % SUBounds.center = {'sin(t)'; 'cos(t)'};  
-        % SUBounds.shape = [9 0; 0 2];
-        % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-        % sys.isempty()
+        %   aMat = [0 1; 0 0]; bMat = eye(2);
+        %   SUBounds = struct();
+        %   SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        %   SUBounds.shape = [9 0; 0 2];
+        %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+        %   sys.isempty()
         %
-        % ans = 
+        %   ans = 
         %      
-        %      0
-        % dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-        % dsys.isempty();
+        %        0
+        %   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+        %   dsys.isempty();
         %
         isEmptyArr = isempty(self)
         %
@@ -319,14 +319,14 @@ classdef ILinSys < handle
         %       time-invariant, and false otherwise.
         %
         % Examples:
-        % aMat = [0 1; 0 0]; bMat = eye(2);
-        % SUBounds = struct();
-        % SUBounds.center = {'sin(t)'; 'cos(t)'};  
-        % SUBounds.shape = [9 0; 0 2];
-        % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-        % isLtiArr = sys.islti();
-        % dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-        % isLtiArr = dsys.islti();
+        %   aMat = [0 1; 0 0]; bMat = eye(2);
+        %   SUBounds = struct();
+        %   SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        %   SUBounds.shape = [9 0; 0 2];
+        %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+        %   isLtiArr = sys.islti();
+        %   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+        %   isLtiArr = dsys.islti();
         %
         isLtiArr = islti(self)
         %
@@ -344,14 +344,14 @@ classdef ILinSys < handle
         %       linear systems in self.
         %
         % Examples:
-        % aMat = [0 1; 0 0]; bMat = eye(2);
-        % SUBounds = struct();
-        % SUBounds.center = {'sin(t)'; 'cos(t)'};  
-        % SUBounds.shape = [9 0; 0 2];
-        % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-        % sys.getAbsTol();
-        % dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-        % dsys.getAbsTol();
+        %   aMat = [0 1; 0 0]; bMat = eye(2);
+        %   SUBounds = struct();
+        %   SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        %   SUBounds.shape = [9 0; 0 2];
+        %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+        %   sys.getAbsTol();
+        %   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+        %   dsys.getAbsTol();
         %
         %
         % $Author: Zakharov Eugene  <justenterrr@gmail.com> $    
@@ -376,14 +376,14 @@ classdef ILinSys < handle
         %      copies of elements of self.
         %
         % Examples:
-        % aMat = [0 1; 0 0]; bMat = eye(2);
-        % SUBounds = struct();
-        % SUBounds.center = {'sin(t)'; 'cos(t)'};  
-        % SUBounds.shape = [9 0; 0 2];
-        % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-        % newSys = sys.getCopy();
-        % dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-        % newDSys = dsys.getCopy();
+        %   aMat = [0 1; 0 0]; bMat = eye(2);
+        %   SUBounds = struct();
+        %   SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        %   SUBounds.shape = [9 0; 0 2];
+        %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+        %   newSys = sys.getCopy();
+        %   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+        %   newDSys = dsys.getCopy();
         %
         copyLinSysArr = getCopy(self)
         %
@@ -406,24 +406,24 @@ classdef ILinSys < handle
         %       are equal and false otherwise.
         %
         % Examples:
-        % aMat = [0 1; 0 0]; bMat = eye(2);
-        % SUBounds = struct();
-        % SUBounds.center = {'sin(t)'; 'cos(t)'};  
-        % SUBounds.shape = [9 0; 0 2];
-        % sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-        % newSys = sys.getCopy();
-        % isEqual = sys.isEqual(newSys)
+        %   aMat = [0 1; 0 0]; bMat = eye(2);
+        %   SUBounds = struct();
+        %   SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        %   SUBounds.shape = [9 0; 0 2];
+        %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+        %   newSys = sys.getCopy();
+        %   isEqual = sys.isEqual(newSys)
         %
-        % isEqual =
+        %   isEqual =
         %
-        %      1
-        % dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-        % newDSys = sys.getCopy();
-        % isEqual = dsys.isEqual(newDSys)
+        %        1
+        %   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+        %   newDSys = sys.getCopy();
+        %   isEqual = dsys.isEqual(newDSys)
         %
-        % isEqual =
+        %   isEqual =
         %
-        %      1       
+        %        1       
         isEqualArr = isEqual(self, compLinSysArr)
         
     end
