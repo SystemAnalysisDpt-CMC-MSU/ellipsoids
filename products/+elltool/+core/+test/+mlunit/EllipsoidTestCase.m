@@ -1299,7 +1299,6 @@ classdef EllipsoidTestCase < mlunitext.test_case
                 '([1; 1], eye(2), [2; 2; 3.5])'),...
                 'wrongInput');
         end
-     end
         %
         function self = testMultiDimensionalConstructor(self)
             % one argument

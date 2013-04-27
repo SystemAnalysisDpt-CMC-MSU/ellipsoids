@@ -69,13 +69,13 @@ checkvar(sizeVec,@(x) isa(x,'double')&&all(isreal(x(:)))&&...
 %
 nEllipsoids = prod(sizeVec);
 ellArr(nEllipsoids) = ellipsoid();
-%
-fMakeEllipsoid = @(index)makeEllipsoid(index,varargin(indVec)); 
-arrayfun(fMakeEllipsoid,1:nEllipsoids);
+% 
+ell = ellipsoid(varargin{indVec});
+arrayfun(@(x)makeEllipsoid(x),1:nEllipsoids);
 ellArr = reshape(ellArr,sizeVec);
 %
-function makeEllipsoid(index, args)
-    ellArr(index) = ellipsoid(args{:});
+function makeEllipsoid(index)
+    ellArr(index) = getCopy(ell);
 end
 end
         
