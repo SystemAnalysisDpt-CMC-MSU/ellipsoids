@@ -1,6 +1,6 @@
 classdef EllUnionTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
-    gras.ellapx.smartdb.rels.EllTubeBasic&...
-    gras.ellapx.smartdb.rels.EllUnionTubeBasic
+        gras.ellapx.smartdb.rels.EllTubeBasic&...
+        gras.ellapx.smartdb.rels.EllUnionTubeBasic
     %TestRelation Summary of this class goes here
     %   Detailed explanation goes here
     methods(Access=protected)
@@ -41,7 +41,6 @@ classdef EllUnionTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
     end
     methods (Static)
         function ellUnionTubeRel=fromEllTubes(ellTubeRel)
-            
             import import gras.ellapx.smartdb.rels.EllUnionTube;
             import gras.ellapx.enums.EEllUnionTimeDirection;
             import gras.ellapx.enums.EApproxType;
@@ -81,21 +80,21 @@ classdef EllUnionTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
                 %
                 [SData.isLtTouchOpVec{iTube},SData.isLsTouchOp(iTube),...
                     SData.timeTouchOpEndVec{iTube}]=fCalcTouchArea(...
-                    SData.xTouchOpCurveMat{iTube});                
-               %
+                    SData.xTouchOpCurveMat{iTube});
+                %
             end
             ellUnionTubeRel=EllUnionTube(SData);
             %
             function [isLtTouchVec,isLsTouch,timeTouchEndVec]=...
                     calcNeverTouchArea(xTouchCurveMat)
-                nTimes=length(timeVec);                
-                isLtTouchVec=false(1,nTimes);                
+                nTimes=length(timeVec);
+                isLtTouchVec=false(1,nTimes);
                 isLsTouch=false;
                 timeTouchEndVec=nan(1,nTimes);
             end
             function [isLtTouchVec,isLsTouch,timeTouchEndVec]=...
                     calcTouchArea(xTouchCurveMat)
-                nTimes=length(timeVec);                
+                nTimes=length(timeVec);
                 isTouchCandidateVec=true(1,nTimes);
                 indTimeTouchEndVec=nan(1,nTimes);
                 isLtTouchVec=false(1,nTimes);
@@ -121,12 +120,12 @@ classdef EllUnionTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
                     isLtTouchVec(iTime)=isTouchVec(iTime);
                     isTouchCandidateVec=isTouchVec;
                 end
-                isLsTouch=isLtTouchVec(indSTime);                
+                isLsTouch=isLtTouchVec(indSTime);
                 isEndBeforeStartVec=indTimeTouchEndVec<(1:nTimes);
                 indTimeTouchEndVec(isEndBeforeStartVec)=nan;
                 %
                 isnNanTimeTouchEndVec=~isnan(indTimeTouchEndVec);
-                timeTouchEndVec=nan(1,nTimes);                                
+                timeTouchEndVec=nan(1,nTimes);
                 timeTouchEndVec(isnNanTimeTouchEndVec)=...
                     timeVec(indTimeTouchEndVec(isnNanTimeTouchEndVec));
             end
@@ -154,7 +153,7 @@ classdef EllUnionTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
             else
                 ellTubeProjRel=EllUnionTubeStaticProj();
             end
-        end        
+        end
         function self=EllUnionTube(varargin)
             self=self@gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel(...
                 varargin{:});

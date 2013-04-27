@@ -91,7 +91,11 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             STubeData=struct;
             %
             STubeData.scaleFactor=ones(nLDirs,1);
-            STubeData.approxType=repmat(approxType,nLDirs,1);
+            if (numel(approxType) == 1)
+                STubeData.approxType=repmat(approxType,nLDirs,1);
+            else
+                STubeData.approxType = approxType;
+            end
             STubeData.QArray=QArrayList.';
             STubeData.aMat=repmat({aMat},nLDirs,1);
             %
@@ -562,6 +566,64 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 else 
                     timeVec = [];
                 end
+            end
+        end
+        %
+        % INTERP - interpolates ellipsoidal tube on a new time vector
+        %
+        % Input:
+        %   regular:
+        %       self.
+        %
+        %       timeVec: double[nPoints] - sorted time vector to interpolate on.
+        %                Must begin with self.timeVec[1] and end with 
+        %                self.timeVec[end]
+        %
+        % Output:
+        %   obj: gras.ellapx.smartdb.rels.EllTubeBasic[1, 1] - interpolated
+        %   ellipsoidal tube
+        %
+        function interpolatedEllTube = interp(self, timeVec)
+            import gras.interp.MatrixInterpolantFactory;
+            import gras.ellapx.smartdb.rels.EllTube;
+            if isempty(self) 
+                interpolatedEllTube = self;
+            else
+                nTuples = length(self.QArray);
+                qArraySplineList = arrayfun(@(iData)fCalcMatSpline(iData,...
+                    self.QArray), 1:nTuples, 'UniformOutput', false);
+                ltGoodDirMatSplineList = ...
+                    arrayfun(@(iData)fCalcVecSpline(iData,...
+                    self.ltGoodDirMat), 1:nTuples, 'UniformOutput', false);
+                % centers are assumed equal in different tuples
+                centSpline = fCalcVecSpline(1, self.aMat);
+                qArrayList = arrayfun(@(iData)...
+                    (qArraySplineList{iData}.evaluate(timeVec)),...
+                    1:nTuples, 'UniformOutput', false);
+                ltGoodDirMatList = arrayfun(@(iData)...
+                    (ltGoodDirMatSplineList{iData}.evaluate(timeVec)),...
+                    1:nTuples, 'UniformOutput', false);
+                ltGoodDirMatArray = permute(cat(3,ltGoodDirMatList{:}),...
+                    [1,3,2]);
+                aMat = centSpline.evaluate(timeVec);
+                interpolatedEllTube = ...
+                    EllTube.fromQArrays(qArrayList, aMat, timeVec,...
+                    ltGoodDirMatArray, self.sTime(1),...
+                    self.approxType, self.approxSchemaName{1},...
+                    self.approxSchemaDescr{1}, self.calcPrecision(1));
+            end
+            %
+            function matSpline = fCalcMatSpline(iData, matArrayList)
+                import gras.interp.MatrixInterpolantFactory;
+                matSpline = MatrixInterpolantFactory.createInstance(...
+                'symm_column_triu', matArrayList{iData},...
+                self.timeVec{iData});
+            end
+            %
+            function vecSpline = fCalcVecSpline(iData, vecArrayList)
+                import gras.interp.MatrixInterpolantFactory;
+                vecSpline = MatrixInterpolantFactory.createInstance(...
+                'column', vecArrayList{iData}, self.timeVec{iData});
             end
         end
     end
