@@ -125,6 +125,19 @@ classdef IReach < handle
         %       reachObj: reach[1,1] - refine reach set for the directions
         %           specified in l0Mat
         %
+        % Example:
+        %   aMat = [0 1; 0 0]; bMat = eye(2);
+        %   SUBounds = struct();
+        %   SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        %   SUBounds.shape = [9 0; 0 2];
+        %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);        
+        %   x0EllObj = ell_unitball(2);  
+        %   timeVec = [0 10];  
+        %   dirsMat = [1 0; 0 1]';
+        %   newDirsMat = [1; -1];
+        %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+        %   rsObj = rsObj.refine(newDirsMat);
+        %
         % $Author: Vitaly Baranov <vetbar42@gmail.com> $ $Date: 21-04-2013$
         % $Copyright: Lomonosov Moscow State University,
         %            Faculty of Computational Mathematics and Cybernetics,
@@ -161,6 +174,7 @@ classdef IReach < handle
         %   dirsMat = [1 0; 0 1]';
         %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
         %   dRsObj = elltool.reach.ReachDiscrete(dsys, x0EllObj, dirsMat, timeVec);
+        %   newRsObj = rsObj.evolve(12);
         %   newDRsObj = dRsObj.evolve(11);
         %
         newReachObj = evolve(self, newEndTime, linSys)

@@ -1,15 +1,15 @@
 function [obj,isThereVec]=getTuplesFilteredBy(self,filterFieldName,filterValueVec,...
     varargin)
-% GETTUPLESFILTEREDBY selects tuples from given relation such
-% that a fixed index field contains values from a given set of values
-% and returns the result as new relation
+% GETTUPLESFILTEREDBY - selects tuples from given relation such that a  
+%                       fixed index field contains values from a given set
+%                       of value and returns the result as new relation
 %
 % Input:
 %   regular:
 %     self: ARelation [1,1] - class object
 %     filterFieldName: char - name of index field
-%     filterValueVec: numeric/ cell of char [nValues,1] - vector
-%         of index values
+%     filterValueVec: numeric/ cell of char [nValues,1] - vector of index 
+%         values
 %
 %   properties:
 %     keepNulls: logical[1,1] - if true, null values are not filteed out,
@@ -18,8 +18,8 @@ function [obj,isThereVec]=getTuplesFilteredBy(self,filterFieldName,filterValueVe
 %  
 % Output:
 %   regular:
-%     obj: ARelation [1,1] - new class object containing only
-%         selected tuples
+%     obj: ARelation [1,1] - new class object containing only selected 
+%         tuples
 %     isThereVec: logical[nTuples,1] - contains true for the kept tuples  
 %
 %

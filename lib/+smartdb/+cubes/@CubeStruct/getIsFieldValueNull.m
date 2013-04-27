@@ -1,6 +1,6 @@
 function isValueNullVec=getIsFieldValueNull(self,fieldNameList)
-% GETISFIELDVALUENULL returns a vector indicating whether a particular
-% field is composed of null values completely
+% GETISFIELDVALUENULL - returns a vector indicating whether a particular
+%                       field is composed of null values completely
 %
 % Usage: isValueNullVec=getIsFieldValueNull(self,fieldNameList)
 %

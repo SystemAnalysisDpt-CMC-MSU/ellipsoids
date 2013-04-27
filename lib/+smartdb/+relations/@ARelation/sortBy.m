@@ -1,6 +1,6 @@
 function sortBy(self,sortFieldNameList,varargin)
-% SORTBY sorts all tuples of given relation with respect to some of its
-% fields
+% SORTBY - sorts all tuples of given relation with respect to some of its
+%          fields
 %
 % Usage: sortBy(self,sortFieldNameList,varargin)
 %
