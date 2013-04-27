@@ -1,7 +1,7 @@
 function resVec=applyGetFunc(self,varargin)
-% APPLYGETFUNC applies a function to the specified fields as columns, i.e.
-% the function is applied to each field as whole, not to each cell
-% separately
+% APPLYGETFUNC - applies a function to the specified fields as columns, i.e.
+%                the function is applied to each field as whole, not to 
+%                each cell separately
 %
 % Input:
 %   regular:
@@ -11,7 +11,8 @@ function resVec=applyGetFunc(self,varargin)
 %       toFieldNameList: char/cell[1,] of char - a list of fields to which
 %          the function specified by hFunc is to be applied
 %   
-%     Note: hFunc can optionally be specified after toFieldNameList parameter
+%     Note: hFunc can optionally be specified after toFieldNameList 
+%           parameter
 %
 % Notes: this function currently has a lots of limitations:
 %   1) it assumes that the output is uniform

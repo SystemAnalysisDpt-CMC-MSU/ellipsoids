@@ -1,7 +1,8 @@
 function varargout=getTuplesJoinedWith(self,otherRel,...
     keyFieldNameList,varargin)
-% GETTUPLESJOINEDWITH returns the tuples of the given relation INNER-joined
-% with other relation by the specified key fields 
+% GETTUPLESJOINEDWITH - returns the tuples of the given relation 
+%                       INNER-joined with other relation by the specified 
+%                       key fields 
 %
 % Input:
 %   regular:
