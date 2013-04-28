@@ -65,14 +65,18 @@ classdef EllTCMultiDim < mlunitext.test_case
             arr2SizeVec=[2,2,4];
             dir2Arr=ones([2,arr2SizeVec]);
             ell2Arr=createEllArr(ellObjCenVec,ellObjMat,arr2SizeVec);
-            self.runAndCheckError('rho(ell2Arr,dirArr)','wrongSizes');
-            self.runAndCheckError('rho(ellArr,dir2Arr)','wrongSizes');
+            self.runAndCheckError('rho(ell2Arr,dirArr)',...
+                'wrongInput:wrongSizes');
+            self.runAndCheckError('rho(ellArr,dir2Arr)',...
+                'wrongInput:wrongSizes');
             ellVec=[ellObj, ellObj, ellObj];
             dirMat=eye(2);
-            self.runAndCheckError('rho(ellVec,dirMat)','wrongSizes');
+            self.runAndCheckError('rho(ellVec,dirMat)',...
+                'wrongInput:wrongSizes');
             ellVec=[ellObj, ellObj, ellObj]';
             dirMat=eye(2);
-            self.runAndCheckError('rho(ellVec,dirMat)','wrongSizes');
+            self.runAndCheckError('rho(ellVec,dirMat)',...
+                'wrongInput:wrongSizes');
         end
         %
         function self = testDistance(self)
