@@ -3,7 +3,7 @@ classdef ContinuousReachProjTestCase2 < mlunitext.test_case
         FIELDS_NOT_TO_COMPARE={'LT_GOOD_DIR_NORM_ORIG_VEC';'PROJ_S_MAT';...
         	'LS_GOOD_DIR_ORIG_VEC';'LS_GOOD_DIR_NORM_ORIG'};
         COMP_PRECISION = 5e-5;
-        PROJECTION_MATRIX_8 = [-0.1936    0.0434    0.1801    0.3372   -0.0717    0.7744   -0.4447    0.1091;
+        PROJECTION_DIM8_MAT = [-0.1936    0.0434    0.1801    0.3372   -0.0717    0.7744   -0.4447    0.1091;
                                -0.4176   -0.3222   -0.1170    0.2453   -0.7028   -0.2820   -0.0221    0.2718;
                                -0.2262    0.3719   -0.0565    0.2184    0.4048   -0.4508   -0.4716    0.4125;
                                -0.5929   -0.3479   -0.4257    0.1079    0.4623    0.0976    0.1567   -0.2946;
@@ -11,7 +11,7 @@ classdef ContinuousReachProjTestCase2 < mlunitext.test_case
                                -0.0575   -0.1476    0.7013    0.5397    0.1969   -0.1814    0.3316   -0.1005;
                                -0.4258   -0.1585    0.4721   -0.6740    0.1083    0.0631    0.0201    0.3166;
                                -0.3254    0.6998   -0.0886    0.0518   -0.1333    0.1760    0.5731    0.1293];
-        PROJECTION_MATRIX_2 = [-0.9442   -0.3293;
+        PROJECTION_DIM2_MAT = [-0.9442   -0.3293;
                                -0.3293    0.9442];
     end
     properties (Access=private)
@@ -43,9 +43,9 @@ classdef ContinuousReachProjTestCase2 < mlunitext.test_case
                 [oMat,~] = qr(rand(dim,dim))
             elseif strcmp(mode,'fix')
                 if dim == 2
-                    oMat=self.PROJECTION_MATRIX_2;
+                    oMat=self.PROJECTION_DIM2_MAT;
                 elseif dim == 8    
-                    oMat=self.PROJECTION_MATRIX_8;
+                    oMat=self.PROJECTION_DIM8_MAT;
                 end    
             end
             %form vector of projection indexes
@@ -121,7 +121,7 @@ classdef ContinuousReachProjTestCase2 < mlunitext.test_case
             [atDefCMat, btDefCMat, ctDefCMat, ptDefCMat,...
                 ptDefCVec, qtDefCMat, qtDefCVec,...
                 x0DefMat, x0DefVec, l0Mat] = self.getSysParams();
-            [oMat, indVec] = self.getProjMatrix(self,'fix', size(atDefCMat,1));
+            [oMat, indVec] = self.getProjMatrix(self,'rand', size(atDefCMat,1));
             newAtCMat = self.multiplyCMat(atDefCMat,oMat,inv(oMat));
             newBtCMat = self.multiplyCMat(btDefCMat,oMat);
             newCtCMat = self.multiplyCMat(ctDefCMat,oMat);
@@ -138,7 +138,7 @@ classdef ContinuousReachProjTestCase2 < mlunitext.test_case
             DistBounds = struct();
             DistBounds.center = newQtCVec;
             DistBounds.shape = newQtCMat;
-            AllDirections = eye(size(atDefCMat));
+            directionsMat = eye(size(atDefCMat));
             oInvMat=inv(oMat);    
             %
             newLinSys = elltool.linsys.LinSysFactory.create(newAtCMat,...
@@ -148,10 +148,10 @@ classdef ContinuousReachProjTestCase2 < mlunitext.test_case
             secondProjReachObj =...
                 newReachObj.projection(oInvMat(indVec,:)');
             firstProjReachObj =...
-                self.reachObj.projection(AllDirections(indVec,:)');
-            isEqual = secondProjReachObj.isEqual(firstProjReachObj,...
+                self.reachObj.projection(directionsMat(indVec,:)');
+            [isEqual,reportStr] = secondProjReachObj.isEqual(firstProjReachObj,...
                 self.FIELDS_NOT_TO_COMPARE);
-            mlunit.assert_equals(true, isEqual);
+            mlunit.assert_equals(true,isEqual,reportStr);
         end
     end
 end

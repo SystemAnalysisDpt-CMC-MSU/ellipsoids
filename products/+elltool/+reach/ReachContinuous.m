@@ -937,7 +937,7 @@ classdef ReachContinuous < elltool.reach.AReach
             isBackward = self.isBackward;
         end
         %%
-        function isEqual = isEqual(self, reachObj, varargin)
+        function [isEq,reportStr] = isEqual(self, reachObj, varargin)
             import gras.ellapx.smartdb.F;
             import gras.ellapx.enums.EApproxType;
             APPROX_TYPE = F.APPROX_TYPE;
@@ -987,10 +987,10 @@ classdef ReachContinuous < elltool.reach.AReach
                 compEllTube =...
                     compEllTube.thinOutTuples(compTimeGridIndVec);
             end
-            isEqual = compEllTube.getFieldProjection(...
+            [isEq,reportStr] = compEllTube.getFieldProjection(...
                 fieldsToCompVec).isEqual(...
                 ellTube.getFieldProjection(fieldsToCompVec),...
-                'maxTolerance', self.COMP_PRECISION,'checktupleorder','true');
+                'maxTolerance', self.COMP_PRECISION,'checkTupleOrder','true');
         end
         %%
         function copyReachObj = getCopy(self)
