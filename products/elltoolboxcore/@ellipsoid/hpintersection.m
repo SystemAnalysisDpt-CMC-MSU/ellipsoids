@@ -154,8 +154,8 @@ end
 tMat = ell_valign([1; zeros(maxEllDim-1, 1)], normHypVec);
 rotVec = (hypScalar*tMat*normHypVec)/(normHypVec'*normHypVec);
 myEll = tMat*myEll - rotVec;
-myEllCentVec = myEll.center;
-myEllShMat = myEll.shape;
+myEllCentVec = myEll.centerVec;
+myEllShMat = myEll.shapeMat;
 
 if rank(myEllShMat) < maxEllDim
     if Properties.getIsVerbose()

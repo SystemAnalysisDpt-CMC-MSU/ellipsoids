@@ -99,7 +99,8 @@ classdef GenEllipsoid < handle
                     ellQ1Mat=0.5*(ellQ1Mat+ellQ1Mat.');
                     ellQ2Mat=0.5*(ellQ2Mat+ellQ2Mat.');
                 end
-                isOk=ellObj1.getIsGoodDirForMat(ellQ1Mat,ellQ2Mat,curDirVec);
+                isOk=ellObj1.getIsGoodDirForMat(ellQ1Mat,ellQ2Mat,...
+                    curDirVec,absTol);
             end
         end
     end
@@ -328,7 +329,7 @@ classdef GenEllipsoid < handle
     end
     methods (Static,Access = private)
         resVec = getColorTable(ch);
-        [isOk, pPar] = getIsGoodDirForMat(ellQ1Mat,ellQ2Mat,dirVec)
+        [isOk, pPar] = getIsGoodDirForMat(ellQ1Mat,ellQ2Mat,dirVec,absTol)
         sqMat = findSqrtOfMatrix(qMat,absTol)
         isBigger=checkBigger(ellObj1,ellObj2,nDimSpace,absTol)
         [isInfVec infDirEigMat] = findAllInfDir(ellObj)

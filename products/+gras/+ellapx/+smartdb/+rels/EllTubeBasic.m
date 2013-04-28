@@ -14,7 +14,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             import gras.gen.SquareMatVector;
             Qsize=size(QArray);
             tmp=SquareMatVector.rMultiplyByVec(QArray,ltGoodDirMat);
-            denominator=sqrt(abs(sum(tmp.*ltGoodDirMat)));
+            denominator=realsqrt(abs(sum(tmp.*ltGoodDirMat)));
             temp=tmp./denominator(ones(1,Qsize(2)),:);
             xTouchOpMat=aMat-temp;
             xTouchMat=aMat+temp;
@@ -121,13 +121,13 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 lsGoodDirVec=lsGoodDirMat(:,iLDir);
                 STubeData.lsGoodDirVec{iLDir}=lsGoodDirVec;
                 STubeData.lsGoodDirNorm(iLDir)=...
-                    sqrt(sum(lsGoodDirVec.*lsGoodDirVec));
+                    realsqrt(sum(lsGoodDirVec.*lsGoodDirVec));
                 %
                 ltGoodDirMat=squeeze(ltGoodDirArray(:,iLDir,:));
                 %
                 STubeData.ltGoodDirMat{iLDir}=ltGoodDirMat;
                 %
-                STubeData.ltGoodDirNormVec{iLDir}=sqrt(sum(...
+                STubeData.ltGoodDirNormVec{iLDir}=realsqrt(sum(...
                     ltGoodDirMat.*ltGoodDirMat,1));
                 %
             end
@@ -507,10 +507,10 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                         %calculate norms
                         lsGoodDirVec = tubeProjDataCMat{iGroup,iProj}.lsGoodDirVec{iLDir};
                         tubeProjDataCMat{iGroup,iProj}.lsGoodDirNorm(iLDir)=...
-                            sqrt(sum(lsGoodDirVec.*lsGoodDirVec));
+                            realsqrt(sum(lsGoodDirVec.*lsGoodDirVec));
                         %
                         tubeProjDataCMat{iGroup,iProj}.ltGoodDirNormVec{iLDir}=...
-                            sqrt(sum(...
+                            realsqrt(sum(...
                             tubeProjDataCMat{iGroup,iProj}.ltGoodDirMat{iLDir}.*...
                             tubeProjDataCMat{iGroup,iProj}.ltGoodDirMat{iLDir},1));
                         %record original norm values

@@ -102,7 +102,7 @@ function [X, lambda, output, exitflag, how, ACTIND] = ...
   else 
     normA = ones(ncstr, 1);
   end
-  errnorm = 0.01*sqrt(eps); 
+  errnorm = 0.01*realsqrt(eps); 
 
   tolDep = 100*numberOfVariables*eps;      
   lambda = zeros(ncstr, 1);
@@ -486,7 +486,7 @@ function [X, lambda, output, exitflag, how, ACTIND] = ...
       rlambda = -R\(Q'*gf);
       if isinf(rlambda(1)) & (rlambda(1) < 0)
         [m, n]  = size(ACTSET);
-        rlambda = -(ACTSET + sqrt(eps)*randn(m,n))'\gf;
+        rlambda = -(ACTSET + realsqrt(eps)*randn(m,n))'\gf;
       end
       actlambda       = rlambda;
       actlambda(eqix) = abs(actlambda(eqix));

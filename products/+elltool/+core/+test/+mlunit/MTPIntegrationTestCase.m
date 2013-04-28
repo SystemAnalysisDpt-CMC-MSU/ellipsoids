@@ -24,16 +24,16 @@ classdef MTPIntegrationTestCase < mlunitext.test_case
             absTol =  elltool.conf.Properties.getAbsTol();
             %
             %distance between testEll2DVec(i) and testPoly2Vec(i)
-            tesDist1Vec = [2, sqrt(2), 0, 0]; 
+            tesDist1Vec = [2, realsqrt(2), 0, 0]; 
             myTestDist(testEll2DVec,testPoly2DVec, tesDist1Vec, absTol);
             %distance between testEll2DVec(1) and testPoly2Vec(1,2)
-            tesDist2Vec =  [2, sqrt(2*(3/2 - 1/sqrt(2))^2)];
+            tesDist2Vec =  [2, realsqrt(2*(3/2 - 1/realsqrt(2))^2)];
             myTestDist(testEll2DVec(1),testPoly2DVec(1:2), tesDist2Vec, absTol);
             %distance between testEll2DVec(1,2) and testPoly2Vec(2)            
-            tesDist3Vec =  [sqrt(2*(3/2 - 1/sqrt(2))^2), sqrt(2)];
+            tesDist3Vec =  [realsqrt(2*(3/2 - 1/realsqrt(2))^2), realsqrt(2)];
             myTestDist(testEll2DVec(1:2),testPoly2DVec(2), tesDist3Vec, absTol);
             %            
-            testDist60D =  sqrt(2*(2-1/sqrt(2))^2);
+            testDist60D =  realsqrt(2*(2-1/realsqrt(2))^2);
             myTestDist(testEll60D,testPoly60D, testDist60D, absTol);
             %test if distance(ellArr,poly) works properly, when ellArr -
             %more than two-dimensional ellipsoidal array and poly - single
@@ -109,11 +109,11 @@ classdef MTPIntegrationTestCase < mlunitext.test_case
             polyConstr15DMat = [eye(nDims);-eye(nDims)];
             %
             polyK1Vec = [0; 0.1; 0.1; 0.1];
-            polyK2Vec = [0.5; 0.05; sqrt(3)/2; 0];
+            polyK2Vec = [0.5; 0.05; realsqrt(3)/2; 0];
             polyK3Vec = [1; 0.05; 0.8; 0.8];
             polyK4Vec = [0.5; -0.1; 0.1; 0.1];
             polyK3DVec = 0.1 * ones(6,1);
-            polyK15DVec = (1/sqrt(nDims))*ones(nDims*2,1);
+            polyK15DVec = (1/realsqrt(nDims))*ones(nDims*2,1);
             %
             poly1 = self.makePolytope(polyConstrMat,polyK1Vec);
             poly2 = self.makePolytope(polyConstrMat,polyK2Vec);
@@ -223,7 +223,7 @@ classdef MTPIntegrationTestCase < mlunitext.test_case
             %test if internal approximation is an empty ellipsoid, when
             %ellipsoid and polytope aren't intersect
             ell8 = ellipsoid(eye(2));
-            poly8 = self.makePolytope([1 1], -sqrt(2));
+            poly8 = self.makePolytope([1 1], -realsqrt(2));
             ellPolyIA8 = intersection_ia(ell8,poly8);
             [~,ellPoly8Mat] = double(ellPolyIA8);
             mlunit.assert(all(ellPoly8Mat(:) == 0));
@@ -282,7 +282,7 @@ classdef MTPIntegrationTestCase < mlunitext.test_case
              [nRows, ~] = size(K);
              absTol = getAbsTol(ell);
              for iRows = 1:nRows
-                 suppFuncVec(iRows) = H(iRows,:)*shiftVec + sqrt(H(iRows,:)*shapeMat*H(iRows,:)');
+                 suppFuncVec(iRows) = H(iRows,:)*shiftVec + realsqrt(H(iRows,:)*shapeMat*H(iRows,:)');
              end
              res = all(suppFuncVec <= K+absTol);
          end
