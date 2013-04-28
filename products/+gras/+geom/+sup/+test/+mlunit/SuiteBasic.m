@@ -27,6 +27,27 @@ classdef SuiteBasic < mlunitext.test_case
             end
             
         end
+        function testSupGeomDiff3d(~)
+            import gras.geom.sup.supgeomdiff3d;
+            absTol = 1e-10;
+            testFirEll=ellipsoid(diag([1 2 1]));
+            testSecEll=ellipsoid(diag([0.8 0.1 0.1]));
+            firMat = diag([-1,1,1])*diag([1 2 1])*diag([-1,1,1]);
+            secMat = diag([-1,1,1])*diag([0.8 0.1 0.1])*diag([-1,1,1]);
+            [lGridMat, fMat] = gras.geom.tri.spheretri(3);
+            [supp1Arr,~] = rho(testFirEll,lGridMat.');
+            [supp2Arr,~] = rho(testSecEll,lGridMat.');
+            rhoDiffVec = gras.geom.sup.supgeomdiff3d(supp1Arr,supp2Arr,lGridMat.',fMat);
+            lGrid2Mat = diag([-1,1,1])*lGridMat.';
+            for ind1 = 1:size(lGridMat,1)
+                for ind2 = 1:size(lGrid2Mat,2)
+                    if (abs(lGridMat(ind1,:).'-lGrid2Mat(:,ind2)) < absTol*ones(3,1))
+                        mlunit.assert_equals(abs(rhoDiffVec(ind1)-rhoDiffVec(ind2)) < absTol,1);  
+                    end
+                end
+            end
+            
+        end
         function testSupGeomDiff2d(~)
             N_DIRS=200;
             EXP_TOL=1e-15;

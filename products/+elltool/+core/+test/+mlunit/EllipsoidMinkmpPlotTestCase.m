@@ -56,5 +56,30 @@ classdef EllipsoidMinkmpPlotTestCase < mlunitext.test_case
            
             end
         end
+        function self = test3d(self)
+            testFirEll = ellipsoid([1, 0, 0].', [9 2 0 ;2 4 0; 0 0 4]);
+            testSecEll = ellipsoid(eye(3));
+            testForthEll=ellipsoid(diag([1 2 1 ]));
+            testFifthEll=ellipsoid(diag([0.8 0.1 0.1]));
+            
+            
+            testThirdEll = ellipsoid([2 1 0 ;1 2 0;0 0 1]);
+            check(testFirEll,testSecEll,testThirdEll);
+            check(testForthEll,testFifthEll,testSecEll);
+            
+            function check(testFirEll,testSecEll,testThirdEll)
+                absTol = 10^(-1);
+                [~,boundPoints] = minkmp(testFirEll,testSecEll,testThirdEll);
+                [lGridMat, fMat] = gras.geom.tri.spheretri(3);
+                [supp1Arr,~] = rho(testFirEll,lGridMat.');
+                [supp2Arr,~] = rho(testSecEll,lGridMat.');
+                [supp3Arr,~] = rho(testThirdEll, lGridMat.');
+                rhoDiffVec = gras.geom.sup.supgeomdiff3d(supp1Arr,supp2Arr,lGridMat.');
+                sup = max(lGridMat*boundPoints(:,1:end-1),[],2);
+                 max(abs(sup'-rhoDiffVec))
+                mlunit.assert_equals(abs(sup'-rhoDiffVec-supp3Arr) < absTol,ones(1,size(sup,1)));     
+           
+            end
+        end
     end
 end
