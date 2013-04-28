@@ -27,6 +27,11 @@ classdef EllTCMultiDim < mlunitext.test_case
             ellObj=ellipsoid(ellObjCenVec,ellObjMat);
             ellArr=[ellObj, ellObj, ellObj];
             %
+            %Check one ell - one dirs
+            [supVal bpVec]=rho(ellObj,dirMat(:,1));
+            checkRhoRes(supVal,bpVec);
+            checkRhoSize(supVal,bpVec,ones(2,1),[1 1]);
+            %
             %Check one ell - multiple dirs
             [supArr bpMat]=rho(ellObj,dirMat);
             checkRhoRes(supArr,bpMat);
@@ -42,19 +47,19 @@ classdef EllTCMultiDim < mlunitext.test_case
             dirArr=zeros([2,arrSizeVec]);
             dirArr(1,:)=1;
             ellArr=createEllArr(ellObjCenVec,ellObjMat,arrSizeVec);
-            [supArr bpMat]=rho(ellArr,dirArr);
-            checkRhoRes(supArr,bpMat);
-            checkRhoSize(supArr,bpMat,dirArr,arrSizeVec);
+            [supArr bpArr]=rho(ellArr,dirArr);
+            checkRhoRes(supArr,bpArr);
+            checkRhoSize(supArr,bpArr,dirArr,arrSizeVec);
             %
             %Check array ell - one dir
-            [supArr bpMat]=rho(ellArr,dirMat(:,1));
-            checkRhoRes(supArr,bpMat);
-            checkRhoSize(supArr,bpMat,dirArr,arrSizeVec);
+            [supArr bpArr]=rho(ellArr,dirMat(:,1));
+            checkRhoRes(supArr,bpArr);
+            checkRhoSize(supArr,bpArr,dirArr,arrSizeVec);
             %
             %Check one ell - array dir
-            [supArr bpMat]=rho(ellObj,dirArr);
-            checkRhoRes(supArr,bpMat);
-            checkRhoSize(supArr,bpMat,dirArr,arrSizeVec);
+            [supArr bpArr]=rho(ellObj,dirArr);
+            checkRhoRes(supArr,bpArr);
+            checkRhoSize(supArr,bpArr,dirArr,arrSizeVec);
             %
             % Negative tests for input
             arr2SizeVec=[2,2,4];
@@ -803,12 +808,9 @@ function checkGeAndGtAndLeAndLt(self, isG, isE)
         end
     end
 end
-function checkRhoSize(supArr,bpMat,dirArr,arrSizeVec)
+function checkRhoSize(supArr,bpArr,dirArr,arrSizeVec)
 isRhoOk=all(size(supArr)==arrSizeVec);
-[nSize mSize]=size(bpMat);
-dirSizeVec=size(dirArr);
-isBPOk=nSize==dirSizeVec(1) && ...
-    mSize==prod(dirSizeVec(2:end));
+isBPOk=all(size(bpArr)==size(dirArr));
 mlunit.assert_equals(true,isRhoOk && isBPOk);
 end
 function checkRhoRes(supArr,bpArr)
@@ -816,12 +818,12 @@ isRhoOk=all(supArr(:)==5);
 isBPOk=all(bpArr(1,:)==5) && all(bpArr(2,:)==0);
 mlunit.assert_equals(true,isRhoOk && isBPOk);
 end
-function ellArr=createEllArr(ellObjCenVec,ellObjMat,arrSize)
-nElems = prod(arrSize, 2);
+function ellArr=createEllArr(ellObjCenVec,ellObjMat,arrSizeVec)
+nElems = prod(arrSizeVec, 2);
 cenCArr = repmat({ellObjCenVec}, 1, nElems);
 matCArr = repmat({ellObjMat}, 1, nElems);
 ellCArr = cellfun(@ellipsoid, cenCArr, matCArr, ...
     'UniformOutput', false);
-ellArr = reshape([ellCArr{:}], arrSize);
+ellArr = reshape([ellCArr{:}], arrSizeVec);
 end
 

@@ -1,4 +1,4 @@
-function [supArr, bpMat] = rho(ellArr, dirsArr)
+function [supArr, bpArr] = rho(ellArr, dirsArr)
 %
 % RHO - computes the values of the support function for given ellipsoid
 %	and given direction.
@@ -8,9 +8,9 @@ function [supArr, bpMat] = rho(ellArr, dirsArr)
 %       dirsMat. Or, if ellArr is array of ellipsoids, dirsMat is expected
 %       to be a single vector.
 %
-%	[supArr, bpMat] = RHO(ellArr, dirstMat)  Computes the support function
+%	[supArr, bpArr] = RHO(ellArr, dirstMat)  Computes the support function
 %       of the ellipsoid ellArr in directions specified by the columns of
-%       matrix dirsMat, and boundary points bpMat of this ellipsoid that
+%       matrix dirsMat, and boundary points bpArr of this ellipsoid that
 %       correspond to directions in dirsMat. Or, if ellArr is array of
 %       ellipsoids, and dirsMat - single vector, then support functions and
 %       corresponding boundary points are computed for all the given
@@ -29,7 +29,7 @@ function [supArr, bpMat] = rho(ellArr, dirsArr)
 %       ellArr: ellipsoid [nDims1,nDims2,...,nDimsN]/[1,1] - array
 %           of ellipsoids.
 %       dirsMat: double[nDim,nDims1,nDims2,...,nDimsN]/
-%           double[nDim,nDirs]/[nDim,1] - matrix of directions.
+%           double[nDim,nDirs]/[nDim,1] - array or matrix of directions.
 %
 % Output:
 %	supArr: double [nDims1,nDims2,...,nDimsN]/[1,nDirs] - support function
@@ -37,59 +37,72 @@ function [supArr, bpMat] = rho(ellArr, dirsArr)
 %       dirsMat. Or, if ellArr is array of ellipsoids, support function of
 %       each ellipsoid in ellArr specified by dirsMat direction.
 %
-%   bpArr: double [nDim,nDims1*nDims2*...*nDimsN]/[nDim,nDirs] - matrix of
-%       boundary points
+%   bpArr: double[nDim,nDims1,nDims2,...,nDimsN]/
+%           double[nDim,nDirs]/[nDim,1] - array or matrix of boundary points
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regesnts of the University of California 2004-2008 $
 %
 % $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
-% $Author: Vitaly Baranov <vetbar42@gmail.com> $   $Date: 27-04-2013$
 % $Copyright: Lomonosov Moscow State University,
 %             Faculty of Computational Mathematics and Cybernetics,
 %             Science, System Analysis Department 2012 $
 %
-
+% $Author: Vitaly Baranov <vetbar42@gmail.com> $   $Date: 27-04-2013$
+% $Copyright: Lomonosov Moscow State University,
+%             Faculty of Computational Mathematics and Cybernetics,
+%             Science, System Analysis Department 2013 $
+%
+%
 import modgen.common.checkmultvar;
-
+%
 ellipsoid.checkIsMe(ellArr,'first');
 modgen.common.checkvar(dirsArr, @(x)isa(x,'double'),...
     'errorMessage','second argument must be matrix of direction vectors.');
-checkmultvar(strcat('isscalar(x1)|| (length(x2)==2)&& x2(2)==1 ||',...
-    '((numel(x1)==prod(x2(2:end),2))&&(size(x1,1)==1 || size(x1,2)==1)&&',...'
-    '(numel(x1))==x2(2)) || all(size(x1)==x2(2:end))'),...
-    2,ellArr, size(dirsArr), 'errorTag','wrongSizes','errorMessage',...
-    strcat('arguments must be single ellipsoid or single direction ',...
-    'vector or arrays of almost the same sizes'));
 %
 dirSizeVec = size(dirsArr);
 ellSizeVec=size(ellArr);
 isOneEll = isscalar(ellArr);
 isOneDir = dirSizeVec(2)==1 && length(dirSizeVec)==2;
-
+%
+nEll=prod(ellSizeVec);
 nDim=dirSizeVec(1);
+nDirs=prod(dirSizeVec(2:end));
+%
+if ~(isOneEll || isOneDir || ...
+        nEll==nDirs&&(ellSizeVec(1)==1 || ellSizeVec(2)==1)&&...
+        length(dirSizeVec)==2 ||...
+        all(ellSizeVec==dirSizeVec(2:end)))
+    modgen.common.throwerror('wrongSizes',...
+        strcat('arguments must be single ellipsoid or single direction ',...
+        'vector or arrays of almost the same sizes'));
+end
+%
 nDimsArr = dimension(ellArr);
 checkmultvar('all(x2==x1)',2,nDim,nDimsArr(:), 'errorMessage',...
     'dimensions mismatch.');
-
+%
 if isOneEll % one ellipsoid, multiple directions
-    qVec = ellArr.centerVec;
-    shMat = ellArr.shapeMat;
+    cenVec = ellArr.centerVec;
+    ellMat = ellArr.shapeMat;
     [~, absTol] = getAbsTol(ellArr);
-    dirsCArr=num2cell(dirsArr,1);
+    dirsMat=reshape(dirsArr,nDim,nDirs);
     %
-    [resCArr xCArr] =cellfun(@(x) fSingleRhoForOneEll(x),dirsCArr,...
-        'UniformOutput',false);
-    supArr = cell2mat(resCArr);
+    [supArr bpArr] =fSingleRhoForOneEll(dirsMat);
     if length(dirSizeVec)>2
         supArr=reshape(supArr,dirSizeVec(2:end));
+        bpArr=reshape(bpArr,dirSizeVec);
     end
-    bpMat = cell2mat(xCArr);
 elseif isOneDir % multiple ellipsoids, one direction
-    [resCArr xCArr] =arrayfun(@(x) fSingleRhoForOneDir(x),ellArr,...
+    fComposite=@(ellObj)fRhoForDir(ellObj,dirsArr);
+    [resCArr xCArr]=arrayfun(fComposite,ellArr,...
         'UniformOutput',false);
     supArr = cell2mat(resCArr);
-    bpMat= horzcat(xCArr{:});
+    bpArr = horzcat(xCArr{:});
+    if length(ellSizeVec)>2
+        reshVec=[nDim,ellSizeVec];
+        bpArr = reshape(bpArr,reshVec);
+    end
 else % multiple ellipsoids, multiple directions
     augxCArr=num2cell(dirsArr,1);
     dirCArr=reshape(augxCArr(1,:),ellSizeVec);
@@ -98,7 +111,8 @@ else % multiple ellipsoids, multiple directions
     [resCArr xCArr]=arrayfun(fComposite,ellArr,dirCArr,...
         'UniformOutput',false);
     supArr = cell2mat(resCArr);
-    bpMat= horzcat(xCArr{:});
+    bpArr= horzcat(xCArr{:});
+    bpArr=reshape(bpArr,dirSizeVec);
 end
 %
     function [supFun xVec] = fRhoForDir(ellObj,dirVec)
@@ -108,17 +122,10 @@ end
         supFun = cenVec'*dirVec + sq;
         xVec = ((ellMat*dirVec)/sq) + cenVec;
     end
-    function [supFun xVec] = fSingleRhoForOneDir(singEll)
-        cVec  = singEll.centerVec;
-        shpMat  = singEll.shapeMat;
-        [~, singAbsTol] = getAbsTol(singEll);
-        sq = max(realsqrt(dirsArr'*shpMat*dirsArr), singAbsTol);
-        supFun = cVec'*dirsArr + sq;
-        xVec =((shpMat*dirsArr)/sq) + cVec;
-    end
-    function [supFun xVec] = fSingleRhoForOneEll(lVec)
-        sq  = max(realsqrt(lVec'*shMat*lVec), absTol);
-        supFun = qVec'*lVec + sq;
-        xVec = ((shMat*lVec)/sq) + qVec;
+    function [supFun xVec] = fSingleRhoForOneEll(dirMat)
+        tempMat  = max(sqrt(sum(dirsMat'*ellMat.*dirsMat',2)), absTol);
+        supFun = cenVec'*dirMat + tempMat';
+        xVec =((ellMat*dirsMat)./repmat(tempMat',size(ellMat,1),1))+...
+            repmat(cenVec,1,size(dirsMat,2));
     end
 end
