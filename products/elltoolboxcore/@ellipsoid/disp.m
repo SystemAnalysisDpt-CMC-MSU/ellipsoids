@@ -18,12 +18,6 @@ function disp(myEllMat)
 %   Shape Matrix:
 %        2    -1
 %       -1     1
-% 
-%
-% $Author: Irina Zhukova <irizka91@gmail.com> $	$Date: 2013-04-19 $ 
-% $Copyright: Moscow State University,
-%            Faculty of Applied Mathematics and Computer Science,
-%            System Analysis Department 2013 $
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright: The Regents of the University of California 

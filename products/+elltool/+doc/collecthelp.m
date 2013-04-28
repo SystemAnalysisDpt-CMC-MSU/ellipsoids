@@ -92,6 +92,8 @@ for iClass = 1:nLength
     mc = meta.class.fromName(className);
     handleClassMethodNameList=arrayfun(@(x)x.Name,...
          meta.class.fromName('handle').MethodList,'UniformOutput',false);
+    dynamicpropsClassMethodNameList=arrayfun(@(x)x.Name,...
+         meta.class.fromName('dynamicprops').MethodList,'UniformOutput',false);
     if isempty(mc)
         bufFuncInfo=struct();
     else
@@ -104,10 +106,18 @@ for iClass = 1:nLength
         if (~isAbstractClass)
             emptyObj=eval([className,'.empty(0,0)']);
             isHandleClass=isa(emptyObj,'handle');
+            isDynamicpropsClass = isa(emptyObj,'dynamicprops');
             if isHandleClass
                 isHandleMethodVec=ismember(curClassMethodNameList,...
                          handleClassMethodNameList);
                 methodVec= methodVec(~isHandleMethodVec);
+            end
+            curClassMethodNameList=arrayfun(@(x)x.Name,...
+                        methodVec,'UniformOutput',false);
+            if isDynamicpropsClass
+                isDynamicpropsVec=ismember(curClassMethodNameList,...
+                         dynamicpropsClassMethodNameList);
+                methodVec= methodVec(~isDynamicpropsVec);
             end
         isPublicVec=arrayfun(@(x)isequal(x.Access,PUBLIC_ACCESS_MOD),...
                          methodVec);
@@ -118,13 +128,15 @@ for iClass = 1:nLength
         finalMethodVec = publicMethodVec(~ignorMethodFlag);
         fullNameList=arrayfun(@(x)[className,'.',x.Name],finalMethodVec,...
                       'UniformOutput',false);
+        funcNameList = arrayfun(@(x)x.Name,finalMethodVec,...
+            'UniformOutput',false);
         bufFuncNameList = arrayfun(@(x)[className,'/',x.Name],finalMethodVec,...
                       'UniformOutput',false);
         helpList=cellfun(@help,fullNameList,'UniformOutput',false);
         helpList=cellfun(@(x, y)fDeleteHelpStr(x, y),helpList,...
             bufFuncNameList, 'UniformOutput',false); 
         bufFuncInfo.className = classList(iClass);
-        bufFuncInfo.funcName=fullNameList;
+        bufFuncInfo.funcName=funcNameList;
         bufFuncInfo.numbOfFunc = length(fullNameList);
         possibleScript=regexp(fullNameList,scriptNamePattern,'once','match');
         bufFuncInfo.isScript=logical(cellfun(@(x,y) isequal(x,y),...

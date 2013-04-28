@@ -197,7 +197,7 @@ in the distribution of the {\it Ellipsoidal Toolbox} is SeDuMi
 To compute the reach sets of the systems described in chapter 3, we define
 few new classes in the {\it Ellipsoidal Toolbox}: class {\tt LinSysContinuous}
 for the continuous-time system description, class {\tt LinSysDiscrete}
-for the discrete-time system description and classes {\tt ReachContinious$\backslash$ReachDiscrete} for the reach set data. We start by explaining how to define a system
+for the discrete-time system description and classes {\tt ReachContinuous$\backslash$ReachDiscrete} for the reach set data. We start by explaining how to define a system
 using {\tt LinSysContinuous} object. Also we can use {\tt LinSysFactory} class for the description of this system.
 Through it's method {\tt create} user can get {\tt LinSysContinuous} or {\tt LinSysDiscrete} object.
 For example, description of the system
@@ -295,7 +295,7 @@ union of ellipsoids in the same column of {\tt internalEllMat}.
 We may be interested in the reachability data of our system in some
 particular time interval, smaller than the one for which the reach set was
 computed, say $3\leq t\leq5$.
-This data can be extracted and returned in the form of {\tt ReachContinious}
+This data can be extracted and returned in the form of {\tt ReachContinuous}
 object by the {\tt cut} function:
 \verbmcodef[Get the reachability data in the time interval]{mcodesnippets/s_chapter05_section03_snippet08.m}
 
@@ -340,7 +340,7 @@ However, to use the {\tt refine} function,
 the reach set object must contain all calculated data, otherwise, an
 error is returned.
 
-Having a reach set object resulting from the {\tt ReachContinious}, {\tt cut} or
+Having a reach set object resulting from the {\tt ReachContinuous}, {\tt cut} or
 {\tt refine} operations, we can obtain the trajectory of the center
 of the reach set and the good curves along which the actual reach set
 is touched by its ellipsoidal approximations:
@@ -405,7 +405,7 @@ routines silent, and no information except errors is displayed.
 \item {\tt nTimeGridPoints = 200} - density of the time grid for the
 continuous time reach set computation.
 This parameter directly affects the number of ellipsoids to
-be stored in the {\tt ReachContinious$\backslash$ReachDiscrete} object.
+be stored in the {\tt ReachContinuous$\backslash$ReachDiscrete} object.
 \item {\tt ODESolverName = ode45} - specifies the ODE solver for continuous time
 reach set computation.
 \item {\tt isODENormControl = 'on'} - switches on and off the norm control
@@ -471,7 +471,7 @@ Since the operation of projection is linear, the projection of the geometric
 sum of ellipsoids equals the geometric sum of the projected ellipsoids.
 The same is true for the geometric difference of two ellipsoids.
 
-Function {\tt projection} exists also for the {\tt ReachContinious$\backslash$ReachDiscrete} objects:
+Function {\tt projection} exists also for the {\tt ReachContinuous$\backslash$ReachDiscrete} objects:
 \verbmcodef[Projection of the reach set tube]
 {mcodesnippets/s_chapter05_section05_snippet02.m}
 
