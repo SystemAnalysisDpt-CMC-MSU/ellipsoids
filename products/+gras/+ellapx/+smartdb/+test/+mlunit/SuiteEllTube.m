@@ -641,5 +641,55 @@ classdef SuiteEllTube < mlunitext.test_case
             [~, ~] =... 
                 extFromEllArrayEllTube.getEllArray(EApproxType.Internal);
         end
+        function self = testInterp(self) 
+            import gras.ellapx.enums.EApproxType;
+            %
+            qMatArray(:,:,3) = [1,0;0,2];
+            qMatArray(:,:,2) = [3,0;0,4];
+            qMatArray(:,:,1) = [5,0;0,6];
+            aMat(:,3) = [1,2];
+            aMat(:,2) = [3,4];
+            aMat(:,1) = [5,6];
+            timeVec = [1,2,3];
+            sTime = 1;
+            lsGoodDirMat=[1;0];
+            lsGoodDirArray(:,:,1) = lsGoodDirMat;
+            lsGoodDirArray(:,:,2) = lsGoodDirMat;
+            lsGoodDirArray(:,:,3) = lsGoodDirMat;            
+            approxSchemaDescr=char.empty(1,0);
+            approxSchemaName=char.empty(1,0);
+            approxType = EApproxType.Internal;
+            calcPrecision=0.01;
+            fromMat1EllTube = ...
+                gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
+                {qMatArray}, aMat, timeVec,...
+                lsGoodDirArray, sTime, approxType, approxSchemaName,...
+                approxSchemaDescr, calcPrecision);
+            interpEllTube = fromMat1EllTube.interp([1,1.5,2,2.5,3]);
+            mlunit.assert(all(interpEllTube.aMat{1}(:,2)==[4;5]));
+            mlunit.assert(all(interpEllTube.aMat{1}(:,4)==[2;3]));
+            mlunit.assert(all(interpEllTube.QArray{1}(:,:,4)==[2,0;0,3]));
+            mlunit.assert(all(interpEllTube.QArray{1}(:,:,2)==[4,0;0,5]));
+            %
+            projSpaceList = {[1,0;0,1].'};
+            projType=gras.ellapx.enums.EProjType.DynamicAlongGoodCurve;
+            interpProjTube =...
+                interpEllTube.project(projType, projSpaceList,...
+                @fGetProjMat);
+            noInterpProjTube = fromMat1EllTube.project(projType, ...
+                projSpaceList, @fGetProjMat);
+            interpProj2Tube = noInterpProjTube.interp([1,1.5,2,2.5,3]);
+            mlunit.assert(all(all(interpProj2Tube.aMat{1}-...
+                interpProjTube.aMat{1} < calcPrecision)));
+            mlunit.assert(all(all(all(interpProj2Tube.QArray{1}-...
+                interpProjTube.QArray{1} < calcPrecision))));
+            %
+            function [projOrthMatArray,projOrthMatTransArray]=...
+                    fGetProjMat(projMat,timeVec,varargin)
+                nTimePoints=length(timeVec);
+                projOrthMatArray=repmat(projMat,[1,1,nTimePoints]);
+                projOrthMatTransArray=repmat(projMat.',[1,1,nTimePoints]);
+            end            
+        end
     end
 end
