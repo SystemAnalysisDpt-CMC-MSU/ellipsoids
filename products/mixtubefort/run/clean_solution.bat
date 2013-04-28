@@ -1,25 +1,22 @@
 @echo off
 
-cd ..
-
 echo CLEANING SOLUTION
+
+if not exist "..\source" goto :eof
+cd ..\source
 
 del /a:h *.suo >nul 2>nul
 
-cd run
-for /f %%f in ('dir /a:d /b') do (
-	call :rmdirifexists %%f
+if exist "build" (
+	cd build
+	call :rmdirifexists lib
+	call :rmdirifexists mod
+	mkdir lib
+	mkdir mod
+	rem del *.exe >nul 2>nul
+	del *.manifest >nul 2>nul
+	cd ..
 )
-cd ..
-
-cd build
-call :rmdirifexists lib
-call :rmdirifexists mod
-mkdir lib
-mkdir mod
-del *.exe >nul 2>nul
-del *.manifest >nul 2>nul
-cd ..
 
 for /f %%f in ('dir /a:d /b') do (
     cd %%f

@@ -110,7 +110,7 @@ subroutine ea_compute(this)
     allocate( work(lenwrk), thres(ea_ode%ny) )
     thres = this%threshold
     hstart = h
-    call d02pvf(ea_ode%ny, this%t1, y0, this%t0-1D0, this%tolerance, thres, this%method, 'U', .false., hstart, work, lenwrk, ifail)
+    call d02pvf(ea_ode%ny, this%t1, y0, this%t0, this%tolerance, thres, this%method, 'U', .false., hstart, work, lenwrk, ifail)
     call profiler%toc(tag = "EA/ODE")
 
 #ifdef MPI

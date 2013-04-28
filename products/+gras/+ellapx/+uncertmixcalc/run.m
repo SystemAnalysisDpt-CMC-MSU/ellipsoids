@@ -1,34 +1,33 @@
 function SRunProp=run(confName,varargin)
-import gras.ellapx.uncertcalc.log.Log4jConfigurator;
-import gras.ellapx.uncertcalc.*;
-import gras.ellapx.common.*;
+import gras.ellapx.uncertmixcalc.log.Log4jConfigurator;
+import gras.ellapx.uncertmixcalc.*;
 import gras.ellapx.enums.EProjType;
 import modgen.common.parseparext;
 import gras.ellapx.uncertcalc.EllTubeProjectorBuilder;
 import gras.ellapx.uncertcalc.ApproxProblemPropertyBuilder;
 import modgen.common.throwerror;
-%% Constants
+% Constants
 MAX_SUPPORTED_PRECISION=0.001;
-%%
+%
 tStartGlobal=tic;
-%% Parse input
+% Parse input
 [reg,isRegSpecVec,confRepoMgr,sysConfRepoMgr,isConfRepoMgrSpec,...
     isSysConfRepoMgrSpec]=parseparext(varargin,...
     {'confRepoMgr','sysConfRepoMgr';...
     [],[];...
-    @(x)isa(x,'gras.ellapx.uncertcalc.conf.IConfRepoMgr'),...
-    @(x)isa(x,'gras.ellapx.uncertcalc.conf.sysdef.AConfRepoMgr')},[0,1],...
+    @(x)isa(x,'gras.ellapx.uncertmixcalc.conf.IConfRepoMgr'),...
+    @(x)isa(x,'gras.ellapx.uncertmixcalc.conf.sysdef.AConfRepoMgr')},[0,1],...
     'regCheckList',{'isstring(x)'},'regDefList',{''});
 %    
-%% Set up configurations
+% Set up configurations
 if ~isConfRepoMgrSpec
-    confRepoMgr=gras.ellapx.uncertcalc.conf.ConfRepoMgr();
+    confRepoMgr=gras.ellapx.uncertmixcalc.conf.ConfRepoMgr();
 end
 if ~isSysConfRepoMgrSpec
-    sysConfRepoMgr=gras.ellapx.uncertcalc.conf.sysdef.ConfRepoMgr();
+    sysConfRepoMgr=gras.ellapx.uncertmixcalc.conf.sysdef.ConfRepoMgr();
 end
 confRepoMgr.selectConf(confName,'reloadIfSelected',false);
-%% Checking a validity of settings
+% Checking a validity of settings
 calcPrecision=confRepoMgr.getParam('genericProps.calcPrecision');
 if calcPrecision>MAX_SUPPORTED_PRECISION
     throwerror('wrongInput',['specified calculation precision %d ',...
@@ -43,15 +42,15 @@ else
 end
 sysConfRepoMgr.selectConf(sysConfName,'reloadIfSelected',false);
 %
-%% Configure logging
+% Configure logging
 Log4jConfigurator.configure(confRepoMgr);
 logger=Log4jConfigurator.getLogger();
-%% Configure Matrix Operations factory
+% Configure Matrix Operations factory
 isSplineUsed=confRepoMgr.getParam(...
     'genericProps.isSplineForMatrixCalcUsed');
 gras.mat.MatrixOperationsFactory.setIsSplineUsed(...
     isSplineUsed);
-%% Create directory for storing the results
+% Create directory for storing the results
 isCustomResDir=confRepoMgr.getParam('customResultDir.isEnabled');
 if isCustomResDir
     rootDir=confRepoMgr.getParam('customResultDir.dirName');
@@ -63,17 +62,17 @@ resDir=[rootDir,filesep,'run_',datestr(now,30)];
 if ~modgen.system.ExistanceChecker.isDir(resDir)
     mkdir(resDir);
 end
-%% saveConfiguration as part of the result
+% saveConfiguration as part of the result
 saveConf(sysConfRepoMgr,confRepoMgr,resDir);
 %
-%% Build good directions
+% Build good directions
 [pDynObj,goodDirSetObj]=ApproxProblemPropertyBuilder.build(confRepoMgr,...
     sysConfRepoMgr,logger);
 %
-%% Building internal ellipsoidal approximations
+% Building internal ellipsoidal approximations
 [ellTubeRel,ellUnionTubeRel]=gras.ellapx.uncertcalc.EllApxBuilder(...
     confRepoMgr,pDynObj,goodDirSetObj).build();
-%% Building projections
+% Building projections
 tStart=tic;
 [projectorObj,staticProjectorObj]=...
     EllTubeProjectorBuilder.build(confRepoMgr,goodDirSetObj);
@@ -83,7 +82,7 @@ ellUnionTubeStaticProjRel=staticProjectorObj.project(ellUnionTubeRel);
 logger.info(['building ellipsoidal tubes projections:',...
     num2str(toc(tStart))]);
 %
-%% Visualize projections
+% Visualize projections
 if confRepoMgr.getParam('plottingProps.isEnabled')
     % configure plotting
     gras.ellapx.smartdb.RelDispConfigurator.setViewAngleVec(...
@@ -106,7 +105,7 @@ if confRepoMgr.getParam('plottingProps.isEnabled')
     SRunProp.plotterObj=plotterObj;
 end
 %
-%% Form the results
+% Form the results
 SRunProp.ellTubeRel=ellTubeRel;
 SRunProp.ellTubeProjRel=ellTubeProjRel;
 SRunProp.ellUnionTubeRel=ellUnionTubeRel;
@@ -120,7 +119,7 @@ function saveConf(sysConfRepoMgr,confRepoMgr,resDir)
 SSysDefConf=getSmartConfInternal(sysConfRepoMgr,'systemDefinition');
 getSmartConfInternal(confRepoMgr,'genericProperties');
 %
-%% Save system definition
+% Save system definition
 sysDefFileName=[resDir,filesep,'sysdef.txt'];
 convertConf2Text(SSysDefConf,sysDefFileName);
     function SConf=getSmartConfInternal(confRepoMgr,confType)

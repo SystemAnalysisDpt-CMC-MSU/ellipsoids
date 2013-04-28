@@ -1,51 +1,28 @@
 classdef MixedIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
-    properties (Constant,GetAccess=private)
+    properties (Constant)
         APPROX_SCHEMA_NAME = 'InternalMixed'
         APPROX_SCHEMA_DESCR = 'Internal approximation with regularization'
         APPROX_TYPE = gras.ellapx.enums.EApproxType.Internal
         N_TIME_POINTS = 100
     end
     properties (Access=private)
-        sMethodName
         mixingStrength
         mixingProportionsMat
         ellTubeRel
         AtDynamics
         BPBTransDynamics
+        BPBTransSqrtDynamics
         CQCTransDynamics
+        slCQClSqrtDynamicsList
         ltSplineList
         goodDirSetObj
     end
     methods (Access=protected)
-        function S = getOrthTranslMatrix(self,Q_star,R_sqrt,b,a)
-            import gras.la.*;
-            methodName=self.sMethodName;
-            switch methodName
-                case 'hausholder'
-                    S=orthtranslhaus(b,a);
-                case 'gram',
-                    S=orthtransl(b,a);
-                case 'direction',
-                    aMaxVec=R_sqrt*l;
-                    bMaxVec=Q_star*l;
-                    S=orthtranslmaxdir(b,a,bMaxVec,aMaxVec);
-                case 'trace',
-                    maxMat=R_sqrt*Q_star;
-                    S=orthtranslmaxtr(b,a,maxMat);
-                case 'volume',
-                    maxMat=R_sqrt/(Q_star.');
-                    S=orthtranslmaxtr(b,a,maxMat);
-                otherwise,
-                    modgen.common.throwerror('wrongInput',...
-                        'method %s is not supported',methodName);
-            end
-        end
         function varargout = calcEllApxMatrixDeriv(self,t,varargin)
             nGoodDirs = self.getNGoodDirs();
             AMat = self.AtDynamics.evaluate(t);
-            BPBTransMat = self.BPBTransDynamics.evaluate(t);
-            CQCTransMat = self.CQCTransDynamics.evaluate(t);
-            BPBTransSqrtMat = sqrtm(BPBTransMat);
+            RSqrtMat = self.BPBTransSqrtDynamics.evaluate(t);
+            DMat = self.CQCTransDynamics.evaluate(t);
             %
             varargout = cell(1,nGoodDirs);
             %
@@ -54,18 +31,18 @@ classdef MixedIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
                 %
                 % main component
                 %
-                QSqrtMat = sqrtm(QMat);
+                QSqrtMat = gras.la.sqrtmpos(QMat);
                 ltVec = self.ltSplineList{iGoodDir}.evaluate(t);
-                SMat = self.getOrthTranslMatrix(QSqrtMat,...
-                    BPBTransSqrtMat,BPBTransSqrtMat*ltVec,QSqrtMat*ltVec);
-                TMat = (AMat*QSqrtMat+BPBTransSqrtMat*(SMat.'))*QSqrtMat;
+                SMat = self.getOrthTranslMatrix(QSqrtMat,RSqrtMat,...
+                    RSqrtMat*ltVec,QSqrtMat*ltVec);
+                tmpMat = (AMat*QSqrtMat+RSqrtMat*(SMat.'))*QSqrtMat;
                 %
                 % disturbance component
                 %
-                piSqrNumerator = (ltVec.')*CQCTransMat*ltVec;
-                piSqrDenominator = (ltVec.')*QMat*ltVec;
-                if piSqrNumerator <= 0 || piSqrDenominator <= 0
-                    if min(eig(CQCTransMat)) <= 0
+                piNumerator = self.slCQClSqrtDynamicsList{iGoodDir}.evaluate(t);
+                piDenominator = realsqrt((ltVec.')*QMat*ltVec);
+                if piNumerator <= 0 || piDenominator <= 0
+                    if min(eig(DMat)) <= 0
                         modgen.common.throwerror('wrongInput',...
                             ['degenerate matrices C,Q for disturbance ',...
                             'contraints are not supported']);
@@ -74,32 +51,48 @@ classdef MixedIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
                             'the estimate has degraded for unknown reason');
                     end
                 end
-                pi = sqrt(piSqrNumerator/piSqrDenominator);
+                piFactor = piNumerator/piDenominator;
                 %
                 % regularization component
                 %
-                RMat = -QMat;
+                mixMat = QMat;
                 for jGoodDir = 1:nGoodDirs
-                    RMat = RMat + ...
-                        self.mixingProportionsMat(iGoodDir,jGoodDir)*varargin{jGoodDir};
+                    mixMat = mixMat-self.mixingProportionsMat(iGoodDir,...
+                        jGoodDir)*varargin{jGoodDir};
                 end
                 %
                 % derivative
                 %
-                varargout{iGoodDir} = (TMat + TMat.') - ...
-                    (pi*QMat + CQCTransMat/pi) + ...
-                    (self.mixingStrength*RMat);
+                uMat = -AMat*QMat + QSqrtMat*SMat*RSqrtMat;
+                varargout{iGoodDir} = uMat + uMat.' + piFactor*QMat + ...
+                    DMat/piFactor;
+%                 varargout{iGoodDir} = (tmpMat+tmpMat.')-...
+%                     (piFactor*QMat+DMat/piFactor)-...
+%                     (self.mixingStrength*mixMat);
             end
         end
     end
     methods (Access=private)
         function self=prepareODEData(self)
+            import gras.mat.MatrixOperationsFactory;
             pDefObj = self.getProblemDef();
+            matOpFactory = MatrixOperationsFactory.create(pDefObj.getTimeVec());
+            %
             self.AtDynamics = pDefObj.getAtDynamics();
             self.BPBTransDynamics = pDefObj.getBPBTransDynamics();
+            self.BPBTransSqrtDynamics = matOpFactory.sqrtmpos(...
+                pDefObj.getBPBTransDynamics());
             self.CQCTransDynamics = pDefObj.getCQCTransDynamics();
             self.ltSplineList = ...
                 self.getGoodDirSet().getGoodDirOneCurveSplineList();
+            %
+            nGoodDirs = self.getGoodDirSet().getNGoodDirs();
+            self.slCQClSqrtDynamicsList = cell(1,nGoodDirs);
+            for iGoodDir = 1:nGoodDirs
+                self.slCQClSqrtDynamicsList{iGoodDir} = ...
+                    matOpFactory.quadraticFormSqrt(...
+                    self.CQCTransDynamics,self.ltSplineList{iGoodDir});
+            end
         end
         function build(self)
             import gras.ode.MatrixSysODESolver;
@@ -161,21 +154,21 @@ classdef MixedIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
         end
     end
     methods
-        function self=MixedIntEllApxBuilder(pDefObj,goodDirSetObj,...
+        function self=MixedIntEllApxBuilder(pDynObj,goodDirSetObj,...
                 timeLimsVec,calcPrecision,varargin)
             import gras.ellapx.lreachuncert.MixedIntEllApxBuilder;
             import gras.gen.MatVector;
             import modgen.common.type.simple.*;
             %
-            self = self@gras.ellapx.gen.ATightEllApxBuilder(pDefObj,...
+            self = self@gras.ellapx.gen.ATightEllApxBuilder(pDynObj,...
                 goodDirSetObj,timeLimsVec,...
                 MixedIntEllApxBuilder.N_TIME_POINTS,calcPrecision);
             %
             [~,~,sMethodName,mixingStrength,mixingProportionsCMat] = ...
-                modgen.common.parseparext(varargin, ...
+                modgen.common.parseparext(varargin,...
                 {'selectionMethodForSMatrix','mixingStrength',...
                 'mixingProportions'}, 0, 3);
-            mMat = MatVector.fromFormulaMat(mixingProportionsCMat,0);
+            mMat = cell2mat(mixingProportionsCMat);
             %
             checkgen(mixingStrength,'x>0');
             checkgenext(['size(x1,1)==size(x1,2) && size(x1,1)==x2 && '...

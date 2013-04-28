@@ -1,12 +1,15 @@
 classdef ATightEllApxBuilder<gras.ellapx.gen.IEllApxBuilder
     properties (Access=private)
-        goodDirSetObj        
+        goodDirSetObj
         pDefObj
         timeVec
         timeLimsVec
         nGoodDirs
         odeAbsCalcPrecision
-        odeRelCalcPrecision        
+        odeRelCalcPrecision
+    end
+    properties (Access=protected)
+        sMethodName
     end
     properties (SetAccess=private,GetAccess=protected)
         calcPrecision
@@ -15,6 +18,22 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.IEllApxBuilder
         MAX_PRECISION_FACTOR=0.003;
     end
     methods (Access=protected)
+        function sMat=getOrthTranslMatrix(self,QMat,RSqrtMat,bVec,aVec)
+            import gras.la.*;
+            switch self.sMethodName
+                case 'hausholder'
+                    sMat=orthtranslhaus(bVec,aVec);
+                case 'gram',
+                    sMat=orthtransl(bVec,aVec);
+                case 'trace',
+                    sMat=orthtranslmaxtr(bVec,aVec,RSqrtMat*QMat);
+                case 'volume',
+                    sMat=orthtranslmaxtr(bVec,aVec,RSqrtMat/(QMat.'));
+                otherwise,
+                    modgen.common.throwerror('wrongInput',...
+                        'method %s is not supported',self.sMethodName);
+            end
+        end
         function res=getAbsODECalcPrecision(self)
             res=self.odeAbsCalcPrecision;
         end
@@ -64,18 +83,18 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.IEllApxBuilder
                 throwerror('wrongInput',...
                     'timeLimsVec should be within pDefTimeLimsVec');
             end
-            nDims=pDefObj.getDimensionality;            
+            nDims=pDefObj.getDimensionality;
             precisionFactor=min(2./(nDims*nDims),...
-                ATightEllApxBuilder.MAX_PRECISION_FACTOR);            
+                ATightEllApxBuilder.MAX_PRECISION_FACTOR);
             self.odeAbsCalcPrecision=calcPrecision*precisionFactor;
-            self.odeRelCalcPrecision=calcPrecision*precisionFactor;               
+            self.odeRelCalcPrecision=calcPrecision*precisionFactor;
             self.calcPrecision=calcPrecision;
             %% check that there is no disturbance
-            self.pDefObj=pDefObj;   
+            self.pDefObj=pDefObj;
             self.goodDirSetObj=goodDirSetObj;
-            self.nGoodDirs=goodDirSetObj.getNGoodDirs();            
+            self.nGoodDirs=goodDirSetObj.getNGoodDirs();
             timeVec=union(linspace(timeLimsVec(1),timeLimsVec(2),...
-                nTimePoints),goodDirSetObj.getsTime());            
+                nTimePoints),goodDirSetObj.getsTime());
             self.timeVec=timeVec;
             self.timeLimsVec=timeLimsVec;
         end
