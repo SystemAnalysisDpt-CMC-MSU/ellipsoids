@@ -84,7 +84,7 @@ classdef test_case < mlunit.test_case
         end
         function result = run(self, result)
             try
-                self = set_up_param(self,self.setUpParams{:});
+                set_up_param(self,self.setUpParams{:});
                 result=run@mlunit.test_case(self,result);
             catch meObj
                 if (nargin == 1)

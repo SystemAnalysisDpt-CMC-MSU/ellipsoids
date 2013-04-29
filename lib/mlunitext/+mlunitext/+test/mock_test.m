@@ -7,7 +7,7 @@ classdef mock_test < mlunitext.test_case
             self = self@mlunitext.test_case(varargin{:});
         end
         %
-        function self = set_up_param(self, varargin)
+        function set_up_param(self, varargin)
             nArgs = length(varargin);
             if nArgs == 1
                 self.verbose = varargin{1};
