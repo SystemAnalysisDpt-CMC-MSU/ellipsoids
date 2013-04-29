@@ -2599,9 +2599,9 @@ RHO - computes the values of the support function for given ellipsoid
       dirsMat. Or, if ellArr is array of ellipsoids, dirsMat is expected
       to be a single vector.
 
-   [supArr, bpMat] = RHO(ellArr, dirstMat)  Computes the support function
+   [supArr, bpArr] = RHO(ellArr, dirstMat)  Computes the support function
       of the ellipsoid ellArr in directions specified by the columns of
-      matrix dirsMat, and boundary points bpMat of this ellipsoid that
+      matrix dirsMat, and boundary points bpArr of this ellipsoid that
       correspond to directions in dirsMat. Or, if ellArr is array of
       ellipsoids, and dirsMat - single vector, then support functions and
       corresponding boundary points are computed for all the given
@@ -2619,7 +2619,8 @@ Input:
   regular:
       ellArr: ellipsoid [nDims1,nDims2,...,nDimsN]/[1,1] - array
           of ellipsoids.
-      dirsMat: double[nDim,nDirs]/[nDim,1] - matrix of directions.
+      dirsMat: double[nDim,nDims1,nDims2,...,nDimsN]/
+          double[nDim,nDirs]/[nDim,1] - array or matrix of directions.
 
 Output:
    supArr: double [nDims1,nDims2,...,nDimsN]/[1,nDirs] - support function
@@ -2627,8 +2628,8 @@ Output:
       dirsMat. Or, if ellArr is array of ellipsoids, support function of
       each ellipsoid in ellArr specified by dirsMat direction.
 
-  bpMat: double [nDim,nDims1*nDims2*...*nDimsN]/[nDim,nDirs] - matrix of
-      boundary points
+  bpArr: double[nDim,nDims1,nDims2,...,nDimsN]/
+          double[nDim,nDirs]/[nDim,1] - array or matrix of boundary points
 
 Example:
   ellObj = ellipsoid([-2; 4], [4 -1; -1 1]);
