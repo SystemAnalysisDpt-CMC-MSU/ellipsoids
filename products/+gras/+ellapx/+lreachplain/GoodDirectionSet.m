@@ -13,13 +13,6 @@ classdef GoodDirectionSet
         CALC_PRECISION_FACTOR = 1e-5;
         CALC_CGRID_COUNT = 4000;
     end
-    properties (Constant, GetAccess = private)
-        % (temporary) algorithm:
-        %   0 - X(s, t)
-        %   1 - R(s, t)
-        %
-        CALC_ALGORITHM = 0;
-    end
     methods
         function nGoodDirs = getNGoodDirs(self)
             nGoodDirs = size(self.lsGoodDirMat, 2);
@@ -36,7 +29,6 @@ classdef GoodDirectionSet
             ltGoodDirSplineList= ...
                 self.ltGoodDirOneCurveSplineList;
         end
-        %
         function RstTransDynamics = getRstTransDynamics(self)
             RstTransDynamics = self.RstTransDynamics;
         end
@@ -110,25 +102,12 @@ classdef GoodDirectionSet
             %
             t0 = pDefObj.gett0();
             t1 = pDefObj.gett1();
-            switch (self.CALC_ALGORITHM)
-                case 0
-                    sRstInitialMat = eye(sizeSysVec);
-                case 1
-                    sRstInitialMat = normaliz(eye(sizeSysVec));
-            end
+            sRstInitialMat = eye(sizeSysVec);
             %
-            % calculation of R(s, t) on [t0, s)
+            % calculation of X(s, t) on [t0, s)
             %
-            switch (self.CALC_ALGORITHM)
-                case 0
-                    fRstDerivFunc = ...
-                        @(t, x) fXstOppositeFunc(t, x, ...
-                        @(u) fAtMat(u), self.sTime);
-                case 1
-                    fRstDerivFunc = ...
-                        @(t, x) fRstOppositeFunc(t, x, ...
-                        @(u) fAtMat(u), self.sTime);
-            end
+            fRstDerivFunc = @(t, x) fXstOppositeFunc(t, x, ...
+                @(u) fAtMat(u), self.sTime);
             [timeRstVec, dataRstArray] = self.calcHalfRstDynamics(t0, ...
                 fRstDerivFunc, sRstInitialMat, calcPrecision);
             %
@@ -138,16 +117,9 @@ classdef GoodDirectionSet
             dataRstArray = cat(3, dataRstArray, ...
                 repmat(sRstInitialMat, [1 1 1]));
             %
-            % calculation of R(s, t) on (s, t1)
+            % calculation of X(s, t) on (s, t1)
             %
-            switch (self.CALC_ALGORITHM)
-                case 0
-                    fRstDerivFunc = @(t, x) fXstDirectFunc(t, x, ...
-                        @(u) fAtMat(u));
-                case 1
-                    fRstDerivFunc = @(t, x) fRstDirectFunc(t, x, ...
-                        @(u) fAtMat(u));
-            end
+            fRstDerivFunc = @(t, x) fXstDirectFunc(t, x, @(u) fAtMat(u));
             [timeRstRightVec, dataRstRightArray] = ...
                 self.calcHalfRstDynamics(t1, fRstDerivFunc, ...
                 sRstInitialMat, calcPrecision);
@@ -207,45 +179,4 @@ end
 %
 function dxMat = fXstOppositeFunc(t, xMat, fAtMat, sTime) 
     dxMat = xMat * fAtMat(sTime - t); % time will be t' = s - t
-end
-%
-% equations for R(s, t)
-%
-function dxMat = fRstDirectFunc(t, xMat, fAtMat)
-    cachedMat = -xMat * fAtMat(t);
-    dxMat = cachedMat - xMat * dot(xMat(:), cachedMat(:));
-end
-%
-function dxMat = fRstOppositeFunc(t, xMat, fAtMat, sTime) 
-    cachedMat = xMat * fAtMat(sTime - t); % time will be t' = s - t
-    dxMat = cachedMat - xMat * dot(xMat(:), cachedMat(:));
-end
-%
-% (temporary) new equation for R(t, t0) and matrixnorm(X(t, t0))
-%
-function dx = fRtt0ExtDerivFunc(t, x, fAtMat, sizeAtVec)
-    norm = x(length(x)); x(length(x)) = [];
-    sRtt0Mat = reshape(x, sizeAtVec);
-    %
-    cachedMat = fAtMat(t) * sRtt0Mat;
-    scProd = dot(sRtt0Mat(:), cachedMat(:));
-    %
-    dnorm = scProd * norm;
-    dsRtt0Mat = cachedMat - sRtt0Mat * scProd;
-    %
-    dx = [dsRtt0Mat(:); dnorm];
-end
-%
-% normalizes matrix argMat (matrixnorm(normalizMat) = 1)
-%
-function normalizMat = normaliz(argMat)
-    szVec = size(argMat);
-    normMat = argMat .* argMat;
-    normMat = realsqrt(sum(sum(normMat, 2), 1));
-    szVecNumel = numel(szVec);
-    if (szVecNumel > 2)
-        szVec(3:szVecNumel) = 1;
-    end
-    normMat = repmat(normMat, szVec);
-    normalizMat = argMat ./ normMat;
 end
