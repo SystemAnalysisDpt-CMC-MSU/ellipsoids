@@ -1,6 +1,7 @@
 function addDataAlongDimInternal(self,catDimension,varargin)
-% ADDDATAALONGDIMINTERNAL adds a set of field values to existing data using
-% a concatenation along a specified dimension
+% ADDDATAALONGDIMINTERNAL - adds a set of field values to existing data 
+%                           using a concatenation along a specified    
+%                           dimension
 %
 % Usage: addDataAlongDimInternal(self,catDimension,varargin)
 %

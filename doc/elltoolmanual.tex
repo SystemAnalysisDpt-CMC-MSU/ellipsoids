@@ -1,0 +1,116 @@
+\documentclass{report}
+\usepackage{config}
+\oddsidemargin 0.25in
+\evensidemargin 0.25in
+\textheight 8.5in
+\textwidth 6.0in
+\parskip 0.0675in
+\parindent 0.0in
+\hfuzz=300pt
+
+\fontfamily{pcr}
+\makeatletter
+\@addtoreset{equation}{section}
+\renewcommand{\theequation}{\arabic{chapter}.\arabic{section}.\arabic{equation}}
+\makeatother
+\tolerance = 5000
+\hbadness = 5000
+\newtheorem{theo}{Theorem}[section]
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{df}{Definition}[section]
+\newtheorem{cor}{Corollary}[section]
+\newtheorem{assump}{Assumption}[section]
+\newtheorem{assert}{Assertion}[section]
+\newtheorem{remark}{Remark}[section]
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{\bigskipamount}
+\newcommand{\bl}{\begin{lemma}}
+\newcommand{\el}{\end{lemma}}
+\newcommand{\be}{\begin{equation}}
+\newcommand{\ee}{\end{equation}}
+\newcommand{\beqn}{\begin{eqnarray}}
+\newcommand{\eeqn}{\end{eqnarray}}
+\newcommand{\bt}{\begin{theo}}
+\newcommand{\et}{\end{theo}}
+\newcommand{\bd}{\begin{df}}
+\newcommand{\ed}{\end{df}}
+\newcommand{\ba}{\begin{assump}}
+\newcommand{\ea}{\end{assump}}
+\newcommand{\bass}{\begin{assert}}
+\newcommand{\eass}{\end{assert}}
+\newcommand{\brem}{\begin{remark}}
+\newcommand{\erem}{\end{remark}}
+\newcommand{\bc}{\begin{cor}}
+\newcommand{\ec}{\end{cor}}
+\newcommand{\dR}{\mbox{\rm I\hspace*{-.2em}R}}
+\newcommand{\DR}{\mbox{\rm I\hspace*{-.2em}R}}
+\newcommand{\EE}{{\cal E}}
+\newcommand{\FF}{{\cal F}}
+\newcommand{\HH}{{\cal H}}
+\newcommand{\II}{{\cal I}}
+\newcommand{\MM}{{\cal M}}
+\newcommand{\PP}{{\cal P}}
+\newcommand{\QQ}{{\cal Q}}
+\newcommand{\RR}{{\cal R}}
+\newcommand{\UU}{{\cal U}}
+\newcommand{\VV}{{\cal V}}
+\newcommand{\WW}{{\cal W}}
+\newcommand{\XX}{{\cal X}}
+\newcommand{\YY}{{\cal Y}}
+\newcommand{\ZZ}{{\cal Z}}
+\newcommand{\dm}{\dot{-}}
+
+\title{
+\begin{figure}[htbp]
+\centerline{
+\includegraphics[height=5 cm]{logo.eps}}
+\end{figure}
+ELLIPSOIDAL TOOLBOX\thanks{Research supported by NSF Grant CCR-00225610.}\\
+Manual\\
+\normalsize{ver. 1.4}
+\author{Alex A. Kurzhanskiy and Pravin Varaiya}
+\date{2013}
+}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\chapter{Introduction}\label{ch_intro}
+\input{intro}
+
+\chapter{Ellipsoidal Calculus}\label{ch_ellcalc}
+\input{ellcalc}
+
+\chapter{Reachability}\label{ch_reachability}
+\input{reachability}
+
+\chapter{Installation}\label{ch_install}
+\input{install}
+
+\chapter{Implementation}\label{ch_implementation}
+\todo[inline]{Merged this section with section objects}
+\input{implementation}
+
+\chapter{Examples}\label{ch_examples}
+\input{examples}
+
+\chapter{Summary and Outlook}\label{ch_summary}
+\input{summary}
+
+\chapter*{Acknowledgement}
+\addcontentsline{toc}{chapter}{Acknowledgement}
+The authors would like to thank Alexander B. Kurzhanski,
+Manfred Morari, Johan L{\"o}fberg, Michal Kvasnica and Goran Frehse
+for their support of this work by useful advice and encouragement.
+
+
+\addcontentsline{toc}{chapter}{Bibliography}
+\bibliography{et}
+\todo[inline]{Added bib file}
+\appendix
+\chapter{Function Reference}\label{appendix_a}
+\input{functions}
+
+\end{document}
+

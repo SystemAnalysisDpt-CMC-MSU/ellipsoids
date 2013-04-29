@@ -1,2 +1,11 @@
-At = {'0' '1 - cos(2*t)'; '-1/t' '0'};  
-sys_t = elltool.linsys.LinSysFactory.create(At, B, U);
+[normVec, hypScal] = firstHypObj.double()
+
+% normVec =
+% 
+%    -1
+%    -1
+% 
+% hypScal =
+% 
+%    -1
+

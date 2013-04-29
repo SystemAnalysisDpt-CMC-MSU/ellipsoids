@@ -6,19 +6,27 @@ function plot3(varargin)
 % Description:
 % ------------
 %
-% PLOT3(E, OPTIONS) plots ellipsoid E if 1 <= dimension(E) <= 3.
+% PLOT3(E, OPTIONS) plots ellipsoid E if
+%                 1 <= dimension(E) <= 3. 
 %
-%                 PLOT3(E)  Plots E in default (red) color.
-%             PLOT3(EA, E)  Plots array of ellipsoids EA and single ellipsoid E.
-%  PLOT3(E1, 'g', E2, 'b')  Plots E1 in green and E2 in blue color.
-%       PLOT3(EA, Options)  Plots EA using options given in the Options structure.
+% PLOT3(E)  Plots E in default (red) color.
+% PLOT3(EA, E)  Plots array of ellipsoids EA and single
+%               ellipsoid E.
+% PLOT3(E1, 'g', E2, 'b')  Plots E1 in green and E2
+%                          in blue color.
+%       PLOT3(EA, Options)  Plots EA using options given in
+%                           the Options structure.
 %
 %
-% Options.newfigure    - if 1, each plot command will open a new figure window.
-% Options.fill         - if 1, ellipsoids in 2D will be filled with color.
+% Options.newfigure    - if 1, each plot command will open 
+%                        a new figure window.
+% Options.fill         - if 1, ellipsoids in 2D will be 
+%                        filled with color.
 % Options.width        - line width for 1D and 2D plots.
-% Options.color        - sets default colors in the form [x y z].
-% Options.shade = 0-1  - level of transparency (0 - transparent, 1 - opaque).
+% Options.color        - sets default colors in the 
+%                        form [x y z].
+% Options.shade = 0-1  - level of transparency 
+%                        (0 - transparent, 1 - opaque).
 %
 %
 % Output:
@@ -34,7 +42,7 @@ function plot3(varargin)
 %
 
 % 
-% Author:
+% $Author:
 % -------
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>

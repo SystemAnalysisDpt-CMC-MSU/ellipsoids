@@ -1,6 +1,6 @@
 function resQMat=findDiffIaND(ellQ1Mat, ellQ2Mat,curDirVec,absTol)
 % FINDDIFFIAND - find internal approximation for Minkowsky difference
-% of ellipsoids with matrices Q1>0, Q2>=0 for any direction
+%                of ellipsoids with matrices Q1>0, Q2>=0 for any direction
 %
 % Input:
 %   regular:
@@ -14,7 +14,7 @@ function resQMat=findDiffIaND(ellQ1Mat, ellQ2Mat,curDirVec,absTol)
 %
 % $Author: Vitaly Baranov  <vetbar42@gmail.com> $    $Date: Nov-2012$
 % $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Cybernetics,
+%            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
 import elltool.core.GenEllipsoid;
 [~, pPar]=GenEllipsoid.getIsGoodDirForMat(ellQ1Mat,ellQ2Mat,curDirVec,...

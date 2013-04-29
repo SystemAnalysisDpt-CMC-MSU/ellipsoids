@@ -1,6 +1,6 @@
 function setData(self,varargin)
-% SETDATA sets values of all cells for all fields
-% see SETDATAINTERNAL for more details
+% SETDATA - sets values of all cells for all fields
+%           see SETDATAINTERNAL for more details
 %
 %
 % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-03-29 $ 

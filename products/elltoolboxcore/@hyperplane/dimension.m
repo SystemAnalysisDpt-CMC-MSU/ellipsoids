@@ -14,13 +14,27 @@ function dimsArr = dimension(inpHypArr)
 %       dimsArr: double[nDims1, nDims2, ...] - dimensions
 %           of hyperplanes.
 %
-% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 2004-2008 $
+% Example:
+%   firstHypObj = hyperplane([-1; 1]);
+%   secHypObj = hyperplane([-1; 1; 8; -2; 3], 7);
+%   thirdHypObj = hyperplane([1; 2; 0], -1);
+%   hypVec = [firstHypObj secHypObj thirdHypObj];
+%   dimsVec  = hypVec.dimension()
+% 
+%   dimsVec =
+% 
+%      2     5     3
 %
-% $Author: Aushkap Nikolay <n.aushkap@gmail.com> $  $Date: 30-11-2012$
+% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+% $Copyright:  The Regents of the University of California 
+%              2004-2008 $
+%
+% $Author: Aushkap Nikolay <n.aushkap@gmail.com> $  
+% $Date: 30-11-2012$
 % $Copyright: Moscow State University,
-%   Faculty of Computational Mathematics and Computer Science,
-%   System Analysis Department 2012 $
+%             Faculty of Computational Mathematics
+%             and Computer Science,
+%             System Analysis Department 2012 $
 
 hyperplane.checkIsMe(inpHypArr);
 dimsArr = arrayfun(@(x) singDimension(x), inpHypArr,...

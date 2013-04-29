@@ -5,9 +5,27 @@ function display(myEllMat)
 % Input:
 %   regular:
 %       myEllMat: ellipsoid [mRows, nCols] - matrix of ellipsoids.
-%
+%           
+% Example:
+%   ellObj = ellipsoid([-2; -1], [2 -1; -1 1]);
+%   display(ellObj)
+% 
+%   ellObj =
+% 
+%   Center:
+%       -2
+%       -1
+% 
+%   Shape Matrix:
+%        2    -1
+%       -1     1
+% 
+%   Nondegenerate ellipsoid in R^2.
+% 
+% 
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 2004-2008 $
+% $Copyright: The Regents of the University of California 
+%             2004-2008 $
 
 fprintf('\n');
 disp([inputname(1) ' =']);

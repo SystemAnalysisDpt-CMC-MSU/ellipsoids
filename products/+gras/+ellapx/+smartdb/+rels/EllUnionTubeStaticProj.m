@@ -30,8 +30,7 @@ classdef EllUnionTubeStaticProj<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&
                 varargin{:});
         end
         function plObj=plot(self,plObj)
-            % PLOT displays ellipsoidal tubes using the specified
-            % RelationDataPlotter
+            % PLOT - displays ellipsoidal tubes using the specified RelationDataPlotter
             %
             % Input:
             %   regular:

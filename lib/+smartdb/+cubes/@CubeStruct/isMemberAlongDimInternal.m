@@ -1,9 +1,9 @@
 function [isThere indTheres]=isMemberAlongDimInternal(self,other,dimNum,varargin)
-% ISMEMBERALONGDIM performs ismember operation of CubeStruct data slices
-% along the specified dimension
+% ISMEMBERALONGDIM - performs ismember operation of CubeStruct data slices
+%                    along the specified dimension
 %
-% Usage: isThere=isMemberAlongDimInternal(self,otherRel,keyFieldNameList,...) or
-%        [isThere indTheres]=isMemberDim(self,otherRel,keyFieldNameList,...)
+% Usage: isThere=isMemberAlongDimInternal(self,otherRel,keyFieldNameList,...) 
+%    or [isThere indTheres]=isMemberDim(self,otherRel,keyFieldNameList,...)
 %
 % Input:
 %   regular:
@@ -12,16 +12,16 @@ function [isThere indTheres]=isMemberAlongDimInternal(self,other,dimNum,varargin
 %     dim: double[1,1] - dimension number for ismember operation
 %
 %   properties:
-%     keyFieldNameList/fieldNameList: char or char cell [1,nKeyFields] - list of fields
-%         to which ismember is applied; by default all fields of first
-%         (self) object are used
+%     keyFieldNameList/fieldNameList: char or char cell [1,nKeyFields] - list 
+%         of fields to which ismember is applied; by default all fields of 
+%         first (self) object are used
 %
 %
 % Output:
 %   regular:
 %     isThere: logical [nSlices,1] - determines for each data slice of the
-%         first (self) object whether combination of values for key fields is in
-%         the second (other) object or not
+%         first (self) object whether combination of values for key fields 
+%         is in the second (other) object or not
 %     indTheres: double [nSlices,1] - zero if the corresponding coordinate
 %         of isThere is false, otherwise the highest index of the
 %         corresponding data slice in the second (other) object

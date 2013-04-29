@@ -1,6 +1,7 @@
 function [sd, dirType] = compute_direction(Z, H, gf, nvars, f)
 %
-% COMPUTE_DIRECTION - computes a search direction in a subspace defined by Z.
+% COMPUTE_DIRECTION - computes a search direction in a 
+%                     subspace defined by Z.
 %
 
   Newton       = 1;

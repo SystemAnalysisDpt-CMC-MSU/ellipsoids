@@ -14,8 +14,17 @@ function [isNeqArr, reportStr] = ne(ellFirstArr, ellSecArr)
 %
 %   reportStr: char[1,] - comparison report
 %
+% Example:
+%   ellObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+%   ellObj ~= [ellObj ellipsoid(eye(2))]
+% 
+%   ans =
+% 
+%       0     1
+%
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 2004-2008 $
+% $Copyright:  The Regents of the University of California 
+%              2004-2008 $
 
 [isEqualArr, reportStr] = eq(ellFirstArr, ellSecArr);
 isNeqArr = ~isEqualArr;
