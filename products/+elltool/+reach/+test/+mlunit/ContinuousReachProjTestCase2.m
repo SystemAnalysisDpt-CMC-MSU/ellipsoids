@@ -23,6 +23,8 @@ classdef ContinuousReachProjTestCase2 < mlunitext.test_case
  -0.5972953  -0.3483677   0.5418988   0.0541199   0.0524137  -0.0527960   0.3105226   0.3511920];
         PROJECTION_DIM2_MAT = [-0.9442   -0.3293;
                                -0.3293    0.9442];
+        DIM2_SYS_IND_VEC = [1 2];
+        DIM8_SYS_IND_VEC = [1 2 6];
     end
     properties (Access=private)
         testDataRootDir
@@ -47,28 +49,7 @@ classdef ContinuousReachProjTestCase2 < mlunitext.test_case
             newCMat = arrayfun(@num2str,newDoubleMat,...
                     'UniformOutput', false);
         end
-        function [oMat indVec] = getProjMatrix(self,mode,dim)
-            %form projection matrix
-            %fixbad mode is only for 8-dimensional test 
-            if strcmp(mode,'rand')
-                [oMat,~] = qr(rand(dim,dim))
-            elseif strcmp(mode,'fix')
-                if dim == 2
-                    oMat=self.PROJECTION_DIM2_MAT;
-                elseif dim == 8    
-                    oMat=self.PROJECTION_DIM8_MAT;
-                end
-            elseif strcmp(mode,'fixbad')
-                oMat=self.PROJECTION_DIM8_BAD_PRECISION_MAT;
-            end
-            %form vector of projection indexes
-            if dim == 8
-                indVec=[1 2 6];
-            elseif dim == 2   
-                indVec=[1 2];
-            end
-        end    
-    end    
+    end
     methods (Access = private)
         function [atDefCMat, btDefCMat, ctDefCMat, ptDefCMat,...
                 ptDefCVec, qtDefCMat, qtDefCVec, x0DefMat,...
@@ -87,6 +68,52 @@ classdef ContinuousReachProjTestCase2 < mlunitext.test_case
                 'goodDirSelection.methodProps.manual.lsGoodDirSets.set1');
             l0Mat = cell2mat(l0CMat.').';
         end
+        %
+        function auxTestProjection(self,varargin)
+            [atDefCMat, btDefCMat, ctDefCMat, ptDefCMat,...
+                ptDefCVec, qtDefCMat, qtDefCVec,...
+                x0DefMat, x0DefVec, l0Mat] = self.getSysParams();
+            if (numel(varargin) == 2)
+                [projMat, ~] = qr(rand(size(atDefCMat)));
+                indVec = varargin{1};
+                caseName = varargin{2};
+            else
+                projMat = varargin{1};
+                indVec = varargin{2};
+                caseName = varargin{3};
+            end    
+            newAtCMat = self.multiplyCMat(atDefCMat,projMat,inv(projMat));
+            newBtCMat = self.multiplyCMat(btDefCMat,projMat);
+            newCtCMat = self.multiplyCMat(ctDefCMat,projMat);
+            newPtCMat = ptDefCMat;       
+            newQtCMat = qtDefCMat;
+            newPtCVec = ptDefCVec;           
+            newQtCVec = qtDefCVec;
+            newX0Mat = projMat*x0DefMat*projMat';
+            newX0Vec = projMat*x0DefVec;
+            newL0Mat = projMat*l0Mat;
+            ControlBounds = struct();
+            ControlBounds.center = newPtCVec;
+            ControlBounds.shape = newPtCMat;
+            DistBounds = struct();
+            DistBounds.center = newQtCVec;
+            DistBounds.shape = newQtCMat;
+            directionsMat = eye(size(atDefCMat));
+            invProjMat=inv(projMat);    
+            %
+            newLinSys = elltool.linsys.LinSysFactory.create(newAtCMat,...
+                newBtCMat, ControlBounds, newCtCMat, DistBounds);
+            newReachObj = elltool.reach.ReachContinuous(newLinSys,...
+                ellipsoid(newX0Vec, newX0Mat), newL0Mat, self.timeVec);
+            secondProjReachObj =...
+                newReachObj.projection(invProjMat(indVec,:)');
+            firstProjReachObj =...
+                self.reachObj.projection(directionsMat(indVec,:)');
+            [isEqual,reportStr] = secondProjReachObj.isEqual(firstProjReachObj,...
+                self.FIELDS_NOT_TO_COMPARE);
+            failMsg=sprintf('failure for case %s, %s',caseName,reportStr);
+            mlunit.assert_equals(true,isEqual,failMsg);
+        end    
     end
     %
     methods
@@ -128,43 +155,25 @@ classdef ContinuousReachProjTestCase2 < mlunitext.test_case
                 btDefCMat, ControlBounds, ctDefCMat, DistBounds);
             self.reachObj = elltool.reach.ReachContinuous(self.linSys,...
                 ellipsoid(x0DefVec, x0DefMat), l0Mat, self.timeVec);
-        end
+        end     
         %
         function self = testProjection(self)
-            [atDefCMat, btDefCMat, ctDefCMat, ptDefCMat,...
-                ptDefCVec, qtDefCMat, qtDefCVec,...
-                x0DefMat, x0DefVec, l0Mat] = self.getSysParams();
-            [oMat, indVec] = self.getProjMatrix(self,'rand', size(atDefCMat,1));
-            newAtCMat = self.multiplyCMat(atDefCMat,oMat,inv(oMat));
-            newBtCMat = self.multiplyCMat(btDefCMat,oMat);
-            newCtCMat = self.multiplyCMat(ctDefCMat,oMat);
-            newPtCMat = ptDefCMat;       
-            newQtCMat = qtDefCMat;
-            newPtCVec = ptDefCVec;           
-            newQtCVec = qtDefCVec;
-            newX0Mat = oMat*x0DefMat*oMat';
-            newX0Vec = oMat*x0DefVec;
-            newL0Mat = oMat*l0Mat;
-            ControlBounds = struct();
-            ControlBounds.center = newPtCVec;
-            ControlBounds.shape = newPtCMat;
-            DistBounds = struct();
-            DistBounds.center = newQtCVec;
-            DistBounds.shape = newQtCMat;
-            directionsMat = eye(size(atDefCMat));
-            oInvMat=inv(oMat);    
-            %
-            newLinSys = elltool.linsys.LinSysFactory.create(newAtCMat,...
-                newBtCMat, ControlBounds, newCtCMat, DistBounds);
-            newReachObj = elltool.reach.ReachContinuous(newLinSys,...
-                ellipsoid(newX0Vec, newX0Mat), newL0Mat, self.timeVec);
-            secondProjReachObj =...
-                newReachObj.projection(oInvMat(indVec,:)');
-            firstProjReachObj =...
-                self.reachObj.projection(directionsMat(indVec,:)');
-            [isEqual,reportStr] = secondProjReachObj.isEqual(firstProjReachObj,...
-                self.FIELDS_NOT_TO_COMPARE);
-            mlunit.assert_equals(true,isEqual,reportStr);
+            switch lower(self.confName)
+                case 'test2dbad',
+                    projMatList = {self.PROJECTION_DIM2_MAT};
+                    caseNameList = {'fix2','rand2'};
+                    indVecList = repmat({self.DIM2_SYS_IND_VEC},length(caseNameList),1);
+                case 'ltisys'
+                    projMatList = {self.PROJECTION_DIM8_MAT,...
+                        self.PROJECTION_DIM8_BAD_PRECISION_MAT};
+                    caseNameList = {'fix8','bad8','rand8'};
+                    indVecList = repmat({self.DIM8_SYS_IND_VEC},length(caseNameList),1);
+            end    
+            nProjs = length(projMatList);
+            for iProj = 1:nProjs
+                self.auxTestProjection(projMatList{iProj},indVecList{iProj},caseNameList{iProj}); 
+            end
+            self.auxTestProjection(indVecList{end},caseNameList{end});
         end
     end
 end
