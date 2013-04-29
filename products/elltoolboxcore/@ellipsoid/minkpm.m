@@ -59,8 +59,6 @@ function [varargout] = minkpm(varargin)
 
 import elltool.plot.plotgeombodyarr;
 import modgen.common.throwerror;
-isPlotCenter3d = false;
-ABS_TOL = 1e-14;
 [reg]=...
     modgen.common.parseparext(varargin,...
     {'relDataPlotter','newFigure','fill','lineWidth','color','shade','priorHold','postHold','showAll'});
@@ -88,36 +86,16 @@ elseif numel(ellsArr) == 2
     end
 else
     if nargout == 0
-        output = minkCommonAction(@getEllArr,@fCalcBodyTriArr,@fCalcCenterTriArr,varargin{:});
-        plObj = output{1};
-        isHold = output{2};
-        if isPlotCenter3d
-            [reg]=...
-                modgen.common.parseparext(varargin,...
-                {'relDataPlotter';...
-                [],;@(x)isa(x,'smartdb.disp.RelationDataPlotter'),...
-                });
-            plotgeombodyarr('ellipsoid',@fCalcCenterTriArr,...
-                @(varargin)patch(varargin{:},'marker','*'),reg{:},'relDataPlotter',...
-                plObj, 'priorHold',true,'postHold',isHold);
-        end
+        minkCommonAction(@getEllArr,@fCalcBodyTriArr,@fCalcCenterTriArr,...
+            varargin{:});
     elseif nargout == 1
-        output = minkCommonAction(@getEllArr,@fCalcBodyTriArr,@fCalcCenterTriArr,varargin{:});
+        output = minkCommonAction(@getEllArr,@fCalcBodyTriArr,...
+            @fCalcCenterTriArr,varargin{:});
         plObj = output{1};
-        isHold = output{2};
-        if isPlotCenter3d
-            [reg]=...
-                modgen.common.parseparext(varargin,...
-                {'relDataPlotter';...
-                [],;@(x)isa(x,'smartdb.disp.RelationDataPlotter'),...
-                });
-            plObj = minkCommonAction('ellipsoid',@fCalcCenterTriArr,...
-                @(varargin)patch(varargin{:},'marker','*'),reg{:},'relDataPlotter',...
-                plObj, 'priorHold',true,'postHold',isHold);
-        end
         varargout = {plObj};
     else
-        [qDifMat,boundMat] = minkCommonAction(@getEllArr,@fCalcBodyTriArr,@fCalcCenterTriArr,varargin{:});
+        [qDifMat,boundMat] = minkCommonAction(@getEllArr,@fCalcBodyTriArr,...
+            @fCalcCenterTriArr,varargin{:});
         varargout(1) = {qDifMat};
         varargout(2) = {boundMat};
     end
@@ -133,7 +111,7 @@ end
     function [qSumDifMat,fMat] = fCalcCenterTriArr(ellsArr)
         nDim = dimension(ellsArr(1));
         if nDim == 1
-            [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr);
+            [ellsArr,~] = rebuildOneDim2TwoDim(ellsArr);
         end
         inpEllArr = ellsArr(1:end-1);
         inpEll = ellsArr(end);
@@ -181,30 +159,14 @@ end
                     bpMat = centVec;
                 end
                 xSumDiffCell = {[bpMat bpMat(:, 1)]};
-                
-                
-%             case 3
-%                 fMat = {fMat};
-%                 isGoodDir = false(1,nCols);
-%                 arrayfun(@(x) fFindGoodDir(x), 1:nCols);
-%                 if any(isGoodDir)
-%                     nGoodDirs = sum(isGoodDir);
-%                     goodIndexVec = find(isGoodDir);
-%                     boundPointMat = zeros(nDims, nGoodDirs);
-%                     arrayfun(@(x)  fCase3(x), 1:nGoodDirs);
-%                     xSumDiffCell = {boundPointMat};
-%                 else
-%                     xSumDiffCell = {centVec};
-%                 end
-               
                 fMat = {fMat};
                 
                 
-%         end
         function fCase2extAppr(index)
             dirVec = dirMat(:, index);
             absTolVal=min(extApproxEllVec(index).absTol, inpEll.absTol);
-            isGoodDirVec =~isbaddirection(extApproxEllVec(index), inpEll, dirVec,absTolVal);
+            isGoodDirVec =~isbaddirection(extApproxEllVec(index), inpEll,...
+                dirVec,absTolVal);
             if any(isGoodDirVec)
                 extApprEllVec(index)=minkdiff_ea(extApproxEllVec(index), ...
                     inpEll, dirMat(:,index));
@@ -216,63 +178,7 @@ end
             valVec = sum((invShMat*dirMat).*dirMat,1);
             mValVec = max(valVec, mValVec);
         end
-        function fFindGoodDir(index)
-            dirVec = dirMat(:, index);
-            absTolVal=min(extApproxEllVec(index).absTol, inpEll.absTol);
-            if ~isbaddirection(extApproxEllVec(index), inpEll, dirVec,absTolVal)
-                intApprEll = minksum_ia(inpEllArr, dirVec);
-                absTolVal2=min(intApprEll.absTol, inpEll.absTol);
-                if ~isbaddirection(intApprEll, inpEll, dirVec,absTolVal2)
-                    isGoodDir(index) = true;
-                end
-            end
-        end
-        function fCase3(iCount)
-            index = goodIndexVec(iCount);
-            dirVec = dirMat(:, index);
-            [~, boundPointSubVec] = ...
-                rho(minkdiff_ea(extApproxEllVec(index), inpEll, ...
-                dirVec), dirVec);
-            boundPointMat(:,iCount) = boundPointSubVec;
-        end
-        %         extApproxEllVec = minksumEa(inpEllArr, dirMat);
-        %         if min(extApproxEllVec > inpEll) == 0
-        %             xSumDifMat = {[]};
-        %             fMat = {[]};
-        %         else
-        % %             isPlotCenter3d = true;
-        %             xSumDifMat = dirMat;
-        %             supAllMat = inf(1,size(dirMat,2));
-        %             [extApproxDiffCell] = arrayfun(@(x)minkdiffEa(x,inpEll,dirMat),extApproxEllVec,'UniformOutput',false);
-        %             cellfun(@(x)diffcalcl1(x),extApproxDiffCell);
-        %             xSumDiffCell ={[xSumDifMat,xSumDifMat(:,1)]};
-        %             fMat = {fMat};
-        %
-        %         end
-        
-        
-        function [boundPointMat] = isplotcenter(boundPointMat)
-            [qSum,~] = minksum(ellsArr(1:end-1));
-            if abs(boundPointMat-qSum+inpEll.center) < ABS_TOL
-                boundPointMat = qSum-inpEll.center;
-            else
-                isPlotCenter3d = false;
-            end
-        end
-        function diffcalcl1(extApproxDiffCell)
-            arrayfun(@(x)diffcalcl2(x),extApproxDiffCell);
-            
-            
-            function diffcalcl2(ellipsoidl1l2)
-                [supMat, supDirMat] = rho(ellipsoidl1l2, ...
-                    dirMat);
-                supAllMat = min(supAllMat,supMat);
-                ind = find((supAllMat-supMat) == 0);
-                if (any(ind))
-                    xSumDifMat(:,ind) = supDirMat(:,ind);
-                end
-            end
-        end
+
     end
 
 
@@ -292,44 +198,7 @@ end
 end
 
 
-function [extApprEllVec] = minkdiffEa(fstEll, secEll, directionsMat)
-import modgen.common.throwerror;
-import modgen.common.checkmultvar;
-import elltool.conf.Properties;
-clear extApprEllVec ;
-centVec = fstEll.center - secEll.center;
-fstEllShMat = fstEll.shape;
-secEllShMat = secEll.shape;
-if isdegenerate(fstEll)
-    fstEllShMat = ellipsoid.regularize(fstEllShMat,fstEll.absTol);
-end
-if isdegenerate(secEll)
-    secEllShMat = ellipsoid.regularize(secEllShMat,secEll.absTol);
-end
-absTolVal=min(fstEll.absTol, secEll.absTol);
-directionsMat  = ellipsoid.rm_bad_directions(fstEllShMat, ...
-    secEllShMat, directionsMat,absTolVal);
-nDirs  = size(directionsMat, 2);
-if nDirs < 1
-    extApprEllVec = [];
-    return;
-end
-fstEllSqrtShMat = sqrtm(fstEllShMat);
-secEllSqrtShMat = sqrtm(secEllShMat);
 
-srcMat=fstEllSqrtShMat*directionsMat;
-dstMat=secEllSqrtShMat*directionsMat;
-rotArray=gras.la.mlorthtransl(dstMat, srcMat);
-
-extApprEllVec(nDirs) = ellipsoid();
-arrayfun(@(x) fSingleDir(x), 1:nDirs)
-    function fSingleDir(index)
-        rotMat = rotArray(:,:,index);
-        shMat = fstEllSqrtShMat - rotMat*secEllSqrtShMat;
-        extApprEllVec(index).center = centVec;
-        extApprEllVec(index).shape = shMat'*shMat;
-    end
-end
 function extApprEllVec = minksumEa(inpEllArr, dirMat)
 [nDims, nCols] = size(dirMat);
 if isscalar(inpEllArr)

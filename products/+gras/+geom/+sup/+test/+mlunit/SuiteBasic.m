@@ -32,8 +32,6 @@ classdef SuiteBasic < mlunitext.test_case
             absTol = 1e-10;
             testFirEll=ellipsoid(diag([1 2 1]));
             testSecEll=ellipsoid(diag([0.8 0.1 0.1]));
-            firMat = diag([-1,1,1])*diag([1 2 1])*diag([-1,1,1]);
-            secMat = diag([-1,1,1])*diag([0.8 0.1 0.1])*diag([-1,1,1]);
             [lGridMat, fMat] = gras.geom.tri.spheretri(3);
             [supp1Arr,~] = rho(testFirEll,lGridMat.');
             [supp2Arr,~] = rho(testSecEll,lGridMat.');

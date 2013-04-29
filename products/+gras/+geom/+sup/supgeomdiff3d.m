@@ -1,4 +1,4 @@
-function rhoDiffVec=supgeomdiff3d(rho1Vec,rho2Vec,lMat,fMat)
+function rhoDiffVec=supgeomdiff3d(rho1Vec,rho2Vec,lMat)
 % SUPGEOMDIFF3D - calculates support function of two 3-dimensional
 %                 convex sets defined by their support functions
 %
@@ -26,7 +26,7 @@ checkmultvar(['isrow(x1)&&isrow(x2)&&ismatrix(x3)&&',...
     'size(x1,2)==size(x2,2)&&size(x1,2)==size(x3,2)'],3,...
     rho1Vec,rho2Vec,lMat,'errorTag','wrongInput');
 %
-nDirs=size(lMat,2);
+
 nDims=size(lMat,1);
 if nDims~=3
     throwerror('wrongInput','only 2-dimensional sets are supported');
@@ -51,14 +51,10 @@ for indL = 1:size(lMat,2)
         normVec = cross(x1Vec,x2Vec);
         if abs(normVec'*lMat(:,indL)) > absTol           
             mu = triMat(:,1)'*normVec./(normVec'*lMat(:,indL));
+        else
+            mu = 0;
         end
         if mu > 0
-%             cla
-%             trimesh(fMat,sMat(1,:),sMat(2,:),sMat(3,:),'EdgeColor',[1,0,0],'FaceAlpha',0)
-%             trimesh(fSMat,sMat(1,:),sMat(2,:),sMat(3,:),'EdgeColor',[1,0,0],'FaceAlpha',0) 
-%             hold on
-%             plot3([triMat(1,1),triMat(1,2),triMat(1,3),triMat(1,1)],[triMat(2,1),triMat(2,2),triMat(2,3),triMat(2,1)],[triMat(3,1),triMat(3,2),triMat(3,3),triMat(3,1)],'*')
-%           
             pointVec = mu*lMat(:,indL);
             p1Vec = (triMat(:,1)-pointVec)/norm(triMat(:,1)-pointVec);
             p2Vec = (triMat(:,2)-pointVec)/norm(triMat(:,2)-pointVec);
@@ -69,25 +65,9 @@ for indL = 1:size(lMat,2)
                     ||(min(abs(triMat(:,3)-pointVec)<absTol*ones(3,1)))
                     
                 dist(indL) = mu/norm(sMat(:,indL));
-                if abs(dist(indL)-1)>1e-3
-                    dist(indL)
-                end
             end
-%             i = inpolygon(x1'*(mu*lMat(:,indS)-tri(:,1)),x2'*(mu*lMat(:,indS)-tri(:,1)),[0,0,1]',[0,1,0]');
-%             if i>0
-%                 hold on
-%                 mu*x1'*lMat(:,indS)
-%                 mu*x2'*lMat(:,indS)
-%                 plot3([tri(1,1),tri(1,2),tri(1,3),tri(1,1)],[tri(2,1),tri(2,2),tri(2,3),tri(2,1)],[tri(3,1),tri(3,2),tri(3,3),tri(3,1)],'*')
-%                     
-%                     plot3(mu*lMat(1,indS),mu*lMat(2,indS),mu*lMat(3,indS),'*r')
-% %                     trisurf(fSMat,sMat(1,:),sMat(2,:),sMat(3,:),'FaceAlpha',0)
-%                 hold off
-%             end
-        end
-        
+        end  
     end
-    indL
 end
 rhoDiffVec=rhoDiffVec./dist;
 end

@@ -87,9 +87,11 @@ elseif numel(ellsArr) == 2
     end
 else
     if nargout == 0
-        minkCommonAction(@getEllArr,@fCalcBodyTriArr,@fCalcCenterTriArr,varargin{:});
+        minkCommonAction(@getEllArr,@fCalcBodyTriArr,@fCalcCenterTriArr,...
+            varargin{:});
     elseif nargout == 1
-        output = minkCommonAction(@getEllArr,@fCalcBodyTriArr,@fCalcCenterTriArr,varargin{:});
+        output = minkCommonAction(@getEllArr,@fCalcBodyTriArr,...
+            @fCalcCenterTriArr,varargin{:});
         varargout = output(1);
     else
         [qDifSumMat,boundMat] = minkCommonAction(@getEllArr,@fCalcBodyTriArr,...
@@ -139,7 +141,8 @@ end
                 secEllShMat = ellipsoid.regularize(secEllShMat,secEll.absTol);
             end            
             absTolVal=min(fstEll.absTol, secEll.absTol);
-            [isBadDirVec,pUniversalVec] = ellipsoid.isbaddirectionmat(fstEllShMat, secEllShMat, ...
+            [isBadDirVec,pUniversalVec] = ...
+                ellipsoid.isbaddirectionmat(fstEllShMat, secEllShMat, ...
                 lDirsMat,absTolVal);
             isGoodDirVec = ~isBadDirVec;
             

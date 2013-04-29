@@ -24,7 +24,6 @@ classdef EllipsoidMinkdiffPlotTestCase < mlunitext.test_case
             testThirdEll = ellipsoid([2 0; 0 0]);
             testForthEll = ellipsoid([0, -1, 3].', 0.5*eye(3));
             testFifthEll = ellipsoid([5,5,5]', [6 2 1; 2 4 3; 1 3 5]);
-            %             testSixthEll = ellipsoid([1 0 0; 0 0 0; 0 0 1]);
             self = testMinkFillAndShade(self,@minkdiff,testSecEll,testFirEll);
             self = testMinkFillAndShade(self,@minkdiff,testFifthEll,testForthEll);
             self = testMinkColor(self,@minkdiff,testSecEll,testFirEll,2);
@@ -49,9 +48,8 @@ classdef EllipsoidMinkdiffPlotTestCase < mlunitext.test_case
                 [supp1Arr,~] = rho(testFirEll,lGridMat.');
                 [supp2Arr,~] = rho(testSecEll,lGridMat.');
                 rhoDiffVec = gras.geom.sup.supgeomdiff2d(supp1Arr,supp2Arr,lGridMat.');
-                sup = max(lGridMat*boundPoints(:,1:end-1),[],2);
-                abs(sup'-rhoDiffVec)
-                mlunit.assert_equals(abs(sup'-rhoDiffVec) < absTol,ones(1,size(sup,1)));      
+                supVec = max(lGridMat*boundPoints(:,1:end-1),[],2);
+                mlunit.assert_equals(abs(supVec'-rhoDiffVec) < absTol,ones(1,size(supVec,1)));      
             end
         end
         function self = test3d(self)
@@ -65,13 +63,12 @@ classdef EllipsoidMinkdiffPlotTestCase < mlunitext.test_case
             function check(testFirEll,testSecEll)
                 absTol = 10^(-2);
                 [~,boundPoints] = minkdiff(testFirEll,testSecEll);
-                [lGridMat, fMat] = gras.geom.tri.spheretri(3);
-                [supp1Arr,~] = rho(testFirEll,lGridMat.');
-                [supp2Arr,~] = rho(testSecEll,lGridMat.');
-                sup = max(lGridMat*boundPoints(:,1:end-1),[],2);
-                rhoDiffVec = gras.geom.sup.supgeomdiff3d(supp1Arr,supp2Arr,lGridMat.',fMat);
-                abs(sup'-rhoDiffVec)
-                mlunit.assert_equals(abs(sup'-rhoDiffVec) < absTol,ones(1,size(sup,1)));      
+                [lGridMat, ~] = gras.geom.tri.spheretri(3);
+                [supp1Mat,~] = rho(testFirEll,lGridMat.');
+                [supp2Mat,~] = rho(testSecEll,lGridMat.');
+                supVec = max(lGridMat*boundPoints(:,1:end-1),[],2);
+                rhoDiffVec = gras.geom.sup.supgeomdiff3d(supp1Mat,supp2Mat,lGridMat.');
+                mlunit.assert_equals(abs(supVec'-rhoDiffVec) < absTol,ones(1,size(supVec,1)));      
             end
         end
     end

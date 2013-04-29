@@ -46,14 +46,30 @@ classdef EllipsoidMinksumPlotTestCase < mlunitext.test_case
             check(testFirEll,testSecEll);
             
             function check(testFirEll,testSecEll)
-                absTol = 10^(-10);
-                [~,boundPoints] = minksum(testFirEll,testSecEll);
+                ABS_TOL = 10^(-10);
+                [~,boundPointsMat] = minksum(testFirEll,testSecEll);
                 [lGridMat] = gras.geom.circlepart(200);
-                [supp1Arr,~] = rho(testFirEll,lGridMat.');
-                [supp2Arr,~] = rho(testSecEll,lGridMat.');
-                rhoDiffVec = supp1Arr+supp2Arr;
-                sup = max(lGridMat*boundPoints(:,1:end-1),[],2);
-                mlunit.assert_equals(abs(sup'-rhoDiffVec) < absTol,ones(1,size(sup,1)));      
+                [supp1Mat,~] = rho(testFirEll,lGridMat.');
+                [supp2Mat,~] = rho(testSecEll,lGridMat.');
+                rhoDiffVec = supp1Mat+supp2Mat;
+                sup = max(lGridMat*boundPointsMat(:,1:end-1),[],2);
+                mlunit.assert_equals(abs(sup'-rhoDiffVec) < ABS_TOL,ones(1,size(sup,1)));      
+            end
+        end
+        function self = test3d(self)           
+            testFirEll = ellipsoid([9 2 0 ;2 4 0; 0 0 4]);
+            testSecEll = ellipsoid(eye(3));
+            check(testFirEll,testSecEll);
+            function check(testFirEll,testSecEll)
+                ABS_TOL = 10^(-10);
+                rotMat = [cos(31) sin(31) 0 ; -sin(31) cos(31) 0 ;0 0 1];
+                firstMat = rotMat*[9 2 0 ;2 4 0; 0 0 4]*rotMat.';
+                firstMat(1,2) = firstMat(2,1);
+                testThirdEll = ellipsoid(firstMat);
+                testForthEll = ellipsoid(rotMat*eye(3)*rotMat.');
+                [~,boundPoints1Mat] = minksum(testFirEll,testSecEll);
+                [~,boundPoints2Mat] = minksum(testThirdEll,testForthEll);
+                mlunit.assert_equals(abs(boundPoints2Mat*rotMat.'-boundPoints1Mat) < ABS_TOL,ones(1,size(boundPoints2Mat,1)));
             end
         end
     end
