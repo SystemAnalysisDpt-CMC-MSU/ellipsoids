@@ -69,18 +69,12 @@ classdef ContinuousReachProjTestCase2 < mlunitext.test_case
             l0Mat = cell2mat(l0CMat.').';
         end
         %
-        function auxTestProjection(self,varargin)
+        function auxTestProjection(self,indVec,caseName,projMat)
             [atDefCMat, btDefCMat, ctDefCMat, ptDefCMat,...
                 ptDefCVec, qtDefCMat, qtDefCVec,...
                 x0DefMat, x0DefVec, l0Mat] = self.getSysParams();
-            if (numel(varargin) == 2)
+            if 	nargin < 4
                 [projMat, ~] = qr(rand(size(atDefCMat)));
-                indVec = varargin{1};
-                caseName = varargin{2};
-            else
-                projMat = varargin{1};
-                indVec = varargin{2};
-                caseName = varargin{3};
             end    
             newAtCMat = self.multiplyCMat(atDefCMat,projMat,inv(projMat));
             newBtCMat = self.multiplyCMat(btDefCMat,projMat);
@@ -158,20 +152,25 @@ classdef ContinuousReachProjTestCase2 < mlunitext.test_case
         end     
         %
         function self = testProjection(self)
-            switch lower(self.confName)
-                case 'test2dbad',
+            import modgen.common.throwerror;
+            dimReachObj = self.reachObj.dimension();
+            switch dimReachObj
+                case 2
                     projMatList = {self.PROJECTION_DIM2_MAT};
                     caseNameList = {'fix2','rand2'};
                     indVecList = repmat({self.DIM2_SYS_IND_VEC},length(caseNameList),1);
-                case 'ltisys'
+                case 8
                     projMatList = {self.PROJECTION_DIM8_MAT,...
                         self.PROJECTION_DIM8_BAD_PRECISION_MAT};
                     caseNameList = {'fix8','bad8','rand8'};
                     indVecList = repmat({self.DIM8_SYS_IND_VEC},length(caseNameList),1);
+                otherwise
+                    throwerror('wrongInput:badDimensionality',...
+                        'expected dimensionality is 8 or 2, real dimensionality is %d',dimReachObj);    
             end    
             nProjs = length(projMatList);
             for iProj = 1:nProjs
-                self.auxTestProjection(projMatList{iProj},indVecList{iProj},caseNameList{iProj}); 
+                self.auxTestProjection(indVecList{iProj},caseNameList{iProj},projMatList{iProj}); 
             end
             self.auxTestProjection(indVecList{end},caseNameList{end});
         end
