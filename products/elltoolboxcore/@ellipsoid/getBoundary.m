@@ -1,4 +1,4 @@
-function [bpMat, fVec] = getBoundary(ellObj,nPoints)
+function [bpMat, fMat] = getBoundary(ellObj,nPoints)
 %
 % GETBOUNDARY - computes the boundary of an ellipsoid. 
 %
@@ -36,7 +36,7 @@ else
     throwerror('wrongDim','ellipsoid must be of dimension 2 or 3');
 end
 if nargout>1
-    [dirMat, fVec]=fGetGrid(nPoints);
+    [dirMat, fMat]=fGetGrid(nPoints);
 else
     dirMat=fGetGrid(nPoints);
 end
