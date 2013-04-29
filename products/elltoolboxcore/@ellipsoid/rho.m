@@ -116,14 +116,16 @@ else % multiple ellipsoids, multiple directions
 end
 %
     function [supFun xVec] = fRhoForDir(ellObj,dirVec)
+        import gras.gen.sqrtpos;
         [cenVec ellMat]=double(ellObj);
         absTol=ellObj.getAbsTol();
-        sq  = max(realsqrt(dirVec'*ellMat*dirVec), absTol);
+        sq  = sqrtpos(dirVec'*ellMat*dirVec,absTol);
         supFun = cenVec'*dirVec + sq;
         xVec = ((ellMat*dirVec)/sq) + cenVec;
     end
     function [supFun xVec] = fSingleRhoForOneEll(dirMat)
-        tempMat  = max(sqrt(sum(dirsMat'*ellMat.*dirsMat',2)), absTol);
+        import gras.gen.sqrtpos;
+        tempMat  = sqrtpos(sum(dirsMat'*ellMat.*dirsMat',2), absTol);
         supFun = cenVec'*dirMat + tempMat';
         xVec =((ellMat*dirsMat)./repmat(tempMat',size(ellMat,1),1))+...
             repmat(cenVec,1,size(dirsMat,2));
