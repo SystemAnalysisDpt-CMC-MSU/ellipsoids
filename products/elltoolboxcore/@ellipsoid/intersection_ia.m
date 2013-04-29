@@ -275,7 +275,7 @@ else
     cvx_end
     Q = (B*B');
     v = d;
-    if max(abs(Q(:))) <= getAbsTol(ell)
+    if ~gras.la.ismatposdef(Q,getAbsTol(ell))
         outEll = ellipsoid(v,zeros(size(Q)));
     else
         outEll = ellipsoid(v,Q);

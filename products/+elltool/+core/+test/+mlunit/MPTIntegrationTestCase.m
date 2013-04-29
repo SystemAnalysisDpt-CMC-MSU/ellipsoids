@@ -196,11 +196,9 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             c3Vec = [0.3; 0.2; 0.5];
             ell3 = ellipsoid(c3Vec,sh3Mat);
             %
-            depth1 = 1;
-            poly1 =ell2.toPolytope(depth1);
+            poly1 =ell2.toPolytope(80);
             %
-            depth2 = 2;
-            poly2 =ell2.toPolytope(depth2);
+            poly2 =ell2.toPolytope();
             %
             %intersection with unit ball
             EXP_MAX_TOL1 = 0.05;
