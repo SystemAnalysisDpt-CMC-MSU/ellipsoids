@@ -1,6 +1,6 @@
 function outEllArr = uminus(ellArr)
 %
-% VOLUME - changes the sign of the center of ellipsoid.
+% VOLUME - changes the sign of the centerVec of ellipsoid.
 %
 % Input:
 %	regular:
@@ -26,7 +26,7 @@ sizeCVec = num2cell(size(ellArr));
 outEllArr(sizeCVec{:}) = ellipsoid;
 arrayfun(@(x) fSingleUminus(x), 1:numel(ellArr));
     function fSingleUminus(index)
-        outEllArr(index).center = -ellArr(index).center;
-        outEllArr(index).shape = ellArr(index).shape;
+        outEllArr(index).centerVec = -ellArr(index).centerVec;
+        outEllArr(index).shapeMat = ellArr(index).shapeMat;
     end
 end

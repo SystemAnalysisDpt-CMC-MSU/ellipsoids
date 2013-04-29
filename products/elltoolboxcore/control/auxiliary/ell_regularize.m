@@ -11,18 +11,14 @@ function R = ell_regularize(Q, delta)
     return;
   end
 
-  if nargin < 2
-    delta = Properties.getAbsTol();
-  end
-
   r = rank(Q);
 
   if r < n
     if ~gras.la.ismatsymm(Q)
       R = Q  +  delta * eye(n);
     else
-      [U S V] = svd(Q);
-      R       = Q + (delta * U * V');
+      [uMat, ~] = eig(Q);
+      R = Q + delta * (uMat * uMat');
     end
   else
     R       = Q;
