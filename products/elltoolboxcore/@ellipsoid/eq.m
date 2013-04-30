@@ -49,8 +49,8 @@ isnFirstScalar=nFirstElems > 1;
 isnSecScalar=nSecElems > 1;
 [~, relTol] = ellFirstArr.getRelTol;
 %
-SEll1Array=arrayfun(@formCompStruct,ellFirstArr);
-SEll2Array=arrayfun(@formCompStruct,ellSecArr);
+SEll1Array = ellFirstArr.toStruct();
+SEll2Array = ellSecArr.toStruct();
 %
 if isnFirstScalar&&isnSecScalar
     
@@ -74,7 +74,4 @@ end
         [isEqualArr,reportStr]=modgen.struct.structcomparevec(SEll1Array,...
             SEll2Array,relTol);
     end
-end
-function SComp=formCompStruct(ellObj)
-    SComp=struct('Q',gras.la.sqrtmpos(ellObj.shape, ellObj.absTol),'q',ellObj.center.');
 end

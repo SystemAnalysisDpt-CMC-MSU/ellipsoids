@@ -46,8 +46,8 @@ isnFirstScalar=nFirstElems > 1;
 isnSecScalar=nSecElems > 1;
 [~, relTol] = getAbsTol(fstHypArr);
 %
-SEll1Array=arrayfun(@formCompStruct,fstHypArr);
-SEll2Array=arrayfun(@formCompStruct,secHypArr);
+SEll1Array = fstHypArr.toStruct();
+SEll2Array = secHypArr.toStruct();
 %
 if isnFirstScalar&&isnSecScalar
     
@@ -71,20 +71,4 @@ end
         [isPosArr,reportStr]=modgen.struct.structcomparevec(SEll1Array,...
             SEll2Array,relTol);
     end
-end
-
-function SComp=formCompStruct(hypObj)
-
-[hypNormVec, hypScal] = parameters(hypObj);
-
-normMult = 1/norm(hypNormVec);
-hypNormVec  = hypNormVec*normMult;
-hypScal  = hypScal*normMult;
-if hypScal < 0
-    hypScal = -hypScal;
-    hypNormVec = -hypNormVec;
-end
-
-SComp = struct('normal', hypNormVec, 'shift', hypScal);
-
 end

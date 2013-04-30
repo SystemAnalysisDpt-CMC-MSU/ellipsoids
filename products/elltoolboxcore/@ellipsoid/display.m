@@ -1,4 +1,4 @@
-function display(myEllMat)
+function display(myEllArr)
 %
 % DISPLAY - Displays the details of the ellipsoid object.
 %
@@ -12,17 +12,22 @@ function display(myEllMat)
 fprintf('\n');
 disp([inputname(1) ' =']);
 
-[mRows, nCols] = size(myEllMat);
-if (mRows > 1) || (nCols > 1)
-    fprintf('%dx%d array of ellipsoids.\n\n', mRows, nCols);
+sizeVec = size(myEllArr);
+if numel(myEllArr) > 1
+    fprintf('%d', sizeVec(1));
+    for iDimension = 2 : length(sizeVec)
+        fprintf('x%d', sizeVec(iDimension)); 
+    end
+    fprintf(' array of ellipsoids.\n\n');
 else
+    SEll = myEllArr.toStruct();
     fprintf('\n');
-    fprintf('Center:\n'); disp(myEllMat.center);
-    fprintf('Shape Matrix:\n'); disp(myEllMat.shape);
-    if isempty(myEllMat)
+    fprintf('Center:\n'); disp(SEll.q.');
+    fprintf('Shape Matrix:\n'); disp(SEll.Q);
+    if isempty(myEllArr)
         fprintf('Empty ellipsoid.\n\n');
     else
-        [spaceDim, ellDim]    = dimension(myEllMat);
+        [spaceDim, ellDim]    = dimension(myEllArr);
         if ellDim < spaceDim
             fprintf('Degenerate (rank %d) ellipsoid in R^%d.\n\n', ...
                 ellDim, spaceDim);
