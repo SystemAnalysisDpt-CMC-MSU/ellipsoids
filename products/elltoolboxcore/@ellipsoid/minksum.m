@@ -85,9 +85,10 @@ end
     function [xSumCMat,fCMat] = fCalcBodyTriArr(ellsArr)
         nDim = dimension(ellsArr(1));
         if nDim == 1
-            [ellsArr,~] = rebuildOneDim2TwoDim(ellsArr);
+            [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr);
         end
-        [xMat, fCMat] = arrayfun(@(x) getBoundary(x), ellsArr, ...
+        [lGridMat, fGridMat] = getGridByFactor(ellsArr(1));
+        [xMat, fCMat] = arrayfun(@(x) fCalcBodyTri(x, nDim), ellsArr, ...    
             'UniformOutput', false);
         xSumCMat = 0;
         for iXMat=1:numel(xMat)
@@ -95,6 +96,13 @@ end
         end
         xSumCMat = {xSumCMat};
         fCMat = fCMat(1);
+        function [xMat, fMat] = fCalcBodyTri(ell, nDim)
+            nPoints = size(lGridMat, 1);
+            xMat = zeros(nDim, nPoints+1);
+            [~,xMat(:, 1:end-1)] = rho(ell,lGridMat.');
+            xMat(:, end) = xMat(:, 1);
+            fMat = fGridMat;
+        end
     end
     function [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr)
         ellsCMat = arrayfun(@(x) oneDim2TwoDim(x), ellsArr, ...

@@ -33,9 +33,9 @@ classdef SuiteBasic < mlunitext.test_case
             testFirEll=ellipsoid(diag([1 2 1]));
             testSecEll=ellipsoid(diag([0.8 0.1 0.1]));
             [lGridMat, fMat] = gras.geom.tri.spheretri(3);
-            [supp1Arr,~] = rho(testFirEll,lGridMat.');
-            [supp2Arr,~] = rho(testSecEll,lGridMat.');
-            rhoDiffVec = gras.geom.sup.supgeomdiff3d(supp1Arr,supp2Arr,lGridMat.',fMat);
+            [supp1Mat,~] = rho(testFirEll,lGridMat.');
+            [supp2Mat,~] = rho(testSecEll,lGridMat.');
+            rhoDiffVec = gras.geom.sup.supgeomdiff3d(supp1Mat,supp2Mat,lGridMat.',fMat);
             lGrid2Mat = diag([-1,1,1])*lGridMat.';
             for ind1 = 1:size(lGridMat,1)
                 for ind2 = 1:size(lGrid2Mat,2)

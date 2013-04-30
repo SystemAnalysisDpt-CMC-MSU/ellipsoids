@@ -59,6 +59,7 @@ classdef EllipsoidMinkdiffPlotTestCase < mlunitext.test_case
             testForthEll=ellipsoid(diag([0.8 0.1 0.1]));
             check(testFirEll,testSecEll);
             check(testThirdEll,testForthEll);
+
             
             function check(testFirEll,testSecEll)
                 absTol = 10^(-2);
