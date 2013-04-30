@@ -14,7 +14,7 @@ Some methods of the {\it Ellipsoidal Toolbox}, namely,
 \end{itemize}
 require solving semidefinite programming (SDP) problems.
 We use CVX (\cite{cvxhp}) as an
-interface to an external SDP solver. CVX as a more reliable toolbox
+interface to an external SDP solver. CVX is a reliable toolbox
 for solving SDP problems of high dimensionality.
 CVX is implemented in Matlab, effectively turning Matlab into an
 optimization modeling language. Model specifications are constructed
@@ -31,8 +31,7 @@ and SDPT3(\cite{sdpt}). The default solver used in the toolbox is SeDuMi.
 Multi-Parametric Toolbox(\cite{mpt}) - a Matlab toolbox for multi-parametric
 optimization and computational geometry. MPT is a toolbox
 that defines polytope class
-used in {\it ET}.
-Here we list methods required MPT.
+used in {\it ET}. We need MPT for the following methods operating with polytopes.
 \begin{itemize}
 \item {\tt distance}
 \item {\tt intersect}
@@ -42,7 +41,7 @@ Here we list methods required MPT.
 \item {\tt hyperplane2polytope}
 \item {\tt polytope2hyperplane}
 \end{itemize}
-We need MPT for all methods operating with polytopes.
+
 
 
 \section{Installation and Quick Start}
