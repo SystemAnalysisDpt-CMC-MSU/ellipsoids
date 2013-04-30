@@ -1,5 +1,5 @@
 function nFields=getNFields(self)
-% GETNFIELDS returns number of fields in given object
+% GETNFIELDS - returns number of fields in given object
 %
 % Usage: nFields=getNFields(self)
 %

@@ -139,7 +139,7 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
                         throwerror('wrongInput',...
                             'Oops, we shouldn''t be here');
                     end
-                    eMat(:,iTime)=sqrt(eSquaredVec);
+                    eMat(:,iTime)=realsqrt(eSquaredVec);
                 end
                 %
                 eMinVec=min(eMat,[],1);
@@ -159,8 +159,8 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
     end
     methods
         function plObj=plot(self,plObj)
-            % PLOT displays ellipsoidal tubes using the specified
-            % RelationDataPlotter
+            % PLOT - displays ellipsoidal tubes using the specified RelationDataPlotter
+            % 
             %
             % Input:
             %   regular:

@@ -22,13 +22,23 @@ function polEllArr = polar(ellArr)
 %   polEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of
 %    	polar ellipsoids.
 %
-% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 2004-2008 $
+% Example:
+%   ellObj = ellipsoid([4 -1; -1 1]);
+%   ellObj.polar() == ellObj.inv()
+% 
+%   ans =
+% 
+%       1
 %
-% $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
+% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+% $Copyright:  The Regents of the University of California 
+%              2004-2008 $
+%
+% $Author: Guliev Rustam <glvrst@gmail.com> $   
+% $Date: Dec-2012$
 % $Copyright: Moscow State University,
-%             Faculty of Computational Mathematics and Cybernetics,
-%             Science, System Analysis Department 2012 $
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2012 $
 %
 
 import modgen.common.throwerror
@@ -44,8 +54,8 @@ arrayfun(@(x) fSinglePolar(x), 1:numel(ellArr));
 
     function fSinglePolar(index)
         singEll = ellArr(index);
-        qVec = singEll.center;
-        shMat = singEll.shape;
+        qVec = singEll.centerVec;
+        shMat = singEll.shapeMat;
         chk    = qVec' * ell_inv(shMat) * qVec;
         %chk checks if zero belongs to singEll ellipsoid
         if chk < 1
@@ -53,8 +63,8 @@ arrayfun(@(x) fSinglePolar(x), 1:numel(ellArr));
             auxMat  = 0.5*(auxMat + auxMat');
             polCenVec  = -auxMat * qVec;
             polShapeMat  = (1 + qVec'*auxMat*qVec)*auxMat;
-            polEllArr(index).center = polCenVec;
-            polEllArr(index).shape = polShapeMat;
+            polEllArr(index).centerVec = polCenVec;
+            polEllArr(index).shapeMat = polShapeMat;
         else
             throwerror('degenerateEllipsoid',...
                 'The resulting ellipsoid is not bounded');

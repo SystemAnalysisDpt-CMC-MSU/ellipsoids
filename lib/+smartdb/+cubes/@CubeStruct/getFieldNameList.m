@@ -1,5 +1,5 @@
 function value=getFieldNameList(self)
-% GETFIELDNAMELIST returns the list of CubeStruct object field names
+% GETFIELDNAMELIST - returns the list of CubeStruct object field names
 %
 % Usage: value=getFieldNameList(self)
 %

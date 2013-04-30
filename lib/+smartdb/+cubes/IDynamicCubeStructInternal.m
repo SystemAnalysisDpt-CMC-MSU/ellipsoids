@@ -12,17 +12,16 @@ classdef IDynamicCubeStructInternal<handle
         copyFromInternal(self,obj,varargin)        
         addDataAlongDimInternal(self,catDimension,varargin)
         varargout=getUniqueDataAlongDimInternal(self,catDim,varargin)
-        % GETUNIQUEDATAALONGDIM returns internal representation of CubeStruct
-        % data set unique along a specified dimension
-        % set    
+        % GETUNIQUEDATAALONGDIM - returns internal representation of CubeStruct data set 
+        %                         unique along a specified dimension set    
         [isThere indTheres]=isMemberAlongDimInternal(self,other,dimNum,varargin)
-        % ISMEMBERALONGDIM performs ismember operation of CubeStruct data slices
-        % along the specified dimension        
+        % ISMEMBERALONGDIM - performs ismember operation of CubeStruct data slices
+        %                    along the specified dimension        
         permuteDimInternal(self,dimOrderVec,isInvPermute)        
         sortByAlongDimInternal(self,sortFieldNameList,sortDim,varargin)        
         changeMinDimInternal(self,minDim)
         reorderDataInternal(self,varargin)        
-        %the following methods being public are still used by CubeStruct 
+        %The following methods being public are still used by CubeStruct 
         %internal methods which makes it dangereous to leave them open 
         %for redefinition. To protect them we use Sealed access modifier.
         clearDataInternal(self)

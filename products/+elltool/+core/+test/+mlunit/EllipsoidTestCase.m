@@ -11,6 +11,94 @@ classdef EllipsoidTestCase < mlunitext.test_case
                 filesep,'TestData', filesep,shortClassName];
         end
         %
+        function testRepMat(~)
+            shMat=eye(2);
+            ell=ellipsoid(shMat);
+            ellVec=ell.repMat(2,4);
+            ellVec(1).shape(2);
+            mlunit.assert(isequal(ellVec(2).getShapeMat,shMat));
+        end
+        %
+        function testConstructorProps(~)
+            nDims=3;
+            absTol=1e-7;
+            relTol=1e-4;
+            nPlot2dPoints=100;
+            nPlot3dPoints=200;
+            %
+            getterList={@getNPlot2dPoints,@getNPlot3dPoints,@getAbsTol,...
+                @getRelTol};
+            %
+            propNameList={'nPlot2dPoints','nPlot3dPoints','absTol',...
+                'relTol'};
+            valList={nPlot2dPoints,nPlot3dPoints,absTol,relTol};
+            check([2 3 1 4]);
+            check(1);
+            check([1 2]);
+            check([2 3]);
+            check([2 3]);
+            check([1 4]);
+            function check(indVec)
+                propNameValCMat=[propNameList(indVec);valList(indVec)];
+                %
+                checkForSize([]);
+                checkForSize([2 3 4]);
+                %
+                function checkForSize(ellArrSizeVec)
+                    sizeList=num2cell(ellArrSizeVec);
+                    shCArr=arrayfun(@(x)genPosMat(nDims),...
+                        ones(sizeList{:}),'UniformOutput',false);
+                    shArr=cell2mat(shiftdim(shCArr,-2));
+                    ellArr=ellipsoid(shArr,propNameValCMat{:});
+                    checkShape();
+                    checkProp();
+                    ellArr=ellArr.getCopy();
+                    checkShape();
+                    checkProp();
+                    if isempty(ellArrSizeVec)
+                        ellArrSizeVec=[ellArrSizeVec, 1];
+                    end
+                    centArr=rand([nDims ellArrSizeVec]);
+                    centCArr=shiftdim(num2cell(centArr,1),1);
+                    ellArr=ellipsoid(centArr,shArr,propNameValCMat{:});
+                    checkCenter();
+                    checkShape();
+                    checkProp();
+                    ellArr=ellArr.getCopy();
+                    checkCenter();
+                    checkShape();
+                    checkProp();
+                    function resMat=genPosMat(nDims)
+                        randMat=rand(nDims);
+                        resMat=eye(nDims)+randMat*randMat.';
+                    end
+                    function checkCenter()
+                        isOkArr=arrayfun(@(x,y)isequal(x.getCenterVec(),...
+                            y{1}),ellArr,centCArr);
+                        mlunit.assert(all(isOkArr(:)));
+                    end
+                    %
+                    function checkShape()
+                        isOkArr=arrayfun(@(x,y)isequal(x.getShapeMat(),...
+                            y{1}),ellArr,shCArr);
+                        mlunit.assert(all(isOkArr(:)));
+                    end
+                    function checkProp()
+                        arrayfun(@checkPropElem,ellArr);
+                    end
+                end
+                function checkPropElem(ell)
+                    nProps=length(indVec);
+                    for iProp=1:nProps
+                        fGetter=getterList{indVec(iProp)};
+                        propVal=feval(fGetter,ell);
+                        expPropVal=valList{indVec(iProp)};
+                        mlunit.assert(isequal(propVal,expPropVal));
+                    end
+                end
+            end
+        end
+        %
         function self = testDistance(self)
             
             import elltool.conf.Properties;
@@ -740,9 +828,9 @@ classdef EllipsoidTestCase < mlunitext.test_case
                 ellipsoid(rand(20,1),9*diag(0:19)), ellipsoid(diag(1:21));
                 ellipsoid(diag(0.1:0.1:10)), ellipsoid(diag(0:0.0001:0.01))];
             testVolMat = volume(testEllMat);
-            testRightVolMat = [(pi^6)*sqrt(prod(0.01:0.01:0.2))/prod(1:6), (pi^6)*(2^7)*sqrt(prod(0.1:0.1:1.3))/prod(1:2:13);
-                0,                                          (pi^10)*(2^11)*sqrt(prod(1:21))/prod(1:2:21);
-                (pi^50)*sqrt(prod(0.1:0.1:10))/prod(1:50), 0];
+            testRightVolMat = [(pi^6)*realsqrt(prod(0.01:0.01:0.2))/prod(1:6), (pi^6)*(2^7)*realsqrt(prod(0.1:0.1:1.3))/prod(1:2:13);
+                0,                                          (pi^10)*(2^11)*realsqrt(prod(1:21))/prod(1:2:21);
+                (pi^50)*realsqrt(prod(0.1:0.1:10))/prod(1:50), 0];
             
             isTestEqMat = (testVolMat-testRightVolMat)<=absTol;
             isTestRes = all(isTestEqMat(:));
@@ -1244,6 +1332,12 @@ classdef EllipsoidTestCase < mlunitext.test_case
             mlunit.assert_equals(true, isOk);
         end
         %
+        function self = testSqrtmposToleranceFailure(self)
+            sh1Mat = diag(repmat(0.0000001, 1, 4)) + diag([1 1 0 0]);
+            sh2Mat = diag(ones(1, 4));
+            minksum_ia([ellipsoid(zeros(4, 1), sh1Mat),...
+                ellipsoid(zeros(4, 1), sh2Mat)], [0 0 1 0]');
+        end
         function self=testGetBoundary(self)
             %
             testEll=createEllObj(2,1);

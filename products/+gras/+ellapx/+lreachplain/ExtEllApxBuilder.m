@@ -12,7 +12,7 @@ classdef ExtEllApxBuilder<gras.ellapx.lreachplain.ATightEllApxBuilder
             AMat=ADynamics.evaluate(t);
             piNumerator=slBPBlSqrtDynamics.evaluate(t);
             ltVec=ltSpline.evaluate(t);
-            piDenominator=sqrt(sum((QMat*ltVec).*ltVec));
+            piDenominator=realsqrt(sum((QMat*ltVec).*ltVec));
             tmpMat=AMat*QMat;
             resMat=tmpMat+tmpMat.'+(piNumerator./piDenominator).*QMat+...
                 (piDenominator./piNumerator).*BPBTransDynamics.evaluate(t);

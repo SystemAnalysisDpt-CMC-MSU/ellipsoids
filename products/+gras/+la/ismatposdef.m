@@ -5,26 +5,30 @@ function isPosDef = ismatposdef( qMat, absTol, isFlagSemDefOn)
 %   regular:
 %       qMat: double[nDims, nDims] - inpute matrix
 %   optional:
-%       absTol: double - precision of positive definiteness determination, 
-%           if minimum eigenvalue of qMat 
-%       isFlagSemDefOn: logical[1,1] - if true than qMat is checked for 
-%                   positive semi-definiteness
+%       absTol: double - precision of positive definiteness determination,
+%           if minimum eigenvalue of qMat
+%       isFlagSemDefOn: logical[1,1] - if true than qMat is checked for
+%                   positive semi-definiteness, DEFAULT value is false;
 % Output:
 %   isPosDef: logical[1,1] - true iff matrix is positive definite
-% 
+%
 %
 % $Author: Vitaly Baranov  <vetbar42@gmail.com> $	$Date: 2013-01-Mar$
-% $Copyright: Lomonosov Moscow State University,
-%             Faculty of Computational Mathematics and Cybernetics,
-%             Department of System Analysis  2013 $
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2013 $
 %
 %
 import modgen.common.throwerror;
 import gras.la.ismatsymm;
+%
 if nargin<3
     isFlagSemDefOn=false;
     if nargin<2
         absTol=0;
+    elseif absTol<0
+        throwerror('wrongInput:absTolNegative',...
+            'absTol is expected to be not-negative');
     end
 end
 %

@@ -11,30 +11,36 @@ function plObj = plot(varargin)
 %
 % Input:
 %   regular:
-%       ellArr:  elltool.core.GenEllipsoid: [dim11Size,dim12Size,...,dim1kSize] -
-%                array of 2D or 3D GenEllipsoids objects. All ellipsoids in ellArr
-%                must be either 2D or 3D simutaneously.
+%       ellArr:  elltool.core.GenEllipsoid: [dim11Size,dim12Size,...,
+%                dim1kSize] - array of 2D or 3D GenEllipsoids objects. 
+%                All ellipsoids in ellArr  must be either 2D or 3D
+%                simutaneously.
 %   optional:
 %       color1Spec: char[1,1] - color specification code, can be 'r','g',
-%                               etc (any code supported by built-in Matlab function).
-%       ell2Arr: elltool.core.GenEllipsoid: [dim21Size,dim22Size,...,dim2kSize] -
-%                                           second ellipsoid array...
+%                               etc (any code supported by built-in Matlab 
+%                               function).
+%       ell2Arr: elltool.core.GenEllipsoid: [dim21Size,dim22Size,...,
+%                               dim2kSize] - second ellipsoid array...
 %       color2Spec: char[1,1] - same as color1Spec but for ell2Arr
 %       ....
-%       ellNArr: elltool.core.GenEllipsoid: [dimN1Size,dim22Size,...,dimNkSize] -
-%                                            N-th ellipsoid array
+%       ellNArr: elltool.core.GenEllipsoid: [dimN1Size,dim22Size,...,
+%                                dimNkSize] - N-th ellipsoid array
 %       colorNSpec - same as color1Spec but for ellNArr.
 %   properties:
-%       'newFigure': logical[1,1] - if 1, each plot command will open a new figure window.
-%                    Default value is 0.
+%       'newFigure': logical[1,1] - if 1, each plot command will open a new .
+%                    figure window Default value is 0.
 %       'fill': logical[1,1]/logical[dim11Size,dim12Size,...,dim1kSize]  -
-%               if 1, ellipsoids in 2D will be filled with color. Default value is 0.
+%               if 1, ellipsoids in 2D will be filled with color. 
+%               Default value is 0.
 %       'lineWidth': double[1,1]/double[dim11Size,dim12Size,...,dim1kSize]  -
-%                    line width for 1D and 2D plots. Default value is 1.
+%                line width for 1D and 2D plots. 
+%                Default value is 1.
 %       'color': double[1,3]/double[dim11Size,dim12Size,...,dim1kSize,3] -
-%                sets default colors in the form [x y z]. Default value is [1 0 0].
+%                sets default colors in the form [x y z]. 
+%                Default value is [1 0 0].
 %       'shade': double[1,1]/double[dim11Size,dim12Size,...,dim1kSize]  -
-%                level of transparency between 0 and 1 (0 - transparent, 1 - opaque).
+%                level of transparency between 0 and 1 (0 - transparent, 
+%                1 - opaque).
 %                Default value is 0.4.
 %       'relDataPlotter' - relation data plotter object.
 %       Notice that property vector could have different dimensions, only
@@ -45,19 +51,20 @@ function plObj = plot(varargin)
 %       data plotter object.
 %
 % Examples:
-%       plot([ell1, ell2, ell3], 'color', [1, 0, 1; 0, 0, 1; 1, 0, 0]);
-%       plot([ell1, ell2, ell3], 'color', [1; 0; 1; 0; 0; 1; 1; 0; 0]);
-%       plot([ell1, ell2, ell3; ell1, ell2, ell3], 'shade', [1, 1, 1; 1, 1,
+%   plot([ell1, ell2, ell3], 'color', [1, 0, 1; 0, 0, 1; 1, 0, 0]);
+%   plot([ell1, ell2, ell3], 'color', [1; 0; 1; 0; 0; 1; 1; 0; 0]);
+%   plot([ell1, ell2, ell3; ell1, ell2, ell3], 'shade', [1, 1, 1; 1, 1,
+%     1]);
+%   plot([ell1, ell2, ell3; ell1, ell2, ell3], 'shade', [1; 1; 1; 1; 1;
 %       1]);
-%       plot([ell1, ell2, ell3; ell1, ell2, ell3], 'shade', [1; 1; 1; 1; 1;
-%       1]);
-%       plot([ell1, ell2, ell3], 'shade', 0.5);
-%       plot([ell1, ell2, ell3], 'lineWidth', 1.5);
-%       plot([ell1, ell2, ell3], 'lineWidth', [1.5, 0.5, 3]);
-
-% $Author: <Vadim Kaushanskiy>  <vkaushanskiy@gmail.com> $    $Date: <21 December 2012> $
-% $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Cybernetics,
+%   plot([ell1, ell2, ell3], 'shade', 0.5);
+%   plot([ell1, ell2, ell3], 'lineWidth', 1.5);
+%   plot([ell1, ell2, ell3], 'lineWidth', [1.5, 0.5, 3]);
+% 
+%$Author: <Vadim Kaushanskiy>  <vkaushanskiy@gmail.com> $
+%$Date: 2012-12-21 $
+%$Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
 % $Author: <Ilya Lyubich>  <lubi4ig@gmail.com> $    $Date: <8 January 2013> $
 % $Copyright: Moscow State University,

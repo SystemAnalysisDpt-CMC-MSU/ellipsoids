@@ -18,6 +18,10 @@ function [varargout] = minkdiff(varargin)
 %    Plots geometric sum of inpEllMat
 %       with setting properties.
 %
+%   In order for the geometric difference to be nonempty set,
+%   ellipsoid fstEll must be bigger than secEll in the sense that
+%   if fstEll and secEll had the same centerVec, secEll would be
+%   contained inside fstEll.
 % Input:
 %   regular:
 %       ellArr:  Ellipsoid: [dim11Size,dim12Size,...,dim1kSize] -
@@ -45,6 +49,12 @@ function [varargout] = minkdiff(varargin)
 %   boundPointMat: double[nDim, nBoundPoints] - set of boundary
 %       points (vertices) of resulting set.
 %
+% Example:
+%   firstEllObj = ellipsoid([-1; 1], [2 0; 0 3]);
+%   secEllObj = ellipsoid([1 2], eye(2));
+%   [centVec, boundPointMat] = minkdiff(firstEllObj, secEllObj);
+% 
+% 
 % $Author: <Ilya Lyubich>  <lubi4ig@gmail.com> $    $Date: <8 January 2013> $
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Cybernetics,

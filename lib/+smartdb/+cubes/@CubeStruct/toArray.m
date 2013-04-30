@@ -1,6 +1,6 @@
 function varargout=toArray(self,varargin)
-% TOARRAY transforms values of all CubeStruct cells into a multi-
-% dimentional array
+% TOARRAY - transforms values of all CubeStruct cells into a multi-
+%           dimentional array
 %
 % Usage: resCArray=toArray(self,varargin)
 %
@@ -15,12 +15,13 @@ function varargout=toArray(self,varargin)
 %     fieldNameList: cell[1,] - list of filed names to return
 %
 %     structNameList: cell[1,]/char[1,], data structure list
-%        for which the data is to be taken from, can consist of the following values
+%        for which the data is to be taken from, can consist of the 
+%        following values
 %
 %       SData - data itself
 %       SIsNull - contains is-null indicator information for data values
-%       SIsValueNull - contains is-null indicators for CubeStruct cells (not
-%          for cell values
+%       SIsValueNull - contains is-null indicators for CubeStruct cells 
+%          (not for cell values)
 %
 %     groupByColumns: logical[1,1], if true, each column is returned in a
 %        separate cell
@@ -28,9 +29,9 @@ function varargout=toArray(self,varargin)
 %     outputType: char[1,] - method of formign an output array, the
 %        following methods are supported:
 %            'uniformMat' - the field values are concatenated without any
-%                    type/size transformations. As a result, this method will fail
-%                    if the specified fields have different types or/and sizes
-%                    along any dimension apart from catDim
+%                    type/size transformations. As a result, this method 
+%                    will fail if the specified fields have different types 
+%                    or/and sizes along any dimension apart from catDim
 %
 %            'uniformCell' - not-cell fields are converted to cells
 %                    element-wise but no size-transformations is performed.
@@ -38,18 +39,19 @@ function varargout=toArray(self,varargin)
 %                    different sizes along any dimension apart from catDim
 %
 %            'notUniform' - this method doesn't make any assumptions about
-%                    size or type of the fields. Each field value is wrapped into
-%                    cell in a such way that a size of resulting cell is
-%                    minDimensionSizeVec for each field. Thus if for
+%                    size or type of the fields. Each field value is wrapped 
+%                    into cell in a such way that a size of resulting cell 
+%                    is minDimensionSizeVec for each field. Thus if for
 %                    instance is size of cube object is [2,3,4] and a field
 %                    size is [2,4,5,10,30] its value is splitted into 2*4*5
 %                    pieces with each piece of size [1,1,1,10,30] put it
 %                    its separate cell
 %            'adaptiveCell' - functions similarly to 'nonUniform' except for
-%                    the cases when a field value size equals minDimensionSizeVec
-%                    exactly i.e. the field takes only scalar values. In such cases
-%                    no wrapping into cell is performed which allows to get a more
-%                    transparent output.
+%                    the cases when a field value size equals 
+%                    minDimensionSizeVec exactly i.e. the field takes only 
+%                    scalar values. In such cases no wrapping into cell is 
+%                    performed which allows to get a more transparent  
+%                    output.
 %
 %     catDim: double[1,1] - dimension number for
 %        concatenating outputs when groupByColumns is false
@@ -78,8 +80,8 @@ function varargout=toArray(self,varargin)
 %        which the nulls are to be replaced with the specified values,
 %        if not specified it is assumed that all fields are to be replaced
 %
-%        NOTE!: all fields not listed in this parameter are replaced with the
-%        default values
+%        NOTE!: all fields not listed in this parameter are replaced with 
+%        the default values
 %
 %
 % Output:
@@ -89,14 +91,16 @@ function varargout=toArray(self,varargin)
 %         fields selected by optional arguments) for all CubeStruct
 %         data cells
 %
-%   Case2 (multiple outputs are requested and their number = length(structNameList)
-%     each output is assigned resCMat for the corresponding struct
+%   Case2 (multiple outputs are requested and their number = 
+%     length(structNameList) each output is assigned resCMat for the 
+%     corresponding struct
 %
 %   Case3 (2 outputs is requested or length(structNameList)+1 outputs is
 %   requested). In this case the last output argument is
 %
-%        isConvertedToCell: logical[nFields,nStructs] -  matrix with true values on
-%           the positions which correspond to fields converted to cells
+%        isConvertedToCell: logical[nFields,nStructs] -  matrix with true 
+%           values on the positions which correspond to fields converted to 
+%           cells
 %
 %
 % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2012-05-25 $ 

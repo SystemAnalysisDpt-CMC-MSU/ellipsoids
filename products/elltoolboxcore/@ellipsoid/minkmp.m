@@ -43,6 +43,11 @@ function varargout = minkmp(varargin)
 %   boundPointMat: double[nDim, nBoundPoints] - set of boundary
 %       points (vertices) of resulting set.
 %
+% Example:
+%   firstEllObj = ellipsoid([-2; -1], [2 -1; -1 1]);
+%   secEllObj = ell_unitball(2);
+%   ellVec = [firstEllObj secEllObj ellipsoid([-3; 1], eye(2))];
+%   minkmp(firstEllObj, secEllObj, ellVec);
 % $Author: <Ilya Lyubich>  <lubi4ig@gmail.com> $    $Date: <8 January 2013> $
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Cybernetics,

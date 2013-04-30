@@ -1,8 +1,10 @@
 classdef EllipsoidIntUnionTC < mlunitext.test_case
-
-% $Author: Vadim Kaushanskiy, Moscow State University by M.V. Lomonosov,
-% Faculty of Computational Mathematics and Cybernetics, System Analysis
-% Department, 24-December-2012, <vkaushanskiy@gmail.com>$
+%$Author: Vadim Kaushanskiy <vkaushanskiy@gmail.com>$
+%$Date: 2012-12-24 $
+%$Copyright: Moscow State University,
+%            Faculty of Computational Mathematics
+%            and Computer Science,
+%            System Analysis Department 2012 $
     properties (Access=private)
         testDataRootDir
     end
@@ -182,7 +184,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             self.flexAssert(1, testResVec);
             
             for iDim = 1:nDim
-                testPointVec(iDim) = 1 / sqrt(nDim);
+                testPointVec(iDim) = 1 / realsqrt(nDim);
             end;
             testResVec = isinternal(testEllVec, testPointVec);
             self.flexAssert(1, testResVec);
@@ -192,7 +194,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             self.flexAssert(0, testResVec);
             
             for iDim = 1:nDim
-                testPointVec(iDim) = 1 / sqrt(nDim);
+                testPointVec(iDim) = 1 / realsqrt(nDim);
             end;
             testPointVec(1) = testPointVec(1) + 1e-4;
             testResVec = isinternal(testEllVec, testPointVec);

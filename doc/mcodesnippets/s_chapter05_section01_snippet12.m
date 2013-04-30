@@ -1,4 +1,4 @@
-intersect(EE, EE(1, 1), 'i')  
+ellMat.intersect(ellMat(1, 1), 'i')  
 
 % ans =
 % 

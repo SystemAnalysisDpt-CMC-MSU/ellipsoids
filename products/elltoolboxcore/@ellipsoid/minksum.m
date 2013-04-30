@@ -44,6 +44,11 @@ function [varargout] = minksum(varargin)
 %   boundPointMat: double[nDim, nBoundPoints] - set of boundary
 %       points (vertices) of resulting set.
 %
+% Example:
+%   firstEllObj = ellipsoid([-2; -1], [2 -1; -1 1]);
+%   secEllObj = ell_unitball(2);
+%   ellVec = [firstEllObj, secellObj]
+%   sumVec = minksum(ellVec);
 % $Author: <Ilya Lyubich>  <lubi4ig@gmail.com> $  Date: <8 January 2013> $
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Cybernetics,

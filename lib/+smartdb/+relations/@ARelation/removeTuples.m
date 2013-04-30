@@ -1,6 +1,5 @@
 function removeTuples(self,subIndVec)
-% REMOVETUPLES removes tuples with given indices from given
-% relation
+% REMOVETUPLES - removes tuples with given indices from given relation
 %
 % Usage: self.removeTuples(subIndVec)
 % 

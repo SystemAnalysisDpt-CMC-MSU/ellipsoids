@@ -264,7 +264,7 @@ $v(t)\in{\bf R}^d$ is disturbance bounded by ellipsoid $\EE(q(t),Q(t))$,
 and matrices $A(t)$, $B(t)$, $G(t)$ are in ${\bf R}^{n\times n}$,
 ${\bf R}^{n\times m}$, ${\bf R}^{n\times d}$ respectively.
 Here we shall assume $A(t)$ to be nonsingular.\footnote{The case
-when $A(t)$ is singular is described in \cite{kurvar07}.
+when $A(t)$ is singular is described in \cite{pvak}.
 The idea is to substitute $A(t)$ with the nonsingular
 $A_\delta(t) = A(t) + \delta U(t)W(t)$,
 in which $U(t)$ and $W(t)$ are obtained from the singular value decomposition
@@ -272,7 +272,7 @@ in which $U(t)$ and $W(t)$ are obtained from the singular value decomposition
 The parameter $\delta$ can be chosen based on the number of time steps for which
 the reach set must be computed and the required accuracy.
 The issue of inverting ill-conditioned matrices is also addressed
-in \cite{kurvar07}.}
+in \cite{pvak}.}
 The set of initial conditions at initial time $t_0$
 is ellipsoid $\EE(x_0,X_0)$.
 
@@ -469,7 +469,7 @@ u_l(t) = p(t) + \frac{P(t)B^T(t)l(t+1)}{\langle l(t+1),
 B(t)P(t)B^T(t)l(t+1)\rangle^{1/2}}. \label{udt}
 \end{equation}
 Each choice of $l_0$ defines an external and internal approximation.
-If $\OXCL(t,t_0,\EE(x_0,X_0))$ is nonempty, 
+If $\OXCL(t,t_0,\EE(x_0,X_0))$ is nonempty,
 \[ \bigcup_{\langle l_0,l_0\rangle=1}\EE(x_c(t),\OXM(t)) =
 \OXCL(t,t_0,\EE(x_0,X_0)) =
 \bigcap_{\langle l_0,l_0\rangle=1}\EE(x_c(t),\OXP(t)). \]

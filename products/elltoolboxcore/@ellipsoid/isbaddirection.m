@@ -43,6 +43,6 @@ if ~isbigger(fstEll, secEll)
     throwwarn('wrongInput:emptyGeomDiff', [fstErrMsg secErrMsg]);
     isBadDirVec = true(1,size(dirsMat,2));
 else    
-    [isBadDirVec,pUniversalVec] = ellipsoid.isbaddirectionmat(fstEll.shape,...
-        secEll.shape, dirsMat,absTol);
+    [isBadDirVec,pUniversalVec] = ellipsoid.isbaddirectionmat(fstEll.shapeMat,...
+        secEll.shapeMat, dirsMat,absTol);
 end

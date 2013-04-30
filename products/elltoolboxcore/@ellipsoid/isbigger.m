@@ -17,9 +17,19 @@ function isPositive = isbigger(fstEll, secEll)
 % Output:
 %   isPositive: logical[1, 1], true - if ellipsoid fstEll
 %       would contain secEll inside, false - otherwise.
+% 
+% Example:
+%   firstEllObj = ellipsoid([1; 1], eye(2));
+%   secEllObj = ellipsoid([1; 1], [4 -1; -1 5]);
+%   isbigger(firstEllObj, secEllObj)
+% 
+%   ans =
+% 
+%        0
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 2004-2008 $
+% $Copyright:  The Regents of the University of California 
+%              2004-2008 $
 
 import elltool.conf.Properties;
 import modgen.common.checkmultvar;
@@ -43,8 +53,8 @@ if nFstRank < nSecRank
     return;
 end
 
-fstEllShMat = fstEll.shape;
-secEllShMat = secEll.shape;
+fstEllShMat = fstEll.shapeMat;
+secEllShMat = secEll.shapeMat;
 if isdegenerate(fstEll)
     if isempty(logger)
         logger=Log4jConfigurator.getLogger();

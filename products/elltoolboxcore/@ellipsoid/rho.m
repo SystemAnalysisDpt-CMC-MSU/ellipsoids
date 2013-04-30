@@ -28,16 +28,26 @@ function [supArr, bpMat] = rho(ellArr, dirsMat)
 %   regular:
 %       ellArr: ellipsoid [nDims1,nDims2,...,nDimsN]/[1,1] - array
 %           of ellipsoids.
-%       dirsMat: double[nDim,nDirs]/[nDim,1] - matrix of directions.
+%       dirsMat: double[nDim,nDims1,nDims2,...,nDimsN]/
+%           double[nDim,nDirs]/[nDim,1] - array or matrix of directions.
 %
 % Output:
-%	supArr: double [nDims1,nDims2,...,nDimsN]/[1,nDirs] - support function 
-%       of the ellArr in directions specified by the columns of matrix 
+%	supArr: double [nDims1,nDims2,...,nDimsN]/[1,nDirs] - support function
+%       of the ellArr in directions specified by the columns of matrix
 %       dirsMat. Or, if ellArr is array of ellipsoids, support function of
 %       each ellipsoid in ellArr specified by dirsMat direction.
 %
-%   bpMat: double [nDim,nDims1*nDims2*...*nDimsN]/[nDim,nDirs] - matrix of
-%       boundary points
+%   bpArr: double[nDim,nDims1,nDims2,...,nDimsN]/
+%           double[nDim,nDirs]/[nDim,1] - array or matrix of boundary points
+% 
+% Example:
+%   ellObj = ellipsoid([-2; 4], [4 -1; -1 1]);
+%   dirsMat = [-2 5; 5 1];
+%   suppFuncVec = rho(ellObj, dirsMat)
+% 
+%   suppFuncVec =
+% 
+%       31.8102    3.5394
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regesnts of the University of California 2004-2008 $
