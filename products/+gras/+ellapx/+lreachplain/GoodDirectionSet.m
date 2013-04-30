@@ -109,22 +109,16 @@ classdef GoodDirectionSet
             %
             tStart=tic;
             %
-            % calculation of X(s, t) on [t0, s)
+            % calculation of X(s, t) on [t0, s]
             %
             fRstDerivFunc = @(t, x) fXstOppositeFunc(t, x, ...
                 @(u) fAtMat(u), self.sTime);
-            fRstPostProcFunc = @(t, x) fPostProcLeftFunc(t, x, self.sTime);
+            fRstPostProcFunc = @(t, x) fPostProcLeftFunc(t, x, t0);
             [timeRstVec, dataRstArray] = self.calcHalfRstDynamics(...
                 0, self.sTime - t0, fRstDerivFunc, sRstInitialMat, ...
                 calcPrecision, fRstPostProcFunc);
             %
-            % concatenation with X(s, s) on time sTime
-            %
-            timeRstVec = cat(2, timeRstVec, self.sTime);
-            dataRstArray = cat(3, dataRstArray, ...
-                repmat(sRstInitialMat, [1 1 1]));
-            %
-            % calculation of X(s, t) on (s, t1)
+            % calculation of X(s, t) on (s, t1]
             %
             fRstDerivFunc = @(t, x) fXstDirectFunc(t, x, @(u) fAtMat(u));
             fRstPostProcFunc = @(t, x) fPostProcRightFunc(t, x); 
@@ -132,8 +126,10 @@ classdef GoodDirectionSet
                 self.calcHalfRstDynamics(self.sTime, t1, fRstDerivFunc, ...
                 sRstInitialMat, calcPrecision, fRstPostProcFunc);
             %
-            timeRstVec = cat(2, timeRstVec, timeRstRightVec);
-            dataRstArray = cat(3, dataRstArray, dataRstRightArray);
+            if (length(timeRstRightVec) > 1)
+                timeRstVec = cat(2, timeRstVec, timeRstRightVec(2:end));
+                dataRstArray = cat(3, dataRstArray, dataRstRightArray(:,:,2:end));
+            end
             %
             RstDynamics=MatrixInterpolantFactory.createInstance(...
                 'column', dataRstArray, timeRstVec);
@@ -164,13 +160,13 @@ classdef GoodDirectionSet
                 [timeRstHalfVec, dataRstHalfArray] = solverObj.solve( ...
                     fRstDerivFunc, timeVec, sRstInitialMat);
                 %
-                dataRstHalfArray(:,:,1) = [];
-                timeRstHalfVec(1) = [];
                 [timeRstHalfVec, dataRstHalfArray] = fRstPostProcFunc(...
                     timeRstHalfVec, dataRstHalfArray);
             else
-                timeRstHalfVec = [];
-                dataRstHalfArray = [];
+                timeRstHalfVec = startTime;
+                dataRstHalfArray = sRstInitialMat;
+                [timeRstHalfVec, dataRstHalfArray] = fRstPostProcFunc(...
+                    timeRstHalfVec, dataRstHalfArray); 
             end
         end
     end
@@ -181,7 +177,7 @@ end
 function [timeRstOutVec, dataRstOutArray] = ...
     fPostProcLeftFunc(timeRstInVec, dataRstInArray, addTime)
     %
-    timeRstOutVec = flipdim(addTime - timeRstInVec, 2);
+    timeRstOutVec = addTime + timeRstInVec;
     dataRstOutArray = flipdim(dataRstInArray, 3);
 end
 function [timeRstOutVec, dataRstOutArray] = ...
