@@ -60,7 +60,7 @@ DEFAULT_PRINT_VALUES=true;
 DEFAULT_NUMBER_FORMAT='%g';
 %% Main program
 %%%%% start program %%%%%
-checkgen(SInp,'isstruct(x)&&isvec(x)');
+checkgen(SInp,'isstruct(x)');
 [reg,~,depth,inpPrintValues,maxArrayLength,numberFormat]=parseparext(varargin,...
     {'depth','printValues','maxArrayLength','numberFormat';...
     DEFAULT_DEPTH,...
@@ -118,15 +118,28 @@ end
         % In case of a vector, this recursive function is recalled for each of
         % the vector elements. But if the values don't have to be printed, only
         % the size of the structure and its fields are printed.
-        if length(Structure) > 1
+        if numel(Structure) > 1
             if (printValues == 0)
                 varStr = createArraySize(Structure, 'Structure');
                 listStr = [{' '}; {['Structure', varStr]}];
                 body = recFieldPrint(Structure(1), indent);
                 listStr = [listStr; body; {'   O'}];
             else
-                for iStruc = 1 : length(Structure)
-                    listStr = [listStr; {' '}; {sprintf('Structure(%d)', iStruc)}];
+                sizeVec = size(Structure);
+                indexVec = ones(1, length(sizeVec));
+                for iStruc = 1 : numel(Structure)
+                    if (~isvector(Structure))
+                        indexStr = 'Structure(';
+                        for iDimension = 1 : length(sizeVec) - 1
+                              indexStr = [indexStr, sprintf('%d, ',...
+                                  indexVec(iDimension))];
+                        end
+                        indexStr = [indexStr, sprintf('%d)', indexVec(end))];
+                        indexVec = incrementIndexVec(indexVec, sizeVec);
+                    else
+                        indexStr = sprintf('Structure(%d)', iStruc);
+                    end
+                    listStr = [listStr; {' '}; {indexStr}];
                     body = recFieldPrint(Structure(iStruc), indent);
                     listStr = [listStr; body; {'   O'}];
                 end
@@ -473,7 +486,17 @@ end
 
 end
 
-
+function newIndexVec = incrementIndexVec(indexVec, sizeVec)
+    newIndexVec = indexVec;
+    for iDimension = 1 : length(sizeVec)
+        newIndexVec(iDimension) = newIndexVec(iDimension) + 1;
+        if (newIndexVec(iDimension) <= sizeVec(iDimension))
+            break;
+        else
+            newIndexVec(iDimension) = 1;
+        end
+    end
+end
 
 %% FUNCTION: getIndentation
 % This function creates the hierarchical indentations
