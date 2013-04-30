@@ -96,6 +96,9 @@ classdef GoodDirectionSet
                 calcPrecision)
             %
             import gras.interp.MatrixInterpolantFactory;
+            import gras.ellapx.uncertcalc.log.Log4jConfigurator;
+            %
+            logger=Log4jConfigurator.getLogger();
             %
             fAtMat = @(t) pDefObj.getAtDynamics().evaluate(t);
             sizeSysVec = size(fAtMat(0));
@@ -104,12 +107,16 @@ classdef GoodDirectionSet
             t1 = pDefObj.gett1();
             sRstInitialMat = eye(sizeSysVec);
             %
+            tStart=tic;
+            %
             % calculation of X(s, t) on [t0, s)
             %
             fRstDerivFunc = @(t, x) fXstOppositeFunc(t, x, ...
                 @(u) fAtMat(u), self.sTime);
-            [timeRstVec, dataRstArray] = self.calcHalfRstDynamics(t0, ...
-                fRstDerivFunc, sRstInitialMat, calcPrecision);
+            fRstPostProcFunc = @(t, x) fPostProcLeftFunc(t, x, self.sTime);
+            [timeRstVec, dataRstArray] = self.calcHalfRstDynamics(...
+                0, self.sTime - t0, fRstDerivFunc, sRstInitialMat, ...
+                calcPrecision, fRstPostProcFunc);
             %
             % concatenation with X(s, s) on time sTime
             %
@@ -120,55 +127,68 @@ classdef GoodDirectionSet
             % calculation of X(s, t) on (s, t1)
             %
             fRstDerivFunc = @(t, x) fXstDirectFunc(t, x, @(u) fAtMat(u));
+            fRstPostProcFunc = @(t, x) fPostProcRightFunc(t, x); 
             [timeRstRightVec, dataRstRightArray] = ...
-                self.calcHalfRstDynamics(t1, fRstDerivFunc, ...
-                sRstInitialMat, calcPrecision);
+                self.calcHalfRstDynamics(self.sTime, t1, fRstDerivFunc, ...
+                sRstInitialMat, calcPrecision, fRstPostProcFunc);
             %
             timeRstVec = cat(2, timeRstVec, timeRstRightVec);
             dataRstArray = cat(3, dataRstArray, dataRstRightArray);
             %
             RstDynamics=MatrixInterpolantFactory.createInstance(...
                 'column', dataRstArray, timeRstVec);
+            %
+            logger.info(...
+                sprintf(['calculating transition matrix spline ' ...
+                'at time %d, nodes = %d, time elapsed = %s sec.'],...
+                self.sTime, 2 * self.CALC_CGRID_COUNT + 1,...
+                num2str(toc(tStart))));
         end
         %
         % calculations for Xst on [t0, s) and (s, t1]
         %
         function [timeRstHalfVec, dataRstHalfArray] = ...
-                calcHalfRstDynamics(self, endTime, fRstDerivFunc, ...
-                sRstInitialMat, calcPrecision)
+                calcHalfRstDynamics(self, startTime, endTime, fRstDerivFunc, ...
+                sRstInitialMat, calcPrecision, fRstPostProcFunc)
             %
             import gras.ode.MatrixODESolver;
             %
-            odeArgList = self.getOdePropList(calcPrecision);
-            sizeSysVec = size(sRstInitialMat);
-            %
-            solverObj = MatrixODESolver(sizeSysVec, @ode45, ...
-                odeArgList{:});
-            if (self.sTime ~= endTime)
-                if (endTime < self.sTime)
-                    timeVec = linspace(0, self.sTime - endTime, ...
-                        self.CALC_CGRID_COUNT + 1);
-                else
-                    timeVec = linspace(self.sTime, endTime, ...
-                        self.CALC_CGRID_COUNT + 1);
-                end
+            if (startTime ~= endTime)
+                odeArgList = self.getOdePropList(calcPrecision);
+                sizeSysVec = size(sRstInitialMat);
+                %
+                solverObj = MatrixODESolver(sizeSysVec, @ode45, ...
+                    odeArgList{:});
+                timeVec = linspace(startTime, endTime, ...
+                    self.CALC_CGRID_COUNT + 1);
                 [timeRstHalfVec, dataRstHalfArray] = solverObj.solve( ...
                     fRstDerivFunc, timeVec, sRstInitialMat);
                 %
                 dataRstHalfArray(:,:,1) = [];
-                if (endTime < self.sTime)
-                    timeRstHalfVec(end) = [];
-                    timeRstHalfVec = endTime + timeRstHalfVec;
-                    dataRstHalfArray = flipdim(dataRstHalfArray, 3);
-                else
-                    timeRstHalfVec(1) = [];
-                end
+                timeRstHalfVec(1) = [];
+                [timeRstHalfVec, dataRstHalfArray] = fRstPostProcFunc(...
+                    timeRstHalfVec, dataRstHalfArray);
             else
                 timeRstHalfVec = [];
                 dataRstHalfArray = [];
             end
         end
     end
+end
+%
+%
+%
+function [timeRstOutVec, dataRstOutArray] = ...
+    fPostProcLeftFunc(timeRstInVec, dataRstInArray, addTime)
+    %
+    timeRstOutVec = flipdim(addTime - timeRstInVec, 2);
+    dataRstOutArray = flipdim(dataRstInArray, 3);
+end
+function [timeRstOutVec, dataRstOutArray] = ...
+    fPostProcRightFunc(timeRstInVec, dataRstInArray)
+    %
+    timeRstOutVec = timeRstInVec;
+    dataRstOutArray = dataRstInArray;
 end
 %
 % equations for X(s, t)
