@@ -118,7 +118,7 @@ classdef GoodDirectionSet
                 0, self.sTime - t0, fRstDerivFunc, sRstInitialMat, ...
                 calcPrecision, fRstPostProcFunc);
             %
-            % calculation of X(s, t) on (s, t1]
+            % calculation of X(s, t) on [s, t1]
             %
             fRstDerivFunc = @(t, x) fXstDirectFunc(t, x, @(u) fAtMat(u));
             fRstPostProcFunc = @(t, x) fPostProcRightFunc(t, x); 
@@ -159,15 +159,12 @@ classdef GoodDirectionSet
                     self.CALC_CGRID_COUNT + 1);
                 [timeRstHalfVec, dataRstHalfArray] = solverObj.solve( ...
                     fRstDerivFunc, timeVec, sRstInitialMat);
-                %
-                [timeRstHalfVec, dataRstHalfArray] = fRstPostProcFunc(...
-                    timeRstHalfVec, dataRstHalfArray);
             else
                 timeRstHalfVec = startTime;
                 dataRstHalfArray = sRstInitialMat;
-                [timeRstHalfVec, dataRstHalfArray] = fRstPostProcFunc(...
-                    timeRstHalfVec, dataRstHalfArray); 
             end
+            [timeRstHalfVec, dataRstHalfArray] = fRstPostProcFunc(...
+                timeRstHalfVec, dataRstHalfArray);
         end
     end
 end
