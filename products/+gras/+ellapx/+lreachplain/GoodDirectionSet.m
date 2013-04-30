@@ -149,12 +149,12 @@ classdef GoodDirectionSet
             %
             import gras.ode.MatrixODESolver;
             %
+            odeArgList = self.getOdePropList(calcPrecision);
+            sizeSysVec = size(sRstInitialMat);
+            %
+            solverObj = MatrixODESolver(sizeSysVec, @ode45, ...
+                odeArgList{:});
             if (startTime ~= endTime)
-                odeArgList = self.getOdePropList(calcPrecision);
-                sizeSysVec = size(sRstInitialMat);
-                %
-                solverObj = MatrixODESolver(sizeSysVec, @ode45, ...
-                    odeArgList{:});
                 timeVec = linspace(startTime, endTime, ...
                     self.CALC_CGRID_COUNT + 1);
                 [timeRstHalfVec, dataRstHalfArray] = solverObj.solve( ...
