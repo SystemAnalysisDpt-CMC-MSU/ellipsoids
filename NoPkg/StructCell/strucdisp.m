@@ -127,7 +127,7 @@ end
             else
                 sizeVec = size(Structure);
                 indexVec = ones(1, length(sizeVec));
-                for iStruc = 1 : numel(Structure)
+                for iStruc = 1 : min(numel(Structure), maxArrayLength)
                     if (~isvector(Structure))
                         indexStr = 'Structure(';
                         for iDimension = 1 : length(sizeVec) - 1
@@ -142,6 +142,10 @@ end
                     listStr = [listStr; {' '}; {indexStr}];
                     body = recFieldPrint(Structure(iStruc), indent);
                     listStr = [listStr; body; {'   O'}];
+                end
+                if (numel(Structure) > maxArrayLength)
+                    listStr = [listStr; {' '}; sprintf('<<%d elements more>>', ...
+                        numel(Structure) - maxArrayLength)];
                 end
             end
             return
