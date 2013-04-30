@@ -1,4 +1,5 @@
-isinside(EA, [E1 E3], 'i')  % array [E1 E3] should be treated as intersection
+% array [firstEllObj secEllObj] should be treated as intersection
+externalEllObj.isinside([firstEllObj secEllObj], 'i')  
 
 % ans =
 % 

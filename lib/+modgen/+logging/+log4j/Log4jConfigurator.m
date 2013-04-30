@@ -116,8 +116,8 @@ classdef Log4jConfigurator<handle
             end
         end        
         function logger=getLogger(loggerName,isSuffix)
-            % GETLOGGER gets logger for caller (it may be either script or
-            % function or method of some class)
+            % GETLOGGER - gets logger for caller (it may be either script or
+            %             function or method of some class)
             import org.apache.log4j.Logger;
             if nargin<2,
                 isSuffix=false;
@@ -157,19 +157,22 @@ classdef Log4jConfigurator<handle
     end
     methods (Access=protected)
         function logFileName=getMainLogFileNameInternal(self)
-            % GETMAINLOGFILENAMEINTERNAL returns a full name of the main log file
+            % GETMAINLOGFILENAMEINTERNAL - returns a full name of the main
+            %                              log file
             logFileName=[self.getMainLogFilePathInternal,...
                 self.getShortMainLogFileNameInternal()];
         end
         function logFileName=getShortMainLogFileNameInternal(self)
-            % GETMAINLOGFILENAME returns a short name (without path) of the main log file
+            % GETMAINLOGFILENAME - returns a short name (without path) of 
+            %                      the main log file
             import modgen.logging.log4j.Log4jConfigurator;
             logFileName=[self.MAIN_LOG_FILE_PREFIX,...
                 self.getCurProcessNameInternal(),'.',...
                 self.LOG_FILE_EXT];
         end
         function processName=getCurProcessNameInternal(self)
-            % GETCURPROCESSNAME returns a name of currently running process
+            % GETCURPROCESSNAME - returns a name of currently running 
+            %                     process
             import modgen.logging.log4j.Log4jConfigurator;
             [~,SProp]=modgen.pcalc.gettaskname();
             if SProp.isMain
@@ -187,8 +190,8 @@ classdef Log4jConfigurator<handle
                 filesep,'Logs',filesep];
         end
         function configureInternal(self,logPropStr,varargin)
-            % CONFIGURE performs log4j configuration using a log4j property
-            % string as a source
+            % CONFIGURE - performs log4j configuration using a log4j 
+            %             property string as a source
             import modgen.system.ExistanceChecker;
             import org.apache.log4j.Logger;
             import org.apache.log4j.PropertyConfigurator;

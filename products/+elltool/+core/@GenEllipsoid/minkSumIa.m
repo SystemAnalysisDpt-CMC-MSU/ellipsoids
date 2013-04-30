@@ -1,6 +1,6 @@
 function [ ellResVec ] = minkSumIa(ellObjVec, dirMat )
 % MINKSUMIA - computes tight internal ellipsoidal approximation for
-% Minkowsky sum of the set of generalized ellipsoids
+%             Minkowsky sum of the set of generalized ellipsoids
 %
 % Input:
 %   regular:
@@ -12,10 +12,45 @@ function [ ellResVec ] = minkSumIa(ellObjVec, dirMat )
 %   ellResVec: GenEllipsoid[1,nDir] - vector of generalized ellipsoids of
 %       internal approximation of the dirrence of first and second
 %       generalized ellipsoids
+% 
+% Example:
+%   firstEllObj = elltool.core.GenEllipsoid([1;1],eye(2));
+%   secEllObj = elltool.core.GenEllipsoid([5;0],[3 0; 0 2]);
+%   ellVec = [firstEllObj secEllObj];
+%   dirsMat = [1 3; 2 4];
+%   ellResVec  = minkSumIa(ellVec, dirsMat )
+%  
+%   Structure(1)
+%      |    
+%      |----- q : [6 1]
+%      |          ---------------------
+%      |----- Q : |7.45135  |0.0272432|
+%      |          |0.0272432|5.81802  |
+%      |          ---------------------
+%      |          -----
+%      |-- QInf : |0|0|
+%      |          |0|0|
+%      |          -----
+%      O
+%  
+%   Structure(2)
+%      |    
+%      |----- q : [6 1]
+%      |          ---------------------
+%      |----- Q : |7.44698  |0.0315642|
+%      |          |0.0315642|5.81445  |
+%      |          ---------------------
+%      |          -----
+%      |-- QInf : |0|0|
+%      |          |0|0|
+%      |          -----
+%      O
+% 
 %
-% $Author: Vitaly Baranov  <vetbar42@gmail.com> $    $Date: 2012-11$
+% $Author: Vitaly Baranov  <vetbar42@gmail.com> $    
+% $Date: 2012-11$
 % $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Cybernetics,
+%            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
 %
 %

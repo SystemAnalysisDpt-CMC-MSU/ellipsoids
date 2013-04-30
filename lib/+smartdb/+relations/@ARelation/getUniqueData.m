@@ -1,6 +1,6 @@
 function varargout=getUniqueData(self,varargin)
-% GETUNIQUEDATA returns internal representation for a set of unique tuples
-% for given relation
+% GETUNIQUEDATA - returns internal representation for a set of unique 
+%                 tuples for given relation
 %
 % Usage: [SData,SIsNull,SIsValueNull]=getUniqueData(self,varargin)
 %

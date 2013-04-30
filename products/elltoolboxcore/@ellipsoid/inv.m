@@ -8,19 +8,37 @@ function invEllArr = inv(myEllArr)
 %
 % Input:
 %   regular:
-%       myEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of ellipsoids.
+%     myEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of ellipsoids.
 %
 % Output:
 %    invEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of ellipsoids
 %       with inverted shape matrices.
+% 
+% Example:
+%   ellObj = ellipsoid([1; 1], [4 -1; -1 5]);
+%   ellObj.inv()
+% 
+%   ans =
+% 
+%   Center:
+%        1
+%        1
+% 
+%   Shape Matrix:
+%       0.2632    0.0526
+%       0.0526    0.2105
+% 
+%   Nondegenerate ellipsoid in R^2.
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 2004-2008 $
+% $Copyright:  The Regents of the University of California 
+%              2004-2008 $
 %
-% $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
+% $Author: Guliev Rustam <glvrst@gmail.com> $   
+% $Date: Dec-2012$
 % $Copyright: Moscow State University,
-%             Faculty of Computational Mathematics and Cybernetics,
-%             Science, System Analysis Department 2012 $
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2012 $
 %
 
 ellipsoid.checkIsMe(myEllArr);

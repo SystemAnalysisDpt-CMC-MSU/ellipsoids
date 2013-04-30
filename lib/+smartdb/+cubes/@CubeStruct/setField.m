@@ -1,5 +1,5 @@
 function setField(self,varargin)
-% SETFIELDINTERNAL sets values of all cells for given field
+% SETFIELDINTERNAL - sets values of all cells for given field
 %
 % Usage: setFieldInternal(self,fieldName,value)
 %
@@ -18,8 +18,8 @@ function setField(self,varargin)
 %       is {SData, SIsNull, SIsValueNull}
 %
 %     inferIsNull: logical[1,2] - the first (second) element = false
-%       means that IsNull (IsValueNull) indicator for a field 
-%           in question is kept intact (default = [true,true])
+%       means that IsNull (IsValueNull) indicator for a field in question 
+%           is kept intact (default = [true,true])
 %
 %       Note: if structNameList contains 'SIsValueNull' entry, 
 %        inferIsValueNull parameter is overwritten by false

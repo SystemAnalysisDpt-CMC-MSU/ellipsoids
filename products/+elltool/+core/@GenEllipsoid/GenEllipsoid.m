@@ -25,9 +25,14 @@ classdef GenEllipsoid < handle
     % Output:
     %   self: GenEllipsoid[1,1] - created generalized ellipsoid
     %
-    % $Author: Vitaly Baranov  <vetbar42@gmail.com> $    $Date: Nov-2012$
+    % Example:
+    %   ellObj = elltool.core.GenEllipsoid([5;2], eye(2));        
+    %   ellObj = elltool.core.GenEllipsoid([5;2], eye(2), [1 3; 4 5]);
+    %
+    %$Author: Vitaly Baranov  <vetbar42@gmail.com> $    
+    %$Date: Nov-2012$
     % $Copyright: Moscow State University,
-    %            Faculty of Computational Mathematics and Cybernetics,
+    %            Faculty of Computational Mathematics and Computer Science,
     %            System Analysis Department 2012 $
     %
     properties (Access = private)
@@ -46,7 +51,16 @@ classdef GenEllipsoid < handle
     end
     methods
         function isOk=getIsGoodDir(ellObj1,ellObj2,curDirVec)
-            %
+        % Example:
+        %   firstEllObj = elltool.core.GenEllipsoid([10;0], 2*eye(2));
+        %   secEllObj = elltool.core.GenEllipsoid([0;0], [1 0; 0 0.1]);
+        %   curDirMat = [1; 0];
+        %   isOk=getIsGoodDir(firstEllObj,secEllObj,dirsMat)
+        %
+        %   isOk =
+        % 
+        %        1
+        %
             import elltool.core.GenEllipsoid;
             absTol=GenEllipsoid.getCheckTol();
             eigv1Mat=ellObj1.getEigvMat();
@@ -132,6 +146,19 @@ classdef GenEllipsoid < handle
     end
     methods
         function display(ellArr)
+        % Example:
+        %   ellObj = elltool.core.GenEllipsoid([5;2], eye(2), [1 3; 4 5]);
+        %   ellObj.display()
+        %      |    
+        %      |----- q : [5 2]
+        %      |          -------
+        %      |----- Q : |10|19|
+        %      |          |19|41|
+        %      |          -------
+        %      |          -----
+        %      |-- QInf : |0|0|
+        %      |          |0|0|
+        %      |          -----
             strucdisp(ellArr(:).toStruct());
         end
     end
@@ -312,17 +339,53 @@ classdef GenEllipsoid < handle
     end
     methods
         function cVec=getCenter(self)
+        % Example:
+        %   ellObj = elltool.core.GenEllipsoid([5;2], eye(2), [1 3; 4 5]);
+        %   ellObj.getCenter()
+        %
+        %   ans =
+        % 
+        %        5
+        %        2
+        %
             cVec=self.centerVec;
         end
         function eigMat=getEigvMat(self)
+        % Example:
+        %   ellObj = elltool.core.GenEllipsoid([5;2], eye(2), [1 3; 4 5]);
+        %   ellObj.getEigvMat()
+        %
+        %   ans =
+        % 
+        %       0.9034   -0.4289
+        %      -0.4289   -0.9034
+        %
             eigMat=self.eigvMat;
         end
         function diagMat=getDiagMat(self)
+        % Example:
+        %   ellObj = elltool.core.GenEllipsoid([5;2], eye(2), [1 3; 4 5]);
+        %   ellObj.getDiagMat()
+        %         
+        %   ans =
+        % 
+        %       0.9796         0
+        %            0   50.0204
+        %
+                
             diagMat=self.diagMat;
         end
     end
     methods (Static)
         function tol=getCheckTol()
+        % Example:
+        %   ellObj = elltool.core.GenEllipsoid([5;2], eye(2), [1 3; 4 5]);
+        %   ellObj.getCheckTol()
+        %
+        %   ans =
+        %
+        %      1.0000e-09
+        %
             import elltool.core.GenEllipsoid;
             tol=GenEllipsoid.CHECK_TOL;
         end

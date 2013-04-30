@@ -1,5 +1,5 @@
 function fileName=writeToXLS(self,filePath)
-% WRITETOXLS writes a content of relation into Excel spreadsheet file
+% WRITETOXLS - writes a content of relation into Excel spreadsheet file
 % Input:
 %   regular:
 %       self:

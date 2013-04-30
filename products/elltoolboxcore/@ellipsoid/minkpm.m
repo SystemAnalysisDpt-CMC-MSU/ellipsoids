@@ -47,14 +47,24 @@ function [centVec, boundPointMat] = minkpm(inpEllArr, inpEll, varargin)
 %       centerVecVec may be empty.
 %    boundPointMat: double[nDim, ]/double[0, 0] - set of boundary
 %       points (vertices) of resulting set. boundPointMat may be empty.
+% 
+% Example:
+%   firstEllObj = ellipsoid([-2; -1], [2 -1; -1 1]);
+%   secEllObj = ell_unitball(2);
+%   thirdEllObj = ell_unitball(2);
+%   ellVec = [firstEllObj secEllObj];
+%   minkpm(ellVec, thirdEllObj); 
+% 
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 2004-2008 $
+% $Copyright:  The Regents of the University of California 
+%              2004-2008 $
 %
-% $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
+% $Author: Guliev Rustam <glvrst@gmail.com> $   
+% $Date: Dec-2012$
 % $Copyright: Moscow State University,
-%             Faculty of Computational Mathematics and Cybernetics,
-%             Science, System Analysis Department 2012 $
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2012 $
 %
 
 import elltool.conf.Properties;

@@ -1,7 +1,7 @@
 function [ spaceBasMat,  oSpaceBasMat, spaceIndVec, oSpaceIndVec] = ...
     findSpaceBas( dirMat,absTol )
 % FINDSPACEBAS - find basis of linear hull of  specified vectors and
-% basis of orthogonal subspace to the hull
+%                basis of orthogonal subspace to the hull
 %
 % Input:
 %   regular:
@@ -16,7 +16,7 @@ function [ spaceBasMat,  oSpaceBasMat, spaceIndVec, oSpaceIndVec] = ...
 %
 % $Author: Vitaly Baranov  <vetbar42@gmail.com> $    $Date: Nov-2012$
 % $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Cybernetics,
+%            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
 %
 import elltool.core.GenEllipsoid;

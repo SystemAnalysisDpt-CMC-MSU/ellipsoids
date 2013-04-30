@@ -1,10 +1,10 @@
 function fieldIsNullCVec=getFieldIsValueNull(self,fieldName)
-% GETFIELDISVALUENULL returns for given field logical vector
-% determining whether value of this field in each cell is null
-% or not.
+% GETFIELDISVALUENULL - returns for given field logical vector determining 
+%                       whether value of this field in each cell is null
+%                       or not.
 %
-% BEWARE OF confusing this with getFieldIsNull method which
-%    returns is-null indicators for a field content
+% BEWARE OF confusing this with getFieldIsNull method which returns is-null 
+%    indicators for a field content
 %
 % Usage: isNullVec=getFieldValueIsNull(self,fieldName)
 %
