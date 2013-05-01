@@ -31,8 +31,17 @@ classdef ellipsoid < handle
     end
     methods
         function resArr=repMat(self,varargin)
-            % REPMAT is analogous to built-in repmat function with one
-            % exception - it copies the objects, not just the handles
+            % REPMAT - is analogous to built-in repmat function with one exception - it
+            %          copies the objects, not just the handles
+            %
+            % Example:
+            %   firstEllObj = ellipsoid([1; 2], eye(2));
+            %   secEllObj = ellipsoid([1; 1], 2*eye(2));
+            %   ellVec = [firstEllObj secEllObj];
+            %   repMat(ellVec)
+            %
+            %   ans =
+            %   1x2 array of ellipsoids.
             %
             %
             % $Author: Peter Gagarinov <pgagarinov@gmail.com> $   $Date: 24-04-2013$
@@ -47,7 +56,7 @@ classdef ellipsoid < handle
         end
         %
         function shMat=getShapeMat(self)
-            % GETSHAPEMAT returns shapeMat matrix of given ellipsoid
+            % GETSHAPEMAT - returns shapeMat matrix of given ellipsoid
             %
             % Input:
             %   regular:
@@ -56,6 +65,14 @@ classdef ellipsoid < handle
             % Output:
             %   shMat: double[nDims,nDims] - shapeMat matrix of ellipsoid
             %
+            % Example:
+            %   ellObj = ellipsoid([1; 2], eye(2));
+            %   getShapeMat(ellObj)
+            %
+            %   ans =
+            % 
+            %        1     0
+            %        0     1  
             %
             % $Author: Peter Gagarinov <pgagarinov@gmail.com> $   $Date: 24-04-2013$
             % $Copyright: Moscow State University,
@@ -66,7 +83,7 @@ classdef ellipsoid < handle
         end
         %
         function centerVecVec=getCenterVec(self)
-            % GETCENTERVEC returns shapeMat matrix of given ellipsoid
+            % GETCENTERVEC - returns centerVec vector of given ellipsoid
             %
             % Input:
             %   regular:
@@ -75,6 +92,14 @@ classdef ellipsoid < handle
             % Output:
             %   centerVecVec: double[nDims,1] - centerVec of ellipsoid
             %
+            % Example:
+            %   ellObj = ellipsoid([1; 2], eye(2));
+            %   getCenterVec(ellObj)
+            %
+            %   ans =
+            % 
+            %        1     
+            %        2       
             %
             % $Author: Peter Gagarinov <pgagarinov@gmail.com> $   $Date: 24-04-2013$
             % $Copyright: Moscow State University,
@@ -84,25 +109,22 @@ classdef ellipsoid < handle
             centerVecVec=self.centerVec;
         end
     end
-    
-    
     methods
         function [ellMat] = ellipsoid(varargin)
             %
             % ELLIPSOID - constructor of the ellipsoid object.
             %
-            %   Ellipsoid E = { x in R^n : <(x - q), Q^(-1)(x - q)> <= 1 },
-            %       with current "Properties"..
-            %       Here q is a vector in R^n, and Q in R^(nxn) is positive
-            %           semi-definite matrix
-            %
+            %   Ellipsoid E = { x in R^n : <(x - q), Q^(-1)(x - q)> <= 1 }, with current 
+            %       "Properties". Here q is a vector in R^n, and Q in R^(nxn) is positive 
+            %       semi-definite matrix
+            %       
             %   ell = ELLIPSOID - Creates an empty ellipsoid
             %
-            %   ell = ELLIPSOID(shMat) - creates an ellipsoid with shape
-            %       matrix shMat, centered at 0
+            %   ell = ELLIPSOID(shMat) - creates an ellipsoid with shape matrix shMat,
+            %       centered at 0
             %
-            %	ell = ELLIPSOID(centVec, shMat) - creates an ellipsoid with
-            %       shape matrix shMat and center centVec
+            %	ell = ELLIPSOID(centVec, shMat) - creates an ellipsoid with shape matrix 
+            %       shMat and center centVec
             %
             %   ell = ELLIPSOID(centVec, shMat, 'propName1', propVal1,...,
             %       'propNameN',propValN) - creates an ellipsoid with shape
@@ -139,31 +161,34 @@ classdef ellipsoid < handle
             %       shMatArray: double [nDim, nDim] /
             %           double [nDim, nDim, nDim1,...,nDimn] -
             %           shape matrices array
+            %           
             %
             %   properties:
-            %       absTol: double [1,1] - absolute tolerance with default
-            %           value 10^(-7)
-            %       relTol: double [1,1] - relative tolerance with default
-            %           value 10^(-5)
-            %       nPlot2dPoints: double [1,1] - number of points for 2D plot
-            %           with default value 200
-            %       nPlot3dPoints: double [1,1] - number of points for 3D plot
-            %           with default value 200.
+            %       absTol: double [1,1] - absolute tolerance with default value 10^(-7)
+            %       relTol: double [1,1] - relative tolerance with default value 10^(-5)
+            %       nPlot2dPoints: double [1,1] - number of points for 2D plot with  
+            %           default value 200
+            %       nPlot3dPoints: double [1,1] - number of points for 3D plot with  
+            %            default value 200.
             %
             % Output:
             %   ellMat: ellipsoid [1,1] / ellipsoid [nDim1,...nDimn] -
             %       ellipsoid with specified properties
             %       or multidimensional array of ellipsoids.
+            % 
+            % Example:
+            %   ellObj = ellipsoid([1 0 -1 6]', 9*eye(4));
             %
             % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
             % $Copyright: The Regents of the University
             %   of California 2004-2008 $
             %
-            % $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
+            % $Author: Guliev Rustam <glvrst@gmail.com> $   
+            % $Date: Dec-2012$
             % $Author: Daniil Stepenskiy <reinkarn@gmail.com> $   $Date: Apr-2013$
             % $Copyright: Moscow State University,
-            %             Faculty of Computational Mathematics and Cybernetics,
-            %             Science, System Analysis Department 2012-2013 $
+            %             Faculty of Computational Mathematics and and Computer Science,
+            %             System Analysis Department 2012-2013 $
             %
             import modgen.common.throwerror;
             import modgen.common.checkvar;
@@ -276,20 +301,10 @@ classdef ellipsoid < handle
     end
     methods(Access = private)
         [propMat, propVal] = getProperty(hplaneMat,propName, fPropFun)
-        x = ellbndr_2d(E)
-        x = ellbndr_3d(E)
+         x = ellbndr_2d(E)
+         x = ellbndr_3d(E)
     end
     methods (Static)
         checkIsMe(someObj,varargin)
-        function outObj=loadobj(inpObj)
-            if isstruct(inpObj)
-                outObj=ellipsoid(inpObj.center,inpObj.shape,...
-                    'absTol',inpObj.absTol,'relTol',inpObj.relTol,...
-                    'nPlot2dPoints',inpObj.nPlot2dPoints,'nPlot3dPoints',...
-                    inpObj.nPlot2dPoints);
-            else
-                outObj=inpObj;
-            end
-        end
     end
 end

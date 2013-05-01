@@ -52,8 +52,8 @@ function [res, status] = isinside(fstEllArr, secObjArr, mode)
 %
 % Input:
 %   regular:
-%       fstEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of ellipsoids
-%           of the same size.
+%       fstEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of 
+%           ellipsoids of the same size.
 %       secEllArr: ellipsoid /
 %           polytope [nDims1,nDims2,...,nDimsN] - array of ellipsoids or
 %           polytopes of the same sizes.
@@ -73,13 +73,25 @@ function [res, status] = isinside(fstEllArr, secObjArr, mode)
 %   status: double[0, 0]/double[1, 1] - status variable. status is empty
 %       if mode == 'u' or mSecRows == nSecCols == 1.
 %
-% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 2004-2008 $
+% Example:
+%   firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+%   secEllObj = ell_unitball(2);
+%   firstEllObj.isinside([firstEllObj secEllObj], 'i')
+% 
+%   ans =
+% 
+%        1
 %
-% $Author: Vadim Kaushanskiy <vkaushanskiy@gmail.com>$ $Date: 10-11-2012$
+% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+% $Copyright:  The Regents of the University of California 
+%              2004-2008 $
+%
+% $Author: Vadim Kaushanskiy <vkaushanskiy@gmail.com>$ 
+% $Date: 10-11-2012$
 % $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Computer Science,
-%            System Analysis Department 2012 $
+%             Faculty of Computational Mathematics
+%             and Computer Science,
+%             System Analysis Department 2012 $
 
 import elltool.conf.Properties;
 import elltool.logging.Log4jConfigurator;

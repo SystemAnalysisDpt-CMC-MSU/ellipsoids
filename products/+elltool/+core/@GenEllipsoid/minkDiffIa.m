@@ -1,6 +1,6 @@
 function [ resEllVec ] = minkDiffIa( ellObj1, ellObj2, dirMat)
 % MINKDIFFIA - computes tight internal ellipsoidal approximation for
-% Minkowsky difference of two generalized ellipsoids
+%              Minkowsky difference of two generalized ellipsoids
 %
 % Input:
 %   regular:
@@ -10,19 +10,30 @@ function [ resEllVec ] = minkDiffIa( ellObj1, ellObj2, dirMat)
 %           directions for which approximations should be computed
 % Output:
 %   resEllVec: GenEllipsoid[1,nDir] - vector of generalized ellipsoids of
-%       internal approximation of the dirrence of first and second generalized
-%       ellipsoids
+%       internal approximation of the dirrence of first and second 
+%       generalized ellipsoids
 %
+% Example:
+%   firstEllObj = elltool.core.GenEllipsoid([10;0], 2*eye(2));
+%   secEllObj = elltool.core.GenEllipsoid([0;0], [1 0; 0 0.1]);
+%   dirsMat = [1,0].';
+%   resEllVec  = minkDiffIa( firstEllObj, secEllObj, dirsMat)
+%      |    
+%      |----- q : [10 0]
+%      |          -------------------
+%      |----- Q : |0.171573|0       |
+%      |          |0       |0.544365|
+%      |          -------------------
+%      |          -----
+%      |-- QInf : |0|0|
+%      |          |0|0|
+%      |          -----
 %
-% $Author: Vitaly Baranov  <vetbar42@gmail.com> $    $Date: 2012-11$
+%$Author: Vitaly Baranov  <vetbar42@gmail.com> $    
+%$Date: 2012-11$
 % $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Cybernetics,
+%            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
-%
-% Bibliography:
-% V.V.Shiryaev, 'About internal ellipsoidal approximations of attainability
-% sets of linear systems under uncertanty'. Moscow University Vestnik,
-% Ser.15, Computational mathematics and cybernetics, 2012, N3, p. 20-27.
 %
 import modgen.common.throwerror
 import elltool.core.GenEllipsoid;

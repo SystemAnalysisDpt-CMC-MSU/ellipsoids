@@ -2,7 +2,8 @@ function [x, FVAL, EXITFLAG] = ...
          nlcp_solve(funfcn, x, confcn, OPTIONS, meritFunctionType, ...
                     CHG, fval, gval, ncineqval, nceqval, gncval, gnceqval, varargin);
 %
-% NLCP_SOLVE - nonlinear function minimizer under nonlinear constraints.
+% NLCP_SOLVE - nonlinear function minimizer under nonlinear
+%              constraints.
 %
 
   status            = 0; 

@@ -56,13 +56,21 @@ function [centVec, boundPntMat] = minkmp(fstEll, secEll, sumEllArr,varargin)
 %   boundarPointsMat: double[nDim, nBoundPoints] - set of boundary
 %       points (vertices) of resulting set.
 %
+% Example:
+%   firstEllObj = ellipsoid([-2; -1], [2 -1; -1 1]);
+%   secEllObj = ell_unitball(2);
+%   ellVec = [firstEllObj secEllObj ellipsoid([-3; 1], eye(2))];
+%   minkmp(firstEllObj, secEllObj, ellVec);
+% 
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 2004-2008 $
+% $Copyright:  The Regents of the University of California 
+%              2004-2008 $
 %
-% $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Nov-2012$
+% $Author: Guliev Rustam <glvrst@gmail.com> $  
+% $Date: Nov-2012$
 % $Copyright: Moscow State University,
-%             Faculty of Computational Mathematics and Cybernetics,
-%             Science, System Analysis Department 2012 $
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2012 $
 %
 
 import modgen.common.throwerror;

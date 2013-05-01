@@ -159,8 +159,8 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
     end
     methods
         function plObj=plot(self,plObj)
-            % PLOT displays ellipsoidal tubes using the specified
-            % RelationDataPlotter
+            % PLOT - displays ellipsoidal tubes using the specified RelationDataPlotter
+            % 
             %
             % Input:
             %   regular:

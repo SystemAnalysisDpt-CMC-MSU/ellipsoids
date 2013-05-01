@@ -90,8 +90,10 @@ classdef ConfRepoManager<modgen.configuration.ConfRepoManagerAnyStorage&...
             %
         end
         function resObj=createInstance(self,varargin)
-            % CREATEINSTANCE returns an object of the same class by calling a default
-            % constructor (with no parameters)
+            % CREATEINSTANCE - returns an object of the same class by 
+            %                  calling a default constructor (with no 
+            %                  arameters)
+            % 
             %
             % Usage: resObj=getInstance(self)
             %

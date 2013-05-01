@@ -1,26 +1,32 @@
 function T = ell_simdiag(A, B, absTol)
 %
-% ELL_SIMDIAG - computes the transformation matrix that simultaneously
-%               diagonalizes two symmetric matrices.
+% ELL_SIMDIAG - computes the transformation matrix that 
+%               simultaneously diagonalizes two symmetric
+%               matrices.
 %
 %
 % Description:
 % ------------
 %
-%    T = ELL_SIMDIAG(A, B)  Given two symmetric matrices, A and B, with A being
-%                           positive definite, find nonsingular transformation
-%                           matrix T such that
-%                                       T A T' = I
-%                                       T B T' = D
-%                           where I is identity matrix, and D is diagonal. 
+%    T = ELL_SIMDIAG(A, B)  Given two symmetric matrices, A
+%                  and B, with A being positive definite, 
+%                  find nonsingular transformation matrix T 
+%                  such that
+%                             T A T' = I
+%                             T B T' = D
+%                  where I is identity matrix, and D is 
+%                  diagonal. 
 %
 %    General info.
-%    Two matrices are said to be simultaneously diagonalizable if they are
-%    diagonalized by a same invertible matrix. That is, they share full rank
-%    of linearly independent eigenvectors. Two square matrices of the same
-%    dimension are simultaneously diagonalizable if and only if they are
-%    diagonalizable and commutative, or these matrices are symmetric and
-%    one of them is positive definite.
+%    Two matrices are said to be simultaneously 
+%    diagonalizable if they are diagonalized by a same 
+%    invertible matrix. 
+%    That is, they share full rank of linearly independent 
+%    eigenvectors. Two square matrices of the same
+%    dimension are simultaneously diagonalizable if and 
+%    only if they are diagonalizable and commutative, or  
+%    these matrices are symmetric and one of them is 
+%    positive definite.
 %
 %
 % Output:
