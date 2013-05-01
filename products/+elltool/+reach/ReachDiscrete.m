@@ -117,7 +117,6 @@ classdef ReachDiscrete < elltool.reach.AReach
                     qMat = ell_regularize(qMat, relTol);
                     bpbMat = ell_regularize(bpbMat, relTol);
                     lVec = aInvMat' * lVec;
-%                     lVec = lVec / norm(lVec);
                     if approxType == EApproxType.Internal
                         eEll = minksum_ia([ellipsoid(0.5 * (qMat + qMat')) ...
                             ellipsoid(0.5 * (bpbMat + bpbMat'))], lVec);
@@ -215,56 +214,20 @@ classdef ReachDiscrete < elltool.reach.AReach
             Properties.setIsVerbose(isVerbose);
         end
         %
-        function centerMat = calculateCenterMat(smartLinSys, isDisturb)
-            import elltool.conf.Properties;
-            import gras.ellapx.enums.EApproxType;
-            %
-            isVerbose = Properties.getIsVerbose();
-            Properties.setIsVerbose(false);
-            isBack = isa(smartLinSys, ...
-                'gras.ellapx.lreachplain.probdyn.LReachDiscrBackwardDynamics');
-            %
-            xDim = smartLinSys.getDimensionality();
-            timeVec = smartLinSys.getTimeVec();
-            %
-            centerMat = zeros(xDim, length(timeVec));
-            centerVec = smartLinSys.getx0Vec;
-            centerMat(:, 1) = centerVec;
-            %
-            for iTime = 1:(length(timeVec) - 1)
-                bpVec = smartLinSys.getBptDynamics().evaluate(timeVec(iTime + isBack));
-                if isDisturb
-                    gqVec = smartLinSys.getCqtDynamics().evaluate(timeVec(iTime + isBack));
-                else
-                    gqVec = zeros(xDim, 1);
-                end
-                aMat = smartLinSys.getAtDynamics().evaluate(timeVec(iTime + isBack));
-                if isBack
-                    centerVec = aMat * (centerVec - bpVec - gqVec);
-                else
-                    centerVec = aMat * centerVec + bpVec + gqVec;
-                end
-                centerMat(:, iTime + 1) = centerVec;
-            end
-            %
-            Properties.setIsVerbose(isVerbose);
-        end
-        %
         function ellTubeRel = makeEllTubeRel(smartLinSys, l0Mat,...
                 timeLimsVec, isDisturb, calcPrecision, approxTypeVec)
             import gras.ellapx.enums.EApproxType;
             relTol = elltool.conf.Properties.getRelTol();
-            isBack = timeLimsVec(1) > timeLimsVec(2);
-            %             goodDirSetObj =...
-            %                 gras.ellapx.lreachplain.GoodDirectionSet(...
-            %                 smartLinSys, timeVec(1), l0Mat, calcPrecision);
-            aMat = elltool.reach.ReachDiscrete.calculateCenterMat(...
-                smartLinSys, isDisturb);
+            goodDirSetObj =...
+                gras.ellapx.lreachplain.GoodDirectionSet(...
+                smartLinSys, timeLimsVec(1), l0Mat, calcPrecision);
             %
             approxSchemaDescr = char.empty(1,0);
             approxSchemaName = char.empty(1,0);
             sTime = timeLimsVec(1);
             timeVec = smartLinSys.getTimeVec();
+            %
+            aMat = smartLinSys.getxtDynamics().evaluate(timeVec);
             %
             isIntApprox = any(approxTypeVec == EApproxType.Internal);
             isExtApprox = any(approxTypeVec == EApproxType.External);
@@ -283,8 +246,10 @@ classdef ReachDiscrete < elltool.reach.AReach
             %
             if isExtApprox
                 approxType = EApproxType.External;
-                [QArrayList ltGoodDirArray] = ...
+                [QArrayList ~] = ...
                     fCalcApproxShape(smartLinSys, l0Mat, relTol, approxType);
+                ltGoodDirArray = ...
+                    goodDirSetObj.getGoodDirCurveSpline().evaluate(timeVec);
                 extEllTubeRel = create();
                 if ~isIntApprox
                     ellTubeRel = extEllTubeRel;
@@ -292,8 +257,10 @@ classdef ReachDiscrete < elltool.reach.AReach
             end
             if isIntApprox
                 approxType = EApproxType.Internal;
-                [QArrayList ltGoodDirArray] = ...
+                [QArrayList ~] = ...
                     fCalcApproxShape(smartLinSys, l0Mat, relTol, approxType);
+                ltGoodDirArray = ...
+                    goodDirSetObj.getGoodDirCurveSpline().evaluate(timeVec);
                 intEllTubeRel = create();
                 if isExtApprox
                     intEllTubeRel.unionWith(extEllTubeRel);

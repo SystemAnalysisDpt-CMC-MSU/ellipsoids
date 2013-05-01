@@ -12,6 +12,7 @@ classdef AReachDiscrForwardDynamics <...
             import gras.ellapx.common.*;
             import gras.mat.symb.MatrixSymbFormulaBased;
             import gras.mat.CompositeMatrixOperations;
+            import gras.interp.MatrixInterpolantFactory;
             %
             self.problemDef = problemDef;
             %
@@ -21,8 +22,10 @@ classdef AReachDiscrForwardDynamics <...
             BtDefCMat = problemDef.getBMatDef();
             t0 = problemDef.gett0();
             t1 = problemDef.gett1();
+            sizeAtVec = size(AtDefCMat);
             %
             self.timeVec = t0:t1;
+            nTimePoints = length(self.timeVec);
             %
             % create dynamics for A(t), inv(A)(t), 
             % B(t)P(t)B'(t) and B(t)p(t)
@@ -37,6 +40,19 @@ classdef AReachDiscrForwardDynamics <...
                 BtDefCMat, problemDef.getPCMat(), BtDefCMat.');
             self.BptDynamics = compOpFact.rSymbMultiplyByVec(...
                 BtDefCMat, problemDef.getpCVec());
+            %
+            % compute X(t,t0)
+            %
+            data_Xtt0 = zeros([sizeAtVec nTimePoints]);
+            data_Xtt0(:, :, 1) = eye(sizeAtVec);
+            for iTime = 2:nTimePoints
+                data_Xtt0(:, :, iTime) = ...
+                    self.AtDynamics.evaluate(self.timeVec(iTime - 1)) * ...
+                    data_Xtt0(:, :, iTime - 1);
+            end
+            %
+            self.Xtt0Dynamics = MatrixInterpolantFactory.createInstance(...
+                'column', data_Xtt0, self.timeVec);
         end
     end
 end

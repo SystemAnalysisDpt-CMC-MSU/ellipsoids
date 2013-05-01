@@ -37,6 +37,27 @@ classdef LReachDiscrBackwardDynamics < ...
                 CtDefCMat, problemDef.getqCVec());
             self.CqtDynamics = compOpFact.rMultiply(...
                 aInvMatFcn, CqtDynamics);
+            %
+            % copy necessary data to local variables
+            %
+            x0DefVec = problemDef.getx0Vec();
+            sysDim = size(problemDef.getAMatDef(), 1);
+            nTimePoints = length(self.timeVec);
+            %
+            % compute x(t)
+            %
+            xtArray = zeros(sysDim, nTimePoints);
+            xtArray(:, 1) = x0DefVec;
+            for iTime = 2:nTimePoints
+                aMat = self.AtDynamics.evaluate(timeVec(iTime));
+                bpVec = self.BptDynamics().evaluate(timeVec(iTime));
+                cqVec = smartLinSys.getCqtDynamics().evaluate(timeVec(iTime));
+                xtArray(:, iTime) = ...
+                    aMat * (xtArray(:, iTime - 1) - bpVec - cqVec);
+            end
+            %
+            self.xtDynamics = MatrixInterpolantFactory.createInstance(...
+                'column', xtArray, self.timeVec.');
         end
     end
 end
