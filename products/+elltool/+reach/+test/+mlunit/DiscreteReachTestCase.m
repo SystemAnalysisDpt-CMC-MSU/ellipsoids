@@ -114,7 +114,8 @@ classdef DiscreteReachTestCase < mlunitext.test_case
                 lVec = self.l0Mat(:, iDirection);
                 directionsCVec{iDirection}(:, 1) = lVec;
                 for kTime = 1:nTimeStep - 1
-                    directionsCVec{iDirection}(:, kTime + 1) = self.fundCMat{1, kTime + 1}' * lVec;
+                    lVec = self.fundCMat{1, kTime + 1}' * lVec;
+                    directionsCVec{iDirection}(:, kTime + 1) = lVec;
                 end
             end
         end
@@ -324,6 +325,10 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             nDirections = size(self.l0Mat, 2);
             isEqual = true;
             for iDirection = 1:nDirections
+                expectedDirectionsCVec{iDirection}
+                
+                directionsCVec{iDirection}
+                
                 isEqual = isEqual && ...
                     all(max(abs(expectedDirectionsCVec{iDirection} - directionsCVec{iDirection}), [], 1) < self.COMP_PRECISION);
             end
@@ -376,6 +381,7 @@ classdef DiscreteReachTestCase < mlunitext.test_case
                         rho(eaEllMat(iDirection, kTime), lVec);
                 end
             end
+            
             isEqual = all(max(abs(expectedSupFunMat - eaSupFunValueMat), [], 2) < ...
                 self.COMP_PRECISION);
             

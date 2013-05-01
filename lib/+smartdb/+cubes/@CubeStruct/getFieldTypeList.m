@@ -1,5 +1,5 @@
 function typeInfoList=getFieldTypeList(self,varargin)
-% GETFIELDTYPELIST returns list of field types in given CubeStruct object
+% GETFIELDTYPELIST - returns list of field types in given CubeStruct object
 %
 % Usage: fieldTypeList=getFieldTypeList(self)
 %
@@ -11,8 +11,8 @@ function typeInfoList=getFieldTypeList(self,varargin)
 %       fieldNameList: cell[1,nFields] - list of field names
 %
 % Output:
-%   regular:
-%     fieldTypeList: cell [1,nFields] of smartdb.cubes.ACubeStructFieldType[1,1]
+%  regular:
+%   fieldTypeList: cell [1,nFields] of smartdb.cubes.ACubeStructFieldType[1,1]
 %       - list of field types
 %
 %

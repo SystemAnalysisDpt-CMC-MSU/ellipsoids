@@ -1,4 +1,5 @@
 \subsection{Systems without disturbances}\label{subsec_sysnodist}
+\todo[inline]{Added this subsection}
 Consider a general continuous-time
 \begin{equation}
 \dot{x}(t) = f(t, x, u),
@@ -125,7 +126,7 @@ Backward reach set can be computed for continuous-time system only if
 the solution of (\ref{ctds1}) exists for $t<t_1$; and for discrete-time
 system only if the right hand side of \ref{dtds1}
 is invertible\footnote{There exists $f^{-1}(t,x,u)$ such that
-$x(t)=f^{-1}(t, x(t+1), u, v)$.}.  
+$x(t)=f^{-1}(t, x(t+1), u, v)$.}.
 
 These two facts about
 the backward reach set $\YY$ are similar to those for forward reach sets.
@@ -172,37 +173,8 @@ In the control literature the backward reach set is also called the
 \emph{solvability set}.
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 \subsection{Systems with disturbances}\label{subsec_sysdist}
+\todo[inline]{This section was changed. I took the information from the previous (more complete) version}
 Consider the continuous-time dynamical system with disturbance
 \begin{equation}
 \dot{x}(t) = f(t, x, u, v),
@@ -214,7 +186,7 @@ x(t+1) = f(t, x, u, v),
 \tag*{(\ref{ctds2}d)}
 \label{dtds2}
 \end{equation}
-in which 
+in which
 we also have the disturbance input $v\in{\bf R}^d$ with values $v(t)$  restricted
 to a closed compact set $\VV(t)\subset{\bf R}^d$.
 
@@ -265,11 +237,11 @@ $\WW, \ZZ \subseteq {\bf R}^n$ is defined as
 \[ {\bf dist}(\WW, \ZZ) = \min\{\langle w-z, w-z\rangle^{1/2}
 ~|~ w\in\WW, \; z\in\ZZ\}, \]
 where $\langle\cdot, \cdot\rangle$ denotes inner product.}
-Since $\underline{V}(t, x)\leq\overline{V}(t, x)$, 
+Since $\underline{V}(t, x)\leq\overline{V}(t, x)$,
 $\UXOL(t, t_0, \XX_0)\subseteq\OXOL(t, t_0, \XX_0)$.
 
 Note that maxmin and minmax OLRS imply \emph{guarantees}: these are states that can be reached
-no matter what the disturbance is, whether it is known in advance 
+no matter what the disturbance is, whether it is known in advance
 (maxmin case) or not (minmax case).
 The OLRS may be empty.
 
@@ -806,7 +778,7 @@ Computation of backward reach sets for discrete-time linear systems
 makes sense only if the state transition matrix $\Phi(t_1, t)$ is invertible.
 
 If the target set $\YY_1$, control sets $\UU(\tau)$ and disturbance
-sets $\VV(\tau)$, $t\leq\tau<t_1$, are compact and convex, then 
+sets $\VV(\tau)$, $t\leq\tau<t_1$, are compact and convex, then
 CLBRS $\OYCL(t_1, t, \YY_1)$ and $\UYCL(t_1, t, \YY_1)$ are compact and convex, if they are nonempty.
 
 
@@ -840,7 +812,7 @@ $\XX(t, t_0, \XX_0)$ and backward  $\YY(t_1, t, \YY_1)$ reach sets (the
 reach sets may  be maxmin or minmax)
 in a way that can effectively meet requests like the following:
 \begin{enumerate}
-\item For the given time interval $[t_0, t]$, 
+\item For the given time interval $[t_0, t]$,
 determine whether the system can be steered into the given target set $\YY_1$.
 In other words, is the set
 $\YY_1\cap\bigcup_{t_0 \leq\tau\leq t}\XX(\tau, t_0, \XX_0)$ nonempty?

@@ -19,8 +19,7 @@ classdef LinSysContinuous < elltool.linsys.ALinSys
     methods
         function self = LinSysContinuous(varargin)
             %
-            % LINSYSCONTINUOUS - Constructor of continuous linear
-            %   system object.
+            % LINSYSCONTINUOUS - Constructor of continuous linear system object.
             %
             % Continuous-time linear system:
             %           dx/dt  =  A(t) x(t)  +  B(t) u(t)  +  G(t) v(t)
@@ -28,43 +27,44 @@ classdef LinSysContinuous < elltool.linsys.ALinSys
             %
             % Input:
             %   regular:
-            %       atInpMat: double[nDim, nDim]/cell[nDim, nDim] -
-            %           matrix A.
+            %       atInpMat: double[nDim, nDim]/cell[nDim, nDim] - matrix A.
             %
-            %       btInpMat: double[nDim, kDim]/cell[nDim, kDim] -
-            %           matrix B.
+            %       btInpMat: double[nDim, kDim]/cell[nDim, kDim] - matrix B.
             %
-            %       uBoundsEll: ellipsoid[1, 1]/struct[1, 1] -
-            %           control bounds ellipsoid.
+            %       uBoundsEll: ellipsoid[1, 1]/struct[1, 1] - control bounds 
+            %             ellipsoid.
             %
-            %       gtInpMat: double[nDim, lDim]/cell[nDim, lDim] -
-            %           matrix G.
+            %       gtInpMat: double[nDim, lDim]/cell[nDim, lDim] - matrix G.
             %
-            %       distBoundsEll: ellipsoid[1, 1]/struct[1, 1] -
-            %           disturbance bounds ellipsoid.
+            %       distBoundsEll: ellipsoid[1, 1]/struct[1, 1] - disturbance 
+            %             bounds ellipsoid.
             %
-            %       ctInpMat: double[mDim, nDim]/cell[mDim, nDim]-
-            %           matrix C.
+            %       ctInpMat: double[mDim, nDim]/cell[mDim, nDim]- matrix C.
             %
-            %       noiseBoundsEll: ellipsoid[1, 1]/struct[1, 1] -
-            %           noise bounds ellipsoid.
+            %       noiseBoundsEll: ellipsoid[1, 1]/struct[1, 1] - noise bounds
+            %             ellipsoid.
             %
-            %       discrFlag: char[1, 1] - if discrFlag set:
-            %           'd' - to discrete-time linSys
-            %           not 'd' - to continuous-time linSys.
+            %       discrFlag: char[1, 1] - if discrFlag set: 
+            %              'd' - to discrete-time linSys, 
+            %              not 'd' - to continuous-time linSys.
+            %
             %
             % Output:
-            %   self: elltool.linsys.LinSysContinuous[1, 1] -
-            %       continuous linear system.
+            %   self: elltool.linsys.LinSysContinuous[1, 1] - continuous linear 
+            %             system.
+            %
+            % Example:
+            %   aMat = [0 1; 0 0]; bMat = eye(2);
+            %   SUBounds = struct();
+            %   SUBounds.center = {'sin(t)'; 'cos(t)'};  
+            %   SUBounds.shape = [9 0; 0 2];
+            %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
             %
             self = self@elltool.linsys.ALinSys(varargin{:});
         end
         %
         function display(self)
-            %
-            % See description of DISPLAY in ILinSys class.
-            %
-            self.displayInternal();
+           self.displayInternal(self.DISPLAY_PARAMETER_STRINGS)
         end
     end
 end

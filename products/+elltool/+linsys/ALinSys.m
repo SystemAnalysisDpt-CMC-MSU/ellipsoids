@@ -1,5 +1,5 @@
 classdef ALinSys < elltool.linsys.ILinSys
-    %
+%
     %  Abstract class of linear system class of the Ellipsoidal Toolbox.
     %
     %
@@ -27,13 +27,13 @@ classdef ALinSys < elltool.linsys.ILinSys
     methods (Access = protected, Static)
         function isEllHaveNeededDim(InpEll, nDim, absTol)
             %
-            % ISELLHAVENEEDEDDIM checks if given structure InpEll
-            %     represents an ellipsoid of dimension nDim.
+            % ISELLHAVENEEDEDDIM - checks if given structure InpEll represents an 
+            %                      ellipsoid of dimension nDim.
             %
             % Input:
             %   regular:
-            %       InpEll: struct[1, 1] - structure to check for being
-            %           an ellipsoid of dimension nDim.
+            %       InpEll: struct[1, 1] - structure to check for being an ellipsoid 
+            %           of dimension nDim.
             %
             %       nDim: double[1, 1] - dimension of ellipsoid.
             %
@@ -152,7 +152,7 @@ classdef ALinSys < elltool.linsys.ILinSys
     methods (Access = protected)
         function displayInternal(self)
             %
-            % DISPLAYINTERNAL displays the details of linear system object.
+            % DISPLAYINTERNAL - displays the details of linear system object.
             %
             % Input:
             %   regular:
@@ -372,26 +372,22 @@ classdef ALinSys < elltool.linsys.ILinSys
             %
             % Input:
             %   regular:
-            %       atInpMat: double[nDim, nDim]/cell[nDim, nDim] -
-            %           matrix A.
+            %       atInpMat: double[nDim, nDim]/cell[nDim, nDim] - matrix A.
             %
-            %       btInpMat: double[nDim, kDim]/cell[nDim, kDim] -
-            %           matrix B.
+            %       btInpMat: double[nDim, kDim]/cell[nDim, kDim] - matrix B.
             %
-            %       uBoundsEll: ellipsoid[1, 1]/struct[1, 1] -
-            %           control bounds ellipsoid.
+            %       uBoundsEll: ellipsoid[1, 1]/struct[1, 1] - control bounds 
+            %           ellipsoid.
             %
-            %       gtInpMat: double[nDim, lDim]/cell[nDim, lDim] -
-            %           matrix G.
+            %       gtInpMat: double[nDim, lDim]/cell[nDim, lDim] - matrix G.
             %
-            %       distBoundsEll: ellipsoid[1, 1]/struct[1, 1] -
-            %           disturbance bounds ellipsoid.
+            %       distBoundsEll: ellipsoid[1, 1]/struct[1, 1] - disturbance bounds 
+            %           ellipsoid.
             %
-            %       ctInpMat: double[mDim, nDim]/cell[mDim, nDim]-
-            %           matrix C.
+            %       ctInpMat: double[mDim, nDim]/cell[mDim, nDim]- matrix C.
             %
-            %       noiseBoundsEll: ellipsoid[1, 1]/struct[1, 1] -
-            %           noise bounds ellipsoid.
+            %       noiseBoundsEll: ellipsoid[1, 1]/struct[1, 1] -  noise bounds 
+            %          ellipsoid.
             %
             %       discrFlag: char[1, 1] - if discrFlag set:
             %           'd' - to discrete-time linSys
@@ -633,66 +629,42 @@ classdef ALinSys < elltool.linsys.ILinSys
         end
         
         function aMat = getAtMat(self)
-            %
-            % See description of GETATMAT in ILinSys class.
-            %
             self.checkScalar();
             aMat = self.atMat;
         end
         
         function bMat = getBtMat(self)
-            %
-            % See description of GETBTMAT in ILinSys class.
-            %
             self.checkScalar();
             bMat = self.btMat;
         end
         
         function uEll = getUBoundsEll(self)
-            %
-            % See description of GETUBOUNDSELL in ILinSys class.
-            %
             self.checkScalar();
             uEll = self.controlBoundsEll;
         end
         
         function gMat = getGtMat(self)
-            %
-            % See description of GETGTMAT in ILinSys class.
-            %
             self.checkScalar();
             gMat = self.gtMat;
         end
         
         function distEll = getDistBoundsEll(self)
-            %
-            % See description of GETDISTBOUNDSELL in ILinSys class.
-            %
             self.checkScalar();
             distEll = self.disturbanceBoundsEll;
         end
         
         function cMat = getCtMat(self)
-            %
-            % See description of GETCTMAT in ILinSys class.
-            %
             self.checkScalar();
             cMat = self.ctMat;
         end
         %
         function noiseEll = getNoiseBoundsEll(self)
-            %
-            % See description of GETNOISEBOUNDSELL in ILinSys class.
-            %
             self.checkScalar();
             noiseEll = self.noiseBoundsEll;
         end
         %
         function [stateDimArr, inpDimArr, outDimArr, distDimArr] = ...
                 dimension(self)
-            %
-            % See description of DIMENSION in ILinSys class.
-            %
             [stateDimArr, inpDimArr, outDimArr, distDimArr] = ...
                 arrayfun(@(x) getDimensions(x), self);
             %
@@ -716,9 +688,6 @@ classdef ALinSys < elltool.linsys.ILinSys
         end
         %
         function isDisturbanceArr = hasdisturbance(self, varargin)
-            %
-            % See description of HASDISTURBANCE in ILinSys class.
-            %
             if (nargin == 1)
                 isMeaningful = true;
             else
@@ -739,9 +708,6 @@ classdef ALinSys < elltool.linsys.ILinSys
         end
         %
         function isNoiseArr = hasnoise(self)
-            %
-            % See description of HASNOISE in ILinSys class.
-            %
             isNoiseArr = arrayfun(@(x) isNoise(x), self);
             %
             function isNoise = isNoise(linsys)
@@ -753,9 +719,6 @@ classdef ALinSys < elltool.linsys.ILinSys
         end
         %
         function isEmptyArr = isempty(self)
-            %
-            % See description of ISEMPTY in ILinSys class.
-            %
             isEmptyArr = arrayfun(@(x) isEmp(x), self);
             %
             function isEmp = isEmp(linsys)
@@ -767,9 +730,6 @@ classdef ALinSys < elltool.linsys.ILinSys
         end
         %
         function isLtiArr = islti(self)
-            %
-            % See description of ISLTI in ILinSys class.
-            %
             isLtiArr = arrayfun(@(x) isLti(x), self);
             %
             function isLti = isLti(linsys)
@@ -778,26 +738,10 @@ classdef ALinSys < elltool.linsys.ILinSys
         end
         %
         function absTolArr = getAbsTol(self)
-            %
-            % See description of GETABSTOL in ILinSys class.
-            %
             absTolArr = arrayfun(@(x)x.absTol, self);
         end
         %
         function copyLinSysArr = getCopy(self)
-            %
-            % GETCOPY gives array the same size as linsysArr with
-            % with copies of elements of self.
-            %
-            % Input:
-            %   regular:
-            %       self: elltool.linsys.ALinSys[nDims1, nDims2,...] -
-            %             an array of linear systems.
-            %
-            % Output:
-            %   copyLinSysArr: elltool.linsys.LinSys[nDims1, nDims2,...] -
-            %       an array of copies of elements of self.
-            %
             sizeCVec = num2cell(size(self));
             copyLinSysArr(sizeCVec{:}) = feval(class(self));
             arrayfun(@(x) fSingleCopy(x), 1 : numel(self));
@@ -822,25 +766,6 @@ classdef ALinSys < elltool.linsys.ILinSys
         end
         %
         function isEqualArr = isEqual(self, compLinSysArr)
-            %
-            % ISEQUAL produces produces logical array the same size as
-            % self/compLinSysArr (if they have the same).
-            % isEqualArr[iDim1, iDim2,...] is true if corresponding
-            % linear systems are equal and false otherwise.
-            %
-            % Input:
-            %   regular:
-            %       self: elltool.linsys.ALinSys[nDims1, nDims2,...] -
-            %             an array of linear systems.
-            %       compLinSysArr: elltool.linsys.LinSys[nDims1,...
-            %             nDims2,...] - an array of linear systems.
-            %
-            % Output:
-            %   isEqualArr: elltool.linsys.ALinSys[nDims1, nDims2,...] -
-            %       an array of logical values.
-            %       isEqualArr[iDim1, iDim2,...] is true if corresponding
-            %       linear systems are equal and false otherwise.
-            %
             import modgen.common.throwerror;
             %
             if ~all(size(self) == size(compLinSysArr))

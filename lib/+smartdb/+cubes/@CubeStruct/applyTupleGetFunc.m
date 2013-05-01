@@ -1,6 +1,6 @@
 function varargout=applyTupleGetFunc(self,varargin)
-% APPLYTUPLEGETFUNC applies a function to the specified fields 
-% separately to each tuple 
+% APPLYTUPLEGETFUNC - applies a function to the specified fields 
+%                     separately to each tuple 
 %
 % Input:
 %   regular:

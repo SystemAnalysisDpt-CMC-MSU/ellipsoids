@@ -1,6 +1,6 @@
 function resRel=getJoinWith(self,otherRel,keyFieldNameList,varargin)
-% GETJOINWITH returns a result of INNER join of given relation with another
-% relation by the specified key fields 
+% GETJOINWITH - returns a result of INNER join of given relation with 
+%               another relation by the specified key fields 
 %
 % LIMITATION: key fields by which the join is peformed are required to form
 % a unique key in the given relation

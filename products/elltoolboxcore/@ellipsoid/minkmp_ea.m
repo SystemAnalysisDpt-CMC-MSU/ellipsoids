@@ -28,13 +28,25 @@ function extApprEllVec = minkmp_ea(fstEll, secEll, sumEllArr, dirMat)
 %       approximating ellipsoids (empty, if for all specified
 %       directions approximations cannot be computed).
 %
-% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 2004-2008 $
+% Example:
+%   firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+%   secEllObj = 3*ell_unitball(2);
+%   dirsMat = [1 0; 1 1; 0 1; -1 1]';
+%   bufEllVec = [secEllObj firstEllObj];
+%   externalEllVec = secEllObj.minkmp_ea(firstEllObj, bufEllVec, dirsMat)
+% 
+%   externalEllVec =
+%   1x2 array of ellipsoids.
 %
-% $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
+% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+% $Copyright:  The Regents of the University of California 
+%              2004-2008 $
+%
+% $Author: Guliev Rustam <glvrst@gmail.com> $   
+% $Date: Dec-2012$
 % $Copyright: Moscow State University,
-%             Faculty of Computational Mathematics and Cybernetics,
-%             Science, System Analysis Department 2012 $
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2012 $
 %
 
 import elltool.conf.Properties;

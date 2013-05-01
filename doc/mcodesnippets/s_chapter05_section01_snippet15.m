@@ -1,1 +1,1 @@
-minksum(EE);
+ellMat.minksum();

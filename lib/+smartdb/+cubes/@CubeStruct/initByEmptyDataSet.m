@@ -1,9 +1,11 @@
 function initByEmptyDataSet(self,dimVec)
-% INITBYEMPTYDATASET initializes cube struct object with null value arrays
-% of specified size based on minDimVec specified. For instance, if
-% minDimVec=[2,3,4,5,6] and minDimensionality of cube struct object cb is 2,
-% then cb.initByEmptyDataSet(minDimVec) will create a cube struct object
-% with element array of [2,3] size where each element has size of [4,5,6,0]
+% INITBYEMPTYDATASET - initializes cube struct object with null value arrays
+%                      of specified size based on minDimVec specified.
+%
+% For instance, if minDimVec=[2,3,4,5,6] and minDimensionality of cube 
+% struct object cb is 2, then cb.initByEmptyDataSet(minDimVec) will create 
+% a cube struct object with element array of [2,3] size where each element 
+% has size of [4,5,6,0]
 %
 % Input:
 %   regular:
