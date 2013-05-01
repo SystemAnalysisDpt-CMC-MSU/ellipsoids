@@ -242,8 +242,6 @@ subroutine closed_loop_simulate(this)
         if( this%ea%nv > 0 ) write(uv, fmtv) v
         write(ud, fmtd) dmin
 
-        call mat_save_ea(trim(prefix)//"data.mat", this%ea);
-
         ! close files
         close(ut)
         close(ux)

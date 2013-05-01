@@ -33,7 +33,7 @@ classdef GoodDirectionSet
         function lsGoodDirMat=getlsGoodDirMat(self)
             lsGoodDirMat=self.lsGoodDirMat;
         end
-        function self=GoodDirectionSet(pDefObj,sTime,lsGoodDirMat,...
+        function self=GoodDirectionSet(pDynObj,sTime,lsGoodDirMat,...
                 calcPrecision)
             import gras.ellapx.common.*;
             import gras.mat.MatrixOperationsFactory;
@@ -43,13 +43,13 @@ classdef GoodDirectionSet
             %
             self.lsGoodDirMat=lsGoodDirMat;
             %
-            timeLimsVec=pDefObj.getTimeLimsVec();
+            timeLimsVec=pDynObj.getTimeLimsVec();
             if (sTime>timeLimsVec(2))||(sTime<timeLimsVec(1))
                 throwerror('wrongInput',...
                     'sTime is expected to be within %s',...
                     mat2str(timeLimsVec));
             end
-            timeVec=unique([pDefObj.getTimeVec(),sTime]);
+            timeVec=unique([pDynObj.getTimeVec(),sTime]);
             indSTime=find(timeVec==sTime,1,'first');
             if isempty(indSTime)
                 throwerror('wrongInput',...
@@ -58,7 +58,7 @@ classdef GoodDirectionSet
             %
             matOpFactory = MatrixOperationsFactory.create(timeVec);
             %
-            Xtt0Dynamics = pDefObj.getXtt0Dynamics();
+            Xtt0Dynamics = pDynObj.getXtt0Dynamics();
             Xt0tTransDynamics = ...
                 matOpFactory.transpose(matOpFactory.inv(Xtt0Dynamics));
             Xst0TransConstMatFunc = ...

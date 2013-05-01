@@ -63,16 +63,18 @@ classdef MixTubeFortData < handle
             end
             %
             for iTimePoint = 1:self.nTimePoints
+                iReversedTimePoint = self.nTimePoints + 1 - iTimePoint;
+                %
                 [atVec, ~, ltMat, qtArray] = self.unpack( ...
                     self.FortranData.yMat(:,iTimePoint));
-                
-                aMat(:,iTimePoint) = atVec;
+                %
+                aMat(:,iReversedTimePoint) = atVec;
+                %
                 ltMat = bsxfun(@rdivide,ltMat,realsqrt(sum(ltMat.*ltMat)));
-                ltGoodDirArray(:,:,self.nTimePoints-iTimePoint+1) = ltMat;
-                
+                ltGoodDirArray(:,:,iReversedTimePoint) = ltMat;
+                %
                 for iGoodDir = 1:self.nGoodDirs
-                    qArrayList{iGoodDir}(:,:,self.nTimePoints-iTimePoint+1) = ...
-                        qtArray(:,:,iGoodDir);
+                    qArrayList{iGoodDir}(:,:,iReversedTimePoint) = qtArray(:,:,iGoodDir);
                 end
             end
             %

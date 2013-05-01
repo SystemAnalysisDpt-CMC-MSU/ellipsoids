@@ -91,7 +91,7 @@
 					</props>
 				</uncertMixed>
 			</schemas>
-			<dispScaleFactor type="double" >0.99</dispScaleFactor>
+			<dispScaleFactor type="double" >1</dispScaleFactor>
 		</internalApx>
 		<externalApx type="struct" >
 			<isEnabled type="boolean" >0</isEnabled>
@@ -100,7 +100,7 @@
 					<isEnabled type="boolean" >0</isEnabled>
 				</justQ>
 			</schemas>
-			<dispScaleFactor type="double" >1.01</dispScaleFactor>
+			<dispScaleFactor type="double" >1</dispScaleFactor>
 		</externalApx>
 		<extIntApx type="struct" >
 			<isEnabled type="boolean" >0</isEnabled>

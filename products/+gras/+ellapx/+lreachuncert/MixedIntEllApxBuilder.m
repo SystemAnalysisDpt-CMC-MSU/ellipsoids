@@ -10,10 +10,8 @@ classdef MixedIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
         mixingProportionsMat
         ellTubeRel
         AtDynamics
-        BPBTransDynamics
         BPBTransSqrtDynamics
         CQCTransDynamics
-        slCQClSqrtDynamicsList
         ltSplineList
         goodDirSetObj
     end
@@ -21,28 +19,28 @@ classdef MixedIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
         function varargout = calcEllApxMatrixDeriv(self,t,varargin)
             nGoodDirs = self.getNGoodDirs();
             AMat = self.AtDynamics.evaluate(t);
-            RSqrtMat = self.BPBTransSqrtDynamics.evaluate(t);
-            DMat = self.CQCTransDynamics.evaluate(t);
+            BPBTransSqrtMat = self.BPBTransSqrtDynamics.evaluate(t);
+            CQCTransMat = self.CQCTransDynamics.evaluate(t);
             %
             varargout = cell(1,nGoodDirs);
             %
             for iGoodDir = 1:nGoodDirs
                 QMat = varargin{iGoodDir};
                 %
-                % main component
+                % dynamics and contol component
                 %
                 QSqrtMat = gras.la.sqrtmpos(QMat);
                 ltVec = self.ltSplineList{iGoodDir}.evaluate(t);
-                SMat = self.getOrthTranslMatrix(QSqrtMat,RSqrtMat,...
-                    RSqrtMat*ltVec,QSqrtMat*ltVec);
-                tmpMat = (AMat*QSqrtMat+RSqrtMat*(SMat.'))*QSqrtMat;
+                SMat = self.getOrthTranslMatrix(QSqrtMat,BPBTransSqrtMat,...
+                    BPBTransSqrtMat*ltVec,QSqrtMat*ltVec);
+                uMat = AMat*QMat + QSqrtMat*SMat*BPBTransSqrtMat;
                 %
                 % disturbance component
                 %
-                piNumerator = self.slCQClSqrtDynamicsList{iGoodDir}.evaluate(t);
-                piDenominator = realsqrt((ltVec.')*QMat*ltVec);
+                piNumerator = (ltVec.')*(CQCTransMat*ltVec);
+                piDenominator = (ltVec.')*(QMat*ltVec);
                 if piNumerator <= 0 || piDenominator <= 0
-                    if min(eig(DMat)) <= 0
+                    if min(eig(CQCTransMat)) <= 0
                         modgen.common.throwerror('wrongInput',...
                             ['degenerate matrices C,Q for disturbance ',...
                             'contraints are not supported']);
@@ -51,24 +49,21 @@ classdef MixedIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
                             'the estimate has degraded for unknown reason');
                     end
                 end
-                piFactor = piNumerator/piDenominator;
+                piFactor = realsqrt(piNumerator/piDenominator);
+                vMat = -piFactor*QMat - CQCTransMat/piFactor;
                 %
-                % regularization component
+                % convex combination component
                 %
-                mixMat = QMat;
+                mMat = -QMat;
                 for jGoodDir = 1:nGoodDirs
-                    mixMat = mixMat-self.mixingProportionsMat(iGoodDir,...
+                    mMat = mMat+self.mixingProportionsMat(iGoodDir,...
                         jGoodDir)*varargin{jGoodDir};
                 end
                 %
                 % derivative
                 %
-                uMat = -AMat*QMat + QSqrtMat*SMat*RSqrtMat;
-                varargout{iGoodDir} = uMat + uMat.' + piFactor*QMat + ...
-                    DMat/piFactor;
-%                 varargout{iGoodDir} = (tmpMat+tmpMat.')-...
-%                     (piFactor*QMat+DMat/piFactor)-...
-%                     (self.mixingStrength*mixMat);
+                varargout{iGoodDir} = uMat + uMat.' + vMat + ...
+                    self.mixingStrength*mMat;
             end
         end
     end
@@ -79,21 +74,13 @@ classdef MixedIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             matOpFactory = MatrixOperationsFactory.create(pDefObj.getTimeVec());
             %
             self.AtDynamics = pDefObj.getAtDynamics();
-            self.BPBTransDynamics = pDefObj.getBPBTransDynamics();
             self.BPBTransSqrtDynamics = matOpFactory.sqrtmpos(...
                 pDefObj.getBPBTransDynamics());
             self.CQCTransDynamics = pDefObj.getCQCTransDynamics();
             self.ltSplineList = ...
                 self.getGoodDirSet().getGoodDirOneCurveSplineList();
-            %
-            nGoodDirs = self.getGoodDirSet().getNGoodDirs();
-            self.slCQClSqrtDynamicsList = cell(1,nGoodDirs);
-            for iGoodDir = 1:nGoodDirs
-                self.slCQClSqrtDynamicsList{iGoodDir} = ...
-                    matOpFactory.quadraticFormSqrt(...
-                    self.CQCTransDynamics,self.ltSplineList{iGoodDir});
-            end
         end
+        %
         function build(self)
             import gras.ode.MatrixSysODESolver;
             import modgen.logging.log4j.Log4jConfigurator;
@@ -170,7 +157,7 @@ classdef MixedIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
                 'mixingProportions'}, 0, 3);
             mMat = cell2mat(mixingProportionsCMat);
             %
-            checkgen(mixingStrength,'x>0');
+            checkgen(mixingStrength,'x>=0');
             checkgenext(['size(x1,1)==size(x1,2) && size(x1,1)==x2 && '...
                 'all(x1(:)>=0) && max(abs(sum(x1,2)-ones(x2,1)))<x3'],...
                 3,mMat,goodDirSetObj.getNGoodDirs(),calcPrecision);
@@ -181,6 +168,7 @@ classdef MixedIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             self.goodDirSetObj = goodDirSetObj;
             self.prepareODEData();
         end
+        %
         function ellTubeRel = getEllTubes(self)
             self.build();
             ellTubeRel = self.ellTubeRel;

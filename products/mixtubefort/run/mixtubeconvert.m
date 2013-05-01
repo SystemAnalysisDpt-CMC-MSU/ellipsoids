@@ -1,13 +1,21 @@
 import gras.ellapx.uncertmixcalc.test.conf.MixTubeFortData
 %
-DirList = dir('example_*_config_*');
+[~,currentDir] = fileparts(fileparts(mfilename('fullpath')));
+%
+if strcmp(currentDir, 'run')
+    basePath = ['products' filesep 'mixtubefort' filesep 'run'];
+else
+    basePath = '.';
+end
+%
+DirList = dir([basePath filesep 'example_*_config_*']);
 nDirs = numel(DirList);
 %
 fprintf('%d configuration(s) found\n',nDirs);
 %
 for iDir = 1:nDirs
     dirName = DirList(iDir).name;
-    dataFileName = [dirName filesep 'data.mat'];
+    dataFileName = [basePath filesep dirName filesep 'data.mat'];
     %
     fprintf('converting configuration "%s"\n',dirName);
     %

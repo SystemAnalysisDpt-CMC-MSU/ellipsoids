@@ -4,8 +4,7 @@ loader = mlunitext.test_loader;
 %
 crm=gras.ellapx.uncertmixcalc.test.conf.ConfRepoMgr();
 confNameList=crm.deployConfTemplate('*');
-confNameList = setdiff(confNameList,{'default'});
-confNameList = {'example_1_config_2'};
+confNameList=setdiff(confNameList,{'default'});
 crmSys=gras.ellapx.uncertmixcalc.test.conf.sysdef.ConfRepoMgr();
 crmSys.deployConfTemplate('*');
 nConfs=length(confNameList);

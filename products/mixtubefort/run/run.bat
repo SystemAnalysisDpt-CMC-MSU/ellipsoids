@@ -24,25 +24,13 @@ goto config_%config%
 :config_1
 	set d="%example%_config_1"
 	if not exist %d% mkdir %d%
-	%exe% --prefix "%d%/" --n  5 --tolerance 1D-6 --t 40 --nl 2 --unilateral --nt 4001 --mr 1D-2 --operator matrix
+	%exe% --prefix "%d%/" --n  2 --tolerance 1D-5 --t 0.4 --nu 1 --nv 1 --nl 4 --nt 100 --rp 1 --rq 1D-1 --rm 1 --alpha 1 --beta 1 --operator matrix
     if "%config%" NEQ "all" goto end_switch
 
 :config_2
 	set d="%example%_config_2"
 	if not exist %d% mkdir %d%
-	%exe% --prefix "%d%/" --n  5 --tolerance 1D-6 --t 1D-1 --nl 1 --nt 201 --rm 1D-2 --operator matrix
-    if "%config%" NEQ "all" goto end_switch
-
-:config_3
-	set d="%example%_config_3"
-	if not exist %d% mkdir %d%
-	%exe% --prefix "%d%/" --n 10 --tolerance 1D-6 --t 20 --nl 5 --rm 1D-4 --nu 3 --rp 2 --rq 1 --vmode U --operator matrix
-    if "%config%" NEQ "all" goto end_switch
-
-:config_4
-	set d="%example%_config_4"
-	if not exist %d% mkdir %d%
-	%exe% --prefix "%d%/" --n 10 --tolerance 1D-4 --t 2 --nl 20 --nt 1001 --mr 1D-2 --write-eigs --alpha .1 --operator matrix 
+	%exe% --prefix "%d%/" --n  5 --tolerance 1D-7 --t 0.8 --nu 3 --nv 3 --nl 4 --nt 100 --rp 2 --rq 1D-2 --rm 3 --alpha 1 --beta 1 --operator matrix
     if "%config%" NEQ "all" goto end_switch
 
 :end_switch

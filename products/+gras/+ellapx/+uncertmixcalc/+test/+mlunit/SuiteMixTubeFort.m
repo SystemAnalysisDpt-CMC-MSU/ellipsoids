@@ -16,8 +16,49 @@ classdef SuiteMixTubeFort < mlunitext.test_case
         end
         %
         function testCompare(self)
-            gras.ellapx.uncertmixcalc.run(self.confName,...
+            import gras.ellapx.smartdb.F
+            %
+            calcPrecision = 1e-5;
+            %
+            SRunProp = gras.ellapx.uncertmixcalc.run(self.confName,...
                 'confRepoMgr',self.crm,'sysConfRepoMgr',self.crmSys);
+            ellTubeGot = SRunProp.ellTubeRel;
+            DataGot = ellTubeGot.getData();
+            %
+            curPath = fileparts(mfilename('fullpath'));
+            SFortranTube = load([curPath filesep 'TestData'...
+                filesep self.confName '.mat']);
+            ellTubeExp = SFortranTube.ellTubeRel;
+            DataExp = ellTubeExp.getData();
+            %
+            nTubes = ellTubeExp.getNElems;
+            for iTube = 1:nTubes
+                checkField(F.Q_ARRAY);
+                %
+                checkField(F.A_MAT);
+                %
+                lGotMat = DataGot.ltGoodDirMat{iTube};
+                lExpMat = DataExp.ltGoodDirMat{iTube};
+                lGotMat = bsxfun(@rdivide, lGotMat,...
+                    realsqrt(sum(lGotMat.*lGotMat)));
+                lExpMat = bsxfun(@rdivide, lExpMat,...
+                    realsqrt(sum(lExpMat.*lExpMat)));
+                compareArrays(lGotMat, lExpMat);
+            end
+            %
+            function checkField(fieldName)
+                compareArrays(DataGot.(fieldName){iTube}, ...
+                    DataExp.(fieldName){iTube})
+            end
+            %
+            function compareArrays(aArray, bArray)
+                rArray = aArray - bArray;
+                try
+                mlunit.assert(max(abs(rArray(:))) < calcPrecision);
+                catch
+                    1
+                end
+            end
         end
     end
 end

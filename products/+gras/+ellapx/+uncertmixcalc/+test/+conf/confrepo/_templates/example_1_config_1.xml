@@ -2,15 +2,15 @@
 <root version="18" xml_tb_version="2.0" type="struct" >
 <valueObj type="struct" >
 	<genericProps type="struct" >
-		<calcTimeLimVec type="double" >-7.979727989493313e-17 0.1</calcTimeLimVec>
-		<calcPrecision type="double" >1e-06</calcPrecision>
+		<calcTimeLimVec type="double" >-8.396061623727746e-16 0.4</calcTimeLimVec>
+		<calcPrecision type="double" >1e-05</calcPrecision>
 		<isSplineForMatrixCalcUsed type="boolean" >1</isSplineForMatrixCalcUsed>
 	</genericProps>
 	<projectionProps type="struct" >
 		<projSpaceSetName type="char" >set1</projSpaceSetName>
 		<projSpaceSets type="struct" >
 			<set1 type="cell" >
-				<item type="double" >1 1 0 0 0 0 0 0 0 0</item>
+				<item type="double" >1 1 0 0</item>
 			</set1>
 		</projSpaceSets>
 		<isDynamicProjEnabled type="boolean" >0</isDynamicProjEnabled>
@@ -22,8 +22,11 @@
 			<manual type="struct" >
 				<lsGoodDirSetName type="char" >set1</lsGoodDirSetName>
 				<lsGoodDirSets type="struct" >
-					<set1 type="cell" >
-						<item type="double" >0.4673492245993297 -1.296819552496896 0.3190830649216537 -0.6441176931929975 -0.653169497239241 0.8766065430210434 -0.2310270286954151 -0.37494370930316 0.05925699155390005 0.9062917757140027</item>
+					<set1 type="cell" size="4 1">
+						<item type="double" >0.1444181360748201 0.1187943732122964 -0.1206667553236096 0.4137518259166502</item>
+						<item type="double" >-0.7940110359175284 0.4285619956381295 0.9701326405283302 0.1140067563335072</item>
+						<item type="double" >2.142556916532041 -1.15383274774884 -0.3570537999845826 -1.616107469036286</item>
+						<item type="double" >1.469644137957468 0.180653544722788 1.419932540248706 1.969538718635977</item>
 					</set1>
 				</lsGoodDirSets>
 			</manual>
@@ -32,7 +35,7 @@
 				<goodDirSpaceVec type="boolean" >1 1</goodDirSpaceVec>
 			</auto>
 		</methodProps>
-		<selectionTime type="double" >-7.979727989493313e-17</selectionTime>
+		<selectionTime type="double" >-8.396061623727746e-16</selectionTime>
 	</goodDirSelection>
 	<customResultDir type="struct" >
 		<isEnabled type="boolean" >0</isEnabled>
@@ -82,14 +85,17 @@
 					<isEnabled type="boolean" >1</isEnabled>
 					<props type="struct" >
 						<selectionMethodForSMatrix type="char" >volume</selectionMethodForSMatrix>
-						<mixingStrength type="double" >0.9</mixingStrength>
-						<mixingProportions type="cell" >
-							<item type="double" >1</item>
+						<mixingStrength type="double" >1</mixingStrength>
+						<mixingProportions type="cell" size="4 1">
+							<item type="double" >0.25 0.25 0.25 0.25</item>
+							<item type="double" >0.25 0.25 0.25 0.25</item>
+							<item type="double" >0.25 0.25 0.25 0.25</item>
+							<item type="double" >0.25 0.25 0.25 0.25</item>
 						</mixingProportions>
 					</props>
 				</uncertMixed>
 			</schemas>
-			<dispScaleFactor type="double" >0.99</dispScaleFactor>
+			<dispScaleFactor type="double" >1</dispScaleFactor>
 		</internalApx>
 		<externalApx type="struct" >
 			<isEnabled type="boolean" >0</isEnabled>
@@ -98,7 +104,7 @@
 					<isEnabled type="boolean" >0</isEnabled>
 				</justQ>
 			</schemas>
-			<dispScaleFactor type="double" >1.01</dispScaleFactor>
+			<dispScaleFactor type="double" >1</dispScaleFactor>
 		</externalApx>
 		<extIntApx type="struct" >
 			<isEnabled type="boolean" >0</isEnabled>
@@ -113,7 +119,7 @@
 			</schemas>
 		</extIntApx>
 	</ellipsoidalApxProps>
-	<systemDefinitionConfName type="char" >example_2_config_2</systemDefinitionConfName>
+	<systemDefinitionConfName type="char" >example_1_config_1</systemDefinitionConfName>
 </valueObj>
-<keyStr type="char" >example_2_config_2</keyStr>
+<keyStr type="char" >example_1_config_1</keyStr>
 </root>
