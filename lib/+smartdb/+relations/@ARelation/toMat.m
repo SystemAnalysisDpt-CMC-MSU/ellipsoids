@@ -1,6 +1,6 @@
 function varargout=toMat(self,varargin)
-% TOMAT transforms values of all fields for all tuples into two
-% dimensional array
+% TOMAT - transforms values of all fields for all tuples into two 
+%         dimensional array
 %
 % Usage: resCMat=toMat(self,varargin)
 %
@@ -17,8 +17,8 @@ function varargout=toMat(self,varargin)
 %     groupByColumns: logical[1,1], if true, each column is returned in a
 %        separate cell
 %
-%     structNameList/dataStructure: char[1,], data structure for which the data is to be
-%        taken from, can have one of the following values
+%     structNameList/dataStructure: char[1,], data structure for which the 
+%        data is to be taken from, can have one of the following values
 %
 %       SData - data itself
 %       SIsNull - contains is-null indicator information for data values
@@ -48,12 +48,12 @@ function varargout=toMat(self,varargin)
 %        which the nulls are to be replaced with the specified values,
 %        if not specified it is assumed that all fields are to be replaced
 %
-%        NOTE!: all fields not listed in this parameter are replaced with the
-%        default values
+%        NOTE!: all fields not listed in this parameter are replaced with 
+%        the default values
 %
 % output:
-%   resCMat:  [nTuples,nFields(N)] - matrix/cell with values of all fields (or
-%       fields selected by optional arguments) for all tuples
+%   resCMat:  [nTuples,nFields(N)] - matrix/cell with values of all fields 
+%       (or fields selected by optional arguments) for all tuples
 %
 %
 % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-03-29 $ 

@@ -14,7 +14,7 @@ function [ projQMat ] = findMatProj( eigvMat,diagMat,basMat )
 %
 % $Author: Vitaly Baranov  <vetbar42@gmail.com> $    $Date: Nov-2012$
 % $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Cybernetics,
+%            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
 %
 curEllMat=eigvMat*diagMat*eigvMat.';

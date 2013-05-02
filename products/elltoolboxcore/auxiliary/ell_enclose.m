@@ -1,13 +1,15 @@
 function E = ell_enclose(V)
 %
-% ELL_ENCLOSE - computes minimum volume ellipsoid that contains given vectors.
+% ELL_ENCLOSE - computes minimum volume ellipsoid that
+%               contains given vectors.
 %
 %
 % Description:
 % ------------
 %
-%    E = ELL_ENCLOSE(V)  Given vectors specified as columns of matrix V,
-%                        compute minimum volume ellipsoid E that contains them.
+%    E = ELL_ENCLOSE(V)  Given vectors specified as columns
+%                 of matrix V, compute minimum  volume 
+%                 ellipsoid E that contains them.
 %
 %
 % Output:

@@ -13,13 +13,32 @@ function outHypArr = uminus(inpHypArr)
 %       of the same hyperplanes as in inpHypArr whose
 %       normals and scalars are multiplied by -1.
 %
-% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 2004-2008 $
+% Example:
+%   hypObj = -hyperplane([-1; 1], 1)
+% 
+%   hypObj =
+%   size: [1 1]
+% 
+%   Element: [1 1]
+%   Normal:
+%        1
+%       -1
+% 
+%   Shift:
+%       -1
+% 
+%   Hyperplane in R^2.
 %
-% $Author: Aushkap Nikolay <n.aushkap@gmail.com> $  $Date: 30-11-2012$
+% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+% $Copyright:  The Regents of the University of California 
+%              2004-2008 $
+%
+% $Author: Aushkap Nikolay <n.aushkap@gmail.com> $  
+% $Date: 30-11-2012$
 % $Copyright: Moscow State University,
-%   Faculty of Computational Mathematics and Computer Science,
-%   System Analysis Department 2012 $
+%             Faculty of Computational Mathematics
+%             and Computer Science,
+%             System Analysis Department 2012 $
 
 hyperplane.checkIsMe(inpHypArr);
 

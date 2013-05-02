@@ -1,5 +1,5 @@
 function writeToCSV(self,filePath)
-% WRITETOCSV writes a content of relation into Excel spreadsheet file
+% WRITETOCSV - writes a content of relation into Excel spreadsheet file
 % Input:
 %   regular:
 %       self:

@@ -1,21 +1,25 @@
 \usepackage[T1]{fontenc}
 \usepackage[cp1251]{inputenc}
 \usepackage{latexsym}
+\usepackage{listings}
 \usepackage{amsthm}
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{graphicx}
-\usepackage{color}
-\usepackage[colorlinks=true,urlcolor=blue,pageanchor=false]{hyperref}
+\usepackage{xcolor}
 \usepackage{fancyvrb}
 \usepackage[courier]{altfont}
 %\usepackage{lastpage}
+\usepackage{hyphenat}
+\usepackage{todonotes}
+\usepackage{epstopdf}
 \usepackage{fancyhdr}
-\usepackage[htt]{hyphenat}
+\usepackage[pdftex,colorlinks=true,urlcolor=blue,pageanchor=false,plainpages=false]{hyperref}
 %
 %---------------------------PAGE MARKING
 %
+\let\equation\gather \let\endequation\endgather
 %set initial parameters
 \textheight=24cm
 %width of text field

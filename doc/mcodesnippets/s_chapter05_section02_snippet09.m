@@ -1,2 +1,6 @@
-ct = cut(rs, 5);  % reach set at time t = 5
+bufEllVec = [firstEllObj secEllObj thirdEllObj];
+bufEllVec.intersect(firstPolObj, 'i')
 
+% ans =
+% 
+%      1

@@ -1,8 +1,10 @@
 function typeSpecList=getFieldTypeSpecList(self,varargin)
-% GETFIELDTYPESPECLIST returns a list of field type specifications. Field
-% type specification is a sequence of type names corresponding to field
-% value types starting with the top level and going down into the nested
-% content of a field (for a field having a complex type).
+% GETFIELDTYPESPECLIST - returns a list of field type specifications. Field
+%                        type specification is a sequence of type names 
+%                        corresponding to field value types starting with 
+%                        the top level and going down into the nested 
+%                        content of a field (for a field having a complex 
+%                        type).
 %
 % Input: 
 %   regular:
