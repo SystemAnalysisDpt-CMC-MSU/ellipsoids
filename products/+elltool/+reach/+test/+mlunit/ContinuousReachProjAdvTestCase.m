@@ -1,4 +1,4 @@
-classdef ContinuousReachProjTestCase2 < mlunitext.test_case
+classdef ContinuousReachProjAdvTestCase < mlunitext.test_case
     properties (Access=private, Constant)
         FIELDS_NOT_TO_COMPARE={'LT_GOOD_DIR_NORM_ORIG_VEC';'PROJ_S_MAT';...
         	'LS_GOOD_DIR_ORIG_VEC';'LS_GOOD_DIR_NORM_ORIG'};
@@ -37,6 +37,7 @@ classdef ContinuousReachProjTestCase2 < mlunitext.test_case
         reachObj
         timeVec
         calcPrecision
+        mode
     end
     methods (Access = private, Static)
         function newCMat = multiplyCMat(cellMat, doubleMultMatLeft, doubleMultMatRight)
@@ -111,7 +112,7 @@ classdef ContinuousReachProjTestCase2 < mlunitext.test_case
     end
     %
     methods
-        function self = ContinuousReachProjTestCase2(varargin)
+        function self = ContinuousReachProjAdvTestCase(varargin)
             self = self@mlunitext.test_case(varargin{:});
             [~, className] = modgen.common.getcallernameext(1);
             shortClassName = mfilename('classname');
@@ -119,10 +120,11 @@ classdef ContinuousReachProjTestCase2 < mlunitext.test_case
                 filesep, 'TestData', filesep, shortClassName];
         end
         %
-        function self = set_up_param(self, confName, crm, crmSys)
+        function self = set_up_param(self, confName, crm, crmSys, inpMode)
             self.crm = crm;
             self.crmSys = crmSys;
             self.confName = confName;
+            self.mode = inpMode;
             %
             self.crm.deployConfTemplate(self.confName);
             self.crm.selectConf(self.confName);
@@ -153,26 +155,26 @@ classdef ContinuousReachProjTestCase2 < mlunitext.test_case
         %
         function self = testProjection(self)
             import modgen.common.throwerror;
-            dimReachObj = self.reachObj.dimension();
-            switch dimReachObj
+            nDims = self.reachObj.dimension();
+            caseName = self.mode;
+            switch nDims
                 case 2
-                    projMatList = {self.PROJECTION_DIM2_MAT};
-                    caseNameList = {'fix2','rand2'};
-                    indVecList = repmat({self.DIM2_SYS_IND_VEC},length(caseNameList),1);
+                    projMat = self.PROJECTION_DIM2_MAT;
+                    indVec = self.DIM2_SYS_IND_VEC;
                 case 8
-                    projMatList = {self.PROJECTION_DIM8_MAT,...
-                        self.PROJECTION_DIM8_BAD_PRECISION_MAT};
-                    caseNameList = {'fix8','bad8','rand8'};
-                    indVecList = repmat({self.DIM8_SYS_IND_VEC},length(caseNameList),1);
+                    projMat = self.PROJECTION_DIM8_MAT;
+                    indVec = self.DIM8_SYS_IND_VEC;
                 otherwise
                     throwerror('wrongInput:badDimensionality',...
-                        'expected dimensionality is 8 or 2, real dimensionality is %d',dimReachObj);    
-            end    
-            nProjs = length(projMatList);
-            for iProj = 1:nProjs
-                self.auxTestProjection(indVecList{iProj},caseNameList{iProj},projMatList{iProj}); 
-            end
-            self.auxTestProjection(indVecList{end},caseNameList{end});
+                        'expected dimensionality is 8 or 2, real dimensionality is %d',nDims);    
+            end 
+            switch lower(caseName)
+                case 'fix'
+                    self.auxTestProjection(indVec,caseName,projMat);
+                case 'rand'    
+                    self.auxTestProjection(indVec,caseName);
+                otherwise  
+            end        
         end
     end
 end
