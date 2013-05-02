@@ -13,7 +13,8 @@ classdef MatrixODESolver
         function [timeVec,xResArray]=solve(self,fDerivFunc,timeVec,initVal)
             import modgen.common.throwerror;
             sizeVec = self.sizeVec;
-            reshapeSizeVec=[sizeVec, ones(1, max(0, 2 - length(sizeVec)))];
+            reshapeSizeVec = [sizeVec, ones(1, max(0, ...
+                2 - length(sizeVec)))];
             if ~isequal(reshapeSizeVec, size(initVal))
                 throwerror('wrongInput', ['initial value should be ', ...
                     'consistent with sizeVec specified in ', ...
@@ -36,7 +37,7 @@ classdef MatrixODESolver
                 xResArray = reshape(xResMat.',[sizeVec nTimePoints]);
             else
                 timeVec = timeVec(1);
-                xResArray = reshape(initVal, sizeVec);
+                xResArray = reshape(initVal, reshapeSizeVec);
             end
         end
     end
