@@ -21,7 +21,7 @@ In particular, the support function of the ellipsoid (\ref{ellipsoid}) is
 \rho(l~|~\EE(q,Q)) = \langle l, q\rangle + \langle l, Ql\rangle^{1/2}.
 \label{ellsupp}
 \end{equation}
-Although in (\ref{ellipsoid}) $Q$ is assumed to be
+Although in (\ref{ellipsoid})    $Q$ is assumed to be
 positive definite, in practice we may deal with situations when $Q$ is
 singular, that is, with degenerate ellipsoids flat in those directions
 for which the corresponding eigenvalues are zero. Therefore, it is
@@ -40,6 +40,7 @@ wherein matrix $Q$ is positive semidefinite
 ($Q=Q^T$ and $\langle x, Qx\rangle\geq0$ for all $x\in{\bf R}^n$).
 \label{ellipsoiddef}
 \ed
+\todo[inline]{Added this definition}
 The volume of ellipsoid $\EE(q,Q)$ is
 \begin{equation}
 {\bf Vol}(E(q,Q)) = {\bf Vol}_{\langle x,x\rangle\leq1}\sqrt{\det Q},
@@ -55,7 +56,6 @@ in ${\bf R}^n$:
 \mbox{ for odd } n. \end{array}\right.
 \label{ellunitball}
 \end{equation}
-
 The distance from $\EE(q,Q)$ to the fixed point $a$ is
 \begin{equation}
 {\bf dist}(\EE(q,Q),a) = \max_{\langle l,l\rangle=1}\left(\langle l,a\rangle -
@@ -67,16 +67,7 @@ If ${\bf dist}(\EE(q,Q),a) > 0$, $a$ lies outside  $\EE(q,Q)$;
 if ${\bf dist}(\EE(q,Q),a) = 0$, $a$ is a boundary point of $\EE(q,Q)$;
 if ${\bf dist}(\EE(q,Q),a) < 0$, $a$ is an internal point of $\EE(q,Q)$.
 
-Finding ${\bf dist}(\EE(q,Q),a)$ can be cast as quadratically constrained
-quadratic programming (QCQP) problem:
-\[ d(\EE(q,Q),a)=\min \langle (x-a), (x-a)\rangle \]
-subject to:
-\[ \langle (q-x), Q^{-1}(q-x)\rangle \leq 1 ,\]
-where
-\[ d(\EE(q,Q),a)=\left\{\begin{array}{ll}
-{\bf dist}^2(\EE(q,Q),a) & \mbox{ if } {\bf dist}(\EE(q,Q),a)>0, \\
-0 & \mbox{ otherwise}. \end{array}\right. \]
-
+\todo[inline]{Added this definition}
 Given two ellipsoids, $\EE(q_1,Q_1)$ and $\EE(q_2,Q_2)$, the distance between
 them is
 \begin{eqnarray}
@@ -106,10 +97,11 @@ where
 0 & \mbox{ otherwise}. \end{array}\right. \]
 
 Checking if $k$ nondegenerate ellipsoids $\EE(q_1,Q_1),\cdots,\EE(q_k,Q_k)$
-have nonempty intersection is a QCQP problem:
+have nonempty intersection, can be cast as a quadratically constrained
+quadratic programming (QCQP) problem:
 \[ \min 0 \]
 subject to:
-\[ \langle (x-q_i),Q_i^{-1}(x-q_i)\rangle \leq 1, ~~~ i=1,\cdots,k. \]
+\[ \langle (x-q_i),Q_i^{-1}(x-q_i)\rangle - 1 \leq 0, ~~~ i=1,\cdots,k. \]
 If this problem is feasible,  the intersection is nonempty.
 \bd
 Given compact convex set $\XX\subseteq{\bf R}^n$, its polar set, denoted
@@ -131,7 +123,7 @@ If a nondegenerate ellipsoid $\EE(q,Q)$ contains the origin,
 \EE^\circ(q,Q) & = & \{l\in{\bf R}^n ~|~ \langle l,q\rangle +
 \langle l,Ql\rangle^{1/2}\leq1 \}\\
 & = & \{l\in{\bf R}^n ~|~ \langle l,(Q-qq^T)^{-1}l\rangle +
-2\langle l,q\rangle\leq1 \}\\ 
+2\langle l,q\rangle\leq1 \}\\
 & = & \{l\in{\bf R}^n ~|~ \langle(l+(Q-qq^T)^{-1}q),
 (Q-qq^T)(l+(Q-qq^T)^{-1}q)\rangle\leq1+\langle q,(Q-qq^T)^{-1}q\rangle \}.
 \end{eqnarray*}
@@ -172,7 +164,7 @@ hyperplanes, halfspaces and polytopes.
 \bd
 Hyperplane $H(c,\gamma)$ in ${\bf R}^n$ is the set
 \begin{equation}
-H(c,\gamma) = \{x\in{\bf R}^n ~|~ \langle c, x\rangle = \gamma\}
+H = \{x\in{\bf R}^n ~|~ \langle c, x\rangle = \gamma\}
 \label{hyperplane}
 \end{equation}
 with $c\in{\bf R}^n$ and $\gamma\in{\bf R}$ fixed.
@@ -199,8 +191,8 @@ is equivalent to the feasibility check of the QCQP problem:
 \[ \min 0 \]
 subject to:
 \begin{eqnarray*}
-\langle (x-q_i),Q_i^{-1}(x-q_i)\rangle & \leq & 1, ~~~ i=1,\cdots,k,\\
-\langle c, x\rangle & = & \gamma .
+\langle (x-q_i),Q_i^{-1}(x-q_i)\rangle - 1 \leq 0, & & i=1,\cdots,k,\\
+\langle c, x\rangle - \gamma = 0. & &
 \end{eqnarray*}
 A hyperplane defines two (closed) {\it halfspaces}:
 \begin{equation}
@@ -220,12 +212,10 @@ other halfspace, the same hyperplane should be defined as $H(-c,-\gamma)$.
 The idea behind the calculation of intersection of an ellipsoid with a
 halfspace is to treat the halfspace as an unbounded ellipsoid, that is, as the
 ellipsoid with the shape matrix  all but one of whose eigenvalues are $\infty$.
-\bd
+\bd\label{polytope}
 Polytope $P(C,g)$ is the  intersection of a finite number
 of closed halfspaces:
-\begin{equation}
-P(C,g) = \{x\in{\bf R}^n ~|~ Cx\leq g\},  \label{polytope}
-\end{equation}
+\[ P = \{x\in{\bf R}^n ~|~ Cx\leq g\}, \]
 wherein $C=[c_1 ~ \cdots ~ c_m]^T\in{\bf R}^{m\times n}$ and
 $g=[\gamma_1 ~ \cdots ~ \gamma_m]^T\in{\bf R}^m$.
 \ed
@@ -247,29 +237,9 @@ is equivalent to the feasibility check of the QCQP problem:
 \[ \min 0 \]
 subject to:
 \begin{eqnarray*}
-\langle (x-q_i),Q_i^{-1}(x-q_i)\rangle \leq 1, & & i=1,\cdots,k,\\
-\langle c_j, x\rangle \leq \gamma_j, & & j=1,\cdots,m.
+\langle (x-q_i),Q_i^{-1}(x-q_i)\rangle - 1 \leq 0, & & i=1,\cdots,k,\\
+\langle c_j, x\rangle - \gamma_j \leq 0, & & j=1,\cdots,m.
 \end{eqnarray*}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -284,15 +254,6 @@ A\EE(q,Q) + b = \EE(Aq+b, AQA^T) .\label{affinetrans}
 Thus, ellipsoids are preserved under affine transformation.
 If the rows of $A$ are linearly independent (which implies  $m\leq n$), and
 $b=0$, the affine transformation is called {\it projection}.
-
-
-
-
-
-
-
-
-
 
 
 \subsection{Geometric Sum}
@@ -336,28 +297,27 @@ Varying vector $l$ we get exact external and internal approximations,
 \[ \bigcup_{\langle l,l\rangle=1} \EE(q,Q_l^-) =
 \EE(q_1,Q_1)\oplus\cdots\oplus\EE(q_k,Q_k) =
 \bigcap_{\langle l,l\rangle=1} \EE(q,Q_l^+) .\]
-For proofs of formulas given in this section, see \cite{kurvalyi, kurvar01}.
+For proofs of formulas given in this section, see \cite{kurvalyi},
+\cite{kurvar}.
 
 One last comment is about how to find orthogonal matrices $S_2,\cdots,S_k$
 that align vectors $Q_2^{1/2}l, \cdots, Q_k^{1/2}l$ with $Q_1^{1/2}l$.
-Let $v$ and $w$ be some unit vectors in ${\bf R}^n$.
-We have to find matrix $S$ such that $Sv=w$. For that,
-we perform singular value decomposition (SVD) of vectors $v$ and $w$:
-\begin{equation}
-v = U_v\Sigma_vV_v^T, ~~~~ w = U_w\Sigma_wV_w^T . \label{valign1}
-\end{equation}
-Notice that $V_v$ and $V_w$ are $\pm1$ scalars.
-The matrix $S$ is now easily determined:
-\begin{equation}
-S U_vV_v = U_wV_w ~~~ \Rightarrow ~~~ S = U_wV_wV_vU_v^T. \label{valign2}
-\end{equation}
-
-
-
-
-
-
-
+Let $v_1$ and $v_2$ be some unit vectors in ${\bf R}^n$.
+\todo[inline]{Algorithms of S matrix calculation have been changed}
+We have to find matrix $S$ such that $Sv_2\uparrow\uparrow v_1$.
+We suggest explicit formulas for the calculation of this matrix:
+\begin{eqnarray}
+&&T = I + Q_1(S - I)Q_1^T,\\ \label{valign1}
+&& S = \begin{pmatrix}
+     c & s\\
+     -s & c
+    \end{pmatrix},\quad c = \langle\hat{v_1}, \hat{v_2}\rangle,\quad s = \sqrt{1 - c^2},\quad \hat{v_i} = \dfrac{v_i}{\|v_i\|}\\ \label{valign2}
+&&  Q_1 = [q_1 \,q_2]\in \mathbb{R}^{n\times2},\quad q_1 = \hat{v_1}, \quad
+q_2 = \begin{cases}
+s^{-1}(\hat{v_2} - c\hat{v_1}),& s\ne 0\\
+0,& s = 0.
+\end{cases} \label{valign3}
+\end{eqnarray}
 
 
 
@@ -427,21 +387,21 @@ The center $q$ is
 q = q_1 - q_2;  \label{minkdiff_c}
 \end{equation}
 the shape matrix of the internal ellipsoid $Q^-_l$ is
-\begin{equation}
-Q^-_l = \left(1-\frac{\langle l,Q_1l\rangle^{1/2}}{\langle l,
-Q_2l\rangle^{1/2}}\right)Q_1 +
-\left(1 - \frac{\langle l, Q_2l\rangle^{1/2}}{\langle l,
-Q_1l\rangle^{1/2}}\right)Q_2; \label{minkdiff_ia}
-\end{equation}
+\todo[inline]{Fixed misprints in 2.2.12, 2.2.13}
+\begin{eqnarray}
+&& P = \frac{\sqrt{\langle l, Q_1 l\rangle}}{\sqrt{\langle l, Q_2 \rangle}};\nonumber\\
+&& Q^-_l = \left(1 - \dfrac{1}{P}\right)Q_1 + \left(1 - P\right)Q_2.
+\label{minkdiff_ia}
+\end{eqnarray}
 and the shape matrix of the external ellipsoid $Q^+_l$ is
 \begin{equation}
-Q^+_l = \left(Q_1^{1/2} + SQ_2^{1/2}\right)^T
-\left(Q_1^{1/2} + SQ_2^{1/2}\right).  \label{minkdiff_ea}
+Q^+_l = \left(Q_1^{1/2} - SQ_2^{1/2}\right)^T
+\left(Q_1^{1/2} - SQ_2^{1/2}\right).  \label{minkdiff_ea}
 \end{equation}
 Here $S$ is an orthogonal matrix such that vectors $Q_1^{1/2}l$
 and $SQ_2^{1/2}l$ are parallel.
- $S$ is found from (\ref{valign1}-\ref{valign2}), with
-$v=Q_2^{1/2}l$ and $w=Q_1^{1/2}l$.
+ $S$ is found from (\ref{valign1}-\ref{valign3}), with
+$v_1=Q_2^{1/2}l$ and $v_2=Q_1^{1/2}l$.
 
 Running $l$ over all unit directions that are not bad, we get
 \[ \bigcup_{\langle l,l\rangle=1} \EE(q,Q_l^-) =
@@ -450,17 +410,10 @@ Running $l$ over all unit directions that are not bad, we get
 For proofs of formulas given in this section, see \cite{kurvalyi}.
 
 
-
-
-
-
-
-
-
 \subsection{Geometric Difference-Sum}\label{subsec_diffsum}
 Given ellipsoids $\EE(q_1,Q_1)$, $\EE(q_2,Q_2)$ and $\EE(q_3,Q_3)$, it is
 possible to compute families of external and internal approximating
-ellipsoids for 
+ellipsoids for
 \begin{equation}
 \EE(q_1,Q_1) \dot{-} \EE(q_2,Q_2) \oplus \EE(q_3,Q_3) \label{minkmp}
 \end{equation}
@@ -492,20 +445,10 @@ Running $l$ over all unit vectors that are not bad, this translates to
 \bigcap_{\langle l,l\rangle=1} \EE(q_1-q_2+q_3,Q_l^+) .\]
 
 
-
-
-
-
-
-
-
-
-
-
 \subsection{Geometric Sum-Difference}\label{subsec_sumdiff}
 Given ellipsoids $\EE(q_1,Q1)$, $\EE(q_2,Q_2)$ and $\EE(q_3,Q_3)$, it is
 possible to compute families of external and internal approximating
-ellipsoids for 
+ellipsoids for
 \begin{equation}
 \EE(q_1,Q_1) \oplus \EE(q_2,Q_2) \dot{-} \EE(q_3,Q_3) \label{minkpm}
 \end{equation}
@@ -547,16 +490,6 @@ For any fixed direction $l$ it may be the case that neither external nor
 internal tight ellipsoidal approximations exist.
 
 
-
-
-
-
-
-
-
-
-
-
 \subsection{Intersection of Ellipsoid and Hyperplane}
 Let nondegenerate ellipsoid $\EE(q,Q)$ and hyperplane $H(c,\gamma)$ be such that
 ${\bf dist}(\EE(q,Q),H(c,\gamma))<0$. In other words,
@@ -567,8 +500,8 @@ ellipsoid. Here we show how to find it.
 First of all, we transform the hyperplane $H(c,\gamma)$
 into $H([1~0~\cdots~0]^T, 0)$ by the affine transformation
 \[ y = Sx - \frac{\gamma}{\langle c,c\rangle^{1/2}}Sc, \]
-where $S$ is an orthogonal matrix found by (\ref{valign1}-\ref{valign2}) with
-$v=c$ and $w=[1~0~\cdots~0]^T$.
+where $S$ is an orthogonal matrix found by (\ref{valign1}-\ref{valign3}) with
+$v_1=c$ and $v_2=[1~0~\cdots~0]^T$.
 The ellipsoid in the new coordinates becomes $\EE(q',Q')$ with
 \begin{eqnarray*}
 q' & = & q-\frac{\gamma}{\langle c,c\rangle^{1/2}}Sc, \\
@@ -607,14 +540,6 @@ W & = & S^TW'S.
 \end{eqnarray*}
 
 
-
-
-
-
-
-
-
-
 \subsection{Intersection of Ellipsoid and Ellipsoid}
 Given two nondegenerate ellipsoids $\EE(q_1,Q_1)$ and $\EE(q_2,Q_2)$,
 ${\bf dist}(\EE(q_1,Q_1),\EE(q_2,Q_2))<0$ implies that
@@ -630,7 +555,7 @@ Define matrices
 \begin{equation}
 W_1 = Q_1^{-1}, ~~~~ W_2 = Q_2^{-1} .\label{wmatrices}
 \end{equation}
-Tight external ellipsoidal approximation $\EE(q+,Q^+)$ of
+Minimal volume external ellipsoidal approximation $\EE(q+,Q^+)$ of
 the intersection $\EE(q_1,Q_1)\cap\EE(q_2,Q_2)$ is determined from the set
 of equations:
 \begin{eqnarray}
@@ -659,18 +584,17 @@ if, for example, one ellipsoid is contained in the other:
 \EE(q_2,Q_2)\subseteq\EE(q_1,Q_1) & \Rightarrow & \pi_0 = 0.\\
 \end{eqnarray*}
 The proof that the system of equations (\ref{fusion1}-\ref{fusion5})
-correctly defines the tight external ellipsoidal approximation
+correctly defines the minimal volume external ellipsoidal approximationi
 of the intersection $\EE(q_1,Q_1)\cap\EE(q_2,Q_2)$ is given in \cite{fusion}.
 
 To find the internal approximating ellipsoid
 $\EE(q^-,Q^-)\subseteq\EE(q_1,Q_1)\cap\EE(q_2,Q_2)$, define
 \begin{eqnarray}
 \beta_1 & = &
-\min_{\langle (x-q_2),W_2(x-q_2)\rangle=1}\langle (x-q_1),W_1(x-q_1)\rangle,
-\label{beta1}\\
-\beta_2 & = & \min_{\langle (x-q_1),W_1(x-q_1)\rangle=1}\langle
-(x-q_2),W_2(x-q_2)\rangle, \label{beta2}
+\min_{\langle x,W_2x\rangle=1}\langle x,W_1x\rangle, \label{beta1}\\
+\beta_2 & = & \min_{\langle x,W_1x\rangle=1}\langle x,W_2x\rangle, \label{beta2}
 \end{eqnarray}
+Notice that (\ref{beta1}) and (\ref{beta2}) are QCQP problems.
 Parameters $\beta_1$ and $\beta_2$ are invariant with respect to affine
 coordinate transformation and describe the position of ellipsoids
 $\EE(q_1,Q_1)$, $\EE(q_2,Q_2)$ with respect to each other:
@@ -720,16 +644,6 @@ and
 \EE(q^-,Q^-)=\EE(q_2,Q_2). \]
 The method of finding the internal ellipsoidal approximation of the
 intersection of two ellipsoids is described in \cite{vazhen}.
-
-
-
-
-
-
-
-
-
-
 
 
 \subsection{Intersection of Ellipsoid and Halfspace}
@@ -789,12 +703,9 @@ $c_1$, and the first element of vector $g$, $\gamma_1$. Then, one by one, we get
 The resulting ellipsoidal approximations are
 \[ \EE(q^+,Q^+)=\EE(q^+_m,Q^+_m), ~~~~ \EE(q^-,Q^-)=\EE(q^-_m,Q^-_m) .\]
 
-
-
-
-
-\subsection{Checking if $\EE(q_1,Q_1)\subseteq\EE(q_2,Q_2)$}\label{subsec_ellcontainment}
-Theorem of alternatives, also known as \emph{$S$-procedure} \cite{boyd04},
+\subsection{Checking if \texorpdfstring{$\EE(q_1,Q_1)\subseteq\EE(q_2,Q_2)$}{enc}}\label{subsec_ellcontainment}
+\todo[inline]{Added this section}
+Theorem of alternatives, also known as \emph{$S$-procedure} \cite{boyd2},
 states that the implication
 \[
 \langle x, A_1x\rangle + 2\langle b_1,x\rangle + c_1 \leq 0
@@ -808,7 +719,7 @@ such that
 \left[\begin{array}{cc}
 A_2 & b_2\\
 b_2^T & c_2\end{array}\right]
-\preceq 
+\preceq
 \lambda\left[\begin{array}{cc}
 A_1 & b_1\\
 b_1^T & c_1\end{array}\right].
@@ -836,6 +747,7 @@ where $\lambda\in{\bf R}$ is the variable.
 
 
 \subsection{Minimum Volume Ellipsoids}
+\todo[inline]{Added this section}
 The minimum volume ellipsoid that contains set $S$ is called
 \emph{L\"{o}wner-John ellipsoid} of the set $S$.
 To characterize it we rewrite general ellipsoid $\EE(q,Q)$ as
@@ -894,15 +806,10 @@ After $A$ and $b$ are found,
 \[ q=-A^{-1}b ~~~ \mbox{ and } ~~~ Q=(A^TA)^{-1}. \]
 
 The results on the minimum volume ellipsoids are explained
-and proven in \cite{boyd04}.
-
-
-
-
-
-
+and proven in \cite{boyd2}.
 
 \subsection{Maximum Volume Ellipsoids}
+\todo[inline]{Added this section}
 Consider a problem of finding the maximum volume ellipsoid that lies inside
 a bounded convex set $S$ with nonempty interior.
 To formulate this problem we rewrite general ellipsoid $\EE(q,Q)$ as
@@ -957,4 +864,5 @@ After $B$ and $q$ are found,
 \[ Q = B^TB. \]
 
 The results on the maximum volume ellipsoids are explained
-and proven in \cite{boyd04}.
+and proven in \cite{boyd2}.
+

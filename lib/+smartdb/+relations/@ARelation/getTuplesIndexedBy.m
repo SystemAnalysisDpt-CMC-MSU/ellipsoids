@@ -1,19 +1,20 @@
 function obj=getTuplesIndexedBy(self,indexFieldName,indexValueVec)
-% GETTUPLESINDEXEDBY selects tuples from given relation such
-% that fixed index field contains given in a specified order values 
-% and returns the result as new relation. It is required that the original relation
-% contains only one record for each field value
+% GETTUPLESINDEXEDBY - selects tuples from given relation such that fixed 
+%                      index field contains given in a specified order  
+%                      values and returns the result as new relation. 
+%                      It is required that the original relation
+%                      contains only one record for each field value
 %
 % input:
 %   regular:
 %     self: ARelation [1,1] - class object
 %     indexFieldName: char - name of index field
-%     indexValueVec: numeric or char cell [nValues,1] - vector
-%         of index values
+%     indexValueVec: numeric or char cell [nValues,1] - vector of index 
+%         values
 % output:
 %   regular:
-%     obj: ARelation [1,1] - new class object containing only
-%         selected tuples
+%     obj: ARelation [1,1] - new class object containing only selected 
+%         tuples
 %
 %TODO add type check
 %

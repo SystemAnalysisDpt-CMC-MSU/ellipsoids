@@ -39,14 +39,25 @@ function [supArr, bpArr] = rho(ellArr, dirsArr)
 %
 %   bpArr: double[nDim,nDims1,nDims2,...,nDimsN]/
 %           double[nDim,nDirs]/[nDim,1] - array or matrix of boundary points
+% 
+% Example:
+%   ellObj = ellipsoid([-2; 4], [4 -1; -1 1]);
+%   dirsMat = [-2 5; 5 1];
+%   suppFuncVec = rho(ellObj, dirsMat)
+% 
+%   suppFuncVec =
+% 
+%       31.8102    3.5394
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regesnts of the University of California 2004-2008 $
+% $Copyright:  The Regesnts of the University of California 
+%              2004-2008 $
 %
-% $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
+% $Author: Guliev Rustam <glvrst@gmail.com> $   
+% $Date: Dec-2012$
 % $Copyright: Lomonosov Moscow State University,
-%             Faculty of Computational Mathematics and Cybernetics,
-%             Science, System Analysis Department 2012 $
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2012 $
 %
 % $Author: Vitaly Baranov <vetbar42@gmail.com> $   $Date: 27-04-2013$
 % $Copyright: Lomonosov Moscow State University,
@@ -116,14 +127,16 @@ else % multiple ellipsoids, multiple directions
 end
 %
     function [supFun xVec] = fRhoForDir(ellObj,dirVec)
+        import gras.gen.sqrtpos;
         [cenVec ellMat]=double(ellObj);
         absTol=ellObj.getAbsTol();
-        sq  = max(realsqrt(dirVec'*ellMat*dirVec), absTol);
+        sq  = sqrtpos(dirVec'*ellMat*dirVec,absTol);
         supFun = cenVec'*dirVec + sq;
         xVec = ((ellMat*dirVec)/sq) + cenVec;
     end
     function [supFun xVec] = fSingleRhoForOneEll(dirMat)
-        tempMat  = max(sqrt(sum(dirsMat'*ellMat.*dirsMat',2)), absTol);
+        import gras.gen.sqrtpos;
+        tempMat  = sqrtpos(sum(dirsMat'*ellMat.*dirsMat',2), absTol);
         supFun = cenVec'*dirMat + tempMat';
         xVec =((ellMat*dirsMat)./repmat(tempMat',size(ellMat,1),1))+...
             repmat(cenVec,1,size(dirsMat,2));

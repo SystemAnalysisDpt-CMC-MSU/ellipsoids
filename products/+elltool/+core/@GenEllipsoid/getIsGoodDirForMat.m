@@ -1,8 +1,8 @@
 function [ isOk, pPar] = getIsGoodDirForMat( ellQ1Mat, ellQ2Mat,dirVec,...
     absTol )
 % GETISGOODDIRFORMAT - check whether specified direction is appropriate for
-% computing tight extrenal approximation of the difference
-% of two generalized ellipsoids
+%                      computing tight extrenal approximation of the 
+%                      difference of two generalized ellipsoids
 %
 % Input:
 %   regular:
@@ -20,7 +20,7 @@ function [ isOk, pPar] = getIsGoodDirForMat( ellQ1Mat, ellQ2Mat,dirVec,...
 %
 % $Author: Vitaly Baranov  <vetbar42@gmail.com> $    $Date: Nov-2012$
 % $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Cybernetics,
+%            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
 %
 import gras.gen.sqrtpos;

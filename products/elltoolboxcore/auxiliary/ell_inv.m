@@ -1,12 +1,14 @@
 function I = ell_inv(A)
 %
-% ELL_INV - computes matrix inverse treating ill-conditioned matrices properly.
+% ELL_INV - computes matrix inverse treating 
+%           ill-conditioned matrices properly.
 %
 %
 % Description:
 % ------------
 %
-%    I = ELL_INV(A)  Given two square nonsingular matrix A, returns its inverse.
+%    I = ELL_INV(A)  Given two square nonsingular matrix A,
+%        returns its inverse.
 %
 %
 % Output:

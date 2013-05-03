@@ -1,5 +1,5 @@
 function varargout=removeDuplicateTuples(self,varargin)
-% REMOVEDUPLICATETUPLES removes all duplicate tuples from the relation
+% REMOVEDUPLICATETUPLES - removes all duplicate tuples from the relation
 %
 % Usage: [indForwardVec,indBackwardVec]=...
 %            removeDuplicateTuples(self,varargin)

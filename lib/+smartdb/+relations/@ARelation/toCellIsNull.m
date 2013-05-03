@@ -1,6 +1,6 @@
 function resCMat=toCellIsNull(self,varargin)
-% TOCELLISNULL transforms is-null indicators of all fields for all tuples into two
-% dimensional cell array
+% TOCELLISNULL - transforms is-null indicators of all fields for all tuples 
+%                into two dimensional cell array
 %
 % Usage: resCMat=toCell(self,varargin)
 %

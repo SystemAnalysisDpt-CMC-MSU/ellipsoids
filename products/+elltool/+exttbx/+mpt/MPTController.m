@@ -19,7 +19,7 @@ classdef MPTController < elltool.exttbx.IExtTBXController
         end
         %
         function checkSettings(self,absTol,relTol,isVerbose)
-            %here we make sure that the settings specified in fullSetup are
+            %Here we make sure that the settings specified in fullSetup are
             %not changed manually via direct mpt calls like mpt_init
         end
         function isPositive=isOnPath(self)
