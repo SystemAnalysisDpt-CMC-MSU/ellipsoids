@@ -213,7 +213,7 @@ classdef SuiteEllTube < mlunitext.test_case
             projType=gras.ellapx.enums.EProjType.Static;
             projSpaceList={[1 0 0;0 0 1],[1 0 0;0 1 0]};
             rel=create();
-            relProj=rel.project(projType,projSpaceList,@fGetProjMat);
+            relProj =rel.project(projType,projSpaceList,@fGetProjMat);
             %
             MBeforeArray=rel.MArray;
             rel2=rel.getCopy();
