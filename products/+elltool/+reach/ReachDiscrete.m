@@ -2,8 +2,10 @@ classdef ReachDiscrete < elltool.reach.AReach
     % Discrete reach set library of the Ellipsoidal Toolbox.
     %
     % $Authors: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-    %           Kirill Mayantsev  <kirill.mayantsev@gmail.com>$
-    % $Date: March-2013 $
+    %           Kirill Mayantsev  <kirill.mayantsev@gmail.com> $
+    %               $Date: March-2013 $
+    %           Igor Kitsenko <kitsenko@gmail.com> $
+    %               $Date: May-2013 $
     % $Copyright: Moscow State University,
     %             Faculty of Computational Mathematics
     %             and Computer Science,
@@ -80,6 +82,12 @@ classdef ReachDiscrete < elltool.reach.AReach
             end
         end
         %
+        function newEllTubeRel = transformEllTube(ellTubeRel)
+            newEllTubeRel = ellTubeRel;
+        end
+    end
+    %
+    methods (Static, Access = private)
         function [QArrayList ltGoodDirArray] = ...
                 calculateApproxShape(smartLinSys, l0Mat, ...
                 relTol, approxType)
@@ -102,6 +110,8 @@ classdef ReachDiscrete < elltool.reach.AReach
             %
             for iTube = 1:nTubes
                 qMat = smartLinSys.getX0Mat;
+                qMat = ell_regularize(qMat, relTol);
+                qMat = 0.5 * (qMat + qMat');
                 QArrayList{iTube}(:, :, 1) = qMat;
                 lVec = l0Mat(:, iTube);
                 lMat(:, 1) = lVec;
@@ -114,7 +124,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                         evaluate(timeVec(iTime + isBack));
                     bpbMat = 0.5 * (bpbMat + bpbMat');
                     qMat = aMat * qMat * aMat';
-                    qMat = ell_regularize(qMat, relTol);
+                    qMat = ell_regularize(qMat, relTol / 1000);
                     bpbMat = ell_regularize(bpbMat, relTol);
                     lVec = aInvMat' * lVec;
                     if approxType == EApproxType.Internal
@@ -125,6 +135,8 @@ classdef ReachDiscrete < elltool.reach.AReach
                             ellipsoid(0.5 * (bpbMat + bpbMat'))], lVec);
                     end
                     qMat = double(eEll);
+                    qMat = ell_regularize(qMat, relTol);
+                    qMat = 0.5 * (qMat + qMat');
                     QArrayList{iTube}(:, :, iTime + 1) = qMat;
                     lMat(:, iTime + 1) = lVec;
                 end
@@ -213,11 +225,13 @@ classdef ReachDiscrete < elltool.reach.AReach
             %
             Properties.setIsVerbose(isVerbose);
         end
-        %
-        function ellTubeRel = makeEllTubeRel(smartLinSys, l0Mat,...
+    end
+    %
+    methods (Access = protected)
+        function ellTubeRel = makeEllTubeRel(self, smartLinSys, l0Mat,...
                 timeLimsVec, isDisturb, calcPrecision, approxTypeVec)
             import gras.ellapx.enums.EApproxType;
-            relTol = elltool.conf.Properties.getRelTol();
+            relTol = elltool.conf.Properties.getRelTol();            
             goodDirSetObj =...
                 gras.ellapx.lreachplain.GoodDirectionSet(...
                 smartLinSys, timeLimsVec(1), l0Mat, calcPrecision);
@@ -269,12 +283,22 @@ classdef ReachDiscrete < elltool.reach.AReach
             end
             %
             function rel = create()
+                
+%                 QL = QArrayList{:}
+%                 siz = size(QArrayList{1})
+%                 for i = 1:siz(3)
+%                     gras.la.ismatposdef(QArrayList{1}(:, :, i), relTol, 1)
+%                 end
+%                 aM = aMat
+%                 tV = timeVec
+%                 lG = ltGoodDirArray
+                
                 rel = gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
                     QArrayList, aMat, timeVec, ltGoodDirArray, ...
                     sTime, approxType, approxSchemaName, ...
-                    approxSchemaDescr, calcPrecision);
+                    approxSchemaDescr, relTol / 10);
             end
-        end
+        end   
     end
     %
     methods
@@ -334,9 +358,11 @@ classdef ReachDiscrete < elltool.reach.AReach
         %   dRsObj = elltool.reach.ReachDiscrete(dtsys, x0EllObj, dirsMat, timeVec);
         %
         %
-        % $Author: Kirill Mayantsev
-        % <kirill.mayantsev@gmail.com> $  
-        % $Date: Jan-2013 $ 
+        % $Authors: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+        %           Kirill Mayantsev <kirill.mayantsev@gmail.com> $   
+        % $Date: Jan-2013 $
+        %           Igor Kitsenko <kitsenko@gmail.com> $
+        % $Date: May-2013 $
         % $Copyright: Moscow State University,
         %             Faculty of Computational
         %             Mathematics and Computer Science,
@@ -434,7 +460,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             self.isProj = false;
             self.isBackward = timeVec(1) > timeVec(2);
             self.projectionBasisMat = [];
-            self.x0Ellipsoid        = x0Ell;
+            self.x0Ellipsoid = x0Ell;
             %
             % create gras LinSys object
             %
@@ -459,10 +485,6 @@ classdef ReachDiscrete < elltool.reach.AReach
             approxTypeVec = [EApproxType.External EApproxType.Internal];
             self.ellTubeRel = self.makeEllTubeRel(smartLinSys, l0Mat, ...
                 timeVec, isDisturbance, relTol, approxTypeVec);
-        end
-        %
-        function newReachObj = evolve(self, newEndTime, linSys)
-            newReachObj = self;
         end
     end
 end

@@ -7,8 +7,8 @@ classdef LReachDiscrBackwardDynamics < ...
     methods
         function self = LReachDiscrBackwardDynamics(problemDef)
             import gras.ellapx.common.*;
-            import gras.mat.symb.MatrixSymbFormulaBased;
             import gras.mat.CompositeMatrixOperations;
+            import gras.interp.MatrixInterpolantFactory;
             %
             if ~isa(problemDef,...
                     'gras.ellapx.lreachuncert.probdef.IReachContProblemDef')
@@ -49,15 +49,15 @@ classdef LReachDiscrBackwardDynamics < ...
             xtArray = zeros(sysDim, nTimePoints);
             xtArray(:, 1) = x0DefVec;
             for iTime = 2:nTimePoints
-                aMat = self.AtDynamics.evaluate(timeVec(iTime));
-                bpVec = self.BptDynamics().evaluate(timeVec(iTime));
-                cqVec = smartLinSys.getCqtDynamics().evaluate(timeVec(iTime));
+                aMat = self.AtDynamics.evaluate(self.timeVec(iTime));
+                bpVec = self.BptDynamics().evaluate(self.timeVec(iTime));
+                cqVec = self.getCqtDynamics().evaluate(self.timeVec(iTime));
                 xtArray(:, iTime) = ...
                     aMat * (xtArray(:, iTime - 1) - bpVec - cqVec);
             end
             %
             self.xtDynamics = MatrixInterpolantFactory.createInstance(...
-                'column', xtArray, self.timeVec.');
+                'column', xtArray, self.timeVec);
         end
     end
 end

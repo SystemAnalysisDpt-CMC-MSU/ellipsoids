@@ -1,7 +1,8 @@
 classdef AReach < elltool.reach.IReach
-% Kirill Mayantsev
-% <kirill.mayantsev@gmail.com>$  
-% $Date: March-2013 $
+% $Authors: Kirill Mayantsev <kirill.mayantsev@gmail.com> $   
+%               $Date: March-2013 $
+%           Igor Kitsenko <kitsenko@gmail.com> $
+%               $Date: May-2013 $
 % $Copyright: Moscow State University,
 %             Faculty of Computational Mathematics 
 %             and Computer Science, 
@@ -42,9 +43,16 @@ classdef AReach < elltool.reach.IReach
     end
     %
     methods (Static, Abstract, Access = protected)
-        linSys = getSmartLinSys(atStrCMat, btStrCMat,...
-                ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat, qtStrCVec,...
-                x0Mat, x0Vec, timeVec, calcPrecision, isDisturb)
+        linSys = getSmartLinSys(atStrCMat, btStrCMat, ...
+            ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat, qtStrCVec, ...
+            x0Mat, x0Vec, timeVec, calcPrecision, isDisturb)
+        %
+        newEllTubeRel = transformEllTube(ellTubeRel)
+    end
+    %
+    methods (Abstract, Access = protected)
+        ellTubeRel = makeEllTubeRel(self, smartLinSys, l0Mat, ...
+            timeVec, isDisturb, calcPrecision, approxTypeVec)
     end
     %
     methods (Static, Access = protected)
@@ -373,6 +381,62 @@ classdef AReach < elltool.reach.IReach
             outMat(:, isNormGrZeroVec) =...
                 inpMat(:, isNormGrZeroVec) ./...
                 matSqNormVec(ones(1, dim), isNormGrZeroVec);
+        end
+    end
+    %
+    methods (Access = private)
+        function [dataCVec, indVec] = evolveApprox(self, ...
+                newTimeVec, newLinSys, approxType)
+            import gras.ellapx.smartdb.F;
+            APPROX_TYPE = F.APPROX_TYPE;
+            [filteredTubes isThereVec] = ...
+                self.ellTubeRel.getTuplesFilteredBy(APPROX_TYPE, approxType);
+            oldData = filteredTubes.getData();
+            indVec = find(isThereVec);
+            %
+            sysDimRows = size(oldData.QArray{1}, 1);
+            sysDimCols = size(oldData.QArray{1}, 2);
+            %
+            relTol = elltool.conf.Properties.getRelTol();
+            dataDimVec = oldData.dim;
+            l0VecNum = size(dataDimVec, 1);
+            l0Mat = zeros(dataDimVec(1), l0VecNum);
+            x0VecMat = zeros(sysDimRows, l0VecNum);
+            x0MatArray = zeros(sysDimRows, sysDimCols, l0VecNum);
+            for il0Num = 1 : l0VecNum
+                l0Mat(:, il0Num) = oldData.ltGoodDirMat{il0Num}(:, end);
+                x0VecMat(:, il0Num) = oldData.aMat{il0Num}(:, end);
+                x0MatArray(:, :, il0Num) = ...
+                    oldData.QArray{il0Num}(:, :, end);
+%                 x0Mat = oldData.QArray{il0Num}(:, :, end);
+%                 x0Mat = ell_regularize(x0Mat, relTol);
+%                 x0MatArray(:, :, il0Num) = (x0Mat + x0Mat') / 2;
+            end
+            [atStrCMat btStrCMat gtStrCMat ptStrCMat ptStrCVec ...
+                qtStrCMat qtStrCVec] = ...
+                self.prepareSysParam(newLinSys, newTimeVec);
+            %
+            % Normalize good ext/int-directions
+            %
+            sysDim = size(atStrCMat, 1);
+            l0Mat = self.getNormMat(l0Mat, sysDim);
+            %
+            % ext/int-approx on the next time interval
+            %
+            dataCVec = cell(1, l0VecNum);
+            isDisturbance = self.isDisturbance(gtStrCMat, qtStrCMat);
+            for il0Num = l0VecNum: -1 : 1
+                smartLinSys = self.getSmartLinSys(atStrCMat, ...
+                    btStrCMat, ptStrCMat, ptStrCVec, gtStrCMat, ...
+                    qtStrCMat, qtStrCVec, x0MatArray(:, :, il0Num), ...
+                    x0VecMat(:, il0Num), newTimeVec, relTol, isDisturbance);
+                ellTubeRelVec{il0Num} = self.makeEllTubeRel(...
+                    smartLinSys, l0Mat(:, il0Num), ...
+                    newTimeVec, isDisturbance, relTol, approxType);
+                dataCVec{il0Num} = ...
+                    ellTubeRelVec{il0Num}.getTuplesFilteredBy(...
+                    APPROX_TYPE, approxType).getData();
+            end
         end
     end
     %
@@ -963,49 +1027,56 @@ classdef AReach < elltool.reach.IReach
             end
         end
         %
-        function self=refine(self,l0Mat)
+        function self = refine(self, l0Mat)
             import modgen.common.throwerror;
             import gras.ellapx.enums.EApproxType;
             if isempty(self.ellTubeRel)
-                throwerror('wrongInput','empty reach set');
+                throwerror('wrongInput', 'empty reach set');
             end
-            if ~isa(l0Mat,'double')
-                throwerror('wrongInput',strcat('second argument must ',...
+            if ~isa(l0Mat, 'double')
+                throwerror('wrongInput', strcat('second argument must ',...
                     'be matrix of directions'));
             end
+            %
             % Calculate additional tubes
-            linSys=self.linSysCVec{1};
-            timeVec= self.switchSysTimeVec;
-            x0Ell= self.x0Ellipsoid;
+            %
+            linSys = self.linSysCVec{1};
+            timeLimsVec = ...
+                [min(self.switchSysTimeVec) max(self.switchSysTimeVec)];
+            if isbackward()
+                timeLimsVec = fliplr(timeLimsVec);
+            end
+            x0Ell = self.x0Ellipsoid;
+            %
             % Normalize good directions
+            %
             nDim = dimension(x0Ell);
             l0Mat = self.getNormMat(l0Mat, nDim);
             if self.isprojection();
-                projMat=self.projectionBasisMat;
-                reachSetObj=elltool.reach.ReachContinuous(...
-                    linSys,x0Ell,l0Mat,timeVec);
+                projMat = self.projectionBasisMat;
+                reachSetObj = feval(class(self), linSys, x0Ell, ...
+                    l0Mat, timeLimsVec);
                 projSet = reachSetObj.getProjSet(projMat);
                 self.ellTubeRel.unionWith(projSet);
             else
                 [x0Vec x0Mat] = double(x0Ell);
-                [atStrCMat btStrCMat gtStrCMat ptStrCMat ptStrCVec...
-                    qtStrCMat qtStrCVec] =...
-                    self.prepareSysParam(linSys, timeVec);
+                [atStrCMat btStrCMat gtStrCMat ptStrCMat ptStrCVec ...
+                    qtStrCMat qtStrCVec] = ...
+                    self.prepareSysParam(linSys, timeLimsVec);
                 isDisturbance = self.isDisturbance(gtStrCMat, qtStrCMat);
                 %
                 relTol = elltool.conf.Properties.getRelTol();
-                smartLinSys = self.getSmartLinSys(atStrCMat, btStrCMat,...
-                    ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat, qtStrCVec,...
-                    x0Mat, x0Vec, [min(timeVec) max(timeVec)],...
+                smartLinSys = self.getSmartLinSys(atStrCMat, btStrCMat, ...
+                    ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat, qtStrCVec, ...
+                    x0Mat, x0Vec, timeLimsVec, ...
                     relTol, isDisturbance);
                 approxTypeVec = [EApproxType.External EApproxType.Internal];
-                ellTubeRelNew = self.makeEllTubeRel(smartLinSys, l0Mat,...
-                    [min(timeVec) max(timeVec)], isDisturbance,...
-                    relTol, approxTypeVec);
-                if self.isbackward()
-                    ellTubeRelNew = self.rotateEllTubeRel(ellTubeRelNew);
-                end
-                %Update self.ellTubRel
+                ellTubeRelNew = self.makeEllTubeRel(smartLinSys, l0Mat, ...
+                    timeLimsVec, isDisturbance, relTol, approxTypeVec);
+                ellTubeRelNew = self.transformEllTube(ellTubeRelNew);
+                %
+                % Update self.ellTubRel
+                %
                 self.ellTubeRel.unionWith(ellTubeRelNew);
             end
         end
@@ -1110,7 +1181,7 @@ classdef AReach < elltool.reach.IReach
         %   timeVec = [0 10];  
         %   dirsMat = [1 0; 0 1]';
         %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec); 
-        %   rsObj. getEllTubeRel();
+        %   rsObj.getEllTubeRel();
         %
             ellTubeRel = self.ellTubeRel;
         end
@@ -1130,6 +1201,84 @@ classdef AReach < elltool.reach.IReach
         %
             import gras.ellapx.smartdb.rels.EllUnionTube;
             ellTubeUnionRel = EllUnionTube.fromEllTubes(self.ellTubeRel);
+        end
+        %
+        function newReachObj = evolve(self, newEndTime, linSys)
+            import elltool.conf.Properties;
+            import gras.ellapx.enums.EApproxType;
+            import gras.ellapx.lreachuncert.probdyn.LReachProblemDynamicsFactory;
+            import gras.ellapx.uncertcalc.EllApxBuilder;
+            import modgen.common.throwerror;
+            %
+            % check and analize input
+            %
+            if nargin < 2
+                throwerror('wrongInput', ['insufficient number ',...
+                    'of input arguments.']);
+            end
+            if nargin > 3
+                throwerror('wrongInput', 'too much arguments.');
+            end
+            if self.isprojection()
+                throwerror('wrongInput', ['cannot compute ',...
+                    'the reach set for projection.']);
+            end
+            if nargin < 3
+                newLinSys = self.get_system();
+                oldLinSys = newLinSys;
+            else
+                if ~(isa(linSys, class(self.get_system())))
+                    throwerror('wrongInput', ['first input argument ',...
+                        'must be linear system object.']);
+                end
+                newLinSys = linSys;
+                oldLinSys = self.get_system();
+            end
+            if isempty(newLinSys)
+                return;
+            end
+            if ~isa(newEndTime, 'double')
+                throwerror('wrongInput',...
+                    'second argument must be double.');
+            end
+            if (newEndTime < self.switchSysTimeVec(end) &&...
+                    ~self.isbackward()) ||...
+                    (newEndTime > self.switchSysTimeVec(end) &&...
+                    self.isbackward())
+                throwerror('wrongInput', ['new end time must be more ',...
+                    '(if forward) or less (if backward) than the old one.']);
+            end
+            if newLinSys.dimension() ~= oldLinSys.dimension()
+                throwerror('wrongInput', ['dimensions of the ',...
+                    'old and new linear systems do not match.']);
+            end
+            %
+            newReachObj = self.getCopy();
+            newReachObj.switchSysTimeVec = ...
+                [newReachObj.switchSysTimeVec newEndTime];
+            newReachObj.linSysCVec = [newReachObj.linSysCVec {newLinSys}];
+            newReachObj.isCut = false;
+            %
+            newTimeVec = newReachObj.switchSysTimeVec(end - 1 : end);
+            [dataIntCVec indIntVec] = self.evolveApprox(newTimeVec,...
+                newLinSys, EApproxType.Internal);
+            [dataExtCVec indExtVec] = self.evolveApprox(newTimeVec,...
+                newLinSys, EApproxType.External);
+            dataCVec = [dataIntCVec dataExtCVec];
+            %
+            % cat old and new ellTubeRel
+            %
+            newEllTubeRel =...
+                gras.ellapx.smartdb.rels.EllTube.fromStructList(...
+                'gras.ellapx.smartdb.rels.EllTube', dataCVec);
+            newEllTubeRel = self.transformEllTube(newEllTubeRel);
+            %
+            indVec = [indIntVec; indExtVec];
+            [~, indRelVec] = sort(indVec);
+            newEllTubeRel = newEllTubeRel.getTuples(indRelVec);
+            %
+            newReachObj.ellTubeRel = ...
+                self.ellTubeRel.cat(newEllTubeRel);
         end
     end
 end
