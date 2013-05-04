@@ -776,13 +776,16 @@ classdef ReachContinuous < elltool.reach.AReach
             end
         end
         %%
-        function [rSdim sSdim] = dimension(self)
-            rSdim = self.linSysCVec{end}.dimension();
-            if ~self.isProj
-                sSdim = rSdim;
-            else
-                sSdim = size(self.projectionBasisMat, 2);
-            end
+        function [rSdimArr sSdimArr] = dimension(self)
+            rSdimArr = arrayfun(@(x) x.linSysCVec{end}.dimension(), self);
+            sSdimArr = arrayfun(@(x,y) getSSdim(x,y), self, rSdimArr);
+            function sSdim = getSSdim(reachObj, rSdim)
+                if ~reachObj.isProj
+                    sSdim = rSdim;
+                else
+                    sSdim = size(reachObj.projectionBasisMat, 2);
+                end
+            end    
         end
         %%
         function linSys = get_system(self)

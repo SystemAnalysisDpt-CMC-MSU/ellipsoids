@@ -24,16 +24,23 @@ classdef AReach < elltool.reach.IReach
     end
     %
     methods
-        function isProj = isprojection(self)
-            isProj = self.isProj;
+        function isProjArr = isprojection(self)
+            isProjArr = arrayfun(@(x) x.isProj, self);   
         end
         %
-        function isCut = iscut(self)
-            isCut = self.isCut;
+        function isCutArr = iscut(self)
+            isCutArr = arrayfun(@(x) x.isCut, self);
         end
         %
-        function isEmpty = isempty(self)
-            isEmpty = isempty(self.x0Ellipsoid);
+        function isEmptyArr = isempty(self)
+            isEmptyArr = arrayfun(@(x) isEmp(x), self);
+            function isEmpty = isEmp(reachObj)
+                isEmpty = isempty(reachObj.x0Ellipsoid);
+            end    
+        end
+        %
+        function absTolArr = getAbsTol(self)
+            absTolArr = arrayfun(@(x) x.linSysCVec{end}.getAbsTol(), self);
         end
         %
         function isEmptyIntersect =...
