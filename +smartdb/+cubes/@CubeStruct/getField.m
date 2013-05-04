@@ -1,5 +1,5 @@
 function propVal=getField(self,fieldName,varargin)
-% GETFIELD - returns values of given field 
+% GETFIELD returns values of given field 
 %
 % Usage: propVal=getField(self,fieldName)
 %
