@@ -3,9 +3,6 @@ function results=run_support_function_tests(inpConfNameList)
 % $Copyright: Moscow State University,
 %             Faculty of Computational Mathematics and Computer Science,
 %             System Analysis Department 2012 $
-import gras.gen.MatVector;
-import gras.mat.symb.iscellofstringconst;
-%
 runner = mlunit.text_test_runner(1, 1);
 loader = mlunitext.test_loader;
 %
@@ -38,26 +35,25 @@ for iConf=nConfs:-1:1
     sysStartTime=crmSys.getParam('time_interval.t0');
     calcTimeLimVec=crm.getParam('genericProps.calcTimeLimVec');
     confStartTime=calcTimeLimVec(1);
-    %
     if sysStartTime==confStartTime
     %
         isCt = crmSys.isParam('Ct');
         isQt = crmSys.isParam('disturbance_restriction.Q');
         %
         if isCt
-            pCtCMat = crmSys.getParam('Ct');
-            pCtMat = MatVector.fromFormulaMat(pCtCMat, 0);
-            isCtZero = ~any(pCtMat(:));
-            isCtZero = isCtZero && iscellofstringconst(pCtCMat);             
+            CtCMat = crmSys.getParam('Ct');
+            zerCMat = cellfun(@(x) num2str(x),...
+                num2cell(zeros(size(CtCMat))), 'UniformOutput', false);
+            isEqCMat = strcmp(CtCMat, zerCMat);
         end
         if isQt
-            pQtCMat = crmSys.getParam('disturbance_restriction.Q');
-            pQtMat = MatVector.fromFormulaMat(pQtCMat, 0);
-            isQtZero = ~any(pQtMat(:));
-            isQtZero = isQtZero && iscellofstringconst(pQtCMat); 
+            QtCMat = crmSys.getParam('disturbance_restriction.Q');
+            zerQtCMat = cellfun(@(x) num2str(x),...
+                num2cell(zeros(size(QtCMat))), 'UniformOutput', false);
+            isEqQMat = strcmp(QtCMat, zerQtCMat);
         end
         isnDisturbance =...
-            ~isCt  || ~isQt || isCtZero || isQtZero;
+            ~isCt  || ~isQt || all(isEqCMat(:)) || all(isEqQMat(:));
         %
         if isnDisturbance
             suiteList{iConf}=loader.load_tests_from_test_case(...
