@@ -57,8 +57,7 @@ classdef ContinuousReachProjAdvTestCase < mlunitext.test_case
                 x0DefVec, l0Mat] = getSysParams(self)
             atDefCMat = self.crmSys.getParam('At');
             btDefCMat = self.crmSys.getParam('Bt');
-            ctDefCMat=arrayfun(@num2str,zeros(size(atDefCMat)),...
-                     'UniformOutput', false);
+            ctDefCMat = self.crmSys.getParam('Ct');
             ptDefCMat = self.crmSys.getParam('control_restriction.Q');
             ptDefCVec = self.crmSys.getParam('control_restriction.a');
             qtDefCMat = self.crmSys.getParam('disturbance_restriction.Q');

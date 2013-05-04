@@ -1144,7 +1144,9 @@ classdef ReachContinuous < elltool.reach.AReach
             APPROX_TYPE = F.APPROX_TYPE;
             %
             ellTube = self.ellTubeRel;
+            ellTube.sortBy(APPROX_TYPE);
             compEllTube = reachObj.ellTubeRel;
+            compEllTube.sortBy(APPROX_TYPE);
             %
             if nargin == 4
                 ellTube = ellTube.getTuplesFilteredBy(APPROX_TYPE,...
