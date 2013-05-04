@@ -41,10 +41,10 @@ classdef EllipsoidMinksumPlotTestCase < mlunitext.test_case
             minksum(testForthEll,testFifthEll,testSixthEll,'showAll',true);
         end
         function self = test2d(self)
-            testFirEll = ellipsoid([1, 0].', [9 2;2 4]);
+            testFirEll = ellipsoid( [9 2;2 4]);
             testSecEll = ellipsoid(eye(2));
             check(testFirEll,testSecEll);
-            
+            check2(testFirEll,testSecEll);
             function check(testFirEll,testSecEll)
                 ABS_TOL = 10^(-10);
                 [~,boundPointsMat] = minksum(testFirEll,testSecEll);
@@ -55,22 +55,53 @@ classdef EllipsoidMinksumPlotTestCase < mlunitext.test_case
                 sup = max(lGridMat*boundPointsMat(:,1:end-1),[],2);
                 mlunit.assert_equals(abs(sup'-rhoDiffVec) < ABS_TOL,ones(1,size(sup,1)));      
             end
+            function check2(testFirEll,testSecEll)
+                ABS_TOL = 10^(-10);
+                [lGridMat] = gras.geom.circlepart(200);
+                rotAngle = pi/4;
+                rotMat = [cos(rotAngle) sin(rotAngle) ;...
+                    -sin(rotAngle) cos(rotAngle)];
+                firstMat = rotMat.'*testFirEll.double*rotMat;
+                firstMat(1,2) = firstMat(2,1);
+                testThirdEll = ellipsoid(firstMat);
+                secMat = rotMat*testSecEll.double*rotMat.';
+                secMat(1,2) = secMat(2,1);
+                testForthEll = ellipsoid(secMat);
+                [~,boundPoints1Mat] = minksum(testFirEll,testSecEll);
+                [~,boundPoints2Mat] = minksum(testThirdEll,testForthEll);
+                boundPoints2Mat = (boundPoints2Mat.'*rotMat.').';
+                sup1 = max(lGridMat*boundPoints1Mat(:,1:end-1),[],2);
+                sup2 = max(lGridMat*boundPoints2Mat(:,1:end-1),[],2);
+                mlunit.assert_equals(max(abs(sup2-sup1)) < ABS_TOL,1);
+            end
         end
-%         function self = test3d(self)           
-%             testFirEll = ellipsoid([9 2 0 ;2 4 0; 0 0 4]);
-%             testSecEll = ellipsoid(eye(3));
-%             check(testFirEll,testSecEll);
-%             function check(testFirEll,testSecEll)
-%                 ABS_TOL = 10^(-10);
-%                 rotMat = [cos(31) sin(31) 0 ; -sin(31) cos(31) 0 ;0 0 1];
-%                 firstMat = rotMat*[9 2 0 ;2 4 0; 0 0 4]*rotMat.';
-%                 firstMat(1,2) = firstMat(2,1);
-%                 testThirdEll = ellipsoid(firstMat);
-%                 testForthEll = ellipsoid(rotMat*eye(3)*rotMat.');
-%                 [~,boundPoints1Mat] = minksum(testFirEll,testSecEll);
-%                 [~,boundPoints2Mat] = minksum(testThirdEll,testForthEll);
-%                 mlunit.assert_equals(abs(boundPoints2Mat*rotMat.'-boundPoints1Mat) < ABS_TOL,ones(1,size(boundPoints2Mat,1)));
-%             end
-%         end
+        function self = test3d(self)           
+            testFirEll = ellipsoid([9 2 0 ;2 4 0; 0 0 4]);
+            testSecEll = ellipsoid(eye(3));
+            check(testFirEll,testSecEll);
+            function check(testFirEll,testSecEll)
+                ABS_TOL = 10^(-1);
+                [lGridMat, ~] = gras.geom.tri.spheretri(3);
+                rotAngle = 3*pi/2;
+                rotMat = [cos(rotAngle) sin(rotAngle) 0;...
+                    -sin(rotAngle) cos(rotAngle) 0;0 0 1];
+                firstMat = rotMat.'*testFirEll.double*rotMat;
+                firstMat(1,2) = firstMat(2,1);
+                firstMat(1,3) = firstMat(3,1);
+                firstMat(2,3) = firstMat(3,2);
+                testThirdEll = ellipsoid(firstMat);
+                secondMat = rotMat*testSecEll.double*rotMat.';
+                secondMat(1,2) = secondMat(2,1);
+                secondMat(1,3) = secondMat(3,1);
+                secondMat(2,3) = secondMat(3,2);
+                testForthEll = ellipsoid(secondMat);
+                [~,boundPoints1Mat] = minksum(testFirEll,testSecEll);
+                [~,boundPoints2Mat] = minksum(testThirdEll,testForthEll);
+                boundPoints2Mat = (boundPoints2Mat.'*rotMat.').';
+                sup1 = max(lGridMat*boundPoints1Mat(:,1:end-1),[],2);
+                sup2 = max(lGridMat*boundPoints2Mat(:,1:end-1),[],2);
+                mlunit.assert_equals(max(abs(sup2-sup1)) < ABS_TOL,1);
+            end
+        end
     end
 end

@@ -137,11 +137,11 @@ end
             xSumDifMat = {[]};
             fMat = {[]};
         else
-            fstEllShMat = fstEll.shape;
+            fstEllShMat = fstEll.shapeMat;
             if isdegenerate(fstEll)
                 fstEllShMat = ellipsoid.regularize(fstEllShMat,fstEll.absTol);
             end
-            secEllShMat = secEll.shape;
+            secEllShMat = secEll.shapeMat;
             if isdegenerate(secEll)
                 secEllShMat = ellipsoid.regularize(secEllShMat,secEll.absTol);
             end            

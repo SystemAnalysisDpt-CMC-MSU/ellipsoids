@@ -297,7 +297,10 @@ classdef ellipsoid < handle
         res = my_color_table(ch)
         regQMat = regularize(qMat,absTol)
         clrDirsMat = rm_bad_directions(q1Mat, q2Mat, dirsMat,absTol)
-        isBadDirVec = isbaddirectionmat(q1Mat, q2Mat, dirsMat,absTol)
+        [isBadDirVec,pUniversalVec] = isbaddirectionmat(q1Mat, q2Mat, dirsMat,absTol)
+        [supArr, bpMat] = rhomat(ellShapeMat,ellCenterVec,absTol, dirsMat)
+        [vGridMat, fGridMat] = getGrid(nDim,nPoints)
+        [diffBoundMat, isPlotCenter3d] = calcdiffonedir(fstEll,secEll,lMat,pUniversalVec,isGoodDirVec)
     end
     methods(Access = private)
         [propMat, propVal] = getProperty(hplaneMat,propName, fPropFun)

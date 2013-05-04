@@ -123,7 +123,7 @@ end
             fMat = {[]};
         else
             [qSum,~] = minksum(inpEllArr);
-            qSumDifMat = {qSum - inpEll.center};
+            qSumDifMat = {qSum - inpEll.centerVec};
             fMat = {[1 1]};
         end
     end
@@ -140,10 +140,9 @@ end
         [dirMat, fMat] =getGridByFactor(inpEllArr(1));
         dirMat = dirMat';
         extApproxEllVec = minksum_ea(inpEllArr, dirMat);
-        centVec= extApproxEllVec(1).center - inpEll.center;
+        centVec= extApproxEllVec(1).centerVec - inpEll.centerVec;
         nCols = size(dirMat, 2);
-%         switch nDims
-%             case 2
+
                 extApprEllVec(1,nCols) = ellipsoid();
                 arrayfun(@(x) fCase2extAppr(x),1:nCols);
                 
@@ -173,7 +172,7 @@ end
             end
         end
         function fCase2(index)
-            eaShMat = extApprEllVec(index).shape;
+            eaShMat = extApprEllVec(index).shapeMat;
             invShMat = ell_inv(eaShMat);
             valVec = sum((invShMat*dirMat).*dirMat,1);
             mValVec = max(valVec, mValVec);
@@ -212,7 +211,7 @@ extApprEllVec(1,nCols) = ellipsoid;
 arrayfun(@(x) fSingleDirection(x),1:nCols);
 
     function fAddCenter(singEll)
-        centVec = centVec + singEll.center;
+        centVec = centVec + singEll.centerVec;
     end
     function fSingleDirection(index)
         secCoef = 0;
@@ -220,11 +219,11 @@ arrayfun(@(x) fSingleDirection(x),1:nCols);
         dirVec = dirMat(:, index);
         arrayfun(@(x,y) fAddSh(x,y), inpEllArr,absTolArr);
         subShMat  = 0.5*secCoef*(subShMat + subShMat');
-        extApprEllVec(index).center = centVec;
-        extApprEllVec(index).shape = subShMat;
+        extApprEllVec(index).centerVec = centVec;
+        extApprEllVec(index).shapeMat = subShMat;
         
         function fAddSh(singEll,absTol)
-            shMat = singEll.shape;
+            shMat = singEll.shapeMat;
             if isdegenerate(singEll)
                 shMat = ellipsoid.regularize(shMat, absTol);
             end

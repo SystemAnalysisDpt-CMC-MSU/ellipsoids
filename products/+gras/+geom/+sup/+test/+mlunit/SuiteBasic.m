@@ -35,16 +35,10 @@ classdef SuiteBasic < mlunitext.test_case
             [lGridMat, fMat] = gras.geom.tri.spheretri(3);
             [supp1Mat,~] = rho(testFirEll,lGridMat.');
             [supp2Mat,~] = rho(testSecEll,lGridMat.');
-            rhoDiffVec = gras.geom.sup.supgeomdiff3d(supp1Mat,supp2Mat,lGridMat.',fMat);
-            lGrid2Mat = diag([-1,1,1])*lGridMat.';
-            for ind1 = 1:size(lGridMat,1)
-                for ind2 = 1:size(lGrid2Mat,2)
-                    if (abs(lGridMat(ind1,:).'-lGrid2Mat(:,ind2)) < absTol*ones(3,1))
-                        mlunit.assert_equals(abs(rhoDiffVec(ind1)-rhoDiffVec(ind2)) < absTol,1);  
-                    end
-                end
-            end
-            
+            rhoDiffVec = gras.geom.sup.supgeomdiff3d(supp1Mat,supp2Mat,lGridMat.');
+            lGrid2Mat = diag([-1,-1,1])*lGridMat.';
+            rhoDiff2Vec = gras.geom.sup.supgeomdiff3d(supp1Mat,supp2Mat,lGrid2Mat);
+            mlunit.assert_equals(abs(rhoDiffVec-rhoDiff2Vec) < absTol,ones(1,size(rhoDiffVec,2)));          
         end
         function testSupGeomDiff2d(~)
             N_DIRS=200;

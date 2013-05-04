@@ -21,7 +21,7 @@ classdef EllipsoidMinkdiffPlotTestCase < mlunitext.test_case
             import elltool.plot.test.testMinkProperties
             testFirEll = ellipsoid(2*eye(2));
             testSecEll = ellipsoid([1, 0].', [9 2;2 4]);
-            testThirdEll = ellipsoid([2 0; 0 0]);
+            testThirdEll = ellipsoid([2 0; 0 1]);
             testForthEll = ellipsoid([0, -1, 3].', 0.5*eye(3));
             testFifthEll = ellipsoid([5,5,5]', [6 2 1; 2 4 3; 1 3 5]);
             self = testMinkFillAndShade(self,@minkdiff,testSecEll,testFirEll);

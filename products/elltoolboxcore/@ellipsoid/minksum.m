@@ -80,7 +80,7 @@ end
         if nDim == 1
             [ellsArr,~] = rebuildOneDim2TwoDim(ellsArr);
         end
-        qMat = arrayfun(@(x) {x.center}, ellsArr);
+        qMat = arrayfun(@(x) {x.centerVec}, ellsArr);
         for iQMat=1:numel(qMat)
             qSumMat = qSumMat + qMat{iQMat};
         end
