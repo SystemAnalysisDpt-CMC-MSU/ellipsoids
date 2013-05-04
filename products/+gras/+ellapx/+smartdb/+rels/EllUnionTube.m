@@ -1,8 +1,47 @@
 classdef EllUnionTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
     gras.ellapx.smartdb.rels.EllTubeBasic&...
     gras.ellapx.smartdb.rels.EllUnionTubeBasic
-    %TestRelation Summary of this class goes here
-    %   Detailed explanation goes here
+    % EllUionTube - class which keeps ellipsoidal tubes' union
+    % 
+    % Fields:
+    %   QArray:cell[1, nElem] - Array of ellipsoid matrices                              
+    %   aMat:cell[1, nElem] - Array of ellipsoid centers                               
+    %   scaleFactor:double[1, 1] - Tube scale factor                                        
+    %   MArray:cell[1, nElem] - Array of regularization ellipsoid matrices                
+    %   dim :double[1, 1] - Dimensionality                                          
+    %   sTime:double[1, 1] - Time s                                                   
+    %   approxSchemaName:cell[1,] - Name                                                      
+    %   approxSchemaDescr:cell[1,] - Description                                               
+    %   approxType:gras.ellapx.enums.EApproxType - Type of approximation 
+    %                 (external, internal, not defined 
+    %   timeVec:cell[1, m] - Time vector                                             
+    %   calcPrecision:double[1, 1] - Calculation precision                                    
+    %   indSTime:double[1, 1]  - index of sTime within timeVec                             
+    %   ltGoodDirMat:cell[1, nElem] - Good direction curve                                     
+    %   lsGoodDirVec:cell[1, nElem] - Good direction at time s                                  
+    %   ltGoodDirNormVec:cell[1, nElem] - Norm of good direction curve                              
+    %   lsGoodDirNorm:double[1, 1] - Norm of good direction at time s                         
+    %   xTouchCurveMat:cell[1, nElem] - Touch point curve for good 
+    %                                   direction                     
+    %   xTouchOpCurveMat:cell[1, nElem] - Touch point curve for direction 
+    %                                     opposite to good direction
+    %   xsTouchVec:cell[1, nElem]  - Touch point at time s                                    
+    %   xsTouchOpVec :cell[1, nElem] - Touch point at time s  
+    %   ellUnionTimeDirection:gras.ellapx.enums.EEllUnionTimeDirection - 
+    %                      Direction in time along which union is performed          
+    %   isLsTouch:logical[1, 1] - Indicates whether a touch takes place 
+    %                             along LS           
+    %   isLsTouchOp:logical[1, 1] - Indicates whether a touch takes place 
+    %                               along LS opposite  
+    %   isLtTouchVec:cell[1, nElem] - Indicates whether a touch takes place 
+    %                                 along LT         
+    %   isLtTouchOpVec:cell[1, nElem] - Indicates whether a touch takes 
+    %                                   place along LT opposite  
+    %   timeTouchEndVec:cell[1, nElem] - Touch point curve for good 
+    %                                    direction                     
+    %   timeTouchOpEndVec:cell[1, nElem] - Touch point curve for good 
+    %                                      direction
+    %
     methods(Access=protected)
         function checkDataConsistency(self)
             checkDataConsistency@gras.ellapx.smartdb.rels.EllTubeBasic(self);
@@ -41,6 +80,12 @@ classdef EllUnionTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
     end
     methods (Static)
         function ellUnionTubeRel=fromEllTubes(ellTubeRel)
+            % FROMELLTUBES - returns union relation object
+            %
+            % Input:
+            %    ellTubeRel: smartdb.relation.StaticRelation[1, 1]/
+            %       smartdb.relation.DynamicRelation[1, 1] - relation object
+            %       
             
             import import gras.ellapx.smartdb.rels.EllUnionTube;
             import gras.ellapx.enums.EEllUnionTimeDirection;
