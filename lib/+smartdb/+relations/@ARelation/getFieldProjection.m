@@ -1,5 +1,5 @@
 function  obj=getFieldProjection(self,fieldNameList)
-% GETFIELDPROJECTION
+% GETFIELDPROJECTION - project object with specified fields.
 %
 % Input:
 %   regular:
