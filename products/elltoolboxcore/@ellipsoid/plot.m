@@ -9,12 +9,15 @@ function plot(varargin)
 % PLOT(E, OPTIONS) plots ellipsoid E if 1 <= dimension(E) <= 3.
 %
 %                  PLOT(E)  Plots E in default (red) color.
-%              PLOT(EA, E)  Plots array of ellipsoids EA and single ellipsoid E.
+%              PLOT(EA, E)  Plots array of ellipsoids EA and single 
+%                           ellipsoid E.
 %   PLOT(E1, 'g', E2, 'b')  Plots E1 in green and E2 in blue color.
-%        PLOT(EA, Options)  Plots EA using options given in the Options structure.
+%        PLOT(EA, Options)  Plots EA using options given in the Options 
+%                           structure.
 %
 %
-% Options.newfigure    - if 1, each plot command will open a new figure window.
+% Options.newfigure    - if 1, each plot command will open a new figure 
+%                        window.
 % Options.fill         - if 1, ellipsoids in 2D will be filled with color.
 % Options.width        - line width for 1D and 2D plots.
 % Options.color        - sets default colors in the form [x y z].
@@ -34,7 +37,7 @@ function plot(varargin)
 %
 
 % 
-% Author:
+% $Author:
 % -------
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
@@ -225,8 +228,8 @@ function plot(varargin)
     hold on;
 
     E = ells(i);
-    q = E.center;
-    Q = E.shape;
+    q = E.centerVec;
+    Q = E.shapeMat;
 
     if ucolor(i) == 1
       clr = vcolor(i, :);
@@ -262,7 +265,7 @@ function plot(varargin)
         %camlight('left','local');
 
       otherwise,
-        h = ell_plot([(q-sqrt(Q)) (q+sqrt(Q))]);
+        h = ell_plot([(q-realsqrt(Q)) (q+realsqrt(Q))]);
         set(h, 'Color', clr, 'LineWidth', Options.width(i));
         h = ell_plot(q(1, 1), '*');
         set(h, 'Color', clr);

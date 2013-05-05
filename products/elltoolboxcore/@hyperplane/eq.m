@@ -17,18 +17,31 @@ function [isPosArr reportStr] = eq(fstHypArr, secHypArr)
 %       for all iDim1, iDim2, ... , and vice versa.
 %   reportStr: char[1,] - comparison report
 %
+% Example:
+%   firstHypObj = hyperplane([-1; 1]);
+%   secHypObj = hyperplane([-1; 1; 8; -2; 3], 7);
+%   thirdHypObj = hyperplane([1; 2; 0], -1);
+%   secHypObj == [firstHypObj secHypObj thirdHypObj]
+% 
+%   ans =
+% 
+%        0     1     0
 %
-% $Author: Vadim Kaushansky  <vkaushanskiy@gmail.com> $ $Date: Nov-2012$
+% $Author: Vadim Kaushansky  <vkaushanskiy@gmail.com> $ 
+% $Date: Nov-2012$
 % $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Cybernetics,
+%            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
 %
 % $Authors:
-%   Peter Gagarinov  <pgagarinov@gmail.com> $ $Date: Dec-2012$
-%   Aushkap Nikolay <n.aushkap@gmail.com> $ $Date: Dec-2012$
+%   Peter Gagarinov  <pgagarinov@gmail.com> $ 
+%   $Date: Dec-2012$
+%   Aushkap Nikolay <n.aushkap@gmail.com> $ 
+%   $Date: Dec-2012$
 % $Copyright: Moscow State University,
-%   Faculty of Computational Mathematics and Computer Science,
-%   System Analysis Department 2012 $
+%             Faculty of Computational Mathematics
+%             and Computer Science,
+%             System Analysis Department 2012 $
 
 import modgen.common.throwerror;
 import modgen.struct.structcomparevec;

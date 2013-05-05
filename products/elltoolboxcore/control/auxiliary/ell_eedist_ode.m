@@ -1,7 +1,7 @@
 function dXdt = ell_eedist_ode(t, X, l0, mydata, n, back, absTol)
 %
-% ELL_EEDIST_ODE - ODE for the shape matrix of the external ellipsoid
-%                  for system with disturbance.
+% ELL_EEDIST_ODE - ODE for the shape matrix of the external 
+%                  ellipsoid for system with disturbance.
 %
 
 import elltool.conf.Properties;
@@ -27,8 +27,8 @@ X     = reshape(X, n, n);
 Y     = gras.la.sqrtmpos(X, absTol);
 Y     = 0.5*(Y + Y);
 mu    = 0;
-p1    = sqrt(l0' * F * BPB * F' * l0);
-p2    = sqrt(l0' * F * X * F' * l0);
+p1    = realsqrt(l0' * F * BPB * F' * l0);
+p2    = realsqrt(l0' * F * X * F' * l0);
 
 if abs(p1) < absTol
     p1 = absTol;
@@ -40,8 +40,8 @@ end
 pp1 = p1/p2;
 pp2 = p2/p1;
 
-%g1  = mu * sqrt(l0' * F * F' * l0);
-%g2  = sqrt(l0' * F * GQG * F' * l0);
+%g1  = mu * realsqrt(l0' * F * F' * l0);
+%g2  = realsqrt(l0' * F * GQG * F' * l0);
 
 %if abs(g2) < Properties.getAbsTol()
 %  g2 = Properties.getAbsTol();
@@ -76,7 +76,7 @@ dXdt = 0.5*(dXdt + dXdt');
 
 %if mn < 0
 %  mn = abs(mn);
-%  g1 = sqrt(l0' * F * F' * l0);
+%  g1 = realsqrt(l0' * F * F' * l0);
 %  if abs(g1) < Properties.getAbsTol()
 %    g1 = Properties.getAbsTol();
 %  end

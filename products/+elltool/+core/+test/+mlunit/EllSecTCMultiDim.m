@@ -1,11 +1,10 @@
 classdef EllSecTCMultiDim < mlunitext.test_case
-    
-    % $Author: Igor Samokhin, Lomonosov Moscow State University,
-    % Faculty of Computational Mathematics and Cybernetics, System Analysis
-    % Department, 31-January-2013, <igorian.vmk@gmail.com>$
-    % $Copyright: Moscow State University,
-    %            Faculty of Computational Mathematics and Computer Science,
-    %            System Analysis Department 2012 $
+%$Author: Igor Samokhin <igorian.vmk@gmail.com> $
+%$Date: 2013-01-31 $
+%$Copyright: Moscow State University,
+%            Faculty of Computational Mathematics
+%            and Computer Science,
+%            System Analysis Department 2013 $
     
     properties (Access=private)
         testDataRootDir
@@ -172,7 +171,7 @@ switch flag
         ansEaEllMat = diag([13 ^ 2, 13 * 16 * ones(1, 6)]);
         ansEaEllVec = createObjectArray([1, 2], @ellipsoid, ...
             13 * ones(7, 1), ansEaEllMat, 2);
-        ansIaEllMat = diag([13 ^ 2, (sqrt(2.5) + 12) ^ 2 * ones(1, 6)]);
+        ansIaEllMat = diag([13 ^ 2, (realsqrt(2.5) + 12) ^ 2 * ones(1, 6)]);
         ansIaEllVec = createObjectArray([1, 2], @ellipsoid, ...
             13 * ones(7, 1), ansIaEllMat, 2);
         varargout{1} = my1Ell;

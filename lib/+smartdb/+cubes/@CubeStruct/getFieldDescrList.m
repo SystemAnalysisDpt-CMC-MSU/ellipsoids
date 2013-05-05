@@ -1,6 +1,5 @@
 function value=getFieldDescrList(self,fieldNameList)
-% GETFIELDDESCRLIST returns the list of CubeStruct field
-% descriptions
+% GETFIELDDESCRLIST - returns the list of CubeStruct field descriptions
 %
 % Usage: value=getFieldDescrList(self)
 %

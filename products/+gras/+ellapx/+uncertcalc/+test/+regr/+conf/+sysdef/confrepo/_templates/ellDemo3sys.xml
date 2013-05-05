@@ -14,8 +14,8 @@
 	</Bt>
 	<initial_set type="struct" >
 		<Q type="cell" size="2 1">
-			<item type="double" >1e-4 0</item>
-			<item type="double" >0 1e-4</item>
+			<item type="double" >1e-3 0</item>
+			<item type="double" >0 1e-3</item>
 		</Q>
 		<a type="double" size="2 1">0 0</a>
 	</initial_set>

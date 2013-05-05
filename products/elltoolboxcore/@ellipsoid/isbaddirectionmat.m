@@ -25,7 +25,7 @@ function isBadDirVec = isbaddirectionmat(q1Mat, q2Mat, dirsMat,absTol)
 %
 % $Author: Rustam Guliev  <glvrst@gmail.com> $	$Date: 2012-16-11$
 % $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Cybernetics,
+%            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
 %
 import modgen.common.throwwarn;
@@ -43,5 +43,5 @@ modgen.common.checkmultvar('gras.la.ismatposdef(x1,x2)',...
 
 lamMin   = min(eig(q1Mat/q2Mat));
 dirsCVec = mat2cell(dirsMat,nDim,ones(1,nDirs));
-isBadDirVec = cellfun(@(x) lamMin < sqrt( (x'*q1Mat*x)/(x'*q2Mat*x) ),...
+isBadDirVec = cellfun(@(x) lamMin < realsqrt( (x'*q1Mat*x)/(x'*q2Mat*x) ),...
     dirsCVec);

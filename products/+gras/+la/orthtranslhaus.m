@@ -18,8 +18,8 @@ function oMat=orthtranslhaus(srcVec,dstVec)
 %            System Analysis Department 2011 $
 %
 MAX_TOL=1e-14;
-srcNormVec=srcVec./sqrt(srcVec'*srcVec);
-dstNormVec=dstVec./sqrt(dstVec'*dstVec);
+srcNormVec=srcVec./realsqrt(srcVec'*srcVec);
+dstNormVec=dstVec./realsqrt(dstVec'*dstVec);
 wVec=srcNormVec-dstNormVec;
 wNorm=wVec'*wVec;
 if wNorm<MAX_TOL

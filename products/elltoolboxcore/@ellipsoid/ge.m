@@ -16,7 +16,16 @@ function isPositiveArr = ge(firsrEllArr, secondEllArr)
 %       contains secondEllArr(iCount)
 %       when both have same center, false - otherwise.
 %
+% Example:
+%   ellObj = ellipsoid([1 ;2], eye(2))
+%   ellObj > ellObj
+% 
+%   ans =
+% 
+%        1
+%
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 2004-2008 $
+% $Copyright:  The Regents of the University of California 
+%              2004-2008 $
 
 isPositiveArr = gt(firsrEllArr, secondEllArr);

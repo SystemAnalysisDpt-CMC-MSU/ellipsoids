@@ -1,6 +1,6 @@
 function [hFigure,gridObj]=dispOnUI(self,varargin)
-% DISPONUI displays a content of the given relation as a data grid UI
-% component.
+% DISPONUI - displays a content of the given relation as a data grid UI
+%            component.
 %
 % Input:
 %   regular:
@@ -16,8 +16,8 @@ function [hFigure,gridObj]=dispOnUI(self,varargin)
 %
 % Output:
 %   hFigure: double[1,1] - figure handle containing the component
-%   gridObj: smartdb.relations.disp.UIDataGrid[1,1] - data grid component instance
-%       used for displaying a content of the relation object
+%   gridObj: smartdb.relations.disp.UIDataGrid[1,1] - data grid component 
+%       instance used for displaying a content of the relation object
 %  
 % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-07-21 $ 
 % $Copyright: Moscow State University,

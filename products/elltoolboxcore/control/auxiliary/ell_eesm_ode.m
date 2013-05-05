@@ -1,6 +1,7 @@
 function dXdt = ell_eesm_ode(t, X, l0, mydata, n, back,absTol)
 %
-% ELL_EESM_ODE - ODE for the shape matrix of the external ellipsoid.
+% ELL_EESM_ODE - ODE for the shape matrix of the external
+%                ellipsoid.
 %
 import elltool.conf.Properties;
 if nargin<7

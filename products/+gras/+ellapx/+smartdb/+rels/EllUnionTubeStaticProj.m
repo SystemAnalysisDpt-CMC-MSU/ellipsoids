@@ -30,8 +30,7 @@ classdef EllUnionTubeStaticProj<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&
                 varargin{:});
         end
         function plObj=plot(self,plObj)
-            % PLOT displays ellipsoidal tubes using the specified
-            % RelationDataPlotter
+            % PLOT - displays ellipsoidal tubes using the specified RelationDataPlotter
             %
             % Input:
             %   regular:
@@ -201,11 +200,11 @@ classdef EllUnionTubeStaticProj<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&
             QArray=QMatSpline.evaluate(timeVec);
             aMat=aVecSpline.evaluate(timeVec);
             %
-            xMax=max(shiftdim(sqrt(QArray(1,1,:)),1)+aMat(1,:));
-            xMin=min(-shiftdim(sqrt(QArray(1,1,:)),1)+aMat(1,:));
+            xMax=max(shiftdim(realsqrt(QArray(1,1,:)),1)+aMat(1,:));
+            xMin=min(-shiftdim(realsqrt(QArray(1,1,:)),1)+aMat(1,:));
             %
-            yMax=max(shiftdim(sqrt(QArray(2,2,:)),1)+aMat(2,:));
-            yMin=min(-shiftdim(sqrt(QArray(2,2,:)),1)+aMat(2,:));
+            yMax=max(shiftdim(realsqrt(QArray(2,2,:)),1)+aMat(2,:));
+            yMin=min(-shiftdim(realsqrt(QArray(2,2,:)),1)+aMat(2,:));
             %
             xVec=linspace(xMin,xMax,...
                 EllUnionTubeStaticProj.N_ISO_SURF_ONEDIM_POINTS);
@@ -238,7 +237,7 @@ classdef EllUnionTubeStaticProj<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&
             [fMat,vMat] = isosurface(tttArray,xxxArray,yyyArray,vArray,1);
             %shrink faces
             maxRangeVec=max(vMat,[],1);
-            surfDiam=sqrt(sum(maxRangeVec.*maxRangeVec));
+            surfDiam=realsqrt(sum(maxRangeVec.*maxRangeVec));
             MAX_EDGE_LENGTH_FACTOR=0.1;
             minTimeDelta=MAX_EDGE_LENGTH_FACTOR*surfDiam;
             [vMat,fMat]=gras.geom.tri.shrinkfacetri(vMat,fMat,minTimeDelta);
@@ -268,14 +267,14 @@ classdef EllUnionTubeStaticProj<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&
                     aLeftVec,qLeftMat,tLeft,aRightVec,qRightMat,tRight)
                     tDeltaInv=1./(tRight-tLeft);
                     aDiffVec = aRightVec-aLeftVec;
-                    aDiff=abs(sqrt(sum(aDiffVec.*aDiffVec))*tDeltaInv);
-                    qDiff=sqrt(max(abs(eig(qRightMat-qLeftMat))))*tDeltaInv;
+                    aDiff=abs(realsqrt(sum(aDiffVec.*aDiffVec))*tDeltaInv);
+                    qDiff=realsqrt(max(abs(eig(qRightMat-qLeftMat))))*tDeltaInv;
                     eigLeftVec=eig(qLeftMat);
                     eigRightVec=eig(qRightMat);
                     condVal=0.5*(max(eigLeftVec)/min(eigLeftVec)+...
                         max(eigRightVec)/min(eigRightVec));
                     refineFactor=min(ceil(max(minRefineFactor,...
-                        log(sqrt((aDiff+qDiff)*condVal)))),maxRefineFactor);
+                        log(realsqrt((aDiff+qDiff)*condVal)))),maxRefineFactor);
             end
         end
         function hVec=plotCreateTubeTouchCurveFunc(self,hAxes,projType,...

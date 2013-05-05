@@ -95,9 +95,9 @@ if isempty(htry)
     % Compute an initial step size h using y'(t).
     absh = min(hmax, htspan);
     if normcontrol
-        rh = (norm(yp) / max(normy,threshold)) / (0.25 * sqrt(rtol));
+        rh = (norm(yp) / max(normy,threshold)) / (0.25 * realsqrt(rtol));
     else
-        rh = norm(yp ./ max(abs(y),threshold),inf) / (0.25 * sqrt(rtol));
+        rh = norm(yp ./ max(abs(y),threshold),inf) / (0.25 * realsqrt(rtol));
     end
     if absh * rh > 1
         absh = 1 / rh;
@@ -337,7 +337,7 @@ while ~isDone
             if failed == 3
                 knew = 1;
             elseif failed > 3
-                reduce = min(0.5, sqrt(0.5*rtol/erk));
+                reduce = min(0.5, realsqrt(0.5*rtol/erk));
             end
             absh = max(reduce * absh, hmin);
             h = absh;
@@ -413,7 +413,7 @@ while ~isDone
                     if failed == 3
                         knew = 1;
                     elseif failed > 3
-                        reduce = min(0.5, sqrt(0.5*rtol/erk));
+                        reduce = min(0.5, realsqrt(0.5*rtol/erk));
                     end
                     absh = max(reduce * absh, hmin);
                     h = absh;

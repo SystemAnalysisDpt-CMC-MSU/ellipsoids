@@ -18,7 +18,7 @@ function [centVec, boundPointMat] = minkdiff(fstEll,secEll,varargin)
 %
 %   In order for the geometric difference to be nonempty set,
 %   ellipsoid fstEll must be bigger than secEll in the sense that
-%   if fstEll and secEll had the same center, secEll would be
+%   if fstEll and secEll had the same centerVec, secEll would be
 %   contained inside fstEll.
 %
 % Input:
@@ -49,8 +49,15 @@ function [centVec, boundPointMat] = minkdiff(fstEll,secEll,varargin)
 %       boundary points (vertices) of resulting set. boundPointMat
 %       may be empty if  ellipsoid fstEll isn't bigger than secEll.
 %
+% Example:
+%   firstEllObj = ellipsoid([-1; 1], [2 0; 0 3]);
+%   secEllObj = ellipsoid([1 2], eye(2));
+%   [centVec, boundPointMat] = minkdiff(firstEllObj, secEllObj);
+% 
+% 
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 2004-2008 $
+% $Copyright:  The Regents of the University of California 
+%              2004-2008 $
 
 import elltool.conf.Properties;
 import elltool.logging.Log4jConfigurator;
@@ -147,17 +154,17 @@ if Properties.getIsVerbose()
     end
 end
 
-fstEllShMat = fstEll.shape;
+fstEllShMat = fstEll.shapeMat;
 if isdegenerate(fstEll)
     fstEllShMat = ellipsoid.regularize(fstEllShMat,fstEll.absTol);
 end
-secEllShMat = secEll.shape;
+secEllShMat = secEll.shapeMat;
 if isdegenerate(secEll)
     secEllShMat = ellipsoid.regularize(secEllShMat,secEll.absTol);
 end
 switch nDim
     case 2,
-        centVec = fstEll.center - secEll.center;
+        centVec = fstEll.centerVec - secEll.centerVec;
         phiVec = linspace(0, 2*pi, fstEll.nPlot2dPoints);
         absTolVal=min(fstEll.absTol, secEll.absTol);
         lMat = ellipsoid.rm_bad_directions(fstEllShMat, ...
@@ -183,7 +190,7 @@ switch nDim
         end
         
     case 3,
-        centVec   = fstEll.center - secEll.center;
+        centVec   = fstEll.centerVec - secEll.centerVec;
         fstEll3dPnt = fstEll.nPlot3dPoints()/2;
         fstEll3dPntSub = fstEll3dPnt/2;
         psyVec = linspace(0, pi, fstEll3dPntSub);
@@ -226,11 +233,11 @@ switch nDim
         end
         
     otherwise,
-        centVec = fstEll.center - secEll.center;
-        boundPointMat(1, 1) = fstEll.center - secEll.center + ...
-            sqrt(secEll.shape) - sqrt(fstEll.shape);
-        boundPointMat(1, 2) = fstEll.center - secEll.center + ...
-            sqrt(fstEll.shape) - sqrt(secEll.shape);
+        centVec = fstEll.centerVec - secEll.centerVec;
+        boundPointMat(1, 1) = fstEll.centerVec - secEll.centerVec + ...
+            sqrt(secEll.shapeMat) - realsqrt(fstEll.shapeMat);
+        boundPointMat(1, 2) = fstEll.centerVec - secEll.centerVec + ...
+            sqrt(fstEll.shapeMat) - realsqrt(secEll.shapeMat);
         if nArgOut == 0
             hPlot = ell_plot(boundPointMat);
             hold on;

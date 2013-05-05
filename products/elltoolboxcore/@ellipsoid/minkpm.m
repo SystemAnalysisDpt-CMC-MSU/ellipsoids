@@ -43,18 +43,28 @@ function [centVec, boundPointMat] = minkpm(inpEllArr, inpEll, varargin)
 %               (0 - transparent, 1 - opaque).
 %
 % Output:
-%    centVec: double[nDim, 1]/double[0, 0] - center of the resulting set.
-%       centerVec may be empty.
+%    centVec: double[nDim, 1]/double[0, 0] - centerVec of the resulting set.
+%       centerVecVec may be empty.
 %    boundPointMat: double[nDim, ]/double[0, 0] - set of boundary
 %       points (vertices) of resulting set. boundPointMat may be empty.
+% 
+% Example:
+%   firstEllObj = ellipsoid([-2; -1], [2 -1; -1 1]);
+%   secEllObj = ell_unitball(2);
+%   thirdEllObj = ell_unitball(2);
+%   ellVec = [firstEllObj secEllObj];
+%   minkpm(ellVec, thirdEllObj); 
+% 
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 2004-2008 $
+% $Copyright:  The Regents of the University of California 
+%              2004-2008 $
 %
-% $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
+% $Author: Guliev Rustam <glvrst@gmail.com> $   
+% $Date: Dec-2012$
 % $Copyright: Moscow State University,
-%             Faculty of Computational Mathematics and Cybernetics,
-%             Science, System Analysis Department 2012 $
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2012 $
 %
 
 import elltool.conf.Properties;
@@ -67,9 +77,9 @@ persistent logger;
 
 ellipsoid.checkIsMe(inpEllArr,'first');
 ellipsoid.checkIsMe(inpEll,'second');
-checkvar(inpEll,'isscalar(x)','errorTag','wrongInput',...
-    'errorMessage','second argument must be single ellipsoid.');
-
+%
+inpEll.checkIfScalar('second argument must be single ellipsoid.');
+%
 nDimsArr = dimension(inpEllArr);
 nDims = dimension(inpEll);
 checkmultvar('all(x1(:)==x2)',2,nDimsArr,nDims,...
@@ -183,7 +193,7 @@ if Properties.getIsVerbose()
     end
 end
 
-centVec= extApproxEllVec(1).center - inpEll.center;
+centVec= extApproxEllVec(1).centerVec - inpEll.centerVec;
 boundPointMat=[];
 nCols = size(dirMat, 2);
 Properties.setIsVerbose(false);
@@ -249,12 +259,12 @@ switch nDims
         
     otherwise,
         boundPointMat = [centVec centVec];
-        boundPointMat(1, 1) = extApproxEllVec(1).center - ...
-            inpEll.center + sqrt(inpEll.shape) - ...
-            sqrt(extApproxEllVec(1).shape);
-        boundPointMat(1, 2) = extApproxEllVec(1).center - ...
-            inpEll.center + sqrt(extApproxEllVec(1).shape) - ...
-            sqrt(inpEll.shape);
+        boundPointMat(1, 1) = extApproxEllVec(1).centerVec - ...
+            inpEll.centerVec + sqrt(inpEll.shapeMat) - ...
+            sqrt(extApproxEllVec(1).shapeMat);
+        boundPointMat(1, 2) = extApproxEllVec(1).centerVec - ...
+            inpEll.centerVec + sqrt(extApproxEllVec(1).shapeMat) - ...
+            sqrt(inpEll.shapeMat);
         if nArgOut == 0
             hPlot = ell_plot(boundPointMat);
             hold on;
@@ -289,7 +299,7 @@ end
         end
     end
     function fCase2(index)
-        eaShMat = extApprEllVec(index).shape;
+        eaShMat = extApprEllVec(index).shapeMat;
         invShMat = ell_inv(eaShMat);
         valVec = sum((invShMat*dirMat).*dirMat,1);
         mValVec = max(valVec, mValVec);

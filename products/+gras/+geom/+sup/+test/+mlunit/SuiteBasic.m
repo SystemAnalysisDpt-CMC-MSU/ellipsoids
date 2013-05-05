@@ -23,7 +23,7 @@ classdef SuiteBasic < mlunitext.test_case
             check(@()supgeomdiff2d(rho2Vec,rho1Vec.',lMat));
             check(@()supgeomdiff2d(rho2Vec.',rho1Vec.',lMat.'));
             function check(fFail)
-            self.runAndCheckError(fFail,'wrongInput');
+                self.runAndCheckError(fFail,'wrongInput');
             end
             
         end
@@ -52,7 +52,7 @@ classdef SuiteBasic < mlunitext.test_case
             mlunit.assert(abs(EXP_MIN-min(rhoDiffVec))<=EXP_TOL);
             %
             function rhoVec=rho(qMat)
-                rhoVec=sqrt(sum((qMat*lMat).*lMat,1));
+                rhoVec=realsqrt(sum((qMat*lMat).*lMat,1));
             end
         end
         %
@@ -82,18 +82,18 @@ classdef SuiteBasic < mlunitext.test_case
             MAX_NORM=1+1e-3;
             MIN_NORM=1;
             MAX_TOL=1e-14;
-            supVec=sqrt(sum((dirMat*qMat).*dirMat,2));
+            supVec=realsqrt(sum((dirMat*qMat).*dirMat,2));
             % build boundary approximation
             xMat=fBoundary(dirMat,supVec,varargin{:});
             xExpMat=fCheckBoundary(dirMat,supVec,varargin{:});
-            realTol=max(sqrt(sum((xMat-xExpMat).*(xMat-xExpMat),2)));
+            realTol=max(realsqrt(sum((xMat-xExpMat).*(xMat-xExpMat),2)));
             mlunit.assert_equals(true,realTol<=MAX_TOL);
             % translate boundary back to unit sphere
             yMat=xMat/sqrtm(qMat);
             % see how good this translation approximates a unit sphere
-            nVec=sqrt(sum(yMat.*yMat,2));
+            nVec=realsqrt(sum(yMat.*yMat,2));
             mlunit.assert_equals(true,max(nVec)<=MAX_NORM);
             mlunit.assert_equals(true,min(nVec)>=MIN_NORM);
-        end        
+        end
     end
 end

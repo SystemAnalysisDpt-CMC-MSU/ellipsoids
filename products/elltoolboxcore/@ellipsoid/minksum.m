@@ -38,13 +38,21 @@ function [centVec, boundPointMat] = minksum(inpEllArr,varargin)
 %   boundPointMat: double[nDim, nBoundPoints] - set of boundary
 %       points (vertices) of resulting set.
 %
-% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 2004-2008 $
+% Example:
+%   firstEllObj = ellipsoid([-2; -1], [2 -1; -1 1]);
+%   secEllObj = ell_unitball(2);
+%   ellVec = [firstEllObj, secellObj]
+%   sumVec = minksum(ellVec);
 %
-% $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
+% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+% $Copyright:  The Regents of the University of California 
+%              2004-2008 $
+%
+% $Author: Guliev Rustam <glvrst@gmail.com> $   
+% $Date: Dec-2012$
 % $Copyright: Moscow State University,
-%             Faculty of Computational Mathematics and Cybernetics,
-%             Science, System Analysis Department 2012 $
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2012 $
 %
 
 import elltool.conf.Properties;
@@ -61,7 +69,7 @@ inpEllVec   = reshape(inpEllArr, 1, nInpEllip);
 nDimsVec = dimension(inpEllVec);
 nDim = nDimsVec(1);
 checkmultvar('all(x2(:)==x1)',2,nDimsVec,nDim,...
-    'errorTag','wrongSizes','errrorMessage',...
+    'errorTag','wrongSizes','errorMessage',...
     'ellipsoids must be of the same dimension which not higher than 3.');
 
 if (nargin > 1)&&(isstruct(varargin{1}))
@@ -121,10 +129,10 @@ if (Properties.getIsVerbose()) && (nInpEllip > 1)
 end
 clrVec = Options.color;
 
-centVec = inpEllVec(1).center;
+centVec = inpEllVec(1).centerVec;
 switch nDim
     case 1
-        rad = sqrt(inpEllVec(1).shape);
+        rad = realsqrt(inpEllVec(1).shapeMat);
         boundPointMat(1, 1) = centVec - rad;
         boundPointMat(1, 2) = centVec + rad;
     case 2
@@ -180,14 +188,14 @@ if nArgOut == 0
     clear centVec boundPointMat;
 end
     function fGetBndPnts(myEll)
-        centVec = centVec + myEll.center;
+        centVec = centVec + myEll.centerVec;
         switch nDim
             case 1
-                rad = sqrt(myEll.shape);
+                rad = realsqrt(myEll.shapeMat);
                 boundPointMat(1, 1) =boundPointMat(1,1) + ...
-                    myEll.center - rad;
+                    myEll.centerVec - rad;
                 boundPointMat(1, 2) = boundPointMat(1,2) + ...
-                    myEll.center + rad;
+                    myEll.centerVec + rad;
             case 2
                 boundPointMat = boundPointMat + ellbndr_2d(myEll);
             case 3
