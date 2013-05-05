@@ -41,6 +41,11 @@ import modgen.common.throwerror;
 ellipsoid.checkIsMe(ellFirstArr,'first');
 ellipsoid.checkIsMe(ellSecArr,'second');
 %
+if (~isempty(ellFirstArr))
+    ABS_TOL = ellFirstArr(1).absTol;
+else
+    ABS_TOL = 1e-6;
+end
 
 nFirstElems = numel(ellFirstArr);
 nSecElems = numel(ellSecArr);
@@ -62,6 +67,9 @@ isnSecScalar=nSecElems > 1;
 SEll1Array = ellFirstArr.toStruct();
 SEll2Array = ellSecArr.toStruct();
 %
+SEll1Array = arrayfun(@formCompStruct, SEll1Array);
+SEll2Array = arrayfun(@formCompStruct, SEll2Array);
+
 if isnFirstScalar&&isnSecScalar
     
     if ~isequal(firstSizeVec, secSizeVec)
@@ -83,5 +91,11 @@ end
     function compare()
         [isEqualArr,reportStr]=modgen.struct.structcomparevec(SEll1Array,...
             SEll2Array,relTol);
+    end
+
+
+    function SComp = formCompStruct(SEll)
+        SComp = struct('Q',gras.la.sqrtmpos(SEll.Q,...
+            ABS_TOL),'q',SEll.q);
     end
 end
