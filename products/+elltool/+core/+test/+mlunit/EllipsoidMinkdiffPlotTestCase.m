@@ -1,4 +1,4 @@
-classdef EllipsoidMinkdiffPlotTestCase < mlunitext.test_case
+classdef EllipsoidMinkdiffPlotTestCase < mlunitext.test_case & elltool.plot.test.SumDiffMinkBodyTestPlot
     properties (Access=private)
         testDataRootDir
         
@@ -7,6 +7,7 @@ classdef EllipsoidMinkdiffPlotTestCase < mlunitext.test_case
     methods
         function self = EllipsoidMinkdiffPlotTestCase(varargin)
             self = self@mlunitext.test_case(varargin{:});
+            self = self@elltool.plot.test.SumDiffMinkBodyTestPlot(varargin{:});
             [~,className]=modgen.common.getcallernameext(1);
             shortClassName=mfilename('classname');
             self.testDataRootDir=[fileparts(which(className)),filesep,'TestData',...
@@ -16,22 +17,7 @@ classdef EllipsoidMinkdiffPlotTestCase < mlunitext.test_case
             close all;
         end
         function self = testSimpleOptions(self)
-            import elltool.plot.test.testMinkFillAndShade
-            import elltool.plot.test.testMinkColor
-            import elltool.plot.test.testMinkProperties
-            testFirEll = ellipsoid(2*eye(2));
-            testSecEll = ellipsoid([1, 0].', [9 2;2 4]);
-            testThirdEll = ellipsoid([2 0; 0 1]);
-            testForthEll = ellipsoid([0, -1, 3].', 0.5*eye(3));
-            testFifthEll = ellipsoid([5,5,5]', [6 2 1; 2 4 3; 1 3 5]);
-            self = testMinkFillAndShade(self,@minkdiff,testSecEll,testFirEll);
-            self = testMinkFillAndShade(self,@minkdiff,testFifthEll,testForthEll);
-            self = testMinkColor(self,@minkdiff,testSecEll,testFirEll,2);
-            self = testMinkColor(self,@minkdiff,testFifthEll,testForthEll,1);
-            self = testMinkColor(self,@minkdiff,testFirEll,testThirdEll,2);
-            self = testMinkProperties(self,@minkdiff,testSecEll,testFirEll);
-            self = testMinkProperties(self,@minkdiff,testFifthEll,testForthEll);
-            self = testMinkProperties(self,@minkdiff,testFirEll,testThirdEll);
+            self = simpleOptions1(self,@minkdiff);
         end
         function self = test2d(self)
             testFirEll = ellipsoid([1, 0].', [9 2;2 4]);

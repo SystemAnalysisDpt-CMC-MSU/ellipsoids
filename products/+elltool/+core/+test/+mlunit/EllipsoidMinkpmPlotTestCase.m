@@ -1,4 +1,4 @@
-classdef EllipsoidMinkpmPlotTestCase < mlunitext.test_case
+classdef EllipsoidMinkpmPlotTestCase < mlunitext.test_case & elltool.plot.test.SumMpPmMinkBodyTestPlot
     properties (Access=private)
         testDataRootDir
         
@@ -7,6 +7,7 @@ classdef EllipsoidMinkpmPlotTestCase < mlunitext.test_case
     methods
         function self = EllipsoidMinkpmPlotTestCase(varargin)
             self = self@mlunitext.test_case(varargin{:});
+            self = self@elltool.plot.test.SumMpPmMinkBodyTestPlot(varargin{:});
             [~,className]=modgen.common.getcallernameext(1);
             shortClassName=mfilename('classname');
             self.testDataRootDir=[fileparts(which(className)),filesep,'TestData',...
@@ -16,23 +17,7 @@ classdef EllipsoidMinkpmPlotTestCase < mlunitext.test_case
             close all;
         end
         function self = testSimpleOptions(self)
-            import elltool.plot.test.testMinkFillAndShade
-            import elltool.plot.test.testMinkColor
-            import elltool.plot.test.testMinkProperties
-            testFirEll = ellipsoid(2*eye(2));
-            testSecEll = ellipsoid([1, 0].', [9 2;2 4]);
-            testThirdEll = ellipsoid([1 0; 0 2]);
-            testForthEll = ellipsoid([0, -1, 3].', 1.5*eye(3));
-            testFifthEll = ellipsoid([5,5,5]', [6 2 1; 2 4 3; 1 3 5]);
-            testSixthEll = ellipsoid([1 0 0; 0 2 0; 0 0 1]);
-            self = testMinkFillAndShade(self,@minkpm,testFirEll,[testSecEll,testThirdEll]);
-            self = testMinkFillAndShade(self,@minkpm,testForthEll,[testFifthEll testSixthEll]);
-            self = testMinkColor(self,@minkpm,testFirEll,[testSecEll,testThirdEll],2);
-            self = testMinkColor(self,@minkpm,testForthEll,[testFifthEll testSixthEll],1); 
-            self = testMinkProperties(self,@minkpm,testFirEll,[testSecEll,testThirdEll]);
-            self = testMinkProperties(self,@minkpm,testForthEll,[testFifthEll testSixthEll]); 
-            minkpm(testFirEll,testSecEll,testThirdEll,'showAll',true);
-            minkpm(testForthEll,testFifthEll,testSixthEll,'showAll',true);
+            self = simpleOptions2(self, @minkpm, false);
         end
         function self = test2d(self)
             testFirEll = ellipsoid([1, 0].', [9 2;2 4]);
