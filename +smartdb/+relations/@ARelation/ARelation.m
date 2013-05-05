@@ -7,9 +7,9 @@ classdef ARelation<smartdb.cubes.CubeStruct
     %
     methods
         function [isEq,reportStr]=isEqual(self,otherObj,varargin)
-            % ISEQUAL compares current relation object with other relation
-            % object and returns true if they are equal, otherwise it
-            % returns false
+            % ISEQUAL - compares current relation object with other relation object and 
+            %           returns true if they are equal, otherwise it returns false
+            % 
             %
             % Usage: isEq=isEqual(self,otherObj)
             %
@@ -19,15 +19,13 @@ classdef ARelation<smartdb.cubes.CubeStruct
             %     otherObj: ARelation [1,1] - other relation object
             %
             %   properties:
-            %     checkFieldOrder/isFieldOrderCheck: logical [1,1] -
-            %         if true, then fields in compared relations must
-            %         be in the same order, otherwise the order is not
-            %         important (false by default)
-            %     checkTupleOrder: logical[1,1]
-            %         if true, then the tuples in the compared relations
-            %         are expected to be in the same order, otherwise the
-            %         order is not important (false by default)
-            %
+            %     checkFieldOrder/isFieldOrderCheck: logical [1,1] - if true, then fields 
+            %         in compared relations must be in the same order, otherwise the 
+            %         order is not  important (false by default)        
+            %     checkTupleOrder: logical[1,1] -  if true, then the tuples in the 
+            %         compared relations are expected to be in the same order,
+            %         otherwise the order is not important (false by default)
+            %         
             %     maxTolerance: double [1,1] - maximum allowed tolerance            
             %
             %     compareMetaDataBackwardRef: logical[1,1] if true, the CubeStruct's

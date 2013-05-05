@@ -1,18 +1,18 @@
 function sizeMat=getFieldValueSizeMat(self,varargin)
-% GETFIELDVALUESIZEMAT returns a matrix composed from the size
-% vectros for the specified fields
+% GETFIELDVALUESIZEMAT - returns a matrix composed from the size vectors
+%                        for the specified fields
 %
 % Input:
 %   regular:
 %       self:
 %
 %   optional:
-%       fieldNameList: cell[1,nFields] - a list of fileds for
-%          which the size matrix is to be generated
+%       fieldNameList: cell[1,nFields] - a list of fileds for which the size 
+%          matrix is to be generated
 %
 %   properties:
-%       skipMinDimensions: logical[1,1] - if true, the
-%           dimensions from 1 up to minDimensionality are skipped
+%       skipMinDimensions: logical[1,1] - if true, the dimensions from 1 up 
+%           to minDimensionality are skipped
 %
 %       minDimension: numeric[1,1] - minimum dimension which definies a
 %          minimum number of columns in the resulting matrix

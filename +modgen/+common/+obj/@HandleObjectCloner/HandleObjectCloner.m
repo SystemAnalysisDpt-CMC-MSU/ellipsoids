@@ -41,13 +41,13 @@ classdef HandleObjectCloner<handle
             end
         end
         function obj=clone(self,varargin)
-            % CLONE creates a copy of a specified object via calling
-            % a copy constructor for the object class
+            % CLONE - creates a copy of a specified object via calling
+            %         a copy constructor for the object class
             obj=self.createInstance(self,varargin{:});
         end
         function resObj=createInstance(self,varargin)
-            % CREATEINSTANCE returns an object of the same class by calling a default
-            % constructor (with no parameters)
+            % CREATEINSTANCE - returns an object of the same class by calling a default
+            %                  constructor (with no parameters)
             %
             % Usage: resObj=getInstance(self)
             %
