@@ -23,10 +23,10 @@ function [resArr, statusArr] = intersect(myEllArr, objArr, mode)
 %   difficult. This problem can be formulated as quadratically
 %   constrained quadratic programming (QCQP) problem.
 %
-%   Let objArr(iObj) = E(q, Q) be an ellipsoid with center q and shape matrix Q.
-%   To check if this ellipsoid intersects (or touches) the intersection
-%   of ellipsoids in meEllArr: E(q1, Q1), E(q2, Q2), ..., E(qn, Qn),
-%   we define the QCQP problem:
+%   Let objArr(iObj) = E(q, Q) be an ellipsoid with center q and shape 
+%   matrix Q. To check if this ellipsoid intersects (or touches) the 
+%   intersection of ellipsoids in meEllArr: E(q1, Q1), E(q2, Q2), ...,
+%   E(qn, Qn), we define the QCQP problem:
 %                     J(x) = <(x - q), Q^(-1)(x - q)> --> min
 %   with constraints:
 %                      <(x - q1), Q1^(-1)(x - q1)> <= 1   (1)
@@ -59,7 +59,8 @@ function [resArr, statusArr] = intersect(myEllArr, objArr, mode)
 %
 % Input:
 %   regular:
-%       myEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of ellipsoids.
+%       myEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of 
+%            ellipsoids.
 %       objArr: ellipsoid / hyperplane /
 %           / polytope [nDims1,nDims2,...,nDimsN] - array of ellipsoids or
 %           hyperplanes or polytopes of the same sizes.
@@ -83,18 +84,40 @@ function [resArr, statusArr] = intersect(myEllArr, objArr, mode)
 %   statusArr: double[0, 0]/double[nDims1,nDims2,...,nDimsN] - status
 %       variable. statusArr is empty if mode = 'u'.
 %
+% Example:
+%   firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+%   secEllObj = firstEllObj + [5; 5];
+%   hypObj  = hyperplane([1; -1]);
+%   ellVec = [firstEllObj secEllObj];
+%   ellVec.intersect(hypObj)
+% 
+%   ans =
+% 
+%        1
+% 
+%   ellVec.intersect(hypObj, 'i')
+% 
+%   ans =
+% 
+%       -1
+% 
+%
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 2004-2008 $
+% $Copyright:  The Regents of the University of California 
+%              2004-2008 $
 %
-% $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
-% $Copyright: Moscow State University,
-%             Faculty of Computational Mathematics and Cybernetics,
-%             Science, System Analysis Department 2012 $
-%
-% $Author: <Zakharov Eugene>  <justenterrr@gmail.com> $    $Date: March-2013 $
+% $Author: Guliev Rustam <glvrst@gmail.com> $   
+% $Date: Dec-2012$
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Computer Science,
-%            System Analysis Department$
+%            System Analysis Department 2012 $
+%
+% $Author: <Zakharov Eugene>  <justenterrr@gmail.com> $    
+% $Date: March-2013 $
+% $Copyright: Moscow State University,
+%             Faculty of Computational Mathematics 
+%             and Computer Science,
+%             System Analysis Department 2013$
 %
 
 import elltool.conf.Properties;

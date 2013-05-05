@@ -4,7 +4,8 @@
 % Functions:
 % ----------
 %  hyperplane - Constructor of hyperplane object.
-%  double     - Returns parameters of hyperplane, i.e. normal vector and shift.
+%  double     - Returns parameters of hyperplane, i.e. normal vector and 
+%               shift.
 %  parameters - Same function as 'double' (legacy matter).
 %  dimension  - Returns dimension of hyperplane.
 %  isempty    - Checks if hyperplane is empty.
@@ -21,7 +22,8 @@
 %  plot    - Plots hyperplane in 2D and 3D.
 %
 %
-% Author:
+% $Author:
 % -------
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
+

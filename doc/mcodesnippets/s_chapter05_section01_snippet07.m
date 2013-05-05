@@ -1,9 +1,11 @@
-[n, r] = dimension([EE(1, :) D])  
+bufEllVec = [ellMat(1, :) fourthEllObj];
+[dimVec, rankVec] = bufEllVec.dimension() 
 
-% n =
+
+% dimVec =
 % 
 %    2     2     4
 % 
-% r =
+% rankVec =
 % 
 %    2     2     3

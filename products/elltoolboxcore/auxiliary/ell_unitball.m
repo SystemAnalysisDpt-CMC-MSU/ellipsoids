@@ -6,8 +6,8 @@ function [B] = ell_unitball(n)
 % Description:
 % ------------
 %
-%    B = ELL_UNITBALL(N)  Creates an ellipsoid in R^N with identity shape matrix,
-%                         centered at the origin.
+%    B = ELL_UNITBALL(N)  Creates an ellipsoid in R^N with 
+%           identity shape matrix, centered at the origin.
 %
 %
 % Output:

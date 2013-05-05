@@ -1,7 +1,7 @@
 function dXdt = ell_eedist_ode(t, X, l0, mydata, n, back, absTol)
 %
-% ELL_EEDIST_ODE - ODE for the shape matrix of the external ellipsoid
-%                  for system with disturbance.
+% ELL_EEDIST_ODE - ODE for the shape matrix of the external 
+%                  ellipsoid for system with disturbance.
 %
 
 import elltool.conf.Properties;

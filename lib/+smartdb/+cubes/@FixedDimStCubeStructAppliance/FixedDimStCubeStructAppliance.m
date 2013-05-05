@@ -2,8 +2,8 @@ classdef FixedDimStCubeStructAppliance<smartdb.cubes.IDynamicCubeStructInternal
     % STATICCUBESTRUCTAPPLIANCE adds basic capabilities to CubeStruct
     methods
         function varargout=getUniqueDataAlongDim(self,varargin)
-            % GETUNIQUEDATAALONGDIM returns internal representation of CubeStruct
-            % data set unique along a specified dimension
+            % GETUNIQUEDATAALONGDIM - returns internal representation of CubeStruct
+            %                         data set unique along a specified dimension
             if nargout==0
                 self.getUniqueDataAlongDimInternal(varargin{:});
             else
@@ -12,8 +12,8 @@ classdef FixedDimStCubeStructAppliance<smartdb.cubes.IDynamicCubeStructInternal
             end
         end
         function varargout=isMemberAlongDim(self,varargin)
-            % ISMEMBERALONGDIM performs ismember operation of CubeStruct data slices
-            % along the specified dimension
+            % ISMEMBERALONGDIM - performs ismember operation of CubeStruct data slices
+            %                    along the specified dimension
             if nargout==0
                 self.isMemberAlongDimInternal(varargin{:});
             else
@@ -25,14 +25,14 @@ classdef FixedDimStCubeStructAppliance<smartdb.cubes.IDynamicCubeStructInternal
             self.sortByAlongDimInternal(varargin{:});
         end
         function reorderData(self,varargin)
-            %the following methods being public are still used by CubeStruct
+            %The following methods being public are still used by CubeStruct
             %internal methods which makes it dangereous to leave them open
             %for redefinition. To protect them we use Sealed access modifier.
             self.reorderDataInternal(varargin{:});
         end
         function addDataAlongDim(self,catDimension,varargin)
-            % ADDDATAALONGDIM adds a set of field values to existing data using
-            % a concatenation along a specified dimension
+            % ADDDATAALONGDIM - adds a set of field values to existing data using
+            %                   a concatenation along a specified dimension
             %
             self.addDataAlongDimInternal(catDimension,varargin{:});
         end

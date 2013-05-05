@@ -1,12 +1,17 @@
 classdef Log4jConfigurator<modgen.logging.log4j.Log4jConfigurator
-    %LOG4JCONFIGURATOR simplifies log4j configuration, especially when
-    %Parallel Computing Toolbox is used. In the latter case the class forwards
-    %the logs of different processees in separate log files
-    %
-    % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-05-18 $ 
-    % $Copyright: Moscow State University,
-    %            Faculty of Computational Mathematics and Computer Science,
-    %            System Analysis Department 2011 $
+%LOG4JCONFIGURATOR - simplifies log4j configuration,
+%                    especially when Parallel Computing
+%                    Toolbox is used. In the latter case
+%                    the class forwards the logs of
+%                    different processees in separate log
+%                    files
+%
+% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	
+% $Date: 2011-05-18 $ 
+% $Copyright: Moscow State University,
+%             Faculty of Computational Mathematics
+%             and Computer Science,
+%             System Analysis Department 2011 $
     properties (Constant)
         %
         MASTER_LOG_FILE_NAME='master';
