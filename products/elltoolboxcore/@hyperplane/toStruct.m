@@ -24,21 +24,21 @@ function ShpArr = toStruct(hpArr)
 %             and Computer Science,
 %             System Analysis Department 2013 $
 
-    ShpArr = arrayfun(@formCompStruct, hpArr);
+    ShpArr = arrayfun(@hp2Struct, hpArr);
 end
 
-function SComp = formCompStruct(hypObj)
+function SHp = hp2Struct(hpObj)
 
-[hypNormVec, hypScal] = parameters(hypObj);
+[hpNormVec, hpScal] = parameters(hpObj);
 
-normMult = 1/norm(hypNormVec);
-hypNormVec  = hypNormVec*normMult;
-hypScal  = hypScal*normMult;
-if hypScal < 0
-    hypScal = -hypScal;
-    hypNormVec = -hypNormVec;
+normMult = 1/norm(hpNormVec);
+hpNormVec  = hpNormVec*normMult;
+hpScal  = hpScal*normMult;
+if hpScal < 0
+    hpScal = -hpScal;
+    hpNormVec = -hpNormVec;
 end
 
-SComp = struct('normal', hypNormVec, 'shift', hypScal);
+SHp = struct('normal', hpNormVec, 'shift', hpScal);
 
 end

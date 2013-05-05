@@ -23,9 +23,9 @@ function SEllArr = toStruct(ellArr)
 %             and Computer Science,
 %             System Analysis Department 2013 $
 
-    SEllArr = arrayfun(@formCompStruct, ellArr);
+    SEllArr = arrayfun(@ell2Struct, ellArr);
 end
 
-function SComp = formCompStruct(ellObj)
-    SComp = struct('Q',gras.la.sqrtmpos(ellObj.shapeMat, ellObj.absTol),'q',ellObj.centerVec.');
+function SEll = ell2Struct(ellObj)
+    SEll = struct('Q', ellObj.shapeMat, 'q', ellObj.centerVec.');
 end
