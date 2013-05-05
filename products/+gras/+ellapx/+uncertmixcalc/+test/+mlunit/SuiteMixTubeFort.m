@@ -34,11 +34,10 @@ classdef SuiteMixTubeFort < mlunitext.test_case
             nTubes = ellTubeExp.getNElems;
             for iTube = 1:nTubes
                 checkField(F.Q_ARRAY);
-                %
                 checkField(F.A_MAT);
                 %
-                lGotMat = DataGot.ltGoodDirMat{iTube};
-                lExpMat = DataExp.ltGoodDirMat{iTube};
+                lGotMat = DataGot.(F.LT_GOOD_DIR_MAT){iTube};
+                lExpMat = DataExp.(F.LT_GOOD_DIR_MAT){iTube};
                 lGotMat = bsxfun(@rdivide, lGotMat,...
                     realsqrt(sum(lGotMat.*lGotMat)));
                 lExpMat = bsxfun(@rdivide, lExpMat,...
@@ -53,11 +52,7 @@ classdef SuiteMixTubeFort < mlunitext.test_case
             %
             function compareArrays(aArray, bArray)
                 rArray = aArray - bArray;
-                try
                 mlunit.assert(max(abs(rArray(:))) < calcPrecision);
-                catch
-                    1
-                end
             end
         end
     end

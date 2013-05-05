@@ -130,7 +130,7 @@ classdef SuiteBasic < mlunitext.test_case
         function testCompareMatVectorMultiply(self)
             import gras.gen.MatVector;
             %
-            absTol = elltool.conf.Properties.getAbsTol();
+            calcPrecision = 1e-5;
             SData = load(['TestData', filesep, 'matvector_data.mat']);
             aArray = SData.aArray;
             bMat = squeeze(aArray(1,:,:));
@@ -157,7 +157,7 @@ classdef SuiteBasic < mlunitext.test_case
             %
             function check(aArray, bArray)
                 rArray = aArray - bArray;
-                mlunit.assert(max(abs(rArray(:))) < absTol);
+                mlunit.assert(max(abs(rArray(:))) < calcPrecision);
             end
         end
     end

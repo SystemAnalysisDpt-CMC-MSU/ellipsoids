@@ -86,8 +86,7 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             piFactor=piNumerator/piDenominator;
             SMat=self.getOrthTranslMatrix(QIntSqrtMat,RSqrtMat,...
                 RSqrtMat*ltVec,QIntSqrtMat*ltVec);
-            tmpMat=(AMat*QIntSqrtMat+RSqrtMat*transpose(SMat))*...
-                transpose(QIntSqrtMat);
+            tmpMat = AMat*QIntMat + QIntSqrtMat*SMat*RSqrtMat;
             dQIntMat=tmpMat+tmpMat.'-piFactor*QIntMat-DMat/piFactor;
             %
             % External approximation
@@ -101,8 +100,7 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             piFactor=piNumerator/piDenominator;
             SMat=self.getOrthTranslMatrix(QExtSqrtMat,DSqrtMat,...
                 DSqrtMat*ltVec,QExtSqrtMat*ltVec);
-            tmpMat=(AMat*QExtSqrtMat-DSqrtMat*transpose(SMat))*...
-                transpose(QExtSqrtMat);
+            tmpMat = AMat*QExtMat - QExtSqrtMat*SMat*DSqrtMat;
             dQExtMat=tmpMat+tmpMat.'+piFactor*QExtMat+RMat/piFactor;
         end
     end

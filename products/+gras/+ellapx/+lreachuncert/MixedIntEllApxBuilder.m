@@ -10,17 +10,19 @@ classdef MixedIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
         mixingProportionsMat
         ellTubeRel
         AtDynamics
-        BPBTransSqrtDynamics
+        BPBTransDynamics
         CQCTransDynamics
         ltSplineList
         goodDirSetObj
+        isDisturbance
     end
     methods (Access=protected)
         function varargout = calcEllApxMatrixDeriv(self,t,varargin)
             nGoodDirs = self.getNGoodDirs();
             AMat = self.AtDynamics.evaluate(t);
-            BPBTransSqrtMat = self.BPBTransSqrtDynamics.evaluate(t);
+            BPBTransMat = self.BPBTransDynamics.evaluate(t);
             CQCTransMat = self.CQCTransDynamics.evaluate(t);
+            BPBTransSqrtMat = gras.la.sqrtmpos(BPBTransMat);
             %
             varargout = cell(1,nGoodDirs);
             %
@@ -37,20 +39,24 @@ classdef MixedIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
                 %
                 % disturbance component
                 %
-                piNumerator = (ltVec.')*(CQCTransMat*ltVec);
-                piDenominator = (ltVec.')*(QMat*ltVec);
-                if piNumerator <= 0 || piDenominator <= 0
-                    if min(eig(CQCTransMat)) <= 0
-                        modgen.common.throwerror('wrongInput',...
-                            ['degenerate matrices C,Q for disturbance ',...
-                            'contraints are not supported']);
-                    else
-                        modgen.common.throwerror('wrongInput',...
-                            'the estimate has degraded for unknown reason');
+                if self.isDisturbance
+                    piNumerator = dot(ltVec, CQCTransMat*ltVec);
+                    piDenominator = dot(ltVec, QMat*ltVec);
+                    if piNumerator <= 0 || piDenominator <= 0
+                        if min(eig(CQCTransMat)) <= 0
+                            modgen.common.throwerror('wrongInput',...
+                                ['degenerate matrices C,Q for disturbance ',...
+                                'contraints are not supported']);
+                        else
+                            modgen.common.throwerror('wrongInput',...
+                                'the estimate has degraded for unknown reason');
+                        end
                     end
+                    piFactor = realsqrt(piNumerator/piDenominator);
+                    vMat = piFactor*QMat + CQCTransMat/piFactor;
+                else
+                    vMat = 0;
                 end
-                piFactor = realsqrt(piNumerator/piDenominator);
-                vMat = -piFactor*QMat - CQCTransMat/piFactor;
                 %
                 % convex combination component
                 %
@@ -62,20 +68,17 @@ classdef MixedIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
                 %
                 % derivative
                 %
-                varargout{iGoodDir} = uMat + uMat.' + vMat + ...
+                varargout{iGoodDir} = uMat + uMat.' - vMat + ...
                     self.mixingStrength*mMat;
             end
         end
     end
     methods (Access=private)
         function self=prepareODEData(self)
-            import gras.mat.MatrixOperationsFactory;
             pDefObj = self.getProblemDef();
-            matOpFactory = MatrixOperationsFactory.create(pDefObj.getTimeVec());
             %
             self.AtDynamics = pDefObj.getAtDynamics();
-            self.BPBTransSqrtDynamics = matOpFactory.sqrtmpos(...
-                pDefObj.getBPBTransDynamics());
+            self.BPBTransDynamics = pDefObj.getBPBTransDynamics();
             self.CQCTransDynamics = pDefObj.getCQCTransDynamics();
             self.ltSplineList = ...
                 self.getGoodDirSet().getGoodDirOneCurveSplineList();
@@ -161,6 +164,13 @@ classdef MixedIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             checkgenext(['size(x1,1)==size(x1,2) && size(x1,1)==x2 && '...
                 'all(x1(:)>=0) && max(abs(sum(x1,2)-ones(x2,1)))<x3'],...
                 3,mMat,goodDirSetObj.getNGoodDirs(),calcPrecision);
+            %
+            self.isDisturbance = true;
+            if isa(pDynObj.getCQCTransDynamics(), ...
+                    'gras.mat.fcnlib.ConstMatrixFunction')
+                CQCTransMat = pDynObj.getCQCTransDynamics.evaluate(0);
+                self.isDisturbance = sum(abs(CQCTransMat(:)))>calcPrecision;
+            end
             %
             self.mixingStrength = mixingStrength;
             self.mixingProportionsMat = mMat;

@@ -8,7 +8,7 @@ else
     basePath = '.';
 end
 %
-DirList = dir([basePath filesep 'example_*_config_*']);
+DirList = dir([basePath filesep 'springs_*']);
 nDirs = numel(DirList);
 %
 fprintf('%d configuration(s) found\n',nDirs);

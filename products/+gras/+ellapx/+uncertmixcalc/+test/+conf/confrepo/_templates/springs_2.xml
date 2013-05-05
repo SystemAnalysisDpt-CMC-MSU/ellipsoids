@@ -2,15 +2,15 @@
 <root version="18" xml_tb_version="2.0" type="struct" >
 <valueObj type="struct" >
 	<genericProps type="struct" >
-		<calcTimeLimVec type="double" >-8.396061623727746e-16 0.4</calcTimeLimVec>
-		<calcPrecision type="double" >1e-05</calcPrecision>
+		<calcTimeLimVec type="double" >2.414735078559716e-15 3</calcTimeLimVec>
+		<calcPrecision type="double" >1e-07</calcPrecision>
 		<isSplineForMatrixCalcUsed type="boolean" >1</isSplineForMatrixCalcUsed>
 	</genericProps>
 	<projectionProps type="struct" >
 		<projSpaceSetName type="char" >set1</projSpaceSetName>
 		<projSpaceSets type="struct" >
 			<set1 type="cell" >
-				<item type="double" >1 1 0 0</item>
+				<item type="double" >1 1 0 0 0 0</item>
 			</set1>
 		</projSpaceSets>
 		<isDynamicProjEnabled type="boolean" >0</isDynamicProjEnabled>
@@ -22,11 +22,17 @@
 			<manual type="struct" >
 				<lsGoodDirSetName type="char" >set1</lsGoodDirSetName>
 				<lsGoodDirSets type="struct" >
-					<set1 type="cell" size="4 1">
-						<item type="double" >0.1444181360748201 0.1187943732122964 -0.1206667553236096 0.4137518259166502</item>
-						<item type="double" >-0.7940110359175284 0.4285619956381295 0.9701326405283302 0.1140067563335072</item>
-						<item type="double" >2.142556916532041 -1.15383274774884 -0.3570537999845826 -1.616107469036286</item>
-						<item type="double" >1.469644137957468 0.180653544722788 1.419932540248706 1.969538718635977</item>
+					<set1 type="cell" size="10 1">
+						<item type="double" >-1.148194122196558 1.513727335575111 -1.18745409925716 0.9177206398795444 -1.788381560111082 1.123474864599097</item>
+						<item type="double" >-0.3096833207291043 -1.545744957652564 -0.006481222892606019 -0.5181496359235088 -0.556967916703334 -0.5121270650835474</item>
+						<item type="double" >0.6872653763379973 -0.7904747075990508 0.1350648135132939 0.9328728138697071 0.7906531242594196 0.3297959754543346</item>
+						<item type="double" >0.4119255710360618 -0.1967163713380142 -0.8575374507472827 0.4599991669595793 -0.7795730363779314 -0.2734168079986471</item>
+						<item type="double" >0.7375436986817555 -2.217843741762702 0.104424929560947 -1.28129528441566 1.202591679248591 0.7827143776030185</item>
+						<item type="double" >-0.7413824349407532 -0.7875816289569175 0.3005274316301868 -1.444688161227439 -0.01748636456093306 -1.494630872757215</item>
+						<item type="double" >-0.8022470687614941 0.213829880697638 -0.4666606552847565 -0.7402563485531435 1.091328186253497 1.293868568549887</item>
+						<item type="double" >-1.528828893699034 0.6478437199208608 0.09344559028693275 0.9110871131399593 -1.652765954208836 1.378549634106579</item>
+						<item type="double" >-0.4169152479286088 -0.1288957298402644 -0.9448640179889671 -1.043292508273151 -0.4978404752524197 -0.2699890582849399</item>
+						<item type="double" >-0.3863115203078466 -0.01873760446534735 1.400690626668709 -0.05693537269373738 -0.0112744262119355 0.5981591983918756</item>
 					</set1>
 				</lsGoodDirSets>
 			</manual>
@@ -35,7 +41,7 @@
 				<goodDirSpaceVec type="boolean" >1 1</goodDirSpaceVec>
 			</auto>
 		</methodProps>
-		<selectionTime type="double" >-8.396061623727746e-16</selectionTime>
+		<selectionTime type="double" >2.414735078559716e-15</selectionTime>
 	</goodDirSelection>
 	<customResultDir type="struct" >
 		<isEnabled type="boolean" >0</isEnabled>
@@ -84,13 +90,19 @@
 				<uncertMixed type="struct" >
 					<isEnabled type="boolean" >1</isEnabled>
 					<props type="struct" >
-						<selectionMethodForSMatrix type="char" >volume</selectionMethodForSMatrix>
-						<mixingStrength type="double" >1</mixingStrength>
-						<mixingProportions type="cell" size="4 1">
-							<item type="double" >0.25 0.25 0.25 0.25</item>
-							<item type="double" >0.25 0.25 0.25 0.25</item>
-							<item type="double" >0.25 0.25 0.25 0.25</item>
-							<item type="double" >0.25 0.25 0.25 0.25</item>
+						<selectionMethodForSMatrix type="char" >qr</selectionMethodForSMatrix>
+						<mixingStrength type="double" >0.5</mixingStrength>
+						<mixingProportions type="cell" size="10 1">
+							<item type="double" >0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1</item>
+							<item type="double" >0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1</item>
+							<item type="double" >0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1</item>
+							<item type="double" >0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1</item>
+							<item type="double" >0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1</item>
+							<item type="double" >0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1</item>
+							<item type="double" >0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1</item>
+							<item type="double" >0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1</item>
+							<item type="double" >0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1</item>
+							<item type="double" >0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1</item>
 						</mixingProportions>
 					</props>
 				</uncertMixed>
@@ -119,7 +131,7 @@
 			</schemas>
 		</extIntApx>
 	</ellipsoidalApxProps>
-	<systemDefinitionConfName type="char" >example_1_config_1</systemDefinitionConfName>
+	<systemDefinitionConfName type="char" >springs_2</systemDefinitionConfName>
 </valueObj>
-<keyStr type="char" >example_1_config_1</keyStr>
+<keyStr type="char" >springs_2</keyStr>
 </root>

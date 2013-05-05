@@ -82,7 +82,7 @@
 				<uncertMixed type="struct" >
 					<isEnabled type="boolean" >1</isEnabled>
 					<props type="struct" >
-						<selectionMethodForSMatrix type="char" >volume</selectionMethodForSMatrix>
+						<selectionMethodForSMatrix type="char" >qr</selectionMethodForSMatrix>
 						<mixingStrength type="double">1</mixingStrength>
 						<mixingProportions type="cell" size="2 1">
 							<item type="char" >1/2  1/2</item>

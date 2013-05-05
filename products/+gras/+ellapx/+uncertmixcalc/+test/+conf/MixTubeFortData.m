@@ -50,6 +50,7 @@ classdef MixTubeFortData < handle
             self.nTimePoints = self.FortranData.nt;
             %
             timeVec = self.FortranData.tVec.';
+            sTime = timeVec(1);
             calcPrecision = self.FortranData.tolerance;
             %
             qArrayList = cell(1, self.nGoodDirs);
@@ -79,33 +80,11 @@ classdef MixTubeFortData < handle
             end
             %
             self.ellTubeRel = EllTube.fromQArrays(qArrayList, aMat, ...
-                timeVec, ltGoodDirArray, timeVec(1), ...
+                timeVec, ltGoodDirArray, sTime, ...
                 MixedIntEllApxBuilder.APPROX_TYPE, ...
                 MixedIntEllApxBuilder.APPROX_SCHEMA_NAME, ...
                 MixedIntEllApxBuilder.APPROX_SCHEMA_DESCR, calcPrecision);
             %
-        end
-        %
-        function ellTubeProjRel = getEllTubeProj(self, projSpaceVec)
-            indVec = find(projSpaceVec);
-            %
-            if length(indVec) ~= 2
-                modgen.common.throwerror('wrongInput', ['Only 2D '...
-                    'projections are supported']);
-            end
-            %
-            projType = gras.ellapx.enums.EProjType.Static;
-            projMat = eye(self.sysDim);
-            projMat = projMat(:,indVec).';
-            ellTubeProjRel = self.ellTubeRel.project(projType, {projMat}, ...
-                @fGetProjMat);
-            %
-            function [projOrthMatArray,projOrthMatTransArray]=...
-                    fGetProjMat(projMat,timeVec,varargin)
-                nPoints=length(timeVec);
-                projOrthMatArray=repmat(projMat,[1,1,nPoints]);
-                projOrthMatTransArray=repmat(projMat.',[1,1,nPoints]);
-            end
         end
         %
         function saveEllTube(self, fileName)
@@ -175,8 +154,8 @@ classdef MixTubeFortData < handle
             sysDefRepoMgr.setParam('At',...
                 toCellOfStrings(-self.FortranData.aMat));
             sysDefRepoMgr.setParam('Bt',...
-                toCellOfStrings(self.FortranData.bMat));
-            sysDefRepoMgr.setParam('Ct',toCellOfStrings(cMat));
+                toCellOfStrings(-self.FortranData.bMat));
+            sysDefRepoMgr.setParam('Ct',toCellOfStrings(-cMat));
             sysDefRepoMgr.setParam('initial_set.Q',...
                 toCellOfRows(self.FortranData.mMat));
             sysDefRepoMgr.setParam('initial_set.a',...

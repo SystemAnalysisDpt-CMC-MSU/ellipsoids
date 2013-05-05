@@ -430,5 +430,26 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
                 ellTubeProjRel=EllTubeProj();
             end
         end
+        function [ellTubeProjRel,indProj2OrigVec]=projectToOrths(...
+                self,indVec,projType)
+            %
+            dim = min(self.dim);
+            %
+            if nargin < 3
+                projType = gras.ellapx.enums.EProjType.Static;
+            end
+            %
+            projMat = eye(dim);
+            projMat = projMat(:,indVec).';
+            [ellTubeProjRel,indProj2OrigVec] = ...
+                self.project(projType, {projMat}, @fGetProjMat);
+            %
+            function [projOrthMatArray,projOrthMatTransArray]=...
+                    fGetProjMat(projMat,timeVec,varargin)
+                nPoints=length(timeVec);
+                projOrthMatArray=repmat(projMat,[1,1,nPoints]);
+                projOrthMatTransArray=repmat(projMat.',[1,1,nPoints]);
+            end
+        end
     end
 end

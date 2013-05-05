@@ -14,7 +14,7 @@
 		<item type="char" >0.000000</item>
 		<item type="char" >0.000000</item>
 		<item type="char" >0.000000</item>
-		<item type="char" >2.000000</item>
+		<item type="char" >-2.000000</item>
 	</Bt>
 	<initial_set type="struct" >
 		<Q type="cell" size="4 1">
@@ -56,8 +56,8 @@
 		<item type="char" >0.000000</item>
 		<item type="char" >0.000000</item>
 		<item type="char" >0.000000</item>
-		<item type="char" >2.000000</item>
+		<item type="char" >-2.000000</item>
 	</Ct>
 </valueObj>
-<keyStr type="char" >example_1_config_1</keyStr>
+<keyStr type="char" >springs_1</keyStr>
 </root>

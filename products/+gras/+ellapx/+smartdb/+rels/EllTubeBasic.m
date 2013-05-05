@@ -90,7 +90,6 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             STubeData=struct;
             %
             STubeData.scaleFactor=ones(nLDirs,1);
-            STubeData.approxType=repmat(approxType,nLDirs,1);
             STubeData.QArray=QArrayList.';
             STubeData.aMat=repmat({aMat},nLDirs,1);
             %
@@ -102,10 +101,25 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             %
             STubeData.timeVec=repmat({timeVec},nLDirs,1);
             %
-            STubeData.approxSchemaName=repmat({approxSchemaName},...
+            if length(approxType) > 1
+                STubeData.approxType=approxType;
+            else
+                STubeData.approxType=repmat(approxType,nLDirs,1);
+            end
+            %
+            if iscell(approxSchemaName)
+                STubeData.approxSchemaName=approxSchemaName;
+            else
+                STubeData.approxSchemaName=repmat({approxSchemaName},...
                 nLDirs,1);
-            STubeData.approxSchemaDescr=repmat({approxSchemaDescr},...
+            end
+            %
+            if iscell(approxSchemaDescr)
+                STubeData.approxSchemaDescr=approxSchemaDescr;
+            else
+                STubeData.approxSchemaDescr=repmat({approxSchemaDescr},...
                 nLDirs,1);
+            end
             %
             STubeData.lsGoodDirVec=cell(nLDirs,1);
             STubeData.ltGoodDirMat=cell(nLDirs,1);
