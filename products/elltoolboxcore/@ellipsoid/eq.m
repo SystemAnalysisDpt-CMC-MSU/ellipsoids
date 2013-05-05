@@ -85,7 +85,3 @@ end
             SEll2Array,relTol);
     end
 end
-function SComp=formCompStruct(ellObj)
-    SComp=struct('Q',gras.la.sqrtmpos(ellObj.shapeMat,...
-        ellObj.absTol),'q',ellObj.centerVec.');
-end

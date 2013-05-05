@@ -26,17 +26,13 @@ function display(myEllArr)
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright: The Regents of the University of California 
 %             2004-2008 $
+MAX_DISP_ELEM = 15;
 
 fprintf('\n');
 disp([inputname(1) ' =']);
 
-sizeVec = size(myEllArr);
 if numel(myEllArr) > 1
-    fprintf('%d', sizeVec(1));
-    for iDimension = 2 : length(sizeVec)
-        fprintf('x%d', sizeVec(iDimension)); 
-    end
-    fprintf(' array of ellipsoids.\n\n');
+    strucdisp(myEllArr.toStruct(), 'maxArrayLength', MAX_DISP_ELEM);
 else
     SEll = myEllArr.toStruct();
     fprintf('\n');

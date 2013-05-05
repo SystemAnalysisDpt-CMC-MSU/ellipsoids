@@ -1,5 +1,30 @@
-function ShypArr = toStruct(hypArr)
-    ShypArr = arrayfun(@formCompStruct, hypArr);
+function ShpArr = toStruct(hpArr)
+% toStruct -- converts hyperplanes array into structural array.
+%
+% Input:
+%   regular:
+%       hpArr: hyperplane [hpDim1, hpDim2, ...] - array
+%           of hyperplanes.
+% 
+% Output:
+%   ShpArr : structural array with size of hpArr.
+% 
+% Example:
+%   hpObj = hyperplane([1 1]', 1);
+%   hpObj.toStruct()
+% 
+%   ans = 
+% 
+%   normal: [2x1 double]
+%   shift: 0.7071
+% 
+% $Author: Alexander Karev <Alexander.Karev.30@gmail.com>
+% $Copyright: Moscow State University,
+%             Faculty of Computational Mathematics
+%             and Computer Science,
+%             System Analysis Department 2013 $
+
+    ShpArr = arrayfun(@formCompStruct, hpArr);
 end
 
 function SComp = formCompStruct(hypObj)
