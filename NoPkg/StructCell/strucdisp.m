@@ -365,11 +365,18 @@ end
             Field = cell2mat(logicalFields(iField));
             filler = char(ones(1, maxFieldLength - length(Field) + 2)...
                 * DASH_SYMBOL_CODE);
-            if isscalar(Structure.(Field))
-                logicalValue = {'False', 'True'};
-                varStr = sprintf(' %s', logicalValue{Structure.(Field) + 1});
-            else
+           if length(Structure.(Field)) > maxArrayLength
                 varStr = createArraySize(Structure.(Field), 'Logic array');
+           else
+                varStr = '';
+                for iIndex = 1 : numel(Structure.(Field))
+                    if (Structure.(Field)(iIndex))
+                        varStr = [varStr, 'True '];
+                    else
+                        varStr = [varStr, 'False '];
+                    end
+                end
+                varStr = ['[' varStr(1:length(varStr) - 1) ']'];
             end
             listStr = [listStr; {[strIndent '   |' filler ' ' Field ' :' varStr]}];
         end
