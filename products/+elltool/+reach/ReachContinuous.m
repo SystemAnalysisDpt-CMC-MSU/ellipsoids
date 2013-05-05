@@ -63,10 +63,11 @@ classdef ReachContinuous < elltool.reach.AReach
             DEFAULT_LINE_WIDTH = 2;
             DEFAULT_EA_SHADE = 0.3;
             DEFAULT_IA_SHADE = 0.1;
-            DEFAULT_FILL = 0;
+            DEFAULT_FILL = false;
 
             if approxType == EApproxType.External
-                [reg, ~, colorVec, shade, lineWidth, isFill] = ...
+                [reg, ~, colorVec, shade, lineWidth, isFill,...
+                    isColorVec, ~, ~, ~] = ...
                     modgen.common.parseparext(varargin,...
                     {'color', 'shade', 'width', 'fill';... 
                     DEFAULT_EA_COLOR_VEC, DEFAULT_EA_SHADE,...
@@ -76,7 +77,8 @@ classdef ReachContinuous < elltool.reach.AReach
                     @(x)(isa(x, 'double') && (x > 0)), 'islogical(x)'});
                     scaleFactor = self.EXTERNAL_SCALE_FACTOR;
             else
-                [reg, ~, colorVec, shade, lineWidth, isFill] = ...
+                [reg, ~, colorVec, shade, lineWidth, isFill,...
+                    isColorVec, ~, ~, ~] = ...
                     modgen.common.parseparext(varargin,...
                     {'color', 'shade', 'width', 'fill';... 
                     DEFAULT_IA_COLOR_VEC, DEFAULT_IA_SHADE,...
@@ -86,12 +88,25 @@ classdef ReachContinuous < elltool.reach.AReach
                     @(x)(isa(x, 'double') && (x > 0)), 'islogical(x)'});
                     scaleFactor = self.INTERNAL_SCALE_FACTOR;
             end
-
+            
+            checkIsWrongInput();
+            
             if (nargin > 2) && ~isempty(reg)
                 if ischar(reg{1})
-                    colorVec = self.my_color_table(reg{1});
+                    if isColorVec
+                        throwerror('ConflictingColor',...
+                            'Conflicting using of color property');
+                    else
+                        colorVec = getColorVec(reg{1});
+                    end
                 end
             end
+            
+            if ischar(colorVec)
+                colorVec = getColorVec(colorVec);
+            end
+            
+
             %
             if self.isProj
                 if self.ellTubeRel.dim() > 3
@@ -113,9 +128,86 @@ classdef ReachContinuous < elltool.reach.AReach
                 projSetObj = self.getProjSet(projBasisMat,...
                     approxType, scaleFactor);
                 plotter = projSetObj.plot(plObj, 'fGetTubeColor',...
-                    @(x) deal(colorVec, shade));
+                    @(x) deal(colorVec, shade), 'width', lineWidth,...
+                    'fill', isFill);
+%                 plotter = projSetObj.plot(plObj, 'fGetTubeColor',...
+%                     @(x) deal(colorVec, shade));
+            end
+            function colCodeVec = getColorVec(colChar)
+                if ~(ischar(colChar))
+                    colCodeVec = [0 0 0];
+                    return;
+                end
+                switch colChar
+                    case 'r',
+                        colCodeVec = [1 0 0];
+                    case 'g',
+                        colCodeVec = [0 1 0];
+                    case 'b',
+                        colCodeVec = [0 0 1];
+                    case 'y',
+                        colCodeVec = [1 1 0];
+                    case 'c',
+                        colCodeVec = [0 1 1];
+                    case 'm',
+                        colCodeVec = [1 0 1];
+                    case 'w',
+                        colCodeVec = [1 1 1];
+                    otherwise,
+                        colCodeVec = [0 0 0];
+                end
+            end
+            
+            function checkIsWrongInput()
+                import modgen.common.throwerror;
+                cellfun(@(x)checkIfNoColorCharPresent(x),reg);
+                cellfun(@(x)checkRightPropName(x),reg);
+                checkIfNoColorCharPresent(colorVec);
+                checkColorSize(colorVec);
+                
+                function checkColorSize(colorVec)
+                    import modgen.common.throwerror;
+                    if isa(colorVec, 'double') && (size(colorVec, 2) ~= 3)
+                        throwerror('wrongColorVecSize', ...
+                            'ColorVec is a vector of length 3');
+                    end
+                end
+        
+                function checkIfNoColorCharPresent(value)
+                    import modgen.common.throwerror;
+                    if ischar(value)&&(numel(value)==1)&&~isColorDef(value)
+                        throwerror('wrongColorChar', ...
+                            'You can''t use this symbol as a color');
+                    end
+                    function isColor = isColorDef(value)
+                        isColor = eq(value, 'r') | eq(value, 'g') | eq(value, 'b') | ...
+                            eq(value, 'y') | eq(value, 'c') | ...
+                            eq(value, 'm') | eq(value, 'w');
+                    end
+                end
+                function checkRightPropName(value)
+                    import modgen.common.throwerror;
+                    if ischar(value)&&(numel(value)>1)
+                        if ~isRightProp(value)
+                            throwerror('wrongProperty', ...
+                                'This property doesn''t exist');
+                        else
+                            throwerror('wrongPropertyValue', ...
+                                'There is no value for property.');
+                        end
+                    elseif ~ischar(value)
+                        throwerror('wrongPropertyType', 'Property must be a string.');
+                    end
+                    function isRProp = isRightProp(value)
+                        isRProp = strcmpi(value, 'fill') |...
+                            strcmpi(value, 'width') | ...
+                            strcmpi(value, 'shade') | strcmpi(value, 'color');
+                    end
+                end
             end
         end
+        
+        
         function dataCVec = evolveApprox(self,...
                 newTimeVec, newLinSys, approxType)
             import gras.ellapx.smartdb.F;
@@ -212,30 +304,7 @@ classdef ReachContinuous < elltool.reach.AReach
         end
     end
     methods (Access = private, Static)
-        function colCodeVec = getColorVec(colChar)
-            if ~(ischar(colChar))
-                colCodeVec = [0 0 0];
-                return;
-            end
-            switch colChar
-                case 'r',
-                    colCodeVec = [1 0 0];
-                case 'g',
-                    colCodeVec = [0 1 0];
-                case 'b',
-                    colCodeVec = [0 0 1];
-                case 'y',
-                    colCodeVec = [1 1 0];
-                case 'c',
-                    colCodeVec = [0 1 1];
-                case 'm',
-                    colCodeVec = [1 0 1];
-                case 'w',
-                    colCodeVec = [1 1 1];
-                otherwise,
-                    colCodeVec = [0 0 0];
-            end
-        end
+
         function backwardStrCMat = getBackwardCMat(strCMat, tSum, isMinus)
             t = sym('t');
             t = tSum-t;
@@ -562,12 +631,9 @@ classdef ReachContinuous < elltool.reach.AReach
             if nargin == 1
                 eaPlotter =...
                     self.plotApprox(EApproxType.External);
-            elseif nargin == 2
+            else
                 eaPlotter =...
-                    self.plotApprox(EApproxType.External, varargin{1});
-            elseif nargin == 3
-                eaPlotter = self.plotApprox(EApproxType.External,...
-                    varargin{1}, varargin{2});
+                    self.plotApprox(EApproxType.External, varargin{:});
             end
         end
         %%
@@ -576,12 +642,9 @@ classdef ReachContinuous < elltool.reach.AReach
             if nargin == 1
                 iaPlotter =...
                     self.plotApprox(EApproxType.Internal);
-            elseif nargin == 2
+            else
                 iaPlotter =...
-                    self.plotApprox(EApproxType.Internal, varargin{1});
-            elseif nargin == 3
-                iaPlotter = self.plotApprox(EApproxType.Internal,...
-                    varargin{1}, varargin{2});
+                    self.plotApprox(EApproxType.Internal, varargin{:});
             end
         end
         %%  
