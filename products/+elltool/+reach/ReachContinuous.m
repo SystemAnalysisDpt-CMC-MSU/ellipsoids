@@ -494,8 +494,8 @@ classdef ReachContinuous < elltool.reach.AReach
         %       linSys: elltool.linsys.LinSys object - given linear system 
         %       x0Ell: ellipsoid[1, 1] - ellipsoidal set of initial conditions 
         %       l0Mat: matrix of double - l0Mat 
-        %       timeVec: double[1, 2] - time interval; timeVec(1) must be less
-        %            then timeVec(2)
+        %       timeVec: double[1, 2] - time interval; timeVec(1) < timeVec(2)
+        %            for forward solving, timeVec(1) > timeVec(2) for backward
         %       OptStruct: structure[1,1] in this class OptStruct doesn't matter
         %           anything
         %

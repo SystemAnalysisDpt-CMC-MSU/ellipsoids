@@ -412,7 +412,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     approxSchemaDescr, approxType,... 
                     timeVec, calcPrecision, indSTime, ltGoodDirMat,...
                     lsGoodDirVec,ltGoodDirNormVec,lsGoodDirNorm,...
-                    xTouchCurveMat, xTouchOpCurveMat, xsTouchVec, xsTouchOpVec)
+                    ~, ~, xsTouchVec, xsTouchOpVec)
                 import gras.interp.MatrixInterpolantFactory;
                 QArraySpline = ...
                     MatrixInterpolantFactory.createInstance(...
@@ -652,6 +652,12 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
         %   obj: gras.ellapx.smartdb.rels.EllTubeBasic[1, 1] - interpolated
         %   ellipsoidal tube
         %
+        % $Author: Daniil Stepenskiy <reinkarn@gmail.com> $
+        % $Date: May-2013 $ 
+        % $Copyright: Moscow State University,
+        %             Faculty of Computational
+        %             Mathematics and Computer Science,
+        %             System Analysis Department 2013 $
         function interpEllTube = interp(self, timeVec)
             import gras.interp.MatrixInterpolantFactory;
             import gras.ellapx.smartdb.rels.EllTube;
