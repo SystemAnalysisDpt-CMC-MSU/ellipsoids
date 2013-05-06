@@ -68,7 +68,7 @@ testLists=cellfun(@(x)x.tests,suiteList,'UniformOutput',false);
 suite=mlunitext.test_suite(horzcat(testLists{:}));
 %
 resList{1}=runner.run(suite);
-resList{2}=elltool.reach.test.run_reachproj_adv_tests();
+resList{2}=elltool.reach.test.run_reachcont_proj_adv_tests();
 results=[resList{:}];
 %
 end

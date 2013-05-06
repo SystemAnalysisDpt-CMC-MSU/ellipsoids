@@ -1,5 +1,6 @@
-function results = run_reachproj_adv_tests(inpConfAdvTestList, inpModeAdvTestList)
+function results = run_reachcont_proj_adv_tests(inpConfAdvTestList, inpModeAdvTestList)
 import modgen.common.throwerror;
+import modgen.cell.cellstr2expression;
 %
 runner = mlunit.text_test_runner(1, 1);
 loader = mlunitext.test_loader;
@@ -7,34 +8,36 @@ loader = mlunitext.test_loader;
 crm = gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
 crmSys = gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
 %
-fullConfList = {'ltisys', 'test2dbad'};
-fullModeList = {'fix','rand'};
+FULL_CONF_LIST = {'ltisys', 'test2dbad'};
+FULL_MODE_LIST = {'fix','rand'};
 suiteList = {};
 %
 if nargin < 1
-    modeList = fullModeList;
-    confList = fullConfList;
+    modeList = FULL_MODE_LIST;
+    confList = FULL_CONF_LIST;
 else
     nInpConf = numel(inpConfAdvTestList);
     nInpMode = numel(inpModeAdvTestList);
     if (nargin < 2)||(nInpMode==1 && strcmp(inpModeAdvTestList,'*'))
-        modeList = fullModeList;
-    elseif sum(ismember(inpModeAdvTestList,fullModeList)) == numel(inpModeAdvTestList)
+        modeList = FULL_MODE_LIST;
+    elseif sum(ismember(inpModeAdvTestList,FULL_MODE_LIST)) == numel(inpModeAdvTestList)
         modeList = inpModeAdvTestList;
     else
         throwerror('wrongInput:unknownMode',...
-            'Unexpected input mode: %s. Allowed modes: fix, rand. ',...
-             inpModeAdvTestList{~ismember(inpModeAdvTestList,fullModeList)});
+            'Unexpected input mode: %s. Allowed modes: %s.',...
+             inpModeAdvTestList{~ismember(inpModeAdvTestList,FULL_MODE_LIST)},...
+             cellstr2expression(FULL_MODE_LIST));
     end    
     %
     if (nInpConf==1 && strcmp(inpConfAdvTestList,'*'))
-        confList = fullConfList;
-    elseif sum(ismember(inpConfAdvTestList,fullConfList)) == numel(inpConfAdvTestList)
+        confList = FULL_CONF_LIST;
+    elseif sum(ismember(inpConfAdvTestList,FULL_CONF_LIST)) == numel(inpConfAdvTestList)
         confList = inpConfAdvTestList;
     else
         throwerror('wrongInput:unknownConf',...
-            'Unexpected input configuration: %s. Allowed configurations: ltisys, test2dbad.',...
-             inpConfAdvTestList{~ismember(inpConfAdvTestList,fullConfList)});
+            'Unexpected input configuration: %s. Allowed configurations: %s.',...
+             inpConfAdvTestList{~ismember(inpConfAdvTestList,FULL_CONF_LIST)},...
+             cellstr2expression(FULL_CONF_LIST));
     end
 end    
 %
