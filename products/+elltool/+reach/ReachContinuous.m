@@ -1137,8 +1137,9 @@ classdef ReachContinuous < elltool.reach.AReach
         % 
         %           1
         %
-        % $Author: Kirill Mayantsev <kirill.mayantsev@gmail.com> $  
-        % $Date: March-2013 $ 
+        % $Author: Kirill Mayantsev <kirill.mayantsev@gmail.com> $
+        % $Author: Daniil Stepenskiy <reinkarn@gmail.com> $
+        % $Date: May-2013 $ 
         % $Copyright: Moscow State University,
         %             Faculty of Computational
         %             Mathematics and Computer Science,
@@ -1223,7 +1224,7 @@ classdef ReachContinuous < elltool.reach.AReach
             if (isTimeVecsEnclosed)
                 if (nargout == 2)
                     reportStr = [reportSrt,...
-                        'Enclosed time vectors. Common times checked. ']
+                        'Enclosed time vectors. Common times checked. '];
                 end
                 if (length(firstTimeVec) < length(secondTimeVec))
                     compEllTube = ...
@@ -1248,18 +1249,16 @@ classdef ReachContinuous < elltool.reach.AReach
                 reportStr = [reportStr, 'Interpolated from common ',...
                     'time points. '];
             end
-            [firstEqualIndVec, secondEqualIndVec] = ...
-                fIntersectSortedVecsWithTol(...
-                firstTimeVec, secondTimeVec, absTol);
-            if logger.isDebugEnabled
-                logger.debug(sprintf('Number of equal knots: %d',...
-                    numel(firstTimeVec)))
-            end
-            % TODO: complete this case after adding interp
-            isEqual = compEllTube.getFieldProjection(...
+            unionTimeVec = union(firstTimeVec, secondTimeVec);
+            ellTube = ellTube.interp(unionTimeVec);
+            compEllTube = compEllTube.interp(unionTimeVec);
+            [isEqual, eqReportStr] = compEllTube.getFieldProjection(...
                 fieldsToCompVec).isEqual(...
                 ellTube.getFieldProjection(fieldsToCompVec),...
                 'maxTolerance', self.COMP_PRECISION);
+            if (nargout == 2)
+                reportStr = [reportStr, eqReportStr];
+            end
             %
             function [isSubset, indexVec] = ...
                     fIsGridSubsetOfGrid(greaterVec, smallerVec)
@@ -1286,39 +1285,6 @@ classdef ReachContinuous < elltool.reach.AReach
                 end
             end
             %
-            function [aIndVec, bIndVec] = ...
-                    fIntersectSortedVecsWithTol(aVec, bVec, tol)
-                aInd = 1;
-                bInd = 1;
-                aIndVec = [];
-                bIndVec = [];
-                while (aInd <= numel(aVec) && bInd <= numel(bVec))
-                    if (abs(aVec(aInd)-bVec(bInd))>tol)
-                        if (aVec(aInd) < bVec(bInd))
-                            aInd = aInd + 1;
-                        else
-                            bInd = bInd + 1;
-                        end
-                    else
-                        while (aVec(aInd) < bVec(bInd)&& ...
-                                aInd + 1 <= numel(aVec) &&...
-                                abs(aVec(aInd)-bVec(bInd)) >... 
-                                abs(aVec(aInd+1)-bVec(bInd)))
-                            aInd = aInd + 1;
-                        end
-                        while (aVec(aInd) > bVec(bInd)&& ...
-                                bInd + 1 <= numel(bVec) &&...
-                                abs(aVec(aInd)-bVec(bInd)) >... 
-                                abs(aVec(aInd)-bVec(bInd+1)))
-                            bInd = bInd + 1;
-                        end
-                        aIndVec = [aIndVec, aInd];
-                        bIndVec = [bIndVec, bInd];
-                        aInd = aInd + 1;
-                        bInd = bInd + 1;
-                    end
-                end
-            end
         end
         %%
         function copyReachObj = getCopy(self)
