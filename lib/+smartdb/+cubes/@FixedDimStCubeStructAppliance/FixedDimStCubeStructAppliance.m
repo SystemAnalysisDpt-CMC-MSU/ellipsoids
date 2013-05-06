@@ -127,7 +127,7 @@ classdef FixedDimStCubeStructAppliance<smartdb.cubes.IDynamicCubeStructInternal
             self.addDataAlongDimInternal(catDimension,varargin{:});
         end
         function clearData(self)
-           % CLEARDATA deletes all the data from the object
+           % CLEARDATA - deletes all the data from the object
            %
            % Usage: self.clearData(self)
            %

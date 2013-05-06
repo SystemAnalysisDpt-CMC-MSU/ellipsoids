@@ -1,5 +1,5 @@
 function run_helpcollector
-import modgen.logging.log4j.Log4jConfigurator;
+import modgen.logging.log4j.Log4jConfigurator;                             
 import modgen.common.throwerror;
 logger=Log4jConfigurator.getLogger();
 
@@ -18,13 +18,13 @@ if modgen.system.ExistanceChecker.isFile(resultTexFileName)
     delete(resultTexFileName);
 end
 %
-FuncData=elltool.doc.collecthelp({'ellipsoid', 'hyperplane', ...
-'elltool.conf.Properties', 'elltool.core.GenEllipsoid',...
+ FuncData=elltool.doc.collecthelp({'ellipsoid', 'hyperplane', ...
+ 'elltool.conf.Properties', 'elltool.core.GenEllipsoid',...
 'gras.ellapx.smartdb.rels.EllTube', 'gras.ellapx.smartdb.rels.EllTubeProj',...
 'gras.ellapx.smartdb.rels.EllUnionTube', ...
 'gras.ellapx.smartdb.rels.EllUnionTubeStaticProj'},...
-     {'elltool.reach', 'elltool.linsys'},{'test'}, {'empty'});
-%
+     {'elltool.reach', 'elltool.linsys'},{'test'});
+% 
 %
 nHelpElems=numel(FuncData.funcName);
 if nHelpElems==0
