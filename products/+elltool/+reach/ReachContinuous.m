@@ -1156,9 +1156,12 @@ classdef ReachContinuous < elltool.reach.AReach
             end
             %
             APPROX_TYPE = F.APPROX_TYPE;
+            SSORT_KEYS={'sTime','lsGoodDirVec','approxType'};
             %
             ellTube = self.ellTubeRel;
             compEllTube = reachObj.ellTubeRel;
+            ellTube.sortBy(SSORT_KEYS);
+            compEllTube.sortBy(SSORT_KEYS);
             %
             if nargin == 4
                 ellTube = ellTube.getTuplesFilteredBy(APPROX_TYPE,...
@@ -1223,7 +1226,7 @@ classdef ReachContinuous < elltool.reach.AReach
             %  
             if (isTimeVecsEnclosed)
                 if (nargout == 2)
-                    reportStr = [reportSrt,...
+                    reportStr = [reportStr,...
                         'Enclosed time vectors. Common times checked. '];
                 end
                 if (length(firstTimeVec) < length(secondTimeVec))
@@ -1262,9 +1265,9 @@ classdef ReachContinuous < elltool.reach.AReach
             %
             function [isSubset, indexVec] = ...
                     fIsGridSubsetOfGrid(greaterVec, smallerVec)
+                indexVec = [];
                 if (length(greaterVec) < length(smallerVec))
                     isSubset = false;
-                    indexVec = [];
                     return;
                 end
                 greaterIndex = 1;
