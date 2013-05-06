@@ -283,16 +283,6 @@ classdef ReachDiscrete < elltool.reach.AReach
             end
             %
             function rel = create()
-                
-%                 QL = QArrayList{:}
-%                 siz = size(QArrayList{1})
-%                 for i = 1:siz(3)
-%                     gras.la.ismatposdef(QArrayList{1}(:, :, i), relTol, 1)
-%                 end
-%                 aM = aMat
-%                 tV = timeVec
-%                 lG = ltGoodDirArray
-                
                 rel = gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
                     QArrayList, aMat, timeVec, ltGoodDirArray, ...
                     sTime, approxType, approxSchemaName, ...

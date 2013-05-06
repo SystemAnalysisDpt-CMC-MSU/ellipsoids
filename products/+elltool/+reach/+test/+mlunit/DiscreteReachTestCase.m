@@ -325,10 +325,6 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             nDirections = size(self.l0Mat, 2);
             isEqual = true;
             for iDirection = 1:nDirections
-                expectedDirectionsCVec{iDirection}
-                
-                directionsCVec{iDirection}
-                
                 isEqual = isEqual && ...
                     all(max(abs(expectedDirectionsCVec{iDirection} - directionsCVec{iDirection}), [], 1) < self.COMP_PRECISION);
             end
