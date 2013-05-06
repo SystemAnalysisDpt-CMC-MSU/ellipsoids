@@ -80,6 +80,60 @@ classdef ContinuousReachRefineTestCase < mlunitext.test_case
             isEqual = projSetNew.isEqual(projReachSetObj);
             mlunit.assert_equals(true,isEqual);
             %
+            %Check arrayMethods (for nDims = 3)
+            nDims = 3;
+            minNumberOfElemAlongDim = 0;
+            maxNumberOfElemAlongDim = 10;
+            checkArrayMethods(self,nDims,minNumberOfElemAlongDim,...
+                maxNumberOfElemAlongDim);
+            %
+            function checkArrayMethods(self,nDims,minNumberOfElemAlongDim,...
+                maxNumberOfElemAlongDim)
+                
+                sizeVec = randi([minNumberOfElemAlongDim maxNumberOfElemAlongDim],...
+                    1,nDims);
+                failMsg = [];
+                reachWholeObj=elltool.reach.ReachContinuous(self.linSys,...
+                    self.x0Ell,self.l0P1Mat,self.tVec);
+                reachObjMat = repmat(reachWholeObj,sizeVec); %define array of objects
+                for iDim1=1:sizeVec(1)
+                    for iDim2=1:sizeVec(2)
+                        for iDim3=1:sizeVec(3)
+                            %fill array of objects
+                            reachObjMat(iDim1,iDim2,iDim3) = reachWholeObj.getCopy();
+                        end
+                    end
+                end
+                dimMat = repmat(reachWholeObj.dimension(),sizeVec);
+                absTolMat = repmat(reachWholeObj.getAbsTol(),sizeVec);
+                isCutMat = repmat(reachWholeObj.iscut(),sizeVec);
+                isProjMat = repmat(reachWholeObj.isprojection(),sizeVec);
+                isEmpMat = repmat(reachWholeObj.isempty(),sizeVec);
+                isEq = isequal(dimMat, reachObjMat.dimension())&&...
+                    isequal(absTolMat, reachObjMat.getAbsTol())&&...
+                    isequal(isCutMat, reachObjMat.iscut())&&...
+                    isequal(isProjMat, reachObjMat.isprojection())&&...
+                    isequal(isEmpMat, reachObjMat.isempty());
+                if ~isEq
+                    if ~isequal(dimMat, reachObjMat.dimension())
+                        failMsg = sprintf('failure for dimension() method; %s',failMsg);
+                    end    
+                    if ~isequal(absTolMat, reachObjMat.getAbsTol())
+                        failMsg = sprintf('failure for getAbsTol() method; %s',failMsg);
+                    end
+                    if ~isequal(isCutMat, reachObjMat.iscut())
+                        failMsg = sprintf('failure for iscut() method; %s',failMsg);
+                    end
+                    if ~isequal(isProjMat, reachObjMat.isprojection())
+                        failMsg = sprintf('failure for isprojection() method; %s',failMsg);
+                    end
+                    if ~isequal(isEmpMat, reachObjMat.isempty())
+                        failMsg = sprintf('failure for isempty() method; %s',failMsg);
+                    end
+                end    
+                mlunit.assert_equals(true,isEq,failMsg);
+            end
+            %
             function checkRefine()
                 reachObjNew=reachSetObj;
                 reachObjNew.refine(l2DirMat);

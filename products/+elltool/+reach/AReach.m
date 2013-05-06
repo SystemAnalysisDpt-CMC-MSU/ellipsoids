@@ -25,14 +25,29 @@ classdef AReach < elltool.reach.IReach
     %
     methods
         function isProjArr = isprojection(self)
+            import modgen.common.throwerror;
+            if sum(size(self)<=0)
+                throwerror('wrongInput:badDimensionality',...
+                        'each dimension of an object array should be a positive number');
+            end    
             isProjArr = arrayfun(@(x) x.isProj, self);   
         end
         %
         function isCutArr = iscut(self)
+            import modgen.common.throwerror;
+            if sum(size(self)<=0)
+                throwerror('wrongInput:badDimensionality',...
+                        'each dimension of an object array should be a positive number');
+            end  
             isCutArr = arrayfun(@(x) x.isCut, self);
         end
         %
         function isEmptyArr = isempty(self)
+            import modgen.common.throwerror;
+            if sum(size(self)<=0)
+                throwerror('wrongInput:badDimensionality',...
+                        'each dimension of an object array should be a positive number');
+            end  
             isEmptyArr = arrayfun(@(x) isEmp(x), self);
             function isEmpty = isEmp(reachObj)
                 isEmpty = isempty(reachObj.x0Ellipsoid);
@@ -40,6 +55,11 @@ classdef AReach < elltool.reach.IReach
         end
         %
         function absTolArr = getAbsTol(self)
+            import modgen.common.throwerror;
+            if sum(size(self)<=0)
+                throwerror('wrongInput:badDimensionality',...
+                        'each dimension of an object array should be a positive number');
+            end  
             absTolArr = arrayfun(@(x) x.linSysCVec{end}.getAbsTol(), self);
         end
         %

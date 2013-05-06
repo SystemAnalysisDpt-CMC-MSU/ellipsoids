@@ -777,6 +777,11 @@ classdef ReachContinuous < elltool.reach.AReach
         end
         %%
         function [rSdimArr sSdimArr] = dimension(self)
+            import modgen.common.throwerror;
+            if sum(size(self)<=0)
+                throwerror('wrongInput:badDimensionality',...
+                        'each dimension of an object array should be a positive number');
+            end  
             rSdimArr = arrayfun(@(x) x.linSysCVec{end}.dimension(), self);
             sSdimArr = arrayfun(@(x,y) getSSdim(x,y), self, rSdimArr);
             function sSdim = getSSdim(reachObj, rSdim)
