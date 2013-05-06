@@ -234,7 +234,7 @@ classdef CubeStruct<dynamicprops&modgen.common.obj.HandleObjectCloner&...
         end
         %
     end
-    methods (Sealed)
+    methods (Hidden, Sealed)
         %we use getField internally which justifies Sealed access modifier
         propVal=getField(self,fieldName)
     end
