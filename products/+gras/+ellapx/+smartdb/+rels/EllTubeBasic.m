@@ -379,20 +379,8 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
     methods
         function [ellTubeProjRel,indProj2OrigVec]=project(self,projType,...
                 projMatList,fGetProjMat)
-            % PROJECT - computes projection of the relation object onto given subspase
-            % 
-            % Input:
-            %    self.
-            %    projType - type of the projection.
-            %        Takes the following values: 'Static'
-            %                                    'DynamicAlongGoodCurve'
-            %    projMatList:double[nDim, nSpDim] - array's matrix of the orthoganal  
-            %             basis vectors
-            % 
-            % Output:
-            %    ellTubeProjRel:smartdb.relation.StaticRelation[1, 1]/
-            %        smartdb.relation.DynamicRelation[1, 1]- projected relation
-            %    indProj2OrigVec:cell[nDim, 1] - 
+            %
+            % fProj(projSpaceVec,timeVec,sTime,dim,indSTime)
             %
             import gras.ellapx.uncertcalc.common.*;
             import modgen.common.throwerror;
@@ -556,16 +544,6 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             indProj2OrigVec=vertcat(indProj2OrigCMat{:});
         end
         function [apprEllMat timeVec] = getEllArray(self, approxType)
-           % GETELLARRAY - returns array of matrix's ellipsoid according to
-           %               approxType
-           %
-           % Input:
-           %   self.
-           %   approxType:char[1,] - type of approximation(internal/external)
-           %
-           % Output:
-           %   apprEllMat:double[nDim1,..., nDimN] - array of array of ellipsoid's 
-           %            matrices
             import gras.ellapx.enums.EApproxType;
             import gras.ellapx.smartdb.F;
             APPROX_TYPE = F.APPROX_TYPE;
