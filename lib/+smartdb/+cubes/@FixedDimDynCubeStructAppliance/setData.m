@@ -1,5 +1,5 @@
 function  setData(self,varargin)
-% SETDATA sets data for all fields of CubeStruct object
+% SETDATA - sets data for all fields of CubeStruct object
 %
 % Usage: setData(self,varargin)
 %
@@ -29,12 +29,12 @@ function  setData(self,varargin)
 %       inferFieldList: logical[1,1] if true, the field names are 
 %         inferred from SData
 %
-%       transactionSafe: logical[1,1] if true, the operation is performed in
-%           a transaction-safe manner
+%       transactionSafe: logical[1,1] if true, the operation is performed 
+%           in a transaction-safe manner
 %
 %       checkStruct: logical[1,nStruct] - an array of indicators which when
-%          true force checking of structure content (including presence of all
-%          required fields). The first element correspod to SData, the
+%          true force checking of structure content (including presence of 
+%          all required fields). The first element correspod to SData, the
 %          second and the third (if specified) to SIsNull and SIsValueNull
 %          correspondingly
 %
@@ -44,10 +44,11 @@ function  setData(self,varargin)
 %
 %            SData - data itself
 %
-%            SIsNull - contains is-null indicator information for data values
+%            SIsNull - contains is-null indicator information for data 
+%                      values
 %
-%            SIsValueNull - contains is-null indicators for CubeStruct cells (not
-%               for cell values
+%            SIsValueNull - contains is-null indicators for CubeStruct cells 
+%               (not for cell values)
 %         structNameList={'SData'} by default
 %
 %

@@ -1,6 +1,6 @@
 function fieldIsNullCVec=getFieldIsNull(self,fieldName)
-% GETFIELDISNULL returns for given field a nested logical/cell
-% array containing is-null indicators for cell content
+% GETFIELDISNULL - returns for given field a nested logical/cell array 
+%                  containing is-null indicators for cell content
 %
 % Usage: fieldIsNullCVec=getFieldIsNull(self,fieldName)
 %
@@ -10,9 +10,8 @@ function fieldIsNullCVec=getFieldIsNull(self,fieldName)
 %     fieldName: char - field name
 % Output:
 %   regular:
-%     fieldIsCVec: logical/cell[] - nested
-%        cell/logical array containing is-null indicators for
-%        content of the field
+%     fieldIsCVec: logical/cell[] - nested cell/logical array containing 
+%        is-null indicators for content of the field
 %
 %
 % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-03-29 $ 

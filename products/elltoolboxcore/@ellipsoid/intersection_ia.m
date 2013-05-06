@@ -33,9 +33,9 @@ function outEllArr = intersection_ia(myEllArr, objArr)
 %   http://www-iri.upc.es/people/ros/ellipsoids.html
 %
 %   The method used to compute maximum volume ellipsoid inscribed in 
-%   intersection of ellipsoid and polytope, is modified version of algorithm
-%   of finding maximum volume ellipsoid inscribed in intersection of 
-%   ellipsoids discribed in Stephen Boyd and Lieven Vandenberghe "Convex
+%   intersection of ellipsoid and polytope, is modified version of 
+%   algorithm of finding maximum volume ellipsoid inscribed in intersection 
+%   of ellipsoids discribed in Stephen Boyd and Lieven Vandenberghe "Convex
 %   Optimization". It works properly for nondegenerate ellipsoid, but for
 %   degenerate ellipsoid result would not lie in this ellipsoid. The result
 %   considered as empty ellipsoid, when maximum absolute velue of element 
@@ -54,13 +54,26 @@ function outEllArr = intersection_ia(myEllArr, objArr)
 %       approximating ellipsoids; entries can be empty ellipsoids
 %       if the corresponding intersection is empty.
 %
-% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 2004-2008 $
+% Example:
+%   firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+%   secEllObj = firstEllObj + [5; 5];
+%   ellVec = [firstEllObj secEllObj];
+%   thirdEllObj  = ell_unitball(2);
+%   internalEllVec = ellVec.intersection_ia(thirdEllObj)
+% 
+%   internalEllVec =
+%   1x2 array of ellipsoids.
+% 
 %
-% $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
+% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+% $Copyright:  The Regents of the University of California 
+%              2004-2008 $
+%
+% $Author: Guliev Rustam <glvrst@gmail.com> $   
+% $Date: Dec-2012$
 % $Copyright: Moscow State University,
-%             Faculty of Computational Mathematics and Cybernetics,
-%             Science, System Analysis Department 2012 $
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2012 $
 %
 
 import modgen.common.throwerror;

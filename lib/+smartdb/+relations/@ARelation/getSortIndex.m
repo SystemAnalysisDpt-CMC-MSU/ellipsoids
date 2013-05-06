@@ -1,14 +1,14 @@
 function sortInd=getSortIndex(self,sortFieldNameList,varargin)
-% GETSORTINDEX gets sort index for all tuples of given relation with
-% respect to some of its fields
+% GETSORTINDEX - gets sort index for all tuples of given relation with
+%                respect to some of its fields
 %
 % Usage: sortInd=getSortIndex(self,sortFieldNameList,varargin)
 %
 % input:
 %   regular:
 %     self: ARelation [1,1] - class object
-%     sortFieldNameList: char or char cell [1,nFields] - list of field
-%         names with respect to which tuples are sorted
+%     sortFieldNameList: char or char cell [1,nFields] - list of field   
+%        names with respect to which tuples are sorted
 %
 %   properties:
 %     Direction: char or char cell [1,nFields] - direction of sorting for

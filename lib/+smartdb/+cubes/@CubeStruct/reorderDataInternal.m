@@ -1,12 +1,13 @@
 function reorderDataInternal(self,varargin)
-% REORDERDATA reorders cells of CubeStruct object along the specified
-% dimensions according to the specified index vectors
+% REORDERDATA - reorders cells of CubeStruct object along the specified
+%               dimensions according to the specified index vectors
 %
 % Input:
 %   regular:
 %       self: CubeStruct [1,1] - the object
-%       subIndCVec: numeric[1,]/cell[1,nDims] of double [nSubElem_i,1] for i=1,...,nDims
-%           array of indices of field value slices that are selected to be returned; 
+%       subIndCVec: numeric[1,]/cell[1,nDims] of double [nSubElem_i,1] 
+%           for i=1,...,nDims array of indices of field value slices that  
+%           are selected to be returned; 
 %           if not given (default), no indexation is performed
 %       
 %   optional:

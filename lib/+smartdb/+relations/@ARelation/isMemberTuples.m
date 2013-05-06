@@ -1,6 +1,6 @@
 function varargout=isMemberTuples(self,other,keyFieldNameList)
-% ISMEMBER performs ismember operation for tuples of two relations by key
-% fields given by special list
+% ISMEMBER - performs ismember operation for tuples of two relations by key
+%            fields given by special list
 %
 % Usage: isTuple=isMemberTuples(self,otherRel,keyFieldNameList) or
 %        [isTuple indTuples]=isMemberTuples(self,otherRel,keyFieldNameList)

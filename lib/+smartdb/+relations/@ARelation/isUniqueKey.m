@@ -1,6 +1,5 @@
 function isPositive=isUniqueKey(self,fieldNameList)
-% ISUNIQUEKEY checks if a specified set of fields forms a unique
-% key
+% ISUNIQUEKEY - checks if a specified set of fields forms a unique key
 % 
 % Usage: isPositive=self.isUniqueKey(fieldNameList)
 %

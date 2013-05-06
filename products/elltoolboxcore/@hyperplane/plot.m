@@ -8,39 +8,48 @@ function figHandleVec = plot(varargin)
 %       plot(hM) -plots hyperplanes contained in hyperplane matrix.
 %       plot(hM1, 'cSpec1', hM2, 'cSpec1',...) - plots hyperplanes in h1 in
 %           cSpec1 color, hyperplanes in h2 in cSpec2 color, etc.
-%       plot(hM1, hM2,..., hMn, option) - plots h1,...,hn using options given
-%           in the option structure.
+%       plot(hM1, hM2,..., hMn, option) - plots h1,...,hn using options 
+%           given in the option structure.
 %
 % Input:
 %   regular:
-%       hMat: hyperplane[m,n] - matrix of 2D or 3D hyperplanes. All hyperplanes
-%             in hM must be either 2D or 3D simutaneously.
+%       hMat: hyperplane[m,n] - matrix of 2D or 3D hyperplanes. All 
+%             hyperplanes in hM must be either 2D or 3D simutaneously.
 %   optional:
 %       colorSpec: char[1,1] - specify wich color hyperplane plots will
 %                  have
 %       option: structure[1,1], containing some of follwing fields:
-%           option.newfigure: boolean[1,1]   - if 1, each plot command will open a new figure window.
-%           option.size: double[1,1] - length of the line segment in 2D, or square diagonal in 3D.
-%           option.center: double[1,1] - center of the line segment in 2D, of the square in 3D.
-%           option.width: double[1,1] - specifies the width (in points) of the line for 2D plots.
-%           option.color: double[1,3] - sets default colors in the form [x y z], .
-%           option.shade = 0-1 - level of transparency (0 - transparent, 1 - opaque).
-%           NOTE: if using options and colorSpec simutaneously, option.color is
-%           ignored
+%           option.newfigure: boolean[1,1]   - if 1, each plot command will 
+%                                              open a new figure window.
+%           option.size: double[1,1] - length of the line segment in 2D, or 
+%                                      square diagonal in 3D.
+%           option.center: double[1,1] - center of the line segment in 2D, 
+%                                        of the square in 3D.
+%           option.width: double[1,1] - specifies the width (in points) of 
+%                                       the line for 2D plots.
+%           option.color: double[1,3] - sets default colors in the form 
+%                                       [x y z], .
+%           option.shade = 0-1 - level of transparency (0 - transparent, 1 
+%                                - opaque).
+%           NOTE: if using options and colorSpec simutaneously, option.color 
+%           is ignored
 %
 % Output:
 %   regular:
-%       figHandleVec: double[1,n] - array with handles of figures hyperplanes
-%       were plotted in. Where n is number of figures.
+%       figHandleVec: double[1,n] - array with handles of figures 
+%       hyperplanes were plotted in. Where n is number of figures.
 %
 % 
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 2004-2008 $
+% $Copyright:  The Regents of the University of California
+%              2004-2008 $
 %
-% $Author: <Zakharov Eugene>  <justenterrr@gmail.com> $    $Date: <1 november> $
+% $Author: <Zakharov Eugene>  <justenterrr@gmail.com> $    
+% $Date: 2012-11-01$
 % $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Computer Science,
-%            System Analysis Department <2012> $
+%             Faculty of Computational Mathematics
+%             and Computer Science,
+%             System Analysis Department <2012> $
 
 
   import elltool.conf.Properties;
