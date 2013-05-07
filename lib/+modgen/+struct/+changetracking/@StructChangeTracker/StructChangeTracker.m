@@ -19,7 +19,7 @@ classdef StructChangeTracker<modgen.struct.changetracking.AStructChangeTracker
     %
     methods
         function self=StructChangeTracker()
-            % STRUCTCHANGETRACKER constructor accepts no parameters
+            % STRUCTCHANGETRACKER - constructor accepts no parameters
         end
         function [SInput,lastVersion]=applyAllLaterPatches(self,SInput,startRev)
             lastVersion=self.getLastRevision();
@@ -39,7 +39,7 @@ classdef StructChangeTracker<modgen.struct.changetracking.AStructChangeTracker
         end
         function lastRevNum=getLastRevision(self)
             % GETLASTREVISION - see the parent class for documentation on
-            % this mehtod
+            %                   this mehtod
             [~,revNumVec]=self.findPatchFuncList(-Inf,+Inf,[true true]);
             if isempty(revNumVec)
                 lastRevNum=nan;
@@ -49,8 +49,8 @@ classdef StructChangeTracker<modgen.struct.changetracking.AStructChangeTracker
                 
         end  
         function SInput=applyPatches(self,SInput,startRev,endRev,isInclusiveVec)
-            % APPLYPATCHES -see the parent class for documentation on this
-            % method
+            % APPLYPATCHES - see the parent class for documentation on this
+            %                method
             if nargin<5
                 isInclusiveVec=[true true];
             end
@@ -64,23 +64,27 @@ classdef StructChangeTracker<modgen.struct.changetracking.AStructChangeTracker
     end
     methods(Access=private)
         function [funcHandleList,revNumVec]=findPatchFuncList(self,startRev,endRev,isInclusiveVec)
-            % FINDPATCHFUNCLIST returns a list of transformation functions
-            % (patch functions) corresponding to the given revision number
-            % range
+            % FINDPATCHFUNCLIST - returns a list of transformation functions
+            %                     patch functions) corresponding to the 
+            %                     iven revision number range
+            % 
             %
             % Input:
             %   regular: 
             %       self: the object itself
-            %       startRev: numeric[1,1] - see applyPatches method description
-            %       endRev: numeric[1,1] - see applyPatches method description
-            %       isInclusiveVec: logical[1,2] see applyPatches method description
+            %       startRev: numeric[1,1] - see applyPatches method 
+            %           description
+            %       endRev: numeric[1,1] - see applyPatches method 
+            %           description
+            %       isInclusiveVec: logical[1,2] see applyPatches method 
+            %           description
             %   
             % Output:
             %   funcHandleList: cell[1,nPatches] - a list of patch functions
-            %   revNumVec: double[1,nPatches] - a vector of revision numbers corresponding to
-            %      the patch functions
-            %
-            %
+            %   revNumVec: double[1,nPatches] - a vector of revision numbers
+            %      corresponding to the patch functions
+            %      
+
            
             if ~islogical(isInclusiveVec)
                 error([upper(mfilename),':wrongInput'],...

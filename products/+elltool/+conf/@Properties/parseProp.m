@@ -1,14 +1,16 @@
 function varargout = parseProp(args,neededPropNameList)
-%PARSEPROP parses input into cell array with values of properties listed in
-%neededPropNameList. Values are taken from args or, if there no value for
-%some property in args, in current Properties.
+%PARSEPROP - parses input into cell array with values of properties listed 
+%            in neededPropNameList. 
+%            Values are  taken from args or, if there no value for some 
+%            property in args, in current Properties.
+%            
 %
 % Input:
 %   regular:
 %       args:cell[1,] - cell array of arguments that should be parsed.
-%       neededPropNameList:cell[1,] or empty cell - cell array of strings, containing
-%           names of parameters, that output should consist of. Possible
-%           properties:
+%       neededPropNameList:cell[1,] or empty cell - cell array of strings, 
+%       containing names of parameters, that output should consist of. 
+%       Possible properties:
 %               version
 %               isVerbose
 %               absTol
@@ -24,12 +26,32 @@ function varargout = parseProp(args,neededPropNameList)
 %
 % Output:
 %   varargout:cell array[1,] - cell array with values of properties listed
-%                              in neededPropNameList in the same order as they
-%                              listed in neededPropNameList
+%                              in neededPropNameList in the same order as 
+%                              they listed in neededPropNameList
+% 
+% Example:
+%   testAbsTol = 1;
+%   testRelTol = 2;
+%   nPlot2dPoints = 3;
+%   someArg = 4;
+%   args = {'absTol',testAbsTol, 'relTol',testRelTol,'nPlot2dPoints',nPlot2dPoints, 'someOtherArg', someArg};
+%   neededProp = {'absTol','relTol'};
+%   [absTol, relTol] = elltool.conf.Properties.parseProp(args,neededProp)
+% 
+%   absTol =
+% 
+%        1
+% 
+% 
+%   relTol =
+% 
+%        2
 %
-%$Author: Zakharov Eugene  <justenterrr@gmail.com> $    $Date: 5-november-2012 $
+%$Author: Zakharov Eugene  <justenterrr@gmail.com> $    
+%$Date: 2012-11-05 $
 %$Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Computer Science,
+%            Faculty of Computational Mathematics 
+%            and Computer Science,
 %            System Analysis Department 2012 $
 %
 import elltool.conf.Properties;

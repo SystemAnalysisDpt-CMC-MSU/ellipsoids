@@ -1,24 +1,46 @@
 function outEll = ellintersection_ia(inpEllArr)
 %
-% ELLINTERSECTION_IA - computes maximum volume ellipsoid that is
-%                      contained in the intersection of
-%                      given ellipsoids.
+% ELLINTERSECTION_IA - computes maximum volume ellipsoid that is contained  
+%                      in the intersection of given ellipsoids.
+%                      
 %
 % Input:
 %   regular:
-%       inpEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of
+%       inpEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of  
 %           ellipsoids of the same dimentions.
 %
 % Output:
 %   outEll: ellipsoid [1, 1] - resulting maximum volume ellipsoid.
+%        
+% Example:
+%   firstEllObj = ellipsoid([-1; 1], [2 0; 0 3]);
+%   secEllObj = ellipsoid([1 2], eye(2);
+%   ellVec = [firstEllObj secEllObj];
+%   resEllObj = ellintersection_ia(ellVec)
 %
+%   resEllObj =
+% 
+%   Center:
+%       0.1847
+%       1.6914
+% 
+%   Shape Matrix:
+%       0.0340   -0.0607
+%      -0.0607    0.1713
+% 
+%   Nondegenerate ellipsoid in R^2.
+% 
+% 
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 2004-2008 $
-%    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+% $Copyright:  The Regents of the University of California 
+%              2004-2008 $
+%    
 %
-% $Author: Vadim Kaushanskiy <vkaushanskiy@gmail.com>$ $Date: 10-11-2012$
+% $Author: Vadim Kaushanskiy <vkaushanskiy@gmail.com>$ 
+% $Date: 10-11-2012 $
 % $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Computer Science,
+%            Faculty of Computational Mathematics 
+%            and Computer Science,
 %            System Analysis Department 2012 $
 
 import modgen.common.throwerror

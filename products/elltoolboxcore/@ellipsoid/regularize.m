@@ -12,7 +12,8 @@ function regQMat = regularize(qMat, regTol)
 %       absTol tolerance    
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 2004-2008 $
+% $Copyright:  The Regents of the University of California 
+%              2004-2008 $
 %
 % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 25-04-2013$
 % $Copyright: Lomonosov Moscow State University,

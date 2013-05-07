@@ -146,6 +146,7 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             dQExtMat=tmp+transpose(tmp)+...
                 piNumerator.*QExtMat./piDenominator+...
                 piDenominator.*R./piNumerator;
+            dQExtMat=(dQExtMat+dQExtMat.')*0.5;
         end
     end
     methods (Access=private)

@@ -1,6 +1,6 @@
 function varargout=getUniqueTuples(self,varargin)
-% GETUNIQUETUPLES returns a relation containing the unique tuples from the
-% original relation
+% GETUNIQUETUPLES - returns a relation containing the unique tuples from 
+%                   the original relation
 %
 % Usage: [resRel,indForwardVec,indBackwardVec]=getUniqueTuples(self,varargin)
 %

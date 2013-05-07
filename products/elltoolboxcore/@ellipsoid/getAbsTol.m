@@ -24,11 +24,24 @@ function [absTolArr, absTolVal] = getAbsTol(ellArr, varargin)
 %       absTolArr and absTol,
 %   use absTolArr = ellArr.getAbsTol() if you want get only absTolArr
 %
+% Example:
+%   firstEllObj = ellipsoid([-1; 1], [2 0; 0 3]);
+%   secEllObj = ellipsoid([1 2], eye(2));
+%   ellVec = [firstEllObj secEllObj];
+%   absTolVec = ellVec.getAbsTol()
+% 
+%   absTolVec =
+% 
+%      1.0e-07 *
+% 
+%       1.0000    1.0000
+% 
+% 
 %$Author: Zakharov Eugene  <justenterrr@gmail.com> $
-% $Author: Grachev Artem  <grachev.art@gmail.com> $
-%   $Date: March-2013$
-% $Copyright: Moscow State University,
-%            Faculty of Computational Arrhematics and Computer Science,
-%            System Analysis Department 2013 $
-%
+%$Author: Grachev Artem  <grachev.art@gmail.com> $
+%$Date: March-2013$
+%$Copyright: Moscow State University,
+%             Faculty of Computational Mathematics
+%             and Computer Science,
+%             System Analysis Department 2013 $ 
 [absTolArr, absTolVal] = ellArr.getProperty('absTol',varargin{:});

@@ -1,6 +1,6 @@
 function applySetFunc(self,varargin)
-% APPLYSETFUNC applies some function to each cell of the specified fields
-% of a given CubeStruct object
+% APPLYSETFUNC - applies some function to each cell of the specified fields
+%                of a given CubeStruct object
 %
 % Usage: applySetFunc(self,toFieldNameList,hFunc)
 %        applySetFunc(self,hFunc,toFieldNameList)
@@ -40,10 +40,11 @@ function applySetFunc(self,varargin)
 %
 %            SData - data itself
 %
-%            SIsNull - contains is-null indicator information for data values
+%            SIsNull - contains is-null indicator information for data 
+%              values
 %
-%            SIsValueNull - contains is-null indicators for CubeStruct cells (not
-%               for cell values
+%            SIsValueNull - contains is-null indicators for CubeStruct 
+%               cells (not for cell values)
 %
 %         structNameList={'SData'} by default
 %   

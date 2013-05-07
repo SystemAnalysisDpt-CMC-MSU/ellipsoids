@@ -179,7 +179,7 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                     numel(ltGoodDirNormOrigVec)==nPoints&&...
                     iscol(lsGoodDirOrigVec)&&...
                     numel(lsGoodDirNormOrig)==1&&...
-                    sum(sum(projSTimeMat))==nDims;
+                    size(projSTimeMat,1)==nDims;
                 if ~isOk
                     reasonStr='Fields have inconsistent sizes';
                     errTagStr='badSize';
@@ -189,18 +189,17 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
     end
     methods
         function plObj=plot(self,varargin)
-            % PLOT displays ellipsoidal tubes using the specified
-            % RelationDataPlotter
+            % PLOT - displays ellipsoidal tubes using the specified RelationDataPlotter
             %
             % Input:
             %   regular:
             %       self:
             %   optional:
-            %       plObj: smartdb.disp.RelationDataPlotter[1,1] - plotter
-            %           object used for displaying ellipsoidal tubes
+            %       plObj: smartdb.disp.RelationDataPlotter[1,1] - plotter object used 
+            %           for displaying ellipsoidal tubes
             %   properties:
-            %       fGetTubeColor: function_handle[1,1] - function with the
-            %           following signature:
+            %       fGetTubeColor: function_handle[1,1] - function with the following 
+            %             signature:
             %           Input:
             %               regular:
             %                   apxType: gras.ellapx.enums.EApproxType[1,1]
@@ -209,8 +208,8 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
             %               patchColor: double[1,3] - RGB color vector
             %               patchAlpha: double[1,1] - transparency level
             %                   within [0,1] range
-            %           if not specified, an internal function 
-            %               getPatchColorByApxType is used. 
+            %           if not specified, an internal function getPatchColorByApxType 
+            %               is used. 
             % Output:
             %   plObj: smartdb.disp.RelationDataPlotter[1,1] - plotter
             %           object used for displaying ellipsoidal tubes

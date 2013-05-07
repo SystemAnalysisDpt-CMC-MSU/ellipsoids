@@ -1,4 +1,5 @@
-isinside([E1 E3], IA) 
+bufEllVec = [firstEllObj thirdEllObj]
+bufEllVec.isinside(internalEllObj) 
 
 % ans =
 % 

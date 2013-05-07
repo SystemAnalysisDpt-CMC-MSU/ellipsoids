@@ -1,5 +1,5 @@
 function resObj=getCopy(self,varargin)
-% GETCOPY returns an object copy
+% GETCOPY - returns an object copy
 %
 % Usage: resObj=getCopy(self)
 %

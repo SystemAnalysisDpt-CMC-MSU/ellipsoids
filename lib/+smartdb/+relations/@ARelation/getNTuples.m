@@ -1,5 +1,5 @@
 function nTuples=getNTuples(self)
-% GETNTUPLES returns number of tuples in given relation
+% GETNTUPLES - returns number of tuples in given relation
 %
 % Usage: nTuples=getNTuples(self)
 %
@@ -8,8 +8,8 @@ function nTuples=getNTuples(self)
 %     self: ARelation [1,1] - class object
 % output:
 %   regular:
-%     nTuples: double [1,1] - number of tuples in given
-%         relation
+%     nTuples: double [1,1] - number of tuples in given  relation
+%        
 %
 %
 % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-03-29 $ 

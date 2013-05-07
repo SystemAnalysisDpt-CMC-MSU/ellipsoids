@@ -1,12 +1,14 @@
 function facets = ell_triag_facets(epoints_num, points_num)
 %
-% ELL_TRIAG_FACETS - generates triangular facets to be used in PATCH function call.
+% ELL_TRIAG_FACETS - generates triangular facets to be used 
+%                    in PATCH function call.
 %
 %
 % Description:
 % ------------
 %
-%    ELL_TRIAG_FACETS(M, N)  Generates triangular facets for the PATCH call.
+%    ELL_TRIAG_FACETS(M, N)  Generates triangular facets 
+%           for the PATCH call.
 %
 %
 % Output:

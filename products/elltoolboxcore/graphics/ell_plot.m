@@ -5,8 +5,10 @@ function h = ell_plot(x, varargin)
 % ------------
 %
 %    Wrapper for PLOT and PLOT3 functions.
-%    First argument must be a vector, or an array of vectors, in 1D, 2D or 3D.
-%    Other arguments are the same as for PLOT and PLOT3 functions.
+%    First argument must be a vector, or an array of 
+%    vectors, in 1D, 2D or 3D.
+%    Other arguments are the same as for PLOT and PLOT3
+%    functions.
 %
 %
 % Output:

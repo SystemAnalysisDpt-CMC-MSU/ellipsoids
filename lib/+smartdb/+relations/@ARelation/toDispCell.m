@@ -1,6 +1,6 @@
 function dataCell=toDispCell(self,varargin)
-% TODISPCELL transforms values of all fields into their character
-%   representation
+% TODISPCELL - transforms values of all fields into their character
+%              representation
 %
 % Usage: resCMat=toDispCell(self)
 %
