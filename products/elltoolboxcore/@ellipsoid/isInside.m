@@ -30,6 +30,7 @@ function res = isInside(ellArr, objArr)
 %
 import modgen.common.checkvar;
 import modgen.common.checkmultvar;
+import modgen.common.throwerror;
 %
 %Checking arguments
 ellipsoid.checkIsMe(ellArr,'first');
@@ -45,10 +46,12 @@ end
 isEllScal = isscalar(ellArr);
 isPolyScal = isscalar(objArr);
 %
-checkmultvar( 'all(size(x1)==size(x2)) || x3 || x4',...
-    4,objArr,ellArr,isEllScal,isPolyScal,...
-    'errorTag','wrongInput',...
-    'errorMessage','sizes of input arrays do not match.');
+if ~(isEllScal || isPolyScal)
+    if ~(size(size(objArr),2) == size(size(ellArr),2)) ||...
+            ~all(size(objArr)==size(ellArr))
+        throwerror('wrongInput','sizes of input arrays do not match.');
+    end
+end
 checkmultvar('(x1(1)==x2(1))&&all(x1(:)==x1(1))&&all(x2(:)==x2(1))',...
     2,nDimsArr,nPolyDimsArr,...
     'errorTag','wrongInput',...

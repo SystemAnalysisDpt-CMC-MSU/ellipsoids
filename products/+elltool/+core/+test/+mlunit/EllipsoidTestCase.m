@@ -865,7 +865,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
             ell1 = ellipsoid(firstMat);
             ell2 = ellipsoid(secVec,secMat);
             [isOk,reportStr]=ell1.eq(ell2);
-            mlunit.assert([isOk,reportStr]);
+            mlunit.assert(~isOk,reportStr);
             [isOk,reportStr]=ell1.eq(ell2,maxTol);
             mlunit.assert(isOk,reportStr);
             %

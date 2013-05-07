@@ -66,7 +66,7 @@ classdef MPTController < elltool.exttbx.IExtTBXController
         function relTol = getRelTol(self)
             checkIfSetUp(self);
             global mptOptions;
-            relTol = mptOptions.abs_tol;
+            relTol = mptOptions.rel_tol;
         end
     end
 end

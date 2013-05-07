@@ -386,7 +386,7 @@ classdef EllipsoidSecTestCase < mlunitext.test_case
         %
         function self = testIsInside(self)
             ell1Arr = ellipsoid.fromRepMat(eye(2),[2 2 2]);
-            ell2Arr = ellipsoid.fromRepMat(2*eye,[2 2]);
+            ell2Arr = ellipsoid.fromRepMat(2*eye(2),[2 2]);
             ell2Arr(:,:,2) = ellipsoid.fromRepMat([1; 0],0.7*eye(2),[2 2]);
             expRes1Arr = true(2);
             expRes1Arr(:,:,2) = false(2);
@@ -404,18 +404,20 @@ classdef EllipsoidSecTestCase < mlunitext.test_case
             self.runAndCheckError('isInside(ellipsoid(eye(3)),ell2Arr)',...
                 'wrongInput');
             badEllVec = [ellipsoid(eye(2)), ellipsoid(eye(3))];
-            self.runAndCheckError('isInside(badEllVec,ellArr(1))',...
+            self.runAndCheckError('isInside(badEllVec,ell1Arr(1))',...
                 'wrongInput');
             %
             self.runAndCheckError('isInside(ell1Arr,hyperplane())',...
                 'wrongInput');
-            function myTestIsInside(ell1Arr,ell2Arr, expResVec)
-                resVec = isInside(ell1Arr,ell2Arr);
-                mlunit.assert(all(resVec == expResVec));
-            end
         end
      end
 end
+
+function myTestIsInside(ell1Arr,ell2Arr, expResVec)
+    resVec = isInside(ell1Arr,ell2Arr);
+    mlunit.assert(all(resVec == expResVec));
+end
+
 function [varargout] = createTypicalEll(flag)
     switch flag
         case 1
