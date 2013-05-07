@@ -4,12 +4,14 @@ CB = ell_unitball(2);
 G = [1; 0];
 V.center = {'2*cos(t)'};
 V.shape = {'0.09*(sin(t))^2'};
+%V.shape = {'1'};
+%
 s = elltool.linsys.LinSysFactory.create(A, B, CB, G, V);
-X0 = 1e-2 * ell_unitball(2);
+X0 = 1e-4 * ell_unitball(2);
 L0 = [1 0; 0 1];
 try
     rs = elltool.reach.ReachContinuous(s, X0, L0, [0 4],...
-        'isRegEnabled', false, 'isJustCheck', false, 'regTol', 0.01);
+        'isRegEnabled', true, 'isJustCheck', false, 'regTol', 0.009);
 catch exception
     exception.identifier
 end

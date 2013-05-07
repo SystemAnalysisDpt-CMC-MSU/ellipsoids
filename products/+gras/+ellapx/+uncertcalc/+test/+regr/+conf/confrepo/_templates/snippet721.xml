@@ -23,7 +23,12 @@
 				<lsGoodDirSetName type="char" >set1</lsGoodDirSetName>
 				<lsGoodDirSets type="struct" >
 					<set1 type="cell" >
+                        <item type="double" >1 0 1 0</item>
                         <item type="double" >1 -1 0 0</item>
+                        <item type="double" >0 -1 0 1</item>
+                        <item type="double" >1 1 -1 1</item>
+                        <item type="double" >-1 1 1 0</item>
+                        <item type="double" >-2 0 1 1</item>
 					</set1>
 				</lsGoodDirSets>
 			</manual>

@@ -106,7 +106,7 @@
 	</ellipsoidalApxProps>
 	<systemDefinitionConfName type="char" >demo3thirdTestSys</systemDefinitionConfName>
 	<regularizationProps type="struct" >
-		<isEnabled type="boolean" >0</isEnabled>
+		<isEnabled type="boolean" >1</isEnabled>
 		<isJustCheck type="boolean" >0</isJustCheck>
 		<regTol type="double" >1e-05</regTol>
 	</regularizationProps>
