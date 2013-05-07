@@ -50,6 +50,9 @@ classdef EllUnionTubeStaticProj<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&
     %                                    direction                     
     %   timeTouchOpEndVec:cell[1, nElem] - Touch point curve for good 
     %                                      direction
+    %
+    %   TODO: correct description of the fields in 
+    %     gras.ellapx.smartdb.rels.EllUnionTubeStaticProj
     methods(Access=protected)
         function checkDataConsistency(self)
             import gras.ellapx.enums.EProjType;

@@ -1,5 +1,6 @@
 function  obj=getFieldProjection(self,fieldNameList)
-% GETFIELDPROJECTION - project object with specified fields.
+% GETFIELDPROJECTION - create object with specified fields using existing 
+%                      table
 %
 % Input:
 %   regular:

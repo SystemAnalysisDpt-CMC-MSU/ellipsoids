@@ -35,6 +35,8 @@ classdef EllTubeProj<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
     %   lsGoodDirOrigVec:cell[1, 1] - Original (not projected) good 
     %                                 direction at time s            
     %
+    % TODO: correct description of the fields in 
+    %     gras.ellapx.smartdb.rels.EllTubeProj
     methods(Access=protected)
         function changeDataPostHook(self)
             self.checkDataConsistency();

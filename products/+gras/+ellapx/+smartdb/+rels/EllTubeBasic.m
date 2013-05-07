@@ -379,20 +379,24 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
     methods
         function [ellTubeProjRel,indProj2OrigVec]=project(self,projType,...
                 projMatList,fGetProjMat)
-            % PROJECT - computes projection of the relation object onto given subspase
+            % PROJECT - computes projection of the relation object onto given time 
+            %           dependent subspase
+            %           
             % 
             % Input:
             %    self.
             %    projType - type of the projection.
             %        Takes the following values: 'Static'
             %                                    'DynamicAlongGoodCurve'
-            %    projMatList:double[nDim, nSpDim] - array's matrix of the orthoganal  
+            %    projMatList:double[nDim, nSpDim] - matrices' array of the orthoganal  
             %             basis vectors
+            %    fGetProjMat - function which creates projection matrix vector
             % 
             % Output:
             %    ellTubeProjRel:smartdb.relation.StaticRelation[1, 1]/
             %        smartdb.relation.DynamicRelation[1, 1]- projected relation
-            %    indProj2OrigVec:cell[nDim, 1] - 
+            %    indProj2OrigVec:cell[nDim, 1] - number of the line ine number from 
+            %             which is obtained the projection
             %
             import gras.ellapx.uncertcalc.common.*;
             import modgen.common.throwerror;

@@ -42,6 +42,8 @@ classdef EllUnionTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
     %   timeTouchOpEndVec:cell[1, nElem] - Touch point curve for good 
     %                                      direction
     %
+    % TODO: correct description of the fields in 
+    %     gras.ellapx.smartdb.rels.EllUnionTube
     methods(Access=protected)
         function checkDataConsistency(self)
             checkDataConsistency@gras.ellapx.smartdb.rels.EllTubeBasic(self);
@@ -80,11 +82,16 @@ classdef EllUnionTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
     end
     methods (Static)
         function ellUnionTubeRel=fromEllTubes(ellTubeRel)
-            % FROMELLTUBES - returns union relation object
+            % FROMELLTUBES - returns union of the ellipsoidal tubes on time
             %
             % Input:
             %    ellTubeRel: smartdb.relation.StaticRelation[1, 1]/
-            %       smartdb.relation.DynamicRelation[1, 1] - relation object
+            %       smartdb.relation.DynamicRelation[1, 1] - relation
+            %       object
+            %
+            % Output:
+            % ellUnionTubeRel: ellapx.smartdb.rel.EllUnionTube - union of the 
+            %             ellipsoidal tubes
             %       
             
             import import gras.ellapx.smartdb.rels.EllUnionTube;
