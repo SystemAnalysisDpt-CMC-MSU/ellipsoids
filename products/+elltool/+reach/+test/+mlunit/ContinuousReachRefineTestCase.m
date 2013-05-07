@@ -80,30 +80,34 @@ classdef ContinuousReachRefineTestCase < mlunitext.test_case
             isEqual = projSetNew.isEqual(projReachSetObj);
             mlunit.assert_equals(true,isEqual);
             %
-            %Check arrayMethods (for nDims = 3)
+            %Check arrayMethods
             nDims = 3;
-            minNumberOfElemAlongDim = 0;
+            minNumberOfElemAlongDim = 1;
             maxNumberOfElemAlongDim = 10;
-            checkArrayMethods(self,nDims,minNumberOfElemAlongDim,...
-                maxNumberOfElemAlongDim);
-            %
-            function checkArrayMethods(self,nDims,minNumberOfElemAlongDim,...
-                maxNumberOfElemAlongDim)
-                
-                sizeVec = randi([minNumberOfElemAlongDim maxNumberOfElemAlongDim],...
+            sizeVec = randi([minNumberOfElemAlongDim maxNumberOfElemAlongDim],...
                     1,nDims);
+            checkArrayMethods(self, sizeVec);
+            %
+            %Check getCopyMethod
+            reachSingleObj=elltool.reach.ReachContinuous(self.linSys,...
+                    self.x0Ell,self.l0P1Mat,self.tVec);
+            reachArr = repmat(reachSingleObj,sizeVec);
+            compReachArr = reachArr.getCopy();
+            isEql = arrayfun(@(x,y) x.isEqual(y), reachArr, compReachArr);
+            if ~isEql
+                failMesg = sprintf('failure for getCopy() method;');
+                isEql = false;
+            else
+                failMesg = [];
+                isEql = true;
+            end
+            mlunit.assert_equals(true,isEql,failMesg);
+            %
+            function checkArrayMethods(self, sizeVec)
                 failMsg = [];
                 reachWholeObj=elltool.reach.ReachContinuous(self.linSys,...
                     self.x0Ell,self.l0P1Mat,self.tVec);
-                reachObjMat = repmat(reachWholeObj,sizeVec); %define array of objects
-                for iDim1=1:sizeVec(1)
-                    for iDim2=1:sizeVec(2)
-                        for iDim3=1:sizeVec(3)
-                            %fill array of objects
-                            reachObjMat(iDim1,iDim2,iDim3) = reachWholeObj.getCopy();
-                        end
-                    end
-                end
+                reachObjMat = reachWholeObj.repMat(sizeVec);
                 dimMat = repmat(reachWholeObj.dimension(),sizeVec);
                 absTolMat = repmat(reachWholeObj.getAbsTol(),sizeVec);
                 isCutMat = repmat(reachWholeObj.iscut(),sizeVec);

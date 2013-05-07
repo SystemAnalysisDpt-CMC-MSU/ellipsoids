@@ -1199,7 +1199,7 @@ classdef ReachContinuous < elltool.reach.AReach
                 'maxTolerance', self.COMP_PRECISION);
         end
         %%
-        function copyReachObj = getCopy(self)
+        function copyReachObjArr = getCopy(self)
         % Example:
         %   aMat = [0 1; 0 0]; bMat = eye(2);
         %   SUBounds = struct();
@@ -1227,17 +1227,31 @@ classdef ReachContinuous < elltool.reach.AReach
         % 
         %   Number of external approximations: 2
         %   Number of internal approximations: 2
-        %
-            copyReachObj = elltool.reach.ReachContinuous();
-            copyReachObj.switchSysTimeVec = self.switchSysTimeVec;
-            copyReachObj.x0Ellipsoid = self.x0Ellipsoid.getCopy();
-            copyReachObj.linSysCVec = cellfun(@(x) x.getCopy(),...
-                self.linSysCVec, 'UniformOutput', false);
-            copyReachObj.isCut = self.isCut;
-            copyReachObj.isProj = self.isProj;
-            copyReachObj.isBackward = self.isBackward;
-            copyReachObj.projectionBasisMat = self.projectionBasisMat;
-            copyReachObj.ellTubeRel = self.ellTubeRel.getCopy();
+            import modgen.common.throwerror;
+            if sum(size(self)<=0)
+                throwerror('wrongInput:badDimensionality',...
+                        'each dimension of an object array should be a positive number');
+            end
+            sizeCVec = num2cell(size(self));
+            copyReachObjArr(sizeCVec{:}) = elltool.reach.ReachContinuous();
+            arrayfun(@fSingleCopy,copyReachObjArr,self);
+            function fSingleCopy(copyReachObj, reachObj)
+                copyReachObj.switchSysTimeVec = reachObj.switchSysTimeVec;
+                copyReachObj.x0Ellipsoid = reachObj.x0Ellipsoid.getCopy();
+                copyReachObj.linSysCVec = cellfun(@(x) x.getCopy(),...
+                    reachObj.linSysCVec, 'UniformOutput', false);
+                copyReachObj.isCut = reachObj.isCut;
+                copyReachObj.isProj = reachObj.isProj;
+                copyReachObj.isBackward = reachObj.isBackward;
+                copyReachObj.projectionBasisMat = reachObj.projectionBasisMat;
+                copyReachObj.ellTubeRel = reachObj.ellTubeRel.getCopy();
+            end    
+        end
+        %%
+        function resArr=repMat(self,varargin)
+            sizeVec=horzcat(varargin{:});
+            resArr=repmat(self,sizeVec);
+            resArr=resArr.getCopy();
         end
         %%
         function ellTubeRel = getEllTubeRel(self)
