@@ -835,12 +835,7 @@ classdef ReachContinuous < elltool.reach.AReach
         function projObj = projection(self, projMat)
             import gras.ellapx.enums.EProjType;
             import modgen.common.throwerror;
-            isOnesMat = flipud(sortrows(projMat)) == eye(size(projMat));
-            isOk = all(isOnesMat(:));
-            if ~isOk
-                throwerror('wrongInput', ['Each column of projection ',...
-                    'matrix should be a unit vector.']);
-            end
+            
             projSet = self.getProjSet(projMat);
             projObj = elltool.reach.ReachContinuous();
             projObj.switchSysTimeVec = self.switchSysTimeVec;
@@ -1100,7 +1095,7 @@ classdef ReachContinuous < elltool.reach.AReach
             isBackward = self.isBackward;
         end
         %%
-        function isEqual = isEqual(self, reachObj, varargin)
+        function [isEq,reportStr] = isEqual(self, reachObj, varargin)
         %
         % ISEQUAL - checks for equality given reach set objects
         % 
@@ -1149,7 +1144,9 @@ classdef ReachContinuous < elltool.reach.AReach
             APPROX_TYPE = F.APPROX_TYPE;
             %
             ellTube = self.ellTubeRel;
+            ellTube.sortBy(APPROX_TYPE);
             compEllTube = reachObj.ellTubeRel;
+            compEllTube.sortBy(APPROX_TYPE);
             %
             if nargin == 4
                 ellTube = ellTube.getTuplesFilteredBy(APPROX_TYPE,...
@@ -1176,19 +1173,27 @@ classdef ReachContinuous < elltool.reach.AReach
                 compTimeGridIndVec = compTimeGridIndVec +...
                     double(compTimeGridIndVec > pointsNum);
             end
-            fieldsNotToCompVec =...
-                F.getNameList(self.FIELDS_NOT_TO_COMPARE);
-            fieldsToCompVec =...
-                setdiff(ellTube.getFieldNameList, fieldsNotToCompVec);
+            
+            if nargin == 3
+                fieldsNotToCompVec =...
+                    F.getNameList(varargin{1});
+                fieldsToCompVec =...
+                    setdiff(ellTube.getFieldNameList, fieldsNotToCompVec);    
+            else    
+                fieldsNotToCompVec =...
+                    F.getNameList(self.FIELDS_NOT_TO_COMPARE);
+                fieldsToCompVec =...
+                    setdiff(ellTube.getFieldNameList, fieldsNotToCompVec);
+            end
             
             if pointsNum ~= newPointsNum
                 compEllTube =...
                     compEllTube.thinOutTuples(compTimeGridIndVec);
             end
-            isEqual = compEllTube.getFieldProjection(...
+            [isEq,reportStr] = compEllTube.getFieldProjection(...
                 fieldsToCompVec).isEqual(...
                 ellTube.getFieldProjection(fieldsToCompVec),...
-                'maxTolerance', self.COMP_PRECISION);
+                'maxTolerance', 2*self.COMP_PRECISION,'checkTupleOrder','true');
         end
         %%
         function copyReachObj = getCopy(self)
