@@ -835,12 +835,7 @@ classdef ReachContinuous < elltool.reach.AReach
         function projObj = projection(self, projMat)
             import gras.ellapx.enums.EProjType;
             import modgen.common.throwerror;
-            isOnesMat = flipud(sortrows(projMat)) == eye(size(projMat));
-            isOk = all(isOnesMat(:));
-            if ~isOk
-                throwerror('wrongInput', ['Each column of projection ',...
-                    'matrix should be a unit vector.']);
-            end
+            
             projSet = self.getProjSet(projMat);
             projObj = elltool.reach.ReachContinuous();
             projObj.switchSysTimeVec = self.switchSysTimeVec;
@@ -1159,6 +1154,7 @@ classdef ReachContinuous < elltool.reach.AReach
             SSORT_KEYS={'sTime','lsGoodDirVec','approxType'};
             %
             ellTube = self.ellTubeRel;
+            ellTube.sortBy(APPROX_TYPE);
             compEllTube = reachObj.ellTubeRel;
             ellTube.sortBy(SSORT_KEYS);
             compEllTube.sortBy(SSORT_KEYS);
@@ -1219,10 +1215,10 @@ classdef ReachContinuous < elltool.reach.AReach
                     fIsGridSubsetOfGrid(firstTimeVec, secondTimeVec);
             end
             %
-            fieldsNotToCompVec =...
-                F.getNameList(self.FIELDS_NOT_TO_COMPARE);
-            fieldsToCompVec =...
-                setdiff(ellTube.getFieldNameList, fieldsNotToCompVec);
+                fieldsNotToCompVec =...
+                    F.getNameList(self.FIELDS_NOT_TO_COMPARE);
+                fieldsToCompVec =...
+                    setdiff(ellTube.getFieldNameList, fieldsNotToCompVec);
             %  
             if (isTimeVecsEnclosed)
                 if (nargout == 2)
@@ -1258,7 +1254,7 @@ classdef ReachContinuous < elltool.reach.AReach
             [isEqual, eqReportStr] = compEllTube.getFieldProjection(...
                 fieldsToCompVec).isEqual(...
                 ellTube.getFieldProjection(fieldsToCompVec),...
-                'maxTolerance', self.COMP_PRECISION);
+                'maxTolerance', 2*self.COMP_PRECISION,'checkTupleOrder','true');
             if (nargout == 2)
                 reportStr = [reportStr, eqReportStr];
             end

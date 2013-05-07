@@ -71,6 +71,9 @@ suiteList{end + 1} = loader.load_tests_from_test_case(...
 
 testLists=cellfun(@(x)x.tests,suiteList,'UniformOutput',false);
 suite=mlunitext.test_suite(horzcat(testLists{:}));
-results=runner.run(suite);
+%
+resList{1}=runner.run(suite);
+resList{2}=elltool.reach.test.run_reachcont_proj_adv_tests();
+results=[resList{:}];
 %
 end
