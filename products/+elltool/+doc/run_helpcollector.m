@@ -5,8 +5,10 @@ logger=Log4jConfigurator.getLogger();
 
 docDirName='doc';
 %
-texFileName='chap_functions.tex';
+texFileName='functions.tex';
 newLineSymbol=10;
+% TeX settings
+font='pcr';
 
 %% obtain full path
 curPath=modgen.path.rmlastnpathparts(...
@@ -110,10 +112,16 @@ for iClass=1:length(classNameCell)
         fprintf(fid,'\\subsection{\\texorpdfstring{%s}{%s}}\n',...
               [classNameCell{iClass}, '.',funcOutputCell{iFunc}],...
                   funcOutputCell{iFunc});
+        % new font
+        fprintf(fid,'\\fontfamily{%s}\n',font);
+        fprintf(fid,'\\selectfont\n');
         % print function help
-        fprintf(fid,'\\begin{verbatim}\n');
+        fprintf(fid,'\\begin{lstlisting}\n');
         fprintf(fid,'%s\n',finalHelpCell{iFunc});
-        fprintf(fid,'\\end{verbatim}\n');
+        fprintf(fid,'\\end{lstlisting}\n');
+        % default font
+        fprintf(fid,'\\fontfamily{\\familydefault}\n');
+        fprintf(fid,'\\selectfont\n');
         indFunc = indFunc + 1;
     end
 end

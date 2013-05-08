@@ -7,17 +7,9 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
     end
     methods 
         function namePrefix=getReachTubeNamePrefix(self)
-            % GETREACHTUBEANEPREFIX - returm prefix of the reach tube
-            %
-            % Input:
-            %    self.
             namePrefix=self.REACH_TUBE_PREFIX;
         end
         function namePrefix=getRegTubeNamePrefix(self)
-            % GETREGTUBEANEPREFIX - returm prefix of the reg tube
-            %
-            % Input:
-            %    self.
             namePrefix=self.REG_TUBE_PREFIX;
         end        
     end
@@ -187,7 +179,7 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                     numel(ltGoodDirNormOrigVec)==nPoints&&...
                     iscol(lsGoodDirOrigVec)&&...
                     numel(lsGoodDirNormOrig)==1&&...
-                    sum(sum(projSTimeMat))==nDims;
+                    size(projSTimeMat,1)==nDims;
                 if ~isOk
                     reasonStr='Fields have inconsistent sizes';
                     errTagStr='badSize';
