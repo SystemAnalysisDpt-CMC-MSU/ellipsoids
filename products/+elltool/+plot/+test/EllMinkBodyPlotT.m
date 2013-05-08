@@ -1,9 +1,16 @@
-classdef SMinkBodyTestPlot < handle
+classdef EllMinkBodyPlotT < handle
+%$Author: Ilya Lyubich <lubi4ig@gmail.com> $
+%$Date: 2013-05-7 $
+%$Copyright: Moscow State University,
+%            Faculty of Computational Mathematics
+%            and Computer Science,
+%            System Analysis Department 2013 $
     methods
-        function self=SMinkBodyTestPlot(varargin)
+        function self=EllMinkBodyPlotT(varargin)
            
         end
-        function self = testMinkColor(self,fmink,firstEllMat,secEllMat,numObj)
+        function self = minkColor(self,fmink,firstEllMat,secEllMat,...
+                numObj)
             plObj = fmink(firstEllMat,secEllMat,'color',[0,1,0]);
             if dimension(firstEllMat(1)) == 2
                 check2dCol(plObj,numObj, [0, 1, 0]);
@@ -18,7 +25,8 @@ classdef SMinkBodyTestPlot < handle
             end
             function check2dCol(plObj,numObj, colMat)
                 colMat = repmat(colMat,numObj,1);
-                SHPlot =  plObj.getPlotStructure().figToAxesToHMap.toStruct();
+                SHPlot =  ...
+                    plObj.getPlotStructure().figToAxesToHMap.toStruct();
                 plEllObjVec = get(SHPlot.figure_g1.ax, 'Children');
                 plEllColCMat = get(plEllObjVec, 'EdgeColor');
                 if iscell(plEllColCMat)
@@ -30,7 +38,8 @@ classdef SMinkBodyTestPlot < handle
             end
             function check3dCol(plObj, numObj, colMat)
                 colMat = repmat(colMat,numObj,1);
-                SHPlot =  plObj.getPlotStructure().figToAxesToHMap.toStruct();
+                SHPlot = ...
+                    plObj.getPlotStructure().figToAxesToHMap.toStruct();
                 plEllObjVec = get(SHPlot.figure_g1.ax, 'Children');
                 plEllColCMat = arrayfun(@(x) getColVec(x), plEllObjVec, ...
                     'UniformOutput', false);
@@ -47,7 +56,7 @@ classdef SMinkBodyTestPlot < handle
                 end
             end
         end
-        function self = testMinkFillAndShade(self,fmink,firstEllMat,secEllMat)
+        function self = minkFillAndShade(self,fmink,firstEllMat,secEllMat)
             fmink(firstEllMat,secEllMat,'fill',false,'shade',1);
             fmink(firstEllMat,secEllMat,'fill',true,'shade',0.7);
             self.runAndCheckError...
@@ -57,7 +66,7 @@ classdef SMinkBodyTestPlot < handle
                 ('fmink([firstEllMat,secEllMat],''shade'',[0 1])', ...
                 'wrongParamsNumber');
         end
-        function self = testMinkProperties(self,fmink,firstEllMat,secEllMat)
+        function self =minkProperties(self,fmink,firstEllMat,secEllMat)
             if dimension(firstEllMat(1)) == 2
                 plObj = fmink(firstEllMat,secEllMat, 'linewidth', 4, ...
                     'fill', true, 'shade', 0.8);
@@ -67,7 +76,8 @@ classdef SMinkBodyTestPlot < handle
                     'fmink(firstEllMat,secEllMat, ''linewidth'', 4,''fill'', true, ''shade'', 0.8)'...
                     ,'wrongProperty');
             end
-            plObj = fmink(firstEllMat,secEllMat, 'fill', true, 'shade', 0.1, ...
+            plObj = fmink(firstEllMat,secEllMat, ...
+                'fill', true, 'shade', 0.1, ...
                 'color', [0, 1, 1]);
             checkParams(plObj, [], 1, 0.1, [0, 1, 1]);
             
@@ -75,7 +85,7 @@ classdef SMinkBodyTestPlot < handle
             
             
             function checkParams(plObj, linewidth, fill, shade, colorVec)
-                SHPlot =  plObj.getPlotStructure().figToAxesToHMap.toStruct();
+                SHPlot=plObj.getPlotStructure().figToAxesToHMap.toStruct();
                 plEllObjVec = get(SHPlot.figure_g1.ax, 'Children');
                 isEqVec = arrayfun(@(x) checkEllParams(x), plEllObjVec);
                 mlunit.assert_equals(isEqVec, ones(size(isEqVec)));
@@ -99,7 +109,7 @@ classdef SMinkBodyTestPlot < handle
                             (~strcmp(get(plObj, 'Marker'), '*'))
                         linewidthPl = get(plObj, 'linewidth');
                         colorPlVec = get(plObj, 'Color');
-                        if numel(linewidth) > 0
+                        if numel(linewidth) > 03
                             isEq = isEq & eq(linewidth, linewidthPl);
                         end
                         if numel(colorVec) > 0

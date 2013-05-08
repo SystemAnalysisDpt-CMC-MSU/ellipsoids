@@ -58,12 +58,15 @@ import elltool.plot.plotgeombodyarr;
 import modgen.common.throwerror;
 
 if nargout == 0
-    minkCommonAction(@getEllArr,@fCalcBodyTriArr,@fCalcCenterTriArr,varargin{:});
+    minkCommonAction(@getEllArr,@fCalcBodyTriArr,@fCalcCenterTriArr,...
+        varargin{:});
 elseif nargout == 1
-    output = minkCommonAction(@getEllArr,@fCalcBodyTriArr,@fCalcCenterTriArr,varargin{:});
+    output = minkCommonAction(@getEllArr,@fCalcBodyTriArr,...
+        @fCalcCenterTriArr,varargin{:});
     varargout = output(1);
 else
-    [qSumMat,boundMat] = minkCommonAction(@getEllArr,@fCalcBodyTriArr,@fCalcCenterTriArr,varargin{:});
+    [qSumMat,boundMat] = minkCommonAction(@getEllArr,@fCalcBodyTriArr,...
+        @fCalcCenterTriArr,varargin{:});
     varargout(1) = {qSumMat};
     varargout(2) = {boundMat};
 end

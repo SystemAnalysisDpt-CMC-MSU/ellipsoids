@@ -1,23 +1,22 @@
-classdef EllipsoidMinkdiffPlotTestCase < mlunitext.test_case & elltool.plot.test.SumDiffMinkBodyTestPlot
-    properties (Access=private)
-        testDataRootDir
-        
-    end
-    %
+classdef EllMinkdiffPlotTC < mlunitext.test_case &...
+        elltool.plot.test.EllMinkBTC
+%$Author: Ilya Lyubich <lubi4ig@gmail.com> $
+%$Date: 2013-05-7 $
+%$Copyright: Moscow State University,
+%            Faculty of Computational Mathematics
+%            and Computer Science,
+%            System Analysis Department 2013 $
     methods
-        function self = EllipsoidMinkdiffPlotTestCase(varargin)
+        function self = EllMinkdiffPlotTC(varargin)
             self = self@mlunitext.test_case(varargin{:});
-            self = self@elltool.plot.test.SumDiffMinkBodyTestPlot(varargin{:});
-            [~,className]=modgen.common.getcallernameext(1);
-            shortClassName=mfilename('classname');
-            self.testDataRootDir=[fileparts(which(className)),filesep,'TestData',...
-                filesep,shortClassName];
+            self =...
+               self@elltool.plot.test.EllMinkBTC(varargin{:});
         end
         function self = tear_down(self,varargin)
             close all;
         end
         function self = testSimpleOptions(self)
-            self = simpleOptions1(self,@minkdiff);
+            self = minkdiffSimpleOptions(self,@minkdiff);
         end
         function self = test2d(self)
             testFirEll = ellipsoid([1, 0].', [9 2;2 4]);
@@ -28,14 +27,16 @@ classdef EllipsoidMinkdiffPlotTestCase < mlunitext.test_case & elltool.plot.test
             check(testThirdEll,testForthEll);
             
             function check(testFirEll,testSecEll)
-                absTol = 10^(-3);
+                ABS_TOL = 10^(-3);
                 [~,boundPoints] = minkdiff(testFirEll,testSecEll);
                 [lGridMat] = gras.geom.circlepart(200);
                 [supp1Arr,~] = rho(testFirEll,lGridMat.');
                 [supp2Arr,~] = rho(testSecEll,lGridMat.');
-                rhoDiffVec = gras.geom.sup.supgeomdiff2d(supp1Arr,supp2Arr,lGridMat.');
+                rhoDiffVec = gras.geom.sup.supgeomdiff2d(supp1Arr,...
+                    supp2Arr,lGridMat.');
                 supVec = max(lGridMat*boundPoints(:,1:end-1),[],2);
-                mlunit.assert_equals(abs(supVec'-rhoDiffVec) < absTol,ones(1,size(supVec,1)));      
+                mlunit.assert_equals(abs(supVec'-rhoDiffVec) < ABS_TOL,...
+                    ones(1,size(supVec,1)));      
             end
         end
         function self = test3d(self)
@@ -48,14 +49,16 @@ classdef EllipsoidMinkdiffPlotTestCase < mlunitext.test_case & elltool.plot.test
 
             
             function check(testFirEll,testSecEll)
-                absTol = 10^(-2);
+                ABS_TOL = 10^(-2);
                 [~,boundPoints] = minkdiff(testFirEll,testSecEll);
                 [lGridMat, ~] = gras.geom.tri.spheretri(3);
                 [supp1Mat,~] = rho(testFirEll,lGridMat.');
                 [supp2Mat,~] = rho(testSecEll,lGridMat.');
                 supVec = max(lGridMat*boundPoints(:,1:end-1),[],2);
-                rhoDiffVec = gras.geom.sup.supgeomdiff3d(supp1Mat,supp2Mat,lGridMat.');
-                mlunit.assert_equals(abs(supVec'-rhoDiffVec) < absTol,ones(1,size(supVec,1)));      
+                rhoDiffVec = gras.geom.sup.supgeomdiff3d(supp1Mat,...
+                    supp2Mat,lGridMat.');
+                mlunit.assert_equals(abs(supVec'-rhoDiffVec) < ABS_TOL,...
+                    ones(1,size(supVec,1)));      
             end
         end
     end

@@ -61,7 +61,8 @@ import elltool.plot.plotgeombodyarr;
 import modgen.common.throwerror;
 [reg]=...
     modgen.common.parseparext(varargin,...
-    {'relDataPlotter','newFigure','fill','lineWidth','color','shade','priorHold','postHold','showAll'});
+    {'relDataPlotter','newFigure','fill','lineWidth','color','shade',...
+    'priorHold','postHold','showAll'});
 ellsArr = cellfun(@(x)getEllArr(x),reg,'UniformOutput', false);
 ellsArr = vertcat(ellsArr{:});
 ind = ~isempty(ellsArr);
@@ -94,7 +95,8 @@ else
         plObj = output{1};
         varargout = {plObj};
     else
-        [qDifMat,boundMat] = minkCommonAction(@getEllArr,@fCalcBodyTriArr,...
+        [qDifMat,boundMat] = minkCommonAction(@getEllArr,...
+            @fCalcBodyTriArr,...
             @fCalcCenterTriArr,varargin{:});
         varargout(1) = {qDifMat};
         varargout(2) = {boundMat};

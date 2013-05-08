@@ -1,11 +1,15 @@
-function  [plObj,nDim,isHold] = plotgeombodyarr(objClassName,calcBodyPoints,fPlotPatch,varargin)
+function  [plObj,nDim,isHold] = plotgeombodyarr(objClassName,...
+    calcBodyPoints,fPlotPatch,varargin)
 %
 % plotgeombodyarr - plots objects in 2D or 3D.
 %
 %
 % Usage:
-%       plotgeombodyarr(objClassName,rebuildOneDim2TwoDim,calcBodyPoints,plotPatch,objArr,'Property',PropValue,...) - plots array of objClassName objects
-%           using calcBodyPoints function to calculate points,  rebuildOneDim2TwoDim to rebuild one dim ibjects to two dim if it is needed,
+%       plotgeombodyarr(objClassName,rebuildOneDim2TwoDim,calcBodyPoints,
+%       plotPatch,objArr,'Property',PropValue,...) 
+%       - plots array of objClassName objects
+%           using calcBodyPoints function to calculate points,  
+%rebuildOneDim2TwoDim to rebuild one dim ibjects to two dim if it is needed,
 %           plotPatch to plot objects with  setting properties
 %
 % Input:
@@ -19,7 +23,7 @@ function  [plObj,nDim,isHold] = plotgeombodyarr(objClassName,calcBodyPoints,fPlo
 %                must be either 2D or 3D simutaneously.
 %   optional:
 %       color1Spec: char[1,1] - color specification code, can be 'r','g',
-%                               etc (any code supported by built-in Matlab function).
+%                      etc (any code supported by built-in Matlab function).
 %       body2Arr: objClassName: [dim21Size,dim22Size,...,dim2kSize] -
 %                                           second ellipsoid array...
 %       color2Spec: char[1,1] - same as color1Spec but for body2Arr
@@ -28,16 +32,19 @@ function  [plObj,nDim,isHold] = plotgeombodyarr(objClassName,calcBodyPoints,fPlo
 %                                            N-th objects array
 %       colorNSpec - same as color1Spec but for bodyNArr.
 %   properties:
-%       'newFigure': logical[1,1] - if 1, each plot command will open a new figure window.
+%       'newFigure': logical[1,1] - if 1, 
+%                   each plot command will open a new figure window.
 %                    Default value is 0.
 %       'fill': logical[1,1]/logical[dim11Size,dim12Size,...,dim1kSize]  -
-%               if 1, ellipsoids in 2D will be filled with color. Default value is 0.
+%               if 1, ellipsoids in 2D will be filled with color. 
+%               Default value is 0.
 %       'lineWidth': double[1,1]/double[dim11Size,dim12Size,...,dim1kSize]  -
 %                    line width for 1D and 2D plots. Default value is 1.
 %       'color': double[1,3]/double[dim11Size,dim12Size,...,dim1kSize,3] -
-%                sets default colors in the form [x y z]. Default value is [1 0 0].
+%                sets default colors in the form [x y z]. 
+%                   Default value is [1 0 0].
 %       'shade': double[1,1]/double[dim11Size,dim12Size,...,dim1kSize]  -
-%                level of transparency between 0 and 1 (0 - transparent, 1 - opaque).
+%      level of transparency between 0 and 1 (0 - transparent, 1 - opaque).
 %                Default value is 0.4.
 %       'relDataPlotter' - relation data plotter object.
 %       'priorHold':logical[1,1] - if true plot with hold on,
@@ -50,7 +57,8 @@ function  [plObj,nDim,isHold] = plotgeombodyarr(objClassName,calcBodyPoints,fPlo
 %       data plotter object.
 %       nDim: double[1,1] - dimension of objects,
 %       isHold: logical[1,1] - true, if before plotting was hold on,
-%       bodyArr: objClassName: [dim21Size,dim22Size,...,dim2kSize] - array of input objects
+%       bodyArr: objClassName: [dim21Size,dim22Size,...,dim2kSize] - 
+%       array of input objects
 %
 % $Author: <Ilya Lyubich>  <lubi4ig@gmail.com> $    $Date: <11 January 2013> $
 % $Copyright: Moscow State University,
@@ -63,12 +71,16 @@ DEFAULT_FILL = false;
 DEFAULT_LINE_WIDTH = 1;
 DEFAULT_SHAD = 0.4;
 isObj = true;
-[reg,~,plObj,isNewFigure,isFill,lineWidth,colorVec,shadVec,priorHold,postHold,...
-    isRelPlotterSpec,~,isIsFill,isLineWidth,isColorVec,isShad,~,isPostHold]=...
+[reg,~,plObj,isNewFigure,isFill,lineWidth,colorVec,shadVec,priorHold,...
+    postHold, isRelPlotterSpec,~,isIsFill,isLineWidth,isColorVec,isShad,~,...
+    isPostHold]=...
     modgen.common.parseparext(varargin,...
-    {'relDataPlotter','newFigure','fill','lineWidth','color','shade','priorHold','postHold';...
-    [],0,[],[],[],0,false,false;@(x)isa(x,'smartdb.disp.RelationDataPlotter'),...
-    @(x)isa(x,'logical'),@(x)(isa(x,'logical')||isa(x,'double')),@(x)isa(x,'double'),...
+    {'relDataPlotter','newFigure','fill','lineWidth','color','shade',...
+    'priorHold','postHold';...
+    [],0,[],[],[],0,false,false...
+    ;@(x)isa(x,'smartdb.disp.RelationDataPlotter'),...
+    @(x)isa(x,'logical'),@(x)(isa(x,'logical')||isa(x,'double')),...
+    @(x)isa(x,'double'),...
     @(x)isa(x,'double'),...
     @(x)isa(x,'double'), @(x)isa(x,'logical'),@(x)isa(x,'logical')});
 checkIsWrongInput();
@@ -135,7 +147,9 @@ if isObj
             @axesGetNameSurfFunc,{'axesNameCMat','axesNumCMat'},...
             @axesSetPropDoNothingFunc,{},...
             @plotCreateFillPlotFunc,...
-            {'xCMat','faceCMat','clrVec','fill','shadVec', 'widVec','plotPatch'},'axesPostPlotFunc',postFun,'isAutoHoldOn',false);
+            {'xCMat','faceCMat','clrVec','fill','shadVec', ...
+            'widVec','plotPatch'},'axesPostPlotFunc',postFun,...
+            'isAutoHoldOn',false);
         
     elseif (nDim==3)
         plObj.plotGeneric(rel,@figureGetGroupNameFunc,{'figureNameCMat'},...
@@ -144,7 +158,8 @@ if isObj
             @axesSetPropDoNothingFunc,{},...
             @plotCreatePatchFunc,...
             {'verCMat','faceCMat','faceVertexCDataCMat',...
-            'shadVec','clrVec','plotPatch'},'axesPostPlotFunc',postFun,'isAutoHoldOn',false);
+            'shadVec','clrVec','plotPatch'},'axesPostPlotFunc',postFun,...
+            'isAutoHoldOn',false);
     end
 end
 
@@ -159,7 +174,8 @@ end
             bodyPlotNum = numel(xCMat);
             uColorVec = uColorVec(1:bodyPlotNum);
             vColorVec = vColorVec(1:bodyPlotNum,:);
-            [colorVec, shadVec, lineWidth, isFill] = getPlotParams(colorVec, shadVec,...
+            [colorVec, shadVec, lineWidth, isFill] = ...
+                getPlotParams(colorVec, shadVec,...
                 lineWidth, isFill,bodyPlotNum);
             checkIsWrongParams();
             SData = setUpSData();
@@ -273,7 +289,7 @@ end
                 else
                     if nParams ~= bodyPlotNum
                         throwerror('wrongParamsNumber',...
-                            'Number of params is not equal to number of objects');
+                     'Number of params is not equal to number of objects');
                     end
                     outParamVec = reshape(inParamArr, 1, nParams);
                 end
@@ -288,8 +304,8 @@ end
                     multiplier = multiplier + 1;
                 end
                 colCell = arrayfun(@(x) auxcolors(mod(x*multiplier, ...
-                    size(auxcolors, 1)) + 1, :), 1:bodyPlotNum, 'UniformOutput',...
-                    false);
+                    size(auxcolors, 1)) + 1, :), 1:bodyPlotNum,...
+                    'UniformOutput', false);
                 colorsArr = vertcat(colCell{:});
                 colorsArr = flipud(colorsArr);
                 colorArr = colorsArr;
@@ -320,7 +336,8 @@ end
                     'You can''t use this symbol as a color');
             end
             function isColor = isColorDef(value)
-                isColor = eq(value, 'r') | eq(value, 'g') | eq(value, 'b') | ...
+                isColor = eq(value, 'r') | eq(value, 'g') | ...
+                    eq(value, 'b') | ...
                     eq(value, 'y') | eq(value, 'c') | ...
                     eq(value, 'm') | eq(value, 'w')| eq(value, 'k');
             end
@@ -336,7 +353,8 @@ end
                         'There is no value for property.');
                 end
             elseif ~isa(value, objClassName) && ~ischar(value)
-                throwerror('wrongPropertyType', 'Property must be a string.');
+                throwerror('wrongPropertyType',...
+                    'Property must be a string.');
             end
             function isRProp = isRightProp(value)
                 isRProp = strcmpi(value, 'fill') |...
@@ -359,7 +377,8 @@ end
             throwerror('wrongColorChar', 'Color char can''t be the first');
         end
         isCharColor = false;
-        [ellsCMat, uColorCMat, vColorCMat] = cellfun(@(x, y, z)getParams(x, y, z),...
+        [ellsCMat, uColorCMat, vColorCMat] = ...
+            cellfun(@(x, y, z)getParams(x, y, z),...
             reg, {reg{2:end}, []}, isnLastElemCMat, 'UniformOutput', false);
         uColorVec = vertcat(uColorCMat{:});
         vColorVec = vertcat(vColorCMat{:});
@@ -393,10 +412,6 @@ end
             end
         end
         function res = myColorTable(ch)
-            %
-            % MY_COLOR_TABLE - returns the code of the color defined by single letter.
-            %
-            
             if ~(ischar(ch))
                 res = [0 0 0];
                 return;
@@ -436,7 +451,8 @@ if ~isFill
     shade = 0;
 end
 h1 = plotPatch('Vertices',X','Faces',faces,'Parent',hAxes);
-set(h1, 'EdgeColor', clrVec, 'LineWidth', widVec,'FaceAlpha',shade,'FaceColor',clrVec);
+set(h1, 'EdgeColor', clrVec, 'LineWidth', widVec,'FaceAlpha',shade,...
+    'FaceColor',clrVec);
 hVec = h1;
 end
 function figureSetPropFunc(hFigure,figureName,~)

@@ -32,40 +32,37 @@ nDims=size(lMat,1);
 if nDims~=3
     throwerror('wrongInput','only 2-dimensional sets are supported');
 end
-%
 rhoDiffVec=rho1Vec-rho2Vec;
 if any(rhoDiffVec<=0)
     throwerror('wrongInput',...
         'geometric difference is expected to have a non-empty interior');
 end
-%
 sMat=lMat./repmat(rhoDiffVec,nDims,1);
 fSMat=convhulln(sMat.');
-%  trimesh(fSMat,sMat(1,:),sMat(2,:),sMat(3,:),'EdgeColor',[1,0,0],'FaceAlpha',0)
-dist = zeros(1,size(lMat,2));
-for indL = 1:size(lMat,2)
-    for indTri = 1:size(fSMat,1)
-        triMat = sMat(:,fSMat(indTri,:));
+distVec = zeros(1,size(lMat,2));
+for iDist = 1:size(lMat,2)
+    for jTri = 1:size(fSMat,1)
+        triMat = sMat(:,fSMat(jTri,:));
         x1Vec = triMat(:,2)-triMat(:,1);
         x2Vec = triMat(:,3)-triMat(:,1);
-        norm1Vec  = cross(sMat(:,indL),x2Vec);
-        det1  = dot(x1Vec,norm1Vec);
-        if (det1<-ABS_TOL || det1>ABS_TOL)
-            invdet = 1/det1;
+        norm1Vec  = cross(sMat(:,iDist),x2Vec);
+        detTemp  = dot(x1Vec,norm1Vec);
+        if (abs(detTemp) > ABS_TOL)
+            invDet = 1/detTemp;
             sPoint = -triMat(:,1);
-            u = invdet*dot(sPoint,norm1Vec);
-            if (u>=-ABS_TOL)
+            uDist = invDet*dot(sPoint,norm1Vec);
+            if (uDist>=-ABS_TOL)
                 norm2Vec = cross(sPoint,x1Vec);
-                v = invdet*dot(sMat(:,indL),norm2Vec);
-                if (v>=-ABS_TOL && u+v<=1+ABS_TOL)
-                    t = invdet*dot(x2Vec,norm2Vec);
-                    if t>0
-                        dist(indL) =t;
+                vDist = invDet*dot(sMat(:,iDist),norm2Vec);
+                if (vDist>=-ABS_TOL && uDist+vDist<=1+ABS_TOL)
+                    tDist = invDet*dot(x2Vec,norm2Vec);
+                    if tDist>0
+                        distVec(iDist) =tDist;
                     end
                 end
             end
         end
     end
 end
-rhoDiffVec=rhoDiffVec./dist;
+rhoDiffVec=rhoDiffVec./distVec;
 end

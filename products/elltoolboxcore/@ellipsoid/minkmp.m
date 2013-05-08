@@ -19,20 +19,23 @@ function varargout = minkmp(varargin)
 % Input:
 %   regular:
 %       ellArr:  Ellipsoid: [dim11Size,dim12Size,...,dim1kSize] -
-%                array of 2D or 3D Ellipsoids objects. All ellipsoids in ellArr
+%           array of 2D or 3D Ellipsoids objects. All ellipsoids in ellArr
 %                must be either 2D or 3D simutaneously.
 %
 %   properties:
 %       'showAll': logical[1,1] - if 1, plot all ellArr.
 %                    Default value is 0.
 %       'fill': logical[1,1]/logical[dim11Size,dim12Size,...,dim1kSize]  -
-%               if 1, ellipsoids in 2D will be filled with color. Default value is 0.
-%       'lineWidth': double[1,1]/double[dim11Size,dim12Size,...,dim1kSize]  -
+%               if 1, ellipsoids in 2D will be filled with color.
+%               Default value is 0.
+%       'lineWidth': double[1,1]/double[dim11Size,dim12Size,...,dim1kSize]-
 %                    line width for 1D and 2D plots. Default value is 1.
 %       'color': double[1,3]/double[dim11Size,dim12Size,...,dim1kSize,3] -
-%                sets default colors in the form [x y z]. Default value is [1 0 0].
+%                sets default colors in the form [x y z].
+%                   Default value is [1 0 0].
 %       'shade': double[1,1]/double[dim11Size,dim12Size,...,dim1kSize]  -
-%                level of transparency between 0 and 1 (0 - transparent, 1 - opaque).
+%                level of transparency between 0 and 1 
+%               (0 - transparent, 1 - opaque).
 %                Default value is 0.4.
 %       'relDataPlotter' - relation data plotter object.
 %       Notice that property vector could have different dimensions, only
@@ -99,7 +102,8 @@ else
             @fCalcCenterTriArr,varargin{:});
         varargout = output(1);
     else
-        [qDifSumMat,boundMat] = minkCommonAction(@getEllArr,@fCalcBodyTriArr,...
+        [qDifSumMat,boundMat] = minkCommonAction(@getEllArr,...
+            @fCalcBodyTriArr,...
             @fCalcCenterTriArr,varargin{:});
         varargout(1) = {qDifSumMat};
         varargout(2) = {boundMat};
@@ -139,11 +143,13 @@ end
         else
             fstEllShMat = fstEll.shapeMat;
             if isdegenerate(fstEll)
-                fstEllShMat = ellipsoid.regularize(fstEllShMat,fstEll.absTol);
+                fstEllShMat = ...
+                    ellipsoid.regularize(fstEllShMat,fstEll.absTol);
             end
             secEllShMat = secEll.shapeMat;
             if isdegenerate(secEll)
-                secEllShMat = ellipsoid.regularize(secEllShMat,secEll.absTol);
+                secEllShMat = ...
+                    ellipsoid.regularize(secEllShMat,secEll.absTol);
             end            
             absTolVal=min(fstEll.absTol, secEll.absTol);
             [isBadDirVec,pUniversalVec] = ...
@@ -157,7 +163,8 @@ end
             for iXMat=1:numel(xCMat)
                 xSumMat = xSumMat + xCMat{iXMat};
             end
-            [diffBoundMat] = ellipsoid.calcdiffonedir(fstEll,secEll,lDirsMat,...
+            [diffBoundMat] = ...
+                ellipsoid.calcdiffonedir(fstEll,secEll,lDirsMat,...
                 pUniversalVec,isGoodDirVec);
             boundPointMat = cell2mat(diffBoundMat) + ...
                 xSumMat;        

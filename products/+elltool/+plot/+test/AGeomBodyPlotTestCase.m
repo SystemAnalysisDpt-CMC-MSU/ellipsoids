@@ -1,4 +1,10 @@
 classdef AGeomBodyPlotTestCase < mlunitext.test_case
+%$Author: Ilya Lyubich <lubi4ig@gmail.com> $
+%$Date: 2013-05-7 $
+%$Copyright: Moscow State University,
+%            Faculty of Computational Mathematics
+%            and Computer Science,
+%            System Analysis Department 2013 $
     methods(Abstract,Access=protected)
         getInstance(varargin)
     end

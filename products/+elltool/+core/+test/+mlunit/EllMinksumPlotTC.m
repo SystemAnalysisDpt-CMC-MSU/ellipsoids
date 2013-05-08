@@ -1,26 +1,26 @@
-classdef EllipsoidMinksumPlotTestCase < mlunitext.test_case & elltool.plot.test.SumDiffMinkBodyTestPlot...
-        &elltool.plot.test.SumMpPmMinkBodyTestPlot
-    properties (Access=private)
-        testDataRootDir
-        
-    end
-    %
+classdef EllMinksumPlotTC < mlunitext.test_case &...
+        elltool.plot.test.EllMinkBTC...
+        &elltool.plot.test.EllMinkATC
+ %$Author: Ilya Lyubich <lubi4ig@gmail.com> $
+%$Date: 2013-05-7 $
+%$Copyright: Moscow State University,
+%            Faculty of Computational Mathematics
+%            and Computer Science,
+%            System Analysis Department 2013 $
     methods
-        function self = EllipsoidMinksumPlotTestCase(varargin)
+        function self = EllMinksumPlotTC(varargin)
             self = self@mlunitext.test_case(varargin{:});
-            self = self@elltool.plot.test.SumMpPmMinkBodyTestPlot(varargin{:});
-            self = self@elltool.plot.test.SumDiffMinkBodyTestPlot(varargin{:});
-            [~,className]=modgen.common.getcallernameext(1);
-            shortClassName=mfilename('classname');
-            self.testDataRootDir=[fileparts(which(className)),filesep,'TestData',...
-                filesep,shortClassName];
+            self = ...
+               self@elltool.plot.test.EllMinkATC(varargin{:});
+            self = ...
+               self@elltool.plot.test.EllMinkBTC(varargin{:});
         end
         function self = tear_down(self,varargin)
             close all;
         end
         function self = testSimpleOptions(self)
-            self = simpleOptions1(self,@minksum);
-            self = simpleOptions2(self,@minksum,false);
+            self = minkdiffSimpleOptions(self,@minksum);
+            self = minkmpSimpleOptions2(self,@minksum,false);
         end
         function self = test2d(self)
             testFirEll = ellipsoid( [9 2;2 4]);
@@ -35,7 +35,8 @@ classdef EllipsoidMinksumPlotTestCase < mlunitext.test_case & elltool.plot.test.
                 [supp2Mat,~] = rho(testSecEll,lGridMat.');
                 rhoDiffVec = supp1Mat+supp2Mat;
                 sup = max(lGridMat*boundPointsMat(:,1:end-1),[],2);
-                mlunit.assert_equals(abs(sup'-rhoDiffVec) < ABS_TOL,ones(1,size(sup,1)));
+                mlunit.assert_equals(abs(sup'-rhoDiffVec) < ABS_TOL,...
+                    ones(1,size(sup,1)));
             end
             function check2(testFirEll,testSecEll)
                 ABS_TOL = 10^(-10);
