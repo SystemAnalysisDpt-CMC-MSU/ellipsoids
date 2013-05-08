@@ -24,43 +24,33 @@ classdef AReach < elltool.reach.IReach
     end
     %
     methods
+        function resArr=repMat(self,varargin)
+            sizeVec=horzcat(varargin{:});
+            resArr=repmat(self,sizeVec);
+            resArr=resArr.getCopy();
+        end
+        %
+        function checkIfNotEmpty(self)
+            modgen.common.checkvar(self,'~isempty(x.isempty())',...
+                'errorMessage',...
+                'Each dimension of an object array should be a positive number');
+        end    
+        %
         function isProjArr = isprojection(self)
-            import modgen.common.throwerror;
-            if sum(size(self)<=0)
-                throwerror('wrongInput:badDimensionality',...
-                        'each dimension of an object array should be a positive number');
-            end    
+            checkIfNotEmpty(self);
             isProjArr = arrayfun(@(x) x.isProj, self);   
         end
         %
         function isCutArr = iscut(self)
-            import modgen.common.throwerror;
-            if sum(size(self)<=0)
-                throwerror('wrongInput:badDimensionality',...
-                        'each dimension of an object array should be a positive number');
-            end  
+            checkIfNotEmpty(self);  
             isCutArr = arrayfun(@(x) x.isCut, self);
         end
         %
         function isEmptyArr = isempty(self)
-            import modgen.common.throwerror;
-            if sum(size(self)<=0)
-                throwerror('wrongInput:badDimensionality',...
-                        'each dimension of an object array should be a positive number');
-            end  
             isEmptyArr = arrayfun(@(x) isEmp(x), self);
             function isEmpty = isEmp(reachObj)
                 isEmpty = isempty(reachObj.x0Ellipsoid);
             end    
-        end
-        %
-        function absTolArr = getAbsTol(self)
-            import modgen.common.throwerror;
-            if sum(size(self)<=0)
-                throwerror('wrongInput:badDimensionality',...
-                        'each dimension of an object array should be a positive number');
-            end  
-            absTolArr = arrayfun(@(x) x.linSysCVec{end}.getAbsTol(), self);
         end
         %
         function isEmptyIntersect =...

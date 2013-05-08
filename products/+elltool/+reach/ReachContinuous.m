@@ -777,11 +777,7 @@ classdef ReachContinuous < elltool.reach.AReach
         end
         %%
         function [rSdimArr sSdimArr] = dimension(self)
-            import modgen.common.throwerror;
-            if sum(size(self)<=0)
-                throwerror('wrongInput:badDimensionality',...
-                        'each dimension of an object array should be a positive number');
-            end  
+            checkIfNotEmpty(self); 
             rSdimArr = arrayfun(@(x) x.linSysCVec{end}.dimension(), self);
             sSdimArr = arrayfun(@(x,y) getSSdim(x,y), self, rSdimArr);
             function sSdim = getSSdim(reachObj, rSdim)
@@ -1227,11 +1223,7 @@ classdef ReachContinuous < elltool.reach.AReach
         % 
         %   Number of external approximations: 2
         %   Number of internal approximations: 2
-            import modgen.common.throwerror;
-            if sum(size(self)<=0)
-                throwerror('wrongInput:badDimensionality',...
-                        'each dimension of an object array should be a positive number');
-            end
+            checkIfNotEmpty(self);
             sizeCVec = num2cell(size(self));
             copyReachObjArr(sizeCVec{:}) = elltool.reach.ReachContinuous();
             arrayfun(@fSingleCopy,copyReachObjArr,self);
@@ -1248,10 +1240,9 @@ classdef ReachContinuous < elltool.reach.AReach
             end    
         end
         %%
-        function resArr=repMat(self,varargin)
-            sizeVec=horzcat(varargin{:});
-            resArr=repmat(self,sizeVec);
-            resArr=resArr.getCopy();
+        function absTolArr = getAbsTol(self)
+            checkIfNotEmpty(self);  
+            absTolArr = arrayfun(@(x) x.linSysCVec{end}.getAbsTol(), self);
         end
         %%
         function ellTubeRel = getEllTubeRel(self)

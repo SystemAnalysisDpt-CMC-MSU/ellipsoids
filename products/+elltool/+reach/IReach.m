@@ -621,5 +621,54 @@ classdef IReach < handle
         %        0
         %
         isEmpty = isempty(self)
+        %
+        % REPMAT - is analogous to built-in repmat function with one exception - it
+        %          copies the objects, not just the handles
+        %
+        %  Example:
+        %    aMat = [0 1; 0 0]; bMat = eye(2);
+        %    SUBounds = struct();
+        %    SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        %    SUBounds.shape = [9 0; 0 2];
+        %    sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds); 
+        %    x0EllObj = ell_unitball(2);  
+        %    timeVec = [0 10];  
+        %    dirsMat = [1 0; 0 1]';
+        %    reachObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+        %    reachObjArr = reachObj.repMat(1,2);
+        %
+        %    reachObjArr = 1x2 array of ReachContinuous objects 
+        %
+        resArr=repMat(self,varargin)
+        %
+        % GETCOPY - returns the copy of ReachContinuous/ReachDiscrete
+        %       object (array of objects)
+        %
+        % Input:
+        %   regular:
+        %       self. (multidimensional array as input is allowed)
+        %
+        % Output:
+        %  copyReachObjArr: elltool.reach.ReachContinuous/ReachDiscrete -
+        %       copy of the given object (array of objects).
+        %    
+        %  Example:
+        %    aMat = [0 1; 0 0]; bMat = eye(2);
+        %    SUBounds = struct();
+        %    SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        %    SUBounds.shape = [9 0; 0 2];
+        %    sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds); 
+        %    x0EllObj = ell_unitball(2);  
+        %    timeVec = [0 10];  
+        %    dirsMat = [1 0; 0 1]';
+        %    reachObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+        %    reachObjArr = reachObj.repMat(1,2);
+        %    copyReachObj = reachObj.getCopy();
+        %    copyReachObjArr = reachObjArr.getCopy();
+        %
+        %    copyReachObj = ReachContinuous object
+        %    copyReachObjArr = 1x2 array of ReachContinuous objects   
+        %
+        copyReachObjArr = getCopy(self)
     end
 end

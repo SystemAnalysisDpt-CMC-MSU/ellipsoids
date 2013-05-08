@@ -81,27 +81,13 @@ classdef ContinuousReachRefineTestCase < mlunitext.test_case
             mlunit.assert_equals(true,isEqual);
             %
             %Check arrayMethods
-            nDims = 3;
-            minNumberOfElemAlongDim = 1;
-            maxNumberOfElemAlongDim = 10;
-            sizeVec = randi([minNumberOfElemAlongDim maxNumberOfElemAlongDim],...
-                    1,nDims);
-            checkArrayMethods(self, sizeVec);
+            TEST1_SIZE_VEC = [2 2];
+            TEST2_SIZE_VEC = [10 9 8];
+            sizeList = {TEST1_SIZE_VEC, TEST2_SIZE_VEC};
+            cellfun(@(x) checkArrayMethods(self,x), sizeList);
             %
             %Check getCopyMethod
-            reachSingleObj=elltool.reach.ReachContinuous(self.linSys,...
-                    self.x0Ell,self.l0P1Mat,self.tVec);
-            reachArr = repmat(reachSingleObj,sizeVec);
-            compReachArr = reachArr.getCopy();
-            isEql = arrayfun(@(x,y) x.isEqual(y), reachArr, compReachArr);
-            if ~isEql
-                failMesg = sprintf('failure for getCopy() method;');
-                isEql = false;
-            else
-                failMesg = [];
-                isEql = true;
-            end
-            mlunit.assert_equals(true,isEql,failMesg);
+            cellfun(@(x) checkGetCopy(self,x), sizeList);
             %
             function checkArrayMethods(self, sizeVec)
                 failMsg = [];
@@ -137,6 +123,22 @@ classdef ContinuousReachRefineTestCase < mlunitext.test_case
                 end    
                 mlunit.assert_equals(true,isEq,failMsg);
             end
+            %
+            function checkGetCopy(self,sizeVec)
+                reachSingleObj=elltool.reach.ReachContinuous(self.linSys,...
+                        self.x0Ell,self.l0P1Mat,self.tVec);
+                reachArr = repmat(reachSingleObj,sizeVec);
+                compReachArr = reachArr.getCopy();
+                isEql = arrayfun(@(x,y) x.isEqual(y), reachArr, compReachArr);
+                if ~isEql
+                    failMesg = sprintf('failure for getCopy() method;');
+                    isEql = false;
+                else
+                    failMesg = [];
+                    isEql = true;
+                end
+                mlunit.assert_equals(true,isEql,failMesg);
+            end    
             %
             function checkRefine()
                 reachObjNew=reachSetObj;
