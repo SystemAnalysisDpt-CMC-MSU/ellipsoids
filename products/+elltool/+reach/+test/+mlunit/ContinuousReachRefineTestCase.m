@@ -1,4 +1,8 @@
 classdef ContinuousReachRefineTestCase < mlunitext.test_case
+    properties (Access = private, Constant)
+        EMPTY_SIZE_VEC = [0 0 1 0 1];
+        SIZE_LIST = {[2 2], [10 9 8]};
+    end    
     properties (Access=private)
         linSys
         reachObj
@@ -34,6 +38,45 @@ classdef ContinuousReachRefineTestCase < mlunitext.test_case
             isEqual = self.reachObj.isEqual(reachWholeObj);
             mlunit.assert_equals(true,isEqual);
         end
+        function self = testArrayMethods(self)
+            cellfun(@(x) checkArrayMethods(self,x), self.SIZE_LIST);
+            %
+            emptyArr = self.reachObj.repMat(self.EMPTY_SIZE_VEC);
+            dimensionMat = repmat(self.reachObj.dimension(),self.EMPTY_SIZE_VEC);
+            checkEq(dimensionMat,emptyArr,'dimension');
+            %
+            function checkArrayMethods(self, sizeVec)
+                reachSingleObj=self.reachObj;
+                reachObjMat = reachSingleObj.repMat(sizeVec);
+                dimMat = repmat(reachSingleObj.dimension(),sizeVec);
+                isCutMat = repmat(reachSingleObj.iscut(),sizeVec);
+                isProjMat = repmat(reachSingleObj.isprojection(),sizeVec);
+                isEmpMat = repmat(reachSingleObj.isempty(),sizeVec);
+                checkEq(dimMat,reachObjMat,'dimension');
+                checkEq(isCutMat,reachObjMat,'iscut');
+                checkEq(isProjMat,reachObjMat,'isprojection');
+                checkEq(isEmpMat,reachObjMat,'isempty');
+            end   
+        end
+        function self = testGetCopyMethod(self)
+            cellfun(@(x) checkGetCopy(self,x), self.SIZE_LIST);
+            %
+            function checkGetCopy(self,sizeVec)
+                reachSingleObj=self.reachObj;
+                reachArr = repmat(reachSingleObj,sizeVec);
+                compReachArr = reachArr.getCopy();
+                checkEq(reachArr,compReachArr,'getCopy');
+            end 
+        end
+        function self = testRepMatMethod(self)
+            cellfun(@(x) checkRepMat(self,x), self.SIZE_LIST);
+            function checkRepMat(self,sizeVec)
+                reachSingleObj=self.reachObj;
+                reachArr = repmat(reachSingleObj,sizeVec);
+                compReachArr = reachSingleObj.repMat(sizeVec);
+                checkEq(reachArr,compReachArr,'repMat');
+            end    
+        end    
         function self = testRefMisc(self)
             lSys=buildLS();
             %Check Evolve after Refine
@@ -78,67 +121,7 @@ classdef ContinuousReachRefineTestCase < mlunitext.test_case
             reachSetObj=buildRS(lDirMat);
             projReachSetObj=reachSetObj.projection(projMat);
             isEqual = projSetNew.isEqual(projReachSetObj);
-            mlunit.assert_equals(true,isEqual);
-            %
-            %Check arrayMethods
-            TEST1_SIZE_VEC = [2 2];
-            TEST2_SIZE_VEC = [10 9 8];
-            sizeList = {TEST1_SIZE_VEC, TEST2_SIZE_VEC};
-            cellfun(@(x) checkArrayMethods(self,x), sizeList);
-            %
-            %Check getCopyMethod
-            cellfun(@(x) checkGetCopy(self,x), sizeList);
-            %
-            function checkArrayMethods(self, sizeVec)
-                failMsg = [];
-                reachWholeObj=elltool.reach.ReachContinuous(self.linSys,...
-                    self.x0Ell,self.l0P1Mat,self.tVec);
-                reachObjMat = reachWholeObj.repMat(sizeVec);
-                dimMat = repmat(reachWholeObj.dimension(),sizeVec);
-                absTolMat = repmat(reachWholeObj.getAbsTol(),sizeVec);
-                isCutMat = repmat(reachWholeObj.iscut(),sizeVec);
-                isProjMat = repmat(reachWholeObj.isprojection(),sizeVec);
-                isEmpMat = repmat(reachWholeObj.isempty(),sizeVec);
-                isEq = isequal(dimMat, reachObjMat.dimension())&&...
-                    isequal(absTolMat, reachObjMat.getAbsTol())&&...
-                    isequal(isCutMat, reachObjMat.iscut())&&...
-                    isequal(isProjMat, reachObjMat.isprojection())&&...
-                    isequal(isEmpMat, reachObjMat.isempty());
-                if ~isEq
-                    if ~isequal(dimMat, reachObjMat.dimension())
-                        failMsg = sprintf('failure for dimension() method; %s',failMsg);
-                    end    
-                    if ~isequal(absTolMat, reachObjMat.getAbsTol())
-                        failMsg = sprintf('failure for getAbsTol() method; %s',failMsg);
-                    end
-                    if ~isequal(isCutMat, reachObjMat.iscut())
-                        failMsg = sprintf('failure for iscut() method; %s',failMsg);
-                    end
-                    if ~isequal(isProjMat, reachObjMat.isprojection())
-                        failMsg = sprintf('failure for isprojection() method; %s',failMsg);
-                    end
-                    if ~isequal(isEmpMat, reachObjMat.isempty())
-                        failMsg = sprintf('failure for isempty() method; %s',failMsg);
-                    end
-                end    
-                mlunit.assert_equals(true,isEq,failMsg);
-            end
-            %
-            function checkGetCopy(self,sizeVec)
-                reachSingleObj=elltool.reach.ReachContinuous(self.linSys,...
-                        self.x0Ell,self.l0P1Mat,self.tVec);
-                reachArr = repmat(reachSingleObj,sizeVec);
-                compReachArr = reachArr.getCopy();
-                isEql = arrayfun(@(x,y) x.isEqual(y), reachArr, compReachArr);
-                if ~isEql
-                    failMesg = sprintf('failure for getCopy() method;');
-                    isEql = false;
-                else
-                    failMesg = [];
-                    isEql = true;
-                end
-                mlunit.assert_equals(true,isEql,failMesg);
-            end    
+            mlunit.assert_equals(true,isEqual);   
             %
             function checkRefine()
                 reachObjNew=reachSetObj;
@@ -186,6 +169,44 @@ classdef ContinuousReachRefineTestCase < mlunitext.test_case
                 uEll=ellipsoid(eye(2));
                 linSys=elltool.linsys.LinSysContinuous(aMat,bMat,uEll);
             end
+        end
+    end
+end
+function checkEq(initMat,compMat,methodName)
+    import modgen.common.throwerror;
+    import modgen.cell.cellstr2expression;
+    %
+    NON_OBJ_OUT_METHOD_LIST = {'dimension','iscut','isprojection','isempty'};
+    OBJ_OUT_METHOD_LIST = {'getCopy','repMat'};
+    switch methodName
+        case NON_OBJ_OUT_METHOD_LIST
+            [isEq failMsg] = checkSimpleEq(initMat,compMat,methodName);
+        case OBJ_OUT_METHOD_LIST    
+            [isEq failMsg] = checkObjEq(initMat,compMat,methodName);
+        otherwise
+            throwerror('wrongInput:unknownMethod',...
+                        'Unexpected method: %s. Allowed methods: %s,%s',...
+             methodName,...
+             cellstr2expression({NON_OBJ_OUT_METHOD_LIST{:}, OBJ_OUT_METHOD_LIST{:}}));
+    end
+    mlunit.assert_equals(true,isEq,failMsg);
+    %
+    function [isEq failMsg] = checkSimpleEq(initMat,compMat,methodName)
+        failMsg = [];
+        isEq = isequal(initMat, compMat.(methodName));
+        if ~isEq
+            failMsg = sprintf('failure for %s() method;',methodName);
+        end    
+    end
+    %
+    function [isEq failMsg] = checkObjEq(initMat,compMat,methodName)
+        isEq = arrayfun(@(x,y) x.isEqual(y), initMat, compMat);
+        if ~isEq
+            failMsg = sprintf('failure for %s() method;',methodName);
+            isEq = false;
+        else
+            failMsg = [];
+            isEq = true;
         end
     end
 end

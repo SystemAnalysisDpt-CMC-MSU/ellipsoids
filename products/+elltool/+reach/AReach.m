@@ -27,7 +27,9 @@ classdef AReach < elltool.reach.IReach
         function resArr=repMat(self,varargin)
             sizeVec=horzcat(varargin{:});
             resArr=repmat(self,sizeVec);
-            resArr=resArr.getCopy();
+            if ~isempty(resArr);
+                resArr=resArr.getCopy();
+            end    
         end
         %
         function checkIfNotEmpty(self)

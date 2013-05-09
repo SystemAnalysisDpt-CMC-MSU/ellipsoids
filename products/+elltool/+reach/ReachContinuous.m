@@ -777,7 +777,6 @@ classdef ReachContinuous < elltool.reach.AReach
         end
         %%
         function [rSdimArr sSdimArr] = dimension(self)
-            checkIfNotEmpty(self); 
             rSdimArr = arrayfun(@(x) x.linSysCVec{end}.dimension(), self);
             sSdimArr = arrayfun(@(x,y) getSSdim(x,y), self, rSdimArr);
             function sSdim = getSSdim(reachObj, rSdim)
@@ -1243,11 +1242,6 @@ classdef ReachContinuous < elltool.reach.AReach
                 copyReachObj.projectionBasisMat = reachObj.projectionBasisMat;
                 copyReachObj.ellTubeRel = reachObj.ellTubeRel.getCopy();
             end    
-        end
-        %%
-        function absTolArr = getAbsTol(self)
-            checkIfNotEmpty(self);  
-            absTolArr = arrayfun(@(x) x.linSysCVec{end}.getAbsTol(), self);
         end
         %%
         function ellTubeRel = getEllTubeRel(self)
