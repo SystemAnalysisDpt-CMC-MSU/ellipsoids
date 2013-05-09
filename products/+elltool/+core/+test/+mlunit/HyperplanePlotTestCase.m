@@ -1,5 +1,11 @@
 classdef HyperplanePlotTestCase < elltool.plot.test.AGeomBodyPlotTestCase
     %
+    %$Author: Ilya Lyubich <lubi4ig@gmail.com> $
+    %$Date: 2013-05-7 $
+    %$Copyright: Moscow State University,
+    %            Faculty of Computational Mathematics
+    %            and Computer Science,
+    %            System Analysis Department 2013 $
     properties (Access=private)
         testDataRootDir
         
@@ -31,7 +37,8 @@ classdef HyperplanePlotTestCase < elltool.plot.test.AGeomBodyPlotTestCase
             self = self@elltool.plot.test.AGeomBodyPlotTestCase(varargin{:});
             [~,className]=modgen.common.getcallernameext(1);
             shortClassName=mfilename('classname');
-            self.testDataRootDir=[fileparts(which(className)),filesep,'TestData',...
+            self.testDataRootDir=[fileparts(which(className)),...
+                filesep,'TestData',...
                 filesep,shortClassName];
         end
         function self = tear_down(self,varargin)
@@ -46,6 +53,7 @@ classdef HyperplanePlotTestCase < elltool.plot.test.AGeomBodyPlotTestCase
                 testHyp=hyperplane(inpNormCList{iElem}, inpScalCList{iElem});
                 check(testHyp, nDims);
             end
+            testHypArr(nElem) = hyperplane();
             testHypArr(1) = hyperplane(inpNormCList{1}, inpScalCList{1});
             testHypArr(2) = hyperplane(inpNormCList{2}, inpScalCList{2});
             check(testHypArr, nDims);
@@ -65,10 +73,10 @@ classdef HyperplanePlotTestCase < elltool.plot.test.AGeomBodyPlotTestCase
                 testHyp=hyperplane(inpNormCList{iElem}, inpScalCList{iElem});
                 check(testHyp, nDims);
             end
+            testHypArr(nElem) = hyperplane();
             testHypArr(1) = hyperplane(inpNormCList{1}, inpScalCList{1});
             testHypArr(2) = hyperplane(inpNormCList{2}, inpScalCList{2});
             check(testHypArr, nDims);
-            
             for iElem = 1:nElem
                 testHypArr(iElem) = hyperplane(inpNormCList{iElem},...
                     inpScalCList{iElem});
@@ -124,7 +132,7 @@ if nDims == 3
 elseif nDims == 2
     pointsMat = [xDataArr; yDataArr];
 else
-    pointsMat = [xDataArr];
+    pointsMat = xDataArr;
 end
 cellPoints = num2cell(pointsMat(:, :), 1);
 

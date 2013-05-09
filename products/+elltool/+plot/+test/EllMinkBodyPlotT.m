@@ -9,15 +9,15 @@ classdef EllMinkBodyPlotT < handle
         function self=EllMinkBodyPlotT(varargin)
            
         end
-        function self = minkColor(self,fmink,firstEllMat,secEllMat,...
+        function self = minkColor(self,fMink,firstEllMat,secEllMat,...
                 numObj)
-            plObj = fmink(firstEllMat,secEllMat,'color',[0,1,0]);
+            plObj = fMink(firstEllMat,secEllMat,'color',[0,1,0]);
             if dimension(firstEllMat(1)) == 2
                 check2dCol(plObj,numObj, [0, 1, 0]);
             else
                 check3dCol(plObj,numObj, [0, 1, 0]);
             end
-            plObj = fmink(firstEllMat,secEllMat,'r');
+            plObj = fMink(firstEllMat,secEllMat,'r');
             if dimension(firstEllMat(1)) == 2
                 check2dCol(plObj,numObj, [1, 0, 0]);
             else
@@ -56,27 +56,27 @@ classdef EllMinkBodyPlotT < handle
                 end
             end
         end
-        function self = minkFillAndShade(self,fmink,firstEllMat,secEllMat)
-            fmink(firstEllMat,secEllMat,'fill',false,'shade',1);
-            fmink(firstEllMat,secEllMat,'fill',true,'shade',0.7);
+        function self = minkFillAndShade(self,fMink,firstEllMat,secEllMat)
+            fMink(firstEllMat,secEllMat,'fill',false,'shade',1);
+            fMink(firstEllMat,secEllMat,'fill',true,'shade',0.7);
             self.runAndCheckError...
-                ('fmink([firstEllMat,secEllMat],''shade'',NaN)', ...
+                ('fMink([firstEllMat,secEllMat],''shade'',NaN)', ...
                 'wrongShade');
             self.runAndCheckError...
-                ('fmink([firstEllMat,secEllMat],''shade'',[0 1])', ...
+                ('fMink([firstEllMat,secEllMat],''shade'',[0 1])', ...
                 'wrongParamsNumber');
         end
-        function self =minkProperties(self,fmink,firstEllMat,secEllMat)
+        function self =minkProperties(self,fMink,firstEllMat,secEllMat)
             if dimension(firstEllMat(1)) == 2
-                plObj = fmink(firstEllMat,secEllMat, 'linewidth', 4, ...
+                plObj = fMink(firstEllMat,secEllMat, 'linewidth', 4, ...
                     'fill', true, 'shade', 0.8);
                 checkParams(plObj, 4, 1, 0.8, []);
             else
                 self.runAndCheckError(...
-                    'fmink(firstEllMat,secEllMat, ''linewidth'', 4,''fill'', true, ''shade'', 0.8)'...
+                    'fMink(firstEllMat,secEllMat, ''linewidth'', 4,''fill'', true, ''shade'', 0.8)'...
                     ,'wrongProperty');
             end
-            plObj = fmink(firstEllMat,secEllMat, ...
+            plObj = fMink(firstEllMat,secEllMat, ...
                 'fill', true, 'shade', 0.1, ...
                 'color', [0, 1, 1]);
             checkParams(plObj, [], 1, 0.1, [0, 1, 1]);

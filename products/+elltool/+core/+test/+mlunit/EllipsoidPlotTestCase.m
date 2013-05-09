@@ -1,5 +1,11 @@
 classdef EllipsoidPlotTestCase < elltool.plot.test.AGeomBodyPlotTestCase
-    %
+    %%$Author: Ilya Lyubich <lubi4ig@gmail.com> $
+    %$Date: 2013-05-7 $
+    %$Copyright: Moscow State University,
+    %            Faculty of Computational Mathematics
+    %            and Computer Science,
+    %            System Analysis Department 2013 $
+    
     properties (Access=private)
         testDataRootDir
         
@@ -48,6 +54,7 @@ classdef EllipsoidPlotTestCase < elltool.plot.test.AGeomBodyPlotTestCase
                 testEll=ellipsoid(inpCenCList{iElem}, inpArgCList{iElem});
                 check(testEll, nDims);
             end
+            testEllArr(nElem) = ellipsoid();
             testEllArr(1) = ellipsoid(inpCenCList{1}, inpArgCList{1});
             testEllArr(2) = ellipsoid(inpCenCList{2}, inpArgCList{2});
             check(testEllArr, nDims);
@@ -61,7 +68,7 @@ classdef EllipsoidPlotTestCase < elltool.plot.test.AGeomBodyPlotTestCase
         function self = testPlot3d(self)
             nDims = 3;
             inpCenCList = {[0, 0, 0].', [1, 10, -1].', [0, 0, 0].', ...
-                [1, 1, 0].', [10, -10, 10].'};            
+                [1, 1, 0].', [10, -10, 10].'};
             inpQMatCList = {eye(3),[2 0 0;0 0.325 -0.3897;0 -0.3897 0.775],...
                 [1.5 0 -0.866;0 1 0; -0.866 0 2.5], diag([1, 100, 0.1]), [1 0 0;0 1 0; 0 0 0]};
             nElem = numel(inpCenCList);
@@ -69,7 +76,7 @@ classdef EllipsoidPlotTestCase < elltool.plot.test.AGeomBodyPlotTestCase
                 testEll=ellipsoid(inpCenCList{iElem}, inpQMatCList{iElem});
                 check(testEll, nDims);
             end
-            
+            testEllArr(nElem) = ellipsoid();
             for iElem = 1:nElem
                 testEllArr(iElem)=ellipsoid(inpCenCList{iElem},inpQMatCList{iElem});
             end
@@ -111,7 +118,7 @@ if nDims == 3
 elseif nDims == 2
     pointsMat = [xDataArr; yDataArr];
 else
-    pointsMat = [xDataArr];
+    pointsMat = xDataArr;
 end
 cellPoints = num2cell(pointsMat(:, :), 1);
 

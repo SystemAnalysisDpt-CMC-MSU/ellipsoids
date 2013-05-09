@@ -1,5 +1,4 @@
-classdef EllMinkdiffPlotTC < mlunitext.test_case &...
-        elltool.plot.test.EllMinkBTC
+classdef EllMinkdiffPlotTC < elltool.plot.test.EllMinkBTC
 %$Author: Ilya Lyubich <lubi4ig@gmail.com> $
 %$Date: 2013-05-7 $
 %$Copyright: Moscow State University,
@@ -8,15 +7,12 @@ classdef EllMinkdiffPlotTC < mlunitext.test_case &...
 %            System Analysis Department 2013 $
     methods
         function self = EllMinkdiffPlotTC(varargin)
-            self = self@mlunitext.test_case(varargin{:});
             self =...
                self@elltool.plot.test.EllMinkBTC(varargin{:});
+           self.fMink = @minkdiff;
         end
         function self = tear_down(self,varargin)
             close all;
-        end
-        function self = testSimpleOptions(self)
-            self = minkdiffSimpleOptions(self,@minkdiff);
         end
         function self = test2d(self)
             testFirEll = ellipsoid([1, 0].', [9 2;2 4]);

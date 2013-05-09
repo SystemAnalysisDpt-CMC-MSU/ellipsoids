@@ -1,5 +1,4 @@
-classdef EllMinksumPlotTC < mlunitext.test_case &...
-        elltool.plot.test.EllMinkBTC...
+classdef EllMinksumPlotTC < elltool.plot.test.EllMinkBTC...
         &elltool.plot.test.EllMinkATC
  %$Author: Ilya Lyubich <lubi4ig@gmail.com> $
 %$Date: 2013-05-7 $
@@ -9,18 +8,16 @@ classdef EllMinksumPlotTC < mlunitext.test_case &...
 %            System Analysis Department 2013 $
     methods
         function self = EllMinksumPlotTC(varargin)
-            self = self@mlunitext.test_case(varargin{:});
             self = ...
                self@elltool.plot.test.EllMinkATC(varargin{:});
             self = ...
                self@elltool.plot.test.EllMinkBTC(varargin{:});
+           self.fMink = @minksum;
+           self.fMinkOp = @minksum;
+           self.isInv = false;
         end
         function self = tear_down(self,varargin)
             close all;
-        end
-        function self = testSimpleOptions(self)
-            self = minkdiffSimpleOptions(self,@minksum);
-            self = minkmpSimpleOptions2(self,@minksum,false);
         end
         function self = test2d(self)
             testFirEll = ellipsoid( [9 2;2 4]);
