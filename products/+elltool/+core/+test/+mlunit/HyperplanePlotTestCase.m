@@ -53,13 +53,12 @@ classdef HyperplanePlotTestCase < elltool.plot.test.AGeomBodyPlotTestCase
                 testHyp=hyperplane(inpNormCList{iElem}, inpScalCList{iElem});
                 check(testHyp, nDims);
             end
-            testHypArr(nElem) = hyperplane();
             testHypArr(1) = hyperplane(inpNormCList{1}, inpScalCList{1});
             testHypArr(2) = hyperplane(inpNormCList{2}, inpScalCList{2});
             check(testHypArr, nDims);
-            
+            testHyp2Arr(nElem) = hyperplane();
             for iElem = 1:nElem
-                testHypArr(iElem) = hyperplane(inpNormCList{iElem},...
+                testHyp2Arr(iElem) = hyperplane(inpNormCList{iElem},...
                     inpScalCList{iElem});
             end
             check(testHypArr, nDims);
@@ -73,12 +72,13 @@ classdef HyperplanePlotTestCase < elltool.plot.test.AGeomBodyPlotTestCase
                 testHyp=hyperplane(inpNormCList{iElem}, inpScalCList{iElem});
                 check(testHyp, nDims);
             end
-            testHypArr(nElem) = hyperplane();
+            
             testHypArr(1) = hyperplane(inpNormCList{1}, inpScalCList{1});
             testHypArr(2) = hyperplane(inpNormCList{2}, inpScalCList{2});
             check(testHypArr, nDims);
+            testHyp2Arr(nElem) = hyperplane();
             for iElem = 1:nElem
-                testHypArr(iElem) = hyperplane(inpNormCList{iElem},...
+                testHyp2Arr(iElem) = hyperplane(inpNormCList{iElem},...
                     inpScalCList{iElem});
             end
             check(testHypArr, nDims);

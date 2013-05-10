@@ -54,13 +54,13 @@ classdef EllipsoidPlotTestCase < elltool.plot.test.AGeomBodyPlotTestCase
                 testEll=ellipsoid(inpCenCList{iElem}, inpArgCList{iElem});
                 check(testEll, nDims);
             end
-            testEllArr(nElem) = ellipsoid();
+            
             testEllArr(1) = ellipsoid(inpCenCList{1}, inpArgCList{1});
             testEllArr(2) = ellipsoid(inpCenCList{2}, inpArgCList{2});
             check(testEllArr, nDims);
-            
+            testEll2Arr(nElem) = ellipsoid();
             for iElem = 1:nElem
-                testEllArr(iElem) = ellipsoid(inpCenCList{iElem},...
+                testEll2Arr(iElem) = ellipsoid(inpCenCList{iElem},...
                     inpArgCList{iElem});
             end
             check(testEllArr, nDims);
