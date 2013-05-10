@@ -30,10 +30,9 @@ classdef GoodDirsContinuousLTI<gras.ellapx.lreachplain.AGoodDirsContinuous
             % calculation of X(s, t) on [t0, t1]
             %
             matOpFactory = MatrixOperationsFactory.create(timeRstVec);
-            AtTransDynamics = matOpFactory.transpose(AtDynamics);
-            AtUmTransDynamics = matOpFactory.uminus(AtTransDynamics);
+            AtUmDynamics = matOpFactory.uminus(AtDynamics);
             RstDynamics = ...
-                matOpFactory.expmt(AtUmTransDynamics, self.sTime);
+                matOpFactory.expmt(AtUmDynamics, self.sTime);
             %
             logger.info(...
                 sprintf(['calculating transition matrix exponent ' ...
