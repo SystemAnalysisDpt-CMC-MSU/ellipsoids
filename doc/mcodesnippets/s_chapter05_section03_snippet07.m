@@ -1,1 +1,1 @@
-dispOnUI(fromMatEllTube);
+fromMatEllTube.dispOnUI();

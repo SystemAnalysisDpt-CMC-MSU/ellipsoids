@@ -55,7 +55,8 @@ for iElem = 1:dirLength
         myPack = mp.PackageList;
         for iPack = 1:pLength
             classVec = myPack(iPack).ClassList;
-            myClassList = arrayfun(@(x)x.Name,classVec,'UniformOutput',false);
+            myClassList = arrayfun(@(x)x.Name,classVec,'UniformOutput',...
+                false);
             packVec = myPack(iPack).PackageList;
             myPackList = arrayfun(@(x)x.Name,packVec,'UniformOutput',false);
             ignorPackFlag = regexp(myPackList, ignorClassList);
@@ -74,7 +75,8 @@ for iElem = 1:dirLength
             end
             SfuncInfo = collecthelp(newClassList', newPackList',...
                 ignorClassList);
-            FuncData=modgen.struct.unionstructsalongdim(1,FuncData,SfuncInfo);
+            FuncData=modgen.struct.unionstructsalongdim(1,FuncData,...
+                SfuncInfo);
         end
     end
     
@@ -93,7 +95,8 @@ for iClass = 1:nLength
     handleClassMethodNameList=arrayfun(@(x)x.Name,...
          meta.class.fromName('handle').MethodList,'UniformOutput',false);
     dynamicpropsClassMethodNameList=arrayfun(@(x)x.Name,...
-         meta.class.fromName('dynamicprops').MethodList,'UniformOutput',false);
+         meta.class.fromName('dynamicprops').MethodList,'UniformOutput',...
+         false);
     if isempty(mc)
         bufFuncInfo=struct();
     else
@@ -123,23 +126,25 @@ for iClass = 1:nLength
                          methodVec);
         isHiddenVec=arrayfun(@(x)isequal(x.Hidden,1), methodVec);
         finalMethodVec=methodVec(isPublicVec & ~isHiddenVec);
-        fullNameList= unique(arrayfun(@(x)[className,'.',x.Name],finalMethodVec,...
-                      'UniformOutput',false));
+        fullNameList= unique(arrayfun(@(x)[className,'.',x.Name],...
+            finalMethodVec,'UniformOutput',false));
         funcNameList = unique(arrayfun(@(x)x.Name,finalMethodVec,...
             'UniformOutput',false));
-        bufFuncNameList = unique(arrayfun(@(x)[className,'/',x.Name],finalMethodVec,...
-                      'UniformOutput',false));
+        bufFuncNameList = unique(arrayfun(@(x)[className,'/',x.Name],...
+            finalMethodVec,'UniformOutput',false));
         helpList=cellfun(@help,fullNameList,'UniformOutput',false);
         helpList=cellfun(@(x, y)fDeleteHelpStr(x, y),helpList,...
             bufFuncNameList, 'UniformOutput',false); 
         bufFuncInfo.className = classList(iClass);
         bufFuncInfo.funcName=funcNameList;
         bufFuncInfo.numbOfFunc = length(fullNameList);
-        possibleScript=regexp(fullNameList,scriptNamePattern,'once','match');
+        possibleScript=regexp(fullNameList,scriptNamePattern,'once',...
+            'match');
         bufFuncInfo.isScript=logical(cellfun(@(x,y) isequal(x,y),...
              fullNameList,possibleScript));
         bufFuncInfo.help=helpList;
-        SFuncInfo=modgen.struct.unionstructsalongdim(1,SFuncInfo,bufFuncInfo);
+        SFuncInfo=modgen.struct.unionstructsalongdim(1,SFuncInfo,...
+            bufFuncInfo);
         end
     end
 end

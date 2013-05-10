@@ -1,7 +1,8 @@
 classdef EllUnionTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
     gras.ellapx.smartdb.rels.EllTubeBasic&...
     gras.ellapx.smartdb.rels.EllUnionTubeBasic
-    % EllUionTube - class which keeps ellipsoidal tubes' union
+    % EllUionTube - class which keeps ellipsoidal tubes by the instant of
+    %               time
     % 
     % Fields:
     %   QArray:cell[1, nElem] - Array of ellipsoid matrices                              

@@ -1,4 +1,5 @@
 ellArray(nPoints) = ellipsoid();
+approxType=gras.ellapx.enums.EApproxType.Internal;
 sTime= 2;
 for iElem = 1:nPoints
    ellArray(iElem) = ellipsoid(...
