@@ -85,6 +85,13 @@ classdef AMatrixOperations<gras.mat.IMatrixOperations
                 obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
             end
         end
+        function obj=uminus(self,mMatFunc)
+            if self.isMatFuncConst(mMatFunc)
+                obj = self.constUnaryOperation(@uminus,mMatFunc);
+            else
+                obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
+            end
+        end
         function obj=expmt(self,mMatFunc,t0)
             obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
         end
