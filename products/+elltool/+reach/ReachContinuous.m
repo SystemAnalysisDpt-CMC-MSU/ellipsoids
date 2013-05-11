@@ -1227,10 +1227,13 @@ classdef ReachContinuous < elltool.reach.AReach
         % 
         %   Number of external approximations: 2
         %   Number of internal approximations: 2
-            checkIfNotEmpty(self);
-            sizeCVec = num2cell(size(self));
-            copyReachObjArr(sizeCVec{:}) = elltool.reach.ReachContinuous();
-            arrayfun(@fSingleCopy,copyReachObjArr,self);
+            if self.isNotEmpty()
+                sizeCVec = num2cell(size(self));
+                copyReachObjArr(sizeCVec{:}) = elltool.reach.ReachContinuous();
+                arrayfun(@fSingleCopy,copyReachObjArr,self);
+            else
+                copyReachObjArr = repmat(elltool.reach.ReachContinuous(),size(self));
+            end    
             function fSingleCopy(copyReachObj, reachObj)
                 copyReachObj.switchSysTimeVec = reachObj.switchSysTimeVec;
                 copyReachObj.x0Ellipsoid = reachObj.x0Ellipsoid.getCopy();

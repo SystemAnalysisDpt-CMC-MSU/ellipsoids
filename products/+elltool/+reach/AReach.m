@@ -23,36 +23,40 @@ classdef AReach < elltool.reach.IReach
         UNION = 'u'
     end
     %
+    methods (Access = private)
+        function isArr = fApplyArrMethod(self,propertyName,addFunc)
+            if nargin < 3
+                isArr = arrayfun(@(x) x.(propertyName), self); 
+            else
+                fApplyToProperty = str2func(addFunc);
+                isArr = arrayfun(@(x) fApplyToProperty(x.(propertyName)), self);
+            end    
+            %in case of empty input array make output logical
+            isArr = logical(isArr);  
+        end    
+    end    
+    %
     methods
         function resArr=repMat(self,varargin)
             sizeVec=horzcat(varargin{:});
             resArr=repmat(self,sizeVec);
-            if ~isempty(resArr);
-                resArr=resArr.getCopy();
-            end    
+            resArr=resArr.getCopy();    
         end
         %
-        function checkIfNotEmpty(self)
-            modgen.common.checkvar(self,'~isempty(x.isempty())',...
-                'errorMessage',...
-                'Each dimension of an object array should be a positive number');
+        function isNEmp = isNotEmpty(self)
+            isNEmp = ~isempty(self.isempty());
         end    
         %
         function isProjArr = isprojection(self)
-            checkIfNotEmpty(self);
-            isProjArr = arrayfun(@(x) x.isProj, self);   
+            isProjArr = fApplyArrMethod(self,'isProj');  
         end
         %
         function isCutArr = iscut(self)
-            checkIfNotEmpty(self);  
-            isCutArr = arrayfun(@(x) x.isCut, self);
+            isCutArr = fApplyArrMethod(self,'isCut');  
         end
         %
-        function isEmptyArr = isempty(self)
-            isEmptyArr = arrayfun(@(x) isEmp(x), self);
-            function isEmpty = isEmp(reachObj)
-                isEmpty = isempty(reachObj.x0Ellipsoid);
-            end    
+        function isEmptyArr = isempty(self)   
+            isEmptyArr = fApplyArrMethod(self,'x0Ellipsoid','isempty');
         end
         %
         function isEmptyIntersect =...

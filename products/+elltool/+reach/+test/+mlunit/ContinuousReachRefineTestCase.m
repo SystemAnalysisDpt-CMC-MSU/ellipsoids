@@ -1,29 +1,30 @@
 classdef ContinuousReachRefineTestCase < mlunitext.test_case
     properties (Access = private, Constant)
-        EMPTY_SIZE_VEC = [0 0 1 0 1];
-        SIZE_LIST = {[2 2], [10 9 8]};
+        SIZE_LIST = {[2 2], [10 9 8], [0 0 1 0 1]};
+        ARRAY_METHODS_LIST = {'dimension', 'iscut', 'isprojection',...
+            'isempty'};
     end    
     properties (Access=private)
         linSys
-        reachObj
         tVec
         x0Ell
         l0P1Mat
         l0P2Mat
+        reachFactObj
     end
      methods
         function self = ContinuousReachRefineTestCase(varargin)
             self = self@mlunitext.test_case(varargin{:});
         end
         %
-        function self = set_up_param(self, reachFactObj)
-            self.reachObj = reachFactObj.createInstance();
-            self.linSys = reachFactObj.getLinSys();
-            self.tVec = reachFactObj.getTVec();
-            l0Mat = reachFactObj.getL0Mat();
+        function self = set_up_param(self, inpReachFactObj)
+            self.reachFactObj = inpReachFactObj;
+            self.linSys = inpReachFactObj.getLinSys();
+            self.tVec = inpReachFactObj.getTVec();
+            l0Mat = inpReachFactObj.getL0Mat();
             [~, mSize]=size(l0Mat);
             nPart1=floor(mSize/2);
-            self.x0Ell = reachFactObj.getX0Ell();
+            self.x0Ell = inpReachFactObj.getX0Ell();
             self.l0P1Mat=l0Mat(:,1:nPart1);
             self.l0P2Mat=l0Mat(:,nPart1+1:end);
         end
@@ -40,29 +41,17 @@ classdef ContinuousReachRefineTestCase < mlunitext.test_case
         end
         function self = testArrayMethods(self)
             cellfun(@(x) checkArrayMethods(self,x), self.SIZE_LIST);
-            %
-            emptyArr = self.reachObj.repMat(self.EMPTY_SIZE_VEC);
-            dimensionMat = repmat(self.reachObj.dimension(),self.EMPTY_SIZE_VEC);
-            checkEq(dimensionMat,emptyArr,'dimension');
-            %
             function checkArrayMethods(self, sizeVec)
-                reachSingleObj=self.reachObj;
-                reachObjMat = reachSingleObj.repMat(sizeVec);
-                dimMat = repmat(reachSingleObj.dimension(),sizeVec);
-                isCutMat = repmat(reachSingleObj.iscut(),sizeVec);
-                isProjMat = repmat(reachSingleObj.isprojection(),sizeVec);
-                isEmpMat = repmat(reachSingleObj.isempty(),sizeVec);
-                checkEq(dimMat,reachObjMat,'dimension');
-                checkEq(isCutMat,reachObjMat,'iscut');
-                checkEq(isProjMat,reachObjMat,'isprojection');
-                checkEq(isEmpMat,reachObjMat,'isempty');
+                reachSingleObj=self.reachFactObj.createInstance();
+                cellfun(@(x) checkSingleMethod(reachSingleObj,x,sizeVec),...
+                    self.ARRAY_METHODS_LIST);
             end   
         end
         function self = testGetCopyMethod(self)
             cellfun(@(x) checkGetCopy(self,x), self.SIZE_LIST);
             %
             function checkGetCopy(self,sizeVec)
-                reachSingleObj=self.reachObj;
+                reachSingleObj=self.reachFactObj.createInstance();
                 reachArr = repmat(reachSingleObj,sizeVec);
                 compReachArr = reachArr.getCopy();
                 checkEq(reachArr,compReachArr,'getCopy');
@@ -71,7 +60,7 @@ classdef ContinuousReachRefineTestCase < mlunitext.test_case
         function self = testRepMatMethod(self)
             cellfun(@(x) checkRepMat(self,x), self.SIZE_LIST);
             function checkRepMat(self,sizeVec)
-                reachSingleObj=self.reachObj;
+                reachSingleObj=self.reachFactObj.createInstance();
                 reachArr = repmat(reachSingleObj,sizeVec);
                 compReachArr = reachSingleObj.repMat(sizeVec);
                 checkEq(reachArr,compReachArr,'repMat');
@@ -209,4 +198,9 @@ function checkEq(initMat,compMat,methodName)
             isEq = true;
         end
     end
+end
+function checkSingleMethod(reachObj,methodName,sizeVec)
+    reachObjMat = reachObj.repMat(sizeVec);
+    dimMat = repmat(reachObj.(methodName),sizeVec);
+    checkEq(dimMat,reachObjMat,methodName);
 end

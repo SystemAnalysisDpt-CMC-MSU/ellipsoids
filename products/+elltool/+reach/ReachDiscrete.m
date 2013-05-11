@@ -1829,10 +1829,13 @@ classdef ReachDiscrete < elltool.reach.AReach
         %             Mathematics and Computer Science,
         %             System Analysis Department 2013 $
         %
-            checkIfNotEmpty(self);
-            sizeCVec = num2cell(size(self));
-            newReachObjArr(sizeCVec{:}) = elltool.reach.ReachDiscrete();
-            arrayfun(@fSingleCopy,newReachObjArr,self);
+            if self.isNotEmpty()    
+                sizeCVec = num2cell(size(self));
+                newReachObjArr(sizeCVec{:}) = elltool.reach.ReachDiscrete();
+                arrayfun(@fSingleCopy,newReachObjArr,self);
+            else
+                newReachObjArr = repmat(elltool.reach.ReachDiscrete(),size(self));
+            end    
             function fSingleCopy(newReachObj, reachObj)   
                 newReachObj.absTol = reachObj.absTol;
                 newReachObj.relTol = reachObj.relTol;
