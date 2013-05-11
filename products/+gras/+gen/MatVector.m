@@ -74,7 +74,7 @@ classdef MatVector
                     nCols*nTimePoints,1);
                 bSparseMat = sparse(iVec,jVec,bMat, ...
                     nCols*nTimePoints,nTimePoints,nCols*nTimePoints);
-                cMat = reshape(aArray,nRows,nCols*nTimePoints)*bSparseMat;      
+                cMat = reshape(aArray,nRows,nCols*nTimePoints)*bSparseMat;
             else
                 cMat = zeros(nRows,nTimePoints);
                 for iTimePoint = 1:nTimePoints
@@ -101,7 +101,7 @@ classdef MatVector
                     cArray = [];
                     useSparseMatrix = false;
             end
-            %           
+            %
             [nARows, nACols, nTimePoints] = size(aArray);
             nBCols = size(bArray,2);
             nCCols = size(cArray,2);
@@ -118,9 +118,16 @@ classdef MatVector
             else
                 if isempty(cArray)
                     dArray = zeros(nARows,nBCols,nTimePoints);
-                    for iTimePoint = 1:nTimePoints
-                        dArray(:,:,iTimePoint) = aArray(:,:,iTimePoint)...
-                            *bArray(:,:,iTimePoint);
+                    if size(bArray,3) == nTimePoints
+                        for iTimePoint = 1:nTimePoints
+                            dArray(:,:,iTimePoint) = aArray(:,:,iTimePoint)...
+                                *bArray(:,:,iTimePoint);
+                        end
+                    else
+                        for iTimePoint = 1:nTimePoints
+                            dArray(:,:,iTimePoint) = aArray(:,:,iTimePoint)...
+                                *bArray;
+                        end
                     end
                 else
                     dArray = zeros(nARows,nCCols,nTimePoints);

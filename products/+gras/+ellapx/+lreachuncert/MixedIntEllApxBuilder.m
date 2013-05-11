@@ -14,7 +14,6 @@ classdef MixedIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
         CQCTransDynamics
         ltSplineList
         goodDirSetObj
-        isDisturbance
     end
     methods (Access=protected)
         function varargout = calcEllApxMatrixDeriv(self,t,varargin)
@@ -39,7 +38,8 @@ classdef MixedIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
                 %
                 % disturbance component
                 %
-                if self.isDisturbance
+                isDisturbance = sum(abs(CQCTransMat(:))) > self.calcPrecision;
+                if isDisturbance
                     piNumerator = dot(ltVec, CQCTransMat*ltVec);
                     piDenominator = dot(ltVec, QMat*ltVec);
                     if piNumerator <= 0 || piDenominator <= 0
@@ -164,13 +164,6 @@ classdef MixedIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             checkgenext(['size(x1,1)==size(x1,2) && size(x1,1)==x2 && '...
                 'all(x1(:)>=0) && max(abs(sum(x1,2)-ones(x2,1)))<x3'],...
                 3,mMat,goodDirSetObj.getNGoodDirs(),calcPrecision);
-            %
-            self.isDisturbance = true;
-            if isa(pDynObj.getCQCTransDynamics(), ...
-                    'gras.mat.fcnlib.ConstMatrixFunction')
-                CQCTransMat = pDynObj.getCQCTransDynamics.evaluate(0);
-                self.isDisturbance = sum(abs(CQCTransMat(:)))>calcPrecision;
-            end
             %
             self.mixingStrength = mixingStrength;
             self.mixingProportionsMat = mMat;

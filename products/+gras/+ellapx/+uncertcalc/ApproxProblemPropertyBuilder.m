@@ -10,10 +10,7 @@ classdef ApproxProblemPropertyBuilder
                     [xVec,yVec] = gras.geom.circlepart(nGoodDirs,[0,pi]);
                     pMat = [xVec,yVec];
                 case 3
-                    aVec = random('Uniform',0,1,nGoodDirs,1);
-                    bVec = random('Uniform',0,2*pi,nGoodDirs,1);
-                    rVec = realsqrt(1-aVec.*aVec);
-                    pMat = [rVec.*sin(bVec),rVec.*cos(bVec),aVec];
+                    pMat = gras.geom.spherepart(nGoodDirs);
                 otherwise
                     modgen.common.throwerror('wrongInput', ['auto '...
                         'generation mode is not supported for '...
