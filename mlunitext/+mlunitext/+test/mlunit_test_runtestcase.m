@@ -36,6 +36,32 @@ classdef mlunit_test_runtestcase < mlunitext.test_case
                 mlunit.assert_equals('nda',test.marker);
             end
         end
-
+        function test_run_and_check_errors(self)
+            %     
+            tCase =  mlunitext.test_case();
+            ERROR_STRINGS = {'firstErr','secondErr','thirdErr','fourthErr'};
+            ERROR_MSG = {'firstMsg','','','fourthMsg'};
+            %
+            tCase.runAndCheckError(strcat('self.errorMaker',...
+                '(ERROR_STRINGS{1},ERROR_MSG{1})'),...
+                  ERROR_STRINGS{1},ERROR_MSG{1});
+            tCase.runAndCheckError('self.errorMaker(ERROR_STRINGS{2})',...
+                                ERROR_STRINGS(1:4));
+            tCase.runAndCheckError(strcat('self.errorMaker',...
+                '(ERROR_STRINGS{1},ERROR_MSG{1})'),...
+                  ERROR_STRINGS(1:4),ERROR_MSG(1:4));
+            tCase.runAndCheckError(strcat('self.errorMaker',...
+                '(ERROR_STRINGS{2},ERROR_MSG{2})'),...
+                  ERROR_STRINGS(1:4),ERROR_MSG(1:4))
+        end
+        function errorMaker(self,msgIdent,varargin)
+            import modgen.common.throwerror;
+            if ~isempty(varargin)
+                msgStr = varargin{1};
+            else
+                msgStr = '';
+            end
+            throwerror(msgIdent,msgStr);
+        end
     end
 end
