@@ -102,6 +102,7 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
                 DSqrtMat*ltVec,QExtSqrtMat*ltVec);
             tmpMat = AMat*QExtMat - QExtSqrtMat*SMat*DSqrtMat;
             dQExtMat=tmpMat+tmpMat.'+piFactor*QExtMat+RMat/piFactor;
+            dQExtMat=(dQExtMat+dQExtMat.')*0.5;
         end
     end
     methods (Access=private)
