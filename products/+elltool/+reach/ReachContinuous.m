@@ -21,6 +21,8 @@ classdef ReachContinuous < elltool.reach.AReach
     end
     properties (Access = private)
         ellTubeRel
+        absTol
+        relTol
     end
     methods (Access = private)
         function projSet = getProjSet(self, projMat,...
@@ -191,17 +193,17 @@ classdef ReachContinuous < elltool.reach.AReach
             %% ext/int-approx on the next time interval
             dataCVec = cell(1, l0VecNum);
             isDisturbance = self.isDisturbance(gtStrCMat, qtStrCMat);
-            relTol = elltool.conf.Properties.getRelTol();
+            %relTol = elltool.conf.Properties.getRelTol();
             for il0Num = l0VecNum: -1 : 1
                 smartLinSys = self.getSmartLinSys(atStrCMat,...
                     btStrCMat, ptStrCMat, ptStrCVec, gtStrCMat,...
                     qtStrCMat, qtStrCVec, x0MatArray(:, :, il0Num),...
                     x0VecMat(:, il0Num), [min(newTimeVec),...
-                    max(newTimeVec)], relTol, isDisturbance);
+                    max(newTimeVec)], self.relTol, isDisturbance);
                 ellTubeRelVec{il0Num} = self.makeEllTubeRel(...
                     smartLinSys, l0Mat(:, il0Num),...
                     [min(newTimeVec) max(newTimeVec)], isDisturbance,...
-                    relTol, approxType);
+                    self.relTol, approxType);
                 dataCVec{il0Num} =...
                     ellTubeRelVec{il0Num}.getTuplesFilteredBy(...
                     APPROX_TYPE, approxType).getData();
@@ -210,7 +212,7 @@ classdef ReachContinuous < elltool.reach.AReach
         function ellTubeRel = makeEllTubeRel(self, smartLinSys, l0Mat,...
                 timeVec, isDisturb, calcPrecision, approxTypeVec)
             import gras.ellapx.enums.EApproxType;
-            relTol = elltool.conf.Properties.getRelTol();
+            %relTol = elltool.conf.Properties.getRelTol();
             goodDirSetObj =...
                 gras.ellapx.lreachplain.GoodDirectionSet(...
                 smartLinSys, timeVec(1), l0Mat, calcPrecision);
@@ -218,7 +220,7 @@ classdef ReachContinuous < elltool.reach.AReach
                 extIntBuilder =...
                     gras.ellapx.lreachuncert.ExtIntEllApxBuilder(...
                     smartLinSys, goodDirSetObj, timeVec,...
-                    relTol,...
+                    self.relTol,...
                     self.DEFAULT_INTAPX_S_SELECTION_MODE,...
                     self.MIN_EIG_Q_REG_UNCERT);
                 ellTubeBuilder =...
@@ -231,7 +233,7 @@ classdef ReachContinuous < elltool.reach.AReach
                     extBuilder =...
                         gras.ellapx.lreachplain.ExtEllApxBuilder(...
                         smartLinSys, goodDirSetObj, timeVec,...
-                        relTol);
+                        self.relTol);
                     extellTubeBuilder =...
                         gras.ellapx.gen.EllApxCollectionBuilder({extBuilder});
                     extEllTubeRel = extellTubeBuilder.getEllTubes();
@@ -243,7 +245,7 @@ classdef ReachContinuous < elltool.reach.AReach
                     intBuilder =...
                         gras.ellapx.lreachplain.IntEllApxBuilder(...
                         smartLinSys, goodDirSetObj, timeVec,...
-                        relTol,...
+                        self.relTol,...
                         self.DEFAULT_INTAPX_S_SELECTION_MODE);
                     intellTubeBuilder =...
                         gras.ellapx.gen.EllApxCollectionBuilder({intBuilder});
@@ -486,7 +488,8 @@ classdef ReachContinuous < elltool.reach.AReach
     end
     methods
         function self =...
-                ReachContinuous(linSys, x0Ell, l0Mat, timeVec, OptStruct)
+                ReachContinuous(linSys, x0Ell, l0Mat,...
+                timeVec, OptStruct, varargin)
         % ReachContinuous - computes reach set approximation of the continuous  
         %                   linear system for the given time interval.
         % Input:
@@ -527,7 +530,17 @@ classdef ReachContinuous < elltool.reach.AReach
             import gras.ellapx.uncertcalc.EllApxBuilder;
             import gras.ellapx.enums.EApproxType;
             import elltool.logging.Log4jConfigurator;
+            import elltool.conf.Properties;
             %%
+            
+            neededPropNameList =...
+                {'absTol', 'relTol'};
+            [absTolVal, relTolVal] =...
+                Properties.parseProp(varargin, neededPropNameList);
+            
+            self.absTol = absTolVal;
+            self.relTol = relTolVal;
+            
             logger=Log4jConfigurator.getLogger(...
                 'elltool.ReachCont.constrCallCount');
             logger.debug(sprintf('constructor is called %s',...
@@ -597,15 +610,15 @@ classdef ReachContinuous < elltool.reach.AReach
             sysDim = size(atStrCMat, 1);
             l0Mat = self.getNormMat(l0Mat, sysDim);
             %
-            relTol = elltool.conf.Properties.getRelTol();
+            %relTol = elltool.conf.Properties.getRelTol();
             smartLinSys = self.getSmartLinSys(atStrCMat, btStrCMat,...
                 ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat, qtStrCVec,...
                 x0Mat, x0Vec, [min(timeVec) max(timeVec)],...
-                relTol, isDisturbance);
+                self.relTol, isDisturbance);
             approxTypeVec = [EApproxType.External EApproxType.Internal];
             self.ellTubeRel = self.makeEllTubeRel(smartLinSys, l0Mat,...
                 [min(timeVec) max(timeVec)], isDisturbance,...
-                relTol, approxTypeVec);
+                self.relTol, approxTypeVec);
             if self.isbackward()
                 self.ellTubeRel = self.rotateEllTubeRel(self.ellTubeRel);
             end
@@ -641,15 +654,15 @@ classdef ReachContinuous < elltool.reach.AReach
                     self.prepareSysParam(linSys, timeVec);
                 isDisturbance = self.isDisturbance(gtStrCMat, qtStrCMat);
                 %
-                relTol = elltool.conf.Properties.getRelTol();
+                %relTol = elltool.conf.Properties.getRelTol();
                 smartLinSys = self.getSmartLinSys(atStrCMat, btStrCMat,...
                     ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat, qtStrCVec,...
                     x0Mat, x0Vec, [min(timeVec) max(timeVec)],...
-                    relTol, isDisturbance);
+                    self.relTol, isDisturbance);
                 approxTypeVec = [EApproxType.External EApproxType.Internal];
                 ellTubeRelNew = self.makeEllTubeRel(smartLinSys, l0Mat,...
                     [min(timeVec) max(timeVec)], isDisturbance,...
-                    relTol, approxTypeVec);
+                    self.relTol, approxTypeVec);
                 if self.isbackward()
                     ellTubeRelNew = self.rotateEllTubeRel(ellTubeRelNew);
                 end
@@ -1144,7 +1157,7 @@ classdef ReachContinuous < elltool.reach.AReach
             import gras.ellapx.enums.EApproxType;
             import elltool.logging.Log4jConfigurator;
             % FIXME: change to self.getAbsTol in the future
-            absTol = elltool.conf.Properties.getAbsTol();
+            %absTol = elltool.conf.Properties.getAbsTol();
             persistent logger;
             if (nargout == 2)
                 reportStr = [];
@@ -1186,7 +1199,7 @@ classdef ReachContinuous < elltool.reach.AReach
             %
             % Checking time bounds equality
             %
-            if (abs(firstTimeVec(end)-secondTimeVec(end)) > absTol)
+            if (abs(firstTimeVec(end)-secondTimeVec(end)) > self.absTol)
                 isEqual = false;
                 if (nargout == 2)
                     reportStr=[reportStr, ...
@@ -1195,7 +1208,7 @@ classdef ReachContinuous < elltool.reach.AReach
                 end
                 return;
             end
-            if (abs(firstTimeVec(1)-secondTimeVec(1)) > absTol)
+            if (abs(firstTimeVec(1)-secondTimeVec(1)) > self.absTol)
                 isEqual = false;
                 if (nargout == 2)
                     reportStr=[reportStr, ...
@@ -1271,7 +1284,7 @@ classdef ReachContinuous < elltool.reach.AReach
                 while (smallerIndex <= length(smallerVec) &&...
                         greaterIndex <= length(greaterVec))
                     if (abs(smallerVec(smallerIndex)-...
-                            greaterVec(greaterIndex))<absTol)
+                            greaterVec(greaterIndex))<self.absTol)
                         smallerIndex = smallerIndex + 1;
                         indexVec = [indexVec, greaterIndex];
                     end
