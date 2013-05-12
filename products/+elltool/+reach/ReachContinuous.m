@@ -749,7 +749,7 @@ classdef ReachContinuous < elltool.reach.AReach
                 sum(self.ellTubeRel.approxType == EApproxType.Internal));
             fprintf('\n');
         end
-        %%
+        %
         function cutObj = cut(self, cutTimeVec)
             import modgen.common.throwerror;
             if self.isprojection()
@@ -1246,7 +1246,9 @@ classdef ReachContinuous < elltool.reach.AReach
                 end
                 [isEqual, eqReportStr] = compEllTube.getFieldProjection(...
                     fieldsToCompVec).isEqual(...
-                    ellTube.getFieldProjection(fieldsToCompVec));
+                    ellTube.getFieldProjection(fieldsToCompVec),...
+                    'maxTolerance', 2*self.COMP_PRECISION,...
+                    'checkTupleOrder','true');
                 if (nargout == 2)
                     reportStr = [reportStr, eqReportStr];
                 end
@@ -1267,7 +1269,8 @@ classdef ReachContinuous < elltool.reach.AReach
             [isEqual, eqReportStr] = compEllTube.getFieldProjection(...
                 fieldsToCompVec).isEqual(...
                 ellTube.getFieldProjection(fieldsToCompVec),...
-                'maxTolerance', 2*self.COMP_PRECISION,'checkTupleOrder','true');
+                'maxTolerance', 2*self.COMP_PRECISION,...
+                'checkTupleOrder','true');
             if (nargout == 2)
                 reportStr = [reportStr, eqReportStr];
             end
