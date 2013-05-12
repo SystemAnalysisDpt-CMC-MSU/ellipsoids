@@ -110,19 +110,18 @@ classdef test_case < mlunit.test_case
             %       self:
             %       commandStr: char[1,]/function_handle[1,1] - command to 
             %                   execute
-            %       expIdentifier: char[1,]/cell[1,N] - string/
-            %                      cell array of strings, containig 
-            %                      expected exeption identifier markers
+            %       expIdentifier: char[1,]/cell[1,] of char[1,] - string/
+            %           cell array of strings, containig expected exeption
+            %           identifier markers
             %
             %   optional:
-            %       msgCodeStr: char[1,]/cell[1,N] - cell array of strings,
-            %                   containig expected exception message
-            %                   markers. For each field in expIdentifier
-            %                   supposed to be one field in msgCodeStr.
-            %                   In case of more then one argument in 
-            %                   expIdentifier, if you don't expect any 
-            %                   exception messages, put '' in corresponding
-            %                   field.
+            %       msgCodeStr: char[1,]/cell[1,N] of char[1,] - cell array
+            %           of strings, containig expected exception message 
+            %           markers. For each field in expIdentifier supposed 
+            %           to be one field in msgCodeStr. In case of more then
+            %           one argument in expIdentifier, if you don't expect 
+            %           any exception messages, put '' in corresponding 
+            %           field.
             %
             %   properties:
             %       causeCheckDepth: double[1,1] - depth at which causes of
