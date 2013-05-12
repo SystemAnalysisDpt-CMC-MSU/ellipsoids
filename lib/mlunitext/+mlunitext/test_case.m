@@ -108,13 +108,20 @@ classdef test_case < mlunit.test_case
             % Input:
             %   regular:
             %       self:
-            %       commandStr: char[1,]/function_handle[1,1] - command to execute
-            %       expIdentifier: char[1,] - expected exeption
-            %           identifier marker
+            %       commandStr: char[1,]/function_handle[1,1] - command to 
+            %                   execute
+            %       expIdentifier: char[1,]/cell[1,] of char[1,] - string/
+            %           cell array of strings, containig expected exeption
+            %           identifier markers
             %
             %   optional:
-            %       msgCodeStr: char[1,] - expected exception message
-            %          marker
+            %       msgCodeStr: char[1,]/cell[1,N] of char[1,] - cell array
+            %           of strings, containig expected exception message 
+            %           markers. For each field in expIdentifier supposed 
+            %           to be one field in msgCodeStr. In case of more then
+            %           one argument in expIdentifier, if you don't expect 
+            %           any exception messages, put '' in corresponding 
+            %           field.
             %
             %   properties:
             %       causeCheckDepth: double[1,1] - depth at which causes of
@@ -126,13 +133,25 @@ classdef test_case < mlunit.test_case
             % Faculty of Computational Mathematics and Cybernetics, System Analysis
             % Department, 7-October-2012, <pgagarinov@gmail.com>$
             %
+            import modgen.common.checkmultvar;
+            %
+            isCell = isa(expIdentifier,'cell');
+            if isCell
+                checkStr = 'iscell(x)';
+            else
+                checkStr = 'isstring(x)';
+            end
+            %
             [reg,~,causeCheckDepth]=...
                 modgen.common.parseparext(varargin,...
                 {'causeCheckDepth';0;'isscalar(x)&&isnumeric(x)'},...
                 [0,1],...
                 'regDefList',{''},...
-                'regCheckList',{'isstring(x)'});
+                'regCheckList',{checkStr});
             msgCodeStr=reg{1};
+            %
+            checkmultvar(@(x,y) size(y,2) == 0 || ...
+                size(y,2) == size(x,2),2,expIdentifier,msgCodeStr)
             %
             try
                 if ischar(commandStr)
@@ -142,29 +161,69 @@ classdef test_case < mlunit.test_case
                 end
             catch meObj
                 if ~isempty(expIdentifier)
-                    checkCode(meObj,'identifier',expIdentifier);
+                    suitableCodes = checkCode(meObj,'identifier',expIdentifier);
                 end
                 if ~isempty(msgCodeStr)
-                    checkCode(meObj,'message',msgCodeStr);
+                    checkCode(meObj,'message',msgCodeStr,suitableCodes);
                 end
                 return;
             end
             mlunit.assert_equals(true,false);
-            function checkCode(inpMeObj,fieldName,codeStr)
+            function suitableCodes = checkCode(inpMeObj,fieldName,...
+                                                codeStrCArr,varargin)
                 %
                 errMsg=modgen.exception.me.obj2hypstr(inpMeObj);
-                
-                mlunit.assert_equals(true,...
-                    getIsCodeMatch(meObj,causeCheckDepth,...
-                    fieldName,codeStr),...
+                N_USUAL_ARGS = 3;
+                %
+                if isa(codeStrCArr,'cell')
+                    nCodes = size(codeStrCArr,2);
+                    isMatchVec = false(1,nCodes);
+                    for iCodes = 1:nCodes
+                        isMatchVec(iCodes) = getIsCodeMatch(meObj,...
+                            causeCheckDepth,fieldName,codeStrCArr{iCodes});
+                    end
+                    %
+                    patternsStr = codeStrCArr{1};
+                    for iCodes = 2:nCodes
+                        patternsStr = [patternsStr,', ',codeStrCArr{iCodes}];
+                    end
+                else
+                    isMatchVec = getIsCodeMatch(meObj,...
+                            causeCheckDepth,fieldName,codeStrCArr);
+                    nCodes = 1;
+                    patternsStr = codeStrCArr;
+                end
+                %
+                numCodesVec = 1:nCodes;
+                isAnyCodeSuited = any(isMatchVec);
+                if isAnyCodeSuited
+                    suitableCodes = numCodesVec(isMatchVec);
+                else
+                    suitableCodes = -1;
+                end
+                %    
+                if nargin == N_USUAL_ARGS
+                    isOk = isAnyCodeSuited;
+                else
+                    neededCode = varargin{1};
+                    isOk = isAnyCodeSuited && ...
+                        any(suitableCodes == neededCode);
+                end
+                %
+                mlunit.assert_equals(true,isOk,...
                     sprintf(...
                     ['\n no match found for field %s ',...
-                    'with pattern %s, ',...
+                    'with patterns: %s, ',...
                     ' exception details: \n %s'],...
-                    fieldName,codeStr,errMsg));
+                    fieldName,patternsStr,errMsg));
             end
             function isPositive=getIsCodeMatch(inpMeObj,checkDepth,fieldName,codeStr)
-                isPositive=~isempty(strfind(inpMeObj.(fieldName),codeStr));
+                str = inpMeObj.(fieldName);
+                if isempty(str)
+                    isPositive= isempty(codeStr);
+                else
+                    isPositive=~isempty(strfind(str,codeStr));
+                end
                 causeList=inpMeObj.cause;
                 nCauses=length(causeList);
                 if checkDepth>0&&nCauses>0

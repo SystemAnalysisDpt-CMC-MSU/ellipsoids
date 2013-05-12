@@ -20,7 +20,7 @@ classdef text_test_result < mlunit.test_result
         isDotDispMode = 0;
         isAllShown = 0;
     end
-
+    %
     methods
         function self = text_test_result(varargin)
             % TEXT_TEST_RESULT creates an instance of TEXT_TEST_RESULT
@@ -166,8 +166,8 @@ classdef text_test_result < mlunit.test_result
             %
             % See also MLUNIT.TEST_RESULT.ADD_SUCCESS, 
             %           MLUNIT.TEST_CASE.RUN.
-
-            self = add_success@mlunit.test_result(self, test);
+            self=add_success@mlunit.test_result(self,test);
+            self.checkIfScalar();
             if (self.isDotDispMode)
                 fprintf(self.textOutFid,'.');
             elseif (self.isAllShown)
@@ -196,7 +196,6 @@ classdef text_test_result < mlunit.test_result
             %         print_error_list(self, 'FAILURE', get_failure_list(self));
             %
             %  See also MLUNIT.TEXT_TEST_RESULT.PRINT_ERRORS.
-            
             for i = 1:size(errors, 1)
                 mlunit.logprintf('info',repmat('=',1,70));
                 mlunit.logprintf('info','%s: %s', ...
@@ -207,6 +206,9 @@ classdef text_test_result < mlunit.test_result
         end
         %
         function message=getErrorFailMessage(self)
+            % GETERRORFAILMESSAGE generates a textual representation of 
+            % all errors and failures for a vector of test results
+            %
             nRes=length(self);
             messageList=cell(1,nRes);
             for iRes=1:nRes
@@ -225,7 +227,7 @@ classdef text_test_result < mlunit.test_result
             %         print_errors(result);
             %
             %  See also MLUNIT.TEXT_TEST_RUNNER.RUN.
-
+            self.checkIfScalar();
             if ((self.isDotDispMode) || (self.isAllShown))
                 fprintf(self.textOutFid,'\n');
             end;
@@ -276,7 +278,6 @@ classdef text_test_result < mlunit.test_result
             %
             % See also MLUNIT.TEST_RESULT.END_TEST, 
             %           MLUNIT.TEST_CASE.RUN.
-
             self = stop_test@mlunit.test_result(self, test);
             mlunit.logprintf('debug',['===  END  ', str(test)]);
         end

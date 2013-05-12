@@ -1,15 +1,19 @@
-function [res, status] = isinside(fstEllArr, secObjArr, mode)
+function [res, status] = isContainedInIntersection(fstEllArr, secObjArr, mode)
 %
-% ISINSIDE - checks if the intersection of ellipsoids contains the
-%            union or intersection of given ellipsoids or polytopes.
+% ISCONTAINEDININTERSECTION - checks if the intersection of
+%                             ellipsoids contains the union
+%                             or intersection of given 
+%                             ellipsoids or polytopes.
 %
-%   res = ISINSIDE(fstEllArr, secEllArr, mode) Checks if the union
+%   res = ISCONTAINEDININTERSECTION(fstEllArr, secEllArr, mode) 
+%       Checks if the union
 %       (mode = 'u') or intersection (mode = 'i') of ellipsoids in
 %       secEllArr lies inside the intersection of ellipsoids in
 %       fstEllArr. Ellipsoids in fstEllArr and secEllArr must be
 %       of the same dimension. mode = 'u' (default) - union of
 %       ellipsoids in secEllArr. mode = 'i' - intersection.
-%   res = ISINSIDE(fstEllArr, secPolyArr, mode) Checks if the union
+%   res = ISCONTAINEDININTERSECTION(fstEllArr, secPolyArr, mode) 
+%        Checks if the union
 %       (mode = 'u') or intersection (mode = 'i')  of polytopes in
 %       secPolyArr lies inside the intersection of ellipsoids in
 %       fstEllArr. Ellipsoids in fstEllArr and polytopes in secPolyArr
@@ -52,8 +56,8 @@ function [res, status] = isinside(fstEllArr, secObjArr, mode)
 %
 % Input:
 %   regular:
-%       fstEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of 
-%           ellipsoids of the same size.
+%       fstEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of ellipsoids
+%           of the same size.
 %       secEllArr: ellipsoid /
 %           polytope [nDims1,nDims2,...,nDimsN] - array of ellipsoids or
 %           polytopes of the same sizes.
@@ -73,25 +77,13 @@ function [res, status] = isinside(fstEllArr, secObjArr, mode)
 %   status: double[0, 0]/double[1, 1] - status variable. status is empty
 %       if mode == 'u' or mSecRows == nSecCols == 1.
 %
-% Example:
-%   firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
-%   secEllObj = ell_unitball(2);
-%   firstEllObj.isinside([firstEllObj secEllObj], 'i')
-% 
-%   ans =
-% 
-%        1
-%
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 
-%              2004-2008 $
+% $Copyright:  The Regents of the University of California 2004-2008 $
 %
-% $Author: Vadim Kaushanskiy <vkaushanskiy@gmail.com>$ 
-% $Date: 10-11-2012$
+% $Author: Vadim Kaushanskiy <vkaushanskiy@gmail.com>$ $Date: 10-11-2012$
 % $Copyright: Moscow State University,
-%             Faculty of Computational Mathematics
-%             and Computer Science,
-%             System Analysis Department 2012 $
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2012 $
 
 import elltool.conf.Properties;
 import elltool.logging.Log4jConfigurator;
