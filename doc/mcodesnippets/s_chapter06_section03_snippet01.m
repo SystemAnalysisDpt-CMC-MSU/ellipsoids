@@ -17,7 +17,8 @@ termTime = 3;  % terminating time
 
 % compute the reach set:
 firstRsObj = elltool.reach.ReachContinuous(firstSys, x0EllObj, dirsMat,...
- [0 switchTime]);  % reach set of the first system
+ [0 switchTime], 'isRegEnabled', true, 'isJustCheck', false,...
+ 'regTol', 1e-5);  % reach set of the first system
 % computation of the second reach set starts
 % where the first left off
 secRsObj = firstRsObj.evolve(termTime, secondSys);
@@ -37,7 +38,7 @@ secPsObj.plot_ia('b');  % internal apprx. of reach set 2 (blue)
 
 % plot the 3-dimensional reach set at time t = 3:
 subplot(2, 2, 2);
-secRsObj = secRsObj.cut(3)
+secRsObj = secRsObj.cut(3);
 secRsObj.plot_ea('y');
 hold on;
 secRsObj.plot_ia('b');

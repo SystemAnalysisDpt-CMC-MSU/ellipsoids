@@ -270,7 +270,7 @@ classdef ReachContinuous < elltool.reach.AReach
             catch meObj
                 errorStr = '';
                 errorTag = '';
-                ETAG_WR_INP = ':wrongInput';
+                ETAG_WR_INP = 'wrongInput';
                 ETAG_R_PROB = ':regProblem';
                 ETAG_R_DISABLED = ':RegIsDisabled';
                 ETAG_ONLY_CHECK = ':onlyCheckIsEnabled';
@@ -283,7 +283,7 @@ classdef ReachContinuous < elltool.reach.AReach
                 EMSG_INIT_SET_PROB = ['There is a problem with initial',...
                     ' set (x0Ell, second parameter). '];
                 EMSG_CALC_PREC_PROB = ['There is a problem with ',...
-                    'calculation precision. Try to do some of this:\n'];
+                    'calculation precision. Try to do some of this: '];
                 EMSG_USE_REG = ['Try to enable it: set property ',...
                     '''isRegEnabled'' to ''true'', ''isJustCheck'' to ',...
                     '''false'' and ''regTol'' to some positive.'];
@@ -588,10 +588,6 @@ classdef ReachContinuous < elltool.reach.AReach
             %           matrix.
             %       timeVec: double[1, 2] - time interval.
             %
-            %     optional:
-            %       OptStruct: structure[1,1] - in this class
-            %           OptStruct doesn't mean anything.
-            %
             %     properties:
             %       isRegEnabled: logical[1, 1] - if it is 'true' constructor
             %           is allowed to use regularization.
@@ -673,29 +669,7 @@ classdef ReachContinuous < elltool.reach.AReach
                 {'isRegEnabled', 'isJustCheck', 'regTol';...
                 false, false, regTolerance});
             if ~isempty(reg)
-                OptStruct = reg{1};
-            else
-                OptStruct = [];
-            end
-            if ~isstruct(OptStruct)
-                OptStruct = [];
-                OptStruct.approximation = 2;
-                OptStruct.saveAll = 0;
-                OptStruct.minmax = 0;
-            else
-                if ~(isfield(OptStruct, 'approximation')) || ...
-                        (OptStruct.approximation < 0) ||...
-                        (OptStruct.approximation > 2)
-                    OptStruct.approximation = 2;
-                end
-                if ~(isfield(OptStruct, 'saveAll')) || ...
-                        (OptStruct.saveAll < 0) || (OptStruct.saveAll > 2)
-                    OptStruct.saveAll = 0;
-                end
-                if ~(isfield(OptStruct, 'minmax')) || ...
-                        (OptStruct.minmax < 0) || (OptStruct.minmax > 1)
-                    OptStruct.minmax = 0;
-                end
+                throwerror('wrongInput', 'wrong input arguments format.');
             end
             %% create gras LinSys object
             [x0Vec x0Mat] = double(x0Ell);

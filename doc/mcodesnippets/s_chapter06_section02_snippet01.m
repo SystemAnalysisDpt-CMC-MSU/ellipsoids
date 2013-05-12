@@ -7,17 +7,19 @@ uBoundsEllObj = ell_unitball(2);
 % linear system
 lsys = elltool.linsys.LinSysContinuous(aMat, bMat, uBoundsEllObj);  
 timeVec = [0 4];  % time interval% initial conditions:
-x0EllObj = [0 2 0 0]' + ellipsoid([0.01 0 0 0; 0 0.01 0 0; 0 0 eps 0;...
-           0 0 0 eps]);
+x0EllObj = [0 2 0 0]' + ellipsoid([0.01 0 0 0; 0 0.01 0 0; 0 0 0 0;...
+           0 0 0 0]);
 % initial directions (some random vectors in R^4):
 dirsMat = [1 0 1 0; 1 -1 0 0; 0 -1 0 1; 1 1 -1 1; -1 1 1 0; -2 0 1 1]';
 % reach set
-rsObj = elltool.reach.ReachContinuous(lsys, x0EllObj, dirsMat, timeVec);  
+rsObj = elltool.reach.ReachContinuous(lsys, x0EllObj, dirsMat, timeVec,...
+    'isRegEnabled', true, 'isJustCheck', false, 'regTol', 1e-3);  
 basisMat = [1 0 0 0; 0 1 0 0]';  % orthogonal basis of (x1, x2) subspace
 psObj = rsObj.projection(basisMat);  % reach set projection
 % plot projection of reach set external approximation:
 subplot(2, 2, 1);
 psObj.plot_ea('g');  % plot the whole reach tube
 subplot(2, 2, 2);
-psObj = psObj.cut(4);
-psObj.plot_ea('g');  % plot reach set approximation at time t = 4
+% ReachContinuous doesn't work with projections:
+% psObj = psObj.cut(4);
+% psObj.plot_ea('g');  % plot reach set approximation at time t = 4

@@ -110,10 +110,6 @@
 		<isJustCheck type="boolean" >0</isJustCheck>
 		<regTol type="double" >1e-05</regTol>
 	</regularizationProps>
-	<regularizationProps type="struct" >
-		<isEnabled type="boolean" >0</isEnabled>
-		<regTol type="double" >1e-08</regTol>
-	</regularizationProps>
 </valueObj>
 <keyStr type="char" >ellDemo3test</keyStr>
 </root>
