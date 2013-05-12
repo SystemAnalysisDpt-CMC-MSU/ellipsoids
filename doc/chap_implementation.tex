@@ -195,9 +195,9 @@ in the distribution of the {\it Ellipsoidal Toolbox} is SeDuMi
 There are several classes in {\it Ellipsoidal Toolbox} for operations with ellipsoidal tubes. The class {\tt gras.ellapx.smartdb.rels.EllTube} is used
 to describe ellipsoidal tubes. The class {\tt gras.ellapx.smartdb.rels.EllUnionTube} is used to store tubes by the instant of time:
 $$
-\XX_{U}[t]=\bigcup \limits_{\overline{\tau\leq t}}\XX[\tau],
+\XX_{U}[t]=\bigcup \limits_{\tau\leq t}\XX[\tau],
 $$
-where $\XX[\tau]$ is single ellipsoidal tube. 
+where $\XX[\tau]$ is single ellipsoidal tube.
 \newline
 The class {\tt gras.ellapx.smartdb.rels.EllTubeProj} is used to describe the projection of the ellipsoidal tubes onto time dependent subspaces.There are two types of projection: static and dynamic.
 Also there is class {\tt gras.ellapx.smartdb.rels.EllUnionTubeStaticProj} for description of the projection on static plane tubes by the instant of time.
@@ -212,11 +212,15 @@ This data can be extracted  by the {\tt cut} function:
 \verbmcodef[Get the ellipsoidal tube in the time interval]{mcodesnippets/s_chapter05_section03_snippet03.m}
 We can compute the projection of the ellipsoidal tube onto time-dependent subspace.
 \verbmcodef[Computing the projection of the ellipsoidal tube]{mcodesnippets/s_chapter05_section03_snippet04.m}
-\begin{figure}[htbp]
-\centerline{
-\includegraphics[height=9 cm]{statProj.eps}}
-\caption{Static projection of the ellipsoidal tube.}
-\end{figure}
+%\begin{figure}[htbp]
+%\centerline{
+%\includegraphics[height=9 cm]{statProj.eps}}
+%\caption{Static projection of the ellipsoidal tube.}
+%\end{figure}
+
+\easytwofigures{reachTube_dynProj.png}{Static projection of the ellipsoidal tube}{stat_proj}{reachTube_staticProj.png}{Dynamic projection of the ellipsoidal tube.}{dyn_proj}{Projection of the ellipsoidal tube.}{}
+
+
 %\begin{figure}[htbp]
 %\centerline{
 %\includegraphics[height=9 cm]{dynProj.eps}}
@@ -229,12 +233,15 @@ Also we can get initial data from the resulting tube:
 \verbmcodef[Getting the initial ellipsoidal array]{mcodesnippets/s_chapter05_section03_snippet06.m}
 There is a method to display a content of ellipsoidal tubes.
 \verbmcodef[Display a content of the ellipsoidal tube]{mcodesnippets/s_chapter05_section03_snippet07.m}
-\begin{figure}[htbp]
-\centerline{
-\includegraphics[height=10 cm]{dispPic.eps}}
-\caption{Content of the ellipsoidal tube}
-\end{figure}
-There are several methods to find the tubes with necessary parameters. 
+%\begin{figure}[htbp]
+%\centerline{
+%\includegraphics[height=10 cm]{dispPic.eps}}
+%\caption{Content of the ellipsoidal tube}
+%\end{figure}
+
+\easyfigure{dispPic.eps}{Content of the ellipsoidal tube}{dispPic}
+
+There are several methods to find the tubes with necessary parameters.
 \verbmcodef[Filtering of the tube by 'sTime' parameter]{mcodesnippets/s_chapter05_section03_snippet08.m}
 Also you can use the method {\tt display} to see the result of the method's work.
 \verbmcodef[Selection of the tube by index]{mcodesnippets/s_chapter05_section03_snippet09.m}
