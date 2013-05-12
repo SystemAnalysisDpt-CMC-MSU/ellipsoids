@@ -5,9 +5,6 @@ classdef ContinuousReachRefineTestCase < mlunitext.test_case
             'isempty'};
     end    
     properties (Access=private)
-        linSys
-        tVec
-        x0Ell
         l0P1Mat
         l0P2Mat
         reachFactObj
@@ -19,12 +16,9 @@ classdef ContinuousReachRefineTestCase < mlunitext.test_case
         %
         function self = set_up_param(self, inpReachFactObj)
             self.reachFactObj = inpReachFactObj;
-            self.linSys = inpReachFactObj.getLinSys();
-            self.tVec = inpReachFactObj.getTVec();
             l0Mat = inpReachFactObj.getL0Mat();
             [~, mSize]=size(l0Mat);
             nPart1=floor(mSize/2);
-            self.x0Ell = inpReachFactObj.getX0Ell();
             self.l0P1Mat=l0Mat(:,1:nPart1);
             self.l0P2Mat=l0Mat(:,nPart1+1:end);
         end
@@ -32,11 +26,11 @@ classdef ContinuousReachRefineTestCase < mlunitext.test_case
         function self = testRefine(self)
             import gras.ellapx.smartdb.F;
             %
-            reachWholeObj=elltool.reach.ReachContinuous(self.linSys,...
-                self.x0Ell,self.l0P1Mat,self.tVec);
+            reachObj = self.reachFactObj.createInstance();
+            reachWholeObj = self.reachFactObj.createInstance('l0Mat',self.l0P1Mat);
             %
             reachWholeObj.refine(self.l0P2Mat);
-            isEqual = self.reachObj.isEqual(reachWholeObj);
+            isEqual = reachObj.isEqual(reachWholeObj);
             mlunit.assert_equals(true,isEqual);
         end
         function self = testArrayMethods(self)
@@ -149,8 +143,8 @@ classdef ContinuousReachRefineTestCase < mlunitext.test_case
             end            
             function reachSet = buildRS(lDirMat)
                 x0EllObj=ellipsoid(eye(2));
-                reachSet=elltool.reach.ReachContinuous(...
-                    lSys,x0EllObj,lDirMat,timeVec);
+                reachSet = self.reachFactObj.createInstance('linSys',lSys,...
+                    'x0Ell',x0EllObj,'l0Mat',lDirMat,'tVec',timeVec);
             end
             function linSys = buildLS()
                 aMat=[1 2; 2 1];
