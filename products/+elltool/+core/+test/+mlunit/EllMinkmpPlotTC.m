@@ -1,4 +1,4 @@
-classdef EllMinkmpPlotTC <  elltool.plot.test.EllMinkDTC
+classdef EllMinkmpPlotTC <  elltool.core.test.mlunit.EllMinkDTC
     %$Author: Ilya Lyubich <lubi4ig@gmail.com> $
     %$Date: 2013-05-7 $
     %$Copyright: Moscow State University,
@@ -9,18 +9,20 @@ classdef EllMinkmpPlotTC <  elltool.plot.test.EllMinkDTC
     methods
         function self = EllMinkmpPlotTC(varargin)
             self =...
-                self@elltool.plot.test.EllMinkDTC(varargin{:});
+                self@elltool.core.test.mlunit.EllMinkDTC(varargin{:});
             self.isInv = true;
             self.fMink = @minkmp;
             self.fRhoDiff2d = @fRhoDiff2d;
             self.fRhoDiff3d = @fRhoDiff3d;
-            function rhoDiffVec=fRhoDiff2d(supp1Mat,supp2Mat,supp3Mat,lGridMat)
+            function rhoDiffVec=...
+                    fRhoDiff2d(supp1Mat,supp2Mat,supp3Mat,lGridMat)
                 rhoDiffVec = gras.geom.sup.supgeomdiff2d(supp1Mat,...
                     supp2Mat,lGridMat.')+supp3Mat;
             end
             
             
-            function rhoDiffVec=fRhoDiff3d(supp1Mat,supp2Mat,supp3Mat,lGridMat)
+            function rhoDiffVec=...
+                    fRhoDiff3d(supp1Mat,supp2Mat,supp3Mat,lGridMat)
                 rhoDiffVec = gras.geom.sup.supgeomdiff3d(supp1Mat,...
                     supp2Mat,lGridMat.')+supp3Mat;
             end

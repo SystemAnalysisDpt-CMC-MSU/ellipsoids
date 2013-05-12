@@ -1,5 +1,5 @@
-classdef EllMinksumPlotTC < elltool.plot.test.EllMinkBTC...
-        &elltool.plot.test.EllMinkATC
+classdef EllMinksumPlotTC < elltool.core.test.mlunit.EllMinkBTC...
+        &elltool.core.test.mlunit.EllMinkATC
  %$Author: Ilya Lyubich <lubi4ig@gmail.com> $
 %$Date: 2013-05-7 $
 %$Copyright: Moscow State University,
@@ -9,9 +9,9 @@ classdef EllMinksumPlotTC < elltool.plot.test.EllMinkBTC...
     methods
         function self = EllMinksumPlotTC(varargin)
             self = ...
-               self@elltool.plot.test.EllMinkATC(varargin{:});
+               self@elltool.core.test.mlunit.EllMinkATC(varargin{:});
             self = ...
-               self@elltool.plot.test.EllMinkBTC(varargin{:});
+               self@elltool.core.test.mlunit.EllMinkBTC(varargin{:});
            self.fMink = @minksum;
            self.fMinkOp = @minksum;
            self.isInv = false;

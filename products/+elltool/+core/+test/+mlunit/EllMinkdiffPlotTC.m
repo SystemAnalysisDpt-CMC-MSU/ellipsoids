@@ -1,4 +1,4 @@
-classdef EllMinkdiffPlotTC < elltool.plot.test.EllMinkBTC
+classdef EllMinkdiffPlotTC < elltool.core.test.mlunit.EllMinkBTC
 %$Author: Ilya Lyubich <lubi4ig@gmail.com> $
 %$Date: 2013-05-7 $
 %$Copyright: Moscow State University,
@@ -8,7 +8,7 @@ classdef EllMinkdiffPlotTC < elltool.plot.test.EllMinkBTC
     methods
         function self = EllMinkdiffPlotTC(varargin)
             self =...
-               self@elltool.plot.test.EllMinkBTC(varargin{:});
+               self@elltool.core.test.mlunit.EllMinkBTC(varargin{:});
            self.fMink = @minkdiff;
         end
         function self = tear_down(self,varargin)

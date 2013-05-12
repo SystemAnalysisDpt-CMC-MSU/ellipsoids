@@ -6,7 +6,7 @@ classdef EllMinkATC < mlunitext.test_case &...
     %            Faculty of Computational Mathematics
     %            and Computer Science,
     %            System Analysis Department 2013 $
-    properties (Access=public)
+    properties (Access=protected)
         fMink,isInv
     end
     methods
@@ -14,7 +14,7 @@ classdef EllMinkATC < mlunitext.test_case &...
             self = self@mlunitext.test_case(varargin{:});
             self = self@elltool.plot.test.EllMinkBodyPlotT(varargin{:});
         end
-        function self = testMinkmpSimpleOptions(self)
+        function self = testMink3EllSimpleOptions(self)
             testFirEll = ellipsoid(2*eye(2));
             testSecEll = ellipsoid([1, 0].', [9 2;2 4]);
             testThirdEll = ellipsoid([1 0; 0 2]);
@@ -32,15 +32,15 @@ classdef EllMinkATC < mlunitext.test_case &...
                 testThirdEllMat = [testForthEll,testFifthEll];
                 testForthEllMat = testSixthEll;
             end
-            self = minkFillAndShade(self,self.fMink,testFirstEllMat,...
+            self.minkFillAndShade(self.fMink,testFirstEllMat,...
                 testSecEllMat);
-            self = minkFillAndShade(self,self.fMink,testThirdEllMat,...
+            self.minkFillAndShade(self.fMink,testThirdEllMat,...
                 testForthEllMat);
-            self = minkColor(self,self.fMink,testFirstEllMat,testSecEllMat,2);
-            self = minkColor(self,self.fMink,testThirdEllMat,testForthEllMat,1);
-            self = minkProperties(self,self.fMink,testFirstEllMat,...
+            self.minkColor(self.fMink,testFirstEllMat,testSecEllMat,2);
+            self.minkColor(self.fMink,testThirdEllMat,testForthEllMat,1);
+            self.minkProperties(self.fMink,testFirstEllMat,...
                 testSecEllMat);
-            self = minkProperties(self,self.fMink,testThirdEllMat,...
+            self.minkProperties(self.fMink,testThirdEllMat,...
                 testForthEllMat);
             self.fMink(testFirstEllMat,testSecEllMat,'showAll',true);
             self.fMink(testThirdEllMat,testForthEllMat,'showAll',true);

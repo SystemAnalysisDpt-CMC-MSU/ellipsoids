@@ -5,7 +5,7 @@ classdef EllMinkDTC <  elltool.plot.test.EllMinkATC
     %            Faculty of Computational Mathematics
     %            and Computer Science,
     %            System Analysis Department 2013 $
-    properties (Access=public)
+    properties (Access=protected)
         fRhoDiff2d,fRhoDiff3d
     end
     methods
