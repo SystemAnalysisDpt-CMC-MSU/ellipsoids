@@ -139,7 +139,8 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
         function [cMat,cOpMat]=getGoodCurveColor(self,varargin)
             [cMat,cOpMat]=self.getGoodDirColor(varargin{:});
         end        
-        function hVec=plotCreateGoodDirFunc(self, lineWidth, hAxes,projType,timeVec,...
+        function hVec=plotCreateGoodDirFunc(self, fGetWidth, indWidthFieldVec,...
+                hAxes,projType,timeVec,...
                 lsGoodDirOrigVec,ltGoodDirMat,sTime,xTouchCurveMat,...
                 xTouchOpCurveMat,ltGoodDirNormVec,ltGoodDirNormOrigVec,...
                 varargin)
@@ -148,7 +149,20 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
                 lsGoodDirOrigVec,ltGoodDirMat,sTime,xTouchCurveMat,...
                 xTouchOpCurveMat,ltGoodDirNormVec,ltGoodDirNormOrigVec,...
                 varargin{:});
-            %
+            
+            numelInputName = nargin - numel(varargin);
+            indWidthFieldVec = indWidthFieldVec + 4;
+            argWidthCVec = cell(1, numel(indWidthFieldVec));
+            for iInd = 1 : numel(indWidthFieldVec)
+                    if indWidthFieldVec > numelInputName
+                        curArg = varargin{indWidthFieldVec(iInd) - numelInputName};
+                    else
+                        curArg = eval(inputname(indWidthFieldVec(iInd)));
+                    end
+                    argWidthCVec{iInd} = curArg;
+            end
+            lineWidth = fGetWidth(argWidthCVec{:});
+            
             hVec(2)=dispDirCurve(ltGoodDirMat,lsGoodDirOrigVec,cMat);
             %
             hVec(1)=dispDirCurve(-ltGoodDirMat,-lsGoodDirOrigVec,cOpMat);
@@ -163,8 +177,8 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
                     'lineWidth', lineWidth,'Parent',hAxes,'DisplayName',plotName);
             end
         end
-        function hVec=plotCreateTubeTouchCurveFunc(self, lineWidth, ...
-                    hAxes,projType,...
+        function hVec=plotCreateTubeTouchCurveFunc(self,...
+                    hAxes, fGetWidth, indWidthFieldVec, projType,...
                     timeVec,lsGoodDirOrigVec,ltGoodDirMat,sTime,...
                     xTouchCurveMat,xTouchOpCurveMat,ltGoodDirNormVec,...
                     ltGoodDirNormOrigVec,varargin)
@@ -172,8 +186,23 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
                 lsGoodDirOrigVec,ltGoodDirMat,sTime,xTouchCurveMat,...
                 xTouchOpCurveMat,ltGoodDirNormVec,ltGoodDirNormOrigVec,...
                 varargin{:});
+            
+            numelInputName = nargin - numel(varargin);
+            indWidthFieldVec = indWidthFieldVec + 4;
+            argWidthCVec = cell(1, numel(indWidthFieldVec));
+            for iInd = 1 : numel(indWidthFieldVec)
+                    if indWidthFieldVec > numelInputName
+                        curArg = varargin{indWidthFieldVec(iInd) - numelInputName};
+                    else
+                        curArg = eval(inputname(indWidthFieldVec(iInd)));
+                    end
+                    argWidthCVec{iInd} = curArg;
+            end
+            lineWidth = fGetWidth(argWidthCVec{:});
+            
             hVec(2)=dispTouchCurve(xTouchCurveMat,lsGoodDirOrigVec,cMat);
             hVec(1)=dispTouchCurve(xTouchOpCurveMat,-lsGoodDirOrigVec,cOpMat);
+            
             %
             function hVec=dispTouchCurve(xTouchCurveMat,lsGoodDirOrigVec,cMat)
                 import modgen.graphics.plot3adv;
