@@ -13,6 +13,25 @@ classdef ReachFactory < handle
         dim
         reachObjMap
     end
+    methods (Access = private)
+        function linSysObj = fGetSys(self, inpAtMat,inpBtMat, inpUBoundMat, inpUBoundVec, inpGtMat,...
+                inpDistBoundMat, inpDistBoundVec, inpCtMat, inpNoiseBoundMat, inpNoiseBoundVec)
+            if ~isempty(inpAtMat)&&~isempty(inpBtMat)
+                uBoundsEll = fGetEll(inpUBoundVec,inpUBoundMat);
+                distBoundsEll = fGetEll(inpDistBoundVec,inpDistBoundMat);
+                noiseBoundsEll = fGetEll(inpNoiseBoundVec,inpNoiseBoundMat);
+                if self.isDiscr
+                    linSysObj = elltool.linsys.LinSysDiscrete(inpAtMat,inpBtMat,uBoundsEll,...
+                        inpGtMat,distBoundsEll,inpCtMat,noiseBoundsEll,'d');
+                else
+                    linSysObj = elltool.linsys.LinSysContinuous(inpAtMat,inpBtMat,uBoundsEll,...
+                        inpGtMat,distBoundsEll,inpCtMat,noiseBoundsEll);
+                end
+            else     
+                linSysObj = self.linSys;
+            end   
+        end
+    end
     methods
         function self =...
                 ReachFactory(confName, crm, crmSys, isBack, isEvolve,...
@@ -89,23 +108,33 @@ classdef ReachFactory < handle
             %   reachObj = rsObj.createInstance();
             %
             import modgen.common.parseparext;
-            [reg, isRegSpec, linSysObj, x0EllMat, l0DirMat, timeVec] = ...
-                parseparext(varargin, {'linSys','x0Ell', 'l0Mat','tVec';...
-                self.linSys, self.x0Ell, self.l0Mat, self.tVec;...
-                'isobject(x)','ismatrix(x)', 'ismatrix(x)','isvector(x)'});
+            [reg, isRegSpec, inpAtMat,inpBtMat, inpUBoundMat, inpUBoundVec, inpGtMat,...
+                inpDistBoundMat, inpDistBoundVec, inpCtMat, inpNoiseBoundMat, inpNoiseBoundVec,...
+                inpX0EllMat,inpX0EllVec, l0DirMat, timeVec] = ...
+                parseparext(varargin, {'At','Bt', 'controlMat', 'controlVec', 'Gt',...
+                'disturbMat', 'disturbVec', 'Ct', 'noiseMat', 'noiseVec', 'x0EllMat','x0EllVec', 'l0Mat','tVec';...
+                [],[],[],[],[],[],[],[],[],[], self.x0Ell.getShapeMat(),...
+                self.x0Ell.getCenterVec(), self.l0Mat, self.tVec;...
+                'ismatrix(x)','ismatrix(x)', 'ismatrix(x)', 'isvector(x)', 'ismatrix(x)',...
+                'ismatrix(x)', 'isvector(x)', 'ismatrix(x)', 'ismatrix(x)', 'isvector(x)',...
+                'ismatrix(x)','isvector(x)', 'ismatrix(x)','isvector(x)'});
             keyStr=hash(varargin);
             if ~self.reachObjMap.isKey(keyStr)
+                linSysObj = self.fGetSys(inpAtMat,inpBtMat, inpUBoundMat, inpUBoundVec, inpGtMat,...
+                    inpDistBoundMat, inpDistBoundVec, inpCtMat, inpNoiseBoundMat, inpNoiseBoundVec);
+                x0EllObj = fGetEll(inpX0EllVec,inpX0EllMat);
+                %
                 if isa(linSysObj, 'elltool.linsys.LinSysDiscrete')
                     reachObj = elltool.reach.ReachDiscrete(linSysObj,...
-                        x0EllMat, l0DirMat, timeVec);
+                        x0EllObj, l0DirMat, timeVec);
                 elseif self.isEvolve
                     halfReachObj = elltool.reach.ReachContinuous(...
-                        linSysObj, x0EllMat, l0DirMat,...
+                        linSysObj, x0EllObj, l0DirMat,...
                         [timeVec(1) sum(timeVec)/2]);
                     reachObj = halfReachObj.evolve(timeVec(2));
                 else
                     reachObj = elltool.reach.ReachContinuous(...
-                        linSysObj, x0EllMat, l0DirMat, timeVec);
+                        linSysObj, x0EllObj, l0DirMat, timeVec);
                 end
                 self.reachObjMap(keyStr)=reachObj;
             else
@@ -183,5 +212,12 @@ classdef ReachFactory < handle
             %
             l0Mat = self.l0Mat;
         end
+    end
+end
+function ellObj = fGetEll(centerVec, shapeMat)
+    if ~isempty(centerVec)&&~isempty(shapeMat)
+        ellObj = ellipsoid(centerVec, shapeMat);
+    else
+        ellObj = ellipsoid(shapeMat);
     end
 end

@@ -61,7 +61,6 @@ classdef ContinuousReachRefineTestCase < mlunitext.test_case
             end    
         end    
         function self = testRefMisc(self)
-            lSys=buildLS();
             %Check Evolve after Refine
             checkEvRef(1);
             checkEvRef(2);
@@ -142,15 +141,12 @@ classdef ContinuousReachRefineTestCase < mlunitext.test_case
                 reachSetObj=buildRS(lDirMat);
             end            
             function reachSet = buildRS(lDirMat)
-                x0EllObj=ellipsoid(eye(2));
-                reachSet = self.reachFactObj.createInstance('linSys',lSys,...
-                    'x0Ell',x0EllObj,'l0Mat',lDirMat,'tVec',timeVec);
-            end
-            function linSys = buildLS()
                 aMat=[1 2; 2 1];
                 bMat=[1 2;0 1];
-                uEll=ellipsoid(eye(2));
-                linSys=elltool.linsys.LinSysContinuous(aMat,bMat,uEll);
+                uEllMat=eye(2);
+                x0EllMat=eye(2);
+                reachSet = self.reachFactObj.createInstance('At',aMat,...
+                    'Bt',bMat,'controlMat',uEllMat,'x0EllMat',x0EllMat,'l0Mat',lDirMat,'tVec',timeVec);
             end
         end
     end

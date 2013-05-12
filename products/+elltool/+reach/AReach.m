@@ -43,10 +43,6 @@ classdef AReach < elltool.reach.IReach
             resArr=resArr.getCopy();    
         end
         %
-        function isNEmp = isNotEmpty(self)
-            isNEmp = ~isempty(self.isempty());
-        end    
-        %
         function isProjArr = isprojection(self)
             isProjArr = fApplyArrMethod(self,'isProj');  
         end

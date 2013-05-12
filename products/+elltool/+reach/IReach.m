@@ -713,33 +713,5 @@ classdef IReach < handle
         %    copyReachObjArr = 1x2 array of ReachContinuous objects   
         %
         copyReachObjArr = getCopy(self)
-        %
-        % ISNOTEMPTY - checks whether the given array of objects is empty
-        %
-        % Input:
-        %   regular:
-        %       self - multidimensional array of
-        %              ReachContinuous/ReachDiscrete objects
-        %
-        % Output:
-        %  isNEmp: logical[1,1]
-        %    
-        %  Example:
-        %    aMat = [0 1; 0 0]; bMat = eye(2);
-        %    SUBounds = struct();
-        %    SUBounds.center = {'sin(t)'; 'cos(t)'};  
-        %    SUBounds.shape = [9 0; 0 2];
-        %    sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds); 
-        %    x0EllObj = ell_unitball(2);  
-        %    timeVec = [0 10];  
-        %    dirsMat = [1 0; 0 1]';
-        %    reachObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-        %    reachObjArr = reachObj.repMat(1,2);
-        %    isNotEmpty(reachObjArr) 
-        %
-        %    ans 
-        %       = 1
-        %
-        isNEmp = isNotEmpty(self)
     end
 end
