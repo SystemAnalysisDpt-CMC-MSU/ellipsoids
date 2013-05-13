@@ -136,9 +136,9 @@ classdef ReachFactory < handle
                     reachObj = elltool.reach.ReachContinuous(...
                         linSysObj, x0EllObj, l0DirMat, timeVec);
                 end
-                self.reachObjMap(keyStr)=reachObj;
+                self.reachObjMap(keyStr)=reachObj.getCopy();
             else
-                reachObj=self.reachObjMap(keyStr);
+                reachObj=self.reachObjMap(keyStr).getCopy();
             end
         end
         function linSys = getLinSys(self)
