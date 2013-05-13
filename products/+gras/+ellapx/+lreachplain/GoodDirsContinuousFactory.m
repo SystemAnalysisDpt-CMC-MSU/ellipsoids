@@ -1,4 +1,4 @@
-classdef AGoodDirsContinuousFactory<handle
+classdef GoodDirsContinuousFactory<handle
     methods (Static)
         function goodDirObj = create(pDynObj, sTime, lsGoodDirMat, ...
                 calcPrecision)

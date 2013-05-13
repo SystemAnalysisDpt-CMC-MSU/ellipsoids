@@ -25,7 +25,7 @@ classdef ApproxProblemPropertyBuilder
             import modgen.common.throwerror;
             import gras.ellapx.uncertcalc.log.Log4jConfigurator;
             import gras.ellapx.lreachuncert.probdyn.LReachProblemDynamicsFactory;
-            import gras.ellapx.lreachplain.AGoodDirsContinuousFactory; 
+            import gras.ellapx.lreachplain.GoodDirsContinuousFactory; 
             %
             logger=Log4jConfigurator.getLogger();            
             %
@@ -107,7 +107,7 @@ classdef ApproxProblemPropertyBuilder
                         'unsupported goodDirGenerationMode');
             end
             %% Build good direction curves
-            goodDirSetObj = AGoodDirsContinuousFactory.create(pDynObj, ...
+            goodDirSetObj = GoodDirsContinuousFactory.create(pDynObj, ...
                 sTime, lsGoodDirMat, calcPrecision);
             logger.info(...
                 sprintf(['Building good directions at time %d, ',...
