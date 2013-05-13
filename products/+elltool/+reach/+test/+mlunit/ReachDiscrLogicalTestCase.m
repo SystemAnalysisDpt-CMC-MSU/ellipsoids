@@ -821,7 +821,7 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
             x0Ell = ell_unitball(nDim);
             argumentList = {aMat, bMat, pEll, x0Ell, lMat, [1, 20]};
             
-            self.runAndCheckError(@check,'complexResult');
+            self.runAndCheckError(@check,{'complexResult','wrongInput'});
             function check()
                 % is ok. Object is created but is not used.
                 rs = createReach(argumentList{:});

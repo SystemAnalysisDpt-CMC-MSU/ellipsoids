@@ -17,25 +17,25 @@ classdef EllipsoidSecTestCase < mlunitext.test_case
             self.testDataRootDir=[fileparts(which(className)),filesep,...
                 'TestData', filesep,shortClassName];
         end
-        function self = testIsInside(self)
+        function self = testIsContainedInIntersection (self)
             [test1Ell, test2Ell] = createTypicalEll(1);
-            compareForIsInside(test1Ell, [test1Ell test2Ell], 'i', 1);
-            compareForIsInside(test1Ell, [test1Ell test2Ell], [], 0);
+            compareForIsCII(test1Ell, [test1Ell test2Ell], 'i', 1);
+            compareForIsCII(test1Ell, [test1Ell test2Ell], [], 0);
             [test1Ell, test2Ell] = createTypicalEll(2);
-            compareForIsInside(test1Ell, [test1Ell test2Ell], 'i', 1);
-            compareForIsInside(test1Ell, [test1Ell test2Ell], 'u', 0);
+            compareForIsCII(test1Ell, [test1Ell test2Ell], 'i', 1);
+            compareForIsCII(test1Ell, [test1Ell test2Ell], 'u', 0);
             [test1Ell, test2Ell] = createTypicalEll(3);
-            compareForIsInside(test1Ell, [test1Ell test2Ell], 'i', -1);
-            compareForIsInside(test1Ell, [test1Ell test2Ell], 'u', 0);
+            compareForIsCII(test1Ell, [test1Ell test2Ell], 'i', -1);
+            compareForIsCII(test1Ell, [test1Ell test2Ell], 'u', 0);
             [test1Ell, test2Ell] = createTypicalEll(4);
-            compareForIsInside([test1Ell test2Ell], test1Ell, 'i', 0);
-            compareForIsInside([test1Ell test2Ell], [test1Ell test2Ell],...
+            compareForIsCII([test1Ell test2Ell], test1Ell, 'i', 0);
+            compareForIsCII([test1Ell test2Ell], [test1Ell test2Ell],...
                 [], 0);
             [test1Ell, test2Ell] = createTypicalHighDimEll(7);
-            compareForIsInside([test1Ell test2Ell], test1Ell, 'i', 0);
-            compareForIsInside([test1Ell test2Ell], [test1Ell test2Ell],...
+            compareForIsCII([test1Ell test2Ell], test1Ell, 'i', 0);
+            compareForIsCII([test1Ell test2Ell], [test1Ell test2Ell],...
                 [], 0);
-            compareForIsInside([test1Ell test2Ell], [test1Ell test2Ell],...
+            compareForIsCII([test1Ell test2Ell], [test1Ell test2Ell],...
                 'u', 0);
         end
         function self = testIsBadDirection(self)
@@ -381,9 +381,43 @@ classdef EllipsoidSecTestCase < mlunitext.test_case
             ansEll = ellipsoid(zeros(100, 1), eye(100));
             [isEq, reportStr] = eq(resEll, ansEll);
             mlunit.assert_equals(true, isEq, reportStr);
-        end      
+        end
+        %
+        %
+        function self = testIsInside(self)
+            ell1Arr = ellipsoid.fromRepMat(eye(2),[2 2 2]);
+            ell2Arr = ellipsoid.fromRepMat(2*eye(2),[2 2]);
+            ell2Arr(:,:,2) = ellipsoid.fromRepMat([1; 0],0.7*eye(2),[2 2]);
+            expRes1Arr = true(2);
+            expRes1Arr(:,:,2) = false(2);
+            expRes2Arr = false(2,2,2);
+            %
+            myTestIsInside(ell1Arr,ell2Arr,expRes1Arr);
+            %
+            myTestIsInside(ell1Arr(1),ell2Arr,expRes1Arr);
+            %
+            myTestIsInside(ell1Arr,ell2Arr(2,2,2),expRes2Arr);
+            %
+            self.runAndCheckError('isInside(ell1Arr(1:2),ell2Arr)',...
+                'wrongInput');
+            %
+            self.runAndCheckError('isInside(ellipsoid(eye(3)),ell2Arr)',...
+                'wrongInput');
+            badEllVec = [ellipsoid(eye(2)), ellipsoid(eye(3))];
+            self.runAndCheckError('isInside(badEllVec,ell1Arr(1))',...
+                'wrongInput');
+            %
+            self.runAndCheckError('isInside(ell1Arr,hyperplane())',...
+                'wrongInput');
+        end
      end
 end
+
+function myTestIsInside(ell1Arr,ell2Arr, expResVec)
+    resVec = isInside(ell1Arr,ell2Arr);
+    mlunit.assert(all(resVec == expResVec));
+end
+
 function [varargout] = createTypicalEll(flag)
     switch flag
         case 1
@@ -684,11 +718,11 @@ function analyticResEllVec = calcExpMinkSum(isExtApx, nDirs, aMat, ...
         analyticResEllVec(1, iDir) = ellipsoid(analyticResVec, analyticResMat);
     end
 end
-function compareForIsInside(test1EllVec, test2EllVec, myString, myResult)
+function compareForIsCII(test1EllVec, test2EllVec, myString, myResult)
     if isempty(myString)
-        testRes = isinside(test1EllVec, test2EllVec);
+        testRes = isContainedInIntersection(test1EllVec, test2EllVec);
     else
-        testRes = isinside(test1EllVec, test2EllVec, myString);
+        testRes = isContainedInIntersection(test1EllVec, test2EllVec, myString);
     end
     mlunit.assert_equals(myResult, testRes);
 end

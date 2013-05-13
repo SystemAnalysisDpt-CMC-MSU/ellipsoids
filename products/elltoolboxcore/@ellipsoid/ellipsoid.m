@@ -292,7 +292,10 @@ classdef ellipsoid < handle
         end
     end
     
-    
+    methods(Static)
+        ellArr = fromRepMat(varargin)
+        [vGridMat, fGridMat] = getGrid(nDim,nPoints)
+    end
     methods(Static,Access = private)
         res = my_color_table(ch)
         regQMat = regularize(qMat,absTol)
