@@ -1,4 +1,4 @@
-classdef EllMinkDTC <  elltool.plot.test.EllMinkATC
+classdef EllMinkDTC <   elltool.core.test.mlunit.EllMinkATC
     %$Author: Ilya Lyubich <lubi4ig@gmail.com> $
     %$Date: 2013-05-7 $
     %$Copyright: Moscow State University,
@@ -10,7 +10,7 @@ classdef EllMinkDTC <  elltool.plot.test.EllMinkATC
     end
     methods
         function self = EllMinkDTC(varargin)
-            self = self@elltool.plot.test.EllMinkATC(varargin{:});
+            self = self@ elltool.core.test.mlunit.EllMinkATC(varargin{:});
         end
         function self = testMink2d(self)
             testFirEll = ellipsoid([1, 0].', [9 2;2 4]);

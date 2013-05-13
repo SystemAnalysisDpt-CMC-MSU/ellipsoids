@@ -1,5 +1,5 @@
-classdef EllMinksumPlotTC < elltool.core.test.mlunit.EllMinkBTC...
-        &elltool.core.test.mlunit.EllMinkATC
+classdef EllMinksumPlotTC < elltool.core.test.mlunit.EllMinkATC&...
+        elltool.core.test.mlunit.EllMinkBTC
  %$Author: Ilya Lyubich <lubi4ig@gmail.com> $
 %$Date: 2013-05-7 $
 %$Copyright: Moscow State University,
@@ -10,10 +10,9 @@ classdef EllMinksumPlotTC < elltool.core.test.mlunit.EllMinkBTC...
         function self = EllMinksumPlotTC(varargin)
             self = ...
                self@elltool.core.test.mlunit.EllMinkATC(varargin{:});
-            self = ...
+           self =...
                self@elltool.core.test.mlunit.EllMinkBTC(varargin{:});
            self.fMink = @minksum;
-           self.fMinkOp = @minksum;
            self.isInv = false;
         end
         function self = tear_down(self,varargin)
