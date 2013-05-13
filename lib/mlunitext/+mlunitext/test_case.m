@@ -115,7 +115,7 @@ classdef test_case < mlunit.test_case
             %           identifier markers
             %
             %   optional:
-            %       msgCodeStr: char[1,]/cell[1,N] of char[1,] - cell array
+            %       msgCodeStr: char[1,]/cell[1,] of char[1,] - cell array
             %           of strings, containig expected exception message 
             %           markers. For each field in expIdentifier supposed 
             %           to be one field in msgCodeStr. In case of more then
@@ -150,8 +150,10 @@ classdef test_case < mlunit.test_case
                 'regCheckList',{checkStr});
             msgCodeStr=reg{1};
             %
-            checkmultvar(@(x,y) size(y,2) == 0 || ...
-                size(y,2) == size(x,2),2,expIdentifier,msgCodeStr)
+            if(isCell)
+                checkmultvar(@(x,y) size(y,2) == 0 || ...
+                    size(y,2) == size(x,2),2,expIdentifier,msgCodeStr);
+            end
             %
             try
                 if ischar(commandStr)
