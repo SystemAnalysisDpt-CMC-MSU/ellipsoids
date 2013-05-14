@@ -1,30 +1,29 @@
 classdef AReachProblemDynamics<...
         gras.ellapx.lreachplain.probdyn.IReachProblemDynamics
-    properties (Access = protected)
+    properties (Access=protected)
         problemDef
         AtDynamics
         BptDynamics
         BPBTransDynamics
+        Xtt0Dynamics
         timeVec
     end
-    properties (Abstract, Access = protected)
+    properties (Abstract,Access=protected)
         xtDynamics
     end
-    properties (Constant, GetAccess = protected)
+    properties (Constant,GetAccess=protected)
+        N_TIME_POINTS=1000;
         ODE_NORM_CONTROL='on';
         CALC_PRECISION_FACTOR=0.001;
-        N_TIME_POINTS=1000;
+    end
+    methods (Access=protected)
+        function odePropList=getOdePropList(self,calcPrecision)
+            odePropList={'NormControl',self.ODE_NORM_CONTROL,'RelTol',...
+                calcPrecision*self.CALC_PRECISION_FACTOR,...
+                'AbsTol',calcPrecision*self.CALC_PRECISION_FACTOR};
+        end
     end
     methods
-        function self = AReachProblemDynamics(problemDef)
-            if (nargin > 0)
-                self.problemDef = problemDef;
-                %
-                t0 = problemDef.gett0();
-                t1 = problemDef.gett1();
-                self.timeVec = linspace(t0,t1,self.N_TIME_POINTS);
-            end
-        end
         function BPBTransDynamics=getBPBTransDynamics(self)
             BPBTransDynamics=self.BPBTransDynamics;
         end
@@ -36,6 +35,9 @@ classdef AReachProblemDynamics<...
         end
         function xtDynamics=getxtDynamics(self)
             xtDynamics=self.xtDynamics;
+        end
+        function Xtt0Dynamics=getXtt0Dynamics(self)
+            Xtt0Dynamics=self.Xtt0Dynamics;
         end
         function timeVec=getTimeVec(self)
             timeVec=self.timeVec;
@@ -60,13 +62,6 @@ classdef AReachProblemDynamics<...
         end
         function problemDef=getProblemDef(self)
             problemDef=self.problemDef;
-        end
-    end
-    methods (Access = protected)
-        function odePropList=getOdePropList(self,calcPrecision)
-            odePropList={'NormControl',self.ODE_NORM_CONTROL,'RelTol',...
-                calcPrecision*self.CALC_PRECISION_FACTOR,...
-                'AbsTol',calcPrecision*self.CALC_PRECISION_FACTOR};
         end
     end
 end

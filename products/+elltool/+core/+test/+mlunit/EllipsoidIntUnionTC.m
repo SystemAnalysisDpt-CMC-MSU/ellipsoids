@@ -168,7 +168,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
                 [4, 1, 1, 1; 1, 2, 1, 1; 1, 1, 5, 1; 1, 1, 1, 6], 2);
             my2EllVec(2) = ell_unitball(4);
             my2EllVec(1) = ell_unitball(4);
-            isOk = isinside(my2EllVec, my1EllVec, 'i');
+            isOk = isContainedInIntersection(my2EllVec, my1EllVec, 'i');
             mlunit.assert_equals(isOk,false);
         end
         
