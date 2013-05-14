@@ -122,6 +122,16 @@ for iClass = 1:nLength
                          dynamicpropsClassMethodNameList);
                 methodVec= methodVec(~isDynamicpropsVec);
             end
+        else
+         isHandleMethodVec=ismember(curClassMethodNameList,...
+         handleClassMethodNameList);
+         methodVec= methodVec(~isHandleMethodVec);
+         curClassMethodNameList=arrayfun(@(x)x.Name,...
+                        methodVec,'UniformOutput',false);
+         isDynamicpropsVec=ismember(curClassMethodNameList,...
+                         dynamicpropsClassMethodNameList);
+         methodVec= methodVec(~isDynamicpropsVec);
+        end
         isPublicVec=arrayfun(@(x)isequal(x.Access,PUBLIC_ACCESS_MOD),...
                          methodVec);
         isHiddenVec=arrayfun(@(x)isequal(x.Hidden,1), methodVec);
@@ -145,7 +155,7 @@ for iClass = 1:nLength
         bufFuncInfo.help=helpList;
         SFuncInfo=modgen.struct.unionstructsalongdim(1,SFuncInfo,...
             bufFuncInfo);
-        end
+        
     end
 end
 end

@@ -37,13 +37,8 @@ In figure \ref{ellpolyfig}, the time required to compute both external
 and internal ellipsoidal approximations, with $32$ ellipsoids each,
 for different number of time steps is shown in blue.
 
-\begin{figure}[htbp]
-\centerline{
-\includegraphics[height=8 cm]{ellpoly.eps}}
-\caption{Reach set computation performance comparison:
-ellipsoids (blue) vs. polytopes (red).}
-\label{ellpolyfig}
-\end{figure}
+\easyfigure[h][10cm]{ellpoly.eps}{Reach set computation performance comparison}{ellpolyfig}
+
 
 Figure \ref{ellpolyfig}  illustrates  the fact that the
 complexity of polytope method grows exponentially with number of time
@@ -58,12 +53,7 @@ by the following system of equations:
 m_1\ddot{x}_1+(k_1+k_2)x_1-k_2x_2 & = & u_1, \label{spmass1}\\
 m_2\ddot{x}_2-k_2x_1+(k_1+k_2)x_2 & = & u_2 . \label{spmass2}
 \end{eqnarray}
-\begin{figure}[htbp]
-\centerline{
-\includegraphics[height=5 cm]{springmass.eps}}
-\caption{Spring-mass system.}
-\label{springmassfig}
-\end{figure}
+\easyfigure[h][10cm]{springmass.eps}{Spring-mass system.}{springmassfig}
 Here $u_1$ and $u_2$ are the forces applied to masses $m_1$ and $m_2$,
 and we shall assume $[u_1 ~~ u_2]^T\in\EE(0,I)$.
 The initial conditions can be taken as $x_1(0)=0$, $x_2(0)=2$.
@@ -101,15 +91,11 @@ Figure \ref{mechreachfig}(a) shows the reach set of the system
 (\ref{spmass1}-\ref{spmass2}) evolving in time from $t=0$ to $t=4$.
 Figure \ref{mechreachfig}(b) presents a snapshot of this reach set at time
 $t=4$.
-\begin{figure}%[htbp]
-\centerline{
-\includegraphics[height=10 cm]{reachmech.eps}}
-\caption{Spring-mass system without disturbance:
+\easyfigure[h][10 cm]{reachmech.eps}{Spring-mass system without disturbance:
 (a) reach tube for time $t\in[0,4]$; (b) reach set at time $t=4$.
 Spring-mass system with disturbance:
-(c) reach tube for time $t\in[0,4]$; (d) reach set at time $t=4$.}
-\label{mechreachfig}
-\end{figure}
+(c) reach tube for time $t\in[0,4]$; (d) reach set at time $t=4$.}{mechreachfig}
+
 
 So far we considered an ideal system without any disturbance, such as friction.
 We introduce disturbance to (\ref{spmass1}-\ref{spmass2}) by adding extra
@@ -152,12 +138,7 @@ current is $C_2\dot{x}_2$.
 \item $x_3$ - current through the inductor $L$, so the voltage across
 the inductor is $L\dot{x}_3$.
 \end{itemize}
-\begin{figure}[htbp]
-\centerline{
-\includegraphics[height=5 cm]{rlc.eps}}
-\caption{RLC circuit with two inputs.}
-\label{rlcfig}
-\end{figure}
+\easyfigure[h][10cm]{rlc.eps}{RLC circuit with two inputs.}{rlcfig}
 Applying Kirchoff current and voltage laws we arrive at the linear system,
 \begin{equation}
 \left[\begin{array}{c}
@@ -228,10 +209,14 @@ The external reach set approximation for the second dynamics is in yellow,
 its internal approximation is in blue.
 The full three-dimensional external (yellow) and internal (blue)
 approximations of the reach set are shown in figure \ref{rlcreachfig}(b).
-\begin{figure}[htbp]
-\centerline{
-\includegraphics[height=10 cm]{rlcreach.eps}}
-\caption{Forward and backward reach sets of the switched system
+
+
+To find out where the system should start at time $t=0$ in order to reach
+a neighborhood {\tt M} of the origin at time $t=3$,
+we compute the backward reach set from $t=3$ to $t=0$.
+\verbmcodef[Computation of the backward reach set]
+{mcodesnippets/s_chapter06_section03_snippet02.m}
+\easyfigure[h][10 cm]{rlcreach.eps}{Forward and backward reach sets of the switched system
 (external and internal approximations).
 The dynamics switches at $t=2$.
 \newline
@@ -243,16 +228,7 @@ $(x_1,x_2)$ subspace.
 (c) Backward reach set evolving from $t=3$ to $t=0$ projected onto
 $(x_1,x_2)$ subspace.
 \newline
-(d) Backward reach set at $t=0$ in ${\bf R}^3$.}
-\label{rlcreachfig}
-\end{figure}
-
-To find out where the system should start at time $t=0$ in order to reach
-a neighborhood {\tt M} of the origin at time $t=3$,
-we compute the backward reach set from $t=3$ to $t=0$.
-\verbmcodef[Computation of the backward reach set]
-{mcodesnippets/s_chapter06_section03_snippet02.m}
-
+(d) Backward reach set at $t=0$ in ${\bf R}^3$.}{rlcreachfig}
 Figure \ref{rlcreachfig}(c) presents the evolution of the reach set
 projection onto $(x_1, x_2)$ in backward time.
 Again, external and internal approximations corresponding
@@ -276,12 +252,7 @@ We  consider the {\it switching-mode model} of highway traffic
 presented in \cite{xiaotian}. The highway segment is divided into $N$ cells
 as shown in figure \ref{hwfig}. In this particular case, $N=4$.
 The traffic density in cell $i$ is  $x_i$ vehicles per mile, $i=1,2,3,4$.
-\begin{figure}[htbp]
-\centerline{
-\includegraphics[height=5 cm]{hw.eps}}
-\caption{Highway model. Adapted from \cite{xiaotian}.}
-\label{hwfig}
-\end{figure}
+\easyfigure[h][10cm]{hw.eps}{Highway model. Adapted from \cite{xiaotian}.}{hwfig}
 
 Define
 \begin{itemize}
@@ -392,10 +363,7 @@ free-flow reach set projection onto $(x_1,x_2,x_3)$ subspace for $t=10$,
 before the guard crossing; figure \ref{hwreachfig}(b) for $t=50$,
 during the guard crossing; and figure \ref{hwreachfig}(c) for $t=80$,
 after the guard was crossed.
-\begin{figure}[htbp]
-\centerline{
-\includegraphics[height=10 cm]{hwreach.eps}}
-\caption{Reach set of the free-flow system is blue, reach set of the congested
+\easyfigure[h][10cm]{hwreach.eps}{Reach set of the free-flow system is blue, reach set of the congested
 system is green, the guard is red.
 \newline
 (a) Reach set of the free-flow system at $t = 10$, before reaching the guard
@@ -409,9 +377,7 @@ system is green, the guard is red.
 \newline
 (d) Reach set trace from $t=0$ to $t=100$, free-flow system in blue,
 congested system in green; bounds of initial conditions are marked with magenta
-(projection onto $(x_1,x_2)$).  }
-\label{hwreachfig}
-\end{figure}
+(projection onto $(x_1,x_2)$).}{hwreachfig}
 
 For each time step that the intersection of the free-flow reach set and the
 guard is nonempty, we establish a new initial time and a set of initial

@@ -147,7 +147,7 @@ classdef IReach < handle
        
         %
         % EVOLVE - computes further evolution in time of the
-        %   already existing reach set.
+        %          already existing reach set.
         %
         % Input:
         %   regular:

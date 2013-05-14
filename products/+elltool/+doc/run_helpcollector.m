@@ -2,7 +2,8 @@ function run_helpcollector
 import modgen.logging.log4j.Log4jConfigurator;                             
 import modgen.common.throwerror;
 logger=Log4jConfigurator.getLogger();
-
+global count;
+count = 0;
 docDirName='doc';
 %
 texFileName='chap_functions.tex';
@@ -23,7 +24,8 @@ end
 'gras.ellapx.smartdb.rels.EllTube',...
 'gras.ellapx.smartdb.rels.EllTubeProj',...
 'gras.ellapx.smartdb.rels.EllUnionTube', ...
-'gras.ellapx.smartdb.rels.EllUnionTubeStaticProj'},...
+'gras.ellapx.smartdb.rels.EllUnionTubeStaticProj',...
+'smartdb.relations.ARelation'},...
      {'elltool.reach', 'elltool.linsys'},{'test'});
 % 
 %
@@ -85,6 +87,8 @@ finalHelpCell = cellfun(@(x)fDeletePercent(x),finalHelpCell, ...
     'UniformOutput', false);
 finalHelpCell = cellfun(@(x)fShiftText(x),finalHelpCell, ...
     'UniformOutput', false);
+finalHelpCell = cellfun(@(x)fDeleteEmptyStr(x),finalHelpCell, ...
+    'UniformOutput', false);
 funcOutputCell=funcNameCell;
 %% substitutions (for TeX requirements)
 symbList={'\','_','&'};
@@ -128,6 +132,11 @@ end
 
 function result = fDeletePercent(str)
 result = regexprep(str, '(\%)', '');
+end
+
+function result = fDeleteEmptyStr(str)
+[m startInd] = regexp(str, '(\n){2,}','match', 'start');
+result = str(1:(max(startInd)-1));
 end
 
 function result = fShiftText(text)

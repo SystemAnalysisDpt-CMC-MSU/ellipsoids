@@ -592,13 +592,39 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
             % SCALE - scales relation object
             %             
             %  Input:
-            %       self
+            %       self.
             %       fCalcFactor - function which calculates factor for
             %                     fields in fieldNameList
-            %       fieldNameList:cell[1,nElem]/char[1,] - name of the field
+            %         Input:
+            %            fieldNameList: char/cell[1,] of char - a list of fields
+            %                   for which factor will be calculated
+            %         Output:
+            %             factor:double[1, 1] - calculated factor
+            %
+            %       fieldNameList:cell[1,nElem]/char[1,] - names of the fields
             %       
             %  Output:
             %       none
+            % 
+            % Example:
+            %   nPoints=5;
+            %   calcPrecision=0.001;
+            %   approxSchemaDescr=char.empty(1,0);
+            %   approxSchemaName=char.empty(1,0);
+            %   nDims=3;
+            %   nTubes=1;
+            %   lsGoodDirVec=[1;0;1];
+            %   aMat=zeros(nDims,nPoints);
+            %   timeVec=1:nPoints;
+            %   sTime=nPoints;
+            %   approxType=gras.ellapx.enums.EApproxType.Internal;
+            %   qArrayList=repmat({repmat(diag([1 2 3]),[1,1,nPoints])},1,nTubes);
+            %   ltGoodDirArray=repmat(lsGoodDirVec,[1,nTubes,nPoints]);
+            %   fromMatEllTube=...
+            %         gras.ellapx.smartdb.rels.EllTube.fromQArrays(qArrayList,...
+            %         aMat, timeVec,ltGoodDirArray, sTime, approxType,...
+            %         approxSchemaName, approxSchemaDescr, calcPrecision);
+            %   fromMatEllTube.scale(@(varargin)2,{});
             import gras.ellapx.smartdb.rels.EllTubeBasic;
             scaleFactorVec=self.applyTupleGetFunc(fCalcFactor,...
                 fieldNameList);
