@@ -17,15 +17,15 @@ classdef TestSuiteStaticProp < mlunitext.test_case
             modgen.common.obj.test.StaticPropStorage.setProp('beta',11);
             modgen.common.obj.test.StaticPropStorage2.setProp('alpha',2);
             modgen.common.obj.test.StaticPropStorage2.setProp('beta',22);
-            mlunit.assert_equals(1,...
+            mlunitext.assert_equals(1,...
                 modgen.common.obj.test.StaticPropStorage.getProp('alpha'));
             %
-            mlunit.assert_equals(2,...
+            mlunitext.assert_equals(2,...
                 modgen.common.obj.test.StaticPropStorage2.getProp('alpha'));
-            mlunit.assert_equals(11,...
+            mlunitext.assert_equals(11,...
                 modgen.common.obj.test.StaticPropStorage.getProp('beta'));
             %
-            mlunit.assert_equals(22,...
+            mlunitext.assert_equals(22,...
                 modgen.common.obj.test.StaticPropStorage2.getProp('beta'));
         end
         function self=test_checkPresence(self)
@@ -33,20 +33,20 @@ classdef TestSuiteStaticProp < mlunitext.test_case
             modgen.common.obj.test.StaticPropStorage2.setProp('beta',11);        
             %
             [resVal,isThere]=modgen.common.obj.test.StaticPropStorage2.getProp('beta',true);
-            mlunit.assert_equals(true,isThere);
-            mlunit.assert_equals(11,resVal);
+            mlunitext.assert_equals(true,isThere);
+            mlunitext.assert_equals(11,resVal);
             %
             [resVal,isThere]=modgen.common.obj.test.StaticPropStorage2.getProp('beta2',true);
-            mlunit.assert_equals(true,isempty(resVal));
-            mlunit.assert_equals(false,isThere);
+            mlunitext.assert_equals(true,isempty(resVal));
+            mlunitext.assert_equals(false,isThere);
             %
             [resVal,isThere]=modgen.common.obj.test.StaticPropStorage.getProp('alpha',true);
-            mlunit.assert_equals(true,isThere);
-            mlunit.assert_equals(1,resVal);
+            mlunitext.assert_equals(true,isThere);
+            mlunitext.assert_equals(1,resVal);
             %
             [resVal,isThere]=modgen.common.obj.test.StaticPropStorage.getProp('alpha2',true);
-            mlunit.assert_equals(false,isThere);
-            mlunit.assert_equals(true,isempty(resVal));
+            mlunitext.assert_equals(false,isThere);
+            mlunitext.assert_equals(true,isempty(resVal));
             %
             try 
                [~,~]=modgen.common.obj.test.StaticPropStorage.getProp('alpha2');
@@ -61,7 +61,7 @@ classdef TestSuiteStaticProp < mlunitext.test_case
             
         end
         function aux_checkNoPropException(~,meObj)
-            mlunit.assert_equals(true,~isempty(findstr(':noProp',meObj.identifier)));
+            mlunitext.assert_equals(true,~isempty(findstr(':noProp',meObj.identifier)));
         end
                
     end

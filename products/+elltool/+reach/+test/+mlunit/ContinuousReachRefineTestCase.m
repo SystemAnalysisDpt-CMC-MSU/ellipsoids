@@ -31,7 +31,7 @@ classdef ContinuousReachRefineTestCase < mlunitext.test_case
             %
             reachWholeObj.refine(self.l0P2Mat);
             isEqual = reachObj.isEqual(reachWholeObj);
-            mlunit.assert_equals(true,isEqual);
+            mlunitext.assert_equals(true,isEqual);
         end
         function self = testArrayMethods(self)
             cellfun(@(x) checkArrayMethods(self,x), self.SIZE_LIST);

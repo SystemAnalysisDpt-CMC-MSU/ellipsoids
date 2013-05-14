@@ -38,4 +38,4 @@ for iFormat=1:nFormats
         suite_diskbasedhashmap_nohashkeysList{iFormat}.tests);
 end
 %    
-suite = mlunit.test_suite(testList);
+suite = mlunitext.test_suite(testList);

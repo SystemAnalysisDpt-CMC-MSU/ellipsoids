@@ -1,5 +1,5 @@
 function results=run_regr_tests(confNameList)
-runner = mlunit.text_test_runner(1, 1);
+runner = mlunitext.text_test_runner(1, 1);
 loader = mlunitext.test_loader;
 crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
 if nargin>0

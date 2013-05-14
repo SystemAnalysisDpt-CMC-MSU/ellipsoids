@@ -36,7 +36,7 @@ classdef mlunit_test_adaptiveconfrepomgr < modgen.configuration.test.mlunit_test
             SConf=genteststruct(3);
             self.tcm.putConf('testConfB',SConf);
             SRes=self.cm.getConf('testConfB');
-            mlunit.assert_equals(isequalwithequalnans(SConf,SRes),true);
+            mlunitext.assert_equals(isequalwithequalnans(SConf,SRes),true);
         end
         function self = test_setGetConfWithVer(self)
             import modgen.configuration.test.*;
@@ -45,8 +45,8 @@ classdef mlunit_test_adaptiveconfrepomgr < modgen.configuration.test.mlunit_test
             testVer=min(333,lastRev);
             self.tcm.putConf('testConfB',SConf,testVer);
             [SRes,resVer]=self.cm.getConf('testConfB');
-            mlunit.assert_equals(isequalwithequalnans(SConf,SRes),true);
-            mlunit.assert_equals(testVer,resVer);
+            mlunitext.assert_equals(isequalwithequalnans(SConf,SRes),true);
+            mlunitext.assert_equals(testVer,resVer);
         end        
         function self=test_deployConfTemplate(self)
             confNameList=[self.tcm.getConfNameList,{'testConfD'}];            
@@ -54,7 +54,7 @@ classdef mlunit_test_adaptiveconfrepomgr < modgen.configuration.test.mlunit_test
             self.cm.deployConfTemplate('*');
             isEqual=isequal(confNameList,...
                 sort(self.cm.getConfNameList()));
-            mlunit.assert_equals(isEqual,true);
+            mlunitext.assert_equals(isEqual,true);
         end
     end
 end

@@ -32,9 +32,9 @@ classdef mlunit_test_common < mlunitext.test_case
             val=valOrig+1;
             cm.setParam('alpha',val,'writeDepth','cache');
             cm.selectConf('testConfA','reloadIfSelected',false);
-            mlunit.assert_equals(val,cm.getParam('alpha'));
+            mlunitext.assert_equals(val,cm.getParam('alpha'));
             cm.selectConf('testConfA','reloadIfSelected',true);
-            mlunit.assert_equals(valOrig,cm.getParam('alpha'));
+            mlunitext.assert_equals(valOrig,cm.getParam('alpha'));
             %
         end
     end

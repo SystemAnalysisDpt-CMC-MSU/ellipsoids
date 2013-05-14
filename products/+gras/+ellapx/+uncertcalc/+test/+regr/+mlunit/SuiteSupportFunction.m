@@ -82,7 +82,7 @@ classdef SuiteSupportFunction < mlunitext.test_case
                 calcPrecision = crm.getParam('genericProps.calcPrecision');
                 isOk = all(SRunProp.ellTubeProjRel.calcPrecision <=...
                     calcPrecision);
-                mlunit.assert_equals(true,isOk);
+                mlunitext.assert_equals(true,isOk);
                 %
                 AtCMat = self.crmSys.getParam('At');
                 fAtMatCalc = @(t) ...
@@ -133,7 +133,7 @@ classdef SuiteSupportFunction < mlunitext.test_case
                             break;
                         end
                     end
-                    mlunit.assert_equals(true, isFound,...
+                    mlunitext.assert_equals(true, isFound,...
                         'Vector mapping - good dir vector not found');
                     %
                     curGoodDirDynamicsObj = ...
@@ -163,7 +163,7 @@ classdef SuiteSupportFunction < mlunitext.test_case
                         abs(expNormResVec - normSupFunVec);                    
                     errTol = max(errorSupFunMat(:));
                     isOk = errTol <= calcPrecision;
-                    mlunit.assert_equals(true, isOk,...
+                    mlunitext.assert_equals(true, isOk,...
                         sprintf('errTol=%g>calcPrecision=%g', errTol,...
                         calcPrecision));
                 end

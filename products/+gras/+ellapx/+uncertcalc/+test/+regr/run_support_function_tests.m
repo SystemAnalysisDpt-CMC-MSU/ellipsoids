@@ -6,7 +6,7 @@ function results=run_support_function_tests(inpConfNameList)
 import gras.gen.MatVector;
 import gras.mat.symb.iscellofstringconst;
 %
-runner = mlunit.text_test_runner(1, 1);
+runner = mlunitext.text_test_runner(1, 1);
 loader = mlunitext.test_loader;
 %
 BAD_TEST_NAME_LIST = {};

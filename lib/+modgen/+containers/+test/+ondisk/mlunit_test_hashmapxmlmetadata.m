@@ -26,10 +26,10 @@ classdef mlunit_test_hashmapxmlmetadata < modgen.containers.test.mlunit_test_dis
             metaDataGetList=fliplr(metaDataGetList);
             %compare values
             isEqual=all(cellfun(@isequal,inpObjList,valueObjList));
-            mlunit.assert_equals(isEqual,true);
+            mlunitext.assert_equals(isEqual,true);
             %compare meta data
             isEqual=all(cellfun(@isequal,metaDataList,metaDataGetList));
-            mlunit.assert_equals(isEqual,true);
+            mlunitext.assert_equals(isEqual,true);
             %
             self.map.removeAll();
         end
