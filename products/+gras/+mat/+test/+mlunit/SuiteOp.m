@@ -254,7 +254,7 @@ classdef SuiteOp < mlunitext.test_case
                 asqtMatFun.getNCols()], asqtMatFun.getMatrixSize());
             self.isMatVecEq(size(asqtMat), asqtMatFun.getMatrixSize());
             %
-            % size test triu square
+            % test triu square
             %
             rsqMatFun = factory.triu(asqMatFun);
             rsqtMatFun = factory.triu(asqtMatFun);
@@ -263,7 +263,7 @@ classdef SuiteOp < mlunitext.test_case
             self.isMatVecEq(asqtMatFun.getMatrixSize, ...
                 rsqtMatFun.getMatrixSize());
             %
-            % size test triu not square
+            % test triu not square
             %
             rMatFun = factory.triu(aMatFun);
             rtMatFun = factory.triu(atMatFun);
