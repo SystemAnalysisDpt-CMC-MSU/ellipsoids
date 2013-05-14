@@ -1,5 +1,5 @@
 % array [firstEllObj secEllObj] should be treated as intersection
-externalEllObj.isinside([firstEllObj secEllObj], 'i')  
+externalEllObj.isContainedInIntersection([firstEllObj secEllObj], 'i')  
 
 % ans =
 % 
