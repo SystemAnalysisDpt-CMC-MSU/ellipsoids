@@ -51,7 +51,7 @@ classdef mlunit_test_diskbasedhashmap < mlunitext.test_case
                 self.testParamList,{'storageLocationRoot'});
             obj2=self.mapFactory.getInstance('storageLocationRoot',...
                 fileparts(which(metaClass.Name)),inpParamList{:});
-            mlunit.assert_equals(strcmp(obj1.getStorageLocation(),...
+            mlunitext.assert_equals(strcmp(obj1.getStorageLocation(),...
                 obj2.getStorageLocation),true);
         end
         %
@@ -69,7 +69,7 @@ classdef mlunit_test_diskbasedhashmap < mlunitext.test_case
             self.map.put(keyList,inpObjList);
             valueObjList=fliplr(self.map.get(fliplr(keyList),'UniformOutput',false));
             isEqual=all(cellfun(@isequal,inpObjList,valueObjList));
-            mlunit.assert_equals(isEqual,true);
+            mlunitext.assert_equals(isEqual,true);
             %
             map=self.map;
             map.removeAll();
@@ -90,7 +90,7 @@ classdef mlunit_test_diskbasedhashmap < mlunitext.test_case
             map.put({keyStr},{rel});
             resObj=map.get({keyStr});
             isEqual=isequal(rel,resObj);
-            mlunit.assert_equals(true,isEqual);
+            mlunitext.assert_equals(true,isEqual);
         end
         %
         function self=test_getKeyList(self,varargin)
@@ -105,10 +105,10 @@ classdef mlunit_test_diskbasedhashmap < mlunitext.test_case
             keyList={'rel1','rel2'};
             self.map.put(keyList,inpObjList);
             isEqual=isequal(sort(keyList),sort(self.map.getKeyList));
-            mlunit.assert_equals(isEqual,true);
+            mlunitext.assert_equals(isEqual,true);
             self.map.remove('rel2');
             isEqual=isequal({'rel1'},self.map.getKeyList);
-            mlunit.assert_equals(isEqual,true);
+            mlunitext.assert_equals(isEqual,true);
             self.map.removeAll();
         end
         %
@@ -123,14 +123,14 @@ classdef mlunit_test_diskbasedhashmap < mlunitext.test_case
             self.map.put(keyList,inpObjList);
             valueObjList=self.map.get(keyList,'UniformOutput',false);
             isEqual=all(cellfun(@isequal,inpObjList,valueObjList));
-            mlunit.assert_equals(isEqual,true);
+            mlunitext.assert_equals(isEqual,true);
             inpObjList=rel1;
             keyList={'rel1'};
             self.map.put(keyList,inpObjList);
             valueObjList=self.map.get(keyList,'UniformOutput',false);
             inpObjList={inpObjList};
             isEqual=all(cellfun(@isequal,inpObjList,valueObjList));
-            mlunit.assert_equals(isEqual,true);
+            mlunitext.assert_equals(isEqual,true);
         end
         %
         function self=test_isKeyAndRemove(self,varargin)
@@ -145,12 +145,12 @@ classdef mlunit_test_diskbasedhashmap < mlunitext.test_case
             keyList={'rel1','rel2','rel3'};
             self.map.put(keyList,inpObjList);
             self.map.remove(keyList{3});
-            mlunit.assert_equals(self.map.isKey(keyList{3}),false);
+            mlunitext.assert_equals(self.map.isKey(keyList{3}),false);
             inpObjList=inpObjList(1:2);
             keyList=keyList(1:2);
             valueObjList=fliplr(self.map.get(fliplr(keyList),'UniformOutput',false));
             isEqual=all(cellfun(@isequal,inpObjList,valueObjList));
-            mlunit.assert_equals(isEqual,true);
+            mlunitext.assert_equals(isEqual,true);
             self.map.removeAll();
         end
         %
@@ -171,10 +171,10 @@ classdef mlunit_test_diskbasedhashmap < mlunitext.test_case
             %
             isThere1=self.map.isKey(keyList);
             isThere2=map1.isKey(keyList);
-            mlunit.assert_equals(all(isThere1==isThere2),true);
+            mlunitext.assert_equals(all(isThere1==isThere2),true);
             map1.removeAll();
             isThere=map1.isKey({'rel1'});
-            mlunit.assert_equals(isThere,false);
+            mlunitext.assert_equals(isThere,false);
             self.map.removeAll();
         end
         %

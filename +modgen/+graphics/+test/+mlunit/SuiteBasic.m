@@ -70,8 +70,8 @@ classdef SuiteBasic < mlunitext.test_case
                 'local');
             hLightVec=modgen.graphics.lightaxis(hAxes,lightCoordList,powerVec,...
                 lightStyleList);
-            mlunit.assert_equals(length(h1LightVec),length(hLightVec));
-            mlunit.assert_equals(sum(powerVec),length(hLightVec));
+            mlunitext.assert_equals(length(h1LightVec),length(hLightVec));
+            mlunitext.assert_equals(sum(powerVec),length(hLightVec));
             nLightObjs=sum(powerVec);
             indRefVec=zeros(1,nLightObjs);
             powerCumVec=cumsum(powerVec(1:end-1))+1;
@@ -87,7 +87,7 @@ classdef SuiteBasic < mlunitext.test_case
                 expLightCoordVec=lightCoordList{indRefVec(iLightObj)};
                 %
                 isEqual=all(max(abs(lightCoordVec-expLightCoordVec))<MAX_TOL);
-                mlunit.assert_equals(true,isEqual);
+                mlunitext.assert_equals(true,isEqual);
             end
             close(hFigure);
             function limVec=getLim(hFunc)
@@ -111,7 +111,7 @@ classdef SuiteBasic < mlunitext.test_case
                 cMat,'Parent',hAxes);
             view(3);
             hParent=get(h,'Parent');
-            mlunit.assert_equals(hAxes,hParent);
+            mlunitext.assert_equals(hAxes,hParent);
             delete(hFig);
         end
     end

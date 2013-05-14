@@ -4,7 +4,7 @@ classdef test_text_test_result < mlunitext.test_case
     % Example:
     %         run(gui_test_runner, 'test_text_test_result');
     %
-    % See also MLUNIT.TEXT_TEST_RESULT.
+    % See also MLUNITEXT.TEXT_TEST_RESULT.
     %
     % $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
     % Faculty of Computational Mathematics and Cybernetics, System Analysis
@@ -30,17 +30,17 @@ classdef test_text_test_result < mlunitext.test_case
             
             import mlunit_test.*;
             
-            result = start_test(result, mock_test('test_method'));
-            result = add_success(result, mock_test('test_method'));
-            result = stop_test(result, mock_test('test_method'));
-            result = start_test(result, mock_test('test_method'));
-            result = add_error_by_message(result,...
+            start_test(result, mock_test('test_method'));
+            add_success(result, mock_test('test_method'));
+            stop_test(result, mock_test('test_method'));
+            start_test(result, mock_test('test_method'));
+            add_error_by_message(result,...
                 mock_test('test_method'),'foo error');
-            result = stop_test(result, mock_test('test_method'));
-            result = start_test(result, mock_test('test_method'));
-            result = add_failure_by_message(result,...
+            stop_test(result, mock_test('test_method'));
+            start_test(result, mock_test('test_method'));
+            add_failure_by_message(result,...
                 mock_test('test_method'), 'foo failure');
-            result = stop_test(result, mock_test('test_method'));
+            stop_test(result, mock_test('test_method'));
         end
         function self = test_verbosity_null(self)
             % TEST_VERBOSITY_NULL tests the behaviour
@@ -67,13 +67,13 @@ classdef test_text_test_result < mlunitext.test_case
             %   run(gui_test_runner,
             %       'test_text_test_result(''test_verbosity_one'');');
             %
-            %  See also MLUNIT.TEXT_TEST_RESULT.
-            import mlunit.*;
+            %  See also MLUNITEXT.TEXT_TEST_RESULT.
+            import mlunitext.*;
             %
             result = text_test_result(1,1);
             [stdOut, result] = evalc('set_result(self, result);');
             assert(strcmp('.EF', stdOut));
-            assert_equals('mlunit.text_test_result run=3 errors=1 failures=1', ...
+            assert_equals('mlunitext.text_test_result run=3 errors=1 failures=1', ...
                 summary(result));
         end
         
@@ -85,7 +85,7 @@ classdef test_text_test_result < mlunitext.test_case
             %   run(gui_test_runner,
             %       'test_text_test_result(''test_verbosity_two'');');
             %
-            %  See also MLUNIT.TEXT_TEST_RESULT.
+            %  See also MLUNITEXT.TEXT_TEST_RESULT.
             
             import mlunitext.*;
             %

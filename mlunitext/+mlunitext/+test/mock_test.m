@@ -32,7 +32,7 @@ classdef mock_test < mlunitext.test_case
                 logger=modgen.logging.log4j.Log4jConfigurator.getLogger();
                 logger.info('test_fail_one');
             end
-            mlunit.fail;
+            mlunitext.fail;
         end
         function test_pass_two(self)
             if self.verbose
@@ -58,7 +58,7 @@ classdef mock_test < mlunitext.test_case
                 logger=modgen.logging.log4j.Log4jConfigurator.getLogger();
                 logger.info('test_fail_two');
             end
-            mlunit.fail;
+            mlunitext.fail;
         end
         function test_pass_four(self)
             if self.verbose
