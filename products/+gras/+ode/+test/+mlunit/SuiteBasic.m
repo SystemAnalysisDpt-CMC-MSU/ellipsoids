@@ -372,23 +372,57 @@ classdef SuiteBasic < mlunitext.test_case
         %
         function self=testMatrixODESolver(self)
     
-            odePropList={@ode45,'NormControl','on','RelTol',0.001,'AbsTol',0.0001};
-            sizeVec=[3 3];
-            nTimePoints=100;
-            timeVec=linspace(0,1,nTimePoints);
-            initVal=eye(sizeVec);
+            odePropList = {@ode45, 'NormControl', 'on', 'RelTol', ...
+                0.001, 'AbsTol', 0.0001};
+            %
+            nTimePoints = 1;
+            timeVec = 0;
+            sizeVec = [3 3];
+            initVal = eye(sizeVec);
             check();
-            sizeVec=3;
-            initVal=ones(3,1);
+            timeVec = 1;
+            check();
+            %
+            timeVec = 0;
+            sizeVec = 3;
+            initVal = ones(3, 1);
+            check();
+            timeVec = 1;
+            check();
+            %
+            nTimePoints = 2;
+            timeVec = [1 1];
+            sizeVec = [3 3];
+            initVal = eye(sizeVec);
+            check();
+            sizeVec = 3;
+            initVal = ones(3, 1);
+            check();
+            %
+            nTimePoints = 100;
+            timeVec = linspace(0, 1, nTimePoints);
+            sizeVec = [3 3];
+            initVal = eye(sizeVec);
+            check();
+            sizeVec = 3;
+            initVal = ones(3, 1);
             check();
             function check()
                 import gras.ode.test.mlunit.SuiteBasic;
-                solveObj=gras.ode.MatrixODESolver(sizeVec,odePropList{:});
-                [resTimeVec,resArray]=solveObj.solve(@SuiteBasic.fDeriv,...
-                    timeVec,initVal);
-                mlunitext.assert_equals(true,...
-                    isequal(size(resArray),[sizeVec,nTimePoints]));
-                mlunitext.assert_equals(true,isequal(resTimeVec,timeVec));
+                solveObj = gras.ode.MatrixODESolver(sizeVec, ...
+                    odePropList{:});
+                [resTimeVec, resArray] = solveObj.solve(...
+                    @SuiteBasic.fDeriv, timeVec, initVal);
+                if (nTimePoints > 1) && (timeVec(1) ~= timeVec(end))
+                    mlunitext.assert_equals(true, isequal(resTimeVec, ...
+                        timeVec));
+                    mlunitext.assert_equals(true, isequal(size(resArray), ...
+                        [sizeVec, nTimePoints]));
+                else
+                    mlunitext.assert_equals(true, isequal(resTimeVec, ...
+                        timeVec(1)));
+                    mlunitext.assert_equals(true, isequal(resArray, initVal));
+                end
             end
         end
     end

@@ -14,35 +14,11 @@ classdef SuiteSupportFunction < mlunitext.test_case
         ABS_TOL_FACTOR = 1e-3;
     end
     methods (Static)
-        function difVec = derivativeSupportFunction(t, xVec, fAMat,...
-                fBMat, fPVec, fPMat, nElem)
-            yVec = xVec(1 : nElem);
-            %
-            difVec = zeros(nElem + 1, 1);
-            difVec(1 : nElem) = -(fAMat(t).') * yVec;
-            difVec(nElem + 1) =...
-                (yVec.') * fBMat(t) * fPVec(t) +...
-                realsqrt((yVec.') * fBMat(t) * fPMat(t) * (fBMat(t).') * yVec);
-        end
-        %
-        function fMatCalc = getHandleFromCellMat(inputCMat)
-            localCMat = inputCMat;
-            [nRows, nColumn] = size(localCMat);
-            for iRow = 1 : nRows
-                for jColumn = 1 : nColumn
-                    if jColumn == nColumn
-                        localCMat(iRow, jColumn) =...
-                            strcat(localCMat(iRow, jColumn), ';');
-                    else
-                        localCMat(iRow, jColumn) =...
-                            strcat(localCMat(iRow, jColumn), ',');
-                    end
-                end
-            end
-            localCMat = localCMat.';
-            helpStr = strcat('fRes = @(t) [', localCMat{:}, '];');
-            eval(helpStr);
-            fMatCalc = fRes;
+        function dSFunc = derivativeSupportFunction(t, ~, fxVec, fAMat,...
+                fBMat, fPVec, fPMat)
+            cacheVec = (fxVec(t)') * fBMat(t);
+            dSFunc = cacheVec * fPVec(t) + ...
+                realsqrt(cacheVec * fPMat(t) * (cacheVec'));
         end
     end
     methods
@@ -87,13 +63,15 @@ classdef SuiteSupportFunction < mlunitext.test_case
                 crm.deployConfTemplate(confNameList{iConf});
             end
             %
+            matOpObj = gras.mat.CompositeMatrixOperations();
+            %
             for iConf = 1 : nConfs
                 confName = confNameList{iConf};
                 crm.selectConf(confName);
                 crm.setParam('plottingProps.isEnabled',false,...
                     'writeDepth','cache');
                 %
-                SRunProp = gras.ellapx.uncertcalc.run(confName,...
+                [SRunProp, SRunAuxProp] = gras.ellapx.uncertcalc.run(confName,...
                     'confRepoMgr', crm, 'sysConfRepoMgr', crmSys);
                 %
                 fGetScaleFactor = @(x)1/x;
@@ -107,13 +85,17 @@ classdef SuiteSupportFunction < mlunitext.test_case
                 mlunitext.assert_equals(true,isOk);
                 %
                 AtCMat = self.crmSys.getParam('At');
-                fAtMatCalc = self.getHandleFromCellMat(AtCMat);
+                fAtMatCalc = @(t) ...
+                    matOpObj.fromSymbMatrix(AtCMat).evaluate(t);
                 BtCMat = self.crmSys.getParam('Bt');
-                fBtMatCalc = self.getHandleFromCellMat(BtCMat);
+                fBtMatCalc = @(t) ...
+                    matOpObj.fromSymbMatrix(BtCMat).evaluate(t);
                 PtCVec = self.crmSys.getParam('control_restriction.a');
-                fPtVecCalc = self.getHandleFromCellMat(PtCVec);
+                fPtVecCalc = @(t) ...
+                    matOpObj.fromSymbMatrix(PtCVec).evaluate(t);
                 PtCMat = self.crmSys.getParam('control_restriction.Q');
-                fPtMatCalc = self.getHandleFromCellMat(PtCMat);
+                fPtMatCalc = @(t) ...
+                    matOpObj.fromSymbMatrix(PtCMat).evaluate(t);
                 x0Vec = self.crmSys.getParam('initial_set.a');
                 %
                 timeCVec = SRunProp.ellTubeRel.timeVec;
@@ -123,15 +105,42 @@ classdef SuiteSupportFunction < mlunitext.test_case
                 ellMatCArray = SRunProp.ellTubeRel.QArray;
                 ellCenterCMat = SRunProp.ellTubeRel.aMat;
                 %
-                nElem = size(x0Vec, 1);
                 OdeOptionsStruct = odeset(...
                     'RelTol', calcPrecision * self.REL_TOL_FACTOR,...
                     'AbsTol', calcPrecision * self.ABS_TOL_FACTOR);
+                lsGoodDirMat = SRunAuxProp.goodDirSetObj.getlsGoodDirMat();
+                for iGoodDir = 1:size(lsGoodDirMat, 2)
+                    lsGoodDirMat(:, iGoodDir) = ...
+                        lsGoodDirMat(:, iGoodDir) / ...
+                        norm(lsGoodDirMat(:, iGoodDir));
+                end
+                lsGoodDirCMat = SRunProp.ellTubeRel.lsGoodDirVec();
                 for iTuple = 1 : nTuples
                     curTimeVec = timeCVec{iTuple};
                     curGoodDirMat = goodDirCMat{iTuple};
                     curEllMatArray = ellMatCArray{iTuple};
                     curEllCenterMat = ellCenterCMat{iTuple};
+                    %
+                    % good directions' indexes mapping
+                    %
+                    curGoodDirVec = lsGoodDirCMat{iTuple};
+                    curGoodDirVec = curGoodDirVec / norm(curGoodDirVec);
+                    %
+                    for iGoodDir = 1:size(lsGoodDirMat, 2)
+                        isFound = norm(curGoodDirVec - ...
+                            lsGoodDirMat(:, iGoodDir)) <= calcPrecision;
+                        if isFound
+                            break;
+                        end
+                    end
+                    mlunitext.assert_equals(true, isFound,...
+                        'Vector mapping - good dir vector not found');
+                    %
+                    curGoodDirDynamicsObj = ...
+                        SRunAuxProp.goodDirSetObj.getGoodDirOneCurveSpline(...
+                        iGoodDir);
+                    fCalclVec = @(t) curGoodDirDynamicsObj.evaluate(t);
+                    %
                     supFun0 =...
                         curGoodDirMat(:, 1).' * curEllCenterMat(:, 1) +...
                         realsqrt(curGoodDirMat(:, 1).' *...
@@ -139,22 +148,9 @@ classdef SuiteSupportFunction < mlunitext.test_case
                     %
                     [~, expResultMat] =...
                         ode45(@(t, x) self.derivativeSupportFunction(t,...
-                        x, fAtMatCalc, fBtMatCalc, fPtVecCalc,...
-                        fPtMatCalc, nElem), curTimeVec,...
-                        [curGoodDirMat(:, 1).', supFun0], OdeOptionsStruct);
-                    %
-                    expSupFuncMat = expResultMat(:, 1 : nElem);
-                    expNormSupFuncMat =...
-                        expSupFuncMat ./ norm(expSupFuncMat);
-                    supFuncMat = curGoodDirMat(:, :);
-                    normSupFuncMat = supFuncMat.' ./ norm(supFuncMat);
-                    errorMat = abs(expNormSupFuncMat - normSupFuncMat);
-                    errTol = max(errorMat(:));
-                    isOk = errTol <= calcPrecision;
-                    %
-                    mlunitext.assert_equals(true, isOk,...
-                        sprintf('errTol=%g>calcPrecision=%g', errTol,...
-                        calcPrecision));
+                        x, fCalclVec, fAtMatCalc, fBtMatCalc, ...
+                        fPtVecCalc, fPtMatCalc), curTimeVec,...
+                        supFun0, OdeOptionsStruct);
                     %
                     supFunVec =...
                         realsqrt(gras.gen.SquareMatVector.lrMultiplyByVec(...

@@ -4,7 +4,7 @@
 	<genericProps type="struct" >
 		<calcTimeLimVec type="double" >0 10</calcTimeLimVec>
 		<calcPrecision type="double" >0.0001</calcPrecision>
-		<isSplineForMatrixCalcUsed type="boolean" >0</isSplineForMatrixCalcUsed>
+		<isSplineForMatrixCalcUsed type="boolean" >1</isSplineForMatrixCalcUsed>
 	</genericProps>
 	<projectionProps type="struct" >
 		<projSpaceSetName type="char" >set1</projSpaceSetName>
@@ -59,7 +59,7 @@
             </log4jSettings>
 	</logging>
 	<plottingProps type="struct" >
-		<isEnabled type="boolean" >0</isEnabled>
+		<isEnabled type="boolean" >1</isEnabled>
 		<viewAngleVec type="double" >37.5 30</viewAngleVec>
 		<isGoodCurvesSeparately type="boolean" >1</isGoodCurvesSeparately>
 	</plottingProps>
@@ -104,7 +104,7 @@
 			</schemas>
 		</extIntApx>
 	</ellipsoidalApxProps>
-	<systemDefinitionConfName type="char" >ellDemo3sys</systemDefinitionConfName>
+	<systemDefinitionConfName type="char" >rot2d</systemDefinitionConfName>
 </valueObj>
-<keyStr type="char" >ellDemo3test</keyStr>
+<keyStr type="char" >rot2d</keyStr>
 </root>
