@@ -25,11 +25,11 @@ classdef LReachDiscrForwardDynamics < ...
             %
             % create C(t)Q(t)C'(t) and C(t)q(t) dynamics
             %
-            CtDefCMat = problemDef.getCMatDef();
+            ctDefCMat = problemDef.getCMatDef();
             self.CQCTransDynamics = compOpFact.rSymbMultiply(...
-                CtDefCMat, problemDef.getQCMat(), CtDefCMat.');
+                ctDefCMat, problemDef.getQCMat(), ctDefCMat.');
             self.CqtDynamics = compOpFact.rSymbMultiplyByVec(...
-                CtDefCMat, problemDef.getqCVec());
+                ctDefCMat, problemDef.getqCVec());
             %
             % copy necessary data to local variables
             %

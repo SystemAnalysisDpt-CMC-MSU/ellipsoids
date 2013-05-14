@@ -18,11 +18,11 @@ classdef AReachDiscrForwardDynamics <...
             %
             % copy necessary data to local variables
             %
-            AtDefCMat = problemDef.getAMatDef();
-            BtDefCMat = problemDef.getBMatDef();
+            atDefCMat = problemDef.getAMatDef();
+            btDefCMat = problemDef.getBMatDef();
             t0 = problemDef.gett0();
             t1 = problemDef.gett1();
-            sizeAtVec = size(AtDefCMat);
+            sizeAtVec = size(atDefCMat);
             %
             self.timeVec = t0:t1;
             nTimePoints = length(self.timeVec);
@@ -32,27 +32,27 @@ classdef AReachDiscrForwardDynamics <...
             %
             compOpFact = CompositeMatrixOperations();
             %
-            aMatFcn = MatrixSymbFormulaBased(AtDefCMat);
+            aMatFcn = MatrixSymbFormulaBased(atDefCMat);
             aInvMatFcn = compOpFact.inv(aMatFcn);
             self.AtDynamics = aMatFcn;
             self.AtInvDynamics = aInvMatFcn;
             self.BPBTransDynamics = compOpFact.rSymbMultiply(...
-                BtDefCMat, problemDef.getPCMat(), BtDefCMat.');
+                btDefCMat, problemDef.getPCMat(), btDefCMat.');
             self.BptDynamics = compOpFact.rSymbMultiplyByVec(...
-                BtDefCMat, problemDef.getpCVec());
+                btDefCMat, problemDef.getpCVec());
             %
             % compute X(t,t0)
             %
-            data_Xtt0 = zeros([sizeAtVec nTimePoints]);
-            data_Xtt0(:, :, 1) = eye(sizeAtVec);
+            dataXtt0 = zeros([sizeAtVec nTimePoints]);
+            dataXtt0(:, :, 1) = eye(sizeAtVec);
             for iTime = 2:nTimePoints
-                data_Xtt0(:, :, iTime) = ...
+                dataXtt0(:, :, iTime) = ...
                     self.AtDynamics.evaluate(self.timeVec(iTime - 1)) * ...
-                    data_Xtt0(:, :, iTime - 1);
+                    dataXtt0(:, :, iTime - 1);
             end
             %
             self.Xtt0Dynamics = MatrixInterpolantFactory.createInstance(...
-                'column', data_Xtt0, self.timeVec);
+                'column', dataXtt0, self.timeVec);
         end
     end
 end

@@ -88,14 +88,11 @@ classdef ReachDiscrete < elltool.reach.AReach
     end
     %
     methods (Static, Access = private)
-        function [QArrayList ltGoodDirArray] = ...
+        function [qArrayList ltGoodDirArray] = ...
                 calculateApproxShape(smartLinSys, l0Mat, ...
-                relTol, approxType)
+                relTol, approxType, isDisturb)
             import elltool.conf.Properties;
             import gras.ellapx.enums.EApproxType;
-            %
-            isVerbose = Properties.getIsVerbose();
-            Properties.setIsVerbose(false);
             %
             isBack = isa(smartLinSys, ...
                 'gras.ellapx.lreachplain.probdyn.LReachDiscrBackwardDynamics');
@@ -103,65 +100,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             xDim = smartLinSys.getDimensionality();
             timeVec = smartLinSys.getTimeVec();
             nTubes = size(l0Mat, 2);
-            QArrayList = repmat({repmat(zeros(xDim), ...
-                [1, 1, length(timeVec)])}, 1, nTubes);
-            ltGoodDirArray = zeros(xDim, nTubes, length(timeVec));
-            lMat = zeros(xDim, length(timeVec));
-            %
-            for iTube = 1:nTubes
-                qMat = smartLinSys.getX0Mat;
-                qMat = ell_regularize(qMat, relTol);
-                qMat = 0.5 * (qMat + qMat');
-                QArrayList{iTube}(:, :, 1) = qMat;
-                lVec = l0Mat(:, iTube);
-                lMat(:, 1) = lVec;
-                for iTime = 1:(length(timeVec) - 1)
-                    aMat = smartLinSys.getAtDynamics(). ...
-                        evaluate(timeVec(iTime + isBack));
-                    aInvMat = smartLinSys.getAtInvDynamics(). ...
-                        evaluate(timeVec(iTime + isBack));
-                    bpbMat = smartLinSys.getBPBTransDynamics(). ...
-                        evaluate(timeVec(iTime + isBack));
-                    bpbMat = 0.5 * (bpbMat + bpbMat');
-                    qMat = aMat * qMat * aMat';
-                    qMat = ell_regularize(qMat, relTol / 1000);
-                    bpbMat = ell_regularize(bpbMat, relTol);
-                    lVec = aInvMat' * lVec;
-                    if approxType == EApproxType.Internal
-                        eEll = minksum_ia([ellipsoid(0.5 * (qMat + qMat')) ...
-                            ellipsoid(0.5 * (bpbMat + bpbMat'))], lVec);
-                    else
-                        eEll = minksum_ea([ellipsoid(0.5 * (qMat + qMat')) ...
-                            ellipsoid(0.5 * (bpbMat + bpbMat'))], lVec);
-                    end
-                    qMat = double(eEll);
-                    qMat = ell_regularize(qMat, relTol);
-                    qMat = 0.5 * (qMat + qMat');
-                    QArrayList{iTube}(:, :, iTime + 1) = qMat;
-                    lMat(:, iTime + 1) = lVec;
-                end
-                ltGoodDirArray(:, iTube, :) = lMat;
-            end
-            %
-            Properties.setIsVerbose(isVerbose);
-        end
-        %
-        function [QArrayList ltGoodDirArray] = ...
-                calculateApproxShapeWithDist(smartLinSys, l0Mat, ...
-                relTol, approxType)
-            import elltool.conf.Properties;
-            import gras.ellapx.enums.EApproxType;
-            %
-            isVerbose = Properties.getIsVerbose();
-            Properties.setIsVerbose(false);
-            %
-            isBack = isa(smartLinSys, ...
-                'gras.ellapx.lreachplain.probdyn.LReachDiscrBackwardDynamics');
-            %
-            xDim = smartLinSys.getDimensionality();
-            timeVec = smartLinSys.getTimeVec();
-            nTubes = size(l0Mat, 2);
-            QArrayList = repmat({repmat(zeros(xDim), ...
+            qArrayList = repmat({repmat(zeros(xDim), ...
                 [1, 1, length(timeVec)])}, 1, nTubes);
             ltGoodDirArray = zeros(xDim, nTubes, length(timeVec));
             lMat = zeros(xDim, length(timeVec));
@@ -170,7 +109,9 @@ classdef ReachDiscrete < elltool.reach.AReach
             %
             for iTube = 1:nTubes
                 qMat = smartLinSys.getX0Mat;
-                QArrayList{iTube}(:, :, 1) = qMat;
+                qMat = ell_regularize(qMat, relTol);
+                qMat = 0.5 * (qMat + qMat');
+                qArrayList{iTube}(:, :, 1) = qMat;
                 lVec = l0Mat(:, iTube);
                 lMat(:, 1) = lVec;
                 for iTime = 1:(length(timeVec) - 1)
@@ -180,35 +121,46 @@ classdef ReachDiscrete < elltool.reach.AReach
                         evaluate(timeVec(iTime + isBack));
                     bpbMat = smartLinSys.getBPBTransDynamics(). ...
                         evaluate(timeVec(iTime + isBack));
-                    gqgMat = smartLinSys.getCQCTransDynamics(). ...
-                        evaluate(timeVec(iTime + isBack));
                     bpbMat = 0.5 * (bpbMat + bpbMat');
-                    gqgMat = 0.5 * (gqgMat + gqgMat');
+                    if isDisturb
+                        gqgMat = smartLinSys.getCQCTransDynamics(). ...
+                            evaluate(timeVec(iTime + isBack));
+                        gqgMat = 0.5 * (gqgMat + gqgMat');
+                        gqgMat = ell_regularize(gqgMat, relTol);
+                    end
                     qMat = aMat * qMat * aMat';
-                    qMat = ell_regularize(qMat, relTol);
+                    qMat = ell_regularize(qMat, relTol / 1000);
                     bpbMat = ell_regularize(bpbMat, relTol);
-                    gqgMat = ell_regularize(gqgMat, relTol);
                     lVec = aInvMat' * lVec;
-                    lVec = lVec / norm(lVec);
-                    if approxType == EApproxType.Internal
-                        if isMinMax
-                            eEll = minkmp_ia(ellipsoid(0.5 * (qMat + qMat')),...
-                                ellipsoid(0.5 * (gqgMat + gqgMat')),...
-                                ellipsoid(0.5 * (bpbMat + bpbMat')), lVec);
+                    if isDisturb
+                        if approxType == EApproxType.Internal
+                            if isMinMax
+                                eEll = minkmp_ia(ellipsoid(0.5 * (qMat + qMat')),...
+                                    ellipsoid(0.5 * (gqgMat + gqgMat')),...
+                                    ellipsoid(0.5 * (bpbMat + bpbMat')), lVec);
+                            else
+                                eEll = minkpm_ia([ellipsoid(0.5 * (qMat + qMat'))...
+                                    ellipsoid(0.5 * (bpbMat + bpbMat'))],...
+                                    ellipsoid(0.5 * (gqgMat + gqgMat')), lVec);
+                            end
                         else
-                            eEll = minkpm_ia([ellipsoid(0.5 * (qMat + qMat'))...
-                                ellipsoid(0.5 * (bpbMat + bpbMat'))],...
-                                ellipsoid(0.5 * (gqgMat + gqgMat')), lVec);
+                            if isMinMax
+                                eEll = minkmp_ea(ellipsoid(0.5 * (qMat + qMat')),...
+                                    ellipsoid(0.5 * (gqgMat + gqgMat')),...
+                                    ellipsoid(0.5 * (bpbMat + bpbMat')), lVec);
+                            else
+                                eEll = minkpm_ea([ellipsoid(0.5 * (qMat + qMat'))...
+                                    ellipsoid(0.5 * (bpbMat + bpbMat'))],...
+                                    ellipsoid(0.5 * (gqgMat + gqgMat')), lVec);
+                            end
                         end
                     else
-                        if isMinMax
-                            eEll = minkmp_ea(ellipsoid(0.5 * (qMat + qMat')),...
-                                ellipsoid(0.5 * (gqgMat + gqgMat')),...
-                                ellipsoid(0.5 * (bpbMat + bpbMat')), lVec);
+                        if approxType == EApproxType.Internal
+                            eEll = minksum_ia([ellipsoid(0.5 * (qMat + qMat')) ...
+                                ellipsoid(0.5 * (bpbMat + bpbMat'))], lVec);
                         else
-                            eEll = minkpm_ea([ellipsoid(0.5 * (qMat + qMat'))...
-                                ellipsoid(0.5 * (bpbMat + bpbMat'))],...
-                                ellipsoid(0.5 * (gqgMat + gqgMat')), lVec);
+                            eEll = minksum_ea([ellipsoid(0.5 * (qMat + qMat')) ...
+                                ellipsoid(0.5 * (bpbMat + bpbMat'))], lVec);
                         end
                     end
                     %
@@ -217,13 +169,13 @@ classdef ReachDiscrete < elltool.reach.AReach
                     else
                         qMat = zeros(xDim, xDim);
                     end
-                    QArrayList{iTube}(:, :, iTime + 1) = qMat;
+                    qMat = ell_regularize(qMat, relTol);
+                    qMat = 0.5 * (qMat + qMat');
+                    qArrayList{iTube}(:, :, iTime + 1) = qMat;
                     lMat(:, iTime + 1) = lVec;
                 end
                 ltGoodDirArray(:, iTube, :) = lMat;
             end
-            %
-            Properties.setIsVerbose(isVerbose);
         end
     end
     %
@@ -246,21 +198,14 @@ classdef ReachDiscrete < elltool.reach.AReach
             isIntApprox = any(approxTypeVec == EApproxType.Internal);
             isExtApprox = any(approxTypeVec == EApproxType.External);
             %
-            if isDisturb
-                fCalcApproxShape = @(smartLinSys, l0Mat, ...
-                    relTol, approxType) ...
-                    elltool.reach.ReachDiscrete.calculateApproxShapeWithDist(...
-                    smartLinSys, l0Mat, relTol, approxType);
-            else
-                fCalcApproxShape = @(smartLinSys, l0Mat, ...
-                    relTol, approxType) ...
-                    elltool.reach.ReachDiscrete.calculateApproxShape(...
-                    smartLinSys, l0Mat, relTol, approxType);
-            end
+            fCalcApproxShape = @(smartLinSys, l0Mat, ...
+                relTol, approxType) ...
+                elltool.reach.ReachDiscrete.calculateApproxShape(...
+                smartLinSys, l0Mat, relTol, approxType, isDisturb);
             %
             if isExtApprox
                 approxType = EApproxType.External;
-                [QArrayList ~] = ...
+                [qArrayList ~] = ...
                     fCalcApproxShape(smartLinSys, l0Mat, relTol, approxType);
                 ltGoodDirArray = ...
                     goodDirSetObj.getGoodDirCurveSpline().evaluate(timeVec);
@@ -271,7 +216,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             end
             if isIntApprox
                 approxType = EApproxType.Internal;
-                [QArrayList ~] = ...
+                [qArrayList ~] = ...
                     fCalcApproxShape(smartLinSys, l0Mat, relTol, approxType);
                 ltGoodDirArray = ...
                     goodDirSetObj.getGoodDirCurveSpline().evaluate(timeVec);
@@ -284,7 +229,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             %
             function rel = create()
                 rel = gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
-                    QArrayList, aMat, timeVec, ltGoodDirArray, ...
+                    qArrayList, aMat, timeVec, ltGoodDirArray, ...
                     sTime, approxType, approxSchemaName, ...
                     approxSchemaDescr, relTol / 10);
             end

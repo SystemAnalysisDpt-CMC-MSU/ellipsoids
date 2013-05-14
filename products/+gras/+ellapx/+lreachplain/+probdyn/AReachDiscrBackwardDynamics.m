@@ -18,11 +18,11 @@ classdef AReachDiscrBackwardDynamics <...
             %
             % copy necessary data to local variables
             %
-            AtDefCMat = problemDef.getAMatDef();
-            BtDefCMat = problemDef.getBMatDef();
+            atDefCMat = problemDef.getAMatDef();
+            btDefCMat = problemDef.getBMatDef();
             t0 = problemDef.gett0();
             t1 = problemDef.gett1();
-            sizeAtVec = size(AtDefCMat);
+            sizeAtVec = size(atDefCMat);
             %
             self.timeVec = fliplr(t1:t0);
             nTimePoints = length(self.timeVec);
@@ -32,32 +32,32 @@ classdef AReachDiscrBackwardDynamics <...
             %
             compOpFact = CompositeMatrixOperations();
             %
-            aMatFcn = MatrixSymbFormulaBased(AtDefCMat);
+            aMatFcn = MatrixSymbFormulaBased(atDefCMat);
             aInvMatFcn = compOpFact.inv(aMatFcn);
             aInvTransMatFcn = compOpFact.transpose(aInvMatFcn);
             self.AtDynamics = aInvMatFcn;
             self.AtInvDynamics = aMatFcn;
-            BPBTransDynamics = compOpFact.rSymbMultiply(...
-                BtDefCMat, problemDef.getPCMat(), BtDefCMat.');
+            bpbTransDynamics = compOpFact.rSymbMultiply(...
+                btDefCMat, problemDef.getPCMat(), btDefCMat.');
             self.BPBTransDynamics = compOpFact.rMultiply(...
-                aInvMatFcn, BPBTransDynamics, aInvTransMatFcn);
-            BptDynamics = compOpFact.rSymbMultiplyByVec(...
-                BtDefCMat, problemDef.getpCVec());
+                aInvMatFcn, bpbTransDynamics, aInvTransMatFcn);
+            bptDynamics = compOpFact.rSymbMultiplyByVec(...
+                btDefCMat, problemDef.getpCVec());
             self.BptDynamics = compOpFact.rMultiply(...
-                aInvMatFcn, BptDynamics);
+                aInvMatFcn, bptDynamics);
             %
             % compute X(t,t0)
             %
-            data_Xtt0 = zeros(sizeAtVec, nTimePoints);
-            data_Xtt0(:, :, 1) = eye(sizeAtVec);
+            dataXtt0 = zeros(sizeAtVec, nTimePoints);
+            dataXtt0(:, :, 1) = eye(sizeAtVec);
             for iTime = 2:nTimePoints
-                data_Xtt0(:, :, iTime) = ...
+                dataXtt0(:, :, iTime) = ...
                     self.AtDynamics.evaluate(self.timeVec(iTime)) * ...
-                    data_Xtt0(:, :, iTime - 1);
+                    dataXtt0(:, :, iTime - 1);
             end
             %
             self.Xtt0Dynamics = MatrixInterpolantFactory.createInstance(...
-                'column', data_Xtt0, self.timeVec);
+                'column', dataXtt0, self.timeVec);
         end
     end
 end
