@@ -47,9 +47,9 @@ classdef SuiteBasic < mlunitext.test_case
             nDirsShift=fix(N_DIRS*0.5);
             maxPeriodTol=max(abs(circshift(rhoDiffVec,[1 nDirsShift])...
                 -rhoDiffVec));
-            mlunit.assert(maxPeriodTol<=EXP_TOL);
-            mlunit.assert(abs(EXP_MAX-max(rhoDiffVec))<=EXP_TOL);
-            mlunit.assert(abs(EXP_MIN-min(rhoDiffVec))<=EXP_TOL);
+            mlunitext.assert(maxPeriodTol<=EXP_TOL);
+            mlunitext.assert(abs(EXP_MAX-max(rhoDiffVec))<=EXP_TOL);
+            mlunitext.assert(abs(EXP_MIN-min(rhoDiffVec))<=EXP_TOL);
             %
             function rhoVec=rho(qMat)
                 rhoVec=realsqrt(sum((qMat*lMat).*lMat,1));
@@ -87,13 +87,13 @@ classdef SuiteBasic < mlunitext.test_case
             xMat=fBoundary(dirMat,supVec,varargin{:});
             xExpMat=fCheckBoundary(dirMat,supVec,varargin{:});
             realTol=max(realsqrt(sum((xMat-xExpMat).*(xMat-xExpMat),2)));
-            mlunit.assert_equals(true,realTol<=MAX_TOL);
+            mlunitext.assert_equals(true,realTol<=MAX_TOL);
             % translate boundary back to unit sphere
             yMat=xMat/sqrtm(qMat);
             % see how good this translation approximates a unit sphere
             nVec=realsqrt(sum(yMat.*yMat,2));
-            mlunit.assert_equals(true,max(nVec)<=MAX_NORM);
-            mlunit.assert_equals(true,min(nVec)>=MIN_NORM);
+            mlunitext.assert_equals(true,max(nVec)<=MAX_NORM);
+            mlunitext.assert_equals(true,min(nVec)>=MIN_NORM);
         end
     end
 end

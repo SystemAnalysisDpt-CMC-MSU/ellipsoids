@@ -3,7 +3,7 @@ function results=run_support_function_tests(inpConfNameList)
 % $Copyright: Moscow State University,
 %             Faculty of Computational Mathematics and Computer Science,
 %             System Analysis Department 2012 $
-runner = mlunit.text_test_runner(1, 1);
+runner = mlunitext.text_test_runner(1, 1);
 loader = mlunitext.test_loader;
 %
 BAD_TEST_NAME_LIST = {};

@@ -1,7 +1,6 @@
 classdef RemoteTestRunner<handle
     %REMOTETESTRUNNER Summary of this class goes here
     %   Detailed explanation goes here
-    
     properties
         emailLogger
         fTempDirGetter
@@ -15,16 +14,20 @@ classdef RemoteTestRunner<handle
             import modgen.common.throwerror;
             self.emailLogger.sendMessage('STARTED','');
             try
-                logMessageStr=evalc('results=feval(testPackName,varargin{:});');
-                [errorCount,failCount]=results.getErrorFailCount();
+                logMessageStr=evalc(...
+                    'results=feval(testPackName,varargin{:});');
                 messageStr=results.getErrorFailMessage();
-                %    
-                if (failCount+errorCount)>0
-                    subjectStr=sprintf('FAILED:(failures: %d, errors %d)',failCount,errorCount);
-                else
+                %
+                if results.isPassed()
                     subjectStr='PASSED';
+                else
+                    reportStr=results.getReport('minimal');
+                    subjectStr=sprintf('FAILED:(%s)',reportStr);
                 end
-                messageStr=[messageStr,sprintf('\n'),logMessageStr];
+                %
+                topsReport=results.getReport('tops');
+                messageStr=sprintf('%s\n%s\n%s\n',topsReport,...
+                    messageStr,logMessageStr);
             catch meObj
                 subjectStr='ERROR';
                 messageStr=modgen.exception.me.obj2plainstr(meObj);

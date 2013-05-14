@@ -77,7 +77,7 @@ classdef SuiteRegression < mlunitext.test_case
                 calcPrecision=crm.getParam('genericProps.calcPrecision');                
                 isOk=all(SRunProp.ellTubeProjRel.calcPrecision<=...
                     calcPrecision);
-                mlunit.assert_equals(true,isOk);
+                mlunitext.assert_equals(true,isOk);
                 %
                 compFieldNameList=setdiff(fieldnames(SRunProp),...
                     NOT_COMPARED_FIELD_LIST);
@@ -118,7 +118,7 @@ classdef SuiteRegression < mlunitext.test_case
                     %
                     reportStr=sprintf('confName=%s\n %s',confName,...
                         reportStr);
-                    mlunit.assert_equals(true,isOk,reportStr);
+                    mlunitext.assert_equals(true,isOk,reportStr);
                 end
             end
             

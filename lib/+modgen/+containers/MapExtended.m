@@ -1,8 +1,48 @@
 classdef MapExtended<containers.Map
     methods
+        function [isPos,reportStr]=isEqualProp(self,otherObj)
+            isPos=isequal(self.KeyType,otherObj.KeyType);
+            if ~isPos
+                reportStr='incompatible key types';
+            else
+                isPos=self.Count==0||otherObj.Count==0||...
+                    isequal(self.ValueType,otherObj.ValueType);
+                if ~isPos
+                    reportStr='incompatible value types';
+                else
+                    reportStr='';
+                end
+            end
+        end
+        %
+        function checkIfEqualProp(self,otherObj)
+            import modgen.common.throwerror;
+            [isPos,reportStr]=isEqualProp(self,otherObj);
+            if ~isPos
+                throwerror('wrongInput',reportStr);
+            end
+        end
         % Override copyElement method:
         function self=MapExtended(varargin)
             self=self@containers.Map(varargin{:});
+        end
+        %
+        function obj=getUnionWith(self,otherObj)
+            import modgen.containers.MapExtended;
+            import modgen.common.throwerror;
+            if self.Count>0||otherObj.Count>0
+                self.checkIfEqualProp(otherObj);
+                keyList=[self.keys,otherObj.keys];
+                if ~modgen.common.isunique(keyList)
+                    throwerror('wrongInput:dupicateKeys',...
+                        'key lists of both map objects cannot intersect');
+                end
+                %
+                obj=MapExtended(keyList,...
+                    [self.values,otherObj.values]);
+            else
+                obj=self.getCopy();
+            end
         end
         %
         function SRes=toStruct(self)
@@ -23,9 +63,25 @@ classdef MapExtended<containers.Map
         function obj=getCopy(self)
             import modgen.containers.MapExtended;
             if self.Count>0
-                obj=MapExtended(self.keys,self.values);
+                isUniform=~strcmp(self.ValueType,'any');
+                obj=MapExtended(self.keys,self.values,'UniformValues',...
+                    isUniform);
             else
-                obj=MapExtended();
+                obj=MapExtended('KeyType',self.KeyType,...
+                    'ValueType',self.ValueType);
+            end
+        end
+        function [isPos,reportStr]=isEqual(self,otherObj)
+            import modgen.struct.structcompare;
+            isPos=isequal(self,otherObj);
+            if isPos
+                reportStr='';
+            else
+                [isPos,reportStr]=self.isEqualProp(otherObj);
+                if isPos
+                    [isPos,reportStr]=structcompare(self.toStruct(),...
+                        otherObj.toStruct());
+                end
             end
         end
     end
@@ -57,6 +113,7 @@ classdef MapExtended<containers.Map
             end
         end
     end
+    %
     methods (Static, Access=private)
         function varname=genVarName(varname)
             if ~isvarname(varname) % Short-circuit if varname already legal

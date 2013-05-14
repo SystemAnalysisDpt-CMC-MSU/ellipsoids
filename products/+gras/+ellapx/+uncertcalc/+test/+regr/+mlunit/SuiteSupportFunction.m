@@ -104,7 +104,7 @@ classdef SuiteSupportFunction < mlunitext.test_case
                 calcPrecision = crm.getParam('genericProps.calcPrecision');
                 isOk = all(SRunProp.ellTubeProjRel.calcPrecision <=...
                     calcPrecision);
-                mlunit.assert_equals(true,isOk);
+                mlunitext.assert_equals(true,isOk);
                 %
                 AtCMat = self.crmSys.getParam('At');
                 fAtMatCalc = self.getHandleFromCellMat(AtCMat);
@@ -152,7 +152,7 @@ classdef SuiteSupportFunction < mlunitext.test_case
                     errTol = max(errorMat(:));
                     isOk = errTol <= calcPrecision;
                     %
-                    mlunit.assert_equals(true, isOk,...
+                    mlunitext.assert_equals(true, isOk,...
                         sprintf('errTol=%g>calcPrecision=%g', errTol,...
                         calcPrecision));
                     %
@@ -167,7 +167,7 @@ classdef SuiteSupportFunction < mlunitext.test_case
                         abs(expNormResVec - normSupFunVec);                    
                     errTol = max(errorSupFunMat(:));
                     isOk = errTol <= calcPrecision;
-                    mlunit.assert_equals(true, isOk,...
+                    mlunitext.assert_equals(true, isOk,...
                         sprintf('errTol=%g>calcPrecision=%g', errTol,...
                         calcPrecision));
                 end

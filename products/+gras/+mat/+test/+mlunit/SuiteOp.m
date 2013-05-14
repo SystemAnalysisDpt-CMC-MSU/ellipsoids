@@ -4,10 +4,10 @@ classdef SuiteOp < mlunitext.test_case
             MAX_TOL=1e-7;
             aSize = size(aMatVec);
             bSize = size(bMatVec);
-            mlunit.assert_equals(numel(aSize), numel(bSize));
+            mlunitext.assert_equals(numel(aSize), numel(bSize));
             %
             isSizeEqVec = ( aSize == bSize );
-            mlunit.assert_equals( all(isSizeEqVec), true );
+            mlunitext.assert_equals( all(isSizeEqVec), true );
             %
             nMatrices = size(aMatVec, 3);
             errorVec = zeros(1, nMatrices);
@@ -18,7 +18,7 @@ classdef SuiteOp < mlunitext.test_case
             %
             maxError = max(errorVec);
             isOk = ( maxError < MAX_TOL);
-            mlunit.assert_equals(isOk, true);
+            mlunitext.assert_equals(isOk, true);
         end
     end
     methods(Access=private)
