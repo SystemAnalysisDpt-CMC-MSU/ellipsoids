@@ -11,22 +11,41 @@ classdef ReachFactory < handle
         isEvolve
         isDiscr
         dim
-        reachObj
+        reachObjMap
+    end
+    methods (Access = private)
+        function linSysObj = fGetSys(self, inpAtMat,inpBtMat, inpUBoundMat, inpUBoundVec, inpGtMat,...
+                inpDistBoundMat, inpDistBoundVec, inpCtMat, inpNoiseBoundMat, inpNoiseBoundVec)
+            if ~isempty(inpAtMat)&&~isempty(inpBtMat)
+                uBoundsEll = fGetEll(inpUBoundVec,inpUBoundMat);
+                distBoundsEll = fGetEll(inpDistBoundVec,inpDistBoundMat);
+                noiseBoundsEll = fGetEll(inpNoiseBoundVec,inpNoiseBoundMat);
+                if self.isDiscr
+                    linSysObj = elltool.linsys.LinSysDiscrete(inpAtMat,inpBtMat,uBoundsEll,...
+                        inpGtMat,distBoundsEll,inpCtMat,noiseBoundsEll,'d');
+                else
+                    linSysObj = elltool.linsys.LinSysContinuous(inpAtMat,inpBtMat,uBoundsEll,...
+                        inpGtMat,distBoundsEll,inpCtMat,noiseBoundsEll);
+                end
+            else     
+                linSysObj = self.linSys;
+            end   
+        end
     end
     methods
         function self =...
                 ReachFactory(confName, crm, crmSys, isBack, isEvolve,...
                 isDiscr)
-        % Example:
-        %   import elltool.reach.ReachFactory;
-        %   crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
-        %   crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
-        %   rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
-        %
+            % Example:
+            %   import elltool.reach.ReachFactory;
+            %   crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
+            %   crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
+            %   rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
+            %
             if nargin < 6
                 isDiscr = false;
             end
-  
+            
             self.confName = confName;
             self.crm = crm;
             self.crmSys = crmSys;
@@ -55,7 +74,7 @@ classdef ReachFactory < handle
             self.x0Ell = ellipsoid(x0DefVec, x0DefMat);
             if self.isBack
                 self.tVec = [crmSys.getParam('time_interval.t1'),...
-                crmSys.getParam('time_interval.t0')];
+                    crmSys.getParam('time_interval.t0')];
             else
                 self.tVec = [crmSys.getParam('time_interval.t0'),...
                     crmSys.getParam('time_interval.t1')];
@@ -71,110 +90,132 @@ classdef ReachFactory < handle
                 self.linSys = elltool.linsys.LinSysDiscrete(atDefCMat, ...
                     btDefCMat,...
                     ControlBounds, ctDefCMat, DistBounds, [], [], 'd');
-            else                
+            else
                 self.linSys = elltool.linsys.LinSysContinuous(atDefCMat, ...
                     btDefCMat,...
                     ControlBounds, ctDefCMat, DistBounds);
             end
+            self.reachObjMap = containers.Map();
         end
-        function reachObj = createInstance(self)
-        % Example:
-        %   import elltool.reach.ReachFactory;
-        %   crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
-        %   crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
-        %   rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
-        %   reachObj = rsObj.createInstance();
-        %
-            if isempty(self.reachObj)
-				if isa(self.linSys, 'elltool.linsys.LinSysDiscrete')
-                	reachObj = elltool.reach.ReachDiscrete(self.linSys,...
-                        self.x0Ell, self.l0Mat, self.tVec);
-				else
-                	if self.isEvolve
-                    	halfReachObj = elltool.reach.ReachContinuous(...
-                        	self.linSys, self.x0Ell, self.l0Mat,...
-                        	[self.tVec(1) sum(self.tVec)/2]);
-                    	reachObj = halfReachObj.evolve(self.tVec(2));
-                	else
-                    	reachObj = elltool.reach.ReachContinuous(...
-                        	self.linSys, self.x0Ell, self.l0Mat, self.tVec);
-                	end
-				end
-                self.reachObj = reachObj;
+        function reachObj = createInstance(self,varargin)
+            % Example:
+            %   import elltool.reach.ReachFactory;
+            %   crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
+            %   crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
+            %   rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
+            %   reachObj = rsObj.createInstance();
+            %
+            import modgen.common.parseparext;
+            [reg, isRegSpec, inpAtMat,inpBtMat, inpUBoundMat, inpUBoundVec, inpGtMat,...
+                inpDistBoundMat, inpDistBoundVec, inpCtMat, inpNoiseBoundMat, inpNoiseBoundVec,...
+                inpX0EllMat,inpX0EllVec, l0DirMat, timeVec] = ...
+                parseparext(varargin, {'At','Bt', 'controlMat', 'controlVec', 'Gt',...
+                'disturbMat', 'disturbVec', 'Ct', 'noiseMat', 'noiseVec', 'x0EllMat','x0EllVec', 'l0Mat','tVec';...
+                [],[],[],[],[],[],[],[],[],[], self.x0Ell.getShapeMat(),...
+                self.x0Ell.getCenterVec(), self.l0Mat, self.tVec;...
+                'ismatrix(x)','ismatrix(x)', 'ismatrix(x)', 'isvector(x)', 'ismatrix(x)',...
+                'ismatrix(x)', 'isvector(x)', 'ismatrix(x)', 'ismatrix(x)', 'isvector(x)',...
+                'ismatrix(x)','isvector(x)', 'ismatrix(x)','isvector(x)'});
+            keyStr=hash(varargin);
+            if ~self.reachObjMap.isKey(keyStr)
+                linSysObj = self.fGetSys(inpAtMat,inpBtMat, inpUBoundMat, inpUBoundVec, inpGtMat,...
+                    inpDistBoundMat, inpDistBoundVec, inpCtMat, inpNoiseBoundMat, inpNoiseBoundVec);
+                x0EllObj = fGetEll(inpX0EllVec,inpX0EllMat);
+                %
+                if isa(linSysObj, 'elltool.linsys.LinSysDiscrete')
+                    reachObj = elltool.reach.ReachDiscrete(linSysObj,...
+                        x0EllObj, l0DirMat, timeVec);
+                elseif self.isEvolve
+                    halfReachObj = elltool.reach.ReachContinuous(...
+                        linSysObj, x0EllObj, l0DirMat,...
+                        [timeVec(1) sum(timeVec)/2]);
+                    reachObj = halfReachObj.evolve(timeVec(2));
+                else
+                    reachObj = elltool.reach.ReachContinuous(...
+                        linSysObj, x0EllObj, l0DirMat, timeVec);
+                end
+                self.reachObjMap(keyStr)=reachObj.getCopy();
             else
-                reachObj = self.reachObj.getCopy();
+                reachObj=self.reachObjMap(keyStr).getCopy();
             end
         end
         function linSys = getLinSys(self)
-        % Example:
-        %   import elltool.reach.ReachFactory;
-        %   crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
-        %   crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
-        %   rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
-        %   linSys = rsObj.getLinSys();
-        %
+            % Example:
+            %   import elltool.reach.ReachFactory;
+            %   crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
+            %   crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
+            %   rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
+            %   linSys = rsObj.getLinSys();
+            %
             linSys = self.linSys;
         end
         function dim = getDim(self)
-        % Example:
-        %   import elltool.reach.ReachFactory;
-        %   crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
-        %   crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
-        %   rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
-        %   dim = rsObj.getDim();
-        %
+            % Example:
+            %   import elltool.reach.ReachFactory;
+            %   crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
+            %   crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
+            %   rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
+            %   dim = rsObj.getDim();
+            %
             dim = self.dim;
         end
         function tVec = getTVec(self)
-        % Example:
-        %   import elltool.reach.ReachFactory;
-        %   crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
-        %   crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
-        %   rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
-        %   tVec = rsObj.getTVec()
-        %
-        %   tVec =
-        % 
-        %        0    10
-        %
+            % Example:
+            %   import elltool.reach.ReachFactory;
+            %   crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
+            %   crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
+            %   rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
+            %   tVec = rsObj.getTVec()
+            %
+            %   tVec =
+            %
+            %        0    10
+            %
             tVec = self.tVec;
         end
         function x0Ell = getX0Ell(self)
-        % Example:
-        %   import elltool.reach.ReachFactory;
-        %   crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
-        %   crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
-        %   rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
-        %   X0Ell = rsObj.getX0Ell()
-        % 
-        %   X0Ell =
-        % 
-        %   Center:
-        %        0
-        %        0
-        % 
-        %   Shape Matrix:
-        %       0.0100         0
-        %            0    0.0100
-        % 
-        %   Nondegenerate ellipsoid in R^2.
-        %
+            % Example:
+            %   import elltool.reach.ReachFactory;
+            %   crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
+            %   crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
+            %   rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
+            %   X0Ell = rsObj.getX0Ell()
+            %
+            %   X0Ell =
+            %
+            %   Center:
+            %        0
+            %        0
+            %
+            %   Shape Matrix:
+            %       0.0100         0
+            %            0    0.0100
+            %
+            %   Nondegenerate ellipsoid in R^2.
+            %
             x0Ell = self.x0Ell;
         end
         function l0Mat = getL0Mat(self)
-        % Example:
-        %   import elltool.reach.ReachFactory;
-        %   crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
-        %   crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
-        %   rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
-        %   l0Mat = rsObj.getL0Mat()
-        % 
-        %   l0Mat =
-        % 
-        %        1     0
-        %        0     1
-        %
+            % Example:
+            %   import elltool.reach.ReachFactory;
+            %   crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
+            %   crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
+            %   rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
+            %   l0Mat = rsObj.getL0Mat()
+            %
+            %   l0Mat =
+            %
+            %        1     0
+            %        0     1
+            %
             l0Mat = self.l0Mat;
         end
+    end
+end
+function ellObj = fGetEll(centerVec, shapeMat)
+    if ~isempty(centerVec)&&~isempty(shapeMat)
+        ellObj = ellipsoid(centerVec, shapeMat);
+    else
+        ellObj = ellipsoid(shapeMat);
     end
 end

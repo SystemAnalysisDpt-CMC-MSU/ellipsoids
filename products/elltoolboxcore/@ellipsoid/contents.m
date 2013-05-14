@@ -82,36 +82,32 @@
 %                       in given direction.
 %  minkmp_ia          -  Computes the internal ellipsoidal approximation of 
 %                       the geometric sum of a geometric difference of
-%                       two single ellipsoids and a geometric sum of 
-%                       ellipsoids in given direction.
-%  isbaddirection     - Checks if ellipsoidal approximation of geometric 
-%                       difference of two ellipsoids in the given direction 
-%                       can be computed.
-%  isinside           - Checks if the union or intersection of ellipsoids 
-%                       or polytopes lies inside the intersection of given  
-%                       ellipsoids.
-%  isinternal         - Checks if given vector belongs to the union or 
-%                       intersection  of given ellipsoids.
-%  distance           - Computes the distance from ellipsoid to given point, 
-%                       ellipsoid, hyperplane or polytope. 
-%  intersect          - Checks if the union or intersection of ellipsoids 
-%                       intersects  with given ellipsoid, hyperplane, 
-%                       or polytope.
-%  intersection_ea    - Computes the minimal volume ellipsoid containing 
-%                       intersection of two ellipsoids, ellipsoid and
-%                       halfspace, or ellipsoid and polytope.
-%  intersection_ia    - Computes the maximal ellipsoid contained inside the 
-%                       intersection of two ellipsoids, ellipsoid and
-%                       halfspace  or ellipsoid and polytope.
-%  ellintersection_ia - Computes maximum volume ellipsoid that is contained 
-%                       in the intersection of given ellipsoids
-%                       (can be more than 2).
-%  ellunion_ea        - Computes minimum volume ellipsoid that contains the  
-%                       union of given ellipsoids.
-%  hpintersection     - Computes the intersection of ellipsoid with 
-%                       hyperplane.
-%                       
-% $Author:
+%                       two single ellipsoids and a geometric sum of ellipsoids
+%                       in given direction.
+%  isbaddirection     - Checks if ellipsoidal approximation of geometric difference
+%                       of two ellipsoids in the given direction can be computed.
+%  isContainedInIntersection           - Checks if the union or intersection of ellipsoids or
+%                       polytopes lies inside the intersection of given ellipsoids.
+%  isinternal         - Checks if given vector belongs to the union or intersection
+%                       of given ellipsoids.
+%  distance           - Computes the distance from ellipsoid to given point,
+%                       ellipsoid, hyperplane or polytope.
+%  intersect          - Checks if the union or intersection of ellipsoids intersects
+%                       with given ellipsoid, hyperplane, or polytope.
+%  intersection_ea    - Computes the minimal volume ellipsoid containing intersection
+%                       of two ellipsoids, ellipsoid and halfspace, or ellipsoid
+%                       and polytope.
+%  intersection_ia    - Computes the maximal ellipsoid contained inside the
+%                       intersection of two ellipsoids, ellipsoid and halfspace
+%                       or ellipsoid and polytope.
+%  ellintersection_ia - Computes maximum volume ellipsoid that is contained
+%                       in the intersection of given ellipsoids (can be more than 2).
+%  ellunion_ea        - Computes minimum volume ellipsoid that contains
+%                       the union of given ellipsoids.
+%  hpintersection     - Computes the intersection of ellipsoid with hyperplane.
+%
+%
+% Author:
 % -------
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %

@@ -60,6 +60,12 @@ classdef SplineMatrixOperations<gras.mat.AMatrixOperations
                     mMatFunc);
             end
         end
+        function obj=uminus(self,mMatFunc)
+            obj=uminus@gras.mat.AMatrixOperations(self,mMatFunc);
+            if isempty(obj)
+                obj = self.interpolateUnary(@uminus,mMatFunc);
+            end
+        end        
         function obj=transpose(self,mMatFunc)
             obj=transpose@gras.mat.AMatrixOperations(self,mMatFunc);
             if isempty(obj)

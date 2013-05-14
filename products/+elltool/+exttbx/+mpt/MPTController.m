@@ -19,9 +19,14 @@ classdef MPTController < elltool.exttbx.IExtTBXController
         end
         %
         function checkSettings(self,absTol,relTol,isVerbose)
-            %Here we make sure that the settings specified in fullSetup are
-            %not changed manually via direct mpt calls like mpt_init
+            import modgen.common.throwerror;
+            if~((absTol == self.getAbsTol()) && ...
+                (relTol == self.getRelTol()) && ...
+                (isVerbose == self.getIsVerbosityEnabled))
+                throwerror('mptError', 'wrong mpt properties');
+            end
         end
+        %
         function isPositive=isOnPath(self)
             isPositive=modgen.system.ExistanceChecker.isFile(...
                 self.MPT_SETUP_FUNC_NAME);
@@ -33,16 +38,35 @@ classdef MPTController < elltool.exttbx.IExtTBXController
                 throwerror('mptNotSetUp','MPT is not set up');
             end
         end
+        %
         function checkIfOnPath(self)
             N_HOR_LINE_CHARS=60;
             if ~self.isOnPath()
                 horLineStr=['\n',repmat('-',1,N_HOR_LINE_CHARS),'\n'];
                 msgStr=sprintf(['\n',horLineStr,...
-                    '\nMTP is not found!!! \n',...
-                    'Please put MTP into "mtp" ',...
+                    '\nMPT is not found!!! \n',...
+                    'Please put MPT into "mpt" ',...
                     'folder next to "products" folder ',horLineStr]);
                 modgen.common.throwerror('mptNotFound',msgStr);
             end
+        end
+        %
+        function isVerb = getIsVerbosityEnabled(self)
+            checkIfSetUp(self);
+            global mptOptions;
+            isVerb = mptOptions.verbose > 1;
+        end
+        %
+        function absTol = getAbsTol(self)
+            checkIfSetUp(self);
+            global mptOptions;
+            absTol = mptOptions.abs_tol;
+        end
+        %
+        function relTol = getRelTol(self)
+            checkIfSetUp(self);
+            global mptOptions;
+            relTol = mptOptions.rel_tol;
         end
     end
 end

@@ -196,6 +196,28 @@ classdef SuiteOp < mlunitext.test_case
             expectedMatVec = cat(3,expm(aMat*0),expm(aMat*0.5),expm(aMat*1));
             obtainedMatVec = rMatFun.evaluate([0, 0.5, 1]);
             self.isMatVecEq(expectedMatVec, obtainedMatVec);
+            % test uminus for constant matrices
+            %
+            aMat = triu(magic(5));
+            aMatFun = ConstMatrixFunction(aMat);
+            rMatFun = factory.uminus(aMatFun);
+            expectedMatVec = repmat(-aMat, [1 1 3]);
+            obtainedMatVec = rMatFun.evaluate([0 1 2]);
+            self.isMatVecEq(expectedMatVec, obtainedMatVec);
+            %            
+            % test uminus for symbolic matrices:
+            aCMat={'t','2*t';'3*t','4*t'};
+            aMatFunc=gras.mat.symb.MatrixSymbFormulaBased(aCMat);  
+            rMatFunc=factory.uminus(aMatFunc);
+            aMinusCMat=strrep(aCMat,'t','-t');
+            rExpMatFunc=gras.mat.symb.MatrixSymbFormulaBased(aMinusCMat);  
+            checkIfEqual(rMatFunc,rExpMatFunc);
+            function checkIfEqual(rMatFun,rExpMatFun)
+                timeVec=[0 1 2 3];
+                rMatVec = rMatFun.evaluate(timeVec);
+                rExpMatVec = rExpMatFun.evaluate(timeVec);
+                self.isMatVecEq(rMatVec, rExpMatVec);
+            end
         end
     end
     methods
