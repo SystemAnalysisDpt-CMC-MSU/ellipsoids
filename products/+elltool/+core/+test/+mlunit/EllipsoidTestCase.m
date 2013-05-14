@@ -856,7 +856,20 @@ classdef EllipsoidTestCase < mlunitext.test_case
             test1Mat = 100*eye(2);
             test2Mat = 100*eye(2) - 0.99*MAX_TOL;
             checkEllEqual(ellipsoid(test1Mat), ellipsoid(test2Mat), true, '');
-            
+            %
+            %test for maxTolerance
+            firstMat = eye(2);
+            secMat = eye(2)+1;
+            secVec = [1;0];
+            maxTol = 1;
+            ell1 = ellipsoid(firstMat);
+            ell2 = ellipsoid(secVec,secMat);
+            [isOk,reportStr]=ell1.eq(ell2);
+            mlunit.assert(~isOk,reportStr);
+            [isOk,reportStr]=ell1.eq(ell2,maxTol);
+            mlunit.assert(isOk,reportStr);
+            %
+            %
             testEll = ellipsoid(eye(2));
             testEll2 = ellipsoid([1e-3, 0].', eye(2));
             mDim = 10;
@@ -932,8 +945,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
             
             
             ansStr = sprintf('(1).Q-->Different sizes (left: [2 2], right: [3 3])\n(1).q-->Different sizes (left: [1 2], right: [1 3])');
-            checkEllEqual([testEllipsoidZeros2 testEllipsoidZeros3], [testEllipsoidZeros3 testEllipsoidZeros3], [false, true], ansStr);
-            
+            checkEllEqual([testEllipsoidZeros2 testEllipsoidZeros3], [testEllipsoidZeros3 testEllipsoidZeros3], [false, true], ansStr); 
         end
         %
         function self = testNe(self)
@@ -1259,6 +1271,33 @@ classdef EllipsoidTestCase < mlunitext.test_case
                 'ellipsoid(eye(2)),ellipsoid([1 0; 0 0]),',...
                 'eye(2),elltool.conf.Properties.getAbsTol())'),...
                 'wrongInput:singularMat');
+        end
+        %
+        function self = testFromRepMat(self)
+            sizeArr = [2, 3, 3, 5];
+            ellArr1 = ellipsoid.fromRepMat(sizeArr);
+            isOk1Arr = ellArr1.isempty();
+            mlunit.assert(all(isOk1Arr(:)));
+            %
+            shMat = eye(2);
+            cVec = [2; 3];
+            absTol = 1e-10;
+            ell2 = ellipsoid(cVec,shMat,'absTol',absTol);
+            ell2Arr = ellipsoid.fromRepMat(cVec,shMat,sizeArr,'absTol',absTol);
+            %
+            isOkArr2 = eq(ell2,ell2Arr);
+            mlunit.assert(all(isOkArr2(:)));
+            %
+            isOkArr3 = ell2Arr.getAbsTol() == absTol;
+            mlunit.assert(all(isOkArr3));
+            %
+            self.runAndCheckError(strcat('ellipsoid.fromRepMat',...
+                '([1; 1], eye(2), ellipsoid(eye(2)))'),...
+                'wrongInput');
+            %
+            self.runAndCheckError(strcat('ellipsoid.fromRepMat',...
+                '([1; 1], eye(2), [2; 2; 3.5])'),...
+                'wrongInput');
         end
         %
         function self = testMultiDimensionalConstructor(self)

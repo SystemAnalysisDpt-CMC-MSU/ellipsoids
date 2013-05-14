@@ -14,7 +14,7 @@ confList = {...
 nConfs = size(confList, 1);
 suiteList = {};
 %
-for iConf = 1 : nConfs
+for iConf = 1:nConfs
     confName = confList{iConf, 1};
     confTests = confList{iConf, 2};
     suiteList{end + 1} = loader.load_tests_from_test_case(...

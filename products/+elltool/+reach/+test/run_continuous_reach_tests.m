@@ -21,7 +21,7 @@ end
 nConfs = size(confCMat, 1);
 suiteList = {};
 %
-for iConf = 1 : nConfs
+for iConf = 1:nConfs
     confName = confCMat{iConf, 1};
     confTestsVec = confCMat{iConf, 2};
     if confTestsVec(1)
