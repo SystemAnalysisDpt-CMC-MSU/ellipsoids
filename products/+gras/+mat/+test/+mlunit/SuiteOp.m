@@ -26,6 +26,8 @@ classdef SuiteOp < mlunitext.test_case
             import gras.mat.*;
             import gras.mat.fcnlib.*;
             %
+            self.runTestsForSize(factory);
+            %
             % test triu square
             %
             aMat = magic(4);
@@ -193,9 +195,11 @@ classdef SuiteOp < mlunitext.test_case
             aMat = ones(4);
             aMatFun = ConstMatrixFunction(aMat);
             rMatFun = factory.expmt(aMatFun,0);
-            expectedMatVec = cat(3,expm(aMat*0),expm(aMat*0.5),expm(aMat*1));
+            expectedMatVec = cat(3,expm(aMat*0),expm(aMat*0.5), ...
+                expm(aMat*1));
             obtainedMatVec = rMatFun.evaluate([0, 0.5, 1]);
             self.isMatVecEq(expectedMatVec, obtainedMatVec);
+            %
             % test uminus for constant matrices
             %
             aMat = triu(magic(5));
@@ -205,7 +209,8 @@ classdef SuiteOp < mlunitext.test_case
             obtainedMatVec = rMatFun.evaluate([0 1 2]);
             self.isMatVecEq(expectedMatVec, obtainedMatVec);
             %            
-            % test uminus for symbolic matrices:
+            % test uminus for symbolic matrices
+            %
             aCMat={'t','2*t';'3*t','4*t'};
             aMatFunc=gras.mat.symb.MatrixSymbFormulaBased(aCMat);  
             rMatFunc=factory.uminus(aMatFunc);
@@ -218,6 +223,102 @@ classdef SuiteOp < mlunitext.test_case
                 rExpMatVec = rExpMatFun.evaluate(timeVec);
                 self.isMatVecEq(rMatVec, rExpMatVec);
             end
+        end
+        function runTestsForSize(self, factory)
+            import gras.mat.fcnlib.*;
+            import gras.mat.symb.*;
+            %
+            % basic size test
+            %
+            aMat = ones(2, 3);
+            aMatFun = ConstMatrixFunction(aMat);
+            self.isMatVecEq([aMatFun.getNRows(), aMatFun.getNCols()], ...
+                aMatFun.getMatrixSize());
+            self.isMatVecEq(size(aMat), aMatFun.getMatrixSize());
+            %
+            asqMat = eye(2);
+            asqMatFun = ConstMatrixFunction(asqMat);
+            self.isMatVecEq([asqMatFun.getNRows(), ...
+                asqMatFun.getNCols()], asqMatFun.getMatrixSize());
+            self.isMatVecEq(size(asqMat), asqMatFun.getMatrixSize());
+            %
+            atMat = {'t', '0'; '0', 't'; '0', '0'};
+            atMatFun = MatrixSymbFormulaBased(atMat);
+            self.isMatVecEq([atMatFun.getNRows(), atMatFun.getNCols()], ...
+                atMatFun.getMatrixSize());
+            self.isMatVecEq(size(atMat), atMatFun.getMatrixSize());
+            %
+            asqtMat = {'cos(t)', '-sin(t)'; 'sin(t)', 'cos(t)'};
+            asqtMatFun = MatrixSymbFormulaBased(asqtMat);
+            self.isMatVecEq([asqtMatFun.getNRows(), ...
+                asqtMatFun.getNCols()], asqtMatFun.getMatrixSize());
+            self.isMatVecEq(size(asqtMat), asqtMatFun.getMatrixSize());
+            %
+            % size test triu square
+            %
+            rsqMatFun = factory.triu(asqMatFun);
+            rsqtMatFun = factory.triu(asqtMatFun);
+            self.isMatVecEq(asqMatFun.getMatrixSize, ...
+                rsqMatFun.getMatrixSize());
+            self.isMatVecEq(asqtMatFun.getMatrixSize, ...
+                rsqtMatFun.getMatrixSize());
+            %
+            % size test triu not square
+            %
+            rMatFun = factory.triu(aMatFun);
+            rtMatFun = factory.triu(atMatFun);
+            self.isMatVecEq(aMatFun.getMatrixSize, ...
+                rMatFun.getMatrixSize());
+            self.isMatVecEq(atMatFun.getMatrixSize, ...
+                rtMatFun.getMatrixSize());
+            %
+            % test makeSymmetric
+            %
+            rsqMatFun = factory.makeSymmetric(asqMatFun);
+            rsqtMatFun = factory.makeSymmetric(asqtMatFun);
+            self.isMatVecEq(asqMatFun.getMatrixSize, ...
+                rsqMatFun.getMatrixSize());
+            self.isMatVecEq(asqtMatFun.getMatrixSize, ...
+                rsqtMatFun.getMatrixSize());            
+            %
+            % test transpose
+            %
+            rMatFun = factory.transpose(aMatFun);
+            rtMatFun = factory.transpose(atMatFun);
+            rsqMatFun = factory.transpose(asqMatFun);
+            rsqtMatFun = factory.transpose(asqtMatFun);
+            self.isMatVecEq(asqMatFun.getMatrixSize, ...
+                fliplr(rsqMatFun.getMatrixSize()));
+            self.isMatVecEq(asqtMatFun.getMatrixSize, ...
+                fliplr(rsqtMatFun.getMatrixSize()));
+            self.isMatVecEq(aMatFun.getMatrixSize, ...
+                fliplr(rMatFun.getMatrixSize()));
+            self.isMatVecEq(atMatFun.getMatrixSize, ...
+                fliplr(rtMatFun.getMatrixSize()));            
+            %
+            % test inv
+            %
+            rsqMatFun = factory.inv(asqMatFun);
+            rsqtMatFun = factory.inv(asqtMatFun);
+            self.isMatVecEq(asqMatFun.getMatrixSize, ...
+                rsqMatFun.getMatrixSize());
+            self.isMatVecEq(asqtMatFun.getMatrixSize, ...
+                rsqtMatFun.getMatrixSize());
+            %
+            % test uminus
+            %
+            rMatFun = factory.uminus(aMatFun);
+            rtMatFun = factory.uminus(atMatFun);
+            rsqMatFun = factory.uminus(asqMatFun);
+            rsqtMatFun = factory.uminus(asqtMatFun);
+            self.isMatVecEq(asqMatFun.getMatrixSize, ...
+                rsqMatFun.getMatrixSize());
+            self.isMatVecEq(asqtMatFun.getMatrixSize, ...
+                rsqtMatFun.getMatrixSize());
+            self.isMatVecEq(aMatFun.getMatrixSize, ...
+                rMatFun.getMatrixSize());
+            self.isMatVecEq(atMatFun.getMatrixSize, ...
+                rtMatFun.getMatrixSize());
         end
     end
     methods
