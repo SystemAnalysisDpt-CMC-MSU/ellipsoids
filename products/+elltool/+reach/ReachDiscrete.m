@@ -1801,7 +1801,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 warning on;
             end
         end
-        function newReachObj = getCopy(self)
+        function newReachObjArr = getCopy(self)
         % GETCOPY - create a new copy of Self reach object. 
         %
         % Input:
@@ -1829,31 +1829,38 @@ classdef ReachDiscrete < elltool.reach.AReach
         %             Mathematics and Computer Science,
         %             System Analysis Department 2013 $
         %
-            
-            newReachObj = elltool.reach.ReachDiscrete();
-            newReachObj.absTol = self.absTol;
-            newReachObj.relTol = self.relTol;
-            newReachObj.nPlot2dPoints = self.nPlot2dPoints;
-            newReachObj.nPlot3dPoints = self.nPlot3dPoints;
-            newReachObj.nTimeGridPoints = self.nTimeGridPoints;
-            newReachObj.system = self.system;
-            newReachObj.t0 = self.t0;
-            newReachObj.initial_directions = self.initial_directions;
-            newReachObj.time_values = self.time_values;
-            newReachObj.center_values = self.center_values;
-            newReachObj.l_values = self.l_values;
-            newReachObj.ea_values = self.ea_values;
-            newReachObj.ia_values = self.ia_values;
-            newReachObj.mu_values = self.mu_values;
-            newReachObj.minmax = self.minmax;
-            newReachObj.projection_basis = self.projection_basis;
-            newReachObj.calc_data = self.calc_data;
-            newReachObj.switchSysTimeVec = self.switchSysTimeVec;
-            newReachObj.x0Ellipsoid = self.x0Ellipsoid;
-            newReachObj.linSysCVec = self.linSysCVec;
-            newReachObj.isCut = self.isCut;
-            newReachObj.isProj = self.isProj;
-            newReachObj.projectionBasisMat = self.projectionBasisMat;
+            if ~isempty(self)    
+                sizeCVec = num2cell(size(self));
+                newReachObjArr(sizeCVec{:}) = elltool.reach.ReachDiscrete();
+                arrayfun(@fSingleCopy,newReachObjArr,self);
+            else
+                newReachObjArr = elltool.reach.ReachDiscrete.empty(size(self));
+            end    
+            function fSingleCopy(newReachObj, reachObj)   
+                newReachObj.absTol = reachObj.absTol;
+                newReachObj.relTol = reachObj.relTol;
+                newReachObj.nPlot2dPoints = reachObj.nPlot2dPoints;
+                newReachObj.nPlot3dPoints = reachObj.nPlot3dPoints;
+                newReachObj.nTimeGridPoints = reachObj.nTimeGridPoints;
+                newReachObj.system = reachObj.system;
+                newReachObj.t0 = reachObj.t0;
+                newReachObj.initial_directions = reachObj.initial_directions;
+                newReachObj.time_values = reachObj.time_values;
+                newReachObj.center_values = reachObj.center_values;
+                newReachObj.l_values = reachObj.l_values;
+                newReachObj.ea_values = reachObj.ea_values;
+                newReachObj.ia_values = reachObj.ia_values;
+                newReachObj.mu_values = reachObj.mu_values;
+                newReachObj.minmax = reachObj.minmax;
+                newReachObj.projection_basis = reachObj.projection_basis;
+                newReachObj.calc_data = reachObj.calc_data;
+                newReachObj.switchSysTimeVec = reachObj.switchSysTimeVec;
+                newReachObj.x0Ellipsoid = reachObj.x0Ellipsoid;
+                newReachObj.linSysCVec = reachObj.linSysCVec;
+                newReachObj.isCut = reachObj.isCut;
+                newReachObj.isProj = reachObj.isProj;
+                newReachObj.projectionBasisMat = reachObj.projectionBasisMat;
+            end
         end
         
         function cutObj = cut(self, cutTimeVec) 

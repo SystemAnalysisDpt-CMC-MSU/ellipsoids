@@ -776,13 +776,16 @@ classdef ReachContinuous < elltool.reach.AReach
             end
         end
         %%
-        function [rSdim sSdim] = dimension(self)
-            rSdim = self.linSysCVec{end}.dimension();
-            if ~self.isProj
-                sSdim = rSdim;
-            else
-                sSdim = size(self.projectionBasisMat, 2);
-            end
+        function [rSdimArr sSdimArr] = dimension(self)
+            rSdimArr = arrayfun(@(x) x.linSysCVec{end}.dimension(), self);
+            sSdimArr = arrayfun(@(x,y) getSSdim(x,y), self, rSdimArr);
+            function sSdim = getSSdim(reachObj, rSdim)
+                if ~reachObj.isProj
+                    sSdim = rSdim;
+                else
+                    sSdim = size(reachObj.projectionBasisMat, 2);
+                end
+            end    
         end
         %%
         function linSys = get_system(self)
@@ -1196,7 +1199,7 @@ classdef ReachContinuous < elltool.reach.AReach
                 'maxTolerance', 2*self.COMP_PRECISION,'checkTupleOrder','true');
         end
         %%
-        function copyReachObj = getCopy(self)
+        function copyReachObjArr = getCopy(self)
         % Example:
         %   aMat = [0 1; 0 0]; bMat = eye(2);
         %   SUBounds = struct();
@@ -1224,17 +1227,24 @@ classdef ReachContinuous < elltool.reach.AReach
         % 
         %   Number of external approximations: 2
         %   Number of internal approximations: 2
-        %
-            copyReachObj = elltool.reach.ReachContinuous();
-            copyReachObj.switchSysTimeVec = self.switchSysTimeVec;
-            copyReachObj.x0Ellipsoid = self.x0Ellipsoid.getCopy();
-            copyReachObj.linSysCVec = cellfun(@(x) x.getCopy(),...
-                self.linSysCVec, 'UniformOutput', false);
-            copyReachObj.isCut = self.isCut;
-            copyReachObj.isProj = self.isProj;
-            copyReachObj.isBackward = self.isBackward;
-            copyReachObj.projectionBasisMat = self.projectionBasisMat;
-            copyReachObj.ellTubeRel = self.ellTubeRel.getCopy();
+            if ~isempty(self)
+                sizeCVec = num2cell(size(self));
+                copyReachObjArr(sizeCVec{:}) = elltool.reach.ReachContinuous();
+                arrayfun(@fSingleCopy,copyReachObjArr,self);
+            else
+                copyReachObjArr = elltool.reach.ReachContinuous.empty(size(self));
+            end    
+            function fSingleCopy(copyReachObj, reachObj)
+                copyReachObj.switchSysTimeVec = reachObj.switchSysTimeVec;
+                copyReachObj.x0Ellipsoid = reachObj.x0Ellipsoid.getCopy();
+                copyReachObj.linSysCVec = cellfun(@(x) x.getCopy(),...
+                    reachObj.linSysCVec, 'UniformOutput', false);
+                copyReachObj.isCut = reachObj.isCut;
+                copyReachObj.isProj = reachObj.isProj;
+                copyReachObj.isBackward = reachObj.isBackward;
+                copyReachObj.projectionBasisMat = reachObj.projectionBasisMat;
+                copyReachObj.ellTubeRel = reachObj.ellTubeRel.getCopy();
+            end    
         end
         %%
         function ellTubeRel = getEllTubeRel(self)
