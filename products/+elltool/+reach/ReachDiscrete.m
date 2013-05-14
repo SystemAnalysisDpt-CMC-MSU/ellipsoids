@@ -105,6 +105,20 @@ classdef ReachDiscrete < elltool.reach.AReach
             ltGoodDirArray = zeros(xDim, nTubes, length(timeVec));
             lMat = zeros(xDim, length(timeVec));
             %
+            if approxType == EApproxType.Internal
+                fMinkmp = @(aEll, bEll, cEll, lVec) ...
+                    minkmp_ia(aEll, bEll, cEll, lVec);
+                fMinksum = @(aEllArray, lVec) minksum_ia(aEllArray, lVec);
+                fMinkdiff = @(aEll, bEll, lVec) ...
+                    minkdiff_ia(aEll, bEll, lVec);
+            else
+                fMinkmp = @(aEll, bEll, cEll, lVec) ...
+                    minkmp_ea(aEll, bEll, cEll, lVec);
+                fMinksum = @(aEllArray, lVec) minksum_ea(aEllArray, lVec);
+                fMinkdiff = @(aEll, bEll, lVec) ...
+                    minkdiff_ea(aEll, bEll, lVec);
+            end
+            %
             isMinMax = false;
             %
             for iTube = 1:nTubes
@@ -133,35 +147,19 @@ classdef ReachDiscrete < elltool.reach.AReach
                     bpbMat = ell_regularize(bpbMat, relTol);
                     lVec = aInvMat' * lVec;
                     if isDisturb
-                        if approxType == EApproxType.Internal
-                            if isMinMax
-                                eEll = minkmp_ia(ellipsoid(0.5 * (qMat + qMat')),...
-                                    ellipsoid(0.5 * (gqgMat + gqgMat')),...
-                                    ellipsoid(0.5 * (bpbMat + bpbMat')), lVec);
-                            else
-                                eEll = minkpm_ia([ellipsoid(0.5 * (qMat + qMat'))...
-                                    ellipsoid(0.5 * (bpbMat + bpbMat'))],...
-                                    ellipsoid(0.5 * (gqgMat + gqgMat')), lVec);
-                            end
+                        if isMinMax
+                            eEll = fMinkmp(ellipsoid(0.5 * (qMat + qMat')),...
+                                ellipsoid(0.5 * (gqgMat + gqgMat')),...
+                                ellipsoid(0.5 * (bpbMat + bpbMat')), lVec);
                         else
-                            if isMinMax
-                                eEll = minkmp_ea(ellipsoid(0.5 * (qMat + qMat')),...
-                                    ellipsoid(0.5 * (gqgMat + gqgMat')),...
-                                    ellipsoid(0.5 * (bpbMat + bpbMat')), lVec);
-                            else
-                                eEll = minkpm_ea([ellipsoid(0.5 * (qMat + qMat'))...
-                                    ellipsoid(0.5 * (bpbMat + bpbMat'))],...
-                                    ellipsoid(0.5 * (gqgMat + gqgMat')), lVec);
-                            end
+                            eEll = fMinksum([ellipsoid(0.5 * (qMat + qMat'))...
+                                ellipsoid(0.5 * (bpbMat + bpbMat'))], lVec);
+                            eEll = fMinkdiff(eEll, ...
+                                ellipsoid(0.5 * (gqgMat + gqgMat')), lVec);
                         end
                     else
-                        if approxType == EApproxType.Internal
-                            eEll = minksum_ia([ellipsoid(0.5 * (qMat + qMat')) ...
-                                ellipsoid(0.5 * (bpbMat + bpbMat'))], lVec);
-                        else
-                            eEll = minksum_ea([ellipsoid(0.5 * (qMat + qMat')) ...
-                                ellipsoid(0.5 * (bpbMat + bpbMat'))], lVec);
-                        end
+                        eEll = fMinksum([ellipsoid(0.5 * (qMat + qMat')) ...
+                            ellipsoid(0.5 * (bpbMat + bpbMat'))], lVec);
                     end
                     %
                     if ~isempty(eEll)
