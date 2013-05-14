@@ -29,17 +29,47 @@ classdef SuiteBasic < mlunitext.test_case
         end
         function testSupGeomDiff3d(~)
             import gras.geom.sup.supgeomdiff3d;
-            absTol = 1e-10;
+            import gras.geom.sup.supgeomdiff2d;
+            ABS_TOL = 1e-10;
+            POINTS_NUMBER = 200;
             testFirEll=ellipsoid(diag([1 2 1]));
             testSecEll=ellipsoid(diag([0.8 0.1 0.1]));
-            [lGridMat, fMat] = gras.geom.tri.spheretri(3);
+            [lGridMat,~] = gras.geom.tri.spheretri(3);
             [supp1Mat,~] = rho(testFirEll,lGridMat.');
             [supp2Mat,~] = rho(testSecEll,lGridMat.');
-            rhoDiffVec = gras.geom.sup.supgeomdiff3d(supp1Mat,supp2Mat,lGridMat.');
+            rhoDiffVec = ...
+                gras.geom.sup.supgeomdiff3d(supp1Mat,supp2Mat,lGridMat.');
             lGrid2Mat = diag([-1,-1,1])*lGridMat.';
-            rhoDiff2Vec = gras.geom.sup.supgeomdiff3d(supp1Mat,supp2Mat,lGrid2Mat);
-            mlunit.assert_equals(abs(rhoDiffVec-rhoDiff2Vec) < absTol,ones(1,size(rhoDiffVec,2)));          
+            rhoDiff2Vec = ...
+                gras.geom.sup.supgeomdiff3d(supp1Mat,supp2Mat,lGrid2Mat);
+            mlunit.assert_equals(abs(rhoDiffVec-rhoDiff2Vec) < ABS_TOL,...
+                ones(1,size(rhoDiffVec,2)));   
+            
+            firBoundMat = gras.geom.circlepart(POINTS_NUMBER).';
+            testFirEll=ellipsoid(diag([0.1 0.2]));
+            secBoundMat =  testFirEll.getBoundary(POINTS_NUMBER).';
+            thirdBoundMat =...
+                [repmat(firBoundMat,1,10);floor((0:1999)./POINTS_NUMBER)];
+            forthBoundMat =...
+                [repmat(secBoundMat,1,10);...
+                floor((0:1999)./POINTS_NUMBER)./10];
+            lGridMat = [firBoundMat;zeros(1,POINTS_NUMBER)].';
+            lGridMat = [lGridMat;.5 .5 .5];
+            sup1Vec = max(firBoundMat.'*firBoundMat,[],2);
+            sup2Vec = max(firBoundMat.'*secBoundMat,[],2);
+            sup3Vec = max(lGridMat*thirdBoundMat,[],2);
+            sup4Vec = max(lGridMat*forthBoundMat,[],2);
+            rhoDiffVec = gras.geom.sup.supgeomdiff2d(sup1Vec.',...
+                    sup2Vec.',firBoundMat);
+                
+            rhoDiff2Vec = ...
+                gras.geom.sup.supgeomdiff3d(sup3Vec.',sup4Vec.',...
+                lGridMat.');
+            
+            mlunit.assert_equals(abs(rhoDiff2Vec(1:end-1)-rhoDiffVec)...
+                < ABS_TOL, ones(1,size(rhoDiffVec,2)));   
         end
+        
         function testSupGeomDiff2d(~)
             N_DIRS=200;
             EXP_TOL=1e-15;
