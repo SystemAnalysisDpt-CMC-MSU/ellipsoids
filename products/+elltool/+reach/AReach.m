@@ -23,17 +23,36 @@ classdef AReach < elltool.reach.IReach
         UNION = 'u'
     end
     %
+    methods (Access = private)
+        function isArr = fApplyArrMethod(self,propertyName,addFunc)
+            if nargin < 3
+                isArr = arrayfun(@(x) x.(propertyName), self); 
+            else
+                fApplyToProperty = str2func(addFunc);
+                isArr = arrayfun(@(x) fApplyToProperty(x.(propertyName)), self);
+            end    
+            %in case of empty input array make output logical
+            isArr = logical(isArr);  
+        end    
+    end    
+    %
     methods
-        function isProj = isprojection(self)
-            isProj = self.isProj;
+        function resArr=repMat(self,varargin)
+            sizeVec=horzcat(varargin{:});
+            resArr=repmat(self,sizeVec);
+            resArr=resArr.getCopy();    
         end
         %
-        function isCut = iscut(self)
-            isCut = self.isCut;
+        function isProjArr = isprojection(self)
+            isProjArr = fApplyArrMethod(self,'isProj');  
         end
         %
-        function isEmpty = isempty(self)
-            isEmpty = isempty(self.x0Ellipsoid);
+        function isCutArr = iscut(self)
+            isCutArr = fApplyArrMethod(self,'isCut');  
+        end
+        %
+        function isEmptyArr = isempty(self)   
+            isEmptyArr = fApplyArrMethod(self,'x0Ellipsoid','isempty');
         end
         %
         function isEmptyIntersect =...
