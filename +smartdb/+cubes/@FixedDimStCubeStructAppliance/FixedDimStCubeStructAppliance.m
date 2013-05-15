@@ -123,7 +123,8 @@ classdef FixedDimStCubeStructAppliance<smartdb.cubes.IDynamicCubeStructInternal
             %                   a concatenation along a specified dimension
             %
             % Input:
-            %    self: CubeStruct [1,1] - the object
+            %   regular:
+            %       self: CubeStruct [1,1] - the object
             self.addDataAlongDimInternal(catDimension,varargin{:});
         end
         function clearData(self)

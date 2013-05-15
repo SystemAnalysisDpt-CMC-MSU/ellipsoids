@@ -61,7 +61,8 @@ classdef CubeStruct<dynamicprops&modgen.common.obj.HandleObjectCloner&...
             % DISPLAY - puts some textual information about CubeStruct object in screen
             % 
             % Input:
-            %    self.
+            %  regular:
+            %      self.
             %
             self.displayInternal('CubeStruct',varargin{:});
         end
