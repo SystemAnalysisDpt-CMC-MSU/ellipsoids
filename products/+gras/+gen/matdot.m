@@ -8,7 +8,7 @@ function resArr = matdot(inpArr1, inpArr2)
 %         inpArr2: double[nMatDim,nMatDim,nElemsDim1...,nElemsDimK]
 %
 % Output:
-%   resArr: double[nElemsDim1,...,nElemsDimk] - dot production values
+%   resArr: double[1,1,nElemsDim1,...,nElemsDimk] - dot production values
     import modgen.common.throwerror;
     %
     sizeVec = size(inpArr1);
