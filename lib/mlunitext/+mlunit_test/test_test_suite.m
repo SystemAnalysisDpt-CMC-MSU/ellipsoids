@@ -4,7 +4,7 @@ classdef test_test_suite < mlunitext.test_case
     %  Example:
     %         run(gui_test_runner, 'test_test_suite');
     %
-    %  See also MLUNIT.TEST_SUITE.
+    %  See also MLUNITEXT.TEST_SUITE.
 
     % $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
     % Faculty of Computational Mathematics and Cybernetics, System Analysis
@@ -109,7 +109,7 @@ classdef test_test_suite < mlunitext.test_case
             %         run(gui_test_runner,
             %             'test_test_suite(''test_construct'');');
             %
-            %  See also MLUNIT.TEST_SUITE.
+            %  See also MLUNITEXT.TEST_SUITE.
 
             import mlunitext.*;
 
@@ -141,7 +141,7 @@ classdef test_test_suite < mlunitext.test_case
             %         run(gui_test_runner,
             %             'test_test_suite(''test_construct_copy'');');
             %
-            %  See also MLUNIT.TEST_SUITE.
+            %  See also MLUNITEXT.TEST_SUITE.
 
             import mlunitext.*;
             %
@@ -169,7 +169,7 @@ classdef test_test_suite < mlunitext.test_case
             %         run(gui_test_runner,
             %             'test_test_suite(''test_count_test_cases'');');
             %
-            %  See also MLUNIT.TEST_SUITE.COUNT_TEST_CASES.
+            %  See also MLUNITEXT.TEST_SUITE.COUNT_TEST_CASES.
 
             import mlunitext.*;
 
@@ -189,9 +189,9 @@ classdef test_test_suite < mlunitext.test_case
             %         run(gui_test_runner,
             %             'test_test_suite(''test_should_stop'');');
             %
-            %  See also MLUNIT.TEST_RESULT.SET_SHOULD_STOP.
+            %  See also MLUNITEXT.TEST_RESULT.SET_SHOULD_STOP.
 
-            self.result = set_should_stop(self.result);
+            set_should_stop(self.result);
             self.suite.add_test(mlunit_test.mock_test('test_method'));
             self.result = run(self.suite, self.result);
             assert(strcmp('mlunitext.test_result run=0 errors=0 failures=0', ...
@@ -209,7 +209,7 @@ classdef test_test_suite < mlunitext.test_case
             %         run(gui_test_runner,
             %             'test_test_suite(''test_suite'');');
             %
-            %  See also MLUNIT.TEST_SUITE.RUN.
+            %  See also MLUNITEXT.TEST_SUITE.RUN.
 
             self.suite.add_test(mlunit_test.mock_test('test_method'));
             self.suite.add_test(...

@@ -367,7 +367,7 @@ classdef LinSysTestCase < mlunitext.test_case
             [nStates, nInputs, nOutputs, nDistInputs] = system.dimension();
             obtainedVec = [nStates, nInputs, nOutputs, nDistInputs];
             expectedVec = [0 0 0 0];
-            mlunit.assert_equals(all(expectedVec == obtainedVec), true);
+            mlunitext.assert_equals(all(expectedVec == obtainedVec), true);
             %
             % test simple system without disturbance
             %
@@ -375,7 +375,7 @@ classdef LinSysTestCase < mlunitext.test_case
             [nStates, nInputs, nOutputs, nDistInputs] = system.dimension();
             obtainedVec = [nStates, nInputs, nOutputs, nDistInputs];
             expectedVec = [2 3 2 0];
-            mlunit.assert_equals(all(expectedVec == obtainedVec), true);
+            mlunitext.assert_equals(all(expectedVec == obtainedVec), true);
             %
             % test complex system with disturbance and noise
             %
@@ -384,7 +384,7 @@ classdef LinSysTestCase < mlunitext.test_case
             [nStates, nInputs, nOutputs, nDistInputs] = system.dimension();
             obtainedVec = [nStates, nInputs, nOutputs, nDistInputs];
             expectedVec = [5 10 3 11];
-            mlunit.assert_equals(all(expectedVec == obtainedVec), true);
+            mlunitext.assert_equals(all(expectedVec == obtainedVec), true);
             %
             % test array of systems
             %
@@ -394,7 +394,7 @@ classdef LinSysTestCase < mlunitext.test_case
             obtainedMat=[nStatesMat,nInputsMat,nOutputsMat,nDistInputsMat];
             expectedMat=[5*ones(2), 10*ones(2), 3*ones(2), 11*ones(2)];
             resultMat = (expectedMat(:) == obtainedMat(:));
-            mlunit.assert_equals(all(resultMat(:)), true);
+            mlunitext.assert_equals(all(resultMat(:)), true);
             %
         end
         %
@@ -429,7 +429,7 @@ classdef LinSysTestCase < mlunitext.test_case
             obtainedMat = systemMat.hasnoise();
             expectedMat = [false false true; true true true];
             eqMat = (obtainedMat == expectedMat);
-            mlunit.assert_equals(all(eqMat(:)), true);
+            mlunitext.assert_equals(all(eqMat(:)), true);
         end
         %
         function self = testIsDiscrete(self)
@@ -455,7 +455,7 @@ classdef LinSysTestCase < mlunitext.test_case
             obtainedMat = cellfun(isDisc, systemCMat);
             expectedMat = [false false false; false true true];
             eqMat = (obtainedMat == expectedMat);
-            mlunit.assert_equals(all(eqMat(:)), true);
+            mlunitext.assert_equals(all(eqMat(:)), true);
         end
         %
         function self = testIsLti(self)
@@ -488,7 +488,7 @@ classdef LinSysTestCase < mlunitext.test_case
             obtainedMat = systemMat.islti();
             expectedMat = [true true false; false false false];
             eqMat = (obtainedMat == expectedMat);
-            mlunit.assert_equals(all(eqMat(:)), true);
+            mlunitext.assert_equals(all(eqMat(:)), true);
         end
         %
         function self = testIsEmpty(self)
@@ -507,7 +507,7 @@ classdef LinSysTestCase < mlunitext.test_case
             obtainedMat = systemMat.isempty();
             expectedMat = [true true; false false];
             eqMat = (obtainedMat == expectedMat);
-            mlunit.assert_equals(all(eqMat(:)), true);
+            mlunitext.assert_equals(all(eqMat(:)), true);
         end
         %
         function self = testDisplay(self)
@@ -564,7 +564,7 @@ classdef LinSysTestCase < mlunitext.test_case
             isOkArr = (testAbsTolArr == systemArr.getAbsTol());
             %
             isOk = all(isOkArr(:));
-            mlunit.assert(isOk);
+            mlunitext.assert(isOk);
         end
         %
         function self = testHasDisturbance(self)
@@ -578,24 +578,24 @@ classdef LinSysTestCase < mlunitext.test_case
             %
             % test default behavior
             %
-            mlunit.assert_equals(...
+            mlunitext.assert_equals(...
                 constantDistLinSys.hasdisturbance(), false);
-            mlunit.assert_equals(boundedDistLinSys.hasdisturbance(), true);
-            mlunit.assert_equals(noDistLinSys.hasdisturbance(), false);
+            mlunitext.assert_equals(boundedDistLinSys.hasdisturbance(), true);
+            mlunitext.assert_equals(noDistLinSys.hasdisturbance(), false);
             %
             % test isMeaningful
             %
-            mlunit.assert_equals(...
+            mlunitext.assert_equals(...
                 boundedDistLinSys.hasdisturbance(true), true);
-            mlunit.assert_equals(...
+            mlunitext.assert_equals(...
                 boundedDistLinSys.hasdisturbance(false), true);
-            mlunit.assert_equals(...
+            mlunitext.assert_equals(...
                 constantDistLinSys.hasdisturbance(true), false);
-            mlunit.assert_equals(...
+            mlunitext.assert_equals(...
                 constantDistLinSys.hasdisturbance(false), true);
-            mlunit.assert_equals(...
+            mlunitext.assert_equals(...
                 noDistLinSys.hasdisturbance(true), false);
-            mlunit.assert_equals(...
+            mlunitext.assert_equals(...
                 noDistLinSys.hasdisturbance(false), false);
         end
         %
@@ -642,12 +642,12 @@ classdef LinSysTestCase < mlunitext.test_case
             copiedLContsysMat = lContsysMat.getCopy();
             isEqualMat = copiedLContsysMat.isEqual(lContsysMat);
             isOk = all(isEqualMat(:));
-            mlunit.assert_equals(true, isOk);
+            mlunitext.assert_equals(true, isOk);
             %
             copiedLDiscrsysMat = lDiscrsysMat.getCopy();
             isEqualMat = copiedLDiscrsysMat.isEqual(lDiscrsysMat);
             isOk = all(isEqualMat(:));
-            mlunit.assert_equals(true, isOk);
+            mlunitext.assert_equals(true, isOk);
             %
             firstCutLsysMat = lContsysMat(1 : 2, 1 : 2);
             secondCutLsysMat = lContsysMat(3 : 4, 3 : 4);
@@ -657,11 +657,11 @@ classdef LinSysTestCase < mlunitext.test_case
                 'wrongInput');
             isEqualMat = firstCutLsysMat.isEqual(secondCutLsysMat);
             isOk = ~any(isEqualMat(:));
-            mlunit.assert_equals(true, isOk);
+            mlunitext.assert_equals(true, isOk);
             isEqualMat = firstCutLsysMat.isEqual(thirdCutLsysMat);
             isOkMat = isEqualMat == [1 0; 0 0];
             isOk = all(isOkMat(:));
-            mlunit.assert_equals(true, isOk);
+            mlunitext.assert_equals(true, isOk);
             %
             function linsysObj = create(varargin)
                 linsysObj = elltool.linsys.LinSysFactory.create(...

@@ -111,7 +111,7 @@ classdef ContinuousReachTestCase < mlunitext.test_case
                     end
                     sqrtScalProdVec = realsqrt(abs(dot(centerPointsMat,...
                         shapeMat\centerPointsMat) - 1));
-                    mlunit.assert_equals(...
+                    mlunitext.assert_equals(...
                         max(sqrtScalProdVec) < self.COMP_PRECISION, true);
                 end
             end
@@ -128,7 +128,7 @@ classdef ContinuousReachTestCase < mlunitext.test_case
                 'tokens');
             tLimsRead = str2double(tokens{1}.').';
             difference = abs(tLimsRead(:) - timeVec(:));
-            mlunit.assert_equals(...
+            mlunitext.assert_equals(...
                 max(difference) < self.COMP_PRECISION, true);
             % time type
             if isa(resStr, 'elltool.reach.ReachContinuous')
@@ -136,13 +136,13 @@ classdef ContinuousReachTestCase < mlunitext.test_case
             else
                 isOk = ~isempty(strfind(resStr, 'discrete-time'));
             end
-            mlunit.assert_equals(isOk, true);
+            mlunitext.assert_equals(isOk, true);
             % dimension
             tokens = regexp(resStr,...
                 ['linear system in R\^' rxDouble],...
                 'tokens');
             dimRead = str2double(tokens{1}{1});
-            mlunit.assert_equals(dimRead, reachObj.dimension);
+            mlunitext.assert_equals(dimRead, reachObj.dimension);
         end
         %
         function runPlotTest(self, approxType)
@@ -202,7 +202,7 @@ classdef ContinuousReachTestCase < mlunitext.test_case
             [rsDim ssDim] = projReachObj.dimension();
             isOk = (rsDim == self.expDim) && (ssDim == 1) &&...
                 (cutDim == self.expDim);
-            mlunit.assert_equals(true, isOk);
+            mlunitext.assert_equals(true, isOk);
         end
         %
         function self = testIsEmpty(self)
@@ -212,10 +212,10 @@ classdef ContinuousReachTestCase < mlunitext.test_case
             cutReachObj = self.reachObj.cut(newTimeVec);
             projReachObj =...
                 self.reachObj.projection(eye(self.reachObj.dimension(), 1));
-            mlunit.assert_equals(true, emptyRs.isempty());
-            mlunit.assert_equals(false, self.reachObj.isempty());
-            mlunit.assert_equals(false, cutReachObj.isempty());
-            mlunit.assert_equals(false, projReachObj.isempty());
+            mlunitext.assert_equals(true, emptyRs.isempty());
+            mlunitext.assert_equals(false, self.reachObj.isempty());
+            mlunitext.assert_equals(false, cutReachObj.isempty());
+            mlunitext.assert_equals(false, projReachObj.isempty());
         end
         %
         function self = testEvolve(self)
@@ -229,16 +229,16 @@ classdef ContinuousReachTestCase < mlunitext.test_case
             evolveReachObj = newReachObj.evolve(self.tVec(2));
             %
             isEqual = self.reachObj.isEqual(evolveReachObj);
-            mlunit.assert_equals(true, isEqual);
+            mlunitext.assert_equals(true, isEqual);
         end
         %
         function self = testGetSystem(self)
             isEqual = self.linSys.isEqual(self.reachObj.get_system());
-            mlunit.assert_equals(true, isEqual);
+            mlunitext.assert_equals(true, isEqual);
             projReachObj = self.reachObj.projection(...
                 eye(self.reachObj.dimension(), 2));
             isEqual = self.linSys.isEqual(projReachObj.get_system());
-            mlunit.assert_equals(true, isEqual);
+            mlunitext.assert_equals(true, isEqual);
         end
         %
         function self = testCut(self)
@@ -268,8 +268,8 @@ classdef ContinuousReachTestCase < mlunitext.test_case
                     EApproxType.Internal);
                 isEaEqual = cutReachObj.isEqual(newEaReachObj, iTuple,...
                     EApproxType.External);
-                mlunit.assert_equals(true, isIaEqual);
-                mlunit.assert_equals(true, isEaEqual);
+                mlunitext.assert_equals(true, isIaEqual);
+                mlunitext.assert_equals(true, isEaEqual);
             end
         end
         %
@@ -284,7 +284,7 @@ classdef ContinuousReachTestCase < mlunitext.test_case
         function self = testGetCopy(self)
             copiedReachObj = self.reachObj.getCopy();
             isEqual = copiedReachObj.isEqual(self.reachObj);
-            mlunit.assert_equals(true, isEqual);
+            mlunitext.assert_equals(true, isEqual);
         end
     end
 end

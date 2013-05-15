@@ -19,11 +19,11 @@ classdef SuiteBasic < mlunitext.test_case
             crm.copyConfFile(resDir);            
             isOk=modgen.system.ExistanceChecker.isFile(...
                 [resDir,filesep,'test.xml']);
-            mlunit.assert_equals(isOk,true);
+            mlunitext.assert_equals(isOk,true);
             resFileName=[resDir,filesep,'res.xml'];
             crm.copyConfFile(resFileName,'destIsFile',true);
             isOk=modgen.system.ExistanceChecker.isFile(resFileName);
-            mlunit.assert_equals(isOk,true);            
+            mlunitext.assert_equals(isOk,true);            
         end
         function testPatchRepoAsProp(~)
             import modgen.configuration.test.*;
@@ -48,13 +48,13 @@ classdef SuiteBasic < mlunitext.test_case
             crm=factory.getInstance();
             crm.selectConf('testConfA');
             resVal=crm.getParam('test123');
-            mlunit.assert_equals(1,resVal);
+            mlunitext.assert_equals(1,resVal);
             crm.setParam('test123',2,'writeDepth','cache');
             crm.storeCachedConf('testConfA');
             crm=factory.getInstance();
             crm.selectConf('testConfA');
             resVal=crm.getParam('test123');
-            mlunit.assert_equals(2,resVal);
+            mlunitext.assert_equals(2,resVal);
             crm.removeAll();
             %
         end        
@@ -71,7 +71,7 @@ classdef SuiteBasic < mlunitext.test_case
                 modgen.configuration.test.StructChangeTrackerTest());
             crm.deployConfTemplate('default','forceUpdate',true);
             [~,lastVersion]=crm.getConf('default');
-            mlunit.assert_equals(true,~isnan(lastVersion));
+            mlunitext.assert_equals(true,~isnan(lastVersion));
         end
         function test_emptyVersion_ConfRepoMgr(~)
             crm=modgen.configuration.test.ConfRepoMgrNanVer();
@@ -83,18 +83,18 @@ classdef SuiteBasic < mlunitext.test_case
             %
             crm.updateConf('def');
             crm.flushCache();
-            mlunit.assert_equals(false,crm.isConfSelected('def'));
+            mlunitext.assert_equals(false,crm.isConfSelected('def'));
             crm.selectConf('def');
-            mlunit.assert_equals(true,crm.isConfSelected('def'));
+            mlunitext.assert_equals(true,crm.isConfSelected('def'));
             %
             crm.setConfPatchRepo(...
                 modgen.configuration.test.StructChangeTrackerTest());
             crm.updateConf('def');
             [SDataUpd,lastVersion]=crm.getConf('def');
             crm.removeConf('def');
-            mlunit.assert_equals(true,~isnan(lastVersion));
-            mlunit.assert_equals(true,isequal(SDataUpd.alpha,1));            
-            mlunit.assert_equals(true,isequal(SDataUpd.beta,2));
+            mlunitext.assert_equals(true,~isnan(lastVersion));
+            mlunitext.assert_equals(true,isequal(SDataUpd.alpha,1));            
+            mlunitext.assert_equals(true,isequal(SDataUpd.beta,2));
         end     
         %
         function testCopyConfFile(self)
@@ -121,7 +121,7 @@ classdef SuiteBasic < mlunitext.test_case
             check(resFile);
             function check(resFile)
                 isOk=modgen.system.ExistanceChecker.isFile(resFile);
-                mlunit.assert_equals(true,isOk);
+                mlunitext.assert_equals(true,isOk);
             end
         end
         %
@@ -132,15 +132,15 @@ classdef SuiteBasic < mlunitext.test_case
             crm.putConf('def',struct(),0);
             acrm.putConf('def',struct(),0);
             [SRes,confVer]=crm.getConf('def');
-            mlunit.assert_equals(true,confVer==0);
+            mlunitext.assert_equals(true,confVer==0);
             [SRes,confVer]=acrm.getConf('def');
-            mlunit.assert_equals(true,confVer==0);
+            mlunitext.assert_equals(true,confVer==0);
             crm.selectConf('def');
             acrm.selectConf('def');
             [SRes,confVer]=crm.getConf('def');
-            mlunit.assert_equals(true,confVer==103);
+            mlunitext.assert_equals(true,confVer==103);
             [SRes,confVer]=acrm.getConf('def');
-            mlunit.assert_equals(true,confVer==103);
+            mlunitext.assert_equals(true,confVer==103);
         end
         %
         function testSaveLoadHook(self)
@@ -171,9 +171,9 @@ classdef SuiteBasic < mlunitext.test_case
                 crm.putConf(CONF_NAME,SInp,0);
                 crm.flushCache();
                 [SRes,confVer]=getConf();
-                mlunit.assert_equals(0,SRes.alpha3);
-                mlunit.assert_equals(0,confVer);
-                mlunit.assert_equals(true,isequal(SRes,SInp));
+                mlunitext.assert_equals(0,SRes.alpha3);
+                mlunitext.assert_equals(0,confVer);
+                mlunitext.assert_equals(true,isequal(SRes,SInp));
                 %
                 crm.flushCache();
                 crm.updateConf(CONF_NAME);
@@ -184,9 +184,9 @@ classdef SuiteBasic < mlunitext.test_case
                 SExp.alpha3=103;
                 SExp.alpha1=strcat(SExp.alpha1,'12103');
                 SExp.alpha5=SExp.alpha5*1000;
-                mlunit.assert_equals(103,confVer);
-                mlunit.assert_equals(103,SRes.alpha3);
-                mlunit.assert_equals(true,isequal(SRes,SExp));
+                mlunitext.assert_equals(103,confVer);
+                mlunitext.assert_equals(103,SRes.alpha3);
+                mlunitext.assert_equals(true,isequal(SRes,SExp));
             end
             %
             function  [SRes,confVer]=getConf()
@@ -227,7 +227,7 @@ classdef SuiteBasic < mlunitext.test_case
             crm.getConf('conf1');
             crm.selectConf('conf2','reloadIfSelected',false);
             SRes=crm.getCurConf;
-            mlunit.assert_equals(2,SRes.a);
+            mlunitext.assert_equals(2,SRes.a);
         end        
     end
 end

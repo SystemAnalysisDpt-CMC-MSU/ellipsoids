@@ -36,7 +36,7 @@ classdef mlunit_test_xmlloadsave < mlunitext.test_case
             function check()
                 reg=modgen.common.parseparams(self.xmlsaveParams);
                 ResData=xmlparse(xmlformat(Data,reg{:}));
-                mlunit.assert_equals(true,isequal(Data,ResData));
+                mlunitext.assert_equals(true,isequal(Data,ResData));
             end
         end
         
@@ -47,13 +47,13 @@ classdef mlunit_test_xmlloadsave < mlunitext.test_case
             check();
             function check()
                 resVar=xmlparse(xmlformat(expVar));
-                mlunit.assert_equals(true,isequal(resVar,expVar));
+                mlunitext.assert_equals(true,isequal(resVar,expVar));
             end
         end
         function self=testMultidimStructField(self)
             SData.alpha(2,3).a=1;
             SRes=xmlparse(xmlformat(SData,'on'));
-            mlunit.assert_equals(isequalwithequalnans(SRes,SData),true);
+            mlunitext.assert_equals(isequalwithequalnans(SRes,SData),true);
         end
         function self = testInteger(self)
             SData.a=int32([1,2,3]);
@@ -68,7 +68,7 @@ classdef mlunit_test_xmlloadsave < mlunitext.test_case
             %
             self.xmlsave(self.fileName,SData);
             SRes=xmlload(self.fileName);
-            mlunit.assert_equals(isequalwithequalnans(SRes,SData),true);
+            mlunitext.assert_equals(isequalwithequalnans(SRes,SData),true);
         end
         function testNegative(self)
             checkN(handle([1,2]));
@@ -99,13 +99,13 @@ classdef mlunit_test_xmlloadsave < mlunitext.test_case
             Data(2)=modgen.common.genteststruct(2);
             self.xmlsave(self.fileName,Data);
             SRes=xmlload(self.fileName);
-            mlunit.assert_equals(isequalwithequalnans(SRes,Data),true);
+            mlunitext.assert_equals(isequalwithequalnans(SRes,Data),true);
             delete(self.fileName);
             %
             Data=modgen.common.genteststruct(1);
             self.xmlsave(self.fileName,Data);
             SRes=xmlload(self.fileName);
-            mlunit.assert_equals(isequalwithequalnans(SRes,Data),true);
+            mlunitext.assert_equals(isequalwithequalnans(SRes,Data),true);
             delete(self.fileName);
         end
         function self = test_complexstructure_backwardcompatibility(self)
@@ -117,28 +117,28 @@ classdef mlunit_test_xmlloadsave < mlunitext.test_case
             SRes=xmlload(file1ElemName);
             self.xmlsave(file1ElemTmpName,SRes);
             SResTmp=xmlload(file1ElemTmpName);
-            mlunit.assert_equals(isequalwithequalnans(SRes,SResTmp),true);
+            mlunitext.assert_equals(isequalwithequalnans(SRes,SResTmp),true);
             delete(file1ElemTmpName);
             %
             SRes=xmlload(fileArrayName);
             self.xmlsave(fileArrayTmpName,SRes);
             SResTmp=xmlload(fileArrayTmpName);
-            mlunit.assert_equals(isequalwithequalnans(SRes,SResTmp),true);
+            mlunitext.assert_equals(isequalwithequalnans(SRes,SResTmp),true);
             delete(fileArrayTmpName);
         end
         function self = test_simple(self)
             self.xmlsave(self.fileName,self.simpleData);
             SRes=xmlload(self.fileName);
-            mlunit.assert_equals(isequalwithequalnans(SRes,...
+            mlunitext.assert_equals(isequalwithequalnans(SRes,...
                 self.simpleData),true)
             delete(self.fileName);
         end
         function self=test_simple_metadata(self)
             self.xmlsave(self.fileName,self.simpleData,'on',self.simpleMetaData);
             [SRes,SMetaData]=xmlload(self.fileName);
-            mlunit.assert_equals(isequalwithequalnans(SRes,...
+            mlunitext.assert_equals(isequalwithequalnans(SRes,...
                 self.simpleData),true)
-            mlunit.assert_equals(SMetaData,...
+            mlunitext.assert_equals(SMetaData,...
                 self.simpleMetaData,true)
         end
         function self=test_simple_metadata_negative(self)
@@ -146,17 +146,17 @@ classdef mlunit_test_xmlloadsave < mlunitext.test_case
                 metaData=self.simpleMetaData;
                 metaData.badParam=zeros(1,3);
                 self.xmlsave(self.fileName,self.simpleData,'on',metaData);
-                mlunit.assert_equals(true,false);
+                mlunitext.assert_equals(true,false);
             catch meObj
-                mlunit.assert_equals(~isempty(strfind(meObj.identifier,...
+                mlunitext.assert_equals(~isempty(strfind(meObj.identifier,...
                     ':wrongInput')),true);
             end
         end
         function self = test_parseFormatEmptyStruct(self)
-            mlunit.assert_equals(true,isequal(....
+            mlunitext.assert_equals(true,isequal(....
                 struct(),...
                 xmlparse(xmlformat(struct()),'on')));
-            mlunit.assert_equals(true,isequal(....
+            mlunitext.assert_equals(true,isequal(....
                 struct([]),...
                 xmlparse(xmlformat(struct([])),'on')));
         end

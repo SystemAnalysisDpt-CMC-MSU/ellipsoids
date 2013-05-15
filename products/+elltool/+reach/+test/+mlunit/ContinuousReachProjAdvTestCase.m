@@ -112,7 +112,7 @@ classdef ContinuousReachProjAdvTestCase < mlunitext.test_case
             [isEqual,reportStr] = secondProjReachObj.isEqual(...
                 firstProjReachObj,self.FIELDS_NOT_TO_COMPARE);
             failMsg=sprintf('failure for case %s, %s',caseName,reportStr);
-            mlunit.assert_equals(true,isEqual,failMsg);
+            mlunitext.assert_equals(true,isEqual,failMsg);
             function checkPlot(reachObj)
                 if numel(indVec)==2
                     reachObj.plot_ia();
