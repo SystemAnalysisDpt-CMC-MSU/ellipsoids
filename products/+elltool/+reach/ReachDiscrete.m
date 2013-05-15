@@ -180,10 +180,10 @@ classdef ReachDiscrete < elltool.reach.AReach
     methods (Access = protected)
         function ellTubeRel = makeEllTubeRel(self, smartLinSys, l0Mat,...
                 timeLimsVec, isDisturb, calcPrecision, approxTypeVec)
-            import gras.ellapx.enums.EApproxType;
+            import gras.ellapx.enums.EApproxType;            
+            import gras.ellapx.lreachplain.GoodDirsDiscrete;
             relTol = elltool.conf.Properties.getRelTol();            
-            goodDirSetObj =...
-                gras.ellapx.lreachplain.GoodDirectionSet(...
+            goodDirSetObj = GoodDirsDiscrete(...
                 smartLinSys, timeLimsVec(1), l0Mat, calcPrecision);
             %
             approxSchemaDescr = char.empty(1,0);
