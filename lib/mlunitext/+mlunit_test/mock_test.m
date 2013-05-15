@@ -34,7 +34,7 @@ classdef mock_test < mlunitext.test_case
             self.log = [self.log, 'tear_down '];
         end
         
-        function self = test_method(self)
+        function test_method(self)
             % TEST_METHOD is a mock test method, that adds to the
             %  member variable log the string 'test_method '.
             %

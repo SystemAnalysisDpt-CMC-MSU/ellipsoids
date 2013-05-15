@@ -2,7 +2,7 @@ function results = run_reachcont_proj_adv_tests(inpConfAdvTestList, inpModeAdvTe
 import modgen.common.throwerror;
 import modgen.cell.cellstr2expression;
 %
-runner = mlunit.text_test_runner(1, 1);
+runner = mlunitext.text_test_runner(1, 1);
 loader = mlunitext.test_loader;
 %
 crm = gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();

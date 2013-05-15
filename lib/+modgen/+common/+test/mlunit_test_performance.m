@@ -20,37 +20,37 @@ classdef mlunit_test_performance < mlunitext.test_case
             [reg,isRegSpec,prop,isPropSpec]=...
                 modgen.common.parseparext([inpReg,inpProp],[],...
                 'propRetMode','list');
-            mlunit.assert_equals(3,length(isPropSpec));
-            mlunit.assert_equals(true,all(isPropSpec));
-            mlunit.assert_equals(true,isRegSpec);            
-            mlunit.assert_equals(true,isequal(reg,inpReg));%
-            mlunit.assert_equals(true,isequal(prop,inpProp));%
+            mlunitext.assert_equals(3,length(isPropSpec));
+            mlunitext.assert_equals(true,all(isPropSpec));
+            mlunitext.assert_equals(true,isRegSpec);            
+            mlunitext.assert_equals(true,isequal(reg,inpReg));%
+            mlunitext.assert_equals(true,isequal(prop,inpProp));%
             %
             [reg,isRegSpec,prop,isPropSpec]=...
                 modgen.common.parseparext([inpReg,inpProp],{'bb','cc'},...
                 'propRetMode','list');
-            mlunit.assert_equals([true,true,true],isRegSpec);            
-            mlunit.assert_equals(true,isequal(reg,[inpReg,inpFirstProp]));%
-            mlunit.assert_equals(true,isequal(prop,inpSecProp));%  
-            mlunit.assert_equals(true,all(isPropSpec));
-            mlunit.assert_equals(2,length(isPropSpec));
+            mlunitext.assert_equals([true,true,true],isRegSpec);            
+            mlunitext.assert_equals(true,isequal(reg,[inpReg,inpFirstProp]));%
+            mlunitext.assert_equals(true,isequal(prop,inpSecProp));%  
+            mlunitext.assert_equals(true,all(isPropSpec));
+            mlunitext.assert_equals(2,length(isPropSpec));
             %
             [reg,isRegSpec,prop,isPropSpec]=...
                 modgen.common.parseparext({},{'bb','cc'},...
                 'propRetMode','list');
-            mlunit.assert_equals(true,isempty(reg));
-            mlunit.assert_equals(true,isempty(prop));
-            mlunit.assert_equals(true,isempty(isRegSpec));
-            mlunit.assert_equals(false,any(isPropSpec));
-            mlunit.assert_equals(2,length(isPropSpec));
+            mlunitext.assert_equals(true,isempty(reg));
+            mlunitext.assert_equals(true,isempty(prop));
+            mlunitext.assert_equals(true,isempty(isRegSpec));
+            mlunitext.assert_equals(false,any(isPropSpec));
+            mlunitext.assert_equals(2,length(isPropSpec));
             %
             [reg,isRegSpec,prop,isPropSpec]=...
                 modgen.common.parseparext({},[],...
                 'propRetMode','list');
-            mlunit.assert_equals(true,isempty(reg));
-            mlunit.assert_equals(true,isempty(prop));
-            mlunit.assert_equals(true,isempty(isRegSpec));            
-            mlunit.assert_equals(true,isempty(isPropSpec));
+            mlunitext.assert_equals(true,isempty(reg));
+            mlunitext.assert_equals(true,isempty(prop));
+            mlunitext.assert_equals(true,isempty(isRegSpec));            
+            mlunitext.assert_equals(true,isempty(isPropSpec));
             %
             nRegs=1;
             regDefList={1,3};
@@ -75,78 +75,78 @@ classdef mlunit_test_performance < mlunitext.test_case
             function checkP(varargin)
                 [reg1,isRegSpec1Vec]=checkPInt(varargin{:});
                 [reg2,isRegSpec2Vec]=checkPInt(varargin{:},'regDefList',regDefList);
-                mlunit.assert_equals(true,isequal(reg1{1},reg2{1}));
-                mlunit.assert_equals(true,...
+                mlunitext.assert_equals(true,isequal(reg1{1},reg2{1}));
+                mlunitext.assert_equals(true,...
                     isequal(isRegSpec1Vec(1),isRegSpec2Vec(1)));
-                mlunit.assert_equals(false,isRegSpec2Vec(2));
-                mlunit.assert_equals(true,isequal(1,length(isRegSpec1Vec)));
-                mlunit.assert_equals(true,isequal(2,length(isRegSpec2Vec)));
-                mlunit.assert_equals(true,isequal(1,length(reg1)));
-                mlunit.assert_equals(true,isequal(2,length(reg2)));
-                mlunit.assert_equals(true,isequal(3,reg2{2}));
+                mlunitext.assert_equals(false,isRegSpec2Vec(2));
+                mlunitext.assert_equals(true,isequal(1,length(isRegSpec1Vec)));
+                mlunitext.assert_equals(true,isequal(2,length(isRegSpec2Vec)));
+                mlunitext.assert_equals(true,isequal(1,length(reg1)));
+                mlunitext.assert_equals(true,isequal(2,length(reg2)));
+                mlunitext.assert_equals(true,isequal(3,reg2{2}));
                 % 
                 function [reg,isRegSpecVec]=checkPInt(varargin)
                     [reg,isRegSpecVec,isJoinByInst,isJoinIdKept]=...
                         modgen.common.parseparext(initInpArgList,...
                         propCheckMat,nRegExpMax,...
                         varargin{:});
-                    mlunit.assert_equals(true,isRegSpecVec(1));
-                    mlunit.assert_equals(true,isequal(reg(1:nRegs),{1}));
-                    mlunit.assert_equals(true,isJoinByInst);
-                    mlunit.assert_equals(true,isJoinIdKept);
+                    mlunitext.assert_equals(true,isRegSpecVec(1));
+                    mlunitext.assert_equals(true,isequal(reg(1:nRegs),{1}));
+                    mlunitext.assert_equals(true,isJoinByInst);
+                    mlunitext.assert_equals(true,isJoinIdKept);
                 end
             end
             
         end
         function self=test_parseparams(self)
             [reg,prop]=getparse({'alpha'});
-            mlunit.assert_equals(true,isequal(reg,{'alpha'}));
-            mlunit.assert_equals(true,isequal(prop,{}));
+            mlunitext.assert_equals(true,isequal(reg,{'alpha'}));
+            mlunitext.assert_equals(true,isequal(prop,{}));
             %
             [reg,prop]=getparse({'alpha','beta',1});
-            mlunit.assert_equals(true,isequal(reg,{'alpha'}));
-            mlunit.assert_equals(true,isequal(prop,{'beta',1}));
+            mlunitext.assert_equals(true,isequal(reg,{'alpha'}));
+            mlunitext.assert_equals(true,isequal(prop,{'beta',1}));
             %
             [reg,prop]=getparse({'alpha',1,3,'beta',1});
-            mlunit.assert_equals(true,isequal(reg,{'alpha',1,3}));
-            mlunit.assert_equals(true,isequal(prop,{'beta',1}));
+            mlunitext.assert_equals(true,isequal(reg,{'alpha',1,3}));
+            mlunitext.assert_equals(true,isequal(prop,{'beta',1}));
             %
             [reg,prop]=getparse({'alpha',1,3,'beta',1},{'alpha'});
-            mlunit.assert_equals(true,isequal(reg,{3,'beta',1}));
-            mlunit.assert_equals(true,isequal(prop,{'alpha',1}));
+            mlunitext.assert_equals(true,isequal(reg,{3,'beta',1}));
+            mlunitext.assert_equals(true,isequal(prop,{'alpha',1}));
             %
             [reg,prop]=getparse({'alpha',1,3,'beta',1},{});
-            mlunit.assert_equals(true,isequal(reg,{'alpha',1,3,'beta',1}));
-            mlunit.assert_equals(true,isequal(prop,{}));
+            mlunitext.assert_equals(true,isequal(reg,{'alpha',1,3,'beta',1}));
+            mlunitext.assert_equals(true,isequal(prop,{}));
             %
             [reg,prop]=getparse({'alpha',1,3,'beta',1,'gamma',1},'gamma');
-            mlunit.assert_equals(true,isequal(reg,{'alpha',1,3,'beta',1}));
-            mlunit.assert_equals(true,isequal(prop,{'gamma',1}));
+            mlunitext.assert_equals(true,isequal(reg,{'alpha',1,3,'beta',1}));
+            mlunitext.assert_equals(true,isequal(prop,{'gamma',1}));
             %
             [reg,prop]=getparse({'alpha',1,3,'gamma',1,'beta',1},'gamma');
-            mlunit.assert_equals(true,isequal(reg,{'alpha',1,3,'beta',1}));
-            mlunit.assert_equals(true,isequal(prop,{'gamma',1}));
+            mlunitext.assert_equals(true,isequal(reg,{'alpha',1,3,'beta',1}));
+            mlunitext.assert_equals(true,isequal(prop,{'gamma',1}));
             %
             [reg,prop]=getparse({'alpha',1,3,'beta',1,'gamma',1},'Gamma');
-            mlunit.assert_equals(true,isequal(reg,{'alpha',1,3,'beta',1}));
-            mlunit.assert_equals(true,isequal(prop,{'gamma',1}));
+            mlunitext.assert_equals(true,isequal(reg,{'alpha',1,3,'beta',1}));
+            mlunitext.assert_equals(true,isequal(prop,{'gamma',1}));
             %
             [reg,prop]=getparse({'alpha',1},'beta');
-            mlunit.assert_equals(true,isequal(reg,{'alpha',1}));
-            mlunit.assert_equals(true,isequal(prop,{}));
+            mlunitext.assert_equals(true,isequal(reg,{'alpha',1}));
+            mlunitext.assert_equals(true,isequal(prop,{}));
             %
             [reg,prop]=getparse({'alpha',1},'beta',[0 2]);
-            mlunit.assert_equals(true,isequal(reg,{'alpha',1}));
-            mlunit.assert_equals(true,isequal(prop,{}));
+            mlunitext.assert_equals(true,isequal(reg,{'alpha',1}));
+            mlunitext.assert_equals(true,isequal(prop,{}));
             %
             [reg,prop]=getparse({1,'alpha'},'alpha');
-            mlunit.assert_equals(true,isequal(reg,{1,'alpha'}));
-            mlunit.assert_equals(true,isequal(prop,{}));
+            mlunitext.assert_equals(true,isequal(reg,{1,'alpha'}));
+            mlunitext.assert_equals(true,isequal(prop,{}));
             %
             [reg,prop]=getparse(...
                 {1,'alpha',3,'beta',3,'gamma'},{'alpha','gamma'});
-            mlunit.assert_equals(true,isequal(reg,{1,'beta',3,'gamma'}));
-            mlunit.assert_equals(true,isequal(prop,{'alpha',3}));
+            mlunitext.assert_equals(true,isequal(reg,{1,'beta',3,'gamma'}));
+            mlunitext.assert_equals(true,isequal(prop,{'alpha',3}));
             function [reg,prop]=getparse(argList,varargin)
                 if (nargin>1)
                     propInpNameList=varargin{1};
@@ -176,29 +176,29 @@ classdef mlunit_test_performance < mlunitext.test_case
                     %
                     propNameList=propInpNameList;
                     %
-                    mlunit.assert_equals(true,isequal(reg,reg1));
+                    mlunitext.assert_equals(true,isequal(reg,reg1));
                     isEqual=isequal(propNameList,...
                         propInpNameList)||isempty(propNameList)&&...
                         isempty(propInpNameList);
-                    mlunit.assert_equals(true,isEqual);
+                    mlunitext.assert_equals(true,isEqual);
                     pNameList=propNameList(isSpecVec);
                     pValList=propValList(isSpecVec);
                     inpArgList=[pNameList;pValList];
                     s1=struct(inpArgList{:});
                     s2=struct(prop{:});
                     isEqual=isequal(s1,s2);
-                    mlunit.assert_equals(true,isEqual);
+                    mlunitext.assert_equals(true,isEqual);
                     %
                     if ~all(isSpecVec)
                         defValList=num2cell(rand(size(propNameList)));
                         [reg2,outCell{:}]=...
                             modgen.common.parseparext(argList,...
                             [propNameList;defValList],varargin{2:end});
-                        mlunit.assert_equals(true,isequal(reg,reg2));
+                        mlunitext.assert_equals(true,isequal(reg,reg2));
                         [propValList,isSpecVec]=getval(outCell);
                         isEqual=isequal(propValList(~isSpecVec),...
                             defValList(~isSpecVec));
-                        mlunit.assert_equals(true,isEqual);
+                        mlunitext.assert_equals(true,isEqual);
                         %
                         checkStrList=repmat({'false'},size(defValList));
                         checkStrList(isSpecVec)={'true'};
@@ -207,9 +207,9 @@ classdef mlunit_test_performance < mlunitext.test_case
                             [propNameList;defValList;...
                             checkStrList],varargin{2:end});
                         [propValList3,isSpecVec3]=getval(outCell);
-                        mlunit.assert_equals(true,isequal(reg,reg3));
-                        mlunit.assert_equals(true,isequal(propValList3,propValList));
-                        mlunit.assert_equals(true,isequal(isSpecVec,isSpecVec3));
+                        mlunitext.assert_equals(true,isequal(reg,reg3));
+                        mlunitext.assert_equals(true,isequal(propValList3,propValList));
+                        mlunitext.assert_equals(true,isequal(isSpecVec,isSpecVec3));
                     end
                 end
                 %
@@ -225,8 +225,8 @@ classdef mlunit_test_performance < mlunitext.test_case
             [reg1,prop1]=modgen.common.parseparams(inpArgList);
             [reg2,prop2]=modgen.common.parseparams(inpArgList,[]);
             %
-            mlunit.assert_equals(true,isequal(reg1,reg2));
-            mlunit.assert_equals(true,isequal(prop1,prop2));
+            mlunitext.assert_equals(true,isequal(reg1,reg2));
+            mlunitext.assert_equals(true,isequal(prop1,prop2));
             %
             self.runAndCheckError(...
                 'modgen.common.parseparams(inpArgList,[],0);',...
@@ -275,15 +275,15 @@ classdef mlunit_test_performance < mlunitext.test_case
         function self=test_getfirstdimsize(self)
             expSizeVec=[2,3];
             inpArray=rand([expSizeVec,4,5]);
-            mlunit.assert_equals(expSizeVec,...
+            mlunitext.assert_equals(expSizeVec,...
                 modgen.common.getfirstdimsize(inpArray,2));
             expSizeVec=[2,3,1];
             inpArray=rand([expSizeVec,1,1]);
-            mlunit.assert_equals(expSizeVec,...
+            mlunitext.assert_equals(expSizeVec,...
                 modgen.common.getfirstdimsize(inpArray,3));
-            mlunit.assert_equals([expSizeVec,[1 1]],...
+            mlunitext.assert_equals([expSizeVec,[1 1]],...
                 modgen.common.getfirstdimsize(inpArray,5));
-            mlunit.assert_equals(true,...
+            mlunitext.assert_equals(true,...
                 isempty(modgen.common.getfirstdimsize(inpArray,0)));
             self.runAndCheckError(...
                 'modgen.common.getfirstdimsize(inpArray,-1)',...
@@ -291,12 +291,12 @@ classdef mlunit_test_performance < mlunitext.test_case
             %
         end
         function self=test_auxchecksize(self)
-            mlunit.assert_equals(true,auxchecksize(rand(2,3),[2,3,1]));
-            mlunit.assert_equals(true,auxchecksize(rand(2,3),[2,3]));
-            mlunit.assert_equals(false,auxchecksize(rand(2,4),[2,3]));
-            mlunit.assert_equals(false,auxchecksize(rand(2,4,5),[2,4]));
-            mlunit.assert_equals(true,auxchecksize([],[]));
-            mlunit.assert_equals(false,auxchecksize(1,[]));
+            mlunitext.assert_equals(true,auxchecksize(rand(2,3),[2,3,1]));
+            mlunitext.assert_equals(true,auxchecksize(rand(2,3),[2,3]));
+            mlunitext.assert_equals(false,auxchecksize(rand(2,4),[2,3]));
+            mlunitext.assert_equals(false,auxchecksize(rand(2,4,5),[2,4]));
+            mlunitext.assert_equals(true,auxchecksize([],[]));
+            mlunitext.assert_equals(false,auxchecksize(1,[]));
         end
         function self=test_cat(self)
             typeList={'int8','double','logical','struct'};
@@ -305,7 +305,7 @@ classdef mlunit_test_performance < mlunitext.test_case
                     iObj=modgen.common.createarray(typeList{iType},[]);
                     jObj=modgen.common.createarray(typeList{jType},[]);
                     res=modgen.common.cat(1,iObj,jObj);
-                    mlunit.assert_equals(true,...
+                    mlunitext.assert_equals(true,...
                         isa(res,typeList{iType}));
                 end
             end

@@ -18,6 +18,12 @@ classdef CompositeMatrixOperations<gras.mat.AMatrixOperations
                 obj= gras.mat.fcnlib.MatrixPInvFunc(mMatFunc);
             end
         end
+        function obj=uminus(self,mMatFunc)
+            obj=uminus@gras.mat.AMatrixOperations(self,mMatFunc);
+            if isempty(obj)
+                obj=gras.mat.fcnlib.MatrixUMinusFunc(mMatFunc);
+            end
+        end        
         function obj=transpose(self,mMatFunc)
             obj=transpose@gras.mat.AMatrixOperations(self,mMatFunc);
             if isempty(obj)

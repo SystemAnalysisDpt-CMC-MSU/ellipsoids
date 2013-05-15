@@ -26,7 +26,7 @@ classdef EllAuxTestCase < mlunitext.test_case
              masterCheckIsPos(shRegMat);             
              %
              ell=ellipsoid(shMat,'absTol',absTol);    
-             mlunit.assert(isequal(ell.getShapeMat(),shMat));
+             mlunitext.assert(isequal(ell.getShapeMat(),shMat));
              %
              checkApxReg(@minksum_ia);
              checkApxReg(@minksum_ea);
@@ -38,7 +38,7 @@ classdef EllAuxTestCase < mlunitext.test_case
              ellRegShapeMat=apxEll.getShapeMat();
              maxDiff=max(abs(ellRegShapeMat(:)*0.25-shRegMat(:)));
              isOk=maxDiff<=CMP_TOL;
-             mlunit.assert(isOk);
+             mlunitext.assert(isOk);
              end
              %masterCheckIsPos(ellRegShapeMat);
              %
@@ -51,7 +51,7 @@ classdef EllAuxTestCase < mlunitext.test_case
              %
              function checkIsPos(inpMat,isExpOk,delta,varargin)
                  isOk=gras.la.ismatposdef(inpMat,absTol+delta,varargin{:});
-                 mlunit.assert_equals(isOk,isExpOk);
+                 mlunitext.assert_equals(isOk,isExpOk);
                  if (nargin>3)
                      isSemPosDef=varargin{1};
                  else
@@ -60,7 +60,7 @@ classdef EllAuxTestCase < mlunitext.test_case
                  if ~isSemPosDef
                     ell=ellipsoid(inpMat,'absTol',absTol+delta);
                     isOk=~ell.isdegenerate();
-                    mlunit.assert_equals(isOk,isExpOk);
+                    mlunitext.assert_equals(isOk,isExpOk);
                  end
              end
          end

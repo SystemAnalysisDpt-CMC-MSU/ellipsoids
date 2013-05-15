@@ -24,8 +24,32 @@ classdef test_result<handle
         failures = {};
         should_stop = 0;
     end
-    
+    %
+    methods (Access=protected)
+        function checkIfScalar(self)
+            import modgen.common.throwerror;
+            if ~isscalar(self)
+                throwerror('wrongInput:notScalarObj',...
+                    'object is expected to be a scalar');
+            end
+        end
+    end
     methods
+        function self = add_success(self, ~)
+            % ADD_SUCCESS is an empty method for classes, which
+            %   might do some action on a successful test.
+            self.checkIfScalar();
+        end
+        function self = stop_test(self, test)
+            % STOP_TEST indicates that a test has been finished.
+            %
+            % Example:
+            %    stop_test is usually called by test_case.run to signal
+            %    the end of the test execution to the test result:
+            %         result = stop_test(result, self);
+            %
+            self.checkIfScalar();
+        end
         function self=test_result(varargin)
         end
         function self = add_error(self, testName, meObj)
@@ -44,6 +68,7 @@ classdef test_result<handle
             %
             % See also MLUNIT.TEST_RESULT.ADD_ERROR, MLUNIT.TEST_CASE.RUN.
             %
+            self.checkIfScalar();
             errMsg=modgen.exception.me.obj2hypstr(meObj);
             self = self.add_error_by_message(testName,errMsg);
         end
@@ -66,6 +91,7 @@ classdef test_result<handle
             %
             %  See also MLUNIT.TEST_CASE.RUN.
             %
+            self.checkIfScalar();
             if ~ischar(errorMsg)
                 modgen.common.throwerror('wrongInput',...
                     'errorMsg is expected to be a character array');
@@ -96,7 +122,7 @@ classdef test_result<handle
             %       result = add_failure(result, self, errmsg);
             %
             %  See also TEST_CASE/RUN.
-            
+            self.checkIfScalar();
             [message,stacktrace]=modgen.exception.me.obj2str(meObj);
             self.add_failure_by_message(testName,[message,stacktrace]);
         end
@@ -118,6 +144,7 @@ classdef test_result<handle
             %       result = add_failure(result, self, errmsg);
             %
             %  See also TEST_CASE/RUN.
+            self.checkIfScalar();
             if ~ischar(failMsg)
                 modgen.common.throwerror('wrongInput',...
                     'failMsg is expected to be a character array');
@@ -125,20 +152,8 @@ classdef test_result<handle
             last = size(self.failures, 1);
             self.failures{last + 1, 1} = testName.str();
             self.failures{last + 1, 2} = failMsg;
-        end        
-        %
-        function self = add_success(self, ~)
-            % ADD_SUCCESS is an empty method for classes, which
-            %   might do some action on a successful test.
-            %
-            % Example:
-            %   ADD_SUCCESS is usually only called by the run method of
-            %   test_case, see test_case.run:
-            %       result = add_success(result, self);
-            %
-            %  See also MLUNIT.TEXT_TEST_RESULT.ADD_SUCCESS,
-            %           MLUNIT.TEST_CASE.RUN.
         end
+        %
         
         function errors = get_error_list(self)
             % GET_ERROR_LIST returns a cell array of tests and
@@ -150,7 +165,7 @@ classdef test_result<handle
             %         get_error_list(self)
             %
             %  See also MLUNIT.TEXT_TEST_RESULT.PRINT_ERRORS.
-            
+            self.checkIfScalar();
             errors = self.errors;
         end
         
@@ -163,7 +178,7 @@ classdef test_result<handle
             %         get_errors(self)
             %
             %  See also MLUNIT.TEXT_TEST_RESULT.RUN.
-            
+            self.checkIfScalar();
             errors = size(self.errors, 1);
         end
         
@@ -177,7 +192,7 @@ classdef test_result<handle
             %       get_failure_list(self)
             %
             %  See also MLUNIT.TEXT_TEST_RESULT.PRINT_ERRORS.
-            
+            self.checkIfScalar();
             failures = self.failures;
         end
         
@@ -190,7 +205,7 @@ classdef test_result<handle
             %         get_errors(self)
             %
             % See also MLUNIT.TEXT_TEST_RESULT.RUN.
-            
+            self.checkIfScalar();
             failures = size(self.failures, 1);
         end
         
@@ -203,7 +218,7 @@ classdef test_result<handle
             %         get_should_stop(result)
             %
             % See also MLUNIT.TEST_SUITE.RUN.
-            
+            self.checkIfScalar();
             should_stop = self.should_stop;
         end
         
@@ -216,7 +231,7 @@ classdef test_result<handle
             %         tests_run = get_tests_run(result);
             %
             %  See also MLUNIT.TEXT_TEST_RUNNER.RUN.
-            
+            self.checkIfScalar();
             tests_run = self.tests_run;
         end
         function self = set_should_stop(self)
@@ -227,7 +242,7 @@ classdef test_result<handle
             %   result = test_result;
             %   % Do something, e.g. iterate through a number of tests, ...
             %   result = set_should_stop(result);
-            
+            self.checkIfScalar();
             self.should_stop = 1;
         end
         
@@ -240,20 +255,10 @@ classdef test_result<handle
             %         result = start_test(result, self);
             %
             %  See also MLUNIT.TEST_CASE.RUN.
-            
+            self.checkIfScalar();
             self.tests_run = self.tests_run + 1;
         end
         
-        function self = stop_test(self, test) %#ok
-            % STOP_TEST indicates that a test has been finished.
-            %
-            % Example:
-            %    stop_test is usually called by test_case.run to signal
-            %    the end of the test execution to the test result:
-            %         result = stop_test(result, self);
-            %
-            % See also MLUNIT.TEST_CASE.RUN.
-        end
         
         function s = summary(self)
             % SUMMARY returns a string with a summary of the
@@ -263,7 +268,7 @@ classdef test_result<handle
             %         test = ... % e.g. created through my_test('test_foo')
             %         [test, result] = run(test);
             %         summary(result)
-            
+            self.checkIfScalar();
             s = sprintf('%s run=%d errors=%d failures=%d', ...
                 class(self), self.tests_run, get_errors(self), ...
                 get_failures(self));
@@ -279,7 +284,7 @@ classdef test_result<handle
             %         was_successful(result)
             %
             %  See also MLUNIT.TEXT_TEST_RESULT.RUN.
-            
+            self.checkIfScalar();
             if (size(self.errors, 1) + size(self.failures, 1) == 0)
                 success = 1;
             else
@@ -308,7 +313,7 @@ classdef test_result<handle
             %     self: test_result [1,1] - object containing all test
             %         results
             %
-            
+            self.checkIfScalar();
             if nargin<2,
                 return;
             end
@@ -340,6 +345,9 @@ classdef test_result<handle
             end
         end
         function [errorCount,failCount]=getErrorFailCount(self)
+            % GETERRORFAILCOUNT returns a number of errors and failures for
+            % a vector of test results
+            %
             nRes=length(self);
             errorCount=0;
             failCount=0;
@@ -350,6 +358,9 @@ classdef test_result<handle
         end
         %
         function display(self)
+            % DISPLAY prints the information about errors and failures from
+            % a vector of test results into console
+            %
             message=evalc('display@handle(self)');
             message=strrep(message,'self = ','');
             [errorCount,failCount]=self.getErrorFailCount();

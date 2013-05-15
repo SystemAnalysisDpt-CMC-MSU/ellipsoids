@@ -38,15 +38,16 @@ classdef IReach < handle
         %
         cutObj = cut(self, cutTimeVec)
         %
-        % DIMENSION - returns the dimension of the reach set.
+        % DIMENSION - returns array of dimensions of given reach set array.
         %
         % Input:
         %   regular:
-        %       self.
+        %       self - multidimensional array of
+        %              ReachContinuous/ReachDiscrete objects
         %
         % Output:
-        %   rSdim: double[1, 1] - reach set dimension.
-        %   sSdim: double[1, 1] - state space dimension.
+        %   rSdimArr: double[nDim1, nDim2,...] - array of reach set dimensions.
+        %   sSdimArr: double[nDim1, nDim2,...] - array of state space dimensions.
         %
         % Example:
         %   aMat = [0 1; 0 0]; bMat = eye(2);
@@ -58,6 +59,7 @@ classdef IReach < handle
         %   timeVec = [0 10];  
         %   dirsMat = [1 0; 0 1]';
         %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+        %   rsObjArr = rsObj.repMat(1,2);
         %   [rSdim sSdim] = rsObj.dimension()
         %
         %   rSdim =
@@ -69,7 +71,15 @@ classdef IReach < handle
         %
         %            2
         %
-        [rSdim sSdim] = dimension(self)
+        %   [rSdim sSdim] = rsObjArr.dimension()
+        %
+        %   rSdim = 
+        %           [ 2  2 ]
+        %
+        %   sSdim = 
+        %           [ 2  2 ]
+        %
+        [rSdimArr sSdimArr] = dimension(self)
         %
         % DISPLAY - displays the reach set object.
         %
@@ -416,15 +426,18 @@ classdef IReach < handle
         %                   1
         %
         isEmptyIntersect = intersect(self, intersectObj, approxTypeChar)       
-        % ISCUT - checks if given reach set object is a cut of another reach set.
+        % ISCUT - checks if given array of reach set objects is a cut of 
+        %         another reach set object's array.
         %
         % Input:
         %   regular:
-        %       self.
+        %       self - multidimensional array of
+        %              ReachContinuous/ReachDiscrete objects
         %
         % Output:
-        %   isCut: logical[1, 1] - true - if self is a cut of the reach set, 
-        %                          false - otherwise.
+        %   isCutArr: logical[nDim1, nDim2, nDim3 ...] - 
+        %             isCut(iDim1, iDim2, iDim3,..) = true - if self(iDim1, iDim2, iDim3,...) is a cut of the reach set, 
+        %                                           = false - otherwise.
         %
         % Example:
         %   aMat = [0 1; 0 0]; bMat = eye(2);
@@ -439,20 +452,27 @@ classdef IReach < handle
         %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
         %   dRsObj = elltool.reach.ReachRiscrete(dsys, x0EllObj, dirsMat, timeVec);
         %   cutObj = rsObj.cut([3 5]);
+        %   cutObjArr = cutObj.repMat(2,3,4);
         %   iscut(cutObj);
+        %   iscut(cutObjArr);
         %   cutObj = dRsObj.cut([4 8]);
+        %   cutObjArr = cutObj.repMat(1,2);
+        %   iscut(cutObjArr);
         %   iscut(cutObj);
         %
-        isCut = iscut(self)
+        isCutArr = iscut(self)
         %
-        % ISPROJECTION - checks if given reach set object is a projection.
+        % ISPROJECTION - checks if given array of reach set objects is projections.
         %
         % Input:
         %   regular:
-        %       self.
+        %       self - multidimensional array of
+        %              ReachContinuous/ReachDiscrete objects
         %
         % Output:
-        %   isProj: logical[1, 1] - true - if self is projection, false - otherwise.  
+        %   isProjArr: logical[nDim1, nDim2, nDim3, ...] - 
+        %              isProj(iDim1, iDim2, iDim3,...) = true - if self(iDim1, iDim2, iDim3,...) is projection, 
+        %                                              = false - otherwise.  
         %                        
         %
         % Example:
@@ -469,11 +489,15 @@ classdef IReach < handle
         %   dRsObj = elltool.reach.ReachRiscrete(dsys, x0EllObj, dirsMat, timeVec);
         %   projMat = eye(2);
         %   projObj = rsObj.projection(projMat);
+        %   projObjArr = projObj.repMat(3,2,2);
         %   isprojection(projObj);
+        %   isprojection(projObjArr);
         %   projObj = dRsObj.projection(projMat);
+        %   projObjArr = projObj.repMat(1,2);
         %   isprojection(projObj);
+        %   isprojection(projObjArr);
         %
-        isProj = isprojection(self) 
+        isProjArr = isprojection(self) 
         %
         % PLOT_EA - plots external approximations of 2D and 3D reach sets.
         %
@@ -592,14 +616,17 @@ classdef IReach < handle
         %
         projObj = projection(self, projMat)
         %
-        % ISEMPTY - checks if given reach set is an empty object.
+        % ISEMPTY - checks if given reach set array is an array of empty objects.
         %
         % Input:
         %   regular:
-        %       self.
+        %       self - multidimensional array of
+        %              ReachContinuous/ReachDiscrete objects
         %
         % Output:
-        %   isEmpty: logical[1, 1] - true - if self is empty, Ffalse - otherwise.
+        %   isEmptyArr: logical[nDim1, nDim2, nDim3,...] - 
+        %               isEmpty(iDim1, iDim2, iDim3,...) = true - if self(iDim1, iDim2, iDim3,...) is empty, 
+        %                                                = false - otherwise.
         %
         % Example:
         %   aMat = [0 1; 0 0]; bMat = eye(2);
@@ -613,6 +640,8 @@ classdef IReach < handle
         %   dirsMat = [1 0; 0 1]';
         %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
         %   dRsObj = elltool.reach.ReachRiscrete(dsys, x0EllObj, dirsMat, timeVec);
+        %   rsObjArr = rsObj.repMat(1,2);
+        %   dRsObjArr = dRsObj.repMat(1,2);
         %   dRsObj.isempty();        
         %   rsObj.isempty()
         %
@@ -620,6 +649,69 @@ classdef IReach < handle
         %
         %        0
         %
-        isEmpty = isempty(self)
+        %   dRsObjArr.isempty();
+        %   rsObjArr.isempty()
+        %
+        %   ans = 
+        %       [ 0  0 ]
+        %
+        isEmptyArr = isempty(self)
+        %
+        % REPMAT - is analogous to built-in repmat function with one exception - it
+        %          copies the objects, not just the handles
+        %
+        % Input:
+        %   regular:
+        %       self. 
+        %
+        % Output:
+        %   Array of given ReachContinuous/ReachDiscrete object's copies.
+        %
+        %  Example:
+        %    aMat = [0 1; 0 0]; bMat = eye(2);
+        %    SUBounds = struct();
+        %    SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        %    SUBounds.shape = [9 0; 0 2];
+        %    sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds); 
+        %    x0EllObj = ell_unitball(2);  
+        %    timeVec = [0 10];  
+        %    dirsMat = [1 0; 0 1]';
+        %    reachObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+        %    reachObjArr = reachObj.repMat(1,2);
+        %
+        %    reachObjArr = 1x2 array of ReachContinuous objects 
+        %
+        resArr=repMat(self,varargin)
+        %
+        % GETCOPY - returns the copy of ReachContinuous/ReachDiscrete
+        %           array of objects
+        %
+        % Input:
+        %   regular:
+        %       self - multidimensional array of
+        %              ReachContinuous/ReachDiscrete objects
+        %
+        % Output:
+        %  copyReachObjArr: elltool.reach.ReachContinuous/ReachDiscrete -
+        %       copy of the given array of objects.
+        %    
+        %  Example:
+        %    aMat = [0 1; 0 0]; bMat = eye(2);
+        %    SUBounds = struct();
+        %    SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        %    SUBounds.shape = [9 0; 0 2];
+        %    sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds); 
+        %    x0EllObj = ell_unitball(2);  
+        %    timeVec = [0 10];  
+        %    dirsMat = [1 0; 0 1]';
+        %    reachObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+        %    reachObjArr = reachObj.repMat(1,2);
+        %    copyReachObj = reachObj.getCopy();
+        %    copyReachObjArr = reachObjArr.getCopy();
+        %
+        %    copyReachObj = ReachContinuous object
+        %    copyReachObjArr = 1x2 array of ReachContinuous objects   
+        %
+        copyReachObjArr = getCopy(self)
     end
 end
