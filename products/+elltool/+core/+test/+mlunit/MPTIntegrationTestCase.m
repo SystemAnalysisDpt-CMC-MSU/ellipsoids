@@ -139,27 +139,27 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             poly3D = polytope(polyConstr3DMat,polyK3DVec);
             poly15D = polytope(polyConstr15DMat,polyK15DVec);
             %
-            isTestInsideVec = [1, 0, 1, 1, 1, 0, 1, 0, -1];
+            isExpVec = [1, 0, 1, 1, 1, 0, 1, 0, -1];
             
-            self.myTestIsCII(ell1, [poly1, poly2], 'u',isTestInsideVec(1))
+            self.myTestIsCII(ell1, [poly1, poly2], 'u',isExpVec(1),true)
             %
-            self.myTestIsCII(ell1, [poly1, poly3], 'u',isTestInsideVec(2))
+            self.myTestIsCII(ell1, [poly1, poly3], 'u',isExpVec(2),true)
             %
-            self.myTestIsCII(ell1, [poly1, poly2], 'i',isTestInsideVec(3))
+            self.myTestIsCII(ell1, [poly1, poly2], 'i',isExpVec(3),true)
             %
-            self.myTestIsCII(ell1, [poly1, poly3], 'i',isTestInsideVec(4))
+            self.myTestIsCII(ell1, [poly1, poly3], 'i',isExpVec(4),true)
             %
             self.myTestIsCII([ell1, ell2], [poly1, poly3], 'i',...
-                isTestInsideVec(5))
+                isExpVec(5),true)
             %
             self.myTestIsCII([ell1, ell2], [poly1, poly2], 'u',...
-                isTestInsideVec(6))
+                isExpVec(6),true)
             %
-            self.myTestIsCII(ell15D, poly15D, 'u',isTestInsideVec(7))
+            self.myTestIsCII(ell15D, poly15D, 'u',isExpVec(7),false)
             %
-            self.myTestIsCII([ell1, ell3], poly1, 'u',isTestInsideVec(8))
+            self.myTestIsCII([ell1, ell3], poly1, 'u',isExpVec(8),false)
             %
-            self.myTestIsCII(ell1, [poly1, poly4],'i',isTestInsideVec(9))
+            self.myTestIsCII(ell1, [poly1, poly4],'i',isExpVec(9),false)
             %
             self.runAndCheckError(strcat('isContainedInIntersection',...
                 '(ell1, poly3D)'),'wrongSizes');
@@ -230,7 +230,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             poly6 = polytope(eye(5),c6Vec);
             ellPolyIA6 = intersection_ia(ell6,poly6);
             mlunit.assert(isContainedInIntersection(ell6,ellPolyIA6) &&...
-                self.isEllInsidePolytope(poly6,ellPolyIA6));
+                isInside(ellPolyIA6,poly6));
             %
             sh7Mat = [1.1954 0.3180 1.3183; 0.3180 0.2167 0.5039;...
                 1.3183 0.5039 1.6320];
@@ -238,7 +238,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             poly7 = polytope([1 1 1], 0.2);
             ellPolyIA7 = intersection_ia(ell7,poly7);
             mlunit.assert(isContainedInIntersection(ell7,ellPolyIA7) &&...
-                self.isEllInsidePolytope(poly7,ellPolyIA7));
+                isInside(ellPolyIA7,poly7));
             %
             %test if internal approximation is an empty ellipsoid, when
             %ellipsoid and polytope aren't intersect
@@ -408,25 +408,17 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
     %
     methods(Static)
          %
-         function myTestIsCII(ellVec,polyVec,letter,isCIIExpVec)
-                isCIIVec = isContainedInIntersection(ellVec,polyVec,letter);
+         function myTestIsCII(ellVec,polyVec,letter,isCIIExpVec,checkOld)
+                isCIIVec = isContainedInIntersection(ellVec,polyVec,...
+                    letter,'polar');
                 mlunit.assert(all(isCIIVec == isCIIExpVec));
+                if checkOld
+                    isCIIVec = isContainedInIntersection(ellVec,...
+                                polyVec,letter,'extreme');
+                    mlunit.assert(all(isCIIVec == isCIIExpVec));
+                end
          end
          %
-         %
-         function res = isEllInsidePolytope(poly,ell)
-             [constrMat constrValVec] = double(poly);
-             [shiftVec shapeMat] = double(ell);
-             suppFuncVec = zeros(size(constrValVec));
-             [nRows, ~] = size(constrValVec);
-             absTol = getAbsTol(ell);
-             for iRows = 1:nRows
-                 suppFuncVec(iRows) = constrMat(iRows,:)*shiftVec....
-                     + sqrt(constrMat(iRows,:)*shapeMat*...
-                     constrMat(iRows,:)');
-             end
-             res = all(suppFuncVec <= constrValVec+absTol);
-         end
          %
          function [testEll2DVec,testPoly2DVec,testEll60D,....
                  testPoly60D,ellArr] = genDataDistAndInter()
