@@ -384,6 +384,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             %           
             % 
             % Input:
+            %  regular:
             %    self.
             %    projType - type of the projection.
             %        Takes the following values: 'Static'
@@ -393,11 +394,11 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             %    fGetProjMat - function which creates vector of the projection 
             %             matrices
             %        Input:
-            %         Regular:
+            %         regular:
             %           projMat:double[nDim, mDim] - matrix of the projection at the
             %             instant of time
             %           timeVec:double[1, nDim] - time interval
-            %         Optional:
+            %         optional:
             %            sTime:double[1,1] - instant of time
             %        Output:
             %           projOrthMatArray:double[1, nSpDim] - vector of the projection 
@@ -604,8 +605,9 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
            %               approxType
            %
            % Input:
-           %   self.
-           %   approxType:char[1,] - type of approximation(internal/external)
+           %  regular:
+           %     self.
+           %     approxType:char[1,] - type of approximation(internal/external)
            %
            % Output:
            %   apprEllMat:double[nDim1,..., nDimN] - array of array of ellipsoid's 

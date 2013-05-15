@@ -317,12 +317,12 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
         %
         % Input:
         %   regular:
-        %   QArrayList: double[nDim1, nDim2, ..., nDimN] - array of ellipsoid 
+        %     QArrayList: double[nDim1, nDim2, ..., nDimN] - array of ellipsoid 
         %         matrices
-        %   aMat: double[nDim1, nDim2, ..., nDimN] - array of ellipsoid centers 
-        %   MArrayList: double[nDim1, nDim2, ..., nDimN] - ellipsoid matrices 
+        %     aMat: double[nDim1, nDim2, ..., nDimN] - array of ellipsoid centers 
+        %     MArrayList: double[nDim1, nDim2, ..., nDimN] - ellipsoid matrices 
         %               of regularization
-        %   scaleFactor:double[1, 1] - tube scale factor
+        %     scaleFactor:double[1, 1] - tube scale factor
         %
         %  optional:
         %    timeVec:cell[1, m] - time vector 
@@ -351,8 +351,8 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
         %
         % Input:
         %   regular:
-        %    qEllArray: ellipsoid[nDim1, nDim2, ..., nDimN] - array of ellipsoids
-        %    ellMArr: double[nDim1, nDim2, ..., nDimN] - regularization ellipsoid 
+        %     qEllArray: ellipsoid[nDim1, nDim2, ..., nDimN] - array of ellipsoids
+        %     ellMArr: double[nDim1, nDim2, ..., nDimN] - regularization ellipsoid 
         %         matrices
         %
         %   optional:
@@ -391,7 +391,7 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
         %
         % Input:
         %   regular:
-        %    qEllArray: ellipsoid[nDim1, nDim2, ..., nDimN] - array of ellipsoids
+        %     qEllArray: ellipsoid[nDim1, nDim2, ..., nDimN] - array of ellipsoids
         %
         %   optional:
         %    timeVec:cell[1, m] - time vector 
@@ -422,6 +422,7 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
             % THINOUTTUPLES  - delete tuples from relation object
             % 
             % Input:
+            %   regular:
             %     self.
             %     indVec:logical[1, nDim]/double[1, nDim] - indexes of tuples which
             %             we must remove
@@ -500,6 +501,7 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
             % CAT  - concatenates data from relation objects.
             %
             % Input:
+            %  regular:
             %    self.
             %    newEllTubeRel: smartdb.relation.StaticRelation[1, 1]/
             %      smartdb.relation.DynamicRelation[1, 1] - relation object
@@ -531,6 +533,7 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
             % CUT - extracts the piece of the relation object from given start time to
             %       given end time.
             % Input:
+            %  regular:
             %     self.
             %     cutTimeVec: double[1, 2]/ double[1, 1] - time interval to cut
             % 
@@ -592,10 +595,12 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
             % SCALE - scales relation object
             %             
             %  Input:
-            %       self.
-            %       fCalcFactor - function which calculates factor for
+            %   regular:
+            %      self.
+            %      fCalcFactor - function which calculates factor for
             %                     fields in fieldNameList
-            %         Input:
+            %        Input:
+            %          regular:
             %            fieldNameList: char/cell[1,] of char - a list of fields
             %                   for which factor will be calculated
             %         Output:

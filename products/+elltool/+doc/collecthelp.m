@@ -122,7 +122,12 @@ for iClass = 1:nLength
                          dynamicpropsClassMethodNameList);
                 methodVec= methodVec(~isDynamicpropsVec);
             end
-        else
+            definingClassNameList=arrayfun(@(x)x.DefiningClass.Name,...
+                methodVec,'UniformOutput',false);
+            isDefiningClassVec=ismember(definingClassNameList,...
+                   classList) & ~(strcmp(definingClassNameList, className));
+            methodVec= methodVec(~isDefiningClassVec);
+        else 
          isHandleMethodVec=ismember(curClassMethodNameList,...
          handleClassMethodNameList);
          methodVec= methodVec(~isHandleMethodVec);
@@ -131,7 +136,12 @@ for iClass = 1:nLength
          isDynamicpropsVec=ismember(curClassMethodNameList,...
                          dynamicpropsClassMethodNameList);
          methodVec= methodVec(~isDynamicpropsVec);
-        end
+         definingClassNameList=arrayfun(@(x)x.DefiningClass.Name,...
+                methodVec,'UniformOutput',false);
+         isDefiningClassVec=ismember(definingClassNameList,...
+                   classList) & ~(strcmp(definingClassNameList, className));
+         methodVec= methodVec(~isDefiningClassVec);
+         end
         isPublicVec=arrayfun(@(x)isequal(x.Access,PUBLIC_ACCESS_MOD),...
                          methodVec);
         isHiddenVec=arrayfun(@(x)isequal(x.Hidden,1), methodVec);

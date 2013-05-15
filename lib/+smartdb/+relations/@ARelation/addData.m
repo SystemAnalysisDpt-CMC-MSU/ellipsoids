@@ -3,6 +3,7 @@ function addData(self,varargin)
 %           tuples
 %
 % Input:
-%    self:ARelation [1,1] - class object
+%   regular:
+%      self:ARelation [1,1] - class object
 %
 self.addDataAlongDimInternal(1,varargin{:});

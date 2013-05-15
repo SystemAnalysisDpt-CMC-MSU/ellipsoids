@@ -56,8 +56,8 @@ function [res, status] = isContainedInIntersection(fstEllArr, secObjArr, mode)
 %
 % Input:
 %   regular:
-%       fstEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of ellipsoids
-%           of the same size.
+%       fstEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of 
+%           ellipsoids of the same size.
 %       secEllArr: ellipsoid /
 %           polytope [nDims1,nDims2,...,nDimsN] - array of ellipsoids or
 %           polytopes of the same sizes.
