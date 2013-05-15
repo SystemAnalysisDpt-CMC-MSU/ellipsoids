@@ -14,11 +14,17 @@ classdef SuiteSupportFunction < mlunitext.test_case
         ABS_TOL_FACTOR = 1e-3;
     end
     methods (Static)
-        function dSFunc = derivativeSupportFunction(t, ~, fxVec, fAMat,...
-                fBMat, fPVec, fPMat)
-            cacheVec = (fxVec(t)') * fBMat(t);
-            dSFunc = cacheVec * fPVec(t) + ...
-                realsqrt(cacheVec * fPMat(t) * (cacheVec'));
+        function dSFunc = derSolFunction(t, x, fxVec, fTransRstMat, fAtMat,...
+                fBtMat, fPtVec, fPtMat)
+            import gras.gen.matdot;
+            %
+            cacheVec = (fxVec(t)') * fBtMat(t);
+            % derivative Rtt0 function
+            cacheMat = fTransRstMat(t)';
+            cacheAMat = cacheMat * fAtMat(t);
+            dSFunc = cacheVec * fPtVec(t) + ...
+                realsqrt(cacheVec * fPtMat(t) * (cacheVec')) + ...
+                x * matdot(cacheMat, cacheAMat);
         end
     end
     methods
@@ -115,6 +121,9 @@ classdef SuiteSupportFunction < mlunitext.test_case
                         norm(lsGoodDirMat(:, iGoodDir));
                 end
                 lsGoodDirCMat = SRunProp.ellTubeRel.lsGoodDirVec();
+                curGoodDirObj = SRunAuxProp.goodDirSetObj;
+                curGoodDirTransMatObj = curGoodDirObj.getRstTransDynamics;
+                fCalcTransMat = @(t) curGoodDirTransMatObj.evaluate(t);
                 for iTuple = 1 : nTuples
                     curTimeVec = timeCVec{iTuple};
                     curGoodDirMat = goodDirCMat{iTuple};
@@ -136,10 +145,9 @@ classdef SuiteSupportFunction < mlunitext.test_case
                     mlunitext.assert_equals(true, isFound,...
                         'Vector mapping - good dir vector not found');
                     %
-                    curGoodDirDynamicsObj = ...
-                        SRunAuxProp.goodDirSetObj.getGoodDirOneCurveSpline(...
-                        iGoodDir);
-                    fCalclVec = @(t) curGoodDirDynamicsObj.evaluate(t);
+                    curGoodDirVecDynamicsObj = ...
+                        curGoodDirObj.getGoodDirOneCurveSpline(iGoodDir);
+                    fCalclVec = @(t) curGoodDirVecDynamicsObj.evaluate(t);
                     %
                     supFun0 =...
                         curGoodDirMat(:, 1).' * curEllCenterMat(:, 1) +...
@@ -147,8 +155,8 @@ classdef SuiteSupportFunction < mlunitext.test_case
                         curEllMatArray(:, :, 1) * curGoodDirMat(:, 1));
                     %
                     [~, expResultMat] =...
-                        ode45(@(t, x) self.derivativeSupportFunction(t,...
-                        x, fCalclVec, fAtMatCalc, fBtMatCalc, ...
+                        ode45(@(t, x) self.derSolFunction(t,...
+                        x, fCalclVec, fCalcTransMat, fAtMatCalc, fBtMatCalc, ...
                         fPtVecCalc, fPtMatCalc), curTimeVec,...
                         supFun0, OdeOptionsStruct);
                     %

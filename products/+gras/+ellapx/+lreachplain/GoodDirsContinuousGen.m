@@ -20,6 +20,7 @@ classdef GoodDirsContinuousGen<gras.ellapx.lreachplain.AGoodDirsContinuous
         function RstDynamics = calcRstDynamics(self, t0, t1, ...
                 AtDynamics, calcPrecision)
             %
+            import gras.gen.matdot;
             import gras.interp.MatrixInterpolantFactory;
             import gras.ellapx.uncertcalc.log.Log4jConfigurator;
             %
@@ -29,7 +30,10 @@ classdef GoodDirsContinuousGen<gras.ellapx.lreachplain.AGoodDirsContinuous
             sizeSysVec = size(fAtMat(0));
             %
             sRstInitialMat = eye(sizeSysVec);
-            fRstDerivFunc = @(t, x) fXstFunc(t, x, @(u) fAtMat(u));
+            sRstInitialMat = sRstInitialMat / ...
+                realsqrt(matdot(sRstInitialMat, sRstInitialMat));
+            %
+            fRstDerivFunc = @(t, x) fRstFunc(t, x, @(u) fAtMat(u));
             fRstPostProcFunc = @(t, x) fPostProcLeftFunc(t, x);
             %
             tStart=tic;
@@ -101,8 +105,11 @@ function [timeRstOutVec, dataRstOutArray] = ...
     dataRstOutArray = flipdim(dataRstInArray, 3);
 end
 %
-% equations for X(s, t)
+% equations for R(s, t)
 %
-function dxMat = fXstFunc(t, xMat, fAtMat)
-    dxMat = -xMat * fAtMat(t);
+function dxMat = fRstFunc(t, xMat, fAtMat)
+    import gras.gen.matdot;
+    %
+    cachedMat = -xMat * fAtMat(t);
+    dxMat = cachedMat - xMat * matdot(xMat, cachedMat);
 end
