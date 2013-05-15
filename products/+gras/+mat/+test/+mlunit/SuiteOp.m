@@ -53,6 +53,7 @@ classdef SuiteOp < mlunitext.test_case
             isOk = self.isMatVecEq(inpFunSizeVec, inpMatSizeVec);
         end
         function runTestsForFactory(self, factory)
+            import gras.gen.matdot;
             import gras.mat.*;
             import gras.mat.fcnlib.*;
             %
@@ -135,6 +136,49 @@ classdef SuiteOp < mlunitext.test_case
             obtainedMatVec = rMatFun.evaluate(0);
             self.isMatVecEq(expectedMatVec, obtainedMatVec);
             %
+            % test realsqrt square
+            %
+            aMat = magic(8);
+            aMatFun = ConstMatrixFunction(aMat);
+            rMatFun = factory.realsqrt(aMatFun);
+			self.isMatFunSizeEq(rMatFun, aMatFun);
+            expectedMatVec = realsqrt(aMat);
+            obtainedMatVec = rMatFun.evaluate(0);
+            self.isMatVecEq(expectedMatVec, obtainedMatVec);
+			%
+            % test realsqrt not square
+            %
+            aMat = 5 * ones(3, 2);
+            aMatFun = ConstMatrixFunction(aMat);
+            rMatFun = factory.realsqrt(aMatFun);
+			self.isMatFunSizeEq(rMatFun, aMatFun);
+            expectedMatVec = realsqrt(aMat);
+            obtainedMatVec = rMatFun.evaluate(0);
+            self.isMatVecEq(expectedMatVec, obtainedMatVec);
+            %
+            % test realsqrt #2
+            %
+            aCMat = {'t^4'};
+            aCSqrtMat = {'t^2'};
+            aMatFun = gras.mat.symb.MatrixSymbFormulaBased(aCMat);
+            aSqrtMatFun = gras.mat.symb.MatrixSymbFormulaBased(aCSqrtMat);
+            aExpMatFunc = factory.realsqrt(aMatFun);
+            checkIfEqual(aExpMatFunc,aSqrtMatFun);
+            %
+            rsqrt_bspline_test = 0;
+            if rsqrt_bspline_test
+                %
+                % test realsqrt #3 - bad spline
+                %
+                aCMat = {'t^2'};
+                aMatFun = gras.mat.symb.MatrixSymbFormulaBased(aCMat);
+                aExpMatFunc = factory.realsqrt(aMatFun);
+                rtimeVec = [-5 -1 0 1 5];
+                expectedMatVec = realsqrt(aMatFun.evaluate(rtimeVec));
+                obtainedMatVec = aExpMatFunc.evaluate(rtimeVec);
+                self.isMatVecEq(expectedMatVec, obtainedMatVec);
+            end
+            %
             % test rMultiplyByVec
             %
             aMat = magic(10);
@@ -190,6 +234,56 @@ classdef SuiteOp < mlunitext.test_case
             rMatFun = factory.lrMultiply(mMatFun,lrMatFun,'R');
             expectedMatVec = (lrMat.')*mMat*lrMat;
             obtainedMatVec = rMatFun.evaluate(0);
+            self.isMatVecEq(expectedMatVec, obtainedMatVec);
+            %
+            % test rMultiplyByScalar
+            %
+            aMat = magic(4);
+            aMatFun = ConstMatrixFunction(aMat);
+            rScalFun = ConstMatrixFunction(2);
+            rMatFun = factory.rMultiplyByScalar(aMatFun, rScalFun);
+            self.isMatFunSizeEq(rMatFun, aMatFun);
+            expectedMatVec = repmat(2 * aMat, [1 1 2]);
+            obtainedMatVec = rMatFun.evaluate([0, 1]);
+            self.isMatVecEq(expectedMatVec, obtainedMatVec);
+            %
+            % test rMultiplyByScalar #2
+            %            
+            aCMat = {'1', '-t'; 't', '1'};
+            rCScal = {'t + 1'};
+            aMatFun = gras.mat.symb.MatrixSymbFormulaBased(aCMat);
+            rScalFun = gras.mat.symb.MatrixSymbFormulaBased(rCScal);
+            rMatFun = factory.rMultiplyByScalar(aMatFun, rScalFun);
+            self.isMatFunSizeEq(rMatFun, aMatFun);
+            rScalVec = rScalFun.evaluate([0 1]);
+            rScalVec = repmat(rScalVec, [size(aCMat), 1]);
+            expectedMatVec = aMatFun.evaluate([0 1]) .* rScalVec;
+            obtainedMatVec = rMatFun.evaluate([0 1]);
+            self.isMatVecEq(expectedMatVec, obtainedMatVec);
+            %
+            % test rDivideToScalar
+            %
+            aMat = magic(4);
+            aMatFun = ConstMatrixFunction(aMat);
+            rScalFun = ConstMatrixFunction(2);
+            rMatFun = factory.rDivideToScalar(aMatFun, rScalFun);
+            self.isMatFunSizeEq(rMatFun, aMatFun);
+            expectedMatVec = repmat(aMat / 2, [1 1 2]);
+            obtainedMatVec = rMatFun.evaluate([0, 1]);
+            self.isMatVecEq(expectedMatVec, obtainedMatVec);
+            %
+            % test rDivideToScalar #2
+            %
+            aCMat = {'1', '-t'; 't', '1'};
+            rCScal = {'(t + 1)^2'};
+            aMatFun = gras.mat.symb.MatrixSymbFormulaBased(aCMat);
+            rScalFun = gras.mat.symb.MatrixSymbFormulaBased(rCScal);
+            rMatFun = factory.rDivideToScalar(aMatFun, rScalFun);
+            self.isMatFunSizeEq(rMatFun, aMatFun);
+            rScalVec = rScalFun.evaluate([0 1]);
+            rScalVec = repmat(rScalVec, [size(aCMat), 1]);
+            expectedMatVec = aMatFun.evaluate([0 1]) ./ rScalVec;
+            obtainedMatVec = rMatFun.evaluate([0 1]);
             self.isMatVecEq(expectedMatVec, obtainedMatVec);
             %
             % test lrMultiplyByVec
@@ -285,6 +379,31 @@ classdef SuiteOp < mlunitext.test_case
             aMinusCMat=strrep(aCMat,'t','-t');
             rExpMatFun=gras.mat.symb.MatrixSymbFormulaBased(aMinusCMat);  
             checkIfEqual(rMatFun,rExpMatFun);
+            %
+            % test matdot for constant matrices
+            %
+            aMat = ones(6);
+            aMatFun = ConstMatrixFunction(aMat);
+            bMat = magic(6);
+            bMatFun = ConstMatrixFunction(bMat);
+            rMatFun = factory.matdot(aMatFun, bMatFun);
+            expectedValVec = repmat(matdot(aMat, bMat), [1 1 3]);
+            obtainedValVec = rMatFun.evaluate([0 1 2]);
+            self.isMatVecEq(expectedValVec, obtainedValVec);
+            %
+            % test matdot for symbolic matrices 
+            %
+            aCMat = {'cos(t)', '-sin(t)'; 'sin(t)', 'cos(t)'};
+            aMinusCMat = strrep(aCMat,'t','-t'); 
+            aMatFunc = gras.mat.symb.MatrixSymbFormulaBased(aCMat);
+            aMinusMatFunc = ...
+                gras.mat.symb.MatrixSymbFormulaBased(aMinusCMat);
+            rMatFunc = factory.matdot(aMatFunc, aMinusMatFunc);
+            rObtVec = rMatFunc.evaluate([1, 2, 3]);
+            rExpVec=matdot(aMatFunc.evaluate([1, 2, 3]), ...
+                aMatFunc.evaluate([-1, -2, -3]));
+            self.isMatVecEq(rObtVec,rExpVec);
+            %
             function checkIfEqual(rMatFun,rExpMatFun)
                 timeVec=[0 1 2 3];
                 rMatVec = rMatFun.evaluate(timeVec);

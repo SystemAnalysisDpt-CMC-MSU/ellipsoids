@@ -92,8 +92,37 @@ classdef AMatrixOperations<gras.mat.IMatrixOperations
                 obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
             end
         end
+        function obj=realsqrt(self,mMatFunc)
+            if self.isMatFuncConst(mMatFunc)
+                obj = self.constUnaryOperation(@realsqrt,mMatFunc);
+            else
+                obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
+            end
+        end
         function obj=expmt(self,mMatFunc,t0)
             obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
+        end
+        function obj=matdot(self,lMatFunc,rMatFunc)
+            import gras.gen.matdot;
+            if self.isMatFuncConst(lMatFunc,rMatFunc)
+                obj = self.constBinaryOperation(@matdot,lMatFunc,rMatFunc);
+            else
+                obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
+            end
+        end
+        function obj=rMultiplyByScalar(self,lMatFunc,rScalFunc)
+            if self.isMatFuncConst(lMatFunc,rScalFunc)
+                obj = self.constBinaryOperation(@times,lMatFunc,rScalFunc);
+            else
+                obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
+            end
+        end
+        function obj=rDivideToScalar(self,lMatFunc,rScalFunc)
+            if self.isMatFuncConst(lMatFunc,rScalFunc)
+                obj = self.constBinaryOperation(@rdivide,lMatFunc,rScalFunc);
+            else
+                obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
+            end
         end
         function obj=rMultiplyByVec(self,lMatFunc,rColFunc)
             if self.isMatFuncConst(lMatFunc,rColFunc)
