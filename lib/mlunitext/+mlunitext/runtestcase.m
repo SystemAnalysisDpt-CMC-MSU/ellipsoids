@@ -100,7 +100,7 @@ else
         testCaseName=testCaseNameList{iTestCase};
         metaClass=meta.class.fromName(testCaseName);
         if isempty(metaClass)
-            error([upper(mfilename),':noSuchClass'],...
+            throwerror('noSuchClass',...
                 'test case %s not found', testCaseName);
         end
         %
