@@ -103,7 +103,7 @@ classdef ContinuousReachRefineTestCase < mlunitext.test_case
             reachSetObj=buildRS(lDirMat);
             projReachSetObj=reachSetObj.projection(projMat);
             isEqual = projSetNew.isEqual(projReachSetObj);
-            mlunit.assert_equals(true,isEqual);   
+            mlunitext.assert_equals(true,isEqual);   
             %
             function checkRefine()
                 reachObjNew=reachSetObj;
@@ -113,7 +113,7 @@ classdef ContinuousReachRefineTestCase < mlunitext.test_case
             end
             function checkRes(reachObjNew)
                 isEqual = reachSetObj.isEqual(reachObjNew);
-                mlunit.assert_equals(true,isEqual);
+                mlunitext.assert_equals(true,isEqual);
             end
             function setDir(typeVal)
                 switch typeVal
@@ -168,7 +168,7 @@ function checkEq(initMat,compMat,methodName)
              methodName,...
              cellstr2expression({NON_OBJ_OUT_METHOD_LIST{:}, OBJ_OUT_METHOD_LIST{:}}));
     end
-    mlunit.assert_equals(true,isEq,failMsg);
+    mlunitext.assert_equals(true,isEq,failMsg);
     %
     function [isEq failMsg] = checkSimpleEq(initMat,compMat,methodName)
         failMsg = [];
