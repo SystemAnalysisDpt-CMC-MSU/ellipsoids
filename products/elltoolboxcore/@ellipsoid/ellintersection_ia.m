@@ -64,8 +64,44 @@ modgen.common.checkvar(dimsArr,'all(x(:)==x(1))',...
     'errorTag','wrongSizes',...
     'errorMessage','all ellipsoids must be of the same dimension.');
 
-nEllipsoids = numel(inpEllArr);
+nEllipsoids = numel(inpEllArr);    
 inpEllVec = reshape(inpEllArr, 1, nEllipsoids);
+
+if nEllipsoids == 2
+    firstEllObj = inpEllVec(1);
+    secEllObj = inpEllVec(2);
+    
+    firstEllCenterVec = getCenterVec(firstEllObj);
+    secEllCenterVec = getCenterVec(secEllObj);
+    
+    if isequal(firstEllCenterVec, secEllCenterVec)
+        EllCenterVec = firstEllCenterVec;
+        
+        firstEllShMat = getShapeMat(firstEllObj);
+        secEllShMat = getShapeMat(secEllObj);
+        
+        sqrtFirstEllShMat = sqrtm(firstEllShMat);
+        invSqrtFirstEllShMat = inv(sqrtFirstEllShMat);
+        
+        intermFirstEllShMat = eye(minEllDim);
+        intermSecEllShMat = invSqrtFirstEllShMat * secEllShMat * ...
+            invSqrtFirstEllShMat';
+        
+        [intermSecEllShMatModalMat intermSecEllShMatCanonMat] = ...
+            eig(intermSecEllShMat);
+                
+        intermEllShMat = ...
+            min(intermFirstEllShMat, intermSecEllShMatCanonMat);
+        
+        ellMat = sqrtFirstEllShMat * intermSecEllShMatModalMat * ...
+            intermEllShMat * intermSecEllShMatModalMat' * ...
+                 sqrtFirstEllShMat';
+        ellMat = 0.5*(ellMat + ellMat');
+             
+        outEll = ellipsoid(EllCenterVec, ellMat);
+        return
+    end
+end
 
 if Properties.getIsVerbose()
     if isempty(logger)
