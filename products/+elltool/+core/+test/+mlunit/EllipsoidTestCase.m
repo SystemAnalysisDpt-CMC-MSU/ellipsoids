@@ -1385,7 +1385,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
             testEllRes = uminus(test2Ell);
             [testEllResCenterVec, ~] = double(testEllRes);
             testIsRight = min(testEllResCenterVec == [-1; 0]);
-            mlunit.assert_equals(testIsRight, 1);
+            mlunitext.assert_equals(testIsRight, 1);
             
             testEllVec = [test1Ell test2Ell test3Ell];
             testEllResVec = uminus(testEllVec);
@@ -1395,41 +1395,41 @@ classdef EllipsoidTestCase < mlunitext.test_case
             testIsRight = (min(test1EllResCenterVec == [0; 0]) && ...
                 min(test2EllResCenterVec == [-1; 0]) && ...
                 min(test3EllResCenterVec == [-1; 0]));
-            mlunit.assert_equals(testIsRight, 1);
+            mlunitext.assert_equals(testIsRight, 1);
             
             testEllMat = [test1Ell test2Ell; test3Ell test4Ell];
             testEllResMat = uminus(testEllMat);
-            [test11EllResCenter, ~] = double(testEllResMat(1, 1));
-            [test12EllResCenter, ~] = double(testEllResMat(1, 2));
-            [test21EllResCenter, ~] = double(testEllResMat(2, 1));
-            [test22EllResCenter, ~] = double(testEllResMat(2, 2));
-            testIsRight = (min(test11EllResCenter == [0; 0]) && ...
-                min(test12EllResCenter == [-1; 0]) && ...
-                min(test21EllResCenter == [-1; 0]) && ...
-                min(test22EllResCenter == [0; 0]));
-            mlunit.assert_equals(testIsRight, 1);
+            [test11EllResCenterVec, ~] = double(testEllResMat(1, 1));
+            [test12EllResCenterVec, ~] = double(testEllResMat(1, 2));
+            [test21EllResCenterVec, ~] = double(testEllResMat(2, 1));
+            [test22EllResCenterVec, ~] = double(testEllResMat(2, 2));
+            testIsRight = (min(test11EllResCenterVec == [0; 0]) && ...
+                min(test12EllResCenterVec == [-1; 0]) && ...
+                min(test21EllResCenterVec == [-1; 0]) && ...
+                min(test22EllResCenterVec == [0; 0]));
+            mlunitext.assert_equals(testIsRight, 1);
             
             testEllVec = [test1Ell test2Ell test3Ell test4Ell test5Ell ...
                 test6Ell test7Ell test8Ell];
             testEllArr = reshape(testEllVec, [2 2 2]);
             testEllResArr = uminus(testEllArr);
-            [test111EllResCenter, ~] = double(testEllResArr(1, 1, 1));
-            [test112EllResCenter, ~] = double(testEllResArr(1, 1, 2));
-            [test121EllResCenter, ~] = double(testEllResArr(1, 2, 1));
-            [test122EllResCenter, ~] = double(testEllResArr(1, 2, 2));
-            [test211EllResCenter, ~] = double(testEllResArr(2, 1, 1));
-            [test212EllResCenter, ~] = double(testEllResArr(2, 1, 2));
-            [test221EllResCenter, ~] = double(testEllResArr(2, 2, 1));
-            [test222EllResCenter, ~] = double(testEllResArr(2, 2, 2));
-            testIsRight = (min(test111EllResCenter == [0; 0]) && ...
-                 min(test112EllResCenter == [0; 0; 0]) && ...
-                 min(test121EllResCenter == [-1; 0]) && ...
-                 min(test122EllResCenter == [-2; -1]) && ...
-                 min(test211EllResCenter == [-1; 0]) && ...
-                 min(isempty(test212EllResCenter)) && ...
-                 min(test221EllResCenter == [0; 0]) && ...
-                 min(test222EllResCenter == [-1;-1]));
-            mlunit.assert_equals(testIsRight, 1);
+            [test111EllResCenterVec, ~] = double(testEllResArr(1, 1, 1));
+            [test112EllResCenterVec, ~] = double(testEllResArr(1, 1, 2));
+            [test121EllResCenterVec, ~] = double(testEllResArr(1, 2, 1));
+            [test122EllResCenterVec, ~] = double(testEllResArr(1, 2, 2));
+            [test211EllResCenterVec, ~] = double(testEllResArr(2, 1, 1));
+            [test212EllResCenterVec, ~] = double(testEllResArr(2, 1, 2));
+            [test221EllResCenterVec, ~] = double(testEllResArr(2, 2, 1));
+            [test222EllResCenterVec, ~] = double(testEllResArr(2, 2, 2));
+            testIsRight = (min(test111EllResCenterVec == [0; 0]) && ...
+                 min(test112EllResCenterVec == [0; 0; 0]) && ...
+                 min(test121EllResCenterVec == [-1; 0]) && ...
+                 min(test122EllResCenterVec == [-2; -1]) && ...
+                 min(test211EllResCenterVec == [-1; 0]) && ...
+                 min(isempty(test212EllResCenterVec)) && ...
+                 min(test221EllResCenterVec == [0; 0]) && ...
+                 min(test222EllResCenterVec == [-1;-1]));
+            mlunitext.assert_equals(testIsRight, 1);
                         
             testEllCenterVec = zeros(1, 100);
             testEllCenterVec(50) = 1;
@@ -1438,9 +1438,9 @@ classdef EllipsoidTestCase < mlunitext.test_case
             testResVec(50) = -1;
             testEll = ellipsoid(testEllCenterVec', testEllMat);
             testResEll = uminus(testEll);
-            [testEllResCenter ~] = double(testResEll);
-            testIsRight = (max(testEllResCenter + testResVec') == 0);
-            mlunit.assert_equals(testIsRight, 1);
+            [testEllResCenterVec ~] = double(testResEll);
+            testIsRight = (max(testEllResCenterVec + testResVec') == 0);
+            mlunitext.assert_equals(testIsRight, 1);
         end
         function self = testPlus(self)  
             testEllCenterVec = 5;
@@ -1455,9 +1455,9 @@ classdef EllipsoidTestCase < mlunitext.test_case
             test2EllMat = 4;
             test1Ell = ellipsoid(test1EllCenterVec, test1EllMat);
             test2Ell = ellipsoid(test2EllCenterVec, test2EllMat);
-            testEllArr = [test1Ell, test2Ell];
+            testEllVec = [test1Ell, test2Ell];
             testVec = [2; 4];
-            self.runAndCheckError('plus(testEllArr, testVec)','wrongInput');
+            self.runAndCheckError('plus(testEllVec, testVec)','wrongInput');
              
             test1EllCenterVec = [1; 0];
             test2EllCenterVec = [7; 2];
@@ -1465,17 +1465,17 @@ classdef EllipsoidTestCase < mlunitext.test_case
             test2EllMat = [3 0; 0 2];
             test1Ell = ellipsoid(test1EllCenterVec, test1EllMat);
             test2Ell = ellipsoid(test2EllCenterVec, test2EllMat);
-            testEllArr = [test1Ell, test2Ell];
+            testEllVec = [test1Ell, test2Ell];
             testVec = [2; 4; 1];
-            self.runAndCheckError('plus(testEllArr, testVec)','wrongInput');
+            self.runAndCheckError('plus(testEllVec, testVec)','wrongInput');
             
             testEllCenterVec = [-1; 5];
             testEllMat = [1 0; 0 1];
             testVec = [5; 3];
             testEll = ellipsoid(testEllCenterVec, testEllMat*testEllMat');
             testResEll = plus(testEll, testVec);
-            [testResCenter ~] = double(testResEll);
-            mlunit.assert_equals(testResCenter, [4; 8]);
+            [testResCenterVec ~] = double(testResEll);
+            mlunitext.assert_equals(testResCenterVec, [4; 8]);
             
             test1EllCenterVec = 5;
             test2EllCenterVec = [2; 4; 1];
@@ -1487,11 +1487,11 @@ classdef EllipsoidTestCase < mlunitext.test_case
             test2Ell = ellipsoid(test2EllCenterVec, test2EllMat*test2EllMat');
             test1ResEll = plus(test1Ell, test1Vec);
             test2ResEll = plus(test2Ell, test2Vec);
-            testResEllArr = [test1ResEll test2ResEll];
-            [test1EllResCenter ~] = double(testResEllArr(1));
-            [test2EllResCenter ~] = double(testResEllArr(2));
-            testIsRight = ((test1EllResCenter == 8) && min(test2EllResCenter == [3; 6; 4]));
-            mlunit.assert_equals(testIsRight, 1);
+            testResEllVec = [test1ResEll test2ResEll];
+            [test1EllResCenterVec ~] = double(testResEllVec(1));
+            [test2EllResCenterVec ~] = double(testResEllVec(2));
+            testIsRight = ((test1EllResCenterVec == 8) && min(test2EllResCenterVec == [3; 6; 4]));
+            mlunitext.assert_equals(testIsRight, 1);
             
             test1EllCenterVec = [1; 2];
             test2EllCenterVec = [2; 3];
@@ -1500,12 +1500,12 @@ classdef EllipsoidTestCase < mlunitext.test_case
             testVec = [2; 4];
             test1Ell = ellipsoid(test1EllCenterVec, test1EllMat);
             test2Ell = ellipsoid(test2EllCenterVec, test2EllMat);
-            testEllArr = [test1Ell test2Ell];
-            testResEllArr = plus(testEllArr, testVec);
-            [test1ResCenter ~] = double(testResEllArr(1));
-            [test2ResCenter ~] = double(testResEllArr(2));
-            testIsRight = (min(test1ResCenter == [3; 6]) && min(test2ResCenter == [4; 7]));
-            mlunit.assert_equals(testIsRight, 1);
+            testEllVec = [test1Ell test2Ell];
+            testResEllVec = plus(testEllVec, testVec);
+            [test1ResCenterVec ~] = double(testResEllVec(1));
+            [test2ResCenterVec ~] = double(testResEllVec(2));
+            testIsRight = (min(test1ResCenterVec == [3; 6]) && min(test2ResCenterVec == [4; 7]));
+            mlunitext.assert_equals(testIsRight, 1);
             
             testEllCenterVec = zeros(1, 100);
             testEllCenterVec(50) = 3;
@@ -1514,13 +1514,13 @@ classdef EllipsoidTestCase < mlunitext.test_case
             testVec = zeros(1, 100);
             testVec(100) = 3;
             testResEll = plus(testEll, testVec');
-            [testResEllCenter ~] = double(testResEll);
+            [testResEllCenterVec ~] = double(testResEll);
             testCheckVec = zeros(1,100);
             testCheckVec(50) = 3;
             testCheckVec(100) = 3;
             testCheckVec = testCheckVec';
-            testIsRight = min(testResEllCenter == testCheckVec);
-            mlunit.assert_equals(testIsRight, 1);
+            testIsRight = min(testResEllCenterVec == testCheckVec);
+            mlunitext.assert_equals(testIsRight, 1);
         end
         function self = testMinus(self)
             testEllCenterVec = 5;
@@ -1535,9 +1535,9 @@ classdef EllipsoidTestCase < mlunitext.test_case
             test2EllMat = 2;
             test1Ell = ellipsoid(test1EllCenterVec, test1EllMat);
             test2Ell = ellipsoid(test2EllCenterVec, test2EllMat);
-            testEllArr = [test1Ell, test2Ell];
+            testEllVec = [test1Ell, test2Ell];
             testVec = [1; 2];
-            self.runAndCheckError('minus(testEllArr, testVec)','wrongInput');
+            self.runAndCheckError('minus(testEllVec, testVec)','wrongInput');
             
             test1EllCenterVec = [2; 3];
             test2EllCenterVec = [5; 7];
@@ -1545,9 +1545,9 @@ classdef EllipsoidTestCase < mlunitext.test_case
             test2EllMat = [1 0; 0 1];
             test1Ell = ellipsoid(test1EllCenterVec, test1EllMat);
             test2Ell = ellipsoid(test2EllCenterVec, test2EllMat);
-            testEllArr = [test1Ell, test2Ell];
+            testEllVec = [test1Ell, test2Ell];
             testVec = [1; 2; 3];
-            self.runAndCheckError('minus(testEllArr, testVec)','wrongInput');
+            self.runAndCheckError('minus(testEllVec, testVec)','wrongInput');
             
             test1EllCenterVec = [1; 2];
             test2EllCenterVec = [3; 4];
@@ -1555,12 +1555,13 @@ classdef EllipsoidTestCase < mlunitext.test_case
             test2EllMat = [2 0; 0 1];
             test1Ell = ellipsoid(test1EllCenterVec, test1EllMat);
             test2Ell = ellipsoid(test2EllCenterVec, test2EllMat);
-            testEllArr = [test1Ell test2Ell];
+            testEllVec = [test1Ell test2Ell];
             testVec = [1; 3];
-            testEllResArr = minus(testEllArr, testVec);
-            [test1ResCenterVec ~] = double(testEllResArr(1));
-            [test2ResCenterVec ~] = double(testEllResArr(2));
+            testEllResVec = minus(testEllVec, testVec);
+            [test1ResCenterVec ~] = double(testEllResVec(1));
+            [test2ResCenterVec ~] = double(testEllResVec(2));
             testIsRight = (min(test1ResCenterVec == [0; -1]) && min(test2ResCenterVec == [2; 1]));
+            mlunitext.assert_equals(testIsRight, 1);
             
             test1EllCenterVec = -10;
             test2EllCenterVec = [2; -4; 11];
@@ -1572,11 +1573,11 @@ classdef EllipsoidTestCase < mlunitext.test_case
             test2Ell = ellipsoid(test2EllCenterVec, test2ShapeMat*test2ShapeMat');
             test1ResEll = minus(test1Ell, test1Vec);
             test2ResEll = minus(test2Ell, test2Vec);
-            testEllResArr = [test1ResEll test2ResEll];
-            [test1ResCenterVec ~] = double(testEllResArr(1));
-            [test2ResCenterVec ~] = double(testEllResArr(2));
+            testEllResVec = [test1ResEll test2ResEll];
+            [test1ResCenterVec ~] = double(testEllResVec(1));
+            [test2ResCenterVec ~] = double(testEllResVec(2));
             testIsRight = ((test1ResCenterVec == -13) && min(test2ResCenterVec == [2; -6; 10]));
-            mlunit.assert_equals(testIsRight, 1);
+            mlunitext.assert_equals(testIsRight, 1);
             
             testEllCenterVec = zeros(1, 100);
             testEllCenterVec(50) = 5;
@@ -1585,13 +1586,13 @@ classdef EllipsoidTestCase < mlunitext.test_case
             testVec = zeros(1, 100);
             testVec(100) = 5;
             testResEll = minus(testEll, testVec');
-            [testResEllCenter ~] = double(testResEll);
+            [testResEllCenterVec ~] = double(testResEll);
             testCheckVec = zeros(1,100);
             testCheckVec(50) = 5;
             testCheckVec(100) = -5;
             testCheckVec = testCheckVec';
-            testIsRight = min(testResEllCenter == testCheckVec);
-            mlunit.assert_equals(testIsRight, 1);
+            testIsRight = min(testResEllCenterVec == testCheckVec);
+            mlunitext.assert_equals(testIsRight, 1);
         end
         function self = testInv(self)
             testEllCenterVec = 1;
@@ -1600,7 +1601,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
             testResEll = inv(testEll);
             [~, testEllResMat] = double(testResEll);
             testIsRight = (testEllResMat == 0.2500);
-            mlunit.assert_equals(min(min(testIsRight)), 1);
+            mlunitext.assert_equals(min(min(testIsRight)), 1);
             
             testEllCenterVec = [-5; 1];
             testEllMat = eye(2);
@@ -1608,7 +1609,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
             testResEll = inv(testEll);
             [~, testEllResMat] = double(testResEll);
             testIsRight = (testEllResMat == eye(2));
-            mlunit.assert_equals(min(min(testIsRight)), 1);
+            mlunitext.assert_equals(min(min(testIsRight)), 1);
             
             test1EllCenterVec = [1; 0; 1];
             test2EllCenterVec = [1; 2];
@@ -1616,12 +1617,12 @@ classdef EllipsoidTestCase < mlunitext.test_case
             test2EllMat = [2 2; 2 3];
             test1Ell = ellipsoid(test1EllCenterVec, test1EllMat);
             test2Ell = ellipsoid(test2EllCenterVec, test2EllMat);
-            testEllArr = [test1Ell test2Ell];
-            testEllResArr = inv(testEllArr);
-            [~, test1EllResMat] = double(testEllResArr(1));
-            [~, test2EllResMat] = double(testEllResArr(2));
+            testEllVec = [test1Ell test2Ell];
+            testEllResVec = inv(testEllVec);
+            [~, test1EllResMat] = double(testEllResVec(1));
+            [~, test2EllResMat] = double(testEllResVec(2));
             testIsRight = (min(min(test1EllResMat == eye(3))) && min(min(test2EllResMat == [1.5 -1; -1 1])));
-            mlunit.assert_equals(testIsRight, 1);
+            mlunitext.assert_equals(testIsRight, 1);
             
             testEllCenterVec = zeros(1, 20);
             testEllMat = eye(20);
@@ -1636,7 +1637,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
             testEll = inv(testEll);
             [~, testEllMat] = double(testEll);
             testIsRight = min(min(testEllMat == testResMat));
-            mlunit.assert_equals(testIsRight, 1);
+            mlunitext.assert_equals(testIsRight, 1);
         end
         function self = testMove2Origin(self)
             testEllCenterVec = [1; 1];
@@ -1644,7 +1645,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
             testEll = ellipsoid(testEllCenterVec, testEllMat);
             testEllRes = move2origin(testEll);
             [testEllResCenterVec ~] = double(testEllRes);
-            mlunit.assert_equals([0; 0], testEllResCenterVec);
+            mlunitext.assert_equals([0; 0], testEllResCenterVec);
 
             test1EllCenterVec = [1; 1; 0];
             test2EllCenterVec = [1; 2];
@@ -1652,12 +1653,12 @@ classdef EllipsoidTestCase < mlunitext.test_case
             test2EllMat = eye(2);
             test1Ell = ellipsoid(test1EllCenterVec, test1EllMat*test1EllMat');
             test2Ell = ellipsoid(test2EllCenterVec, test2EllMat);
-            testEllArr = [test1Ell test2Ell];
-            testEllResArr = move2origin(testEllArr);
-            [test1ResCenter ~] = double(testEllResArr(1));
-            [test2ResCenter ~] = double(testEllResArr(2));
-            testIsRight = min(test1ResCenter == [0; 0; 0]) && min(test2ResCenter == [0;0]);
-            mlunit.assert_equals(1, testIsRight);
+            testEllVec = [test1Ell test2Ell];
+            testEllResVec = move2origin(testEllVec);
+            [test1ResCenterVec ~] = double(testEllResVec(1));
+            [test2ResCenterVec ~] = double(testEllResVec(2));
+            testIsRight = min(test1ResCenterVec == [0; 0; 0]) && min(test2ResCenterVec == [0;0]);
+            mlunitext.assert_equals(1, testIsRight);
             
             testEllCenterVec = zeros(20, 1);
             testEllMat = eye(20);
@@ -1665,7 +1666,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
             testEllRes = move2origin(testEll);
             [testResCenterVec ~] = double(testEllRes);
             testIsRight = min(testResCenterVec == zeros(20, 1));
-            mlunit.assert_equals(1, testIsRight);
+            mlunitext.assert_equals(1, testIsRight);
         end
         function self = testShape(self)
             testEllCenterVec = [1; 0];
@@ -1681,7 +1682,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
             testResEll = shape(testEll, testMat);
             [~, testResMat] = double(testResEll);
             testIsRight = min(testResMat == 12);
-            mlunit.assert_equals(1, testIsRight);
+            mlunitext.assert_equals(1, testIsRight);
             
             test1EllCenterVec = [2; 4];
             test2EllCenterVec = [5; 1];
@@ -1690,12 +1691,12 @@ classdef EllipsoidTestCase < mlunitext.test_case
             testMat = [0 1; 2 3];
             testEll1 = ellipsoid(test1EllCenterVec, test1EllMat*test1EllMat');
             testEll2 = ellipsoid(test2EllCenterVec, test2EllMat*test2EllMat');
-            testEllArr = [testEll1, testEll2];
-            testEllResArr = shape(testEllArr, testMat);
-            [~, testResMat1] = double(testEllResArr(1));
-            [~, testResMat2] = double(testEllResArr(2));
-            testIsRight = min(min(testResMat1 == [20 72; 72 288])) && min(min(testResMat2 == [9 27; 27 145]));
-            mlunit.assert_equals(1, testIsRight);
+            testEllVec = [testEll1, testEll2];
+            testEllResVec = shape(testEllVec, testMat);
+            [~, testRes1Mat] = double(testEllResVec(1));
+            [~, testRes2Mat] = double(testEllResVec(2));
+            testIsRight = min(min(testRes1Mat == [20 72; 72 288])) && min(min(testRes2Mat == [9 27; 27 145]));
+            mlunitext.assert_equals(1, testIsRight);
             
             %test1EllCenterVec = [
             
@@ -1824,6 +1825,8 @@ switch flag
         varargout{4} = ellipsoid([0; 0], [0 0; 0 0]);
         varargout{5} = ellipsoid([0; 0; 0], [0 0 0 ;0 0 0; 0 0 0]);
         varargout{6} = ellipsoid;
+        varargout{7} = ellipsoid([2; 1], [3 1; 1 1]);
+        varargout{8} = ellipsoid([1; 1], [1 0; 0 1]);
     case 2
         varargout{1} = ellipsoid([0; 0], [1 0; 0 1]);
         varargout{2} = ellipsoid([0; 0], [2 0; 0 2]);
