@@ -474,6 +474,19 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             testEllVec(2) = ellipsoid([100, 0]', eye(nDim));
             self.runAndCheckError ...
                 ('ellintersection_ia(testEllVec)','cvxError');
+            
+            nDim = 2;
+            firstTestEllVec(1) = ellipsoid([0; 0],[4 -0.3;-0.3 0.5]);
+            firstTestEllVec(2) = ellipsoid([0; 0],[4 1;1 0.5]);
+            
+            secTestEllVec = [firstTestEllVec firstTestEllVec(2)];
+            
+            firstResEllVec = ellintersection_ia(firstTestEllVec);
+            secResEllVec = ellintersection_ia(secTestEllVec);
+            
+            [isEq, reportStr] = eq(firstResEllVec, secResEllVec);
+            self.flexAssert(true, isEq, reportStr);
+            
         end
         function self = testEllunionEa(self)
             self.setUpCheckSettings();
