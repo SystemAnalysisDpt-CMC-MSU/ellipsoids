@@ -18,7 +18,7 @@ u_2[k]\end{array}\right], ~~~ x[0]\in\XX_0, ~~~ u[k]\in U, ~~~ k\geq0, \]
 where $\XX_0$ is the set of initial conditions, and $U$ is the control set.
 
 Let $\XX_0$ and $U$ be unit boxes in ${\bf R}^2$, and compute the reach set
-using the polytope method implemented in MPT (\cite{mpt}). With every time step
+using the polytope method implemented in MPT (\cite{MULTI_PARAMETRIC_TOOLBOX_HOMEPAGE}). With every time step
 the number of vertices of the reach set polytope increases by $4$.
 The complexity of the
 convex hull computation increases exponentially with number of vertices.
@@ -37,7 +37,7 @@ In figure \ref{ellpolyfig}, the time required to compute both external
 and internal ellipsoidal approximations, with $32$ ellipsoids each,
 for different number of time steps is shown in blue.
 
-\easyfigure[h][10cm]{ellpoly.eps}{Reach set computation performance comparison}{ellpolyfig}
+\easyfigure[h][0.7\textwidth]{ellpoly.eps}{Reach set computation performance comparison}{ellpolyfig}
 
 
 Figure \ref{ellpolyfig}  illustrates  the fact that the
@@ -53,7 +53,7 @@ by the following system of equations:
 m_1\ddot{x}_1+(k_1+k_2)x_1-k_2x_2 & = & u_1, \label{spmass1}\\
 m_2\ddot{x}_2-k_2x_1+(k_1+k_2)x_2 & = & u_2 . \label{spmass2}
 \end{eqnarray}
-\easyfigure[h][10cm]{springmass.eps}{Spring-mass system.}{springmassfig}
+\easyfigure[h][0.6\textwidth]{springmass.eps}{Spring-mass system.}{springmassfig}
 Here $u_1$ and $u_2$ are the forces applied to masses $m_1$ and $m_2$,
 and we shall assume $[u_1 ~~ u_2]^T\in\EE(0,I)$.
 The initial conditions can be taken as $x_1(0)=0$, $x_2(0)=2$.
@@ -91,7 +91,7 @@ Figure \ref{mechreachfig}(a) shows the reach set of the system
 (\ref{spmass1}-\ref{spmass2}) evolving in time from $t=0$ to $t=4$.
 Figure \ref{mechreachfig}(b) presents a snapshot of this reach set at time
 $t=4$.
-\easyfigure[h][10 cm]{reachmech.eps}{Spring-mass system without disturbance:
+\easyfigure[h][0.8\textwidth]{reachmech.eps}{Spring-mass system without disturbance:
 (a) reach tube for time $t\in[0,4]$; (b) reach set at time $t=4$.
 Spring-mass system with disturbance:
 (c) reach tube for time $t\in[0,4]$; (d) reach set at time $t=4$.}{mechreachfig}
@@ -138,7 +138,7 @@ current is $C_2\dot{x}_2$.
 \item $x_3$ - current through the inductor $L$, so the voltage across
 the inductor is $L\dot{x}_3$.
 \end{itemize}
-\easyfigure[h][10cm]{rlc.eps}{RLC circuit with two inputs.}{rlcfig}
+\easyfigure[h][0.6\textwidth]{rlc.eps}{RLC circuit with two inputs.}{rlcfig}
 Applying Kirchoff current and voltage laws we arrive at the linear system,
 \begin{equation}
 \left[\begin{array}{c}
@@ -216,7 +216,7 @@ a neighborhood {\tt M} of the origin at time $t=3$,
 we compute the backward reach set from $t=3$ to $t=0$.
 \verbmcodef[Computation of the backward reach set]
 {mcodesnippets/s_chapter06_section03_snippet02.m}
-\easyfigure[h][10 cm]{rlcreach.eps}{Forward and backward reach sets of the switched system
+\easyfigure[h][0.7\textwidth]{rlcreach.eps}{Forward and backward reach sets of the switched system
 (external and internal approximations).
 The dynamics switches at $t=2$.
 \newline
@@ -249,10 +249,10 @@ hybrid systems with affine continuous dynamics whose guards are
 ellipsoids, hyperplanes, halfspaces or polytopes.
 
 We  consider the {\it switching-mode model} of highway traffic
-presented in \cite{xiaotian}. The highway segment is divided into $N$ cells
+presented in \cite{MUNOZ_SUN_HOROWITZ_ALVAREZ_DENSITY_ESTIMATION_WITH_THE_CELL_MODEL}. The highway segment is divided into $N$ cells
 as shown in figure \ref{hwfig}. In this particular case, $N=4$.
 The traffic density in cell $i$ is  $x_i$ vehicles per mile, $i=1,2,3,4$.
-\easyfigure[h][10cm]{hw.eps}{Highway model. Adapted from \cite{xiaotian}.}{hwfig}
+\easyfigure[h][0.6\textwidth]{hw.eps}{Highway model. Adapted from \cite{MUNOZ_SUN_HOROWITZ_ALVAREZ_DENSITY_ESTIMATION_WITH_THE_CELL_MODEL}.}{hwfig}
 
 Define
 \begin{itemize}
@@ -363,7 +363,7 @@ free-flow reach set projection onto $(x_1,x_2,x_3)$ subspace for $t=10$,
 before the guard crossing; figure \ref{hwreachfig}(b) for $t=50$,
 during the guard crossing; and figure \ref{hwreachfig}(c) for $t=80$,
 after the guard was crossed.
-\easyfigure[h][10cm]{hwreach.eps}{Reach set of the free-flow system is blue, reach set of the congested
+\easyfigure[h][0.8\textwidth]{hwreach.eps}{Reach set of the free-flow system is blue, reach set of the congested
 system is green, the guard is red.
 \newline
 (a) Reach set of the free-flow system at $t = 10$, before reaching the guard

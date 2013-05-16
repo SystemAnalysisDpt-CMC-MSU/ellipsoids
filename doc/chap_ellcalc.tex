@@ -297,8 +297,8 @@ Varying vector $l$ we get exact external and internal approximations,
 \[ \bigcup_{\langle l,l\rangle=1} \EE(q,Q_l^-) =
 \EE(q_1,Q_1)\oplus\cdots\oplus\EE(q_k,Q_k) =
 \bigcap_{\langle l,l\rangle=1} \EE(q,Q_l^+) .\]
-For proofs of formulas given in this section, see \cite{kurvalyi},
-\cite{kurvar}.
+For proofs of formulas given in this section, see \cite{KURZHANSKI_VALYI_ELLIPSOIDAL_CALCULUS_FOR_ESTINATION_AND_CONTROL},
+\cite{KURZHANSKI_VARAIYA_ON_ELLIPSOIDAL_TECHNIQUES_FOR_REACHABILITY_ANALYSIS}.
 
 One last comment is about how to find orthogonal matrices $S_2,\cdots,S_k$
 that align vectors $Q_2^{1/2}l, \cdots, Q_k^{1/2}l$ with $Q_1^{1/2}l$.
@@ -341,7 +341,7 @@ we find matrix $T$ such that
 \[ TQ_1T^T = I ~~~ \mbox{and} ~~~ TQ_2T^T=D, \]
 where $D$ is some diagonal matrix.
 Simultaneous diagonalization of $Q_1$ and $Q_2$ is possible
-because both are symmetric positive definite (see \cite{gant}).
+because both are symmetric positive definite (see \cite{GANTMACHER_MATRIX_THEORY}).
 To find such matrix $T$, we first do the SVD of $Q_1$:
 \begin{equation}
 Q_1 = U_1\Sigma_1V_1^T . \label{simdiag1}
@@ -407,7 +407,7 @@ Running $l$ over all unit directions that are not bad, we get
 \[ \bigcup_{\langle l,l\rangle=1} \EE(q,Q_l^-) =
 \EE(q_1,Q_1)\dot{-}\EE(q_2,Q_2) =
 \bigcap_{\langle l,l\rangle=1} \EE(q,Q_l^+) .\]
-For proofs of formulas given in this section, see \cite{kurvalyi}.
+For proofs of formulas given in this section, see \cite{KURZHANSKI_VALYI_ELLIPSOIDAL_CALCULUS_FOR_ESTINATION_AND_CONTROL}.
 
 
 \subsection{Geometric Difference-Sum}\label{subsec_diffsum}
@@ -585,7 +585,7 @@ if, for example, one ellipsoid is contained in the other:
 \end{eqnarray*}
 The proof that the system of equations (\ref{fusion1}-\ref{fusion5})
 correctly defines the minimal volume external ellipsoidal approximationi
-of the intersection $\EE(q_1,Q_1)\cap\EE(q_2,Q_2)$ is given in \cite{fusion}.
+of the intersection $\EE(q_1,Q_1)\cap\EE(q_2,Q_2)$ is given in \cite{ROS_SABATER_THOMAS_EN_ELLIPSOIDAL_CALCULUS_BASED_ON_PROPAGATION_AND_FUSION}.
 
 To find the internal approximating ellipsoid
 $\EE(q^-,Q^-)\subseteq\EE(q_1,Q_1)\cap\EE(q_2,Q_2)$, define
@@ -643,7 +643,7 @@ and
 \EE(q_2,Q_2)\subseteq\EE(q_1,Q_1) ~~~ \Rightarrow ~~~
 \EE(q^-,Q^-)=\EE(q_2,Q_2). \]
 The method of finding the internal ellipsoidal approximation of the
-intersection of two ellipsoids is described in \cite{vazhen}.
+intersection of two ellipsoids is described in \cite{VASHENTSEV_ON_INTERNAL_ELLIPSOIDAL_APPROXIMATION_FOR_PROBLEN_OF_CONTROL_AND_SYNTHESIS}.
 
 
 \subsection{Intersection of Ellipsoid and Halfspace}
@@ -705,7 +705,7 @@ The resulting ellipsoidal approximations are
 
 \subsection{Checking if \texorpdfstring{$\EE(q_1,Q_1)\subseteq\EE(q_2,Q_2)$}{enc}}\label{subsec_ellcontainment}
 \todo[inline]{Added this section}
-Theorem of alternatives, also known as \emph{$S$-procedure} \cite{boyd2},
+Theorem of alternatives, also known as \emph{$S$-procedure} \cite{BOYD_VANDERBERGHE_CONVEX_OPTIMIZATION},
 states that the implication
 \[
 \langle x, A_1x\rangle + 2\langle b_1,x\rangle + c_1 \leq 0
@@ -806,7 +806,7 @@ After $A$ and $b$ are found,
 \[ q=-A^{-1}b ~~~ \mbox{ and } ~~~ Q=(A^TA)^{-1}. \]
 
 The results on the minimum volume ellipsoids are explained
-and proven in \cite{boyd2}.
+and proven in \cite{BOYD_VANDERBERGHE_CONVEX_OPTIMIZATION}.
 
 \subsection{Maximum Volume Ellipsoids}
 \todo[inline]{Added this section}
@@ -864,5 +864,5 @@ After $B$ and $q$ are found,
 \[ Q = B^TB. \]
 
 The results on the maximum volume ellipsoids are explained
-and proven in \cite{boyd2}.
+and proven in \cite{BOYD_VANDERBERGHE_CONVEX_OPTIMIZATION}.
 

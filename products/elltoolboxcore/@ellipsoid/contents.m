@@ -107,7 +107,7 @@
 %  hpintersection     - Computes the intersection of ellipsoid with hyperplane.
 %
 %
-% Author:
+% $Author:
 % -------
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
