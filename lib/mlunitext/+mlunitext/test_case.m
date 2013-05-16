@@ -100,7 +100,7 @@ classdef test_case<handle
                     case 'profile',
                         profMode=prop{k+1};
                         if ~(ischar(profMode)&&modgen.common.isrow(profMode))
-                            error([upper(mfilename),':wrongInput'],...
+                            throwerror('wrongInput',...
                                 'profile property is expected to be a string');
                         end
                         %
@@ -109,7 +109,7 @@ classdef test_case<handle
                         markerStr=prop{k+1};
                         if ~(ischar(markerStr)&&...
                                 modgen.common.isrow(markerStr))
-                            error([upper(mfilename),':wrongInput'],...
+                            throwerror('wrongInput',...
                                 'marker is expected to be a string');
                         end
                         isMarkerSet=true;
