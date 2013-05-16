@@ -306,6 +306,8 @@ classdef ellipsoid < handle
         [propMat, propVal] = getProperty(hplaneMat,propName, fPropFun)
          x = ellbndr_2d(E)
          x = ellbndr_3d(E)
+         checkDoesContainArgs(ell,poly)
+         doesContain = doesEllContainPoly(ellArr,polytope,varagin)
     end
     methods (Static)
         checkIsMe(someObj,varargin)

@@ -720,9 +720,9 @@ function analyticResEllVec = calcExpMinkSum(isExtApx, nDirs, aMat, ...
 end
 function compareForIsCII(test1EllVec, test2EllVec, myString, myResult)
     if isempty(myString)
-        testRes = isContainedInIntersection(test1EllVec, test2EllVec);
+        testRes = doesIntersectionContain(test1EllVec, test2EllVec);
     else
-        testRes = isContainedInIntersection(test1EllVec, test2EllVec, myString);
+        testRes = doesIntersectionContain(test1EllVec, test2EllVec, myString);
     end
     mlunit.assert_equals(myResult, testRes);
 end

@@ -73,7 +73,7 @@ end
 %
     function res = isMyEllInPoly(ellIndex,polyIndex)
         if isEll
-            res = contains(objArr(polyIndex),ellArr(ellIndex));
+            res = doesContain(objArr(polyIndex),ellArr(ellIndex));
         else
             [constrMat constrValVec] = double(objArr(polyIndex));
             suppFuncVec =rho(ellArr(ellIndex),constrMat');

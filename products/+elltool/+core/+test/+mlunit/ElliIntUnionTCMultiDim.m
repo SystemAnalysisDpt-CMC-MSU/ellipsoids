@@ -24,13 +24,13 @@ classdef ElliIntUnionTCMultiDim < mlunitext.test_case
         function self = testEllintersectionIa(self)
             checkEllunionEaAndEllintersectionIa(self, false);
         end
-        function self = testContains(self)    
+        function self = testDoesContain(self)    
             arraySizeVec = [2, 1, 1, 1, 3, 1, 1];
             test1EllArray = createObjectArray(arraySizeVec, @ell_unitball, ...
                 3, 1, 1);
             test2EllArray = createObjectArray(arraySizeVec, @ell_unitball, ...
                 3, 1, 1);
-            testResVec = contains(test1EllArray, test2EllArray);
+            testResVec = doesContain(test1EllArray, test2EllArray);
                 mlunit.assert_equals(1, all(testResVec(:)));
             arraySizeVec = [1, 2, 3, 1, 2, 1];
             test1EllArray = createObjectArray(arraySizeVec, @ell_unitball, ... 
@@ -52,7 +52,7 @@ classdef ElliIntUnionTCMultiDim < mlunitext.test_case
             test2EllArray = createObjectArray(arraySizeVec, @ellipsoid, ...
                 5 * ones(4, 1), diag( 2 * ones(1, 4)), 2);
             testCorrect(false);
-            testResVec = contains(test2EllArray, test1EllArray);
+            testResVec = doesContain(test2EllArray, test1EllArray);
                 mlunit.assert_equals(0, any(testResVec(:)));
             testError(4);
             testError(5);
@@ -60,10 +60,10 @@ classdef ElliIntUnionTCMultiDim < mlunitext.test_case
             testError(7);
             function testCorrect(isAllCheck)
                 if (isAllCheck)
-                    testResVec = contains(test2EllArray, test1EllArray);
+                    testResVec = doesContain(test2EllArray, test1EllArray);
                     mlunit.assert_equals(1, all(testResVec(:)));
                 else
-                    testResVec = contains(test1EllArray, test2EllArray);
+                    testResVec = doesContain(test1EllArray, test2EllArray);
                     mlunit.assert_equals(0, any(testResVec(:)));
                 end
             end
@@ -71,11 +71,11 @@ classdef ElliIntUnionTCMultiDim < mlunitext.test_case
                 [test1EllArray, test2EllArray, errorStr] = ...
                     createTypicalArray(flag);
                 self.runAndCheckError...
-                   ('test1EllArray.contains(test2EllArray)', errorStr);
+                   ('test1EllArray.doesContain(test2EllArray)', errorStr);
                 self.runAndCheckError...
-                   ('test2EllArray.contains(test1EllArray)', errorStr);
+                   ('test2EllArray.doesContain(test1EllArray)', errorStr);
                 self.runAndCheckError...
-                   ('test1EllArray.contains(test1EllArray)', errorStr);
+                   ('test1EllArray.doesContain(test1EllArray)', errorStr);
             end
         end
 
