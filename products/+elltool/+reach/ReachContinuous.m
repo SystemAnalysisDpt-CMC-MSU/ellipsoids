@@ -213,6 +213,7 @@ classdef ReachContinuous < elltool.reach.AReach
                 timeVec, isDisturb, calcPrecision, approxTypeVec)
             import gras.ellapx.enums.EApproxType;
             import gras.ellapx.gen.RegProblemDynamicsFactory;
+            import gras.ellapx.lreachplain.GoodDirsContinuousFactory;
             import modgen.common.throwerror;
             %
             smartLinSys = RegProblemDynamicsFactory.create(smartLinSys,...
