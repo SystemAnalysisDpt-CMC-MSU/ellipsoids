@@ -18,9 +18,9 @@ classdef mlunit_test_mixed < mlunitext.test_case
             %
             res=evalc('strucdisp(S)');
             ind=strfind(res,'name');
-            mlunit.assert_equals(1,numel(ind));
+            mlunitext.assert_equals(1,numel(ind));
             ind=strfind(res,'description');
-            mlunit.assert_equals(1,numel(ind));
+            mlunitext.assert_equals(1,numel(ind));
         end
         function testStruct2Str(self)
             S.alpha=1;
@@ -29,7 +29,7 @@ classdef mlunit_test_mixed < mlunitext.test_case
             S.gamma.beta=2;
             resStr=strucdisp(S);
             resStr2=modgen.struct.struct2str(S);
-            mlunit.assert_equals(true,isequal(resStr,resStr2));
+            mlunitext.assert_equals(true,isequal(resStr,resStr2));
         end
         function testStrucDispSimpleRegress(self)
             S.alpha=1;
@@ -50,10 +50,10 @@ classdef mlunit_test_mixed < mlunitext.test_case
                 inpArgList={S,'depth',2,'printValues',true};
                 resStr=evalc('strucdisp(inpArgList{:})');
                 resStr2=strucdisp(inpArgList{:});
-                mlunit.assert_equals(true,isequal(resStr,resStr2));
+                mlunitext.assert_equals(true,isequal(resStr,resStr2));
                 resList=textscan(resStr,'%s','delimiter','\n');
                 resList=resList{1};                
-                mlunit.assert_equals(true,isequal(resList,expList));
+                mlunitext.assert_equals(true,isequal(resList,expList));
             end            
         end
         function testStrucDispRegress(self)
@@ -94,7 +94,7 @@ classdef mlunit_test_mixed < mlunitext.test_case
                     SExpRes=resMap.get(inpKey);
                     [isPos,reportStr]=...
                         modgen.struct.structcompare(SRes,SExpRes);
-                    mlunit.assert_equals(true,isPos,reportStr);
+                    mlunitext.assert_equals(true,isPos,reportStr);
                     %
                     evalc('strucdisp(S,resFileName,inpArgList{:});');
                     fid=fopen(resFileName,'r');
@@ -107,7 +107,7 @@ classdef mlunit_test_mixed < mlunitext.test_case
                     end
                     fclose(fid);
                     delete(resFileName);
-                    mlunit.assert_equals(true,isequal(resFileStr,resStr));
+                    mlunitext.assert_equals(true,isequal(resFileStr,resStr));
                 end
             end
             %
@@ -136,8 +136,8 @@ classdef mlunit_test_mixed < mlunitext.test_case
                 %
                 function compare()
                     [isEqual,reportStr]=modgen.struct.structcompare(SRes,Data);
-                    mlunit.assert_equals(true,isEqual,reportStr);
-                    mlunit.assert_equals(true,isequalwithequalnans(SRes,Data));                          
+                    mlunitext.assert_equals(true,isEqual,reportStr);
+                    mlunitext.assert_equals(true,isequalwithequalnans(SRes,Data));                          
                 end
                 function SRes=checkValue()
                     [pathSpecList,valList]=modgen.struct.getleavelist(Data);
@@ -165,7 +165,7 @@ classdef mlunit_test_mixed < mlunitext.test_case
             SRes=updateleavesext(SData,@fTransform);
             %
             SExp.a.bb=1;
-            mlunit.assert_equals(true,isequal(SRes,SExp));
+            mlunitext.assert_equals(true,isequal(SRes,SExp));
             %
             function [val,path]=fTransform(val,path)
                 path{4}=repmat(path{4},1,2);
@@ -190,18 +190,18 @@ classdef mlunit_test_mixed < mlunitext.test_case
             check();
             function check()
                 SRes=modgen.struct.updateleaves(SData,@(x,y)x);
-                mlunit.assert_equals(true,...
+                mlunitext.assert_equals(true,...
                     isequalwithequalnans(SData,SRes));
                 SRes=modgen.struct.updateleaves(SData,@fMinus);
                 SRes=modgen.struct.updateleaves(SRes,@fMinus);
-                mlunit.assert_equals(true,...
+                mlunitext.assert_equals(true,...
                     isequalwithequalnans(SData,SRes));
                 %
                 pathExpList=modgen.struct.getleavelist(SData);
                 pathList={};
                 %
                 modgen.struct.updateleaves(SRes,@storePath);
-                mlunit.assert_equals(true,isequal(pathList,pathExpList));
+                mlunitext.assert_equals(true,isequal(pathList,pathExpList));
                 %
                 function value=storePath(value,subFieldNameList)
                     pathList=[pathList;{subFieldNameList}];
@@ -214,11 +214,11 @@ classdef mlunit_test_mixed < mlunitext.test_case
             end
             function checkPathList(pathList)
                 import modgen.common.type.simple.lib.iscellofstring;
-                mlunit.assert_equals(true,iscell(pathList));
+                mlunitext.assert_equals(true,iscell(pathList));
                 if ~isempty(pathList)
-                    mlunit.assert_equals(true,...
+                    mlunitext.assert_equals(true,...
                         all(cellfun('isclass',pathList,'cell')));
-                    mlunit.assert_equals(true,...
+                    mlunitext.assert_equals(true,...
                         iscellofstring([pathList{:}]));
                 end
             end

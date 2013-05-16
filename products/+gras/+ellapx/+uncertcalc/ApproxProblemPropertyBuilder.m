@@ -26,6 +26,7 @@ classdef ApproxProblemPropertyBuilder
                 sysConfRepoMgr, logger)
             import gras.ellapx.uncertcalc.ApproxProblemPropertyBuilder;
             import gras.ellapx.lreachuncert.probdyn.LReachProblemDynamicsFactory;
+            import gras.ellapx.lreachplain.GoodDirsContinuousFactory;
             %
             % we need PRECISION_FACTOR because this data is later used
             % for solving ODE which also introduces its own imprecision
@@ -93,8 +94,8 @@ classdef ApproxProblemPropertyBuilder
             %
             % build good direction curves
             %
-            goodDirSetObj = gras.ellapx.lreachplain.GoodDirectionSet(...
-                pDynObj,sTime,lsGoodDirMat,calcPrecision);
+            goodDirSetObj = GoodDirsContinuousFactory.create(pDynObj,...
+                sTime,lsGoodDirMat,calcPrecision);
             logger.info(...
                 sprintf(['Building good directions at time %d, ',...
                 'calc. precision=%d, time elapsed =%s sec.'],...

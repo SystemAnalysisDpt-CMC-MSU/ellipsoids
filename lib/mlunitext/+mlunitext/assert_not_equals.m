@@ -1,4 +1,4 @@
-function assert_not_equals(varargin)
+function assert_not_equals(expectedVal, actualVal, msg)
 % ASSERT_NOT_EQUALS checks whether expected ~= actual and raises an error
 % if not.
 %
@@ -17,11 +17,30 @@ function assert_not_equals(varargin)
 %   The message is only used, if the assertion fails.
 %
 %
-% $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-% Faculty of Computational Mathematics and Cybernetics, System Analysis
-% Department, 7-October-2012, <pgagarinov@gmail.com>$
-try
-    mlunit.assert_not_equals(varargin{:});
-catch meObj
-    throwAsCaller(meObj);
-end
+% $Authors: Peter Gagarinov <pgagarinov@gmail.com>
+% $Date: March-2013 $
+% $Copyright: Moscow State University,
+%             Faculty of Computational Mathematics
+%             and Computer Science,
+%             System Analysis Department 2012-2013$
+
+if (nargin == 2)
+    msg = '';
+end;
+if (isempty(msg))
+    if (isnumeric(expectedVal) || islogical(expectedVal))
+        expStr = num2str(expectedVal);
+    else
+        expStr = expectedVal;
+    end;
+    msgOut = sprintf('Expected not equal to <%s>.', expStr);
+else
+    msgOut = msg;
+end;
+if (isequal(actualVal, expectedVal))
+    try
+        mlunitext.fail(msgOut);
+    catch meObj
+        throwAsCaller(meObj)
+    end
+end;

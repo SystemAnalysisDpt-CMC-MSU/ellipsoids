@@ -1,7 +1,6 @@
 classdef RemoteTestRunner<handle
     %REMOTETESTRUNNER Summary of this class goes here
     %   Detailed explanation goes here
-    
     properties
         emailLogger
         fTempDirGetter
@@ -14,36 +13,55 @@ classdef RemoteTestRunner<handle
         function runTestPack(self,testPackName,varargin)
             import modgen.common.throwerror;
             self.emailLogger.sendMessage('STARTED','');
+            tmpDirName=self.fTempDirGetter(testPackName);
+            resultVec=[];
             try
-                logMessageStr=evalc('results=feval(testPackName,varargin{:});');
-                [errorCount,failCount]=results.getErrorFailCount();
-                messageStr=results.getErrorFailMessage();
-                %    
-                if (failCount+errorCount)>0
-                    subjectStr=sprintf('FAILED:(failures: %d, errors %d)',failCount,errorCount);
-                else
-                    subjectStr='PASSED';
-                end
-                messageStr=[messageStr,sprintf('\n'),logMessageStr];
+                consoleOutStr=evalc(...
+                    'resultVec=feval(testPackName,varargin{:});');
+                errorFailStr=resultVec.getErrorFailMessage();
+                %
+                subjectStr=resultVec.getReport('minimal');
+                %
+                statRel=resultVec.getRunStatRel();
+                
+                consoleOutFileName=writeMessageToFile('console_output',...
+                    consoleOutStr);
+                topsFileName=getFullFileName('performance_tops','.csv');
+                statRel.writeToCSV(topsFileName);
+                attachFileNameList={consoleOutFileName,topsFileName};
             catch meObj
                 subjectStr='ERROR';
-                messageStr=modgen.exception.me.obj2plainstr(meObj);
+                errorFailStr=modgen.exception.me.obj2plainstr(meObj);
+                attachFileNameList={};
             end
-            tmpDirName=self.fTempDirGetter(testPackName);
-            dstFileName=[tmpDirName,filesep,'output','.txt'];
-            [fid,errMsg] = fopen(dstFileName, 'w');
-            if fid<0
-                throwerror('cantOpenFile',errMsg);
+            consoleOutFileName=writeMessageToFile('error_fail_list',...
+                errorFailStr);
+            attachFileNameList=[attachFileNameList,{consoleOutFileName}];
+            %
+            self.emailLogger.sendMessage(subjectStr,...
+                'emailAttachmentNameList',attachFileNameList);
+            
+            function fullFileName=getFullFileName(shortFileName,extName)
+                if nargin<2
+                    extName='.txt';
+                end
+                fullFileName=[tmpDirName,filesep,shortFileName,extName];
             end
-            try
-                fprintf(fid,'%s',messageStr);
-            catch meObj
+            function fullFileName=writeMessageToFile(shortFileName,msgStr)
+                fullFileName=getFullFileName(shortFileName);
+                [fid,errMsg] = fopen(fullFileName, 'w');
+                if fid<0
+                    throwerror('cantOpenFile',errMsg);
+                end
+                try
+                    fprintf(fid,'%s',msgStr);
+                catch meObj
+                    fclose(fid);
+                    rethrow(meObj);
+                end
                 fclose(fid);
-                rethrow(meObj);
             end
-            fclose(fid);
-            self.emailLogger.sendMessage(subjectStr,messageStr);
         end
     end
-    
 end
+

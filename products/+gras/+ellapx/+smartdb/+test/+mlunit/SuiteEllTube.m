@@ -1,16 +1,13 @@
 classdef SuiteEllTube < mlunitext.test_case
-    properties
-    end
-    
     methods
         function self = SuiteEllTube(varargin)
             self = self@mlunitext.test_case(varargin{:});
         end
         %
-        function self = set_up_param(self,varargin)
-            
+        function tear_down(~)
+            close all;
         end
-        function testCutAndCat(self)
+        function testCutAndCat(~)
             nDims=2;
             nTubes=3;
             calcPrecision=0.001;
@@ -26,7 +23,7 @@ classdef SuiteEllTube < mlunitext.test_case
             [isOk,reportStr] = ...
                 cutRel.getFieldProjection(fieldList).isEqual(...
                 expRel.getFieldProjection(fieldList));
-            mlunit.assert(isOk, reportStr);
+            mlunitext.assert(isOk, reportStr);
             % cut: test point
             rel = create(timeVec);
             cutRel = rel.cut(timeVec(end) / 2);
@@ -34,7 +31,7 @@ classdef SuiteEllTube < mlunitext.test_case
             [isOk,reportStr] = ...
                 cutRel.getFieldProjection(fieldList).isEqual(...
                 expRel.getFieldProjection(fieldList));
-            mlunit.assert(isOk, reportStr);
+            mlunitext.assert(isOk, reportStr);
             % cat: test
             firstRel = create(timeVec);
             secondRel = create(evolveTimeVec);
@@ -43,7 +40,7 @@ classdef SuiteEllTube < mlunitext.test_case
             [isOk,reportStr] = ...
                 catRel.getFieldProjection(fieldList).isEqual(...
                 expRel.getFieldProjection(fieldList));
-            mlunit.assert(isOk, reportStr);
+            mlunitext.assert(isOk, reportStr);
             %
             function rel = create(timeVec)
                 nPoints = numel(timeVec);
@@ -137,12 +134,12 @@ classdef SuiteEllTube < mlunitext.test_case
                 %
                 [~,~,scaleFactor,MArrayList]=fGetScaleAndReg(false,false);
                 approxType=gras.ellapx.enums.EApproxType.Internal;
-                scaleFactorInt=scaleFactor;
-                rel1=create();
+                scaleFactorInt=scaleFactor; %#ok<NASGU>
+                rel1=create(); %#ok<NASGU>
                 QArrayList=repmat({repmat(0.5*eye(nDims),[1,1,nPoints])},1,nTubes);
                 approxType=gras.ellapx.enums.EApproxType.External;
                 [isScaleDiff,isMDiff,scaleFactor,MArrayList]=fGetScaleAndReg(true,true);
-                rel2=create();
+                rel2=create(); %#ok<NASGU>
                 if ~(isMDiff||isScaleDiff)
                     check('wrongInput:touchCurveDependency');
                 else
@@ -151,7 +148,7 @@ classdef SuiteEllTube < mlunitext.test_case
                 %
                 QArrayList=repmat({repmat(diag([1 0.5]),[1,1,nPoints])},1,nTubes);
                 [isScaleDiff,isMDiff,scaleFactor,MArrayList]=fGetScaleAndReg(true,true);
-                rel2=create();
+                rel2=create(); %#ok<NASGU>
                 if ~(isMDiff||isScaleDiff)
                     check('wrongInput:internalWithinExternal');
                 else
@@ -161,7 +158,7 @@ classdef SuiteEllTube < mlunitext.test_case
                 lsGoodDirVec=[0;1];
                 QArrayList=repmat({repmat(diag([0.5 0.2]),[1,1,nPoints])},1,nTubes);
                 [isScaleDiff,isMDiff,scaleFactor,MArrayList]=fGetScaleAndReg(false,false);
-                rel1=create();
+                rel1=create(); %#ok<NASGU>
                 %
                 if ~(isMDiff||isScaleDiff)
                     check('wrongInput:touchLineValueFunc');
@@ -191,8 +188,8 @@ classdef SuiteEllTube < mlunitext.test_case
             end
             %
         end
-        function testProjectionAndScale(self)
-            relProj=gras.ellapx.smartdb.rels.EllTubeProj();
+        function testProjectionAndScale(~)
+            relProj=gras.ellapx.smartdb.rels.EllTubeProj(); %#ok<NASGU>
             %
             nPoints=5;
             calcPrecision=0.001;
@@ -211,24 +208,25 @@ classdef SuiteEllTube < mlunitext.test_case
             QArrayList=repmat({repmat(diag([1 2 3]),[1,1,nPoints])},1,nTubes);
             scaleFactor=1.01;
             projType=gras.ellapx.enums.EProjType.Static;
-            projSpaceList={[1 0 0;0 0 1],[1 0 0;0 1 0]};
+            projMatList={[1 0 1;0 1 1],[1 0 0;0 1 0]};
             rel=create();
-            relProj=rel.project(projType,projSpaceList,@fGetProjMat);
+            relProj=rel.project(projType,projMatList,@fGetProjMat); 
+            relProj.plot();
             %
             MBeforeArray=rel.MArray;
             rel2=rel.getCopy();
             rel2.scale(@(varargin)2,{});
             MAfterArray=rel2.MArray;
             %
-            mlunit.assert_equals(false,isequal(MBeforeArray,MAfterArray));
+            mlunitext.assert_equals(false,isequal(MBeforeArray,MAfterArray));
             rel2.scale(@(varargin)0.5,{});
             [isEqual,reportStr]=rel.isEqual(rel2);
-            mlunit.assert_equals(true,isEqual,reportStr);
+            mlunitext.assert_equals(true,isEqual,reportStr);
             %
             relProjOrthExp=rel.project(projType,{[0 1 0;0 0 1]},@fGetProjMat);
             relProjOrthGot=rel.projectToOrths([2,3],projType);
             [isEqual,reportStr]=relProjOrthExp.isEqual(relProjOrthGot);
-            mlunit.assert_equals(true,isEqual,reportStr);
+            mlunitext.assert_equals(true,isEqual,reportStr);
             %
             function [projOrthMatArray,projOrthMatTransArray]=...
                     fGetProjMat(projMat,timeVec,varargin)
@@ -481,20 +479,20 @@ classdef SuiteEllTube < mlunitext.test_case
             sTime=nPoints;
             approxType=gras.ellapx.enums.EApproxType.Internal;
             
-            rel1=create();
+            rel1=create(); %#ok<NASGU>
             QArrayList=repmat({repmat(0.5*eye(nDims),[1,1,nPoints])},1,nTubes);
             approxType=gras.ellapx.enums.EApproxType.External;
-            rel2=create();
+            rel2=create(); %#ok<NASGU>
             check('wrongInput:touchCurveDependency');
             %
             QArrayList=repmat({repmat(diag([1 0.5]),[1,1,nPoints])},1,nTubes);
-            rel2=create();
+            rel2=create(); %#ok<NASGU>
             check('wrongInput:internalWithinExternal');
             %
             lsGoodDirVec=[0;1];
             QArrayList=repmat({repmat(diag([0.5 0.2]),[1,1,nPoints])},1,nTubes);
             
-            rel1=create();
+            rel1=create(); %#ok<NASGU>
             %
             check('wrongInput:touchLineValueFunc');
             %
@@ -554,7 +552,7 @@ classdef SuiteEllTube < mlunitext.test_case
                     approxSchemaDescr,calcPrecision);
             end
         end
-        function testEllTubeFromEllArray(self)
+        function testEllTubeFromEllArray(~)
             import gras.ellapx.smartdb.rels.EllTube.fromQArrays;
             import gras.ellapx.smartdb.rels.EllTube.fromEllArray;
             nPoints=5;
@@ -599,10 +597,10 @@ classdef SuiteEllTube < mlunitext.test_case
             %
             [isEqual,reportStr]=...
                 fromEllArrayEllTube.isEqual(fromMatEllTube);
-            mlunit.assert(isEqual,reportStr);
+            mlunitext.assert(isEqual,reportStr);
             [isEqual,reportStr]=...
                 fromEllMArrayEllTube.isEqual(fromMatMEllTube);
-            mlunit.assert(isEqual,reportStr);
+            mlunitext.assert(isEqual,reportStr);
             %
             function fMakeEllArrayElem(iElem)
                 ellArray(iElem) = ellipsoid(...
@@ -637,7 +635,7 @@ classdef SuiteEllTube < mlunitext.test_case
             mlunitext.assert(isOk,reportStr);
             [isOk, reportStr] = extFromEllTubeEllArray(2).eq(ellArray(2));
             mlunitext.assert(isOk,reportStr);
-            mlunit.assert(all(extTimeVec == [1 2]));
+            mlunitext.assert(all(extTimeVec == [1 2]));
             %
             intFromEllArrayEllTube = ...
                 gras.ellapx.smartdb.rels.EllTube.fromEllArray(...
@@ -651,7 +649,7 @@ classdef SuiteEllTube < mlunitext.test_case
             mlunitext.assert(isOk,reportStr);
             [isOk, reportStr] = intFromEllTubeEllArray(2).eq(ellArray(2));
             mlunitext.assert(isOk,reportStr);
-            mlunit.assert(all(intTimeVec == [1 2]));
+            mlunitext.assert(all(intTimeVec == [1 2]));
             % no assertions, just error test
             intFromEllArrayEllTube.getEllArray(EApproxType.External);
             [~, ~] =...

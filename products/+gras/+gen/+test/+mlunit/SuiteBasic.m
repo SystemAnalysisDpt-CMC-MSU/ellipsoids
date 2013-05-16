@@ -59,9 +59,9 @@ classdef SuiteBasic < mlunitext.test_case
             res{iCur}=evalc('obj.finish');
             resStr=[res{:}];
             resExpStr='[].].].].].]';
-            mlunit.assert_equals(48,length(resStr));
+            mlunitext.assert_equals(48,length(resStr));
             resStrFiltered=resStr(ismember(resStr,'.[]'));
-            mlunit.assert_equals(true,isequal(resStrFiltered,resExpStr));
+            mlunitext.assert_equals(true,isequal(resStrFiltered,resExpStr));
         end
         function testRMultiplySimple(self)
             MAX_TOL=1e-11;
@@ -71,7 +71,7 @@ classdef SuiteBasic < mlunitext.test_case
             resMat=gras.gen.MatVector.rMultiply(aMat,bMat,cMat);
             etMat=aMat*bMat*cMat;
             maxTol=max(abs(resMat(:)-etMat(:)));
-            mlunit.assert_equals(true,maxTol<=MAX_TOL)
+            mlunitext.assert_equals(true,maxTol<=MAX_TOL)
         end
         %
         function testSortrowstol(self)
@@ -91,12 +91,12 @@ classdef SuiteBasic < mlunitext.test_case
                 checkint();
                 [resMat,indSortVec,indRevSortVec]=sortrowstol(inpMat,tol);
                 checkint();
-                mlunit.assert_equals(true,isequal(resMat(indRevSortVec,:),...
+                mlunitext.assert_equals(true,isequal(resMat(indRevSortVec,:),...
                     inpMat));
                 function checkint()
-                    mlunit.assert_equals(true,isequal(resMat,...
+                    mlunitext.assert_equals(true,isequal(resMat,...
                         inpMat(indVec,:)));
-                    mlunit.assert_equals(true,isequal(indSortVec,...
+                    mlunitext.assert_equals(true,isequal(indSortVec,...
                         indVec));
                 end
             end
@@ -119,9 +119,9 @@ classdef SuiteBasic < mlunitext.test_case
                 [minExpArray,indExpMinSide]=gras.gen.test.minadv(...
                     leftArray,rightArray);
                 minArray=reshape(minArray,size(minArray,1),[]);
-                mlunit.assert_equals(true,isequal(minArray,...
+                mlunitext.assert_equals(true,isequal(minArray,...
                     minExpArray));
-                mlunit.assert_equals(true,isequal(indMinSide,...
+                mlunitext.assert_equals(true,isequal(indMinSide,...
                     indExpMinSide));
             end
             

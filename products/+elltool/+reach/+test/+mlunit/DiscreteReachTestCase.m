@@ -280,7 +280,7 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             rel2 = create(); %#ok<NASGU>
             check();
             
-            mlunit.assert_equals(true, true);
+            mlunitext.assert_equals(true, true);
             
             function check(errorTag)
                 CMD_STR = 'rel1.getCopy().unionWith(rel2)';
@@ -302,11 +302,11 @@ classdef DiscreteReachTestCase < mlunitext.test_case
         
         function self = testGetSystem(self)
             isEqual = self.linSys == self.reachObj.get_system;
-            mlunit.assert_equals(true, isEqual);
+            mlunitext.assert_equals(true, isEqual);
             projReachObj = self.reachObj.projection(...
                 eye(self.reachObj.dimension, 2));
             isEqual = self.linSys == projReachObj.get_system;
-            mlunit.assert_equals(true, isEqual);
+            mlunitext.assert_equals(true, isEqual);
         end
         
         function self = testGetCenter(self)
@@ -314,7 +314,7 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             expectedTrCenterMat = self.calculateTrajectoryCenterMat(self);
             
             isEqual = all(max(abs(expectedTrCenterMat - trCenterMat), [], 1) < self.COMP_PRECISION);
-            mlunit.assert_equals(true, isEqual);
+            mlunitext.assert_equals(true, isEqual);
         end
         
         function self = testGetDirections(self)
@@ -327,7 +327,7 @@ classdef DiscreteReachTestCase < mlunitext.test_case
                 isEqual = isEqual && ...
                     all(max(abs(expectedDirectionsCVec{iDirection} - directionsCVec{iDirection}), [], 1) < self.COMP_PRECISION);
             end
-            mlunit.assert_equals(true, isEqual);
+            mlunitext.assert_equals(true, isEqual);
         end
         
         function self = testGetGoodCurves(self)
@@ -350,7 +350,7 @@ classdef DiscreteReachTestCase < mlunitext.test_case
                 isEqual = isEqual && ...
                     all(max(abs(expectedGoodCurvesCVec{iDirection} - goodCurvesCVec{iDirection}), [], 1) < correctedRelTolVec);
             end
-            mlunit.assert_equals(true, isEqual);
+            mlunitext.assert_equals(true, isEqual);
         end
         
         function self = testGetEa(self)
@@ -379,7 +379,7 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             isEqual = all(max(abs(expectedSupFunMat - eaSupFunValueMat), [], 2) < ...
                 self.COMP_PRECISION);
             
-            mlunit.assert_equals(true, isEqual);
+            mlunitext.assert_equals(true, isEqual);
         end
         
         function self = testGetIa(self)
@@ -409,7 +409,7 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             isEqual = all(max(abs(expectedSupFunMat - eaSupFunValueMat), [], 2) < ...
                 self.COMP_PRECISION);
             
-            mlunit.assert_equals(true, isEqual);
+            mlunitext.assert_equals(true, isEqual);
         end
         
         function self = testFirstBasicTest(self)
@@ -444,7 +444,7 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             projReachSetObj.isprojection();
             firstCutReachObj.iscut();
             newReachObj.isempty();
-            mlunit.assert_equals(true, true);
+            mlunitext.assert_equals(true, true);
         end
         %
         function self = testSecondBasicTest(self)
@@ -479,7 +479,7 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             projReachSetObj.isprojection();
             firstCutReachObj.iscut();
             newReachObj.isempty();
-            mlunit.assert_equals(true, true);
+            mlunitext.assert_equals(true, true);
         end
         %
         function self=testConstructor(self)

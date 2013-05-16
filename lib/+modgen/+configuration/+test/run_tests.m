@@ -2,7 +2,7 @@ function results=run_tests()
 import modgen.configuration.*;
 import modgen.configuration.test.*;
 %
-runner = mlunit.text_test_runner(1, 1);
+runner = mlunitext.text_test_runner(1, 1);
 loader = mlunitext.test_loader;
 %
 
@@ -32,7 +32,7 @@ suite_crm_nostorage = loader.load_tests_from_test_case('modgen.configuration.tes
 suite_adaptive_negative=loader.load_tests_from_test_case('modgen.configuration.test.mlunit.SuiteNegative');
 suite_adaptive_basic=loader.load_tests_from_test_case('modgen.configuration.test.mlunit.SuiteBasic');
 %
-suite = mlunit.test_suite(horzcat(...
+suite = mlunitext.test_suite(horzcat(...
     suite_adaptivecrm.tests,...
     suite_crm.tests,...
     suite_crmver.tests,...
