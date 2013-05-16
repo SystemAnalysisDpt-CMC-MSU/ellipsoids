@@ -16,8 +16,8 @@ classdef TestSuite < mlunitext.test_case
             etArray=evalStrMat(inpCMat,timeVec);
             resArray=evalOptMat(inpCMat,timeVec);
             fcnArray=evalFcnMat(inpCMat,timeVec);
-            mlunit.assert_equals(true,isequal(etArray,resArray));
-            mlunit.assert_equals(true,isequal(fcnArray,resArray));
+            mlunitext.assert_equals(true,isequal(etArray,resArray));
+            mlunitext.assert_equals(true,isequal(fcnArray,resArray));
             %
             function resArray=evalFcnMat(X,t)
                 fHandle=modgen.cell.cellstr2func(X,'t');
@@ -44,12 +44,12 @@ classdef TestSuite < mlunitext.test_case
         function self=test_parseparams_negative(self)
             inpVar={};
             resStr=evalc('showcell(inpVar);');
-            mlunit.assert_equals(true,...
+            mlunitext.assert_equals(true,...
                 ~isempty(findstr(resStr,'inpVar')));
             commandStr='showcell(inpVar,''printVarName'',false)';
             %
             resStr=evalc(commandStr);
-            mlunit.assert_equals(false,...
+            mlunitext.assert_equals(false,...
                 ~isempty(findstr(resStr,'inpVar')));
         end
         function testShowCellOnEnum(self)
@@ -67,15 +67,15 @@ classdef TestSuite < mlunitext.test_case
                 resStrExpList={...
                     '[4-D modgen.cell.test.ShowCellTestEnum]    [1]    [Internal]',...
                     '[]                                         [2]    [2x1 modgen.cell.test.ShowCellTestEnum]'};
-                mlunit.assert_equals(true,isequal(resStrList,resStrExpList));
+                mlunitext.assert_equals(true,isequal(resStrList,resStrExpList));
             end
         end
         function testShowCellOfCharCols(self)
             inpCell={'a',1;'bb'.' 2};
             resStr=evalc('display(inpCell)');
-            mlunit.assert_equals(true,~isempty(findstr(resStr,'inpCell =')));
+            mlunitext.assert_equals(true,~isempty(findstr(resStr,'inpCell =')));
             resStr=evalc('disp(inpCell)');
-            mlunit.assert_equals(true,isempty(findstr(resStr,'inpCell =')));
+            mlunitext.assert_equals(true,isempty(findstr(resStr,'inpCell =')));
             %
             inpCell={repmat('z',10,1)};
             evalc('showcell(inpCell)');

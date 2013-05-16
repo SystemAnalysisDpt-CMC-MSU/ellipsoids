@@ -7,6 +7,16 @@ classdef EllAuxTestCase < mlunitext.test_case
             self=self@mlunitext.test_case(varargin{:});
         end
         %
+        function testEllRegularize(self)
+            import modgen.common.checkmultvar;
+            shMat = [4 4 14; 4 4 14; 14 14 78];
+            isOk=gras.la.ismatposdef(shMat,self.ABS_TOL);
+            mlunitext.assert(~isOk);
+            shMat = gras.la.regposdefmat(shMat, self.ABS_TOL);
+            isOk=gras.la.ismatposdef(shMat,self.ABS_TOL,true);
+            mlunitext.assert(isOk);
+        end
+        %
         function testEllRegConsitent(self)
             absTol=self.ABS_TOL;
             CMP_TOL=1e-12;

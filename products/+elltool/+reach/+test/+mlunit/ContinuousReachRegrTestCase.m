@@ -139,16 +139,16 @@ classdef ContinuousReachRegrTestCase < mlunitext.test_case
                 isExt = self.isEqualApprox(expRel, EApproxType.External);
                 isInt = self.isEqualApprox(expRel, EApproxType.Internal);
                 isOk = isExt && isInt;
-                mlunit.assert_equals(true, isOk);
+                mlunitext.assert_equals(true, isOk);
             else
                 throwerror('WrongInput', 'Do not exist config mat file.');
             end
         end
         function self = testGetEllTubeRel(self)
-            mlunit.assert(all(self.reachObj.get_ia() == ...
+            mlunitext.assert(all(self.reachObj.get_ia() == ...
                 self.reachObj.getEllTubeRel.getEllArray(...
                 gras.ellapx.enums.EApproxType.Internal))); 
-            mlunit.assert(all(self.reachObj.get_ea() == ...
+            mlunitext.assert(all(self.reachObj.get_ea() == ...
                 self.reachObj.getEllTubeRel.getEllArray(...
                 gras.ellapx.enums.EApproxType.External))); 
         end

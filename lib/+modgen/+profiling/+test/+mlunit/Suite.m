@@ -34,7 +34,7 @@ classdef Suite < mlunitext.test_case
                 hOut=modgen.profiling.profview(inpArgList{:});
                 hOut.close();                
                 S = profile('status');
-                mlunit.assert_equals(true,isequal('off',S.ProfilerStatus));
+                mlunitext.assert_equals(true,isequal('off',S.ProfilerStatus));
             end
         end
         function self=tear_down(self)

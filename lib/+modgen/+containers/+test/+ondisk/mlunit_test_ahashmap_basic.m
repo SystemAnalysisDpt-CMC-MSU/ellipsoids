@@ -22,8 +22,8 @@ classdef mlunit_test_ahashmap_basic < mlunitext.test_case
             map=self.mapFactory.getInstance();
             isHashedKeys=map.getIsHashedKeys();
             isHashedPath=map.getIsHashedPath();
-            mlunit.assert_equals(true,isHashedPath);
-            mlunit.assert_equals(false,isHashedKeys);
+            mlunitext.assert_equals(true,isHashedPath);
+            mlunitext.assert_equals(false,isHashedKeys);
         end
     end
 end

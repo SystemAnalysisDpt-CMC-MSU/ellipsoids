@@ -4,7 +4,7 @@ classdef test_test_result < mlunitext.test_case
     % Example:
     %  run(gui_test_runner, 'test_test_result');
     %
-    %  See also MLUNIT.TEST_RESULT.
+    %  See also MLUNITEXT.TEST_RESULT.
     %
     % $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
     % Faculty of Computational Mathematics and Cybernetics, System Analysis
@@ -39,7 +39,7 @@ classdef test_test_result < mlunitext.test_case
             %         run(gui_test_runner,
             %             'test_test_result(''test_add_error_with_stack'');');
             %
-            %  See also MLUNIT.TEST_RESULT.ADD_ERROR_WITH_STACK.
+            %  See also MLUNITEXT.TEST_RESULT.ADD_ERROR_WITH_STACK.
             
             import mlunitext.*;
             
@@ -51,7 +51,7 @@ classdef test_test_result < mlunitext.test_case
                 char(error_lines(1)));
             assert_equals(false, isempty(findstr('mock_test.m at line 94', ...
                 char(error_lines(2)))));
-            assert_equals(false, isempty(findstr('test_case.m at line 141', ...
+            assert_equals(false, isempty(findstr('test_case.m at line 293', ...
                 char(error_lines(3)))));
             assert_equals('Error:  , Identifier: ', char(error_lines(end)));
         end
@@ -64,16 +64,16 @@ classdef test_test_result < mlunitext.test_case
             %   run(gui_test_runner,
             %             'test_test_result(''test_get_errors_failures'');');
             %
-            % See also MLUNIT.TEST_RESULT.GET_ERRORS,
-            %   MLUNIT.TEST_RESULT.GET_FAILURES.
+            % See also MLUNITEXT.TEST_RESULT.GET_ERRORS,
+            %   MLUNITEXT.TEST_RESULT.GET_FAILURES.
             
-            self.result = start_test(self.result, ...
+            start_test(self.result, ...
                 mlunit_test.mock_test('test_method'));
-            self.result = add_error_by_message(self.result, ...
+            add_error_by_message(self.result, ...
                 mlunit_test.mock_test('test_method'), 'foo error');
-            self.result = add_failure_by_message(self.result, ...
+            add_failure_by_message(self.result, ...
                 mlunit_test.mock_test('test_method'), 'foo failure');
-            self.result = stop_test(self.result, ...
+            stop_test(self.result, ...
                 mlunit_test.mock_test('test_method'));
             assert(1 == get_errors(self.result));
             assert(1 == get_failures(self.result));
@@ -87,13 +87,13 @@ classdef test_test_result < mlunitext.test_case
             %   run(gui_test_runner,
             %       'test_test_result(''test_get_tests_run'');');
             %
-            %  See also MLUNIT.TEST_RESULT.GET_TESTS_RUN.
-            
-            self.result = start_test(self.result, ...
+            %  See also MLUNITEXT.TEST_RESULT.GET_TESTS_RUN.
+            %
+            start_test(self.result, ...
                 mlunit_test.mock_test('test_method'));
-            self.result = add_success(self.result, ...
+            add_success(self.result, ...
                 mlunit_test.mock_test('test_method'));
-            self.result = stop_test(self.result, ...
+            stop_test(self.result, ...
                 mlunit_test.mock_test('test_method'));
             assert(1 == get_tests_run(self.result));
         end
@@ -105,31 +105,31 @@ classdef test_test_result < mlunitext.test_case
             %   run(gui_test_runner,
             %             'test_test_result(''test_result'');');
             %
-            % See also MLUNIT.TEST_RESULT.
+            % See also MLUNITEXT.TEST_RESULT.
             %
-            import mlunit.*;
+            import mlunitext.*;
             %
-            self.result = start_test(self.result, ...
+            start_test(self.result, ...
                 mlunit_test.mock_test('test_method'));
-            self.result = add_success(self.result, ...
+            add_success(self.result, ...
                 mlunit_test.mock_test('test_method'));
             assert_equals(1, was_successful(self.result));
             assert_equals('mlunitext.test_result run=1 errors=0 failures=0', ...
                 summary(self.result));
             check(0,0);
-            self.result = add_error_by_message(self.result, ...
+            add_error_by_message(self.result, ...
                 mlunit_test.mock_test('test_method'), 'foo error');
             assert_equals('mlunitext.test_result run=1 errors=1 failures=0', ...
                 summary(self.result));
             check(1,0);
-            self.result = add_failure_by_message(self.result, ...
+            add_failure_by_message(self.result, ...
                 mlunit_test.mock_test('test_method'), 'foo failure');
             assert_equals('mlunitext.test_result run=1 errors=1 failures=1', ...
                 summary(self.result));
             check(1,1);
-            self.result = stop_test(self.result, ...
+            stop_test(self.result, ...
                 mlunit_test.mock_test('test_method'));
-            self.result = set_should_stop(self.result);
+            set_should_stop(self.result);
             assert_equals(1, get_should_stop(self.result));
             function check(nExpErrors,nExpFailures)
                 [nErrors,nFailures]=self.result.getErrorFailCount();

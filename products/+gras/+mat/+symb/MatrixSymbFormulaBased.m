@@ -43,8 +43,8 @@ classdef MatrixSymbFormulaBased<gras.mat.IMatrixFunction
                     'iscellofstring(x)&&ndims(x)==2');
                 sizeVec=size(formulaCMat);
                 self.nDims=length(sizeVec);
-                self.nCols=sizeVec(1);
-                self.nRows=sizeVec(2);
+                self.nRows=sizeVec(1);
+                self.nCols=sizeVec(2);
                 self.mSizeVec=sizeVec;
                 self.formulaFunc=cellstr2func(formulaCMat,'t');
             end

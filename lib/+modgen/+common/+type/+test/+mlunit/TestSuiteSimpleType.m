@@ -19,7 +19,7 @@ classdef TestSuiteSimpleType < mlunitext.test_case
             function checkPE(inpArg)
                 expArg=inpArg;
                 res=modgen.common.type.simple.checkcelloffunc(inpArg,true);
-                mlunit.assert_equals(true,isequal(res,expArg));
+                mlunitext.assert_equals(true,isequal(res,expArg));
             end
             function checkN(varargin)
                 self.runAndCheckError(...
@@ -28,7 +28,7 @@ classdef TestSuiteSimpleType < mlunitext.test_case
             end
             function checkP(inpArg)
                 res=modgen.common.type.simple.checkcelloffunc(inpArg);
-                mlunit.assert_equals(true,iscell(res));
+                mlunitext.assert_equals(true,iscell(res));
             end            
         end
         function test_checkcellofstrorfunc(self)
@@ -43,10 +43,10 @@ classdef TestSuiteSimpleType < mlunitext.test_case
             checkN({'isstring(x)','isstring(x)',2});
             checkN({'isstring(x)','isstring(x)'.'});
             function checkP(inpArray)
-                mlunit.assert_equals(true,fHandle(inpArray));
+                mlunitext.assert_equals(true,fHandle(inpArray));
             end
             function checkN(inpArray)
-                mlunit.assert_equals(false,fHandle(inpArray));
+                mlunitext.assert_equals(false,fHandle(inpArray));
             end
             
         end
@@ -69,7 +69,7 @@ classdef TestSuiteSimpleType < mlunitext.test_case
             function checkPE(inpArg,varargin)
                 expArg=inpArg;
                 res=modgen.common.type.simple.checkcellofstr(inpArg,varargin{:});
-                mlunit.assert_equals(true,isequal(res,expArg));
+                mlunitext.assert_equals(true,isequal(res,expArg));
             end
             function checkN(varargin)
                 self.runAndCheckError(...
@@ -81,7 +81,7 @@ classdef TestSuiteSimpleType < mlunitext.test_case
                     expArg=inpArg;
                 end
                 res=modgen.common.type.simple.checkcellofstr(inpArg);
-                mlunit.assert_equals(true,isequal(res,expArg));
+                mlunitext.assert_equals(true,isequal(res,expArg));
             end
             
         end

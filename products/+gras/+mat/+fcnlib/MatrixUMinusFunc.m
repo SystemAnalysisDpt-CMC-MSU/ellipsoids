@@ -5,8 +5,8 @@ classdef MatrixUMinusFunc<gras.mat.AMatrixUnaryOpFunc
             self=self@gras.mat.AMatrixUnaryOpFunc(lMatFunc,...
                 @uminus);
             %
-            self.nRows = lMatFunc.getNCols();
-            self.nCols = lMatFunc.getNRows();
+            self.nRows = lMatFunc.getNRows();
+            self.nCols = lMatFunc.getNCols();
             self.nDims = lMatFunc.getDimensionality();
         end
     end

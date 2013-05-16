@@ -116,9 +116,9 @@ classdef ContinuousReachProjTestCase < mlunitext.test_case
             secondProjReachObj =...
                 newReachObj.projection([zeros(oldDim); eye(oldDim)]);
             isEqual = self.reachObj.isEqual(firstProjReachObj);
-            mlunit.assert_equals(true, isEqual);
+            mlunitext.assert_equals(true, isEqual);
             isEqual = self.reachObj.isEqual(secondProjReachObj);
-            mlunit.assert_equals(true, isEqual);
+            mlunitext.assert_equals(true, isEqual);
         end
     end
 end

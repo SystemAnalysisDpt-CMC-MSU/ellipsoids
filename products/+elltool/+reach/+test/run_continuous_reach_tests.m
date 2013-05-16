@@ -1,7 +1,7 @@
 function results = run_continuous_reach_tests(inpConfNameList)
 import elltool.reach.ReachFactory;
 %
-runner = mlunit.text_test_runner(1, 1);
+runner = mlunitext.text_test_runner(1, 1);
 loader = mlunitext.test_loader;
 %
 crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
