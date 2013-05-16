@@ -1381,66 +1381,40 @@ classdef EllipsoidTestCase < mlunitext.test_case
         function self = testUminus(self)
             [test1Ell test2Ell test3Ell test4Ell test5Ell test6Ell ...
                 test7Ell test8Ell] = createTypicalEll(1);
-            
-            testEllRes = uminus(test2Ell);
-            [testEllResCenterVec, ~] = double(testEllRes);
-            testIsRight = min(testEllResCenterVec == [-1; 0]);
-            mlunitext.assert_equals(testIsRight, 1);
-            
+            %
+            checkCenterVecList = {[-1 0]'};
+            operationNestedFunction(test2Ell, checkCenterVecList,'uminus');
+            %
             testEllVec = [test1Ell test2Ell test3Ell];
-            testEllResVec = uminus(testEllVec);
-            [test1EllResCenterVec, ~] = double(testEllResVec(1));
-            [test2EllResCenterVec, ~] = double(testEllResVec(2));
-            [test3EllResCenterVec, ~] = double(testEllResVec(3));
-            testIsRight = (min(test1EllResCenterVec == [0; 0]) && ...
-                min(test2EllResCenterVec == [-1; 0]) && ...
-                min(test3EllResCenterVec == [-1; 0]));
-            mlunitext.assert_equals(testIsRight, 1);
-            
+            checkCenterVecList = {[0; 0], [-1; 0], [-1; 0]};
+            operationNestedFunction(testEllVec, checkCenterVecList,'uminus');
+            %
             testEllMat = [test1Ell test2Ell; test3Ell test4Ell];
-            testEllResMat = uminus(testEllMat);
-            [test11EllResCenterVec, ~] = double(testEllResMat(1, 1));
-            [test12EllResCenterVec, ~] = double(testEllResMat(1, 2));
-            [test21EllResCenterVec, ~] = double(testEllResMat(2, 1));
-            [test22EllResCenterVec, ~] = double(testEllResMat(2, 2));
-            testIsRight = (min(test11EllResCenterVec == [0; 0]) && ...
-                min(test12EllResCenterVec == [-1; 0]) && ...
-                min(test21EllResCenterVec == [-1; 0]) && ...
-                min(test22EllResCenterVec == [0; 0]));
-            mlunitext.assert_equals(testIsRight, 1);
-            
+            checkCenterVecList = {[0; 0],[-1; 0];[-1; 0],[0; 0]};
+            operationNestedFunction(testEllMat, checkCenterVecList,'uminus');
+            %
             testEllVec = [test1Ell test2Ell test3Ell test4Ell test5Ell ...
                 test6Ell test7Ell test8Ell];
             testEllArr = reshape(testEllVec, [2 2 2]);
-            testEllResArr = uminus(testEllArr);
-            [test111EllResCenterVec, ~] = double(testEllResArr(1, 1, 1));
-            [test112EllResCenterVec, ~] = double(testEllResArr(1, 1, 2));
-            [test121EllResCenterVec, ~] = double(testEllResArr(1, 2, 1));
-            [test122EllResCenterVec, ~] = double(testEllResArr(1, 2, 2));
-            [test211EllResCenterVec, ~] = double(testEllResArr(2, 1, 1));
-            [test212EllResCenterVec, ~] = double(testEllResArr(2, 1, 2));
-            [test221EllResCenterVec, ~] = double(testEllResArr(2, 2, 1));
-            [test222EllResCenterVec, ~] = double(testEllResArr(2, 2, 2));
-            testIsRight = (min(test111EllResCenterVec == [0; 0]) && ...
-                 min(test112EllResCenterVec == [0; 0; 0]) && ...
-                 min(test121EllResCenterVec == [-1; 0]) && ...
-                 min(test122EllResCenterVec == [-2; -1]) && ...
-                 min(test211EllResCenterVec == [-1; 0]) && ...
-                 min(isempty(test212EllResCenterVec)) && ...
-                 min(test221EllResCenterVec == [0; 0]) && ...
-                 min(test222EllResCenterVec == [-1;-1]));
-            mlunitext.assert_equals(testIsRight, 1);
-                        
+            checkCenterVecList = cell(2,2,2);
+            checkCenterVecList{1,1,1} = [0; 0];
+            checkCenterVecList{1,1,2} = [0; 0; 0];
+            checkCenterVecList{1,2,1} = [-1; 0];
+            checkCenterVecList{1,2,2} = [-2; -1];
+            checkCenterVecList{2,1,1} = [-1; 0];
+            checkCenterVecList{2,1,2} = [];
+            checkCenterVecList{2,2,1} = [0; 0];
+            checkCenterVecList{2,2,2} = [-1; -1];
+            operationNestedFunction(testEllArr, checkCenterVecList, 'uminus');
+            %            
             testEllCenterVec = zeros(1, 100);
             testEllCenterVec(50) = 1;
             testEllMat = eye(100, 100);
+            testEll = ellipsoid(testEllCenterVec', testEllMat);           
             testResVec = zeros(1, 100);
             testResVec(50) = -1;
-            testEll = ellipsoid(testEllCenterVec', testEllMat);
-            testResEll = uminus(testEll);
-            [testEllResCenterVec ~] = double(testResEll);
-            testIsRight = (max(testEllResCenterVec + testResVec') == 0);
-            mlunitext.assert_equals(testIsRight, 1);
+            checkCenterVecList = {testResVec'};
+            operationNestedFunction(testEll, checkCenterVecList, 'uminus');
         end
         function self = testPlus(self)  
             testEllCenterVec = 5;
@@ -1448,7 +1422,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
             testEll = ellipsoid(testEllCenterVec, testEllMat);
             testVec = 'a';
             self.runAndCheckError('plus(testEll, testVec)','wrongInput');
-            
+            %
             test1EllCenterVec = [5; 7];
             test2EllCenterVec = 2;
             test1EllMat = [3 0; 0 1];
@@ -1458,7 +1432,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
             testEllVec = [test1Ell, test2Ell];
             testVec = [2; 4];
             self.runAndCheckError('plus(testEllVec, testVec)','wrongInput');
-             
+            %
             test1EllCenterVec = [1; 0];
             test2EllCenterVec = [7; 2];
             test1EllMat = [1 0; 0 5];
@@ -1468,31 +1442,28 @@ classdef EllipsoidTestCase < mlunitext.test_case
             testEllVec = [test1Ell, test2Ell];
             testVec = [2; 4; 1];
             self.runAndCheckError('plus(testEllVec, testVec)','wrongInput');
-            
+            %
             testEllCenterVec = [-1; 5];
             testEllMat = [1 0; 0 1];
             testVec = [5; 3];
             testEll = ellipsoid(testEllCenterVec, testEllMat*testEllMat');
-            testResEll = plus(testEll, testVec);
-            [testResCenterVec ~] = double(testResEll);
-            mlunitext.assert_equals(testResCenterVec, [4; 8]);
-            
+            checkCenterVecList = {[4; 8]};
+            operationNestedFunction(testEll, checkCenterVecList, 'plus', testVec);
+            %
             test1EllCenterVec = 5;
-            test2EllCenterVec = [2; 4; 1];
             test1EllMat = 4;
-            test2EllMat = [2 2 1; 7 0 1; 0 1 8];
             test1Vec = 3;
-            test2Vec = [1; 2; 3];
             test1Ell = ellipsoid(test1EllCenterVec, test1EllMat*test1EllMat');
+            checkCenterVecList = {8};
+            operationNestedFunction(test1Ell, checkCenterVecList, 'plus', test1Vec);
+            %
+            test2EllCenterVec = [2; 4; 1];
+            test2EllMat = [2 2 1; 7 0 1; 0 1 8];
+            test2Vec = [1; 2; 3];
             test2Ell = ellipsoid(test2EllCenterVec, test2EllMat*test2EllMat');
-            test1ResEll = plus(test1Ell, test1Vec);
-            test2ResEll = plus(test2Ell, test2Vec);
-            testResEllVec = [test1ResEll test2ResEll];
-            [test1EllResCenterVec ~] = double(testResEllVec(1));
-            [test2EllResCenterVec ~] = double(testResEllVec(2));
-            testIsRight = ((test1EllResCenterVec == 8) && min(test2EllResCenterVec == [3; 6; 4]));
-            mlunitext.assert_equals(testIsRight, 1);
-            
+            checkCenterVecList = {[3; 6; 4]};
+            operationNestedFunction(test2Ell, checkCenterVecList, 'plus', test2Vec);
+            %
             test1EllCenterVec = [1; 2];
             test2EllCenterVec = [2; 3];
             test1EllMat = eye(2);
@@ -1501,26 +1472,20 @@ classdef EllipsoidTestCase < mlunitext.test_case
             test1Ell = ellipsoid(test1EllCenterVec, test1EllMat);
             test2Ell = ellipsoid(test2EllCenterVec, test2EllMat);
             testEllVec = [test1Ell test2Ell];
-            testResEllVec = plus(testEllVec, testVec);
-            [test1ResCenterVec ~] = double(testResEllVec(1));
-            [test2ResCenterVec ~] = double(testResEllVec(2));
-            testIsRight = (min(test1ResCenterVec == [3; 6]) && min(test2ResCenterVec == [4; 7]));
-            mlunitext.assert_equals(testIsRight, 1);
-            
+            checkCenterVecList = {[3; 6], [4; 7]};
+            operationNestedFunction(testEllVec, checkCenterVecList, 'plus', testVec);
+            %
             testEllCenterVec = zeros(1, 100);
             testEllCenterVec(50) = 3;
             testEllMat = eye(100);
             testEll = ellipsoid(testEllCenterVec', testEllMat);
-            testVec = zeros(1, 100);
+            testVec = zeros(1, 100)';
             testVec(100) = 3;
-            testResEll = plus(testEll, testVec');
-            [testResEllCenterVec ~] = double(testResEll);
             testCheckVec = zeros(1,100);
             testCheckVec(50) = 3;
             testCheckVec(100) = 3;
-            testCheckVec = testCheckVec';
-            testIsRight = min(testResEllCenterVec == testCheckVec);
-            mlunitext.assert_equals(testIsRight, 1);
+            checkCenterVecList = {testCheckVec'};
+            operationNestedFunction(testEll, checkCenterVecList, 'plus', testVec);
         end
         function self = testMinus(self)
             testEllCenterVec = 5;
@@ -1528,7 +1493,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
             testEll = ellipsoid(testEllCenterVec, testEllMat);
             testWrongVec = [0; 'a'];
             self.runAndCheckError('minus(testEll, testWrongVec)','wrongInput');
-            
+            %
             test1EllCenterVec = [1; 0];
             test2EllCenterVec = 1;
             test1EllMat = [1 0; 0 1];
@@ -1538,7 +1503,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
             testEllVec = [test1Ell, test2Ell];
             testVec = [1; 2];
             self.runAndCheckError('minus(testEllVec, testVec)','wrongInput');
-            
+            %
             test1EllCenterVec = [2; 3];
             test2EllCenterVec = [5; 7];
             test1EllMat = [2 0; 0 2];
@@ -1548,7 +1513,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
             testEllVec = [test1Ell, test2Ell];
             testVec = [1; 2; 3];
             self.runAndCheckError('minus(testEllVec, testVec)','wrongInput');
-            
+            %
             test1EllCenterVec = [1; 2];
             test2EllCenterVec = [3; 4];
             test1EllMat = eye(2);
@@ -1556,61 +1521,49 @@ classdef EllipsoidTestCase < mlunitext.test_case
             test1Ell = ellipsoid(test1EllCenterVec, test1EllMat);
             test2Ell = ellipsoid(test2EllCenterVec, test2EllMat);
             testEllVec = [test1Ell test2Ell];
-            testVec = [1; 3];
-            testEllResVec = minus(testEllVec, testVec);
-            [test1ResCenterVec ~] = double(testEllResVec(1));
-            [test2ResCenterVec ~] = double(testEllResVec(2));
-            testIsRight = (min(test1ResCenterVec == [0; -1]) && min(test2ResCenterVec == [2; 1]));
-            mlunitext.assert_equals(testIsRight, 1);
-            
+            testVec = [1; 3];            
+            checkCenterVecList = {[0; -1], [2; 1]};
+            operationNestedFunction(testEllVec, checkCenterVecList, 'minus', testVec);
+            %
             test1EllCenterVec = -10;
-            test2EllCenterVec = [2; -4; 11];
             test1ShapeMat = 4;
-            test2ShapeMat = [7 2 1; 7 2 2; 5 6 8];
             test1Vec = 3;
-            test2Vec = [0; 2; 1];
             test1Ell = ellipsoid(test1EllCenterVec, test1ShapeMat*test1ShapeMat');
+            checkCenterVecList = {-13};
+            operationNestedFunction(test1Ell, checkCenterVecList, 'minus', test1Vec);
+            %
+            test2EllCenterVec = [2; -4; 11];
+            test2ShapeMat = [7 2 1; 7 2 2; 5 6 8];
+            test2Vec = [0; 2; 1];
             test2Ell = ellipsoid(test2EllCenterVec, test2ShapeMat*test2ShapeMat');
-            test1ResEll = minus(test1Ell, test1Vec);
-            test2ResEll = minus(test2Ell, test2Vec);
-            testEllResVec = [test1ResEll test2ResEll];
-            [test1ResCenterVec ~] = double(testEllResVec(1));
-            [test2ResCenterVec ~] = double(testEllResVec(2));
-            testIsRight = ((test1ResCenterVec == -13) && min(test2ResCenterVec == [2; -6; 10]));
-            mlunitext.assert_equals(testIsRight, 1);
-            
+            checkCenterVecList = {[2; -6; 10]};
+            operationNestedFunction(test2Ell, checkCenterVecList, 'minus', test2Vec);
+            %
             testEllCenterVec = zeros(1, 100);
             testEllCenterVec(50) = 5;
             testEllMat = eye(100);
             testEll = ellipsoid(testEllCenterVec', testEllMat);
-            testVec = zeros(1, 100);
+            testVec = zeros(1, 100)';
             testVec(100) = 5;
-            testResEll = minus(testEll, testVec');
-            [testResEllCenterVec ~] = double(testResEll);
             testCheckVec = zeros(1,100);
             testCheckVec(50) = 5;
             testCheckVec(100) = -5;
-            testCheckVec = testCheckVec';
-            testIsRight = min(testResEllCenterVec == testCheckVec);
-            mlunitext.assert_equals(testIsRight, 1);
+            checkCenterVecList = {testCheckVec'};
+            operationNestedFunction(testEll, checkCenterVecList, 'minus', testVec);
         end
         function self = testInv(self)
             testEllCenterVec = 1;
             testEllMat = 4;
             testEll = ellipsoid(testEllCenterVec, testEllMat);
-            testResEll = inv(testEll);
-            [~, testEllResMat] = double(testResEll);
-            testIsRight = (testEllResMat == 0.2500);
-            mlunitext.assert_equals(min(min(testIsRight)), 1);
-            
+            checkShapeList = {0.2500};
+            operationNestedFunction(testEll, checkShapeList, 'inv');
+            %
             testEllCenterVec = [-5; 1];
             testEllMat = eye(2);
             testEll = ellipsoid(testEllCenterVec, testEllMat);
-            testResEll = inv(testEll);
-            [~, testEllResMat] = double(testResEll);
-            testIsRight = (testEllResMat == eye(2));
-            mlunitext.assert_equals(min(min(testIsRight)), 1);
-            
+            checkShapeList = {eye(2)};
+            operationNestedFunction(testEll, checkShapeList, 'inv');
+            %
             test1EllCenterVec = [1; 0; 1];
             test2EllCenterVec = [1; 2];
             test1EllMat = eye(3);
@@ -1618,12 +1571,9 @@ classdef EllipsoidTestCase < mlunitext.test_case
             test1Ell = ellipsoid(test1EllCenterVec, test1EllMat);
             test2Ell = ellipsoid(test2EllCenterVec, test2EllMat);
             testEllVec = [test1Ell test2Ell];
-            testEllResVec = inv(testEllVec);
-            [~, test1EllResMat] = double(testEllResVec(1));
-            [~, test2EllResMat] = double(testEllResVec(2));
-            testIsRight = (min(min(test1EllResMat == eye(3))) && min(min(test2EllResMat == [1.5 -1; -1 1])));
-            mlunitext.assert_equals(testIsRight, 1);
-            
+            checkShapeList = {eye(3),[1.5 -1; -1 1]};
+            operationNestedFunction(testEllVec, checkShapeList, 'inv');
+            %
             testEllCenterVec = zeros(1, 20);
             testEllMat = eye(20);
             testResMat = eye(20);
@@ -1634,19 +1584,16 @@ classdef EllipsoidTestCase < mlunitext.test_case
             for testCounter = 1:1:size(testEllMat,2)
                 testResMat(testCounter,testCounter) = 1./testCounter;
             end
-            testEll = inv(testEll);
-            [~, testEllMat] = double(testEll);
-            testIsRight = min(min(testEllMat == testResMat));
-            mlunitext.assert_equals(testIsRight, 1);
+            checkShapeList = {testResMat};
+            operationNestedFunction(testEll, checkShapeList, 'inv');
         end
         function self = testMove2Origin(self)
             testEllCenterVec = [1; 1];
             testEllMat = [3 1; 1 1];
             testEll = ellipsoid(testEllCenterVec, testEllMat);
-            testEllRes = move2origin(testEll);
-            [testEllResCenterVec ~] = double(testEllRes);
-            mlunitext.assert_equals([0; 0], testEllResCenterVec);
-
+            checkCenterVecList = {[0;0]};
+            operationNestedFunction(testEll, checkCenterVecList, 'move2origin');
+            %
             test1EllCenterVec = [1; 1; 0];
             test2EllCenterVec = [1; 2];
             test1EllMat = [3 0 0; 0 2 0; 0 0 1];
@@ -1654,19 +1601,14 @@ classdef EllipsoidTestCase < mlunitext.test_case
             test1Ell = ellipsoid(test1EllCenterVec, test1EllMat*test1EllMat');
             test2Ell = ellipsoid(test2EllCenterVec, test2EllMat);
             testEllVec = [test1Ell test2Ell];
-            testEllResVec = move2origin(testEllVec);
-            [test1ResCenterVec ~] = double(testEllResVec(1));
-            [test2ResCenterVec ~] = double(testEllResVec(2));
-            testIsRight = min(test1ResCenterVec == [0; 0; 0]) && min(test2ResCenterVec == [0;0]);
-            mlunitext.assert_equals(1, testIsRight);
-            
+            checkCenterVecList = {[0;0;0], [0;0]};
+            operationNestedFunction(testEllVec, checkCenterVecList, 'move2origin');
+            %
             testEllCenterVec = zeros(20, 1);
             testEllMat = eye(20);
             testEll = ellipsoid(testEllCenterVec, testEllMat);
-            testEllRes = move2origin(testEll);
-            [testResCenterVec ~] = double(testEllRes);
-            testIsRight = min(testResCenterVec == zeros(20, 1));
-            mlunitext.assert_equals(1, testIsRight);
+            checkCenterVecList = {zeros(20, 1)};
+            operationNestedFunction(testEll, checkCenterVecList, 'move2origin'); 
         end
         function self = testShape(self)
             testEllCenterVec = [1; 0];
@@ -1674,16 +1616,14 @@ classdef EllipsoidTestCase < mlunitext.test_case
             testEll = ellipsoid(testEllCenterVec, testEllMat);
             testVec = [0, 'a'];
             self.runAndCheckError('shape(testEll, testVec)','wrongInput');            
-            
+            %
             testEllCenterVec = 4;
             testEllMat = 3;
             testMat = 2;
             testEll = ellipsoid(testEllCenterVec, testEllMat);
-            testResEll = shape(testEll, testMat);
-            [~, testResMat] = double(testResEll);
-            testIsRight = min(testResMat == 12);
-            mlunitext.assert_equals(1, testIsRight);
-            
+            checkShapeList = {12};
+            operationNestedFunction(testEll, checkShapeList, 'shape',testMat);
+            %
             test1EllCenterVec = [2; 4];
             test2EllCenterVec = [5; 1];
             test1EllMat = [3 0; 2 4];
@@ -1692,12 +1632,9 @@ classdef EllipsoidTestCase < mlunitext.test_case
             testEll1 = ellipsoid(test1EllCenterVec, test1EllMat*test1EllMat');
             testEll2 = ellipsoid(test2EllCenterVec, test2EllMat*test2EllMat');
             testEllVec = [testEll1, testEll2];
-            testEllResVec = shape(testEllVec, testMat);
-            [~, testRes1Mat] = double(testEllResVec(1));
-            [~, testRes2Mat] = double(testEllResVec(2));
-            testIsRight = min(min(testRes1Mat == [20 72; 72 288])) && min(min(testRes2Mat == [9 27; 27 145]));
-            mlunitext.assert_equals(1, testIsRight);
-            
+            checkShapeList = {[20 72; 72 288], [9 27; 27 145]};
+            operationNestedFunction(testEllVec, checkShapeList, 'shape',testMat);
+            %
             %test1EllCenterVec = [
             
             %testEllCenterVec = zeros(20, 1);
@@ -1864,4 +1801,32 @@ switch flag
         varargout{2} = diag(11:0.1:20.9);
     otherwise
 end
+end
+function operationNestedFunction(testEllArr, compList, operation,...
+                                        argument)
+            import modgen.common.throwerror;
+            import modgen.cell.cellstr2expression;
+            VEC_COMP_METHODS_LIST = {'uminus', 'plus', 'minus', 'move2origin'};
+            MAT_COMP_METHODS_LIST = {'inv', 'shape'};
+            if nargin < 4
+                testEllResArr = testEllArr.(operation);
+            else
+                testEllResArr = testEllArr.(operation)(argument);
+            end    
+            [testEllResCentersVecList, testEllResShapeMatList] = arrayfun(@(x) double(x),... 
+                testEllResArr, 'UniformOutput', false);
+            if ismember(operation, VEC_COMP_METHODS_LIST)
+                eqArr = cellfun(@(x,y) isequal(x,y),testEllResCentersVecList,...
+                    compList);
+            elseif ismember(operation, MAT_COMP_METHODS_LIST)
+                eqArr = cellfun(@(x,y) isequal(x,y), testEllResShapeMatList,...
+                    compList);
+            else
+                throwerror('wrongInput:badMethodName',...
+                        'Allowed method names: %s. Input name %s',...
+                        cellstr2expression({VEC_COMP_METHODS_LIST{:}, ...
+                        MAT_COMP_METHODS_LIST}), operation);
+            end    
+            testIsRight = ~ismember(0,eqArr);
+            mlunitext.assert_equals(testIsRight, 1);
 end
