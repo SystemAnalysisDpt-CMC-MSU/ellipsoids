@@ -37,7 +37,7 @@ classdef EllMinkBodyPlotT < handle
                 else
                     plEllColMat = plEllColCMat;
                 end
-                mlunit.assert_equals(plEllColMat, colMat);
+                mlunitext.assert_equals(plEllColMat, colMat);
             end
             function check3dCol(plObj, numObj, colMat)
                 colMat = repmat(colMat,numObj,1);
@@ -48,7 +48,7 @@ classdef EllMinkBodyPlotT < handle
                     'UniformOutput', false);
                 plEllColMat = vertcat(plEllColCMat{:});
                 plEllColMat = sortrows(plEllColMat);
-                mlunit.assert_equals(plEllColMat, colMat);
+                mlunitext.assert_equals(plEllColMat, colMat);
                 function clrVec = getColVec(plEllObj)
                     if ~eq(get(plEllObj, 'Type'), 'patch')
                         clrVec = [];
@@ -94,10 +94,10 @@ classdef EllMinkBodyPlotT < handle
                 SHPlot=plObj.getPlotStructure().figToAxesToHMap.toStruct();
                 plEllObjVec = get(SHPlot.figure_g1.ax, 'Children');
                 isEqVec = arrayfun(@(x) checkEllParams(x), plEllObjVec);
-                mlunit.assert_equals(isEqVec, ones(size(isEqVec)));
+                mlunitext.assert_equals(isEqVec, ones(size(isEqVec)));
                 isFillVec = arrayfun(@(x) checkIsFill(x), plEllObjVec, ...
                     'UniformOutput', false);
-                mlunit.assert_equals(numel(isFillVec) > 0, fill);
+                mlunitext.assert_equals(numel(isFillVec) > 0, fill);
                 function isFill = checkIsFill(plObj)
                     if strcmp(get(plObj, 'type'), 'patch')
                         if get(plObj, 'FaceAlpha') > 0

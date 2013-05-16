@@ -31,7 +31,7 @@ classdef EllMinksumPlotTC < elltool.core.test.mlunit.EllMinkATC&...
                 [supp2Mat,~] = rho(testSecEll,lGridMat.');
                 rhoDiffVec = supp1Mat+supp2Mat;
                 sup = max(lGridMat*boundPointsMat(:,1:end-1),[],2);
-                mlunit.assert_equals(abs(sup'-rhoDiffVec) < ABS_TOL,...
+                mlunitext.assert_equals(abs(sup'-rhoDiffVec) < ABS_TOL,...
                     ones(1,size(sup,1)));
             end
             function check2(testFirEll,testSecEll)
@@ -51,7 +51,7 @@ classdef EllMinksumPlotTC < elltool.core.test.mlunit.EllMinkATC&...
                 boundPoints2Mat = (boundPoints2Mat.'*rotMat.').';
                 sup1 = max(lGridMat*boundPoints1Mat(:,1:end-1),[],2);
                 sup2 = max(lGridMat*boundPoints2Mat(:,1:end-1),[],2);
-                mlunit.assert_equals(max(abs(sup2-sup1)) < ABS_TOL,1);
+                mlunitext.assert_equals(max(abs(sup2-sup1)) < ABS_TOL,1);
             end
         end
         function self = test3d(self)
@@ -79,7 +79,7 @@ classdef EllMinksumPlotTC < elltool.core.test.mlunit.EllMinkATC&...
                 boundPoints2Mat = (boundPoints2Mat.'*rotMat.').';
                 sup1 = max(lGridMat*boundPoints1Mat(:,1:end-1),[],2);
                 sup2 = max(lGridMat*boundPoints2Mat(:,1:end-1),[],2);
-                mlunit.assert_equals(max(abs(sup2-sup1)) < ABS_TOL,1);
+                mlunitext.assert_equals(max(abs(sup2-sup1)) < ABS_TOL,1);
             end
         end
     end

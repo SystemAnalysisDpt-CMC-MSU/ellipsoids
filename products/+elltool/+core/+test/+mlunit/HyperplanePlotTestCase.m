@@ -143,7 +143,7 @@ for iHyp = 1:nHyp
     isBoundVec = isBoundVec | isBoundHypVec;
 end
 
-mlunit.assert_equals(isBoundVec, ones(size(isBoundVec)));
+mlunitext.assert_equals(isBoundVec, ones(size(isBoundVec)));
 
     function [outXData, outYData, outZData] = getData(hObj)
         objType = get(hObj, 'type');

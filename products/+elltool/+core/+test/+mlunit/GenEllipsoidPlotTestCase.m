@@ -256,7 +256,7 @@ for iEll = 1:nEll
     isBoundVec = isBoundVec | isBoundEllVec;
 end
 
-mlunit.assert_equals(isBoundVec, ones(size(isBoundVec)));
+mlunitext.assert_equals(isBoundVec, ones(size(isBoundVec)));
 
     function [outXData, outYData, outZData] = getData(hObj)
         objType = get(hObj, 'type');

@@ -37,7 +37,7 @@ classdef EllMinkDTC <   elltool.core.test.mlunit.EllMinkATC
                 [supp3Mat,~] = rho(testThirdEll, lGridMat.');
                 rhoDiffVec = self.fRhoDiff2d(supp1Mat,supp2Mat,supp3Mat,lGridMat);
                 supVec = max(lGridMat*boundPoints(:,1:end-1),[],2);
-                mlunit.assert_equals(abs(supVec'-rhoDiffVec) ...
+                mlunitext.assert_equals(abs(supVec'-rhoDiffVec) ...
                     < ABS_TOL,ones(1,size(supVec,1)));
                 
             end
@@ -65,7 +65,7 @@ classdef EllMinkDTC <   elltool.core.test.mlunit.EllMinkATC
                 [supp3Mat,~] = rho(testThirdEll, lGridMat.');
                 rhoDiffVec = self.fRhoDiff3d(supp1Mat,supp2Mat,supp3Mat,lGridMat);
                 supVec = max(lGridMat*boundPoints(:,1:end-1),[],2);
-                mlunit.assert_equals(abs(supVec'-rhoDiffVec)...
+                mlunitext.assert_equals(abs(supVec'-rhoDiffVec)...
                     < ABS_TOL,ones(1,size(supVec,1)));
                 
             end
