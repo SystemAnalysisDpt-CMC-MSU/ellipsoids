@@ -1,5 +1,5 @@
 % equivalent to: isinside(ellMat(2, 2), firstPolObj & secPolObj)
-ellMat(2, 2).isinside([firstPolObj secPolObj], 'i')  
+ellMat(2, 2).isContainedInIntersection([firstPolObj secPolObj], 'i')  
 
 % ans =
 % 

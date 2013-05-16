@@ -123,9 +123,9 @@ classdef ReachContinuous < elltool.reach.AReach
             end
             %
             if self.isProj
-                if self.ellTubeRel.dim() > 3
-                    throwerror('wrongData',...
-                        'Dimension of the projection must be leq 3');
+                if self.dimension() ~= 3
+                    throwerror('wrongInput',...
+                        'Dimension of projection must be 2.');
                 else
                     plObj = smartdb.disp.RelationDataPlotter();
                     plotter = self.ellTubeRel.getTuplesFilteredBy(...
@@ -848,7 +848,7 @@ classdef ReachContinuous < elltool.reach.AReach
                 if ~isempty(firstIntInd)
                     switchTimeIndVec(firstIntInd - 1) = 1;
                 else
-                    switchTimeIndVec(find(switchTimeVec >=...
+                    switchTimeIndVec(find(switchTimeVec >...
                         cutTimeVec(end), 1) - 1) = 1;
                 end
                 cutObj.linSysCVec = self.linSysCVec(switchTimeIndVec);
@@ -922,7 +922,7 @@ classdef ReachContinuous < elltool.reach.AReach
         function projObj = projection(self, projMat)
             import gras.ellapx.enums.EProjType;
             import modgen.common.throwerror;
-            
+            %
             projSet = self.getProjSet(projMat);
             projObj = elltool.reach.ReachContinuous();
             projObj.switchSysTimeVec = self.switchSysTimeVec;

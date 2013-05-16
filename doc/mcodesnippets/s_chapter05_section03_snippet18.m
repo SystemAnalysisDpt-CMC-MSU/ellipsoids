@@ -5,7 +5,7 @@ secDtrsObj = secDtrsObj.evolve(200);  % compute next 100 time steps
 
 tbTimeVec = [50 0];  % backward time interval
 % backward reach set
-dtbrsObj = elltool.reach.ReachDiscrete(dtsys, yEll, dirsMat, tbTimeVec);  
+dtbrsObj = elltool.reach.ReachDiscrete(dtsys, yEllObj, dirsMat, tbTimeVec);  
 dtbrsObj = dtbrsObj.refine(newDirsMat);  % refine the approximation
 % get external approximating ellipsoids and time values
 [externallEllMat, timeVec] = dtbrsObj.get_ea();

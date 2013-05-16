@@ -270,6 +270,19 @@ classdef ContinuousReachTestCase < mlunitext.test_case
                 'wrongInput');
         end
         %
+        function self = testNegativePlot(self)
+            dim = self.reachObj.dimension();
+            if dim == 2
+                projReachSet =...
+                    self.reachObj.projection(eye(dim, 1));
+            else
+                projReachSet =...
+                    self.reachObj.projection(eye(dim, 3));
+            end
+            self.runAndCheckError('projReachSet.plot_ea()', 'wrongInput');
+            self.runAndCheckError('projReachSet.plot_ia()', 'wrongInput');
+        end
+        %
         function self = testGetCopy(self)
             copiedReachObj = self.reachObj.getCopy();
             isEqual = copiedReachObj.isEqual(self.reachObj);
