@@ -28,7 +28,7 @@ classdef test_case<handle
     %  6) Run the test:
     %         test = my_test('test_foo');
     %         [test, result] = run(test);
-    %         summary(result)
+    %         getReport(result)
     %
     %  See also MLUNITEXT.TEST_RESULT, MLUNITEXT.TEST_SUITE.
     %
@@ -141,7 +141,7 @@ classdef test_case<handle
                             self.name = 'run_test';
                         else
                             r = mlunitext.reflect(subclass);
-                            if (~method_exists(r, name))
+                            if ~r.method_exists(name)
                                 throwerror('noSuchMethod',...
                                     ['Method ', name ' does not exists.']);
                             end
@@ -179,7 +179,7 @@ classdef test_case<handle
             %         result = default_test_result(test1);
             %         [test1, result] = run(test1, result)
             %         [test2, result] = run(test2, result)
-            %         summary(result)
+            %         getReport(result)
             
             result = mlunitext.test_result;
         end
@@ -220,7 +220,7 @@ classdef test_case<handle
             %  directly, but through the method run.
             %         test = function_test_case(@() assert(0 == sin(0)));
             %         [test, result] = run(test);
-            %         summary(result)
+            %         getReport(result)
             
         end
         
@@ -232,7 +232,7 @@ classdef test_case<handle
             %  set_up is not called directly, but through the method run.
             %         test = ... % e.g. created through my_test('test_foo')
             %         [test, result] = run(test);
-            %         summary(result)
+            %         getReport(result)
             
         end
         function self = tear_down(self)
@@ -244,7 +244,7 @@ classdef test_case<handle
             %  run.
             %   test = ... % e.g. created through my_test('test_foo')
             %   [test, result] = run(test);
-            %   summary(result)
+            %   getReport(result)
         end
         function result = run(self, result)
             % RUN executes the test case and saves the results in
@@ -281,9 +281,8 @@ classdef test_case<handle
                     if (nargin == 1)
                         result = default_test_result(self);
                     end
-                    start_test(result, self);
-                    %add_error(result, self, meObj);
                     add_error(result, self, meObj);
+                    result.stop_test(self);
                     return;
                 end
                 %

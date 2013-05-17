@@ -20,12 +20,13 @@ classdef test_result<handle
     %             Faculty of Computational Mathematics
     %             and Computer Science,
     %             System Analysis Department 2012-2013$
-    
+    %
     properties (SetAccess=private)
-        tests_run = 0;
         errors = {};
         failures = {};
         should_stop = 0;
+    end
+    properties (Access=private)
         runTimeMap
         curTicId
     end
@@ -40,6 +41,9 @@ classdef test_result<handle
         end
     end
     methods
+        function nTests=getNTestsRun(self)
+            nTests=self.runTimeMap.Count;
+        end
         function isOk=isPassed(self)
             [nErrors,nFails]=self.getErrorFailCount();
             isOk=(nErrors==0)&&(nFails==0);
@@ -55,8 +59,8 @@ classdef test_result<handle
                     nTests=self.get_tests_run();
                     runTime=self.getRunTimeTotal();
                     %
-                    msgFormatStr=['<< %s >> || TESTS: %d,  ',...
-                        'RUN TIME(sec.): %.5g'];
+                    msgFormatStr='<< %s >> || TESTS: %d';
+                    suffixStr=',  RUN TIME(sec.): %.5g';
                     %
                     if (nErrors==0)&&(nFails)==0
                         prefixStr='PASSED';
@@ -67,8 +71,9 @@ classdef test_result<handle
                             ',  FAILURES: %d,  ERRORS: %d'];
                         addArgList={nFails,nErrors};
                     end
+                    msgFormatStr=[msgFormatStr,suffixStr];
                     reportStr=sprintf(msgFormatStr,prefixStr,...
-                        nTests,runTime,addArgList{:});
+                        nTests,addArgList{:},runTime);
                 case 'tops',
                     rel=self.getRunStatRel(); %#ok<NASGU>
                     reportStr=evalc('rel.display');
@@ -80,13 +85,11 @@ classdef test_result<handle
         function rel=getRunStatRel(self)
             SDataList=arrayfun(@getOneResultData,self,'UniformOutput',false);
             SData=modgen.struct.unionstructsalongdim(1,SDataList{:});
-            rel=smartdb.relations.DynamicRelation(SData,...
-                'fieldNameList',{'runTime','testName'},...
-                'fieldDescrList',...
-                {'run time in seconds','full test name'});
-            rel.sortBy('runTime','direction','desc');
+            rel=mlunitext.rels.TopsReportRelation(SData);
+            %
             function SData=getOneResultData(selfElem)
-                SData.runTime=selfElem.runTimeMap.values.';
+                runTimeList=selfElem.runTimeMap.values.';
+                SData.runTime=vertcat(runTimeList{:});
                 SData.testName=selfElem.runTimeMap.keys.';
             end
         end
@@ -130,7 +133,7 @@ classdef test_result<handle
             curRunTime=toc(self.curTicId);
             self.runTimeMap(testKey)=curRunTime;
         end
-        function start_test(self, test) %#ok
+        function start_test(self, test)
             % START_TEST indicates that a test will be started.
             %
             % Example:
@@ -139,9 +142,14 @@ classdef test_result<handle
             %         result = start_test(result, self);
             %
             %  See also MLUNITEXT.TEST_CASE.RUN.
+            import modgen.common.throwerror;
             self.checkIfScalar();
+            testKey=test.str();
+            if self.runTimeMap.isKey(testKey)
+                throwerror('wrongInput',...
+                    'the same test cannot be run twice');
+            end
             self.curTicId=tic();
-            self.tests_run = self.tests_run + 1;
         end
         function mapObj=getRunTimeMap(self)
             self.checkIfScalar();
@@ -329,7 +337,7 @@ classdef test_result<handle
             %         tests_run = get_tests_run(result);
             %
             %  See also MLUNITEXT.TEXT_TEST_RUNNER.RUN.
-            tests_run = sum(arrayfun(@(x)x.tests_run,self));
+            tests_run = sum(arrayfun(@(x)x.getNTestsRun(),self));
         end
         function set_should_stop(self)
             % SET_SHOULD_STOP indicates that the execution of
@@ -342,39 +350,6 @@ classdef test_result<handle
             self.checkIfScalar();
             self.should_stop = 1;
         end
-        %
-        function s = summary(self)
-            % SUMMARY returns a string with a summary of the
-            % test result.
-            %
-            % Example:
-            %         test = ... % e.g. created through my_test('test_foo')
-            %         [test, result] = run(test);
-            %         summary(result)
-            self.checkIfScalar();
-            s = sprintf('%s run=%d errors=%d failures=%d', ...
-                class(self), self.tests_run, get_errors(self), ...
-                get_failures(self));
-        end
-        
-        function success = was_successful(self)
-            % WAS_SUCCESSFUL returns whether the test was
-            % successful or not.
-            %
-            % Example:
-            %    was_successful is called for example from
-            %    text_test_result.run:
-            %         was_successful(result)
-            %
-            %  See also MLUNITEXT.TEXT_TEST_RESULT.RUN.
-            self.checkIfScalar();
-            if (size(self.errors, 1) + size(self.failures, 1) == 0)
-                success = 1;
-            else
-                success = 0;
-            end;
-        end
-        
         function union_test_results(self,varargin)
             % UNION_TEST_RESULTS unions several objects of test_result
             % class into single object
@@ -425,7 +400,6 @@ classdef test_result<handle
             nObjs=nargin-1;
             for iObj=1:nObjs,
                 curObj=varargin{iObj};
-                self.tests_run=self.tests_run+curObj.get_tests_run();
                 self.errors=vertcat(self.errors,curObj.get_error_list());
                 self.failures=vertcat(self.failures,curObj.get_failure_list());
                 self.should_stop=self.should_stop|curObj.get_should_stop();
