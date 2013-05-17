@@ -163,7 +163,7 @@ subroutine ea_ode_rhs(this, t, y, dy)
 
     double precision pi
     double precision, dimension(this%nx) :: CQCsj, Xjsj, v1, v2
-    double precision, dimension(this%nx, this%nx) :: sXj, R, Z, xX
+    double precision, dimension(this%nx, this%nx) :: sXj, R, Z, xX, maxMat
     integer j
 
     associate( nx => this%nx, nl => this%nl, alpha => this%alpha )
@@ -211,7 +211,10 @@ subroutine ea_ode_rhs(this, t, y, dy)
                     ! v2 = matmul(sBPB, sj)
                     call dsymv('U', nx, 1D0, this%sBPB, nx, sj, 1, 0D0, v2, 1)
                     call profiler%toc(tag = "EA/CONTROL/V1V2")
-                    call align3(nx, v1, v2, R)
+
+                    call mrdivide(nx, nx, this%sBPB, sXj, maxMat)
+                    call orthtranslmaxtr(nx, v2, v1, maxMat, R)
+
                     call profiler%toc(tag = "EA/CONTROL/ALIGN")
                     ! Z = matmul(sXj, R)
                     call dsymm('L', 'U', nx, nx, 1D0, sXj, nx, R, nx, 0D0, Z, nx)

@@ -123,11 +123,14 @@ classdef MatVector
                             dArray(:,:,iTimePoint) = aArray(:,:,iTimePoint)...
                                 *bArray(:,:,iTimePoint);
                         end
-                    else
+                    elseif size(bArray,3) == 1
                         for iTimePoint = 1:nTimePoints
                             dArray(:,:,iTimePoint) = aArray(:,:,iTimePoint)...
                                 *bArray;
                         end
+                    else
+                        modgen.common.throwerror('wrongInput', ...
+                            'Incorrect size of bArray');
                     end
                 else
                     dArray = zeros(nARows,nCCols,nTimePoints);

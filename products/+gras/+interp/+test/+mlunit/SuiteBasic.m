@@ -258,7 +258,7 @@ classdef SuiteBasic < mlunitext.test_case
             bArray = splineObj.evaluate(evalTimeVec);
             %
             rArray = aArray - bArray;
-            mlunit.assert(max(abs(rArray(:))) < absTol);
+            mlunitext.assert(max(abs(rArray(:))) < absTol);
         end
     end
 end

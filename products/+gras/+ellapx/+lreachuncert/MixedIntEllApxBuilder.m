@@ -157,15 +157,15 @@ classdef MixedIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             [~,~,sMethodName,mixingStrength,mixingProportionsCMat] = ...
                 modgen.common.parseparext(varargin,...
                 {'selectionMethodForSMatrix','mixingStrength',...
-                'mixingProportions'}, 0, 3);
+                'mixingProportions'}, 0, 3); %#ok
             mMat = cell2mat(mixingProportionsCMat);
             %
-            checkgen(mixingStrength,'x>=0');
+            checkgen(mixingStrength,'x>=0'); %#ok
             checkgenext(['size(x1,1)==size(x1,2) && size(x1,1)==x2 && '...
                 'all(x1(:)>=0) && max(abs(sum(x1,2)-ones(x2,1)))<x3'],...
                 3,mMat,goodDirSetObj.getNGoodDirs(),calcPrecision);
             %
-            self.mixingStrength = mixingStrength;
+            self.mixingStrength = mixingStrength; %#ok
             self.mixingProportionsMat = mMat;
             self.sMethodName = sMethodName;
             self.goodDirSetObj = goodDirSetObj;

@@ -25,15 +25,15 @@ if ~isreal(dstVec)
     throwerror('wrongInput:dstComplex',...
         'destination vector is expected to be real');
 end
-dstSquaredNorm=sum(dstVec.*dstVec);
 srcSquaredNorm=sum(srcVec.*srcVec);
-if dstSquaredNorm==0
-    throwerror('wrongInput:dstZero',...
-        'destination vectors are expected to be non-zero');
-end
+dstSquaredNorm=sum(dstVec.*dstVec);
 if srcSquaredNorm==0
     throwerror('wrongInput:srcZero',...
         'source vectors are expected to be non-zero');
+end
+if dstSquaredNorm==0
+    throwerror('wrongInput:dstZero',...
+        'destination vectors are expected to be non-zero');
 end
 %
 nDims = length(srcVec);
@@ -41,20 +41,19 @@ nDims = length(srcVec);
 if nDims == 1
     oMat = sign(srcVec*dstVec);
 else
-    [QMat,RMat] = qr([srcVec,dstVec],0);
+    [qMat,rMat] = qr([dstVec,srcVec],0);
     %
-    cosVal = dot(srcVec,dstVec) / ...
-        realsqrt(dot(srcVec,srcVec)*dot(dstVec,dstVec));
+    cosVal = dot(srcVec,dstVec) / realsqrt(srcSquaredNorm*dstSquaredNorm);
     sinVal = -realsqrt(1 - cosVal*cosVal);
-    if RMat(1, 1)*RMat(2, 2) < 0
+    if rMat(1, 1)*rMat(2, 2) < 0
         sinVal = -sinVal;
     end
     %
-    QSMat = zeros(nDims, 2);
-    QSMat(:, 1) = QMat(:, 1)*(cosVal-1) + QMat(:, 2)*sinVal;
-    QSMat(:, 2) = -QMat(:, 1)*sinVal + QMat(:, 2)*(cosVal-1);
+    qsMat = zeros(nDims, 2);
+    qsMat(:, 1) = qMat(:, 1)*(cosVal-1) + qMat(:, 2)*sinVal;
+    qsMat(:, 2) = -qMat(:, 1)*sinVal + qMat(:, 2)*(cosVal-1);
     %
-    oMat = eye(nDims) + QSMat*(QMat.');
+    oMat = eye(nDims) + qsMat*(qMat.');
 end
 end
 

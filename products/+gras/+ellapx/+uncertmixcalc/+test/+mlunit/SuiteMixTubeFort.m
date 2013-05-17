@@ -52,7 +52,7 @@ classdef SuiteMixTubeFort < mlunitext.test_case
             %
             function compareArrays(aArray, bArray)
                 rArray = aArray - bArray;
-                mlunit.assert(max(abs(rArray(:))) < calcPrecision);
+                mlunitext.assert(max(abs(rArray(:))) < calcPrecision);
             end
         end
     end

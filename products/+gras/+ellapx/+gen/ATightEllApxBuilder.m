@@ -30,7 +30,7 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.IEllApxBuilder
                 case 'volume',
                     sMat=orthtranslmaxtr(bVec,aVec,RSqrtMat/(QMat.'));
                 case 'qr',
-                    sMat=orthtranslqr(aVec,bVec);
+                    sMat=orthtranslqr(bVec,aVec);
                 otherwise,
                     modgen.common.throwerror('wrongInput',...
                         'method %s is not supported',self.sMethodName);

@@ -178,6 +178,131 @@ subroutine align4(n, v1, v2, T)
     end do
 end subroutine
 
+subroutine orthtransl(n, v1, v2, T)
+    integer, intent(in), value :: n !< dimension
+    double precision, intent(in) :: v1(n) !< first vector
+    double precision, intent(in) :: v2(n) !< second vector
+    double precision, intent(out) :: T(n, n) !< orthogonal matrix
+
+    double precision c, s, Q(n, 2), R(2, 2), vn1(n), vn2(n)
+    integer j
+
+    vn1 = v1/sqrt(dot_product(v1,v1))
+    vn2 = v2/sqrt(dot_product(v2,v2))
+
+    c = dot_product(vn1,vn2)
+    s = sqrt(1-c**2)
+
+    Q(:,1) = vn2
+    if (abs(s) > 1D-7) then
+        Q(:,2) = (vn1-c*vn2)/s
+    else
+        Q(:,2) = 0
+    end if
+
+    R(1, 1) = c-1;  R(1, 2) =   s
+    R(2, 1) =  -s;  R(2, 2) = c-1
+   
+    T = matmul(matmul(Q,R),transpose(Q))
+
+    do j = 1,n
+        T(j, j) = T(j, j) + 1D0
+    end do
+end subroutine
+
+subroutine orthtranslmaxtr(n, v1, v2, M, T)
+    integer, intent(in), value :: n !< dimension
+    double precision, intent(in) :: v1(n) !< first vector
+    double precision, intent(in) :: v2(n) !< second vector
+    double precision, intent(in) :: M(n, n) !< max matrix
+    double precision, intent(out) :: T(n, n) !< orthogonal matrix
+
+    double precision e(n), T1(n, n), T2(n, n), U0(n,n-1), V0(n,n-1), vn1(n,1), vn2(n,1), K(n-1, n-1), A(n-1, n-1), C(n-1, n-1), S(n-1, n-1)
+    integer j
+
+    e = 0; e(1) = 1
+
+    call orthtransl(n, e, v1, T1)
+    call orthtransl(n, e, v2, T2)
+
+    vn1(:,1) = T1(:,1)
+    vn2(:,1) = T2(:,1)
+
+    V0 = T1(:,2:n)
+    U0 = T2(:,2:n)
+    
+    K = matmul(matmul(transpose(V0),M),U0)
+
+    call svd(n-1, n-1, K, A, S, C)
+
+    S = matmul(C,transpose(A))
+
+    T = matmul(matmul(U0,S),transpose(V0))+matmul(vn2,transpose(vn1))
+end subroutine
+
+
+subroutine svd(m, n, X, U, S, V)
+    integer, intent(in) :: m !< number of rows
+    integer, intent(in) :: n !< number of cols
+    double precision, intent(in) :: X(m, n)
+    double precision, intent(out) :: U(m, m)
+    double precision, intent(out) :: S(m, n)
+    double precision, intent(out) :: V(n, n)
+
+    integer LWMAX, INFO, LWORK, i
+    double precision A(m, n), SV(n), VT(n, n), TWORK(1)
+    double precision, allocatable :: WORK(:)
+
+    A = X
+
+    call DGESVD('A', 'A', m, n, A, m, SV, U, m, VT, n, TWORK, -1, INFO)
+
+    LWORK = int(TWORK(1))
+    allocate(WORK(LWORK))
+
+    call DGESVD('A', 'A', m, n, A, m, SV, U, m, VT, n, WORK, LWORK, INFO)
+
+    deallocate(WORK)
+
+    S = 0
+    do i = 1,min(m,n)
+        S(i, i) = SV(i)
+    end do
+
+    V = transpose(VT)
+end subroutine
+
+! compute the solution to the problem AX = B (if A is not singular then X = inv(A)*B)
+subroutine mldivide(m, n, A, B, X)
+    integer, intent(in), value :: m !< number of rows (and columns) in the matrix A
+    integer, intent(in), value :: n !< number of columns in the matrix B
+    double precision, intent(in) :: A(m, m)
+    double precision, intent(in) :: B(m, n)
+    double precision, intent(out) :: X(m, n)
+
+    integer INFO, IPIV(m)
+
+    call DGETRF( m, m, A, m, IPIV, INFO )
+    call DGETRS('N', m, n, A, m, IPIV, B, m, INFO)  
+
+    X = B
+end subroutine
+
+! compute the solution to the problem XB = A (if B is not singular then X = A*inv(B))
+subroutine mrdivide(m, n, A, B, X)
+    integer, intent(in), value :: m !< number of rows in the matrix A
+    integer, intent(in), value :: n !< number of rows (and columns) in the matrix B
+    double precision, intent(in) :: A(m, n)
+    double precision, intent(in) :: B(n, n)
+    double precision, intent(out) :: X(m, n)
+
+    double precision XT(n, m)
+
+    call mldivide(n, m, transpose(B), transpose(A), XT)
+    X = transpose(XT)
+end subroutine
+
+
 !> Compute square root of a real symmetric matrix
 subroutine sqrtm(n, A, R)
     integer, intent(in), value :: n !< dimension

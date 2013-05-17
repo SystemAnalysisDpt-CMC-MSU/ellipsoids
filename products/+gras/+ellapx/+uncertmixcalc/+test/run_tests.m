@@ -1,5 +1,5 @@
 function results=run_tests(varargin)
-runner = mlunit.text_test_runner(1, 1);
+runner = mlunitext.text_test_runner(1, 1);
 loader = mlunitext.test_loader;
 %
 crm=gras.ellapx.uncertmixcalc.test.conf.ConfRepoMgr();
@@ -12,9 +12,16 @@ nConfs=length(confNameList);
 suiteList=cell(1,nConfs);
 for iConf=1:nConfs
     confName = confNameList{iConf};
-    suiteList{iConf}=loader.load_tests_from_test_case(...
-        'gras.ellapx.uncertmixcalc.test.mlunit.SuiteMixTubeFort',...
-        crm,crmSys,confName);
+    %
+    if ~isempty(strfind(confName, 'springs_'))
+        suiteList{iConf}=loader.load_tests_from_test_case(...
+            'gras.ellapx.uncertmixcalc.test.mlunit.SuiteMixTubeFort',...
+            crm,crmSys,confName);
+    else
+        suiteList{iConf}=loader.load_tests_from_test_case(...
+            'gras.ellapx.uncertmixcalc.test.mlunit.SuiteBasic',...
+            crm,crmSys,confName);
+    end
 end
 %
 testLists=cellfun(@(x)x.tests,suiteList,'UniformOutput',false);

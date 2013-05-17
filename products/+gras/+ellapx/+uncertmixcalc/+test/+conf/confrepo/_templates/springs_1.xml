@@ -23,10 +23,10 @@
 				<lsGoodDirSetName type="char" >set1</lsGoodDirSetName>
 				<lsGoodDirSets type="struct" >
 					<set1 type="cell" size="4 1">
-						<item type="double" >-1.726867515906565 0.2225468881013 -0.08010909733818991 -1.036923923287034</item>
-						<item type="double" >0.7647497870256783 0.6623162130263882 0.2532057080090767 0.7536492974890302</item>
-						<item type="double" >0.408346071285892 -1.262789248227119 -0.6825218607478523 -0.8969082584311819</item>
-						<item type="double" >-1.383149025400192 0.9226732644585509 -0.2720313269616644 0.9983110501673709</item>
+						<item type="double" >0.9631648265583294 -0.4215856988132574 1.40394337059764 -1.472180082968241</item>
+						<item type="double" >1.253924521235202 -0.6923622576798275 0.1379356241049849 0.5851122449823342</item>
+						<item type="double" >0.3181529621225686 0.9328835803733389 0.151872555426123 0.7212963478580605</item>
+						<item type="double" >0.377443526579842 0.4770686372592979 0.7222041422641649 0.1534109530511494</item>
 					</set1>
 				</lsGoodDirSets>
 			</manual>
@@ -84,7 +84,7 @@
 				<uncertMixed type="struct" >
 					<isEnabled type="boolean" >1</isEnabled>
 					<props type="struct" >
-						<selectionMethodForSMatrix type="char" >qr</selectionMethodForSMatrix>
+						<selectionMethodForSMatrix type="char" >volume</selectionMethodForSMatrix>
 						<mixingStrength type="double" >1</mixingStrength>
 						<mixingProportions type="cell" size="4 1">
 							<item type="double" >0.25 0.25 0.25 0.25</item>

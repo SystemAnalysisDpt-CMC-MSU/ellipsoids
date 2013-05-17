@@ -46,10 +46,10 @@ classdef SuiteOrthTransl < mlunitext.test_case
             %
             function check(srcVec,dstVec)
                 ind = find(dstVec, 1, 'first');
-                oMat = gras.la.orthtranslqr(dstVec,srcVec);
+                oMat = gras.la.orthtranslqr(srcVec,dstVec);
                 gotVec = oMat*srcVec;
                 diffVec = abs(dstVec/dstVec(ind) - gotVec/gotVec(ind));
-                mlunit.assert(all(diffVec < CALC_PRECISION));
+                mlunitext.assert(all(diffVec < CALC_PRECISION));
             end
         end
         function test_matorth(self)

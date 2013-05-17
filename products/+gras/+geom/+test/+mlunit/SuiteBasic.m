@@ -21,9 +21,9 @@ classdef SuiteBasic < mlunitext.test_case
                 pMat = gras.geom.spherepart(nPoints);
                 normVec = realsqrt(sum(pMat.*pMat,2));
                 %
-                mlunit.assert(size(pMat,1)==nPoints);
-                mlunit.assert(size(pMat,2)==3);
-                mlunit.assert(all(abs(normVec-1)<CALC_PRECISION));
+                mlunitext.assert(size(pMat,1)==nPoints);
+                mlunitext.assert(size(pMat,2)==3);
+                mlunitext.assert(all(abs(normVec-1)<CALC_PRECISION));
             end
         end
     end
