@@ -22,5 +22,5 @@ psObj.plot_ea('g');  % plot the whole reach tube
 subplot(2, 2, 2);
 %
 % ReachContinuous's cut() doesn't work with projections:
-% psObj = psObj.cut(4);
-% psObj.plot_ea('g');  % plot reach set approximation at time t = 4
+psObj = psObj.cut(4);
+psObj.plot_ea('g');  % plot reach set approximation at time t = 4

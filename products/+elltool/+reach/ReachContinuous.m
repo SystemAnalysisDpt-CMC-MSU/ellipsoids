@@ -123,9 +123,10 @@ classdef ReachContinuous < elltool.reach.AReach
             end
             %
             if self.isProj
-                if self.dimension() ~= 3
+                [~, dim] = self.dimension();
+                if dim < 2 || dim > 3
                     throwerror('wrongInput',...
-                        'Dimension of projection must be 2.');
+                        'Dimension of projection must be 2 or 3.');
                 else
                     plObj = smartdb.disp.RelationDataPlotter();
                     plotter = self.ellTubeRel.getTuplesFilteredBy(...
@@ -133,16 +134,9 @@ classdef ReachContinuous < elltool.reach.AReach
                         'fGetTubeColor', @(x) deal(colorVec, shade));
                 end
             else
-                if self.dimension() > 2
-                    projBasisMat = eye(self.dimension(), 2);
-                else
-                    projBasisMat = eye(self.dimension());
-                end
                 plObj = smartdb.disp.RelationDataPlotter();
-                projSetObj = self.getProjSet(projBasisMat,...
-                    approxType, scaleFactor);
-                plotter = projSetObj.plot(plObj, 'fGetTubeColor',...
-                    @(x) deal(colorVec, shade));
+                plotter = self.ellTubeRel.getTuplesFilteredBy(...
+                        APPROX_TYPE, approxType).plot(plObj);
             end
             %
             function setPlotParams(ColorOpt)
@@ -623,12 +617,26 @@ classdef ReachContinuous < elltool.reach.AReach
             import gras.ellapx.uncertcalc.EllApxBuilder;
             import gras.ellapx.enums.EApproxType;
             import elltool.logging.Log4jConfigurator;
+            import elltool.conf.Properties;
             %%
             logger=Log4jConfigurator.getLogger(...
                 'elltool.ReachCont.constrCallCount');
             logger.debug(sprintf('constructor is called %s',...
                 modgen.exception.me.printstack(...
                 dbstack, 'useHyperlink', false)));
+            %
+            neededPropNameList =...
+                {'absTol', 'relTol', 'nPlot2dPoints',...
+                'nPlot3dPoints','nTimeGridPoints'};
+            [absTolVal, relTolVal, nPlot2dPointsVal,...
+                nPlot3dPointsVal, nTimeGridPointsVal] =...
+                Properties.parseProp(varargin, neededPropNameList);
+            %
+            self.absTol = absTolVal;
+            self.relTol = relTolVal;
+            self.nPlot2dPoints = nPlot2dPointsVal;
+            self.nPlot3dPoints = nPlot3dPointsVal;
+            self.nTimeGridPoints = nTimeGridPointsVal;
             %
             if (nargin == 0) || isempty(linSys)
                 return;
@@ -744,30 +752,12 @@ classdef ReachContinuous < elltool.reach.AReach
         %%
         function eaPlotter = plot_ea(self, varargin)
             import gras.ellapx.enums.EApproxType;
-            if nargin == 1
-                eaPlotter =...
-                    self.plotApprox(EApproxType.External);
-            elseif nargin == 2
-                eaPlotter =...
-                    self.plotApprox(EApproxType.External, varargin{1});
-            elseif nargin == 3
-                eaPlotter = self.plotApprox(EApproxType.External,...
-                    varargin{1}, varargin{2});
-            end
+            eaPlotter = self.plotApprox(EApproxType.External, varargin{:});
         end
         %%
         function iaPlotter = plot_ia(self, varargin)
             import gras.ellapx.enums.EApproxType;
-            if nargin == 1
-                iaPlotter =...
-                    self.plotApprox(EApproxType.Internal);
-            elseif nargin == 2
-                iaPlotter =...
-                    self.plotApprox(EApproxType.Internal, varargin{1});
-            elseif nargin == 3
-                iaPlotter = self.plotApprox(EApproxType.Internal,...
-                    varargin{1}, varargin{2});
-            end
+            iaPlotter = self.plotApprox(EApproxType.Internal, varargin{:});
         end
         %%
         function display(self)

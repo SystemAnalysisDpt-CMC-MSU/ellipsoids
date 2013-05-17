@@ -10,11 +10,6 @@ classdef ReachDiscrete < elltool.reach.AReach
 %             System Analysis Department 2013 $
 %
     properties (Access = private)
-        absTol
-        relTol
-        nPlot2dPoints
-        nPlot3dPoints
-        nTimeGridPoints
         system
         t0
         initial_directions
@@ -431,59 +426,6 @@ classdef ReachDiscrete < elltool.reach.AReach
             end
         end
         %
-        function [propArr, propVal] = getProperty(rsArr,propName,fPropFun)
-        % GETPROPERTY - gives array the same size as rsArray with values of 
-        %               propName properties for each reach set in rsArr. 
-        %               Private method, used in every public property getter.
-        %               
-        %
-        % Input:
-        %   regular:
-        %       rsArray: elltool.reach.ReachDiscrete [nDims1, nDims2,...] -  
-        %           multidimension array of reach sets 
-        %       propName: char[1,N] - name property
-        %
-        %   optional:
-        %       fPropFun: function_handle[1,1] - function that apply to the propArr. 
-        %           The default is @min.        
-        %
-        % Output:
-        %   regular:
-        %       propArr: double[nDim1, nDim2,...] -  multidimension array of properties 
-        %          for reach object in rsArr
-        %   optional:
-        %       propVal: double[1, 1] - return result of work fPropFun with the propArr
-        %
-        % $Author: Zakharov Eugene <justenterrr@gmail.com>$
-        %   $Date: 17-november-2012$
-        % $Author: Grachev Artem  <grachev.art@gmail.com> $
-        %   $Date: March-2013$
-        % $Copyright: Moscow State University,
-        %             Faculty of Computational Mathematics
-        %             and Computer Science,
-        %             System Analysis Department 2013 $
-        %
-    
-            import modgen.common.throwerror;
-            propNameList = {'absTol','relTol','nPlot2dPoints',...
-                'nPlot3dPoints','nTimeGridPoints'};
-            if ~any(strcmp(propName,propNameList))
-                throwerror('wrongInput',[propName,':no such property']);
-            end
-            %
-            if nargin == 2
-                fPropFun = @min;
-            end
-                
-            propArr = arrayfun(@(x)x.(propName),rsArr);
-                
-            if nargout == 2
-                propVal = fPropFun(propArr(:));
-            end
-                
-        end
-      
-        %
         function x = ellbndr_2d(ell, num)
         %
         % ELLBNDR_2D - compute the boundary of 2D ellipsoid.
@@ -512,160 +454,6 @@ classdef ReachDiscrete < elltool.reach.AReach
                 l = [l [cos(phi)*sin(psy(i)); sin(phi)*sin(psy(i)); arr]];
             end
             [r, x] = rho(ell, l);
-        end
-        %
-        function [absTolArr, absTolVal] = getAbsTol(rsArr, varargin)
-        % GETABSTOL - gives the array of absTol for all elements in rsArr
-        %
-        % Input:
-        %   regular:
-        %       rsArr: elltool.reach.ReachDiscrete[nDim1, nDim2, ...] - multidimension 
-        %              array of reach sets
-        %   optional:
-        %       fAbsTolFun: function_handle[1,1] - function that apply to the absTolArr. 
-        %               The default is @min.
-        %         
-        % Output:
-        %   regular:
-        %       absTolArr: double [absTol1, absTol2, ...] - return absTol for each 
-        %                 element in rsArr
-        %   optional:
-        %       absTol: double[1,1] - return result of work fAbsTolFun with the absTolArr
-        %
-        % Usage:
-        %   use [~,absTol] = rsArr.getAbsTol() if you want get only absTol,
-        %   use [absTolArr,absTol] = rsArr.getAbsTol() if you want get absTolArr and absTol,
-        %   use absTolArr = rsArr.getAbsTol() if you want get only absTolArr
-        % 
-        %$Author: Zakharov Eugene  <justenterrr@gmail.com> $
-        % $Author: Grachev Artem  <grachev.art@gmail.com> $
-        %   $Date: March-2013$
-        % $Copyright: Moscow State University,
-        %             Faculty of Computational Mathematics
-        %             and Computer Science, 
-        %             System Analysis Department 2013 $
-        % 
-        
-            [absTolArr,absTolVal]=rsArr.getProperty('absTol',varargin{:});
-            
-        end
-        %
-        function nPlot2dPointsArr = getNPlot2dPoints(rsArr)
-        % GETNPLOT2DPOINTS - gives array  the same size as rsArr of value of 
-        %                    nPlot2dPoints property for each element in rsArr - 
-        %                    array of reach sets
-        % 
-        %
-        % Input:
-        %   regular:
-        %     rsArr:elltool.reach.ReachDiscrete [nDims1,nDims2,...] - reach set array 
-        %           
-        %
-        % Output:
-        %   nPlot2dPointsArr:double[nDims1,nDims2,...] - array of values of 
-        %       nTimeGridPoints property for each reach set in rsArr
-        %
-        % $Author: Zakharov Eugene
-        % <justenterrr@gmail.com> $    
-        % $Date: 17-november-2012 $ 
-        % $Copyright: Moscow State University,
-        %             Faculty of Computational Mathematics
-        %             and Computer Science,
-        %             System Analysis Department 2012 $
-        %
-            nPlot2dPointsArr =...
-                elltool.reach.ReachDiscrete.getProperty(rsArr,'nPlot2dPoints');
-        end
-        %
-        function nPlot3dPointsArr = getNPlot3dPoints(rsArr)
-        % GETNPLOT3DPOINTS - gives array  the same size as rsArr of value of 
-        %                    nPlot3dPoints property for each element in rsArr
-        %                    - array of reach sets
-        %
-        % Input:
-        %   regular:
-        %       rsArr:reach[nDims1,nDims2,...] - reach set array
-        %
-        % Output:
-        %   nPlot3dPointsArr:double[nDims1,nDims2,...]- array of values of 
-        %             nPlot3dPoints property for each reach set in rsArr
-        %       
-        %
-        % $Author: Zakharov Eugene
-        % <justenterrr@gmail.com> $    
-        % $Date: 17-november-2012 $ 
-        % $Copyright: Moscow State University,
-        %             Faculty of Computational Mathematics
-        %             and Computer Science,
-        %             System Analysis Department 2012 $
-        %
-            nPlot3dPointsArr =...
-                elltool.reach.ReachDiscrete.getProperty(rsArr,'nPlot3dPoints');
-        end
-        %
-        function nTimeGridPointsArr = getNTimeGridPoints(rsArr)
-        % GETNTIMEGRIDPOINTS - gives array  the same size as rsArr of value of 
-        %                      nTimeGridPoints property for each element in rsArr
-        %                     - array of reach sets
-        % 
-        % Input:
-        %   regular:
-        %       rsArr: elltool.reach.ReachDiscrete [nDims1,nDims2,...] - reach set 
-        %         array
-        %
-        % Output:
-        %   nTimeGridPointsArr: double[nDims1,nDims2,...]- array of values of 
-        %       nTimeGridPoints property for each reach set in rsArr
-        %       
-        %
-        % $Author: Zakharov Eugene
-        % <justenterrr@gmail.com> $    
-        % $Date: 17-november-2012 $ 
-        % $Copyright: Moscow State University,
-        %             Faculty of Computational Mathematics
-        %             and Computer Science,
-        %             System Analysis Department 2012 $
-        %
-            nTimeGridPointsArr =...
-                elltool.reach.ReachDiscrete.getProperty(rsArr,'nTimeGridPoints');
-        end
-        %
-        function [relTolArr, relTolVal] = getRelTol(rsArr, varargin)
-        % GETRELTOL - gives the array of relTol for all elements in ellArr
-        %
-        % Input:
-        %   regular:
-        %       rsArr: elltool.reach.ReachDiscrete[nDim1,nDim2, ...] - multidimension  
-        %           array of reach sets.
-        %   optional
-        %       fRelTolFun: function_handle[1,1] - function that apply to the  
-        %           relTolArr. The default is @min.
-        %
-        % Output:
-        %   regular:
-        %       relTolArr: double [relTol1, relTol2, ...] - return relTol for each 
-        %           element in rsArr
-        %   optional:
-        %       relTol: double[1,1] - return result of work fRelTolFun with the
-        %           relTolArr
-        %           
-        %
-        % Usage:
-        %   use [~,relTol] = rsArr.getRelTol() if you want get only relTol,
-        %   use [relTolArr,relTol] = rsArr.getRelTol() if you want get relTolArr
-        %        and relTol,
-        %   use relTolArr = rsArr.getRelTol() if you want get only relTolArr
-        %
-        %$Author: Zakharov Eugene  <justenterrr@gmail.com> $
-        % $Author: Grachev Artem  <grachev.art@gmail.com> $
-        %   $Date: March-2013$
-        % $Copyright: Moscow State University,
-        %             Faculty of Computational Mathematics
-        %             and Computer Science, 
-        %             System Analysis Department 2013 $
-        %
-            
-            [relTolArr,relTolVal]=rsArr.Property('relTol',varargin{:});
         end
     end
     %
@@ -1805,6 +1593,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 warning on;
             end
         end
+        %
         function newReachObjArr = getCopy(self)
         % GETCOPY - create a new copy of Self reach object. 
         %
@@ -1866,8 +1655,8 @@ classdef ReachDiscrete < elltool.reach.AReach
                 newReachObj.projectionBasisMat = reachObj.projectionBasisMat;
             end
         end
-        
-        function cutObj = cut(self, cutTimeVec) 
+        %
+        function cutObj = cut(self, cutTimeVec)
             import modgen.common.throwerror;
             cutObj = self.getCopy();
             if self.isempty()
@@ -2154,7 +1943,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             end
             cutObj.isCut = true;
         end
-
+        %
         function [rSdim sSdim] = dimension(self)
             [m, n] = size(self);
             rSdim = [];
@@ -2179,7 +1968,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 clear('sSdim');
             end
         end
-
+        %
         function display(self)
             if self.isempty()
                 return;
@@ -2253,7 +2042,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             end
             fprintf('\n');
         end
-
+        %
         function [trCenterMat timeVec] = get_center(self)
             import elltool.conf.Properties;
             trCenterMat  = self.center_values;
@@ -2261,7 +2050,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 timeVec = self.time_values;
             end
         end
-
+        %
         function [directionsCVec timeVec] = get_directions(self)
             import elltool.conf.Properties;
             directionsCVec  = [];
@@ -2276,7 +2065,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 timeVec = self.time_values;
             end
         end
- 
+        % 
         function [eaEllMat timeVec] = get_ea(self)
             if isempty(self)
                 return;
@@ -2302,7 +2091,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 eaEllMat = [eaEllMat; ee];
             end
         end
-
+        %
         function [iaEllMat timeVec] = get_ia(self)
             if isempty(self)
                 return;
@@ -2329,8 +2118,8 @@ classdef ReachDiscrete < elltool.reach.AReach
                 iaEllMat = [iaEllMat; ee];
             end
         end
-   
-        function [goodCurvesCVec timeVec] = get_goodcurves(self)           
+        %   
+        function [goodCurvesCVec timeVec] = get_goodcurves(self)
             import elltool.conf.Properties;
             import modgen.common.throwerror;
             if isempty(self)
@@ -2374,12 +2163,12 @@ classdef ReachDiscrete < elltool.reach.AReach
                 timeVec  = self.time_values;
             end
         end
-
+        %
         function linSys = get_system(self)
             import elltool.conf.Properties;
             linSys = self.system;
         end
-   
+        %   
         function plot_ea(self, varargin)
             import elltool.conf.Properties;
             import elltool.logging.Log4jConfigurator;
@@ -2634,8 +2423,8 @@ classdef ReachDiscrete < elltool.reach.AReach
                 hold off;
             end
         end
-
-        function plot_ia(self, varargin) 
+        %
+        function plot_ia(self, varargin)
             import elltool.conf.Properties;
             import elltool.logging.Log4jConfigurator;
             
@@ -2895,7 +2684,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 hold off;
             end
         end
-     
+        %
         function projObj = projection(self, projMat)
             import elltool.conf.Properties;
             import modgen.common.throwerror;
@@ -2951,7 +2740,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             projObj.ia_values = QQ;
             projObj.isProj = true;
         end
- 
+        % 
         function newReachObj = evolve(self, newEndTime, linSys)
             import elltool.conf.Properties;
             import modgen.common.throwerror;
