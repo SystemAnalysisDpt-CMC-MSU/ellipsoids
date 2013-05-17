@@ -1475,6 +1475,12 @@ classdef EllipsoidTestCase < mlunitext.test_case
             checkCenterVecList = {[3; 6], [4; 7]};
             operationNestedFunction(testEllVec, checkCenterVecList, 'plus', testVec);
             %
+            testEll = ellipsoid(eye(2,2));
+            testEllArr = testEll.repMat([2,2,3,4]);
+            testVec = [2;1];
+            checkCenterVecList = repmat({testVec},[2,2,3,4]);
+            operationNestedFunction(testEllArr, checkCenterVecList, 'plus', testVec);
+            %
             testEllCenterVec = zeros(1, 100);
             testEllCenterVec(50) = 3;
             testEllMat = eye(100);
@@ -1539,6 +1545,12 @@ classdef EllipsoidTestCase < mlunitext.test_case
             checkCenterVecList = {[2; -6; 10]};
             operationNestedFunction(test2Ell, checkCenterVecList, 'minus', test2Vec);
             %
+            testEll = ellipsoid(ones(2,1),eye(2,2));
+            testEllArr = testEll.repMat([2,2,3,4]);
+            testVec = [1;1];
+            checkCenterVecList = repmat({zeros(2,1)},[2,2,3,4]);
+            operationNestedFunction(testEllArr, checkCenterVecList, 'minus', testVec);
+            %
             testEllCenterVec = zeros(1, 100);
             testEllCenterVec(50) = 5;
             testEllMat = eye(100);
@@ -1581,11 +1593,12 @@ classdef EllipsoidTestCase < mlunitext.test_case
                 testEllMat(testCounter,testCounter) = testCounter;
             end
             testEll = ellipsoid(testEllCenterVec',testEllMat);
+            testEllArr = testEll.repMat([2 2 3 4]);
             for testCounter = 1:1:size(testEllMat,2)
                 testResMat(testCounter,testCounter) = 1./testCounter;
             end
-            checkShapeList = {testResMat};
-            operationNestedFunction(testEll, checkShapeList, 'inv');
+            checkShapeList = repmat({testResMat},[2 2 3 4]);
+            operationNestedFunction(testEllArr, checkShapeList, 'inv');
         end
         function self = testMove2Origin(self)
             testEllCenterVec = [1; 1];
@@ -1603,6 +1616,11 @@ classdef EllipsoidTestCase < mlunitext.test_case
             testEllVec = [test1Ell test2Ell];
             checkCenterVecList = {[0;0;0], [0;0]};
             operationNestedFunction(testEllVec, checkCenterVecList, 'move2origin');
+            %
+            testEll = ellipsoid(ones(2,1),eye(2,2));
+            testEllArr = testEll.repMat([2,2,3,4]);
+            checkCenterVecList = repmat({zeros(2,1)},[2,2,3,4]);
+            operationNestedFunction(testEllArr, checkCenterVecList, 'move2origin');
             %
             testEllCenterVec = zeros(20, 1);
             testEllMat = eye(20);
@@ -1635,17 +1653,14 @@ classdef EllipsoidTestCase < mlunitext.test_case
             checkShapeList = {[20 72; 72 288], [9 27; 27 145]};
             operationNestedFunction(testEllVec, checkShapeList, 'shape',testMat);
             %
-            %test1EllCenterVec = [
-            
-            %testEllCenterVec = zeros(20, 1);
-            %testEllMat = eye(20);
-            %testMat = diag(1:size(testEllMat,2));
-            %testResMat = testMat.^2;
-            %testEll = ellipsoid(testEllCenterVec, testEllMat);
-            %testEllRes = shape(testEll, testMat);
-            %[~, testResMat] = double(testEllRes);
-            %testIsRight = min(min(testResMat == testResMat));
-            %mlunit.assert_equals(1, testIsRight);
+            testEllMat = [5 2;2 8];
+            testEll = ellipsoid(testEllMat);
+            testEllArr = testEll.repMat([2,2,3,4]);
+            testMat = [4 2;1 3];
+            testResMat = [144 96; 96 89];
+            checkCenterVecList = repmat({testResMat},[2,2,3,4]);
+            operationNestedFunction(testEllArr, checkCenterVecList, 'shape',...
+                testMat);
         end
     end
 end
@@ -1823,9 +1838,9 @@ function operationNestedFunction(testEllArr, compList, operation,...
                     compList);
             else
                 throwerror('wrongInput:badMethodName',...
-                        'Allowed method names: %s. Input name %s',...
+                        'Allowed method names: %s. Input name: %s',...
                         cellstr2expression({VEC_COMP_METHODS_LIST{:}, ...
-                        MAT_COMP_METHODS_LIST}), operation);
+                        MAT_COMP_METHODS_LIST{:}}), operation);
             end    
             testIsRight = ~ismember(0,eqArr);
             mlunitext.assert_equals(testIsRight, 1);
