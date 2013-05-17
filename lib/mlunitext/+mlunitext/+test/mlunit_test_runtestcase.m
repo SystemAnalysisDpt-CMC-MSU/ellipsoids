@@ -24,12 +24,13 @@ classdef mlunit_test_runtestcase < mlunitext.test_case
             % exception
             self.runAndCheckError('mlunitext.runtestcase(''wrongClass'')',...
                 ':noSuchClass');
-            self.runAndCheckError('mlunitext.runtestcase(''wrongClass'',''someMethod'')',...
+            self.runAndCheckError(...
+                'mlunitext.runtestcase(''wrongClass'',''someMethod'')',...
                 ':noSuchClass');
             self.runAndCheckError(['mlunitext.runtestcase(''', class(self),...
                 ''', ''wrongMethod'')'], ':wrongInput');
         end
-        function test_marker(self)
+        function test_marker(~)
             import mlunitext.*;
             tests{1} = mlunit_test.mock_test('test_method');
             tests{2} = mlunit_test.mock_test('test_broken_method');
@@ -37,7 +38,7 @@ classdef mlunit_test_runtestcase < mlunitext.test_case
             runner=mlunitext.text_test_runner(1, 1);
             suite=test_suite(tests,'marker','nda');
             result = runner.run(suite);
-            mlunitext.assert_equals(2, get_tests_run(result));
+            mlunitext.assert_equals(2, getNTestsRun(result));
             mlunitext.assert_equals('mlunit_test.mock_test[nda]',...
                 suite.str());
             %

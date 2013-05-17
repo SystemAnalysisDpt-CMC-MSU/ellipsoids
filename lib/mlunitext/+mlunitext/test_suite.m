@@ -377,10 +377,6 @@ classdef test_suite<handle
             %         getReport(result)
             %
             %  See also MLUNITEXT.TEST_SUITE.
-            
-            if (get_should_stop(result))
-                return;
-            end;
             nTests=length(self.tests);
             if nTests==0,
                 return;
@@ -442,10 +438,6 @@ classdef test_suite<handle
             mlunitext.logprintf('debug', '==== START suite [%s] with %d tests', ...
                 self.str(), nTests);
             for i = 1:nTests
-                if (get_should_stop(result))
-                    break;
-                end;
-                
                 result = run(self.tests{i}, result);
             end;
             mlunitext.logprintf('debug', '====  END  suite [%s]', self.str());
