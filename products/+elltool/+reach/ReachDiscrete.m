@@ -180,9 +180,8 @@ classdef ReachDiscrete < elltool.reach.AReach
     methods (Access = protected)
         function ellTubeRel = makeEllTubeRel(self, smartLinSys, l0Mat,...
                 timeLimsVec, isDisturb, calcPrecision, approxTypeVec)
-            import gras.ellapx.enums.EApproxType;            
+            import gras.ellapx.enums.EApproxType;
             import gras.ellapx.lreachplain.GoodDirsDiscrete;
-            relTol = elltool.conf.Properties.getRelTol();            
             goodDirSetObj = GoodDirsDiscrete(...
                 smartLinSys, timeLimsVec(1), l0Mat, calcPrecision);
             %
@@ -192,21 +191,19 @@ classdef ReachDiscrete < elltool.reach.AReach
             timeVec = smartLinSys.getTimeVec();
             %
             aMat = smartLinSys.getxtDynamics().evaluate(timeVec);
+            ltGoodDirArray = ...
+                goodDirSetObj.getGoodDirCurveSpline().evaluate(timeVec);
             %
             isIntApprox = any(approxTypeVec == EApproxType.Internal);
             isExtApprox = any(approxTypeVec == EApproxType.External);
             %
-            fCalcApproxShape = @(smartLinSys, l0Mat, ...
-                relTol, approxType) ...
+            fCalcApproxShape = @(approxType) ...
                 elltool.reach.ReachDiscrete.calculateApproxShape(...
-                smartLinSys, l0Mat, relTol, approxType, isDisturb);
+                smartLinSys, l0Mat, self.relTol, approxType, isDisturb);
             %
             if isExtApprox
                 approxType = EApproxType.External;
-                [qArrayList ~] = ...
-                    fCalcApproxShape(smartLinSys, l0Mat, relTol, approxType);
-                ltGoodDirArray = ...
-                    goodDirSetObj.getGoodDirCurveSpline().evaluate(timeVec);
+                [qArrayList ~] = fCalcApproxShape(approxType);
                 extEllTubeRel = create();
                 if ~isIntApprox
                     ellTubeRel = extEllTubeRel;
@@ -214,10 +211,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             end
             if isIntApprox
                 approxType = EApproxType.Internal;
-                [qArrayList ~] = ...
-                    fCalcApproxShape(smartLinSys, l0Mat, relTol, approxType);
-                ltGoodDirArray = ...
-                    goodDirSetObj.getGoodDirCurveSpline().evaluate(timeVec);
+                [qArrayList ~] = fCalcApproxShape(approxType);
                 intEllTubeRel = create();
                 if isExtApprox
                     intEllTubeRel.unionWith(extEllTubeRel);
@@ -229,78 +223,60 @@ classdef ReachDiscrete < elltool.reach.AReach
                 rel = gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
                     qArrayList, aMat, timeVec, ltGoodDirArray, ...
                     sTime, approxType, approxSchemaName, ...
-                    approxSchemaDescr, relTol / 10);
+                    approxSchemaDescr, self.relTol / 10);
             end
-        end   
+        end
     end
     %
     methods
         function self = ReachDiscrete(linSys, x0Ell, l0Mat,...
-                timeVec, OptStruct, varargin)
-        %
-        % ReachDiscrete - computes reach set approximation of the discrete linear 
-        %                 system for the given time interval.
-        % 
-        % 
-        % Input:
-        %     linSys: elltool.linsys.LinSys object - given linear system 
-        %     x0Ell: ellipsoid[1, 1] - ellipsoidal set of initial conditions 
-        %     l0Mat: matrix of double - l0Mat 
-        %     timeVec: double[1, 2] - time interval 
-        %     OptStruct: struct[1, 1] - structure with
-        %     fields:
-        %         approximation: int[1, 1] - field, which mean the following values 
-        %          for type approximation:
-        %           = 0 for external,
-        %           = 1 for internal, 
-        %           = 2 for both (default).
-        %         save_all: logical [1, 1] - field, which
-        %           = 1 if save intermediate calculation data,
-        %           = 0 (default) if delete intermediate calculation data.
-        %         minmax: logical[1, 1] - field, which:
-        %           = 1 compute minmax reach set,
-        %           = 0 (default) compute maxmin reach set.
-        %         This option makes sense only for discrete-time systems with 
-        %         disturbance.
-        %
-        % self = ReachDiscrete(linSys, x0Ell, l0Mat,timeVec, Options, prop) is the 
-        % same as self = ReachDiscrete(linSys, x0Ell, l0Mat, timeVec, Options), but 
-        % with "Properties"  specified in  prop. 
-        % In other cases "Properties" are taken from current values stored in 
-        % elltool.conf.Properties
-        %
-        % As "Properties" we understand here such list of ellipsoid properties:
-        %         absTol
-        %         relTol 
-        %         nPlot2dPoints
-        %         Plot3dPoints 
-        %         nTimeGridPoints
-        %
-        % Output:
-        %   regular:
-        %       self - reach set object.
-        %
-        % Example:
-        %   adMat = [0 1; -1 -0.5]; 
-        %   bdMat = [0; 1];  
-        %   udBoundsEllObj  = ellipsoid(1);  
-        %   dtsys = elltool.linsys.LinSysDiscrete(adMat, bdMat, udBoundsEllObj); 
-        %   x0EllObj = ell_unitball(2);  
-        %   timeVec = [0 10];  
-        %   dirsMat = [1 0; 0 1]';
-        %   dRsObj = elltool.reach.ReachDiscrete(dtsys, x0EllObj, dirsMat, timeVec);
-        %
-        %
-        % $Authors: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-        %           Kirill Mayantsev <kirill.mayantsev@gmail.com> $   
-        % $Date: Jan-2013 $
-        %           Igor Kitsenko <kitsenko@gmail.com> $
-        % $Date: May-2013 $
-        % $Copyright: Moscow State University,
-        %             Faculty of Computational
-        %             Mathematics and Computer Science,
-        %             System Analysis Department 2013 $
-        %
+                timeVec, varargin)
+            %
+            % ReachDiscrete - computes reach set approximation of the discrete linear
+            %                 system for the given time interval.
+            %
+            %
+            % Input:
+            %     linSys: elltool.linsys.LinSys object - given linear system
+            %     x0Ell: ellipsoid[1, 1] - ellipsoidal set of initial conditions
+            %     l0Mat: double[nRows, nColumns] - initial good directions
+            %           matrix.
+            %     timeVec: double[1, 2] - time interval
+            %     properties:
+            %       isRegEnabled: logical[1, 1] - if it is 'true' constructor
+            %           is allowed to use regularization.
+            %       isJustCheck: logical[1, 1] - if it is 'true' constructor
+            %           just check if square matrices are degenerate, if it is
+            %           'false' all degenerate matrices will be regularized.
+            %       regTol: double[1, 1] - regularization precision.
+            %       minmax: logical[1, 1] - field, which:
+            %           = 1 compute minmax reach set,
+            %           = 0 (default) compute maxmin reach set.
+            %
+            % Output:
+            %   regular:
+            %     self - reach set object.
+            % Example:
+            %   adMat = [0 1; -1 -0.5];
+            %   bdMat = [0; 1];
+            %   udBoundsEllObj  = ellipsoid(1);
+            %   dtsys = elltool.linsys.LinSysDiscrete(adMat, bdMat, udBoundsEllObj);
+            %   x0EllObj = ell_unitball(2);
+            %   timeVec = [0 10];
+            %   dirsMat = [1 0; 0 1]';
+            %   dRsObj = elltool.reach.ReachDiscrete(dtsys, x0EllObj, dirsMat, timeVec);
+            %
+            %
+            % $Authors: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+            %           Kirill Mayantsev <kirill.mayantsev@gmail.com> $
+            % $Date: Jan-2013 $
+            %           Igor Kitsenko <kitsenko@gmail.com> $
+            % $Date: May-2013 $
+            % $Copyright: Moscow State University,
+            %             Faculty of Computational
+            %             Mathematics and Computer Science,
+            %             System Analysis Department 2013 $
+            %
             import gras.la.sqrtmpos;
             import elltool.conf.Properties;
             import gras.ellapx.enums.EApproxType;
@@ -360,26 +336,6 @@ classdef ReachDiscrete < elltool.reach.AReach
                 throwerror('wrongInput',...
                     ['dimensions of state space ',...
                     'and direction vector do not match.']);
-            end
-            if (nargin < 5) || ~(isstruct(OptStruct))
-                OptStruct               = [];
-                OptStruct.approximation = 2;
-                OptStruct.save_all      = 0;
-                OptStruct.minmax        = 0;
-            else
-                if ~(isfield(OptStruct, 'approximation')) ||...
-                        (OptStruct.approximation < 0) ||...
-                        (OptStruct.approximation > 2)
-                    OptStruct.approximation = 2;
-                end
-                if ~(isfield(OptStruct, 'save_all')) ||...
-                        (OptStruct.save_all < 0) || (OptStruct.save_all > 2)
-                    OptStruct.save_all = 0;
-                end
-                if ~(isfield(OptStruct, 'minmax')) ||...
-                        (OptStruct.minmax < 0) || (OptStruct.minmax > 1)
-                    OptStruct.minmax = 0;
-                end
             end
             %
             k0 = round(timeVec(1));

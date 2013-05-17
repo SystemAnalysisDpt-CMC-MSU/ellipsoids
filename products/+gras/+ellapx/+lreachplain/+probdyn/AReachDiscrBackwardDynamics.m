@@ -8,7 +8,7 @@ classdef AReachDiscrBackwardDynamics <...
             AtInvDynamics = self.AtInvDynamics;
         end
         %
-        function self = AReachProblemDynamicsInterp(problemDef)
+        function self = AReachDiscrBackwardDynamics(problemDef)
             import gras.ellapx.common.*;
             import gras.mat.symb.MatrixSymbFormulaBased;
             import gras.mat.CompositeMatrixOperations;

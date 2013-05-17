@@ -28,16 +28,16 @@ classdef GoodDirsDiscrete < gras.ellapx.lreachplain.AGoodDirsContinuous
             end
             nTimePoints = length(timeVec);
             %
-            dataXtt0 = zeros([sizeSysVec nTimePoints]);
-            dataXtt0(:, :, 1) = eye(sizeSysVec);
+            dataXtt0Arr = zeros([sizeSysVec nTimePoints]);
+            dataXtt0Arr(:, :, 1) = eye(sizeSysVec);
             for iTime = 2:nTimePoints
-                dataXtt0(:, :, iTime) = ...
+                dataXtt0Arr(:, :, iTime) = ...
                     fAtMat(timeVec(iTime - 1 + isBack)) * ...
-                    dataXtt0(:, :, iTime - 1);
+                    dataXtt0Arr(:, :, iTime - 1);
             end
             %
             RstDynamics = MatrixInterpolantFactory.createInstance(...
-                'column', dataXtt0, timeVec);
+                'column', dataXtt0Arr, timeVec);
             %
             tStart = tic;
             %

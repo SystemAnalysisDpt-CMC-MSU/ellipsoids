@@ -35,40 +35,6 @@ classdef AReachRegrTestCase < mlunitext.test_case
                 'goodDirSelection.methodProps.manual.lsGoodDirSets.set1');
             l0Mat = cell2mat(l0CMat.').';
         end
-        function isEqual = isEqualApprox(self, expRel, approxType)
-            import modgen.common.throwerror;
-            import gras.ellapx.enums.EApproxType;
-            import gras.ellapx.smartdb.F;
-            APPROX_TYPE = F.APPROX_TYPE;
-            %
-            SData = expRel.getTuplesFilteredBy(APPROX_TYPE, approxType);
-            if approxType == EApproxType.External
-                approxEllMat = self.reachObj.get_ea();
-            else
-                approxEllMat = self.reachObj.get_ia();
-            end
-            %
-            nTuples = SData.getNTuples();
-            isEqual = true;
-            if nTuples > 0
-                nTimes = numel(SData.timeVec{1});
-                for iTuple = nTuples : -1 : 1
-                    tupleCentMat = SData.aMat{iTuple};
-                    tupleMatArray = SData.QArray{iTuple};
-                    for jTime = nTimes : -1 : 1
-                        [centerVec shapeMat] =...
-                            approxEllMat(iTuple, jTime).parameters;
-                        isEqual = isEqual &&...
-                            (norm(centerVec - tupleCentMat(:, jTime)) <=...
-                            self.COMP_PRECISION) &&...
-                            (norm(shapeMat - tupleMatArray(:, :, jTime)) <=...
-                            self.COMP_PRECISION);
-                    end
-                end
-            else
-                throwerror('WrongInput', 'No tuple is found.');
-            end
-        end
     end
     methods
         function self = AReachRegrTestCase(linSysFactory, ...
@@ -120,29 +86,6 @@ classdef AReachRegrTestCase < mlunitext.test_case
                 ellipsoid(x0DefVec, x0DefMat), l0Mat, self.timeVec);
         end
         %
-        function self = testSystem(self)
-            import modgen.common.throwerror;
-            import gras.ellapx.enums.EApproxType;
-            %
-            ELL_TUBE_REL = 'ellTubeRel';
-            resMap = modgen.containers.ondisk.HashMapMatXML(...
-                'storageLocationRoot', self.etalonDataRootDir,...
-                'storageBranchKey', self.etalonDataBranchKey,...
-                'storageFormat', 'mat', 'useHashedPath', false,...
-                'useHashedKeys', true);
-            %
-            if resMap.isKey(self.confName);
-                SExpRes = resMap.get(self.confName);
-                expRel = SExpRes.(ELL_TUBE_REL);
-                isExt = self.isEqualApprox(expRel, EApproxType.External);
-                isInt = self.isEqualApprox(expRel, EApproxType.Internal);
-                isOk = isExt && isInt;
-                mlunit.assert_equals(true, isOk);
-            else
-                throwerror('WrongInput', 'Do not exist config mat file.');
-            end
-        end
-        %
         function self = testProjection(self)
             [atDefCMat, btDefCMat, ctDefCMat, ptDefCMat,...
                 ptDefCVec, qtDefCMat, qtDefCVec,...
@@ -176,9 +119,9 @@ classdef AReachRegrTestCase < mlunitext.test_case
             DistBounds.shape = newQtCMat;
             %
             oldDim = self.reachObj.dimension();
-            newLinSys = elltool.linsys.LinSysFactory.create(newAtCMat, ...
+            newLinSys = self.linSysFactory.create(newAtCMat, ...
                 newBtCMat, ControlBounds, newCtCMat, DistBounds);
-            newReachObj = elltool.reach.ReachContinuous(newLinSys,...
+            newReachObj = feval(class(self.reachObj), newLinSys,...
                 ellipsoid(newX0Vec, newX0Mat), newL0Mat, self.timeVec);
             firstProjReachObj =...
                 newReachObj.projection([eye(oldDim); zeros(oldDim)]);

@@ -19,8 +19,8 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             
             xDim = size(self.linSys.getAtMat(), 1);
             
-            syms k;
-            fAMatCalc = @(t)subs(self.linSys.getAtMat(), k, t);
+            syms t;
+            fAMatCalc = @(x)subs(self.linSys.getAtMat(), t, x);
             
             nTimeStep = abs(k1 - k0) + 1;
             
@@ -63,13 +63,13 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             
             xDim = size(self.linSys.getAtMat(), 1);
             
-            syms k;
-            fAMatCalc = @(t)subs(self.linSys.getAtMat(), k, t);
-            fBMatCalc = @(t)subs(self.linSys.getBtMat(), k, t);
+            syms t;
+            fAMatCalc = @(x)subs(self.linSys.getAtMat(), t, x);
+            fBMatCalc = @(x)subs(self.linSys.getBtMat(), t, x);
             
             pCVec = self.linSys.getUBoundsEll().center;
             
-            fControlBoundsCenterVecCalc = @(t)subs(pCVec, k, t);
+            fControlBoundsCenterVecCalc = @(x)subs(pCVec, t, x);
             
             nTimeStep = abs(k1 - k0) + 1;
             
@@ -155,10 +155,10 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             nDirections = size(self.l0Mat, 2);
             pCMat = self.linSys.getUBoundsEll().shape;
             
-            syms k;
-            fBMatCalc = @(t)subs(self.linSys.getBtMat(), k, t);
-            fControlBoundsMatCalc = @(t)subs(pCMat, k, t);
-            rMatCalc = @(t) fBMatCalc(t) * fControlBoundsMatCalc(t) * fBMatCalc(t)';
+            syms t;
+            fBMatCalc = @(x)subs(self.linSys.getBtMat(), t, x);
+            fControlBoundsMatCalc = @(x)subs(pCMat, t, x);
+            rMatCalc = @(x) fBMatCalc(x) * fControlBoundsMatCalc(x) * fBMatCalc(x)';
             
             nTimeStep = abs(k1 - k0) + 1;
             
@@ -190,7 +190,7 @@ classdef DiscreteReachTestCase < mlunitext.test_case
                         supFunMat(kTime + 1, iDirection) = ...
                             supFunMat(kTime, iDirection) + ...
                             sqrt(lVec' * self.fundCMat{1, kTime + 1} * ...
-                            rMatCalc(tVec(kTime + 1)) * self.fundCMat{1, kTime + 1}' * lVec);
+                            rMatCalc(tVec(kTime)) * self.fundCMat{1, kTime + 1}' * lVec);
                     end
                 end
                 
@@ -505,7 +505,7 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             checkUVW2(self,'W',fMethod);
         end        
         %
-        function self = DISABLED_testCut(self)
+        function self = testCut(self)
             import gras.ellapx.enums.EApproxType;
             %
             newTimeVec = [sum(self.tIntervalVec/2), self.tIntervalVec(2)];

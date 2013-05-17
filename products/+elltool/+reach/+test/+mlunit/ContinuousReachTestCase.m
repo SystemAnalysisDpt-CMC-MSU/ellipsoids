@@ -206,7 +206,6 @@ classdef ContinuousReachTestCase < mlunitext.test_case
         end
         %
         function self = testIsEmpty(self)
-%             emptyRs = elltool.reach.ReachContinuous();
             emptyRs = feval(class(self.reachObj));
             newTimeVec = [sum(self.tVec)/2, self.tVec(2)];
             cutReachObj = self.reachObj.cut(newTimeVec);
@@ -218,12 +217,10 @@ classdef ContinuousReachTestCase < mlunitext.test_case
             mlunitext.assert_equals(false, projReachObj.isempty());
         end
         %
-        function self = testEvolve(self)
+        function self = DISABLED_testEvolve(self)
             import gras.ellapx.smartdb.F;
             %
             timeVec = [self.tVec(1), sum(self.tVec)/2];
-%             newReachObj = elltool.reach.ReachContinuous(self.linSys,...
-%                 self.x0Ell, self.l0Mat, timeVec);
             newReachObj = feval(class(self.reachObj), ...
                 self.linSys, self.x0Ell, self.l0Mat, timeVec);
             evolveReachObj = newReachObj.evolve(self.tVec(2));
@@ -256,10 +253,6 @@ classdef ContinuousReachTestCase < mlunitext.test_case
                 directionsCVec = cutReachObj.get_directions();
                 l0Mat = directionsCVec{iTuple}(:, 1);
                 l0Mat = l0Mat ./ norm(l0Mat);
-%                 newIaReachObj = elltool.reach.ReachContinuous(self.linSys,...
-%                     x0IaEll, l0Mat, newTimeVec + timeDif);
-%                 newEaReachObj = elltool.reach.ReachContinuous(self.linSys,...
-%                     x0EaEll, l0Mat, newTimeVec + timeDif);
                 newIaReachObj = feval(class(self.reachObj), ...
                     self.linSys, x0IaEll, l0Mat, newTimeVec + timeDif);
                 newEaReachObj = feval(class(self.reachObj), ...

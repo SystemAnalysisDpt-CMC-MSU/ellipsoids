@@ -30,8 +30,8 @@ classdef LReachDiscrBackwardDynamics <...
             xtArray = zeros(sysDim, nTimePoints);
             xtArray(:, 1) = x0DefVec;
             for iTime = 2:nTimePoints
-                aMat = self.AtDynamics.evaluate(timeVec(iTime));
-                bpVec = self.BptDynamics().evaluate(timeVec(iTime));
+                aMat = self.AtDynamics.evaluate(self.timeVec(iTime));
+                bpVec = self.BptDynamics().evaluate(self.timeVec(iTime));
                 xtArray(:, iTime) = ...
                     aMat * (xtArray(:, iTime - 1) - bpVec);
             end
