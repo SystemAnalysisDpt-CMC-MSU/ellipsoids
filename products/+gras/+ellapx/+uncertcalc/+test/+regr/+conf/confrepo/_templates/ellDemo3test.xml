@@ -14,7 +14,7 @@
 			</set1>
 		</projSpaceSets>
 		<isDynamicProjEnabled type="boolean" >0</isDynamicProjEnabled>
-		<isStaticProjEnabled type="boolean" >0</isStaticProjEnabled>
+		<isStaticProjEnabled type="boolean" >1</isStaticProjEnabled>
 	</projectionProps>
 	<goodDirSelection type="struct" >
 		<methodName type="char" >manual</methodName>

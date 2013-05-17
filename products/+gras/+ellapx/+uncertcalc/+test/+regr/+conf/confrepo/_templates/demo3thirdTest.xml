@@ -14,7 +14,7 @@
 			</set1>
 		</projSpaceSets>
 		<isDynamicProjEnabled type="boolean" >0</isDynamicProjEnabled>
-		<isStaticProjEnabled type="boolean" >0</isStaticProjEnabled>
+		<isStaticProjEnabled type="boolean" >1</isStaticProjEnabled>
 	</projectionProps>
 	<goodDirSelection type="struct" >
 		<methodName type="char" >manual</methodName>
@@ -59,7 +59,7 @@
             </log4jSettings>
 	</logging>
 	<plottingProps type="struct" >
-		<isEnabled type="boolean" >1</isEnabled>
+		<isEnabled type="boolean" >0</isEnabled>
 		<viewAngleVec type="double" >37.5 30</viewAngleVec>
 		<isGoodCurvesSeparately type="boolean" >0</isGoodCurvesSeparately>
 	</plottingProps>
