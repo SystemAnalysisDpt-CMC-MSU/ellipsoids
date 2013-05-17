@@ -100,7 +100,7 @@ classdef text_test_runner
                 'in %.3fs(%.3fm)\n'], ...
                 testCaseName,tests_run, tElapsed,tElapsed/60);
             %
-            if (was_successful(result))
+            if (isPassed(result))
                 mlunitext.logprintf('info','OK\n');
             else
                 mlunitext.logprintf('info',...

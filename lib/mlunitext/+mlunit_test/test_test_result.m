@@ -1,4 +1,4 @@
-classdef test_test_result < mlunitext.test_case
+classdef test_test_result < mlunitext.test_case&mlunit_test.AuxChecker
     % TEST_TEST_RESULT tests the class test_result.
     %
     % Example:
@@ -51,7 +51,7 @@ classdef test_test_result < mlunitext.test_case
                 char(error_lines(1)));
             assert_equals(false, isempty(findstr('mock_test.m at line 94', ...
                 char(error_lines(2)))));
-            assert_equals(false, isempty(findstr('test_case.m at line 293', ...
+            assert_equals(false, isempty(findstr('test_case.m at line 292', ...
                 char(error_lines(3)))));
             assert_equals('Error:  , Identifier: ', char(error_lines(end)));
         end
@@ -109,32 +109,24 @@ classdef test_test_result < mlunitext.test_case
             %
             import mlunitext.*;
             %
-            start_test(self.result, ...
-                mlunit_test.mock_test('test_method'));
-            add_success(self.result, ...
-                mlunit_test.mock_test('test_method'));
-            assert_equals(1, was_successful(self.result));
-            assert_equals('mlunitext.test_result run=1 errors=0 failures=0', ...
-                summary(self.result));
+            testObj=mlunit_test.mock_test('test_method');
+            start_test(self.result,testObj);
+            add_success(self.result,testObj);
+            self.result.stop_test(testObj);
+            assert_equals(1, isPassed(self.result));
             check(0,0);
             add_error_by_message(self.result, ...
                 mlunit_test.mock_test('test_method'), 'foo error');
-            assert_equals('mlunitext.test_result run=1 errors=1 failures=0', ...
-                summary(self.result));
             check(1,0);
             add_failure_by_message(self.result, ...
                 mlunit_test.mock_test('test_method'), 'foo failure');
-            assert_equals('mlunitext.test_result run=1 errors=1 failures=1', ...
-                summary(self.result));
             check(1,1);
             stop_test(self.result, ...
                 mlunit_test.mock_test('test_method'));
             set_should_stop(self.result);
             assert_equals(1, get_should_stop(self.result));
-            function check(nExpErrors,nExpFailures)
-                [nErrors,nFailures]=self.result.getErrorFailCount();
-                assert(nErrors==nExpErrors);
-                assert(nFailures==nExpFailures);
+            function check(varargin)
+                self.checkResultReport(self.result,1,varargin{:});
             end
         end
     end

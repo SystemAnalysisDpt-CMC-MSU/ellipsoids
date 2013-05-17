@@ -11,11 +11,11 @@ classdef mlunit_test_common < mlunitext.test_case
             %
         end
         %
-        function test_xlswrite(self)
+        function DISABLED_test_xlswrite(self)
             N_MAX_ROWS=65536;
             N_MAX_COLS=256;
             s=warning('off',...
-                'MODGEN:MICROSOFT:OFFICE:XLSWRITE:resultFileTypeChange');            
+                'MODGEN:MICROSOFT:OFFICE:XLSWRITE:resultFileTypeChange');
             check(cell(0,0));
             check(cell(N_MAX_ROWS+1,1));
             check(cell(1,N_MAX_COLS+1));
@@ -26,7 +26,7 @@ classdef mlunit_test_common < mlunitext.test_case
                 import modgen.test.TmpDataManager;
                 import modgen.system.ExistanceChecker;
                 import modgen.microsoft.office.xlswrite;
-
+                
                 if ~ispc()
                     return;
                 end

@@ -13,7 +13,7 @@ classdef test_suite<handle
     %  Running a test suite is done the same way as a single test. Example:
     %         result = test_result;
     %         [suite, result] = run(suite, result);
-    %         summary(result)
+    %         getReport(result)
     %
     %  See also MLUNIT.TEST_CASE, MLUNIT.TEST_LOADER, MLUNIT.TEST_RESULT.
     %
@@ -374,7 +374,7 @@ classdef test_suite<handle
             %         suite = ...; % Create test suite, e.g. with test_loader.
             %         result = test_result;
             %         [suite, result] = run(suite, result);
-            %         summary(result)
+            %         getReport(result)
             %
             %  See also MLUNITEXT.TEST_SUITE.
             
@@ -432,7 +432,7 @@ classdef test_suite<handle
             %       suite = ...; % Create test suite, e.g. with test_loader.
             %       result = test_result;
             %       [suite, result] = run(suite, result);
-            %       summary(result)
+            %       getReport(result)
             %
             %  See also MLUNITEXT.TEST_SUITE.
             

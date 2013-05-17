@@ -1,4 +1,4 @@
-classdef test_test_suite < mlunitext.test_case
+classdef test_test_suite < mlunitext.test_case&mlunit_test.AuxChecker
     % TEST_TEST_SUITE tests the class test_suite.
     %
     %  Example:
@@ -48,8 +48,7 @@ classdef test_test_suite < mlunitext.test_case
             tests{3} = mlunit_test.mock_test('test_method_no_return');
             self.suite.add_tests(tests);
             self.result = run(self.suite, self.result);
-            assert(strcmp('mlunitext.test_result run=3 errors=1 failures=0', ...
-                summary(self.result)));
+            self.checkResultReport(self.result,3,1,0);
         end
         function testFromTestCaseNameList(self)
             % TEST_ADD_TESTS_AS_A_SUITE tests the method
@@ -194,8 +193,7 @@ classdef test_test_suite < mlunitext.test_case
             set_should_stop(self.result);
             self.suite.add_test(mlunit_test.mock_test('test_method'));
             self.result = run(self.suite, self.result);
-            assert(strcmp('mlunitext.test_result run=0 errors=0 failures=0', ...
-                summary(self.result)));
+            self.checkResultReport(self.result,0,0,0);
             [nErrors,nFailures]=self.result.getErrorFailCount();
             assert(nErrors==0);
             assert(nFailures==0);
@@ -215,8 +213,7 @@ classdef test_test_suite < mlunitext.test_case
             self.suite.add_test(...
                 mlunit_test.mock_test('test_broken_method'));
             self.result = run(self.suite, self.result);
-            assert(strcmp('mlunitext.test_result run=2 errors=1 failures=0', ...
-                summary(self.result)));
+            self.checkResultReport(self.result,2,1,0);
             [nErrors,nFailures]=self.result.getErrorFailCount();
             assert(nErrors==1);
             assert(nFailures==0);
