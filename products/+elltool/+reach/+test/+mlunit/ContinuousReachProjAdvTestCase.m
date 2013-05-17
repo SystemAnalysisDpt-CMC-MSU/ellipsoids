@@ -25,10 +25,9 @@ classdef ContinuousReachProjAdvTestCase < mlunitext.test_case
             -0.3293    0.9442];
         DIM2_SYS_IND_VEC = [1 2];
         DIM8_SYS_IND_VEC = [1 2 6];
+        ALLOWED_MODE_LIST = {'rand', 'fix'};
     end
     properties (Access=private)
-        etalonDataRootDir
-        etalonDataBranchKey
         confName
         crm
         crmSys
@@ -36,10 +35,11 @@ classdef ContinuousReachProjAdvTestCase < mlunitext.test_case
         reachObj
         timeVec
         calcPrecision
-        mode
+        modeList
+        SysParam
     end
     methods (Access = private, Static)
-        function newCMat = multiplyCMat(cellMat, doubleMultMatLeft,...
+        function newDoubleMat = multiplyCMat(cellMat, doubleMultMatLeft,...
                 doubleMultMatRight)
             doubleMat = cellfun(@str2num,cellMat);
             if (nargin == 2)
@@ -48,59 +48,51 @@ classdef ContinuousReachProjAdvTestCase < mlunitext.test_case
                 newDoubleMat = doubleMultMatLeft*doubleMat*...
                     doubleMultMatRight;
             end
-            newCMat = arrayfun(@num2str,newDoubleMat,...
-                'UniformOutput', false);
-        end
+        end   
     end
     methods (Access = private)
-        function [atDefCMat, btDefCMat, ctDefCMat, ptDefCMat,...
-                ptDefCVec, qtDefCMat, qtDefCVec, x0DefMat,...
-                x0DefVec, l0Mat] = getSysParams(self)
-            atDefCMat = self.crmSys.getParam('At');
-            btDefCMat = self.crmSys.getParam('Bt');
-            ctDefCMat = self.crmSys.getParam('Ct');
-            ptDefCMat = self.crmSys.getParam('control_restriction.Q');
-            ptDefCVec = self.crmSys.getParam('control_restriction.a');
-            qtDefCMat = self.crmSys.getParam('disturbance_restriction.Q');
-            qtDefCVec = self.crmSys.getParam('disturbance_restriction.a');
-            x0DefMat = self.crmSys.getParam('initial_set.Q');
-            x0DefVec = self.crmSys.getParam('initial_set.a');
+        %
+        function fillSysParamField(self)
+            self.SysParam = struct();
+            self.SysParam.atCMat = self.crmSys.getParam('At');
+            self.SysParam.btCMat = self.crmSys.getParam('Bt');
+            self.SysParam.ctCMat = self.crmSys.getParam('Ct');
+            self.SysParam.ptCMat = self.crmSys.getParam('control_restriction.Q');
+            self.SysParam.ptCVec = self.crmSys.getParam('control_restriction.a');
+            self.SysParam.qtCMat = self.crmSys.getParam('disturbance_restriction.Q');
+            self.SysParam.qtCVec = self.crmSys.getParam('disturbance_restriction.a');
+            self.SysParam.x0Mat = self.crmSys.getParam('initial_set.Q');
+            self.SysParam.x0Vec = self.crmSys.getParam('initial_set.a');
             l0CMat = self.crm.getParam(...
                 'goodDirSelection.methodProps.manual.lsGoodDirSets.set1');
-            l0Mat = cell2mat(l0CMat.').';
-        end
+            self.SysParam.l0Mat = cell2mat(l0CMat.').';
+        end 
         %
-        function auxTestProjection(self,indVec,caseName,projMat)
-            [atDefCMat, btDefCMat, ctDefCMat, ptDefCMat,...
-                ptDefCVec, qtDefCMat, qtDefCVec,...
-                x0DefMat, x0DefVec, l0Mat] = self.getSysParams();
-            if 	nargin < 4
-                [projMat, ~] = qr(rand(size(atDefCMat)));
-            end
-            newAtCMat = self.multiplyCMat(atDefCMat,projMat,inv(projMat));
-            newBtCMat = self.multiplyCMat(btDefCMat,projMat);
-            newCtCMat = self.multiplyCMat(ctDefCMat,projMat);
-            newPtCMat = ptDefCMat;
-            newQtCMat = qtDefCMat;
-            newPtCVec = ptDefCVec;
-            newQtCVec = qtDefCVec;
-            newX0Mat = projMat*x0DefMat*projMat';
-            newX0Vec = projMat*x0DefVec;
-            newL0Mat = projMat*l0Mat;
+        function auxTestProjection(self,indVec,caseName,projMat)          
+            newAtMat = self.multiplyCMat(self.SysParam.atCMat,projMat,inv(projMat));
+            newBtMat = self.multiplyCMat(self.SysParam.btCMat,projMat);
+            newCtMat = self.multiplyCMat(self.SysParam.ctCMat,projMat);
+            newPtCMat = self.SysParam.ptCMat;
+            newQtCMat = self.SysParam.qtCMat;
+            newPtCVec = self.SysParam.ptCVec;
+            newQtCVec = self.SysParam.qtCVec;
+            newX0Mat = projMat*self.SysParam.x0Mat*projMat';
+            newX0Vec = projMat*self.SysParam.x0Vec;
+            newL0Mat = projMat*self.SysParam.l0Mat;
             ControlBounds = struct();
             ControlBounds.center = newPtCVec;
             ControlBounds.shape = newPtCMat;
             DistBounds = struct();
             DistBounds.center = newQtCVec;
             DistBounds.shape = newQtCMat;
-            directionsMat = eye(size(atDefCMat));
+            directionsMat = eye(size(self.SysParam.atCMat));
             invProjMat=inv(projMat);
             %
-            newLinSys = elltool.linsys.LinSysFactory.create(newAtCMat,...
-                newBtCMat, ControlBounds, newCtCMat, DistBounds);
+            newLinSys = elltool.linsys.LinSysFactory.create(newAtMat,...
+                newBtMat, ControlBounds, newCtMat, DistBounds);
             newReachObj = elltool.reach.ReachContinuous(newLinSys,...
                 ellipsoid(newX0Vec, newX0Mat), newL0Mat, self.timeVec);
-            
+            %
             secondProjReachObj =...
                 newReachObj.projection(invProjMat(indVec,:)');
             checkPlot(secondProjReachObj);
@@ -128,13 +120,13 @@ classdef ContinuousReachProjAdvTestCase < mlunitext.test_case
         end
         function tear_down(~)
             close all;
-        end
+        end   
         %
-        function self = set_up_param(self, confName, crm, crmSys, inpMode)
+        function self = set_up_param(self, confName, crm, crmSys, inpModeList)
             self.crm = crm;
             self.crmSys = crmSys;
             self.confName = confName;
-            self.mode = inpMode;
+            self.modeList = inpModeList;
             %
             self.crm.deployConfTemplate(self.confName);
             self.crm.selectConf(self.confName);
@@ -142,31 +134,29 @@ classdef ContinuousReachProjAdvTestCase < mlunitext.test_case
             self.crmSys.selectConf(sysDefConfName,...
                 'reloadIfSelected', false);
             %
-            [atDefCMat, btDefCMat, ctDefCMat, ptDefCMat,...
-                ptDefCVec, qtDefCMat, qtDefCVec,...
-                x0DefMat, x0DefVec, l0Mat] = self.getSysParams();
+            self.fillSysParamField();
             %
             self.timeVec = [self.crmSys.getParam('time_interval.t0'),...
                 self.crmSys.getParam('time_interval.t1')];
             self.calcPrecision =...
                 self.crm.getParam('genericProps.calcPrecision');
             ControlBounds = struct();
-            ControlBounds.center = ptDefCVec;
-            ControlBounds.shape = ptDefCMat;
+            ControlBounds.center = self.SysParam.ptCVec;
+            ControlBounds.shape = self.SysParam.ptCMat;
             DistBounds = struct();
-            DistBounds.center = qtDefCVec;
-            DistBounds.shape = qtDefCMat;
-            
-            self.linSys = elltool.linsys.LinSysFactory.create(atDefCMat,...
-                btDefCMat, ControlBounds, ctDefCMat, DistBounds);
+            DistBounds.center = self.SysParam.qtCVec;
+            DistBounds.shape = self.SysParam.qtCMat;
+            %
+            self.linSys = elltool.linsys.LinSysFactory.create(self.SysParam.atCMat,...
+                self.SysParam.btCMat, ControlBounds, self.SysParam.ctCMat, DistBounds);
             self.reachObj = elltool.reach.ReachContinuous(self.linSys,...
-                ellipsoid(x0DefVec, x0DefMat), l0Mat, self.timeVec);
+                ellipsoid(self.SysParam.x0Vec, self.SysParam.x0Mat),...
+                self.SysParam.l0Mat, self.timeVec);          
         end
         %
         function self = testProjection(self)
             import modgen.common.throwerror;
             nDims = self.reachObj.dimension();
-            caseName = self.mode;
             switch nDims
                 case 2
                     projMat = self.PROJECTION_DIM2_MAT;
@@ -179,15 +169,15 @@ classdef ContinuousReachProjAdvTestCase < mlunitext.test_case
                         ['expected dimensionality is 8 or 2, ',...
                         'real dimensionality is %d'],nDims);
             end
-            switch lower(caseName)
-                case 'fix'
-                    self.auxTestProjection(indVec,caseName,projMat);
-                case 'rand'
-                    self.auxTestProjection(indVec,caseName);
-                otherwise
+            if ismember('rand', self.modeList)
+                [projMat, ~] = qr(rand(size(self.SysParam.atCMat)));
+            end  
+            isNotModeVec = ~ismember(self.modeList,self.ALLOWED_MODE_LIST); 
+            if isNotModeVec
                     throwerror('wrongInput:badMode',...
-                        'mode %s is not supported',caseName);
+                        'mode %s is not supported',self.modeList(isNotModeVec));
             end
+            cellfun(@(x) self.auxTestProjection(indVec,x,projMat), self.modeList);
         end
     end
 end

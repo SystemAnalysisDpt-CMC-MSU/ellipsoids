@@ -70,22 +70,23 @@ classdef EmailLogger<handle
         end
         function sendMessage(self,subjectMessage,varargin)
             import modgen.common.throwerror;
+            import modgen.common.parseparext;
             %% Create log4j logger
             logger=modgen.logging.log4j.Log4jConfigurator.getLogger();
             %
             if ~self.isDryRun
-                if nargin<3
-                    bodyMessage=[];
-                else
-                    bodyMessage=varargin{1};
-                end
+                [reg,~,attachNameList]=parseparext(varargin,...
+                    {'emailAttachmentNameList';{};'iscellofstring(x)'},...
+                    [0 1],'regDefList',{[]});
+                bodyMessage=reg{1};
                 %
                 emailSubjectPrefix=['[',self.loggerName,']:'];
                 emailSubjectSuffix=[self.subjectSuffix ,...
                     ', running on ',self.hostName,'(',self.userName,')'];
                 emailSubject=[emailSubjectPrefix,subjectMessage,...
                     emailSubjectSuffix];
-                attachNameList=self.emailAttachmentNameList;
+                attachNameList=[attachNameList,...
+                    self.emailAttachmentNameList];
                 %
                 nAttachemments=length(attachNameList);
                 for iFile=1:nAttachemments

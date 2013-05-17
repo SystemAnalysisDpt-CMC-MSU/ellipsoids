@@ -55,10 +55,20 @@ classdef test_result<handle
                     nTests=self.get_tests_run();
                     runTime=self.getRunTimeTotal();
                     %
-                    reportStr=sprintf(...
-                        ['TESTS: %-5d, FAILURES: %-5d, ERRORS: %-5d ',...
-                        'RUN TIME(sec.): %-12.5g'],nTests,nFails,...
-                        nErrors,runTime);
+                    msgFormatStr=['<< %s >> || TESTS: %d,  ',...
+                        'RUN TIME(sec.): %.5g'];
+                    %
+                    if (nErrors==0)&&(nFails)==0
+                        prefixStr='PASSED';
+                        addArgList={};
+                    else
+                        prefixStr='FAILED';
+                        msgFormatStr=[msgFormatStr,...
+                            ',  FAILURES: %d,  ERRORS: %d'];
+                        addArgList={nFails,nErrors};
+                    end
+                    reportStr=sprintf(msgFormatStr,prefixStr,...
+                        nTests,runTime,addArgList{:});
                 case 'tops',
                     rel=self.getRunStatRel(); %#ok<NASGU>
                     reportStr=evalc('rel.display');
