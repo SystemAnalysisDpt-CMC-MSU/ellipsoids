@@ -87,44 +87,20 @@ classdef test_case<handle
             % Faculty of Computational Mathematics and Cybernetics, System Analysis
             % Department, 7-October-2012, <pgagarinov@gmail.com>$
             %
-            [reg,prop]=modgen.common.parseparams(varargin,...
-                {'profile','marker'});
+            [reg,~,self.profMode,markerStr,~,isMarkerSet]=...
+                modgen.common.parseparext(varargin,...
+                {'profile','marker';...
+                'off',[];...
+                'isstring(x)','isstring(x)'});
             nRegs=length(reg);
             additionalParse(reg{1:min(nRegs,2)});
             %
-            isProfSpec=false;
-            isMarkerSet=false;
-            nProps=length(prop);
-            for k=1:2:nProps-1
-                switch prop{k}
-                    case 'profile',
-                        profMode=prop{k+1};
-                        if ~(ischar(profMode)&&modgen.common.isrow(profMode))
-                            throwerror('wrongInput',...
-                                'profile property is expected to be a string');
-                        end
-                        %
-                        isProfSpec=true;
-                    case 'marker'
-                        markerStr=prop{k+1};
-                        if ~(ischar(markerStr)&&...
-                                modgen.common.isrow(markerStr))
-                            throwerror('wrongInput',...
-                                'marker is expected to be a string');
-                        end
-                        isMarkerSet=true;
-                end
-            end
-            if ~isProfSpec
-                profMode='off';
-            end
             if isMarkerSet
                 self.set_marker(markerStr);
             end
-            self.profMode=profMode;
             self.profDir=fileparts(which(class(self)));
             %
-            self.setUpParams=[reg(3:end),prop];
+            self.setUpParams=reg(3:end);
             function additionalParse(name, subclass)
                 import modgen.common.throwerror;
                 if (nargin == 0)

@@ -10,7 +10,7 @@ classdef mlunit_test_text_test_result < mlunitext.test_case
                 suite.set_marker(markerStr);
             end
         end
-        function result=getSimpleTestResult(self,varargin)
+        function [result,suite]=getSimpleTestResult(self,varargin)
             [runner,suite]=self.getSimpleRunnerSuite(varargin{:}); %#ok<NASGU,ASGLU>
             result=[];
             evalc('result=runner.run(suite);');
@@ -24,7 +24,14 @@ classdef mlunit_test_text_test_result < mlunitext.test_case
             resVec=[result,result2]; %#ok<NASGU>
             check('')
             check('minimal')
-            check('tops')
+            checkMaster('tops');
+            checkMaster('topsTestCase');
+            function checkMaster(repType)
+                check(repType);
+                rel=[];
+                str=['rel=resVec.getRunStatRel(''',repType,''')'];
+                evalc(str);
+            end
             function check(repType)
                 PREFIX='reportStr=resVec.getReport';
                 reportStr=''; %#ok<NASGU>
@@ -44,7 +51,7 @@ classdef mlunit_test_text_test_result < mlunitext.test_case
             result1Vec=self.getSimpleTestResult();
             result2Vec=self.getSimpleTestResult('alpha');
             result1Vec.union_test_results(result2Vec);
-            nTests=result1Vec.get_tests_run();
+            nTests=result1Vec.getNTestsRun();
             nMapEntries=result1Vec.getRunTimeMap().Count;
             mlunitext.assert_equals(nTests,nMapEntries);
         end
@@ -65,30 +72,24 @@ classdef mlunit_test_text_test_result < mlunitext.test_case
         end
         %
         function testPrintErrorList(self)
-            runner = mlunitext.text_test_runner(1,1);
-            loader = mlunitext.test_loader;
-            tests = loader.map('mlunitext.test.mock_test',...
-                {'test_pass_one','test_fail_one','test_error_one'}, false);
-            suite = mlunitext.test_suite(tests);
-            testRes=[];
-            evalc('testRes=runner.run(suite);');
-            evalc('testRes.print_errors');
-            testVec=[testRes,testRes];
+            [result,suite]=self.getSimpleTestResult();
+            result2=self.getSimpleTestResult('alpha');
+            testVec=[result,result2];
+            evalc('result.print_errors');
             evalc('testVec.getErrorFailMessage();');
             evalc('testVec.getErrorFailCount();');
-            evalc('testVec.get_tests_run;');
+            evalc('testVec.getNTestsRun();');
+            evalc('testVec.getNErrors();');
+            evalc('testVec.getNFailures;');
+            testObj=suite.tests{1};
             check('print_errors','get_error_list','get_failure_list',...
                 'union_test_results',...
-                @(x)stop_test(x,tests{1}),@(x)start_test(x,tests{1}),...
-                'set_should_stop',...
-                'get_should_stop',...
-                'get_failures',...
-                'get_errors',...
-                @(x)add_success(x,tests{1}),...
-                @(x)add_failure(x,tests{1},MException('alpha:beta','gamma')),...
-                @(x)add_failure_by_message(x,tests{1},'alpha'),...
-                @(x)add_error_by_message(x,tests{1},'alpha'),...
-                @(x)add_error(x,tests{1},...
+                @(x)stop_test(x,testObj),@(x)start_test(x,testObj),...
+                @(x)add_success(x,testObj),...
+                @(x)add_failure(x,testObj,MException('alpha:beta','gamma')),...
+                @(x)add_failure_by_message(x,testObj,'alpha'),...
+                @(x)add_error_by_message(x,testObj,'alpha'),...
+                @(x)add_error(x,testObj,...
                 MException('alpha:beta','gamma')),...
                 'add_error');
             function check(varargin)

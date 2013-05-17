@@ -153,7 +153,7 @@ classdef test_test_case < mlunitext.test_case&mlunit_test.AuxChecker
         %
         function test_run(self)
             % TEST_RESULT tests the method test_case.run and
-            %   the method test_result.get_tests_run.
+            %   the method test_result.getNTestsRun.
             %
             %  Example:
             %         run(gui_test_runner,
@@ -166,8 +166,8 @@ classdef test_test_case < mlunitext.test_case&mlunit_test.AuxChecker
             
             test = mlunit_test.mock_test('test_method');
             result = run(test);
-            assert_equals(1, get_tests_run(result));
-            assert_not_equals(0, get_tests_run(result));
+            assert_equals(1, getNTestsRun(result));
+            assert_not_equals(0, getNTestsRun(result));
         end
         %
         function test_template_method(self)

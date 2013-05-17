@@ -51,14 +51,14 @@ classdef test_test_result < mlunitext.test_case&mlunit_test.AuxChecker
                 char(error_lines(1)));
             assert_equals(false, isempty(findstr('mock_test.m at line 94', ...
                 char(error_lines(2)))));
-            assert_equals(false, isempty(findstr('test_case.m at line 292', ...
+            assert_equals(false, isempty(findstr('test_case.m at line 268', ...
                 char(error_lines(3)))));
             assert_equals('Error:  , Identifier: ', char(error_lines(end)));
         end
         
         function self = test_get_errors_failures(self)
             % TEST_GET_ERRORS_FAILURES tests the methods
-            % test_result.get_errors and test_result.get_failures.
+            % test_result.getNErrors and test_result.getNFailures.
             %
             % Example:
             %   run(gui_test_runner,
@@ -75,13 +75,13 @@ classdef test_test_result < mlunitext.test_case&mlunit_test.AuxChecker
                 mlunit_test.mock_test('test_method'), 'foo failure');
             stop_test(self.result, ...
                 mlunit_test.mock_test('test_method'));
-            assert(1 == get_errors(self.result));
-            assert(1 == get_failures(self.result));
+            assert(1 == getNErrors(self.result));
+            assert(1 == getNFailures(self.result));
         end
         
         function self = test_get_tests_run(self)
             % TEST_GET_TESTS_RUN tests the method
-            %   test_result.get_tests_run.
+            %   test_result.getNTestsRun.
             %
             % Example:
             %   run(gui_test_runner,
@@ -95,7 +95,7 @@ classdef test_test_result < mlunitext.test_case&mlunit_test.AuxChecker
                 mlunit_test.mock_test('test_method'));
             stop_test(self.result, ...
                 mlunit_test.mock_test('test_method'));
-            assert(1 == get_tests_run(self.result));
+            assert(1 == getNTestsRun(self.result));
         end
         
         function self = test_result(self)
@@ -123,8 +123,6 @@ classdef test_test_result < mlunitext.test_case&mlunit_test.AuxChecker
             check(1,1);
             stop_test(self.result, ...
                 mlunit_test.mock_test('test_method'));
-            set_should_stop(self.result);
-            assert_equals(1, get_should_stop(self.result));
             function check(varargin)
                 self.checkResultReport(self.result,1,varargin{:});
             end
