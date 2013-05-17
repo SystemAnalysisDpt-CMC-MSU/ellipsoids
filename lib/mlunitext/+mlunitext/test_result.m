@@ -55,8 +55,8 @@ classdef test_result<handle
                     nTests=self.get_tests_run();
                     runTime=self.getRunTimeTotal();
                     %
-                    msgFormatStr=['<< %s >> || TESTS: %-5d,  ',...
-                        'RUN TIME(sec.): %-12.5g'];
+                    msgFormatStr=['<< %s >> || TESTS: %d,  ',...
+                        'RUN TIME(sec.): %.5g'];
                     %
                     if (nErrors==0)&&(nFails)==0
                         prefixStr='PASSED';
@@ -64,7 +64,7 @@ classdef test_result<handle
                     else
                         prefixStr='FAILED';
                         msgFormatStr=[msgFormatStr,...
-                            ', FAILURES: %-5d, ERRORS: %-5d'];
+                            ',  FAILURES: %d,  ERRORS: %d'];
                         addArgList={nFails,nErrors};
                     end
                     reportStr=sprintf(msgFormatStr,prefixStr,...
