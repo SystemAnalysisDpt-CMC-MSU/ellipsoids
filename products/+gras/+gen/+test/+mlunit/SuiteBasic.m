@@ -126,5 +126,25 @@ classdef SuiteBasic < mlunitext.test_case
             end
             
         end
+        function testMatDot(self)
+            import gras.gen.matdot;
+            Amat = magic(4);
+            Bmat = eye(4);
+            Cmat = ones(4);
+            % commutative
+            check(matdot(Amat, Bmat), matdot(Bmat, Amat));
+            % bilinear
+            check(matdot(Amat, 2 * Bmat - 4 * Cmat), 2 * ...
+                matdot(Amat, Bmat) - 4 * matdot(Amat, Cmat));
+            check(matdot(Amat + 3 * Bmat, Cmat), matdot(Amat, Cmat) + ...
+                3 * matdot(Bmat, Cmat));
+            % scalar multiplication
+            check(matdot(3 * Amat, -5 * Bmat), -15 * matdot(Amat, Bmat));
+            %
+            function check(leftArray,rightArray)
+                mlunitext.assert_equals(true,isequal(leftArray,...
+                    rightArray));
+            end
+        end
     end
 end

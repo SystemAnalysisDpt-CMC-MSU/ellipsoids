@@ -1,5 +1,5 @@
 function resArr = matdot(inpArr1, inpArr2)
-% MATDOT calculates the dot production of two square matrices, which have
+% MATDOT calculates the dot product of two square matrices, which have
 % the same size.
 %
 % Input:
