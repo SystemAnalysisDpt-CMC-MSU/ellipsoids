@@ -11,26 +11,25 @@ function removeFields(self,varargin)
 %        fieldName1: char - name of first field
 %        ...
 %        fieldNameN: char - name of N-th field
-%     Case2: 
+%     Case2:
 %        fieldNameList: cell[1,] of char - list of fileds to delete
 %
 %
-% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-03-29 $ 
+% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-03-29 $
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2011 $
 %
 %
-if nargin==1,
-    return;
+import modgen.common.throwerror;
+if nargin~=1
+    isCharVec=cellfun('isclass',varargin,'char');
+    isCellStr=cellfun(@iscellstr,varargin);
+    if ~all(isCharVec|isCellStr)
+        throwerror('wrongInput','all inputs should be of type char');
+    end
+    inpList=varargin(isCharVec);
+    inpCellStr=varargin(isCellStr);
+    inpList=[inpList,inpCellStr{:}];
+    self.removeFieldsInternal(unique(inpList));
 end
-isCharVec=cellfun('isclass',varargin,'char');
-isCellStr=cellfun(@iscellstr,varargin);
-if ~all(isCharVec|isCellStr)
-    error([upper(mfilename),':wrongInput'],...
-        'all inputs should be of type char');
-end
-inpList=varargin(isCharVec);
-inpCellStr=varargin(isCellStr);
-inpList=[inpList,inpCellStr{:}];
-self.removeFieldsInternal(unique(inpList));

@@ -65,7 +65,7 @@ classdef TestSuiteType < mlunitext.test_case
                 isIncludedVec(iPair)=objPairList{iPair}{1}.isIncludedInto(...
                     objPairList{iPair}{2});
             end
-            mlunit.assert_equals(vertcat(combAndIsIncludedExpCMat{:,2}),...
+            mlunitext.assert_equals(vertcat(combAndIsIncludedExpCMat{:,2}),...
                 isIncludedVec);
             %
            isIncludedExpVec=[true;true;false;false;true;true];
@@ -75,7 +75,7 @@ classdef TestSuiteType < mlunitext.test_case
                 isIncludedVec(iObj)=objList{iObj}.isContainedInCellType();
            end
            %
-           mlunit.assert_equals(true,isequal(isIncludedVec,isIncludedExpVec));
+           mlunitext.assert_equals(true,isequal(isIncludedVec,isIncludedExpVec));
         end
         function self=test_toStruct(self)
            obj1=modgen.common.type.NestedArrayType.fromClassName({'cell','char'});
@@ -101,7 +101,7 @@ classdef TestSuiteType < mlunitext.test_case
             for iPair=1:nPairs
                 type=modgen.common.type.NestedArrayTypeFactory.fromClassName(...
                     classSpecNamePairMat{iPair,1}{:});
-                mlunit.assert_equals(true,...
+                mlunitext.assert_equals(true,...
                     isa(type,classSpecNamePairMat{iPair,2}),...
                     sprintf('failed for pair %d',iPair));
             end

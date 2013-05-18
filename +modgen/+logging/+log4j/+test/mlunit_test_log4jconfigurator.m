@@ -28,7 +28,7 @@ classdef mlunit_test_log4jconfigurator < mlunitext.test_case
             loggerName=char(logger.getName());
             logger2=modgen.logging.log4j.test.Log4jConfigurator.getLogger(loggerName);
             loggerName2=char(logger2.getName());
-            mlunit.assert_equals(loggerName,loggerName2);
+            mlunitext.assert_equals(loggerName,loggerName2);
         end
         %
         function aux_test_configuration_persistence(~)
@@ -44,56 +44,56 @@ classdef mlunit_test_log4jconfigurator < mlunitext.test_case
                 'log4j.appender.stdout.layout.ConversionPattern=%5p %c - %m\\n'];
             % Unlock and reconfigure
             Log4jConfigurator.unlockConfiguration();
-            mlunit.assert_equals(false,Log4jConfigurator.isLocked());
+            mlunitext.assert_equals(false,Log4jConfigurator.isLocked());
             confStr = ['log4j.rootLogger=WARN,stdout', NL, appenderConfStr];
             evalc('Log4jConfigurator.configure(confStr)');
-            mlunit.assert_equals(true,Log4jConfigurator.isConfigured());
-            mlunit.assert_equals(confStr,Log4jConfigurator.getLastLogPropStr());
+            mlunitext.assert_equals(true,Log4jConfigurator.isConfigured());
+            mlunitext.assert_equals(confStr,Log4jConfigurator.getLastLogPropStr());
             % Lock configuration and try to configure log4j again, using a
             % different level than it currently has. Log4jConfigurator
             % should do nothing, besides issuing a warning, and the level
             % should remain unchanged.
             Log4jConfigurator.lockConfiguration();
-            mlunit.assert_equals(true,Log4jConfigurator.isLocked());
+            mlunitext.assert_equals(true,Log4jConfigurator.isLocked());
             confStr = ['log4j.rootLogger=INFO,stdout', NL, appenderConfStr]; %#ok<NASGU>
             outputText = evalc('Log4jConfigurator.configure(confStr)');
             if isempty( strfind(outputText,'WARN') )
-                mlunit.fail('Log4jConfigurator.configure should have issued at least 1 warning');
+                mlunitext.fail('Log4jConfigurator.configure should have issued at least 1 warning');
             end
             if isempty( regexp(outputText, 'in .* at line \d+', 'once') )
-                mlunit.fail('Log4jConfigurator.configure did not print a stack trace');
+                mlunitext.fail('Log4jConfigurator.configure did not print a stack trace');
             end
             % Create a logger instance and check log level
             logger=Log4jConfigurator.getLogger();
             if logger.isInfoEnabled()
-                mlunit.fail('Locked Log4jConfigurator should not allow a configuration change');
+                mlunitext.fail('Locked Log4jConfigurator should not allow a configuration change');
             end
             % Now try to configure using configureSimply
             outputText = evalc('Log4jConfigurator.configureSimply(''INFO'')');
             if logger.isInfoEnabled()
-                mlunit.fail('Locked Log4jConfigurator should not allow a configuration change');
+                mlunitext.fail('Locked Log4jConfigurator should not allow a configuration change');
             end
             if isempty( strfind(outputText,'WARN') )
-                mlunit.fail('Log4jConfigurator.configureSimply should have issued at least 1 warning');
+                mlunitext.fail('Log4jConfigurator.configureSimply should have issued at least 1 warning');
             end
             if isempty( regexp(outputText, 'in .* at line \d+', 'once') )
-                mlunit.fail('Log4jConfigurator.configureSimply did not print a stack trace');
+                mlunitext.fail('Log4jConfigurator.configureSimply did not print a stack trace');
             end
             % Unlock the configuration and try to change it
             Log4jConfigurator.unlockConfiguration();
             evalc('Log4jConfigurator.configure(''log4j.rootLogger=INFO'',''isLockAfterConfigure'',true)');
             if ~logger.isInfoEnabled()
-                mlunit.fail('Log4jConfigurator failed to change configuration');
+                mlunitext.fail('Log4jConfigurator failed to change configuration');
             end
-            mlunit.assert_equals(true,Log4jConfigurator.isLocked(),...
+            mlunitext.assert_equals(true,Log4jConfigurator.isLocked(),...
                 'Failed to lock configuration using isLockAfterConfigure property');
             % Do the same using configureSimply
             Log4jConfigurator.unlockConfiguration();
             evalc('Log4jConfigurator.configureSimply(''WARN'',''isLockAfterConfigure'',true)');
             if logger.isInfoEnabled()
-                mlunit.fail('Log4jConfigurator failed to change configuration');
+                mlunitext.fail('Log4jConfigurator failed to change configuration');
             end
-            mlunit.assert_equals(true,Log4jConfigurator.isLocked(),...
+            mlunitext.assert_equals(true,Log4jConfigurator.isLocked(),...
                 'Failed to lock configuration using isLockAfterConfigure property');
         end
         %
@@ -102,10 +102,10 @@ classdef mlunit_test_log4jconfigurator < mlunitext.test_case
             loggerName=char(logger.getName());
             logger2=modgen.logging.log4j.test.Log4jConfigurator.getLogger(loggerName,false);
             loggerName2=char(logger2.getName());
-            mlunit.assert_equals(loggerName,loggerName2);
+            mlunitext.assert_equals(loggerName,loggerName2);
             logger2=modgen.logging.log4j.test.Log4jConfigurator.getLogger('suffix',true);
             loggerName2=char(logger2.getName());
-            mlunit.assert_equals([loggerName '.suffix'],loggerName2);
+            mlunitext.assert_equals([loggerName '.suffix'],loggerName2);
         end
     end
 end

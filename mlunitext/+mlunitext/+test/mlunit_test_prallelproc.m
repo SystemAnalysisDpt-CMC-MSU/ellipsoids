@@ -20,12 +20,12 @@ classdef mlunit_test_prallelproc < mlunitext.test_case
         end
         %
         function test_runMultiPar(self)
-            loader = mlunit.test_loader;
+            loader = mlunitext.test_loader;
             suite = loader.load_tests_from_test_case('mlunitext.test.mock_test');
             self.aux_test_run_tests(suite);
         end
         function aux_test_run_tests(self,suite)
-            runner = mlunit.text_test_runner(1, 1); %#ok<NASGU>
+            runner = mlunitext.text_test_runner(1, 1); %#ok<NASGU>
             %
             suiteSingleThread = mlunitext.test_suite(horzcat(suite.tests),...
                 self.testSuiteProps{:}); %#ok<NASGU>
@@ -35,10 +35,10 @@ classdef mlunit_test_prallelproc < mlunitext.test_case
             check('parallelMode','blockBased');
             check('parallelMode','queueBased');
             %
-            mlunit.assert_equals(true,...
+            mlunitext.assert_equals(true,...
                 isFieldEqual(resultsSingle,resultsDouble,'errors'));
             %
-            mlunit.assert_equals(true,...
+            mlunitext.assert_equals(true,...
                 isFieldEqual(resultsSingle,resultsDouble,'failures'));
             %
             function isPositive=isFieldEqual(resultsSingle,resultsDouble,fieldName)
@@ -58,8 +58,8 @@ classdef mlunit_test_prallelproc < mlunitext.test_case
                     self.testSuiteProps{:},'nParallelProcesses',2,varargin{:}); 
                 [~,resultsDouble]=evalc('runner.run(suiteDoubleThread);');
                 %
-                mlunit.assert_equals(resultsSingle.tests_run,...
-                    resultsDouble.tests_run);
+                mlunitext.assert_equals(resultsSingle.getNTestsRun(),...
+                    resultsDouble.getNTestsRun());
             end
         end
     end
