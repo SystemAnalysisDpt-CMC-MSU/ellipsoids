@@ -1842,6 +1842,6 @@ function operationNestedFunction(testEllArr, compList, operation,...
                         cellstr2expression({VEC_COMP_METHODS_LIST{:}, ...
                         MAT_COMP_METHODS_LIST{:}}), operation);
             end    
-            testIsRight = ~isempty(find(eqArr,1));
+            testIsRight = all(eqArr(:)==1);
             mlunitext.assert_equals(testIsRight, 1);
 end
