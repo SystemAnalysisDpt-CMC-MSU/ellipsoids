@@ -1,17 +1,17 @@
-classdef test_test_case < mlunitext.test_case
+classdef test_test_case < mlunitext.test_case&mlunit_test.AuxChecker
     %test_test_case tests the class test_case.
     %
     %  Example:
     %         run(gui_test_runner, 'test_test_case');
-
+    
     % $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
     % Faculty of Computational Mathematics and Cybernetics, System Analysis
     % Department, 7-October-2012, <pgagarinov@gmail.com>$
-
+    
     properties (Access=private)
         result = []
     end
-
+    
     methods
         function self = test_test_case(varargin)
             self = self@mlunitext.test_case(varargin{:});
@@ -22,9 +22,9 @@ classdef test_test_case < mlunitext.test_case
             %
             %  Example:
             %         run(gui_test_runner, 'test_test_case');
-
+            
             import mlunitext.*;
-
+            
             self.result = test_result;
         end
         %
@@ -36,8 +36,8 @@ classdef test_test_case < mlunitext.test_case
             %         run(gui_test_runner,
             %             'test_test_case(''test_count_test_cases'');');
             %
-            %  See also MLUNIT.TEST_CASE.COUNT_TEST_CASES.
-
+            %  See also MLUNITEXT.TEST_CASE.COUNT_TEST_CASES.
+            
             assert(1 == count_test_cases(self));
         end
         %
@@ -48,10 +48,10 @@ classdef test_test_case < mlunitext.test_case
             %         run(gui_test_runner,
             %             'test_test_case(''test_creates'');');
             %
-            %  See also MLUNIT.TEST_CASE.
-
+            %  See also MLUNITEXT.TEST_CASE.
+            
             import mlunitext.*;
-
+            
             error = 0;
             try
                 test_case('foo', 'mock_test');
@@ -60,7 +60,7 @@ classdef test_test_case < mlunitext.test_case
             end
             assert_equals(0, error);
             assert_not_equals(1, error);
-
+            
             error = 0;
             try
                 test_case('', 'mock_test');
@@ -78,10 +78,10 @@ classdef test_test_case < mlunitext.test_case
             %         run(gui_test_runner,
             %             'test_test_case(''test_default_result'');');
             %
-            %  See also MLUNIT.TEST_CASE.DEFAULT_TEST_RESULT.
-
+            %  See also MLUNITEXT.TEST_CASE.DEFAULT_TEST_RESULT.
+            
             t = mlunit_test.mock_test('test_method');
-            assert(isa(default_test_result(t), 'mlunit.test_result'));
+            assert(isa(default_test_result(t), 'mlunitext.test_result'));
         end
         %
         function test_failed_result(self)
@@ -92,14 +92,11 @@ classdef test_test_case < mlunitext.test_case
             %         run(gui_test_runner,
             %             'test_test_case(''test_failed_result'');');
             %
-            %  See also MLUNIT.TEST_CASE.RUN.
-
+            %  See also MLUNITEXT.TEST_CASE.RUN.
             import mlunitext.*;
-
             test = mlunit_test.mock_test('test_broken_method');
             self.result = run(test, self.result);
-            assert_equals('mlunitext.test_result run=1 errors=1 failures=0', ...
-                summary(self.result));
+            self.checkResultReport(self.result,1,1,0);
             assert(strcmp('set_up tear_down ', get_log(test)));
         end
         %
@@ -111,15 +108,13 @@ classdef test_test_case < mlunitext.test_case
             %         run(gui_test_runner,
             %             'test_test_case(''test_failed_set_up'');');
             %
-            %  See also MLUNIT.TEST_CASE.RUN.
-
+            %  See also MLUNITEXT.TEST_CASE.RUN.
+            %
             test = mlunit_test.mock_test_failed_set_up('test_method');
-            try
-                run(test, default_test_result(self));
-            catch
-                assert(0);
-            end
+            testRes=default_test_result(self);
+            run(test, testRes);
             assert(strcmp('', get_log(test)));
+            assert(testRes.getNTestsRun()==1);
         end
         %
         function test_failed_tear_down(self)
@@ -130,8 +125,8 @@ classdef test_test_case < mlunitext.test_case
             %         run(gui_test_runner,
             %             'test_test_case(''test_failed_tear_down'');');
             %
-            %  See also MLUNIT.TEST_CASE.RUN.
-
+            %  See also MLUNITEXT.TEST_CASE.RUN.
+            
             test = mlunit_test.mock_test_failed_tear_down('test_method');
             try
                 run(test, default_test_result(self));
@@ -149,42 +144,41 @@ classdef test_test_case < mlunitext.test_case
             %         run(gui_test_runner,
             %             'test_test_case(''test_result'');');
             %
-            %  See also MLUNIT.TEST_CASE.RUN, MLUNIT.TEST_RESULT.
-
+            %  See also MLUNITEXT.TEST_CASE.RUN, MLUNITEXT.TEST_RESULT.
+            
             test = mlunit_test.mock_test('test_method');
             self.result = run(test, self.result);
-            assert(strcmp('mlunitext.test_result run=1 errors=0 failures=0', ...
-                summary(self.result)));
+            self.checkResultReport(self.result,1,0,0);
         end
         %
         function test_run(self)
             % TEST_RESULT tests the method test_case.run and
-            %   the method test_result.get_tests_run.
+            %   the method test_result.getNTestsRun.
             %
             %  Example:
             %         run(gui_test_runner,
             %             'test_test_case(''test_run'');');
             %
-            %  See also MLUNIT.TEST_CASE.RUN,
-            %           MLUNIT.TEST_RESULT.GET_TESTS_RUN.
-
+            %  See also MLUNITEXT.TEST_CASE.RUN,
+            %           MLUNITEXT.TEST_RESULT.GET_TESTS_RUN.
+            
             import mlunitext.*;
-
+            
             test = mlunit_test.mock_test('test_method');
             result = run(test);
-            assert_equals(1, get_tests_run(result));
-            assert_not_equals(0, get_tests_run(result));
+            assert_equals(1, getNTestsRun(result));
+            assert_not_equals(0, getNTestsRun(result));
         end
         %
         function test_template_method(self)
             % TEST_RESULT tests the method test_case.run.
             %
             %  Example:
-            %         run(gui_test_runner, 
+            %         run(gui_test_runner,
             %             'test_test_case(''test_template_method'');');
             %
-            %  See also MLUNIT.TEST_CASE.RUN.
-
+            %  See also MLUNITEXT.TEST_CASE.RUN.
+            
             test = mlunit_test.mock_test('test_method');
             run(test, self.result);
             assert(strcmp(get_log(test), 'set_up test_method tear_down '));

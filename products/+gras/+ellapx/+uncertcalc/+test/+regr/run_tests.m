@@ -1,5 +1,5 @@
 function results=run_tests(varargin)
-runner = mlunit.text_test_runner(1, 1);
+runner = mlunitext.text_test_runner(1, 1);
 loader = mlunitext.test_loader;
 suite = loader.load_tests_from_test_case(...
     'gras.ellapx.uncertcalc.test.regr.mlunit.SuiteBasic');

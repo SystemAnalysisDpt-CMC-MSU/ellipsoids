@@ -46,7 +46,7 @@ classdef mlunit_test_diskbasedhashmap_nostorage < mlunitext.test_case
             self.map.put(keyList,inpObjList);
             isThere=fliplr(self.map.isKey(fliplr(keyList)));
             isEqual=any(isThere==true);
-            mlunit.assert_equals(isEqual,false);
+            mlunitext.assert_equals(isEqual,false);
             self.map.removeAll();
         end
         function self=test_getKeyList(self,varargin)
@@ -58,10 +58,10 @@ classdef mlunit_test_diskbasedhashmap_nostorage < mlunitext.test_case
             keyList={'rel1','rel2'};
             self.map.put(keyList,inpObjList);
             isEqual=isequal({},self.map.getKeyList);
-            mlunit.assert_equals(isEqual,true);
+            mlunitext.assert_equals(isEqual,true);
             self.map.remove('rel2');
             isEqual=isequal({},self.map.getKeyList);
-            mlunit.assert_equals(isEqual,true);
+            mlunitext.assert_equals(isEqual,true);
             self.map.removeAll();
         end        
         function self=test_isKeyAndRemove(self,varargin)
@@ -74,11 +74,11 @@ classdef mlunit_test_diskbasedhashmap_nostorage < mlunitext.test_case
             keyList={'rel1','rel2','rel3'};
             self.map.put(keyList,inpObjList);
             self.map.remove(keyList{3});
-            mlunit.assert_equals(self.map.isKey(keyList{3}),false);
+            mlunitext.assert_equals(self.map.isKey(keyList{3}),false);
             keyList=keyList(1:2);
             isThere=fliplr(self.map.isKey(fliplr(keyList)));
             isEqual=any(isThere==true);
-            mlunit.assert_equals(isEqual,false);
+            mlunitext.assert_equals(isEqual,false);
             self.map.removeAll();
         end
         function self=test_getFileNameByKey(self,varargin)

@@ -23,7 +23,7 @@ classdef SuiteEllTube < mlunitext.test_case
             [isOk,reportStr] = ...
                 cutRel.getFieldProjection(fieldList).isEqual(...
                 expRel.getFieldProjection(fieldList));
-            mlunit.assert(isOk, reportStr);
+            mlunitext.assert(isOk, reportStr);
             % cut: test point
             rel = create(timeVec);
             cutRel = rel.cut(timeVec(end) / 2);
@@ -31,7 +31,7 @@ classdef SuiteEllTube < mlunitext.test_case
             [isOk,reportStr] = ...
                 cutRel.getFieldProjection(fieldList).isEqual(...
                 expRel.getFieldProjection(fieldList));
-            mlunit.assert(isOk, reportStr);
+            mlunitext.assert(isOk, reportStr);
             % cat: test
             firstRel = create(timeVec);
             secondRel = create(evolveTimeVec);
@@ -40,7 +40,7 @@ classdef SuiteEllTube < mlunitext.test_case
             [isOk,reportStr] = ...
                 catRel.getFieldProjection(fieldList).isEqual(...
                 expRel.getFieldProjection(fieldList));
-            mlunit.assert(isOk, reportStr);
+            mlunitext.assert(isOk, reportStr);
             %
             function rel = create(timeVec)
                 nPoints = numel(timeVec);
@@ -218,10 +218,10 @@ classdef SuiteEllTube < mlunitext.test_case
             rel2.scale(@(varargin)2,{});
             MAfterArray=rel2.MArray;
             %
-            mlunit.assert_equals(false,isequal(MBeforeArray,MAfterArray));
+            mlunitext.assert_equals(false,isequal(MBeforeArray,MAfterArray));
             rel2.scale(@(varargin)0.5,{});
             [isEqual,reportStr]=rel.isEqual(rel2);
-            mlunit.assert_equals(true,isEqual,reportStr);
+            mlunitext.assert_equals(true,isEqual,reportStr);
             %
             function [projOrthMatArray,projOrthMatTransArray]=...
                     fGetProjMat(projMat,timeVec,varargin)
@@ -578,10 +578,10 @@ classdef SuiteEllTube < mlunitext.test_case
             %
             [isEqual,reportStr]=...
                 fromEllArrayEllTube.isEqual(fromMatEllTube);
-            mlunit.assert(isEqual,reportStr);
+            mlunitext.assert(isEqual,reportStr);
             [isEqual,reportStr]=...
                 fromEllMArrayEllTube.isEqual(fromMatMEllTube);
-            mlunit.assert(isEqual,reportStr);
+            mlunitext.assert(isEqual,reportStr);
             %
             function fMakeEllArrayElem(iElem)
                 ellArray(iElem) = ellipsoid(...
@@ -616,7 +616,7 @@ classdef SuiteEllTube < mlunitext.test_case
             mlunitext.assert(isOk,reportStr);
             [isOk, reportStr] = extFromEllTubeEllArray(2).eq(ellArray(2));
             mlunitext.assert(isOk,reportStr);
-            mlunit.assert(all(extTimeVec == [1 2]));
+            mlunitext.assert(all(extTimeVec == [1 2]));
             %
             intFromEllArrayEllTube = ...
                 gras.ellapx.smartdb.rels.EllTube.fromEllArray(...
@@ -630,7 +630,7 @@ classdef SuiteEllTube < mlunitext.test_case
             mlunitext.assert(isOk,reportStr);
             [isOk, reportStr] = intFromEllTubeEllArray(2).eq(ellArray(2));
             mlunitext.assert(isOk,reportStr);
-            mlunit.assert(all(intTimeVec == [1 2]));
+            mlunitext.assert(all(intTimeVec == [1 2]));
             % no assertions, just error test
             intFromEllArrayEllTube.getEllArray(EApproxType.External);
             [~, ~] =...

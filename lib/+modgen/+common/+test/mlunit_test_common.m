@@ -198,8 +198,8 @@ classdef mlunit_test_common < mlunitext.test_case
                 lastwarn('');
                 modgen.common.throwwarn('wrongInput',message);
                 [lastMsg,lastId]=lastwarn();
-                mlunit.assert_equals(true,isequal(message,lastMsg));
-                mlunit.assert_equals(true,isequal(ID_STR,lastId));
+                mlunitext.assert_equals(true,isequal(message,lastMsg));
+                mlunitext.assert_equals(true,isequal(ID_STR,lastId));
             end
         end
         function self=testThrowError(self)
@@ -211,16 +211,16 @@ classdef mlunit_test_common < mlunitext.test_case
                 try
                     modgen.common.throwerror(identifier,message);
                 catch meObj
-                    mlunit.assert_equals(true,isequal(meObj.identifier,meExpObj.identifier));
-                    mlunit.assert_equals(true,isequal(meObj.message,meExpObj.message));
-                    mlunit.assert_equals(true,isequal(meObj.cause,meExpObj.cause));
+                    mlunitext.assert_equals(true,isequal(meObj.identifier,meExpObj.identifier));
+                    mlunitext.assert_equals(true,isequal(meObj.message,meExpObj.message));
+                    mlunitext.assert_equals(true,isequal(meObj.cause,meExpObj.cause));
                 end
             end
         end
         function testGenFileName(~)
             resStr=modgen.common.genfilename('sdfsdfsdf.;:sdfd');
             expStr='sdfsdfsdf.;_sdfd';
-            mlunit.assert_equals(true,isequal(resStr,expStr));
+            mlunitext.assert_equals(true,isequal(resStr,expStr));
         end
         function testInd2SubMat(~)
             sizeVec=[2,3];
@@ -231,7 +231,7 @@ classdef mlunit_test_common < mlunitext.test_case
             indMat=modgen.common.ind2submat(sizeVec,indVec);
             [indSubList{:}]=ind2sub(sizeVec,indVec.');
             indExpMat=[indSubList{:}];
-            mlunit.assert_equals(true,isequal(indMat,indExpMat));
+            mlunitext.assert_equals(true,isequal(indMat,indExpMat));
         end
         %
         function self=test_ismembercellstr(self)
@@ -240,39 +240,39 @@ classdef mlunit_test_common < mlunitext.test_case
             bList={'sdf','sdfsdf','ssdfsfsdfsd','sdf'};
             [isTVec,indLVec]=ismember(aList,bList);
             [isTOVec,indLOVec]=ismembercellstr(aList,bList,true);
-            mlunit.assert_equals(true,isequal(isTVec,isTOVec));
-            mlunit.assert_equals(true,isequal(indLVec,indLOVec));
+            mlunitext.assert_equals(true,isequal(isTVec,isTOVec));
+            mlunitext.assert_equals(true,isequal(indLVec,indLOVec));
             %
             [isTOVec,indLOVec]=ismembercellstr(aList,bList);
-            mlunit.assert_equals(true,isequal([false false true true],isTOVec));
-            mlunit.assert_equals(true,isequal([0 0 2 1],indLOVec));
+            mlunitext.assert_equals(true,isequal([false false true true],isTOVec));
+            mlunitext.assert_equals(true,isequal([0 0 2 1],indLOVec));
             %
             [isTOVec,indLOVec]=ismembercellstr(aList,'sdfsfd');
-            mlunit.assert_equals(true,isequal([false true false false],isTOVec));
-            mlunit.assert_equals(true,isequal([0 1 0 0],indLOVec));
+            mlunitext.assert_equals(true,isequal([false true false false],isTOVec));
+            mlunitext.assert_equals(true,isequal([0 1 0 0],indLOVec));
             %
             [isTOVec,indLOVec]=ismembercellstr('sdfsfd',aList);
-            mlunit.assert_equals(true,isequal(true,isTOVec));
-            mlunit.assert_equals(true,isequal(2,indLOVec));            
+            mlunitext.assert_equals(true,isequal(true,isTOVec));
+            mlunitext.assert_equals(true,isequal(2,indLOVec));            
             [isTOVec,indLOVec]=ismembercellstr('sdfsfd','sdfsfd');
-            mlunit.assert_equals(true,isTOVec);
-            mlunit.assert_equals(indLOVec,1);
+            mlunitext.assert_equals(true,isTOVec);
+            mlunitext.assert_equals(indLOVec,1);
             [isTOVec,indLOVec]=ismembercellstr('sdfsfd','sdfsf');
-            mlunit.assert_equals(false,isTOVec);
-            mlunit.assert_equals(indLOVec,0);
+            mlunitext.assert_equals(false,isTOVec);
+            mlunitext.assert_equals(indLOVec,0);
             %
             [isTOVec,indLOVec]=ismembercellstr('alpha',{'a','b','c'});
-            mlunit.assert_equals(false,isTOVec);
-            mlunit.assert_equals(indLOVec,0);
+            mlunitext.assert_equals(false,isTOVec);
+            mlunitext.assert_equals(indLOVec,0);
             %
             [isTOVec,indLOVec]=ismembercellstr({'a','b','c'},'alpha');            
-            mlunit.assert_equals(true,isequal(false(1,3),isTOVec));
-            mlunit.assert_equals(true,isequal(zeros(1,3),indLOVec));
+            mlunitext.assert_equals(true,isequal(false(1,3),isTOVec));
+            mlunitext.assert_equals(true,isequal(zeros(1,3),indLOVec));
             %
         end
         function self=test_isunique(self)
-            mlunit.assert_equals(false,modgen.common.isunique([1 1]));
-            mlunit.assert_equals(true,modgen.common.isunique([1 2]));
+            mlunitext.assert_equals(false,modgen.common.isunique([1 1]));
+            mlunitext.assert_equals(true,modgen.common.isunique([1 2]));
         end
         function self=test_cell2sepstr(self)
             check(1000,-1,{'1000'});
@@ -281,7 +281,7 @@ classdef mlunit_test_common < mlunitext.test_case
             function check(value,numPrecision,expStr)
                 resStr=cell2sepstr([],num2cell(value),'_',...
                     'numPrecision',numPrecision);
-                mlunit.assert_equals(true,any(strcmp(expStr,resStr)));
+                mlunitext.assert_equals(true,any(strcmp(expStr,resStr)));
             end
         end
         function self=test_ismemberjoint_simple(self)
@@ -301,16 +301,16 @@ classdef mlunit_test_common < mlunitext.test_case
             expIndMember=[4,0,3];
             
             isOk=isequal(isMember,expIsMember) && isequal(indMember,expIndMember);
-            mlunit.assert_equals(true,isOk);
+            mlunitext.assert_equals(true,isOk);
         end
         function self=test_ismemberjoint_empty(self)
             [isMember,indMember]=ismemberjoint({[],[]},{[],[]});
-            mlunit.assert_equals(true,isempty(isMember));
-            mlunit.assert_equals(true,isempty(indMember));
+            mlunitext.assert_equals(true,isempty(isMember));
+            mlunitext.assert_equals(true,isempty(indMember));
             %
             [isMember,indMember]=ismemberjoint({zeros(10,0),false(10,0)},{zeros(5,0),false(5,0)},1);
-            mlunit.assert_equals(true,isequal(isMember,true(10,1)));
-            mlunit.assert_equals(true,isequal(indMember,repmat(5,10,1)));
+            mlunitext.assert_equals(true,isequal(isMember,true(10,1)));
+            mlunitext.assert_equals(true,isequal(indMember,repmat(5,10,1)));
         end
         function self = test_cellfunallelem(self)
             inpCell=repmat({rand(7,7,7)<10},4*500,2);
@@ -328,19 +328,19 @@ classdef mlunit_test_common < mlunitext.test_case
             res=cellfunallelem(hFunc,inpCell);
             %toc;
             resCheck=cellfun(@(x)hFunc(x(:)),inpCell);
-            mlunit.assert_equals(isequal(res,resCheck),true);
+            mlunitext.assert_equals(isequal(res,resCheck),true);
             %
             %tic;
             res=cellfunallelem(hFunc,inpCell,'UniformOutput',false);
             %toc;
             resCheck=cellfun(@(x)hFunc(x(:)),inpCell,'UniformOutput',false);
-            mlunit.assert_equals(isequal(res,resCheck),true);
+            mlunitext.assert_equals(isequal(res,resCheck),true);
         end
         %
         function self=test_subreffrontdim(self)
             inp=[1 2;3 4];
             res=modgen.common.subreffrontdim(inp,1);
-            mlunit.assert_equals(res,[1 2]);
+            mlunitext.assert_equals(res,[1 2]);
         end
         %
         function self=test_num2cell(self)
@@ -350,7 +350,7 @@ classdef mlunit_test_common < mlunitext.test_case
             inpMat=rand(2,3,4);
             resCellEthalon=num2cell(inpMat);
             resCell=modgen.common.num2cell(inpMat);
-            mlunit.assert_equals(true,isequal(resCell,resCellEthalon));            
+            mlunitext.assert_equals(true,isequal(resCell,resCellEthalon));            
         end
         %
         function self=test_num2cell_empty(self)
@@ -361,7 +361,7 @@ classdef mlunit_test_common < mlunitext.test_case
         function self=aux_test_num2cell(self,inpArray)
             resCellEthalon={inpArray(1,:);inpArray(2,:);inpArray(3,:)};
             resCell=modgen.common.num2cell(inpArray,2);
-            mlunit.assert_equals(true,isequal(resCell,resCellEthalon));
+            mlunitext.assert_equals(true,isequal(resCell,resCellEthalon));
             %
         end
         function self=test_ismemberjoint(self)
@@ -424,10 +424,10 @@ classdef mlunit_test_common < mlunitext.test_case
                 end
             end
             function check()
-                mlunit.assert_equals(true,...
+                mlunitext.assert_equals(true,...
                     isequal(isMemberVec,isMemberExpVec));
                 %
-                mlunit.assert_equals(true,...
+                mlunitext.assert_equals(true,...
                     isequal(indMemberVec,indMemberExpVec));
             end
         end
@@ -493,7 +493,7 @@ classdef mlunit_test_common < mlunitext.test_case
             function check_results()
                 isOk= isequal(indShrink,expIndShrink) && isequal(indReplicate,expIndReplicate) ...
                     && isequal(resCell,expResCell);
-                mlunit.assert_equals(true,isOk);
+                mlunitext.assert_equals(true,isOk);
             end
         end
         function self=test_uniquejoint_empty(self)
@@ -546,7 +546,7 @@ classdef mlunit_test_common < mlunitext.test_case
             function check_results()
                 isOk= isequal(indShrink,expIndShrink) && isequal(indReplicate,expIndReplicate) ...
                     && isequal(resCell,expResCell);
-                mlunit.assert_equals(true,isOk);
+                mlunitext.assert_equals(true,isOk);
             end
         end
         function self=test_uniquejoint_funchandle(self)
@@ -595,7 +595,7 @@ classdef mlunit_test_common < mlunitext.test_case
             function check_results()
                 isOk= isequal(indShrink,expIndShrink) && isequal(indReplicate,expIndReplicate) ...
                     && isequal(func2strForCell(resCell),func2strForCell(expResCell));
-                mlunit.assert_equals(true,isOk);
+                mlunitext.assert_equals(true,isOk);
                 
                 function inpVec=func2strForCell(inpVec)
                     if iscell(inpVec),
@@ -608,9 +608,9 @@ classdef mlunit_test_common < mlunitext.test_case
         end
         function self=test_iscelllogical(self)
             isTrue=modgen.common.iscelllogical({true,false});
-            mlunit.assert_equals(true,isTrue);
+            mlunitext.assert_equals(true,isTrue);
             isTrue=modgen.common.iscelllogical({});
-            mlunit.assert_equals(false,isTrue);
+            mlunitext.assert_equals(false,isTrue);
         end
         function self=aux_test_iscellnumeric(self,isOk,isEmpty)
             sizeVec=[1 1];
@@ -622,7 +622,7 @@ classdef mlunit_test_common < mlunitext.test_case
                 end
                 
                 isTrue=modgen.common.iscellnumeric(obj);
-                mlunit.assert_equals(isOk,isTrue,...
+                mlunitext.assert_equals(isOk,isTrue,...
                     ['failed for type ',typeList{iType}]);
             end
         end
@@ -633,39 +633,39 @@ classdef mlunit_test_common < mlunitext.test_case
         %
         function self=test_isvec(self)
             isPositive=modgen.common.iscol(rand(10,1));
-            mlunit.assert_equals(isPositive,true);
+            mlunitext.assert_equals(isPositive,true);
             %
             isPositive=modgen.common.iscol(rand(10,2));
-            mlunit.assert_equals(isPositive,false);
+            mlunitext.assert_equals(isPositive,false);
             %
             isPositive=modgen.common.iscol(zeros(0,1));
-            mlunit.assert_equals(isPositive,true);
+            mlunitext.assert_equals(isPositive,true);
             %
             isPositive=modgen.common.iscol(zeros(1,0));
-            mlunit.assert_equals(isPositive,false);
+            mlunitext.assert_equals(isPositive,false);
             %
             isPositive=modgen.common.iscol(zeros(0,0));
-            mlunit.assert_equals(isPositive,false);
+            mlunitext.assert_equals(isPositive,false);
             %
             isPositive=modgen.common.isvec(rand(10,1));
-            mlunit.assert_equals(isPositive,true);
+            mlunitext.assert_equals(isPositive,true);
             isPositive=modgen.common.isvec(rand(1,10));
-            mlunit.assert_equals(isPositive,true);
+            mlunitext.assert_equals(isPositive,true);
             isPositive=modgen.common.isvec(rand(1,1,10));
-            mlunit.assert_equals(isPositive,false);
+            mlunitext.assert_equals(isPositive,false);
             %
-            mlunit.assert_equals(modgen.common.isrow(rand(10,1)),false);
-            mlunit.assert_equals(modgen.common.isrow(rand(1,10)),true);
-            mlunit.assert_equals(modgen.common.isrow([]),false);
+            mlunitext.assert_equals(modgen.common.isrow(rand(10,1)),false);
+            mlunitext.assert_equals(modgen.common.isrow(rand(1,10)),true);
+            mlunitext.assert_equals(modgen.common.isrow([]),false);
             %
-            mlunit.assert_equals(modgen.common.isrow(zeros(0,1)),false);
-            mlunit.assert_equals(modgen.common.isrow(zeros(1,0)),true);
+            mlunitext.assert_equals(modgen.common.isrow(zeros(0,1)),false);
+            mlunitext.assert_equals(modgen.common.isrow(zeros(1,0)),true);
             %
-            mlunit.assert_equals(modgen.common.iscol(rand(10,1)),true);
-            mlunit.assert_equals(modgen.common.iscol(rand(1,10)),false);
-            mlunit.assert_equals(modgen.common.iscol([]),false);
+            mlunitext.assert_equals(modgen.common.iscol(rand(10,1)),true);
+            mlunitext.assert_equals(modgen.common.iscol(rand(1,10)),false);
+            mlunitext.assert_equals(modgen.common.iscol([]),false);
             %
-            mlunit.assert_equals(modgen.common.isrow(rand(1,1,2)),false);
+            mlunitext.assert_equals(modgen.common.isrow(rand(1,1,2)),false);
         end
         function self=test_error(self)
             inpArgList={'myTag','myMessage %d',1};
@@ -740,37 +740,37 @@ classdef mlunit_test_common < mlunitext.test_case
             [reg,isRegSpec,prop,isPropSpec]=...
                 modgen.common.parseparext([inpReg,inpProp],[],...
                 'propRetMode','list');
-            mlunit.assert_equals(3,length(isPropSpec));
-            mlunit.assert_equals(true,all(isPropSpec));
-            mlunit.assert_equals(true,isRegSpec);            
-            mlunit.assert_equals(true,isequal(reg,inpReg));%
-            mlunit.assert_equals(true,isequal(prop,inpProp));%
+            mlunitext.assert_equals(3,length(isPropSpec));
+            mlunitext.assert_equals(true,all(isPropSpec));
+            mlunitext.assert_equals(true,isRegSpec);            
+            mlunitext.assert_equals(true,isequal(reg,inpReg));%
+            mlunitext.assert_equals(true,isequal(prop,inpProp));%
             %
             [reg,isRegSpec,prop,isPropSpec]=...
                 modgen.common.parseparext([inpReg,inpProp],{'bb','cc'},...
                 'propRetMode','list');
-            mlunit.assert_equals([true,true,true],isRegSpec);            
-            mlunit.assert_equals(true,isequal(reg,[inpReg,inpFirstProp]));%
-            mlunit.assert_equals(true,isequal(prop,inpSecProp));%  
-            mlunit.assert_equals(true,all(isPropSpec));
-            mlunit.assert_equals(2,length(isPropSpec));
+            mlunitext.assert_equals([true,true,true],isRegSpec);            
+            mlunitext.assert_equals(true,isequal(reg,[inpReg,inpFirstProp]));%
+            mlunitext.assert_equals(true,isequal(prop,inpSecProp));%  
+            mlunitext.assert_equals(true,all(isPropSpec));
+            mlunitext.assert_equals(2,length(isPropSpec));
             %
             [reg,isRegSpec,prop,isPropSpec]=...
                 modgen.common.parseparext({},{'bb','cc'},...
                 'propRetMode','list');
-            mlunit.assert_equals(true,isempty(reg));
-            mlunit.assert_equals(true,isempty(prop));
-            mlunit.assert_equals(true,isempty(isRegSpec));
-            mlunit.assert_equals(false,any(isPropSpec));
-            mlunit.assert_equals(2,length(isPropSpec));
+            mlunitext.assert_equals(true,isempty(reg));
+            mlunitext.assert_equals(true,isempty(prop));
+            mlunitext.assert_equals(true,isempty(isRegSpec));
+            mlunitext.assert_equals(false,any(isPropSpec));
+            mlunitext.assert_equals(2,length(isPropSpec));
             %
             [reg,isRegSpec,prop,isPropSpec]=...
                 modgen.common.parseparext({},[],...
                 'propRetMode','list');
-            mlunit.assert_equals(true,isempty(reg));
-            mlunit.assert_equals(true,isempty(prop));
-            mlunit.assert_equals(true,isempty(isRegSpec));            
-            mlunit.assert_equals(true,isempty(isPropSpec));
+            mlunitext.assert_equals(true,isempty(reg));
+            mlunitext.assert_equals(true,isempty(prop));
+            mlunitext.assert_equals(true,isempty(isRegSpec));            
+            mlunitext.assert_equals(true,isempty(isPropSpec));
             %
             nRegs=1;
             regDefList={1,3};
@@ -824,16 +824,16 @@ classdef mlunit_test_common < mlunitext.test_case
                 [reg1,isRegSpec1Vec]=checkPInt(varargin{:});
                 [reg2,isRegSpec2Vec]=checkPInt(varargin{:},'regDefList',regDefList);
                 if nRegs>=1
-                    mlunit.assert_equals(true,isequal(reg1{1},reg2{1}));
-                    mlunit.assert_equals(true,...
+                    mlunitext.assert_equals(true,isequal(reg1{1},reg2{1}));
+                    mlunitext.assert_equals(true,...
                         isequal(isRegSpec1Vec(1),isRegSpec2Vec(1)));
                 end
-                mlunit.assert_equals(false,isRegSpec2Vec(2));
-                mlunit.assert_equals(true,isequal(nRegs,length(isRegSpec1Vec)));
-                mlunit.assert_equals(true,isequal(2,length(isRegSpec2Vec)));
-                mlunit.assert_equals(true,isequal(nRegs,length(reg1)));
-                mlunit.assert_equals(true,isequal(2,length(reg2)));
-                mlunit.assert_equals(true,isequal(3,reg2{2}));
+                mlunitext.assert_equals(false,isRegSpec2Vec(2));
+                mlunitext.assert_equals(true,isequal(nRegs,length(isRegSpec1Vec)));
+                mlunitext.assert_equals(true,isequal(2,length(isRegSpec2Vec)));
+                mlunitext.assert_equals(true,isequal(nRegs,length(reg1)));
+                mlunitext.assert_equals(true,isequal(2,length(reg2)));
+                mlunitext.assert_equals(true,isequal(3,reg2{2}));
                 % 
                 inpArgList={initInpArgList,...
                     varargin{:},'regDefList',[regDefList,4]};
@@ -847,75 +847,75 @@ classdef mlunit_test_common < mlunitext.test_case
                         propCheckMat,nRegExpMax,...
                         varargin{:});
                     if nRegs>=1
-                        mlunit.assert_equals(true,isRegSpecVec(1));
-                        mlunit.assert_equals(true,isequal(reg(1:nRegs),{1}));
+                        mlunitext.assert_equals(true,isRegSpecVec(1));
+                        mlunitext.assert_equals(true,isequal(reg(1:nRegs),{1}));
                     else
                         [~,prop]=modgen.common.parseparams(varargin,{'regDefList'});
                         if isempty(prop)
-                            mlunit.assert_equals(true,isempty(isRegSpecVec));
-                            mlunit.assert_equals(true,isempty(reg));
+                            mlunitext.assert_equals(true,isempty(isRegSpecVec));
+                            mlunitext.assert_equals(true,isempty(reg));
                         else
-                            mlunit.assert_equals(false,any(isRegSpecVec))
-                            mlunit.assert_equals(length(prop{2}),...
+                            mlunitext.assert_equals(false,any(isRegSpecVec))
+                            mlunitext.assert_equals(length(prop{2}),...
                                 length(reg));
                         end
                     end
                     %
-                    mlunit.assert_equals(true,isJoinByInst);
-                    mlunit.assert_equals(true,isJoinIdKept);
+                    mlunitext.assert_equals(true,isJoinByInst);
+                    mlunitext.assert_equals(true,isJoinIdKept);
                 end
             end
             
         end
         function self=test_parseparams(self)
             [reg,prop]=getparse({'alpha'});
-            mlunit.assert_equals(true,isequal(reg,{'alpha'}));
-            mlunit.assert_equals(true,isequal(prop,{}));
+            mlunitext.assert_equals(true,isequal(reg,{'alpha'}));
+            mlunitext.assert_equals(true,isequal(prop,{}));
             %
             [reg,prop]=getparse({'alpha','beta',1});
-            mlunit.assert_equals(true,isequal(reg,{'alpha'}));
-            mlunit.assert_equals(true,isequal(prop,{'beta',1}));
+            mlunitext.assert_equals(true,isequal(reg,{'alpha'}));
+            mlunitext.assert_equals(true,isequal(prop,{'beta',1}));
             %
             [reg,prop]=getparse({'alpha',1,3,'beta',1});
-            mlunit.assert_equals(true,isequal(reg,{'alpha',1,3}));
-            mlunit.assert_equals(true,isequal(prop,{'beta',1}));
+            mlunitext.assert_equals(true,isequal(reg,{'alpha',1,3}));
+            mlunitext.assert_equals(true,isequal(prop,{'beta',1}));
             %
             [reg,prop]=getparse({'alpha',1,3,'beta',1},{'alpha'});
-            mlunit.assert_equals(true,isequal(reg,{3,'beta',1}));
-            mlunit.assert_equals(true,isequal(prop,{'alpha',1}));
+            mlunitext.assert_equals(true,isequal(reg,{3,'beta',1}));
+            mlunitext.assert_equals(true,isequal(prop,{'alpha',1}));
             %
             [reg,prop]=getparse({'alpha',1,3,'beta',1},{});
-            mlunit.assert_equals(true,isequal(reg,{'alpha',1,3,'beta',1}));
-            mlunit.assert_equals(true,isequal(prop,{}));
+            mlunitext.assert_equals(true,isequal(reg,{'alpha',1,3,'beta',1}));
+            mlunitext.assert_equals(true,isequal(prop,{}));
             %
             [reg,prop]=getparse({'alpha',1,3,'beta',1,'gamma',1},'gamma');
-            mlunit.assert_equals(true,isequal(reg,{'alpha',1,3,'beta',1}));
-            mlunit.assert_equals(true,isequal(prop,{'gamma',1}));
+            mlunitext.assert_equals(true,isequal(reg,{'alpha',1,3,'beta',1}));
+            mlunitext.assert_equals(true,isequal(prop,{'gamma',1}));
             %
             [reg,prop]=getparse({'alpha',1,3,'gamma',1,'beta',1},'gamma');
-            mlunit.assert_equals(true,isequal(reg,{'alpha',1,3,'beta',1}));
-            mlunit.assert_equals(true,isequal(prop,{'gamma',1}));
+            mlunitext.assert_equals(true,isequal(reg,{'alpha',1,3,'beta',1}));
+            mlunitext.assert_equals(true,isequal(prop,{'gamma',1}));
             %
             [reg,prop]=getparse({'alpha',1,3,'beta',1,'gamma',1},'Gamma');
-            mlunit.assert_equals(true,isequal(reg,{'alpha',1,3,'beta',1}));
-            mlunit.assert_equals(true,isequal(prop,{'gamma',1}));
+            mlunitext.assert_equals(true,isequal(reg,{'alpha',1,3,'beta',1}));
+            mlunitext.assert_equals(true,isequal(prop,{'gamma',1}));
             %
             [reg,prop]=getparse({'alpha',1},'beta');
-            mlunit.assert_equals(true,isequal(reg,{'alpha',1}));
-            mlunit.assert_equals(true,isequal(prop,{}));
+            mlunitext.assert_equals(true,isequal(reg,{'alpha',1}));
+            mlunitext.assert_equals(true,isequal(prop,{}));
             %
             [reg,prop]=getparse({'alpha',1},'beta',[0 2]);
-            mlunit.assert_equals(true,isequal(reg,{'alpha',1}));
-            mlunit.assert_equals(true,isequal(prop,{}));
+            mlunitext.assert_equals(true,isequal(reg,{'alpha',1}));
+            mlunitext.assert_equals(true,isequal(prop,{}));
             %
             [reg,prop]=getparse({1,'alpha'},'alpha');
-            mlunit.assert_equals(true,isequal(reg,{1,'alpha'}));
-            mlunit.assert_equals(true,isequal(prop,{}));
+            mlunitext.assert_equals(true,isequal(reg,{1,'alpha'}));
+            mlunitext.assert_equals(true,isequal(prop,{}));
             %
             [reg,prop]=getparse(...
                 {1,'alpha',3,'beta',3,'gamma'},{'alpha','gamma'});
-            mlunit.assert_equals(true,isequal(reg,{1,'beta',3,'gamma'}));
-            mlunit.assert_equals(true,isequal(prop,{'alpha',3}));
+            mlunitext.assert_equals(true,isequal(reg,{1,'beta',3,'gamma'}));
+            mlunitext.assert_equals(true,isequal(prop,{'alpha',3}));
             function [reg,prop]=getparse(argList,varargin)
                 if (nargin>1)
                     propInpNameList=varargin{1};
@@ -945,29 +945,29 @@ classdef mlunit_test_common < mlunitext.test_case
                     %
                     propNameList=propInpNameList;
                     %
-                    mlunit.assert_equals(true,isequal(reg,reg1));
+                    mlunitext.assert_equals(true,isequal(reg,reg1));
                     isEqual=isequal(propNameList,...
                         propInpNameList)||isempty(propNameList)&&...
                         isempty(propInpNameList);
-                    mlunit.assert_equals(true,isEqual);
+                    mlunitext.assert_equals(true,isEqual);
                     pNameList=propNameList(isSpecVec);
                     pValList=propValList(isSpecVec);
                     inpArgList=[pNameList;pValList];
                     s1=struct(inpArgList{:});
                     s2=struct(prop{:});
                     isEqual=isequal(s1,s2);
-                    mlunit.assert_equals(true,isEqual);
+                    mlunitext.assert_equals(true,isEqual);
                     %
                     if ~all(isSpecVec)
                         defValList=num2cell(rand(size(propNameList)));
                         [reg2,~,outCell{:}]=...
                             modgen.common.parseparext(argList,...
                             [propNameList;defValList],varargin{2:end});
-                        mlunit.assert_equals(true,isequal(reg,reg2));
+                        mlunitext.assert_equals(true,isequal(reg,reg2));
                         [propValList,isSpecVec]=getval(outCell);
                         isEqual=isequal(propValList(~isSpecVec),...
                             defValList(~isSpecVec));
-                        mlunit.assert_equals(true,isEqual);
+                        mlunitext.assert_equals(true,isEqual);
                         %
                         checkStrList=repmat({'false'},size(defValList));
                         checkStrList(isSpecVec)={'true'};
@@ -976,9 +976,9 @@ classdef mlunit_test_common < mlunitext.test_case
                             [propNameList;defValList;...
                             checkStrList],varargin{2:end});
                         [propValList3,isSpecVec3]=getval(outCell);
-                        mlunit.assert_equals(true,isequal(reg,reg3));
-                        mlunit.assert_equals(true,isequal(propValList3,propValList));
-                        mlunit.assert_equals(true,isequal(isSpecVec,isSpecVec3));
+                        mlunitext.assert_equals(true,isequal(reg,reg3));
+                        mlunitext.assert_equals(true,isequal(propValList3,propValList));
+                        mlunitext.assert_equals(true,isequal(isSpecVec,isSpecVec3));
                     end
                 end
                 %
@@ -994,8 +994,8 @@ classdef mlunit_test_common < mlunitext.test_case
             [reg1,prop1]=modgen.common.parseparams(inpArgList);
             [reg2,prop2]=modgen.common.parseparams(inpArgList,[]);
             %
-            mlunit.assert_equals(true,isequal(reg1,reg2));
-            mlunit.assert_equals(true,isequal(prop1,prop2));
+            mlunitext.assert_equals(true,isequal(reg1,reg2));
+            mlunitext.assert_equals(true,isequal(prop1,prop2));
             %
             self.runAndCheckError(...
                 'modgen.common.parseparams(inpArgList,[],0);',...
@@ -1044,15 +1044,15 @@ classdef mlunit_test_common < mlunitext.test_case
         function self=test_getfirstdimsize(self)
             expSizeVec=[2,3];
             inpArray=rand([expSizeVec,4,5]);
-            mlunit.assert_equals(expSizeVec,...
+            mlunitext.assert_equals(expSizeVec,...
                 modgen.common.getfirstdimsize(inpArray,2));
             expSizeVec=[2,3,1];
             inpArray=rand([expSizeVec,1,1]);
-            mlunit.assert_equals(expSizeVec,...
+            mlunitext.assert_equals(expSizeVec,...
                 modgen.common.getfirstdimsize(inpArray,3));
-            mlunit.assert_equals([expSizeVec,[1 1]],...
+            mlunitext.assert_equals([expSizeVec,[1 1]],...
                 modgen.common.getfirstdimsize(inpArray,5));
-            mlunit.assert_equals(true,...
+            mlunitext.assert_equals(true,...
                 isempty(modgen.common.getfirstdimsize(inpArray,0)));
             self.runAndCheckError(...
                 'modgen.common.getfirstdimsize(inpArray,-1)',...
@@ -1060,12 +1060,12 @@ classdef mlunit_test_common < mlunitext.test_case
             %
         end
         function self=test_auxchecksize(self)
-            mlunit.assert_equals(true,auxchecksize(rand(2,3),[2,3,1]));
-            mlunit.assert_equals(true,auxchecksize(rand(2,3),[2,3]));
-            mlunit.assert_equals(false,auxchecksize(rand(2,4),[2,3]));
-            mlunit.assert_equals(false,auxchecksize(rand(2,4,5),[2,4]));
-            mlunit.assert_equals(true,auxchecksize([],[]));
-            mlunit.assert_equals(false,auxchecksize(1,[]));
+            mlunitext.assert_equals(true,auxchecksize(rand(2,3),[2,3,1]));
+            mlunitext.assert_equals(true,auxchecksize(rand(2,3),[2,3]));
+            mlunitext.assert_equals(false,auxchecksize(rand(2,4),[2,3]));
+            mlunitext.assert_equals(false,auxchecksize(rand(2,4,5),[2,4]));
+            mlunitext.assert_equals(true,auxchecksize([],[]));
+            mlunitext.assert_equals(false,auxchecksize(1,[]));
         end
         function self=test_cat(self)
             typeList={'int8','double','logical','struct'};
@@ -1074,7 +1074,7 @@ classdef mlunit_test_common < mlunitext.test_case
                     iObj=modgen.common.createarray(typeList{iType},[]);
                     jObj=modgen.common.createarray(typeList{jType},[]);
                     res=modgen.common.cat(1,iObj,jObj);
-                    mlunit.assert_equals(true,...
+                    mlunitext.assert_equals(true,...
                         isa(res,typeList{iType}));
                 end
             end
@@ -1082,187 +1082,187 @@ classdef mlunit_test_common < mlunitext.test_case
         function self=test_getcallernameext(self)
             testClassA=GetCallerNameExtTestClassA;
             [methodName className]=getCallerInfo(testClassA);
-            mlunit.assert_equals(true,...
+            mlunitext.assert_equals(true,...
                 isequal(methodName,'GetCallerNameExtTestClassA')&&...
                 isequal(className,'GetCallerNameExtTestClassA'));
             testClassA=simpleMethod(testClassA);
             [methodName className]=getCallerInfo(testClassA);
-            mlunit.assert_equals(true,...
+            mlunitext.assert_equals(true,...
                 isequal(methodName,'simpleMethod')&&...
                 isequal(className,'GetCallerNameExtTestClassA'));
             testClassA=subFunctionMethod(testClassA);
             [methodName className]=getCallerInfo(testClassA);
-            mlunit.assert_equals(true,...
+            mlunitext.assert_equals(true,...
                 isequal(methodName,'subFunctionMethod/subFunction')&&...
                 isequal(className,'GetCallerNameExtTestClassA'));
             testClassA=subFunctionMethod2(testClassA);
             [methodName className]=getCallerInfo(testClassA);
-            mlunit.assert_equals(true,...
+            mlunitext.assert_equals(true,...
                 isequal(methodName,'subFunctionMethod2/subFunction')&&...
                 isequal(className,'GetCallerNameExtTestClassA'));
             testClassA=subFunctionMethod3(testClassA);
             [methodName className]=getCallerInfo(testClassA);
-            mlunit.assert_equals(true,...
+            mlunitext.assert_equals(true,...
                 isequal(methodName,'subFunctionMethod3/subFunction/subFunction2')&&...
                 isequal(className,'GetCallerNameExtTestClassA'));
             %
             testClassB=GetCallerNameExtTestClassB;
             [methodName className]=getCallerInfo(testClassB);
-            mlunit.assert_equals(true,...
+            mlunitext.assert_equals(true,...
                 isequal(methodName,'GetCallerNameExtTestClassB')&&...
                 isequal(className,'GetCallerNameExtTestClassB'));
             simpleMethod(testClassB);
             [methodName className]=getCallerInfo(testClassB);
-            mlunit.assert_equals(true,...
+            mlunitext.assert_equals(true,...
                 isequal(methodName,'simpleMethod')&&...
                 isequal(className,'GetCallerNameExtTestClassB'));
             subFunctionMethod(testClassB);
             [methodName className]=getCallerInfo(testClassB);
-            mlunit.assert_equals(true,...
+            mlunitext.assert_equals(true,...
                 isequal(methodName,'subFunctionMethod/subFunction')&&...
                 isequal(className,'GetCallerNameExtTestClassB'));
             subFunctionMethod2(testClassB);
             [methodName className]=getCallerInfo(testClassB);
-            mlunit.assert_equals(true,...
+            mlunitext.assert_equals(true,...
                 isequal(methodName,'subFunctionMethod2/subFunction')&&...
                 isequal(className,'GetCallerNameExtTestClassB'));
             subFunctionMethod3(testClassB);
             [methodName className]=getCallerInfo(testClassB);
-            mlunit.assert_equals(true,...
+            mlunitext.assert_equals(true,...
                 isequal(methodName,'subFunctionMethod3/subFunction/subFunction2')&&...
                 isequal(className,'GetCallerNameExtTestClassB'));
             %
             testClassB=getcallernameexttest.GetCallerNameExtTestClassB;
             [methodName className]=getCallerInfo(testClassB);
-            mlunit.assert_equals(true,...
+            mlunitext.assert_equals(true,...
                 isequal(methodName,'GetCallerNameExtTestClassB')&&...
                 isequal(className,'getcallernameexttest.GetCallerNameExtTestClassB'));
             simpleMethod(testClassB);
             [methodName className]=getCallerInfo(testClassB);
-            mlunit.assert_equals(true,...
+            mlunitext.assert_equals(true,...
                 isequal(methodName,'simpleMethod')&&...
                 isequal(className,'getcallernameexttest.GetCallerNameExtTestClassB'));
             subFunctionMethod(testClassB);
             [methodName className]=getCallerInfo(testClassB);
-            mlunit.assert_equals(true,...
+            mlunitext.assert_equals(true,...
                 isequal(methodName,'subFunctionMethod/subFunction')&&...
                 isequal(className,'getcallernameexttest.GetCallerNameExtTestClassB'));
             subFunctionMethod2(testClassB);
             [methodName className]=getCallerInfo(testClassB);
-            mlunit.assert_equals(true,...
+            mlunitext.assert_equals(true,...
                 isequal(methodName,'subFunctionMethod2/subFunction')&&...
                 isequal(className,'getcallernameexttest.GetCallerNameExtTestClassB'));
             subFunctionMethod3(testClassB);
             [methodName className]=getCallerInfo(testClassB);
-            mlunit.assert_equals(true,...
+            mlunitext.assert_equals(true,...
                 isequal(methodName,'subFunctionMethod3/subFunction/subFunction2')&&...
                 isequal(className,'getcallernameexttest.GetCallerNameExtTestClassB'));
             %
             testClassC=GetCallerNameExtTestClassC;
             [methodName className]=getCallerInfo(testClassC);
-            mlunit.assert_equals(true,...
+            mlunitext.assert_equals(true,...
                 isequal(methodName,'GetCallerNameExtTestClassB')&&...
                 isequal(className,'GetCallerNameExtTestClassB'));
             testClassC=GetCallerNameExtTestClassC(false);
             [methodName className]=getCallerInfo(testClassC);
-            mlunit.assert_equals(true,...
+            mlunitext.assert_equals(true,...
                 isequal(methodName,'GetCallerNameExtTestClassC')&&...
                 isequal(className,'GetCallerNameExtTestClassC'));
             simpleMethod(testClassC);
             [methodName className]=getCallerInfo(testClassC);
-            mlunit.assert_equals(true,...
+            mlunitext.assert_equals(true,...
                 isequal(methodName,'simpleMethod')&&...
                 isequal(className,'GetCallerNameExtTestClassC'));
             subFunctionMethod(testClassC);
             [methodName className]=getCallerInfo(testClassC);
-            mlunit.assert_equals(true,...
+            mlunitext.assert_equals(true,...
                 isequal(methodName,'subFunctionMethod/subFunction')&&...
                 isequal(className,'GetCallerNameExtTestClassC'));
             subFunctionMethod2(testClassC);
             [methodName className]=getCallerInfo(testClassC);
-            mlunit.assert_equals(true,...
+            mlunitext.assert_equals(true,...
                 isequal(methodName,'subFunctionMethod2/subFunction')&&...
                 isequal(className,'GetCallerNameExtTestClassB'));
             subFunctionMethod3(testClassC);
             [methodName className]=getCallerInfo(testClassC);
-            mlunit.assert_equals(true,...
+            mlunitext.assert_equals(true,...
                 isequal(methodName,'subFunctionMethod3/subFunction/subFunction2')&&...
                 isequal(className,'GetCallerNameExtTestClassC'));
             %
             testClassC=getcallernameexttest.GetCallerNameExtTestClassC;
             [methodName className]=getCallerInfo(testClassC);
-            mlunit.assert_equals(true,...
+            mlunitext.assert_equals(true,...
                 isequal(methodName,'GetCallerNameExtTestClassB')&&...
                 isequal(className,'getcallernameexttest.GetCallerNameExtTestClassB'));
             testClassC=getcallernameexttest.GetCallerNameExtTestClassC(false);
             [methodName className]=getCallerInfo(testClassC);
-            mlunit.assert_equals(true,...
+            mlunitext.assert_equals(true,...
                 isequal(methodName,'GetCallerNameExtTestClassC')&&...
                 isequal(className,'getcallernameexttest.GetCallerNameExtTestClassC'));
             simpleMethod(testClassC);
             [methodName className]=getCallerInfo(testClassC);
-            mlunit.assert_equals(true,...
+            mlunitext.assert_equals(true,...
                 isequal(methodName,'simpleMethod')&&...
                 isequal(className,'getcallernameexttest.GetCallerNameExtTestClassC'));
             subFunctionMethod(testClassC);
             [methodName className]=getCallerInfo(testClassC);
-            mlunit.assert_equals(true,...
+            mlunitext.assert_equals(true,...
                 isequal(methodName,'subFunctionMethod/subFunction')&&...
                 isequal(className,'getcallernameexttest.GetCallerNameExtTestClassC'));
             subFunctionMethod2(testClassC);
             [methodName className]=getCallerInfo(testClassC);
-            mlunit.assert_equals(true,...
+            mlunitext.assert_equals(true,...
                 isequal(methodName,'subFunctionMethod2/subFunction')&&...
                 isequal(className,'getcallernameexttest.GetCallerNameExtTestClassB'));
             subFunctionMethod3(testClassC);
             [methodName className]=getCallerInfo(testClassC);
-            mlunit.assert_equals(true,...
+            mlunitext.assert_equals(true,...
                 isequal(methodName,'subFunctionMethod3/subFunction/subFunction2')&&...
                 isequal(className,'getcallernameexttest.GetCallerNameExtTestClassC'));
             %
             methodName='';className='';
             s_getcallernameext_test;
-            mlunit.assert_equals(true,...
+            mlunitext.assert_equals(true,...
                 isequal(methodName,'s_getcallernameext_test')&&...
                 isequal(className,''));
             %
             methodName='';className='';
             getcallernameexttest.s_getcallernameext_test;
-            mlunit.assert_equals(true,...
+            mlunitext.assert_equals(true,...
                 isequal(methodName,'getcallernameexttest.s_getcallernameext_test')&&...
                 isequal(className,''));
             %
             [methodName className]=getcallernameext_simplefunction();
-            mlunit.assert_equals(true,...
+            mlunitext.assert_equals(true,...
                 isequal(methodName,'getcallernameext_simplefunction')&&...
                 isequal(className,''));
             [methodName className]=getcallernameext_subfunction();
-            mlunit.assert_equals(true,...
+            mlunitext.assert_equals(true,...
                 isequal(methodName,'getcallernameext_subfunction/subfunction')&&...
                 isequal(className,''));
             [methodName className]=getcallernameext_subfunction2();
-            mlunit.assert_equals(true,...
+            mlunitext.assert_equals(true,...
                 isequal(methodName,'getcallernameext_subfunction2/subfunction')&&...
                 isequal(className,''));
             [methodName className]=getcallernameext_subfunction3();
-            mlunit.assert_equals(true,...
+            mlunitext.assert_equals(true,...
                 isequal(methodName,'getcallernameext_subfunction3/subfunction/subfunction2')&&...
                 isequal(className,''));
             %
             [methodName className]=getcallernameexttest.getcallernameext_simplefunction();
-            mlunit.assert_equals(true,...
+            mlunitext.assert_equals(true,...
                 isequal(methodName,'getcallernameexttest.getcallernameext_simplefunction')&&...
                 isequal(className,''));
             [methodName className]=getcallernameexttest.getcallernameext_subfunction();
-            mlunit.assert_equals(true,...
+            mlunitext.assert_equals(true,...
                 isequal(methodName,'getcallernameexttest.getcallernameext_subfunction/subfunction')&&...
                 isequal(className,''));
             [methodName className]=getcallernameexttest.getcallernameext_subfunction2();
-            mlunit.assert_equals(true,...
+            mlunitext.assert_equals(true,...
                 isequal(methodName,'getcallernameexttest.getcallernameext_subfunction2/subfunction')&&...
                 isequal(className,''));
             [methodName className]=getcallernameexttest.getcallernameext_subfunction3();
-            mlunit.assert_equals(true,...
+            mlunitext.assert_equals(true,...
                 isequal(methodName,'getcallernameexttest.getcallernameext_subfunction3/subfunction/subfunction2')&&...
                 isequal(className,''));
         end
@@ -1270,23 +1270,23 @@ classdef mlunit_test_common < mlunitext.test_case
             enumVal=modgen.common.test.aux.TestEnum.Alpha;
             arrayList={[1;2],[enumVal;enumVal]};
             [a,b,c]=uniquejoint(arrayList,1);
-            mlunit.assert_equals(true,isequal(a,arrayList));
-            mlunit.assert_equals(true,isequal(b,[1;2]));
-            mlunit.assert_equals(true,isequal(c,[1;2]));
+            mlunitext.assert_equals(true,isequal(a,arrayList));
+            mlunitext.assert_equals(true,isequal(b,[1;2]));
+            mlunitext.assert_equals(true,isequal(c,[1;2]));
         end
         function self=test_ismemberjoint_enum(self)
             enumVal=modgen.common.test.aux.TestEnum.Alpha;
             arrayList={[1;2],[enumVal;enumVal]};
             [a,b]=ismemberjoint(arrayList,arrayList,1);
-            mlunit.assert_equals(true,isequal(a,[true;true]));
-            mlunit.assert_equals(true,isequal(b,[1;2]));
+            mlunitext.assert_equals(true,isequal(a,[true;true]));
+            mlunitext.assert_equals(true,isequal(b,[1;2]));
         end        
         function self=test_uniquejoint_ext(self)
             pathStr=fileparts(mfilename('fullpath'));
             StData=load([pathStr '\+aux\uniquejoint_testdata.mat']);
             inputCell=cellfun(@(x)x(:),struct2cell(StData),'UniformOutput',false);
             [~,~,~,isSorted]=uniquejoint(inputCell,1);
-            mlunit.assert_equals(true,isSorted);
+            mlunitext.assert_equals(true,isSorted);
             %
             nRows=200;
             inputCell=cellfun(@(x)x(1:nRows),inputCell,'UniformOutput',false);
@@ -1299,16 +1299,16 @@ classdef mlunit_test_common < mlunitext.test_case
             end
             [~,indForward2Vec,indBackward2Vec]=uniquejoint(outputCell2,1);
             outputCell2=cellfun(@(x)x(indForward2Vec),inputCell,'UniformOutput',false);
-            mlunit.assert_equals(nUniqueRows,numel(indForward2Vec));
+            mlunitext.assert_equals(nUniqueRows,numel(indForward2Vec));
             indForwardVec=indBackward1Vec(indForward2Vec);
-            mlunit.assert_equals(true,~any(diff(sort(indForwardVec))==0));
+            mlunitext.assert_equals(true,~any(diff(sort(indForwardVec))==0));
             outputCell1=cellfun(@(x)x(indForwardVec),outputCell1,'UniformOutput',false);
             for iElem=1:nElems,
-                mlunit.assert_equals(true,...
+                mlunitext.assert_equals(true,...
                     isequalwithequalnans(outputCell1{iElem},outputCell2{iElem}));
             end
-            mlunit.assert_equals(true,isequal(indBackward1Vec,indForwardVec(indBackward2Vec)));
-            mlunit.assert_equals(true,isequal(indForwardVec(indBackward2Vec(indForward1Vec)),(1:nUniqueRows).'));
+            mlunitext.assert_equals(true,isequal(indBackward1Vec,indForwardVec(indBackward2Vec)));
+            mlunitext.assert_equals(true,isequal(indForwardVec(indBackward2Vec(indForward1Vec)),(1:nUniqueRows).'));
         end
         function self=test_ismemberjointwithnulls(self)
             %
@@ -1514,10 +1514,10 @@ classdef mlunit_test_common < mlunitext.test_case
                 check();
             end
             function check()
-                mlunit.assert_equals(true,...
+                mlunitext.assert_equals(true,...
                     isequal(isMemberVec,isMemberExpVec));
                 %
-                mlunit.assert_equals(true,...
+                mlunitext.assert_equals(true,...
                     isequal(indMemberVec,indMemberExpVec));
             end
         end
@@ -1527,20 +1527,20 @@ classdef mlunit_test_common < mlunitext.test_case
             [a,b]=modgen.common.ismemberjointwithnulls(...
                 arrayList,{false(2,1),false(2,1)},...
                 arrayList,{false(2,1),false(2,1)},1);
-            mlunit.assert_equals(true,isequal(a,[true;true]));
-            mlunit.assert_equals(true,isequal(b,[1;2]));
+            mlunitext.assert_equals(true,isequal(a,[true;true]));
+            mlunitext.assert_equals(true,isequal(b,[1;2]));
             %
             [a,b]=modgen.common.ismemberjointwithnulls(...
                 arrayList,{[false;true],[true;false]},...
                 arrayList,{[false;true],[true;false]},1);
-            mlunit.assert_equals(true,isequal(a,[true;true]));
-            mlunit.assert_equals(true,isequal(b,[1;2]));
+            mlunitext.assert_equals(true,isequal(a,[true;true]));
+            mlunitext.assert_equals(true,isequal(b,[1;2]));
             %
             [a,b]=modgen.common.ismemberjointwithnulls(...
                 arrayList,{false(2,1),[true;true]},...
                 {[1;2],nan(2,0)},{false(2,1),[true;true]},1);
-            mlunit.assert_equals(true,isequal(a,[true;true]));
-            mlunit.assert_equals(true,isequal(b,[1;2]));
+            mlunitext.assert_equals(true,isequal(a,[true;true]));
+            mlunitext.assert_equals(true,isequal(b,[1;2]));
         end
         function self=test_uniquejoint_performance(self)
             inpMat=randi([1 2],8500,4);
@@ -1568,19 +1568,19 @@ classdef mlunit_test_common < mlunitext.test_case
                 time2=self.runAndCheckTime(...
                     '[outMat2,indForwardVec2,indBackwardVec2]=uniquejoint({inpMat},1,''standard'');',...
                     'nRuns',nRuns,'useMedianTime',true);
-                mlunit.assert_equals(true,isequal(outMat1,outMat2));
-                mlunit.assert_equals(true,isequal(indForwardVec1,indForwardVec2));
-                mlunit.assert_equals(true,isequal(indBackwardVec1,indBackwardVec2));
+                mlunitext.assert_equals(true,isequal(outMat1,outMat2));
+                mlunitext.assert_equals(true,isequal(indForwardVec1,indForwardVec2));
+                mlunitext.assert_equals(true,isequal(indBackwardVec1,indBackwardVec2));
                 time1=min(time1,time2);
                 time2=self.runAndCheckTime('[outMat2,indForwardVec2,indBackwardVec2]=uniquejoint({inpMat},1);',...
                     'nRuns',nRuns,'useMedianTime',true);
-                mlunit.assert_equals(true,isequal(outMat1,outMat2));
-                mlunit.assert_equals(true,isequal(indForwardVec1,indForwardVec2));
-                mlunit.assert_equals(true,isequal(indBackwardVec1,indBackwardVec2));
+                mlunitext.assert_equals(true,isequal(outMat1,outMat2));
+                mlunitext.assert_equals(true,isequal(indForwardVec1,indForwardVec2));
+                mlunitext.assert_equals(true,isequal(indBackwardVec1,indBackwardVec2));
                 curTolerance=max(max(time1/time2,time2/time1)-1,0);
                 messageStr=sprintf('Ratio error %f between chosen and mininal exceeds maximal one %f',...
                     curTolerance,MAX_TOLERANCE);
-                mlunit.assert_equals(true,curTolerance<MAX_TOLERANCE,messageStr);
+                mlunitext.assert_equals(true,curTolerance<MAX_TOLERANCE,messageStr);
             end
         end
         function self=test_ismemberjoint_performance(self)
@@ -1615,18 +1615,18 @@ classdef mlunit_test_common < mlunitext.test_case
                 time2=self.runAndCheckTime(...
                     '[isMemberVec2,indMemberVec2]=ismemberjoint({inpMat1},{inpMat2},1,''standard'');',...
                     'nRuns',nRuns,'useMedianTime',true);
-                mlunit.assert_equals(true,isequal(isMemberVec1,isMemberVec2));
-                mlunit.assert_equals(true,isequal(indMemberVec1,indMemberVec2));
+                mlunitext.assert_equals(true,isequal(isMemberVec1,isMemberVec2));
+                mlunitext.assert_equals(true,isequal(indMemberVec1,indMemberVec2));
                 time1=min(time1,time2);
                 time2=self.runAndCheckTime(...
                     '[isMemberVec2,indMemberVec2]=ismemberjoint({inpMat1},{inpMat2},1);',...
                     'nRuns',nRuns,'useMedianTime',true);
-                mlunit.assert_equals(true,isequal(isMemberVec1,isMemberVec2));
-                mlunit.assert_equals(true,isequal(indMemberVec1,indMemberVec2));
+                mlunitext.assert_equals(true,isequal(isMemberVec1,isMemberVec2));
+                mlunitext.assert_equals(true,isequal(indMemberVec1,indMemberVec2));
                 curTolerance=max(max(time1/time2,time2/time1)-1,0);
                 messageStr=sprintf('Ratio error %f between chosen and mininal exceeds maximal one %f',...
                     curTolerance,MAX_TOLERANCE);
-                mlunit.assert_equals(true,curTolerance<MAX_TOLERANCE,messageStr);
+                mlunitext.assert_equals(true,curTolerance<MAX_TOLERANCE,messageStr);
             end
         end
     end
