@@ -77,7 +77,7 @@ classdef text_test_runner
             tElapsed = etime(clock, tStart);
             print_errors(result);
             mlunitext.logprintf('info','----------------------------------------------------------------------\n');
-            tests_run = result.get_tests_run();
+            tests_run = result.getNTestsRun();
             %
             if isa(test,'mlunitext.test_case')
                 testCaseNameList={class(test)};
@@ -100,12 +100,12 @@ classdef text_test_runner
                 'in %.3fs(%.3fm)\n'], ...
                 testCaseName,tests_run, tElapsed,tElapsed/60);
             %
-            if (was_successful(result))
+            if (isPassed(result))
                 mlunitext.logprintf('info','OK\n');
             else
                 mlunitext.logprintf('info',...
                     'FAILED (errors=%d, failures=%d)\n', ...
-                    get_errors(result), get_failures(result));
+                    getNErrors(result), getNFailures(result));
             end
         end
     end

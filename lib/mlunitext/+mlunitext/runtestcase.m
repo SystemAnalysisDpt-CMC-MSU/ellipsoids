@@ -98,6 +98,7 @@ else
     test_suite=mlunitext.test_suite(suiteArgList{:});
     for iTestCase=1:nTestCases,
         testCaseName=testCaseNameList{iTestCase};
+        constructorName=modgen.string.splitpart(testCaseName,'.','last');
         metaClass=meta.class.fromName(testCaseName);
         if isempty(metaClass)
             throwerror('noSuchClass',...
@@ -107,7 +108,8 @@ else
         methodList=...
             cellfun(@(x)x.Name,metaClass.Methods,'UniformOutput',false);
         isMatchedVec=...
-            cellfun(@(x)~isempty(regexp(x,testName, 'once')),methodList);
+            cellfun(@(x)(~isempty(regexp(x,testName, 'once'))&&...
+            ~strcmp(x,constructorName)),methodList);
         testList=methodList(isMatchedVec);
         if isempty(testList)
             throwerror('wrongInput',...

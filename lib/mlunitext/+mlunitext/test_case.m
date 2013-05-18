@@ -28,7 +28,7 @@ classdef test_case<handle
     %  6) Run the test:
     %         test = my_test('test_foo');
     %         [test, result] = run(test);
-    %         summary(result)
+    %         getReport(result)
     %
     %  See also MLUNITEXT.TEST_RESULT, MLUNITEXT.TEST_SUITE.
     %
@@ -87,44 +87,20 @@ classdef test_case<handle
             % Faculty of Computational Mathematics and Cybernetics, System Analysis
             % Department, 7-October-2012, <pgagarinov@gmail.com>$
             %
-            [reg,prop]=modgen.common.parseparams(varargin,...
-                {'profile','marker'});
+            [reg,~,self.profMode,markerStr,~,isMarkerSet]=...
+                modgen.common.parseparext(varargin,...
+                {'profile','marker';...
+                'off',[];...
+                'isstring(x)','isstring(x)'});
             nRegs=length(reg);
             additionalParse(reg{1:min(nRegs,2)});
             %
-            isProfSpec=false;
-            isMarkerSet=false;
-            nProps=length(prop);
-            for k=1:2:nProps-1
-                switch prop{k}
-                    case 'profile',
-                        profMode=prop{k+1};
-                        if ~(ischar(profMode)&&modgen.common.isrow(profMode))
-                            throwerror('wrongInput',...
-                                'profile property is expected to be a string');
-                        end
-                        %
-                        isProfSpec=true;
-                    case 'marker'
-                        markerStr=prop{k+1};
-                        if ~(ischar(markerStr)&&...
-                                modgen.common.isrow(markerStr))
-                            throwerror('wrongInput',...
-                                'marker is expected to be a string');
-                        end
-                        isMarkerSet=true;
-                end
-            end
-            if ~isProfSpec
-                profMode='off';
-            end
             if isMarkerSet
                 self.set_marker(markerStr);
             end
-            self.profMode=profMode;
             self.profDir=fileparts(which(class(self)));
             %
-            self.setUpParams=[reg(3:end),prop];
+            self.setUpParams=reg(3:end);
             function additionalParse(name, subclass)
                 import modgen.common.throwerror;
                 if (nargin == 0)
@@ -141,7 +117,7 @@ classdef test_case<handle
                             self.name = 'run_test';
                         else
                             r = mlunitext.reflect(subclass);
-                            if (~method_exists(r, name))
+                            if ~r.method_exists(name)
                                 throwerror('noSuchMethod',...
                                     ['Method ', name ' does not exists.']);
                             end
@@ -179,7 +155,7 @@ classdef test_case<handle
             %         result = default_test_result(test1);
             %         [test1, result] = run(test1, result)
             %         [test2, result] = run(test2, result)
-            %         summary(result)
+            %         getReport(result)
             
             result = mlunitext.test_result;
         end
@@ -220,7 +196,7 @@ classdef test_case<handle
             %  directly, but through the method run.
             %         test = function_test_case(@() assert(0 == sin(0)));
             %         [test, result] = run(test);
-            %         summary(result)
+            %         getReport(result)
             
         end
         
@@ -232,7 +208,7 @@ classdef test_case<handle
             %  set_up is not called directly, but through the method run.
             %         test = ... % e.g. created through my_test('test_foo')
             %         [test, result] = run(test);
-            %         summary(result)
+            %         getReport(result)
             
         end
         function self = tear_down(self)
@@ -244,7 +220,7 @@ classdef test_case<handle
             %  run.
             %   test = ... % e.g. created through my_test('test_foo')
             %   [test, result] = run(test);
-            %   summary(result)
+            %   getReport(result)
         end
         function result = run(self, result)
             % RUN executes the test case and saves the results in
@@ -281,9 +257,8 @@ classdef test_case<handle
                     if (nargin == 1)
                         result = default_test_result(self);
                     end
-                    start_test(result, self);
-                    %add_error(result, self, meObj);
                     add_error(result, self, meObj);
+                    result.stop_test(self);
                     return;
                 end
                 %
