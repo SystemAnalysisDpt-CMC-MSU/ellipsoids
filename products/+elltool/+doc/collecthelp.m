@@ -1,4 +1,4 @@
-function FuncData=collecthelp(classNames, packNames, ignorClassList)
+function FuncData=collecthelp(classNames, packNames, sourceClassNames, ignorClassList)
 %COLLECTHELP -  collects helps of m files in given classes and packages
 %
 % Input:
@@ -29,7 +29,7 @@ function FuncData=collecthelp(classNames, packNames, ignorClassList)
 import elltool.doc.collecthelp;
 FuncData = [];
 scriptNamePattern = 's_\w+\.m';
-SfuncInfo = extractHelpFromClass(classNames);
+SfuncInfo = extractHelpFromClass(classNames, sourceClassNames);
 FuncData=modgen.struct.unionstructsalongdim(1,FuncData,SfuncInfo);
 dirLength = length(packNames);
 for iElem = 1:dirLength
@@ -45,7 +45,7 @@ for iElem = 1:dirLength
     else
        classVec = mp.ClassList;
        myClassList = arrayfun(@(x)x.Name,classVec,'UniformOutput',false);
-       SfuncInfo = extractHelpFromClass(myClassList');
+       SfuncInfo = extractHelpFromClass(myClassList', sourceClassNames);
     end
     FuncData=modgen.struct.unionstructsalongdim(1,FuncData,SfuncInfo);
     if isempty(mp.PackageList)
@@ -74,7 +74,7 @@ for iElem = 1:dirLength
                 end
             end
             SfuncInfo = collecthelp(newClassList', newPackList',...
-                ignorClassList);
+                ignorClassList, sourceClassNames);
             FuncData=modgen.struct.unionstructsalongdim(1,FuncData,...
                 SfuncInfo);
         end
@@ -84,7 +84,7 @@ end
 
 %%
 
-function SFuncInfo=extractHelpFromClass(classList)
+function SFuncInfo=extractHelpFromClass(classList, sourceClassNames)
 SFuncInfo = struct();
 bufFuncInfo = struct();
 PUBLIC_ACCESS_MOD='public';
@@ -123,9 +123,9 @@ for iClass = 1:nLength
                 methodVec= methodVec(~isDynamicpropsVec);
             end
             definingClassNameList=arrayfun(@(x)x.DefiningClass.Name,...
-                methodVec,'UniformOutput',false);
+                methodVec,'UniformOutput',false)
             isDefiningClassVec=ismember(definingClassNameList,...
-                   classList) & ~(strcmp(definingClassNameList, className));
+                   sourceClassNames)  & ~(strcmp(definingClassNameList, className));
             methodVec= methodVec(~isDefiningClassVec);
         else 
          isHandleMethodVec=ismember(curClassMethodNameList,...
@@ -137,9 +137,9 @@ for iClass = 1:nLength
                          dynamicpropsClassMethodNameList);
          methodVec= methodVec(~isDynamicpropsVec);
          definingClassNameList=arrayfun(@(x)x.DefiningClass.Name,...
-                methodVec,'UniformOutput',false);
+                methodVec,'UniformOutput',false)
          isDefiningClassVec=ismember(definingClassNameList,...
-                   classList) & ~(strcmp(definingClassNameList, className));
+                   sourceClassNames)& ~(strcmp(definingClassNameList, className));
          methodVec= methodVec(~isDefiningClassVec);
          end
         isPublicVec=arrayfun(@(x)isequal(x.Access,PUBLIC_ACCESS_MOD),...
