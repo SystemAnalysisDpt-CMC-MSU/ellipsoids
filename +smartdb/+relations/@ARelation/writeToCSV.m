@@ -16,7 +16,7 @@ function writeToCSV(self,filePath)
 %
 %
 if ~(modgen.common.isrow(filePath)&&ischar(filePath))
-    error([upper(mfilename),':wrongInput'],...
+    throwerror('wrongInput',...
         'filePath is expected to be a character string');
 end
 %

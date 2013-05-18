@@ -1,6 +1,6 @@
 function results=run_tests()
 %
-runner = mlunit.text_test_runner(1, 1);
+runner = mlunitext.text_test_runner(1, 1);
 loader = mlunitext.test_loader;
 suite = loader.load_tests_from_test_case(...
     'modgen.struct.test.mlunit_test_structcompare');
@@ -8,7 +8,7 @@ suite = loader.load_tests_from_test_case(...
 suite_mixed = loader.load_tests_from_test_case(...
     'modgen.struct.test.mlunit_test_mixed');
 %
-suite = mlunit.test_suite(horzcat(...
+suite = mlunitext.test_suite(horzcat(...
     suite.tests,suite_mixed.tests));
 %
 results=runner.run(suite);

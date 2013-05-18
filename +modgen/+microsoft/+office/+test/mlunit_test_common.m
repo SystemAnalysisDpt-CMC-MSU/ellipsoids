@@ -11,11 +11,11 @@ classdef mlunit_test_common < mlunitext.test_case
             %
         end
         %
-        function test_xlswrite(self)
+        function DISABLED_test_xlswrite(self)
             N_MAX_ROWS=65536;
             N_MAX_COLS=256;
             s=warning('off',...
-                'MODGEN:MICROSOFT:OFFICE:XLSWRITE:resultFileTypeChange');            
+                'MODGEN:MICROSOFT:OFFICE:XLSWRITE:resultFileTypeChange');
             check(cell(0,0));
             check(cell(N_MAX_ROWS+1,1));
             check(cell(1,N_MAX_COLS+1));
@@ -26,7 +26,7 @@ classdef mlunit_test_common < mlunitext.test_case
                 import modgen.test.TmpDataManager;
                 import modgen.system.ExistanceChecker;
                 import modgen.microsoft.office.xlswrite;
-
+                
                 if ~ispc()
                     return;
                 end
@@ -44,19 +44,19 @@ classdef mlunit_test_common < mlunitext.test_case
                     size(dataCell,2)>N_MAX_COLS;
                 isEmpty=numel(dataCell)==0;
                 %
-                mlunit.assert_equals(false,...
+                mlunitext.assert_equals(false,...
                     ExistanceChecker.isFile(filePath));
                 [~,~,resFilePath]=xlswrite(filePath,dataCell);
                 if isExcelInstalled&&~isEmpty&&~isTooBig
-                    mlunit.assert_equals(true,...
+                    mlunitext.assert_equals(true,...
                         ExistanceChecker.isFile(filePath));
-                    mlunit.assert_equals(true,...
+                    mlunitext.assert_equals(true,...
                         strcmp(resFilePath,filePath));
                 else
-                    mlunit.assert_equals(true,...
+                    mlunitext.assert_equals(true,...
                         strcmp(strrep(resFilePath,...
                         'csv','xls'),filePath));
-                    mlunit.assert_equals(true,...
+                    mlunitext.assert_equals(true,...
                         ExistanceChecker.isFile(resFilePath));
                 end
             end

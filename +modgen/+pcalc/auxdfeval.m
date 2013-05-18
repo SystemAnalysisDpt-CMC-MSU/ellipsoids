@@ -106,7 +106,7 @@ for k=1:2:nProp-1
 end
 %
 if isSharedPathMapSpec
-    if ~(ndims(sharedPathMapCMat)==2&&iscellstr(sharedPathMapCMat))
+    if ~(ismatrix(sharedPathMapCMat)&&iscellstr(sharedPathMapCMat))
         error([upper(mfilename),':wrongInput'],...
             'sharedPathMap is expected to be a 2-D cell array of strings');
     end
