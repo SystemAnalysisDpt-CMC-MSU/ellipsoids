@@ -1,10 +1,54 @@
-classdef test_case < mlunit.test_case
+classdef test_case<handle
+    % TEST_CASE is the base class for all tests. It defines a
+    %  fixture to run multiple tests. The constructor is called as follows:
+    %
+    %  Example: test = test_case('test_foo', 'my_test');
+    %  test_foo is the name of the test method, my_test is the name of a
+    %  subclass of test_case. Such a class is created as follows:
+    %
+    %  1) Implement a subclass of test_class with a constructor looking
+    %     like this:
+    %         function self = my_test(name)
+    %
+    %         test = test_case(name, 'my_test');
+    %         self.dummy = 0;
+    %         self = class(self, 'my_test', test);
+    %
+    %  2) Define instance variables like self.dummy.
+    %
+    %  3) Override set_up to initialize the fixture.
+    %
+    %  4) Override tear_down to clean-up after a test.
+    %
+    %  5) Implement a method for each test looking like:
+    %         function self = test_foo(self)
+    %
+    %         assert_equals(1, mod(4 * 4, 3));
+    %
+    %  6) Run the test:
+    %         test = my_test('test_foo');
+    %         [test, result] = run(test);
+    %         getReport(result)
+    %
+    %  See also MLUNITEXT.TEST_RESULT, MLUNITEXT.TEST_SUITE.
+    %
+    % $Authors: Peter Gagarinov <pgagarinov@gmail.com>
+    % $Date: March-2013 $
+    % $Copyright: Moscow State University,
+    %             Faculty of Computational Mathematics
+    %             and Computer Science,
+    %             System Analysis Department 2012-2013$
+    %
     properties (Access=private)
         setUpParams={};
         profMode
         profDir
     end
-    
+    properties (SetAccess=protected,GetAccess=public)
+        name
+        marker = ''
+    end
+    %
     methods
         function self = test_case(varargin)
             % MLUNITEXT.TEST_CASE is an extension of mlunitext.test_case
@@ -14,9 +58,9 @@ classdef test_case < mlunit.test_case
             %
             % Input:
             %   optional:
-            %       testCaseName: char[1,] - see mlunit.test_case for
+            %       testCaseName: char[1,] - see mlunitext.test_case for
             %          details
-            %       subClassName: char[1,] - see mlunit.test_case for
+            %       subClassName: char[1,] - see mlunitext.test_case for
             %          details
             %       testParam1 - test parameter passed into set_up_param
             %       ...
@@ -43,64 +87,220 @@ classdef test_case < mlunit.test_case
             % Faculty of Computational Mathematics and Cybernetics, System Analysis
             % Department, 7-October-2012, <pgagarinov@gmail.com>$
             %
-            [reg,prop]=modgen.common.parseparams(varargin,...
-                {'profile','marker'});
+            [reg,~,self.profMode,markerStr,~,isMarkerSet]=...
+                modgen.common.parseparext(varargin,...
+                {'profile','marker';...
+                'off',[];...
+                'isstring(x)','isstring(x)'});
             nRegs=length(reg);
-            self = self@mlunit.test_case(reg{1:min(nRegs,2)});
+            additionalParse(reg{1:min(nRegs,2)});
             %
-            isProfSpec=false;
-            isMarkerSet=false;
-            nProps=length(prop);
-            for k=1:2:nProps-1
-                switch prop{k}
-                    case 'profile',
-                        profMode=prop{k+1};
-                        if ~(ischar(profMode)&&modgen.common.isrow(profMode))
-                            error([upper(mfilename),':wrongInput'],...
-                                'profile property is expected to be a string');
-                        end
-                        %
-                        isProfSpec=true;
-                    case 'marker'
-                        markerStr=prop{k+1};
-                        if ~(ischar(markerStr)&&...
-                                modgen.common.isrow(markerStr))
-                            error([upper(mfilename),':wrongInput'],...
-                                'marker is expected to be a string');
-                        end
-                        isMarkerSet=true;
-                end
-            end
-            if ~isProfSpec
-                profMode='off';
-            end
             if isMarkerSet
                 self.set_marker(markerStr);
             end
-            self.profMode=profMode;
             self.profDir=fileparts(which(class(self)));
             %
-            self.setUpParams=[reg(3:end),prop];
-        end
-        function result = run(self, result)
-            try
-                set_up_param(self,self.setUpParams{:});
-                result=run@mlunit.test_case(self,result);
-            catch meObj
-                if (nargin == 1)
-                    result = default_test_result(self);
+            self.setUpParams=reg(3:end);
+            function additionalParse(name, subclass)
+                import modgen.common.throwerror;
+                if (nargin == 0)
+                    self.name = '';
+                else
+                    self.name = name;
+                    %
+                    if (nargin == 1)
+                        if isempty(self.name)
+                            self.name = 'run_test';
+                        end
+                    else
+                        if isempty(self.name)
+                            self.name = 'run_test';
+                        else
+                            r = mlunitext.reflect(subclass);
+                            if ~r.method_exists(name)
+                                throwerror('noSuchMethod',...
+                                    ['Method ', name ' does not exists.']);
+                            end
+                        end
+                    end
                 end
-                
-                result = start_test(result, self);
-                
-                result = add_error(result, self, meObj);
-                return;
             end
         end
-        function self = set_up_param(self,varargin)
+        function count = count_test_cases(self) %#ok
+            % COUNT_TEST_CASES returns the number of test cases
+            %  executed by run.
+            %  The default implementation of test_case returns always 1,
+            %  because the test_case object consists only of one test
+            %  method (whereas it is possible to define more than one test
+            %  method within the test_case class).
+            %
+            %  Example:
+            %         test = my_test('test_foo');
+            %         count_test_cases(test);     % Returns 1
+            count = 1;
+        end
+        
+        function result = default_test_result(self) %#ok
+            % DEFAULT_TEST_RESULT returns a default test_result
+            % object.
+            %  Usually default_test_result is used by the method
+            %  test_case.run to obtain a default test result. If the
+            %  results of more than tests should be collected within the
+            %  same test result, default_test_result could be called before
+            %  the execution of the tests.
+            %
+            %  Example:
+            %         test1 = my_test('test_foo1');
+            %         test2 = my_test('test_foo2');
+            %         result = default_test_result(test1);
+            %         [test1, result] = run(test1, result)
+            %         [test2, result] = run(test2, result)
+            %         getReport(result)
+            
+            result = mlunitext.test_result;
+        end
+        
+        function s = str(self)
+            % STR returns a string with the method and class name
+            % of the test.
+            %
+            % Example:
+            %  If a test method is defined as follows
+            %           function test_method
+            %               assert(0 == sin(0));
+            %           end
+            %  belonging to a class my_test, which is instantiated as
+            %  follows
+            %           test = my_test('test_method');
+            %  then str will return:
+            %           my_test('test_method')
+            
+            s = class(self);
+            if ~isempty(self.marker)
+                s = [s, '[', self.marker, ']'];
+            end
+            s = [s, '(''', self.name, ''')'];
+            %
+        end
+        
+        function set_marker(self, marker)
+            %test_case.set_marker sets an optional marker for the test case
+            
+            self.marker = marker;
+        end
+        function self = run_test(self)
+            % RUN_TEST is the default test method of test_case.
+            %
+            % Example:
+            %  Usually run_test (as every test method) is not called
+            %  directly, but through the method run.
+            %         test = function_test_case(@() assert(0 == sin(0)));
+            %         [test, result] = run(test);
+            %         getReport(result)
             
         end
-        function runAndCheckError(~,commandStr,expIdentifier,varargin)
+        
+        function self = set_up(self)
+            % SET_UP sets up the fixture and is called everytime
+            % before a test is executed.
+            %
+            % Example:
+            %  set_up is not called directly, but through the method run.
+            %         test = ... % e.g. created through my_test('test_foo')
+            %         [test, result] = run(test);
+            %         getReport(result)
+            
+        end
+        function self = tear_down(self)
+            % TEAR_DOWN called everytime after a test is executed
+            % for cleaning up the fixture.
+            %
+            % Example:
+            %  tear_down is not called directly, but through the method
+            %  run.
+            %   test = ... % e.g. created through my_test('test_foo')
+            %   [test, result] = run(test);
+            %   getReport(result)
+        end
+        function result = run(self, result)
+            % RUN executes the test case and saves the results in
+            % result.
+            %
+            % Input:
+            %   regular:
+            %       self:
+            %       result: mlunitext.test_result[1,1] - input result
+            %
+            % Output:
+            %   result: mlunitext.test_result[1,1] -output result
+            %
+            % Example:
+            %  There are two ways of calling run:
+            %
+            %  1) [test, result] = run(test) uses the default test result.
+            %
+            %  2) [test, result] = run(test, result) uses the result given
+            %     as paramater, which allows to collect the result of a
+            %     number of tests within one test result.
+            %
+            if (nargin == 1)
+                result = default_test_result(self);
+            end
+            
+            result.start_test(self);
+            try
+                try
+                    set_up_param(self,self.setUpParams{:});
+                    set_up(self);
+                catch meObj
+                    
+                    if (nargin == 1)
+                        result = default_test_result(self);
+                    end
+                    add_error(result, self, meObj);
+                    result.stop_test(self);
+                    return;
+                end
+                %
+                isOk = false;
+                try
+                    method = self.name;
+                    eval([method, '(self);']);
+                    isOk = true;
+                catch meObj
+                    isFailure = ~isempty(strfind(meObj.identifier,...
+                        'MLUNITEXT:TESTFAILURE'));
+                    if isFailure
+                        result.add_failure(self,meObj);
+                    else
+                        result.add_error(self,meObj);
+                    end
+                end
+                %
+                try
+                    tear_down(self);
+                catch meObj
+                    result.add_error(self,meObj);
+                    isOk = false;
+                end
+                %
+                if isOk
+                    result.add_success(self);
+                end
+            catch meObj
+                baseMeObj=modgen.common.throwerror('internalError',...
+                    'Oops, we should not be here');
+                newMeObj=baseMeObj.addCause(meObj);
+                throw(newMeObj);
+            end
+            result.stop_test(self);
+            
+        end
+        %
+        function set_up_param(~,varargin)
+        end
+        %
+        function runAndCheckError(~,commandStr,expIdentifierList,varargin)
             % RUNANDCHECKERROR executes the specifies command and checks
             % that it throws an exeption with an identifier containing the
             % specified marker
@@ -108,13 +308,25 @@ classdef test_case < mlunit.test_case
             % Input:
             %   regular:
             %       self:
-            %       commandStr: char[1,]/function_handle[1,1] - command to execute
-            %       expIdentifier: char[1,] - expected exeption
-            %           identifier marker
+            %       commandStr: char[1,]/function_handle[1,1] - command to
+            %                   execute
+            %       expIdentifierList: double[0,0]/char[1,]/...
+            %         cell[1,N] of char[1,] - list of of strings
+            %           (a single string), containig expected exeption
+            %           identifier markers. double[0,0] means that no
+            %           identifier match is performed.
+            %
             %
             %   optional:
-            %       msgCodeStr: char[1,] - expected exception message
-            %          marker
+            %       expMsgCodeList: char[1,]/cell[1,N] of char[1,] - list
+            %           of strings (a single string),
+            %           containig expected exception message
+            %           markers. For each field in expIdentifierList supposed
+            %           to be one field in expMsgCodeList. In case of more then
+            %           one argument in expIdentifierList, if you don't expect
+            %           any exception messages, put '' in corresponding
+            %           field. double[0,0] means that no identifier match
+            %           is performed
             %
             %   properties:
             %       causeCheckDepth: double[1,1] - depth at which causes of
@@ -122,17 +334,52 @@ classdef test_case < mlunit.test_case
             %          specified patters, default value is 0 (no cause is
             %          checked)
             %
-            % $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-            % Faculty of Computational Mathematics and Cybernetics, System Analysis
-            % Department, 7-October-2012, <pgagarinov@gmail.com>$
+            % $Authors: Peter Gagarinov <pgagarinov@gmail.com>
+            % $Date: March-2013 $
+            % $Copyright: Moscow State University,
+            %             Faculty of Computational Mathematics
+            %             and Computer Science,
+            %             System Analysis Department 2012-2013$
             %
-            [reg,~,causeCheckDepth]=...
+            import modgen.common.checkmultvar;
+            import modgen.common.throwerror;
+            %
+            isNoIdentPatternSpec=false;
+            if ischar(expIdentifierList)
+                expIdentifierList={expIdentifierList};
+            elseif isempty(expIdentifierList)
+                isNoIdentPatternSpec=true;
+            end
+            %
+            nExpIdentifiers=length(expIdentifierList);
+            %
+            [reg,isRegSpec,causeCheckDepth]=...
                 modgen.common.parseparext(varargin,...
                 {'causeCheckDepth';0;'isscalar(x)&&isnumeric(x)'},...
                 [0,1],...
-                'regDefList',{''},...
-                'regCheckList',{'isstring(x)'});
-            msgCodeStr=reg{1};
+                'regDefList',{[]},...
+                'regCheckList',{'iscellstr(x)||isstring(x)'});
+            %
+            if isRegSpec
+                expMsgCodeList=reg{1};
+                if ischar(expMsgCodeList)
+                    expMsgCodeList={expMsgCodeList};
+                end
+                isNoMsgPatternSpecVec=false(1,numel(expMsgCodeList));
+            else
+                isNoMsgPatternSpecVec=true(1,nExpIdentifiers);
+                expMsgCodeList=repmat({''},1,nExpIdentifiers);
+            end
+            nMsgCodes=numel(expMsgCodeList);
+            if isNoIdentPatternSpec
+                expIdentifierList=repmat({''},1,nMsgCodes);
+                isNoIdentPatternSpecVec=true(1,nMsgCodes);
+            else
+                isNoIdentPatternSpecVec=false(1,nMsgCodes);
+            end
+            %
+            checkmultvar(@(x,y) size(y,2) == 0 || ...
+                size(y,2) == size(x,2),2,expIdentifierList,expMsgCodeList);
             %
             try
                 if ischar(commandStr)
@@ -141,30 +388,44 @@ classdef test_case < mlunit.test_case
                     feval(commandStr);
                 end
             catch meObj
-                if ~isempty(expIdentifier)
-                    checkCode(meObj,'identifier',expIdentifier);
-                end
-                if ~isempty(msgCodeStr)
-                    checkCode(meObj,'message',msgCodeStr);
-                end
+                [isIdentMatchVec,identPatternStr] =checkCode(meObj,...
+                    'identifier',expIdentifierList);
+                [isMsgMatchVec,msgPatternStr] =checkCode(meObj,...
+                    'message',expMsgCodeList);
+                %
+                isOk=any((isIdentMatchVec|isNoIdentPatternSpecVec)&...
+                    (isMsgMatchVec|isNoMsgPatternSpecVec));
+                patternStr=['identifier(',identPatternStr,')',...
+                    'message(',msgPatternStr,')'];
+                %
+                mlunitext.assert_equals(true,isOk,...
+                    sprintf(...
+                    ['\n no match found for pattern %s',...
+                    ' exception details: \n %s'],...
+                    patternStr,errMsg));
                 return;
             end
-            mlunit.assert_equals(true,false);
-            function checkCode(inpMeObj,fieldName,codeStr)
+            mlunitext.assert_equals(true,false);
+            function [isMatchVec,patternsStr]=checkCode(inpMeObj,...
+                    fieldName,codeList)
                 %
                 errMsg=modgen.exception.me.obj2hypstr(inpMeObj);
+                isMatchVec=cellfun(...
+                    @(x)getIsCodeMatch(...
+                    inpMeObj,causeCheckDepth,fieldName,x),codeList);
+                %
+                patternsStr=modgen.string.catwithsep(codeList,', ');
+                %
                 
-                mlunit.assert_equals(true,...
-                    getIsCodeMatch(meObj,causeCheckDepth,...
-                    fieldName,codeStr),...
-                    sprintf(...
-                    ['\n no match found for field %s ',...
-                    'with pattern %s, ',...
-                    ' exception details: \n %s'],...
-                    fieldName,codeStr,errMsg));
             end
-            function isPositive=getIsCodeMatch(inpMeObj,checkDepth,fieldName,codeStr)
-                isPositive=~isempty(strfind(inpMeObj.(fieldName),codeStr));
+            function isPositive=getIsCodeMatch(inpMeObj,checkDepth,...
+                    fieldName,codeStr)
+                fieldValue = inpMeObj.(fieldName);
+                if isempty(fieldValue)
+                    isPositive= isempty(codeStr);
+                else
+                    isPositive=~isempty(strfind(fieldValue,codeStr));
+                end
                 causeList=inpMeObj.cause;
                 nCauses=length(causeList);
                 if checkDepth>0&&nCauses>0

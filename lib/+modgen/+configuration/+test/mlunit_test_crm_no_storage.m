@@ -9,10 +9,10 @@ classdef mlunit_test_crm_no_storage < modgen.configuration.test.mlunit_test_crm
             metaData=struct('a','111','b','222');
             self.cm.putConf('testConfA',SConf,3,metaData);
             [SRes,confVersion,metaDataRes]=self.cm.getConf('testConfA');
-            mlunit.assert_equals(isequalwithequalnans(SConf,SRes),true);
+            mlunitext.assert_equals(isequalwithequalnans(SConf,SRes),true);
             metaData.version='3';
-            mlunit.assert_equals(isequalwithequalnans(metaData,metaDataRes),true);
-            mlunit.assert_equals(isequalwithequalnans(3,confVersion),true);
+            mlunitext.assert_equals(isequalwithequalnans(metaData,metaDataRes),true);
+            mlunitext.assert_equals(isequalwithequalnans(3,confVersion),true);
         end
         function self = test_copyConfAndgetConfList(self)
             import modgen.configuration.test.*;
@@ -20,12 +20,12 @@ classdef mlunit_test_crm_no_storage < modgen.configuration.test.mlunit_test_crm
             self.cm.putConf('testConfA',SConf);
             self.cm.copyConf('testConfA','testConfAA');
             SRes=self.cm.getConf('testConfAA');
-            mlunit.assert_equals(isequalwithequalnans(SConf,SRes),true);
+            mlunitext.assert_equals(isequalwithequalnans(SConf,SRes),true);
             self.cm.removeConf('testConfB');
             confNameList=self.cm.getConfNameList();
             isEqual=isequal(sort({'testConfA','testConfAA'}),...
                 sort(confNameList));
-            mlunit.assert_equals(isEqual,true);
+            mlunitext.assert_equals(isEqual,true);
         end        
         function self = test_isParam(self)
             import modgen.configuration.test.*;
@@ -33,11 +33,11 @@ classdef mlunit_test_crm_no_storage < modgen.configuration.test.mlunit_test_crm
             self.cm.putConf('testConfA',SConf);
             self.cm.selectConf('testConfA');
             isPos=self.cm.isParam('dConf.gen.cdefs.gen.instTypeCode');
-            mlunit.assert_equals(isPos,true);
+            mlunitext.assert_equals(isPos,true);
             isPos=self.cm.isParam('dConf.gen.cdefs.gen.instTypeCode__');
-            mlunit.assert_equals(isPos,false);
+            mlunitext.assert_equals(isPos,false);
             isPos=self.cm.isParam('.dConf.gen.cdefs.gen.instTypeCode');
-            mlunit.assert_equals(isPos,true);
+            mlunitext.assert_equals(isPos,true);
             
         end        
         function self = test_setGetParamWithDot(self)
@@ -53,11 +53,11 @@ classdef mlunit_test_crm_no_storage < modgen.configuration.test.mlunit_test_crm
                 paramVal=paramVal+3;
                 self.cm.setParam(paramName,paramVal);
                 paramVal2=self.cm.getParam(paramName);
-                mlunit.assert_equals(isequalwithequalnans(paramVal,paramVal2),true);
+                mlunitext.assert_equals(isequalwithequalnans(paramVal,paramVal2),true);
                 self.cm.selectConf('testConfB');
                 self.cm.setParam(paramName,Inf);
                 paramVal3=self.cm.getParam(paramName);            
-                mlunit.assert_equals(isequalwithequalnans(Inf,paramVal3),true);            
+                mlunitext.assert_equals(isequalwithequalnans(Inf,paramVal3),true);            
             end
         end
         function self = test_setGetParamNegative(self)
@@ -68,11 +68,11 @@ classdef mlunit_test_crm_no_storage < modgen.configuration.test.mlunit_test_crm
             self.cm.selectConf('testConfA');
             try
                 self.cm.getParam(paramName);
-                mlunit.assert_equals(true,false);
+                mlunitext.assert_equals(true,false);
             catch meObj
                 isOk=~isempty(strfind(meObj.identifier,...
                     'CONFREPOMANAGERANYSTORAGE:invalidParam'));
-                mlunit.assert_equals(isOk,true);
+                mlunitext.assert_equals(isOk,true);
             end
         end
         function self = test_setParamInCache(self)
@@ -86,12 +86,12 @@ classdef mlunit_test_crm_no_storage < modgen.configuration.test.mlunit_test_crm
                 self.cm.selectConf('testConfA');
                 paramValue=rand(1);
                 self.cm.setParam(paramName,paramValue,'writeDepth','cache');
-                mlunit.assert_equals(true,self.cm.isParam(paramName));
-                mlunit.assert_equals(paramValue,self.cm.getParam(paramName));
+                mlunitext.assert_equals(true,self.cm.isParam(paramName));
+                mlunitext.assert_equals(paramValue,self.cm.getParam(paramName));
                 paramValue=rand(1);
                 self.cm.setParam(paramName,paramValue,'writeDepth','cache');
-                mlunit.assert_equals(true,self.cm.isParam(paramName));
-                mlunit.assert_equals(paramValue,self.cm.getParam(paramName));
+                mlunitext.assert_equals(true,self.cm.isParam(paramName));
+                mlunitext.assert_equals(paramValue,self.cm.getParam(paramName));
             end
         end        
     end

@@ -1,7 +1,7 @@
 function results = run_continuous_reach_tests(inpConfNameList)
 import elltool.reach.ReachFactory;
 %
-runner = mlunit.text_test_runner(1, 1);
+runner = mlunitext.text_test_runner(1, 1);
 loader = mlunitext.test_loader;
 %
 crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
@@ -21,7 +21,7 @@ end
 nConfs = size(confCMat, 1);
 suiteList = {};
 %
-for iConf = 1 : nConfs
+for iConf = 1:nConfs
     confName = confCMat{iConf, 1};
     confTestsVec = confCMat{iConf, 2};
     if confTestsVec(1)
@@ -58,7 +58,7 @@ for iConf = 1 : nConfs
         suiteList{end + 1} = loader.load_tests_from_test_case(...
             'elltool.reach.test.mlunit.ContinuousReachRefineTestCase',...
             ReachFactory(confName, crm, crmSys, false, false));
-    end  
+    end
 end
 suiteList{end + 1} = loader.load_tests_from_test_case(...
     'elltool.reach.test.mlunit.ContinuousReachFirstTestCase',...
@@ -66,6 +66,9 @@ suiteList{end + 1} = loader.load_tests_from_test_case(...
 %
 testLists=cellfun(@(x)x.tests,suiteList,'UniformOutput',false);
 suite=mlunitext.test_suite(horzcat(testLists{:}));
-results=runner.run(suite);
+%
+resList{1}=runner.run(suite);
+resList{2}=elltool.reach.test.run_reachcont_proj_adv_tests();
+results=[resList{:}];
 %
 end

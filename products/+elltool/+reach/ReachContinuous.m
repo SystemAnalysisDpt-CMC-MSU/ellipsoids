@@ -210,9 +210,9 @@ classdef ReachContinuous < elltool.reach.AReach
         function ellTubeRel = makeEllTubeRel(self, smartLinSys, l0Mat,...
                 timeVec, isDisturb, calcPrecision, approxTypeVec)
             import gras.ellapx.enums.EApproxType;
+            import gras.ellapx.lreachplain.GoodDirsContinuousFactory;
             relTol = elltool.conf.Properties.getRelTol();
-            goodDirSetObj =...
-                gras.ellapx.lreachplain.GoodDirectionSet(...
+            goodDirSetObj = GoodDirsContinuousFactory.create(...
                 smartLinSys, timeVec(1), l0Mat, calcPrecision);
             if (isDisturb)
                 extIntBuilder =...
@@ -776,13 +776,16 @@ classdef ReachContinuous < elltool.reach.AReach
             end
         end
         %%
-        function [rSdim sSdim] = dimension(self)
-            rSdim = self.linSysCVec{end}.dimension();
-            if ~self.isProj
-                sSdim = rSdim;
-            else
-                sSdim = size(self.projectionBasisMat, 2);
-            end
+        function [rSdimArr sSdimArr] = dimension(self)
+            rSdimArr = arrayfun(@(x) x.linSysCVec{end}.dimension(), self);
+            sSdimArr = arrayfun(@(x,y) getSSdim(x,y), self, rSdimArr);
+            function sSdim = getSSdim(reachObj, rSdim)
+                if ~reachObj.isProj
+                    sSdim = rSdim;
+                else
+                    sSdim = size(reachObj.projectionBasisMat, 2);
+                end
+            end    
         end
         %%
         function linSys = get_system(self)
@@ -835,12 +838,7 @@ classdef ReachContinuous < elltool.reach.AReach
         function projObj = projection(self, projMat)
             import gras.ellapx.enums.EProjType;
             import modgen.common.throwerror;
-            isOnesMat = flipud(sortrows(projMat)) == eye(size(projMat));
-            isOk = all(isOnesMat(:));
-            if ~isOk
-                throwerror('wrongInput', ['Each column of projection ',...
-                    'matrix should be a unit vector.']);
-            end
+            
             projSet = self.getProjSet(projMat);
             projObj = elltool.reach.ReachContinuous();
             projObj.switchSysTimeVec = self.switchSysTimeVec;
@@ -1100,7 +1098,7 @@ classdef ReachContinuous < elltool.reach.AReach
             isBackward = self.isBackward;
         end
         %%
-        function isEqual = isEqual(self, reachObj, varargin)
+        function [isEq,reportStr] = isEqual(self, reachObj, varargin)
         %
         % ISEQUAL - checks for equality given reach set objects
         % 
@@ -1149,7 +1147,9 @@ classdef ReachContinuous < elltool.reach.AReach
             APPROX_TYPE = F.APPROX_TYPE;
             %
             ellTube = self.ellTubeRel;
+            ellTube.sortBy(APPROX_TYPE);
             compEllTube = reachObj.ellTubeRel;
+            compEllTube.sortBy(APPROX_TYPE);
             %
             if nargin == 4
                 ellTube = ellTube.getTuplesFilteredBy(APPROX_TYPE,...
@@ -1176,22 +1176,30 @@ classdef ReachContinuous < elltool.reach.AReach
                 compTimeGridIndVec = compTimeGridIndVec +...
                     double(compTimeGridIndVec > pointsNum);
             end
-            fieldsNotToCompVec =...
-                F.getNameList(self.FIELDS_NOT_TO_COMPARE);
-            fieldsToCompVec =...
-                setdiff(ellTube.getFieldNameList, fieldsNotToCompVec);
+            
+            if nargin == 3
+                fieldsNotToCompVec =...
+                    F.getNameList(varargin{1});
+                fieldsToCompVec =...
+                    setdiff(ellTube.getFieldNameList, fieldsNotToCompVec);    
+            else    
+                fieldsNotToCompVec =...
+                    F.getNameList(self.FIELDS_NOT_TO_COMPARE);
+                fieldsToCompVec =...
+                    setdiff(ellTube.getFieldNameList, fieldsNotToCompVec);
+            end
             
             if pointsNum ~= newPointsNum
                 compEllTube =...
                     compEllTube.thinOutTuples(compTimeGridIndVec);
             end
-            isEqual = compEllTube.getFieldProjection(...
+            [isEq,reportStr] = compEllTube.getFieldProjection(...
                 fieldsToCompVec).isEqual(...
                 ellTube.getFieldProjection(fieldsToCompVec),...
-                'maxTolerance', self.COMP_PRECISION);
+                'maxTolerance', 2*self.COMP_PRECISION,'checkTupleOrder','true');
         end
         %%
-        function copyReachObj = getCopy(self)
+        function copyReachObjArr = getCopy(self)
         % Example:
         %   aMat = [0 1; 0 0]; bMat = eye(2);
         %   SUBounds = struct();
@@ -1219,17 +1227,24 @@ classdef ReachContinuous < elltool.reach.AReach
         % 
         %   Number of external approximations: 2
         %   Number of internal approximations: 2
-        %
-            copyReachObj = elltool.reach.ReachContinuous();
-            copyReachObj.switchSysTimeVec = self.switchSysTimeVec;
-            copyReachObj.x0Ellipsoid = self.x0Ellipsoid.getCopy();
-            copyReachObj.linSysCVec = cellfun(@(x) x.getCopy(),...
-                self.linSysCVec, 'UniformOutput', false);
-            copyReachObj.isCut = self.isCut;
-            copyReachObj.isProj = self.isProj;
-            copyReachObj.isBackward = self.isBackward;
-            copyReachObj.projectionBasisMat = self.projectionBasisMat;
-            copyReachObj.ellTubeRel = self.ellTubeRel.getCopy();
+            if ~isempty(self)
+                sizeCVec = num2cell(size(self));
+                copyReachObjArr(sizeCVec{:}) = elltool.reach.ReachContinuous();
+                arrayfun(@fSingleCopy,copyReachObjArr,self);
+            else
+                copyReachObjArr = elltool.reach.ReachContinuous.empty(size(self));
+            end    
+            function fSingleCopy(copyReachObj, reachObj)
+                copyReachObj.switchSysTimeVec = reachObj.switchSysTimeVec;
+                copyReachObj.x0Ellipsoid = reachObj.x0Ellipsoid.getCopy();
+                copyReachObj.linSysCVec = cellfun(@(x) x.getCopy(),...
+                    reachObj.linSysCVec, 'UniformOutput', false);
+                copyReachObj.isCut = reachObj.isCut;
+                copyReachObj.isProj = reachObj.isProj;
+                copyReachObj.isBackward = reachObj.isBackward;
+                copyReachObj.projectionBasisMat = reachObj.projectionBasisMat;
+                copyReachObj.ellTubeRel = reachObj.ellTubeRel.getCopy();
+            end    
         end
         %%
         function ellTubeRel = getEllTubeRel(self)

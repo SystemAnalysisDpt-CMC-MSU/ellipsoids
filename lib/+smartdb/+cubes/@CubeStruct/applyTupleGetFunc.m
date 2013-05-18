@@ -15,6 +15,12 @@ function varargout=applyTupleGetFunc(self,varargin)
 %           uniform as in cellfun with 'UniformOutput'=true, default 
 %			value is true
 %
+% Output:
+%   funcOut1Arr: <type1>[] - array corresponding to the first output of the
+%       applied function
+%           ....
+%   funcOutNArr: <typeN>[] - array corresponding to the last output of the
+%       applied function
 %
 % Notes: this function currently has a lots of limitations:
 %   1) the function is applies to SData part of field value

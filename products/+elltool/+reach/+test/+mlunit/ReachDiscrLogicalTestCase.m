@@ -96,7 +96,7 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
             isExpectedVec = [false, true];
             isObtainedVec = arrayfun(@isprojection, rsVec);
             isOk = all(isExpectedVec == isObtainedVec);
-            mlunit.assert_equals( isOk, true );  
+            mlunitext.assert_equals( isOk, true );  
         end
         
         
@@ -112,7 +112,7 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
             isObtainedVec = arrayfun(@isempty, rsVec);
             isExpectedVec = [true, false];
             isEqVec = isObtainedVec == isExpectedVec;
-            mlunit.assert_equals( all(isEqVec), true );
+            mlunitext.assert_equals( all(isEqVec), true );
         end
         
         
@@ -140,7 +140,7 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
             isFixedSystem = false;
             auxTestGetDirections();
             
-            mlunit.assert_equals(isOk, true);
+            mlunitext.assert_equals(isOk, true);
             
             function auxTestGetDirections()
                 if (isFixedSystem)
@@ -203,7 +203,7 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
             tVec = [1, 20];
             auxTestGetCenter();
             
-            mlunit.assert_equals(isOk, true);
+            mlunitext.assert_equals(isOk, true);
             
             function auxTestGetCenter()
                 if (isFixedSystem)
@@ -262,7 +262,7 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
             isFixedSystem = false;
             auxTestCut();
 
-            mlunit.assert_equals(isOk, true);
+            mlunitext.assert_equals(isOk, true);
             
             function auxTestCut()
                 if (isFixedSystem)
@@ -321,7 +321,7 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
             isFixedSystem = false;
             auxTestGoodCurves();
             
-            mlunit.assert_equals(isOk, true);
+            mlunitext.assert_equals(isOk, true);
             
             function auxTestGoodCurves()
                 if (isFixedSystem)
@@ -383,7 +383,7 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
             isFixedSystem = false;
             auxTestGetIa();
 
-            mlunit.assert_equals(isOk, true);
+            mlunitext.assert_equals(isOk, true);
             
             function auxTestGetIa()
                 if (isFixedSystem)
@@ -507,7 +507,7 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
             isFixedSystem = false;
             auxTestGetEa();
             
-            mlunit.assert_equals(isOk, true);
+            mlunitext.assert_equals(isOk, true);
             
             function auxTestGetEa()
                 if (isFixedSystem)
@@ -633,7 +633,7 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
             projectionMatrix = [1 0 0; 0 1 0]';
             isFixedSystem = false;
             auxTestProjection();
-            mlunit.assert_equals(isOk, true);
+            mlunitext.assert_equals(isOk, true);
             
             
             function auxTestProjection()
@@ -723,7 +723,7 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
             isOkMat = isObtainedValuesMat == isExpectedValuesMat;
             isOk = isOk && all(isOkMat(:));
             
-            mlunit.assert_equals(isOk, true);            
+            mlunitext.assert_equals(isOk, true);            
         end
         
         
@@ -757,7 +757,7 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
             isWithAnotherSystem = true;
             auxTestEvolve();
             
-            mlunit.assert_equals(isOk, true);
+            mlunitext.assert_equals(isOk, true);
             
             function auxTestEvolve()
                 if (~isWithAnotherSystem)
@@ -821,7 +821,7 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
             x0Ell = ell_unitball(nDim);
             argumentList = {aMat, bMat, pEll, x0Ell, lMat, [1, 20]};
             
-            self.runAndCheckError(@check,'complexResult');
+            self.runAndCheckError(@check,{'complexResult','wrongInput'});
             function check()
                 % is ok. Object is created but is not used.
                 rs = createReach(argumentList{:});

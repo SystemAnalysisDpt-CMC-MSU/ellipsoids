@@ -127,7 +127,7 @@ classdef GenEllipsoidPlotTestCase < mlunitext.test_case
                 plEllColCMat = get(plEllObjVec, 'Color');
                 plEllColMat = vertcat(plEllColCMat{:});
                 plEllColMat = sortrows(plEllColMat);
-                mlunit.assert_equals(plEllColMat, colMat);
+                mlunitext.assert_equals(plEllColMat, colMat);
             end
             function check3dCol(plObj, varargin)
                 colMat = vertcat(varargin{:});
@@ -138,7 +138,7 @@ classdef GenEllipsoidPlotTestCase < mlunitext.test_case
                     'UniformOutput', false);
                 plEllColMat = vertcat(plEllColCMat{:});
                 plEllColMat = sortrows(plEllColMat);
-                mlunit.assert_equals(plEllColMat, colMat);
+                mlunitext.assert_equals(plEllColMat, colMat);
                 function clrVec = getColVec(plEllObj)
                     if ~eq(get(plEllObj, 'Type'), 'patch')
                         clrVec = [];
@@ -162,12 +162,12 @@ classdef GenEllipsoidPlotTestCase < mlunitext.test_case
             function checkNewFig(testEllArr, numEll)
                 plObj = plot(testEllArr, 'newfigure', true);
                 SHPlot =  plObj.getPlotStructure().figToAxesToHMap.toStruct();
-                mlunit.assert_equals(numel(fields(SHPlot)), numEll);
+                mlunitext.assert_equals(numel(fields(SHPlot)), numEll);
             end
             function checkNotNewFig(testEllArr)
                 plObj = plot(testEllArr, 'newfigure', false);
                 SHPlot =  plObj.getPlotStructure().figToAxesToHMap.toStruct();
-                mlunit.assert_equals(numel(SHPlot), 1);
+                mlunitext.assert_equals(numel(SHPlot), 1);
             end
         end
         function self = testProperties(self)
@@ -195,10 +195,10 @@ classdef GenEllipsoidPlotTestCase < mlunitext.test_case
                 SHPlot =  plObj.getPlotStructure().figToAxesToHMap.toStruct();
                 plEllObjVec = get(SHPlot.figure_g1.ax, 'Children');
                 isEqVec = arrayfun(@(x) checkEllParams(x), plEllObjVec);
-                mlunit.assert_equals(isEqVec, ones(size(isEqVec)));
+                mlunitext.assert_equals(isEqVec, ones(size(isEqVec)));
                 isFillVec = arrayfun(@(x) checkIsFill(x), plEllObjVec, ...
                     'UniformOutput', false);
-                mlunit.assert_equals(numel(isFillVec) > 0, fill);
+                mlunitext.assert_equals(numel(isFillVec) > 0, fill);
                 function isFill = checkIsFill(plObj)
                     if strcmp(get(plObj, 'type'), 'patch')
                         if get(plObj, 'FaceAlpha') > 0
@@ -268,7 +268,7 @@ classdef GenEllipsoidPlotTestCase < mlunitext.test_case
                 SHPlot = plotObj.getPlotStructure().figToAxesToHMap.toStruct();
                 SAxes = SHPlot.figure_g1;
                 axesHandle = SAxes.ax;
-                mlunit.assert_equals(axesHandle, axesSubPlHandle);
+                mlunitext.assert_equals(axesHandle, axesSubPlHandle);
             end
             function checkNewAxisNewFig(testEllArr)
                 axesSubPlHandle = subplot(3,2,2);
@@ -276,7 +276,7 @@ classdef GenEllipsoidPlotTestCase < mlunitext.test_case
                 SHPlot =  plotObj.getPlotStructure().figToAxesToHMap.toStruct();
                 SAxes = SHPlot.figure1_g1;
                 axesHandle = SAxes.ax1;
-                mlunit.assert(~eq(axesHandle, axesSubPlHandle));
+                mlunitext.assert(~eq(axesHandle, axesSubPlHandle));
                 
             end
         end
@@ -307,7 +307,7 @@ classdef GenEllipsoidPlotTestCase < mlunitext.test_case
                 SHPlot = plotObj.getPlotStructure().figToAxesToHMap.toStruct();
                 SAxes = SHPlot.figure_g1;
                 plotFig = get(SAxes.ax, 'Children');
-                mlunit.assert_equals(numel(plotFig), testAns);
+                mlunitext.assert_equals(numel(plotFig), testAns);
             end
             function checkHoldOn(testEllArr, testAns)
                 plot(1:10,sin(1:10));
@@ -316,7 +316,7 @@ classdef GenEllipsoidPlotTestCase < mlunitext.test_case
                 SHPlot = plotObj.getPlotStructure().figToAxesToHMap.toStruct();
                 SAxes = SHPlot.figure_g1;
                 plotFig = get(SAxes.ax, 'Children');
-                mlunit.assert_equals(numel(plotFig), testAns);
+                mlunitext.assert_equals(numel(plotFig), testAns);
                 
             end
             function checkHoldOffNewFig(testEllArr, testAns)
@@ -326,7 +326,7 @@ classdef GenEllipsoidPlotTestCase < mlunitext.test_case
                 SHPlot = plotObj.getPlotStructure().figToAxesToHMap.toStruct();
                 SAxes = SHPlot.figure1_g1;
                 plotFig = get(SAxes.ax1, 'Children');
-                mlunit.assert_equals(numel(plotFig), testAns);
+                mlunitext.assert_equals(numel(plotFig), testAns);
             end
             function checkHoldOnNewFig(testEllArr, testAns)
                 plot(1:10,sin(1:10));
@@ -335,7 +335,7 @@ classdef GenEllipsoidPlotTestCase < mlunitext.test_case
                 SHPlot = plotObj.getPlotStructure().figToAxesToHMap.toStruct();
                 SAxes = SHPlot.figure1_g1;
                 plotFig = get(SAxes.ax1, 'Children');
-                mlunit.assert_equals(numel(plotFig), testAns);
+                mlunitext.assert_equals(numel(plotFig), testAns);
                 
             end
             
@@ -560,7 +560,7 @@ for iEll = 1:nEll
     isBoundVec = isBoundVec | isBoundEllVec;
 end
 
-mlunit.assert_equals(isBoundVec, ones(size(isBoundVec)));
+mlunitext.assert_equals(isBoundVec, ones(size(isBoundVec)));
 
     function [outXData, outYData, outZData] = getData(hObj)
         objType = get(hObj, 'type');
