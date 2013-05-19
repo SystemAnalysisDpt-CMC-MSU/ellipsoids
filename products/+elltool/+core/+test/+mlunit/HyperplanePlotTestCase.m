@@ -1,4 +1,4 @@
-classdef HyperplanePlotTestCase < elltool.plot.test.AGeomBodyPlotTestCase
+classdef HyperplanePlotTestCase < elltool.core.test.mlunit.BGeomBodyTC
     %
     %$Author: Ilya Lyubich <lubi4ig@gmail.com> $
     %$Date: 2013-05-7 $
@@ -34,12 +34,31 @@ classdef HyperplanePlotTestCase < elltool.plot.test.AGeomBodyPlotTestCase
     end
     methods
         function self = HyperplanePlotTestCase(varargin)
-            self = self@elltool.plot.test.AGeomBodyPlotTestCase(varargin{:});
+            self = self@elltool.core.test.mlunit.BGeomBodyTC(varargin{:});
+            self.fTest = @hyperplane;
+            self.fCheckBoundary = @checkBoundary;
             [~,className]=modgen.common.getcallernameext(1);
             shortClassName=mfilename('classname');
             self.testDataRootDir=[fileparts(which(className)),...
                 filesep,'TestData',...
                 filesep,shortClassName];
+            function isBoundVec = checkBoundary(cellPoints,testHypVec)
+                nHyp = numel(testHypVec);
+                isBoundVec = 0;
+                for iHyp = 1:nHyp
+                    isBoundHypVec =...
+                        checkNorm(testHypVec(iHyp), cellPoints);
+                    isBoundVec = isBoundVec | isBoundHypVec;
+                end
+                function isBoundHypVec = checkNorm(testHyp, cellPoints)
+                    absTol = elltool.conf.Properties.getAbsTol();
+                    [normVec, hypScal] = testHyp.double();
+                    isBoundHypVec =...
+                        cellfun(@(x) abs(x.'*normVec-hypScal)< ...
+                        absTol, cellPoints);
+                    
+                end
+            end
         end
         function self = tear_down(self,varargin)
             close all;
@@ -48,40 +67,13 @@ classdef HyperplanePlotTestCase < elltool.plot.test.AGeomBodyPlotTestCase
             nDims = 2;
             inpNormCList = {[1;1],[2;1],[0;0]};
             inpScalCList = {1,3,0};
-            nElem = numel(inpNormCList);
-            for iElem = 1:nElem
-                testHyp=hyperplane(inpNormCList{iElem}, inpScalCList{iElem});
-                check(testHyp, nDims);
-            end
-            testHypArr(1) = hyperplane(inpNormCList{1}, inpScalCList{1});
-            testHypArr(2) = hyperplane(inpNormCList{2}, inpScalCList{2});
-            check(testHypArr, nDims);
-            testHyp2Arr(nElem) = hyperplane();
-            for iElem = 1:nElem
-                testHyp2Arr(iElem) = hyperplane(inpNormCList{iElem},...
-                    inpScalCList{iElem});
-            end
-            check(testHypArr, nDims);
+            self = plotND(self,nDims,inpNormCList,inpScalCList);
         end
         function self = testPlot3d(self)
             nDims = 3;
             inpNormCList = {[1;1;1],[2;1;3],[0;0;0],[1;0;0]};
             inpScalCList = {1,3,0,0};
-            nElem = numel(inpNormCList);
-            for iElem = 1:nElem
-                testHyp=hyperplane(inpNormCList{iElem}, inpScalCList{iElem});
-                check(testHyp, nDims);
-            end
-            
-            testHypArr(1) = hyperplane(inpNormCList{1}, inpScalCList{1});
-            testHypArr(2) = hyperplane(inpNormCList{2}, inpScalCList{2});
-            check(testHypArr, nDims);
-            testHyp2Arr(nElem) = hyperplane();
-            for iElem = 1:nElem
-                testHyp2Arr(iElem) = hyperplane(inpNormCList{iElem},...
-                    inpScalCList{iElem});
-            end
-            check(testHypArr, nDims);
+            self = plotND(self,nDims,inpNormCList,inpScalCList);
         end
         function testWrongCenterSize(self)
             testFirstHyp = hyperplane([2;1],-1);
@@ -97,74 +89,6 @@ classdef HyperplanePlotTestCase < elltool.plot.test.AGeomBodyPlotTestCase
             plot(testFirstHyp,testSecondHyp,'size',100);
             plot(testFirstHyp,testSecondHyp,'size',[100;2]);
         end
-    end
-end
-function check(testHypArr, nDims)
-isBoundVec = 0;
-plotObj = plot(testHypArr);
-SPlotStructure = plotObj.getPlotStructure;
-SHPlot =  toStruct(SPlotStructure.figToAxesToPlotHMap);
-num = SHPlot.figure_g1;
-[xDataCell, yDataCell, zDataCell] = arrayfun(@(x) getData(num.ax(x)), ...
-    1:numel(num.ax), 'UniformOutput', false);
-if iscell(xDataCell)
-    xDataArr = horzcat(xDataCell{:});
-else
-    xDataArr = xDataCell;
-end
-if iscell(yDataCell)
-    yDataArr =  horzcat(yDataCell{:});
-else
-    yDataArr = yDataCell;
-end
-
-if nDims == 3
-    if iscell(zDataCell)
-        zDataArr = horzcat(zDataCell{:});
-    else
-        zDataArr = zDataCell;
-    end
-    nPoints = numel(xDataArr);
-    xDataVec = reshape(xDataArr, 1, nPoints);
-    yDataVec = reshape(yDataArr, 1, nPoints);
-    zDataVec = reshape(zDataArr, 1, nPoints);
-    pointsMat = [xDataVec; yDataVec; zDataVec];
-elseif nDims == 2
-    pointsMat = [xDataArr; yDataArr];
-else
-    pointsMat = xDataArr;
-end
-cellPoints = num2cell(pointsMat(:, :), 1);
-
-testHypVec = reshape(testHypArr, 1, numel(testHypArr));
-nHyp = numel(testHypVec);
-for iHyp = 1:nHyp
-    isBoundHypVec = checkNorm(testHypVec(iHyp), cellPoints);
-    isBoundVec = isBoundVec | isBoundHypVec;
-end
-
-mlunitext.assert_equals(isBoundVec, ones(size(isBoundVec)));
-
-    function [outXData, outYData, outZData] = getData(hObj)
-        objType = get(hObj, 'type');
-        if strcmp(objType, 'patch') || strcmp(objType, 'line')
-            outXData = get(hObj, 'XData');
-            outYData = get(hObj, 'YData');
-            outZData = get(hObj, 'ZData');
-            outXData = outXData(:)';
-            outYData = outYData(:)';
-            outZData = outZData(:)';
-        else
-            outXData = [];
-            outYData = [];
-            outZData = [];
-        end
-    end
-    function isBoundHypVec = checkNorm(testHyp, cellPoints)
-        absTol = elltool.conf.Properties.getAbsTol();
-        [normVec, hypScal] = testHyp.double();
-        isBoundHypVec = cellfun(@(x) abs(x.'*normVec-hypScal)< ...
-            absTol, cellPoints);
         
     end
 end
