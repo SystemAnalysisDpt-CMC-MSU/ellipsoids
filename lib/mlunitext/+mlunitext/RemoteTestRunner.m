@@ -19,6 +19,7 @@ classdef RemoteTestRunner<handle
                 consoleOutStr=evalc(...
                     'resultVec=feval(testPackName,varargin{:});');
                 errorFailStr=resultVec.getErrorFailMessage();
+                isFailed=~resultVec.isPassed();
                 %
                 subjectStr=resultVec.getReport('minimal');
                 %
@@ -36,10 +37,13 @@ classdef RemoteTestRunner<handle
                 subjectStr='ERROR';
                 errorFailStr=modgen.exception.me.obj2plainstr(meObj);
                 attachFileNameList={};
+                isFailed=true;
             end
-            consoleOutFileName=writeMessageToFile('error_fail_list',...
-                errorFailStr);
-            attachFileNameList=[attachFileNameList,{consoleOutFileName}];
+            if isFailed
+                errorFailFileName=writeMessageToFile('error_fail_list',...
+                    errorFailStr);
+                attachFileNameList=[attachFileNameList,{errorFailFileName}];
+            end
             %
             self.emailLogger.sendMessage(subjectStr,...
                 'emailAttachmentNameList',attachFileNameList);
