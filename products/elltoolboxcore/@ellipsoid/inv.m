@@ -44,9 +44,12 @@ function invEllArr = inv(myEllArr)
 ellipsoid.checkIsMe(myEllArr);
 
 sizeCVec = num2cell(size(myEllArr));
-invEllArr(sizeCVec{:}) = ellipsoid;
-arrayfun(@(x) fSingleInv(x),1:numel(myEllArr));
-
+if isempty(myEllArr.isempty())
+    invEllArr = ellipsoid.empty(sizeCVec{:});
+else    
+    invEllArr(sizeCVec{:}) = ellipsoid;
+    arrayfun(@(x) fSingleInv(x),1:numel(myEllArr));
+end
     function fSingleInv(index)
         
         singEll = myEllArr(index);

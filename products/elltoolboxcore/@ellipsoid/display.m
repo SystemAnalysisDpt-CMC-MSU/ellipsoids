@@ -30,9 +30,19 @@ function display(myEllMat)
 fprintf('\n');
 disp([inputname(1) ' =']);
 
-[mRows, nCols] = size(myEllMat);
-if (mRows > 1) || (nCols > 1)
-    fprintf('%dx%d array of ellipsoids.\n\n', mRows, nCols);
+sizeVec = size(myEllMat);
+nDims = numel(sizeVec);
+isEmpty = isempty(myEllMat.isempty());
+if (nDims > 1 && (sizeVec(1) > 1 || sizeVec(2) > 1) )|| isEmpty
+    if isEmpty
+        fprintf('Empty array of ellipsoids with dimensionality ');
+    else
+        fprintf('Array of ellipsoids with dimensionality ');
+    end
+    for iDim = 1:nDims-1
+        fprintf('%dx', sizeVec(iDim));
+    end
+    fprintf('%d\n\n', sizeVec(nDims));
 else
     fprintf('\n');
     fprintf('Center:\n'); disp(myEllMat.centerVec);

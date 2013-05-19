@@ -51,20 +51,23 @@ function modEllArr = shape(ellArr, modMat)
 ellipsoid.checkIsMe(ellArr,'first');
 modgen.common.checkvar(modMat, @(x)isa(x,'double'),...
     'errorMessage','second input argument must be double');
-
-isModScal = isscalar(modMat);
-if isModScal
-    modMatSq = modMat*modMat;
-else
-    [nRows, nDim] = size(modMat);
-    dimArr = dimension(ellArr);
-    modgen.common.checkmultvar('(x1==x2)&&all(x3(:)==x2)',...
-        3,nRows,nDim,dimArr,'errorMessage',...
-        'input matrix not square or dimensions do not match');
-end
 sizeCVec = num2cell(size(ellArr));
-modEllArr(sizeCVec{:}) = ellipsoid;
-arrayfun(@(x) fSingleShape(x), 1:numel(ellArr) );
+if isempty(ellArr.isempty())
+    modEllArr = ellipsoid.empty(sizeCVec{:});
+else   
+    isModScal = isscalar(modMat);
+    if isModScal
+        modMatSq = modMat*modMat;
+    else
+        [nRows, nDim] = size(modMat);
+        dimArr = dimension(ellArr);
+        modgen.common.checkmultvar('(x1==x2)&&all(x3(:)==x2)',...
+            3,nRows,nDim,dimArr,'errorMessage',...
+            'input matrix not square or dimensions do not match');
+    end
+    modEllArr(sizeCVec{:}) = ellipsoid;
+    arrayfun(@(x) fSingleShape(x), 1:numel(ellArr));
+end
     function fSingleShape(index)
         singEll = ellArr(index);
         if isModScal

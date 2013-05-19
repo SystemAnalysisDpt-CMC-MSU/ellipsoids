@@ -46,8 +46,12 @@ ellipsoid.checkIsMe(inpEllArr,...
     'errorTag','wrongInput',...
     'errorMessage','argument must be array of ellipsoid.');
 sizeCVec = num2cell(size(inpEllArr));
-outEllArr(sizeCVec{:}) = ellipsoid;
-arrayfun(@(x) fSingleMove(x), 1:numel(inpEllArr));
+if isempty(inpEllArr.isempty())
+    outEllArr = ellipsoid.empty(sizeCVec{:});
+else    
+    outEllArr(sizeCVec{:}) = ellipsoid;
+    arrayfun(@(x) fSingleMove(x), 1:numel(inpEllArr));
+end
     function fSingleMove(index)
         nDim = dimension(inpEllArr(index));
         outEllArr(index).centerVec = zeros(nDim,1);

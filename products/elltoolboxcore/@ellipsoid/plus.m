@@ -83,13 +83,16 @@ else
     throwerror('wrongInput',errMsg);
 end
 
-dimArr = dimension(inpEllArr);
-checkmultvar('iscolumn(x1)&&all(x2(:)==length(x1))',2,inpVec,dimArr,...
-    'errorMessage','dimensions mismatch');
-
 sizeCVec = num2cell(size(inpEllArr));
-outEllArr(sizeCVec{:})=ellipsoid;
-arrayfun(@(x) fSinglePlus(x),1:numel(inpEllArr));
+if isempty(inpEllArr.isempty())
+    outEllArr = ellipsoid.empty(sizeCVec{:});
+else    
+    dimArr = dimension(inpEllArr);
+    checkmultvar('iscolumn(x1)&&all(x2(:)==length(x1))',2,inpVec,dimArr,...
+        'errorMessage','dimensions mismatch');
+    outEllArr(sizeCVec{:})=ellipsoid;
+    arrayfun(@(x) fSinglePlus(x),1:numel(inpEllArr));
+end        
     function fSinglePlus(index)
         outEllArr(index).centerVec = inpEllArr(index).centerVec + inpVec;
         outEllArr(index).shapeMat = inpEllArr(index).shapeMat;
