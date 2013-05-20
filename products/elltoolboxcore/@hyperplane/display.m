@@ -1,4 +1,4 @@
-function display(hypArr)
+function display(hpArr)
 %
 % DISPLAY - Displays hyperplane object.
 %
@@ -36,48 +36,17 @@ function display(hypArr)
 %             System Analysis Department 2012 $
 
 MAX_DISP_ELEM = 15;
+DEFAULT_NAME = 'hpArr';
 
 fprintf('\n');
-if (isscalar(hypArr))
-    disp([inputname(1) ' =']);
-else
-    fprintf('array of hyperplanes: \n');
+variableName = inputname(1);
+if (isempty(variableName))
+    variableName = DEFAULT_NAME;
 end
-sizeVec = size(hypArr);
-fprintf('size: %s\n', mat2str(sizeVec));
+disp([variableName ' =']);
 
-nHyp = numel(hypArr);
-nDispElem = min(nHyp, MAX_DISP_ELEM);
-
-nDims = ndims(hypArr);
-indList = cell(1, nDims);
-indArr = reshape(1:numel(hypArr), sizeVec);
-ShypArr = hypArr.toStruct();
-strucdisp(ShypArr, 'maxArrayLength', MAX_DISP_ELEM);
-% arrayfun(@(x, y) subDisplay(x, y), indArr(1:nDispElem), ...
-%     hypArr(1:nDispElem));
-
-% if (nHyp > MAX_DISP_ELEM)
-%     fprintf('... <<%s elements more>> ...\n', ...
-%         mat2str((nHyp - MAX_DISP_ELEM)));
-% end
-% i'll delete later
-%     function subDisplay(indCur, inpHyp)
-%         [indList{:}] = ind2sub(sizeVec, indCur);
-%         indVec = [indList{:}];
-%         fprintf('\n');
-%         fprintf('Element: %s',mat2str(indVec));
-%         fprintf('\n');
-%         fprintf('Normal:\n'); disp(inpHyp.normal);
-%         fprintf('Shift:\n'); disp(inpHyp.shift);
-%         
-%         nDims = dimension(inpHyp);
-%         if nDims < 1
-%             fprintf('Empty hyperplane.\n\n');
-%         else
-%             fprintf('Hyperplane in R^%d.\n\n', nDims);
-%         end
-%     end
-
+strucdisp(hpArr.toStruct(), 'maxArrayLength', MAX_DISP_ELEM, ...
+     'defaultName', variableName);
 end
+
 

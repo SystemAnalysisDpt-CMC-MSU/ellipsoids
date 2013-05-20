@@ -3,10 +3,14 @@ function SEllArr = toStruct(ellArr)
 %
 % Input:
 %   regular:
-%       ellArr: ellipsoid [ellDim1, ellDim2, ...] - array
+%       ellArr: ellipsoid [nDim1, nDim2, ...] - array
 %           of ellipsoids.
 % Output:
-%   SEllArr : structural array with size of ellArr.
+%   SEllArr: struct[nDim1, nDim2, ...] - structural array with size of 
+%       ellArr with the following fields:
+%         
+%       q: double[1, nEllDim] - the center of ellipsoid
+%       Q: double[nEllDim, nEllDim] - the shape matrix of ellipsoid  
 %
 % Example:
 %   ellObj = ellipsoid([1 1]', eye(2));

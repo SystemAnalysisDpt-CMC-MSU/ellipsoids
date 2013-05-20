@@ -5,10 +5,14 @@ function ShpArr = toStruct(hpArr)
 %   regular:
 %       hpArr: hyperplane [hpDim1, hpDim2, ...] - array
 %           of hyperplanes.
-% 
+%       
 % Output:
-%   ShpArr : structural array with size of hpArr.
-% 
+%   ShpArr : struct[nDim1, nDim2, ...] - structural array with size of 
+%       hpArr with the following fields:
+%         
+%       normal: double[nHpDim, 1] - the normal of hyperplane
+%       shift: double[1, 1] - the shift of hyperplane
+
 % Example:
 %   hpObj = hyperplane([1 1]', 1);
 %   hpObj.toStruct()

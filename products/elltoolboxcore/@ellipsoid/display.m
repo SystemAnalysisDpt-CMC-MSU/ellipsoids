@@ -27,26 +27,17 @@ function display(myEllArr)
 % $Copyright: The Regents of the University of California 
 %             2004-2008 $
 MAX_DISP_ELEM = 15;
+DEFAULT_NAME = 'ellArr';
 
 fprintf('\n');
-disp([inputname(1) ' =']);
-
-if numel(myEllArr) > 1
-    strucdisp(myEllArr.toStruct(), 'maxArrayLength', MAX_DISP_ELEM);
-else
-    SEll = myEllArr.toStruct();
-    fprintf('\n');
-    fprintf('Center:\n'); disp(SEll.q.');
-    fprintf('Shape Matrix:\n'); disp(SEll.Q);
-    if isempty(myEllArr)
-        fprintf('Empty ellipsoid.\n\n');
-    else
-        [spaceDim, ellDim]    = dimension(myEllArr);
-        if ellDim < spaceDim
-            fprintf('Degenerate (rank %d) ellipsoid in R^%d.\n\n', ...
-                ellDim, spaceDim);
-        else
-            fprintf('Nondegenerate ellipsoid in R^%d.\n\n', spaceDim);
-        end
-    end
+variableName = inputname(1);
+size(variableName)
+if (isempty(variableName))
+    variableName = DEFAULT_NAME;
 end
+disp([variableName ' =']);
+
+strucdisp(myEllArr.toStruct(), 'maxArrayLength', MAX_DISP_ELEM, ...
+     'defaultName', variableName);
+end
+
