@@ -310,4 +310,18 @@ classdef ellipsoid < handle
     methods (Static)
         checkIsMe(someObj,varargin)
     end
+    
+    methods (Access=private)
+        function isArrEq = isMatEqualInternal(self,aArr,bArr)
+            self.checkIfScalar();
+            
+            if all(all(aArr>self.absTol)) || all(all(bArr>self.absTol))
+                isArrEq = abs(2*(aArr-bArr)./(aArr+bArr));
+                isArrEq = all(all(isArrEq<=self.relTol));
+            else
+                isArrEq = true;
+            end
+        end
+    end
+    
 end
