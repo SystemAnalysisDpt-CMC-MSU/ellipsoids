@@ -13,7 +13,7 @@ classdef test_suite<handle
     %  Running a test suite is done the same way as a single test. Example:
     %         result = test_result;
     %         [suite, result] = run(suite, result);
-    %         summary(result)
+    %         getReport(result)
     %
     %  See also MLUNIT.TEST_CASE, MLUNIT.TEST_LOADER, MLUNIT.TEST_RESULT.
     %
@@ -81,43 +81,6 @@ classdef test_suite<handle
         end
     end
     methods
-        
-        %         function unionWith(self,varargin)
-        %             % UNIONWITH complements the tests of the test suite with
-        %             % the tests from other tests suites
-        %             %
-        %             % Input:
-        %             %   regular:
-        %             %       self:
-        %             %       suite1Obj: mlunitext.test_suite[1,1] - the first additonal
-        %             %           tests suite
-        %             %       suite2Obj: mlunitext.test_suite[1,1] - the second
-        %             %           additional test suite
-        %             %       suiteNObj: mlunitext.test_suite[1,1] - the nth additional
-        %             %           test suite
-        %             %
-        %             %
-        %             nSuites=length(varargin);
-        %             isOkVec=cellfun(@(x)isscalar(x)&&isa(x,'mlunitext.test_suite'),...
-        %                 varargin);
-        %             if ~all(isOkVec)
-        %                 modgen.common.throwerror('wrongInput',...
-        %                     'all inputs are expected to be the scalar test suites');
-        %             end
-        %             %
-        %             testNumVec=cellfun(@(x)numel(x.tests),varargin);
-        %
-        %             nAddTests=sum(testNumVec);
-        %             nCurTests=numel(self.tests);
-        %             testList=[self.tests,cell(1,nAddTests)];
-        %             testCumNumVec=cumsum([nCurTests,testNumVec]);
-        %             for iSuite=1:nSuites
-        %                 indLeft=testCumNumVec(iSuite)+1;
-        %                 indRight=testCumNumVec(iSuite+1);
-        %                 testList(indLeft:indRight)=varargin{iSuite}.tests;
-        %             end
-        %             self.tests=testList;
-        %         end
         function set.tests(self,value)
             % SET.TESTS puts a list of test suites or test cases into the
             % suite
@@ -132,7 +95,7 @@ classdef test_suite<handle
             
             if ~all(cellfun(@(x)isa(x,'mlunitext.test_case'),value)|...
                     cellfun(@(x)isa(x,'mlunitext.test_suite'),value))
-                error([upper(mfilename),':wrongInput'],...
+                throwerror('wrongInput',...
                     ['tests property can only contain ',...
                     'test_case and test_suite class objects']);
             end
@@ -188,7 +151,7 @@ classdef test_suite<handle
                         markerStr=prop{iProp+1};
                         if ~(ischar(markerStr)&&...
                                 modgen.common.isrow(markerStr))
-                            error([upper(mfilename),':wrongInput'],...
+                            throwerror('wrongInput',...
                                 'marker is expected to be a string');
                         end
                         isMarkerSet=true;
@@ -197,12 +160,12 @@ classdef test_suite<handle
                     case 'parallelmode',
                         parMode=prop{iProp+1};
                         if ~(ischar(parMode)&&modgen.common.isrow(parMode))
-                            error([upper(mfilename),':wrongInput'],...
+                            throwerror('wrongInput',...
                                 'parMode is expected to be a string');
                         end
                         if ~any(strcmpi(parMode,...
                                 {'blockBased','queueBased'}))
-                            error([upper(mfilename),':wrongInput'],...
+                            throwerror('wrongInput',...
                                 'parallel mode %s is not supported',...
                                 parMode);
                         end
@@ -210,13 +173,13 @@ classdef test_suite<handle
                         evalFh = prop{iProp+1};
                         if ~isscalar(evalFh) ...
                                 || ~isa(evalFh, 'function_handle')
-                            error([upper(mfilename),':wrongInput'], ...
+                            throwerror('wrongInput', ...
                                 'Invalid size or type of %s', prop{iProp});
                         end
                     case 'parallelconfiguration'
                         parConf = prop{iProp+1};
                         if ~ischar(parConf)
-                            error([upper(mfilename),':wrongInput'], ...
+                            throwerror('wrongInput', ...
                                 'Invalid type of %s', prop{iProp});
                         end
                 end
@@ -272,7 +235,7 @@ classdef test_suite<handle
                     %% Copy constructor
                     %
                     if nProp > 0
-                        error([upper(mfilename),':wrongInput'], ...
+                        throwerror('wrongInput', ...
                             'Copy constructor does not take any properties');
                     end
                     testSuite = reg{1};
@@ -294,7 +257,7 @@ classdef test_suite<handle
                         self.tests = reg{1};
                         checkTests('Invalid size or type of parameter #1');
                     else
-                        error([upper(mfilename),':wrongInput'], ...
+                        throwerror('wrongInput', ...
                             'Too many regular arguments');
                     end;
                     %
@@ -305,25 +268,30 @@ classdef test_suite<handle
                                 if ~isscalar(self.confRepoMgr) ...
                                         || ~isa(self.confRepoMgr, ...
                                         'modgen.configuration.ConfRepoManager')
-                                    error([upper(mfilename),':wrongInput'], ...
-                                        'Invalid size or type of %s', prop{iProp});
+                                    throwerror('wrongInput', ...
+                                        'Invalid size or type of %s',...
+                                        prop{iProp});
                                 end
                             case 'hconffunc',
                                 self.hConfFunc=prop{iProp+1};
                                 if ~isscalar(self.hConfFunc) ...
-                                        || ~isa(self.hConfFunc, 'function_handle')
-                                    error([upper(mfilename),':wrongInput'], ...
-                                        'Invalid size or type of %s', prop{iProp});
+                                        || ~isa(self.hConfFunc,...
+                                        'function_handle')
+                                    throwerror('wrongInput', ...
+                                        'Invalid size or type of %s',...
+                                        prop{iProp});
                                 end
                             otherwise
-                                error([upper(mfilename),':wrongInput'], ...
+                                throwerror('wrongInput', ...
                                     'Unknown property: %s', prop{iProp});
                         end
                     end
                     if isempty(self.confRepoMgr) && ~isempty( self.hConfFunc) ...
-                            || ~isempty(self.confRepoMgr) && isempty( self.hConfFunc)
-                        error([upper(mfilename),':wrongInput'], ...
-                            'Either none or both confRepoMgr and hConfFunc should be specified');
+                            || ~isempty(self.confRepoMgr) &&...
+                            isempty( self.hConfFunc)
+                        throwerror('wrongInput', ...
+                            ['Either none or both confRepoMgr ',...
+                            'and hConfFunc should be specified']);
                     end
                     % Default configuration
                     if isempty(self.hConfFunc)
@@ -337,7 +305,7 @@ classdef test_suite<handle
                             || ~isempty(self.tests) &&...
                             ~all(cellfun(@(x)(isa(x,'mlunitext.test_case')||...
                             isa(x,'mlunitext.test_suite')),self.tests))
-                        error([upper(mfilename),':wrongInput'], msg);
+                        throwerror('wrongInput', msg);
                     end
                 end
             end
@@ -406,13 +374,9 @@ classdef test_suite<handle
             %         suite = ...; % Create test suite, e.g. with test_loader.
             %         result = test_result;
             %         [suite, result] = run(suite, result);
-            %         summary(result)
+            %         getReport(result)
             %
             %  See also MLUNITEXT.TEST_SUITE.
-            
-            if (get_should_stop(result))
-                return;
-            end;
             nTests=length(self.tests);
             if nTests==0,
                 return;
@@ -423,8 +387,7 @@ classdef test_suite<handle
                 case 'queuebased',
                     blockLen=1;
                 otherwise,
-                    error([upper(mfilename),':wrongInput'],...
-                        'Oops, we shouldn''t be here');
+                    throwerror('wrongInput','Oops, we shouldn''t be here');
             end
             %
             nBlocks=ceil(nTests/blockLen);
@@ -465,7 +428,7 @@ classdef test_suite<handle
             %       suite = ...; % Create test suite, e.g. with test_loader.
             %       result = test_result;
             %       [suite, result] = run(suite, result);
-            %       summary(result)
+            %       getReport(result)
             %
             %  See also MLUNITEXT.TEST_SUITE.
             
@@ -475,10 +438,6 @@ classdef test_suite<handle
             mlunitext.logprintf('debug', '==== START suite [%s] with %d tests', ...
                 self.str(), nTests);
             for i = 1:nTests
-                if (get_should_stop(result))
-                    break;
-                end;
-                
                 result = run(self.tests{i}, result);
             end;
             mlunitext.logprintf('debug', '====  END  suite [%s]', self.str());

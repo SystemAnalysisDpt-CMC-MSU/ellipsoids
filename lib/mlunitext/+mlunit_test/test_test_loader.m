@@ -62,8 +62,8 @@ classdef test_test_loader < mlunitext.test_case
             assert(modgen.common.isrow(suite.tests));            
             result = test_result;
             result = run(suite, result);
-            assert_equals(3, get_tests_run(result));
-            assert_equals(1, get_errors(result));
+            assert_equals(3, getNTestsRun(result));
+            assert_equals(1, getNErrors(result));
             %
             testLoader=mlunitext.test_loader;
             suite = load_tests_from_test_case(testLoader,...

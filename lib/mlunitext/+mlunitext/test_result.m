@@ -20,12 +20,13 @@ classdef test_result<handle
     %             Faculty of Computational Mathematics
     %             and Computer Science,
     %             System Analysis Department 2012-2013$
-    
+    %
     properties (SetAccess=private)
-        tests_run = 0;
         errors = {};
         failures = {};
         should_stop = 0;
+    end
+    properties (Access=private)
         runTimeMap
         curTicId
     end
@@ -45,39 +46,64 @@ classdef test_result<handle
             isOk=(nErrors==0)&&(nFails==0);
         end
         function reportStr=getReport(self,reportType)
-            import modgen.common.throwerror;
             if nargin<2
                 reportType='minimal';
             end
-            switch lower(reportType)
-                case 'minimal',
+            if strcmpi(reportType,'minimal')
                     [nErrors,nFails]=self.getErrorFailCount();
-                    nTests=self.get_tests_run();
+                    nTests=self.getNTestsRun();
                     runTime=self.getRunTimeTotal();
                     %
-                    reportStr=sprintf(...
-                        ['TESTS: %-5d, FAILURES: %-5d, ERRORS: %-5d ',...
-                        'RUN TIME(sec.): %-12.5g'],nTests,nFails,...
-                        nErrors,runTime);
-                case 'tops',
-                    rel=self.getRunStatRel(); %#ok<NASGU>
+                    msgFormatStr='<< %s >> || TESTS: %d';
+                    suffixStr=',  RUN TIME(sec.): %.5g';
+                    %
+                    if (nErrors==0)&&(nFails)==0
+                        prefixStr='PASSED';
+                        addArgList={};
+                    else
+                        prefixStr='FAILED';
+                        msgFormatStr=[msgFormatStr,...
+                            ',  FAILURES: %d,  ERRORS: %d'];
+                        addArgList={nFails,nErrors};
+                    end
+                    msgFormatStr=[msgFormatStr,suffixStr];
+                    reportStr=sprintf(msgFormatStr,prefixStr,...
+                        nTests,addArgList{:},runTime);
+            else
+                    rel=self.getRunStatRel(reportType); %#ok<NASGU>
                     reportStr=evalc('rel.display');
-                otherwise,
-                    throwerror('wrongInput',...
-                        'report type %s is not supported');
             end
         end
-        function rel=getRunStatRel(self)
-            SDataList=arrayfun(@getOneResultData,self,'UniformOutput',false);
+        function resRel=getRunStatRel(self,reportType)
+            import mlunitext.rels.F;
+            import modgen.common.throwerror;
+            if nargin<2
+                reportType='tops';
+            end
+            SDataList=arrayfun(@getOneResultData,self,'UniformOutput',...
+                false);
             SData=modgen.struct.unionstructsalongdim(1,SDataList{:});
-            rel=smartdb.relations.DynamicRelation(SData,...
-                'fieldNameList',{'runTime','testName'},...
-                'fieldDescrList',...
-                {'run time in seconds','full test name'});
-            rel.sortBy('runTime','direction','desc');
+            rel=mlunitext.rels.TopsReportRel(SData);
+            switch lower(reportType)
+                case 'tops',
+                    resRel=rel;
+                case 'topstestcase',
+                    rel=smartdb.relations.DynamicRelation(rel);
+                    rel.groupBy({F.TEST_CASE_NAME});
+                    rel.applySetFunc(@sum,F.TEST_RUN_TIME,...
+                        'inferIsNull',true,'UniformOutput',true);
+                    SData=rel.getData('fieldNameList',...
+                        {F.TEST_RUN_TIME,F.TEST_CASE_NAME});
+                    resRel=mlunitext.rels.TopsTestCaseReportRel(SData);
+                otherwise,
+                    throwerror('wrongInput',...
+                        'report type %s is not supported',reportType);
+            end
+            
+            %
             function SData=getOneResultData(selfElem)
-                SData.runTime=selfElem.runTimeMap.values.';
-                SData.testName=selfElem.runTimeMap.keys.';
+                valuesList=selfElem.runTimeMap.values;
+                SData=modgen.struct.unionstructsalongdim(1,valuesList{:});
             end
         end
         %
@@ -89,17 +115,19 @@ classdef test_result<handle
             %
             reportStr=self.getReport();
             nSlashes=length(reportStr)+3;
-            fprintf([...
-                ['\n%s\n+',repmat('-',1,nSlashes),'+'],...
+            fprintf([['\n%s\n+',repmat('-',1,nSlashes),'+'],...
                 '\n| %s  |\n',...
                 ['+',repmat('-',1,nSlashes),'+\n']],....
                 message,reportStr);
         end
         function runTimeTotal=getRunTimeTotal(self)
+            import mlunitext.rels.F;
+            runTimeFieldName=F.TEST_RUN_TIME;
             runTimeTotal=sum(arrayfun(@getRunTimeTotalElem,self));
             function runTime=getRunTimeTotalElem(selfElem)
-                runTimeList=selfElem.runTimeMap.values();
-                runTime=sum([runTimeList{:}]);
+                runTimeVec=cellfun(@(x)x.(runTimeFieldName),...
+                    selfElem.runTimeMap.values());
+                runTime=sum(runTimeVec);
             end
         end
         function add_success(self, ~)
@@ -115,12 +143,17 @@ classdef test_result<handle
             %    the end of the test execution to the test result:
             %         result = stop_test(result, self);
             %
+            import mlunitext.rels.F;
             self.checkIfScalar();
             testKey=test.str();
             curRunTime=toc(self.curTicId);
-            self.runTimeMap(testKey)=curRunTime;
+            self.runTimeMap(testKey)=struct(...
+                F.TEST_RUN_TIME,curRunTime,...
+                F.TEST_NAME,{{test.name}},...
+                F.TEST_CASE_NAME,{{class(test)}},...
+                F.TEST_MARKER,{{test.marker}});
         end
-        function start_test(self, test) %#ok
+        function start_test(self, test)
             % START_TEST indicates that a test will be started.
             %
             % Example:
@@ -129,9 +162,14 @@ classdef test_result<handle
             %         result = start_test(result, self);
             %
             %  See also MLUNITEXT.TEST_CASE.RUN.
+            import modgen.common.throwerror;
             self.checkIfScalar();
+            testKey=test.str();
+            if self.runTimeMap.isKey(testKey)
+                throwerror('wrongInput',...
+                    'attempt to run test %s twice',testKey);
+            end
             self.curTicId=tic();
-            self.tests_run = self.tests_run + 1;
         end
         function mapObj=getRunTimeMap(self)
             self.checkIfScalar();
@@ -139,7 +177,7 @@ classdef test_result<handle
         end
         function self=test_result(varargin)
             self.runTimeMap=modgen.containers.MapExtended(...
-                'KeyType','char','ValueType','double');
+                'KeyType','char','ValueType','any');
         end
         function add_error(self, testName, meObj)
             % ADD_ERROR_WITH_STACK adds an error to the test result
@@ -257,17 +295,16 @@ classdef test_result<handle
             errors = self.errors;
         end
         %
-        function errors = get_errors(self)
+        function errors = getNErrors(self)
             % GET_ERRORS returns the number of errors.
             %
             %  Example:
             %    get_error_list is called for example from
             %    text_test_result.run:
-            %         get_errors(self)
+            %         getNErrors(self)
             %
             %  See also MLUNITEXT.TEXT_TEST_RESULT.RUN.
-            self.checkIfScalar();
-            errors = size(self.errors, 1);
+            errors = sum(arrayfun(@(x)size(x.errors, 1),self));
         end
         %
         function failures = get_failure_list(self)
@@ -284,87 +321,20 @@ classdef test_result<handle
             failures = self.failures;
         end
         %
-        function failures = get_failures(self)
+        function failures = getNFailures(self)
             % GET_ERRORS returns the number of failures.
             %
             % Example:
             %    get_error_list is called for example from
             %    text_test_result.run:
-            %         get_errors(self)
+            %         getNErrors(self)
             %
             % See also MLUNITEXT.TEXT_TEST_RESULT.RUN.
-            self.checkIfScalar();
-            failures = size(self.failures, 1);
+            failures = sum(arrayfun(@(x)size(x.failures,1),self));
         end
-        
-        function should_stop = get_should_stop(self)
-            % GET_SHOULD_STOP returns whether the test should
-            %   stop or not.
-            %
-            % Example:
-            %    get_should_stop is called for example from test_suite.run:
-            %         get_should_stop(result)
-            %
-            % See also MLUNITEXT.TEST_SUITE.RUN.
-            self.checkIfScalar();
-            should_stop = self.should_stop;
+        function tests_run = getNTestsRun(self)
+            tests_run = sum(arrayfun(@(x)x.runTimeMap.Count,self));
         end
-        
-        function tests_run = get_tests_run(self)
-            % TESTS_RUN returns the number of tests executed.
-            %
-            % Example:
-            %    get_tests_run is called for example from
-            %    text_test_runner.run:
-            %         tests_run = get_tests_run(result);
-            %
-            %  See also MLUNITEXT.TEXT_TEST_RUNNER.RUN.
-            tests_run = sum(arrayfun(@(x)x.tests_run,self));
-        end
-        function set_should_stop(self)
-            % SET_SHOULD_STOP indicates that the execution of
-            % tests should stop.
-            %
-            % Example:
-            %   result = test_result;
-            %   % Do something, e.g. iterate through a number of tests, ...
-            %   result = set_should_stop(result);
-            self.checkIfScalar();
-            self.should_stop = 1;
-        end
-        %
-        function s = summary(self)
-            % SUMMARY returns a string with a summary of the
-            % test result.
-            %
-            % Example:
-            %         test = ... % e.g. created through my_test('test_foo')
-            %         [test, result] = run(test);
-            %         summary(result)
-            self.checkIfScalar();
-            s = sprintf('%s run=%d errors=%d failures=%d', ...
-                class(self), self.tests_run, get_errors(self), ...
-                get_failures(self));
-        end
-        
-        function success = was_successful(self)
-            % WAS_SUCCESSFUL returns whether the test was
-            % successful or not.
-            %
-            % Example:
-            %    was_successful is called for example from
-            %    text_test_result.run:
-            %         was_successful(result)
-            %
-            %  See also MLUNITEXT.TEXT_TEST_RESULT.RUN.
-            self.checkIfScalar();
-            if (size(self.errors, 1) + size(self.failures, 1) == 0)
-                success = 1;
-            else
-                success = 0;
-            end;
-        end
-        
         function union_test_results(self,varargin)
             % UNION_TEST_RESULTS unions several objects of test_result
             % class into single object
@@ -415,10 +385,8 @@ classdef test_result<handle
             nObjs=nargin-1;
             for iObj=1:nObjs,
                 curObj=varargin{iObj};
-                self.tests_run=self.tests_run+curObj.get_tests_run();
                 self.errors=vertcat(self.errors,curObj.get_error_list());
                 self.failures=vertcat(self.failures,curObj.get_failure_list());
-                self.should_stop=self.should_stop|curObj.get_should_stop();
                 self.runTimeMap=self.runTimeMap.getUnionWith(...
                     curObj.runTimeMap);
             end
@@ -431,8 +399,8 @@ classdef test_result<handle
             errorCount=0;
             failCount=0;
             for iRes=1:nRes
-                errorCount=errorCount+self(iRes).get_errors();
-                failCount=failCount+self(iRes).get_failures();
+                errorCount=errorCount+self(iRes).getNErrors();
+                failCount=failCount+self(iRes).getNFailures();
             end
         end
     end

@@ -58,8 +58,8 @@ classdef mlunit_test_prallelproc < mlunitext.test_case
                     self.testSuiteProps{:},'nParallelProcesses',2,varargin{:}); 
                 [~,resultsDouble]=evalc('runner.run(suiteDoubleThread);');
                 %
-                mlunitext.assert_equals(resultsSingle.tests_run,...
-                    resultsDouble.tests_run);
+                mlunitext.assert_equals(resultsSingle.getNTestsRun(),...
+                    resultsDouble.getNTestsRun());
             end
         end
     end

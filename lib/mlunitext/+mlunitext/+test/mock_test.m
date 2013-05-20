@@ -8,16 +8,20 @@ classdef mock_test < mlunitext.test_case
         end
         %
         function set_up_param(self, varargin)
+            import modgen.common.throwerror;
+            if any(strcmpi('marker',varargin))
+                throwerror('wrongState',...
+                    'Oops, marker property should not get here');
+            end
             nArgs = length(varargin);
             if nArgs == 1
                 self.verbose = varargin{1};
                 if ~isscalar(self.verbose) || ~islogical(self.verbose)
-                    error([upper(mfilename),':wrongInput'], ...
+                    throwerror('wrongInput', ...
                         'Invalid size or type of parameter #1');
                 end
             elseif nArgs > 1
-                error([upper(mfilename),':wrongInput'], ...
-                    'Too many parameters');
+                throwerror('wrongInput','Too many parameters');
             end
         end
         %

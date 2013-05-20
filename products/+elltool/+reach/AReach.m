@@ -1067,7 +1067,7 @@ classdef AReach < elltool.reach.IReach
             linSys = self.linSysCVec{1};
             timeLimsVec = ...
                 [min(self.switchSysTimeVec) max(self.switchSysTimeVec)];
-            if isbackward()
+            if self.isbackward()
                 timeLimsVec = fliplr(timeLimsVec);
             end
             x0Ell = self.x0Ellipsoid;
