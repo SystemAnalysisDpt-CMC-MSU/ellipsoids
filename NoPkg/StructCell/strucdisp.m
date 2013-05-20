@@ -58,18 +58,22 @@ DEFAULT_MAX_ARRAY_LENGTH=10;
 DEFAULT_DEPTH=-1;
 DEFAULT_PRINT_VALUES=true;
 DEFAULT_NUMBER_FORMAT='%g';
+DEFAULT_NAME = 'Structure';
 %% Main program
 %%%%% start program %%%%%
 checkgen(SInp,'isstruct(x)');
-[reg,~,depth,inpPrintValues,maxArrayLength,numberFormat]=parseparext(varargin,...
-    {'depth','printValues','maxArrayLength','numberFormat';...
+[reg,~,depth,inpPrintValues,maxArrayLength,numberFormat,structureName]=parseparext(varargin,...
+    {'depth','printValues','maxArrayLength','numberFormat','defaultName';...
     DEFAULT_DEPTH,...
     DEFAULT_PRINT_VALUES,...
     DEFAULT_MAX_ARRAY_LENGTH,...
-    DEFAULT_NUMBER_FORMAT;
+    DEFAULT_NUMBER_FORMAT,...
+    DEFAULT_NAME;
     'isscalar(x)&&isnumeric(x)&&fix(x)==x',...
     'islogical(x)&&isscalar(x)',...
-    'isscalar(x)&&isnumeric(x)&&fix(x)==x&&x>0','isstring(x)'},[0,1],...
+    'isscalar(x)&&isnumeric(x)&&fix(x)==x&&x>0',...
+    'isstring(x)',...
+    'isstring(x)'},[0,1],...
     'regDefList',{''});
 fileName=reg{1};
 % start recursive function
@@ -121,7 +125,7 @@ end
         if numel(Structure) > 1
             if (printValues == 0)
                 varStr = createArraySize(Structure, 'Structure');
-                listStr = [{' '}; {['Structure', varStr]}];
+                listStr = [{' '}; {[structureName, varStr]}];
                 body = recFieldPrint(Structure(1), indent);
                 listStr = [listStr; body; {'   O'}];
             else
@@ -129,7 +133,7 @@ end
                 indexVec = ones(1, length(sizeVec));
                 for iStruc = 1 : min(numel(Structure), maxArrayLength)
                     if (~isvector(Structure))
-                        indexStr = 'Structure(';
+                        indexStr = [structureName, '('];
                         for iDimension = 1 : length(sizeVec) - 1
                               indexStr = [indexStr, sprintf('%d, ',...
                                   indexVec(iDimension))];
@@ -137,7 +141,7 @@ end
                         indexStr = [indexStr, sprintf('%d)', indexVec(end))];
                         indexVec = incrementIndexVec(indexVec, sizeVec);
                     else
-                        indexStr = sprintf('Structure(%d)', iStruc);
+                        indexStr = sprintf([structureName,'(%d)'], iStruc);
                     end
                     listStr = [listStr; {' '}; {indexStr}];
                     body = recFieldPrint(Structure(iStruc), indent);
@@ -367,18 +371,18 @@ end
                 * DASH_SYMBOL_CODE);
             if (isscalar(Structure.(Field)))
                 if (Structure.(Field))
-                    varStr = ' True';
+                    varStr = ' true';
                 else
-                    varStr = ' False';
+                    varStr = ' false';
                 end
             elseif (isvector(Structure.(Field)) && ...
                     length(Structure.(Field)) <= maxArrayLength)
                 varStr = '';
                 for iIndex = 1 : numel(Structure.(Field))
                     if (Structure.(Field)(iIndex))
-                        varStr = [varStr, 'True '];
+                        varStr = [varStr, 'true '];
                     else
-                        varStr = [varStr, 'False '];
+                        varStr = [varStr, 'false '];
                     end
                 end
                 varStr = ['[' varStr(1:length(varStr) - 1) ']'];
