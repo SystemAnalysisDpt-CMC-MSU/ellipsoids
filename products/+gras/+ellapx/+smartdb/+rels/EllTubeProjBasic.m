@@ -136,7 +136,7 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                 indVertVec=[1:nVerts,1];
                 hVec=line('Parent',hAxes,'xData',vMat(indVertVec,1),...
                     'yData',vMat(indVertVec,2),...
-                    'zData',vMat(indVertVec,3),'Color',patchColor);
+                    'zData',vMat(indVertVec,3),'Color',patchColorVec);
             else
                 hVec=patch('FaceColor', 'interp', 'EdgeColor', 'none',...
                     'DisplayName', patchName,...
@@ -234,26 +234,41 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
             %       plObj: smartdb.disp.RelationDataPlotter[1,1] - plotter
             %           object used for displaying ellipsoidal tubes
             %   properties:
-            %       fGetTubeColor: function_handle[1,1] - function with the
-            %           following signature:
-            %           Input:
-            %               regular:
-            %                   apxType: gras.ellapx.enums.EApproxType[1,1]
-            %                       - approximation type
-            %           Output:
-            %               patchColor: double[1,3] - RGB color vector
-            %               patchAlpha: double[1,1] - transparency level
-            %                   within [0,1] range
-            %           if not specified, an internal function 
-            %               getPatchColorByApxType is used. 
+            %       fGetColor: function_handle[1, 1] -
+            %           function that specified colorVec for
+            %           ellipsoidal tubes
+            %       fGetAlpha: function_handle[1, 1] -
+            %           function that specified transparency
+            %           value for ellipsoidal tubes
+            %       fGetLineWidth: function_handle[1, 1] -
+            %           function that specified lineWidth for good curves 
+            %       fGetFill: function_handle[1, 1] - this
+            %           property not used in this version
+            %       colorFieldList: cell[nField, ] - list of 
+            %           parameters for color function
+            %       alphaFieldList: cell[nField, ] - list of 
+            %           parameters for transparency function
+            %       lineWidthFieldList: cell[nField, ] - list of 
+            %           parameters for lineWidth function
+            %       fillFieldList: cell[nField, ] - list of 
+            %           parameters for fill function
+            %       plotSpecFieldList: cell[nField, ] - defaul list of 
+            %           parameters. If for any function in
+            %           properties not specified list of
+            %           parameters, this one will be used
+            %
             % Output:
             %   plObj: smartdb.disp.RelationDataPlotter[1,1] - plotter
             %           object used for displaying ellipsoidal tubes
             % 
-            % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2013-01-06 $
+            % $Author: 
+            % Peter Gagarinov  <pgagarinov@gmail.com> 	
+            % Artem Grachev <grachev.art@gmail.com> %
+            % $Date: May-2013$
             % $Copyright: Moscow State University,
-            %            Faculty of Computational Mathematics and Computer Science,
-            %            System Analysis Department 2011 $
+            %             Faculty of Computational Mathematics
+            %             and Computer Science, 
+            %             System Analysis Department 2013$
             %
             import gras.ellapx.smartdb.rels.EllTubeProjBasic;
             import gras.ellapx.smartdb.PlotPropProcessor;
@@ -281,14 +296,15 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
             fGetFillDefault = ...
                 @(approxType)(true);
             
-            [reg, isRegSpec, fGetColor, fGetAlpha, fGetWidth,...
+            [reg, isRegSpec, fGetColor, fGetAlpha, fGetLineWidth,...
                 fGetFill, colorFieldList, alphaFieldList, widthFieldList,...
                 fillFieldList,...
                 plotSpecFieldList, ~, ~, ~, ~, isColorList, isAlphaList,...
                 isFillList, isWidthList, isPlotSpecFieldList] = ...
                 parseparext(varargin, {'fGetColor', 'fGetAlpha',...
-                'fGetLineWidth', 'fGetFill', 'colorFieldList', 'alphaFieldList',...
-                'widthFieldList', 'fillFieldList', 'plotSpecFieldList';...
+                'fGetLineWidth', 'fGetFill', 'colorFieldList',...
+                'alphaFieldList',...
+                'lineWidthFieldList', 'fillFieldList', 'plotSpecFieldList';...
                 fGetPatchColorDefault, fGetAlphaDefault,...
                 fGetLineWidthDefault,fGetFillDefault,colorFieldListDefault,...
                 alphaFieldListDefault, widthFieldListDefault,...
@@ -305,7 +321,7 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
             checkListOfField();
             
             plotPropProcObj = PlotPropProcessor(PLOT_FULL_FIELD_LIST,...
-                fGetColor, colorFieldList, fGetWidth, widthFieldList,...
+                fGetColor, colorFieldList, fGetLineWidth, widthFieldList,...
                 fGetFill, fillFieldList, fGetAlpha, alphaFieldList);
 
             if self.getNTuples()>0

@@ -142,17 +142,13 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
         function hVec = plotCreateGoodDirFunc(self, plotPropProcObj,...
                 hAxes, varargin)
             
-            [projType, timeVec, lsGoodDirOrigVec, ltGoodDirMat, sTime,...
-                xTouchCurveMat, xTouchOpCurveMat, ltGoodDirNormVec,...
-                ltGoodDirNormOrigVec] = deal(varargin{1:9});
-            newVarargin = varargin(10 : end);
+            [~, timeVec, lsGoodDirOrigVec, ltGoodDirMat, sTime,...
+                ~, ~, ~, ltGoodDirNormOrigVec] = deal(varargin{1:9});
             
             import gras.ellapx.enums.EProjType;
             import gras.ellapx.smartdb.PlotPropProcessor;
-            [cMat,cOpMat]=self.getGoodDirColor(hAxes,projType,timeVec,...
-                lsGoodDirOrigVec,ltGoodDirMat,sTime,xTouchCurveMat,...
-                xTouchOpCurveMat,ltGoodDirNormVec,ltGoodDirNormOrigVec,...
-                newVarargin{:});
+            
+            [cMat, cOpMat]=self.getGoodDirColor(hAxes, varargin{:});
             
             lineWidth = plotPropProcObj.getLineWidth(varargin(:));
             
@@ -173,21 +169,16 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
         function hVec=plotCreateTubeTouchCurveFunc(self,...
                     hAxes, plotPropProcessorObj, varargin)   
                 
-            [projType, timeVec, lsGoodDirOrigVec, ltGoodDirMat, sTime,...
-                xTouchCurveMat, xTouchOpCurveMat, ltGoodDirNormVec,...
-                ltGoodDirNormOrigVec] = deal(varargin{1:9});
-            newVarargin = varargin(10 : end);
+            [~, timeVec, lsGoodDirOrigVec, ~, sTime, xTouchCurveMat,...
+                xTouchOpCurveMat, ~, ~] = deal(varargin{1:9});
             
             import gras.ellapx.smartdb.PlotPropProcessor;
-            [cMat,cOpMat]=self.getGoodCurveColor(hAxes, projType, timeVec,...
-                lsGoodDirOrigVec, ltGoodDirMat, sTime, xTouchCurveMat,...
-                xTouchOpCurveMat, ltGoodDirNormVec, ltGoodDirNormOrigVec,...
-                newVarargin{:});
+            [cMat,cOpMat] = self.getGoodCurveColor(hAxes, varargin{:});
             
             lineWidth = plotPropProcessorObj.getLineWidth(varargin(:));
             
-            hVec(2)=dispTouchCurve(xTouchCurveMat,lsGoodDirOrigVec,cMat);
-            hVec(1)=dispTouchCurve(xTouchOpCurveMat,-lsGoodDirOrigVec,cOpMat);
+            hVec(2)=dispTouchCurve(xTouchCurveMat, lsGoodDirOrigVec,cMat);
+            hVec(1)=dispTouchCurve(xTouchOpCurveMat, -lsGoodDirOrigVec,cOpMat);
             
             %
             function hVec=dispTouchCurve(xTouchCurveMat,lsGoodDirOrigVec,cMat)
