@@ -412,17 +412,27 @@ end
 %
 function operationCheckEqFunc(testEllArr, compList, operation,...
     argument)
+    OBJ_MODIFICATING_METHODS_LIST = {'inv', 'move2origin',...
+        'shape'};
+    isObjModifMethod = ismember(operation, OBJ_MODIFICATING_METHODS_LIST);
+    if nargin < 4
+        testEllResArr = testEllArr.(operation);
+    else
+        testEllResArr = testEllArr.(operation)(argument);
+    end
+    checkRes(testEllResArr,compList, operation);
+    if isObjModifMethod
+        %test for methods which modify the input array
+        checkRes(testEllArr,compList, operation);
+    end    
+end
+function checkRes(testEllResArr,compList, operation)
     import modgen.common.throwerror;
     import modgen.cell.cellstr2expression;
     %
     VEC_COMP_METHODS_LIST = {'uminus', 'plus', 'minus', 'move2origin'};
     MAT_COMP_METHODS_LIST = {'inv', 'shape'};
     %
-    if nargin < 4
-        testEllResArr = testEllArr.(operation);
-    else
-        testEllResArr = testEllArr.(operation)(argument);
-    end
     [testEllResCentersVecList, testEllResShapeMatList] = arrayfun(@(x) double(x),...
         testEllResArr, 'UniformOutput', false);
     if ismember(operation, VEC_COMP_METHODS_LIST)
@@ -440,6 +450,7 @@ function operationCheckEqFunc(testEllArr, compList, operation,...
     testIsRight = all(eqArr(:)==1);
     mlunitext.assert_equals(testIsRight, 1);
 end
+%
 function checkRhoSize(supArr,bpArr,dirArr,arrSizeVec)
     isRhoOk=all(size(supArr)==arrSizeVec);
     isBPOk=all(size(bpArr)==size(dirArr));
@@ -467,12 +478,17 @@ function auxTestProjection(centVec, shapeMat, projMat, dimVec)
      compEllObj = ellipsoid(projCentVec, projShapeMat);
      if nargin < 4   
         projEllObj = ellObj.projection(projMat); 
-        testIsRight = isequal(compEllObj, projEllObj);
+        testIsRight1 = isequal(compEllObj, projEllObj);
+        %additional test for modification of input object
+        testIsRight2 = isequal(compEllObj, ellObj);
      else
         ellArr = ellObj.repMat(dimVec);
         projEllArr = ellArr.projection(projMat);
         compEllArr = compEllObj.repMat(dimVec);
-        testIsRight = isequal(compEllArr, projEllArr);
+        testIsRight1 = isequal(compEllArr, projEllArr);
+        %additional test for modification of input array
+        testIsRight2 = isequal(compEllArr, ellArr);
      end    
-     mlunitext.assert_equals(testIsRight, 1);
+     mlunitext.assert_equals(testIsRight1, 1);
+     mlunitext.assert_equals(testIsRight2, 1);
 end

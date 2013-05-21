@@ -663,24 +663,24 @@ classdef EllipsoidTestCase < mlunitext.test_case
         function self = testIsEmpty(self)
             %Chek realy empty ellipsoid
             testEllipsoid=ellipsoid;
-            isTestRes = isempty(testEllipsoid);
+            isTestRes = testEllipsoid.isEmpty();
             mlunitext.assert_equals(true, isTestRes);
             
             %Chek not empty ellipsoid
             testEllipsoid=ellipsoid(eye(10,1),eye(10,10));
-            isTestRes = isempty(testEllipsoid);
+            isTestRes =testEllipsoid.isEmpty();
             mlunitext.assert_equals(false, isTestRes);
             
             %High-dimensional ellipsoids
             testEllVec = [ellipsoid(diag(1:22)), ellipsoid((0:0.1:1.4).',diag(1:15)), ...
                 ellipsoid(rand(21,1),diag(0:20)), ellipsoid, ellipsoid, ellipsoid(zeros(40,40))];
-            isTestEmpVec = isempty(testEllVec);
+            isTestEmpVec = testEllVec.isEmpty();
             isTestRes = all( isTestEmpVec == [false false false true true false] );
             mlunitext.assert_equals(true, isTestRes);
             
             testEllMat= [ellipsoid((0:0.1:2).',diag(0:0.01:0.2)), ellipsoid(eye(40,40)), ellipsoid;
                 ellipsoid, ellipsoid(repmat([diag(0:0.1:5) diag(0:0.1:5)],2,1)), ellipsoid(zeros(30,30))];
-            isTestEmpMat = isempty(testEllMat);
+            isTestEmpMat = testEllMat.isEmpty();
             isTestMat = ( isTestEmpMat == [false false true;true false false] );
             isTestRes = all( isTestMat(:));
             mlunitext.assert_equals(true, isTestRes);
@@ -1276,7 +1276,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
         function self = testFromRepMat(self)
             sizeArr = [2, 3, 3, 5];
             ellArr1 = ellipsoid.fromRepMat(sizeArr);
-            isOk1Arr = ellArr1.isempty();
+            isOk1Arr = ellArr1.isEmpty();
             mlunitext.assert(all(isOk1Arr(:)));
             %
             shMat = eye(2);

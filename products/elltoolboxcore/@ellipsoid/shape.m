@@ -1,7 +1,7 @@
-function modEllArr = shape(ellArr, modMat)
+function ellArr = shape(ellArr, modMat)
 %
 % SHAPE - modifies the shape matrix of the ellipsoid without
-%   changing its center.
+%   changing its center. Modified given array is on output (not its copy).
 %
 %	modEllArr = SHAPE(ellArr, modMat)  Modifies the shape matrices of
 %       the ellipsoids in the ellipsoidal array ellArr. The centers
@@ -50,33 +50,25 @@ function modEllArr = shape(ellArr, modMat)
 
 ellipsoid.checkIsMe(ellArr,'first');
 modgen.common.checkvar(modMat, @(x)isa(x,'double'),...
-    'errorMessage','second input argument must be double');
-sizeCVec = num2cell(size(ellArr));
-if isempty(ellArr.isempty())
-    modEllArr = ellipsoid.empty(sizeCVec{:});
-else   
-    isModScal = isscalar(modMat);
-    if isModScal
-        modMatSq = modMat*modMat;
-    else
-        [nRows, nDim] = size(modMat);
-        dimArr = dimension(ellArr);
-        modgen.common.checkmultvar('(x1==x2)&&all(x3(:)==x2)',...
-            3,nRows,nDim,dimArr,'errorMessage',...
-            'input matrix not square or dimensions do not match');
-    end
-    modEllArr(sizeCVec{:}) = ellipsoid;
-    arrayfun(@(x) fSingleShape(x), 1:numel(ellArr));
+    'errorMessage','second input argument must be double');   
+isModScal = isscalar(modMat);
+if isModScal
+   modMatSq = modMat*modMat;
+else
+    [nRows, nDim] = size(modMat);
+    dimArr = dimension(ellArr);
+    modgen.common.checkmultvar('(x1==x2)&&all(x3(:)==x2)',...
+        3,nRows,nDim,dimArr,'errorMessage',...
+        'input matrix not square or dimensions do not match');
 end
-    function fSingleShape(index)
-        singEll = ellArr(index);
+arrayfun(@(x) fSingleShape(x), ellArr);
+    function fSingleShape(ellObj)
         if isModScal
-            qMat = modMatSq*singEll.shapeMat;
+            qMat = modMatSq*ellObj.shapeMat;
         else
-            qMat    = modMat*(singEll.shapeMat)*modMat';
+            qMat    = modMat*(ellObj.shapeMat)*modMat';
             qMat    = 0.5*(qMat + qMat');
         end
-        modEllArr(index).centerVec = singEll.centerVec;
-        modEllArr(index).shapeMat = qMat;
+        ellObj.shapeMat = qMat;
     end
 end

@@ -32,7 +32,7 @@ disp([inputname(1) ' =']);
 
 sizeVec = size(myEllMat);
 nDims = numel(sizeVec);
-isEmpty = isempty(myEllMat.isempty());
+isEmpty = isempty(myEllMat);
 if (nDims > 1 && (sizeVec(1) > 1 || sizeVec(2) > 1) )|| isEmpty
     if isEmpty
         fprintf('Empty array of ellipsoids with dimensionality ');
@@ -47,7 +47,7 @@ else
     fprintf('\n');
     fprintf('Center:\n'); disp(myEllMat.centerVec);
     fprintf('Shape Matrix:\n'); disp(myEllMat.shapeMat);
-    if isempty(myEllMat)
+    if myEllMat.isEmpty()
         fprintf('Empty ellipsoid.\n\n');
     else
         [spaceDim, ellDim]    = dimension(myEllMat);

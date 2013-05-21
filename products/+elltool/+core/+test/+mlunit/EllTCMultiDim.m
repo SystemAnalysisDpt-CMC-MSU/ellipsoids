@@ -224,7 +224,7 @@ classdef EllTCMultiDim < mlunitext.test_case
             testCorrect()
             mlunitext.assert_equals(class(isAnsArray), class(isTestRes)); 
             function testCorrect()
-                isTestRes = isempty(testEllArray);
+                isTestRes = testEllArray.isEmpty();
                 mlunitext.assert_equals(isAnsArray, isTestRes);
             end
         end

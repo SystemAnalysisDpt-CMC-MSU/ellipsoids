@@ -51,12 +51,8 @@ classdef ellipsoid < handle
             %
             %
             sizeVec=horzcat(varargin{:});
-            if sizeVec
-                resArr=repmat(self,sizeVec);
-                resArr=resArr.getCopy();
-            else    
-                resArr = ellipsoid.empty(sizeVec); 
-            end    
+            resArr=repmat(self,sizeVec);
+            resArr=resArr.getCopy();    
         end
         %
         function shMat=getShapeMat(self)

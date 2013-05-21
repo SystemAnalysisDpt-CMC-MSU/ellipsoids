@@ -84,7 +84,7 @@ else
 end
 
 sizeCVec = num2cell(size(inpEllArr));
-if isempty(inpEllArr.isempty())
+if isempty(inpEllArr)
     outEllArr = ellipsoid.empty(sizeCVec{:});
 else    
     dimArr = dimension(inpEllArr);

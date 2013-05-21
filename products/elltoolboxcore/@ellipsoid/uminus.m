@@ -40,7 +40,7 @@ function outEllArr = uminus(ellArr)
 
 ellipsoid.checkIsMe(ellArr);
 sizeCVec = num2cell(size(ellArr));
-if isempty(ellArr.isempty())
+if isempty(ellArr)
     outEllArr = ellipsoid.empty(sizeCVec{:});
 else    
     outEllArr(sizeCVec{:}) = ellipsoid;
