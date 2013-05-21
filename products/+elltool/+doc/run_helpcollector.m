@@ -17,16 +17,13 @@ if modgen.system.ExistanceChecker.isFile(resultTexFileName)
     delete(resultTexFileName);
 end
 %
-FuncData=elltool.doc.collecthelp({'ellipsoid', 'hyperplane', ...
- 'elltool.conf.Properties', 'elltool.core.GenEllipsoid',...
- 'smartdb.relations.ARelation','smartdb.cubes.CubeStruct'...
- 'gras.ellapx.smartdb.rels.EllTube',...
+FuncData=elltool.doc.collecthelp({'ellipsoid', 'hyperplane',...
+ 'elltool.conf.Properties', 'elltool.core.GenEllipsoid',...   
+ 'smartdb.relations.ARelation','gras.ellapx.smartdb.rels.EllTube',...
  'gras.ellapx.smartdb.rels.EllTubeProj',...
  'gras.ellapx.smartdb.rels.EllUnionTube', ...
- 'gras.ellapx.smartdb.rels.EllUnionTubeStaticProj'},...
-{'elltool.reach', 'elltool.linsys'},{'elltool.reach.AReach',...
-'elltool.linsys.ALinSys', 'smartdb.relations.ARelation',...
-'elltool.reach.IReach', 'smartdb.cubes.CubeStruct'},{'test'});
+ 'gras.ellapx.smartdb.rels.EllUnionTubeStaticProj',...
+ 'elltool.reach.AReach', 'elltool.linsys.ALinSys'},{},{'test'});
 
 nHelpElems=numel(FuncData.funcName);
 if nHelpElems==0
@@ -41,6 +38,9 @@ isChosenFunc=~(FuncData.isScript);
 funcNameCell=FuncData.funcName(isChosenFunc);
 helpCell=FuncData.help(isChosenFunc);
 classNameCell = FuncData.className;
+defClassNameCell = unique(FuncData.defClassName);
+inhFuncNameCell = unique(FuncData.inhFuncName);
+indOfClasses = FuncData.numberOfInhClass;
 classNameCell=cellfun(@(x) x(1:end),classNameCell,'UniformOutput',false);
 numberOfFunctions = FuncData.numbOfFunc;
 
@@ -89,6 +89,17 @@ finalHelpCell = cellfun(@(x)fShiftText(x),finalHelpCell, ...
 finalHelpCell = cellfun(@(x)fDeleteEmptyStr(x),finalHelpCell, ...
     'UniformOutput', false);
 funcOutputCell=funcNameCell;
+ 
+indFunc = 1;
+
+for iClass=1:length(classNameCell)
+   if ismember(iClass,indOfClasses)
+       finalHelpCell{indFunc} = fAddMethodList(finalHelpCell{indFunc},...
+           inhFuncNameCell, char(defClassNameCell));
+   end
+     indFunc = indFunc + numberOfFunctions(iClass);
+end
+
 %% substitutions (for TeX requirements)
 symbList={'\','_','&'};
 substList={'/','\_','\&'};
@@ -110,7 +121,7 @@ end
 fid = fopen(resultTexFileName, 'wt');
 indFunc = 1;
 for iClass=1:length(classNameCell)
-    fprintf(fid,'\\section{%s}\n',classNameCell{iClass});
+    fprintf(fid,'\\section{%s}\\label{secClassDescr:%s}\n',classNameCell{iClass}, classNameCell{iClass});
     numbFunc = indFunc + numberOfFunctions(iClass) - 1;
     for iFunc = indFunc: numbFunc
         fprintf(fid,'\\subsection{\\texorpdfstring{%s}{%s}}\n',...
@@ -164,4 +175,14 @@ end
 nl = repmat({'\n'}, 1, nLines);
 lines = [lines; nl];
 result = sprintf(strcat(lines{:}));
+end
+
+function result = fAddMethodList(helpText, methodList, defClassName)
+   helpPattern = sprintf...
+  ('\n\nSee the description of the following methods in section\n\\ref{secClassDescr:%s}:\n',...
+  defClassName);
+ result = strcat(helpText, helpPattern);
+ for iMethod = 1:length(methodList);
+   result = strcat(result, sprintf('\n%s', methodList{iMethod}));
+ end
 end

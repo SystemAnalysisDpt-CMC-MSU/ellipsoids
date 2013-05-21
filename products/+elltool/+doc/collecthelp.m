@@ -1,4 +1,4 @@
-function FuncData=collecthelp(classNames, packNames, sourceClassNames, ignorClassList)
+function FuncData=collecthelp(classNames, packNames, ignorClassList)
 %COLLECTHELP -  collects helps of m files in given classes and packages
 %
 % Input:
@@ -9,6 +9,7 @@ function FuncData=collecthelp(classNames, packNames, sourceClassNames, ignorClas
 %   FuncData: struct[1,1] with the following fields
 %       funcName: cell[nElems,1] - list of function names
 %       className: cell[nElems,1] - list of class names
+%       defClassName: cell[nElems,1] - list of class names
 %       help: cell[nElems,1] - list of help headers
 %       numbOfFunc:double[length(className), 1] - quantity of functions in
 %           each class
@@ -29,7 +30,8 @@ function FuncData=collecthelp(classNames, packNames, sourceClassNames, ignorClas
 import elltool.doc.collecthelp;
 FuncData = [];
 scriptNamePattern = 's_\w+\.m';
-SfuncInfo = extractHelpFromClass(classNames, sourceClassNames);
+
+SfuncInfo = extractHelpFromClass(classNames);
 FuncData=modgen.struct.unionstructsalongdim(1,FuncData,SfuncInfo);
 dirLength = length(packNames);
 for iElem = 1:dirLength
@@ -45,7 +47,7 @@ for iElem = 1:dirLength
     else
        classVec = mp.ClassList;
        myClassList = arrayfun(@(x)x.Name,classVec,'UniformOutput',false);
-       SfuncInfo = extractHelpFromClass(myClassList', sourceClassNames);
+       SfuncInfo = extractHelpFromClass(myClassList');
     end
     FuncData=modgen.struct.unionstructsalongdim(1,FuncData,SfuncInfo);
     if isempty(mp.PackageList)
@@ -58,7 +60,8 @@ for iElem = 1:dirLength
             myClassList = arrayfun(@(x)x.Name,classVec,'UniformOutput',...
                 false);
             packVec = myPack(iPack).PackageList;
-            myPackList = arrayfun(@(x)x.Name,packVec,'UniformOutput',false);
+            myPackList = arrayfun(@(x)x.Name,packVec,'UniformOutput',false)
+            ignorClassList = union(ignorClassList, classNames)
             ignorPackFlag = regexp(myPackList, ignorClassList);
             ignorClassFlag = regexp(myClassList, ignorClassList);
             newPackList = myPackList;
@@ -74,7 +77,7 @@ for iElem = 1:dirLength
                 end
             end
             SfuncInfo = collecthelp(newClassList', newPackList',...
-                ignorClassList, sourceClassNames);
+                ignorClassList);
             FuncData=modgen.struct.unionstructsalongdim(1,FuncData,...
                 SfuncInfo);
         end
@@ -84,7 +87,7 @@ end
 
 %%
 
-function SFuncInfo=extractHelpFromClass(classList, sourceClassNames)
+function SFuncInfo=extractHelpFromClass(classList)
 SFuncInfo = struct();
 bufFuncInfo = struct();
 PUBLIC_ACCESS_MOD='public';
@@ -122,26 +125,30 @@ for iClass = 1:nLength
                          dynamicpropsClassMethodNameList);
                 methodVec= methodVec(~isDynamicpropsVec);
             end
-            definingClassNameList=arrayfun(@(x)x.DefiningClass.Name,...
-                methodVec,'UniformOutput',false)
-            isDefiningClassVec=ismember(definingClassNameList,...
-                   sourceClassNames)  & ~(strcmp(definingClassNameList, className));
-            methodVec= methodVec(~isDefiningClassVec);
+            
         else 
-         isHandleMethodVec=ismember(curClassMethodNameList,...
-         handleClassMethodNameList);
-         methodVec= methodVec(~isHandleMethodVec);
-         curClassMethodNameList=arrayfun(@(x)x.Name,...
+            isHandleMethodVec=ismember(curClassMethodNameList,...
+            handleClassMethodNameList);
+            methodVec= methodVec(~isHandleMethodVec);
+            curClassMethodNameList=arrayfun(@(x)x.Name,...
                         methodVec,'UniformOutput',false);
-         isDynamicpropsVec=ismember(curClassMethodNameList,...
+            isDynamicpropsVec=ismember(curClassMethodNameList,...
                          dynamicpropsClassMethodNameList);
-         methodVec= methodVec(~isDynamicpropsVec);
-         definingClassNameList=arrayfun(@(x)x.DefiningClass.Name,...
-                methodVec,'UniformOutput',false)
-         isDefiningClassVec=ismember(definingClassNameList,...
-                   sourceClassNames)& ~(strcmp(definingClassNameList, className));
-         methodVec= methodVec(~isDefiningClassVec);
-         end
+            methodVec= methodVec(~isDynamicpropsVec);
+        end
+        definingClassNameList=arrayfun(@(x)x.DefiningClass.Name,...
+                methodVec,'UniformOutput',false);
+        isSourseClass= strcmp(className, definingClassNameList);
+        isDefiningClassVec=ismember(definingClassNameList, classList);
+        defMethodVec = methodVec(isDefiningClassVec & ~isSourseClass);
+        inheritedMethodList = unique(arrayfun(@(x)x.Name,defMethodVec,...
+            'UniformOutput',false));
+        definingClassNameList=unique(arrayfun(@(x)x.DefiningClass.Name,...
+                defMethodVec,'UniformOutput',false));
+        if ~isempty(definingClassNameList)
+              bufFuncInfo.numberOfInhClass = iClass;
+        end
+        methodVec= methodVec(~isDefiningClassVec | isSourseClass);
         isPublicVec=arrayfun(@(x)isequal(x.Access,PUBLIC_ACCESS_MOD),...
                          methodVec);
         isHiddenVec=arrayfun(@(x)isequal(x.Hidden,1), methodVec);
@@ -156,6 +163,8 @@ for iClass = 1:nLength
         helpList=cellfun(@(x, y)fDeleteHelpStr(x, y),helpList,...
             bufFuncNameList, 'UniformOutput',false); 
         bufFuncInfo.className = classList(iClass);
+        bufFuncInfo.defClassName=unique(definingClassNameList);
+        bufFuncInfo.inhFuncName=inheritedMethodList;
         bufFuncInfo.funcName=funcNameList;
         bufFuncInfo.numbOfFunc = length(fullNameList);
         possibleScript=regexp(fullNameList,scriptNamePattern,'once',...
@@ -165,10 +174,10 @@ for iClass = 1:nLength
         bufFuncInfo.help=helpList;
         SFuncInfo=modgen.struct.unionstructsalongdim(1,SFuncInfo,...
             bufFuncInfo);
-        
+        end 
     end
 end
-end
+
 
 
 function SFuncInfo=extractHelpFromFunc(mPack)
