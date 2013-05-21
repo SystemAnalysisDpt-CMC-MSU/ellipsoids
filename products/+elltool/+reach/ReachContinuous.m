@@ -13,6 +13,7 @@ classdef ReachContinuous < elltool.reach.AReach
 %             System Analysis Department 2013$
     properties (Constant, GetAccess = ?elltool.reach.AReach)
         DISPLAY_PARAMETER_STRINGS = {'continuous-time', 'k0 = ', 'k1 = '}
+        LINSYS_CLASS_STRING = 'elltool.linsys.LinSysContinuous'
     end
     %
     methods (Static, Access = protected)
@@ -51,7 +52,7 @@ classdef ReachContinuous < elltool.reach.AReach
             end
         end
         %
-        function linSys = getSmartLinSys(atStrCMat, btStrCMat,...
+        function linSys = getProbDynamics(atStrCMat, btStrCMat,...
                 ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat, qtStrCVec,...
                 x0Mat, x0Vec, timeVec, calcPrecision, isDisturb)
             timeVec = [min(timeVec) max(timeVec)];
@@ -88,28 +89,24 @@ classdef ReachContinuous < elltool.reach.AReach
             end
         end
         %
-        function newEllTubeRel = transformEllTube(ellTubeRel)            
-            if self.isbackward()
-                newEllTubeRel = self.rotateEllTubeRel(ellTubeRel);
-            else
-                newEllTubeRel = ellTubeRel;
-            end
+        function newEllTubeRel = transformEllTube(ellTubeRel)
+            newEllTubeRel = self.rotateEllTubeRel(ellTubeRel);
         end
     end
     %
     methods (Access = protected)
-        function ellTubeRel = makeEllTubeRel(self, smartLinSys, l0Mat, ...
+        function ellTubeRel = makeEllTubeRel(self, probDynObj, l0Mat, ...
                 timeVec, isDisturb, calcPrecision, approxTypeVec)
             import gras.ellapx.enums.EApproxType;
             import gras.ellapx.lreachplain.GoodDirsContinuousFactory;
             relTol = elltool.conf.Properties.getRelTol();
             timeVec = [min(timeVec) max(timeVec)];
             goodDirSetObj = GoodDirsContinuousFactory.create(...
-                smartLinSys, timeVec(1), l0Mat, calcPrecision);
+                probDynObj, timeVec(1), l0Mat, calcPrecision);
             if (isDisturb)
                 extIntBuilder =...
                     gras.ellapx.lreachuncert.ExtIntEllApxBuilder(...
-                    smartLinSys, goodDirSetObj, timeVec,...
+                    probDynObj, goodDirSetObj, timeVec,...
                     relTol,...
                     self.DEFAULT_INTAPX_S_SELECTION_MODE,...
                     self.MIN_EIG_Q_REG_UNCERT);
@@ -122,7 +119,7 @@ classdef ReachContinuous < elltool.reach.AReach
                 if isExtApprox
                     extBuilder =...
                         gras.ellapx.lreachplain.ExtEllApxBuilder(...
-                        smartLinSys, goodDirSetObj, timeVec,...
+                        probDynObj, goodDirSetObj, timeVec,...
                         relTol);
                     extellTubeBuilder =...
                         gras.ellapx.gen.EllApxCollectionBuilder({extBuilder});
@@ -134,7 +131,7 @@ classdef ReachContinuous < elltool.reach.AReach
                 if isIntApprox
                     intBuilder =...
                         gras.ellapx.lreachplain.IntEllApxBuilder(...
-                        smartLinSys, goodDirSetObj, timeVec,...
+                        probDynObj, goodDirSetObj, timeVec,...
                         relTol,...
                         self.DEFAULT_INTAPX_S_SELECTION_MODE);
                     intellTubeBuilder =...
@@ -215,7 +212,7 @@ classdef ReachContinuous < elltool.reach.AReach
     end
     methods
         function self =...
-                ReachContinuous(linSys, x0Ell, l0Mat, timeVec, OptStruct)
+                ReachContinuous(linSys, x0Ell, l0Mat, timeVec, varargin)
         % ReachContinuous - computes reach set approximation of the continuous  
         %                   linear system for the given time interval.
         % Input:
@@ -256,83 +253,33 @@ classdef ReachContinuous < elltool.reach.AReach
             import gras.ellapx.uncertcalc.EllApxBuilder;
             import gras.ellapx.enums.EApproxType;
             import elltool.logging.Log4jConfigurator;
-            %%
-            logger=Log4jConfigurator.getLogger(...
-                'elltool.ReachCont.constrCallCount');
-            logger.debug(sprintf('constructor is called %s',...
-                modgen.exception.me.printstack(...
-                dbstack,'useHyperlink',false)));
             %
             if (nargin == 0) || isempty(linSys)
                 return;
             end
-            self.switchSysTimeVec = timeVec;
-            self.x0Ellipsoid = x0Ell;
-            self.linSysCVec = {linSys};
-            self.isCut = false;
-            self.isProj = false;
-            self.isBackward = timeVec(1) > timeVec(2);
-            self.projectionBasisMat = [];
-            %% check and analize input
-            if nargin < 4
-                throwerror('wrongInput', ['insufficient ',...
-                    'number of input arguments.']);
-            end
-            if ~(isa(linSys, 'elltool.linsys.LinSysContinuous'))
-                throwerror('wrongInput', ['first input argument ',...
-                    'must be linear system object.']);
-            end
-            if ~(isa(x0Ell, 'ellipsoid'))
-                throwerror('wrongInput', ['set of initial ',...
-                    'conditions must be ellipsoid.']);
-            end
-            checkgenext('x1==x2&&x2==x3', 3,...
-                dimension(linSys), dimension(x0Ell), size(l0Mat, 1));
-            %%
-            [timeRows, timeCols] = size(timeVec);
-            if ~(isa(timeVec, 'double')) ||...
-                    (timeRows ~= 1) || (timeCols ~= 2)
-                throwerror('wrongInput', ['time interval must be ',...
-                    'specified as ''[t0 t1]'', or, in ',...
-                    'discrete-time - as ''[k0 k1]''.']);
-            end
-            if (nargin < 5) || ~(isstruct(OptStruct))
-                OptStruct = [];
-                OptStruct.approximation = 2;
-                OptStruct.saveAll = 0;
-                OptStruct.minmax = 0;
-            else
-                if ~(isfield(OptStruct, 'approximation')) || ...
-                        (OptStruct.approximation < 0) ||...
-                        (OptStruct.approximation > 2)
-                    OptStruct.approximation = 2;
-                end
-                if ~(isfield(OptStruct, 'saveAll')) || ...
-                        (OptStruct.saveAll < 0) || (OptStruct.saveAll > 2)
-                    OptStruct.saveAll = 0;
-                end
-                if ~(isfield(OptStruct, 'minmax')) || ...
-                        (OptStruct.minmax < 0) || (OptStruct.minmax > 1)
-                    OptStruct.minmax = 0;
-                end
-            end
-            %% create gras LinSys object
+            %
+            self.parse(linSys, x0Ell, l0Mat, timeVec, varargin);
+            %
+            % create gras LinSys object
+            %
             [x0Vec x0Mat] = double(x0Ell);
             [atStrCMat btStrCMat gtStrCMat ptStrCMat ptStrCVec...
                 qtStrCMat qtStrCVec] =...
                 self.prepareSysParam(linSys, timeVec);
             isDisturbance = self.isDisturbance(gtStrCMat, qtStrCMat);
-            %% Normalize good directions
+            %
+            % Normalize good directions
+            %
             sysDim = size(atStrCMat, 1);
             l0Mat = self.getNormMat(l0Mat, sysDim);
             %
             relTol = elltool.conf.Properties.getRelTol();
-            smartLinSys = self.getSmartLinSys(atStrCMat, btStrCMat,...
+            probDynObj = self.getProbDynamics(atStrCMat, btStrCMat,...
                 ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat, qtStrCVec,...
                 x0Mat, x0Vec, timeVec,...
                 relTol, isDisturbance);
             approxTypeVec = [EApproxType.External EApproxType.Internal];
-            self.ellTubeRel = self.makeEllTubeRel(smartLinSys, l0Mat,...
+            self.ellTubeRel = self.makeEllTubeRel(probDynObj, l0Mat,...
                 timeVec, isDisturbance,...
                 relTol, approxTypeVec);
             if self.isbackward()

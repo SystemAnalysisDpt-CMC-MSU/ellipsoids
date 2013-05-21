@@ -56,7 +56,7 @@ classdef AReach < elltool.reach.IReach
     end
     %
     methods (Static, Abstract, Access = protected)
-        linSys = getSmartLinSys(atStrCMat, btStrCMat, ...
+        linSys = getProbDynamics(atStrCMat, btStrCMat, ...
             ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat, qtStrCVec, ...
             x0Mat, x0Vec, timeVec, calcPrecision, isDisturb)
         %
@@ -64,7 +64,7 @@ classdef AReach < elltool.reach.IReach
     end
     %
     methods (Abstract, Access = protected)
-        ellTubeRel = makeEllTubeRel(self, smartLinSys, l0Mat, ...
+        ellTubeRel = makeEllTubeRel(self, probDynObj, l0Mat, ...
             timeVec, isDisturb, calcPrecision, approxTypeVec)
     end
     %
@@ -368,7 +368,7 @@ classdef AReach < elltool.reach.IReach
             end
         end
         %
-        function isDisturb = isNoise(gtStrCMat, wtStrCMat)
+        function isDisturb = isNoise(gtStrCMat, qtStrCMat)
             import gras.mat.symb.iscellofstringconst;
             import gras.gen.MatVector;
             isDisturb = true;
@@ -410,7 +410,6 @@ classdef AReach < elltool.reach.IReach
             sysDimRows = size(oldData.QArray{1}, 1);
             sysDimCols = size(oldData.QArray{1}, 2);
             %
-            relTol = elltool.conf.Properties.getRelTol();
             dataDimVec = oldData.dim;
             l0VecNum = size(dataDimVec, 1);
             l0Mat = zeros(dataDimVec(1), l0VecNum);
@@ -439,13 +438,14 @@ classdef AReach < elltool.reach.IReach
             dataCVec = cell(1, l0VecNum);
             isDisturbance = self.isDisturbance(gtStrCMat, qtStrCMat);
             for il0Num = l0VecNum: -1 : 1
-                smartLinSys = self.getSmartLinSys(atStrCMat, ...
+                probDynObj = self.getProbDynamics(atStrCMat, ...
                     btStrCMat, ptStrCMat, ptStrCVec, gtStrCMat, ...
                     qtStrCMat, qtStrCVec, x0MatArray(:, :, il0Num), ...
-                    x0VecMat(:, il0Num), newTimeVec, relTol, isDisturbance);
+                    x0VecMat(:, il0Num), newTimeVec, self.relTol, ...
+                    isDisturbance);
                 ellTubeRelVec{il0Num} = self.makeEllTubeRel(...
-                    smartLinSys, l0Mat(:, il0Num), ...
-                    newTimeVec, isDisturbance, relTol, approxType);                
+                    probDynObj, l0Mat(:, il0Num), ...
+                    newTimeVec, isDisturbance, self.relTol, approxType);                
                 dataCVec{il0Num} = ...
                     ellTubeRelVec{il0Num}.getTuplesFilteredBy(...
                     APPROX_TYPE, approxType).getData();
@@ -591,6 +591,65 @@ classdef AReach < elltool.reach.IReach
         end
     end
     methods
+        function parse(self, linSys, x0Ell, l0Mat, timeVec, varargin)
+            import modgen.common.type.simple.checkgenext;
+            import modgen.common.throwerror;
+            import elltool.logging.Log4jConfigurator;
+            import elltool.conf.Properties;
+            %
+            logger=Log4jConfigurator.getLogger(...
+                'elltool.ReachCont.constrCallCount');
+            logger.debug(sprintf('constructor is called %s',...
+                modgen.exception.me.printstack(...
+                dbstack, 'useHyperlink', false)));
+            %
+            neededPropNameList =...
+                {'absTol', 'relTol', 'nPlot2dPoints',...
+                'nPlot3dPoints','nTimeGridPoints'};
+            [absTolVal, relTolVal, nPlot2dPointsVal,...
+                nPlot3dPointsVal, nTimeGridPointsVal] =...
+                Properties.parseProp(varargin, neededPropNameList);
+            %
+            self.absTol = absTolVal;
+            self.relTol = relTolVal;
+            self.nPlot2dPoints = nPlot2dPointsVal;
+            self.nPlot3dPoints = nPlot3dPointsVal;
+            self.nTimeGridPoints = nTimeGridPointsVal;
+            %
+            self.switchSysTimeVec = timeVec;
+            self.x0Ellipsoid = x0Ell;
+            self.linSysCVec = {linSys};
+            self.isCut = false;
+            self.isProj = false;
+            self.isBackward = timeVec(1) > timeVec(2);
+            self.projectionBasisMat = [];
+            %
+            % check and analize input
+            %
+            if nargin < 4
+                throwerror('wrongInput', ['insufficient ',...
+                    'number of input arguments.']);
+            end
+            if ~(isa(linSys, self.LINSYS_CLASS_STRING))
+                throwerror('wrongInput', ['first input argument ',...
+                    'must be linear system object.']);
+            end
+            if ~(isa(x0Ell, 'ellipsoid'))
+                throwerror('wrongInput', ['set of initial ',...
+                    'conditions must be ellipsoid.']);
+            end
+            checkgenext('x1==x2&&x2==x3', 3,...
+                dimension(linSys), dimension(x0Ell), size(l0Mat, 1));
+            %
+            [timeRows, timeCols] = size(timeVec);
+            if ~(isa(timeVec, 'double')) ||...
+                    (timeRows ~= 1) || (timeCols ~= 2)
+                throwerror('wrongInput', ['time interval must be ',...
+                    'specified as ''[t0 t1]'', or, in ',...
+                    'discrete-time - as ''[k0 k1]''.']);
+            end
+        end
+        %
         function resArr=repMat(self,varargin)
             sizeVec=horzcat(varargin{:});
             resArr=repmat(self,sizeVec);
@@ -1089,15 +1148,16 @@ classdef AReach < elltool.reach.IReach
                     self.prepareSysParam(linSys, timeLimsVec);
                 isDisturbance = self.isDisturbance(gtStrCMat, qtStrCMat);
                 %
-                relTol = elltool.conf.Properties.getRelTol();
-                smartLinSys = self.getSmartLinSys(atStrCMat, btStrCMat, ...
+                probDynObj = self.getProbDynamics(atStrCMat, btStrCMat, ...
                     ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat, qtStrCVec, ...
                     x0Mat, x0Vec, timeLimsVec, ...
-                    relTol, isDisturbance);
+                    self.relTol, isDisturbance);
                 approxTypeVec = [EApproxType.External EApproxType.Internal];
-                ellTubeRelNew = self.makeEllTubeRel(smartLinSys, l0Mat, ...
-                    timeLimsVec, isDisturbance, relTol, approxTypeVec);
-                ellTubeRelNew = self.transformEllTube(ellTubeRelNew);
+                ellTubeRelNew = self.makeEllTubeRel(probDynObj, l0Mat, ...
+                    timeLimsVec, isDisturbance, self.relTol, approxTypeVec);
+                if self.isbackward()
+                    ellTubeRelNew = self.transformEllTube(ellTubeRelNew);
+                end
                 %
                 % Update self.ellTubRel
                 %
@@ -1294,7 +1354,9 @@ classdef AReach < elltool.reach.IReach
             newEllTubeRel =...
                 gras.ellapx.smartdb.rels.EllTube.fromStructList(...
                 'gras.ellapx.smartdb.rels.EllTube', dataCVec);
-            newEllTubeRel = self.transformEllTube(newEllTubeRel);
+            if self.isbackward()
+                newEllTubeRel = self.transformEllTube(newEllTubeRel);
+            end
             %
             indVec = [indIntVec; indExtVec];
             [~, indRelVec] = sort(indVec);

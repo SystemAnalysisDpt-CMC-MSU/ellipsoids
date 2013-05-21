@@ -130,8 +130,8 @@ classdef ContinuousReachTestCase < mlunitext.test_case
             difference = abs(tLimsRead(:) - timeVec(:));
             mlunitext.assert_equals(...
                 max(difference) < self.COMP_PRECISION, true);
-            % time type
-            if isa(resStr, 'elltool.reach.ReachContinuous')
+            % time typez
+            if isa(reachObj, 'elltool.reach.ReachContinuous')
                 isOk = ~isempty(strfind(resStr, 'continuous-time'));
             else
                 isOk = ~isempty(strfind(resStr, 'discrete-time'));

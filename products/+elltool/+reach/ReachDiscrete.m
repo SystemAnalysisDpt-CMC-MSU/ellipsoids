@@ -13,12 +13,17 @@ classdef ReachDiscrete < elltool.reach.AReach
     %
     properties (Constant, GetAccess = ?elltool.reach.AReach)
         DISPLAY_PARAMETER_STRINGS = {'discrete-time', 'k0 = ', 'k1 = '}
+        LINSYS_CLASS_STRING = 'elltool.linsys.LinSysDiscrete'
+    end
+    %
+    properties (Access = private)
+        isMinMax
     end
     %
     methods (Static, Access = protected)
         function [atStrCMat btStrCMat gtStrCMat...
                 ptStrCMat ptStrCVec...
-                qtStrCMat qtStrCVec] = prepareSysParam(linSys, timeVec)
+                qtStrCMat qtStrCVec] = prepareSysParam(linSys, ~)
             [atStrCMat btStrCMat gtStrCMat...
                 ptStrCMat ptStrCVec...
                 qtStrCMat qtStrCVec] = ...
@@ -39,9 +44,9 @@ classdef ReachDiscrete < elltool.reach.AReach
             end
         end
         %
-        function linSys = getSmartLinSys(atStrCMat, btStrCMat,...
+        function linSys = getProbDynamics(atStrCMat, btStrCMat,...
                 ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat, qtStrCVec,...
-                x0Mat, x0Vec, timeVec, calcPrecision, isDisturb)
+                x0Mat, x0Vec, timeVec, ~, isDisturb)
             isBack = timeVec(1) > timeVec(2);
             if isDisturb
                 linSys = getSysWithDisturb(atStrCMat, btStrCMat,...
@@ -89,16 +94,16 @@ classdef ReachDiscrete < elltool.reach.AReach
     %
     methods (Static, Access = private)
         function [qArrayList ltGoodDirArray] = ...
-                calculateApproxShape(smartLinSys, l0Mat, ...
-                relTol, approxType, isDisturb)
+                calculateApproxShape(probDynObj, l0Mat, ...
+                relTol, approxType, isDisturb, isMinMax)
             import elltool.conf.Properties;
             import gras.ellapx.enums.EApproxType;
             %
-            isBack = isa(smartLinSys, ...
+            isBack = isa(probDynObj, ...
                 'gras.ellapx.lreachplain.probdyn.LReachDiscrBackwardDynamics');
             %
-            xDim = smartLinSys.getDimensionality();
-            timeVec = smartLinSys.getTimeVec();
+            xDim = probDynObj.getDimensionality();
+            timeVec = probDynObj.getTimeVec();
             nTubes = size(l0Mat, 2);
             qArrayList = repmat({repmat(zeros(xDim), ...
                 [1, 1, length(timeVec)])}, 1, nTubes);
@@ -119,25 +124,23 @@ classdef ReachDiscrete < elltool.reach.AReach
                     minkdiff_ea(aEll, bEll, lVec);
             end
             %
-            isMinMax = false;
-            %
             for iTube = 1:nTubes
-                qMat = smartLinSys.getX0Mat;
+                qMat = probDynObj.getX0Mat;
                 qMat = ell_regularize(qMat, relTol);
                 qMat = 0.5 * (qMat + qMat');
                 qArrayList{iTube}(:, :, 1) = qMat;
                 lVec = l0Mat(:, iTube);
                 lMat(:, 1) = lVec;
                 for iTime = 1:(length(timeVec) - 1)
-                    aMat = smartLinSys.getAtDynamics(). ...
+                    aMat = probDynObj.getAtDynamics(). ...
                         evaluate(timeVec(iTime + isBack));
-                    aInvMat = smartLinSys.getAtInvDynamics(). ...
+                    aInvMat = probDynObj.getAtInvDynamics(). ...
                         evaluate(timeVec(iTime + isBack));
-                    bpbMat = smartLinSys.getBPBTransDynamics(). ...
+                    bpbMat = probDynObj.getBPBTransDynamics(). ...
                         evaluate(timeVec(iTime + isBack));
                     bpbMat = 0.5 * (bpbMat + bpbMat');
                     if isDisturb
-                        gqgMat = smartLinSys.getCQCTransDynamics(). ...
+                        gqgMat = probDynObj.getCQCTransDynamics(). ...
                             evaluate(timeVec(iTime + isBack));
                         gqgMat = 0.5 * (gqgMat + gqgMat');
                         gqgMat = ell_regularize(gqgMat, relTol);
@@ -178,19 +181,19 @@ classdef ReachDiscrete < elltool.reach.AReach
     end
     %
     methods (Access = protected)
-        function ellTubeRel = makeEllTubeRel(self, smartLinSys, l0Mat,...
+        function ellTubeRel = makeEllTubeRel(self, probDynObj, l0Mat,...
                 timeLimsVec, isDisturb, calcPrecision, approxTypeVec)
             import gras.ellapx.enums.EApproxType;
             import gras.ellapx.lreachplain.GoodDirsDiscrete;
             goodDirSetObj = GoodDirsDiscrete(...
-                smartLinSys, timeLimsVec(1), l0Mat, calcPrecision);
+                probDynObj, timeLimsVec(1), l0Mat, calcPrecision);
             %
             approxSchemaDescr = char.empty(1,0);
             approxSchemaName = char.empty(1,0);
             sTime = timeLimsVec(1);
-            timeVec = smartLinSys.getTimeVec();
+            timeVec = probDynObj.getTimeVec();
             %
-            aMat = smartLinSys.getxtDynamics().evaluate(timeVec);
+            aMat = probDynObj.getxtDynamics().evaluate(timeVec);
             ltGoodDirArray = ...
                 goodDirSetObj.getGoodDirCurveSpline().evaluate(timeVec);
             %
@@ -199,11 +202,13 @@ classdef ReachDiscrete < elltool.reach.AReach
             %
             fCalcApproxShape = @(approxType) ...
                 elltool.reach.ReachDiscrete.calculateApproxShape(...
-                smartLinSys, l0Mat, self.relTol, approxType, isDisturb);
+                probDynObj, l0Mat, self.relTol, approxType, ...
+                isDisturb, ...
+                self.isMinMax);
             %
             if isExtApprox
                 approxType = EApproxType.External;
-                [qArrayList ~] = fCalcApproxShape(approxType);
+                [qArrayList ltGoodDirArray] = fCalcApproxShape(approxType);
                 extEllTubeRel = create();
                 if ~isIntApprox
                     ellTubeRel = extEllTubeRel;
@@ -211,7 +216,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             end
             if isIntApprox
                 approxType = EApproxType.Internal;
-                [qArrayList ~] = fCalcApproxShape(approxType);
+                [qArrayList ltGoodDirArray] = fCalcApproxShape(approxType);
                 intEllTubeRel = create();
                 if isExtApprox
                     intEllTubeRel.unionWith(extEllTubeRel);
@@ -228,7 +233,7 @@ classdef ReachDiscrete < elltool.reach.AReach
         end
     end
     %
-    methods
+    methods        
         function self = ReachDiscrete(linSys, x0Ell, l0Mat,...
                 timeVec, varargin)
             %
@@ -277,86 +282,30 @@ classdef ReachDiscrete < elltool.reach.AReach
             %             Mathematics and Computer Science,
             %             System Analysis Department 2013 $
             %
-            import gras.la.sqrtmpos;
             import elltool.conf.Properties;
             import gras.ellapx.enums.EApproxType;
-            import modgen.common.throwerror;
-            import elltool.logging.Log4jConfigurator;
-            %
-            persistent logger;
-            %
-            neededPropNameList =...
-                {'absTol', 'relTol', 'nPlot2dPoints',...
-                'nPlot3dPoints','nTimeGridPoints'};
-            [absTolVal, relTolVal, nPlot2dPointsVal,...
-                nPlot3dPointsVal, nTimeGridPointsVal] =...
-                Properties.parseProp(varargin, neededPropNameList);
-            self.absTol = absTolVal;
-            self.relTol = relTolVal;
-            self.nPlot2dPoints = nPlot2dPointsVal;
-            self.nPlot3dPoints = nPlot3dPointsVal;
-            self.nTimeGridPoints = nTimeGridPointsVal;
             %
             if (nargin == 0) || isempty(linSys)
                 return;
             end
-            if isstruct(linSys) && (nargin == 1)
-                return;
-            end
-            % check and analize input
-            if nargin < 4
-                throwerror('wrongInput',...
-                    'insufficient number of input arguments.');
-            end
-            if ~(isa(linSys, 'elltool.linsys.LinSysDiscrete'))
-                throwerror('wrongInput',['first input argument ',...
-                    'must be discrete linear system object.']);
-            end
-            linSys = linSys(1, 1);
-            [d1, du, dy, dd] = linSys.dimension();
-            if ~isa(x0Ell, 'ellipsoid')
-                throwerror('wrongInput',...
-                    'set of initial conditions must be ellipsoid.');
-            end
-            x0Ell = x0Ell(1, 1);
-            d2 = dimension(x0Ell);
-            if d1 ~= d2
-                throwerror('wrongInput',...
-                    ['dimensions of linear system and ',...
-                    'set of initial conditions do not match.']);
-            end
-            [timeRows, timeCols] = size(timeVec);
-            if ~(isa(timeVec, 'double')) || ...
-                    (timeRows ~= 1) || (timeCols ~= 2)
-                throwerror('wrongInput', ['time interval must be ',...
-                    'specified as ''[k0 k1]''.']);
-            end
-            [m, N] = size(l0Mat);
-            if m ~= d2
-                throwerror('wrongInput',...
-                    ['dimensions of state space ',...
-                    'and direction vector do not match.']);
-            end
-            %
+            %            
             k0 = round(timeVec(1));
             k1 = round(timeVec(2));
             timeVec = [k0 k1];
             %
-            self.switchSysTimeVec = timeVec;
-            self.x0Ellipsoid = x0Ell;
-            self.linSysCVec = {linSys};
-            self.isCut = false;
-            self.isProj = false;
-            self.isBackward = timeVec(1) > timeVec(2);
-            self.projectionBasisMat = [];
-            self.x0Ellipsoid = x0Ell;
+            self.parse(linSys, x0Ell, l0Mat, timeVec, varargin);
+            %
+            [reg, ~, self.isMinMax] =...
+                modgen.common.parseparext(varargin, {'isMinMax'; false});
+            if ~isempty(reg)
+                throwerror('wrongInput', 'wrong input arguments format.');
+            end
             %
             % create gras LinSys object
             %
             [x0Vec x0Mat] = double(x0Ell);
             [atStrCMat btStrCMat gtStrCMat ptStrCMat ptStrCVec...
-                qtStrCMat qtStrCVec] =...
-                self.prepareSysParam(linSys);
+                qtStrCMat qtStrCVec] = self.prepareSysParam(linSys);
             isDisturbance = self.isDisturbance(gtStrCMat, qtStrCMat);
             %
             % normalize good directions
@@ -366,14 +315,12 @@ classdef ReachDiscrete < elltool.reach.AReach
             %
             % create approximation tube
             %
-            relTol = elltool.conf.Properties.getRelTol();
-            smartLinSys = self.getSmartLinSys(atStrCMat, btStrCMat, ...
+            probDynObj = self.getProbDynamics(atStrCMat, btStrCMat, ...
                 ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat, qtStrCVec, ...
-                x0Mat, x0Vec, timeVec,...
-                relTol, isDisturbance);
+                x0Mat, x0Vec, timeVec, self.relTol, isDisturbance);
             approxTypeVec = [EApproxType.External EApproxType.Internal];
-            self.ellTubeRel = self.makeEllTubeRel(smartLinSys, l0Mat, ...
-                timeVec, isDisturbance, relTol, approxTypeVec);
+            self.ellTubeRel = self.makeEllTubeRel(probDynObj, l0Mat, ...
+                timeVec, isDisturbance, self.relTol, approxTypeVec);
         end
     end
 end
