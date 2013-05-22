@@ -1,4 +1,4 @@
-function fail(varargin)
+function fail(msg)
 % FAIL raises an error.
 %
 % Input:
@@ -7,12 +7,16 @@ function fail(varargin)
 %
 % Example: fail('Test failed.');
 %
-% $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-% Faculty of Computational Mathematics and Cybernetics, System Analysis
-% Department, 7-October-2012, <pgagarinov@gmail.com>$
+% $Authors: Peter Gagarinov <pgagarinov@gmail.com>
+% $Date: March-2013 $
+% $Copyright: Moscow State University,
+%             Faculty of Computational Mathematics
+%             and Computer Science,
+%             System Analysis Department 2012-2013$
 %
-try
-    mlunit.fail(varargin{:});
-catch meObj
-    throwAsCaller(meObj);
-end
+if (nargin == 0)
+    msg = 'no message.';
+end;
+meObj=modgen.common.throwerror('MLUNITEXT:TESTFAILURE',msg);
+throwAsCaller(meObj);
+

@@ -35,8 +35,8 @@ classdef mlunit_test_versionedconfrepomgr < modgen.configuration.test.mlunit_tes
         end
         function self=aux_test_updateConf(self,confName)
             [SConf,confVersion]=self.cm1.getConf(confName);
-            mlunit.assert_equals(103,confVersion);
-            mlunit.assert_equals(2,SConf.beta);            
+            mlunitext.assert_equals(103,confVersion);
+            mlunitext.assert_equals(2,SConf.beta);            
         end
         function self=test_updateConfOnSelect(self)
             self.cm1.selectConf('testConfK');
@@ -54,9 +54,9 @@ classdef mlunit_test_versionedconfrepomgr < modgen.configuration.test.mlunit_tes
         function self=test_updateAll_wrongKey(self)
             try
                 self.cm2.updateAll();
-                mlunit.assert_equals(false,true);
+                mlunitext.assert_equals(false,true);
             catch meObj
-                 mlunit.assert_equals(false,...
+                 mlunitext.assert_equals(false,...
                      isempty(findstr(meObj.identifier,':badConfRepo')));
             end
         end

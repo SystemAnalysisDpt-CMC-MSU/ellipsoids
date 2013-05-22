@@ -33,12 +33,12 @@ classdef mlunit_test_crmversioned < mlunitext.test_case
         function aux_checkUpdate(~,cm)
             [SConfB,confVersionB]=cm.getConf('testConfB');
             [SConfA,confVersionA]=cm.getConf('testConfA');
-            mlunit.assert_equals(2,SConfA.beta);
-            mlunit.assert_equals(103,confVersionA);
-            mlunit.assert_equals('testConfA',SConfA.confName);
-            mlunit.assert_equals(11,SConfB.beta);
-            mlunit.assert_equals(0,confVersionB);
-            mlunit.assert_equals('testConfB',SConfB.confName);
+            mlunitext.assert_equals(2,SConfA.beta);
+            mlunitext.assert_equals(103,confVersionA);
+            mlunitext.assert_equals('testConfA',SConfA.confName);
+            mlunitext.assert_equals(11,SConfB.beta);
+            mlunitext.assert_equals(0,confVersionB);
+            mlunitext.assert_equals('testConfB',SConfB.confName);
         end          
         function self=test_updateAll(self)
             self.cm.updateAll();
@@ -47,12 +47,12 @@ classdef mlunit_test_crmversioned < mlunitext.test_case
         function aux_checkUpdateAll(~,cm)
             [SConfA,confVersionA]=cm.getConf('testConfA');
             [SConfB,confVersionB]=cm.getConf('testConfB');
-            mlunit.assert_equals(2,SConfA.beta);
-            mlunit.assert_equals(103,confVersionA);
-            mlunit.assert_equals('testConfA',SConfA.confName);
-            mlunit.assert_equals(2,SConfB.beta);
-            mlunit.assert_equals(103,confVersionB);
-            mlunit.assert_equals('testConfB',SConfB.confName);
+            mlunitext.assert_equals(2,SConfA.beta);
+            mlunitext.assert_equals(103,confVersionA);
+            mlunitext.assert_equals('testConfA',SConfA.confName);
+            mlunitext.assert_equals(2,SConfB.beta);
+            mlunitext.assert_equals(103,confVersionB);
+            mlunitext.assert_equals('testConfB',SConfB.confName);
         end        
     end
 end

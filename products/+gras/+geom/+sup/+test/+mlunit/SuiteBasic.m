@@ -27,6 +27,49 @@ classdef SuiteBasic < mlunitext.test_case
             end
             
         end
+        function testSupGeomDiff3d(~)
+            import gras.geom.sup.supgeomdiff3d;
+            import gras.geom.sup.supgeomdiff2d;
+            ABS_TOL = 1e-10;
+            POINTS_NUMBER = 200;
+            testFirEll=ellipsoid(diag([1 2 1]));
+            testSecEll=ellipsoid(diag([0.8 0.1 0.1]));
+            [lGridMat,~] = gras.geom.tri.spheretri(3);
+            [supp1Mat,~] = rho(testFirEll,lGridMat.');
+            [supp2Mat,~] = rho(testSecEll,lGridMat.');
+            rhoDiffVec = ...
+                gras.geom.sup.supgeomdiff3d(supp1Mat,supp2Mat,lGridMat.');
+            lGrid2Mat = diag([-1,-1,1])*lGridMat.';
+            rhoDiff2Vec = ...
+                gras.geom.sup.supgeomdiff3d(supp1Mat,supp2Mat,lGrid2Mat);
+            mlunitext.assert_equals(abs(rhoDiffVec-rhoDiff2Vec) < ABS_TOL,...
+                ones(1,size(rhoDiffVec,2)));   
+            
+            firBoundMat = gras.geom.circlepart(POINTS_NUMBER).';
+            testFirEll=ellipsoid(diag([0.1 0.2]));
+            secBoundMat =  testFirEll.getBoundary(POINTS_NUMBER).';
+            thirdBoundMat =...
+                [repmat(firBoundMat,1,10);floor((0:1999)./POINTS_NUMBER)];
+            forthBoundMat =...
+                [repmat(secBoundMat,1,10);...
+                floor((0:1999)./POINTS_NUMBER)./10];
+            lGridMat = [firBoundMat;zeros(1,POINTS_NUMBER)].';
+            lGridMat = [lGridMat;.5 .5 .5];
+            sup1Vec = max(firBoundMat.'*firBoundMat,[],2);
+            sup2Vec = max(firBoundMat.'*secBoundMat,[],2);
+            sup3Vec = max(lGridMat*thirdBoundMat,[],2);
+            sup4Vec = max(lGridMat*forthBoundMat,[],2);
+            rhoDiffVec = gras.geom.sup.supgeomdiff2d(sup1Vec.',...
+                    sup2Vec.',firBoundMat);
+                
+            rhoDiff2Vec = ...
+                gras.geom.sup.supgeomdiff3d(sup3Vec.',sup4Vec.',...
+                lGridMat.');
+            
+            mlunitext.assert_equals(abs(rhoDiff2Vec(1:end-1)-rhoDiffVec)...
+                < ABS_TOL, ones(1,size(rhoDiffVec,2)));   
+        end
+        
         function testSupGeomDiff2d(~)
             N_DIRS=200;
             EXP_TOL=1e-15;
@@ -47,9 +90,9 @@ classdef SuiteBasic < mlunitext.test_case
             nDirsShift=fix(N_DIRS*0.5);
             maxPeriodTol=max(abs(circshift(rhoDiffVec,[1 nDirsShift])...
                 -rhoDiffVec));
-            mlunit.assert(maxPeriodTol<=EXP_TOL);
-            mlunit.assert(abs(EXP_MAX-max(rhoDiffVec))<=EXP_TOL);
-            mlunit.assert(abs(EXP_MIN-min(rhoDiffVec))<=EXP_TOL);
+            mlunitext.assert(maxPeriodTol<=EXP_TOL);
+            mlunitext.assert(abs(EXP_MAX-max(rhoDiffVec))<=EXP_TOL);
+            mlunitext.assert(abs(EXP_MIN-min(rhoDiffVec))<=EXP_TOL);
             %
             function rhoVec=rho(qMat)
                 rhoVec=realsqrt(sum((qMat*lMat).*lMat,1));
@@ -87,13 +130,13 @@ classdef SuiteBasic < mlunitext.test_case
             xMat=fBoundary(dirMat,supVec,varargin{:});
             xExpMat=fCheckBoundary(dirMat,supVec,varargin{:});
             realTol=max(realsqrt(sum((xMat-xExpMat).*(xMat-xExpMat),2)));
-            mlunit.assert_equals(true,realTol<=MAX_TOL);
+            mlunitext.assert_equals(true,realTol<=MAX_TOL);
             % translate boundary back to unit sphere
             yMat=xMat/sqrtm(qMat);
             % see how good this translation approximates a unit sphere
             nVec=realsqrt(sum(yMat.*yMat,2));
-            mlunit.assert_equals(true,max(nVec)<=MAX_NORM);
-            mlunit.assert_equals(true,min(nVec)>=MIN_NORM);
+            mlunitext.assert_equals(true,max(nVec)<=MAX_NORM);
+            mlunitext.assert_equals(true,min(nVec)>=MIN_NORM);
         end
     end
 end

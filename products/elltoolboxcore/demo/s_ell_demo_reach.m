@@ -135,10 +135,7 @@ ylabel('i_L');
 %
 % Both hyperplanes (red) intersect the external approximation (blue) but do not intersect the internal approximation (green) of the reach set. It leaves the question whether the actual reach is intersected by these hyperplanes open.
 HA = hyperplane([1 0; 1 -2]', [4 -2]);
-o.width = 2;
-o.size = [3 6.6];
-o.center = [0 -2; 0 0];
-plot(HA, 'r', o);
+plot(HA, 'r','lineWidth',2,'size',[3; 6.6],'center',[0 -2; 0 0]);
 hold off;
 %%
 % Function 'intersect' works with ellipsoids as well as with hyperplanes:
@@ -167,7 +164,7 @@ E2 = ell_unitball(2) - [6; -1];
 ct.plot_ea();
 hold on;
 ct.plot_ia();
-plot(E1, 'r', E2, 'k', o);
+plot(E1, 'r', E2, 'k', 'lineWidth',2);
 hold off;
 xlabel('V_C');
 ylabel('i_L');

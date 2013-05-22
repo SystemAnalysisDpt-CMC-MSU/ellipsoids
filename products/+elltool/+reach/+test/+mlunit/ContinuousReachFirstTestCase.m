@@ -13,12 +13,12 @@ classdef ContinuousReachFirstTestCase < mlunitext.test_case
     end
     methods (Access=private, Static)
         function checkIntersection(reachObj, ellVec)
-            mlunit.assert_equals(false, reachObj.intersect(ellVec(1), 'e'));
-            mlunit.assert_equals(false, reachObj.intersect(ellVec(1), 'i'));
-            mlunit.assert_equals(true, reachObj.intersect(ellVec(2), 'e'));
-            mlunit.assert_equals(false, reachObj.intersect(ellVec(2), 'i'));
-            mlunit.assert_equals(true, reachObj.intersect(ellVec(3), 'e'));
-            mlunit.assert_equals(true, reachObj.intersect(ellVec(3), 'i'));
+            mlunitext.assert_equals(false, reachObj.intersect(ellVec(1), 'e'));
+            mlunitext.assert_equals(false, reachObj.intersect(ellVec(1), 'i'));
+            mlunitext.assert_equals(true, reachObj.intersect(ellVec(2), 'e'));
+            mlunitext.assert_equals(false, reachObj.intersect(ellVec(2), 'i'));
+            mlunitext.assert_equals(true, reachObj.intersect(ellVec(3), 'e'));
+            mlunitext.assert_equals(true, reachObj.intersect(ellVec(3), 'i'));
         end
     end
     methods
@@ -124,7 +124,7 @@ classdef ContinuousReachFirstTestCase < mlunitext.test_case
             backReachObj = elltool.reach.ReachContinuous(linSys,...
                 ellipsoid(x0DefVec, x0DefMat), l0Mat, timeVec);
             isEqual = self.reachObj.isEqual(backReachObj);
-            mlunit.assert_equals(isEqual, true);
+            mlunitext.assert_equals(isEqual, true);
         end
     end
 end
