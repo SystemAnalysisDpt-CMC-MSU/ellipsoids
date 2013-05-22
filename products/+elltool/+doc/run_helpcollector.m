@@ -89,17 +89,6 @@ finalHelpCell = cellfun(@(x)fShiftText(x),finalHelpCell, ...
 finalHelpCell = cellfun(@(x)fDeleteEmptyStr(x),finalHelpCell, ...
     'UniformOutput', false);
 funcOutputCell=funcNameCell;
- 
-indFunc = 1;
-
-for iClass=1:length(classNameCell)
-   if ismember(iClass,indOfClasses)
-       finalHelpCell{indFunc} = fAddMethodList(finalHelpCell{indFunc},...
-           inhFuncNameCell, char(defClassNameCell));
-   end
-     indFunc = indFunc + numberOfFunctions(iClass);
-end
-
 %% substitutions (for TeX requirements)
 symbList={'\','_','&'};
 substList={'/','\_','\&'};
@@ -118,11 +107,18 @@ for iSymb=1:length(symbListHelp)
 end
 %% create tex doc
 %
+helpPattern = sprintf...
+('\n\nSee the description of the following methods in section\n\\hyperref[secClassDescr:%s]{%s}:\n',...
+  char(defClassNameCell), char(defClassNameCell));
 fid = fopen(resultTexFileName, 'wt');
 indFunc = 1;
+flag = 0;
 for iClass=1:length(classNameCell)
     fprintf(fid,'\\section{%s}\\label{secClassDescr:%s}\n',classNameCell{iClass}, classNameCell{iClass});
     numbFunc = indFunc + numberOfFunctions(iClass) - 1;
+    if ismember(iClass,indOfClasses)
+        flag = 1;
+    end
     for iFunc = indFunc: numbFunc
         fprintf(fid,'\\subsection{\\texorpdfstring{%s}{%s}}\n',...
               [classNameCell{iClass}, '.',funcOutputCell{iFunc}],...
@@ -131,6 +127,15 @@ for iClass=1:length(classNameCell)
         fprintf(fid,'\\begin{verbatim}\n');
         fprintf(fid,'%s\n',finalHelpCell{iFunc});
         fprintf(fid,'\\end{verbatim}\n');
+        if flag
+            fprintf(fid,'%s\n',helpPattern);
+            fprintf(fid,'\\begin{list}{}{}\n');
+            for iMethod = 1:length(inhFuncNameCell);
+                 fprintf(fid,' \\item %s\n',char(inhFuncNameCell{iMethod}));
+            end
+            fprintf(fid,'\\end{list}\n');
+            flag = 0;
+        end
         indFunc = indFunc + 1;
     end
 end
