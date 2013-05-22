@@ -106,6 +106,6 @@ end
 
     function SComp = formCompStruct(SEll)
         SComp = struct('Q',gras.la.sqrtmpos(SEll.Q,...
-            ABS_TOL),'q',SEll.q);
+            ABS_TOL),'a',SEll.a);
     end
 end

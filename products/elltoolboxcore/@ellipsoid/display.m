@@ -31,11 +31,26 @@ DEFAULT_NAME = 'ellArr';
 
 fprintf('\n');
 variableName = inputname(1);
-size(variableName)
 if (isempty(variableName))
     variableName = DEFAULT_NAME;
 end
-disp([variableName ' =']);
+
+fprintf('-------ellipsoid object-------\n');
+fprintf('Properties:\n');
+fprintf('   |\n');    
+fprintf('   |-- actualClass : ''ellipsoid''\n');
+fprintf('   |--------- size : ');
+sizeVec = size(myEllArr);
+fprintf('[%d', sizeVec(1));
+for index = 2 : length(sizeVec)
+    fprintf(', %d', sizeVec(index));
+end
+fprintf(']\n');
+fprintf('\n');
+fprintf('Fields (name, type, description):\n');
+fprintf('    ''Q''    ''double''    ''Configuration matrix''\n');
+fprintf('    ''a''    ''double''    ''Center''\n');
+fprintf('\nData: \n');
 
 strucdisp(myEllArr.toStruct(), 'maxArrayLength', MAX_DISP_ELEM, ...
      'defaultName', variableName);

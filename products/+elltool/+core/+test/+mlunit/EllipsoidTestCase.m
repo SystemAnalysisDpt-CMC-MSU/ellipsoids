@@ -916,7 +916,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
             checkEllEqual(testEllipsoid1, testEllipsoid1, true, '');
             
             checkEllEqual(testEllipsoid2, testEllipsoid1, false, ...
-                '(1).q-->Max. difference (1) is greater than the specified tolerance(1.000000e-05)');
+                '(1).a-->Max. difference (1) is greater than the specified tolerance(1.000000e-05)');
             
             checkEllEqual(testEllipsoid3, testEllipsoid2, false, ...
                 '(1).Q-->Max. difference (4.142136e-01) is greater than the specified tolerance(1.000000e-05)');
@@ -925,11 +925,11 @@ classdef EllipsoidTestCase < mlunitext.test_case
             checkEllEqual(testEllipsoid3, testEllipsoid2, false, ...
                 '(1).Q-->Max. difference (4.142136e-01) is greater than the specified tolerance(1.000000e-05)');
             
-            ansStr = sprintf('(1).Q-->Different sizes (left: [2 2], right: [3 3])\n(1).q-->Different sizes (left: [1 2], right: [1 3])');
+            ansStr = sprintf('(1).Q-->Different sizes (left: [2 2], right: [3 3])\n(1).a-->Different sizes (left: [1 2], right: [1 3])');
             checkEllEqual(testEllipsoidZeros2, testEllipsoidZeros3, false, ansStr);
             
             
-            ansStr = sprintf('(1).Q-->Different sizes (left: [2 2], right: [0 0])\n(1).q-->Different sizes (left: [1 2], right: [0 0])');
+            ansStr = sprintf('(1).Q-->Different sizes (left: [2 2], right: [0 0])\n(1).a-->Different sizes (left: [1 2], right: [0 0])');
             checkEllEqual(testEllipsoidZeros2, testEllipsoidEmpty, false, ansStr);
             
             
@@ -944,7 +944,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
             
             
             
-            ansStr = sprintf('(1).Q-->Different sizes (left: [2 2], right: [3 3])\n(1).q-->Different sizes (left: [1 2], right: [1 3])');
+            ansStr = sprintf('(1).Q-->Different sizes (left: [2 2], right: [3 3])\n(1).a-->Different sizes (left: [1 2], right: [1 3])');
             checkEllEqual([testEllipsoidZeros2 testEllipsoidZeros3], [testEllipsoidZeros3 testEllipsoidZeros3], [false, true], ansStr); 
         end
         %
@@ -1376,6 +1376,37 @@ classdef EllipsoidTestCase < mlunitext.test_case
             sh2Mat = diag(ones(1, 4));
             minksum_ia([ellipsoid(zeros(4, 1), sh1Mat),...
                 ellipsoid(zeros(4, 1), sh2Mat)], [0 0 1 0]');
+        end
+        %
+        function self = testToStruct(self)
+            centerCVec{1} = [1 2 3]';
+            shapeMatCVec{1} = eye(3);
+            centerCVec{2} = [2 3 4]';
+            shapeMatCVec{2} = ones(3);
+            centerCVec{3} = [1 0]';
+            shapeMatCVec{3} = [3 1; 1 2];
+            centerCVec{4} = [1 0 0 0]';
+            shapeMatCVec{4} = diag([3 2 1 0]);
+            for index = 1 : 4
+                ellVec(index) = ellipsoid(centerCVec{index}, shapeMatCVec{index});
+                transposedCenterCVec{index} = centerCVec{index}';
+            end
+            SEllVec = struct('a', transposedCenterCVec, 'Q', shapeMatCVec);
+            obtainedEllStruct = ellVec(1).toStruct();
+            isOk = isEqual(obtainedEllStruct, SEllVec(1));
+            obtainedEllStructVec = ellVec.toStruct();
+            for index = 1 : 4
+                isOk = isOk && isEqual(obtainedEllStructVec(index), ...
+                                       SEllVec(index)); 
+            end
+               
+            mlunitext.assert_equals(true, isOk);
+            
+            function isEq = isEqual(SEll1, SEll2)
+                isEq = all(SEll1.a == SEll2.a);
+                compMat = SEll1.Q == SEll2.Q;
+                isEq = isEq && all(compMat(:));
+            end
         end
     end
 end

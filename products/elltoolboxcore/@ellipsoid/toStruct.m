@@ -31,5 +31,5 @@ function SEllArr = toStruct(ellArr)
 end
 
 function SEll = ell2Struct(ellObj)
-    SEll = struct('Q', ellObj.shapeMat, 'q', ellObj.centerVec.');
+    SEll = struct('Q', ellObj.shapeMat, 'a', ellObj.centerVec.');
 end

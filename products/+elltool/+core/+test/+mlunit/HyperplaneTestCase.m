@@ -25,7 +25,7 @@ classdef HyperplaneTestCase < mlunitext.test_case
             %hyperplanes contents and normals and constants, from which it 
             %was constructed(in function isNormalAndConstantRight)
             %
-            SInpData =  self.auxReadFile(self);
+            SInpData = self.auxReadFile(self);
             testNormalVec = SInpData.testNormalVec;
             testConst = SInpData.testConstant;
             %
@@ -141,7 +141,6 @@ classdef HyperplaneTestCase < mlunitext.test_case
             mlunitext.assert(isOk);
         end
         %
-        %
         function self = testEqAndNe(self)
             SInpData =  self.auxReadFile(self);
             testHyperplanesVec = SInpData.testHyperplanesVec;
@@ -234,6 +233,7 @@ classdef HyperplaneTestCase < mlunitext.test_case
             pHandle = plot(testHplane3D1Vec,'g',testHplane3D2Vec,'r');
             close(pHandle);            
         end
+        %
         function testPlotSimple(~)
             HA = hyperplane([1 0; 1 -2]'', [4 -2]);
             o.width = 2; o.size = [3 6.6]; o.center = [0 -2; 0 0];
@@ -256,8 +256,8 @@ classdef HyperplaneTestCase < mlunitext.test_case
             self.runAndCheckError('hyperplane(nanVec,testConstant)',...
                 'wrongInput');
         end
-       %
-       function self = testGetAbsTol(self)
+        %
+        function self = testGetAbsTol(self)
            normVec = ones(3,1);
            const = 0;
            testAbsTol = 1;
@@ -274,7 +274,42 @@ classdef HyperplaneTestCase < mlunitext.test_case
             %  
             isOk = all(isOkArr(:));
             mlunitext.assert(isOk);
-       end
+        end
+        %
+        function self = testToStruct(self)
+            normalCVec{1} = [1 2 3]';
+            shiftCVec{1} = 3;
+            normalCVec{2} = [2 3 4]';
+            shiftCVec{2} = -2;
+            normalCVec{3} = [1 0]';
+            shiftCVec{3} = 1;
+            normalCVec{4} = [1 0 0 0]';
+            shiftCVec{4} = 5;
+            for index = 1 : 4
+                hpVec(index) = hyperplane(normalCVec{index}, shiftCVec{index});
+            end
+            SHpVec = cellfun(@auxToStruct, normalCVec, shiftCVec);
+            obtainedHpStruct = hpVec(1).toStruct();
+            isOk = isEqual(obtainedHpStruct, SHpVec(1));
+            obtainedHpStructVec = hpVec.toStruct();
+            isOk = isOk && all(arrayfun(@isEqual, obtainedHpStructVec, SHpVec));
+               
+            mlunitext.assert_equals(true, isOk);
+            
+            function isEq = isEqual(SHp1, SHp2)
+                isEq = abs(SHp1.shift - SHp2.shift) < 1e-6;
+                isEq = isEq && all(abs(SHp1.normal - SHp2.normal) < 1e-6);
+            end
+            
+            function struct = auxToStruct(normal, shift)
+                multiplier = 1/norm(normal);
+                if (shift < 0)
+                    multiplier = -multiplier;
+                end
+                struct.shift = shift * multiplier;
+                struct.normal = normal * multiplier;
+            end
+        end
     end
     %
     methods(Static, Access = private)

@@ -43,7 +43,23 @@ variableName = inputname(1);
 if (isempty(variableName))
     variableName = DEFAULT_NAME;
 end
-disp([variableName ' =']);
+
+fprintf('-------hyperplane object-------\n');
+fprintf('Properties:\n');
+fprintf('   |\n');    
+fprintf('   |-- actualClass : ''hyperplane''\n');
+fprintf('   |--------- size : ');
+sizeVec = size(hpArr);
+fprintf('[%d', sizeVec(1));
+for index = 2 : length(sizeVec)
+    fprintf(', %d', sizeVec(index));
+end
+fprintf(']\n');
+fprintf('\n');
+fprintf('Fields (name, type, description):\n');
+fprintf('    ''normal''    ''double''    ''Hyperplane normal''\n');
+fprintf('    ''shift''     ''double''    ''Hyperplane shift''\n');
+fprintf('\nData: \n');
 
 strucdisp(hpArr.toStruct(), 'maxArrayLength', MAX_DISP_ELEM, ...
      'defaultName', variableName);
