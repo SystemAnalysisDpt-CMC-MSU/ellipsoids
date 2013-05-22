@@ -315,9 +315,13 @@ classdef ellipsoid < handle
         function isArrEq = isMatEqualInternal(self,aArr,bArr)
             self.checkIfScalar();
             
-            if all(all(aArr>self.absTol)) || all(all(bArr>self.absTol))
+            aArr = reshape(aArr,[1 prod(size(aArr))]);
+            bArr = reshape(bArr,[1 prod(size(bArr))]);
+            
+            if any(abs(aArr)>self.absTol) || any(abs(bArr)>self.absTol)
                 isArrEq = abs(2*(aArr-bArr)./(aArr+bArr));
-                isArrEq = all(all(isArrEq<=self.relTol));
+                isArrEq = reshape(isArrEq,[1 prod(size(isArrEq))])
+                isArrEq = all(isArrEq<=self.relTol);
             else
                 isArrEq = true;
             end

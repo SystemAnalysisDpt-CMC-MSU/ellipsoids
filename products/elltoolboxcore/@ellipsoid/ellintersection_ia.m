@@ -66,25 +66,13 @@ modgen.common.checkvar(dimsArr,'all(x(:)==x(1))',...
 
 nEllipsoids = numel(inpEllArr);    
 inpEllVec = reshape(inpEllArr, 1, nEllipsoids);
-
-function is2eq = is2EllEqCentre(inpEllVec)
-    is2eq = 0;
-    if numel(inpEllVec) == 2
-        firstEll = inpEllVec(1);
-        secEll = inpEllVec(2);
-        firstCenterVec = firstEll.getCenterVec();
-        secCenterVec = secEll.getCenterVec();
-        if firstEll.isMatEqualInternal(firstCenterVec, secCenterVec)
-            is2eq = 1;
-        end
-    end
-end
     
-if is2EllEqCentre(inpEllVec)    
+if is2EllEqCentre(inpEllVec)  
+    
     firstEllObj = inpEllVec(1);
     secEllObj = inpEllVec(2);
-
-    EllCenterVec = inpEllVec(1).getCenterVec();
+    
+    EllCenterVec = firstEllObj.getCenterVec();
 
     firstEllShMat = firstEllObj.getShapeMat();
     secEllShMat = secEllObj.getShapeMat();
@@ -97,7 +85,7 @@ if is2EllEqCentre(inpEllVec)
         sqrtFirstEllShMat';
 
     [vSecMat dSecMat] = eig(intermSecEllShMat);
-            
+
     intermEllShMat = min(intermFirstEllShMat, dSecMat);
 
     ellMat = sqrtFirstEllShMat * vSecMat * ...
@@ -107,6 +95,7 @@ if is2EllEqCentre(inpEllVec)
 
     outEll = ellipsoid(EllCenterVec, ellMat);
 else
+
     if Properties.getIsVerbose()
         if isempty(logger)
             logger=Log4jConfigurator.getLogger();
@@ -158,4 +147,19 @@ else
 
     outEll = ellipsoid(cvxEllCenterVec, ellMat);
 end
+end
+
+function is2eq = is2EllEqCentre(inpEllVec)
+    is2eq = false;
+    
+    if numel(inpEllVec) == 2
+        firstEll = inpEllVec(1);
+        secEll = inpEllVec(2);
+        firstCenterVec = firstEll.getCenterVec();
+        secCenterVec = secEll.getCenterVec();
+        
+        if firstEll.isMatEqualInternal(firstCenterVec, secCenterVec)
+            is2eq = true;
+        end
+    end
 end
