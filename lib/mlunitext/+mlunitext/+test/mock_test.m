@@ -8,6 +8,11 @@ classdef mock_test < mlunitext.test_case
         end
         %
         function set_up_param(self, varargin)
+            import modgen.common.throwerror;
+            if any(strcmpi('marker',varargin))
+                throwerror('wrongState',...
+                    'Oops, marker property should not get here');
+            end
             nArgs = length(varargin);
             if nArgs == 1
                 self.verbose = varargin{1};

@@ -19,24 +19,31 @@ classdef RemoteTestRunner<handle
                 consoleOutStr=evalc(...
                     'resultVec=feval(testPackName,varargin{:});');
                 errorFailStr=resultVec.getErrorFailMessage();
+                isFailed=~resultVec.isPassed();
                 %
                 subjectStr=resultVec.getReport('minimal');
                 %
-                statRel=resultVec.getRunStatRel();
-                
                 consoleOutFileName=writeMessageToFile('console_output',...
                     consoleOutStr);
-                topsFileName=getFullFileName('performance_tops','.csv');
-                statRel.writeToCSV(topsFileName);
-                attachFileNameList={consoleOutFileName,topsFileName};
+                topsFileName=getFullFileName('perf_tops','.csv');
+                topsTCFileName=getFullFileName(...
+                    'perf_tops_tc','.csv');
+                resultVec.getRunStatRel().writeToCSV(topsFileName);
+                resultVec.getRunStatRel('topsTestCase').writeToCSV(...
+                    topsTCFileName);
+                attachFileNameList={consoleOutFileName,...
+                    topsFileName,topsTCFileName};
             catch meObj
                 subjectStr='ERROR';
                 errorFailStr=modgen.exception.me.obj2plainstr(meObj);
                 attachFileNameList={};
+                isFailed=true;
             end
-            consoleOutFileName=writeMessageToFile('error_fail_list',...
-                errorFailStr);
-            attachFileNameList=[attachFileNameList,{consoleOutFileName}];
+            if isFailed
+                errorFailFileName=writeMessageToFile('error_fail_list',...
+                    errorFailStr);
+                attachFileNameList=[attachFileNameList,{errorFailFileName}];
+            end
             %
             self.emailLogger.sendMessage(subjectStr,...
                 'emailAttachmentNameList',attachFileNameList);

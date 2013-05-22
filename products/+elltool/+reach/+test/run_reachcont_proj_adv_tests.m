@@ -39,7 +39,7 @@ if nargin < 1
     confList = DEFAULT_CONF_LIST;
 else
     nInpConf = numel(inpConfAdvTestList);
-    nInpMode = numel(inpModeAdvTestList);   
+    nInpMode = numel(inpModeAdvTestList);
     if nargin < 2
         modeList = DEFAULT_MODE_LIST;
     elseif (nInpMode==1 && strcmp(inpModeAdvTestList,'*'))
@@ -49,9 +49,9 @@ else
     else
         throwerror('wrongInput:unknownMode',...
             'Unexpected input mode: %s. Allowed modes: %s.',...
-             inpModeAdvTestList{~ismember(inpModeAdvTestList,ALLOWED_MODE_LIST)},...
-             cellstr2expression(ALLOWED_MODE_LIST));
-    end    
+            inpModeAdvTestList{~ismember(inpModeAdvTestList,ALLOWED_MODE_LIST)},...
+            cellstr2expression(ALLOWED_MODE_LIST));
+    end
     %
     if (nInpConf==1 && strcmp(inpConfAdvTestList,'*'))
         confList = DEFAULT_CONF_LIST;
@@ -60,17 +60,19 @@ else
     else
         throwerror('wrongInput:unknownConf',...
             'Unexpected input configuration: %s. Allowed configurations: %s.',...
-             inpConfAdvTestList{~ismember(inpConfAdvTestList,DEFAULT_CONF_LIST)},...
-             cellstr2expression(DEFAULT_CONF_LIST));
+            inpConfAdvTestList{~ismember(inpConfAdvTestList,DEFAULT_CONF_LIST)},...
+            cellstr2expression(DEFAULT_CONF_LIST));
     end
-end    
+end
 %
 nConf = numel(confList);
 for iConf = 1:nConf
-        suiteList{end + 1} = loader.load_tests_from_test_case(...
-            'elltool.reach.test.mlunit.ContinuousReachProjAdvTestCase',...
-            confList{iConf}, crm, crmSys, modeList);
-end    
+    confName=confList{iConf};
+    suiteList{end + 1} = loader.load_tests_from_test_case(...
+        'elltool.reach.test.mlunit.ContinuousReachProjAdvTestCase',...
+        confList{iConf}, crm, crmSys, modeList,...
+        'marker',confName);
+end
 %
 testLists=cellfun(@(x)x.tests,suiteList,'UniformOutput',false);
 suite=mlunitext.test_suite(horzcat(testLists{:}));

@@ -1,4 +1,4 @@
-function isBadDirVec = isbaddirection(fstEll, secEll, dirsMat,absTol)
+function [isBadDirVec,pUniversalVec] = isbaddirection(fstEll, secEll, dirsMat,absTol)
 %
 % ISBADDIRECTION - checks if ellipsoidal approximations of geometric
 %                  difference of two ellipsoids can be computed for
@@ -22,29 +22,17 @@ function isBadDirVec = isbaddirection(fstEll, secEll, dirsMat,absTol)
 % Output:
 %    isBadDirVec: logical[1, nCols] - array of true or false with length
 %       being equal to the number of columns in matrix dirsMat.
+%       ture marks direction vector as bad - ellipsoidal approximation
 %       true marks direction vector as bad - ellipsoidal approximation
 %       cannot be computed for this direction. false means the opposite.
 %
-% Example:
-%   firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
-%   secEllObj = 3*ell_unitball(2);
-%   dirsMat = [1 0; 1 1; 0 1; -1 1]';
-%   absTol = getAbsTol(secEllObj);
-%   secEllObj.isbaddirection(firstEllObj, dirsMat, absTol)
-% 
-%   ans =
-% 
-%        0     1     1     0
-%
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 
-%              2004-2008 $
+% $Copyright:  The Regents of the University of California 2004-2008 $
 %
-% $Author: Guliev Rustam <glvrst@gmail.com> $   
-% $Date: Dec-2012$
+% $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
 % $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Computer Science,
-%            System Analysis Department 2012 $
+%             Faculty of Computational Mathematics and Cybernetics,
+%             Science, System Analysis Department 2012 $
 %
 
 import modgen.common.throwwarn;
@@ -55,6 +43,6 @@ if ~isbigger(fstEll, secEll)
     throwwarn('wrongInput:emptyGeomDiff', [fstErrMsg secErrMsg]);
     isBadDirVec = true(1,size(dirsMat,2));
 else    
-    isBadDirVec=ellipsoid.isbaddirectionmat(fstEll.shapeMat,...
+    [isBadDirVec,pUniversalVec] = ellipsoid.isbaddirectionmat(fstEll.shapeMat,...
         secEll.shapeMat, dirsMat,absTol);
 end
