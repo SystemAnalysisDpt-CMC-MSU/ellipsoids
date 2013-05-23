@@ -293,7 +293,7 @@ classdef BasicTestCase < mlunitext.test_case
             expRegZeroMat = REG_TOL * eye(matDim);
             regZeroMat = regposdefmat(zeroMat, REG_TOL);
             isEqual = norm(regZeroMat - expRegZeroMat) <= ABS_TOL;
-            mlunit.assert_equals(isEqual, true);
+            mlunitext.assert_equals(isEqual, true);
             % more complex test
             shMat = [4 4 14; 4 4 14; 14 14 78];
             isOk = gras.la.ismatposdef(shMat, ABS_TOL);

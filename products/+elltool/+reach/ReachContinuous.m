@@ -326,7 +326,10 @@ classdef ReachContinuous < elltool.reach.AReach
                     errorTag = [ETAG_WR_INP, ETAG_BAD_INIT_SET];
                 elseif strcmp(meObj.identifier,...
                         ['GRAS:ELLAPX:LREACHUNCERT:EXTINTELLAPXBUILDER',...
-                        ':CALCELLAPXMATRIXDERIV:wrongInput'])
+                        ':CALCELLAPXMATRIXDERIV:wrongInput']) ||...
+                    strcmp(meObj.identifier,...
+                        ['GRAS:ELLAPX:SMARTDB:RELS:ELLTUBEBASIC:',...
+                        'CHECKDATACONSISTENCY:wrongInput:QArrayNotPos'])
                     errorStr = [EMSG_R_PROB, EMSG_USE_REG];
                     errorTag = [ETAG_WR_INP, ETAG_R_PROB, ETAG_R_DISABLED];
                 end
@@ -825,23 +828,39 @@ classdef ReachContinuous < elltool.reach.AReach
                     switchTimeVec = self.switchSysTimeVec;
                 end
                 cutObj.ellTubeRel = self.ellTubeRel.cut(cutTimeVec);
-                switchTimeIndVec =...
-                    switchTimeVec > cutTimeVec(1) &...
-                    switchTimeVec < cutTimeVec(end);
-                cutObj.switchSysTimeVec = [cutTimeVec(1)...
-                    switchTimeVec(switchTimeIndVec) cutTimeVec(end)];
-                if self.isbackward()
-                    cutObj.switchSysTimeVec =...
-                        fliplr(cutObj.switchSysTimeVec);
-                end
-                firstIntInd = find(switchTimeIndVec == 1, 1);
-                if ~isempty(firstIntInd)
-                    switchTimeIndVec(firstIntInd - 1) = 1;
+                %
+                if abs(cutTimeVec(1) - cutTimeVec(end)) <= self.absTol
+                    cutObj.switchSysTimeVec = cutTimeVec(1);
+                    indCutPointVec = switchTimeVec < cutTimeVec(1) &...
+                        cutTimeVec(1) <= switchTimeVec;
+                    cutObj.linSysCVec = self.linSysCVec(indCutPointVec);
                 else
-                    switchTimeIndVec(find(switchTimeVec >...
-                        cutTimeVec(end), 1) - 1) = 1;
+                    switchTimeIndVec =...
+                        switchTimeVec > cutTimeVec(1) &...
+                        switchTimeVec < cutTimeVec(end);
+                    switchSysTimeVec = [cutTimeVec(1)...
+                        switchTimeVec(switchTimeIndVec) cutTimeVec(end)];
+                    cutObj.switchSysTimeVec = switchSysTimeVec;
+                    if self.isbackward()
+                        cutObj.switchSysTimeVec =...
+                            fliplr(cutObj.switchSysTimeVec);
+                    end
+                    firstIntInd = find(switchTimeIndVec == 1, 1);
+                    if ~isempty(firstIntInd)
+                        switchTimeIndVec(firstIntInd - 1) = 1;
+                    else
+                        firstGreaterInd =...
+                            find(switchTimeVec > cutTimeVec(end), 1);
+                        if ~isempty(firstGreaterInd)
+                            switchTimeIndVec(firstGreaterInd - 1) = 1;
+                        else
+                            switchTimeIndVec(end - 1) = 1;
+                        end
+                    end
+                    cutObj.linSysCVec =...
+                        self.linSysCVec(switchTimeIndVec(1 : end - 1));
                 end
-                cutObj.linSysCVec = self.linSysCVec(switchTimeIndVec);
+                %
                 cutObj.x0Ellipsoid = self.x0Ellipsoid;
                 cutObj.isCut = true;
                 cutObj.isProj = false;

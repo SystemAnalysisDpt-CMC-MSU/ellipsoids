@@ -6,12 +6,13 @@ V.center = {'2*cos(t)'};
 V.shape = {'0.09*(sin(t))^2'};
 %V.shape = {'1'};
 %
-s = elltool.linsys.LinSysFactory.create(A, B, CB, G, V);
-X0 = 1e-4 * ell_unitball(2);
+s1 = elltool.linsys.LinSysFactory.create(A, B, CB);
+s2 = elltool.linsys.LinSysFactory.create(A, B, CB, G, V);
+X0 = 1e-5 * ell_unitball(2);
 L0 = [1 0; 0 1];
 try
-    rs = elltool.reach.ReachContinuous(s, X0, L0, [0 4],...
-        'isRegEnabled', true, 'isJustCheck', false, 'regTol', 0.009);
+    rs = elltool.reach.ReachContinuous(s2, X0, L0, [0 4],...
+        'isRegEnabled', false, 'isJustCheck', false, 'regTol', 1e-2);
 catch exception
     exception.identifier
 end

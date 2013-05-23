@@ -39,16 +39,18 @@
 	</time_interval>
 	<description type="char" > </description>
 	<disturbance_restriction type="struct" >
-		<Q type="cell" size="1 1">
-			<item type="char" >0.09*(sin(t))^2</item>
+		<Q type="cell" size="2 1">
+			<item type="char" >0.0001+0.09*(sin(t))^2 0</item>
+            <item type="char" >0 0.0001</item>
 		</Q>
-		<a type="cell" size="1 1">
+		<a type="cell" size="2 1">
 			<item type="char" >2*cos(t)</item>
+            <item type="char" >0</item>
 		</a>
 	</disturbance_restriction>
 	<Ct type="cell" size="2 1">
-		<item type="char" >1</item>
-        <item type="char" >0</item>
+		<item type="char" >1 0</item>
+		<item type="char" >0 1</item>
 	</Ct>
 </valueObj>
 <keyStr type="char" >demo3thirdTestSys</keyStr>

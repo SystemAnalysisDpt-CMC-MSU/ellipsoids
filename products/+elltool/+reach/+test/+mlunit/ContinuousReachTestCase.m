@@ -41,17 +41,29 @@ classdef ContinuousReachTestCase < mlunitext.test_case
             import modgen.common.throwerror;
             if approxType == EApproxType.External
                 ellArray = reachObj.get_ea();
-                plotter = reachObj.plot_ea();
+                dim = ellArray(1, 1).dimension;
+                if ~reachObj.isprojection()
+                    projReachObj = reachObj.projection(eye(dim, 2));
+                else
+                    projReachObj = reachObj.getCopy();
+                end
+                plotter = projReachObj.plot_ea();
                 scaleFactor = reachObj.getEaScaleFactor();
             elseif approxType == EApproxType.Internal
                 ellArray = reachObj.get_ia();
-                plotter = reachObj.plot_ia();
+                dim = ellArray(1, 1).dimension;
+                if ~reachObj.isprojection()
+                    projReachObj = reachObj.projection(eye(dim, 2));
+                else
+                    projReachObj = reachObj.getCopy();
+                end
+                plotter = projReachObj.plot_ia();
                 scaleFactor = reachObj.getIaScaleFactor();
             end
             [dirCVec timeVec] = reachObj.get_directions();
             goodDirCVec =...
                 cellfun(@(x) x(:, 1), dirCVec.', 'UniformOutput', false);
-            dim = ellArray(1, 1).dimension;
+            
             if dim > 2
                 ellArray = ellArray.projection(eye(dim, 2));
                 goodDirCVec = cellfun(@(x) x(1:2), goodDirCVec,...
@@ -106,9 +118,6 @@ classdef ContinuousReachTestCase < mlunitext.test_case
                     [centerVec shapeMat] = parameters(ell);
                     centerPointsMat = pointsMat -...
                         repmat(centerVec, 1, size(pointsMat, 2));
-                    if ~reachObj.isprojection()
-                        centerPointsMat = centerPointsMat / scaleFactor;
-                    end
                     sqrtScalProdVec = realsqrt(abs(dot(centerPointsMat,...
                         shapeMat\centerPointsMat) - 1));
                     mlunitext.assert_equals(...

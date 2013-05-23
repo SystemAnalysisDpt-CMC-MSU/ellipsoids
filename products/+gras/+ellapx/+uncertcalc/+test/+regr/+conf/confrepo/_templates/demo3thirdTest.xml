@@ -61,7 +61,7 @@
 	<plottingProps type="struct" >
 		<isEnabled type="boolean" >0</isEnabled>
 		<viewAngleVec type="double" >37.5 30</viewAngleVec>
-		<isGoodCurvesSeparately type="boolean" >0</isGoodCurvesSeparately>
+		<isGoodCurvesSeparately type="boolean" >1</isGoodCurvesSeparately>
 	</plottingProps>
 	<ellipsoidalApxProps type="struct" >
 		<internalApx type="struct" >
@@ -106,7 +106,7 @@
 	</ellipsoidalApxProps>
 	<systemDefinitionConfName type="char" >demo3thirdTestSys</systemDefinitionConfName>
 	<regularizationProps type="struct" >
-		<isEnabled type="boolean" >1</isEnabled>
+		<isEnabled type="boolean" >0</isEnabled>
 		<isJustCheck type="boolean" >0</isJustCheck>
 		<regTol type="double" >1e-05</regTol>
 	</regularizationProps>
