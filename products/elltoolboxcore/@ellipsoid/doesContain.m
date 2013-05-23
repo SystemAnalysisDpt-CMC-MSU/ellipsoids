@@ -1,16 +1,18 @@
-function resArr = doesContain(firstEllArr, secondObjArr,varargin)
+function isPosArr = doesContain(firstEllArr, secondObjArr,varargin)
 % CONTAINS - checks if one ellipsoid contains the other ellipsoid or
 %            polytope. The condition for E1 = firstEllArr to contain
 %            E2 = secondEllArr is
 %            min(rho(l | E1) - rho(l | E2)) > 0, subject to <l, l> = 1.
 %            How checked if ellipsoid contains polytope is explained in 
-%            doesEllContainPoly.
+%            doesContainPoly.
 % Input:
 %   regular:
 %       firstEllArr: ellipsoid [nDims1,nDims2,...,nDimsN]/[1,1] - first
 %           array of ellipsoids.
-%       secondEllArr: ellipsoid [nDims1,nDims2,...,nDimsN]/[1,1] - second
-%           array of ellipsoids.
+%       secondObjArr: ellipsoid [nDims1,nDims2,...,nDimsN]/
+%           polytope[nDims1,nDims2,...,nDimsN]/[1,1] - array of the same
+%           size as firstEllArr or single ellipsoid or polytope.
+%
 %    properties:
 %       mode: char[1, 1] - 'u' or 'i', go to description.
 %       computeMode: char[1,] - 'highDimFast' or 'lowDimFast'. Determines, 
@@ -22,7 +24,7 @@ function resArr = doesContain(firstEllArr, secondObjArr,varargin)
 %           'lowDimFast'
 %
 % Output:
-%   resArr: logical[nDims1,nDims2,...,nDimsN],
+%   isPosArr: logical[nDims1,nDims2,...,nDimsN],
 %       resArr(iCount) = true - firstEllArr(iCount)
 %       contains secondObjArr(iCount), false - otherwise.
 %
@@ -86,15 +88,15 @@ end
 if isFirstScal
     indVec = 1:nSizeSecond;
     indVec = reshape(indVec,size(secondObjArr));
-    resArr= arrayfun(@(x) checkContaintment(1,x),indVec);
+    isPosArr= arrayfun(@(x) checkContaintment(1,x),indVec);
 elseif isSecScal
     indVec = 1:nSizeFirst;
     indVec = reshape(indVec,size(firstEllArr));
-    resArr = arrayfun(@(x) checkContaintment(x,1),indVec);
+    isPosArr = arrayfun(@(x) checkContaintment(x,1),indVec);
 else
     indVec = 1:nSizeFirst;
     indVec = reshape(indVec,size(firstEllArr));
-    resArr = arrayfun(@(x) checkContaintment(x,x),indVec);
+    isPosArr = arrayfun(@(x) checkContaintment(x,x),indVec);
 end
 %
     function res = checkContaintment(firstIndex,secondIndex)
@@ -102,7 +104,7 @@ end
             res = l_check_containment(firstEllArr(firstIndex),...
                 secondObjArr(secondIndex));
         else
-            res = doesEllContainPoly(firstEllArr(firstIndex),...
+            res = doesContainPoly(firstEllArr(firstIndex),...
                 secondObjArr(secondIndex),varargin);
         end
     end

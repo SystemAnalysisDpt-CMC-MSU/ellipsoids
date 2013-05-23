@@ -31,7 +31,7 @@ classdef ElliIntUnionTCMultiDim < mlunitext.test_case
             test2EllArray = createObjectArray(arraySizeVec, @ell_unitball, ...
                 3, 1, 1);
             testResVec = doesContain(test1EllArray, test2EllArray);
-                mlunit.assert_equals(1, all(testResVec(:)));
+                mlunit.assert_equals(true, all(testResVec(:)));
             arraySizeVec = [1, 2, 3, 1, 2, 1];
             test1EllArray = createObjectArray(arraySizeVec, @ell_unitball, ... 
                 2, 1, 1);
@@ -53,7 +53,7 @@ classdef ElliIntUnionTCMultiDim < mlunitext.test_case
                 5 * ones(4, 1), diag( 2 * ones(1, 4)), 2);
             testCorrect(false);
             testResVec = doesContain(test2EllArray, test1EllArray);
-                mlunit.assert_equals(0, any(testResVec(:)));
+                mlunit.assert_equals(false, any(testResVec(:)));
             testError(4);
             testError(5);
             testError(6);
@@ -61,10 +61,10 @@ classdef ElliIntUnionTCMultiDim < mlunitext.test_case
             function testCorrect(isAllCheck)
                 if (isAllCheck)
                     testResVec = doesContain(test2EllArray, test1EllArray);
-                    mlunit.assert_equals(1, all(testResVec(:)));
+                    mlunit.assert_equals(true, all(testResVec(:)));
                 else
                     testResVec = doesContain(test1EllArray, test2EllArray);
-                    mlunit.assert_equals(0, any(testResVec(:)));
+                    mlunit.assert_equals(false, any(testResVec(:)));
                 end
             end
             function testError(flag)

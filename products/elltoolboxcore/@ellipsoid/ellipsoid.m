@@ -307,7 +307,7 @@ classdef ellipsoid < handle
          x = ellbndr_2d(E)
          x = ellbndr_3d(E)
          checkDoesContainArgs(ell,poly)
-         doesContain = doesEllContainPoly(ellArr,polytope,varagin)
+         doesContain = doesContainPoly(ellArr,polytope,varagin)
     end
     methods (Static)
         checkIsMe(someObj,varargin)

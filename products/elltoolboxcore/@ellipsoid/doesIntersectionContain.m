@@ -49,7 +49,7 @@ function [res, status] = doesIntersectionContain(fstEllArr, secObjArr,...
 %
 %   The intersection of polytopes is a polytope, which is computed
 %   by the standard routine of MPT. How checked if intersection of  
-%   ellipsoids contains polytope is explained in doesEllContainPoly.
+%   ellipsoids contains polytope is explained in doesContainPoly.
 %
 %   Checking if the union of polytopes belongs to the intersection
 %   of ellipsoids is the same as checking if its convex hull belongs
@@ -141,7 +141,7 @@ if isa(secObjArr, 'polytope')
     else
         isInsideVec = false(1,nCols);
         for iCols = 1:nCols
-            isInsideVec(iCols) = doesEllContainPoly(fstEllArr,...
+            isInsideVec(iCols) = doesContainPoly(fstEllArr,...
                                     polyVec(iCols),varargin);  
         end
         res = all(isInsideVec);

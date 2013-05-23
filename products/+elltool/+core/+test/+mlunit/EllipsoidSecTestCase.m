@@ -45,7 +45,7 @@ classdef EllipsoidSecTestCase < mlunitext.test_case
             isTestResVec = isbaddirection(test1Ell, test2Ell, aMat,...
                 absTol);
             isTestRes = any(isTestResVec);
-            mlunit.assert_equals(0, isTestRes);
+            mlunit.assert_equals(false, isTestRes);
             [test1Ell, test2Ell] = createTypicalEll(6);
             compareExpForIsBadDir(test1Ell, test2Ell, [1, -1; 0, 0], ...
                 [1, -1; 2, 3],absTol);

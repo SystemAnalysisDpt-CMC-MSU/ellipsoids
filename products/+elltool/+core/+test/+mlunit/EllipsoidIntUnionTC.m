@@ -93,44 +93,44 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             testEll1Vec = ellipsoid(eye(3));
             testEll2Vec = ellipsoid([10, 0, 5]',...
                 [1, 0, 0; 0, 0, 0; 0, 0, 1]);
-            testResVec = doesContain(testEll1Vec, testEll2Vec);
-            mlunit.assert_equals(0, testResVec);
+            isTestResVec = doesContain(testEll1Vec, testEll2Vec);
+            mlunit.assert_equals(false, isTestResVec);
             
             testEll1Vec = ellipsoid(eye(3));
             testEll2Vec = ellipsoid([1, 0, 0; 0, 0, 0; 0, 0, 1]);
             %testResVec = doesContain(testEll1Vec, testEll2Vec);
-            %mlunit.assert_equals(1, testResVec);
+            %mlunit.assert_equals(true, testResVec);
             
             testEll1Vec = ellipsoid(eye(3));
             testEll2Vec = ellipsoid(eye(3));
-            testResVec = doesContain(testEll1Vec, testEll2Vec);
-            mlunit.assert_equals(1, testResVec);
+            isTestResVec = doesContain(testEll1Vec, testEll2Vec);
+            mlunit.assert_equals(true, isTestResVec);
             
             testEll1Vec = ellipsoid(eye(3));
             testEll2Vec = ellipsoid([1e-4, 1e-4, 0]', eye(3));
-            testResVec = doesContain(testEll1Vec, testEll2Vec);
-            mlunit.assert_equals(0, testResVec);
+            isTestResVec = doesContain(testEll1Vec, testEll2Vec);
+            mlunit.assert_equals(false, isTestResVec);
             
             testEll1Vec = ellipsoid(4*eye(2));
             testEll2Vec = ellipsoid([1, 0]', eye(2));
-            testResVec = doesContain(testEll1Vec, testEll2Vec);
-            mlunit.assert_equals(1, testResVec);
+            isTestResVec = doesContain(testEll1Vec, testEll2Vec);
+            mlunit.assert_equals(true, isTestResVec);
             
             
             testEll1Vec = ellipsoid(eye(2));
             testEll2Vec = ellipsoid(zeros(2));
-            testResVec = doesContain(testEll1Vec, testEll2Vec);
-            mlunit.assert_equals(1, testResVec);
+            isTestResVec = doesContain(testEll1Vec, testEll2Vec);
+            mlunit.assert_equals(true, isTestResVec);
             
             testEll1Vec = ellipsoid(eye(2));
             testEll2Vec = ellipsoid([1, 0; 0, 0]);
-            testResVec = doesContain(testEll1Vec, testEll2Vec);
-            mlunit.assert_equals(1, testResVec);
+            isTestResVec = doesContain(testEll1Vec, testEll2Vec);
+            mlunit.assert_equals(true, isTestResVec);
             
             testEll1Vec = ellipsoid([1, 0, 0; 0, 0, 0; 0, 0, 1]);
             testEll2Vec = ellipsoid([1, 0, 0; 0, 0, 0; 0, 0, 0]);
-            testResVec = doesContain(testEll1Vec, testEll2Vec);
-            mlunit.assert_equals(1, testResVec);
+            isTestResVec = doesContain(testEll1Vec, testEll2Vec);
+            mlunit.assert_equals(true, isTestResVec);
         end
         
         function self = testSqrtm(self)
