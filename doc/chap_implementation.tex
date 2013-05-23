@@ -77,12 +77,14 @@ of ellipsoids in the given array:
 For the ellipsoids in ${\bf R}$, ${\bf R}^2$ and ${\bf R}^3$ the geometric
 sum can be computed explicitely and plotted:
 \verbmcodef[Compute and plot the geometric sum of ellipsoids]{mcodesnippets/s_chapter05_section01_snippet15.m}
+Figure $\ref{minksumPic}$ displays the geometric sum of ellipsoids.
+\newline
 If the dimension of the space in which the ellipsoids are defined exceeds $3$,
 an error is returned. The result of the geometric sum operation is
 not generally an ellipsoid, but it can be approximated by families
 of external and internal ellipsoids parametrized by the direction vector:
 \verbmcodef[Approximation of the geometric sum's result]{mcodesnippets/s_chapter05_section01_snippet16.m}
-
+\easyfigure[h][0.6\textwidth]{minksum.eps}{The geometric sum of ellipsoids}{minksumPic}
 Functions {\tt minksum\_ea} and {\tt minksum\_ia} work for ellipsoids of
 arbitrary dimension. They should be used for general computations
 whereas {\tt minksum} is there merely for visualization purposes.
@@ -91,6 +93,9 @@ If the geometric difference of two ellipsoids is not an empty set, it can
 be computed explicitely and plotted for ellipsoids in ${\bf R}$,
 ${\bf R}^2$ and ${\bf R}^3$:
 \verbmcodef[Geometric difference]{mcodesnippets/s_chapter05_section01_snippet17.m}
+\easyfigure[h][0.6\textwidth]{minkdiff.eps}{The geometric difference of ellipsoids}{minkdiffPic}
+Figure $\ref{minkdiffPic}$ shows the geometric difference of ellipsoids.
+\newline
 Similar to {\tt minksum}, {\tt minkdiff} is there for visualization
 purpose. It works only for dimensions $1$, $2$ and $3$, and for higher
 dimensions it returns an error. For arbitrary dimensions, the geometric
@@ -103,11 +108,15 @@ functions {\tt minkmp}, {\tt minkmp\_ea}, {\tt minkmp\_ia}, the first one of
 which is used for visualization and works for dimensions not higher than $3$,
 whereas the last two can deal with ellipsoids of arbitrary dimension.
 \verbmcodef[Implementation of an operation 'difference-sum']{mcodesnippets/s_chapter05_section01_snippet19.m}
+\easytwofigures{minkpm.eps}{Implementation of an operation 'sum-difference'}{minkpmPic}{minkmp.eps}{Implementation of an operation 'difference-sum'}{minkmpPic}{Implementation of the {\tt minkpm}, {\tt minkmp} operations}{minkPic}
+Figure $\ref{minkPic}$ displays results of the implementation of {\tt minkpm} and {\tt minkmp} operations.
+\newline 
 Similarly, operation 'sum-difference' described in section 2.2.5
 is implemented in
 functions {\tt minkpm}, {\tt minkpm\_ea}, {\tt minkpm\_ia}, the first one of
 which is used for visualization and works for dimensions not higher than $3$,
 whereas the last two can deal with ellipsoids of arbitrary dimension.
+
 \verbmcodef[Implementation of an operation 'sum-difference']{mcodesnippets/s_chapter05_section01_snippet20.m}
 \section{Operations with hyperplanes}
 The class {\tt hyperplane} of the {\it Ellipsoidal Toolbox} is used

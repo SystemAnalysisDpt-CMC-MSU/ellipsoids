@@ -11,4 +11,4 @@ internalEllVec = firstEllObj.minkmp_ia(thirdEllObj, secEllObj, dirsMat)
 % 1x5 array of ellipsoids.
 
 % plot the set (firstEllObj - thirdEllObj + secEllObj)
-firstEllObj.minkmp(thirdEllObj, secEllObj);  
+firstEllObj.minkmp(thirdEllObj, secEllObj);
