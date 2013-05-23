@@ -1,6 +1,7 @@
-function outEllArr = move2origin(inpEllArr)
+function inpEllArr = move2origin(inpEllArr)
 %
-% MOVE2ORIGIN - moves ellipsoids in the given array to the origin.
+% MOVE2ORIGIN - moves ellipsoids in the given array to the origin. Modified 
+%               given array is on output (not its copy).
 %
 %   outEllArr = MOVE2ORIGIN(inpEll) - Replaces the centers of
 %       ellipsoids in inpEllArr with zero vectors.
@@ -45,12 +46,9 @@ function outEllArr = move2origin(inpEllArr)
 ellipsoid.checkIsMe(inpEllArr,...
     'errorTag','wrongInput',...
     'errorMessage','argument must be array of ellipsoid.');
-sizeCVec = num2cell(size(inpEllArr));
-outEllArr(sizeCVec{:}) = ellipsoid;
-arrayfun(@(x) fSingleMove(x), 1:numel(inpEllArr));
-    function fSingleMove(index)
-        nDim = dimension(inpEllArr(index));
-        outEllArr(index).centerVec = zeros(nDim,1);
-        outEllArr(index).shapeMat = inpEllArr(index).shapeMat;
+arrayfun(@(x) fSingleMove(x), inpEllArr);
+    function fSingleMove(ellObj)
+        nDim = dimension(ellObj);
+        ellObj.centerVec = zeros(nDim,1);
     end
 end

@@ -280,7 +280,7 @@ if isContainedInIntersection(myEll, polyt)
 end
 
 for iElem = 1:nDimsHyp
-    if(isempty(outEll))
+    if(outEll.isEmpty())
         return;
     else
         outEll = intersection_ea(outEll, hyp(iElem));
