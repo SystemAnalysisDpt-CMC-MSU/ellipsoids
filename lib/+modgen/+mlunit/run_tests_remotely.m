@@ -1,5 +1,6 @@
 function run_tests_remotely(inpArgList,confRepoMgr,...
-    log4jConfiguratorName,emailSubjSuffixName,runnerName,fTempDirGetter,scriptName)
+    log4jConfiguratorName,emailSubjSuffixName,runnerName,fTempDirGetter,...
+    scriptName)
 import(log4jConfiguratorName);
 %
 try
@@ -18,9 +19,12 @@ try
         Log4jConfigurator.getMainLogFileName(),fTempDirGetter);
     %
     try
-        nParallelProcesses=confRepoMgr.getParam('executionControl.nParallelProcesses');
-        parallelConfiguration = confRepoMgr.getParam('executionControl.parallelConfiguration');
-        confFHandle=str2func(['@(x)',log4jConfiguratorName,'.configure(x,''isLockAfterConfigure'',true)']);
+        nParallelProcesses=confRepoMgr.getParam(...
+            'executionControl.nParallelProcesses');
+        parallelConfiguration = confRepoMgr.getParam(...
+            'executionControl.parallelConfiguration');
+        confFHandle=str2func(['@(x)',log4jConfiguratorName,...
+            '.configure(x,''isLockAfterConfigure'',true)']);
         testRunner=mlunitext.RemoteTestRunner(emailLogger,fTempDirGetter);
         testRunner.runTestPack(scriptName,inpArgList{:},...
             'nParallelProcesses',nParallelProcesses,...

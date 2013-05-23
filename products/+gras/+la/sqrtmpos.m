@@ -17,8 +17,8 @@ function qSqrtMat = sqrtmpos(qMat, absTol)
 %           Daniil Stepenskiy <reinkarn@gmail.com> $	$Date: 2013-03-29$
 %           Peter Gagarinov <pgagarinov@gmail.com> $	$Date: 2013-04-17$
 % $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Cybernetics,
-%            System Analysis Department 2012-2013 $
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2012 $
 import modgen.common.throwerror;
 
 %
@@ -36,7 +36,7 @@ if any(dVec < -absTol)
         'input matrix is expected to be positive semi-definite');
 end
 %
-isZeroVec = dVec <= absTol;
+isZeroVec = dVec <0;
 dVec(isZeroVec) = 0;
 dMat = diag(dVec);
 dMat = realsqrt(dMat);

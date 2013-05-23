@@ -1,10 +1,9 @@
 classdef EllTCMultiDim < mlunitext.test_case
-
-% $Author: Igor Samokhin, Lomonosov Moscow State University,
-% Faculty of Computational Mathematics and Cybernetics, System Analysis
-% Department, 31-January-2013, <igorian.vmk@gmail.com>$
-% $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Computer Science,
+%$Author: Igor Samokhin <igorian.vmk@gmail.com> $
+%$Date: 2013-01-31 $
+%$Copyright: Moscow State University,
+%            Faculty of Computational Mathematics
+%            and Computer Science,
 %            System Analysis Department 2013 $
     
     properties (Access=private)
@@ -18,6 +17,67 @@ classdef EllTCMultiDim < mlunitext.test_case
             self.testDataRootDir=[fileparts(which(className)),filesep,'TestData',...
                 filesep,shortClassName];
         end
+         %
+        function self = testRho(self)
+            %
+            dirMat=[1 1; 0 0];
+            ellObjMat=diag([9 25]);
+            ellObjCenVec=[2 0]';
+            ellObj=ellipsoid(ellObjCenVec,ellObjMat);
+            ellArr=[ellObj, ellObj, ellObj];
+            %
+            %Check one ell - one dirs
+            [supVal bpVec]=rho(ellObj,dirMat(:,1));
+            checkRhoRes(supVal,bpVec);
+            checkRhoSize(supVal,bpVec,ones(2,1),[1 1]);
+            %
+            %Check one ell - multiple dirs
+            [supArr bpMat]=rho(ellObj,dirMat);
+            checkRhoRes(supArr,bpMat);
+            checkRhoSize(supArr,bpMat,dirMat,[1 2]);
+            %
+            %Check multiple ell - one dir
+            [supArr bpMat]=rho(ellArr,dirMat(:,1));
+            checkRhoRes(supArr,bpMat);
+            checkRhoSize(supArr,bpMat,ones(2,3),[1 3]);
+            %
+            %Check multiple ell - multiple dirs           
+            arrSizeVec=[2,3,4];
+            dirArr=zeros([2,arrSizeVec]);
+            dirArr(1,:)=1;
+            ellArr=createEllArr(ellObjCenVec,ellObjMat,arrSizeVec);
+            [supArr bpArr]=rho(ellArr,dirArr);
+            checkRhoRes(supArr,bpArr);
+            checkRhoSize(supArr,bpArr,dirArr,arrSizeVec);
+            %
+            %Check array ell - one dir
+            [supArr bpArr]=rho(ellArr,dirMat(:,1));
+            checkRhoRes(supArr,bpArr);
+            checkRhoSize(supArr,bpArr,dirArr,arrSizeVec);
+            %
+            %Check one ell - array dir
+            [supArr bpArr]=rho(ellObj,dirArr);
+            checkRhoRes(supArr,bpArr);
+            checkRhoSize(supArr,bpArr,dirArr,arrSizeVec);
+            %
+            % Negative tests for input
+            arr2SizeVec=[2,2,4];
+            dir2Arr=ones([2,arr2SizeVec]);
+            ell2Arr=createEllArr(ellObjCenVec,ellObjMat,arr2SizeVec);
+            self.runAndCheckError('rho(ell2Arr,dirArr)',...
+                'wrongInput:wrongSizes');
+            self.runAndCheckError('rho(ellArr,dir2Arr)',...
+                'wrongInput:wrongSizes');
+            ellVec=[ellObj, ellObj, ellObj];
+            dirMat=eye(2);
+            self.runAndCheckError('rho(ellVec,dirMat)',...
+                'wrongInput:wrongSizes');
+            ellVec=[ellObj, ellObj, ellObj]';
+            dirMat=eye(2);
+            self.runAndCheckError('rho(ellVec,dirMat)',...
+                'wrongInput:wrongSizes');
+        end
+        %
         function self = testDistance(self)
             absTol = elltool.conf.Properties.getAbsTol();
             %
@@ -86,7 +146,7 @@ classdef EllTCMultiDim < mlunitext.test_case
             function checkDist(obj1Array, obj2Array)
                 resArray=distance(obj1Array, obj2Array);
                 difVec=abs(resArray(:)-ansArray(:))<absTol;
-                mlunit.assert(all(difVec));
+                mlunitext.assert(all(difVec));
             end
             function checkMultyInput(obj1Array, obj2Array, isVecDist)
                 checkDist(obj1Array,obj2Array);
@@ -133,19 +193,19 @@ classdef EllTCMultiDim < mlunitext.test_case
                     [testEllArray ansNumArray, ~] = createTypicalArray(flag);
                     if isnRankParam
                         testRes = dimension(testEllArray);
-                        mlunit.assert_equals(ansNumArray, testRes);
+                        mlunitext.assert_equals(ansNumArray, testRes);
                         if (flag == 16)
-                           mlunit.assert_equals(class(ansNumArray), ...
+                           mlunitext.assert_equals(class(ansNumArray), ...
                                class(testRes)); 
                         end
                     else
                         [testDim, testRank] = dimension(testEllArray);
-                        mlunit.assert_equals(ansNumArray, testDim);
-                        mlunit.assert_equals(ansNumArray, testRank);
+                        mlunitext.assert_equals(ansNumArray, testDim);
+                        mlunitext.assert_equals(ansNumArray, testRank);
                         if (flag == 16)
-                           mlunit.assert_equals(class(ansNumArray), ...
+                           mlunitext.assert_equals(class(ansNumArray), ...
                                class(testDim)); 
-                           mlunit.assert_equals(class(ansNumArray), ...
+                           mlunitext.assert_equals(class(ansNumArray), ...
                                class(testRank)); 
                         end
                     end
@@ -157,8 +217,8 @@ classdef EllTCMultiDim < mlunitext.test_case
             end
             function test2Correct()
                 [testDim, testRank] = dimension(testEllArray);
-                mlunit.assert_equals(ansDimNumArray, testDim);
-                mlunit.assert_equals(ansRankNumArray, testRank);
+                mlunitext.assert_equals(ansDimNumArray, testDim);
+                mlunitext.assert_equals(ansRankNumArray, testRank);
             end
             
         end
@@ -179,17 +239,17 @@ classdef EllTCMultiDim < mlunitext.test_case
             isAnsArray = createObjectArray(arraySizeVec, @true, ...
                 1, 1, 1);
             testCorrect()
-            mlunit.assert_equals(class(isAnsArray), class(isTestRes)); 
+            mlunitext.assert_equals(class(isAnsArray), class(isTestRes)); 
             [testEllArray, ~, isAnsArray] = createTypicalArray(16);
             testCorrect()
-            mlunit.assert_equals(class(isAnsArray), class(isTestRes)); 
+            mlunitext.assert_equals(class(isAnsArray), class(isTestRes)); 
             %Empty ellipsoid
             testError(1);
             testError(14);
             testError(15);
             function testCorrect()
                 isTestRes = isdegenerate(testEllArray);
-                mlunit.assert_equals(isAnsArray, isTestRes);
+                mlunitext.assert_equals(isAnsArray, isTestRes);
             end
             function testError(flag)
                 [testEllArray, ~, errorStr] = createTypicalArray(flag);
@@ -222,10 +282,10 @@ classdef EllTCMultiDim < mlunitext.test_case
             testCorrect()
             [testEllArray, ~, isAnsArray] = createTypicalArray(16);
             testCorrect()
-            mlunit.assert_equals(class(isAnsArray), class(isTestRes)); 
+            mlunitext.assert_equals(class(isAnsArray), class(isTestRes)); 
             function testCorrect()
                 isTestRes = isempty(testEllArray);
-                mlunit.assert_equals(isAnsArray, isTestRes);
+                mlunitext.assert_equals(isAnsArray, isTestRes);
             end
         end
         function self = testMaxEig(self)
@@ -241,7 +301,7 @@ classdef EllTCMultiDim < mlunitext.test_case
             testCorrect(7);
             testCorrect(8);
             testCorrect(16);
-            mlunit.assert_equals(class(ansNumArray), class(testNumArray)); 
+            mlunitext.assert_equals(class(ansNumArray), class(testNumArray)); 
             %Empty ellipsoid
             testError(1);
             testError(14);
@@ -253,7 +313,7 @@ classdef EllTCMultiDim < mlunitext.test_case
                     [testEllArray, ~, ~, ansNumArray] = createTypicalArray(flag);
                 end
                 [testNumArray] = trace(testEllArray);
-                mlunit.assert_equals(ansNumArray, testNumArray);
+                mlunitext.assert_equals(ansNumArray, testNumArray);
             end
             function testError(flag)
                 [testEllArray, ~, errorStr] = createTypicalArray(flag);
@@ -271,7 +331,7 @@ classdef EllTCMultiDim < mlunitext.test_case
             testCorrect(2);
             testCorrect(3);
             testCorrect(16);
-            mlunit.assert_equals(class(ansDoubleArray), ...
+            mlunitext.assert_equals(class(ansDoubleArray), ...
                 class(testDoubleArray)); 
             %Empty ellipsoid
             testError(1);
@@ -286,7 +346,7 @@ classdef EllTCMultiDim < mlunitext.test_case
                     [testEllArray, ~, ~, ansDoubleArray] = createTypicalArray(flag);
                 end
                 [testDoubleArray] = volume(testEllArray);
-                mlunit.assert_equals(ansDoubleArray, testDoubleArray);
+                mlunitext.assert_equals(ansDoubleArray, testDoubleArray);
             end
             function testError(flag)
                 [testEllArray, ~, errorStr] = createTypicalArray(flag);
@@ -339,11 +399,11 @@ classdef EllTCMultiDim < mlunitext.test_case
                 testNPlot2dPoints, 1, 2);
             testNPlot3dPointsArray = createObjectArray(arraySizeVec, @repmat, ... 
                 testNPlot3dPoints, 1, 2);
-            mlunit.assert_equals(testAbsTolArray, testEllArray.getAbsTol());
-            mlunit.assert_equals(testRelTolArray, testEllArray.getRelTol());
-            mlunit.assert_equals(testNPlot2dPointsArray, ...
+            mlunitext.assert_equals(testAbsTolArray, testEllArray.getAbsTol());
+            mlunitext.assert_equals(testRelTolArray, testEllArray.getRelTol());
+            mlunitext.assert_equals(testNPlot2dPointsArray, ...
                 testEllArray.getNPlot2dPoints());
-            mlunit.assert_equals(testNPlot3dPointsArray, ...
+            mlunitext.assert_equals(testNPlot3dPointsArray, ...
                 testEllArray.getNPlot3dPoints());
         end
      end
@@ -561,7 +621,7 @@ function checkMaxeigAndMineig(self, isMaxeigCheck)
     testCorrect(7);
     testCorrect(8);
     testCorrect(16);
-    mlunit.assert_equals(class(ansNumArray), class(testNumArray)); 
+    mlunitext.assert_equals(class(ansNumArray), class(testNumArray)); 
     %Check empty ellipsoid
     testError(1);
     testError(14);
@@ -578,7 +638,7 @@ function checkMaxeigAndMineig(self, isMaxeigCheck)
             end
             [testNumArray] = mineig(testEllArray);
         end
-        mlunit.assert_equals(ansNumArray, testNumArray);
+        mlunitext.assert_equals(ansNumArray, testNumArray);
     end
     function testError(flag)
         [testEllArray, ~, errorStr] = createTypicalArray(flag);
@@ -621,14 +681,14 @@ function checkEqAndNq(self, isEqCheck)
     end
     function testCheckCorrect()
         if isEqCheck
-            mlunit.assert_equals(isAnsArray, ...
+            mlunitext.assert_equals(isAnsArray, ...
                 test1EllArray.eq(test2EllArray));
-            mlunit.assert_equals(isAnsArray, ...
+            mlunitext.assert_equals(isAnsArray, ...
                 test2EllArray.eq(test1EllArray));
         else
-            mlunit.assert_equals(isAnsArray, ...
+            mlunitext.assert_equals(isAnsArray, ...
                 test1EllArray.ne(test2EllArray));
-            mlunit.assert_equals(isAnsArray, ...
+            mlunitext.assert_equals(isAnsArray, ...
                 test2EllArray.ne(test1EllArray));
         end
     end
@@ -651,9 +711,9 @@ function checkEqAndNq(self, isEqCheck)
             isAnsArray = ~isAnsArray;
             isTestArray = ne(test1EllArray, test2EllArray);
         end
-        mlunit.assert_equals(isTestArray, isAnsArray);
+        mlunitext.assert_equals(isTestArray, isAnsArray);
         if isEqCheck && ((flag == 1) || (flag == 2) || (flag == 9))
-            mlunit.assert_equals(myReportStr, reportStr);
+            mlunitext.assert_equals(myReportStr, reportStr);
         end
     end
 end
@@ -673,25 +733,25 @@ function checkGeAndGtAndLeAndLt(self, isG, isE)
     function testCheckCorrect()
         if isG
             if isE
-                mlunit.assert_equals(isAnsArray, ...
+                mlunitext.assert_equals(isAnsArray, ...
                     test1EllArray.ge(test2EllArray));
-                mlunit.assert_equals(~isAnsArray, ...
+                mlunitext.assert_equals(~isAnsArray, ...
                     test2EllArray.ge(test1EllArray));
             else
-                mlunit.assert_equals(isAnsArray, ...
+                mlunitext.assert_equals(isAnsArray, ...
                     test1EllArray.gt(test2EllArray));
-                mlunit.assert_equals(~isAnsArray, ...
+                mlunitext.assert_equals(~isAnsArray, ...
                     test2EllArray.gt(test1EllArray));
             end
         elseif isE
-            mlunit.assert_equals(isAnsArray, ...
+            mlunitext.assert_equals(isAnsArray, ...
                 test1EllArray.le(test2EllArray));
-            mlunit.assert_equals(~isAnsArray, ...
+            mlunitext.assert_equals(~isAnsArray, ...
                 test2EllArray.le(test1EllArray));
         else
-            mlunit.assert_equals(isAnsArray, ...
+            mlunitext.assert_equals(isAnsArray, ...
                 test1EllArray.lt(test2EllArray));
-            mlunit.assert_equals(~isAnsArray, ...
+            mlunitext.assert_equals(~isAnsArray, ...
                 test2EllArray.lt(test1EllArray));
         end
     end
@@ -720,7 +780,7 @@ function checkGeAndGtAndLeAndLt(self, isG, isE)
         else
             testResArray = le(test1EllArray, test2EllArray);
         end
-        mlunit.assert_equals(isAnsArray, testResArray);
+        mlunitext.assert_equals(isAnsArray, testResArray);
     end
     function testError(flag)
         if (flag == 1)
@@ -750,4 +810,23 @@ function checkGeAndGtAndLeAndLt(self, isG, isE)
                 errorStr);
         end
     end
- end 
+end
+function checkRhoSize(supArr,bpArr,dirArr,arrSizeVec)
+isRhoOk=all(size(supArr)==arrSizeVec);
+isBPOk=all(size(bpArr)==size(dirArr));
+mlunitext.assert_equals(true,isRhoOk && isBPOk);
+end
+function checkRhoRes(supArr,bpArr)
+isRhoOk=all(supArr(:)==5);
+isBPOk=all(bpArr(1,:)==5) && all(bpArr(2,:)==0);
+mlunitext.assert_equals(true,isRhoOk && isBPOk);
+end
+function ellArr=createEllArr(ellObjCenVec,ellObjMat,arrSizeVec)
+nElems = prod(arrSizeVec, 2);
+cenCArr = repmat({ellObjCenVec}, 1, nElems);
+matCArr = repmat({ellObjMat}, 1, nElems);
+ellCArr = cellfun(@ellipsoid, cenCArr, matCArr, ...
+    'UniformOutput', false);
+ellArr = reshape([ellCArr{:}], arrSizeVec);
+end
+

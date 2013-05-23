@@ -31,21 +31,18 @@ classdef ReachDiscrete < elltool.reach.AReach
     %
     methods (Static, Access = private)
         function colCodeVec = my_color_table(colChar)
-        % MY_COLOR_TABLE - returns the code of the color
-        % defined by single letter.
+        % MY_COLOR_TABLE - returns the code of the color defined by single letter.
         %   
         % Input:
         %   regular:
-        %       colChar: char[1,1] - single letter, that
-        %           define code of color.
+        %       colChar: char[1,1] - single letter, that define code of color.
         %
         % Output:
         %   regular:
-        %       colCodeVec: double[1,3] - three-element row
-        %           vector whose elements specify the 
-        %           intensities in the range [0 1] of the 
-        %           red, green and blue components of the 
-        %           color.
+        %       colCodeVec: double[1,3] - three-element row vector whose elements 
+        %           specify the intensities in the range [0 1] of the red, green 
+        %           and blue components of the color.
+        %           
         %
         % $Authors: Kirill Mayantsev
         % <kirill.mayantsev@gmail.com> $
@@ -82,9 +79,9 @@ classdef ReachDiscrete < elltool.reach.AReach
         function [QQ, LL] = eedist_de(ntv, X0, l0, mydata, N, back,...
                             mnmx,absTol)
         %
-        % EEDIST_DE - recurrence relation for the shape
-        % matrix of external ellipsoid for discrete-time 
-        % system with disturbance.
+        % EEDIST_DE - recurrence relation for the shape matrix of external 
+        %             ellipsoid for discrete-time system with disturbance.
+        % 
         %
             import elltool.conf.Properties;
             LL = l0;
@@ -178,10 +175,10 @@ classdef ReachDiscrete < elltool.reach.AReach
         %
         function [QQ, LL] = eesm_de(ntv, X0, l0, mydata, N, back,absTol)
             %
-            % EESM_DE - recurrence relation for the shape
-            % matrix of external ellipsoid for 
-            % discrete-time system without disturbance.
-            %
+            % EESM_DE - recurrence relation for the shape matrix of external 
+            %           ellipsoid for discrete-time system without disturbance.
+            % 
+
             import elltool.conf.Properties;
             LL = l0;
             l = l0;
@@ -253,10 +250,10 @@ classdef ReachDiscrete < elltool.reach.AReach
         %
         function [QQ, LL] = iedist_de(ntv, X0, l0, mydata, N, back, mnmx,absTol)
             %
-            % IEDIST_DE - recurrence relation for the shape
-            % matrix of internal ellipsoid for 
-            % discrete-time system with disturbance.
-            %
+            % IEDIST_DE - recurrence relation for the shape matrix of internal 
+            %             ellipsoid for discrete-time system with disturbance.
+            % 
+
             import elltool.conf.Properties;
             LL = l0;
             l = l0;
@@ -349,10 +346,10 @@ classdef ReachDiscrete < elltool.reach.AReach
         %
         function [QQ, LL] = iesm_de(ntv, X0, l0, mydata, N, back,absTol)
             %
-            % IESM_DE - recurrence relation for the shape
-            % matrix of internal ellipsoid for 
-            % discrete-time system without disturbance.
-            %
+            % IESM_DE - recurrence relation for the shape matrix of internal 
+            %           ellipsoid for discrete-time system without disturbance.
+            % 
+
             import elltool.conf.Properties;
             LL = l0;
             l = l0;
@@ -414,8 +411,7 @@ classdef ReachDiscrete < elltool.reach.AReach
         %
         function evalMat = matrix_eval(XCMat, time)
             %
-            % MATRIX_EVAL - evaluates symbolic matrix at
-            % given time instant.
+            % MATRIX_EVAL - evaluates symbolic matrix at given time instant.
             %
             if ~(iscell(XCMat))
                 evalMat = XCMat;
@@ -432,31 +428,27 @@ classdef ReachDiscrete < elltool.reach.AReach
         end
         %
         function [propArr, propVal] = getProperty(rsArr,propName,fPropFun)
-        % GETPROPERTY gives array the same size as rsArray
-        % with values of propName properties for each reach
-        % set in rsArr. Private method, used in every public
-        % property getter.
+        % GETPROPERTY - gives array the same size as rsArray with values of 
+        %               propName properties for each reach set in rsArr. 
+        %               Private method, used in every public property getter.
+        %               
         %
         % Input:
         %   regular:
-        %       rsArray: elltool.reach.ReachDiscrete 
-        %           [nDims1, nDims2,...] - multidimension 
-        %           array of reach sets 
+        %       rsArray: elltool.reach.ReachDiscrete [nDims1, nDims2,...] -  
+        %           multidimension array of reach sets 
         %       propName: char[1,N] - name property
         %
         %   optional:
-        %       fPropFun: function_handle[1,1] - function
-        %           that apply to the propArr. The default 
-        %           is @min.
+        %       fPropFun: function_handle[1,1] - function that apply to the propArr. 
+        %           The default is @min.        
         %
         % Output:
         %   regular:
-        %       propArr: double[nDim1, nDim2,...] -
-        %           multidimension array of properties for
-        %           reach object in rsArr
+        %       propArr: double[nDim1, nDim2,...] -  multidimension array of properties 
+        %          for reach object in rsArr
         %   optional:
-        %       propVal: double[1, 1] - return result of
-        %           work fPropFun with the propArr
+        %       propVal: double[1, 1] - return result of work fPropFun with the propArr
         %
         % $Author: Zakharov Eugene <justenterrr@gmail.com>$
         %   $Date: 17-november-2012$
@@ -490,8 +482,7 @@ classdef ReachDiscrete < elltool.reach.AReach
         %
         function x = ellbndr_2d(ell, num)
         %
-        % ELLBNDR_2D - compute the boundary of 2D
-        % ellipsoid.
+        % ELLBNDR_2D - compute the boundary of 2D ellipsoid.
         %
             import elltool.conf.Properties;
             if nargin < 2
@@ -504,8 +495,7 @@ classdef ReachDiscrete < elltool.reach.AReach
         %
         function x = ellbndr_3d(ell)
         %
-        % ELLBNDR_3D - compute the boundary of 3D
-        % ellipsoid.
+        % ELLBNDR_3D - compute the boundary of 3D ellipsoid.
         %
             import elltool.conf.Properties;
             M = elltool.reach.ReachDiscrete.getNPlot3dPoints(ell)/2;
@@ -521,34 +511,27 @@ classdef ReachDiscrete < elltool.reach.AReach
         end
         %
         function [absTolArr, absTolVal] = getAbsTol(rsArr, varargin)
-        % GETABSTOL - gives the array of absTol for all
-        % elements in rsArr
+        % GETABSTOL - gives the array of absTol for all elements in rsArr
         %
         % Input:
         %   regular:
-        %       rsArr: elltool.reach.ReachDiscrete
-        %           [nDim1, nDim2, ...] - multidimension 
-        %           array of reach sets
+        %       rsArr: elltool.reach.ReachDiscrete[nDim1, nDim2, ...] - multidimension 
+        %              array of reach sets
         %   optional:
-        %       fAbsTolFun: function_handle[1,1] - function
-        %           that apply to the absTolArr. 
-        %           The default is @min.
+        %       fAbsTolFun: function_handle[1,1] - function that apply to the absTolArr. 
+        %               The default is @min.
         %         
         % Output:
         %   regular:
-        %       absTolArr: double [absTol1, absTol2, ...] -
-        %           return absTol for each element in rsArr
+        %       absTolArr: double [absTol1, absTol2, ...] - return absTol for each 
+        %                 element in rsArr
         %   optional:
-        %       absTol: double[1,1] - return result of work
-        %           fAbsTolFun with the absTolArr
+        %       absTol: double[1,1] - return result of work fAbsTolFun with the absTolArr
         %
         % Usage:
-        %   use [~,absTol] = rsArr.getAbsTol() if you want
-        %       get only absTol,
-        %   use [absTolArr,absTol] = rsArr.getAbsTol() if
-        %       you want get absTolArr and absTol,
-        %   use absTolArr = rsArr.getAbsTol() if you want
-        %       get only absTolArr
+        %   use [~,absTol] = rsArr.getAbsTol() if you want get only absTol,
+        %   use [absTolArr,absTol] = rsArr.getAbsTol() if you want get absTolArr and absTol,
+        %   use absTolArr = rsArr.getAbsTol() if you want get only absTolArr
         % 
         %$Author: Zakharov Eugene  <justenterrr@gmail.com> $
         % $Author: Grachev Artem  <grachev.art@gmail.com> $
@@ -560,24 +543,23 @@ classdef ReachDiscrete < elltool.reach.AReach
         % 
         
             [absTolArr,absTolVal]=rsArr.getProperty('absTol',varargin{:});
-        
+            
         end
         %
         function nPlot2dPointsArr = getNPlot2dPoints(rsArr)
-        % GETNPLOT2DPOINTS gives array  the same size as
-        % rsArr of value of nPlot2dPoints property for
-        % each element in rsArr - array of reach sets
+        % GETNPLOT2DPOINTS - gives array  the same size as rsArr of value of 
+        %                    nPlot2dPoints property for each element in rsArr - 
+        %                    array of reach sets
+        % 
         %
         % Input:
         %   regular:
-        %       rsArr:elltool.reach.ReachDiscrete
-        %           [nDims1,nDims2,...] - reach set 
-        %           array
+        %     rsArr:elltool.reach.ReachDiscrete [nDims1,nDims2,...] - reach set array 
+        %           
         %
         % Output:
-        %   nPlot2dPointsArr:double[nDims1,nDims2,...]-
-        %       array of values of nTimeGridPoints
-        %       property for each reach set in rsArr
+        %   nPlot2dPointsArr:double[nDims1,nDims2,...] - array of values of 
+        %       nTimeGridPoints property for each reach set in rsArr
         %
         % $Author: Zakharov Eugene
         % <justenterrr@gmail.com> $    
@@ -592,19 +574,18 @@ classdef ReachDiscrete < elltool.reach.AReach
         end
         %
         function nPlot3dPointsArr = getNPlot3dPoints(rsArr)
-        % GETNPLOT3DPOINTS gives array  the same size as
-        % rsArr of value of nPlot3dPoints property for
-        % each element in rsArr - array of reach sets
+        % GETNPLOT3DPOINTS - gives array  the same size as rsArr of value of 
+        %                    nPlot3dPoints property for each element in rsArr
+        %                    - array of reach sets
         %
         % Input:
         %   regular:
-        %       rsArr:reach[nDims1,nDims2,...] - reach
-        %           set array
+        %       rsArr:reach[nDims1,nDims2,...] - reach set array
         %
         % Output:
-        %   nPlot3dPointsArr:double[nDims1,nDims2,...]-
-        %       array of values of nPlot3dPoints property
-        %       for each reach set in rsArr
+        %   nPlot3dPointsArr:double[nDims1,nDims2,...]- array of values of 
+        %             nPlot3dPoints property for each reach set in rsArr
+        %       
         %
         % $Author: Zakharov Eugene
         % <justenterrr@gmail.com> $    
@@ -619,20 +600,19 @@ classdef ReachDiscrete < elltool.reach.AReach
         end
         %
         function nTimeGridPointsArr = getNTimeGridPoints(rsArr)
-        % GETNTIMEGRIDPOINTS gives array  the same size
-        % as rsArr of value of nTimeGridPoints property
-        % for each element in rsArr - array of reach
-        % sets
-        %
+        % GETNTIMEGRIDPOINTS - gives array  the same size as rsArr of value of 
+        %                      nTimeGridPoints property for each element in rsArr
+        %                     - array of reach sets
+        % 
         % Input:
         %   regular:
-        %       rsArr: elltool.reach.ReachDiscrete
-        %           [nDims1,nDims2,...] - reach set array
+        %       rsArr: elltool.reach.ReachDiscrete [nDims1,nDims2,...] - reach set 
+        %         array
         %
         % Output:
-        %   nTimeGridPointsArr: double[nDims1,nDims2,...]-
-        %       array of values of nTimeGridPoints 
-        %       property for each reach set in rsArr
+        %   nTimeGridPointsArr: double[nDims1,nDims2,...]- array of values of 
+        %       nTimeGridPoints property for each reach set in rsArr
+        %       
         %
         % $Author: Zakharov Eugene
         % <justenterrr@gmail.com> $    
@@ -647,34 +627,30 @@ classdef ReachDiscrete < elltool.reach.AReach
         end
         %
         function [relTolArr, relTolVal] = getRelTol(rsArr, varargin)
-        % GETRELTOL - gives the array of relTol for all
-        % elements in ellArr
+        % GETRELTOL - gives the array of relTol for all elements in ellArr
         %
         % Input:
         %   regular:
-        %       rsArr: elltool.reach.ReachDiscrete[nDim1,
-        %           nDim2, ...] - multidimension array of 
-        %           reach sets.
+        %       rsArr: elltool.reach.ReachDiscrete[nDim1,nDim2, ...] - multidimension  
+        %           array of reach sets.
         %   optional
-        %       fRelTolFun: function_handle[1,1] - function
-        %           that apply to the relTolArr. The 
-        %           default is @min.
+        %       fRelTolFun: function_handle[1,1] - function that apply to the  
+        %           relTolArr. The default is @min.
         %
         % Output:
         %   regular:
-        %       relTolArr: double [relTol1, relTol2, ...] -
-        %           return relTol for each element in rsArr
+        %       relTolArr: double [relTol1, relTol2, ...] - return relTol for each 
+        %           element in rsArr
         %   optional:
-        %       relTol: double[1,1] - return result of work
-        %           fRelTolFun with the relTolArr
+        %       relTol: double[1,1] - return result of work fRelTolFun with the
+        %           relTolArr
+        %           
         %
         % Usage:
-        %   use [~,relTol] = rsArr.getRelTol() if you want
-        %       get only relTol,
-        %   use [relTolArr,relTol] = rsArr.getRelTol() if
-        %       you want get relTolArr and relTol,
-        %   use relTolArr = rsArr.getRelTol() if you want
-        %       get only relTolArr
+        %   use [~,relTol] = rsArr.getRelTol() if you want get only relTol,
+        %   use [relTolArr,relTol] = rsArr.getRelTol() if you want get relTolArr
+        %        and relTol,
+        %   use relTolArr = rsArr.getRelTol() if you want get only relTolArr
         %
         %$Author: Zakharov Eugene  <justenterrr@gmail.com> $
         % $Author: Grachev Artem  <grachev.art@gmail.com> $
@@ -693,53 +669,58 @@ classdef ReachDiscrete < elltool.reach.AReach
         function self = ReachDiscrete(linSys, x0Ell, l0Mat,...
                 timeVec, OptStruct, varargin)
         %
-        % ReachDiscrete - computes reach set approximation
-        % of the discrete linear system for the given time 
-        % interval.
+        % ReachDiscrete - computes reach set approximation of the discrete linear 
+        %                 system for the given time interval.
+        % 
         % 
         % Input:
-        %     linSys: elltool.linsys.LinSys object - given
-        %       linear system 
-        %     x0Ell: ellipsoid[1, 1] - ellipsoidal set of 
-        %       initial conditions 
+        %     linSys: elltool.linsys.LinSys object - given linear system 
+        %     x0Ell: ellipsoid[1, 1] - ellipsoidal set of initial conditions 
         %     l0Mat: matrix of double - l0Mat 
         %     timeVec: double[1, 2] - time interval 
         %     OptStruct: struct[1, 1] - structure with
         %     fields:
-        %         approximation: int[1, 1] - field, which 
-        %           mean the following values for type 
-        %           approximation:
+        %         approximation: int[1, 1] - field, which mean the following values 
+        %          for type approximation:
         %           = 0 for external,
         %           = 1 for internal, 
         %           = 2 for both (default).
         %         save_all: logical [1, 1] - field, which
-        %           = 1 if save intermediate calculation 
-        %               data,
-        %           = 0 (default) if delete intermediate 
-        %               calculation data.
+        %           = 1 if save intermediate calculation data,
+        %           = 0 (default) if delete intermediate calculation data.
         %         minmax: logical[1, 1] - field, which:
         %           = 1 compute minmax reach set,
-        %           = 0 (default) compute maxmin
-        %               reach set.
-        %         This option makes sense only for
-        %         discrete-time systems with disturbance.
+        %           = 0 (default) compute maxmin reach set.
+        %         This option makes sense only for discrete-time systems with 
+        %         disturbance.
         %
-        % self = ReachDiscrete(linSys, x0Ell, l0Mat,
-        % timeVec, Options, prop) is the same as self =
-        % ReachDiscrete(linSys, x0Ell, l0Mat, timeVec,
-        % Options), but with "Properties"  specified in 
-        % prop. In other cases "Properties" are taken 
-        % from current values stored in 
+        % self = ReachDiscrete(linSys, x0Ell, l0Mat,timeVec, Options, prop) is the 
+        % same as self = ReachDiscrete(linSys, x0Ell, l0Mat, timeVec, Options), but 
+        % with "Properties"  specified in  prop. 
+        % In other cases "Properties" are taken from current values stored in 
         % elltool.conf.Properties
         %
-        % As "Properties" we understand here such
-        % list of ellipsoid properties:
-        %   absTol relTol nPlot2dPoints
-        %   nPlot3dPoints nTimeGridPoints
+        % As "Properties" we understand here such list of ellipsoid properties:
+        %         absTol
+        %         relTol 
+        %         nPlot2dPoints
+        %         Plot3dPoints 
+        %         nTimeGridPoints
         %
         % Output:
         %   regular:
         %       self - reach set object.
+        %
+        % Example:
+        %   adMat = [0 1; -1 -0.5]; 
+        %   bdMat = [0; 1];  
+        %   udBoundsEllObj  = ellipsoid(1);  
+        %   dtsys = elltool.linsys.LinSysDiscrete(adMat, bdMat, udBoundsEllObj); 
+        %   x0EllObj = ell_unitball(2);  
+        %   timeVec = [0 10];  
+        %   dirsMat = [1 0; 0 1]';
+        %   dRsObj = elltool.reach.ReachDiscrete(dtsys, x0EllObj, dirsMat, timeVec);
+        %
         %
         % $Author: Kirill Mayantsev
         % <kirill.mayantsev@gmail.com> $  
@@ -795,22 +776,24 @@ classdef ReachDiscrete < elltool.reach.AReach
             self.projectionBasisMat = [];
             %% check and analize input
             if nargin < 4
-                throwerror('insufficient number of input arguments.');
+                throwerror('wrongInput',...
+                    'insufficient number of input arguments.');
             end
             if ~(isa(linSys, 'elltool.linsys.LinSysDiscrete'))
-                throwerror(['first input argument ',...
+                throwerror('wrongInput',['first input argument ',...
                     'must be linear system object.']);
             end
             linSys = linSys(1, 1);
             [d1, du, dy, dd] = linSys.dimension();
-            if ~(isa(x0Ell, 'ellipsoid'))
-                throwerror(['set of initial ',...
-                    'conditions must be ellipsoid.']);
+            if ~isa(x0Ell, 'ellipsoid')
+                throwerror('wrongInput',...
+                    'set of initial conditions must be ellipsoid.');
             end
             x0Ell = x0Ell(1, 1);
             d2 = dimension(x0Ell);
             if d1 ~= d2
-                throwerror(['dimensions of linear system and ',...
+                throwerror('wrongInput',...
+                    ['dimensions of linear system and ',...
                     'set of initial conditions do not match.']);
             end
             [k, l] = size(timeVec);
@@ -821,7 +804,8 @@ classdef ReachDiscrete < elltool.reach.AReach
             end
             [m, N] = size(l0Mat);
             if m ~= d2
-                throwerror(['dimensions of state space ',...
+                throwerror('wrongInput',...
+                    ['dimensions of state space ',...
                     'and direction vector do not match.']);
             end
             if (nargin < 5) || ~(isstruct(OptStruct))
@@ -1051,7 +1035,8 @@ classdef ReachDiscrete < elltool.reach.AReach
                             p = self.matrix_eval(uEll.center, self.time_values(i));
                             P = self.matrix_eval(uEll.shape, self.time_values(i));
                             if ~gras.la.ismatposdef(P,self.absTol,false)
-                                throwerror('wrongMat',['shape matrix of ',...
+                                throwerror('wrongInput:wrongMat',....
+                                    ['shape matrix of ',...
                                     'ellipsoidal control bounds ',...
                                     'must be positive definite.']);
                             end
@@ -1091,7 +1076,8 @@ classdef ReachDiscrete < elltool.reach.AReach
                         for i = 1:size(self.time_values, 2)
                             P = self.matrix_eval(uEll.shape, self.time_values(i));
                             if ~gras.la.ismatposdef(P,self.absTol,false)
-                                throwerror('wrongMat',['shape matrix of ',...
+                                throwerror('wrongInput:wrongMat',...
+                                    ['shape matrix of ',...
                                     'ellipsoidal control bounds ',...
                                     'must be positive definite.']);
                             end
@@ -1124,7 +1110,8 @@ classdef ReachDiscrete < elltool.reach.AReach
                         if iscell(uEll.shape)
                             P = self.matrix_eval(uEll.shape, self.time_values(i));
                             if ~gras.la.ismatposdef(P,self.absTol,false)
-                                throwerror('wrongMat',['shape matrix of ',...
+                                throwerror('wrongInput:wrongMat',...
+                                    ['shape matrix of ',...
                                     'ellipsoidal control bounds ',...
                                     'must be positive definite.']);
                             end
@@ -1227,7 +1214,8 @@ classdef ReachDiscrete < elltool.reach.AReach
                                 q = self.matrix_eval(vEll.center, self.time_values(i));
                                 Q = self.matrix_eval(vEll.shape, self.time_values(i));
                                 if ~gras.la.ismatposdef(Q,self.absTol,false)
-                                    throwerror('wrongMat',['shape matrix of ',...
+                                    throwerror('wrongInput:wrongMat',...
+                                        ['shape matrix of ',...
                                         'ellipsoidal disturbance bounds ',...
                                         'must be positive definite.']);
                                 end
@@ -1267,7 +1255,8 @@ classdef ReachDiscrete < elltool.reach.AReach
                             for i = 1:size(self.time_values, 2)
                                 Q = self.matrix_eval(vEll.shape, self.time_values(i));
                                 if ~gras.la.ismatposdef(Q,self.absTol,false)
-                                    throwerror('wrongMat',['shape matrix of ',...
+                                    throwerror('wrongInput:wrongMat',...
+                                        ['shape matrix of ',...
                                         'ellipsoidal disturbance bounds ',...
                                         'must be positive definite.']);
                                 end
@@ -1300,7 +1289,8 @@ classdef ReachDiscrete < elltool.reach.AReach
                             if iscell(vEll.shape)
                                 Q = self.matrix_eval(vEll.shape, self.time_values(i));
                                 if ~gras.la.ismatposdef(Q,self.absTol,false)
-                                    throwerror('wrongMat',['shape matrix of ',...
+                                    throwerror('wrongInput:wrongMat',...
+                                        ['shape matrix of ',...
                                         'ellipsoidal disturbance bounds ',...
                                         'must be positive definite.']);
                                 end
@@ -1353,7 +1343,8 @@ classdef ReachDiscrete < elltool.reach.AReach
                             w  = [w self.matrix_eval(noiseEll.center, self.time_values(i))];
                             ww = self.matrix_eval(noiseEll.shape, self.time_values(i));
                             if ~gras.la.ismatposdef(ww,self.absTol,false)
-                                throwerror('wrongMat',['shape matrix of ',...
+                                throwerror('wrongInput:wrongMat',...
+                                    ['shape matrix of ',...
                                     'ellipsoidal noise bounds must be positive definite.']);
                             end
                             W  = [W reshape(ww, dy*dy, 1)];
@@ -1381,7 +1372,8 @@ classdef ReachDiscrete < elltool.reach.AReach
                         for i = 1:size(self.time_values, 2)
                             ww = self.matrix_eval(noiseEll.shape, self.time_values(i));
                             if ~gras.la.ismatposdef(ww,self.absTol,false)
-                                throwerror('wrongMat',['shape matrix of ',...
+                                throwerror('wrongInput:wrongMat',...
+                                    ['shape matrix of ',...
                                     'ellipsoidal noise bounds must be positive definite.']);
                             end
                             W  = [W reshape(ww, dy*dy, 1)];
@@ -1560,9 +1552,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 end
                 self.ia_values = QQ;
             end
-            if OptStruct.save_all > 0
-                self.calc_data = mydata;
-            end
+            self.calc_data = mydata;
             if ~isa(linSys, 'elltool.linsys.LinSysDiscrete')
                 LL = [];
                 for ii = 1:N
@@ -1586,16 +1576,250 @@ classdef ReachDiscrete < elltool.reach.AReach
             end
         end
         %
-        function newReachObj = getCopy(self)
-        % newReachObj - create a new copy of Self 
-        %   reach object. 
+        function RRS = refine(self, L0, Options)
+            %
+            % REFINE - adds new approximations computed for the specified directions
+            %          to the given reach set.
+            %
+            %
+            % Description:
+            % ------------
+            %
+            % RRS = REFINE(RS, L0, OPTIONS)
+            %        Given nonempty reach set RS and direction
+            %        vectors specified by matrix L0,
+            %        adds new approximations computed for those
+            %        directions to this reach set.
+            %        This refinement is possible only if the reach
+            %        set was obtained by the REACH call with option
+            %        'save_all' set to 1 (intermediate calculation
+            %        information is saved in the reach set object).
+            %        Optional OPTIONS parameter is a structure:
+            %          Options.approximation = 0 for external,
+            %                                = 1 for internal,
+            %                                = 2 for both (default).
+            %          Options.save_all = 1 (default) to save intermediate
+            %                               calculation data,
+            %                           = 0 to delete intermediate
+            %                               calculation data.
+            %          Options.minmax = 1 compute minmax reach set,
+            %          Options.minmax = 0 (default) compute maxmin reach set.
+            %                         This option makes sense only for
+            %                        discrete-time systems with disturbance.
+            %
+            %    WARNING! This function does not work with reach set objects resulting
+            %             form CUT and/or PROJECTION operation.
+            %
+            %
+            %
+            % Output:
+            % -------
+            %
+            %    RRS - refined reach set.
+            %
+            %
+            % See also:
+            % ---------
+            %
+            %    REACH/REACH.
+            %
+            
+            %
+            % Author:
+            % -------
+            %
+            %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+            %
+            import elltool.conf.Properties;
+            RRS = self(1, 1);
+            if isempty(RRS)
+                return;
+            end
+            
+            if nargin < 2
+                error('REFINE: insufficient number of input arguments.');
+            end
+            
+            if iscut(RRS)
+                error('REFINE: cannot perform a refinement on a cut of the reach set.');
+            end
+            
+            if isprojection(RRS)
+                error('REFINE: cannot perform a refinement on a projection of the reach set.');
+            end
+            
+            d1 = dimension(RRS);
+            k  = size(RRS.initial_directions, 1);
+            if isempty(L0)
+                m = k;
+            else
+                [m, n] = size(L0);
+            end
+            if (k ~= m) | (d1 ~= m)
+                error('REFINE: dimensions of the reach set and direction vectors do not matcch.');
+            end
+            
+            mydata = RRS.calc_data;
+            if isempty(mydata) | ~(isstruct(mydata))
+                error('REFINE: cannot perform a refinement without intermediate calculation info.');
+            end
+            
+            if (nargin < 3) | ~(isstruct(Options))
+                Options               = [];
+                Options.approximation = 2;
+                Options.save_all      = 1;
+                Options.minmax        = 0;
+            else
+                if ~(isfield(Options, 'approximation')) | ...
+                        (Options.approximation < 0) | (Options.approximation > 2)
+                    Options.approximation = 2;
+                end
+                if ~(isfield(Options, 'save_all')) | ...
+                        (Options.save_all < 0) | (Options.save_all > 2)
+                    Options.save_all = 1;
+                end
+                if ~(isfield(Options, 'minmax')) | ...
+                        (Options.minmax < 0) | (Options.minmax > 1)
+                    Options.minmax = 0;
+                end
+            end
+            
+            www = warning;
+            warning off;
+            
+            tvals = RRS.time_values;
+            if tvals(1) > tvals(end)
+                tvals = -tvals;
+                back  = 1;
+            else
+                back  = 0;
+            end
+            
+            RRS.initial_directions = [RRS.initial_directions L0];
+            N                      = size(RRS.initial_directions, 2);
+            EN                     = size(RRS.ea_values, 2);
+            IN                     = size(RRS.ia_values, 2);
+            x0Ellipsoid                     = parameters(RRS.x0Ellipsoid);
+            
+            
+            %%% Compute external shape matrices. %%%
+            
+            if (Options.approximation ~= 1)
+                if Properties.getIsVerbose()
+                    if (N - EN) > 0
+                        fprintf('Computing external shape matrices...\n');
+                    end
+                end
+                
+                LL = [];
+                QQ = [];
+                Q0 = reshape(x0Ellipsoid, d1*d1, 1);
+                for ii = (EN + 1):N
+                    l0 = RRS.initial_directions(:, ii);
+                    if hasdisturbance(RRS.system)
+                        [Q, L] = reach.eedist_de(size(tvals, 2), ...
+                            Q0, ...
+                            l0, ...
+                            mydata, ...
+                            d1, ...
+                            back, ...
+                            Options.minmax,self.absTol);
+                    elseif ~(isempty(mydata.BPB))
+                        [Q, L] = self.eesm_de(size(tvals, 2), Q0, l0, mydata, d1, back,self.absTol);
+                    else
+                        Q = [];
+                        L = [];
+                    end
+                    LL = [LL {L}];
+                    QQ = [QQ {Q}];
+                end
+                RRS.ea_values = [RRS.ea_values QQ];
+            end
+            
+            %%% Compute internal shape matrices. %%%
+            
+            if (Options.approximation ~= 0)
+                if Properties.getIsVerbose()
+                    if (N - IN) > 0
+                        fprintf('Computing internal shape matrices...\n');
+                    end
+                end
+                
+                LL = [];
+                QQ = [];
+                Q0 = reshape(x0Ellipsoid, d1*d1, 1);
+                M  = sqrtm(x0Ellipsoid);
+                M  = 0.5*(M + M');
+                for ii = (IN + 1):N
+                    l0 = RRS.initial_directions(:, ii);
+                    if hasdisturbance(RRS.system)
+                        [Q, L] = reach.iedist_de(size(tvals, 2), ...
+                            Q0, ...
+                            l0, ...
+                            mydata, ...
+                            d1, ...
+                            back, ...
+                            Options.minmax,self.absTol);
+                    elseif ~(isempty(mydata.BPB))
+                        [Q, L] = self.iesm_de(size(tvals, 2), Q0, l0, mydata, d1, back,self.absTol);
+                    else
+                        Q = [];
+                        L = [];
+                    end
+                    LL = [LL {L}];
+                    QQ = [QQ {Q}];
+                end
+                RRS.ia_values = [RRS.ia_values QQ];
+            end
+            % Save direction values if necessary.
+            if Options.save_all == 0
+                RRS.calc_data = [];
+            end
+            
+            LL = [];
+            for ii = 1:N
+                l0 = RRS.initial_directions(:, ii);
+                L = l0;
+                l = l0;
+                if back > 0
+                    for i = 2:size(RRS.time_values, 2)
+                        A = ell_value_extract(mydata.A, i, [d1 d1]);
+                        l = A' * l;
+                        L = [L l];
+                    end
+                else
+                    for i = 1:(size(RRS.time_values, 2) - 1)
+                        A = ell_inv(ell_value_extract(mydata.A, i, [d1 d1]));
+                        l = A' * l;
+                        L = [L l];
+                    end
+                end
+                LL = [LL {L}];
+            end
+            RRS.l_values  = LL;
+            if www(1).state
+                warning on;
+            end
+        end
+        function newReachObjArr = getCopy(self)
+        % GETCOPY - create a new copy of Self reach object. 
         %
         % Input:
-        %   self: reach[1, 1] - reach set object, 
-        %       copy of which should be create.
+        %   self: reach[1, 1] - reach set object, copy of which should be create.
         %
         % Output:
         %     newReachObj - reach set object.
+        %
+        % Example:
+        %   adMat = [0 1; -1 -0.5]; 
+        %   bdMat = [0; 1];  
+        %   udBoundsEllObj  = ellipsoid(1);  
+        %   dtsys = elltool.linsys.LinSysDiscrete(adMat, bdMat, udBoundsEllObj); 
+        %   x0EllObj = ell_unitball(2);  
+        %   timeVec = [0 10];  
+        %   dirsMat = [1 0; 0 1]';
+        %   dRsObj = elltool.reach.ReachDiscrete(dtsys, x0EllObj, dirsMat, timeVec);
+        %   newDRsObj = dRsObj.getCopy();
         %
         % $Author: Kirill Mayantsev
         % <kirill.mayantsev@gmail.com> $  
@@ -1605,34 +1829,41 @@ classdef ReachDiscrete < elltool.reach.AReach
         %             Mathematics and Computer Science,
         %             System Analysis Department 2013 $
         %
-            
-            newReachObj = elltool.reach.ReachDiscrete();
-            newReachObj.absTol = self.absTol;
-            newReachObj.relTol = self.relTol;
-            newReachObj.nPlot2dPoints = self.nPlot2dPoints;
-            newReachObj.nPlot3dPoints = self.nPlot3dPoints;
-            newReachObj.nTimeGridPoints = self.nTimeGridPoints;
-            newReachObj.system = self.system;
-            newReachObj.t0 = self.t0;
-            newReachObj.initial_directions = self.initial_directions;
-            newReachObj.time_values = self.time_values;
-            newReachObj.center_values = self.center_values;
-            newReachObj.l_values = self.l_values;
-            newReachObj.ea_values = self.ea_values;
-            newReachObj.ia_values = self.ia_values;
-            newReachObj.mu_values = self.mu_values;
-            newReachObj.minmax = self.minmax;
-            newReachObj.projection_basis = self.projection_basis;
-            newReachObj.calc_data = self.calc_data;
-            newReachObj.switchSysTimeVec = self.switchSysTimeVec;
-            newReachObj.x0Ellipsoid = self.x0Ellipsoid;
-            newReachObj.linSysCVec = self.linSysCVec;
-            newReachObj.isCut = self.isCut;
-            newReachObj.isProj = self.isProj;
-            newReachObj.projectionBasisMat = self.projectionBasisMat;
+            if ~isempty(self)    
+                sizeCVec = num2cell(size(self));
+                newReachObjArr(sizeCVec{:}) = elltool.reach.ReachDiscrete();
+                arrayfun(@fSingleCopy,newReachObjArr,self);
+            else
+                newReachObjArr = elltool.reach.ReachDiscrete.empty(size(self));
+            end    
+            function fSingleCopy(newReachObj, reachObj)   
+                newReachObj.absTol = reachObj.absTol;
+                newReachObj.relTol = reachObj.relTol;
+                newReachObj.nPlot2dPoints = reachObj.nPlot2dPoints;
+                newReachObj.nPlot3dPoints = reachObj.nPlot3dPoints;
+                newReachObj.nTimeGridPoints = reachObj.nTimeGridPoints;
+                newReachObj.system = reachObj.system;
+                newReachObj.t0 = reachObj.t0;
+                newReachObj.initial_directions = reachObj.initial_directions;
+                newReachObj.time_values = reachObj.time_values;
+                newReachObj.center_values = reachObj.center_values;
+                newReachObj.l_values = reachObj.l_values;
+                newReachObj.ea_values = reachObj.ea_values;
+                newReachObj.ia_values = reachObj.ia_values;
+                newReachObj.mu_values = reachObj.mu_values;
+                newReachObj.minmax = reachObj.minmax;
+                newReachObj.projection_basis = reachObj.projection_basis;
+                newReachObj.calc_data = reachObj.calc_data;
+                newReachObj.switchSysTimeVec = reachObj.switchSysTimeVec;
+                newReachObj.x0Ellipsoid = reachObj.x0Ellipsoid;
+                newReachObj.linSysCVec = reachObj.linSysCVec;
+                newReachObj.isCut = reachObj.isCut;
+                newReachObj.isProj = reachObj.isProj;
+                newReachObj.projectionBasisMat = reachObj.projectionBasisMat;
+            end
         end
         
-        function cutObj = cut(self, cutTimeVec)
+        function cutObj = cut(self, cutTimeVec) 
             import modgen.common.throwerror;
             cutObj = self.getCopy();
             if self.isempty()

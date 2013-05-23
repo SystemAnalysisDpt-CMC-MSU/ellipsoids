@@ -1,5 +1,5 @@
 function writeToCSV(self,filePath)
-% WRITETOCSV writes a content of relation into Excel spreadsheet file
+% WRITETOCSV - writes a content of relation into Excel spreadsheet file
 % Input:
 %   regular:
 %       self:
@@ -16,7 +16,7 @@ function writeToCSV(self,filePath)
 %
 %
 if ~(modgen.common.isrow(filePath)&&ischar(filePath))
-    error([upper(mfilename),':wrongInput'],...
+    throwerror('wrongInput',...
         'filePath is expected to be a character string');
 end
 %

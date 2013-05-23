@@ -1,10 +1,9 @@
 classdef ElliIntUnionTCMultiDim < mlunitext.test_case
-
-% $Author: Igor Samokhin, Lomonosov Moscow State University,
-% Faculty of Computational Mathematics and Cybernetics, System Analysis
-% Department, 31-January-2013, <igorian.vmk@gmail.com>$
-% $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Computer Science,
+%$Author: Igor Samokhin <igorian.vmk@gmail.com> $
+%$Date: 2013-01-31 $
+%$Copyright: Moscow State University,
+%            Faculty of Computational Mathematics
+%            and Computer Science,
 %            System Analysis Department 2013 $
 
     properties (Access=private)
@@ -32,7 +31,7 @@ classdef ElliIntUnionTCMultiDim < mlunitext.test_case
             test2EllArray = createObjectArray(arraySizeVec, @ell_unitball, ...
                 3, 1, 1);
             testResVec = contains(test1EllArray, test2EllArray);
-                mlunit.assert_equals(1, all(testResVec(:)));
+                mlunitext.assert_equals(1, all(testResVec(:)));
             arraySizeVec = [1, 2, 3, 1, 2, 1];
             test1EllArray = createObjectArray(arraySizeVec, @ell_unitball, ... 
                 2, 1, 1);
@@ -54,7 +53,7 @@ classdef ElliIntUnionTCMultiDim < mlunitext.test_case
                 5 * ones(4, 1), diag( 2 * ones(1, 4)), 2);
             testCorrect(false);
             testResVec = contains(test2EllArray, test1EllArray);
-                mlunit.assert_equals(0, any(testResVec(:)));
+                mlunitext.assert_equals(0, any(testResVec(:)));
             testError(4);
             testError(5);
             testError(6);
@@ -62,10 +61,10 @@ classdef ElliIntUnionTCMultiDim < mlunitext.test_case
             function testCorrect(isAllCheck)
                 if (isAllCheck)
                     testResVec = contains(test2EllArray, test1EllArray);
-                    mlunit.assert_equals(1, all(testResVec(:)));
+                    mlunitext.assert_equals(1, all(testResVec(:)));
                 else
                     testResVec = contains(test1EllArray, test2EllArray);
-                    mlunit.assert_equals(0, any(testResVec(:)));
+                    mlunitext.assert_equals(0, any(testResVec(:)));
                 end
             end
             function testError(flag)
@@ -156,8 +155,10 @@ classdef ElliIntUnionTCMultiDim < mlunitext.test_case
                 hpintersection(testEllArray, testHpArray);
             testResArray = eq(resEllArray, ansEllArray);
             self.flexAssert(true, all(testResArray(:)));
+            
             testResArray = eq(isnIntersectedArray, isnAnsIntersectedArray);
             self.flexAssert(true, all(testResArray(:)));
+            
             [testEllArray, arraySizeVec] = createTypicalArray(8);
             testHpArray = createObjectArray(arraySizeVec,  ...
                 @(varargin)hyperplane(varargin{:}), [0, 0, 1, 0].', 0, 2);
@@ -176,7 +177,7 @@ classdef ElliIntUnionTCMultiDim < mlunitext.test_case
             testCorrect()
             arraySizeVec = [2, 2, 3, 1, 1, 1, 4];
             testEllArray = createObjectArray(arraySizeVec, @ell_unitball, ... 
-                3, 1, 1);
+                 3, 1, 1);
             testHpArray = createObjectArray(arraySizeVec,  ...
                 @(varargin)hyperplane(varargin{:}), [0, 0, 1].', -2, 2);   
             ansEllArray = ellipsoid();
@@ -197,13 +198,13 @@ classdef ElliIntUnionTCMultiDim < mlunitext.test_case
                 @(varargin)hyperplane(varargin{:}), [0, 0, 1].', 1, 2);
             testHpArray(1, 1, 1, 2, 1, 1, 1) = hyperplane([0, 1].', 1);
             [~, ~, errorStr] = createTypicalArray(7);
-            testError(0);
-            testHpArray(1, 1, 1, 2, 1, 1, 1) = hyperplane([0, 0, 1].', 1);
-            testError(4);
-            testError(5);
-            testError(6);
-            testError(7);       
-            function testCorrect()
+           testError(0);
+             testHpArray(1, 1, 1, 2, 1, 1, 1) = hyperplane([0, 0, 1].', 1);
+             testError(4);
+             testError(5);
+             testError(6);
+             testError(7);       
+             function testCorrect()
                 resEllArray = hpintersection(testEllArray, testHpArray);
                 testResArray = eq(resEllArray, ansEllArray);
                 self.flexAssert(true, all(testResArray(:)));
@@ -220,7 +221,7 @@ classdef ElliIntUnionTCMultiDim < mlunitext.test_case
         function flexAssert(varargin)
             IS_ASSERTION_ON = true;
             if (IS_ASSERTION_ON)
-                mlunit.assert_equals(varargin{2:end});
+                mlunitext.assert_equals(varargin{2:end});
             end;
         end
     end    
@@ -351,7 +352,7 @@ function checkEllunionEaAndEllintersectionIa(self, isEllunionEa)
             resEllVec = ellintersection_ia(testEllArray);
         end
         [isEqual, reportStr] = eq(resEllVec, resultEll);
-        mlunit.assert_equals(true, isEqual, reportStr);
+        mlunitext.assert_equals(true, isEqual, reportStr);
     end
     function testError(flag)
         if (flag > 0)

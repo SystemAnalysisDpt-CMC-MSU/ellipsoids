@@ -1,6 +1,5 @@
-EA = get_ea(rs)  % external approximating ellipsoids
+ellMat.intersect(hypVec, 'u')
 
-% EA =
-% 2x100 array of ellipsoids.
-
-[IA, tt] = get_ia(rs);  % internal approximating ellipsoids
+% ans =
+% 
+%      1     1     1     1

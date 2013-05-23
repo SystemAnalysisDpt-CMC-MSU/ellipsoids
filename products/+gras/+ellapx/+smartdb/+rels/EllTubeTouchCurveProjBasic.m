@@ -59,7 +59,7 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
             import modgen.graphics.camlight;
 
             title(hAxes,axesName);
-            checkgen(projSTimeMat,@(x)sum(sum(x))==2);
+            checkgen(projSTimeMat,@(x)size(x,1)==2);
             indDimVec=find(sum(projSTimeMat));
             yLabel=sprintf('x_%d',indDimVec(1));
             zLabel=sprintf('x_%d',indDimVec(2));
@@ -205,14 +205,14 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
                     self.ltGoodDirNormOrigVec,indSTime,'lsGoodDirNormOrig',...
                     'ltGoodDirNormOrigVec',fCheck);
                 nInd=length(self.projSTimeMat);
+                compareLsGoodDirVec=cell(nInd,1);
                 indList=cell(nInd,1);
                 for iInd=1:nInd
-                    projMat=self.projSTimeMat{iInd};
-                    indBinVec=sum(projMat);
-                    indList{iInd}=find(indBinVec);
+                    compareLsGoodDirVec{iInd}=self.projSTimeMat{iInd}*self.lsGoodDirOrigVec{iInd};
+                    indList{iInd}=1:size(self.projSTimeMat{iInd},1);
                 end
                 self.checkSVsTConsistency(self.lsGoodDirVec,...
-                    self.lsGoodDirOrigVec,indList,...
+                    compareLsGoodDirVec,indList,...
                     'lsGoodDirVec','lsGoodDirOrigVec',fCheck);
             end
         end

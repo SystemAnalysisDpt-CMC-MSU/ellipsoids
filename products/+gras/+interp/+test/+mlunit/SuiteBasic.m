@@ -28,8 +28,8 @@ classdef SuiteBasic < mlunitext.test_case
                 etArray=MatVector.rMultiplyByVec(m1Array,squeeze(m2Array));
                 mProdInterp=MatrixSFBinaryProdByVec(sym1CMat,sym2CMat);
                 resArray=mProdInterp.evaluate(timeVec);
-                mlunit.assert_equals(nTimePoints,size(resArray,2));
-                mlunit.assert_equals(true,isequal(resArray,etArray));
+                mlunitext.assert_equals(nTimePoints,size(resArray,2));
+                mlunitext.assert_equals(true,isequal(resArray,etArray));
             end
         end
         %
@@ -50,15 +50,15 @@ classdef SuiteBasic < mlunitext.test_case
                 dataArray=gras.gen.MatVector.fromFormulaMat(sym1CMat,timeVec);
                 mInterp=MatrixSymbFormulaBased(sym1CMat);
                 resDataArray=mInterp.evaluate(timeVec);
-                mlunit.assert_equals(true,isequal(dataArray,resDataArray));
+                mlunitext.assert_equals(true,isequal(dataArray,resDataArray));
                 %
                 mInterpBin=MatrixSFBinaryProd(sym1CMat,sym2CMat);
                 resDataArray=mInterpBin.evaluate(timeVec);
-                mlunit.assert_equals(true,isequal(dataArray,resDataArray));
+                mlunitext.assert_equals(true,isequal(dataArray,resDataArray));
                 %
                 mInterpBin=MatrixSFBinaryProd(sym2CMat,sym1CMat);
                 resDataArray=mInterpBin.evaluate(timeVec);
-                mlunit.assert_equals(true,isequal(dataArray,resDataArray));
+                mlunitext.assert_equals(true,isequal(dataArray,resDataArray));
                 %
                 sym2CMat={'t','2*t';'3*t','4*t'};
                 mInterpBin=MatrixSFBinaryProd(sym1CMat,sym2CMat);
@@ -67,13 +67,13 @@ classdef SuiteBasic < mlunitext.test_case
                 etDataArray=gras.gen.MatVector.rMultiply(dataArray,...
                     m2Interp.evaluate(timeVec));
                 %
-                mlunit.assert_equals(true,isequal(resDataArray,etDataArray));
+                mlunitext.assert_equals(true,isequal(resDataArray,etDataArray));
                 %
                 mInterpBin=MatrixSFBinaryProd(sym2CMat,sym1CMat);
                 resDataArray=mInterpBin.evaluate(timeVec);
                 etDataArray=gras.gen.MatVector.rMultiply(...
                     m2Interp.evaluate(timeVec),dataArray);
-                mlunit.assert_equals(true,isequal(resDataArray,etDataArray));
+                mlunitext.assert_equals(true,isequal(resDataArray,etDataArray));
                 %
                 sym3CMat={'sqrt(t)','2*sqrt(t)';'3*sqrt(t)','4*sqrt(t)'};
                 mInterpTriple=MatrixSFTripleProd(sym1CMat,sym2CMat,sym3CMat);
@@ -83,13 +83,13 @@ classdef SuiteBasic < mlunitext.test_case
                     m3Interp.evaluate(timeVec));
                 resDataArray=mInterpTriple.evaluate(timeVec);
                 maxTol=max(abs(etDataArray(:)-resDataArray(:)));
-                mlunit.assert_equals(true,maxTol<=MAX_TOL);
+                mlunitext.assert_equals(true,maxTol<=MAX_TOL);
                 %
                 mInterpBin=MatrixSFBinaryProd(sym2CMat,sym3CMat);
                 etDataArray=gras.gen.MatVector.rMultiply(mInterp.evaluate(timeVec),...
                     mInterpBin.evaluate(timeVec));
                 maxTol=max(abs(etDataArray(:)-resDataArray(:)));
-                mlunit.assert_equals(true,maxTol<=MAX_TOL);
+                mlunitext.assert_equals(true,maxTol<=MAX_TOL);
             end
         end
         %
@@ -107,7 +107,7 @@ classdef SuiteBasic < mlunitext.test_case
                 check(mInterp);
                 function check(mInterp)
                     resDataArray=mInterp.evaluate(timeVec);
-                    mlunit.assert_equals(true,isequal(dataArray,resDataArray));
+                    mlunitext.assert_equals(true,isequal(dataArray,resDataArray));
                 end
             end
         end
@@ -178,8 +178,8 @@ classdef SuiteBasic < mlunitext.test_case
                 end
                 %% Check for a possibility to use a default constuctor
                 obj=gras.interp.MatrixInterpolantFactory.createInstance(shape);
-                mlunit.assert_equals(true,isempty(obj.evaluate([])));
-                mlunit.assert_equals(2,obj.getDimensionality());
+                mlunitext.assert_equals(true,isempty(obj.evaluate([])));
+                mlunitext.assert_equals(2,obj.getDimensionality());
                 %
                 %%
                 obj=gras.interp.MatrixInterpolantFactory.createInstance(...
@@ -208,7 +208,7 @@ classdef SuiteBasic < mlunitext.test_case
                     if nDims==2
                         nRows=obj.getNRows();
                         nTimePoints=length(obj.getKnotVec);
-                        mlunit.assert_equals(nTimePoints,obj.getNKnots());
+                        mlunitext.assert_equals(nTimePoints,obj.getNKnots());
                         %
                         dataList=cellfun(@(x)reshape(x,...
                             [nRows,1,nTimePoints]),dataList,...
@@ -217,12 +217,12 @@ classdef SuiteBasic < mlunitext.test_case
                     else
                         catDataArray=dataList{1};
                     end
-                    mlunit.assert_equals(true,isequal(resDataArray,catDataArray));
+                    mlunitext.assert_equals(true,isequal(resDataArray,catDataArray));
                 end
                 function checkInternal()
                     maxTol=max(abs(dataArray(:)-resDataArray(:)));
                     isOk=maxTol<=MAX_TOL;
-                    mlunit.assert_equals(true,isOk,...
+                    mlunitext.assert_equals(true,isOk,...
                         sprintf('max tol %g',maxTol));
                 end
                 %

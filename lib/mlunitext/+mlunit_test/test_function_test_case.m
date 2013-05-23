@@ -29,7 +29,7 @@ classdef test_function_test_case < mlunitext.test_case
 
             test = function_test_case(@() assert(1), @()0, @()0);
             result = run(test);
-            assert_equals(1, get_tests_run(result));
+            assert_equals(1, getNTestsRun(result));
         end
         %
         function self = test_run(self)
@@ -45,9 +45,9 @@ classdef test_function_test_case < mlunitext.test_case
 
             test = function_test_case(@() assert(true));
             result = run(test);
-            assert_equals(0, get_failures(result));
-            assert_equals(0, get_errors(result));
-            assert_equals(1, get_tests_run(result));
+            assert_equals(0, getNFailures(result));
+            assert_equals(0, getNErrors(result));
+            assert_equals(1, getNTestsRun(result));
         end
     end
 end

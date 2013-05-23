@@ -13,14 +13,30 @@ classdef BasicTestCase < mlunitext.test_case
             shortClassName=mfilename('classname');
             self.testDataRootDir=[fileparts(which(className)),filesep,'TestData',...
                 filesep,shortClassName];
-            
         end
+        %
+        function testSqrtMCompare(~)
+            inpMat=eye(2);
+            check(1.5,0,true);
+            check(1.5,2,true);
+            check(1.5,1,true);
+            inpMat=diag([1;-1]);
+            check(1.5,1,true);
+            check(1.5,1.5,true);
+            function check(lTol,rTol,isExpOk)
+                import gras.la.sqrtmpos;
+                isOk=isequal(sqrtmpos(inpMat,lTol),sqrtmpos(inpMat,rTol));
+                mlunitext.assert_equals(isOk,isExpOk);
+            end
+        end
+        %
         function self=testSqrtMSimple(self)
             import gras.la.sqrtmpos;
             import gras.la.ismatposdef;
             import gras.gen.sqrtpos;
             self.runAndCheckError('gras.la.sqrtmpos(eye(2),-1)',...
                 'wrongInput:absTolNegative');
+            %
             mlunitext.assert(isreal(sqrtmpos(diag([0 -0.001]),0.001)));
             %
             minEigVal=-0.001;
@@ -67,54 +83,54 @@ classdef BasicTestCase < mlunitext.test_case
             nDim = 100;
             testMat = eye(nDim);
             sqrtMat = sqrtmpos(testMat, MAX_TOL);
-            mlunit.assert_equals(testMat, sqrtMat);
+            mlunitext.assert_equals(testMat, sqrtMat);
             sqrtMat = sqrtmpos(testMat);
-            mlunit.assert_equals(testMat, sqrtMat);
+            mlunitext.assert_equals(testMat, sqrtMat);
             %
             nDim = 100;
             testMat = diag(1:nDim);
             sqrtMat = sqrtmpos(testMat, MAX_TOL);
-            mlunit.assert_equals(realsqrt(testMat), sqrtMat);
+            mlunitext.assert_equals(realsqrt(testMat), sqrtMat);
             sqrtMat = sqrtmpos(testMat);
-            mlunit.assert_equals(realsqrt(testMat), sqrtMat);
+            mlunitext.assert_equals(realsqrt(testMat), sqrtMat);
             %
             testMat = [2, 1; 1, 2];
             vMat = [-1/realsqrt(2), 1/realsqrt(2); 1/realsqrt(2), 1/realsqrt(2)];
             dMat = diag([1, realsqrt(3)]);
             sqrtTestMat = vMat*dMat*vMat';
             sqrtMat = sqrtmpos(testMat, MAX_TOL);
-            mlunit.assert_equals(sqrtTestMat, sqrtMat);
+            mlunitext.assert_equals(sqrtTestMat, sqrtMat);
             sqrtMat = sqrtmpos(testMat);
-            mlunit.assert_equals(sqrtTestMat, sqrtMat);
+            mlunitext.assert_equals(sqrtTestMat, sqrtMat);
             %
             testMat = [5, -4, 1; -4, 6, -4; 1, -4, 5];
             sqrtTestMat = [2, -1, 0; -1, 2, -1; 0, -1, 2];
             sqrtMat = sqrtmpos(testMat, MAX_TOL);
-            mlunit.assert(norm(sqrtmpos(sqrtTestMat, MAX_TOL) -...
+            mlunitext.assert(norm(sqrtmpos(sqrtTestMat, MAX_TOL) -...
                 sqrtmpos(sqrtMat, MAX_TOL)) < MAX_TOL);
             %
             load(strcat(self.testDataRootDir,...
                 strcat(filesep, 'testSqrtm1_inp.mat')), 'testMat');
             sqrtMat = sqrtmpos(testMat, MAX_TOL);
-            mlunit.assert(norm(sqrtmpos(testMat, MAX_TOL)...
+            mlunitext.assert(norm(sqrtmpos(testMat, MAX_TOL)...
                 -sqrtmpos(sqrtMat*sqrtMat', MAX_TOL))<MAX_TOL);
             %
             load(strcat(self.testDataRootDir,...
                 strcat(filesep, 'testSqrtm2_inp.mat')), 'testMat');
             sqrtMat = sqrtmpos(testMat, MAX_TOL);
-            mlunit.assert(norm(sqrtmpos(testMat,MAX_TOL) -...
+            mlunitext.assert(norm(sqrtmpos(testMat,MAX_TOL) -...
                 sqrtmpos(sqrtMat*sqrtMat')) < MAX_TOL);
             %
             test1Mat = eye(2);
             test2SqrtMat = eye(2) + 1.01*MAX_TOL;
             test2Mat = test2SqrtMat*test2SqrtMat.';
-            mlunit.assert(norm(sqrtmpos(test1Mat, MAX_TOL) -...
+            mlunitext.assert(norm(sqrtmpos(test1Mat, MAX_TOL) -...
                 sqrtmpos(test2Mat, MAX_TOL)) > MAX_TOL);
             %
             test1Mat = eye(2);
             test2SqrtMat = eye(2) + 0.5*MAX_TOL;
             test2Mat = test2SqrtMat*test2SqrtMat.';
-            mlunit.assert(norm(sqrtmpos(test1Mat, MAX_TOL) -...
+            mlunitext.assert(norm(sqrtmpos(test1Mat, MAX_TOL) -...
                 sqrtmpos(test2Mat, MAX_TOL)) < MAX_TOL);
             %
             testMat = [1, 0; 0, -1];
@@ -126,38 +142,38 @@ classdef BasicTestCase < mlunitext.test_case
             import gras.la.ismatsymm;
             
             %scalar
-            mlunit.assert( ismatsymm(2) );
+            mlunitext.assert( ismatsymm(2) );
             
             %diag matrix
-            mlunit.assert( ismatsymm(diag(1:5)) );
+            mlunitext.assert( ismatsymm(diag(1:5)) );
             
             %nDim = 20, 100
             testAMat = rand(20,20);
-            mlunit.assert( ismatsymm(testAMat*(testAMat')) );
+            mlunitext.assert( ismatsymm(testAMat*(testAMat')) );
             
             testAMat = 10*rand(100,100);
-            mlunit.assert( ismatsymm(testAMat+(testAMat')) );
+            mlunitext.assert( ismatsymm(testAMat+(testAMat')) );
             
             %negative tests
             testAMat = [2 1;3 2];
-            mlunit.assert( ~ismatsymm(testAMat) );
+            mlunitext.assert( ~ismatsymm(testAMat) );
             
             testAMat = 10*rand(20,20)+diag(1:19,1);
-            mlunit.assert( ~ismatsymm(testAMat) );
+            mlunitext.assert( ~ismatsymm(testAMat) );
             
             self.runAndCheckError('gras.la.ismatsymm(eye(5,7))','wrongInput:nonSquareMat');
         end
         function testIsMatPosSimple(~)
             isOk=~gras.la.ismatposdef(zeros(2),1e-7);
-            mlunit.assert(isOk);
+            mlunitext.assert(isOk);
             isOk=gras.la.ismatposdef(zeros(2),1e-7,true);
-            mlunit.assert(isOk);
+            mlunitext.assert(isOk);
             isOk=~gras.la.ismatposdef(zeros(2),1e-7,false);
-            mlunit.assert(isOk);
+            mlunitext.assert(isOk);
             isOk=~gras.la.ismatposdef(zeros(2));
-            mlunit.assert(isOk);    
+            mlunitext.assert(isOk);    
             isOk=gras.la.ismatposdef(zeros(2),0,true);
-            mlunit.assert(isOk);              
+            mlunitext.assert(isOk);              
         end
         function self = testIsMatPosAndPosSemDef(self)
             import gras.la.ismatposdef;
@@ -173,12 +189,12 @@ classdef BasicTestCase < mlunitext.test_case
             testMat=rand(10,10);
             testMat=testMat.'*testMat;
             testMat=0.5*(testMat+testMat.');
-            mlunit.assert(fIsMatPosSemDef(testMat.'*testMat,absTol));
+            mlunitext.assert(fIsMatPosSemDef(testMat.'*testMat,absTol));
             %
             testMat=[1 5; 5 25];
-            mlunit.assert(~ismatposdef(testMat,absTol));
-            mlunit.assert(fIsMatPosSemDef(testMat,absTol));
-            mlunit.assert(~fIsMatPosDef(testMat,absTol));
+            mlunitext.assert(~ismatposdef(testMat,absTol));
+            mlunitext.assert(fIsMatPosSemDef(testMat,absTol));
+            mlunitext.assert(~fIsMatPosDef(testMat,absTol));
             %
             gras.la.ismatposdef(eye(3));
             %
@@ -227,13 +243,13 @@ classdef BasicTestCase < mlunitext.test_case
                 else
                     isOk=ismatposdef(testMat,absTol,isSemPosDef);
                 end
-                mlunit.assert_equals(isTrue,isOk);
+                mlunitext.assert_equals(isTrue,isOk);
             end
             %
             function check(fHandle)
                 import gras.la.ismatposdef;
                 %
-                mlunit.assert(fHandle(1,absTol));
+                mlunitext.assert(fHandle(1,absTol));
                 %
                 testMat=rand(10,10);
                 testMat=testMat.'*testMat;
@@ -242,7 +258,7 @@ classdef BasicTestCase < mlunitext.test_case
                 testMat=vMat.'*dMat*vMat;
                 testMat=0.5*(testMat.'+testMat);
                 isOk=fHandle(testMat,absTol);
-                mlunit.assert(isOk);
+                mlunitext.assert(isOk);
                 %
             end
             %
@@ -258,7 +274,7 @@ classdef BasicTestCase < mlunitext.test_case
                 % Check that ismatposdef return false with
                 % isSemDefFlagOn=true and at the same time sqrtmpos throws
                 % notPosSemDef error:
-                mlunit.assert_equals(false,isFalse);
+                mlunitext.assert_equals(false,isFalse);
                 self.runAndCheckError('gras.la.sqrtmpos(testMat,absTol)',...
                     'wrongInput:notPosSemDef');
             end

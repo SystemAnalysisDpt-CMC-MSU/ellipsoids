@@ -41,18 +41,26 @@ function outEllArr = intersection_ea(myEllArr, objArr)
 %           / polytope [nDims1,nDims2,...,nDimsN]/[1,1]  - array of
 %           ellipsoids or hyperplanes or polytopes of the same sizes.
 %
-% Output:
-%    outEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of external
-%       approximating ellipsoids; entries can be empty ellipsoids
-%       if the corresponding intersection is empty.
+% Example:
+%   firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+%   secEllObj = firstEllObj + [5; 5];
+%   ellVec = [firstEllObj secEllObj];
+%   thirdEllObj  = ell_unitball(2);
+%   externalEllVec = ellVec.intersection_ea(thirdEllObj)
+% 
+%   externalEllVec =
+%   1x2 array of ellipsoids.
+% 
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 2004-2008 $
+% $Copyright:  The Regents of the University of California
+%              2004-2008 $
 %
-% $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
+% $Author: Guliev Rustam <glvrst@gmail.com> $   
+% $Date: Dec-2012$
 % $Copyright: Moscow State University,
-%             Faculty of Computational Mathematics and Cybernetics,
-%             Science, System Analysis Department 2012 $
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2012 $
 %
 
 import modgen.common.throwerror;
@@ -141,8 +149,8 @@ function outEll = l_intersection_ea(fstEll, secObj)
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
 
-fstEllCentVec = fstEll.center;
-fstEllShMat = fstEll.shape;
+fstEllCentVec = fstEll.centerVec;
+fstEllShMat = fstEll.shapeMat;
 if rank(fstEllShMat) < size(fstEllShMat, 1)
     fstEllShMat = ...
         ell_inv(ellipsoid.regularize(fstEllShMat,fstEll.absTol));
@@ -180,8 +188,8 @@ else
         outEll = ellipsoid;
         return;
     end
-    qSecVec = secObj.center;
-    seqQMat = secObj.shape;
+    qSecVec = secObj.centerVec;
+    seqQMat = secObj.shapeMat;
     if rank(seqQMat) < size(seqQMat, 1)
         seqQMat = ell_inv(ellipsoid.regularize(seqQMat,secObj.absTol));
     else
@@ -199,7 +207,7 @@ const = 1 - lambda*(1 - lambda)*(qSecVec - ...
     fstEllCentVec)'*seqQMat*invXMat*fstEllShMat*(qSecVec - fstEllCentVec);
 qCenterVec = invXMat*(lambda*fstEllShMat*fstEllCentVec + ...
     (1 - lambda)*seqQMat*qSecVec);
-shQMat = (1+fstEll.absTol)*const*invXMat;
+shQMat = const*invXMat;
 outEll = ellipsoid(qCenterVec, shQMat);
 
 end
@@ -266,7 +274,7 @@ outEll = myEll;
 hyp = polytope2hyperplane(polyt);
 nDimsHyp  = size(hyp, 2);
 
-if isinside(myEll, polyt)
+if isContainedInIntersection(myEll, polyt)
     outEll = getOutterEllipsoid(polyt);
     return;
 end

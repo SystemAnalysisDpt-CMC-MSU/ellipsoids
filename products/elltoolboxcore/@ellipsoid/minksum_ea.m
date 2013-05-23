@@ -37,13 +37,26 @@ function extApprEllVec = minksum_ea(inpEllArr, dirMat)
 %   extApprEllVec: ellipsoid [1, nCols] - array of external
 %       approximating ellipsoids.
 %
-% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 2004-2008 $
+% Example:
+%   firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+%   secEllObj = ell_unitball(2);
+%   ellVec = [firstEllObj secEllObj firstEllObj.inv()];
+%   dirsMat = [1 0; 1 1; 0 1; -1 1]';
+%   externalEllVec = ellVec.minksum_ea(dirsMat)
+% 
+%   externalEllVec =
+%   1x4 array of ellipsoids.
 %
-% $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
+% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+% $Copyright:  The Regents of the University of California 
+%              2004-2008 $
+%
+% $Author: Guliev Rustam <glvrst@gmail.com> $   
+% $Date: Dec-2012$
+% $Author: Peter Gagarinov <pgagarinov@gmail.com> $   $Date: 25-04-2013$
 % $Copyright: Moscow State University,
-%             Faculty of Computational Mathematics and Cybernetics,
-%             Science, System Analysis Department 2012 $
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2012 $
 %
 
 import elltool.conf.Properties;
@@ -71,30 +84,23 @@ modgen.common.checkvar( nDimsInpEllArr,'all(x(:)==x(1))','errorTag', ...
     'ellipsoids in the array and vector(s) must be of the same dimension.');
 
 checkmultvar('x1(1)==x2',2,nDimsInpEllArr,nDims,...
-    'errorTag','wrongSizes','errrorMessage',...
+    'errorTag','wrongSizes','errorMessage',...
     'ellipsoids in the array and vector(s) must be of the same dimension.');
 
 if isscalar(inpEllArr)
-    extApprEllVec(1,nCols) = ellipsoid; 
-    arrayfun(@(x)fCopyEll(x,inpEllArr),1:nCols);
-    return;
+    extApprEllVec=inpEllArr.repMat(1,nCols);
+else
+    centVec =zeros(nDims,1);
+    arrayfun(@(x) fAddCenter(x),inpEllArr);
+    %
+    isVerbose=Properties.getIsVerbose();
+    %
+    absTolArr = getAbsTol(inpEllArr);
+    extApprEllVec(1,nCols) = ellipsoid;
+    arrayfun(@(x) fSingleDirection(x),1:nCols);
 end
-
-centVec =zeros(nDims,1);
-arrayfun(@(x) fAddCenter(x),inpEllArr);
-%
-isVerbose=Properties.getIsVerbose();
-%
-absTolArr = getAbsTol(inpEllArr);
-extApprEllVec(1,nCols) = ellipsoid;
-arrayfun(@(x) fSingleDirection(x),1:nCols);
-
-    function fCopyEll(index,ellObj)
-        extApprEllVec(index).center=ellObj.center;
-        extApprEllVec(index).shape=ellObj.shape;
-    end
     function fAddCenter(singEll)
-        centVec = centVec + singEll.center;
+        centVec = centVec + singEll.centerVec;
     end
     function fSingleDirection(index)
         secCoef = 0;
@@ -102,11 +108,11 @@ arrayfun(@(x) fSingleDirection(x),1:nCols);
         dirVec = dirMat(:, index);
         arrayfun(@(x,y) fAddSh(x,y), inpEllArr, absTolArr);
         subShMat  = 0.5*secCoef*(subShMat + subShMat');
-        extApprEllVec(index).center = centVec;
-        extApprEllVec(index).shape = subShMat;
+        extApprEllVec(index).centerVec = centVec;
+        extApprEllVec(index).shapeMat = subShMat;
         
         function fAddSh(singEll,absTol)
-            shMat = singEll.shape;
+            shMat = singEll.shapeMat;
             if isdegenerate(singEll)
                 if isVerbose
                     if isempty(logger)

@@ -1,6 +1,7 @@
 function res = ell_value_extract(X, t, dims)
 %
-% ELL_VALUE_EXTRACT - extracts matrix value from ppform or vector array.
+% ELL_VALUE_EXTRACT - extracts matrix value from ppform or 
+%                     vector array.
 %
 
   if isstruct(X)

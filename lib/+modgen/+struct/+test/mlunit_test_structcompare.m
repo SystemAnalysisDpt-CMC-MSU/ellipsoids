@@ -29,7 +29,7 @@ classdef mlunit_test_structcompare < mlunitext.test_case
             S1=struct('a',1,'b',2);
             S2=struct('a',2,'b',2);
             isEqual=modgen.struct.structcompare(S1,S2,0);
-            mlunit.assert_equals(isEqual,false);
+            mlunitext.assert_equals(isEqual,false);
         end
         %
         function testVectorialStruct(~)
@@ -47,7 +47,7 @@ classdef mlunit_test_structcompare < mlunitext.test_case
             check();
             function check()
                 isEqual=modgen.struct.structcompare(S1,S2);
-                mlunit.assert_equals(false,isEqual);
+                mlunitext.assert_equals(false,isEqual);
             end
         end
         %
@@ -60,7 +60,7 @@ classdef mlunit_test_structcompare < mlunitext.test_case
             S1=struct('a',1,'b',value1);
             S2=struct('a',1,'b',value2);
             isEqual=modgen.struct.structcompare(S1,S2,tol);
-            mlunit.assert_equals(isEqual,expRes);
+            mlunitext.assert_equals(isEqual,expRes);
             end
         end
         %
@@ -68,31 +68,31 @@ classdef mlunit_test_structcompare < mlunitext.test_case
             S1=struct('a',1,'b',nan);
             S2=struct('a',1,'b',2);
             isEqual=modgen.struct.structcompare(S1,S2,0);
-            mlunit.assert_equals(isEqual,false);
+            mlunitext.assert_equals(isEqual,false);
         end
         function self = test_simplestruct_negative2(self)
             S1=struct('a',1,'b',2);
             S2=struct('a',1,'b',2);
             isEqual=modgen.struct.structcompare(S1,S2,0);
-            mlunit.assert_equals(isEqual,true);
+            mlunitext.assert_equals(isEqual,true);
         end
         function self = test_simplestruct2_negative(self)
             S1=struct('a',struct('a',1+1e-10,'b',1),'b',2);
             S2=struct('a',struct('a',1,'b',1),'b',2);
             isEqual=modgen.struct.structcompare(S1,S2,1e-11);
-            mlunit.assert_equals(isEqual,false);
+            mlunitext.assert_equals(isEqual,false);
         end        
         function self = test_simplestruct2_positive(self)
             S1=struct('a',struct('a',1+1e-10,'b',1),'b',2);
             S2=struct('a',struct('a',1,'b',1),'b',2);
             [isEqual,reportStr]=modgen.struct.structcompare(S1,S2,1e-9);
-            mlunit.assert_equals(isEqual,true,reportStr);
+            mlunitext.assert_equals(isEqual,true,reportStr);
         end   
         function self = test_simplestruct3_negative(self)
             S1=struct('a',struct('a',nan,'b',1),'b',2);
             S2=struct('a',struct('a',1,'b',1),'b',2);
             isEqual=modgen.struct.structcompare(S1,S2,0);
-            mlunit.assert_equals(isEqual,false);
+            mlunitext.assert_equals(isEqual,false);
         end        
         
         function self = test_simplestructarray1_negative(self)
@@ -101,62 +101,62 @@ classdef mlunit_test_structcompare < mlunitext.test_case
             S2(1)=struct('a',struct('a',1,'b',1),'b',2);
             S2(2)=struct('a',struct('a',1,'b',1),'b',2);
             isEqual=modgen.struct.structcompare(S1,S2,0);
-            mlunit.assert_equals(isEqual,false);
+            mlunitext.assert_equals(isEqual,false);
         end        
         function self = test_simplestructarray1_positive(self)
             S2(1)=struct('a',struct('a',1,'b',1),'b',2);
             S2(2)=struct('a',struct('a',1,'b',1),'b',2);
             S1=S2;
             [isEqual,reportStr]=modgen.struct.structcompare(S1,S2,0);
-            mlunit.assert_equals(isEqual,true,reportStr);
+            mlunitext.assert_equals(isEqual,true,reportStr);
         end        
         function self = test_complex1_positive(self)
             [isEqual,reportStr]=modgen.struct.structcompare(self.SXComp,self.SXComp,0);
-            mlunit.assert_equals(isEqual,true,reportStr);
+            mlunitext.assert_equals(isEqual,true,reportStr);
         end        
         function self = test_complex1_negative(self)
             [isEqual,reportStr]=modgen.struct.structcompare(self.SXComp,self.SYComp,0);
-            mlunit.assert_equals(isEqual,false);
-            mlunit.assert_equals(numel(findstr(sprintf('\n'),reportStr)),5);
+            mlunitext.assert_equals(isEqual,false);
+            mlunitext.assert_equals(numel(findstr(sprintf('\n'),reportStr)),5);
         end
         function self = test_optional_tolerance_arg(self)
             [isEqual,reportStr]=modgen.struct.structcompare(self.SXComp,self.SYComp,0);
             [isEqual2,reportStr2]=modgen.struct.structcompare(self.SXComp,self.SYComp);
-            mlunit.assert_equals(isEqual,isEqual2);
-            mlunit.assert_equals(reportStr,reportStr2);
+            mlunitext.assert_equals(isEqual,isEqual2);
+            mlunitext.assert_equals(reportStr,reportStr2);
         end          
         function self = test_complex2_negative(self)
             S1=struct('a',1,'b',repmat([2 nan 3],2,1));
             S2=struct('a',2,'b',repmat([1 nan 2],2,1));
             [isEqual,reportStr]=modgen.struct.structcompare(S1,S2,0.1);
-            mlunit.assert_equals(isEqual,false);
-            mlunit.assert_equals(2,numel(findstr('Max. difference',reportStr)));
+            mlunitext.assert_equals(isEqual,false);
+            mlunitext.assert_equals(2,numel(findstr('Max. difference',reportStr)));
         end
         function self = test_differentsize_negative(self)
             S1=struct('a',1,'b',repmat([2 nan 3 3],2,1));
             S2=struct('a',2,'b',repmat([1 nan 2],2,1));
             [isEqual,reportStr]=modgen.struct.structcompare(S1,S2,0.1);
-            mlunit.assert_equals(isEqual,false);
-            mlunit.assert_equals(1,numel(findstr('Max. difference',reportStr)));
-            mlunit.assert_equals(1,numel(findstr('Different sizes',reportStr)));
+            mlunitext.assert_equals(isEqual,false);
+            mlunitext.assert_equals(1,numel(findstr('Max. difference',reportStr)));
+            mlunitext.assert_equals(1,numel(findstr('Different sizes',reportStr)));
         end
         function self = test_cell_positive(self)
             S1=struct('a',1,'b',{{NaN;struct('c',{'aaa'})}});
             isEqual=modgen.struct.structcompare(S1,S1,0);
-            mlunit.assert_equals(isEqual,true);
+            mlunitext.assert_equals(isEqual,true);
         end
         function self = test_cell_negative(self)
             S1=struct('a',1,'b',{{NaN;struct('c',{'aaa'})}});
             S2=struct('a',1,'b',{{NaN;struct('c',{'bbb'})}});
             [isEqual,reportStr]=modgen.struct.structcompare(S1,S2,0);
-            mlunit.assert_equals(isEqual,false);
-            mlunit.assert_equals(1,numel(findstr('values are different',reportStr)));
+            mlunitext.assert_equals(isEqual,false);
+            mlunitext.assert_equals(1,numel(findstr('values are different',reportStr)));
         end
         function self = test_simplestruct_order_positive(self)
             S1=struct('a',1,'b',2);
             S2=struct('b',2,'a',1);
             isEqual=modgen.struct.structcompare(S1,S2,0);
-            mlunit.assert_equals(isEqual,true);
+            mlunitext.assert_equals(isEqual,true);
         end
     end
 end

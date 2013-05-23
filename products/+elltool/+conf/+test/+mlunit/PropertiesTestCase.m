@@ -1,9 +1,12 @@
 classdef PropertiesTestCase < mlunitext.test_case
-    % $Author: <Zakharov Eugene>  <justenterrr@gmail.com> $    $Date: <5 november> $
-    % $Copyright: Moscow State University,
-    %            Faculty of Computational Mathematics and Computer Science,
-    %            System Analysis Department <2012> $
-    %
+% PUTCOPYRIGHTHERE
+%$Author: <Zakharov Eugene>  <justenterrr@gmail.com> $
+%$Date: 2012-11-05$
+%$Copyright: Moscow State University,
+%            Faculty of Computational Mathematics 
+%            and Computer Science,
+%            System Analysis Department <2012> $
+%
     properties (Access=private)
         confName
     end
@@ -49,25 +52,25 @@ classdef PropertiesTestCase < mlunitext.test_case
             confRepo.setParam('nPlot3dPoints',plot3dGrid);
             %
             Properties.setConfRepoMgr(confRepo);
-            mlunit.assert_equals(version,Properties.getVersion());
-            mlunit.assert_equals(verbose,Properties.getIsVerbose());
-            mlunit.assert_equals(absTol,Properties.getAbsTol());
-            mlunit.assert_equals(relTol,Properties.getRelTol());
-            mlunit.assert_equals(timeGrid,Properties.getNTimeGridPoints());
-            mlunit.assert_equals(odeSolver,Properties.getODESolverName());
-            mlunit.assert_equals(normControl,Properties.getIsODENormControl());
-            mlunit.assert_equals(solverOptions,Properties.getIsEnabledOdeSolverOptions());
-            mlunit.assert_equals(plot2dGrid,Properties.getNPlot2dPoints());
-            mlunit.assert_equals(plot3dGrid,Properties.getNPlot3dPoints());
+            mlunitext.assert_equals(version,Properties.getVersion());
+            mlunitext.assert_equals(verbose,Properties.getIsVerbose());
+            mlunitext.assert_equals(absTol,Properties.getAbsTol());
+            mlunitext.assert_equals(relTol,Properties.getRelTol());
+            mlunitext.assert_equals(timeGrid,Properties.getNTimeGridPoints());
+            mlunitext.assert_equals(odeSolver,Properties.getODESolverName());
+            mlunitext.assert_equals(normControl,Properties.getIsODENormControl());
+            mlunitext.assert_equals(solverOptions,Properties.getIsEnabledOdeSolverOptions());
+            mlunitext.assert_equals(plot2dGrid,Properties.getNPlot2dPoints());
+            mlunitext.assert_equals(plot3dGrid,Properties.getNPlot3dPoints());
             %%
             %testing setters
             Properties.setIsVerbose(~verbose);
             Properties.setNPlot2dPoints(plot2dGrid - 1);
             Properties.setNTimeGridPoints(timeGrid + 1);
             %
-            mlunit.assert_equals(~verbose,Properties.getIsVerbose());
-            mlunit.assert_equals(plot2dGrid-1,Properties.getNPlot2dPoints());
-            mlunit.assert_equals(timeGrid+1,Properties.getNTimeGridPoints());
+            mlunitext.assert_equals(~verbose,Properties.getIsVerbose());
+            mlunitext.assert_equals(plot2dGrid-1,Properties.getNPlot2dPoints());
+            mlunitext.assert_equals(timeGrid+1,Properties.getNTimeGridPoints());
 %             %%
 %             %negative test, trying to access one of properties, before
 %             %Properties were initialized
@@ -77,7 +80,7 @@ classdef PropertiesTestCase < mlunitext.test_case
             %placing previous confRepoMgr back and testing if absTol
             %not changed
             Properties.setConfRepoMgr(prevConfRepo);
-            mlunit.assert_equals(prevAbsTol,Properties.getAbsTol());   
+            mlunitext.assert_equals(prevAbsTol,Properties.getAbsTol());   
         end
         function self = testParseProp(self)
             %Positive test
@@ -89,7 +92,7 @@ classdef PropertiesTestCase < mlunitext.test_case
             neededProp = {'absTol','relTol'};
             [absTol, relTol] = elltool.conf.Properties.parseProp(args,neededProp);
             isOk = (absTol == testAbsTol) && (relTol == testRelTol);
-            mlunit.assert(isOk);
+            mlunitext.assert(isOk);
             %Negative test
             args{2} = -absTol;
             self.runAndCheckError('elltool.conf.Properties.parseProp(args,neededProp)','wrongInput');

@@ -1,44 +1,130 @@
 classdef ellipsoid < handle
     %ELLIPSOID class of ellipsoids
-    properties (Access=private)
-        center
-        shape
+    properties (Access=private,Hidden)
+        centerVec
+        shapeMat
         absTol
         relTol
         nPlot2dPoints
         nPlot3dPoints
     end
     
-    methods 
-        function set.shape(self,shMat)
+    methods
+        function set.shapeMat(self,shMat)
             import modgen.common.throwerror;
             if any(isnan(shMat(:)))
                 throwerror('wrongInput',...
                     'configuration matrix cannot contain NaN values');
             end
-            self.shape=shMat;
+            self.shapeMat=shMat;
         end
     end
     %
-    
-    
+    methods (Access=private)
+        function checkIfScalar(self,errMsg)
+            if nargin<2
+                errMsg='input argument must be single ellipsoid.';
+            end
+            modgen.common.checkvar(self,'isscalar(x)',...
+                'errorMessage',errMsg);
+        end
+    end
+    methods
+        function resArr=repMat(self,varargin)
+            % REPMAT - is analogous to built-in repmat function with one exception - it
+            %          copies the objects, not just the handles
+            %
+            % Example:
+            %   firstEllObj = ellipsoid([1; 2], eye(2));
+            %   secEllObj = ellipsoid([1; 1], 2*eye(2));
+            %   ellVec = [firstEllObj secEllObj];
+            %   repMat(ellVec)
+            %
+            %   ans =
+            %   1x2 array of ellipsoids.
+            %
+            %
+            % $Author: Peter Gagarinov <pgagarinov@gmail.com> $   $Date: 24-04-2013$
+            % $Copyright: Moscow State University,
+            %             Faculty of Computational Mathematics and Cybernetics,
+            %             Science, System Analysis Department 2012-2013 $
+            %
+            %
+            sizeVec=horzcat(varargin{:});
+            resArr=repmat(self,sizeVec);
+            resArr=resArr.getCopy();
+        end
+        %
+        function shMat=getShapeMat(self)
+            % GETSHAPEMAT - returns shapeMat matrix of given ellipsoid
+            %
+            % Input:
+            %   regular:
+            %      self: ellipsoid[1,1]
+            %
+            % Output:
+            %   shMat: double[nDims,nDims] - shapeMat matrix of ellipsoid
+            %
+            % Example:
+            %   ellObj = ellipsoid([1; 2], eye(2));
+            %   getShapeMat(ellObj)
+            %
+            %   ans =
+            % 
+            %        1     0
+            %        0     1  
+            %
+            % $Author: Peter Gagarinov <pgagarinov@gmail.com> $   $Date: 24-04-2013$
+            % $Copyright: Moscow State University,
+            %             Faculty of Computational Mathematics and Cybernetics,
+            %             Science, System Analysis Department 2012-2013 $
+            self.checkIfScalar();
+            shMat=self.shapeMat;
+        end
+        %
+        function centerVecVec=getCenterVec(self)
+            % GETCENTERVEC - returns centerVec vector of given ellipsoid
+            %
+            % Input:
+            %   regular:
+            %      self: ellipsoid[1,1]
+            %
+            % Output:
+            %   centerVecVec: double[nDims,1] - centerVec of ellipsoid
+            %
+            % Example:
+            %   ellObj = ellipsoid([1; 2], eye(2));
+            %   getCenterVec(ellObj)
+            %
+            %   ans =
+            % 
+            %        1     
+            %        2       
+            %
+            % $Author: Peter Gagarinov <pgagarinov@gmail.com> $   $Date: 24-04-2013$
+            % $Copyright: Moscow State University,
+            %             Faculty of Computational Mathematics and Cybernetics,
+            %             Science, System Analysis Department 2012-2013 $
+            self.checkIfScalar();
+            centerVecVec=self.centerVec;
+        end
+    end
     methods
         function [ellMat] = ellipsoid(varargin)
             %
             % ELLIPSOID - constructor of the ellipsoid object.
             %
-            %   Ellipsoid E = { x in R^n : <(x - q), Q^(-1)(x - q)> <= 1 },
-            %       with current "Properties"..
-            %       Here q is a vector in R^n, and Q in R^(nxn) is positive
-            %           semi-definite matrix
-            %
+            %   Ellipsoid E = { x in R^n : <(x - q), Q^(-1)(x - q)> <= 1 }, with current 
+            %       "Properties". Here q is a vector in R^n, and Q in R^(nxn) is positive 
+            %       semi-definite matrix
+            %       
             %   ell = ELLIPSOID - Creates an empty ellipsoid
             %
-            %   ell = ELLIPSOID(shMat) - creates an ellipsoid with shape
-            %       matrix shMat, centered at 0
+            %   ell = ELLIPSOID(shMat) - creates an ellipsoid with shape matrix shMat,
+            %       centered at 0
             %
-            %	ell = ELLIPSOID(centVec, shMat) - creates an ellipsoid with
-            %       shape matrix shMat and center centVec
+            %	ell = ELLIPSOID(centVec, shMat) - creates an ellipsoid with shape matrix 
+            %       shMat and center centVec
             %
             %   ell = ELLIPSOID(centVec, shMat, 'propName1', propVal1,...,
             %       'propNameN',propValN) - creates an ellipsoid with shape
@@ -75,111 +161,117 @@ classdef ellipsoid < handle
             %       shMatArray: double [nDim, nDim] /
             %           double [nDim, nDim, nDim1,...,nDimn] -
             %           shape matrices array
+            %           
             %
             %   properties:
-            %       absTol: double [1,1] - absolute tolerance with default
-            %           value 10^(-7)
-            %       relTol: double [1,1] - relative tolerance with default
-            %           value 10^(-5)
-            %       nPlot2dPoints: double [1,1] - number of points for 2D plot
-            %           with default value 200
-            %       nPlot3dPoints: double [1,1] - number of points for 3D plot
-            %           with default value 200.
+            %       absTol: double [1,1] - absolute tolerance with default value 10^(-7)
+            %       relTol: double [1,1] - relative tolerance with default value 10^(-5)
+            %       nPlot2dPoints: double [1,1] - number of points for 2D plot with  
+            %           default value 200
+            %       nPlot3dPoints: double [1,1] - number of points for 3D plot with  
+            %            default value 200.
             %
             % Output:
             %   ellMat: ellipsoid [1,1] / ellipsoid [nDim1,...nDimn] -
             %       ellipsoid with specified properties
             %       or multidimensional array of ellipsoids.
+            % 
+            % Example:
+            %   ellObj = ellipsoid([1 0 -1 6]', 9*eye(4));
             %
             % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
             % $Copyright: The Regents of the University
             %   of California 2004-2008 $
             %
-            % $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
+            % $Author: Guliev Rustam <glvrst@gmail.com> $   
+            % $Date: Dec-2012$
             % $Author: Daniil Stepenskiy <reinkarn@gmail.com> $   $Date: Apr-2013$
             % $Copyright: Moscow State University,
-            %             Faculty of Computational Mathematics and Cybernetics,
-            %             Science, System Analysis Department 2012-2013 $
+            %             Faculty of Computational Mathematics and and Computer Science,
+            %             System Analysis Department 2012-2013 $
             %
             import modgen.common.throwerror;
             import modgen.common.checkvar;
             import modgen.common.checkmultvar;
             import gras.la.ismatsymm;
-            
-            neededPropNameList = {'absTol','relTol','nPlot2dPoints','nPlot3dPoints'};
+            %
+            NEEDED_PROP_NAME_LIST = {'absTol','relTol',...
+                'nPlot2dPoints','nPlot3dPoints'};
+            [regParamList,propNameValList]=modgen.common.parseparams(...
+                varargin,NEEDED_PROP_NAME_LIST);
             [absTolVal, relTolVal,nPlot2dPointsVal,nPlot3dPointsVal] =...
-                elltool.conf.Properties.parseProp(varargin,neededPropNameList);
-            
-            if nargin == 0
-                ellMat.center = [];
-                ellMat.shape  = [];
+                elltool.conf.Properties.parseProp(propNameValList,...
+                NEEDED_PROP_NAME_LIST);
+            %
+            nReg=numel(regParamList);
+            if nReg == 0
+                ellMat.centerVec = [];
+                ellMat.shapeMat  = [];
                 ellMat.absTol = absTolVal;
                 ellMat.relTol = relTolVal;
                 ellMat.nPlot2dPoints = nPlot2dPointsVal;
                 ellMat.nPlot3dPoints = nPlot3dPointsVal;
-                return;
-            end
-            
-            if nargin == 1
-                checkvar(varargin{1},@(x) isa(x,'double')&&isreal(x),...
-                    'errorTag','wrongInput:imagArgs',...
-                    'errorMessage','shape matrix must be real.');
-                shMatArray = varargin{1};
-                nShDims = ndims(shMatArray);
-                shDimsVec(1:nShDims) = size(shMatArray);
-                nShRows = shDimsVec(1);
-                nShCols = shDimsVec(2);
-                nCentRows = nShCols;
-                nCentCols = 1;
-                if (nShDims > 2)
-                    centVecArray = zeros([nCentRows, shDimsVec(3:end)]);
+            else
+                if nReg == 1
+                    checkvar(regParamList{1},@(x) isa(x,'double')&&isreal(x),...
+                        'errorTag','wrongInput:imagArgs',...
+                        'errorMessage','shapeMat matrix must be real.');
+                    shMatArray = regParamList{1};
+                    nShDims = ndims(shMatArray);
+                    shDimsVec(1:nShDims) = size(shMatArray);
+                    nShRows = shDimsVec(1);
+                    nShCols = shDimsVec(2);
+                    nCentRows = nShCols;
+                    nCentCols = 1;
+                    if (nShDims > 2)
+                        centVecArray = zeros([nCentRows, shDimsVec(3:end)]);
+                    else
+                        centVecArray = zeros(nCentRows, 1);
+                    end
+                    %
                 else
-                    centVecArray = zeros(nCentRows, 1);
+                    checkmultvar(@(x,y) isa(x,'double') && isa(y,'double') &&...
+                        isreal(x) && isreal(y),2,regParamList{1},regParamList{2},...
+                        'errorTag','wrongInput:imagArgs',...
+                        'errorMessage','centerVec and shapeMat matrix must be real.');
+                    centVecArray = regParamList{1};
+                    shMatArray = regParamList{2};
+                    nShDims = ndims(shMatArray);
+                    nCentDims = ndims(centVecArray);
+                    checkmultvar(...
+                        @(x,y)(x==2&&y==2)||x==y+1, 2, nShDims, nCentDims,...
+                        'errorTag','wrongInput',...
+                        'errorMessage', ['centerVec and shapeMat matrix must ',...
+                        'differ in dimensionality by 1.']);
+                    centDimsVec(1:nCentDims) = size(centVecArray);
+                    shDimsVec(1:nShDims) = size(shMatArray);
+                    checkmultvar(@(x,y)all(x==y), 2, centDimsVec(2:end),...
+                        shDimsVec(3:end), 'errorTag','wrongInput',...
+                        'errorMessage',...
+                        'additional dimensions must agree');
+                    nCentRows = centDimsVec(1);
+                    nCentCols = centDimsVec(2);
+                    nShRows = shDimsVec(1);
+                    nShCols = shDimsVec(2);
                 end
-                
-            else
-                checkmultvar(@(x,y) isa(x,'double') && isa(y,'double') &&...
-                    isreal(x) && isreal(y),2,varargin{1},varargin{2},...
-                    'errorTag','wrongInput:imagArgs',...
-                    'errorMessage','center and shape matrix must be real.');
-                centVecArray = varargin{1};
-                shMatArray = varargin{2};
-                nShDims = ndims(shMatArray);
-                nCentDims = ndims(centVecArray);
-                checkmultvar(...
-                    @(x,y)(x==2&&y==2)||x==y+1, 2, nShDims, nCentDims,...
-                    'errorTag','wrongInput',...
-                    'errorMessage', ['center and shape matrix must ',...
-                    'differ in dimensionality by 1.']);
-                centDimsVec(1:nCentDims) = size(centVecArray);
-                shDimsVec(1:nShDims) = size(shMatArray);
-                checkmultvar(@(x,y)all(x==y), 2, centDimsVec(2:end),...
-                    shDimsVec(3:end), 'errorTag','wrongInput',...
-                    'errorMessage',...
-                    'additional dimensions must agree');
-                nCentRows = centDimsVec(1);
-                nCentCols = centDimsVec(2);
-                nShRows = shDimsVec(1);
-                nShCols = shDimsVec(2);
-            end
-            %
-            checkmultvar('(x1==x2)&&(x3==x1)&&(x4==1||x5>2)',...
-                5,nShRows,nShCols,nCentRows,nCentCols,nShDims,...
-                'errorTag','wrongInput', 'errorMessage',...
-                'center must be vector and dimesions must agree.');
-            %
-            
-            if nShDims > 2
-                ellMat(prod(shDimsVec(3:end))) = ellipsoid();
-                arrayfun(@(iEll)fMakeEllipsoid(iEll), 1:numel(ellMat));
-                if (nShDims > 3)
-                    ellMat = reshape(ellMat, [shDimsVec(3:end)]);
+                %
+                checkmultvar('(x1==x2)&&(x3==x1)&&(x4==1||x5>2)',...
+                    5,nShRows,nShCols,nCentRows,nCentCols,nShDims,...
+                    'errorTag','wrongInput', 'errorMessage',...
+                    'centerVec must be vector and dimesions must agree.');
+                %
+                if nShDims > 2
+                    ellMat(prod(shDimsVec(3:end))) = ellipsoid();
+                    arrayfun(@(iEll)fMakeEllipsoid(iEll), 1:numel(ellMat));
+                    if (nShDims > 3)
+                        ellMat = reshape(ellMat, shDimsVec(3:end));
+                    end
+                else
+                    fMakeEllipsoid(1);
                 end
-            else
-                fMakeEllipsoid(1);
             end
             function fMakeEllipsoid(iEll)
-                %shape matrix must be symmetric.');
+                %shapeMat matrix must be symmetric.');
                 % We cannot just check the condition 'min(eig(Q)) < 0'
                 % because the zero eigenvalue may be internally represented
                 % as something like -10^(-15).
@@ -188,10 +280,10 @@ classdef ellipsoid < handle
                     &&gras.la.ismatposdef(aMat,aAbsTolVal,1), 2,...
                     shMatArray(:,:,iEll), absTolVal,...
                     'errorTag','wrongInput',...
-                    'errorMessage', ['shape matrices must be symmetric',...
+                    'errorMessage', ['shapeMat matrices must be symmetric',...
                     ' and positive semi-definite']);
-                ellMat(iEll).center = centVecArray(:,iEll);
-                ellMat(iEll).shape = shMatArray(:,:,iEll);
+                ellMat(iEll).centerVec = centVecArray(:,iEll);
+                ellMat(iEll).shapeMat = shMatArray(:,:,iEll);
                 ellMat(iEll).absTol = absTolVal;
                 ellMat(iEll).relTol = relTolVal;
                 ellMat(iEll).nPlot2dPoints = nPlot2dPointsVal;
@@ -200,17 +292,21 @@ classdef ellipsoid < handle
         end
     end
     
-    
+    methods(Static)
+        ellArr = fromRepMat(varargin)
+        [vGridMat, fGridMat] = getGrid(nDim,nPoints)
+    end
     methods(Static,Access = private)
         res = my_color_table(ch)
         regQMat = regularize(qMat,absTol)
         clrDirsMat = rm_bad_directions(q1Mat, q2Mat, dirsMat,absTol)
-        isBadDirVec = isbaddirectionmat(q1Mat, q2Mat, dirsMat,absTol)
+        [isBadDirVec,pUniversalVec] = isbaddirectionmat(q1Mat, q2Mat, dirsMat,absTol)
+        [supArr, bpMat] = rhomat(ellShapeMat,ellCenterVec,absTol, dirsMat)
+        [diffBoundMat, isPlotCenter3d] = calcdiffonedir(fstEll,secEll,lMat,pUniversalVec,isGoodDirVec)
     end
     methods(Access = private)
         [propMat, propVal] = getProperty(hplaneMat,propName, fPropFun)
-        x = ellbndr_2d(E)
-        x = ellbndr_3d(E)
+        [bpMat, fVec] = getGridByFactor(ellObj,factorVec)
     end
     methods (Static)
         checkIsMe(someObj,varargin)

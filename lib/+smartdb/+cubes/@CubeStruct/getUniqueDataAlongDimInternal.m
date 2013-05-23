@@ -1,7 +1,7 @@
 function varargout=getUniqueDataAlongDimInternal(self,catDim,varargin)
-% GETUNIQUEDATAALONGDIM returns internal representation of CubeStruct
-% data set unique along a specified dimension
-% set
+% GETUNIQUEDATAALONGDIM - returns internal representation of CubeStruct
+%                         data set unique along a specified dimension
+%                         set
 %
 % Usage: [SData,SIsNull,SIsValueNull]=getUniqueData(self,varargin)
 %

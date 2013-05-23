@@ -45,13 +45,25 @@ function extApprEllVec = minkdiff_ea(fstEll, secEll, directionsMat)
 %       approximating ellipsoids (empty, if for all specified
 %       directions approximations cannot be computed).
 %
-% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 2004-2008 $
+% Example:
+%   firstEllObj= ellipsoid([-2; -1], [4 -1; -1 1]);
+%   secEllObj = 3*ell_unitball(2);
+%   dirsMat = [1 0; 1 1; 0 1; -1 1]';
+%   externalEllVec = secEllObj.minkdiff_ea(firstEllObj, dirsMat)
+% 
+%   externalEllVec =
+%   1x2 array of ellipsoids.
+% 
 %
-% $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
+% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+% $Copyright:  The Regents of the University of California 
+%              2004-2008 $
+%
+% $Author: Guliev Rustam <glvrst@gmail.com> $   
+% $Date: Dec-2012$
 % $Copyright: Moscow State University,
-%             Faculty of Computational Mathematics and Cybernetics,
-%             Science, System Analysis Department 2012 $
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2012 $
 %
 
 import modgen.common.throwerror;
@@ -87,9 +99,9 @@ checkmultvar('(x1==x2)',2,dimension(fstEll),size(directionsMat, 1),...
     'errorTag','wrongSizes','errorMessage',...
     'direction vectors ans ellipsoids dimensions mismatch.');
 
-centVec = fstEll.center - secEll.center;
-fstEllShMat = fstEll.shape;
-secEllShMat = secEll.shape;
+centVec = fstEll.centerVec - secEll.centerVec;
+fstEllShMat = fstEll.shapeMat;
+secEllShMat = secEll.shapeMat;
 absTolVal = min(fstEll.absTol, secEll.absTol);
 directionsMat  = ellipsoid.rm_bad_directions(fstEllShMat, ...
     secEllShMat, directionsMat,absTolVal);
@@ -124,7 +136,7 @@ arrayfun(@(x) fSingleDir(x), 1:nDirs)
     function fSingleDir(index)
         rotMat = rotArray(:,:,index);
         shMat = fstEllSqrtShMat - rotMat*secEllSqrtShMat;
-        extApprEllVec(index).center = centVec;
-        extApprEllVec(index).shape = shMat'*shMat;
+        extApprEllVec(index).centerVec = centVec;
+        extApprEllVec(index).shapeMat = shMat'*shMat;
     end
 end

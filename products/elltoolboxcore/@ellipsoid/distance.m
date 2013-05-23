@@ -1,56 +1,68 @@
 function [distValArray, statusArray] = distance(ellObjArr, objArr, isFlagOn)
 %
-% DISTANCE - computes distance between the given ellipsoid (or array of
+% DISTANCE - computes distance between the given ellipsoid (or array of 
 %            ellipsoids) to the specified object (or arrays of objects):
 %            vector, ellipsoid, hyperplane or polytope.
-%
+%            
 % Input:
 %   regular:
-%       ellObjArr: ellipsoid [nDims1, nDims2,..., nDimsN] - array of
-%           ellipsoids of the same dimension.
-%       objArray: double / ellipsoid / hyperplane /
-%           polytope [nDims1, nDims2,..., nDimsN] - array of vectors or
-%           ellipsoids or hyperplanes or polytopes. If number of elements
-%           in objArray is more than 1, then it must be equal to the number
-%           of elements in ellObjArr.
+%       ellObjArr: ellipsoid [nDims1, nDims2,..., nDimsN] -  array of  
+%          ellipsoids of the same dimension.
+%       objArray: double / ellipsoid / hyperplane / polytope [nDims1, 
+%           nDims2,..., nDimsN] - array of vectors or ellipsoids or
+%           hyperplanes or polytopes. If number of elements in objArray
+%           is more than 1, then it must be equal to the number of elements 
+%           in ellObjArr.
 %
 %   optional:
-%       isFlagOn: logical[1,1] - if true then distance is computed in
-%           ellipsoidal metric, if false - in Euclidean metric
-%           (by default isFlagOn=false).
+%       isFlagOn: logical[1,1] - if true then distance is  computed in  
+%           ellipsoidal metric, if false - in Euclidean metric (by default 
+%           isFlagOn=false).
 %
 % Output:
 %   regular:
-%       distValArray: double [nDims1, nDims2,..., nDimsN] - array of
-%           pairwise calculated distances.
+%     distValArray: double [nDims1, nDims2,..., nDimsN] - array of pairwise 
+%           calculated distances.
 %           Negative distance value means
 %               for ellipsoid and vector: vector belongs to the ellipsoid,
-%               for ellipsoid and hyperplane: ellipsoid
-%                   intersects the hyperplane.
-%           Zero distance value means
-%               for ellipsoid and vector: vector is a
-%                   boundary point of the ellipsoid,
-%               for ellipsoid and hyperplane: ellipsoid
-%                   touches the hyperplane.
+%               for ellipsoid and hyperplane: ellipsoid intersects the 
+%                   hyperplane.
+%               Zero distance value means for ellipsoid and vector: vector 
+%                   is aboundary point of the ellipsoid,
+%               for ellipsoid and hyperplane: ellipsoid  touches the 
+%                   hyperplane.
 %   optional:
-%       statusArray: double [nDims1, nDims2,..., nDimsN] - array of time of
+%       statusArray: double [nDims1, nDims2,..., nDimsN] - array of time of 
 %           computation of ellipsoids-vectors or ellipsoids-ellipsoids
 %           distances, or status of cvx solver for ellipsoids-polytopes
 %           distances.
+% 
+% Example:
+%   ellObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+%   tempMat = [1 1; 1 -1; -1 1; -1 -1]';
+%   distVec = ellObj.distance(tempMat)
+% 
+%   distVec =
+% 
+%        2.3428    1.0855    1.3799    -1.0000
 %
 %
-% $Author: Alex Kurzhanskiy  <akurzhan@eecs.berkeley.edu> $    $Date: 2004-2008 $
-% $Copyright:  The Regents of the University of California 2004-2008 $
+% $Author: Alex Kurzhanskiy  <akurzhan@eecs.berkeley.edu> $    
+% $Date: 2004-2008 $
+% $Copyright:  The Regents of the University of California 
+%              2004-2008 $
 %
-% $Author:  Vitaly Baranov  <vetbar42@gmail.com> $    $Date: 31-10-2012 $
-% $Copyright: Lomonosov Moscow State University,
-%            Faculty of Computational Mathematics and Cybernetics,
+% $Author:  Vitaly Baranov  <vetbar42@gmail.com> $    
+% $Date: 31-10-2012 $
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
 % Literature:
 %    1. Lin, A. and Han, S. On the Distance between Two Ellipsoids.
 %       SIAM Journal on Optimization, 2002, Vol. 13, No. 1 : pp. 298-308
 %    2. Stanley Chan, "Numerical method for Finding Minimum Distance to an
-%       Ellipsoid". http://videoprocessing.ucsd.edu/~stanleychan/publication/unpublished/Ellipse.pdf
+%       Ellipsoid". 
+%       http://videoprocessing.ucsd.edu/~stanleychan/publication/unpublished/Ellipse.pdf
 %
 import modgen.common.throwerror
 
@@ -150,7 +162,7 @@ ellQ2Mat=ellQ2Mat\eye(size(ellQ2Mat));
 if (isinternal(ellObj1,ellCenter2Vec)||isinternal(ellObj2,ellCenter1Vec))
     ellDist=0;
 else
-    %initial centers of circle inside the ellipsoids
+    %initial centerVecs of circle inside the ellipsoids
     circleCenter1Vec=ellCenter1Vec;
     circleCenter2Vec=ellCenter2Vec;
     %
@@ -160,7 +172,7 @@ else
     isDone=false;
     ellDist=inf;
     %find stepsizes that determine the points on the interval formed by
-    %centers of circles, and that points should belong to the boundaries of
+    %centerVecs of circles, and that points should belong to the boundaries of
     %corresponding ellipsoids
     while (kIter<=nMaxIter) &&(~isDone)
         %solve two one dimentional qudratic equations of the type ax^2+bx+c=0 to get the stepsizes
@@ -177,7 +189,7 @@ else
         stepSize1=fzero(fSquareFunc(aCoeff1,bCoeff1,cCoeff1),[0,1]);
         stepSize2=fzero(fSquareFunc(aCoeff2,bCoeff2,cCoeff2),[0,1]);
         if (stepSize2-stepSize1<=absTol)
-            %in this case the interval between the centers of circles
+            %in this case the interval between the centerVecs of circles
             %belongs to the ellipsoids and we obtain intersection
             ellDist=0;
             isDone=true;
@@ -205,7 +217,7 @@ else
                 %at the title
                 gamma1Coeff=1/norm(2*ellQ1Mat);
                 gamma2Coeff=1/norm(2*ellQ2Mat);
-                %finally we calculate new centers of circles
+                %finally we calculate new centerVecs of circles
                 circleCenter1Vec=newPoint1Vec-gamma1Coeff*(newCircle1Vec);
                 circleCenter2Vec=newPoint2Vec-gamma2Coeff*(newCircle2Vec);
             end
@@ -508,11 +520,11 @@ if cPar < 0
     vPar = -vPar;
 end
 if isFlagOn
-    sr = realsqrt(vPar' * (ellObj.shape) * vPar);
+    sr = realsqrt(vPar' * (ellObj.shapeMat) * vPar);
 else
     sr = realsqrt(vPar' * vPar);
 end
-if (vPar' * ellObj.center) < cPar
+if (vPar' * ellObj.centerVec) < cPar
     distEllHpVal = (cPar - rho(ellObj, vPar))/sr;
 else
     distEllHpVal = (-cPar - rho(ellObj, -vPar))/sr;

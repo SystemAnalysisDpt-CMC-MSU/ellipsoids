@@ -1,277 +1,131 @@
-function plot(varargin)
+function plObj = plot(varargin)
 %
 % PLOT - plots ellipsoids in 2D or 3D.
 %
 %
-% Description:
-% ------------
+% Usage:
+%       plot(ell) - plots ellipsoid ell in default (red) color.
+%       plot(ellArr) - plots an array of ellipsoids.
+%       plot(ellArr, 'Property',PropValue,...) - plots ellArr with setting
+%                                                properties.
 %
-% PLOT(E, OPTIONS) plots ellipsoid E if 1 <= dimension(E) <= 3.
-%
-%                  PLOT(E)  Plots E in default (red) color.
-%              PLOT(EA, E)  Plots array of ellipsoids EA and single ellipsoid E.
-%   PLOT(E1, 'g', E2, 'b')  Plots E1 in green and E2 in blue color.
-%        PLOT(EA, Options)  Plots EA using options given in the Options structure.
-%
-%
-% Options.newfigure    - if 1, each plot command will open a new figure window.
-% Options.fill         - if 1, ellipsoids in 2D will be filled with color.
-% Options.width        - line width for 1D and 2D plots.
-% Options.color        - sets default colors in the form [x y z].
-% Options.shade = 0-1  - level of transparency (0 - transparent, 1 - opaque).
-%
-%
+% Input:
+%   regular:
+%       ellArr:  Ellipsoid: [dim11Size,dim12Size,...,dim1kSize] -
+%                array of 2D or 3D Ellipsoids objects. All ellipsoids in ellArr
+%                must be either 2D or 3D simutaneously.
+%   optional:
+%       color1Spec: char[1,1] - color specification code, can be 'r','g',
+%                               etc (any code supported by built-in Matlab function).
+%       ell2Arr: Ellipsoid: [dim21Size,dim22Size,...,dim2kSize] -
+%                                           second ellipsoid array...
+%       color2Spec: char[1,1] - same as color1Spec but for ell2Arr
+%       ....
+%       ellNArr: Ellipsoid: [dimN1Size,dim22Size,...,dimNkSize] -
+%                                            N-th ellipsoid array
+%       colorNSpec - same as color1Spec but for ellNArr.
+%   properties:
+%       'newFigure': logical[1,1] - if 1, each plot command will open a new figure window.
+%                    Default value is 0.
+%       'fill': logical[1,1]/logical[dim11Size,dim12Size,...,dim1kSize]  -
+%               if 1, ellipsoids in 2D will be filled with color. Default value is 0.
+%       'lineWidth': double[1,1]/double[dim11Size,dim12Size,...,dim1kSize]  -
+%                    line width for 1D and 2D plots. Default value is 1.
+%       'color': double[1,3]/double[dim11Size,dim12Size,...,dim1kSize,3] -
+%                sets default colors in the form [x y z]. Default value is [1 0 0].
+%       'shade': double[1,1]/double[dim11Size,dim12Size,...,dim1kSize]  -
+%                level of transparency between 0 and 1 (0 - transparent, 1 - opaque).
+%                Default value is 0.4.
+%       'relDataPlotter' - relation data plotter object.
+%       Notice that property vector could have different dimensions, only
+%       total number of elements must be the same.
 % Output:
-% -------
+%   regular:
+%       plObj: smartdb.disp.RelationDataPlotter[1,1] - returns the relation
+%       data plotter object.
 %
-%    None.
-%
-%
-% See also:
-% ---------
-%
-%    ELLIPSOID/ELLIPSOID.
-%
+% Examples:
+%       plot([ell1, ell2, ell3], 'color', [1, 0, 1; 0, 0, 1; 1, 0, 0]);
+%       plot([ell1, ell2, ell3], 'color', [1; 0; 1; 0; 0; 1; 1; 0; 0]);
+%       plot([ell1, ell2, ell3; ell1, ell2, ell3], 'shade', [1, 1, 1; 1, 1,
+%       1]);
+%       plot([ell1, ell2, ell3; ell1, ell2, ell3], 'shade', [1; 1; 1; 1; 1;
+%       1]);
+%       plot([ell1, ell2, ell3], 'shade', 0.5);
+%       plot([ell1, ell2, ell3], 'lineWidth', 1.5);
+%       plot([ell1, ell2, ell3], 'lineWidth', [1.5, 0.5, 3]);
 
-% 
-% Author:
-% -------
-%
-%    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-%
+% $Author: <Ilya Lyubich>  <lubi4ig@gmail.com> $    $Date: <23 December 2012> $
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Cybernetics,
+%            System Analysis Department 2012 $
 
-  import elltool.conf.Properties;
-  import elltool.logging.Log4jConfigurator;
 
-  persistent logger;
-  
-  nai = nargin;
-  E   = varargin{1};
-  if ~isa(E, 'ellipsoid')
-    error('PLOT: input argument must be an ellipsoid.');
-  end
+import elltool.plot.plotgeombodyarr;
+[plObj,nDim,isHold]= plotgeombodyarr('ellipsoid',@fCalcBodyTriArr,@patch,varargin{:});
+if (nDim < 3)
+    [reg]=...
+        modgen.common.parseparext(varargin,...
+        {'relDataPlotter','priorHold','postHold';...
+        [],[],[];
+        });
+    plObj= plotgeombodyarr('ellipsoid',@fCalcCenterTriArr,...
+        @(varargin)patch(varargin{:},'marker','*'),reg{:},'relDataPlotter',plObj, 'priorHold',true,'postHold',isHold);
+end
 
-  if nai > 1
-    if isstruct(varargin{nai})
-      Options = varargin{nai};
-      nai     = nai - 1;
-    else
-      Options = [];
-    end
-  else
-    Options = [];
-  end
 
-  if ~isfield(Options, 'newfigure')
-    Options.newfigure = 0;
-  end
-
-  ucolor    = [];
-  vcolor    = [];
-  ells      = [];
-  ell_count = 0;
-
-  for i = 1:nai
-    if isa(varargin{i}, 'ellipsoid')
-      E      = varargin{i};
-      [m, n] = size(E);
-      cnt    = m * n;
-      E1     = reshape(E, 1, cnt);
-      ells   = [ells E1];
-      if (i < nai) && ischar(varargin{i + 1})
-        clr = ellipsoid.my_color_table(varargin{i + 1});
-        val = 1;
-      else
-        clr = [0 0 0];
-        val = 0;
-      end
-      for j = (ell_count + 1):(ell_count + cnt)
-        ucolor(j) = val;
-        vcolor    = [vcolor; clr];
-      end
-      ell_count = ell_count + cnt;
-    end
-  end
-
-  if ~isfield(Options, 'color')
-    % Color maps:
-    %    hsv       - Hue-saturation-value color map.
-    %    hot       - Black-red-yellow-white color map.
-    %    gray      - Linear gray-scale color map.
-    %    bone      - Gray-scale with tinge of blue color map.
-    %    copper    - Linear copper-tone color map.
-    %    pink      - Pastel shades of pink color map.
-    %    white     - All white color map.
-    %    flag      - Alternating red, white, blue, and black color map.
-    %    lines     - Color map with the line colors.
-    %    colorcube - Enhanced color-cube color map.
-    %    vga       - Windows colormap for 16 colors.
-    %    jet       - Variant of HSV.
-    %    prism     - Prism color map.
-    %    cool      - Shades of cyan and magenta color map.
-    %    autumn    - Shades of red and yellow color map.
-    %    spring    - Shades of magenta and yellow color map.
-    %    winter    - Shades of blue and green color map.
-    %    summer    - Shades of green and yellow color map.
-    
-    auxcolors  = hsv(ell_count);
-    colors     = auxcolors;
-    multiplier = 7;
-    if mod(size(auxcolors, 1), multiplier) == 0
-      multiplier = multiplier + 1;
-    end
-    
-    for i = 1:ell_count
-      jj           = mod(i*multiplier, size(auxcolors, 1)) + 1;
-      colors(i, :) = auxcolors(jj, :);
-    end
-    colors        = flipud(colors);
-    Options.color = colors;
-  else
-    if size(Options.color, 1) ~= ell_count
-      if size(Options.color, 1) > ell_count
-        Options.color = Options.color(1:ell_count, :);
-      else
-        Options.color = repmat(Options.color, ell_count, 1);
-      end
-    end
-  end
-
-  if ~isfield(Options, 'shade')
-    Options.shade = 0.4*ones(1, ell_count);
-  else
-    [m, n] = size(Options.shade);
-    m      = m * n;
-    if m == 1
-      Options.shade = Options.shade * ones(1, ell_count);
-    else
-      Options.shade = reshape(Options.shade, 1, m);
-      if m < ell_count
-        for i = (m + 1):ell_count
-          Options.shade = [Options.shade 0.4];
+    function [xCMat,fCMat] = fCalcBodyTriArr(bodyArr,varargin)
+        [xCMat,fCMat] = arrayfun(@(x)fCalcBodyTri(x),bodyArr,'UniformOutput',false);
+        function [xMat, fMat] = fCalcBodyTri(ell)
+            nDim = dimension(ell(1));
+            if nDim == 1
+                [ell,nDim] = rebuildOneDim2TwoDim(ell);
+            end
+            [lGetGridMat, fGetGridMat] = getGridByFactor(ell);
+            nPoints = size(lGetGridMat, 1);
+            xMat = zeros(nDim, nPoints+1);
+            [qCenVec,qMat] = ell.double();
+            xMat(:, 1:end-1) = sqrtm(qMat)*lGetGridMat.' + ...
+                repmat(qCenVec, 1, nPoints);
+            xMat(:, end) = xMat(:, 1);
+            fMat = fGetGridMat;
         end
-      end
     end
-  end
 
-  if ~isfield(Options, 'width')
-    Options.width = ones(1, ell_count);
-  else
-    [m, n] = size(Options.width);
-    m      = m * n;
-    if m == 1
-      Options.width = Options.width * ones(1, ell_count);
-    else
-      Options.width = reshape(Options.width, 1, m);
-      if m < ell_count
-        for i = (m + 1):ell_count
-          Options.width = [Options.width 1];
+    function [xCMat,fCMat] = fCalcCenterTriArr(bodyArr,varargin)
+        [xCMat,fCMat] = arrayfun(@(x)fCalcCenterTri(x),bodyArr,'UniformOutput',false);
+        function [vCenterMat, fCenterMat] = fCalcCenterTri(plotEll)
+            if nDim == 1
+                [plotEll,nDim] = rebuildOneDim2TwoDim(plotEll);
+            end
+            vCenterMat = plotEll.centerVec();
+            fCenterMat = [1 1];
         end
-      end
     end
-  end
 
-  if ~isfield(Options, 'fill')
-    Options.fill = zeros(1, ell_count);
-  else
-    [m, n] = size(Options.fill);
-    m      = m * n;
-    if m == 1
-      Options.fill = Options.fill * ones(1, ell_count);
-    else
-      Options.fill = reshape(Options.fill, 1, m);
-      if m < ell_count
-        for i = (m + 1):ell_count
-          Options.fill = [Options.fill 0];
+
+
+
+
+
+
+    function [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr)
+        ellsCMat = arrayfun(@(x) oneDim2TwoDim(x), ellsArr, ...
+            'UniformOutput', false);
+        ellsArr = vertcat(ellsCMat{:});
+        nDim = 2;
+        function ellTwoDim = oneDim2TwoDim(ell)
+            [ellCenVec, qMat] = ell.double();
+            ellTwoDim = ellipsoid([ellCenVec, 0].', ...
+                diag([qMat, 0]));
         end
-      end
     end
-  end
-
-  if size(Options.color, 1) < ell_count
-    error('PLOT: not enough colors.');
-  end
-
-  dims = dimension(ells);
-  m    = min(dims);
-  n    = max(dims);
-  if m ~= n
-    error('PLOT: ellipsoids must be of the same dimension.');
-  end
-  if (n > 3) || (n < 1)
-    error('PLOT: ellipsoid dimension can be 1, 2 or 3.');
-  end
-
-  if Properties.getIsVerbose()
-    if isempty(logger)
-      logger=Log4jConfigurator.getLogger();
-    end
-    if ell_count == 1
-      logger.info('Plotting ellipsoid...');
-    else
-      logger.info(sprintf('Plotting %d ellipsoids...', ell_count));
-    end
-  end
-
-  ih = ishold;
-
-  for i = 1:ell_count
-    if Options.newfigure ~= 0
-      figure;
-    else
-      newplot;
-    end
-
-    hold on;
-
-    E = ells(i);
-    q = E.center;
-    Q = E.shape;
-
-    if ucolor(i) == 1
-      clr = vcolor(i, :);
-    else
-      clr = Options.color(i, :);
-    end
-      
-    switch n
-      case 2,
-        x = ellbndr_2d(E);
-        if Options.fill(i) ~= 0
-          fill(x(1, :), x(2, :), clr);
-        end
-        h = ell_plot(x);
-        set(h, 'Color', clr, 'LineWidth', Options.width(i));
-        h = ell_plot(q, '.');
-        set(h, 'Color', clr);
-
-      case 3,
-        x    = ellbndr_3d(E);
-        chll = convhulln(x');
-        vs   = size(x, 2);
-        patch('Vertices', x', 'Faces', chll, ...
-              'FaceVertexCData', clr(ones(1, vs), :), 'FaceColor', 'flat', ...
-              'FaceAlpha', Options.shade(1, i));
-        shading interp;
-        lighting phong;
-        material('metal');
-        view(3);
-        %camlight('headlight','local');
-        %camlight('headlight','local');
-        %camlight('right','local');
-        %camlight('left','local');
-
-      otherwise,
-        h = ell_plot([(q-realsqrt(Q)) (q+realsqrt(Q))]);
-        set(h, 'Color', clr, 'LineWidth', Options.width(i));
-        h = ell_plot(q(1, 1), '*');
-        set(h, 'Color', clr);
-
-    end
-  end
-
-  if ih == 0;
-    hold off;
-  end
 
 end
+
+
+
+
+
+
+

@@ -1,6 +1,6 @@
 classdef ReflectionHelper<handle
-    %REFLECTIONHELPER serves a single purpose: retrieving a name
-    %of currently constructed object
+    %REFLECTIONHELPER - serves a single purpose: retrieving a name of 
+    %                   currently constructed object
     methods
         function self=ReflectionHelper(valBox)
             if ~isa(valBox,'modgen.containers.ValueBox')

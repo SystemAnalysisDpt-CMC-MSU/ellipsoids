@@ -214,7 +214,7 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                     numel(ltGoodDirNormOrigVec)==nPoints&&...
                     iscol(lsGoodDirOrigVec)&&...
                     numel(lsGoodDirNormOrig)==1&&...
-                    sum(sum(projSTimeMat))==nDims;
+                    size(projSTimeMat,1)==nDims;
                 if ~isOk
                     reasonStr='Fields have inconsistent sizes';
                     errTagStr='badSize';
@@ -224,15 +224,14 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
     end
     methods
         function plObj=plot(self, varargin)
-            % PLOT displays ellipsoidal tubes using the specified
-            % RelationDataPlotter
+            % PLOT - displays ellipsoidal tubes using the specified RelationDataPlotter
             %
             % Input:
             %   regular:
             %       self:
             %   optional:
-            %       plObj: smartdb.disp.RelationDataPlotter[1,1] - plotter
-            %           object used for displaying ellipsoidal tubes
+            %       plObj: smartdb.disp.RelationDataPlotter[1,1] - plotter object used 
+            %           for displaying ellipsoidal tubes
             %   properties:
             %       fGetColor: function_handle[1, 1] -
             %           function that specified colorVec for
@@ -420,5 +419,4 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
         end
     end
 end
-
 

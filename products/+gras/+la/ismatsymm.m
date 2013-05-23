@@ -11,7 +11,7 @@ function isSymm = ismatsymm(qMat)
 %
 % $Author: Rustam Guliev  <glvrst@gmail.com> $	$Date: 2012-16-11$
 % $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Cybernetics,
+%            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
 %
 

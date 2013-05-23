@@ -1,6 +1,6 @@
 function [ resEllVec ] = minkDiffEa( ellObj1, ellObj2, dirMat)
 % MINKDIFFEA - computes tight external ellipsoidal approximation for
-% Minkowsky difference of two generalized ellipsoids
+%              Minkowsky difference of two generalized ellipsoids
 %
 % Input:
 %   regular:
@@ -10,14 +10,30 @@ function [ resEllVec ] = minkDiffEa( ellObj1, ellObj2, dirMat)
 %           directions for which approximations should be computed
 % Output:
 %   resEllVec: GenEllipsoid[1,nDir] - vector of generalized ellipsoids of
-%       external approximation of the dirrence of first and second generalized
-%       ellipsoids (may contain empty ellipsoids if in specified
+%       external approximation of the dirrence of first and second 
+%       generalized ellipsoids (may contain empty ellipsoids if in specified
 %       directions approximation cannot be computed)
 %
+% Example:
+%   firstEllObj = elltool.core.GenEllipsoid([10;0], 2*eye(2));
+%   secEllObj = elltool.core.GenEllipsoid([0;0], [1 0; 0 0.1]);
+%   dirsMat = [1,0].';
+%   resEllVec  = minkDiffEa( firstEllObj, secEllObj, dirsMat)
+%      |    
+%      |----- q : [10 0]
+%      |          -------------------
+%      |----- Q : |0.171573|0       |
+%      |          |0       |1.20557 |
+%      |          -------------------
+%      |          -----
+%      |-- QInf : |0|0|
+%      |          |0|0|
+%      |          -----
 %
-% $Author: Vitaly Baranov  <vetbar42@gmail.com> $    $Date: 2012-11$
+% $Author: Vitaly Baranov  <vetbar42@gmail.com> $    
+% $Date: 2012-11$
 % $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Cybernetics,
+%            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
 %
 %

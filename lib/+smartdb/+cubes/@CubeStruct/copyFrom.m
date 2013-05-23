@@ -1,6 +1,6 @@
 function copyFrom(self,obj)
-% COPYFROM reconstruct CubeStruct object within a current object using the 
-% input CubeStruct object as a prototype
+% COPYFROM - reconstruct CubeStruct object within a current object using the 
+%            input CubeStruct object as a prototype
 %
 if self.isMe(obj)
     self.copyFromInternal(obj);

@@ -50,8 +50,8 @@ classdef mlunit_test_emaillogger < mlunitext.test_case
                 'smtpServer',testSmtpServer,...
                 'subjectSuffix','for mydatabase on mypc',...
                 'loggerName','MyApplication');
-            mlunit.assert_equals(testSmtpServer, logger.getSMTPServer());
-            mlunit.assert_equals(testEmail, logger.getEmailAddress());
+            mlunitext.assert_equals(testSmtpServer, logger.getSMTPServer());
+            mlunitext.assert_equals(testEmail, logger.getEmailAddress());
             % EmailLogger should warn about changed preferences and reset
             % them to their original values
             setpref('Internet','SMTP_Server','some.other.server');
@@ -60,9 +60,9 @@ classdef mlunit_test_emaillogger < mlunitext.test_case
                 ['logger.sendMessage(''calculation started'',',...
                 '''calculation started'')']);
             nWarnings = length( findstr('Warning:',outputText) );
-            mlunit.assert_equals(0,nWarnings)
-            mlunit.assert_equals(testSmtpServer, logger.getSMTPServer());
-            mlunit.assert_equals(testEmail, logger.getEmailAddress());
+            mlunitext.assert_equals(0,nWarnings)
+            mlunitext.assert_equals(testSmtpServer, logger.getSMTPServer());
+            mlunitext.assert_equals(testEmail, logger.getEmailAddress());
             % If 'dryRun' property is set, EmailLogger should also change
             % e-mail preferences
             logger=modgen.logging.EmailLogger(...
@@ -71,7 +71,7 @@ classdef mlunit_test_emaillogger < mlunitext.test_case
                 'subjectSuffix','for mydatabase on mypc',...
                 'loggerName','MyApplication',...
                 'dryRun',true);
-            mlunit.assert_equals('some.other.server',logger.getSMTPServer());
+            mlunitext.assert_equals('some.other.server',logger.getSMTPServer());
         end
         %
         function self = tear_down(self)

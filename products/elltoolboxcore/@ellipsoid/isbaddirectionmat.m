@@ -1,4 +1,4 @@
-function isBadDirVec = isbaddirectionmat(q1Mat, q2Mat, dirsMat,absTol)
+function [isBadDirVec,pUniversalVec] = isbaddirectionmat(q1Mat, q2Mat, dirsMat,absTol)
 % ISBADDIRECTIONMAT - Checks if it is possible to build ellipsoidal
 %                     approximation of the geometric difference of two
 %                     ellipsoids with shape matrices q1Mat and q2Mat
@@ -43,5 +43,14 @@ modgen.common.checkmultvar('gras.la.ismatposdef(x1,x2)',...
 
 lamMin   = min(eig(q1Mat/q2Mat));
 dirsCVec = mat2cell(dirsMat,nDim,ones(1,nDirs));
-isBadDirVec = cellfun(@(x) lamMin < realsqrt( (x'*q1Mat*x)/(x'*q2Mat*x) ),...
-    dirsCVec);
+[isBadDirVec,pUniversalVec] = cellfun(@(x) culcPUniversal(x), dirsCVec);
+
+
+    function [isBadDir,pUniversal] = culcPUniversal(dirVec)
+        p1Par=sqrt(dirVec.'*q1Mat*dirVec);
+        p2Par=sqrt(dirVec.'*q2Mat*dirVec);
+        pPar=p1Par/p2Par;
+        isBadDir = lamMin < pPar;
+        pUniversal = min(pPar,lamMin);
+    end
+end

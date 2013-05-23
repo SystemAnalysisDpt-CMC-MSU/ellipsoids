@@ -1,7 +1,8 @@
 function minDimensionSizeVec=getMinDimensionSize(self,varargin)
-% GETMINDIMENSIONSIZE returns a size vector for the specified
-% dimensions. If no dimensions are specified, a size vector for
-% all dimensions up to minimum CubeStruct dimension is returned
+% GETMINDIMENSIONSIZE - returns a size vector for the specified
+%                       dimensions. If no dimensions are specified, a size 
+%                       vector for all dimensions up to minimum CubeStruct 
+%                       dimension is returned
 %
 % Input:
 %   regular:
