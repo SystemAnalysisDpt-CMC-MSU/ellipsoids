@@ -244,18 +244,19 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
             %           function that specified lineWidth for good curves 
             %       fGetFill: function_handle[1, 1] - this
             %           property not used in this version
-            %       colorFieldList: cell[nField, ] - list of 
-            %           parameters for color function
-            %       alphaFieldList: cell[nField, ] - list of 
-            %           parameters for transparency function
-            %       lineWidthFieldList: cell[nField, ] - list of 
-            %           parameters for lineWidth function
-            %       fillFieldList: cell[nField, ] - list of 
-            %           parameters for fill function
-            %       plotSpecFieldList: cell[nField, ] - defaul list of 
-            %           parameters. If for any function in
-            %           properties not specified list of
-            %           parameters, this one will be used
+            %       colorFieldList: cell[nColorFields, ] of char[1, ] - 
+            %           list of parameters for color function
+            %       alphaFieldList: cell[nAlphaFields, ] of char[1, ] - 
+            %           list of parameters for transparency function
+            %       lineWidthFieldList: cell[nLineWidthFields, ] 
+            %           of char[1, ] - list of parameters for lineWidth 
+            %           function
+            %       fillFieldList: cell[nIsFillFields, ] of char[1, ] - 
+            %           list of parameters for fill function
+            %       plotSpecFieldList: cell[nPlotFields, ] of char[1, ] - 
+            %           defaul list of parameters. If for any function in
+            %           properties not specified list of parameters, 
+            %           this one will be used
             %
             % Output:
             %   plObj: smartdb.disp.RelationDataPlotter[1,1] - plotter
@@ -263,7 +264,7 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
             % 
             % $Author: 
             % Peter Gagarinov  <pgagarinov@gmail.com> 	
-            % Artem Grachev <grachev.art@gmail.com> %
+            % Artem Grachev <grachev.art@gmail.com> 
             % $Date: May-2013$
             % $Copyright: Moscow State University,
             %             Faculty of Computational Mathematics

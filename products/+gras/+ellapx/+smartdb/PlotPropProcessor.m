@@ -1,4 +1,16 @@
 classdef PlotPropProcessor
+    % PlotPropProcessor - class that processes different
+    %   functions which specified properties for plot.
+    %   This class has series methods for getting necessary
+    %   properties.
+    %   
+    % $Authors: 
+    % Artem Grachev <grachev.art@gmail.com> 
+    % $Date: May-2013 $
+    % $Copyright: Moscow State University,
+    %             Faculty of Computational Mathematics
+    %             and Computer Science, 
+    %             System Analysis Department 2013$
     
     properties (Access = private)
         fullArgNameList;
@@ -55,36 +67,39 @@ classdef PlotPropProcessor
             %
             % Input:
             %   regular:
-            %       fullArgNameList: cell[nArg, ] - full list of
-            %           possible arguments
+            %       fullArgNameList: cell[nArgs, ] of char[1, ] - full 
+            %           list of possible arguments
             %       fColor: function_handle[1, 1] - function 
             %           for property 'color'
-            %       colorFieldList: cell[nField, ] - list of   
-            %           arguments for property 'color'
+            %       colorFieldList: cell[nColorFields, ] of char[1, ] - 
+            %           list of arguments for property 'color'
             %       fLineWidth: function_handle[1, 1] - function 
             %           for property 'lineWidth'
-            %       lineWidthFieldList: cell[nField, ] - list of   
-            %           arguments for property 'lineWidth'
+            %       lineWidthFieldList: cell[nLineWidthFields, ] 
+            %           of char[1, ] - list of arguments for property 
+            %           'lineWidth'
             %       fIsFill: function_handle[1, 1] - function 
             %           for property 'isFill'
-            %       isFillFieldList: cell[nField, ] - list of   
-            %           arguments for property 'isFill'
+            %       isFillFieldList: cell[nIsFillFields, ] of char[1, ] - 
+            %           list of arguments for property 'isFill'
             %       fTransparency: function_handle[1, 1] - function 
             %           for property 'transparency'
-            %       transparencyFieldList: cell[nField, ] - list of   
-            %           arguments for property 'transparency'
+            %       transparencyFieldList: cell[nTransparencyFields, ] of 
+            %           char[1, ] - list of arguments for property 
+            %           'transparency'
             % Ouptput:
             %   self.
             %
-            % Artem Grachev <grachev.art@gmail.com> %
+            % Artem Grachev <grachev.art@gmail.com> 
             % $Date: May-2013 $
             % $Copyright: Moscow State University,
             %             Faculty of Computational Mathematics
             %             and Computer Science, 
             %             System Analysis Department 2013$
             
+            checkInput(); 
             self.fullArgNameList = fullArgNameList;
-            
+                      
             self.colorFieldList = colorFieldList;
             self.lineWidthFieldList = lineWidthFieldList;
             self.isFillFieldList = isFillFieldList;
@@ -93,7 +108,46 @@ classdef PlotPropProcessor
             self.fColor = fColor;
             self.fLineWidth = fLineWidth;
             self.fTransparency = fTransparency;
-            self.fIsFill = fIsFill;            
+            self.fIsFill = fIsFill;
+            function checkInput()
+                import modgen.common.checkvar
+                modgen.common.checkvar(fullArgNameList,...
+                    'iscellofstring(x)&&isrow(x)', 'errorTag',...
+                    'wrongInput:badType','errorMessage',...
+                    'Excpect cell of string');
+                modgen.common.checkvar(colorFieldList,...
+                    'iscellofstring(x)&&isrow(x)', 'errorTag',...
+                    'wrongInput:badType','errorMessage',...
+                    'Excpect cell of string');
+                modgen.common.checkvar(lineWidthFieldList,...
+                    'iscellofstring(x)&&isrow(x)', 'errorTag',...
+                    'wrongInput:badType','errorMessage',...
+                    'Excpect cell of string');
+                modgen.common.checkvar(isFillFieldList,...
+                    'iscellofstring(x)&&isrow(x)', 'errorTag',...
+                    'wrongInput:badType','errorMessage',...
+                    'Excpect cell of string');
+                modgen.common.checkvar(transparencyFieldList,...
+                    'iscellofstring(x)&&isrow(x)', 'errorTag',...
+                    'wrongInput:badType','errorMessage',...
+                    'Excpect cell of string');
+                modgen.common.checkvar(fColor,...
+                    @(x)isa(x, 'function_handle'), 'errorTag',...
+                    'wrongInput:badType','errorMessage',...
+                    'Excpect function_handle');
+                modgen.common.checkvar(fLineWidth,...
+                    @(x)isa(x, 'function_handle'), 'errorTag',...
+                    'wrongInput:badType','errorMessage',...
+                    'Excpect function_handle');
+                modgen.common.checkvar(fIsFill,...
+                    @(x)isa(x, 'function_handle'), 'errorTag',...
+                    'wrongInput:badType','errorMessage',...
+                    'Excpect function_handle');
+                modgen.common.checkvar(fTransparency,...
+                    @(x)isa(x, 'function_handle'), 'errorTag',...
+                    'wrongInput:badType','errorMessage',...
+                    'Excpect function_handle');
+            end
         end
         
         
@@ -104,14 +158,13 @@ classdef PlotPropProcessor
             % Input:
             %   regular:
             %       self.
-            %       argList: cell[nArg, ] - list of value
-            %           arguments for function_hanlde
-            %           self.fColor
+            %       argList: cell[nArgs, ] of char[1, ] - list of value
+            %           arguments for function_hanlde self.fColor
             %
             % Ouptput:
             %   colorVec: double[1, 3] - color vector
             %
-            % Artem Grachev <grachev.art@gmail.com> %
+            % Artem Grachev <grachev.art@gmail.com> 
             % $Date: May-2013 $
             % $Copyright: Moscow State University,
             %             Faculty of Computational Mathematics
@@ -122,17 +175,73 @@ classdef PlotPropProcessor
         end
         
         function lineWidth = getLineWidth(self, argList)
-        %
+            % GETCOLOR return lineWidth value specified by
+            %   function_handle self.fLineWidth and argList
+            %
+            % Input:
+            %   regular:
+            %       self.
+            %       argList: cell[nLineWidthArgs, ] of char[1, ] - list of 
+            %           value arguments for function_hanlde
+            %           self.fLineWidth
+            %
+            % Ouptput:
+            %   lineWidth: double[1, 1] - value line width
+            %
+            % Artem Grachev <grachev.art@gmail.com> 
+            % $Date: May-2013 $
+            % $Copyright: Moscow State University,
+            %             Faculty of Computational Mathematics
+            %             and Computer Science, 
+            %             System Analysis Department 2013$
             lineWidth = self.getProp(argList, self.fLineWidth,...
                 self.lineWidthFieldList);        
         end
         
         function isFill = getIsFilled(self, argList)
+            % GETCOLOR return isFill value
+            %
+            % Input:
+            %   regular:
+            %       self.
+            %       argList: cell[nIsFillArgs, ] of char[1, ] - list of 
+            %           value arguments for function_hanlde self.fIsFill
+            %
+            % Ouptput:
+            %   isFill: logical[1, 1] - true if need to
+            %       fill, false if not need to fill
+            %
+            % Artem Grachev <grachev.art@gmail.com> 
+            % $Date: May-2013 $
+            % $Copyright: Moscow State University,
+            %             Faculty of Computational Mathematics
+            %             and Computer Science, 
+            %             System Analysis Department 2013$
             isFill = self.getProp(argList, self.fIsFill,...
                 self.isFillFieldList);
         end
         
         function transparency = getTransparency(self, argList)
+            % GETCOLOR return transparency value specified by
+            %   function_handle self.fTransparency and argList
+            %
+            % Input:
+            %   regular:
+            %       self.
+            %       argList: cell[nTransparencyArgs, ] of char[1, ] - list 
+            %           of value arguments for function_hanlde 
+            %           self.fTransparency
+            %
+            % Ouptput:
+            %   transparency: double[1, 1] - value of
+            %       transparency
+            %
+            % Artem Grachev <grachev.art@gmail.com> 
+            % $Date: May-2013 $
+            % $Copyright: Moscow State University,
+            %             Faculty of Computational Mathematics
+            %             and Computer Science, 
+            %             System Analysis Department 2013$
             transparency = self.getProp(argList, self.fTransparency,...
                 self.transparencyFieldList);
         end
