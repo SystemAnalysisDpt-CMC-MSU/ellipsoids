@@ -1,4 +1,4 @@
-function doesContain = doesEllContainPoly(ellArr,poly,varargin)
+function doesContain = doesContainPoly(ellArr,poly,varargin)
 % DOESELLCONTAINPOLY -- privat function, used by doesContain and
 %   doesIntersection contain, to check, if intersection of ellipsids in
 %   ellArr contains polytope poly.
@@ -12,18 +12,38 @@ function doesContain = doesEllContainPoly(ellArr,poly,varargin)
 %   newX = oldX - intP
 %   and then check if polar of ellipsoids in new coordinates belogs to
 %   polar of polytope.
+%
+% Input:
+%   regular:
+%       ellArr: ellipsoid [nDims1,nDims2,...,nDimsN]/[1,1] - first
+%           array of ellipsoids.
+%       poly: polytope[1,1] - single polytope
+%
+%    properties:
+%       computeMode: char[1,] - 'highDimFast' or 'lowDimFast'. Determines, 
+%           which way function is computed, when secObjArr is polytope. If 
+%           secObjArr is ellipsoid computeMode is ignored. 'highDimFast' 
+%           works  faster for  high dimensions, 'lowDimFast' for low. If
+%           this property is omitted if dimension of ellipsoids is greater
+%           then 10, then 'hightDimFast' is choosen, otherwise -
+%           'lowDimFast'
+%
+% Output:
+%   isPosArr: logical[nDims1,nDims2,...,nDimsN],
+%       resArr(iCount) = true - firstEllArr(iCount)
+%       contains secondObjArr(iCount), false - otherwise.
 varargin = varargin{:};
-[~,cModeNameAndVal] = modgen.common.parseparams(varargin,'computeMode');
-if isempty(cModeNameAndVal) || ~(ischar(cModeNameAndVal{2}))||...
-        ~(strcmp(cModeNameAndVal{2},'highDimFast') ||...
-          strcmp(cModeNameAndVal{2},'lowDimFast'))
+[~,~,compMode,isCompModeSpec] = modgen.common.parseparext(varargin,'computeMode');
+if ~isCompModeSpec || ~(ischar(compMode))||...
+        ~(strcmp(compMode,'highDimFast') ||...
+          strcmp(compMode,'lowDimFast'))
     if dimension(ellArr(1)) > 10
         computeMode = 'highDimFast';
     else
         computeMode = 'lowDimFast';
     end
 else
-    computeMode = cModeNameAndVal{2};
+    computeMode = compMode;
 end
 
 isAnyEllDeg = any(isdegenerate(ellArr(:)));
@@ -34,19 +54,19 @@ if ~isBnd || (isAnyEllDeg && isPolyDeg)
 else
     if isAnyEllDeg || isPolyDeg || ...
                     strcmp(computeMode,'lowDimFast')
-        doesContain = lDFDoesContain(ellArr,poly);
+        doesContain = doesContainLowDim(ellArr,poly);
     else
-        doesContain = hDDoesContain(ellArr,poly);
+        doesContain = doesContainHighDim(ellArr,poly);
     end
 end
 end
 
-function doesContain = lDFDoesContain(ellArr,poly)
+function doesContain = doesContainLowDim(ellArr,poly)
 xVec = extreme(poly);
 doesContain = min(isinternal(ellArr, xVec', 'i'));
 end
 
-function doesContain = hDDoesContain(ellArr,poly)
+function doesContain = doesContainHighDim(ellArr,poly)
 [isFeasible, internalPoint] = findInternal(ellArr,poly);
 if ~isFeasible
     doesContain = false;
