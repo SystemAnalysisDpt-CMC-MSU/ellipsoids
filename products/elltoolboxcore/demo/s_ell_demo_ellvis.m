@@ -22,7 +22,7 @@ text(-2, 0.5, 'VISUALIZATION', 'FontSize', 16);
 % >> plot(E1, E2, EA);
 E1 = ellipsoid([1; -1], [9 -3; -3 4]);
 E2 = 2*ell_unitball(2) + [-1; 3];
-E3 = 3*(inv(E1) - [2; -1]); E4 = ellipsoid([4 1; 1 9]);
+E3 = 3*(inv(E1.getCopy()) - [2; -1]); E4 = ellipsoid([4 1; 1 9]);
 EA = [E3 E4]; plot(E1, E2, EA);
 %% 
 % The way to make the lines thicker is to tweak the 'width' option:
@@ -82,7 +82,7 @@ plot(E1, E2, EA, 'b');
 % >> plot(E31, E32, E33);
 E31 = ellipsoid([-1; -1; 2], [25 10 -1; 10 9 5; -1 5 6]);
 E32 = 2.5*ell_unitball(3) + [1; 2; -6];
-E33 = [2 -1 0; 0 0.8 0; 0 0 1.1] * move2origin(E31);
+E33 = [2 -1 0; 0 0.8 0; 0 0 1.1] * move2origin(E31.getCopy());
 plot(E31, E32, E33);
 %% 
 % Option 'shade', taking values from [0, 1], specifies the transparency level of each ellipsoid:
@@ -103,9 +103,12 @@ plot(E31, 'r', E32, 'b', E33, 'g', 'shade',[0.6 0.2 0.3]);
 % >> subplot(2, 2, 3); minksum(P2, options);
 % >> B3 = [0 1 0; 0 0 1]'; P3 = projection([E31 E32 E33], B3);
 % >> subplot(2, 2, 4); minksum(P3, options);
-B1 = [1 0 0; 0 1 0]'; P1 = projection([E31 E32 E33], B1);
-B2 = [1 0 0; 0 0 1]'; P2 = projection([E31 E32 E33], B2);
-B3 = [0 1 0; 0 0 1]'; P3 = projection([E31 E32 E33], B3);
+B1 = [1 0 0; 0 1 0]'; P1 = projection([E31.getCopy() E32.getCopy()...
+    E33.getCopy()], B1);
+B2 = [1 0 0; 0 0 1]'; P2 = projection([E31.getCopy() E32.getCopy()...
+    E33.getCopy()], B2);
+B3 = [0 1 0; 0 0 1]'; P3 = projection([E31.getCopy() E32.getCopy()...
+    E33.getCopy()], B3);
 subplot(2, 2, 1); minksum([E31 E32 E33], 'showAll',true);
 title('(a) Geometric Sum'); xlabel('x_1'); ylabel('x_2'); zlabel('x_3');
 subplot(2, 2, 2); minksum(P1,'showAll',true);
@@ -138,11 +141,14 @@ subplot(1, 1, 1); minksum(P2, 'fill',true,'color',[0 1 0]);
 E = ellipsoid([2 -1 0; -1 1 0; 0 0 1.5]); 
 subplot(2, 2, 1); minkdiff(E32, E, 'showAll',true,'fill',true);
 title('(a) Geometric Difference'); xlabel('x_1'); ylabel('x_2'); zlabel('x_3');
-subplot(2, 2, 2); minkdiff(projection(E32, B1), projection(E, B1), 'showAll',true,'fill',true),
+subplot(2, 2, 2); minkdiff(projection(E32.getCopy(), B1), projection(E.getCopy(), B1),...
+    'showAll',true,'fill',true),
 title('(b) Projection on basis B1'); xlabel('x_1'); ylabel('x_2');
-subplot(2, 2, 3); minkdiff(projection(E32, B2), projection(E, B2), 'showAll',true,'fill',true),
+subplot(2, 2, 3); minkdiff(projection(E32.getCopy(), B2), projection(E.getCopy(), B2),...
+    'showAll',true,'fill',true),
 title('(c) Projection on basis B2'); xlabel('x_1'); ylabel('x_3');
-subplot(2, 2, 4); minkdiff(projection(E32, B3), projection(E, B3), 'showAll',true,'fill',true),
+subplot(2, 2, 4); minkdiff(projection(E32, B3), projection(E, B3),...
+    'showAll',true,'fill',true),
 title('(d) Projection on basis B3'); xlabel('x_2'); ylabel('x_3');
 %% 
 % Hyperplanes are plotted similarly to ellipsoids with 'plot' function taking almost the same options. Let us define three hyperplanes in R^3:
