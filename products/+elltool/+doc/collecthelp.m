@@ -141,10 +141,14 @@ for iClass = 1:nLength
         isSourseClass= strcmp(className, definingClassNameList);
         isDefiningClassVec=ismember(definingClassNameList, classList);
         defMethodVec = methodVec(isDefiningClassVec & ~isSourseClass);
-        inheritedMethodList = unique(arrayfun(@(x)x.Name,defMethodVec,...
+        isHiddenVec=arrayfun(@(x)isequal(x.Hidden,1), defMethodVec);
+        isPublicVec=arrayfun(@(x)isequal(x.Access,PUBLIC_ACCESS_MOD),...
+                         defMethodVec);
+        finalDefMethodVec = defMethodVec(isPublicVec & ~isHiddenVec);
+        inheritedMethodList = unique(arrayfun(@(x)x.Name,finalDefMethodVec,...
             'UniformOutput',false));
         definingClassNameList=unique(arrayfun(@(x)x.DefiningClass.Name,...
-                defMethodVec,'UniformOutput',false));
+                finalDefMethodVec,'UniformOutput',false));
         if ~isempty(definingClassNameList)
               bufFuncInfo.numberOfInhClass = iClass;
         end

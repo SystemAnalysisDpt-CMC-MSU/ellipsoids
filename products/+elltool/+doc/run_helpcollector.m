@@ -89,6 +89,7 @@ finalHelpCell = cellfun(@(x)fShiftText(x),finalHelpCell, ...
 finalHelpCell = cellfun(@(x)fDeleteEmptyStr(x),finalHelpCell, ...
     'UniformOutput', false);
 funcOutputCell=funcNameCell;
+
 %% substitutions (for TeX requirements)
 symbList={'\','_','&'};
 substList={'/','\_','\&'};
@@ -105,6 +106,9 @@ for iSymb=1:length(symbListHelp)
     finalHelpCell=cellfun(@(x) strrep(x,symbListHelp{iSymb},...
         substListHelp{iSymb}),finalHelpCell,'UniformOutput',false);
 end
+
+labelFuncCell = cellfun(@(x)fDeleteSymbols(x),funcNameCell, ...
+    'UniformOutput', false);
 %% create tex doc
 %
 helpPattern = sprintf...
@@ -114,15 +118,18 @@ fid = fopen(resultTexFileName, 'wt');
 indFunc = 1;
 flag = 0;
 for iClass=1:length(classNameCell)
-    fprintf(fid,'\\section{%s}\\label{secClassDescr:%s}\n',classNameCell{iClass}, classNameCell{iClass});
+    fprintf(fid,'\\section{%s}\\label{secClassDescr:%s}\n',...
+        classNameCell{iClass}, classNameCell{iClass});
     numbFunc = indFunc + numberOfFunctions(iClass) - 1;
     if ismember(iClass,indOfClasses)
         flag = 1;
     end
     for iFunc = indFunc: numbFunc
-        fprintf(fid,'\\subsection{\\texorpdfstring{%s}{%s}}\n',...
-              [classNameCell{iClass}, '.',funcOutputCell{iFunc}],...
-                  funcOutputCell{iFunc});
+        fprintf(fid,...
+        '\\subsection{\\texorpdfstring{%s}{%s}}\\label{method:%s}\n',...
+        [classNameCell{iClass}, '.',funcOutputCell{iFunc}],...
+        funcOutputCell{iFunc},...
+        [classNameCell{iClass}, '.',labelFuncCell{iFunc}]);
         % print function help
         fprintf(fid,'\\begin{verbatim}\n');
         fprintf(fid,'%s\n',finalHelpCell{iFunc});
@@ -131,7 +138,9 @@ for iClass=1:length(classNameCell)
             fprintf(fid,'%s\n',helpPattern);
             fprintf(fid,'\\begin{list}{}{}\n');
             for iMethod = 1:length(inhFuncNameCell);
-                 fprintf(fid,' \\item %s\n',char(inhFuncNameCell{iMethod}));
+             fprintf(fid,' \\item \\hyperref[method:%s]{%s}\n',...
+             [char(defClassNameCell), '.', char(inhFuncNameCell{iMethod})],...
+             char(inhFuncNameCell{iMethod}));
             end
             fprintf(fid,'\\end{list}\n');
             flag = 0;
@@ -182,12 +191,6 @@ lines = [lines; nl];
 result = sprintf(strcat(lines{:}));
 end
 
-function result = fAddMethodList(helpText, methodList, defClassName)
-   helpPattern = sprintf...
-  ('\n\nSee the description of the following methods in section\n\\ref{secClassDescr:%s}:\n',...
-  defClassName);
- result = strcat(helpText, helpPattern);
- for iMethod = 1:length(methodList);
-   result = strcat(result, sprintf('\n%s', methodList{iMethod}));
+ function result = fDeleteSymbols(str)
+     result = regexprep(str, '(\\_)', '');
  end
-end
