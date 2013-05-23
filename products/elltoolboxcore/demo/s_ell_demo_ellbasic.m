@@ -25,7 +25,7 @@ title('(b) Projection on basis B1'); xlabel('x_1'); ylabel('x_2');
 subplot(2, 2, 3); plot(projection([E1.getCopy() E2.getCopy() E3.getCopy()], B2)); 
 grid on;
 title('(c) Projection on basis B2'); xlabel('x_1'); ylabel('x_3');
-subplot(2, 2, 4); plot(projection([E1.getCopy() E2.getCopy() E3.getCopy()], B3));
+subplot(2, 2, 4); plot(projection([E1 E2 E3], B3));
 grid on;
 title('(d) Projection on basis B3'); xlabel('x_2'); ylabel('x_3');
 %% 

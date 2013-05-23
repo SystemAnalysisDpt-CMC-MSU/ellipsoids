@@ -80,7 +80,7 @@ plot(shape(EA(2, 2).getCopy(), A), EA(2, 2), 'b'); grid on;
 % >> plot(Ei, E, 'b'); grid on;
 % 
 % plots original (blue) and the inverted (red) ellipsoids.
-plot(E, inv(E.getCopy()), 'b'); grid on;
+plot(E, inv(E), 'b'); grid on;
 %% 
 % The polar set for an ellipsoid that contains the origin in its interior is also an ellipsoid:
 % 
@@ -123,7 +123,7 @@ W = ellipsoid([-1; 1], [4 -2; -2 2]); plot(polar(W), W, 'b'); grid on;
 %      1
 E1 = ellipsoid([15; 0], [49 -12; -12 10]);
 E2 = ellipsoid([9; 3], [9 2; 2 4]);
-plot(E1, 'b', E2, 'g', move2origin([E1.getCopy() E2.getCopy()]), 'r'); grid on;
+plot(E1, 'b', E2, 'g', move2origin([E1 E2]), 'r'); grid on;
 %% 
 % It can be checked if given ellipsoid intersects the intersection of ellipsoids in the given array:
 % 
@@ -308,7 +308,7 @@ title('(b) Projection on basis B1'); xlabel('x_1'); ylabel('x_2');
 subplot(2, 2, 3); plot(projection([E1.getCopy() E2.getCopy() E3.getCopy()], B2));
 grid on;
 title('(c) Projection on basis B2'); xlabel('x_1'); ylabel('x_3');
-subplot(2, 2, 4); plot(projection([E1.getCopy() E2.getCopy() E3.getCopy()], B3));
+subplot(2, 2, 4); plot(projection([E1 E2 E3], B3));
 grid on;
 title('(d) Projection on basis B3'); xlabel('x_2'); ylabel('x_3');
 %% 
