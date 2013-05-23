@@ -5,13 +5,13 @@ dirsMat = [1 0; 1 1; 0 1; -1 1; 1 3]';
 externalEllVec = ellMat.minksum_ea(dirsMat) 
 
 % externalEllVec =
-% 1x5 array of ellipsoids.
+% Array of ellipsoids with dimensionality 1x5
 
 % compute internal ellipsoids for the directions in dirsMat
 internalEllVec = ellMat.minksum_ia(dirsMat)  
 
 % internalEllVec =
-% 1x5 array of ellipsoids.
+% Array of ellipsoids with dimensionality 1x5
 
 % intersection of external ellipsoids should always contain 
 % the union of internal ellipsoids:

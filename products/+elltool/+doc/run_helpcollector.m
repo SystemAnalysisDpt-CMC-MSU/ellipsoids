@@ -18,16 +18,16 @@ if modgen.system.ExistanceChecker.isFile(resultTexFileName)
 end
 %
 FuncData=elltool.doc.collecthelp({'ellipsoid', 'hyperplane',...
- 'elltool.conf.Properties', 'elltool.core.GenEllipsoid',...   
- 'smartdb.relations.ARelation','gras.ellapx.smartdb.rels.EllTube',...
- 'gras.ellapx.smartdb.rels.EllTubeProj',...
- 'gras.ellapx.smartdb.rels.EllUnionTube', ...
- 'gras.ellapx.smartdb.rels.EllUnionTubeStaticProj',...
- 'elltool.reach.AReach','elltool.reach.ReachContinuous',...
- 'elltool.reach.ReachDiscrete','elltool.reach.ReachFactory',...
- 'elltool.linsys.ALinSys',  'elltool.linsys.LinSysContinuous',...
- 'elltool.linsys.LinSysDiscrete',  'elltool.linsys.LinSysFactory'},{},...
- {'test'});
+'elltool.conf.Properties', 'elltool.core.GenEllipsoid',...
+'smartdb.cubes.CubeStruct','smartdb.relations.ARelation',...
+ 'gras.ellapx.smartdb.rels.EllTube', 'gras.ellapx.smartdb.rels.EllTubeProj',...
+'gras.ellapx.smartdb.rels.EllUnionTube', ...
+'gras.ellapx.smartdb.rels.EllUnionTubeStaticProj',...
+'elltool.reach.AReach','elltool.reach.ReachContinuous',...
+'elltool.reach.ReachDiscrete','elltool.reach.ReachFactory',...
+'elltool.linsys.ALinSys',  'elltool.linsys.LinSysContinuous',...
+'elltool.linsys.LinSysDiscrete',  'elltool.linsys.LinSysFactory'},...
+{},{'test'});
 
 nHelpElems=numel(FuncData.funcName);
 if nHelpElems==0
@@ -42,16 +42,15 @@ isChosenFunc=~(FuncData.isScript);
 funcNameCell=FuncData.funcName(isChosenFunc);
 helpCell=FuncData.help(isChosenFunc);
 classNameCell = FuncData.className;
-defClassNameCell = FuncData.defClassName;
-inhFuncNameCell = FuncData.inhFuncName;
-indOfClasses = FuncData.numberOfInhClass
-classNameCell=cellfun(@(x) x(1:end),classNameCell,'UniformOutput',false);
 numberOfFunctions = FuncData.numbOfFunc;
-numberOfInheritedFunctions = FuncData.numbOfInhFunc;
-
+defClassNameCell = FuncData.defClassName;
+inhFuncNameCell = FuncData.inhFuncNameList;
+indOfClasses = FuncData.numberOfInhClass;
+infoOfInheritedFunctions = FuncData.infoOfInhClass;
+numberOfInheritedClasses = FuncData.numbOfInhClasses;
 % update funcNameCell (delete '.m')
 funcNameCell=cellfun(@(x) x(1:end),funcNameCell,'UniformOutput',false);
-
+classNameCell=cellfun(@(x) x(1:end),classNameCell,'UniformOutput',false);
 %% prepare data for output (for tex doc)
 % obtain helpCellNew
 %
@@ -118,21 +117,15 @@ labelFuncCell = cellfun(@(x)fDeleteSymbols(x),funcNameCell, ...
 %
 fid = fopen(resultTexFileName, 'wt');
 indFunc = 1;
-indMethod = 1;
+iCountClass = 1;
 flag = 0;
 indInhClass = 1;
 for iClass=1:length(classNameCell)
-   
     fprintf(fid,'\\section{%s}\\label{secClassDescr:%s}\n',...
         classNameCell{iClass}, classNameCell{iClass});
     numbFunc = indFunc + numberOfFunctions(iClass) - 1;
-    iClass
-    ismember(iClass,indOfClasses)
     if ismember(iClass,indOfClasses)
         flag = 1;
-        helpPattern = sprintf...
-('\n\nSee the description of the following methods in section \\ref{secClassDescr:%s}\n for %s:\n',...
-  char(defClassNameCell{indInhClass}), char(defClassNameCell{indInhClass}));
     end
     for iFunc = indFunc: numbFunc
         fprintf(fid,...
@@ -145,22 +138,30 @@ for iClass=1:length(classNameCell)
         fprintf(fid,'%s\n',finalHelpCell{iFunc});
         fprintf(fid,'\\end{verbatim}\n');
         if flag
-            numbInhFunc = indMethod + numberOfInheritedFunctions(iClass) - 1;
+            %for iNumbClass = 1:numberOfInheritedClasses(indInhClass)
+            numberOfClasses = numberOfInheritedClasses(indInhClass);
+            for iBuf = iCountClass: iCountClass + numberOfClasses -1
+                helpPattern = sprintf...
+('\n\nSee the description of the following methods in section \\ref{secClassDescr:%s}\n for %s:\n',...
+  char(defClassNameCell{iBuf}), char(defClassNameCell{iBuf}));
             fprintf(fid,'%s\n',helpPattern);
             fprintf(fid,'\\begin{list}{}{}\n');
-            for iMethod = indMethod:numbInhFunc
-              fprintf(fid,' \\item \\hyperref[method:%s]{%s}\n',...
-              [char(defClassNameCell{indInhClass}), '.',...
-              char(inhFuncNameCell{iMethod})],...
-              char(inhFuncNameCell{iMethod}));
-              indMethod = indMethod+1;
+            for iMethod = 1:infoOfInheritedFunctions(iBuf)
+             fprintf(fid,' \\item \\hyperref[method:%s]{%s}\n',...
+             [char(defClassNameCell{iBuf}), '.',...
+             char(inhFuncNameCell{iBuf}{iMethod})],...
+             char(inhFuncNameCell{iBuf}{iMethod}));
             end
             fprintf(fid,'\\end{list}\n');
+            iCountClass = iCountClass+1;
+            end
+            
             flag = 0;
             indInhClass = indInhClass + 1;
         end
         indFunc = indFunc + 1;
     end
+
 end
 % close file
 fclose(fid);

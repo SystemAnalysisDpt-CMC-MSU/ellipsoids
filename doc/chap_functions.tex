@@ -1054,7 +1054,9 @@ Example:
 \end{verbatim}
 \subsection{\texorpdfstring{ellipsoid.inv}{inv}}\label{method:ellipsoid.inv}
 \begin{verbatim}
-INV - inverts shape matrices of ellipsoids in the given array.
+INV - inverts shape matrices of ellipsoids in the given array,
+      modified given array is on output (not its copy).
+
 
   invEllArr = INV(myEllArr)  Inverts shape matrices of ellipsoids
       in the array myEllMat. In case shape matrix is sigular, it is
@@ -1169,6 +1171,28 @@ Example:
   secEllObj = [0 ; 0] + ellipsoid(2*eye(2, 2));
   thirdEllObj = [1; 0] + ellipsoid(0.5 * eye(2, 2));
   secEllObj.isContainedInIntersection([firstEllObj secEllObj], 'i')
+
+  ans =
+
+       1
+\end{verbatim}
+\subsection{\texorpdfstring{ellipsoid.isEmpty}{isEmpty}}\label{method:ellipsoid.isEmpty}
+\begin{verbatim}
+ISEMPTY - checks if the ellipsoid object is empty.
+
+Input:
+  regular:
+      myEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of
+           ellipsoids.
+
+Output:
+  isPositiveArr: logical[nDims1,nDims2,...,nDimsN],
+      isPositiveArr(iCount) = true - if ellipsoid
+      myEllMat(iCount) is empty, false - otherwise.
+
+Example:
+  ellObj = ellipsoid();
+  isempty(ellObj)
 
   ans =
 
@@ -1313,28 +1337,6 @@ Example:
   ans =
 
        0
-\end{verbatim}
-\subsection{\texorpdfstring{ellipsoid.isempty}{isempty}}\label{method:ellipsoid.isempty}
-\begin{verbatim}
-ISEMPTY - checks if the ellipsoid object is empty.
-
-Input:
-  regular:
-      myEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of
-           ellipsoids.
-
-Output:
-  isPositiveArr: logical[nDims1,nDims2,...,nDimsN],
-      isPositiveArr(iCount) = true - if ellipsoid
-      myEllMat(iCount) is empty, false - otherwise.
-
-Example:
-  ellObj = ellipsoid();
-  isempty(ellObj)
-
-  ans =
-
-       1
 \end{verbatim}
 \subsection{\texorpdfstring{ellipsoid.isinternal}{isinternal}}\label{method:ellipsoid.isinternal}
 \begin{verbatim}
@@ -2077,7 +2079,8 @@ Example:
 \end{verbatim}
 \subsection{\texorpdfstring{ellipsoid.move2origin}{move2origin}}\label{method:ellipsoid.move2origin}
 \begin{verbatim}
-MOVE2ORIGIN - moves ellipsoids in the given array to the origin.
+MOVE2ORIGIN - moves ellipsoids in the given array to the origin. Modified
+              given array is on output (not its copy).
 
   outEllArr = MOVE2ORIGIN(inpEll) - Replaces the centers of
       ellipsoids in inpEllArr with zero vectors.
@@ -2316,6 +2319,7 @@ Example:
 \subsection{\texorpdfstring{ellipsoid.projection}{projection}}\label{method:ellipsoid.projection}
 \begin{verbatim}
 PROJECTION - computes projection of the ellipsoid onto the given subspace.
+             modified given array is on output (not its copy).
 
   projEllArr = projection(ellArr, basisMat)  Computes projection of the
       ellipsoid ellArr onto a subspace, specified by orthogonal
@@ -2418,7 +2422,7 @@ Example:
 \subsection{\texorpdfstring{ellipsoid.shape}{shape}}\label{method:ellipsoid.shape}
 \begin{verbatim}
 SHAPE - modifies the shape matrix of the ellipsoid without
-  changing its center.
+  changing its center. Modified given array is on output (not its copy).
 
    modEllArr = SHAPE(ellArr, modMat)  Modifies the shape matrices of
       the ellipsoids in the ellipsoidal array ellArr. The centers
@@ -3576,72 +3580,57 @@ Example:
        2
        1
 \end{verbatim}
-\section{smartdb.relations.ARelation}\label{secClassDescr:smartdb.relations.ARelation}
-\subsection{\texorpdfstring{smartdb.relations.ARelation.ARelation}{ARelation}}\label{method:smartdb.relations.ARelation.ARelation}
+\section{smartdb.cubes.CubeStruct}\label{secClassDescr:smartdb.cubes.CubeStruct}
+\subsection{\texorpdfstring{smartdb.cubes.CubeStruct.CubeStruct}{CubeStruct}}\label{method:smartdb.cubes.CubeStruct.CubeStruct}
 \begin{verbatim}
-ARELATION is a constructor of relation class object
-
-Usage: self=ARelation(varargin)
+CUBESTRUCT - constructor for CubeStruct class
 
 Input:
-  optional:
-    inpObj: ARelation[1,1]/SData: struct[1,1]
-        structure with values of all fields
-        for all tuples
+  Case1 (copy constructor):
+      regular:
+         cubeObj: CubeStruct: [1,1]
 
-    SIsNull: struct [1,1] - structure of fields with is-null
-       information for the field content, it can be logical for
-       plain real numbers of cell of logicals for cell strs or
-       cell of cell of str for more complex types
+  Case2 (building from structures):
+      regular:
+          SData: struct[1,1]
+      optional:
 
-    SIsValueNull: struct [1,1] - structure with logicals
-        determining whether value corresponding to each field
-        and each tuple is null or not
+          SIsNull: struct[1,1]
+          SIsValueNull: struct[1,1]
+
+      properties:
+          SubCase1:
+              fieldMetaData: CubeStructFieldInfo[1,nFields] - an
+                  array of field meta data objects,
+          SubCase2:
+
+              fieldNameList: char cell [1,nFields] - list of
+                  names for fields of given object
+
+              fieldDescrList: char cell [1,nFields] - list of
+                  descriptions for fields of given object
+
+              fieldTypeSpecList: cell[1,nFields] of cell of
+                  char - field type specification
+
+          minDimensionality: numeric[1,1] - minimum
+              dimensionality of CubeStruct field values.
+              Use minDimensionality=1 for relations and
+              minDimensionality=# of keys for cubes
+
+          checkConsistency: logical[1,1] - determines if
+              consistency of input data structures is checked
+
+          structNameList: cell[] of char - determines which
+              structures are specified on input
+
+          checkstruct: logical[1,1] - determines if presence of
+              all relation fields in the input structures is checked
 
 Output:
-  regular:
-    self: ARelation [1,1] - constructed class object
-
-  Subclasses probably do have an overriden version of this
-  method which defines either dynamic or static set of fields
-
-(tweaked to use CubeStuct as a base class)
+  self: CubeStruct[1,1] - created object
 \end{verbatim}
-\subsection{\texorpdfstring{smartdb.relations.ARelation.addData}{addData}}\label{method:smartdb.relations.ARelation.addData}
-\begin{verbatim}
-ADDDATA - adds a set of field values to existing data in a form of new
-          tuples
-
-Input:
-  regular:
-     self:ARelation [1,1] - class object
-\end{verbatim}
-\subsection{\texorpdfstring{smartdb.relations.ARelation.addTuples}{addTuples}}\label{method:smartdb.relations.ARelation.addTuples}
-\begin{verbatim}
-ADDTUPLES - adds a set of new tuples to the relation
-
-Usage: addTuplesInternal(self,varargin)
-
-input:
-  regular:
-      self: ARelation [1,1] - class object
-      SData: struct [1,1] - structure with values of all fields  for all
-       tuples
-  optional:
-      SIsNull: struct [1,1] - structure of fields with is-null
-        information for the field content, it can be logical for plain
-        real numbers of cell of logicals for cell strs or cell of cell of
-        str for more complex types
-
-      SIsValueNull: struct [1,1] - structure with logicals determining
-        whether value corresponding to each field and each tuple is null
-        or not
-
-  properties:
-      checkConsistency: logical[1,1], if true, a consistency between the
-         input structures is not checked, true by default
-\end{verbatim}
-\subsection{\texorpdfstring{smartdb.relations.ARelation.applyGetFunc}{applyGetFunc}}\label{method:smartdb.relations.ARelation.applyGetFunc}
+\subsection{\texorpdfstring{smartdb.cubes.CubeStruct.applyGetFunc}{applyGetFunc}}\label{method:smartdb.cubes.CubeStruct.applyGetFunc}
 \begin{verbatim}
 APPLYGETFUNC - applies a function to the specified fields as columns, i.e.
                the function is applied to each field as whole, not to
@@ -3664,7 +3653,7 @@ Notes: this function currently has a lots of limitations:
   3) no additional arguments can be passed
   All this limitations will eventually go away though so stay tuned...
 \end{verbatim}
-\subsection{\texorpdfstring{smartdb.relations.ARelation.applySetFunc}{applySetFunc}}\label{method:smartdb.relations.ARelation.applySetFunc}
+\subsection{\texorpdfstring{smartdb.cubes.CubeStruct.applySetFunc}{applySetFunc}}\label{method:smartdb.cubes.CubeStruct.applySetFunc}
 \begin{verbatim}
 APPLYSETFUNC - applies some function to each cell of the specified fields
                of a given CubeStruct object
@@ -3727,7 +3716,7 @@ Input:
          outputType parameter of toArray method, see its documentation
          for a list of supported input types.
 \end{verbatim}
-\subsection{\texorpdfstring{smartdb.relations.ARelation.applyTupleGetFunc}{applyTupleGetFunc}}\label{method:smartdb.relations.ARelation.applyTupleGetFunc}
+\subsection{\texorpdfstring{smartdb.cubes.CubeStruct.applyTupleGetFunc}{applyTupleGetFunc}}\label{method:smartdb.cubes.CubeStruct.applyTupleGetFunc}
 \begin{verbatim}
 APPLYTUPLEGETFUNC - applies a function to the specified fields
                     separately to each tuple
@@ -3758,7 +3747,7 @@ Notes: this function currently has a lots of limitations:
   2) no additional arguments can be passed
   All this limitations will eventually go away though so stay tuned...
 \end{verbatim}
-\subsection{\texorpdfstring{smartdb.relations.ARelation.clone}{clone}}\label{method:smartdb.relations.ARelation.clone}
+\subsection{\texorpdfstring{smartdb.cubes.CubeStruct.clone}{clone}}\label{method:smartdb.cubes.CubeStruct.clone}
 \begin{verbatim}
 CLONE - creates a copy of a specified object via calling
         a copy constructor for the object class
@@ -3772,7 +3761,7 @@ Input:
 Ouput:
   self: any [] - constructed object
 \end{verbatim}
-\subsection{\texorpdfstring{smartdb.relations.ARelation.copyFrom}{copyFrom}}\label{method:smartdb.relations.ARelation.copyFrom}
+\subsection{\texorpdfstring{smartdb.cubes.CubeStruct.copyFrom}{copyFrom}}\label{method:smartdb.cubes.CubeStruct.copyFrom}
 \begin{verbatim}
 COPYFROM - reconstruct CubeStruct object within a current object using the
            input CubeStruct object as a prototype
@@ -3785,7 +3774,7 @@ Input:
   optional:
     fieldNameList: cell[1,nFields] - list of fields to copy
 \end{verbatim}
-\subsection{\texorpdfstring{smartdb.relations.ARelation.createInstance}{createInstance}}\label{method:smartdb.relations.ARelation.createInstance}
+\subsection{\texorpdfstring{smartdb.cubes.CubeStruct.createInstance}{createInstance}}\label{method:smartdb.cubes.CubeStruct.createInstance}
 \begin{verbatim}
 CREATEINSTANCE - returns an object of the same class by calling a default
                  constructor (with no parameters)
@@ -3801,29 +3790,7 @@ input:
 Ouput:
   self: any [] - constructed object
 \end{verbatim}
-\subsection{\texorpdfstring{smartdb.relations.ARelation.dispOnUI}{dispOnUI}}\label{method:smartdb.relations.ARelation.dispOnUI}
-\begin{verbatim}
-DISPONUI - displays a content of the given relation as a data grid UI
-           component.
-
-Input:
-  regular:
-      self:
-  properties:
-      tableType: char[1,] - type of table used for displaying the data,
-          the following types are supported:
-          'sciJavaGrid' - proprietary Java-based data grid component
-              is used
-          'uitable'  - Matlab built-in uitable component is used.
-              if not specified, the method tries to use sciJavaGrid
-              if it is available, if not - uitable is used.
-
-Output:
-  hFigure: double[1,1] - figure handle containing the component
-  gridObj: smartdb.relations.disp.UIDataGrid[1,1] - data grid component
-      instance used for displaying a content of the relation object
-\end{verbatim}
-\subsection{\texorpdfstring{smartdb.relations.ARelation.display}{display}}\label{method:smartdb.relations.ARelation.display}
+\subsection{\texorpdfstring{smartdb.cubes.CubeStruct.display}{display}}\label{method:smartdb.cubes.CubeStruct.display}
 \begin{verbatim}
 DISPLAY - puts some textual information about CubeStruct object in screen
 
@@ -3831,25 +3798,25 @@ Input:
  regular:
      self.
 \end{verbatim}
-\subsection{\texorpdfstring{smartdb.relations.ARelation.fromStructList}{fromStructList}}\label{method:smartdb.relations.ARelation.fromStructList}
+\subsection{\texorpdfstring{smartdb.cubes.CubeStruct.fromStructList}{fromStructList}}\label{method:smartdb.cubes.CubeStruct.fromStructList}
 \begin{verbatim}
-FROMSTRUCTLIST - creates a dynamic relation from a list of structures
-                 interpreting each structure as the data for
-                 several tuples.
+FROMSTRUCTLIST creates an object of specified type
+from a list of structures interpreting each structure
+as the data for several CubeStruct data slices
 
 Input:
   regular:
+      catDim: double[1,1] - dimension along which the input structures
+         are to be concatenated
       className: name of object class which will be created,
           the class constructor should accept 2 properties:
           'fieldNameList' and 'fieldTypeSpecList'
-
       structList: cell[] of struct[1,1] - list of structures
 
 Output:
-  relDataObj: smartdb.relations.DynamicRelation[1,1] -
-     constructed relation
+  relDataObj: className[1,1] -  constructed object
 \end{verbatim}
-\subsection{\texorpdfstring{smartdb.relations.ARelation.getCopy}{getCopy}}\label{method:smartdb.relations.ARelation.getCopy}
+\subsection{\texorpdfstring{smartdb.cubes.CubeStruct.getCopy}{getCopy}}\label{method:smartdb.cubes.CubeStruct.getCopy}
 \begin{verbatim}
 GETCOPY - returns an object copy
 
@@ -3861,7 +3828,7 @@ Input:
   optional:
     same as for getData
 \end{verbatim}
-\subsection{\texorpdfstring{smartdb.relations.ARelation.getData}{getData}}\label{method:smartdb.relations.ARelation.getData}
+\subsection{\texorpdfstring{smartdb.cubes.CubeStruct.getData}{getData}}\label{method:smartdb.cubes.CubeStruct.getData}
 \begin{verbatim}
 GETDATA - returns an indexed projection of CubeStruct object's content
 
@@ -3929,7 +3896,7 @@ Output:
        means that a corresponding cell doesn't not contain
           any value
 \end{verbatim}
-\subsection{\texorpdfstring{smartdb.relations.ARelation.getFieldDescrList}{getFieldDescrList}}\label{method:smartdb.relations.ARelation.getFieldDescrList}
+\subsection{\texorpdfstring{smartdb.cubes.CubeStruct.getFieldDescrList}{getFieldDescrList}}\label{method:smartdb.cubes.CubeStruct.getFieldDescrList}
 \begin{verbatim}
 GETFIELDDESCRLIST - returns the list of CubeStruct field descriptions
 
@@ -3947,7 +3914,7 @@ Output:
     value: char cell [1,nFields] - list of CubeStruct object field
         descriptions
 \end{verbatim}
-\subsection{\texorpdfstring{smartdb.relations.ARelation.getFieldIsNull}{getFieldIsNull}}\label{method:smartdb.relations.ARelation.getFieldIsNull}
+\subsection{\texorpdfstring{smartdb.cubes.CubeStruct.getFieldIsNull}{getFieldIsNull}}\label{method:smartdb.cubes.CubeStruct.getFieldIsNull}
 \begin{verbatim}
 GETFIELDISNULL - returns for given field a nested logical/cell array
                  containing is-null indicators for cell content
@@ -3963,7 +3930,7 @@ Output:
     fieldIsCVec: logical/cell[] - nested cell/logical array containing
        is-null indicators for content of the field
 \end{verbatim}
-\subsection{\texorpdfstring{smartdb.relations.ARelation.getFieldIsValueNull}{getFieldIsValueNull}}\label{method:smartdb.relations.ARelation.getFieldIsValueNull}
+\subsection{\texorpdfstring{smartdb.cubes.CubeStruct.getFieldIsValueNull}{getFieldIsValueNull}}\label{method:smartdb.cubes.CubeStruct.getFieldIsValueNull}
 \begin{verbatim}
 GETFIELDISVALUENULL - returns for given field logical vector determining
                       whether value of this field in each cell is null
@@ -3984,7 +3951,7 @@ Output:
     isValueNullVec: logical[] - array of isValueNull indicators for the
        specified field
 \end{verbatim}
-\subsection{\texorpdfstring{smartdb.relations.ARelation.getFieldNameList}{getFieldNameList}}\label{method:smartdb.relations.ARelation.getFieldNameList}
+\subsection{\texorpdfstring{smartdb.cubes.CubeStruct.getFieldNameList}{getFieldNameList}}\label{method:smartdb.cubes.CubeStruct.getFieldNameList}
 \begin{verbatim}
 GETFIELDNAMELIST - returns the list of CubeStruct object field names
 
@@ -3998,19 +3965,20 @@ Iutput:
     value: char cell [1,nFields] - list of CubeStruct object field
         names
 \end{verbatim}
-\subsection{\texorpdfstring{smartdb.relations.ARelation.getFieldProjection}{getFieldProjection}}\label{method:smartdb.relations.ARelation.getFieldProjection}
+\subsection{\texorpdfstring{smartdb.cubes.CubeStruct.getFieldProjection}{getFieldProjection}}\label{method:smartdb.cubes.CubeStruct.getFieldProjection}
 \begin{verbatim}
-GETFIELDPROJECTION - project object with specified fields.
+GETFIELDPROJECTION - create object with specified fields using existing
+                     table
 
 Input:
   regular:
-      self: ARelation[1,1] - original object
+      self: CubeStruct[1,1] - original object
       fieldNameList: cell[1,nFields] of char[1,] - field name list
 
 Output:
-  obj: DynamicRelation[1,1] - projected object
+  obj: DynamicCubeStruct[1,1] - projected object
 \end{verbatim}
-\subsection{\texorpdfstring{smartdb.relations.ARelation.getFieldTypeList}{getFieldTypeList}}\label{method:smartdb.relations.ARelation.getFieldTypeList}
+\subsection{\texorpdfstring{smartdb.cubes.CubeStruct.getFieldTypeList}{getFieldTypeList}}\label{method:smartdb.cubes.CubeStruct.getFieldTypeList}
 \begin{verbatim}
 GETFIELDTYPELIST - returns list of field types in given CubeStruct object
 
@@ -4028,7 +3996,7 @@ Output:
   fieldTypeList: cell [1,nFields] of smartdb.cubes.ACubeStructFieldType[1,1]
       - list of field types
 \end{verbatim}
-\subsection{\texorpdfstring{smartdb.relations.ARelation.getFieldTypeSpecList}{getFieldTypeSpecList}}\label{method:smartdb.relations.ARelation.getFieldTypeSpecList}
+\subsection{\texorpdfstring{smartdb.cubes.CubeStruct.getFieldTypeSpecList}{getFieldTypeSpecList}}\label{method:smartdb.cubes.CubeStruct.getFieldTypeSpecList}
 \begin{verbatim}
 GETFIELDTYPESPECLIST - returns a list of field type specifications. Field
                        type specification is a sequence of type names
@@ -4054,7 +4022,7 @@ Output:
           cell[1,nFields*prod(nNestedLevelsVec)] of char[1,.]
        - list of field type specifications
 \end{verbatim}
-\subsection{\texorpdfstring{smartdb.relations.ARelation.getFieldValueSizeMat}{getFieldValueSizeMat}}\label{method:smartdb.relations.ARelation.getFieldValueSizeMat}
+\subsection{\texorpdfstring{smartdb.cubes.CubeStruct.getFieldValueSizeMat}{getFieldValueSizeMat}}\label{method:smartdb.cubes.CubeStruct.getFieldValueSizeMat}
 \begin{verbatim}
 GETFIELDVALUESIZEMAT - returns a matrix composed from the size vectors
                        for the specified fields
@@ -4077,7 +4045,7 @@ Input:
 Output:
   sizeMat: double[nFields,nMaxDims]
 \end{verbatim}
-\subsection{\texorpdfstring{smartdb.relations.ARelation.getIsFieldValueNull}{getIsFieldValueNull}}\label{method:smartdb.relations.ARelation.getIsFieldValueNull}
+\subsection{\texorpdfstring{smartdb.cubes.CubeStruct.getIsFieldValueNull}{getIsFieldValueNull}}\label{method:smartdb.cubes.CubeStruct.getIsFieldValueNull}
 \begin{verbatim}
 GETISFIELDVALUENULL - returns a vector indicating whether a particular
                       field is composed of null values completely
@@ -4094,6 +4062,580 @@ Input:
 Output:
   regular:
     isValueNullVec: logical[1,nFields]
+\end{verbatim}
+\subsection{\texorpdfstring{smartdb.cubes.CubeStruct.getMinDimensionSize}{getMinDimensionSize}}\label{method:smartdb.cubes.CubeStruct.getMinDimensionSize}
+\begin{verbatim}
+GETMINDIMENSIONSIZE - returns a size vector for the specified
+                      dimensions. If no dimensions are specified, a size
+                      vector for all dimensions up to minimum CubeStruct
+                      dimension is returned
+
+Input:
+  regular:
+      self:
+  optional:
+      dimNumVec: numeric[1,nDims] - a vector of dimension
+          numbers
+
+Output:
+  minDimensionSizeVec: double [1,nDims] - a size vector for
+     the requested dimensions
+\end{verbatim}
+\subsection{\texorpdfstring{smartdb.cubes.CubeStruct.getMinDimensionality}{getMinDimensionality}}\label{method:smartdb.cubes.CubeStruct.getMinDimensionality}
+\begin{verbatim}
+GETMINDIMENSIONALITY - returns a minimum dimensionality for a given
+                       object
+
+Input:
+  regular:
+      self
+
+Output:
+  minDimensionality: double[1,1] - minimum dimensionality of
+     self object
+\end{verbatim}
+\subsection{\texorpdfstring{smartdb.cubes.CubeStruct.getNElems}{getNElems}}\label{method:smartdb.cubes.CubeStruct.getNElems}
+\begin{verbatim}
+GETNELEMS - returns a number of elements in a given object
+Input:
+  regular:
+     self:
+
+Output:
+  nElems:double[1, 1] - number of elements in a given object
+\end{verbatim}
+\subsection{\texorpdfstring{smartdb.cubes.CubeStruct.getNFields}{getNFields}}\label{method:smartdb.cubes.CubeStruct.getNFields}
+\begin{verbatim}
+GETNFIELDS - returns number of fields in given object
+
+Usage: nFields=getNFields(self)
+
+Input:
+  regular:
+    self: CubeStruct [1,1]
+Output:
+  regular:
+    nFields: double [1,1] - number of fields in given object
+\end{verbatim}
+\subsection{\texorpdfstring{smartdb.cubes.CubeStruct.initByEmptyDataSet}{initByEmptyDataSet}}\label{method:smartdb.cubes.CubeStruct.initByEmptyDataSet}
+\begin{verbatim}
+INITBYEMPTYDATASET - initializes cube struct object with null value arrays
+                     of specified size based on minDimVec specified.
+
+For instance, if minDimVec=[2,3,4,5,6] and minDimensionality of cube
+struct object cb is 2, then cb.initByEmptyDataSet(minDimVec) will create
+a cube struct object with element array of [2,3] size where each element
+has size of [4,5,6,0]
+
+Input:
+  regular:
+      self:
+  optional
+      minDimVec: double[1,nDims] - size vector of null value arrays
+\end{verbatim}
+\subsection{\texorpdfstring{smartdb.cubes.CubeStruct.initByNullDataSet}{initByNullDataSet}}\label{method:smartdb.cubes.CubeStruct.initByNullDataSet}
+\begin{verbatim}
+INITBYDEFAULTDATASET - initializes cube struct object with null value
+                       arrays of specified size based on minDimVec
+                       specified.
+
+For instance, if minDimVec=[2,3,4,5,6] and minDimensionality of cube
+struct object cb is 2, then cb.initByEmptyDataSet(minDimVec) will create
+a cube struct object with element array of [2,3] size where each element
+has size of [4,5,6]
+
+Input:
+  regular:
+      self:
+  optional
+      minDimVec: double[1,nDims] - size vector of null value arrays
+\end{verbatim}
+\subsection{\texorpdfstring{smartdb.cubes.CubeStruct.isEqual}{isEqual}}\label{method:smartdb.cubes.CubeStruct.isEqual}
+\begin{verbatim}
+ISEQUAL compares the specified CubeStruct object with other CubeStruct
+object and returns true if they are equal, otherwise it
+returns false
+
+Usage: isEq=isEqual(self,otherObj)
+
+Input:
+  regular:
+    self: CubeStruct [1,1]
+    otherObj: CubeStruct [1,1] - the other object
+
+  properties:
+    checkFieldOrder/isFieldOrderCheck: logical [1,1] -
+        if true, then fields in compared objects must
+        be in the same order, otherwise the order is not
+        important (false by default)
+
+    sortDim: numeric[1,1] - dimension along which the CubeStruct slices
+       order is considered irrelevant with regard to equality
+
+    compareMetaDataBackwardRef: logical[1,1] if true, the CubeStruct's
+        referenced from the meta data objects are also compared
+
+    compareMetaDataParamList: cell[1,nParam] - list of additional
+       parameters passed to isEqual method of CubeStruct from isEqual method
+       of CubeStructFieldInfo. This list is used particularly to
+       elimitate an infinite loop when comparing the reverse
+       references from CubeStructFieldInfo to CubeStruct
+
+    maxTolerance: double [1,1] - maximum allowed tolerance
+
+    leftIndCVec: cell[1,nLeftIndDims] - list of indices to be applied to
+      the dimensions of left-hand side CubeStruct object
+
+    leftDimVec: numeric[1,nLeftIndDims] - vector of index dimensions for
+       which leftIndCVec is specified
+
+    rightIndCVec: cell[1,nRightIndDims] - same as leftIndCVec but for the
+       right-hand side CubeStruct object
+
+    rightDimVec: numeric[1,nRightIndDims] - same as leftDimVec but for
+    the right-hand side CubeStruct object
+
+      Note: sortDim property cannot be specified along with
+          any of leftIndCVec, leftDimVec, rightIndCVec, rightDimVec
+          properties
+
+    compareFuncHandle: function_handle[1,1] - function handle used to
+       compare data structures
+
+Output:
+  isEq: logical[1,1] - result of comparison
+  reportStr: char[1,] - contains an additional information about the
+     differences (if any)
+\end{verbatim}
+\subsection{\texorpdfstring{smartdb.cubes.CubeStruct.isFields}{isFields}}\label{method:smartdb.cubes.CubeStruct.isFields}
+\begin{verbatim}
+ ISFIELDS - returns whether all fields whose names are given in the input
+            list are in the field list of given object or not
+
+ Usage: isPositive=isFields(self,fieldList)
+
+ Input:
+   regular:
+     self: CubeStruct [1,1]
+     fieldList: char or char cell [1,nFields]/[nFields,1] - input list of
+         given field names
+ Output:
+   isPositive: logical [1,1] - true if all gields whose
+       names are given in the input list are in the field
+       list of given object, false otherwise
+
+   isUniqueNames: logical[1,1] - true if the specified names contain
+      unique field values
+
+   isThereVec: logical[1,nFields] - each element indicate whether the
+       corresponding field is present in the cube
+
+TODO allow for varargins
+\end{verbatim}
+\subsection{\texorpdfstring{smartdb.cubes.CubeStruct.isequal}{isequal}}\label{method:smartdb.cubes.CubeStruct.isequal}
+\begin{verbatim}
+ISEQUAL compares the specified CubeStruct object with other CubeStruct
+object and returns true if they are equal, otherwise it
+returns false
+
+Usage: isEq=isEqual(self,otherObj)
+
+Input:
+  regular:
+    self: CubeStruct [1,1]
+    otherObj: CubeStruct [1,1] - the other object
+
+  properties:
+    checkFieldOrder/isFieldOrderCheck: logical [1,1] -
+        if true, then fields in compared objects must
+        be in the same order, otherwise the order is not
+        important (false by default)
+
+    sortDim: numeric[1,1] - dimension along which the CubeStruct slices
+       order is considered irrelevant with regard to equality
+
+    compareMetaDataBackwardRef: logical[1,1] if true, the CubeStruct's
+        referenced from the meta data objects are also compared
+
+    compareMetaDataParamList: cell[1,nParam] - list of additional
+       parameters passed to isEqual method of CubeStruct from isEqual method
+       of CubeStructFieldInfo. This list is used particularly to
+       elimitate an infinite loop when comparing the reverse
+       references from CubeStructFieldInfo to CubeStruct
+
+    maxTolerance: double [1,1] - maximum allowed tolerance
+
+    leftIndCVec: cell[1,nLeftIndDims] - list of indices to be applied to
+      the dimensions of left-hand side CubeStruct object
+
+    leftDimVec: numeric[1,nLeftIndDims] - vector of index dimensions for
+       which leftIndCVec is specified
+
+    rightIndCVec: cell[1,nRightIndDims] - same as leftIndCVec but for the
+       right-hand side CubeStruct object
+
+    rightDimVec: numeric[1,nRightIndDims] - same as leftDimVec but for
+    the right-hand side CubeStruct object
+
+      Note: sortDim property cannot be specified along with
+          any of leftIndCVec, leftDimVec, rightIndCVec, rightDimVec
+          properties
+
+    compareFuncHandle: function_handle[1,1] - function handle used to
+       compare data structures
+
+Output:
+  isEq: logical[1,1] - result of comparison
+  reportStr: char[1,] - contains an additional information about the
+     differences (if any)
+\end{verbatim}
+\subsection{\texorpdfstring{smartdb.cubes.CubeStruct.saveObj}{saveObj}}\label{method:smartdb.cubes.CubeStruct.saveObj}
+\begin{verbatim}
+SAVEOBJ- transforms given CubeStruct object into structure containing
+         internal representation of object properties
+
+Input:
+  regular:
+    self: CubeStruct [nDim1,...,nDim2]
+
+
+Output:
+  regular:
+    SObjectData: struct [n1,...,n_k] - structure containing an internal
+       representation of the specified object
+\end{verbatim}
+\subsection{\texorpdfstring{smartdb.cubes.CubeStruct.setField}{setField}}\label{method:smartdb.cubes.CubeStruct.setField}
+\begin{verbatim}
+SETFIELDINTERNAL - sets values of all cells for given field
+
+Usage: setFieldInternal(self,fieldName,value)
+
+Input:
+  regular:
+    self: CubeStruct [1,1]
+    fieldName: char - name of field
+    value: array [] of some type - field values
+
+  optional:
+    isNull: logical/cell[]
+    isValueNull: logical[]
+
+  properties:
+    structNameList: list of internal structures to return (by default it
+      is {SData, SIsNull, SIsValueNull}
+
+    inferIsNull: logical[1,2] - the first (second) element = false
+      means that IsNull (IsValueNull) indicator for a field in question
+          is kept intact (default = [true,true])
+
+      Note: if structNameList contains 'SIsValueNull' entry,
+       inferIsValueNull parameter is overwritten by false
+\end{verbatim}
+\subsection{\texorpdfstring{smartdb.cubes.CubeStruct.toArray}{toArray}}\label{method:smartdb.cubes.CubeStruct.toArray}
+\begin{verbatim}
+TOARRAY - transforms values of all CubeStruct cells into a multi-
+          dimentional array
+
+Usage: resCArray=toArray(self,varargin)
+
+Input:
+  regular:
+    self: CubeStruct [1,1]
+
+  properties:
+    checkInputs: logical[1,1] - if false, the method skips checking the
+       input parameters for consistency
+
+    fieldNameList: cell[1,] - list of filed names to return
+
+    structNameList: cell[1,]/char[1,], data structure list
+       for which the data is to be taken from, can consist of the
+       following values
+
+      SData - data itself
+      SIsNull - contains is-null indicator information for data values
+      SIsValueNull - contains is-null indicators for CubeStruct cells
+         (not for cell values)
+
+    groupByColumns: logical[1,1], if true, each column is returned in a
+       separate cell
+
+    outputType: char[1,] - method of formign an output array, the
+       following methods are supported:
+           'uniformMat' - the field values are concatenated without any
+                   type/size transformations. As a result, this method
+                   will fail if the specified fields have different types
+                   or/and sizes along any dimension apart from catDim
+
+           'uniformCell' - not-cell fields are converted to cells
+                   element-wise but no size-transformations is performed.
+                   This method will fail if the specified fields have
+                   different sizes along any dimension apart from catDim
+
+           'notUniform' - this method doesn't make any assumptions about
+                   size or type of the fields. Each field value is wrapped
+                   into cell in a such way that a size of resulting cell
+                   is minDimensionSizeVec for each field. Thus if for
+                   instance is size of cube object is [2,3,4] and a field
+                   size is [2,4,5,10,30] its value is splitted into 2*4*5
+                   pieces with each piece of size [1,1,1,10,30] put it
+                   its separate cell
+           'adaptiveCell' - functions similarly to 'nonUniform' except for
+                   the cases when a field value size equals
+                   minDimensionSizeVec exactly i.e. the field takes only
+                   scalar values. In such cases no wrapping into cell is
+                   performed which allows to get a more transparent
+                   output.
+
+    catDim: double[1,1] - dimension number for
+       concatenating outputs when groupByColumns is false
+
+
+    replaceNull: logical[1,1], if true, null values from SData are
+       replaced by null replacement, = true by default
+
+    nullTopReplacement: - can be of any type and currently only applicable
+      when  UniformOutput=false and of
+      the corresponding column type if UniformOutput=true.
+
+      Note!: this parameter is disregarded for any dataStructure different
+         from 'SData'.
+
+      Note!: the main difference between this parameter and the following
+         parameters is that nullTopReplacement can violate field type
+         constraints thus allowing to replace doubles with strings for
+         instance (for non-uniform output types only of course)
+
+
+    nullReplacements: cell[1,nReplacedFields]  - list of null
+       replacements for each of the fields
+
+    nullReplacementFields: cell[1,nReplacedFields] - list of fields in
+       which the nulls are to be replaced with the specified values,
+       if not specified it is assumed that all fields are to be replaced
+
+       NOTE!: all fields not listed in this parameter are replaced with
+       the default values
+
+
+Output:
+  Case1 (one output is requested and length(structNameList)==1):
+
+      resCMat: matrix/cell[]  with values of all fields (or
+        fields selected by optional arguments) for all CubeStruct
+        data cells
+
+  Case2 (multiple outputs are requested and their number =
+    length(structNameList) each output is assigned resCMat for the
+    corresponding struct
+
+  Case3 (2 outputs is requested or length(structNameList)+1 outputs is
+  requested). In this case the last output argument is
+
+       isConvertedToCell: logical[nFields,nStructs] -  matrix with true
+          values on the positions which correspond to fields converted to
+          cells
+\end{verbatim}
+\subsection{\texorpdfstring{smartdb.cubes.CubeStruct.toStruct}{toStruct}}\label{method:smartdb.cubes.CubeStruct.toStruct}
+\begin{verbatim}
+TOSTRUCT - transforms given CubeStruct object into structure
+
+Input:
+  regular:
+    self: CubeStruct [nDim1,...,nDim2]
+
+
+Output:
+  regular:
+    SObjectData: struct [n1,...,n_k] - structure containing an internal
+       representation of the specified object
+\end{verbatim}
+\section{smartdb.relations.ARelation}\label{secClassDescr:smartdb.relations.ARelation}
+\subsection{\texorpdfstring{smartdb.relations.ARelation.ARelation}{ARelation}}\label{method:smartdb.relations.ARelation.ARelation}
+\begin{verbatim}
+ARELATION is a constructor of relation class object
+
+Usage: self=ARelation(varargin)
+
+Input:
+  optional:
+    inpObj: ARelation[1,1]/SData: struct[1,1]
+        structure with values of all fields
+        for all tuples
+
+    SIsNull: struct [1,1] - structure of fields with is-null
+       information for the field content, it can be logical for
+       plain real numbers of cell of logicals for cell strs or
+       cell of cell of str for more complex types
+
+    SIsValueNull: struct [1,1] - structure with logicals
+        determining whether value corresponding to each field
+        and each tuple is null or not
+
+Output:
+  regular:
+    self: ARelation [1,1] - constructed class object
+
+  Subclasses probably do have an overriden version of this
+  method which defines either dynamic or static set of fields
+
+(tweaked to use CubeStuct as a base class)
+\end{verbatim}
+
+
+See the description of the following methods in section \ref{secClassDescr:smartdb.cubes.CubeStruct}
+ for smartdb.cubes.CubeStruct:
+
+\begin{list}{}{}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.applyGetFunc]{applyGetFunc}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.applySetFunc]{applySetFunc}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.applyTupleGetFunc]{applyTupleGetFunc}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.copyFrom]{copyFrom}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getCopy]{getCopy}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getData]{getData}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getFieldDescrList]{getFieldDescrList}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getFieldIsNull]{getFieldIsNull}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getFieldIsValueNull]{getFieldIsValueNull}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getFieldNameList]{getFieldNameList}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getFieldTypeList]{getFieldTypeList}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getFieldTypeSpecList]{getFieldTypeSpecList}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getFieldValueSizeMat]{getFieldValueSizeMat}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getIsFieldValueNull]{getIsFieldValueNull}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getMinDimensionSize]{getMinDimensionSize}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getMinDimensionality]{getMinDimensionality}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getNElems]{getNElems}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getNFields]{getNFields}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.initByEmptyDataSet]{initByEmptyDataSet}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.initByNullDataSet]{initByNullDataSet}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.isFields]{isFields}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.saveObj]{saveObj}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.setField]{setField}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.toArray]{toArray}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.toStruct]{toStruct}
+\end{list}
+\subsection{\texorpdfstring{smartdb.relations.ARelation.addData}{addData}}\label{method:smartdb.relations.ARelation.addData}
+\begin{verbatim}
+ADDDATA - adds a set of field values to existing data in a form of new
+          tuples
+
+Input:
+  regular:
+     self:ARelation [1,1] - class object
+\end{verbatim}
+\subsection{\texorpdfstring{smartdb.relations.ARelation.addTuples}{addTuples}}\label{method:smartdb.relations.ARelation.addTuples}
+\begin{verbatim}
+ADDTUPLES - adds a set of new tuples to the relation
+
+Usage: addTuplesInternal(self,varargin)
+
+input:
+  regular:
+      self: ARelation [1,1] - class object
+      SData: struct [1,1] - structure with values of all fields  for all
+       tuples
+  optional:
+      SIsNull: struct [1,1] - structure of fields with is-null
+        information for the field content, it can be logical for plain
+        real numbers of cell of logicals for cell strs or cell of cell of
+        str for more complex types
+
+      SIsValueNull: struct [1,1] - structure with logicals determining
+        whether value corresponding to each field and each tuple is null
+        or not
+
+  properties:
+      checkConsistency: logical[1,1], if true, a consistency between the
+         input structures is not checked, true by default
+\end{verbatim}
+\subsection{\texorpdfstring{smartdb.relations.ARelation.clone}{clone}}\label{method:smartdb.relations.ARelation.clone}
+\begin{verbatim}
+CLONE - creates a copy of a specified object via calling
+        a copy constructor for the object class
+
+Input:
+  regular:
+    self: any [] - current object
+  optional
+    any parameters applicable for relation constructor
+
+Ouput:
+  self: any [] - constructed object
+\end{verbatim}
+\subsection{\texorpdfstring{smartdb.relations.ARelation.createInstance}{createInstance}}\label{method:smartdb.relations.ARelation.createInstance}
+\begin{verbatim}
+CREATEINSTANCE - returns an object of the same class by calling a default
+                 constructor (with no parameters)
+
+Usage: resObj=getInstance(self)
+
+input:
+  regular:
+    self: any [] - current object
+  optional
+    any parameters applicable for relation constructor
+
+Ouput:
+  self: any [] - constructed object
+\end{verbatim}
+\subsection{\texorpdfstring{smartdb.relations.ARelation.dispOnUI}{dispOnUI}}\label{method:smartdb.relations.ARelation.dispOnUI}
+\begin{verbatim}
+DISPONUI - displays a content of the given relation as a data grid UI
+           component.
+
+Input:
+  regular:
+      self:
+  properties:
+      tableType: char[1,] - type of table used for displaying the data,
+          the following types are supported:
+          'sciJavaGrid' - proprietary Java-based data grid component
+              is used
+          'uitable'  - Matlab built-in uitable component is used.
+              if not specified, the method tries to use sciJavaGrid
+              if it is available, if not - uitable is used.
+
+Output:
+  hFigure: double[1,1] - figure handle containing the component
+  gridObj: smartdb.relations.disp.UIDataGrid[1,1] - data grid component
+      instance used for displaying a content of the relation object
+\end{verbatim}
+\subsection{\texorpdfstring{smartdb.relations.ARelation.display}{display}}\label{method:smartdb.relations.ARelation.display}
+\begin{verbatim}
+DISPLAY - puts some textual information about CubeStruct object in screen
+
+Input:
+ regular:
+     self.
+\end{verbatim}
+\subsection{\texorpdfstring{smartdb.relations.ARelation.fromStructList}{fromStructList}}\label{method:smartdb.relations.ARelation.fromStructList}
+\begin{verbatim}
+FROMSTRUCTLIST - creates a dynamic relation from a list of structures
+                 interpreting each structure as the data for
+                 several tuples.
+
+Input:
+  regular:
+      className: name of object class which will be created,
+          the class constructor should accept 2 properties:
+          'fieldNameList' and 'fieldTypeSpecList'
+
+      structList: cell[] of struct[1,1] - list of structures
+
+Output:
+  relDataObj: smartdb.relations.DynamicRelation[1,1] -
+     constructed relation
+\end{verbatim}
+\subsection{\texorpdfstring{smartdb.relations.ARelation.getFieldProjection}{getFieldProjection}}\label{method:smartdb.relations.ARelation.getFieldProjection}
+\begin{verbatim}
+GETFIELDPROJECTION - project object with specified fields.
+
+Input:
+  regular:
+      self: ARelation[1,1] - original object
+      fieldNameList: cell[1,nFields] of char[1,] - field name list
+
+Output:
+  obj: DynamicRelation[1,1] - projected object
 \end{verbatim}
 \subsection{\texorpdfstring{smartdb.relations.ARelation.getJoinWith}{getJoinWith}}\label{method:smartdb.relations.ARelation.getJoinWith}
 \begin{verbatim}
@@ -4125,60 +4667,6 @@ Input:
 
 Output:
   resRel: smartdb.relations.ARelation[1,1] - join result
-\end{verbatim}
-\subsection{\texorpdfstring{smartdb.relations.ARelation.getMinDimensionSize}{getMinDimensionSize}}\label{method:smartdb.relations.ARelation.getMinDimensionSize}
-\begin{verbatim}
-GETMINDIMENSIONSIZE - returns a size vector for the specified
-                      dimensions. If no dimensions are specified, a size
-                      vector for all dimensions up to minimum CubeStruct
-                      dimension is returned
-
-Input:
-  regular:
-      self:
-  optional:
-      dimNumVec: numeric[1,nDims] - a vector of dimension
-          numbers
-
-Output:
-  minDimensionSizeVec: double [1,nDims] - a size vector for
-     the requested dimensions
-\end{verbatim}
-\subsection{\texorpdfstring{smartdb.relations.ARelation.getMinDimensionality}{getMinDimensionality}}\label{method:smartdb.relations.ARelation.getMinDimensionality}
-\begin{verbatim}
-GETMINDIMENSIONALITY - returns a minimum dimensionality for a given
-                       object
-
-Input:
-  regular:
-      self
-
-Output:
-  minDimensionality: double[1,1] - minimum dimensionality of
-     self object
-\end{verbatim}
-\subsection{\texorpdfstring{smartdb.relations.ARelation.getNElems}{getNElems}}\label{method:smartdb.relations.ARelation.getNElems}
-\begin{verbatim}
-GETNELEMS - returns a number of elements in a given object
-Input:
-  regular:
-     self:
-
-Output:
-  nElems:double[1, 1] - number of elements in a given object
-\end{verbatim}
-\subsection{\texorpdfstring{smartdb.relations.ARelation.getNFields}{getNFields}}\label{method:smartdb.relations.ARelation.getNFields}
-\begin{verbatim}
-GETNFIELDS - returns number of fields in given object
-
-Usage: nFields=getNFields(self)
-
-Input:
-  regular:
-    self: CubeStruct [1,1]
-Output:
-  regular:
-    nFields: double [1,1] - number of fields in given object
 \end{verbatim}
 \subsection{\texorpdfstring{smartdb.relations.ARelation.getNTuples}{getNTuples}}\label{method:smartdb.relations.ARelation.getNTuples}
 \begin{verbatim}
@@ -4380,39 +4868,6 @@ Output:
     indBackward: double[1,nTuples] - indices that map the unique tuple
        set back to the original tuple set
 \end{verbatim}
-\subsection{\texorpdfstring{smartdb.relations.ARelation.initByEmptyDataSet}{initByEmptyDataSet}}\label{method:smartdb.relations.ARelation.initByEmptyDataSet}
-\begin{verbatim}
-INITBYEMPTYDATASET - initializes cube struct object with null value arrays
-                     of specified size based on minDimVec specified.
-
-For instance, if minDimVec=[2,3,4,5,6] and minDimensionality of cube
-struct object cb is 2, then cb.initByEmptyDataSet(minDimVec) will create
-a cube struct object with element array of [2,3] size where each element
-has size of [4,5,6,0]
-
-Input:
-  regular:
-      self:
-  optional
-      minDimVec: double[1,nDims] - size vector of null value arrays
-\end{verbatim}
-\subsection{\texorpdfstring{smartdb.relations.ARelation.initByNullDataSet}{initByNullDataSet}}\label{method:smartdb.relations.ARelation.initByNullDataSet}
-\begin{verbatim}
-INITBYDEFAULTDATASET - initializes cube struct object with null value
-                       arrays of specified size based on minDimVec
-                       specified.
-
-For instance, if minDimVec=[2,3,4,5,6] and minDimensionality of cube
-struct object cb is 2, then cb.initByEmptyDataSet(minDimVec) will create
-a cube struct object with element array of [2,3] size where each element
-has size of [4,5,6]
-
-Input:
-  regular:
-      self:
-  optional
-      minDimVec: double[1,nDims] - size vector of null value arrays
-\end{verbatim}
 \subsection{\texorpdfstring{smartdb.relations.ARelation.isEqual}{isEqual}}\label{method:smartdb.relations.ARelation.isEqual}
 \begin{verbatim}
 ISEQUAL - compares current relation object with other relation object and
@@ -4442,31 +4897,6 @@ Input:
 Output:
   isEq: logical[1,1] - result of comparison
   reportStr: char[1,] - report of comparsion
-\end{verbatim}
-\subsection{\texorpdfstring{smartdb.relations.ARelation.isFields}{isFields}}\label{method:smartdb.relations.ARelation.isFields}
-\begin{verbatim}
- ISFIELDS - returns whether all fields whose names are given in the input
-            list are in the field list of given object or not
-
- Usage: isPositive=isFields(self,fieldList)
-
- Input:
-   regular:
-     self: CubeStruct [1,1]
-     fieldList: char or char cell [1,nFields]/[nFields,1] - input list of
-         given field names
- Output:
-   isPositive: logical [1,1] - true if all gields whose
-       names are given in the input list are in the field
-       list of given object, false otherwise
-
-   isUniqueNames: logical[1,1] - true if the specified names contain
-      unique field values
-
-   isThereVec: logical[1,nFields] - each element indicate whether the
-       corresponding field is present in the cube
-
-TODO allow for varargins
 \end{verbatim}
 \subsection{\texorpdfstring{smartdb.relations.ARelation.isMemberTuples}{isMemberTuples}}\label{method:smartdb.relations.ARelation.isMemberTuples}
 \begin{verbatim}
@@ -4575,48 +5005,6 @@ Input:
     subIndVec: double [nSubTuples,1]/logical[nTuples,1] - array of
        indices for tuples that are selected to be removed
 \end{verbatim}
-\subsection{\texorpdfstring{smartdb.relations.ARelation.saveObj}{saveObj}}\label{method:smartdb.relations.ARelation.saveObj}
-\begin{verbatim}
-SAVEOBJ- transforms given CubeStruct object into structure containing
-         internal representation of object properties
-
-Input:
-  regular:
-    self: CubeStruct [nDim1,...,nDim2]
-
-
-Output:
-  regular:
-    SObjectData: struct [n1,...,n_k] - structure containing an internal
-       representation of the specified object
-\end{verbatim}
-\subsection{\texorpdfstring{smartdb.relations.ARelation.setField}{setField}}\label{method:smartdb.relations.ARelation.setField}
-\begin{verbatim}
-SETFIELDINTERNAL - sets values of all cells for given field
-
-Usage: setFieldInternal(self,fieldName,value)
-
-Input:
-  regular:
-    self: CubeStruct [1,1]
-    fieldName: char - name of field
-    value: array [] of some type - field values
-
-  optional:
-    isNull: logical/cell[]
-    isValueNull: logical[]
-
-  properties:
-    structNameList: list of internal structures to return (by default it
-      is {SData, SIsNull, SIsValueNull}
-
-    inferIsNull: logical[1,2] - the first (second) element = false
-      means that IsNull (IsValueNull) indicator for a field in question
-          is kept intact (default = [true,true])
-
-      Note: if structNameList contains 'SIsValueNull' entry,
-       inferIsValueNull parameter is overwritten by false
-\end{verbatim}
 \subsection{\texorpdfstring{smartdb.relations.ARelation.sortBy}{sortBy}}\label{method:smartdb.relations.ARelation.sortBy}
 \begin{verbatim}
 SORTBY - sorts all tuples of given relation with respect to some of its
@@ -4633,111 +5021,6 @@ input:
     direction: char or char cell [1,nFields] - direction of sorting for
         all fields (if one value is given) or for each field separately;
         each value may be 'asc' or 'desc'
-\end{verbatim}
-\subsection{\texorpdfstring{smartdb.relations.ARelation.toArray}{toArray}}\label{method:smartdb.relations.ARelation.toArray}
-\begin{verbatim}
-TOARRAY - transforms values of all CubeStruct cells into a multi-
-          dimentional array
-
-Usage: resCArray=toArray(self,varargin)
-
-Input:
-  regular:
-    self: CubeStruct [1,1]
-
-  properties:
-    checkInputs: logical[1,1] - if false, the method skips checking the
-       input parameters for consistency
-
-    fieldNameList: cell[1,] - list of filed names to return
-
-    structNameList: cell[1,]/char[1,], data structure list
-       for which the data is to be taken from, can consist of the
-       following values
-
-      SData - data itself
-      SIsNull - contains is-null indicator information for data values
-      SIsValueNull - contains is-null indicators for CubeStruct cells
-         (not for cell values)
-
-    groupByColumns: logical[1,1], if true, each column is returned in a
-       separate cell
-
-    outputType: char[1,] - method of formign an output array, the
-       following methods are supported:
-           'uniformMat' - the field values are concatenated without any
-                   type/size transformations. As a result, this method
-                   will fail if the specified fields have different types
-                   or/and sizes along any dimension apart from catDim
-
-           'uniformCell' - not-cell fields are converted to cells
-                   element-wise but no size-transformations is performed.
-                   This method will fail if the specified fields have
-                   different sizes along any dimension apart from catDim
-
-           'notUniform' - this method doesn't make any assumptions about
-                   size or type of the fields. Each field value is wrapped
-                   into cell in a such way that a size of resulting cell
-                   is minDimensionSizeVec for each field. Thus if for
-                   instance is size of cube object is [2,3,4] and a field
-                   size is [2,4,5,10,30] its value is splitted into 2*4*5
-                   pieces with each piece of size [1,1,1,10,30] put it
-                   its separate cell
-           'adaptiveCell' - functions similarly to 'nonUniform' except for
-                   the cases when a field value size equals
-                   minDimensionSizeVec exactly i.e. the field takes only
-                   scalar values. In such cases no wrapping into cell is
-                   performed which allows to get a more transparent
-                   output.
-
-    catDim: double[1,1] - dimension number for
-       concatenating outputs when groupByColumns is false
-
-
-    replaceNull: logical[1,1], if true, null values from SData are
-       replaced by null replacement, = true by default
-
-    nullTopReplacement: - can be of any type and currently only applicable
-      when  UniformOutput=false and of
-      the corresponding column type if UniformOutput=true.
-
-      Note!: this parameter is disregarded for any dataStructure different
-         from 'SData'.
-
-      Note!: the main difference between this parameter and the following
-         parameters is that nullTopReplacement can violate field type
-         constraints thus allowing to replace doubles with strings for
-         instance (for non-uniform output types only of course)
-
-
-    nullReplacements: cell[1,nReplacedFields]  - list of null
-       replacements for each of the fields
-
-    nullReplacementFields: cell[1,nReplacedFields] - list of fields in
-       which the nulls are to be replaced with the specified values,
-       if not specified it is assumed that all fields are to be replaced
-
-       NOTE!: all fields not listed in this parameter are replaced with
-       the default values
-
-
-Output:
-  Case1 (one output is requested and length(structNameList)==1):
-
-      resCMat: matrix/cell[]  with values of all fields (or
-        fields selected by optional arguments) for all CubeStruct
-        data cells
-
-  Case2 (multiple outputs are requested and their number =
-    length(structNameList) each output is assigned resCMat for the
-    corresponding struct
-
-  Case3 (2 outputs is requested or length(structNameList)+1 outputs is
-  requested). In this case the last output argument is
-
-       isConvertedToCell: logical[nFields,nStructs] -  matrix with true
-          values on the positions which correspond to fields converted to
-          cells
 \end{verbatim}
 \subsection{\texorpdfstring{smartdb.relations.ARelation.toCell}{toCell}}\label{method:smartdb.relations.ARelation.toCell}
 \begin{verbatim}
@@ -4856,20 +5139,6 @@ output:
   resCMat:  [nTuples,nFields(N)] - matrix/cell with values of all fields
       (or fields selected by optional arguments) for all tuples
 \end{verbatim}
-\subsection{\texorpdfstring{smartdb.relations.ARelation.toStruct}{toStruct}}\label{method:smartdb.relations.ARelation.toStruct}
-\begin{verbatim}
-TOSTRUCT - transforms given CubeStruct object into structure
-
-Input:
-  regular:
-    self: CubeStruct [nDim1,...,nDim2]
-
-
-Output:
-  regular:
-    SObjectData: struct [n1,...,n_k] - structure containing an internal
-       representation of the specified object
-\end{verbatim}
 \subsection{\texorpdfstring{smartdb.relations.ARelation.unionWith}{unionWith}}\label{method:smartdb.relations.ARelation.unionWith}
 \begin{verbatim}
 UNIONWITH - adds tuples of the input relation to the set of tuples of the
@@ -4959,6 +5228,38 @@ Fields:
 \end{verbatim}
 
 
+See the description of the following methods in section \ref{secClassDescr:smartdb.cubes.CubeStruct}
+ for smartdb.cubes.CubeStruct:
+
+\begin{list}{}{}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.applyGetFunc]{applyGetFunc}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.applySetFunc]{applySetFunc}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.applyTupleGetFunc]{applyTupleGetFunc}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.copyFrom]{copyFrom}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getCopy]{getCopy}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getData]{getData}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getFieldDescrList]{getFieldDescrList}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getFieldIsNull]{getFieldIsNull}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getFieldIsValueNull]{getFieldIsValueNull}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getFieldNameList]{getFieldNameList}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getFieldTypeList]{getFieldTypeList}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getFieldTypeSpecList]{getFieldTypeSpecList}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getFieldValueSizeMat]{getFieldValueSizeMat}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getIsFieldValueNull]{getIsFieldValueNull}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getMinDimensionSize]{getMinDimensionSize}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getMinDimensionality]{getMinDimensionality}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getNElems]{getNElems}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getNFields]{getNFields}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.initByEmptyDataSet]{initByEmptyDataSet}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.initByNullDataSet]{initByNullDataSet}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.isFields]{isFields}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.saveObj]{saveObj}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.setField]{setField}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.toArray]{toArray}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.toStruct]{toStruct}
+\end{list}
+
+
 See the description of the following methods in section \ref{secClassDescr:smartdb.relations.ARelation}
  for smartdb.relations.ARelation:
 
@@ -4999,123 +5300,6 @@ Input:
   regular:
       self: CubeStruct [1,1] - the object
 \end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.applyGetFunc}{applyGetFunc}}\label{method:gras.ellapx.smartdb.rels.EllTube.applyGetFunc}
-\begin{verbatim}
-APPLYGETFUNC - applies a function to the specified fields as columns, i.e.
-               the function is applied to each field as whole, not to
-               each cell separately
-
-Input:
-  regular:
-      hFunc: function_handle[1,1] - function to apply to each of the
-         field values
-  optional:
-      toFieldNameList: char/cell[1,] of char - a list of fields to which
-         the function specified by hFunc is to be applied
-
-    Note: hFunc can optionally be specified after toFieldNameList
-          parameter
-
-Notes: this function currently has a lots of limitations:
-  1) it assumes that the output is uniform
-  2) the function is applies to SData part of field value
-  3) no additional arguments can be passed
-  All this limitations will eventually go away though so stay tuned...
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.applySetFunc}{applySetFunc}}\label{method:gras.ellapx.smartdb.rels.EllTube.applySetFunc}
-\begin{verbatim}
-APPLYSETFUNC - applies some function to each cell of the specified fields
-               of a given CubeStruct object
-
-Usage: applySetFunc(self,toFieldNameList,hFunc)
-       applySetFunc(self,hFunc,toFieldNameList)
-
-Input:
-  regular:
-      self: CubeStruct [1,1] - class object
-
-      hFunc: function handle [1,1] - handle of function to be
-        applied to fields, the function is assumed to
-          1) have the same number of input/output arguments
-          2) the number of input arguments should be
-             length(structNameList)*length(fieldNameList)
-          3) the input arguments should be ordered according to the
-          following rule
-              (x_struct_1_field_1,x_struct_1_field_2,...,struct_n_field1,
-              ...,struct_n_field_m)
-
-  optional:
-
-      toFieldNameList: char or char cell [1,nFields] - list of
-        field names to which given function should be applied
-
-        Note1: field lists of length>1 are not currently supported !
-        Note2: it is possible to specify toFieldNameList before hFunc in
-           which case the parameters will be recognized automatically
-
-  properties:
-      uniformOutput: logical[1,1] - specifies if the result
-         of the function is uniform to be stored in non-cell
-         field, by default it is false for cell fileds and
-         true for non-cell fields
-
-      structNameList: char[1,]/cell[1,], name of data structure/list of
-        data structure names to which the function is to
-             be applied, can be composed from the following values
-
-           SData - data itself
-
-           SIsNull - contains is-null indicator information for data
-             values
-
-           SIsValueNull - contains is-null indicators for CubeStruct
-              cells (not for cell values)
-
-        structNameList={'SData'} by default
-
-      inferIsNull: logical[1,2] - if the first(second) element is true,
-          SIsNull(SIsValueNull) indicators are inferred from SData,
-          i.e. with this indicator set to true it is sufficient to apply
-          the function only to SData while the rest of the structures
-          will be adjusted automatically.
-
-      inputType: char[1,] - specifies a way in which the field value is
-         partitioned into individual cells before being passed as an
-         input parameter to hFunc. This parameter directly corresponds to
-         outputType parameter of toArray method, see its documentation
-         for a list of supported input types.
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.applyTupleGetFunc}{applyTupleGetFunc}}\label{method:gras.ellapx.smartdb.rels.EllTube.applyTupleGetFunc}
-\begin{verbatim}
-APPLYTUPLEGETFUNC - applies a function to the specified fields
-                    separately to each tuple
-
-Input:
-  regular:
-      hFunc: function_handle[1,1] - function to apply to the specified
-         fields
-  optional:
-      toFieldNameList: char/cell[1,] of char - a list of fields to which
-         the function specified by hFunc is to be applied
-
-  properties:
-      uniformOutput: logical[1,1] - if true, output is expected to be
-          uniform as in cellfun with 'UniformOutput'=true, default
-           value is true
-
-Output:
-  funcOut1Arr: <type1>[] - array corresponding to the first output of the
-      applied function
-          ....
-  funcOutNArr: <typeN>[] - array corresponding to the last output of the
-      applied function
-
-
-Notes: this function currently has a lots of limitations:
-  1) the function is applies to SData part of field value
-  2) no additional arguments can be passed
-  All this limitations will eventually go away though so stay tuned...
-\end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.cat}{cat}}\label{method:gras.ellapx.smartdb.rels.EllTube.cat}
 \begin{verbatim}
 CAT  - concatenates data from relation objects.
@@ -5154,19 +5338,6 @@ Input:
 
 Ouput:
   self: any [] - constructed object
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.copyFrom}{copyFrom}}\label{method:gras.ellapx.smartdb.rels.EllTube.copyFrom}
-\begin{verbatim}
-COPYFROM - reconstruct CubeStruct object within a current object using the
-           input CubeStruct object as a prototype
-
-Input:
-  regular:
-    self: CubeStruct [n_1,...,n_k]
-    obj: any [] - internal representation of the object
-
-  optional:
-    fieldNameList: cell[1,nFields] - list of fields to copy
 \end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.createInstance}{createInstance}}\label{method:gras.ellapx.smartdb.rels.EllTube.createInstance}
 \begin{verbatim}
@@ -5343,86 +5514,6 @@ Output:
    ellTubeRel: smartdb.relation.StaticRelation[1, 1] - constructed relation
          object
 \end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.getCopy}{getCopy}}\label{method:gras.ellapx.smartdb.rels.EllTube.getCopy}
-\begin{verbatim}
-GETCOPY - returns an object copy
-
-Usage: resObj=getCopy(self)
-
-Input:
-  regular:
-    self: CubeStruct [1,1] - current CubeStruct object
-  optional:
-    same as for getData
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.getData}{getData}}\label{method:gras.ellapx.smartdb.rels.EllTube.getData}
-\begin{verbatim}
-GETDATA - returns an indexed projection of CubeStruct object's content
-
-Input:
-  regular:
-      self: CubeStruct [1,1] - the object
-
-  optional:
-
-      subIndCVec:
-        Case#1: numeric[1,]/numeric[,1]
-
-        Case#2: cell[1,nDims]/cell[nDims,1] of double [nSubElem_i,1]
-              for i=1,...,nDims
-
-          -array of indices of field value slices that are selected
-          to be returned; if not given (default),
-          no indexation is performed
-
-        Note!: numeric components of subIndVec are allowed to contain
-           zeros which are be treated as they were references to null
-           data slices
-
-      dimVec: numeric[1,nDims]/numeric[nDims,1] - vector of dimension
-          numbers corresponding to subIndCVec
-
-  properties:
-
-      fieldNameList: char[1,]/cell[1,nFields] of char[1,]
-          list of field names to return
-
-      structNameList: char[1,]/cell[1,nStructs] of char[1,]
-          list of internal structures to return (by default it
-          is {SData, SIsNull, SIsValueNull}
-
-      replaceNull: logical[1,1] if true, null values are replaced with
-          certain default values uniformly across all the cells,
-              default value is false
-
-      nullReplacements: cell[1,nReplacedFields]  - list of null
-          replacements for each of the fields
-
-      nullReplacementFields: cell[1,nReplacedFields] - list of fields in
-         which the nulls are to be replaced with the specified values,
-         if not specified it is assumed that all fields are to be
-         replaced
-
-         NOTE!: all fields not listed in this parameter are replaced with
-         the default values
-
-      checkInputs: logical[1,1] - true by default (input arguments are
-         checked for correctness
-
-Output:
-  regular:
-    SData: struct [1,1] - structure containing values of
-        fields at the selected slices, each field is an array
-        containing values of the corresponding type
-
-    SIsNull: struct [1,1] - structure containing a nested
-        array with is-null indicators for each CubeStruct cell content
-
-    SIsValueNull: struct [1,1] - structure containing a
-       logical array [] for each of the fields (true
-       means that a corresponding cell doesn't not contain
-          any value
-\end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.getEllArray}{getEllArray}}\label{method:gras.ellapx.smartdb.rels.EllTube.getEllArray}
 \begin{verbatim}
 GETELLARRAY - returns array of matrix's ellipsoid according to
@@ -5436,160 +5527,6 @@ Input:
 Output:
   apprEllMat:double[nDim1,..., nDimN] - array of array of ellipsoid's
            matrices
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.getFieldDescrList}{getFieldDescrList}}\label{method:gras.ellapx.smartdb.rels.EllTube.getFieldDescrList}
-\begin{verbatim}
-GETFIELDDESCRLIST - returns the list of CubeStruct field descriptions
-
-Usage: value=getFieldDescrList(self)
-
-Input:
-  regular:
-      self: CubeStruct [1,1]
-  optional:
-      fieldNameList: cell[1,nSpecFields] of char[1,] - field names for
-         which descriptions should be returned
-
-Output:
-  regular:
-    value: char cell [1,nFields] - list of CubeStruct object field
-        descriptions
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.getFieldIsNull}{getFieldIsNull}}\label{method:gras.ellapx.smartdb.rels.EllTube.getFieldIsNull}
-\begin{verbatim}
-GETFIELDISNULL - returns for given field a nested logical/cell array
-                 containing is-null indicators for cell content
-
-Usage: fieldIsNullCVec=getFieldIsNull(self,fieldName)
-
-Input:
-  regular:
-    self: CubeStruct [1,1]
-    fieldName: char - field name
-Output:
-  regular:
-    fieldIsCVec: logical/cell[] - nested cell/logical array containing
-       is-null indicators for content of the field
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.getFieldIsValueNull}{getFieldIsValueNull}}\label{method:gras.ellapx.smartdb.rels.EllTube.getFieldIsValueNull}
-\begin{verbatim}
-GETFIELDISVALUENULL - returns for given field logical vector determining
-                      whether value of this field in each cell is null
-                      or not.
-
-BEWARE OF confusing this with getFieldIsNull method which returns is-null
-   indicators for a field content
-
-Usage: isNullVec=getFieldValueIsNull(self,fieldName)
-
-Input:
-  regular:
-    self: CubeStruct [1,1]
-    fieldName: char - field name
-
-Output:
-  regular:
-    isValueNullVec: logical[] - array of isValueNull indicators for the
-       specified field
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.getFieldNameList}{getFieldNameList}}\label{method:gras.ellapx.smartdb.rels.EllTube.getFieldNameList}
-\begin{verbatim}
-GETFIELDNAMELIST - returns the list of CubeStruct object field names
-
-Usage: value=getFieldNameList(self)
-
-Input:
-  regular:
-    self: CubeStruct [1,1]
-Iutput:
-  regular:
-    value: char cell [1,nFields] - list of CubeStruct object field
-        names
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.getFieldTypeList}{getFieldTypeList}}\label{method:gras.ellapx.smartdb.rels.EllTube.getFieldTypeList}
-\begin{verbatim}
-GETFIELDTYPELIST - returns list of field types in given CubeStruct object
-
-Usage: fieldTypeList=getFieldTypeList(self)
-
-Input:
-  regular:
-      self: CubeStruct [1,1]
-
-  optional:
-      fieldNameList: cell[1,nFields] - list of field names
-
-Output:
- regular:
-  fieldTypeList: cell [1,nFields] of smartdb.cubes.ACubeStructFieldType[1,1]
-      - list of field types
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.getFieldTypeSpecList}{getFieldTypeSpecList}}\label{method:gras.ellapx.smartdb.rels.EllTube.getFieldTypeSpecList}
-\begin{verbatim}
-GETFIELDTYPESPECLIST - returns a list of field type specifications. Field
-                       type specification is a sequence of type names
-                       corresponding to field value types starting with
-                       the top level and going down into the nested
-                       content of a field (for a field having a complex
-                       type).
-
-Input:
-  regular:
-      self:
-  optional:
-      fieldNameList: cell [1,nFields] of char[1,] - list of field names
-  properties:
-      uniformOutput: logical[1,1] - if true, the result is concatenated
-         across all the specified fields
-
-Output:
-  typeSpecList:
-       Case#1: uniformOutput=false
-          cell[1,nFields] of cell[1,nNestedLevels_i] of char[1,.]
-       Case#2: uniformOutput=true
-          cell[1,nFields*prod(nNestedLevelsVec)] of char[1,.]
-       - list of field type specifications
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.getFieldValueSizeMat}{getFieldValueSizeMat}}\label{method:gras.ellapx.smartdb.rels.EllTube.getFieldValueSizeMat}
-\begin{verbatim}
-GETFIELDVALUESIZEMAT - returns a matrix composed from the size vectors
-                       for the specified fields
-
-Input:
-  regular:
-      self:
-
-  optional:
-      fieldNameList: cell[1,nFields] - a list of fileds for which the size
-         matrix is to be generated
-
-  properties:
-      skipMinDimensions: logical[1,1] - if true, the dimensions from 1 up
-          to minDimensionality are skipped
-
-      minDimension: numeric[1,1] - minimum dimension which definies a
-         minimum number of columns in the resulting matrix
-
-Output:
-  sizeMat: double[nFields,nMaxDims]
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.getIsFieldValueNull}{getIsFieldValueNull}}\label{method:gras.ellapx.smartdb.rels.EllTube.getIsFieldValueNull}
-\begin{verbatim}
-GETISFIELDVALUENULL - returns a vector indicating whether a particular
-                      field is composed of null values completely
-
-Usage: isValueNullVec=getIsFieldValueNull(self,fieldNameList)
-
-Input:
-  regular:
-    self: CubeStruct [1,1]
-
-  optional:
-    fieldNameList: cell[1,nFields] of char[1,] - list of field names
-
-Output:
-  regular:
-    isValueNullVec: logical[1,nFields]
 \end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.getJoinWith}{getJoinWith}}\label{method:gras.ellapx.smartdb.rels.EllTube.getJoinWith}
 \begin{verbatim}
@@ -5612,60 +5549,6 @@ Input:
 
 Output:
   resRel: smartdb.relations.ARelation[1,1] - join result
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.getMinDimensionSize}{getMinDimensionSize}}\label{method:gras.ellapx.smartdb.rels.EllTube.getMinDimensionSize}
-\begin{verbatim}
-GETMINDIMENSIONSIZE - returns a size vector for the specified
-                      dimensions. If no dimensions are specified, a size
-                      vector for all dimensions up to minimum CubeStruct
-                      dimension is returned
-
-Input:
-  regular:
-      self:
-  optional:
-      dimNumVec: numeric[1,nDims] - a vector of dimension
-          numbers
-
-Output:
-  minDimensionSizeVec: double [1,nDims] - a size vector for
-     the requested dimensions
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.getMinDimensionality}{getMinDimensionality}}\label{method:gras.ellapx.smartdb.rels.EllTube.getMinDimensionality}
-\begin{verbatim}
-GETMINDIMENSIONALITY - returns a minimum dimensionality for a given
-                       object
-
-Input:
-  regular:
-      self
-
-Output:
-  minDimensionality: double[1,1] - minimum dimensionality of
-     self object
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.getNElems}{getNElems}}\label{method:gras.ellapx.smartdb.rels.EllTube.getNElems}
-\begin{verbatim}
-GETNELEMS - returns a number of elements in a given object
-Input:
-  regular:
-     self:
-
-Output:
-  nElems:double[1, 1] - number of elements in a given object
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.getNFields}{getNFields}}\label{method:gras.ellapx.smartdb.rels.EllTube.getNFields}
-\begin{verbatim}
-GETNFIELDS - returns number of fields in given object
-
-Usage: nFields=getNFields(self)
-
-Input:
-  regular:
-    self: CubeStruct [1,1]
-Output:
-  regular:
-    nFields: double [1,1] - number of fields in given object
 \end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.getUniqueDataAlongDim}{getUniqueDataAlongDim}}\label{method:gras.ellapx.smartdb.rels.EllTube.getUniqueDataAlongDim}
 \begin{verbatim}
@@ -5708,64 +5591,6 @@ Output:
     indBackwardVec: double[nSlices,1] - indices that map the unique data
        set back to the original data setdata set unique along a specified
        dimension
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.initByEmptyDataSet}{initByEmptyDataSet}}\label{method:gras.ellapx.smartdb.rels.EllTube.initByEmptyDataSet}
-\begin{verbatim}
-INITBYEMPTYDATASET - initializes cube struct object with null value arrays
-                     of specified size based on minDimVec specified.
-
-For instance, if minDimVec=[2,3,4,5,6] and minDimensionality of cube
-struct object cb is 2, then cb.initByEmptyDataSet(minDimVec) will create
-a cube struct object with element array of [2,3] size where each element
-has size of [4,5,6,0]
-
-Input:
-  regular:
-      self:
-  optional
-      minDimVec: double[1,nDims] - size vector of null value arrays
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.initByNullDataSet}{initByNullDataSet}}\label{method:gras.ellapx.smartdb.rels.EllTube.initByNullDataSet}
-\begin{verbatim}
-INITBYDEFAULTDATASET - initializes cube struct object with null value
-                       arrays of specified size based on minDimVec
-                       specified.
-
-For instance, if minDimVec=[2,3,4,5,6] and minDimensionality of cube
-struct object cb is 2, then cb.initByEmptyDataSet(minDimVec) will create
-a cube struct object with element array of [2,3] size where each element
-has size of [4,5,6]
-
-Input:
-  regular:
-      self:
-  optional
-      minDimVec: double[1,nDims] - size vector of null value arrays
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.isFields}{isFields}}\label{method:gras.ellapx.smartdb.rels.EllTube.isFields}
-\begin{verbatim}
- ISFIELDS - returns whether all fields whose names are given in the input
-            list are in the field list of given object or not
-
- Usage: isPositive=isFields(self,fieldList)
-
- Input:
-   regular:
-     self: CubeStruct [1,1]
-     fieldList: char or char cell [1,nFields]/[nFields,1] - input list of
-         given field names
- Output:
-   isPositive: logical [1,1] - true if all gields whose
-       names are given in the input list are in the field
-       list of given object, false otherwise
-
-   isUniqueNames: logical[1,1] - true if the specified names contain
-      unique field values
-
-   isThereVec: logical[1,nFields] - each element indicate whether the
-       corresponding field is present in the cube
-
-TODO allow for varargins
 \end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.isMemberAlongDim}{isMemberAlongDim}}\label{method:gras.ellapx.smartdb.rels.EllTube.isMemberAlongDim}
 \begin{verbatim}
@@ -5913,21 +5738,6 @@ Input:
       dimVec: numeric[1,nDims] - vector of dimension numbers
           corresponding to subIndCVec
 \end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.saveObj}{saveObj}}\label{method:gras.ellapx.smartdb.rels.EllTube.saveObj}
-\begin{verbatim}
-SAVEOBJ- transforms given CubeStruct object into structure containing
-         internal representation of object properties
-
-Input:
-  regular:
-    self: CubeStruct [nDim1,...,nDim2]
-
-
-Output:
-  regular:
-    SObjectData: struct [n1,...,n_k] - structure containing an internal
-       representation of the specified object
-\end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.scale}{scale}}\label{method:gras.ellapx.smartdb.rels.EllTube.scale}
 \begin{verbatim}
 SCALE - scales relation object
@@ -6043,33 +5853,6 @@ Input:
 Note: call of setData with an empty list of arguments clears
    the data
 \end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.setField}{setField}}\label{method:gras.ellapx.smartdb.rels.EllTube.setField}
-\begin{verbatim}
-SETFIELDINTERNAL - sets values of all cells for given field
-
-Usage: setFieldInternal(self,fieldName,value)
-
-Input:
-  regular:
-    self: CubeStruct [1,1]
-    fieldName: char - name of field
-    value: array [] of some type - field values
-
-  optional:
-    isNull: logical/cell[]
-    isValueNull: logical[]
-
-  properties:
-    structNameList: list of internal structures to return (by default it
-      is {SData, SIsNull, SIsValueNull}
-
-    inferIsNull: logical[1,2] - the first (second) element = false
-      means that IsNull (IsValueNull) indicator for a field in question
-          is kept intact (default = [true,true])
-
-      Note: if structNameList contains 'SIsValueNull' entry,
-       inferIsValueNull parameter is overwritten by false
-\end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.sortByAlongDim}{sortByAlongDim}}\label{method:gras.ellapx.smartdb.rels.EllTube.sortByAlongDim}
 \begin{verbatim}
 SORTBYALONGDIM -  sorts data of given CubeStruct object along the
@@ -6103,125 +5886,6 @@ Output:
   thinnedEllTubeRel: smartdb.relation.StaticRelation[1, 1]/
       smartdb.relation.DynamicRelation[1, 1] - relation object without
       tuples
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.toArray}{toArray}}\label{method:gras.ellapx.smartdb.rels.EllTube.toArray}
-\begin{verbatim}
-TOARRAY - transforms values of all CubeStruct cells into a multi-
-          dimentional array
-
-Usage: resCArray=toArray(self,varargin)
-
-Input:
-  regular:
-    self: CubeStruct [1,1]
-
-  properties:
-    checkInputs: logical[1,1] - if false, the method skips checking the
-       input parameters for consistency
-
-    fieldNameList: cell[1,] - list of filed names to return
-
-    structNameList: cell[1,]/char[1,], data structure list
-       for which the data is to be taken from, can consist of the
-       following values
-
-      SData - data itself
-      SIsNull - contains is-null indicator information for data values
-      SIsValueNull - contains is-null indicators for CubeStruct cells
-         (not for cell values)
-
-    groupByColumns: logical[1,1], if true, each column is returned in a
-       separate cell
-
-    outputType: char[1,] - method of formign an output array, the
-       following methods are supported:
-           'uniformMat' - the field values are concatenated without any
-                   type/size transformations. As a result, this method
-                   will fail if the specified fields have different types
-                   or/and sizes along any dimension apart from catDim
-
-           'uniformCell' - not-cell fields are converted to cells
-                   element-wise but no size-transformations is performed.
-                   This method will fail if the specified fields have
-                   different sizes along any dimension apart from catDim
-
-           'notUniform' - this method doesn't make any assumptions about
-                   size or type of the fields. Each field value is wrapped
-                   into cell in a such way that a size of resulting cell
-                   is minDimensionSizeVec for each field. Thus if for
-                   instance is size of cube object is [2,3,4] and a field
-                   size is [2,4,5,10,30] its value is splitted into 2*4*5
-                   pieces with each piece of size [1,1,1,10,30] put it
-                   its separate cell
-           'adaptiveCell' - functions similarly to 'nonUniform' except for
-                   the cases when a field value size equals
-                   minDimensionSizeVec exactly i.e. the field takes only
-                   scalar values. In such cases no wrapping into cell is
-                   performed which allows to get a more transparent
-                   output.
-
-    catDim: double[1,1] - dimension number for
-       concatenating outputs when groupByColumns is false
-
-
-    replaceNull: logical[1,1], if true, null values from SData are
-       replaced by null replacement, = true by default
-
-    nullTopReplacement: - can be of any type and currently only applicable
-      when  UniformOutput=false and of
-      the corresponding column type if UniformOutput=true.
-
-      Note!: this parameter is disregarded for any dataStructure different
-         from 'SData'.
-
-      Note!: the main difference between this parameter and the following
-         parameters is that nullTopReplacement can violate field type
-         constraints thus allowing to replace doubles with strings for
-         instance (for non-uniform output types only of course)
-
-
-    nullReplacements: cell[1,nReplacedFields]  - list of null
-       replacements for each of the fields
-
-    nullReplacementFields: cell[1,nReplacedFields] - list of fields in
-       which the nulls are to be replaced with the specified values,
-       if not specified it is assumed that all fields are to be replaced
-
-       NOTE!: all fields not listed in this parameter are replaced with
-       the default values
-
-
-Output:
-  Case1 (one output is requested and length(structNameList)==1):
-
-      resCMat: matrix/cell[]  with values of all fields (or
-        fields selected by optional arguments) for all CubeStruct
-        data cells
-
-  Case2 (multiple outputs are requested and their number =
-    length(structNameList) each output is assigned resCMat for the
-    corresponding struct
-
-  Case3 (2 outputs is requested or length(structNameList)+1 outputs is
-  requested). In this case the last output argument is
-
-       isConvertedToCell: logical[nFields,nStructs] -  matrix with true
-          values on the positions which correspond to fields converted to
-          cells
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.toStruct}{toStruct}}\label{method:gras.ellapx.smartdb.rels.EllTube.toStruct}
-\begin{verbatim}
-TOSTRUCT - transforms given CubeStruct object into structure
-
-Input:
-  regular:
-    self: CubeStruct [nDim1,...,nDim2]
-
-
-Output:
-  regular:
-    SObjectData: struct [n1,...,n_k] - structure containing an internal
-       representation of the specified object
 \end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.unionWithAlongDim}{unionWithAlongDim}}\label{method:gras.ellapx.smartdb.rels.EllTube.unionWithAlongDim}
 \begin{verbatim}
@@ -6298,6 +5962,38 @@ TODO: correct description of the fields in
 \end{verbatim}
 
 
+See the description of the following methods in section \ref{secClassDescr:smartdb.cubes.CubeStruct}
+ for smartdb.cubes.CubeStruct:
+
+\begin{list}{}{}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.applyGetFunc]{applyGetFunc}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.applySetFunc]{applySetFunc}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.applyTupleGetFunc]{applyTupleGetFunc}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.copyFrom]{copyFrom}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getCopy]{getCopy}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getData]{getData}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getFieldDescrList]{getFieldDescrList}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getFieldIsNull]{getFieldIsNull}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getFieldIsValueNull]{getFieldIsValueNull}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getFieldNameList]{getFieldNameList}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getFieldTypeList]{getFieldTypeList}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getFieldTypeSpecList]{getFieldTypeSpecList}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getFieldValueSizeMat]{getFieldValueSizeMat}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getIsFieldValueNull]{getIsFieldValueNull}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getMinDimensionSize]{getMinDimensionSize}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getMinDimensionality]{getMinDimensionality}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getNElems]{getNElems}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getNFields]{getNFields}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.initByEmptyDataSet]{initByEmptyDataSet}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.initByNullDataSet]{initByNullDataSet}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.isFields]{isFields}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.saveObj]{saveObj}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.setField]{setField}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.toArray]{toArray}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.toStruct]{toStruct}
+\end{list}
+
+
 See the description of the following methods in section \ref{secClassDescr:smartdb.relations.ARelation}
  for smartdb.relations.ARelation:
 
@@ -6338,123 +6034,6 @@ Input:
   regular:
       self: CubeStruct [1,1] - the object
 \end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.applyGetFunc}{applyGetFunc}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.applyGetFunc}
-\begin{verbatim}
-APPLYGETFUNC - applies a function to the specified fields as columns, i.e.
-               the function is applied to each field as whole, not to
-               each cell separately
-
-Input:
-  regular:
-      hFunc: function_handle[1,1] - function to apply to each of the
-         field values
-  optional:
-      toFieldNameList: char/cell[1,] of char - a list of fields to which
-         the function specified by hFunc is to be applied
-
-    Note: hFunc can optionally be specified after toFieldNameList
-          parameter
-
-Notes: this function currently has a lots of limitations:
-  1) it assumes that the output is uniform
-  2) the function is applies to SData part of field value
-  3) no additional arguments can be passed
-  All this limitations will eventually go away though so stay tuned...
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.applySetFunc}{applySetFunc}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.applySetFunc}
-\begin{verbatim}
-APPLYSETFUNC - applies some function to each cell of the specified fields
-               of a given CubeStruct object
-
-Usage: applySetFunc(self,toFieldNameList,hFunc)
-       applySetFunc(self,hFunc,toFieldNameList)
-
-Input:
-  regular:
-      self: CubeStruct [1,1] - class object
-
-      hFunc: function handle [1,1] - handle of function to be
-        applied to fields, the function is assumed to
-          1) have the same number of input/output arguments
-          2) the number of input arguments should be
-             length(structNameList)*length(fieldNameList)
-          3) the input arguments should be ordered according to the
-          following rule
-              (x_struct_1_field_1,x_struct_1_field_2,...,struct_n_field1,
-              ...,struct_n_field_m)
-
-  optional:
-
-      toFieldNameList: char or char cell [1,nFields] - list of
-        field names to which given function should be applied
-
-        Note1: field lists of length>1 are not currently supported !
-        Note2: it is possible to specify toFieldNameList before hFunc in
-           which case the parameters will be recognized automatically
-
-  properties:
-      uniformOutput: logical[1,1] - specifies if the result
-         of the function is uniform to be stored in non-cell
-         field, by default it is false for cell fileds and
-         true for non-cell fields
-
-      structNameList: char[1,]/cell[1,], name of data structure/list of
-        data structure names to which the function is to
-             be applied, can be composed from the following values
-
-           SData - data itself
-
-           SIsNull - contains is-null indicator information for data
-             values
-
-           SIsValueNull - contains is-null indicators for CubeStruct
-              cells (not for cell values)
-
-        structNameList={'SData'} by default
-
-      inferIsNull: logical[1,2] - if the first(second) element is true,
-          SIsNull(SIsValueNull) indicators are inferred from SData,
-          i.e. with this indicator set to true it is sufficient to apply
-          the function only to SData while the rest of the structures
-          will be adjusted automatically.
-
-      inputType: char[1,] - specifies a way in which the field value is
-         partitioned into individual cells before being passed as an
-         input parameter to hFunc. This parameter directly corresponds to
-         outputType parameter of toArray method, see its documentation
-         for a list of supported input types.
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.applyTupleGetFunc}{applyTupleGetFunc}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.applyTupleGetFunc}
-\begin{verbatim}
-APPLYTUPLEGETFUNC - applies a function to the specified fields
-                    separately to each tuple
-
-Input:
-  regular:
-      hFunc: function_handle[1,1] - function to apply to the specified
-         fields
-  optional:
-      toFieldNameList: char/cell[1,] of char - a list of fields to which
-         the function specified by hFunc is to be applied
-
-  properties:
-      uniformOutput: logical[1,1] - if true, output is expected to be
-          uniform as in cellfun with 'UniformOutput'=true, default
-           value is true
-
-Output:
-  funcOut1Arr: <type1>[] - array corresponding to the first output of the
-      applied function
-          ....
-  funcOutNArr: <typeN>[] - array corresponding to the last output of the
-      applied function
-
-
-Notes: this function currently has a lots of limitations:
-  1) the function is applies to SData part of field value
-  2) no additional arguments can be passed
-  All this limitations will eventually go away though so stay tuned...
-\end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.clearData}{clearData}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.clearData}
 \begin{verbatim}
 CLEARDATA - deletes all the data from the object
@@ -6478,19 +6057,6 @@ Input:
 
 Ouput:
   self: any [] - constructed object
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.copyFrom}{copyFrom}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.copyFrom}
-\begin{verbatim}
-COPYFROM - reconstruct CubeStruct object within a current object using the
-           input CubeStruct object as a prototype
-
-Input:
-  regular:
-    self: CubeStruct [n_1,...,n_k]
-    obj: any [] - internal representation of the object
-
-  optional:
-    fieldNameList: cell[1,nFields] - list of fields to copy
 \end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.createInstance}{createInstance}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.createInstance}
 \begin{verbatim}
@@ -6516,86 +6082,6 @@ Input:
  regular:
      self.
 \end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.getCopy}{getCopy}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.getCopy}
-\begin{verbatim}
-GETCOPY - returns an object copy
-
-Usage: resObj=getCopy(self)
-
-Input:
-  regular:
-    self: CubeStruct [1,1] - current CubeStruct object
-  optional:
-    same as for getData
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.getData}{getData}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.getData}
-\begin{verbatim}
-GETDATA - returns an indexed projection of CubeStruct object's content
-
-Input:
-  regular:
-      self: CubeStruct [1,1] - the object
-
-  optional:
-
-      subIndCVec:
-        Case#1: numeric[1,]/numeric[,1]
-
-        Case#2: cell[1,nDims]/cell[nDims,1] of double [nSubElem_i,1]
-              for i=1,...,nDims
-
-          -array of indices of field value slices that are selected
-          to be returned; if not given (default),
-          no indexation is performed
-
-        Note!: numeric components of subIndVec are allowed to contain
-           zeros which are be treated as they were references to null
-           data slices
-
-      dimVec: numeric[1,nDims]/numeric[nDims,1] - vector of dimension
-          numbers corresponding to subIndCVec
-
-  properties:
-
-      fieldNameList: char[1,]/cell[1,nFields] of char[1,]
-          list of field names to return
-
-      structNameList: char[1,]/cell[1,nStructs] of char[1,]
-          list of internal structures to return (by default it
-          is {SData, SIsNull, SIsValueNull}
-
-      replaceNull: logical[1,1] if true, null values are replaced with
-          certain default values uniformly across all the cells,
-              default value is false
-
-      nullReplacements: cell[1,nReplacedFields]  - list of null
-          replacements for each of the fields
-
-      nullReplacementFields: cell[1,nReplacedFields] - list of fields in
-         which the nulls are to be replaced with the specified values,
-         if not specified it is assumed that all fields are to be
-         replaced
-
-         NOTE!: all fields not listed in this parameter are replaced with
-         the default values
-
-      checkInputs: logical[1,1] - true by default (input arguments are
-         checked for correctness
-
-Output:
-  regular:
-    SData: struct [1,1] - structure containing values of
-        fields at the selected slices, each field is an array
-        containing values of the corresponding type
-
-    SIsNull: struct [1,1] - structure containing a nested
-        array with is-null indicators for each CubeStruct cell content
-
-    SIsValueNull: struct [1,1] - structure containing a
-       logical array [] for each of the fields (true
-       means that a corresponding cell doesn't not contain
-          any value
-\end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.getEllArray}{getEllArray}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.getEllArray}
 \begin{verbatim}
 GETELLARRAY - returns array of matrix's ellipsoid according to
@@ -6609,160 +6095,6 @@ Input:
 Output:
   apprEllMat:double[nDim1,..., nDimN] - array of array of ellipsoid's
            matrices
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.getFieldDescrList}{getFieldDescrList}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.getFieldDescrList}
-\begin{verbatim}
-GETFIELDDESCRLIST - returns the list of CubeStruct field descriptions
-
-Usage: value=getFieldDescrList(self)
-
-Input:
-  regular:
-      self: CubeStruct [1,1]
-  optional:
-      fieldNameList: cell[1,nSpecFields] of char[1,] - field names for
-         which descriptions should be returned
-
-Output:
-  regular:
-    value: char cell [1,nFields] - list of CubeStruct object field
-        descriptions
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.getFieldIsNull}{getFieldIsNull}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.getFieldIsNull}
-\begin{verbatim}
-GETFIELDISNULL - returns for given field a nested logical/cell array
-                 containing is-null indicators for cell content
-
-Usage: fieldIsNullCVec=getFieldIsNull(self,fieldName)
-
-Input:
-  regular:
-    self: CubeStruct [1,1]
-    fieldName: char - field name
-Output:
-  regular:
-    fieldIsCVec: logical/cell[] - nested cell/logical array containing
-       is-null indicators for content of the field
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.getFieldIsValueNull}{getFieldIsValueNull}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.getFieldIsValueNull}
-\begin{verbatim}
-GETFIELDISVALUENULL - returns for given field logical vector determining
-                      whether value of this field in each cell is null
-                      or not.
-
-BEWARE OF confusing this with getFieldIsNull method which returns is-null
-   indicators for a field content
-
-Usage: isNullVec=getFieldValueIsNull(self,fieldName)
-
-Input:
-  regular:
-    self: CubeStruct [1,1]
-    fieldName: char - field name
-
-Output:
-  regular:
-    isValueNullVec: logical[] - array of isValueNull indicators for the
-       specified field
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.getFieldNameList}{getFieldNameList}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.getFieldNameList}
-\begin{verbatim}
-GETFIELDNAMELIST - returns the list of CubeStruct object field names
-
-Usage: value=getFieldNameList(self)
-
-Input:
-  regular:
-    self: CubeStruct [1,1]
-Iutput:
-  regular:
-    value: char cell [1,nFields] - list of CubeStruct object field
-        names
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.getFieldTypeList}{getFieldTypeList}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.getFieldTypeList}
-\begin{verbatim}
-GETFIELDTYPELIST - returns list of field types in given CubeStruct object
-
-Usage: fieldTypeList=getFieldTypeList(self)
-
-Input:
-  regular:
-      self: CubeStruct [1,1]
-
-  optional:
-      fieldNameList: cell[1,nFields] - list of field names
-
-Output:
- regular:
-  fieldTypeList: cell [1,nFields] of smartdb.cubes.ACubeStructFieldType[1,1]
-      - list of field types
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.getFieldTypeSpecList}{getFieldTypeSpecList}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.getFieldTypeSpecList}
-\begin{verbatim}
-GETFIELDTYPESPECLIST - returns a list of field type specifications. Field
-                       type specification is a sequence of type names
-                       corresponding to field value types starting with
-                       the top level and going down into the nested
-                       content of a field (for a field having a complex
-                       type).
-
-Input:
-  regular:
-      self:
-  optional:
-      fieldNameList: cell [1,nFields] of char[1,] - list of field names
-  properties:
-      uniformOutput: logical[1,1] - if true, the result is concatenated
-         across all the specified fields
-
-Output:
-  typeSpecList:
-       Case#1: uniformOutput=false
-          cell[1,nFields] of cell[1,nNestedLevels_i] of char[1,.]
-       Case#2: uniformOutput=true
-          cell[1,nFields*prod(nNestedLevelsVec)] of char[1,.]
-       - list of field type specifications
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.getFieldValueSizeMat}{getFieldValueSizeMat}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.getFieldValueSizeMat}
-\begin{verbatim}
-GETFIELDVALUESIZEMAT - returns a matrix composed from the size vectors
-                       for the specified fields
-
-Input:
-  regular:
-      self:
-
-  optional:
-      fieldNameList: cell[1,nFields] - a list of fileds for which the size
-         matrix is to be generated
-
-  properties:
-      skipMinDimensions: logical[1,1] - if true, the dimensions from 1 up
-          to minDimensionality are skipped
-
-      minDimension: numeric[1,1] - minimum dimension which definies a
-         minimum number of columns in the resulting matrix
-
-Output:
-  sizeMat: double[nFields,nMaxDims]
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.getIsFieldValueNull}{getIsFieldValueNull}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.getIsFieldValueNull}
-\begin{verbatim}
-GETISFIELDVALUENULL - returns a vector indicating whether a particular
-                      field is composed of null values completely
-
-Usage: isValueNullVec=getIsFieldValueNull(self,fieldNameList)
-
-Input:
-  regular:
-    self: CubeStruct [1,1]
-
-  optional:
-    fieldNameList: cell[1,nFields] of char[1,] - list of field names
-
-Output:
-  regular:
-    isValueNullVec: logical[1,nFields]
 \end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.getJoinWith}{getJoinWith}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.getJoinWith}
 \begin{verbatim}
@@ -6785,60 +6117,6 @@ Input:
 
 Output:
   resRel: smartdb.relations.ARelation[1,1] - join result
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.getMinDimensionSize}{getMinDimensionSize}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.getMinDimensionSize}
-\begin{verbatim}
-GETMINDIMENSIONSIZE - returns a size vector for the specified
-                      dimensions. If no dimensions are specified, a size
-                      vector for all dimensions up to minimum CubeStruct
-                      dimension is returned
-
-Input:
-  regular:
-      self:
-  optional:
-      dimNumVec: numeric[1,nDims] - a vector of dimension
-          numbers
-
-Output:
-  minDimensionSizeVec: double [1,nDims] - a size vector for
-     the requested dimensions
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.getMinDimensionality}{getMinDimensionality}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.getMinDimensionality}
-\begin{verbatim}
-GETMINDIMENSIONALITY - returns a minimum dimensionality for a given
-                       object
-
-Input:
-  regular:
-      self
-
-Output:
-  minDimensionality: double[1,1] - minimum dimensionality of
-     self object
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.getNElems}{getNElems}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.getNElems}
-\begin{verbatim}
-GETNELEMS - returns a number of elements in a given object
-Input:
-  regular:
-     self:
-
-Output:
-  nElems:double[1, 1] - number of elements in a given object
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.getNFields}{getNFields}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.getNFields}
-\begin{verbatim}
-GETNFIELDS - returns number of fields in given object
-
-Usage: nFields=getNFields(self)
-
-Input:
-  regular:
-    self: CubeStruct [1,1]
-Output:
-  regular:
-    nFields: double [1,1] - number of fields in given object
 \end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.getReachTubeNamePrefix}{getReachTubeNamePrefix}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.getReachTubeNamePrefix}
 \begin{verbatim}
@@ -6897,64 +6175,6 @@ Output:
     indBackwardVec: double[nSlices,1] - indices that map the unique data
        set back to the original data setdata set unique along a specified
        dimension
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.initByEmptyDataSet}{initByEmptyDataSet}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.initByEmptyDataSet}
-\begin{verbatim}
-INITBYEMPTYDATASET - initializes cube struct object with null value arrays
-                     of specified size based on minDimVec specified.
-
-For instance, if minDimVec=[2,3,4,5,6] and minDimensionality of cube
-struct object cb is 2, then cb.initByEmptyDataSet(minDimVec) will create
-a cube struct object with element array of [2,3] size where each element
-has size of [4,5,6,0]
-
-Input:
-  regular:
-      self:
-  optional
-      minDimVec: double[1,nDims] - size vector of null value arrays
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.initByNullDataSet}{initByNullDataSet}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.initByNullDataSet}
-\begin{verbatim}
-INITBYDEFAULTDATASET - initializes cube struct object with null value
-                       arrays of specified size based on minDimVec
-                       specified.
-
-For instance, if minDimVec=[2,3,4,5,6] and minDimensionality of cube
-struct object cb is 2, then cb.initByEmptyDataSet(minDimVec) will create
-a cube struct object with element array of [2,3] size where each element
-has size of [4,5,6]
-
-Input:
-  regular:
-      self:
-  optional
-      minDimVec: double[1,nDims] - size vector of null value arrays
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.isFields}{isFields}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.isFields}
-\begin{verbatim}
- ISFIELDS - returns whether all fields whose names are given in the input
-            list are in the field list of given object or not
-
- Usage: isPositive=isFields(self,fieldList)
-
- Input:
-   regular:
-     self: CubeStruct [1,1]
-     fieldList: char or char cell [1,nFields]/[nFields,1] - input list of
-         given field names
- Output:
-   isPositive: logical [1,1] - true if all gields whose
-       names are given in the input list are in the field
-       list of given object, false otherwise
-
-   isUniqueNames: logical[1,1] - true if the specified names contain
-      unique field values
-
-   isThereVec: logical[1,nFields] - each element indicate whether the
-       corresponding field is present in the cube
-
-TODO allow for varargins
 \end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.isMemberAlongDim}{isMemberAlongDim}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.isMemberAlongDim}
 \begin{verbatim}
@@ -7118,21 +6338,6 @@ Input:
       dimVec: numeric[1,nDims] - vector of dimension numbers
           corresponding to subIndCVec
 \end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.saveObj}{saveObj}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.saveObj}
-\begin{verbatim}
-SAVEOBJ- transforms given CubeStruct object into structure containing
-         internal representation of object properties
-
-Input:
-  regular:
-    self: CubeStruct [nDim1,...,nDim2]
-
-
-Output:
-  regular:
-    SObjectData: struct [n1,...,n_k] - structure containing an internal
-       representation of the specified object
-\end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.setData}{setData}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.setData}
 \begin{verbatim}
 SETDATA - sets values of all cells for all fields
@@ -7207,33 +6412,6 @@ Input:
 Note: call of setData with an empty list of arguments clears
    the data
 \end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.setField}{setField}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.setField}
-\begin{verbatim}
-SETFIELDINTERNAL - sets values of all cells for given field
-
-Usage: setFieldInternal(self,fieldName,value)
-
-Input:
-  regular:
-    self: CubeStruct [1,1]
-    fieldName: char - name of field
-    value: array [] of some type - field values
-
-  optional:
-    isNull: logical/cell[]
-    isValueNull: logical[]
-
-  properties:
-    structNameList: list of internal structures to return (by default it
-      is {SData, SIsNull, SIsValueNull}
-
-    inferIsNull: logical[1,2] - the first (second) element = false
-      means that IsNull (IsValueNull) indicator for a field in question
-          is kept intact (default = [true,true])
-
-      Note: if structNameList contains 'SIsValueNull' entry,
-       inferIsValueNull parameter is overwritten by false
-\end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.sortByAlongDim}{sortByAlongDim}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.sortByAlongDim}
 \begin{verbatim}
 SORTBYALONGDIM -  sorts data of given CubeStruct object along the
@@ -7252,125 +6430,6 @@ input:
     direction: char or char cell [1,nFields] - direction of sorting for
         all fields (if one value is given) or for each field separately;
         each value may be 'asc' or 'desc'
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.toArray}{toArray}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.toArray}
-\begin{verbatim}
-TOARRAY - transforms values of all CubeStruct cells into a multi-
-          dimentional array
-
-Usage: resCArray=toArray(self,varargin)
-
-Input:
-  regular:
-    self: CubeStruct [1,1]
-
-  properties:
-    checkInputs: logical[1,1] - if false, the method skips checking the
-       input parameters for consistency
-
-    fieldNameList: cell[1,] - list of filed names to return
-
-    structNameList: cell[1,]/char[1,], data structure list
-       for which the data is to be taken from, can consist of the
-       following values
-
-      SData - data itself
-      SIsNull - contains is-null indicator information for data values
-      SIsValueNull - contains is-null indicators for CubeStruct cells
-         (not for cell values)
-
-    groupByColumns: logical[1,1], if true, each column is returned in a
-       separate cell
-
-    outputType: char[1,] - method of formign an output array, the
-       following methods are supported:
-           'uniformMat' - the field values are concatenated without any
-                   type/size transformations. As a result, this method
-                   will fail if the specified fields have different types
-                   or/and sizes along any dimension apart from catDim
-
-           'uniformCell' - not-cell fields are converted to cells
-                   element-wise but no size-transformations is performed.
-                   This method will fail if the specified fields have
-                   different sizes along any dimension apart from catDim
-
-           'notUniform' - this method doesn't make any assumptions about
-                   size or type of the fields. Each field value is wrapped
-                   into cell in a such way that a size of resulting cell
-                   is minDimensionSizeVec for each field. Thus if for
-                   instance is size of cube object is [2,3,4] and a field
-                   size is [2,4,5,10,30] its value is splitted into 2*4*5
-                   pieces with each piece of size [1,1,1,10,30] put it
-                   its separate cell
-           'adaptiveCell' - functions similarly to 'nonUniform' except for
-                   the cases when a field value size equals
-                   minDimensionSizeVec exactly i.e. the field takes only
-                   scalar values. In such cases no wrapping into cell is
-                   performed which allows to get a more transparent
-                   output.
-
-    catDim: double[1,1] - dimension number for
-       concatenating outputs when groupByColumns is false
-
-
-    replaceNull: logical[1,1], if true, null values from SData are
-       replaced by null replacement, = true by default
-
-    nullTopReplacement: - can be of any type and currently only applicable
-      when  UniformOutput=false and of
-      the corresponding column type if UniformOutput=true.
-
-      Note!: this parameter is disregarded for any dataStructure different
-         from 'SData'.
-
-      Note!: the main difference between this parameter and the following
-         parameters is that nullTopReplacement can violate field type
-         constraints thus allowing to replace doubles with strings for
-         instance (for non-uniform output types only of course)
-
-
-    nullReplacements: cell[1,nReplacedFields]  - list of null
-       replacements for each of the fields
-
-    nullReplacementFields: cell[1,nReplacedFields] - list of fields in
-       which the nulls are to be replaced with the specified values,
-       if not specified it is assumed that all fields are to be replaced
-
-       NOTE!: all fields not listed in this parameter are replaced with
-       the default values
-
-
-Output:
-  Case1 (one output is requested and length(structNameList)==1):
-
-      resCMat: matrix/cell[]  with values of all fields (or
-        fields selected by optional arguments) for all CubeStruct
-        data cells
-
-  Case2 (multiple outputs are requested and their number =
-    length(structNameList) each output is assigned resCMat for the
-    corresponding struct
-
-  Case3 (2 outputs is requested or length(structNameList)+1 outputs is
-  requested). In this case the last output argument is
-
-       isConvertedToCell: logical[nFields,nStructs] -  matrix with true
-          values on the positions which correspond to fields converted to
-          cells
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.toStruct}{toStruct}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.toStruct}
-\begin{verbatim}
-TOSTRUCT - transforms given CubeStruct object into structure
-
-Input:
-  regular:
-    self: CubeStruct [nDim1,...,nDim2]
-
-
-Output:
-  regular:
-    SObjectData: struct [n1,...,n_k] - structure containing an internal
-       representation of the specified object
 \end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.unionWithAlongDim}{unionWithAlongDim}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.unionWithAlongDim}
 \begin{verbatim}
@@ -7454,6 +6513,38 @@ TODO: correct description of the fields in
 \end{verbatim}
 
 
+See the description of the following methods in section \ref{secClassDescr:smartdb.cubes.CubeStruct}
+ for smartdb.cubes.CubeStruct:
+
+\begin{list}{}{}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.applyGetFunc]{applyGetFunc}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.applySetFunc]{applySetFunc}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.applyTupleGetFunc]{applyTupleGetFunc}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.copyFrom]{copyFrom}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getCopy]{getCopy}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getData]{getData}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getFieldDescrList]{getFieldDescrList}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getFieldIsNull]{getFieldIsNull}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getFieldIsValueNull]{getFieldIsValueNull}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getFieldNameList]{getFieldNameList}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getFieldTypeList]{getFieldTypeList}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getFieldTypeSpecList]{getFieldTypeSpecList}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getFieldValueSizeMat]{getFieldValueSizeMat}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getIsFieldValueNull]{getIsFieldValueNull}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getMinDimensionSize]{getMinDimensionSize}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getMinDimensionality]{getMinDimensionality}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getNElems]{getNElems}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getNFields]{getNFields}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.initByEmptyDataSet]{initByEmptyDataSet}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.initByNullDataSet]{initByNullDataSet}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.isFields]{isFields}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.saveObj]{saveObj}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.setField]{setField}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.toArray]{toArray}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.toStruct]{toStruct}
+\end{list}
+
+
 See the description of the following methods in section \ref{secClassDescr:smartdb.relations.ARelation}
  for smartdb.relations.ARelation:
 
@@ -7494,123 +6585,6 @@ Input:
   regular:
       self: CubeStruct [1,1] - the object
 \end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTube.applyGetFunc}{applyGetFunc}}\label{method:gras.ellapx.smartdb.rels.EllUnionTube.applyGetFunc}
-\begin{verbatim}
-APPLYGETFUNC - applies a function to the specified fields as columns, i.e.
-               the function is applied to each field as whole, not to
-               each cell separately
-
-Input:
-  regular:
-      hFunc: function_handle[1,1] - function to apply to each of the
-         field values
-  optional:
-      toFieldNameList: char/cell[1,] of char - a list of fields to which
-         the function specified by hFunc is to be applied
-
-    Note: hFunc can optionally be specified after toFieldNameList
-          parameter
-
-Notes: this function currently has a lots of limitations:
-  1) it assumes that the output is uniform
-  2) the function is applies to SData part of field value
-  3) no additional arguments can be passed
-  All this limitations will eventually go away though so stay tuned...
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTube.applySetFunc}{applySetFunc}}\label{method:gras.ellapx.smartdb.rels.EllUnionTube.applySetFunc}
-\begin{verbatim}
-APPLYSETFUNC - applies some function to each cell of the specified fields
-               of a given CubeStruct object
-
-Usage: applySetFunc(self,toFieldNameList,hFunc)
-       applySetFunc(self,hFunc,toFieldNameList)
-
-Input:
-  regular:
-      self: CubeStruct [1,1] - class object
-
-      hFunc: function handle [1,1] - handle of function to be
-        applied to fields, the function is assumed to
-          1) have the same number of input/output arguments
-          2) the number of input arguments should be
-             length(structNameList)*length(fieldNameList)
-          3) the input arguments should be ordered according to the
-          following rule
-              (x_struct_1_field_1,x_struct_1_field_2,...,struct_n_field1,
-              ...,struct_n_field_m)
-
-  optional:
-
-      toFieldNameList: char or char cell [1,nFields] - list of
-        field names to which given function should be applied
-
-        Note1: field lists of length>1 are not currently supported !
-        Note2: it is possible to specify toFieldNameList before hFunc in
-           which case the parameters will be recognized automatically
-
-  properties:
-      uniformOutput: logical[1,1] - specifies if the result
-         of the function is uniform to be stored in non-cell
-         field, by default it is false for cell fileds and
-         true for non-cell fields
-
-      structNameList: char[1,]/cell[1,], name of data structure/list of
-        data structure names to which the function is to
-             be applied, can be composed from the following values
-
-           SData - data itself
-
-           SIsNull - contains is-null indicator information for data
-             values
-
-           SIsValueNull - contains is-null indicators for CubeStruct
-              cells (not for cell values)
-
-        structNameList={'SData'} by default
-
-      inferIsNull: logical[1,2] - if the first(second) element is true,
-          SIsNull(SIsValueNull) indicators are inferred from SData,
-          i.e. with this indicator set to true it is sufficient to apply
-          the function only to SData while the rest of the structures
-          will be adjusted automatically.
-
-      inputType: char[1,] - specifies a way in which the field value is
-         partitioned into individual cells before being passed as an
-         input parameter to hFunc. This parameter directly corresponds to
-         outputType parameter of toArray method, see its documentation
-         for a list of supported input types.
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTube.applyTupleGetFunc}{applyTupleGetFunc}}\label{method:gras.ellapx.smartdb.rels.EllUnionTube.applyTupleGetFunc}
-\begin{verbatim}
-APPLYTUPLEGETFUNC - applies a function to the specified fields
-                    separately to each tuple
-
-Input:
-  regular:
-      hFunc: function_handle[1,1] - function to apply to the specified
-         fields
-  optional:
-      toFieldNameList: char/cell[1,] of char - a list of fields to which
-         the function specified by hFunc is to be applied
-
-  properties:
-      uniformOutput: logical[1,1] - if true, output is expected to be
-          uniform as in cellfun with 'UniformOutput'=true, default
-           value is true
-
-Output:
-  funcOut1Arr: <type1>[] - array corresponding to the first output of the
-      applied function
-          ....
-  funcOutNArr: <typeN>[] - array corresponding to the last output of the
-      applied function
-
-
-Notes: this function currently has a lots of limitations:
-  1) the function is applies to SData part of field value
-  2) no additional arguments can be passed
-  All this limitations will eventually go away though so stay tuned...
-\end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTube.clearData}{clearData}}\label{method:gras.ellapx.smartdb.rels.EllUnionTube.clearData}
 \begin{verbatim}
 CLEARDATA - deletes all the data from the object
@@ -7634,19 +6608,6 @@ Input:
 
 Ouput:
   self: any [] - constructed object
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTube.copyFrom}{copyFrom}}\label{method:gras.ellapx.smartdb.rels.EllUnionTube.copyFrom}
-\begin{verbatim}
-COPYFROM - reconstruct CubeStruct object within a current object using the
-           input CubeStruct object as a prototype
-
-Input:
-  regular:
-    self: CubeStruct [n_1,...,n_k]
-    obj: any [] - internal representation of the object
-
-  optional:
-    fieldNameList: cell[1,nFields] - list of fields to copy
 \end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTube.createInstance}{createInstance}}\label{method:gras.ellapx.smartdb.rels.EllUnionTube.createInstance}
 \begin{verbatim}
@@ -7685,86 +6646,6 @@ Output:
 ellUnionTubeRel: ellapx.smartdb.rel.EllUnionTube - union of the
             ellipsoidal tubes
 \end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTube.getCopy}{getCopy}}\label{method:gras.ellapx.smartdb.rels.EllUnionTube.getCopy}
-\begin{verbatim}
-GETCOPY - returns an object copy
-
-Usage: resObj=getCopy(self)
-
-Input:
-  regular:
-    self: CubeStruct [1,1] - current CubeStruct object
-  optional:
-    same as for getData
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTube.getData}{getData}}\label{method:gras.ellapx.smartdb.rels.EllUnionTube.getData}
-\begin{verbatim}
-GETDATA - returns an indexed projection of CubeStruct object's content
-
-Input:
-  regular:
-      self: CubeStruct [1,1] - the object
-
-  optional:
-
-      subIndCVec:
-        Case#1: numeric[1,]/numeric[,1]
-
-        Case#2: cell[1,nDims]/cell[nDims,1] of double [nSubElem_i,1]
-              for i=1,...,nDims
-
-          -array of indices of field value slices that are selected
-          to be returned; if not given (default),
-          no indexation is performed
-
-        Note!: numeric components of subIndVec are allowed to contain
-           zeros which are be treated as they were references to null
-           data slices
-
-      dimVec: numeric[1,nDims]/numeric[nDims,1] - vector of dimension
-          numbers corresponding to subIndCVec
-
-  properties:
-
-      fieldNameList: char[1,]/cell[1,nFields] of char[1,]
-          list of field names to return
-
-      structNameList: char[1,]/cell[1,nStructs] of char[1,]
-          list of internal structures to return (by default it
-          is {SData, SIsNull, SIsValueNull}
-
-      replaceNull: logical[1,1] if true, null values are replaced with
-          certain default values uniformly across all the cells,
-              default value is false
-
-      nullReplacements: cell[1,nReplacedFields]  - list of null
-          replacements for each of the fields
-
-      nullReplacementFields: cell[1,nReplacedFields] - list of fields in
-         which the nulls are to be replaced with the specified values,
-         if not specified it is assumed that all fields are to be
-         replaced
-
-         NOTE!: all fields not listed in this parameter are replaced with
-         the default values
-
-      checkInputs: logical[1,1] - true by default (input arguments are
-         checked for correctness
-
-Output:
-  regular:
-    SData: struct [1,1] - structure containing values of
-        fields at the selected slices, each field is an array
-        containing values of the corresponding type
-
-    SIsNull: struct [1,1] - structure containing a nested
-        array with is-null indicators for each CubeStruct cell content
-
-    SIsValueNull: struct [1,1] - structure containing a
-       logical array [] for each of the fields (true
-       means that a corresponding cell doesn't not contain
-          any value
-\end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTube.getEllArray}{getEllArray}}\label{method:gras.ellapx.smartdb.rels.EllUnionTube.getEllArray}
 \begin{verbatim}
 GETELLARRAY - returns array of matrix's ellipsoid according to
@@ -7778,160 +6659,6 @@ Input:
 Output:
   apprEllMat:double[nDim1,..., nDimN] - array of array of ellipsoid's
            matrices
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTube.getFieldDescrList}{getFieldDescrList}}\label{method:gras.ellapx.smartdb.rels.EllUnionTube.getFieldDescrList}
-\begin{verbatim}
-GETFIELDDESCRLIST - returns the list of CubeStruct field descriptions
-
-Usage: value=getFieldDescrList(self)
-
-Input:
-  regular:
-      self: CubeStruct [1,1]
-  optional:
-      fieldNameList: cell[1,nSpecFields] of char[1,] - field names for
-         which descriptions should be returned
-
-Output:
-  regular:
-    value: char cell [1,nFields] - list of CubeStruct object field
-        descriptions
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTube.getFieldIsNull}{getFieldIsNull}}\label{method:gras.ellapx.smartdb.rels.EllUnionTube.getFieldIsNull}
-\begin{verbatim}
-GETFIELDISNULL - returns for given field a nested logical/cell array
-                 containing is-null indicators for cell content
-
-Usage: fieldIsNullCVec=getFieldIsNull(self,fieldName)
-
-Input:
-  regular:
-    self: CubeStruct [1,1]
-    fieldName: char - field name
-Output:
-  regular:
-    fieldIsCVec: logical/cell[] - nested cell/logical array containing
-       is-null indicators for content of the field
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTube.getFieldIsValueNull}{getFieldIsValueNull}}\label{method:gras.ellapx.smartdb.rels.EllUnionTube.getFieldIsValueNull}
-\begin{verbatim}
-GETFIELDISVALUENULL - returns for given field logical vector determining
-                      whether value of this field in each cell is null
-                      or not.
-
-BEWARE OF confusing this with getFieldIsNull method which returns is-null
-   indicators for a field content
-
-Usage: isNullVec=getFieldValueIsNull(self,fieldName)
-
-Input:
-  regular:
-    self: CubeStruct [1,1]
-    fieldName: char - field name
-
-Output:
-  regular:
-    isValueNullVec: logical[] - array of isValueNull indicators for the
-       specified field
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTube.getFieldNameList}{getFieldNameList}}\label{method:gras.ellapx.smartdb.rels.EllUnionTube.getFieldNameList}
-\begin{verbatim}
-GETFIELDNAMELIST - returns the list of CubeStruct object field names
-
-Usage: value=getFieldNameList(self)
-
-Input:
-  regular:
-    self: CubeStruct [1,1]
-Iutput:
-  regular:
-    value: char cell [1,nFields] - list of CubeStruct object field
-        names
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTube.getFieldTypeList}{getFieldTypeList}}\label{method:gras.ellapx.smartdb.rels.EllUnionTube.getFieldTypeList}
-\begin{verbatim}
-GETFIELDTYPELIST - returns list of field types in given CubeStruct object
-
-Usage: fieldTypeList=getFieldTypeList(self)
-
-Input:
-  regular:
-      self: CubeStruct [1,1]
-
-  optional:
-      fieldNameList: cell[1,nFields] - list of field names
-
-Output:
- regular:
-  fieldTypeList: cell [1,nFields] of smartdb.cubes.ACubeStructFieldType[1,1]
-      - list of field types
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTube.getFieldTypeSpecList}{getFieldTypeSpecList}}\label{method:gras.ellapx.smartdb.rels.EllUnionTube.getFieldTypeSpecList}
-\begin{verbatim}
-GETFIELDTYPESPECLIST - returns a list of field type specifications. Field
-                       type specification is a sequence of type names
-                       corresponding to field value types starting with
-                       the top level and going down into the nested
-                       content of a field (for a field having a complex
-                       type).
-
-Input:
-  regular:
-      self:
-  optional:
-      fieldNameList: cell [1,nFields] of char[1,] - list of field names
-  properties:
-      uniformOutput: logical[1,1] - if true, the result is concatenated
-         across all the specified fields
-
-Output:
-  typeSpecList:
-       Case#1: uniformOutput=false
-          cell[1,nFields] of cell[1,nNestedLevels_i] of char[1,.]
-       Case#2: uniformOutput=true
-          cell[1,nFields*prod(nNestedLevelsVec)] of char[1,.]
-       - list of field type specifications
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTube.getFieldValueSizeMat}{getFieldValueSizeMat}}\label{method:gras.ellapx.smartdb.rels.EllUnionTube.getFieldValueSizeMat}
-\begin{verbatim}
-GETFIELDVALUESIZEMAT - returns a matrix composed from the size vectors
-                       for the specified fields
-
-Input:
-  regular:
-      self:
-
-  optional:
-      fieldNameList: cell[1,nFields] - a list of fileds for which the size
-         matrix is to be generated
-
-  properties:
-      skipMinDimensions: logical[1,1] - if true, the dimensions from 1 up
-          to minDimensionality are skipped
-
-      minDimension: numeric[1,1] - minimum dimension which definies a
-         minimum number of columns in the resulting matrix
-
-Output:
-  sizeMat: double[nFields,nMaxDims]
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTube.getIsFieldValueNull}{getIsFieldValueNull}}\label{method:gras.ellapx.smartdb.rels.EllUnionTube.getIsFieldValueNull}
-\begin{verbatim}
-GETISFIELDVALUENULL - returns a vector indicating whether a particular
-                      field is composed of null values completely
-
-Usage: isValueNullVec=getIsFieldValueNull(self,fieldNameList)
-
-Input:
-  regular:
-    self: CubeStruct [1,1]
-
-  optional:
-    fieldNameList: cell[1,nFields] of char[1,] - list of field names
-
-Output:
-  regular:
-    isValueNullVec: logical[1,nFields]
 \end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTube.getJoinWith}{getJoinWith}}\label{method:gras.ellapx.smartdb.rels.EllUnionTube.getJoinWith}
 \begin{verbatim}
@@ -7954,60 +6681,6 @@ Input:
 
 Output:
   resRel: smartdb.relations.ARelation[1,1] - join result
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTube.getMinDimensionSize}{getMinDimensionSize}}\label{method:gras.ellapx.smartdb.rels.EllUnionTube.getMinDimensionSize}
-\begin{verbatim}
-GETMINDIMENSIONSIZE - returns a size vector for the specified
-                      dimensions. If no dimensions are specified, a size
-                      vector for all dimensions up to minimum CubeStruct
-                      dimension is returned
-
-Input:
-  regular:
-      self:
-  optional:
-      dimNumVec: numeric[1,nDims] - a vector of dimension
-          numbers
-
-Output:
-  minDimensionSizeVec: double [1,nDims] - a size vector for
-     the requested dimensions
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTube.getMinDimensionality}{getMinDimensionality}}\label{method:gras.ellapx.smartdb.rels.EllUnionTube.getMinDimensionality}
-\begin{verbatim}
-GETMINDIMENSIONALITY - returns a minimum dimensionality for a given
-                       object
-
-Input:
-  regular:
-      self
-
-Output:
-  minDimensionality: double[1,1] - minimum dimensionality of
-     self object
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTube.getNElems}{getNElems}}\label{method:gras.ellapx.smartdb.rels.EllUnionTube.getNElems}
-\begin{verbatim}
-GETNELEMS - returns a number of elements in a given object
-Input:
-  regular:
-     self:
-
-Output:
-  nElems:double[1, 1] - number of elements in a given object
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTube.getNFields}{getNFields}}\label{method:gras.ellapx.smartdb.rels.EllUnionTube.getNFields}
-\begin{verbatim}
-GETNFIELDS - returns number of fields in given object
-
-Usage: nFields=getNFields(self)
-
-Input:
-  regular:
-    self: CubeStruct [1,1]
-Output:
-  regular:
-    nFields: double [1,1] - number of fields in given object
 \end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTube.getUniqueDataAlongDim}{getUniqueDataAlongDim}}\label{method:gras.ellapx.smartdb.rels.EllUnionTube.getUniqueDataAlongDim}
 \begin{verbatim}
@@ -8050,64 +6723,6 @@ Output:
     indBackwardVec: double[nSlices,1] - indices that map the unique data
        set back to the original data setdata set unique along a specified
        dimension
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTube.initByEmptyDataSet}{initByEmptyDataSet}}\label{method:gras.ellapx.smartdb.rels.EllUnionTube.initByEmptyDataSet}
-\begin{verbatim}
-INITBYEMPTYDATASET - initializes cube struct object with null value arrays
-                     of specified size based on minDimVec specified.
-
-For instance, if minDimVec=[2,3,4,5,6] and minDimensionality of cube
-struct object cb is 2, then cb.initByEmptyDataSet(minDimVec) will create
-a cube struct object with element array of [2,3] size where each element
-has size of [4,5,6,0]
-
-Input:
-  regular:
-      self:
-  optional
-      minDimVec: double[1,nDims] - size vector of null value arrays
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTube.initByNullDataSet}{initByNullDataSet}}\label{method:gras.ellapx.smartdb.rels.EllUnionTube.initByNullDataSet}
-\begin{verbatim}
-INITBYDEFAULTDATASET - initializes cube struct object with null value
-                       arrays of specified size based on minDimVec
-                       specified.
-
-For instance, if minDimVec=[2,3,4,5,6] and minDimensionality of cube
-struct object cb is 2, then cb.initByEmptyDataSet(minDimVec) will create
-a cube struct object with element array of [2,3] size where each element
-has size of [4,5,6]
-
-Input:
-  regular:
-      self:
-  optional
-      minDimVec: double[1,nDims] - size vector of null value arrays
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTube.isFields}{isFields}}\label{method:gras.ellapx.smartdb.rels.EllUnionTube.isFields}
-\begin{verbatim}
- ISFIELDS - returns whether all fields whose names are given in the input
-            list are in the field list of given object or not
-
- Usage: isPositive=isFields(self,fieldList)
-
- Input:
-   regular:
-     self: CubeStruct [1,1]
-     fieldList: char or char cell [1,nFields]/[nFields,1] - input list of
-         given field names
- Output:
-   isPositive: logical [1,1] - true if all gields whose
-       names are given in the input list are in the field
-       list of given object, false otherwise
-
-   isUniqueNames: logical[1,1] - true if the specified names contain
-      unique field values
-
-   isThereVec: logical[1,nFields] - each element indicate whether the
-       corresponding field is present in the cube
-
-TODO allow for varargins
 \end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTube.isMemberAlongDim}{isMemberAlongDim}}\label{method:gras.ellapx.smartdb.rels.EllUnionTube.isMemberAlongDim}
 \begin{verbatim}
@@ -8244,21 +6859,6 @@ Input:
       dimVec: numeric[1,nDims] - vector of dimension numbers
           corresponding to subIndCVec
 \end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTube.saveObj}{saveObj}}\label{method:gras.ellapx.smartdb.rels.EllUnionTube.saveObj}
-\begin{verbatim}
-SAVEOBJ- transforms given CubeStruct object into structure containing
-         internal representation of object properties
-
-Input:
-  regular:
-    self: CubeStruct [nDim1,...,nDim2]
-
-
-Output:
-  regular:
-    SObjectData: struct [n1,...,n_k] - structure containing an internal
-       representation of the specified object
-\end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTube.setData}{setData}}\label{method:gras.ellapx.smartdb.rels.EllUnionTube.setData}
 \begin{verbatim}
 SETDATA - sets values of all cells for all fields
@@ -8333,33 +6933,6 @@ Input:
 Note: call of setData with an empty list of arguments clears
    the data
 \end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTube.setField}{setField}}\label{method:gras.ellapx.smartdb.rels.EllUnionTube.setField}
-\begin{verbatim}
-SETFIELDINTERNAL - sets values of all cells for given field
-
-Usage: setFieldInternal(self,fieldName,value)
-
-Input:
-  regular:
-    self: CubeStruct [1,1]
-    fieldName: char - name of field
-    value: array [] of some type - field values
-
-  optional:
-    isNull: logical/cell[]
-    isValueNull: logical[]
-
-  properties:
-    structNameList: list of internal structures to return (by default it
-      is {SData, SIsNull, SIsValueNull}
-
-    inferIsNull: logical[1,2] - the first (second) element = false
-      means that IsNull (IsValueNull) indicator for a field in question
-          is kept intact (default = [true,true])
-
-      Note: if structNameList contains 'SIsValueNull' entry,
-       inferIsValueNull parameter is overwritten by false
-\end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTube.sortByAlongDim}{sortByAlongDim}}\label{method:gras.ellapx.smartdb.rels.EllUnionTube.sortByAlongDim}
 \begin{verbatim}
 SORTBYALONGDIM -  sorts data of given CubeStruct object along the
@@ -8378,125 +6951,6 @@ input:
     direction: char or char cell [1,nFields] - direction of sorting for
         all fields (if one value is given) or for each field separately;
         each value may be 'asc' or 'desc'
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTube.toArray}{toArray}}\label{method:gras.ellapx.smartdb.rels.EllUnionTube.toArray}
-\begin{verbatim}
-TOARRAY - transforms values of all CubeStruct cells into a multi-
-          dimentional array
-
-Usage: resCArray=toArray(self,varargin)
-
-Input:
-  regular:
-    self: CubeStruct [1,1]
-
-  properties:
-    checkInputs: logical[1,1] - if false, the method skips checking the
-       input parameters for consistency
-
-    fieldNameList: cell[1,] - list of filed names to return
-
-    structNameList: cell[1,]/char[1,], data structure list
-       for which the data is to be taken from, can consist of the
-       following values
-
-      SData - data itself
-      SIsNull - contains is-null indicator information for data values
-      SIsValueNull - contains is-null indicators for CubeStruct cells
-         (not for cell values)
-
-    groupByColumns: logical[1,1], if true, each column is returned in a
-       separate cell
-
-    outputType: char[1,] - method of formign an output array, the
-       following methods are supported:
-           'uniformMat' - the field values are concatenated without any
-                   type/size transformations. As a result, this method
-                   will fail if the specified fields have different types
-                   or/and sizes along any dimension apart from catDim
-
-           'uniformCell' - not-cell fields are converted to cells
-                   element-wise but no size-transformations is performed.
-                   This method will fail if the specified fields have
-                   different sizes along any dimension apart from catDim
-
-           'notUniform' - this method doesn't make any assumptions about
-                   size or type of the fields. Each field value is wrapped
-                   into cell in a such way that a size of resulting cell
-                   is minDimensionSizeVec for each field. Thus if for
-                   instance is size of cube object is [2,3,4] and a field
-                   size is [2,4,5,10,30] its value is splitted into 2*4*5
-                   pieces with each piece of size [1,1,1,10,30] put it
-                   its separate cell
-           'adaptiveCell' - functions similarly to 'nonUniform' except for
-                   the cases when a field value size equals
-                   minDimensionSizeVec exactly i.e. the field takes only
-                   scalar values. In such cases no wrapping into cell is
-                   performed which allows to get a more transparent
-                   output.
-
-    catDim: double[1,1] - dimension number for
-       concatenating outputs when groupByColumns is false
-
-
-    replaceNull: logical[1,1], if true, null values from SData are
-       replaced by null replacement, = true by default
-
-    nullTopReplacement: - can be of any type and currently only applicable
-      when  UniformOutput=false and of
-      the corresponding column type if UniformOutput=true.
-
-      Note!: this parameter is disregarded for any dataStructure different
-         from 'SData'.
-
-      Note!: the main difference between this parameter and the following
-         parameters is that nullTopReplacement can violate field type
-         constraints thus allowing to replace doubles with strings for
-         instance (for non-uniform output types only of course)
-
-
-    nullReplacements: cell[1,nReplacedFields]  - list of null
-       replacements for each of the fields
-
-    nullReplacementFields: cell[1,nReplacedFields] - list of fields in
-       which the nulls are to be replaced with the specified values,
-       if not specified it is assumed that all fields are to be replaced
-
-       NOTE!: all fields not listed in this parameter are replaced with
-       the default values
-
-
-Output:
-  Case1 (one output is requested and length(structNameList)==1):
-
-      resCMat: matrix/cell[]  with values of all fields (or
-        fields selected by optional arguments) for all CubeStruct
-        data cells
-
-  Case2 (multiple outputs are requested and their number =
-    length(structNameList) each output is assigned resCMat for the
-    corresponding struct
-
-  Case3 (2 outputs is requested or length(structNameList)+1 outputs is
-  requested). In this case the last output argument is
-
-       isConvertedToCell: logical[nFields,nStructs] -  matrix with true
-          values on the positions which correspond to fields converted to
-          cells
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTube.toStruct}{toStruct}}\label{method:gras.ellapx.smartdb.rels.EllUnionTube.toStruct}
-\begin{verbatim}
-TOSTRUCT - transforms given CubeStruct object into structure
-
-Input:
-  regular:
-    self: CubeStruct [nDim1,...,nDim2]
-
-
-Output:
-  regular:
-    SObjectData: struct [n1,...,n_k] - structure containing an internal
-       representation of the specified object
 \end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTube.unionWithAlongDim}{unionWithAlongDim}}\label{method:gras.ellapx.smartdb.rels.EllUnionTube.unionWithAlongDim}
 \begin{verbatim}
@@ -8588,6 +7042,38 @@ Fields:
 \end{verbatim}
 
 
+See the description of the following methods in section \ref{secClassDescr:smartdb.cubes.CubeStruct}
+ for smartdb.cubes.CubeStruct:
+
+\begin{list}{}{}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.applyGetFunc]{applyGetFunc}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.applySetFunc]{applySetFunc}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.applyTupleGetFunc]{applyTupleGetFunc}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.copyFrom]{copyFrom}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getCopy]{getCopy}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getData]{getData}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getFieldDescrList]{getFieldDescrList}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getFieldIsNull]{getFieldIsNull}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getFieldIsValueNull]{getFieldIsValueNull}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getFieldNameList]{getFieldNameList}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getFieldTypeList]{getFieldTypeList}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getFieldTypeSpecList]{getFieldTypeSpecList}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getFieldValueSizeMat]{getFieldValueSizeMat}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getIsFieldValueNull]{getIsFieldValueNull}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getMinDimensionSize]{getMinDimensionSize}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getMinDimensionality]{getMinDimensionality}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getNElems]{getNElems}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.getNFields]{getNFields}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.initByEmptyDataSet]{initByEmptyDataSet}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.initByNullDataSet]{initByNullDataSet}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.isFields]{isFields}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.saveObj]{saveObj}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.setField]{setField}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.toArray]{toArray}
+ \item \hyperref[method:smartdb.cubes.CubeStruct.toStruct]{toStruct}
+\end{list}
+
+
 See the description of the following methods in section \ref{secClassDescr:smartdb.relations.ARelation}
  for smartdb.relations.ARelation:
 
@@ -8628,123 +7114,6 @@ Input:
   regular:
       self: CubeStruct [1,1] - the object
 \end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.applyGetFunc}{applyGetFunc}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.applyGetFunc}
-\begin{verbatim}
-APPLYGETFUNC - applies a function to the specified fields as columns, i.e.
-               the function is applied to each field as whole, not to
-               each cell separately
-
-Input:
-  regular:
-      hFunc: function_handle[1,1] - function to apply to each of the
-         field values
-  optional:
-      toFieldNameList: char/cell[1,] of char - a list of fields to which
-         the function specified by hFunc is to be applied
-
-    Note: hFunc can optionally be specified after toFieldNameList
-          parameter
-
-Notes: this function currently has a lots of limitations:
-  1) it assumes that the output is uniform
-  2) the function is applies to SData part of field value
-  3) no additional arguments can be passed
-  All this limitations will eventually go away though so stay tuned...
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.applySetFunc}{applySetFunc}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.applySetFunc}
-\begin{verbatim}
-APPLYSETFUNC - applies some function to each cell of the specified fields
-               of a given CubeStruct object
-
-Usage: applySetFunc(self,toFieldNameList,hFunc)
-       applySetFunc(self,hFunc,toFieldNameList)
-
-Input:
-  regular:
-      self: CubeStruct [1,1] - class object
-
-      hFunc: function handle [1,1] - handle of function to be
-        applied to fields, the function is assumed to
-          1) have the same number of input/output arguments
-          2) the number of input arguments should be
-             length(structNameList)*length(fieldNameList)
-          3) the input arguments should be ordered according to the
-          following rule
-              (x_struct_1_field_1,x_struct_1_field_2,...,struct_n_field1,
-              ...,struct_n_field_m)
-
-  optional:
-
-      toFieldNameList: char or char cell [1,nFields] - list of
-        field names to which given function should be applied
-
-        Note1: field lists of length>1 are not currently supported !
-        Note2: it is possible to specify toFieldNameList before hFunc in
-           which case the parameters will be recognized automatically
-
-  properties:
-      uniformOutput: logical[1,1] - specifies if the result
-         of the function is uniform to be stored in non-cell
-         field, by default it is false for cell fileds and
-         true for non-cell fields
-
-      structNameList: char[1,]/cell[1,], name of data structure/list of
-        data structure names to which the function is to
-             be applied, can be composed from the following values
-
-           SData - data itself
-
-           SIsNull - contains is-null indicator information for data
-             values
-
-           SIsValueNull - contains is-null indicators for CubeStruct
-              cells (not for cell values)
-
-        structNameList={'SData'} by default
-
-      inferIsNull: logical[1,2] - if the first(second) element is true,
-          SIsNull(SIsValueNull) indicators are inferred from SData,
-          i.e. with this indicator set to true it is sufficient to apply
-          the function only to SData while the rest of the structures
-          will be adjusted automatically.
-
-      inputType: char[1,] - specifies a way in which the field value is
-         partitioned into individual cells before being passed as an
-         input parameter to hFunc. This parameter directly corresponds to
-         outputType parameter of toArray method, see its documentation
-         for a list of supported input types.
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.applyTupleGetFunc}{applyTupleGetFunc}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.applyTupleGetFunc}
-\begin{verbatim}
-APPLYTUPLEGETFUNC - applies a function to the specified fields
-                    separately to each tuple
-
-Input:
-  regular:
-      hFunc: function_handle[1,1] - function to apply to the specified
-         fields
-  optional:
-      toFieldNameList: char/cell[1,] of char - a list of fields to which
-         the function specified by hFunc is to be applied
-
-  properties:
-      uniformOutput: logical[1,1] - if true, output is expected to be
-          uniform as in cellfun with 'UniformOutput'=true, default
-           value is true
-
-Output:
-  funcOut1Arr: <type1>[] - array corresponding to the first output of the
-      applied function
-          ....
-  funcOutNArr: <typeN>[] - array corresponding to the last output of the
-      applied function
-
-
-Notes: this function currently has a lots of limitations:
-  1) the function is applies to SData part of field value
-  2) no additional arguments can be passed
-  All this limitations will eventually go away though so stay tuned...
-\end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.clearData}{clearData}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.clearData}
 \begin{verbatim}
 CLEARDATA - deletes all the data from the object
@@ -8768,19 +7137,6 @@ Input:
 
 Ouput:
   self: any [] - constructed object
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.copyFrom}{copyFrom}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.copyFrom}
-\begin{verbatim}
-COPYFROM - reconstruct CubeStruct object within a current object using the
-           input CubeStruct object as a prototype
-
-Input:
-  regular:
-    self: CubeStruct [n_1,...,n_k]
-    obj: any [] - internal representation of the object
-
-  optional:
-    fieldNameList: cell[1,nFields] - list of fields to copy
 \end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.createInstance}{createInstance}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.createInstance}
 \begin{verbatim}
@@ -8806,86 +7162,6 @@ Input:
  regular:
      self.
 \end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getCopy}{getCopy}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getCopy}
-\begin{verbatim}
-GETCOPY - returns an object copy
-
-Usage: resObj=getCopy(self)
-
-Input:
-  regular:
-    self: CubeStruct [1,1] - current CubeStruct object
-  optional:
-    same as for getData
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getData}{getData}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getData}
-\begin{verbatim}
-GETDATA - returns an indexed projection of CubeStruct object's content
-
-Input:
-  regular:
-      self: CubeStruct [1,1] - the object
-
-  optional:
-
-      subIndCVec:
-        Case#1: numeric[1,]/numeric[,1]
-
-        Case#2: cell[1,nDims]/cell[nDims,1] of double [nSubElem_i,1]
-              for i=1,...,nDims
-
-          -array of indices of field value slices that are selected
-          to be returned; if not given (default),
-          no indexation is performed
-
-        Note!: numeric components of subIndVec are allowed to contain
-           zeros which are be treated as they were references to null
-           data slices
-
-      dimVec: numeric[1,nDims]/numeric[nDims,1] - vector of dimension
-          numbers corresponding to subIndCVec
-
-  properties:
-
-      fieldNameList: char[1,]/cell[1,nFields] of char[1,]
-          list of field names to return
-
-      structNameList: char[1,]/cell[1,nStructs] of char[1,]
-          list of internal structures to return (by default it
-          is {SData, SIsNull, SIsValueNull}
-
-      replaceNull: logical[1,1] if true, null values are replaced with
-          certain default values uniformly across all the cells,
-              default value is false
-
-      nullReplacements: cell[1,nReplacedFields]  - list of null
-          replacements for each of the fields
-
-      nullReplacementFields: cell[1,nReplacedFields] - list of fields in
-         which the nulls are to be replaced with the specified values,
-         if not specified it is assumed that all fields are to be
-         replaced
-
-         NOTE!: all fields not listed in this parameter are replaced with
-         the default values
-
-      checkInputs: logical[1,1] - true by default (input arguments are
-         checked for correctness
-
-Output:
-  regular:
-    SData: struct [1,1] - structure containing values of
-        fields at the selected slices, each field is an array
-        containing values of the corresponding type
-
-    SIsNull: struct [1,1] - structure containing a nested
-        array with is-null indicators for each CubeStruct cell content
-
-    SIsValueNull: struct [1,1] - structure containing a
-       logical array [] for each of the fields (true
-       means that a corresponding cell doesn't not contain
-          any value
-\end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getEllArray}{getEllArray}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getEllArray}
 \begin{verbatim}
 GETELLARRAY - returns array of matrix's ellipsoid according to
@@ -8899,160 +7175,6 @@ Input:
 Output:
   apprEllMat:double[nDim1,..., nDimN] - array of array of ellipsoid's
            matrices
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getFieldDescrList}{getFieldDescrList}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getFieldDescrList}
-\begin{verbatim}
-GETFIELDDESCRLIST - returns the list of CubeStruct field descriptions
-
-Usage: value=getFieldDescrList(self)
-
-Input:
-  regular:
-      self: CubeStruct [1,1]
-  optional:
-      fieldNameList: cell[1,nSpecFields] of char[1,] - field names for
-         which descriptions should be returned
-
-Output:
-  regular:
-    value: char cell [1,nFields] - list of CubeStruct object field
-        descriptions
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getFieldIsNull}{getFieldIsNull}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getFieldIsNull}
-\begin{verbatim}
-GETFIELDISNULL - returns for given field a nested logical/cell array
-                 containing is-null indicators for cell content
-
-Usage: fieldIsNullCVec=getFieldIsNull(self,fieldName)
-
-Input:
-  regular:
-    self: CubeStruct [1,1]
-    fieldName: char - field name
-Output:
-  regular:
-    fieldIsCVec: logical/cell[] - nested cell/logical array containing
-       is-null indicators for content of the field
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getFieldIsValueNull}{getFieldIsValueNull}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getFieldIsValueNull}
-\begin{verbatim}
-GETFIELDISVALUENULL - returns for given field logical vector determining
-                      whether value of this field in each cell is null
-                      or not.
-
-BEWARE OF confusing this with getFieldIsNull method which returns is-null
-   indicators for a field content
-
-Usage: isNullVec=getFieldValueIsNull(self,fieldName)
-
-Input:
-  regular:
-    self: CubeStruct [1,1]
-    fieldName: char - field name
-
-Output:
-  regular:
-    isValueNullVec: logical[] - array of isValueNull indicators for the
-       specified field
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getFieldNameList}{getFieldNameList}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getFieldNameList}
-\begin{verbatim}
-GETFIELDNAMELIST - returns the list of CubeStruct object field names
-
-Usage: value=getFieldNameList(self)
-
-Input:
-  regular:
-    self: CubeStruct [1,1]
-Iutput:
-  regular:
-    value: char cell [1,nFields] - list of CubeStruct object field
-        names
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getFieldTypeList}{getFieldTypeList}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getFieldTypeList}
-\begin{verbatim}
-GETFIELDTYPELIST - returns list of field types in given CubeStruct object
-
-Usage: fieldTypeList=getFieldTypeList(self)
-
-Input:
-  regular:
-      self: CubeStruct [1,1]
-
-  optional:
-      fieldNameList: cell[1,nFields] - list of field names
-
-Output:
- regular:
-  fieldTypeList: cell [1,nFields] of smartdb.cubes.ACubeStructFieldType[1,1]
-      - list of field types
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getFieldTypeSpecList}{getFieldTypeSpecList}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getFieldTypeSpecList}
-\begin{verbatim}
-GETFIELDTYPESPECLIST - returns a list of field type specifications. Field
-                       type specification is a sequence of type names
-                       corresponding to field value types starting with
-                       the top level and going down into the nested
-                       content of a field (for a field having a complex
-                       type).
-
-Input:
-  regular:
-      self:
-  optional:
-      fieldNameList: cell [1,nFields] of char[1,] - list of field names
-  properties:
-      uniformOutput: logical[1,1] - if true, the result is concatenated
-         across all the specified fields
-
-Output:
-  typeSpecList:
-       Case#1: uniformOutput=false
-          cell[1,nFields] of cell[1,nNestedLevels_i] of char[1,.]
-       Case#2: uniformOutput=true
-          cell[1,nFields*prod(nNestedLevelsVec)] of char[1,.]
-       - list of field type specifications
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getFieldValueSizeMat}{getFieldValueSizeMat}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getFieldValueSizeMat}
-\begin{verbatim}
-GETFIELDVALUESIZEMAT - returns a matrix composed from the size vectors
-                       for the specified fields
-
-Input:
-  regular:
-      self:
-
-  optional:
-      fieldNameList: cell[1,nFields] - a list of fileds for which the size
-         matrix is to be generated
-
-  properties:
-      skipMinDimensions: logical[1,1] - if true, the dimensions from 1 up
-          to minDimensionality are skipped
-
-      minDimension: numeric[1,1] - minimum dimension which definies a
-         minimum number of columns in the resulting matrix
-
-Output:
-  sizeMat: double[nFields,nMaxDims]
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getIsFieldValueNull}{getIsFieldValueNull}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getIsFieldValueNull}
-\begin{verbatim}
-GETISFIELDVALUENULL - returns a vector indicating whether a particular
-                      field is composed of null values completely
-
-Usage: isValueNullVec=getIsFieldValueNull(self,fieldNameList)
-
-Input:
-  regular:
-    self: CubeStruct [1,1]
-
-  optional:
-    fieldNameList: cell[1,nFields] of char[1,] - list of field names
-
-Output:
-  regular:
-    isValueNullVec: logical[1,nFields]
 \end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getJoinWith}{getJoinWith}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getJoinWith}
 \begin{verbatim}
@@ -9075,60 +7197,6 @@ Input:
 
 Output:
   resRel: smartdb.relations.ARelation[1,1] - join result
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getMinDimensionSize}{getMinDimensionSize}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getMinDimensionSize}
-\begin{verbatim}
-GETMINDIMENSIONSIZE - returns a size vector for the specified
-                      dimensions. If no dimensions are specified, a size
-                      vector for all dimensions up to minimum CubeStruct
-                      dimension is returned
-
-Input:
-  regular:
-      self:
-  optional:
-      dimNumVec: numeric[1,nDims] - a vector of dimension
-          numbers
-
-Output:
-  minDimensionSizeVec: double [1,nDims] - a size vector for
-     the requested dimensions
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getMinDimensionality}{getMinDimensionality}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getMinDimensionality}
-\begin{verbatim}
-GETMINDIMENSIONALITY - returns a minimum dimensionality for a given
-                       object
-
-Input:
-  regular:
-      self
-
-Output:
-  minDimensionality: double[1,1] - minimum dimensionality of
-     self object
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getNElems}{getNElems}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getNElems}
-\begin{verbatim}
-GETNELEMS - returns a number of elements in a given object
-Input:
-  regular:
-     self:
-
-Output:
-  nElems:double[1, 1] - number of elements in a given object
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getNFields}{getNFields}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getNFields}
-\begin{verbatim}
-GETNFIELDS - returns number of fields in given object
-
-Usage: nFields=getNFields(self)
-
-Input:
-  regular:
-    self: CubeStruct [1,1]
-Output:
-  regular:
-    nFields: double [1,1] - number of fields in given object
 \end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getReachTubeNamePrefix}{getReachTubeNamePrefix}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getReachTubeNamePrefix}
 \begin{verbatim}
@@ -9187,64 +7255,6 @@ Output:
     indBackwardVec: double[nSlices,1] - indices that map the unique data
        set back to the original data setdata set unique along a specified
        dimension
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.initByEmptyDataSet}{initByEmptyDataSet}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.initByEmptyDataSet}
-\begin{verbatim}
-INITBYEMPTYDATASET - initializes cube struct object with null value arrays
-                     of specified size based on minDimVec specified.
-
-For instance, if minDimVec=[2,3,4,5,6] and minDimensionality of cube
-struct object cb is 2, then cb.initByEmptyDataSet(minDimVec) will create
-a cube struct object with element array of [2,3] size where each element
-has size of [4,5,6,0]
-
-Input:
-  regular:
-      self:
-  optional
-      minDimVec: double[1,nDims] - size vector of null value arrays
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.initByNullDataSet}{initByNullDataSet}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.initByNullDataSet}
-\begin{verbatim}
-INITBYDEFAULTDATASET - initializes cube struct object with null value
-                       arrays of specified size based on minDimVec
-                       specified.
-
-For instance, if minDimVec=[2,3,4,5,6] and minDimensionality of cube
-struct object cb is 2, then cb.initByEmptyDataSet(minDimVec) will create
-a cube struct object with element array of [2,3] size where each element
-has size of [4,5,6]
-
-Input:
-  regular:
-      self:
-  optional
-      minDimVec: double[1,nDims] - size vector of null value arrays
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.isFields}{isFields}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.isFields}
-\begin{verbatim}
- ISFIELDS - returns whether all fields whose names are given in the input
-            list are in the field list of given object or not
-
- Usage: isPositive=isFields(self,fieldList)
-
- Input:
-   regular:
-     self: CubeStruct [1,1]
-     fieldList: char or char cell [1,nFields]/[nFields,1] - input list of
-         given field names
- Output:
-   isPositive: logical [1,1] - true if all gields whose
-       names are given in the input list are in the field
-       list of given object, false otherwise
-
-   isUniqueNames: logical[1,1] - true if the specified names contain
-      unique field values
-
-   isThereVec: logical[1,nFields] - each element indicate whether the
-       corresponding field is present in the cube
-
-TODO allow for varargins
 \end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.isMemberAlongDim}{isMemberAlongDim}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.isMemberAlongDim}
 \begin{verbatim}
@@ -9391,21 +7401,6 @@ Input:
       dimVec: numeric[1,nDims] - vector of dimension numbers
           corresponding to subIndCVec
 \end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.saveObj}{saveObj}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.saveObj}
-\begin{verbatim}
-SAVEOBJ- transforms given CubeStruct object into structure containing
-         internal representation of object properties
-
-Input:
-  regular:
-    self: CubeStruct [nDim1,...,nDim2]
-
-
-Output:
-  regular:
-    SObjectData: struct [n1,...,n_k] - structure containing an internal
-       representation of the specified object
-\end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.setData}{setData}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.setData}
 \begin{verbatim}
 SETDATA - sets values of all cells for all fields
@@ -9480,33 +7475,6 @@ Input:
 Note: call of setData with an empty list of arguments clears
    the data
 \end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.setField}{setField}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.setField}
-\begin{verbatim}
-SETFIELDINTERNAL - sets values of all cells for given field
-
-Usage: setFieldInternal(self,fieldName,value)
-
-Input:
-  regular:
-    self: CubeStruct [1,1]
-    fieldName: char - name of field
-    value: array [] of some type - field values
-
-  optional:
-    isNull: logical/cell[]
-    isValueNull: logical[]
-
-  properties:
-    structNameList: list of internal structures to return (by default it
-      is {SData, SIsNull, SIsValueNull}
-
-    inferIsNull: logical[1,2] - the first (second) element = false
-      means that IsNull (IsValueNull) indicator for a field in question
-          is kept intact (default = [true,true])
-
-      Note: if structNameList contains 'SIsValueNull' entry,
-       inferIsValueNull parameter is overwritten by false
-\end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.sortByAlongDim}{sortByAlongDim}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.sortByAlongDim}
 \begin{verbatim}
 SORTBYALONGDIM -  sorts data of given CubeStruct object along the
@@ -9525,125 +7493,6 @@ input:
     direction: char or char cell [1,nFields] - direction of sorting for
         all fields (if one value is given) or for each field separately;
         each value may be 'asc' or 'desc'
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.toArray}{toArray}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.toArray}
-\begin{verbatim}
-TOARRAY - transforms values of all CubeStruct cells into a multi-
-          dimentional array
-
-Usage: resCArray=toArray(self,varargin)
-
-Input:
-  regular:
-    self: CubeStruct [1,1]
-
-  properties:
-    checkInputs: logical[1,1] - if false, the method skips checking the
-       input parameters for consistency
-
-    fieldNameList: cell[1,] - list of filed names to return
-
-    structNameList: cell[1,]/char[1,], data structure list
-       for which the data is to be taken from, can consist of the
-       following values
-
-      SData - data itself
-      SIsNull - contains is-null indicator information for data values
-      SIsValueNull - contains is-null indicators for CubeStruct cells
-         (not for cell values)
-
-    groupByColumns: logical[1,1], if true, each column is returned in a
-       separate cell
-
-    outputType: char[1,] - method of formign an output array, the
-       following methods are supported:
-           'uniformMat' - the field values are concatenated without any
-                   type/size transformations. As a result, this method
-                   will fail if the specified fields have different types
-                   or/and sizes along any dimension apart from catDim
-
-           'uniformCell' - not-cell fields are converted to cells
-                   element-wise but no size-transformations is performed.
-                   This method will fail if the specified fields have
-                   different sizes along any dimension apart from catDim
-
-           'notUniform' - this method doesn't make any assumptions about
-                   size or type of the fields. Each field value is wrapped
-                   into cell in a such way that a size of resulting cell
-                   is minDimensionSizeVec for each field. Thus if for
-                   instance is size of cube object is [2,3,4] and a field
-                   size is [2,4,5,10,30] its value is splitted into 2*4*5
-                   pieces with each piece of size [1,1,1,10,30] put it
-                   its separate cell
-           'adaptiveCell' - functions similarly to 'nonUniform' except for
-                   the cases when a field value size equals
-                   minDimensionSizeVec exactly i.e. the field takes only
-                   scalar values. In such cases no wrapping into cell is
-                   performed which allows to get a more transparent
-                   output.
-
-    catDim: double[1,1] - dimension number for
-       concatenating outputs when groupByColumns is false
-
-
-    replaceNull: logical[1,1], if true, null values from SData are
-       replaced by null replacement, = true by default
-
-    nullTopReplacement: - can be of any type and currently only applicable
-      when  UniformOutput=false and of
-      the corresponding column type if UniformOutput=true.
-
-      Note!: this parameter is disregarded for any dataStructure different
-         from 'SData'.
-
-      Note!: the main difference between this parameter and the following
-         parameters is that nullTopReplacement can violate field type
-         constraints thus allowing to replace doubles with strings for
-         instance (for non-uniform output types only of course)
-
-
-    nullReplacements: cell[1,nReplacedFields]  - list of null
-       replacements for each of the fields
-
-    nullReplacementFields: cell[1,nReplacedFields] - list of fields in
-       which the nulls are to be replaced with the specified values,
-       if not specified it is assumed that all fields are to be replaced
-
-       NOTE!: all fields not listed in this parameter are replaced with
-       the default values
-
-
-Output:
-  Case1 (one output is requested and length(structNameList)==1):
-
-      resCMat: matrix/cell[]  with values of all fields (or
-        fields selected by optional arguments) for all CubeStruct
-        data cells
-
-  Case2 (multiple outputs are requested and their number =
-    length(structNameList) each output is assigned resCMat for the
-    corresponding struct
-
-  Case3 (2 outputs is requested or length(structNameList)+1 outputs is
-  requested). In this case the last output argument is
-
-       isConvertedToCell: logical[nFields,nStructs] -  matrix with true
-          values on the positions which correspond to fields converted to
-          cells
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.toStruct}{toStruct}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.toStruct}
-\begin{verbatim}
-TOSTRUCT - transforms given CubeStruct object into structure
-
-Input:
-  regular:
-    self: CubeStruct [nDim1,...,nDim2]
-
-
-Output:
-  regular:
-    SObjectData: struct [n1,...,n_k] - structure containing an internal
-       representation of the specified object
 \end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.unionWithAlongDim}{unionWithAlongDim}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.unionWithAlongDim}
 \begin{verbatim}

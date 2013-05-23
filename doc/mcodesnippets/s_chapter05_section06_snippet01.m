@@ -13,6 +13,6 @@ bufEllVec = [firstEllObj secEllObj];
 ellVec = bufEllVec.projection(basisMat)  
 
 % ellVec =
-% 1x2 array of ellipsoids.
+% Array of ellipsoids with dimensionality 1x2
 
 ellVec.plot();  % plot ellipsoids in ellVec

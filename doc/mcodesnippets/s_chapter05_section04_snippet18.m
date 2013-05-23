@@ -13,4 +13,4 @@ dtbrsObj = dtbrsObj.refine(newDirsMat);  % refine the approximation
 internalEllMat = dtbrsObj.get_ia()
 
 % internalEllMat =
-% 3x51 array of ellipsoids.
+% Array of ellipsoids with dimensionality 3x51

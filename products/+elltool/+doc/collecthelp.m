@@ -89,10 +89,11 @@ end
 
 function SFuncInfo=extractHelpFromClass(classList)
 SFuncInfo = struct();
-bufFuncInfo = struct();
+
 PUBLIC_ACCESS_MOD='public';
 nLength = length(classList);
 for iClass = 1:nLength
+    bufFuncInfo = struct();
     className = char(classList(iClass));
     mc = meta.class.fromName(className);
     handleClassMethodNameList=arrayfun(@(x)x.Name,...
@@ -145,10 +146,24 @@ for iClass = 1:nLength
         isPublicVec=arrayfun(@(x)isequal(x.Access,PUBLIC_ACCESS_MOD),...
                          defMethodVec);
         finalDefMethodVec = defMethodVec(isPublicVec & ~isHiddenVec);
-        inheritedMethodList = unique(arrayfun(@(x)x.Name,finalDefMethodVec,...
-            'UniformOutput',false));
-        definingClassNameList=unique(arrayfun(@(x)x.DefiningClass.Name,...
-                finalDefMethodVec,'UniformOutput',false))
+        definingClassNameList =unique(arrayfun(@(x)x.DefiningClass.Name,...
+                finalDefMethodVec,'UniformOutput',false));
+        classLength = length(definingClassNameList);
+        infoInhClass = zeros(classLength, 1);
+        if (classLength ~= 0)
+            bufFuncInfo.numbOfInhClasses = classLength;
+        end
+            
+        inheritedMethodList = cell(classLength, 1);
+        for iBuf = 1:classLength
+            isInheritedFromClass=arrayfun(@(x)isequal...
+                (x.DefiningClass.Name,definingClassNameList{iBuf}),...
+                finalDefMethodVec);
+            bufDefMethodVec = finalDefMethodVec(isInheritedFromClass);
+            inheritedMethodList{iBuf} = unique(arrayfun(@(x)x.Name,...
+                bufDefMethodVec,'UniformOutput',false));
+            infoInhClass(iBuf) = length(inheritedMethodList{iBuf});
+        end
         if ~isempty(definingClassNameList)
               bufFuncInfo.numberOfInhClass = iClass;
         end
@@ -167,11 +182,11 @@ for iClass = 1:nLength
         helpList=cellfun(@(x, y)fDeleteHelpStr(x, y),helpList,...
             bufFuncNameList, 'UniformOutput',false); 
         bufFuncInfo.className = classList(iClass);
-        bufFuncInfo.defClassName=unique(definingClassNameList);
-        bufFuncInfo.inhFuncName=inheritedMethodList;
         bufFuncInfo.funcName=funcNameList;
         bufFuncInfo.numbOfFunc = length(fullNameList);
-        bufFuncInfo.numbOfInhFunc  = length(inheritedMethodList);
+        bufFuncInfo.defClassName = definingClassNameList;
+        bufFuncInfo.inhFuncNameList =inheritedMethodList;
+        bufFuncInfo.infoOfInhClass  = infoInhClass;
         possibleScript=regexp(fullNameList,scriptNamePattern,'once',...
             'match');
         bufFuncInfo.isScript=logical(cellfun(@(x,y) isequal(x,y),...
