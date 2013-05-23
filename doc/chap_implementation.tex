@@ -8,7 +8,7 @@ $Q\in{\bf R}^{n\times n}$ being symmetric positive semidefinite:
 \verbmcodef[Definition of the ellipsoid]{mcodesnippets/s_chapter05_section01_snippet01.m}
 For the {\tt ellipsoid} class we overload the following functions and operators:
 \begin{itemize}
-\item {\tt isempty(ellObj)} - checks if $\EE(q,Q)$ is an empty ellipsoid.
+\item {\tt isEmpty(ellObj)} - checks if $\EE(q,Q)$ is an empty ellipsoid.
 \item {\tt display(ellObj)} - displays the details of ellipsoid $\EE(q,Q)$, namely,
 its center $q$ and the shape matrix $Q$.
 \item {\tt plot(ellObj)} - plots ellipsoid $\EE(q,Q)$ if its dimension is not greater
@@ -110,7 +110,7 @@ whereas the last two can deal with ellipsoids of arbitrary dimension.
 \verbmcodef[Implementation of an operation 'difference-sum']{mcodesnippets/s_chapter05_section01_snippet19.m}
 \easytwofigures{minkpm.eps}{Implementation of an operation 'sum-difference'}{minkpmPic}{minkmp.eps}{Implementation of an operation 'difference-sum'}{minkmpPic}{Implementation of the {\tt minkpm}, {\tt minkmp} operations}{minkPic}
 Figure $\ref{minkPic}$ displays results of the implementation of {\tt minkpm} and {\tt minkmp} operations.
-\newline 
+\newline
 Similarly, operation 'sum-difference' described in section 2.2.5
 is implemented in
 functions {\tt minkpm}, {\tt minkpm\_ea}, {\tt minkpm\_ia}, the first one of

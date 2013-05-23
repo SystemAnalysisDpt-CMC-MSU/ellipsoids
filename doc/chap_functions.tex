@@ -10408,6 +10408,1476 @@ Output:
 
    reachObjArr = 1x2 array of ReachContinuous objects
 \end{verbatim}
+\section{elltool.reach.ReachContinuous}\label{secClassDescr:elltool.reach.ReachContinuous}
+\subsection{\texorpdfstring{elltool.reach.ReachContinuous.ReachContinuous}{ReachContinuous}}\label{method:elltool.reach.ReachContinuous.ReachContinuous}
+\begin{verbatim}
+ReachContinuous - computes reach set approximation of the continuous
+                  linear system for the given time interval.
+Input:
+    regular:
+      linSys: elltool.linsys.LinSys object - given linear system
+      x0Ell: ellipsoid[1, 1] - ellipsoidal set of initial conditions
+      l0Mat: matrix of double - l0Mat
+      timeVec: double[1, 2] - time interval; timeVec(1) must be less
+           then timeVec(2)
+      OptStruct: structure[1,1] in this class OptStruct doesn't matter
+          anything
+
+Output:
+  regular:
+    self - reach set object.
+
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+\end{verbatim}
+
+
+See the description of the following methods in section \ref{secClassDescr:elltool.reach.AReach}
+ for elltool.reach.AReach:
+
+\begin{list}{}{}
+ \item \hyperref[method:elltool.reach.AReach.intersect]{intersect}
+ \item \hyperref[method:elltool.reach.AReach.iscut]{iscut}
+ \item \hyperref[method:elltool.reach.AReach.isempty]{isempty}
+ \item \hyperref[method:elltool.reach.AReach.isprojection]{isprojection}
+ \item \hyperref[method:elltool.reach.AReach.repMat]{repMat}
+\end{list}
+\subsection{\texorpdfstring{elltool.reach.ReachContinuous.cut}{cut}}\label{method:elltool.reach.ReachContinuous.cut}
+\begin{verbatim}
+CUT - extracts the piece of reach tube from given start time to given
+      end time. Given reach set self, find states that are reachable
+      within time interval specified by cutTimeVec. If cutTimeVec
+      is a scalar, then reach set at given time is returned.
+
+Input:
+  regular:
+      self.
+
+   cutTimeVec: double[1, 2]/double[1, 1] - time interval to cut.
+
+Output:
+  cutObj: elltool.reach.IReach[1, 1] - reach set resulting from the CUT
+        operation.
+
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  cutObj = rsObj.cut([3 5]);
+  dRsObj = elltool.reach.ReachDiscrete(dtsys, x0EllObj, dirsMat, timeVec);
+  dCutObj = dRsObj.cut([3 5]);
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.ReachContinuous.dimension}{dimension}}\label{method:elltool.reach.ReachContinuous.dimension}
+\begin{verbatim}
+
+DIMENSION - returns array of dimensions of given reach set array.
+
+Input:
+  regular:
+      self - multidimensional array of
+             ReachContinuous/ReachDiscrete objects
+
+Output:
+  rSdimArr: double[nDim1, nDim2,...] - array of reach set dimensions.
+  sSdimArr: double[nDim1, nDim2,...] - array of state space dimensions.
+
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  rsObjArr = rsObj.repMat(1,2);
+  [rSdim sSdim] = rsObj.dimension()
+
+  rSdim =
+
+           2
+
+
+  sSdim =
+
+           2
+
+  [rSdim sSdim] = rsObjArr.dimension()
+
+  rSdim =
+          [ 2  2 ]
+
+  sSdim =
+          [ 2  2 ]
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.ReachContinuous.display}{display}}\label{method:elltool.reach.ReachContinuous.display}
+\begin{verbatim}
+
+DISPLAY - displays the reach set object.
+
+Input:
+  regular:
+      self.
+
+Output:
+  None.
+
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  rsObj.display()
+
+  rsObj =
+  Reach set of the continuous-time linear system in R^2 in the time...
+       interval [0, 10].
+
+  Initial set at time t0 = 0:
+  Ellipsoid with parameters
+  Center:
+       0
+       0
+
+  Shape Matrix:
+       1     0
+       0     1
+
+  Number of external approximations: 2
+  Number of internal approximations: 2
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.ReachContinuous.evolve}{evolve}}\label{method:elltool.reach.ReachContinuous.evolve}
+\begin{verbatim}
+
+EVOLVE - computes further evolution in time of the
+         already existing reach set.
+
+Input:
+  regular:
+      self.
+
+      newEndTime: double[1, 1] - new end time.
+
+  optional:
+      linSys: elltool.linsys.LinSys[1, 1] - new linear system.
+
+Output:
+  newReachObj: reach[1, 1] - reach set on time  interval
+        [oldT0 newEndTime].
+
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  dRsObj = elltool.reach.ReachDiscrete(dsys, x0EllObj, dirsMat, timeVec);
+  newRsObj = rsObj.evolve(12);
+  newDRsObj = dRsObj.evolve(11);
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.ReachContinuous.getCopy}{getCopy}}\label{method:elltool.reach.ReachContinuous.getCopy}
+\begin{verbatim}
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  copyRsObj = rsObj.getCopy()
+  copyRsObj =
+  Reach set of the continuous-time linear system in R^2 in the time ...
+            interval [0, 10].
+
+  Initial set at time t0 = 0:
+  Ellipsoid with parameters
+  Center:
+       0
+       0
+
+  Shape Matrix:
+       1     0
+       0     1
+
+  Number of external approximations: 2
+  Number of internal approximations: 2
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.ReachContinuous.getEaScaleFactor}{getEaScaleFactor}}\label{method:elltool.reach.ReachContinuous.getEaScaleFactor}
+\begin{verbatim}
+GET_EASCALEFACTOR - return the scale factor for external approximation
+                    of reach tube
+
+Input:
+  regular:
+      self.
+
+Output:
+  regular:
+      eaScaleFactor: double[1, 1] - scale factor.
+
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [10 0];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  rsObj.getEaScaleFactor()
+
+  ans =
+
+      1.0200
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.ReachContinuous.getEllTubeRel}{getEllTubeRel}}\label{method:elltool.reach.ReachContinuous.getEllTubeRel}
+\begin{verbatim}
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  rsObj. getEllTubeRel();
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.ReachContinuous.getEllTubeUnionRel}{getEllTubeUnionRel}}\label{method:elltool.reach.ReachContinuous.getEllTubeUnionRel}
+\begin{verbatim}
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  getEllTubeUnionRel(rsObj);
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.ReachContinuous.getIaScaleFactor}{getIaScaleFactor}}\label{method:elltool.reach.ReachContinuous.getIaScaleFactor}
+\begin{verbatim}
+GET_IASCALEFACTOR - return the scale factor for internal approximation
+                    of reach tube
+
+Input:
+  regular:
+      self.
+
+Output:
+  regular:
+      iaScaleFactor: double[1, 1] - scale factor.
+
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [10 0];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  rsObj.getIaScaleFactor()
+
+  ans =
+
+      1.0200
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.ReachContinuous.getInitialSet}{getInitialSet}}\label{method:elltool.reach.ReachContinuous.getInitialSet}
+\begin{verbatim}
+GETINITIALSET - return the initial set for linear system, which is solved
+                for building reach tube.
+
+Input:
+  regular:
+      self.
+
+Output:
+  regular:
+      x0Ell: ellipsoid[1, 1] - ellipsoid x0, which was initial set for
+          linear system.
+
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [10 0];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  x0Ell = rsObj.getInitialSet()
+
+  x0Ell =
+
+  Center:
+       0
+       0
+
+  Shape Matrix:
+       1     0
+       0     1
+
+  Nondegenerate ellipsoid in R^2.
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.ReachContinuous.get\_center}{get\_center}}\label{method:elltool.reach.ReachContinuous.getcenter}
+\begin{verbatim}
+
+GET_CENTER - returns the trajectory of the center of the reach set.
+
+Input:
+  regular:
+      self.
+
+Output:
+  trCenterMat: double[nDim, nPoints] - array of points that form the
+      trajectory of the reach set center, where nDim is reach set
+      dimentsion, nPoints - number of points in time grid.
+
+  timeVec: double[1, nPoints] - array of time values.
+
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  [trCenterMat timeVec] = rsObj.get_center();
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.ReachContinuous.get\_directions}{get\_directions}}\label{method:elltool.reach.ReachContinuous.getdirections}
+\begin{verbatim}
+
+GET_DIRECTIONS - returns the values of direction vectors for time grid
+                 values.
+
+Input:
+  regular:
+      self.
+
+Output:
+  directionsCVec: cell[1, nPoints] of double [nDim, nDir] - array of
+      cells, where each cell is a sequence of direction vector values
+      that correspond to the time values of the grid, where nPoints is
+      number of points in time grid.
+
+  timeVec: double[1, nPoints] - array of time values.
+
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  [directionsCVec timeVec] = rsObj.get_directions();
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.ReachContinuous.get\_ea}{get\_ea}}\label{method:elltool.reach.ReachContinuous.getea}
+\begin{verbatim}
+
+GET_EA - returns array of ellipsoid objects representing external
+         approximation of the reach  tube.
+
+Input:
+  regular:
+      self.
+
+Output:
+  eaEllMat: ellipsoid[nAppr, nPoints] - array of ellipsoids, where nAppr
+      is the number of approximations, nPoints is number of points in time
+      grid.
+
+   timeVec: double[1, nPoints] - array of time values.
+
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  [eaEllMat timeVec] = rsObj.get_ea();
+
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
+  [eaEllMat timeVec] = dRsObj.get_ea();
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.ReachContinuous.get\_goodcurves}{get\_goodcurves}}\label{method:elltool.reach.ReachContinuous.getgoodcurves}
+\begin{verbatim}
+GET_GOODCURVES - returns the 'good curve' trajectories of the reach set.
+
+Input:
+  regular:
+      self.
+
+Output:
+  goodCurvesCVec: cell[1, nPoints] of double [x, y] - array of cells,
+      where each cell is array of points that form a 'good curve'.
+
+  timeVec: double[1, nPoints] - array of time values.
+
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  [goodCurvesCVec timeVec] = rsObj.get_goodcurves();
+
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
+  [goodCurvesCVec timeVec] = dRsObj.get_goodcurves();
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.ReachContinuous.get\_ia}{get\_ia}}\label{method:elltool.reach.ReachContinuous.getia}
+\begin{verbatim}
+
+GET_IA - returns array of ellipsoid objects representing internal
+         approximation of the  reach tube.
+
+Input:
+  regular:
+      self.
+
+Output:
+  iaEllMat: ellipsoid[nAppr, nPoints] - array of ellipsoids, where nAppr
+      is the number of approximations, nPoints is number of points in time
+      grid.
+
+  timeVec: double[1, nPoints] - array of time values.
+
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  [iaEllMat timeVec] = rsObj.get_ia();
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.ReachContinuous.get\_system}{get\_system}}\label{method:elltool.reach.ReachContinuous.getsystem}
+\begin{verbatim}
+
+GET_SYSTEM - returns the linear system for which the reach set is
+             computed.
+
+Input:
+  regular:
+      self.
+
+Output:
+  linSys: elltool.linsys.LinSys[1, 1] - linear system object.
+
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  linSys = rsObj.get_system()
+
+  self =
+  A:
+       0     1
+       0     0
+
+
+  B:
+       1     0
+       0     1
+
+
+  Control bounds:
+     2-dimensional ellipsoid with center
+      'sin(t)'
+      'cos(t)'
+
+     and shape matrix
+       9     0
+       0     2
+
+
+  C:
+       1     0
+       0     1
+
+  2-input, 2-output continuous-time linear time-invariant system of
+          dimension 2:
+  dx/dt  =  A x(t)  +  B u(t)
+   y(t)  =  C x(t)
+
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
+  dRsObj.get_system();
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.ReachContinuous.isEqual}{isEqual}}\label{method:elltool.reach.ReachContinuous.isEqual}
+\begin{verbatim}
+ISEQUAL - checks for equality given reach set objects
+
+Input:
+  regular:
+      self.
+      reachObj:
+          elltool.reach.ReachContinuous[1, 1] - each set object, which
+           compare with self.
+  optional:
+      tuple: int[1, 1] - number of tuple for which will be compared.
+      approxType: gras.ellapx.enums.EApproxType[1, 1] -  type of
+          approximation, which will be compared.
+
+Output:
+  regular:
+      ISEQUAL: logical[1, 1] - true - if reach set objects are equal.
+          false - otherwise.
+
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  copyRsObj = rsObj.getCopy();
+  isEqual = isEqual(rsObj, copyRsObj)
+
+  isEqual =
+
+          1
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.ReachContinuous.isbackward}{isbackward}}\label{method:elltool.reach.ReachContinuous.isbackward}
+\begin{verbatim}
+ISBACKWARD - checks if given reach set object was obtained by solving
+             the system in reverse time.
+
+Input:
+  regular:
+      self.
+
+Output:
+  regular:
+      isBackward: logical[1, 1] - true - if self was obtained by solving
+          in reverse time, false - otherwise.
+
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [10 0];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  rsObj.isbackward()
+
+  ans =
+
+       1
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.ReachContinuous.plot\_ea}{plot\_ea}}\label{method:elltool.reach.ReachContinuous.plotea}
+\begin{verbatim}
+
+PLOT_EA - plots external approximations of 2D and 3D reach sets.
+
+Input:
+  regular:
+      self.
+
+  optional:
+      colorSpec: char[1, 1] - set color to plot in following way:
+                             'r' - red color,
+                             'g' - green color,
+                             'b' - blue color,
+                             'y' - yellow color,
+                             'c' - cyan color,
+                             'm' - magenta color,
+                             'w' - white color.
+
+      OptStruct: struct[1, 1] with fields:
+          color: double[1, 3] - sets color of the picture in the form
+                [x y z].
+          width: double[1, 1] - sets line width for 2D plots.
+          shade: double[1, 1] in [0; 1] interval - sets transparency level
+                (0 - transparent, 1 - opaque).
+           fill: double[1, 1] - if set to 1, reach set will be filled with
+                 color.
+
+Output:
+  None.
+
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  rsObj.plot_ea();
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
+  dRsObj.plot_ea();
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.ReachContinuous.plot\_ia}{plot\_ia}}\label{method:elltool.reach.ReachContinuous.plotia}
+\begin{verbatim}
+
+PLOT_IA - plots internal approximations of 2D and 3D reach sets.
+
+Input:
+  regular:
+      self.
+
+  optional:
+      colorSpec: char[1, 1] - set color to plot in following way:
+                             'r' - red color,
+                             'g' - green color,
+                             'b' - blue color,
+                             'y' - yellow color,
+                             'c' - cyan color,
+                             'm' - magenta color,
+                             'w' - white color.
+
+      OptStruct: struct[1, 1] with fields:
+          color: double[1, 3] - sets color of the picture in the form
+                [x y z].
+          width: double[1, 1] - sets line width for 2D plots.
+          shade: double[1, 1] in [0; 1] interval - sets transparency level
+                (0 - transparent, 1 - opaque).
+           fill: double[1, 1] - if set to 1, reach set will be filled with
+                color.
+
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  rsObj.plot_ia();
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
+  dRsObj.plot_ia();
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.ReachContinuous.projection}{projection}}\label{method:elltool.reach.ReachContinuous.projection}
+\begin{verbatim}
+
+PROJECTION - projects the reach set self onto the orthogonal basis
+             specified by the columns of matrix projMat.
+
+Input:
+  regular:
+      self.
+      projMat: double[nRows, nCols] - projection matrix, where nRows
+          is dimension of reach set, nCols <= nRows.
+
+Output:
+  projObj: elltool.reach.IReach[1, 1] - projected reach set.
+
+Examples:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  dRsObj = elltool.reach.ReachRiscrete(dsys, x0EllObj, dirsMat, timeVec);
+  projMat = eye(2);
+  projObj = rsObj.projection(projMat);
+  dProjObj = dRsObj.projection(projMat);
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.ReachContinuous.refine}{refine}}\label{method:elltool.reach.ReachContinuous.refine}
+\begin{verbatim}
+
+REFINE - adds new approximations computed for the specified directions
+         to the given reach set or to the projection of reach set.
+
+Input:
+  regular:
+      self.
+      l0Mat: double[nDim, nDir] - matrix of directions for new
+          approximation
+
+Output:
+  regular:
+      reachObj: reach[1,1] - refine reach set for the directions
+          specified in l0Mat
+
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  newDirsMat = [1; -1];
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  rsObj = rsObj.refine(newDirsMat);
+\end{verbatim}
+\section{elltool.reach.ReachDiscrete}\label{secClassDescr:elltool.reach.ReachDiscrete}
+\subsection{\texorpdfstring{elltool.reach.ReachDiscrete.ReachDiscrete}{ReachDiscrete}}\label{method:elltool.reach.ReachDiscrete.ReachDiscrete}
+\begin{verbatim}
+ReachDiscrete - computes reach set approximation of the discrete linear
+                system for the given time interval.
+
+
+Input:
+    linSys: elltool.linsys.LinSys object - given linear system
+    x0Ell: ellipsoid[1, 1] - ellipsoidal set of initial conditions
+    l0Mat: matrix of double - l0Mat
+    timeVec: double[1, 2] - time interval
+    OptStruct: struct[1, 1] - structure with
+    fields:
+        approximation: int[1, 1] - field, which mean the following values
+         for type approximation:
+          = 0 for external,
+          = 1 for internal,
+          = 2 for both (default).
+        save_all: logical [1, 1] - field, which
+          = 1 if save intermediate calculation data,
+          = 0 (default) if delete intermediate calculation data.
+        minmax: logical[1, 1] - field, which:
+          = 1 compute minmax reach set,
+          = 0 (default) compute maxmin reach set.
+        This option makes sense only for discrete-time systems with
+        disturbance.
+
+self = ReachDiscrete(linSys, x0Ell, l0Mat,timeVec, Options, prop) is the
+same as self = ReachDiscrete(linSys, x0Ell, l0Mat, timeVec, Options), but
+with "Properties"  specified in  prop.
+In other cases "Properties" are taken from current values stored in
+elltool.conf.Properties
+
+As "Properties" we understand here such list of ellipsoid properties:
+        absTol
+        relTol
+        nPlot2dPoints
+        Plot3dPoints
+        nTimeGridPoints
+
+Output:
+  regular:
+      self - reach set object.
+
+Example:
+  adMat = [0 1; -1 -0.5];
+  bdMat = [0; 1];
+  udBoundsEllObj  = ellipsoid(1);
+  dtsys = elltool.linsys.LinSysDiscrete(adMat, bdMat, udBoundsEllObj);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  dRsObj = elltool.reach.ReachDiscrete(dtsys, x0EllObj, dirsMat, timeVec);
+\end{verbatim}
+
+
+See the description of the following methods in section \ref{secClassDescr:elltool.reach.AReach}
+ for elltool.reach.AReach:
+
+\begin{list}{}{}
+ \item \hyperref[method:elltool.reach.AReach.intersect]{intersect}
+ \item \hyperref[method:elltool.reach.AReach.iscut]{iscut}
+ \item \hyperref[method:elltool.reach.AReach.isempty]{isempty}
+ \item \hyperref[method:elltool.reach.AReach.isprojection]{isprojection}
+ \item \hyperref[method:elltool.reach.AReach.repMat]{repMat}
+\end{list}
+\subsection{\texorpdfstring{elltool.reach.ReachDiscrete.cut}{cut}}\label{method:elltool.reach.ReachDiscrete.cut}
+\begin{verbatim}
+CUT - extracts the piece of reach tube from given start time to given
+      end time. Given reach set self, find states that are reachable
+      within time interval specified by cutTimeVec. If cutTimeVec
+      is a scalar, then reach set at given time is returned.
+
+Input:
+  regular:
+      self.
+
+   cutTimeVec: double[1, 2]/double[1, 1] - time interval to cut.
+
+Output:
+  cutObj: elltool.reach.IReach[1, 1] - reach set resulting from the CUT
+        operation.
+
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  cutObj = rsObj.cut([3 5]);
+  dRsObj = elltool.reach.ReachDiscrete(dtsys, x0EllObj, dirsMat, timeVec);
+  dCutObj = dRsObj.cut([3 5]);
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.ReachDiscrete.dimension}{dimension}}\label{method:elltool.reach.ReachDiscrete.dimension}
+\begin{verbatim}
+
+DIMENSION - returns array of dimensions of given reach set array.
+
+Input:
+  regular:
+      self - multidimensional array of
+             ReachContinuous/ReachDiscrete objects
+
+Output:
+  rSdimArr: double[nDim1, nDim2,...] - array of reach set dimensions.
+  sSdimArr: double[nDim1, nDim2,...] - array of state space dimensions.
+
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  rsObjArr = rsObj.repMat(1,2);
+  [rSdim sSdim] = rsObj.dimension()
+
+  rSdim =
+
+           2
+
+
+  sSdim =
+
+           2
+
+  [rSdim sSdim] = rsObjArr.dimension()
+
+  rSdim =
+          [ 2  2 ]
+
+  sSdim =
+          [ 2  2 ]
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.ReachDiscrete.display}{display}}\label{method:elltool.reach.ReachDiscrete.display}
+\begin{verbatim}
+
+DISPLAY - displays the reach set object.
+
+Input:
+  regular:
+      self.
+
+Output:
+  None.
+
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  rsObj.display()
+
+  rsObj =
+  Reach set of the continuous-time linear system in R^2 in the time...
+       interval [0, 10].
+
+  Initial set at time t0 = 0:
+  Ellipsoid with parameters
+  Center:
+       0
+       0
+
+  Shape Matrix:
+       1     0
+       0     1
+
+  Number of external approximations: 2
+  Number of internal approximations: 2
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.ReachDiscrete.evolve}{evolve}}\label{method:elltool.reach.ReachDiscrete.evolve}
+\begin{verbatim}
+
+EVOLVE - computes further evolution in time of the
+         already existing reach set.
+
+Input:
+  regular:
+      self.
+
+      newEndTime: double[1, 1] - new end time.
+
+  optional:
+      linSys: elltool.linsys.LinSys[1, 1] - new linear system.
+
+Output:
+  newReachObj: reach[1, 1] - reach set on time  interval
+        [oldT0 newEndTime].
+
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  dRsObj = elltool.reach.ReachDiscrete(dsys, x0EllObj, dirsMat, timeVec);
+  newRsObj = rsObj.evolve(12);
+  newDRsObj = dRsObj.evolve(11);
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.ReachDiscrete.getCopy}{getCopy}}\label{method:elltool.reach.ReachDiscrete.getCopy}
+\begin{verbatim}
+GETCOPY - create a new copy of Self reach object.
+
+Input:
+  self: reach[1, 1] - reach set object, copy of which should be create.
+
+Output:
+    newReachObj - reach set object.
+
+Example:
+  adMat = [0 1; -1 -0.5];
+  bdMat = [0; 1];
+  udBoundsEllObj  = ellipsoid(1);
+  dtsys = elltool.linsys.LinSysDiscrete(adMat, bdMat, udBoundsEllObj);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  dRsObj = elltool.reach.ReachDiscrete(dtsys, x0EllObj, dirsMat, timeVec);
+  newDRsObj = dRsObj.getCopy();
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.ReachDiscrete.get\_center}{get\_center}}\label{method:elltool.reach.ReachDiscrete.getcenter}
+\begin{verbatim}
+
+GET_CENTER - returns the trajectory of the center of the reach set.
+
+Input:
+  regular:
+      self.
+
+Output:
+  trCenterMat: double[nDim, nPoints] - array of points that form the
+      trajectory of the reach set center, where nDim is reach set
+      dimentsion, nPoints - number of points in time grid.
+
+  timeVec: double[1, nPoints] - array of time values.
+
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  [trCenterMat timeVec] = rsObj.get_center();
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.ReachDiscrete.get\_directions}{get\_directions}}\label{method:elltool.reach.ReachDiscrete.getdirections}
+\begin{verbatim}
+
+GET_DIRECTIONS - returns the values of direction vectors for time grid
+                 values.
+
+Input:
+  regular:
+      self.
+
+Output:
+  directionsCVec: cell[1, nPoints] of double [nDim, nDir] - array of
+      cells, where each cell is a sequence of direction vector values
+      that correspond to the time values of the grid, where nPoints is
+      number of points in time grid.
+
+  timeVec: double[1, nPoints] - array of time values.
+
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  [directionsCVec timeVec] = rsObj.get_directions();
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.ReachDiscrete.get\_ea}{get\_ea}}\label{method:elltool.reach.ReachDiscrete.getea}
+\begin{verbatim}
+
+GET_EA - returns array of ellipsoid objects representing external
+         approximation of the reach  tube.
+
+Input:
+  regular:
+      self.
+
+Output:
+  eaEllMat: ellipsoid[nAppr, nPoints] - array of ellipsoids, where nAppr
+      is the number of approximations, nPoints is number of points in time
+      grid.
+
+   timeVec: double[1, nPoints] - array of time values.
+
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  [eaEllMat timeVec] = rsObj.get_ea();
+
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
+  [eaEllMat timeVec] = dRsObj.get_ea();
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.ReachDiscrete.get\_goodcurves}{get\_goodcurves}}\label{method:elltool.reach.ReachDiscrete.getgoodcurves}
+\begin{verbatim}
+GET_GOODCURVES - returns the 'good curve' trajectories of the reach set.
+
+Input:
+  regular:
+      self.
+
+Output:
+  goodCurvesCVec: cell[1, nPoints] of double [x, y] - array of cells,
+      where each cell is array of points that form a 'good curve'.
+
+  timeVec: double[1, nPoints] - array of time values.
+
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  [goodCurvesCVec timeVec] = rsObj.get_goodcurves();
+
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
+  [goodCurvesCVec timeVec] = dRsObj.get_goodcurves();
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.ReachDiscrete.get\_ia}{get\_ia}}\label{method:elltool.reach.ReachDiscrete.getia}
+\begin{verbatim}
+
+GET_IA - returns array of ellipsoid objects representing internal
+         approximation of the  reach tube.
+
+Input:
+  regular:
+      self.
+
+Output:
+  iaEllMat: ellipsoid[nAppr, nPoints] - array of ellipsoids, where nAppr
+      is the number of approximations, nPoints is number of points in time
+      grid.
+
+  timeVec: double[1, nPoints] - array of time values.
+
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  [iaEllMat timeVec] = rsObj.get_ia();
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.ReachDiscrete.get\_system}{get\_system}}\label{method:elltool.reach.ReachDiscrete.getsystem}
+\begin{verbatim}
+
+GET_SYSTEM - returns the linear system for which the reach set is
+             computed.
+
+Input:
+  regular:
+      self.
+
+Output:
+  linSys: elltool.linsys.LinSys[1, 1] - linear system object.
+
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  linSys = rsObj.get_system()
+
+  self =
+  A:
+       0     1
+       0     0
+
+
+  B:
+       1     0
+       0     1
+
+
+  Control bounds:
+     2-dimensional ellipsoid with center
+      'sin(t)'
+      'cos(t)'
+
+     and shape matrix
+       9     0
+       0     2
+
+
+  C:
+       1     0
+       0     1
+
+  2-input, 2-output continuous-time linear time-invariant system of
+          dimension 2:
+  dx/dt  =  A x(t)  +  B u(t)
+   y(t)  =  C x(t)
+
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
+  dRsObj.get_system();
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.ReachDiscrete.plot\_ea}{plot\_ea}}\label{method:elltool.reach.ReachDiscrete.plotea}
+\begin{verbatim}
+
+PLOT_EA - plots external approximations of 2D and 3D reach sets.
+
+Input:
+  regular:
+      self.
+
+  optional:
+      colorSpec: char[1, 1] - set color to plot in following way:
+                             'r' - red color,
+                             'g' - green color,
+                             'b' - blue color,
+                             'y' - yellow color,
+                             'c' - cyan color,
+                             'm' - magenta color,
+                             'w' - white color.
+
+      OptStruct: struct[1, 1] with fields:
+          color: double[1, 3] - sets color of the picture in the form
+                [x y z].
+          width: double[1, 1] - sets line width for 2D plots.
+          shade: double[1, 1] in [0; 1] interval - sets transparency level
+                (0 - transparent, 1 - opaque).
+           fill: double[1, 1] - if set to 1, reach set will be filled with
+                 color.
+
+Output:
+  None.
+
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  rsObj.plot_ea();
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
+  dRsObj.plot_ea();
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.ReachDiscrete.plot\_ia}{plot\_ia}}\label{method:elltool.reach.ReachDiscrete.plotia}
+\begin{verbatim}
+
+PLOT_IA - plots internal approximations of 2D and 3D reach sets.
+
+Input:
+  regular:
+      self.
+
+  optional:
+      colorSpec: char[1, 1] - set color to plot in following way:
+                             'r' - red color,
+                             'g' - green color,
+                             'b' - blue color,
+                             'y' - yellow color,
+                             'c' - cyan color,
+                             'm' - magenta color,
+                             'w' - white color.
+
+      OptStruct: struct[1, 1] with fields:
+          color: double[1, 3] - sets color of the picture in the form
+                [x y z].
+          width: double[1, 1] - sets line width for 2D plots.
+          shade: double[1, 1] in [0; 1] interval - sets transparency level
+                (0 - transparent, 1 - opaque).
+           fill: double[1, 1] - if set to 1, reach set will be filled with
+                color.
+
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  rsObj.plot_ia();
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
+  dRsObj.plot_ia();
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.ReachDiscrete.projection}{projection}}\label{method:elltool.reach.ReachDiscrete.projection}
+\begin{verbatim}
+
+PROJECTION - projects the reach set self onto the orthogonal basis
+             specified by the columns of matrix projMat.
+
+Input:
+  regular:
+      self.
+      projMat: double[nRows, nCols] - projection matrix, where nRows
+          is dimension of reach set, nCols <= nRows.
+
+Output:
+  projObj: elltool.reach.IReach[1, 1] - projected reach set.
+
+Examples:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  dRsObj = elltool.reach.ReachRiscrete(dsys, x0EllObj, dirsMat, timeVec);
+  projMat = eye(2);
+  projObj = rsObj.projection(projMat);
+  dProjObj = dRsObj.projection(projMat);
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.ReachDiscrete.refine}{refine}}\label{method:elltool.reach.ReachDiscrete.refine}
+\begin{verbatim}
+REFINE - adds new approximations computed for the specified directions
+         to the given reach set.
+
+
+Description:
+------------
+
+RRS = REFINE(RS, L0, OPTIONS)
+       Given nonempty reach set RS and direction
+       vectors specified by matrix L0,
+       adds new approximations computed for those
+       directions to this reach set.
+       This refinement is possible only if the reach
+       set was obtained by the REACH call with option
+       'save_all' set to 1 (intermediate calculation
+       information is saved in the reach set object).
+       Optional OPTIONS parameter is a structure:
+         Options.approximation = 0 for external,
+                               = 1 for internal,
+                               = 2 for both (default).
+         Options.save_all = 1 (default) to save intermediate
+                              calculation data,
+                          = 0 to delete intermediate
+                              calculation data.
+         Options.minmax = 1 compute minmax reach set,
+         Options.minmax = 0 (default) compute maxmin reach set.
+                        This option makes sense only for
+                       discrete-time systems with disturbance.
+
+   WARNING! This function does not work with reach set objects resulting
+            form CUT and/or PROJECTION operation.
+
+
+
+Output:
+-------
+
+   RRS - refined reach set.
+
+
+See also:
+---------
+
+   REACH/REACH.
+\end{verbatim}
+\section{elltool.reach.ReachFactory}\label{secClassDescr:elltool.reach.ReachFactory}
+\subsection{\texorpdfstring{elltool.reach.ReachFactory.ReachFactory}{ReachFactory}}\label{method:elltool.reach.ReachFactory.ReachFactory}
+\begin{verbatim}
+Example:
+  import elltool.reach.ReachFactory;
+  crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
+  crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
+  rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.ReachFactory.createInstance}{createInstance}}\label{method:elltool.reach.ReachFactory.createInstance}
+\begin{verbatim}
+Example:
+  import elltool.reach.ReachFactory;
+  crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
+  crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
+  rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
+  reachObj = rsObj.createInstance();
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.ReachFactory.getDim}{getDim}}\label{method:elltool.reach.ReachFactory.getDim}
+\begin{verbatim}
+Example:
+  import elltool.reach.ReachFactory;
+  crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
+  crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
+  rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
+  dim = rsObj.getDim();
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.ReachFactory.getL0Mat}{getL0Mat}}\label{method:elltool.reach.ReachFactory.getL0Mat}
+\begin{verbatim}
+Example:
+  import elltool.reach.ReachFactory;
+  crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
+  crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
+  rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
+  l0Mat = rsObj.getL0Mat()
+
+  l0Mat =
+
+       1     0
+       0     1
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.ReachFactory.getLinSys}{getLinSys}}\label{method:elltool.reach.ReachFactory.getLinSys}
+\begin{verbatim}
+Example:
+  import elltool.reach.ReachFactory;
+  crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
+  crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
+  rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
+  linSys = rsObj.getLinSys();
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.ReachFactory.getTVec}{getTVec}}\label{method:elltool.reach.ReachFactory.getTVec}
+\begin{verbatim}
+Example:
+  import elltool.reach.ReachFactory;
+  crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
+  crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
+  rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
+  tVec = rsObj.getTVec()
+
+  tVec =
+
+       0    10
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.ReachFactory.getX0Ell}{getX0Ell}}\label{method:elltool.reach.ReachFactory.getX0Ell}
+\begin{verbatim}
+Example:
+  import elltool.reach.ReachFactory;
+  crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
+  crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
+  rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
+  X0Ell = rsObj.getX0Ell()
+
+  X0Ell =
+
+  Center:
+       0
+       0
+
+  Shape Matrix:
+      0.0100         0
+           0    0.0100
+
+  Nondegenerate ellipsoid in R^2.
+\end{verbatim}
 \section{elltool.linsys.ALinSys}\label{secClassDescr:elltool.linsys.ALinSys}
 \subsection{\texorpdfstring{elltool.linsys.ALinSys.ALinSys}{ALinSys}}\label{method:elltool.linsys.ALinSys.ALinSys}
 \begin{verbatim}
@@ -10868,4 +12338,231 @@ Examples:
   isLtiArr = sys.islti();
   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
   isLtiArr = dsys.islti();
+\end{verbatim}
+\section{elltool.linsys.LinSysContinuous}\label{secClassDescr:elltool.linsys.LinSysContinuous}
+\subsection{\texorpdfstring{elltool.linsys.LinSysContinuous.LinSysContinuous}{LinSysContinuous}}\label{method:elltool.linsys.LinSysContinuous.LinSysContinuous}
+\begin{verbatim}
+LINSYSCONTINUOUS - Constructor of continuous linear system object.
+
+Continuous-time linear system:
+          dx/dt  =  A(t) x(t)  +  B(t) u(t)  +  G(t) v(t)
+           y(t)  =  C(t) x(t)  +  w(t)
+
+Input:
+  regular:
+      atInpMat: double[nDim, nDim]/cell[nDim, nDim] - matrix A.
+
+      btInpMat: double[nDim, kDim]/cell[nDim, kDim] - matrix B.
+
+      uBoundsEll: ellipsoid[1, 1]/struct[1, 1] - control bounds
+            ellipsoid.
+
+      gtInpMat: double[nDim, lDim]/cell[nDim, lDim] - matrix G.
+
+      distBoundsEll: ellipsoid[1, 1]/struct[1, 1] - disturbance
+            bounds ellipsoid.
+
+      ctInpMat: double[mDim, nDim]/cell[mDim, nDim]- matrix C.
+
+      noiseBoundsEll: ellipsoid[1, 1]/struct[1, 1] - noise bounds
+            ellipsoid.
+
+      discrFlag: char[1, 1] - if discrFlag set:
+             'd' - to discrete-time linSys,
+             not 'd' - to continuous-time linSys.
+
+
+Output:
+  self: elltool.linsys.LinSysContinuous[1, 1] - continuous linear
+            system.
+
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+\end{verbatim}
+
+
+See the description of the following methods in section \ref{secClassDescr:elltool.linsys.ALinSys}
+ for elltool.linsys.ALinSys:
+
+\begin{list}{}{}
+ \item \hyperref[method:elltool.linsys.ALinSys.dimension]{dimension}
+ \item \hyperref[method:elltool.linsys.ALinSys.getAbsTol]{getAbsTol}
+ \item \hyperref[method:elltool.linsys.ALinSys.getAtMat]{getAtMat}
+ \item \hyperref[method:elltool.linsys.ALinSys.getBtMat]{getBtMat}
+ \item \hyperref[method:elltool.linsys.ALinSys.getCopy]{getCopy}
+ \item \hyperref[method:elltool.linsys.ALinSys.getCtMat]{getCtMat}
+ \item \hyperref[method:elltool.linsys.ALinSys.getDistBoundsEll]{getDistBoundsEll}
+ \item \hyperref[method:elltool.linsys.ALinSys.getGtMat]{getGtMat}
+ \item \hyperref[method:elltool.linsys.ALinSys.getNoiseBoundsEll]{getNoiseBoundsEll}
+ \item \hyperref[method:elltool.linsys.ALinSys.getUBoundsEll]{getUBoundsEll}
+ \item \hyperref[method:elltool.linsys.ALinSys.hasdisturbance]{hasdisturbance}
+ \item \hyperref[method:elltool.linsys.ALinSys.hasnoise]{hasnoise}
+ \item \hyperref[method:elltool.linsys.ALinSys.isEqual]{isEqual}
+ \item \hyperref[method:elltool.linsys.ALinSys.isempty]{isempty}
+ \item \hyperref[method:elltool.linsys.ALinSys.islti]{islti}
+\end{list}
+\subsection{\texorpdfstring{elltool.linsys.LinSysContinuous.display}{display}}\label{method:elltool.linsys.LinSysContinuous.display}
+\begin{verbatim}
+
+DISPLAY - displays the details of linear system object.
+
+Input:
+  regular:
+      self: elltool.linsys.ILinSys[1, 1] - linear system.
+
+Output:
+  None.
+
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  sys.display()
+\end{verbatim}
+\section{elltool.linsys.LinSysDiscrete}\label{secClassDescr:elltool.linsys.LinSysDiscrete}
+\subsection{\texorpdfstring{elltool.linsys.LinSysDiscrete.LinSysDiscrete}{LinSysDiscrete}}\label{method:elltool.linsys.LinSysDiscrete.LinSysDiscrete}
+\begin{verbatim}
+LINSYSDISCRETE - constructor of discrete linear system object.
+
+Discrete-time linear system:
+          x[k+1]  =  A[k] x[k]  +  B[k] u[k]  +  G[k] v[k]
+            y[k]  =  C[k] x[k]  +  w[k]
+
+Input:
+  regular:
+      atInpMat: double[nDim, nDim]/cell[nDim, nDim] - matrix A.
+
+      btInpMat: double[nDim, kDim]/cell[nDim, kDim] - matrix B.
+
+      uBoundsEll: ellipsoid[1, 1]/struct[1, 1] - control bounds
+          ellipsoid.
+
+      gtInpMat: double[nDim, lDim]/cell[nDim, lDim] - matrix G.
+
+      distBoundsEll: ellipsoid[1, 1]/struct[1, 1] - disturbance bounds
+          ellipsoid.
+
+      ctInpMat: double[mDim, nDim]/cell[mDim, nDim]- matrix C.
+
+      noiseBoundsEll: ellipsoid[1, 1]/struct[1, 1] - noise bounds
+          ellipsoid.
+
+      discrFlag: char[1, 1] - if discrFlag set:
+           'd' - to discrete-time linSys
+           not 'd' - to continuous-time linSys.
+
+Output:
+  self: elltool.linsys.LinSysDiscrete[1, 1] - discrete linear system.
+
+Example:
+  for k = 1:20
+     atMat = {'0' '1 + cos(pi*k/2)'; '-2' '0'};
+     btMat =  [0; 1];
+     uBoundsEllObj = ellipsoid(4);
+     gtMat = [1; 0];
+     distBounds = 1/(k+1);
+     ctVec = [1 0];
+     lsys = elltool.linsys.LinSysDiscrete(atMat, btMat,...
+         uBoundsEllObj, gtMat,distBounds, ctVec);
+  end
+\end{verbatim}
+
+
+See the description of the following methods in section \ref{secClassDescr:elltool.linsys.ALinSys}
+ for elltool.linsys.ALinSys:
+
+\begin{list}{}{}
+ \item \hyperref[method:elltool.linsys.ALinSys.dimension]{dimension}
+ \item \hyperref[method:elltool.linsys.ALinSys.getAbsTol]{getAbsTol}
+ \item \hyperref[method:elltool.linsys.ALinSys.getAtMat]{getAtMat}
+ \item \hyperref[method:elltool.linsys.ALinSys.getBtMat]{getBtMat}
+ \item \hyperref[method:elltool.linsys.ALinSys.getCopy]{getCopy}
+ \item \hyperref[method:elltool.linsys.ALinSys.getCtMat]{getCtMat}
+ \item \hyperref[method:elltool.linsys.ALinSys.getDistBoundsEll]{getDistBoundsEll}
+ \item \hyperref[method:elltool.linsys.ALinSys.getGtMat]{getGtMat}
+ \item \hyperref[method:elltool.linsys.ALinSys.getNoiseBoundsEll]{getNoiseBoundsEll}
+ \item \hyperref[method:elltool.linsys.ALinSys.getUBoundsEll]{getUBoundsEll}
+ \item \hyperref[method:elltool.linsys.ALinSys.hasdisturbance]{hasdisturbance}
+ \item \hyperref[method:elltool.linsys.ALinSys.hasnoise]{hasnoise}
+ \item \hyperref[method:elltool.linsys.ALinSys.isEqual]{isEqual}
+ \item \hyperref[method:elltool.linsys.ALinSys.isempty]{isempty}
+ \item \hyperref[method:elltool.linsys.ALinSys.islti]{islti}
+\end{list}
+\subsection{\texorpdfstring{elltool.linsys.LinSysDiscrete.display}{display}}\label{method:elltool.linsys.LinSysDiscrete.display}
+\begin{verbatim}
+
+DISPLAY - displays the details of linear system object.
+
+Input:
+  regular:
+      self: elltool.linsys.ILinSys[1, 1] - linear system.
+
+Output:
+  None.
+
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  sys.display()
+\end{verbatim}
+\section{elltool.linsys.LinSysFactory}\label{secClassDescr:elltool.linsys.LinSysFactory}
+\subsection{\texorpdfstring{elltool.linsys.LinSysFactory.LinSysFactory}{LinSysFactory}}\label{method:elltool.linsys.LinSysFactory.LinSysFactory}
+\begin{verbatim}
+Factory class of linear system objects of the Ellipsoidal Toolbox.
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.linsys.LinSysFactory.create}{create}}\label{method:elltool.linsys.LinSysFactory.create}
+\begin{verbatim}
+CREATE - returns linear system object.
+
+Continuous-time linear system:
+          dx/dt  =  A(t) x(t)  +  B(t) u(t)  +  G(t) v(t)
+           y(t)  =  C(t) x(t)  +  w(t)
+
+Discrete-time linear system:
+          x[k+1]  =  A[k] x[k]  +  B[k] u[k]  +  G[k] v[k]
+            y[k]  =  C[k] x[k]  +  w[k]
+
+Input:
+  regular:
+  regular:
+      atInpMat: double[nDim, nDim]/cell[nDim, nDim] - matrix A.
+
+      btInpMat: double[nDim, kDim]/cell[nDim, kDim] - matrix B.
+
+      uBoundsEll: ellipsoid[1, 1]/struct[1, 1] - control bounds
+          ellipsoid.
+
+      gtInpMat: double[nDim, lDim]/cell[nDim, lDim] - matrix G.
+
+      distBoundsEll: ellipsoid[1, 1]/struct[1, 1] - disturbance bounds
+          ellipsoid.
+
+      ctInpMat: double[mDim, nDim]/cell[mDim, nDim]- matrix C.
+
+      noiseBoundsEll: ellipsoid[1, 1]/struct[1, 1] -  noise bounds
+         ellipsoid.
+
+      discrFlag: char[1, 1] - if discrFlag set:
+          'd' - to discrete-time linSys
+          not 'd' - to continuous-time linSys.
+
+Output:
+  linSys: elltool.linsys.LinSysContinuous[1, 1]/
+      elltool.linsys.LinSysDiscrete[1, 1] - linear system.
+
+Examples:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysFactory.create(aMat, bMat,SUBounds);
 \end{verbatim}

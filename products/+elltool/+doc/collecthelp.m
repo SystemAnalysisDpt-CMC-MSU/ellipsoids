@@ -148,7 +148,7 @@ for iClass = 1:nLength
         inheritedMethodList = unique(arrayfun(@(x)x.Name,finalDefMethodVec,...
             'UniformOutput',false));
         definingClassNameList=unique(arrayfun(@(x)x.DefiningClass.Name,...
-                finalDefMethodVec,'UniformOutput',false));
+                finalDefMethodVec,'UniformOutput',false))
         if ~isempty(definingClassNameList)
               bufFuncInfo.numberOfInhClass = iClass;
         end
@@ -171,6 +171,7 @@ for iClass = 1:nLength
         bufFuncInfo.inhFuncName=inheritedMethodList;
         bufFuncInfo.funcName=funcNameList;
         bufFuncInfo.numbOfFunc = length(fullNameList);
+        bufFuncInfo.numbOfInhFunc  = length(inheritedMethodList);
         possibleScript=regexp(fullNameList,scriptNamePattern,'once',...
             'match');
         bufFuncInfo.isScript=logical(cellfun(@(x,y) isequal(x,y),...
