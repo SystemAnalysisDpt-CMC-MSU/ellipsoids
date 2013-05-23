@@ -1,7 +1,7 @@
 externallEllMat = firstRsObj.get_ea()  % external approximating ellipsoids
 
 % externallEllMat =
-% 2x100 array of ellipsoids.
+% Array of ellipsoids with dimensionality 2x100
 
 % internal approximating ellipsoids
 [internalEllMat, timeVec] = firstRsObj.get_ia();  
