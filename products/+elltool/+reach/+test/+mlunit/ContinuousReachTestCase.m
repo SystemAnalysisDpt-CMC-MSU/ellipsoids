@@ -217,7 +217,7 @@ classdef ContinuousReachTestCase < mlunitext.test_case
             mlunitext.assert_equals(false, projReachObj.isempty());
         end
         %
-        function self = DISABLED_testEvolve(self)
+        function self = testEvolve(self)
             import gras.ellapx.smartdb.F;
             %
             timeVec = [self.tVec(1), sum(self.tVec)/2];

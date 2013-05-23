@@ -1,10 +1,10 @@
 classdef AReachRegrTestCase < mlunitext.test_case
-    properties (Access=private, Constant)
+    properties (Access = protected, Constant)
         FIELDS_NOT_TO_COMPARE={'LT_GOOD_DIR_MAT';'LT_GOOD_DIR_NORM_VEC';...
             'LS_GOOD_DIR_NORM';'LS_GOOD_DIR_VEC'};
         COMP_PRECISION = 5e-5;
     end
-    properties (Access=private)
+    properties (Access = protected)
         testDataRootDir
         etalonDataRootDir
         etalonDataBranchKey

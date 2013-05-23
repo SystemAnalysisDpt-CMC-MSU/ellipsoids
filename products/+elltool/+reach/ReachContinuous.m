@@ -90,7 +90,8 @@ classdef ReachContinuous < elltool.reach.AReach
         end
         %
         function newEllTubeRel = transformEllTube(ellTubeRel)
-            newEllTubeRel = self.rotateEllTubeRel(ellTubeRel);
+            newEllTubeRel = ...
+                elltool.reach.ReachContinuous.rotateEllTubeRel(ellTubeRel);
         end
     end
     %

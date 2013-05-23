@@ -505,7 +505,7 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             checkUVW2(self,'W',fMethod);
         end        
         %
-        function self = testCut(self)
+        function self = DISABLED_testCut(self)
             import gras.ellapx.enums.EApproxType;
             %
             newTimeVec = [sum(self.tIntervalVec/2), self.tIntervalVec(2)];
@@ -529,8 +529,8 @@ classdef DiscreteReachTestCase < mlunitext.test_case
                     EApproxType.Internal);
                 isEaEqual = cutReachObj.isEqual(newEaReachObj, iTuple,...
                     EApproxType.External);
-                mlunit.assert_equals(true, isIaEqual);
-                mlunit.assert_equals(true, isEaEqual);
+                mlunitext.assert_equals(true, isIaEqual);
+                mlunitext.assert_equals(true, isEaEqual);
             end
         end
         %

@@ -70,7 +70,7 @@ end
 suiteList{end + 1} = loader.load_tests_from_test_case(...
     'elltool.reach.test.mlunit.ContinuousReachFirstTestCase',...
     'demo3firstTest', crm, crmSys);
-%
+
 testLists=cellfun(@(x)x.tests,suiteList,'UniformOutput',false);
 suite=mlunitext.test_suite(horzcat(testLists{:}));
 %

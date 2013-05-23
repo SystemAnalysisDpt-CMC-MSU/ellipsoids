@@ -64,7 +64,7 @@ classdef LinSysContinuous < elltool.linsys.ALinSys
         end
         %
         function display(self)
-           self.displayInternal(self.DISPLAY_PARAMETER_STRINGS)
+           self.displayInternal()
         end
     end
 end

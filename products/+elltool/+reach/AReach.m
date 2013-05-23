@@ -445,7 +445,7 @@ classdef AReach < elltool.reach.IReach
                     isDisturbance);
                 ellTubeRelVec{il0Num} = self.makeEllTubeRel(...
                     probDynObj, l0Mat(:, il0Num), ...
-                    newTimeVec, isDisturbance, self.relTol, approxType);                
+                    newTimeVec, isDisturbance, self.relTol, approxType);
                 dataCVec{il0Num} = ...
                     ellTubeRelVec{il0Num}.getTuplesFilteredBy(...
                     APPROX_TYPE, approxType).getData();
@@ -1357,6 +1357,11 @@ classdef AReach < elltool.reach.IReach
             if self.isbackward()
                 newEllTubeRel = self.transformEllTube(newEllTubeRel);
             end
+            %
+            evolveTimeVec = newEllTubeRel.getData().timeVec{1};
+            evolveTimeVec = [evolveTimeVec(2) evolveTimeVec(end)];
+            evolveTimeVec = [min(evolveTimeVec) max(evolveTimeVec)];
+            newEllTubeRel = newEllTubeRel.cut(evolveTimeVec);                        
             %
             indVec = [indIntVec; indExtVec];
             [~, indRelVec] = sort(indVec);
