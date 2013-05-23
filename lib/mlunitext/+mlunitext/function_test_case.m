@@ -56,7 +56,7 @@ classdef function_test_case < mlunitext.test_case
             %                                     % not called directly,
             %                                     % but through the method
             %                                     % test_case.run.
-            %         summary(result)
+            %         getReport(result)
             %
             %  See also MLUNITEXT.TEST_CASE.
             %
