@@ -137,17 +137,19 @@ for iClass = 1:nLength
                          dynamicpropsClassMethodNameList);
             methodVec= methodVec(~isDynamicpropsVec);
         end
-        definingClassNameList=arrayfun(@(x)x.DefiningClass.Name,...
-                methodVec,'UniformOutput',false);
-        isSourseClass= strcmp(className, definingClassNameList);
-        isDefiningClassVec=ismember(definingClassNameList, classList);
-        defMethodVec = methodVec(isDefiningClassVec & ~isSourseClass);
-        isHiddenVec=arrayfun(@(x)isequal(x.Hidden,1), defMethodVec);
         isPublicVec=arrayfun(@(x)isequal(x.Access,PUBLIC_ACCESS_MOD),...
-                         defMethodVec);
-        finalDefMethodVec = defMethodVec(isPublicVec & ~isHiddenVec);
-        definingClassNameList =unique(arrayfun(@(x)x.DefiningClass.Name,...
-                finalDefMethodVec,'UniformOutput',false));
+                         methodVec);
+        isHiddenVec=arrayfun(@(x)isequal(x.Hidden,1), methodVec);
+        methodVec=methodVec(isPublicVec & ~isHiddenVec);
+        curClassMethodNameList=arrayfun(@(x)x.Name,...
+                        methodVec,'UniformOutput',false)
+        definingClassNameList=arrayfun(@(x)x.DefiningClass.Name,...
+                methodVec,'UniformOutput',false)
+        isSourseClass= strcmp(className, definingClassNameList)
+        isDefiningClassVec=ismember(definingClassNameList, classList)
+        finalDefMethodVec = methodVec(isDefiningClassVec & ~isSourseClass);
+        definingClassNameList = unique(arrayfun(@(x)x.DefiningClass.Name,...
+                finalDefMethodVec,'UniformOutput',false))
         classLength = length(definingClassNameList);
         infoInhClass = zeros(classLength, 1);
         if (classLength ~= 0)
@@ -167,11 +169,7 @@ for iClass = 1:nLength
         if ~isempty(definingClassNameList)
               bufFuncInfo.numberOfInhClass = iClass;
         end
-        methodVec= methodVec(~isDefiningClassVec | isSourseClass);
-        isPublicVec=arrayfun(@(x)isequal(x.Access,PUBLIC_ACCESS_MOD),...
-                         methodVec);
-        isHiddenVec=arrayfun(@(x)isequal(x.Hidden,1), methodVec);
-        finalMethodVec=methodVec(isPublicVec & ~isHiddenVec);
+        finalMethodVec= methodVec(~isDefiningClassVec | isSourseClass);
         fullNameList= unique(arrayfun(@(x)[className,'.',x.Name],...
             finalMethodVec,'UniformOutput',false));
         funcNameList = unique(arrayfun(@(x)x.Name,finalMethodVec,...

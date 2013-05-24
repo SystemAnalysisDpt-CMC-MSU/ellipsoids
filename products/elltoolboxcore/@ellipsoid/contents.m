@@ -86,7 +86,7 @@
 %                       in given direction.
 %  isbaddirection     - Checks if ellipsoidal approximation of geometric difference
 %                       of two ellipsoids in the given direction can be computed.
-%  isContainedInIntersection           - Checks if the union or intersection of ellipsoids or
+%  doesIntersectionContain           - Checks if the union or intersection of ellipsoids or
 %                       polytopes lies inside the intersection of given ellipsoids.
 %  isinternal         - Checks if given vector belongs to the union or intersection
 %                       of given ellipsoids.
