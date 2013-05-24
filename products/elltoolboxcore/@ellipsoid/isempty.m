@@ -1,4 +1,4 @@
-function isPositiveArr = isEmpty(myEllArr)
+function isPositiveArr = isempty(myEllArr)
 %
 % ISEMPTY - checks if the ellipsoid object is empty.
 %

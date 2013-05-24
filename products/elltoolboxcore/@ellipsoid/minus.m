@@ -74,12 +74,12 @@ errMsg =...
 checkvar(nargin,'x==2','errorTag','wrongInput',...
     'errorMessage',errMsg)
 if isa(varargin{1}, 'ellipsoid')&&isa(varargin{2}, 'double')
-    inpEllArr = varargin{1};
+    inpEllVec = varargin{1};
     inpVec = varargin{2};
 elseif isa(varargin{2}, 'ellipsoid')&&isa(varargin{1}, 'double')
-    inpEllArr = varargin{2};
+    inpEllVec = varargin{2};
     inpVec = varargin{1};
 else
     throwerror('wrongInput',errMsg);
 end
-outEllArr = plus(inpEllArr, -inpVec);
+outEllArr = plus(inpEllVec, -inpVec);
