@@ -27,9 +27,7 @@ function copyEllArr = getCopy(ellArr)
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2013 $
 %
-if isempty(ellArr)
-    copyEllArr = ellipsoid.empty(size(ellArr));
-elseif isscalar(ellArr)
+if isscalar(ellArr)
     copyEllArr=ellipsoid();
     fSingleCopy(copyEllArr,ellArr);
 else

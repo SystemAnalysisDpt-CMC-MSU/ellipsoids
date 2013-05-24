@@ -67,7 +67,7 @@ modgen.common.checkvar( sumEllArr , 'numel(x) > 0', 'errorTag', ...
     'wrongInput:emptyArray', 'errorMessage', ...
     'Each array must be not empty.');
 
-modgen.common.checkvar( sumEllArr,'all(~x(:).isEmpty())','errorTag', ...
+modgen.common.checkvar( sumEllArr,'all(~isempty(x(:)))','errorTag', ...
     'wrongInput:emptyEllipsoid', 'errorMessage', ...
     'Array should not have empty ellipsoid.');
 
@@ -102,7 +102,7 @@ intApprEllVec(nGoodDirs) = ellipsoid();
 arrayfun(@(x) fSingleMP(x),1:nGoodDirs)
 
 Properties.setIsVerbose(isVrb);
-if intApprEllVec.isEmpty()
+if isempty(intApprEllVec)
     if Properties.getIsVerbose()
         if isempty(logger)
             logger=Log4jConfigurator.getLogger();
