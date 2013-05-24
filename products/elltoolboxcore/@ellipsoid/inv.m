@@ -13,7 +13,7 @@ function myEllArr = inv(myEllArr)
 %     myEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of ellipsoids.
 %
 % Output:
-%    invEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of ellipsoids
+%    myEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of ellipsoids
 %       with inverted shape matrices.
 % 
 % Example:

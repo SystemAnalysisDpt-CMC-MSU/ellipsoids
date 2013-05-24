@@ -16,7 +16,7 @@ function ellArr = shape(ellArr, modMat)
 %       modMat: double[nDim, nDim]/[1,1] - square matrix or scalar
 %
 % Output:
-%	modEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of modified
+%	ellArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of modified
 %       ellipsoids.
 %
 % Example:

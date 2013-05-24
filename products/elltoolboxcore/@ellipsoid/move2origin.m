@@ -12,7 +12,7 @@ function inpEllArr = move2origin(inpEllArr)
 %           ellipsoids.
 %
 % Output:
-%   outEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of ellipsoids
+%   inpEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of ellipsoids
 %       with the same shapes as in inpEllArr centered at the origin.
 %
 % Example:

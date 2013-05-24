@@ -396,16 +396,57 @@ classdef EllipsoidBasicSecondTC < mlunitext.test_case
             projMat = [1 0 0;0 1 0]';
             centVec = [-2; -1; 4]; 
             shapeMat = [4 -1 0; -1 1 0; 0 0 9];
-            auxTestProjection(centVec, shapeMat, projMat);
+            auxTestProjection('projection',centVec, shapeMat, projMat);
             %
             projMat = [1 0 0; 0 0 1]';
             centVec = [2; 4; 3];
             shapeMat = [3 1 1; 1 4 1; 1 1 8];
             dimVec = [2,2,3,4];
-            auxTestProjection(centVec, shapeMat, projMat, dimVec);
+            auxTestProjection('projection',centVec, shapeMat, projMat, dimVec);
             %
             dimVec = [0,0,2,0];
-            auxTestProjection(centVec, shapeMat, projMat, dimVec);
+            auxTestProjection('projection',centVec, shapeMat, projMat, dimVec);
+        end
+        function self = testGetShape(self)
+            ellMat = eye(2);
+            testEll = ellipsoid(ellMat);
+            testEllArr = testEll.repMat([2 2 3 4]);
+            testMat =[2 0;0 2];
+            compMat = [4 0;0 4];
+            compList = repmat({compMat},[2 2 3 4]);
+            operationCheckEqFunc(testEllArr, compList, 'getShape', testMat);
+            %
+            emptyTest('getShape',[0,0,2,0],testMat);
+        end 
+        function self = testGetInv(self)
+            ellMat = [2 0;0 2];
+            testEll = ellipsoid(ellMat);
+            testEllArr = testEll.repMat([2 2 3 4]);
+            testMat = [1/2 0; 0 1/2];
+            compList  = repmat({testMat}, [2 2 3 4]);
+            operationCheckEqFunc(testEllArr,compList,'getInv');
+            %
+            emptyTest('getInv',[0,0,2,0]);
+        end    
+        function self = testGetMove2Origin(self)
+            ellMat = eye(2);
+            ellVec = [2;2];
+            testEll = ellipsoid(ellVec,ellMat);
+            testEllArr = testEll.repMat([2 2 3 4]);
+            compList = repmat({[0;0]},[2 2 3 4]);
+            operationCheckEqFunc(testEllArr,compList,'getMove2Origin');
+            %
+            emptyTest('getMove2Origin',[0,0,2,0]);
+        end    
+        function self = testGetProjection(self)
+            projMat = [1 0 0; 0 0 1]';
+            centVec = [2; 4; 3];
+            shapeMat = [3 1 1; 1 4 1; 1 1 8];
+            dimVec = [2,2,3,4];
+            auxTestProjection('getProjection',centVec, shapeMat, projMat, dimVec);
+            %
+            dimVec = [0,0,2,0];
+            auxTestProjection('getProjection',centVec, shapeMat, projMat, dimVec);
         end    
     end
 end
@@ -415,6 +456,9 @@ function operationCheckEqFunc(testEllArr, compList, operation,...
     OBJ_MODIFICATING_METHODS_LIST = {'inv', 'move2origin',...
         'shape'};
     isObjModifMethod = ismember(operation, OBJ_MODIFICATING_METHODS_LIST);
+    if ~isObjModifMethod
+        testCopyEllArr = testEllArr.getCopy();
+    end    
     if nargin < 4
         testEllResArr = testEllArr.(operation);
     else
@@ -424,14 +468,19 @@ function operationCheckEqFunc(testEllArr, compList, operation,...
     if isObjModifMethod
         %test for methods which modify the input array
         checkRes(testEllArr,compList, operation);
+    else
+        %test for absence of input array's modification 
+        isNotModif = all(testCopyEllArr(:).isEqual(testEllArr(:)));
+        mlunitext.assert_equals(isNotModif, 1);
     end    
 end
 function checkRes(testEllResArr,compList, operation)
     import modgen.common.throwerror;
     import modgen.cell.cellstr2expression;
     %
-    VEC_COMP_METHODS_LIST = {'uminus', 'plus', 'minus', 'move2origin'};
-    MAT_COMP_METHODS_LIST = {'inv', 'shape'};
+    VEC_COMP_METHODS_LIST = {'uminus', 'plus', 'minus', 'move2origin',...
+        'getMove2Origin'};
+    MAT_COMP_METHODS_LIST = {'inv', 'shape','getInv','getShape'};
     %
     [testEllResCentersVecList, testEllResShapeMatList] = arrayfun(@(x) double(x),...
         testEllResArr, 'UniformOutput', false);
@@ -471,23 +520,51 @@ function emptyTest(methodName, sizeVec, argument)
             argument);
     end    
 end
-function auxTestProjection(centVec, shapeMat, projMat, dimVec)
+function auxTestProjection(methodName, centVec, shapeMat, projMat, dimVec)
+     import modgen.common.throwerror;
+     import modgen.cell.cellstr2expression;
+     INP_OBJ_MODIF_LIST = {'projection'};
+     INP_OBJ_NOT_MODIF_LIST = {'getProjection'};
      projCentVec = projMat'*centVec;
      projShapeMat = projMat'*shapeMat*projMat;
      ellObj = ellipsoid(centVec, shapeMat);
      compEllObj = ellipsoid(projCentVec, projShapeMat);
-     if nargin < 4   
-        projEllObj = ellObj.projection(projMat); 
+     if ismember(methodName, INP_OBJ_MODIF_LIST)
+         isInpObjModif = true;
+     elseif ismember(methodName, INP_OBJ_NOT_MODIF_LIST)
+         ellCopyObj = ellObj.getCopy();
+         isInpObjModif = false;
+     else
+         throwerror('wrongInput:badMethodName',...
+             'Allowed method names: %s. Input name: %s',...
+             cellstr2expression({INP_OBJ_MODIF_LIST{:}, ...
+             INP_OBJ_NOT_MODIF_LIST{:}}), methodName);
+     end
+     if nargin < 5
+        projEllObj = ellObj.(methodName)(projMat); 
         testIsRight1 = isequal(compEllObj, projEllObj);
-        %additional test for modification of input object
-        testIsRight2 = isequal(compEllObj, ellObj);
+        if isInpObjModif    
+            %additional test for modification of input object
+            testIsRight2 = compEllObj.isEqual(ellObj);
+        else
+            %additional test for absence of input object's modification
+            testIsRight2 = ellCopyObj.isEqual(ellObj);
+        end    
      else
         ellArr = ellObj.repMat(dimVec);
-        projEllArr = ellArr.projection(projMat);
+        if ~isInpObjModif
+            ellCopyArr = ellCopyObj.repMat(dimVec);
+        end    
+        projEllArr = ellArr.(methodName)(projMat);
         compEllArr = compEllObj.repMat(dimVec);
         testIsRight1 = isequal(compEllArr, projEllArr);
-        %additional test for modification of input array
-        testIsRight2 = isequal(compEllArr, ellArr);
+        if isInpObjModif    
+            %additional test for modification of input array
+            testIsRight2 = all(compEllArr(:).isEqual(ellArr(:)));
+        else
+            %additional test for absence of input array's modification
+            testIsRight2 = all(ellCopyArr(:).isEqual(ellArr(:)));
+        end
      end    
      mlunitext.assert_equals(testIsRight1, 1);
      mlunitext.assert_equals(testIsRight2, 1);

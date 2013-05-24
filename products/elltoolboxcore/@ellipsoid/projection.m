@@ -16,7 +16,7 @@ function ellArr = projection(ellArr, basisMat)
 %           vectors
 %
 % Output:
-%   projEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of
+%   ellArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of
 %       projected ellipsoids, generally, of lower dimension.
 %
 % Example:
