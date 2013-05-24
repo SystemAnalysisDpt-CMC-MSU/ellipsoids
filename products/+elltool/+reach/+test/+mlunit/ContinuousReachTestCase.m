@@ -169,7 +169,7 @@ classdef ContinuousReachTestCase < mlunitext.test_case
             self.l0Mat = reachFactObj.getL0Mat();
         end
         %
-        function self = DISABLED_testDisplay(self)
+        function self = testDisplay(self)
             self.displayTest(self.reachObj, self.tVec);
             newTimeVec = [sum(self.tVec)/2, self.tVec(2)];
             cutReachObj = self.reachObj.cut(newTimeVec);
@@ -184,12 +184,12 @@ classdef ContinuousReachTestCase < mlunitext.test_case
             self.runPlotTest(EApproxType.External);
         end
         %
-        function self = DISABLED_testPlotIa(self)
+        function self = testPlotIa(self)
             import gras.ellapx.enums.EApproxType;
             self.runPlotTest(EApproxType.Internal);
         end
         %
-        function self = DISABLED_testDimension(self)
+        function self = testDimension(self)
             newTimeVec = [sum(self.tVec) / 2, self.tVec(2)];
             cutReachObj = self.reachObj.cut(newTimeVec);
             cutDim = cutReachObj.dimension();
@@ -201,7 +201,7 @@ classdef ContinuousReachTestCase < mlunitext.test_case
             mlunitext.assert_equals(true, isOk);
         end
         %
-        function self = DISABLED_testIsEmpty(self)
+        function self = testIsEmpty(self)
             emptyRs = elltool.reach.ReachContinuous();
             newTimeVec = [sum(self.tVec)/2, self.tVec(2)];
             cutReachObj = self.reachObj.cut(newTimeVec);
@@ -225,7 +225,7 @@ classdef ContinuousReachTestCase < mlunitext.test_case
             mlunitext.assert_equals(true, isEqual);
         end
         %
-        function self = DISABLED_testGetSystem(self)
+        function self = testGetSystem(self)
             isEqual = self.linSys.isEqual(self.reachObj.get_system());
             mlunitext.assert_equals(true, isEqual);
             projReachObj = self.reachObj.projection(...
@@ -262,7 +262,7 @@ classdef ContinuousReachTestCase < mlunitext.test_case
             end
         end
         %
-        function self = DISABLED_testNegativeCut(self)
+        function self = testNegativeCut(self)
             projReachObj =...
                 self.reachObj.projection(eye(self.reachObj.dimension(), 2));
             newTimeVec = [sum(self.tVec)/2, self.tVec(2)];
@@ -270,7 +270,7 @@ classdef ContinuousReachTestCase < mlunitext.test_case
                 'wrongInput');
         end
         %
-        function self = DISABLED_testGetCopy(self)
+        function self = testGetCopy(self)
             copiedReachObj = self.reachObj.getCopy();
             isEqual = copiedReachObj.isEqual(self.reachObj);
             mlunitext.assert_equals(true, isEqual);
