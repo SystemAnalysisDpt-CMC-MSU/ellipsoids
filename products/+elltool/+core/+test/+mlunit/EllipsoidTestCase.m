@@ -15,7 +15,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
             shMat=eye(2);
             ell=ellipsoid(shMat);
             ellVec=ell.repMat(2,4);
-            ellVec(1).shape(2);
+            ellVec(1).getShape(2);
             mlunitext.assert(isequal(ellVec(2).getShapeMat,shMat));
         end
         %
