@@ -1356,19 +1356,18 @@ classdef AReach < elltool.reach.IReach
                 'gras.ellapx.smartdb.rels.EllTube', dataCVec);
             if self.isbackward()
                 newEllTubeRel = self.transformEllTube(newEllTubeRel);
-            end
-            %
-            evolveTimeVec = newEllTubeRel.getData().timeVec{1};
-            evolveTimeVec = [evolveTimeVec(2) evolveTimeVec(end)];
-            evolveTimeVec = [min(evolveTimeVec) max(evolveTimeVec)];
-            newEllTubeRel = newEllTubeRel.cut(evolveTimeVec);                        
+            end                   
             %
             indVec = [indIntVec; indExtVec];
             [~, indRelVec] = sort(indVec);
             newEllTubeRel = newEllTubeRel.getTuples(indRelVec);
             %
+            timeVec = newEllTubeRel.timeVec{1};
+            indVec = true(size(timeVec));
+            indVec(1) = false;
+            %
             newReachObj.ellTubeRel = ...
-                self.ellTubeRel.cat(newEllTubeRel);
+                self.ellTubeRel.cat(newEllTubeRel, indVec);
         end
     end
 end

@@ -168,7 +168,7 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
             %       plObj: smartdb.disp.RelationDataPlotter[1,1] - plotter
             %           object used for displaying ellipsoidal tubes
             %
-            % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-12-19 $
+            % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $        $Date: 2011-12-19 $
             % $Copyright: Moscow State University,
             %            Faculty of Computational Mathematics and Computer Science,
             %            System Analysis Department 2011 $
@@ -264,13 +264,39 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
             nDims = size(parameters(qEllArray(1)), 1);
             mArray = zeros([nDims, nDims, nPoints]);
             ellTubeRel = EllTube.fromEllMArray(...
-                qEllArray, mArray, varargin{:});                       
+                qEllArray, mArray, varargin{:});
         end
-        
+        function cutResObj = getCutObj(whatToCutObj, isCutTimeVec)
+            dim = ndims(whatToCutObj);
+            if dim == 1
+                cutResObj = whatToCutObj(isCutTimeVec);
+            elseif dim == 2
+                cutResObj = whatToCutObj(:, isCutTimeVec);
+            elseif dim == 3
+                cutResObj = whatToCutObj(:, :, isCutTimeVec);
+            end
+        end
+        function isNeededIndVec = getLogicalInd(indVec, timeVec)
+            nPoints = numel(timeVec);
+            if isa(indVec, 'double')
+                if min(indVec) < 1 || max(indVec) > nPoints
+                    throwerror('wrongInput', 'Indexes are out of range.');
+                end
+                isNeededIndVec = false(size(timeVec));
+                isNeededIndVec(indVec) = true;
+            elseif islogical(indVec)
+                if numel(indVec) ~= nPoints
+                    throwerror('wrongInput', 'Indexes are out of range.');
+                end
+                isNeededIndVec = indVec;
+            else
+                throwerror('wrongInput',...
+                    'indVec should be double or logical');
+            end
+        end
     end
     methods
-        function thinnedEllTubeRel =...
-                thinOutTuples(self, indVec)
+        function thinnedEllTubeRel = thinOutTuples(self, indVec)
             import gras.ellapx.smartdb.F;
             import modgen.common.throwerror;
             FIELD_NAME_LIST_TO = {F.LS_GOOD_DIR_VEC;F.LS_GOOD_DIR_NORM;...
@@ -281,21 +307,7 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
             SData = self.getData();
             SThinFunResult = SData;
             timeVec = SData.timeVec{1};
-            nPoints = numel(timeVec);
-            if isa(indVec, 'double')
-                if min(indVec) < 1 || max(indVec) > nPoints
-                    throwerror('Indexes are out of range.');
-                end
-                isNeededIndVec = false(size(timeVec));
-                isNeededIndVec(indVec) = true;
-            elseif islogical(indVec)
-                if numel(indVec) ~= nPoints
-                    throwerror('Indexes are out of range.');
-                end
-                isNeededIndVec = indVec;
-            else
-                throwerror('indVec should be double or logical');
-            end
+            isNeededIndVec = self.getLogicalInd(indVec, timeVec);
             %
             fieldsNotToCatVec =...
                 F.getNameList(self.FIELDS_NOT_TO_CAT_OR_CUT);
@@ -319,40 +331,36 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
                     'UniformOutput', false);
             end
             %
-            function cutResObj = getCutObj(whatToCutObj, isCutTimeVec)
-                dim = ndims(whatToCutObj);
-                if dim == 1
-                    cutResObj = whatToCutObj(isCutTimeVec);
-                elseif dim == 2
-                    cutResObj = whatToCutObj(:, isCutTimeVec);
-                elseif dim == 3
-                    cutResObj = whatToCutObj(:, :, isCutTimeVec);
-                end
-            end
-            %
             function cutStructField(fieldName)
                 SThinFunResult.(fieldName) = cellfun(@(StructFieldVal)...
-                    getCutObj(StructFieldVal, isNeededIndVec),...
+                    self.getCutObj(StructFieldVal, isNeededIndVec),...
                     SData.(fieldName), 'UniformOutput', false);
             end
         end
-        function catEllTubeRel = cat(self, newEllTubeRel)
+        function catEllTubeRel = cat(self, newEllTubeRel, indVec)
             import gras.ellapx.smartdb.F;
             SDataFirst = self.getData();
             SDataSecond = newEllTubeRel.getData();
             SCatFunResult = SDataFirst;
+            timeVec = SDataSecond.timeVec{1};
+            if nargin == 2
+                indVec = true(size(timeVec));
+            end
+            isNeededIndVec = self.getLogicalInd(indVec, timeVec);
             fieldsNotToCatVec =...
                 F.getNameList(self.FIELDS_NOT_TO_CAT_OR_CUT);
             fieldsToCatVec =...
                 setdiff(fieldnames(SDataFirst), fieldsNotToCatVec);
-            cellfun(@(field) catStructField(field), fieldsToCatVec);
+            cellfun(@(field) catStructField(field, isNeededIndVec),...
+                fieldsToCatVec);
             catEllTubeRel = self.createInstance(SCatFunResult);
             %
-            function catStructField(fieldName)
+            function catStructField(fieldName, isNeededIndVec)
                 SCatFunResult.(fieldName) =...
                     cellfun(@(firstStructFieldVal, secondStructFieldVal)...
                     cat(ndims(firstStructFieldVal), firstStructFieldVal,...
-                    secondStructFieldVal), SDataFirst.(fieldName),...
+                    self.getCutObj(secondStructFieldVal,...
+                    isNeededIndVec)), SDataFirst.(fieldName),...
                     SDataSecond.(fieldName), 'UniformOutput', false);
             end
         end
