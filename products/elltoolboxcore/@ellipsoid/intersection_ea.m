@@ -274,7 +274,7 @@ outEll = myEll;
 hyp = polytope2hyperplane(polyt);
 nDimsHyp  = size(hyp, 2);
 
-if isContainedInIntersection(myEll, polyt)
+if doesIntersectionContain(myEll, polyt)
     outEll = getOutterEllipsoid(polyt);
     return;
 end
