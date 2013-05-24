@@ -439,8 +439,7 @@ classdef ALinSys < elltool.linsys.ILinSys
             %%
             isCBU = true;
             if nargin > 2
-                if isempty(uBoundsEll)||...
-                        isa(uBoundsEll, 'ellipsoid')&&(uBoundsEll.isEmpty())
+                if isempty(uBoundsEll)
                     % leave as is
                 elseif isa(uBoundsEll, 'ellipsoid')
                     uBoundsEll = uBoundsEll(1, 1);
@@ -575,8 +574,7 @@ classdef ALinSys < elltool.linsys.ILinSys
             %%
             isCBW = true;
             if nargin > 6
-                if isempty(noiseBoundsEll)||...
-                        isa(noiseBoundsEll, 'ellipsoid')&&(noiseBoundsEll.isEmpty())
+                if isempty(noiseBoundsEll)
                     % leave as is
                 elseif isa(noiseBoundsEll, 'ellipsoid')
                     noiseBoundsEll = noiseBoundsEll(1, 1);

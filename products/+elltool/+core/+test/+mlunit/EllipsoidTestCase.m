@@ -663,24 +663,24 @@ classdef EllipsoidTestCase < mlunitext.test_case
         function self = testIsEmpty(self)
             %Chek realy empty ellipsoid
             testEllipsoid=ellipsoid;
-            isTestRes = testEllipsoid.isEmpty();
+            isTestRes = isempty(testEllipsoid);
             mlunitext.assert_equals(true, isTestRes);
             
             %Chek not empty ellipsoid
             testEllipsoid=ellipsoid(eye(10,1),eye(10,10));
-            isTestRes =testEllipsoid.isEmpty();
+            isTestRes = isempty(testEllipsoid);
             mlunitext.assert_equals(false, isTestRes);
             
             %High-dimensional ellipsoids
             testEllVec = [ellipsoid(diag(1:22)), ellipsoid((0:0.1:1.4).',diag(1:15)), ...
                 ellipsoid(rand(21,1),diag(0:20)), ellipsoid, ellipsoid, ellipsoid(zeros(40,40))];
-            isTestEmpVec = testEllVec.isEmpty();
+            isTestEmpVec = isempty(testEllVec);
             isTestRes = all( isTestEmpVec == [false false false true true false] );
             mlunitext.assert_equals(true, isTestRes);
             
             testEllMat= [ellipsoid((0:0.1:2).',diag(0:0.01:0.2)), ellipsoid(eye(40,40)), ellipsoid;
                 ellipsoid, ellipsoid(repmat([diag(0:0.1:5) diag(0:0.1:5)],2,1)), ellipsoid(zeros(30,30))];
-            isTestEmpMat = testEllMat.isEmpty();
+            isTestEmpMat = isempty(testEllMat);
             isTestMat = ( isTestEmpMat == [false false true;true false false] );
             isTestRes = all( isTestMat(:));
             mlunitext.assert_equals(true, isTestRes);
@@ -1276,7 +1276,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
         function self = testFromRepMat(self)
             sizeArr = [2, 3, 3, 5];
             ellArr1 = ellipsoid.fromRepMat(sizeArr);
-            isOk1Arr = ellArr1.isEmpty();
+            isOk1Arr = ellArr1.isempty();
             mlunitext.assert(all(isOk1Arr(:)));
             %
             shMat = eye(2);
@@ -1492,8 +1492,6 @@ switch flag
         varargout{4} = ellipsoid([0; 0], [0 0; 0 0]);
         varargout{5} = ellipsoid([0; 0; 0], [0 0 0 ;0 0 0; 0 0 0]);
         varargout{6} = ellipsoid;
-        varargout{7} = ellipsoid([2; 1], [3 1; 1 1]);
-        varargout{8} = ellipsoid([1; 1], [1 0; 0 1]);
     case 2
         varargout{1} = ellipsoid([0; 0], [1 0; 0 1]);
         varargout{2} = ellipsoid([0; 0], [2 0; 0 2]);

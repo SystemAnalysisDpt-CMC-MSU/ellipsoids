@@ -39,13 +39,10 @@ function outEllArr = uminus(ellArr)
 %
 
 ellipsoid.checkIsMe(ellArr);
+
 sizeCVec = num2cell(size(ellArr));
-if isempty(ellArr)
-    outEllArr = ellipsoid.empty(sizeCVec{:});
-else    
-    outEllArr(sizeCVec{:}) = ellipsoid;
-    arrayfun(@(x) fSingleUminus(x), 1:numel(ellArr));   
-end
+outEllArr(sizeCVec{:}) = ellipsoid;
+arrayfun(@(x) fSingleUminus(x), 1:numel(ellArr));
     function fSingleUminus(index)
         outEllArr(index).centerVec = -ellArr(index).centerVec;
         outEllArr(index).shapeMat = ellArr(index).shapeMat;

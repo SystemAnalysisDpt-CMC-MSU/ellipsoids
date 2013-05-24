@@ -1,8 +1,6 @@
-function myEllArr = inv(myEllArr)
+function invEllArr = inv(myEllArr)
 %
-% INV - inverts shape matrices of ellipsoids in the given array,
-%       modified given array is on output (not its copy).
-%       
+% INV - inverts shape matrices of ellipsoids in the given array.
 %
 %   invEllArr = INV(myEllArr)  Inverts shape matrices of ellipsoids
 %       in the array myEllMat. In case shape matrix is sigular, it is
@@ -44,15 +42,22 @@ function myEllArr = inv(myEllArr)
 %
 
 ellipsoid.checkIsMe(myEllArr);
-arrayfun(@(x) fSingleInv(x),myEllArr);
-    function fSingleInv(ellObj)
-        if isdegenerate(ellObj)
-            regShMat = ellipsoid.regularize(ellObj.shapeMat,...
-                getAbsTol(ellObj));
+
+sizeCVec = num2cell(size(myEllArr));
+invEllArr(sizeCVec{:}) = ellipsoid;
+arrayfun(@(x) fSingleInv(x),1:numel(myEllArr));
+
+    function fSingleInv(index)
+        
+        singEll = myEllArr(index);
+        if isdegenerate(singEll)
+            regShMat = ellipsoid.regularize(singEll.shapeMat,...
+                getAbsTol(singEll));
         else
-            regShMat = ellObj.shapeMat;
+            regShMat = singEll.shapeMat;
         end
         regShMat = ell_inv(regShMat);
-        ellObj.shapeMat = 0.5*(regShMat + regShMat');
+        invEllArr(index) = ellipsoid(singEll.centerVec ,...
+            0.5*(regShMat + regShMat'));
     end
 end
