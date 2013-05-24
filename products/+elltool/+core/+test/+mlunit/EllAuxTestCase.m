@@ -43,11 +43,11 @@ classdef EllAuxTestCase < mlunitext.test_case
             %masterCheckIsPos(ellRegShapeMat);
             %
             function masterCheckIsPos(inpMat)
-                EPS = 1e-14;
+                epsVal=absTol*1e-5;
                 checkIsPos(inpMat,false,0);
                 checkIsPos(inpMat,true,0,true);
-                checkIsPos(inpMat,false,EPS);
-                checkIsPos(inpMat,true,-EPS);
+                checkIsPos(inpMat,false,epsVal);
+                checkIsPos(inpMat,true,-epsVal);
             end
             %
             function checkIsPos(inpMat,isExpOk,delta,varargin)
