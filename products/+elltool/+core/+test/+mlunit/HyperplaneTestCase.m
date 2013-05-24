@@ -32,13 +32,13 @@ classdef HyperplaneTestCase < mlunitext.test_case
             %simple construction test
             testingHyperplane = hyperplane(testNormalVec, testConst);
             res = self.isNormalAndConstantRight(testNormalVec, testConst,testingHyperplane);
-            mlunitext.assert_equals(1, res);
+            mlunitext.assert_equals(true, res);
             %
             %omitting constant test
             testConst = 0;
             testingHyperplane = hyperplane(testNormalVec);
             res = self.isNormalAndConstantRight(testNormalVec, testConst,testingHyperplane);
-            mlunitext.assert_equals(1, res);
+            mlunitext.assert_equals(true, res);
             %
             %
             testNormalsMat = SInpData.testNormalsMat;
@@ -207,7 +207,7 @@ classdef HyperplaneTestCase < mlunitext.test_case
             testHyraplane = hyperplane(testNormalVec, testConstant);
             minusTestHyraplane = uminus(testHyraplane);
             res = self.isNormalAndConstantRight(-testNormalVec, -testConstant,minusTestHyraplane);
-            mlunitext.assert_equals(1, res);
+            mlunitext.assert_equals(true, res);
         end
         %
         function self = testDisplay(self)
