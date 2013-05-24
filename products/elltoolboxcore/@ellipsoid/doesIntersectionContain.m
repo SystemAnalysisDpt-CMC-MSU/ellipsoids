@@ -86,6 +86,16 @@ function [res, status] = doesIntersectionContain(fstEllArr, secObjArr,...
 %   status: double[0, 0]/double[1, 1] - status variable. status is empty
 %       if mode == 'u' or mSecRows == nSecCols == 1.
 %
+% Example:
+%   firstEllObj = [0 ; 0] + ellipsoid(eye(2, 2));
+%   secEllObj = [0 ; 0] + ellipsoid(2*eye(2, 2));
+%   thirdEllObj = [1; 0] + ellipsoid(0.5 * eye(2, 2));
+%   secEllObj.doesIntersectionContain([firstEllObj secEllObj], 'i')
+% 
+%   ans =
+% 
+%        1
+%
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
 %

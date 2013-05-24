@@ -1,5 +1,5 @@
 bufEllVec = [firstEllObj thirdEllObj];
-bufEllVec.isContainedInIntersection(internalEllObj, 'i') 
+bufEllVec.doesIntersectionContain(internalEllObj, 'i') 
 
 % ans =
 % 
