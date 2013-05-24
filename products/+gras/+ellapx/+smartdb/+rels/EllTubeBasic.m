@@ -64,7 +64,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 MArrayList,timeVec,ltGoodDirArray,sTime,approxType,...
                 approxSchemaName,approxSchemaDescr,calcPrecision,scaleFactorVec)
             %
-            % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011 $ 
+            % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $        $Date: 2011 $ 
             % $Copyright: Moscow State University,
             %            Faculty of Computational Mathematics and Computer Science,
             %            System Analysis Department 2011 $
@@ -301,7 +301,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 end
                 checkDataConsistency@...
                     gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic(self);
-	            %% Check that touch lines lie within the tubes
+                    %% Check that touch lines lie within the tubes
                 probDepFieldList=self.getProblemDependencyFieldList();
                 [~,~,~,indForwardVec,indBackwardVec]=...
                     self.getUniqueData('fieldNameList',probDepFieldList);
@@ -314,10 +314,10 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                         SData,SIsNull,SIsValueNull));
                 end
             end
-            function [isOk,errTagStr,reasonStr]=checkTuple(QArray,aMat,scaleFactor,MArray,...
-                    dim,sTime,approxSchemaName,approxSchemaDescr,...
-                    approxType,timeVec,calcPrecision,indSTime,...
-                    ltGoodDirMat,lsGoodDirVec,ltGoodDirNormVec,...
+            function [isOk,errTagStr,reasonStr]=checkTuple(QArray,aMat,...
+                    scaleFactor,MArray,dim,sTime,approxSchemaName,...
+                    approxSchemaDescr,approxType,timeVec,calcPrecision,...
+                    indSTime,ltGoodDirMat,lsGoodDirVec,ltGoodDirNormVec,...
                     lsGoodDirNorm,xTouchCurveMat,xTouchOpCurveMat,...
                     xsTouchVec,xsTouchOpVec)
                 import gras.gen.SquareMatVector; 
@@ -331,7 +331,18 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     reasonStr='QArray is not positively defined';
                     return;
                 end
-                %                
+                %
+                [~,indSortVec]=unique(timeVec); %unique sorts input values
+                if length(indSortVec)~=length(timeVec);
+                    errTagStr='timeVecNotUnq';
+                    reasonStr='timeVec contains non-unique values';
+                    return;
+                elseif any(diff(indSortVec)<0)
+                    errTagStr='timeVecNotMon';
+                    reasonStr='timeVec is not monotone';
+                    return;
+                end
+                %
                 isNotPosDefVec=SquareMatVector.evalMFunc(...
                     @(x)~gras.la.ismatposdef(x,calcPrecision,true),MArray);
                 if any(isNotPosDefVec)

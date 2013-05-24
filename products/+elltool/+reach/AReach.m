@@ -1363,11 +1363,11 @@ classdef AReach < elltool.reach.IReach
             newEllTubeRel = newEllTubeRel.getTuples(indRelVec);
             %
             timeVec = newEllTubeRel.timeVec{1};
-            indVec = true(size(timeVec));
-            indVec(1) = false;
+            isIndVec = true(size(timeVec));
+            isIndVec(1) = false;
             %
             newReachObj.ellTubeRel = ...
-                self.ellTubeRel.cat(newEllTubeRel, indVec);
+                self.ellTubeRel.cat(newEllTubeRel, isIndVec);
         end
     end
 end
