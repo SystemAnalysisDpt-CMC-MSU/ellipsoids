@@ -307,6 +307,8 @@ classdef ellipsoid < handle
     methods(Access = private)
         [propMat, propVal] = getProperty(hplaneMat,propName, fPropFun)
         [bpMat, fVec] = getGridByFactor(ellObj,factorVec)
+         checkDoesContainArgs(ell,poly)
+         doesContain = doesContainPoly(ellArr,polytope,varagin)
     end
     methods (Static)
         checkIsMe(someObj,varargin)

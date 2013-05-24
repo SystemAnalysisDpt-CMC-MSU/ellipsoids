@@ -1,18 +1,19 @@
-function [res, status] = isContainedInIntersection(fstEllArr, secObjArr, mode)
+function [res, status] = doesIntersectionContain(fstEllArr, secObjArr,...
+                            varargin)
 %
-% ISCONTAINEDININTERSECTION - checks if the intersection of
+% DOESINTERSECTIONCONTAIN - checks if the intersection of
 %                             ellipsoids contains the union
 %                             or intersection of given 
 %                             ellipsoids or polytopes.
 %
-%   res = ISCONTAINEDININTERSECTION(fstEllArr, secEllArr, mode) 
+%   res = DOESINTERSECTIONCONTAIN(fstEllArr, secEllArr, mode) 
 %       Checks if the union
 %       (mode = 'u') or intersection (mode = 'i') of ellipsoids in
 %       secEllArr lies inside the intersection of ellipsoids in
 %       fstEllArr. Ellipsoids in fstEllArr and secEllArr must be
 %       of the same dimension. mode = 'u' (default) - union of
 %       ellipsoids in secEllArr. mode = 'i' - intersection.
-%   res = ISCONTAINEDININTERSECTION(fstEllArr, secPolyArr, mode) 
+%   res = DOESINTERSECTIONCONTAIN(fstEllArr, secPolyArr, mode) 
 %        Checks if the union
 %       (mode = 'u') or intersection (mode = 'i')  of polytopes in
 %       secPolyArr lies inside the intersection of ellipsoids in
@@ -47,9 +48,9 @@ function [res, status] = isContainedInIntersection(fstEllArr, secObjArr, mode)
 %   contains the given intersection, otherwise, it does not.
 %
 %   The intersection of polytopes is a polytope, which is computed
-%   by the standard routine of MPT. If the vertices of this polytope
-%   belong to the intersection of ellipsoids, then the polytope itself
-%   belongs to this intersection.
+%   by the standard routine of MPT. How checked if intersection of  
+%   ellipsoids contains polytope is explained in doesContainPoly.
+%
 %   Checking if the union of polytopes belongs to the intersection
 %   of ellipsoids is the same as checking if its convex hull belongs
 %   to this intersection.
@@ -65,8 +66,16 @@ function [res, status] = isContainedInIntersection(fstEllArr, secObjArr, mode)
 %           note: if mode == 'i', then fstEllArr, secEllVec should be
 %               array.
 %
-%   optional:
+%   properties:
 %       mode: char[1, 1] - 'u' or 'i', go to description.
+%       computeMode: char[1,] - 'highDimFast' or 'lowDimFast'. Determines, 
+%           which way function is computed, when secObjArr is polytope. If 
+%           secObjArr is ellipsoid computeMode is ignored. 'highDimFast' 
+%           works  faster for  high dimensions, 'lowDimFast' for low. If
+%           this property is omitted if dimension of ellipsoids is greater
+%           then 10, then 'hightDimFast' is choosen, otherwise -
+%           'lowDimFast'
+%                       
 %
 % Output:
 %   res: double[1, 1] - result:
@@ -92,111 +101,73 @@ import modgen.common.checkmultvar;
 
 persistent logger;
 
-ellipsoid.checkIsMe(fstEllArr,'first');
-modgen.common.checkvar(secObjArr,@(x) isa(x, 'ellipsoid') ||...
-    isa(x, 'hyperplane') || isa(x, 'polytope'),...
-    'errorTag','wrongInput', 'errorMessage',...
-    'second input argument must be ellipsoid,hyperplane or polytope.');
+checkDoesContainArgs(fstEllArr,secObjArr);
 
-modgen.common.checkvar( fstEllArr , 'numel(x) > 0', 'errorTag', ...
-    'wrongInput:emptyArray', 'errorMessage', ...
-    'Each array must be not empty.');
 
-modgen.common.checkvar( fstEllArr,'all(~x(:).isEmpty())','errorTag', ...
-    'wrongInput:emptyEllipsoid', 'errorMessage', ...
-    'Array should not have empty ellipsoid.');
+if ~isa(secObjArr,'polytope')
+    nElem = numel(secObjArr);
+    secObjVec  = reshape(secObjArr, 1, nElem);
+end
 
-modgen.common.checkvar( secObjArr , 'numel(x) > 0', 'errorTag', ...
-    'wrongInput:emptyArray', 'errorMessage', ...
-    'Each array must be not empty.');
+[~,modeNameAndVal] = modgen.common.parseparams(varargin,'mode');
+if isempty(modeNameAndVal) || ~(ischar(modeNameAndVal{2})) ||...
+        ~(strcmp(modeNameAndVal{2},'u') || strcmp(modeNameAndVal{2},'i'))
+    mode = 'u';
+else
+    mode = modeNameAndVal{2};
+end
 
 if isa(secObjArr, 'polytope')
-    isEmptyArr = true(size(secObjArr));
-    [~, nCols] = size(secObjArr);
-    for iCols = 1:nCols
-        isEmptyArr(iCols) = isempty(secObjArr(iCols));
-    end
-    isAnyObjEmpty = any(isEmptyArr);
-else
-    isAnyObjEmpty = any(secObjArr(:).isEmpty());
-end
-if isAnyObjEmpty
-    throwerror('wrongInput:emptyObject',...
-    'Array should not have empty ellipsoid, hyperplane or polytope.');
-end
-
-if (nargin < 3) || ~(ischar(mode))
-    mode = 'u';
-end
-
-status = [];
-
-nElem = numel(secObjArr);
-secObjVec  = reshape(secObjArr, 1, nElem);
-
-if isa(secObjVec, 'polytope')
+    
+    isAnyEllDeg = any(isdegenerate(fstEllArr(:)));
     if mode == 'i'
-        polyAnd = and(secObjVec);
-
-        if ~isbounded(polyAnd)
-            res = 0;
-            return;
-        end
-        
-        xVec = {extreme(polyAnd)};  
+        polyVec = and(secObjArr);
     else
-        [~, nCols] = size(secObjVec);
-        xVec = cell(1,nCols);
-        isBoundedVec = true(1,nCols);
-        for iCols = 1:nCols
-            isBoundedVec(iCols) = isbounded(secObjArr(iCols));
-        end;
-        
-        if ~all(isBoundedVec(:))
-            res = 0;
-            return;
-        end
-        
-        for iCols = 1:nCols
-            xVec{iCols} = extreme(secObjArr(iCols));
-        end;
+        polyVec = secObjArr; 
     end
-    if all(cellfun(@(x) isempty(x), xVec))
+    [~, nCols] = size(polyVec);
+    isBndVec = false(1,nCols);
+    isPolyDegVec = false(1,nCols);
+    for iCols = 1:nCols
+        isBndVec(iCols) = isbounded(polyVec(iCols));
+        isPolyDegVec(iCols) = ~isfulldim(polyVec(iCols));
+    end;
+    isEmpty = isempty(double(polyVec(1)));
+    
+    if isEmpty
         res = -1;
+    elseif ~(all(isBndVec(:))) || (isAnyEllDeg && ~all(isPolyDegVec(:)))
+        res = 0;
     else
-        res = min(cellfun(@(x) min(isinternal(fstEllArr, x', 'i')),xVec));
+        isInsideVec = false(1,nCols);
+        for iCols = 1:nCols
+            isInsideVec(iCols) = doesContainPoly(fstEllArr,...
+                                    polyVec(iCols),varargin);  
+        end
+        res = all(isInsideVec);
     end
-   
+    
     if nargout < 2
         clear status;
     end
-   
     return;
 end
 
 
 if mode == 'u'
     res = 1;
-    isContain = arrayfun(@(x) all(all(contains(x, secObjVec))), fstEllArr);
+    isContain = arrayfun(@(x) all(all(doesContain(x, secObjVec))), fstEllArr);
     if ~all( isContain(:) )
         res=0;
         return;
     end
 elseif isscalar(secObjVec)
     res = 1;
-    isContain = arrayfun(@(x) all(all(contains(x, secObjVec))), fstEllArr);
+    isContain = arrayfun(@(x) all(all(doesContain(x, secObjVec))), fstEllArr);
     if ~all( isContain(:) )
         res = 0;
     end
-else
-    nFstEllDimsMat = dimension(fstEllArr);
-    nSecEllDimsMat = dimension(secObjVec);
-    checkmultvar('(x1(1)==x2(1))&&all(x1(:)==x1(1))&&all(x2(:)==x2(1))',...
-        2,nFstEllDimsMat,nSecEllDimsMat,...
-        'errorTag','wrongSizes',...
-        'errorMessage','input arguments must be of the same dimension.');
-    
-    
+else    
     if Properties.getIsVerbose()
         if isempty(logger)
             logger=Log4jConfigurator.getLogger();
@@ -305,3 +276,5 @@ else
 end
 
 end
+%
+%
