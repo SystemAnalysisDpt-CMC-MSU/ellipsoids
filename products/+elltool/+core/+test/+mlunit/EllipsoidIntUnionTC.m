@@ -710,7 +710,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             testHpArr = repmat(hyperplane([0, 0, 1].', 2),[2,2,2]);
             testEll = ellipsoid(eye(3));
             [resEllArr isnIntersecArr] = hpintersection(testEll, testHpArr);
-            self.flexAssert(true([2,2,2]), isempty(resEllArr));
+            self.flexAssert(true([2,2,2]), resEllArr.isEmpty());
             self.flexAssert(true([2,2,2]), isnIntersecArr);
             function fCopyEll(index,ellObj)
                 ellArr(index)=ellObj;

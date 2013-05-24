@@ -75,11 +75,11 @@ Properties.setIsVerbose(false);
 
 intApprEllVec(nCols) = ellipsoid();
 arrayfun(@(x) fSetIntApprVec(x),1:nCols);
-intApprEllVec = intApprEllVec(~isempty(intApprEllVec));
+intApprEllVec = intApprEllVec(~intApprEllVec.isEmpty());
 
 Properties.setIsVerbose(isVrb);
 
-if isempty(intApprEllVec)
+if intApprEllVec.isEmpty()
     if Properties.getIsVerbose()
         if isempty(logger)
             logger=Log4jConfigurator.getLogger();

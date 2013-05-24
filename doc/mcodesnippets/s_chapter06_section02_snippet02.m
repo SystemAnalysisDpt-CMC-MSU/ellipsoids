@@ -6,7 +6,7 @@ lsysd = elltool.linsys.LinSysContinuous(aMat, bMat, uBoundsEllObj,...
     gMat, vEllObj); 
 % reach set
 rsdObj = elltool.reach.ReachContinuous(lsysd, x0EllObj, dirsMat, timeVec); 
-psdObj = rsdObj.projection(BB);  % reach set projection onto (x1, x2)
+psdObj = rsdObj.getProjection(BB);  % reach set projection onto (x1, x2)
 % plot projection of reach set external approximation:
 subplot(2, 2, 3);
 psObj.plot_ea();  % plot the whole reach tube
