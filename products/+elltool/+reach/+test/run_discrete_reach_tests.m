@@ -1,7 +1,7 @@
 function results = run_discrete_reach_tests(varargin)
 import elltool.reach.ReachFactory;
 %
-runner = mlunit.text_test_runner(1, 1);
+runner = mlunitext.text_test_runner(1, 1);
 loader = mlunitext.test_loader;
 %
 crm = gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
@@ -14,7 +14,7 @@ confList = {...
 nConfs = size(confList, 1);
 suiteList = {};
 %
-for iConf = 1
+for iConf = 1:nConfs
     confName = confList{iConf, 1};
     confTests = confList{iConf, 2};
     suiteList{end + 1} = loader.load_tests_from_test_case(...

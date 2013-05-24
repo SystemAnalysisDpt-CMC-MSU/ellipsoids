@@ -61,27 +61,32 @@ classdef EmailLogger<handle
                     self.hostName = curHostName;
                 end
                 self.emailAddress=[self.userName,'@',self.hostName];
-                logger.info(['no dry run mode, configured for smtpServer=',self.smtpServer]);
+                logger.info(...
+                    ['no dry run mode, configured for smtpServer=',...
+                    self.smtpServer]);
             else
                 logger.info('configured for dry run');
             end
         end
         function sendMessage(self,subjectMessage,varargin)
             import modgen.common.throwerror;
+            import modgen.common.parseparext;
             %% Create log4j logger
             logger=modgen.logging.log4j.Log4jConfigurator.getLogger();
             %
-             if ~self.isDryRun
-                if nargin<3
-                    bodyMessage=[];
-                else
-                    bodyMessage=varargin{1};
-                end
+            if ~self.isDryRun
+                [reg,~,attachNameList]=parseparext(varargin,...
+                    {'emailAttachmentNameList';{};'iscellofstring(x)'},...
+                    [0 1],'regDefList',{[]});
+                bodyMessage=reg{1};
                 %
                 emailSubjectPrefix=['[',self.loggerName,']:'];
-                emailSubjectSuffix=[self.subjectSuffix ,', running on ',self.hostName,'(',self.userName,')'];
-                emailSubject=[emailSubjectPrefix,subjectMessage,emailSubjectSuffix];
-                attachNameList=self.emailAttachmentNameList;
+                emailSubjectSuffix=[self.subjectSuffix ,...
+                    ', running on ',self.hostName,'(',self.userName,')'];
+                emailSubject=[emailSubjectPrefix,subjectMessage,...
+                    emailSubjectSuffix];
+                attachNameList=[attachNameList,...
+                    self.emailAttachmentNameList];
                 %
                 nAttachemments=length(attachNameList);
                 for iFile=1:nAttachemments
@@ -105,13 +110,16 @@ classdef EmailLogger<handle
                         'subject: %s\n',...
                         'smtpServer: %s\n',...
                         'emailAttachmentNameList: %s'],...
-                        cell2sepstr([],self.emailDistributionList,',','isMatlabSyntax',true),...
+                        cell2sepstr([],self.emailDistributionList,',',...
+                        'isMatlabSyntax',true),...
                         emailSubject,...
                         self.smtpServer,...
-                        cell2sepstr([],self.emailAttachmentNameList,',','isMatlabSyntax',true));
+                        cell2sepstr([],self.emailAttachmentNameList,',',...
+                        'isMatlabSyntax',true));
                     meObj=addCause(meObj,causeObj);
                     logger.fatal(sprintf('%s\nMessage body:\n%s',...
-                        modgen.exception.me.obj2plainstr(meObj),bodyMessage));
+                        modgen.exception.me.obj2plainstr(meObj),...
+                        bodyMessage));
                     if self.isThrowExceptions
                         throw(meObj);
                     end

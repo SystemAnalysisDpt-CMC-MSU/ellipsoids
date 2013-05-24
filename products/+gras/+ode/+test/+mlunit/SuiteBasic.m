@@ -160,7 +160,7 @@ classdef SuiteBasic < mlunitext.test_case
                             tsVec,initVec,odeset(odePropList{:}),...
                             odeRegPropList{:});
                        
-                        mlunit.assert_equals(true,all(yMat(:,1)>=0));
+                        mlunitext.assert_equals(true,all(yMat(:,1)>=0));
           
                         tPosVec=tVec;
                         ttPosVec=ttVec;
@@ -177,7 +177,7 @@ classdef SuiteBasic < mlunitext.test_case
                             @(t,y)fReg(y),...
                             tsVec,initVec,odeset(odePropList{:}),...
                             odeRegPropList{:});
-                        mlunit.assert_equals(true,all(yMat(:,1)<=0));
+                        mlunitext.assert_equals(true,all(yMat(:,1)<=0));
                         tNegVec=tVec;
                         ttNegVec=ttVec;
                         isCheckReg=any(yNotRegMat(:,1)>0);
@@ -185,10 +185,10 @@ classdef SuiteBasic < mlunitext.test_case
                         tUniqVec=unique([tPosVec;ttPosVec;tNegVec;ttNegVec]);
                         %
                         function cmp()
-                            mlunit.assert_equals(true,...
+                            mlunitext.assert_equals(true,...
                                 all(all(dyRegMat(:,2:end)==0)));
                             isOk=any(any(abs(dyRegMat(:,1))>0));
-                            mlunit.assert_equals(isCheckReg,isOk);
+                            mlunitext.assert_equals(isCheckReg,isOk);
                             if length(tsVec)>2
                                 actualTol=max(abs(yMat(:)-yyMat(:)));
                                 isOk=actualTol<=maxTol;
@@ -196,8 +196,8 @@ classdef SuiteBasic < mlunitext.test_case
 %                                     keyboard;
 %                                 end
                     
-                                mlunit.assert_equals(true,isOk);
-                                mlunit.assert_equals(true,isequal(tVec,ttVec));
+                                mlunitext.assert_equals(true,isOk);
+                                mlunitext.assert_equals(true,isequal(tVec,ttVec));
                             end
                         end
                     end
@@ -252,8 +252,8 @@ classdef SuiteBasic < mlunitext.test_case
                     odePropList{:});
                 [~,yyMat]=feval(self.odeSolverNonReg, @(t,y)cos(y),tVec,initVec,...
                     odeset(odePropList{:}));
-                mlunit.assert_equals(true,isequal(yMat,yyMat));
-                mlunit.assert_equals(true,all(mMat(:)==0));
+                mlunitext.assert_equals(true,isequal(yMat,yyMat));
+                mlunitext.assert_equals(true,all(mMat(:)==0));
                 %% check that zero derivative doesn't change initial value
                 [ttVec,yMat,mMat]=...
                     feval(self.odeSolver, @fDeriv,@fReg,tVec,initVec,...
@@ -261,10 +261,10 @@ classdef SuiteBasic < mlunitext.test_case
                 [~,yyMat]=feval(self.odeSolverNonReg, @(t,y)cos(y),tVec,initVec,...
                     odeset(odePropList{:}));
                 isOk=isequal(yMat,repmat(initVec,nTimePoints,1));
-                mlunit.assert_equals(true,isOk);
+                mlunitext.assert_equals(true,isOk);
                 isOk=all(mMat(:)==0);
-                mlunit.assert_equals(true,isOk);
-                mlunit.assert_equals(true,all(tVec==ttVec));
+                mlunitext.assert_equals(true,isOk);
+                mlunitext.assert_equals(true,all(tVec==ttVec));
                 %
                 checkReg(tSpanVec);
                 checkReg(tVec);
@@ -288,14 +288,14 @@ classdef SuiteBasic < mlunitext.test_case
                     [tNotRegVec,ynRegMat]=...
                         ode45(fDeriv,...
                         tVec,initVec,odeset(odePropList{:}));
-                    mlunit.assert_equals(true,isequal(tRegVec,tNotRegVec));
+                    mlunitext.assert_equals(true,isequal(tRegVec,tNotRegVec));
                     muVec=[0;cumsum(diff(tRegVec).*mMat(2:end,1))];
                     yNotRegVec=ynRegMat(:,1);
                     yRegRestoredVec=muVec+yNotRegVec;
                     yRegVec=yRegMat(:,1);
                     isOk=max(abs(yRegRestoredVec-yRegVec))<=1.2*absTol;
                     %plot(tNotRegVec,yRegRestoredVec,'g');hold on;plot(tRegVec,yRegVec,'r')
-                    mlunit.assert_equals(true,isOk);
+                    mlunitext.assert_equals(true,isOk);
                     %
                     %plot(tNotRegVec,yRegRestoredVec,'g');hold on;plot(tRegVec,yRegVec,'r')
                 end
@@ -334,7 +334,7 @@ classdef SuiteBasic < mlunitext.test_case
                     indShift=(iFunc-1)*nEqs;
                     for iEq=1:nEqs
                         indEq=indShift+iEq;
-                        mlunit.assert_equals(true,...
+                        mlunitext.assert_equals(true,...
                             isequal(size(resList{iEq}),...
                             [sizeVecList{iEq},nTimePoints]));
                         if iEq==indEqNoDyn&&iFunc==indFuncEqNoDyn
@@ -342,11 +342,11 @@ classdef SuiteBasic < mlunitext.test_case
                                 repmat(initValList{iEq},...
                                 [ones(1,ndims(resList{indEq})-1),...
                                 nTimePoints]));
-                            mlunit.assert_equals(true,isOk);
+                            mlunitext.assert_equals(true,isOk);
                         end
                     end
                 end
-                mlunit.assert_equals(true,isequal(resTimeVec,timeVec));
+                mlunitext.assert_equals(true,isequal(resTimeVec,timeVec));
             end
             %
             function varargout=fAdvRegFunc(~,varargin)
@@ -372,23 +372,57 @@ classdef SuiteBasic < mlunitext.test_case
         %
         function self=testMatrixODESolver(self)
     
-            odePropList={@ode45,'NormControl','on','RelTol',0.001,'AbsTol',0.0001};
-            sizeVec=[3 3];
-            nTimePoints=100;
-            timeVec=linspace(0,1,nTimePoints);
-            initVal=eye(sizeVec);
+            odePropList = {@ode45, 'NormControl', 'on', 'RelTol', ...
+                0.001, 'AbsTol', 0.0001};
+            %
+            nTimePoints = 1;
+            timeVec = 0;
+            sizeVec = [3 3];
+            initVal = eye(sizeVec);
             check();
-            sizeVec=3;
-            initVal=ones(3,1);
+            timeVec = 1;
+            check();
+            %
+            timeVec = 0;
+            sizeVec = 3;
+            initVal = ones(3, 1);
+            check();
+            timeVec = 1;
+            check();
+            %
+            nTimePoints = 2;
+            timeVec = [1 1];
+            sizeVec = [3 3];
+            initVal = eye(sizeVec);
+            check();
+            sizeVec = 3;
+            initVal = ones(3, 1);
+            check();
+            %
+            nTimePoints = 100;
+            timeVec = linspace(0, 1, nTimePoints);
+            sizeVec = [3 3];
+            initVal = eye(sizeVec);
+            check();
+            sizeVec = 3;
+            initVal = ones(3, 1);
             check();
             function check()
                 import gras.ode.test.mlunit.SuiteBasic;
-                solveObj=gras.ode.MatrixODESolver(sizeVec,odePropList{:});
-                [resTimeVec,resArray]=solveObj.solve(@SuiteBasic.fDeriv,...
-                    timeVec,initVal);
-                mlunit.assert_equals(true,...
-                    isequal(size(resArray),[sizeVec,nTimePoints]));
-                mlunit.assert_equals(true,isequal(resTimeVec,timeVec));
+                solveObj = gras.ode.MatrixODESolver(sizeVec, ...
+                    odePropList{:});
+                [resTimeVec, resArray] = solveObj.solve(...
+                    @SuiteBasic.fDeriv, timeVec, initVal);
+                if (nTimePoints > 1) && (timeVec(1) ~= timeVec(end))
+                    mlunitext.assert_equals(true, isequal(resTimeVec, ...
+                        timeVec));
+                    mlunitext.assert_equals(true, isequal(size(resArray), ...
+                        [sizeVec, nTimePoints]));
+                else
+                    mlunitext.assert_equals(true, isequal(resTimeVec, ...
+                        timeVec(1)));
+                    mlunitext.assert_equals(true, isequal(resArray, initVal));
+                end
             end
         end
     end

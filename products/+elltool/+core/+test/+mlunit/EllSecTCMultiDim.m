@@ -105,7 +105,7 @@ classdef EllSecTCMultiDim < mlunitext.test_case
                         otherwise
                     end
                 end
-                mlunit.assert_equals(myResult, testRes);
+                mlunitext.assert_equals(myResult, testRes);
             end
             function testError(flag)
                 [test1EllArray, test2EllArray, errorStr] = ...
@@ -378,7 +378,7 @@ switch nArg
     otherwise
 end
 [isEqual, reportStr] = eq(resEllVec, ansEllVec);
-mlunit.assert_equals(true, all(isEqual), reportStr);
+mlunitext.assert_equals(true, all(isEqual), reportStr);
 end
 function objectArray = createObjectArray(arraySize, func, firstArg, ...
     secondArg, nArg)

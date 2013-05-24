@@ -42,6 +42,6 @@ else
     isAnyObjEmpty = any(isempty(secObjArr(:)));
 end
 if isAnyObjEmpty
-    throwerror('wrongInput:emptyObject',...
+    throwerror('wrongInput:emptyEllipsoid',...
     'Array should not have empty ellipsoid or polytope.');
 end

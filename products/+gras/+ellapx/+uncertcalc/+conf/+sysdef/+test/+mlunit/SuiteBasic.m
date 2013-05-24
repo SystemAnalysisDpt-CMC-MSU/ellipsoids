@@ -16,9 +16,9 @@ classdef SuiteBasic < mlunitext.test_case
             [SConf,confVersion,metaData]=crm.getConf('test');
             crm.putConf('test2',SConf,confVersion,metaData);
             [SConf2,confVersion2,metaData2]=crm.getConf('test2');
-            mlunit.assert_equals(true,isequal(SConf,SConf2));
-            mlunit.assert_equals(true,isequal(confVersion,confVersion2));
-            mlunit.assert_equals(true,isequal(metaData,metaData2));
+            mlunitext.assert_equals(true,isequal(SConf,SConf2));
+            mlunitext.assert_equals(true,isequal(confVersion,confVersion2));
+            mlunitext.assert_equals(true,isequal(metaData,metaData2));
         end
     end
 end
