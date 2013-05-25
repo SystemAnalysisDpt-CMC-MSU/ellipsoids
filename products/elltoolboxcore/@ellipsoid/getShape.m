@@ -17,7 +17,7 @@ function outEllArr = getShape(ellArr, modMat)
 % Example:
 %   ellObj = ellipsoid([-2; -1], [4 -1; -1 1]);
 %   tempMat = [0 1; -1 0];
-%   outEllObj = shape(ellObj, tempMat)
+%   outEllObj = ellObj.getShape(tempMat)
 % 
 %   outEllObj =
 % 
