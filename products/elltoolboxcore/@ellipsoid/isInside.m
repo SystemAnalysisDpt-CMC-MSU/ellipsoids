@@ -73,17 +73,11 @@ end
 %
     function res = isMyEllInPoly(ellIndex,polyIndex)
         if isEll
-            res = contains(objArr(polyIndex),ellArr(ellIndex));
+            res = doesContain(objArr(polyIndex),ellArr(ellIndex));
         else
             [constrMat constrValVec] = double(objArr(polyIndex));
-            [shiftVec shapeMat] = double(ellArr(ellIndex));
-            suppFuncVec = zeros(size(constrValVec));
-            [nRows, ~] = size(constrValVec);
-            for iRows = 1:nRows
-                suppFuncVec(iRows) = constrMat(iRows,:)*shiftVec +...
-                    sqrt(constrMat(iRows,:)*shapeMat*constrMat(iRows,:)');
-            end
-            res = all(suppFuncVec <= constrValVec+absTol);
+            suppFuncVec =rho(ellArr(ellIndex),constrMat');
+            res = all(suppFuncVec' <= constrValVec+absTol);
         end
     end
 end

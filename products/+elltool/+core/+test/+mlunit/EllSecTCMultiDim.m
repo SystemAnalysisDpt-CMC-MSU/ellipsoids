@@ -79,29 +79,29 @@ classdef EllSecTCMultiDim < mlunitext.test_case
                 if isempty(myString)
                     switch flag
                         case 0
-                            testRes = isContainedInIntersection(test1EllArray, test1EllArray);
+                            testRes = doesIntersectionContain(test1EllArray, test1EllArray);
                         case 1
-                            testRes = isContainedInIntersection(test1EllArray, test2EllArray);
+                            testRes = doesIntersectionContain(test1EllArray, test2EllArray);
                         case 2
-                            testRes = isContainedInIntersection(test2EllArray, test1EllArray);
+                            testRes = doesIntersectionContain(test2EllArray, test1EllArray);
                         case 3
-                            testRes = isContainedInIntersection(test2EllArray, test2EllArray);
+                            testRes = doesIntersectionContain(test2EllArray, test2EllArray);
                         otherwise
                     end
                 else
                     switch flag
                         case 0
-                            testRes = isContainedInIntersection(test1EllArray, ...
-                                test1EllArray, myString);
+                            testRes = doesIntersectionContain(test1EllArray, ...
+                                test1EllArray, 'mode', myString);
                         case 1
-                            testRes = isContainedInIntersection(test1EllArray, ...
-                                test2EllArray, myString);
+                            testRes = doesIntersectionContain(test1EllArray, ...
+                                test2EllArray, 'mode', myString);
                         case 2
-                            testRes = isContainedInIntersection(test2EllArray, ...
-                                test1EllArray, myString);
+                            testRes = doesIntersectionContain(test2EllArray, ...
+                                test1EllArray, 'mode', myString);
                         case 3
-                            testRes = isContainedInIntersection(test2EllArray, ...
-                                test2EllArray, myString);
+                            testRes = doesIntersectionContain(test2EllArray, ...
+                                test2EllArray, 'mode', myString);
                         otherwise
                     end
                 end
@@ -111,16 +111,16 @@ classdef EllSecTCMultiDim < mlunitext.test_case
                 [test1EllArray, test2EllArray, errorStr] = ...
                     createTypicalArray(flag);
                 self.runAndCheckError...
-                    ('test1EllArray.isContainedInIntersection(test2EllArray)', ...
+                    ('test1EllArray.doesIntersectionContain(test2EllArray)', ...
                     errorStr);
                 if (flag == 10) || (flag == 13)
                     self.runAndCheckError...
-                        ('test2EllArray.isContainedInIntersection(test1EllArray)', ...
+                        ('test2EllArray.doesIntersectionContain(test1EllArray)', ...
                         errorStr);
                 else
                     self.runAndCheckError...
-                        ('test2EllArray.isContainedInIntersection(test1EllArray)', ...
-                        'wrongInput:emptyObject');
+                        ('test2EllArray.doesIntersectionContain(test1EllArray)', ...
+                        'wrongInput:emptyEllipsoid');
                 end
             end
         end

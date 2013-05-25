@@ -274,13 +274,13 @@ outEll = myEll;
 hyp = polytope2hyperplane(polyt);
 nDimsHyp  = size(hyp, 2);
 
-if isContainedInIntersection(myEll, polyt)
+if doesIntersectionContain(myEll, polyt)
     outEll = getOutterEllipsoid(polyt);
     return;
 end
 
 for iElem = 1:nDimsHyp
-    if(isempty(outEll))
+    if(outEll.isEmpty())
         return;
     else
         outEll = intersection_ea(outEll, hyp(iElem));

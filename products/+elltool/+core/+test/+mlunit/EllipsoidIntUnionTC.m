@@ -88,49 +88,49 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
 
         
         
-        function self = testContains(self)            
+        function self = testDoesContain(self)            
             self.setUpCheckSettings();
             testEll1Vec = ellipsoid(eye(3));
             testEll2Vec = ellipsoid([10, 0, 5]',...
                 [1, 0, 0; 0, 0, 0; 0, 0, 1]);
-            testResVec = contains(testEll1Vec, testEll2Vec);
-            mlunitext.assert_equals(0, testResVec);
+            isTestResVec = doesContain(testEll1Vec, testEll2Vec);
+            mlunitext.assert_equals(false, isTestResVec);
             
             testEll1Vec = ellipsoid(eye(3));
             testEll2Vec = ellipsoid([1, 0, 0; 0, 0, 0; 0, 0, 1]);
-            %testResVec = contains(testEll1Vec, testEll2Vec);
-            %mlunitext.assert_equals(1, testResVec);
+            %testResVec = doesContain(testEll1Vec, testEll2Vec);
+            %mlunitext.assert_equals(true, testResVec);
             
             testEll1Vec = ellipsoid(eye(3));
             testEll2Vec = ellipsoid(eye(3));
-            testResVec = contains(testEll1Vec, testEll2Vec);
-            mlunitext.assert_equals(1, testResVec);
+            isTestResVec = doesContain(testEll1Vec, testEll2Vec);
+            mlunitext.assert_equals(true, isTestResVec);
             
             testEll1Vec = ellipsoid(eye(3));
             testEll2Vec = ellipsoid([1e-4, 1e-4, 0]', eye(3));
-            testResVec = contains(testEll1Vec, testEll2Vec);
-            mlunitext.assert_equals(0, testResVec);
+            isTestResVec = doesContain(testEll1Vec, testEll2Vec);
+            mlunitext.assert_equals(false, isTestResVec);
             
             testEll1Vec = ellipsoid(4*eye(2));
             testEll2Vec = ellipsoid([1, 0]', eye(2));
-            testResVec = contains(testEll1Vec, testEll2Vec);
-            mlunitext.assert_equals(1, testResVec);
+            isTestResVec = doesContain(testEll1Vec, testEll2Vec);
+            mlunitext.assert_equals(true, isTestResVec);
             
             
             testEll1Vec = ellipsoid(eye(2));
             testEll2Vec = ellipsoid(zeros(2));
-            testResVec = contains(testEll1Vec, testEll2Vec);
-            mlunitext.assert_equals(1, testResVec);
+            isTestResVec = doesContain(testEll1Vec, testEll2Vec);
+            mlunitext.assert_equals(true, isTestResVec);
             
             testEll1Vec = ellipsoid(eye(2));
             testEll2Vec = ellipsoid([1, 0; 0, 0]);
-            testResVec = contains(testEll1Vec, testEll2Vec);
-            mlunitext.assert_equals(1, testResVec);
+            isTestResVec = doesContain(testEll1Vec, testEll2Vec);
+            mlunitext.assert_equals(true, isTestResVec);
             
             testEll1Vec = ellipsoid([1, 0, 0; 0, 0, 0; 0, 0, 1]);
             testEll2Vec = ellipsoid([1, 0, 0; 0, 0, 0; 0, 0, 0]);
-            testResVec = contains(testEll1Vec, testEll2Vec);
-            mlunitext.assert_equals(1, testResVec);
+            isTestResVec = doesContain(testEll1Vec, testEll2Vec);
+            mlunitext.assert_equals(true, isTestResVec);
         end
         
         function self = testSqrtm(self)
@@ -158,6 +158,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             [isEq, reportStr] = eq(ellipsoid(test1Mat),...
                 ellipsoid(test2Mat)); 
             mlunitext.assert_equals(false, isEq);
+            mlunitext.assert_equals(false, isEq);
             mlunitext.assert_equals(reportStr, '(1).Q-->Max. difference (1.000000e-05) is greater than the specified tolerance(1.000000e-05)');
         end
         
@@ -168,7 +169,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
                 [4, 1, 1, 1; 1, 2, 1, 1; 1, 1, 5, 1; 1, 1, 1, 6], 2);
             my2EllVec(2) = ell_unitball(4);
             my2EllVec(1) = ell_unitball(4);
-            isOk = isContainedInIntersection(my2EllVec, my1EllVec, 'i');
+            isOk = doesIntersectionContain(my2EllVec, my1EllVec, 'i');
             mlunitext.assert_equals(isOk,false);
         end
         
@@ -394,8 +395,8 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
                 0; 0, 0.578464829541428]);
             [isEq, reportStr] = eq(resEllVec, ansEllVec);
             self.flexAssert(true, isEq, reportStr);
-            self.flexAssert(true, contains(testEllVec(1), resEllVec));
-            self.flexAssert(true, contains(testEllVec(2), resEllVec));
+            self.flexAssert(true, doesContain(testEllVec(1), resEllVec));
+            self.flexAssert(true, doesContain(testEllVec(2), resEllVec));
 
             clear testEllVec;
             nDim = 2;
@@ -409,9 +410,9 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             ansEllVec = ellipsoid(ansEllCenterVec, ansEllMat);
             [isEq, reportStr] = eq(resEllVec, ansEllVec);
             self.flexAssert(true, isEq, reportStr);
-            self.flexAssert(true, contains(testEllVec(1), resEllVec));
-            self.flexAssert(true, contains(testEllVec(2), resEllVec));
-            self.flexAssert(true, contains(testEllVec(3), resEllVec));
+            self.flexAssert(true, doesContain(testEllVec(1), resEllVec));
+            self.flexAssert(true, doesContain(testEllVec(2), resEllVec));
+            self.flexAssert(true, doesContain(testEllVec(3), resEllVec));
             
             
             clear testEllVec;
@@ -432,9 +433,9 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             ansEllVec = ellipsoid(ansEllCenterVec, ansEllMat);
             [isEq, reportStr] = eq(resEllVec, ansEllVec);
             self.flexAssert(true, isEq, reportStr);
-            self.flexAssert(true, contains(testEllVec(1), resEllVec));
-            self.flexAssert(true, contains(testEllVec(2), resEllVec));
-            self.flexAssert(true, contains(testEllVec(3), resEllVec));
+            self.flexAssert(true, doesContain(testEllVec(1), resEllVec));
+            self.flexAssert(true, doesContain(testEllVec(2), resEllVec));
+            self.flexAssert(true, doesContain(testEllVec(3), resEllVec));
 
             clear testEllVec;
             load(strcat(self.testDataRootDir, strcat(filesep,...
@@ -449,8 +450,8 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             ansEllVec = ellipsoid(ansEllCenterVec, ansEllMat);
             [isEq, reportStr] = eq(resEllVec, ansEllVec);
             self.flexAssert(true, isEq, reportStr);
-            self.flexAssert(true, contains(testEllVec(1), resEllVec));
-            self.flexAssert(true, contains(testEllVec(2), resEllVec));
+            self.flexAssert(true, doesContain(testEllVec(1), resEllVec));
+            self.flexAssert(true, doesContain(testEllVec(2), resEllVec));
 
             clear testEllVec;
             load(strcat(self.testDataRootDir, strcat(filesep,...
@@ -465,8 +466,8 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             ansEllVec = ellipsoid(ansEllCenterVec, ansEllMat);
             [isEq, reportStr] = eq(resEllVec, ansEllVec);
             self.flexAssert(1, isEq, reportStr);
-            self.flexAssert(1, contains(testEllVec(1), resEllVec));
-            self.flexAssert(1, contains(testEllVec(2), resEllVec));
+            self.flexAssert(1, doesContain(testEllVec(1), resEllVec));
+            self.flexAssert(1, doesContain(testEllVec(2), resEllVec));
             
             clear testEllVec;
             nDim = 2;
@@ -527,8 +528,8 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
                 0; 0, 1.296535157845836]);
             [isEq, reportStr] = eq(resEllVec, ansEllVec);
             self.flexAssert(true, isEq, reportStr);
-            self.flexAssert(true, contains(resEllVec, testEllVec(1)));
-            self.flexAssert(true, contains(resEllVec, testEllVec(2)));
+            self.flexAssert(true, doesContain(resEllVec, testEllVec(1)));
+            self.flexAssert(true, doesContain(resEllVec, testEllVec(2)));
             
             clear testEllVec;
             nDim = 2;
@@ -541,9 +542,9 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
                 -0.428437874833322;-0.428437874833322, 2.713989515632939]);
             [isEq, reportStr] = eq(resEllVec, ansEllVec);
             self.flexAssert(true, isEq, reportStr);
-            self.flexAssert(true, contains(resEllVec, testEllVec(1)));
-            self.flexAssert(true, contains(resEllVec, testEllVec(2)));
-            self.flexAssert(true, contains(resEllVec, testEllVec(3)));
+            self.flexAssert(true, doesContain(resEllVec, testEllVec(1)));
+            self.flexAssert(true, doesContain(resEllVec, testEllVec(2)));
+            self.flexAssert(true, doesContain(resEllVec, testEllVec(3)));
             
             
             nDim = 3;
@@ -564,9 +565,9 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             
             [isEq, reportStr] = eq(resEllVec, ansEllVec);
             self.flexAssert(true, isEq, reportStr);
-            self.flexAssert(true, contains(resEllVec, testEllVec(1)));
-            self.flexAssert(true, contains(resEllVec, testEllVec(2)));
-            self.flexAssert(true, contains(resEllVec, testEllVec(3)));
+            self.flexAssert(true, doesContain(resEllVec, testEllVec(1)));
+            self.flexAssert(true, doesContain(resEllVec, testEllVec(2)));
+            self.flexAssert(true, doesContain(resEllVec, testEllVec(3)));
             
             clear testEllVec;
             nDim = 15;
@@ -580,8 +581,8 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
                 'testEllunion_outSimple.mat')), ...
                 'ansEllCenterVec', 'ansEllMat');
             ansEllVec = ellipsoid(ansEllCenterVec, ansEllMat);
-            self.flexAssert(true, contains(resEllVec, testEllVec(1)));
-            self.flexAssert(true, contains(resEllVec, testEllVec(2)));
+            self.flexAssert(true, doesContain(resEllVec, testEllVec(1)));
+            self.flexAssert(true, doesContain(resEllVec, testEllVec(2)));
             [isEq, reportStr] = eq(resEllVec, ansEllVec);
             self.flexAssert(true, isEq, reportStr);
             clear testEllVec;
@@ -595,8 +596,8 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             load(strcat(self.testDataRootDir, strcat(filesep, ...
                'testEllunionEa_out.mat')), 'ansEllCenterVec', 'ansEllMat');
             ansEllVec = ellipsoid(ansEllCenterVec, ansEllMat);
-            self.flexAssert(true, contains(resEllVec, testEllVec(1)));
-            self.flexAssert(true, contains(resEllVec, testEllVec(2)));
+            self.flexAssert(true, doesContain(resEllVec, testEllVec(1)));
+            self.flexAssert(true, doesContain(resEllVec, testEllVec(2)));
             [isEq, reportStr] = eq(resEllVec, ansEllVec);
             self.flexAssert(true, isEq, reportStr);
         end
@@ -737,7 +738,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             testHpArr = repmat(hyperplane([0, 0, 1].', 2),[2,2,2]);
             testEll = ellipsoid(eye(3));
             [resEllArr isnIntersecArr] = hpintersection(testEll, testHpArr);
-            self.flexAssert(true([2,2,2]), isempty(resEllArr));
+            self.flexAssert(true([2,2,2]), resEllArr.isEmpty());
             self.flexAssert(true([2,2,2]), isnIntersecArr);
             function fCopyEll(index,ellObj)
                 ellArr(index)=ellObj;
