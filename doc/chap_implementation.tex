@@ -60,7 +60,7 @@ It can be checked that resulting ellipsoid {\tt externalEllObj} contains the giv
 intersection, whereas {\tt internalEllObj} is contained in this intersection:
 \verbmcodef[Check if the ellipsoid contains the intersection]{mcodesnippets/s_chapter05_section01_snippet10.m}
 \verbmcodef[Check if the internal approximation is contained in the intersection]{mcodesnippets/s_chapter05_section01_snippet11.m}
-Function {\tt isinside} in general checks if the intersection of ellipsoids
+Function {\tt isInside} in general checks if the intersection of ellipsoids
 in the given array contains the union or intersection of ellipsoids or
 polytopes.
 
@@ -187,7 +187,7 @@ with {\tt hyperplane} objects, which in this case define {\tt halfspaces} and
 {\tt polytope} objects:
 \verbmcodef[Computation of external and internal ellipsoidal approximations]{mcodesnippets/s_chapter05_section02_snippet11.m}
 
-Function {\tt isinside} can be used to check if a polytope or union of
+Function {\tt isInside} can be used to check if a polytope or union of
 polytopes is contained in the intersection of given ellipsoids:
 \verbmcodef[Check if the intersection of ellipsoids contains the union of polytopes]
 {mcodesnippets/s_chapter05_section02_snippet12.m}
@@ -195,7 +195,7 @@ polytopes is contained in the intersection of given ellipsoids:
 \verbmcodef[Check if the ellipsoid contains the intersection of polytopes]
 {mcodesnippets/s_chapter05_section02_snippet13.m}
 Functions {\tt distance}, {\tt intersect}, {\tt intersection\_ia} and
-{\tt isinside} use the CVX interface (\cite{CVX_HOMEPAGE}) to the
+{\tt isInside} use the CVX interface (\cite{CVX_HOMEPAGE}) to the
 external optimization package. The default optimization package included
 in the distribution of the {\it Ellipsoidal Toolbox} is SeDuMi
 (\cite{STURM_USING_SEDUMI},\cite{SEDUMI_HOMEPAGE}).

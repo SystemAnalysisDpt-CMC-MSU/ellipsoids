@@ -17,20 +17,18 @@ if modgen.system.ExistanceChecker.isFile(resultTexFileName)
     delete(resultTexFileName);
 end
 %
-FuncData=elltool.doc.collecthelp({
+FuncData=elltool.doc.collecthelp({'ellipsoid','hyperplane',...
+'elltool.conf.Properties', 'elltool.core.GenEllipsoid',...
+{'smartdb.relations.ATypifiedStaticRelation',...
 'smartdb.cubes.CubeStruct','smartdb.relations.ARelation',...
- 'gras.ellapx.smartdb.rels.EllTube'},...
-{},{'test'});
-
-% 'ellipsoid', 'hyperplane',...
-% 'elltool.conf.Properties', 'elltool.core.GenEllipsoid',...
-% , 'gras.ellapx.smartdb.rels.EllTubeProj',...
-% 'gras.ellapx.smartdb.rels.EllUnionTube', ...
-% 'gras.ellapx.smartdb.rels.EllUnionTubeStaticProj',...
-% 'elltool.reach.AReach','elltool.reach.ReachContinuous',...
-% 'elltool.reach.ReachDiscrete','elltool.reach.ReachFactory',...
-% 'elltool.linsys.ALinSys',  'elltool.linsys.LinSysContinuous',...
-% 'elltool.linsys.LinSysDiscrete',  'elltool.linsys.LinSysFactory'
+'smartdb.cubes.FixedDimStCubeStructAppliance'},...
+'gras.ellapx.smartdb.rels.EllTube','gras.ellapx.smartdb.rels.EllTubeProj',...
+'gras.ellapx.smartdb.rels.EllUnionTube',...
+'gras.ellapx.smartdb.rels.EllUnionTubeStaticProj',...
+ {'elltool.reach.AReach'},'elltool.reach.ReachContinuous',...
+ 'elltool.reach.ReachDiscrete','elltool.reach.ReachFactory',...
+ {'elltool.linsys.ALinSys'}, 'elltool.linsys.LinSysContinuous',...
+'elltool.linsys.LinSysDiscrete',  'elltool.linsys.LinSysFactory'},{},{'test'});
 nHelpElems=numel(FuncData.funcName);
 if nHelpElems==0
     throwerror('wrongDir',...
@@ -39,16 +37,18 @@ end
 logger.info(sprintf('%d element(s) collected',nHelpElems));
 %
 
-isChosenFunc=~(FuncData.isScript);
 
-funcNameCell=FuncData.funcName(isChosenFunc);
-helpCell=FuncData.help(isChosenFunc);
+
+funcNameCell=FuncData.funcName;
+helpCell=FuncData.help;
+sectionNameCell = FuncData.sectionName;
 classNameCell = FuncData.className;
 numberOfFunctions = FuncData.numbOfFunc;
+numberOfClassInSection = FuncData.numbOfClass;
 defClassNameCell = FuncData.defClassName;
 inhFuncNameCell = FuncData.inhFuncNameList;
 indOfClasses = FuncData.numberOfInhClass;
-infoOfInheritedFunctions = FuncData.infoOfInhClass;
+numberOfInheritedFunctions = FuncData.infoOfInhClass;
 numberOfInheritedClasses = FuncData.numbOfInhClasses;
 % update funcNameCell (delete '.m')
 funcNameCell=cellfun(@(x) x(1:end),funcNameCell,'UniformOutput',false);
@@ -113,59 +113,59 @@ for iSymb=1:length(symbListHelp)
         substListHelp{iSymb}),finalHelpCell,'UniformOutput',false);
 end
 
-labelFuncCell = cellfun(@(x)fDeleteSymbols(x),funcNameCell, ...
+labelFuncCell = cellfun(@(x)fDeleteSymbols(x),funcOutputCell, ...
     'UniformOutput', false);
 %% create tex doc
-%
 fid = fopen(resultTexFileName, 'wt');
 indFunc = 1;
-iCountClass = 1;
+indMethod = 1;
 flag = 0;
 indInhClass = 1;
-for iClass=1:length(classNameCell)
+iClass = 1;
+indClass = 1;
+for iSect=1:length(sectionNameCell)
+   
     fprintf(fid,'\\section{%s}\\label{secClassDescr:%s}\n',...
-        classNameCell{iClass}, classNameCell{iClass});
-    numbFunc = indFunc + numberOfFunctions(iClass) - 1;
-    if ismember(iClass,indOfClasses)
-        flag = 1;
+        sectionNameCell{iSect}, sectionNameCell{iSect});
+    numbFunc = indFunc + numberOfFunctions(iSect) -1;
+    for jClass = indClass:numberOfClassInSection(iSect) + indClass -1
+        if ismember(jClass,indOfClasses)
+            flag = 1;
+            helpPattern = sprintf...
+('\n\nSee the description of the following methods in section \\ref{secClassDescr:%s}\n for %s:\n',...
+   char(defClassNameCell{indInhClass}), char(defClassNameCell{indInhClass}));
+        end
+        indClass = indClass+1;
     end
+    numbFunc = indFunc + numberOfFunctions(iSect)-1;
     for iFunc = indFunc: numbFunc
         fprintf(fid,...
         '\\subsection{\\texorpdfstring{%s}{%s}}\\label{method:%s}\n',...
-        [classNameCell{iClass}, '.',funcOutputCell{iFunc}],...
+        [sectionNameCell{iSect}, '.',funcOutputCell{iFunc}],...
         funcOutputCell{iFunc},...
-        [classNameCell{iClass}, '.',labelFuncCell{iFunc}]);
+        [sectionNameCell{iSect}, '.',labelFuncCell{iFunc}]);
         % print function help
         fprintf(fid,'\\begin{verbatim}\n');
         fprintf(fid,'%s\n',finalHelpCell{iFunc});
         fprintf(fid,'\\end{verbatim}\n');
         if flag
-            %for iNumbClass = 1:numberOfInheritedClasses(indInhClass)
-            numberOfClasses = numberOfInheritedClasses(indInhClass);
-            for iBuf = iCountClass: iCountClass + numberOfClasses -1
-                helpPattern = sprintf...
-('\n\nSee the description of the following methods in section \\ref{secClassDescr:%s}\n for %s:\n',...
-  char(defClassNameCell{iBuf}), char(defClassNameCell{iBuf}));
+            numbInhFunc = numberOfInheritedFunctions(indInhClass);
             fprintf(fid,'%s\n',helpPattern);
             fprintf(fid,'\\begin{list}{}{}\n');
-            for iMethod = 1:infoOfInheritedFunctions(iBuf)
-             fprintf(fid,' \\item \\hyperref[method:%s]{%s}\n',...
-             [char(defClassNameCell{iBuf}), '.',...
-             char(inhFuncNameCell{iBuf}{iMethod})],...
-             char(inhFuncNameCell{iBuf}{iMethod}));
+            for iMethod = 1:numbInhFunc
+              fprintf(fid,' \\item \\hyperref[method:%s]{%s}\n',...
+              [char(defClassNameCell{indInhClass}), '.',...
+              char(inhFuncNameCell{indInhClass}{iMethod})],...
+              char(inhFuncNameCell{indInhClass}{iMethod}));
+              indMethod = indMethod+1;
             end
             fprintf(fid,'\\end{list}\n');
-            iCountClass = iCountClass+1;
-            end
-            
             flag = 0;
             indInhClass = indInhClass + 1;
         end
-        indFunc = indFunc + 1;
+        indFunc = iFunc + 1;
     end
-
 end
-% close file
 fclose(fid);
 logger.info(sprintf('Job completed, the result is written to \n%s',...
     resultTexFileName));
