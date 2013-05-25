@@ -13,7 +13,7 @@
 				<item type="boolean" >1 1</item>
 			</set1>
 		</projSpaceSets>
-		<isDynamicProjEnabled type="boolean" >0</isDynamicProjEnabled>
+		<isDynamicProjEnabled type="boolean" >1</isDynamicProjEnabled>
 		<isStaticProjEnabled type="boolean" >1</isStaticProjEnabled>
 	</projectionProps>
 	<goodDirSelection type="struct" >
