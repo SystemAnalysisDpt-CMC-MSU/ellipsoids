@@ -125,7 +125,7 @@ classdef GenEllipsoidTestCase < mlunitext.test_case
             ansCenVec=[0 0].';
             %
             function check()
-                mlunit.assert_equals(1,isEqElM(resEllipsoid,...
+                mlunitext.assert_equals(true,isEqElM(resEllipsoid,...
                     ansVMat,ansDMat,ansCenVec));
             end
             function checkNeg(typeNum)
@@ -172,7 +172,7 @@ classdef GenEllipsoidTestCase < mlunitext.test_case
                 import elltool.core.GenEllipsoid;
                 ellSecObj=GenEllipsoid(varargin{:});
                 [isOk,reportStr]=eq(ellObj,ellSecObj);
-                mlunit.assert_equals(true,isOk,reportStr);
+                mlunitext.assert_equals(true,isOk,reportStr);
             end
             
         end
@@ -358,7 +358,7 @@ classdef GenEllipsoidTestCase < mlunitext.test_case
                 isOkVec=arrayfun(@isEllNewOldEqual,resNewEllVec,...
                     resOldEllVec);
                 isOk=all(isOkVec);
-                mlunit.assert(isOk);
+                mlunitext.assert(isOk);
             end
             %
             function checkMellMdir(testEllMat,nElems,nDim)
@@ -382,7 +382,7 @@ classdef GenEllipsoidTestCase < mlunitext.test_case
                 isOkVec=arrayfun(@isEllNewOldEqual,resNewEllVec,...
                     resOldEllVec);
                 isOk=all(isOkVec);
-                mlunit.assert(isOk);
+                mlunitext.assert(isOk);
             end
         end
         %
@@ -492,7 +492,7 @@ classdef GenEllipsoidTestCase < mlunitext.test_case
                 import elltool.core.GenEllipsoid;
                 ellSecObj=GenEllipsoid(varargin{:});
                 [isOk,reportStr]=eq(ellObj,ellSecObj);
-                mlunit.assert_equals(true,isOk,reportStr);
+                mlunitext.assert_equals(true,isOk,reportStr);
             end
             function checkWOld(dirMat)
                 %Compare with old function
@@ -505,7 +505,7 @@ classdef GenEllipsoidTestCase < mlunitext.test_case
                 isOkVec=arrayfun(@isEllNewOldEqual,resNewEllVec,...
                     resOldEllVec);
                 isOk=all(isOkVec);
-                mlunit.assert(isOk);
+                mlunitext.assert(isOk);
             end
             %
             function checkHighDim(nDim, oMat, isZeroCenter)
@@ -750,7 +750,7 @@ classdef GenEllipsoidTestCase < mlunitext.test_case
                 import elltool.core.GenEllipsoid;
                 ellSecObj=GenEllipsoid(varargin{:});
                 [isOk,reportStr]=eq(ellObj,ellSecObj);
-                mlunit.assert_equals(true,isOk,reportStr);
+                mlunitext.assert_equals(true,isOk,reportStr);
             end
             function checkHighDim(nDim, oMat, isZeroCenter)
                 q1Mat=rotateM(10*diag(1:nDim),oMat);
@@ -779,7 +779,7 @@ classdef GenEllipsoidTestCase < mlunitext.test_case
                 isOkVec=arrayfun(@isEllNewOldEqual,resNewEllVec,...
                     resOldEllVec);
                 isOk=all(isOkVec);
-                mlunit.assert(isOk);
+                mlunitext.assert(isOk);
             end
         end
         %
@@ -1160,7 +1160,7 @@ if ~isOk
 else
     reportStr='';
 end
-mlunit.assert_equals(true,isOk,reportStr);
+mlunitext.assert_equals(true,isOk,reportStr);
 if (isequal(fMethod,@minkSumIa) || isequal(fMethod,@minkSumEa))
     checkSumTight(ansEllObj,testEllVec,testDirObj(:,1));
 else

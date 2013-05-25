@@ -1,14 +1,14 @@
 function [supArr, bpArr] = rho(ellArr, dirsArr)
 %
 % RHO - computes the values of the support function for given ellipsoid
-%	and given direction.
+%       and given direction.
 %
-%	supArr = RHO(ellArr, dirsMat)  Computes the support function of the
+%       supArr = RHO(ellArr, dirsMat)  Computes the support function of the
 %       ellipsoid ellArr in directions specified by the columns of matrix
 %       dirsMat. Or, if ellArr is array of ellipsoids, dirsMat is expected
 %       to be a single vector.
 %
-%	[supArr, bpArr] = RHO(ellArr, dirstMat)  Computes the support function
+%       [supArr, bpArr] = RHO(ellArr, dirstMat)  Computes the support function
 %       of the ellipsoid ellArr in directions specified by the columns of
 %       matrix dirsMat, and boundary points bpArr of this ellipsoid that
 %       correspond to directions in dirsMat. Or, if ellArr is array of
@@ -16,9 +16,9 @@ function [supArr, bpArr] = rho(ellArr, dirsArr)
 %       corresponding boundary points are computed for all the given
 %       ellipsoids in the array in the specified direction dirsMat.
 %
-%	The support function is defined as
+%       The support function is defined as
 %   (1)  rho(l | E) = sup { <l, x> : x belongs to E }.
-%	For ellipsoid E(q,Q), where q is its center and Q - shape matrix,
+%       For ellipsoid E(q,Q), where q is its center and Q - shape matrix,
 %   it is simplified to
 %   (2)  rho(l | E) = <q, l> + sqrt(<l, Ql>)
 %   Vector x, at which the maximum at (1) is achieved is defined by
@@ -32,7 +32,7 @@ function [supArr, bpArr] = rho(ellArr, dirsArr)
 %           double[nDim,nDirs]/[nDim,1] - array or matrix of directions.
 %
 % Output:
-%	supArr: double [nDims1,nDims2,...,nDimsN]/[1,nDirs] - support function
+%       supArr: double [nDims1,nDims2,...,nDimsN]/[1,nDirs] - support function
 %       of the ellArr in directions specified by the columns of matrix
 %       dirsMat. Or, if ellArr is array of ellipsoids, support function of
 %       each ellipsoid in ellArr specified by dirsMat direction.

@@ -207,7 +207,7 @@ const = 1 - lambda*(1 - lambda)*(qSecVec - ...
     fstEllCentVec)'*seqQMat*invXMat*fstEllShMat*(qSecVec - fstEllCentVec);
 qCenterVec = invXMat*(lambda*fstEllShMat*fstEllCentVec + ...
     (1 - lambda)*seqQMat*qSecVec);
-shQMat = (1+fstEll.absTol)*const*invXMat;
+shQMat = const*invXMat;
 outEll = ellipsoid(qCenterVec, shQMat);
 
 end
@@ -274,13 +274,13 @@ outEll = myEll;
 hyp = polytope2hyperplane(polyt);
 nDimsHyp  = size(hyp, 2);
 
-if isinside(myEll, polyt)
+if doesIntersectionContain(myEll, polyt)
     outEll = getOutterEllipsoid(polyt);
     return;
 end
 
 for iElem = 1:nDimsHyp
-    if(isempty(outEll))
+    if(outEll.isEmpty())
         return;
     else
         outEll = intersection_ea(outEll, hyp(iElem));

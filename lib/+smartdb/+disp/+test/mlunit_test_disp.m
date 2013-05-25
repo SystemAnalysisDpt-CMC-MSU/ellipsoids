@@ -1,4 +1,4 @@
-classdef mlunit_test_disp < mlunit.test_case
+classdef mlunit_test_disp < mlunitext.test_case
     
     properties
         locDir
@@ -27,7 +27,7 @@ classdef mlunit_test_disp < mlunit.test_case
     
     methods
         function self = mlunit_test_disp(varargin)
-            self = self@mlunit.test_case(varargin{:});
+            self = self@mlunitext.test_case(varargin{:});
             metaClass=metaclass(self);
             self.locDir=fileparts(which(metaClass.Name));
         end
@@ -249,7 +249,7 @@ classdef mlunit_test_disp < mlunit.test_case
                 plotSomeTestGraps({fGetGroup21Key,fGetGroup21Key,fGetGroup22Key},isSetAxesPost);
                 %
                 nCurFigures=plObj.getPlotStructure.figHMap.Count;
-                mlunit.assert_equals(40,nCurFigures);
+                mlunitext.assert_equals(40,nCurFigures);
                 %
                 plObj.closeAllFigures();
             end
@@ -278,7 +278,7 @@ classdef mlunit_test_disp < mlunit.test_case
                         modgen.struct.updateleaves(...
                         plObj.getPlotStructure().figToAxesToHMap.toStruct(),...
                         @(x,y)strcmp(y{end},get(x,'UserData'))));
-                    mlunit.assert_equals(true,all([isOkVec{:}]));
+                    mlunitext.assert_equals(true,all([isOkVec{:}]));
                 end
                 function hVec=axesPostPlotFunc(hAxes,axesKey,varargin)
                     hVec=[];
@@ -345,9 +345,9 @@ classdef mlunit_test_disp < mlunit.test_case
             end
             function checkForEmptyMaps()
                 SPlot=plObj.getPlotStructure();
-                mlunit.assert_equals(0,SPlot.figHMap.Count);
-                mlunit.assert_equals(0,SPlot.figToAxesToHMap.Count);
-                mlunit.assert_equals(0,SPlot.figToAxesToPlotHMap.Count);
+                mlunitext.assert_equals(0,SPlot.figHMap.Count);
+                mlunitext.assert_equals(0,SPlot.figToAxesToHMap.Count);
+                mlunitext.assert_equals(0,SPlot.figToAxesToPlotHMap.Count);
             end
             function checkDisplayedPlots(SExp)
                 import modgen.struct.updateleavesext;
@@ -359,7 +359,7 @@ classdef mlunit_test_disp < mlunit.test_case
                 isOk=all(ismember(inpExpFileNameList,...
                     SPlot.figHMap.keys))&&...
                     SPlot.figHMap.Count==nFigures;
-                mlunit.assert_equals(true,isOk);
+                mlunitext.assert_equals(true,isOk);
                 %
                 SAxisNames=updateleaves(...
                     SPlot.figToAxesToHMap.toStruct(),...
@@ -367,7 +367,7 @@ classdef mlunit_test_disp < mlunit.test_case
                 SExp=updateleavesext(SExp,@fTransform);
                 [isOk,reportStr]=modgen.struct.structcompare(...
                     SAxisNames,SExp);
-                mlunit.assert_equals(true,isOk,reportStr);
+                mlunitext.assert_equals(true,isOk,reportStr);
                 function [val,path]=fTransform(val,path)
                     import modgen.containers.MapExtended;
                     modField=modifyAxesName(path{4});
@@ -402,7 +402,7 @@ classdef mlunit_test_disp < mlunit.test_case
                     SFiles=dir([resDir,filesep,'*.',formatName]);
                     fileNameList=sort({SFiles.name});
                     expFileNameList=sort(expFileNameList);
-                    mlunit.assert_equals(true,isequal(fileNameList,expFileNameList));
+                    mlunitext.assert_equals(true,isequal(fileNameList,expFileNameList));
                     delete([resDir,filesep,'*.',formatName]);
                 end
             end
@@ -489,7 +489,7 @@ classdef mlunit_test_disp < mlunit.test_case
                 set(hFigure,'NumberTitle','off','WindowStyle','docked',...
                     'RendererMode','manual','Renderer','OpenGL',...
                     'Name',figureName);
-                mlunit.assert_equals(indFigureGroup,...
+                mlunitext.assert_equals(indFigureGroup,...
                     str2double(modgen.string.splitpart(...
                     figureName,'_gr',2)));
             end

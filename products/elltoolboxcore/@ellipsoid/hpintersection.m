@@ -59,7 +59,7 @@ modgen.common.checkvar( myEllArr , 'numel(x) > 0', 'errorTag', ...
     'wrongInput:emptyArray', 'errorMessage', ...
     'Each array must be not empty.');
 
-modgen.common.checkvar( myEllArr,'all(~isempty(x(:)))','errorTag', ...
+modgen.common.checkvar( myEllArr,'all(~x(:).isEmpty())','errorTag', ...
     'wrongInput:emptyEllipsoid', 'errorMessage', ...
     'Array should not have empty ellipsoid.');
 
@@ -104,7 +104,7 @@ if Properties.getIsVerbose()
         logger.info('Computing ellipsoid-hyperplane intersection...');
     end
 end
-
+[~,absTol]=myEllArr.getAbsTol();
 if ~(isEllScal || isHypScal)
     arrayfun(@(x,y) fSingleCase(x,y), indexVec,indexVec);
 elseif isHypScal
@@ -117,7 +117,7 @@ end
         myEll = myEllArr(ellIndex);
         myHyp = myHypArr(hypIndex);
         index = max(ellIndex,hypIndex);
-        if distance(myEll, myHyp) > 0
+        if distance(myEll, myHyp) > absTol
            intEllArr(index) = ellipsoid;
            isnIntersectedArr(index) = true;
         else

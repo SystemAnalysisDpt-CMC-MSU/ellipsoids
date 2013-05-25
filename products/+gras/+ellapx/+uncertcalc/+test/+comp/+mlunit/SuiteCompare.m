@@ -52,7 +52,7 @@ classdef SuiteCompare < mlunitext.test_case
             %
             % expecting two configurations: name and name_lti
             %
-            mlunit.assert_equals(nConfs,2);
+            mlunitext.assert_equals(nConfs,2);
             %
             for iConf=1:2
                 crm.deployConfTemplate(confNameList{iConf});
@@ -74,7 +74,7 @@ classdef SuiteCompare < mlunitext.test_case
                 calcPrecision=crm.getParam('genericProps.calcPrecision');
                 isOk=all(runResult.ellTubeProjRel.calcPrecision<=...
                     calcPrecision);
-                mlunit.assert_equals(true,isOk);
+                mlunitext.assert_equals(true,isOk);
                 %
                 % filter struct fields
                 %
@@ -89,9 +89,9 @@ classdef SuiteCompare < mlunitext.test_case
             %
             % number of fields and fields themselves should be the same
             %
-            mlunit.assert_equals(nCmpFieldsCVec{1},nCmpFieldsCVec{2});
+            mlunitext.assert_equals(nCmpFieldsCVec{1},nCmpFieldsCVec{2});
             isEqVec=strcmp(compFieldNameListCVec{1},compFieldNameListCVec{2});
-            mlunit.assert_equals(all(isEqVec),true);
+            mlunitext.assert_equals(all(isEqVec),true);
             %
             compFieldNameList = fieldnames(runResults{1});
             nCmpFields = numel(compFieldNameList);
@@ -122,7 +122,7 @@ classdef SuiteCompare < mlunitext.test_case
                 %
                 reportStr=sprintf('confName=%s\n %s',confName,...
                     reportStr);
-                mlunit.assert_equals(true,isOk,reportStr);
+                mlunitext.assert_equals(true,isOk,reportStr);
             end
             
         end

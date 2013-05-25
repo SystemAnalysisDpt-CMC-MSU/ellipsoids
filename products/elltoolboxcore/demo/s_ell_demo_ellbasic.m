@@ -19,11 +19,14 @@ E3 = 2*ell_unitball(3) + [1; 1; 0];
 B1 = [1 0 0; 0 1 0]'; B2 = [1 0 0; 0 0 1]'; B3 = [0 1 0; 0 0 1]';
 subplot(2, 2, 1); plot(E1, E2, E3); title('(a) Ellipsoids in 3D');
 xlabel('x_1'); ylabel('x_2'); zlabel('x_3'); grid on;
-subplot(2, 2, 2); plot(projection([E1 E2 E3], B1)); grid on;
+subplot(2, 2, 2); plot(getProjection([E1 E2 E3], B1)); 
+grid on;
 title('(b) Projection on basis B1'); xlabel('x_1'); ylabel('x_2');
-subplot(2, 2, 3); plot(projection([E1 E2 E3], B2)); grid on;
+subplot(2, 2, 3); plot(getProjection([E1 E2 E3], B2)); 
+grid on;
 title('(c) Projection on basis B2'); xlabel('x_1'); ylabel('x_3');
-subplot(2, 2, 4); plot(projection([E1 E2 E3], B3)); grid on;
+subplot(2, 2, 4); plot(projection([E1 E2 E3], B3));
+grid on;
 title('(d) Projection on basis B3'); xlabel('x_2'); ylabel('x_3');
 %% 
 %Internal structure of the ellipsoid can be accessed through several functions:',

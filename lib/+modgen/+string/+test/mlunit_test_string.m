@@ -19,7 +19,7 @@ classdef mlunit_test_string < mlunitext.test_case
             function check(inpStr,expStr)
                 import modgen.string.shortcapstr;
                 resStr=shortcapstr(inpStr);
-                mlunit.assert_equals(resStr,expStr);
+                mlunitext.assert_equals(resStr,expStr);
                 
             end
         end
@@ -27,24 +27,24 @@ classdef mlunit_test_string < mlunitext.test_case
             inpStr='aaa..bbb..';
             try
                 modgen.string.splitpart(inpStr,'..',3);
-                mlunit.assert_equals(true,false);
+                mlunitext.assert_equals(true,false);
             catch meObj
-                mlunit.assert_equals(~isempty(strfind(meObj.identifier,':wrongInput')),true);
+                mlunitext.assert_equals(~isempty(strfind(meObj.identifier,':wrongInput')),true);
             end
-            mlunit.assert_equals(modgen.string.splitpart(inpStr,'..',2),'bbb');
-            mlunit.assert_equals(modgen.string.splitpart(inpStr,'..','first'),'aaa');
+            mlunitext.assert_equals(modgen.string.splitpart(inpStr,'..',2),'bbb');
+            mlunitext.assert_equals(modgen.string.splitpart(inpStr,'..','first'),'aaa');
             inpStr='aaa';
-            mlunit.assert_equals(modgen.string.splitpart(inpStr,'..','first'),'aaa');
-            mlunit.assert_equals(modgen.string.splitpart(inpStr,'..','last'),'aaa');
+            mlunitext.assert_equals(modgen.string.splitpart(inpStr,'..','first'),'aaa');
+            mlunitext.assert_equals(modgen.string.splitpart(inpStr,'..','last'),'aaa');
         end
         function self=test_catwithsep(self)
             outStr=modgen.string.catwithsep({'aaa','bbb'},'__');
-            mlunit.assert_equals(outStr,'aaa__bbb');
+            mlunitext.assert_equals(outStr,'aaa__bbb');
         end
         function self=test_catcellstrwithsep(self)
             outCVec=modgen.string.catcellstrwithsep(...
                 {'aa','bb';'aaa','bbb';'a','b'},'-');
-            mlunit.assert_equals(true,...
+            mlunitext.assert_equals(true,...
                 isequal(outCVec,{'aa-bb';'aaa-bbb';'a-b'}));
         end
         function test_sepcellstrbysep(~)
@@ -61,7 +61,7 @@ classdef mlunit_test_string < mlunitext.test_case
                 inpCMat,sepStr);
             %
             resCMat=modgen.string.sepcellstrbysep(outCVec,sepStr);
-            mlunit.assert_equals(true,isequal(resCMat,inpCMat));
+            mlunitext.assert_equals(true,isequal(resCMat,inpCMat));
             end
         end
     end

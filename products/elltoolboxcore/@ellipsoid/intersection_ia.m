@@ -255,7 +255,7 @@ function outEll = l_polyintersect(ell, poly)
 %            System Analysis Department$
 %
 
-if isinside(ell, poly)
+if doesIntersectionContain(ell, poly)
     outEll = getInnerEllipsoid(poly);
 elseif ~intersect(ell,poly)
     outEll = ellipsoid();
@@ -288,7 +288,7 @@ else
     cvx_end
     Q = (B*B');
     v = d;
-    if max(abs(Q(:))) <= getAbsTol(ell)
+    if ~gras.la.ismatposdef(Q,getAbsTol(ell))
         outEll = ellipsoid(v,zeros(size(Q)));
     else
         outEll = ellipsoid(v,Q);

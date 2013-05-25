@@ -52,7 +52,7 @@ classdef ellipsoid < handle
             %
             sizeVec=horzcat(varargin{:});
             resArr=repmat(self,sizeVec);
-            resArr=resArr.getCopy();
+            resArr=resArr.getCopy();    
         end
         %
         function shMat=getShapeMat(self)
@@ -292,17 +292,23 @@ classdef ellipsoid < handle
         end
     end
     
-    
+    methods(Static)
+        ellArr = fromRepMat(varargin)
+        [vGridMat, fGridMat] = getGrid(nDim,nPoints)
+    end
     methods(Static,Access = private)
         res = my_color_table(ch)
         regQMat = regularize(qMat,absTol)
         clrDirsMat = rm_bad_directions(q1Mat, q2Mat, dirsMat,absTol)
-        isBadDirVec = isbaddirectionmat(q1Mat, q2Mat, dirsMat,absTol)
+        [isBadDirVec,pUniversalVec] = isbaddirectionmat(q1Mat, q2Mat, dirsMat,absTol)
+        [supArr, bpMat] = rhomat(ellShapeMat,ellCenterVec,absTol, dirsMat)
+        [diffBoundMat, isPlotCenter3d] = calcdiffonedir(fstEll,secEll,lMat,pUniversalVec,isGoodDirVec)
     end
     methods(Access = private)
         [propMat, propVal] = getProperty(hplaneMat,propName, fPropFun)
-         x = ellbndr_2d(E)
-         x = ellbndr_3d(E)
+        [bpMat, fVec] = getGridByFactor(ellObj,factorVec)
+         checkDoesContainArgs(ell,poly)
+         doesContain = doesContainPoly(ellArr,polytope,varagin)
     end
     methods (Static)
         checkIsMe(someObj,varargin)

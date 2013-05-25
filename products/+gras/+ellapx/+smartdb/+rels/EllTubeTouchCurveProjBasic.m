@@ -59,7 +59,7 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
             import modgen.graphics.camlight;
 
             title(hAxes,axesName);
-            checkgen(projSTimeMat,@(x)sum(sum(x))==2);
+            checkgen(projSTimeMat,@(x)size(x,1)==2);
             indDimVec=find(sum(projSTimeMat));
             yLabel=sprintf('x_%d',indDimVec(1));
             zLabel=sprintf('x_%d',indDimVec(2));
