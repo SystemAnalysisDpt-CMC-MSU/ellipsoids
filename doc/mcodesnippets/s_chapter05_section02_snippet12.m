@@ -5,7 +5,7 @@ secPolObj = 0.5*firstPolObj + [1; 1];
 % contains the union of polytopes firstPolObj and secPolObj:
 
 % equivalent to: isinside(ellMat(:, 1), firstPolObj | secPolObj)
-ellMat(:, 1).isContainedInIntersection([firstPolObj secPolObj])  
+ellMat(:, 1).doesIntersectionContain([firstPolObj secPolObj])  
 
 % ans =
 % 

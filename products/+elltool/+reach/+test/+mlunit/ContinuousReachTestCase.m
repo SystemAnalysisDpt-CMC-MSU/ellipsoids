@@ -197,7 +197,7 @@ classdef ContinuousReachTestCase < mlunitext.test_case
         function self = testPlotIa(self)
             import gras.ellapx.enums.EApproxType;
             self.runPlotTest(EApproxType.Internal);
-            self.reachObj.plot_ea();
+            self.reachObj.plot_ia();
         end
         %
         function self = testDimension(self)
