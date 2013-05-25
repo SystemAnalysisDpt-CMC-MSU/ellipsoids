@@ -65,7 +65,7 @@ import modgen.common.throwerror;
     'priorHold','postHold','showAll'});
 ellsArr = cellfun(@(x)getEllArr(x),reg,'UniformOutput', false);
 ellsArr = vertcat(ellsArr{:});
-ind = ~isempty(ellsArr);
+ind = ~ellsArr.isEmpty();
 ellsArr = ellsArr(ind);
 if numel(ellsArr) == 1
     if (nargout == 1)||(nargout == 0)
@@ -149,7 +149,7 @@ end
                 arrayfun(@(x) fCase2extAppr(x),1:nCols);
                 
                 mValVec=zeros(1, nCols);
-                arrayfun(@(x) fCase2(x),find(~isempty(extApprEllVec)));
+                arrayfun(@(x) fCase2(x),find(~extApprEllVec.isEmpty()));
                 
                 isPosVec=mValVec>0;
                 nPos=sum(isPosVec);
