@@ -108,9 +108,9 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             end 
         end
         %
-        function self = testIsContainedInIntersection (self)
+        function self = testDoesIntersectionContain(self)
             ellConstrMat = eye(2);
-            nDims = 15;
+            nDims = 14;
             ellConstr15DMat = eye(nDims);
             ellShift1 = [0.05; 0];
             ellShift2 = [0; 4];
@@ -118,7 +118,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             ell1 = ellipsoid(ellConstrMat);
             ell2 = ellipsoid(ellShift1,ellConstrMat);
             ell3 = ellipsoid(ellShift2,ellConstrMat);
-            ell15D = ellipsoid(ellConstr15DMat);
+            ell14D = ellipsoid(ellConstr15DMat);
             %
             %
             polyConstrMat = [-1 0; 1 0; 0 1; 0 -1];
@@ -137,32 +137,41 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             poly3 = polytope(polyConstrMat,polyK3Vec);
             poly4 = polytope(polyConstrMat,polyK4Vec);
             poly3D = polytope(polyConstr3DMat,polyK3DVec);
-            poly15D = polytope(polyConstr15DMat,polyK15DVec);
+            poly14D = polytope(polyConstr15DMat,polyK15DVec);
             %
-            isTestInsideVec = [1, 0, 1, 1, 1, 0, 1, 0, -1];
+            isExpVec = [1, 0, 1, 1, 1, 0, 1, 0, -1];
             
-            self.myTestIsCII(ell1, [poly1, poly2], 'u',isTestInsideVec(1))
+            self.myTestIsCII(ell1, [poly1, poly2], 'u',isExpVec(1),true,...
+                'no')
             %
-            self.myTestIsCII(ell1, [poly1, poly3], 'u',isTestInsideVec(2))
+            self.myTestIsCII(ell1, [poly1, poly3], 'u',isExpVec(2),true,...
+                'no')
             %
-            self.myTestIsCII(ell1, [poly1, poly2], 'i',isTestInsideVec(3))
+            self.myTestIsCII(ell1, [poly1, poly2], 'i',isExpVec(3),true,...
+                'no')
             %
-            self.myTestIsCII(ell1, [poly1, poly3], 'i',isTestInsideVec(4))
+            self.myTestIsCII(ell1, [poly1, poly3], 'i',isExpVec(4),true,...
+                'no')
             %
             self.myTestIsCII([ell1, ell2], [poly1, poly3], 'i',...
-                isTestInsideVec(5))
+                isExpVec(5),true,'no')
             %
             self.myTestIsCII([ell1, ell2], [poly1, poly2], 'u',...
-                isTestInsideVec(6))
+                isExpVec(6),true,'no')
             %
-            self.myTestIsCII(ell15D, poly15D, 'u',isTestInsideVec(7))
+            self.myTestIsCII([ell1, ell3], poly1, 'u',isExpVec(8),false,'no')
             %
-            self.myTestIsCII([ell1, ell3], poly1, 'u',isTestInsideVec(8))
+            self.myTestIsCII(ell1, [poly1, poly4],'i',isExpVec(9),false,'no')
             %
-            self.myTestIsCII(ell1, [poly1, poly4],'i',isTestInsideVec(9))
-            %
-            self.runAndCheckError(strcat('isContainedInIntersection',...
+            self.runAndCheckError(strcat('doesIntersectionContain',...
                 '(ell1, poly3D)'),'wrongSizes');
+            %
+            nDims2 = 9;
+            ell9D = ellipsoid(eye(nDims2));
+            poly9D = polytope([eye(nDims2); -eye(nDims2)],ones(2*nDims2,1)/...
+                sqrt(nDims2));       
+            self.myTestIsCII(ell9D, poly9D, 'u',isExpVec(7),true,'low')
+            self.myTestIsCII(ell14D, poly14D, 'u',isExpVec(7),true,'high')
         end
         %
         %
@@ -229,16 +238,16 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             ell6 = ellipsoid(c6Vec, sh6Mat);
             poly6 = polytope(eye(5),c6Vec);
             ellPolyIA6 = intersection_ia(ell6,poly6);
-            mlunitext.assert(isContainedInIntersection(ell6,ellPolyIA6) &&...
-                self.isEllInsidePolytope(poly6,ellPolyIA6));
+            mlunitext.assert(doesIntersectionContain(ell6,ellPolyIA6) &&...
+                isInside(ellPolyIA6,poly6));
             %
             sh7Mat = [1.1954 0.3180 1.3183; 0.3180 0.2167 0.5039;...
                 1.3183 0.5039 1.6320];
             ell7 = ellipsoid(sh7Mat);
             poly7 = polytope([1 1 1], 0.2);
             ellPolyIA7 = intersection_ia(ell7,poly7);
-            mlunitext.assert(isContainedInIntersection(ell7,ellPolyIA7) &&...
-                self.isEllInsidePolytope(poly7,ellPolyIA7));
+            mlunitext.assert(doesIntersectionContain(ell7,ellPolyIA7) &&...
+                isInside(ellPolyIA7,poly7));
             %
             %test if internal approximation is an empty ellipsoid, when
             %ellipsoid and polytope aren't intersect
@@ -404,29 +413,65 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             expPoly5 = expPoly4*transf2Mat+ transf2Vec;
             mlunitext.assert(poly5 == expPoly5);
         end
+        
+        function self = testDoesContain(self)
+            ellConstrMat = eye(2);
+            ellShift1 = [0.05; 0];
+            %
+            ell1 = ellipsoid(ellConstrMat);
+            ell2 = ellipsoid(ellShift1,ellConstrMat);
+            %
+            polyConstrMat = [-1 0; 1 0; 0 1; 0 -1];
+            %
+            polyK1Vec = [0; 0.1; 0.1; 0.1];
+            polyK2Vec = [0.5; 0.05; sqrt(3)/2; 0];
+            %
+            poly1 = polytope(polyConstrMat,polyK1Vec);
+            poly2 = polytope(polyConstrMat,polyK2Vec);
+            %
+            exp1Const = 0;
+            exp1Vec = [1, 1];
+            exp2Vec = [1, 1];
+            exp3Vec = [1, 0];
+            myTestDoesContain(ell2,poly2,exp1Const);
+            myTestDoesContain(ell1,[poly1,poly2],exp1Vec);
+            myTestDoesContain([ell1,ell2],poly1,exp2Vec);
+            myTestDoesContain([ell1,ell2],[poly1,poly2],exp3Vec);
+            function myTestDoesContain(ellVec,polyVec,expVec)
+                doesContainVec = doesContain(ellVec,polyVec);
+                mlunitext.assert(all(doesContainVec == expVec));
+            end
+        end
     end
     %
     methods(Static)
          %
-         function myTestIsCII(ellVec,polyVec,letter,isCIIExpVec)
-                isCIIVec = isContainedInIntersection(ellVec,polyVec,letter);
-                mlunitext.assert(all(isCIIVec == isCIIExpVec));
+         function myTestIsCII(ellVec,polyVec,letter,isCIIExpVec,checkBoth,...
+             timeCompare)
+                
+                if checkBoth
+                    tic;
+                    isCIIVec = doesIntersectionContain(ellVec,polyVec,...
+                        'mode',letter,'computeMode','lowDimFast');
+                    lowTime = toc;
+                    mlunitext.assert(all(isCIIVec == isCIIExpVec));
+                    tic;
+                    isCIIVec = doesIntersectionContain(ellVec,polyVec,...
+                        'mode',letter,'computeMode','highDimFast');
+                    highTime = toc;
+                    mlunitext.assert(all(isCIIVec == isCIIExpVec));
+                    if strcmp(timeCompare,'low')
+                        mlunitext.assert(lowTime <= highTime);
+                    elseif strcmp(timeCompare,'high')
+                        mlunitext.assert(lowTime >= highTime);
+                    end
+                else
+                    isCIIVec = doesIntersectionContain(ellVec,polyVec,...
+                        'mode',letter);
+                    mlunitext.assert(all(isCIIVec == isCIIExpVec));
+                end
          end
          %
-         %
-         function res = isEllInsidePolytope(poly,ell)
-             [constrMat constrValVec] = double(poly);
-             [shiftVec shapeMat] = double(ell);
-             suppFuncVec = zeros(size(constrValVec));
-             [nRows, ~] = size(constrValVec);
-             absTol = getAbsTol(ell);
-             for iRows = 1:nRows
-                 suppFuncVec(iRows) = constrMat(iRows,:)*shiftVec....
-                     + sqrt(constrMat(iRows,:)*shapeMat*...
-                     constrMat(iRows,:)');
-             end
-             res = all(suppFuncVec <= constrValVec+absTol);
-         end
          %
          function [testEll2DVec,testPoly2DVec,testEll60D,....
                  testPoly60D,ellArr] = genDataDistAndInter()

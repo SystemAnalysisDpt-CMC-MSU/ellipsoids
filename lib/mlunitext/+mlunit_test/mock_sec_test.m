@@ -86,7 +86,7 @@ classdef mock_sec_test < mlunitext.test_case
             %         test = mock_test('test_broken_method');
             %         [test, self.result] = run(test, self.result);
             %         assert_equals('test_result run=1 errors=1 failures=0',
-            %                       summary(self.result));
+            %                       getReport(self.result));
             %         assert(strcmp('set_up tear_down ', get_log(test)));
             %
             %  See also MOCK_TEST, TEST_TEST_CASE.
@@ -102,7 +102,7 @@ classdef mock_sec_test < mlunitext.test_case
             %         test = mock_test('test_broken_method');
             %         [test, self.result] = run(test, self.result);
             %         assert_equals('test_result run=1 errors=1 failures=0',
-            %                       summary(self.result));
+            %                       getReport(self.result));
             %         assert(strcmp('set_up tear_down ', get_log(test)));
             %
             %  See also MOCK_TEST, TEST_TEST_CASE.
@@ -117,7 +117,7 @@ classdef mock_sec_test < mlunitext.test_case
             %         test = mock_test('test_broken_method');
             %         [test, self.result] = run(test, self.result);
             %         assert_equals('test_result run=1 errors=1 failures=0',
-            %                       summary(self.result));
+            %                       getReport(self.result));
             %         assert(strcmp('set_up tear_down ', get_log(test)));
             %
             %  See also MOCK_TEST, TEST_TEST_CASE.

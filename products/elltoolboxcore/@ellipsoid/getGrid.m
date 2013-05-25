@@ -11,7 +11,7 @@ function [vGridMat, fGridMat] = getGrid(nDim,nPoints)
 %   regular:
 %       bpMat: double[nPoints,nDim] - boundary points of sphere
 %   optional:
-%       fVec: double[1,nFaces]/double[nPoints,3] - indices of points in
+%       fVec: double[1,nFaces]/double[nPoints,3] - indices of points in 
 %           each face of bpMat graph
 %
 % $Author: Vitaly Baranov <vetbar42@gmail.com>$ $Date: 13-04-2013$
@@ -35,7 +35,7 @@ vGridMat(vGridMat == 0) = eps;
 %
 function [ bpMat, fVec] = spherebndr_2d(nPoints)
 %
-% SPHEREBNDR_2D - computes the boudary of 2D ellipsoid
+% SPHEREBNDR_2D - computes the boudary of 2D ellipsoid 
 %
 % Input:
 %   regular:
@@ -62,7 +62,7 @@ bpMat = gras.geom.circlepart(nPoints);
 %
 function [ bpMat, fMat] = spherebndr_3d(nPoints)
 %
-% SPHREEBNDR_3d - computes the boudary of 3D ellipsoid
+% SPHREEBNDR_3d - computes the boudary of 3D ellipsoid 
 %
 % Input:
 %   regular:

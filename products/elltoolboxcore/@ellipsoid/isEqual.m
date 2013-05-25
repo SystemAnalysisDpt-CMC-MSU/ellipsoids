@@ -44,7 +44,7 @@ isEqualArr = arrayfun(@(x, y) fSingleComp(x, y), ell1Arr, ell2Arr);
         isEq = firstEll.dimension() == secondEll.dimension();
         if isEq
             isEq = false;
-            if ~firstEll.isempty() && ~secondEll.isempty()
+            if ~firstEll.isEmpty() && ~secondEll.isEmpty()
                 relTol =...
                     min(firstEll.getRelTol(), secondEll.getRelTol());
                 [firstCenterVec, firstShapeMat] = firstEll.parameters();
@@ -53,7 +53,7 @@ isEqualArr = arrayfun(@(x, y) fSingleComp(x, y), ell1Arr, ell2Arr);
                     norm(firstCenterVec - secondCenterVec) <= relTol &&...
                     norm(firstShapeMat - secondShapeMat) <= relTol;
             end
-            if firstEll.isempty() && secondEll.isempty()
+            if firstEll.isEmpty() && secondEll.isEmpty()
                 isEq = true;
             end
         end

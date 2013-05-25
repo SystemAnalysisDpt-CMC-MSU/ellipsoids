@@ -45,7 +45,7 @@ classdef EllipsoidSecTestCase < mlunitext.test_case
             isTestResVec = isbaddirection(test1Ell, test2Ell, aMat,...
                 absTol);
             isTestRes = any(isTestResVec);
-            mlunitext.assert_equals(0, isTestRes);
+            mlunitext.assert_equals(false, isTestRes);
             [test1Ell, test2Ell] = createTypicalEll(6);
             compareExpForIsBadDir(test1Ell, test2Ell, [1, -1; 0, 0], ...
                 [1, -1; 2, 3],absTol);
@@ -720,9 +720,9 @@ function analyticResEllVec = calcExpMinkSum(isExtApx, nDirs, aMat, ...
 end
 function compareForIsCII(test1EllVec, test2EllVec, myString, myResult)
     if isempty(myString)
-        testRes = isContainedInIntersection(test1EllVec, test2EllVec);
+        testRes = doesIntersectionContain(test1EllVec, test2EllVec);
     else
-        testRes = isContainedInIntersection(test1EllVec, test2EllVec, myString);
+        testRes = doesIntersectionContain(test1EllVec, test2EllVec, 'mode', myString);
     end
     mlunitext.assert_equals(myResult, testRes);
 end

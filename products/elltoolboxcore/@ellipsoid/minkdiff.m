@@ -1,53 +1,56 @@
-function [centVec, boundPointMat] = minkdiff(fstEll,secEll,varargin)
+function [varargout] = minkdiff(varargin)
 %
-% MINKDIFF - computes geometric (Minkowski) difference of two
+%MINKDIFF - computes geometric (Minkowski) difference of two
 %            ellipsoids in 2D or 3D.
+% Usage:
+%MINKDIFF(inpEllMat,'Property',PropValue,...) - Computes
+%geometric difference of two ellipsoids in the array inpEllMat, if
+%1 <= min(dimension(inpEllMat)) = max(dimension(inpEllMat)) <= 3,
+%       and plots it if no output arguments are specified.
 %
-%   MINKDIFF(fstEll, secEll, Options) - Computes geometric difference
-%       of two ellipsoids fstEll - secEll, if 1 <= dimension(fstEll) =
-%       = dimension(secEll) <= 3, and plots it if no output arguments
-%       are specified.
-%   [centVec, boundPointMat] = MINKDIFF(fstEll, secEll)  Computes
-%       geometric difference of two ellipsoids fstEll - secEll.
-%       Here centVec is the center, and boundPointMat - matrix
-%       whose colums are boundary points.
-%   MINKDIFF(fstEll, secEll)  Plots geometric difference of two
-%       ellipsoids fstEll - secEll in default (red) color.
-%   MINKDIFF(fstEll, secEll, Options)  Plots geometric difference
-%       fstEll - secEll using options given in the Options structure.
+%   [centVec, boundPointMat] = MINKDIFF(inpEllMat) - Computes
+%       geometric difference of two ellipsoids in inpEllMat. 
+%       Here centVec is
+%       the center, and boundPointMat - array of boundary points.
+%   MINKDIFF(inpEllMat) - Plots geometric differencr of two 
+%   ellipsoids in inpEllMat in default (red) color.
+%   MINKDIFF(inpEllMat, 'Property',PropValue,...) - 
+%    Plots geometric sum of inpEllMat
+%       with setting properties.
 %
 %   In order for the geometric difference to be nonempty set,
 %   ellipsoid fstEll must be bigger than secEll in the sense that
 %   if fstEll and secEll had the same centerVec, secEll would be
 %   contained inside fstEll.
-%
 % Input:
 %   regular:
-%       fstEll: ellipsoid [1, 1] - first ellipsoid. Suppose
-%           nDim - space dimension, nDim = 2 or 3.
-%       secEll: ellipsoid [1, 1] - second ellipsoid
-%           of the same dimention.
+%       ellArr:  Ellipsoid: [dim11Size,dim12Size,...,dim1kSize] -
+%                array of 2D or 3D Ellipsoids objects. All ellipsoids in ellArr
+%                must be either 2D or 3D simutaneously.
 %
-%   optional:
-%       Options: structure[1, 1] - fields:
-%           show_all: double[1, 1] - if 1, displays
-%               also ellipsoids fstEll and secEll.
-%           newfigure: double[1, 1] - if 1, each plot
-%               command will open a new figure window.
-%           fill: double[1, 1] - if 1, the resulting
-%               set in 2D will be filled with color.
-%           color: double[1, 3] - sets default colors
-%               in the form [x y z].
-%           shade: double[1, 1] = 0-1 - level of transparency
-%               (0 - transparent, 1 - opaque).
+%   properties:
+%       'shawAll': logical[1,1] - if 1, plot all ellArr.
+%                    Default value is 0.
+%       'fill': logical[1,1]/logical[dim11Size,dim12Size,...,dim1kSize]  -
+%               if 1, ellipsoids in 2D will be filled with color.
+%               Default value is 0.
+%       'lineWidth': double[1,1]/double[dim11Size,dim12Size,...,dim1kSize]  -
+%                    line width for 1D and 2D plots. Default value is 1.
+%       'color': double[1,3]/double[dim11Size,dim12Size,...,dim1kSize,3] -
+%                sets default colors in the form [x y z]. 
+%               Default value is [1 0 0].
+%       'shade': double[1,1]/double[dim11Size,dim12Size,...,dim1kSize]  -
+%                level of transparency between 0 and 1
+%                   (0 - transparent, 1 - opaque).
+%                Default value is 0.4.
+%       'relDataPlotter' - relation data plotter object.
+%       Notice that property vector could have different dimensions, only
+%       total number of elements must be the same.
 %
 % Output:
-%   centVec: double[nDim, 1]/double[0, 0] - center of the resulting set.
-%       centVec may be empty if ellipsoid fsrEll isn't bigger
-%       than secEll.
-%   boundPointMat: double[nDim, nBoundPoints]/double[0, 0] - set of
-%       boundary points (vertices) of resulting set. boundPointMat
-%       may be empty if  ellipsoid fstEll isn't bigger than secEll.
+%   centVec: double[nDim, 1] - center of the resulting set.
+%   boundPointMat: double[nDim, nBoundPoints] - set of boundary
+%       points (vertices) of resulting set.
 %
 % Example:
 %   firstEllObj = ellipsoid([-1; 1], [2 0; 0 3]);
@@ -55,208 +58,132 @@ function [centVec, boundPointMat] = minkdiff(fstEll,secEll,varargin)
 %   [centVec, boundPointMat] = minkdiff(firstEllObj, secEllObj);
 % 
 % 
-% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 
-%              2004-2008 $
+% $Author: <Ilya Lyubich>  <lubi4ig@gmail.com> $    $Date: <8 January 2013> $
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Cybernetics,
+%            System Analysis Department 2013 $
 
-import elltool.conf.Properties;
-import elltool.logging.Log4jConfigurator;
+import elltool.plot.plotgeombodyarr;
 import modgen.common.throwerror;
-import modgen.common.checkmultvar;
+isPlotCenter3d = false;
+if nargout == 0
+    output = minkCommonAction(@getEllArr,@fCalcBodyTriArr,...
+        @fCalcCenterTriArr,varargin{:});
+    plObj = output{1};
+    isHold = output{2};
+    if isPlotCenter3d
+        [reg]=...
+            modgen.common.parseparext(varargin,...
+            {'relDataPlotter';...
+            [],;@(x)isa(x,'smartdb.disp.RelationDataPlotter'),...
+            });
+        plotgeombodyarr('ellipsoid',@fCalcCenterTriArr,...
+            @(varargin)patch(varargin{:},'marker','*'),reg{:},...
+            'relDataPlotter',plObj, 'priorHold',true,'postHold',isHold);
+    end
+elseif nargout == 1
+    output = minkCommonAction(@getEllArr,@fCalcBodyTriArr,...
+        @fCalcCenterTriArr,varargin{:});
+    plObj = output{1};
+    isHold = output{2};
+    if isPlotCenter3d
+        [reg]=...
+            modgen.common.parseparext(varargin,...
+            {'relDataPlotter';...
+            [],;@(x)isa(x,'smartdb.disp.RelationDataPlotter'),...
+            });
+        plObj = plotgeombodyarr('ellipsoid',@fCalcCenterTriArr,...
+            @(varargin)patch(varargin{:},'marker','*'),reg{:},...
+            'relDataPlotter',plObj, 'priorHold',true,'postHold',isHold);
+    end
+    varargout = {plObj};
+else
+    [qDifMat,boundMat] = minkCommonAction(@getEllArr,@fCalcBodyTriArr,...
+        @fCalcCenterTriArr,varargin{:});
+    varargout(1) = {qDifMat};
+    varargout(2) = {boundMat};
+end
+    function ellsVec = getEllArr(ellsArr)
+        if isa(ellsArr, 'ellipsoid')
+            cnt    = numel(ellsArr);
+            ellsVec = reshape(ellsArr, cnt, 1);
+        end
+    end
 
-persistent logger;
-
-ellipsoid.checkIsMe(fstEll,'first');
-ellipsoid.checkIsMe(secEll,'second');
-checkmultvar('isscalar(x1)&&isscalar(x2)',2,fstEll,secEll,...
-    'errorTag','wrongInput','errorMessage',...
-    'first and second arguments must be single ellipsoids.');
-nDim = dimension(fstEll);
-checkmultvar('(x1==x2)&&(x1<4)',2,nDim,dimension(secEll),...
-    'errorTag','wrongSizes','errorMessage',...
-    'ellipsoids must be of the same dimension, which not higher than 3.');
-nArgOut = nargout;
-if ~isbigger(fstEll, secEll)
-    switch nArgOut
-        case 0,
-            if isempty(logger)
-                logger=Log4jConfigurator.getLogger();
+    function [qDifMat,fMat] = fCalcCenterTriArr(ellsArr)
+        nDim = dimension(ellsArr(1));
+        if nDim == 1
+            [ellsArr,~] = rebuildOneDim2TwoDim(ellsArr);
+        end
+        fstEll = ellsArr(1);
+        secEll = ellsArr(2);
+        if ~isbigger(fstEll, secEll)
+            qDifMat = {[]};
+            fMat = {[]};
+        else
+            centVec = fstEll.centerVec - secEll.centerVec;
+            boundPointMat = centVec;
+            qDifMat = {boundPointMat};
+            fMat = {[1 1]};
+        end
+    end
+    function [xDifMat,fMat] = fCalcBodyTriArr(ellsArr)
+        import modgen.common.throwerror;
+%         import calcdiffonedir;
+        nDim = dimension(ellsArr(1));
+        if nDim == 1
+            [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr);
+        end
+        if numel(ellsArr) ~= 2
+            throwerror('wrongInput','minkdiff needs 2 ellipsods');
+        end
+        fstEll = ellsArr(1);
+        secEll = ellsArr(2);
+        if ~isbigger(fstEll, secEll)
+            xDifMat = {[]};
+            fMat = {[]};
+        else
+            if nDim == 3
+                isPlotCenter3d = true;
             end
-            fstStr = 'Geometric difference of these two ellipsoids';
-            secStr = ' is empty set.';
-            logger.info([fstStr secStr]);
-            return;
-        case 1,
-            centVec = [];
-            return;
+            fstEllShMat = fstEll.shapeMat;
+            if isdegenerate(fstEll)
+                fstEllShMat = ...
+                    ellipsoid.regularize(fstEllShMat,fstEll.absTol);
+            end
+            secEllShMat = secEll.shapeMat;
+            if isdegenerate(secEll)
+                secEllShMat = ...
+                    ellipsoid.regularize(secEllShMat,secEll.absTol);
+            end
+            [lMat, fMat] = getGridByFactor(fstEll);
+            lMat = lMat';
+            absTolVal=min(fstEll.absTol, secEll.absTol);
+            [isBadDirVec,pUniversalVec] =...
+                ellipsoid.isbaddirectionmat(fstEllShMat, secEllShMat, ...
+                lMat,absTolVal);
+            isGoodDirVec = ~isBadDirVec;
+            [diffBoundMat,isPlotCenter3d] = ...
+                ellipsoid.calcdiffonedir(fstEll,secEll,lMat,...
+                pUniversalVec,isGoodDirVec);
+            boundPointMat = cell2mat(diffBoundMat);
+            boundPointMat = [boundPointMat, boundPointMat(:, 1)];
+            fMat = {fMat};
             
-        otherwise,
-            centVec = [];
-            boundPointMat = [];
-            return;
+            xDifMat = {boundPointMat};
+        end
     end
-end
 
-if nargin > 2 && isstruct(varargin{1})
-	Options = varargin{1};
-else
-    Options = [];
-end
-
-if ~isfield(Options, 'newfigure')
-    Options.newfigure = 0;
-end
-
-if ~isfield(Options, 'fill')
-    Options.fill = 0;
-end
-
-if ~isfield(Options, 'show_all')
-    Options.show_all = 0;
-end
-
-if ~isfield(Options, 'color')
-    Options.color = [1 0 0];
-end
-
-if ~isfield(Options, 'shade')
-    Options.shade = 0.4;
-else
-    Options.shade = Options.shade(1, 1);
-end
-
-clrVec  = Options.color;
-
-if ~nArgOut
-    isHld = ishold;
-end
-
-if (Options.show_all ~= 0) && (nargout == 0)
-    plot([fstEll secEll], 'b');
-    hold on;
-    if Options.newfigure ~= 0
-        figure;
-    else
-        newplot;
+    function [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr)
+        ellsCMat = arrayfun(@(x) oneDim2TwoDim(x), ellsArr, ...
+            'UniformOutput', false);
+        ellsArr = vertcat(ellsCMat{:});
+        nDim = 2;
+        function ellTwoDim = oneDim2TwoDim(ell)
+            [ellCenVec, qMat] = ell.double();
+            ellTwoDim = ellipsoid([ellCenVec, 0].', ...
+                diag([qMat, 0]));
+        end
     end
-end
 
-if Properties.getIsVerbose()
-    if isempty(logger)
-        logger=Log4jConfigurator.getLogger();
-    end
-    if nArgOut == 0
-        fstStr = 'Computing and plotting geometric difference ';
-        secStr = 'of two ellipsoids...';
-        logger.info([fstStr secStr]);
-    else
-        logger.info('Computing geometric difference of two ellipsoids...');
-    end
-end
-
-fstEllShMat = fstEll.shapeMat;
-if isdegenerate(fstEll)
-    fstEllShMat = ellipsoid.regularize(fstEllShMat,fstEll.absTol);
-end
-secEllShMat = secEll.shapeMat;
-if isdegenerate(secEll)
-    secEllShMat = ellipsoid.regularize(secEllShMat,secEll.absTol);
-end
-switch nDim
-    case 2,
-        centVec = fstEll.centerVec - secEll.centerVec;
-        phiVec = linspace(0, 2*pi, fstEll.nPlot2dPoints);
-        absTolVal=min(fstEll.absTol, secEll.absTol);
-        lMat = ellipsoid.rm_bad_directions(fstEllShMat, ...
-            secEllShMat, [cos(phiVec); sin(phiVec)],absTolVal);
-        if size(lMat, 2) > 0
-            [~, bpMat] = rho(fstEll, lMat);
-            [~, subBoundPointMat] = rho(secEll, lMat);
-            bpMat = bpMat - subBoundPointMat;
-            boundPointMat = [bpMat bpMat(:, 1)];
-        else
-            boundPointMat = centVec;
-        end
-        if nArgOut == 0
-            if Options.fill ~= 0
-                fill(boundPointMat(1, :), boundPointMat(2, :), clrVec);
-                hold on;
-            end
-            hPlot = ell_plot(boundPointMat);
-            hold on;
-            set(hPlot, 'Color', clrVec, 'LineWidth', 2);
-            hPlot = ell_plot(centVec, '.');
-            set(hPlot, 'Color', clrVec);
-        end
-        
-    case 3,
-        centVec   = fstEll.centerVec - secEll.centerVec;
-        fstEll3dPnt = fstEll.nPlot3dPoints()/2;
-        fstEll3dPntSub = fstEll3dPnt/2;
-        psyVec = linspace(0, pi, fstEll3dPntSub);
-        phiVec = linspace(0, 2*pi, fstEll3dPnt);
-        lMat   = zeros(3,fstEll3dPnt*(fstEll3dPntSub-2));
-        for iFstEll3dPnt = 2:(fstEll3dPntSub - 1)
-            arrVec = cos(psyVec(iFstEll3dPnt))*ones(1, fstEll3dPnt);
-            lMat(:,(fstEll3dPnt*(iFstEll3dPnt-2))+(1:fstEll3dPnt)) ...
-                = [cos(phiVec)*sin(psyVec(iFstEll3dPnt)); ...
-                sin(phiVec)*sin(psyVec(iFstEll3dPnt)); arrVec];
-        end
-        absTolVal=min(fstEll.absTol, secEll.absTol);
-        lMat = ellipsoid.rm_bad_directions(fstEllShMat,...
-            secEllShMat, lMat,absTolVal);
-        if size(lMat, 2) > 0
-            [~, boundPointMat] = rho(fstEll, lMat);
-            [~, subBoundPointMat] = rho(secEll, lMat);
-            boundPointMat      = boundPointMat - subBoundPointMat;
-        else
-            boundPointMat = centVec;
-        end
-        if nArgOut == 0
-            nBoundPonts = size(boundPointMat, 2);
-            if nBoundPonts > 1
-                chllMat = convhulln(boundPointMat');
-                patch('Vertices', boundPointMat', 'Faces', ...
-                    chllMat, 'FaceVertexCData', ...
-                    clrVec(ones(1, nBoundPonts), :), ...
-                    'FaceColor', 'flat', ...
-                    'FaceAlpha', Options.shade(1, 1));
-            else
-                hPlot = ell_plot(centVec, '*');
-                set(hPlot, 'Color', clrVec);
-            end
-            hold on;
-            shading interp;
-            lighting phong;
-            material('metal');
-            view(3);
-        end
-        
-    otherwise,
-        centVec = fstEll.centerVec - secEll.centerVec;
-        boundPointMat(1, 1) = fstEll.centerVec - secEll.centerVec + ...
-            sqrt(secEll.shapeMat) - realsqrt(fstEll.shapeMat);
-        boundPointMat(1, 2) = fstEll.centerVec - secEll.centerVec + ...
-            sqrt(fstEll.shapeMat) - realsqrt(secEll.shapeMat);
-        if nArgOut == 0
-            hPlot = ell_plot(boundPointMat);
-            hold on;
-            set(hPlot, 'Color', clrVec, 'LineWidth', 2);
-            hPlot = ell_plot(centVec, '*');
-            set(hPlot, 'Color', clrVec);
-        end
-        
-end
-
-if nArgOut == 0
-    if isHld == 0
-        hold off;
-    end
-end
-
-if nArgOut == 1
-    centVec = boundPointMat;
-end
-if nArgOut == 0
-    clear centVec boundPointMat;
 end

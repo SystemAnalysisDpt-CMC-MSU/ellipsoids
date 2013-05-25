@@ -1,4 +1,4 @@
-classdef test_test_suite < mlunitext.test_case
+classdef test_test_suite < mlunitext.test_case&mlunit_test.AuxChecker
     % TEST_TEST_SUITE tests the class test_suite.
     %
     %  Example:
@@ -48,8 +48,7 @@ classdef test_test_suite < mlunitext.test_case
             tests{3} = mlunit_test.mock_test('test_method_no_return');
             self.suite.add_tests(tests);
             self.result = run(self.suite, self.result);
-            assert(strcmp('mlunitext.test_result run=3 errors=1 failures=0', ...
-                summary(self.result)));
+            self.checkResultReport(self.result,3,1,0);
         end
         function testFromTestCaseNameList(self)
             % TEST_ADD_TESTS_AS_A_SUITE tests the method
@@ -74,12 +73,12 @@ classdef test_test_suite < mlunitext.test_case
             resultEth = run(suiteEth, resultEth);
             resultAlt = run(suiteAlt, resultAlt);
             
-            assert_equals(get_tests_run(resultEth),...
-                get_tests_run(resultAlt));
-            assert_equals(get_errors(resultEth),...
-                get_errors(resultAlt));
-            assert_equals(get_failures(resultEth),...
-                get_failures(resultAlt));            
+            assert_equals(getNTestsRun(resultEth),...
+                getNTestsRun(resultAlt));
+            assert_equals(getNErrors(resultEth),...
+                getNErrors(resultAlt));
+            assert_equals(getNFailures(resultEth),...
+                getNFailures(resultAlt));            
         end
         function test_add_tests_as_a_suite(self)
             % TEST_ADD_TESTS_AS_A_SUITE tests the method
@@ -97,8 +96,8 @@ classdef test_test_suite < mlunitext.test_case
                 'mlunit_test.mock_test');
             self.suite.add_test(suite);
             self.result = run(self.suite, self.result);
-            assert_equals(3, get_tests_run(self.result));
-            assert_equals(1, get_errors(self.result));
+            assert_equals(3, getNTestsRun(self.result));
+            assert_equals(1, getNErrors(self.result));
         end
 
         function test_construct(self)
@@ -119,7 +118,7 @@ classdef test_test_suite < mlunitext.test_case
             assert_equals('mlunit_test.mock_test', suite.str());
 
             self.result = run(suite, self.result); %#ok
-            assert_equals(2, get_tests_run(self.result));
+            assert_equals(2, getNTestsRun(self.result));
 
             tests{2}.set_marker('broken');
             suite = test_suite(tests);
@@ -129,7 +128,7 @@ classdef test_test_suite < mlunitext.test_case
             assert_equals('mlunit_test.mock_test[nada]', suite.str());
             %
             self.result = run(suite, self.result);
-            assert_equals(4, get_tests_run(self.result));
+            assert_equals(4, getNTestsRun(self.result));
             %
 
         end
@@ -180,27 +179,6 @@ classdef test_test_suite < mlunitext.test_case
             suite.add_test(mlunit_test.mock_test('test_broken_method'));
             assert(2 == count_test_cases(suite));
         end
-
-        function test_should_stop(self)
-            % TEST_SHOULD_STOP TESTS the method
-            %   test_result.set_should_stop.
-            %
-            % Example:
-            %         run(gui_test_runner,
-            %             'test_test_suite(''test_should_stop'');');
-            %
-            %  See also MLUNITEXT.TEST_RESULT.SET_SHOULD_STOP.
-
-            set_should_stop(self.result);
-            self.suite.add_test(mlunit_test.mock_test('test_method'));
-            self.result = run(self.suite, self.result);
-            assert(strcmp('mlunitext.test_result run=0 errors=0 failures=0', ...
-                summary(self.result)));
-            [nErrors,nFailures]=self.result.getErrorFailCount();
-            assert(nErrors==0);
-            assert(nFailures==0);
-        end
-
         function test_suite(self)
             % TEST_SUITE TESTS the basic behaviour of
             %   test_suite.run.
@@ -215,8 +193,7 @@ classdef test_test_suite < mlunitext.test_case
             self.suite.add_test(...
                 mlunit_test.mock_test('test_broken_method'));
             self.result = run(self.suite, self.result);
-            assert(strcmp('mlunitext.test_result run=2 errors=1 failures=0', ...
-                summary(self.result)));
+            self.checkResultReport(self.result,2,1,0);
             [nErrors,nFailures]=self.result.getErrorFailCount();
             assert(nErrors==1);
             assert(nFailures==0);
