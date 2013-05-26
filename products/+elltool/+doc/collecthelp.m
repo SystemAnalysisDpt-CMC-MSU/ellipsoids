@@ -372,10 +372,6 @@ for iSect = 1:length(sectionNameCell);
            fullFuncName  = [className, '.', finalFuncNameCell{jFunc}];
            bufFuncName = [className, '/', finalFuncNameCell{jFunc}];
            bufHelp = help(fullFuncName);
-%            if isempty(bufHelp)
-%                jFunc
-%                fullFuncName
-%            end
            bufHelp = fDeleteHelpStr(bufHelp, bufFuncName);
            helpCell{iHelp} = bufHelp;
            iHelp = iHelp + 1;
@@ -391,7 +387,6 @@ funcInfo.help = helpCell;
 result = funcInfo;
 result.sectionName = sectionNameCell';
 result.numbOfClass = nClass;
-result.ignorList = ignorMethodList;
 end
 
 function result = fDeleteHelpStr(helpText, helpStr)
