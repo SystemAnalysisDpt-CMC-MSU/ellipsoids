@@ -706,6 +706,9 @@ classdef SuiteEllTube < mlunitext.test_case
                 'fromMat1EllTube.interp([10])','wrongInput');
             self.runAndCheckError(...
                 'fromMat1EllTube.interp([1,2;3,4])','wrongInput');
+            ellTubeVec = [interpEllTube, interpEllTube];
+            self.runAndCheckError(...
+                'ellTubeVec.interp([2])',':noScalarObj');
             %
             function [projOrthMatArray,projOrthMatTransArray]=...
                     fGetProjMat(projMat,timeVec,varargin)

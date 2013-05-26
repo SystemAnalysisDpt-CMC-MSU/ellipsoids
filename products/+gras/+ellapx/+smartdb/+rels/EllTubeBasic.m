@@ -665,6 +665,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             import gras.ellapx.smartdb.rels.EllTube;
             import modgen.common.throwerror;
             %
+            self.checkIfObjectScalar();
             if (isempty(timeVec))
                 throwerror('wrongInput',...
                     'time vector should not be empty');
@@ -680,7 +681,6 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     'no extrapolation allowed');
             end
             %
-            self.checkIfObjectScalar();
             if isempty(self) 
                 interpEllTube = self;
             else
