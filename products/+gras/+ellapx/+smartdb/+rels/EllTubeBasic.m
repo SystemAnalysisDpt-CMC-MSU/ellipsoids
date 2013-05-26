@@ -7,6 +7,9 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
         FCODE_SCALE_FACTOR
         FCODE_M_ARRAY
     end
+    methods(Access=protected, Abstract)
+        checkIfObjectScalar(~);
+    end
     methods (Static, Access=protected,Sealed)
         function [xTouchMat,xTouchOpMat]=calcTouchCurves(QArray,aMat,...
                 ltGoodDirMat)
@@ -413,7 +416,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     scaleFactor, MArray, dim, sTime, approxSchemaName, ...
                     approxSchemaDescr, approxType,... 
                     timeVec, calcPrecision, indSTime, ltGoodDirMat,...
-                    lsGoodDirVec,ltGoodDirNormVec,lsGoodDirNorm,...
+                    lsGoodDirVec,~,lsGoodDirNorm,...
                     ~, ~, xsTouchVec, xsTouchOpVec)
                 import gras.interp.MatrixInterpolantFactory;
                 QArraySpline = ...
@@ -660,14 +663,187 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
         function interpEllTube = interp(self, timeVec)
             import gras.interp.MatrixInterpolantFactory;
             import gras.ellapx.smartdb.rels.EllTube;
-            %TODO: Figure out why this does not work:
-            %self.checkIfObjectScalar();
+            import modgen.common.throwerror;
+            %
+            if (isempty(timeVec))
+                throwerror('wrongInput',...
+                    'time vector should not be empty');
+            end           
+            if (ndims(timeVec)~=2 || size(timeVec, 1)~=1)
+                throwerror('wrongInput',...
+                    'timeVec must be an array');
+            end
+            selfTimeVec = self.timeVec{1};
+            if (timeVec(end) > selfTimeVec(end) ||...
+                    timeVec(1) < selfTimeVec(1))
+                throwerror('wrongInput',...
+                    'no extrapolation allowed');
+            end
+            %
+            self.checkIfObjectScalar();
             if isempty(self) 
                 interpEllTube = self;
             else
                 SData = self.getInterpInternal(timeVec);
                 interpEllTube = self.createInstance(SData);
             end
+        end
+        %
+    end
+    methods(Sealed)
+        function [isEqual, reportStr] = isEqual(self, ellTubeObj, varargin)
+            import gras.ellapx.smartdb.F;
+            import gras.ellapx.enums.EApproxType;
+            import elltool.logging.Log4jConfigurator;
+            %
+            persistent logger;
+            if (nargout == 2)
+                reportStr = [];
+            end
+            %
+            APPROX_TYPE = F.APPROX_TYPE;
+            SSORT_KEYS={'sTime','lsGoodDirVec','approxType'};
+            FIELDS_NOT_TO_COMPARE={ ...
+                'LT_GOOD_DIR_MAT';'LT_GOOD_DIR_NORM_VEC';...
+                'LS_GOOD_DIR_NORM';'LS_GOOD_DIR_VEC';'IND_S_TIME';...
+                'S_TIME';'TIME_VEC'};
+            %
+            absTol = max(self.calcPrecision) +...
+                max(ellTubeObj.calcPrecision);
+            %
+            ellTube = self;
+            compEllTube = ellTubeObj;
+            ellTube.sortBy(SSORT_KEYS);
+            compEllTube.sortBy(SSORT_KEYS);
+            %
+            if nargin == 4
+                ellTube = ellTube.getTuplesFilteredBy(APPROX_TYPE,...
+                    varargin{2});
+                ellTube = ellTube.getTuples(varargin{1});
+                compEllTube = compEllTube.getTuplesFilteredBy(APPROX_TYPE,...
+                    varargin{2});
+            end            
+            %
+            pointsNum = numel(ellTube.timeVec{1});
+            newPointsNum = numel(compEllTube.timeVec{1});
+            firstTimeVec = ellTube.timeVec{1};
+            secondTimeVec = compEllTube.timeVec{1};
+            %
+            if isempty(logger)
+                logger=Log4jConfigurator.getLogger();
+            end
+            %
+            if logger.isDebugEnabled
+                if pointsNum ~= newPointsNum
+                    logger.debug('Inequal time knots count');
+                else
+                    logger.debug('Equal time knots count');
+                end                
+            end
+            %
+            % Checking time bounds equality
+            %
+            if (abs(firstTimeVec(end)-secondTimeVec(end)) > absTol)
+                isEqual = false;
+                if (nargout == 2)
+                    reportStr=[reportStr, ...
+                        sprintf('Ending times differ by %f. ',...
+                        abs(firstTimeVec(end)-secondTimeVec(end)))];
+                end
+                return;
+            end
+            if (abs(firstTimeVec(1)-secondTimeVec(1)) > absTol)
+                isEqual = false;
+                if (nargout == 2)
+                    reportStr=[reportStr, ...
+                        sprintf('Beginning times differ by %f. ',...
+                        abs(firstTimeVec(end)-secondTimeVec(end)))];
+                end
+                return;
+            end   
+            %
+            % Checking enclosion of time vectors
+            %
+            if (length(firstTimeVec) < length(secondTimeVec))
+                [isTimeVecsEnclosed, secondIndexVec] = ...
+                    fIsGridSubsetOfGrid(secondTimeVec, firstTimeVec);
+            else
+                [isTimeVecsEnclosed, firstIndexVec] = ...
+                    fIsGridSubsetOfGrid(firstTimeVec, secondTimeVec);
+            end
+            %
+                fieldsNotToCompVec =...
+                    F.getNameList(FIELDS_NOT_TO_COMPARE);
+                fieldsToCompVec =...
+                    setdiff(ellTube.getFieldNameList, fieldsNotToCompVec);
+            %  
+            if (isTimeVecsEnclosed)
+                if (nargout == 2)
+                    reportStr = [reportStr,...
+                        'Enclosed time vectors. Common times checked. '];
+                end
+                if (length(firstTimeVec) < length(secondTimeVec))
+                    compEllTube = ...
+                        compEllTube.thinOutTuples(secondIndexVec);
+                else                    
+                    ellTube = ellTube.thinOutTuples(firstIndexVec);
+                end
+                [isEqual, eqReportStr] = compEllTube.getFieldProjection(...
+                    fieldsToCompVec).isEqual(...
+                    ellTube.getFieldProjection(fieldsToCompVec),...
+                    'maxTolerance', absTol,...
+                    'checkTupleOrder','true');
+                if (nargout == 2)
+                    reportStr = [reportStr, eqReportStr];
+                end
+                return;
+            end
+            %
+            % Time vectors are not enclosed, 
+            % though start and finish at the same time
+            % So interpolating from common time knots
+            %
+            if (nargout == 2)
+                reportStr = [reportStr, 'Interpolated from common ',...
+                    'time points. '];
+            end
+            unionTimeVec = union(firstTimeVec, secondTimeVec);
+            ellTube = ellTube.interp(unionTimeVec);
+            compEllTube = compEllTube.interp(unionTimeVec);
+            [isEqual, eqReportStr] = compEllTube.getFieldProjection(...
+                fieldsToCompVec).isEqual(...
+                ellTube.getFieldProjection(fieldsToCompVec),...
+                'maxTolerance', absTol,...
+                'checkTupleOrder','true');
+            if (nargout == 2)
+                reportStr = [reportStr, eqReportStr];
+            end
+            %
+            function [isSubset, indexVec] = ...
+                    fIsGridSubsetOfGrid(greaterVec, smallerVec)
+                indexVec = [];
+                if (length(greaterVec) < length(smallerVec))
+                    isSubset = false;
+                    return;
+                end
+                greaterIndex = 1;
+                smallerIndex = 1;
+                while (smallerIndex <= length(smallerVec) &&...
+                        greaterIndex <= length(greaterVec))
+                    if (abs(smallerVec(smallerIndex)-...
+                            greaterVec(greaterIndex))<absTol)
+                        smallerIndex = smallerIndex + 1;
+                        indexVec = [indexVec, greaterIndex];
+                    end
+                    greaterIndex = greaterIndex + 1;
+                end
+                if (smallerIndex > length(smallerVec))
+                    isSubset = true;
+                else
+                    isSubset = false;
+                end
+            end
+            %            
         end
     end
 end
