@@ -1,13 +1,19 @@
-function bpMat = ellbndr_3d(myEll)
+function [bpMat, fMat] = ellbndr_3d(myEll,nPoints)
 %
-% ELLBNDR_3D - compute the boundary of 3D ellipsoid. Private method.
+% ELLBNDR_3D - compute the boundary of 3D ellipsoid.
 %
 % Input:
 %   regular:
 %       myEll: ellipsoid [1, 1]- ellipsoid of the dimention 3.
 %
+%   optional:
+%       nPoints: number of boundary points
+%
 % Output:
-%   bpMat: double[3, nCols] - boundary points of the ellipsoid myEll.
+%   regular:
+%       bpMat: double[nPoints,3] - boundary points of ellipsoid
+%   optional:
+%       fMat: double[nFaces,3] - indices of face verties in bpMat
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
@@ -17,21 +23,18 @@ function bpMat = ellbndr_3d(myEll)
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
 %
-
-ellipsoid.checkIsMe(myEll);
-
-nMPoints   = 0.5*myEll.nPlot3dPoints;
-nNPoints   = 0.5*nMPoints;
-psyVec = linspace(0, pi, nNPoints);
-phiVec = linspace(0, 2*pi, nMPoints);
-
-cosPhiVec = repmat(cos(phiVec),1,(nNPoints - 2));
-sinPhiVec = repmat(sin(phiVec),1,(nNPoints - 2));
-cosPsyMat = repmat(cos(psyVec(2:(nNPoints - 1))),nMPoints,1);
-cosPsyVec = reshape(cosPsyMat,1,nMPoints*(nNPoints - 2));
-sinPsyMat = repmat(sin(psyVec(2:(nNPoints - 1))),nMPoints,1);
-sinPsyVec = reshape(sinPsyMat,1,nMPoints*(nNPoints - 2));
-lMat = [cosPhiVec.*sinPsyVec; ...
-        sinPhiVec.*sinPsyVec; ...
-        cosPsyVec];
-[~, bpMat] = rho(myEll, lMat);
+% $Author: Vitaly Baranov <vetbar42@gmail.com>$ $Date: 10-04-2013$
+% $Copyright: Lomonosov Moscow State University,
+%             Faculty of Computational Mathematics and Cybernetics,
+%             System Analysis Department 2013$
+%
+if nargin<2
+    nPoints=myEll.nPlot3dPoints;
+end
+[cenVec qMat]=double(myEll);
+absTol=myEll.getAbsTol();
+if nargout>1
+    [bpMat,fMat]=ellipsoid.ellbndr_3dmat(nPoints,cenVec,qMat,absTol);
+else
+    bpMat=ellipsoid.ellbndr_3dmat(nPoints,cenVec,qMat,absTol);
+end
