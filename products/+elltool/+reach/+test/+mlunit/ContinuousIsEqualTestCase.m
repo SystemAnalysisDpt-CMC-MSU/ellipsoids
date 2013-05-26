@@ -39,7 +39,7 @@ classdef ContinuousIsEqualTestCase < mlunitext.test_case
             % Equality of the identical reaches
             sameReachObj = self.reachFactObj.createInstance();
             [isEqual, reportStr] = self.reachObj.isEqual(sameReachObj);
-            mlunit.assert(isEqual, reportStr);
+            mlunitext.assert(isEqual, reportStr);
             % Inequality of reaches with different time
             %
             % finish time differs
@@ -48,14 +48,14 @@ classdef ContinuousIsEqualTestCase < mlunitext.test_case
             longerReachObj = elltool.reach.ReachContinuous(self.linSys,...
                 self.x0Ell, self.l0Mat, newTimeVec);
             [isEqual, reportStr] = self.reachObj.isEqual(longerReachObj);
-            mlunit.assert(~isEqual, reportStr);
+            mlunitext.assert(~isEqual, reportStr);
             % start time differs
             newTimeVec = self.timeVec;
             newTimeVec(1) = newTimeVec(1) - 1;
             longerReachObj = elltool.reach.ReachContinuous(self.linSys,...
                 self.x0Ell, self.l0Mat, newTimeVec);
             [isEqual, reportStr] = self.reachObj.isEqual(longerReachObj);
-            mlunit.assert(~isEqual, reportStr);
+            mlunitext.assert(~isEqual, reportStr);
             % Equality of enclosedly-grided reaches
             %
              REL_TOL1 = 0.0001;
@@ -69,9 +69,9 @@ classdef ContinuousIsEqualTestCase < mlunitext.test_case
                 self.x0Ell, self.l0Mat, self.timeVec, 1, ...
                 'absTol', ABS_TOL2, 'relTol', REL_TOL2);
             [isEqual, reportStr] = smallerReachObj.isEqual(biggerReachObj);
-            mlunit.assert(isEqual, reportStr);
+            mlunitext.assert(isEqual, reportStr);
             [isEqual, reportStr] = biggerReachObj.isEqual(smallerReachObj);
-            mlunit.assert(isEqual, reportStr);
+            mlunitext.assert(isEqual, reportStr);
             % Equality of not enclosedly-grided reaches
             % 
             smallerReachObj = elltool.reach.ReachContinuous(self.linSys,...
@@ -86,9 +86,9 @@ classdef ContinuousIsEqualTestCase < mlunitext.test_case
             newBiggerReachObj = ...
                 biggerReachObj.evolve(self.timeVec(2), self.linSys);
             [isEqual, reportStr] = smallerReachObj.isEqual(biggerReachObj);
-            mlunit.assert(isEqual, reportStr);
+            mlunitext.assert(isEqual, reportStr);
             [isEqual, reportStr] = biggerReachObj.isEqual(smallerReachObj);
-            mlunit.assert(isEqual, reportStr);
+            mlunitext.assert(isEqual, reportStr);
         end
     end
 end
