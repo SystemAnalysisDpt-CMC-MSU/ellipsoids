@@ -7,15 +7,26 @@ function FuncData=collecthelp(classNames, packNames, ignorClassList)
 %    ignorList:cell[1, 1]  - the names of ignored subpackages.
 % Output:
 %   FuncData: struct[1,1] with the following fields
+%       sectionName:cell[mElems,1] - list of section names
 %       funcName: cell[nElems,1] - list of function names
 %       className: cell[nElems,1] - list of class names
-%       defClassName: cell[nElems,1] - list of class names
+%       defClassName: cell[nElems,1] - list of defining class names
 %       help: cell[nElems,1] - list of help headers
 %       numbOfFunc:double[length(className), 1] - quantity of functions in
 %           each class
+%       numbOfClass:double[length(className), 1] - quantity of classes in
+%           each section
+%       inhFuncNameList:cell[nElems,1] - list of inherited functions for
+%              each class
+%       infoOfInhClass:double[nElems, 1] - quantity of inherited functions 
+%              in each class
+%       numberOfInhClass:double[nElems, 1] - vector of classes'
+%             indices , which inherit functions from other classes.
 %       isScript: logical[nElems,1] - a vector of 
 %           "is script" indicators
 % 
+
+numberOfInheritedClasses = FuncData.numbOfInhClasses;
 %Usage: FuncData=collecthelp(classNames, packNames, ignorList)
 %
 %
@@ -254,6 +265,7 @@ count = 0;
 countFunctions = 0;
 defFlag = 1;
 iClass = 0;
+
 for iElem = 1:length(classNameCell)
    if isDefClass(iElem) 
        count = count + 1;
@@ -278,6 +290,24 @@ for iElem = 1:length(classNameCell)
     nClass(iSection) = 1;
     numberFunc(iSection) = numberOfFunctions(iElem);
     end
+end
+iIgnor = 1;
+for iClass = 1:length(classNameCell)
+    isConstructor =ismember(classNameCell{iClass}, sectionNameCell);
+    if ~isConstructor
+        ignorMethodList{iIgnor} = classNameCell{iClass};
+        iIgnor = iIgnor + 1;
+    end
+end
+
+for iMethod = 1:length(ignorMethodList)
+    quantityDots =strfind(ignorMethodList{iMethod}, '.');
+    str = ignorMethodList{iMethod};
+    for iElem = 1:length(quantityDots)+1
+      [startStr finishStr]= strtok(str, '.');
+      str = finishStr;
+    end
+    ignorMethodList{iMethod} = startStr;
 end
 
 jBuf = 1;
@@ -324,10 +354,13 @@ finalNumberFunc(jNumb) = length(finalFuncNameCell);
 for jNumb = 2:length(numberFunc)
     bufFuncNameCell = ...
         unique(funcNameCell(indFunc: numberFunc(jNumb)+ indFunc - 1));
+    bufFuncNameCell = bufFuncNameCell(~ismember(bufFuncNameCell,...
+               ignorMethodList));
     finalFuncNameCell = [finalFuncNameCell; bufFuncNameCell];
     finalNumberFunc(jNumb) = length(bufFuncNameCell);
     indFunc = indFunc + numberFunc(jNumb);
 end
+
 
 iHelp = 1;
 helpCell = cell(length(finalFuncNameCell), 1);
@@ -339,6 +372,10 @@ for iSect = 1:length(sectionNameCell);
            fullFuncName  = [className, '.', finalFuncNameCell{jFunc}];
            bufFuncName = [className, '/', finalFuncNameCell{jFunc}];
            bufHelp = help(fullFuncName);
+%            if isempty(bufHelp)
+%                jFunc
+%                fullFuncName
+%            end
            bufHelp = fDeleteHelpStr(bufHelp, bufFuncName);
            helpCell{iHelp} = bufHelp;
            iHelp = iHelp + 1;
@@ -354,6 +391,7 @@ funcInfo.help = helpCell;
 result = funcInfo;
 result.sectionName = sectionNameCell';
 result.numbOfClass = nClass;
+result.ignorList = ignorMethodList;
 end
 
 function result = fDeleteHelpStr(helpText, helpStr)
