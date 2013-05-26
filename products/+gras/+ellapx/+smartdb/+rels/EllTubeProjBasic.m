@@ -5,13 +5,13 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
         REACH_TUBE_PREFIX='Reach';
         REG_TUBE_PREFIX='Reg';
     end
-    methods 
+    methods
         function namePrefix=getReachTubeNamePrefix(self)
             namePrefix=self.REACH_TUBE_PREFIX;
         end
         function namePrefix=getRegTubeNamePrefix(self)
             namePrefix=self.REG_TUBE_PREFIX;
-        end        
+        end
     end
     methods (Access=protected)
         function dependencyFieldList=getTouchCurveDependencyFieldList(~)
@@ -228,10 +228,10 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
             %   regular:
             %       self:
             %   optional:
-            %       plObj: smartdb.disp.RelationDataPlotter[1,1] - plotter object used 
+            %       plObj: smartdb.disp.RelationDataPlotter[1,1] - plotter object used
             %           for displaying ellipsoidal tubes
             %   properties:
-            %       fGetTubeColor: function_handle[1,1] - function with the following 
+            %       fGetTubeColor: function_handle[1,1] - function with the following
             %             signature:
             %           Input:
             %               regular:
@@ -241,12 +241,12 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
             %               patchColor: double[1,3] - RGB color vector
             %               patchAlpha: double[1,1] - transparency level
             %                   within [0,1] range
-            %           if not specified, an internal function getPatchColorByApxType 
-            %               is used. 
+            %           if not specified, an internal function getPatchColorByApxType
+            %               is used.
             % Output:
             %   plObj: smartdb.disp.RelationDataPlotter[1,1] - plotter
             %           object used for displaying ellipsoidal tubes
-            % 
+            %
             % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2013-01-06 $
             % $Copyright: Moscow State University,
             %            Faculty of Computational Mathematics and Computer Science,

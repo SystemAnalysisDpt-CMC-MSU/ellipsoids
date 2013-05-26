@@ -210,7 +210,7 @@ classdef SuiteEllTube < mlunitext.test_case
             projType=gras.ellapx.enums.EProjType.Static;
             projMatList={[1 0 1;0 1 1],[1 0 0;0 1 0]};
             rel=create();
-            relProj=rel.project(projType,projMatList,@fGetProjMat); 
+            relProj=rel.project(projType,projMatList,@fGetProjMat);
             relProj.plot();
             %
             MBeforeArray=rel.MArray;
@@ -639,7 +639,7 @@ classdef SuiteEllTube < mlunitext.test_case
             [~, ~] =...
                 extFromEllArrayEllTube.getEllArray(EApproxType.Internal);
         end
-        function self = testInterp(self) 
+        function self = testInterp(self)
             import gras.ellapx.enums.EApproxType;
             %
             qMatArray(:,:,3) = [1,0;0,2];
@@ -653,7 +653,7 @@ classdef SuiteEllTube < mlunitext.test_case
             lsGoodDirMat=[1;0];
             lsGoodDirArray(:,:,1) = lsGoodDirMat;
             lsGoodDirArray(:,:,2) = lsGoodDirMat;
-            lsGoodDirArray(:,:,3) = lsGoodDirMat;            
+            lsGoodDirArray(:,:,3) = lsGoodDirMat;
             approxSchemaDescr=char.empty(1,0);
             approxSchemaName=char.empty(1,0);
             approxType = EApproxType.Internal;
@@ -678,7 +678,7 @@ classdef SuiteEllTube < mlunitext.test_case
             mlunitext.assert(...
                 all(interpEllTube.QArray{1}(:,:,4)==[2,0;0,3]));
             mlunitext.assert(...
-                all(interpEllTube.QArray{1}(:,:,2)==[4,0;0,5]));            
+                all(interpEllTube.QArray{1}(:,:,2)==[4,0;0,5]));
             mlunitext.assert(all(interpDoubleEllTube.aMat{1}(:,2)==[4;5]));
             mlunitext.assert(all(interpDoubleEllTube.aMat{2}(:,4)==[2;3]));
             mlunitext.assert(...
@@ -715,7 +715,7 @@ classdef SuiteEllTube < mlunitext.test_case
                 nTimePoints=length(timeVec);
                 projOrthMatArray=repmat(projMat,[1,1,nTimePoints]);
                 projOrthMatTransArray=repmat(projMat.',[1,1,nTimePoints]);
-            end            
+            end
         end
     end
 end

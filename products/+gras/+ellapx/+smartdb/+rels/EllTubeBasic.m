@@ -47,7 +47,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             STubeData.xsTouchOpVec=cell(nLDirs,1);
             %
             STubeData.xTouchCurveMat=cell(nLDirs,1);
-            STubeData.xTouchOpCurveMat=cell(nLDirs,1);            
+            STubeData.xTouchOpCurveMat=cell(nLDirs,1);
             %
             for iLDir=1:nLDirs
                 indSTime=STubeData.indSTime(iLDir);
@@ -60,14 +60,14 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 STubeData.xsTouchVec{iLDir}=...
                     STubeData.xTouchCurveMat{iLDir}(:,indSTime);
                 STubeData.xsTouchOpVec{iLDir}=...
-                    STubeData.xTouchOpCurveMat{iLDir}(:,indSTime);            
+                    STubeData.xTouchOpCurveMat{iLDir}(:,indSTime);
             end
         end
         function STubeData=fromQArraysInternal(QArrayList,aMat,...
                 MArrayList,timeVec,ltGoodDirArray,sTime,approxType,...
                 approxSchemaName,approxSchemaDescr,calcPrecision,scaleFactorVec)
             %
-            % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011 $ 
+            % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011 $
             % $Copyright: Moscow State University,
             %            Faculty of Computational Mathematics and Computer Science,
             %            System Analysis Department 2011 $
@@ -140,12 +140,12 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             end
             STubeData=EllTubeBasic.scaleTubeData(STubeData,scaleFactorVec.');
             STubeData=EllTubeBasic.calcTouchCurveData(STubeData);
-        end        
+        end
     end
     methods (Access=protected)
         function dependencyFieldList=getTouchCurveDependencyFieldList(~)
             dependencyFieldList={'sTime','lsGoodDirVec','MArray'};
-        end        
+        end
         function checkTouchCurveVsQNormArray(~,tubeRel,curveRel,...
                 fTolFunc,checkName,fFilterFunc)
             nTubes=tubeRel.getNTuples();
@@ -193,7 +193,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                         checkName,fieldName,calcPrecision,actualPrecision);
                 end
             end
-        end    
+        end
         function checkIntWithinExt(self,intRel,extRel)
             [~,~,~,indIntForwardVec,indIntBackwardVec]=...
                 intRel.getUniqueData('fieldNameList',{'aMat'});
@@ -228,19 +228,19 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             end
             function minEig=checkIntWithinExt(QExtArray,QIntArray,calcPrec)
                 import gras.gen.SquareMatVector;
-                import modgen.common.throwerror;                
+                import modgen.common.throwerror;
                 QExtSqrtArray=SquareMatVector.sqrtmpos(QExtArray);
                 QIntSqrtArray=SquareMatVector.sqrtmpos(QIntArray);
                 minEig=min(SquareMatVector.evalMFunc(@(x)min(eig(x)),...
                     QExtSqrtArray-QIntSqrtArray));
                 if minEig+calcPrec<0
-                        throwerror('wrongInput:internalWithinExternal',...
-                            sprintf(['internal approximation should be ',...
-                            'within external appproximation with ',...
-                            'tolerance %f, actual tolerance is %f'],...
-                            calcPrec,abs(minEig)));
+                    throwerror('wrongInput:internalWithinExternal',...
+                        sprintf(['internal approximation should be ',...
+                        'within external appproximation with ',...
+                        'tolerance %f, actual tolerance is %f'],...
+                        calcPrec,abs(minEig)));
                 end
-                    
+                
             end
         end
         function checkTouchCurves(self,fullRel)
@@ -308,7 +308,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 end
                 checkDataConsistency@...
                     gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic(self);
-	            %% Check that touch lines lie within the tubes
+                %% Check that touch lines lie within the tubes
                 probDepFieldList=self.getProblemDependencyFieldList();
                 [~,~,~,indForwardVec,indBackwardVec]=...
                     self.getUniqueData('fieldNameList',probDepFieldList);
@@ -327,7 +327,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     ltGoodDirMat,lsGoodDirVec,ltGoodDirNormVec,...
                     lsGoodDirNorm,xTouchCurveMat,xTouchOpCurveMat,...
                     xsTouchVec,xsTouchOpVec)
-                import gras.gen.SquareMatVector; 
+                import gras.gen.SquareMatVector;
                 errTagStr='';
                 reasonStr='';
                 isOk=false;
@@ -338,14 +338,14 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     reasonStr='QArray is not positively defined';
                     return;
                 end
-                %                
+                %
                 isNotPosDefVec=SquareMatVector.evalMFunc(...
                     @(x)~gras.la.ismatposdef(x,calcPrecision,true),MArray);
                 if any(isNotPosDefVec)
                     errTagStr='MArrayNeg';
                     reasonStr='MArray is negatively defined';
                     return;
-                end        
+                end
                 nPoints=size(timeVec,2);
                 nDims=size(QArray,1);
                 isOk=size(QArray,3)==nPoints&&...
@@ -386,7 +386,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             SData = struct;
             import gras.ellapx.smartdb.F;
             if (~isempty(newTimeVec))
-                 fieldList=F.getNameList(...
+                fieldList=F.getNameList(...
                     {'Q_ARRAY','A_MAT','SCALE_FACTOR',...
                     'M_ARRAY','DIM','S_TIME','APPROX_SCHEMA_NAME',...
                     'APPROX_SCHEMA_DESCR','APPROX_TYPE','TIME_VEC',...
@@ -408,13 +408,13 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             end
             %
             function [QArray, aMat, scaleFactor, MArray, dim, sTime,...
-                    approxSchemaName, approxSchemaDescr, approxType,... 
+                    approxSchemaName, approxSchemaDescr, approxType,...
                     timeVec, calcPrecision, indSTime, ltGoodDirMat,...
                     lsGoodDirVec,ltGoodDirNormVec,lsGoodDirNorm,...
                     xTouchCurveMat, xTouchOpCurveMat, xsTouchVec,...
                     xsTouchOpVec] = fInterpTuple(QArray, aMat,...
                     scaleFactor, MArray, dim, sTime, approxSchemaName, ...
-                    approxSchemaDescr, approxType,... 
+                    approxSchemaDescr, approxType,...
                     timeVec, calcPrecision, indSTime, ltGoodDirMat,...
                     lsGoodDirVec,~,lsGoodDirNorm,...
                     ~, ~, xsTouchVec, xsTouchOpVec)
@@ -430,7 +430,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     'column', ltGoodDirMat, timeVec);
                 centSpline = ...
                     MatrixInterpolantFactory.createInstance(...
-                    'column', aMat, timeVec);  
+                    'column', aMat, timeVec);
                 QArray = {QArraySpline.evaluate(newTimeVec)};
                 MArray = {MArraySpline.evaluate(newTimeVec)};
                 ltGoodDirMat = {ltGoodDirMatSpline.evaluate(newTimeVec)};
@@ -450,7 +450,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 approxSchemaDescr = {approxSchemaDescr};
             end
         end
-    end    
+    end
     methods
         function [ellTubeProjRel,indProj2OrigVec]=project(self,projType,...
                 projMatList,fGetProjMat)
@@ -462,7 +462,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             import gras.ellapx.common.*;
             import import gras.ellapx.enums.EProjType;
             import gras.gen.SquareMatVector;
-            import gras.ellapx.smartdb.rels.EllTubeBasic; 
+            import gras.ellapx.smartdb.rels.EllTubeBasic;
             %
             projDependencyFieldNameList=...
                 self.getProjectionDependencyFieldList();
@@ -498,7 +498,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     tubeProjDataCMat{iGroup,iProj}.dim=...
                         repmat(size(projMat,1),nLDirs,1);
                     tubeProjDataCMat{iGroup,iProj}.projSTimeMat=...
-                        repmat({projMat},nLDirs,1); 
+                        repmat({projMat},nLDirs,1);
                     tubeProjDataCMat{iGroup,iProj}.projType=...
                         repmat(projType,nLDirs,1);
                     %
@@ -538,7 +538,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     tubeProjDataCMat{iGroup,iProj}.calcPrecision=...
                         STubeData.calcPrecision(indLDirs);
                     tubeProjDataCMat{iGroup,iProj}.scaleFactor=...
-                        STubeData.scaleFactor(indLDirs);                    
+                        STubeData.scaleFactor(indLDirs);
                     %
                     projOrthSTimeMat=projOrthMatArray(:,:,indSTime);
                     %
@@ -565,7 +565,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                         %project regularization matrix
                         tubeProjDataCMat{iGroup,iProj}.MArray{iLDir}=...
                             SquareMatVector.rMultiply(projOrthMatArray,...
-                            STubeData.MArray{iOLDir},projOrthMatTransArray);                       
+                            STubeData.MArray{iOLDir},projOrthMatTransArray);
                         %Matrices must remain symmetric
                         tubeProjDataCMat{iGroup,iProj}.MArray{iLDir}=...
                             0.5*(tubeProjDataCMat{iGroup,iProj}.MArray{iLDir}+...
@@ -634,7 +634,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             if nargout > 1
                 if (~isempty(SData.timeVec))
                     timeVec = SData.timeVec{1};
-                else 
+                else
                     timeVec = [];
                 end
             end
@@ -647,7 +647,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
         %       self.
         %
         %       timeVec: double[nPoints] - sorted time vector to interpolate on.
-        %                Must begin with self.timeVec[1] and end with 
+        %                Must begin with self.timeVec[1] and end with
         %                self.timeVec[end]
         %
         % Output:
@@ -655,7 +655,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
         %        ellipsoidal tube
         %
         % $Author: Daniil Stepenskiy <reinkarn@gmail.com> $
-        % $Date: May-2013 $ 
+        % $Date: May-2013 $
         % $Copyright: Moscow State University,
         %             Faculty of Computational
         %             Mathematics and Computer Science,
@@ -669,7 +669,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             if (isempty(timeVec))
                 throwerror('wrongInput',...
                     'time vector should not be empty');
-            end           
+            end
             if (ndims(timeVec)~=2 || size(timeVec, 1)~=1)
                 throwerror('wrongInput',...
                     'timeVec must be an array');
@@ -681,7 +681,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     'no extrapolation allowed');
             end
             %
-            if isempty(self) 
+            if isempty(self)
                 interpEllTube = self;
             else
                 SData = self.getInterpInternal(timeVec);
@@ -723,7 +723,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 ellTube = ellTube.getTuples(varargin{1});
                 compEllTube = compEllTube.getTuplesFilteredBy(APPROX_TYPE,...
                     varargin{2});
-            end            
+            end
             %
             pointsNum = numel(ellTube.timeVec{1});
             newPointsNum = numel(compEllTube.timeVec{1});
@@ -739,7 +739,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     logger.debug('Inequal time knots count');
                 else
                     logger.debug('Equal time knots count');
-                end                
+                end
             end
             %
             % Checking time bounds equality
@@ -761,7 +761,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                         abs(firstTimeVec(end)-secondTimeVec(end)))];
                 end
                 return;
-            end   
+            end
             %
             % Checking enclosion of time vectors
             %
@@ -773,11 +773,11 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     fIsGridSubsetOfGrid(firstTimeVec, secondTimeVec);
             end
             %
-                fieldsNotToCompVec =...
-                    F.getNameList(FIELDS_NOT_TO_COMPARE);
-                fieldsToCompVec =...
-                    setdiff(ellTube.getFieldNameList, fieldsNotToCompVec);
-            %  
+            fieldsNotToCompVec =...
+                F.getNameList(FIELDS_NOT_TO_COMPARE);
+            fieldsToCompVec =...
+                setdiff(ellTube.getFieldNameList, fieldsNotToCompVec);
+            %
             if (isTimeVecsEnclosed)
                 if (nargout == 2)
                     reportStr = [reportStr,...
@@ -786,7 +786,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 if (length(firstTimeVec) < length(secondTimeVec))
                     compEllTube = ...
                         compEllTube.thinOutTuples(secondIndexVec);
-                else                    
+                else
                     ellTube = ellTube.thinOutTuples(firstIndexVec);
                 end
                 [isEqual, eqReportStr] = compEllTube.getFieldProjection(...
@@ -800,7 +800,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 return;
             end
             %
-            % Time vectors are not enclosed, 
+            % Time vectors are not enclosed,
             % though start and finish at the same time
             % So interpolating from common time knots
             %
@@ -844,7 +844,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     isSubset = false;
                 end
             end
-            %            
+            %
         end
     end
 end

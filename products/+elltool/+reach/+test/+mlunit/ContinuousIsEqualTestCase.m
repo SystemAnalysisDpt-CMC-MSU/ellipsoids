@@ -33,7 +33,7 @@ classdef ContinuousIsEqualTestCase < mlunitext.test_case
             self.timeVec = reachFactObj.getTVec();
             self.l0Mat = reachFactObj.getL0Mat();
             self.x0Ell = reachFactObj.getX0Ell();
-        end        
+        end
         %
         function self = testIsEqual(self)
             % Equality of the identical reaches
@@ -58,13 +58,13 @@ classdef ContinuousIsEqualTestCase < mlunitext.test_case
             mlunitext.assert(~isEqual, reportStr);
             % Equality of enclosedly-grided reaches
             %
-             REL_TOL1 = 0.0001;
-             ABS_TOL1 = 0.001;
-             REL_TOL2 = 0.000001;
-             ABS_TOL2 = 0.00001;
+            REL_TOL1 = 0.0001;
+            ABS_TOL1 = 0.001;
+            REL_TOL2 = 0.000001;
+            ABS_TOL2 = 0.00001;
             smallerReachObj = elltool.reach.ReachContinuous(self.linSys,...
                 self.x0Ell, self.l0Mat, self.timeVec, 1, ...
-                'absTol', ABS_TOL1, 'relTol', REL_TOL1);            
+                'absTol', ABS_TOL1, 'relTol', REL_TOL1);
             biggerReachObj = elltool.reach.ReachContinuous(self.linSys,...
                 self.x0Ell, self.l0Mat, self.timeVec, 1, ...
                 'absTol', ABS_TOL2, 'relTol', REL_TOL2);
@@ -73,10 +73,10 @@ classdef ContinuousIsEqualTestCase < mlunitext.test_case
             [isEqual, reportStr] = biggerReachObj.isEqual(smallerReachObj);
             mlunitext.assert(isEqual, reportStr);
             % Equality of not enclosedly-grided reaches
-            % 
+            %
             smallerReachObj = elltool.reach.ReachContinuous(self.linSys,...
                 self.x0Ell, self.l0Mat, self.timeVec, 1, ...
-                'absTol', ABS_TOL1, 'relTol', REL_TOL1); 
+                'absTol', ABS_TOL1, 'relTol', REL_TOL1);
             newTimeVec = self.timeVec;
             newTimeVec(2) = newTimeVec(1) + ...
                 (newTimeVec(2) - newTimeVec(1))/pi;
@@ -85,7 +85,7 @@ classdef ContinuousIsEqualTestCase < mlunitext.test_case
                 'absTol', ABS_TOL2, 'relTol', REL_TOL2);
             newBiggerReachObj = ...
                 biggerReachObj.evolve(self.timeVec(2), self.linSys);
-            [isEqual, reportStr] = smallerReachObj.isEqual(biggerReachObj);
+            [isEqual, reportStr] = smallerReachObj.isEqual(newBiggerReachObj);
             mlunitext.assert(isEqual, reportStr);
             [isEqual, reportStr] = biggerReachObj.isEqual(smallerReachObj);
             mlunitext.assert(isEqual, reportStr);
