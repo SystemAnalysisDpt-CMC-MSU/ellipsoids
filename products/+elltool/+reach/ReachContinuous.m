@@ -638,13 +638,20 @@ classdef ReachContinuous < elltool.reach.AReach
                     'be matrix of directions']);
             end
             % Calculate additional tubes
+            % Error! We need to use all linear systems in self.linSysCVec:
             linSys = self.linSysCVec{1};
             timeVec = self.switchSysTimeVec;
+            if numel(timeVec) ~= 2
+                timeVec = [timeVec(1), timeVec(end)];
+            end
+            if self.isBackward
+                timeVec = [timeVec(end), timeVec(1)];
+            end
             x0Ell = self.x0Ellipsoid;
             % Normalize good directions
             nDim = dimension(x0Ell);
             l0Mat = self.getNormMat(l0Mat, nDim);
-            if self.isprojection();
+            if self.isProj
                 projMat = self.projectionBasisMat;
                 reachSetObj = elltool.reach.ReachContinuous(...
                     linSys, x0Ell, l0Mat, timeVec);
@@ -666,7 +673,7 @@ classdef ReachContinuous < elltool.reach.AReach
                 ellTubeRelNew = self.makeEllTubeRel(smartLinSys, l0Mat,...
                     [min(timeVec) max(timeVec)], isDisturbance,...
                     relTol, approxTypeVec);
-                if self.isbackward()
+                if self.isBackward
                     ellTubeRelNew = self.rotateEllTubeRel(ellTubeRelNew);
                 end
                 %Update self.ellTubeRel
