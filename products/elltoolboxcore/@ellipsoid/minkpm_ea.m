@@ -88,11 +88,11 @@ else
     absTol=min(min(secExtApprEllVec.getAbsTol()),inpEll.absTol);
     extApprEllVec(nCols) = ellipsoid();
     arrayfun(@(x) fSetExtApprEllVec(x), 1:nCols)
-    extApprEllVec = extApprEllVec(~isempty(extApprEllVec));
+    extApprEllVec = extApprEllVec(~extApprEllVec.isEmpty());
     
     Properties.setIsVerbose(isVrb);
     
-    if isempty(extApprEllVec)
+    if extApprEllVec.isEmpty()
         if Properties.getIsVerbose()
             if isempty(logger)
                 logger=Log4jConfigurator.getLogger();

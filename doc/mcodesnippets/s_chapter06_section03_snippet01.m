@@ -24,8 +24,8 @@ secRsObj = firstRsObj.evolve(termTime, secondSys);
 
 % obtain projections onto (x1, x2) subspace:
 basisMat = [1 0 0; 0 1 0]';  % (x1, x2) subspace basis
-firstPsObj = firstRsObj.projection(basisMat);
-secPsObj = secRsObj.projection(basisMat);
+firstPsObj = firstRsObj.getProjection(basisMat);
+secPsObj = secRsObj.getProjection(basisMat);
 
 % plot the results:
 subplot(2, 2, 1);

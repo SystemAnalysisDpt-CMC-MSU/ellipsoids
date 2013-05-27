@@ -65,7 +65,7 @@ import modgen.common.throwerror;
     'priorHold','postHold','showAll'});
 ellsArr = cellfun(@(x)getEllArr(x),reg,'UniformOutput', false);
 ellsArr = vertcat(ellsArr{:});
-ind = ~isempty(ellsArr);
+ind = ~ellsArr.isEmpty();
 ellsArr = ellsArr(ind);
 if numel(ellsArr) == 1
     if (nargout == 1)||(nargout == 0)
