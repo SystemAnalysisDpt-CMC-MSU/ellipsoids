@@ -324,29 +324,23 @@ classdef ellipsoid < handle
             % Input:
             %   regular:
             %      self: ellipsoid[1,1]
-            %      aArr: multidimensional array
-            %      bArr: multidimensional array
+            %      aArr: double[nDim1,nDim2,...,nDimk]
+            %      bArr: double[nDim1,nDim2,...,nDimk]
             %
             % Output:
             %   isArrEq: logical[1,1]
             %
             %     
             %
-            % $Author: Victor Gribov <illuminati1606@gmail.com> $   $Date: 22-05-2013$
+            % $Author: Victor Gribov <illuminati1606@gmail.com> $   $Date: 28-05-2013$
             % $Copyright: Moscow State University,
             %             Faculty of Computational Mathematics and Cybernetics,
             %             Science, System Analysis Department 2012-2013 $
             self.checkIfScalar();
-            
             absTol = self.absTol;
-            
-            aArr = reshape(aArr,[1 prod(size(aArr))]);
-            bArr = reshape(bArr,[1 prod(size(bArr))]);
-            
-            if any(abs(aArr)>absTol) || any(abs(bArr)>absTol)
+            if any(abs(aArr(:))>absTol) || any(abs(bArr(:))>absTol)
                 isArrEq = abs(2*(aArr-bArr)./(aArr+bArr));
-                isArrEq = reshape(isArrEq,[1 prod(size(isArrEq))])
-                isArrEq = all(isArrEq<=self.relTol);
+                isArrEq = all(isArrEq(:)<=self.relTol);
             else
                 isArrEq = true;
             end
