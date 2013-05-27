@@ -25,8 +25,6 @@ function FuncData=collecthelp(classNames, packNames, ignorClassList)
 %       isScript: logical[nElems,1] - a vector of 
 %           "is script" indicators
 % 
-
-numberOfInheritedClasses = FuncData.numbOfInhClasses;
 %Usage: FuncData=collecthelp(classNames, packNames, ignorList)
 %
 %

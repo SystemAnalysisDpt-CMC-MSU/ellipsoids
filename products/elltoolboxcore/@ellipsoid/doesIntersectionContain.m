@@ -1,10 +1,9 @@
 function [res, status] = doesIntersectionContain(fstEllArr, secObjArr,...
                             varargin)
 %
-% DOESINTERSECTIONCONTAIN - checks if the intersection of
-%                             ellipsoids contains the union
-%                             or intersection of given 
-%                             ellipsoids or polytopes.
+% DOESINTERSECTIONCONTAIN - checks if the intersection of ellipsoids 
+%                           contains the union or intersection of given 
+%                           ellipsoids or polytopes.
 %
 %   res = DOESINTERSECTIONCONTAIN(fstEllArr, secEllArr, mode) 
 %       Checks if the union

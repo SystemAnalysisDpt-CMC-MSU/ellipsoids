@@ -2,8 +2,8 @@
 \subsection{\texorpdfstring{ellipsoid.calcGrid}{calcGrid}}\label{method:ellipsoid.calcGrid}
 \begin{verbatim}
 CALCGRID - computes grid of 2d or 3d sphere and vertices for each face
-             in the grid with number of points taken from ellObj
-             nPlot2dPoints or nPlot3dPoints parameters
+           in the grid with number of points taken from ellObj
+           nPlot2dPoints or nPlot3dPoints parameters
 \end{verbatim}
 \subsection{\texorpdfstring{ellipsoid.checkIsMe}{checkIsMe}}\label{method:ellipsoid.checkIsMe}
 \begin{verbatim}
@@ -269,12 +269,12 @@ Example:
 \end{verbatim}
 \subsection{\texorpdfstring{ellipsoid.doesContain}{doesContain}}\label{method:ellipsoid.doesContain}
 \begin{verbatim}
-CONTAINS - checks if one ellipsoid contains the other ellipsoid or
-           polytope. The condition for E1 = firstEllArr to contain
-           E2 = secondEllArr is
-           min(rho(l | E1) - rho(l | E2)) > 0, subject to <l, l> = 1.
-           How checked if ellipsoid contains polytope is explained in
-           doesContainPoly.
+DOESCONTAIN - checks if one ellipsoid contains the other ellipsoid or
+              polytope. The condition for E1 = firstEllArr to contain
+              E2 = secondEllArr is
+              min(rho(l | E1) - rho(l | E2)) > 0, subject to <l, l> = 1.
+              How checked if ellipsoid contains polytope is explained in
+              doesContainPoly.
 Input:
   regular:
       firstEllArr: ellipsoid [nDims1,nDims2,...,nDimsN]/[1,1] - first
@@ -309,10 +309,9 @@ Example:
 \end{verbatim}
 \subsection{\texorpdfstring{ellipsoid.doesIntersectionContain}{doesIntersectionContain}}\label{method:ellipsoid.doesIntersectionContain}
 \begin{verbatim}
-DOESINTERSECTIONCONTAIN - checks if the intersection of
-                            ellipsoids contains the union
-                            or intersection of given
-                            ellipsoids or polytopes.
+DOESINTERSECTIONCONTAIN - checks if the intersection of ellipsoids
+                          contains the union or intersection of given
+                          ellipsoids or polytopes.
 
   res = DOESINTERSECTIONCONTAIN(fstEllArr, secEllArr, mode)
       Checks if the union
@@ -746,7 +745,7 @@ Output:
 \subsection{\texorpdfstring{ellipsoid.getBoundaryByFactor}{getBoundaryByFactor}}\label{method:ellipsoid.getBoundaryByFactor}
 \begin{verbatim}
   GETBOUNDARYBYFACTOR - computes grid of 2d or 3d ellipsoid and vertices
-      for each face in the grid
+                        for each face in the grid
 \end{verbatim}
 \subsection{\texorpdfstring{ellipsoid.getCenterVec}{getCenterVec}}\label{method:ellipsoid.getCenterVec}
 \begin{verbatim}
@@ -771,7 +770,7 @@ Example:
 \subsection{\texorpdfstring{ellipsoid.getCopy}{getCopy}}\label{method:ellipsoid.getCopy}
 \begin{verbatim}
 GETCOPY - gives array the same size as ellArr with copies of elements of
-         ellArr.
+          ellArr.
 
 Input:
   regular:
@@ -1164,7 +1163,9 @@ Example:
 \end{verbatim}
 \subsection{\texorpdfstring{ellipsoid.inv}{inv}}\label{method:ellipsoid.inv}
 \begin{verbatim}
-INV - inverts shape matrices of ellipsoids in the given array.
+INV - inverts shape matrices of ellipsoids in the given array,
+      modified given array is on output (not its copy).
+
 
   invEllArr = INV(myEllArr)  Inverts shape matrices of ellipsoids
       in the array myEllMat. In case shape matrix is sigular, it is
@@ -1175,7 +1176,7 @@ Input:
     myEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of ellipsoids.
 
 Output:
-   invEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of ellipsoids
+   myEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of ellipsoids
       with inverted shape matrices.
 
 Example:
@@ -2130,7 +2131,8 @@ Example:
 \end{verbatim}
 \subsection{\texorpdfstring{ellipsoid.move2origin}{move2origin}}\label{method:ellipsoid.move2origin}
 \begin{verbatim}
-MOVE2ORIGIN - moves ellipsoids in the given array to the origin.
+MOVE2ORIGIN - moves ellipsoids in the given array to the origin. Modified
+              given array is on output (not its copy).
 
   outEllArr = MOVE2ORIGIN(inpEll) - Replaces the centers of
       ellipsoids in inpEllArr with zero vectors.
@@ -2141,7 +2143,7 @@ Input:
           ellipsoids.
 
 Output:
-  outEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of ellipsoids
+  inpEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of ellipsoids
       with the same shapes as in inpEllArr centered at the origin.
 
 Example:
@@ -2369,6 +2371,7 @@ Example:
 \subsection{\texorpdfstring{ellipsoid.projection}{projection}}\label{method:ellipsoid.projection}
 \begin{verbatim}
 PROJECTION - computes projection of the ellipsoid onto the given subspace.
+             modified given array is on output (not its copy).
 
   projEllArr = projection(ellArr, basisMat)  Computes projection of the
       ellipsoid ellArr onto a subspace, specified by orthogonal
@@ -2383,7 +2386,7 @@ Input:
           vectors
 
 Output:
-  projEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of
+  ellArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of
       projected ellipsoids, generally, of lower dimension.
 
 Example:
@@ -2471,7 +2474,7 @@ Example:
 \subsection{\texorpdfstring{ellipsoid.shape}{shape}}\label{method:ellipsoid.shape}
 \begin{verbatim}
 SHAPE - modifies the shape matrix of the ellipsoid without
-  changing its center.
+  changing its center. Modified given array is on output (not its copy).
 
    modEllArr = SHAPE(ellArr, modMat)  Modifies the shape matrices of
       the ellipsoids in the ellipsoidal array ellArr. The centers
@@ -2486,7 +2489,7 @@ Input:
       modMat: double[nDim, nDim]/[1,1] - square matrix or scalar
 
 Output:
-   modEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of modified
+   ellArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of modified
       ellipsoids.
 
 Example:
@@ -3243,7 +3246,10 @@ Example:
 \end{verbatim}
 \subsection{\texorpdfstring{elltool.conf.Properties.setRelTol}{setRelTol}}\label{method:elltool.conf.Properties.setRelTol}
 \begin{verbatim}
+SETRELTOL - set global relative tolerance
 
+Input
+relTol: double[1,1]
 \end{verbatim}
 \section{elltool.core.GenEllipsoid}\label{secClassDescr:elltool.core.GenEllipsoid}
 \subsection{\texorpdfstring{elltool.core.GenEllipsoid.GenEllipsoid}{GenEllipsoid}}\label{method:elltool.core.GenEllipsoid.GenEllipsoid}
@@ -5470,6 +5476,10 @@ Output:
    ellTubeRel: smartdb.relation.StaticRelation[1, 1] - constructed relation
          object
 \end{verbatim}
+\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.getCutObj}{getCutObj}}\label{method:gras.ellapx.smartdb.rels.EllTube.getCutObj}
+\begin{verbatim}
+
+\end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.getEllArray}{getEllArray}}\label{method:gras.ellapx.smartdb.rels.EllTube.getEllArray}
 \begin{verbatim}
 GETELLARRAY - returns array of matrix's ellipsoid according to
@@ -5505,6 +5515,10 @@ Input:
 
 Output:
   resRel: smartdb.relations.ARelation[1,1] - join result
+\end{verbatim}
+\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.getLogicalInd}{getLogicalInd}}\label{method:gras.ellapx.smartdb.rels.EllTube.getLogicalInd}
+\begin{verbatim}
+
 \end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.plot}{plot}}\label{method:gras.ellapx.smartdb.rels.EllTube.plot}
 \begin{verbatim}
