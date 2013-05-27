@@ -885,7 +885,7 @@ classdef GenEllipsoidTestCase < mlunitext.test_case
         end
         
         function testAllDirRand(self)
-            import elltool.core.test.mlunitext.GenEllipsoidTestCase;
+            import elltool.core.test.mlunit.GenEllipsoidTestCase;
             import elltool.core.GenEllipsoid;
             load(strcat(self.testDataRootDir,filesep,...
                 'testEllEllRMat.mat'),'testOrth50Mat',...
@@ -905,7 +905,7 @@ classdef GenEllipsoidTestCase < mlunitext.test_case
                 dirRandMat,testOrth50Mat);
         end
         function testAllDirFixed(self)
-            import elltool.core.test.mlunitext.GenEllipsoidTestCase;
+            import elltool.core.test.mlunit.GenEllipsoidTestCase;
             import elltool.core.GenEllipsoid;
             load(strcat(self.testDataRootDir,filesep,...
                 'testNewEllRandM.mat'),'testOrth50Mat',...
