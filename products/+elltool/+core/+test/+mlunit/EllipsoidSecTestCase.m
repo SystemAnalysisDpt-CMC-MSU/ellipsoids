@@ -722,7 +722,7 @@ function compareForIsCII(test1EllVec, test2EllVec, myString, myResult)
     if isempty(myString)
         testRes = doesIntersectionContain(test1EllVec, test2EllVec);
     else
-        testRes = doesIntersectionContain(test1EllVec, test2EllVec, myString);
+        testRes = doesIntersectionContain(test1EllVec, test2EllVec, 'mode', myString);
     end
     mlunitext.assert_equals(myResult, testRes);
 end

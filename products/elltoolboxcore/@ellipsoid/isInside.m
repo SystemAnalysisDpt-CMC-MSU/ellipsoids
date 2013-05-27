@@ -77,7 +77,7 @@ end
         else
             [constrMat constrValVec] = double(objArr(polyIndex));
             suppFuncVec =rho(ellArr(ellIndex),constrMat');
-            res = all(suppFuncVec <= constrValVec+absTol);
+            res = all(suppFuncVec' <= constrValVec+absTol);
         end
     end
 end
