@@ -15,7 +15,7 @@ internalEllVec = ellMat.minksum_ia(dirsMat)
 
 % intersection of external ellipsoids should always contain 
 % the union of internal ellipsoids:
-externalEllVec.isinside(internalEllVec, 'u') 
+externalEllVec.doesIntersectionContain(internalEllVec, 'u') 
 % 
 % ans =
 % 
