@@ -927,8 +927,11 @@ classdef ReachContinuous < elltool.reach.AReach
             [~,indRelVec]=sort(indVec);
             newEllTubeRel=newEllTubeRel.getTuples(indRelVec);
             %
+            timeVec = newEllTubeRel.timeVec{1};
+            isIndVec = true(size(timeVec));
+            isIndVec(1) = false;
             newReachObj.ellTubeRel =...
-                self.ellTubeRel.cat(newEllTubeRel);
+                self.ellTubeRel.cat(newEllTubeRel, isIndVec);
         end
         %%
         function eaScaleFactor = getEaScaleFactor(self)

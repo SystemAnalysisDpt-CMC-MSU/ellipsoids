@@ -74,24 +74,27 @@ errMsg =...
 checkvar(nargin,'x==2','errorTag','wrongInput',...
     'errorMessage',errMsg)
 if isa(varargin{1}, 'ellipsoid')&&isa(varargin{2}, 'double')
-    inpEllVec = varargin{1};
+    inpEllArr = varargin{1};
     inpVec = varargin{2};
 elseif isa(varargin{2}, 'ellipsoid')&&isa(varargin{1}, 'double')
-    inpEllVec = varargin{2};
+    inpEllArr = varargin{2};
     inpVec = varargin{1};
 else
     throwerror('wrongInput',errMsg);
 end
 
-dimsVec = dimension(inpEllVec);
-checkmultvar('iscolumn(x1)&&all(x2(:)==length(x1))',2,inpVec,dimsVec,...
-    'errorMessage','dimensions mismatch');
-
-sizeCVec = num2cell(size(inpEllVec));
-outEllArr(sizeCVec{:})=ellipsoid;
-arrayfun(@(x) fSinglePlus(x),1:numel(inpEllVec));
+sizeCVec = num2cell(size(inpEllArr));
+if isempty(inpEllArr)
+    outEllArr = ellipsoid.empty(sizeCVec{:});
+else    
+    dimArr = dimension(inpEllArr);
+    checkmultvar('iscolumn(x1)&&all(x2(:)==length(x1))',2,inpVec,dimArr,...
+        'errorMessage','dimensions mismatch');
+    outEllArr(sizeCVec{:})=ellipsoid;
+    arrayfun(@(x) fSinglePlus(x),1:numel(inpEllArr));
+end        
     function fSinglePlus(index)
-        outEllArr(index).centerVec =inpEllVec(index).centerVec + inpVec;
-        outEllArr(index).shapeMat = inpEllVec(index).shapeMat;
+        outEllArr(index).centerVec = inpEllArr(index).centerVec + inpVec;
+        outEllArr(index).shapeMat = inpEllArr(index).shapeMat;
     end
 end
