@@ -27,7 +27,7 @@ classdef CompositeMatrixOperations<gras.mat.AMatrixOperations
         function obj=realsqrt(self,mMatFunc)
             obj=realsqrt@gras.mat.AMatrixOperations(self,mMatFunc);
             if isempty(obj)
-                obj=gras.mat.fcnlib.MatrixRealsqrtFunc(mMatFunc);
+                obj=gras.mat.fcnlib.MatrixRealSqrtFunc(mMatFunc);
             end
         end   
         function obj=transpose(self,mMatFunc)
@@ -74,11 +74,11 @@ classdef CompositeMatrixOperations<gras.mat.AMatrixOperations
                     lMatFunc,rScalFunc);
             end
         end
-        function obj=rDivideToScalar(self,lMatFunc,rScalFunc)
-            obj=rDivideToScalar@gras.mat.AMatrixOperations(...
+        function obj=rDivideByScalar(self,lMatFunc,rScalFunc)
+            obj=rDivideByScalar@gras.mat.AMatrixOperations(...
                 self,lMatFunc,rScalFunc);
             if isempty(obj)
-                obj=gras.mat.fcnlib.MatrixRDivideScalarFunc(...
+                obj=gras.mat.fcnlib.MatrixRDivideByScalarFunc(...
                     lMatFunc,rScalFunc);
             end
         end

@@ -1,6 +1,6 @@
-classdef MatrixRDivideScalarFunc<gras.mat.AMatrixBinaryOpFunc
+classdef MatrixRDivideByScalarFunc<gras.mat.AMatrixBinaryOpFunc
     methods
-        function self=MatrixRDivideScalarFunc(mMatFunc, rScalFunc)
+        function self=MatrixRDivideByScalarFunc(mMatFunc, rScalFunc)
             fHandle = @(mMat,rScal) mMat ./ rScal;
             %
             self=self@gras.mat.AMatrixBinaryOpFunc(mMatFunc,...

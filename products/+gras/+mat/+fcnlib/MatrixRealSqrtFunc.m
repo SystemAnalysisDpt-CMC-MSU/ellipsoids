@@ -1,6 +1,6 @@
-classdef MatrixRealsqrtFunc<gras.mat.AMatrixUnaryOpFunc
+classdef MatrixRealSqrtFunc<gras.mat.AMatrixUnaryOpFunc
     methods
-        function self=MatrixRealsqrtFunc(lMatFunc)
+        function self=MatrixRealSqrtFunc(lMatFunc)
             %
             self=self@gras.mat.AMatrixUnaryOpFunc(lMatFunc,...
                 @realsqrt);

@@ -165,8 +165,8 @@ classdef SuiteOp < mlunitext.test_case
             aExpMatFunc = factory.realsqrt(aMatFun);
             checkIfEqual(aExpMatFunc,aSqrtMatFun);
             %
-            rsqrt_bspline_test = 0;
-            if rsqrt_bspline_test
+            isRSqrtBTestEnabled = false;
+            if isRSqrtBTestEnabled
                 %
                 % test realsqrt #3 - bad spline
                 %
@@ -261,24 +261,24 @@ classdef SuiteOp < mlunitext.test_case
             obtainedMatVec = rMatFun.evaluate([0 1]);
             self.isMatVecEq(expectedMatVec, obtainedMatVec);
             %
-            % test rDivideToScalar
+            % test rDivideByScalar
             %
             aMat = magic(4);
             aMatFun = ConstMatrixFunction(aMat);
             rScalFun = ConstMatrixFunction(2);
-            rMatFun = factory.rDivideToScalar(aMatFun, rScalFun);
+            rMatFun = factory.rDivideByScalar(aMatFun, rScalFun);
             self.isMatFunSizeEq(rMatFun, aMatFun);
             expectedMatVec = repmat(aMat / 2, [1 1 2]);
             obtainedMatVec = rMatFun.evaluate([0, 1]);
             self.isMatVecEq(expectedMatVec, obtainedMatVec);
             %
-            % test rDivideToScalar #2
+            % test rDivideByScalar #2
             %
             aCMat = {'1', '-t'; 't', '1'};
             rCScal = {'(t + 1)^2'};
             aMatFun = gras.mat.symb.MatrixSymbFormulaBased(aCMat);
             rScalFun = gras.mat.symb.MatrixSymbFormulaBased(rCScal);
-            rMatFun = factory.rDivideToScalar(aMatFun, rScalFun);
+            rMatFun = factory.rDivideByScalar(aMatFun, rScalFun);
             self.isMatFunSizeEq(rMatFun, aMatFun);
             rScalVec = rScalFun.evaluate([0 1]);
             rScalVec = repmat(rScalVec, [size(aCMat), 1]);
@@ -479,6 +479,48 @@ classdef SuiteOp < mlunitext.test_case
             rMatFun = MatrixMinusFunc(aMatFun,bMatFun);
             expectedMatVec = -ones(4);
             obtainedMatVec = rMatFun.evaluate(0);
+            self.isMatVecEq(expectedMatVec, obtainedMatVec);
+        end
+        function testMatrixBinaryTimesScalar(self)
+            import gras.mat.*;
+            import gras.mat.fcnlib.*;
+            import gras.mat.symb.*;
+            %
+            % test constant
+            %
+            aMat = magic(5);
+            aMatFun = ConstMatrixFunction(aMat);
+            rScalFun = ConstMatrixFunction(2);
+            expectedMatVec = repmat(2 * aMat, [1 1 2]);
+            %
+            rMatFun = MatrixBinaryTimesFunc(aMatFun, rScalFun);
+            self.isMatFunSizeEq(rMatFun, aMatFun);
+            obtainedMatVec = rMatFun.evaluate([0, 1]);
+            self.isMatVecEq(expectedMatVec, obtainedMatVec);
+            %
+            rMatFun = MatrixBinaryTimesFunc(rScalFun, aMatFun);
+            self.isMatFunSizeEq(rMatFun, aMatFun);
+            obtainedMatVec = rMatFun.evaluate([0, 1]);
+            self.isMatVecEq(expectedMatVec, obtainedMatVec);
+            %
+            % test non constant
+            %            
+            aCMat = {'1', '-t'; 't', '1'};
+            rCScal = {'t + 1'};
+            aMatFun = gras.mat.symb.MatrixSymbFormulaBased(aCMat);
+            rScalFun = gras.mat.symb.MatrixSymbFormulaBased(rCScal);
+            rScalVec = rScalFun.evaluate([0 1]);
+            rScalVec = repmat(rScalVec, [size(aCMat), 1]);
+            expectedMatVec = aMatFun.evaluate([0 1]) .* rScalVec;
+            %
+            rMatFun = MatrixBinaryTimesFunc(aMatFun, rScalFun);
+            self.isMatFunSizeEq(rMatFun, aMatFun);            
+            obtainedMatVec = rMatFun.evaluate([0 1]);
+            self.isMatVecEq(expectedMatVec, obtainedMatVec);
+            %
+            rMatFun = MatrixBinaryTimesFunc(rScalFun, aMatFun);
+            self.isMatFunSizeEq(rMatFun, aMatFun);            
+            obtainedMatVec = rMatFun.evaluate([0 1]);
             self.isMatVecEq(expectedMatVec, obtainedMatVec);
         end
     end

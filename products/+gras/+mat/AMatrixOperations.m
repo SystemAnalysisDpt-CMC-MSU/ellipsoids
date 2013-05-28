@@ -117,7 +117,7 @@ classdef AMatrixOperations<gras.mat.IMatrixOperations
                 obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
             end
         end
-        function obj=rDivideToScalar(self,lMatFunc,rScalFunc)
+        function obj=rDivideByScalar(self,lMatFunc,rScalFunc)
             if self.isMatFuncConst(lMatFunc,rScalFunc)
                 obj = self.constBinaryOperation(@rdivide,lMatFunc,rScalFunc);
             else
