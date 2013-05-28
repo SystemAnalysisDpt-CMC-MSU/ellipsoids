@@ -9,7 +9,8 @@ classdef ETManualTC < mlunitext.test_case
         function self = testBasic(self)
             currentDir = fileparts(which(mfilename('class')));
             rootDir = modgen.path.rmlastnpathparts(currentDir, 5);
-            snippetsDir = [rootDir, filesep, 'doc', filesep, 'mcodesnippets'];
+            snippetsDir = [rootDir, filesep, 'doc', filesep,...
+                'mcodesnippets'];
             snippetsPattern = [snippetsDir, filesep, '*.m'];
             fileList = dir(snippetsPattern);
             nFiles = length(fileList);

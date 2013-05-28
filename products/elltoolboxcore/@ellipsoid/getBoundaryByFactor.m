@@ -1,7 +1,7 @@
 function [vGridMat, fGridMat] = getBoundaryByFactor(ellObj,factorVec)
 %
 %   GETBOUNDARYBYFACTOR - computes grid of 2d or 3d ellipsoid and vertices
-%       for each face in the grid
+%                         for each face in the grid
 %
 % Input:
 %   regular:
