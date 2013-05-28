@@ -1,0 +1,869 @@
+\subsection{Systems without disturbances}\label{subsec_sysnodist}
+\todo[inline]{Added this subsection}
+Consider a general continuous-time
+\begin{equation}
+\dot{x}(t) = f(t, x, u),
+\label{ctds1}
+\end{equation}
+or discrete-time dynamical system
+\begin{equation}
+x(t+1) = f(t, x, u),
+\tag*{(\ref{ctds1}d)}
+\label{dtds1}
+\end{equation}
+wherein $t$ is time\footnote{In discrete-time case $t$ assumes integer values.},
+$x\in{\bf R}^n$ is the state, $u\in{\bf R}^m$ is the control,
+and $f$ is a measurable vector function taking values in
+${\bf R}^n$.\footnote{We are being general when giving the basic definitions.
+However, it is  important to understand that for any specific
+\emph{continuous-time} dynamical system it must be determined whether
+the solution exists and is unique, and in which class of solutions
+these conditions are met.
+Here we shall assume that function $f$ is such that the solution of the differential equation (\ref{ctds1})
+exists and is unique in Fillipov sense.
+This allows the right-hand side to be discontinuous.
+For discrete-time systems this problem does not exist.}
+The control values $u(t, x(t))$ are restricted
+to a closed compact control set $\UU(t)\subset{\bf R}^m$.
+An \emph{open-loop} control does not depend on the state, $u=u(t)$; for a \emph{closed-loop} control, $u=u(t, x(t))$.
+
+\bd[Reach set]
+The (forward) reach set $\XX(t, t_0, x_0)$ at time $t>t_0$ from the initial position
+$(t_0, x_0)$ is the set of all states $x(t)$ reachable at time $t$ by
+system (\ref{ctds1}), or \ref{dtds1}, with $x(t_0)=x_0$
+through all possible controls
+$u(\tau, x(\tau))\in\UU(\tau)$, $t_0\leq\tau< t$.
+For a given set of initial states $\XX_0$, the reach set $\XX(t, t_0, \XX_0)$ is
+\[ \XX(t, t_0, \XX_0) = \bigcup_{x_0\in\XX_0}\XX(t, t_0, x_0). \]
+\label{def_olrs}
+\ed
+Here are two facts about forward reach sets.
+\begin{enumerate}
+
+\item  $\XX(t, t_0, \XX_0)$ is the same for open-loop and closed-loop control.
+
+\item  $\XX(t, t_0, \XX_0)$ satisfies the semigroup property,
+\begin{equation}
+\XX(t, t_0, \XX_0) = \XX(t, \tau, \XX(\tau, t_0, \XX_0)), \;\;\;
+t_0\leq \tau< t.
+\label{semigroup}
+\end{equation}
+\end{enumerate}
+
+For linear systems
+\begin{equation}
+f(t, x, u) = A(t)x(t) + B(t)u,
+\label{linearrhs}
+\end{equation}
+with matrices $A(t)$ in ${\bf R}^{n\times n}$ and $B(t)$ in ${\bf R}^{m\times n}$.
+For continuous-time linear system the state transition matrix is
+\[ \dot{\Phi}(t, t_0) = A(t)\Phi(t, t_0), \;\;\; \Phi(t, t) = I, \]
+which for constant $A(t)\equiv A$ simplifies as
+\[ \Phi(t, t_0) = e^{A(t-t_0)} .\]
+For discrete-time linear system the state transition matrix is
+\[ \Phi(t+1, t_0) = A(t)\Phi(t, t_0), \;\;\; \Phi(t, t) = I, \]
+which for constant $A(t)\equiv A$ simplifies as
+\[ \Phi(t, t_0) = A^{t-t_0} .\]
+
+If the state transition matrix is invertible, $\Phi^{-1}(t, t_0) = \Phi(t_0, t)$.
+The transition matrix is always invertible for continuous-time and for sampled discrete-time systems.
+However, if for some $\tau$, $t_0\leq\tau<t$, $A(\tau)$
+is degenerate (singular),  $\Phi(t, t_0)=\prod_{\tau=t_0}^{t-1}A(\tau)$, is also degenerate
+and  cannot be inverted.
+
+Following Cauchy's formula,
+the reach set $\XX(t, t_0, \XX_0)$ for a linear system can be expressed as
+\begin{equation}
+\XX(t, t_0, \XX_0) =
+\Phi(t, t_0)\XX_0 \oplus \int_{t_0}^t\Phi(t, \tau)B(\tau)\UU(\tau)d\tau
+\label{ctlsrs}
+\end{equation}
+in continuous-time, and as
+\begin{equation}
+\XX(t, t_0, \XX_0) =
+\Phi(t, t_0)\XX_0 \oplus \sum_{\tau=t_0}^{t-1}\Phi(t, \tau+1)B(\tau)\UU(\tau)
+\tag*{(\ref{ctlsrs}d)}
+\label{dtlsrs}
+\end{equation}
+in discrete-time case.
+
+The operation `$\oplus$' is the \emph{geometric sum},
+also known as \emph{Minkowski sum}.\footnote{Minkowski sum of sets
+$\WW, \ZZ \subseteq {\bf R}^n$ is defined as
+$\WW \oplus \ZZ = \{w+z ~|~ w\in\WW, ~ z\in\ZZ\}$.
+Set $\WW\oplus\ZZ$ is nonempty if and only if both, $\WW$ and $\ZZ$ are
+nonempty.
+If $\WW$ and $\ZZ$ are convex, set $\WW\oplus\ZZ$ is convex.}
+The geometric sum and linear (or affine)
+transformations preserve compactness and convexity.
+Hence, if the initial set $\XX_0$ and the control sets $\UU(\tau)$,
+$t_0\leq\tau<t$, are compact and convex, so is the reach set
+$\XX(t, t_0, \XX_0)$.
+
+\bd[Backward reach set]
+The backward reach set $\YY(t_1, t, y_1)$ for the target position
+$(t_1, y_1)$ is the set of all states $y(t)$ for which there exists
+some control $u(\tau, x(\tau))\in\UU(\tau)$, $t\leq\tau<t_1$,
+that steers system (\ref{ctds1}), or \ref{dtds1}
+to the state $y_1$ at time $t_1$.
+For the target set $\YY_1$ at time $t_1$, the backward reach set $\YY(t_1, t, \YY_1)$ is
+\[ \YY(t_1, t, \YY_1) = \bigcup_{y_1\in\YY_1}\YY(t_1, t, y_1). \]
+\label{def_olbrs}
+\ed
+The backward reach set $\YY(t_1, t, \YY_1)$ is the largest \emph{weakly invariant}
+set with respect to the target set $\YY_1$ and time values $t$ and
+$t_1$.\footnote{$\MM$ is weakly invariant with respect to
+the target set $\YY_1$ and times $t_0$ and $t$, if for every state $x_0\in\MM$
+there exists a control $u(\tau, x(\tau))\in\UU(\tau)$, $t_0\leq\tau< t$, that
+steers the system from $x_0$ at time $t_0$ to some state in $\YY_1$ at time $t$.
+If \emph{all} controls in $\UU(\tau)$, $t_0\leq\tau<t$ steer the system
+from every $x_0\in\MM$ at time $t_0$ to $\YY_1$ at time $t$,
+set $\MM$ is said to be
+\emph{strongly} invariant with respect to $\YY_1$, $t_0$ and $t$.}
+
+{\bf Remark.}
+Backward reach set can be computed for continuous-time system only if
+the solution of (\ref{ctds1}) exists for $t<t_1$; and for discrete-time
+system only if the right hand side of \ref{dtds1}
+is invertible\footnote{There exists $f^{-1}(t,x,u)$ such that
+$x(t)=f^{-1}(t, x(t+1), u, v)$.}.
+
+These two facts about
+the backward reach set $\YY$ are similar to those for forward reach sets.
+\begin{enumerate}
+\item $\YY(t_1, t, \YY_1)$ is the same for open-loop
+and closed-loop control.
+
+\item $\YY(t_1, t, \YY_1)$ satisfies the semigroup property,
+\begin{equation}
+\YY(t_1, t, \YY_1) = \YY(\tau, t, \YY(t_1, \tau, \YY_1)), \;\;\;
+t\leq \tau< t_1.
+\label{semigroup_b}
+\end{equation}
+\end{enumerate}
+For the linear system (\ref{linearrhs}) the backward reach set
+can be expressed as
+\begin{equation}
+\YY(t_1, t, \YY_1) =
+\Phi(t, t_1)\YY_1 \oplus \int_{t_1}^t\Phi(t, \tau)B(\tau)\UU(\tau)d\tau
+\label{ctlsbrs}
+\end{equation}
+in the continuous-time case, and as
+\begin{equation}
+\YY(t_1, t, \YY_1) =
+\Phi(t, t_1)\YY_1 \oplus \sum_{\tau =t}^{t_1-1}-\Phi(t, \tau)B(\tau)\UU(\tau)
+\tag*{(\ref{ctlsbrs}d)}
+\label{dtlsbrs}
+\end{equation}
+in discrete-time case.
+The last formula makes sense only for discrete-time linear systems with
+invertible state transition matrix.
+Degenerate discrete-time linear systems have unbounded backward reach sets and such sets
+cannot be computed with available software tools.
+
+Just as in the case of forward reach set, the backward reach set of
+a linear system $\YY(t_1, t, \YY_1)$ is compact and convex if the target set $\YY_1$ and the control sets
+$\UU(\tau)$, $t\leq\tau<t_1$, are compact and convex.
+
+{\bf Remark.}
+In the computer science literature the reach set is said to be the result
+of operator \emph{post}, and the backward reach set is the result of
+operator \emph{pre}.
+In the control literature the backward reach set is also called the
+\emph{solvability set}.
+
+
+\subsection{Systems with disturbances}\label{subsec_sysdist}
+\todo[inline]{This section was changed. I took the information from the previous (more complete) version}
+Consider the continuous-time dynamical system with disturbance
+\begin{equation}
+\dot{x}(t) = f(t, x, u, v),
+\label{ctds2}
+\end{equation}
+or the discrete-time dynamical system with disturbance
+\begin{equation}
+x(t+1) = f(t, x, u, v),
+\tag*{(\ref{ctds2}d)}
+\label{dtds2}
+\end{equation}
+in which
+we also have the disturbance input $v\in{\bf R}^d$ with values $v(t)$  restricted
+to a closed compact set $\VV(t)\subset{\bf R}^d$.
+
+In the presence of disturbances the open-loop reach set (OLRS) is different from the
+closed-loop reach set (CLRS).
+
+Given the initial time $t_0$, the set of initial states $\XX_0$, and
+terminal time $t$, there are two types of OLRS.
+
+\bd[OLRS of maxmin type]
+The maxmin open-loop reach set $\OXOL(t, t_0, \XX_0)$ is the set of all states $x$,
+such that for any disturbance $v(\tau)\in\VV(\tau)$, there exist an initial state
+$x_0\in\XX_0$ and a control $u(\tau)\in\UU(\tau)$, $t_0\leq\tau<t$, that
+steers system (\ref{ctds2}) or \ref{dtds2} from $x(t_0)=x_0$ to $x(t)=x$.
+\label{def_maxminolrs}
+\ed
+\bd[OLRS of minmax type]
+The minmax open-loop reach set $\UXOL(t, t_0, \XX_0)$ is the set of all states $x$,
+such that there exists a control $u(\tau)\in\UU(\tau)$ that for all disturbances
+$v(\tau)\in\VV(\tau)$, $t_0\leq\tau<t$, assigns an initial state $x_0\in\XX_0$
+and steers system (\ref{ctds2}), or \ref{dtds2}, from $x(t_0)=x_0$ to $x(t)=x$.
+\label{def_minmaxolrs}
+\ed
+In the maxmin case the control is chosen \emph{after} knowing the disturbance
+over the entire time interval $[t_0, t]$, whereas in the minmax case
+the control is chosen \emph{before} any knowledge
+of the disturbance.   Consequently, the OLRS do not satisfy the semigroup property.
+
+The terms `maxmin' and `minmax' come from the fact that
+$\OXOL(t, t_0, \XX_0)$ is the subzero level set of the value function
+\begin{equation}
+\underline{V}(t, x) =
+\max_v\min_u\{{\bf dist}(x(t_0), \XX_0) ~|~ x(t)=x, \; u(\tau)\in\UU(\tau), \;
+v(\tau)\in\VV(\tau), \; t_0\leq\tau<t\},
+\label{maxminvf}
+\end{equation}
+i.e., $\OXOL(t, t_0, \XX_0) = \{ x~|~\underline{V}(t, x) \le 0\}$,
+and $\UXOL(t, t_0, \XX_0)$ is the subzero level set of the value function
+\begin{equation}
+\overline{V}(t, x) =
+\min_u\max_v\{{\bf dist}(x(t_0), \XX_0) ~|~ x(t)=x, \; u(\tau)\in\UU(\tau), \;
+v(\tau)\in\VV(\tau), \; t_0\leq\tau<t\},
+\label{minmaxvf}
+\end{equation}
+in which ${\bf dist}(\cdot, \cdot)$ denotes Hausdorff
+semidistance.\footnote{Hausdorff semidistance between compact sets
+$\WW, \ZZ \subseteq {\bf R}^n$ is defined as
+\[ {\bf dist}(\WW, \ZZ) = \min\{\langle w-z, w-z\rangle^{1/2}
+~|~ w\in\WW, \; z\in\ZZ\}, \]
+where $\langle\cdot, \cdot\rangle$ denotes inner product.}
+Since $\underline{V}(t, x)\leq\overline{V}(t, x)$,
+$\UXOL(t, t_0, \XX_0)\subseteq\OXOL(t, t_0, \XX_0)$.
+
+Note that maxmin and minmax OLRS imply \emph{guarantees}: these are states that can be reached
+no matter what the disturbance is, whether it is known in advance
+(maxmin case) or not (minmax case).
+The OLRS may be empty.
+
+
+Fixing time instant $\tau_1$, $t_0<\tau_1<t$, define the
+\emph{piecewise maxmin open-loop reach set with one correction},
+\begin{equation}
+\OXOL^1(t, t_0, \XX_0) = \OXOL(t, \tau_1, \OXOL(\tau_1, t_0, \XX_0)),
+\label{maxmin1}
+\end{equation}
+and the \emph{piecewise minmax open-loop reach set with one correction},
+\begin{equation}
+\UXOL^1(t, t_0, \XX_0) = \UXOL(t, \tau_1, \UXOL(\tau_1, t_0, \XX_0)).
+\label{minmax1}
+\end{equation}
+The piecewise maxmin OLRS $\OXOL^1(t, t_0, \XX_0)$ is the subzero level set
+of the value function
+\begin{equation}
+\underline{V}^1(t, x) =
+\max_v\min_u\{\underline{V}(\tau_1, x(\tau_1)) ~|~ x(t)=x, \;
+u(\tau)\in\UU(\tau), \; v(\tau)\in\VV(\tau), \; \tau_1\leq\tau<t\},
+\label{maxminvf1}
+\end{equation}
+with $V(\tau_1, x(\tau_1))$ given by (\ref{maxminvf}), which yields
+\[ \underline{V}^1(t, x) \geq \underline{V}(t, x), \]
+and thus,
+\[ \OXOL^1(t, t_0 \XX_0) \subseteq \OXOL(t, t_0, \XX_0) .\]
+On the other hand, the piecewise minmax OLRS $\UXOL^1(t, t_0, \XX_0)$
+is the subzero level set of the value function
+\begin{equation}
+\overline{V}^1(t, x) =
+\min_u\max_v\{\overline{V}(\tau_1, x(\tau_1)) ~|~ x(t)=x, \;
+u(\tau)\in\UU(\tau), \; v(\tau)\in\VV(\tau), \; \tau_1\leq\tau<t\},
+\label{minmaxvf1}
+\end{equation}
+with $V(\tau_1, x(\tau_1))$ given by (\ref{minmaxvf}), which yields
+\[ \overline{V}(t, x) \geq \overline{V}^1(t, x), \]
+and thus,
+\[ \UXOL(t, t_0 \XX_0) \subseteq \UXOL^1(t, t_0, \XX_0) .\]
+We can now recursively define piecewise maxmin and minmax OLRS with
+$k$ corrections for $t_0<\tau_1<\cdots<\tau_k<t$.
+The maxmin piecewise OLRS with $k$ corrections is
+\begin{equation}
+\OXOL^k(t, t_0, \XX_0) =
+\OXOL(t, \tau_k, \OXOL^{k-1}(\tau_k, t_0, \XX_0)),
+\label{maxmink}
+\end{equation}
+which is the subzero level set of the corresponding value function
+\begin{eqnarray}
+&&\underline{V}^k(t, x) = \nonumber \\
+&&\max_v\min_u\{\underline{V}^{k-1}(\tau_k, x(\tau_k)) ~|~ x(t)=x, \;
+u(\tau)\in\UU(\tau), \; v(\tau)\in\VV(\tau), \; \tau_k\leq\tau<t\}.
+\label{maxminvfk}
+\end{eqnarray}
+The minmax piecewise OLRS with $k$ corrections is
+\begin{equation}
+\UXOL^k(t, t_0, \XX_0) =
+\UXOL(t, \tau_k, \UXOL^{k-1}(\tau_k, t_0, \XX_0)),
+\label{minmaxk}
+\end{equation}
+which is the subzero level set of the corresponding value function
+\begin{eqnarray}
+&&\overline{V}^k(t, x) = \nonumber \\
+&&\min_u\max_v\{\overline{V}^{k-1}(\tau_k, x(\tau_k)) ~|~ x(t)=x, \;
+u(\tau)\in\UU(\tau), \; v(\tau)\in\VV(\tau), \; \tau_k\leq\tau<t\}.
+\label{minmaxvfk}
+\end{eqnarray}
+From (\ref{maxminvf1}), (\ref{minmaxvf1}), (\ref{maxminvfk}) and
+(\ref{minmaxvfk}) it follows that
+\[ \underline{V}(t, x) \leq \underline{V}^1(t, x)\leq \cdots
+\leq \underline{V}^k(t, x) \leq \overline{V}^k(t, x) \leq \cdots
+\leq \overline{V}^1(t, x) \leq \overline{V}(t, x) .\]
+Hence,
+\begin{eqnarray}
+&&\UXOL(t, t_0, \XX_0) \subseteq \UXOL^1(t, t_0, \XX_0) \subseteq \cdots
+\subseteq \UXOL^k(t, t_0, \XX_0) \subseteq \nonumber \\
+&&\OXOL^k(t, t_0, \XX_0) \subseteq \cdots \subseteq \OXOL^1(t, t_0, \XX_0)
+\subseteq \OXOL(t, t_0, \XX_0) .
+\label{olrsinclusion}
+\end{eqnarray}
+We call
+\begin{equation}
+\OXCL(t, t_0, \XX_0) = \OXOL^k(t, t_0, \XX_0), \;\;
+k = \left\{\begin{array}{ll}
+\infty & \mbox{ for continuous-time system}\\
+t-t_0-1 & \mbox{ for discrete-time system}\end{array}\right.
+\label{maxminclrs}
+\end{equation}
+the \emph{maxmin closed-loop reach set} of system (\ref{ctds2}) or \ref{dtds2}
+at time $t$, and we call
+\begin{equation}
+\UXCL(t, t_0, \XX_0) = \UXOL^k(t, t_0, \XX_0), \;\;
+k = \left\{\begin{array}{ll}
+\infty & \mbox{ for continuous-time system}\\
+t-t_0-1 & \mbox{ for discrete-time system}\end{array}\right.
+\label{minmaxclrs}
+\end{equation}
+the \emph{minmax closed-loop reach set} of system (\ref{ctds2}) or \ref{dtds2}
+at time $t$.
+\bd[CLRS of maxmin type]
+Given initial time $t_0$ and the set of initial states $\XX_0$, the maxmin
+CLRS $\OXCL(t, t_0, \XX_0)$ of system (\ref{ctds2}) or \ref{dtds2} at time
+$t>t_0$, is the set of all states $x$, for each of which and for every disturbance
+$v(\tau)\in\VV(\tau)$, there exist an initial state $x_0\in\XX_0$ and a control
+$u(\tau, x(\tau))\in\UU(\tau)$, such that the trajectory
+$x(\tau | v(\tau), u(\tau, x(\tau)))$ satisfying $x(t_0) = x_0$ and
+\[ \dot{x}(\tau | v(\tau), u(\tau, x(\tau))) \in
+f(\tau, x(\tau), u(\tau, x(\tau)), v(\tau)) \]
+in the continuous-time case, or
+\[ x(\tau+1 | v(\tau), u(\tau, x(\tau))) \in
+f(\tau, x(\tau), u(\tau, x(\tau)), v(\tau)) \]
+in the discrete-time case, with $t_0\leq\tau<t$, is such that $x(t)=x$.
+\label{def_maxminclrs}
+\ed
+\bd[CLRS of minmax type]
+Given initial time $t_0$ and the set of initial states $\XX_0$, the maxmin
+CLRS $\UXCL(t, t_0, \XX_0)$ of system (\ref{ctds2}) or \ref{dtds2}, at time
+$t>t_0$, is the set of all states $x$, for each of which there exists a control
+$u(\tau, x(\tau))\in\UU(\tau)$, and for every disturbance $v(\tau)\in\VV(\tau)$
+there exists  an initial state $x_0\in\XX_0$, such that the trajectory
+$x(\tau, v(\tau) | u(\tau, x(\tau)))$ satisfying $x(t_0) = x_0$ and
+\[ \dot{x}(\tau, v(\tau) | u(\tau, x(\tau))) \in
+f(\tau, x(\tau), u(\tau, x(\tau)), v(\tau)) \]
+in the continuous-time case, or
+\[ x(\tau+1, v(\tau) | u(\tau, x(\tau))) \in
+f(\tau, x(\tau), u(\tau, x(\tau)), v(\tau)) \]
+in the discrete-time case, with $t_0\leq\tau<t$, is such that
+$x(t)=x$.
+\label{def_minmaxclrs}
+\ed
+By construction, both maxmin and minmax CLRS satisfy the
+semigroup property (\ref{semigroup}).
+
+For some classes of dynamical systems and some types of constraints
+on initial conditions, controls and disturbances, the
+maxmin and minmax CLRS may coincide.
+This is the case for continuous-time linear systems
+with convex compact bounds on the initial set, controls and disturbances
+under the condition that the initial set $\XX_0$ is large enough to ensure that
+$\XX(t_0+\epsilon, t_0, \XX_0)$ is nonempty for some small $\epsilon>0$.
+
+Consider the linear system case,
+\begin{equation}
+f(t, x, u) = A(t)x(t) + B(t)u + G(t)v,
+\label{linearrhsdist}
+\end{equation}
+where $A(t)$ and $B(t)$ are as in (\ref{linearrhs}), and
+$G(t)$ takes its values in ${\bf R}^d$.
+
+The maxmin OLRS for the continuous-time linear system can be expressed through
+set valued integrals,
+\begin{equation}
+\begin{array}{l}
+\OXOL(t, t_0, \XX_0) = \\
+\left(\Phi(t, t_0)\XX_0 \oplus
+\int_{t_0}^t\Phi(t, \tau)B(\tau)\UU(\tau)d\tau\right) \dot{-} \\
+\int_{t_0}^t\Phi(t, \tau)(-G(\tau))\VV(\tau)d\tau,
+\end{array}
+\label{ctlsmaxmin}
+\end{equation}
+and for discrete-time linear system through set-valued sums,
+\begin{equation}
+\begin{array}{l}
+\OXOL(t, t_0, \XX_0) = \\
+\left(\Phi(t, t_0)\XX_0 \oplus
+\sum_{\tau=t_0}^{t-1}\Phi(t, \tau+1)B(\tau)\UU(\tau)\right) \dot{-} \\
+\sum_{\tau=t_0}^{t-1}\Phi(t, \tau+1)(-G(\tau))\VV(\tau).
+\end{array}
+\tag*{(\ref{ctlsmaxmin}d)}
+\label{dtlsmaxmin}
+\end{equation}
+Similarly, the minmax OLRS for the continuous-time linear system is
+\begin{equation}
+\begin{array}{l}
+\UXOL(t, t_0, \XX_0) = \\
+\left(\Phi(t, t_0)\XX_0 \dot{-}
+\int_{t_0}^t\Phi(t, \tau)(-G(\tau))\VV(\tau)d\tau\right)
+\oplus \\
+\int_{t_0}^t\Phi(t, \tau)B(\tau)\UU(\tau)d\tau,
+\end{array}
+\label{ctlsminmax}
+\end{equation}
+and for the discrete-time linear system it is
+\begin{equation}
+\begin{array}{l}
+\UXOL(t, t_0, \XX_0) = \\
+\left(\Phi(t, t_0)\XX_0 \dot{-}
+\sum_{\tau=t_0}^{t-1}\Phi(t, \tau+1)(-G(\tau))\VV(\tau)\right)
+\oplus \\
+\sum_{\tau=t_0}^{t-1}\Phi(t, \tau+1)B(\tau)\UU(\tau).
+\end{array}
+\tag*{(\ref{ctlsminmax}d)}
+\label{dtlsminmax}
+\end{equation}
+The operation `$\dot{-}$' is \emph{geometric difference}, also known as
+\emph{Minkowski difference}.\footnote{The Minkowski difference of sets
+$\WW, \ZZ \in{\bf R}^n$ is defined as
+$\WW\dot{-}\ZZ = \left\{\xi\in{\bf R}^n ~|~
+\xi \oplus \ZZ \subseteq \WW\right\}$.
+If  $\WW$ and $\ZZ$ are convex,  $\WW\dot{-}\ZZ$ is convex if it is nonempty.}
+
+Now consider the piecewise OLRS with $k$ corrections.
+Expression (\ref{maxmink}) translates into
+\begin{equation}
+\begin{array}{l}
+\OXOL^k(t, t_0, \XX_0) = \\
+\left(\Phi(t, \tau_k)\OXOL^{k-1}(\tau_k, t_0, \XX_0) \oplus
+\int_{\tau_k}^t\Phi(t, \tau)B(\tau)\UU(\tau)d\tau\right) \dot{-} \\
+\int_{\tau_k}^t\Phi(t, \tau)(-G(\tau))\VV(\tau)d\tau,
+\end{array}
+\label{ctlsmaxmink}
+\end{equation}
+in the continuous-time case, and for the discrete-time case into
+\begin{equation}
+\begin{array}{l}
+\OXOL^k(t, t_0, \XX_0) = \\
+\left(\Phi(t, \tau_k)\OXOL^{k-1}(\tau_k, t_0, \XX_0) \oplus
+\sum_{\tau=\tau_k}^{t-1}\Phi(t, \tau+1)B(\tau)\UU(\tau)\right) \dot{-} \\
+\sum_{\tau=\tau_k}^{t-1}\Phi(t, \tau+1)(-G(\tau))\VV(\tau).
+\end{array}
+\tag*{(\ref{ctlsmaxmink}d)}
+\label{dtlsmaxmink}
+\end{equation}
+Expression (\ref{minmaxk}) translates into
+\begin{equation}
+\begin{array}{l}
+\UXOL^k(t, t_0, \XX_0) = \\
+\left(\Phi(t, \tau_k)\UXOL^{k-1}(t, t_0, \XX_0) \dot{-}
+\int_{\tau_k}^t\Phi(t, \tau)(-G(\tau))\VV(\tau)d\tau\right)
+\oplus \\
+\int_{\tau_k}^t\Phi(t, \tau)B(\tau)\UU(\tau)d\tau,
+\end{array}
+\label{ctlsminmaxk}
+\end{equation}
+in the continuous-time case, and for the discrete-time case into
+\begin{equation}
+\begin{array}{l}
+\UXOL^k(t, t_0, \XX_0) = \\
+\left(\Phi(t, \tau_k)\UXOL^{k-1}(\tau_k, t_0, \XX_0) \dot{-}
+\sum_{\tau=\tau_k}^{t-1}\Phi(t, \tau+1)(-G(\tau))\VV(\tau)\right)
+\oplus \\
+\sum_{\tau=\tau_k}^{t-1}\Phi(t, \tau+1)B(\tau)\UU(\tau).
+\end{array}
+\tag*{(\ref{ctlsminmaxk}d)}
+\label{dtlsminmaxk}
+\end{equation}
+Since for any $\WW_1, \WW_2, \WW_3 \subseteq {\bf R}^n$ it is true that
+\[ (\WW_1 \dot{-} \WW_2) \oplus \WW_3 =
+(\WW_1 \oplus \WW_3) \dot{-} (\WW_2 \oplus \WW_3) \subseteq
+(\WW_1 \oplus \WW_3) \dot{-} \WW_2, \]
+from (\ref{ctlsmaxmink}), (\ref{ctlsminmaxk})  and from
+\ref{dtlsmaxmink}, \ref{dtlsminmaxk}, it is clear that (\ref{olrsinclusion})
+is true.
+
+For linear systems,
+if the initial set $\XX_0$, control bounds $\UU(\tau)$ and disturbance
+bounds $\VV(\tau)$, $t_0\leq\tau<t$, are compact and convex, the
+CLRS $\OXCL(t, t_0, \XX_0)$ and $\UXCL(t, t_0, \XX_0)$ are compact and convex, provided they are nonempty.
+For continuous-time linear systems,
+$\OXCL(t, t_0, \XX_0) = \UXCL(t, t_0, \XX_0) = \XX_{CL}(t, t_0, \XX_0)$.
+
+
+
+% Backward reachability
+
+
+Just as for forward reach sets, the backward reach sets can be open-loop (OLBRS)
+or closed-loop (CLBRS).
+
+\bd[OLBRS of maxmin type]
+Given the terminal time $t_1$ and target set $\YY_1$, the
+maxmin open-loop backward reach set $\OYOL(t_1, t, \YY_1)$
+of system (\ref{ctds2}) or \ref{dtds2} at time $t<t_1$, is the set of all $y$,
+such that for any disturbance $v(\tau)\in\VV(\tau)$
+there exists a terminal state $y_1\in\YY_1$ and control $u(\tau)\in\UU(\tau)$,
+$t\leq\tau<t_1$, which steers the system
+from $y(t)=y$ to $y(t_1)=y_1$.
+\label{def_maxminolbrs}
+\ed
+$\OYOL(t_1, t, \YY_1)$ is the subzero level set of the value function
+\begin{eqnarray}
+&&\underline{V}_b(t, y) = \nonumber \\
+&&\max_v\min_u\{{\bf dist}(y(t_1), \YY_1) ~|~ y(t)=y, \; u(\tau)\in\UU(\tau), \;
+v(\tau)\in\VV(\tau), \; t\leq\tau<t_1\},
+\label{maxminvfb}
+\end{eqnarray}
+\bd[OLBRS of minmax type]
+Given the terminal time $t_1$ and target set $\YY_1$, the
+minmax open-loop backward reach set $\UYOL(t_1, t, \YY_1)$
+of system (\ref{ctds2}) or \ref{dtds2} at time $t<t_1$, is the set of all $y$,
+such that there exists a control $u(\tau)\in\UU(\tau)$ that for all
+disturbances $v(\tau\in\VV(\tau)$, $t\leq\tau<t_1$, assigns a terminal
+state $y_1\in\YY_1$ and steers the system
+from $y(t)=y$ to $y(t_1)=y_1$.
+\label{def_minmaxolbrs}
+\ed
+$\UYOL(t_1, t, \YY_1)$ is the subzero level set of the value function
+\begin{eqnarray}
+&&\overline{V}_b(t, y) = \nonumber \\
+&&\min_u\max_v\{{\bf dist}(y(t_1), \YY_1) ~|~ y(t)=y, \; u(\tau)\in\UU(\tau), \;
+v(\tau)\in\VV(\tau), \; t\leq\tau<t_1\},
+\label{minmaxvfb}
+\end{eqnarray}
+{\bf Remark.}
+The backward reach set can be computed for a continuous-time system only if
+the solution of (\ref{ctds2}) exists for $t<t_1$, and for a discrete-time
+system only if the right hand side of \ref{dtds2} is invertible.
+
+Similarly to the forward reachability case, we construct piecewise
+OLBRS with one correction at time $\tau_1$, $t<\tau_1<t_1$.
+The piecewise maxmin OLBRS with one correction is
+\begin{equation}
+\OYOL^1(t_1, t, \YY_1) = \OYOL(\tau_1, t, \OYOL(t_1, \tau_1, \YY_1)),
+\label{maxminb1}
+\end{equation}
+and it is the subzero level set of the function
+\begin{eqnarray}
+&&\underline{V}^1_b(t, y) = \nonumber \\
+&&\max_v\min_u\{\underline{V}_b(\tau_1, y(\tau_1)) ~|~
+y(t)=y, \; u(\tau)\in\UU(\tau), \;
+v(\tau)\in\VV(\tau), \; t\leq\tau<\tau_1\}.
+\label{maxminvfb1}
+\end{eqnarray}
+The piecewise minmax OLBRS with one correction is
+\begin{equation}
+\UYOL^1(t_1, t, \YY_1) = \UYOL(\tau_1, t, \UYOL(t_1, \tau_1, \YY_1)),
+\label{minmaxb1}
+\end{equation}
+and it is the subzero level set of the function
+\begin{eqnarray}
+&&\overline{V}^1_b(t, y) = \nonumber \\
+&&\min_u\max_v\{\overline{V}_b(\tau_1, y(\tau_1)) ~|~
+y(t)=y, \; u(\tau)\in\UU(\tau), \;
+v(\tau)\in\VV(\tau), \; t\leq\tau<\tau_1\},
+\label{minmaxvfb1}
+\end{eqnarray}
+Recursively define maxmin and minmax OLBRS with $k$ corrections for
+$t<\tau_k<\cdots<\tau_1<t_1$.
+The maxmin OLBRS with $k$ corrections is
+\begin{equation}
+\OYOL^k(t_1, t, \YY_1) = \OYOL(\tau_k, t, \OYOL^{k-1}(t_1, \tau_k, \YY_1)),
+\label{maxminbk}
+\end{equation}
+which is the subzero level set of function
+\begin{eqnarray}
+&&\underline{V}^k_b(t, y) = \nonumber \\
+&&\max_v\min_u\{\underline{V}^{k-1}_b(\tau_k, y(\tau_k)) ~|~
+y(t)=y, \; u(\tau)\in\UU(\tau), \;
+v(\tau)\in\VV(\tau), \; t\leq\tau<\tau_k\}.
+\label{maxminvfbk}
+\end{eqnarray}
+The minmax OLBRS with $k$ corrections is
+\begin{equation}
+\UYOL^k(t_1, t, \YY_1) = \UYOL(\tau_k, t, \UYOL^{k-1}(t_1, \tau_k, \YY_1)),
+\label{minmaxbk}
+\end{equation}
+which is the subzero level set of the function
+\begin{eqnarray}
+&&\overline{V}^k_b(t, y) = \nonumber \\
+&&\min_u\max_v\{\overline{V}^{k-1}_b(\tau_k, y(\tau_k)) ~|~
+y(t)=y, \; u(\tau)\in\UU(\tau), \;
+v(\tau)\in\VV(\tau), \; t\leq\tau<\tau_k\},
+\label{minmaxvfbk}
+\end{eqnarray}
+From (\ref{maxminvfb1}), (\ref{minmaxvfb1}), (\ref{maxminvfbk}) and
+(\ref{minmaxvfbk}) it follows that
+\[ \underline{V}_b(t, y) \leq \underline{V}^1_b(t, y)\leq \cdots
+\leq \underline{V}^k_b(t, y) \leq \overline{V}^k_b(t, y) \leq \cdots
+\leq \overline{V}^1_b(t, y) \leq \overline{V}_b(t, y) .\]
+Hence,
+\begin{eqnarray}
+&&\UYOL(t_1, t, \YY_1) \subseteq \UYOL^1(t_1, t, \YY_1) \subseteq \cdots
+\subseteq \UYOL^k(t_1, t, \YY_1) \subseteq \nonumber \\
+&&\OYOL^k(t_1, t, \YY_1) \subseteq \cdots \subseteq \OYOL^1(t_1, t, \YY_1)
+\subseteq \OYOL(t_1, t, \YY_1) .
+\label{olbrsinclusion}
+\end{eqnarray}
+We say that
+\begin{equation}
+\OYCL(t_1, t, \YY_1) = \OYOL^k(t_1, t, \YY_1), \;\;
+k = \left\{\begin{array}{ll}
+\infty & \mbox{ for continuous-time system}\\
+t_1-t-1 & \mbox{ for discrete-time system}\end{array}\right.
+\label{maxminclbrs}
+\end{equation}
+is the \emph{maxmin closed-loop backward reach set}
+of system (\ref{ctds2}) or \ref{dtds2} at time $t$.
+
+We say that
+\begin{equation}
+\UYCL(t_1, t, \YY_1) = \UYOL^k(t_1, t, \YY_1), \;\;
+k = \left\{\begin{array}{ll}
+\infty & \mbox{ for continuous-time system}\\
+t_1-t-1 & \mbox{ for discrete-time system}\end{array}\right.
+\label{minmaxclbrs}
+\end{equation}
+is the \emph{minmax closed-loop backward reach set}
+of system (\ref{ctds2}) or \ref{dtds2} at time $t$.
+\bd[CLBRS of maxmin type]
+Given the terminal time $t_1$ and target set $\YY_1$, the
+maxmin CLBRS $\OYCL(t_1, t, \YY_1)$ of
+system (\ref{ctds2}) or \ref{dtds2} at time $t<t_1$,
+is the set of all states $y$, for each of which for every disturbance
+$v(\tau)\in\VV(\tau)$ there exists terminal state $y_1\in\YY_1$ and
+control $u(\tau, y(\tau))\in\UU(\tau)$ that assigns
+trajectory $y(\tau, | v(\tau), u(\tau, y(\tau)))$ satisfying
+\[ \dot{y}(\tau | v(\tau), u(\tau, y(\tau))) \in
+f(\tau, y(\tau), u(\tau, y(\tau)), v(\tau)) \]
+in continuous-time case, or
+\[ y(\tau+1 | v(\tau), u(\tau, y(\tau))) \in
+f(\tau, y(\tau), u(\tau, y(\tau)), v(\tau)) \]
+in discrete-time case, with $t\leq\tau<t_1$, such that
+$y(t) = y$ and $y(t_1)=y_1$.
+\label{def_maxminclbrs}
+\ed
+\bd[CLBRS of minmax type]
+Given the terminal time $t_1$ and target set $\YY_1$, the
+minmax CLBRS $\UYCL(t_1, t, \YY_1)$ of
+system (\ref{ctds2}) or \ref{dtds2} at time $t<t_1$,
+is the set of all states $y$, for each of which there exists control
+$u(\tau, y(\tau))\in\UU(\tau)$ that for every disturbance
+$v(\tau)\in\VV(\tau)$
+assigns terminal state $y_1\in\YY_1$ and trajectory
+$y(\tau, v(\tau) | u(\tau, y(\tau)))$ satisfying
+\[ \dot{y}(\tau, v(\tau) | u(\tau, y(\tau))) \in
+f(\tau, y(\tau), u(\tau, y(\tau)), v(\tau)) \]
+in the continuous-time case, or
+\[ y(\tau+1, v(\tau) | u(\tau, y(\tau))) \in
+f(\tau, y(\tau), u(\tau, y(\tau)), v(\tau)) \]
+in the discrete-time case, with $t\leq\tau<t_1$, such that
+$y(t) = y$ and $y(t_1)=y_1$.
+\label{def_minmaxclbrs}
+\ed
+Both maxmin and minmax CLBRS satisfy the semigroup property (\ref{semigroup_b}).
+
+The maxmin OLBRS for the continuous-time linear system can be expressed through
+set valued integrals,
+\begin{equation}
+\begin{array}{l}
+\OYOL(t_1, t, \YY_1) = \\
+\left(\Phi(t, t_1)\YY_1 \oplus
+\int_{t_1}^t\Phi(t, \tau)B(\tau)\UU(\tau)d\tau\right) \dot{-} \\
+\int_{t}^{t_1}\Phi(t, \tau)G(\tau)\VV(\tau)d\tau,
+\end{array}
+\label{ctlsmaxminb}
+\end{equation}
+and for the discrete-time linear system through set-valued sums,
+\begin{equation}
+\begin{array}{l}
+\OYOL(t_1, t, \YY_1) = \\
+\left(\Phi(t, t_1)\YY_1 \oplus
+\sum_{\tau=t}^{t_1-1}-\Phi(t, \tau+1)B(\tau)\UU(\tau)\right) \dot{-} \\
+\sum_{\tau=t}^{t_1-1}\Phi(t, \tau+1)G(\tau)\VV(\tau).
+\end{array}
+\tag*{(\ref{ctlsmaxminb}d)}
+\label{dtlsmaxminb}
+\end{equation}
+Similarly, the minmax OLBRS for the continuous-time linear system is
+\begin{equation}
+\begin{array}{l}
+\UYOL(t_1, t, \YY_1) = \\
+\left(\Phi(t, t_1)\YY_1 \dot{-}
+\int_{t}^{t_1}\Phi(t, \tau)G(\tau)\VV(\tau)d\tau\right)
+\oplus \\
+\int_{t_1}^{t}\Phi(t, \tau)B(\tau)\UU(\tau)d\tau,
+\end{array}
+\label{ctlsminmaxb}
+\end{equation}
+and for the discrete-time linear system it is
+\begin{equation}
+\begin{array}{l}
+\UYOL(t_1, t, \YY_1) = \\
+\left(\Phi(t, t_1)\YY_1 \dot{-}
+\sum_{\tau=t}^{t_1-1}\Phi(t, \tau+1)G(\tau)\VV(\tau)\right)
+\oplus \\
+\sum_{\tau=t}^{t_1-1}-\Phi(t, \tau+1)B(\tau)\UU(\tau).
+\end{array}
+\tag*{(\ref{ctlsminmaxb}d)}
+\label{dtlsminmaxb}
+\end{equation}
+
+Now consider piecewise OLBRS with $k$ corrections.
+Expression (\ref{maxminbk}) translates into
+\begin{equation}
+\begin{array}{l}
+\OYOL^k(t_1, t, \YY_1) = \\
+\left(\Phi(t, \tau_k)\OYOL^{k-1}(t_1, \tau_k, \YY_1) \oplus
+\int_{\tau_k}^t\Phi(t, \tau)B(\tau)\UU(\tau)d\tau\right) \dot{-} \\
+\int^{\tau_k}_t\Phi(t, \tau)G(\tau)\VV(\tau)d\tau,
+\end{array}
+\label{ctlsmaxminbk}
+\end{equation}
+in the continuous-time case, and for the discrete-time case into
+\begin{equation}
+\begin{array}{l}
+\OYOL^k(t_1, t, \YY_1) = \\
+\left(\Phi(t, \tau_k)\OYOL^{k-1}(t_1, \tau_k, \YY_1) \oplus
+\sum_{\tau=t}^{\tau_k-1}-\Phi(t, \tau+1)B(\tau)\UU(\tau)\right) \dot{-} \\
+\sum_{\tau=t}^{\tau_k-1}\Phi(t, \tau+1)G(\tau)\VV(\tau).
+\end{array}
+\tag*{(\ref{ctlsmaxminbk}d)}
+\label{dtlsmaxminbk}
+\end{equation}
+Expression (\ref{minmaxbk}) translates into
+\begin{equation}
+\begin{array}{l}
+\UYOL^k(t_1, t, \YY_1) = \\
+\left(\Phi(t, \tau_k)\OYOL^{k-1}(t_1, \tau_k, \YY_1) \dot{-}
+\int^{\tau_k}_t\Phi(t, \tau)G(\tau)\VV(\tau)d\tau\right)
+\oplus \\
+\int_{\tau_k}^t\Phi(t, \tau)B(\tau)\UU(\tau)d\tau,
+\end{array}
+\label{ctlsminmaxbk}
+\end{equation}
+in the continuous-time case, and for the discrete-time case into
+\begin{equation}
+\begin{array}{l}
+\UYOL^k(t_1, t, \YY_1) = \\
+\left(\Phi(t, \tau_k)\OYOL^{k-1}(t_1, \tau_k, \YY_1) \dot{-}
+\sum_{\tau=t}^{\tau_k-1}\Phi(t, \tau+1)G(\tau)\VV(\tau)\right)
+\oplus \\
+\sum_{\tau=t}^{\tau_k-1}-\Phi(t, \tau+1)B(\tau)\UU(\tau).
+\end{array}
+\tag*{(\ref{ctlsminmaxk}d)}
+\label{dtlsminmaxbk}
+\end{equation}
+
+For continuous-time linear systems
+$\OYCL(t_1, t, \YY_1) = \UYCL(t_1, t, \YY_1) = \YY_{CL}(t_1, t, \YY_1)$
+under the condition that the target set $\YY_1$ is large enough to ensure
+that $\UYCL(t_1, t_1-\epsilon, \YY_1)$ is nonempty for some small $\epsilon>0$.
+
+Computation of backward reach sets for discrete-time linear systems
+makes sense only if the state transition matrix $\Phi(t_1, t)$ is invertible.
+
+If the target set $\YY_1$, control sets $\UU(\tau)$ and disturbance
+sets $\VV(\tau)$, $t\leq\tau<t_1$, are compact and convex, then
+CLBRS $\OYCL(t_1, t, \YY_1)$ and $\UYCL(t_1, t, \YY_1)$ are compact and convex, if they are nonempty.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Reachability problem}
+Reachability analysis is concerned with the computation of the forward
+$\XX(t, t_0, \XX_0)$ and backward  $\YY(t_1, t, \YY_1)$ reach sets (the
+reach sets may  be maxmin or minmax)
+in a way that can effectively meet requests like the following:
+\begin{enumerate}
+\item For the given time interval $[t_0, t]$,
+determine whether the system can be steered into the given target set $\YY_1$.
+In other words, is the set
+$\YY_1\cap\bigcup_{t_0 \leq\tau\leq t}\XX(\tau, t_0, \XX_0)$ nonempty?
+And if the answer is `yes', find a  control that steers the system to the target set (or avoids the target set).\footnote{So-called verification problems often consist in ensuring
+ that the system is unable to reach an `unsafe' target set within a given
+time interval.}
+
+\item If the target set $\YY_1$ is reachable from the given initial
+condition $\{t_0, \XX_0\}$ in the time interval $[t_0, t]$,
+find the shortest time to reach $\YY_1$,
+\[ \arg\min_{\tau}
+\{\XX(\tau,t_0,\XX_0)\cap\YY_1\neq\emptyset ~|~ t_0\leq\tau\leq t\}. \]
+
+\item Given the terminal time $t_1$, target set $\YY_1$ and time $t<t_1$
+find the set of states starting at time $t$ from which  the system can reach
+$\YY_1$ within time interval $[t, t_1]$.
+In other words, find $\bigcup_{t\leq\tau<t_1}\YY(t_1, \tau, \YY_1)$.
+
+\item Find a closed-loop control that steers a system with disturbances
+to the given target set in given time.
+
+\item Graphically display the projection of the reach set along any
+specified two- or three-dimensional subspace.
+\end{enumerate}
+For linear systems, if the initial set $\XX_0$, target set $\YY_1$, control
+bounds $\UU(\cdot)$ and disturbance bounds $\VV(\cdot)$ are compact and convex,
+so are the forward $\XX(t, t_0, \XX_0)$ and backward $\YY(t_1, t, \YY_1)$
+reach sets.
+Hence reachability analysis requires the computationally effective manipulation
+of convex sets, and performing the set-valued operations of unions,
+intersections, geometric sums and differences.
+
+Existing reach set computation tools can deal reliably only with linear
+systems with convex constraints.
+A claim that certain tool or method can be used \emph{effectively}
+for nonlinear systems must be treated with caution,
+and the first question to ask is for what class of nonlinear systems
+and with what limit on the state space dimension does this tool work?
+Some ``reachability methods for nonlinear systems'' reduce to
+the local linearization of a system followed by the use of well-tested techniques
+for linear system reach set computation.
+Thus these approaches in fact use reachability methods for
+linear systems.
+
+
+
+
+
+
+
+
+
+
+

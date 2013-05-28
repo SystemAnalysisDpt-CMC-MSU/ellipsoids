@@ -36,6 +36,14 @@ function [distValArray, statusArray] = distance(ellObjArr, objArr, isFlagOn)
 %           computation of ellipsoids-vectors or ellipsoids-ellipsoids
 %           distances, or status of cvx solver for ellipsoids-polytopes
 %           distances.
+%
+% Literature:
+%  1. Lin, A. and Han, S. On the Distance between Two Ellipsoids.
+%     SIAM Journal on Optimization, 2002, Vol. 13, No. 1 : pp. 298-308
+%  2. Stanley Chan, "Numerical method for Finding Minimum Distance to an
+%     Ellipsoid". 
+%     http://videoprocessing.ucsd.edu/~stanleychan/publication/...
+%     unpublished/Ellipse.pdf
 % 
 % Example:
 %   ellObj = ellipsoid([-2; -1], [4 -1; -1 1]);
@@ -57,12 +65,7 @@ function [distValArray, statusArray] = distance(ellObjArr, objArr, isFlagOn)
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
-% Literature:
-%    1. Lin, A. and Han, S. On the Distance between Two Ellipsoids.
-%       SIAM Journal on Optimization, 2002, Vol. 13, No. 1 : pp. 298-308
-%    2. Stanley Chan, "Numerical method for Finding Minimum Distance to an
-%       Ellipsoid". 
-%       http://videoprocessing.ucsd.edu/~stanleychan/publication/unpublished/Ellipse.pdf
+
 %
 import modgen.common.throwerror
 

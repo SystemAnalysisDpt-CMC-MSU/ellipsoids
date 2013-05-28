@@ -1,10 +1,10 @@
 function isPosArr = doesContain(firstEllArr, secondObjArr,varargin)
-% CONTAINS - checks if one ellipsoid contains the other ellipsoid or
-%            polytope. The condition for E1 = firstEllArr to contain
-%            E2 = secondEllArr is
-%            min(rho(l | E1) - rho(l | E2)) > 0, subject to <l, l> = 1.
-%            How checked if ellipsoid contains polytope is explained in 
-%            doesContainPoly.
+% DOESCONTAIN - checks if one ellipsoid contains the other ellipsoid or
+%               polytope. The condition for E1 = firstEllArr to contain
+%               E2 = secondEllArr is
+%               min(rho(l | E1) - rho(l | E2)) > 0, subject to <l, l> = 1.
+%               How checked if ellipsoid contains polytope is explained in 
+%               doesContainPoly.
 % Input:
 %   regular:
 %       firstEllArr: ellipsoid [nDims1,nDims2,...,nDimsN]/[1,1] - first

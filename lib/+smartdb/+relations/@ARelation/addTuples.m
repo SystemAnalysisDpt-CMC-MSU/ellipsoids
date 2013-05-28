@@ -1,5 +1,5 @@
 function addTuples(self,varargin)
-% ADDTUPLESINTERNAL - adds a set of new tuples to the relation        
+% ADDTUPLES - adds a set of new tuples to the relation        
 %
 % Usage: addTuplesInternal(self,varargin)
 %

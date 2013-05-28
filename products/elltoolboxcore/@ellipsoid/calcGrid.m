@@ -1,8 +1,8 @@
 function [vGridMat, fGridMat] = calcGrid(ellObj,factorVec)
 %
-%   CALCGRID - computes grid of 2d or 3d sphere and vertices for each face 
-%       in the grid with number of points taken from ellObj nPlot2dPoints
-%       or nPlot3dPoints parameters
+% CALCGRID - computes grid of 2d or 3d sphere and vertices for each face 
+%            in the grid with number of points taken from ellObj 
+%            nPlot2dPoints or nPlot3dPoints parameters
 %
 % Input:
 %   regular:

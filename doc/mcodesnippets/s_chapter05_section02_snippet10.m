@@ -4,7 +4,7 @@
 intersectEllMat = ellMat(:, 2).hpintersection(firstHypObj)
 
 % intersectEllMat =
-% 2x1 array of ellipsoids.
+% Array of ellipsoids with dimensionality 2x1
 
 intersectEllMat.isdegenerate()  % resulting ellipsoids should lose rank
 

@@ -207,6 +207,10 @@ classdef Properties<modgen.common.obj.StaticPropStorage
         end
         %
         function setRelTol(value)
+        % SETRELTOL - set global relative tolerance
+        %
+        % Input 
+        % relTol: double[1,1]
             elltool.conf.Properties.setOption('relTol',value);
         end    
         %
