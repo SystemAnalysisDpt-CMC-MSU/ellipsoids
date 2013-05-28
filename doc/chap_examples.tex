@@ -37,7 +37,7 @@ In figure \ref{ellpolyfig}, the time required to compute both external
 and internal ellipsoidal approximations, with $32$ ellipsoids each,
 for different number of time steps is shown in blue.
 
-\easyfigure[h][0.7\textwidth]{ellpoly.eps}{Reach set computation performance comparison}{ellpolyfig}
+\easyfigure[ht][0.7\textwidth]{ellpoly.eps}{Reach set computation performance comparison}{ellpolyfig}
 
 
 Figure \ref{ellpolyfig}  illustrates  the fact that the
@@ -53,7 +53,7 @@ by the following system of equations:
 m_1\ddot{x}_1+(k_1+k_2)x_1-k_2x_2 & = & u_1, \label{spmass1}\\
 m_2\ddot{x}_2-k_2x_1+(k_1+k_2)x_2 & = & u_2 . \label{spmass2}
 \end{eqnarray}
-\easyfigure[h][0.6\textwidth]{springmass.eps}{Spring-mass system.}{springmassfig}
+\easyfigure[ht][0.6\textwidth]{springmass.eps}{Spring-mass system.}{springmassfig}
 Here $u_1$ and $u_2$ are the forces applied to masses $m_1$ and $m_2$,
 and we shall assume $[u_1 ~~ u_2]^T\in\EE(0,I)$.
 The initial conditions can be taken as $x_1(0)=0$, $x_2(0)=2$.
@@ -91,7 +91,7 @@ Figure \ref{mechreachfig}(a) shows the reach set of the system
 (\ref{spmass1}-\ref{spmass2}) evolving in time from $t=0$ to $t=4$.
 Figure \ref{mechreachfig}(b) presents a snapshot of this reach set at time
 $t=4$.
-\easyfigure[h][0.8\textwidth]{reachmech.eps}{Spring-mass system without disturbance:
+\easyfigure[ht][0.8\textwidth]{reachmech.eps}{Spring-mass system without disturbance:
 (a) reach tube for time $t\in[0,4]$; (b) reach set at time $t=4$.
 Spring-mass system with disturbance:
 (c) reach tube for time $t\in[0,4]$; (d) reach set at time $t=4$.}{mechreachfig}
