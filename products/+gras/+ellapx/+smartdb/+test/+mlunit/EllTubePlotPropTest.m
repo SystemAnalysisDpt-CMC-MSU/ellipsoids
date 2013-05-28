@@ -11,10 +11,6 @@ classdef EllTubePlotPropTest < mlunitext.test_case
             [~, handleVecList] = modgen.struct.getleavelist(SHandle);
             handleVec = [handleVecList{:}];
             
-%             lsGoodDirList = arrayfun(@(x)num2str(rel.lsGoodDirVec{x},...
-%                 '%g;'), 1 : numel(rel.lsGoodDirVec), 'UniformOutput', false);
-%             lsGoodDirList = arrayfun(@(x)(lsGoodDirList{x}(end - 1)),...
-%                 1 : numel(rel.lsGoodDirVec), 'UniformOutput', false);
             isOkVec = arrayfun(@(x)checkPropsTuple(x),...
                 1 : numel(rel.lsGoodDirVec));
             
