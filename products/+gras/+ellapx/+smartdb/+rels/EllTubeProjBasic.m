@@ -38,7 +38,7 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
             import gras.ellapx.enums.EApproxType;
             switch approxType
                 case EApproxType.Internal
-                    patchAlpha=0.5;
+                    patchAlpha=0.1;
                 case EApproxType.External
                     patchAlpha=0.3;
                 otherwise,
