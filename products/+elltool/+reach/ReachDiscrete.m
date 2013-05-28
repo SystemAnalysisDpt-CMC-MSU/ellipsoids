@@ -2447,7 +2447,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 logger.info('Plotting reach set external approximation...');
             end
             if d == 3
-                EE  = move2origin(E(:, end));
+                EE  = getMove2Origin(E(:, end));
                 EE  = EE';
                 M   = self.nPlot3dPoints()/2;
                 N   = M/2;
@@ -2466,7 +2466,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                     mval = self.absTol();
                     for j = 1:m
                         if trace(EE(1, j)) > self.absTol()
-                            Q = parameters(inv(EE(1, j)));
+                            Q = parameters(getInv(EE(1, j)));
                             v = l' * Q * l;
                             if v > mval
                                 mval = v;
@@ -2494,7 +2494,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             end
             ih = ishold;
             if size(self.time_values, 2) == 1
-                E   = move2origin(E');
+                E   = getMove2Origin(E');
                 M   = size(E, 2);
                 N   = self.nPlot2dPoints;
                 phi = linspace(0, 2*pi, N);
@@ -2541,7 +2541,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             L      = [cos(phi); sin(phi)];
             if isa(self.system, 'elltool.linsys.LinSysDiscrete')
                 for ii = 1:n
-                    EE = move2origin(E(:, ii));
+                    EE = getMove2Origin(E(:, ii));
                     EE = EE';
                     X  = [];
                     cnt = 0;
@@ -2585,7 +2585,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 F = ell_triag_facets(s, size(self.time_values, 2));
                 V = [];
                 for ii = 1:n
-                    EE = move2origin(inv(E(:, ii)));
+                    EE = getMove2Origin(getInv(E(:, ii)));
                     EE = EE';
                     X  = [];
                     for i = 1:s
@@ -2702,7 +2702,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 logger.info('Plotting reach set internal approximation...');
             end
             if d == 3
-                EE         = move2origin(inv(E(:, end)));
+                EE         = getMove2Origin(getInv(E(:, end)));
                 EE         = EE';
                 m          = size(EE, 2);
                 M          = self.nPlot3dPoints/2;
@@ -2751,7 +2751,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             end
             ih = ishold;
             if size(self.time_values, 2) == 1
-                E   = move2origin(E');
+                E   = getMove2Origin(E');
                 M   = size(E, 2);
                 N   = self.nPlot2dPoints;
                 phi = linspace(0, 2*pi, N);
@@ -2801,7 +2801,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             L      = [cos(phi); sin(phi)];
             if isa(self.system, 'elltool.linsys.LinSysDiscrete')
                 for ii = 1:n
-                    EE = move2origin(E(:, ii));
+                    EE = getMove2Origin(E(:, ii));
                     EE = EE';
                     X  = [];
                     for i = 1:s
@@ -2844,7 +2844,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 F = ell_triag_facets(s, size(self.time_values, 2));
                 V = [];
                 for ii = 1:n
-                    EE = move2origin(E(:, ii));
+                    EE = getMove2Origin(E(:, ii));
                     EE = EE';
                     X  = [];
                     for i = 1:s

@@ -22,7 +22,6 @@ function [normVec, hypScal] = double(myHyp)
 %       -1
 %        1
 % 
-% 
 %   hypScal =
 % 
 %        0

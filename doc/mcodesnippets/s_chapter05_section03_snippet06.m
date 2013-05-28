@@ -1,2 +1,5 @@
-% reach set of continuos-time system
-firstRsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec); 
+approxType=gras.ellapx.enums.EApproxType.Internal;
+ellArray = fromEllArrayEllTube.getEllArray(approxType)
+
+% ellArray =
+% Array of ellipsoids with dimensionality 5x1
