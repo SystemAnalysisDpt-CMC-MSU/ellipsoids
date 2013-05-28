@@ -118,6 +118,11 @@ classdef DiscreteReachTestCase < mlunitext.test_case
                     directionsCVec{iDirection}(:, kTime + 1) = lVec;
                 end
             end
+            
+            if self.reachObj.isbackward()
+                directionsCVec = cellfun(@(x) fliplr(x), directionsCVec, ...
+                        'UniformOutput', false);
+            end
         end
         
         function goodCurvesCVec = calculateGoodCurvesCVec(self)
@@ -200,6 +205,10 @@ classdef DiscreteReachTestCase < mlunitext.test_case
                         curDirectionVec' * trCenterMat(:, kTime);
                 end
             end
+            
+            if self.reachObj.isbackward()
+                supFunMat = flipdim(supFunMat, 1);
+            end
         end
     end
     methods
@@ -219,86 +228,6 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             self.x0Ell = reachFactObj.getX0Ell();
             self.l0Mat = reachFactObj.getL0Mat();
             self.fundCMat = self.calculateFundamentalMatrix(self);
-        end
-        
-        function self = DISABLED_testConsistency(self)
-            k0 = self.tIntervalVec(1);
-            k1 = self.tIntervalVec(2);
-            
-            nTimeStep = abs(k1 - k0) + 1;
-            nDirections = size(self.l0Mat, 2);
-            xDim = size(self.linSys.getAtMat(), 1);
-            
-            isBack = k0 > k1;
-            
-            if isBack
-                tVec = k0:-1:k1;
-            else
-                tVec = k0:k1;
-            end
-            
-            goodDirCVec = self.reachObj.get_directions();
-            [eaEllMat ~] = self.reachObj.get_ea();
-            [iaEllMat ~] = self.reachObj.get_ia();
-            [trCenterMat ~] = self.reachObj.get_center();
-            
-            nPoints = nTimeStep;
-            calcPrecision = 0.001;
-            approxSchemaDescr = char.empty(1,0);
-            approxSchemaName = char.empty(1,0);
-            nDims = xDim;
-            nTubes = nDirections;
-            QArrayList = repmat({repmat(eye(nDims),[1,1,nPoints])},1,nTubes);
-            aMat = trCenterMat;
-            timeVec = tVec;
-            sTime = k0;
-            
-            approxType = gras.ellapx.enums.EApproxType.External;
-            
-            ltGoodDirArray = zeros(xDim, nTubes, nTimeStep);
-            for iTube = 1:nTubes
-                ltGoodDirArray(:, iTube, :) = goodDirCVec{iTube};
-            end
-            
-            QArrayList = repmat({repmat(zeros(xDim), ...
-                [1, 1, nPoints])}, 1, nTubes);
-            
-            for iTube = 1:nTubes
-                for iTime = 1:nTimeStep
-                    QArrayList{1, iTube}(:, :, iTime) = double(eaEllMat(iTube, iTime));
-                end
-            end
-            
-            rel1 = create(); %#ok<NASGU>
-            
-            approxType = gras.ellapx.enums.EApproxType.Internal;
-            
-            for iTube = 1:nTubes
-                for iTime = 1:nTimeStep
-                    QArrayList{1, iTube}(:, :, iTime) = double(iaEllMat(iTube, iTime));
-                end
-            end
-            rel2 = create(); %#ok<NASGU>
-            check();
-            
-            mlunitext.assert_equals(true, true);
-            
-            function check(errorTag)
-                CMD_STR = 'rel1.getCopy().unionWith(rel2)';
-                if nargin == 0
-                    eval(CMD_STR);
-                else
-                    self.runAndCheckError(CMD_STR,...
-                        errorTag)
-                end
-            end
-            
-            function rel = create()
-                rel = gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
-                    QArrayList,aMat,timeVec,...
-                    ltGoodDirArray,sTime,approxType,approxSchemaName,...
-                    approxSchemaDescr,calcPrecision);
-            end
         end
         
         function self = testGetSystem(self)
@@ -504,57 +433,6 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             checkUVW2(self,'U',fMethod);
             checkUVW2(self,'W',fMethod);
         end        
-        %
-        function self = DISABLED_testCut(self)
-            import gras.ellapx.enums.EApproxType;
-            %
-            newTimeVec = [sum(self.tIntervalVec/2), self.tIntervalVec(2)];
-            newTimeVec = round(newTimeVec);
-            cutReachObj = self.reachObj.cut(newTimeVec);
-            [iaEllMat timeVec] = cutReachObj.get_ia();
-            [eaEllMat timeVec] = cutReachObj.get_ea();
-            nTuples = size(eaEllMat, 1);
-            timeDif = timeVec(1) - newTimeVec(1);
-            for iTuple = 1 : nTuples
-                x0IaEll = iaEllMat(iTuple, 1);
-                x0EaEll = eaEllMat(iTuple, 1);
-                directionsCVec = cutReachObj.get_directions();
-                l0Mat = directionsCVec{iTuple}(:, 1);
-                l0Mat = l0Mat ./ norm(l0Mat);
-                newIaReachObj = elltool.reach.ReachDiscrete(self.linSys,...
-                    x0IaEll, l0Mat, newTimeVec + timeDif);
-                newEaReachObj = elltool.reach.ReachDiscrete(self.linSys,...
-                    x0EaEll, l0Mat, newTimeVec + timeDif);
-                isIaEqual = cutReachObj.isEqual(newIaReachObj, iTuple,...
-                    EApproxType.Internal);
-                isEaEqual = cutReachObj.isEqual(newEaReachObj, iTuple,...
-                    EApproxType.External);
-                mlunitext.assert_equals(true, isIaEqual);
-                mlunitext.assert_equals(true, isEaEqual);
-            end
-        end
-        %
-        function self = DISABLED_testCutExternalOnly(self)
-            import gras.ellapx.enums.EApproxType;
-            %
-            newTimeVec = [sum(self.tIntervalVec/2), self.tIntervalVec(2)];
-            newTimeVec = round(newTimeVec);
-            cutReachObj = self.reachObj.cut(newTimeVec);
-            [eaEllMat timeVec] = cutReachObj.get_ea();
-            nTuples = size(eaEllMat, 1);
-            timeDif = timeVec(1) - newTimeVec(1);
-            for iTuple = 1 : nTuples
-                x0EaEll = eaEllMat(iTuple, 1);
-                directionsCVec = cutReachObj.get_directions();
-                l0Mat = directionsCVec{iTuple}(:, 1);
-                l0Mat = l0Mat ./ norm(l0Mat);
-                newEaReachObj = elltool.reach.ReachDiscrete(self.linSys,...
-                    x0EaEll, l0Mat, newTimeVec + timeDif);
-                isEaEqual = cutReachObj.isEqual(newEaReachObj, iTuple,...
-                    EApproxType.External);
-                mlunit.assert_equals(true, isEaEqual);
-            end
-        end
         %
         function checkUVW2(self,typeUVW,fMethod)
             

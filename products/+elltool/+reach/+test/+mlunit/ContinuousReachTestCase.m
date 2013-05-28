@@ -246,12 +246,22 @@ classdef ContinuousReachTestCase < mlunitext.test_case
             [iaEllMat timeVec] = cutReachObj.get_ia();
             eaEllMat = cutReachObj.get_ea();
             nTuples = size(iaEllMat, 1);
-            timeDif = timeVec(1) - newTimeVec(1);
+            if self.reachObj.isbackward()
+                timeDif = timeVec(end) - newTimeVec(1);
+            else
+                timeDif = timeVec(1) - newTimeVec(1);
+            end
             for iTuple = 1 : nTuples
-                x0IaEll = iaEllMat(iTuple, 1);
-                x0EaEll = eaEllMat(iTuple, 1);
                 directionsCVec = cutReachObj.get_directions();
-                l0Mat = directionsCVec{iTuple}(:, 1);
+                if self.reachObj.isbackward()
+                    x0IaEll = iaEllMat(iTuple, end);
+                    x0EaEll = eaEllMat(iTuple, end);
+                    l0Mat = directionsCVec{iTuple}(:, end);
+                else
+                    x0IaEll = iaEllMat(iTuple, 1);
+                    x0EaEll = eaEllMat(iTuple, 1);
+                    l0Mat = directionsCVec{iTuple}(:, 1);
+                end
                 l0Mat = l0Mat ./ norm(l0Mat);
                 newIaReachObj = feval(class(self.reachObj), ...
                     self.linSys, x0IaEll, l0Mat, newTimeVec + timeDif);
@@ -261,6 +271,7 @@ classdef ContinuousReachTestCase < mlunitext.test_case
                     EApproxType.Internal);
                 isEaEqual = cutReachObj.isEqual(newEaReachObj, iTuple,...
                     EApproxType.External);
+                
                 mlunitext.assert_equals(true, isIaEqual);
                 mlunitext.assert_equals(true, isEaEqual);
             end

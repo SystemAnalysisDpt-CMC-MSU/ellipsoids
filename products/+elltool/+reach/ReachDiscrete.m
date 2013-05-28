@@ -38,9 +38,9 @@ classdef ReachDiscrete < elltool.reach.AReach
             qtStrCVec = unifySym(qtStrCVec);
             %
             function outStrCMat = unifySym(inStrCMat)
-               fChangeSymToT = @(str) strrep(str, 'k', 't');
-               outStrCMat = cellfun(fChangeSymToT, inStrCMat, ...
-                   'UniformOutput', false);
+                fChangeSymToT = @(str) strrep(str, 'k', 't');
+                outStrCMat = cellfun(fChangeSymToT, inStrCMat, ...
+                    'UniformOutput', false);
             end
         end
         %
@@ -192,6 +192,9 @@ classdef ReachDiscrete < elltool.reach.AReach
             approxSchemaName = char.empty(1,0);
             sTime = timeLimsVec(1);
             timeVec = probDynObj.getTimeVec();
+            if self.isBackward
+                timeVec = fliplr(timeVec);
+            end
             %
             aMat = probDynObj.getxtDynamics().evaluate(timeVec);
             ltGoodDirArray = ...
@@ -203,8 +206,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             fCalcApproxShape = @(approxType) ...
                 elltool.reach.ReachDiscrete.calculateApproxShape(...
                 probDynObj, l0Mat, self.relTol, approxType, ...
-                isDisturb, ...
-                self.isMinMax);
+                isDisturb, self.isMinMax);
             %
             if isExtApprox
                 approxType = EApproxType.External;
@@ -225,6 +227,11 @@ classdef ReachDiscrete < elltool.reach.AReach
             end
             %
             function rel = create()
+                if self.isBackward
+                    qArrayList = cellfun(@(x) flipdim(x, 3), qArrayList, ...
+                        'UniformOutput', false);
+                    ltGoodDirArray = flipdim(ltGoodDirArray, 3);
+                end
                 rel = gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
                     qArrayList, aMat, timeVec, ltGoodDirArray, ...
                     sTime, approxType, approxSchemaName, ...
@@ -233,7 +240,7 @@ classdef ReachDiscrete < elltool.reach.AReach
         end
     end
     %
-    methods        
+    methods
         function self = ReachDiscrete(linSys, x0Ell, l0Mat,...
                 timeVec, varargin)
             %
@@ -288,7 +295,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             if (nargin == 0) || isempty(linSys)
                 return;
             end
-            %            
+            %
             k0 = round(timeVec(1));
             k1 = round(timeVec(2));
             timeVec = [k0 k1];
@@ -303,9 +310,10 @@ classdef ReachDiscrete < elltool.reach.AReach
             %
             % create gras LinSys object
             %
-            [x0Vec x0Mat] = double(x0Ell);
-            [atStrCMat btStrCMat gtStrCMat ptStrCMat ptStrCVec...
-                qtStrCMat qtStrCVec] = self.prepareSysParam(linSys);
+            [x0Vec, x0Mat] = double(x0Ell);
+            [atStrCMat, btStrCMat, gtStrCMat, ptStrCMat, ptStrCVec,...
+                qtStrCMat, qtStrCVec] =...
+                self.prepareSysParam(linSys, timeVec);
             isDisturbance = self.isDisturbance(gtStrCMat, qtStrCMat);
             %
             % normalize good directions

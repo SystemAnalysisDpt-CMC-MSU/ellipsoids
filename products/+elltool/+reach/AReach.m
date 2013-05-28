@@ -1,13 +1,13 @@
 classdef AReach < elltool.reach.IReach
-% $Authors: Kirill Mayantsev <kirill.mayantsev@gmail.com> $   
-%               $Date: March-2013 $
-%           Igor Kitsenko <kitsenko@gmail.com> $
-%               $Date: May-2013 $
-% $Copyright: Moscow State University,
-%             Faculty of Computational Mathematics 
-%             and Computer Science, 
-%             System Analysis Department 2013$
-%
+    % $Authors: Kirill Mayantsev <kirill.mayantsev@gmail.com> $
+    %               $Date: March-2013 $
+    %           Igor Kitsenko <kitsenko@gmail.com> $
+    %               $Date: May-2013 $
+    % $Copyright: Moscow State University,
+    %             Faculty of Computational Mathematics
+    %             and Computer Science,
+    %             System Analysis Department 2013$
+    %
     properties (Constant, GetAccess = protected)
         MIN_EIG_Q_REG_UNCERT = 0.1
         EXTERNAL_SCALE_FACTOR = 1.02
@@ -70,37 +70,37 @@ classdef AReach < elltool.reach.IReach
     %
     methods (Static, Access = protected)
         function [propArr, propVal] = getProperty(rsArr,propName,fPropFun)
-        % GETPROPERTY - gives array the same size as rsArray with values of 
-        %               propName properties for each reach set in rsArr. 
-        %               Private method, used in every public property getter.
-        %               
-        %
-        % Input:
-        %   regular:
-        %       rsArray: elltool.reach.ReachDiscrete [nDims1, nDims2,...] -  
-        %           multidimension array of reach sets 
-        %       propName: char[1,N] - name property
-        %
-        %   optional:
-        %       fPropFun: function_handle[1,1] - function that apply to the propArr. 
-        %           The default is @min.        
-        %
-        % Output:
-        %   regular:
-        %       propArr: double[nDim1, nDim2,...] -  multidimension array of properties 
-        %          for reach object in rsArr
-        %   optional:
-        %       propVal: double[1, 1] - return result of work fPropFun with the propArr
-        %
-        % $Author: Zakharov Eugene <justenterrr@gmail.com>$
-        %   $Date: 17-november-2012$
-        % $Author: Grachev Artem  <grachev.art@gmail.com> $
-        %   $Date: March-2013$
-        % $Copyright: Moscow State University,
-        %             Faculty of Computational Mathematics
-        %             and Computer Science,
-        %             System Analysis Department 2013 $
-        %
+            % GETPROPERTY - gives array the same size as rsArray with values of
+            %               propName properties for each reach set in rsArr.
+            %               Private method, used in every public property getter.
+            %
+            %
+            % Input:
+            %   regular:
+            %       rsArray: elltool.reach.ReachDiscrete [nDims1, nDims2,...] -
+            %           multidimension array of reach sets
+            %       propName: char[1,N] - name property
+            %
+            %   optional:
+            %       fPropFun: function_handle[1,1] - function that apply to the propArr.
+            %           The default is @min.
+            %
+            % Output:
+            %   regular:
+            %       propArr: double[nDim1, nDim2,...] -  multidimension array of properties
+            %          for reach object in rsArr
+            %   optional:
+            %       propVal: double[1, 1] - return result of work fPropFun with the propArr
+            %
+            % $Author: Zakharov Eugene <justenterrr@gmail.com>$
+            %   $Date: 17-november-2012$
+            % $Author: Grachev Artem  <grachev.art@gmail.com> $
+            %   $Date: March-2013$
+            % $Copyright: Moscow State University,
+            %             Faculty of Computational Mathematics
+            %             and Computer Science,
+            %             System Analysis Department 2013 $
+            %
             import modgen.common.throwerror;
             propNameList = {'absTol','relTol','nPlot2dPoints',...
                 'nPlot3dPoints','nTimeGridPoints'};
@@ -121,163 +121,163 @@ classdef AReach < elltool.reach.IReach
         end
         %
         function [absTolArr, absTolVal] = getAbsTol(rsArr, varargin)
-        % GETABSTOL - gives the array of absTol for all elements in rsArr
-        %
-        % Input:
-        %   regular:
-        %       rsArr: elltool.reach.ReachDiscrete[nDim1, nDim2, ...] - multidimension 
-        %              array of reach sets
-        %   optional:
-        %       fAbsTolFun: function_handle[1,1] - function that apply to the absTolArr. 
-        %               The default is @min.
-        %         
-        % Output:
-        %   regular:
-        %       absTolArr: double [absTol1, absTol2, ...] - return absTol for each 
-        %                 element in rsArr
-        %   optional:
-        %       absTol: double[1,1] - return result of work fAbsTolFun with the absTolArr
-        %
-        % Usage:
-        %   use [~,absTol] = rsArr.getAbsTol() if you want get only absTol,
-        %   use [absTolArr,absTol] = rsArr.getAbsTol() if you want get absTolArr and absTol,
-        %   use absTolArr = rsArr.getAbsTol() if you want get only absTolArr
-        % 
-        %$Author: Zakharov Eugene  <justenterrr@gmail.com> $
-        % $Author: Grachev Artem  <grachev.art@gmail.com> $
-        %   $Date: March-2013$
-        % $Copyright: Moscow State University,
-        %             Faculty of Computational Mathematics
-        %             and Computer Science, 
-        %             System Analysis Department 2013 $
-        %             
+            % GETABSTOL - gives the array of absTol for all elements in rsArr
+            %
+            % Input:
+            %   regular:
+            %       rsArr: elltool.reach.ReachDiscrete[nDim1, nDim2, ...] - multidimension
+            %              array of reach sets
+            %   optional:
+            %       fAbsTolFun: function_handle[1,1] - function that apply to the absTolArr.
+            %               The default is @min.
+            %
+            % Output:
+            %   regular:
+            %       absTolArr: double [absTol1, absTol2, ...] - return absTol for each
+            %                 element in rsArr
+            %   optional:
+            %       absTol: double[1,1] - return result of work fAbsTolFun with the absTolArr
+            %
+            % Usage:
+            %   use [~,absTol] = rsArr.getAbsTol() if you want get only absTol,
+            %   use [absTolArr,absTol] = rsArr.getAbsTol() if you want get absTolArr and absTol,
+            %   use absTolArr = rsArr.getAbsTol() if you want get only absTolArr
+            %
+            %$Author: Zakharov Eugene  <justenterrr@gmail.com> $
+            % $Author: Grachev Artem  <grachev.art@gmail.com> $
+            %   $Date: March-2013$
+            % $Copyright: Moscow State University,
+            %             Faculty of Computational Mathematics
+            %             and Computer Science,
+            %             System Analysis Department 2013 $
+            %
             [absTolArr,absTolVal]=rsArr.getProperty('absTol',varargin{:});
             
         end
         %
         function nPlot2dPointsArr = getNPlot2dPoints(rsArr)
-        % GETNPLOT2DPOINTS - gives array  the same size as rsArr of value of 
-        %                    nPlot2dPoints property for each element in rsArr - 
-        %                    array of reach sets
-        % 
-        %
-        % Input:
-        %   regular:
-        %     rsArr:elltool.reach.ReachDiscrete [nDims1,nDims2,...] - reach set array 
-        %           
-        %
-        % Output:
-        %   nPlot2dPointsArr:double[nDims1,nDims2,...] - array of values of 
-        %       nTimeGridPoints property for each reach set in rsArr
-        %
-        % $Author: Zakharov Eugene
-        % <justenterrr@gmail.com> $    
-        % $Date: 17-november-2012 $ 
-        % $Copyright: Moscow State University,
-        %             Faculty of Computational Mathematics
-        %             and Computer Science,
-        %             System Analysis Department 2012 $
-        %
+            % GETNPLOT2DPOINTS - gives array  the same size as rsArr of value of
+            %                    nPlot2dPoints property for each element in rsArr -
+            %                    array of reach sets
+            %
+            %
+            % Input:
+            %   regular:
+            %     rsArr:elltool.reach.ReachDiscrete [nDims1,nDims2,...] - reach set array
+            %
+            %
+            % Output:
+            %   nPlot2dPointsArr:double[nDims1,nDims2,...] - array of values of
+            %       nTimeGridPoints property for each reach set in rsArr
+            %
+            % $Author: Zakharov Eugene
+            % <justenterrr@gmail.com> $
+            % $Date: 17-november-2012 $
+            % $Copyright: Moscow State University,
+            %             Faculty of Computational Mathematics
+            %             and Computer Science,
+            %             System Analysis Department 2012 $
+            %
             nPlot2dPointsArr =...
                 elltool.reach.ReachDiscrete.getProperty(rsArr,'nPlot2dPoints');
         end
         %
         function nPlot3dPointsArr = getNPlot3dPoints(rsArr)
-        % GETNPLOT3DPOINTS - gives array  the same size as rsArr of value of 
-        %                    nPlot3dPoints property for each element in rsArr
-        %                    - array of reach sets
-        %
-        % Input:
-        %   regular:
-        %       rsArr:reach[nDims1,nDims2,...] - reach set array
-        %
-        % Output:
-        %   nPlot3dPointsArr:double[nDims1,nDims2,...]- array of values of 
-        %             nPlot3dPoints property for each reach set in rsArr
-        %       
-        %
-        % $Author: Zakharov Eugene
-        % <justenterrr@gmail.com> $    
-        % $Date: 17-november-2012 $ 
-        % $Copyright: Moscow State University,
-        %             Faculty of Computational Mathematics
-        %             and Computer Science,
-        %             System Analysis Department 2012 $
-        %
+            % GETNPLOT3DPOINTS - gives array  the same size as rsArr of value of
+            %                    nPlot3dPoints property for each element in rsArr
+            %                    - array of reach sets
+            %
+            % Input:
+            %   regular:
+            %       rsArr:reach[nDims1,nDims2,...] - reach set array
+            %
+            % Output:
+            %   nPlot3dPointsArr:double[nDims1,nDims2,...]- array of values of
+            %             nPlot3dPoints property for each reach set in rsArr
+            %
+            %
+            % $Author: Zakharov Eugene
+            % <justenterrr@gmail.com> $
+            % $Date: 17-november-2012 $
+            % $Copyright: Moscow State University,
+            %             Faculty of Computational Mathematics
+            %             and Computer Science,
+            %             System Analysis Department 2012 $
+            %
             nPlot3dPointsArr =...
                 elltool.reach.ReachDiscrete.getProperty(rsArr,'nPlot3dPoints');
         end
         %
         function nTimeGridPointsArr = getNTimeGridPoints(rsArr)
-        % GETNTIMEGRIDPOINTS - gives array  the same size as rsArr of value of 
-        %                      nTimeGridPoints property for each element in rsArr
-        %                     - array of reach sets
-        % 
-        % Input:
-        %   regular:
-        %       rsArr: elltool.reach.ReachDiscrete [nDims1,nDims2,...] - reach set 
-        %         array
-        %
-        % Output:
-        %   nTimeGridPointsArr: double[nDims1,nDims2,...]- array of values of 
-        %       nTimeGridPoints property for each reach set in rsArr
-        %       
-        %
-        % $Author: Zakharov Eugene
-        % <justenterrr@gmail.com> $    
-        % $Date: 17-november-2012 $ 
-        % $Copyright: Moscow State University,
-        %             Faculty of Computational Mathematics
-        %             and Computer Science,
-        %             System Analysis Department 2012 $
-        %
+            % GETNTIMEGRIDPOINTS - gives array  the same size as rsArr of value of
+            %                      nTimeGridPoints property for each element in rsArr
+            %                     - array of reach sets
+            %
+            % Input:
+            %   regular:
+            %       rsArr: elltool.reach.ReachDiscrete [nDims1,nDims2,...] - reach set
+            %         array
+            %
+            % Output:
+            %   nTimeGridPointsArr: double[nDims1,nDims2,...]- array of values of
+            %       nTimeGridPoints property for each reach set in rsArr
+            %
+            %
+            % $Author: Zakharov Eugene
+            % <justenterrr@gmail.com> $
+            % $Date: 17-november-2012 $
+            % $Copyright: Moscow State University,
+            %             Faculty of Computational Mathematics
+            %             and Computer Science,
+            %             System Analysis Department 2012 $
+            %
             nTimeGridPointsArr =...
                 elltool.reach.ReachDiscrete.getProperty(rsArr,'nTimeGridPoints');
         end
         %
         function [relTolArr, relTolVal] = getRelTol(rsArr, varargin)
-        % GETRELTOL - gives the array of relTol for all elements in ellArr
-        %
-        % Input:
-        %   regular:
-        %       rsArr: elltool.reach.ReachDiscrete[nDim1,nDim2, ...] - multidimension  
-        %           array of reach sets.
-        %   optional
-        %       fRelTolFun: function_handle[1,1] - function that apply to the  
-        %           relTolArr. The default is @min.
-        %
-        % Output:
-        %   regular:
-        %       relTolArr: double [relTol1, relTol2, ...] - return relTol for each 
-        %           element in rsArr
-        %   optional:
-        %       relTol: double[1,1] - return result of work fRelTolFun with the
-        %           relTolArr
-        %           
-        %
-        % Usage:
-        %   use [~,relTol] = rsArr.getRelTol() if you want get only relTol,
-        %   use [relTolArr,relTol] = rsArr.getRelTol() if you want get relTolArr
-        %        and relTol,
-        %   use relTolArr = rsArr.getRelTol() if you want get only relTolArr
-        %
-        %$Author: Zakharov Eugene  <justenterrr@gmail.com> $
-        % $Author: Grachev Artem  <grachev.art@gmail.com> $
-        %   $Date: March-2013$
-        % $Copyright: Moscow State University,
-        %             Faculty of Computational Mathematics
-        %             and Computer Science, 
-        %             System Analysis Department 2013 $
-        %
+            % GETRELTOL - gives the array of relTol for all elements in ellArr
+            %
+            % Input:
+            %   regular:
+            %       rsArr: elltool.reach.ReachDiscrete[nDim1,nDim2, ...] - multidimension
+            %           array of reach sets.
+            %   optional
+            %       fRelTolFun: function_handle[1,1] - function that apply to the
+            %           relTolArr. The default is @min.
+            %
+            % Output:
+            %   regular:
+            %       relTolArr: double [relTol1, relTol2, ...] - return relTol for each
+            %           element in rsArr
+            %   optional:
+            %       relTol: double[1,1] - return result of work fRelTolFun with the
+            %           relTolArr
+            %
+            %
+            % Usage:
+            %   use [~,relTol] = rsArr.getRelTol() if you want get only relTol,
+            %   use [relTolArr,relTol] = rsArr.getRelTol() if you want get relTolArr
+            %        and relTol,
+            %   use relTolArr = rsArr.getRelTol() if you want get only relTolArr
+            %
+            %$Author: Zakharov Eugene  <justenterrr@gmail.com> $
+            % $Author: Grachev Artem  <grachev.art@gmail.com> $
+            %   $Date: March-2013$
+            % $Copyright: Moscow State University,
+            %             Faculty of Computational Mathematics
+            %             and Computer Science,
+            %             System Analysis Department 2013 $
+            %
             [relTolArr,relTolVal]=rsArr.Property('relTol',varargin{:});
         end
-        %        
+        %
         function outStrCMat = getStrCMat(inpMat)
             outStrCMat =...
                 arrayfun(@num2str, inpMat, 'UniformOutput', false);
         end
         %
-        function [centerVec shapeMat] = getEllParams(inpEll, relMat)
+        function [centerVec, shapeMat] = getEllParams(inpEll, relMat)
             if ~isempty(inpEll)
                 if isa(inpEll, 'ellipsoid')
                     [centerVec shapeMat] = double(inpEll);
@@ -349,7 +349,7 @@ classdef AReach < elltool.reach.IReach
                 qtStrCVec = qtVec;
             end
         end
-        %        
+        %
         function isDisturb = isDisturbance(gtStrCMat, qtStrCMat)
             import gras.mat.symb.iscellofstringconst;
             import gras.gen.MatVector;
@@ -402,8 +402,9 @@ classdef AReach < elltool.reach.IReach
                 newTimeVec, newLinSys, approxType)
             import gras.ellapx.smartdb.F;
             APPROX_TYPE = F.APPROX_TYPE;
-            [filteredTubes isThereVec] = ...
-                self.ellTubeRel.getTuplesFilteredBy(APPROX_TYPE, approxType);
+            [filteredTubes, isThereVec] =...
+                self.ellTubeRel.getTuplesFilteredBy(...
+                APPROX_TYPE, approxType);
             oldData = filteredTubes.getData();
             indVec = find(isThereVec);
             %
@@ -415,14 +416,20 @@ classdef AReach < elltool.reach.IReach
             l0Mat = zeros(dataDimVec(1), l0VecNum);
             x0VecMat = zeros(sysDimRows, l0VecNum);
             x0MatArray = zeros(sysDimRows, sysDimCols, l0VecNum);
-            for il0Num = 1 : l0VecNum
-                l0Mat(:, il0Num) = oldData.ltGoodDirMat{il0Num}(:, end);
-                x0VecMat(:, il0Num) = oldData.aMat{il0Num}(:, end);
-                x0MatArray(:, :, il0Num) = ...
-                    oldData.QArray{il0Num}(:, :, end);
-%                 x0Mat = oldData.QArray{il0Num}(:, :, end);
-%                 x0Mat = ell_regularize(x0Mat, relTol);
-%                 x0MatArray(:, :, il0Num) = (x0Mat + x0Mat') / 2;
+            if self.isBackward
+                for il0Num = 1 : l0VecNum
+                    l0Mat(:, il0Num) = oldData.ltGoodDirMat{il0Num}(:, 1);
+                    x0VecMat(:, il0Num) = oldData.aMat{il0Num}(:, 1);
+                    x0MatArray(:, :, il0Num) =...
+                        oldData.QArray{il0Num}(:, :, 1);
+                end
+            else
+                for il0Num = 1 : l0VecNum
+                    l0Mat(:, il0Num) = oldData.ltGoodDirMat{il0Num}(:, end);
+                    x0VecMat(:, il0Num) = oldData.aMat{il0Num}(:, end);
+                    x0MatArray(:, :, il0Num) =...
+                        oldData.QArray{il0Num}(:, :, end);
+                end
             end
             [atStrCMat btStrCMat gtStrCMat ptStrCMat ptStrCVec ...
                 qtStrCMat qtStrCVec] = ...
@@ -597,7 +604,7 @@ classdef AReach < elltool.reach.IReach
             import elltool.logging.Log4jConfigurator;
             import elltool.conf.Properties;
             %
-            logger=Log4jConfigurator.getLogger(...
+            logger = Log4jConfigurator.getLogger(...
                 'elltool.ReachCont.constrCallCount');
             logger.debug(sprintf('constructor is called %s',...
                 modgen.exception.me.printstack(...
@@ -616,7 +623,7 @@ classdef AReach < elltool.reach.IReach
             self.nPlot3dPoints = nPlot3dPointsVal;
             self.nTimeGridPoints = nTimeGridPointsVal;
             %
-            self.switchSysTimeVec = timeVec;
+            self.switchSysTimeVec = [min(timeVec), max(timeVec)];
             self.x0Ellipsoid = x0Ell;
             self.linSysCVec = {linSys};
             self.isCut = false;
@@ -653,18 +660,18 @@ classdef AReach < elltool.reach.IReach
         function resArr=repMat(self,varargin)
             sizeVec=horzcat(varargin{:});
             resArr=repmat(self,sizeVec);
-            resArr=resArr.getCopy();    
+            resArr=resArr.getCopy();
         end
         %
         function isProjArr = isprojection(self)
-            isProjArr = fApplyArrMethod(self,'isProj');  
+            isProjArr = fApplyArrMethod(self,'isProj');
         end
         %
         function isCutArr = iscut(self)
-            isCutArr = fApplyArrMethod(self,'isCut');  
+            isCutArr = fApplyArrMethod(self,'isCut');
         end
         %
-        function isEmptyArr = isempty(self)   
+        function isEmptyArr = isempty(self)
             isEmptyArr = fApplyArrMethod(self,'x0Ellipsoid','isempty');
         end
         %
@@ -701,49 +708,49 @@ classdef AReach < elltool.reach.IReach
         end
         %
         function [isEq,reportStr] = isEqual(self, reachObj, varargin)
-        %
-        % ISEQUAL - checks for equality given reach set objects
-        %
-        % Input:
-        %   regular:
-        %       self.
-        %       reachObj:
-        %           elltool.reach.ReachContinuous[1, 1] - each set object, which
-        %            compare with self.
-        %   optional:
-        %       tuple: int[1, 1] - number of tuple for which will be compared.
-        %       approxType: gras.ellapx.enums.EApproxType[1, 1] -  type of  
-        %           approximation, which will be compared.
-        %
-        % Output:
-        %   regular:
-        %       ISEQUAL: logical[1, 1] - true - if reach set objects are equal.
-        %           false - otherwise.
-        %    
-        % Example:
-        %   aMat = [0 1; 0 0]; bMat = eye(2);
-        %   SUBounds = struct();
-        %   SUBounds.center = {'sin(t)'; 'cos(t)'};  
-        %   SUBounds.shape = [9 0; 0 2];
-        %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-        %   x0EllObj = ell_unitball(2);  
-        %   timeVec = [0 10];  
-        %   dirsMat = [1 0; 0 1]';
-        %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-        %   copyRsObj = rsObj.getCopy();
-        %   isEqual = isEqual(rsObj, copyRsObj)
-        %
-        %   isEqual =
-        %
-        %           1
-        %
-        % $Author: Kirill Mayantsev <kirill.mayantsev@gmail.com> $  
-        % $Date: March-2013 $
-        % $Copyright: Moscow State University,
-        %             Faculty of Computational
-        %             Mathematics and Computer Science,
-        %             System Analysis Department 2013 $
-        %
+            %
+            % ISEQUAL - checks for equality given reach set objects
+            %
+            % Input:
+            %   regular:
+            %       self.
+            %       reachObj:
+            %           elltool.reach.ReachContinuous[1, 1] - each set object, which
+            %            compare with self.
+            %   optional:
+            %       tuple: int[1, 1] - number of tuple for which will be compared.
+            %       approxType: gras.ellapx.enums.EApproxType[1, 1] -  type of
+            %           approximation, which will be compared.
+            %
+            % Output:
+            %   regular:
+            %       ISEQUAL: logical[1, 1] - true - if reach set objects are equal.
+            %           false - otherwise.
+            %
+            % Example:
+            %   aMat = [0 1; 0 0]; bMat = eye(2);
+            %   SUBounds = struct();
+            %   SUBounds.center = {'sin(t)'; 'cos(t)'};
+            %   SUBounds.shape = [9 0; 0 2];
+            %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+            %   x0EllObj = ell_unitball(2);
+            %   timeVec = [0 10];
+            %   dirsMat = [1 0; 0 1]';
+            %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+            %   copyRsObj = rsObj.getCopy();
+            %   isEqual = isEqual(rsObj, copyRsObj)
+            %
+            %   isEqual =
+            %
+            %           1
+            %
+            % $Author: Kirill Mayantsev <kirill.mayantsev@gmail.com> $
+            % $Date: March-2013 $
+            % $Copyright: Moscow State University,
+            %             Faculty of Computational
+            %             Mathematics and Computer Science,
+            %             System Analysis Department 2013 $
+            %
             import gras.ellapx.smartdb.F;
             import gras.ellapx.enums.EApproxType;
             APPROX_TYPE = F.APPROX_TYPE;
@@ -768,7 +775,11 @@ classdef AReach < elltool.reach.IReach
             %
             pointsNum = numel(ellTube.timeVec{1});
             newPointsNum = numel(compEllTube.timeVec{1});
-            compTimeGridIndVec = 2 .* (1 : pointsNum) - 1;
+            if self.isBackward
+                compTimeGridIndVec = 2 .* (1 : pointsNum);
+            else
+                compTimeGridIndVec = 2 .* (1 : pointsNum) - 1;
+            end
             firstTimeVec = ellTube.timeVec{1};
             secondTimeVec = compEllTube.timeVec{1};
             if pointsNum ~= newPointsNum
@@ -778,19 +789,19 @@ classdef AReach < elltool.reach.IReach
                 compTimeGridIndVec = compTimeGridIndVec +...
                     double(compTimeGridIndVec > pointsNum);
             end
-           
+            %
             if nargin == 3
                 fieldsNotToCompVec =...
                     F.getNameList(varargin{1});
                 fieldsToCompVec =...
-                    setdiff(ellTube.getFieldNameList, fieldsNotToCompVec);    
-            else    
+                    setdiff(ellTube.getFieldNameList, fieldsNotToCompVec);
+            else
                 fieldsNotToCompVec =...
                     F.getNameList(self.FIELDS_NOT_TO_COMPARE);
                 fieldsToCompVec =...
                     setdiff(ellTube.getFieldNameList, fieldsNotToCompVec);
             end
-           
+            %
             if pointsNum ~= newPointsNum
                 compEllTube =...
                     compEllTube.thinOutTuples(compTimeGridIndVec);
@@ -815,30 +826,30 @@ classdef AReach < elltool.reach.IReach
             dim = self.dimension();
             timeVec =...
                 [self.switchSysTimeVec(1) self.switchSysTimeVec(end)];
-            if timeVec(1) > timeVec(end)
+            if self.isBackward
                 isBack = true;
                 fprintf(['Backward reach set of the %s linear system ',...
                     'in R^%d in the time interval [%d, %d].\n'],...
-                    sysTypeStr, dim, timeVec(1), timeVec(end));
+                    sysTypeStr, dim, timeVec(end), timeVec(1));
             else
                 isBack = false;
                 fprintf(['Reach set of the %s linear system ',...
                     'in R^%d in the time interval [%d, %d].\n'],...
                     sysTypeStr, dim, timeVec(1), timeVec(end));
             end
-            if self.isprojection()
+            if self.isProj
                 fprintf('Projected onto the basis:\n');
                 disp(self.projectionBasisMat);
             end
             fprintf('\n');
             if isBack
                 fprintf('Target set at time %s%d:\n',...
-                    sysTimeEndStr, timeVec(1));
+                    sysTimeEndStr, timeVec(end));
             else
                 fprintf('Initial set at time %s%d:\n',...
                     sysTimeStartStr, timeVec(1));
             end
-            disp(self.getInitialSet());
+            disp(self.x0Ellipsoid);
             fprintf('Number of external approximations: %d\n',...
                 sum(self.ellTubeRel.approxType == EApproxType.External));
             fprintf('Number of internal approximations: %d\n',...
@@ -859,7 +870,7 @@ classdef AReach < elltool.reach.IReach
                 else
                     sSdim = size(reachObj.projectionBasisMat, 2);
                 end
-            end    
+            end
         end
         %
         function [directionsCVec timeVec] = get_directions(self)
@@ -906,169 +917,169 @@ classdef AReach < elltool.reach.IReach
         end
         %
         function eaScaleFactor = getEaScaleFactor(self)
-        %
-        % GET_EASCALEFACTOR - return the scale factor for external approximation
-        %                     of reach tube
-        %
-        % Input:
-        %   regular:
-        %       self.
-        %
-        % Output:
-        %   regular:
-        %       eaScaleFactor: double[1, 1] - scale factor. 
-        %     
-        % Example:
-        %   aMat = [0 1; 0 0]; bMat = eye(2);
-        %   SUBounds = struct();
-        %   SUBounds.center = {'sin(t)'; 'cos(t)'};  
-        %   SUBounds.shape = [9 0; 0 2];
-        %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds); 
-        %   x0EllObj = ell_unitball(2);  
-        %   timeVec = [10 0];  
-        %   dirsMat = [1 0; 0 1]';
-        %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-        %   rsObj.getEaScaleFactor()
-        % 
-        %   ans =
-        % 
-        %       1.0200        
-        %
-        % $Author: Kirill Mayantsev <kirill.mayantsev@gmail.com> $  
-        % $Date: March-2013 $ 
-        % $Copyright: Moscow State University,
-        %             Faculty of Computational
-        %             Mathematics and Computer Science,
-        %             System Analysis Department 2013 $
-        %
+            %
+            % GET_EASCALEFACTOR - return the scale factor for external approximation
+            %                     of reach tube
+            %
+            % Input:
+            %   regular:
+            %       self.
+            %
+            % Output:
+            %   regular:
+            %       eaScaleFactor: double[1, 1] - scale factor.
+            %
+            % Example:
+            %   aMat = [0 1; 0 0]; bMat = eye(2);
+            %   SUBounds = struct();
+            %   SUBounds.center = {'sin(t)'; 'cos(t)'};
+            %   SUBounds.shape = [9 0; 0 2];
+            %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+            %   x0EllObj = ell_unitball(2);
+            %   timeVec = [10 0];
+            %   dirsMat = [1 0; 0 1]';
+            %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+            %   rsObj.getEaScaleFactor()
+            %
+            %   ans =
+            %
+            %       1.0200
+            %
+            % $Author: Kirill Mayantsev <kirill.mayantsev@gmail.com> $
+            % $Date: March-2013 $
+            % $Copyright: Moscow State University,
+            %             Faculty of Computational
+            %             Mathematics and Computer Science,
+            %             System Analysis Department 2013 $
+            %
             eaScaleFactor = self.EXTERNAL_SCALE_FACTOR;
         end
         %
         function iaScaleFactor = getIaScaleFactor(self)
-        %
-        % GET_IASCALEFACTOR - return the scale factor for internal approximation
-        %                     of reach tube
-        %
-        % Input:
-        %   regular:
-        %       self.
-        %
-        % Output:
-        %   regular:
-        %       iaScaleFactor: double[1, 1] - scale factor. 
-        %     
-        % Example:
-        %   aMat = [0 1; 0 0]; bMat = eye(2);
-        %   SUBounds = struct();
-        %   SUBounds.center = {'sin(t)'; 'cos(t)'};  
-        %   SUBounds.shape = [9 0; 0 2];
-        %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds); 
-        %   x0EllObj = ell_unitball(2);  
-        %   timeVec = [10 0];  
-        %   dirsMat = [1 0; 0 1]';
-        %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-        %   rsObj.getIaScaleFactor()
-        % 
-        %   ans =
-        % 
-        %       1.0200
-        %
-        % $Author: Kirill Mayantsev <kirill.mayantsev@gmail.com> $  
-        % $Date: March-2013 $ 
-        % $Copyright: Moscow State University,
-        %             Faculty of Computational
-        %             Mathematics and Computer Science,
-        %             System Analysis Department 2013 $
-        %
+            %
+            % GET_IASCALEFACTOR - return the scale factor for internal approximation
+            %                     of reach tube
+            %
+            % Input:
+            %   regular:
+            %       self.
+            %
+            % Output:
+            %   regular:
+            %       iaScaleFactor: double[1, 1] - scale factor.
+            %
+            % Example:
+            %   aMat = [0 1; 0 0]; bMat = eye(2);
+            %   SUBounds = struct();
+            %   SUBounds.center = {'sin(t)'; 'cos(t)'};
+            %   SUBounds.shape = [9 0; 0 2];
+            %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+            %   x0EllObj = ell_unitball(2);
+            %   timeVec = [10 0];
+            %   dirsMat = [1 0; 0 1]';
+            %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+            %   rsObj.getIaScaleFactor()
+            %
+            %   ans =
+            %
+            %       1.0200
+            %
+            % $Author: Kirill Mayantsev <kirill.mayantsev@gmail.com> $
+            % $Date: March-2013 $
+            % $Copyright: Moscow State University,
+            %             Faculty of Computational
+            %             Mathematics and Computer Science,
+            %             System Analysis Department 2013 $
+            %
             iaScaleFactor = self.INTERNAL_SCALE_FACTOR;
         end
         %
         function x0Ell = getInitialSet(self)
-        %
-        % GETINITIALSET - return the initial set for linear system, which is solved
-        %                 for building reach tube.
-        %
-        % Input:
-        %   regular:
-        %       self.
-        %
-        % Output:
-        %   regular:
-        %       x0Ell: ellipsoid[1, 1] - ellipsoid x0, which was initial set for  
-        %           linear system. 
-        %     
-        % Example:
-        %   aMat = [0 1; 0 0]; bMat = eye(2);
-        %   SUBounds = struct();
-        %   SUBounds.center = {'sin(t)'; 'cos(t)'};  
-        %   SUBounds.shape = [9 0; 0 2];
-        %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds); 
-        %   x0EllObj = ell_unitball(2);  
-        %   timeVec = [10 0];  
-        %   dirsMat = [1 0; 0 1]';
-        %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-        %   x0Ell = rsObj.getInitialSet()
-        % 
-        %   x0Ell =
-        % 
-        %   Center:
-        %        0
-        %        0
-        % 
-        %   Shape Matrix:
-        %        1     0
-        %        0     1
-        % 
-        %   Nondegenerate ellipsoid in R^2.
-        %
-        % $Author: Kirill Mayantsev <kirill.mayantsev@gmail.com> $  
-        % $Date: March-2013 $ 
-        % $Copyright: Moscow State University,
-        %             Faculty of Computational
-        %             Mathematics and Computer Science,
-        %             System Analysis Department 2013 $
-        %
+            %
+            % GETINITIALSET - return the initial set for linear system, which is solved
+            %                 for building reach tube.
+            %
+            % Input:
+            %   regular:
+            %       self.
+            %
+            % Output:
+            %   regular:
+            %       x0Ell: ellipsoid[1, 1] - ellipsoid x0, which was initial set for
+            %           linear system.
+            %
+            % Example:
+            %   aMat = [0 1; 0 0]; bMat = eye(2);
+            %   SUBounds = struct();
+            %   SUBounds.center = {'sin(t)'; 'cos(t)'};
+            %   SUBounds.shape = [9 0; 0 2];
+            %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+            %   x0EllObj = ell_unitball(2);
+            %   timeVec = [10 0];
+            %   dirsMat = [1 0; 0 1]';
+            %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+            %   x0Ell = rsObj.getInitialSet()
+            %
+            %   x0Ell =
+            %
+            %   Center:
+            %        0
+            %        0
+            %
+            %   Shape Matrix:
+            %        1     0
+            %        0     1
+            %
+            %   Nondegenerate ellipsoid in R^2.
+            %
+            % $Author: Kirill Mayantsev <kirill.mayantsev@gmail.com> $
+            % $Date: March-2013 $
+            % $Copyright: Moscow State University,
+            %             Faculty of Computational
+            %             Mathematics and Computer Science,
+            %             System Analysis Department 2013 $
+            %
             x0Ell = self.x0Ellipsoid.getCopy();
         end
         %
         function isBackward = isbackward(self)
-        %
-        % ISBACKWARD - checks if given reach set object was obtained by solving
-        %              the system in reverse time.
-        %
-        % Input:
-        %   regular:
-        %       self.
-        %
-        % Output:
-        %   regular:
-        %       isBackward: logical[1, 1] - true - if self was obtained by solving 
-        %           in reverse time, false - otherwise.
-        %     
-        % Example:
-        %   aMat = [0 1; 0 0]; bMat = eye(2);
-        %   SUBounds = struct();
-        %   SUBounds.center = {'sin(t)'; 'cos(t)'};  
-        %   SUBounds.shape = [9 0; 0 2];
-        %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds); 
-        %   x0EllObj = ell_unitball(2);  
-        %   timeVec = [10 0];  
-        %   dirsMat = [1 0; 0 1]';
-        %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-        %   rsObj.isbackward()
-        %
-        %   ans =
-        % 
-        %        1
-        %
-        %
-        % $Author: Kirill Mayantsev <kirill.mayantsev@gmail.com> $  
-        % $Date: March-2013 $ 
-        % $Copyright: Moscow State University,
-        %             Faculty of Computational
-        %             Mathematics and Computer Science,
-        %             System Analysis Department 2013 $
-        %
+            %
+            % ISBACKWARD - checks if given reach set object was obtained by solving
+            %              the system in reverse time.
+            %
+            % Input:
+            %   regular:
+            %       self.
+            %
+            % Output:
+            %   regular:
+            %       isBackward: logical[1, 1] - true - if self was obtained by solving
+            %           in reverse time, false - otherwise.
+            %
+            % Example:
+            %   aMat = [0 1; 0 0]; bMat = eye(2);
+            %   SUBounds = struct();
+            %   SUBounds.center = {'sin(t)'; 'cos(t)'};
+            %   SUBounds.shape = [9 0; 0 2];
+            %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+            %   x0EllObj = ell_unitball(2);
+            %   timeVec = [10 0];
+            %   dirsMat = [1 0; 0 1]';
+            %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+            %   rsObj.isbackward()
+            %
+            %   ans =
+            %
+            %        1
+            %
+            %
+            % $Author: Kirill Mayantsev <kirill.mayantsev@gmail.com> $
+            % $Date: March-2013 $
+            % $Copyright: Moscow State University,
+            %             Faculty of Computational
+            %             Mathematics and Computer Science,
+            %             System Analysis Department 2013 $
+            %
             isBackward = self.isBackward;
         end
         %
@@ -1124,10 +1135,12 @@ classdef AReach < elltool.reach.IReach
             % Calculate additional tubes
             %
             linSys = self.linSysCVec{1};
-            timeLimsVec = ...
-                [min(self.switchSysTimeVec) max(self.switchSysTimeVec)];
-            if self.isbackward()
-                timeLimsVec = fliplr(timeLimsVec);
+            if self.isBackward
+                timeLimsVec = ...
+                    [self.switchSysTimeVec(end), self.switchSysTimeVec(1)];
+            else
+                timeLimsVec = ...
+                    [self.switchSysTimeVec(1), self.switchSysTimeVec(end)];
             end
             x0Ell = self.x0Ellipsoid;
             %
@@ -1135,7 +1148,7 @@ classdef AReach < elltool.reach.IReach
             %
             nDim = dimension(x0Ell);
             l0Mat = self.getNormMat(l0Mat, nDim);
-            if self.isprojection();
+            if self.isProj
                 projMat = self.projectionBasisMat;
                 reachSetObj = feval(class(self), linSys, x0Ell, ...
                     l0Mat, timeLimsVec);
@@ -1155,7 +1168,7 @@ classdef AReach < elltool.reach.IReach
                 approxTypeVec = [EApproxType.External EApproxType.Internal];
                 ellTubeRelNew = self.makeEllTubeRel(probDynObj, l0Mat, ...
                     timeLimsVec, isDisturbance, self.relTol, approxTypeVec);
-                if self.isbackward()
+                if self.isBackward
                     ellTubeRelNew = self.transformEllTube(ellTubeRelNew);
                 end
                 %
@@ -1167,27 +1180,21 @@ classdef AReach < elltool.reach.IReach
         %
         function cutObj = cut(self, cutTimeVec)
             import modgen.common.throwerror;
-            if self.isprojection()
+            if self.isProj
                 throwerror('wrongInput',...
                     'Method cut does not work with projections');
             else
                 cutObj = self.getCopy();
-                if self.isbackward()
+                if self.isBackward
                     cutTimeVec = fliplr(cutTimeVec);
-                    switchTimeVec = fliplr(self.switchSysTimeVec);
-                else
-                    switchTimeVec = self.switchSysTimeVec;
                 end
+                switchTimeVec = self.switchSysTimeVec;
                 cutObj.ellTubeRel = cutObj.ellTubeRel.cut(cutTimeVec);
                 switchTimeIndVec = ...
                     switchTimeVec > cutTimeVec(1) & ...
                     switchTimeVec < cutTimeVec(end);
                 cutObj.switchSysTimeVec = [cutTimeVec(1) ...
                     switchTimeVec(switchTimeIndVec) cutTimeVec(end)];
-                if self.isbackward()
-                    cutObj.switchSysTimeVec = ...
-                        fliplr(cutObj.switchSysTimeVec);
-                end
                 firstIntInd = find(switchTimeIndVec == 1, 1);
                 if ~isempty(firstIntInd)
                     switchTimeIndVec(firstIntInd - 1) = 1;
@@ -1201,40 +1208,40 @@ classdef AReach < elltool.reach.IReach
         end
         %
         function copyReachObjArr = getCopy(self)
-        % Example:
-        %   aMat = [0 1; 0 0]; bMat = eye(2);
-        %   SUBounds = struct();
-        %   SUBounds.center = {'sin(t)'; 'cos(t)'};  
-        %   SUBounds.shape = [9 0; 0 2];
-        %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-        %   x0EllObj = ell_unitball(2);  
-        %   timeVec = [0 10];  
-        %   dirsMat = [1 0; 0 1]';
-        %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-        %   copyRsObj = rsObj.getCopy()
-        %   copyRsObj =
-        %   Reach set of the continuous-time linear system in R^2 in the time ...
-        %             interval [0, 10].
-        %
-        %   Initial set at time t0 = 0:
-        %   Ellipsoid with parameters
-        %   Center:
-        %        0
-        %        0
-        %
-        %   Shape Matrix:
-        %        1     0
-        %        0     1
-        %
-        %   Number of external approximations: 2
-        %   Number of internal approximations: 2
+            % Example:
+            %   aMat = [0 1; 0 0]; bMat = eye(2);
+            %   SUBounds = struct();
+            %   SUBounds.center = {'sin(t)'; 'cos(t)'};
+            %   SUBounds.shape = [9 0; 0 2];
+            %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+            %   x0EllObj = ell_unitball(2);
+            %   timeVec = [0 10];
+            %   dirsMat = [1 0; 0 1]';
+            %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+            %   copyRsObj = rsObj.getCopy()
+            %   copyRsObj =
+            %   Reach set of the continuous-time linear system in R^2 in the time ...
+            %             interval [0, 10].
+            %
+            %   Initial set at time t0 = 0:
+            %   Ellipsoid with parameters
+            %   Center:
+            %        0
+            %        0
+            %
+            %   Shape Matrix:
+            %        1     0
+            %        0     1
+            %
+            %   Number of external approximations: 2
+            %   Number of internal approximations: 2
             if ~isempty(self)
                 sizeCVec = num2cell(size(self));
                 copyReachObjArr(sizeCVec{:}) = feval(class(self(1, 1)));
                 arrayfun(@fSingleCopy,copyReachObjArr,self);
             else
                 copyReachObjArr = elltool.reach.ReachContinuous.empty(size(self));
-            end    
+            end
             function fSingleCopy(copyReachObj, reachObj)
                 copyReachObj.absTol = reachObj.absTol;
                 copyReachObj.relTol = reachObj.relTol;
@@ -1250,38 +1257,38 @@ classdef AReach < elltool.reach.IReach
                 copyReachObj.isBackward = reachObj.isBackward;
                 copyReachObj.projectionBasisMat = reachObj.projectionBasisMat;
                 copyReachObj.ellTubeRel = reachObj.ellTubeRel.getCopy();
-            end    
+            end
         end
         %
-        function ellTubeRel = getEllTubeRel(self)            
-        % Example:
-        %   aMat = [0 1; 0 0]; bMat = eye(2);
-        %   SUBounds = struct();
-        %   SUBounds.center = {'sin(t)'; 'cos(t)'};  
-        %   SUBounds.shape = [9 0; 0 2];
-        %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds); 
-        %   x0EllObj = ell_unitball(2);  
-        %   timeVec = [0 10];  
-        %   dirsMat = [1 0; 0 1]';
-        %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec); 
-        %   rsObj.getEllTubeRel();
-        %
+        function ellTubeRel = getEllTubeRel(self)
+            % Example:
+            %   aMat = [0 1; 0 0]; bMat = eye(2);
+            %   SUBounds = struct();
+            %   SUBounds.center = {'sin(t)'; 'cos(t)'};
+            %   SUBounds.shape = [9 0; 0 2];
+            %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+            %   x0EllObj = ell_unitball(2);
+            %   timeVec = [0 10];
+            %   dirsMat = [1 0; 0 1]';
+            %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+            %   rsObj.getEllTubeRel();
+            %
             ellTubeRel = self.ellTubeRel;
         end
         %
         function ellTubeUnionRel = getEllTubeUnionRel(self)
-        % Example:
-        %   aMat = [0 1; 0 0]; bMat = eye(2);
-        %   SUBounds = struct();
-        %   SUBounds.center = {'sin(t)'; 'cos(t)'};  
-        %   SUBounds.shape = [9 0; 0 2];
-        %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds); 
-        %   x0EllObj = ell_unitball(2);  
-        %   timeVec = [0 10];  
-        %   dirsMat = [1 0; 0 1]';
-        %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec); 
-        %   getEllTubeUnionRel(rsObj);
-        %
+            % Example:
+            %   aMat = [0 1; 0 0]; bMat = eye(2);
+            %   SUBounds = struct();
+            %   SUBounds.center = {'sin(t)'; 'cos(t)'};
+            %   SUBounds.shape = [9 0; 0 2];
+            %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+            %   x0EllObj = ell_unitball(2);
+            %   timeVec = [0 10];
+            %   dirsMat = [1 0; 0 1]';
+            %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+            %   getEllTubeUnionRel(rsObj);
+            %
             import gras.ellapx.smartdb.rels.EllUnionTube;
             ellTubeUnionRel = EllUnionTube.fromEllTubes(self.ellTubeRel);
         end
@@ -1302,7 +1309,7 @@ classdef AReach < elltool.reach.IReach
             if nargin > 3
                 throwerror('wrongInput', 'too much arguments.');
             end
-            if self.isprojection()
+            if self.isProj
                 throwerror('wrongInput', ['cannot compute ',...
                     'the reach set for projection.']);
             end
@@ -1324,10 +1331,10 @@ classdef AReach < elltool.reach.IReach
                 throwerror('wrongInput',...
                     'second argument must be double.');
             end
-            if (newEndTime < self.switchSysTimeVec(end) &&...
-                    ~self.isbackward()) ||...
-                    (newEndTime > self.switchSysTimeVec(end) &&...
-                    self.isbackward())
+            if (newEndTime < self.switchSysTimeVec(end) && ...
+                    ~self.isBackward) || ...
+                    (newEndTime > self.switchSysTimeVec(end) && ...
+                    self.isBackward)
                 throwerror('wrongInput', ['new end time must be more ',...
                     '(if forward) or less (if backward) than the old one.']);
             end
@@ -1337,37 +1344,50 @@ classdef AReach < elltool.reach.IReach
             end
             %
             newReachObj = self.getCopy();
-            newReachObj.switchSysTimeVec = ...
-                [newReachObj.switchSysTimeVec newEndTime];
+            if self.isBackward
+                newReachObj.switchSysTimeVec =...
+                    [newEndTime, self.switchSysTimeVec];
+                newTimeVec = [self.switchSysTimeVec(1), newEndTime];
+            else
+                newReachObj.switchSysTimeVec =...
+                    [self.switchSysTimeVec, newEndTime];
+                newTimeVec = [self.switchSysTimeVec(end), newEndTime];
+            end
             newReachObj.linSysCVec = [newReachObj.linSysCVec {newLinSys}];
             newReachObj.isCut = false;
             %
-            newTimeVec = newReachObj.switchSysTimeVec(end - 1 : end);
-            [dataIntCVec indIntVec] = self.evolveApprox(newTimeVec,...
+            [dataIntCVec, indIntVec] = self.evolveApprox(newTimeVec, ...
                 newLinSys, EApproxType.Internal);
-            [dataExtCVec indExtVec] = self.evolveApprox(newTimeVec,...
+            [dataExtCVec, indExtVec] = self.evolveApprox(newTimeVec, ...
                 newLinSys, EApproxType.External);
-            dataCVec = [dataIntCVec dataExtCVec];
+            dataCVec = [dataIntCVec, dataExtCVec];
             %
             % cat old and new ellTubeRel
             %
             newEllTubeRel =...
                 gras.ellapx.smartdb.rels.EllTube.fromStructList(...
                 'gras.ellapx.smartdb.rels.EllTube', dataCVec);
-            if self.isbackward()
+            if self.isBackward
                 newEllTubeRel = self.transformEllTube(newEllTubeRel);
-            end                   
+            end
             %
             indVec = [indIntVec; indExtVec];
             [~, indRelVec] = sort(indVec);
             newEllTubeRel = newEllTubeRel.getTuples(indRelVec);
             %
-            timeVec = newEllTubeRel.timeVec{1};
-            isIndVec = true(size(timeVec));
-            isIndVec(1) = false;
-            %
-            newReachObj.ellTubeRel = ...
-                self.ellTubeRel.cat(newEllTubeRel, isIndVec);
+            if self.isBackward
+                timeVec = self.ellTubeRel.timeVec{1};
+                isIndVec = true(size(timeVec));
+                isIndVec(1) = false;
+                newReachObj.ellTubeRel =...
+                    newEllTubeRel.cat(self.ellTubeRel, isIndVec);
+            else
+                timeVec = newEllTubeRel.timeVec{1};
+                isIndVec = true(size(timeVec));
+                isIndVec(1) = false;
+                newReachObj.ellTubeRel =...
+                    self.ellTubeRel.cat(newEllTubeRel, isIndVec);
+            end
         end
     end
 end
