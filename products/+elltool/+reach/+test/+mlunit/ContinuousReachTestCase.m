@@ -219,7 +219,11 @@ classdef ContinuousReachTestCase < mlunitext.test_case
             timeVec = [self.tVec(1), sum(self.tVec)/2];
             newReachObj = elltool.reach.ReachContinuous(self.linSys,...
                 self.x0Ell, self.l0Mat, timeVec);
+            indSTimeVec = newReachObj.getEllTubeRel().indSTime;
+            mlunitext.assert_equals(true, all(indSTimeVec == 1));
             evolveReachObj = newReachObj.evolve(self.tVec(2));
+            indSTimeVec = evolveReachObj.getEllTubeRel().indSTime;
+            mlunitext.assert_equals(true, all(indSTimeVec == 1));
             %
             isEqual = self.reachObj.isEqual(evolveReachObj);
             mlunitext.assert_equals(true, isEqual);
