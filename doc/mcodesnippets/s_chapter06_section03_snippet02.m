@@ -9,8 +9,8 @@ secBrsObj = elltool.reach.ReachContinuous(secondSys, mEllObj, dirsMat,...
 firstBrsObj = secBrsObj.evolve(0, firstSys);  % then the first system
 
 % obtain projections onto (x1, x2) subspace:
-firstBpsObj = firstBrsObj.getProjection(basisMat);
-secBpsObj = secBrsObj.getProjection(basisMat);
+firstBpsObj = firstBrsObj.projection(basisMat);
+secBpsObj = secBrsObj.projection(basisMat);
 
 % plot the results:
 subplot(2, 2, 3);
