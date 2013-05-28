@@ -18,11 +18,7 @@ classdef MatrixBinaryTimesFunc<gras.mat.AMatrixBinaryOpFunc
             self.nRows = sSizeVec(1);
             self.nCols = sSizeVec(2);
             %
-            if self.nRows == 1 || self.nCols == 1
-                self.nDims = 1;
-            else
-                self.nDims = 2;
-            end
+            self.nDims = 2 - any(sSizeVec == 1);
         end
     end
 end

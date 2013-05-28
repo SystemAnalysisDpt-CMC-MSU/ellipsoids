@@ -35,11 +35,7 @@ classdef MatrixLRTimesFunc<gras.mat.AMatrixBinaryOpFunc
                 self.nCols = lrSizeVec(1);
             end
             %
-            if self.nRows == 1 || self.nCols == 1
-                self.nDims = 1;
-            else
-                self.nDims = 2;
-            end
+            self.nDims = 2 - any(lrSizeVec == 1);
         end
     end
 end

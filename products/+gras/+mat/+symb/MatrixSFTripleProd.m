@@ -40,7 +40,7 @@ classdef MatrixSFTripleProd<gras.mat.IMatrixFunction
                 %
                 sizeVec=[size(formula1CMat,1),size(formula3CMat,2)];
                 %
-                self.nDims=length(sizeVec);
+                self.nDims=2-any(sizeVec == 1);
                 self.nCols=sizeVec(1);
                 self.nRows=sizeVec(2);
                 self.mSizeVec=sizeVec;

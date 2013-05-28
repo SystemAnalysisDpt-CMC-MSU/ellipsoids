@@ -16,12 +16,7 @@ classdef MatrixTernaryTimesFunc<gras.mat.AMatrixTernaryOpFunc
             %
             self.nRows = lSizeVec(1);
             self.nCols = rSizeVec(2);
-            %
-            if self.nRows == 1 || self.nCols == 1
-                self.nDims = 1;
-            else
-                self.nDims = 2;
-            end
+            self.nDims = 2 - any(lSizeVec == 1);
         end
     end
 end
