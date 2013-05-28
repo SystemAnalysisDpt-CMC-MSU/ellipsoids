@@ -8,10 +8,10 @@ crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
 crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
 %
 confCMat = {...
-    'demo3firstTest',  [0 0 0 0 0 0 1];...%[1 0 1 0 1 0 1]
-    'demo3secondTest', 0*[1 0 0 1 1 0 0];...
-    'demo3thirdTest',  0*[1 1 0 0 1 1 0];...
-    'demo3fourthTest', 0*[1 1 1 1 1 1 0];
+    'demo3firstTest',  [1 0 1 0 1 0 1];...
+    'demo3secondTest', [1 0 0 1 1 0 0];...
+    'demo3thirdTest',  [1 1 0 0 1 1 0];...
+    'demo3fourthTest', [1 1 1 1 1 1 0];
     };
 %
 if nargin>0
@@ -67,9 +67,9 @@ for iConf = 1:nConfs
             'marker',confName);
     end
 end
-% suiteList{end + 1} = loader.load_tests_from_test_case(...
-%     'elltool.reach.test.mlunit.ContinuousReachFirstTestCase',...
-%     'demo3firstTest', crm, crmSys);
+suiteList{end + 1} = loader.load_tests_from_test_case(...
+    'elltool.reach.test.mlunit.ContinuousReachFirstTestCase',...
+    'demo3firstTest', crm, crmSys);
 %
 suiteList{end + 1} = loader.load_tests_from_test_case(...
     'elltool.reach.test.mlunit.MPTIntegrationTestCase');
@@ -78,7 +78,7 @@ testLists=cellfun(@(x)x.tests,suiteList,'UniformOutput',false);
 suite=mlunitext.test_suite(horzcat(testLists{:}));
 %
 resList{1}=runner.run(suite);
-%resList{2}=elltool.reach.test.run_reachcont_proj_adv_tests();
+resList{2}=elltool.reach.test.run_reachcont_proj_adv_tests();
 results=[resList{:}];
 %
 end
