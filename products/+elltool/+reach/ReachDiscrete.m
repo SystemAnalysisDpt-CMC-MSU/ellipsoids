@@ -309,13 +309,9 @@ classdef ReachDiscrete < elltool.reach.AReach
             k1 = round(timeVec(2));
             timeVec = [k0 k1];
             %
-            self.parse(linSys, x0Ell, l0Mat, timeVec, varargin);
-            %
-            [reg, ~, self.isMinMax] =...
+            [varargin, ~, self.isMinMax] =...
                 modgen.common.parseparext(varargin, {'isMinMax'; false});
-            if ~isempty(reg)
-                throwerror('wrongInput', 'wrong input arguments format.');
-            end
+            self.parse(linSys, x0Ell, l0Mat, timeVec, varargin);
             %
             % create gras LinSys object
             %

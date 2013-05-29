@@ -610,7 +610,6 @@ classdef AReach < elltool.reach.IReach
                     probDynObj,  l0Mat, timeVec, isDisturb, ...
                     calcPrecision, approxTypeVec);
             catch meObj
-                meObj
                 errorStr = '';
                 errorTag = '';
                 ETAG_WR_INP = 'wrongInput';
@@ -752,12 +751,12 @@ classdef AReach < elltool.reach.IReach
             end
             regTolerance = elltool.conf.Properties.getRegTol();
             [reg, ~, self.isRegEnabled, self.isJustCheck, self.regTol] =...
-                modgen.common.parseparext(varargin,...
+                modgen.common.parseparext(varargin{:},...
                 {'isRegEnabled', 'isJustCheck', 'regTol';...
                 false, false, regTolerance});
-%             if ~isempty(reg)
-%                 throwerror('wrongInput', 'wrong input arguments format.');
-%             end
+            if ~isempty(reg)
+                throwerror('wrongInput', 'wrong input arguments format.');
+            end
         end
         %
         function resArr=repMat(self,varargin)
