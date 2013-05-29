@@ -1,0 +1,329 @@
+\ProvidesPackage{basic_config}[2005/07/28]
+%\RequirePackage{timing}
+\RequirePackage{hepnicenames,hepunits,soul,epstopdf}
+\RequirePackage{amsmath}
+\RequirePackage{amsthm,amsfonts,amssymb,mathtools}
+\RequirePackage{xargs}
+\RequirePackage{subfig}
+\RequirePackage{xifthen}
+\RequirePackage{color}
+\captionsetup{labelformat=simple}
+%\usepackage[sort,numbers]{natbib}
+%% Citation spacing hack to bring the citation
+%% number a little closer to the referring text
+\let\@OldCite\cite
+%\renewcommand{\cite}[1]{\mbox{\!\!\!\@OldCite{#1}}}
+\renewcommand{\cite}[1]{\mbox{\!\!\@OldCite{#1}}}
+
+%% Maths
+\DeclareRobustCommand{\thesismath}[1]{\ensuremath{\maybebmsf{#1}}}
+\DeclareRobustCommand{\parenths}[1]{\mymath{\left({#1}\right)}}
+\DeclareRobustCommand{\braces}[1]{\mymath{\left\{{#1}\right\}}}
+\DeclareRobustCommand{\angles}[1]{\mymath{\left\langle{#1}\right\rangle}}
+\DeclareRobustCommand{\sqbracs}[1]{\mymath{\left[{#1}\right]}}
+\DeclareRobustCommand{\mods}[1]{\mymath{\left\lvert{#1}\right\rvert}}
+\DeclareRobustCommand{\modsq}[1]{\mymath{\mods{#1}^2}}
+\DeclareRobustCommand{\dblmods}[1]{\mymath{\left\lVert{#1}\right\rVert}}
+\DeclareRobustCommand{\expOf}[1]{\mymath{\exp{\!\parenths{#1}}}}
+\DeclareRobustCommand{\eexp}[1]{\mymath{e^{#1}}}
+\DeclareRobustCommand{\plusquad}{\mymath{\oplus}}
+\DeclareRobustCommand{\logOf}[1]{\log\!\parenths{#1}}
+\DeclareRobustCommand{\lnOf}[1]{\ln\!\parenths{#1}}
+\DeclareRobustCommand{\ofOrder}[1]{\mymath{ \mathcal{O}\parenths{#1} }}
+
+%% General utility defns
+\DeclareRobustCommand{\arXivCode}[1]{arXiv:#1}
+\DeclareRobustCommand{\CPviolation}{\CP-violation\xspace}
+\DeclareRobustCommand{\CPv}{\CPviolation}
+\DeclareRobustCommand{\LHCb}{LHCb\xspace}
+\DeclareRobustCommand{\LHC}{LHC\xspace}
+\DeclareRobustCommand{\LEP}{LEP\xspace}
+\DeclareRobustCommand{\CERN}{CERN\xspace}
+
+%% Basic rate formalisms
+\DeclareRobustCommand{\Rate}{\thesismath{\Gamma}\xspace}
+\DeclareRobustCommand{\RateOf}[1]{\thesismath{\Gamma}\parenths{#1}\xspace}
+
+%% Phrases to be consistent about (with b/B)
+\DeclareRobustCommand{\bphysics}{\Pbottom-physics\xspace}
+\DeclareRobustCommand{\bhadron}{\Pbottom-hadron\xspace}
+\DeclareRobustCommand{\Bmeson}{\PB-meson\xspace}
+\DeclareRobustCommand{\bbaryon}{\Pbottom-baryon\xspace}
+\DeclareRobustCommand{\Bdecay}{\PB-decay\xspace}
+\DeclareRobustCommand{\bdecay}{\Pbottom-decay\xspace}
+
+%% Processes
+\DeclareRobustCommand{\BToKPi}{\HepProcess{ \PB \to \PK \, \Ppi }\xspace}
+\DeclareRobustCommand{\BToPiPi}{\HepProcess{ \PB \to \Ppi \, \Ppi }\xspace}
+\DeclareRobustCommand{\BToKK}{\HepProcess{\PB \to \PK \, \PK}\xspace}
+\DeclareRobustCommand{\BToRhoPi}{\HepProcess{ \PB \to \Prho \, \Ppi }\xspace}
+\DeclareRobustCommand{\BToRhoRho}{\HepProcess{ \PB \to \Prho \Prho }\xspace}
+\DeclareRobustCommand{\X}{\thesismath{X}\xspace}
+\DeclareRobustCommand{\Xbar}{\thesismath{\overline{X}}\xspace}
+\DeclareRobustCommand{\Xzero}{\HepGenParticle{X}{}{0}\xspace}
+\DeclareRobustCommand{\Xzerobar}{\HepGenAntiParticle{X}{}{0}\xspace}
+\DeclareRobustCommand{\epluseminus}{\Pelectron\Ppositron\xspace}
+\DeclareRobustCommand{\transp}{'}
+
+% Fix hyperref labels in PDFTeX
+\@ifpackageloaded{hyperref}{%
+  \pdfstringdefDisableCommands{%
+      \def\pi{pi}%
+      \def\gamma{gamma}%
+  }%
+}{}
+
+%% Peter's commands
+%
+\newcommand{\pspan}{[1,\infty)}
+\newcommand{\pplus}{\oplus_{p}}
+\newcommand{\pminus}{\ominus_{p}}
+%
+\newcommand{\qplus}{\oplus_{q}}
+\newcommand{\qminus}{\ominus_{q}}
+%
+\newcommand{\psqrt}{\frac{1}{p}}
+\newcommand{\qsqrt}{\frac{1}{q}}
+
+\newcommand{\pqsqrt}{\frac{p}{q}}
+\newcommand{\qpsqrt}{\frac{q}{p}}
+%
+\newcommand{\psq}{\frac{1}{2}}
+\newcommand{\eref}[1]{$(\ref{#1})$}
+\newcommand{\grad}{\mathop{\rm grad}\nolimits}
+\newcommand{\esssup}{\mathop{\rm ess\,sup\ }}
+\newcommand{\argmax}{\mathop{\rm arg\,max\ }}
+\newcommand{\Argmax}{\mathop{\rm Arg\,max\ }}
+\newcommand{\argmin}{\mathop{\rm arg\,min\ }}
+\newcommand{\Argmin}{\mathop{\rm Arg\,min\ }}
+%\newcommand{\limsup}{\mathop{\rm lim\,sup}}
+\newcommand{\var}{\mathop{\rm I\!\!\! E}}
+\newcommand {\rdim}[1]
+{
+%{\mathop{\rm I\!R}}^{#1}
+{\mathbb{R}}^{#1}
+}
+
+\DeclareMathOperator{\cl}{cl}
+\DeclareMathOperator{\inter}{int}
+\DeclareMathOperator{\lin}{lin}
+\DeclareMathOperator{\epi}{epi}
+\DeclareMathOperator{\hypo}{hypo}
+\DeclareMathOperator{\const}{const}
+
+\newcommand{\updownlims}[3]{\underset{#3}{\overset{#2}{#1}}}
+\newcommand{\underuplims}[3]{\underset{#1}{\overset{#2}{#3}}}
+\newcommand{\hhspace}{\hspace{5 mm}}
+\newcommand{\nnat}{\mathbb{Z}_{+}}
+\newcommand{\convwith}[1]{\mathrel{\mathop{\longrightarrow}\limits_{#1}}}
+\newcommand{\conv}{\mathop{\rm conv}}
+\newcommand{\csym}{\mathop{\rm symm}}
+\newcommand{\csymclass}{\csym(\rdim{n})}
+
+\newcommand{\centr}{\mathop{\rm c}}
+\newcommand{\setcenter}[1]{\centr(#1)}
+\newcommand{\zcenter}[1]{\mathop{\rm z}(#1)}
+\newcommand{\co}{\mathop{\rm co}}
+\newcommand{\interior}{\mathop{\rm int}}
+\newcommand{\rang}{\mathop{\rm rang}}
+\newcommand{\conc}{\mathop{\rm conc}}
+\newcommand{\comp}{\mathop{\rm comp}}
+\newcommand{\dom}{\mathop{\rm dom}}
+\newcommand{\supp}{\mathop{\rm supp}}
+\newcommand{\Var}{\mathop{\rm Var}}
+\newcommand{\Lin}{\mathop{\rm Lin}}
+\newcommand{\Image}{\mathop{\rm Im}}
+\newcommand{\Ker}{\mathop{\rm Ker}}
+\newcommand{\pr}[2]{\mathop{\rm Pr_{#1}\ifthenelse{\equal{#2}{}}{}{}}#2}
+\newcommand{\prr}[3]{\mathop{\rm Pr^{#3}_{#1}\ifthenelse{\equal{#2}{}}{}{}}#2}
+\newcommand{\subm}[2]{\mathop{\rm \pi_{#1}^{#2}}}
+%\newcommand{\subm}[3]{\mathop{\rm \pi_{#1}^{#2}\ifthenelse{\equal{#3}{}}{}{}}#3}
+\newcommand{\bl}{\begin{lemma}}
+\newcommand{\el}{\end{lemma}}
+\newcommand{\be}{\begin{equation}}
+\newcommand{\ee}{\end{equation}}
+\newcommand{\bt}{\begin{theo}}
+\newcommand{\et}{\end{theo}}
+\newcommand{\bd}{\begin{df}}
+\newcommand{\ed}{\end{df}}
+\newcommand{\br}{\begin{rem}}
+\newcommand{\er}{\end{rem}}
+\newcommand{\bexc}{\begin{exc}}
+\newcommand{\eexc}{\end{exc}}
+\newcommand{\bex}{\begin{exam}}
+\newcommand{\eex}{\end{exam}}
+\newcommand{\bass}{\begin{ass}}
+\newcommand{\eass}{\end{ass}}
+\newcommand{\bcns}{\begin{cons}}
+\newcommand{\ecns}{\end{cons}}
+%\newcommand{\diff}[2][\partial]{\frac{#1}{#1#2}}
+%\newcommand{\C}{{\rm C}}
+\newcommand{\bq}{{\bf q}}
+\newcommand{\bQ}{{\bf Q}}
+\newcommand{\EE}{{\mathcal E}}
+\newcommand{\FF}{{\mathcal F}}
+\newcommand{\UU}{{\mathcal U}}
+\newcommand{\PP}{{\mathcal P}}
+\newcommand{\QQ}{{\mathcal Q}}
+\newcommand{\CC}{{\mathcal C}}
+\newcommand{\RR}{{\mathcal R}}
+\newcommand{\DD}{{\mathcal D}}
+\newcommand{\dR}{I\hspace*{-.26em}R}
+\newcommand{\DR}{I\hspace*{-.34em}R}
+\newcommand{\II}{{\mathcal I}}
+\newcommand{\bX}{{\bf X}}
+\newcommand{\bV}{{\bf V}}
+\newcommand{\VV}{{\mathcal V}}
+\newcommand{\XX}{{\mathcal X}}
+\newcommand{\GG}{{\mathcal G}}
+\newcommand{\AAA}{{\mathcal A}}
+\newcommand{\BB}{{\mathcal B}}
+\newcommand{\ZZ}{{\mathcal Z}}
+\newcommand{\MM}{{\mathcal M}}
+\newcommand{\HH}{{\mathcal H}}
+\newcommand{\SSS}{{\mathcal S}}
+\renewcommand{\SS}{{\mathcal S}}
+\newcommand{\WW}{{\mathcal W}}
+\newcommand{\KK}{{\mathcal K}}
+\newcommand{\LL}{{\mathcal L}}
+\newcommand{\YY}{{\mathcal Y}}
+\newcommand{\dm}{\dot{-}}
+\newcommand{\bb}{\Box}
+\newcommand{\matident}{\mathop{\rm I}}
+
+\newcommand {\stablefigure}[5]
+{
+\begin{figure}[#5]
+\centering\includegraphics[width=#4,keepaspectratio]{#1}
+\ifthenelse{\isempty{#2}}
+{}
+{\caption{#2}}
+\ifthenelse{\isempty{#3}}%
+{}%
+{\label{#3}}%
+\end{figure}
+}
+
+\newcommandx*\easyfigure[5][1=p,2=\textwidth]
+{
+\stablefigure{#3}{#4}{#5}{#2}{#1}
+}
+
+\newcommand*{\centerfloat}{%
+  \parindent \z@
+  \leftskip \z@ \@plus 1fil \@minus \textwidth
+  \rightskip\leftskip
+  \parfillskip \z@skip}
+
+
+%\newlength{\easyfigwidth}
+%\setlength{\easyfigwidth}{0.45\textwidth}
+
+\newcommandx*\easytwoplainfigures[7][1=0.5]
+{
+%width=0.8\mediumfigwidth
+\begin{figure}[htp]
+\centerfloat{
+    \begin{minipage}{#1\textwidth}
+        \includegraphics[width=\textwidth,keepaspectratio]{#2}
+        \ifthenelse{\isempty{#3}}
+        {}
+        {\caption{#3}}
+        \ifthenelse{\isempty{#4}}%
+        {}%
+        {\label{#4}}%
+    \end{minipage}
+%    \qquad
+    \begin{minipage}{#1\textwidth}
+        \includegraphics[width=\textwidth,keepaspectratio]{#5}
+        \ifthenelse{\isempty{#6}}
+        {}
+        {\caption{#6}}
+        \ifthenelse{\isempty{#7}}%
+        {}%
+        {\label{#7}}%
+    \end{minipage}
+}
+\end{figure}
+}
+
+\newcommandx*\easytwofigures[9][1=0.5]
+{
+    \ifthenelse{\isempty{#8}\AND\isempty{#9}}
+    {\easytwoplainfigures[#1]{#2}{#3}{#4}{#5}{#6}{#7}}
+    {\easytwosubfigures[#1]{#2}{#3}{#4}{#5}{#6}{#7}{#8}{#9}}
+}
+
+
+\newcommandx*\easytwosubfigures[9][1=0.5]
+{
+\begin{figure}[htp]
+\centerfloat{
+\subfloat[#3]{
+    \includegraphics[width=#1\textwidth,keepaspectratio]{#2}
+    \ifthenelse{\isempty{#4}}%
+    {}%
+    {\label{#4}}%
+    }
+\subfloat[#6]{
+    \includegraphics[width=#1\textwidth,keepaspectratio]{#5}
+    \ifthenelse{\isempty{#7}}%
+    {}%
+    {\label{#7}}%
+    }
+  \ifthenelse{\isempty{#8}}%
+    {}%
+    {\caption{#8}}
+  \ifthenelse{\isempty{#9}}%
+    {}%
+    {\label{#9}}%
+}
+\end{figure}
+}
+
+
+%
+\renewcommand{\figurename}{Fig.}
+\renewcommand{\ge}{\geqslant}
+\renewcommand{\le}{\leqslant}
+\renewcommand{\geq}{\geqslant}
+\renewcommand{\leq}{\leqslant}
+\newcommand{\CCP}[1]
+{\mathop{ \CC_{+}#1}}
+\newcommand{\CPZ}[1]
+{\mathop{ \CC^{\circ}_{+}#1}}
+%\newcommand{\sign}{\mathop{\rm sgn}}
+%\newcommand{\trace}{\mathop{\rm Tr}}
+\newcommand{\intt}{\mathop{\rm int}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\doverline}[1]{\overline{\overline{#1}}}
+\newcommand{\sminus}{\dot{-}}
+
+\theoremstyle{plain}
+\newtheorem{theo}{Theorem}[section]
+\newtheorem{utv}{Proposition}[section]
+\newtheorem{lemm}{Lemma}[section]
+\newtheorem{cons}{Corollary}[section]
+\newtheorem{exam}{Example}[section]
+\newtheorem{ass}{Assumption}[section]
+
+\theoremstyle{remark}
+\newtheorem{remm}{Remark}[section]
+
+\theoremstyle{definition}
+\newtheorem{df}{Definition}[section]
+
+
+
+
+
+
+%
+\newcommand{\pglapki}[1]{\textquotedblleft#1\textquotedblright}
+%% Increase width of text a bit
+
+\numberwithin{equation}{section}
+%
+%% Enable section-based figure numbers
+\numberwithin{figure}{section}
+%%Fix for long figure captions in list of figures

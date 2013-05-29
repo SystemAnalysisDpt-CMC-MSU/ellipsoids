@@ -1,6 +1,6 @@
 function poly = toPolytope(varargin)
-% TOPOLYTOPE --   for ellipsoid ell makes polytope
-%                 object represanting the boundary of ell
+% TOPOLYTOPE - for ellipsoid ell makes polytope object represanting the 
+%              boundary of ell
 %                 
 % Input:
 %   regular: 
