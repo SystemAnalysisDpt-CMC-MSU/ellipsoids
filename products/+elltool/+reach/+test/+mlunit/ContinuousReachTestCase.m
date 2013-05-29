@@ -223,7 +223,13 @@ classdef ContinuousReachTestCase < mlunitext.test_case
             timeVec = [self.tVec(1), sum(self.tVec)/2];
             newReachObj = feval(class(self.reachObj), ...
                 self.linSys, self.x0Ell, self.l0Mat, timeVec);
+            %
+            indSTimeVec = newReachObj.getEllTubeRel().indSTime;
+            mlunitext.assert_equals(true, all(indSTimeVec == 1));
+            %
             evolveReachObj = newReachObj.evolve(self.tVec(2));
+            indSTimeVec = evolveReachObj.getEllTubeRel().indSTime;
+            mlunitext.assert_equals(true, all(indSTimeVec == 1));
             %
             isEqual = self.reachObj.isEqual(evolveReachObj);
             mlunitext.assert_equals(true, isEqual);
@@ -267,11 +273,10 @@ classdef ContinuousReachTestCase < mlunitext.test_case
                     self.linSys, x0IaEll, l0Mat, newTimeVec + timeDif);
                 newEaReachObj = feval(class(self.reachObj), ...
                     self.linSys, x0EaEll, l0Mat, newTimeVec + timeDif);
-                isIaEqual = cutReachObj.isEqual(newIaReachObj, iTuple,...
+                [isIaEqual, repStr] = cutReachObj.isEqual(newIaReachObj, iTuple,...
                     EApproxType.Internal);
                 isEaEqual = cutReachObj.isEqual(newEaReachObj, iTuple,...
                     EApproxType.External);
-                
                 mlunitext.assert_equals(true, isIaEqual);
                 mlunitext.assert_equals(true, isEaEqual);
             end

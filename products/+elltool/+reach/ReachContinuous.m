@@ -196,7 +196,7 @@ classdef ReachContinuous < elltool.reach.AReach
                 F.X_TOUCH_CURVE_MAT;F.X_TOUCH_OP_CURVE_MAT;...
                 F.LT_GOOD_DIR_NORM_VEC;F.M_ARRAY};
             SData = oldEllTubeRel.getData();
-            indSTime = numel(SData.timeVec(1));
+            indSTime = 1;
             SData.indSTime(:) = indSTime;
             cellfun(@flipField, FIELDS_TO_FLIP);
             cellfun(@cutStructSTimeField,...

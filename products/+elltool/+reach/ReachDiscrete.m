@@ -190,7 +190,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             %
             approxSchemaDescr = char.empty(1,0);
             approxSchemaName = char.empty(1,0);
-            sTime = timeLimsVec(1);
+            sTime = min(timeLimsVec);
             timeVec = probDynObj.getTimeVec();
             if self.isBackward
                 timeVec = fliplr(timeVec);

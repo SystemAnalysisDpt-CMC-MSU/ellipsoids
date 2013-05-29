@@ -775,7 +775,8 @@ classdef AReach < elltool.reach.IReach
             %
             pointsNum = numel(ellTube.timeVec{1});
             newPointsNum = numel(compEllTube.timeVec{1});
-            if self.isBackward
+            if self.isBackward && numel(self.switchSysTimeVec) == 2 && ...
+                    numel(reachObj.switchSysTimeVec) == 2
                 compTimeGridIndVec = 2 .* (1 : pointsNum);
             else
                 compTimeGridIndVec = 2 .* (1 : pointsNum) - 1;

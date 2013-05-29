@@ -121,7 +121,7 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             
             if self.reachObj.isbackward()
                 directionsCVec = cellfun(@(x) fliplr(x), directionsCVec, ...
-                        'UniformOutput', false);
+                    'UniformOutput', false);
             end
         end
         
@@ -351,7 +351,7 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             linSysObj = elltool.linsys.LinSysFactory.create(aMat, bMat,...
                 ControlBounds, [], [], [], [], 'd');
             reachSetObj = elltool.reach.ReachDiscrete(linSysObj,...
-                x0Ell, l0Mat, timeVec); %#ok<CPROP>
+                x0Ell, l0Mat, timeVec);
             evalc('reachSetObj.display();');
             firstCutReachObj =...
                 reachSetObj.cut([timeVec(1)+1 timeVec(end)-1]);
@@ -386,7 +386,7 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             linSysObj = elltool.linsys.LinSysFactory.create(aMat, bMat,...
                 ControlBounds, gMat, DistorbBounds, [], [], 'd');
             reachSetObj = elltool.reach.ReachDiscrete(linSysObj,...
-                x0Ell, l0Mat, timeVec); %#ok<CPROP>
+                x0Ell, l0Mat, timeVec);
             evalc('reachSetObj.display();');
             firstCutReachObj =...
                 reachSetObj.cut([timeVec(1)+1 timeVec(end)-1]);
@@ -411,109 +411,6 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             firstCutReachObj.iscut();
             newReachObj.isempty();
             mlunitext.assert_equals(true, true);
-        end
-        %
-        function self = DISABLED_testConstructor(self)
-            timeVec=[0 5.1];
-            fMethod=@(lSys) elltool.reach.ReachDiscrete(lSys,ellipsoid(eye(2)),...
-                [1 0]', timeVec);
-            %
-            checkUVW2(self,'U',fMethod);
-            checkUVW2(self,'V',fMethod);
-            checkUVW2(self,'W',fMethod);
-        end
-        %
-        function self = DISABLED_testEvolve(self)
-            lSys=elltool.linsys.LinSysDiscrete(eye(2),eye(2),ellipsoid(eye(2)));
-            rSet=elltool.reach.ReachDiscrete(lSys,ellipsoid(eye(2)),[1 0]', [0 1]);
-            timeVec=[2 5]';
-            fMethod=@(lSys) evolve(rSet,timeVec,lSys);
-            %
-            checkUVW2(self,'V',fMethod);
-            checkUVW2(self,'U',fMethod);
-            checkUVW2(self,'W',fMethod);
-        end        
-        %
-        function checkUVW2(self,typeUVW,fMethod)
-            
-            % U - control, V - disturbance, W - noise
-            % Center of ellipsoid is of type double
-            lSysRight=formVLinSys(typeUVW,1,false,false);
-            lSysWrong=formVLinSys(typeUVW,2,false,false);
-            fMethod(lSysRight);
-            self.runAndCheckError(@check,...
-                'wrongMat');
-            %
-            % Center of ellipsoid is of type cell
-            lSysRight=formVLinSys(typeUVW,1,false,true);
-            lSysWrong=formVLinSys(typeUVW,2,false,true);
-            fMethod(lSysRight);
-            self.runAndCheckError(@check,...
-                'wrongMat');
-            %
-            if typeUVW~='W'
-                % Matrix is of type cell
-                lSysRight=formVLinSys(typeUVW,1,true,true);
-                lSysWrong=formVLinSys(typeUVW,2,true,true);
-                fMethod(lSysRight);
-                self.runAndCheckError(@check,...
-                    'wrongMat');
-            end
-            function check()
-                fMethod(lSysWrong);
-            end
-            function lSys=formVLinSys(typeUVW,typeMatShape,isGCell,isCenterCell)
-                
-                
-                if isCenterCell
-                    testStruct.center={'0';'0'};
-                else
-                    testStruct.center=[0,0]';
-                end
-                if typeMatShape==1
-                    shapeCMat={'1' ,'0'; '0', '1'};
-                else
-                    shapeCMat={'0.1-k', 'k'; 'k', 'k'};
-                end
-                if ~isGCell
-                    testMat=eye(2);
-                else
-                    testMat={'1', '0'; '0', '1'};
-                end
-                testStruct.shape=shapeCMat;
-                if typeUVW=='V'
-                    lSys=elltool.linsys.LinSysDiscrete(eye(2),eye(2),ellipsoid(eye(2)),testMat,...
-                        testStruct);
-                elseif typeUVW=='U'
-                    lSys=elltool.linsys.LinSysDiscrete(eye(2),testMat,testStruct);
-                elseif typeUVW=='W'
-                    lSys=elltool.linsys.LinSysDiscrete(eye(2),eye(2),ellipsoid(eye(2)),...
-                        eye(2),ellipsoid(eye(2)),eye(2),testStruct);
-                end
-            end
-        end
-        %
-        function self = DISABLED_testConstDisturbance(self)
-            aMat = [0.997222222222222 0.00277777777777778 0 0;...
-                0 0.998148148148148 0.00185185185185185 0;...
-                0 0 0.998611111111111 0.00231481481481482;...
-                0 0 0 0.997222222222222];
-            x0Ell = ellipsoid(...
-                [3.0199 0 -0.0501 -0.0057;...
-                0 0 0 0;...
-                -0.0501 0 3.2646 0.5751;...
-                -0.0057 0 0.5751 2.4248]); %#ok<PROP>
-            l0Mat = [1 0; 0 1; 0 0; 0 0]; %#ok<PROP>
-            timeBounds = [0 10];
-            distVec = [1; 1; 1; 1];
-            distMat = [1 0 0 0; 0 1 0 0; 0 0 1 0; 0 0 0 1];
-            linSysObj = elltool.linsys.LinSysFactory.create(aMat, ...
-                eye(size(aMat, 1)),...
-                ellipsoid(zeros(size(aMat, 2), 1), eye(size(aMat, 1))),...
-                distMat, distVec, [], [], 'd');
-            reachSetObj = elltool.reach.ReachDiscrete(linSysObj,...
-                x0Ell, l0Mat, timeBounds); %#ok<PROP,NASGU>
-            evalc('reachSetObj.display();')
         end
     end
 end

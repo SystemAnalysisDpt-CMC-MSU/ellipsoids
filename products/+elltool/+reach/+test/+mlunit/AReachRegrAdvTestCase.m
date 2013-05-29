@@ -1,4 +1,4 @@
-classdef ContinuousReachProjAdvTestCase < mlunitext.test_case
+classdef AReachRegrAdvTestCase < mlunitext.test_case
     properties (Access=private, Constant)
         FIELDS_NOT_TO_COMPARE={'LT_GOOD_DIR_NORM_ORIG_VEC';'PROJ_S_MAT';...
             'LS_GOOD_DIR_ORIG_VEC';'LS_GOOD_DIR_NORM_ORIG'};
@@ -24,10 +24,10 @@ classdef ContinuousReachProjAdvTestCase < mlunitext.test_case
         PROJECTION_DIM2_MAT = [-0.9442   -0.3293;
             -0.3293    0.9442];
         DIM2_SYS_IND_VEC = [1 2];
-        DIM8_SYS_IND_VEC = [1 2 6];
+        DIM8_SYS_IND_VEC = [1 2 7];
         ALLOWED_MODE_LIST = {'rand', 'fix'};
     end
-    properties (Access=private)
+    properties (Access = protected)
         confName
         crm
         crmSys
@@ -37,8 +37,10 @@ classdef ContinuousReachProjAdvTestCase < mlunitext.test_case
         calcPrecision
         modeList
         SysParam
+        linSysFactory
+        reachObfFactory
     end
-    methods (Access = private, Static)
+    methods (Access = protected, Static)
         function newDoubleMat = multiplyCMat(cellMat, doubleMultMatLeft,...
                 doubleMultMatRight)
             doubleMat = cellfun(@str2num,cellMat);
@@ -50,7 +52,7 @@ classdef ContinuousReachProjAdvTestCase < mlunitext.test_case
             end
         end   
     end
-    methods (Access = private)
+    methods (Access = protected)
         %
         function fillSysParamField(self)
             self.SysParam = struct();
@@ -68,7 +70,7 @@ classdef ContinuousReachProjAdvTestCase < mlunitext.test_case
             self.SysParam.l0Mat = cell2mat(l0CMat.').';
         end 
         %
-        function auxTestProjection(self,indVec,caseName,projMat)          
+        function auxTestProjection(self,indVec,caseName,projMat)
             newAtMat = self.multiplyCMat(self.SysParam.atCMat,projMat,inv(projMat));
             newBtMat = self.multiplyCMat(self.SysParam.btCMat,projMat);
             newCtMat = self.multiplyCMat(self.SysParam.ctCMat,projMat);
@@ -88,9 +90,9 @@ classdef ContinuousReachProjAdvTestCase < mlunitext.test_case
             directionsMat = eye(size(self.SysParam.atCMat));
             invProjMat=inv(projMat);
             %
-            newLinSys = elltool.linsys.LinSysFactory.create(newAtMat,...
+            newLinSys = self.linSysFactory.create(newAtMat,...
                 newBtMat, ControlBounds, newCtMat, DistBounds);
-            newReachObj = elltool.reach.ReachContinuous(newLinSys,...
+            newReachObj = self.reachObfFactory.create(newLinSys,...
                 ellipsoid(newX0Vec, newX0Mat), newL0Mat, self.timeVec);
             %
             secondProjReachObj =...
@@ -115,8 +117,11 @@ classdef ContinuousReachProjAdvTestCase < mlunitext.test_case
     end
     %
     methods
-        function self = ContinuousReachProjAdvTestCase(varargin)
+        function self = AReachRegrAdvTestCase(linSysFactory, ...
+                reachObfFactory, varargin)
             self = self@mlunitext.test_case(varargin{:});
+            self.linSysFactory = linSysFactory;
+            self.reachObfFactory = reachObfFactory;
         end
         function tear_down(~)
             close all;
@@ -136,8 +141,7 @@ classdef ContinuousReachProjAdvTestCase < mlunitext.test_case
             %
             self.fillSysParamField();
             %
-            self.timeVec = [self.crmSys.getParam('time_interval.t0'),...
-                self.crmSys.getParam('time_interval.t1')];
+            self.timeVec = self.crm.getParam('genericProps').calcTimeLimVec;
             self.calcPrecision =...
                 self.crm.getParam('genericProps.calcPrecision');
             ControlBounds = struct();
@@ -147,9 +151,9 @@ classdef ContinuousReachProjAdvTestCase < mlunitext.test_case
             DistBounds.center = self.SysParam.qtCVec;
             DistBounds.shape = self.SysParam.qtCMat;
             %
-            self.linSys = elltool.linsys.LinSysFactory.create(self.SysParam.atCMat,...
+            self.linSys = self.linSysFactory.create(self.SysParam.atCMat,...
                 self.SysParam.btCMat, ControlBounds, self.SysParam.ctCMat, DistBounds);
-            self.reachObj = elltool.reach.ReachContinuous(self.linSys,...
+            self.reachObj = self.reachObfFactory.create(self.linSys,...
                 ellipsoid(self.SysParam.x0Vec, self.SysParam.x0Mat),...
                 self.SysParam.l0Mat, self.timeVec);          
         end
