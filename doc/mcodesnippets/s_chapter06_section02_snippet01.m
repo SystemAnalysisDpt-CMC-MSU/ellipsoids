@@ -7,10 +7,10 @@ uBoundsEllObj = ell_unitball(2);
 % linear system
 lsys = elltool.linsys.LinSysContinuous(aMat, bMat, uBoundsEllObj);  
 timeVec = [0 4];  % time interval% initial conditions:
-x0EllObj = [0 2 0 0]' + ellipsoid([0.01 0 0 0; 0 0.01 0 0; 0 0 0 0;...
+x0EllObj = [0 2 0 0].' + ellipsoid([0.01 0 0 0; 0 0.01 0 0; 0 0 0 0;...
            0 0 0 0]);
 % initial directions (some random vectors in R^4):
-dirsMat = [1 0 1 0; 1 -1 0 0; 0 -1 0 1; 1 1 -1 1; -1 1 1 0; -2 0 1 1]';
+dirsMat = [1 0 1 0; 1 -1 0 0; 0 -1 0 1; 1 1 -1 1; -1 1 1 0; -2 0 1 1].';
 % reach set
 rsObj = elltool.reach.ReachContinuous(lsys, x0EllObj, dirsMat, timeVec,...
     'isRegEnabled', true, 'isJustCheck', false, 'regTol', 1e-3);  
