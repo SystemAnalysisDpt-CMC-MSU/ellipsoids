@@ -219,7 +219,11 @@ classdef ContinuousReachTestCase < mlunitext.test_case
             timeVec = [self.tVec(1), sum(self.tVec)/2];
             newReachObj = elltool.reach.ReachContinuous(self.linSys,...
                 self.x0Ell, self.l0Mat, timeVec);
+            indSTimeVec = newReachObj.getEllTubeRel().indSTime;
+            mlunitext.assert_equals(true, all(indSTimeVec == 1));
             evolveReachObj = newReachObj.evolve(self.tVec(2));
+            indSTimeVec = evolveReachObj.getEllTubeRel().indSTime;
+            mlunitext.assert_equals(true, all(indSTimeVec == 1));
             %
             isEqual = self.reachObj.isEqual(evolveReachObj);
             mlunitext.assert_equals(true, isEqual);
@@ -237,17 +241,31 @@ classdef ContinuousReachTestCase < mlunitext.test_case
         function self = testCut(self)
             import gras.ellapx.enums.EApproxType;
             %
-            newTimeVec = [sum(self.tVec)/2, self.tVec(2)];
+            if self.reachObj.isbackward()
+                newTimeVec = [sum(self.tVec)/2, self.tVec(2)];
+            else
+                newTimeVec = [sum(self.tVec)/2, self.tVec(2)];
+            end
             cutReachObj = self.reachObj.cut(newTimeVec);
             [iaEllMat timeVec] = cutReachObj.get_ia();
             eaEllMat = cutReachObj.get_ea();
             nTuples = size(iaEllMat, 1);
-            timeDif = timeVec(1) - newTimeVec(1);
+            if self.reachObj.isbackward()
+                timeDif = timeVec(end) - newTimeVec(1);
+            else
+                timeDif = timeVec(1) - newTimeVec(1);
+            end
             for iTuple = 1 : nTuples
-                x0IaEll = iaEllMat(iTuple, 1);
-                x0EaEll = eaEllMat(iTuple, 1);
                 directionsCVec = cutReachObj.get_directions();
-                l0Mat = directionsCVec{iTuple}(:, 1);
+                if self.reachObj.isbackward()
+                    x0IaEll = iaEllMat(iTuple, end);
+                    x0EaEll = eaEllMat(iTuple, end);
+                    l0Mat = directionsCVec{iTuple}(:, end);
+                else
+                    x0IaEll = iaEllMat(iTuple, 1);
+                    x0EaEll = eaEllMat(iTuple, 1);
+                    l0Mat = directionsCVec{iTuple}(:, 1);
+                end
                 l0Mat = l0Mat ./ norm(l0Mat);
                 newIaReachObj = elltool.reach.ReachContinuous(self.linSys,...
                     x0IaEll, l0Mat, newTimeVec + timeDif);
@@ -274,6 +292,22 @@ classdef ContinuousReachTestCase < mlunitext.test_case
             copiedReachObj = self.reachObj.getCopy();
             isEqual = copiedReachObj.isEqual(self.reachObj);
             mlunitext.assert_equals(true, isEqual);
+        end
+        %
+        function self = testSortedTimeVec(self)
+            ellTube = self.reachObj.getEllTubeRel();
+            switchTimeVec = self.reachObj.getSwitchTimeVec();
+            timeVec = ellTube.timeVec{1};
+            if numel(switchTimeVec) == 1
+                isOk = numel(timeVec) == 1;
+                mlunitext.assert_equals(true, isOk);
+            else
+                isnOk = any(diff(switchTimeVec) <= 0);
+                mlunitext.assert_equals(false, isnOk);
+                isOk = switchTimeVec(1) <= timeVec(1) ||...
+                    switchTimeVec(end) >= timeVec(end);
+                mlunitext.assert_equals(true, isOk);
+            end
         end
     end
 end
