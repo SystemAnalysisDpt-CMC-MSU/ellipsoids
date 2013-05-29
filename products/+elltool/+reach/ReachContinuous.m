@@ -790,7 +790,6 @@ classdef ReachContinuous < elltool.reach.AReach
         function display(self)
             import gras.ellapx.enums.EApproxType;
             fprintf('\n');
-            disp([inputname(1) ' =']);
             if self.isempty()
                 fprintf('Empty reach set object.\n\n');
                 return;
@@ -863,10 +862,6 @@ classdef ReachContinuous < elltool.reach.AReach
                     switchSysTimeVec = [cutTimeVec(1)...
                         switchTimeVec(switchTimeIndVec) cutTimeVec(end)];
                     cutObj.switchSysTimeVec = switchSysTimeVec;
-                    if self.isbackward()
-                        cutObj.switchSysTimeVec =...
-                            fliplr(cutObj.switchSysTimeVec);
-                    end
                     firstIntInd = find(switchTimeIndVec == 1, 1);
                     if ~isempty(firstIntInd)
                         switchTimeIndVec(firstIntInd - 1) = 1;
@@ -886,7 +881,7 @@ classdef ReachContinuous < elltool.reach.AReach
                 cutObj.x0Ellipsoid = self.x0Ellipsoid.getCopy();
                 cutObj.isCut = true;
                 cutObj.isProj = false;
-                cutObj.isBackward = self.isbackward();
+                cutObj.isBackward = self.isBackward;
                 cutObj.projectionBasisMat = self.projectionBasisMat;
             end
         end
