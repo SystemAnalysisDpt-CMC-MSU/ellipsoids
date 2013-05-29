@@ -295,5 +295,21 @@ classdef ContinuousReachTestCase < mlunitext.test_case
             isEqual = copiedReachObj.isEqual(self.reachObj);
             mlunitext.assert_equals(true, isEqual);
         end
+        %
+        function self = testSortedTimeVec(self)
+            ellTube = self.reachObj.getEllTubeRel();
+            switchTimeVec = self.reachObj.getSwitchTimeVec();
+            timeVec = ellTube.timeVec{1};
+            if numel(switchTimeVec) == 1
+                isOk = numel(timeVec) == 1;
+                mlunitext.assert_equals(true, isOk);
+            else
+                isnOk = any(diff(switchTimeVec) <= 0);
+                mlunitext.assert_equals(false, isnOk);
+                isOk = switchTimeVec(1) <= timeVec(1) ||...
+                    switchTimeVec(end) >= timeVec(end);
+                mlunitext.assert_equals(true, isOk);
+            end
+        end
     end
 end

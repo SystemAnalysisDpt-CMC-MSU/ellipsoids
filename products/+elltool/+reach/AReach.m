@@ -272,6 +272,10 @@ classdef AReach < elltool.reach.IReach
             [relTolArr,relTolVal]=rsArr.Property('relTol',varargin{:});
         end
         %
+        function switchTimeVec = getSwitchTimeVec(self)
+            switchTimeVec = self.switchSysTimeVec;
+        end
+        %
         function outStrCMat = getStrCMat(inpMat)
             outStrCMat =...
                 arrayfun(@num2str, inpMat, 'UniformOutput', false);
@@ -1135,6 +1139,10 @@ classdef AReach < elltool.reach.IReach
             %
             % Calculate additional tubes
             %
+            if length(self.switchSysTimeVec) > 2
+                throwerror('unsupportedFunctionality', ...
+                    'refine currently cannot be applied after evolve');
+            end
             linSys = self.linSysCVec{1};
             if self.isBackward
                 timeLimsVec = ...

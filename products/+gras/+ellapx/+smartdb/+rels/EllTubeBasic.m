@@ -349,7 +349,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     errTagStr='MArrayNeg';
                     reasonStr='MArray is negatively defined';
                     return;
-                end        
+                end
                 nPoints=size(timeVec,2);
                 nDims=size(QArray,1);
                 isOk=size(QArray,3)==nPoints&&...
