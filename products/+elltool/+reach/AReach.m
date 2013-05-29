@@ -919,7 +919,6 @@ classdef AReach < elltool.reach.IReach
         function display(self)
             import gras.ellapx.enums.EApproxType;
             fprintf('\n');
-            disp([inputname(1) ' =']);
             if self.isempty()
                 fprintf('Empty reach set object.\n\n');
                 return;
@@ -1292,10 +1291,6 @@ classdef AReach < elltool.reach.IReach
                     newSwitchSysTimeVec = [cutTimeVec(1)...
                         switchTimeVec(switchTimeIndVec) cutTimeVec(end)];
                     cutObj.switchSysTimeVec = newSwitchSysTimeVec;
-                    if self.isbackward()
-                        cutObj.switchSysTimeVec =...
-                            fliplr(cutObj.switchSysTimeVec);
-                    end
                     firstIntInd = find(switchTimeIndVec == 1, 1);
                     if ~isempty(firstIntInd)
                         switchTimeIndVec(firstIntInd - 1) = 1;
