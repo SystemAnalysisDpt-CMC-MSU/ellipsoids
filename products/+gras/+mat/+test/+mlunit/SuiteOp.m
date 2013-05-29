@@ -396,6 +396,100 @@ classdef SuiteOp < mlunitext.test_case
             factory = gras.interp.SplineMatrixOperations(timeVec);
             self.runTestsForFactory(factory);
         end
+        function testSymbMatrixOperations(self)
+            import gras.mat.symb.*
+            import gras.mat.MatrixFunctionFactory;
+            %
+            aScCMat = {'t'};
+            bScCMat = {'t + 1'};
+            aVecCMat = {'t'; 't.^2'};
+            aSqCMat = {'t', '1'; '1', 't'};            
+            %
+            % MatrixSFBinaryProdByVec: regular test
+            %
+            resCMat = {'2 .* t.^2'; 't.^3 + t'};
+            isBinarySymbOpEqual(@MatrixSFBinaryProdByVec, aSqCMat, ...
+                aVecCMat, resCMat);
+            %
+            % MatrixSFBinaryProdByVec: scalar result test
+            %
+            resCMat = {'t.^4 + t.^2'};
+            isBinarySymbOpEqual(@MatrixSFBinaryProdByVec, aVecCMat', ...
+                aVecCMat, resCMat);
+            %
+            % MatrixSFBinaryProd: regular test
+            %
+            resCMat = {'2 .* t.^2'; 't.^3 + t'};
+            isBinarySymbOpEqual(@MatrixSFBinaryProd, aSqCMat, ...
+                aVecCMat, resCMat);
+            %
+            % MatrixSFBinaryProd: scalar result test
+            %
+            resCMat = {'t.^4 + t.^2'};
+            isBinarySymbOpEqual(@MatrixSFBinaryProd, aVecCMat', ...
+                aVecCMat, resCMat);
+            %
+            % MatrixSFBinaryProd: scalar argument test #1
+            %
+            resCMat = {'t.^2', 't'; 't', 't.^2'};  
+            isBinarySymbOpEqual(@MatrixSFBinaryProd, aScCMat, ...
+                aSqCMat, resCMat, [], 'symmetric');
+            %
+            % MatrixSFBinaryProd: scalar argument test #1
+            %
+            resCMat = {'t.^2 + t'};  
+            isBinarySymbOpEqual(@MatrixSFBinaryProd, aScCMat, ...
+                bScCMat, resCMat, [], 'symmetric');
+            %
+            % MatrixSFTripleProd: scalar argument test #1
+            %
+            resCMat = {'t.^3', 't.^2'; 't.^2', 't.^3'};    
+            isBinarySymbOpEqual(@(x, y)MatrixSFTripleProd(x, x, y), ...
+                aScCMat, aSqCMat, resCMat);
+            %
+            % MatrixSFTripleProd: scalar argument test #2
+            %
+            resCMat = {'t.^3'; 't.^4'};  
+            isBinarySymbOpEqual(@(x, y)MatrixSFTripleProd(x, x, y), ...
+                aScCMat, aVecCMat, resCMat);
+            %
+            % MatrixSFTripleProd: scalar argument test #2
+            %
+            resCMat = {'t.^3 + t.^2'};
+            isBinarySymbOpEqual(@(x, y)MatrixSFTripleProd(x, x, y), ...
+                aScCMat, bScCMat, resCMat);
+            %
+            function isOk = isBinarySymbOpEqual(op, arg1CMat, ...
+                    arg2CMat, expectedCMat, varargin)
+                timeVec = -3:3;
+                if nargin > 5
+                    if ~isempty(varargin{1})
+                        timeVec = varargin{1};
+                    end   
+                end
+                %
+                resMatFun = op(arg1CMat, arg2CMat);
+                %
+                isOk = isEquality();
+                if nargin > 5
+                    if any(strcmp('symmetric', varargin))
+                        resMatFun = op(arg2CMat, arg1CMat);
+                        isOk = isOk && isEquality();
+                    end
+                end
+                mlunitext.assert_equals(isOk, true);
+                %
+                function isOk = isEquality()
+                    import gras.mat.MatrixFunctionFactory;
+                    resultVec = resMatFun.evaluate(timeVec);
+                    expMatFun = MatrixFunctionFactory.createInstance(...
+                        expectedCMat);
+                    self.isMatFunSizeEq(resMatFun, expMatFun);
+                    expectedVec = expMatFun.evaluate(timeVec);
+                    isOk = self.isMatVecEq(resultVec(:), expectedVec(:));
+                end
+            end
+        end
         function testOtherOperations(self)
             import gras.mat.*;
             import gras.mat.fcnlib.*;
@@ -403,11 +497,7 @@ classdef SuiteOp < mlunitext.test_case
             % test MatrixMinEigValFunc
             %
             aMat = diag([-2 -1 0 1 2]);
-            aMatFun = ConstMatrixFunctionFactory.createInstance(aMat);
-            rMatFun = MatrixMinEigValFunc(aMatFun);
-            expectedMatVec = -2;
-            obtainedMatVec = rMatFun.evaluate(0);
-            self.isMatVecEq(expectedMatVec, obtainedMatVec);
+            self.isUnaryOpEqual(@MatrixMinEigValFunc, aMat, -2);
             %
             % test MatrixPlusFunc
             %
@@ -428,6 +518,9 @@ classdef SuiteOp < mlunitext.test_case
             self.isBinaryOpEqual(@MatrixBinaryTimesFunc, aMat, 2, ...
                 2 * aMat, [], 'symmetric');
             %
+            self.isBinaryOpEqual(@MatrixBinaryTimesFunc, 3, 2, 6, [], ...
+                'symmetric');
+            %
             % test MatrixBinaryTimesFunc: scalar non constant
             %            
             aCMat = {'1', '-t'; 't', '1'};
@@ -435,6 +528,43 @@ classdef SuiteOp < mlunitext.test_case
             resCMat = {'t + 1', '-t.^2 - t'; 't.^2 + t', 't + 1'};
             self.isBinaryOpEqual(@MatrixBinaryTimesFunc, aCMat, rCScal, ...
                resCMat, [], 'symmetric');
+            %
+            self.isBinaryOpEqual(@MatrixBinaryTimesFunc, {'t + 1'}, ...
+                {'t + 3'}, {'(t + 1).*(t + 3)'}, [], 'symmetric');
+            %
+            % test MatrixLRTimesFunc: scalar constant
+            %
+            aMat = magic(5);
+            self.isBinaryOpEqual(@MatrixLRTimesFunc, aMat, 2, ...
+                4 * aMat);
+            %
+            % test MatrixLRTimesFunc: scalar non constant
+            %            
+            aCMat = {'1', '-t'; 't', '1'};
+            rCScal = {'t + 1'};
+            resCMat = {'(t + 1).^2', '-t.*((t + 1).^2)'; ...
+                't.*((t + 1).^2)', '(t + 1).^2'};
+            self.isBinaryOpEqual(@MatrixLRTimesFunc, aCMat, rCScal, ...
+               resCMat);
+            %
+            % test MatrixTernaryTimesFunc: scalar constant
+            %
+            aMat = ones(2, 3);
+            self.isBinaryOpEqual(@(x, y) MatrixTernaryTimesFunc(x, x, y), ...
+                2, aMat, 4 * aMat);
+            %
+            self.isBinaryOpEqual(@(x, y) MatrixTernaryTimesFunc(x, x, y), ...
+                5, 2, 50);
+            %
+            % test MatrixTernaryTimesFunc: scalar non constant
+            %
+            aCMat = {'t', 't + 1'};
+            resCMat = {'9 .* t', '9 .* t + 9'};
+            self.isBinaryOpEqual(@(x, y) MatrixTernaryTimesFunc(x, x, y), ...
+                3, aCMat, resCMat);
+            %
+            self.isBinaryOpEqual(@(x, y) MatrixTernaryTimesFunc(x, x, y), ...
+                {'2'}, {'3 .* t'}, {'12 .* t'});
         end
     end
 end

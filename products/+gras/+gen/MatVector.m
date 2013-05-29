@@ -88,9 +88,14 @@ classdef MatVector
                     ['number of elements in both matrix vectors ',...
                     'should be the same']);
             end
+            if ~(all(bsize(1:2) == 1) || all(psize(1:2) == 1))
+                resSizeVec = [bsize(1), psize(2), nElems];
+            else
+                resSizeVec = [max(bsize(1:2), psize(1:2)), nElems];
+            end
             switch nargin
                 case 2,
-                    Bpt_data=zeros([bsize(1) psize(2) nElems]);
+                    Bpt_data=zeros(resSizeVec);
                     if nRightElems>1
                         for t=1:1:nElems
                             Bpt_data(:,:,t)=Bt_data(:,:,t)*pt_data(:,:,t);
@@ -102,7 +107,13 @@ classdef MatVector
                     end
                 case 3,
                     qsize=size(qt_data);
-                    Bpt_data=zeros([bsize(1) qsize(2) psize(3)]);
+                    if ~(all(resSizeVec(1:2) == 1) || all(qsize(1:2) == 1))
+                        resSizeVec = [resSizeVec(1), qsize(2), nElems];
+                    else
+                        resSizeVec = [max(resSizeVec(1:2), ...
+                            qsize(1:2)), nElems];
+                    end
+                    Bpt_data=zeros(resSizeVec);
                     for t=1:1:psize(3)
                         Bpt_data(:,:,t)=Bt_data(:,:,t)*...
                             pt_data(:,:,t)*qt_data(:,:,t);

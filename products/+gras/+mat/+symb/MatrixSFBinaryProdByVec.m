@@ -49,8 +49,8 @@ classdef MatrixSFBinaryProdByVec<gras.mat.IMatrixFunction
                 %
                 sizeVec=[size(formula1CMat,1),size(formula2CMat,2)];
                 self.nDims=2-any(sizeVec == 1);
-                self.nCols=sizeVec(1);
-                self.nRows=sizeVec(2);
+                self.nRows=sizeVec(1);
+                self.nCols=sizeVec(2);
                 self.mSizeVec=sizeVec;
                 self.formula1Func=cellstr2func(formula1CMat,'t');
                 self.formula2Func=cellstr2func(formula2CMat,'t');
