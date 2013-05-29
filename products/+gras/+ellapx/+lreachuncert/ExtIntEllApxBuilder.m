@@ -3,6 +3,10 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
         APPROX_SCHEMA_NAME='ExtIntUncert'
         APPROX_SCHEMA_DESCR='External and internal approximation based on matrix ODEs for (Q)'
         N_TIME_POINTS=100;
+        ODE_NORM_CONTROL='on';
+        REG_MAX_STEP_TOL=0.05;
+        REG_ABS_TOL=1e-8;
+        N_MAX_REG_STEPS=6;
     end
     properties (Access=private)
         sMethodName
@@ -191,8 +195,7 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             import gras.gen.SquareMatVector;
             import gras.ode.MatrixSysODESolver;
             import modgen.logging.log4j.Log4jConfigurator;
-            ODE_NORM_CONTROL='on';
-            odeArgList={'NormControl',ODE_NORM_CONTROL,...
+            odeArgList={'NormControl',self.ODE_NORM_CONTROL,...
                 'RelTol',self.getRelODECalcPrecision(),...
                 'AbsTol',self.getAbsODECalcPrecision()};
             %
@@ -200,18 +203,15 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             logger=Log4jConfigurator.getLogger();
             %
             %% Constructor solver object
-            REG_MAX_STEP_TOL=0.05;
-            REG_ABS_TOL=1e-8;
-            N_MAX_REG_STEPS=6;
             fOdeReg=@(t,QIntMat,QExtMat)calcRegEllApxMatrix(self,...
                 QIntMat,QExtMat);
             %
             solverObj=MatrixSysODESolver({[sysDim,sysDim],[sysDim,sysDim]},...
                 @(varargin)gras.ode.ode45reg(varargin{:},...
                 odeset(odeArgList{:}),...
-                'regMaxStepTol',REG_MAX_STEP_TOL,...
-                'regAbsTol',REG_ABS_TOL,...
-                'nMaxRegSteps',N_MAX_REG_STEPS),...
+                'regMaxStepTol',self.REG_MAX_STEP_TOL,...
+                'regAbsTol',self.REG_ABS_TOL,...
+                'nMaxRegSteps',self.N_MAX_REG_STEPS),...
                 'outArgStartIndVec',[1 2]);
             %
             nLDirs=self.getNGoodDirs;
@@ -300,9 +300,16 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
         function self=ExtIntEllApxBuilder(pDefObj,goodDirSetObj,...
                 timeLimsVec,calcPrecision,sMethodName,minQSqrtMatEig)
             import gras.ellapx.lreachuncert.ExtIntEllApxBuilder;
+            import modgen.common.throwerror;
+            import gras.la.ismatposdef;
+            x0Mat = pDefObj.getX0Mat();
             self=self@gras.ellapx.gen.ATightEllApxBuilder(pDefObj,...
                 goodDirSetObj,timeLimsVec,...
                 ExtIntEllApxBuilder.N_TIME_POINTS,calcPrecision);
+            if ~ismatposdef(x0Mat, self.REG_ABS_TOL)
+                throwerror('wrongInput',...
+                    'Initial set is not positive definite.');
+            end
             self.minQMatEig=minQSqrtMatEig*minQSqrtMatEig;
             self.goodDirSetObj=goodDirSetObj;
             self.sMethodName=sMethodName;
