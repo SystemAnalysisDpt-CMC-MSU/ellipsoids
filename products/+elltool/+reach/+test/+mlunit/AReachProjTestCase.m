@@ -1,4 +1,4 @@
-classdef AReachRegrTestCase < mlunitext.test_case
+classdef AReachProjTestCase < mlunitext.test_case
     properties (Access = protected, Constant)
         FIELDS_NOT_TO_COMPARE={'LT_GOOD_DIR_MAT';'LT_GOOD_DIR_NORM_VEC';...
             'LS_GOOD_DIR_NORM';'LS_GOOD_DIR_VEC'};
@@ -37,7 +37,7 @@ classdef AReachRegrTestCase < mlunitext.test_case
         end
     end
     methods
-        function self = AReachRegrTestCase(linSysFactory, ...
+        function self = AReachProjTestCase(linSysFactory, ...
                 reachObfFactory, varargin)
             self = self@mlunitext.test_case(varargin{:});
             [~, className] = modgen.common.getcallernameext(1);

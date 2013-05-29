@@ -67,7 +67,7 @@ classdef AReach < elltool.reach.IReach
     end
     %
     methods (Abstract, Access = protected)
-        ellTubeRel = makeEllTubeRel(self, probDynObj, l0Mat, ...
+        ellTubeRel = internalMakeEllTubeRel(self, probDynObj, l0Mat, ...
             timeVec, isDisturb, calcPrecision, approxTypeVec)
     end
     %
@@ -595,6 +595,102 @@ classdef AReach < elltool.reach.IReach
                 end
             end
         end
+        %
+        function ellTubeRel = makeEllTubeRel(self, probDynObj, l0Mat,...
+                timeVec, isDisturb, calcPrecision, approxTypeVec)
+            import gras.ellapx.enums.EApproxType;
+            import gras.ellapx.gen.RegProblemDynamicsFactory;
+            import gras.ellapx.lreachplain.GoodDirsContinuousFactory;
+            import modgen.common.throwerror;
+            %
+            probDynObj = RegProblemDynamicsFactory.create(probDynObj,...
+                self.isRegEnabled, self.isJustCheck, self.regTol);
+            try
+                ellTubeRel = self.internalMakeEllTubeRel(...
+                    probDynObj,  l0Mat, timeVec, isDisturb, ...
+                    calcPrecision, approxTypeVec);
+            catch meObj
+                meObj
+                errorStr = '';
+                errorTag = '';
+                ETAG_WR_INP = 'wrongInput';
+                ETAG_R_PROB = ':regProblem';
+                ETAG_R_DISABLED = ':RegIsDisabled';
+                ETAG_ONLY_CHECK = ':onlyCheckIsEnabled';
+                ETAG_LOW_REG_TOL = ':regTolIsTooLow';
+                ETAG_ODE_45_REG_TOL = ':Ode45Failed';
+                ETAG_BAD_CALC_PREC = ':BadCalcPrec';
+                ETAG_BAD_INIT_SET = ':BadInitSet';
+                %
+                EMSG_R_PROB = 'There is a problem with regularization. ';
+                EMSG_INIT_SET_PROB = ['There is a problem with initial',...
+                    ' set (x0Ell, second parameter). '];
+                EMSG_CALC_PREC_PROB = ['There is a problem with ',...
+                    'calculation precision. Try to do some of this: '];
+                EMSG_USE_REG = ['Try to enable it: set property ',...
+                    '''isRegEnabled'' to ''true'', ''isJustCheck'' to ',...
+                    '''false'' and ''regTol'' to some positive.'];
+                EMSG_LOW_REG_TOL = ['Try to increase regularization ',...
+                    'tolerance: increase value of ''regTol'' property.'];
+                EMSG_SMALL_INIT_SET = ['Try to increase it: change its',...
+                    ' shape matrix'];
+                EMSG_BAD_TIME_VEC = ['Try to decrease the length of ',...
+                    'your time interval (timeVec, fourth parameter).'];
+                FIRST_COMMON_PART_BAD_ELL_STR = 'Try to decrease ';
+                SECOND_COMMON_PART_BAD_ELL_STR =...
+                    [' ellipsoid (linear system''s parameter): change ',...
+                    'its shape matrix.'];
+                EMSG_BAD_CONTROL = [FIRST_COMMON_PART_BAD_ELL_STR,...
+                    'control', SECOND_COMMON_PART_BAD_ELL_STR];
+                EMSG_BAD_DIST = [FIRST_COMMON_PART_BAD_ELL_STR,...
+                    'disturbance', SECOND_COMMON_PART_BAD_ELL_STR];
+                EMSG_BAD_INIT_SET = [FIRST_COMMON_PART_BAD_ELL_STR,...
+                    'initial set', SECOND_COMMON_PART_BAD_ELL_STR];
+                %
+                if strcmp(meObj.identifier,...
+                        'MODGEN:COMMON:CHECKVAR:wrongInput')
+                    errorStr = [EMSG_R_PROB, EMSG_USE_REG];
+                    errorTag = [ETAG_WR_INP, ETAG_R_PROB, ETAG_ONLY_CHECK];
+                elseif strcmp(meObj.identifier, 'MATLAB:badsubscript')
+                    errorStr = [EMSG_R_PROB, EMSG_LOW_REG_TOL];
+                    errorTag = [ETAG_WR_INP, ETAG_R_PROB, ETAG_LOW_REG_TOL];
+                elseif strcmp(meObj.identifier,...
+                        'GRAS:ODE:ODE45REG:wrongState')
+                    errorStr = [EMSG_R_PROB, EMSG_LOW_REG_TOL];
+                    errorTag = [ETAG_WR_INP, ETAG_R_PROB,...
+                        ETAG_LOW_REG_TOL, ETAG_ODE_45_REG_TOL];
+                elseif strcmp(meObj.identifier,...
+                        ['GRAS:ELLAPX:SMARTDB:RELS:',...
+                        'ELLTUBETOUCHCURVEBASIC:',...
+                        'CHECKTOUCHCURVEINDEPENDENCE:',...
+                        'wrongInput:touchCurveDependency'])
+                    errorStr = [EMSG_CALC_PREC_PROB, EMSG_BAD_TIME_VEC,...
+                        EMSG_BAD_CONTROL, EMSG_BAD_DIST,...
+                        EMSG_BAD_INIT_SET];
+                    errorTag = [ETAG_WR_INP, ETAG_BAD_CALC_PREC];
+                elseif strcmp(meObj.identifier,...
+                        ['GRAS:ELLAPX:LREACHUNCERT:EXTINTELLAPXBUILDER',...
+                        ':EXTINTELLAPXBUILDER:wrongInput'])
+                    errorStr = [EMSG_INIT_SET_PROB, EMSG_SMALL_INIT_SET];
+                    errorTag = [ETAG_WR_INP, ETAG_BAD_INIT_SET];
+                elseif strcmp(meObj.identifier,...
+                        ['GRAS:ELLAPX:LREACHUNCERT:EXTINTELLAPXBUILDER',...
+                        ':CALCELLAPXMATRIXDERIV:wrongInput']) ||...
+                    strcmp(meObj.identifier,...
+                        ['GRAS:ELLAPX:SMARTDB:RELS:ELLTUBEBASIC:',...
+                        'CHECKDATACONSISTENCY:wrongInput:QArrayNotPos'])
+                    errorStr = [EMSG_R_PROB, EMSG_USE_REG];
+                    errorTag = [ETAG_WR_INP, ETAG_R_PROB, ETAG_R_DISABLED];
+                end
+                if isempty(errorStr)
+                    throw(meObj);
+                else
+                    friendlyMeObj = throwerror(errorTag, errorStr);
+                    friendlyMeObj = addCause(friendlyMeObj, meObj);
+                    throw(friendlyMeObj);
+                end
+            end
+        end
     end
     methods
         function parse(self, linSys, x0Ell, l0Mat, timeVec, varargin)
@@ -659,9 +755,9 @@ classdef AReach < elltool.reach.IReach
                 modgen.common.parseparext(varargin,...
                 {'isRegEnabled', 'isJustCheck', 'regTol';...
                 false, false, regTolerance});
-            if ~isempty(reg)
-                throwerror('wrongInput', 'wrong input arguments format.');
-            end
+%             if ~isempty(reg)
+%                 throwerror('wrongInput', 'wrong input arguments format.');
+%             end
         end
         %
         function resArr=repMat(self,varargin)

@@ -95,9 +95,10 @@ classdef ReachDiscrete < elltool.reach.AReach
     methods (Static, Access = private)
         function [qArrayList ltGoodDirArray] = ...
                 calculateApproxShape(probDynObj, l0Mat, ...
-                relTol, approxType, isDisturb, isMinMax)
+                regTol, approxType, isDisturb, isMinMax)
             import elltool.conf.Properties;
             import gras.ellapx.enums.EApproxType;
+            import gras.la.regposdefmat;
             %
             isBack = isa(probDynObj, ...
                 'gras.ellapx.lreachplain.probdyn.LReachDiscrBackwardDynamics');
@@ -126,7 +127,8 @@ classdef ReachDiscrete < elltool.reach.AReach
             %
             for iTube = 1:nTubes
                 qMat = probDynObj.getX0Mat;
-                qMat = ell_regularize(qMat, relTol);
+                qMat = 0.5 * (qMat + qMat');
+                qMat = regposdefmat(qMat, regTol);
                 qMat = 0.5 * (qMat + qMat');
                 qArrayList{iTube}(:, :, 1) = qMat;
                 lVec = l0Mat(:, iTube);
@@ -138,16 +140,17 @@ classdef ReachDiscrete < elltool.reach.AReach
                         evaluate(timeVec(iTime + isBack));
                     bpbMat = probDynObj.getBPBTransDynamics(). ...
                         evaluate(timeVec(iTime + isBack));
-                    bpbMat = 0.5 * (bpbMat + bpbMat');
+%                     bpbMat = 0.5 * (bpbMat + bpbMat');
                     if isDisturb
                         gqgMat = probDynObj.getCQCTransDynamics(). ...
                             evaluate(timeVec(iTime + isBack));
-                        gqgMat = 0.5 * (gqgMat + gqgMat');
-                        gqgMat = ell_regularize(gqgMat, relTol);
+%                         gqgMat = 0.5 * (gqgMat + gqgMat');
+%                         gqgMat = regposdefmat(gqgMat, relTol);
                     end
                     qMat = aMat * qMat * aMat';
-                    qMat = ell_regularize(qMat, relTol / 1000);
-                    bpbMat = ell_regularize(bpbMat, relTol);
+                    qMat = 0.5 * (qMat + qMat');
+                    qMat = regposdefmat(qMat, regTol);
+%                     bpbMat = regposdefmat(bpbMat, relTol);
                     lVec = aInvMat' * lVec;
                     if isDisturb
                         if isMinMax
@@ -170,7 +173,8 @@ classdef ReachDiscrete < elltool.reach.AReach
                     else
                         qMat = zeros(xDim, xDim);
                     end
-                    qMat = ell_regularize(qMat, relTol);
+                    qMat = 0.5 * (qMat + qMat');
+                    qMat = regposdefmat(qMat, regTol);
                     qMat = 0.5 * (qMat + qMat');
                     qArrayList{iTube}(:, :, iTime + 1) = qMat;
                     lMat(:, iTime + 1) = lVec;
@@ -181,10 +185,15 @@ classdef ReachDiscrete < elltool.reach.AReach
     end
     %
     methods (Access = protected)
-        function ellTubeRel = makeEllTubeRel(self, probDynObj, l0Mat,...
-                timeLimsVec, isDisturb, calcPrecision, approxTypeVec)
+        function ellTubeRel = internalMakeEllTubeRel(self, probDynObj, ...
+                l0Mat, timeLimsVec, isDisturb, calcPrecision, ...
+                approxTypeVec)
             import gras.ellapx.enums.EApproxType;
             import gras.ellapx.lreachplain.GoodDirsDiscrete;
+            import gras.ellapx.gen.RegProblemDynamicsFactory;
+            %
+            probDynObj = RegProblemDynamicsFactory.create(probDynObj,...
+                self.isRegEnabled, self.isJustCheck, self.regTol);
             goodDirSetObj = GoodDirsDiscrete(...
                 probDynObj, timeLimsVec(1), l0Mat, calcPrecision);
             %
@@ -205,7 +214,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             %
             fCalcApproxShape = @(approxType) ...
                 elltool.reach.ReachDiscrete.calculateApproxShape(...
-                probDynObj, l0Mat, self.relTol, approxType, ...
+                probDynObj, l0Mat, self.regTol, approxType, ...
                 isDisturb, self.isMinMax);
             %
             if isExtApprox

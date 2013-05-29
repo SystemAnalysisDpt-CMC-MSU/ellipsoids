@@ -43,7 +43,7 @@ for iConf = 1:nConfs
         ReachFactory(confName, crm, crmSys, true, true, true), ...
         'marker', [confName,'_IsBackTrueIsEvolveTrue']);
     suiteList{end + 1} = loader.load_tests_from_test_case(...
-        'elltool.reach.test.mlunit.DiscreteReachRegrTestCase', ...
+        'elltool.reach.test.mlunit.DiscreteReachProjTestCase', ...
         confName, crm, crmSys, 'marker', confName);
     if confTestsVec(5)
         suiteList{end + 1} = loader.load_tests_from_test_case(...
@@ -57,7 +57,7 @@ testLists = cellfun(@(x)x.tests,suiteList,'UniformOutput',false);
 suite = mlunitext.test_suite(horzcat(testLists{:}));
 
 resList{1} = runner.run(suite);
-testCaseNameStr = 'elltool.reach.test.mlunit.DiscreteReachRegrAdvTestCase';
+testCaseNameStr = 'elltool.reach.test.mlunit.DiscreteReachProjAdvTestCase';
 resList{2} = elltool.reach.test.run_reach_proj_adv_tests(testCaseNameStr);
 results = [resList{:}];
 

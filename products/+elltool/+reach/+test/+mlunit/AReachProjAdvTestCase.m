@@ -1,4 +1,4 @@
-classdef AReachRegrAdvTestCase < mlunitext.test_case
+classdef AReachProjAdvTestCase < mlunitext.test_case
     properties (Access=private, Constant)
         FIELDS_NOT_TO_COMPARE={'LT_GOOD_DIR_NORM_ORIG_VEC';'PROJ_S_MAT';...
             'LS_GOOD_DIR_ORIG_VEC';'LS_GOOD_DIR_NORM_ORIG'};
@@ -117,7 +117,7 @@ classdef AReachRegrAdvTestCase < mlunitext.test_case
     end
     %
     methods
-        function self = AReachRegrAdvTestCase(linSysFactory, ...
+        function self = AReachProjAdvTestCase(linSysFactory, ...
                 reachObfFactory, varargin)
             self = self@mlunitext.test_case(varargin{:});
             self.linSysFactory = linSysFactory;

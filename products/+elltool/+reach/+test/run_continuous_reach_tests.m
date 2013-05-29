@@ -50,7 +50,7 @@ for iConf = 1:nConfs
     end
     if confTestsVec(5)
         suiteList{end + 1} = loader.load_tests_from_test_case(...
-            'elltool.reach.test.mlunit.ContinuousReachRegrTestCase',...
+            'elltool.reach.test.mlunit.ContinuousReachProjTestCase',...
             confName, crm, crmSys,...
             'marker',confName);
     end
@@ -77,7 +77,7 @@ testLists = cellfun(@(x)x.tests,suiteList,'UniformOutput',false);
 suite = mlunitext.test_suite(horzcat(testLists{:}));
 %
 resList{1} = runner.run(suite);
-testCaseNameStr = 'elltool.reach.test.mlunit.ContinuousReachRegrAdvTestCase';
+testCaseNameStr = 'elltool.reach.test.mlunit.ContinuousReachProjTestCase';
 resList{2} = elltool.reach.test.run_reach_proj_adv_tests(testCaseNameStr);
 results = [resList{:}];
 %
