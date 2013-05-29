@@ -7,9 +7,19 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
     end
     methods 
         function namePrefix=getReachTubeNamePrefix(self)
+            % GETREACHTUBEANEPREFIX - return prefix of the reach tube
+            %
+            % Input:
+            %   regular:
+            %      self.
             namePrefix=self.REACH_TUBE_PREFIX;
         end
         function namePrefix=getRegTubeNamePrefix(self)
+            % GETREGTUBEANEPREFIX - return prefix of the reg tube
+            %
+            % Input:
+            %   regular:
+            %      self.
             namePrefix=self.REG_TUBE_PREFIX;
         end        
     end

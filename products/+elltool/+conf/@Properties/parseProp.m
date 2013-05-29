@@ -42,7 +42,6 @@ function varargout = parseProp(args,neededPropNameList)
 % 
 %        1
 % 
-% 
 %   relTol =
 % 
 %        2
