@@ -1,6 +1,6 @@
 function copyEllArr = getCopy(ellArr)
 % GETCOPY - gives array the same size as ellArr with copies of elements of 
-%          ellArr.
+%           ellArr.
 %
 % Input:
 %   regular:
@@ -27,7 +27,9 @@ function copyEllArr = getCopy(ellArr)
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2013 $
 %
-if isscalar(ellArr)
+if isempty(ellArr)
+    copyEllArr = ellipsoid.empty(size(ellArr));
+elseif isscalar(ellArr)
     copyEllArr=ellipsoid();
     fSingleCopy(copyEllArr,ellArr);
 else

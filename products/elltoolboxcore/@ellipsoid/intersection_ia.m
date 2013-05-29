@@ -255,7 +255,7 @@ function outEll = l_polyintersect(ell, poly)
 %            System Analysis Department$
 %
 
-if isContainedInIntersection(ell, poly)
+if doesIntersectionContain(ell, poly)
     outEll = getInnerEllipsoid(poly);
 elseif ~intersect(ell,poly)
     outEll = ellipsoid();

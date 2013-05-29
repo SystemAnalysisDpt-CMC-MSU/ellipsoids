@@ -1,6 +1,6 @@
-function [bpMat, fVec] = getBoundary(ellObj,nPoints)
+function [bpMat, fMat] = getBoundary(ellObj,nPoints)
 %
-% GETBOUNDARY - computes the boundary of an ellipsoid.
+% GETBOUNDARY - computes the boundary of an ellipsoid. 
 %
 % Input:
 %   regular:
@@ -12,7 +12,7 @@ function [bpMat, fVec] = getBoundary(ellObj,nPoints)
 %   regular:
 %       bpMat: double[nPoints,nDim] - boundary points of ellipsoid
 %   optional:
-%       fVec: double[1,nFaces]/double[nFacex,nDim] - indices of points in
+%       fVec: double[1,nFaces]/double[nFacex,nDim] - indices of points in 
 %           each face of bpMat graph
 %
 % $Author: Vitaly Baranov <vetbar42@gmail.com>$ $Date: 13-04-2013$
@@ -36,7 +36,7 @@ else
     throwerror('wrongDim','ellipsoid must be of dimension 2 or 3');
 end
 if nargout>1
-    [dirMat, fVec]=fGetGrid(nPoints);
+    [dirMat, fMat]=fGetGrid(nPoints);
 else
     dirMat=fGetGrid(nPoints);
 end

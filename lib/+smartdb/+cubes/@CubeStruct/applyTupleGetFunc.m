@@ -22,6 +22,7 @@ function varargout=applyTupleGetFunc(self,varargin)
 %   funcOutNArr: <typeN>[] - array corresponding to the last output of the
 %       applied function
 %
+%
 % Notes: this function currently has a lots of limitations:
 %   1) the function is applies to SData part of field value
 %   2) no additional arguments can be passed

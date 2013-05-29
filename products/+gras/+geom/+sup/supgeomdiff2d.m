@@ -40,6 +40,7 @@ end
 %
 sMat=lMat./repmat(rhoDiffVec,nDims,1);
 indMat=convhulln(sMat.');
+% plot(sMat(1,indMat),sMat(2,indMat));
 indFaceLengthVec=indMat(:,2)-indMat(:,1);
 isNegVec=indFaceLengthVec<0;
 indFaceLengthVec(isNegVec)=nDirs+indFaceLengthVec(isNegVec);

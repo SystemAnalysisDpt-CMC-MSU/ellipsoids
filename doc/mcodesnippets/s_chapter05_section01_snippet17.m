@@ -1,5 +1,5 @@
 % ellipsoid defined by squeezing the ellipsoid ellMat(2, 2)
-fourthEllObj = shape(ellMat(2, 2), 0.4);  
+fourthEllObj = ellMat(2, 2).getShape(0.4);  
 % check if the geometric difference firstEllObj - fourthEllObj is nonempty
 firstEllObj >= fourthEllObj  
 % 
