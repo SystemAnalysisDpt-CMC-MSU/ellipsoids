@@ -16,78 +16,87 @@ classdef EllTubePlotPropTest < mlunitext.test_case
             
             mlunitext.assert(all(isOkVec));
             
-            function isOk = checkPropsTuple(numberTuple)
+            function isOk = checkPropsTuple(indTuple)
                 
-                lsGoodDirString = vecToStr(rel.lsGoodDirVec{numberTuple});
-                lsGoodDirMinusString = ...
-                    vecToStr(-rel.lsGoodDirVec{numberTuple});
+                lsGoodDirString = vecToStr(rel.lsGoodDirVec{indTuple});
+                lsGoodDirNegString = ...
+                    vecToStr(-rel.lsGoodDirVec{indTuple});
                 
-                isColAndAlphaVec = getIsColorAndAlpha(handleVec,...
-                    lsGoodDirString);
-                isLineWidthVec = getIsLineWidth(handleVec,...
-                    lsGoodDirString, lsGoodDirMinusString);
-                
+                posHandleVec = getDirHandle(handleVec, lsGoodDirString);
+                negHandleVec = getDirHandle(handleVec, lsGoodDirNegString);
+                                 
+                colAndAlphaHandleVec = getColorAndAlphaHandle(posHandleVec);
+                lineWidthHandleVec = getLineWidthHandle([posHandleVec,...
+                    negHandleVec]);
+                 
                 isOkColor = checkOneProperty('FaceVertexCData', fColor,...
-                    colorFieldList, isColAndAlphaVec, numberTuple);
+                    colorFieldList, colAndAlphaHandleVec, indTuple);
                 isOkTrans = checkOneProperty('FaceAlpha', fTrans,...
-                    transFieldList, isColAndAlphaVec, numberTuple);
+                    transFieldList, colAndAlphaHandleVec, indTuple);
                 isOkLineWidth = checkOneProperty('lineWidth', fLineWidth,...
-                    lineWidthFieldList, isLineWidthVec, numberTuple);
+                    lineWidthFieldList, lineWidthHandleVec, indTuple);
                 
                 isOk = all([isOkColor, isOkTrans, isOkLineWidth]);
                 
             end
             
             function isOk = checkOneProperty(propNameString, fProp,...
-                    propFieldList, indProp, numberTuple)
+                    propFieldList, handlePropVec, indTuple)
                 argList = arrayfun(@(x)(rel.(propFieldList{x})),...
                     1 : numel(propFieldList), 'UniformOutput', false);
-                for iArg = 1 : numel(argList)
-                    if ~iscell(argList{iArg})
-                        argList{iArg} = num2cell(argList{iArg});
-                    end
-                end
-                argList = arrayfun(@(x)(argList{x}{numberTuple}),...
-                    1 : numel(argList), 'UniformOutput', false);
+                argList  = cellfun(@(x)getArgByIndTuple(x, indTuple),...
+                    argList, 'UniformOutput', false);
                 
                 propValue = fProp(argList{:});
-                plotPropValue = get(handleVec(indProp),...
+                plotPropValue = get(handlePropVec,...
                     propNameString);
             
-                isOk = compareProps(propNameString, propValue, plotPropValue);
+                isOk = compareProps(propNameString, propValue,...
+                    plotPropValue);
+                function arg = getArgByIndTuple(argVec, indTuple)
+                    if ~iscell(argVec)
+                        arg = argVec(indTuple);
+                    else
+                        arg = argVec{indTuple};
+                    end
+                end
             end
             
-            function isOkProp = compareProps(propNameString, propValue, plotPropValue)
+            function isOkProp = compareProps(propNameString, propValue,...
+                    plotPropValue)
                 if strcmp('lineWidth', propNameString)
-                    isOkLineWidthVec = arrayfun(@(x)(plotPropValue{x} == propValue),...
-                        1 : numel(plotPropValue));
+                    isOkLineWidthVec = arrayfun(@(x)(plotPropValue{x}...
+                        == propValue), 1 : numel(plotPropValue));
                     isOkProp = all(isOkLineWidthVec);
                 else
                     nRows = size(plotPropValue, 1);
-                    isOkProp = isequal(plotPropValue, repmat(propValue, nRows, 1));
+                    isOkProp = isequal(plotPropValue,...
+                        repmat(propValue, nRows, 1));
                 end
             end
             
-            function isLineWidthVec = getIsLineWidth(handleVec,...
-                    lsGoodDirString, lsGoodDirMinusString)
-                isLineWidthVec = cellfun(@(x)(((~isempty(strfind(x,...
-                    lsGoodDirString))) || (~isempty(strfind(x,...
-                    lsGoodDirMinusString)))) && (~isempty(strfind(x, 'curve')))),...
-                    get(handleVec, 'DisplayName'));
+            function dirHandleVec = getDirHandle(handleVec,...
+                    lsGoodDirString)
+                isDirHandleVec = cellfun(@(x)(~isempty(strfind(x,...
+                    lsGoodDirString))), get(handleVec, 'DisplayName'));
+                dirHandleVec = handleVec(isDirHandleVec);
             end
             
-            function isColorAndAlphaVec = getIsColorAndAlpha(handleVec,...
-                lsGoodDirStr)
-                isColorAndAlphaVec = cellfun(@(x)((~isempty(strfind(x,...
-                    lsGoodDirStr))) && (~isempty(strfind(x, 'Reach')))),...
-                    get(handleVec, 'DisplayName'));
+            function lineWidthHandleVec = getLineWidthHandle(handleVec)
+                isLineWidthVec = cellfun(@(x)(~isempty(strfind(x,...
+                    'curve'))), get(handleVec, 'DisplayName'));
+                lineWidthHandleVec = handleVec(isLineWidthVec);
+            end
+            
+            function colorAndAlphaHandleVec =...
+                    getColorAndAlphaHandle(handleVec)
+                isColorAndAlphaVec = cellfun(@(x)(~isempty(strfind(x,...
+                    'Reach'))), get(handleVec, 'DisplayName'));
+                colorAndAlphaHandleVec = handleVec(isColorAndAlphaVec);
             end
             
             function lsGoodDirStr = vecToStr(lsGoodDirVec)
-                lsGoodDirStr = num2str(lsGoodDirVec', '%g;');
-                lsGoodDirStr =...
-                    ['lsGoodDirVec=[' lsGoodDirStr(1 : end - 1) ']'];
-                lsGoodDirStr = lsGoodDirStr(~isspace(lsGoodDirStr));
+                lsGoodDirStr=['lsGoodDirVec=' mat2str(lsGoodDirVec, 5)];
             end
         end
      end
@@ -111,7 +120,7 @@ classdef EllTubePlotPropTest < mlunitext.test_case
                 if nargin < 2
                     nTubes=1;
                 end
-                lsGoodDirVec = [1; 0];
+                lsGoodDirVec = [sin(1); cos(1)];
                 qMat = eye(nDims);
                 QArrayList = repmat({repmat(qMat, [1, 1, nPoints])}, 1,...
                     nTubes);
@@ -128,18 +137,28 @@ classdef EllTubePlotPropTest < mlunitext.test_case
                 approxType = gras.ellapx.enums.EApproxType.External;
                 rel.unionWith(create());
                 %
+                lsGoodDirVec = [cos(2); sin(2)];
+                qMat = diag([1, 2]);
+                QArrayList = repmat({repmat(qMat,[1, 1, nPoints])}, 1,...
+                    nTubes);
+                rel.unionWith(create());
+                %
                 projSpaceList = {[1 0; 0 1].'};
                 %
                 projType = gras.ellapx.enums.EProjType.Static;
-                relStatProj = rel.project(projType,projSpaceList,@fGetProjMat);
+                relStatProj = ...
+                    rel.project(projType,projSpaceList,@fGetProjMat);
                 %
-                projType = gras.ellapx.enums.EProjType.DynamicAlongGoodCurve;
-                relDynProj = rel.project(projType,projSpaceList,@fGetProjMat);
+                projType =...
+                    gras.ellapx.enums.EProjType.DynamicAlongGoodCurve;
+                relDynProj = rel.project(projType,...
+                    projSpaceList,@fGetProjMat);
                 function [projOrthMatArray, projOrthMatTransArray] =...
                         fGetProjMat(projMat, timeVec, varargin)
                     nTimePoints = length(timeVec);
                     projOrthMatArray = repmat(projMat, [1, 1, nTimePoints]);
-                    projOrthMatTransArray = repmat(projMat.', [1,1,nTimePoints]);
+                    projOrthMatTransArray = repmat(projMat.',...
+                        [1,1,nTimePoints]);
                 end
                 function rel = create()
                     ltGoodDirArray=repmat(lsGoodDirVec,[1,nTubes,nPoints]);
@@ -179,8 +198,7 @@ classdef EllTubePlotPropTest < mlunitext.test_case
         end
         function auxCheckPlotProp(self, rel, fColor, fLineWidth,...
                 fTrans, colorFieldList, lineWidthFieldList,...
-                transFieldList,...
-                passedArgList)
+                transFieldList, passedArgList)
             import gras.ellapx.enums.EApproxType;
             import modgen.common.parseparext;
 
@@ -196,8 +214,8 @@ classdef EllTubePlotPropTest < mlunitext.test_case
             fExpTrans = @fTransByParam;
             fExpColor = @fColorByParam;
             fExpLineWidth = @fLineWidthByParam;
-            expColorFieldList = {'ltGoodDirMat','QArray'}; 
-            expTransFieldList = {'sTime','ltGoodDirMat','QArray'};
+            expColorFieldList = {'aMat', 'QArray', 'timeVec'};
+            expTransFieldList = {'sTime','aMat','QArray'};
             expLineWidthFieldList = {'timeVec','aMat','sTime'};
             
             passedArgList = {'fGetColor', fExpColor,... 
@@ -211,22 +229,11 @@ classdef EllTubePlotPropTest < mlunitext.test_case
                 expTransFieldList,...
                 passedArgList);
             
-            function Trans = fTransByParam(ltGoodDirMat, sTime, QArray)
-                sumNorm = norm(ltGoodDirMat) + norm(sTime) + norm(QArray(:, :, 1));
+            function Trans = fTransByParam(aMat, sTime, QArray)
+                sumNorm = norm(aMat) + norm(sTime) +...
+                    norm(QArray(:, :, 1));
                 Trans = (mod(round(sumNorm), 9) + 1)/...
                     (mod(round(sumNorm), 9) + 2);
-            end
-            function colorVec = fColorByParam(ltGoodDirMat, QArray)
-                sumNorm = norm(ltGoodDirMat) + norm(QArray(:, :, 1));
-                modSumNorm = mod(round(sumNorm), 3) + 1;
-                switch modSumNorm
-                    case 1
-                        colorVec = [1, 0, 0];
-                    case 2
-                        colorVec = [0, 1, 0];
-                    case 3
-                        colorVec = [0, 0, 1];
-                end
             end
             function lineWidth = fLineWidthByParam(timeVec, aMat, sTime)
                 sumNorm = norm(timeVec) + norm(aMat) + norm(sTime);
@@ -293,21 +300,7 @@ classdef EllTubePlotPropTest < mlunitext.test_case
                 fExpLineWidth, fExpTrans, expColorFieldList,...
                 expLineWidthFieldList, expTransFieldList,...
                 passedArgList);
-            
-            function colorVec = fColorByParam(aMat, QArray, timeVec)
-                sumNorm = norm(aMat) + norm(QArray(:, :, 1)) + norm(timeVec);
-                modSumNorm = mod(round(sumNorm), 4) + 1;
-                switch modSumNorm
-                    case 1
-                        colorVec = [1, 0, 0];
-                    case 2
-                        colorVec = [0, 1, 0];
-                    case 3
-                        colorVec = [0, 0, 1];
-                    case 4
-                        colorVec = [1, 1, 0];
-                end
-            end
+
         end
         
         function  testPlotAllDefault(self)
@@ -330,3 +323,18 @@ classdef EllTubePlotPropTest < mlunitext.test_case
     end
 end
 
+function colorVec = fColorByParam(aMat, QArray, timeVec)
+    sumNorm = norm(aMat) + norm(QArray(:, :, 1)) +...
+        norm(timeVec);
+    modSumNorm = mod(round(sumNorm), 4) + 1;
+    switch modSumNorm
+        case 1
+            colorVec = [1, 0, 0];
+        case 2
+            colorVec = [0, 1, 0];
+        case 3
+            colorVec = [0, 0, 1];
+        case 4
+            colorVec = [1, 1, 0];
+    end
+end

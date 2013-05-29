@@ -3,15 +3,42 @@ classdef ReachPlotTestCase < mlunitext.test_case
     properties (Access=private)
         reachObj
     end
+    methods(Access = private)
+        function getPlotAndCheck(self, passedArgList, fColor,...
+                fLineWidth, fTrans, colorFieldList, lineWidthFieldList,...
+                transFieldList, namePlot)
+            import gras.ellapx.enums.EApproxType;
+            
+            if strcmp(namePlot, 'plot_ia')
+                approxType = EApproxType.Internal;
+            else
+                approxType = EApproxType.External;
+            end
+            
+            plObj = feval(namePlot, self.reachObj, passedArgList{:});
+            relByAppType = getTupleByApproxType(self, approxType);
+            
+            gras.ellapx.smartdb.test.mlunit.EllTubePlotPropTest...
+                .checkPlotProp(relByAppType, plObj, fColor, fLineWidth,...
+                fTrans, colorFieldList, lineWidthFieldList, transFieldList)
+            function relByAppType = getTupleByApproxType(self, approxType)
+                import gras.ellapx.smartdb.F;
+                APPROX_TYPE = F.APPROX_TYPE;
+                ellTubeRel = self.reachObj.getEllTubeRel();
+                relByAppType = ellTubeRel.getTuplesFilteredBy(...
+                       APPROX_TYPE, approxType);
+                
+            end
+        end
+    end
     
     methods
         function self = ReachPlotTestCase(varargin)
             self = self@mlunitext.test_case(varargin{:});
-%             self.reachObj = getReach();
         end
         
-        function set_up(self)
-            self.reachObj = getReach();
+        function set_up_param(self, reachFactObj)
+            self.reachObj = reachFactObj.createInstance();
         end
         
         function self = tear_down(self,varargin)
@@ -53,15 +80,8 @@ classdef ReachPlotTestCase < mlunitext.test_case
         end
         
         function checkPlot(self, namePlot)
-            import gras.ellapx.enums.EApproxType;
             import gras.ellapx.smartdb.test.mlunit.EllTubePlotPropTest
-            
-            if strcmp(namePlot, 'plot_ia')
-                approxType = EApproxType.Internal;
-            else
-                approxType = EApproxType.External;
-            end
-            
+
             colorFieldList = {'approxType'};
             lineWidthFieldList = {'approxType'};
             transFieldList = {'approxType'};
@@ -71,62 +91,40 @@ classdef ReachPlotTestCase < mlunitext.test_case
             checkPlotSemiDefault()
             
             function checkPlotAdvance()
-                plObj = feval(namePlot, self.reachObj, 'color',...
-                    [1, 0, 0], 'width', 3, 'shade', 0.9);
-                tuple = getTupleByApproxType(self, approxType);
-                fColor = @(approxType)deal([1, 0, 0]);
-                fLineWidth = @(approxType)deal(3);
-                fTrans = @(approxType)deal(0.9);
+                passedArgList = {'color', [1, 0, 0], 'width', 3,...
+                    'shade', 0.9};
+                fColor = @(approxType)([1, 0, 0]);
+                fLineWidth = @(approxType)(3);
+                fTrans = @(approxType)(0.9);
 
-                gras.ellapx.smartdb.test.mlunit.EllTubePlotPropTest...
-                    .checkPlotProp(tuple, plObj, fColor, fLineWidth, fTrans,...
-                    colorFieldList, lineWidthFieldList, transFieldList)
+                getPlotAndCheck(self, passedArgList, fColor,...
+                    fLineWidth, fTrans, colorFieldList,...
+                    lineWidthFieldList, transFieldList, namePlot)
             end
             
             function checkPlotDefault()
-                
-                plObj = feval(namePlot, self.reachObj);
-                tuple = getTupleByApproxType(self, approxType);
+                passedArgList = {};
                 fColor = @(approxType)getColorDefault(self, approxType);
-                fLineWidth = @(approxType)deal(2);
+                fLineWidth = @(approxType)(2);
                 fTrans = @(approxType)getAlphaDefault(self, approxType);
 
-                gras.ellapx.smartdb.test.mlunit.EllTubePlotPropTest...
-                    .checkPlotProp(tuple, plObj, fColor, fLineWidth, fTrans,...
-                    colorFieldList, lineWidthFieldList, transFieldList)
+                getPlotAndCheck(self, passedArgList, fColor,...
+                    fLineWidth, fTrans, colorFieldList,...
+                    lineWidthFieldList, transFieldList, namePlot)
             end
             
             function checkPlotSemiDefault()
-                plObj = feval(namePlot, self.reachObj, 'color',...
-                    [1, 0, 0]);
-                tuple = getTupleByApproxType(self, approxType);
-                fColor = @(approxType)deal([1, 0, 0]);
-                fLineWidth = @(approxType)deal(2);
+                passedArgList = {'color', [1, 0, 0]};
+                fColor = @(approxType)([1, 0, 0]);
+                fLineWidth = @(approxType)(2);
                 fTrans = @(approxType)getAlphaDefault(self, approxType);
-
-                gras.ellapx.smartdb.test.mlunit.EllTubePlotPropTest...
-                    .checkPlotProp(tuple, plObj, fColor, fLineWidth, fTrans,...
-                    colorFieldList, lineWidthFieldList, transFieldList)
-            end
-            
-            function tuple = getTupleByApproxType(self, approxType)
-                import gras.ellapx.smartdb.F;
-                APPROX_TYPE = F.APPROX_TYPE;
-                ellTubeRel = self.reachObj.getEllTubeRel();
-                tuple = ellTubeRel.getTuplesFilteredBy(...
-                       APPROX_TYPE, approxType);
                 
+                getPlotAndCheck(self, passedArgList, fColor,...
+                    fLineWidth, fTrans, colorFieldList,...
+                    lineWidthFieldList, transFieldList, namePlot)
             end
+
         end
     end   
 end
-
-function reachObj = getReach()
-    import elltool.reach.ReachFactory;
-    crm = gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
-    crmSys = gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
-    reachFactObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
-    reachObj = reachFactObj.createInstance();
-end
-     
        
