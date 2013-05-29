@@ -34,6 +34,9 @@ classdef AReach < elltool.reach.IReach
         isBackward
         projectionBasisMat
         ellTubeRel
+        isRegEnabled
+        isJustCheck
+        regTol
     end
     %
     properties (Constant, Access = private)
@@ -151,7 +154,8 @@ classdef AReach < elltool.reach.IReach
             %             and Computer Science,
             %             System Analysis Department 2013 $
             %
-            [absTolArr,absTolVal]=rsArr.getProperty('absTol',varargin{:});
+            [absTolArr, absTolVal] = elltool.reach.AReach.getProperty(...
+                rsArr, 'absTol', varargin{:});
             
         end
         %
@@ -179,7 +183,7 @@ classdef AReach < elltool.reach.IReach
             %             System Analysis Department 2012 $
             %
             nPlot2dPointsArr =...
-                elltool.reach.ReachDiscrete.getProperty(rsArr,'nPlot2dPoints');
+                elltool.reach.AReach.getProperty(rsArr, 'nPlot2dPoints');
         end
         %
         function nPlot3dPointsArr = getNPlot3dPoints(rsArr)
@@ -205,7 +209,7 @@ classdef AReach < elltool.reach.IReach
             %             System Analysis Department 2012 $
             %
             nPlot3dPointsArr =...
-                elltool.reach.ReachDiscrete.getProperty(rsArr,'nPlot3dPoints');
+                elltool.reach.AReach.getProperty(rsArr, 'nPlot3dPoints');
         end
         %
         function nTimeGridPointsArr = getNTimeGridPoints(rsArr)
@@ -232,7 +236,7 @@ classdef AReach < elltool.reach.IReach
             %             System Analysis Department 2012 $
             %
             nTimeGridPointsArr =...
-                elltool.reach.ReachDiscrete.getProperty(rsArr,'nTimeGridPoints');
+                elltool.reach.AReach.getProperty(rsArr, 'nTimeGridPoints');
         end
         %
         function [relTolArr, relTolVal] = getRelTol(rsArr, varargin)
@@ -269,7 +273,8 @@ classdef AReach < elltool.reach.IReach
             %             and Computer Science,
             %             System Analysis Department 2013 $
             %
-            [relTolArr,relTolVal]=rsArr.Property('relTol',varargin{:});
+            [relTolArr, relTolVal] = elltool.reach.AReach.getProperty(...
+                rsArr, 'relTol', varargin{:});
         end
         %
         function outStrCMat = getStrCMat(inpMat)
@@ -477,7 +482,7 @@ classdef AReach < elltool.reach.IReach
                     self.ellTubeRel.getTuplesFilteredBy(...
                     APPROX_TYPE, approxType);
             else
-                localEllTubeRel = self.ellTubeRel;
+                localEllTubeRel = self.ellTubeRel.getCopy();
             end
             if nargin == 4
                 localEllTubeRel.scale(@(x) scaleFactor, {APPROX_TYPE});
@@ -559,9 +564,10 @@ classdef AReach < elltool.reach.IReach
             end
             %
             if self.isProj
-                if self.ellTubeRel.dim() > 3
-                    throwerror('wrongData',...
-                        'Dimension of the projection must be leq 3');
+                [~, dim] = self.dimension();
+                if dim < 2 || dim > 3
+                    throwerror('wrongInput',...
+                        'Dimension of projection must be 2 or 3.');
                 else
                     plObj = smartdb.disp.RelationDataPlotter();
                     plotter = self.ellTubeRel.getTuplesFilteredBy(...
@@ -569,16 +575,9 @@ classdef AReach < elltool.reach.IReach
                         'fGetTubeColor', @(x) deal(colorVec, shade));
                 end
             else
-                if self.dimension() > 2
-                    projBasisMat = eye(self.dimension(), 2);
-                else
-                    projBasisMat = eye(self.dimension());
-                end
                 plObj = smartdb.disp.RelationDataPlotter();
-                projSetObj = self.getProjSet(projBasisMat,...
-                    approxType, scaleFactor);
-                plotter = projSetObj.plot(plObj, 'fGetTubeColor',...
-                    @(x) deal(colorVec, shade));
+                plotter = self.ellTubeRel.getTuplesFilteredBy(...
+                    APPROX_TYPE, approxType).plot(plObj);
             end
             %
             function setPlotParams(ColorOpt)
@@ -654,6 +653,14 @@ classdef AReach < elltool.reach.IReach
                 throwerror('wrongInput', ['time interval must be ',...
                     'specified as ''[t0 t1]'', or, in ',...
                     'discrete-time - as ''[k0 k1]''.']);
+            end
+            regTolerance = elltool.conf.Properties.getRegTol();
+            [reg, ~, self.isRegEnabled, self.isJustCheck, self.regTol] =...
+                modgen.common.parseparext(varargin,...
+                {'isRegEnabled', 'isJustCheck', 'regTol';...
+                false, false, regTolerance});
+            if ~isempty(reg)
+                throwerror('wrongInput', 'wrong input arguments format.');
             end
         end
         %
@@ -1096,30 +1103,12 @@ classdef AReach < elltool.reach.IReach
         %
         function eaPlotter = plot_ea(self, varargin)
             import gras.ellapx.enums.EApproxType;
-            if nargin == 1
-                eaPlotter =...
-                    self.plotApprox(EApproxType.External);
-            elseif nargin == 2
-                eaPlotter =...
-                    self.plotApprox(EApproxType.External, varargin{1});
-            elseif nargin == 3
-                eaPlotter = self.plotApprox(EApproxType.External,...
-                    varargin{1}, varargin{2});
-            end
+            eaPlotter = self.plotApprox(EApproxType.External, varargin{:});
         end
         %
         function iaPlotter = plot_ia(self, varargin)
             import gras.ellapx.enums.EApproxType;
-            if nargin == 1
-                iaPlotter =...
-                    self.plotApprox(EApproxType.Internal);
-            elseif nargin == 2
-                iaPlotter =...
-                    self.plotApprox(EApproxType.Internal, varargin{1});
-            elseif nargin == 3
-                iaPlotter = self.plotApprox(EApproxType.Internal,...
-                    varargin{1}, varargin{2});
-            end
+            iaPlotter = self.plotApprox(EApproxType.Internal, varargin{:});
         end
         %
         function self = refine(self, l0Mat)
@@ -1195,19 +1184,39 @@ classdef AReach < elltool.reach.IReach
                 end
                 switchTimeVec = self.switchSysTimeVec;
                 cutObj.ellTubeRel = cutObj.ellTubeRel.cut(cutTimeVec);
-                switchTimeIndVec = ...
-                    switchTimeVec > cutTimeVec(1) & ...
-                    switchTimeVec < cutTimeVec(end);
-                cutObj.switchSysTimeVec = [cutTimeVec(1) ...
-                    switchTimeVec(switchTimeIndVec) cutTimeVec(end)];
-                firstIntInd = find(switchTimeIndVec == 1, 1);
-                if ~isempty(firstIntInd)
-                    switchTimeIndVec(firstIntInd - 1) = 1;
+                %
+                if abs(cutTimeVec(1) - cutTimeVec(end)) <= self.absTol
+                    cutObj.switchSysTimeVec = cutTimeVec(1);
+                    indCutPointVec = switchTimeVec < cutTimeVec(1) &...
+                        cutTimeVec(1) <= switchTimeVec;
+                    cutObj.linSysCVec = self.linSysCVec(indCutPointVec);
                 else
-                    switchTimeIndVec(find(switchTimeVec >= ...
-                        cutTimeVec(end), 1) - 1) = 1;
+                    switchTimeIndVec =...
+                        switchTimeVec > cutTimeVec(1) &...
+                        switchTimeVec < cutTimeVec(end);
+                    newSwitchSysTimeVec = [cutTimeVec(1)...
+                        switchTimeVec(switchTimeIndVec) cutTimeVec(end)];
+                    cutObj.switchSysTimeVec = newSwitchSysTimeVec;
+                    if self.isbackward()
+                        cutObj.switchSysTimeVec =...
+                            fliplr(cutObj.switchSysTimeVec);
+                    end
+                    firstIntInd = find(switchTimeIndVec == 1, 1);
+                    if ~isempty(firstIntInd)
+                        switchTimeIndVec(firstIntInd - 1) = 1;
+                    else
+                        firstGreaterInd =...
+                            find(switchTimeVec > cutTimeVec(end), 1);
+                        if ~isempty(firstGreaterInd)
+                            switchTimeIndVec(firstGreaterInd - 1) = 1;
+                        else
+                            switchTimeIndVec(end - 1) = 1;
+                        end
+                    end
+                    cutObj.linSysCVec =...
+                        self.linSysCVec(switchTimeIndVec(1 : end - 1));
                 end
-                cutObj.linSysCVec = cutObj.linSysCVec(switchTimeIndVec);
+                %
                 cutObj.isCut = true;
             end
         end
