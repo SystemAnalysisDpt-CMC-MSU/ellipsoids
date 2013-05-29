@@ -1387,26 +1387,16 @@ classdef EllipsoidTestCase < mlunitext.test_case
             shapeMatCVec{3} = [3 1; 1 2];
             centerCVec{4} = [1 0 0 0]';
             shapeMatCVec{4} = diag([3 2 1 0]);
-            for index = 1 : 4
-                ellVec(index) = ellipsoid(centerCVec{index}, shapeMatCVec{index});
-                transposedCenterCVec{index} = centerCVec{index}';
+            for iElem = 1 : 4
+                ellVec(iElem) = ellipsoid(centerCVec{iElem}, shapeMatCVec{iElem});
+                transposedCenterCVec{iElem} = centerCVec{iElem}';
             end
             SEllVec = struct('a', transposedCenterCVec, 'Q', shapeMatCVec);
-            obtainedEllStruct = ellVec(1).toStruct();
-            isOk = isEqual(obtainedEllStruct, SEllVec(1));
-            obtainedEllStructVec = ellVec.toStruct();
-            for index = 1 : 4
-                isOk = isOk && isEqual(obtainedEllStructVec(index), ...
-                                       SEllVec(index)); 
-            end
-               
+            ObtainedEllStruct = ellVec(1).toStruct();
+            isOk = isequal(ObtainedEllStruct, SEllVec(1));
+            ObtainedEllStructVec = ellVec.toStruct();
+            isOk = isOk && isequal(ObtainedEllStructVec, SEllVec);
             mlunitext.assert_equals(true, isOk);
-            
-            function isEq = isEqual(SEll1, SEll2)
-                isEq = all(SEll1.a == SEll2.a);
-                compMat = SEll1.Q == SEll2.Q;
-                isEq = isEq && all(compMat(:));
-            end
         end
     end
 end

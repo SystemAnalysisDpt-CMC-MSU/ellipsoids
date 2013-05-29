@@ -220,6 +220,7 @@ classdef hyperplane < handle
     end
     methods (Static)
         checkIsMe(someObj)
+        hpObj = fromStruct(SHpObj)
     end
 end
 %

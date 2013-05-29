@@ -285,14 +285,14 @@ classdef HyperplaneTestCase < mlunitext.test_case
             shiftCVec{3} = 1;
             normalCVec{4} = [1 0 0 0]';
             shiftCVec{4} = 5;
-            for index = 1 : 4
-                hpVec(index) = hyperplane(normalCVec{index}, shiftCVec{index});
+            for iElem = 1 : 4
+                hpVec(iElem) = hyperplane(normalCVec{iElem}, shiftCVec{iElem});
             end
             SHpVec = cellfun(@auxToStruct, normalCVec, shiftCVec);
-            obtainedHpStruct = hpVec(1).toStruct();
-            isOk = isEqual(obtainedHpStruct, SHpVec(1));
-            obtainedHpStructVec = hpVec.toStruct();
-            isOk = isOk && all(arrayfun(@isEqual, obtainedHpStructVec, SHpVec));
+            ObtainedHpStruct = hpVec(1).toStruct();
+            isOk = isEqual(ObtainedHpStruct, SHpVec(1));
+            ObtainedHpStructVec = hpVec.toStruct();
+            isOk = isOk && all(arrayfun(@isEqual, ObtainedHpStructVec, SHpVec));
                
             mlunitext.assert_equals(true, isOk);
             

@@ -1,4 +1,4 @@
-function isEqualArr = isEqual(ell1Arr, ell2Arr)
+function isEqualArr = isEqual(ell1Arr, ell2Arr, varargin)
 % ISEQUAL - produces logical array the same size as
 %           ell1Arr/ell1Arr (if they have the same).
 %           isEqualArr[iDim1, iDim2,...] is true if corresponding
@@ -11,7 +11,9 @@ function isEqualArr = isEqual(ell1Arr, ell2Arr)
 %           of ellipsoids.
 %       ell2Arr: ellipsoid[nDim1, nDim2,...] - multidimensional array
 %           of ellipsoids.
-%
+%   properties:
+%       'isPropIncluded': makes to compare second value properties, such as
+%       absTol etc.
 % Output:
 %   isEqualArr: logical[nDim1, nDim2,...] - multidimension array of
 %       logical values. isEqualArr[iDim1, iDim2,...] is true if
@@ -37,10 +39,12 @@ import modgen.common.throwerror;
 if ~all(size(ell1Arr) == size(ell2Arr))
     throwerror('wrongInput', 'dimensions must be the same.');
 end
+[reg,isSpecVec,isPropIncluded] = ...
+           modgen.common.parseparext(varargin, {'isPropIncluded'; false});
 %
-isEqualArr = arrayfun(@(x, y) fSingleComp(x, y), ell1Arr, ell2Arr);
+isEqualArr = arrayfun(@(x, y) fSingleComp(x, y, isPropIncluded), ell1Arr, ell2Arr);
 %
-    function isEq = fSingleComp(firstEll, secondEll)
+    function isEq = fSingleComp(firstEll, secondEll, isPropIncluded)
         isEq = firstEll.dimension() == secondEll.dimension();
         if isEq
             isEq = false;
@@ -52,6 +56,13 @@ isEqualArr = arrayfun(@(x, y) fSingleComp(x, y), ell1Arr, ell2Arr);
                 isEq =...
                     norm(firstCenterVec - secondCenterVec) <= relTol &&...
                     norm(firstShapeMat - secondShapeMat) <= relTol;
+                if (isPropIncluded)
+                    isEq = isEq && ...
+                        firstEll.nPlot2dPoints == secondEll.nPlot2dPoints &&...
+                        firstEll.nPlot3dPoints == secondEll.nPlot3dPoints &&...
+                        firstEll.absTol == secondEll.absTol &&...
+                        firstEll.relTol == secondEll.relTol;
+                end
             end
             if firstEll.isempty() && secondEll.isempty()
                 isEq = true;

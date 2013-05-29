@@ -1,4 +1,4 @@
-function ShpArr = toStruct(hpArr)
+function [SDataArr, SFieldNiceNames, SFieldDescr] = toStruct(hpArr, isPropIncluded)
 % toStruct -- converts hyperplanes array into structural array.
 %
 % Input:
@@ -27,11 +27,25 @@ function ShpArr = toStruct(hpArr)
 %             Faculty of Computational Mathematics
 %             and Computer Science,
 %             System Analysis Department 2013 $
-
-    ShpArr = arrayfun(@hp2Struct, hpArr);
+    if (nargin < 2)
+        isPropIncluded = false;
+    end
+    SDataArr = arrayfun(@(hpObj)hp2Struct(hpObj, isPropIncluded), hpArr);
+    if (isPropIncluded) 
+        SFieldNiceNames = struct('normal', 'normal', 'shift', 'shift',...
+                                 'absTol', 'absTol');
+        SFieldDescr = struct('normal', 'Hyperplane normal.',...
+                             'shift', 'Hyperplane shift along normal from origin.',...
+                             'absTol', 'Absolute tolerance.');
+                             
+    else
+        SFieldNiceNames = struct('normal', 'normal', 'shift', 'shift');
+        SFieldDescr = struct('normal', 'Hyperplane normal.',...
+                             'shift', 'Hyperplane shift along normal from origin.');
+    end
 end
 
-function SHp = hp2Struct(hpObj)
+function SHp = hp2Struct(hpObj, isPropIncluded)
 
 [hpNormVec, hpScal] = parameters(hpObj);
 
@@ -42,7 +56,10 @@ if hpScal < 0
     hpScal = -hpScal;
     hpNormVec = -hpNormVec;
 end
-
-SHp = struct('normal', hpNormVec, 'shift', hpScal);
+if (isPropIncluded)
+    SHp = struct('normal', hpNormVec, 'shift', hpScal, 'absTol', hpObj.absTol);
+else
+    SHp = struct('normal', hpNormVec, 'shift', hpScal);
+end
 
 end
