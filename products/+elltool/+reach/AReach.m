@@ -272,10 +272,6 @@ classdef AReach < elltool.reach.IReach
             [relTolArr,relTolVal]=rsArr.Property('relTol',varargin{:});
         end
         %
-        function switchTimeVec = getSwitchTimeVec(self)
-            switchTimeVec = self.switchSysTimeVec;
-        end
-        %
         function outStrCMat = getStrCMat(inpMat)
             outStrCMat =...
                 arrayfun(@num2str, inpMat, 'UniformOutput', false);
@@ -1300,6 +1296,10 @@ classdef AReach < elltool.reach.IReach
             %
             import gras.ellapx.smartdb.rels.EllUnionTube;
             ellTubeUnionRel = EllUnionTube.fromEllTubes(self.ellTubeRel);
+        end
+        %
+        function switchTimeVec = getSwitchTimeVec(self)
+            switchTimeVec = self.switchSysTimeVec;
         end
         %
         function newReachObj = evolve(self, newEndTime, linSys)
