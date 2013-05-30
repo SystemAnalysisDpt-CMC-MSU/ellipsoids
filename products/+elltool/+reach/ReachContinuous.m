@@ -1407,7 +1407,14 @@ classdef ReachContinuous < elltool.reach.AReach
             %   getEllTubeUnionRel(rsObj);
             %
             import gras.ellapx.smartdb.rels.EllUnionTube;
-            ellTubeUnionRel = EllUnionTube.fromEllTubes(self.ellTubeRel);
+            import gras.ellapx.smartdb.rels.EllUnionTubeStaticProj;
+            if (self.isprojection())
+                ellTubeUnionRel = ...
+                    EllUnionTubeStaticProj.fromEllTubes(self.ellTubeRel);
+            else
+                ellTubeUnionRel = ...
+                    EllUnionTube.fromEllTubes(self.ellTubeRel);
+            end
         end
         %%
         function switchTimeVec = getSwitchTimeVec(self)
