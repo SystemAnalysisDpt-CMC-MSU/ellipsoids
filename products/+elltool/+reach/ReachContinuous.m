@@ -102,6 +102,7 @@ classdef ReachContinuous < elltool.reach.AReach
             import gras.ellapx.lreachplain.GoodDirsContinuousFactory;
             import modgen.common.throwerror;
             %
+            timeVec = [min(timeVec) max(timeVec)];
             goodDirSetObj = GoodDirsContinuousFactory.create(...
                 probDynObj, timeVec(1), l0Mat, calcPrecision);
             if isDisturb
