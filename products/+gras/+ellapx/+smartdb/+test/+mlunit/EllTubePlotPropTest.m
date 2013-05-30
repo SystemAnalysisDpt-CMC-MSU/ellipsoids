@@ -106,6 +106,10 @@ classdef EllTubePlotPropTest < mlunitext.test_case
             self = self@mlunitext.test_case(varargin{:});
         end
         
+        function self = tear_down(self,varargin)
+            close all;
+        end
+        
         function set_up(self)
             nPoints = 10;
             [~, relStatProj, ~] = auxGenTubeAndProjForPlot(nPoints);
