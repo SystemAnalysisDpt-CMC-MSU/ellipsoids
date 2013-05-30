@@ -179,17 +179,6 @@ classdef AMatrixOperations<gras.mat.IMatrixOperations
         function obj=quadraticFormSqrt(self,mMatFunc,xColFunc)
             obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
         end
-        function obj = fromSymbMatrix(self, mCMat)
-            import gras.mat.symb.MatrixSymbFormulaBased;
-            import gras.mat.ConstMatrixFunctionFactory;
-            import gras.mat.symb.iscellofstringconst;
-            %
-            if iscellofstringconst(mCMat)
-                obj = ConstMatrixFunctionFactory.createInstance(mCMat);
-            else
-                obj = MatrixSymbFormulaBased(mCMat);
-            end
-        end
         function obj = rSymbMultiply(self, lCMat, mCMat, rCMat)
             import gras.mat.symb.MatrixSFTripleProd;
             import gras.mat.symb.MatrixSFBinaryProd;
@@ -232,6 +221,19 @@ classdef AMatrixOperations<gras.mat.IMatrixOperations
                     mMat*vVec);
             else
                 obj = MatrixSFBinaryProdByVec(mCMat,vCVec);
+            end
+        end
+    end
+    methods(Static)
+        function obj = fromSymbMatrix(mCMat)
+            import gras.mat.symb.MatrixSymbFormulaBased;
+            import gras.mat.ConstMatrixFunctionFactory;
+            import gras.mat.symb.iscellofstringconst;
+            %
+            if iscellofstringconst(mCMat)
+                obj = ConstMatrixFunctionFactory.createInstance(mCMat);
+            else
+                obj = MatrixSymbFormulaBased(mCMat);
             end
         end
     end

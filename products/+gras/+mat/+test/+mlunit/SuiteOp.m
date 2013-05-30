@@ -54,66 +54,58 @@ classdef SuiteOp < mlunitext.test_case
             end
             isOk = self.isMatVecEq(aSizeVec, bSizeVec);
         end
-        function isOk = isUnaryOpEqual(self, op, argMat, expectedMat, ...
+        %
+        function isOk = isOpEqual(self, opts, expectedMat, timeVec, op, ...
                 varargin)
-            import gras.mat.MatrixFunctionFactory;
+            import gras.mat.AMatrixOperations;
+            import gras.mat.ConstMatrixFunctionFactory;
             %
-            timeVec = -3:3;
-            if nargin > 4
-                if ~isempty(varargin{1})
-                    timeVec = varargin{1};
+            if isempty(timeVec)
+                timeVec = -3:3;
+            end
+            %
+            if ~any(strcmp('symb', opts))
+                argFunCMat = cell(1, nargin-5);
+                for i = 1:nargin-5
+                    if isnumeric(varargin{i})
+                        argFunCMat{i} = ...
+                            ConstMatrixFunctionFactory.createInstance(...
+                            varargin{i});
+                    else
+                        argFunCMat{i} = AMatrixOperations.fromSymbMatrix(...
+                            varargin{i});
+                    end
                 end
-            end
-            %
-            resMatFun = op(MatrixFunctionFactory.createInstance(argMat));
-            resultVec = resMatFun.evaluate(timeVec);
-            %
-            isExpFunc = (size(expectedMat, 3) == 1);
-            if isExpFunc
-                expMatFun = MatrixFunctionFactory.createInstance(...
-                    expectedMat);
-                self.isMatFunSizeEq(resMatFun, expMatFun);
-                expectedVec = expMatFun.evaluate(timeVec);
-                isOk = self.isMatVecEq(resultVec(:), expectedVec(:));
+                isExpFunc = (size(expectedMat, 3) == 1);
             else
-                self.isMatFunSizeEq(resMatFun, expectedMat(:,:,1));
-                isOk = self.isMatVecEq(resultVec(:), expectedMat(:));
-            end
-            mlunitext.assert_equals(isOk, true);
-        end
-        function isOk = isBinaryOpEqual(self, op, arg1Mat, arg2Mat, ...
-                expectedMat, varargin)
-            import gras.mat.MatrixFunctionFactory;
-            %
-            timeVec = -3:3;
-            if nargin > 5
-                if ~isempty(varargin{1})
-                    timeVec = varargin{1};
-                end   
+                argFunCMat = varargin;
+                isExpFunc = true;
             end
             %
-            arg1MatFun = MatrixFunctionFactory.createInstance(arg1Mat);
-            arg2MatFun = MatrixFunctionFactory.createInstance(arg2Mat);
-            resMatFun = op(arg1MatFun, arg2MatFun);
-            %
-            isExpFunc = (size(expectedMat, 3) == 1);
+            resMatFun = op(argFunCMat{:});            
             % ToFix: row splines returns [nxt] vector, while const returns
             % [nx1xt]
             isOk = isEquality();
-            if nargin > 5
-                if any(strcmp('symmetric', varargin))
-                    resMatFun = op(arg2MatFun, arg1MatFun);
-                    isOk = isOk && isEquality();
-                end
-            end
+            %if any(strcmp('symmetric', opts))
+            %    resMatFun = op(argFunCMat{:});
+            %    isOk = isOk && isEquality();
+            %end
             mlunitext.assert_equals(isOk, true);
             %
             function isOk = isEquality()
-                import gras.mat.MatrixFunctionFactory;
+                import gras.mat.AMatrixOperations;
+                import gras.mat.ConstMatrixFunctionFactory;
+                %
                 resultVec = resMatFun.evaluate(timeVec);
                 if isExpFunc
-                    expMatFun = MatrixFunctionFactory.createInstance(...
-                        expectedMat);
+                    if isnumeric(expectedMat)
+                        expMatFun = ...
+                            ConstMatrixFunctionFactory.createInstance(...
+                            expectedMat);
+                    else
+                        expMatFun = ...
+                            AMatrixOperations.fromSymbMatrix(expectedMat);
+                    end
                     self.isMatFunSizeEq(resMatFun, expMatFun);
                     expectedVec = expMatFun.evaluate(timeVec);
                     isOk = self.isMatVecEq(resultVec(:), expectedVec(:));
@@ -122,6 +114,37 @@ classdef SuiteOp < mlunitext.test_case
                     isOk = self.isMatVecEq(resultVec(:), expectedMat(:));
                 end
             end
+        end
+        function isOk = isUnaryOpEqual(self, op, argMat, expectedMat, ...
+                varargin)
+            if nargin > 4
+                timeVec = varargin{1};
+                if nargin > 5
+                    opts = varargin{2:end};
+                else
+                    opts = {};
+                end
+            else
+                timeVec = [];
+                opts = {};
+            end
+            isOk = self.isOpEqual(opts, expectedMat, timeVec, op, argMat);
+        end
+        function isOk = isBinaryOpEqual(self, op, arg1Mat, arg2Mat, ...
+            expectedMat, varargin)
+            if nargin > 5
+                    timeVec = varargin{1};
+                if nargin > 6
+                    opts = varargin{2:end};
+                else
+                    opts = {};
+                end
+            else
+                timeVec = [];
+                opts = {};
+            end
+            isOk = self.isOpEqual(opts, expectedMat, timeVec, op, ...
+                arg1Mat, arg2Mat);
         end
         function runTestsForFactory(self, factory)
             import gras.gen.matdot;
@@ -354,11 +377,11 @@ classdef SuiteOp < mlunitext.test_case
             self.isMatFunSizeEq(asqMatFun, asqMat);
             %
             atCMat = {'t', '0'; '0', 't'; '0', '0'};
-            atMatFun = MatrixFunctionFactory.createInstance(atCMat);
+            atMatFun = AMatrixOperations.fromSymbMatrix(atCMat);
             self.isMatFunSizeEq(atMatFun, atCMat);
             %
             asqtCMat = {'cos(t)', '-sin(t)'; 'sin(t)', 'cos(t)'};
-            asqtMatFun = MatrixFunctionFactory.createInstance(asqtCMat);
+            asqtMatFun = AMatrixOperations.fromSymbMatrix(asqtCMat);
             self.isMatFunSizeEq(asqtMatFun, asqtCMat);
             %
             % dimensionality tests
@@ -376,15 +399,15 @@ classdef SuiteOp < mlunitext.test_case
             self.isMatFunSizeEq(aMatFun, aMat);
             %
             atCMat = {'t', '0'};
-            atMatFun = MatrixFunctionFactory.createInstance(atCMat);
+            atMatFun = AMatrixOperations.fromSymbMatrix(atCMat);
             self.isMatFunSizeEq(atMatFun, atCMat);
             %
             atCMat = atCMat.';
-            atMatFun = MatrixFunctionFactory.createInstance(atCMat);
+            atMatFun = AMatrixOperations.fromSymbMatrix(atCMat);
             self.isMatFunSizeEq(atMatFun, atCMat);
             %
             atCMat = {'t'};
-            atMatFun = MatrixFunctionFactory.createInstance(atCMat);
+            atMatFun = AMatrixOperations.fromSymbMatrix(atCMat);
             self.isMatFunSizeEq(atMatFun, atCMat);
         end
         function testCompositeMatrixOperations(self)
@@ -398,7 +421,7 @@ classdef SuiteOp < mlunitext.test_case
         end
         function testSymbMatrixOperations(self)
             import gras.mat.symb.*
-            import gras.mat.MatrixFunctionFactory;
+            import gras.mat.AMatrixOperations;
             %
             aScCMat = {'t'};
             bScCMat = {'t + 1'};
@@ -460,34 +483,20 @@ classdef SuiteOp < mlunitext.test_case
                 aScCMat, bScCMat, resCMat);
             %
             function isOk = isBinarySymbOpEqual(op, arg1CMat, ...
-                    arg2CMat, expectedCMat, varargin)
-                timeVec = -3:3;
+                arg2CMat, expectedCMat, varargin)
                 if nargin > 5
-                    if ~isempty(varargin{1})
-                        timeVec = varargin{1};
-                    end   
-                end
-                %
-                resMatFun = op(arg1CMat, arg2CMat);
-                %
-                isOk = isEquality();
-                if nargin > 5
-                    if any(strcmp('symmetric', varargin))
-                        resMatFun = op(arg2CMat, arg1CMat);
-                        isOk = isOk && isEquality();
+                    timeVec = varargin{1};
+                    if nargin > 6
+                        opts = {'symb', varargin{2:end}};
+                    else
+                        opts = {'symb'};
                     end
+                else
+                    timeVec = [];
+                    opts = {'symb'};
                 end
-                mlunitext.assert_equals(isOk, true);
-                %
-                function isOk = isEquality()
-                    import gras.mat.MatrixFunctionFactory;
-                    resultVec = resMatFun.evaluate(timeVec);
-                    expMatFun = MatrixFunctionFactory.createInstance(...
-                        expectedCMat);
-                    self.isMatFunSizeEq(resMatFun, expMatFun);
-                    expectedVec = expMatFun.evaluate(timeVec);
-                    isOk = self.isMatVecEq(resultVec(:), expectedVec(:));
-                end
+                isOk = self.isOpEqual(opts, expectedCMat, timeVec, op, ...
+                    arg1CMat, arg2CMat);
             end
         end
         function testOtherOperations(self)
