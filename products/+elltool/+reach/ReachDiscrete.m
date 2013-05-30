@@ -140,17 +140,14 @@ classdef ReachDiscrete < elltool.reach.AReach
                         evaluate(timeVec(iTime + isBack));
                     bpbMat = probDynObj.getBPBTransDynamics(). ...
                         evaluate(timeVec(iTime + isBack));
-%                     bpbMat = 0.5 * (bpbMat + bpbMat');
+                    bpbMat = 0.5 * (bpbMat + bpbMat');
                     if isDisturb
                         gqgMat = probDynObj.getCQCTransDynamics(). ...
                             evaluate(timeVec(iTime + isBack));
-%                         gqgMat = 0.5 * (gqgMat + gqgMat');
-%                         gqgMat = regposdefmat(gqgMat, relTol);
                     end
                     qMat = aMat * qMat * aMat';
                     qMat = 0.5 * (qMat + qMat');
                     qMat = regposdefmat(qMat, regTol);
-%                     bpbMat = regposdefmat(bpbMat, relTol);
                     lVec = aInvMat' * lVec;
                     if isDisturb
                         if isMinMax

@@ -7,11 +7,11 @@ loader = mlunitext.test_loader;
 crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
 crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
 %
-confCMat = {...
-    'demo3firstTest',  [1 0 1 0 1 0 1 0];...
-    'demo3secondTest', [1 0 0 1 1 0 0 0];...
-    'demo3thirdTest',  [1 1 0 0 1 1 0 1];...
-    'demo3fourthTest', [1 1 1 1 1 1 0 0];...
+confCMat = {
+    'demo3firstTest',  [1 0 1 0 1 0 1 0];
+    'demo3secondTest', [1 0 0 1 1 0 0 0];
+    'demo3thirdTest',  [1 1 0 0 1 1 0 1];
+    'demo3fourthTest', [1 1 1 1 1 1 0 0];
     };
 %
 if nargin>0
@@ -77,7 +77,7 @@ testLists = cellfun(@(x)x.tests,suiteList,'UniformOutput',false);
 suite = mlunitext.test_suite(horzcat(testLists{:}));
 %
 resList{1} = runner.run(suite);
-testCaseNameStr = 'elltool.reach.test.mlunit.ContinuousReachProjTestCase';
+testCaseNameStr = 'elltool.reach.test.mlunit.ContinuousReachProjAdvTestCase';
 resList{2} = elltool.reach.test.run_reach_proj_adv_tests(testCaseNameStr);
 results = [resList{:}];
 %
