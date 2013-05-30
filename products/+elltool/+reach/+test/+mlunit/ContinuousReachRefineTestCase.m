@@ -146,7 +146,8 @@ classdef ContinuousReachRefineTestCase < mlunitext.test_case
                 uEllMat=eye(2);
                 x0EllMat=eye(2);
                 reachSet = self.reachFactObj.createInstance('At',aMat,...
-                    'Bt',bMat,'controlMat',uEllMat,'x0EllMat',x0EllMat,'l0Mat',lDirMat,'tVec',timeVec);
+                    'Bt',bMat,'controlMat',uEllMat,'x0EllMat',x0EllMat,...
+                    'l0Mat',lDirMat,'tVec',timeVec);
             end
         end
     end

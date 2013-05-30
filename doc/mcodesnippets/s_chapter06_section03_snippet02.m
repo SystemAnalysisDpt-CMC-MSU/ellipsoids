@@ -4,12 +4,13 @@ termTime = 3;  % terminating time
 % compute backward reach set:
 % compute the reach set:
 secBrsObj = elltool.reach.ReachContinuous(secondSys, mEllObj, dirsMat,...
- [termTime switchTime]);  % second system comes first
+ [termTime switchTime], 'isRegEnabled', true, 'isJustCheck', false,...
+ 'regTol', 1e-5);  % second system comes first
 firstBrsObj = secBrsObj.evolve(0, firstSys);  % then the first system
 
 % obtain projections onto (x1, x2) subspace:
-firstBpsObj = firstBrsObj.getProjection(basisMat);
-secBpsObj = secBrsObj.getProjection(basisMat);
+firstBpsObj = firstBrsObj.projection(basisMat);
+secBpsObj = secBrsObj.projection(basisMat);
 
 % plot the results:
 subplot(2, 2, 3);
