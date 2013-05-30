@@ -1,6 +1,6 @@
 function resQMat=findDiffEaND(ellQ1Mat, ellQ2Mat,curDirVec,absTol)
 % FINDDIFFEAND - find external approximation for Minkowsky difference
-% of ellipsoids with matrices Q1>0, Q2>=0, in good direction
+%                of ellipsoids with matrices Q1>0, Q2>=0, in good direction
 %
 % Input:
 %   regular:
@@ -15,11 +15,12 @@ function resQMat=findDiffEaND(ellQ1Mat, ellQ2Mat,curDirVec,absTol)
 %
 % $Author: Vitaly Baranov  <vetbar42@gmail.com> $    $Date: Nov-2012$
 % $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Cybernetics,
+%            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
 %
 import elltool.core.GenEllipsoid;
-isGoodDir= GenEllipsoid.getIsGoodDirForMat(ellQ1Mat,ellQ2Mat,curDirVec);
+isGoodDir= GenEllipsoid.getIsGoodDirForMat(ellQ1Mat,ellQ2Mat,curDirVec,...
+    absTol);
 if isGoodDir
     ellSQR1Mat=GenEllipsoid.findSqrtOfMatrix(ellQ1Mat,absTol);
     ellSQR2Mat=GenEllipsoid.findSqrtOfMatrix(ellQ2Mat,absTol);

@@ -1,6 +1,6 @@
 function varargout=applyTupleGetFunc(self,varargin)
-% APPLYTUPLEGETFUNC applies a function to the specified fields 
-% separately to each tuple 
+% APPLYTUPLEGETFUNC - applies a function to the specified fields 
+%                     separately to each tuple 
 %
 % Input:
 %   regular:
@@ -14,6 +14,13 @@ function varargout=applyTupleGetFunc(self,varargin)
 %       uniformOutput: logical[1,1] - if true, output is expected to be
 %           uniform as in cellfun with 'UniformOutput'=true, default 
 %			value is true
+%
+% Output:
+%   funcOut1Arr: <type1>[] - array corresponding to the first output of the
+%       applied function
+%           ....
+%   funcOutNArr: <typeN>[] - array corresponding to the last output of the
+%       applied function
 %
 %
 % Notes: this function currently has a lots of limitations:

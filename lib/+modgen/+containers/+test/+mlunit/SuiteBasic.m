@@ -48,7 +48,7 @@ classdef SuiteBasic < mlunitext.test_case
             SRes=check();
             SExp=struct('a',1,'b',2);
             %
-            mlunit.assert_equals(true,isequal(SRes,SExp));
+            mlunitext.assert_equals(true,isequal(SRes,SExp));
             %
             key1=sprintf(['Diameters for ',...
                 '\nlsGoodDirVec=[0;0;0;0;1;0;0;0],sTime=4']);
@@ -84,17 +84,36 @@ classdef SuiteBasic < mlunitext.test_case
             SExp=struct(aVarKey,1,bVarKey,2,cVarKey,...
                 struct(dVarKey,1,eVarKey,2));
             %
-            mlunit.assert_equals(true,isequal(SRes,SExp));
+            mlunitext.assert_equals(true,isequal(SRes,SExp));
             mp2=mp.getCopy();
-            mlunit.assert_equals(true,isequal(mp,mp2));
+            checkIfEqual(true);
             mp(aKey)=2;
-            mlunit.assert_equals(false,isequal(mp,mp2));
+            checkIfEqual(false);
             %
             mp=MapExtended();
             mp2=mp.getCopy();
-            mlunit.assert_equals(true,isequal(mp,mp2));
+            checkIfEqual(true);
             mp(aKey)=2;
-            mlunit.assert_equals(false,isequal(mp,mp2));
+            checkIfEqual(false);
+            
+            function checkIfEqual(isPos)
+                isPosExp=isequal(mp,mp2);
+                [isPosAct,reportStr]=mp.isEqual(mp2);
+                mlunitext.assert_equals(isPosAct,isPosExp);
+                mlunitext.assert_equals(isPos,isPosAct,reportStr);
+                mp3=mp.getCopy();
+                isOk=isequal(mp,mp3);
+                mlunitext.assert(isOk);
+                [isOk,reportStr]=mp.isEqual(mp3);
+                mlunitext.assert(isOk,reportStr);
+                %
+                if modgen.common.isunique([mp.keys,mp2.keys])
+                    mpA=mp.getUnionWith(mp2);
+                    mpB=mp2.getUnionWith(mp);
+                    [isOk,reportStr]=mpA.isEqual(mpB);
+                    mlunitext.assert(isOk,reportStr);
+                end
+            end
         end
         %
         function self=test_MapExtended(self,varargin)

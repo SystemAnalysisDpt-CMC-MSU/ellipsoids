@@ -1,6 +1,7 @@
-% check if polytope P intersects with external approximation:
-intersect(ct, P)
+% equivalent to: doesIntersectionContain(ellMat(2, 2),...
+%                                  firstPolObj & secPolObj)
+ellMat(2, 2).doesIntersectionContain([firstPolObj secPolObj], 'i')  
 
 % ans =
 % 
-%      0
+%      1

@@ -72,7 +72,7 @@ W = A*EA(:, 1) + b; plot(EA(:, 1), 'b', W, 'r'); grid on;
 % >> plot(E, EA(2, 2), 'b'); grid on;
 % 
 % plots original ellipsoid (blue) and the one with modified shape matrix (red).
-plot(shape(EA(2, 2), A), EA(2, 2), 'b'); grid on;
+plot(getShape(EA(2, 2), A), EA(2, 2), 'b'); grid on;
 %% 
 % Inverted ellipsoid is obtained by inverting the shape matrix of the original ellipsoid. In case the original ellipsoid is centered at the origin, the inverted ellipsoid is its polar ellipsoid.
 % 
@@ -195,35 +195,34 @@ EU = ellunion_ea(EA); plot(EA, 'b', EU, 'r'); grid on;
 %% 
 % For two or more ellipsoids in R, R^2 and R^3, their geometric (Minkowski) sum can be plotted:
 % 
-% >> opts.show_all = 1;
-% >> minksum(EA, opts); grid on;
 % 
-% plots geometric sum (red) of the ellipsoids in array EA (blue).
-opts.show_all = 1; minksum(EA, opts); grid on;
+% >> minksum(EA, 'showAll',true); grid on;
+% 
+% plots geometric sum (red) of the ellipsoids in array EA (black).
+minksum(EA, 'showAll',true); grid on;
 %% 
 % For two or more ellipsoids of arbitrary dimension, their geometric sum can be approximated by tight external and tight internal ellipsoids. Tight ellipsoids are computed for given directions.
 % 
 % >> L  = [1 0; 1 1; 0 1; -1 1]';
 % >> EE = minksum_ea(EA, L); IE = minksum_ia(EA, L);
-% >> plot(EE, 'b', IE, 'g'); grid on; hold on; minksum(EA, L);
-% >> minksum(EA, L);
+% >> plot(EE, 'b', IE, 'g'); grid on; hold on; 
+% >> minksum(EA);
 % 
 % plots geometric sum (red) of the ellipsoids in array EA, its external (blue) and internal (green) ellipsoidal approximations for directions specified by matrix L.
 L  = [1 0; 1 1; 0 1; -1 1]';
 EE = minksum_ea(EA, L); IE = minksum_ia(EA, L);
-plot(EE, 'b', IE, 'g'); grid on; hold on; minksum(EA, L); hold off;
+plot(EE, 'b', IE, 'g'); grid on; hold on; minksum(EA); hold off;
 %% 
 % For two single ellipsoids E1 and E2 in R, R^2 and R^3, such that E1 > E2, their geometric (Minkowski) difference can be plotted:
 % 
 % >> E1 = ellipsoid([15; 0], [49 -12; -12 10]);
 % >> E2 = ellipsoid([9; 3], [9 2; 2 4]);
-% >> opts.show_all = 1;
-% >> minkdiff(E1, E2, opts); grid on;
+% >> minkdiff(E1, E2, 'shawAll',true); grid on;
 % 
-% plots geometric difference (red) of the ellipsoids E1 and E2 (blue).
+% plots geometric difference (red) of the ellipsoids E1 and E2 (black).
 E1 = ellipsoid([15; 0], [49 -12; -12 10]);
 E2 = ellipsoid([9; 3], [9 2; 2 4]);
-opts.show_all = 1; minkdiff(E1, E2, opts); grid on;
+minkdiff(E1, E2,'showAll',true); grid on;
 %% 
 % For two ellipsoids of arbitrary dimension, E1 and E2, such that E1 > E2, their geometric difference can be approximated by tight external and tight internal ellipsoids. Tight ellipsoids are computed for given directions. Not all directions are allowed. Those directions, for which tight ellipsoidal approximations cannot be computed, are called "bad directions".
 % 
@@ -247,10 +246,10 @@ plot(EE, 'b', IE, 'g'); grid on; hold on; minkdiff(E1, E2); hold off;
 % For ellipsoids E1, E2 and E3 in R, R^2 or R^3, such that E1 > E3, the set E1 - E3 + E2 can be plotted.
 % 
 % >> E3 = ell_unitball(2);
-% >> minkmp(E1, E3, E2, opts);
+% >> minkmp(E1, E3, E2, 'showAll',true);
 % 
 % plots the set E1 - E3 + E2 (red), ellipsoids E1 (green), E2 (blue) and E3 (black).
-E3=ell_unitball(2); minkmp(E1, E3, E2, opts); grid on
+E3=ell_unitball(2); minkmp(E1, E3, E2, 'showAll',true); grid on
 %% 
 % For ellipsoids E1, E2 and E3 of arbitrary dimension, such that E1 > E3, tight external and internal ellipsoidal approximations of the set E1 - E3 + E2 for given directions can be computed.
 % 
@@ -266,10 +265,10 @@ minkmp(E1, E3, E2); grid on; hold on; plot(EE, 'b', IE, 'g'); hold off
 %% 
 % For ellipsoids E1, E2 and E3 in R, R^2 or R^3, the set E1 + E2 - E3 can be plotted if nonempty.
 % 
-% >> minkpm([E1 E2], E3, opts);
+% >> minkpm([E1 E2], E3, 'showAll',true);
 % 
 % plots the set E1 + E2 - E3 (red), ellipsoids E1, E2 (blue) and ellipsoid E3 (black).
-minkpm([E1 E2], E3, opts); grid on
+minkpm([E1 E2], E3,'showAll',true); grid on
 %% 
 % For ellipsoids E1, E2 and E3 of arbitrary dimension, tight external and internal ellipsoidal approximations of the set E1 + E2 - E3 (if this set is nonempty) for given directions can be computed.
 % 
@@ -303,11 +302,14 @@ E3 = 2*ell_unitball(3) + [1; 1; 0];
 B1 = [1 0 0; 0 1 0]'; B2 = [1 0 0; 0 0 1]'; B3 = [0 1 0; 0 0 1]';
 subplot(2, 2, 1); plot(E1, E2, E3); title('(a) Ellipsoids in 3D');
 xlabel('x_1'); ylabel('x_2'); zlabel('x_3'); grid on;
-subplot(2, 2, 2); plot(projection([E1 E2 E3], B1)); grid on;
+subplot(2, 2, 2); plot(getProjection([E1 E2 E3], B1));
+grid on;
 title('(b) Projection on basis B1'); xlabel('x_1'); ylabel('x_2');
-subplot(2, 2, 3); plot(projection([E1 E2 E3], B2)); grid on;
+subplot(2, 2, 3); plot(getProjection([E1 E2 E3], B2));
+grid on;
 title('(c) Projection on basis B2'); xlabel('x_1'); ylabel('x_3');
-subplot(2, 2, 4); plot(projection([E1 E2 E3], B3)); grid on;
+subplot(2, 2, 4); plot(projection([E1 E2 E3], B3));
+grid on;
 title('(d) Projection on basis B3'); xlabel('x_2'); ylabel('x_3');
 %% 
 % Internal structure of the ellipsoid can be accessed through several functions:
@@ -355,13 +357,12 @@ subplot(1, 1, 1); D = ellipsoid([1 3; 3 9]); plot(D, E, 'b'); grid on;
 % 
 % Most functions dealing with hyperplanes can be used for hyperplane arrays as well as for single hyperplanes.
 % 
-% >> opts.size = 7; opts.width = 2;
-% >> plot(H, HA, 'b', opts); grid on;
+% >> plot(H, HA, 'b','lineWidth',2,'size',7); grid on;
 % 
 % plots three hyperplanes - one single hyperplane H (red) and two hyperplanes from the array HA (blue).
 H  = hyperplane([-5; -3], -9);
 HA = hyperplane([0 1; 1 0]', [2.5 2]);
-opts.size = 7; opts.width = 2; plot(H, HA, 'b', opts); grid on;
+plot(H, HA, 'b', 'lineWidth',2,'size',7); grid on;
 %% 
 % It can be checked if given hyperplane intersects an ellipsoid or intersection of ellipsoids:
 % 
@@ -387,12 +388,11 @@ opts.size = 7; opts.width = 2; plot(H, HA, 'b', opts); grid on;
 % 
 %      1
 % 
-% >> opts.size = 5; opts.width = 1;
-% >> plot(H, 'k', opts); hold on; grid on;
+% >> plot(H, 'k', 'lineWidth',1,'size',5); hold on; grid on;
 % >> plot(E, EA(1, 1), 'g', I, 'b');
 % 
 % plots hyperplane H (black), ellipsoid EA(1, 1) (green) whose intersection with H is empty, ellipsoid E (red) that has nonempty intersection with H, and this intersection I (blue).
-opts.size = 5; opts.width = 1; plot(H, 'k', opts); hold on; grid on;
+plot(H, 'k', 'lineWidth',1,'size',5); hold on; grid on;
 E = E - [0.5; 0]; plot(E, EA(1, 1), 'g', hpintersection(E, H), 'b'); hold off;
 %% 
 % If hyperplane H is defined by its normal v and the scalar c, then the corresponding halfpace is
@@ -403,12 +403,12 @@ E = E - [0.5; 0]; plot(E, EA(1, 1), 'g', hpintersection(E, H), 'b'); hold off;
 % 
 % >> Ee = intersection_ea(E, H);
 % >> Ei = intersection_ia(E, H);
-% >> plot(H, 'k', opts); hold on; grid on;
+% >> plot(H, 'k', 'lineWidth',1,'size',5); hold on; grid on;
 % >> plot(E, Ee, 'b', Ei, 'g');
 % 
 % plots hyperplane H (black), ellipsoid E (red), external Ee (blue) and internal Ei (green) ellipsoidal approximations of intersection of E with halfspace defined by H.
 Ee = intersection_ea(E, H); Ei = intersection_ia(E, H);
-plot(H, 'k', opts); hold on; plot(E, Ee, 'b', Ei, 'g'); grid on; hold off;
+plot(H, 'k',  'lineWidth',1,'size',5); hold on; plot(E, Ee, 'b', Ei, 'g'); grid on; hold off;
 %% 
 % To approximate the intersection of ellipsoid E with the other halfspace defined by the same hyperplane H, it is enough to switch sign of H:
 % 
@@ -424,11 +424,11 @@ plot(H, 'k', opts); hold on; plot(E, Ee, 'b', Ei, 'g'); grid on; hold off;
 % 
 %      1
 % 
-% >> plot(H, 'k', opts); grid on; hold on;
+% >> plot(H, 'k',  'lineWidth',1,'size',5); grid on; hold on;
 % >> plot(E, Ei, 'g');
 % 
 % plots hyperplane H (black), original ellipsoid E (red), which is the same as Ee, and internal approximating ellipsoid Ei (green).
-plot(H, 'k', opts); hold on; grid on;
+plot(H, 'k',  'lineWidth',1,'size',5); hold on; grid on;
 plot(E, intersection_ia(E, -H), 'g'); hold off;
 %% 
 % For more information about functionality of ellipsoid and hyperplane libraries of this toolbox, type

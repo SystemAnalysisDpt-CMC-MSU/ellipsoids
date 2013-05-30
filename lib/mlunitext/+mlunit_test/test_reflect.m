@@ -24,11 +24,11 @@ classdef test_reflect < mlunitext.test_case
             %         run(gui_test_runner,
             %             'test_reflect(''test_get_methods'')');
             %
-            %  See also MLUNIT.REFLECT.GET_METHODS.
+            %  See also MLUNITEXT.REFLECT.GET_METHODS.
 
             import mlunitext.*;
 
-            r = reflect('mlunit.test_case');
+            r = reflect('mlunitext.test_case');
             m = get_methods(r);
             assert(size(m, 1) > 0);
             assert(sum(strcmp(m, 'run')) == 1);
@@ -44,11 +44,11 @@ classdef test_reflect < mlunitext.test_case
             %         run(gui_test_runner,
             %             'test_reflect(''test_method_exists'')');
             %
-            %  See also MLUNIT.REFLECT.METHOD_EXISTS.
+            %  See also MLUNITEXT.REFLECT.METHOD_EXISTS.
 
-            import mlunit.*;
+            import mlunitext.*;
 
-            r = reflect('mlunit.test_suite');
+            r = reflect('mlunitext.test_suite');
             assert(method_exists(r, 'run'));
             assert(~method_exists(r, 'foo'));
 
@@ -64,9 +64,9 @@ classdef test_reflect < mlunitext.test_case
             %         run(gui_test_runner, 
             %             'test_reflect(''test_not_instantiated'')');
             %
-            %  See also MLUNIT.REFLECT.GET_METHODS.
+            %  See also MLUNITEXT.REFLECT.GET_METHODS.
 
-            import mlunit.*;
+            import mlunitext.*;
 
             r = reflect('mlunit_test.mock_test_not_instantiated');
             m = get_methods(r);
@@ -75,13 +75,13 @@ classdef test_reflect < mlunitext.test_case
         
         function test_no_such_class(~)
             try
-                mlunit.reflect('nosuchpackage.nosuchclass');
+                mlunitext.reflect('nosuchpackage.nosuchclass');
             catch meObj
-                mlunit.assert_equals(true,...
+                mlunitext.assert_equals(true,...
                     ~isempty(strfind(meObj.identifier,'noSuchClass')));
                 return;
             end
-            mlunit.fail('Expected exception was not thrown');
+            mlunitext.fail('Expected exception was not thrown');
         end
     end
 end

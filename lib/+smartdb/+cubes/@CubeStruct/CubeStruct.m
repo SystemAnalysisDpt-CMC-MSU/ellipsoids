@@ -58,8 +58,11 @@ classdef CubeStruct<dynamicprops&modgen.common.obj.HandleObjectCloner&...
     end
     methods
         function display(self,varargin)
-            % DISPLAY puts some textual information about CubeStruct object
-            % on screen
+            % DISPLAY - puts some textual information about CubeStruct object in screen
+            % 
+            % Input:
+            %  regular:
+            %      self.
             %
             self.displayInternal('CubeStruct',varargin{:});
         end
@@ -232,7 +235,7 @@ classdef CubeStruct<dynamicprops&modgen.common.obj.HandleObjectCloner&...
         end
         %
     end
-    methods (Hidden,Sealed)
+    methods (Hidden, Sealed)
         %we use getField internally which justifies Sealed access modifier
         propVal=getField(self,fieldName)
     end
@@ -409,18 +412,15 @@ classdef CubeStruct<dynamicprops&modgen.common.obj.HandleObjectCloner&...
         varargout=removeDuplicatesAlongDimInternal(self,catDim,varargin)
         % REMOVEDUPLICATESALONGDIM removes duplicates in CubeStruct object
         % along a specified dimension
-        varargout=getUniqueDataAlongDimInternal(self,catDim,varargin)
-        % GETUNIQUEDATAALONGDIM returns internal representation of CubeStruct
-        % data set unique along a specified dimension
-        % set    
+        varargout=getUniqueDataAlongDimInternal(self,catDim,varargin) 
         [isThere indTheres]=isMemberAlongDimInternal(self,other,dimNum,varargin)
-        % ISMEMBERALONGDIM performs ismember operation of CubeStruct data slices
-        % along the specified dimension        
+        % ISMEMBERALONGDIM - performs ismember operation of CubeStruct data slices
+        %                    along the specified dimension        
         permuteDimInternal(self,dimOrderVec,isInvPermute)        
         sortByAlongDimInternal(self,sortFieldNameList,sortDim,varargin)        
         changeMinDimInternal(self,minDim)
         reorderDataInternal(self,varargin)        
-        %the following methods being public are still used by CubeStruct 
+        %The following methods being public are still used by CubeStruct 
         %internal methods which makes it dangereous to leave them open 
         %for redefinition. To protect them we use Sealed access modifier.
         clearDataInternal(self)
@@ -477,8 +477,8 @@ classdef CubeStruct<dynamicprops&modgen.common.obj.HandleObjectCloner&...
         % vectros for the specified fields
         %    
         function minDimensionality=getMinDimensionality(self)
-            % GETMINDIMENSIONALITY returns a minimum dimensionality for a
-            % given object
+            % GETMINDIMENSIONALITY - returns a minimum dimensionality for a given 
+            %                        object
             %
             % Input:
             %   regular:
@@ -494,9 +494,9 @@ classdef CubeStruct<dynamicprops&modgen.common.obj.HandleObjectCloner&...
     end
     methods (Static)
         relDataObj=fromStructList(catDim,className,structList)
-            % FROMSTRUCTLIST creates an object of specified type 
-            % from a list of structures interpreting each structure 
-            % as the data for several CubeStruct data slices.
+            % FROMSTRUCTLIST - creates an object of specified type from a list of 
+            %                  structures interpreting each structure as the data for 
+            %                  several CubeStruct data slices.
             %        
     end
 end

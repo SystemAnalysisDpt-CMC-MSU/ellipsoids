@@ -13,12 +13,12 @@ classdef ContinuousReachFirstTestCase < mlunitext.test_case
     end
     methods (Access=private, Static)
         function checkIntersection(reachObj, ellVec)
-            mlunit.assert_equals(false, reachObj.intersect(ellVec(1), 'e'));
-            mlunit.assert_equals(false, reachObj.intersect(ellVec(1), 'i'));
-            mlunit.assert_equals(true, reachObj.intersect(ellVec(2), 'e'));
-            mlunit.assert_equals(false, reachObj.intersect(ellVec(2), 'i'));
-            mlunit.assert_equals(true, reachObj.intersect(ellVec(3), 'e'));
-            mlunit.assert_equals(true, reachObj.intersect(ellVec(3), 'i'));
+            mlunitext.assert_equals(false, reachObj.intersect(ellVec(1), 'e'));
+            mlunitext.assert_equals(false, reachObj.intersect(ellVec(1), 'i'));
+            mlunitext.assert_equals(true, reachObj.intersect(ellVec(2), 'e'));
+            mlunitext.assert_equals(false, reachObj.intersect(ellVec(2), 'i'));
+            mlunitext.assert_equals(true, reachObj.intersect(ellVec(3), 'e'));
+            mlunitext.assert_equals(true, reachObj.intersect(ellVec(3), 'i'));
         end
     end
     methods
@@ -54,6 +54,9 @@ classdef ContinuousReachFirstTestCase < mlunitext.test_case
             l0Mat = cell2mat(l0CMat.').';
             self.timeVec = [self.crmSys.getParam('time_interval.t0'),...
                 self.crmSys.getParam('time_interval.t1')];
+            isRegEnabled = crm.getParam('regularizationProps.isEnabled');
+            isJustCheck = crm.getParam('regularizationProps.isJustCheck');
+            regTol = crm.getParam('regularizationProps.regTol');
             ControlBounds = struct();
             ControlBounds.center = ptDefCVec;
             ControlBounds.shape = ptDefCMat;
@@ -64,7 +67,10 @@ classdef ContinuousReachFirstTestCase < mlunitext.test_case
             self.linSys = elltool.linsys.LinSysFactory.create(atDefCMat,...
                 btDefCMat, ControlBounds, ctDefCMat, DistBounds);
             self.reachObj = elltool.reach.ReachContinuous(self.linSys,...
-                ellipsoid(x0DefVec, x0DefMat), l0Mat, self.timeVec);
+                ellipsoid(x0DefVec, x0DefMat), l0Mat, self.timeVec,...
+                'isRegEnabled', isRegEnabled,...
+                'isJustCheck', isJustCheck,...
+                'regTol', regTol);
         end
         %
         function self = testIntersect(self)
@@ -124,7 +130,7 @@ classdef ContinuousReachFirstTestCase < mlunitext.test_case
             backReachObj = elltool.reach.ReachContinuous(linSys,...
                 ellipsoid(x0DefVec, x0DefMat), l0Mat, timeVec);
             isEqual = self.reachObj.isEqual(backReachObj);
-            mlunit.assert_equals(isEqual, true);
+            mlunitext.assert_equals(isEqual, true);
         end
     end
 end

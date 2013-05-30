@@ -4,7 +4,7 @@ classdef test_text_test_runner < mlunitext.test_case
     %  Example:
     %         run(gui_test_runner, 'test_text_test_runner');
     %
-    %  See also MLUNIT.TEXT_TEST_RUNNER.
+    %  See also MLUNITEXT.TEXT_TEST_RUNNER.
 
     % $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
     % Faculty of Computational Mathematics and Cybernetics, System Analysis
@@ -39,7 +39,7 @@ classdef test_text_test_runner < mlunitext.test_case
             %         run(gui_test_runner,
             %             'test_text_test_runner(''test_run_failed_tests'');');
             %
-            %  See also MLUNIT.TEXT_TEST_RUNNER.RUN.
+            %  See also MLUNITEXT.TEXT_TEST_RUNNER.RUN.
 
             import mlunitext.*;
 
@@ -86,14 +86,14 @@ classdef test_text_test_runner < mlunitext.test_case
             %         run(gui_test_runner,
             %             'test_text_test_runner(''test_run_with_nonexisting_test_case'');');
             %
-            %  See also MLUNIT.TEXT_TEST_RUNNER.RUN.
+            %  See also MLUNITEXT.TEXT_TEST_RUNNER.RUN.
 
             import mlunitext.*;
 
             try
                 run(self.runner, 'mlunit_nonexisting_test');
             catch meObj
-                mlunit.assert_equals(true,...
+                mlunitext.assert_equals(true,...
                     ~isempty(strfind(meObj.identifier,'noSuchClass')));
             end
         end
@@ -106,7 +106,7 @@ classdef test_text_test_runner < mlunitext.test_case
             %         run(gui_test_runner,
             %             'test_text_test_runner(''test_verbosity_null'');');
             %
-            %  See also MLUNIT.TEXT_TEST_RUNNER.RUN.
+            %  See also MLUNITEXT.TEXT_TEST_RUNNER.RUN.
 
             import mlunitext.*;
 
@@ -144,7 +144,7 @@ classdef test_text_test_runner < mlunitext.test_case
             %         run(gui_test_runner,
             %             'test_text_test_runner(''test_verbosity_one'');');
             %
-            %  See also MLUNIT.TEXT_TEST_RUNNER.RUN.
+            %  See also MLUNITEXT.TEXT_TEST_RUNNER.RUN.
 
             import mlunitext.*;
 

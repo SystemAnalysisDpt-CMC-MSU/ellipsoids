@@ -18,14 +18,14 @@ classdef mlunit_test_auxdfeval < mlunitext.test_case
         function self=test_gettaskname(self)
             [taskName,SProp]=modgen.pcalc.gettaskname();
             taskName2=modgen.pcalc.gettaskname();
-            mlunit.assert_equals(taskName,taskName2);
-            mlunit.assert_equals(true,SProp.isMain);
+            mlunitext.assert_equals(taskName,taskName2);
+            mlunitext.assert_equals(true,SProp.isMain);
             [a,b]=modgen.pcalc.auxdfeval(...
                 @(x)modgen.pcalc.gettaskname(),cell(1,2));
             isOk=all(cellfun(@(x)~strcmp(x,taskName),a));
-            mlunit.assert_equals(true,isOk);
+            mlunitext.assert_equals(true,isOk);
             isOk=all(cellfun(@(x)isequal(x.isMain,false),b));
-            mlunit.assert_equals(true,isOk);
+            mlunitext.assert_equals(true,isOk);
         end
         %
         function self=test_always_fork(self)
@@ -35,13 +35,13 @@ classdef mlunit_test_auxdfeval < mlunitext.test_case
             modgen.pcalc.auxdfeval(@self.setPersistent,{1});
             % Check that the persistent variable is not empty and reset it
             % to []
-            mlunit.assert_equals(false, self.setPersistent([]));
+            mlunitext.assert_equals(false, self.setPersistent([]));
             % With the flag set to true, execute setPersistent(1) in a new
             % process, which should have no effect on the presistent
             % variable within this process
             modgen.pcalc.auxdfeval(@self.setPersistent,{1},'alwaysFork',true,...
                 self.configurationProp{:});
-            mlunit.assert_equals(true, self.setPersistent([]));
+            mlunitext.assert_equals(true, self.setPersistent([]));
         end
         %
         function isEmpty = setPersistent(~,val)
@@ -62,20 +62,20 @@ classdef mlunit_test_auxdfeval < mlunitext.test_case
             % take no arguments
             hFunc = @()1;
             % 1 worker
-            mlunit.assert_equals(true, ...
+            mlunitext.assert_equals(true, ...
                 isequal({1}, modgen.pcalc.auxdfeval(hFunc, cell(0,1))));
             % 2 workers
-            mlunit.assert_equals(true, ...
+            mlunitext.assert_equals(true, ...
                 isequal({1;1}, modgen.pcalc.auxdfeval(hFunc, cell(0,2),...
                 self.configurationProp{:})));
         end
         function self=test_clusterSizeProp(self)
             res=modgen.pcalc.auxdfeval(@deal,num2cell(1:3),'clusterSize',1);
-            mlunit.assert_equals(true,isequal(res.',num2cell(1:3)));
+            mlunitext.assert_equals(true,isequal(res.',num2cell(1:3)));
         end
         function self=test_clusterSize1(self)
             res=modgen.pcalc.auxdfeval(@getTaskName,cell(1,3),'clusterSize',1);
-            mlunit.assert_equals(true,all(cellfun(@(x)isequal(x,true),res)));
+            mlunitext.assert_equals(true,all(cellfun(@(x)isequal(x,true),res)));
             
             function isMain=getTaskName(varargin)
                 [~,SProp]=modgen.pcalc.gettaskname();

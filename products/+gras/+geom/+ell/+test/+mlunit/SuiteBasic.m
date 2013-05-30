@@ -15,9 +15,9 @@ classdef SuiteBasic < mlunitext.test_case
             eVec=[1,2,3];
             QMat=diag(eVec);
             resVol=gras.geom.ell.ellvolume(QMat);
-            expVol=sqrt(prod(eVec))*pi*4/3;
+            expVol=realsqrt(prod(eVec))*pi*4/3;
             isOk=abs(expVol-resVol)<MAX_TOL;
-            mlunit.assert_equals(true,isOk);
+            mlunitext.assert_equals(true,isOk);
         end
     end
 end

@@ -1,4 +1,4 @@
-function isBadDirVec = isbaddirection(fstEll, secEll, dirsMat,absTol)
+function [isBadDirVec,pUniversalVec] = isbaddirection(fstEll, secEll, dirsMat,absTol)
 %
 % ISBADDIRECTION - checks if ellipsoidal approximations of geometric
 %                  difference of two ellipsoids can be computed for
@@ -22,6 +22,7 @@ function isBadDirVec = isbaddirection(fstEll, secEll, dirsMat,absTol)
 % Output:
 %    isBadDirVec: logical[1, nCols] - array of true or false with length
 %       being equal to the number of columns in matrix dirsMat.
+%       ture marks direction vector as bad - ellipsoidal approximation
 %       true marks direction vector as bad - ellipsoidal approximation
 %       cannot be computed for this direction. false means the opposite.
 %
@@ -42,6 +43,6 @@ if ~isbigger(fstEll, secEll)
     throwwarn('wrongInput:emptyGeomDiff', [fstErrMsg secErrMsg]);
     isBadDirVec = true(1,size(dirsMat,2));
 else    
-    isBadDirVec=ellipsoid.isbaddirectionmat(fstEll.shape,...
-        secEll.shape, dirsMat,absTol);
+    [isBadDirVec,pUniversalVec] = ellipsoid.isbaddirectionmat(fstEll.shapeMat,...
+        secEll.shapeMat, dirsMat,absTol);
 end

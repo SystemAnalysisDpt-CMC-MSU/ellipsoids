@@ -40,8 +40,25 @@ function isPositiveVec = isinternal(myEllArr, matrixOfVecMat, mode)
 %       true - if vector belongs to the union or intersection
 %       of ellipsoids, false - otherwise.
 %
+% Example:
+%   firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+%   secEllObj = firstEllObj + [5; 5];
+%   ellVec = [firstEllObj secEllObj];
+%   ellVec.isinternal([-2 3; -1 4], 'i')
+% 
+%   ans =
+% 
+%        0     0
+% 
+%   ellVec.isinternal([-2 3; -1 4])
+% 
+%   ans =
+% 
+%        1     1
+%
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 2004-2008 $
+% $Copyright:  The Regents of the University of California 
+%              2004-2008 $
 
 import elltool.conf.Properties;
 import modgen.common.checkvar;
@@ -56,7 +73,7 @@ modgen.common.checkvar( myEllArr , 'numel(x) > 0', 'errorTag', ...
     'wrongInput:emptyArray', 'errorMessage', ...
     'Each array must be not empty.');
 
-modgen.common.checkvar( myEllArr,'all(~isempty(x(:)))','errorTag', ...
+modgen.common.checkvar( myEllArr,'all(~x(:).isEmpty())','errorTag', ...
     'wrongInput:emptyEllipsoid', 'errorMessage', ...
     'Array should not have empty ellipsoid.');
 
@@ -124,8 +141,8 @@ end
     function isPos = fSingleCase(singEll,absTol)
         import elltool.conf.Properties;
         isPos = false;
-        cVec = xVec - singEll.center;
-        shMat = singEll.shape;
+        cVec = xVec - singEll.centerVec;
+        shMat = singEll.shapeMat;
         
         if isdegenerate(singEll)
             if Properties.getIsVerbose()

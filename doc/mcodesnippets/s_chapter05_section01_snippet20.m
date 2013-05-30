@@ -1,12 +1,14 @@
-% ellipsoidal approximations for (E1 + E2 - E3)
-EA = minkpm_ea([E1 E2], E3, L)  % external
+% ellipsoidal approximations for (firstEllObj + secEllObj - thirdEllObj)
+bufEllVec = [firstEllObj secEllObj];
+externalEllVec = bufEllVec.minkpm_ea(thirdEllObj, dirsMat)  % external
 
-% EA =
-% 1x5 array of ellipsoids.
+% externalEllVec =
+% Array of ellipsoids with dimensionality 1x5
 
-IA = minkpm_ia([E1 E2], E3, L)  % internal
+internalEllVec = bufEllVec.minkpm_ia(thirdEllObj, dirsMat)  % internal
 
-% IA =
-% 1x4 array of ellipsoids.
+% internalEllVec =
+% Array of ellipsoids with dimensionality 1x4
 
-minkpm(E1, E2, E3);  % plot the set (E1 + E2 - E3)
+% plot the set (firstEllObj + secEllObj - thirdEllObj)
+firstEllObj.minkpm(secEllObj, thirdEllObj)

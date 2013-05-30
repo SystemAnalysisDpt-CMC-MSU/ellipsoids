@@ -1,6 +1,6 @@
 function unionWith(self,varargin)
-% UNIONWITH adds tuples of the input relation to the set of tuples of the
-% original relation
+% UNIONWITH - adds tuples of the input relation to the set of tuples of the
+%             original relation
 % Usage: self.unionWith(inpRel)
 % 
 % Input:

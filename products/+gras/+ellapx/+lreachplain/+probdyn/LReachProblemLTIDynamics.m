@@ -9,7 +9,8 @@ classdef LReachProblemLTIDynamics<...
             import gras.interp.MatrixInterpolantFactory;
             import gras.ode.MatrixODESolver;
             %
-            if ~isa(problemDef,'gras.ellapx.lreachplain.probdef.ReachContLTIProblemDef')
+            if ~isa(problemDef, ...
+                    'gras.ellapx.lreachplain.probdef.ReachContLTIProblemDef')
                 modgen.common.throwerror('wrongInput',...
                     'Incorrect system definition');
             end

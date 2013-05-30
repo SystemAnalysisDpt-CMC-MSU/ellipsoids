@@ -41,13 +41,22 @@ classdef HandleObjectCloner<handle
             end
         end
         function obj=clone(self,varargin)
-            % CLONE creates a copy of a specified object via calling
-            % a copy constructor for the object class
+            % CLONE - creates a copy of a specified object via calling
+            %         a copy constructor for the object class
+            %
+            % Input:
+            %   regular:
+            %     self: any [] - current object
+            %   optional
+            %     any parameters applicable for relation constructor
+            %
+            % Ouput:
+            %   self: any [] - constructed object
             obj=self.createInstance(self,varargin{:});
         end
         function resObj=createInstance(self,varargin)
-            % CREATEINSTANCE returns an object of the same class by calling a default
-            % constructor (with no parameters)
+            % CREATEINSTANCE - returns an object of the same class by calling a default
+            %                  constructor (with no parameters)
             %
             % Usage: resObj=getInstance(self)
             %
@@ -57,7 +66,8 @@ classdef HandleObjectCloner<handle
             %   optional
             %     any parameters applicable for relation constructor
             %
-            %
+            % Ouput:
+            %   self: any [] - constructed object
             p=metaclass(self);
             resObj=feval(p.Name,varargin{:});
         end

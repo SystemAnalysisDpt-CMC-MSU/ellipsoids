@@ -20,13 +20,13 @@ function [propArr, propVal] = getProperty(ellArr,propName,fPropFun)
 %       propVal: double[1, 1] - return result of work fPropFun with 
 %           the propArr
 %
-% $Author: Zakharov Eugene  <justenterrr@gmail.com> $
-%   $Date: 17-november-2012$
-% $Author: Grachev Artem  <grachev.art@gmail.com> $
-%   $Date: March-2013$
-% $Copyright: Moscow State University,
-%            Faculty of Computational Arrhematics and Computer Science,
-%            System Analysis Department 2012 $
+%$Author: Zakharov Eugene  <justenterrr@gmail.com> $
+%$Date: 2012-11-17$
+%$Author: Grachev Artem  <grachev.art@gmail.com> $
+%$Date: March-2013$
+%$Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2013 $
 %
 import modgen.common.throwerror;
 propNameList = {'absTol','relTol','nPlot2dPoints','nPlot3dPoints',...

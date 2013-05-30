@@ -32,16 +32,31 @@ function isPosArr = contains(myHypArr, xArr)
 %       isPosArr(iDim1, iDim2, ...) = true - myHypArr(iDim1, iDim2, ...)
 %       contains xArr(:, iDim1, iDim2, ...), false - otherwise.
 %
+% Example:
+%   hypObj = hyperplane([-1; 1]);
+%   tempMat = [100 -1 2; 100 1 2];
+%   hypObj.contains(tempMat)
+% 
+%   ans =
+% 
+%        1
+%        0
+%        1
+%
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 2004-2008 $
+% $Copyright:  The Regents of the University of California 
+%              2004-2008 $
 %
 % $Authors:
-%   Zakharov Eugene <justenterrr@gmail.com>$ $Date: <31 october>$
-%   Aushkap Nikolay <n.aushkap@gmail.com> $  $Date: 30-11-2012$
+%   Zakharov Eugene <justenterrr@gmail.com>$ 
+%   $Date: 2012-10-31$
+%   Aushkap Nikolay <n.aushkap@gmail.com> $  
+%   $Date: 30-11-2012$
 % $Copyright: Moscow State University,
-%   Faculty of Computational Mathematics and Computer Science,
-%   System Analysis Department 2012 $
+%             Faculty of Computational Mathematics
+%             and Computer Science,
+%             System Analysis Department 2012 $
 
 import modgen.common.checkvar;
 import modgen.common.checkmultvar;

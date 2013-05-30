@@ -1,17 +1,21 @@
 % define the set of directions:
-L = [1 0; 1 1; 0 1; -1 1; 1 3]';  % columns of matrix L are vectors in R^2
-EA = minksum_ea(EE, L)  % compute external ellipsoids for the directions in L
+% columns of matrix dirsMat are vectors in R^2
+dirsMat = [1 0; 1 1; 0 1; -1 1; 1 3]';
+% compute external ellipsoids for the directions in dirsMat
+externalEllVec = ellMat.minksum_ea(dirsMat) 
 
-% EA =
-% 1x5 array of ellipsoids.
+% externalEllVec =
+% Array of ellipsoids with dimensionality 1x5
 
-IA = minksum_ia(EE, L)  % compute internal ellipsoids for the directions in L
+% compute internal ellipsoids for the directions in dirsMat
+internalEllVec = ellMat.minksum_ia(dirsMat)  
 
-% IA =
-% 1x5 array of ellipsoids.
+% internalEllVec =
+% Array of ellipsoids with dimensionality 1x5
 
-isinside(EA, IA, 'u') % intersection of external ellipsoids should always contain
-                      % the union of internal ellipsoids:
+% intersection of external ellipsoids should always contain 
+% the union of internal ellipsoids:
+externalEllVec.doesIntersectionContain(internalEllVec, 'u') 
 % 
 % ans =
 % 

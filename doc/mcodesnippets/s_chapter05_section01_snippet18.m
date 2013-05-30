@@ -1,18 +1,21 @@
-isbaddirection(E1, E4, L)  % find out which of the directions in L are bad
+absTol = getAbsTol(firstEllObj);
+% find out which of the directions in dirsMat are bad
+firstEllObj.isbaddirection(fourthEllObj, dirsMat, absTol)  
 
 % ans =
 % 
-%      1     0     0     1     0
+%      1     0     0     1     0 
 
 
-EA = minkdiff_ea(E1, E4, L) % two of five directions specified by L are bad,
-                            % so, only three ellipsoidal approximations 
-                            % can be produced for this L:
+% two of five directions specified by dirsMat are bad,
+% so, only three ellipsoidal approximations 
+% can be produced for this dirsMat:
+externalEllVec = firstEllObj.minkdiff_ea(fourthEllObj, dirsMat) 
 
-% EA =
-% 1x3 array of ellipsoids.
+% externalEllVec =
+% Array of ellipsoids with dimensionality 1x3
 
-IA = minkdiff_ia(E1, E4, L)
+internalEllVec = firstEllObj.minkdiff_ia(fourthEllObj, dirsMat)
 
-% IA =
-% 1x3 array of ellipsoids.
+% internalEllVec =
+% Array of ellipsoids with dimensionality 1x3

@@ -17,7 +17,7 @@ function [vMat,fMat] = icosahedron()
 IND_VEC=transpose(0:4);
 Z_VEC=0.5*ones(5,1);
 pi = 4 * atan(1.0);
-tau = (sqrt(5.0) + 1)/2;
+tau = (realsqrt(5.0) + 1)/2;
 r = tau - 0.5;
 vMat([1,12],:)=[0.0, 0.0, 1.0;0.0, 0.0, -1.0];
 %

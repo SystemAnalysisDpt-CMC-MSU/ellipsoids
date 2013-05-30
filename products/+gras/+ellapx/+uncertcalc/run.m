@@ -1,4 +1,4 @@
-function SRunProp=run(confName,varargin)
+function [SRunProp, varargout]=run(confName,varargin)
 import gras.ellapx.uncertcalc.log.Log4jConfigurator;
 import gras.ellapx.uncertcalc.*;
 import gras.ellapx.common.*;
@@ -67,12 +67,12 @@ end
 saveConf(sysConfRepoMgr,confRepoMgr,resDir);
 %
 %% Build good directions
-[pDefObj,goodDirSetObj]=ApproxProblemPropertyBuilder.build(confRepoMgr,...
+[pDynObj,goodDirSetObj]=ApproxProblemPropertyBuilder.build(confRepoMgr,...
     sysConfRepoMgr);
 %
 %% Building internal ellipsoidal approximations
 [ellTubeRel,ellUnionTubeRel]=gras.ellapx.uncertcalc.EllApxBuilder(...
-    confRepoMgr,pDefObj,goodDirSetObj).build();
+    confRepoMgr,pDynObj,goodDirSetObj).build();
 %% Building projections
 tStart=tic;
 [projectorObj,staticProjectorObj]=...
@@ -111,6 +111,11 @@ SRunProp.ellTubeRel=ellTubeRel;
 SRunProp.ellTubeProjRel=ellTubeProjRel;
 SRunProp.ellUnionTubeRel=ellUnionTubeRel;
 SRunProp.ellUnionTubeStaticProjRel=ellUnionTubeStaticProjRel;
+%
+if nargout > 1
+    SRunAuxProp.goodDirSetObj = goodDirSetObj;
+    varargout{1}= SRunAuxProp;
+end
 %
 SRunProp.resDir=resDir;
 logger.info(['total time:',num2str(toc(tStartGlobal))]);

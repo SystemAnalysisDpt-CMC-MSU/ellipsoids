@@ -1,11 +1,10 @@
 classdef EllSecTCMultiDim < mlunitext.test_case
-    
-    % $Author: Igor Samokhin, Lomonosov Moscow State University,
-    % Faculty of Computational Mathematics and Cybernetics, System Analysis
-    % Department, 31-January-2013, <igorian.vmk@gmail.com>$
-    % $Copyright: Moscow State University,
-    %            Faculty of Computational Mathematics and Computer Science,
-    %            System Analysis Department 2012 $
+%$Author: Igor Samokhin <igorian.vmk@gmail.com> $
+%$Date: 2013-01-31 $
+%$Copyright: Moscow State University,
+%            Faculty of Computational Mathematics
+%            and Computer Science,
+%            System Analysis Department 2013 $
     
     properties (Access=private)
         testDataRootDir
@@ -18,7 +17,7 @@ classdef EllSecTCMultiDim < mlunitext.test_case
             self.testDataRootDir=[fileparts(which(className)),filesep,...
                 'TestData', filesep,shortClassName];
         end
-        function self = testIsInside(self)
+        function self = testIsContainedInIntersection (self)
             array1Size = [1, 2, 1, 1, 2, 1];
             myMat = [4, 1, 1; 1, 2, 1; 1, 1, 5];
             test1EllArray = createObjectArray(array1Size, @ellipsoid, ...
@@ -80,48 +79,48 @@ classdef EllSecTCMultiDim < mlunitext.test_case
                 if isempty(myString)
                     switch flag
                         case 0
-                            testRes = isinside(test1EllArray, test1EllArray);
+                            testRes = doesIntersectionContain(test1EllArray, test1EllArray);
                         case 1
-                            testRes = isinside(test1EllArray, test2EllArray);
+                            testRes = doesIntersectionContain(test1EllArray, test2EllArray);
                         case 2
-                            testRes = isinside(test2EllArray, test1EllArray);
+                            testRes = doesIntersectionContain(test2EllArray, test1EllArray);
                         case 3
-                            testRes = isinside(test2EllArray, test2EllArray);
+                            testRes = doesIntersectionContain(test2EllArray, test2EllArray);
                         otherwise
                     end
                 else
                     switch flag
                         case 0
-                            testRes = isinside(test1EllArray, ...
-                                test1EllArray, myString);
+                            testRes = doesIntersectionContain(test1EllArray, ...
+                                test1EllArray, 'mode', myString);
                         case 1
-                            testRes = isinside(test1EllArray, ...
-                                test2EllArray, myString);
+                            testRes = doesIntersectionContain(test1EllArray, ...
+                                test2EllArray, 'mode', myString);
                         case 2
-                            testRes = isinside(test2EllArray, ...
-                                test1EllArray, myString);
+                            testRes = doesIntersectionContain(test2EllArray, ...
+                                test1EllArray, 'mode', myString);
                         case 3
-                            testRes = isinside(test2EllArray, ...
-                                test2EllArray, myString);
+                            testRes = doesIntersectionContain(test2EllArray, ...
+                                test2EllArray, 'mode', myString);
                         otherwise
                     end
                 end
-                mlunit.assert_equals(myResult, testRes);
+                mlunitext.assert_equals(myResult, testRes);
             end
             function testError(flag)
                 [test1EllArray, test2EllArray, errorStr] = ...
                     createTypicalArray(flag);
                 self.runAndCheckError...
-                    ('test1EllArray.isinside(test2EllArray)', ...
+                    ('test1EllArray.doesIntersectionContain(test2EllArray)', ...
                     errorStr);
                 if (flag == 10) || (flag == 13)
                     self.runAndCheckError...
-                        ('test2EllArray.isinside(test1EllArray)', ...
+                        ('test2EllArray.doesIntersectionContain(test1EllArray)', ...
                         errorStr);
                 else
                     self.runAndCheckError...
-                        ('test2EllArray.isinside(test1EllArray)', ...
-                        'wrongInput:emptyObject');
+                        ('test2EllArray.doesIntersectionContain(test1EllArray)', ...
+                        'wrongInput:emptyEllipsoid');
                 end
             end
         end
@@ -172,7 +171,7 @@ switch flag
         ansEaEllMat = diag([13 ^ 2, 13 * 16 * ones(1, 6)]);
         ansEaEllVec = createObjectArray([1, 2], @ellipsoid, ...
             13 * ones(7, 1), ansEaEllMat, 2);
-        ansIaEllMat = diag([13 ^ 2, (sqrt(2.5) + 12) ^ 2 * ones(1, 6)]);
+        ansIaEllMat = diag([13 ^ 2, (realsqrt(2.5) + 12) ^ 2 * ones(1, 6)]);
         ansIaEllVec = createObjectArray([1, 2], @ellipsoid, ...
             13 * ones(7, 1), ansIaEllMat, 2);
         varargout{1} = my1Ell;
@@ -379,7 +378,7 @@ switch nArg
     otherwise
 end
 [isEqual, reportStr] = eq(resEllVec, ansEllVec);
-mlunit.assert_equals(true, all(isEqual), reportStr);
+mlunitext.assert_equals(true, all(isEqual), reportStr);
 end
 function objectArray = createObjectArray(arraySize, func, firstArg, ...
     secondArg, nArg)

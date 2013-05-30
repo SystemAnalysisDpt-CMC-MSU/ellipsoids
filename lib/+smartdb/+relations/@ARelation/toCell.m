@@ -1,6 +1,6 @@
 function resCMat=toCell(self,varargin)
-% TOCELL transforms values of all fields for all tuples into two
-% dimensional cell array
+% TOCELL - transforms values of all fields for all tuples into two
+%          dimensional cell array
 %
 % Usage: resCMat=toCell(self,varargin)
 %

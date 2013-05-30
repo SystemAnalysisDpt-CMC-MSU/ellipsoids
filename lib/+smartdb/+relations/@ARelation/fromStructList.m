@@ -1,7 +1,7 @@
 function relDataObj=fromStructList(className,structList)
-% FROMSTRUCTLIST creates a dynamic relation from a list of
-% structures interpreting each structure as the data for
-% several tuples.
+% FROMSTRUCTLIST - creates a dynamic relation from a list of structures 
+%                  interpreting each structure as the data for
+%                  several tuples.
 %
 % Input:
 %   regular:

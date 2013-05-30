@@ -103,6 +103,9 @@ classdef ContinuousReachRegrTestCase < mlunitext.test_case
                 self.crmSys.getParam('time_interval.t1')];
             self.calcPrecision =...
                 self.crm.getParam('genericProps.calcPrecision');
+            isRegEnabled = crm.getParam('regularizationProps.isEnabled');
+            isJustCheck = crm.getParam('regularizationProps.isJustCheck');
+            regTol = crm.getParam('regularizationProps.regTol');
             ControlBounds = struct();
             ControlBounds.center = ptDefCVec;
             ControlBounds.shape = ptDefCMat;
@@ -113,7 +116,10 @@ classdef ContinuousReachRegrTestCase < mlunitext.test_case
             self.linSys = elltool.linsys.LinSysFactory.create(atDefCMat,...
                 btDefCMat, ControlBounds, ctDefCMat, DistBounds);
             self.reachObj = elltool.reach.ReachContinuous(self.linSys,...
-                ellipsoid(x0DefVec, x0DefMat), l0Mat, self.timeVec);
+                ellipsoid(x0DefVec, x0DefMat), l0Mat, self.timeVec,...
+                'isRegEnabled', isRegEnabled,...
+                'isJustCheck', isJustCheck,...
+                'regTol', regTol);
         end
         %
         function self = testSystem(self)
@@ -133,16 +139,16 @@ classdef ContinuousReachRegrTestCase < mlunitext.test_case
                 isExt = self.isEqualApprox(expRel, EApproxType.External);
                 isInt = self.isEqualApprox(expRel, EApproxType.Internal);
                 isOk = isExt && isInt;
-                mlunit.assert_equals(true, isOk);
+                mlunitext.assert_equals(true, isOk);
             else
                 throwerror('WrongInput', 'Do not exist config mat file.');
             end
         end
         function self = testGetEllTubeRel(self)
-            mlunit.assert(all(self.reachObj.get_ia() == ...
+            mlunitext.assert(all(self.reachObj.get_ia() == ...
                 self.reachObj.getEllTubeRel.getEllArray(...
                 gras.ellapx.enums.EApproxType.Internal))); 
-            mlunit.assert(all(self.reachObj.get_ea() == ...
+            mlunitext.assert(all(self.reachObj.get_ea() == ...
                 self.reachObj.getEllTubeRel.getEllArray(...
                 gras.ellapx.enums.EApproxType.External))); 
         end

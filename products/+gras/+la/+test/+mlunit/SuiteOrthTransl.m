@@ -14,6 +14,25 @@ classdef SuiteOrthTransl < mlunitext.test_case
         function self = set_up_param(self,varargin)
         end
         %
+        function testOrthTransl(self)
+            import gras.la.orthtransl;
+            srcVec=[0 0];
+            dstVec=[1 0];
+            check('wrongInput:srcZero');
+            srcVec=[1 0];
+            dstVec=[0 0];
+            check('wrongInput:dstZero');
+            srcVec=[1 0]+1i*[1 0];
+            check('wrongInput:srcComplex');
+            srcVec=[1 0];
+            dstVec=[1 0]+1i*[1 0];
+            check('wrongInput:dstComplex');
+            %
+            function check(expErrorTag)
+            self.runAndCheckError('gras.la.orthtransl(srcVec,dstVec)',...
+                expErrorTag);                
+            end
+        end
         function test_matorth(self)
             inpMat=self.srcTlMat;
             %
@@ -81,7 +100,7 @@ classdef SuiteOrthTransl < mlunitext.test_case
                     compVal=fCalc(oCompMat);
                     isPos=maxVal+MAX_METRIC_COMP_TOL>=compVal;
                     %
-                    mlunit.assert_equals(true,isPos,...
+                    mlunitext.assert_equals(true,isPos,...
                         sprintf(['%s maximization doesn''t work, maxVal %f ',...
                         '< compVal %f'],func2str(fCalc),maxVal,compVal));
                 end
@@ -97,7 +116,7 @@ classdef SuiteOrthTransl < mlunitext.test_case
                     compExpVal=fCompHandle(oExpMat);
                     realTol=max(abs(compVal-compExpVal));
                     isPos=realTol<=self.MAX_TOL;
-                    mlunit.assert_equals(true,isPos,...
+                    mlunitext.assert_equals(true,isPos,...
                         sprintf('when comparing %s and %s real tol %e>%e',...
                         func2str(fProdHandle),func2str(fTestHandle),...
                         realTol,self.MAX_TOL));
@@ -142,7 +161,7 @@ classdef SuiteOrthTransl < mlunitext.test_case
                 %
                 realTol=max(max(abs(oMat-oExpMat)));
                 isPos=realTol<=self.MAX_TOL;
-                mlunit.assert_equals(true,isPos,...
+                mlunitext.assert_equals(true,isPos,...
                     sprintf('when comparing %s and %s real tol %e>%e',...
                     func2str(fHandle),func2str(fHandleSingle),...
                     realTol,self.MAX_TOL));
@@ -150,8 +169,8 @@ classdef SuiteOrthTransl < mlunitext.test_case
             end
         end
         function aux_checkOrthPlain(self,oMat,funcName)
-            mlunit.assert_equals(true,ndims(oMat)==2);
-            mlunit.assert_equals(true,size(oMat,1)==size(oMat,2));
+            mlunitext.assert_equals(true,ndims(oMat)==2);
+            mlunitext.assert_equals(true,size(oMat,1)==size(oMat,2));
             %
             self.aux_checkEye(oMat.'*oMat,'oMat.''*oMat',funcName);
             self.aux_checkEye(oMat*oMat.','oMat*oMat.''',funcName);
@@ -161,7 +180,7 @@ classdef SuiteOrthTransl < mlunitext.test_case
             nDims=size(eMat,1);
             realTol=max(max(abs(eMat-eye(nDims))));
             isPos=realTol<=self.MAX_TOL;
-            mlunit.assert_equals(true,isPos,...
+            mlunitext.assert_equals(true,isPos,...
                 sprintf('real tol for %s=I check of %s is %e>%e',...
                 msgStr,funcName,realTol,self.MAX_TOL));
         end
@@ -175,7 +194,7 @@ classdef SuiteOrthTransl < mlunitext.test_case
             %
             realTol=max(abs(dstVec-dstExpVec));
             isPos=realTol<=self.MAX_TOL;
-            mlunit.assert_equals(true,isPos,...
+            mlunitext.assert_equals(true,isPos,...
                 sprintf(['dstVec for %s is not close enough to ',...
                 'expDestVec, is %e>%e'],...
                 funcName,realTol,self.MAX_TOL));

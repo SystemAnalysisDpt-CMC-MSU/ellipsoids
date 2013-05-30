@@ -1,4 +1,24 @@
 function [resRho, bndPVec] = rho(ellObj,dirVec)
+% Example:
+%   ellObj = elltool.core.GenEllipsoid([1;1],eye(2));
+%   dirsVec = [1; 0];
+%   [resRho, bndPVec] = rho(ellObj, dirsVec)
+% 
+%   resRho =
+% 
+%        2
+% 
+%  bndPVec =
+% 
+%        2
+%        1
+% 
+%
+% $Author: Vadim Kaushanskiy <vkaushanskiy@gmail.com> $	$Date: 2012-12-24 $ 
+% $Copyright: Moscow State University,
+%            Faculty of Applied Mathematics and Computer Science,
+%            System Analysis Department 2012 $
+%
 import elltool.core.GenEllipsoid;
 absTol=GenEllipsoid.getCheckTol();
 eigvMat=ellObj.getEigvMat();
@@ -31,7 +51,7 @@ else
 end
 if ~all(abs(dirInfProjVec)<absTol)
     resRho=Inf;
-    scMul = sqrt(dirVec'*ellQMat*dirVec);
+    scMul = realsqrt(dirVec'*ellQMat*dirVec);
     if scMul > 0
         bndPFinVec = cenVec + (ellQMat*dirVec)/scMul;
     else
@@ -45,7 +65,7 @@ if ~all(abs(dirInfProjVec)<absTol)
     end
 else
     dirVec=dirVec/norm(dirVec);
-    scMul = sqrt(dirVec'*ellQMat*dirVec);
+    scMul = realsqrt(dirVec'*ellQMat*dirVec);
     resRho=cenVec.'*dirVec+scMul;
     if scMul > 0
         bndPVec = cenVec + (ellQMat*dirVec)/scMul;

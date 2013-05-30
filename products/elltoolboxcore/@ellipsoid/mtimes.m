@@ -16,13 +16,32 @@ function outEllVec = mtimes(multMat, inpEllVec)
 % Output:
 %   outEllVec: ellipsoid [1, nCols] - resulting ellipsoids.
 %
-% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 2004-2008 $
+% Example:
+%   ellObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+%   tempMat = [0 1; -1 0];
+%   outEllObj = tempMat*ellObj
+% 
+%   outEllObj =
+% 
+%   Center:
+%       -1
+%        2
+% 
+%   Shape:
+%        1     1
+%        1     4
+% 
+%   Nondegenerate ellipsoid in R^2.
 %
-% $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
+% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+% $Copyright:  The Regents of the University of California 
+% 2004-2008 $
+%
+% $Author: Guliev Rustam <glvrst@gmail.com> $   
+% $Date: Dec-2012$
 % $Copyright: Moscow State University,
-%             Faculty of Computational Mathematics and Cybernetics,
-%             Science, System Analysis Department 2012 $
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2012 $
 %
 
 import modgen.common.checkvar
@@ -56,12 +75,12 @@ arrayfun(@(x) fSingleMtimes(x), 1:numel(inpEllVec));
     function fSingleMtimes(index)
         singEll = inpEllVec(index);
         if isFstScal
-            shMat = multMatSq*singEll.shape;
+            shMat = multMatSq*singEll.shapeMat;
         else
-            shMat = multMat*(singEll.shape)*multMat';
+            shMat = multMat*(singEll.shapeMat)*multMat';
             shMat = 0.5*(shMat + shMat');
         end
-        outEllVec(index).center = multMat *singEll.center;
-        outEllVec(index).shape = shMat;
+        outEllVec(index).centerVec = multMat *singEll.centerVec;
+        outEllVec(index).shapeMat = shMat;
     end
 end

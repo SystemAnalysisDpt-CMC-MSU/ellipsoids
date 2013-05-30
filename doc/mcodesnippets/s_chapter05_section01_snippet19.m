@@ -1,8 +1,14 @@
-% ellipsoidal approximations for (E1 - E3 + E2)
-EA = minkmp_ea(E1, E3, E2, L)  % external
-% EA =
-% 1x5 array of ellipsoids.
-IA = minkmp_ia(E1, E3, E2, L)  % internal
-% IA =
-% 1x5 array of ellipsoids.
-minkmp(E1, E3, E2);  % plot the set (E1 - E3 + E2)
+% ellipsoidal approximations for (firstEllObj - thirdEllObj + secEllObj)
+
+% external
+externalEllVec = firstEllObj.minkmp_ea(thirdEllObj, secEllObj, dirsMat) 
+% externalEllVec =
+% Array of ellipsoids with dimensionality 1x5
+
+% internal
+internalEllVec = firstEllObj.minkmp_ia(thirdEllObj, secEllObj, dirsMat)
+% internalEllVec =
+% Array of ellipsoids with dimensionality 1x5
+
+% plot the set (firstEllObj - thirdEllObj + secEllObj)
+firstEllObj.minkmp(thirdEllObj, secEllObj);

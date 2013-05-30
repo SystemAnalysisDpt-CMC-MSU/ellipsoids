@@ -1,6 +1,6 @@
 function [ ellResVec] = minkSumEa( ellObjVec, dirMat )
 % MINKSUMEA - computes tight external ellipsoidal approximation for
-% Minkowsky sum of the set of generalized ellipsoids
+%             Minkowsky sum of the set of generalized ellipsoids
 %
 % Input:
 %   regular:
@@ -10,13 +10,47 @@ function [ ellResVec] = minkSumEa( ellObjVec, dirMat )
 %           directions for which approximations should be computed
 % Output:
 %   ellResVec: GenEllipsoid[1,nDir] - vector of generalized ellipsoids of
-%       external approximation of the dirrence of first and second generalized
-%       ellipsoids
+%       external approximation of the dirrence of first and second 
+%       generalized ellipsoids
+% 
+% Example:
+%   firstEllObj = elltool.core.GenEllipsoid([1;1],eye(2));
+%   secEllObj = elltool.core.GenEllipsoid([5;0],[3 0; 0 2]);
+%   ellVec = [firstEllObj secEllObj];
+%   dirsMat = [1 3; 2 4];
+%   ellResVec  = minkSumEa(ellVec, dirsMat )
+%  
+%   Structure(1)
+%      |    
+%      |----- q : [6 1]
+%      |          -----------------
+%      |----- Q : |7.50584|0      |
+%      |          |0      |5.83164|
+%      |          -----------------
+%      |          -----
+%      |-- QInf : |0|0|
+%      |          |0|0|
+%      |          -----
+%      O
+%  
+%   Structure(2)
+%      |    
+%      |----- q : [6 1]
+%      |          -----------------
+%      |----- Q : |7.48906|0      |
+%      |          |0      |5.83812|
+%      |          -----------------
+%      |          -----
+%      |-- QInf : |0|0|
+%      |          |0|0|
+%      |          -----
+%      O
 %
 %
-% $Author: Vitaly Baranov  <vetbar42@gmail.com> $    $Date: 2012-11$
+% $Author: Vitaly Baranov  <vetbar42@gmail.com> $    
+% $Date: 2012-11$
 % $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Cybernetics,
+%            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
 %
 %
@@ -124,7 +158,7 @@ else
             projCenVec=...
                 finBasMat.'*ellObjVec(iEll).centerVec;
             curPNum=...
-                sqrt(projCurDirVec.'*projQMat*projCurDirVec);
+                realsqrt(projCurDirVec.'*projQMat*projCurDirVec);
             if (abs(curPNum)>absTol)
                 if (~isBeenFirstNonDeg)
                     cenVec=projCenVec;
@@ -159,7 +193,7 @@ for iEll=1:nEllObj;
     eigviMat=ellObjVec(iEll).eigvMat;
     diagiMat=ellObjVec(iEll).diagMat;
     auxVec=eigviMat.'*curDirVec;
-    curPNum=sqrt(auxVec.'*diagiMat*auxVec);
+    curPNum=realsqrt(auxVec.'*diagiMat*auxVec);
     if (iEll==1)
         cenVec=ellObjVec(iEll).centerVec;
         sumMat=1/(curPNum)*eigviMat*diagiMat*eigviMat.';
@@ -198,7 +232,7 @@ for iEll=1:nEllObj
     diagiMat=ellObjVec(iEll).diagMat;
     projQMat=GenEllipsoid.findMatProj(eigviMat,diagiMat,zeroBasMat);
     projCenVec=zeroBasMat.'*ellObjVec(iEll).centerVec;
-    curPNum=sqrt(projCurDirVec.'*projQMat*projCurDirVec);
+    curPNum=realsqrt(projCurDirVec.'*projQMat*projCurDirVec);
     if (abs(curPNum)>absTol)
         if (~isBeenFirstNonDeg)
             cenVec=projCenVec;

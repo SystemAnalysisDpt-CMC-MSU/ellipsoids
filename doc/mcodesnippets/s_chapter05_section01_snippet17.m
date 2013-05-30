@@ -1,7 +1,11 @@
-E4 = shape(EE(2, 2), 0.4);  % ellipsoid defined by squeezing the ellipsoid EE(2, 2)
-E1 >= E4  % check if the geometric difference E1 - E4 is nonempty
+% ellipsoid defined by squeezing the ellipsoid ellMat(2, 2)
+fourthEllObj = ellMat(2, 2).getShape(0.4);  
+% check if the geometric difference firstEllObj - fourthEllObj is nonempty
+firstEllObj >= fourthEllObj  
 % 
 % ans =
 % 
 %      1
-minkdiff(E1, E4);  % compute and plot this geometric difference
+
+% compute and plot this geometric difference
+firstEllObj.minkdiff(fourthEllObj);

@@ -49,7 +49,8 @@ classdef ConfRepoManagerAnyStorage<handle
     end    
     methods
         function isPos=isConfSelected(self,confName)
-            %ISCONFSELECTED checks if the specified configuration selected
+            %ISCONFSELECTED - checks if the specified configuration
+            %                 selected
             isPos=self.isCachedConf(confName);
         end
         function storeCachedConf(self,confName)
@@ -57,7 +58,7 @@ classdef ConfRepoManagerAnyStorage<handle
             self.putConfToStorage(confName,SConfData,metaData)
         end
         function flushCache(self)
-            %FLUSHCACHE flushes all the cached information
+            %FLUSHCACHE - flushes all the cached information
             self.initCache();
         end
         function lastRevision=getLastConfVersion(self)
@@ -149,8 +150,8 @@ classdef ConfRepoManagerAnyStorage<handle
         end
         %
         function editConf(self,confName)
-            % EDITCONF opens the default system editor for the
-            % configuration specified by name
+            % EDITCONF - opens the default system editor for the
+            %            configuration specified by name
             % 
             % Input:
             %   confName: char[1,] - configuration name
@@ -161,9 +162,10 @@ classdef ConfRepoManagerAnyStorage<handle
         end
         %
         function selectConf(self,confName,varargin)
-            % SELECTCONF selects the configuration specified by name
-            % Only one configuration can be selected at any time. A selected 
-            % configuration is used for parameters reading/storing.
+            % SELECTCONF - selects the configuration specified by name
+            %              Only one configuration can be selected at any 
+            %              time. A selected configuration is used for 
+            %              parameters reading/storing.
             %
             % Input:
             %   regular:
@@ -202,9 +204,9 @@ classdef ConfRepoManagerAnyStorage<handle
         end
         %
         function isPositive=isParam(self,paramName)
-            % ISPARAM checks if the specified parameter name corresponds to
-            % the existing parameter for the currently selected
-            % configuration
+            % ISPARAM - checks if the specified parameter name corresponds 
+            %           to the existing parameter for the currently 
+            %           selected configuration
             % 
             % Input:
             %   regular:
@@ -219,7 +221,7 @@ classdef ConfRepoManagerAnyStorage<handle
         end
         %    
         function resVal=getParam(self,paramName,varargin)
-            % GETPARAM extracts a value for a parameter specified by name
+            % GETPARAM - extracts a value for a parameter specified by name
             %
             % Input:
             %   regular:
@@ -255,8 +257,9 @@ classdef ConfRepoManagerAnyStorage<handle
         end
         %
         function setParam(self,paramName,paramValue,varargin)
-            % SETPARAM assigns the specified value to a parameter specified
-            % by its name
+            % SETPARAM - assigns the specified value to a parameter 
+            %            specified by its name
+            % 
             %
             % Input:
             %   regular:
@@ -292,7 +295,7 @@ classdef ConfRepoManagerAnyStorage<handle
         end
         %
         function putConf(self,confName,SConf,varargin)
-           % PUTCONF puts the configuration structure into the storage
+           % PUTCONF - puts the configuration structure into the storage
            %
            % Input:
            %    regular:
@@ -301,7 +304,8 @@ classdef ConfRepoManagerAnyStorage<handle
            %        SConf: struct[1,1] - configuration structure
            %    
            %    optional:
-           %        confVersion: numeric[1,1] - configuration version number
+           %        confVersion: numeric[1,1] - configuration version 
+           %            number
            %        metaData: struct[1,1] - meta data to store along with
            %            the configuration structure
            %
@@ -310,9 +314,10 @@ classdef ConfRepoManagerAnyStorage<handle
         end
         %
         function [SConf,confVersion,metaData]=getConf(self,confName)
-           % GETCONF extracts the configuration structure and its meta data 
-           % by name, the returned configuration is automatically updated 
-           % up to the latest version
+           % GETCONF - extracts the configuration structure and its meta  
+           %           data by name, the returned configuration is 
+           %           automatically updated up to the latest version
+           % 
            %
            % Input:
            %    regular: 
@@ -329,8 +334,8 @@ classdef ConfRepoManagerAnyStorage<handle
         end
         %
         function copyConf(self,fromConfName,toConfName)
-            % COPYCONF copies a configuration to another
-            % configuration
+            % COPYCONF - copies a configuration to another configuration
+            % 
             %
             % Input:
             %   regular:
@@ -344,7 +349,8 @@ classdef ConfRepoManagerAnyStorage<handle
         end
         %
         function copyConfFile(self,destFolderName,varargin)
-            % COPYCONFFILE copies a configuration file to a specified file
+            % COPYCONFFILE - copies a configuration file to a specified
+            %                file
             % 
             % Input:
             %   regular:
@@ -382,7 +388,7 @@ classdef ConfRepoManagerAnyStorage<handle
         end        
         %
         function removeAll(self)
-            % REMOVEALL removes all the configurations from the storage
+            % REMOVEALL - removes all the configurations from the storage
             % 
             % Input:
             %   regular:
@@ -392,8 +398,8 @@ classdef ConfRepoManagerAnyStorage<handle
             self.storage.removeAll();
         end
         function confNameList=getConfNameList(self)
-            % GETCONFNAMELIST returns a name list of all configurations
-            % residing in the storage
+            % GETCONFNAMELIST - returns a name list of all configurations
+            %                   residing in the storage
             %
             % Input:
             %   regular:
@@ -406,8 +412,8 @@ classdef ConfRepoManagerAnyStorage<handle
             confNameList=self.getConfNameListInternal();
         end
         function confName=getCurConfName(self)
-            % GETCURCONFNAME returns a name of currently selected
-            % configuration
+            % GETCURCONFNAME - returns a name of currently selected
+            %                  configuration
             % 
             % Input:
             %   regular:
@@ -427,7 +433,7 @@ classdef ConfRepoManagerAnyStorage<handle
         end        
         %
         function [SConf,metaData]=getCurConf(self)
-            % GETCURCONF returns the currently selected configuration
+            % GETCURCONF - returns the currently selected configuration
             % 
             % Input:
             %   regular:
@@ -443,8 +449,8 @@ classdef ConfRepoManagerAnyStorage<handle
         end
         %
         function isPositive=isConf(self,confName)
-            % ISCONF checks if the specified name corresponds to existing
-            % configuration from the storage
+            % ISCONF - checks if the specified name corresponds to existing
+            %          configuration from the storage
             %
             % Input:
             %   regular:
@@ -459,8 +465,8 @@ classdef ConfRepoManagerAnyStorage<handle
             isPositive=self.storage.isKey(confName);
         end
         function removeConf(self,confName)
-            % REMOVECONF removes the specified configuartion from the
-            % storage by name
+            % REMOVECONF - removes the specified configuartion from the
+            %              storage by name
             %
             % Input:
             %   regular:
@@ -475,20 +481,21 @@ classdef ConfRepoManagerAnyStorage<handle
             self.storage.remove(confName);
         end
         function setConfPatchRepo(self,confPatchRepo)
-            % SETCONFPATCHREPO sets the configuration version tracker
+            % SETCONFPATCHREPO - sets the configuration version tracker
             % 
             % Input:
             %   regular:
             %       self: the object itself
-            %       confPatchRepo: modgen.struct.changetracking.AStructChangeTracker[1,1]  
-            %           configuration version tracker
+            %       confPatchRepo:   
+            %         modgen.struct.changetracking.AStructChangeTracker[1,1]
+            %         configuration version tracker
             %
             %
             self.confPatchRepo=confPatchRepo;
         end
         function updateConf(self,confName)
-            % UPDATECONF updates the specified configuration up to the
-            % latest version
+            % UPDATECONF - updates the specified configuration up to the
+            %              latest version
             %
             % Input: 
             %   regular:
@@ -499,8 +506,8 @@ classdef ConfRepoManagerAnyStorage<handle
             self.updateConfInternal(confName);
         end
         function updateAll(self)
-            % UPDATEALL updates all the configurations in the repository
-            % up to the latest version
+            % UPDATEALL - updates all the configurations in the repository
+            %             up to the latest version
             %
             % Input:
             %   regular:
@@ -522,8 +529,8 @@ classdef ConfRepoManagerAnyStorage<handle
                 self.updateConfInternal(confName);
             end
         end        function confNameList=getConfNameListInternal(self)
-            % GETCONFNAMELISTINTERNAL is an internal implementation of
-            % getConfNameList
+            % GETCONFNAMELISTINTERNAL - an internal implementation of
+            %                           getConfNameList
             %
             try
                 confNameList=self.storage.getKeyList();
@@ -540,8 +547,8 @@ classdef ConfRepoManagerAnyStorage<handle
             end
         end
         function updateConfInternal(self,confName)
-            % UPDATECONFINTERNAL is an internal implementation of
-            % updateConf
+            % UPDATECONFINTERNAL - an internal implementation of
+            %                      updateConf
             %
             [SConf,oldConfVersion,metaData]=self.getConfInternal(confName);
             [SConf,confVersion,metaData]=self.updateConfStructInternal(...
@@ -551,8 +558,8 @@ classdef ConfRepoManagerAnyStorage<handle
             end
         end
         function [SConf,confVersion,metaData]=updateConfStructInternal(self,SConf,confVersion,metaData)
-            % UPDATESCONFSTRUCTINTERNAL updates configuration structure
-            % up to the latest version
+            % UPDATESCONFSTRUCTINTERNAL - updates configuration structure
+            %                             up to the latest version
             %
             [SConf,confVersion]=self.confPatchRepo.applyAllLaterPatches(SConf,confVersion);
             metaData=self.putConfVersionToMetaData(metaData,confVersion);
@@ -560,9 +567,10 @@ classdef ConfRepoManagerAnyStorage<handle
         end
 
         function [SConf,confVersion,metaData]=getConfInternal(self,confName)
-            % GETCONFINTERNAL is an internal imlpementation of getConf that
-            % is used within the class to separate interface from its
-            % internal implementation
+            % GETCONFINTERNAL - an internal imlpementation of getConf that
+            %                   is used within the class to separate 
+            %                   interface from its internal implementation
+            % 
             % 
             if self.isCachedConf(confName)
                 [SConf,metaData]=self.getCachedConf(confName);
@@ -583,7 +591,7 @@ classdef ConfRepoManagerAnyStorage<handle
             confVersion=self.getConfVersionFromMetaData(metaData);
         end
         function putConfInternal(self,confName,SConf,confVersion,metaData)
-            % PUTCONFINTERNAL is an internal implementation of putConf
+            % PUTCONFINTERNAL - an internal implementation of putConf
             %
             if nargin<5
                 metaData=struct();
@@ -601,15 +609,17 @@ classdef ConfRepoManagerAnyStorage<handle
     end
     methods (Access=private)
         function cacheConf(self,confName,SConf,metaData)
-            % CACHECONF chaches the specified configuration and makes it current
+            % CACHECONF - chaches the specified configuration and makes it
+            %             current
             %
             self.cache(confName)={SConf,metaData};
             self.curConfName=confName;
         end
         function [SConf,metaData]=getCachedConf(self,confName)
-            % GETCACHEDCONF returns a cached configuration by its name; 
-            % exception is thrown if the requested configuration is not
-            % found
+            % GETCACHEDCONF - returns a cached configuration by its name; 
+            %                 exception is thrown if the requested 
+            %                 configuration is not found
+            % 
             %
             isCached=self.isCachedConf(confName);
             if isCached

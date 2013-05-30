@@ -3,6 +3,10 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
         APPROX_SCHEMA_NAME='ExtIntUncert'
         APPROX_SCHEMA_DESCR='External and internal approximation based on matrix ODEs for (Q)'
         N_TIME_POINTS=100;
+        ODE_NORM_CONTROL='on';
+        REG_MAX_STEP_TOL=0.05;
+        REG_ABS_TOL=1e-8;
+        N_MAX_REG_STEPS=6;
     end
     properties (Access=private)
         sMethodName
@@ -104,14 +108,14 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             D_sqrt=gras.la.sqrtmpos(D);
             %
             [VMat,DMat]=eig(QIntMat);
-            if ~ismatposdef(QIntMat,self.absTol,true)
+            if ~ismatposdef(QIntMat,self.calcPrecision,true)
                 throwerror('wrongState','internal approx has degraded');
             end
-            Q_star=VMat*sqrt(DMat)*transpose(VMat);
+            Q_star=VMat*realsqrt(DMat)*transpose(VMat);
             S=self.getOrthTranslMatrix(Q_star,R_sqrt,rSqrtlVec,Q_star*ltVec);
             %
             piNumerator=slCQClSqrtDynamics.evaluate(t);
-            piDenominator=sqrt(sum((QIntMat*ltVec).*ltVec));
+            piDenominator=realsqrt(sum((QIntMat*ltVec).*ltVec));
             if (piNumerator<=0)||(piDenominator<=0)
                 if ~ismatposdef(D,self.absTol)
                     throwerror('wrongInput',...
@@ -133,15 +137,16 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             if ~ismatposdef(QExtMat,self.absTol)
                 throwerror('wrongState','external approx has degraded');
             end
-            Q_star=VMat*sqrt(DMat)*transpose(VMat);
+            Q_star=VMat*realsqrt(DMat)*transpose(VMat);
             piNumerator=slBPBlSqrtDynamics.evaluate(t);
-            piDenominator=sqrt(sum((QExtMat*ltVec).*ltVec));
+            piDenominator=realsqrt(sum((QExtMat*ltVec).*ltVec));
             dSqrtlVec=CQCTransSqrtLDynamics.evaluate(t);
             S=self.getOrthTranslMatrix(Q_star,D_sqrt,dSqrtlVec,Q_star*ltVec);
             tmp=(A*Q_star-D_sqrt*transpose(S))*transpose(Q_star);
             dQExtMat=tmp+transpose(tmp)+...
                 piNumerator.*QExtMat./piDenominator+...
                 piDenominator.*R./piNumerator;
+            dQExtMat=(dQExtMat+dQExtMat.')*0.5;
         end
     end
     methods (Access=private)
@@ -190,8 +195,7 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             import gras.gen.SquareMatVector;
             import gras.ode.MatrixSysODESolver;
             import modgen.logging.log4j.Log4jConfigurator;
-            ODE_NORM_CONTROL='on';
-            odeArgList={'NormControl',ODE_NORM_CONTROL,...
+            odeArgList={'NormControl',self.ODE_NORM_CONTROL,...
                 'RelTol',self.getRelODECalcPrecision(),...
                 'AbsTol',self.getAbsODECalcPrecision()};
             %
@@ -199,18 +203,15 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             logger=Log4jConfigurator.getLogger();
             %
             %% Constructor solver object
-            REG_MAX_STEP_TOL=0.05;
-            REG_ABS_TOL=1e-8;
-            N_MAX_REG_STEPS=6;
             fOdeReg=@(t,QIntMat,QExtMat)calcRegEllApxMatrix(self,...
                 QIntMat,QExtMat);
             %
             solverObj=MatrixSysODESolver({[sysDim,sysDim],[sysDim,sysDim]},...
                 @(varargin)gras.ode.ode45reg(varargin{:},...
                 odeset(odeArgList{:}),...
-                'regMaxStepTol',REG_MAX_STEP_TOL,...
-                'regAbsTol',REG_ABS_TOL,...
-                'nMaxRegSteps',N_MAX_REG_STEPS),...
+                'regMaxStepTol',self.REG_MAX_STEP_TOL,...
+                'regAbsTol',self.REG_ABS_TOL,...
+                'nMaxRegSteps',self.N_MAX_REG_STEPS),...
                 'outArgStartIndVec',[1 2]);
             %
             nLDirs=self.getNGoodDirs;
@@ -299,14 +300,20 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
         function self=ExtIntEllApxBuilder(pDefObj,goodDirSetObj,...
                 timeLimsVec,calcPrecision,sMethodName,minQSqrtMatEig)
             import gras.ellapx.lreachuncert.ExtIntEllApxBuilder;
+            import modgen.common.throwerror;
+            import gras.la.ismatposdef;
+            x0Mat = pDefObj.getX0Mat();
             self=self@gras.ellapx.gen.ATightEllApxBuilder(pDefObj,...
                 goodDirSetObj,timeLimsVec,...
                 ExtIntEllApxBuilder.N_TIME_POINTS,calcPrecision);
+            if ~ismatposdef(x0Mat, self.REG_ABS_TOL)
+                throwerror('wrongInput',...
+                    'Initial set is not positive definite.');
+            end
             self.minQMatEig=minQSqrtMatEig*minQSqrtMatEig;
             self.goodDirSetObj=goodDirSetObj;
             self.sMethodName=sMethodName;
             self.prepareODEData();
-            self.absTol=elltool.conf.Properties.getAbsTol();
         end
         function ellTubeRel=getEllTubes(self)
             import gras.gen.SquareMatVector;

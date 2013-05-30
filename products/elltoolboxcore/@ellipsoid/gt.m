@@ -14,14 +14,24 @@ function isPositiveArr = gt(firstEllArr, secondEllArr)
 %       isPositiveArr(iCount) = true - if firsrEllArr(iCount)
 %       contains secondEllArr(iCount)
 %       when both have same center, false - otherwise.
+% 
+% Example:
+%   ellObj = ellipsoid([1 ;2], eye(2))
+%   ellObj > ellObj
+% 
+%   ans =
+% 
+%        1
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 2004-2008 $
+% $Copyright:  The Regents of the University of California 
+%              2004-2008 $
 %
-% $Author: Guliev Rustam <glvrst@gmail.com> $   $Date: Dec-2012$
+% $Author: Guliev Rustam <glvrst@gmail.com> $   
+% $Date: Dec-2012$
 % $Copyright: Moscow State University,
-%             Faculty of Computational Mathematics and Cybernetics,
-%             Science, System Analysis Department 2012 $
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2012 $
 %
 
 import modgen.common.throwerror;
@@ -37,7 +47,7 @@ modgen.common.checkvar( firstEllArr, 'numel(x) > 0', 'errorTag', ...
     'wrongInput:emptyArray', 'errorMessage', ...
     'Each array must be not empty.');
 
-modgen.common.checkvar( firstEllArr,'all(~isempty(x(:)))','errorTag', ...
+modgen.common.checkvar( firstEllArr,'all(~x(:).isEmpty())','errorTag', ...
     'wrongInput:emptyEllipsoid', 'errorMessage', ...
     'Array should not have empty ellipsoid.');
 
@@ -45,7 +55,7 @@ modgen.common.checkvar( secondEllArr, 'numel(x) > 0', 'errorTag', ...
     'wrongInput:emptyArray', 'errorMessage', ...
     'Each array must be not empty.')
 
-modgen.common.checkvar( secondEllArr,'all(~isempty(x(:)))','errorTag', ...
+modgen.common.checkvar( secondEllArr,'all(~x(:).isEmpty())','errorTag', ...
     'wrongInput:emptyEllipsoid', 'errorMessage', ...
     'Array should not have empty ellipsoid.');
 

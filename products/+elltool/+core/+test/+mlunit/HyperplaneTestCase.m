@@ -1,9 +1,11 @@
 classdef HyperplaneTestCase < mlunitext.test_case
-    % $Author: <Zakharov Eugene>  <justenterrr@gmail.com> $    $Date: <31 october> $
-    % $Copyright: Moscow State University,
-    %            Faculty of Computational Mathematics and Computer Science,
-    %            System Analysis Department <2012> $
-    %
+%$Author: <Zakharov Eugene>  <justenterrr@gmail.com> $    
+%$Date: 2012-10-31 $
+%$Copyright: Moscow State University,
+%            Faculty of Computational Mathematics 
+%            and Computer Science,
+%            System Analysis Department <2012> $
+%
     properties (Access=private)
         testDataRootDir
     end
@@ -30,13 +32,13 @@ classdef HyperplaneTestCase < mlunitext.test_case
             %simple construction test
             testingHyperplane = hyperplane(testNormalVec, testConst);
             res = self.isNormalAndConstantRight(testNormalVec, testConst,testingHyperplane);
-            mlunit.assert_equals(1, res);
+            mlunitext.assert_equals(true, res);
             %
             %omitting constant test
             testConst = 0;
             testingHyperplane = hyperplane(testNormalVec);
             res = self.isNormalAndConstantRight(testNormalVec, testConst,testingHyperplane);
-            mlunit.assert_equals(1, res);
+            mlunitext.assert_equals(true, res);
             %
             %
             testNormalsMat = SInpData.testNormalsMat;
@@ -51,7 +53,7 @@ classdef HyperplaneTestCase < mlunitext.test_case
                 nRes = nRes + self.isNormalAndConstantRight(testNormalsMat(:,iHyperplane),...
                     testConstantVec(iHyperplane), testingHyraplaneVec(iHyperplane));
             end
-            mlunit.assert_equals(nHypeplanes, nRes);
+            mlunitext.assert_equals(nHypeplanes, nRes);
             %
             %mutliple Hyperplane one constant test
             testNormalsMat = [[3; 4; 43; 1], [1; 0; 3; 3], [5; 2; 2; 12]];
@@ -64,7 +66,7 @@ classdef HyperplaneTestCase < mlunitext.test_case
                 nRes = nRes + self.isNormalAndConstantRight(testNormalsMat(:,iHyperplane),...
                     testConst, testingHyraplaneVec(iHyperplane));
             end
-            mlunit.assert_equals(nHypeplanes, nRes);
+            mlunitext.assert_equals(nHypeplanes, nRes);
             
             testNormArr = ones(10, 2, 2);
             testConstArr = 2*ones(2, 2);
@@ -76,7 +78,7 @@ classdef HyperplaneTestCase < mlunitext.test_case
             isPos = (isPos && ...
                 (self.isNormalAndConstantRight(testNormArr(:, 1, 2), ...
                 testConstArr(1, 2), testHypArr(3))));
-            mlunit.assert(isPos);
+            mlunitext.assert(isPos);
             %
             %mutliple constantants and single vector
             testNormalVec = [3; 4; 43; 1];
@@ -98,14 +100,14 @@ classdef HyperplaneTestCase < mlunitext.test_case
             isContainedTestedVec = contains(testHyperplanesVec,testVectorsMat);
             isOk = all(isContainedVec == isContainedTestedVec);
             %
-            mlunit.assert(isOk);
+            mlunitext.assert(isOk);
             
             testHyp = hyperplane([1; 0; 0], 1);
             testVectorsMat = [1 0 0 2; 0 1 0 0; 0 0 1 0];
             isContainedVec = contains(testHyp, testVectorsMat);
             isContainedTestedVec = [true; 0; 0; 0];
             isOk = all(isContainedVec == isContainedTestedVec);
-            mlunit.assert(isOk);
+            mlunitext.assert(isOk);
             
             testFstHyp = hyperplane([1; 0], 1);
             testSecHyp = hyperplane([1; 1], 1);
@@ -115,7 +117,7 @@ classdef HyperplaneTestCase < mlunitext.test_case
             isContainedMat = contains(testHypMat, testVectors);
             isContainedTestedMat = [true false; true false];
             isOk = all(isContainedMat == isContainedTestedMat);
-            mlunit.assert(isOk);
+            mlunitext.assert(isOk);
             
             nElems = 24;
             testHypArr(nElems) = hyperplane();
@@ -127,7 +129,7 @@ classdef HyperplaneTestCase < mlunitext.test_case
             isContainedTestedArr = false(2, 3, 4);
             isContainedTestedArr(end) = true;
             isOk = all(isContainedArr == isContainedTestedArr);
-            mlunit.assert(isOk);
+            mlunitext.assert(isOk);
         end
         %
         function self = testDimensions(self)
@@ -136,7 +138,7 @@ classdef HyperplaneTestCase < mlunitext.test_case
             dimensionsVec = SInpData.dimensionsVec;
             dimensionsTestedVec = dimension(testHyperplanesVec);
             isOk = all(dimensionsVec == dimensionsTestedVec);
-            mlunit.assert(isOk);
+            mlunitext.assert(isOk);
         end
         %
         %
@@ -150,10 +152,10 @@ classdef HyperplaneTestCase < mlunitext.test_case
             testedNeVec = ne(testHyperplanesVec,compareHyperplanesVec);
             %
             isOk = all(isEqVec == testedIsEqVec);
-            mlunit.assert(isOk);
+            mlunitext.assert(isOk);
             %
             isOk =  all(isEqVec ~= testedNeVec);
-            mlunit.assert(isOk);
+            mlunitext.assert(isOk);
             %
             testHypHighDimFst = hyperplane([1:1:75]', 1);
             testHypHighDimSec = hyperplane([1:1:75]', 2);
@@ -175,7 +177,7 @@ classdef HyperplaneTestCase < mlunitext.test_case
             isEmptyVec = SInpData.isEmptyVec;
             isEmptyTestedVec = isempty(testHyperplanesVec);
             isOk = all(isEmptyVec == isEmptyTestedVec);
-            mlunit.assert(isOk);
+            mlunitext.assert(isOk);
             
             nFstDim = 10;
             nSecDim = 20;
@@ -183,7 +185,7 @@ classdef HyperplaneTestCase < mlunitext.test_case
             testHypArr(nFstDim, nSecDim, nThrDim) = hyperplane();
             isEmptyArr = isempty(testHypArr);
             isOk = all(isEmptyArr);
-            mlunit.assert(isOk);
+            mlunitext.assert(isOk);
         end
         %
         function self = testIsParallel(self)
@@ -195,7 +197,7 @@ classdef HyperplaneTestCase < mlunitext.test_case
             testedIsParallel = isparallel(testHyperplanesVec,compareHyperplanesVec);
             isOk = all(testedIsParallel == isParallelVec);
             %
-            mlunit.assert(isOk);
+            mlunitext.assert(isOk);
         end
         %
         function self = testUminus(self)
@@ -205,7 +207,7 @@ classdef HyperplaneTestCase < mlunitext.test_case
             testHyraplane = hyperplane(testNormalVec, testConstant);
             minusTestHyraplane = uminus(testHyraplane);
             res = self.isNormalAndConstantRight(-testNormalVec, -testConstant,minusTestHyraplane);
-            mlunit.assert_equals(1, res);
+            mlunitext.assert_equals(true, res);
         end
         %
         function self = testDisplay(self)
@@ -216,29 +218,29 @@ classdef HyperplaneTestCase < mlunitext.test_case
             evalc('display(testHyperplaneVec);');
         end
         %
-        function self = testPlot(self)
-            SInpData =  self.auxReadFile(self);
-            testHplane3D1Vec = SInpData.testHplane3D1Vec;
-            testHplane3D2Vec = SInpData.testHplane3D2Vec;
-            testHplane2DVec = SInpData.testHplane2DVec;
-            STestOptions = SInpData.STestOptions;
-            %
-            pHandle = plot(testHplane3D1Vec);
-            close(pHandle);
-            pHandle = plot(testHplane2DVec);
-            close(pHandle);
-            pHandle = plot(testHplane3D1Vec,STestOptions);
-            close(pHandle);
-            pHandle = plot(testHplane3D1Vec,'g',testHplane3D2Vec,'r');
-            close(pHandle);            
-        end
-        function testPlotSimple(~)
-            HA = hyperplane([1 0; 1 -2]'', [4 -2]);
-            o.width = 2; o.size = [3 6.6]; o.center = [0 -2; 0 0];
-            hFig=figure();
-            h=plot(HA, 'r', o); hold off;
-            close(hFig);
-        end
+%         function self = testPlot(self)
+%             SInpData =  self.auxReadFile(self);
+%             testHplane3D1Vec = SInpData.testHplane3D1Vec;
+%             testHplane3D2Vec = SInpData.testHplane3D2Vec;
+%             testHplane2DVec = SInpData.testHplane2DVec;
+%             STestOptions = SInpData.STestOptions;
+%             %
+%             pHandle = plot(testHplane3D1Vec);
+%             close(pHandle);
+%             pHandle = plot(testHplane2DVec);
+%             close(pHandle);
+%             pHandle = plot(testHplane3D1Vec,STestOptions);
+%             close(pHandle);
+%             pHandle = plot(testHplane3D1Vec,'g',testHplane3D2Vec,'r');
+%             close(pHandle);            
+%         end
+%         function testPlotSimple(~)
+%             HA = hyperplane([1 0; 1 -2]'', [4 -2]);
+%             o.width = 2; o.size = [3 6.6]; o.center = [0 -2; 0 0];
+%             hFig=figure();
+%             h=plot(HA, 'r', o); hold off;
+%             close(hFig);
+%         end
         %    
         function self = testWrongInput(self)
             SInpData =  self.auxReadFile(self);
@@ -271,7 +273,7 @@ classdef HyperplaneTestCase < mlunitext.test_case
             isOkArr = (testAbsTolArr == hplaneArr.getAbsTol());
             %  
             isOk = all(isOkArr(:));
-            mlunit.assert(isOk);
+            mlunitext.assert(isOk);
        end
     end
     %
@@ -305,6 +307,6 @@ end
 
 function checkHypEqual(testFstHypArr, testSecHypArr, isEqualArr, ansStr)
     [isEqArr, reportStr] = eq(testFstHypArr, testSecHypArr);
-    mlunit.assert_equals(isEqArr, isEqualArr);
-    mlunit.assert_equals(reportStr, ansStr);
+    mlunitext.assert_equals(isEqArr, isEqualArr);
+    mlunitext.assert_equals(reportStr, ansStr);
 end
