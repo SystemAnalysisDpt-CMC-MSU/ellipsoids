@@ -37,8 +37,7 @@ classdef AGoodDirsContinuous
                 lsGoodDirMat, calcPrecision)
             import gras.ellapx.common.*;
             import gras.mat.MatrixOperationsFactory;
-            import gras.mat.fcnlib.ConstMatrixFunction;
-            import gras.mat.fcnlib.ConstColFunction;
+            import gras.mat.ConstMatrixFunctionFactory;
             import modgen.common.throwerror;
             %
             self.lsGoodDirMat = lsGoodDirMat;
@@ -72,13 +71,15 @@ classdef AGoodDirsContinuous
             self.ltGoodDirOneCurveSplineList = cell(nGoodDirs, 1);
             for iGoodDir = 1:nGoodDirs
                 lsGoodDirConstColFunc = ...
-                    ConstColFunction(lsGoodDirMat(:, iGoodDir));
+                    ConstMatrixFunctionFactory.createInstance(...
+                    lsGoodDirMat(:, iGoodDir));
                 self.ltGoodDirOneCurveSplineList{iGoodDir} = ...
                     matOpFactory.rMultiply(self.RstTransDynamics, ...
                     lsGoodDirConstColFunc);
             end
             %
-            lsGoodDirConstMatFunc = ConstMatrixFunction(lsGoodDirMat);
+            lsGoodDirConstMatFunc = ...
+                ConstMatrixFunctionFactory.createInstance(lsGoodDirMat);
             self.ltGoodDirCurveSpline = matOpFactory.rMultiply(...
                 self.RstTransDynamics, lsGoodDirConstMatFunc);
         end
