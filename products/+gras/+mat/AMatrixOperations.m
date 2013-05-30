@@ -180,9 +180,15 @@ classdef AMatrixOperations<gras.mat.IMatrixOperations
             obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
         end
         function obj = fromSymbMatrix(self, mCMat)
-            import gras.mat.MatrixFunctionFactory;
+            import gras.mat.symb.MatrixSymbFormulaBased;
+            import gras.mat.ConstMatrixFunctionFactory;
+            import gras.mat.symb.iscellofstringconst;
             %
-            obj = MatrixFunctionFactory.createInstance(mCMat);
+            if iscellofstringconst(mCMat)
+                obj = ConstMatrixFunctionFactory.createInstance(mCMat);
+            else
+                obj = MatrixSymbFormulaBased(mCMat);
+            end
         end
         function obj = rSymbMultiply(self, lCMat, mCMat, rCMat)
             import gras.mat.symb.MatrixSFTripleProd;
