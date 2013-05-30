@@ -82,12 +82,8 @@ zlabel('i_L');
 % Function 'evolve' can be used for computing the reach sets of switching systems.
 %
 rs2 = rs.evolve(20, s2);
-ColorOptEa.color = [1 0 0];
-ColorOptEa.alpha = 0.3;
-ColorOptIa.color = [1 1 0];
-ColorOptIa.alpha = 0.1;
-rs2.plot_ea(ColorOptEa);
-rs2.plot_ia(ColorOptIa);
+rs2.plot_ea('color', [1 0 0], 'shade', 0.3);
+rs2.plot_ia('color', [1 1 0], 'shade', 0.1);
 %%
 % To analyze the reachability of the system on some specific time segment within the computed time interval, use 'cut' function:
 %

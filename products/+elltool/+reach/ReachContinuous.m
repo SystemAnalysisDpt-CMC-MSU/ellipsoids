@@ -102,7 +102,6 @@ classdef ReachContinuous < elltool.reach.AReach
             if ischar(colorVec)
                 colorVec = getColorVec(colorVec);
             end
-            
 
             %
             if self.isProj
@@ -119,6 +118,11 @@ classdef ReachContinuous < elltool.reach.AReach
                         'fGetFill', @(x)(isFill));
                 end
             else
+                if self.dimension() > 2
+                    projBasisMat = eye(self.dimension(), 2);
+                else
+                    projBasisMat = eye(self.dimension());
+                end
                 plObj = smartdb.disp.RelationDataPlotter();
                 projSetObj = self.getProjSet(projBasisMat,...
                     approxType, scaleFactor);

@@ -6,14 +6,7 @@ classdef ReachPlotTestCase < mlunitext.test_case
     methods(Access = private)
         function getPlotAndCheck(self, passedArgList, fColor,...
                 fLineWidth, fTrans, colorFieldList, lineWidthFieldList,...
-                transFieldList, namePlot)
-            import gras.ellapx.enums.EApproxType;
-            
-            if strcmp(namePlot, 'plot_ia')
-                approxType = EApproxType.Internal;
-            else
-                approxType = EApproxType.External;
-            end
+                transFieldList, namePlot, approxType)
             
             plObj = feval(namePlot, self.reachObj, passedArgList{:});
             relByAppType = getTupleByApproxType(self, approxType);
@@ -73,13 +66,15 @@ classdef ReachPlotTestCase < mlunitext.test_case
         end
         
         function testPlotIA(self)
-            checkPlot(self, 'plot_ia');
+            import gras.ellapx.enums.EApproxType;
+            checkPlot(self, 'plot_ia', EApproxType.Internal);
         end
         function testPlotEA(self)
-            checkPlot(self, 'plot_ea');
+            import gras.ellapx.enums.EApproxType;
+            checkPlot(self, 'plot_ea', EApproxType.External);
         end
         
-        function checkPlot(self, namePlot)
+        function checkPlot(self, namePlot, approxType)
             import gras.ellapx.smartdb.test.mlunit.EllTubePlotPropTest
 
             colorFieldList = {'approxType'};
@@ -89,6 +84,8 @@ classdef ReachPlotTestCase < mlunitext.test_case
             checkPlotAdvance();
             checkPlotDefault();
             checkPlotSemiDefault()
+            checkPlotSymColor();
+            checkPlotSym();
             
             function checkPlotAdvance()
                 passedArgList = {'color', [1, 0, 0], 'width', 3,...
@@ -99,7 +96,8 @@ classdef ReachPlotTestCase < mlunitext.test_case
 
                 getPlotAndCheck(self, passedArgList, fColor,...
                     fLineWidth, fTrans, colorFieldList,...
-                    lineWidthFieldList, transFieldList, namePlot)
+                    lineWidthFieldList, transFieldList, namePlot,...
+                    approxType)
             end
             
             function checkPlotDefault()
@@ -110,7 +108,8 @@ classdef ReachPlotTestCase < mlunitext.test_case
 
                 getPlotAndCheck(self, passedArgList, fColor,...
                     fLineWidth, fTrans, colorFieldList,...
-                    lineWidthFieldList, transFieldList, namePlot)
+                    lineWidthFieldList, transFieldList, namePlot,...
+                    approxType)
             end
             
             function checkPlotSemiDefault()
@@ -121,9 +120,33 @@ classdef ReachPlotTestCase < mlunitext.test_case
                 
                 getPlotAndCheck(self, passedArgList, fColor,...
                     fLineWidth, fTrans, colorFieldList,...
-                    lineWidthFieldList, transFieldList, namePlot)
+                    lineWidthFieldList, transFieldList, namePlot,...
+                    approxType)
             end
-
+            
+            function checkPlotSymColor()
+                passedArgList = {'color', 'g'};
+                fColor = @(approxType)([0, 1, 0]);
+                fLineWidth = @(approxType)(2);
+                fTrans = @(approxType)getAlphaDefault(self, approxType);
+                
+                getPlotAndCheck(self, passedArgList, fColor,...
+                    fLineWidth, fTrans, colorFieldList,...
+                    lineWidthFieldList, transFieldList, namePlot,...
+                    approxType)
+            end
+            
+            function checkPlotSym()
+                passedArgList = {'r'};
+                fColor = @(approxType)([1, 0, 0]);
+                fLineWidth = @(approxType)(2);
+                fTrans = @(approxType)getAlphaDefault(self, approxType);
+                
+                getPlotAndCheck(self, passedArgList, fColor,...
+                    fLineWidth, fTrans, colorFieldList,...
+                    lineWidthFieldList, transFieldList, namePlot,...
+                    approxType)
+            end
         end
     end   
 end
