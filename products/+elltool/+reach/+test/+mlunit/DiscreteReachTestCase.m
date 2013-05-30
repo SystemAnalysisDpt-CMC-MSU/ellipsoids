@@ -243,7 +243,9 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             [trCenterMat ~] = self.reachObj.get_center();
             expectedTrCenterMat = self.calculateTrajectoryCenterMat(self);
             
-            isEqual = all(max(abs(expectedTrCenterMat - trCenterMat), [], 1) < self.COMP_PRECISION);
+            isEqual =...
+                all(max(abs(expectedTrCenterMat - trCenterMat), [], 1)...
+                < self.COMP_PRECISION);
             mlunitext.assert_equals(true, isEqual);
         end
         
@@ -350,6 +352,7 @@ classdef DiscreteReachTestCase < mlunitext.test_case
                 'x0Ell', 'l0Mat', 'timeVec');
             linSysObj = elltool.linsys.LinSysFactory.create(aMat, bMat,...
                 ControlBounds, [], [], [], [], 'd');
+            %timeVec = [0, 3];
             reachSetObj = elltool.reach.ReachDiscrete(linSysObj,...
                 x0Ell, l0Mat, timeVec);
             evalc('reachSetObj.display();');
@@ -363,7 +366,7 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             [~, ~] = reachSetObj.get_ia();
             [~, ~] = reachSetObj.get_goodcurves();
             [~] = reachSetObj.get_system();
-            projBasMat = [0 0 0 0 1 0; 0 0 0 0 0 1]';
+            projBasMat = [0 0 0 0 1 0; 0 0 0 0 0 1].';
             projReachSetObj = reachSetObj.projection(projBasMat);
             fig = figure();
             hold on;
@@ -371,7 +374,7 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             projReachSetObj.plot_ia();
             hold off;
             close(fig);
-            newReachObj = reachSetObj.evolve(2 * timeVec(2));
+            newReachObj = reachSetObj.evolve(timeVec(2) + 1);
             projReachSetObj.isprojection();
             firstCutReachObj.iscut();
             newReachObj.isempty();
