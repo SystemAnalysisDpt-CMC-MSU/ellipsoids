@@ -41,17 +41,29 @@ classdef ContinuousReachTestCase < mlunitext.test_case
             import modgen.common.throwerror;
             if approxType == EApproxType.External
                 ellArray = reachObj.get_ea();
-                plotter = reachObj.plot_ea();
+                dim = ellArray(1, 1).dimension;
+                if ~reachObj.isprojection()
+                    projReachObj = reachObj.projection(eye(dim, 2));
+                else
+                    projReachObj = reachObj.getCopy();
+                end
+                plotter = projReachObj.plot_ea();
                 scaleFactor = reachObj.getEaScaleFactor();
             elseif approxType == EApproxType.Internal
                 ellArray = reachObj.get_ia();
-                plotter = reachObj.plot_ia();
+                dim = ellArray(1, 1).dimension;
+                if ~reachObj.isprojection()
+                    projReachObj = reachObj.projection(eye(dim, 2));
+                else
+                    projReachObj = reachObj.getCopy();
+                end
+                plotter = projReachObj.plot_ia();
                 scaleFactor = reachObj.getIaScaleFactor();
             end
             [dirCVec timeVec] = reachObj.get_directions();
             goodDirCVec =...
                 cellfun(@(x) x(:, 1), dirCVec.', 'UniformOutput', false);
-            dim = ellArray(1, 1).dimension;
+            
             if dim > 2
                 ellArray = ellArray.projection(eye(dim, 2));
                 goodDirCVec = cellfun(@(x) x(1:2), goodDirCVec,...
@@ -106,9 +118,6 @@ classdef ContinuousReachTestCase < mlunitext.test_case
                     [centerVec shapeMat] = parameters(ell);
                     centerPointsMat = pointsMat -...
                         repmat(centerVec, 1, size(pointsMat, 2));
-                    if ~reachObj.isprojection()
-                        centerPointsMat = centerPointsMat / scaleFactor;
-                    end
                     sqrtScalProdVec = realsqrt(abs(dot(centerPointsMat,...
                         shapeMat\centerPointsMat) - 1));
                     mlunitext.assert_equals(...
@@ -182,11 +191,13 @@ classdef ContinuousReachTestCase < mlunitext.test_case
         function self = testPlotEa(self)
             import gras.ellapx.enums.EApproxType;
             self.runPlotTest(EApproxType.External);
+            self.reachObj.plot_ea();
         end
         %
         function self = testPlotIa(self)
             import gras.ellapx.enums.EApproxType;
             self.runPlotTest(EApproxType.Internal);
+            self.reachObj.plot_ia();
         end
         %
         function self = testDimension(self)
@@ -219,7 +230,11 @@ classdef ContinuousReachTestCase < mlunitext.test_case
             timeVec = [self.tVec(1), sum(self.tVec)/2];
             newReachObj = elltool.reach.ReachContinuous(self.linSys,...
                 self.x0Ell, self.l0Mat, timeVec);
+            indSTimeVec = newReachObj.getEllTubeRel().indSTime;
+            mlunitext.assert_equals(true, all(indSTimeVec == 1));
             evolveReachObj = newReachObj.evolve(self.tVec(2));
+            indSTimeVec = evolveReachObj.getEllTubeRel().indSTime;
+            mlunitext.assert_equals(true, all(indSTimeVec == 1));
             %
             isEqual = self.reachObj.isEqual(evolveReachObj);
             mlunitext.assert_equals(true, isEqual);
@@ -237,17 +252,31 @@ classdef ContinuousReachTestCase < mlunitext.test_case
         function self = testCut(self)
             import gras.ellapx.enums.EApproxType;
             %
-            newTimeVec = [sum(self.tVec)/2, self.tVec(2)];
+            if self.reachObj.isbackward()
+                newTimeVec = [sum(self.tVec)/2, self.tVec(2)];
+            else
+                newTimeVec = [sum(self.tVec)/2, self.tVec(2)];
+            end
             cutReachObj = self.reachObj.cut(newTimeVec);
             [iaEllMat timeVec] = cutReachObj.get_ia();
             eaEllMat = cutReachObj.get_ea();
             nTuples = size(iaEllMat, 1);
-            timeDif = timeVec(1) - newTimeVec(1);
+            if self.reachObj.isbackward()
+                timeDif = timeVec(end) - newTimeVec(1);
+            else
+                timeDif = timeVec(1) - newTimeVec(1);
+            end
             for iTuple = 1 : nTuples
-                x0IaEll = iaEllMat(iTuple, 1);
-                x0EaEll = eaEllMat(iTuple, 1);
                 directionsCVec = cutReachObj.get_directions();
-                l0Mat = directionsCVec{iTuple}(:, 1);
+                if self.reachObj.isbackward()
+                    x0IaEll = iaEllMat(iTuple, end);
+                    x0EaEll = eaEllMat(iTuple, end);
+                    l0Mat = directionsCVec{iTuple}(:, end);
+                else
+                    x0IaEll = iaEllMat(iTuple, 1);
+                    x0EaEll = eaEllMat(iTuple, 1);
+                    l0Mat = directionsCVec{iTuple}(:, 1);
+                end
                 l0Mat = l0Mat ./ norm(l0Mat);
                 newIaReachObj = elltool.reach.ReachContinuous(self.linSys,...
                     x0IaEll, l0Mat, newTimeVec + timeDif);
@@ -270,10 +299,39 @@ classdef ContinuousReachTestCase < mlunitext.test_case
                 'wrongInput');
         end
         %
+        function self = testNegativePlot(self)
+            dim = self.reachObj.dimension();
+            if dim == 2
+                projReachSet =...
+                    self.reachObj.projection(eye(dim, 1));
+            else
+                projReachSet =...
+                    self.reachObj.projection(eye(dim, 3));
+            end
+            self.runAndCheckError('projReachSet.plot_ea()', 'wrongInput');
+            self.runAndCheckError('projReachSet.plot_ia()', 'wrongInput');
+        end
+        %
         function self = testGetCopy(self)
             copiedReachObj = self.reachObj.getCopy();
             isEqual = copiedReachObj.isEqual(self.reachObj);
             mlunitext.assert_equals(true, isEqual);
+        end
+        %
+        function self = testSortedTimeVec(self)
+            ellTube = self.reachObj.getEllTubeRel();
+            switchTimeVec = self.reachObj.getSwitchTimeVec();
+            timeVec = ellTube.timeVec{1};
+            if numel(switchTimeVec) == 1
+                isOk = numel(timeVec) == 1;
+                mlunitext.assert_equals(true, isOk);
+            else
+                isnOk = any(diff(switchTimeVec) <= 0);
+                mlunitext.assert_equals(false, isnOk);
+                isOk = switchTimeVec(1) <= timeVec(1) ||...
+                    switchTimeVec(end) >= timeVec(end);
+                mlunitext.assert_equals(true, isOk);
+            end
         end
     end
 end

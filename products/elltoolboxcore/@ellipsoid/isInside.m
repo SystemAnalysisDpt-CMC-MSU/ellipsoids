@@ -21,6 +21,16 @@ function res = isInside(ellArr, objArr)
 %               ellArr[iDim1,...,iDimN] lies inside
 %               objArr[iDim1,...,iDimN].
 %
+% Example:
+%   firstEllObj = [0 ; 0] + ellipsoid(eye(2, 2));
+%   secEllObj = [0 ; 0] + ellipsoid(2*eye(2, 2));
+%   firstEllObj.isInside(secEllObj)
+% 
+%   ans =
+% 
+%        1
+%
+%
 % $Author: <Zakharov Eugene>  <justenterrr@gmail.com> $
 % $Date: <april> $
 % $Copyright: Moscow State University,
@@ -73,17 +83,11 @@ end
 %
     function res = isMyEllInPoly(ellIndex,polyIndex)
         if isEll
-            res = contains(objArr(polyIndex),ellArr(ellIndex));
+            res = doesContain(objArr(polyIndex),ellArr(ellIndex));
         else
             [constrMat constrValVec] = double(objArr(polyIndex));
-            [shiftVec shapeMat] = double(ellArr(ellIndex));
-            suppFuncVec = zeros(size(constrValVec));
-            [nRows, ~] = size(constrValVec);
-            for iRows = 1:nRows
-                suppFuncVec(iRows) = constrMat(iRows,:)*shiftVec +...
-                    sqrt(constrMat(iRows,:)*shapeMat*constrMat(iRows,:)');
-            end
-            res = all(suppFuncVec <= constrValVec+absTol);
+            suppFuncVec =rho(ellArr(ellIndex),constrMat');
+            res = all(suppFuncVec' <= constrValVec+absTol);
         end
     end
 end

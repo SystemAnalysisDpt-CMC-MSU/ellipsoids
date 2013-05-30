@@ -25,7 +25,8 @@ classdef ApproxProblemPropertyBuilder
             import modgen.common.throwerror;
             import gras.ellapx.uncertcalc.log.Log4jConfigurator;
             import gras.ellapx.lreachuncert.probdyn.LReachProblemDynamicsFactory;
-            import gras.ellapx.lreachplain.GoodDirsContinuousFactory; 
+            import gras.ellapx.gen.RegProblemDynamicsFactory;
+			import gras.ellapx.lreachplain.GoodDirsContinuousFactory
             %
             logger=Log4jConfigurator.getLogger();            
             %
@@ -54,10 +55,18 @@ classdef ApproxProblemPropertyBuilder
             tLims=[sysConfRepoMgr.getParam('time_interval.t0'),...
                 sysConfRepoMgr.getParam('time_interval.t1')];
             %
-            tStart=tic;            
+            isRegEnabled =...
+                confRepoMgr.getParam('regularizationProps.isEnabled');
+            isJustCheck =...
+                confRepoMgr.getParam('regularizationProps.isJustCheck');
+            regTol = confRepoMgr.getParam('regularizationProps.regTol');
+            %
+            tStart=tic;
             pDynObj = LReachProblemDynamicsFactory.createByParams(...
                 AtDefMat,BtDefMat,PtDefMat,ptDefVec,CtDefMat,...
                 QtDefMat,qtDefVec,X0DefMat,x0DefVec,tLims,calcPrecision);
+            pDynObj = RegProblemDynamicsFactory.create(pDynObj,...
+                isRegEnabled, isJustCheck, regTol);
             logger.info(...
                 sprintf(['building interpolation of the problem definition, ',...
                 'calc. precision=%d, time elapsed =%s sec.'],...
