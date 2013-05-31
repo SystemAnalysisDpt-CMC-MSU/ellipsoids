@@ -100,11 +100,9 @@ classdef EllUnionTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
             import gras.ellapx.enums.EEllUnionTimeDirection;
             import gras.ellapx.enums.EApproxType;
             import modgen.common.throwerror;
-            %
-            nTubes=ellTubeRel.getNTuples();
-            %
-            SData = EllUnionTubeBasic.sDataFromEllTubes(ellTubeRel);
-            ellUnionTubeRel=EllUnionTube(SData);
+            %            
+            ellUnionTubeRel=EllUnionTube();
+            ellUnionTubeRel.setDataFromEllTubesInternal(ellTubeRel);
         end
     end
     methods

@@ -13,8 +13,11 @@ classdef EllUnionTubeBasic<handle
         FCODE_TIME_TOUCH_END_VEC
         FCODE_TIME_TOUCH_OP_END_VEC        
     end
-    methods (Static)
-        function SData = sDataFromEllTubes(ellTubeRel)
+    methods(Access=protected)
+        setDataInternal(~);
+    end
+    methods (Access = protected)
+        function self = setDataFromEllTubesInternal(self, ellTubeRel)
             import gras.ellapx.smartdb.rels.EllUnionTube;
             import gras.ellapx.smartdb.rels.EllUnionTubeBasic;
             import gras.ellapx.enums.EEllUnionTimeDirection;
@@ -57,9 +60,10 @@ classdef EllUnionTubeBasic<handle
                     SData.xTouchOpCurveMat{iTube});                
                %
             end
+            self.setDataInternal(SData);
             %
             function [isLtTouchVec,isLsTouch,timeTouchEndVec]=...
-                    calcNeverTouchArea(xTouchCurveMat)
+                    calcNeverTouchArea(~)
                 nTimes=length(timeVec);                
                 isLtTouchVec=false(1,nTimes);                
                 isLsTouch=false;
