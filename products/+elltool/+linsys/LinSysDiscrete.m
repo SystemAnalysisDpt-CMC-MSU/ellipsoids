@@ -11,7 +11,7 @@ classdef LinSysDiscrete < elltool.linsys.ALinSys
     %            Faculty of Computational Mathematics and Computer Science,
     %            System Analysis Department 2012 $
     %
-    properties (Constant, Access = private)
+    properties (Constant, GetAccess = ?elltool.linsys.ALinSys)
         DISPLAY_PARAMETER_STRINGS = {'[k]', 'x[k+1]  =  ', ...
             '  y[k]  =  ', ' x[k]'}
     end
@@ -67,7 +67,7 @@ classdef LinSysDiscrete < elltool.linsys.ALinSys
         end
         %
         function display(self)
-            self.displayInternal(self.DISPLAY_PARAMETER_STRINGS)
+            self.displayInternal();
         end
     end
 end
