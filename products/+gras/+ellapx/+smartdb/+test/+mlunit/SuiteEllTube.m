@@ -719,7 +719,9 @@ classdef SuiteEllTube < mlunitext.test_case
         end
         %
         function self = testIsEqual(self)
-            import gras.ellapx.enums.EApproxType;
+            import gras.ellapx.enums.EApproxType;            
+            import gras.ellapx.smartdb.rels.EllUnionTube;
+            import gras.ellapx.smartdb.rels.EllUnionTubeStaticProj;
             %
             qMatArray(:,:,3) = [1,0;0,2];
             qMatArray(:,:,2) = [3,0;0,4];
@@ -842,9 +844,27 @@ classdef SuiteEllTube < mlunitext.test_case
             mlunitext.assert(isEqual, reportStr);
             proj2EllTube = interpSmallerEllTube.project(projType,...
                 projSpaceList, @fGetProjMat);
-            [isEqual, reportStr] = interpSmallerEllTube.isEqual(...
-                mixedExtInt2EllTube);
+            [isEqual, reportStr] = proj2EllTube.isEqual(...
+                projEllTube);
             mlunitext.assert(isEqual, reportStr);
+            % union
+            unionEllTube = EllUnionTube.fromEllTubes(...
+                mixedExtIntEllTube);
+            union2EllTube = EllUnionTube.fromEllTubes(...
+                mixedExtInt2EllTube);
+            [isEqual, reportStr] = unionEllTube.isEqual(...
+                union2EllTube);
+            mlunitext.assert(isEqual, reportStr);
+            % not availible until issue 87 is reintegrated
+%             unionProjEllTube = ...
+%                 EllUnionTubeStaticProj.fromEllTubes(...
+%                 proj2EllTube);
+%             unionProj2EllTube = ...
+%                 EllUnionTubeStaticProj.fromEllTubes(...
+%                 projEllTube);
+%             [isEqual, reportStr] = unionProjEllTube.isEqual(...
+%                 unionProj2EllTube);
+%             mlunitext.assert(isEqual, reportStr);            
             %
             function [projOrthMatArray,projOrthMatTransArray]=...
                     fGetProjMat(projMat,timeVec,varargin)
