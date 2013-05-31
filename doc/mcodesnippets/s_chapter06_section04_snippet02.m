@@ -5,5 +5,5 @@ dirsMat = [1; 0; 0; 0];  % single initial direction
 nSteps = 100;  % number of time steps
 
 % free-flow reach set
-ffrsObj = elltool.reach.ReachDiscrete(firstSys, x0EllObj, dirsMat, nSteps);  
+ffrsObj = elltool.reach.ReachDiscrete(firstSys, x0EllObj, dirsMat, [0 nSteps]);  
 externalEllMat = ffrsObj.get_ea();  % 101x1 array of external ellipsoids
