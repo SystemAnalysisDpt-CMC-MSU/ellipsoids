@@ -90,8 +90,9 @@ classdef EllTubePlotPropTest < mlunitext.test_case
             
             function colorAndAlphaHandleVec =...
                     getColorAndAlphaHandle(handleVec)
-                isColorAndAlphaVec = cellfun(@(x)(~isempty(strfind(x,...
-                    'Reach'))), get(handleVec, 'DisplayName'));
+                isColorAndAlphaVec = cellfun(@(x)((~isempty(strfind(x,...
+                    'Reach'))) || (~isempty(strfind(x,...
+                    'Union'))) ), get(handleVec, 'DisplayName'));
                 colorAndAlphaHandleVec = handleVec(isColorAndAlphaVec);
             end
             
@@ -110,19 +111,19 @@ classdef EllTubePlotPropTest < mlunitext.test_case
             close all;
         end
         
-        function set_up(self)
+        function set_up_param(self, fCreate)
             nPoints = 10;
-            [~, relStatProj, ~] = auxGenTubeAndProjForPlot(nPoints);
+            [~, relStatProj] = auxGenTubeAndProjForPlot(fCreate, nPoints);
             self.rel = relStatProj;
             
-            function [rel,relStatProj,relDynProj] =...
-                    auxGenTubeAndProjForPlot(nPoints,nTubes)
+            function [rel,relStatProj] =...
+                    auxGenTubeAndProjForPlot(fCreate, nPoints, nTubes)
                 calcPrecision = 0.001;
                 approxSchemaDescr = char.empty(1,0);
                 approxSchemaName = char.empty(1,0);
                 nDims = 2;
-                if nargin < 2
-                    nTubes=1;
+                if nargin < 3
+                    nTubes = 1;
                 end
                 lsGoodDirVec = [sin(1); cos(1)];
                 qMat = eye(nDims);
@@ -133,30 +134,26 @@ classdef EllTubePlotPropTest < mlunitext.test_case
                 sTime = nPoints;
                 approxType = gras.ellapx.enums.EApproxType.Internal;
                 %
-                rel = create();
+                rel = create(fCreate);
                 lsGoodDirVec = [0; 1];
                 qMat = diag([1, 2]);
                 QArrayList = repmat({repmat(qMat,[1, 1, nPoints])}, 1,...
                     nTubes);
                 approxType = gras.ellapx.enums.EApproxType.External;
-                rel.unionWith(create());
+                rel.unionWith(create(fCreate));
                 %
                 lsGoodDirVec = [cos(2); sin(2)];
                 qMat = diag([1, 2]);
                 QArrayList = repmat({repmat(qMat,[1, 1, nPoints])}, 1,...
                     nTubes);
-                rel.unionWith(create());
+                rel.unionWith(create(fCreate));
                 %
                 projSpaceList = {[1 0; 0 1].'};
                 %
                 projType = gras.ellapx.enums.EProjType.Static;
                 relStatProj = ...
                     rel.project(projType,projSpaceList,@fGetProjMat);
-                %
-                projType =...
-                    gras.ellapx.enums.EProjType.DynamicAlongGoodCurve;
-                relDynProj = rel.project(projType,...
-                    projSpaceList,@fGetProjMat);
+
                 function [projOrthMatArray, projOrthMatTransArray] =...
                         fGetProjMat(projMat, timeVec, varargin)
                     nTimePoints = length(timeVec);
@@ -164,12 +161,11 @@ classdef EllTubePlotPropTest < mlunitext.test_case
                     projOrthMatTransArray = repmat(projMat.',...
                         [1,1,nTimePoints]);
                 end
-                function rel = create()
+                function rel = create(fCreate)
                     ltGoodDirArray=repmat(lsGoodDirVec,[1,nTubes,nPoints]);
-                    rel=gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
-                        QArrayList, aMat, timeVec,...
-                        ltGoodDirArray, sTime, approxType, approxSchemaName,...
-                        approxSchemaDescr, calcPrecision);
+                    rel = fCreate(QArrayList, aMat, timeVec,...
+                          ltGoodDirArray, sTime, approxType,...
+                          approxSchemaName, approxSchemaDescr, calcPrecision);
                 end
             end
             

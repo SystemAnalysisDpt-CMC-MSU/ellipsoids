@@ -23,38 +23,110 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
             namePrefix=self.REG_TUBE_PREFIX;
         end        
     end
+    methods (Static = true, Access = protected)
+        function [plotPropProcObj, plObj] = parceInput(plotFullFieldList,...
+                varargin)
+            import gras.ellapx.smartdb.PlotPropProcessor;
+            import modgen.common.parseparext;
+                
+            plotSpecFieldListDefault = {'approxType'};
+            colorFieldListDefault = {'approxType'};
+            alphaFieldListDefault = {'approxType'};
+            widthFieldListDefault = {'approxType'};
+            fillFieldListDefault = {'approxType'};
+            
+            fGetPatchColorDefault =...
+                @(approxType)getPatchColorByApxType(approxType);
+            fGetAlphaDefault =...
+                @(approxType)getPatchAlphaByApxType(approxType);
+            fGetLineWidthDefault = ...
+                @(approxType)(2);
+            fGetFillDefault = ...
+                @(approxType)(true);
+            
+            [reg, isRegSpec, fGetColor, fGetAlpha, fGetLineWidth,...
+                fGetFill, colorFieldList, alphaFieldList, widthFieldList,...
+                fillFieldList,...
+                plotSpecFieldList, ~, ~, ~, ~, isColorList, isAlphaList,...
+                isFillList, isWidthList, isPlotSpecFieldList] = ...
+                parseparext(varargin, {'fGetColor', 'fGetAlpha',...
+                'fGetLineWidth', 'fGetFill', 'colorFieldList',...
+                'alphaFieldList',...
+                'lineWidthFieldList', 'fillFieldList', 'plotSpecFieldList';...
+                fGetPatchColorDefault, fGetAlphaDefault,...
+                fGetLineWidthDefault,fGetFillDefault,colorFieldListDefault,...
+                alphaFieldListDefault, widthFieldListDefault,...
+                fillFieldListDefault, plotSpecFieldListDefault;...
+                'isfunction(x)', 'isfunction(x)',...
+                'isfunction(x)', 'isfunction(x)',...
+                'iscell(x)', 'iscell(x)', 'iscell(x)',...
+                'iscell(x)', 'iscell(x)'},...
+                [0 1],...
+                'regCheckList',...
+                {@(x)isa(x,'smartdb.disp.RelationDataPlotter')},...
+                'regDefList', cell(1,1));
+            
+            checkListOfField();
+            
+            plotPropProcObj = PlotPropProcessor(plotFullFieldList,...
+                fGetColor, colorFieldList, fGetLineWidth, widthFieldList,...
+                fGetFill, fillFieldList, fGetAlpha, alphaFieldList);
+            
+            if ~isRegSpec
+                plObj=smartdb.disp.RelationDataPlotter;
+            else
+                plObj=reg{1};
+            end
+            
+            function checkListOfField()
+                if isPlotSpecFieldList
+                    if ~isColorList
+                        colorFieldList = plotSpecFieldList;
+                    end
+                    if ~isAlphaList
+                        alphaFieldList = plotSpecFieldList;
+                    end
+                    if ~isWidthList
+                        widthFieldList = plotSpecFieldList;
+                    end
+                    if ~isFillList
+                        fillFieldList = plotSpecFieldList;
+                    end
+                end
+            end
+            
+            function patchColor = getPatchColorByApxType(approxType)
+                import gras.ellapx.enums.EApproxType;
+                switch approxType
+                    case EApproxType.Internal
+                        patchColor = [0 1 0];
+                    case EApproxType.External
+                        patchColor = [0 0 1];
+                    otherwise,
+                        throwerror('wrongInput',...
+                            'ApproxType=%s is not supported',char(approxType));
+                end
+            end
+        
+            function patchAlpha = getPatchAlphaByApxType(approxType)
+                import gras.ellapx.enums.EApproxType;
+                switch approxType
+                    case EApproxType.Internal
+                        patchAlpha=0.1;
+                    case EApproxType.External
+                        patchAlpha=0.3;
+                    otherwise,
+                        throwerror('wrongInput',...
+                            'ApproxType=%s is not supported',char(approxType));
+                end
+            end
+        end
+    end
+    
     methods (Access=protected)
         function dependencyFieldList=getTouchCurveDependencyFieldList(~)
             dependencyFieldList={'sTime','lsGoodDirOrigVec',...
                 'projType','projSTimeMat','MArray'};
-        end
-    end
-    methods (Access=protected)
-        
-        function patchColor = getPatchColorByApxType(~,approxType)
-            import gras.ellapx.enums.EApproxType;
-            switch approxType
-                case EApproxType.Internal
-                    patchColor = [0 1 0];
-                case EApproxType.External
-                    patchColor = [0 0 1];
-                otherwise,
-                    throwerror('wrongInput',...
-                        'ApproxType=%s is not supported',char(approxType));
-            end
-        end
-        
-        function patchAlpha = getPatchAlphaByApxType(~,approxType)
-            import gras.ellapx.enums.EApproxType;
-            switch approxType
-                case EApproxType.Internal
-                    patchAlpha=0.1;
-                case EApproxType.External
-                    patchAlpha=0.3;
-                otherwise,
-                    throwerror('wrongInput',...
-                        'ApproxType=%s is not supported',char(approxType));
-            end
         end
         
         function patchColor = getRegTubeColor(~, ~)
@@ -234,14 +306,15 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
     end
     methods
         function plObj=plot(self, varargin)
-            % PLOT - displays ellipsoidal tubes using the specified RelationDataPlotter
+            % PLOT - displays ellipsoidal tubes using the specified
+            %   RelationDataPlotter
             %
             % Input:
             %   regular:
             %       self:
             %   optional:
-            %       plObj: smartdb.disp.RelationDataPlotter[1,1] - plotter object used 
-            %           for displaying ellipsoidal tubes
+            %       plObj: smartdb.disp.RelationDataPlotter[1,1] - plotter
+            %           object used for displaying ellipsoidal tubes
             %   properties:
             %       fGetColor: function_handle[1, 1] -
             %           function that specified colorVec for
@@ -281,65 +354,19 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
             %             System Analysis Department 2013$
             %
             import gras.ellapx.smartdb.rels.EllTubeProjBasic;
-            import gras.ellapx.smartdb.PlotPropProcessor;
             import modgen.logging.log4j.Log4jConfigurator;
-            import modgen.common.parseparext;
-                        
+                                    
             PLOT_FULL_FIELD_LIST =...
                 {'projType','timeVec','lsGoodDirOrigVec',...
                 'ltGoodDirMat','sTime','xTouchCurveMat',...
                 'xTouchOpCurveMat','ltGoodDirNormVec',...
                 'ltGoodDirNormOrigVec','approxType','QArray','aMat','MArray'};
-                
-            plotSpecFieldListDefault = {'approxType'};
-            colorFieldListDefault = {'approxType'};
-            alphaFieldListDefault = {'approxType'};
-            widthFieldListDefault = {'approxType'};
-            fillFieldListDefault = {'approxType'};
             
-            fGetPatchColorDefault =...
-                @(approxType)getPatchColorByApxType(self,approxType);
-            fGetAlphaDefault =...
-                @(approxType)getPatchAlphaByApxType(self,approxType);
-            fGetLineWidthDefault = ...
-                @(approxType)(2);
-            fGetFillDefault = ...
-                @(approxType)(true);
+            [plotPropProcObj, plObj] = gras.ellapx.smartdb...
+                .rels.EllTubeProjBasic.parceInput(PLOT_FULL_FIELD_LIST,...
+                varargin{:});
             
-            [reg, isRegSpec, fGetColor, fGetAlpha, fGetLineWidth,...
-                fGetFill, colorFieldList, alphaFieldList, widthFieldList,...
-                fillFieldList,...
-                plotSpecFieldList, ~, ~, ~, ~, isColorList, isAlphaList,...
-                isFillList, isWidthList, isPlotSpecFieldList] = ...
-                parseparext(varargin, {'fGetColor', 'fGetAlpha',...
-                'fGetLineWidth', 'fGetFill', 'colorFieldList',...
-                'alphaFieldList',...
-                'lineWidthFieldList', 'fillFieldList', 'plotSpecFieldList';...
-                fGetPatchColorDefault, fGetAlphaDefault,...
-                fGetLineWidthDefault,fGetFillDefault,colorFieldListDefault,...
-                alphaFieldListDefault, widthFieldListDefault,...
-                fillFieldListDefault, plotSpecFieldListDefault;...
-                'isfunction(x)', 'isfunction(x)',...
-                'isfunction(x)', 'isfunction(x)',...
-                'iscell(x)', 'iscell(x)', 'iscell(x)',...
-                'iscell(x)', 'iscell(x)'},...
-                [0 1],...
-                'regCheckList',...
-                {@(x)isa(x,'smartdb.disp.RelationDataPlotter')},...
-                'regDefList', cell(1,1));
-            
-            checkListOfField();
-            
-            plotPropProcObj = PlotPropProcessor(PLOT_FULL_FIELD_LIST,...
-                fGetColor, colorFieldList, fGetLineWidth, widthFieldList,...
-                fGetFill, fillFieldList, fGetAlpha, alphaFieldList);
-
             if self.getNTuples()>0
-                if ~isRegSpec
-                    plObj=smartdb.disp.RelationDataPlotter;
-                else
-                    plObj=reg{1};
-                end
                 %
                 fGetReachGroupKey=...
                     @(varargin)figureGetNamedGroupKeyFunc(self,...
@@ -407,25 +434,7 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                     'ltGoodDirMat','sTime','xTouchCurveMat',...
                     'xTouchOpCurveMat','ltGoodDirNormVec',...
                     'ltGoodDirNormOrigVec','approxType','QArray','aMat','MArray'});
-            end
-            
-            function checkListOfField()
-                if isPlotSpecFieldList
-                    if ~isColorList
-                        colorFieldList = plotSpecFieldList;
-                    end
-                    if ~isAlphaList
-                        alphaFieldList = plotSpecFieldList;
-                    end
-                    if ~isWidthList
-                        widthFieldList = plotSpecFieldList;
-                    end
-                    if ~isFillList
-                        fillFieldList = plotSpecFieldList;
-                    end
-                end
-            end
-            
+            end           
         end
     end
 end
