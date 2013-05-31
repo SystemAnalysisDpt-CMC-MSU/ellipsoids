@@ -499,7 +499,7 @@ classdef IReach < handle
         %
         isProjArr = isprojection(self) 
         %
-        % PLOT_EA - plots external approximations of 2D and 3D reach sets.
+        % PLOTEA - plots external approximations of 2D and 3D reach sets.
         %
         % Input:
         %   regular:
@@ -537,14 +537,14 @@ classdef IReach < handle
         %   timeVec = [0 10];  
         %   dirsMat = [1 0; 0 1]';
         %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-        %   rsObj.plot_ea();
+        %   rsObj.plotEa();
         %   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds); 
         %   dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
-        %   dRsObj.plot_ea();
+        %   dRsObj.plotEa();
         %
-        plot_ea(self, varargin)
+        plotEa(self, varargin)
         %
-        % PLOT_IA - plots internal approximations of 2D and 3D reach sets.
+        % PLOTIA - plots internal approximations of 2D and 3D reach sets.
         %
         % Input:
         %   regular:
@@ -579,12 +579,12 @@ classdef IReach < handle
         %   timeVec = [0 10];  
         %   dirsMat = [1 0; 0 1]';
         %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-        %   rsObj.plot_ia();
+        %   rsObj.plotIa();
         %   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds); 
         %   dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
-        %   dRsObj.plot_ia();
+        %   dRsObj.plotIa();
         %
-        plot_ia(self, varargin)
+        plotIa(self, varargin)
         %
         % PROJECTION - projects the reach set self onto the orthogonal basis   
         %              specified by the columns of matrix projMat.

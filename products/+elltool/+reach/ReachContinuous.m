@@ -777,16 +777,23 @@ classdef ReachContinuous < elltool.reach.AReach
             end
         end
         %%
-        function eaPlotter = plot_ea(self, varargin)
+        function eaPlotter = plotEa(self, varargin)
             import gras.ellapx.enums.EApproxType;
             eaPlotter = self.plotApprox(EApproxType.External, varargin{:});
         end
         %%
-        function iaPlotter = plot_ia(self, varargin)
+        function iaPlotter = plotIa(self, varargin)
             import gras.ellapx.enums.EApproxType;
             iaPlotter = self.plotApprox(EApproxType.Internal, varargin{:});
         end
         %%
+        function eaPlotter = plotByEa(self, varargin)
+            import gras.ellapx.enums.EProjType;
+            import gras.ellapx.smartdb.F;
+            import gras.ellapx.enums.EApproxType;
+             eaPlotter = self.ellTubeRel.getTuplesFilteredBy(...
+                        F.APPROX_TYPE, EApproxType.External).plotExt();
+        end
         function display(self)
             import gras.ellapx.enums.EApproxType;
             fprintf('\n');

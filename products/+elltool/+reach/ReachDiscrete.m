@@ -2169,7 +2169,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             linSys = self.system;
         end
         %   
-        function plot_ea(self, varargin)
+        function plotEa(self, varargin)
             import elltool.conf.Properties;
             import elltool.logging.Log4jConfigurator;
             
@@ -2424,7 +2424,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             end
         end
         %
-        function plot_ia(self, varargin)
+        function plotIa(self, varargin)
             import elltool.conf.Properties;
             import elltool.logging.Log4jConfigurator;
             
