@@ -83,8 +83,6 @@ classdef ReachFactory < handle
                 crm.getParam('regularizationProps.isJustCheck');
             self.regTol = crm.getParam('regularizationProps.regTol');
             self.x0Ell = ellipsoid(x0DefVec, x0DefMat);
-            self.tVec = [crmSys.getParam('time_interval.t0'),...
-                crmSys.getParam('time_interval.t1')];
             if self.isBack
                 self.tVec = [crmSys.getParam('time_interval.t1'),...
                     crmSys.getParam('time_interval.t0')];
@@ -142,8 +140,15 @@ classdef ReachFactory < handle
                 x0EllObj = fGetEll(inpX0EllVec, inpX0EllMat);
                 %
                 if isa(linSysObj, 'elltool.linsys.LinSysDiscrete')
-                    reachObj = elltool.reach.ReachDiscrete(linSysObj,...
-                        x0EllObj, l0DirMat, timeVec);
+                    if self.isEvolve
+                        halfReachObj = elltool.reach.ReachDiscrete(...
+                            linSysObj, x0EllObj, l0DirMat,...
+                            [timeVec(1) sum(timeVec)/2]);
+                        reachObj = halfReachObj.evolve(timeVec(2));
+                    else
+                        reachObj = elltool.reach.ReachDiscrete(linSysObj,...
+                            x0EllObj, l0DirMat, timeVec);
+                    end
                 elseif self.isEvolve
                     halfReachObj = elltool.reach.ReachContinuous(...
                         linSysObj, x0EllObj, l0DirMat,...

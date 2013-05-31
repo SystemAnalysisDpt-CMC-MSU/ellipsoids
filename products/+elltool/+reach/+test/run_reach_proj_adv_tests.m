@@ -1,4 +1,5 @@
-function results = run_reachcont_proj_adv_tests(inpConfAdvTestList, inpModeAdvTestList)
+function results = run_reach_proj_adv_tests(...
+    testCaseNameStr, inpConfAdvTestList, inpModeAdvTestList)
 % 'fix' - a mode with fixed projection matrix
 % 'rand' - a mode with random projection matrix
 %
@@ -30,17 +31,18 @@ crm = gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
 crmSys = gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
 %
 DEFAULT_CONF_LIST = {'ltisys', 'test2dbad'};
+% DEFAULT_CONF_LIST = {'ltisys'};
 DEFAULT_MODE_LIST = {'fix'};
 ALLOWED_MODE_LIST = {'fix','rand'};
 suiteList = {};
 %
-if nargin < 1
+if nargin < 2
     modeList = DEFAULT_MODE_LIST;
     confList = DEFAULT_CONF_LIST;
 else
     nInpConf = numel(inpConfAdvTestList);
     nInpMode = numel(inpModeAdvTestList);
-    if nargin < 2
+    if nargin < 3
         modeList = DEFAULT_MODE_LIST;
     elseif (nInpMode==1 && strcmp(inpModeAdvTestList,'*'))
         modeList = ALLOWED_MODE_LIST;
@@ -69,7 +71,7 @@ nConf = numel(confList);
 for iConf = 1:nConf
     confName=confList{iConf};
     suiteList{end + 1} = loader.load_tests_from_test_case(...
-        'elltool.reach.test.mlunit.ContinuousReachProjAdvTestCase',...
+        testCaseNameStr,...
         confList{iConf}, crm, crmSys, modeList,...
         'marker',confName);
 end
