@@ -64,7 +64,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 MArrayList,timeVec,ltGoodDirArray,sTime,approxType,...
                 approxSchemaName,approxSchemaDescr,calcPrecision,scaleFactorVec)
             %
-            % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011 $ 
+            % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $        $Date: 2011 $ 
             % $Copyright: Moscow State University,
             %            Faculty of Computational Mathematics and Computer Science,
             %            System Analysis Department 2011 $
@@ -301,7 +301,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 end
                 checkDataConsistency@...
                     gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic(self);
-	            %% Check that touch lines lie within the tubes
+                    %% Check that touch lines lie within the tubes
                 probDepFieldList=self.getProblemDependencyFieldList();
                 [~,~,~,indForwardVec,indBackwardVec]=...
                     self.getUniqueData('fieldNameList',probDepFieldList);
