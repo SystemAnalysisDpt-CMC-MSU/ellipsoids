@@ -45,15 +45,16 @@ function ellArr = fromStruct(SEllArr)
         ellArr(iEll) = struct2Ell(SEllArr(iEll));
     end
     ellArr = reshape(ellArr, size(SEllArr));
+    
+    
 end
 
 function ell = struct2Ell(SEll)
     if (isfield(SEll, 'absTol'))
-        ell = ellipsoid(SEll.a.', SEll.Q, 'absTol', SEll.absTol, ...
-                        'relTol', SEll.relTol, ...
-                        'nPlot2dPoints', SEll.nPlot2dPoints, ...
-                        'nPlot3dPoints', SEll.nPlot3dPoints);
+        SProp = rmfield(SEll, {'shapeMat', 'centerVec'});
+        propNameValueCMat = [fieldnames(SProp), struct2cell(SProp)].';
+        ell = ellipsoid(SEll.centerVec.', SEll.shapeMat, propNameValueCMat{:});
     else
-        ell = ellipsoid(SEll.a.', SEll.Q);
+        ell = ellipsoid(SEll.centerVec.', SEll.shapeMat);
     end
 end

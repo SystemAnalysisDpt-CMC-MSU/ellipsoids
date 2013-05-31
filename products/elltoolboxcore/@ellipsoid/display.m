@@ -45,8 +45,10 @@ sizeVec = size(myEllArr);
 fprintf([mat2str(sizeVec) '\n']);
 fprintf('\n');
 fprintf('Fields (name, type, description):\n');
-fprintf(['    ', SfieldNames.Q, '    double    ', SfieldDescription.Q, '\n']);
-fprintf(['    ', SfieldNames.a, '    double    ', SfieldDescription.a, '\n']);
+fprintf(['    ', SfieldNames.shapeMat, '    double    ',...
+        SfieldDescription.shapeMat, '\n']);
+fprintf(['    ', SfieldNames.centerVec, '    double    ',...
+        SfieldDescription.centerVec, '\n']);
 fprintf('\nData: \n');
 
 strucdisp(SdataArray, 'maxArrayLength', MAX_DISP_ELEM, ...

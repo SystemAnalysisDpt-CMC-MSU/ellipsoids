@@ -35,7 +35,9 @@ end
 
 function hpObj = struct2Hp(SHp)
     if (isfield(SHp, 'absTol'))
-        hpObj = hyperplane(SHp.normal, SHp.shift, 'absTol', SHp.absTol);
+        SProp = rmfield(SHp, {'normal', 'shift'});
+        propNameValueCMat = [fieldnames(SProp), struct2cell(SProp)].';
+        hpObj = hyperplane(SHp.normal, SHp.shift, propNameValueCMat{:});
     else
         hpObj = hyperplane(SHp.normal, SHp.shift);
     end
