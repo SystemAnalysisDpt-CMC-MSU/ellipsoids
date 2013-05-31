@@ -4,6 +4,7 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
         FCODE_PROJ_TYPE
         FCODE_LT_GOOD_DIR_NORM_ORIG_VEC
         FCODE_LS_GOOD_DIR_NORM_ORIG
+		FCODE_LT_GOOD_DIR_ORIG_MAT 
         FCODE_LS_GOOD_DIR_ORIG_VEC
         %
     end
@@ -193,10 +194,14 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
                 %
                 TS_CHECK_TOL=1e-13;
                 fCheck=@(x,y,z)max(abs(x-y(z)))<=TS_CHECK_TOL;
+                fCheck2d=@(x,y,z)max(abs(x-y(:,z)))<=TS_CHECK_TOL;
                 indSTime=num2cell(self.indSTime);
                 self.checkSVsTConsistency(num2cell(self.lsGoodDirNormOrig),...
                     self.ltGoodDirNormOrigVec,indSTime,'lsGoodDirNormOrig',...
                     'ltGoodDirNormOrigVec',fCheck);
+                self.checkSVsTConsistency(self.lsGoodDirOrigVec,...
+                    self.ltGoodDirOrigMat,indSTime,'lsGoodDirNormOrig',...
+                    'ltGoodDirNormOrigVec',fCheck2d);
                 nInd=length(self.projSTimeMat);
                 compareLsGoodDirVec=cell(nInd,1);
                 indList=cell(nInd,1);

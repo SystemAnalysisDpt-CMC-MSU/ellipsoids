@@ -9,10 +9,6 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
     end
     properties (GetAccess=private,Constant)
         DEFAULT_SCALE_FACTOR=1;
-        FIELDS_NOT_TO_CAT_OR_CUT={'APPROX_SCHEMA_DESCR';'DIM';...
-            'APPROX_SCHEMA_NAME';'APPROX_TYPE';'CALC_PRECISION';...
-            'IND_S_TIME';'LS_GOOD_DIR_NORM';'LS_GOOD_DIR_VEC';'S_TIME';...
-            'SCALE_FACTOR';'XS_TOUCH_OP_VEC';'XS_TOUCH_VEC'};
     end
     methods (Access=protected)
         function figureGroupKeyName=figureGetGroupKeyFunc(self,sTime,lsGoodDirVec)
@@ -269,80 +265,13 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
         
     end
     methods
-        function thinnedEllTubeRel =...
-                thinOutTuples(self, indVec)
-            import gras.ellapx.smartdb.F;
-            import modgen.common.throwerror;
-            FIELD_NAME_LIST_TO = {F.LS_GOOD_DIR_VEC;F.LS_GOOD_DIR_NORM;...
-                F.XS_TOUCH_VEC;F.XS_TOUCH_OP_VEC};
-            FIELD_NAME_LIST_FROM = {F.LT_GOOD_DIR_MAT;...
-                F.LT_GOOD_DIR_NORM_VEC;F.X_TOUCH_CURVE_MAT;...
-                F.X_TOUCH_OP_CURVE_MAT};
-            SData = self.getData();
-            SThinFunResult = SData;
-            timeVec = SData.timeVec{1};
-            nPoints = numel(timeVec);
-            if isa(indVec, 'double')
-                if min(indVec) < 1 || max(indVec) > nPoints
-                    throwerror('Indexes are out of range.');
-                end
-                isNeededIndVec = false(size(timeVec));
-                isNeededIndVec(indVec) = true;
-            elseif islogical(indVec)
-                if numel(indVec) ~= nPoints
-                    throwerror('Indexes are out of range.');
-                end
-                isNeededIndVec = indVec;
-            else
-                throwerror('indVec should be double or logical');
-            end
-            %
-            fieldsNotToCatVec =...
-                F.getNameList(self.FIELDS_NOT_TO_CAT_OR_CUT);
-            fieldsToCutVec =...
-                setdiff(fieldnames(SData), fieldsNotToCatVec);
-            cellfun(@(field) cutStructField(field), fieldsToCutVec);
-            cellfun(@cutStructSTimeField,...
-                FIELD_NAME_LIST_TO, FIELD_NAME_LIST_FROM);
-            SThinFunResult.lsGoodDirNorm =...
-                cell2mat(SThinFunResult.lsGoodDirNorm);
-            SThinFunResult.sTime(:) =...
-                timeVec(find(isNeededIndVec, 1));
-            SThinFunResult.indSTime(:) = 1;
-            %
-            thinnedEllTubeRel = self.createInstance(SThinFunResult);
-            %
-            function cutStructSTimeField(fieldNameTo, fieldNameFrom)
-                SThinFunResult.(fieldNameTo) =...
-                    cellfun(@(field) field(:, 1),...
-                    SThinFunResult.(fieldNameFrom),...
-                    'UniformOutput', false);
-            end
-            %
-            function cutResObj = getCutObj(whatToCutObj, isCutTimeVec)
-                dim = ndims(whatToCutObj);
-                if dim == 1
-                    cutResObj = whatToCutObj(isCutTimeVec);
-                elseif dim == 2
-                    cutResObj = whatToCutObj(:, isCutTimeVec);
-                elseif dim == 3
-                    cutResObj = whatToCutObj(:, :, isCutTimeVec);
-                end
-            end
-            %
-            function cutStructField(fieldName)
-                SThinFunResult.(fieldName) = cellfun(@(StructFieldVal)...
-                    getCutObj(StructFieldVal, isNeededIndVec),...
-                    SData.(fieldName), 'UniformOutput', false);
-            end
-        end
         function catEllTubeRel = cat(self, newEllTubeRel)
             import gras.ellapx.smartdb.F;
             SDataFirst = self.getData();
             SDataSecond = newEllTubeRel.getData();
             SCatFunResult = SDataFirst;
             fieldsNotToCatVec =...
-                F.getNameList(self.FIELDS_NOT_TO_CAT_OR_CUT);
+                F.getNameList(self.getNoCatOrCutFieldsList());
             fieldsToCatVec =...
                 setdiff(fieldnames(SDataFirst), fieldsNotToCatVec);
             cellfun(@(field) catStructField(field), fieldsToCatVec);

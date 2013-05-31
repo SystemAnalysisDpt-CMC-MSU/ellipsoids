@@ -102,6 +102,10 @@ classdef F
         LS_GOOD_DIR_NORM_ORIG_D='Norm of the original (not projected) good direction at time s';
         LS_GOOD_DIR_NORM_ORIG_T={'double'};
         %
+		LT_GOOD_DIR_ORIG_MAT = 'ltGoodDirOrigMat';
+		LT_GOOD_DIR_ORIG_MAT_D = 'Original (not projected) good direction curve';
+		LT_GOOD_DIR_ORIG_MAT_T = {'cell', 'double'};
+		%
         LS_GOOD_DIR_ORIG_VEC='lsGoodDirOrigVec';
         LS_GOOD_DIR_ORIG_VEC_D='Original (not projected) good direction at time s';
         LS_GOOD_DIR_ORIG_VEC_T={'cell','double'};

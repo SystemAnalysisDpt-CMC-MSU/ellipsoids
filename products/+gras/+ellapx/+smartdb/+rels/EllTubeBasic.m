@@ -7,6 +7,26 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
         FCODE_SCALE_FACTOR
         FCODE_M_ARRAY
     end
+    methods (Access = protected)
+        function fieldsList = getNoCatOrCutFieldsList(~)
+            fieldsList={'APPROX_SCHEMA_DESCR';'DIM';...
+            'APPROX_SCHEMA_NAME';'APPROX_TYPE';'CALC_PRECISION';...
+            'IND_S_TIME';'LS_GOOD_DIR_NORM';'LS_GOOD_DIR_VEC';'S_TIME';...
+            'SCALE_FACTOR';'XS_TOUCH_OP_VEC';'XS_TOUCH_VEC'};
+        end
+        function fieldsList = getSFieldsList(~)
+            fieldsList = {'LS_GOOD_DIR_VEC';'LS_GOOD_DIR_NORM';...
+            'XS_TOUCH_VEC';'XS_TOUCH_OP_VEC'};
+        end
+        function fieldsList = getTFieldsList(~)
+            fieldsList = {'LT_GOOD_DIR_MAT';...
+            'LT_GOOD_DIR_NORM_VEC';'X_TOUCH_CURVE_MAT';...
+            'X_TOUCH_OP_CURVE_MAT'};
+        end
+        function fieldsList = getScalarFieldsList(~)
+            fieldsList = {'LS_GOOD_DIR_NORM'};
+        end
+    end
     methods(Access=protected, Abstract)
         checkIfObjectScalar(~);
     end
@@ -523,6 +543,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     tubeProjDataCMat{iGroup,iProj}.lsGoodDirNormOrig=zeros(nLDirs,1);
                     tubeProjDataCMat{iGroup,iProj}.ltGoodDirNormOrigVec=cell(nLDirs,1);
                     tubeProjDataCMat{iGroup,iProj}.lsGoodDirOrigVec=cell(nLDirs,1);
+                    tubeProjDataCMat{iGroup,iProj}.ltGoodDirOrigMat=cell(nLDirs,1);
                     %
                     tubeProjDataCMat{iGroup,iProj}.xsTouchVec=cell(nLDirs,1);
                     tubeProjDataCMat{iGroup,iProj}.xsTouchOpVec=cell(nLDirs,1);
@@ -546,6 +567,8 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                         iOLDir=indLDirs(iLDir);
                         tubeProjDataCMat{iGroup,iProj}.lsGoodDirOrigVec{iOLDir}=...
                             STubeData.lsGoodDirVec{iOLDir};
+                        tubeProjDataCMat{iGroup,iProj}.ltGoodDirOrigMat{iOLDir}=...
+                            STubeData.ltGoodDirMat{iOLDir};
                         tubeProjDataCMat{iGroup,iProj}.ltGoodDirMat{iLDir}=...
                             SquareMatVector.rMultiplyByVec(projOrthMatArray,...
                             STubeData.ltGoodDirMat{iOLDir});
@@ -689,13 +712,93 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             end
         end
         %
+        function thinnedEllTubeRel =...
+                thinOutTuples(self, indVec)
+            import gras.ellapx.smartdb.F;
+            import modgen.common.throwerror;
+            SData = self.getData();
+            SThinFunResult = SData;
+            timeVec = SData.timeVec{1};
+            nPoints = numel(timeVec);
+            if isa(indVec, 'double')
+                if min(indVec) < 1 || max(indVec) > nPoints
+                    throwerror('Indexes are out of range.');
+                end
+                isNeededIndVec = false(size(timeVec));
+                isNeededIndVec(indVec) = true;
+            elseif islogical(indVec)
+                if numel(indVec) ~= nPoints
+                    throwerror('Indexes are out of range.');
+                end
+                isNeededIndVec = indVec;
+            else
+                throwerror('indVec should be double or logical');
+            end
+            %
+            fieldsNotToCatVec =...
+                F.getNameList(self.getNoCatOrCutFieldsList());
+            fieldsToCutVec =...
+                setdiff(fieldnames(SData), fieldsNotToCatVec);
+            cellfun(@(field) cutStructField(field), fieldsToCutVec);
+            cellfun(@cutStructSTimeField,...
+                F.getNameList(self.getSFieldsList()),...
+                F.getNameList(self.getTFieldsList()));
+            cellfun(@(field)fMakeCell(field), ...
+                 F.getNameList(self.getScalarFieldsList()))
+%             SThinFunResult.lsGoodDirNorm =...
+%                 cell2mat(SThinFunResult.lsGoodDirNorm);
+%             SThinFunResult.lsGoodDirNormOrig =...
+%                 cell2mat(SThinFunResult.lsGoodDirNormOrig);
+            SThinFunResult.sTime(:) =...
+                timeVec(find(isNeededIndVec, 1));
+            SThinFunResult.indSTime(:) = 1;
+            %
+            thinnedEllTubeRel = self.createInstance(SThinFunResult);
+            %
+            function fMakeCell(fieldName)
+                SThinFunResult.(fieldName) = ...
+                    cell2mat(SThinFunResult.(fieldName));
+            end
+            %
+            function cutStructSTimeField(fieldNameTo, fieldNameFrom)
+                SThinFunResult.(fieldNameTo) =...
+                    cellfun(@(field) field(:, 1),...
+                    SThinFunResult.(fieldNameFrom),...
+                    'UniformOutput', false);
+            end
+            %
+            function cutResObj = getCutObj(whatToCutObj, isCutTimeVec)
+                dim = ndims(whatToCutObj);
+                if dim == 1
+                    cutResObj = whatToCutObj(isCutTimeVec);
+                elseif dim == 2
+                    cutResObj = whatToCutObj(:, isCutTimeVec);
+                elseif dim == 3
+                    cutResObj = whatToCutObj(:, :, isCutTimeVec);
+                end
+            end
+            %
+            function cutStructField(fieldName)
+                SThinFunResult.(fieldName) = cellfun(@(StructFieldVal)...
+                    getCutObj(StructFieldVal, isNeededIndVec),...
+                    SData.(fieldName), 'UniformOutput', false);
+            end
+        end
     end
     methods(Sealed)
         function [isEqual, reportStr] = isEqual(self, ellTubeObj, varargin)
             import gras.ellapx.smartdb.F;
             import gras.ellapx.enums.EApproxType;
             import elltool.logging.Log4jConfigurator;
+            import modgen.common.throwerror;
             %
+            self.checkIfObjectScalar();
+            ellTubeObj.checkIfObjectScalar();
+            if (~isempty(setdiff(self.getFieldNameList(),...
+                    ellTubeObj.getFieldNameList())))
+                throwerror('wrongInput',...
+                    'tubes must be of the same type');
+            end
             persistent logger;
             if (nargout == 2)
                 reportStr = [];
