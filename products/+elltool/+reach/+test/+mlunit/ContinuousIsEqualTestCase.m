@@ -44,24 +44,24 @@ classdef ContinuousIsEqualTestCase < mlunitext.test_case
             %
             % finish time differs
             newTimeVec = self.timeVec;
-            newTimeVec(2) = newTimeVec(2) + 1;
-            longerReachObj = elltool.reach.ReachContinuous(self.linSys,...
+            newTimeVec(2) = (newTimeVec(2) + newTimeVec(1))/2;
+            smallerReachObj = elltool.reach.ReachContinuous(self.linSys,...
                 self.x0Ell, self.l0Mat, newTimeVec);
-            [isEqual, reportStr] = self.reachObj.isEqual(longerReachObj);
+            [isEqual, reportStr] = self.reachObj.isEqual(smallerReachObj);
             mlunitext.assert(~isEqual, reportStr);
             % start time differs
             newTimeVec = self.timeVec;
-            newTimeVec(1) = newTimeVec(1) - 1;
-            longerReachObj = elltool.reach.ReachContinuous(self.linSys,...
+            newTimeVec(1) = (newTimeVec(2) + newTimeVec(1))/2;
+            smallerReachObj = elltool.reach.ReachContinuous(self.linSys,...
                 self.x0Ell, self.l0Mat, newTimeVec);
-            [isEqual, reportStr] = self.reachObj.isEqual(longerReachObj);
+            [isEqual, reportStr] = self.reachObj.isEqual(smallerReachObj);
             mlunitext.assert(~isEqual, reportStr);
             % Equality of enclosedly-grided reaches
             %
             REL_TOL1 = 0.0001;
-            ABS_TOL1 = 0.001;
-            REL_TOL2 = 0.000001;
-            ABS_TOL2 = 0.00001;
+            ABS_TOL1 = 0.00001;
+            REL_TOL2 = 0.00001;
+            ABS_TOL2 = 0.0000001;
             smallerReachObj = elltool.reach.ReachContinuous(self.linSys,...
                 self.x0Ell, self.l0Mat, self.timeVec, 1, ...
                 'absTol', ABS_TOL1, 'relTol', REL_TOL1);
