@@ -700,7 +700,7 @@ classdef AReach < elltool.reach.IReach
                 elseif strcmp(meObj.identifier,...
                         ['GRAS:ELLAPX:LREACHUNCERT:EXTINTELLAPXBUILDER',...
                         ':CALCELLAPXMATRIXDERIV:wrongInput']) ||...
-                    strcmp(meObj.identifier,...
+                        strcmp(meObj.identifier,...
                         ['GRAS:ELLAPX:SMARTDB:RELS:ELLTUBEBASIC:',...
                         'CHECKDATACONSISTENCY:wrongInput:QArrayNotPos'])
                     errorStr = [EMSG_R_PROB, EMSG_USE_REG];
@@ -1220,16 +1220,27 @@ classdef AReach < elltool.reach.IReach
             projObj.projectionBasisMat = projMat;
         end
         %
-        function eaPlotter = plot_ea(self, varargin)
+        function eaPlotter = plotEa(self, varargin)
             import gras.ellapx.enums.EApproxType;
             eaPlotter = self.plotApprox(EApproxType.External, varargin{:});
         end
         %
-        function iaPlotter = plot_ia(self, varargin)
+        function iaPlotter = plotIa(self, varargin)
             import gras.ellapx.enums.EApproxType;
             iaPlotter = self.plotApprox(EApproxType.Internal, varargin{:});
         end
         %
+        function eaPlotter = plotByEa(self, varargin)
+            import gras.ellapx.enums.EApproxType;
+            eaPlotter = self.plotByApprox(EApproxType.External, varargin{:});
+            
+        end
+        function plotter = plotByApprox(self, approxType, varargin)
+            import gras.ellapx.smartdb.F;
+            import gras.ellapx.enums.EProjType;
+            plotter = self.ellTubeRel.getTuplesFilteredBy(...
+                F.APPROX_TYPE, approxType).plotExt(varargin{:});
+        end
         function self = refine(self, l0Mat)
             import modgen.common.throwerror;
             import gras.ellapx.enums.EApproxType;
