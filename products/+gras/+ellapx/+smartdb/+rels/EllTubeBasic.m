@@ -14,7 +14,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             import gras.gen.SquareMatVector;
             Qsize=size(QArray);
             tmp=SquareMatVector.rMultiplyByVec(QArray,ltGoodDirMat);
-            denominator=realsqrt(abs(sum(tmp.*ltGoodDirMat)));
+            denominator=realsqrt(abs(dot(ltGoodDirMat, tmp, 1)));
             temp=tmp./denominator(ones(1,Qsize(2)),:);
             xTouchOpMat=aMat-temp;
             xTouchMat=aMat+temp;
@@ -175,15 +175,27 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             function checkNorm(QArray,aMat,xTouchCurveMat,...
                     calcPrecision,fieldName)
                 import modgen.common.throwerror;
+                %
+                invPrecision = 0;
                 normVec=gras.gen.SquareMatVector.lrDivideVec(...
                     QArray,xTouchCurveMat-aMat);
                 actualPrecision=max(fTolFunc(normVec));
-                isOk=actualPrecision<=calcPrecision;
+                %
+                for i = 1:size(QArray, 3)
+                    xTVec = xTouchCurveMat(:,i) - aMat(:,i);
+                    QMat = QArray(:,:,i);
+                    iQxVec = QMat \ xTVec;
+                    curInvPrecision = max(abs(QMat * iQxVec - xTVec));
+                    invPrecision = max(invPrecision, curInvPrecision);
+                end
+                %
+                isOk=actualPrecision<=invPrecision + calcPrecision;
                 if ~isOk
                     throwerror('wrongInput:touchLineValueFunc',...
                         ['check [%s] has failed for %s, ',...
-                        'expected precision=%d, actual precision=%d'],...
-                        checkName,fieldName,calcPrecision,actualPrecision);
+                        'expected precision=%d, actual precision=%d, inv precision=%d'],...
+                        checkName,fieldName,calcPrecision,actualPrecision, ...
+                        invPrecision);
                 end
             end
         end    
