@@ -164,10 +164,6 @@ classdef ReachContinuous < elltool.reach.AReach
                     probDynObj,  l0Mat, timeVec, isDisturb, ...
                     calcPrecision, approxTypeVec);
             catch meObj
-%                 'aux'
-%                 meObj.identifier
-%                 meObj.message
-%                 
                 errorStr = '';
                 errorTag = '';
                 %
@@ -197,9 +193,6 @@ classdef ReachContinuous < elltool.reach.AReach
                 else
                     friendlyMeObj = throwerror(errorTag, errorStr);
                     friendlyMeObj = addCause(friendlyMeObj, meObj);
-                    
-%                     friendlyMeObj.identifier
-%                     friendlyMeObj.message
                     throw(friendlyMeObj);
                 end
             end
