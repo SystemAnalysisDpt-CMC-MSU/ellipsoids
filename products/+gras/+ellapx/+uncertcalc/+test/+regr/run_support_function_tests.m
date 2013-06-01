@@ -24,6 +24,15 @@ if nargin==0
 else
     confNameList=inpConfNameList;
 end
+%
+notToTestConfNameList = {'discrSecondTest'};
+testConfIndArray = ones(1, length(confNameList));
+for confName = notToTestConfNameList{:}
+    testConfIndArray = testConfIndArray & ...
+        ~ismember(confNameList, 'discrSecondTest');
+end
+confNameList = confNameList(testConfIndArray);
+%
 crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
 crmSys.deployConfTemplate('*');
 nConfs=length(confNameList);

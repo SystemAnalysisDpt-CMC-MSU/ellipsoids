@@ -1,8 +1,17 @@
-aMat = [0 1; 0 0]; bMat = eye(2);  % matrices A and B, B is identity
-SUBounds = struct();
-% center of the ellipsoid depends on t
-SUBounds.center = {'sin(t)'; 'cos(t)'};  
-SUBounds.shape = [9 0; 0 2]; % shape matrix of the ellipsoid is static
-% create linear system object
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds); 
-% is equal to sys = elltool.linsys.LinSysFactory.create(aMat, bMat, SUBounds)
+nPoints=5;
+calcPrecision=0.001;
+approxSchemaDescr=char.empty(1,0);
+approxSchemaName=char.empty(1,0);
+nDims=3;
+nTubes=1;
+lsGoodDirVec=[1;0;1];
+aMat=zeros(nDims,nPoints);
+timeVec=1:nPoints;
+sTime=nPoints;
+approxType=gras.ellapx.enums.EApproxType.Internal;
+qArrayList=repmat({repmat(diag([1 2 3]),[1,1,nPoints])},1,nTubes);
+ltGoodDirArray=repmat(lsGoodDirVec,[1,nTubes,nPoints]);
+fromMatEllTube=gras.ellapx.smartdb.rels.EllTube.fromQArrays(qArrayList,...
+                aMat, timeVec,ltGoodDirArray, sTime, approxType,...
+                approxSchemaName, approxSchemaDescr, calcPrecision);
+

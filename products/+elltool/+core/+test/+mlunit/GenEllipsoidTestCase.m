@@ -125,7 +125,7 @@ classdef GenEllipsoidTestCase < mlunitext.test_case
             ansCenVec=[0 0].';
             %
             function check()
-                mlunitext.assert_equals(1,isEqElM(resEllipsoid,...
+                mlunitext.assert_equals(true,isEqElM(resEllipsoid,...
                     ansVMat,ansDMat,ansCenVec));
             end
             function checkNeg(typeNum)

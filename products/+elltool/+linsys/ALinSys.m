@@ -150,7 +150,7 @@ classdef ALinSys < elltool.linsys.ILinSys
     end
     %
     methods (Access = protected)
-        function displayInternal(self, dispParamStringsCVec)
+        function displayInternal(self)
             %
             % DISPLAYINTERNAL - displays the details of linear system object.
             %
@@ -169,7 +169,17 @@ classdef ALinSys < elltool.linsys.ILinSys
                 return;
             end
             %
-            [s0 s1 s2 s3] = dispParamStringsCVec{:};
+            if min(size(self)) == 0
+                if max(size(self)) == 0
+                    fprintf('Empty linear system object.\n\n');
+                    return;
+                else
+                    fprintf('Empty linear system objects array.\n\n');
+                    return;
+                end
+            end
+            %
+            [s0, s1, s2, s3] = self.DISPLAY_PARAMETER_STRINGS{:};
             %
             fprintf('\n');
             if iscell(self.atMat)
@@ -439,7 +449,8 @@ classdef ALinSys < elltool.linsys.ILinSys
             %%
             isCBU = true;
             if nargin > 2
-                if isempty(uBoundsEll)
+                if isempty(uBoundsEll)||...
+                        isa(uBoundsEll, 'ellipsoid')&&(uBoundsEll.isEmpty())
                     % leave as is
                 elseif isa(uBoundsEll, 'ellipsoid')
                     uBoundsEll = uBoundsEll(1, 1);
@@ -574,7 +585,8 @@ classdef ALinSys < elltool.linsys.ILinSys
             %%
             isCBW = true;
             if nargin > 6
-                if isempty(noiseBoundsEll)
+                if isempty(noiseBoundsEll)||...
+                        isa(noiseBoundsEll, 'ellipsoid')&&(noiseBoundsEll.isEmpty())
                     % leave as is
                 elseif isa(noiseBoundsEll, 'ellipsoid')
                     noiseBoundsEll = noiseBoundsEll(1, 1);

@@ -37,6 +37,7 @@ classdef Properties<modgen.common.obj.StaticPropStorage
                 obj.checkSettings(inpArgList{:});
             end            
         end
+        %
         function init()
             % Example:
             %   elltool.conf.Properties.init()
@@ -58,7 +59,6 @@ classdef Properties<modgen.common.obj.StaticPropStorage
             elltool.logging.Log4jConfigurator.configure(confRepoMgr,...
                 'islockafterconfigure',true);
         end
-        %
         %
         function ConfRepoMgr=getConfRepoMgr()
             % Example:
@@ -104,7 +104,6 @@ classdef Properties<modgen.common.obj.StaticPropStorage
         end
         %%
         %Public getters
-        
         function version = getVersion()
         % Example:
         %   elltool.conf.Properties.getVersion();
@@ -126,11 +125,12 @@ classdef Properties<modgen.common.obj.StaticPropStorage
             absTol = elltool.conf.Properties.getOption('absTol');
         end
         %
-        function absRel = getRelTol()
-        % Example:
-        %   elltool.conf.Properties.getRelTol();
+        function relTol = getRelTol()
+            relTol = elltool.conf.Properties.getOption('relTol');
+        end
         %
-            absRel = elltool.conf.Properties.getOption('relTol');
+        function regTol = getRegTol()
+            regTol = elltool.conf.Properties.getOption('regTol');
         end
         %
         function nTimeGridPoints = getNTimeGridPoints()
@@ -182,7 +182,6 @@ classdef Properties<modgen.common.obj.StaticPropStorage
         end
         %%
         %Public setters
-        
         function setIsVerbose(isVerb)
         % Example:
         %   elltool.conf.Properties.setIsVerbose(true);
@@ -207,6 +206,10 @@ classdef Properties<modgen.common.obj.StaticPropStorage
         end
         %
         function setRelTol(value)
+        % SETRELTOL - set global relative tolerance
+        %
+        % Input 
+        % relTol: double[1,1]
             elltool.conf.Properties.setOption('relTol',value);
         end    
         %
