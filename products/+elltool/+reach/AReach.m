@@ -558,8 +558,18 @@ classdef AReach < elltool.reach.IReach
                 end
             else
                 plObj = smartdb.disp.RelationDataPlotter();
-                plotter = self.ellTubeRel.getTuplesFilteredBy(...
+                if self.dimension() == 2
+                    projBasisMat = eye(2);
+                    projSetObj = self.getProjSet(projBasisMat,...
+                        approxType, scaleFactor);
+                    plotter = projSetObj.plot(plObj, 'fGetColor',...
+                        @(x)(colorVec), 'fGetAlpha', @(x)(shade),...
+                        'fGetLineWidth', @(x)(lineWidth),...
+                        'fGetFill', @(x)(isFill));
+                else
+                    plotter = self.ellTubeRel.getTuplesFilteredBy(...
                         APPROX_TYPE, approxType).plot(plObj);
+                end
             end
             function colCodeVec = getColorVec(colChar)
                 if ~(ischar(colChar))
@@ -1314,6 +1324,9 @@ classdef AReach < elltool.reach.IReach
                 throwerror('wrongInput',...
                     'Method cut does not work with projections');
             else
+                if numel(cutTimeVec) == 1
+                    cutTimeVec = [cutTimeVec, cutTimeVec];
+                end
                 cutObj = self.getCopy();
                 if self.isBackward
                     cutTimeVec = fliplr(cutTimeVec);
@@ -1321,34 +1334,24 @@ classdef AReach < elltool.reach.IReach
                 switchTimeVec = self.switchSysTimeVec;
                 cutObj.ellTubeRel = cutObj.ellTubeRel.cut(cutTimeVec);
                 %
-                if abs(cutTimeVec(1) - cutTimeVec(end)) <= self.absTol
-                    cutObj.switchSysTimeVec = cutTimeVec(1);
-                    indCutPointVec = switchTimeVec < cutTimeVec(1) &...
-                        cutTimeVec(1) <= switchTimeVec;
-                    cutObj.linSysCVec = self.linSysCVec(indCutPointVec);
-                else
-                    switchTimeIndVec =...
-                        switchTimeVec > cutTimeVec(1) &...
-                        switchTimeVec < cutTimeVec(end);
-                    newSwitchSysTimeVec = [cutTimeVec(1)...
-                        switchTimeVec(switchTimeIndVec) cutTimeVec(end)];
-                    cutObj.switchSysTimeVec = newSwitchSysTimeVec;
-                    firstIntInd = find(switchTimeIndVec == 1, 1);
-                    if ~isempty(firstIntInd)
-                        switchTimeIndVec(firstIntInd - 1) = 1;
-                    else
-                        firstGreaterInd =...
-                            find(switchTimeVec > cutTimeVec(end), 1);
-                        if ~isempty(firstGreaterInd)
-                            switchTimeIndVec(firstGreaterInd - 1) = 1;
-                        else
-                            switchTimeIndVec(end - 1) = 1;
-                        end
-                    end
-                    cutObj.linSysCVec =...
-                        self.linSysCVec(switchTimeIndVec(1 : end - 1));
+                if ((cutTimeVec(1) < switchTimeVec(1)) ||...
+                        (cutTimeVec(end) > switchTimeVec(end)))
+                     throwerror('wrongInput',...
+                        'cutTime out of time interval');
                 end
                 %
+                firstIndCut = find(cutTimeVec(1) >= switchTimeVec,...
+                    1, 'first');
+                lastIndCut = find(cutTimeVec(end) <= switchTimeVec,...
+                    1, 'first');
+                if lastIndCut > numel(self.linSysCVec)
+                    lastIndCut = lastIndCut - 1;
+                    if firstIndCut > numel(self.linSysCVec)
+                        firstIndCut = firstIndCut - 1;
+                    end
+                end
+                cutObj.linSysCVec =...
+                        self.linSysCVec(firstIndCut : lastIndCut);           
                 cutObj.isCut = true;
             end
         end

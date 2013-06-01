@@ -292,7 +292,12 @@ classdef ContinuousReachTestCase < mlunitext.test_case
                 mlunitext.assert_equals(true, isEaEqual);
             end
         end
-        %
+        function self = testCutLastMoment(self)
+            cutReachObj = self.reachObj.cut(self.tVec(end));
+            cutReachObj.dimension();
+            mlunitext.assert_equals(true, true);
+        end
+        
         function self = testNegativeCut(self)
             projReachObj =...
                 self.reachObj.projection(eye(self.reachObj.dimension(), 2));
