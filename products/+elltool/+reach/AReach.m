@@ -72,30 +72,6 @@ classdef AReach < elltool.reach.IReach
     end
     %
     methods (Static, Access = protected)
-        function colCodeVec = getColorVec(colChar)
-            if ~(ischar(colChar))
-                colCodeVec = [0 0 0];
-                return;
-            end
-            switch colChar
-                case 'r',
-                    colCodeVec = [1 0 0];
-                case 'g',
-                    colCodeVec = [0 1 0];
-                case 'b',
-                    colCodeVec = [0 0 1];
-                case 'y',
-                    colCodeVec = [1 1 0];
-                case 'c',
-                    colCodeVec = [0 1 1];
-                case 'm',
-                    colCodeVec = [1 0 1];
-                case 'w',
-                    colCodeVec = [1 1 1];
-                otherwise,
-                    colCodeVec = [0 0 0];
-            end
-        end
         %
         function [propArr, propVal] = getProperty(rsArr,propName,fPropFun)
             % GETPROPERTY - gives array the same size as rsArray with values of
@@ -515,7 +491,6 @@ classdef AReach < elltool.reach.IReach
             projSet = localEllTubeRel.project(projType,...
                 ProjCMatList, fProj);
         end
-        %
         function plotter = plotApprox(self, approxType, varargin)
             import gras.ellapx.enums.EApproxType;
             import modgen.common.throwerror;
@@ -538,7 +513,6 @@ classdef AReach < elltool.reach.IReach
                     'isvector(x)',...
                     @(x)(isa(x, 'double') && (x >= 0) && (x <= 1)),...
                     @(x)(isa(x, 'double') && (x > 0)), 'islogical(x)'});
-                    scaleFactor = self.EXTERNAL_SCALE_FACTOR;
             else
                 [reg, ~, colorVec, shade, lineWidth, isFill,...
                     isColorVec, ~, ~, ~] = ...
@@ -549,7 +523,6 @@ classdef AReach < elltool.reach.IReach
                     'isvector(x)',...
                     @(x)(isa(x, 'double') && (x >= 0) && (x <= 1)),...
                     @(x)(isa(x, 'double') && (x > 0)), 'islogical(x)'});
-                    scaleFactor = self.INTERNAL_SCALE_FACTOR;
             end
             
             checkIsWrongInput();
@@ -584,18 +557,9 @@ classdef AReach < elltool.reach.IReach
                         'fGetFill', @(x)(isFill));
                 end
             else
-                if self.dimension() > 2
-                    projBasisMat = eye(self.dimension(), 2);
-                else
-                    projBasisMat = eye(self.dimension());
-                end
                 plObj = smartdb.disp.RelationDataPlotter();
-                projSetObj = self.getProjSet(projBasisMat,...
-                    approxType, scaleFactor);
-                plotter = projSetObj.plot(plObj, 'fGetColor',...
-                    @(x)(colorVec), 'fGetAlpha', @(x)(shade),...
-                    'fGetLineWidth', @(x)(lineWidth),...
-                    'fGetFill', @(x)(isFill));
+                plotter = self.ellTubeRel.getTuplesFilteredBy(...
+                        APPROX_TYPE, approxType).plot(plObj);
             end
             function colCodeVec = getColorVec(colChar)
                 if ~(ischar(colChar))

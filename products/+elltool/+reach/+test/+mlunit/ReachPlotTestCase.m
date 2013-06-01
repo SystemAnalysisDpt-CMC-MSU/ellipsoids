@@ -1,5 +1,5 @@
 classdef ReachPlotTestCase < mlunitext.test_case
-
+   
     properties (Access=private)
         reachObj
     end
@@ -20,7 +20,6 @@ classdef ReachPlotTestCase < mlunitext.test_case
                 ellTubeRel = self.reachObj.getEllTubeRel();
                 relByAppType = ellTubeRel.getTuplesFilteredBy(...
                        APPROX_TYPE, approxType);
-                
             end
         end
     end
@@ -32,6 +31,14 @@ classdef ReachPlotTestCase < mlunitext.test_case
         
         function set_up_param(self, reachFactObj)
             self.reachObj = reachFactObj.createInstance();
+            if ~self.reachObj.isprojection()
+                if self.reachObj.dimension() > 2
+                    projBasisMat = eye(self.reachObj.dimension(), 2);
+                else
+                    projBasisMat = eye(self.reachObj.dimension());
+                end
+                self.reachObj = self.reachObj.projection(projBasisMat);
+            end
         end
         
         function self = tear_down(self,varargin)
@@ -76,7 +83,8 @@ classdef ReachPlotTestCase < mlunitext.test_case
         
         function checkPlot(self, namePlot, approxType)
             import gras.ellapx.smartdb.test.mlunit.EllTubePlotPropTest
-
+            import gras.ellapx.enums.EApproxType;
+            
             colorFieldList = {'approxType'};
             lineWidthFieldList = {'approxType'};
             transFieldList = {'approxType'};
