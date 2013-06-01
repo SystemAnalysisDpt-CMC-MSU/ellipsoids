@@ -173,7 +173,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                     qMat = regposdefmat(qMat, regTol);
                     qMat = 0.5 * (qMat + qMat');
                     qArrayList{iTube}(:, :, iTime + 1) = qMat;
-                    lMat(:, iTime + 1) = lVec;
+                    lMat(:, iTime + 1) = aInvMat' * lMat(:, iTime);
                 end
                 ltGoodDirArray(:, iTube, :) = lMat;
             end
