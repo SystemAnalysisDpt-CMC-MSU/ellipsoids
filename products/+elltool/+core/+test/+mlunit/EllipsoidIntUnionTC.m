@@ -470,11 +470,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             nDim = 2;
             testEllVec(1) = ellipsoid(eye(nDim));
             testEllVec(2) = ellipsoid([100, 0]', eye(nDim));
-%             try
-%                 ellintersection_ia(testEllVec);
-%             catch meObj
-%                 meObj
-%             end
+
             self.runAndCheckError('testEllVec.ellintersection_ia()',...
                 'ELLIPSOID:ELLINTERSECTION_IA:cvxError');
             nDim = 3;
