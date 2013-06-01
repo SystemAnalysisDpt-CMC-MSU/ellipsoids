@@ -361,7 +361,7 @@ X0 = ellipsoid([1; 0.5; -0.5; 1.10; 0.55; 0], eye(6));
 lsys = elltool.linsys.LinSysFactory.create(A, B, U, [], [], [], [], 'd');
 L0 = [1 0 0 0 0 0; 0 1 0 0 0 0; 0 0 1 0 0 1; 0 1 0 1 1 0; 0 0 -1 1 0 1; 0 0 0 -1 1 1]';
 %%
-% Now we compute the reach set for N = 4 time steps and plot the projection onto (V[k], Y[k]) subspace:
+% Now we compute the reach set for time interval [1 4] and plot the projection onto (V[k], Y[k]) subspace:
 %
 % >> X0 = ellipsoid([1; 0.5; -0.5; 1.10; 0.55; 0], eye(6));
 % >> L0 = [1 0 0 0 0 0; 0 1 0 0 0 0; 0 0 1 0 0 1; 0 1 0 1 1 0; 0 0 -1 1 0 1; 0 0 0 -1 1 1]';
@@ -372,8 +372,8 @@ L0 = [1 0 0 0 0 0; 0 1 0 0 0 0; 0 0 1 0 0 1; 0 1 0 1 1 0; 0 0 -1 1 0 1; 0 0 0 -1
 % >> ps.plot_ea(); hold on; ps.plot_ia();
 %
 % Forward reach sets can be computed for singular discrete-time systems as well. Backward reach sets, on the other hand, can be computed only for nonsingular discrete-time systems.
-N  = 4;
-rs = elltool.reach.ReachDiscrete(lsys, X0, L0, N);
+timeLimsVec = [1 4];
+rs = elltool.reach.ReachDiscrete(lsys, X0, L0, timeLimsVec);
 BB = [0 0 0 0 1 0; 0 0 0 0 0 1]';
 ps = rs.projection(BB);
 plot_ea(ps);
