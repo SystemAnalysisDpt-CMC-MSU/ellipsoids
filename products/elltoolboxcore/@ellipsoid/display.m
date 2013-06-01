@@ -51,7 +51,11 @@ fprintf(['    ', SfieldNames.centerVec, '    double    ',...
         SfieldDescription.centerVec, '\n']);
 fprintf('\nData: \n');
 
-strucdisp(SdataArray, 'maxArrayLength', MAX_DISP_ELEM, ...
-     'defaultName', variableName);
+if (numel(SdataArray) == 0)
+    fprintf('[Empty array]\n');
+else
+    strucdisp(SdataArray, 'maxArrayLength', MAX_DISP_ELEM, ...
+         'defaultName', variableName);
+end
 end
 

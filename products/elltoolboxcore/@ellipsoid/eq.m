@@ -105,7 +105,7 @@ end
 
 
     function SComp = formCompStruct(SEll)
-        SComp = struct('Q',gras.la.sqrtmpos(SEll.Q,...
-            ABS_TOL),'a',SEll.a);
+        SComp = struct('shapeMat',gras.la.sqrtmpos(SEll.shapeMat,...
+            ABS_TOL),'centerVec',SEll.centerVec);
     end
 end

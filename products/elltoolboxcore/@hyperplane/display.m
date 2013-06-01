@@ -60,9 +60,12 @@ fprintf('Fields (name, type, description):\n');
 fprintf('    ''normal''    ''double''    ''Hyperplane normal''\n');
 fprintf('    ''shift''     ''double''    ''Hyperplane shift''\n');
 fprintf('\nData: \n');
-
-strucdisp(hpArr.toStruct(), 'maxArrayLength', MAX_DISP_ELEM, ...
-     'defaultName', variableName);
+if (numel(hpArr) == 0)
+    fprintf('[Empty array]\n');
+else
+    strucdisp(hpArr.toStruct(), 'maxArrayLength', MAX_DISP_ELEM, ...
+        'defaultName', variableName);
+end
 end
 
 

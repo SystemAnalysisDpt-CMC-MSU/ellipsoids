@@ -138,7 +138,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
             mlunitext.assert_equals(true, (abs(testResVec(1)-4)<absTol) &&...
                 (abs(testResVec(2)-1)<absTol));
             %
-            %negative test: matrix Q of ellipsoid has very large
+            %negative test: matrix shapeMat of ellipsoid has very large
             %eigenvalues.
             testEllipsoid = ellipsoid([1e+15,0;0,1e+15]);
             testPointVec = [3e+15,0].';
@@ -897,39 +897,39 @@ classdef EllipsoidTestCase < mlunitext.test_case
             checkEllEqual(testEllHighDim1, testEllHighDim1, true, '');
             
             checkEllEqual(testEllHighDim1, testEllHighDim2, false, ...
-                '(1).Q-->Max. difference (2.316625e+00) is greater than the specified tolerance(1.000000e-05)');
+                '(1).shapeMat-->Max. difference (2.316625e+00) is greater than the specified tolerance(1.000000e-05)');
             
             [testEllHighDim1 testEllHighDim2] = createTypicalHighDimEll(2);
             checkEllEqual(testEllHighDim1, testEllHighDim1, true, '');
             
             
             checkEllEqual(testEllHighDim1, testEllHighDim2, false, ...
-                '(1).Q-->Max. difference (2.316625e+00) is greater than the specified tolerance(1.000000e-05)');
+                '(1).shapeMat-->Max. difference (2.316625e+00) is greater than the specified tolerance(1.000000e-05)');
             
             [testEllHighDim1 testEllHighDim2] = createTypicalHighDimEll(3);
             checkEllEqual(testEllHighDim1, testEllHighDim1, true, '');
             
             checkEllEqual(testEllHighDim1, testEllHighDim2, false, ...
-                '(1).Q-->Max. difference (2.316625e+00) is greater than the specified tolerance(1.000000e-05)');
+                '(1).shapeMat-->Max. difference (2.316625e+00) is greater than the specified tolerance(1.000000e-05)');
             
             
             checkEllEqual(testEllipsoid1, testEllipsoid1, true, '');
             
             checkEllEqual(testEllipsoid2, testEllipsoid1, false, ...
-                '(1).a-->Max. difference (1) is greater than the specified tolerance(1.000000e-05)');
+                '(1).centerVec-->Max. difference (1) is greater than the specified tolerance(1.000000e-05)');
             
             checkEllEqual(testEllipsoid3, testEllipsoid2, false, ...
-                '(1).Q-->Max. difference (4.142136e-01) is greater than the specified tolerance(1.000000e-05)');
+                '(1).shapeMat-->Max. difference (4.142136e-01) is greater than the specified tolerance(1.000000e-05)');
             
             
             checkEllEqual(testEllipsoid3, testEllipsoid2, false, ...
-                '(1).Q-->Max. difference (4.142136e-01) is greater than the specified tolerance(1.000000e-05)');
+                '(1).shapeMat-->Max. difference (4.142136e-01) is greater than the specified tolerance(1.000000e-05)');
             
-            ansStr = sprintf('(1).Q-->Different sizes (left: [2 2], right: [3 3])\n(1).a-->Different sizes (left: [1 2], right: [1 3])');
+            ansStr = sprintf('(1).centerVec-->Different sizes (left: [1 2], right: [1 3])\n(1).shapeMat-->Different sizes (left: [2 2], right: [3 3])');
             checkEllEqual(testEllipsoidZeros2, testEllipsoidZeros3, false, ansStr);
             
             
-            ansStr = sprintf('(1).Q-->Different sizes (left: [2 2], right: [0 0])\n(1).a-->Different sizes (left: [1 2], right: [0 0])');
+            ansStr = sprintf('(1).centerVec-->Different sizes (left: [1 2], right: [0 0])\n(1).shapeMat-->Different sizes (left: [2 2], right: [0 0])');
             checkEllEqual(testEllipsoidZeros2, testEllipsoidEmpty, false, ansStr);
             
             
@@ -944,7 +944,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
             
             
             
-            ansStr = sprintf('(1).Q-->Different sizes (left: [2 2], right: [3 3])\n(1).a-->Different sizes (left: [1 2], right: [1 3])');
+            ansStr = sprintf('(1).centerVec-->Different sizes (left: [1 2], right: [1 3])\n(1).shapeMat-->Different sizes (left: [2 2], right: [3 3])');
             checkEllEqual([testEllipsoidZeros2 testEllipsoidZeros3], [testEllipsoidZeros3 testEllipsoidZeros3], [false, true], ansStr); 
         end
         %
@@ -1391,7 +1391,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
                 ellVec(iElem) = ellipsoid(centerCVec{iElem}, shapeMatCVec{iElem});
                 transposedCenterCVec{iElem} = centerCVec{iElem}';
             end
-            SEllVec = struct('a', transposedCenterCVec, 'Q', shapeMatCVec);
+            SEllVec = struct('centerVec', transposedCenterCVec, 'shapeMat', shapeMatCVec);
             ObtainedEllStruct = ellVec(1).toStruct();
             isOk = isequal(ObtainedEllStruct, SEllVec(1));
             ObtainedEllStructVec = ellVec.toStruct();
@@ -1458,21 +1458,21 @@ mlunitext.assert(isTestRes);
 end
 %
 function distEll=ellVecDistanceCVX(ellObj,vectorVec,isFlagOn)
-[ellCenVec ellQMat]=double(ellObj);
-ellQMat=ellQMat\eye(size(ellQMat));
-ellQMat=0.5*(ellQMat+ellQMat.');
+[ellCenVec ellshapeMatMat]=double(ellObj);
+ellshapeMatMat=ellshapeMatMat\eye(size(ellshapeMatMat));
+ellshapeMatMat=0.5*(ellshapeMatMat+ellshapeMatMat.');
 ellDims = dimension(ellObj);
 maxDim   = max(max(ellDims));
 cvx_begin sdp
 variable x(maxDim, 1)
 if isFlagOn
-    fDist = (x - vectorVec)'*ellQMat*(x - vectorVec);
+    fDist = (x - vectorVec)'*ellshapeMatMat*(x - vectorVec);
 else
     fDist = (x - vectorVec)'*(x - vectorVec);
 end
 minimize(fDist)
 subject to
-x'*ellQMat*x + 2*(-ellQMat*ellCenVec)'*x + (ellCenVec'*ellQMat*ellCenVec - 1) <= 0
+x'*ellshapeMatMat*x + 2*(-ellshapeMatMat*ellCenVec)'*x + (ellCenVec'*ellshapeMatMat*ellCenVec - 1) <= 0
 cvx_end
 distEll = sqrt(fDist);
 end
