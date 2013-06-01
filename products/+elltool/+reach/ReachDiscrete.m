@@ -136,8 +136,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 for iTime = 1:(length(timeVec) - 1)
                     aMat = probDynObj.getAtDynamics(). ...
                         evaluate(timeVec(iTime + isBack));
-                    aInvMat = probDynObj.getAtInvDynamics(). ...
-                        evaluate(timeVec(iTime + isBack));
+                    aInvMat = inv(aMat);
                     bpbMat = probDynObj.getBPBTransDynamics(). ...
                         evaluate(timeVec(iTime + isBack));
                     bpbMat = 0.5 * (bpbMat + bpbMat');
@@ -242,6 +241,41 @@ classdef ReachDiscrete < elltool.reach.AReach
                     qArrayList, aMat, timeVec, ltGoodDirArray, ...
                     sTime, approxType, approxSchemaName, ...
                     approxSchemaDescr, self.relTol / 10);
+            end
+        end
+        %
+        function ellTubeRel = auxMakeEllTubeRel(self, probDynObj, l0Mat,...
+                timeVec, isDisturb, calcPrecision, approxTypeVec)
+            import gras.ellapx.enums.EApproxType;
+            import gras.ellapx.gen.RegProblemDynamicsFactory;
+            import gras.ellapx.lreachplain.GoodDirsContinuousFactory;
+            import modgen.common.throwerror;
+            %
+            try
+                ellTubeRel = self.internalMakeEllTubeRel(...
+                    probDynObj,  l0Mat, timeVec, isDisturb, ...
+                    calcPrecision, approxTypeVec);
+            catch meObj
+                errorStr = '';
+                errorTag = '';
+                %
+                if strcmp(meObj.identifier,...
+                        'MATLAB:realsqrt:complexResult') || ...
+                        strcmp(meObj.identifier,...
+                        'MODGEN:COMMON:CHECKMULTVAR:wrongInput')
+                    errorStr = [self.EMSG_APPROX_SHAPE_MAT_CALC_PROB, ...
+                        self.EMSG_BAD_TIME_VEC, self.EMSG_BAD_CONTROL, ...
+                        self.EMSG_BAD_DIST, self.EMSG_BAD_INIT_SET];
+                    errorTag = [self.ETAG_WR_INP, ...
+                        self.ETAG_SH_MAT_CALC_FAILURE];
+                end
+                if isempty(errorStr)
+                    throw(meObj);
+                else
+                    friendlyMeObj = throwerror(errorTag, errorStr);
+                    friendlyMeObj = addCause(friendlyMeObj, meObj);
+                    throw(friendlyMeObj);
+                end
             end
         end
     end
