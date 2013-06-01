@@ -16,6 +16,12 @@ classdef ReachDiscrete < elltool.reach.AReach
         LINSYS_CLASS_STRING = 'elltool.linsys.LinSysDiscrete'
     end
     %
+    properties (Constant, GetAccess = private)
+        ETAG_SH_MAT_CALC_FAILURE = ':ShapeMatCalcFailure';
+        EMSG_APPROX_SHAPE_MAT_CALC_PROB = ['There is a problem with ',...
+            'calculation of approximation''s shape matrix. '];
+    end
+    %
     properties (Access = private)
         isMinMax
     end
@@ -148,6 +154,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                     qMat = 0.5 * (qMat + qMat');
                     qMat = regposdefmat(qMat, regTol);
                     lVec = aInvMat' * lVec;
+                    lVec = lVec / norm(lVec);
                     if isDisturb
                         if isMinMax
                             eEll = fMinkmp(ellipsoid(0.5 * (qMat + qMat')),...
@@ -260,8 +267,6 @@ classdef ReachDiscrete < elltool.reach.AReach
                 errorTag = '';
                 %
                 if strcmp(meObj.identifier,...
-                        'MATLAB:realsqrt:complexResult') || ...
-                        strcmp(meObj.identifier,...
                         'MODGEN:COMMON:CHECKMULTVAR:wrongInput')
                     errorStr = [self.EMSG_APPROX_SHAPE_MAT_CALC_PROB, ...
                         self.EMSG_BAD_TIME_VEC, self.EMSG_BAD_CONTROL, ...

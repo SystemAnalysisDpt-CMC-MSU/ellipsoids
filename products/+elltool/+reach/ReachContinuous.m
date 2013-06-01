@@ -16,6 +16,11 @@ classdef ReachContinuous < elltool.reach.AReach
         LINSYS_CLASS_STRING = 'elltool.linsys.LinSysContinuous'
     end
     %
+    properties (Constant, GetAccess = private)
+        ETAG_ODE_45_REG_TOL = ':Ode45Failed';
+        ETAG_BAD_INIT_SET = ':BadInitSet';
+    end
+    %
     methods (Static, Access = protected)
         function [atStrCMat, btStrCMat, gtStrCMat, ptStrCMat, ...
                 ptStrCVec, qtStrCMat, qtStrCVec] = ...

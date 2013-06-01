@@ -18,24 +18,19 @@ classdef AReach < elltool.reach.IReach
             'LT_GOOD_DIR_NORM_VEC'; 'LS_GOOD_DIR_NORM'; ...
             'LS_GOOD_DIR_VEC';'IND_S_TIME';...
             'S_TIME'; 'TIME_VEC'};
-        %        
+        %
         ETAG_WR_INP = 'wrongInput';
         ETAG_R_PROB = ':regProblem';
         ETAG_R_DISABLED = ':RegIsDisabled';
         ETAG_ONLY_CHECK = ':onlyCheckIsEnabled';
         ETAG_LOW_REG_TOL = ':regTolIsTooLow';
-        ETAG_ODE_45_REG_TOL = ':Ode45Failed';
         ETAG_BAD_CALC_PREC = ':BadCalcPrec';
-        ETAG_BAD_INIT_SET = ':BadInitSet';
-        ETAG_SH_MAT_CALC_FAILURE = ':ShapeMatCalcFailure';
         %
         EMSG_R_PROB = 'There is a problem with regularization. ';
         EMSG_INIT_SET_PROB = ['There is a problem with initial',...
             ' set (x0Ell, second parameter). '];
         EMSG_CALC_PREC_PROB = ['There is a problem with ',...
             'calculation precision. Try to do some of this: '];
-        EMSG_APPROX_SHAPE_MAT_CALC_PROB = ['There is a problem with ',...
-            'calculation of approximation''s shape matrix. '];
         EMSG_USE_REG = ['Try to enable it: set property ',...
             '''isRegEnabled'' to ''true'', ''isJustCheck'' to ',...
             '''false'' and ''regTol'' to some positive.'];
