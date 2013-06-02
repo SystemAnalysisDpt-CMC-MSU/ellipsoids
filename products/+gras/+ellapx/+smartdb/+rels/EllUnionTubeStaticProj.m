@@ -416,4 +416,24 @@ classdef EllUnionTubeStaticProj<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&
             end
         end
     end
+    methods (Static)
+        function ellUnionProjRel=fromEllTubes(ellTubeRel)
+            % FROMELLTUBES - returns union of the ellipsoidal tubes on time
+            %
+            % Input:
+            %    ellTubeRel: smartdb.relation.StaticRelation[1, 1]/
+            %       smartdb.relation.DynamicRelation[1, 1] - relation
+            %       object
+            %
+            % Output:
+            % ellUnionTubeRel: ellapx.smartdb.rel.EllUnionTube - union of the 
+            %             ellipsoidal tubes
+            %                   
+            import gras.ellapx.smartdb.rels.EllUnionTubeBasic;
+            import gras.ellapx.smartdb.rels.EllUnionTubeStaticProj;
+            %
+            ellUnionProjRel=EllUnionTubeStaticProj();
+            ellUnionProjRel.setDataFromEllTubesInternal(ellTubeRel);
+        end
+    end
 end
