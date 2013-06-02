@@ -1,4 +1,4 @@
-classdef EllTube < gras.ellapx.smartdb.rels.AEllTube & ...
+classdef EllTubeNotTight < gras.ellapx.smartdb.rels.AEllTubeNotTight & ...
         gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel
     %
     methods (Access=protected)
@@ -8,7 +8,7 @@ classdef EllTube < gras.ellapx.smartdb.rels.AEllTube & ...
     end
     %
     methods
-        function self=EllTube(varargin)
+        function self=EllTubeNotTight(varargin)
             self=self@gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel(...
                 varargin{:});
         end

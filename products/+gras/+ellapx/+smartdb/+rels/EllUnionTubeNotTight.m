@@ -1,6 +1,6 @@
-classdef EllUnionTube < ...
-        gras.ellapx.smartdb.rels.AEllTube & ...
-        gras.ellapx.smartdb.rels.AEllUnionTube & ...
+classdef EllUnionTubeNotTight < ...
+        gras.ellapx.smartdb.rels.AEllTubeNotTight & ...
+        gras.ellapx.smartdb.rels.AEllUnionTubeNotTight & ...
         gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel
     %
     methods(Access=protected)
@@ -9,20 +9,20 @@ classdef EllUnionTube < ...
         end
         %
         function checkDataConsistency(self)
-            checkDataConsistency@gras.ellapx.smartdb.rels.AEllTube(self);
-            checkDataConsistency@gras.ellapx.smartdb.rels.AEllUnionTube(self);
+            checkDataConsistency@gras.ellapx.smartdb.rels.AEllTubeNotTight(self);
+            checkDataConsistency@gras.ellapx.smartdb.rels.AEllUnionTubeNotTight(self);
         end
     end
     %
     methods
-        function self=EllUnionTube(varargin)
+        function self=EllUnionTubeNotTight(varargin)
             self=self@gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel(...
                 varargin{:});
         end
         %
         function [ellTubeProjRel,indProj2OrigVec]=project(self,projType,...
                 varargin)
-            import gras.ellapx.smartdb.rels.EllUnionTubeStaticProj;
+            import gras.ellapx.smartdb.rels.EllUnionTubeNotTightStaticProj;
             import gras.ellapx.enums.EProjType;
             import modgen.common.throwerror;
             %
@@ -37,20 +37,20 @@ classdef EllUnionTube < ...
                 projRel=smartdb.relations.DynamicRelation(SProjData);
                 projRel.catWith(self.getTuples(indProj2OrigVec),...
                     'duplicateFields','useOriginal');
-                ellTubeProjRel=EllUnionTubeStaticProj(projRel);
+                ellTubeProjRel=EllUnionTubeNotTightStaticProj(projRel);
             else
-                ellTubeProjRel=EllUnionTubeStaticProj();
+                ellTubeProjRel=EllUnionTubeNotTightStaticProj();
             end
         end
     end
     %
     methods (Static)
         function ellUnionTubeRel=fromEllTubes(ellTubeRel)
-            import gras.ellapx.smartdb.rels.EllUnionTube
-            import gras.ellapx.smartdb.rels.AEllUnionTube
+            import gras.ellapx.smartdb.rels.EllUnionTubeNotTight
+            import gras.ellapx.smartdb.rels.AEllUnionTubeNotTight
             %
-            SData = AEllUnionTube.fromEllTubesInternal(ellTubeRel);
-            ellUnionTubeRel = EllUnionTube(SData);
+            SData = AEllUnionTubeNotTight.fromEllTubesInternal(ellTubeRel);
+            ellUnionTubeRel = EllUnionTubeNotTight(SData);
         end
     end
 end
