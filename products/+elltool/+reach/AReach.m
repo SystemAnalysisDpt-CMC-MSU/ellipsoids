@@ -1427,7 +1427,6 @@ classdef AReach < elltool.reach.IReach
                 ellTubeUnionRel = ...
                     EllUnionTube.fromEllTubes(self.ellTubeRel);
             end
-            ellTubeUnionRel = EllUnionTube.fromEllTubes(self.ellTubeRel);
         end
         %
         function switchTimeVec = getSwitchTimeVec(self)
