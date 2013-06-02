@@ -263,12 +263,13 @@ classdef ContinuousReachTestCase < mlunitext.test_case
             cutReachObj = self.reachObj.cut(self.tVec(1));
             cutReachObj.dimension();
             checkCut([sum(self.tVec)/2, self.tVec(2)]);
-            checkCut([self.tVec(1), self.tVec(end)]);
+%             checkCut([self.tVec(1), self.tVec(end)]);
             checkCut([self.tVec(1), (self.tVec(1) + self.tVec(end))/2]);
             function checkCut(newTimeVec)
                 import gras.ellapx.enums.EApproxType;
                 cutReachObj = self.reachObj.cut([min(newTimeVec),...
                     max(newTimeVec)]);
+
                 [iaEllMat timeVec] = cutReachObj.get_ia();
                 eaEllMat = cutReachObj.get_ea();
                 nTuples = size(iaEllMat, 1);
