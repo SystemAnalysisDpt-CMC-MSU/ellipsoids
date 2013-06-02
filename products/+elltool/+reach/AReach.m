@@ -513,6 +513,7 @@ classdef AReach < elltool.reach.IReach
                     'isvector(x)',...
                     @(x)(isa(x, 'double') && (x >= 0) && (x <= 1)),...
                     @(x)(isa(x, 'double') && (x > 0)), 'islogical(x)'});
+                    scaleFactor = self.EXTERNAL_SCALE_FACTOR;
             else
                 [reg, ~, colorVec, shade, lineWidth, isFill,...
                     isColorVec, ~, ~, ~] = ...
@@ -523,6 +524,7 @@ classdef AReach < elltool.reach.IReach
                     'isvector(x)',...
                     @(x)(isa(x, 'double') && (x >= 0) && (x <= 1)),...
                     @(x)(isa(x, 'double') && (x > 0)), 'islogical(x)'});
+                    scaleFactor = self.INTERNAL_SCALE_FACTOR;
             end
             
             checkIsWrongInput();
@@ -1326,17 +1328,16 @@ classdef AReach < elltool.reach.IReach
             else
                 switchTimeVec = self.switchSysTimeVec;
                 cutObj = self.getCopy();
-                if self.isBackward
-                    cutObj.ellTubeRel = cutObj...
-                        .ellTubeRel.cut(fliplr(cutTimeVec));
-                    cutTimeVec = max(switchTimeVec) - cutTimeVec;
-                    switchTimeVec = max(switchTimeVec) - cutTimeVec;
-                else
-                    cutObj.ellTubeRel = cutObj.ellTubeRel.cut(cutTimeVec);
-                end
+                cutObj.ellTubeRel = cutObj.ellTubeRel.cut(cutTimeVec);
+
                 if numel(cutTimeVec) == 1
-                    cutTimeVec = [switchTimeVec(1), cutTimeVec];
+                    if ~self.isBackward
+                        cutTimeVec = [switchTimeVec(1), cutTimeVec];
+                    else
+                        cutTimeVec = [cutTimeVec, switchTimeVec(end)];
+                    end
                 end
+                
                 %               
                 if ((cutTimeVec(1) < switchTimeVec(1)) ||...
                         (cutTimeVec(end) > switchTimeVec(end)))
