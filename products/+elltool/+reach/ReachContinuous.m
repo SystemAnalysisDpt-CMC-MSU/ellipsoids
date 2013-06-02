@@ -16,6 +16,11 @@ classdef ReachContinuous < elltool.reach.AReach
         LINSYS_CLASS_STRING = 'elltool.linsys.LinSysContinuous'
     end
     %
+    properties (Constant, GetAccess = private)
+        ETAG_ODE_45_REG_TOL = ':Ode45Failed';
+        ETAG_BAD_INIT_SET = ':BadInitSet';
+    end
+    %
     methods (Static, Access = protected)
         function [atStrCMat, btStrCMat, gtStrCMat, ptStrCMat, ...
                 ptStrCVec, qtStrCMat, qtStrCVec] = ...
@@ -151,6 +156,52 @@ classdef ReachContinuous < elltool.reach.AReach
                 end
             end
         end
+        %
+        function ellTubeRel = auxMakeEllTubeRel(self, probDynObj, l0Mat,...
+                timeVec, isDisturb, calcPrecision, approxTypeVec)
+            import gras.ellapx.enums.EApproxType;
+            import gras.ellapx.gen.RegProblemDynamicsFactory;
+            import gras.ellapx.lreachplain.GoodDirsContinuousFactory;
+            import modgen.common.throwerror;
+            %
+            try
+                ellTubeRel = self.internalMakeEllTubeRel(...
+                    probDynObj,  l0Mat, timeVec, isDisturb, ...
+                    calcPrecision, approxTypeVec);
+            catch meObj
+                errorStr = '';
+                errorTag = '';
+                %
+                if strcmp(meObj.identifier,...
+                        'GRAS:ODE:ODE45REG:wrongState')
+                    errorStr = [self.EMSG_R_PROB, self.EMSG_LOW_REG_TOL];
+                    errorTag = [self.ETAG_WR_INP, self.ETAG_R_PROB,...
+                        self.ETAG_LOW_REG_TOL, self.ETAG_ODE_45_REG_TOL];
+                elseif strcmp(meObj.identifier,...
+                        ['GRAS:ELLAPX:LREACHUNCERT:EXTINTELLAPXBUILDER',...
+                        ':EXTINTELLAPXBUILDER:wrongInput'])
+                    errorStr = [self.EMSG_INIT_SET_PROB, ...
+                        self.EMSG_SMALL_INIT_SET];
+                    errorTag = [self.ETAG_WR_INP, self.ETAG_BAD_INIT_SET];
+                elseif strcmp(meObj.identifier,...
+                        ['GRAS:ELLAPX:LREACHUNCERT:EXTINTELLAPXBUILDER',...
+                        ':CALCELLAPXMATRIXDERIV:wrongInput']) ||...
+                    strcmp(meObj.identifier,...
+                        ['GRAS:ELLAPX:SMARTDB:RELS:ELLTUBEBASIC:',...
+                        'CHECKDATACONSISTENCY:wrongInput:QArrayNotPos'])
+                    errorStr = [self.EMSG_R_PROB, self.EMSG_USE_REG];
+                    errorTag = [self.ETAG_WR_INP, self.ETAG_R_PROB, ...
+                        self.ETAG_R_DISABLED];
+                end
+                if isempty(errorStr)
+                    throw(meObj);
+                else
+                    friendlyMeObj = throwerror(errorTag, errorStr);
+                    friendlyMeObj = addCause(friendlyMeObj, meObj);
+                    throw(friendlyMeObj);
+                end
+            end
+        end
     end
     methods (Access = private, Static)
         function backwardStrCMat = getBackwardCMat(strCMat, tSum, isMinus)
@@ -168,6 +219,7 @@ classdef ReachContinuous < elltool.reach.AReach
                 backwardStrCMat = strcat('-(', backwardStrCMat, ')');
             end
         end
+        %
         function rotatedEllTubeRel = rotateEllTubeRel(oldEllTubeRel)
             import gras.ellapx.smartdb.F;
             FIELD_NAME_LIST_TO = {F.LS_GOOD_DIR_VEC;F.LS_GOOD_DIR_NORM;...
