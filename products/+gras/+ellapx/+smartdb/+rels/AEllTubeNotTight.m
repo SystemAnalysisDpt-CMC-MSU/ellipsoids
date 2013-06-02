@@ -202,7 +202,7 @@ classdef AEllTubeNotTight < gras.ellapx.smartdb.rels.IEllTubeNotTight
             end
         end
         %
-        function catEllTubeRel=cat(self, newEllTubeRel)
+        function catEllTubeRel=cat(self, newEllTubeRel, indVec)
             % CAT  - concatenates data from relation objects.
             %
             % Input:

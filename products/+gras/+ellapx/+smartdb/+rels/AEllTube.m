@@ -107,7 +107,8 @@ classdef AEllTube < gras.ellapx.smartdb.rels.AEllTubeNotTight & ...
             SProjData.xsTouchVec=cell(nLDirs,1);
             SProjData.xsTouchOpVec=cell(nLDirs,1);
             %
-            projOrthMatArray=fGetProjMat(projMat,timeVec,sTime,dim,indSTime);
+            [projOrthMatArray,projOrthMatTransArray]=...
+                fGetProjMat(projMat,timeVec,sTime,dim,indSTime);
             projOrthSTimeMat=projOrthMatArray(:,:,indSTime);
             %
             for iLDir=1:nLDirs
