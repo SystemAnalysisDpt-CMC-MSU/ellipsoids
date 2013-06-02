@@ -35,7 +35,7 @@ classdef MixTubeFortData < handle
     %
     methods
         function self = MixTubeFortData(fullName)
-            import gras.ellapx.smartdb.rels.EllTube
+            import gras.ellapx.smartdb.EllTubeFactory
             import gras.ellapx.lreachuncert.MixedIntEllApxBuilder
             import modgen.common.throwerror;
             %
@@ -79,7 +79,8 @@ classdef MixTubeFortData < handle
                 end
             end
             %
-            self.ellTubeRel = EllTube.fromQArrays(qArrayList, aMat, ...
+            ellTubeFactory = EllTubeFactory('not-tight');
+            self.ellTubeRel = ellTubeFactory.fromQArrays(qArrayList, aMat, ...
                 timeVec, ltGoodDirArray, sTime, ...
                 MixedIntEllApxBuilder.APPROX_TYPE, ...
                 MixedIntEllApxBuilder.APPROX_SCHEMA_NAME, ...

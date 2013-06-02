@@ -1,5 +1,5 @@
 classdef EllApxCollectionBuilder<gras.ellapx.gen.IEllApxBuilder
-    properties (Access=private)
+    properties (Access=protected)
         builderList
     end
     methods

@@ -115,6 +115,11 @@
 			</schemas>
 		</extIntApx>
 	</ellipsoidalApxProps>
+	<regularizationProps type="struct" >
+		<isEnabled type="boolean" >0</isEnabled>
+		<isJustCheck type="boolean" >0</isJustCheck>
+		<regTol type="double" >1e-05</regTol>
+	</regularizationProps>
 	<systemDefinitionConfName type="char" >default</systemDefinitionConfName>
 </valueObj>
 <keyStr type="char" >default</keyStr>
