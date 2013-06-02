@@ -1,6 +1,6 @@
 function copyEllArr = getCopy(ellArr)
 % GETCOPY - gives array the same size as ellArr with copies of elements of 
-%          ellArr.
+%           ellArr.
 %
 % Input:
 %   regular:

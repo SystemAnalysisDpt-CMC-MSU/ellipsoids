@@ -1,0 +1,546 @@
+\subsection{Continuous-time systems}\label{subsec_ellappct}
+Consider the system
+\begin{equation}
+\dot{x}(t) = A(t)x(t) + B(t)u + G(t)v, \label{ctsystem}
+\end{equation}
+in which $x\in{\bf R}^n$ is the state, $u\in{\bf R}^m$ is the control and
+$v\in{\bf R}^d$ is the disturbance. $A(t)$, $B(t)$ and $G(t)$
+are continuous and take their values in ${\bf R}^{n\times n}$,
+${\bf R}^{n\times m}$ and ${\bf R}^{n\times d}$ respectively.
+Control $u(t,x(t))$ and disturbance $v(t)$ are measurable functions
+restricted by ellipsoidal constraints:
+$u(t,x(t)) \in \EE(p(t), P(t))$ and $v(t) \in \EE(q(t), Q(t))$.
+The set of initial states at initial time $t_0$ is assumed
+to be the ellipsoid $\EE(x_0,X_0)$.
+
+The reach sets for systems with disturbances computed by the Ellipsoidal
+Toolbox are CLRS.
+Henceforth, when describing backward reachability,
+reach sets  refer to CLRS or CLBRS.
+Recall that for continuous-time linear systems maxmin and minmax CLRS
+coincide, and the same is true for maxmin and minmax CLBRS.
+
+If the matrix $Q(\cdot)=0$, the system (\ref{ctsystem})
+becomes an ordinary affine system with known $v(\cdot)=q(\cdot)$.
+If $G(\cdot) = 0$, the system becomes linear.
+For these two cases ($Q(\cdot)=0$ or $G(\cdot)=0$) the reach set is
+as given in Definition \ref{def_olrs}, and so
+the reach set will be denoted as
+$\XX_{CL}(t, t_0, \EE(x_0, X_0)) = \XX(t, t_0, \EE(x_0,X_0))$.
+
+The reach set $\XX(t,t_0,\EE(x_0,X_0))$ is a symmetric compact convex set,
+whose center evolves in time according to
+\begin{equation}
+\dot{x}_c(t) = A(t)x_c(t) + B(t)p(t) + G(t)q(t), \;\;\;
+x_c(t_0)=x_0. \label{fwdcenter}
+\end{equation}
+Fix a vector $l_0\in{\bf R}^n$, and consider the solution $l(t)$ of
+the adjoint equation
+\begin{equation}
+\dot{l}(t) = -A^T(t)l(t), \;\;\; l(t_0) = l_0,
+\label{adjointct}
+\end{equation}
+which is equivalent to
+\[ l(t) = \Phi^T(t_0, t)l_0. \]
+If the reach set $\XX(t, t_0, \EE(x_0,X_0))$ is nonempty,
+there exist tight external and
+tight internal approximating ellipsoids $\EE(x_c(t), X^+_l(t))$ and
+$\EE(x_c(t), X^-_l(t))$, respectively, such that
+\begin{equation}
+\EE(x_c(t), X^-_l(t))\subseteq\XX(t,t_0,\EE(x_0,X_0))
+\subseteq \EE(x_c(t), X^+_l(t)),
+\label{fwdinclusion}
+\end{equation}
+and
+\begin{equation}
+\rho(l(t) ~|~ \EE(x_c(t), X^-_l(t))) =
+\rho(l(t) ~|~ \XX(t, t_0, \EE(x_0,X_0))) =
+\rho(l(t) ~|~ \EE(x_c(t), X^+_l(t))) .
+\label{fwdtightness}
+\end{equation}
+The equation for the shape matrix of the external ellipsoid is
+\begin{eqnarray}
+\dot{X}^+_l(t) & = & A(t)X^+_l(t) + X^+_l(t)A^T(t) +\nonumber \\
+& & \pi_l(t)X^+_l(t) + \frac{1}{\pi_l(t)}B(t)P(t)B^T(t) -\nonumber \\
+& & (X_l^{+}(t))^{1/2}S_l(t)(G(t)Q(t)G^T(t))^{1/2} \nonumber -\\
+& & (G(t)Q(t)G^T(t))^{1/2}S_l^T(t)(X_l^{+}(t))^{1/2}, \label{fwdext1} \\
+X^+_l(t_0) & = & X_0, \label{fwdext2}
+\end{eqnarray}
+in which
+\[ \pi_l(t) = \frac{\langle l(t),
+B(t)P(t)B^T(t)l(t)\rangle^{1/2}}{\langle l(t), X^+_l(t)l(t)\rangle^{1/2}}, \]
+and the orthogonal matrix $S_l(t)$  ($S_l(t)S_l^T(t) = I$) is determined
+by the equation
+\[ S_l(t)(G(t)Q(t)G^T(t))^{1/2}l(t) = \frac{\langle l(t),
+G(t)Q(t)G^T(t)l(t)\rangle^{1/2}}{\langle l(t),
+X_l^+(t)l(t)\rangle^{1/2}}(X_l^{+}(t))^{1/2}l(t). \]
+In the presence of disturbance, if the reach set is empty, the
+matrix $X^+_l(t)$ becomes sign indefinite.
+For a system without disturbance, the terms containing $G(t)$ and $Q(t)$
+vanish from the equation (\ref{fwdext1}).
+
+The equation for the shape matrix of the internal ellipsoid is
+\begin{eqnarray}
+\dot{X}^-_l(t) & = & A(t)X^-_l(t) + X^-_l(t)A^T(t) +\nonumber \\
+& & (X_l^{-}(t))^{1/2}T_l(t)(B(t)P(t)B^T(t))^{1/2} +\nonumber \\
+& & (B(t)P(t)B^T(t))^{1/2}T_l^T(t)(X_l^{-}(t))^{1/2} -\nonumber \\
+& & \eta_l(t)X^-_l(t) - \frac{1}{\eta_l(t)}G(t)Q(t)G^T(t), \label{fwdint1} \\
+X^-_l(t_0) & = & X_0, \label{fwdint2}
+\end{eqnarray}
+in which
+\[ \eta_l(t) = \frac{\langle l(t),
+G(t)Q(t)G^T(t)l(t)\rangle^{1/2}}{\langle l(t), X^+_l(t)l(t)\rangle^{1/2}}, \]
+and the orthogonal matrix $T_l(t)$ is determined by the equation
+\[ T_l(t)(B(t)P(t)B^T(t))^{1/2}l(t) = \frac{\langle l(t),
+B(t)P(t)B^T(t)l(t)\rangle^{1/2}}{\langle l(t),
+X_l^-(t)l(t)\rangle^{1/2}}(X_l^{-}(t))^{1/2}l(t). \]
+Similarly to the external case, the terms containing $G(t)$ and $Q(t)$
+vanish from the equation (\ref{fwdint1}) for a system without disturbance.
+
+The  point where the external and internal ellipsoids touch the
+boundary of the reach set is given by
+\[ x_l^*(t) = x_c(t) +
+\frac{X^+_l(t)l(t)}{\langle l(t), X^+_l(t)l(t)\rangle^{1/2}} .\]
+The boundary points $x^*_l(t)$ form trajectories, which we call
+{\it extremal trajectories}.
+Due to the nonsingular nature of the state transition matrix $\Phi(t,t_0)$,
+every boundary point of the reach set belongs to an extremal trajectory.
+To follow an extremal trajectory specified by parameter $l_0$, the
+system has to start at time $t_0$ at initial state
+\begin{equation}
+x^0_l = x_0 + \frac{X_0l_0}{\langle l_0,X_0l_0\rangle^{1/2}}. \label{x0lct}
+\end{equation}
+In the absence of disturbances, the open-loop control
+\begin{equation}
+u_l(t) = p(t) + \frac{P(t)B^T(t)l(t)}{\langle l(t),
+B(t)P(t)B^T(t)l(t)\rangle^{1/2}}. \label{uct}
+\end{equation}
+steers the system along the extremal trajectory defined by the vector $l_0$.
+When a disturbance is present, this control keeps the system on an extremal
+trajectory if and only if the disturbance plays against the control
+always taking its extreme values.
+
+Expressions (\ref{fwdinclusion}) and (\ref{fwdtightness}) lead
+to the following fact,
+\[ \bigcup_{\langle l_0,l_0\rangle=1}\EE(x_c(t),X^-_l(t)) =
+\XX(t,t_0,\EE(x_0,X_0)) =
+\bigcap_{\langle l_0,l_0\rangle=1}\EE(x_c(t),X^+_l(t)). \]
+In practice this means that the more values of $l_0$
+we use to compute $X^+_l(t)$ and
+$X^-_l(t)$, the better will be our approximation.
+
+
+
+
+% Continuous-time backward
+
+
+
+
+Analogous results hold for the backward reach set.
+
+Given the terminal time $t_1$ and ellipsoidal target set $\EE_(y_1,Y_1)$, the
+CLBRS $\YY_{CL}(t_1, t, \YY_1)=\YY(t_1, t, \YY_1)$, $t<t_1$, if it is nonempty,
+is a symmetric compact convex set whose center is governed by
+\begin{equation}
+y_c(t) = Ay_c(t) + B(t)p(t) + G(t)q(t), \;\;\; y_c(t_1) = y_1.\label{bckcenter}
+\end{equation}
+Fix a vector $l_1\in{\bf R}^n$, and consider
+\begin{equation}
+l(t) = \Phi(t_1, t)^Tl_1 .
+\label{bckadjoint}
+\end{equation}
+If the backward reach set $\YY(t_1, t, \EE(y_1,Y_1))$ is nonempty,
+there exist tight external and
+tight internal approximating ellipsoids $\EE(y_c(t), Y^+_l(t))$ and
+$\EE(y_c(t), Y^-_l(t))$ respectively, such that
+\begin{equation}
+\EE(y_c(t), Y^-_l(t))\subseteq\YY(t_1,t,\EE(y_1,Y_1))
+\subseteq \EE(y_c(t), Y^+_l(t)),
+\label{bckinclusion}
+\end{equation}
+and
+\begin{equation}
+\rho(l(t) ~|~ \EE(y_c(t), Y^-_l(t))) =
+\rho(l(t) ~|~ \YY(t_1, t, \EE(y_0,Y_0))) =
+\rho(l(t) ~|~ \EE(y_c(t), Y^+_l(t))) .
+\label{bcktightness}
+\end{equation}
+The equation for the shape matrix of the external ellipsoid is
+\begin{eqnarray}
+\dot{Y}^+_l(t) & = & A(t)Y^+_l(t) + Y^+_l(t)A^T(t) -\nonumber \\
+& & \pi_l(t)Y^+_l(t) - \frac{1}{\pi_l(t)}B(t)P(t)B^T(t) +\nonumber \\
+& & (Y_l^{+}(t))^{1/2}S_l(t)(G(t)Q(t)G^T(t))^{1/2} +\nonumber \\
+& & (G(t)Q(t)G^T(t))^{1/2}S_l^T(t)(Y_l^{+}(t))^{1/2}, \label{bckext1} \\
+Y^+_l(t_1) & = & Y_1, \label{bckext2}
+\end{eqnarray}
+in which
+\[ \pi_l(t) = \frac{\langle l(t),
+B(t)P(t)B^T(t)l(t)\rangle^{1/2}}{\langle l(t),
+Y^+_l(t)l(t)\rangle^{1/2}}, \]
+and the orthogonal matrix $S_l(t)$ satisfies the equation
+\[ S_l(t)(G(t)Q(t)G^T(t))^{1/2}l(t) = \frac{\langle l(t),
+G(t)Q(t)G^T(t)l(t)\rangle^{1/2}}{\langle l(t),
+Y_l^+(t)l(t)\rangle^{1/2}}(Y_l^{+}(t))^{1/2}l(t). \]
+The equation for the shape matrix of the internal ellipsoid is
+\begin{eqnarray}
+\dot{Y}^-_l(t) & = & A(t)Y^-_l(t) + Y^-_l(t)A^T(t) -\nonumber \\
+& & (Y_l^{-}(t))^{1/2}T_l(t)(B(t)P(t)B^T(t))^{1/2} -\nonumber \\
+& & (B(t)P(t)B^T(t))^{1/2}T_l^T(t)(Y_l^{-}(t))^{1/2} +\nonumber \\
+& & \eta_l(t)Y^-_l(t) + \frac{1}{\eta_l(t)}G(t)Q(t)G^T(t), \label{bckint1} \\
+Y^-_l(t_1) & = & Y_1, \label{bckint2}
+\end{eqnarray}
+in which
+\[ \eta_l(t) = \frac{\langle l(t),
+G(t)Q(t)G^T(t)l(t)\rangle^{1/2}}{\langle l(t),
+Y^+_l(t)l(t)\rangle^{1/2}}, \]
+and the orthogonal matrix $T_l(t)$ is  determined by the equation
+\[ T_l(t)(B(t)P(t)B^T(t))^{1/2}l(t) = \frac{\langle l(t),
+B(t)P(t)B^T(t)l(t)\rangle^{1/2}}{\langle l(t),
+Y_l^-(t)l(t)\rangle^{1/2}}(Y_l^{-}(t))^{1/2}l(t). \]
+Just as in the forward reachability case, the terms containing $G(t)$ and
+$Q(t)$ vanish from  equations (\ref{bckext1}) and
+(\ref{bckint1}) in the absence of disturbances.
+The boundary value problems (\ref{bckcenter}), (\ref{bckext1})
+and (\ref{bckint1}) are converted to the initial value
+problems by the change of variables $s = -t$.
+
+Due to (\ref{bckinclusion}) and (\ref{bcktightness}),
+\[ \bigcup_{\langle l_1,l_1\rangle=1}\EE(y_c(t),Y^-_l(t)) =
+\YY(t_1,t,\EE(y_1,Y_1)) =
+\bigcap_{\langle l_1,l_1\rangle=1}\EE(y_c(t),Y^+_l(t)). \]
+
+{\bf Remark.} In expressions (\ref{fwdext1}), (\ref{fwdint1}),
+(\ref{bckext1}) and (\ref{bckint1}) the terms $\frac{1}{\pi_l(t)}$
+and $\frac{1}{\eta_l(t)}$ may not be well defined for some vectors $l$,
+because matrices $B(t)P(t)B^T(t)$ and $G(t)Q(t)G^T(t)$ may be singular.
+In such cases, we set these entire expressions to  zero.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\newcommand{\OXP}{\overline{X}^+_l}
+\newcommand{\OXM}{\overline{X}^-_l}
+\newcommand{\UXP}{\underline{X}^+_l}
+\newcommand{\UXM}{\underline{X}^-_l}
+\newcommand{\OOXP}{\hat{X}^+_l}
+\newcommand{\OOXM}{\hat{X}^-_l}
+\newcommand{\UUXP}{\breve{X}^+_l}
+\newcommand{\UUXM}{\breve{X}^-_l}
+\newcommand{\OYP}{\overline{Y}^+_l}
+\newcommand{\OYM}{\overline{Y}^-_l}
+\newcommand{\UYP}{\underline{Y}^+_l}
+\newcommand{\UYM}{\underline{Y}^-_l}
+
+
+
+
+
+
+
+
+
+\subsection{Discrete-time systems}\label{ellappdt}
+Consider the discrete-time linear system,
+\begin{equation}
+x(t+1) = A(t)x(t) + B(t)u(t,x(t)) + G(t)v(t),
+\tag*{(\ref{ctsystem})}
+\label{dtsystem}
+\end{equation}
+in which $x(t)\in{\bf R}^n$ is the state, $u(t, x(t))\in{\bf R}^m$ is the control
+bounded by the ellipsoid $\EE(p(t),P(t))$,
+$v(t)\in{\bf R}^d$ is disturbance bounded by ellipsoid $\EE(q(t),Q(t))$,
+and matrices $A(t)$, $B(t)$, $G(t)$ are in ${\bf R}^{n\times n}$,
+${\bf R}^{n\times m}$, ${\bf R}^{n\times d}$ respectively.
+Here we shall assume $A(t)$ to be nonsingular.\footnote{The case
+when $A(t)$ is singular is described in \cite{KURZHANSKI_VARAIYA_ELLIPSOIDAL_TECHNIQUES_FOR_REACHABILITY_ANALISYS_OF_DISCRETE_TIME_SYSTEMS}.
+The idea is to substitute $A(t)$ with the nonsingular
+$A_\delta(t) = A(t) + \delta U(t)W(t)$,
+in which $U(t)$ and $W(t)$ are obtained from the singular value decomposition
+\[ A(t) = U(t)\Sigma(t)V(t) .\]
+The parameter $\delta$ can be chosen based on the number of time steps for which
+the reach set must be computed and the required accuracy.
+The issue of inverting ill-conditioned matrices is also addressed
+in \cite{KURZHANSKI_VARAIYA_ELLIPSOIDAL_TECHNIQUES_FOR_REACHABILITY_ANALISYS_OF_DISCRETE_TIME_SYSTEMS}.}
+The set of initial conditions at initial time $t_0$
+is ellipsoid $\EE(x_0,X_0)$.
+
+Ellipsoidal Toolbox computes maxmin and minmax CLRS
+$\OXCL(t, t_0, \EE(x_0, X_0)$ and $\UXCL(t, t_0, \EE(x_0, X_0)$ for
+discrete-time systems.
+
+If matrix $Q(\cdot)=0$,  the system (\ref{dtsystem}) becomes an
+ordinary affine system with known $v(\cdot)=q(\cdot)$.
+If matrix $G(\cdot)=0$,  the system reduces to a linear controlled
+system.
+In the absence of disturbance ($Q(\cdot)=0$ or $G(\cdot)=0$),
+$\OXCL(t,t_0,\EE(x_0,X_0))=\UXCL(t,t_0,\EE(x_0,X_0))=\XX(t,t_0,\EE(x_0,X_0))$,
+the reach set is as in Definition \ref{def_olrs}.
+
+Maxmin and minmax CLRS $\OXCL(t, t_0, \EE(x_0, X_0)$ and
+$\UXCL(t, t_0, \EE(x_0, X_0)$, if nonempty, are symmetric convex and compact,
+with the center evolving in time according to
+\begin{equation}
+x_c(t+1) = A(t)x_c(t) + B(t)p(t) + G(t)v(t), \;\;\; x_c(t_0)=x_0.
+\label{fwdcenterd}
+\end{equation}
+Fix some vector $l_0\in{\bf R}^n$ and consider $l(t)$ that satisfies the
+discrete-time adjoint equation,\footnote{Note that for (\ref{adjointdt})
+$A(t)$ must be invertible.}
+\begin{equation}
+l(t+1) = \left(A^T\right)^{-1}(t)l(t), \;\;\; l(t_0) = l_0,
+\label{adjointdt}
+\end{equation}
+or, equivalently
+\[ l(t) = \Phi^T(t_0, t)l_0 .\]
+There exist tight external ellipsoids
+$\EE(x_c(t), \OXP(t))$, $\EE(x_c(t), \UXP(t))$ and tight internal
+ellipsoids
+$\EE(x_c(t), \OXM(t))$, $\EE(x_c(t), \UXM(t))$ such that
+\begin{equation}
+\EE(x_c(t), \OXM(t))\subseteq\OXCL(t,t_0,\EE(x_0,X_0))
+\subseteq \EE(x_c(t), \OXP(t)),
+\label{maxmininclusion}
+\end{equation}
+\begin{equation}
+\rho(l(t) ~|~ \EE(x_c(t), \OXM(t))) =
+\rho(l(t) ~|~ \OXCL(t, t_0, \EE(x_0,X_0))) =
+\rho(l(t) ~|~ \EE(x_c(t), \OXP(t))) .
+\label{maxmintightness}
+\end{equation}
+and
+\begin{equation}
+\EE(x_c(t), \UXM(t))\subseteq\UXCL(t,t_0,\EE(x_0,X_0))
+\subseteq \EE(x_c(t), \UXP(t)),
+\label{minmaxinclusion}
+\end{equation}
+\begin{equation}
+\rho(l(t) ~|~ \EE(x_c(t), \UXM(t))) =
+\rho(l(t) ~|~ \UXCL(t, t_0, \EE(x_0,X_0))) =
+\rho(l(t) ~|~ \EE(x_c(t), \UXP(t))) .
+\label{minmaxtightness}
+\end{equation}
+The shape matrix of the external ellipsoid for maxmin reach set
+is determined from
+\begin{eqnarray}
+\OOXP(t) & = & (1+\overline{\pi}_l(t))A(t)\OXP(t)A^T(t) +
+\left(1+\frac{1}{\overline{\pi}_l(t)}\right)
+B(t)P(t)B^T(t), \label{fwdextmaxmin1} \\
+\OXP(t+1) & = & \left((\OOXP(t))^{1/2} +
+\overline{S}_l(t)(G(t)Q(t)G^T(t))^{1/2}\right)^T
+\times \nonumber \\
+& &\left((\OOXP(t))^{1/2} + \overline{S}_l(t)(G(t)Q(t)G^T(t))^{1/2}\right),
+\label{fwdextmaxmin2}\\
+\OXP(t_0) & = & X_0, \label{fwdextmaxmin3}
+\end{eqnarray}
+wherein
+\[ \overline{\pi}_l(t) = \frac{\langle l(t+1),
+B(t)P(t)B^T(t)l(t+1)\rangle^{1/2}}{\langle l(t),
+\OXP(t)l(t)\rangle^{1/2}}, \]
+and the orthogonal matrix $\overline{S}_l(t)$ is determined by the equation
+\begin{eqnarray*}
+& & \overline{S}_l(t)(G(t)Q(t)G^T(t))^{1/2}l(t+1) = \\
+& & \frac{\langle l(t+1),
+G(t)Q(t)G^T(t)l(t+1)\rangle^{1/2}}{\langle l(t+1),
+\OOXP(t)l(t+1)\rangle^{1/2}}(\OOXP(t))^{1/2}l(t+1).
+\end{eqnarray*}
+Equation (\ref{fwdextmaxmin2}) is valid only if
+$\EE(0,G(t)Q(t)G^T(t))\subseteq\EE(0,\OOXP(t))$, otherwise the
+maxmin CLRS $\OXCL(t,t_0,\EE(x_0,X_0))$ is empty.
+
+The shape matrix of the external ellipsoid for minmax reach set
+is determined from
+\begin{eqnarray}
+\UUXP(t) & = &
+\left((A(t)\UXP(t)A^T(t))^{1/2} +
+\underline{S}_l(t)(G(t)Q(t)G^T(t))^{1/2}\right)^T
+\times \nonumber \\
+& &\left((A(t)\UXP(t)A^T(t))^{1/2} +
+\underline{S}_l(t)(G(t)Q(t)G^T(t))^{1/2}\right)
+\label{fwdextminmax1}\\
+\UXP(t+1) & = &
+(1+\underline{\pi}_l(t))\UUXP(t) +
+\left(1+\frac{1}{\underline{\pi}_l(t)}\right)
+B(t)P(t)B^T(t), \label{fwdextminmax2} \\
+\UXP(t_0) & = & X_0, \label{fwdextminmax3}
+\end{eqnarray}
+where
+\[ \underline{\pi}_l(t) = \frac{\langle l(t+1),
+B(t)P(t)B^T(t)l(t+1)\rangle^{1/2}}{\langle l(t+1),
+\UUXP(t)l(t+1)\rangle^{1/2}}, \]
+and $\underline{S}_l(t)$ is orthogonal matrix determined from the equation
+\begin{eqnarray*}
+& & \underline{S}_l(t)(G(t)Q(t)G^T(t))^{1/2}l(t+1) = \\
+& & \frac{\langle l(t+1),
+G(t)Q(t)G^T(t)l(t+1)\rangle^{1/2}}{\langle l(t),
+\UXP(t)l(t)\rangle^{1/2}}(A(t)\UXP(t)A^T(t))^{1/2}l(t+1).
+\end{eqnarray*}
+Equations (\ref{fwdextminmax1}), (\ref{fwdextminmax2}) are valid only if
+$\EE(0,G(t)Q(t)G^T(t)\subseteq\EE(0,A(t)\UXP(t)A^T(t))$, otherwise
+minmax CLRS $\UXCL(t,t_0,\EE(x_0,X_0))$ is empty.
+
+The shape matrix of the internal ellipsoid for maxmin reach set
+is determined from
+\begin{eqnarray}
+\OOXM(t) & = &
+\left((A(t)\OXM(t)A^T(t))^{1/2} +
+\overline{T}_l(t)(B(t)P(t)B^T(t))^{1/2}\right)^T
+\times \nonumber \\
+& &\left((A(t)\OXM(t)A^T(t))^{1/2} +
+\overline{T}_l(t)(B(t)P(t)B^T(t))^{1/2}\right)
+\label{fwdintmaxmin1}\\
+\OXM(t+1) & = &
+(1+\overline{\eta}_l(t))\OOXM(t) +
+\left(1+\frac{1}{\underline{\eta}_l(t)}\right)
+G(t)Q(t)G^T(t), \label{fwdintmaxmin2} \\
+\OXM(t_0) & = & X_0, \label{fwdintmaxmin3}
+\end{eqnarray}
+where
+\[ \overline{\eta}_l(t) = \frac{\langle l(t+1),
+G(t)Q(t)G^T(t)l(t+1)\rangle^{1/2}}{\langle l(t+1),
+\OOXM(t)l(t+1)\rangle^{1/2}}, \]
+and $\overline{T}_l(t)$ is orthogonal matrix determined from the equation
+\begin{eqnarray*}
+& & \overline{T}_l(t)(B(t)P(t)B^T(t))^{1/2}l(t+1) = \\
+& & \frac{\langle l(t+1),
+B(t)P(t)B^T(t)l(t+1)\rangle^{1/2}}{\langle l(t),
+\OXM(t)l(t)\rangle^{1/2}}(A(t)\OXM(t)A^T(t))^{1/2}l(t+1).
+\end{eqnarray*}
+Equation (\ref{fwdintmaxmin2}) is valid only if
+$\EE(0,G(t)Q(t)G^T(t)\subseteq\EE(0,\OOXM(t))$.
+
+The shape matrix of the internal ellipsoid for the minmax reach set
+is determined by
+\begin{eqnarray}
+\UUXM(t) & = & (1+\underline{\eta}_l(t))A(t)\UXM(t)A^T(t) +
+\left(1+\frac{1}{\underline{\eta}_l(t)}\right)
+G(t)Q(t)G^T(t), \label{fwdintminmax1} \\
+\UXM(t+1) & = & \left((\UUXM(t))^{1/2} +
+\underline{T}_l(t)(B(t)P(t)B^T(t))^{1/2}\right)^T
+\times \nonumber \\
+& &\left((\UUXM(t))^{1/2} + \underline{T}_l(t)(B(t)P(t)B^T(t))^{1/2}\right),
+\label{fwdintminmax2}\\
+\UXM(t_0) & = & X_0, \label{fwdintminmax3}
+\end{eqnarray}
+wherein
+\[ \underline{\eta}_l(t) = \frac{\langle l(t+1),
+G(t)Q(t)G^T(t)l(t+1)\rangle^{1/2}}{\langle l(t),
+\UXM(t)l(t)\rangle^{1/2}}, \]
+and the orthogonal matrix $\underline{T}_l(t)$ is determined by the equation
+\begin{eqnarray*}
+& & \underline{T}_l(t)(B(t)P(t)B^T(t))^{1/2}l(t+1) = \\
+& & \frac{\langle l(t+1),
+B(t)P(t)B^T(t)l(t+1)\rangle^{1/2}}{\langle l(t+1),
+\UUXM(t)l(t+1)\rangle^{1/2}}(\UUXM(t))^{1/2}l(t+1).
+\end{eqnarray*}
+Equations (\ref{fwdintminmax1}), (\ref{fwdintminmax2}) are valid only if
+$\EE(0,G(t)Q(t)G^T(t)\subseteq\EE(0,A(t)\UXM(t)A^T(t))$.
+
+The point where the external and the internal ellipsoids both touch
+the boundary of the maxmin CLRS is
+\[ x_l^+(t) = x_c(t) + \frac{\OXP(t)l(t)}{\langle l(t),
+\OXP(t)l(t)\rangle^{1/2}} ,\]
+and the bounday point of minmax CLRS is
+\[ x_l^-(t) = x_c(t) + \frac{\OXM(t)l(t)}{\langle l(t),
+\OXM(t)l(t)\rangle^{1/2}} .\]
+Points $x^{\pm}_l(t)$, $t\geq t_0$, form extremal trajectories.
+In order for the system to follow the extremal trajectory specified by
+some vector $l_0$, the initial state must be
+\begin{equation}
+x_l^0 = x_0 + \frac{X_0l_0}{\langle l_0, X_0l_0\rangle^{1/2}}. \label{dx0l}
+\end{equation}
+When there is no disturbance ($G(t)=0$ or $Q(t)=0$),
+$\OXP(t)=\UXP(t)$ and $\OXM(t)=\UXM(t)$, and
+the open-loop control that steers the system along the extremal trajectory
+defined by $l_0$ is
+\begin{equation}
+u_l(t) = p(t) + \frac{P(t)B^T(t)l(t+1)}{\langle l(t+1),
+B(t)P(t)B^T(t)l(t+1)\rangle^{1/2}}. \label{udt}
+\end{equation}
+Each choice of $l_0$ defines an external and internal approximation.
+If $\OXCL(t,t_0,\EE(x_0,X_0))$ is nonempty,
+\[ \bigcup_{\langle l_0,l_0\rangle=1}\EE(x_c(t),\OXM(t)) =
+\OXCL(t,t_0,\EE(x_0,X_0)) =
+\bigcap_{\langle l_0,l_0\rangle=1}\EE(x_c(t),\OXP(t)). \]
+Similarly for $\UXCL(t,t_0,\EE(x_0,X_0))$,
+\[ \bigcup_{\langle l_0,l_0\rangle=1}\EE(x_c(t),\UXM(t)) =
+\UXCL(t,t_0,\EE(x_0,X_0)) =
+\bigcap_{\langle l_0,l_0\rangle=1}\EE(x_c(t),\UXP(t)). \]
+
+
+
+
+
+
+% Discrete-time backwards reachability
+
+
+
+
+Similarly, tight ellipsoidal approximations of maxmin and minmax CLBRS
+with terminating conditions $(t_1, \EE(y_1,Y_1))$ can be obtained
+for those directions $l(t)$ satisfying
+\begin{equation}
+l(t) = \Phi^T(t_1,t)l_1,
+\tag*{(\ref{bckadjoint})}
+\label{bckadjointd}
+\end{equation}
+with some fixed $l_1$, for which they exist.
+
+With boundary conditions
+\begin{equation}
+y_c(t_1)=y_1, ~~~ \OYP(t_1)=\OYM(t_1)=\UYP(t_1)=\UYM(t_1)=Y_1,
+\label{bndconds}
+\end{equation}
+external and internal ellipsoids for maxmin CLBRS $\OYCL(t_1,t,\EE(y_1,Y_1))$
+at time $t$, $\EE(y_c(t),\OYP(t))$ and $\EE(y_c(t),\OYM(t))$, are computed
+as external and internal ellipsoidal approximations of
+the geometric sum-difference
+\[ A^{-1}(t)\left(
+\EE(y_c(t+1),\OYP(t+1)) \oplus B(t)\EE(-p(t),P(t))
+\dot{-}G(t)\EE(-q(t),Q(t))
+\right)\]
+and
+\[ A^{-1}(t)\left(
+\EE(y_c(t+1),\OYM(t+1)) \oplus B(t)\EE(-p(t),P(t))
+\dot{-}G(t)\EE(-q(t),Q(t))
+\right)\]
+in direction $l(t)$ from \ref{bckadjointd}.
+Section \ref{subsec_sumdiff} describes the operation of
+geometric sum-difference for ellipsoids.
+
+External and internal ellipsoids for minmax CLBRS $\UYCL(t_1,t,\EE(y_1,Y_1))$
+at time $t$, $\EE(y_c(t),\UYP(t))$ and $\EE(y_c(t),\UYM(t))$, are computed
+as external and internal ellipsoidal approximations of
+the geometric difference-sum
+\[ A^{-1}(t)\left(
+\EE(y_c(t+1),\UYP(t+1))
+\dot{-}G(t)\EE(-q(t),Q(t))
+\oplus B(t)\EE(-p(t),P(t))
+\right)\]
+and
+\[ A^{-1}(t)\left(
+\EE(y_c(t+1),\UYM(t+1))
+\dot{-}G(t)\EE(-q(t),Q(t))
+\oplus B(t)\EE(-p(t),P(t))
+\right)\]
+in direction $l(t)$ from \ref{bckadjointd}.
+Section \ref{subsec_diffsum} describes the operation of
+geometric difference-sum for ellipsoids.
+
+
+
+
+
+
