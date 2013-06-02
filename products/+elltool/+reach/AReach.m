@@ -1326,6 +1326,10 @@ classdef AReach < elltool.reach.IReach
                 throwerror('wrongInput',...
                     'Method cut does not work with projections');
             else
+                if cutTimeVec(1) > cutTimeVec(end)
+                    cutTimeVec = fliplr(cutTimeVec);
+                end
+                
                 switchTimeVec = self.switchSysTimeVec;
                 cutObj = self.getCopy();
                 cutObj.ellTubeRel = cutObj.ellTubeRel.cut(cutTimeVec);
@@ -1343,9 +1347,6 @@ classdef AReach < elltool.reach.IReach
                         (cutTimeVec(end) > switchTimeVec(end)))
                      throwerror('wrongInput',...
                         'cutTime out of time interval');
-                elseif cutTimeVec(1) > cutTimeVec(end)
-                     throwerror('wrongInput',...
-                        'wrong cutTime interval');
                 end
                 %
                 switchTimeVec = switchTimeVec(2:end);

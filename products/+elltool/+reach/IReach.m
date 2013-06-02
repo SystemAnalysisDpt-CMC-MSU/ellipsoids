@@ -19,6 +19,7 @@ classdef IReach < handle
         %       self.
         %
         %    cutTimeVec: double[1, 2]/double[1, 1] - time interval to cut.
+        %       Can be both direct and back.
         %
         % Output:
         %   cutObj: elltool.reach.IReach[1, 1] - reach set resulting from the CUT
