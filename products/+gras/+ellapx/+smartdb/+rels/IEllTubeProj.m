@@ -3,6 +3,6 @@ classdef IEllTubeProj < ...
         gras.ellapx.smartdb.rels.IEllTubeNotTightProj
     %
     methods (Abstract,Access=protected)
-         plotCreateTubeTouchCurveFunc(~)
+        plotCreateTubeTouchCurveFunc(~)
     end
 end

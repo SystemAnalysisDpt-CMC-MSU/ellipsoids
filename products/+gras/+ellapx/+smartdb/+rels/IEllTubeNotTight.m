@@ -19,6 +19,8 @@ classdef IEllTubeNotTight < handle
     %
     methods (Abstract,Static)
         scaleTubeData(~)
+        getCutObj(~)
+        getLogicalInd(~)
     end
     %
     methods (Abstract,Access=protected)

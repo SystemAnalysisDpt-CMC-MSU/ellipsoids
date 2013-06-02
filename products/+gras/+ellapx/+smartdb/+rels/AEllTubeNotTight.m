@@ -26,11 +26,73 @@ classdef AEllTubeNotTight < gras.ellapx.smartdb.rels.IEllTubeNotTight
     end
     %
     methods
-        function [ellTubeProjRel,indProj2OrigVec]=project(self,varargin)
+        function [ellTubeProjRel,indProj2OrigVec]=project(self,...
+                projType,projMatList,fGetProjMat)
+            % PROJECT - computes projection of the relation object onto given time
+            %           dependent subspase
+            %
+            % Input:
+            %  regular:
+            %    self.
+            %    projType - type of the projection.
+            %        Takes the following values: 'Static'
+            %                                    'DynamicAlongGoodCurve'
+            %    projMatList:double[nDim, nSpDim] - matrices' array of the orthoganal
+            %             basis vectors
+            %    fGetProjMat - function which creates vector of the projection
+            %             matrices
+            %        Input:
+            %         regular:
+            %           projMat:double[nDim, mDim] - matrix of the projection at the
+            %             instant of time
+            %           timeVec:double[1, nDim] - time interval
+            %         optional:
+            %            sTime:double[1,1] - instant of time
+            %        Output:
+            %           projOrthMatArray:double[1, nSpDim] - vector of the projection
+            %             matrices
+            %           projOrthMatTransArray:double[nSpDim, 1] - transposed vector of
+            %             the projection matrices
+            % Output:
+            %    ellTubeProjRel:smartdb.relation.StaticRelation[1, 1]/
+            %        smartdb.relation.DynamicRelation[1, 1]- projected relation
+            %    indProj2OrigVec:cell[nDim, 1] - index of the line number from
+            %             which is obtained the projection
+            %
+            % Example:
+            %   function example
+            %    aMat = [0 1; 0 0]; bMat = eye(2);
+            %    SUBounds = struct();
+            %    SUBounds.center = {'sin(t)'; 'cos(t)'};
+            %    SUBounds.shape = [9 0; 0 2];
+            %    sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+            %    x0EllObj = ell_unitball(2);
+            %    timeVec = [0 10];
+            %    dirsMat = [1 0; 0 1]';
+            %    rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+            %    ellTubeObj = rsObj.getEllTubeRel();
+            %    unionEllTube = ...
+            %     gras.ellapx.smartdb.rels.EllUnionTube.fromEllTubes(ellTubeObj);
+            %    projSpaceList = {[1 0;0 1]};
+            %    projType = gras.ellapx.enums.EProjType.Static;
+            %    statEllTubeProj = unionEllTube.project(projType,projSpaceList,...
+            %       @fGetProjMat);
+            %    plObj=smartdb.disp.RelationDataPlotter();
+            %    statEllTubeProj.plot(plObj);
+            % end
+            %
+            % function [projOrthMatArray,projOrthMatTransArray]=fGetProjMat(projMat,...
+            %     timeVec,varargin)
+            %   nTimePoints=length(timeVec);
+            %   projOrthMatArray=repmat(projMat,[1,1,nTimePoints]);
+            %   projOrthMatTransArray=repmat(projMat.',[1,1,nTimePoints]);
+            %  end
+            %
             import gras.ellapx.smartdb.rels.EllTubeNotTightProj
             %
             if self.getNTuples() > 0
-                [rel,indProj2OrigVec]=self.projectInternal(varargin{:});
+                [rel,indProj2OrigVec]=self.projectInternal(projType,...
+                    projMatList,fGetProjMat);
                 ellTubeProjRel=EllTubeNotTightProj(rel);
             else
                 ellTubeProjRel=EllTubeNotTightProj();
@@ -89,26 +151,25 @@ classdef AEllTubeNotTight < gras.ellapx.smartdb.rels.IEllTubeNotTight
         end
         %
         function thinnedEllTubeRel=thinOutTuples(self, indVec)
+            % THINOUTTUPLES  - delete tuples from relation object
+            %
+            % Input:
+            %   regular:
+            %     self.
+            %     indVec:logical[1, nDim]/double[1, nDim] - indexes of tuples which
+            %             we must remove
+            %
+            % Output:
+            %   thinnedEllTubeRel: smartdb.relation.StaticRelation[1, 1]/
+            %       smartdb.relation.DynamicRelation[1, 1] - relation object without
+            %       tuples
+            %
             import modgen.common.throwerror;
             %
             SData = self.getData();
             SThinFunResult = SData;
             timeVec = SData.timeVec{1};
-            nPoints = numel(timeVec);
-            if isa(indVec, 'double')
-                if min(indVec) < 1 || max(indVec) > nPoints
-                    throwerror('Indexes are out of range.');
-                end
-                isNeededIndVec = false(size(timeVec));
-                isNeededIndVec(indVec) = true;
-            elseif islogical(indVec)
-                if numel(indVec) ~= nPoints
-                    throwerror('Indexes are out of range.');
-                end
-                isNeededIndVec = indVec;
-            else
-                throwerror('indVec should be double or logical');
-            end
+            isNeededIndVec = self.getLogicalInd(indVec, timeVec);
             %
             fieldsNotToCatVec = self.getProtectedFromCutFieldList();
             fieldsToCutVec =...
@@ -134,45 +195,65 @@ classdef AEllTubeNotTight < gras.ellapx.smartdb.rels.IEllTubeNotTight
                     'UniformOutput', false);
             end
             %
-            function cutResObj = getCutObj(whatToCutObj, isCutTimeVec)
-                switch ndims(whatToCutObj)
-                    case 1
-                        cutResObj = whatToCutObj(isCutTimeVec);
-                    case 2
-                        cutResObj = whatToCutObj(:, isCutTimeVec);
-                    case 3
-                        cutResObj = whatToCutObj(:, :, isCutTimeVec);
-                end
-            end
-            %
             function cutStructField(fieldName)
                 SThinFunResult.(fieldName) = cellfun(@(StructFieldVal)...
-                    getCutObj(StructFieldVal, isNeededIndVec),...
+                    self.getCutObj(StructFieldVal, isNeededIndVec),...
                     SData.(fieldName), 'UniformOutput', false);
             end
         end
         %
         function catEllTubeRel=cat(self, newEllTubeRel)
+            % CAT  - concatenates data from relation objects.
+            %
+            % Input:
+            %  regular:
+            %    self.
+            %    newEllTubeRel: smartdb.relation.StaticRelation[1, 1]/
+            %      smartdb.relation.DynamicRelation[1, 1] - relation object
+            %
+            % Output:
+            %    catEllTubeRel:smartdb.relation.StaticRelation[1, 1]/
+            %      smartdb.relation.DynamicRelation[1, 1] - relation object resulting
+            %      from CAT operation
+            %
             SDataFirst = self.getData();
             SDataSecond = newEllTubeRel.getData();
             SCatFunResult = SDataFirst;
-            %
+            timeVec = SDataSecond.timeVec{1};
+            if nargin == 2
+                indVec = true(size(timeVec));
+            end
+            isNeededIndVec = self.getLogicalInd(indVec, timeVec);
             fieldsNotToCatVec = self.getProtectedFromCutFieldList();
             fieldsToCatVec =...
                 setdiff(fieldnames(SDataFirst), fieldsNotToCatVec);
-            cellfun(@(field) catStructField(field), fieldsToCatVec);
+            cellfun(@(field) catStructField(field, isNeededIndVec),...
+                fieldsToCatVec);
             catEllTubeRel = self.createInstance(SCatFunResult);
             %
-            function catStructField(fieldName)
+            function catStructField(fieldName, isNeededIndVec)
                 SCatFunResult.(fieldName) =...
                     cellfun(@(firstStructFieldVal, secondStructFieldVal)...
                     cat(ndims(firstStructFieldVal), firstStructFieldVal,...
-                    secondStructFieldVal), SDataFirst.(fieldName),...
+                    self.getCutObj(secondStructFieldVal,...
+                    isNeededIndVec)), SDataFirst.(fieldName),...
                     SDataSecond.(fieldName), 'UniformOutput', false);
             end
         end
         %
         function cutEllTubeRel=cut(self, cutTimeVec)
+            % CUT - extracts the piece of the relation object from given start time to
+            %       given end time.
+            % Input:
+            %  regular:
+            %     self.
+            %     cutTimeVec: double[1, 2]/ double[1, 1] - time interval to cut
+            %
+            % Output:
+            % cutEllTubeRel: smartdb.relation.StaticRelation[1, 1]/
+            %      smartdb.relation.DynamicRelation[1, 1] - relation object resulting
+            %      from CUT operation
+            %
             import modgen.common.throwerror;
             %
             if numel(cutTimeVec) == 1
@@ -224,6 +305,45 @@ classdef AEllTubeNotTight < gras.ellapx.smartdb.rels.IEllTubeNotTight
         end
         %
         function scale(self,fCalcFactor,fieldNameList)
+            % SCALE - scales relation object
+            %
+            %  Input:
+            %   regular:
+            %      self.
+            %      fCalcFactor - function which calculates factor for
+            %                     fields in fieldNameList
+            %        Input:
+            %          regular:
+            %            fieldNameList: char/cell[1,] of char - a list of fields
+            %                   for which factor will be calculated
+            %         Output:
+            %             factor:double[1, 1] - calculated factor
+            %
+            %       fieldNameList:cell[1,nElem]/char[1,] - names of the fields
+            %
+            %  Output:
+            %       none
+            %
+            % Example:
+            %   nPoints=5;
+            %   calcPrecision=0.001;
+            %   approxSchemaDescr=char.empty(1,0);
+            %   approxSchemaName=char.empty(1,0);
+            %   nDims=3;
+            %   nTubes=1;
+            %   lsGoodDirVec=[1;0;1];
+            %   aMat=zeros(nDims,nPoints);
+            %   timeVec=1:nPoints;
+            %   sTime=nPoints;
+            %   approxType=gras.ellapx.enums.EApproxType.Internal;
+            %   qArrayList=repmat({repmat(diag([1 2 3]),[1,1,nPoints])},1,nTubes);
+            %   ltGoodDirArray=repmat(lsGoodDirVec,[1,nTubes,nPoints]);
+            %   fromMatEllTube=...
+            %         gras.ellapx.smartdb.rels.EllTube.fromQArrays(qArrayList,...
+            %         aMat, timeVec,ltGoodDirArray, sTime, approxType,...
+            %         approxSchemaName, approxSchemaDescr, calcPrecision);
+            %   fromMatEllTube.scale(@(varargin)2,{});
+            %
             scaleFactorVec=self.applyTupleGetFunc(fCalcFactor,...
                 fieldNameList);
             self.setData(...
@@ -247,7 +367,7 @@ classdef AEllTubeNotTight < gras.ellapx.smartdb.rels.IEllTubeNotTight
             %
             % Output:
             %   regular:
-            %       ellTubeProjRel: gras.ellapx.smartdb.rels.EllTubeProj[1, 1] - 
+            %       ellTubeProjRel: gras.ellapx.smartdb.rels.EllTubeProj[1, 1] -
             %           elltube projection
             %
             % Example:
@@ -281,6 +401,18 @@ classdef AEllTubeNotTight < gras.ellapx.smartdb.rels.IEllTubeNotTight
         end
         %
         function [apprEllMat timeVec]=getEllArray(self, approxType)
+            % GETELLARRAY - returns array of matrix's ellipsoid according to
+            %               approxType
+            %
+            % Input:
+            %  regular:
+            %     self.
+            %     approxType:char[1,] - type of approximation(internal/external)
+            %
+            % Output:
+            %   apprEllMat:double[nDim1,..., nDimN] - array of array of ellipsoid's
+            %            matrices
+            %
             import gras.ellapx.smartdb.F;
             %
             SData = self.getTuplesFilteredBy(F.APPROX_TYPE, approxType);
@@ -318,6 +450,36 @@ classdef AEllTubeNotTight < gras.ellapx.smartdb.rels.IEllTubeNotTight
                 STubeData.QArray,'UniformOutput',false);
             %
             STubeData.scaleFactor=STubeData.scaleFactor.*scaleFactorVec;
+        end
+        %
+        function cutResObj=getCutObj(whatToCutObj, isCutTimeVec)
+            dim = ndims(whatToCutObj);
+            if dim == 1
+                cutResObj = whatToCutObj(isCutTimeVec);
+            elseif dim == 2
+                cutResObj = whatToCutObj(:, isCutTimeVec);
+            elseif dim == 3
+                cutResObj = whatToCutObj(:, :, isCutTimeVec);
+            end
+        end
+        %
+        function isNeededIndVec=getLogicalInd(indVec, timeVec)
+            nPoints = numel(timeVec);
+            if isa(indVec, 'double')
+                if min(indVec) < 1 || max(indVec) > nPoints
+                    throwerror('wrongInput', 'Indexes are out of range.');
+                end
+                isNeededIndVec = false(size(timeVec));
+                isNeededIndVec(indVec) = true;
+            elseif islogical(indVec)
+                if numel(indVec) ~= nPoints
+                    throwerror('wrongInput', 'Indexes are out of range.');
+                end
+                isNeededIndVec = indVec;
+            else
+                throwerror('wrongInput',...
+                    'indVec should be double or logical');
+            end
         end
     end
     %
@@ -359,7 +521,7 @@ classdef AEllTubeNotTight < gras.ellapx.smartdb.rels.IEllTubeNotTight
             lsGoodDirVec(abs(lsGoodDirVec)<dispTol)=0;
             strVal = sprintf('lsGoodDirVec=%s, sTime=%f',...
                 mat2str(lsGoodDirVec,dispDigits),sTime);
-                end
+        end
         %
         function figureGroupKeyName=figureGetGroupKeyFunc(self,sTime,lsGoodDirVec)
             figureGroupKeyName=sprintf(...
@@ -690,6 +852,19 @@ classdef AEllTubeNotTight < gras.ellapx.smartdb.rels.IEllTubeNotTight
                 isTupleOk=false;
                 nPoints=size(timeVec,2);
                 nDims=size(QArray,1);
+                %
+                % check timeVec
+                %
+                [~,indSortVec]=unique(timeVec);
+                if length(indSortVec)~=length(timeVec);
+                    errTagStr='timeVecNotUnq';
+                    reasonStr='timeVec contains non-unique values';
+                    return;
+                elseif any(diff(indSortVec)<0)
+                    errTagStr='timeVecNotMon';
+                    reasonStr='timeVec is not monotone';
+                    return;
+                end
                 %
                 % Check for positive (semi-)definiteness
                 %

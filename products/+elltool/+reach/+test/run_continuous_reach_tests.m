@@ -7,11 +7,11 @@ loader = mlunitext.test_loader;
 crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
 crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
 %
-confCMat = {...
-    'demo3firstTest',  [1 0 1 0 1 0 1];...
-    'demo3secondTest', [1 0 0 1 1 0 0];...
-    'demo3thirdTest',  [1 1 0 0 1 1 0];...
-    'demo3fourthTest', [1 1 1 1 1 1 0];
+confCMat = {
+    'demo3firstTest',  [1 0 1 0 1 0 1 0];
+    'demo3secondTest', [1 0 0 1 1 0 0 0];
+    'demo3thirdTest',  [1 1 0 0 1 1 0 1];
+    'demo3fourthTest', [1 1 1 1 1 1 0 0];
     };
 %
 if nargin>0
@@ -50,12 +50,6 @@ for iConf = 1:nConfs
     end
     if confTestsVec(5)
         suiteList{end + 1} = loader.load_tests_from_test_case(...
-            'elltool.reach.test.mlunit.ContinuousReachRegrTestCase',...
-            confName, crm, crmSys,...
-            'marker',confName);
-    end
-    if confTestsVec(6)
-        suiteList{end + 1} = loader.load_tests_from_test_case(...
             'elltool.reach.test.mlunit.ContinuousReachProjTestCase',...
             confName, crm, crmSys,...
             'marker',confName);
@@ -66,16 +60,25 @@ for iConf = 1:nConfs
             ReachFactory(confName, crm, crmSys, false, false),...
             'marker',confName);
     end
+	if confTestsVec(8)
+        suiteList{end + 1} = loader.load_tests_from_test_case(...
+            'elltool.reach.test.mlunit.ContinuousReachRegTestCase',...
+            confName, crm, crmSys);
+    end
 end
 suiteList{end + 1} = loader.load_tests_from_test_case(...
     'elltool.reach.test.mlunit.ContinuousReachFirstTestCase',...
     'demo3firstTest', crm, crmSys);
+
+suiteList{end + 1} = loader.load_tests_from_test_case(...
+    'elltool.reach.test.mlunit.MPTIntegrationTestCase');
 %
-testLists=cellfun(@(x)x.tests,suiteList,'UniformOutput',false);
-suite=mlunitext.test_suite(horzcat(testLists{:}));
+testLists = cellfun(@(x)x.tests,suiteList,'UniformOutput',false);
+suite = mlunitext.test_suite(horzcat(testLists{:}));
 %
-resList{1}=runner.run(suite);
-resList{2}=elltool.reach.test.run_reachcont_proj_adv_tests();
-results=[resList{:}];
+resList{1} = runner.run(suite);
+testCaseNameStr = 'elltool.reach.test.mlunit.ContinuousReachProjAdvTestCase';
+resList{2} = elltool.reach.test.run_reach_proj_adv_tests(testCaseNameStr);
+results = [resList{:}];
 %
 end

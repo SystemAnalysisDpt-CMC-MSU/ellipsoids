@@ -21,7 +21,8 @@ function [isPosArr reportStr] = ne(fstHypArr, secHypArr)
 %   firstHypObj = hyperplane([-1; 1]);
 %   secHypObj = hyperplane([-1; 1; 8; -2; 3], 7);
 %   thirdHypObj = hyperplane([1; 2; 0], -1);
-%   [secHypObj firstHypObj thirdHypObj] ~= [firstHypObj secHypObj thirdHypObj]
+%   [secHypObj firstHypObj thirdHypObj] ~= [firstHypObj secHypObj...
+%                                                             thirdHypObj]
 % 
 %   ans =
 % 

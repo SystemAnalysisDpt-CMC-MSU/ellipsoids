@@ -60,7 +60,9 @@ classdef CubeStruct<dynamicprops&modgen.common.obj.HandleObjectCloner&...
         function display(self,varargin)
             % DISPLAY - puts some textual information about CubeStruct object in screen
             % 
-            %
+            % Input:
+            %  regular:
+            %      self.
             %
             self.displayInternal('CubeStruct',varargin{:});
         end
@@ -233,7 +235,7 @@ classdef CubeStruct<dynamicprops&modgen.common.obj.HandleObjectCloner&...
         end
         %
     end
-    methods (Hidden,Sealed)
+    methods (Hidden, Sealed)
         %we use getField internally which justifies Sealed access modifier
         propVal=getField(self,fieldName)
     end

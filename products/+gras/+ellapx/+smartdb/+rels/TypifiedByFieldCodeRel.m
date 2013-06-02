@@ -1,10 +1,8 @@
 classdef TypifiedByFieldCodeRel<smartdb.relations.ATypifiedStaticRelation
-    %TestRelation Summary of this class goes here
-    %   Detailed explanation goes here
-    methods 
+    methods
         function self=TypifiedByFieldCodeRel(varargin)
             self=self@smartdb.relations.ATypifiedStaticRelation(varargin{:});
-         
+            
         end
     end
     methods (Access=protected)

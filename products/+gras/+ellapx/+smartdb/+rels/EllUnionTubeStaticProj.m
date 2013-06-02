@@ -3,6 +3,8 @@ classdef EllUnionTubeStaticProj < ...
         gras.ellapx.smartdb.rels.AEllUnionTubeStaticProj & ...
         gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel
     %
+    %   TODO: correct description of the fields in
+    %     gras.ellapx.smartdb.rels.EllUnionTubeStaticProj
     methods(Access=protected)
         function changeDataPostHook(self)
             self.checkDataConsistency();
@@ -58,7 +60,7 @@ classdef EllUnionTubeStaticProj < ...
         function [patchColor,patchAlpha]=getPatchColorByApxType(varargin)
             [patchColor,patchAlpha]=getPatchColorByApxType@...
                 gras.ellapx.smartdb.rels.AEllUnionTubeStaticProj(varargin{:});
-        end       
+        end
         %
         function checkTouchCurves(varargin)
             checkTouchCurves@...
@@ -68,6 +70,27 @@ classdef EllUnionTubeStaticProj < ...
         function fieldList=getPlotArgumentsFieldList(varargin)
             fieldList=getPlotArgumentsFieldList@...
                 gras.ellapx.smartdb.rels.AEllUnionTubeStaticProj(varargin{:});
+        end
+    end
+    %
+    methods (Static)
+        function ellUnionTubeRel=fromEllTubes(ellTubeRel)
+            % FROMELLTUBES - returns union of the ellipsoidal tubes on time
+            %
+            % Input:
+            %    ellTubeRel: smartdb.relation.StaticRelation[1, 1]/
+            %       smartdb.relation.DynamicRelation[1, 1] - relation
+            %       object
+            %
+            % Output:
+            % ellUnionTubeRel: ellapx.smartdb.rel.EllUnionTubeStaticProj - union of the
+            %             ellipsoidal tubes
+            %
+            import gras.ellapx.smartdb.rels.EllUnionTubeStaticProj
+            import gras.ellapx.smartdb.rels.AEllUnionTubeNotTight
+            %
+            SData = AEllUnionTubeNotTight.fromEllTubesInternal(ellTubeRel);
+            ellUnionTubeRel = EllUnionTubeStaticProj(SData);
         end
     end
     %

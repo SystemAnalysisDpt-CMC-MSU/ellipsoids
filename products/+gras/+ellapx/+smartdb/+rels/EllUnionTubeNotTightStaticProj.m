@@ -48,11 +48,32 @@ classdef EllUnionTubeNotTightStaticProj < ...
         function [patchColor,patchAlpha]=getPatchColorByApxType(varargin)
             [patchColor,patchAlpha]=getPatchColorByApxType@...
                 gras.ellapx.smartdb.rels.AEllUnionTubeNotTightStaticProj(varargin{:});
-        end       
+        end
         %
         function fieldList=getPlotArgumentsFieldList(varargin)
             fieldList=getPlotArgumentsFieldList@...
                 gras.ellapx.smartdb.rels.AEllUnionTubeNotTightStaticProj(varargin{:});
+        end
+    end
+    %
+    methods (Static)
+        function ellUnionTubeRel=fromEllTubes(ellTubeRel)
+            % FROMELLTUBES - returns union of the ellipsoidal tubes on time
+            %
+            % Input:
+            %    ellTubeRel: smartdb.relation.StaticRelation[1, 1]/
+            %       smartdb.relation.DynamicRelation[1, 1] - relation
+            %       object
+            %
+            % Output:
+            % ellUnionTubeRel: ellapx.smartdb.rel.EllUnionTubeNotTightStaticProj - union of the
+            %             ellipsoidal tubes
+            %
+            import gras.ellapx.smartdb.rels.EllUnionTubeNotTightStaticProj
+            import gras.ellapx.smartdb.rels.AEllUnionTubeNotTight
+            %
+            SData = AEllUnionTubeNotTight.fromEllTubesInternal(ellTubeRel);
+            ellUnionTubeRel = EllUnionTubeNotTightStaticProj(SData);
         end
     end
     %

@@ -38,7 +38,7 @@ B = [1/C 0; 0 1/L];
 CB = ell_unitball(2);
 A2 = [0 -1/C; 1/L2 -R2/L2];
 B2 = [1/C 0; 0 1/L2];
-X0 = 0.1*ell_unitball(2);
+X0 = 1e-5*ell_unitball(2);
 T = 10;
 L0 = [1 0; 0 1]';
 s = elltool.linsys.LinSysFactory.create(A, B, CB);
@@ -46,7 +46,7 @@ s2 = elltool.linsys.LinSysFactory.create(A2, B2, CB);
 %%
 % We are ready to compute the reach set approximations of this system on some time interval, say T = [0, 10], for zero initial conditions and plot them:
 %
-% >> X0 = 0.1*ell_unitball(2);
+% >> X0 = 0.00001*ell_unitball(2);
 % >> T = 10;
 % >> L0 = [1 0; 0 1]';
 % >> rs = elltool.reach.ReachContinuous(lsys, X0, L0, T);
@@ -55,7 +55,8 @@ s2 = elltool.linsys.LinSysFactory.create(A2, B2, CB);
 % >> ylabel('V_C'); zlabel('i_L');
 %
 % On your screen you see the reach set evolving in time from 0 to 10 (reach tube). Its external and internal approximations are computed for two directions specified by matrix L0. Function 'plot_ea' plots external (blue by default), and function 'plot_ia' - internal (green by default) approximations.
-rs = elltool.reach.ReachContinuous(s, X0, L0, [0 T]);
+rs = elltool.reach.ReachContinuous(s, X0, L0, [0 T],...
+    'isRegEnabled', true, 'isJustCheck', false, 'regTol', 1e-4);
 ell_plot([0; 0; 0], 'k.');
 cla;
 rs.plot_ea();
@@ -182,7 +183,8 @@ ylabel('i_L');
 A = {'0' '-10'; '1/(2 + sin(t))' '-4/(2 + sin(t))'};
 B = {'10' '0'; '0' '1/(2 + sin(t))'};
 s = elltool.linsys.LinSysFactory.create(A, B, CB);
-rs = elltool.reach.ReachContinuous(s, X0, L0, [0 4]);
+rs = elltool.reach.ReachContinuous(s, X0, L0, [0 4],...
+    'isRegEnabled', true, 'isJustCheck', false, 'regTol', 1e-4);
 cla;
 ell_plot([0; 0; 0], '.');
 cla;
@@ -212,23 +214,24 @@ hold off;
 %
 % Let disturbance bounds depend on time:
 %
-% >> DB.center = {'2*cos(t)'};
-% >> DB.shape = {'0.09*(sin(t))^2'};
+% >> V.center = {'2*cos(t)'};
+% >> V.shape = {'0.09*(sin(t))^2'};
 % >> G = [1; 0];
 %
 % Now we declare the linear system object with disturbance:
 %
-% >> lsys = elltool.linsys.LinSysFactory.create(A, B, CB, G, DB);
+% >> lsys = elltool.linsys.LinSysFactory.create(A, B, CB, G, V);
 %
 % Compute and plot the reach tube approximations:
 %
 % >> rs = elltool.reach.ReachContinuous(s, X0, L0, [0 4]);
 % >> rs.plot_ea(); hold on; rs.plot_ia();
-G = eye(2);
-V.center = {'2*cos(t)'; '0'};
-V.shape = {'0.0001+0.09*(sin(t))^2', '0'; '0', '0.0001'};
+G = [1; 0];
+V.center = {'2*cos(t)'};
+V.shape = {'0.09*(sin(t))^2'};
 s = elltool.linsys.LinSysFactory.create(A, B, CB, G, V);
-rs = elltool.reach.ReachContinuous(s, X0, L0, [0 4]);
+rs = elltool.reach.ReachContinuous(s, X0, L0, [0 4],...
+    'isRegEnabled', true, 'isJustCheck', false, 'regTol', 1e-2);
 cla;
 rs.plot_ea();
 hold on;
@@ -287,7 +290,8 @@ L = [1 0 -1 1; 0 -1 1 1]';
 % >> rs = elltool.reach.ReachContinuous(lsys, X0, L, T);
 % >> ps = prs.projection([1 0 0 0; 0 1 0 0]');
 % >> ps.plot_ea(); hold on; ps.plot_ia();
-rs = elltool.reach.ReachContinuous(s, X0, L, [0 T]);
+rs = elltool.reach.ReachContinuous(s, X0, L, [0 T],...
+    'isRegEnabled', true, 'isJustCheck', false, 'regTol', 1e-5);
 ps = rs.projection([1 0 0 0; 0 1 0 0]');
 ell_plot([0; 0; 0], 'k.');
 cla;
@@ -315,7 +319,8 @@ hold off;
 
 % plots approximations of backward reach tube of the system for target point [2; 3] (used to be initial condition in the previous example, hence, is still denoted X0 in the code), terminating time 1 and initial time 0.
 T = [1 0];
-brs = elltool.reach.ReachContinuous(s, X0, L, T);
+brs = elltool.reach.ReachContinuous(s, X0, L, T,...
+    'isRegEnabled', true, 'isJustCheck', false, 'regTol', 1e-5);
 bps = brs.projection([1 0 0 0; 0 1 0 0]');
 cla;
 bps.plot_ea(); hold on; bps.plot_ia(); hold off;
@@ -356,7 +361,7 @@ X0 = ellipsoid([1; 0.5; -0.5; 1.10; 0.55; 0], eye(6));
 lsys = elltool.linsys.LinSysFactory.create(A, B, U, [], [], [], [], 'd');
 L0 = [1 0 0 0 0 0; 0 1 0 0 0 0; 0 0 1 0 0 1; 0 1 0 1 1 0; 0 0 -1 1 0 1; 0 0 0 -1 1 1]';
 %%
-% Now we compute the reach set for N = 4 time steps and plot the projection onto (V[k], Y[k]) subspace:
+% Now we compute the reach set for time interval [1 4] and plot the projection onto (V[k], Y[k]) subspace:
 %
 % >> X0 = ellipsoid([1; 0.5; -0.5; 1.10; 0.55; 0], eye(6));
 % >> L0 = [1 0 0 0 0 0; 0 1 0 0 0 0; 0 0 1 0 0 1; 0 1 0 1 1 0; 0 0 -1 1 0 1; 0 0 0 -1 1 1]';
@@ -367,8 +372,8 @@ L0 = [1 0 0 0 0 0; 0 1 0 0 0 0; 0 0 1 0 0 1; 0 1 0 1 1 0; 0 0 -1 1 0 1; 0 0 0 -1
 % >> ps.plot_ea(); hold on; ps.plot_ia();
 %
 % Forward reach sets can be computed for singular discrete-time systems as well. Backward reach sets, on the other hand, can be computed only for nonsingular discrete-time systems.
-N  = 4;
-rs = elltool.reach.ReachDiscrete(lsys, X0, L0, N);
+timeLimsVec = [1 4];
+rs = elltool.reach.ReachDiscrete(lsys, X0, L0, timeLimsVec);
 BB = [0 0 0 0 1 0; 0 0 0 0 0 1]';
 ps = rs.projection(BB);
 plot_ea(ps);

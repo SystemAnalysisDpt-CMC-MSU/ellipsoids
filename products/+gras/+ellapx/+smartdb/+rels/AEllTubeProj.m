@@ -25,10 +25,10 @@ classdef AEllTubeProj < ...
     end
     %
     methods (Access=protected)
-       function checkDataConsistency(self)
+        function checkDataConsistency(self)
             checkDataConsistency@...
                 gras.ellapx.smartdb.rels.AEllTubeNotTightProj(self);
-       end
+        end
         function fieldList=getPlotArgumentsFieldList(self)
             import gras.ellapx.smartdb.F
             %

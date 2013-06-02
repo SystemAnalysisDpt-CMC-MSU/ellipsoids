@@ -17,10 +17,20 @@ classdef AEllTubeNotTightProj < ...
     %
     methods
         function namePrefix=getReachTubeNamePrefix(self)
+            % GETREACHTUBEANEPREFIX - return prefix of the reach tube
+            %
+            % Input:
+            %   regular:
+            %      self.
             namePrefix=self.REACH_TUBE_PREFIX;
         end
         %
         function namePrefix=getRegTubeNamePrefix(self)
+            % GETREGTUBEANEPREFIX - return prefix of the reg tube
+            %
+            % Input:
+            %   regular:
+            %      self.
             namePrefix=self.REG_TUBE_PREFIX;
         end
     end
@@ -33,10 +43,10 @@ classdef AEllTubeNotTightProj < ...
             %   regular:
             %       self:
             %   optional:
-            %       plObj: smartdb.disp.RelationDataPlotter[1,1] - plotter object used 
+            %       plObj: smartdb.disp.RelationDataPlotter[1,1] - plotter object used
             %           for displaying ellipsoidal tubes
             %   properties:
-            %       fGetTubeColor: function_handle[1,1] - function with the following 
+            %       fGetTubeColor: function_handle[1,1] - function with the following
             %             signature:
             %           Input:
             %               regular:
@@ -46,12 +56,12 @@ classdef AEllTubeNotTightProj < ...
             %               patchColor: double[1,3] - RGB color vector
             %               patchAlpha: double[1,1] - transparency level
             %                   within [0,1] range
-            %           if not specified, an internal function getPatchColorByApxType 
-            %               is used. 
+            %           if not specified, an internal function getPatchColorByApxType
+            %               is used.
             % Output:
             %   plObj: smartdb.disp.RelationDataPlotter[1,1] - plotter
             %           object used for displaying ellipsoidal tubes
-            % 
+            %
             % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2013-01-06 $
             % $Copyright: Moscow State University,
             %            Faculty of Computational Mathematics and Computer Science,
@@ -212,12 +222,12 @@ classdef AEllTubeNotTightProj < ...
             view(hAxes,viewAngleVec);
             set(hAxes,'xtickmode','auto',...
                 'ytickmode','auto',...
-                'ztickmode','auto','xgrid','on','ygrid','on','zgrid','on'); 
+                'ztickmode','auto','xgrid','on','ygrid','on','zgrid','on');
             hVec=[];
             %
             lightTypeList={{'left'},{40,65},{-20,25}};
             hLightVec=cellfun(@(x)camlight(hAxes,x{:}),lightTypeList);
-            hVec=[hVec,hLightVec];            
+            hVec=[hVec,hLightVec];
         end
         %
         function hVec=axesSetPropGoodCurveFunc(self,hAxes,axesName,...
@@ -229,7 +239,7 @@ classdef AEllTubeNotTightProj < ...
             %
             ylim(hAxes,[-1 1]);
             zlim(hAxes,[-1 1]);
-            set(hAxes,'PlotBoxAspectRatio',[6 1 1]);            
+            set(hAxes,'PlotBoxAspectRatio',[6 1 1]);
             hVec=self.axesSetPropBasicFunc(hAxes,axesName,projSTimeMat,varargin{:});
         end
         %
@@ -238,7 +248,7 @@ classdef AEllTubeNotTightProj < ...
             import gras.ellapx.smartdb.RelDispConfigurator;
             %
             self.scaleAxesHeight(hAxes,1.1,true);
-            axis(hAxes,'auto');            
+            axis(hAxes,'auto');
             hVec=self.axesSetPropBasicFunc(hAxes,axesName,projSTimeMat,varargin{:});
         end
         %
@@ -265,8 +275,8 @@ classdef AEllTubeNotTightProj < ...
                 goodCurveStr=self.goodDirProp2Str(lsGoodDirOrigVec,sTime);
                 figureGroupKeyName=[figureGroupKeyName,', ',goodCurveStr];
             end
-        end        
-
+        end
+        
         %
         function figureNamedSetPropFunc(~,~,hFigure,...
                 figureGroupName,indGroup,...
@@ -278,7 +288,7 @@ classdef AEllTubeNotTightProj < ...
             set(hFigure,'NumberTitle','off','WindowStyle','docked',...
                 'RendererMode','manual','Renderer','OpenGL','Name',...
                 figureGroupName,'PaperPositionMode','auto');
-        end        
+        end
         %
         function [cMat,cOpMat]=getGoodDirColor(~,ltGoodDirNormVec,...
                 ltGoodDirNormOrigVec)
@@ -335,7 +345,7 @@ classdef AEllTubeNotTightProj < ...
                 import modgen.graphics.plot3adv;
                 %
                 goodDirStr=self.goodDirProp2Str(lsGoodDirOrigVec,...
-                    sTime);                
+                    sTime);
                 plotName=['Good directions curve: ',goodDirStr];
                 vMat=ltGoodDirMat./repmat(ltGoodDirNormOrigVec,2,1);
                 hVec=plot3adv(timeVec.',vMat(1,:).',vMat(2,:).',cMat,...
@@ -409,7 +419,7 @@ classdef AEllTubeNotTightProj < ...
                 hVec=[];
             end
         end
-
+        
         %
         function checkDataConsistency(self)
             import modgen.common.throwerror;
