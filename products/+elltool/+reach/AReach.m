@@ -1324,32 +1324,34 @@ classdef AReach < elltool.reach.IReach
                 throwerror('wrongInput',...
                     'Method cut does not work with projections');
             else
-                if numel(cutTimeVec) == 1
-                    cutTimeVec = [cutTimeVec, cutTimeVec];
-                end
+                switchTimeVec = self.switchSysTimeVec;
                 cutObj = self.getCopy();
                 if self.isBackward
-                    cutTimeVec = fliplr(cutTimeVec);
+                    cutObj.ellTubeRel = cutObj...
+                        .ellTubeRel.cut(fliplr(cutTimeVec));
+                    cutTimeVec = max(switchTimeVec) - cutTimeVec;
+                    switchTimeVec = max(switchTimeVec) - cutTimeVec;
+                else
+                    cutObj.ellTubeRel = cutObj.ellTubeRel.cut(cutTimeVec);
                 end
-                switchTimeVec = self.switchSysTimeVec;
-                cutObj.ellTubeRel = cutObj.ellTubeRel.cut(cutTimeVec);
-                %
+                if numel(cutTimeVec) == 1
+                    cutTimeVec = [switchTimeVec(1), cutTimeVec];
+                end
+                %               
                 if ((cutTimeVec(1) < switchTimeVec(1)) ||...
                         (cutTimeVec(end) > switchTimeVec(end)))
                      throwerror('wrongInput',...
                         'cutTime out of time interval');
+                elseif cutTimeVec(1) > cutTimeVec(end)
+                     throwerror('wrongInput',...
+                        'wrong cutTime interval');
                 end
                 %
-                firstIndCut = find(cutTimeVec(1) >= switchTimeVec,...
+                switchTimeVec = switchTimeVec(2:end);
+                firstIndCut = find(cutTimeVec(1) <= switchTimeVec,...
                     1, 'first');
                 lastIndCut = find(cutTimeVec(end) <= switchTimeVec,...
                     1, 'first');
-                if lastIndCut > numel(self.linSysCVec)
-                    lastIndCut = lastIndCut - 1;
-                    if firstIndCut > numel(self.linSysCVec)
-                        firstIndCut = firstIndCut - 1;
-                    end
-                end
                 cutObj.linSysCVec =...
                         self.linSysCVec(firstIndCut : lastIndCut);           
                 cutObj.isCut = true;
