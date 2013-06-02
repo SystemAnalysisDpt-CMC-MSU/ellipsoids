@@ -106,6 +106,18 @@ classdef EllUnionTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
         function changeDataPostHook(self)
             self.checkDataConsistency();
         end
+        function SData = getInterpInternal(self, newTimeVec)
+            SData = struct;
+            import gras.ellapx.smartdb.F;
+            if (~isempty(newTimeVec))
+                SData = getInterpInternal@...
+                    gras.ellapx.smartdb.rels.EllTubeBasic(self,newTimeVec);
+                tEllTube = gras.ellapx.smartdb.rels.EllTube(...
+                    ).createInstance(SData);
+                SData = self.fromEllTubes(tEllTube).getData();
+            end
+            %
+        end
     end
     methods (Static)
         function ellUnionTubeRel=fromEllTubes(ellTubeRel)

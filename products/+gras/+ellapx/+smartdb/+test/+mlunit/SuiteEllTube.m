@@ -639,9 +639,10 @@ classdef SuiteEllTube < mlunitext.test_case
             [~, ~] =...
                 extFromEllArrayEllTube.getEllArray(EApproxType.Internal);
         end
-        function self = testInterp(self)
-            import gras.ellapx.enums.EApproxType;
-            %
+        
+        function [qMatArray, aMat, timeVec, sTime, lsGoodDirArray,...
+                approxSchemaDescr, approxSchemaName] = ...
+                getSimpleInputData(~)
             qMatArray(:,:,3) = [1,0;0,2];
             qMatArray(:,:,2) = [3,0;0,4];
             qMatArray(:,:,1) = [5,0;0,6];
@@ -656,6 +657,14 @@ classdef SuiteEllTube < mlunitext.test_case
             lsGoodDirArray(:,:,3) = lsGoodDirMat;
             approxSchemaDescr=char.empty(1,0);
             approxSchemaName=char.empty(1,0);
+        end
+        
+        function self = testInterp(self)
+            import gras.ellapx.enums.EApproxType;
+            %
+            [qMatArray, aMat, timeVec, sTime, lsGoodDirArray,...
+                approxSchemaDescr, approxSchemaName] = ...
+                self.getSimpleInputData();                
             approxType = EApproxType.Internal;
             CALC_PRECISION=0.01;
             fromMat1EllTube = ...
@@ -723,20 +732,9 @@ classdef SuiteEllTube < mlunitext.test_case
             import gras.ellapx.smartdb.rels.EllUnionTube;
             import gras.ellapx.smartdb.rels.EllUnionTubeStaticProj;
             %
-            qMatArray(:,:,3) = [1,0;0,2];
-            qMatArray(:,:,2) = [3,0;0,4];
-            qMatArray(:,:,1) = [5,0;0,6];
-            aMat(:,3) = [1,2];
-            aMat(:,2) = [3,4];
-            aMat(:,1) = [5,6];
-            timeVec = [1,2,3];
-            sTime = 1;
-            lsGoodDirMat=[1;0];
-            lsGoodDirArray(:,:,1) = lsGoodDirMat;
-            lsGoodDirArray(:,:,2) = lsGoodDirMat;
-            lsGoodDirArray(:,:,3) = lsGoodDirMat;
-            approxSchemaDescr=char.empty(1,0);
-            approxSchemaName=char.empty(1,0);
+            [qMatArray, aMat, timeVec, sTime, lsGoodDirArray,...
+                approxSchemaDescr, approxSchemaName] = ...
+                self.getSimpleInputData();
             approx1Type = EApproxType.Internal;
             approx2Type = EApproxType.External;
             CHECK_INEQUALITY = 1;
@@ -818,7 +816,7 @@ classdef SuiteEllTube < mlunitext.test_case
                 CHECK_INEQUALITY);
             % projection
             projSpaceList = {[1,0;0,1].'};
-            projType=gras.ellapx.enums.EProjType.DynamicAlongGoodCurve;
+            projType=gras.ellapx.enums.EProjType.Static;
             projEllTube = mixedExtIntEllTube.project(projType,...
                 projSpaceList, @fGetProjMat);
             self.runAndCheckError(...
@@ -837,14 +835,13 @@ classdef SuiteEllTube < mlunitext.test_case
             union2EllTube = EllUnionTube.fromEllTubes(...
                 mixedExtInt2EllTube);
             fCheckIsEqual(unionEllTube, union2EllTube);
-            % not availible until issue 87 is reintegrated
-            % unionProjEllTube = ...
-            %     EllUnionTubeStaticProj.fromEllTubes(...
-            %     proj2EllTube);
-            % unionProj2EllTube = ...
-            %     EllUnionTubeStaticProj.fromEllTubes(...
-            %     projEllTube);      
-            % fCheckIsEqual(unionProjEllTube, unionProj2EllTube);
+            unionProjEllTube = ...
+                EllUnionTubeStaticProj.fromEllTubes(...
+                proj2EllTube);
+            unionProj2EllTube = ...
+                EllUnionTubeStaticProj.fromEllTubes(...
+                projEllTube);      
+            fCheckIsEqual(unionProjEllTube, unionProj2EllTube);
             %
             function fCheckIsEqual(ellTube1, ellTube2, notEqual)
                 [isEqual, reportStr] = ellTube1.isEqual(...
