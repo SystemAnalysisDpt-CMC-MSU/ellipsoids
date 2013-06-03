@@ -8,7 +8,7 @@ crm = gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
 crmSys = gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
 %
 confList = {
-    'discrFirstTest',  [1 1 1 1 0];
+    'discrFirstTest',  [1 0 1 1 0];
     'discrSecondTest',  [1 1 1 0 0];
     'demo3fourthTest', [0 0 0 0 1];
     };

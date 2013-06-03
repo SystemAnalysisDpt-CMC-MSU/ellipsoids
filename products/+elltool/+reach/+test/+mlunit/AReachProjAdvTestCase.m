@@ -1,7 +1,8 @@
 classdef AReachProjAdvTestCase < mlunitext.test_case
     properties (Access=private, Constant)
         FIELDS_NOT_TO_COMPARE={'LT_GOOD_DIR_NORM_ORIG_VEC';'PROJ_S_MAT';...
-            'LS_GOOD_DIR_ORIG_VEC';'LS_GOOD_DIR_NORM_ORIG'};
+            'LS_GOOD_DIR_ORIG_VEC';'LS_GOOD_DIR_NORM_ORIG';...
+            'LT_GOOD_DIR_ORIG_MAT'};
         COMP_PRECISION = 5e-5;
         PROJECTION_DIM8_MAT =...
             [-0.1936    0.0434    0.1801    0.3372   -0.0717    0.7744   -0.4447    0.1091;
@@ -104,7 +105,8 @@ classdef AReachProjAdvTestCase < mlunitext.test_case
             checkPlot(firstProjReachObj);
             %
             [isEqual,reportStr] = secondProjReachObj.isEqual(...
-                firstProjReachObj,self.FIELDS_NOT_TO_COMPARE);
+                firstProjReachObj,...
+                'notComparedFieldList', self.FIELDS_NOT_TO_COMPARE);
             failMsg=sprintf('failure for case %s, %s',caseName,reportStr);
             mlunitext.assert_equals(true,isEqual,failMsg);
             function checkPlot(reachObj)

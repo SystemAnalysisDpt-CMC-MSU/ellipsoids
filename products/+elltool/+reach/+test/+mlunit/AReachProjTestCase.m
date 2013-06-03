@@ -116,7 +116,8 @@ classdef AReachProjTestCase < mlunitext.test_case
             newX0Mat = [x0DefMat zeros(size(x0DefMat));...
                 zeros(size(x0DefMat)) x0DefMat];
             newX0Vec = [x0DefVec; x0DefVec];
-            newL0Mat = [l0Mat zeros(size(l0Mat)); zeros(size(l0Mat)) l0Mat];
+            new1L0Mat = [l0Mat; zeros(size(l0Mat))];
+            new2L0Mat = [zeros(size(l0Mat));l0Mat];
             ControlBounds = struct();
             ControlBounds.center = newPtCVec;
             ControlBounds.shape = newPtCMat;
@@ -127,12 +128,14 @@ classdef AReachProjTestCase < mlunitext.test_case
             oldDim = self.reachObj.dimension();
             newLinSys = self.linSysFactory.create(newAtCMat, ...
                 newBtCMat, ControlBounds, newCtCMat, DistBounds);
-            newReachObj = feval(class(self.reachObj), newLinSys,...
-                ellipsoid(newX0Vec, newX0Mat), newL0Mat, self.timeVec);
+            firstNewReachObj = feval(class(self.reachObj), newLinSys,...
+                ellipsoid(newX0Vec, newX0Mat), new1L0Mat, self.timeVec);
+            secondNewReachObj = feval(class(self.reachObj), newLinSys,...
+                ellipsoid(newX0Vec, newX0Mat), new2L0Mat, self.timeVec);
             firstProjReachObj =...
-                newReachObj.projection([eye(oldDim); zeros(oldDim)]);
+                firstNewReachObj.projection([eye(oldDim); zeros(oldDim)]);
             secondProjReachObj =...
-                newReachObj.projection([zeros(oldDim); eye(oldDim)]);
+                secondNewReachObj.projection([zeros(oldDim); eye(oldDim)]);
             isEqual = self.reachObj.isEqual(firstProjReachObj);
             mlunitext.assert_equals(true, isEqual);
             isEqual = self.reachObj.isEqual(secondProjReachObj);

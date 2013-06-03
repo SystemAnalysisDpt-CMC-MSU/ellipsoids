@@ -30,8 +30,9 @@ loader = mlunitext.test_loader;
 crm = gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
 crmSys = gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
 %
-DEFAULT_CONF_LIST = {'ltisys', 'test2dbad'};
+% DEFAULT_CONF_LIST = {'ltisys', 'test2dbad'};
 % DEFAULT_CONF_LIST = {'ltisys'};
+DEFAULT_CONF_LIST = {'test2dbad'};
 DEFAULT_MODE_LIST = {'fix'};
 ALLOWED_MODE_LIST = {'fix','rand'};
 suiteList = {};

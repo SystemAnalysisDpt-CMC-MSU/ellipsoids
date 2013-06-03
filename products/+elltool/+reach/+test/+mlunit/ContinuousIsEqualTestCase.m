@@ -49,14 +49,16 @@ classdef ContinuousIsEqualTestCase < mlunitext.test_case
             newTimeVec(2) = (newTimeVec(2) + newTimeVec(1))/2;
             smallerReachObj = elltool.reach.ReachContinuous(self.linSys,...
                 self.x0Ell, self.l0Mat, newTimeVec);
-            [isEqual, reportStr] = self.reachObj.isEqual(smallerReachObj);
+            [isEqual, reportStr] = self.reachObj.isEqual(smallerReachObj,...
+				'areTimeBoundsCompared', true);
             mlunitext.assert(~isEqual, reportStr);
             % start time differs
             newTimeVec = self.timeVec;
             newTimeVec(1) = (newTimeVec(2) + newTimeVec(1))/2;
             smallerReachObj = elltool.reach.ReachContinuous(self.linSys,...
                 self.x0Ell, self.l0Mat, newTimeVec);
-            [isEqual, reportStr] = self.reachObj.isEqual(smallerReachObj);
+            [isEqual, reportStr] = self.reachObj.isEqual(smallerReachObj,...
+				'areTimeBoundsCompared', true);
             mlunitext.assert(~isEqual, reportStr);
         end
         function self = DISABLED_testIsEqualEnclosedTimeVecs(self)

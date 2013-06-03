@@ -839,6 +839,13 @@ classdef AReach < elltool.reach.IReach
             %       tuple: int[1, 1] - number of tuple for which will be compared.
             %       approxType: gras.ellapx.enums.EApproxType[1, 1] -  type of
             %           approximation, which will be compared.
+            %   properties:
+            %       notComparedFieldList: cell[1,k] - fields not to compare
+            %           in tubes. Default: LT_GOOD_DIR_*, LS_GOOD_DIR_*,
+            %           IND_S_TIME, S_TIME, TIME_VEC
+            %       areTimeBoundsCompared: logical[1,1] - treat tubes with
+            %           different timebounds as inequal if 'true'.
+            %           Default: false
             %
             % Output:
             %   regular:
