@@ -1029,8 +1029,8 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     'time points. '];
             end
             unionTimeVec = union(firstTimeVec, secondTimeVec);
-            if (areTimeBoundsCompared || (areEndTimesDifferent &&...
-                    areBeginTimesDifferent)) 
+            if (areTimeBoundsCompared || (~areEndTimesDifferent &&...
+                    ~areBeginTimesDifferent)) 
                 ellTube = ellTube.interp(unionTimeVec);
                 compEllTube = compEllTube.interp(unionTimeVec);
             elseif (areFirstTimesInsideSecond)
