@@ -70,9 +70,8 @@ classdef EllUnionTubeNotTightStaticProj < ...
             %             ellipsoidal tubes
             %
             import gras.ellapx.smartdb.rels.EllUnionTubeNotTightStaticProj
-            import gras.ellapx.smartdb.rels.AEllUnionTubeNotTight
             %
-            SData = AEllUnionTubeNotTight.fromEllTubesInternal(ellTubeRel);
+            SData = EllUnionTubeNotTightStaticProj.fromEllTubesInternal(ellTubeRel);
             ellUnionTubeRel = EllUnionTubeNotTightStaticProj(SData);
         end
     end

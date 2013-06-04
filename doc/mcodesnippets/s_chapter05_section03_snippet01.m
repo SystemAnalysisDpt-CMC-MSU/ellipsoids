@@ -11,7 +11,8 @@ sTime=nPoints;
 approxType=gras.ellapx.enums.EApproxType.Internal;
 qArrayList=repmat({repmat(diag([1 2 3]),[1,1,nPoints])},1,nTubes);
 ltGoodDirArray=repmat(lsGoodDirVec,[1,nTubes,nPoints]);
-fromMatEllTube=gras.ellapx.smartdb.EllTubeFactory('tight').fromQArrays(qArrayList,...
+ellTubeFactory=gras.ellapx.smartdb.EllTubeFactory('tight');
+fromMatEllTube=ellTubeFactory.fromQArrays(qArrayList,...
                 aMat, timeVec,ltGoodDirArray, sTime, approxType,...
                 approxSchemaName, approxSchemaDescr, calcPrecision);
 

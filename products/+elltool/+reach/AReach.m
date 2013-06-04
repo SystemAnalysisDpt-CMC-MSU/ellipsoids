@@ -692,7 +692,8 @@ classdef AReach < elltool.reach.IReach
                     errorStr = [self.EMSG_R_PROB, self.EMSG_USE_REG];
                     errorTag = [self.ETAG_WR_INP, ...
                         self.ETAG_R_PROB, self.ETAG_ONLY_CHECK];
-                elseif strcmp(meObj.identifier, 'MATLAB:badsubscript')
+                elseif strcmp(meObj.identifier, 'MATLAB:badsubscript') || ...
+                        strcmp(meObj.identifier, 'MATLAB:samelen')
                     errorStr = [self.EMSG_R_PROB, self.EMSG_LOW_REG_TOL];
                     errorTag = [self.ETAG_WR_INP, self.ETAG_R_PROB, ...
                         self.ETAG_LOW_REG_TOL];
