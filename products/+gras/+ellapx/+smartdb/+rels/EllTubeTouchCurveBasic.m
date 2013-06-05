@@ -140,6 +140,9 @@ classdef EllTubeTouchCurveBasic<handle
                         tolVec=rel.calcPrecision{iTuple};
                         if nVals>0
                             valSizeVec=size(valList{iTuple}{1});
+                            cDims = 1:length(valSizeVec)-1;
+                            v1CMat = num2cell(valList{iTuple}{1}, cDims);
+                            v1NormVec = cellfun(@norm, v1CMat);
                             for iVal=2:nVals
                                 isOk=isequal(valSizeVec,...
                                     size(valList{iTuple}{iVal}));
@@ -147,8 +150,16 @@ classdef EllTubeTouchCurveBasic<handle
                                     throwError('size',fieldName);
                                 end
                                 %
-                                actTol=max(reshape(abs(valList{iTuple}{1}-...
-                                    valList{iTuple}{iVal}),[],1));
+                                v2CMat = ...
+                                    num2cell(valList{iTuple}{iVal}, cDims);
+                                v2NormVec = cellfun(@norm, v2CMat);
+                                %
+                                actTolVec = 2 .* abs(valList{iTuple}{1}-...
+                                    valList{iTuple}{iVal}) ./ repmat(...
+                                    v1NormVec + v2NormVec, ...
+                                    [valSizeVec(1:end-1), 1]);
+                                actTol = max(actTolVec(:));
+                                %
                                 expTol=(tolVec(1)+tolVec(iVal));
                                 isOk=actTol<=expTol;
                                 if ~isOk
