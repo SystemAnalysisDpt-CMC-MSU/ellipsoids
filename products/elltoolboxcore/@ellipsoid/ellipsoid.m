@@ -313,4 +313,38 @@ classdef ellipsoid < handle
     methods (Static)
         checkIsMe(someObj,varargin)
     end
+    
+    methods (Access=private)
+        function isArrEq = isMatEqualInternal(self,aArr,bArr)
+            % ISMATEQUALINTERNAL - returns isArrEq - logical 1(true) if
+            %           multidimensional arrays aArr and bArr are equal,
+            %           and logical 0(false) otherwise, comparing them
+            %           using absTol and relTol fields of the object self
+            %
+            % Input:
+            %   regular:
+            %      self: ellipsoid[1,1]
+            %      aArr: double[nDim1,nDim2,...,nDimk]
+            %      bArr: double[nDim1,nDim2,...,nDimk]
+            %
+            % Output:
+            %   isArrEq: logical[1,1]
+            %
+            %     
+            %
+            % $Author: Victor Gribov <illuminati1606@gmail.com> $   $Date: 28-05-2013$
+            % $Copyright: Moscow State University,
+            %             Faculty of Computational Mathematics and Cybernetics,
+            %             Science, System Analysis Department 2012-2013 $
+            self.checkIfScalar();
+            absTol = self.absTol;
+            if any(abs(aArr(:))>absTol) || any(abs(bArr(:))>absTol)
+                isArrEq = abs(2*(aArr-bArr)./(aArr+bArr));
+                isArrEq = all(isArrEq(:)<=self.relTol);
+            else
+                isArrEq = true;
+            end
+        end
+    end
+    
 end
