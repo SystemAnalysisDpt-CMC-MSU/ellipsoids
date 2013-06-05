@@ -1232,45 +1232,41 @@ classdef AReach < elltool.reach.IReach
         %
         function cutObj = cut(self, cutTimeVec)
             import modgen.common.throwerror;
+            if numel(cutTimeVec) > 2
+                throwerror('wrongInput',...
+                    'Time vector must consist of one or two elements.');
+            end
             if self.isProj
                 throwerror('wrongInput',...
-                    'Method cut does not work with projections');
+                    'Method cut does not work with projections.');
             else
                 cutObj = self.getCopy();
-                if self.isBackward
+                if cutTimeVec(1) > cutTimeVec(end)
                     cutTimeVec = fliplr(cutTimeVec);
                 end
                 switchTimeVec = self.switchSysTimeVec;
-                cutObj.ellTubeRel = cutObj.ellTubeRel.cut(cutTimeVec);
-                %
-                if abs(cutTimeVec(1) - cutTimeVec(end)) <= self.absTol
-                    cutObj.switchSysTimeVec = cutTimeVec(1);
-                    indCutPointVec = switchTimeVec < cutTimeVec(1) &...
-                        cutTimeVec(1) <= switchTimeVec;
-                    cutObj.linSysCVec = self.linSysCVec(indCutPointVec);
-                else
-                    switchTimeIndVec =...
-                        switchTimeVec > cutTimeVec(1) &...
-                        switchTimeVec < cutTimeVec(end);
-                    newSwitchSysTimeVec = [cutTimeVec(1)...
-                        switchTimeVec(switchTimeIndVec) cutTimeVec(end)];
-                    cutObj.switchSysTimeVec = newSwitchSysTimeVec;
-                    firstIntInd = find(switchTimeIndVec == 1, 1);
-                    if ~isempty(firstIntInd)
-                        switchTimeIndVec(firstIntInd - 1) = 1;
-                    else
-                        firstGreaterInd =...
-                            find(switchTimeVec > cutTimeVec(end), 1);
-                        if ~isempty(firstGreaterInd)
-                            switchTimeIndVec(firstGreaterInd - 1) = 1;
-                        else
-                            switchTimeIndVec(end - 1) = 1;
-                        end
-                    end
-                    cutObj.linSysCVec =...
-                        self.linSysCVec(switchTimeIndVec(1 : end - 1));
+                cutObj.ellTubeRel = self.ellTubeRel.cut(cutTimeVec);
+                switchTimeIndVec =...
+                    switchTimeVec > cutTimeVec(1) &...
+                    switchTimeVec < cutTimeVec(end);
+                switchSystemsTimeVec = [cutTimeVec(1)...
+                    switchTimeVec(switchTimeIndVec) cutTimeVec(end)];
+                if cutTimeVec(1) == cutTimeVec(end)
+                    switchSystemsTimeVec = switchSystemsTimeVec(1:end - 1);
                 end
-                %
+                cutObj.switchSysTimeVec = switchSystemsTimeVec;
+                firstIntInd = find(switchTimeIndVec == true, 1);
+                if ~isempty(firstIntInd)
+                    switchTimeIndVec(firstIntInd - 1) = true;
+                else
+                    firstGreaterInd =...
+                        find(switchTimeVec >= cutTimeVec(end), 1);
+                    switchTimeIndVec(max(1, firstGreaterInd - 1)) = true;
+                end
+                maxIncludedInd = find(switchTimeIndVec == 1, 1, 'last');
+                switchTimeIndVec(1 : maxIncludedInd) = true;
+                cutObj.linSysCVec =...
+                    self.linSysCVec(switchTimeIndVec(1 : end - 1));
                 cutObj.isCut = true;
             end
         end

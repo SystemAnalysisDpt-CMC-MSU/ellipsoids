@@ -258,38 +258,50 @@ classdef ContinuousReachTestCase < mlunitext.test_case
         function self = testCut(self)
             import gras.ellapx.enums.EApproxType;
             %
-            newTimeVec = [sum(self.tVec)/2, self.tVec(2)];
-            cutReachObj = self.reachObj.cut(newTimeVec);
-            [iaEllMat timeVec] = cutReachObj.get_ia();
-            eaEllMat = cutReachObj.get_ea();
-            nTuples = size(iaEllMat, 1);
-            if self.reachObj.isbackward()
-                timeDif = timeVec(end) - newTimeVec(1);
-            else
-                timeDif = timeVec(1) - newTimeVec(1);
-            end
-            for iTuple = 1 : nTuples
-                directionsCVec = cutReachObj.get_directions();
+            cutReachObj = self.reachObj.cut(self.tVec(end));
+            cutReachObj.dimension();
+            cutReachObj = self.reachObj.cut(self.tVec(1));
+            cutReachObj.dimension();
+            checkCut([sum(self.tVec)/2, self.tVec(2)]);
+            % TODO: please investigate why this check fails:
+            %checkCut([self.tVec(1), self.tVec(end)]);
+            checkCut([self.tVec(1), (self.tVec(1) + self.tVec(end))/2]);
+            %
+            function checkCut(newTimeVec)
+                import gras.ellapx.enums.EApproxType;
+                cutReachObj = self.reachObj.cut([min(newTimeVec),...
+                    max(newTimeVec)]);
+                [iaEllMat timeVec] = cutReachObj.get_ia();
+                eaEllMat = cutReachObj.get_ea();
+                nTuples = size(iaEllMat, 1);
                 if self.reachObj.isbackward()
-                    x0IaEll = iaEllMat(iTuple, end);
-                    x0EaEll = eaEllMat(iTuple, end);
-                    l0Mat = directionsCVec{iTuple}(:, end);
+                    timeDif = timeVec(end) - newTimeVec(1);
                 else
-                    x0IaEll = iaEllMat(iTuple, 1);
-                    x0EaEll = eaEllMat(iTuple, 1);
-                    l0Mat = directionsCVec{iTuple}(:, 1);
+                    timeDif = timeVec(1) - newTimeVec(1);
                 end
-                l0Mat = l0Mat ./ norm(l0Mat);
-                newIaReachObj = feval(class(self.reachObj), ...
-                    self.linSys, x0IaEll, l0Mat, newTimeVec + timeDif);
-                newEaReachObj = feval(class(self.reachObj), ...
-                    self.linSys, x0EaEll, l0Mat, newTimeVec + timeDif);
-                [isIaEqual, repStr] = cutReachObj.isEqual(newIaReachObj, iTuple,...
-                    EApproxType.Internal);
-                isEaEqual = cutReachObj.isEqual(newEaReachObj, iTuple,...
-                    EApproxType.External);
-                mlunitext.assert_equals(true, isIaEqual);
-                mlunitext.assert_equals(true, isEaEqual);
+                for iTuple = 1 : nTuples
+                    directionsCVec = cutReachObj.get_directions();
+                    if self.reachObj.isbackward()
+                        x0IaEll = iaEllMat(iTuple, end);
+                        x0EaEll = eaEllMat(iTuple, end);
+                        l0Mat = directionsCVec{iTuple}(:, end);
+                    else
+                        x0IaEll = iaEllMat(iTuple, 1);
+                        x0EaEll = eaEllMat(iTuple, 1);
+                        l0Mat = directionsCVec{iTuple}(:, 1);
+                    end
+                    l0Mat = l0Mat ./ norm(l0Mat);
+                    newIaReachObj = feval(class(self.reachObj), ...
+                        self.linSys, x0IaEll, l0Mat, newTimeVec + timeDif);
+                    newEaReachObj = feval(class(self.reachObj), ...
+                        self.linSys, x0EaEll, l0Mat, newTimeVec + timeDif);
+                    isIaEqual = cutReachObj.isEqual(newIaReachObj,...
+                        iTuple, EApproxType.Internal);
+                    isEaEqual = cutReachObj.isEqual(newEaReachObj,...
+                        iTuple, EApproxType.External);
+                    mlunitext.assert_equals(true, isIaEqual);
+                    mlunitext.assert_equals(true, isEaEqual);
+                end
             end
         end
         %
