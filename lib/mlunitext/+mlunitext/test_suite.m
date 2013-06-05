@@ -138,6 +138,9 @@ classdef test_suite<handle
                 {'nParallelProcesses','hExecFunc',...
                 'parallelConfiguration','parallelMode','marker'});
             %
+            if isempty(reg{1})
+                reg = {};
+            end
             nProp=length(prop);
             nProcesses=1;
             evalFh = @mlunitext.pcalc.auxdfeval;
