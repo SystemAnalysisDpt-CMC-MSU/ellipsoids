@@ -7,6 +7,10 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
         FCODE_SCALE_FACTOR
         FCODE_M_ARRAY
     end
+    properties (Constant, Hidden, Access = protected)
+        % Maximum tolerance of mdivide and inv operations for QArray
+        MAX_CONDITION_TOL = 1e-3;
+    end
     methods (Static, Access=protected,Sealed)
         function [xTouchMat,xTouchOpMat]=calcTouchCurves(QArray,aMat,...
                 ltGoodDirMat)
@@ -139,7 +143,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
         function dependencyFieldList=getTouchCurveDependencyFieldList(~)
             dependencyFieldList={'sTime','lsGoodDirVec','MArray'};
         end        
-        function checkTouchCurveVsQNormArray(~,tubeRel,curveRel,...
+        function checkTouchCurveVsQNormArray(self,tubeRel,curveRel,...
                 fTolFunc,checkName,fFilterFunc)
             nTubes=tubeRel.getNTuples();
             nCurves=curveRel.getNTuples();
@@ -175,7 +179,6 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             function checkNorm(QArray,aMat,xTouchCurveMat,...
                     calcPrecision,fieldName)
                 import modgen.common.throwerror;
-                MAX_INVPREC = 1e-2;
                 %
                 invPrecision = 0;
                 normVec=gras.gen.SquareMatVector.lrDivideVec(...
@@ -189,14 +192,14 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     curInvPrecision = max(abs(QMat * iQxVec - xTVec));
                     invPrecision = max(invPrecision, curInvPrecision);
                 end
-                isOk = invPrecision <= MAX_INVPREC;
+                isOk = invPrecision <= self.MAX_CONDITION_TOL;
                 if ~isOk
                     throwerror('wrongInput:touchLineValueFunc',...
                         ['check [%s] has failed because QArray', ...
                         ' contains ill-conditioned or degenerated', ...
                         'matrix, expected precision=%d, ', ...
-                        'inv precision=%d'], checkName, MAX_INVPREC, ...
-                        invPrecision);
+                        'inv precision=%d'], checkName, ...
+                        self.MAX_CONDITION_TOL, invPrecision);
                 end
                 %
                 isOk=isOk && (actualPrecision <= ...
