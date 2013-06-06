@@ -10,7 +10,7 @@ crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
 confCMat = {
     'demo3firstTest',  [1 0 1 0 1 0 1 0];
     'demo3secondTest', [1 0 0 1 1 0 0 0];
-    'demo3thirdTest',  [1 1 0 0 1 1 0 1];
+    'demo3thirdTest',  [1 1 0 0 1 1 0 0];
     'demo3fourthTest', [1 1 1 1 1 1 0 0];
     };
 %
