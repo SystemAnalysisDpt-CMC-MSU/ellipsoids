@@ -17,8 +17,8 @@ classdef GoodDirsContinuousGen<gras.ellapx.lreachplain.AGoodDirsContinuous
                 'RelTol', calcPrecision*self.CALC_PRECISION_FACTOR, ...
                 'AbsTol', calcPrecision*self.CALC_PRECISION_FACTOR};
         end
-        function RstDynamics = calcRstDynamics(self, t0, t1, ...
-                AtDynamics, calcPrecision)
+        function [XstNormDynamics, RstDynamics] = calcTransMatDynamics(...
+                self, t0, t1, AtDynamics, calcPrecision)
             %
             import gras.gen.matdot;
             import gras.interp.MatrixInterpolantFactory;
@@ -32,32 +32,39 @@ classdef GoodDirsContinuousGen<gras.ellapx.lreachplain.AGoodDirsContinuous
             sRstInitialMat = eye(sizeSysVec);
             sRstInitialMat = sRstInitialMat / ...
                 realsqrt(matdot(sRstInitialMat, sRstInitialMat));
+            sXstNormInitial = 1;
             %
-            fRstDerivFunc = @(t, x) fRstFunc(t, x, @(u) fAtMat(u));
-            fRstPostProcFunc = @(t, x) fPostProcLeftFunc(t, x);
+            fRstExtDerivFunc = @(t, x) fRstExtFunc(t, x, @(u) fAtMat(u));
+            fRstPostProcFunc = @fPostProcLeftFunc;
             %
             tStart=tic;
             %
             % calculation of X(s, t) on [t0, s]
             %
-            [timeRstVec, dataRstArray] = self.calcHalfRstDynamics(...
-                self.sTime, t0, fRstDerivFunc, sRstInitialMat, ...
+            [timeRstVec, dataRstArray, dataXstNormArray] = ...
+                self.calcHalfRstExtDynamics(self.sTime, t0, ...
+                fRstExtDerivFunc, sRstInitialMat, sXstNormInitial, ...
                 calcPrecision, fRstPostProcFunc);
             %
             % calculation of X(s, t) on [s, t1]
             %
-            [timeRstRightVec, dataRstRightArray] = ...
-                self.calcHalfRstDynamics(self.sTime, t1, fRstDerivFunc, ...
-                sRstInitialMat, calcPrecision);
+            [timeRstRightVec, dataRstRightArray, ...
+                dataXstNormRightArray] = self.calcHalfRstExtDynamics(...
+                self.sTime, t1, fRstExtDerivFunc, sRstInitialMat, ...
+                sXstNormInitial, calcPrecision);
             %
             if (length(timeRstRightVec) > 1)
                 timeRstVec = cat(2, timeRstVec, timeRstRightVec(2:end));
                 dataRstArray = cat(3, dataRstArray, ...
                     dataRstRightArray(:,:,2:end));
+                dataXstNormArray = cat(2, dataXstNormArray, ...
+                    dataXstNormRightArray(2:end));
             end
             %
-            RstDynamics=MatrixInterpolantFactory.createInstance(...
+            RstDynamics = MatrixInterpolantFactory.createInstance(...
                 'column', dataRstArray, timeRstVec);
+            XstNormDynamics = MatrixInterpolantFactory.createInstance(...
+                'scalar', dataXstNormArray, timeRstVec); % temp
             %
             logger.info(...
                 sprintf(['calculating transition matrix spline ' ...
@@ -70,27 +77,34 @@ classdef GoodDirsContinuousGen<gras.ellapx.lreachplain.AGoodDirsContinuous
         %
     end
     methods (Access = private)
-        function [timeRstHalfVec, dataRstHalfArray] = ...
-                calcHalfRstDynamics(self, startTime, endTime, ...
-                fRstDerivFunc, sRstInitialMat, calcPrecision, varargin ...
-                )
+        function [timeRstHalfVec, dataRstHalfArray, ...
+                dataXstNormHalfArray] = calcHalfRstExtDynamics(self, ...
+                startTime, endTime, fRstDerivFunc, sRstInitialMat, ...
+                sXstNormInitial, calcPrecision, varargin)
             %
             import gras.ode.MatrixODESolver;
             %
+            sRstExtInitialMat = [sRstInitialMat(:); sXstNormInitial];
+            %
             odeArgList = self.getOdePropList(calcPrecision);
-            sizeSysVec = size(sRstInitialMat);
+            sizeSysVec = size(sRstExtInitialMat);
             %
             solverObj = MatrixODESolver(sizeSysVec, @ode45, ...
                 odeArgList{:});
             timeVec = linspace(startTime, endTime, ...
                 self.CALC_CGRID_COUNT + 1);
-            [timeRstHalfVec, dataRstHalfArray] = solverObj.solve(...
-                fRstDerivFunc, timeVec, sRstInitialMat);
+            [timeRstHalfVec, dataRstExtHalfArray] = solverObj.solve(...
+                fRstDerivFunc, timeVec, sRstExtInitialMat);
+            dataRstHalfArray = reshape(dataRstExtHalfArray(1:end-1,:), ...
+                [size(sRstInitialMat), length(timeRstHalfVec)]);
+            dataXstNormHalfArray = dataRstExtHalfArray(end,:);
             %
-            if nargin > 6
+            if nargin > 7
                 fRstPostProcFunc = varargin{1};
-                [timeRstHalfVec, dataRstHalfArray] = fRstPostProcFunc(...
-                    timeRstHalfVec, dataRstHalfArray);
+                [timeRstHalfVec, dataRstHalfArray, ...
+                    dataXstNormHalfArray] = fRstPostProcFunc(...
+                    timeRstHalfVec, dataRstHalfArray, ...
+                    dataXstNormHalfArray);
             end
         end
     end
@@ -98,18 +112,28 @@ end
 %
 % post processing function
 %
-function [timeRstOutVec, dataRstOutArray] = ...
-    fPostProcLeftFunc(timeRstInVec, dataRstInArray)
+function [timeRstOutVec, dataRstOutArray, dataXstNormOutArray] = ...
+    fPostProcLeftFunc(timeRstInVec, dataRstInArray, dataXstNormInArray)
     %
     timeRstOutVec = flipdim(timeRstInVec, 2);
+    dataXstNormOutArray = flipdim(dataXstNormInArray, 2);
     dataRstOutArray = flipdim(dataRstInArray, 3);
 end
 %
 % equations for R(s, t)
 %
-function dxMat = fRstFunc(t, xMat, fAtMat)
+function dxMat = fRstExtFunc(t, xMat, fAtMat)
     import gras.gen.matdot;
     %
-    cachedMat = -xMat * fAtMat(t);
-    dxMat = cachedMat - xMat * matdot(xMat, cachedMat);
+    atMat = fAtMat(t);
+    rstMat = reshape(xMat(1:end-1), size(atMat));
+    xstNorm = xMat(end);
+    %
+    cachedMat = -rstMat * atMat;
+    arstNorm = matdot(rstMat, cachedMat);
+    %
+    drstMat = cachedMat - rstMat * arstNorm;
+    dxstNorm = arstNorm .* xstNorm;
+    %
+    dxMat = [drstMat(:); dxstNorm];
 end

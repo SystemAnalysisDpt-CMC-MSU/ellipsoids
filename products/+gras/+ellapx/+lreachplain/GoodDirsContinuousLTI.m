@@ -10,7 +10,8 @@ classdef GoodDirsContinuousLTI<gras.ellapx.lreachplain.AGoodDirsContinuous
         end
     end
     methods (Access = protected)
-        function RstDynamics = calcRstDynamics(self, t0, t1, AtDynamics, ~)
+        function [XstNormDynamics, RstDynamics] = calcTransMatDynamics(...
+                self, t0, t1, AtDynamics, ~)
             %
             import gras.mat.MatrixOperationsFactory;
             import gras.ellapx.uncertcalc.log.Log4jConfigurator;

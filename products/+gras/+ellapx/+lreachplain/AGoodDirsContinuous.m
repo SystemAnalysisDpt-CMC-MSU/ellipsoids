@@ -1,10 +1,17 @@
 classdef AGoodDirsContinuous
     properties
-        % rstTransArray: double[nDims,nDims,nTimePoints] - R(s,t)' is a
-        % transition matrix for good directions l(t)=R(s,t)'l_0
+        % XstTransDynamics - X(s,t)' is a transition matrix for good
+        % directions l(t)=X(s,t)'l_s
+        %
+        % RstTransDynamics - R(s,t)' is a transition matrix for good
+        % directions lR(t)=R(s,t)'l_s
+        XstTransDynamics
         RstTransDynamics
+        XstNormDynamics
         ltGoodDirCurveSpline
         ltGoodDirOneCurveSplineList
+        ltRGoodDirCurveSpline
+        ltRGoodDirOneCurveSplineList
         sTime
         lsGoodDirMat
     end
@@ -23,6 +30,24 @@ classdef AGoodDirsContinuous
         function ltGoodDirSplineList = getGoodDirOneCurveSplineList(self)
             ltGoodDirSplineList= ...
                 self.ltGoodDirOneCurveSplineList;
+        end
+        function ltRGoodDirCurveSpline = getRGoodDirCurveSpline(self)
+            ltRGoodDirCurveSpline = self.ltRGoodDirCurveSpline;
+        end
+        function ltRGoodDirCurveSpline = getRGoodDirOneCurveSpline(...
+                self, dirNum)
+            ltRGoodDirCurveSpline = ...
+                self.ltRGoodDirOneCurveSplineList{dirNum};
+        end
+        function ltRGoodDirSplineList = getRGoodDirOneCurveSplineList(self)
+            ltRGoodDirSplineList= ...
+                self.ltRGoodDirOneCurveSplineList;
+        end
+        function XstNormDynamics = getXstNormDynamics(self)
+            XstNormDynamics = self.XstNormDynamics;
+        end
+        function XstTransDynamics = getXstTransDynamics(self)
+            XstTransDynamics = self.XstTransDynamics;
         end
         function RstTransDynamics = getRstTransDynamics(self)
             RstTransDynamics = self.RstTransDynamics;
@@ -63,18 +88,25 @@ classdef AGoodDirsContinuous
             t0 = pDynObj.gett0();
             t1 = pDynObj.gett1();
             %
-            RstDynamics = self.calcRstDynamics(t0, t1, ...
-                pDynObj.getAtDynamics(), calcPrecision);
+            [cXstNormDynamics, RstDynamics] = self.calcTransMatDynamics(...
+                t0, t1, pDynObj.getAtDynamics(), calcPrecision);
             self.RstTransDynamics = matOpFactory.transpose(RstDynamics);
+            self.XstNormDynamics = cXstNormDynamics;
+            self.XstTransDynamics = matOpFactory.rMultiplyByScalar(...
+                self.RstTransDynamics, cXstNormDynamics);
             %
             nGoodDirs = self.getNGoodDirs();
             %
             self.ltGoodDirOneCurveSplineList = cell(nGoodDirs, 1);
+            self.ltRGoodDirOneCurveSplineList = cell(nGoodDirs, 1);
             for iGoodDir = 1:nGoodDirs
                 lsGoodDirConstColFunc = ...
                     ConstMatrixFunctionFactory.createInstance(...
                     lsGoodDirMat(:, iGoodDir));
                 self.ltGoodDirOneCurveSplineList{iGoodDir} = ...
+                    matOpFactory.rMultiply(self.XstTransDynamics, ...
+                    lsGoodDirConstColFunc);
+                self.ltRGoodDirOneCurveSplineList{iGoodDir} = ...
                     matOpFactory.rMultiply(self.RstTransDynamics, ...
                     lsGoodDirConstColFunc);
             end
@@ -82,10 +114,12 @@ classdef AGoodDirsContinuous
             lsGoodDirConstMatFunc = ...
                 ConstMatrixFunctionFactory.createInstance(lsGoodDirMat);
             self.ltGoodDirCurveSpline = matOpFactory.rMultiply(...
+                self.XstTransDynamics, lsGoodDirConstMatFunc);
+            self.ltRGoodDirCurveSpline = matOpFactory.rMultiply(...
                 self.RstTransDynamics, lsGoodDirConstMatFunc);
         end
     end
     methods (Abstract, Access = protected)
-        calcRstDynamics(self, t0, t1, AtDynamics, calcPrecision)
+        calcTransMatDynamics(self, t0, t1, AtDynamics, calcPrecision)
     end
 end

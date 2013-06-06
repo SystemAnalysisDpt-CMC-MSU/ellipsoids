@@ -7,12 +7,13 @@ classdef GoodDirsDiscrete < gras.ellapx.lreachplain.AGoodDirsContinuous
         end
     end
     methods (Access = protected)
-        function RstDynamics = calcRstDynamics(self, t0, t1, ...
-                AtDynamics, calcPrecision)
+        function [XstNormDynamics, RstDynamics] = calcTransMatDynamics(...
+                self, t0, t1, AtDynamics, calcPrecision)
             %
             import gras.interp.MatrixInterpolantFactory;
             import gras.ellapx.uncertcalc.log.Log4jConfigurator;
             import gras.mat.CompositeMatrixOperations;
+            import gras.gen.matdot;
             %
             logger=Log4jConfigurator.getLogger();
             %
@@ -29,15 +30,29 @@ classdef GoodDirsDiscrete < gras.ellapx.lreachplain.AGoodDirsContinuous
             nTimePoints = length(timeVec);
             %
             dataXtt0Arr = zeros([sizeSysVec nTimePoints]);
+            dataRtt0Arr = zeros([sizeSysVec nTimePoints]);
+            dataXtt0NormVec = zeros([1, nTimePoints]);
+            %
             dataXtt0Arr(:, :, 1) = eye(sizeSysVec);
+            dataXtt0NormVec(1) = realsqrt(matdot(...
+                    dataXtt0Arr(:, :, 1), dataXtt0Arr(:, :, 1)));
+            dataRtt0Arr(:, :, 1) = dataXtt0Arr(:, :, 1) ./ ...
+                    dataXtt0NormVec(1);
+            %
             for iTime = 2:nTimePoints
                 dataXtt0Arr(:, :, iTime) = ...
                     fAtMat(timeVec(iTime - 1 + isBack)) * ...
                     dataXtt0Arr(:, :, iTime - 1);
+                dataXtt0NormVec(iTime) = realsqrt(matdot(...
+                    dataXtt0Arr(:, :, iTime), dataXtt0Arr(:, :, iTime)));
+                dataRtt0Arr(:, :, iTime) = dataXtt0Arr(:, :, iTime) ./ ...
+                    dataXtt0NormVec(iTime);
             end
             %
             RstDynamics = MatrixInterpolantFactory.createInstance(...
-                'column', dataXtt0Arr, timeVec);
+                'column', dataRtt0Arr, timeVec);
+            XstNormDynamics = MatrixInterpolantFactory.createInstance(...
+                'scalar', dataXtt0NormVec, timeVec);
             %
             tStart = tic;
             %
