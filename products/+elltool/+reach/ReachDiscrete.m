@@ -16,12 +16,6 @@ classdef ReachDiscrete < elltool.reach.AReach
         LINSYS_CLASS_STRING = 'elltool.linsys.LinSysDiscrete'
     end
     %
-    properties (Constant, GetAccess = private)
-        ETAG_SH_MAT_CALC_FAILURE = ':ShapeMatCalcFailure';
-        EMSG_APPROX_SHAPE_MAT_CALC_PROB = ['There is a problem with ',...
-            'calculation of approximation''s shape matrix. '];
-    end
-    %
     properties (Access = private)
         isMinMax
     end
@@ -142,7 +136,8 @@ classdef ReachDiscrete < elltool.reach.AReach
                 for iTime = 1:(length(timeVec) - 1)
                     aMat = probDynObj.getAtDynamics(). ...
                         evaluate(timeVec(iTime + isBack));
-                    aInvMat = inv(aMat);
+                    aInvMat = probDynObj.getAtInvDynamics(). ...
+                        evaluate(timeVec(iTime + isBack));
                     bpbMat = probDynObj.getBPBTransDynamics(). ...
                         evaluate(timeVec(iTime + isBack));
                     bpbMat = 0.5 * (bpbMat + bpbMat');
@@ -154,7 +149,6 @@ classdef ReachDiscrete < elltool.reach.AReach
                     qMat = 0.5 * (qMat + qMat');
                     qMat = regposdefmat(qMat, regTol);
                     lVec = aInvMat' * lVec;
-                    lVec = lVec / norm(lVec);
                     if isDisturb
                         if isMinMax
                             eEll = fMinkmp(ellipsoid(0.5 * (qMat + qMat')),...
@@ -180,7 +174,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                     qMat = regposdefmat(qMat, regTol);
                     qMat = 0.5 * (qMat + qMat');
                     qArrayList{iTube}(:, :, iTime + 1) = qMat;
-                    lMat(:, iTime + 1) = aInvMat' * lMat(:, iTime);
+                    lMat(:, iTime + 1) = lVec;
                 end
                 ltGoodDirArray(:, iTube, :) = lMat;
             end
@@ -248,39 +242,6 @@ classdef ReachDiscrete < elltool.reach.AReach
                     qArrayList, aMat, timeVec, ltGoodDirArray, ...
                     sTime, approxType, approxSchemaName, ...
                     approxSchemaDescr, self.relTol / 10);
-            end
-        end
-        %
-        function ellTubeRel = auxMakeEllTubeRel(self, probDynObj, l0Mat,...
-                timeVec, isDisturb, calcPrecision, approxTypeVec)
-            import gras.ellapx.enums.EApproxType;
-            import gras.ellapx.gen.RegProblemDynamicsFactory;
-            import gras.ellapx.lreachplain.GoodDirsContinuousFactory;
-            import modgen.common.throwerror;
-            %
-            try
-                ellTubeRel = self.internalMakeEllTubeRel(...
-                    probDynObj,  l0Mat, timeVec, isDisturb, ...
-                    calcPrecision, approxTypeVec);
-            catch meObj
-                errorStr = '';
-                errorTag = '';
-                %
-                if strcmp(meObj.identifier,...
-                        'MODGEN:COMMON:CHECKMULTVAR:wrongInput')
-                    errorStr = [self.EMSG_APPROX_SHAPE_MAT_CALC_PROB, ...
-                        self.EMSG_BAD_TIME_VEC, self.EMSG_BAD_CONTROL, ...
-                        self.EMSG_BAD_DIST, self.EMSG_BAD_INIT_SET];
-                    errorTag = [self.ETAG_WR_INP, ...
-                        self.ETAG_SH_MAT_CALC_FAILURE];
-                end
-                if isempty(errorStr)
-                    throw(meObj);
-                else
-                    friendlyMeObj = throwerror(errorTag, errorStr);
-                    friendlyMeObj = addCause(friendlyMeObj, meObj);
-                    throw(friendlyMeObj);
-                end
             end
         end
     end

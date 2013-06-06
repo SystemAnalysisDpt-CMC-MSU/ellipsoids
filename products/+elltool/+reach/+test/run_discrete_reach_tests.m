@@ -8,9 +8,8 @@ crm = gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
 crmSys = gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
 %
 confList = {
-    'discrFirstTest',  [1 1 1 1 0];
-    'discrSecondTest',  [1 1 1 0 0];
-    'demo3fourthTest', [0 0 0 0 1];
+    'discrFirstTest',  [1 1 1 1];
+    'discrSecondTest',  [1 1 1 0];
     };
 %
 nConfs = size(confList, 1);
@@ -57,11 +56,6 @@ for iConf = 1:nConfs
             'elltool.reach.test.mlunit.ContinuousReachRefineTestCase',...
             ReachFactory(confName, crm, crmSys, false, false),...
             'marker',confName);
-    end
-    if confTestsVec(5)
-        suiteList{end + 1} = loader.load_tests_from_test_case(...
-            'elltool.reach.test.mlunit.DiscreteReachRegTestCase',...
-            confName, crm, crmSys);
     end
 end
 suiteList{end + 1} = loader.load_tests_from_test_case(...

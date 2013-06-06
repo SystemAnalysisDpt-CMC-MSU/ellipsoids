@@ -64,102 +64,56 @@ modgen.common.checkvar(dimsArr,'all(x(:)==x(1))',...
     'errorTag','wrongSizes',...
     'errorMessage','all ellipsoids must be of the same dimension.');
 
-nEllipsoids = numel(inpEllArr);    
+nEllipsoids = numel(inpEllArr);
 inpEllVec = reshape(inpEllArr, 1, nEllipsoids);
-    
-if is2EllEqCentre(inpEllVec)  
-    
-    firstEllObj = inpEllVec(1);
-    secEllObj = inpEllVec(2);
-    
-    EllCenterVec = firstEllObj.getCenterVec();
 
-    firstEllShMat = firstEllObj.getShapeMat();
-    secEllShMat = secEllObj.getShapeMat();
-
-    sqrtFirstEllShMat = ...
-        gras.la.sqrtmpos(firstEllShMat,firstEllObj.getAbsTol());
-
-    intermFirstEllShMat = eye(minEllDim);
-    intermSecEllShMat = sqrtFirstEllShMat \ secEllShMat / ...
-        sqrtFirstEllShMat';
-
-    [vSecMat dSecMat] = eig(intermSecEllShMat);
-
-    intermEllShMat = min(intermFirstEllShMat, dSecMat);
-
-    ellMat = sqrtFirstEllShMat * vSecMat * ...
-        intermEllShMat * vSecMat' * ...
-             sqrtFirstEllShMat';
-    ellMat = 0.5*(ellMat + ellMat');
-
-    outEll = ellipsoid(EllCenterVec, ellMat);
-else
-
-    if Properties.getIsVerbose()
-        if isempty(logger)
-            logger=Log4jConfigurator.getLogger();
-        end
-        logger.info('Invoking CVX...');
+if Properties.getIsVerbose()
+    if isempty(logger)
+        logger=Log4jConfigurator.getLogger();
     end
-    [absTolVec, absTol] = getAbsTol(inpEllVec);
-    cvx_begin sdp
-    variable cvxEllMat(minEllDim, minEllDim) symmetric
-    variable cvxEllCenterVec(minEllDim)
-    variable cvxDirVec(nEllipsoids)
-
-    maximize( det_rootn( cvxEllMat ) )
-    subject to
-    -cvxDirVec <= 0;
-    for iEllipsoid = 1:nEllipsoids
-        [inpEllcenrVec, inpEllShMat] = double(inpEllVec(iEllipsoid));
-        if rank(inpEllShMat) < minEllDim
-            inpEllShMat = ...
-                ellipsoid.regularize(inpEllShMat,absTolVec(iEllipsoid));
-        end
-        invShMat     = ell_inv(inpEllShMat);
-        bVec     = -invShMat * inpEllcenrVec;
-        constraint     = inpEllcenrVec' * invShMat * inpEllcenrVec - 1;
-        [ (-cvxDirVec(iEllipsoid)-constraint+bVec'*inpEllShMat*bVec), ...
-            zeros(minEllDim,1)', (cvxEllCenterVec + inpEllShMat*bVec)' ;
-
-            zeros(minEllDim,1), ...
-            cvxDirVec(iEllipsoid)*eye(minEllDim), cvxEllMat;
-            (cvxEllCenterVec + inpEllShMat*bVec), ...
-            cvxEllMat, inpEllShMat] >= 0;
-    end
-
-    cvx_end
-
-    if strcmp(cvx_status,'Infeasible') || ...
-            strcmp(cvx_status,'Inaccurate/Infeasible') || ...
-            strcmp(cvx_status,'Failed')
-        throwerror('cvxError','Cvx cannot solve the system');
-    end;
-
-    if rank(cvxEllMat) < minEllDim
-        cvxEllMat = ...
-            ellipsoid.regularize(cvxEllMat,absTol);
-    end
-
-    ellMat = cvxEllMat * cvxEllMat';
-    ellMat = 0.5*(ellMat + ellMat');
-
-    outEll = ellipsoid(cvxEllCenterVec, ellMat);
+    logger.info('Invoking CVX...');
 end
-end
+[absTolVec, absTol] = getAbsTol(inpEllVec);
+cvx_begin sdp
+variable cvxEllMat(minEllDim, minEllDim) symmetric
+variable cvxEllCenterVec(minEllDim)
+variable cvxDirVec(nEllipsoids)
 
-function is2eq = is2EllEqCentre(inpEllVec)
-    is2eq = false;
-    
-    if numel(inpEllVec) == 2
-        firstEll = inpEllVec(1);
-        secEll = inpEllVec(2);
-        firstCenterVec = firstEll.getCenterVec();
-        secCenterVec = secEll.getCenterVec();
+maximize( det_rootn( cvxEllMat ) )
+subject to
+-cvxDirVec <= 0;
+for iEllipsoid = 1:nEllipsoids
+    [inpEllcenrVec, inpEllShMat] = double(inpEllVec(iEllipsoid));
+    if rank(inpEllShMat) < minEllDim
+        inpEllShMat = ...
+            ellipsoid.regularize(inpEllShMat,absTolVec(iEllipsoid));
+    end
+    invShMat     = ell_inv(inpEllShMat);
+    bVec     = -invShMat * inpEllcenrVec;
+    constraint     = inpEllcenrVec' * invShMat * inpEllcenrVec - 1;
+    [ (-cvxDirVec(iEllipsoid)-constraint+bVec'*inpEllShMat*bVec), ...
+        zeros(minEllDim,1)', (cvxEllCenterVec + inpEllShMat*bVec)' ;
         
-        if firstEll.isMatEqualInternal(firstCenterVec, secCenterVec)
-            is2eq = true;
-        end
-    end
+        zeros(minEllDim,1), ...
+        cvxDirVec(iEllipsoid)*eye(minEllDim), cvxEllMat;
+        (cvxEllCenterVec + inpEllShMat*bVec), ...
+        cvxEllMat, inpEllShMat] >= 0;
 end
+
+cvx_end
+
+if strcmp(cvx_status,'Infeasible') || ...
+        strcmp(cvx_status,'Inaccurate/Infeasible') || ...
+        strcmp(cvx_status,'Failed')
+    throwerror('cvxError','Cvx cannot solve the system');
+end;
+
+if rank(cvxEllMat) < minEllDim
+    cvxEllMat = ...
+        ellipsoid.regularize(cvxEllMat,absTol);
+end
+
+ellMat = cvxEllMat * cvxEllMat';
+ellMat = 0.5*(ellMat + ellMat');
+
+outEll = ellipsoid(cvxEllCenterVec, ellMat);

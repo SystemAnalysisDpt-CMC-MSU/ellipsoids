@@ -572,50 +572,5 @@ classdef SuiteEllTube < mlunitext.test_case
             [~, ~] =...
                 extFromEllArrayEllTube.getEllArray(EApproxType.Internal);
         end
-        %
-        function self = testUnionFromEllTubes(self)
-            import gras.ellapx.enums.EApproxType;
-            import gras.ellapx.smartdb.rels.EllUnionTubeStaticProj;
-            import gras.ellapx.smartdb.rels.EllUnionTube;
-            %
-            qMatArray(:,:,2) = [1,0,0;0,2,0;0,0,3];
-            qMatArray(:,:,1) = [5,0,0;0,6,0;0,0,7];
-            aMat(:,2) = [1,2,3];
-            aMat(:,1) = [5,6,7];
-            ellArray = ellipsoid(aMat,qMatArray);
-            timeVec = [1,2];
-            sTime = 2;
-            lsGoodDirMat=[1,0,0;0,1,0;0,0,1];
-            lsGoodDirArray(:,:,1) = lsGoodDirMat;
-            lsGoodDirArray(:,:,2) = lsGoodDirMat;
-            approxSchemaDescr=char.empty(1,0);
-            approxSchemaName=char.empty(1,0);
-            calcPrecision=0.001;
-            testEllTube = ...
-                gras.ellapx.smartdb.rels.EllTube.fromEllArray(...
-                ellArray, timeVec,...
-                lsGoodDirArray, sTime, EApproxType.External, ...
-                approxSchemaName,...
-                approxSchemaDescr, calcPrecision);
-            projSpaceList = {[1 0 0; 0 1 1]};
-            projType = gras.ellapx.enums.EProjType.Static;
-            testEllProj = testEllTube.project(projType,projSpaceList,...
-            @fGetProjMat);
-            testEllUnionStaticProj = ...
-                EllUnionTubeStaticProj.fromEllTubes(testEllProj);
-            testEllUnionTube = EllUnionTube.fromEllTubes(testEllTube);
-            testEllUnionStaticProj0 = testEllUnionTube.project(...
-                projType,projSpaceList,@fGetProjMat);
-            [isEqual, reportStr] = testEllUnionStaticProj.isEqual(...
-                testEllUnionStaticProj0);
-            mlunitext.assert(isEqual, reportStr);
-            %
-            function [projOrthMatArray,projOrthMatTransArray]=...
-                    fGetProjMat(projMat,timeVec,varargin)
-               nTimePoints=length(timeVec);
-               projOrthMatArray=repmat(projMat,[1,1,nTimePoints]);
-               projOrthMatTransArray=repmat(projMat.',[1,1,nTimePoints]);
-            end
-        end
     end
 end
