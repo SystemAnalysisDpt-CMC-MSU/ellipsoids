@@ -138,9 +138,11 @@ classdef test_suite<handle
                 {'nParallelProcesses','hExecFunc',...
                 'parallelConfiguration','parallelMode','marker'});
             %
-            if isempty(reg{1})
-                reg = {};
+            nemptyIndsVec = ~cellfun(@isempty, reg);
+            if ~all(nemptyIndsVec)
+                reg = reg(nemptyIndsVec);
             end
+            %
             nProp=length(prop);
             nProcesses=1;
             evalFh = @mlunitext.pcalc.auxdfeval;
