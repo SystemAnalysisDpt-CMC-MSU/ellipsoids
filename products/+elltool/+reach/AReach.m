@@ -542,7 +542,7 @@ classdef AReach < elltool.reach.IReach
             DEFAULT_EA_SHADE = 0.3;
             DEFAULT_IA_SHADE = 0.1;
             DEFAULT_FILL = false;
-
+            %
             if approxType == EApproxType.External
                 [reg, ~, colorVec, shade, lineWidth, isFill,...
                     isColorVec, ~, ~, ~] = ...
@@ -564,9 +564,9 @@ classdef AReach < elltool.reach.IReach
                     @(x)(isa(x, 'double') && (x >= 0) && (x <= 1)),...
                     @(x)(isa(x, 'double') && (x > 0)), 'islogical(x)'});
             end
-            
+            %
             checkIsWrongInput();
-            
+            %
             if (nargin > 2) && ~isempty(reg)
                 if ischar(reg{1})
                     if isColorVec
