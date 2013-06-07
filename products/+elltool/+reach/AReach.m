@@ -112,30 +112,6 @@ classdef AReach < elltool.reach.IReach
     end
     %
     methods (Static, Access = protected)
-        function colCodeVec = getColorVec(colChar)
-            if ~(ischar(colChar))
-                colCodeVec = [0 0 0];
-                return;
-            end
-            switch colChar
-                case 'r',
-                    colCodeVec = [1 0 0];
-                case 'g',
-                    colCodeVec = [0 1 0];
-                case 'b',
-                    colCodeVec = [0 0 1];
-                case 'y',
-                    colCodeVec = [1 1 0];
-                case 'c',
-                    colCodeVec = [0 1 1];
-                case 'm',
-                    colCodeVec = [1 0 1];
-                case 'w',
-                    colCodeVec = [1 1 1];
-                otherwise,
-                    colCodeVec = [0 0 0];
-            end
-        end
         %
         function [propArr, propVal] = getProperty(rsArr,propName,fPropFun)
             % GETPROPERTY - gives array the same size as rsArray with values of
@@ -555,7 +531,6 @@ classdef AReach < elltool.reach.IReach
             projSet = localEllTubeRel.project(projType,...
                 ProjCMatList, fProj);
         end
-        %
         function plotter = plotApprox(self, approxType, varargin)
             import gras.ellapx.enums.EApproxType;
             import modgen.common.throwerror;
@@ -566,67 +541,47 @@ classdef AReach < elltool.reach.IReach
             DEFAULT_LINE_WIDTH = 2;
             DEFAULT_EA_SHADE = 0.3;
             DEFAULT_IA_SHADE = 0.1;
-            DEFAULT_FILL = 0;
+            DEFAULT_FILL = false;
             %
             if approxType == EApproxType.External
-                colorVec = DEFAULT_EA_COLOR_VEC;
-                shade = DEFAULT_EA_SHADE;
-                scaleFactor = self.EXTERNAL_SCALE_FACTOR;
+                [reg, ~, colorVec, shade, lineWidth, isFill,...
+                    isColorVec, ~, ~, ~] = ...
+                    modgen.common.parseparext(varargin,...
+                    {'color', 'shade', 'width', 'fill';... 
+                    DEFAULT_EA_COLOR_VEC, DEFAULT_EA_SHADE,...
+                    DEFAULT_LINE_WIDTH, DEFAULT_FILL;...
+                    'isvector(x)',...
+                    @(x)(isa(x, 'double') && (x >= 0) && (x <= 1)),...
+                    @(x)(isa(x, 'double') && (x > 0)), 'islogical(x)'});
             else
-                colorVec = DEFAULT_IA_COLOR_VEC;
-                shade = DEFAULT_IA_SHADE;
-                scaleFactor = self.INTERNAL_SCALE_FACTOR;
-            end
-            lineWidth = DEFAULT_LINE_WIDTH;
-            fill = DEFAULT_FILL;
-            if nargin > 4
-                throwerror('wrongInput', 'Too many arguments.');
-            elseif nargin == 3
-                if ischar(varargin{1})
-                    colorVec = self.getColorVec(varargin{1});
-                elseif isstruct(varargin{1})
-                    ColorOpt = varargin{1};
-                    setPlotParams(ColorOpt);
-                else
-                    throwerror('wrongInput', 'Wrong argument format.');
-                end
-            elseif nargin == 4
-                if isstruct(varargin{2})
-                    ColorOpt = varargin{2};
-                    setPlotParams(ColorOpt);
-                else
-                    throwerror('wrongInput', 'Wrong argument format.');
-                end
-                if ischar(varargin{1})
-                    colorVec = self.getColorVec(varargin{1});
-                else
-                    throwerror('wrongInput', 'Wrong argument format.');
-                end
+                [reg, ~, colorVec, shade, lineWidth, isFill,...
+                    isColorVec, ~, ~, ~] = ...
+                    modgen.common.parseparext(varargin,...
+                    {'color', 'shade', 'width', 'fill';... 
+                    DEFAULT_IA_COLOR_VEC, DEFAULT_IA_SHADE,...
+                    DEFAULT_LINE_WIDTH, DEFAULT_FILL;...
+                    'isvector(x)',...
+                    @(x)(isa(x, 'double') && (x >= 0) && (x <= 1)),...
+                    @(x)(isa(x, 'double') && (x > 0)), 'islogical(x)'});
             end
             %
-            if ~ismatrix(colorVec)
-                throwerror('wrongInput', 'Wrong field format ("color")');
-            else
-                [nRows nCols] = size(colorVec);
-                if nRows ~= 1 || nCols ~= 3
-                    throwerror('wrongInput',...
-                        'Wrong field format ("color")');
+            checkIsWrongInput();
+            %
+            if (nargin > 2) && ~isempty(reg)
+                if ischar(reg{1})
+                    if isColorVec
+                        throwerror('ConflictingColor',...
+                            'Conflicting using of color property');
+                    else
+                        colorVec = getColorVec(reg{1});
+                    end
                 end
             end
-            if ~isa(lineWidth, 'double')
-                throwerror('wrongInput', 'Wrong field format ("width")');
+            
+            if ischar(colorVec)
+                colorVec = getColorVec(colorVec);
             end
-            if ~isa(shade, 'double')
-                throwerror('wrongInput', 'Wrong field format ("shade")');
-            else
-                if shade < 0 || shade > 1
-                    throwerror('wrongInput',...
-                        'Wrong field format ("shade")');
-                end
-            end
-            if ~isa(fill, 'double')
-                throwerror('Wrong field format ("fill")');
-            end
+
             %
             if self.isProj
                 [~, dim] = self.dimension();
@@ -636,27 +591,89 @@ classdef AReach < elltool.reach.IReach
                 else
                     plObj = smartdb.disp.RelationDataPlotter();
                     plotter = self.ellTubeRel.getTuplesFilteredBy(...
-                        APPROX_TYPE, approxType).plot(plObj,...
-                        'fGetTubeColor', @(x) deal(colorVec, shade));
+                        APPROX_TYPE, approxType).plot(plObj, 'fGetColor',...
+                        @(x)(colorVec), 'fGetAlpha', @(x)(shade),...
+                        'fGetLineWidth', @(x)(lineWidth),...
+                        'fGetFill', @(x)(isFill));
                 end
             else
                 plObj = smartdb.disp.RelationDataPlotter();
                 plotter = self.ellTubeRel.getTuplesFilteredBy(...
-                    APPROX_TYPE, approxType).plot(plObj);
+                        APPROX_TYPE, approxType).plot(plObj);
             end
-            %
-            function setPlotParams(ColorOpt)
-                if isfield(ColorOpt, 'color')
-                    colorVec = ColorOpt.color;
+            function colCodeVec = getColorVec(colChar)
+                if ~(ischar(colChar))
+                    colCodeVec = [0 0 0];
+                    return;
                 end
-                if isfield(ColorOpt, 'width')
-                    lineWidth = ColorOpt.width;
+                switch colChar
+                    case 'r',
+                        colCodeVec = [1 0 0];
+                    case 'g',
+                        colCodeVec = [0 1 0];
+                    case 'b',
+                        colCodeVec = [0 0 1];
+                    case 'y',
+                        colCodeVec = [1 1 0];
+                    case 'c',
+                        colCodeVec = [0 1 1];
+                    case 'm',
+                        colCodeVec = [1 0 1];
+                    case 'w',
+                        colCodeVec = [1 1 1];
+                    otherwise,
+                        colCodeVec = [0 0 0];
                 end
-                if isfield(ColorOpt, 'shade')
-                    shade = ColorOpt.shade;
+            end
+            
+            function checkIsWrongInput()
+                import modgen.common.throwerror;
+                cellfun(@(x)checkIfNoColorCharPresent(x),reg);
+                cellfun(@(x)checkRightPropName(x),reg);
+                checkIfNoColorCharPresent(colorVec);
+                checkColorSize(colorVec);
+                
+                function checkColorSize(colorVec)
+                    import modgen.common.throwerror;
+                    if isa(colorVec, 'double') && (size(colorVec, 2) ~= 3)
+                        throwerror('wrongColorVecSize', ...
+                            'ColorVec is a vector of length 3');
+                    end
                 end
-                if isfield(ColorOpt, 'fill')
-                    fill = ColorOpt.fill;
+        
+                function checkIfNoColorCharPresent(value)
+                    import modgen.common.throwerror;
+                    if ischar(value)&&(numel(value)==1)&&~isColorDef(value)
+                        throwerror('wrongColorChar', ...
+                            'You can''t use this symbol as a color');
+                    end
+                    function isColor = isColorDef(value)
+                        isColor = eq(value, 'r') | eq(value, 'g') |...
+                            eq(value, 'b') | ...
+                            eq(value, 'y') | eq(value, 'c') | ...
+                            eq(value, 'm') | eq(value, 'w');
+                    end
+                end
+                function checkRightPropName(value)
+                    import modgen.common.throwerror;
+                    if ischar(value)&&(numel(value)>1)
+                        if ~isRightProp(value)
+                            throwerror('wrongProperty', ...
+                                'This property doesn''t exist');
+                        else
+                            throwerror('wrongPropertyValue', ...
+                                'There is no value for property.');
+                        end
+                    elseif ~ischar(value)
+                        throwerror('wrongPropertyType',...
+                            'Property must be a string.');
+                    end
+                    function isRProp = isRightProp(value)
+                        isRProp = strcmpi(value, 'fill') |...
+                            strcmpi(value, 'width') | ...
+                            strcmpi(value, 'shade') | strcmpi(value,...
+                            'color');
+                    end
                 end
             end
         end
