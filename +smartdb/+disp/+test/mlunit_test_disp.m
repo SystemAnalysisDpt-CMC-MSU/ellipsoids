@@ -2,6 +2,7 @@ classdef mlunit_test_disp < mlunitext.test_case
     
     properties
         locDir
+        resTmpDir
     end
     
     methods (Access=protected,Static)
@@ -34,10 +35,12 @@ classdef mlunit_test_disp < mlunitext.test_case
         
         function self = set_up(self)
             close all;
+            self.resTmpDir=modgen.test.TmpDataManager.getDirByCallerKey();
         end
         %
         function self = tear_down(self)
             close all;
+            rmdir(self.resTmpDir,'s');
         end
         %
         function self = test_plotts(self)
@@ -197,7 +200,7 @@ classdef mlunit_test_disp < mlunitext.test_case
             fPlotSimple2=@plotSimple2;
             fCheckForEmptyMaps=@checkForEmptyMaps;
             %
-            resDir=modgen.test.TmpDataManager.getDirByCallerKey();
+            resDir=self.resTmpDir;
             %
             SData.zMat=cellfun(@(x)ones(10,10)*x,num2cell(1:10).',...
                 'UniformOutput',false);

@@ -6,15 +6,21 @@ classdef mlunit_test_xmlloadsave < mlunitext.test_case
         simpleData
         simpleMetaData
         xmlsaveParams
+        resTmpDir
     end
     %
     methods
+        function self = set_up(self)
+            self.resTmpDir=modgen.test.TmpDataManager.getDirByCallerKey();
+        end
+        function self = tear_down(self)
+            rmdir(self.resTmpDir,'s');
+        end
         function self = mlunit_test_xmlloadsave(varargin)
             self = self@mlunitext.test_case(varargin{:});
             metaClass=metaclass(self);
             self.locDir=fileparts(which(metaClass.Name));
-            self.fileName=[modgen.test.TmpDataManager.getDirByCallerKey,...
-                filesep,'tmp.xml'];            
+            self.fileName=[self.resTmpDir,filesep,'tmp.xml'];            
         end
         function self=set_up_param(self,varargin)
             Data.a=[1 2 3];
