@@ -16,7 +16,7 @@ classdef SuiteBasic < mlunitext.test_case
         function self = tear_down(self)
             rmdir(self.resTmpDir,'s');
         end
-        function testInMemoryMgr_copyFile(~)
+        function testInMemoryMgr_copyFile(self)
             resTmpDir = self.resTmpDir;
             crm=modgen.configuration.ConfRepoMgrInMemory();
             crm.putConf('test',struct('a',1,'b',2));

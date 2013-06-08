@@ -6,7 +6,6 @@ classdef mlunit_test_diskbasedhashmap < mlunitext.test_case
         rel1
         rel2
         testParamList
-        resTmpDir
     end
     %
     methods
@@ -14,18 +13,10 @@ classdef mlunit_test_diskbasedhashmap < mlunitext.test_case
             self = self@mlunitext.test_case(varargin{:});
         end
         %
-         function self = set_up(self)
-            self.resTmpDir=modgen.test.TmpDataManager.getDirByCallerKey();
-        end
-        function self = tear_down(self)
-            rmdir(self.resTmpDir,'s');
-        end
-        %
         function self = set_up_param(self,mapFactory,varargin)
             import modgen.*;
             self.mapFactory=mapFactory;
-%             storageRootDir=modgen.test.TmpDataManager.getDirByCallerKey();
-            storageRootDir=self.resTmpDir;
+            storageRootDir=modgen.test.TmpDataManager.getDirByCallerKey();
             self.map=self.mapFactory.getInstance('storageBranchKey',...
                 'testBranch','storageLocationRoot',storageRootDir,...
                 varargin{:});
