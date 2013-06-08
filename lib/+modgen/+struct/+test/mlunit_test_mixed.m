@@ -1,19 +1,10 @@
 classdef mlunit_test_mixed < mlunitext.test_case
     properties (Access=private)
         testDataRootDir
-        resTmpDir
     end
     methods
         function self = set_up_param(self,varargin)
         end
-        %
-        function self = set_up(self)
-            self.resTmpDir=modgen.test.TmpDataManager.getDirByCallerKey();
-        end
-        function self = tear_down(self)
-            rmdir(self.resTmpDir,'s');
-        end
-        %
         function self = mlunit_test_mixed(varargin)
             self = self@mlunitext.test_case(varargin{:});
             [~,className]=modgen.common.getcallernameext(1);
@@ -86,7 +77,7 @@ classdef mlunit_test_mixed < mlunitext.test_case
             nFields=length(structNameList);
             nArgCombs=length(ARG_COMB_LIST);
             %
-            resTmpDir=self.resTmpDir;
+            resTmpDir=modgen.test.TmpDataManager.getDirByCallerKey;
             resFileName=[resTmpDir,filesep,'out.txt'];
             for iField=1:nFields
                 structName=structNameList{iField};

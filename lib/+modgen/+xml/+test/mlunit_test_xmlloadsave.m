@@ -13,7 +13,7 @@ classdef mlunit_test_xmlloadsave < mlunitext.test_case
             self = self@mlunitext.test_case(varargin{:});
             metaClass=metaclass(self);
             self.locDir=fileparts(which(metaClass.Name));
-            self.fileName=[modgen.test.TmpDataManager.getDirByCallerKey(),...
+            self.fileName=[modgen.test.TmpDataManager.getDirByCallerKey,...
                 filesep,'tmp.xml'];            
         end
         function self=set_up_param(self,varargin)
