@@ -109,7 +109,7 @@ classdef SuiteBasic < mlunitext.test_case
         %
         function testCopyConfFile(self)
             import modgen.configuration.test.*;
-            resDir=modgen.test.TmpDataManager.getDirByCallerKey();
+            resDir=self.resTmpDir;
             crm=ConfRepoMgrAdv();
             crm.putConf('def',struct());
             crm.copyConfFile(resDir,'def');

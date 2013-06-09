@@ -17,4 +17,5 @@ suite=mlunitext.test_suite(horzcat(...
 %    
 resList{1}=runner.run(suite);
 resList{2}=modgen.containers.test.ondisk.run_tests;
+
 results=[resList{:}];
