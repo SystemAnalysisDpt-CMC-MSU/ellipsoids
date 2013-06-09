@@ -140,9 +140,7 @@ classdef EllTubeTouchCurveBasic<handle
                         tolVec=rel.calcPrecision{iTuple};
                         if nVals>0
                             valSizeVec=size(valList{iTuple}{1});
-                            cDims = 1:length(valSizeVec)-1;
-                            v1CMat = num2cell(valList{iTuple}{1}, cDims);
-                            v1NormVec = cellfun(@norm, v1CMat);
+                            v1NormVec = vecArrNorm(valList{iTuple}{1});
                             for iVal=2:nVals
                                 isOk=isequal(valSizeVec,...
                                     size(valList{iTuple}{iVal}));
@@ -150,9 +148,8 @@ classdef EllTubeTouchCurveBasic<handle
                                     throwError('size',fieldName);
                                 end
                                 %
-                                v2CMat = ...
-                                    num2cell(valList{iTuple}{iVal}, cDims);
-                                v2NormVec = cellfun(@norm, v2CMat);
+                                v2NormVec = vecArrNorm(...
+                                    valList{iTuple}{iVal});
                                 %
                                 actAbsTolVec = abs(valList{iTuple}{1}-...
                                     valList{iTuple}{iVal});
@@ -176,6 +173,29 @@ classdef EllTubeTouchCurveBasic<handle
                             end
                         end
                     end
+                end
+            end
+            function normVec = vecArrNorm(inpMat)
+                import gras.gen.MatVector;
+                %
+                nDims = size(inpMat);
+                if all(nDims(1:2) == 1)
+                    nDims = 1;
+                end
+                nDims = length(nDims);
+                switch nDims
+                    case 1
+                        normVec = squeeze(abs(inpMat))';
+                    case 2
+                        normVec = MatVector.evalMFunc(@norm, shiftdim(...
+                            inpMat, -1))';
+                    case 3
+                        normVec = MatVector.evalMFunc(@norm, inpMat)';
+                    otherwise
+                        optMsg=sprintf(...
+                            ['Arrays with dimensionality = %u are not', ...
+                            ' supported'], nDims);
+                        throwError('value', fieldName, optMsg);
                 end
             end
             function throwError(tagName,fieldName,optMsg)
