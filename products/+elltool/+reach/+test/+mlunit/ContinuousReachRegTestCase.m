@@ -85,7 +85,8 @@ classdef ContinuousReachRegTestCase < mlunitext.test_case
             ControlBounds = self.ControlBounds;
             %DistBounds = self.DistBounds;
             %
-            ControlBoundsTest = 100 * ellipsoid(eye(2));
+            assymEllMat = [1e-3, 0; 0, 1e+3];
+            ControlBoundsTest = 100 * ellipsoid(assymEllMat);
             linSys = elltool.linsys.LinSysFactory.create(...
                 atDefCMat, btDefCMat, ControlBoundsTest);
             self.runAndCheckError(...

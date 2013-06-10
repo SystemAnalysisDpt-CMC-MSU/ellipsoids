@@ -87,10 +87,10 @@ classdef DiscreteReachRegTestCase < mlunitext.test_case
             
             % 1
             
-            timeVec = [0 20];
-            ControlBoundsTest = 100 * ellipsoid(eye(2));
+            timeVec = [0 24];
+            ControlBoundsTest = ellipsoid(eye(2));
             linSys = elltool.linsys.LinSysDiscrete(...
-                atDefCMat, btDefCMat, ControlBounds);
+                atDefCMat, btDefCMat, ControlBoundsTest);
             self.runAndCheckError(...
                 ['elltool.reach.ReachDiscrete(linSys, x0Ell,',...
                 'l0Mat, timeVec, ''isRegEnabled'', true, ',...
