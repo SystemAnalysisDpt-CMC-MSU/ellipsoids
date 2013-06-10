@@ -54,6 +54,13 @@ classdef ContinuousReachProjTestCase < ...
             mlunitext.assert(all(self.reachObj.get_ea() == ...
                 self.reachObj.getEllTubeRel().getEllArray(...
                 gras.ellapx.enums.EApproxType.External))); 
+            l0CMat = self.crm.getParam(...
+                'goodDirSelection.methodProps.manual.lsGoodDirSets.set1');
+            l0Mat = cell2mat(l0CMat.').';
+            projMat = l0Mat(:,1);
+            projReachObj = self.reachObj.projection(projMat);
+            projReachObj.getEllTubeRel();
+
         end
         function self = testGetEllTubeUnionRel(self)
             ellTubeRel = self.reachObj.getEllTubeRel();
@@ -63,6 +70,12 @@ classdef ContinuousReachProjTestCase < ...
                 ellTubeUnionRel.getFieldProjection(compFieldList). ...
                 isEqual(ellTubeRel.getFieldProjection(compFieldList));
             mlunitext.assert(isOk,reportStr);
+            l0CMat = self.crm.getParam(...
+                'goodDirSelection.methodProps.manual.lsGoodDirSets.set1');
+            l0Mat = cell2mat(l0CMat.').';
+            projMat = l0Mat(:,1);
+            projReachObj = self.reachObj.projection(projMat);
+            projReachObj.getEllTubeUnionRel();
         end
         function self = testSystem(self)
             import modgen.common.throwerror;

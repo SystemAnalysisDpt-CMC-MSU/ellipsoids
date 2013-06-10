@@ -1,4 +1,5 @@
 classdef SuiteEllTube < mlunitext.test_case
+    
     methods
         function self = SuiteEllTube(varargin)
             self = self@mlunitext.test_case(varargin{:});
@@ -191,22 +192,22 @@ classdef SuiteEllTube < mlunitext.test_case
         function testProjectionAndScale(~)
             relProj=gras.ellapx.smartdb.rels.EllTubeProj(); %#ok<NASGU>
             %
-            nPoints=5;
-            calcPrecision=0.001;
-            approxSchemaDescr=char.empty(1,0);
-            approxSchemaName=char.empty(1,0);
-            nDims=3;
-            nTubes=4;
-            lsGoodDirVec=[1;0;1];
-            aMat=zeros(nDims,nPoints);
-            timeVec=1:nPoints;
-            sTime=nPoints;
-            approxType=gras.ellapx.enums.EApproxType.Internal;
+            nPoints = 5;
+            calcPrecision = 0.001;
+            approxSchemaDescr = char.empty(1,0);
+            approxSchemaName = char.empty(1,0);
+            nDims = 3;
+            nTubes = 4;
+            lsGoodDirVec=[1; 0; 1];
+            aMat = zeros(nDims, nPoints);
+            timeVec = 1:nPoints;
+            sTime = nPoints;
+            approxType = gras.ellapx.enums.EApproxType.Internal;
             %
-            MArrayList=repmat({repmat(diag([0.1 0.2 0.3]),[1,1,nPoints])},...
+            MArrayList = repmat({repmat(diag([0.1 0.2 0.3]),[1,1,nPoints])},...
                 1,nTubes);
-            QArrayList=repmat({repmat(diag([1 2 3]),[1,1,nPoints])},1,nTubes);
-            scaleFactor=1.01;
+            QArrayList = repmat({repmat(diag([1 2 3]),[1,1,nPoints])},1,nTubes);
+            scaleFactor = 1.01;
             projType=gras.ellapx.enums.EProjType.Static;
             projMatList={[1 0 1;0 1 1],[1 0 0;0 1 0]};
             rel=create();
@@ -243,17 +244,17 @@ classdef SuiteEllTube < mlunitext.test_case
             end
         end
         function testSimpleNegRegCreate(self)
-            nPoints=3;
-            calcPrecision=0.001;
-            approxSchemaDescr=char.empty(1,0);
-            approxSchemaName=char.empty(1,0);
-            nDims=2;
-            nTubes=3;
-            lsGoodDirVec=[1;0];
-            aMat=zeros(nDims,nPoints);
-            timeVec=1:nPoints;
-            sTime=nPoints;
-            approxType=gras.ellapx.enums.EApproxType.Internal;
+            nPoints = 3;
+            calcPrecision = 0.001;
+            approxSchemaDescr = char.empty(1,0);
+            approxSchemaName = char.empty(1,0);
+            nDims = 2;
+            nTubes = 3;
+            lsGoodDirVec = [1;0];
+            aMat = zeros(nDims,nPoints);
+            timeVec = 1:nPoints;
+            sTime = nPoints;
+            approxType = gras.ellapx.enums.EApproxType.Internal;
             %
             MArrayList=repmat({repmat(diag([0.1 0.1]),[1,1,nPoints])},...
                 1,nTubes);
@@ -312,77 +313,9 @@ classdef SuiteEllTube < mlunitext.test_case
             end
         end
         %
-        function testPlotProps(self)
-            import gras.ellapx.enums.EApproxType;
-            nPoints=10;
-            INTERNAL_COLOR_VEC=[0 1 1];
-            INTERNAL_ALPHA=0.1;
-            EXTERNAL_COLOR_VEC=[1 0 1];
-            EXTERNAL_ALPHA=0.3;
-            %
-            [~,rel]=auxGenSimpleTubeAndProj(...
-                self,nPoints);
-            plObj=smartdb.disp.RelationDataPlotter();
-            rel.plot(plObj,'fGetTubeColor',...
-                @getPatchColorByApxType);
-            %
-            SHandle=plObj.getPlotStructure().figToAxesToPlotHMap.toStruct();
-            [~,handleVecList]=modgen.struct.getleavelist(SHandle);
-            handleVec=[handleVecList{:}];
-            %
-            check(EApproxType.Internal,...
-                INTERNAL_ALPHA,INTERNAL_COLOR_VEC);
-            %
-            check(EApproxType.External,...
-                EXTERNAL_ALPHA,EXTERNAL_COLOR_VEC);
-            %
-            plObj.closeAllFigures();
-            function check(apxType,apxAlpha,apxColorVec)
-                checkPropForApx(apxType,...
-                    rel.getReachTubeNamePrefix(),handleVec,...
-                    {'FaceAlpha','FaceVertexCData'},...
-                    {apxAlpha,apxColorVec},...
-                    {@isequal,@compareColor});
-            end
-            function checkPropForApx(apxType,namePrefix,handleVec,...
-                    propNameList,propValList,fPropCmpList)
-                apxTypeName=char(apxType);
-                nChars=length(namePrefix);
-                isApxVec=cellfun(@(x)~isempty(strfind(x,apxTypeName))&&...
-                    strcmp(namePrefix,x(1:nChars)),...
-                    get(handleVec,'DisplayName'));
-                apxHandleVec=handleVec(isApxVec);
-                nProps=length(propNameList);
-                for iProp=1:nProps
-                    fPropCmp=fPropCmpList{iProp};
-                    propVal=propValList{iProp};
-                    propName=propNameList{iProp};
-                    propValCVec=get(apxHandleVec,propName);
-                    isOkVec=cellfun(@(x)fPropCmp(propVal,x),propValCVec);
-                    mlunitext.assert(all(isOkVec));
-                end
-            end
-            function isOk=compareColor(colorVec,colorMat)
-                nRows=size(colorMat,1);
-                isOk=isequal(colorMat,repmat(colorVec,nRows,1));
-            end
-            function [patchColor,patchAlpha]=getPatchColorByApxType(...
-                    approxType)
-                import gras.ellapx.enums.EApproxType;
-                switch approxType
-                    case EApproxType.Internal
-                        patchColor=INTERNAL_COLOR_VEC;
-                        patchAlpha=INTERNAL_ALPHA;
-                    case EApproxType.External
-                        patchColor=EXTERNAL_COLOR_VEC;
-                        patchAlpha=EXTERNAL_ALPHA;
-                    otherwise,
-                        throwerror('wrongInput',...
-                            'ApproxType=%s is not supported',...
-                            char(approxType));
-                end
-            end
-        end
+
+        
+        
         function testPlotTouch(self)
             [relStatProj,relDynProj]=checkMaster(1);
             [rel2StatProj,rel2DynProj]=checkMaster(10);
@@ -446,18 +379,18 @@ classdef SuiteEllTube < mlunitext.test_case
             %
             projType=gras.ellapx.enums.EProjType.DynamicAlongGoodCurve;
             relDynProj=rel.project(projType,projSpaceList,@fGetProjMat);
-            function [projOrthMatArray,projOrthMatTransArray]=...
-                    fGetProjMat(projMat,timeVec,varargin)
-                nTimePoints=length(timeVec);
-                projOrthMatArray=repmat(projMat,[1,1,nTimePoints]);
-                projOrthMatTransArray=repmat(projMat.',[1,1,nTimePoints]);
+            function [projOrthMatArray, projOrthMatTransArray] =...
+                    fGetProjMat(projMat, timeVec, varargin)
+                nTimePoints = length(timeVec);
+                projOrthMatArray = repmat(projMat, [1, 1, nTimePoints]);
+                projOrthMatTransArray = repmat(projMat.', [1,1,nTimePoints]);
             end
-            function rel=create()
+            function rel = create()
                 ltGoodDirArray=repmat(lsGoodDirVec,[1,nTubes,nPoints]);
                 rel=gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
-                    QArrayList,aMat,timeVec,...
-                    ltGoodDirArray,sTime,approxType,approxSchemaName,...
-                    approxSchemaDescr,calcPrecision);
+                    QArrayList, aMat, timeVec,...
+                    ltGoodDirArray, sTime, approxType, approxSchemaName,...
+                    approxSchemaDescr, calcPrecision);
             end
         end
         function testSimpleCreate(self)
@@ -638,6 +571,51 @@ classdef SuiteEllTube < mlunitext.test_case
             extFromEllArrayEllTube.getEllArray(EApproxType.Internal);
             [~, ~] =...
                 extFromEllArrayEllTube.getEllArray(EApproxType.Internal);
+        end
+        %
+        function self = testUnionFromEllTubes(self)
+            import gras.ellapx.enums.EApproxType;
+            import gras.ellapx.smartdb.rels.EllUnionTubeStaticProj;
+            import gras.ellapx.smartdb.rels.EllUnionTube;
+            %
+            qMatArray(:,:,2) = [1,0,0;0,2,0;0,0,3];
+            qMatArray(:,:,1) = [5,0,0;0,6,0;0,0,7];
+            aMat(:,2) = [1,2,3];
+            aMat(:,1) = [5,6,7];
+            ellArray = ellipsoid(aMat,qMatArray);
+            timeVec = [1,2];
+            sTime = 2;
+            lsGoodDirMat=[1,0,0;0,1,0;0,0,1];
+            lsGoodDirArray(:,:,1) = lsGoodDirMat;
+            lsGoodDirArray(:,:,2) = lsGoodDirMat;
+            approxSchemaDescr=char.empty(1,0);
+            approxSchemaName=char.empty(1,0);
+            calcPrecision=0.001;
+            testEllTube = ...
+                gras.ellapx.smartdb.rels.EllTube.fromEllArray(...
+                ellArray, timeVec,...
+                lsGoodDirArray, sTime, EApproxType.External, ...
+                approxSchemaName,...
+                approxSchemaDescr, calcPrecision);
+            projSpaceList = {[1 0 0; 0 1 1]};
+            projType = gras.ellapx.enums.EProjType.Static;
+            testEllProj = testEllTube.project(projType,projSpaceList,...
+            @fGetProjMat);
+            testEllUnionStaticProj = ...
+                EllUnionTubeStaticProj.fromEllTubes(testEllProj);
+            testEllUnionTube = EllUnionTube.fromEllTubes(testEllTube);
+            testEllUnionStaticProj0 = testEllUnionTube.project(...
+                projType,projSpaceList,@fGetProjMat);
+            [isEqual, reportStr] = testEllUnionStaticProj.isEqual(...
+                testEllUnionStaticProj0);
+            mlunitext.assert(isEqual, reportStr);
+            %
+            function [projOrthMatArray,projOrthMatTransArray]=...
+                    fGetProjMat(projMat,timeVec,varargin)
+               nTimePoints=length(timeVec);
+               projOrthMatArray=repmat(projMat,[1,1,nTimePoints]);
+               projOrthMatTransArray=repmat(projMat.',[1,1,nTimePoints]);
+            end
         end
     end
 end
