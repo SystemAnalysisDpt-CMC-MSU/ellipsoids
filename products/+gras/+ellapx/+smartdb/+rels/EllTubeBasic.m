@@ -179,27 +179,19 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             function checkNorm(QArray,aMat,xTouchCurveMat,...
                     calcPrecision,fieldName)
                 import modgen.common.throwerror;
+                import gras.la.gdtouchvecprec;
                 %
                 invPrecision = 0;
                 normVec = gras.gen.SquareMatVector.lrDivideVec(...
                     QArray, xTouchCurveMat - aMat);
                 actualPrecision = max(fTolFunc(normVec));
                 %
-                for i = 1:size(QArray, 3)
-                    xTVec = xTouchCurveMat(:,i) - aMat(:,i);
-                    QMat = QArray(:,:,i);
-                    curVec = xTVec;
-                    curInvPrecision = 0;
-                    for j = 1:10
-                        ierrVec = QMat * (QMat \ curVec) - curVec;
-                        addInvPrecision = abs(dot(xTVec, QMat \ ierrVec));
-                        curInvPrecision = curInvPrecision + ...
-                            addInvPrecision;
-                        curVec = ierrVec;
-                        if addInvPrecision < eps
-                            break;
-                        end
-                    end
+                for iTimePoint = 1:size(QArray, 3)
+                    xTVec = xTouchCurveMat(:,iTimePoint) - ...
+                        aMat(:,iTimePoint);
+                    qMat = QArray(:,:,iTimePoint);
+                    curInvPrecision = gdtouchvecprec(qMat, xTVec, 10, ...
+                        eps, self.MAX_CONDITION_TOL);
                     invPrecision = max(invPrecision, curInvPrecision);
                 end
                 isOk = invPrecision <= self.MAX_CONDITION_TOL;
