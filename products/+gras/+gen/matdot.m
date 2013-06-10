@@ -8,7 +8,14 @@ function resArr = matdot(inpArr1, inpArr2)
 %         inpArr2: double[nMatDim,nMatDim,nElemsDim1...,nElemsDimK]
 %
 % Output:
-%   resArr: double[1,1,nElemsDim1,...,nElemsDimk] - dot production values
+%         resArr: double[1,1,nElemsDim1,...,nElemsDimk] - dot production values
+%
+%
+%
+% $Authors: Yuri Admiralsky  <swige.ide@gmail.com> $	$Date: 2013-05$
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2013 $
     import modgen.common.throwerror;
     %
     sizeVec = size(inpArr1);

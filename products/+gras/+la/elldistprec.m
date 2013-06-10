@@ -79,7 +79,6 @@ function prec = elldistprec(qMat, tchVec, nCount, varargin)
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2013 $
 import modgen.common.throwerror;
-import gras.la.ismatsymm;
 %
 if ~(size(qMat, 1) == size(qMat, 2)) || ~ismatrix(qMat)
     throwerror('wrongInput:nonSquareqMat', ['qMat is expected to be ', ...
