@@ -317,6 +317,61 @@ classdef BasicTestCase < mlunitext.test_case
                 'gras.la.regposdefmat(nonSquareMat, REG_TOL)',...
                 'wrongInput:nonSquareMat');
         end
+        function self = testEllDistPrec(self)
+            import gras.la.elldistprec;
+            SERIES_COUNT = 3;
+            ABS_TOL = 1e-5;
+            EPS_TOL = 1e-8;
+            % good tests
+            qMat = [1, 0; 0, 1];
+            xVec = [1; 0];
+            isOk = elldistprec(qMat, xVec, SERIES_COUNT, EPS_TOL) < ...
+                EPS_TOL;
+            mlunitext.assert(isOk);
+            xVec = sqrt(2) ./ 2 * [1; 1];
+            isOk = elldistprec(qMat, xVec, SERIES_COUNT, EPS_TOL) < ...
+                EPS_TOL;
+            mlunitext.assert(isOk);
+            % bad tests
+            qMat = [1e+6, 0; 0, 1e-6];
+            xVec = [1000; 0];
+            isOk = elldistprec(qMat, xVec, SERIES_COUNT, EPS_TOL) < ...
+                EPS_TOL;
+            mlunitext.assert(isOk);
+            xVec = [0; 0.001];
+            isOk = elldistprec(qMat, xVec, SERIES_COUNT) < ...
+                EPS_TOL;
+            mlunitext.assert(isOk);
+            T = @(x) [cos(x), -sin(x); sin(x), cos(x)];
+            xVec = 0.5 * ([1000;0] + [0; 0.001]);
+            xVec = xVec ./ realsqrt(dot(xVec, qMat \ xVec));
+            xVec = T(1) * xVec;
+            qMat = T(1) * qMat * T(1)';
+            qMat(2) = qMat(3);
+            isOk = elldistprec(qMat, xVec, SERIES_COUNT, [], ABS_TOL) > ...
+                ABS_TOL;
+            mlunitext.assert(isOk);
+            % negative tests
+            wrongSerCount = -SERIES_COUNT;
+            self.runAndCheckError(...
+                'gras.la.elldistprec(qMat, xVec, wrongSerCount)',...
+                'wrongInput');
+            %
+            wrongSerCount = [SERIES_COUNT, SERIES_COUNT];
+            self.runAndCheckError(...
+                'gras.la.elldistprec(qMat, xVec, wrongSerCount)',...
+                'wrongInput');
+            %
+            wrongAbsTol = [ABS_TOL, ABS_TOL];
+            self.runAndCheckError(...
+                ['gras.la.elldistprec(qMat, xVec, SERIES_COUNT, [], ', ...
+                'wrongAbsTol)'], 'wrongInput');
+            %
+            nonSquareMat = ones(2, 3);
+            self.runAndCheckError(...
+                'gras.la.elldistprec(nonSquareMat, xVec, SERIES_COUNT)',...
+                'wrongInput');
+        end
     end
 end
 
