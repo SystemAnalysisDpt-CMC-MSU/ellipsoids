@@ -6,8 +6,7 @@ classdef mlunit_test_xmlloadsave < mlunitext.test_case
         simpleData
         simpleMetaData
         xmlsaveParams
-        resTmpDir1
-        resTmpDir2
+        resTmpDir
     end
     %
     methods
@@ -17,13 +16,11 @@ classdef mlunit_test_xmlloadsave < mlunitext.test_case
         function self = mlunit_test_xmlloadsave(varargin)
             self = self@mlunitext.test_case(varargin{:});
             metaClass=metaclass(self);
-            self.locDir=fileparts(which(metaClass.Name));
-%             self.resTmpDir1=modgen.test.TmpDataManager.getDirByCallerKey();
-%             self.fileName=[self.resTmpDir1,filesep,'tmp.xml'];            
+            self.locDir=fileparts(which(metaClass.Name));            
         end
         function self=set_up_param(self,varargin)
             self.resTmpDir2=modgen.test.TmpDataManager.getDirByCallerKey();
-            self.fileName=[self.resTmpDir2,filesep,'tmp.xml'];
+            self.fileName=[self.resTmpDir,filesep,'tmp.xml'];
             Data.a=[1 2 3];
             Data.b=[1 2 3].';
             Data.c='sdfasdfa';
