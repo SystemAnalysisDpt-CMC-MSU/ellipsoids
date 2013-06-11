@@ -8,6 +8,7 @@ classdef SuiteSupportFunction < mlunitext.test_case
         confNameList
         crm
         crmSys
+        resTmpDir
     end
     properties (Constant, GetAccess = private)
         REL_TOL_FACTOR = 1e-3;
@@ -30,6 +31,12 @@ classdef SuiteSupportFunction < mlunitext.test_case
                 filesep, 'TestData', filesep, shortClassName];
         end
         %
+        function self = set_up(self)
+            self.resTmpDir = elltool.test.TmpDataManager.getDirByCallerKey;
+        end
+        function self = tear_down(self)
+            rmdir(self.resTmpDir,'s');
+        end
         function self = set_up_param(self, varargin)
             if nargin > 2
                 self.crm = varargin{2};
@@ -68,6 +75,10 @@ classdef SuiteSupportFunction < mlunitext.test_case
             for iConf = 1 : nConfs
                 confName = confNameList{iConf};
                 crm.selectConf(confName);
+                crm.setParam('customResultDir.dirName',self.resTmpDir,...
+                    'writeDepth','cache');
+                crm.setParam('customResultDir.isEnabled',true,...
+                    'writeDepth','cache');
                 crm.setParam('plottingProps.isEnabled',false,...
                     'writeDepth','cache');
                 %
