@@ -29,7 +29,7 @@ classdef ContinuousReachRefineTestCase < mlunitext.test_case
             reachObj = self.reachFactObj.createInstance();
             reachWholeObj = self.reachFactObj.createInstance('l0Mat',self.l0P1Mat);
             %
-            reachWholeObj.refine(self.l0P2Mat);
+            reachWholeObj = reachWholeObj.refine(self.l0P2Mat);
             isEqual = reachObj.isEqual(reachWholeObj);
             mlunitext.assert_equals(true,isEqual);
         end
@@ -80,14 +80,14 @@ classdef ContinuousReachRefineTestCase < mlunitext.test_case
             newEndTime=1;
             timeVec=[0 0.5];
             reachSetObj=buildRS(l1DirMat);
-            reachSetObj.evolve(newEndTime);
+            reachSetObj = reachSetObj.evolve(newEndTime);
             checkRefine();
             %
             % Check after evolve, reverse time
             newEndTime=0;
             timeVec=[1 0.5];
             reachSetObj=buildRS(l1DirMat);
-            reachSetObj.evolve(newEndTime);
+            reachSetObj = reachSetObj.evolve(newEndTime);
             checkRefine();
             %
             % Check projection
@@ -98,7 +98,7 @@ classdef ContinuousReachRefineTestCase < mlunitext.test_case
             projSet=reachSetObj.projection(projMat);
             %
             projSetNew=projSet;
-            projSetNew.refine(l2DirMat);
+            projSetNew = projSetNew.refine(l2DirMat);
             %
             reachSetObj=buildRS(lDirMat);
             projReachSetObj=reachSetObj.projection(projMat);
@@ -107,7 +107,7 @@ classdef ContinuousReachRefineTestCase < mlunitext.test_case
             %
             function checkRefine()
                 reachObjNew=reachSetObj;
-                reachObjNew.refine(l2DirMat);
+                reachObjNew = reachObjNew.refine(l2DirMat);
                 reachSetObj=buildRS(lDirMat);
                 checkRes(reachObjNew);
             end
@@ -135,9 +135,9 @@ classdef ContinuousReachRefineTestCase < mlunitext.test_case
                 setDir(typeVal);              
                 timeVec=[0 0.5];
                 reachObjNew=buildRS(l1DirMat);
-                reachObjNew.refine(l2DirMat);
+                reachObjNew = reachObjNew.refine(l2DirMat);
                 timeVec=[0 1];
-                reachObjNew.evolve(timeVec(end));
+                reachObjNew = reachObjNew.evolve(timeVec(end));
                 reachSetObj=buildRS(lDirMat);
             end            
             function reachSet = buildRS(lDirMat)

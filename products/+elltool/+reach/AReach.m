@@ -1238,7 +1238,7 @@ classdef AReach < elltool.reach.IReach
             iaPlotter = self.plotApprox(EApproxType.Internal, varargin{:});
         end
         %
-        function self = refine(self, l0Mat)
+        function outReachObj = refine(self, l0Mat)
             import modgen.common.throwerror;
             import gras.ellapx.enums.EApproxType;
             if isempty(self.ellTubeRel)
@@ -1251,51 +1251,57 @@ classdef AReach < elltool.reach.IReach
             %
             % Calculate additional tubes
             %
-            if length(self.switchSysTimeVec) > 2
-                throwerror('unsupportedFunctionality', ...
-                    'refine currently cannot be applied after evolve');
-            end
-            linSys = self.linSysCVec{1};
-            if self.isBackward
+%             if length(self.switchSysTimeVec) > 2
+%                 throwerror('unsupportedFunctionality', ...
+%                     'refine currently cannot be applied after evolve');
+%             end
+            outReachobj=self.getCopy();
+            linSys = outReachobj.linSysCVec{1};
+            if outReachobj.isBackward
                 timeLimsVec = ...
-                    [self.switchSysTimeVec(end), self.switchSysTimeVec(1)];
+                    [outReachobj.switchSysTimeVec(end),...
+                     outReachobj.switchSysTimeVec(1)];
             else
                 timeLimsVec = ...
-                    [self.switchSysTimeVec(1), self.switchSysTimeVec(end)];
+                    [outReachobj.switchSysTimeVec(1),...
+                     outReachobj.switchSysTimeVec(end)];
             end
-            x0Ell = self.x0Ellipsoid;
+            x0Ell = outReachobj.x0Ellipsoid;
             %
             % Normalize good directions
             %
             nDim = dimension(x0Ell);
-            l0Mat = self.getNormMat(l0Mat, nDim);
-            if self.isProj
-                projMat = self.projectionBasisMat;
-                reachSetObj = feval(class(self), linSys, x0Ell, ...
+            l0Mat = outReachobj.getNormMat(l0Mat, nDim);
+            if outReachobj.isProj
+                projMat = outReachobj.projectionBasisMat;
+                reachSetObj = feval(class(outReachobj), linSys, x0Ell,...
                     l0Mat, timeLimsVec);
                 projSet = reachSetObj.getProjSet(projMat);
-                self.ellTubeRel.unionWith(projSet);
+                outReachobj.ellTubeRel.unionWith(projSet);
             else
                 [x0Vec x0Mat] = double(x0Ell);
                 [atStrCMat btStrCMat gtStrCMat ptStrCMat ptStrCVec ...
                     qtStrCMat qtStrCVec] = ...
-                    self.prepareSysParam(linSys, timeLimsVec);
-                isDisturbance = self.isDisturbance(gtStrCMat, qtStrCMat);
+                    outReachobj.prepareSysParam(linSys, timeLimsVec);
+                isDisturbance = outReachobj.isDisturbance(gtStrCMat,...
+                    qtStrCMat);
                 %
-                probDynObj = self.getProbDynamics(atStrCMat, btStrCMat, ...
-                    ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat, qtStrCVec, ...
-                    x0Mat, x0Vec, timeLimsVec, ...
-                    self.relTol, isDisturbance);
+                probDynObj = outReachobj.getProbDynamics(atStrCMat, ...
+                    btStrCMat, ptStrCMat, ptStrCVec, gtStrCMat, ...
+                    qtStrCMat, qtStrCVec, x0Mat, x0Vec, timeLimsVec, ...
+                    outReachobj.relTol, isDisturbance);
                 approxTypeVec = [EApproxType.External EApproxType.Internal];
-                ellTubeRelNew = self.makeEllTubeRel(probDynObj, l0Mat, ...
-                    timeLimsVec, isDisturbance, self.relTol, approxTypeVec);
-                if self.isBackward
-                    ellTubeRelNew = self.transformEllTube(ellTubeRelNew);
+                ellTubeRelNew = outReachobj.makeEllTubeRel(probDynObj, ...
+                    l0Mat, timeLimsVec, isDisturbance, ...
+                    outReachobj.relTol, approxTypeVec);
+                if outReachobj.isBackward
+                    ellTubeRelNew = ...
+                        outReachobj.transformEllTube(ellTubeRelNew);
                 end
                 %
-                % Update self.ellTubRel
+                % Add new tube
                 %
-                self.ellTubeRel.unionWith(ellTubeRelNew);
+                outReachobj.ellTubeRel.unionWith(ellTubeRelNew);
             end
         end
         %
