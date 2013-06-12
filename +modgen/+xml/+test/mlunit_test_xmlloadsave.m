@@ -11,7 +11,7 @@ classdef mlunit_test_xmlloadsave < mlunitext.test_case
     %
     methods
         function self = tear_down(self)
-            rmdir(self.resTmpDir2,'s');
+            rmdir(self.resTmpDir,'s');
         end
         function self = mlunit_test_xmlloadsave(varargin)
             self = self@mlunitext.test_case(varargin{:});
@@ -19,7 +19,7 @@ classdef mlunit_test_xmlloadsave < mlunitext.test_case
             self.locDir=fileparts(which(metaClass.Name));            
         end
         function self=set_up_param(self,varargin)
-            self.resTmpDir2=modgen.test.TmpDataManager.getDirByCallerKey();
+            self.resTmpDir=modgen.test.TmpDataManager.getDirByCallerKey();
             self.fileName=[self.resTmpDir,filesep,'tmp.xml'];
             Data.a=[1 2 3];
             Data.b=[1 2 3].';
