@@ -3,19 +3,12 @@ classdef SuiteCompare < mlunitext.test_case
         confNameList
         crm
         crmSys
-        resTmpDir
     end
     methods
         function self = SuiteCompare(varargin)
             self = self@mlunitext.test_case(varargin{:});
         end
         %
-        function self = set_up(self)
-            self.resTmpDir = elltool.test.TmpDataManager.getDirByCallerKey;
-        end
-        function self = tear_down(self)
-            rmdir(self.resTmpDir,'s');
-        end
         function self = set_up_param(self,varargin)
             if nargin>2
                 self.crm=varargin{2};
@@ -72,11 +65,6 @@ classdef SuiteCompare < mlunitext.test_case
             compFieldNameListCVec = cell(1,2);
             for iConf=1:2
                 confName=confNameList{iConf};
-                crm.selectConf(confName,'reloadIfSelected',false);
-                crm.setParam('customResultDir.dirName',self.resTmpDir,...
-                        'writeDepth','cache');
-                crm.setParam('customResultDir.isEnabled',true,...
-                        'writeDepth','cache');
                 runResult=gras.ellapx.uncertcalc.run(confName,...
                     'confRepoMgr',crm,'sysConfRepoMgr',crmSys);
                 if crm.getParam('plottingProps.isEnabled')
