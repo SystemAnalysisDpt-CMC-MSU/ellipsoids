@@ -10,6 +10,10 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
     properties (Constant, Hidden, Access = protected)
         % Maximum tolerance of mdivide and inv operations for QArray
         MAX_ELLDIST_TOL = 1e-3;
+        % Time neighbourhood
+        ELLDIST_TIME_NEIG = 4;
+        % Norm cell in touchVec calcPrecision neighbourhood (minimum 2)
+        ELLDIST_NORM_CELL = 5; 
         % Count of series elements to calculate mdivide and inv precision
         ELLDIST_PREC_SERIES_ELEMENTS_COUNT = 10;
     end
@@ -188,12 +192,29 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 [actualPrecision, maxEllDistTimePoint] = ...
                     max(fDistFunc(normVec));
                 %
-                xTVec = xTouchCurveMat(:, maxEllDistTimePoint) - ...
-                    aMat(:, maxEllDistTimePoint);
-                qMat = QArray(:, :, maxEllDistTimePoint);
-                ellDistPrecision = elldistprec(qMat, xTVec, ...
-                    self.ELLDIST_PREC_SERIES_ELEMENTS_COUNT, eps, ...
-                    self.MAX_ELLDIST_TOL);
+                ellDistPrecision = 0;
+                if (actualPrecision > calcPrecision)
+                    normCellVec = linspace(-1, 1, self.ELLDIST_NORM_CELL);
+                    timeNeigBase = ...
+                        -self.ELLDIST_TIME_NEIG:self.ELLDIST_TIME_NEIG;
+                    timeNeigVec = maxEllDistTimePoint + timeNeigBase;
+                    timeNeigVec(or((timeNeigVec < 1), ...
+                        (timeNeigVec > length(normVec)))) = [];
+                    for iTimeNeig = timeNeigVec
+                        baseTVec = xTouchCurveMat(:, iTimeNeig) - ...
+                        aMat(:, iTimeNeig);
+                        qMat = QArray(:, :, iTimeNeig);
+                        for iNormCoeff = normCellVec
+                            xTVec = (1 + iNormCoeff * calcPrecision) * ...
+                                baseTVec;
+                            curDistPrecision = elldistprec(qMat, xTVec, ...
+                                self.ELLDIST_PREC_SERIES_ELEMENTS_COUNT,...
+                                eps, self.MAX_ELLDIST_TOL);
+                            ellDistPrecision = max([ellDistPrecision, ...
+                                curDistPrecision]);
+                        end
+                    end
+                end
                 %
                 isOk = ellDistPrecision <= self.MAX_ELLDIST_TOL;
                 if ~isOk
