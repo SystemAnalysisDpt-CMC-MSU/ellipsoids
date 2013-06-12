@@ -81,13 +81,15 @@ classdef ContinuousReachRefineTestCase < mlunitext.test_case
             timeVec=[0 0.5];
             reachSetObj=buildRS(l1DirMat);
             reachSetObj = reachSetObj.evolve(newEndTime);
+            timeVec=[0 1];
             checkRefine();
             %
             % Check after evolve, reverse time
             newEndTime=0;
             timeVec=[1 0.5];
             reachSetObj=buildRS(l1DirMat);
-            reachSetObj = reachSetObj.evolve(newEndTime);
+            reachSetObj = reachSetObj.evolve(newEndTime)
+            timeVec = [1 0];
             checkRefine();
             %
             % Check projection
@@ -95,14 +97,14 @@ classdef ContinuousReachRefineTestCase < mlunitext.test_case
             reachSetObj=buildRS(l1DirMat);
             %
             projMat=[1,0;0,1];
-            projSet=reachSetObj.projection(projMat);
+            ellTubeProjRel=reachSetObj.projection(projMat);
             %
-            projSetNew=projSet;
-            projSetNew = projSetNew.refine(l2DirMat);
+            ellTubeProjRelNew=ellTubeProjRel;
+            ellTubeProjRelNew = ellTubeProjRelNew.refine(l2DirMat);
             %
             reachSetObj=buildRS(lDirMat);
             projReachSetObj=reachSetObj.projection(projMat);
-            isEqual = projSetNew.isEqual(projReachSetObj);
+            isEqual = ellTubeProjRelNew.isEqual(projReachSetObj);
             mlunitext.assert_equals(true,isEqual);   
             %
             function checkRefine()
@@ -139,6 +141,7 @@ classdef ContinuousReachRefineTestCase < mlunitext.test_case
                 timeVec=[0 1];
                 reachObjNew = reachObjNew.evolve(timeVec(end));
                 reachSetObj=buildRS(lDirMat);
+                checkRes(reachObjNew);
             end            
             function reachSet = buildRS(lDirMat)
                 aMat=[1 2; 2 1];
