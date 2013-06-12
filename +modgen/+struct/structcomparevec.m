@@ -1,4 +1,4 @@
-function [isEqualVec,reportStr]= structcomparevec(SX,SY,tol)
+function [isEqualVec,reportStr]= structcomparevec(SX,SY,tol,reltol)
 % STRUCTCOMPARE compares two structures using the specified tolerance
 %
 % Input:
@@ -7,6 +7,8 @@ function [isEqualVec,reportStr]= structcomparevec(SX,SY,tol)
 %       SRight: struct[] - second input structure array
 %   optional:
 %       tol: double[1,1] - maximum allowed tolerance, default value is 0
+%       reltol: double[1,1] - maximum allowed relative tolerance, default 
+%                          value is 0
 %
 % Output:
 %   isEqualVec: logical[1,] - true if the structures are found equal
@@ -23,13 +25,16 @@ function [isEqualVec,reportStr]= structcomparevec(SX,SY,tol)
 if nargin<3
     tol=0;
 end
+if nargin<4
+    reltol=0;
+end
 %
 if ~isequal(size(SX),size(SY));
     isEqualVec=false;
     reportStr={'sizes are different'};
     return;
 end
-[isEqualVec,reportStrList]=structcompare1darray(SX(:),SY(:),tol);
+[isEqualVec,reportStrList]=structcompare1darray(SX(:),SY(:),tol,reltol);
 nReports=length(reportStrList);
 if nReports>1
     reportStrList(1:end-1)=cellfun(@(x)horzcat(x,sprintf('\n')),reportStrList(1:end-1),'UniformOutput',false);
@@ -42,11 +47,11 @@ end
 end
 
 
-function [isEqualVec,reportStrList]= structcompare1darray(SX,SY,tol)
+function [isEqualVec,reportStrList]= structcompare1darray(SX,SY,tol,reltol)
 % STRUCTCOMPARE1D compares 1-dimentional structural arrays
 %
 nElem=numel(SX);
-[isEqualList,reportStrList]=arrayfun(@(x,y)structcomparescalar(x,y,tol),SX,SY,'UniformOutput',false);
+[isEqualList,reportStrList]=arrayfun(@(x,y)structcomparescalar(x,y,tol,reltol),SX,SY,'UniformOutput',false);
 nReportsList=num2cell(cellfun('prodofsize',reportStrList));
 isEqualVec=[isEqualList{:}];
 isEqualList=cellfun(@(x,y)repmat(x,1,y),isEqualList,nReportsList,'UniformOutput',false);
@@ -64,7 +69,7 @@ end
 %
 end
 
-function [isEqual,reportStrList]= structcomparescalar(SX,SY,tol)
+function [isEqual,reportStrList]= structcomparescalar(SX,SY,tol,reltol)
 % STRUCTCOMPARE1D compares the scalar structures
 
 if ~auxchecksize(SX,SY,[1 1])
@@ -88,7 +93,7 @@ end
 nFields=length(fieldXList);
 for iField=1:nFields
     fieldName=fieldXList{iField};
-    [isEqualCur,reportStrCurList]=compfun(SX.(fieldName),SY.(fieldName),tol);
+    [isEqualCur,reportStrCurList]=compfun(SX.(fieldName),SY.(fieldName),tol,reltol);
     isEqual=isEqual&&isEqualCur;
     if ~isEqualCur
         if ~isstruct(SX.(fieldName))
@@ -100,7 +105,7 @@ for iField=1:nFields
 end
 end
 
-function [isEqual,reportStr]=compfun(x,y,tol)
+function [isEqual,reportStr]=compfun(x,y,tol,reltol)
 % COMPFUN compares two different objects (ideally - of any type)
 reportStr='';
 isEqual=false;
@@ -122,9 +127,19 @@ if isnumeric(x)
     x=toNumericSupportingMinus(x);
     y=toNumericSupportingMinus(y);
     maxDiff=max(abs(x(:)-y(:)));
+    maxRelDiff=2 .* abs(x(:)-y(:));
+    maxRelDiff=maxRelDiff./(abs(x(:)) + abs(y(:)));
+    maxRelDiff(isnan(maxRelDiff)) = 0;
+    maxRelDiff=max(maxRelDiff);
     isUpperTolVec=maxDiff>tol;
-    if any(isUpperTolVec)
-        reportStr=sprintf('Max. difference (%d) is greater than the specified tolerance(%d)',maxDiff,tol);
+    isUpperRelTolVec=maxRelDiff>reltol;
+    if any(and(isUpperTolVec, isUpperRelTolVec))
+        if any(isUpperTolVec)
+            reportStr=sprintf('Max. difference (%d) is greater than the specified tolerance(%d).   ',maxDiff,tol);
+        end
+        if any(isUpperRelTolVec)
+            reportStr=horzcat(reportStr, sprintf('Max. relative difference (%d) is greater than the specified tolerance(%d).',maxRelDiff,reltol));
+        end
         return;
     end
     if ismember(xClass,{'double','single'})
@@ -136,7 +151,7 @@ if isnumeric(x)
         end
     end
 elseif isstruct(x)
-    [isEqual,reportStr]=modgen.struct.structcompare(x,y,tol);
+    [isEqual,reportStr]=modgen.struct.structcompare(x,y,tol,reltol);
     if ~isEqual
         return;
     end
@@ -147,7 +162,7 @@ elseif iscell(x)&&~iscellstr(x),
         return;
     end
     for iElem=1:nElems,
-        [isEqual,reportStr]=compfun(x{iElem},y{iElem},tol);
+        [isEqual,reportStr]=compfun(x{iElem},y{iElem},tol,reltol);
         if ~isEqual,
             break;
         end
