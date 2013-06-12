@@ -128,8 +128,8 @@ classdef SquareMatVector<gras.gen.MatVector
         end
         function outVec=lrDivideVec(InpBArray,InpAArray)
             import modgen.common.throwerror;
-            ASizeVec=size(InpAArray);
-            nElems=ASizeVec(2);
+            BSizeVec=size(InpBArray);
+            nElems=BSizeVec(2);
             %
             nMatElems=size(InpBArray,3);
             if nMatElems==1
@@ -137,9 +137,16 @@ classdef SquareMatVector<gras.gen.MatVector
                 outVec=sum((bInvMat*InpAArray).*InpAArray,1);
             else
                 outVec=zeros(1,nElems);
-                for iElem=1:nElems
-                    outVec(iElem)=transpose(InpAArray(:,iElem))*...
-                        (InpBArray(:,:,iElem)\InpAArray(:,iElem));
+                if size(InpAArray,2)==1
+                    for iElem=1:nElems
+                        outVec(iElem)=transpose(InpAArray)*...
+                            (InpBArray(:,:,iElem)\InpAArray);
+                    end
+                else
+                    for iElem=1:nElems
+                        outVec(iElem)=transpose(InpAArray(:,iElem))*...
+                            (InpBArray(:,:,iElem)\InpAArray(:,iElem));
+                    end
                 end
             end
         end

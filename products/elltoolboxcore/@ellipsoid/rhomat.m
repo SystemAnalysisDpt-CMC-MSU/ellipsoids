@@ -4,7 +4,8 @@ function [supArr, bpMat] = rhomat(ellShapeMat,ellCenterVec,absTol, dirsMat)
 % ellipsoid's shape matrix and center vector and given direction.
 %
 %
-%	[supArr, bpMat] = RHO(ellShapeMat, ellCenterVec,absTol, dirstMat)  Computes the support function
+%	[supArr, bpMat] = RHO(ellShapeMat, ellCenterVec,absTol, dirstMat)
+%       Computes the support function
 %       of the ellipsoid in directions specified by the columns of
 %       matrix dirsMat, and boundary points bpMat of this ellipsoid that
 %       correspond to directions in dirsMat.
@@ -43,6 +44,7 @@ function [supArr, bpMat] = rhomat(ellShapeMat,ellCenterVec,absTol, dirsMat)
 
 tempMat  = max(sqrt(sum(dirsMat'*ellShapeMat.*dirsMat',2)), absTol);
 supArr = ellCenterVec'*dirsMat + tempMat';
-bpMat = ((ellShapeMat*dirsMat)./repmat(tempMat',size(ellShapeMat,1),1)) + repmat(ellCenterVec,1,size(dirsMat,2));
+bpMat = ((ellShapeMat*dirsMat)./repmat(tempMat',size(ellShapeMat,1),1))...
+    + repmat(ellCenterVec,1,size(dirsMat,2));
 
 end
