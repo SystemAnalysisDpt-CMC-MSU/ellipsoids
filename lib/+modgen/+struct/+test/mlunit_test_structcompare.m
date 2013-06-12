@@ -158,5 +158,11 @@ classdef mlunit_test_structcompare < mlunitext.test_case
             isEqual=modgen.struct.structcompare(S1,S2,0);
             mlunitext.assert_equals(isEqual,true);
         end
+        function self = test_simplerelative_positive(self)
+            S1=struct('a',1e+10,'b',2e+12);
+            S2=struct('b',2e+12, 'a',1e+10 + 1e+2);
+            isEqual=modgen.struct.structcompare(S1,S2,0, 1e-6);
+            mlunitext.assert_equals(isEqual,true);
+        end
     end
 end
