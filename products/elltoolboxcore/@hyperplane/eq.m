@@ -22,21 +22,21 @@ function [isPosArr reportStr] = eq(fstHypArr, secHypArr)
 %   secHypObj = hyperplane([-1; 1; 8; -2; 3], 7);
 %   thirdHypObj = hyperplane([1; 2; 0], -1);
 %   secHypObj == [firstHypObj secHypObj thirdHypObj]
-% 
+%
 %   ans =
-% 
+%
 %        0     1     0
 %
-% $Author: Vadim Kaushansky  <vkaushanskiy@gmail.com> $ 
+% $Author: Vadim Kaushansky  <vkaushanskiy@gmail.com> $
 % $Date: Nov-2012$
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
 %
 % $Authors:
-%   Peter Gagarinov  <pgagarinov@gmail.com> $ 
+%   Peter Gagarinov  <pgagarinov@gmail.com> $
 %   $Date: Dec-2012$
-%   Aushkap Nikolay <n.aushkap@gmail.com> $ 
+%   Aushkap Nikolay <n.aushkap@gmail.com> $
 %   $Date: Dec-2012$
 % $Copyright: Moscow State University,
 %             Faculty of Computational Mathematics
@@ -66,7 +66,7 @@ if isnFirstScalar&&isnSecScalar
     
     if ~isequal(firstSizeVec, secSizeVec)
         throwerror('wrongSizes',...
-            'sizes of ellipsoidal arrays do not... match');
+            'sizes of hyperplane arrays do not... match');
     end;
     compare();
     isPosArr = reshape(isPosArr, firstSizeVec);

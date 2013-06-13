@@ -138,7 +138,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             test2Mat = test2SqrtMat*test2SqrtMat.';
             [isEq, reportStr] = eq(ellipsoid(test1Mat), ellipsoid(test2Mat));
             mlunitext.assert_equals(false, isEq);
-            mlunitext.assert_equals('(1).shapeMat-->Max. difference (1.010000e-05) is greater than the specified tolerance(1.000000e-05)',...
+            mlunitext.assert_equals('(1).Q-->Max. difference (1.010000e-05) is greater than the specified tolerance(1.000000e-05)',...
                 reportStr);
             
             test1Mat = eye(2);
@@ -156,7 +156,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
                 ellipsoid(test2Mat));
             mlunitext.assert_equals(false, isEq);
             mlunitext.assert_equals(false, isEq);
-            mlunitext.assert_equals(reportStr, '(1).shapeMat-->Max. difference (1.000000e-05) is greater than the specified tolerance(1.000000e-05)');
+            mlunitext.assert_equals(reportStr, '(1).Q-->Max. difference (1.000000e-05) is greater than the specified tolerance(1.000000e-05)');
         end
         
         function testIsInternalCenter(~)

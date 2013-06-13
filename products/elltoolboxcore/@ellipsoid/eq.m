@@ -8,7 +8,7 @@ function [isEqualArr, reportStr] = eq(ellFirstArr, ellSecArr,varargin)
 %       ellSecArr: ellipsoid: [nDims1,nDims2,...,nDimsN]/[1,1] - the second
 %           array of ellipsoid objects
 %   optional:
-%       maxTol: double[1,1] - maximum tolerance, used 
+%       maxTol: double[1,1] - maximum tolerance, used
 %           intstead of ellFirstArr.getRelTol()
 % Output:
 %   isEqualArr: logical: [nDims1,nDims2,...,nDimsN]- array of comparison
@@ -43,12 +43,6 @@ import modgen.common.throwerror;
 ellipsoid.checkIsMe(ellFirstArr,'first');
 ellipsoid.checkIsMe(ellSecArr,'second');
 %
-if (~isempty(ellFirstArr))
-    ABS_TOL = ellFirstArr(1).absTol;
-else
-    ABS_TOL = 1e-6;
-end
-
 nFirstElems = numel(ellFirstArr);
 nSecElems = numel(ellSecArr);
 
@@ -59,7 +53,7 @@ modgen.common.checkvar( ellFirstArr, 'numel(x) > 0', 'errorTag', ...
 modgen.common.checkvar( ellSecArr, 'numel(x) > 0', 'errorTag', ...
     'wrongInput:emptyArray', 'errorMessage', ...
     'Each array must be not empty.');
-
+[~, ABS_TOL] = ellFirstArr.getAbsTol;
 firstSizeVec = size(ellFirstArr);
 secSizeVec = size(ellSecArr);
 isnFirstScalar=nFirstElems > 1;
@@ -75,7 +69,7 @@ else
     tolerance = varargin{1};
 end
 %
-SEll1Array = ellFirstArr.toStruct();
+[SEll1Array, SFieldNiceNames, ~] = ellFirstArr.toStruct();
 SEll2Array = ellSecArr.toStruct();
 %
 SEll1Array = arrayfun(@formCompStruct, SEll1Array);
@@ -105,7 +99,7 @@ end
 
 
     function SComp = formCompStruct(SEll)
-        SComp = struct('shapeMat',gras.la.sqrtmpos(SEll.shapeMat,...
-            ABS_TOL),'centerVec',SEll.centerVec);
+        SComp.(SFieldNiceNames.shapeMat) = gras.la.sqrtmpos(SEll.shapeMat, ABS_TOL);
+        SComp.(SFieldNiceNames.centerVec) = SEll.centerVec;
     end
 end
