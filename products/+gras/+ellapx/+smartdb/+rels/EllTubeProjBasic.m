@@ -5,7 +5,7 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
         REACH_TUBE_PREFIX='Reach';
         REG_TUBE_PREFIX='Reg';
     end
-    methods 
+    methods
         function namePrefix=getReachTubeNamePrefix(self)
             % GETREACHTUBEANEPREFIX - return prefix of the reach tube
             %
@@ -21,14 +21,14 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
             %   regular:
             %      self.
             namePrefix=self.REG_TUBE_PREFIX;
-        end        
+        end
     end
     methods (Static = true, Access = protected)
         function [plotPropProcObj, plObj] = parceInput(plotFullFieldList,...
                 varargin)
             import gras.ellapx.smartdb.PlotPropProcessor;
             import modgen.common.parseparext;
-                
+            
             plotSpecFieldListDefault = {'approxType'};
             colorFieldListDefault = {'approxType'};
             alphaFieldListDefault = {'approxType'};
@@ -107,7 +107,7 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                             'ApproxType=%s is not supported',char(approxType));
                 end
             end
-        
+            
             function patchAlpha = getPatchAlphaByApxType(approxType)
                 import gras.ellapx.enums.EApproxType;
                 switch approxType
@@ -143,7 +143,7 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                 xTouchCurveMat, xTouchOpCurveMat, ltGoodDirNormVec,...
                 ltGoodDirNormOrigVec, approxType, QArray, aMat, MArray,...
                 varargin)
-
+            
             import gras.ellapx.enums.EApproxType;
             %
             tubeNamePrefix = self.REACH_TUBE_PREFIX;
@@ -153,7 +153,7 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                 xTouchCurveMat, xTouchOpCurveMat, ltGoodDirNormVec,...
                 ltGoodDirNormOrigVec,...
                 approxType, QArray, aMat, tubeNamePrefix);
-
+            
             axis(hAxes, 'tight');
             axis(hAxes, 'normal');
             if approxType == EApproxType.External
@@ -194,7 +194,7 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
             else
                 hVec=[];
             end
-        end  
+        end
         function hVec = plotCreateGenericTubeFunc(self,...
                 plotPropProcessorObj, hAxes, varargin)
             
@@ -209,7 +209,7 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
             [vMat,fMat]=gras.geom.tri.elltubetri(...
                 QArray,aMat,timeVec,nSPoints);
             nTimePoints=length(timeVec);
-           
+            
             patchColorVec = plotPropProcessorObj.getColor(varargin(:));
             patchAlpha = plotPropProcessorObj.getTransparency(varargin(:));
             
@@ -228,7 +228,7 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                     'EdgeLighting','phong','FaceLighting','phong');
                 material('metal');
             end
-            hold(hAxes,'on');            
+            hold(hAxes,'on');
         end
         function hVec=axesSetPropRegTubeFunc(self,hAxes,axesName,projSTimeMat,varargin)
             import modgen.common.type.simple.checkgen;
@@ -323,39 +323,39 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
             %           function that specified transparency
             %           value for ellipsoidal tubes
             %       fGetLineWidth: function_handle[1, 1] -
-            %           function that specified lineWidth for good curves 
+            %           function that specified lineWidth for good curves
             %       fGetFill: function_handle[1, 1] - this
             %           property not used in this version
-            %       colorFieldList: cell[nColorFields, ] of char[1, ] - 
+            %       colorFieldList: cell[nColorFields, ] of char[1, ] -
             %           list of parameters for color function
-            %       alphaFieldList: cell[nAlphaFields, ] of char[1, ] - 
+            %       alphaFieldList: cell[nAlphaFields, ] of char[1, ] -
             %           list of parameters for transparency function
-            %       lineWidthFieldList: cell[nLineWidthFields, ] 
-            %           of char[1, ] - list of parameters for lineWidth 
+            %       lineWidthFieldList: cell[nLineWidthFields, ]
+            %           of char[1, ] - list of parameters for lineWidth
             %           function
-            %       fillFieldList: cell[nIsFillFields, ] of char[1, ] - 
+            %       fillFieldList: cell[nIsFillFields, ] of char[1, ] -
             %           list of parameters for fill function
-            %       plotSpecFieldList: cell[nPlotFields, ] of char[1, ] - 
+            %       plotSpecFieldList: cell[nPlotFields, ] of char[1, ] -
             %           defaul list of parameters. If for any function in
-            %           properties not specified list of parameters, 
+            %           properties not specified list of parameters,
             %           this one will be used
             %
             % Output:
             %   plObj: smartdb.disp.RelationDataPlotter[1,1] - plotter
             %           object used for displaying ellipsoidal tubes
-            % 
-            % $Author: 
-            % Peter Gagarinov  <pgagarinov@gmail.com> 	
-            % Artem Grachev <grachev.art@gmail.com> 
+            %
+            % $Author:
+            % Peter Gagarinov  <pgagarinov@gmail.com>
+            % Artem Grachev <grachev.art@gmail.com>
             % $Date: May-2013$
             % $Copyright: Moscow State University,
             %             Faculty of Computational Mathematics
-            %             and Computer Science, 
+            %             and Computer Science,
             %             System Analysis Department 2013$
             %
             import gras.ellapx.smartdb.rels.EllTubeProjBasic;
             import modgen.logging.log4j.Log4jConfigurator;
-                                    
+            
             PLOT_FULL_FIELD_LIST =...
                 {'projType','timeVec','lsGoodDirOrigVec',...
                 'ltGoodDirMat','sTime','xTouchCurveMat',...
@@ -378,7 +378,7 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                 fSetReachFigProp=@(varargin)figureNamedSetPropFunc(self,...
                     'reachTube',varargin{:});
                 fSetRegFigProp=@(varargin)figureNamedSetPropFunc(self,...
-                    'regTube',varargin{:});    
+                    'regTube',varargin{:});
                 %
                 fGetTubeAxisKey=@(varargin)axesGetKeyTubeFunc(self,varargin{:});
                 fGetCurveAxisKey=@(varargin)axesGetKeyGoodCurveFunc(self,varargin{:});
@@ -434,7 +434,76 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                     'ltGoodDirMat','sTime','xTouchCurveMat',...
                     'xTouchOpCurveMat','ltGoodDirNormVec',...
                     'ltGoodDirNormOrigVec','approxType','QArray','aMat','MArray'});
-            end           
+            end
+        end
+        
+        function plObj = plotExt(self,varargin)
+            import elltool.plot.plotgeombodyarr;
+            import
+            ABS_TOL = elltool.conf.Properties.getAbsTol();
+            tempEllMat = self.QArray{1};
+            tempEll = ellipsoid(tempEllMat(:,:,1));
+            plObj= plotgeombodyarr('ellipsoid',...
+                @fCalcBodyArr,@patch,tempEll,varargin{:},'isTitle',true);
+            function [xCMat,fCMat,titl] = fCalcBodyArr(~,varargin)
+                dim = self.dim(1);
+                allEllMat =zeros(size(self.QArray,1),dim,dim,...
+                    size(self.timeVec{1},2));
+                arrayfun(@(x) getEllMat(x),...
+                    1:size(self.QArray,1),'UniformOutput', false);
+                
+                if dim == 3
+                    allEll2Mat = allEllMat(:,:,:,end);
+                    lastCenterVec = self.aMat{1}(:, end);
+                    [lGridMat, fMat] = ellipsoid.getGrid(3,600);
+                    lGridMat = lGridMat';
+                    nDim = size(lGridMat, 2);
+                    xMat = zeros(3,nDim);
+                    allEll3Mat = [];
+                    ind2 = 1;
+                    arrayfun(@(x) getEll3Mat(x),...
+                        1:size(allEll2Mat,1),'UniformOutput', false);
+                    suppAllMat = zeros(1:size(allEll3Mat,3),nDim);
+                    bpAllCell = cell(1:size(allEll3Mat,3),nDim);
+                    ind3 = 1;
+                    arrayfun(@(x) calcSupMat(allEll3Mat(:,:,x)),...
+                        1:size(allEll3Mat,3),'UniformOutput', false);
+                    [~,xInd] = min(suppAllMat,[],1);
+                    arrayfun(@(x) calcXMat(x), 1:size(xInd,2),...
+                        'UniformOutput', false);                    
+                    xCMat = {xMat};
+                    fCMat = {fMat};
+                    titl = 'yes';
+                else
+                    
+                end
+                
+                function  getEllMat(ind)
+                    allEllMat(ind,:,:,:) = self.QArray{ind};
+                end
+                function getEll3Mat(ind)
+                    aMat = reshape(allEll2Mat(ind,:,:),dim,dim);
+                    if trace(aMat) > ...
+                            ABS_TOL
+                        allEll3Mat(:,:,ind2) = aMat;
+                        ind2 = ind2+1;
+                    end
+                end
+                function calcSupMat(tempEll)
+                    import gras.geom.ell.rhomat
+                    [supMat, bpMat] = rhomat(tempEll,...
+                        zeros(size(tempEll,1),1),...
+                        ABS_TOL,lGridMat);
+                    suppAllMat(ind3,:) = supMat;
+                    for indBP=1:size(bpAllCell,2)
+                        bpAllCell{ind3,indBP} = bpMat(:,indBP);
+                    end
+                    ind3 = ind3+1;
+                end
+                function calcXMat(ind)
+                    xMat(:,ind) = bpAllCell{xInd(ind),ind}+lastCenterVec;
+                end
+            end
         end
     end
 end
