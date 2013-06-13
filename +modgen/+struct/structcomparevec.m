@@ -1,4 +1,4 @@
-function [isEqualVec,reportStr]= structcomparevec(SX,SY,tol,reltol)
+function [isEqualVec,reportStr]= structcomparevec(SX,SY,absTol,relTol)
 % STRUCTCOMPARE compares two structures using the specified tolerance
 %
 % Input:
@@ -6,9 +6,9 @@ function [isEqualVec,reportStr]= structcomparevec(SX,SY,tol,reltol)
 %       SLeft: struct[] - first input structure array
 %       SRight: struct[] - second input structure array
 %   optional:
-%       tol: double[1,1] - maximum allowed tolerance, default value is 0
-%       reltol: double[1,1] - maximum allowed relative tolerance, default 
-%                          value is 0
+%       absTol: double[1,1] - maximum allowed tolerance, default value is 0
+%       relTol: double[1,1] - maximum allowed relative tolerance, isn't
+%                             used by default
 %
 % Output:
 %   isEqualVec: logical[1,] - true if the structures are found equal
@@ -23,10 +23,10 @@ function [isEqualVec,reportStr]= structcomparevec(SX,SY,tol,reltol)
 %
 
 if nargin<3
-    tol=0;
+    absTol=0;
 end
 if nargin<4
-    reltol=0;
+    relTol=[];
 end
 %
 if ~isequal(size(SX),size(SY));
@@ -34,7 +34,7 @@ if ~isequal(size(SX),size(SY));
     reportStr={'sizes are different'};
     return;
 end
-[isEqualVec,reportStrList]=structcompare1darray(SX(:),SY(:),tol,reltol);
+[isEqualVec,reportStrList]=structcompare1darray(SX(:),SY(:),absTol,relTol);
 nReports=length(reportStrList);
 if nReports>1
     reportStrList(1:end-1)=cellfun(@(x)horzcat(x,sprintf('\n')),reportStrList(1:end-1),'UniformOutput',false);
@@ -47,11 +47,11 @@ end
 end
 
 
-function [isEqualVec,reportStrList]= structcompare1darray(SX,SY,tol,reltol)
+function [isEqualVec,reportStrList]= structcompare1darray(SX,SY,absTol,relTol)
 % STRUCTCOMPARE1D compares 1-dimentional structural arrays
 %
 nElem=numel(SX);
-[isEqualList,reportStrList]=arrayfun(@(x,y)structcomparescalar(x,y,tol,reltol),SX,SY,'UniformOutput',false);
+[isEqualList,reportStrList]=arrayfun(@(x,y)structcomparescalar(x,y,absTol,relTol),SX,SY,'UniformOutput',false);
 nReportsList=num2cell(cellfun('prodofsize',reportStrList));
 isEqualVec=[isEqualList{:}];
 isEqualList=cellfun(@(x,y)repmat(x,1,y),isEqualList,nReportsList,'UniformOutput',false);
@@ -69,7 +69,7 @@ end
 %
 end
 
-function [isEqual,reportStrList]= structcomparescalar(SX,SY,tol,reltol)
+function [isEqual,reportStrList]= structcomparescalar(SX,SY,absTol,relTol)
 % STRUCTCOMPARE1D compares the scalar structures
 
 if ~auxchecksize(SX,SY,[1 1])
@@ -93,7 +93,7 @@ end
 nFields=length(fieldXList);
 for iField=1:nFields
     fieldName=fieldXList{iField};
-    [isEqualCur,reportStrCurList]=compfun(SX.(fieldName),SY.(fieldName),tol,reltol);
+    [isEqualCur,reportStrCurList]=compfun(SX.(fieldName),SY.(fieldName),absTol,relTol);
     isEqual=isEqual&&isEqualCur;
     if ~isEqualCur
         if ~isstruct(SX.(fieldName))
@@ -105,7 +105,7 @@ for iField=1:nFields
 end
 end
 
-function [isEqual,reportStr]=compfun(x,y,tol,reltol)
+function [isEqual,reportStr]=compfun(x,y,absTol,relTol)
 % COMPFUN compares two different objects (ideally - of any type)
 reportStr='';
 isEqual=false;
@@ -118,6 +118,8 @@ if ~isequal(xClass,yClass)
 end
 %
 if isnumeric(x)
+    isRelativeEnabled = ~isempty(relTol);
+    %
     xSizeVec=size(x);
     ySizeVec=size(y);
     if ~isequal(xSizeVec,ySizeVec)
@@ -126,19 +128,45 @@ if isnumeric(x)
     end
     x=toNumericSupportingMinus(x);
     y=toNumericSupportingMinus(y);
-    maxDiff=max(abs(x(:)-y(:)));
-    maxRelDiff=2 .* abs(x(:)-y(:));
-    maxRelDiff=maxRelDiff./(abs(x(:)) + abs(y(:)));
-    maxRelDiff(isnan(maxRelDiff)) = 0;
-    maxRelDiff=max(maxRelDiff);
-    isUpperTolVec=maxDiff>tol;
-    isUpperRelTolVec=maxRelDiff>reltol;
-    if any(and(isUpperTolVec, isUpperRelTolVec))
-        if any(isUpperTolVec)
-            reportStr=sprintf('Max. difference (%d) is greater than the specified tolerance(%d).   ',maxDiff,tol);
+    %
+    curAbsDiffVec = abs(x(:)-y(:));
+    if isRelativeEnabled
+        isUpperTolVec = curAbsDiffVec > absTol;
+        isLowerTolNormVec = and(abs(x(:)) < absTol, abs(y(:)) < absTol);
+        isRelComparison = and(isUpperTolVec, ~isLowerTolNormVec);
+        isAbsComparison = ~isRelComparison;
+        %
+        if any(isRelComparison)
+            curRelDiff = 2 .* curAbsDiffVec(isRelComparison);
+            curNormVec = abs(x(isRelComparison)) + abs(y(isRelComparison));
+            curRelDiff = curRelDiff(:) ./ curNormVec(:);
+            [maxRelDiff, indMaxRelDiff] = max(curRelDiff);
+            indMaxRelDiff = ...
+                find(cumsum(isRelComparison) == indMaxRelDiff, 1, 'first');
+        else
+            maxRelDiff = [];
         end
-        if any(isUpperRelTolVec)
-            reportStr=horzcat(reportStr, sprintf('Max. relative difference (%d) is greater than the specified tolerance(%d).',maxRelDiff,reltol));
+        %
+        maxAbsDiff = max(curAbsDiffVec(isAbsComparison));
+    else
+        maxRelDiff = [];
+        maxAbsDiff = max(curAbsDiffVec);
+    end
+    isUpperAbsTol = maxAbsDiff > absTol;
+    if isRelativeEnabled
+        isUpperRelTol = maxRelDiff > relTol;
+    else
+        isUpperRelTol = [];
+    end
+    if any([isUpperAbsTol, isUpperRelTol])
+        if any(isUpperAbsTol)
+            reportStr=sprintf('Max. difference (%d) is greater than the specified tolerance(%d)', maxAbsDiff, absTol);
+        end
+        if any(isUpperRelTol)
+            if ~isempty(reportStr)
+                reportStr = horzcat(reportStr, '   ');
+            end
+            reportStr=horzcat(reportStr, sprintf('Max. relative difference (%d) is greater than the specified tolerance(%d); absolute difference: (%d), absolute tolerance: (%d)', maxRelDiff, relTol, curAbsDiffVec(indMaxRelDiff), absTol));
         end
         return;
     end
@@ -151,7 +179,7 @@ if isnumeric(x)
         end
     end
 elseif isstruct(x)
-    [isEqual,reportStr]=modgen.struct.structcompare(x,y,tol,reltol);
+    [isEqual,reportStr]=modgen.struct.structcompare(x,y,absTol,relTol);
     if ~isEqual
         return;
     end
@@ -162,7 +190,7 @@ elseif iscell(x)&&~iscellstr(x),
         return;
     end
     for iElem=1:nElems,
-        [isEqual,reportStr]=compfun(x{iElem},y{iElem},tol,reltol);
+        [isEqual,reportStr]=compfun(x{iElem},y{iElem},absTol,relTol);
         if ~isEqual,
             break;
         end
