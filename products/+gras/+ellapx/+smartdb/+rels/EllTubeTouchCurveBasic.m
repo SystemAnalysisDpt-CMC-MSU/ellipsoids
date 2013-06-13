@@ -141,6 +141,7 @@ classdef EllTubeTouchCurveBasic<handle
                         if nVals>0
                             valSizeVec=size(valList{iTuple}{1});
                             v1NormVec = vecArrNorm(valList{iTuple}{1});
+                            isv1ExcTolVec = v1NormVec > tolVec(1);
                             for iVal=2:nVals
                                 isOk=isequal(valSizeVec,...
                                     size(valList{iTuple}{iVal}));
@@ -148,26 +149,42 @@ classdef EllTubeTouchCurveBasic<handle
                                     throwError('size',fieldName);
                                 end
                                 %
+                                expTol=(tolVec(1)+tolVec(iVal));
+                                %
                                 v2NormVec = vecArrNorm(...
                                     valList{iTuple}{iVal});
+                                isRelCompVec = and(v2NormVec > ...
+                                    tolVec(iVal), isv1ExcTolVec);
                                 %
                                 actAbsTolVec = vecArrNorm(...
                                     valList{iTuple}{1} - ...
                                     valList{iTuple}{iVal});
-                                actRelTolVec = 2 .* actAbsTolVec ./ ...
-                                    (v1NormVec + v2NormVec);
-                                actRelTol = max(actRelTolVec(:));
-                                actAbsTol = max(actAbsTolVec(:));
+                                isRelCompVec = and(isRelCompVec, ...
+                                    actAbsTolVec > expTol);
                                 %
-                                expTol=(tolVec(1)+tolVec(iVal));
-                                isOk=(actRelTol<=expTol) || ...
-                                    (actAbsTol<=expTol);
+                                isRelEnabled = any(isRelCompVec);
+                                if isRelEnabled
+                                    actRelTolVec = 2 .* ...
+                                        actAbsTolVec(isRelCompVec) ./ ...
+                                        (v1NormVec(isRelCompVec) + ...
+                                        v2NormVec(isRelCompVec));
+                                end
+                                %
+                                actCompTolVec = actAbsTolVec;
+                                if isRelEnabled
+                                    actCompTolVec(isRelCompVec) = ...
+                                        actRelTolVec;
+                                end
+                                actAbsTol = max(actAbsTolVec(:));
+                                actCompTol = max(actCompTolVec(:));
+                                %
+                                isOk=actCompTol<=expTol;
                                 if ~isOk
                                     optMsg=sprintf(...
-                                        ['relative tolerance=%g,'...
+                                        ['compared tolerance=%g,'...
                                         ' absolute tolerance=%g,',...
                                         ' expected tolerance=%g'], ...
-                                        actRelTol, actAbsTol, expTol);
+                                        actCompTol, actAbsTol, expTol);
                                     throwError('value',fieldName,optMsg);
                                 end
                             end

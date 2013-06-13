@@ -161,8 +161,28 @@ classdef mlunit_test_structcompare < mlunitext.test_case
         function self = test_simplerelative_positive(self)
             S1=struct('a',1e+10,'b',2e+12);
             S2=struct('b',2e+12, 'a',1e+10 + 1e+2);
+            isEqual=modgen.struct.structcompare(S1,S2,0, 1e-5);
+            mlunitext.assert_equals(isEqual,true);
+        end
+        function self = test_relative_positive(self)
+            S1=struct('a',1e+6 - 0.5,'b',2e+6, 'c', 'aab');
+            S2=struct('a',1e+6,'b',2e+6 +1, 'c', 'aab');
             isEqual=modgen.struct.structcompare(S1,S2,0, 1e-6);
             mlunitext.assert_equals(isEqual,true);
+        end
+        function self = test_simplerelative_negative(self)
+            S1=struct('a',1e+10,'b',2e+12);
+            S2=struct('b',2e+12, 'a',1e+10 + 1e+6);
+            [isEqual,reportStr]=modgen.struct.structcompare(S1,S2,0, 1e-5);
+            mlunitext.assert_equals(isEqual,false);
+            mlunitext.assert_equals(1,numel(findstr('Max. relative difference',reportStr)));
+        end
+        function self = test_relative_negative(self)
+            S1=struct('a',1e+6 - 2,'b',2e+6, 'c', 'aab');
+            S2=struct('a',1e+6,'b',2e+6 + 4, 'c', 'aab');
+            [isEqual,reportStr]=modgen.struct.structcompare(S1,S2,0, 1e-6);
+            mlunitext.assert_equals(isEqual,false);
+            mlunitext.assert_equals(2,numel(findstr('Max. relative difference',reportStr)));
         end
     end
 end

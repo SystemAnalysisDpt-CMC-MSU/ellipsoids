@@ -60,79 +60,72 @@ function prec = elldistprec(qMat, tchVec, nCount, varargin)
 %
 %         tchVec: double[n, 1] - good dir support point vector x.
 %
-%         nCount: positive integer - count (N) of error series elements to
-%                   calculate.
+%         nCount: double[1, 1] - positive integer - count (N) of error 
+%                                series elements to calculate.
 %
 %     optional:
-%         minTol: double - minimal series element value to be calculated.
+%         minTol: double[1, 1] - minimal series element value to be 
+%                                calculated.
 %
-%         maxTol: double - maximal series sum value to be calculated.
+%         maxTol: double[1, 1] - maximal series sum value to be calculated.
 %       
 %
 % Output:
-%         prec: double - f(x, E(0, Q)) precision.
+%         prec: double[1, 1] - f(x, E(0, Q)) precision.
 %
+%
+% Example:
+%
+%         gras.la.elldistprec(eye(2), [1;1], 1)
+%
+%         gras.la.elldistprec(eye(4), [1;0;0;0], 3, 1e-6)
+%
+%         gras.la.elldistprec(eye(3), [0;1;0], 5, [], 1e-3)
 %
 %
 % $Authors: Yuri Admiralsky  <swige.ide@gmail.com> $	$Date: 2013-06-10$
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2013 $
-import modgen.common.throwerror;
+import modgen.common.checkvar;
+import modgen.common.checkmultvar;
 %
-if ~(size(qMat, 1) == size(qMat, 2)) || ~ismatrix(qMat)
-    throwerror('wrongInput:nonSquareqMat', ['qMat is expected to be ', ...
-        'square matrix']);
-end
-if (size(tchVec, 2) ~= 1) || ~isvector(tchVec)
-    throwerror('wrongInput:nonVector', ['tchVec is expected to be ', ...
-        'vector']);
-end
-if (size(tchVec, 1) ~= size(qMat, 2))
-    throwerror('wrongInput:nonConsistent', ['qMat and tchVec are not ', ...
-        'consistent']);
-end
-wrongCountErrMsg = 'nCount is expected to be positive integer';
-if ~isscalar(nCount)
-    throwerror('wrongInput:wrongCount', wrongCountErrMsg);
-end
-if (abs(nCount - round(nCount)) > 1e-10) || (nCount < 1)
-    throwerror('wrongInput:wrongCount', wrongCountErrMsg);
-end
-prec = 0;
+INTEGER_TOL = 1e-10;
+%
+checkvar(qMat, '(size(x,1)==size(x,2))&&(size(x,1)>1)&&ismatrix(x)', ...
+    'errorTag', 'wrongInput:nonSquareqMat', 'ErrorMessage', ...
+    'qMat expected to be a square matrix.');
+%
+checkvar(tchVec, '(size(x,2)==1)&&isvector(x)', 'errorTag', ...
+    'wrongInput:nonVector', 'ErrorMessage', ...
+    'tchVec is expected to be a vector.');
+checkmultvar('size(x1,2)==size(x2,1)', 2, qMat, tchVec, 'errorTag', ...
+    'wrongInput:notConsistent', 'ErrorMessage', ...
+    'qMat and tchVec are not consistent.');
+%
+checkmultvar(['isscalar(x1)&&isnumeric(x1)&&(x1>0)&&', ...
+    '(abs(round(x1)-x1)<x2)'], 2, nCount, INTEGER_TOL, 'errorTag', ...
+    'wrongInput:wrongCount', 'ErrorMessage', ...
+    'nCount is expected to be a positive integer.');
+%
 minTol = -Inf;
 maxTol = Inf;
 if nargin > 3
+    checkTol(varargin{1}, 'minTol', 0, '0');
     if ~isempty(varargin{1})
-        errMsg = ['minTol is expected to be a nonnegative scalar or ', ...
-            'empty matrix'];
-        if ~isscalar(varargin{1})
-            throwerror('wrongInput:wrongMinTol', errMsg);
-        end
-        if (varargin{1} < 0)
-            throwerror('wrongInput:wrongMinTol', errMsg);
-        end
         minTol = varargin{1};
     end
 end
 if nargin > 4
+    checkGrList = {'0', 'minTol'};
+    [maxVal, maxInd] = max([0, minTol]);
+    checkTol(varargin{2}, 'maxTol', maxVal, checkGrList{maxInd});
     if ~isempty(varargin{2})
-        errMsg = ['maxTol is expected to be a nonnegative scalar or ', ...
-            'empty matrix'];
-        if ~isscalar(varargin{2})
-            throwerror('wrongInput:wrongMinTol', errMsg);
-        end
-        if (varargin{2} < 0)
-            throwerror('wrongInput:wrongMinTol', errMsg);
-        end
-        if (varargin{2} < minTol)
-            throwerror('wrongInput:wrongMaxTol', ['maxTol is expected', ...
-                ' not to be lesser than minTol']);
-        end
         maxTol = varargin{2};
     end
 end
 %
+prec = 0;
 curVec = tchVec;
 for iSeries = 1:nCount
     invErrVec = qMat * (qMat \ curVec) - curVec;
@@ -141,6 +134,23 @@ for iSeries = 1:nCount
     curVec = invErrVec;
     if (addInvPrecision < minTol) || (prec > maxTol)
         break;
+    end
+end
+
+function checkTol(tol, tolStr, checkGreater, checkGreaterStr)
+    import modgen.common.checkvar;
+    import modgen.common.checkmultvar;
+    %
+    errTag = horzcat('wrongInput:wrong', tolStr);
+    errMsg = horzcat(tolStr, [' is expected to be a positive scalar', ...
+        ' or empty matrix.']);
+    errMsg2 = horzcat(tolStr, ' is expected to be greater than ', ...
+        checkGreaterStr, '.');
+    checkvar(tol, '(isscalar(x)&&isnumeric(x))||isempty(x)', ...
+        'ErrorTag', errTag, 'ErrorMessage', errMsg);
+    if ~isempty(tol)
+        checkmultvar('(x1>x2)', 2, tol, checkGreater, 'ErrorTag', errTag, ...
+            'ErrorMessage', errMsg2);
     end
 end
 end
