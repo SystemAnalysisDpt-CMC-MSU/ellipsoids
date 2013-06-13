@@ -1251,17 +1251,11 @@ classdef AReach < elltool.reach.IReach
             %
             % Calculate additional tubes
             %
-%             if length(self.switchSysTimeVec) > 2
-%                 throwerror('unsupportedFunctionality', ...
-%                     'refine currently cannot be applied after evolve');
-%             end
             outReachObj=self.getCopy();
-            % Let's get it started
-            
-            sysTimeVecLenght = numel(outReachObj.linSysCVec);
             %
+            sysTimeVecLenght = numel(outReachObj.linSysCVec);
             linSys = outReachObj.linSysCVec{1};
-            
+            %
             if outReachObj.isBackward
                 timeLimsVec = ...
                     [outReachObj.switchSysTimeVec(end),...
