@@ -1,28 +1,26 @@
-function [error, stacktrace] = parsemessage(error, stacktrace)
+function [errStr, StackVec] = parsemessage(errStr, StackVec)
 % PARSEERROR parses special errors to extract
 % further information for the stacktrace.
 %
 
-if (~isempty(strfind(error, 'Unbalanced or misused parentheses or brackets.')) || ...
-        ~isempty(strfind(error, 'Unbalanced or unexpected parenthesis or bracket.')))
-    [tokens] = regexp(error, 'Error:.*File:\ ([\w\ \.,$&/\\:@]*.m)\ Line: (\w*)\ Column: (\w*).*', 'tokens', 'once');
-    if (length(tokens) == 3)
-        fullname = which(char(tokens(1)));
-        if (~isempty(fullname))
-            stacktrace = sprintf('\n  In %s at line %s%s', ...
-                fullname, char(tokens(2)), ...
-                stacktrace);
-        else
-            stacktrace = sprintf('\n  In %s at line %s%s', ...
-                char(tokens(1)), char(tokens(2)), ...
-                stacktrace);
-        end;
-        error = 'Unbalanced or misused parentheses or brackets.';
-    end;
+if (~isempty(strfind(errStr,...
+        'Unbalanced or misused parentheses or brackets.')) || ...
+        ~isempty(strfind(errStr,...
+        'Unbalanced or unexpected parenthesis or bracket.')))
+    [tokens] = regexp(errStr,...
+        'Error:.*opentoline\(''(.*)'',\d+,\d+\).*File:\ ([\w\ \.,$&/\\:@]*.m)\ Line: (\w*)\ Column: (\w*).*',...
+        'tokens','once');
+    fullFileName=tokens{1};
+    shortFileName=tokens{2};
+    lineNumber=tokens{3};
+    errStr = 'Unbalanced or misused parentheses or brackets.';
+    StackEntry=struct('file',fullFileName,'name',shortFileName,...
+        'line',str2double(lineNumber));
+    StackVec=[StackEntry;StackVec];
 else
-    [tokens] = regexp(error, 'Error using ==> <a href.*>(.*)</a>\n(.*)', 'tokens', 'once');
+    [tokens] = regexp(errStr,...
+        'Error using ==> <a href.*>(.*)</a>\n(.*)', 'tokens', 'once');
     if (length(tokens) == 2)
-        error = char(tokens(2));
-    end;
-end;
+        errStr = char(tokens(2));
+    end
 end

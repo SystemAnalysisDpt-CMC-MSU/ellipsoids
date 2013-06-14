@@ -5,7 +5,7 @@ function varargout=isMemberTuples(self,other,keyFieldNameList)
 % Usage: isTuple=isMemberTuples(self,otherRel,keyFieldNameList) or
 %        [isTuple indTuples]=isMemberTuples(self,otherRel,keyFieldNameList)
 %
-% input:
+% Input:
 %   regular:
 %     self: ARelation [1,1] - class object
 %     other: ARelation [1,1] - other class object
@@ -13,7 +13,7 @@ function varargout=isMemberTuples(self,other,keyFieldNameList)
 %     keyFieldNameList: char or char cell [1,nKeyFields] - list of fields
 %         to which ismember is applied; by default all fields of first
 %         (self) object are used
-% output:
+% Output:
 %   regular:
 %     isTuple: logical [nTuples,1] - determines for each tuple of first
 %         (self) object whether combination of values for key fields is in

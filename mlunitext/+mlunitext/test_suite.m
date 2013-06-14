@@ -106,8 +106,8 @@ classdef test_suite<handle
             %
             % Input:
             %   optional:
-            %     tests: object[,1] - test_case objects. When omitted, an
-            %       empty suite is constructed
+            %     tests: cell[1,] of object[,1] - test_case objects. 
+            %       When omitted, an empty suite is constructed
             %
             %   properties:
             %     nParallelProcesses: double[1,1] - the number of parallel
@@ -227,7 +227,8 @@ classdef test_suite<handle
                 % $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
                 % Faculty of Computational Mathematics and Cybernetics, System Analysis
                 % Department, 7-October-2012, <pgagarinov@gmail.com>$
-                
+                %
+                import modgen.common.throwerror;
                 [reg,prop]=modgen.common.parseparams(varargin);
                 nReg = length(reg);
                 nProp=length(prop);
