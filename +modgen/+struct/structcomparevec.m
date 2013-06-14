@@ -130,33 +130,29 @@ if isnumeric(x)
     y=toNumericSupportingMinus(y);
     %
     curAbsDiffVec = abs(x(:)-y(:));
-    if isRelativeEnabled
-        isUpperTolVec = curAbsDiffVec > absTol;
-        isLowerTolNormVec = and(abs(x(:)) < absTol, abs(y(:)) < absTol);
-        isRelComparison = and(isUpperTolVec, ~isLowerTolNormVec);
-        isAbsComparison = ~isRelComparison;
+    maxAbsDiff = max(curAbsDiffVec);
+    isUpperAbsTol = any(maxAbsDiff > absTol);
+    %
+    maxRelDiff = [];
+    isUpperRelTol = [];
+    %
+    if all([isUpperAbsTol, isRelativeEnabled])
+        curNormVec = abs(x(:)) + abs(y(:));
+        isRelComparison = and(curAbsDiffVec > absTol, ...
+            curNormVec > absTol);
         %
         if any(isRelComparison)
-            curRelDiff = 2 .* curAbsDiffVec(isRelComparison);
-            curNormVec = abs(x(isRelComparison)) + abs(y(isRelComparison));
-            curRelDiff = curRelDiff(:) ./ curNormVec(:);
+            curRelDiff = 2 .* curAbsDiffVec(isRelComparison) ./ ...
+                curNormVec(isRelComparison);
             [maxRelDiff, indMaxRelDiff] = max(curRelDiff);
             indMaxRelDiff = ...
                 find(cumsum(isRelComparison) == indMaxRelDiff, 1, 'first');
-        else
-            maxRelDiff = [];
+            %
+            maxAbsDiff = max(curAbsDiffVec(~isRelComparison));
+            %
+            isUpperAbsTol = maxAbsDiff > absTol;
+            isUpperRelTol = maxRelDiff > relTol;
         end
-        %
-        maxAbsDiff = max(curAbsDiffVec(isAbsComparison));
-    else
-        maxRelDiff = [];
-        maxAbsDiff = max(curAbsDiffVec);
-    end
-    isUpperAbsTol = maxAbsDiff > absTol;
-    if isRelativeEnabled
-        isUpperRelTol = maxRelDiff > relTol;
-    else
-        isUpperRelTol = [];
     end
     if any([isUpperAbsTol, isUpperRelTol])
         if any(isUpperAbsTol)
