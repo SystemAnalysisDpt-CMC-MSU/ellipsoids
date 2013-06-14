@@ -20,7 +20,6 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
         minQMatEig
         %
         goodDirSetObj
-        absTol
     end
     methods (Access=protected)
         function S=getOrthTranslMatrix(self,Q_star,R_sqrt,b,a)
@@ -116,15 +115,13 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             %
             piNumerator=slCQClSqrtDynamics.evaluate(t);
             piDenominator=realsqrt(sum((QIntMat*ltVec).*ltVec));
-            if (piNumerator<=0)||(piDenominator<=0)
-                if ~ismatposdef(D,self.absTol)
-                    throwerror('wrongInput',...
-                        ['degenerate matrices C,Q for disturbance ',...
-                        'contraints are not supported']);
-                else
-                    throwerror('wrongInput',...
-                        'the estimate has degraded, reason unknown');
-                end
+            if piNumerator<=self.absTol
+                throwerror('wrongInput',...
+                    ['degenerate matrices C,Q for disturbance ',...
+                    'contraints are not supported']);
+            elseif piDenominator<=self.absTol
+                throwerror('wrongInput',...
+                    'the estimate has degraded, reason unknown');
             end
             %
             tmp=(A*Q_star+R_sqrt*transpose(S))*transpose(Q_star);

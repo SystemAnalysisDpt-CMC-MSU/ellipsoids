@@ -31,6 +31,7 @@ function [obj,isThereVec]=getTuplesFilteredBy(self,filterFieldName,filterValueVe
 %   a minor bug fix related to error message format
 %
 %
+import modgen.common.throwerror;
 [~,prop]=modgen.common.parseparams(varargin,{'keepNulls'},0);
 if ~isempty(prop)
     isNullsKept=prop{2};
@@ -41,11 +42,11 @@ end
 self.isFieldsCheck(filterFieldName)
 %
 if ~modgen.common.isvec(filterValueVec)
-    error([upper(mfilename),':wrongInput'],...
+    throwerror('wrongInput',...
         'filterValueVec is expected to be a vector');
 end
 if ~(isnumeric(filterValueVec)||iscellstr(filterValueVec)||ischar(filterValueVec))
-    error([upper(mfilename),':wrongInput'],...
+    throwerror('wrongInput',...
         'filterValueVec is expected to be a numeric or cellOfChar vector');
 end
 %
@@ -54,7 +55,7 @@ if self.getNTuples()>0
     if ~(isnumeric(filterValueVec)&&isnumeric(fieldValueVec)||...
             iscellstr(fieldValueVec)&&...
             (iscellstr(filterValueVec)||ischar(filterValueVec)))
-        error([upper(mfilename),':wrongInput'],...
+        throwerror('wrongInput',...
             'field type is inconsistent with type of filterValueVec');
     end
     isNullVec=self.getFieldIsValueNull(filterFieldName);

@@ -254,11 +254,16 @@ while ~isDone
             % Failed step
             nfailed = nfailed + 1;
             if absh <= hmin
-                warning(message('MATLAB:ode45:IntegrationTolNotMet', ...
-                    sprintf( '%e', t ), sprintf( '%e', hmin )));
-                shrinkResults();
-                prDispObj.finish();
-                return;
+                msg=message('MATLAB:ode45:IntegrationTolNotMet', ...
+                    sprintf( '%e', t ), sprintf( '%e', hmin ));
+                if isRejectedStep
+                    error(msg);
+                else
+                    warning(msg);
+                    shrinkResults();
+                    prDispObj.finish();
+                    return;
+                end
             end
             %
             if isNeverFailed

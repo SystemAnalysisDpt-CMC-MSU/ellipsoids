@@ -31,6 +31,7 @@ classdef LinSysContinuous < elltool.linsys.ALinSys
             %
             %       btInpMat: double[nDim, kDim]/cell[nDim, kDim] - matrix B.
             %
+            %   optional:
             %       uBoundsEll: ellipsoid[1, 1]/struct[1, 1] - control bounds 
             %             ellipsoid.
             %

@@ -13,6 +13,7 @@ classdef ContinuousReachTestCase < mlunitext.test_case
         x0Ell
         l0Mat
         expDim
+        reachFactoryObj
     end
     methods (Access=private, Static)
         function verticesCVec =...
@@ -174,6 +175,7 @@ classdef ContinuousReachTestCase < mlunitext.test_case
         end
         %
         function self = set_up_param(self, reachFactObj)
+            self.reachFactoryObj=reachFactObj;
             self.reachObj = reachFactObj.createInstance();
             self.linSys = reachFactObj.getLinSys();
             self.expDim = reachFactObj.getDim();
@@ -256,51 +258,61 @@ classdef ContinuousReachTestCase < mlunitext.test_case
         end
         %
         function self = testCut(self)
-            import gras.ellapx.enums.EApproxType;
             %
             cutReachObj = self.reachObj.cut(self.tVec(end));
             cutReachObj.dimension();
             cutReachObj = self.reachObj.cut(self.tVec(1));
             cutReachObj.dimension();
+            %
             checkCut([sum(self.tVec)/2, self.tVec(2)]);
             % TODO: please investigate why this check fails:
-            %checkCut([self.tVec(1), self.tVec(end)]);
-            checkCut([self.tVec(1), (self.tVec(1) + self.tVec(end))/2]);
+            checkCut([self.tVec(1), self.tVec(end)]);
+            checkCut([self.tVec(1), (self.tVec(1) + self.tVec(end))/2]);            
             %
             function checkCut(newTimeVec)
-                import gras.ellapx.enums.EApproxType;
-                cutReachObj = self.reachObj.cut([min(newTimeVec),...
-                    max(newTimeVec)]);
-                [iaEllMat timeVec] = cutReachObj.get_ia();
-                eaEllMat = cutReachObj.get_ea();
-                nTuples = size(iaEllMat, 1);
-                if self.reachObj.isbackward()
-                    timeDif = timeVec(end) - newTimeVec(1);
-                else
-                    timeDif = timeVec(1) - newTimeVec(1);
-                end
-                for iTuple = 1 : nTuples
-                    directionsCVec = cutReachObj.get_directions();
+                import gras.ellapx.enums.EApproxType;    
+                import gras.ellapx.smartdb.F;
+                %
+                NOT_COMPARED_FIELD_CODE_LIST=...
+                    {'LT_GOOD_DIR_MAT','LS_GOOD_DIR_VEC',...
+                        'LT_GOOD_DIR_NORM_VEC','LS_GOOD_DIR_NORM'};
+                notComparedFieldList=...
+                    F().getNameList(NOT_COMPARED_FIELD_CODE_LIST);
+                %
+                newTimeVec = [sum(self.tVec)/2, self.tVec(2)];
+                cutReachObj = self.reachObj.cut(newTimeVec);
+                check('get_ea',[false, true]);
+                check('get_ia',[true, false]);
+                %
+                function check(fGetApx,isIntExtApxVec)
+                    [apxEllMat,timeVec] = feval(fGetApx,cutReachObj);
+                    nTuples = size(apxEllMat, 1);
                     if self.reachObj.isbackward()
-                        x0IaEll = iaEllMat(iTuple, end);
-                        x0EaEll = eaEllMat(iTuple, end);
-                        l0Mat = directionsCVec{iTuple}(:, end);
+                        timeDif = timeVec(end) - newTimeVec(1);
                     else
-                        x0IaEll = iaEllMat(iTuple, 1);
-                        x0EaEll = eaEllMat(iTuple, 1);
-                        l0Mat = directionsCVec{iTuple}(:, 1);
+                        timeDif = timeVec(1) - newTimeVec(1);
                     end
-                    l0Mat = l0Mat ./ norm(l0Mat);
-                    newIaReachObj = feval(class(self.reachObj), ...
-                        self.linSys, x0IaEll, l0Mat, newTimeVec + timeDif);
-                    newEaReachObj = feval(class(self.reachObj), ...
-                        self.linSys, x0EaEll, l0Mat, newTimeVec + timeDif);
-                    isIaEqual = cutReachObj.isEqual(newIaReachObj,...
-                        iTuple, EApproxType.Internal);
-                    isEaEqual = cutReachObj.isEqual(newEaReachObj,...
-                        iTuple, EApproxType.External);
-                    mlunitext.assert_equals(true, isIaEqual);
-                    mlunitext.assert_equals(true, isEaEqual);
+                    for iTuple = 1 : nTuples
+                        directionsCVec = cutReachObj.get_directions();
+                        if self.reachObj.isbackward()
+                            x0ApxEll = apxEllMat(iTuple, end);
+                            l0Vec = directionsCVec{iTuple}(:, end);
+                        else
+                            x0ApxEll = apxEllMat(iTuple, 1);
+                            l0Vec = directionsCVec{iTuple}(:, 1);
+                        end
+                        l0Vec = l0Vec ./ norm(l0Vec);
+                        newApxReachObj = feval(class(self.reachObj), ...
+                            self.linSys, x0ApxEll, l0Vec, newTimeVec + timeDif);
+                        [isApxEqual, repStr] = cutReachObj.getCopy(...
+                            'isIntExtApxVec',isIntExtApxVec,...
+                            'l0Mat',l0Vec).isEqual(...
+                            newApxReachObj.getCopy(...
+                            'isIntExtApxVec',isIntExtApxVec),...
+                            'notComparedFieldList',notComparedFieldList);
+                        %
+                        mlunitext.assert_equals(true, isApxEqual,repStr);
+                    end
                 end
             end
         end
@@ -330,6 +342,64 @@ classdef ContinuousReachTestCase < mlunitext.test_case
             copiedReachObj = self.reachObj.getCopy();
             isEqual = copiedReachObj.isEqual(self.reachObj);
             mlunitext.assert_equals(true, isEqual);
+        end
+        %
+        %
+        function self = testGetCopyAdvanced(self)
+            initL0Mat=self.l0Mat;
+            nDims=size(initL0Mat,1);
+            nOrigDirs=size(initL0Mat,2);
+            expL0Mat=[initL0Mat, initL0Mat-1, initL0Mat+1];
+            expL0Mat=expL0Mat./...
+                repmat(realsqrt(dot(expL0Mat,expL0Mat,1)),nDims,1);
+            %
+            reachObj=self.reachFactoryObj.createInstance('l0Mat',expL0Mat);
+            checkApxFilter(reachObj,[true,false]);
+            checkApxFilter(reachObj,[false,true]);
+            %
+            nOrigTuples=reachObj.getEllTubeRel().getNTuples();
+            copyReachObj=reachObj.getCopy('isIntExtApxVec',[true,false]);
+            nCopiedTuples=copyReachObj.getEllTubeRel().getNTuples();
+            mlunitext.assert(nCopiedTuples==0.5*nOrigTuples);
+            %
+            [~,~,l0Mat]=reachObj.get_directions();
+            %
+            mlunitext.assert_equals(true, getIsEqual(expL0Mat,l0Mat));
+            indSubDirVec=[1,nOrigDirs+1,2*nOrigDirs+1];
+            l0SubMat=expL0Mat(:,indSubDirVec);
+            %
+            copiedReachObj = reachObj.getCopy('l0Mat',l0SubMat);
+            expReachObj=self.reachFactoryObj.createInstance('l0Mat',l0SubMat);
+            %
+            [isEqual,reportStr] = copiedReachObj.isEqual(expReachObj);
+            mlunitext.assert_equals(true, isEqual,reportStr);
+            %
+            copyIntReachObj=...
+                expReachObj.getCopy('l0Mat',l0SubMat,...
+                'isIntExtApxVec',[true,false]);
+            copyExtReachObj=...
+                expReachObj.getCopy('l0Mat',l0SubMat,...
+                'isIntExtApxVec',[false,true]);
+            %
+            allTubeRel=copyIntReachObj.getEllTubeRel();
+            allTubeRel.unionWith(copyExtReachObj.getEllTubeRel());
+            [isEqual,reportStr]=allTubeRel.isEqual(...
+                expReachObj.getEllTubeRel());
+            mlunitext.assert(isEqual,reportStr);
+            %
+            function checkApxFilter(reachObj,isIntExptApxVec)
+                nOrigTuples=reachObj.getEllTubeRel().getNTuples();
+                copyReachObj=reachObj.getCopy('isIntExtApxVec',...
+                    isIntExptApxVec);
+                nCopiedTuples=copyReachObj.getEllTubeRel().getNTuples();
+                mlunitext.assert(nCopiedTuples==0.5*nOrigTuples);
+            end
+            %
+            function isPos=getIsEqual(leftDirMat,rightDirMat)
+                CMP_TOL=1e-15;
+                diffMat=sortrows(leftDirMat.')-sortrows(rightDirMat.');
+                isPos=max(abs(diffMat(:)))<=CMP_TOL;
+            end
         end
         %
         function self = testSortedTimeVec(self)

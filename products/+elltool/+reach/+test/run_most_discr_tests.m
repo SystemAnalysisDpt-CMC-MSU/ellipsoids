@@ -1,4 +1,4 @@
-function results = run_discrete_reach_tests(varargin)
+function results = run_most_discr_tests(varargin)
 import elltool.reach.ReachFactory;
 %
 runner = mlunitext.text_test_runner(1, 1);
@@ -71,8 +71,4 @@ suiteList{end + 1} = loader.load_tests_from_test_case(...
 testLists = cellfun(@(x)x.tests,suiteList,'UniformOutput',false);
 suite = mlunitext.test_suite(horzcat(testLists{:}));
 %
-resList{1} = runner.run(suite);
-testCaseNameStr = 'elltool.reach.test.mlunit.DiscreteReachProjAdvTestCase';
-resList{2} = elltool.reach.test.run_reach_proj_adv_tests(testCaseNameStr);
-results = [resList{:}];
-end
+results = runner.run(suite);

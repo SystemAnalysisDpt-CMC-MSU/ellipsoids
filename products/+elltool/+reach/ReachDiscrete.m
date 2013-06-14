@@ -266,8 +266,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 errorStr = '';
                 errorTag = '';
                 %
-                if strcmp(meObj.identifier,...
-                        'MODGEN:COMMON:CHECKMULTVAR:wrongInput')
+                if isMatch('MODGEN:COMMON:CHECKMULTVAR:wrongInput')
                     errorStr = [self.EMSG_APPROX_SHAPE_MAT_CALC_PROB, ...
                         self.EMSG_BAD_TIME_VEC, self.EMSG_BAD_CONTROL, ...
                         self.EMSG_BAD_DIST, self.EMSG_BAD_INIT_SET];
@@ -275,13 +274,16 @@ classdef ReachDiscrete < elltool.reach.AReach
                         self.ETAG_SH_MAT_CALC_FAILURE];
                 end
                 if isempty(errorStr)
-                    throw(meObj);
+                    rethrow(meObj);
                 else
                     friendlyMeObj = throwerror(errorTag, errorStr);
                     friendlyMeObj = addCause(friendlyMeObj, meObj);
                     throw(friendlyMeObj);
                 end
             end
+            function isPos=isMatch(patternStr)
+                isPos=~isempty(strfind(meObj.identifier,patternStr));
+            end            
         end
     end
     %
@@ -345,9 +347,11 @@ classdef ReachDiscrete < elltool.reach.AReach
             k1 = round(timeVec(2));
             timeVec = [k0 k1];
             %
-            [varargin, ~, self.isMinMax] =...
+            [varargin, ~, isMinMax] =...
                 modgen.common.parseparext(varargin, {'isMinMax'; false});
-            self.parse(linSys, x0Ell, l0Mat, timeVec, varargin);
+            self=self@elltool.reach.AReach(linSys, x0Ell, l0Mat,...
+                timeVec,varargin{:});
+            self.isMinMax=isMinMax;
             %
             % create gras LinSys object
             %

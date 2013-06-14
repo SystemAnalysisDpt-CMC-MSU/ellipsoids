@@ -7,12 +7,21 @@ classdef ExtEllApxBuilder<gras.ellapx.lreachplain.ATightEllApxBuilder
         slBPBlSqrtDynamicsList
     end
     methods (Access=protected)
-        function resMat=calcEllApxMatrixDeriv(~,ADynamics,BPBTransDynamics,...
+        function resMat=calcEllApxMatrixDeriv(self,ADynamics,BPBTransDynamics,...
                 slBPBlSqrtDynamics,ltSpline,t,QMat)
+            import modgen.common.throwerror;
             AMat=ADynamics.evaluate(t);
             piNumerator=slBPBlSqrtDynamics.evaluate(t);
             ltVec=ltSpline.evaluate(t);
             piDenominator=realsqrt(sum((QMat*ltVec).*ltVec));
+            if piNumerator<=self.absTol
+                throwerror('wrongInput:degenerateControlBounds',...
+                    ['degenerate matrices B,P for constraints ',...
+                    'contraints are not supported']);
+            elseif piDenominator<=self.absTol
+                throwerror('wrongInput:estimateDegraded',...
+                    'the estimate has degraded, reason unknown');
+            end          
             tmpMat=AMat*QMat;
             resMat=tmpMat+tmpMat.'+(piNumerator./piDenominator).*QMat+...
                 (piDenominator./piNumerator).*BPBTransDynamics.evaluate(t);

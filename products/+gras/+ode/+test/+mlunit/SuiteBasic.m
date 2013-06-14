@@ -49,25 +49,16 @@ classdef SuiteBasic < mlunitext.test_case
             %
             function [isStrict,y]=fRegPos(y)
                 isStrict=y(1,:)<0;
-                %y(1,:)=max(y(1,:),0);
                 if any(isStrict)
                     y=nan(size(y));
                 end
             end
-%             function yp=fOdeDerivSimple(t,y,fReg)
-%                 isStrict=fReg(y);
-%                 if isStrict
-%                     throwerror('wrongState','strict constraint is violated');
-%                 end
-%                 yp=cos(t).*[1;1;1;1];
-%             end
             function yp=fOdeDerivCpl(t,y,fReg)
-                import modgen.common.throwerror;                
+                import modgen.common.throwerror;
                 isStrict=fReg(y);
                 if isStrict
                     throwerror('wrongState','strict constraint is violated');
                 end
-                %yp=sin(y+1)*cos(t)*cos(2.5*(t));
                 yp=-1./y;
             end
         end
@@ -75,7 +66,7 @@ classdef SuiteBasic < mlunitext.test_case
             import modgen.common.throwerror;
             import gras.ode.ode45reg;
             import gras.ode.ode113reg;
- 
+            %
             tStart=0;
             tEnd=0.65;
             aTol=0.00001;
@@ -114,15 +105,15 @@ classdef SuiteBasic < mlunitext.test_case
                     isStrict=false;
                 end
                 function yp=fOdeDerivSimple(t,y,fReg)
-                    import modgen.common.throwerror;                    
+                    import modgen.common.throwerror;
                     isStrict=fReg(y);
                     if isStrict
                         throwerror('wrongState','strict constraint is violated');
                     end
                     yp=cos(t).*[1;1;1;1];
-                end                
+                end
                 function yp=fOdeDerivCpl(t,y,fReg)
-                    import modgen.common.throwerror;                    
+                    import modgen.common.throwerror;
                     isStrict=fReg(y);
                     if isStrict
                         throwerror('wrongState','strict constraint is violated');
@@ -141,27 +132,22 @@ classdef SuiteBasic < mlunitext.test_case
                     checkInt(tsSpanVec,'Refine',1);
                     %
                     function tUniqVec=checkInt(tsVec,varargin)
-                        global ttVec;
-                        global yyMat;
                         odePropList=[odePropList,varargin{:}];
                         %
                         [~,yNotRegMat]=ode113(fOdeDeriv,tsVec,initVec,...
                             odeset(odePropList{:}));
                         %
                         fReg=@(y)fOdeRegPos(y,1);
-                        if length(tsVec)>2
-                            fff = 1;
-                        end
-                         [ttVec,yyMat]=ode45(fOdeDeriv,tsVec,initVec,...
+                        [ttVec,yyMat]=ode45(fOdeDeriv,tsVec,initVec,...
                             odeset(odePropList{:},'nonNegative',1));
                         [tVec,yMat,dyRegMat]=...
                             feval(self.odeSolver, @(t,y)fOdeDerivReg(t,y,fReg),...
                             @(t,y)fReg(y),...
                             tsVec,initVec,odeset(odePropList{:}),...
                             odeRegPropList{:});
-                       
+                        
                         mlunitext.assert_equals(true,all(yMat(:,1)>=0));
-          
+                        
                         tPosVec=tVec;
                         ttPosVec=ttVec;
                         isCheckReg=any(yNotRegMat(:,1)<0);
@@ -192,10 +178,6 @@ classdef SuiteBasic < mlunitext.test_case
                             if length(tsVec)>2
                                 actualTol=max(abs(yMat(:)-yyMat(:)));
                                 isOk=actualTol<=maxTol;
-%                                 if ~isOk
-%                                     keyboard;
-%                                 end
-                    
                                 mlunitext.assert_equals(true,isOk);
                                 mlunitext.assert_equals(true,isequal(tVec,ttVec));
                             end
@@ -204,13 +186,11 @@ classdef SuiteBasic < mlunitext.test_case
                 end
             end
             function [isStrictViolVec,yRegMat]=fOdeRegNeg(yMat,indNonPositive)
-                %isStrictViolVec=false(1,size(yMat,2));
-                isStrictViolVec=any(yMat(indNonPositive,:)>0.01,1);                
+                isStrictViolVec=any(yMat(indNonPositive,:)>0.01,1);
                 yRegMat=yMat;
                 yRegMat(indNonPositive,:)=min(yRegMat(indNonPositive,:),0);
             end
             function [isStrictViolVec,yRegMat]=fOdeRegPos(yMat,indNonNegative)
-                %isStrictViolVec=false(1,size(yMat,2));
                 isStrictViolVec=any(yMat(indNonNegative,:)<-0.01,1);
                 yRegMat=yMat;
                 yRegMat(indNonNegative,:)=max(yRegMat(indNonNegative,:),0);
@@ -294,17 +274,12 @@ classdef SuiteBasic < mlunitext.test_case
                     yRegRestoredVec=muVec+yNotRegVec;
                     yRegVec=yRegMat(:,1);
                     isOk=max(abs(yRegRestoredVec-yRegVec))<=1.2*absTol;
-                    %plot(tNotRegVec,yRegRestoredVec,'g');hold on;plot(tRegVec,yRegVec,'r')
                     mlunitext.assert_equals(true,isOk);
-                    %
-                    %plot(tNotRegVec,yRegRestoredVec,'g');hold on;plot(tRegVec,yRegVec,'r')
                 end
             end
             
         end
         function self=testMatrixSysODESolver(self)
-        
- 
             odePropList={'NormControl','on','RelTol',0.001,'AbsTol',0.0001};
             sizeVecList={[3 3],[2 2],[2 4 1],[2 1]};
             nTimePoints=100;
@@ -315,14 +290,14 @@ classdef SuiteBasic < mlunitext.test_case
             indFuncEqNoDyn=1;
             fSolver=str2func(self.odeSolver);
             check({@fSimpleDerivFunc,@fAdvRegFunc},'outArgStartIndVec',[1 2]);
-            fSolver=str2func(self.odeSolverNonReg);            
+            fSolver=str2func(self.odeSolverNonReg);
             check(@fSimpleDerivFunc);
             %
             function resList=check(fDerivFuncList,varargin)
                 import gras.ode.test.mlunit.SuiteBasic;
                 solveObj=gras.ode.MatrixSysODESolver(sizeVecList,...
                     @(varargin)fSolver(varargin{:},odeset(odePropList{:})),...
-                varargin{:});
+                    varargin{:});
                 resList=cell(1,length(sizeVecList)*...
                     length(fDerivFuncList));
                 %
@@ -356,7 +331,6 @@ classdef SuiteBasic < mlunitext.test_case
                     varargout{iEq+1}=max(varargin{iEq},0);
                 end
             end
-
             %
             function varargout=fSimpleDerivFunc(t,varargin)
                 nEqs=length(varargin);
@@ -371,7 +345,7 @@ classdef SuiteBasic < mlunitext.test_case
         end
         %
         function self=testMatrixODESolver(self)
-    
+            
             odePropList = {@ode45, 'NormControl', 'on', 'RelTol', ...
                 0.001, 'AbsTol', 0.0001};
             %

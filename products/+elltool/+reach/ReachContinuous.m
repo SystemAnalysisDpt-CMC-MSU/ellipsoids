@@ -11,11 +11,9 @@ classdef ReachContinuous < elltool.reach.AReach
     %             Faculty of Computational Mathematics
     %             and Computer Science,
     %             System Analysis Department 2013$
-    properties (Constant, GetAccess = ?elltool.reach.AReach)
+    properties (Constant)
         DISPLAY_PARAMETER_STRINGS = {'continuous-time', 'k0 = ', 'k1 = '}
         LINSYS_CLASS_STRING = 'elltool.linsys.LinSysContinuous'
-        
-        
     end
     %
     properties (Constant, GetAccess = private)
@@ -174,34 +172,39 @@ classdef ReachContinuous < elltool.reach.AReach
                 errorStr = '';
                 errorTag = '';
                 %
-                if strcmp(meObj.identifier,...
-                        'GRAS:ODE:ODE45REG:wrongState')
+                if isMatch('GRAS:ODE:ODE45REG:wrongState')
                     errorStr = [self.EMSG_R_PROB, self.EMSG_LOW_REG_TOL];
                     errorTag = [self.ETAG_WR_INP, self.ETAG_R_PROB,...
                         self.ETAG_LOW_REG_TOL, self.ETAG_ODE_45_REG_TOL];
-                elseif strcmp(meObj.identifier,...
-                        ['GRAS:ELLAPX:LREACHUNCERT:EXTINTELLAPXBUILDER',...
-                        ':EXTINTELLAPXBUILDER:wrongInput'])
+                elseif isMatch('EXTINTELLAPXBUILDER:wrongInput')
                     errorStr = [self.EMSG_INIT_SET_PROB, ...
                         self.EMSG_SMALL_INIT_SET];
                     errorTag = [self.ETAG_WR_INP, self.ETAG_BAD_INIT_SET];
-                elseif strcmp(meObj.identifier,...
-                        ['GRAS:ELLAPX:LREACHUNCERT:EXTINTELLAPXBUILDER',...
-                        ':CALCELLAPXMATRIXDERIV:wrongInput']) ||...
-                    strcmp(meObj.identifier,...
-                        ['GRAS:ELLAPX:SMARTDB:RELS:ELLTUBEBASIC:',...
+                elseif isMatch(['EXTINTELLAPXBUILDER:',...
+                        'CALCELLAPXMATRIXDERIV:wrongInput'])||...
+                        isMatch(['SMARTDB:RELS:ELLTUBEBASIC:',...
                         'CHECKDATACONSISTENCY:wrongInput:QArrayNotPos'])
                     errorStr = [self.EMSG_R_PROB, self.EMSG_USE_REG];
                     errorTag = [self.ETAG_WR_INP, self.ETAG_R_PROB, ...
                         self.ETAG_R_DISABLED];
+                elseif isMatch(['EXTELLAPXBUILDER:CALCELLAPXMATRIXDERIV:',...
+                        'wrongInput:degenerateControlBounds'])
+                    errorStr=[...
+                        'Degenerate control bounds are not supported. ',...
+                        self.EMSG_USE_REG];
+                    errorTag = [self.ETAG_WR_INP, self.ETAG_R_PROB, ...
+                        self.ETAG_R_DISABLED,':degenerateControlBounds'];
                 end
                 if isempty(errorStr)
-                    throw(meObj);
+                    rethrow(meObj);
                 else
                     friendlyMeObj = throwerror(errorTag, errorStr);
                     friendlyMeObj = addCause(friendlyMeObj, meObj);
                     throw(friendlyMeObj);
                 end
+            end
+            function isPos=isMatch(patternStr)
+                isPos=~isempty(strfind(meObj.identifier,patternStr));
             end
         end
     end
@@ -257,7 +260,7 @@ classdef ReachContinuous < elltool.reach.AReach
     end
     methods
         function self =...
-                ReachContinuous(linSys, x0Ell, l0Mat, timeVec, varargin)
+                ReachContinuous(varargin)
             % ReachContinuous - computes reach set approximation of the continuous
             %     linear system for the given time interval.
             % Input:
@@ -285,11 +288,11 @@ classdef ReachContinuous < elltool.reach.AReach
             % Example:
             %   aMat = [0 1; 0 0]; bMat = eye(2);
             %   SUBounds = struct();
-            %   SUBounds.center = {'sin(t)'; 'cos(t)'};  
+            %   SUBounds.center = {'sin(t)'; 'cos(t)'};
             %   SUBounds.shape = [9 0; 0 2];
-            %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds); 
-            %   x0EllObj = ell_unitball(2);  
-            %   timeVec = [0 10];  
+            %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+            %   x0EllObj = ell_unitball(2);
+            %   timeVec = [0 10];
             %   dirsMat = [1 0; 0 1]';
             %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
             %
@@ -307,36 +310,33 @@ classdef ReachContinuous < elltool.reach.AReach
             import gras.ellapx.enums.EApproxType;
             import elltool.logging.Log4jConfigurator;
             import elltool.conf.Properties;
-
             %
-            if (nargin == 0) || isempty(linSys)
-                return;
-            end
-            %
-            self.parse(linSys, x0Ell, l0Mat, timeVec, varargin);
-            %
-            % create gras LinSys object
-            %
-            [x0Vec, x0Mat] = double(x0Ell);
-            [atStrCMat, btStrCMat, gtStrCMat, ptStrCMat, ptStrCVec,...
-                qtStrCMat, qtStrCVec] =...
-                self.prepareSysParam(linSys, timeVec);
-            isDisturbance = self.isDisturbance(gtStrCMat, qtStrCMat);
-            %
-            % Normalize good directions
-
-            %
-            sysDim = size(atStrCMat, 1);
-            l0Mat = self.getNormMat(l0Mat, sysDim);
-            %
-            probDynObj = self.getProbDynamics(atStrCMat, btStrCMat,...
-                ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat, qtStrCVec,...
-                x0Mat, x0Vec, timeVec, self.relTol, isDisturbance);
-            approxTypeVec = [EApproxType.External, EApproxType.Internal];
-            self.ellTubeRel = self.makeEllTubeRel(probDynObj, l0Mat,...
-                timeVec, isDisturbance, self.relTol, approxTypeVec);
-            if self.isBackward
-                self.ellTubeRel = self.rotateEllTubeRel(self.ellTubeRel);
+            self=self@elltool.reach.AReach(varargin{:});
+            if nargin>0
+                [linSys, x0Ell, l0Mat, timeVec]=deal(varargin{1:4});
+                %
+                % create gras LinSys object
+                %
+                [x0Vec, x0Mat] = double(x0Ell);
+                [atStrCMat, btStrCMat, gtStrCMat, ptStrCMat, ptStrCVec,...
+                    qtStrCMat, qtStrCVec] =...
+                    self.prepareSysParam(linSys, timeVec);
+                isDisturbance = self.isDisturbance(gtStrCMat, qtStrCMat);
+                %
+                % Normalize good directions
+                %
+                sysDim = size(atStrCMat, 1);
+                l0Mat = self.getNormMat(l0Mat, sysDim);
+                %
+                probDynObj = self.getProbDynamics(atStrCMat, btStrCMat,...
+                    ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat, qtStrCVec,...
+                    x0Mat, x0Vec, timeVec, self.relTol, isDisturbance);
+                approxTypeVec = [EApproxType.External, EApproxType.Internal];
+                self.ellTubeRel = self.makeEllTubeRel(probDynObj, l0Mat,...
+                    timeVec, isDisturbance, self.relTol, approxTypeVec);
+                if self.isBackward
+                    self.ellTubeRel = self.rotateEllTubeRel(self.ellTubeRel);
+                end
             end
         end
     end

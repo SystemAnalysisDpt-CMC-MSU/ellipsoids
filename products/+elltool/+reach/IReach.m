@@ -259,6 +259,7 @@ classdef IReach < handle
         %       grid.
         %       
         %    timeVec: double[1, nPoints] - array of time values.
+        %    l0Mat: double[nDirs,nDims] - matrix of good directions at t0
         %
         % Example:
         %   aMat = [0 1; 0 0]; bMat = eye(2);

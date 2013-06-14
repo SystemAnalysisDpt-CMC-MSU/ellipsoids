@@ -1,4 +1,4 @@
-classdef F
+classdef F<smartdb.gen.AFieldDefs
     %Standard fields
     properties (Constant)
         DIM='dim'
@@ -147,57 +147,5 @@ classdef F
         SCALE_FACTOR='scaleFactor';
         SCALE_FACTOR_D='Tube scale factor';
         SCALE_FACTOR_T={'double'};
-    end
-    methods (Static)
-        function nameList=getNameList(idList)
-            import gras.ellapx.smartdb.F;
-            nameList=cell(size(idList));
-            for iDescr=1:length(idList)
-                nameList{iDescr}=F.(idList{iDescr});
-            end
-        end
-        function descrList=getDescrList(idList)
-            import gras.ellapx.smartdb.F;
-            descrList=cell(size(idList));
-            for iDescr=1:length(descrList)
-                descrList{iDescr}=F.([idList{iDescr},'_D']);
-            end
-        end
-        function typeSpecList=getTypeSpecList(idList)
-            import gras.ellapx.smartdb.F;
-            typeSpecList=cell(size(idList));
-            for iType=1:length(typeSpecList)
-                typeSpecList{iType}=F.([idList{iType},'_T']);
-            end
-        end
-        function [nameList,descrList,typeSpecList]=getDefs(idList,...
-                addNameCMat,isAddedToEnd)
-            import gras.ellapx.smartdb.F;
-            import modgen.common.type.simple.lib.*;
-            import modgen.common.type.simple.checkgen;
-            %
-            if nargin<3
-                isAddedToEnd=true;
-                if nargin<2
-                    addNameCMat=cell(3,0);
-                end
-            end
-            nameList=F.getNameList(idList);
-            descrList=F.getDescrList(idList);
-            typeSpecList=F.getTypeSpecList(idList);
-            %
-            checkgen(addNameCMat,@(x)size(x,1)==3);
-            checkgen(addNameCMat(1:2,:),@(x)iscellofstring(x));
-            checkgen(addNameCMat(3,:),@(x)all(cellfun(@iscellofstring,x)));
-            if isAddedToEnd
-                nameList=[nameList,addNameCMat(1,:)];
-                descrList=[descrList,addNameCMat(2,:)];
-                typeSpecList=[typeSpecList,addNameCMat(3,:)];
-            else
-                nameList=[addNameCMat(1,:),nameList];
-                descrList=[addNameCMat(2,:),descrList];
-                typeSpecList=[addNameCMat(3,:),typeSpecList];
-            end
-        end
     end
 end

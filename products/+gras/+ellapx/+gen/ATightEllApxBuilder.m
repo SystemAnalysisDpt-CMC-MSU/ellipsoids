@@ -10,6 +10,7 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.IEllApxBuilder
     end
     properties (SetAccess=private,GetAccess=protected)
         calcPrecision
+        absTol
     end
     properties (Constant,GetAccess=private)
         MAX_PRECISION_FACTOR=0.003;
@@ -70,6 +71,7 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.IEllApxBuilder
             self.odeAbsCalcPrecision=calcPrecision*precisionFactor;
             self.odeRelCalcPrecision=calcPrecision*precisionFactor;               
             self.calcPrecision=calcPrecision;
+            self.absTol=calcPrecision;
             %% check that there is no disturbance
             self.pDefObj=pDefObj;   
             self.goodDirSetObj=goodDirSetObj;

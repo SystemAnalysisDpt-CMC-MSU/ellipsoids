@@ -24,7 +24,6 @@ classdef LinSysFactory
             %
             % Input:
             %   regular:
-            %   regular:
             %       atInpMat: double[nDim, nDim]/cell[nDim, nDim] - matrix A.
             %
             %       btInpMat: double[nDim, kDim]/cell[nDim, kDim] - matrix B.

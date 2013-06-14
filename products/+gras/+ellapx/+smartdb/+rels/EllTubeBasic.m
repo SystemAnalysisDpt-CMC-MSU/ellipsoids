@@ -10,18 +10,18 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
     methods (Access = protected)
         function fieldsList = getNoCatOrCutFieldsList(~)
             fieldsList={'APPROX_SCHEMA_DESCR';'DIM';...
-            'APPROX_SCHEMA_NAME';'APPROX_TYPE';'CALC_PRECISION';...
-            'IND_S_TIME';'LS_GOOD_DIR_NORM';'LS_GOOD_DIR_VEC';'S_TIME';...
-            'SCALE_FACTOR';'XS_TOUCH_OP_VEC';'XS_TOUCH_VEC'};
+                'APPROX_SCHEMA_NAME';'APPROX_TYPE';'CALC_PRECISION';...
+                'IND_S_TIME';'LS_GOOD_DIR_NORM';'LS_GOOD_DIR_VEC';'S_TIME';...
+                'SCALE_FACTOR';'XS_TOUCH_OP_VEC';'XS_TOUCH_VEC'};
         end
         function fieldsList = getSFieldsList(~)
             fieldsList = {'LS_GOOD_DIR_VEC';'LS_GOOD_DIR_NORM';...
-            'XS_TOUCH_VEC';'XS_TOUCH_OP_VEC'};
+                'XS_TOUCH_VEC';'XS_TOUCH_OP_VEC'};
         end
         function fieldsList = getTFieldsList(~)
             fieldsList = {'LT_GOOD_DIR_MAT';...
-            'LT_GOOD_DIR_NORM_VEC';'X_TOUCH_CURVE_MAT';...
-            'X_TOUCH_OP_CURVE_MAT'};
+                'LT_GOOD_DIR_NORM_VEC';'X_TOUCH_CURVE_MAT';...
+                'X_TOUCH_OP_CURVE_MAT'};
         end
         function fieldsList = getScalarFieldsList(~)
             fieldsList = {'LS_GOOD_DIR_NORM'};
@@ -87,7 +87,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 MArrayList,timeVec,ltGoodDirArray,sTime,approxType,...
                 approxSchemaName,approxSchemaDescr,calcPrecision,scaleFactorVec)
             %
-            % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $        $Date: 2011 $ 
+            % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $        $Date: 2011 $
             % $Copyright: Moscow State University,
             %            Faculty of Computational Mathematics and Computer Science,
             %            System Analysis Department 2011 $
@@ -214,7 +214,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 end
             end
         end
-        function checkIntWithinExt(self,intRel,extRel)
+        function checkIntWithinExt(~,intRel,extRel)
             [~,~,~,indIntForwardVec,indIntBackwardVec]=...
                 intRel.getUniqueData('fieldNameList',{'aMat'});
             [~,~,~,indExtForwardVec,indExtBackwardVec]=...
@@ -386,7 +386,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     size(xTouchCurveMat,2)==nPoints&&...
                     size(xTouchOpCurveMat,2)==nPoints&&...
                     size(timeVec,1)==1&&...
-                    ndims(timeVec)==2&&size(MArray,1)==nDims&&...
+                    ismatrix(timeVec)&&size(MArray,1)==nDims&&...
                     size(MArray,2)==nDims&&size(QArray,2)==nDims&&...
                     size(ltGoodDirMat,1)==nDims&&...
                     size(xTouchCurveMat,1)==nDims&&...
@@ -417,7 +417,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             SData = struct;
             import gras.ellapx.smartdb.F;
             if (~isempty(newTimeVec))
-                fieldList=F.getNameList(...
+                fieldList=F().getNameList(...
                     {'Q_ARRAY','A_MAT','SCALE_FACTOR',...
                     'M_ARRAY','DIM','S_TIME','APPROX_SCHEMA_NAME',...
                     'APPROX_SCHEMA_DESCR','APPROX_TYPE','TIME_VEC',...
@@ -471,7 +471,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 aMat = {centSpline.evaluate(newTimeVec)};
                 indSTime = ...
                     find(newTimeVec == timeVec(indSTime));
-                timeVec = {newTimeVec};                
+                timeVec = {newTimeVec};
                 [xTouchCurveMat, xTouchOpCurveMat] =...
                     self.calcTouchCurves(QArray{1}, aMat{1}, ...
                     ltGoodDirMat{1});
@@ -488,19 +488,19 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
     methods
         function [ellTubeProjRel,indProj2OrigVec]=project(self,projType,...
                 projMatList,fGetProjMat)
-            % PROJECT - computes projection of the relation object onto given time 
+            % PROJECT - computes projection of the relation object onto given time
             %           dependent subspase
-            %           
-            % 
+            %
+            %
             % Input:
             %  regular:
             %    self.
             %    projType - type of the projection.
             %        Takes the following values: 'Static'
             %                                    'DynamicAlongGoodCurve'
-            %    projMatList:double[nDim, nSpDim] - matrices' array of the orthoganal  
+            %    projMatList:double[nDim, nSpDim] - matrices' array of the orthoganal
             %             basis vectors
-            %    fGetProjMat - function which creates vector of the projection 
+            %    fGetProjMat - function which creates vector of the projection
             %             matrices
             %        Input:
             %         regular:
@@ -510,26 +510,26 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             %         optional:
             %            sTime:double[1,1] - instant of time
             %        Output:
-            %           projOrthMatArray:double[1, nSpDim] - vector of the projection 
+            %           projOrthMatArray:double[1, nSpDim] - vector of the projection
             %             matrices
             %           projOrthMatTransArray:double[nSpDim, 1] - transposed vector of
             %             the projection matrices
             % Output:
             %    ellTubeProjRel:smartdb.relation.StaticRelation[1, 1]/
             %        smartdb.relation.DynamicRelation[1, 1]- projected relation
-            %    indProj2OrigVec:cell[nDim, 1] - index of the line number from 
+            %    indProj2OrigVec:cell[nDim, 1] - index of the line number from
             %             which is obtained the projection
             %
             % Example:
             %   function example
-            %    aMat = [0 1; 0 0]; bMat = eye(2);  
+            %    aMat = [0 1; 0 0]; bMat = eye(2);
             %    SUBounds = struct();
-            %    SUBounds.center = {'sin(t)'; 'cos(t)'};  
-            %    SUBounds.shape = [9 0; 0 2]; 
+            %    SUBounds.center = {'sin(t)'; 'cos(t)'};
+            %    SUBounds.shape = [9 0; 0 2];
             %    sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
             %    x0EllObj = ell_unitball(2);
-            %    timeVec = [0 10]; 
-            %    dirsMat = [1 0; 0 1]';  
+            %    timeVec = [0 10];
+            %    dirsMat = [1 0; 0 1]';
             %    rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
             %    ellTubeObj = rsObj.getEllTubeRel();
             %    unionEllTube = ...
@@ -541,7 +541,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             %    plObj=smartdb.disp.RelationDataPlotter();
             %    statEllTubeProj.plot(plObj);
             % end
-            % 
+            %
             % function [projOrthMatArray,projOrthMatTransArray]=fGetProjMat(projMat,...
             %     timeVec,varargin)
             %   nTimePoints=length(timeVec);
@@ -713,17 +713,17 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             indProj2OrigVec=vertcat(indProj2OrigCMat{:});
         end
         function [apprEllMat timeVec] = getEllArray(self, approxType)
-           % GETELLARRAY - returns array of matrix's ellipsoid according to
-           %               approxType
-           %
-           % Input:
-           %  regular:
-           %     self.
-           %     approxType:char[1,] - type of approximation(internal/external)
-           %
-           % Output:
-           %   apprEllMat:double[nDim1,..., nDimN] - array of array of ellipsoid's 
-           %            matrices
+            % GETELLARRAY - returns array of matrix's ellipsoid according to
+            %               approxType
+            %
+            % Input:
+            %  regular:
+            %     self.
+            %     approxType:char[1,] - type of approximation(internal/external)
+            %
+            % Output:
+            %   apprEllMat:double[nDim1,..., nDimN] - array of array of ellipsoid's
+            %            matrices
             import gras.ellapx.enums.EApproxType;
             import gras.ellapx.smartdb.F;
             APPROX_TYPE = F.APPROX_TYPE;
@@ -775,7 +775,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 throwerror('wrongInput',...
                     'time vector should not be empty');
             end
-            if (ndims(timeVec)~=2 || size(timeVec, 1)~=1)
+            if (~ismatrix(timeVec) || size(timeVec, 1)~=1)
                 throwerror('wrongInput',...
                     'timeVec must be an array');
             end
@@ -817,7 +817,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 throwerror('indVec should be double or logical');
             end
             SThinFunResult.timeVec=cellfun(...
-                @(field)field(find(isNeededIndVec)), SData.timeVec,...
+                @(field)field(isNeededIndVec), SData.timeVec,...
                 'UniformOutput', false);
             %
             if (isNeededIndVec(SData.indSTime))
@@ -830,15 +830,15 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 SThinFunResult.indSTime(:) = 1;
             end
             fieldsNotToCatVec =...
-                F.getNameList(self.getNoCatOrCutFieldsList());
+                F().getNameList(self.getNoCatOrCutFieldsList());
             fieldsToCutVec =...
                 setdiff(fieldnames(SData), fieldsNotToCatVec);
             cellfun(@(field) cutStructField(field), fieldsToCutVec);
             cellfun(@cutStructSTimeField,...
-                F.getNameList(self.getSFieldsList()),...
-                F.getNameList(self.getTFieldsList()));
+                F().getNameList(self.getSFieldsList()),...
+                F().getNameList(self.getTFieldsList()));
             cellfun(@(field)fMakeCell(field), ...
-                 F.getNameList(self.getScalarFieldsList()));
+                F().getNameList(self.getScalarFieldsList()));
             %
             thinnedEllTubeRel = self.createInstance(SThinFunResult);
             %
@@ -873,7 +873,48 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
         end
     end
     methods(Sealed)
-        function [isEqual, reportStr] = isEqual(self, ellTubeObj, varargin)
+        function [isPos, reportStr] = isEqual(self, ellTubeObj, varargin)
+            % ISEQUAL - compares current relation object with other relation object and 
+            %           returns true if they are equal, otherwise it returns false
+            % 
+            %
+            % Usage: isEq=isEqual(self,otherObj)
+            %
+            % Input:
+            %   regular:
+            %     self: ARelation [1,1] - current relation object
+            %     otherObj: ARelation [1,1] - other relation object
+            %
+            %   properties:
+            %     checkFieldOrder/isFieldOrderCheck: logical [1,1] - if true, then fields 
+            %         in compared relations must be in the same order, otherwise the 
+            %         order is not  important (false by default)        
+            %     checkTupleOrder: logical[1,1] -  if true, then the tuples in the 
+            %         compared relations are expected to be in the same order,
+            %         otherwise the order is not important (false by default)
+            %         
+            %     maxTolerance: double [1,1] - maximum allowed tolerance            
+            %
+            %     compareMetaDataBackwardRef: logical[1,1] if true, the CubeStruct's
+            %         referenced from the meta data objects are also compared            
+            %
+            %     notComparedFieldList: cell[1,nFields] of char[1,] - list
+            %        of fields that are not compared
+            %     
+            %     areTimeBoundsCompared: logical[1,1] - if false,
+            %       ellipsoidal tubes are compared on intersection of
+            %       definition domains
+            %
+            % Output:
+            %   isEq: logical[1,1] - result of comparison
+            %   reportStr: char[1,] - report of comparsion
+            %
+            %
+            % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2013-06-13 $ 
+            % $Copyright: Moscow State University,
+            %            Faculty of Computational Mathematics and Computer Science,
+            %            System Analysis Department 2012 $
+            %
             import gras.ellapx.smartdb.F;
             import gras.ellapx.enums.EApproxType;
             import elltool.logging.Log4jConfigurator;
@@ -887,199 +928,172 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     'tubes must be of the same type');
             end
             persistent logger;
-            if (nargout == 2)
-                reportStr = [];
-            end
-            [reg, ~, notComparedFieldList, areTimeBoundsCompared] = ...
+            reportStr = '';
+            [reg, ~,...
+                maxCompareTol,notComparedFieldList,areTimeBoundsCompared,...
+                isTupleOrderChecked,isMaxCompareTolSpec] = ...
                 modgen.common.parseparext(...
                 varargin,{...
-                'notComparedFieldList','areTimeBoundsCompared';...
-                {},false;...
-                'iscell(x)','isscalar(x)'});
+                'maxTolerance','notComparedFieldList',...
+                'areTimeBoundsCompared','checkTupleOrder';...
+                [],{},false,true;...
+                'isscalar(x)&&isnumeric(x)&&x>0','iscellofstring(x)',...
+                'isscalar(x)&&islogical(x)','isscalar(x)&&islogical(x)'});
+            if ~isMaxCompareTolSpec
+                maxCompareTol=max(self.calcPrecision)+...
+                    max(ellTubeObj.calcPrecision);
+            end
             %
-            APPROX_TYPE = F.APPROX_TYPE;
-            SSORT_KEYS=F.getNameList({...
+            SSORT_KEYS=F().getNameList({...
                 'S_TIME','LS_GOOD_DIR_VEC','APPROX_TYPE'});
-            FIELDS_NOT_TO_COMPARE=union({...
-                'LT_GOOD_DIR_MAT';'LT_GOOD_DIR_NORM_VEC';...
-                'LS_GOOD_DIR_NORM';'LS_GOOD_DIR_VEC';'IND_S_TIME';...
-                'S_TIME';'TIME_VEC'}, notComparedFieldList);
+            MUST_FIELD_CODES_NOT_TO_COMPARE={'IND_S_TIME','TIME_VEC'};
+            notComparedFieldList=[notComparedFieldList,...
+                F().getNameList(MUST_FIELD_CODES_NOT_TO_COMPARE)];
             %
-            absTol = max(self.calcPrecision) +...
-                max(ellTubeObj.calcPrecision);
+            %TODO: the following line is temporary solution until we
+            %replace calcPrecision with absTol and relTol
+            absTol = maxCompareTol;
             %
             ellTube = self;
             compEllTube = ellTubeObj;
             ellTube.sortBy(SSORT_KEYS);
             compEllTube.sortBy(SSORT_KEYS);
             %
-            if length(reg) == 2
-                ellTube = ellTube.getTuplesFilteredBy(APPROX_TYPE,...
-                    reg{2});    
-                ellTube = ellTube.getTuples(reg{1});
-                compEllTube = compEllTube.getTuplesFilteredBy(...
-                    APPROX_TYPE, reg{2});
-            end
-            %
-            if (length(ellTube.timeVec) == 0 && ...
-                    length(compEllTube.timeVec) == 0)
-                isEqual = 1;
+            isFirstEmpty=ellTube.getNTuples()==0;
+            isSecondEmpty=compEllTube.getNTuples()==0;
+            if isFirstEmpty&&isSecondEmpty
+                isPos = true;
                 reportStr = 'Comparing empty elltubes';
-                return;
-            elseif (length(ellTube.timeVec) == 0 ||...
-                    length(compEllTube.timeVec) == 0)
-                isEqual = 0;
+            elseif isFirstEmpty||isSecondEmpty
+                isPos = false;
                 reportStr = 'Comparing empty elltube with nonempty';
-                return; 
-            end
-            pointsNum = numel(ellTube.timeVec{1});
-            newPointsNum = numel(compEllTube.timeVec{1});
-            firstTimeVec = ellTube.timeVec{1};
-            secondTimeVec = compEllTube.timeVec{1};
-            %
-            if isempty(logger)
-                logger=Log4jConfigurator.getLogger();
-            end
-            %
-            if logger.isDebugEnabled
-                if pointsNum ~= newPointsNum
-                    logger.debug('Inequal time knots count');
-                else
-                    logger.debug('Equal time knots count');
+            else
+                isPos=true;
+                pointsNum = numel(ellTube.timeVec{1});
+                newPointsNum = numel(compEllTube.timeVec{1});
+                firstTimeVec = ellTube.timeVec{1};
+                secondTimeVec = compEllTube.timeVec{1};
+                %
+                if isempty(logger)
+                    logger=Log4jConfigurator.getLogger();
                 end
-            end
-            %
-            % Checking time bounds equality
-            %
-            areEndTimesDifferent = ...
-                abs(firstTimeVec(end)-secondTimeVec(end)) > absTol;
-            areBeginTimesDifferent = ...
-                abs(firstTimeVec(1)-secondTimeVec(1)) > absTol;
-            if (areTimeBoundsCompared)
-                if (areBeginTimesDifferent)
-                    isEqual = false;
-                    if (nargout == 2)
+                %
+                if logger.isDebugEnabled
+                    if pointsNum ~= newPointsNum
+                        logger.debug('Inequal time knots count');
+                    else
+                        logger.debug('Equal time knots count');
+                    end
+                end
+                %
+                % Checking time bounds equality
+                %
+                areEndTimesDifferent = ...
+                    abs(firstTimeVec(end)-secondTimeVec(end)) > absTol;
+                areBeginTimesDifferent = ...
+                    abs(firstTimeVec(1)-secondTimeVec(1)) > absTol;
+                if areTimeBoundsCompared
+                    if areBeginTimesDifferent
+                        isPos = false;
                         reportStr=[reportStr, ...
                             sprintf('Ending times differ by %f. ',...
                             abs(firstTimeVec(end)-secondTimeVec(end)))];
-                    end
-                    return;
-                end
-                if (areEndTimesDifferent)
-                    isEqual = false;
-                    if (nargout == 2)
+                    elseif areEndTimesDifferent
+                        isPos = false;
                         reportStr=[reportStr, ...
                             sprintf('Beginning times differ by %f. ',...
                             abs(firstTimeVec(1)-secondTimeVec(1)))];
                     end
-                    return;
+                end
+                if isPos
+                    % Checking enclosion of time vectors
+                    areFirstTimesInsideSecond = ...
+                        (firstTimeVec(end)<=secondTimeVec(end)) &&...
+                        (firstTimeVec(1)>=secondTimeVec(1));
+                    areSecondTimesInsideFirst = ...
+                        (secondTimeVec(end)<=firstTimeVec(end)) &&...
+                        (secondTimeVec(1)>=firstTimeVec(1));
+                    if (length(firstTimeVec) < length(secondTimeVec) &&...
+                            areFirstTimesInsideSecond)
+                        [isTimeVecsEnclosed, secondIndexVec] = ...
+                            fIsGridSubsetOfGrid(secondTimeVec, firstTimeVec);
+                    else
+                        [isTimeVecsEnclosed, firstIndexVec] = ...
+                            fIsGridSubsetOfGrid(firstTimeVec, secondTimeVec);
+                    end
+                    %
+                    fieldsToCompList=setdiff(ellTube.getFieldNameList,...
+                        notComparedFieldList);
+                    %
+                    if isTimeVecsEnclosed
+                        reportStr = [reportStr,...
+                            'Enclosed time vectors. Common times checked. '];
+                        if numel(firstTimeVec) < numel(secondTimeVec)
+                            compEllTube = ...
+                                compEllTube.thinOutTuples(secondIndexVec);
+                        elseif (length(firstTimeVec) > length(secondTimeVec))
+                            ellTube = ellTube.thinOutTuples(firstIndexVec);
+                        end
+                        [isPos, eqReportStr] = compEllTube.getFieldProjection(...
+                            fieldsToCompList).isEqual(...
+                            ellTube.getFieldProjection(fieldsToCompList),...
+                            'maxTolerance', maxCompareTol,...
+                            'checkTupleOrder','true',reg{:});
+                        reportStr = [reportStr, eqReportStr];
+                    else
+                        %
+                        % Time vectors are not enclosed,
+                        %
+                        % So interpolating from common time knots
+                        %
+                        reportStr = [reportStr, 'Interpolated from common ',...
+                            'time points. '];
+                        unionTimeVec = union(firstTimeVec, secondTimeVec);
+                        if areTimeBoundsCompared || (~areEndTimesDifferent &&...
+                                ~areBeginTimesDifferent)
+                            ellTube = ellTube.interp(unionTimeVec);
+                            compEllTube = compEllTube.interp(unionTimeVec);
+                        elseif areFirstTimesInsideSecond
+                            compEllTube = compEllTube.interp(unionTimeVec);
+                            [~, indexVec] = ...
+                                fIsGridSubsetOfGrid(secondTimeVec, firstTimeVec);
+                            compEllTube = compEllTube.thinOutTuples(indexVec);
+                        elseif areSecondTimesInsideFirst
+                            ellTube = ellTube.interp(unionTimeVec);
+                            [~, indexVec] = ...
+                                fIsGridSubsetOfGrid(firstTimeVec, secondTimeVec);
+                            ellTube = ellTube.thinOutTuples(indexVec);
+                        end
+                        if areFirstTimesInsideSecond||areSecondTimesInsideFirst
+                            [isPos, eqReportStr] = compEllTube.getFieldProjection(...
+                                fieldsToCompList).isEqual(...
+                                ellTube.getFieldProjection(fieldsToCompList),...
+                                'maxTolerance', maxCompareTol,...
+                                'checkTupleOrder',isTupleOrderChecked,...
+                                reg{:});
+                        else
+                            isPos = false;
+                            eqReportStr = 'Cannot interpolate: shifted bounds. ';
+                        end
+                        reportStr = [reportStr, eqReportStr];
+                    end
                 end
             end
             %
-            % Checking enclosion of time vectors
-            %
-            areFirstTimesInsideSecond = ...
-                (firstTimeVec(end)<=secondTimeVec(end)) &&...
-                (firstTimeVec(1)>=secondTimeVec(1));
-            areSecondTimesInsideFirst = ...
-                (secondTimeVec(end)<=firstTimeVec(end)) &&...
-                (secondTimeVec(1)>=firstTimeVec(1));
-            if (length(firstTimeVec) < length(secondTimeVec) &&...
-                    areFirstTimesInsideSecond)
-                [isTimeVecsEnclosed, secondIndexVec] = ...
-                    fIsGridSubsetOfGrid(secondTimeVec, firstTimeVec);
-            else
-                [isTimeVecsEnclosed, firstIndexVec] = ...
-                    fIsGridSubsetOfGrid(firstTimeVec, secondTimeVec);
-            end
-            %
-            fieldsNotToCompVec =...
-                F.getNameList(FIELDS_NOT_TO_COMPARE);
-            fieldsToCompVec =...
-                setdiff(ellTube.getFieldNameList, fieldsNotToCompVec);
-            %
-            if (isTimeVecsEnclosed)
-                if (nargout == 2)
-                    reportStr = [reportStr,...
-                        'Enclosed time vectors. Common times checked. '];
-                end
-                if (length(firstTimeVec) < length(secondTimeVec))
-                    compEllTube = ...
-                        compEllTube.thinOutTuples(secondIndexVec);
-                elseif (length(firstTimeVec) > length(secondTimeVec))
-                    ellTube = ellTube.thinOutTuples(firstIndexVec);
-                end
-                [isEqual, eqReportStr] = compEllTube.getFieldProjection(...
-                    fieldsToCompVec).isEqual(...
-                    ellTube.getFieldProjection(fieldsToCompVec),...
-                    'maxTolerance', absTol,...
-                    'checkTupleOrder','true');
-                if (nargout == 2)
-                    reportStr = [reportStr, eqReportStr];
-                end
-                return;
-            end
-            %
-            % Time vectors are not enclosed,
-            % 
-            % So interpolating from common time knots
-            %
-            if (nargout == 2)
-                reportStr = [reportStr, 'Interpolated from common ',...
-                    'time points. '];
-            end
-            unionTimeVec = union(firstTimeVec, secondTimeVec);
-            if (areTimeBoundsCompared || (~areEndTimesDifferent &&...
-                    ~areBeginTimesDifferent)) 
-                ellTube = ellTube.interp(unionTimeVec);
-                compEllTube = compEllTube.interp(unionTimeVec);
-            elseif (areFirstTimesInsideSecond)
-                compEllTube = compEllTube.interp(unionTimeVec);
-                [~, indexVec] = ...
-                    fIsGridSubsetOfGrid(secondTimeVec, firstTimeVec);
-                compEllTube = compEllTube.thinOutTuples(indexVec);
-            elseif (areSecondTimesInsideFirst)
-                ellTube = ellTube.interp(unionTimeVec);
-                [~, indexVec] = ...
-                    fIsGridSubsetOfGrid(firstTimeVec, secondTimeVec);
-                ellTube = ellTube.thinOutTuples(indexVec);                
-            end    
-            if (areFirstTimesInsideSecond || areSecondTimesInsideFirst)
-                [isEqual, eqReportStr] = compEllTube.getFieldProjection(...
-                        fieldsToCompVec).isEqual(...
-                        ellTube.getFieldProjection(fieldsToCompVec),...
-                        'maxTolerance', absTol,...
-                        'checkTupleOrder','true');
-            else
-                isEqual = 0;
-                eqReportStr = 'Cannot interpolate: shifted bounds. ';
-            end
-            if (nargout == 2)
-                reportStr = [reportStr, eqReportStr];
-            end
-            %
-            function [isSubset, indexVec] = ...
+            function [isSubset, indThereVec] = ...
                     fIsGridSubsetOfGrid(greaterVec, smallerVec)
-                indexVec = [];
                 if (length(greaterVec) < length(smallerVec))
                     isSubset = false;
-                    return;
-                end
-                greaterIndex = 1;
-                smallerIndex = 1;
-                while (smallerIndex <= length(smallerVec) &&...
-                        greaterIndex <= length(greaterVec))
-                    if (abs(smallerVec(smallerIndex)-...
-                            greaterVec(greaterIndex))<absTol)
-                        smallerIndex = smallerIndex + 1;
-                        indexVec = [indexVec, greaterIndex];
-                    end
-                    greaterIndex = greaterIndex + 1;
-                end
-                if (smallerIndex > length(smallerVec))
-                    isSubset = true;
                 else
-                    isSubset = false;
+                    [smallerMat,greaterMat]=ndgrid(smallerVec,greaterVec);
+                    isCloseMat=abs(smallerMat-greaterMat)<=absTol;
+                    isSubset=all(any(isCloseMat,2));
+                    nFirstElems=numel(smallerVec);
+                    indThereVec=zeros(1,nFirstElems);
+                    for iElem=1:nFirstElems
+                        indThereVec(iElem)=find(isCloseMat(iElem,:),1,...
+                            'first');
+                    end
                 end
             end
             %
