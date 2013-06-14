@@ -140,16 +140,19 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
         function [cMat,cOpMat]=getGoodCurveColor(self,varargin)
             [cMat,cOpMat]=self.getGoodDirColor(varargin{:});
         end        
-        function hVec=plotCreateGoodDirFunc(self,hAxes,projType,timeVec,...
-                lsGoodDirOrigVec,ltGoodDirMat,sTime,xTouchCurveMat,...
-                xTouchOpCurveMat,ltGoodDirNormVec,ltGoodDirNormOrigVec,...
-                varargin)
+        function hVec = plotCreateGoodDirFunc(self, plotPropProcObj,...
+                hAxes, varargin)
+            
+            [~, timeVec, lsGoodDirOrigVec, ltGoodDirMat, sTime,...
+                ~, ~, ~, ltGoodDirNormOrigVec] = deal(varargin{1:9});
+            
             import gras.ellapx.enums.EProjType;
-            [cMat,cOpMat]=self.getGoodDirColor(hAxes,projType,timeVec,...
-                lsGoodDirOrigVec,ltGoodDirMat,sTime,xTouchCurveMat,...
-                xTouchOpCurveMat,ltGoodDirNormVec,ltGoodDirNormOrigVec,...
-                varargin{:});
-            %
+            import gras.ellapx.smartdb.PlotPropProcessor;
+            
+            [cMat, cOpMat]=self.getGoodDirColor(hAxes, varargin{:});
+            
+            lineWidth = plotPropProcObj.getLineWidth(varargin(:));
+            
             hVec(2)=dispDirCurve(ltGoodDirMat,lsGoodDirOrigVec,cMat);
             %
             hVec(1)=dispDirCurve(-ltGoodDirMat,-lsGoodDirOrigVec,cOpMat);
@@ -161,25 +164,29 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
                 plotName=['Good directions curve: ',goodDirStr];
                 vMat=ltGoodDirMat./repmat(ltGoodDirNormOrigVec,2,1);
                 hVec=plot3adv(timeVec.',vMat(1,:).',vMat(2,:).',cMat,...
-                    'lineWidth',2,'Parent',hAxes,'DisplayName',plotName);
+                    'lineWidth', lineWidth,'Parent',hAxes,'DisplayName',plotName);
             end
         end
-        function hVec=plotCreateTubeTouchCurveFunc(self,hAxes,projType,...
-                    timeVec,lsGoodDirOrigVec,ltGoodDirMat,sTime,...
-                    xTouchCurveMat,xTouchOpCurveMat,ltGoodDirNormVec,...
-                    ltGoodDirNormOrigVec,varargin)
-            [cMat,cOpMat]=self.getGoodCurveColor(hAxes,projType,timeVec,...
-                lsGoodDirOrigVec,ltGoodDirMat,sTime,xTouchCurveMat,...
-                xTouchOpCurveMat,ltGoodDirNormVec,ltGoodDirNormOrigVec,...
-                varargin{:});
-            hVec(2)=dispTouchCurve(xTouchCurveMat,lsGoodDirOrigVec,cMat);
-            hVec(1)=dispTouchCurve(xTouchOpCurveMat,-lsGoodDirOrigVec,cOpMat);
+        function hVec=plotCreateTubeTouchCurveFunc(self,...
+                    hAxes, plotPropProcessorObj, varargin)   
+                
+            [~, timeVec, lsGoodDirOrigVec, ~, sTime, xTouchCurveMat,...
+                xTouchOpCurveMat, ~, ~] = deal(varargin{1:9});
+            
+            import gras.ellapx.smartdb.PlotPropProcessor;
+            [cMat,cOpMat] = self.getGoodCurveColor(hAxes, varargin{:});
+            
+            lineWidth = plotPropProcessorObj.getLineWidth(varargin(:));
+            
+            hVec(2)=dispTouchCurve(xTouchCurveMat, lsGoodDirOrigVec,cMat);
+            hVec(1)=dispTouchCurve(xTouchOpCurveMat, -lsGoodDirOrigVec,cOpMat);
+            
             %
             function hVec=dispTouchCurve(xTouchCurveMat,lsGoodDirOrigVec,cMat)
                 import modgen.graphics.plot3adv;
                 plotName=['Good curve: ',...
                     self.goodDirProp2Str(lsGoodDirOrigVec,sTime)];
-                propList={'lineWidth',2,...
+                propList={'lineWidth', lineWidth,...
                     'Parent',hAxes,'DisplayName',plotName};
                 hVec=plot3adv(timeVec.',xTouchCurveMat(1,:).',...
                     xTouchCurveMat(2,:).',cMat,propList{:});

@@ -421,6 +421,8 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
             end
         end
         function isNeededIndVec = getLogicalInd(indVec, timeVec)
+            import modgen.common.throwerror
+            %
             nPoints = numel(timeVec);
             if isa(indVec, 'double')
                 if min(indVec) < 1 || max(indVec) > nPoints
