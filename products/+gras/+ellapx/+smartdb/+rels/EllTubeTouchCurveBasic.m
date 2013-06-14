@@ -141,7 +141,6 @@ classdef EllTubeTouchCurveBasic<handle
                         if nVals>0
                             valSizeVec=size(valList{iTuple}{1});
                             v1NormVec = vecArrNorm(valList{iTuple}{1});
-                            isv1ExcTolVec = v1NormVec > tolVec(1);
                             for iVal=2:nVals
                                 isOk=isequal(valSizeVec,...
                                     size(valList{iTuple}{iVal}));
@@ -151,32 +150,24 @@ classdef EllTubeTouchCurveBasic<handle
                                 %
                                 expTol=(tolVec(1)+tolVec(iVal));
                                 %
-                                v2NormVec = vecArrNorm(...
-                                    valList{iTuple}{iVal});
-                                isRelCompVec = and(v2NormVec > ...
-                                    tolVec(iVal), isv1ExcTolVec);
-                                %
-                                actAbsTolVec = vecArrNorm(...
+                                actTolVec = vecArrNorm(...
                                     valList{iTuple}{1} - ...
                                     valList{iTuple}{iVal});
-                                isRelCompVec = and(isRelCompVec, ...
-                                    actAbsTolVec > expTol);
-                                %
-                                isRelEnabled = any(isRelCompVec);
-                                if isRelEnabled
-                                    actRelTolVec = 2 .* ...
-                                        actAbsTolVec(isRelCompVec) ./ ...
-                                        (v1NormVec(isRelCompVec) + ...
-                                        v2NormVec(isRelCompVec));
+                                actAbsTol = max(actTolVec(:));
+                                actCompTol = actAbsTol;
+                                if (actAbsTol > expTol)
+                                    sumNormVec = vecArrNorm(...
+                                        valList{iTuple}{iVal}) + v1NormVec;
+                                    isRelCompVec = and(sumNormVec > ...
+                                        expTol, actTolVec > expTol);
+                                    %
+                                    if any(isRelCompVec)
+                                        actTolVec(isRelCompVec) = 2 .* ...
+                                            actTolVec(isRelCompVec) ./ ...
+                                            sumNormVec(isRelCompVec);
+                                        actCompTol = max(actTolVec(:));
+                                    end
                                 end
-                                %
-                                actCompTolVec = actAbsTolVec;
-                                if isRelEnabled
-                                    actCompTolVec(isRelCompVec) = ...
-                                        actRelTolVec;
-                                end
-                                actAbsTol = max(actAbsTolVec(:));
-                                actCompTol = max(actCompTolVec(:));
                                 %
                                 isOk=actCompTol<=expTol;
                                 if ~isOk
