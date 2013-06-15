@@ -30,6 +30,9 @@ function [isEq,reportStr]=isEqual(self,otherObj,varargin)
 %
 %     maxTolerance: double [1,1] - maximum allowed tolerance
 %
+%     maxRelativeTolerance: double [1,1] - maximum allowed relative
+%        tolerance
+%
 %     leftIndCVec: cell[1,nLeftIndDims] - list of indices to be applied to
 %       the dimensions of left-hand side CubeStruct object
 %

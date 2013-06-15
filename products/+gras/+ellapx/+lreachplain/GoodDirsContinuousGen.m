@@ -2,7 +2,7 @@ classdef GoodDirsContinuousGen<gras.ellapx.lreachplain.AGoodDirsContinuous
     properties (Constant, GetAccess = protected)
         ODE_NORM_CONTROL = 'on';
         CALC_PRECISION_FACTOR = 1e-5;
-        CALC_CGRID_COUNT = 4000;
+        CALC_CGRID_COUNT = 6000;
     end
     methods
         function self = GoodDirsContinuousGen(pDynObj, sTime, ...

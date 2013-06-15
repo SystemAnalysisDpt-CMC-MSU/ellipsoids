@@ -90,6 +90,7 @@ classdef AGoodDirsContinuous
             %
             [cXstNormDynamics, RstDynamics] = self.calcTransMatDynamics(...
                 t0, t1, pDynObj.getAtDynamics(), calcPrecision);
+            %
             self.RstTransDynamics = matOpFactory.transpose(RstDynamics);
             self.XstNormDynamics = cXstNormDynamics;
             self.XstTransDynamics = matOpFactory.rMultiplyByScalar(...

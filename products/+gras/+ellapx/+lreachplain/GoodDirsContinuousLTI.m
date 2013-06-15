@@ -1,6 +1,6 @@
 classdef GoodDirsContinuousLTI<gras.ellapx.lreachplain.AGoodDirsContinuous
     properties (Constant, GetAccess = protected)
-        CALC_CGRID_COUNT = 4000;
+        CALC_CGRID_COUNT = 6000;
     end
     methods
         function self = GoodDirsContinuousLTI(pDynObj, sTime, ...
