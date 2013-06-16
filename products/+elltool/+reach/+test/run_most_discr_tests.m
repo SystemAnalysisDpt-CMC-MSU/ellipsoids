@@ -1,11 +1,36 @@
-function results = run_most_discr_tests(confNameRegExp,...
-    testCaseRegExp,testNameRegExp,markerRegExp)
+function results = run_most_discr_tests(varargin)
+% RUN_MOST_DISCR_TESTS runs most of the tests based on specified patters
+% for markers, test cases, tests names
+%
+% Input:
+%   optional:
+%       markerRegExp: char[1,] - regexp for marker AND/OR configuration
+%           names, default is '.*' which means 'all cofigs'
+%       testCaseRegExp: char[1,] - regexp for test case names, same default
+%       testRegExp: char[1,] - regexp for test names, same default
+%
+% Output:
+%   results: mlunitext.text_test_run[1,1] - test result
+%
+% Example:
+%
+%   elltool.reach.test.run_most_discr_tests('demo3firstTest',...
+%       'elltool.reach.test.mlunit.ContinuousReachTestCase','testCut')
+%
+%   elltool.reach.test.run_most_discr_tests('.*',...
+%       'elltool.reach.test.mlunit.ContinuousReachTestCase','testCut')
+%
+%   elltool.reach.test.run_most_discr_tests('_IsBackTrueIsEvolveFalse',...
+%       '.*','testCut')
+%
+% $Authors: Peter Gagarinov <pgagarinov@gmail.com>
+% $Date: March-2013 $
+% $Copyright: Moscow State University,
+%             Faculty of Computational Mathematics
+%             and Computer Science,
+%             System Analysis Department 2012-2013$
+%
 import elltool.reach.ReachFactory;
-import elltool.logging.Log4jConfigurator;
-DISP_VERT_SEP_STR='--------------------------';
-%
-logger=Log4jConfigurator.getLogger();
-%
 runner = mlunitext.text_test_runner(1, 1);
 loader = mlunitext.test_loader;
 %
@@ -18,10 +43,6 @@ confCMat = {
     'demo3fourthTest', [0 0 0 0 1];
     };
 %
-if nargin>0
-    isSpecVec=isMatch(confCMat(:,1),confNameRegExp);
-    confCMat=confCMat(isSpecVec,:);
-end
 nConfs = size(confCMat, 1);
 suiteList = {};
 %
@@ -78,32 +99,7 @@ suiteList{end + 1} = loader.load_tests_from_test_case(...
     crm, crmSys);
 %
 testLists = cellfun(@(x)x.tests,suiteList,'UniformOutput',false);
-
-
-
-
 testList=horzcat(testLists{:});
-%
-isTestCaseMatchVec=isMatchTest(@class,testList,testCaseRegExp);
-isTestNameMatchVec=isMatchTest(@(x)x.name,testList,testNameRegExp);
-isMarkerMatchVec=isMatchTest(@(x)x.marker,testList,markerRegExp);
-isMatchVec=isTestCaseMatchVec&isTestNameMatchVec&isMarkerMatchVec;
-%
-testList=testList(isMatchVec);
-testNameList=cellfun(@(x)x.str(),testList,'UniformOutput',false);
-testNameStr=modgen.string.catwithsep(testNameList,sprintf('/n'));
-logMsg=sprintf('\n Number of found tests %d\n%s\n%s\n%s',numel(testList),...
-    DISP_VERT_SEP_STR,testNameStr,DISP_VERT_SEP_STR);
-logger.info(logMsg);
-%
 suite = mlunitext.test_suite(testList);
-%
+suite=suite.getCopyFiltered(varargin{:});
 results = runner.run(suite);
-end
-function isPosVec=isMatchTest(fGetProp,testList,regExpStr)
-isPosVec=isMatch(cellfun(fGetProp,testList,'UniformOutput',false),...
-    regExpStr);
-end
-function isPosVec=isMatch(tagList,regExpStr)
-isPosVec=~cellfun(@isempty,regexp(tagList,regExpStr,'emptymatch'));
-end

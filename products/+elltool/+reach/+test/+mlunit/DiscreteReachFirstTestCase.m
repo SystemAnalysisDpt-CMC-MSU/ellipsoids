@@ -14,9 +14,6 @@ classdef DiscreteReachFirstTestCase < mlunitext.test_case
                 filesep, 'TestData', filesep, shortClassName];
         end
         %
-%         function self = set_up_param(self)
-%         end
-        
         function self = testFirstBasicTest(self)
             loadFileStr = strcat(self.testDataRootDir,...
                 '/demo3DiscreteTest.mat');

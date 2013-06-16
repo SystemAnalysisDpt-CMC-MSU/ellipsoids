@@ -13,12 +13,12 @@ classdef ContinuousReachFirstTestCase < mlunitext.test_case
     end
     methods (Access=private, Static)
         function checkIntersection(reachObj, ellVec)
-            mlunitext.assert_equals(false, reachObj.intersect(ellVec(1), 'e'));
-            mlunitext.assert_equals(false, reachObj.intersect(ellVec(1), 'i'));
-            mlunitext.assert_equals(true, reachObj.intersect(ellVec(2), 'e'));
-            mlunitext.assert_equals(false, reachObj.intersect(ellVec(2), 'i'));
-            mlunitext.assert_equals(true, reachObj.intersect(ellVec(3), 'e'));
-            mlunitext.assert_equals(true, reachObj.intersect(ellVec(3), 'i'));
+            mlunitext.assert_equals(false,reachObj.intersect(ellVec(1),'e'));
+            mlunitext.assert_equals(false,reachObj.intersect(ellVec(1),'i'));
+            mlunitext.assert_equals(true,reachObj.intersect(ellVec(2),'e'));
+            mlunitext.assert_equals(false,reachObj.intersect(ellVec(2),'i'));
+            mlunitext.assert_equals(true,reachObj.intersect(ellVec(3),'e'));
+            mlunitext.assert_equals(true,reachObj.intersect(ellVec(3),'i'));
         end
     end
     methods

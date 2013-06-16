@@ -106,7 +106,7 @@ classdef test_suite<handle
             %
             % Input:
             %   optional:
-            %     tests: cell[1,] of object[,1] - test_case objects. 
+            %     tests: cell[1,] of object[,1] - test_case objects.
             %       When omitted, an empty suite is constructed
             %
             %   properties:
@@ -476,7 +476,7 @@ classdef test_suite<handle
             %
             cellfun(@(x)x.set_marker(marker), self.tests);
         end
-        
+        %
         function s = str(self)
             % STR returns a string with the name of the test
             % suite. The name has to be set with SET_DISPLAY_NAME method
@@ -490,16 +490,87 @@ classdef test_suite<handle
             else
                 % Concatenate all unique class-name/marker pairs from the
                 % constituent tests
-                testClassCVec = cellfun(@class, self.tests, 'UniformOutput', false);
-                testMarkerCVec = cellfun(@(x)x.marker, self.tests, 'UniformOutput', false);
+                testClassCVec = cellfun(@class, self.tests,...
+                    'UniformOutput', false);
+                testMarkerCVec = cellfun(@(x)x.marker, self.tests,...
+                    'UniformOutput', false);
                 isEmptyMarker = cellfun(@isempty, testMarkerCVec);
                 testMarkerCVec(~isEmptyMarker) = cellfun(@(x)['[',x,']'],...
                     testMarkerCVec(~isEmptyMarker), 'UniformOutput', false);
-                testNameCVec = cellfun(@(x,y)[x,y], testClassCVec, testMarkerCVec, ...
-                    'UniformOutput', false);
-                s = modgen.string.catwithsep( sort(unique(testNameCVec)), '|' );
+                testNameCVec = cellfun(@(x,y)[x,y], testClassCVec,...
+                    testMarkerCVec,'UniformOutput', false);
+                s = modgen.string.catwithsep(sort(unique(testNameCVec)),...
+                    '|' );
             end
         end
         %
+        function newSuiteObj=getCopyFiltered(self,markerRegExp,...
+                testCaseRegExp,testNameRegExp)
+            % GETCOPYFILTERED makes a copy of the suite keeping the
+            %   tests based on specified filters for markers, test cases and
+            %   tests names
+            %
+            % Input:
+            %   optional:
+            %       markerRegExp: char[1,] - regexp for marker AND/OR configuration
+            %           names, default is '.*' which means 'all cofigs'
+            %       testCaseRegExp: char[1,] - regexp for test case names, same default
+            %       testRegExp: char[1,] - regexp for test names, same default
+            %
+            %
+            % Output:
+            %   results: mlunitext.text_test_run[1,1] - test result
+            %
+            % $Authors: Peter Gagarinov <pgagarinov@gmail.com>
+            % $Date: March-2013 $
+            % $Copyright: Moscow State University,
+            %             Faculty of Computational Mathematics
+            %             and Computer Science,
+            %             System Analysis Department 2012-2013$
+            %
+            import elltool.reach.ReachFactory;
+            import elltool.logging.Log4jConfigurator;
+            DISP_VERT_SEP_STR='--------------------------';
+            %
+            if nargin<4
+                testNameRegExp='.*';
+                if nargin<3
+                    testCaseRegExp='.*';
+                    if nargin<2
+                        markerRegExp='.*';
+                    end
+                end
+            end
+            logger=Log4jConfigurator.getLogger();
+            testList = self.tests;
+            %
+            isTestCaseMatchVec=isMatchTest(@class,testList,testCaseRegExp);
+            isTestNameMatchVec=isMatchTest(@(x)x.name,testList,...
+                testNameRegExp);
+            isMarkerMatchVec=isMatchTest(@(x)x.marker,testList,...
+                markerRegExp);
+            isMatchVec=isTestCaseMatchVec&isTestNameMatchVec&...
+                isMarkerMatchVec;
+            %
+            testList=testList(isMatchVec);
+            testNameList=cellfun(@(x)x.str(),testList,'UniformOutput',...
+                false);
+            testNameStr=modgen.string.catwithsep(testNameList,...
+                sprintf('\n'));
+            logMsg=sprintf('\n Number of found tests %d\n%s\n%s\n%s',...
+                numel(testList),DISP_VERT_SEP_STR,testNameStr,...
+                DISP_VERT_SEP_STR);
+            %
+            logger.info(logMsg);
+            newSuiteObj = mlunitext.test_suite(testList);
+            function isPosVec=isMatchTest(fGetProp,testList,regExpStr)
+                isPosVec=isMatch(cellfun(fGetProp,testList,...
+                    'UniformOutput',false),regExpStr);
+            end
+            function isPosVec=isMatch(tagList,regExpStr)
+                isPosVec=~cellfun(@isempty,...
+                    regexp(tagList,regExpStr,'emptymatch'));
+            end
+        end
     end
 end
