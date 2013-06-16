@@ -1,5 +1,10 @@
-function results = run_most_discr_tests(varargin)
+function results = run_most_discr_tests(confNameRegExp,...
+    testCaseRegExp,testNameRegExp,markerRegExp)
 import elltool.reach.ReachFactory;
+import elltool.logging.Log4jConfigurator;
+DISP_VERT_SEP_STR='--------------------------';
+%
+logger=Log4jConfigurator.getLogger();
 %
 runner = mlunitext.text_test_runner(1, 1);
 loader = mlunitext.test_loader;
@@ -7,18 +12,22 @@ loader = mlunitext.test_loader;
 crm = gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
 crmSys = gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
 %
-confList = {
+confCMat = {
     'discrFirstTest',  [1 0 1 1 0];
     'discrSecondTest',  [1 1 1 0 0];
     'demo3fourthTest', [0 0 0 0 1];
     };
 %
-nConfs = size(confList, 1);
+if nargin>0
+    isSpecVec=isMatch(confCMat(:,1),confNameRegExp);
+    confCMat=confCMat(isSpecVec,:);
+end
+nConfs = size(confCMat, 1);
 suiteList = {};
 %
 for iConf = 1:nConfs
-    confName = confList{iConf, 1};
-    confTestsVec = confList{iConf, 2};
+    confName = confCMat{iConf, 1};
+    confTestsVec = confCMat{iConf, 2};
     if confTestsVec(1)
         suiteList{end + 1} = loader.load_tests_from_test_case(...
             'elltool.reach.test.mlunit.DiscreteReachTestCase', ...
@@ -69,6 +78,32 @@ suiteList{end + 1} = loader.load_tests_from_test_case(...
     crm, crmSys);
 %
 testLists = cellfun(@(x)x.tests,suiteList,'UniformOutput',false);
-suite = mlunitext.test_suite(horzcat(testLists{:}));
+
+
+
+
+testList=horzcat(testLists{:});
+%
+isTestCaseMatchVec=isMatchTest(@class,testList,testCaseRegExp);
+isTestNameMatchVec=isMatchTest(@(x)x.name,testList,testNameRegExp);
+isMarkerMatchVec=isMatchTest(@(x)x.marker,testList,markerRegExp);
+isMatchVec=isTestCaseMatchVec&isTestNameMatchVec&isMarkerMatchVec;
+%
+testList=testList(isMatchVec);
+testNameList=cellfun(@(x)x.str(),testList,'UniformOutput',false);
+testNameStr=modgen.string.catwithsep(testNameList,sprintf('/n'));
+logMsg=sprintf('\n Number of found tests %d\n%s\n%s\n%s',numel(testList),...
+    DISP_VERT_SEP_STR,testNameStr,DISP_VERT_SEP_STR);
+logger.info(logMsg);
+%
+suite = mlunitext.test_suite(testList);
 %
 results = runner.run(suite);
+end
+function isPosVec=isMatchTest(fGetProp,testList,regExpStr)
+isPosVec=isMatch(cellfun(fGetProp,testList,'UniformOutput',false),...
+    regExpStr);
+end
+function isPosVec=isMatch(tagList,regExpStr)
+isPosVec=~cellfun(@isempty,regexp(tagList,regExpStr,'emptymatch'));
+end

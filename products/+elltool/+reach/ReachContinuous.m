@@ -11,7 +11,7 @@ classdef ReachContinuous < elltool.reach.AReach
     %             Faculty of Computational Mathematics
     %             and Computer Science,
     %             System Analysis Department 2013$
-    properties (Constant)
+    properties (Constant,GetAccess=protected)
         DISPLAY_PARAMETER_STRINGS = {'continuous-time', 'k0 = ', 'k1 = '}
         LINSYS_CLASS_STRING = 'elltool.linsys.LinSysContinuous'
     end

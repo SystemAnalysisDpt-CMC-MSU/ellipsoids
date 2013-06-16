@@ -804,17 +804,18 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             nPoints = numel(timeVec);
             if isa(indVec, 'double')
                 if min(indVec) < 1 || max(indVec) > nPoints
-                    throwerror('Indexes are out of range.');
+                    throwerror('wrongInput','Indexes are out of range.');
                 end
                 isNeededIndVec = false(size(timeVec));
                 isNeededIndVec(indVec) = true;
             elseif islogical(indVec)
                 if numel(indVec) ~= nPoints
-                    throwerror('Indexes are out of range.');
+                    throwerror('wrongInput','Indexes are out of range.');
                 end
                 isNeededIndVec = indVec;
             else
-                throwerror('indVec should be double or logical');
+                throwerror('wrongInput',...
+                    'indVec should be double or logical');
             end
             SThinFunResult.timeVec=cellfun(...
                 @(field)field(isNeededIndVec), SData.timeVec,...
@@ -1010,9 +1011,11 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     areFirstTimesInsideSecond = ...
                         (firstTimeVec(end)<=secondTimeVec(end)) &&...
                         (firstTimeVec(1)>=secondTimeVec(1));
+                    %
                     areSecondTimesInsideFirst = ...
                         (secondTimeVec(end)<=firstTimeVec(end)) &&...
                         (secondTimeVec(1)>=firstTimeVec(1));
+                    %
                     if (length(firstTimeVec) < length(secondTimeVec) &&...
                             areFirstTimesInsideSecond)
                         [isTimeVecsEnclosed, secondIndexVec] = ...
@@ -1049,22 +1052,22 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                         reportStr = [reportStr, 'Interpolated from common ',...
                             'time points. '];
                         unionTimeVec = union(firstTimeVec, secondTimeVec);
+                        %
                         if areTimeBoundsCompared || (~areEndTimesDifferent &&...
-                                ~areBeginTimesDifferent)
-                            ellTube = ellTube.interp(unionTimeVec);
-                            compEllTube = compEllTube.interp(unionTimeVec);
+                                ~areBeginTimesDifferent)                        
+                            %do nothing
                         elseif areFirstTimesInsideSecond
-                            compEllTube = compEllTube.interp(unionTimeVec);
-                            [~, indexVec] = ...
-                                fIsGridSubsetOfGrid(secondTimeVec, firstTimeVec);
-                            compEllTube = compEllTube.thinOutTuples(indexVec);
+                            isInsideVec=unionTimeVec<=firstTimeVec(2)&...
+                                unionTimeVec>=firstTimeVec(1);
+                            unionTimeVec=unionTimeVec(isInsideVec);
                         elseif areSecondTimesInsideFirst
-                            ellTube = ellTube.interp(unionTimeVec);
-                            [~, indexVec] = ...
-                                fIsGridSubsetOfGrid(firstTimeVec, secondTimeVec);
-                            ellTube = ellTube.thinOutTuples(indexVec);
+                         isInsideVec=unionTimeVec<=secondTimeVec(2)&...
+                                unionTimeVec>=secondTimeVec(1);
+                            unionTimeVec=unionTimeVec(isInsideVec);                            
                         end
                         if areFirstTimesInsideSecond||areSecondTimesInsideFirst
+                            ellTube = ellTube.interp(unionTimeVec);
+                            compEllTube = compEllTube.interp(unionTimeVec);
                             [isPos, eqReportStr] = compEllTube.getFieldProjection(...
                                 fieldsToCompList).isEqual(...
                                 ellTube.getFieldProjection(fieldsToCompList),...
@@ -1091,8 +1094,10 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     nFirstElems=numel(smallerVec);
                     indThereVec=zeros(1,nFirstElems);
                     for iElem=1:nFirstElems
-                        indThereVec(iElem)=find(isCloseMat(iElem,:),1,...
-                            'first');
+                        indFirst=find(isCloseMat(iElem,:),1,'first');
+                        if ~isempty(indFirst)
+                            indThereVec(iElem)=indFirst;
+                        end
                     end
                 end
             end

@@ -1,5 +1,19 @@
 function results = run_most_cont_tests(confNameRegExp,...
     testCaseRegExp,testNameRegExp,markerRegExp)
+% RUN_MOST_CONT_TESTS runs most of the tests based on specified patters
+% for configuration names, test cases, tests names and markers
+%
+% Input:
+%   optional:
+%       confNameRegExp: char[1,] - regexp for configuration names, default
+%           is '.*' which means 'all cofigs'
+%       testCaseRegExp: char[1,] - regexp for test case names, same default
+%       testRegExp: char[1,] - regexp for test names, same default
+%       markerRegExp: char[1,] - regexp for marker names, same default
+%
+% Output:
+%   results: mlunitext.text_test_run[1,1] - test result
+%
 import elltool.reach.ReachFactory;
 import elltool.logging.Log4jConfigurator;
 DISP_VERT_SEP_STR='--------------------------';

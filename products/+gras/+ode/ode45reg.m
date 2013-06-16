@@ -185,7 +185,8 @@ while ~isDone
             tStep=t+hA(iStep);
             [isStrictViol,yInterimNewRegVec]=fOdeReg(tStep,yInterimNewVec);
             yCurCorrVec=(yInterimNewRegVec-yInterimNewVec);
-            errReg = max(abs(yCurCorrVec));
+            errReg = 2*max(abs(yCurCorrVec))/...
+                (max(abs(yInterimNewRegVec))+max(abs(yInterimNewVec)));
             isWeakViol=errReg>=regAbsTol;
             if isStrictViol
                 isRejectedStep=true;
@@ -211,7 +212,7 @@ while ~isDone
             %
             [isStrictViol,yNewRegVec]=fOdeReg(tnew,ynew);
             yCurCorrVec=(yNewRegVec-ynew);
-            errReg = max(abs(yCurCorrVec));
+            errReg =2*max(abs(yCurCorrVec))/(max(abs(yNewRegVec))+max(abs(ynew)));
             isWeakViol=errReg>regAbsTol;
             if (iRegStep>nMaxRegSteps)&&isWeakViol
                 throwerror('wrongState',...

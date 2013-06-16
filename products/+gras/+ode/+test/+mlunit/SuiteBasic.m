@@ -33,6 +33,8 @@ classdef SuiteBasic < mlunitext.test_case
             %
             fOdeDerivReg=@fOdeDerivCpl;
             fReg=@fRegPos;
+            self.runAndCheckError(@run,'IntegrationTolNotMet');
+            function run()
             s=warning('off','MATLAB:ode45:IntegrationTolNotMet');
             try
                 [tVec,yMat,dyRegMat]=...
@@ -45,7 +47,9 @@ classdef SuiteBasic < mlunitext.test_case
                 warning(s);
                 rethrow(meObj);
             end
+            %
             warning(s);
+            end
             %
             function [isStrict,y]=fRegPos(y)
                 isStrict=y(1,:)<0;
@@ -59,7 +63,7 @@ classdef SuiteBasic < mlunitext.test_case
                 if isStrict
                     throwerror('wrongState','strict constraint is violated');
                 end
-                yp=-1./y;
+                yp=-ones(size(y));
             end
         end
         function self=testPosSame(self)

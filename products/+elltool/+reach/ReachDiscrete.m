@@ -11,7 +11,7 @@ classdef ReachDiscrete < elltool.reach.AReach
     %             and Computer Science,
     %             System Analysis Department 2013 $
     %
-    properties (Constant, GetAccess = ?elltool.reach.AReach)
+    properties (Constant,GetAccess=protected)
         DISPLAY_PARAMETER_STRINGS = {'discrete-time', 'k0 = ', 'k1 = '}
         LINSYS_CLASS_STRING = 'elltool.linsys.LinSysDiscrete'
     end
@@ -283,13 +283,12 @@ classdef ReachDiscrete < elltool.reach.AReach
             end
             function isPos=isMatch(patternStr)
                 isPos=~isempty(strfind(meObj.identifier,patternStr));
-            end            
+            end
         end
     end
     %
     methods
-        function self = ReachDiscrete(linSys, x0Ell, l0Mat,...
-                timeVec, varargin)
+        function self = ReachDiscrete(varargin)
             %
             % ReachDiscrete - computes reach set approximation of the discrete linear
             %                 system for the given time interval.
@@ -338,42 +337,45 @@ classdef ReachDiscrete < elltool.reach.AReach
             %
             import elltool.conf.Properties;
             import gras.ellapx.enums.EApproxType;
+            import modgen.common.checkvar;
             %
-            if (nargin == 0) || isempty(linSys)
-                return;
+            if nargin>0
+                timeVec=varargin{4};
+                checkvar(timeVec,'all(fix(x)==x)',...
+                    'errorTag','wrongInput:notIntegerTimeVec',...
+                    'errorMessage',...
+                    'timeVec is expected to contain integer values');
+                %
+                [varargin, ~, isMinMax] =...
+                    modgen.common.parseparext(varargin, {'isMinMax'; false});
             end
-            %
-            k0 = round(timeVec(1));
-            k1 = round(timeVec(2));
-            timeVec = [k0 k1];
-            %
-            [varargin, ~, isMinMax] =...
-                modgen.common.parseparext(varargin, {'isMinMax'; false});
-            self=self@elltool.reach.AReach(linSys, x0Ell, l0Mat,...
-                timeVec,varargin{:});
-            self.isMinMax=isMinMax;
-            %
-            % create gras LinSys object
-            %
-            [x0Vec, x0Mat] = double(x0Ell);
-            [atStrCMat, btStrCMat, gtStrCMat, ptStrCMat, ptStrCVec,...
-                qtStrCMat, qtStrCVec] =...
-                self.prepareSysParam(linSys, timeVec);
-            isDisturbance = self.isDisturbance(gtStrCMat, qtStrCMat);
-            %
-            % normalize good directions
-            %
-            sysDim = size(atStrCMat, 1);
-            l0Mat = self.getNormMat(l0Mat, sysDim);
-            %
-            % create approximation tube
-            %
-            probDynObj = self.getProbDynamics(atStrCMat, btStrCMat, ...
-                ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat, qtStrCVec, ...
-                x0Mat, x0Vec, timeVec, self.relTol, isDisturbance);
-            approxTypeVec = [EApproxType.External EApproxType.Internal];
-            self.ellTubeRel = self.makeEllTubeRel(probDynObj, l0Mat, ...
-                timeVec, isDisturbance, self.relTol, approxTypeVec);
+            self=self@elltool.reach.AReach(varargin{:});
+            if nargin>0
+                [linSys, x0Ell, l0Mat,timeVec]=deal(varargin{1:4});
+                self.isMinMax=isMinMax;
+                %
+                % create gras LinSys object
+                %
+                [x0Vec, x0Mat] = double(x0Ell);
+                [atStrCMat, btStrCMat, gtStrCMat, ptStrCMat, ptStrCVec,...
+                    qtStrCMat, qtStrCVec] =...
+                    self.prepareSysParam(linSys, timeVec);
+                isDisturbance = self.isDisturbance(gtStrCMat, qtStrCMat);
+                %
+                % normalize good directions
+                %
+                sysDim = size(atStrCMat, 1);
+                l0Mat = self.getNormMat(l0Mat, sysDim);
+                %
+                % create approximation tube
+                %
+                probDynObj = self.getProbDynamics(atStrCMat, btStrCMat, ...
+                    ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat, qtStrCVec, ...
+                    x0Mat, x0Vec, timeVec, self.relTol, isDisturbance);
+                approxTypeVec = [EApproxType.External EApproxType.Internal];
+                self.ellTubeRel = self.makeEllTubeRel(probDynObj, l0Mat, ...
+                    timeVec, isDisturbance, self.relTol, approxTypeVec);
+            end
         end
     end
 end

@@ -8,7 +8,7 @@ classdef AReach < elltool.reach.IReach
     %             and Computer Science,
     %             System Analysis Department 2013$
     %
-    properties (Constant, Abstract)
+    properties (Constant, Abstract,GetAccess=protected)
         DISPLAY_PARAMETER_STRINGS
         LINSYS_CLASS_STRING
     end
@@ -785,6 +785,7 @@ classdef AReach < elltool.reach.IReach
         %
         function isEmptyIntersect =...
                 intersect(self, intersectObj, approxTypeChar)
+            import modgen.common.throwerror;
             if ~ (isa(intersectObj, 'ellipsoid') &&...
                     ~isa(intersectObj, 'hyperplane') &&...
                     ~isa(intersectObj, 'polytope'))
