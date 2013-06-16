@@ -13,7 +13,7 @@ classdef AReachProblemDynamics<...
     properties (Constant, GetAccess = protected)
         ODE_NORM_CONTROL='on';
         CALC_PRECISION_FACTOR=0.001;
-        N_TIME_POINTS=8000;
+        N_TIME_POINTS=4000;
     end
     methods
         function self = AReachProblemDynamics(problemDef)
