@@ -507,7 +507,7 @@ classdef AReach < elltool.reach.IReach
     end
     %
     methods (Access = protected)
-        function projSet = getProjSet(self, projMat,...
+        function ellTubeProjRel = getProjSet(self, projMat,...
                 approxType, scaleFactor)
             import gras.ellapx.enums.EProjType;
             import gras.ellapx.smartdb.F;
@@ -528,7 +528,7 @@ classdef AReach < elltool.reach.IReach
             if nargin == 4
                 localEllTubeRel.scale(@(x) scaleFactor, {APPROX_TYPE});
             end
-            projSet = localEllTubeRel.project(projType,...
+            ellTubeProjRel = localEllTubeRel.project(projType,...
                 ProjCMatList, fProj);
         end
         function plotter = plotApprox(self, approxType, varargin)
@@ -1221,9 +1221,9 @@ classdef AReach < elltool.reach.IReach
         function projObj = projection(self, projMat)
             import gras.ellapx.enums.EProjType;
             import modgen.common.throwerror;
-            projSet = self.getProjSet(projMat);
+            ellTubeProjRel = self.getProjSet(projMat);
             projObj = self.getCopy();
-            projObj.ellTubeRel = projSet.getCopy();
+            projObj.ellTubeRel = ellTubeProjRel.getCopy();
             projObj.isProj = true;
             projObj.projectionBasisMat = projMat;
         end
@@ -1238,7 +1238,7 @@ classdef AReach < elltool.reach.IReach
             iaPlotter = self.plotApprox(EApproxType.Internal, varargin{:});
         end
         %
-        function self = refine(self, l0Mat)
+        function outReachObj = refine(self, l0Mat)
             import modgen.common.throwerror;
             import gras.ellapx.enums.EApproxType;
             if isempty(self.ellTubeRel)
@@ -1251,51 +1251,52 @@ classdef AReach < elltool.reach.IReach
             %
             % Calculate additional tubes
             %
-            if length(self.switchSysTimeVec) > 2
-                throwerror('unsupportedFunctionality', ...
-                    'refine currently cannot be applied after evolve');
-            end
-            linSys = self.linSysCVec{1};
-            if self.isBackward
+            outReachObj=self.getCopy();
+            %
+            sysTimeVecLenght = numel(outReachObj.linSysCVec);
+            linSys = outReachObj.linSysCVec{1};
+            %
+            if outReachObj.isBackward
                 timeLimsVec = ...
-                    [self.switchSysTimeVec(end), self.switchSysTimeVec(1)];
+                    [outReachObj.switchSysTimeVec(end),...
+                     outReachObj.switchSysTimeVec(end - 1)];
             else
                 timeLimsVec = ...
-                    [self.switchSysTimeVec(1), self.switchSysTimeVec(end)];
+                    [outReachObj.switchSysTimeVec(1),...
+                     outReachObj.switchSysTimeVec(2)];
             end
-            x0Ell = self.x0Ellipsoid;
+
+            x0Ell = outReachObj.x0Ellipsoid;
             %
             % Normalize good directions
             %
             nDim = dimension(x0Ell);
-            l0Mat = self.getNormMat(l0Mat, nDim);
-            if self.isProj
-                projMat = self.projectionBasisMat;
-                reachSetObj = feval(class(self), linSys, x0Ell, ...
+            l0Mat = outReachObj.getNormMat(l0Mat, nDim);
+            reachSetObj = feval(class(outReachObj), linSys, x0Ell,...
                     l0Mat, timeLimsVec);
-                projSet = reachSetObj.getProjSet(projMat);
-                self.ellTubeRel.unionWith(projSet);
+            %
+            for iLinSys = 2 : sysTimeVecLenght
+                reachSetObj = ...
+                    reachSetObj.evolve(...
+                        getNewTime(outReachObj.switchSysTimeVec,...
+                                   outReachObj.isBackward,iLinSys),...
+                        outReachObj.linSysCVec{iLinSys});
+            end
+            %
+            if outReachObj.isProj
+                projMat = outReachObj.projectionBasisMat;
+                ellTubeProjRel = reachSetObj.getProjSet(projMat);
+                outReachObj.ellTubeRel.unionWith(ellTubeProjRel);
             else
-                [x0Vec x0Mat] = double(x0Ell);
-                [atStrCMat btStrCMat gtStrCMat ptStrCMat ptStrCVec ...
-                    qtStrCMat qtStrCVec] = ...
-                    self.prepareSysParam(linSys, timeLimsVec);
-                isDisturbance = self.isDisturbance(gtStrCMat, qtStrCMat);
-                %
-                probDynObj = self.getProbDynamics(atStrCMat, btStrCMat, ...
-                    ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat, qtStrCVec, ...
-                    x0Mat, x0Vec, timeLimsVec, ...
-                    self.relTol, isDisturbance);
-                approxTypeVec = [EApproxType.External EApproxType.Internal];
-                ellTubeRelNew = self.makeEllTubeRel(probDynObj, l0Mat, ...
-                    timeLimsVec, isDisturbance, self.relTol, approxTypeVec);
-                if self.isBackward
-                    ellTubeRelNew = self.transformEllTube(ellTubeRelNew);
+                outReachObj.ellTubeRel.unionWith(reachSetObj.getEllTubeRel());
+            end
+
+            function newTime = getNewTime(sysTimeVec,isBackward,ind)
+                if isBackward
+                    newTime = sysTimeVec(end - ind);
+                else
+                    newTime = sysTimeVec(ind + 1);
                 end
-                %
-                % Update self.ellTubRel
-                %
-                self.ellTubeRel.unionWith(ellTubeRelNew);
             end
         end
         %

@@ -4,6 +4,7 @@ classdef SuiteRegression < mlunitext.test_case
         confNameList
         crm
         crmSys
+        resTmpDir
     end
     methods
         function self = SuiteRegression(varargin)
@@ -14,6 +15,12 @@ classdef SuiteRegression < mlunitext.test_case
                 filesep,'TestData',filesep,shortClassName];
         end
         %
+        function self = set_up(self)
+            self.resTmpDir = elltool.test.TmpDataManager.getDirByCallerKey;
+        end
+        function self = tear_down(self)
+            rmdir(self.resTmpDir,'s');
+        end
         function self = set_up_param(self,varargin)
             if nargin>2
                 self.crm=varargin{2};
@@ -68,6 +75,11 @@ classdef SuiteRegression < mlunitext.test_case
             for iConf=1:nConfs
                 confName=confNameList{iConf};
                 inpKey=confName;
+                crm.selectConf(confName,'reloadIfSelected',false);
+                crm.setParam('customResultDir.dirName',self.resTmpDir,...
+                        'writeDepth','cache');
+                crm.setParam('customResultDir.isEnabled',true,...
+                        'writeDepth','cache');
                 SRunProp=gras.ellapx.uncertcalc.run(confName,...
                     'confRepoMgr',crm,'sysConfRepoMgr',crmSys);
                 if crm.getParam('plottingProps.isEnabled')

@@ -1,26 +1,36 @@
 classdef SuiteBasic < mlunitext.test_case
     %mlunitext.test_case
+    properties (Access=private)
+        resTmpDir
+    end
+    
     methods
         function self = SuiteBasic(varargin)
             self = self@mlunitext.test_case(varargin{:});
         end
         function self = set_up_param(self)
         end
-        function testInMemoryMgr_copyFile(~)
+        function self = set_up(self)
+            self.resTmpDir=modgen.test.TmpDataManager.getDirByCallerKey();
+        end
+        function self = tear_down(self)
+            rmdir(self.resTmpDir,'s');
+        end
+        function testInMemoryMgr_copyFile(self)
+            resTmpDir = self.resTmpDir;
             crm=modgen.configuration.ConfRepoMgrInMemory();
             crm.putConf('test',struct('a',1,'b',2));
-            resDir=modgen.test.TmpDataManager.getDirByCallerKey();
-            [fid,messageStr]=fopen([resDir,filesep,'test.txt'],'a');
+            [fid,messageStr]=fopen([resTmpDir,filesep,'test.txt'],'a');
             if fid<0
                 modgen.common.throwerror('failedFileCreation',messageStr);
             end
             fclose(fid);
-            crm.copyConfFile(resDir);
-            crm.copyConfFile(resDir);            
+            crm.copyConfFile(resTmpDir);
+            crm.copyConfFile(resTmpDir);            
             isOk=modgen.system.ExistanceChecker.isFile(...
-                [resDir,filesep,'test.xml']);
+                [resTmpDir,filesep,'test.xml']);
             mlunitext.assert_equals(isOk,true);
-            resFileName=[resDir,filesep,'res.xml'];
+            resFileName=[resTmpDir,filesep,'res.xml'];
             crm.copyConfFile(resFileName,'destIsFile',true);
             isOk=modgen.system.ExistanceChecker.isFile(resFileName);
             mlunitext.assert_equals(isOk,true);            
@@ -99,7 +109,7 @@ classdef SuiteBasic < mlunitext.test_case
         %
         function testCopyConfFile(self)
             import modgen.configuration.test.*;
-            resDir=modgen.test.TmpDataManager.getDirByCallerKey();
+            resDir=self.resTmpDir;
             crm=ConfRepoMgrAdv();
             crm.putConf('def',struct());
             crm.copyConfFile(resDir,'def');
