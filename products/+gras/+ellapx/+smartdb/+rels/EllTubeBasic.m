@@ -7,24 +7,30 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
         FCODE_SCALE_FACTOR
         FCODE_M_ARRAY
     end
-    methods (Access = protected)
+    methods
         function fieldsList = getNoCatOrCutFieldsList(~)
-            fieldsList={'APPROX_SCHEMA_DESCR';'DIM';...
+            import  gras.ellapx.smartdb.F;
+            fieldsList=F().getNameList({'APPROX_SCHEMA_DESCR';'DIM';...
                 'APPROX_SCHEMA_NAME';'APPROX_TYPE';'CALC_PRECISION';...
                 'IND_S_TIME';'LS_GOOD_DIR_NORM';'LS_GOOD_DIR_VEC';'S_TIME';...
-                'SCALE_FACTOR';'XS_TOUCH_OP_VEC';'XS_TOUCH_VEC'};
+                'SCALE_FACTOR';'XS_TOUCH_OP_VEC';'XS_TOUCH_VEC'});
         end
+    end
+    methods (Access = protected)
         function fieldsList = getSFieldsList(~)
-            fieldsList = {'LS_GOOD_DIR_VEC';'LS_GOOD_DIR_NORM';...
-                'XS_TOUCH_VEC';'XS_TOUCH_OP_VEC'};
+            import gras.ellapx.smartdb.F;
+            fieldsList = F().getNameList({'LS_GOOD_DIR_VEC';'LS_GOOD_DIR_NORM';...
+                'XS_TOUCH_VEC';'XS_TOUCH_OP_VEC'});
         end
         function fieldsList = getTFieldsList(~)
-            fieldsList = {'LT_GOOD_DIR_MAT';...
+            import  gras.ellapx.smartdb.F;
+            fieldsList = F().getNameList({'LT_GOOD_DIR_MAT';...
                 'LT_GOOD_DIR_NORM_VEC';'X_TOUCH_CURVE_MAT';...
-                'X_TOUCH_OP_CURVE_MAT'};
+                'X_TOUCH_OP_CURVE_MAT'});
         end
         function fieldsList = getScalarFieldsList(~)
-            fieldsList = {'LS_GOOD_DIR_NORM'};
+            import  gras.ellapx.smartdb.F;
+            fieldsList = F().getNameList({'LS_GOOD_DIR_NORM'});
         end
     end
     methods(Access=protected, Abstract)
@@ -831,15 +837,13 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 SThinFunResult.indSTime(:) = 1;
             end
             fieldsNotToCatVec =...
-                F().getNameList(self.getNoCatOrCutFieldsList());
+                self.getNoCatOrCutFieldsList();
             fieldsToCutVec =...
                 setdiff(fieldnames(SData), fieldsNotToCatVec);
             cellfun(@(field) cutStructField(field), fieldsToCutVec);
-            cellfun(@cutStructSTimeField,...
-                F().getNameList(self.getSFieldsList()),...
-                F().getNameList(self.getTFieldsList()));
-            cellfun(@(field)fMakeCell(field), ...
-                F().getNameList(self.getScalarFieldsList()));
+            cellfun(@cutStructSTimeField, self.getSFieldsList(),...
+                self.getTFieldsList());
+            cellfun(@(field)fMakeCell(field),self.getScalarFieldsList());
             %
             thinnedEllTubeRel = self.createInstance(SThinFunResult);
             %
@@ -1078,7 +1082,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                             isPos = false;
                             eqReportStr = 'Cannot interpolate: shifted bounds. ';
                         end
-                        reportStr = [reportStr, eqReportStr];
+                        reportStr = [reportStr,sprintf('\n'),eqReportStr];
                     end
                 end
             end

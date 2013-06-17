@@ -442,36 +442,60 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
         end
     end
     methods
-        function catEllTubeRel = cat(self, newEllTubeRel, indVec)
+        function catEllTubeRel = cat(self, newEllTubeRel,...
+                varargin)
             % CAT  - concatenates data from relation objects.
             %
             % Input:
-            %  regular:
-            %    self.
-            %    newEllTubeRel: smartdb.relation.StaticRelation[1, 1]/
-            %      smartdb.relation.DynamicRelation[1, 1] - relation object
+            %   regular:
+            %       self.
+            %       newEllTubeRel: smartdb.relation.StaticRelation[1, 1]/
+            %           smartdb.relation.DynamicRelation[1, 1] - relation object
+            %   optional:
+            %       indNewVec: logical[nTuples,1]/double[nTuples,1] -
+            %           indices of time moments from newEllTubeRel that
+            %           participate in concatenation
+            %
+            %   properties:
+            %       isReplacedByNew: logical[1,1] - if true, all values of
+            %           non-concatenated fields are replaced with values from
+            %           newEllTubeRel object
             %
             % Output:
-            %    catEllTubeRel:smartdb.relation.StaticRelation[1, 1]/
-            %      smartdb.relation.DynamicRelation[1, 1] - relation object resulting 
-            %      from CAT operation
+            %   catEllTubeRel:smartdb.relation.StaticRelation[1, 1]/
+            %       smartdb.relation.DynamicRelation[1, 1] - relation object
+            %       resulting from CAT operation
+            %
             import gras.ellapx.smartdb.F;
+            import modgen.common.parseparext;
+            [reg,~,isReplacedByNew]=parseparext(varargin,...
+                {'isReplacedByNew';false;'islogical(x)&&isscalar(x)'},...
+                [0 1]);
+            %
             SDataFirst = self.getData();
             SDataSecond = newEllTubeRel.getData();
             SCatFunResult = SDataFirst;
             timeVec = SDataSecond.timeVec{1};
-            if nargin == 2
-                indVec = true(size(timeVec));
+            if isempty(reg)
+                indNewVec = true(size(timeVec));
+            else
+                indNewVec=reg{1};
             end
-            isNeededIndVec = self.getLogicalInd(indVec, timeVec);
-            fieldsNotToCatVec =...
-                F().getNameList(self.getNoCatOrCutFieldsList());
+            isNeededIndVec = self.getLogicalInd(indNewVec, timeVec);
+            fieldsNotToCatVec=self.getNoCatOrCutFieldsList();
             fieldsToCatVec =...
                 setdiff(fieldnames(SDataFirst), fieldsNotToCatVec);
             cellfun(@(field) catStructField(field, isNeededIndVec),...
                 fieldsToCatVec);
-            catEllTubeRel = self.createInstance(SCatFunResult);
             %
+            if isReplacedByNew
+                nRepFields=length(fieldsNotToCatVec);
+                for iField=1:nRepFields
+                    fieldName=fieldsNotToCatVec{iField};
+                    SCatFunResult.(fieldName)=SDataSecond.(fieldName);
+                end
+            end
+            catEllTubeRel = self.createInstance(SCatFunResult);            
             function catStructField(fieldName, isNeededIndVec)
                 SCatFunResult.(fieldName) =...
                     cellfun(@(firstStructFieldVal, secondStructFieldVal)...

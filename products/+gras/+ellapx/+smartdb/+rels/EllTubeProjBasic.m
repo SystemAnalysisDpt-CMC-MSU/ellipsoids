@@ -6,31 +6,37 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
         REG_TUBE_PREFIX='Reg';
     end
     methods (Access = protected)
+        function fieldsList = getSFieldsList(self)
+            import  gras.ellapx.smartdb.F;
+            ellTubeBasicList = self.getSFieldsList@...
+                gras.ellapx.smartdb.rels.EllTubeBasic;
+            fieldsList=[ellTubeBasicList;...
+                F().getNameList({'LS_GOOD_DIR_NORM_ORIG';...
+                'LS_GOOD_DIR_ORIG_VEC'})];
+        end
+        function fieldsList = getTFieldsList(self)
+            import  gras.ellapx.smartdb.F;
+            ellTubeBasicList = self.getTFieldsList@...
+                gras.ellapx.smartdb.rels.EllTubeBasic;
+            fieldsList=[ellTubeBasicList;F().getNameList(...
+                {'LT_GOOD_DIR_NORM_ORIG_VEC';'LT_GOOD_DIR_ORIG_MAT'})];
+        end
+        function fieldsList = getScalarFieldsList(self)
+            import  gras.ellapx.smartdb.F;
+            ellTubeBasicList = self.getScalarFieldsList@...
+                gras.ellapx.smartdb.rels.EllTubeBasic;
+            fieldsList=[ellTubeBasicList;...
+                F().getNameList({'LS_GOOD_DIR_NORM_ORIG'})];
+        end
+    end
+    methods
         function fieldsList = getNoCatOrCutFieldsList(self)
+            import  gras.ellapx.smartdb.F;
             ellTubeBasicList = self.getNoCatOrCutFieldsList@...
                 gras.ellapx.smartdb.rels.EllTubeBasic;
             fieldsList=[ellTubeBasicList;'LS_GOOD_DIR_NORM_ORIG';...
                 'LS_GOOD_DIR_ORIG_VEC';'PROJ_S_MAT';'PROJ_TYPE'];
-        end
-        function fieldsList = getSFieldsList(self)
-            ellTubeBasicList = self.getSFieldsList@...
-                gras.ellapx.smartdb.rels.EllTubeBasic;
-            fieldsList=[ellTubeBasicList;'LS_GOOD_DIR_NORM_ORIG';...
-                'LS_GOOD_DIR_ORIG_VEC'];
-        end
-        function fieldsList = getTFieldsList(self)
-            ellTubeBasicList = self.getTFieldsList@...
-                gras.ellapx.smartdb.rels.EllTubeBasic;
-            fieldsList=[ellTubeBasicList;'LT_GOOD_DIR_NORM_ORIG_VEC';...
-                'LT_GOOD_DIR_ORIG_MAT'];
-        end
-        function fieldsList = getScalarFieldsList(self)
-            ellTubeBasicList = self.getScalarFieldsList@...
-                gras.ellapx.smartdb.rels.EllTubeBasic;
-            fieldsList=[ellTubeBasicList;'LS_GOOD_DIR_NORM_ORIG'];
-        end
-    end
-    methods
+        end        
         function namePrefix=getReachTubeNamePrefix(self)
             % GETREACHTUBEANEPREFIX - return prefix of the reach tube
             %

@@ -45,30 +45,37 @@ classdef EllUnionTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
     %
     % TODO: correct description of the fields in 
     %     gras.ellapx.smartdb.rels.EllUnionTube
-    methods (Access = protected)
+    methods 
         function fieldsList = getNoCatOrCutFieldsList(self)
+            import  gras.ellapx.smartdb.F;
             ellTubeBasicList = self.getNoCatOrCutFieldsList@...
                 gras.ellapx.smartdb.rels.EllTubeBasic;
-            fieldsList=[ellTubeBasicList;'ELL_UNION_TIME_DIRECTION';...
-                'IS_LS_TOUCH';'IS_LS_TOUCH_OP'];
-        end
+            fieldsList=[ellTubeBasicList;...
+                F().getNameList({'ELL_UNION_TIME_DIRECTION';...
+                'IS_LS_TOUCH';'IS_LS_TOUCH_OP'})];
+        end        
+    end
+    methods (Access = protected)
         function fieldsList = getSFieldsList(self)
+            import  gras.ellapx.smartdb.F;
             ellTubeBasicList = self.getSFieldsList@...
                 gras.ellapx.smartdb.rels.EllTubeBasic;
-            fieldsList=[ellTubeBasicList;'IS_LS_TOUCH';...
-                'IS_LS_TOUCH_OP'];
+            fieldsList=[ellTubeBasicList;...
+                F().getNameList({'IS_LS_TOUCH';'IS_LS_TOUCH_OP'})];
         end
         function fieldsList = getTFieldsList(self)
+            import  gras.ellapx.smartdb.F;
             ellTubeBasicList = self.getTFieldsList@...
                 gras.ellapx.smartdb.rels.EllTubeBasic;
-            fieldsList=[ellTubeBasicList;'IS_LT_TOUCH_VEC';...
-                'IS_LT_TOUCH_OP_VEC'];
+            fieldsList=[ellTubeBasicList;...
+                F().getNameList({'IS_LT_TOUCH_VEC';'IS_LT_TOUCH_OP_VEC'})];
         end
         function fieldsList = getScalarFieldsList(self)
+            import  gras.ellapx.smartdb.F;
             ellTubeBasicList = self.getScalarFieldsList@...
                 gras.ellapx.smartdb.rels.EllTubeBasic;
-            fieldsList=[ellTubeBasicList;'IS_LS_TOUCH';...
-                'IS_LS_TOUCH_OP'];
+            fieldsList=[ellTubeBasicList;...
+                F().getNameList({'IS_LS_TOUCH';'IS_LS_TOUCH_OP'})];
         end
     end
     methods(Access=protected)

@@ -32,7 +32,7 @@ classdef EllTubeTouchCurveBasic<handle
                 if ~all(isOkVec)
                     throwerror('wrongInput',['tuples with indices %s ',...
                         'have inconsistent %s and %s'],...
-                        lsName,ltName,mat2str(find(~isOkVec)));
+                        mat2str(find(~isOkVec)),lsName,ltName);
                 end
             end
         end

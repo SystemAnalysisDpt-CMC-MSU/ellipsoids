@@ -248,115 +248,6 @@ classdef LinSysTestCase < mlunitext.test_case
             %
             % incorrect dimension of matrix C
             %
-            self.runAndCheckError(...
-                'elltool.linsys.LinSysFactory.create(eye(3),eye(3),ell3d,[],[],eye(4))',...
-                'dimension:C');
-            %
-            % incorrect type of matrix C
-            %
-            self.runAndCheckError(...
-                'elltool.linsys.LinSysFactory.create(eye(3),eye(3),ell3d,[],[],true(3))',...
-                'type:C');
-            %
-            % incorrect dimension of W when W is a constant ellipsoid
-            %
-            self.runAndCheckError(...
-                'elltool.linsys.LinSysFactory.create(eye(3),eye(3),ell3d,eye(3),ell3d,eye(3),ell4d)',...
-                'dimension:W');
-            %
-            % incorrect dimension of W when W is a symbolic ellipsoid
-            %
-            wEllStruct.center = {'1';'1';'1';'1'};
-            wEllStruct.shape = ones(3);
-            self.runAndCheckError(...
-                'elltool.linsys.LinSysFactory.create(eye(3),eye(3),ell3d,eye(3),ell3d,eye(3),wEllStruct)',...
-                'dimension:noiseBoundsEll:center');
-            %
-            wEllStruct.center = {'1';'1';'1'};
-            wEllStruct.shape = ones(4);
-            self.runAndCheckError(...
-                'elltool.linsys.LinSysFactory.create(eye(3),eye(3),ell3d,eye(3),ell3d,eye(3),wEllStruct)',...
-                'dimension:noiseBoundsEll:shape');
-            %
-            % incorrect dimension of W when W is a constant vector
-            %
-            wVec = eye(4,1);
-            self.runAndCheckError(...
-                'elltool.linsys.LinSysFactory.create(eye(3),eye(3),ell3d,eye(3),ell3d,eye(3),wVec)',...
-                'dimension:W');
-            %
-            % incorrect dimension of W when W is a symbolic vector
-            %
-            wCVec = {'t';'t';'t';'t'};
-            self.runAndCheckError(...
-                'elltool.linsys.LinSysFactory.create(eye(3),eye(3),ell3d,eye(3),ell3d,eye(3),wCVec)',...
-                'dimension:W');
-            %
-            % incorrect type of W when W is a vector
-            %
-            self.runAndCheckError(...
-                'elltool.linsys.LinSysFactory.create(eye(3),eye(3),ell3d,eye(3),ell3d,eye(3),true(3,1))',...
-                'type:W');
-            %
-            % incorrect type of W when W is a all-constant structure
-            %
-            wEllStruct.center = eye(3,1);
-            wEllStruct.shape = eye(3);
-            self.runAndCheckError(...
-                'elltool.linsys.LinSysFactory.create(eye(3),eye(3),ell3d,eye(3),ell3d,eye(3),wEllStruct)',...
-                'type:noiseBoundsEll');
-            %
-            % incorrect value of W when W.shape is non-symmetric cell matrix
-            %
-            wEllStruct.center = zeros(2,1);
-            wEllStruct.shape = {'t','t^2';'t^3','t^4'};
-            self.runAndCheckError(...
-                'elltool.linsys.LinSysFactory.create(eye(2),eye(2),ell2d,eye(2),ell2d,eye(2),wEllStruct)',...
-                'value:noiseBoundsEll:shape');
-            %
-            % incorrect value of W when W.shape is non-symmetric
-            % negative-defined constant matrix
-            %
-            wEllStruct.center = {'t';'t'};
-            wEllStruct.shape = [1 2; 3 4];
-            self.runAndCheckError(...
-                'elltool.linsys.LinSysFactory.create(eye(2),eye(2),ell2d,eye(2),ell2d,eye(2),wEllStruct)',...
-                'value:noiseBoundsEll:shape');
-            %
-            % incorrect value of W when W.shape is non-symmetric
-            % positive-defined constant matrix
-            %
-            wEllStruct.center = {'t';'t'};
-            wEllStruct.shape = [2 1; 3 2];
-            self.runAndCheckError(...
-                'elltool.linsys.LinSysFactory.create(eye(2),eye(2),ell2d,eye(2),ell2d,eye(2),wEllStruct)',...
-                'value:noiseBoundsEll:shape');
-            %
-            % incorrect value of W when W.shape is symmetric but
-            % negative-defined constant matrix
-            %
-            wEllStruct.center = {'t';'t'};
-            wEllStruct.shape = [1 2; 2 1];
-            self.runAndCheckError(...
-                'elltool.linsys.LinSysFactory.create(eye(2),eye(2),ell2d,eye(2),ell2d,eye(2),wEllStruct)',...
-                'value:noiseBoundsEll:shape');
-            %
-            % incorrect value of W when W.shape is symmetric but
-            % non-negative-defined constant matrix
-            %
-            wEllStruct.center = {'t';'t'};
-            wEllStruct.shape = [1 0; 0 0];
-            self.runAndCheckError(...
-                'elltool.linsys.LinSysFactory.create(eye(2),eye(2),ell2d,eye(2),ell2d,eye(2),wEllStruct)',...
-                'value:noiseBoundsEll:shape');
-            %
-            % correct value of W when W.shape is symmetric and
-            % positive-defined constant matrix
-            %
-            wEllStruct.center = {'t';'t'};
-            wEllStruct.shape = [1 0; 0 1];
-            elltool.linsys.LinSysFactory.create(eye(2),eye(2),ell2d,eye(2),ell2d,eye(2),wEllStruct);
-            %
         end
         %
         function self = testDimension(self)
@@ -364,72 +255,38 @@ classdef LinSysTestCase < mlunitext.test_case
             % test empty system
             %
             system = elltool.linsys.LinSysFactory.create([],[],[]);
-            [nStates, nInputs, nOutputs, nDistInputs] = system.dimension();
-            obtainedVec = [nStates, nInputs, nOutputs, nDistInputs];
-            expectedVec = [0 0 0 0];
+            [nStates, nInputs,  nDistInputs] = system.dimension();
+            obtainedVec = [nStates, nInputs,  nDistInputs];
+            expectedVec = [0 0 0];
             mlunitext.assert_equals(all(expectedVec == obtainedVec), true);
             %
             % test simple system without disturbance
             %
             system = elltool.linsys.LinSysFactory.create(eye(2), eye(2,3), ell_unitball(3));
-            [nStates, nInputs, nOutputs, nDistInputs] = system.dimension();
-            obtainedVec = [nStates, nInputs, nOutputs, nDistInputs];
-            expectedVec = [2 3 2 0];
+            [nStates, nInputs,  nDistInputs] = system.dimension();
+            obtainedVec = [nStates, nInputs,  nDistInputs];
+            expectedVec = [2 3 0];
             mlunitext.assert_equals(all(expectedVec == obtainedVec), true);
             %
             % test complex system with disturbance and noise
             %
             system = elltool.linsys.LinSysFactory.create(eye(5),eye(5,10),ell_unitball(10),...
                 eye(5,11),ell_unitball(11),zeros(3,5),ell_unitball(3));
-            [nStates, nInputs, nOutputs, nDistInputs] = system.dimension();
-            obtainedVec = [nStates, nInputs, nOutputs, nDistInputs];
-            expectedVec = [5 10 3 11];
+            [nStates, nInputs,  nDistInputs] = system.dimension();
+            obtainedVec = [nStates, nInputs,  nDistInputs];
+            expectedVec = [5 10 11];
             mlunitext.assert_equals(all(expectedVec == obtainedVec), true);
             %
             % test array of systems
             %
             systemMat = [system system; system system];
-            [nStatesMat, nInputsMat, nOutputsMat, nDistInputsMat] =...
+            [nStatesMat, nInputsMat, nDistInputsMat] =...
                 systemMat.dimension();
-            obtainedMat=[nStatesMat,nInputsMat,nOutputsMat,nDistInputsMat];
-            expectedMat=[5*ones(2), 10*ones(2), 3*ones(2), 11*ones(2)];
+            obtainedMat=[nStatesMat,nInputsMat,nDistInputsMat];
+            expectedMat=[5*ones(2), 10*ones(2), 11*ones(2)];
             resultMat = (expectedMat(:) == obtainedMat(:));
             mlunitext.assert_equals(all(resultMat(:)), true);
             %
-        end
-        %
-        function self = testHasNoise(self)
-            aMat = eye(3);
-            bMat = eye(3);
-            cMat = eye(3);
-            gMat = eye(3);
-            uEllipsoid = ell_unitball(3);
-            vEllipsoid = ell_unitball(3);
-            wVec = eye(3,1);
-            wCVec = {'t';'t';'t'};
-            wEllipsoid = ell_unitball(3);
-            wEllStuct.shape = {'t','t','t';'t','t','t';'t','t','t'};
-            wEllStuct.center = {'t';'t';'t'};
-            %
-            % test matrix of systems
-            %
-            systemMat = [...
-                elltool.linsys.LinSysFactory.create([],[],[]),...
-                elltool.linsys.LinSysFactory.create(aMat,bMat,uEllipsoid,...
-                gMat,vEllipsoid,cMat,[]),...
-                elltool.linsys.LinSysFactory.create(aMat,bMat,uEllipsoid,...
-                gMat,vEllipsoid,cMat,wVec); ...
-                elltool.linsys.LinSysFactory.create(aMat,bMat,uEllipsoid,...
-                gMat,vEllipsoid,cMat,wCVec), ...
-                elltool.linsys.LinSysFactory.create(aMat,bMat,uEllipsoid,...
-                gMat,vEllipsoid,cMat,wEllipsoid),...
-                elltool.linsys.LinSysFactory.create(aMat,bMat,uEllipsoid,...
-                gMat,vEllipsoid,cMat,wEllStuct)...
-                ];
-            obtainedMat = systemMat.hasnoise();
-            expectedMat = [false false true; true true true];
-            eqMat = (obtainedMat == expectedMat);
-            mlunitext.assert_equals(all(eqMat(:)), true);
         end
         %
         function self = testIsDiscrete(self)
@@ -446,28 +303,26 @@ classdef LinSysTestCase < mlunitext.test_case
             systemCMat = {...
                 elltool.linsys.LinSysFactory.create([],[],[]),...
                 elltool.linsys.LinSysFactory.create(aMat,bMat,uEllipsoid),...
-                elltool.linsys.LinSysFactory.create(aMat,bMat,uEllipsoid,[],[],cMat,[]);...
-                elltool.linsys.LinSysFactory.create(aMat,bMat,uEllipsoid,[],[],cMat,[],'c'),...
-                elltool.linsys.LinSysFactory.create(aMat,bMat,uEllipsoid,[],[],cMat,[],'d'),...
-                elltool.linsys.LinSysFactory.create(aMat,bMat,uVec,[],vVec,cMat,wVec,'d')...
+                elltool.linsys.LinSysFactory.create(aMat,bMat,uEllipsoid,[],[]);...
+                elltool.linsys.LinSysFactory.create(aMat,bMat,uEllipsoid,[],[],'c'),...
+                elltool.linsys.LinSysFactory.create(aMat,bMat,uEllipsoid,[],[],'d'),...
+                elltool.linsys.LinSysFactory.create(aMat,bMat,uVec,[],vVec,'d')...
                 }; 
             isDisc = @(linSys) isa(linSys, 'elltool.linsys.LinSysDiscrete');
             obtainedMat = cellfun(isDisc, systemCMat);
             expectedMat = [false false false; false true true];
-            eqMat = (obtainedMat == expectedMat);
-            mlunitext.assert_equals(all(eqMat(:)), true);
+            isEqMat = (obtainedMat == expectedMat);
+            mlunitext.assert_equals(all(isEqMat(:)), true);
         end
         %
         function self = testIsLti(self)
             aMat = eye(3);
             bMat = eye(3);
-            gMat = eye(3);
             cMat = eye(3);
             vEllipsoid = ell_unitball(3);
             uEllipsoid = ell_unitball(3);
             aCMat = {'t','t','t';'t','t','t';'t','t','t'};
             bCMat = {'t','t','t';'t','t','t';'t','t','t'};
-            gCMat = {'t','t','t';'t','t','t';'t','t','t'};
             cCMat = {'t','t','t';'t','t','t';'t','t','t'};
             %
             % test matrix of systems
@@ -475,20 +330,20 @@ classdef LinSysTestCase < mlunitext.test_case
             systemMat = [...
                 elltool.linsys.LinSysFactory.create([],[],[]),...
                 elltool.linsys.LinSysFactory.create(aMat,bMat,uEllipsoid,...
-                gMat,vEllipsoid,cMat),...
+                cMat,vEllipsoid),...
                 elltool.linsys.LinSysFactory.create(aCMat,bMat,uEllipsoid,...
-                gMat,vEllipsoid,cMat);...
+                cMat,vEllipsoid);...
                 elltool.linsys.LinSysFactory.create(aMat,bCMat,uEllipsoid,...
-                gMat,vEllipsoid,cMat),...
+                cMat,vEllipsoid),...
                 elltool.linsys.LinSysFactory.create(aMat,bMat,uEllipsoid,...
-                gCMat,vEllipsoid,cMat),...
+                cCMat,vEllipsoid),...
                 elltool.linsys.LinSysFactory.create(aMat,bMat,uEllipsoid,...
-                gMat,vEllipsoid,cCMat)...
+                cMat,vEllipsoid)...
                 ];
             obtainedMat = systemMat.islti();
-            expectedMat = [true true false; false false false];
-            eqMat = (obtainedMat == expectedMat);
-            mlunitext.assert_equals(all(eqMat(:)), true);
+            expectedMat = [true true false; false false true];
+            isEqMat = (obtainedMat == expectedMat);
+            mlunitext.assert_equals(all(isEqMat(:)), true);
         end
         %
         function self = testIsEmpty(self)
@@ -504,7 +359,7 @@ classdef LinSysTestCase < mlunitext.test_case
                 elltool.linsys.LinSysFactory.create(aMat,bMat,[]),...
                 elltool.linsys.LinSysFactory.create(aMat,bMat,uEllipsoid)...
                 ];
-            obtainedMat = systemMat.isempty();
+            obtainedMat = systemMat.isEmpty();
             expectedMat = [true true; false false];
             eqMat = (obtainedMat == expectedMat);
             mlunitext.assert_equals(all(eqMat(:)), true);
@@ -525,7 +380,6 @@ classdef LinSysTestCase < mlunitext.test_case
             isOk = ~isempty(strfind(resStr,'B')) && isOk;
             isOk = ~isempty(strfind(resStr,'Control bound')) && isOk;
             isOk = ~isempty(strfind(resStr,'Disturbance bounds')) && isOk;
-            isOk = ~isempty(strfind(resStr,'Noise bounds')) && isOk;
             mlunitext.assert(isOk);
         end
         %
@@ -579,24 +433,24 @@ classdef LinSysTestCase < mlunitext.test_case
             % test default behavior
             %
             mlunitext.assert_equals(...
-                constantDistLinSys.hasdisturbance(), false);
-            mlunitext.assert_equals(boundedDistLinSys.hasdisturbance(), true);
-            mlunitext.assert_equals(noDistLinSys.hasdisturbance(), false);
+                constantDistLinSys.hasDisturbance(), false);
+            mlunitext.assert_equals(boundedDistLinSys.hasDisturbance(), true);
+            mlunitext.assert_equals(noDistLinSys.hasDisturbance(), false);
             %
             % test isMeaningful
             %
             mlunitext.assert_equals(...
-                boundedDistLinSys.hasdisturbance(true), true);
+                boundedDistLinSys.hasDisturbance(true), true);
             mlunitext.assert_equals(...
-                boundedDistLinSys.hasdisturbance(false), true);
+                boundedDistLinSys.hasDisturbance(false), true);
             mlunitext.assert_equals(...
-                constantDistLinSys.hasdisturbance(true), false);
+                constantDistLinSys.hasDisturbance(true), false);
             mlunitext.assert_equals(...
-                constantDistLinSys.hasdisturbance(false), true);
+                constantDistLinSys.hasDisturbance(false), true);
             mlunitext.assert_equals(...
-                noDistLinSys.hasdisturbance(true), false);
+                noDistLinSys.hasDisturbance(true), false);
             mlunitext.assert_equals(...
-                noDistLinSys.hasdisturbance(false), false);
+                noDistLinSys.hasDisturbance(false), false);
         end
         %
         function self = testGetCopy(self)
@@ -606,14 +460,12 @@ classdef LinSysTestCase < mlunitext.test_case
             uStruct = struct();
             uStruct.center = [1; 1; 1];
             uStruct.shape = {'10' 't' '0'; 't' '2' '0'; '0' '0' '3'};
-            gMat = eye(3);
-            gCMat = {'1' '0' '0'; '0' 'sin(t)' '0'; '0' '0' '2'};
+            cMat = eye(3);
+            cCMat = {'1' '0' '0'; '0' 'sin(t)' '0'; '0' '0' '2'};
             vEll = ellipsoid(0.5 * eye(3));
             vStruct = struct();
             vStruct.center = [-1; 0; 1];
             vStruct.shape = {'1' '0' '0'; '0' 't' '0'; '0' '0' 't^3'};
-            cMat = eye(3);
-            cCMat = {'1' '0' '0'; '0' 'cos(t)' '0'; '0' '0' '10'};
             nEll = ellipsoid([1; 2; 3], eye(3));
             nStruct = struct();
             nStruct.center = [0; 0; 0];
@@ -621,23 +473,13 @@ classdef LinSysTestCase < mlunitext.test_case
             lContsysMat(4, 4) = elltool.linsys.LinSysContinuous();
             lContsysMat(1) = create(uEll);
             lContsysMat(2) = create(uStruct);
-            lContsysMat(3) = create(uEll, gMat, vEll);
-            lContsysMat(4) = create(uEll, gMat, vStruct);
-            lContsysMat(5) = create(uStruct, gMat, vEll);
-            lContsysMat(6) = create(uStruct, gMat, vStruct);
-            lContsysMat(7) = create(uEll, gMat, vEll, cMat, nEll);
-            lContsysMat(8) = create(uEll, gMat, vEll, cMat, nStruct);
-            lContsysMat(9) = create(uEll, gMat, vStruct, cMat, nEll);
-            lContsysMat(10) = create(uEll, gMat, vStruct, cMat, nStruct);
-            lContsysMat(11) = create(uStruct, gMat, vEll, cMat, nEll);
-            lContsysMat(12) = create(uStruct, gMat, vEll, cMat, nStruct);
-            lContsysMat(13) = create(uStruct, gMat, vStruct, cMat, nEll);
-            lContsysMat(14) = create(uStruct, gMat, vStruct, cMat, nStruct);
-            lContsysMat(15) = create(uEll, gCMat, vStruct, cMat, nStruct);
-            lContsysMat(16) = create(uStruct, gCMat, vEll, cCMat, nEll);
+            lContsysMat(3) = create(uEll, cMat, vEll);
+            lContsysMat(4) = create(uEll, cMat, vStruct);
+            lContsysMat(5) = create(uStruct, cMat, vEll);
+            lContsysMat(6) = create(uStruct, cMat, vStruct);
             lDiscrsysMat(2, 1) = elltool.linsys.LinSysDiscrete();
-            lDiscrsysMat(1) = create(uEll, [], [], [], [], 'd');
-            lDiscrsysMat(2) = create(uEll, gMat, vEll, [], [], 'd');
+            lDiscrsysMat(1) = create(uEll, [], [], 'd');
+            lDiscrsysMat(2) = create(uEll, cMat, vEll, 'd');
             %
             copiedLContsysMat = lContsysMat.getCopy();
             isEqualMat = copiedLContsysMat.isEqual(lContsysMat);

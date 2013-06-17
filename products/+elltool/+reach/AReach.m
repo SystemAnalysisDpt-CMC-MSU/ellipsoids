@@ -332,7 +332,7 @@ classdef AReach < elltool.reach.IReach
                 qtStrCMat qtStrCVec] = prepareSysParam(linSys)
             atMat = linSys.getAtMat();
             btMat = linSys.getBtMat();
-            gtMat = linSys.getGtMat();
+            ctMat = linSys.getCtMat();
             if ~iscell(atMat) && ~isempty(atMat)
                 atStrCMat = getStrCMat(atMat);
             else
@@ -343,13 +343,13 @@ classdef AReach < elltool.reach.IReach
             else
                 btStrCMat = btMat;
             end
-            if isempty(gtMat)
-                gtMat = zeros(size(btMat));
+            if isempty(ctMat)
+                ctMat = zeros(size(btMat));
             end
-            if ~iscell(gtMat)
-                gtStrCMat = getStrCMat(gtMat);
+            if ~iscell(ctMat)
+                gtStrCMat = getStrCMat(ctMat);
             else
-                gtStrCMat = gtMat;
+                gtStrCMat = ctMat;
             end
             uEll = linSys.getUBoundsEll();
             [ptVec ptMat] =getEllParams(uEll, btMat);
@@ -364,7 +364,7 @@ classdef AReach < elltool.reach.IReach
                 ptStrCVec = ptVec;
             end
             vEll = linSys.getDistBoundsEll();
-            [qtVec qtMat] =getEllParams(vEll, gtMat);
+            [qtVec qtMat] =getEllParams(vEll, ctMat);
             if ~iscell(qtMat)
                 qtStrCMat = getStrCMat(qtMat);
             else
@@ -471,11 +471,6 @@ classdef AReach < elltool.reach.IReach
             [atStrCMat btStrCMat gtStrCMat ptStrCMat ptStrCVec ...
                 qtStrCMat qtStrCVec] = ...
                 self.prepareSysParam(newLinSys, newTimeVec);
-            %
-            % Normalize good ext/int-directions
-            %
-            sysDim = size(atStrCMat, 1);
-            l0Mat = self.getNormMat(l0Mat, sysDim);
             %
             % ext/int-approx on the next time interval
             %
@@ -713,10 +708,11 @@ classdef AReach < elltool.reach.IReach
     end
     methods
         function self=AReach(linSys, x0Ell, l0Mat, timeVec, varargin)
-            import modgen.common.type.simple.checkgenext;
-            import modgen.common.type.simple.checkgen;
+            import modgen.common.checkmultvar;
+            import modgen.common.checkvar;
             import modgen.common.throwerror;
             import elltool.conf.Properties;
+            import gras.ellapx.enums.EApproxType;            
             %
             if nargin>0
                 NEEDED_PROP_LIST =...
@@ -749,10 +745,11 @@ classdef AReach < elltool.reach.IReach
                     throwerror('wrongInput', ['set of initial ',...
                         'conditions must be ellipsoid.']);
                 end
-                checkgenext('x1==x2&&x2==x3', 3,...
-                    dimension(linSys), dimension(x0Ell), size(l0Mat, 1));
+                checkmultvar(...
+                    'dimension(x1)==dimension(x2)&&dimension(x2)==size(x3,1)',...
+                    3,linSys,x0Ell,l0Mat);
                 %
-                checkgen(timeVec,'isnumeric(x)&isrow(x)&&numel(x)==2',...
+                checkvar(timeVec,'isnumeric(x)&isrow(x)&&numel(x)==2',...
                     'errorTag','wrongInput', 'errorMessage',...
                     'time interval must be specified by a vector');
                 %
@@ -762,6 +759,30 @@ classdef AReach < elltool.reach.IReach
                     false, false;...
                     'islogical(x)&&isscalar(x)',...
                     'islogical(x)&&isscalar(x)'},0);
+                %
+                % create gras LinSys object
+                %
+                [x0Vec, x0Mat] = double(x0Ell);
+                [atStrCMat, btStrCMat, gtStrCMat, ptStrCMat, ptStrCVec,...
+                    qtStrCMat, qtStrCVec] =...
+                    self.prepareSysParam(linSys, timeVec);
+                isDisturbance = self.isDisturbance(gtStrCMat, qtStrCMat);
+                %
+                % Normalize good directions
+                %
+                sysDim = size(atStrCMat, 1);
+                l0Mat = self.getNormMat(l0Mat, sysDim);
+                %
+                probDynObj = self.getProbDynamics(atStrCMat, btStrCMat,...
+                    ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat, qtStrCVec,...
+                    x0Mat, x0Vec, timeVec, self.relTol, isDisturbance);
+                approxTypeVec = [EApproxType.External, EApproxType.Internal];
+                self.ellTubeRel = self.makeEllTubeRel(probDynObj, l0Mat,...
+                    timeVec, isDisturbance, self.relTol, approxTypeVec);
+                if self.isBackward
+                    self.ellTubeRel =...
+                        self.transformEllTube(self.ellTubeRel);
+                end                
             end
         end
         %
@@ -789,7 +810,8 @@ classdef AReach < elltool.reach.IReach
             if ~ (isa(intersectObj, 'ellipsoid') &&...
                     ~isa(intersectObj, 'hyperplane') &&...
                     ~isa(intersectObj, 'polytope'))
-                throwerror(['INTERSECT: first input argument must be ',...
+                throwerror('wrongInput',...
+                    ['first input argument must be ',...
                     'ellipsoid, hyperplane or polytope.']);
             end
             if (nargin < 3) || ~ischar(approxTypeChar)
@@ -1458,8 +1480,10 @@ classdef AReach < elltool.reach.IReach
                 oldLinSys = newLinSys;
             else
                 if ~isa(linSys,self.LINSYS_CLASS_STRING)
-                    throwerror('wrongInput', ['first input argument ',...
-                        'must be linear system object.']);
+                    throwerror('wrongInput',...
+                        sprintf(['first input argument ',...
+                        'must be linear system object of type %s'],...
+                        self.LINSYS_CLASS_STRING));
                 end
                 newLinSys = linSys;
                 oldLinSys = self.get_system();
@@ -1520,7 +1544,8 @@ classdef AReach < elltool.reach.IReach
                 isIndVec = true(size(timeVec));
                 isIndVec(1) = false;
                 newReachObj.ellTubeRel =...
-                    newEllTubeRel.cat(self.ellTubeRel, isIndVec);
+                    newEllTubeRel.cat(self.ellTubeRel, isIndVec,...
+                    'isReplacedByNew',true);
             else
                 timeVec = newEllTubeRel.timeVec{1};
                 isIndVec = true(size(timeVec));

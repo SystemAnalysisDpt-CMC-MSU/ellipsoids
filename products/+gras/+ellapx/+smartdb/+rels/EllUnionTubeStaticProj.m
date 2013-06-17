@@ -1,82 +1,89 @@
 classdef EllUnionTubeStaticProj<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
         gras.ellapx.smartdb.rels.EllTubeProjBasic&...
         gras.ellapx.smartdb.rels.EllUnionTubeBasic
-    % EllUnionTubeStaticProj - class which keeps projection on static plane 
+    % EllUnionTubeStaticProj - class which keeps projection on static plane
     %                          union of ellipsoid tubes
-    % 
+    %
     % Fields:
-    %   QArray:cell[1, nElem] - Array of ellipsoid matrices                              
-    %   aMat:cell[1, nElem] - Array of ellipsoid centers                               
-    %   scaleFactor:double[1, 1] - Tube scale factor                                        
-    %   MArray:cell[1, nElem] - Array of regularization ellipsoid matrices                
-    %   dim :double[1, 1] - Dimensionality                                          
-    %   sTime:double[1, 1] - Time s                                                   
-    %   approxSchemaName:cell[1,] - Name                                                      
-    %   approxSchemaDescr:cell[1,] - Description                                               
-    %   approxType:gras.ellapx.enums.EApproxType - Type of approximation 
-    %                 (external, internal, not defined 
-    %   timeVec:cell[1, m] - Time vector                                             
-    %   calcPrecision:double[1, 1] - Calculation precision                                    
-    %   indSTime:double[1, 1]  - index of sTime within timeVec                             
-    %   ltGoodDirMat:cell[1, nElem] - Good direction curve                                     
-    %   lsGoodDirVec:cell[1, nElem] - Good direction at time s                                  
-    %   ltGoodDirNormVec:cell[1, nElem] - Norm of good direction curve                              
-    %   lsGoodDirNorm:double[1, 1] - Norm of good direction at time s                         
-    %   xTouchCurveMat:cell[1, nElem] - Touch point curve for good 
-    %                                   direction                     
-    %   xTouchOpCurveMat:cell[1, nElem] - Touch point curve for direction 
+    %   QArray:cell[1, nElem] - Array of ellipsoid matrices
+    %   aMat:cell[1, nElem] - Array of ellipsoid centers
+    %   scaleFactor:double[1, 1] - Tube scale factor
+    %   MArray:cell[1, nElem] - Array of regularization ellipsoid matrices
+    %   dim :double[1, 1] - Dimensionality
+    %   sTime:double[1, 1] - Time s
+    %   approxSchemaName:cell[1,] - Name
+    %   approxSchemaDescr:cell[1,] - Description
+    %   approxType:gras.ellapx.enums.EApproxType - Type of approximation
+    %                 (external, internal, not defined
+    %   timeVec:cell[1, m] - Time vector
+    %   calcPrecision:double[1, 1] - Calculation precision
+    %   indSTime:double[1, 1]  - index of sTime within timeVec
+    %   ltGoodDirMat:cell[1, nElem] - Good direction curve
+    %   lsGoodDirVec:cell[1, nElem] - Good direction at time s
+    %   ltGoodDirNormVec:cell[1, nElem] - Norm of good direction curve
+    %   lsGoodDirNorm:double[1, 1] - Norm of good direction at time s
+    %   xTouchCurveMat:cell[1, nElem] - Touch point curve for good
+    %                                   direction
+    %   xTouchOpCurveMat:cell[1, nElem] - Touch point curve for direction
     %                                     opposite to good direction
-    %   xsTouchVec:cell[1, nElem]  - Touch point at time s                                    
+    %   xsTouchVec:cell[1, nElem]  - Touch point at time s
     %   xsTouchOpVec :cell[1, nElem] - Touch point at time s
-    %   projSTimeMat: cell[1, 1] - Projection matrix at time s                                  
-    %   projType:gras.ellapx.enums.EProjType - Projection type                                             
-    %   ltGoodDirNormOrigVec:cell[1, 1] - Norm of the original (not 
-    %                                     projected) good direction curve   
-    %   lsGoodDirNormOrig:double[1, 1] - Norm of the original (not 
+    %   projSTimeMat: cell[1, 1] - Projection matrix at time s
+    %   projType:gras.ellapx.enums.EProjType - Projection type
+    %   ltGoodDirNormOrigVec:cell[1, 1] - Norm of the original (not
+    %                                     projected) good direction curve
+    %   lsGoodDirNormOrig:double[1, 1] - Norm of the original (not
     %                                    projected)good direction at time s
-    %   lsGoodDirOrigVec:cell[1, 1] - Original (not projected) good 
+    %   lsGoodDirOrigVec:cell[1, 1] - Original (not projected) good
     %                                 direction at time s
-    %   ellUnionTimeDirection:gras.ellapx.enums.EEllUnionTimeDirection - 
-    %                      Direction in time along which union is performed          
-    %   isLsTouch:logical[1, 1] - Indicates whether a touch takes place 
-    %                             along LS           
-    %   isLsTouchOp:logical[1, 1] - Indicates whether a touch takes place 
-    %                               along LS opposite  
-    %   isLtTouchVec:cell[1, nElem] - Indicates whether a touch takes place 
-    %                                 along LT         
-    %   isLtTouchOpVec:cell[1, nElem] - Indicates whether a touch takes 
-    %                                   place along LT opposite  
-    %   timeTouchEndVec:cell[1, nElem] - Touch point curve for good 
-    %                                    direction                     
-    %   timeTouchOpEndVec:cell[1, nElem] - Touch point curve for good 
+    %   ellUnionTimeDirection:gras.ellapx.enums.EEllUnionTimeDirection -
+    %                      Direction in time along which union is performed
+    %   isLsTouch:logical[1, 1] - Indicates whether a touch takes place
+    %                             along LS
+    %   isLsTouchOp:logical[1, 1] - Indicates whether a touch takes place
+    %                               along LS opposite
+    %   isLtTouchVec:cell[1, nElem] - Indicates whether a touch takes place
+    %                                 along LT
+    %   isLtTouchOpVec:cell[1, nElem] - Indicates whether a touch takes
+    %                                   place along LT opposite
+    %   timeTouchEndVec:cell[1, nElem] - Touch point curve for good
+    %                                    direction
+    %   timeTouchOpEndVec:cell[1, nElem] - Touch point curve for good
     %                                      direction
     %
-    %   TODO: correct description of the fields in 
+    %   TODO: correct description of the fields in
     %     gras.ellapx.smartdb.rels.EllUnionTubeStaticProj
-     methods (Access = protected)
+    methods
         function fieldsList = getNoCatOrCutFieldsList(self)
+            import  gras.ellapx.smartdb.F;
             ellTubeBasicList = self.getNoCatOrCutFieldsList@...
                 gras.ellapx.smartdb.rels.EllTubeProjBasic;
-            fieldsList=[ellTubeBasicList;'ELL_UNION_TIME_DIRECTION';...
-                'IS_LS_TOUCH';'IS_LS_TOUCH_OP'];
+            fieldsList=[ellTubeBasicList;...
+                F().getNameList({'ELL_UNION_TIME_DIRECTION';...
+                'IS_LS_TOUCH';'IS_LS_TOUCH_OP'})];
         end
+    end
+    methods (Access = protected)
         function fieldsList = getSFieldsList(self)
+            import  gras.ellapx.smartdb.F;
             ellTubeBasicList = self.getSFieldsList@...
                 gras.ellapx.smartdb.rels.EllTubeProjBasic;
-            fieldsList=[ellTubeBasicList;'IS_LS_TOUCH';...
-                'IS_LS_TOUCH_OP'];
+            fieldsList=[ellTubeBasicList;...
+                F().getNameList({'IS_LS_TOUCH';'IS_LS_TOUCH_OP'})];
         end
         function fieldsList = getTFieldsList(self)
+            import  gras.ellapx.smartdb.F;
             ellTubeBasicList = self.getTFieldsList@...
                 gras.ellapx.smartdb.rels.EllTubeProjBasic;
-            fieldsList=[ellTubeBasicList;'IS_LT_TOUCH_VEC';...
-                'IS_LT_TOUCH_OP_VEC'];
+            fieldsList=[ellTubeBasicList;...
+                F().getNameList({'IS_LT_TOUCH_VEC';'IS_LT_TOUCH_OP_VEC'})];
         end
         function fieldsList = getScalarFieldsList(self)
+            import  gras.ellapx.smartdb.F;
             ellTubeBasicList = self.getScalarFieldsList@...
                 gras.ellapx.smartdb.rels.EllTubeProjBasic;
-            fieldsList=[ellTubeBasicList;'IS_LS_TOUCH';...
-                'IS_LS_TOUCH_OP'];
+            fieldsList=[ellTubeBasicList;...
+                F().getNameList({'IS_LS_TOUCH';'IS_LS_TOUCH_OP'})];
         end
     end
     methods(Access=protected)
@@ -122,34 +129,34 @@ classdef EllUnionTubeStaticProj<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&
             %           function that specified transparency
             %           value for ellipsoidal tubes
             %       fGetLineWidth: function_handle[1, 1] -
-            %           function that specified lineWidth for good curves 
+            %           function that specified lineWidth for good curves
             %       fGetFill: function_handle[1, 1] - this
             %           property not used in this version
-            %       colorFieldList: cell[nColorFields, ] of char[1, ] - 
+            %       colorFieldList: cell[nColorFields, ] of char[1, ] -
             %           list of parameters for color function
-            %       alphaFieldList: cell[nAlphaFields, ] of char[1, ] - 
+            %       alphaFieldList: cell[nAlphaFields, ] of char[1, ] -
             %           list of parameters for transparency function
-            %       lineWidthFieldList: cell[nLineWidthFields, ] 
-            %           of char[1, ] - list of parameters for lineWidth 
+            %       lineWidthFieldList: cell[nLineWidthFields, ]
+            %           of char[1, ] - list of parameters for lineWidth
             %           function
-            %       fillFieldList: cell[nIsFillFields, ] of char[1, ] - 
+            %       fillFieldList: cell[nIsFillFields, ] of char[1, ] -
             %           list of parameters for fill function
-            %       plotSpecFieldList: cell[nPlotFields, ] of char[1, ] - 
+            %       plotSpecFieldList: cell[nPlotFields, ] of char[1, ] -
             %           defaul list of parameters. If for any function in
-            %           properties not specified list of parameters, 
+            %           properties not specified list of parameters,
             %           this one will be used
             %
             % Output:
             %   plObj: smartdb.disp.RelationDataPlotter[1,1] - plotter
             %           object used for displaying ellipsoidal tubes
-            % 
-            % $Author: 
-            % Peter Gagarinov  <pgagarinov@gmail.com> 	
-            % Artem Grachev <grachev.art@gmail.com> 
+            %
+            % $Author:
+            % Peter Gagarinov  <pgagarinov@gmail.com>
+            % Artem Grachev <grachev.art@gmail.com>
             % $Date: May-2013$
             % $Copyright: Moscow State University,
             %             Faculty of Computational Mathematics
-            %             and Computer Science, 
+            %             and Computer Science,
             %             System Analysis Department 2013$
             %
             import gras.ellapx.smartdb.rels.EllUnionTubeStaticProj;
@@ -203,7 +210,7 @@ classdef EllUnionTubeStaticProj<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&
         function axesName=axesGetKeyTubeFunc(self,~,projSTimeMat,varargin)
             axesName=['Ellipsoidal union tubes, proj. on subspace ',...
                 self.projSpecVec2Str(projSTimeMat)];
-        end        
+        end
         function figureSetPropFunc(self,hFigure,varargin)
             figureSetPropFunc@gras.ellapx.smartdb.rels.EllTubeProjBasic(...
                 self,hFigure,varargin{:});
@@ -233,16 +240,16 @@ classdef EllUnionTubeStaticProj<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&
                 lsGoodDirOrigVec,ltGoodDirMat,sTime,xTouchCurveMat,...
                 xTouchOpCurveMat,ltGoodDirNormVec,ltGoodDirNormOrigVec,...
                 ~,~, isLtTouchVec,isLtTouchOpVec,varargin)
-                
-                [cMat,cOpMat]=...
-                    getGoodDirColor@gras.ellapx.smartdb.rels...
-                    .EllTubeProjBasic(...
-                    self,hAxes,projType,timeVec,...
-                    lsGoodDirOrigVec,ltGoodDirMat,sTime,xTouchCurveMat,...
-                    xTouchOpCurveMat,ltGoodDirNormVec,ltGoodDirNormOrigVec);
-                cMat = adjustColor(cMat,isLtTouchVec);
-                cOpMat = adjustColor(cOpMat,isLtTouchOpVec);
-                %
+            
+            [cMat,cOpMat]=...
+                getGoodDirColor@gras.ellapx.smartdb.rels...
+                .EllTubeProjBasic(...
+                self,hAxes,projType,timeVec,...
+                lsGoodDirOrigVec,ltGoodDirMat,sTime,xTouchCurveMat,...
+                xTouchOpCurveMat,ltGoodDirNormVec,ltGoodDirNormOrigVec);
+            cMat = adjustColor(cMat,isLtTouchVec);
+            cOpMat = adjustColor(cOpMat,isLtTouchOpVec);
+            %
             function cOutMat=adjustColor(cMat,isTouchVec)
                 nPoints=size(ltGoodDirNormVec,2);
                 cOutMat=zeros(nPoints,3);
@@ -264,16 +271,16 @@ classdef EllUnionTubeStaticProj<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&
                 normRatioVec.'*(ONE_NORM_COLOR_RGB_VEC-...
                 ZERO_NORM_COLOR_RGB_VEC);
         end
-
+        
         function hVec=plotCreateReachTubeFunc(self, plotPropProcObj,...
                 hAxes, varargin)
-
+            
             [~, inpTimeVec,lsGoodDirOrigVec,~,sTime,...
                 ~,~,~,...
                 ~,~,~,...
                 ~,~,approxType,QArray,aMat] =...
                 varargin{:};
-
+            
             import gras.ellapx.enums.EProjType;
             import modgen.common.throwerror;
             import gras.ellapx.enums.EApproxType;
@@ -386,16 +393,16 @@ classdef EllUnionTubeStaticProj<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&
             end
             function refineFactor=getRefineFactorByNeighborQMat(...
                     aLeftVec,qLeftMat,tLeft,aRightVec,qRightMat,tRight)
-                    tDeltaInv=1./(tRight-tLeft);
-                    aDiffVec = aRightVec-aLeftVec;
-                    aDiff=abs(realsqrt(sum(aDiffVec.*aDiffVec))*tDeltaInv);
-                    qDiff=realsqrt(max(abs(eig(qRightMat-qLeftMat))))*tDeltaInv;
-                    eigLeftVec=eig(qLeftMat);
-                    eigRightVec=eig(qRightMat);
-                    condVal=0.5*(max(eigLeftVec)/min(eigLeftVec)+...
-                        max(eigRightVec)/min(eigRightVec));
-                    refineFactor=min(ceil(max(minRefineFactor,...
-                        log(realsqrt((aDiff+qDiff)*condVal)))),maxRefineFactor);
+                tDeltaInv=1./(tRight-tLeft);
+                aDiffVec = aRightVec-aLeftVec;
+                aDiff=abs(realsqrt(sum(aDiffVec.*aDiffVec))*tDeltaInv);
+                qDiff=realsqrt(max(abs(eig(qRightMat-qLeftMat))))*tDeltaInv;
+                eigLeftVec=eig(qLeftMat);
+                eigRightVec=eig(qRightMat);
+                condVal=0.5*(max(eigLeftVec)/min(eigLeftVec)+...
+                    max(eigRightVec)/min(eigRightVec));
+                refineFactor=min(ceil(max(minRefineFactor,...
+                    log(realsqrt((aDiff+qDiff)*condVal)))),maxRefineFactor);
             end
         end
         function hVec=plotCreateTubeTouchCurveFunc(self, hAxes,...
@@ -471,9 +478,9 @@ classdef EllUnionTubeStaticProj<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&
             %       object
             %
             % Output:
-            % ellUnionTubeRel: ellapx.smartdb.rel.EllUnionTube - union of the 
+            % ellUnionTubeRel: ellapx.smartdb.rel.EllUnionTube - union of the
             %             ellipsoidal tubes
-            %                   
+            %
             import gras.ellapx.smartdb.rels.EllUnionTubeBasic;
             import gras.ellapx.smartdb.rels.EllUnionTubeStaticProj;
             %

@@ -304,40 +304,7 @@ classdef ReachContinuous < elltool.reach.AReach
             %             and Computer Science,
             %             System Analysis Department 2013$
             %
-            import modgen.common.type.simple.checkgenext;
-            import modgen.common.throwerror;
-            import gras.ellapx.uncertcalc.EllApxBuilder;
-            import gras.ellapx.enums.EApproxType;
-            import elltool.logging.Log4jConfigurator;
-            import elltool.conf.Properties;
-            %
             self=self@elltool.reach.AReach(varargin{:});
-            if nargin>0
-                [linSys, x0Ell, l0Mat, timeVec]=deal(varargin{1:4});
-                %
-                % create gras LinSys object
-                %
-                [x0Vec, x0Mat] = double(x0Ell);
-                [atStrCMat, btStrCMat, gtStrCMat, ptStrCMat, ptStrCVec,...
-                    qtStrCMat, qtStrCVec] =...
-                    self.prepareSysParam(linSys, timeVec);
-                isDisturbance = self.isDisturbance(gtStrCMat, qtStrCMat);
-                %
-                % Normalize good directions
-                %
-                sysDim = size(atStrCMat, 1);
-                l0Mat = self.getNormMat(l0Mat, sysDim);
-                %
-                probDynObj = self.getProbDynamics(atStrCMat, btStrCMat,...
-                    ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat, qtStrCVec,...
-                    x0Mat, x0Vec, timeVec, self.relTol, isDisturbance);
-                approxTypeVec = [EApproxType.External, EApproxType.Internal];
-                self.ellTubeRel = self.makeEllTubeRel(probDynObj, l0Mat,...
-                    timeVec, isDisturbance, self.relTol, approxTypeVec);
-                if self.isBackward
-                    self.ellTubeRel = self.rotateEllTubeRel(self.ellTubeRel);
-                end
-            end
         end
     end
 end

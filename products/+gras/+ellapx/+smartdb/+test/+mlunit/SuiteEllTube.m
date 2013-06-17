@@ -15,7 +15,8 @@ classdef SuiteEllTube < mlunitext.test_case
             cutTimeVec = [20, 80];
             timeVec = 1 : 100;
             evolveTimeVec = 101 : 200;
-            fieldToExcludeList = {'sTime','lsGoodDirVec'};
+            rel=create();
+            fieldToExcludeList = rel.getNoCatOrCutFieldsList();
             % cut: test interval
             rel = create(timeVec);
             cutRel = rel.cut(cutTimeVec);
@@ -38,32 +39,44 @@ classdef SuiteEllTube < mlunitext.test_case
             secondRel = create(evolveTimeVec);
             expRel = create([timeVec evolveTimeVec]);
             catRel = firstRel.cat(secondRel);
-            [isOk,reportStr] = ...
-                catRel.getFieldProjection(fieldList).isEqual(...
-                expRel.getFieldProjection(fieldList));
-            mlunitext.assert(isOk, reportStr);
+            check();
+            catRel = firstRel.cat(secondRel,'isReplacedByNew',true);
+            check();
+            isOk=all(cellfun(isequal(catRel.(x),secondRel.(x)),...
+                fieldToExcludeList));
+            mlunitext.assert(isOk);
+            function check()
+                [isOk,reportStr] = ...
+                    catRel.getFieldProjection(fieldList).isEqual(...
+                    expRel.getFieldProjection(fieldList));
+                mlunitext.assert(isOk, reportStr);
+            end
             %
             function rel = create(timeVec)
-                nPoints = numel(timeVec);
-                aMat=zeros(nDims,nPoints);
-                %
-                QArray = zeros(nDims,nDims,nPoints);
-                for iPoint = 1:nPoints
-                    QArray(:,:,iPoint) = timeVec(iPoint)*eye(nDims);
+                if nargin==0
+                    rel=gras.ellapx.smartdb.rels.EllTube();
+                else
+                    nPoints = numel(timeVec);
+                    aMat=zeros(nDims,nPoints);
+                    %
+                    QArray = zeros(nDims,nDims,nPoints);
+                    for iPoint = 1:nPoints
+                        QArray(:,:,iPoint) = timeVec(iPoint)*eye(nDims);
+                    end
+                    QArrayList=repmat({QArray},1,nTubes);
+                    %
+                    ltSingleGoodDirArray = zeros(nDims,1,nPoints);
+                    for iPoint = 1:nPoints
+                        ltSingleGoodDirArray(:,:,iPoint) = ...
+                            timeVec(iPoint)*eye(nDims,1);
+                    end
+                    ltGoodDirArray=repmat(ltSingleGoodDirArray,1,nTubes);
+                    %
+                    rel = gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
+                        QArrayList,aMat,timeVec,ltGoodDirArray,timeVec(1),...
+                        gras.ellapx.enums.EApproxType.Internal,...
+                        char.empty(1,0),char.empty(1,0),calcPrecision);
                 end
-                QArrayList=repmat({QArray},1,nTubes);
-                %
-                ltSingleGoodDirArray = zeros(nDims,1,nPoints);
-                for iPoint = 1:nPoints
-                    ltSingleGoodDirArray(:,:,iPoint) = ...
-                        timeVec(iPoint)*eye(nDims,1);
-                end
-                ltGoodDirArray=repmat(ltSingleGoodDirArray,1,nTubes);
-                %
-                rel = gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
-                    QArrayList,aMat,timeVec,ltGoodDirArray,timeVec(1),...
-                    gras.ellapx.enums.EApproxType.Internal,...
-                    char.empty(1,0),char.empty(1,0),calcPrecision);
             end
         end
         function testRegCreate(self)

@@ -5,11 +5,11 @@ function regMat = regposdefmat(inpMat, regTol)
 %   regular:
 %       inpMat: double[nDim, nDim] - square matrix
 %           that needs to be regularized.
-%       regTol: double[1, 1] - regularization parameter.
+%       regTol: double[1, 1] - regularization tolerance, added to each
+%          eigen value of inpMat. regTol is expected to be positive
 %
 % Output:
 %   regMat: double[nDim, nDim] - regularized matrix.
-%
 %
 % $Authors: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: 21-04-2013 $
 % $Copyright: Moscow State University,
