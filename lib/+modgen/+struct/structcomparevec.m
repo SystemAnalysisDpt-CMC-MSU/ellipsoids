@@ -107,6 +107,8 @@ end
 
 function [isEqual,reportStr]=compfun(x,y,absTol,relTol)
 % COMPFUN compares two different objects (ideally - of any type)
+import gras.gen.absreldiff;
+%
 reportStr='';
 isEqual=false;
 xClass=class(x);
@@ -129,40 +131,37 @@ if isnumeric(x)
     x=toNumericSupportingMinus(x);
     y=toNumericSupportingMinus(y);
     %
-    curAbsDiffVec = abs(x(:)-y(:));
-    maxAbsDiff = max(curAbsDiffVec);
+    if isRelativeEnabled
+        [curDiffVec, isRelCompVec] = absreldiff(x(:), y(:), absTol, @abs);
+    else
+        [curDiffVec, isRelCompVec] = absreldiff(x(:), y(:), Inf, @abs);
+    end
+    %
+    maxAbsDiff = max(curDiffVec(~isRelCompVec(:)));
     isUpperAbsTol = any(maxAbsDiff > absTol);
     %
-    maxRelDiff = [];
-    isUpperRelTol = [];
-    %
-    if all([isUpperAbsTol, isRelativeEnabled])
-        curNormVec = abs(x(:)) + abs(y(:));
-        isRelComparison = and(curAbsDiffVec > absTol, ...
-            curNormVec > absTol);
+    if isRelativeEnabled && any(isRelCompVec)
+        curRelDiff = curDiffVec(isRelCompVec(:));
+        [maxRelDiff, indMaxRelDiff] = max(curRelDiff(:));
+        indMaxRelDiff = ...
+            find(cumsum(isRelCompVec(:)) == indMaxRelDiff, 1, 'first');
+        maxAbsRelDiff = absreldiff(x(indMaxRelDiff), y(indMaxRelDiff), ...
+            Inf, @abs);
         %
-        if any(isRelComparison)
-            curRelDiff = 2 .* curAbsDiffVec(isRelComparison) ./ ...
-                curNormVec(isRelComparison);
-            [maxRelDiff, indMaxRelDiff] = max(curRelDiff);
-            indMaxRelDiff = ...
-                find(cumsum(isRelComparison) == indMaxRelDiff, 1, 'first');
-            %
-            maxAbsDiff = max(curAbsDiffVec(~isRelComparison));
-            %
-            isUpperAbsTol = maxAbsDiff > absTol;
-            isUpperRelTol = maxRelDiff > relTol;
-        end
+        isUpperRelTol = any(maxRelDiff > relTol);
+    else
+        isUpperRelTol = false;
     end
-    if any([isUpperAbsTol, isUpperRelTol])
-        if any(isUpperAbsTol)
+    %
+    if isUpperAbsTol || isUpperRelTol
+        if isUpperAbsTol
             reportStr=sprintf('Max. difference (%d) is greater than the specified tolerance(%d)', maxAbsDiff, absTol);
         end
-        if any(isUpperRelTol)
+        if isUpperRelTol
             if ~isempty(reportStr)
                 reportStr = horzcat(reportStr, '   ');
             end
-            reportStr=horzcat(reportStr, sprintf('Max. relative difference (%d) is greater than the specified tolerance(%d); absolute difference: (%d), absolute tolerance: (%d)', maxRelDiff, relTol, curAbsDiffVec(indMaxRelDiff), absTol));
+            reportStr=horzcat(reportStr, sprintf('Max. relative difference (%d) is greater than the specified tolerance(%d); absolute difference: (%d), absolute tolerance: (%d)', maxRelDiff, relTol, maxAbsRelDiff, absTol));
         end
         return;
     end

@@ -146,5 +146,37 @@ classdef SuiteBasic < mlunitext.test_case
                     rightArray));
             end
         end
+        function testAbsRelDiff(self)
+            import gras.gen.absreldiff;
+            % size error
+            self.runAndCheckError(...
+                'gras.gen.absreldiff([1 1], [1; 1], 0.1, @abs)', ...
+                'wrongInput:wrongArgs');
+            % absTol error #1
+            self.runAndCheckError(...
+                'gras.gen.absreldiff([1 1], [1 1], -0.1, @abs)', ...
+                'wrongInput:wrongAbsTol');
+            % absTol error #2
+            self.runAndCheckError(...
+                'gras.gen.absreldiff([1 1], [1 1], [0.1, -0.1], @abs)', ...
+                'wrongInput:wrongAbsTol');
+            % result tests
+            xVec = [1 2]; yVec = [2 4];
+            [zVec, isRelComp] = absreldiff(xVec, yVec, 0.5, @abs);
+            check(zVec, [2/3, 2/3]);
+            check(isRelComp, true([1 2]));
+            %
+            [zVec, isRelComp] = absreldiff(xVec, yVec, 1.5, @abs);
+            check(zVec, [1, 2/3]);
+            check(isRelComp, logical([0, 1]));
+            %
+            [zVec, isRelComp] = absreldiff(xVec, yVec, 3, @abs);
+            check(zVec, [1, 2]);
+            check(isRelComp, false([1, 2]));
+            function check(leftArray,rightArray)
+                mlunitext.assert_equals(true,isequal(leftArray,...
+                    rightArray));
+            end
+        end
     end
 end
