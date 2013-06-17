@@ -108,7 +108,7 @@
     <regularizationProps type="struct" >
 		<isEnabled type="boolean" >1</isEnabled>
 		<isJustCheck type="boolean" >0</isJustCheck>
-		<regTol type="double" >1e-05</regTol>
+		<regTol type="double" >1e-06</regTol>
 	</regularizationProps>
 </valueObj>
 <keyStr type="char" >inftraj2d</keyStr>
