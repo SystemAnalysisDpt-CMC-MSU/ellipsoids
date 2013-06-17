@@ -1,7 +1,7 @@
 classdef GoodDirsContinuousGen<gras.ellapx.lreachplain.AGoodDirsContinuous
     properties (Constant, GetAccess = protected)
         ODE_NORM_CONTROL = 'on';
-        CALC_PRECISION_FACTOR = 1e-6;
+        CALC_PRECISION_FACTOR = 1e-5;
         CALC_CGRID_COUNT = 8000;
     end
     methods
