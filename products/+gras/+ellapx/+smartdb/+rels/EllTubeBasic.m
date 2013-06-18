@@ -21,13 +21,40 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
         function [xTouchMat,xTouchOpMat]=calcTouchCurves(QArray,aMat,...
                 ltGoodDirMat)
             import gras.ellapx.common.*;
-            import gras.gen.SquareMatVector;
-            Qsize=size(QArray);
-            tmp=SquareMatVector.rMultiplyByVec(QArray,ltGoodDirMat);
-            denominator=realsqrt(abs(dot(ltGoodDirMat, tmp, 1)));
-            temp=tmp./denominator(ones(1,Qsize(2)),:);
-            xTouchOpMat=aMat-temp;
-            xTouchMat=aMat+temp;
+            import gras.gen.SymmetricMatVector;
+            %
+            % Calculating svd curves (better for ill-conditioned QArray)
+            %
+            centSvdCurve = calcCentCurve(...
+                @SymmetricMatVector.rSvdMultiplyByVec);
+            svdPrec = checkPrecision(...
+                @SymmetricMatVector.lrSvdDivideVec, centSvdCurve);
+            %
+            % Calculating standart curves (better for big dimentional 
+            % QArray)
+            %
+            centRegCurve = calcCentCurve(...
+                @SymmetricMatVector.rMultiplyByVec);
+            regPrec = checkPrecision(...
+                @SymmetricMatVector.lrDivideVec, centRegCurve);
+            %
+            if (svdPrec < regPrec)
+                xTouchOpMat= aMat - centSvdCurve;
+                xTouchMat= aMat + centSvdCurve;
+            else
+                xTouchOpMat= aMat - centRegCurve;
+                xTouchMat= aMat + centRegCurve;
+            end
+            function curveMat = calcCentCurve(rMulByVecOp)
+                tempVec = rMulByVecOp(QArray, ltGoodDirMat);
+                denomVec = realsqrt(abs(dot(ltGoodDirMat, tempVec, 1)));
+                curveMat = tempVec ./ denomVec(...
+                    ones(1, size(QArray, 2)), :);
+            end
+            function normVal = checkPrecision(lrDivByVecOp, curveMat)
+                normVec = lrDivByVecOp(QArray, curveMat);
+                normVal = max(abs(normVec(:) - 1));
+            end
         end
         %
         function STubeData=scaleTubeData(STubeData,scaleFactorVec)
@@ -184,56 +211,27 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             end
             function checkNorm(QArray,aMat,xTouchCurveMat,...
                     calcPrecision,fieldName)
+                import gras.gen.SymmetricMatVector
                 import modgen.common.throwerror;
-                import gras.la.elldistprec;
                 %
-                normVec = gras.gen.SquareMatVector.lrDivideVec(...
-                    QArray, xTouchCurveMat - aMat);
-                [actualPrecision, maxEllDistTimePoint] = ...
-                    max(fDistFunc(normVec));
+                actualSvdPrecision = checkPrecision(...
+                    @SymmetricMatVector.lrSvdDivideVec);
+                actualRegPrecision = checkPrecision(...
+                    @SymmetricMatVector.lrDivideVec);
+                actualPrecision = min([actualSvdPrecision, ...
+                    actualRegPrecision]);
                 %
-                ellDistPrecision = 0;
-                if (actualPrecision > calcPrecision)
-                    normCellVec = linspace(-1, 1, self.ELLDIST_NORM_CELL);
-                    timeAllNeigVec = maxEllDistTimePoint + ...
-                        (-self.ELLDIST_TIME_NEIG:self.ELLDIST_TIME_NEIG);
-                    timeNeigVec = timeAllNeigVec(and(timeAllNeigVec > 0,...
-                        timeAllNeigVec < length(normVec) + 1));
-                    for iTimeNeig = timeNeigVec
-                        baseTVec = xTouchCurveMat(:, iTimeNeig) - ...
-                        aMat(:, iTimeNeig);
-                        qMat = QArray(:, :, iTimeNeig);
-                        for iNormCoeff = normCellVec
-                            xTVec = (1 + iNormCoeff * calcPrecision) * ...
-                                baseTVec;
-                            curDistPrecision = elldistprec(qMat, xTVec, ...
-                                self.ELLDIST_PREC_SERIES_ELEMENTS_COUNT,...
-                                eps, self.MAX_ELLDIST_TOL);
-                            ellDistPrecision = max([ellDistPrecision, ...
-                                curDistPrecision]);
-                        end
-                    end
-                end
-                %
-                isOk = ellDistPrecision <= self.MAX_ELLDIST_TOL;
-                if ~isOk
-                    throwerror('wrongInput:QArrayDistPrecValue',...
-                        ['check [%s] has failed because QArray', ...
-                        ' contains ill-conditioned or degenerated', ...
-                        ' matrix, expected precision=%d,', ...
-                        ' distance precision=%d'], checkName, ...
-                        self.MAX_ELLDIST_TOL, ellDistPrecision);
-                end
-                %
-                isOk = isOk && (actualPrecision <= ellDistPrecision + ...
-                    calcPrecision);
+                isOk = (actualPrecision <= calcPrecision);
                 if ~isOk
                     throwerror('wrongInput:touchLineValueFunc',...
                         ['check [%s] has failed for %s, ',...
-                        'expected precision=%d, actual precision=%d,', ...
-                        ' distance precision=%d'], checkName, ...
-                        fieldName, calcPrecision, actualPrecision, ...
-                        ellDistPrecision);
+                        'expected precision=%d, actual precision=%d'], ...
+                        checkName, fieldName, calcPrecision, ...
+                        actualPrecision);
+                end
+                function normVal = checkPrecision(lrDivByVecOp)
+                    normVec = lrDivByVecOp(QArray, xTouchCurveMat - aMat);
+                    normVal = max(fDistFunc(normVec));
                 end
             end
         end    
