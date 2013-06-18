@@ -1,9 +1,19 @@
-classdef mlunit_test_mixed < mlunitext.test_case
+classdef StructDispTC < mlunitext.test_case
+    %
+    %$Author: Alexander Karev <Alexander.Karev.30@gmail.com> $
+    %$Date: 2013-06$
+    %$Copyright: Moscow State University,
+    %            Faculty of Computational Mathematics
+    %            and Computer Science,
+    %            System Analysis Department 2013 $
     properties (Access=private)
         testDataRootDir
         resTmpDir
     end
     methods
+        function self = StructDispTC(varargin)
+            self = self@mlunitext.test_case(varargin{:});
+        end
         function self = set_up_param(self,varargin)
         end
         %
@@ -14,13 +24,6 @@ classdef mlunit_test_mixed < mlunitext.test_case
             rmdir(self.resTmpDir,'s');
         end
         %
-        function self = mlunit_test_mixed(varargin)
-            self = self@mlunitext.test_case(varargin{:});
-            [~,className]=modgen.common.getcallernameext(1);
-            shortClassName=mfilename('classname');
-            self.testDataRootDir=[fileparts(which(className)),filesep,'TestData',...
-                filesep,shortClassName];            
-        end
         function self = test_strucdisp(self)
             S.name='';
             S.description=[];
@@ -61,14 +64,14 @@ classdef mlunit_test_mixed < mlunitext.test_case
                 resStr2=strucdisp(inpArgList{:});
                 mlunitext.assert_equals(true,isequal(resStr,resStr2));
                 resList=textscan(resStr,'%s','delimiter','\n');
-                resList=resList{1};                
+                resList=resList{1};
                 mlunitext.assert_equals(true,isequal(resList,expList));
-            end            
+            end
         end
         function testStrucDispRegress(self)
             %
             ARG_COMB_LIST={...
-            {'depth',100,'printValues',false,'maxArrayLength',100},...
+                {'depth',100,'printValues',false,'maxArrayLength',100},...
                 {'depth',100,'printValues',true,'maxArrayLength',100},...
                 {'depth',2,'printValues',true},...
                 {'depth',100,'printValues',true},...
@@ -146,7 +149,7 @@ classdef mlunit_test_mixed < mlunitext.test_case
                 function compare()
                     [isEqual,reportStr]=modgen.struct.structcompare(SRes,Data);
                     mlunitext.assert_equals(true,isEqual,reportStr);
-                    mlunitext.assert_equals(true,isequalwithequalnans(SRes,Data));                          
+                    mlunitext.assert_equals(true,isequalwithequalnans(SRes,Data));
                 end
                 function SRes=checkValue()
                     [pathSpecList,valList]=modgen.struct.getleavelist(Data);
@@ -231,6 +234,38 @@ classdef mlunit_test_mixed < mlunitext.test_case
                         iscellofstring([pathList{:}]));
                 end
             end
+        end
+        
+        function self = testArrays(self)
+            S = struct('a', 1);
+            str = evalc('strucdisp(S)');
+            isOk = ~isempty(strfind(str, '1'));
+            
+            S = struct('a', [1 2 3]);
+            str = evalc('strucdisp(S)');
+            isOk = isOk & ~isempty(strfind(str, '[1 2 3]'));
+            
+            S = struct('a', ones(5, 3, 2));
+            str = evalc('strucdisp(S)');
+            isOk = isOk & ~isempty(strfind(str, '[5x3x2 Array]'));
+            
+            mlunitext.assert_equals(isOk, true);
+        end
+        
+        function self = testLogicalFields(self)
+            S = struct('a', false(1, 2));
+            str = evalc('strucdisp(S)');
+            isOk = ~isempty(strfind(str, '[false false]'));
+            
+            S = struct('a', false);
+            str = evalc('strucdisp(S)');
+            isOk = isOk & ~isempty(strfind(str, 'false'));
+            
+            S = struct('a', false(5));
+            str = evalc('strucdisp(S)');
+            isOk = isOk & ~isempty(strfind(str, '[5x5 Logic array]'));
+            
+            mlunitext.assert_equals(isOk, true);
         end
     end
 end

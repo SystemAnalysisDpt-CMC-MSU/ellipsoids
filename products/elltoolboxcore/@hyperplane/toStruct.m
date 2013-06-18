@@ -43,21 +43,20 @@ end
 end
 
 function SHp = hp2Struct(hpObj, isPropIncluded)
-if (hpObj.isempty())
+if (hpObj.isEmpty())
     SHp = struct('normal', [], 'shift', []);
-    return;
-end
-
-[hpNormVec, hpScal] = parameters(hpObj);
-normMult = 1/norm(hpNormVec);
-hpNormVec  = hpNormVec*normMult;
-hpScal  = hpScal*normMult;
-if hpScal < 0
-    hpScal = -hpScal;
-    hpNormVec = -hpNormVec;
-end
-SHp = struct('normal', hpNormVec, 'shift', hpScal);
-if (isPropIncluded)
-    SHp.absTol = hpObj.absTol;
+else
+    [hpNormVec, hpScal] = parameters(hpObj);
+    normMult = 1/norm(hpNormVec);
+    hpNormVec  = hpNormVec*normMult;
+    hpScal  = hpScal*normMult;
+    if hpScal < 0
+        hpScal = -hpScal;
+        hpNormVec = -hpNormVec;
+    end
+    SHp = struct('normal', hpNormVec, 'shift', hpScal);
+    if (isPropIncluded)
+        SHp.absTol = hpObj.absTol;
+    end
 end
 end

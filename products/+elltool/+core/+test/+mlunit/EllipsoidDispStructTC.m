@@ -6,115 +6,197 @@ classdef EllipsoidDispStructTC < elltool.core.test.mlunit.ADispStructTC
     %            Faculty of Computational Mathematics
     %            and Computer Science,
     %            System Analysis Department 2013 $
-    methods
+    methods (Static)
+        function objArr = getToStructObj(iTest)
+            switch iTest
+                case 2
+                    objArr = ellipsoid();
+                case 6
+                    objArr = ellipsoid.fromRepMat(1, 1, [5 5 5]);
+                case 7
+                    objArr = ellipsoid.fromRepMat(1, 1, [5 5 5]);
+                    objArr(1) = ellipsoid();
+                otherwise
+                    objArr = ellipsoid([1, 1]', eye(2));
+            end
+        end
+        
+        function SArr = getToStructStruct(iTest)
+            switch iTest
+                case 1
+                    SArr = struct('shapeMat', eye(2), 'centerVec', [1, 1]');
+                case 2
+                    SArr = struct('shapeMat', [], 'centerVec', []);
+                case 3
+                    SArr = struct('shapeMat', [], 'centerVec', []);
+                case 4
+                    SArr = struct('shapeMat', eye(2), 'centerVec', [1, 1]',...
+                        'absTol', 1e-7, 'relTol', 1e-5,...
+                        'nPlot2dPoints', 200, 'nPlot3dPoints', 200);
+                case 5
+                    SArr = struct('shapeMat', eye(2), 'centerVec', [2, 1]');
+                case 6
+                    SArr = struct('shapeMat', num2cell(ones(5, 5, 5)), ...
+                        'centerVec', num2cell(ones(5, 5, 5)));
+                case 7
+                    SArr = struct('shapeMat', num2cell(ones(5, 5, 5)), ...
+                        'centerVec', num2cell(ones(5, 5, 5)));
+            end
+        end
+        
+        function isProp = getToStructIsPropIncluded(iTest)
+            isProp = iTest == 4;
+        end
+        
+        function result = getToStructResult(iTest)
+            falseAnswers = [3, 5, 7];
+            result = isempty(find(falseAnswers == iTest, 1));
+        end
+        
+        function objArr = getFromStructObj(iTest)
+            switch iTest
+                case 1
+                    objArr = ellipsoid([1, 1]', eye(2));
+                case 2
+                    objArr = ellipsoid([1, 1]', eye(2), 'absTol', 1e-8,...
+                        'relTol', 1e-4, 'nPlot2dPoints', 300, ...
+                        'nPlot3dPoints', 100);
+                case 3
+                    objArr = ellipsoid();
+                case 4
+                    objArr = ellipsoid([1, 1]', eye(2));
+                case 5
+                    objArr = ellipsoid.fromRepMat(1, 1, [5 5 5]);
+                case 6
+                    objArr = ellipsoid.fromRepMat(1, 1, [5 5 5]);
+                    objArr(1) = ellipsoid();
+            end
+        end
+        
+        function SArr = getFromStructStruct(iTest)
+            switch iTest
+                case 1
+                    SArr = struct('shapeMat', eye(2), 'centerVec', [1, 1]);
+                case 2
+                    SArr = struct('shapeMat', eye(2), 'centerVec', [1, 1],...
+                        'absTol', 1e-8, 'relTol', 1e-4,...
+                        'nPlot2dPoints', 300, 'nPlot3dPoints', 100);
+                case 3
+                    SArr = struct('shapeMat', eye(2), 'centerVec', [1, 1],...
+                        'absTol', 1e-8, 'relTol', 1e-4,...
+                        'nPlot2dPoints', 300, 'nPlot3dPoints', 100);
+                case 4
+                    SArr = struct('shapeMat', eye(2), 'centerVec', [1, 1],...
+                        'absTol', 1e-8, 'relTol', 1e-4,...
+                        'nPlot2dPoints', 300, 'nPlot3dPoints', 100);
+                case 5
+                    SArr = struct('shapeMat', num2cell(ones(5, 5, 5)),...
+                        'centerVec', num2cell(ones(5, 5, 5)));
+                case 6
+                    SArr = struct('shapeMat', num2cell(ones(5, 5, 5)),...
+                        'centerVec', num2cell(ones(5, 5, 5)));
+            end
+        end
+        
+        function result = getFromStructResult(iTest)
+            falseAnswers = [3, 4, 6];
+            result = isempty(find(falseAnswers == iTest, 1));
+        end
+        
         function self = EllipsoidDispStructTC(varargin)
             self = self@elltool.core.test.mlunit.ADispStructTC(varargin{:});
         end
         
-        function self = testToStruct(self)
-            ell = ellipsoid([1, 1]', eye(2));
-            ellStruct = struct('shapeMat', eye(2), 'centerVec', [1, 1]);
-            toStructTest(self, ell, ellStruct, false, true);
-            
-            ell2 = ellipsoid();
-            ell2Struct = struct('shapeMat', [], 'centerVec', []);
-            toStructTest(self, ell2, ell2Struct, false, true);
-            toStructTest(self, ell, ell2Struct, false, false);
-            
-            ellStruct = struct('shapeMat', eye(2), 'centerVec', [1, 1],...
-                'absTol', 1e-7, 'relTol', 1e-5,...
-                'nPlot2dPoints', 200, 'nPlot3dPoints', 200);
-            toStructTest(self, ell, ellStruct, true, true);
-            
-            ellStruct = struct('shapeMat', eye(2), 'centerVec', [2, 1]);
-            toStructTest(self, ell, ellStruct, false, false);
-            
-            for iEll = 125 : -1 : 1
-                ellArr(iEll) = ellipsoid(1, 1); 
+        function objArr = getDisplayObj(iTest)
+            switch iTest
+                case 1
+                    objArr = ellipsoid([1, 1]', eye(2));
+                case 2
+                    objArr = ellipsoid();
+                case 3
+                    objArr = ellipsoid([1, 2]', eye(2));
+                case 4
+                    objArr = ellipsoid.fromStruct(struct('shapeMat',...
+                        num2cell(ones(5, 5, 5)), ...
+                        'centerVec', num2cell(ones(5, 5, 5))));
+                case 5
+                    objArr = ellipsoid.fromStruct(struct('shapeMat', ...
+                        num2cell(ones(5, 5, 5)), ...
+                        'centerVec', num2cell(ones(5, 5, 5))));
+                    objArr = [objArr, objArr];
+                case 6
+                    objArr = hyperplane();
             end
-            ellArr = reshape(ellArr, [5 5 5]);
-            ellArrStruct = struct('shapeMat', num2cell(ones(5, 5, 5)), ...
-                'centerVec', num2cell(ones(5, 5, 5)));
-            toStructTest(self, ellArr, ellArrStruct, false, true);
-            ellArr(1) = ellipsoid();
-            toStructTest(self, ellArr, ellArrStruct, false, false);
         end
         
-        function self = testFromStruct(self)
-            ell = ellipsoid([1, 1]', eye(2));
-            ellStruct = struct('shapeMat', eye(2), 'centerVec', [1, 1]);
-            fromStructTest(self, ellStruct, ell, ellipsoid(), true);
-            
-            ell2Struct = struct('shapeMat', eye(2), 'centerVec', [1, 1],...
-                'absTol', 1e-8, 'relTol', 1e-4,...
-                'nPlot2dPoints', 300, 'nPlot3dPoints', 100);
-            ell2 = ellipsoid([1, 1]', eye(2), 'absTol', 1e-8,...
-                'relTol', 1e-4, 'nPlot2dPoints', 300, ...
-                'nPlot3dPoints', 100);
-            fromStructTest(self, ell2Struct, ell2, ellipsoid(), true);
-            
-            ell3 = ellipsoid();
-            fromStructTest(self, ell2Struct, ell3, ellipsoid(), false);
-            fromStructTest(self, ell2Struct, ell, ellipsoid(), false);
-            
-            for iEll = 125 : -1 : 1
-                ellArr(iEll) = ellipsoid(1, 1); 
+        function stringCVec = getDisplayStrings(iTest)
+            stringCVec = {'Ellipsoid shape matrix.', ...
+                'ellipsoid object',...
+                'centerVec',...
+                'shapeMat'};
+            if (iTest > 4)
+                stringCVec = horzcat(stringCVec, 'ObjArr(1, 1, 1)');
             end
-            ellArr = reshape(ellArr, [5 5 5]);
-            ellArrStruct = struct('shapeMat', num2cell(ones(5, 5, 5)),...
-                'centerVec', num2cell(ones(5, 5, 5)));
-            fromStructTest(self, ellArrStruct, ellArr, ellipsoid(), true);
-            ellArr(1) = ellipsoid();
-            fromStructTest(self, ellArrStruct, ellArr, ellipsoid(), false);
         end
         
-        function self = testDisplay(self)
-            ell = ellipsoid([1, 1]', eye(2));
-            patternsCVec = {'Ellipsoid shape matrix.', ...
-                            'ellipsoid object',...
-                            'centerVec',...
-                            'shapeMat'};
-            displayTest(self, ell, patternsCVec, true);
-            
-            ell = ellipsoid();
-            displayTest(self, ell, patternsCVec, true);
-            
-            ell = ellipsoid([1, 2]', eye(2));
-            displayTest(self, ell, patternsCVec, true);
-            
-            ellArr = ellipsoid.fromStruct(struct('shapeMat', num2cell(ones(5, 5, 5)), ...
-                'centerVec', num2cell(ones(5, 5, 5))));
-            displayTest(self, ellArr, patternsCVec, true);
-            
-            ell = [ell, ell];
-            patternsCVec = horzcat(patternsCVec, 'ObjArr(1)');
-            displayTest(self, ell, patternsCVec, true);
-            hp = hyperplane();
-            displayTest(self, hp, patternsCVec, false);
+        function result = getDisplayResult(iTest)
+            result = iTest ~= 6;
         end
         
-        function self = testEq(self)
-            ell = ellipsoid([1, 1]', eye(2));
-            eqTest(self, ell, ell, true);
-            
-            ell2 = ellipsoid();
-            eqTest(self, ell2, ell2, true);
-            
-            ell3 = ellipsoid([1, 2]', eye(2));
-            eqTest(self, ell3, ell3, true);
-            eqTest(self, ell2, ell3, false);
-            eqTest(self, ell2, ell, false);
-            
-            ellArr = ellipsoid.fromStruct(struct('shapeMat', num2cell(ones(5, 5, 5)), ...
-                                          'centerVec', num2cell(ones(5, 5, 5))));
-            eqTest(self, ellArr, ellArr, true);
-            ellArr2 = ellArr;
-            ellArr2(1, 1, 1) = ellipsoid();
-            eqTest(self, ellArr, ellArr2, false);
-            
-            ell = [ell ell];
-            eqTest(self, ell, ell, true);
-            eqTest(self, ell, ellArr2(1, 1:2, 1), false);
+        function objArr = getEqFstObj(iTest)
+            switch iTest
+                case 1
+                    objArr = ellipsoid([1, 1]', eye(2));
+                case 2
+                    objArr = ellipsoid();
+                case 3
+                    objArr = ellipsoid([1, 2]', eye(2));
+                case 4
+                    objArr = ellipsoid();
+                case 5
+                    objArr = ellipsoid();
+                case 6
+                    objArr = ellipsoid.fromStruct(struct('shapeMat',...
+                        num2cell(ones(5, 5, 5)), ...
+                        'centerVec', num2cell(ones(5, 5, 5))));
+                case 7
+                    objArr = ellipsoid.fromStruct(struct('shapeMat',...
+                        num2cell(ones(5, 5, 5)), ...
+                        'centerVec', num2cell(ones(5, 5, 5))));
+                case 8
+                    objArr = ellipsoid.fromRepMat([1, 1]', eye(2), [1 2]);
+            end
+        end
+        
+        function objArr = getEqSndObj(iTest)
+            switch iTest
+                case 1
+                    objArr = ellipsoid([1, 1]', eye(2));
+                case 2
+                    objArr = ellipsoid();
+                case 3
+                    objArr = ellipsoid([1, 2]', eye(2));
+                case 4
+                    objArr = ellipsoid([1, 2]', eye(2));
+                case 5
+                    objArr = ellipsoid([1, 1]', eye(2));
+                case 6
+                    objArr = ellipsoid.fromStruct(struct('shapeMat',...
+                        num2cell(ones(5, 5, 5)), ...
+                        'centerVec', num2cell(ones(5, 5, 5))));
+                case 7
+                    objArr = ellipsoid.fromStruct(struct('shapeMat',...
+                        num2cell(ones(5, 5, 5)), ...
+                        'centerVec', num2cell(ones(5, 5, 5))));
+                    objArr(1, 1, 1) = ellipsoid();
+                case 8
+                    objArr = ellipsoid.fromRepMat([1, 1]', eye(2), [1 2]);
+            end
+        end
+        
+        function result = getEqResult(iTest)
+            falseAnswers = [4, 5, 7];
+            result = isempty(find(falseAnswers == iTest, 1));
         end
     end
 end

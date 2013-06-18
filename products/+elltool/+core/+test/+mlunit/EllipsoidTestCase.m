@@ -925,11 +925,11 @@ classdef EllipsoidTestCase < mlunitext.test_case
             checkEllEqual(testEllipsoid3, testEllipsoid2, false, ...
                 '(1).Q-->Max. difference (4.142136e-01) is greater than the specified tolerance(1.000000e-05)');
             
-            ansStr = sprintf('(1).Q-->Different sizes (left: [2 2], right: [3 3])\n(1).q-->Different sizes (left: [1 2], right: [1 3])');
+            ansStr = sprintf('(1).Q-->Different sizes (left: [2 2], right: [3 3])\n(1).q-->Different sizes (left: [2 1], right: [3 1])');
             checkEllEqual(testEllipsoidZeros2, testEllipsoidZeros3, false, ansStr);
             
             
-            ansStr = sprintf('(1).Q-->Different sizes (left: [2 2], right: [0 0])\n(1).q-->Different sizes (left: [1 2], right: [0 0])');
+            ansStr = sprintf('(1).Q-->Different sizes (left: [2 2], right: [0 0])\n(1).q-->Different sizes (left: [2 1], right: [0 0])');
             checkEllEqual(testEllipsoidZeros2, testEllipsoidEmpty, false, ansStr);
             
             
@@ -944,8 +944,8 @@ classdef EllipsoidTestCase < mlunitext.test_case
             
             
             
-            ansStr = sprintf('(1).Q-->Different sizes (left: [2 2], right: [3 3])\n(1).q-->Different sizes (left: [1 2], right: [1 3])');
-            checkEllEqual([testEllipsoidZeros2 testEllipsoidZeros3], [testEllipsoidZeros3 testEllipsoidZeros3], [false, true], ansStr); 
+            ansStr = sprintf('(1).Q-->Different sizes (left: [2 2], right: [3 3])\n(1).q-->Different sizes (left: [2 1], right: [3 1])');
+            checkEllEqual([testEllipsoidZeros2 testEllipsoidZeros3], [testEllipsoidZeros3 testEllipsoidZeros3], [false, true], ansStr);
         end
         %
         function self = testNe(self)
@@ -1379,16 +1379,16 @@ classdef EllipsoidTestCase < mlunitext.test_case
         end
         %
         function self = testToStruct(self)
-            centerCVec{1} = [1 2 3]';
+            centerCVec{1} = [1 2 3];
             shapeMatCVec{1} = eye(3);
-            centerCVec{2} = [2 3 4]';
+            centerCVec{2} = [2 3 4];
             shapeMatCVec{2} = ones(3);
-            centerCVec{3} = [1 0]';
+            centerCVec{3} = [1 0];
             shapeMatCVec{3} = [3 1; 1 2];
-            centerCVec{4} = [1 0 0 0]';
+            centerCVec{4} = [1 0 0 0];
             shapeMatCVec{4} = diag([3 2 1 0]);
             for iElem = 1 : 4
-                ellVec(iElem) = ellipsoid(centerCVec{iElem}, shapeMatCVec{iElem});
+                ellVec(iElem) = ellipsoid(centerCVec{iElem}', shapeMatCVec{iElem});
                 transposedCenterCVec{iElem} = centerCVec{iElem}';
             end
             SEllVec = struct('centerVec', transposedCenterCVec, 'shapeMat', shapeMatCVec);

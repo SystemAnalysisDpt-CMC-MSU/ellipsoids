@@ -55,7 +55,7 @@ end
 end
 
 function SEll = ell2Struct(ellObj, isPropIncluded)
-SEll = struct('shapeMat', ellObj.shapeMat, 'centerVec', ellObj.centerVec.');
+SEll = struct('shapeMat', ellObj.shapeMat, 'centerVec', ellObj.centerVec);
 if (isPropIncluded)
     SEll.absTol = ellObj.absTol;
     SEll.relTol = ellObj.relTol;
