@@ -3,7 +3,7 @@
 <valueObj type="struct" >
 	<genericProps type="struct" >
 		<calcTimeLimVec type="double" >0 10</calcTimeLimVec>
-		<calcPrecision type="double" >0.0008</calcPrecision>
+		<calcPrecision type="double" >0.0006</calcPrecision>
 		<isSplineForMatrixCalcUsed type="boolean" >0</isSplineForMatrixCalcUsed>
 	</genericProps>
 	<projectionProps type="struct" >
