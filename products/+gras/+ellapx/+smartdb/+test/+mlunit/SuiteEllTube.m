@@ -42,8 +42,8 @@ classdef SuiteEllTube < mlunitext.test_case
             check();
             catRel = firstRel.cat(secondRel,'isReplacedByNew',true);
             check();
-            isOk=all(cellfun(isequal(catRel.(x),secondRel.(x)),...
-                fieldToExcludeList));
+            isOk=all(cellfun(@(x)isequal(catRel.(x),secondRel.(x)),...
+                setdiff(fieldToExcludeList,{'sTime','indSTime'})));
             mlunitext.assert(isOk);
             function check()
                 [isOk,reportStr] = ...
@@ -604,10 +604,30 @@ classdef SuiteEllTube < mlunitext.test_case
             approxSchemaDescr=char.empty(1,0);
             approxSchemaName=char.empty(1,0);
         end
-        
+        function testInterpAdvanced(self)
+            nTubes=3;
+            nPoints=10;
+            [rel,relStatProj,relDynProj]=auxGenSimpleTubeAndProj(self,...
+                nPoints,nTubes);
+            %
+            timeVec=rel.timeVec{1};
+            checkScalarTime(min(timeVec),rel);            
+            checkScalarTime(max(timeVec),rel);
+            checkScalarTime(max(timeVec),relStatProj);
+            checkScalarTime(min(timeVec),relStatProj);
+            checkScalarTime(max(timeVec),relDynProj);
+            checkScalarTime(min(timeVec),relDynProj);
+            %
+            function checkScalarTime(interpTime,inpRel)
+                interpRel=inpRel.interp(interpTime);
+                mlunitext.assert(all(cellfun(@(x)numel(x)==1,...
+                    interpRel.timeVec)));
+            end            
+        end
         function self = testInterp(self)
             import gras.ellapx.enums.EApproxType;
             %
+            INTERP_TIME_VEC=[1,1.5,2,2.5,3];
             [qMatArray, aMat, timeVec, sTime, lsGoodDirArray,...
                 approxSchemaDescr, approxSchemaName] = ...
                 self.getSimpleInputData();                
@@ -624,9 +644,9 @@ classdef SuiteEllTube < mlunitext.test_case
                 [lsGoodDirArray,lsGoodDirArray], sTime,...
                 approxType, approxSchemaName,...
                 approxSchemaDescr, CALC_PRECISION);
-            interpEllTube = fromMat1EllTube.interp([1,1.5,2,2.5,3]);
+            interpEllTube = fromMat1EllTube.interp(INTERP_TIME_VEC);
             interpDoubleEllTube =...
-                fromMat1EllTubeDouble.interp([1,1.5,2,2.5,3]);
+                fromMat1EllTubeDouble.interp(INTERP_TIME_VEC);
             mlunitext.assert(all(interpEllTube.aMat{1}(:,2)==[4;5]));
             mlunitext.assert(...
                 all(interpEllTube.aMat{1}(:,4)==[2;3]));

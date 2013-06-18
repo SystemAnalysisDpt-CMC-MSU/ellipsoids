@@ -288,8 +288,13 @@ classdef ContinuousReachTestCase < mlunitext.test_case
                     [apxEllMat,timeVec] = feval(fGetApx,cutReachObj);
                     nTuples = size(apxEllMat, 1);
                     if self.reachObj.isbackward()
+                        isOk=all(cutReachObj.getEllTubeRel().indSTime==...
+                            cellfun(@numel,cutReachObj.getEllTubeRel().timeVec));
+                        mlunitext.assert(isOk);
                         timeDif = timeVec(end) - newTimeVec(1);
                     else
+                        isOk=all(cutReachObj.indSTime==1);
+                        mlunitext.assert(isOk);
                         timeDif = timeVec(1) - newTimeVec(1);
                     end
                     for iTuple = 1 : nTuples

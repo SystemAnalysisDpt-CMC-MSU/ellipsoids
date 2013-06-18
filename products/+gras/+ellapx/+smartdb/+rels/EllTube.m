@@ -1,30 +1,30 @@
 classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
         gras.ellapx.smartdb.rels.EllTubeBasic
     % EllTube - class which keeps ellipsoidal tubes
-    % 
+    %
     % Fields:
-    %   QArray:cell[1, nElem] - Array of ellipsoid matrices                              
-    %   aMat:cell[1, nElem] - Array of ellipsoid centers                               
-    %   scaleFactor:double[1, 1] - Tube scale factor                                        
-    %   MArray:cell[1, nElem] - Array of regularization ellipsoid matrices                
-    %   dim :double[1, 1] - Dimensionality                                          
-    %   sTime:double[1, 1] - Time s                                                   
-    %   approxSchemaName:cell[1,] - Name                                                      
-    %   approxSchemaDescr:cell[1,] - Description                                               
-    %   approxType:gras.ellapx.enums.EApproxType - Type of approximation 
+    %   QArray:cell[1, nElem] - Array of ellipsoid matrices
+    %   aMat:cell[1, nElem] - Array of ellipsoid centers
+    %   scaleFactor:double[1, 1] - Tube scale factor
+    %   MArray:cell[1, nElem] - Array of regularization ellipsoid matrices
+    %   dim :double[1, 1] - Dimensionality
+    %   sTime:double[1, 1] - Time s
+    %   approxSchemaName:cell[1,] - Name
+    %   approxSchemaDescr:cell[1,] - Description
+    %   approxType:gras.ellapx.enums.EApproxType - Type of approximation
     %                 (external, internal, not defined)
-    %   timeVec:cell[1, m] - Time vector                                             
-    %   calcPrecision:double[1, 1] - Calculation precision                                    
-    %   indSTime:double[1, 1]  - index of sTime within timeVec                             
-    %   ltGoodDirMat:cell[1, nElem] - Good direction curve                                     
-    %   lsGoodDirVec:cell[1, nElem] - Good direction at time s                                  
-    %   ltGoodDirNormVec:cell[1, nElem] - Norm of good direction curve                              
-    %   lsGoodDirNorm:double[1, 1] - Norm of good direction at time s                         
-    %   xTouchCurveMat:cell[1, nElem] - Touch point curve for good 
-    %                                   direction                     
-    %   xTouchOpCurveMat:cell[1, nElem] - Touch point curve for direction 
+    %   timeVec:cell[1, m] - Time vector
+    %   calcPrecision:double[1, 1] - Calculation precision
+    %   indSTime:double[1, 1]  - index of sTime within timeVec
+    %   ltGoodDirMat:cell[1, nElem] - Good direction curve
+    %   lsGoodDirVec:cell[1, nElem] - Good direction at time s
+    %   ltGoodDirNormVec:cell[1, nElem] - Norm of good direction curve
+    %   lsGoodDirNorm:double[1, 1] - Norm of good direction at time s
+    %   xTouchCurveMat:cell[1, nElem] - Touch point curve for good
+    %                                   direction
+    %   xTouchOpCurveMat:cell[1, nElem] - Touch point curve for direction
     %                                     opposite to good direction
-    %   xsTouchVec:cell[1, nElem]  - Touch point at time s                                    
+    %   xsTouchVec:cell[1, nElem]  - Touch point at time s
     %   xsTouchOpVec :cell[1, nElem] - Touch point at time s
     %
     %   TODO: correct description of the fields in gras.ellapx.smartdb.rels.EllTube
@@ -182,7 +182,7 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
     methods
         function plObj=plot(self,plObj)
             % PLOT - displays ellipsoidal tubes using the specified RelationDataPlotter
-            % 
+            %
             %
             % Input:
             %   regular:
@@ -375,8 +375,8 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
             STubeData=EllTubeBasic.fromQArraysInternal({qArray}, aMat,...
                 {ellMArr},varargin{:},...
                 EllTube.DEFAULT_SCALE_FACTOR(1));
-            ellTubeRel=EllTube(STubeData);           
-            %            
+            ellTubeRel=EllTube(STubeData);
+            %
             function fCalcAMatAndQArray(iPoint)
                 [aMat(:, iPoint), qArray(:,:,iPoint)] =...
                     parameters(qEllArray(iPoint));
@@ -457,9 +457,9 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
             %           participate in concatenation
             %
             %   properties:
-            %       isReplacedByNew: logical[1,1] - if true, all values of
-            %           non-concatenated fields are replaced with values from
-            %           newEllTubeRel object
+            %       isReplacedByNew: logical[1,1] - if true, sTime and
+            %       values of properties corresponding to sTime are taken
+            %       from newEllTubeRel
             %
             % Output:
             %   catEllTubeRel:smartdb.relation.StaticRelation[1, 1]/
@@ -468,7 +468,7 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
             %
             import gras.ellapx.smartdb.F;
             import modgen.common.parseparext;
-            [reg,~,isReplacedByNew]=parseparext(varargin,...
+            [reg,~,isSTimeReplaced]=parseparext(varargin,...
                 {'isReplacedByNew';false;'islogical(x)&&isscalar(x)'},...
                 [0 1]);
             %
@@ -488,14 +488,17 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
             cellfun(@(field) catStructField(field, isNeededIndVec),...
                 fieldsToCatVec);
             %
-            if isReplacedByNew
+            if isSTimeReplaced
                 nRepFields=length(fieldsNotToCatVec);
                 for iField=1:nRepFields
                     fieldName=fieldsNotToCatVec{iField};
                     SCatFunResult.(fieldName)=SDataSecond.(fieldName);
                 end
+                SCatFunResult.indSTime=...
+                    cellfun(@(x,y)find(x==y,1,'first'),...
+                    SCatFunResult.timeVec,num2cell(SDataSecond.sTime));
             end
-            catEllTubeRel = self.createInstance(SCatFunResult);            
+            catEllTubeRel = self.createInstance(SCatFunResult);
             function catStructField(fieldName, isNeededIndVec)
                 SCatFunResult.(fieldName) =...
                     cellfun(@(firstStructFieldVal, secondStructFieldVal)...
@@ -512,10 +515,10 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
             %  regular:
             %     self.
             %     cutTimeVec: double[1, 2]/ double[1, 1] - time interval to cut
-            % 
+            %
             % Output:
             % cutEllTubeRel: smartdb.relation.StaticRelation[1, 1]/
-            %      smartdb.relation.DynamicRelation[1, 1] - relation object resulting 
+            %      smartdb.relation.DynamicRelation[1, 1] - relation object resulting
             %      from CUT operation
             import gras.ellapx.smartdb.F;
             import modgen.common.throwerror;
@@ -533,43 +536,25 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
                 throwerror('wrongInput', 's0 must be LEQ than s1.');
             end
             timeVec = self.timeVec{1};
-            sysStartTime = timeVec(1);
-            sysEndTime = timeVec(end);
-            if sysStartTime < sysEndTime
-                if cutStartTime < sysStartTime ||...
-                        cutStartTime > sysEndTime ||...
-                        cutEndTime < sysStartTime ||...
-                        cutEndTime > sysEndTime
-                    throwerror('wrongInput', 'wrong input format.');
-                end
-            else
-                if cutStartTime > sysStartTime ||...
-                        cutStartTime < sysEndTime ||...
-                        cutEndTime > sysStartTime ||...
-                        cutEndTime < sysEndTime
-                    throwerror('wrongInput', 'wrong input format.');
-                end
-            end
-            if cutTimeVec(1) == cutTimeVec(2)
-                indClosestVec = find(timeVec <= cutStartTime, 1, 'last');
-                isSysNewTimeIndVec = false(size(timeVec));
-                isSysNewTimeIndVec(indClosestVec) = true;
-            else
-                isSysTimeLowerVec = timeVec < cutStartTime;
-                isSysTimeGreaterVec = timeVec > cutEndTime;  
-                [unTimeVec, unVec, notUnVec] = unique(timeVec);
-                isSysNewTimeIndVec = false(size(timeVec));
-                isSysNewTimeIndVec(unVec) = true;
-                isSysNewTimeIndVec = isSysNewTimeIndVec &...
-                    ~(isSysTimeLowerVec | isSysTimeGreaterVec);
+            startTime = timeVec(1);
+            endTime = timeVec(end);
+            %
+            if cutStartTime < startTime ||...
+                    cutStartTime > endTime ||...
+                    cutEndTime < startTime ||...
+                    cutEndTime > endTime
+                throwerror('wrongInput',...
+                    'cutTimeVec is out of allowed range');
             end
             %
-            cutEllTubeRel =...
-                self.thinOutTuples(isSysNewTimeIndVec);
+            isWithinVec=(timeVec<=cutEndTime)&(timeVec>=cutStartTime);
+            resTimeVec=union(timeVec(isWithinVec),cutTimeVec);
+            %
+            cutEllTubeRel=self.interp(resTimeVec);
         end
         function scale(self,fCalcFactor,fieldNameList)
             % SCALE - scales relation object
-            %             
+            %
             %  Input:
             %   regular:
             %      self.
@@ -583,10 +568,10 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
             %             factor:double[1, 1] - calculated factor
             %
             %       fieldNameList:cell[1,nElem]/char[1,] - names of the fields
-            %       
+            %
             %  Output:
             %       none
-            % 
+            %
             % Example:
             %   nPoints=5;
             %   calcPrecision=0.001;
