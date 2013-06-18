@@ -7,16 +7,6 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
         FCODE_SCALE_FACTOR
         FCODE_M_ARRAY
     end
-    properties (Constant, Hidden, Access = protected)
-        % Maximum tolerance of mdivide and inv operations for QArray
-        MAX_ELLDIST_TOL = 1e-3;
-        % Time neighbourhood
-        ELLDIST_TIME_NEIG = 4;
-        % Norm cell in touchVec calcPrecision neighbourhood (minimum 2)
-        ELLDIST_NORM_CELL = 5; 
-        % Count of series elements to calculate mdivide and inv precision
-        ELLDIST_PREC_SERIES_ELEMENTS_COUNT = 10;
-    end
     methods (Static, Access=protected,Sealed)
         function [xTouchMat,xTouchOpMat]=calcTouchCurves(QArray,aMat,...
                 ltGoodDirMat)
