@@ -42,7 +42,7 @@ function resStr=strucdisp(SInp,varargin)
 %           used
 %
 %
-% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-12-08 $ 
+% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-12-08 $
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2011 $
@@ -135,8 +135,8 @@ end
                     if (~isvector(Structure))
                         indexStr = [structureName, '('];
                         for iDimension = 1 : length(sizeVec) - 1
-                              indexStr = [indexStr, sprintf('%d, ',...
-                                  indexVec(iDimension))];
+                            indexStr = [indexStr, sprintf('%d, ',...
+                                indexVec(iDimension))];
                         end
                         indexStr = [indexStr, sprintf('%d)', indexVec(end))];
                         indexVec = incrementIndexVec(indexVec, sizeVec);
@@ -348,8 +348,8 @@ end
                 * DASH_SYMBOL_CODE);
             if (size(Structure.(Field), 1) > 1) && (size(Structure.(Field), 2) > 1)
                 varStr = createArraySize(Structure.(Field), 'char');
-%             elseif length(Field) > maxStrLength
-%                 varStr = sprintf(' ''%s...''', Structure.(Field(1:maxStrLength)));
+                %             elseif length(Field) > maxStrLength
+                %                 varStr = sprintf(' ''%s...''', Structure.(Field(1:maxStrLength)));
             else
                 varStr = sprintf(' ''%s''', Structure.(Field));
             end
@@ -440,9 +440,9 @@ end
                 varStr = createArraySize(Structure.(Field), 'Array');
                 varCell = {[strIndent '   |' filler ' ' Field ' :' varStr]};
             else
-%                matrixSize = size(Structure.(Field));
-%                 filler2 = char(ones(1, maxFieldLength + 6) * FILLER_SYMBOL_CODE);
-%                 dashes = char(ones(1, 12 * matrixSize(2) + 1) * DASH_SYMBOL_CODE);
+                %                matrixSize = size(Structure.(Field));
+                %                 filler2 = char(ones(1, maxFieldLength + 6) * FILLER_SYMBOL_CODE);
+                %                 dashes = char(ones(1, 12 * matrixSize(2) + 1) * DASH_SYMBOL_CODE);
                 curPrintFormat=numberFormat;
                 printedFieldValue=cellfun(@(x)sprintf(curPrintFormat,x),...
                     num2cell(Structure.(Field)),'UniformOutput',false);
@@ -491,7 +491,7 @@ end
             fieldValue,'UniformOutput',false);
         nDashes=(maxStringLength+1)* matrixSize(2)+1;
         filler2 = char(ones(1, maxFieldLength + 6) * FILLER_SYMBOL_CODE);
-        dashes = char(ones(1, nDashes)* DASH_SYMBOL_CODE);        
+        dashes = char(ones(1, nDashes)* DASH_SYMBOL_CODE);
         varCell = {[strIndent '   |' filler2 dashes]};
         %
         % first line with field name
@@ -509,15 +509,15 @@ end
 end
 
 function newIndexVec = incrementIndexVec(indexVec, sizeVec)
-    newIndexVec = indexVec;
-    for iDimension = 1 : length(sizeVec)
-        newIndexVec(iDimension) = newIndexVec(iDimension) + 1;
-        if (newIndexVec(iDimension) <= sizeVec(iDimension))
-            break;
-        else
-            newIndexVec(iDimension) = 1;
-        end
+newIndexVec = indexVec;
+for iDimension = 1 : length(sizeVec)
+    newIndexVec(iDimension) = newIndexVec(iDimension) + 1;
+    if (newIndexVec(iDimension) <= sizeVec(iDimension))
+        break;
+    else
+        newIndexVec(iDimension) = 1;
     end
+end
 end
 
 %% FUNCTION: getIndentation
