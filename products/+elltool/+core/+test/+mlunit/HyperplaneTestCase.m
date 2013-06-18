@@ -174,7 +174,7 @@ classdef HyperplaneTestCase < mlunitext.test_case
             SInpData =  self.auxReadFile(self);
             testHyperplanesVec = SInpData.testHyperplanesVec;
             isEmptyVec = SInpData.isEmptyVec;
-            isEmptyTestedVec = isempty(testHyperplanesVec);
+            isEmptyTestedVec = isEmpty(testHyperplanesVec);
             isOk = all(isEmptyVec == isEmptyTestedVec);
             mlunitext.assert(isOk);
             
@@ -182,7 +182,7 @@ classdef HyperplaneTestCase < mlunitext.test_case
             nSecDim = 20;
             nThrDim = 30;
             testHypArr(nFstDim, nSecDim, nThrDim) = hyperplane();
-            isEmptyArr = isempty(testHypArr);
+            isEmptyArr = isEmpty(testHypArr);
             isOk = all(isEmptyArr);
             mlunitext.assert(isOk);
         end

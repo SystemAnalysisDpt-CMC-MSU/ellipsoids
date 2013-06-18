@@ -99,7 +99,11 @@ end
 
 
     function SComp = formCompStruct(SEll)
-        SComp.(SFieldNiceNames.shapeMat) = gras.la.sqrtmpos(SEll.shapeMat, absTol);
+        if (~isempty(SEll.shapeMat))
+            SComp.(SFieldNiceNames.shapeMat) = gras.la.sqrtmpos(SEll.shapeMat, absTol);
+        else
+            SComp.(SFieldNiceNames.shapeMat) = [];
+        end
         SComp.(SFieldNiceNames.centerVec) = SEll.centerVec;
     end
 end
