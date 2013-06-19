@@ -3,8 +3,8 @@
 <valueObj type="struct" >
 	<genericProps type="struct" >
 		<calcTimeLimVec type="double" >0 10</calcTimeLimVec>
-		<calcPrecision type="double" >0.0006</calcPrecision>
-		<isSplineForMatrixCalcUsed type="boolean" >1</isSplineForMatrixCalcUsed>
+		<calcPrecision type="double" >0.0008</calcPrecision>
+		<isSplineForMatrixCalcUsed type="boolean" >0</isSplineForMatrixCalcUsed>
 	</genericProps>
 	<projectionProps type="struct" >
 		<projSpaceSetName type="char" >set1</projSpaceSetName>
@@ -106,7 +106,7 @@
 	</ellipsoidalApxProps>
 	<systemDefinitionConfName type="char" >inftraj2d</systemDefinitionConfName>
     <regularizationProps type="struct" >
-		<isEnabled type="boolean" >1</isEnabled>
+		<isEnabled type="boolean" >0</isEnabled>
 		<isJustCheck type="boolean" >0</isJustCheck>
 		<regTol type="double" >1e-06</regTol>
 	</regularizationProps>
