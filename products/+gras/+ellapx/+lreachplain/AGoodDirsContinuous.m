@@ -80,21 +80,29 @@ classdef AGoodDirsContinuous
                 throwerror('wrongInput', ...
                     'sTime is expected to be among elements of timeVec');
             end
-            %
-            matOpFactory = MatrixOperationsFactory.create(timeVec);
+            if (max(timeVec(:)) > max(timeLimsVec(:))) || ...
+                    (min(timeVec(:)) < min(timeLimsVec(:)))
+                throwerror('wrongInput', ...
+                    'all timeVec elements are expected to be within %s',...
+                    mat2str(timeLimsVec));
+            end
             %
             self.sTime = sTime;
             %
-            t0 = pDynObj.gett0();
-            t1 = pDynObj.gett1();
+            STimeData.t0 = pDynObj.gett0();
+            STimeData.t1 = pDynObj.gett1();
+            STimeData.timeVec = timeVec;
+            STimeData.indSTime = indSTime;
             %
-            [cXstNormDynamics, RstDynamics] = self.calcTransMatDynamics(...
-                t0, t1, pDynObj.getAtDynamics(), calcPrecision);
+            matOpFactory = MatrixOperationsFactory.create(timeVec);
             %
-            self.RstTransDynamics = matOpFactory.transpose(RstDynamics);
+            [XstDynamics, RstDynamics, cXstNormDynamics] = ...
+                self.calcTransMatDynamics(matOpFactory, STimeData, ...
+                pDynObj.getAtDynamics(), calcPrecision);
+            %
             self.XstNormDynamics = cXstNormDynamics;
-            self.XstTransDynamics = matOpFactory.rMultiplyByScalar(...
-                self.RstTransDynamics, cXstNormDynamics);
+            self.XstTransDynamics = matOpFactory.transpose(XstDynamics);
+            self.RstTransDynamics = matOpFactory.transpose(RstDynamics);
             %
             [self.ltGoodDirCurveSpline, ...
                 self.ltGoodDirOneCurveSplineList] = ...
@@ -130,6 +138,7 @@ classdef AGoodDirsContinuous
         end
     end
     methods (Abstract, Access = protected)
-        calcTransMatDynamics(self, t0, t1, AtDynamics, calcPrecision)
+        calcTransMatDynamics(matOpFactory, STimeData, AtDynamics, ...
+            calcPrecision)
     end
 end

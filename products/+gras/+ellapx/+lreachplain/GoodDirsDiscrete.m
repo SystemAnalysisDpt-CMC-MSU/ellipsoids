@@ -7,8 +7,9 @@ classdef GoodDirsDiscrete < gras.ellapx.lreachplain.AGoodDirsContinuous
         end
     end
     methods (Access = protected)
-        function [XstNormDynamics, RstDynamics] = calcTransMatDynamics(...
-                self, t0, t1, AtDynamics, calcPrecision)
+        function [XstDynamics, RstDynamics, XstNormDynamics] = ...
+                calcTransMatDynamics(self, matOpFactory, STimeData, ...
+                AtDynamics, calcPrecision)
             %
             import gras.interp.MatrixInterpolantFactory;
             import gras.ellapx.uncertcalc.log.Log4jConfigurator;
@@ -17,10 +18,14 @@ classdef GoodDirsDiscrete < gras.ellapx.lreachplain.AGoodDirsContinuous
             %
             logger=Log4jConfigurator.getLogger();
             %
-            compOpFact = CompositeMatrixOperations();
-            aInvMatFcn = compOpFact.inv(AtDynamics);
+            compOpFactory = CompositeMatrixOperations();
+            aInvMatFcn = compOpFactory.inv(AtDynamics);
             fAtMat = @(t) aInvMatFcn.evaluate(t);
             sizeSysVec = size(fAtMat(0));
+            %
+            t0 = STimeData.t0;
+            t1 = STimeData.t1;
+            %
             isBack = t0 > t1;
             if isBack
                 timeVec = fliplr(t1:t0);
@@ -49,6 +54,8 @@ classdef GoodDirsDiscrete < gras.ellapx.lreachplain.AGoodDirsContinuous
                     dataXtt0NormVec(iTime);
             end
             %
+            XstDynamics = MatrixInterpolantFactory.createInstance(...
+                'column', dataXtt0Arr, timeVec);
             RstDynamics = MatrixInterpolantFactory.createInstance(...
                 'column', dataRtt0Arr, timeVec);
             XstNormDynamics = MatrixInterpolantFactory.createInstance(...
