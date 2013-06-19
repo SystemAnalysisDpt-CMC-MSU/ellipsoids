@@ -101,8 +101,19 @@ classdef AGoodDirsContinuous
                 pDynObj.getAtDynamics(), calcPrecision);
             %
             self.XstNormDynamics = cXstNormDynamics;
-            self.XstTransDynamics = matOpFactory.transpose(XstDynamics);
-            self.RstTransDynamics = matOpFactory.transpose(RstDynamics);
+            %self.XstTransDynamics = matOpFactory.transpose(XstDynamics);
+            %self.RstTransDynamics = matOpFactory.transpose(RstDynamics);
+            %------
+            %
+            % Special changeset for 'inftraj2d' - removing the last error
+            % source - transpose, which can give up to 1e-11 error. Now on
+            % composite matOpFactory we reache absolute precision = 0. It
+            % was checked in IntEllApxBuilder (line 14) by:
+            %
+            % ltVec - expm(-[0, 1; 1, 0] * t) * ltSpline.evaluate(0)
+            %
+            self.XstTransDynamics = XstDynamics;
+            self.RstTransDynamics = RstDynamics;
             %
             [self.ltGoodDirCurveSpline, ...
                 self.ltGoodDirOneCurveSplineList] = ...
