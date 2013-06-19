@@ -89,9 +89,15 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     STubeData.xTouchOpCurveMat{iLDir}(:,indSTime);
             end
         end
-        function STubeData=calcGoodCurveData(~,STubeData)
+        function STubeData=calcGoodCurveData(STubeData)
+            import modgen.common.throwerror;
             nLDirs=length(STubeData.QArray);
-            for iLDir=nLDirs:-1:1
+            STubeData.indSTime=zeros(nLDirs,1);
+            STubeData.lsGoodDirVec=cell(nLDirs,1);
+            STubeData.ltGoodDirNormVec=cell(nLDirs,1);
+            STubeData.lsGoodDirNorm=zeros(nLDirs,1);
+            %
+            for iLDir=1:nLDirs
                 timeVec=STubeData.timeVec{iLDir};
                 sTime=STubeData.sTime(iLDir);
                 indSTime=find(sTime==timeVec,1,'first');
@@ -99,8 +105,9 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     throwerror('wrongInput:sTimeOutOfBounds',...
                         'sTime is expected to be among elements of timeVec');
                 end      
-                ltGoodDirMat=SData.ltGoodDirMat{iLDir};
+                ltGoodDirMat=STubeData.ltGoodDirMat{iLDir};
                 lsGoodDirVec=ltGoodDirMat(:,indSTime);
+                STubeData.indSTime(iLDir)=indSTime;
                 STubeData.lsGoodDirVec{iLDir}=lsGoodDirVec;
                 STubeData.lsGoodDirNorm(iLDir)=...
                     realsqrt(sum(lsGoodDirVec.*lsGoodDirVec));                
@@ -421,101 +428,40 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
         function SData = getInterpDataInternal(self, newTimeVec)
             import gras.ellapx.smartdb.F;
             import gras.ellapx.smartdb.rels.EllTubeBasic;
-            INTERP_FIELD_LIST={'QArray','aMat','MArray','ltGoodDirMat','timeVec'};            
-            SData=self.getDataInternal(INTERP_FIELD_LIST);
+            SData=self.getData();
             [SData.QArray, SData.aMat, SData.MArray,...
-                    SData.ltGoodDirMat] =...
-                    cellfun(fInterpTuple,SData.QArray, SData.aMat, SData.MArray,...
+                    SData.ltGoodDirMat,SData.timeVec,sTimeList] =...
+                    cellfun(@fInterpTuple,SData.QArray,...
+                    SData.aMat, SData.MArray,...
                     SData.ltGoodDirMat,SData.timeVec,...
-                    'UniformOutput',false);
+                    num2cell(SData.sTime),'UniformOutput',false);
+            SData.sTime=vertcat(sTimeList{:});    
             SData=EllTubeBasic.calcGoodCurveData(SData);
             SData=EllTubeBasic.calcTouchCurveData(SData);
             %
-            function [QArray, aMat, MArray,ltGoodDirMat] =...
-                    fInterpTuple(QArray, aMat, MArray,ltGoodDirMat)
-                import gras.interp.MatrixInterpolantFactory;
-                QArraySpline = ...
-                    MatrixInterpolantFactory.createInstance(...
-                    'symm_column_triu', QArray, timeVec);
-                MArraySpline = ...
-                    MatrixInterpolantFactory.createInstance(...
-                    'symm_column_triu', MArray, timeVec);
-                ltGoodDirMatSpline = ...
-                    MatrixInterpolantFactory.createInstance(...
-                    'column', ltGoodDirMat, timeVec);
-                centSpline = ...
-                    MatrixInterpolantFactory.createInstance(...
-                    'column', aMat, timeVec);
-                QArray = QArraySpline.evaluate(newTimeVec);
-                MArray = MArraySpline.evaluate(newTimeVec);
-                ltGoodDirMat = ltGoodDirMatSpline.evaluate(newTimeVec);
-                aMat = centSpline.evaluate(newTimeVec);
+            function [QArray, aMat, MArray,ltGoodDirMat,timeVec,sTime] =...
+                    fInterpTuple(QArray, aMat, MArray,ltGoodDirMat,...
+                    timeVec,sTime)
+                QArray = simpleInterp(QArray,'symm_column_triu');
+                MArray = simpleInterp(MArray,'symm_column_triu');
+                ltGoodDirMat = simpleInterp(ltGoodDirMat,'column');
+                aMat = simpleInterp(aMat,'column');
+                timeVec=newTimeVec;
+                distVec=abs(sTime-newTimeVec);
+                [~,indMin]=min(distVec);
+                sTime=newTimeVec(indMin);
+                function interpArray=simpleInterp(inpArray,interpType)
+                    import gras.interp.MatrixInterpolantFactory;                    
+                    splineObj=MatrixInterpolantFactory.createInstance(...
+                        interpType,inpArray,timeVec);
+                    interpArray=splineObj.evaluate(newTimeVec);
+                end
             end
         end
     end
-    methods
-        function [ellTubeProjRel,indProj2OrigVec]=project(self,projType,...
+    methods (Access=protected)
+        function [ellTubeProjRel,indProj2OrigVec]=projectInternal(self,projType,...
                 projMatList,fGetProjMat)
-            % PROJECT - computes projection of the relation object onto given time
-            %           dependent subspase
-            %
-            %
-            % Input:
-            %  regular:
-            %    self.
-            %    projType - type of the projection.
-            %        Takes the following values: 'Static'
-            %                                    'DynamicAlongGoodCurve'
-            %    projMatList:double[nDim, nSpDim] - matrices' array of the orthoganal
-            %             basis vectors
-            %    fGetProjMat - function which creates vector of the projection
-            %             matrices
-            %        Input:
-            %         regular:
-            %           projMat:double[nDim, mDim] - matrix of the projection at the
-            %             instant of time
-            %           timeVec:double[1, nDim] - time interval
-            %         optional:
-            %            sTime:double[1,1] - instant of time
-            %        Output:
-            %           projOrthMatArray:double[1, nSpDim] - vector of the projection
-            %             matrices
-            %           projOrthMatTransArray:double[nSpDim, 1] - transposed vector of
-            %             the projection matrices
-            % Output:
-            %    ellTubeProjRel:smartdb.relation.StaticRelation[1, 1]/
-            %        smartdb.relation.DynamicRelation[1, 1]- projected relation
-            %    indProj2OrigVec:cell[nDim, 1] - index of the line number from
-            %             which is obtained the projection
-            %
-            % Example:
-            %   function example
-            %    aMat = [0 1; 0 0]; bMat = eye(2);
-            %    SUBounds = struct();
-            %    SUBounds.center = {'sin(t)'; 'cos(t)'};
-            %    SUBounds.shape = [9 0; 0 2];
-            %    sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-            %    x0EllObj = ell_unitball(2);
-            %    timeVec = [0 10];
-            %    dirsMat = [1 0; 0 1]';
-            %    rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-            %    ellTubeObj = rsObj.getEllTubeRel();
-            %    unionEllTube = ...
-            %     gras.ellapx.smartdb.rels.EllUnionTube.fromEllTubes(ellTubeObj);
-            %    projSpaceList = {[1 0;0 1]};
-            %    projType = gras.ellapx.enums.EProjType.Static;
-            %    statEllTubeProj = unionEllTube.project(projType,projSpaceList,...
-            %       @fGetProjMat);
-            %    plObj=smartdb.disp.RelationDataPlotter();
-            %    statEllTubeProj.plot(plObj);
-            % end
-            %
-            % function [projOrthMatArray,projOrthMatTransArray]=fGetProjMat(projMat,...
-            %     timeVec,varargin)
-            %   nTimePoints=length(timeVec);
-            %   projOrthMatArray=repmat(projMat,[1,1,nTimePoints]);
-            %   projOrthMatTransArray=repmat(projMat.',[1,1,nTimePoints]);
-            %  end
             import gras.ellapx.uncertcalc.common.*;
             import modgen.common.throwerror;
             import gras.ellapx.common.*;
@@ -558,6 +504,8 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                         repmat(size(projMat,1),nLDirs,1);
                     tubeProjDataCMat{iGroup,iProj}.projSTimeMat=...
                         repmat({projMat},nLDirs,1);
+                    tubeProjDataCMat{iGroup,iProj}.projArray=...
+                        repmat({projOrthMatArray},nLDirs,1);
                     tubeProjDataCMat{iGroup,iProj}.projType=...
                         repmat(projType,nLDirs,1);
                     %
@@ -680,6 +628,8 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             indProj2OrigCMat=repmat(indProj2OrigCVec,1,nProj);
             indProj2OrigVec=vertcat(indProj2OrigCMat{:});
         end
+    end
+    methods
         function [apprEllMat timeVec] = getEllArray(self, approxType)
             % GETELLARRAY - returns array of matrix's ellipsoid according to
             %               approxType
@@ -757,7 +707,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             if isempty(self)
                 interpEllTube = self;
             else
-                SData = self.getInterpInternal(timeVec);
+                SData = self.getInterpDataInternal(timeVec);
                 interpEllTube = self.createInstance(SData);
             end
         end
@@ -839,8 +789,8 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             end
         end
     end
-    methods(Sealed)
-        function [isPos, reportStr] = isEqual(self, ellTubeObj, varargin)
+    methods (Access=protected)
+        function [isPos, reportStr] = isEqualAdjustedInternal(self, ellTubeObj, varargin)
             % ISEQUAL - compares current relation object with other relation object and 
             %           returns true if they are equal, otherwise it returns false
             % 

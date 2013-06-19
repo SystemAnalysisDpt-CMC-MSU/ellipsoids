@@ -17,6 +17,58 @@ classdef EllUnionTubeBasic<handle
         setDataInternal(~);
     end
     methods (Access = protected)
+        function checkDataConsistency(self)
+            checkTAndS('isLtTouchVec','timeTouchEndVec');
+            checkTAndS('isLtTouchOpVec','timeTouchOpEndVec');
+            function checkTAndS(fieldIsLtTouch,fieldTimeTouchEnd)
+                cellfun(@checkOneTAndS,self.(fieldIsLtTouch),...
+                    self.(fieldTimeTouchEnd));
+                function checkOneTAndS(isLtTouchVec,timeTouchEndVec)
+                    import modgen.common.throwerror;
+                    timeTouchNotNanVec=timeTouchEndVec(isLtTouchVec);
+                    isOk=~any(isnan(timeTouchNotNanVec));
+                    if ~isOk
+                        throwerror('wrongInput',...
+                            ['field %s have NaNs at touch moments ',...
+                            'specified by field %s'],fieldTimeTouchEnd,...
+                            fieldIsLtTouch);
+                    end
+                    %
+                    isOk=all(isnan(timeTouchEndVec(~isLtTouchVec)));
+                    if ~isOk
+                        throwerror('wrongInput',...
+                            ['field %s doesn''t have NaNs for all non-touch',...
+                            ' moments specified by field %s'],...
+                            fieldTimeTouchEnd,fieldIsLtTouch);
+                    end
+                    if any(isLtTouchVec)
+                        isNanVec=~isLtTouchVec;
+                        indCumVec=cumsum(isNanVec);
+                        indNotUniqueGroupVec=indCumVec(isLtTouchVec);
+                        [~,~,indGroupVec]=unique(indNotUniqueGroupVec);
+                        isOk=all(accumarray(indGroupVec.',timeTouchNotNanVec.',[],...
+                            @(x)all(diff(x)>=0)));
+                        if ~isOk
+                            throwerror('wrongInput',...
+                                'field %s contains non-monotone values',...
+                                fieldTimeTouchEnd);
+                        end
+                        timeMinVec=(accumarray(indGroupVec.',timeTouchNotNanVec.',[],...
+                            @(x)x(1)));
+                        timeMaxVec=(accumarray(indGroupVec.',timeTouchNotNanVec.',[],...
+                            @(x)x(end)));
+                        isOk=all(timeMinVec(2:end)>timeMaxVec(1:end-1));
+                        if ~isOk
+                            throwerror('wrongInput',...
+                                ['field %s is expected to contain ',...
+                                'strongly-monotone values across ',...
+                                'different touch groups'],...
+                                fieldTimeTouchEnd)
+                        end
+                    end
+                end
+            end
+        end
         function self = setDataFromEllTubesInternal(self, ellTubeRel)
             import gras.ellapx.smartdb.rels.EllUnionTube;
             import gras.ellapx.smartdb.rels.EllUnionTubeBasic;
@@ -96,6 +148,7 @@ classdef EllUnionTubeBasic<handle
                     %
                     isLtTouchVec(iTime)=isTouchVec(iTime);
                     isTouchCandidateVec=isTouchVec;
+                    isTouchCandidateVec(iTime)=false;
                 end
                 isLsTouch=isLtTouchVec(indSTime);                
                 isEndBeforeStartVec=indTimeTouchEndVec<(1:nTimes);

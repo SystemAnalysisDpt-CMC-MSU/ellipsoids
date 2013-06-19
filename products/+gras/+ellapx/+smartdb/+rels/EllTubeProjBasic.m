@@ -34,9 +34,10 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
             import  gras.ellapx.smartdb.F;
             ellTubeBasicList = self.getNoCatOrCutFieldsList@...
                 gras.ellapx.smartdb.rels.EllTubeBasic;
-            fieldsList=[ellTubeBasicList;'LS_GOOD_DIR_NORM_ORIG';...
-                'LS_GOOD_DIR_ORIG_VEC';'PROJ_S_MAT';'PROJ_TYPE'];
-        end        
+            fieldsList=[ellTubeBasicList;...
+                F().getNameList({'LS_GOOD_DIR_NORM_ORIG';...
+                'LS_GOOD_DIR_ORIG_VEC';'PROJ_S_MAT';'PROJ_TYPE'})];
+        end
         function namePrefix=getReachTubeNamePrefix(self)
             % GETREACHTUBEANEPREFIX - return prefix of the reach tube
             %
@@ -59,7 +60,7 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                 varargin)
             import gras.ellapx.smartdb.PlotPropProcessor;
             import modgen.common.parseparext;
-                
+            
             plotSpecFieldListDefault = {'approxType'};
             colorFieldListDefault = {'approxType'};
             alphaFieldListDefault = {'approxType'};
@@ -138,7 +139,7 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                             'ApproxType=%s is not supported',char(approxType));
                 end
             end
-        
+            
             function patchAlpha = getPatchAlphaByApxType(approxType)
                 import gras.ellapx.enums.EApproxType;
                 switch approxType
@@ -174,7 +175,7 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                 xTouchCurveMat, xTouchOpCurveMat, ltGoodDirNormVec,...
                 ltGoodDirNormOrigVec, approxType, QArray, aMat, MArray,...
                 varargin)
-
+            
             import gras.ellapx.enums.EApproxType;
             %
             tubeNamePrefix = self.REACH_TUBE_PREFIX;
@@ -184,7 +185,7 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                 xTouchCurveMat, xTouchOpCurveMat, ltGoodDirNormVec,...
                 ltGoodDirNormOrigVec,...
                 approxType, QArray, aMat, tubeNamePrefix);
-
+            
             axis(hAxes, 'tight');
             axis(hAxes, 'normal');
             if approxType == EApproxType.External
@@ -225,7 +226,7 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
             else
                 hVec=[];
             end
-        end  
+        end
         function hVec = plotCreateGenericTubeFunc(self,...
                 plotPropProcessorObj, hAxes, varargin)
             
@@ -240,7 +241,7 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
             [vMat,fMat]=gras.geom.tri.elltubetri(...
                 QArray,aMat,timeVec,nSPoints);
             nTimePoints=length(timeVec);
-           
+            
             patchColorVec = plotPropProcessorObj.getColor(varargin(:));
             patchAlpha = plotPropProcessorObj.getTransparency(varargin(:));
             
@@ -259,7 +260,7 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                     'EdgeLighting','phong','FaceLighting','phong');
                 material('metal');
             end
-            hold(hAxes,'on');            
+            hold(hAxes,'on');
         end
         function hVec=axesSetPropRegTubeFunc(self,hAxes,axesName,projSTimeMat,varargin)
             import modgen.common.type.simple.checkgen;
@@ -334,41 +335,37 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                 end
             end
         end
-        function SData = getInterpInternal(self, newTimeVec)
-            SData = struct;
+        function SData = getInterpDataInternal(self, newTimeVec)
             import gras.ellapx.smartdb.F;
-            if (~isempty(newTimeVec))
-                SData = getInterpInternal@...
-                    gras.ellapx.smartdb.rels.EllTubeBasic(self,newTimeVec);
-                fieldList=F().getNameList({'PROJ_S_MAT', 'PROJ_TYPE',...
-                    'LS_GOOD_DIR_NORM_ORIG',...
-                    'LT_GOOD_DIR_NORM_ORIG_VEC',...
-                    'LT_GOOD_DIR_ORIG_MAT',...
-                    'LS_GOOD_DIR_ORIG_VEC'});
-                [SData.projSTimeMat, SData.projType, ...
-                    SData.lsGoodDirNormOrig, ...
-                    SData.ltGoodDirNormOrigVec,...
-                    SData.ltGoodDirOrigMat,...
-                    SData.lsGoodDirOrigVec] = ...
-                    self.applyTupleGetFunc(@fInterpTuple, fieldList);
-            end
+            SData = getInterpDataInternal@...
+                gras.ellapx.smartdb.rels.EllTubeBasic(self,newTimeVec);
+            [SData.projSTimeMat, ...
+                lsGoodDirNormOrigList, ...
+                SData.ltGoodDirNormOrigVec,...
+                SData.ltGoodDirOrigMat,...
+                SData.lsGoodDirOrigVec] = ...
+                cellfun(@fInterpTuple,SData.ltGoodDirNormOrigVec,...
+                SData.ltGoodDirOrigMat,SData.projArray,self.timeVec,...
+                num2cell(SData.indSTime),'UniformOutput',false);
+            SData.lsGoodDirNormOrig=vertcat(lsGoodDirNormOrigList{:});
             %
-            function [projSTimeMat, projType, lsGoodDirNormOrig,...
-                    ltGoodDirNormOrigVec, ltGoodDirOrigMat,...
-                    lsGoodDirOrigVec] = ...
-                    fInterpTuple(projSTimeMat, projType, ...
-                    lsGoodDirNormOrig, ltGoodDirNormOrigVec,...
-                    ltGoodDirOrigMat, lsGoodDirOrigVec)
-                import gras.interp.MatrixInterpolantFactory;
-                goodDirNormOrigVecSpline = ...
-                    MatrixInterpolantFactory.createInstance(...
-                    'column', ltGoodDirNormOrigVec,...
-                    self.timeVec{1});
-                ltGoodDirNormOrigVec =...
-                    {goodDirNormOrigVecSpline.evaluate(newTimeVec)};
-                lsGoodDirOrigVec = {lsGoodDirOrigVec};
-                ltGoodDirOrigMat = {ltGoodDirOrigMat};
-                projSTimeMat = {projSTimeMat};
+            function [projSTimeMat,lsGoodDirNormOrig,ltGoodDirNormOrigVec,...
+                    ltGoodDirOrigMat,lsGoodDirOrigVec] = ...
+                    fInterpTuple(ltGoodDirNormOrigVec,ltGoodDirOrigMat,...
+                    projArray,timeVec,indSTime)
+                ltGoodDirOrigMat=simpleInterp(ltGoodDirOrigMat);
+                ltGoodDirNormOrigVec=simpleInterp(ltGoodDirNormOrigVec);
+                projArray=simpleInterp(projArray);
+                %
+                lsGoodDirOrigVec=ltGoodDirOrigMat(:,indSTime);
+                lsGoodDirNormOrig=ltGoodDirNormOrigVec(indSTime);
+                projSTimeMat = projArray(:,:,indSTime);
+                function interpArray=simpleInterp(inpArray)
+                    import gras.interp.MatrixInterpolantFactory;
+                    splineObj=MatrixInterpolantFactory.createInstance(...
+                        'column',inpArray,timeVec);
+                    interpArray=splineObj.evaluate(newTimeVec);
+                end
             end
         end
     end
@@ -391,39 +388,39 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
             %           function that specified transparency
             %           value for ellipsoidal tubes
             %       fGetLineWidth: function_handle[1, 1] -
-            %           function that specified lineWidth for good curves 
+            %           function that specified lineWidth for good curves
             %       fGetFill: function_handle[1, 1] - this
             %           property not used in this version
-            %       colorFieldList: cell[nColorFields, ] of char[1, ] - 
+            %       colorFieldList: cell[nColorFields, ] of char[1, ] -
             %           list of parameters for color function
-            %       alphaFieldList: cell[nAlphaFields, ] of char[1, ] - 
+            %       alphaFieldList: cell[nAlphaFields, ] of char[1, ] -
             %           list of parameters for transparency function
-            %       lineWidthFieldList: cell[nLineWidthFields, ] 
-            %           of char[1, ] - list of parameters for lineWidth 
+            %       lineWidthFieldList: cell[nLineWidthFields, ]
+            %           of char[1, ] - list of parameters for lineWidth
             %           function
-            %       fillFieldList: cell[nIsFillFields, ] of char[1, ] - 
+            %       fillFieldList: cell[nIsFillFields, ] of char[1, ] -
             %           list of parameters for fill function
-            %       plotSpecFieldList: cell[nPlotFields, ] of char[1, ] - 
+            %       plotSpecFieldList: cell[nPlotFields, ] of char[1, ] -
             %           defaul list of parameters. If for any function in
-            %           properties not specified list of parameters, 
+            %           properties not specified list of parameters,
             %           this one will be used
             %
             % Output:
             %   plObj: smartdb.disp.RelationDataPlotter[1,1] - plotter
             %           object used for displaying ellipsoidal tubes
             %
-            % $Author: 
-            % Peter Gagarinov  <pgagarinov@gmail.com> 	
-            % Artem Grachev <grachev.art@gmail.com> 
+            % $Author:
+            % Peter Gagarinov  <pgagarinov@gmail.com>
+            % Artem Grachev <grachev.art@gmail.com>
             % $Date: May-2013$
             % $Copyright: Moscow State University,
             %             Faculty of Computational Mathematics
-            %             and Computer Science, 
+            %             and Computer Science,
             %             System Analysis Department 2013$
             %
             import gras.ellapx.smartdb.rels.EllTubeProjBasic;
             import modgen.logging.log4j.Log4jConfigurator;
-                                    
+            
             PLOT_FULL_FIELD_LIST =...
                 {'projType','timeVec','lsGoodDirOrigVec',...
                 'ltGoodDirMat','sTime','xTouchCurveMat',...
@@ -446,7 +443,7 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                 fSetReachFigProp=@(varargin)figureNamedSetPropFunc(self,...
                     'reachTube',varargin{:});
                 fSetRegFigProp=@(varargin)figureNamedSetPropFunc(self,...
-                    'regTube',varargin{:});    
+                    'regTube',varargin{:});
                 %
                 fGetTubeAxisKey=@(varargin)axesGetKeyTubeFunc(self,varargin{:});
                 fGetCurveAxisKey=@(varargin)axesGetKeyGoodCurveFunc(self,varargin{:});
@@ -502,7 +499,7 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                     'ltGoodDirMat','sTime','xTouchCurveMat',...
                     'xTouchOpCurveMat','ltGoodDirNormVec',...
                     'ltGoodDirNormOrigVec','approxType','QArray','aMat','MArray'});
-            end           
+            end
         end
     end
 end

@@ -45,9 +45,9 @@ classdef F<smartdb.gen.AFieldDefs
         PROJ_S_MAT_D='Projection matrix at time s';
         PROJ_S_MAT_T={'cell','double'};
         %
-        PROJ_MAT_ARRAY='projMatArray';
-        PROJ_MAT_ARRAY_D='Array of projection matrices for each time moment';
-        PROJ_MAT_ARRAY_T={'cell','double'};
+        PROJ_ARRAY='projArray';
+        PROJ_ARRAY_D='Array of projection matrices for each time moment';
+        PROJ_ARRAY_T={'cell','double'};
         %
         LS_GOOD_DIR_VEC='lsGoodDirVec';
         LS_GOOD_DIR_VEC_D='Good direction at time s';

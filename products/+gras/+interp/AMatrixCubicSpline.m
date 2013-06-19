@@ -57,8 +57,8 @@ classdef AMatrixCubicSpline<gras.mat.IMatrixFunction
             %       no arguments
             %
             import modgen.common.throwerror;
-            import modgen.common.type.simple.checkgen;
-            import modgen.common.type.simple.checkgenext;
+            import modgen.common.checkvar;
+            import modgen.common.checkmultvar;
             %
             if nargin==0
                 %do nothing
@@ -72,11 +72,11 @@ classdef AMatrixCubicSpline<gras.mat.IMatrixFunction
             elseif nargin==2
                 [mSizeVec,nDims]=self.getSizeProps(dataArray);
                 %
-                checkgen(nDims,'x==1||x==2');
-                checkgen(timeVec,'isrow(x)');
+                checkvar(nDims,'x==1||x==2');
+                checkvar(timeVec,'isrow(x)');
                 nTimePoints=length(timeVec);
                 dSizeVec=size(dataArray);
-                checkgenext('x1(end)==x2',2,dSizeVec(end),nTimePoints);
+                checkmultvar('x1(end)==x2',2,dSizeVec(end),nTimePoints);
                 %
                 ppFormList=self.buildSplineCoeffs(dataArray,timeVec);
                 self.initialize(ppFormList,mSizeVec,timeVec);

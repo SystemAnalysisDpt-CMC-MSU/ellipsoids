@@ -1,5 +1,6 @@
-classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
-        gras.ellapx.smartdb.rels.EllTubeBasic
+classdef EllTube<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&...
+        gras.ellapx.smartdb.rels.EllTubeBasic&...
+        gras.ellapx.smartdb.rels.AEllTubeProjectable
     % EllTube - class which keeps ellipsoidal tubes
     %
     % Fields:
@@ -599,15 +600,13 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
                 EllTubeBasic.scaleTubeData(self.getData(),scaleFactorVec));
         end
         function self=EllTube(varargin)
-            self=self@gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel(...
+            self=self@gras.ellapx.smartdb.rels.ATypifiedAdjustedRel(...
                 varargin{:});
         end
         function [ellTubeProjRel,indProj2OrigVec]=project(self,varargin)
             import gras.ellapx.smartdb.rels.EllTubeProj;
             if self.getNTuples()>0
-                [rel,indProj2OrigVec]=project@...
-                    gras.ellapx.smartdb.rels.EllTubeBasic(...
-                    self,varargin{:});
+                [rel,indProj2OrigVec]=self.projectInternal(varargin{:});
                 ellTubeProjRel=EllTubeProj(rel);
             else
                 ellTubeProjRel=EllTubeProj();

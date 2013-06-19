@@ -91,6 +91,7 @@ function [reg,isRegSpecVec,varargout]=parseparext(args,propNameValMat,varargin)
 %
 %
 import modgen.common.type.simple.*;
+import modgen.common.checkvar;
 import modgen.common.ismembercellstr;
 import modgen.common.throwerror;
 %
@@ -146,7 +147,7 @@ if ~isempty(inpProp)
         switch lower(inpProp{iInpProp})
             case 'regchecklist',
                 regCheckList=inpProp{iInpProp+1};
-                checkgen(regCheckList,...
+                checkvar(regCheckList,...
                     @(x)iscell(x)&&lib.isrow(x)&&...
                     (~isNRegExpSpec&&numel(x)>=nRegs||...
                     isNRegExpSpec&&numel(x)<=nRegExpVec(2)));
