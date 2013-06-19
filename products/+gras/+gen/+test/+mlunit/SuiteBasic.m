@@ -178,5 +178,62 @@ classdef SuiteBasic < mlunitext.test_case
                     rightArray));
             end
         end
+        function testSvdOp(self)
+            import gras.gen.SymmetricMatVector;
+            %
+            MAX_TOL=1e-10;
+            aArray = zeros(2, 2, 2);
+            bArray = zeros(2, 3, 2);
+            aArray(:,:,1) = [0 1; 1 0];
+            aArray(:,:,2) = [5 2; 2 1];
+            bArray(:,:,1) = [4 6 1; -6 2 4];
+            bArray(:,:,2) = [8 3 8; 4 3 7];
+            %
+            resArray = SymmetricMatVector.lrSvdMultiply(aArray, bArray);
+            check(@(x)x, aArray, bArray, resArray, true, false);
+            %
+            cMat = repmat([1; 0], [1 2]);
+            resArray = SymmetricMatVector.rSvdMultiplyByVec(aArray, ...
+                cMat);
+            check(@(x)x, aArray, cMat, resArray, false, true);
+            %
+            resArray = SymmetricMatVector.lrSvdMultiplyByVec(aArray, ...
+                cMat);
+            check(@(x)x, aArray, cMat, resArray, true, true);
+            %
+            resArray = SymmetricMatVector.lrSvdDivideVec(aArray, ...
+                cMat);
+            check(@inv, aArray, cMat, resArray, true, true);
+            %
+            function check(fOpFunc, inp1Array, inp2Array, resArray, ...
+                    isLrOp, isVec)
+                sizeVec = size(resArray);
+                nPoints = sizeVec(end);
+                expArray = zeros(size(resArray));
+                for i = 1:nPoints
+                    [~, sMat, uMat] = svd(inp1Array(:,:,i));
+                    if isVec
+                        arg2Mat = inp2Array(:,i);
+                    else
+                        arg2Mat = inp2Array(:,:,i);
+                    end
+                    %
+                    if isLrOp
+                        tempMat = uMat * arg2Mat;
+                        resMat = tempMat' * fOpFunc(sMat) * tempMat;
+                    else
+                        resMat = uMat' * fOpFunc(sMat) * uMat * arg2Mat;
+                    end
+                    %
+                    if isVec
+                        expArray(:,i) = resMat;
+                    else
+                        expArray(:,:,i) = resMat;
+                    end
+                end
+                maxTol = max(abs(expArray(:) - resArray(:)));
+                mlunitext.assert_equals(true, maxTol<=MAX_TOL)
+            end
+        end
     end
 end
