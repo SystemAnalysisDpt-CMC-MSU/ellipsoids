@@ -1,4 +1,7 @@
 classdef SuiteOp < mlunitext.test_case
+    properties (Constant, Hidden, Access = private)
+        SYMCHECK_MAX_DIM = 5;
+    end
     methods(Static,Access=private)
         function isOk = isMatFunSizeConsistent(inpMatFun)
             inpMatSizeVec = inpMatFun.getMatrixSize();
@@ -11,6 +14,7 @@ classdef SuiteOp < mlunitext.test_case
             %
             mlunitext.assert_equals(isOk, true);
         end
+        %
         function isOk = isMatVecEq(aMatVec, bMatVec)
             MAX_TOL=1e-7;
             aSize = size(aMatVec);
@@ -31,42 +35,43 @@ classdef SuiteOp < mlunitext.test_case
             isOk = ( maxError < MAX_TOL);
             mlunitext.assert_equals(isOk, true);
         end
-    end
-    methods(Access=private)
-        function isOk = isMatFunSizeEq(self, aMatFun, bMatFun, varargin)
+        %
+        function isOk = isMatFunSizeEq(aMatFun, bMatFun, varargin)
+            import gras.mat.test.mlunit.SuiteOp;
             if any([isa(aMatFun, 'cell'), isa(aMatFun, 'numeric')])
                 aSizeVec = size(aMatFun);
             else
-                self.isMatFunSizeConsistent(aMatFun);
+                SuiteOp.isMatFunSizeConsistent(aMatFun);
                 aSizeVec = aMatFun.getMatrixSize();
             end
             %
             if any([isa(bMatFun, 'cell'), isa(bMatFun, 'numeric')])
                 bSizeVec = size(bMatFun);
             else
-                self.isMatFunSizeConsistent(bMatFun);
+                SuiteOp.isMatFunSizeConsistent(bMatFun);
                 bSizeVec = bMatFun.getMatrixSize();
             end
             %
-            if nargin > 3
+            if nargin > 2
                 fPostProc = varargin{1};
                 [aSizeVec, bSizeVec] = fPostProc(aSizeVec, bSizeVec);
             end
-            isOk = self.isMatVecEq(aSizeVec, bSizeVec);
+            isOk = SuiteOp.isMatVecEq(aSizeVec, bSizeVec);
         end
         %
-        function isOk = isOpEqual(self, opts, expectedMat, timeVec, op, ...
+        function isOk = isOpEqual(opts, expectedMat, timeVec, op, ...
                 varargin)
             import gras.mat.AMatrixOperations;
             import gras.mat.ConstMatrixFunctionFactory;
+            import gras.mat.test.mlunit.SuiteOp;            
             %
             if isempty(timeVec)
                 timeVec = -3:3;
             end
             %
             if ~any(strcmp('symb', opts))
-                argFunCMat = cell(1, nargin-5);
-                for i = 1:nargin-5
+                argFunCMat = cell(1, nargin-4);
+                for i = 1:nargin-4
                     if isnumeric(varargin{i})
                         argFunCMat{i} = ...
                             ConstMatrixFunctionFactory.createInstance(...
@@ -82,7 +87,8 @@ classdef SuiteOp < mlunitext.test_case
                 isExpFunc = true;
             end
             %
-            if any(strcmp('symmetric', opts)) && (length(varargin) < 5)
+            if any(strcmp('symmetric', opts)) && (length(varargin) < ...
+                    SuiteOp.SYMCHECK_MAX_DIM)
                 checkMat = perms(1:length(varargin));
                 isOk = true;
                 for i = 1:size(checkMat, 1)
@@ -101,6 +107,7 @@ classdef SuiteOp < mlunitext.test_case
             function isOk = isEquality()
                 import gras.mat.AMatrixOperations;
                 import gras.mat.ConstMatrixFunctionFactory;
+                import gras.mat.test.mlunit.SuiteOp;
                 %
                 resultVec = resMatFun.evaluate(timeVec);
                 if isExpFunc
@@ -112,15 +119,17 @@ classdef SuiteOp < mlunitext.test_case
                         expMatFun = ...
                             AMatrixOperations.fromSymbMatrix(expectedMat);
                     end
-                    self.isMatFunSizeEq(resMatFun, expMatFun);
+                    SuiteOp.isMatFunSizeEq(resMatFun, expMatFun);
                     expectedVec = expMatFun.evaluate(timeVec);
-                    isOk = self.isMatVecEq(resultVec(:), expectedVec(:));
+                    isOk = SuiteOp.isMatVecEq(resultVec(:), expectedVec(:));
                 else
-                    self.isMatFunSizeEq(resMatFun, expectedMat(:,:,1));
-                    isOk = self.isMatVecEq(resultVec(:), expectedMat(:));
+                    SuiteOp.isMatFunSizeEq(resMatFun, expectedMat(:,:,1));
+                    isOk = SuiteOp.isMatVecEq(resultVec(:), expectedMat(:));
                 end
             end
         end
+    end
+    methods(Access=private)
         function runTestsForFactory(self, factory)
             import gras.gen.matdot;
             import gras.mat.*;

@@ -1,6 +1,9 @@
 classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
     %TestRelation Summary of this class goes here
     %   Detailed explanation goes here
+    properties (Constant, Hidden, Access = protected)
+        SVD_SWITCH_THRESHOLD = 1e-4;
+    end
     properties (Constant,Hidden)
         FCODE_Q_ARRAY
         FCODE_A_MAT
@@ -8,10 +11,12 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
         FCODE_M_ARRAY
     end
     methods (Static, Access=protected,Sealed)
-        function [xTouchMat,xTouchOpMat]=calcTouchCurves(QArray,aMat,...
-                ltGoodDirMat)
+        function [xTouchMat,xTouchOpMat]=calcTouchCurves(QArray, ...
+                aMat, ltGoodDirMat)
             import gras.ellapx.common.*;
             import gras.gen.SymmetricMatVector;
+            import gras.gen.absreldiff;
+            import gras.ellapx.smartdb.rels.EllTubeBasic;
             %
             % Calculating svd curves (better for ill-conditioned QArray)
             %
@@ -28,7 +33,8 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             regPrec = checkPrecision(...
                 @SymmetricMatVector.lrDivideVec, centRegCurve);
             %
-            if (svdPrec < regPrec)
+            if (regPrec > 0) && (svdPrec / regPrec < ...
+                    EllTubeBasic.SVD_SWITCH_THRESHOLD)
                 xTouchOpMat= aMat - centSvdCurve;
                 xTouchMat= aMat + centSvdCurve;
             else
