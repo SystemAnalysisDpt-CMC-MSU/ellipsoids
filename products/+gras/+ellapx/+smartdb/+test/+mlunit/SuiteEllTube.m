@@ -313,9 +313,6 @@ classdef SuiteEllTube < mlunitext.test_case
             end
         end
         %
-
-        
-        
         function testPlotTouch(self)
             [relStatProj,relDynProj]=checkMaster(1);
             [rel2StatProj,rel2DynProj]=checkMaster(10);
@@ -618,49 +615,55 @@ classdef SuiteEllTube < mlunitext.test_case
             end
         end
         function self = testRelativeComparison(self)
-            import gras.ellapx.smartdb.rels.EllTube.fromQArrays;
             nPoints=5;
-            calcPrecision=0.001;
             relTolerance=0.01;
-            approxSchemaDescr=char.empty(1,0);
-            approxSchemaName=char.empty(1,0);
-            nDims=3;
-            nTubes=1;
             lsGoodDirVec=[1;0;1];
-            aMat=zeros(nDims,nPoints);
             timeVec=1:nPoints;
             sTime=nPoints;
-            approxType=gras.ellapx.enums.EApproxType.Internal;
+            fCheckFun = @(x, y) x.isEqual(y, 'MaxRelativeTolerance', ...
+                relTolerance);
             %
-            qArrayListBase=repmat({repmat(diag([1 2 3]),[1,1,nPoints])},...
-                1,nTubes);
-            ltGoodDirArray=repmat(lsGoodDirVec,[1,nTubes,nPoints]);
+            qArrayListBase = repmat({repmat(diag([1 2 3]), [1, 1, ...
+                nPoints])}, 1, 1);
+            firstEllTube = createSimpleRel(lsGoodDirVec, ...
+                qArrayListBase, timeVec, sTime);
             %
-            firstEllTube=gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
-                qArrayListBase, aMat, timeVec,...
-                ltGoodDirArray, sTime, approxType, approxSchemaName,...
-                approxSchemaDescr, calcPrecision);
             qArrayList = {qArrayListBase{:} .* (1 - 0.5 * relTolerance)};
-            secondEllTube=gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
-                qArrayList, aMat, timeVec,...
-                ltGoodDirArray, sTime, approxType, approxSchemaName,...
-                approxSchemaDescr, calcPrecision);
-            %
-            [isEqual,reportStr]=...
-                firstEllTube.isEqual(secondEllTube, ...
-                'MaxRelativeTolerance', relTolerance);
+            secondEllTube = createSimpleRel(lsGoodDirVec, ...
+                qArrayList, timeVec, sTime);
+            [isEqual,reportStr] = fCheckFun(firstEllTube, secondEllTube);
             mlunitext.assert(isEqual,reportStr);
             %
             qArrayList = {qArrayListBase{:} .* (1 + 2 * relTolerance)};
-            secondEllTube=gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
-                qArrayList, aMat, timeVec,...
+            secondEllTube = createSimpleRel(lsGoodDirVec, ...
+                qArrayList, timeVec, sTime);
+            [isEqual,~] = fCheckFun(firstEllTube, secondEllTube);
+            mlunitext.assert(~isEqual, ['Ellipsoids relative', ...
+                ' difference must be greater than  tolerance']);
+            %
+            function rel = createSimpleRel(lsGoodDirVec, qArrayList, ...
+                    timeVec, sTime)
+                import gras.ellapx.smartdb.rels.EllTube;
+                %
+                calcPrecision = 0.001;
+                nTubes = size(qArrayList, 2);
+                approxSchemaDescr = char.empty(1,0);
+                approxSchemaName = char.empty(1,0);
+                approxType = gras.ellapx.enums.EApproxType.Internal;
+                nTimePoints = timeVec(end);
+                if ~isempty(qArrayList)
+                    nDims = size(qArrayList{1}, 1);
+                else
+                    rel = [];
+                    return;
+                end
+                aMat = zeros(nDims,nTimePoints);
+                ltGoodDirArray = repmat(lsGoodDirVec,[1,nTubes,nTimePoints]);
+                %
+                rel = EllTube.fromQArrays(qArrayList, aMat, timeVec,...
                 ltGoodDirArray, sTime, approxType, approxSchemaName,...
                 approxSchemaDescr, calcPrecision);
-            [isEqual,~]=...
-                firstEllTube.isEqual(secondEllTube, ...
-                'MaxRelativeTolerance', relTolerance);
-            mlunitext.assert(~isEqual,...
-                'Ellipsoids relative difference is greater than tolerance');
+            end
         end
     end
 end
