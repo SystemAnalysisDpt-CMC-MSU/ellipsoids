@@ -1,9 +1,6 @@
 classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
     %TestRelation Summary of this class goes here
     %   Detailed explanation goes here
-    properties (Constant, Hidden, Access = protected)
-        SVD_SWITCH_THRESHOLD = 1e-4;
-    end
     properties (Constant,Hidden)
         FCODE_Q_ARRAY
         FCODE_A_MAT
@@ -13,43 +10,18 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
     methods (Static, Access=protected,Sealed)
         function [xTouchMat,xTouchOpMat]=calcTouchCurves(QArray, ...
                 aMat, ltGoodDirMat)
-            import gras.ellapx.common.*;
-            import gras.gen.SymmetricMatVector;
-            import gras.gen.absreldiff;
-            import gras.ellapx.smartdb.rels.EllTubeBasic;
-            %
-            % Calculating svd curves (better for ill-conditioned QArray)
-            %
-            centSvdCurve = calcCentCurve(...
-                @SymmetricMatVector.rSvdMultiplyByVec);
-            svdPrec = checkPrecision(...
-                @SymmetricMatVector.lrSvdDivideVec, centSvdCurve);
-            %
-            % Calculating standart curves (better for big dimentional 
-            % QArray)
+            import gras.gen.SquareMatVector;
             %
             centRegCurve = calcCentCurve(...
-                @SymmetricMatVector.rMultiplyByVec);
-            regPrec = checkPrecision(...
-                @SymmetricMatVector.lrDivideVec, centRegCurve);
+                @SquareMatVector.rMultiplyByVec);
             %
-            if (regPrec > 0) && (svdPrec / regPrec < ...
-                    EllTubeBasic.SVD_SWITCH_THRESHOLD)
-                xTouchOpMat= aMat - centSvdCurve;
-                xTouchMat= aMat + centSvdCurve;
-            else
-                xTouchOpMat= aMat - centRegCurve;
-                xTouchMat= aMat + centRegCurve;
-            end
+            xTouchOpMat= aMat - centRegCurve;
+            xTouchMat= aMat + centRegCurve;
             function curveMat = calcCentCurve(rMulByVecOp)
                 tempVec = rMulByVecOp(QArray, ltGoodDirMat);
                 denomVec = realsqrt(abs(dot(ltGoodDirMat, tempVec, 1)));
                 curveMat = tempVec ./ denomVec(...
                     ones(1, size(QArray, 2)), :);
-            end
-            function normVal = checkPrecision(lrDivByVecOp, curveMat)
-                normVec = lrDivByVecOp(QArray, curveMat);
-                normVal = max(abs(normVec(:) - 1));
             end
         end
         %
@@ -210,10 +182,10 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 import gras.gen.SymmetricMatVector
                 import modgen.common.throwerror;
                 %
-                actualSvdPrecision = checkPrecision(...
-                    @SymmetricMatVector.lrSvdDivideVec);
                 actualRegPrecision = checkPrecision(...
                     @SymmetricMatVector.lrDivideVec);
+                actualSvdPrecision = checkPrecision(...
+                    @SymmetricMatVector.lrSvdDivideVec);
                 actualPrecision = min([actualSvdPrecision, ...
                     actualRegPrecision]);
                 %
