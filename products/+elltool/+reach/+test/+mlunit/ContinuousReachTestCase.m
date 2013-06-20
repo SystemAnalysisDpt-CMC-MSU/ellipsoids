@@ -236,13 +236,10 @@ classdef ContinuousReachTestCase < mlunitext.test_case
             timeVec = [self.tVec(1), sum(self.tVec)/2];
             newReachObj = feval(class(self.reachObj), ...
                 self.linSys, self.x0Ell, self.l0Mat, timeVec);
-            %
-            indSTimeVec = newReachObj.getEllTubeRel().indSTime;
-            mlunitext.assert_equals(true, all(indSTimeVec == 1));
+            auxCheckIndSTime(self.reachObj);
             %
             evolveReachObj = newReachObj.evolve(self.tVec(2));
-            indSTimeVec = evolveReachObj.getEllTubeRel().indSTime;
-            mlunitext.assert_equals(true, all(indSTimeVec == 1));
+            auxCheckIndSTime(self.reachObj);
             %
             isEqual = self.reachObj.isEqual(evolveReachObj);
             mlunitext.assert_equals(true, isEqual);
@@ -285,16 +282,12 @@ classdef ContinuousReachTestCase < mlunitext.test_case
                 check('get_ia',[true, false]);
                 %
                 function check(fGetApx,isIntExtApxVec)
+                    auxCheckIndSTime(cutReachObj);
                     [apxEllMat,timeVec] = feval(fGetApx,cutReachObj);
                     nTuples = size(apxEllMat, 1);
                     if self.reachObj.isbackward()
-                        isOk=all(cutReachObj.getEllTubeRel().indSTime==...
-                            cellfun(@numel,cutReachObj.getEllTubeRel().timeVec));
-                        mlunitext.assert(isOk);
                         timeDif = timeVec(end) - newTimeVec(1);
                     else
-                        isOk=all(cutReachObj.indSTime==1);
-                        mlunitext.assert(isOk);
                         timeDif = timeVec(1) - newTimeVec(1);
                     end
                     for iTuple = 1 : nTuples
@@ -423,4 +416,14 @@ classdef ContinuousReachTestCase < mlunitext.test_case
             end
         end
     end
+end
+function auxCheckIndSTime(reachObj)
+if reachObj.isbackward()
+    isOk=all(reachObj.getEllTubeRel().indSTime==...
+        cellfun(@numel,reachObj.getEllTubeRel().timeVec));
+    mlunitext.assert(isOk);
+else
+    isOk=all(reachObj.getEllTubeRel().indSTime==1);
+    mlunitext.assert(isOk);
+end
 end
