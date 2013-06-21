@@ -17,6 +17,9 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
         end
     end
     methods (Access = protected)
+        function fieldList=getDetermenisticSortFieldList(~)        
+            fieldList={'sTime','lsGoodDirVec','approxType'};
+        end
         function fieldsList = getSFieldsList(~)
             import gras.ellapx.smartdb.F;
             fieldsList = F().getNameList({'LS_GOOD_DIR_VEC';'LS_GOOD_DIR_NORM';...
@@ -362,33 +365,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 import gras.gen.SquareMatVector;
                 errTagStr='';
                 reasonStr='';
-                isOk=false;
-                isNotPosDefVec=SquareMatVector.evalMFunc(...
-                    @(x)~gras.la.ismatposdef(x,calcPrecision),QArray);
-                if any(isNotPosDefVec)
-                    errTagStr='QArrayNotPos';
-                    reasonStr='QArray is not positively defined';
-                    return;
-                end
                 %
-                [~,indSortVec]=unique(timeVec); %unique sorts input values
-                if length(indSortVec)~=length(timeVec);
-                    errTagStr='timeVecNotUnq';
-                    reasonStr='timeVec contains non-unique values';
-                    return;
-                elseif any(diff(indSortVec)<0)
-                    errTagStr='timeVecNotMon';
-                    reasonStr='timeVec is not monotone';
-                    return;
-                end
-                %
-                isNotPosDefVec=SquareMatVector.evalMFunc(...
-                    @(x)~gras.la.ismatposdef(x,calcPrecision,true),MArray);
-                if any(isNotPosDefVec)
-                    errTagStr='MArrayNeg';
-                    reasonStr='MArray is negatively defined';
-                    return;
-                end
                 nPoints=size(timeVec,2);
                 nDims=size(QArray,1);
                 isOk=size(QArray,3)==nPoints&&...
@@ -416,10 +393,43 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     size(approxSchemaDescr,1)==1&&...
                     size(approxSchemaDescr,2)==numel(approxSchemaDescr)&&...
                     numel(approxType)==1&&size(aMat,1)==nDims&&...
-                    dim==nDims;
+                    dim==nDims&&indSTime>=1&&indSTime<=numel(timeVec);
                 if ~isOk
                     reasonStr='Fields have inconsistent sizes';
                     errTagStr='badSize';
+                    return;
+                end
+                isOk=false;
+                if timeVec(indSTime)~=sTime
+                    errTagStr='indSTimeBad';
+                    reasonStr='timeVec(indSTime) is not equal to sTime';
+                    return;
+                end
+                %
+                isNotPosDefVec=SquareMatVector.evalMFunc(...
+                    @(x)~gras.la.ismatposdef(x,calcPrecision),QArray);
+                if any(isNotPosDefVec)
+                    errTagStr='QArrayNotPos';
+                    reasonStr='QArray is not positively defined';
+                    return;
+                end
+                %
+                [~,indSortVec]=unique(timeVec); %unique sorts input values
+                if length(indSortVec)~=length(timeVec);
+                    errTagStr='timeVecNotUnq';
+                    reasonStr='timeVec contains non-unique values';
+                    return;
+                elseif any(diff(indSortVec)<0)
+                    errTagStr='timeVecNotMon';
+                    reasonStr='timeVec is not monotone';
+                    return;
+                end
+                %
+                isNotPosDefVec=SquareMatVector.evalMFunc(...
+                    @(x)~gras.la.ismatposdef(x,calcPrecision,true),MArray);
+                if any(isNotPosDefVec)
+                    errTagStr='MArrayNeg';
+                    reasonStr='MArray is negatively defined';
                     return;
                 end
                 isOk=true;
@@ -704,12 +714,8 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     'no extrapolation allowed');
             end
             %
-            if isempty(self)
-                interpEllTube = self;
-            else
-                SData = self.getInterpDataInternal(timeVec);
-                interpEllTube = self.createInstance(SData);
-            end
+            SData = self.getInterpDataInternal(timeVec);
+            interpEllTube = self.createInstance(SData);
         end
         %
         function thinnedEllTubeRel =...
@@ -861,8 +867,6 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     max(ellTubeObj.calcPrecision);
             end
             %
-            SSORT_KEYS=F().getNameList({...
-                'S_TIME','LS_GOOD_DIR_VEC','APPROX_TYPE'});
             MUST_FIELD_CODES_NOT_TO_COMPARE={'IND_S_TIME','TIME_VEC'};
             notComparedFieldList=[notComparedFieldList,...
                 F().getNameList(MUST_FIELD_CODES_NOT_TO_COMPARE)];
@@ -873,8 +877,6 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             %
             ellTube = self;
             compEllTube = ellTubeObj;
-            ellTube.sortBy(SSORT_KEYS);
-            compEllTube.sortBy(SSORT_KEYS);
             %
             isFirstEmpty=ellTube.getNTuples()==0;
             isSecondEmpty=compEllTube.getNTuples()==0;
@@ -953,12 +955,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                         elseif (length(firstTimeVec) > length(secondTimeVec))
                             ellTube = ellTube.thinOutTuples(firstIndexVec);
                         end
-                        [isPos, eqReportStr] = compEllTube.getFieldProjection(...
-                            fieldsToCompList).isEqual(...
-                            ellTube.getFieldProjection(fieldsToCompList),...
-                            'maxTolerance', maxCompareTol,...
-                            'checkTupleOrder','true',reg{:});
-                        reportStr = [reportStr, eqReportStr];
+                        [isPos,eqReportStr]=getIsEqualProj();
                     else
                         %
                         % Time vectors are not enclosed,
@@ -984,19 +981,26 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                         if areFirstTimesInsideSecond||areSecondTimesInsideFirst
                             ellTube = ellTube.interp(unionTimeVec);
                             compEllTube = compEllTube.interp(unionTimeVec);
-                            [isPos, eqReportStr] = compEllTube.getFieldProjection(...
-                                fieldsToCompList).isEqual(...
-                                ellTube.getFieldProjection(fieldsToCompList),...
-                                'maxTolerance', maxCompareTol,...
-                                'checkTupleOrder',isTupleOrderChecked,...
-                                reg{:});
+                            [isPos,eqReportStr]=getIsEqualProj();
                         else
                             isPos = false;
                             eqReportStr = 'Cannot interpolate: shifted bounds. ';
                         end
-                        reportStr = [reportStr,sprintf('\n'),eqReportStr];
                     end
+                    reportStr = [reportStr,sprintf('\n'),eqReportStr];                    
                 end
+            end
+            function [isPos,eqReportStr]=getIsEqualProj()
+                compEllTubeReduced=compEllTube.getFieldProjection(...
+                    fieldsToCompList);
+                ellTubeReduced=ellTube.getFieldProjection(...
+                    fieldsToCompList);
+                %
+                [isPos, eqReportStr] = compEllTubeReduced.isEqual(...
+                    ellTubeReduced,...
+                    'maxTolerance', maxCompareTol,...
+                    'checkTupleOrder',isTupleOrderChecked,...
+                    reg{:});
             end
             %
             function [isSubset, indThereVec] = ...

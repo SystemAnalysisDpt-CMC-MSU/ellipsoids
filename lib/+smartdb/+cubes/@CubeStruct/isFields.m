@@ -29,6 +29,7 @@ function [isPositive,isUniqueNames,isThereVec]=isFields(self,fieldList)
 %            System Analysis Department 2011 $
 %
 %
+self.checkIfObjectScalar();
 if isa(fieldList,'char')
     fieldList={fieldList};
 elseif ~(iscellstr(fieldList)&&modgen.common.isvec(fieldList)&&...

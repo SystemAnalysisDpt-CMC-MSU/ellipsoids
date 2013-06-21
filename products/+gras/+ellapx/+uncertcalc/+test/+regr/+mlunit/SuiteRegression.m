@@ -45,24 +45,14 @@ classdef SuiteRegression < mlunitext.test_case
         end
         function testRegression(self)
             NOT_COMPARED_FIELD_LIST={'resDir','plotterObj'};
-            MAX_TOL=1e-6;
-            SSORT_KEYS.ellTubeProjRel={'projSTimeMat','projType',...
-                'sTime','lsGoodDirOrigVec'};
-            SSORT_KEYS.ellTubeRel={'sTime','lsGoodDirVec'};
-            SSORT_KEYS.ellUnionTubeRel={'sTime','lsGoodDirVec'};
-            SSORT_KEYS.ellUnionTubeStaticProjRel=...
-                {'projSTimeMat','projType','sTime','lsGoodDirOrigVec'};
             %
-            ROUND_FIELD_LIST={'lsGoodDirOrigVec','lsGoodDirVec'};
             %
-            nRoundDigits=-fix(log(MAX_TOL)/log(10));
-            %
-            crm=self.crm;
-            crmSys=self.crmSys;
-            confNameList=self.confNameList;
-            nConfs=length(confNameList);
+            curCrm=self.crm;
+            curCrmSys=self.crmSys;
+            curConfNameList=self.confNameList;
+            nConfs=length(curConfNameList);
             for iConf=1:nConfs
-                crm.deployConfTemplate(confNameList{iConf});
+                curCrm.deployConfTemplate(curConfNameList{iConf});
             end
             %
             methodName=modgen.common.getcallernameext(1);
@@ -73,20 +63,20 @@ classdef SuiteRegression < mlunitext.test_case
                 'useHashedPath',false,'useHashedKeys',true);
             %
             for iConf=1:nConfs
-                confName=confNameList{iConf};
+                confName=curConfNameList{iConf};
                 inpKey=confName;
-                crm.selectConf(confName,'reloadIfSelected',false);
-                crm.setParam('customResultDir.dirName',self.resTmpDir,...
+                curCrm.selectConf(confName,'reloadIfSelected',false);
+                curCrm.setParam('customResultDir.dirName',self.resTmpDir,...
                         'writeDepth','cache');
-                crm.setParam('customResultDir.isEnabled',true,...
+                curCrm.setParam('customResultDir.isEnabled',true,...
                         'writeDepth','cache');
                 SRunProp=gras.ellapx.uncertcalc.run(confName,...
-                    'confRepoMgr',crm,'sysConfRepoMgr',crmSys);
-                if crm.getParam('plottingProps.isEnabled')
+                    'confRepoMgr',curCrm,'sysConfRepoMgr',curCrmSys);
+                if curCrm.getParam('plottingProps.isEnabled')
                     SRunProp.plotterObj.closeAllFigures();
                 end
                 %
-                calcPrecision=crm.getParam('genericProps.calcPrecision');                
+                calcPrecision=curCrm.getParam('genericProps.calcPrecision');                
                 isOk=all(SRunProp.ellTubeProjRel.calcPrecision<=...
                     calcPrecision);
                 mlunitext.assert_equals(true,isOk);
@@ -104,21 +94,6 @@ classdef SuiteRegression < mlunitext.test_case
                     fieldName=compFieldNameList{iField};
                     expRel=SExpRes.(fieldName);
                     rel=SRunProp.(fieldName);
-                    %
-                    keyList=SSORT_KEYS.(fieldName);
-                    isRoundVec=ismember(keyList,ROUND_FIELD_LIST);
-                    roundKeyList=keyList(isRoundVec);
-                    nRoundKeys=length(roundKeyList);
-                    %
-                    for iRound=1:nRoundKeys
-                        roundKey=roundKeyList{iRound};
-                        rel.applySetFunc(@(x)roundn(x,-nRoundDigits),...
-                            roundKey);
-                        expRel.applySetFunc(@(x)roundn(x,-nRoundDigits),...
-                            roundKey);
-                    end
-                    rel.sortBy(SSORT_KEYS.(fieldName));
-                    expRel.sortBy(SSORT_KEYS.(fieldName));
                     %
                     %expRel=smartdb.relations.DynamicRelation(expRel);
                     %expRel.removeFields('approxSchemaName');

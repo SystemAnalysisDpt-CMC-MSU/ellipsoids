@@ -233,7 +233,7 @@ classdef ContinuousReachTestCase < mlunitext.test_case
         function self = testEvolve(self)
             import gras.ellapx.smartdb.F;
             %
-            timeVec = [self.tVec(1), sum(self.tVec)/2];
+            timeVec = [self.tVec(1), sum(self.tVec)/4];
             newReachObj = feval(class(self.reachObj), ...
                 self.linSys, self.x0Ell, self.l0Mat, timeVec);
             auxCheckIndSTime(self.reachObj);
@@ -241,8 +241,8 @@ classdef ContinuousReachTestCase < mlunitext.test_case
             evolveReachObj = newReachObj.evolve(self.tVec(2));
             auxCheckIndSTime(self.reachObj);
             %
-            isEqual = self.reachObj.isEqual(evolveReachObj);
-            mlunitext.assert_equals(true, isEqual);
+            [isEqual,reportStr] = self.reachObj.isEqual(evolveReachObj);
+            mlunitext.assert(isEqual,reportStr);
         end
         %
         function self = testGetSystem(self)
@@ -261,15 +261,16 @@ classdef ContinuousReachTestCase < mlunitext.test_case
             timeLimVec=self.tVec;
             tStart=min(timeLimVec);
             tEnd=max(timeLimVec);
-            tMid=sum(timeLimVec)/2;
+            tMid=sum(timeLimVec)/4;
             %
             isBackward=timeLimVec(2)<timeLimVec(1);
+            %
+            checkCut([tStart,tEnd]);
             %
             checkScalarCut(tEnd);
             checkScalarCut(tStart);
             %
             checkCut([tMid,tEnd]);
-            checkCut(timeLims);
             checkCut([tStart,tMid]);            
             %
             function checkScalarCut(tScalar)

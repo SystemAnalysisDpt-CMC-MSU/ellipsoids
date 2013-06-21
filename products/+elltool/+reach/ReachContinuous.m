@@ -99,8 +99,8 @@ classdef ReachContinuous < elltool.reach.AReach
         end
     end
     %
-    methods (Access = protected)
-        function ellTubeRel = internalMakeEllTubeRel(self, probDynObj, ...
+    methods (Access = private)
+        function ellTubeRel = auxMakeEllTubeRel(self, probDynObj, ...
                 l0Mat, timeVec, isDisturb, calcPrecision, approxTypeVec)
             import gras.ellapx.enums.EApproxType;
             import gras.ellapx.gen.RegProblemDynamicsFactory;
@@ -157,7 +157,9 @@ classdef ReachContinuous < elltool.reach.AReach
             end
         end
         %
-        function ellTubeRel = auxMakeEllTubeRel(self, probDynObj, l0Mat,...
+    end
+    methods (Access=protected)
+        function ellTubeRel = internalMakeEllTubeRel(self, probDynObj, l0Mat,...
                 timeVec, isDisturb, calcPrecision, approxTypeVec)
             import gras.ellapx.enums.EApproxType;
             import gras.ellapx.gen.RegProblemDynamicsFactory;
@@ -165,9 +167,12 @@ classdef ReachContinuous < elltool.reach.AReach
             import modgen.common.throwerror;
             %
             try
-                ellTubeRel = self.internalMakeEllTubeRel(...
+                ellTubeRel = self.auxMakeEllTubeRel(...
                     probDynObj,  l0Mat, timeVec, isDisturb, ...
                     calcPrecision, approxTypeVec);
+                if self.isbackward()
+                    ellTubeRel=self.rotateEllTubeRel(ellTubeRel);
+                end
             catch meObj
                 errorStr = '';
                 errorTag = '';
@@ -203,6 +208,7 @@ classdef ReachContinuous < elltool.reach.AReach
                     throw(friendlyMeObj);
                 end
             end
+           
             function isPos=isMatch(patternStr)
                 isPos=~isempty(strfind(meObj.identifier,patternStr));
             end
@@ -232,6 +238,8 @@ classdef ReachContinuous < elltool.reach.AReach
                 F.LT_GOOD_DIR_NORM_VEC;F.M_ARRAY};
             SData = oldEllTubeRel.getData();
             SData.indSTime=cellfun(@numel,SData.timeVec)+1-SData.indSTime;
+            SData.sTime=cellfun(@(x,y)x(y),SData.timeVec,...
+                num2cell(SData.indSTime));
             cellfun(@flipField, FIELDS_TO_FLIP);
             %
             rotatedEllTubeRel = oldEllTubeRel.createInstance(SData);

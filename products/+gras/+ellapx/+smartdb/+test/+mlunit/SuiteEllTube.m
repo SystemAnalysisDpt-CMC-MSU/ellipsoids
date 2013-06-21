@@ -355,6 +355,54 @@ classdef SuiteEllTube < mlunitext.test_case
                 end
             end
         end
+        function testCatCommonTime(self)
+            nFirstPoints=100;
+            nSecPoints=150;
+            nTubes=2;
+            rel1=self.auxGenSimpleTubeAndProj(...
+                nFirstPoints,nTubes,nFirstPoints);
+            %
+            rel2=self.auxGenSimpleTubeAndProj(...
+                nSecPoints,nTubes,nSecPoints+nFirstPoints-1,nFirstPoints);            
+            %
+            rel1.sortDetermenistically();
+            rel2.sortDetermenistically();
+            rel3=rel1.cat(rel2);
+            check(rel3,nFirstPoints,rel1,nFirstPoints);
+            rel3=rel1.cat(rel2,'isReplacedByNew',true);
+            check(rel3,nFirstPoints,rel2,1);
+            %
+            function check(relLeft,indLeft,relRight,indRight)
+                import modgen.cell.cellstr2expression;
+                fieldNameList=setdiff(relLeft.getFieldNameList(),...
+                    relLeft.getNoCatOrCutFieldsList());
+                %
+                nFields=length(fieldNameList);
+                isOkVec=false(1,nFields);
+                for iField=1:nFields
+                    fieldName=fieldNameList{iField};
+                    if isnumeric(relLeft.(fieldName))
+                        isOkVec(iField)=isequal(relLeft.(fieldName),...
+                            relRight.(fieldName));
+                    else
+                        isOkVec(iField)=...
+                            all(cellfun(...
+                            @(x,y)isEqSmart(x,y,indLeft,indRight),...
+                            relLeft.(fieldName),relRight.(fieldName)));
+                    end
+                end
+                isOk=all(isOkVec);
+                mlunitext.assert(isOk,sprintf('not consistent fields %s',...
+                    cellstr2expression(fieldNameList(~isOkVec))));
+                %
+                function isOk=isEqSmart(leftArr,rightArr,indLeft,indRight)
+                    nDims=ndims(leftArr);
+                    leftArr=permute(leftArr,[nDims,1:nDims-1]);
+                    rightArr=permute(rightArr,[nDims,1:nDims-1]);
+                    isOk=isequal(leftArr(indLeft,:),rightArr(indRight,:));
+                end
+            end
+        end
         function testCatAdvanced(self)
             nFirstPoints=100;
             nSecPoints=150;
@@ -366,8 +414,10 @@ classdef SuiteEllTube < mlunitext.test_case
             catRel=rel1.cat(rel2,'isReplacedByNew',true);
             isOk=all(catRel.indSTime==(nFirstPoints+nSecPoints));
             mlunitext.assert(isOk);
+            %
             self.runAndCheckError(@badAction,...
                 'wrongInput:commonTimeVecEntries');
+            %
             function badAction()
                 rel1.cat(rel1);
             end
@@ -434,7 +484,7 @@ classdef SuiteEllTube < mlunitext.test_case
             end
             function QArrayList=createQArrayList(diagVec)
                 qMat=diag(diagVec);
-                multVec=linspace(1,2,nPoints);
+                multVec=linspace(1,2,nPoints);                
                 QArray=repmat(qMat,[1,1,nPoints]);
                 QArray=QArray.*repmat(shiftdim(multVec,-1),...
                     [nDims,nDims,1]);
@@ -447,7 +497,10 @@ classdef SuiteEllTube < mlunitext.test_case
                 projOrthMatTransArray = repmat(projMat.', [1,1,nTimePoints]);
             end
             function rel = create()
-                ltGoodDirArray=repmat(lsGoodDirVec,[1,nTubes,nPoints]);
+                multVec=cos(linspace(1,2,nPoints)/(10*pi))+...
+                    linspace(1,2,nPoints);                
+                ltGoodDirArray=repmat(lsGoodDirVec,[1,nTubes,nPoints]).*...
+                    repmat(reshape(multVec,[1,1,nPoints]),[nDims,nTubes]);
                 rel=gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
                     QArrayList, aMat, timeVec,...
                     ltGoodDirArray, sTime, approxType, approxSchemaName,...

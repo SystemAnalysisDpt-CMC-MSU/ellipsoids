@@ -6,6 +6,10 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
         REG_TUBE_PREFIX='Reg';
     end
     methods (Access = protected)
+        function fieldList=getDetermenisticSortFieldList(~)        
+            fieldList={'projSTimeMat','projType',...
+                'sTime','lsGoodDirOrigVec','approxType'};
+        end        
         function fieldsList = getSFieldsList(self)
             import  gras.ellapx.smartdb.F;
             ellTubeBasicList = self.getSFieldsList@...

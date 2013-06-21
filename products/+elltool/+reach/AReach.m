@@ -110,15 +110,11 @@ classdef AReach < elltool.reach.IReach
         linSys = getProbDynamics(atStrCMat, btStrCMat, ...
             ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat, qtStrCVec, ...
             x0Mat, x0Vec, timeVec, calcPrecision, isDisturb)
-        %
-        newEllTubeRel = transformEllTube(ellTubeRel)
     end
     %
     methods (Abstract, Access = protected)
-        ellTubeRel = internalMakeEllTubeRel(self, probDynObj, l0Mat, ...
-            timeVec, isDisturb, calcPrecision, approxTypeVec)
         %
-        ellTubeRel = auxMakeEllTubeRel(self, probDynObj, l0Mat, ...
+        ellTubeRel = internalMakeEllTubeRel(self, probDynObj, l0Mat, ...
             timeVec, isDisturb, calcPrecision, approxTypeVec)
     end
     %
@@ -690,7 +686,7 @@ classdef AReach < elltool.reach.IReach
             probDynObj = RegProblemDynamicsFactory.create(probDynObj,...
                 self.isRegEnabled, self.isJustCheck, self.regTol);
             try
-                ellTubeRel = self.auxMakeEllTubeRel(...
+                ellTubeRel = self.internalMakeEllTubeRel(...
                     probDynObj,  l0Mat, timeVec, isDisturb, ...
                     calcPrecision, approxTypeVec);
             catch meObj
@@ -795,14 +791,8 @@ classdef AReach < elltool.reach.IReach
                     x0Mat, x0Vec, timeVec, self.relTol, isDisturbance);
                 approxTypeVec = [EApproxType.External, EApproxType.Internal];
                 %
-                calcEllTubeRel = self.makeEllTubeRel(probDynObj, l0Mat,...
+                self.ellTubeRel = self.makeEllTubeRel(probDynObj, l0Mat,...
                     timeVec, isDisturbance, self.relTol, approxTypeVec);
-                if self.isBackward
-                    self.ellTubeRel =...
-                        self.transformEllTube(calcEllTubeRel);
-                else
-                    self.ellTubeRel=calcEllTubeRel;
-                end
             end
         end
         %
@@ -1551,9 +1541,6 @@ classdef AReach < elltool.reach.IReach
             newEllTubeRel =...
                 gras.ellapx.smartdb.rels.EllTube.fromStructList(...
                 'gras.ellapx.smartdb.rels.EllTube', dataCVec);
-            if self.isBackward
-                newEllTubeRel = self.transformEllTube(newEllTubeRel);
-            end
             self.checkIndSTime(newEllTubeRel);            
             %
             indVec = [indIntVec; indExtVec];
@@ -1561,18 +1548,12 @@ classdef AReach < elltool.reach.IReach
             newEllTubeRel = newEllTubeRel.getTuples(indRelVec);
             %
             if self.isBackward
-                timeVec = self.ellTubeRel.timeVec{1};
-                isIndVec = true(size(timeVec));
-                isIndVec(1) = false;
                 newReachObj.ellTubeRel =...
-                    newEllTubeRel.cat(self.ellTubeRel, isIndVec,...
+                    newEllTubeRel.cat(self.ellTubeRel,...
                     'isReplacedByNew',true);
             else
-                timeVec = newEllTubeRel.timeVec{1};
-                isIndVec = true(size(timeVec));
-                isIndVec(1) = false;
                 newReachObj.ellTubeRel =...
-                    self.ellTubeRel.cat(newEllTubeRel, isIndVec);
+                    self.ellTubeRel.cat(newEllTubeRel);
             end
         end
     end
