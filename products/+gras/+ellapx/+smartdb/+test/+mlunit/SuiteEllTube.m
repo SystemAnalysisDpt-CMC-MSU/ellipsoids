@@ -355,43 +355,91 @@ classdef SuiteEllTube < mlunitext.test_case
                 end
             end
         end
-        %
-        function [rel,relStatProj,relDynProj]=auxGenSimpleTubeAndProj(~,...
-                nPoints,nTubes)
-            calcPrecision=0.001;
-            approxSchemaDescr=char.empty(1,0);
-            approxSchemaName=char.empty(1,0);
-            nDims=2;
-            if nargin<3
-                nTubes=1;
+        function testCatAdvanced(self)
+            nFirstPoints=100;
+            nSecPoints=150;
+            nTubes=2;
+            rel1=self.auxGenSimpleTubeAndProj(...
+                nFirstPoints,nTubes,nFirstPoints);
+            rel2=self.auxGenSimpleTubeAndProj(...
+                nSecPoints,nTubes,nSecPoints+nFirstPoints,nFirstPoints+1);
+            catRel=rel1.cat(rel2,'isReplacedByNew',true);
+            isOk=all(catRel.indSTime==(nFirstPoints+nSecPoints));
+            mlunitext.assert(isOk);
+            self.runAndCheckError(@badAction,...
+                'wrongInput:commonTimeVecEntries');
+            function badAction()
+                rel1.cat(rel1);
             end
-            lsGoodDirVec=[1;0];
-            qMat=eye(nDims);
-            QArrayList=repmat({repmat(qMat,[1,1,nPoints])},1,nTubes);
-            aMat=zeros(nDims,nPoints);
-            timeVec=1:nPoints;
-            sTime=nPoints;
-            approxType=gras.ellapx.enums.EApproxType.Internal;
-            %
-            rel=create();
-            qMat=diag([1,2]);
-            QArrayList=repmat({repmat(qMat,[1,1,nPoints])},1,nTubes);
-            approxType=gras.ellapx.enums.EApproxType.External;
-            rel.unionWith(create());
-            relWithReg=rel.getCopy();
-            relWithReg.scale(@(varargin)0.5,{});
-            %
-            relWithReg.MArray=cellfun(@(x)x*0.1,relWithReg.QArray,...
-                'UniformOutput',false);
-            rel.unionWith(relWithReg);
-            %
-            projSpaceList = {[1 0; 0 1].'};
-            %
-            projType=gras.ellapx.enums.EProjType.Static;
-            relStatProj=rel.project(projType,projSpaceList,@fGetProjMat);
-            %
-            projType=gras.ellapx.enums.EProjType.DynamicAlongGoodCurve;
-            relDynProj=rel.project(projType,projSpaceList,@fGetProjMat);
+        end
+        %
+        function varargout=auxGenSimpleTubeAndProj(~,...
+                nPoints,nTubes,indSTime,indStart)
+            persistent hashMap;
+            if nargin<5
+                indStart=1;
+                if nargin<4
+                    indSTime=nPoints;
+                    if nargin<3
+                        nTubes=1;
+                    end
+                end
+            end
+            if isempty(hashMap)
+                hashMap=containers.Map();
+            end
+            varargout=cell(1,nargout);
+            keyStr=mat2str([nargout,nPoints,nTubes,indSTime]);
+            if hashMap.isKey(keyStr)
+                argList=hashMap(keyStr);
+                [varargout{:}]=deal(argList{:});
+            else
+                calcPrecision=0.001;
+                approxSchemaDescr=char.empty(1,0);
+                approxSchemaName=char.empty(1,0);
+                nDims=2;
+                lsGoodDirVec=[1;0];
+                QArrayList=createQArrayList(ones(1,nDims));
+                aMat=zeros(nDims,nPoints);
+                timeVec=indStart:(indStart+nPoints-1);
+                sTime=indSTime;
+                approxType=gras.ellapx.enums.EApproxType.Internal;
+                %
+                rel=create();
+                qMat=diag([1,2]);
+                QArrayList=createQArrayList(1:nDims);
+                approxType=gras.ellapx.enums.EApproxType.External;
+                rel.unionWith(create());
+                relWithReg=rel.getCopy();
+                relWithReg.scale(@(varargin)0.5,{});
+                %
+                relWithReg.MArray=cellfun(@(x)x*0.1,relWithReg.QArray,...
+                    'UniformOutput',false);
+                rel.unionWith(relWithReg);
+                varargout{1}=rel;
+                %
+                if nargout>1
+                    projSpaceList = {[1 0; 0 1].'};
+                    %
+                    projType=gras.ellapx.enums.EProjType.Static;
+                    relStatProj=rel.project(projType,projSpaceList,@fGetProjMat);
+                    varargout{2}=relStatProj;
+                    if nargout>2
+                        projType=gras.ellapx.enums.EProjType.DynamicAlongGoodCurve;
+                        relDynProj=rel.project(projType,projSpaceList,@fGetProjMat);
+                        varargout{3}=relDynProj;
+                    end
+                end
+                hashMap(keyStr)=varargout;                
+            end
+            function QArrayList=createQArrayList(diagVec)
+                qMat=diag(diagVec);
+                multVec=linspace(1,2,nPoints);
+                QArray=repmat(qMat,[1,1,nPoints]);
+                QArray=QArray.*repmat(shiftdim(multVec,-1),...
+                    [nDims,nDims,1]);
+                QArrayList=repmat({QArray},1,nTubes);
+            end
             function [projOrthMatArray, projOrthMatTransArray] =...
                     fGetProjMat(projMat, timeVec, varargin)
                 nTimePoints = length(timeVec);

@@ -469,12 +469,22 @@ classdef EllTube<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&...
             %
             import gras.ellapx.smartdb.F;
             import modgen.common.parseparext;
-            [reg,~,isSTimeReplaced]=parseparext(varargin,...
+            import modgen.common.throwerror;
+            [reg,~,isReplacedByNew]=parseparext(varargin,...
                 {'isReplacedByNew';false;'islogical(x)&&isscalar(x)'},...
                 [0 1]);
             %
             SDataFirst = self.getData();
             SDataSecond = newEllTubeRel.getData();
+            %
+            isOkVec=cellfun(@(x,y)isempty(intersect(x,y)),...
+                SDataFirst.timeVec,SDataSecond.timeVec);
+            if ~all(isOkVec)
+                throwerror('wrongInput:commonTimeVecEntries',...
+                    ['cannot concatenate relations ',...
+                    'with commot entries in timeVec']);
+            end
+            %
             SCatFunResult = SDataFirst;
             timeVec = SDataSecond.timeVec{1};
             if isempty(reg)
@@ -489,7 +499,7 @@ classdef EllTube<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&...
             cellfun(@(field) catStructField(field, isNeededIndVec),...
                 fieldsToCatVec);
             %
-            if isSTimeReplaced
+            if isReplacedByNew
                 nRepFields=length(fieldsNotToCatVec);
                 for iField=1:nRepFields
                     fieldName=fieldsNotToCatVec{iField};
@@ -534,7 +544,7 @@ classdef EllTube<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&...
             cutStartTime = cutTimeVec(1);
             cutEndTime = cutTimeVec(2);
             if cutStartTime > cutEndTime
-                throwerror('wrongInput', 's0 must be LEQ than s1.');
+                throwerror('wrongInput', 's0 must be less or equal than s1.');
             end
             timeVec = self.timeVec{1};
             startTime = timeVec(1);

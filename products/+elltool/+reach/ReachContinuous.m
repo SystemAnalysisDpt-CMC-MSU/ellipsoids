@@ -227,22 +227,13 @@ classdef ReachContinuous < elltool.reach.AReach
         %
         function rotatedEllTubeRel = rotateEllTubeRel(oldEllTubeRel)
             import gras.ellapx.smartdb.F;
-            FIELD_NAME_LIST_TO = {F.LS_GOOD_DIR_VEC;F.LS_GOOD_DIR_NORM;...
-                F.XS_TOUCH_VEC;F.XS_TOUCH_OP_VEC};
-            FIELD_NAME_LIST_FROM = {F.LT_GOOD_DIR_MAT;...
-                F.LT_GOOD_DIR_NORM_VEC;F.X_TOUCH_CURVE_MAT;...
-                F.X_TOUCH_OP_CURVE_MAT};
             FIELDS_TO_FLIP = {F.Q_ARRAY;F.A_MAT;F.LT_GOOD_DIR_MAT;...
                 F.X_TOUCH_CURVE_MAT;F.X_TOUCH_OP_CURVE_MAT;...
                 F.LT_GOOD_DIR_NORM_VEC;F.M_ARRAY};
             SData = oldEllTubeRel.getData();
-            indSTime = 1;
-            SData.indSTime(:) = indSTime;
+            SData.indSTime=cellfun(@numel,SData.timeVec)+1-SData.indSTime;
             cellfun(@flipField, FIELDS_TO_FLIP);
-            cellfun(@cutStructSTimeField,...
-                FIELD_NAME_LIST_TO, FIELD_NAME_LIST_FROM);
-            SData.lsGoodDirNorm =...
-                cell2mat(SData.lsGoodDirNorm);
+            %
             rotatedEllTubeRel = oldEllTubeRel.createInstance(SData);
             %
             function flipField(fieldName)
@@ -250,11 +241,6 @@ classdef ReachContinuous < elltool.reach.AReach
                 dim = ndims(fieldCVec{1});
                 SData.(fieldName) = cellfun(@(field)flipdim(field, dim),...
                     SData.(fieldName), 'UniformOutput', false);
-            end
-            function cutStructSTimeField(fieldNameTo, fieldNameFrom)
-                SData.(fieldNameTo) =...
-                    cellfun(@(field) field(:, 1),...
-                    SData.(fieldNameFrom), 'UniformOutput', false);
             end
         end
     end

@@ -80,6 +80,12 @@ classdef AReach < elltool.reach.IReach
         isJustCheck
         regTol
     end
+    methods 
+        function set.ellTubeRel(self,rel)
+            self.checkIndSTime(rel);
+            self.ellTubeRel=rel;
+        end
+    end
     %
     properties (Constant, Access = private)
         EXTERNAL = 'e'
@@ -116,10 +122,21 @@ classdef AReach < elltool.reach.IReach
             timeVec, isDisturb, calcPrecision, approxTypeVec)
     end
     %
-    methods (Static, Access = protected)
-    end
     methods (Access=protected)
-        %
+        function checkIndSTime(self,ellTubeRel)
+            import modgen.common.throwerror;
+            indSTimeVec=ellTubeRel.indSTime;
+            if self.isbackward()
+                isOk=all(indSTimeVec==...
+                    cellfun(@numel,ellTubeRel.timeVec));
+            else
+                isOk=all(indSTimeVec==1);
+            end
+            if ~isOk
+                throwerror('wrongState:internalError',...
+                    'Oops,we should be here, indSTime is incorrect');
+            end
+        end
         function [propArr, propVal] = getProperty(rsArr,propName,fPropFun)
             % GETPROPERTY - gives array the same size as rsArray with
             %   values of propName property for each element in rsArr array
@@ -777,12 +794,15 @@ classdef AReach < elltool.reach.IReach
                     ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat, qtStrCVec,...
                     x0Mat, x0Vec, timeVec, self.relTol, isDisturbance);
                 approxTypeVec = [EApproxType.External, EApproxType.Internal];
-                self.ellTubeRel = self.makeEllTubeRel(probDynObj, l0Mat,...
+                %
+                calcEllTubeRel = self.makeEllTubeRel(probDynObj, l0Mat,...
                     timeVec, isDisturbance, self.relTol, approxTypeVec);
                 if self.isBackward
                     self.ellTubeRel =...
-                        self.transformEllTube(self.ellTubeRel);
-                end                
+                        self.transformEllTube(calcEllTubeRel);
+                else
+                    self.ellTubeRel=calcEllTubeRel;
+                end
             end
         end
         %
@@ -800,7 +820,7 @@ classdef AReach < elltool.reach.IReach
             isCutArr = fApplyArrMethod(self,'isCut');
         end
         %
-        function isEmptyArr = isempty(self)
+        function isEmptyArr = isEmpty(self)
             isEmptyArr = fApplyArrMethod(self,'x0Ellipsoid','isempty');
         end
         %
@@ -1472,8 +1492,8 @@ classdef AReach < elltool.reach.IReach
                     'of input arguments.']);
             end
             if self.isProj
-                throwerror('wrongInput', ['cannot compute ',...
-                    'the reach set for projection.']);
+                throwerror('wrongInput',...
+                    'evolve for projections is not supported');
             end
             if nargin < 3
                 newLinSys = self.get_system();
@@ -1534,6 +1554,7 @@ classdef AReach < elltool.reach.IReach
             if self.isBackward
                 newEllTubeRel = self.transformEllTube(newEllTubeRel);
             end
+            self.checkIndSTime(newEllTubeRel);            
             %
             indVec = [indIntVec; indExtVec];
             [~, indRelVec] = sort(indVec);
@@ -1556,3 +1577,4 @@ classdef AReach < elltool.reach.IReach
         end
     end
 end
+
