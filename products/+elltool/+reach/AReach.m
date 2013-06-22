@@ -1474,6 +1474,7 @@ classdef AReach < elltool.reach.IReach
             import gras.ellapx.lreachuncert.probdyn.LReachProblemDynamicsFactory;
             import gras.ellapx.uncertcalc.EllApxBuilder;
             import modgen.common.throwerror;
+            MAX_ALLOWED_CAT_ABS_TOL=1e-12;
             %
             % check and analize input
             %
@@ -1547,13 +1548,14 @@ classdef AReach < elltool.reach.IReach
             [~, indRelVec] = sort(indVec);
             newEllTubeRel = newEllTubeRel.getTuples(indRelVec);
             %
+            inpArgList={'commonTimeAbsTol',MAX_ALLOWED_CAT_ABS_TOL};
             if self.isBackward
                 newReachObj.ellTubeRel =...
-                    newEllTubeRel.cat(self.ellTubeRel,...
+                    newEllTubeRel.cat(self.ellTubeRel,inpArgList{:},...
                     'isReplacedByNew',true);
             else
                 newReachObj.ellTubeRel =...
-                    self.ellTubeRel.cat(newEllTubeRel);
+                    self.ellTubeRel.cat(newEllTubeRel,inpArgList{:});
             end
         end
     end

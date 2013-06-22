@@ -1,4 +1,4 @@
-classdef NNDefMatCholCubicSpline<gras.interp.PosDefMatCholCubicSpline
+classdef NNDefMatCholMultCubicSpline<gras.interp.PosDefMatCholCubicSpline
     % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-10$
     % $Copyright: Moscow State University,
     %            Faculty of Computational Mathematics and Computer Science,
@@ -7,8 +7,8 @@ classdef NNDefMatCholCubicSpline<gras.interp.PosDefMatCholCubicSpline
         multInterpObj
     end
     methods
-        function self=NNDefMatCholCubicSpline(varargin)
-            % NNDefMatCholCubicSpline imlements an interpolation for
+        function self=NNDefMatCholMultCubicSpline(varargin)
+            % NNDefMatCholMultCubicSpline imlements an interpolation for
             % matrices represented as a product B*P*B' where P>0 and B is
             % arbitrary
             %

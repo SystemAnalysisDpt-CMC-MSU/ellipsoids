@@ -444,7 +444,8 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     cellfun(@fInterpTuple,SData.QArray,...
                     SData.aMat, SData.MArray,...
                     SData.ltGoodDirMat,SData.timeVec,...
-                    num2cell(SData.sTime),'UniformOutput',false);
+                    num2cell(SData.sTime),...
+                    'UniformOutput',false);
             SData.sTime=vertcat(sTimeList{:});    
             SData=EllTubeBasic.calcGoodCurveData(SData);
             SData=EllTubeBasic.calcTouchCurveData(SData);
@@ -452,18 +453,19 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             function [QArray, aMat, MArray,ltGoodDirMat,timeVec,sTime] =...
                     fInterpTuple(QArray, aMat, MArray,ltGoodDirMat,...
                     timeVec,sTime)
-                QArray = simpleInterp(QArray,'symm_column_triu');
-                MArray = simpleInterp(MArray,'symm_column_triu');
+                QArray = simpleInterp(QArray,'linear');
+                MArray = simpleInterp(MArray,'linear');
                 ltGoodDirMat = simpleInterp(ltGoodDirMat,'column');
                 aMat = simpleInterp(aMat,'column');
                 timeVec=newTimeVec;
                 distVec=abs(sTime-newTimeVec);
                 [~,indMin]=min(distVec);
                 sTime=newTimeVec(indMin);
-                function interpArray=simpleInterp(inpArray,interpType)
+                function interpArray=simpleInterp(inpArray,interpType,...
+                        varargin)
                     import gras.interp.MatrixInterpolantFactory;                    
                     splineObj=MatrixInterpolantFactory.createInstance(...
-                        interpType,inpArray,timeVec);
+                        interpType,inpArray,timeVec,varargin{:});
                     interpArray=splineObj.evaluate(newTimeVec);
                 end
             end

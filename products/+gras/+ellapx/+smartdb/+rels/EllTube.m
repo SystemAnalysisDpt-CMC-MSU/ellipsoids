@@ -96,7 +96,7 @@ classdef EllTube<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&...
             else
                 hMVec=[];
             end
-            
+            %
             hVec=[hQVec,hMVec];
             %
             axis(hAxes,'tight');
@@ -431,6 +431,13 @@ classdef EllTube<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&...
             %           newEllTubeRel depending on value of isReplacedByNew
             %           property
             %
+            %       isCommonValuesChecked: logical[1,1] - if true, values
+            %           at common times (if such are found) are checked for
+            %           strong equality (with zero precision). If not equal
+            %           - an exception is thrown. True by default.
+            %       commonTimeAbsTol: double[1,1] - absolute tolerance used
+            %           for comparing values at common times, =0 by default
+            %
             % Output:
             %   catEllTubeRel:smartdb.relation.StaticRelation[1, 1]/
             %       smartdb.relation.DynamicRelation[1, 1] - relation object
@@ -439,12 +446,15 @@ classdef EllTube<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&...
             import gras.ellapx.smartdb.F;
             import modgen.common.parseparext;
             import modgen.common.throwerror;
-            [~,~,isReplacedByNew]=parseparext(varargin,...
-                {'isReplacedByNew';false;'islogical(x)&&isscalar(x)'},...
+            [~,~,isReplacedByNew,isCommonValuesChecked,commonTimeAbsTol]=...
+                parseparext(varargin,...
+                {'isReplacedByNew','isCommonValuesChecked','commonTimeAbsTol';...
+                false,true,0;...
+                'islogical(x)&&isscalar(x)',...
+                'islogical(x)&&isscalar(x)',...
+                'isfloat(x)&&isscalar(x)&&(x>=0)'},...
                 0);
             %
-            self.sortDetermenistically();
-            newEllTubeRel.sortDetermenistically();
             SDataFirst = self.getData();
             SDataSecond = newEllTubeRel.getData();
             %
@@ -464,18 +474,10 @@ classdef EllTube<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&...
             fieldsToCatVec =...
                 setdiff(fieldnames(SDataFirst), fieldsNotToCatVec);
             %
-            if isReplacedByNew
-                fLeftCut=@(x,y)getCutArr(x,y,true);
-                fRightCut=@(x,y)x;
-            else                
-                fLeftCut=@(x,y)x;
-                fRightCut=@(x,y)getCutArr(x,y,false);
-            end
-            fCut=@(firstArr,secArr,isCommonTime)cat(ndims(firstArr),...
-                fLeftCut(firstArr,isCommonTime),...
-                fRightCut(secArr,isCommonTime));
+            fCut=@(varargin)catArr(...
+                varargin{:},isReplacedByNew);
             %
-            cellfun(@catStructField,fieldsToCatVec);
+            cellfun(@(x)catStructField(x,fCut),fieldsToCatVec);
             %
             if isReplacedByNew
                 nRepFields=length(fieldsNotToCatVec);
@@ -493,41 +495,72 @@ classdef EllTube<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&...
             %
             catEllTubeRel = self.createInstance(SCatFunResult);
             %
-            function catStructField(fieldName)
+            function catStructField(fieldName,fCut)
                 SCatFunResult.(fieldName) =...
-                    cellfun(fCut,...
+                    cellfun(@(varargin)fCut(varargin{:},fieldName),...
                     SDataFirst.(fieldName),...
                     SDataSecond.(fieldName),...
                     isDelCommonTimeList,...
                     'UniformOutput', false);
             end
             %
-            function dataArr = getCutArr(dataArr, isDel,isLast)
+            function resArr = catArr(leftArr,rightArr,isCommon,...
+                    fieldName,isRightTaken)
                 import modgen.common.throwerror;
-                if isDel
-                    dim = ndims(dataArr);
-                    if dim<2||dim>3
-                        throwerror('wrongInput',...
-                            sprintf('dimensionality %d is not supported',...
-                            dim));
+                nDims = ndims(leftArr);
+                if nDims<2||nDims>3
+                    throwerror('wrongInput',...
+                        sprintf(...
+                        'dimensionality %d is not supported, field %s',...
+                        nDims,fieldName));
+                end
+                if isCommon
+                    if isCommonValuesChecked
+                        if nDims==2
+                            leftCutArr=leftArr(:,end);
+                            rightCutArr=rightArr(:,1);
+                        else
+                            leftCutArr=leftArr(:,:,end);
+                            rightCutArr=rightArr(:,:,1);
+                        end
+                        if isnumeric(leftCutArr)
+                            maxDiff=max(abs(leftCutArr(:)-rightCutArr(:)));
+                            isEq=maxDiff<=commonTimeAbsTol;
+                            if ~isEq
+                                suffixStr=', maximum absolute difference = %g';
+                                addArgList={maxDiff};
+                            end
+                        else
+                            isEq=isequal(leftCutArr,rightCutArr);
+                            if ~isEq
+                                addArgList={};
+                                suffixStr='';
+                            end
+                        end
+                        if ~isEq
+                            throwerror('wrongInput:commonValuesDiff',...
+                                ['field %s values at common times ',...
+                                'are different ',suffixStr],...
+                                fieldName,addArgList{:});
+                        end
                     end
-                    if isLast
-                        if dim == 2
-                            dataArr(:, end)=[];
-                        elseif dim == 3
-                            dataArr(:, :, end)=[];
+                    if nDims==2
+                        if isRightTaken
+                            resArr=cat(2,leftArr(:,1:end-1),rightArr);
+                        else
+                            resArr=cat(2,leftArr,rightArr(:,2:end));
                         end
                     else
-                        if dim == 2
-                            dataArr(:, 1)=[];
-                        elseif dim == 3
-                            dataArr(:, :, 1)=[];
+                        if isRightTaken
+                            resArr=cat(3,leftArr(:,:,1:end-1),rightArr);
+                        else
+                            resArr=cat(3,leftArr,rightArr(:,:,2:end));
                         end
                     end
+                else
+                    resArr=cat(nDims,leftArr,rightArr);
                 end
             end
-            
-            
         end
         function cutEllTubeRel = cut(self, cutTimeVec)
             % CUT - extracts the piece of the relation object from given start time to

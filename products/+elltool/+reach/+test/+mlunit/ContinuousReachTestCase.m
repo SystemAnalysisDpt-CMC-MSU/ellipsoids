@@ -4,6 +4,7 @@ classdef ContinuousReachTestCase < mlunitext.test_case
             'LS_GOOD_DIR_NORM';'LS_GOOD_DIR_VEC';'IND_S_TIME';'S_TIME'};
         COMP_PRECISION = 5e-3;
         REL_TOL = 1e-5;
+        SPLIT_FACTOR=0.25;
     end
     properties (Access=private)
         testDataRootDir
@@ -157,7 +158,7 @@ classdef ContinuousReachTestCase < mlunitext.test_case
         %
         function runPlotTest(self, approxType)
             self.plotApproxTest(self.reachObj, approxType);
-            newTimeVec = [sum(self.tVec) / 2, self.tVec(2)];
+            newTimeVec = [sum(self.tVec)*self.SPLIT_FACTOR, self.tVec(2)];
             cutReachObj = self.reachObj.cut(newTimeVec);
             self.plotApproxTest(cutReachObj, approxType);
             projReachObj =...
@@ -186,7 +187,7 @@ classdef ContinuousReachTestCase < mlunitext.test_case
         %
         function self = testDisplay(self)
             self.displayTest(self.reachObj, self.tVec);
-            newTimeVec = [sum(self.tVec)/2, self.tVec(2)];
+            newTimeVec = [sum(self.tVec)*self.SPLIT_FACTOR, self.tVec(2)];
             cutReachObj = self.reachObj.cut(newTimeVec);
             self.displayTest(cutReachObj, newTimeVec);
             projReachObj =...
@@ -207,7 +208,7 @@ classdef ContinuousReachTestCase < mlunitext.test_case
         end
         %
         function self = testDimension(self)
-            newTimeVec = [sum(self.tVec) / 2, self.tVec(2)];
+            newTimeVec = [sum(self.tVec)*self.SPLIT_FACTOR, self.tVec(2)];
             cutReachObj = self.reachObj.cut(newTimeVec);
             cutDim = cutReachObj.dimension();
             projReachObj =...
@@ -220,20 +221,20 @@ classdef ContinuousReachTestCase < mlunitext.test_case
         %
         function self = testIsEmpty(self)
             emptyRs = feval(class(self.reachObj));
-            newTimeVec = [sum(self.tVec)/2, self.tVec(2)];
+            newTimeVec = [sum(self.tVec)*self.SPLIT_FACTOR self.tVec(2)];
             cutReachObj = self.reachObj.cut(newTimeVec);
             projReachObj =...
                 self.reachObj.projection(eye(self.reachObj.dimension(), 1));
-            mlunitext.assert_equals(true, emptyRs.isempty());
-            mlunitext.assert_equals(false, self.reachObj.isempty());
-            mlunitext.assert_equals(false, cutReachObj.isempty());
-            mlunitext.assert_equals(false, projReachObj.isempty());
+            mlunitext.assert_equals(true, emptyRs.isEmpty());
+            mlunitext.assert_equals(false, self.reachObj.isEmpty());
+            mlunitext.assert_equals(false, cutReachObj.isEmpty());
+            mlunitext.assert_equals(false, projReachObj.isEmpty());
         end
         %
         function self = testEvolve(self)
             import gras.ellapx.smartdb.F;
             %
-            timeVec = [self.tVec(1), sum(self.tVec)/4];
+            timeVec = [self.tVec(1), sum(self.tVec)*self.SPLIT_FACTOR];
             newReachObj = feval(class(self.reachObj), ...
                 self.linSys, self.x0Ell, self.l0Mat, timeVec);
             auxCheckIndSTime(self.reachObj);
@@ -255,13 +256,12 @@ classdef ContinuousReachTestCase < mlunitext.test_case
         end
         %
         function self = testCut(self)
-            %
             origReachObj=self.reachObj;
             auxCheckIndSTime(origReachObj);
             timeLimVec=self.tVec;
             tStart=min(timeLimVec);
             tEnd=max(timeLimVec);
-            tMid=sum(timeLimVec)/4;
+            tMid=sum(timeLimVec)*self.SPLIT_FACTOR;
             %
             isBackward=timeLimVec(2)<timeLimVec(1);
             %

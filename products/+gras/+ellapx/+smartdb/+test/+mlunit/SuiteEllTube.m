@@ -367,9 +367,18 @@ classdef SuiteEllTube < mlunitext.test_case
             %
             rel1.sortDetermenistically();
             rel2.sortDetermenistically();
-            rel3=rel1.cat(rel2);
+            self.runAndCheckError('rel3=rel1.cat(rel2);',...
+                'wrongInput:commonValuesDiff');
+            rel1.cat(rel2,'isCommonValuesChecked',false);
+            rel3=rel1.cat(rel2,'commonTimeAbsTol',2);
             check(rel3,nFirstPoints,rel1,nFirstPoints);
-            rel3=rel1.cat(rel2,'isReplacedByNew',true);
+            self.runAndCheckError(...
+                'rel3=rel1.cat(rel2,''isReplacedByNew'',true);',...
+                'wrongInput:commonValuesDiff');
+            rel1.cat(rel2,'isReplacedByNew',true,...
+                'isCommonValuesChecked',false);
+            rel3=rel1.cat(rel2,'isReplacedByNew',true,...
+                'commonTimeAbsTol',2);
             check(rel3,nFirstPoints,rel2,1);
             %
             function check(relLeft,indLeft,relRight,indRight)
