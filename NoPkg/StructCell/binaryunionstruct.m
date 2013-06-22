@@ -1,4 +1,5 @@
-function varargout=binaryunionstruct(leftStruct,rightStruct,fieldOpCell,leftFieldOpCell,rightFieldOpCell)
+function varargout=binaryunionstruct(leftStruct,rightStruct,fieldOpCell,...
+    leftFieldOpCell,rightFieldOpCell)
 % BINARYUNIONSTRUCT applies a set of binary operations to the fields of two
 % structures, each operation can return multiple results.
 %
@@ -44,12 +45,15 @@ function varargout=binaryunionstruct(leftStruct,rightStruct,fieldOpCell,leftFiel
 %
 
 if nargin<2
-    error([upper(mfilename),':incorrectInput'],'there should be at least 2 arguments');
+    error([upper(mfilename),':incorrectInput'],...
+        'there should be at least 2 arguments');
 end
 %
 sizeStructVec=size(leftStruct);
-if ~(isstruct(leftStruct)&&isstruct(rightStruct)&&auxchecksize(leftStruct,rightStruct,sizeStructVec))
-    error([upper(mfilename),':incorrectInput'],'first and second inputs should be structure arrays of the same size');
+if ~(isstruct(leftStruct)&&isstruct(rightStruct)&&...
+        auxchecksize(leftStruct,rightStruct,sizeStructVec))
+    error([upper(mfilename),':incorrectInput'],...
+        'first and second inputs should be structure arrays of the same size');
 end
 %
 nDims=ndims(leftStruct);
