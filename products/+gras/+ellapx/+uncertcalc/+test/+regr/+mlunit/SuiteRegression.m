@@ -100,8 +100,7 @@ classdef SuiteRegression < mlunitext.test_case
                     %rel=smartdb.relations.DynamicRelation(rel);
                     %rel.removeFields('approxSchemaName');
                     %
-                    [isOk,reportStr]=expRel.isEqual(rel,'maxTolerance',...
-                        MAX_TOL,'checkTupleOrder',true);
+                    [isOk,reportStr]=expRel.isEqual(rel);
                     %
                     reportStr=sprintf('confName=%s\n %s',confName,...
                         reportStr);
