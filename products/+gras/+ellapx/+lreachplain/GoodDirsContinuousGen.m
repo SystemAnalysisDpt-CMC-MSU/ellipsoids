@@ -1,4 +1,4 @@
-classdef GoodDirsContinuousGen<gras.ellapx.lreachplain.AGoodDirsContinuous
+classdef GoodDirsContinuousGen<gras.ellapx.lreachplain.AGoodDirs
     properties (Constant, GetAccess = protected)
         ODE_NORM_CONTROL = 'on';
         CALC_PRECISION_FACTOR = 1e-5;
@@ -6,7 +6,7 @@ classdef GoodDirsContinuousGen<gras.ellapx.lreachplain.AGoodDirsContinuous
     methods
         function self = GoodDirsContinuousGen(pDynObj, sTime, ...
                 lsGoodDirMat, calcPrecision)
-            self=self@gras.ellapx.lreachplain.AGoodDirsContinuous(...
+            self=self@gras.ellapx.lreachplain.AGoodDirs(...
                 pDynObj, sTime, lsGoodDirMat, calcPrecision);
         end
     end

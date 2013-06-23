@@ -107,7 +107,7 @@ end
 
 function [isEqual,reportStr]=compfun(x,y,absTol,relTol)
 % COMPFUN compares two different objects (ideally - of any type)
-import gras.gen.absreldiff;
+import gras.gen.absrelcompare;
 %
 reportStr='';
 isEqual=false;
@@ -120,8 +120,6 @@ if ~isequal(xClass,yClass)
 end
 %
 if isnumeric(x)
-    isRelativeEnabled = ~isempty(relTol);
-    %
     xSizeVec=size(x);
     ySizeVec=size(y);
     if ~isequal(xSizeVec,ySizeVec)
@@ -131,37 +129,14 @@ if isnumeric(x)
     x=toNumericSupportingMinus(x);
     y=toNumericSupportingMinus(y);
     %
-    if isRelativeEnabled
-        [curDiffVec, isRelCompVec] = absreldiff(x(:), y(:), absTol, @abs);
-    else
-        [curDiffVec, isRelCompVec] = absreldiff(x(:), y(:), Inf, @abs);
-    end
+    [isEqual, maxAbsDiff, isRelativeEnabled, maxRelDiff, ...
+        maxMRelAbsDiff] = absrelcompare(x(:), y(:), absTol, relTol, @abs);
     %
-    maxAbsDiff = max(curDiffVec(~isRelCompVec(:)));
-    isUpperAbsTol = any(maxAbsDiff > absTol);
-    %
-    if isRelativeEnabled && any(isRelCompVec)
-        curRelDiff = curDiffVec(isRelCompVec(:));
-        [maxRelDiff, indMaxRelDiff] = max(curRelDiff(:));
-        indMaxRelDiff = ...
-            find(cumsum(isRelCompVec(:)) == indMaxRelDiff, 1, 'first');
-        maxAbsRelDiff = absreldiff(x(indMaxRelDiff), y(indMaxRelDiff), ...
-            Inf, @abs);
-        %
-        isUpperRelTol = any(maxRelDiff > relTol);
-    else
-        isUpperRelTol = false;
-    end
-    %
-    if isUpperAbsTol || isUpperRelTol
-        if isUpperAbsTol
+    if ~isEqual
+        if ~isRelativeEnabled
             reportStr=sprintf('Max. difference (%d) is greater than the specified tolerance(%d)', maxAbsDiff, absTol);
-        end
-        if isUpperRelTol
-            if ~isempty(reportStr)
-                reportStr = horzcat(reportStr, '   ');
-            end
-            reportStr=horzcat(reportStr, sprintf('Max. relative difference (%d) is greater than the specified tolerance(%d); absolute difference: (%d), absolute tolerance: (%d)', maxRelDiff, relTol, maxAbsRelDiff, absTol));
+        else
+            reportStr=sprintf('Max. relative difference (%d) is greater than the specified tolerance(%d); absolute difference: (%d), absolute tolerance: (%d)', maxRelDiff, relTol, maxMRelAbsDiff, absTol);
         end
         return;
     end

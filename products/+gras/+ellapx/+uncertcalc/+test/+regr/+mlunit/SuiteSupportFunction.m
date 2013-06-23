@@ -68,6 +68,8 @@ classdef SuiteSupportFunction < mlunitext.test_case
         end
         %
         function testSupportCompare(self)
+            import modgen.common.throwerror;
+            %
             crm = self.crm;
             crmSys = self.crmSys;
             confNameList = self.confNameList;
@@ -178,12 +180,24 @@ classdef SuiteSupportFunction < mlunitext.test_case
                         curEllMatArray,currGoodDirMat)) +...
                         sum(curEllCenterMat .* currGoodDirMat, 1);
                     %
-                    errTol = gras.gen.absreldiff(supFunVec(:), ...
-                        expResultMat(:), calcPrecision, @norm);
-                    isOk = errTol <= calcPrecision;
-                    mlunitext.assert_equals(true, isOk,...
-                        sprintf('errTol=%g>calcPrecision=%g', errTol,...
-                        calcPrecision));
+                    [isOk, absTol, isRelUsed, relTol, absRTol] = ...
+                        gras.gen.absrelcompare(supFunVec(:), ...
+                        expResultMat(:), calcPrecision, calcPrecision, ...
+                        @abs);
+                    if ~isOk
+                        if isRelUsed
+                            errMsg = sprintf(['support function value', ...
+                                ' error (relative error: %g, absolute', ...
+                                ' error: %g)'], relTol, absRTol);
+                        else
+                            errMsg = sprintf(['support function value', ...
+                                ' error (%g)'], absTol);
+                        end
+                        errMsg = strcat(errMsg, sprintf([' is greater', ...
+                            ' than the expected tolerance (%g)'], ...
+                            calcPrecision));
+                        throwerror('tol', errMsg);
+                    end
                 end
             end
         end

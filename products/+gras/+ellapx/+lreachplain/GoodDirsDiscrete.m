@@ -1,8 +1,8 @@
-classdef GoodDirsDiscrete < gras.ellapx.lreachplain.AGoodDirsContinuous
+classdef GoodDirsDiscrete < gras.ellapx.lreachplain.AGoodDirs
     methods
         function self = GoodDirsDiscrete(pDynObj, sTime, ...
                 lsGoodDirMat, calcPrecision)
-            self = self@gras.ellapx.lreachplain.AGoodDirsContinuous(...
+            self = self@gras.ellapx.lreachplain.AGoodDirs(...
                 pDynObj, sTime, lsGoodDirMat, calcPrecision);
         end
     end

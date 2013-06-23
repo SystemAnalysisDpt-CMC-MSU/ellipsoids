@@ -1,4 +1,4 @@
-classdef AGoodDirsContinuous
+classdef AGoodDirs
     properties
         % XstTransDynamics - X(s,t)' is a transition matrix for good
         % directions l(t)=X(s,t)'l_s
@@ -58,7 +58,7 @@ classdef AGoodDirsContinuous
         function lsGoodDirMat = getlsGoodDirMat(self)
             lsGoodDirMat = self.lsGoodDirMat;
         end
-        function self = AGoodDirsContinuous(pDynObj, sTime, ...
+        function self = AGoodDirs(pDynObj, sTime, ...
                 lsGoodDirMat, calcPrecision)
             import gras.ellapx.common.*;
             import gras.mat.MatrixOperationsFactory;
@@ -101,25 +101,13 @@ classdef AGoodDirsContinuous
                 pDynObj.getAtDynamics(), calcPrecision);
             %
             self.XstNormDynamics = cXstNormDynamics;
-            %self.XstTransDynamics = matOpFactory.transpose(XstDynamics);
-            %self.RstTransDynamics = matOpFactory.transpose(RstDynamics);
-            %------
-            %
-            % Special changeset for 'inftraj2d' - removing the last error
-            % source - transpose, which can give up to 1e-11 error. Now on
-            % composite matOpFactory we reache absolute precision = 0. It
-            % was checked in IntEllApxBuilder (line 14) by:
-            %
-            % ltVec - expm(-[0, 1; 1, 0] * t) * ltSpline.evaluate(0)
-            %
-            self.XstTransDynamics = XstDynamics;
-            self.RstTransDynamics = RstDynamics;
+            self.XstTransDynamics = matOpFactory.transpose(XstDynamics);
+            self.RstTransDynamics = matOpFactory.transpose(RstDynamics);
             %
             [self.ltGoodDirCurveSpline, ...
                 self.ltGoodDirOneCurveSplineList] = ...
                 buildGoodDirCurve(matOpFactory, ...
                 self.XstTransDynamics, lsGoodDirMat);
-            %
             [self.ltRGoodDirCurveSpline, ...
                 self.ltRGoodDirOneCurveSplineList] = ...
                 buildGoodDirCurve(matOpFactory, ...
@@ -149,7 +137,8 @@ classdef AGoodDirsContinuous
         end
     end
     methods (Abstract, Access = protected)
-        calcTransMatDynamics(matOpFactory, STimeData, AtDynamics, ...
+        [XstDynamics, RstDynamics, cXstNormDynamics] = ...
+            calcTransMatDynamics(matOpFactory, STimeData, AtDynamics, ...
             calcPrecision)
     end
 end

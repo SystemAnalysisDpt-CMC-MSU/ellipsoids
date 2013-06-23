@@ -146,43 +146,88 @@ classdef SuiteBasic < mlunitext.test_case
                     rightArray));
             end
         end
-        function testAbsRelDiff(self)
-            import gras.gen.absreldiff;
+        function testAbsRelCompare(self)
+            import gras.gen.absrelcompare;
             % size error
             self.runAndCheckError(...
-                'gras.gen.absreldiff([1 1], [1; 1], 0.1, @abs)', ...
+                'gras.gen.absrelcompare([1 1], [1; 1], 0.1, [], @abs)', ...
                 'wrongInput:wrongArgs');
             % absTol error #1
             self.runAndCheckError(...
-                'gras.gen.absreldiff([1 1], [1 1], -0.1, @abs)', ...
+                'gras.gen.absrelcompare([1 1], [1 1], -0.1, [], @abs)', ...
                 'wrongInput:wrongAbsTol');
             % absTol error #2
+            self.runAndCheckError([...
+                'gras.gen.absrelcompare([1 1], [1 1], [0.1, 0.1], [],', ...
+                ' @abs)'], 'wrongInput:wrongAbsTol');
+            % absTol error #3
+            self.runAndCheckError([...
+                'gras.gen.absrelcompare([1 1], [1 1], [], [],', ...
+                ' @abs)'], 'wrongInput:wrongAbsTol');
+            % relTol error #1
             self.runAndCheckError(...
-                'gras.gen.absreldiff([1 1], [1 1], [0.1, -0.1], @abs)', ...
-                'wrongInput:wrongAbsTol');
-            % normOpFun error
+                'gras.gen.absrelcompare([1 1], [1 1], 0.1, -0.1, @abs)',...
+                'wrongInput:wrongRelTol');
+            % relTol error #2
+            self.runAndCheckError([...
+                'gras.gen.absrelcompare([1 1], [1 1], 0.1, [0.1, 0.1],',...
+                ' @abs)'], 'wrongInput:wrongRelTol');
+            % fNormOp error
             self.runAndCheckError(...
-                'gras.gen.absreldiff([1 1], [1 1], 0.1, 100)', ...
-                'wrongInput:wrongnormOpFun');
+                'gras.gen.absrelcompare([1 1], [1 1], 0.1, [], 100)', ...
+                'wrongInput:wrongNormOp');
             % result tests
+            [SRes.isEqual, SRes.absDiff, SRes.isRel, SRes.relDiff, ...
+                SRes.relMDiff, SRes.diffMat, SRes.isRelCompMat] = ...
+                absrelcompare([], [], 0.5, [], @abs);
+            SExpRes = struct('isEqual', true, 'absDiff', [], 'isRel', ...
+                false, 'relDiff', [], 'relMDiff', [], 'diffMat', [], ...
+                'isRelCompMat', []);
+            check(SExpRes, SRes);
+            %
             xVec = [1 2]; yVec = [2 4];
-            [zVec, isRelComp] = absreldiff(xVec, yVec, 0.5, @abs);
-            check(zVec, [2/3, 2/3]);
-            check(isRelComp, true([1 2]));
+            SRes = calc(xVec, yVec, 2, [], @abs);
+            SExpRes.isEqual = true;
+            SExpRes.absDiff = 2;
+            SExpRes.diffMat = [1, 2];
+            SExpRes.isRelCompMat = false([1 2]);
+            check(SExpRes, SRes);
             %
-            [zVec, isRelComp] = absreldiff(xVec, yVec, 1.5, @abs);
-            check(zVec, [1, 2/3]);
-            check(isRelComp, logical([0, 1]));
+            SRes = calc(xVec, yVec, 1, [], @abs);
+            SExpRes.isEqual = false;
+            check(SExpRes, SRes);
             %
-            [zVec, isRelComp] = absreldiff(xVec, yVec, 3, @abs);
-            check(zVec, [1, 2]);
-            check(isRelComp, false([1, 2]));
+            SRes = calc(xVec, yVec, 2, 2/3, @abs);
+            SExpRes.isEqual = true;
+            check(SExpRes, SRes);
+            %
+            SRes = calc(xVec, yVec, 1, 2/3, @abs);
+            SExpRes.isRel = true;
+            SExpRes.relDiff = 2/3;
+            SExpRes.relMDiff = 2;
+            SExpRes.diffMat = [1, 2/3];
+            SExpRes.isRelCompMat = logical([0, 1]);
+            check(SExpRes, SRes);
+            %
+            SRes = calc(xVec, yVec, 1, 0.5, @abs);
+            SExpRes.isEqual = false;
+            check(SExpRes, SRes);
+            %
+            SRes = calc(xVec, yVec, 0.5, 0.5, @abs);
+            SExpRes.diffMat = [2/3, 2/3];
+            SExpRes.isRelCompMat = true([1, 2]);
+            check(SExpRes, SRes);
+            function SRes = calc(varargin)
+                [SRes.isEqual, SRes.absDiff, SRes.isRel, SRes.relDiff, ...
+                SRes.relMDiff, SRes.diffMat, SRes.isRelCompMat] = ...
+                gras.gen.absrelcompare(varargin{:}); 
+            end
             function check(leftArray,rightArray)
                 mlunitext.assert_equals(true,isequal(leftArray,...
                     rightArray));
             end
         end
-        function testSvdOp(self)
+        function testSymmetricOp(self)
             import gras.gen.SymmetricMatVector;
             %
             MAX_TOL=1e-10;

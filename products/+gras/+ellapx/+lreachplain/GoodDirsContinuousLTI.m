@@ -1,8 +1,8 @@
-classdef GoodDirsContinuousLTI<gras.ellapx.lreachplain.AGoodDirsContinuous
+classdef GoodDirsContinuousLTI<gras.ellapx.lreachplain.AGoodDirs
     methods
         function self = GoodDirsContinuousLTI(pDynObj, sTime, ...
                 lsGoodDirMat, calcPrecision)
-            self=self@gras.ellapx.lreachplain.AGoodDirsContinuous(...
+            self=self@gras.ellapx.lreachplain.AGoodDirs(...
                 pDynObj, sTime, lsGoodDirMat, calcPrecision);
         end
     end

@@ -115,7 +115,7 @@ classdef EllTubeTouchCurveBasic<handle
     end
     methods (Access=private)
         function checkTouchCurveIndependence(self,rel)
-            import gras.gen.absreldiff;
+            import gras.gen.absrelcompare;
             %
             dependencyFieldList=self.getTouchCurveDependencyFieldList;
             fCheckFieldTransfList=self.getTouchCurveDependencyCheckTransFuncList();
@@ -151,19 +151,13 @@ classdef EllTubeTouchCurveBasic<handle
                                 %
                                 expTol=(tolVec(1)+tolVec(iVal));
                                 %
-                                [diffNormVec, isRelVec] = absreldiff(...
+                                [isOk, actAbsTol, isRelTolUsed, ...
+                                    actRelTol] = absrelcompare(...
                                     valList{iTuple}{1}, ...
                                     valList{iTuple}{iVal}, expTol, ...
-                                    @vecArrNorm);
-                                actAbsTol = max(diffNormVec(~isRelVec(:)));
-                                actRelTol = max(diffNormVec(isRelVec(:)));
-                                %
-                                % There may be empty actRelTol
-                                %
-                                isOk=all([actAbsTol <= expTol, ...
-                                    actRelTol <= expTol]);
+                                    expTol, @vecArrNorm);
                                 if ~isOk
-                                    if isempty(actRelTol)
+                                    if ~isRelTolUsed
                                         optMsg=sprintf(...
                                             ['absolute tolerance=%g,',...
                                             ' expected tolerance=%g'], ...
