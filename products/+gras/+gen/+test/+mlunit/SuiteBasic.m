@@ -260,7 +260,7 @@ classdef SuiteBasic < mlunitext.test_case
                 nPoints = sizeVec(end);
                 expArray = zeros(size(resArray));
                 for i = 1:nPoints
-                    [~, sMat, uMat] = svd(inp1Array(:,:,i));
+                    [uMat, sMat] = eig(inp1Array(:,:,i));
                     if isVec
                         arg2Mat = inp2Array(:,i);
                     else

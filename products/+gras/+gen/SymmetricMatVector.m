@@ -81,7 +81,7 @@ function [uArray, sArray] = arraysvd(symArray)
     uArray = zeros(sizeVec);
     sArray = zeros(sizeVec);
     for t = 1:sizeVec(3)
-        [~, sArray(:,:,t), uArray(:,:,t)] = svd(symArray(:,:,t));
+        [uArray(:,:,t), sArray(:,:,t)] = eig(symArray(:,:,t));
     end
 end
 

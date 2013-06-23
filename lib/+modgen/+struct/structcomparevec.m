@@ -128,9 +128,17 @@ if isnumeric(x)
     end
     x=toNumericSupportingMinus(x);
     y=toNumericSupportingMinus(y);
+    if ismember(xClass,{'double','single'})
+        isNanX=isnan(x);
+        isNanY=isnan(y);
+        if ~isequal(isNanX,isNanY);
+            reportStr='Nans are on the different places';
+            return;
+        end
+    end
     %
     [isEqual, maxAbsDiff, isRelativeEnabled, maxRelDiff, ...
-        maxMRelAbsDiff] = absrelcompare(x(:), y(:), absTol, relTol, @abs);
+        maxMRelAbsDiff] = absrelcompare(x(~isnan(x)), y(~isnan(y)), absTol, relTol, @abs);
     %
     if ~isEqual
         if ~isRelativeEnabled
@@ -139,14 +147,6 @@ if isnumeric(x)
             reportStr=sprintf('Max. relative difference (%d) is greater than the specified tolerance(%d); absolute difference: (%d), absolute tolerance: (%d)', maxRelDiff, relTol, maxMRelAbsDiff, absTol);
         end
         return;
-    end
-    if ismember(xClass,{'double','single'})
-        isNanX=isnan(x);
-        isNanY=isnan(y);
-        if ~isequal(isNanX,isNanY);
-            reportStr='Nans are on the different places';
-            return;
-        end
     end
 elseif isstruct(x)
     [isEqual,reportStr]=modgen.struct.structcompare(x,y,absTol,relTol);
