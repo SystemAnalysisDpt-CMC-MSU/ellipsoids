@@ -177,20 +177,15 @@ classdef SuiteBasic < mlunitext.test_case
                 'gras.gen.absrelcompare([1 1], [1 1], 0.1, [], 100)', ...
                 'wrongInput:wrongNormOp');
             % result tests
-            [SRes.isEqual, SRes.absDiff, SRes.isRel, SRes.relDiff, ...
-                SRes.relMDiff, SRes.diffMat, SRes.isRelCompMat] = ...
-                absrelcompare([], [], 0.5, [], @abs);
+            SRes = calc([], [], 0.5, [], @abs);
             SExpRes = struct('isEqual', true, 'absDiff', [], 'isRel', ...
-                false, 'relDiff', [], 'relMDiff', [], 'diffMat', [], ...
-                'isRelCompMat', []);
+                false, 'relDiff', [], 'relMDiff', []);
             check(SExpRes, SRes);
             %
             xVec = [1 2]; yVec = [2 4];
             SRes = calc(xVec, yVec, 2, [], @abs);
             SExpRes.isEqual = true;
             SExpRes.absDiff = 2;
-            SExpRes.diffMat = [1, 2];
-            SExpRes.isRelCompMat = false([1 2]);
             check(SExpRes, SRes);
             %
             SRes = calc(xVec, yVec, 1, [], @abs);
@@ -205,8 +200,6 @@ classdef SuiteBasic < mlunitext.test_case
             SExpRes.isRel = true;
             SExpRes.relDiff = 2/3;
             SExpRes.relMDiff = 2;
-            SExpRes.diffMat = [1, 2/3];
-            SExpRes.isRelCompMat = logical([0, 1]);
             check(SExpRes, SRes);
             %
             SRes = calc(xVec, yVec, 1, 0.5, @abs);
@@ -214,13 +207,10 @@ classdef SuiteBasic < mlunitext.test_case
             check(SExpRes, SRes);
             %
             SRes = calc(xVec, yVec, 0.5, 0.5, @abs);
-            SExpRes.diffMat = [2/3, 2/3];
-            SExpRes.isRelCompMat = true([1, 2]);
             check(SExpRes, SRes);
             function SRes = calc(varargin)
                 [SRes.isEqual, SRes.absDiff, SRes.isRel, SRes.relDiff, ...
-                SRes.relMDiff, SRes.diffMat, SRes.isRelCompMat] = ...
-                gras.gen.absrelcompare(varargin{:}); 
+                SRes.relMDiff] = gras.gen.absrelcompare(varargin{:}); 
             end
             function check(leftArray,rightArray)
                 mlunitext.assert_equals(true,isequal(leftArray,...
