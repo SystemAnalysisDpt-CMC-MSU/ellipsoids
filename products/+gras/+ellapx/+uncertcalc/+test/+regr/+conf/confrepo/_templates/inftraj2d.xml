@@ -2,8 +2,8 @@
 <root version="19" xml_tb_version="2.0" type="struct" >
 <valueObj type="struct" >
 	<genericProps type="struct" >
-		<calcTimeLimVec type="double" >0 10</calcTimeLimVec>
-		<calcPrecision type="double" >0.001</calcPrecision>
+		<calcTimeLimVec type="double" >0 9</calcTimeLimVec>
+		<calcPrecision type="double" >0.0001</calcPrecision>
 		<isSplineForMatrixCalcUsed type="boolean" >0</isSplineForMatrixCalcUsed>
 	</genericProps>
 	<projectionProps type="struct" >
