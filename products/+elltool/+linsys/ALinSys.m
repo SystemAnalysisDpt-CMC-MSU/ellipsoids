@@ -150,7 +150,7 @@ classdef ALinSys < elltool.linsys.ILinSys
     end
     %
     methods (Access = protected)
-        function displayInternal(self)
+        function displayInternal(self, dispParamStringsCVec)
             %
             % DISPLAYINTERNAL - displays the details of linear system object.
             %
@@ -169,17 +169,7 @@ classdef ALinSys < elltool.linsys.ILinSys
                 return;
             end
             %
-            if min(size(self)) == 0
-                if max(size(self)) == 0
-                    fprintf('Empty linear system object.\n\n');
-                    return;
-                else
-                    fprintf('Empty linear system objects array.\n\n');
-                    return;
-                end
-            end
-            %
-            [s0, s1, s2, s3] = self.DISPLAY_PARAMETER_STRINGS{:};
+            [s0 s1 s2 s3] = dispParamStringsCVec{:};
             %
             fprintf('\n');
             if iscell(self.atMat)

@@ -70,7 +70,7 @@ saveConf(sysConfRepoMgr,confRepoMgr,resDir);
     sysConfRepoMgr,logger);
 %
 % Building internal ellipsoidal approximations
-[ellTubeRel,ellUnionTubeRel]=gras.ellapx.uncertmixcalc.EllApxBuilder(...
+[ellTubeRel,ellUnionTubeRel]=gras.ellapx.uncertcalc.EllApxBuilder(...
     confRepoMgr,pDynObj,goodDirSetObj).build();
 % Building projections
 tStart=tic;

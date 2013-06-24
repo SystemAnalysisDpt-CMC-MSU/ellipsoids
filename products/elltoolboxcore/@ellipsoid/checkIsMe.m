@@ -1,13 +1,4 @@
 function checkIsMe(ellArr,varargin)
-%
-% CHECKISME - determine whether input object is ellipsoid. And display
-%             message and abort function if input object
-%             is not ellipsoid
-%
-% Input:
-%   regular:
-%       someObjArr: any[] - any type array of objects.
-%
 % Example:
 %   ellObj = ellipsoid([1; 2], eye(2));
 %   ellipsoid.checkIsMe(ellObj)

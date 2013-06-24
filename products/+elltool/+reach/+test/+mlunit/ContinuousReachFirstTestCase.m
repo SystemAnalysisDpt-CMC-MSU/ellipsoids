@@ -54,9 +54,6 @@ classdef ContinuousReachFirstTestCase < mlunitext.test_case
             l0Mat = cell2mat(l0CMat.').';
             self.timeVec = [self.crmSys.getParam('time_interval.t0'),...
                 self.crmSys.getParam('time_interval.t1')];
-            isRegEnabled = crm.getParam('regularizationProps.isEnabled');
-            isJustCheck = crm.getParam('regularizationProps.isJustCheck');
-            regTol = crm.getParam('regularizationProps.regTol');
             ControlBounds = struct();
             ControlBounds.center = ptDefCVec;
             ControlBounds.shape = ptDefCMat;
@@ -67,10 +64,7 @@ classdef ContinuousReachFirstTestCase < mlunitext.test_case
             self.linSys = elltool.linsys.LinSysFactory.create(atDefCMat,...
                 btDefCMat, ControlBounds, ctDefCMat, DistBounds);
             self.reachObj = elltool.reach.ReachContinuous(self.linSys,...
-                ellipsoid(x0DefVec, x0DefMat), l0Mat, self.timeVec,...
-                'isRegEnabled', isRegEnabled,...
-                'isJustCheck', isJustCheck,...
-                'regTol', regTol);
+                ellipsoid(x0DefVec, x0DefMat), l0Mat, self.timeVec);
         end
         %
         function self = testIntersect(self)

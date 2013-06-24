@@ -15,7 +15,7 @@ function outEllArr = getMove2Origin(inpEllArr)
 %
 % Example:
 %   ellObj = ellipsoid([-2; -1], [4 -1; -1 1]);
-%   outEllObj = ellObj.getMove2Origin()
+%   outEllObj = ellObj.move2origin()
 % 
 %   outEllObj =
 % 

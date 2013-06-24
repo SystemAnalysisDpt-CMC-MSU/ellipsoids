@@ -11,7 +11,7 @@ classdef LinSysContinuous < elltool.linsys.ALinSys
     %            Faculty of Computational Mathematics and Computer Science,
     %            System Analysis Department 2012 $
     %
-    properties (Constant, GetAccess = ?elltool.linsys.ALinSys)
+    properties (Constant, Access = private)
         DISPLAY_PARAMETER_STRINGS = {'(t)', 'dx/dt  =  ',...
             ' y(t)  =  ', ' x(t)'}
     end
@@ -64,7 +64,7 @@ classdef LinSysContinuous < elltool.linsys.ALinSys
         end
         %
         function display(self)
-           self.displayInternal()
+           self.displayInternal(self.DISPLAY_PARAMETER_STRINGS)
         end
     end
 end

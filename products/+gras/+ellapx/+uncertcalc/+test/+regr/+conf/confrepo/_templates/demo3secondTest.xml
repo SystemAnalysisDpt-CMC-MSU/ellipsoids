@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<root version="19" xml_tb_version="2.0" type="struct" >
+<root version="18" xml_tb_version="2.0" type="struct" >
 <valueObj type="struct" >
 	<genericProps type="struct" >
 		<calcTimeLimVec type="double" >0 3</calcTimeLimVec>
@@ -13,7 +13,7 @@
 				<item type="boolean" >1 1</item>
 			</set1>
 		</projSpaceSets>
-		<isDynamicProjEnabled type="boolean" >0</isDynamicProjEnabled>
+		<isDynamicProjEnabled type="boolean" >1</isDynamicProjEnabled>
 		<isStaticProjEnabled type="boolean" >1</isStaticProjEnabled>
 	</projectionProps>
 	<goodDirSelection type="struct" >
@@ -105,11 +105,6 @@
 		</extIntApx>
 	</ellipsoidalApxProps>
 	<systemDefinitionConfName type="char" >demo3secondTestSys</systemDefinitionConfName>
-	<regularizationProps type="struct" >
-		<isEnabled type="boolean" >0</isEnabled>
-		<isJustCheck type="boolean" >0</isJustCheck>
-		<regTol type="double" >1e-05</regTol>
-	</regularizationProps>
 </valueObj>
 <keyStr type="char" >demo3secondTest</keyStr>
 </root>

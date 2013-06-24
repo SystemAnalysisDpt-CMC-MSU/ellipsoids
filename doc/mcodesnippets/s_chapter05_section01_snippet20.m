@@ -3,12 +3,12 @@ bufEllVec = [firstEllObj secEllObj];
 externalEllVec = bufEllVec.minkpm_ea(thirdEllObj, dirsMat)  % external
 
 % externalEllVec =
-% Array of ellipsoids with dimensionality 1x5
+% 1x5 array of ellipsoids.
 
 internalEllVec = bufEllVec.minkpm_ia(thirdEllObj, dirsMat)  % internal
 
 % internalEllVec =
-% Array of ellipsoids with dimensionality 1x4
+% 1x4 array of ellipsoids.
 
 % plot the set (firstEllObj + secEllObj - thirdEllObj)
-firstEllObj.minkpm(secEllObj, thirdEllObj)
+firstEllObj.minkpm(secEllObj, thirdEllObj);  

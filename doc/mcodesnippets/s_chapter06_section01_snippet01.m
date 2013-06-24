@@ -8,4 +8,4 @@ dirsMat = [cos(0:0.1:pi); sin(0:0.1:pi)];  % 32 initial directions
 nSteps  = 100;  % number of time steps
 
 % compute the reach set
-rsObj = elltool.reach.ReachDiscrete(lsys, x0EllObj, dirsMat, [0 nSteps]);
+rsObj = elltool.reach.ReachDiscrete(lsys, x0EllObj, dirsMat, nSteps);

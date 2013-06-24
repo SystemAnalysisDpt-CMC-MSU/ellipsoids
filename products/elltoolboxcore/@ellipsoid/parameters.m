@@ -18,7 +18,8 @@ function [myEllCenterVec, myEllShapeMat] = parameters(myEll)
 % 
 %       -2
 %        4
-%
+% 
+% 
 %   shapeMat =
 % 
 %       4    -1

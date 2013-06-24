@@ -44,8 +44,7 @@ classdef AGoodDirsContinuous
             self.lsGoodDirMat = lsGoodDirMat;
             %
             timeLimsVec = pDynObj.getTimeLimsVec();
-            if ((timeLimsVec(1) < timeLimsVec(2)) && ...
-                    (sTime > timeLimsVec(2)) || (sTime < timeLimsVec(1)))
+            if (sTime > timeLimsVec(2)) || (sTime < timeLimsVec(1))
                 throwerror('wrongInput',...
                     'sTime is expected to be within %s', ...
                     mat2str(timeLimsVec));

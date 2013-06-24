@@ -14,7 +14,7 @@ function invEllArr = getInv(myEllArr)
 % 
 % Example:
 %   ellObj = ellipsoid([1; 1], [4 -1; -1 5]);
-%   invEllObj = ellObj.getInv()
+%   invEllObj = ellObj.inv()
 % 
 %   invEllObj =
 % 

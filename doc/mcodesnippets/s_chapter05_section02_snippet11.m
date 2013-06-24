@@ -5,12 +5,12 @@
 % get external ellipsoids
 firstExternalEllMat = ellMat(:, 1).intersection_ea(firstHypObj(1))  
 % firstExternalEllMat =
-% Array of ellipsoids with dimensionality 2x1
+% 2x1 array of ellipsoids.
 
 % get internal ellipsoids
 firstInternalEllMat = ellMat(:, 1).intersection_ia(firstHypObj(1))  
 % firstInternalEllMat =
-% Array of ellipsoids with dimensionality 2x1
+% 2x1 array of ellipsoids.
 
 % compute external and internal ellipsoidal approximations
 % of the intersections of ellipsoids in the first column of ellMat

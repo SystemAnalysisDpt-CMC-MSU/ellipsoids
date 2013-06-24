@@ -12,15 +12,6 @@ if nargin==0
     confNameList=crm.deployConfTemplate('*');
 end
 %confNameList = {'advanced'};
-%
-notToTestConfNameList = {'discrSecondTest'};
-testConfIndArray = ones(1, length(confNameList));
-for confName = notToTestConfNameList{:}
-    testConfIndArray = testConfIndArray & ...
-        ~ismember(confNameList, 'discrSecondTest');
-end
-confNameList = confNameList(testConfIndArray);
-%
 crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
 crmSys.deployConfTemplate('*');
 nConfs=length(confNameList);

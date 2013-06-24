@@ -1,4 +1,4 @@
-function regQMat = regularize(qMat, regTol)
+function regQMat = regularize(qMat,absTol)
 %
 % REGULARIZE - regularization of singular symmetric matrix.
 %
@@ -20,4 +20,4 @@ function regQMat = regularize(qMat, regTol)
 %             Faculty of Computational Mathematics and Cybernetics,
 %             Department of System Analysis 2012-2013 $
 
-regQMat = gras.la.regposdefmat(qMat, regTol);
+regQMat=ell_regularize(qMat,absTol);

@@ -3,12 +3,12 @@
 % external
 externalEllVec = firstEllObj.minkmp_ea(thirdEllObj, secEllObj, dirsMat) 
 % externalEllVec =
-% Array of ellipsoids with dimensionality 1x5
+% 1x5 array of ellipsoids.
 
 % internal
 internalEllVec = firstEllObj.minkmp_ia(thirdEllObj, secEllObj, dirsMat)
 % internalEllVec =
-% Array of ellipsoids with dimensionality 1x5
+% 1x5 array of ellipsoids.
 
 % plot the set (firstEllObj - thirdEllObj + secEllObj)
-firstEllObj.minkmp(thirdEllObj, secEllObj);
+firstEllObj.minkmp(thirdEllObj, secEllObj);  

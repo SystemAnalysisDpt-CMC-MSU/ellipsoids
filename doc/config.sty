@@ -2,15 +2,20 @@
 \usepackage[cp1251]{inputenc}
 \usepackage{latexsym}
 \usepackage{listings}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
 \usepackage{graphicx}
-%\usepackage{xcolor}
+\usepackage{xcolor}
 \usepackage{fancyvrb}
 \usepackage[courier]{altfont}
+%\usepackage{lastpage}
 \usepackage{hyphenat}
 \usepackage{todonotes}
+\usepackage{epstopdf}
 \usepackage{fancyhdr}
 \usepackage[pdftex,colorlinks=true,urlcolor=blue,pageanchor=false,plainpages=false]{hyperref}
-\usepackage{basic_config}
 %
 %---------------------------PAGE MARKING
 %
@@ -42,6 +47,16 @@
 \advance\evensidemargin by -1in
 %
 %
+%----------------------------Stable function for figure insertion
+%works with EPS format (for PS as output format) and with PNG format (for PDF as output)
+%
+\newcommand {\stablefigure}[6]
+{
+\begin{figure}[#6]
+\centering\includegraphics[height=#5,width=#4,keepaspectratio]{#1}
+\caption{#2}\label{#3}
+\end{figure}
+}
 %
 %--------------------------MathWorks logo
 %
@@ -81,11 +96,80 @@ framesep=3mm,numbersep=2mm,fontsize=\small}
 %\VerbatimInput[defineactive=\def%{\color{mcommcolor}\ExPoint}]{ex1.m}
 %\catcode`\%=\count255
 
-
+%------------------------------inequalities
+%
+\renewcommand{\ge}{\geqslant}
+\renewcommand{\le}{\leqslant}
+\renewcommand{\geq}{\geqslant}
+\renewcommand{\leq}{\leqslant}
+%
+%------------------------------reference to equation
+%
+\newcommand{\eref}[1]{(\ref{#1})}
+%
 %------------------------------reference to picture
 %
 \newcommand{\pref}[1]{pic.\ref{#1}}
+%
+%------------------------------R^n - finite-dimensional space
+%
+\newcommand {\rdim}[1]
+{{\mathbb{R}}^{#1} }
+%
+%------------------------------Mathematical expectation
+%
+\newcommand {\mean}
+{\mathbb{E}}
+%
+%------------------------------%Probability
+%
+\newcommand {\prob}
+{\mathbb{P}}
+%
+%------------------------------Exponential moving average
+%
+\newcommand {\esma}
+{\mathit{EMA}}
+%
+%------------------------------Market data
+%
+\newcommand {\mdata}
+{\mathit{MD}}
+%
+%------------------------------Disturbance
+%
+\newcommand{\eps}{\varepsilon}
+%
 %-----------------------------Bibliography style
 %
 \bibliographystyle{plain}
 %
+%-----------------------------Theorem definitions
+%
+%--------------Example
+%
+\newtheorem*{example*}{Example}
+\newtheorem{example}{Example}[section]
+%
+%--------------Definition
+%
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+%--------------------------PAGE FOOT/HEAD
+%
+
+%\pagestyle{fancy}
+%  \fancyhf{}
+%  \renewcommand{\sectionmark}[1]{\markboth{\thesection.\ #1}{\thesection.\ #1}}
+%%  \headheight=1.2cm
+%%  \footskip=1.2cm
+%  \rhead{Page \thepage}
+%  \cfoot{MSU, System Analysis Department}
+%  \renewcommand{\footrulewidth}{0.6pt}
+%  \lhead{\rightmark}
+%------------------------Mathematical operators
+
+\newcommand{\argmax}{\mathop{\rm arg\,max}}
+\newcommand{\Argmax}{\mathop{\rm Arg\,max}}
+\newcommand{\argmin}{\mathop{\rm arg\,min}}
+\newcommand{\Argmin}{\mathop{\rm Arg\,max}}

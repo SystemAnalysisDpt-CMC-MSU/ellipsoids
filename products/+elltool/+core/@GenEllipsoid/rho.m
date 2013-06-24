@@ -8,7 +8,8 @@ function [resRho, bndPVec] = rho(ellObj,dirVec)
 % 
 %        2
 % 
-%  bndPVec =
+% 
+%   bndPVec =
 % 
 %        2
 %        1

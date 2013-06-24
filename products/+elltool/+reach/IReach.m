@@ -1,8 +1,6 @@
 classdef IReach < handle
-% $Authors: Kirill Mayantsev <kirill.mayantsev@gmail.com> $   
-%               $Date: March-2013 $
-%           Igor Kitsenko <kitsenko@gmail.com> $
-%               $Date: May-2013 $
+% $Author: Kirill Mayantsev <kirill.mayantsev@gmail.com>$  
+% $Date: March-2013 $
 % $Copyright: Moscow State University,
 %             Faculty of Computational Mathematics 
 %             and Computer Science, 
@@ -156,9 +154,10 @@ classdef IReach < handle
         %            System Analysis Department 2013 $
         %
         reachObj = refine(self, l0Mat)
+       
         %
         % EVOLVE - computes further evolution in time of the
-        %          already existing reach set.
+        %   already existing reach set.
         %
         % Input:
         %   regular:

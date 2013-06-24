@@ -1,10 +1,2 @@
-ellArray(nPoints) = ellipsoid();
-approxType=gras.ellapx.enums.EApproxType.Internal;
-sTime= 2;
-for iElem = 1:nPoints
-   ellArray(iElem) = ellipsoid(...
-   aMat(:,iElem), qArrayList{1}(:,:,iElem)); 
-end
-fromEllArrayEllTube = ellTubeFactory.fromEllArray(...
-                ellArray, timeVec,ltGoodDirArray, sTime, approxType,...
-                approxSchemaName,approxSchemaDescr, calcPrecision);
+atMat = {'0' '1 - cos(2*t)'; '-1/t' '0'};  
+sys_t = elltool.linsys.LinSysFactory.create(atMat, bMat, uBoundsEllObj);
