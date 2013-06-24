@@ -137,15 +137,11 @@ if isnumeric(x)
         end
     end
     %
-    [isEqual, maxAbsDiff, isRelativeEnabled, maxRelDiff, ...
-        maxMRelAbsDiff] = absrelcompare(x(~isnan(x)), y(~isnan(y)), absTol, relTol, @abs);
+    [isEqual, ~, ~, ~, ~, reportStr] = absrelcompare(x(~isnan(x)), ...
+        y(~isnan(y)), absTol, relTol, @abs);
     %
     if ~isEqual
-        if ~isRelativeEnabled
-            reportStr=sprintf('Max. difference (%d) is greater than the specified tolerance(%d)', maxAbsDiff, absTol);
-        else
-            reportStr=sprintf('Max. relative difference (%d) is greater than the specified tolerance(%d); absolute difference: (%d), absolute tolerance: (%d)', maxRelDiff, relTol, maxMRelAbsDiff, absTol);
-        end
+        reportStr = horzcat('Max. ', reportStr);
         return;
     end
 elseif isstruct(x)
