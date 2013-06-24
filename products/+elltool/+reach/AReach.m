@@ -547,7 +547,7 @@ classdef AReach < elltool.reach.IReach
                 [reg, ~, colorVec, shade, lineWidth, isFill,...
                     isColorVec, ~, ~, ~] = ...
                     modgen.common.parseparext(varargin,...
-                    {'color', 'shade', 'width', 'fill';... 
+                    {'color', 'shade', 'width', 'fill';...
                     DEFAULT_EA_COLOR_VEC, DEFAULT_EA_SHADE,...
                     DEFAULT_LINE_WIDTH, DEFAULT_FILL;...
                     'isvector(x)',...
@@ -557,7 +557,7 @@ classdef AReach < elltool.reach.IReach
                 [reg, ~, colorVec, shade, lineWidth, isFill,...
                     isColorVec, ~, ~, ~] = ...
                     modgen.common.parseparext(varargin,...
-                    {'color', 'shade', 'width', 'fill';... 
+                    {'color', 'shade', 'width', 'fill';...
                     DEFAULT_IA_COLOR_VEC, DEFAULT_IA_SHADE,...
                     DEFAULT_LINE_WIDTH, DEFAULT_FILL;...
                     'isvector(x)',...
@@ -581,7 +581,7 @@ classdef AReach < elltool.reach.IReach
             if ischar(colorVec)
                 colorVec = getColorVec(colorVec);
             end
-
+            
             %
             if self.isProj
                 [~, dim] = self.dimension();
@@ -599,7 +599,7 @@ classdef AReach < elltool.reach.IReach
             else
                 plObj = smartdb.disp.RelationDataPlotter();
                 plotter = self.ellTubeRel.getTuplesFilteredBy(...
-                        APPROX_TYPE, approxType).plot(plObj);
+                    APPROX_TYPE, approxType).plot(plObj);
             end
             function colCodeVec = getColorVec(colChar)
                 if ~(ischar(colChar))
@@ -640,7 +640,7 @@ classdef AReach < elltool.reach.IReach
                             'ColorVec is a vector of length 3');
                     end
                 end
-        
+                
                 function checkIfNoColorCharPresent(value)
                     import modgen.common.throwerror;
                     if ischar(value)&&(numel(value)==1)&&~isColorDef(value)
@@ -694,7 +694,7 @@ classdef AReach < elltool.reach.IReach
             catch meObj
                 errorStr = '';
                 errorTag = '';
-                %                
+                %
                 if strcmp(meObj.identifier,...
                         ['GRAS:ELLAPX:SMARTDB:RELS:',...
                         'ELLTUBETOUCHCURVEBASIC:',...
@@ -1228,28 +1228,46 @@ classdef AReach < elltool.reach.IReach
             projObj.projectionBasisMat = projMat;
         end
         %
-
+        
         function eaPlotter = plotEa(self, varargin)
             import gras.ellapx.enums.EApproxType;
             eaPlotter = self.plotApprox(EApproxType.External, varargin{:});
         end
         %
-
+        
         function iaPlotter = plotIa(self, varargin)
             import gras.ellapx.enums.EApproxType;
-            iaPlotter = self.plotApprox(EApproxType.Internal, varargin{:});
+            iaPlotter = self.plotApprox(EApproxType.Internal,...
+                varargin{:});
         end
         %
-function eaPlotter = plotByEa(self, varargin)
+        function eaPlotter = plotByEa(self, varargin)
             import gras.ellapx.enums.EApproxType;
-            eaPlotter = self.plotByApprox(EApproxType.External, varargin{:});
+            eaPlotter = self.plotByApprox(EApproxType.External,...
+                @min, varargin{:});
             
         end
-        function plotter = plotByApprox(self, approxType, varargin)
+        function iaPlotter = plotByIa(self, varargin)
+            import gras.ellapx.enums.EApproxType;
+            iaPlotter = self.plotByApprox(EApproxType.Internal,...
+                @max, varargin{:});
+            
+        end
+        function plotter = plotByApprox(self, approxType,...
+                fExtOrInt,varargin)
             import gras.ellapx.smartdb.F;
             import gras.ellapx.enums.EProjType;
-            plotter = self.ellTubeRel.getTuplesFilteredBy(...
-                F.APPROX_TYPE, approxType).plotExt(varargin{:});
+            dim = self.dimension;
+            if ~self.isprojection()
+                projReachObj = self.projection(eye(dim));
+                plotter = projReachObj.ellTubeRel.getTuplesFilteredBy(...
+                F.APPROX_TYPE, approxType).plotExtOrInt(fExtOrInt,...
+                varargin{:});
+            else
+                plotter = self.ellTubeRel.getTuplesFilteredBy(...
+                F.APPROX_TYPE, approxType).plotExtOrInt(fExtOrInt,...
+                varargin{:});
+            end                       
         end
         function outReachObj = refine(self, l0Mat)
             import modgen.common.throwerror;
@@ -1272,13 +1290,13 @@ function eaPlotter = plotByEa(self, varargin)
             if outReachObj.isBackward
                 timeLimsVec = ...
                     [outReachObj.switchSysTimeVec(end),...
-                     outReachObj.switchSysTimeVec(end - 1)];
+                    outReachObj.switchSysTimeVec(end - 1)];
             else
                 timeLimsVec = ...
                     [outReachObj.switchSysTimeVec(1),...
-                     outReachObj.switchSysTimeVec(2)];
+                    outReachObj.switchSysTimeVec(2)];
             end
-
+            
             x0Ell = outReachObj.x0Ellipsoid;
             %
             % Normalize good directions
@@ -1286,14 +1304,14 @@ function eaPlotter = plotByEa(self, varargin)
             nDim = dimension(x0Ell);
             l0Mat = outReachObj.getNormMat(l0Mat, nDim);
             reachSetObj = feval(class(outReachObj), linSys, x0Ell,...
-                    l0Mat, timeLimsVec);
+                l0Mat, timeLimsVec);
             %
             for iLinSys = 2 : sysTimeVecLenght
                 reachSetObj = ...
                     reachSetObj.evolve(...
-                        getNewTime(outReachObj.switchSysTimeVec,...
-                                   outReachObj.isBackward,iLinSys),...
-                        outReachObj.linSysCVec{iLinSys});
+                    getNewTime(outReachObj.switchSysTimeVec,...
+                    outReachObj.isBackward,iLinSys),...
+                    outReachObj.linSysCVec{iLinSys});
             end
             %
             if outReachObj.isProj
@@ -1303,7 +1321,7 @@ function eaPlotter = plotByEa(self, varargin)
             else
                 outReachObj.ellTubeRel.unionWith(reachSetObj.getEllTubeRel());
             end
-
+            
             function newTime = getNewTime(sysTimeVec,isBackward,ind)
                 if isBackward
                     newTime = sysTimeVec(end - ind);
@@ -1441,7 +1459,7 @@ function eaPlotter = plotByEa(self, varargin)
             %   getEllTubeUnionRel(rsObj);
             %
             import gras.ellapx.smartdb.rels.EllUnionTube;
-			import gras.ellapx.smartdb.rels.EllUnionTubeStaticProj;
+            import gras.ellapx.smartdb.rels.EllUnionTubeStaticProj;
             if (self.isprojection())
                 ellTubeUnionRel = ...
                     EllUnionTubeStaticProj.fromEllTubes(self.ellTubeRel);

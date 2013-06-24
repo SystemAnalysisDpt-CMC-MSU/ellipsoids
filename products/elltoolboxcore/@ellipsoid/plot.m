@@ -62,7 +62,8 @@ function plObj = plot(varargin)
 
 
 import elltool.plot.plotgeombodyarr;
-[plObj,nDim,isHold]= plotgeombodyarr('ellipsoid',@fCalcBodyTriArr,@patch,varargin{:});
+[plObj,nDim,isHold]= plotgeombodyarr('ellipsoid',@fCalcBodyTriArr,...
+    @patch,varargin{:});
 if (nDim < 3)
     [reg]=...
         modgen.common.parseparext(varargin,...
@@ -70,12 +71,14 @@ if (nDim < 3)
         [],[],[];
         });
     plObj= plotgeombodyarr('ellipsoid',@fCalcCenterTriArr,...
-        @(varargin)patch(varargin{:},'marker','*'),reg{:},'relDataPlotter',plObj, 'priorHold',true,'postHold',isHold);
+        @(varargin)patch(varargin{:},'marker','*'),reg{:},...
+        'relDataPlotter',plObj, 'priorHold',true,'postHold',isHold);
 end
 
 
     function [xCMat,fCMat] = fCalcBodyTriArr(bodyArr,varargin)
-        [xCMat,fCMat] = arrayfun(@(x)fCalcBodyTri(x),bodyArr,'UniformOutput',false);
+        [xCMat,fCMat] = arrayfun(@(x)fCalcBodyTri(x),bodyArr,...
+            'UniformOutput',false);
         function [xMat, fMat] = fCalcBodyTri(ell)
             nDim = dimension(ell(1));
             if nDim == 1
@@ -93,7 +96,8 @@ end
     end
 
     function [xCMat,fCMat] = fCalcCenterTriArr(bodyArr,varargin)
-        [xCMat,fCMat] = arrayfun(@(x)fCalcCenterTri(x),bodyArr,'UniformOutput',false);
+        [xCMat,fCMat] = arrayfun(@(x)fCalcCenterTri(x),bodyArr,...
+            'UniformOutput',false);
         function [vCenterMat, fCenterMat] = fCalcCenterTri(plotEll)
             if nDim == 1
                 [plotEll,nDim] = rebuildOneDim2TwoDim(plotEll);

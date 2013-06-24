@@ -99,7 +99,7 @@ if isOneEll % one ellipsoid, multiple directions
     [~, absTol] = getAbsTol(ellArr);
     dirsMat=reshape(dirsArr,nDim,nDirs);
     %
-    [supArr bpArr] =fSingleRhoForOneEll(dirsMat);
+    [supArr bpArr] = gras.geom.ell.rhomat(ellMat, dirsMat,absTol, cenVec);
     if length(dirSizeVec)>2
         supArr=reshape(supArr,dirSizeVec(2:end));
         bpArr=reshape(bpArr,dirSizeVec);
@@ -133,12 +133,5 @@ end
         sq  = sqrtpos(dirVec'*ellMat*dirVec,absTol);
         supFun = cenVec'*dirVec + sq;
         xVec = ((ellMat*dirVec)/sq) + cenVec;
-    end
-    function [supFun xVec] = fSingleRhoForOneEll(dirMat)
-        import gras.gen.sqrtpos;
-        tempMat  = sqrtpos(sum(dirsMat'*ellMat.*dirsMat',2), absTol);
-        supFun = cenVec'*dirMat + tempMat';
-        xVec =((ellMat*dirsMat)./repmat(tempMat',size(ellMat,1),1))+...
-            repmat(cenVec,1,size(dirsMat,2));
     end
 end

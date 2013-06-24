@@ -437,71 +437,107 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
             end
         end
         
-        function plObj = plotExt(self,varargin)
+        function plObj = plotExtOrInt(self,fExtOrInt,varargin)
             import elltool.plot.plotgeombodyarr;
-            import
+            dim = self.dim(1);
+            if (dim == 3) && ( size(self.timeVec{1},2) ~= 1)
+                throwerror('wrongDim',...
+                    '3d Tube can be displayed only after cutting');
+            end
             ABS_TOL = elltool.conf.Properties.getAbsTol();
-            tempEllMat = self.QArray{1};
-            tempEll = ellipsoid(tempEllMat(:,:,1));
-            plObj= plotgeombodyarr('ellipsoid',...
+            if (dim == 3) || (size(self.timeVec{1},2) >1)
+                tempEll = ellipsoid(ones(3));
+            else
+                tempEll = ellipsoid(ones(2));
+            end
+            isCenter = false;
+            nPlotPoints = [getNPlot2dPoints(tempEll),...
+                getNPlot3dPoints(tempEll)];
+            
+            [plObj,nDim,isHold]= plotgeombodyarr('ellipsoid',...
                 @fCalcBodyArr,@patch,tempEll,varargin{:},'isTitle',true);
+            if (isCenter)
+                reg = modgen.common.parseparext(varargin,...
+                    {'relDataPlotter','priorHold','postHold';...
+                    [],[],[];
+                    });
+                plObj= plotgeombodyarr('ellipsoid',@fCalcCenterTriArr,...
+                    @(varargin)patch(varargin{:},'marker','*'),...
+                    tempEll,reg{:},'relDataPlotter',plObj, 'priorHold',...
+                    true,'postHold',isHold);
+            end
+            
+            function [xCMat,fCMat] = fCalcCenterTriArr(~,varargin)
+                xCMat = {self.aMat{1}(:,1)};
+                fCMat = {[1 1]};
+            end
+            
             function [xCMat,fCMat,titl] = fCalcBodyArr(~,varargin)
-                dim = self.dim(1);
-                allEllMat =zeros(size(self.QArray,1),dim,dim,...
-                    size(self.timeVec{1},2));
-                arrayfun(@(x) getEllMat(x),...
-                    1:size(self.QArray,1),'UniformOutput', false);
+                allEllMat = cat(4, self.QArray{:});
                 
-                if dim == 3
-                    allEll2Mat = allEllMat(:,:,:,end);
-                    lastCenterVec = self.aMat{1}(:, end);
-                    [lGridMat, fMat] = ellipsoid.getGrid(3,600);
-                    lGridMat = lGridMat';
-                    nDim = size(lGridMat, 2);
-                    xMat = zeros(3,nDim);
-                    allEll3Mat = [];
-                    ind2 = 1;
-                    arrayfun(@(x) getEll3Mat(x),...
-                        1:size(allEll2Mat,1),'UniformOutput', false);
-                    suppAllMat = zeros(1:size(allEll3Mat,3),nDim);
-                    bpAllCell = cell(1:size(allEll3Mat,3),nDim);
-                    ind3 = 1;
-                    arrayfun(@(x) calcSupMat(allEll3Mat(:,:,x)),...
-                        1:size(allEll3Mat,3),'UniformOutput', false);
-                    [~,xInd] = min(suppAllMat,[],1);
-                    arrayfun(@(x) calcXMat(x), 1:size(xInd,2),...
-                        'UniformOutput', false);                    
+                
+                [lGridMat, fMat] = ellipsoid.getGrid(dim,...
+                    nPlotPoints(dim-1));
+                lGridMat = lGridMat';
+                nDim = size(lGridMat, 2);
+                mDim =  size(self.timeVec{1}, 2);
+                
+                
+                if size(self.timeVec{1}, 2) == 1
+                    
+                    allEllMat = shiftdim(...
+                        shiftdim(shiftdim(allEllMat(:,:,end,:),2)),1);
+                    
+                    
+                    xMat = calcPoints(1,3);
+                    xCMat = {[xMat xMat(:,1)]};
+                    fCMat = {fMat};
+                    titl = 'yes';
+                    if dim == 2
+                        isCenter = true;
+                    end
+                else
+                    fMat = ell_triag_facets...
+                        (nPlotPoints(1),mDim);
+                    xMat = zeros(3,nDim*mDim);
+                    
+                    for iTime = 1:size(self.timeVec{1}, 2)
+                        xTemp = calcPoints(iTime,4);
+                        xMat(:,(iTime-1)*nDim+1:iTime*nDim) =...
+                            [self.timeVec{1}(iTime)*ones(1,nDim); xTemp];
+                    end
                     xCMat = {xMat};
                     fCMat = {fMat};
                     titl = 'yes';
-                else
-                    
                 end
                 
-                function  getEllMat(ind)
-                    allEllMat(ind,:,:,:) = self.QArray{ind};
-                end
-                function getEll3Mat(ind)
-                    aMat = reshape(allEll2Mat(ind,:,:),dim,dim);
-                    if trace(aMat) > ...
-                            ABS_TOL
-                        allEll3Mat(:,:,ind2) = aMat;
-                        ind2 = ind2+1;
+                
+                function xMat = calcPoints(ind,needDim)
+                    xMat = zeros(dim,nDim);
+                    centerVec = self.aMat{1}(:,ind);
+                    suppAllMat = zeros(size(allEllMat,needDim),nDim);
+                    bpAllCell = cell(size(allEllMat,needDim),nDim);
+                    ind3 = 1;
+                    arrayfun(@(x) calcSupMat(allEllMat(:,:,ind,x)),...
+                        1:size(allEllMat,needDim),...
+                        'UniformOutput', false);
+                    [~,xInd] = fExtOrInt(suppAllMat,[],1);
+                    arrayfun(@(x) calcXMat(x), 1:size(xInd,2),...
+                        'UniformOutput', false);
+                    function calcSupMat(tempEll)
+                        import gras.geom.ell.rhomat
+                        [supMat, bpMat] = rhomat(tempEll,...
+                            lGridMat,ABS_TOL);
+                        suppAllMat(ind3,:) = supMat;
+                        for indBP=1:size(bpAllCell,2)
+                            bpAllCell{ind3,indBP} = bpMat(:,indBP);
+                        end
+                        ind3 = ind3+1;
                     end
-                end
-                function calcSupMat(tempEll)
-                    import gras.geom.ell.rhomat
-                    [supMat, bpMat] = rhomat(tempEll,...
-                        zeros(size(tempEll,1),1),...
-                        ABS_TOL,lGridMat);
-                    suppAllMat(ind3,:) = supMat;
-                    for indBP=1:size(bpAllCell,2)
-                        bpAllCell{ind3,indBP} = bpMat(:,indBP);
+                    function calcXMat(ind2)
+                        xMat(:,ind2) = bpAllCell{xInd(ind2),ind2}...
+                            +centerVec;
                     end
-                    ind3 = ind3+1;
-                end
-                function calcXMat(ind)
-                    xMat(:,ind) = bpAllCell{xInd(ind),ind}+lastCenterVec;
                 end
             end
         end

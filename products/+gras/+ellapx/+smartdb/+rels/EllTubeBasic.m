@@ -645,5 +645,6 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
         end
         
         
+        
     end
 end
