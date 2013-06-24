@@ -1,28 +1,27 @@
 function [isEqual, absDiff, isRelDiffTriggered, relDiff, absMRelDiff, ...
     reportStr] = absrelcompare(leftArr, rightArr, absTol, relTol, fNormOp)
-% ABSRELCOMPARE - compares two numerical arrays by user 
-% defined norm. For each two corresponding fNormOp input elements from
-% the leftArr (argL) and the rightArr (argR) the function calculates:
+% ABSRELCOMPARE - compares two numerical arrays by user defined norm. For 
+% each two corresponding fNormOp input elements from the leftArr (argL) and
+% the rightArr (argR) the function calculates:
 %
 %   1) Absolute difference if:
-%        fNormOpFun(argL - argR) <= absTol
+%        fNormOp(argL - argR) <= absTol
 %   or
-%        fNormOpFun(argL) + fNormOpFun(argR) <= absTol.
+%        fNormOp(argL) + fNormOp(argR) <= absTol.
 %
 %   The absolute difference is calculated as:
-%        fNormOpFun(argL - argR)
+%        fNormOp(argL - argR)
 %
-%   2) Absolute and relative difference in other cases. The relative difference is
-%   calculated as:
-%        2*fNormOpFun(argL - argR) / (fNormOpFun(argL) + fNormOpFun(argR))
+%   2) Absolute and relative difference in other cases. The relative 
+%   difference is calculated as:
+%
+%        2 * fNormOp(argL - argR) / (fNormOp(argL) + fNormOp(argR))
 %
 %   The maximum absolute difference for all elements is returned as
 %   absDiff. If the relative difference has been calculated for some
 %   elements, then the relative difference value for maximum element 
 %   returns as relDiff, the maximum absolute difference for this element as 
-%   absMRelDiff. The matrix with absolute or relative (where it has been 
-%   calculated) returns as diffMat, the elements where relative precisions 
-%   as isRelDiffTriggeredMat.
+%   absMRelDiff.
 %
 %
 % Input:
@@ -41,18 +40,19 @@ function [isEqual, absDiff, isRelDiffTriggered, relDiff, absMRelDiff, ...
 %         fNormOp: function_handle[1, 1] - norm(x) operator handle. The
 %                  function must have the format:
 %
-%                  normMat = fNormOp(inpArr)
+%                  normArr = fNormOp(inpArr)
 %
 %                       Input:
 %                           inpArr: double[nElemsDim1,..., nElemsDimk] - an
 %                                   input array.
 %
 %                       Output:
-%                           normMat: double[..] - output matrix with norm
-%                                    for each element. The the type of
+%                           normArr: double[..] - an output array with norm
+%                                    for each element. The type of
 %                                    element is specified by user (it can
-%                                    be the vector, for example). The only
-%                                    condition is:
+%                                    be the vector, for example), so the 
+%                                    numerical array normArr can have any 
+%                                    size. The only condition is:
 %
 %                                       size(fNormOp(inp1Arr)) == ...
 %                                           size(fNormOp(inp2Arr)),
@@ -113,7 +113,7 @@ import modgen.common.checkmultvar;
 %
 checkmultvar('isequal(size(x1),size(x2))&&isnumeric(x1)&&isnumeric(x2)',...
     2, leftArr, rightArr, 'ErrorTag', 'wrongInput:wrongArgs', ...
-    'ErrorMessage', ['arg1Mat and arg2Mat must be numeric arrays with', ...
+    'ErrorMessage', ['leftArr and rightArr must be numeric arrays with',...
     ' the same size']);
 checkvar(absTol, 'isnumeric(x)&&isscalar(x)&&(x>=0)', 'errorTag', ...
     'wrongInput:wrongAbsTol', 'ErrorMessage', ['relTol', ...
@@ -125,8 +125,8 @@ checkvar(fNormOp, 'isfunction(x)', 'errorTag', ...
     'wrongInput:wrongNormOp', 'ErrorMessage', ['fNormOp must be ', ...
     'a function handle']);
 %
-diffMat = fNormOp(leftArr - rightArr);
-absDiff = max(diffMat(:));
+diffArr = fNormOp(leftArr - rightArr);
+absDiff = max(diffArr(:));
 if isempty(absDiff)
     absDiff = [];
 end
@@ -135,25 +135,25 @@ absRDiff = absDiff;
 relDiff = [];
 absMRelDiff = [];
 %
-isRelDiffTriggeredMat = (diffMat > absTol) & ~isempty(relTol);
-isRelDiffTriggered = any(isRelDiffTriggeredMat(:));
+isRelDiffTriggeredArr = (diffArr > absTol) & ~isempty(relTol);
+isRelDiffTriggered = any(isRelDiffTriggeredArr(:));
 if isRelDiffTriggered
-    argSumNormVec = fNormOp(leftArr) + fNormOp(rightArr);
-    isRelDiffTriggeredMat = isRelDiffTriggeredMat & ...
-        (argSumNormVec > absTol);
-    isRelDiffTriggered = any(isRelDiffTriggeredMat(:));
+    argSumNormArr = fNormOp(leftArr) + fNormOp(rightArr);
+    isRelDiffTriggeredArr = isRelDiffTriggeredArr & ...
+        (argSumNormArr > absTol);
+    isRelDiffTriggered = any(isRelDiffTriggeredArr(:));
     if isRelDiffTriggered
-        tempMat = zeros(size(diffMat));
-        temp2Mat = tempMat;
-        tempMat(isRelDiffTriggeredMat) = ...
-            2 .* diffMat(isRelDiffTriggeredMat) ./ ...
-            argSumNormVec(isRelDiffTriggeredMat);
-        relDiff = max(tempMat(:));
-        temp2Mat(tempMat == relDiff) = diffMat(tempMat == relDiff);
-        absMRelDiff = max(temp2Mat(:));
-        tempMat = zeros(size(diffMat));
-        tempMat(~isRelDiffTriggeredMat) = diffMat(~isRelDiffTriggeredMat);
-        absRDiff = max(tempMat(:));
+        tempArr = zeros(size(diffArr));
+        temp2Arr = tempArr;
+        tempArr(isRelDiffTriggeredArr) = ...
+            2 .* diffArr(isRelDiffTriggeredArr) ./ ...
+            argSumNormArr(isRelDiffTriggeredArr);
+        relDiff = max(tempArr(:));
+        temp2Arr(tempArr == relDiff) = diffArr(tempArr == relDiff);
+        absMRelDiff = max(temp2Arr(:));
+        tempArr = zeros(size(diffArr));
+        tempArr(~isRelDiffTriggeredArr) = diffArr(~isRelDiffTriggeredArr);
+        absRDiff = max(tempArr(:));
     end
 end
 isEqual = all([absRDiff <= absTol, relDiff <= relTol]);
@@ -163,13 +163,13 @@ if nargout > 5
         reportStr = '';
     else
         if isRelDiffTriggered
-            reportStr = sprintf(['relative error (%g) is greater than', ...
-                ' the specified tolerance (%g); absolute difference', ...
-                ' (%g), absolute tolerance (%g)'], relDiff, relTol, ...
-                absMRelDiff, absTol);
+            reportStr = sprintf(['relative difference (%e) is greater', ...
+                ' than the specified tolerance (%e); absolute', ...
+                ' difference (%e), absolute tolerance (%e)'], relDiff, ...
+                relTol, absMRelDiff, absTol);
         else
-            reportStr = sprintf(['absolute error (%g) is greater than', ...
-                ' the specified tolerance (%g)'], absDiff, absTol);
+            reportStr = sprintf(['absolute difference (%e) is greater', ...
+                ' than the specified tolerance (%e)'], absDiff, absTol);
         end
     end
 end
