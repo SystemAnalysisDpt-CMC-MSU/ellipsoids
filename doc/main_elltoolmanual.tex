@@ -1,0 +1,73 @@
+\documentclass{report}
+\usepackage{config}
+\oddsidemargin 0.25in
+\evensidemargin 0.25in
+\textheight 8.5in
+\textwidth 6.0in
+\parskip 0.0675in
+\parindent 0.0in
+\hfuzz=300pt
+
+\fontfamily{pcr}
+\makeatletter
+\@addtoreset{equation}{section}
+\renewcommand{\theequation}{\arabic{chapter}.\arabic{section}.\arabic{equation}}
+\makeatother
+\tolerance = 5000
+\hbadness = 5000
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{\bigskipamount}
+
+\title{
+\easyfigure[ht][0.7\textwidth]{logo.eps}{}{}
+ELLIPSOIDAL TOOLBOX\thanks{Research supported by NSF Grant CCR-00225610.}\\
+Manual DRAFT\\
+\normalsize{ver. 1.4 dev}
+\author{Alex A. Kurzhanskiy, Pravin Varaiya and Peter Gagarinov}
+\date{2013}
+}
+%%Path to figures
+\graphicspath{{./pic/}}
+\begin{document}
+\maketitle
+\tableofcontents
+
+\chapter{Introduction}\label{ch_intro}
+\input{chap_intro}
+
+\chapter{Ellipsoidal Calculus}\label{ch_ellcalc}
+\input{chap_ellcalc}
+
+\chapter{Reachability}\label{ch_reachability}
+\input{chap_reachability}
+
+\chapter{Installation}\label{ch_install}
+\input{chap_install}
+
+\chapter{Implementation}\label{ch_implementation}
+\todo[inline]{Merged this section with section objects}
+\input{chap_implementation}
+
+\chapter{Examples}\label{ch_examples}
+\input{chap_examples}
+
+\chapter{Summary and Outlook}\label{ch_summary}
+\input{chap_summary}
+
+\chapter*{Acknowledgement}
+\addcontentsline{toc}{chapter}{Acknowledgement}
+The authors would like to thank Alexander B. Kurzhanski,
+Manfred Morari, Johan L{\"o}fberg, Michal Kvasnica and Goran Frehse
+for their support of this work by useful advice and encouragement.
+
+
+\addcontentsline{toc}{chapter}{Bibliography}
+\bibliography{et}
+\todo[inline]{Added bib file}
+\appendix
+\chapter{Function Reference}\label{appendix_a}
+\input{chap_functions}
+
+\end{document}
+

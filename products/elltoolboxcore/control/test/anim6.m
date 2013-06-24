@@ -1,5 +1,4 @@
 import elltool.conf.Properties;
-o.fill = 1;
 
 Properties.setNPlot2dPoints(500);
 Properties.setNTimeGridPoints(135);
@@ -30,8 +29,8 @@ for i = 1:Properties.getNTimeGridPoints();
 	rs = reach(s, X0, L0, [t0 t1]);
 
 	ct = cut(rs, t1);
-	plot_ea(ct, 'r', o); hold on;
-	plot_ia(ct, 'b', o);
+	plot_ea(ct, 'r', 'fill', 1); hold on;
+	plot_ia(ct, 'b', 'fill', 1);
 	ell_plot(x0, 'k*');
 	axis([-25 70 -5 14]);
 

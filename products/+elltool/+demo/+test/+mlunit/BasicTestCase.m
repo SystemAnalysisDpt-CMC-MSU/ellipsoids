@@ -15,7 +15,7 @@ classdef BasicTestCase < mlunitext.test_case
         function testDemoReach(~)
             s_ell_demo_reach;
         end
-        
+        %
         function tear_down(~)
             close all;
         end

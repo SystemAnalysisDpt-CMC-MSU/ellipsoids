@@ -13,9 +13,9 @@ firstEllObj.isbaddirection(fourthEllObj, dirsMat, absTol)
 externalEllVec = firstEllObj.minkdiff_ea(fourthEllObj, dirsMat) 
 
 % externalEllVec =
-% 1x3 array of ellipsoids.
+% Array of ellipsoids with dimensionality 1x3
 
 internalEllVec = firstEllObj.minkdiff_ia(fourthEllObj, dirsMat)
 
 % internalEllVec =
-% 1x3 array of ellipsoids.
+% Array of ellipsoids with dimensionality 1x3

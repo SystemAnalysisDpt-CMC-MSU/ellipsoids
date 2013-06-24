@@ -1,13 +1,13 @@
 % some of the intersections are empty
 intersectEllVec = externalEllMat.hpintersection(grdHypObj);  
-dVec = find(~isempty(intersectEllVec)); % determine nonempty intersections
-min(D)
+dVec = find(~isEmpty(intersectEllVec)); % determine nonempty intersections
+min(dVec)
 
 % ans =
 % 
 %       19
 
-max(D)
+max(dVec)
 
 % ans =
 % 

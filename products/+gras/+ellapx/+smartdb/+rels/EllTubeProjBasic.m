@@ -7,87 +7,201 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
     end
     methods 
         function namePrefix=getReachTubeNamePrefix(self)
+            % GETREACHTUBEANEPREFIX - return prefix of the reach tube
+            %
+            % Input:
+            %   regular:
+            %      self.
             namePrefix=self.REACH_TUBE_PREFIX;
         end
         function namePrefix=getRegTubeNamePrefix(self)
+            % GETREGTUBEANEPREFIX - return prefix of the reg tube
+            %
+            % Input:
+            %   regular:
+            %      self.
             namePrefix=self.REG_TUBE_PREFIX;
         end        
     end
+    methods (Static = true, Access = protected)
+        function [plotPropProcObj, plObj] = parceInput(plotFullFieldList,...
+                varargin)
+            import gras.ellapx.smartdb.PlotPropProcessor;
+            import modgen.common.parseparext;
+                
+            plotSpecFieldListDefault = {'approxType'};
+            colorFieldListDefault = {'approxType'};
+            alphaFieldListDefault = {'approxType'};
+            widthFieldListDefault = {'approxType'};
+            fillFieldListDefault = {'approxType'};
+            
+            fGetPatchColorDefault =...
+                @(approxType)getPatchColorByApxType(approxType);
+            fGetAlphaDefault =...
+                @(approxType)getPatchAlphaByApxType(approxType);
+            fGetLineWidthDefault = ...
+                @(approxType)(2);
+            fGetFillDefault = ...
+                @(approxType)(true);
+            
+            [reg, isRegSpec, fGetColor, fGetAlpha, fGetLineWidth,...
+                fGetFill, colorFieldList, alphaFieldList, widthFieldList,...
+                fillFieldList,...
+                plotSpecFieldList, ~, ~, ~, ~, isColorList, isAlphaList,...
+                isFillList, isWidthList, isPlotSpecFieldList] = ...
+                parseparext(varargin, {'fGetColor', 'fGetAlpha',...
+                'fGetLineWidth', 'fGetFill', 'colorFieldList',...
+                'alphaFieldList',...
+                'lineWidthFieldList', 'fillFieldList', 'plotSpecFieldList';...
+                fGetPatchColorDefault, fGetAlphaDefault,...
+                fGetLineWidthDefault,fGetFillDefault,colorFieldListDefault,...
+                alphaFieldListDefault, widthFieldListDefault,...
+                fillFieldListDefault, plotSpecFieldListDefault;...
+                'isfunction(x)', 'isfunction(x)',...
+                'isfunction(x)', 'isfunction(x)',...
+                'iscell(x)', 'iscell(x)', 'iscell(x)',...
+                'iscell(x)', 'iscell(x)'},...
+                [0 1],...
+                'regCheckList',...
+                {@(x)isa(x,'smartdb.disp.RelationDataPlotter')},...
+                'regDefList', cell(1,1));
+            
+            checkListOfField();
+            
+            plotPropProcObj = PlotPropProcessor(plotFullFieldList,...
+                fGetColor, colorFieldList, fGetLineWidth, widthFieldList,...
+                fGetFill, fillFieldList, fGetAlpha, alphaFieldList);
+            
+            if ~isRegSpec
+                plObj=smartdb.disp.RelationDataPlotter;
+            else
+                plObj=reg{1};
+            end
+            
+            function checkListOfField()
+                if isPlotSpecFieldList
+                    if ~isColorList
+                        colorFieldList = plotSpecFieldList;
+                    end
+                    if ~isAlphaList
+                        alphaFieldList = plotSpecFieldList;
+                    end
+                    if ~isWidthList
+                        widthFieldList = plotSpecFieldList;
+                    end
+                    if ~isFillList
+                        fillFieldList = plotSpecFieldList;
+                    end
+                end
+            end
+            
+            function patchColor = getPatchColorByApxType(approxType)
+                import gras.ellapx.enums.EApproxType;
+                switch approxType
+                    case EApproxType.Internal
+                        patchColor = [0 1 0];
+                    case EApproxType.External
+                        patchColor = [0 0 1];
+                    otherwise,
+                        throwerror('wrongInput',...
+                            'ApproxType=%s is not supported',char(approxType));
+                end
+            end
+        
+            function patchAlpha = getPatchAlphaByApxType(approxType)
+                import gras.ellapx.enums.EApproxType;
+                switch approxType
+                    case EApproxType.Internal
+                        patchAlpha=0.1;
+                    case EApproxType.External
+                        patchAlpha=0.3;
+                    otherwise,
+                        throwerror('wrongInput',...
+                            'ApproxType=%s is not supported',char(approxType));
+                end
+            end
+        end
+    end
+    
     methods (Access=protected)
         function dependencyFieldList=getTouchCurveDependencyFieldList(~)
             dependencyFieldList={'sTime','lsGoodDirOrigVec',...
                 'projType','projSTimeMat','MArray'};
         end
-    end
-    methods (Access=protected)
-        function [patchColor,patchAlpha]=getPatchColorByApxType(~,approxType)
-            import gras.ellapx.enums.EApproxType;
-            switch approxType
-                case EApproxType.Internal
-                    patchColor=[0 1 0];
-                    patchAlpha=0.5;
-                case EApproxType.External
-                    patchColor=[0 0 1];
-                    patchAlpha=0.3;
-                otherwise,
-                    throwerror('wrongInput',...
-                        'ApproxType=%s is not supported',char(approxType));
-            end
+        
+        function patchColor = getRegTubeColor(~, ~)
+            patchColor = [1 0 0];
         end
-        function [patchColor,patchAlpha]=getRegTubeColor(~,~)
-            patchColor=[1 0 0];
-            patchAlpha=1;
+        
+        function patchAlpha = getRegTubeAlpha(~, ~)
+            patchAlpha = 1;
         end
         %
-        function hVec=plotCreateReachTubeFunc(self,fGetPatchColor,...
+        function hVec = plotCreateReachTubeFunc(self, plotPropProcessorObj,...
                 hAxes,projType,...
-                timeVec,lsGoodDirOrigVec,ltGoodDirMat,sTime,...
-                xTouchCurveMat,xTouchOpCurveMat,ltGoodDirNormVec,...
-                ltGoodDirNormOrigVec,approxType,QArray,aMat,MArray,...
+                timeVec, lsGoodDirOrigVec, ltGoodDirMat,sTime,...
+                xTouchCurveMat, xTouchOpCurveMat, ltGoodDirNormVec,...
+                ltGoodDirNormOrigVec, approxType, QArray, aMat, MArray,...
                 varargin)
+
             import gras.ellapx.enums.EApproxType;
             %
-            hVec=self.plotCreateGenericTubeFunc(hAxes,...
-                timeVec,lsGoodDirOrigVec,sTime,...
-                approxType,QArray,aMat,fGetPatchColor,self.REACH_TUBE_PREFIX);
-            axis(hAxes,'tight');
-            axis(hAxes,'normal');
-            if approxType==EApproxType.External
-                hTouchVec=self.plotCreateTubeTouchCurveFunc(...
-                    hAxes,projType,...
-                    timeVec,lsGoodDirOrigVec,ltGoodDirMat,sTime,...
-                    xTouchCurveMat,xTouchOpCurveMat,ltGoodDirNormVec,...
-                    ltGoodDirNormOrigVec,varargin{:});
+            tubeNamePrefix = self.REACH_TUBE_PREFIX;
+            hVec = plotCreateGenericTubeFunc(self,...
+                plotPropProcessorObj, hAxes, projType,...
+                timeVec, lsGoodDirOrigVec, ltGoodDirMat, sTime,...
+                xTouchCurveMat, xTouchOpCurveMat, ltGoodDirNormVec,...
+                ltGoodDirNormOrigVec,...
+                approxType, QArray, aMat, tubeNamePrefix);
+
+            axis(hAxes, 'tight');
+            axis(hAxes, 'normal');
+            if approxType == EApproxType.External
+                hTouchVec=self.plotCreateTubeTouchCurveFunc(hAxes,...
+                    plotPropProcessorObj, projType,...
+                    timeVec, lsGoodDirOrigVec, ltGoodDirMat, sTime,...
+                    xTouchCurveMat,xTouchOpCurveMat, ltGoodDirNormVec,...
+                    ltGoodDirNormOrigVec, approxType, QArray, aMat, MArray,...
+                    varargin{:});
                 hVec=[hVec,hTouchVec];
             end
-            if approxType==EApproxType.Internal
-                hAddVec=plotCreateRegTubeFunc(self,hAxes,projType,...
-                    timeVec,lsGoodDirOrigVec,ltGoodDirMat,sTime,...
-                    xTouchCurveMat,xTouchOpCurveMat,ltGoodDirNormVec,...
-                    ltGoodDirNormOrigVec,approxType,QArray,aMat,MArray);
-                hVec=[hVec,hAddVec];
+            if approxType == EApproxType.Internal
+                hAddVec = plotCreateRegTubeFunc(self, plotPropProcessorObj,...
+                    hAxes, projType,...
+                    timeVec, lsGoodDirOrigVec, ltGoodDirMat,sTime,...
+                    xTouchCurveMat, xTouchOpCurveMat, ltGoodDirNormVec,...
+                    ltGoodDirNormOrigVec, approxType, QArray, aMat, MArray);
+                hVec=[hVec, hAddVec];
             end
         end
-        function hVec=plotCreateRegTubeFunc(self,hAxes,~,...
-                timeVec,lsGoodDirOrigVec,~,sTime,...
-                ~,~,~,...
-                ~,approxType,~,aMat,MArray,...
+        function hVec = plotCreateRegTubeFunc(self, plotPropProcessorObj,...
+                hAxes, projType,...
+                timeVec, lsGoodDirOrigVec, ltGoodDirMat, sTime,...
+                xTouchCurveMat, xTouchOpCurveMat, ltGoodDirNormVec,...
+                ltGoodDirNormOrigVec,...
+                approxType,~,aMat,MArray,...
                 varargin)
             import gras.ellapx.enums.EApproxType;
             %
-            if approxType==EApproxType.Internal
-                fGetPatchColor=@(approxType)getRegTubeColor(self,approxType);
-                hVec=self.plotCreateGenericTubeFunc(hAxes,...
-                    timeVec,lsGoodDirOrigVec,sTime,...
-                    approxType,MArray,zeros(size(aMat)),...
-                    fGetPatchColor,self.REG_TUBE_PREFIX);
+            if approxType == EApproxType.Internal
+                tubeNamePrefix = self.REG_TUBE_PREFIX;
+                hVec = self.plotCreateGenericTubeFunc(plotPropProcessorObj,...
+                    hAxes,  projType,...
+                    timeVec, lsGoodDirOrigVec, ltGoodDirMat, sTime,...
+                    xTouchCurveMat, xTouchOpCurveMat, ltGoodDirNormVec,...
+                    ltGoodDirNormOrigVec,...
+                    approxType, MArray, zeros(size(aMat)), tubeNamePrefix);
             else
                 hVec=[];
             end
-        end
-        function hVec=plotCreateGenericTubeFunc(self,hAxes,...
-                timeVec,lsGoodDirOrigVec,sTime,...
-                approxType,QArray,aMat,fGetPatchColor,tubeNamePrefix)
+        end  
+        function hVec = plotCreateGenericTubeFunc(self,...
+                plotPropProcessorObj, hAxes, varargin)
+            
+            [~, timeVec, lsGoodDirOrigVec, ~, sTime,...
+                ~, ~, ~,~, approxType, QArray, aMat,...
+                tubeNamePrefix] = deal(varargin{:});
+            
             nSPoints=self.N_SPOINTS;
             goodDirStr=self.goodDirProp2Str(lsGoodDirOrigVec,sTime);
             patchName=sprintf('%s Tube, %s: %s',tubeNamePrefix,...
@@ -95,23 +209,26 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
             [vMat,fMat]=gras.geom.tri.elltubetri(...
                 QArray,aMat,timeVec,nSPoints);
             nTimePoints=length(timeVec);
-            [patchColor,patchAlpha]=fGetPatchColor(approxType);
+           
+            patchColorVec = plotPropProcessorObj.getColor(varargin(:));
+            patchAlpha = plotPropProcessorObj.getTransparency(varargin(:));
+            
             if nTimePoints==1
                 nVerts=size(vMat,1);
                 indVertVec=[1:nVerts,1];
                 hVec=line('Parent',hAxes,'xData',vMat(indVertVec,1),...
                     'yData',vMat(indVertVec,2),...
-                    'zData',vMat(indVertVec,3),'Color',patchColor);
+                    'zData',vMat(indVertVec,3),'Color',patchColorVec);
             else
-                hVec=patch('FaceColor','interp','EdgeColor','none',...
-                    'DisplayName',patchName,...
-                    'FaceAlpha',patchAlpha,...
-                    'FaceVertexCData',repmat(patchColor,size(vMat,1),1),...
+                hVec=patch('FaceColor', 'interp', 'EdgeColor', 'none',...
+                    'DisplayName', patchName,...
+                    'FaceAlpha', patchAlpha,...
+                    'FaceVertexCData', repmat(patchColorVec,size(vMat,1),1),...
                     'Faces',fMat,'Vertices',vMat,'Parent',hAxes,...
                     'EdgeLighting','phong','FaceLighting','phong');
                 material('metal');
             end
-            hold(hAxes,'on');
+            hold(hAxes,'on');            
         end
         function hVec=axesSetPropRegTubeFunc(self,hAxes,axesName,projSTimeMat,varargin)
             import modgen.common.type.simple.checkgen;
@@ -164,9 +281,9 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                         mat2str(find(~isOkVec)));
                 end
             end
-            function [isOk,errTagStr,reasonStr]=checkTuple(dim,...
-                    projSTimeMat,projType,ltGoodDirNormOrigVec,...
-                    lsGoodDirNormOrig,lsGoodDirOrigVec,timeVec)
+            function [isOk,errTagStr,reasonStr] = checkTuple(dim,...
+                    projSTimeMat, projType, ltGoodDirNormOrigVec,...
+                    lsGoodDirNormOrig, lsGoodDirOrigVec, timeVec)
                 errTagStr='';
                 import modgen.common.type.simple.lib.*;
                 reasonStr='';
@@ -188,55 +305,68 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
         end
     end
     methods
-        function plObj=plot(self,varargin)
-            % PLOT - displays ellipsoidal tubes using the specified RelationDataPlotter
+        function plObj=plot(self, varargin)
+            % PLOT - displays ellipsoidal tubes using the specified
+            %   RelationDataPlotter
             %
             % Input:
             %   regular:
             %       self:
             %   optional:
-            %       plObj: smartdb.disp.RelationDataPlotter[1,1] - plotter object used 
-            %           for displaying ellipsoidal tubes
+            %       plObj: smartdb.disp.RelationDataPlotter[1,1] - plotter
+            %           object used for displaying ellipsoidal tubes
             %   properties:
-            %       fGetTubeColor: function_handle[1,1] - function with the following 
-            %             signature:
-            %           Input:
-            %               regular:
-            %                   apxType: gras.ellapx.enums.EApproxType[1,1]
-            %                       - approximation type
-            %           Output:
-            %               patchColor: double[1,3] - RGB color vector
-            %               patchAlpha: double[1,1] - transparency level
-            %                   within [0,1] range
-            %           if not specified, an internal function getPatchColorByApxType 
-            %               is used. 
+            %       fGetColor: function_handle[1, 1] -
+            %           function that specified colorVec for
+            %           ellipsoidal tubes
+            %       fGetAlpha: function_handle[1, 1] -
+            %           function that specified transparency
+            %           value for ellipsoidal tubes
+            %       fGetLineWidth: function_handle[1, 1] -
+            %           function that specified lineWidth for good curves 
+            %       fGetFill: function_handle[1, 1] - this
+            %           property not used in this version
+            %       colorFieldList: cell[nColorFields, ] of char[1, ] - 
+            %           list of parameters for color function
+            %       alphaFieldList: cell[nAlphaFields, ] of char[1, ] - 
+            %           list of parameters for transparency function
+            %       lineWidthFieldList: cell[nLineWidthFields, ] 
+            %           of char[1, ] - list of parameters for lineWidth 
+            %           function
+            %       fillFieldList: cell[nIsFillFields, ] of char[1, ] - 
+            %           list of parameters for fill function
+            %       plotSpecFieldList: cell[nPlotFields, ] of char[1, ] - 
+            %           defaul list of parameters. If for any function in
+            %           properties not specified list of parameters, 
+            %           this one will be used
+            %
             % Output:
             %   plObj: smartdb.disp.RelationDataPlotter[1,1] - plotter
             %           object used for displaying ellipsoidal tubes
             % 
-            % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2013-01-06 $
+            % $Author: 
+            % Peter Gagarinov  <pgagarinov@gmail.com> 	
+            % Artem Grachev <grachev.art@gmail.com> 
+            % $Date: May-2013$
             % $Copyright: Moscow State University,
-            %            Faculty of Computational Mathematics and Computer Science,
-            %            System Analysis Department 2011 $
+            %             Faculty of Computational Mathematics
+            %             and Computer Science, 
+            %             System Analysis Department 2013$
             %
             import gras.ellapx.smartdb.rels.EllTubeProjBasic;
             import modgen.logging.log4j.Log4jConfigurator;
-            import modgen.common.parseparext;
-            %
-            fGetPatchColorDefault=...
-                @(approxType)getPatchColorByApxType(self,approxType);
-            [reg,isRegSpec,fGetPatchColor]=parseparext(varargin,...
-                {'fGetTubeColor';fGetPatchColorDefault;'isfunction(x)'},...
-                [0 1],...
-                'regCheckList',...
-                {@(x)isa(x,'smartdb.disp.RelationDataPlotter')},...
-                'regDefList',cell(1,1));
+                                    
+            PLOT_FULL_FIELD_LIST =...
+                {'projType','timeVec','lsGoodDirOrigVec',...
+                'ltGoodDirMat','sTime','xTouchCurveMat',...
+                'xTouchOpCurveMat','ltGoodDirNormVec',...
+                'ltGoodDirNormOrigVec','approxType','QArray','aMat','MArray'};
+            
+            [plotPropProcObj, plObj] = gras.ellapx.smartdb...
+                .rels.EllTubeProjBasic.parceInput(PLOT_FULL_FIELD_LIST,...
+                varargin{:});
+            
             if self.getNTuples()>0
-                if ~isRegSpec
-                    plObj=smartdb.disp.RelationDataPlotter;
-                else
-                    plObj=reg{1};
-                end
                 %
                 fGetReachGroupKey=...
                     @(varargin)figureGetNamedGroupKeyFunc(self,...
@@ -248,8 +378,7 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                 fSetReachFigProp=@(varargin)figureNamedSetPropFunc(self,...
                     'reachTube',varargin{:});
                 fSetRegFigProp=@(varargin)figureNamedSetPropFunc(self,...
-                    'regTube',varargin{:});
-                
+                    'regTube',varargin{:});    
                 %
                 fGetTubeAxisKey=@(varargin)axesGetKeyTubeFunc(self,varargin{:});
                 fGetCurveAxisKey=@(varargin)axesGetKeyGoodCurveFunc(self,varargin{:});
@@ -260,11 +389,12 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                 fSetRegTubeAxisProp=@(varargin)axesSetPropRegTubeFunc(self,varargin{:});
                 %
                 fPlotReachTube=@(varargin)plotCreateReachTubeFunc(self,...
-                    fGetPatchColor,varargin{:});
+                    plotPropProcObj, varargin{:});
                 fPlotRegTube=@(varargin)plotCreateRegTubeFunc(self,varargin{:});
-                fPlotCurve=@(varargin)plotCreateGoodDirFunc(self,varargin{:});
+                fPlotCurve=@(varargin)plotCreateGoodDirFunc(self,...
+                    plotPropProcObj, varargin{:});
                 %
-                isEmptyRegVec=cellfun(@(x)all(x(:)==0),self.MArray);
+                isEmptyRegVec=cellfun(@(x)all(x(:) == 0), self.MArray);
                 
                 plotInternal(isEmptyRegVec,false);
                 plotInternal(~isEmptyRegVec,true);
@@ -278,17 +408,17 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                 else
                     rel=self.getTuples(isTupleVec);
                 end
-                fGetGroupKeyList={fGetReachGroupKey,fGetReachGroupKey};
-                fSetFigPropList={fSetReachFigProp,fSetReachFigProp};
-                fGetAxisKeyList={fGetTubeAxisKey,fGetCurveAxisKey};
-                fSetAxiPropList={fSetTubeAxisProp,fSetCurveAxisProp};
-                fPlotList={fPlotReachTube,fPlotCurve};
+                fGetGroupKeyList = {fGetReachGroupKey, fGetReachGroupKey};
+                fSetFigPropList = {fSetReachFigProp, fSetReachFigProp};
+                fGetAxisKeyList = {fGetTubeAxisKey, fGetCurveAxisKey};
+                fSetAxiPropList = {fSetTubeAxisProp, fSetCurveAxisProp};
+                fPlotList = {fPlotReachTube, fPlotCurve};
                 if isRegPlot
-                    fGetGroupKeyList=[fGetGroupKeyList,{fGetRegGroupKey}];
-                    fSetFigPropList=[fSetFigPropList,{fSetRegFigProp}];
-                    fGetAxisKeyList=[fGetAxisKeyList,{fGetTubeAxisKey}];
-                    fSetAxiPropList=[fSetAxiPropList,{fSetRegTubeAxisProp}];
-                    fPlotList=[fPlotList,{fPlotRegTube}];
+                    fGetGroupKeyList = [fGetGroupKeyList,{fGetRegGroupKey}];
+                    fSetFigPropList = [fSetFigPropList,{fSetRegFigProp}];
+                    fGetAxisKeyList = [fGetAxisKeyList,{fGetTubeAxisKey}];
+                    fSetAxiPropList = [fSetAxiPropList,{fSetRegTubeAxisProp}];
+                    fPlotList = [fPlotList, {fPlotRegTube}];
                 end
                 plObj.plotGeneric(rel,...
                     fGetGroupKeyList,...
@@ -304,7 +434,8 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                     'ltGoodDirMat','sTime','xTouchCurveMat',...
                     'xTouchOpCurveMat','ltGoodDirNormVec',...
                     'ltGoodDirNormOrigVec','approxType','QArray','aMat','MArray'});
-            end
+            end           
         end
     end
 end
+
