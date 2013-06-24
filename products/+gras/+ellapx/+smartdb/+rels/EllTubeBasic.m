@@ -453,9 +453,19 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             function [QArray, aMat, MArray,ltGoodDirMat,timeVec,sTime] =...
                     fInterpTuple(QArray, aMat, MArray,ltGoodDirMat,...
                     timeVec,sTime)
+                nDims=size(QArray,1);
+                nPoints=size(QArray,2);
+                %
+                QArray=gras.gen.SquareMatVector.evalMFunc(@...
+                    gras.la.sqrtmpos,QArray,'keepSize',true);
+                %
                 QArray = simpleInterp(QArray,'linear');
+                %
+                QArray=gras.gen.SquareMatVector.evalMFunc(@(x)x*x.',...
+                    QArray,'keepSize',true);
+                %
                 MArray = simpleInterp(MArray,'linear');
-                ltGoodDirMat = simpleInterp(ltGoodDirMat,'column');
+                ltGoodDirMat = squeeze(simpleInterp(reshape(ltGoodDirMat,[nDims,1,nPoints]),'linear'));
                 aMat = simpleInterp(aMat,'column');
                 timeVec=newTimeVec;
                 distVec=abs(sTime-newTimeVec);

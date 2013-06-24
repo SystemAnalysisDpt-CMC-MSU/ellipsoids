@@ -8,6 +8,36 @@ classdef SuiteEllTube < mlunitext.test_case
         function tear_down(~)
             close all;
         end
+        function testInterpConsistency(self)
+            nTubes=2;
+            nPoints=2;
+            nDims=2;
+            calcPrecision=0.001;
+            rel=create([1 2]);
+            rel.interp(1.5);
+            function rel = create(timeVec)
+                nPoints = numel(timeVec);
+                aMat=zeros(nDims,nPoints);
+                %
+                QArrayList{1}=cat(3,[0.01 0;0 0.01],...
+                    [1.1854712954712        0.0684536402222359;
+                    0.0684536402222359        0.0388340536467047]);
+                %
+                QArrayList{2}=cat(3,[0.01 0;0 0.01],...
+                    [1.40338301849471 0.100115465487981;
+                    0.100115465487981  0.0434344082928089]);
+                %
+                ltGoodDirMat=[0        -0.300544790642452;
+                         1          2.06849231658064];
+                ltGoodDirArray=repmat(...
+                    permute(ltGoodDirMat,[1 3 2]),[1,nTubes]);
+                %
+                rel = gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
+                    QArrayList,aMat,timeVec,ltGoodDirArray,timeVec(1),...
+                    gras.ellapx.enums.EApproxType.Internal,...
+                    char.empty(1,0),char.empty(1,0),calcPrecision);
+            end
+        end
         function testCutAndCat(~)
             nDims=2;
             nTubes=3;
