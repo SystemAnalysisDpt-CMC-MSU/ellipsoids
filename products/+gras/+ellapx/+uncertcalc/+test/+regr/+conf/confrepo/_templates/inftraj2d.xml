@@ -2,9 +2,9 @@
 <root version="19" xml_tb_version="2.0" type="struct" >
 <valueObj type="struct" >
 	<genericProps type="struct" >
-		<calcTimeLimVec type="double" >0 7.75</calcTimeLimVec>
-		<calcPrecision type="double" >0.000002</calcPrecision>
-		<isSplineForMatrixCalcUsed type="boolean" >0</isSplineForMatrixCalcUsed>
+		<calcTimeLimVec type="double" >0 7.8</calcTimeLimVec>
+		<calcPrecision type="double" >0.00001</calcPrecision>
+		<isSplineForMatrixCalcUsed type="boolean" >1</isSplineForMatrixCalcUsed>
 	</genericProps>
 	<projectionProps type="struct" >
 		<projSpaceSetName type="char" >set1</projSpaceSetName>
