@@ -2,7 +2,7 @@ classdef ContinuousReachRefineTestCase < mlunitext.test_case
     properties (Access = private, Constant)
         SIZE_LIST = {[2 2], [2 2 3], [0 0 1 0 1]};
         ARRAY_METHODS_LIST = {'dimension', 'iscut', 'isprojection',...
-            'isempty'};
+            'isEmpty'};
     end
     properties (Access=private)
         l0P1Mat

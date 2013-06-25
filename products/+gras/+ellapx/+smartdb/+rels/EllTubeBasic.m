@@ -454,29 +454,34 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     fInterpTuple(QArray, aMat, MArray,ltGoodDirMat,...
                     timeVec,sTime)
                 nDims=size(QArray,1);
-                nPoints=size(QArray,2);
+                nPoints=size(QArray,3);
                 %
-                QArray=gras.gen.SquareMatVector.evalMFunc(@...
-                    gras.la.sqrtmpos,QArray,'keepSize',true);
+                QArray = simpleInterp(QArray);
                 %
-                QArray = simpleInterp(QArray,'linear');
-                %
-                QArray=gras.gen.SquareMatVector.evalMFunc(@(x)x*x.',...
-                    QArray,'keepSize',true);
-                %
-                MArray = simpleInterp(MArray,'linear');
-                ltGoodDirMat = squeeze(simpleInterp(reshape(ltGoodDirMat,[nDims,1,nPoints]),'linear'));
-                aMat = simpleInterp(aMat,'column');
+                MArray = simpleInterp(MArray);
+                ltGoodDirMat = simpleInterp(ltGoodDirMat,true);
+                aMat = simpleInterp(aMat,true);
                 timeVec=newTimeVec;
                 distVec=abs(sTime-newTimeVec);
                 [~,indMin]=min(distVec);
                 sTime=newTimeVec(indMin);
-                function interpArray=simpleInterp(inpArray,interpType,...
-                        varargin)
-                    import gras.interp.MatrixInterpolantFactory;                    
+                %
+                function interpArray=simpleInterp(inpArray,isVector)
+                    import gras.interp.MatrixInterpolantFactory;        
+                    if nargin<2
+                        isVector=false;
+                    end
+                    if isVector
+                        nDims=size(inpArray,1);                        
+                        nPoints=size(inpArray,2);
+                        inpArray=reshape(inpArray,[nDims,1,nPoints]);
+                    end
                     splineObj=MatrixInterpolantFactory.createInstance(...
-                        interpType,inpArray,timeVec,varargin{:});
+                        'nearest',inpArray,timeVec);
                     interpArray=splineObj.evaluate(newTimeVec);
+                    if isVector
+                        interpArray=permute(interpArray,[1 3 2]);
+                    end
                 end
             end
         end

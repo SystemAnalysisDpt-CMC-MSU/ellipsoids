@@ -184,6 +184,7 @@ classdef SuiteBasic < mlunitext.test_case
             checkN('symm_column_triu');
             checkN('posdef_chol');
             check('linear');
+            check('nearest');
             dataArray=gras.gen.MatVector.triu(dataArray);
             check('column_triu');
             dataArray=rand(8,N_TIME_POINTS);

@@ -7,6 +7,8 @@ classdef MatrixInterpolantFactory
             switch lower(type)
                 case 'linear',
                     obj=gras.interp.MatrixLinearInterp(varargin{:});
+                case 'nearest',
+                    obj=gras.interp.MatrixNearestInterp(varargin{:});                    
                 case 'posdef_chol',
                     obj=gras.interp.PosDefMatCholCubicSpline(varargin{:});
                 case 'nndef_chol_mult',

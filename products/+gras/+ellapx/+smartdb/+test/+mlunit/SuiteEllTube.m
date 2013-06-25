@@ -767,7 +767,7 @@ classdef SuiteEllTube < mlunitext.test_case
         function self = testInterp(self)
             import gras.ellapx.enums.EApproxType;
             %
-            INTERP_TIME_VEC=[1,1.5,2,2.5,3];
+            INTERP_TIME_VEC=[1,1.6,2,2.3,3];
             [qMatArray, aMat, timeVec, sTime, lsGoodDirArray,...
                 approxSchemaDescr, approxSchemaName] = ...
                 self.getSimpleInputData();                
@@ -787,19 +787,19 @@ classdef SuiteEllTube < mlunitext.test_case
             interpEllTube = fromMat1EllTube.interp(INTERP_TIME_VEC);
             interpDoubleEllTube =...
                 fromMat1EllTubeDouble.interp(INTERP_TIME_VEC);
-            mlunitext.assert(all(interpEllTube.aMat{1}(:,2)==[4;5]));
+            mlunitext.assert(all(interpEllTube.aMat{1}(:,2)==[3;4]));
             mlunitext.assert(...
-                all(interpEllTube.aMat{1}(:,4)==[2;3]));
+                all(interpEllTube.aMat{1}(:,4)==[3;4]));
             mlunitext.assert(...
-                all(interpEllTube.QArray{1}(:,:,4)==[2,0;0,3]));
+                all(interpEllTube.QArray{1}(:,:,4)==[3,0;0,4]));
             mlunitext.assert(...
-                all(interpEllTube.QArray{1}(:,:,2)==[4,0;0,5]));
-            mlunitext.assert(all(interpDoubleEllTube.aMat{1}(:,2)==[4;5]));
-            mlunitext.assert(all(interpDoubleEllTube.aMat{2}(:,4)==[2;3]));
+                all(interpEllTube.QArray{1}(:,:,2)==[3,0;0,4]));
+            mlunitext.assert(all(interpDoubleEllTube.aMat{1}(:,2)==[3;4]));
+            mlunitext.assert(all(interpDoubleEllTube.aMat{2}(:,4)==[3;4]));
             mlunitext.assert(...
-                all(interpDoubleEllTube.QArray{1}(:,:,4)==[2,0;0,3]));
+                all(interpDoubleEllTube.QArray{1}(:,:,4)==[3,0;0,4]));
             mlunitext.assert(...
-                all(interpDoubleEllTube.QArray{2}(:,:,2)==[4,0;0,5]));
+                all(interpDoubleEllTube.QArray{2}(:,:,2)==[3,0;0,4]));
             %
             projSpaceList = {[1,0;0,1].'};
             projType=gras.ellapx.enums.EProjType.DynamicAlongGoodCurve;
@@ -838,6 +838,7 @@ classdef SuiteEllTube < mlunitext.test_case
             import gras.ellapx.smartdb.rels.EllUnionTube;
             import gras.ellapx.smartdb.rels.EllUnionTubeStaticProj;
             %
+            IS_LINEAR_INTERP=false;
             [qMatArray, aMat, timeVec, sTime, lsGoodDirArray,...
                 approxSchemaDescr, approxSchemaName] = ...
                 self.getSimpleInputData();
@@ -908,7 +909,11 @@ classdef SuiteEllTube < mlunitext.test_case
             interp2TimeVec = [1,1.5,3];
             interpSmallerEllTube = smallerMixedEllTube.interp(...
                 interp2TimeVec);
-            fCheckIsEqual(interpSmallerEllTube, mixedExtInt2EllTube);
+            %
+            if IS_LINEAR_INTERP
+                fCheckIsEqual(interpSmallerEllTube, mixedExtInt2EllTube);
+            end
+            %
             % different time vectors
             badTimeVec = [1,4];
             badTimedMixedEllTube = ...
@@ -918,8 +923,11 @@ classdef SuiteEllTube < mlunitext.test_case
                 [approx1Type,approx2Type,approx1Type]',...
                 approxSchemaName,...
                 approxSchemaDescr, CALC_PRECISION);
-            fCheckIsEqual(badTimedMixedEllTube, smallerMixedEllTube,...
-                CHECK_INEQUALITY);
+            %
+            if IS_LINEAR_INTERP
+                fCheckIsEqual(badTimedMixedEllTube, smallerMixedEllTube,...
+                    CHECK_INEQUALITY);
+            end
             % projection
             projSpaceList = {[1,0;0,1].'};
             projType=gras.ellapx.enums.EProjType.Static;
@@ -933,7 +941,9 @@ classdef SuiteEllTube < mlunitext.test_case
             fCheckIsEqual(projEllTube, proj2EllTube);
             proj2EllTube = interpSmallerEllTube.project(projType,...
                 projSpaceList, @fGetProjMat);
-            fCheckIsEqual(proj2EllTube, projEllTube);
+            if IS_LINEAR_INTERP
+                fCheckIsEqual(proj2EllTube, projEllTube);
+            end
             mlunitext.assert(isEqual, reportStr);
             % union
             unionEllTube = EllUnionTube.fromEllTubes(...
@@ -947,7 +957,9 @@ classdef SuiteEllTube < mlunitext.test_case
             unionProj2EllTube = ...
                 EllUnionTubeStaticProj.fromEllTubes(...
                 projEllTube);      
-            fCheckIsEqual(unionProjEllTube, unionProj2EllTube);
+            if IS_LINEAR_INTERP
+                fCheckIsEqual(unionProjEllTube, unionProj2EllTube);
+            end
             %
             function fCheckIsEqual(ellTube1, ellTube2, notEqual)
                 [isEqual, reportStr] = ellTube1.isEqual(...

@@ -908,7 +908,7 @@ classdef AReach < elltool.reach.IReach
         function display(self)
             import gras.ellapx.enums.EApproxType;
             fprintf('\n');
-            if self.isempty()
+            if self.isEmpty()
                 fprintf('Empty reach set object.\n\n');
                 return;
             end

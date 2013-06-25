@@ -357,18 +357,31 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                     ltGoodDirOrigMat,lsGoodDirOrigVec] = ...
                     fInterpTuple(ltGoodDirNormOrigVec,ltGoodDirOrigMat,...
                     projArray,timeVec,indSTime)
-                ltGoodDirOrigMat=simpleInterp(ltGoodDirOrigMat);
-                ltGoodDirNormOrigVec=simpleInterp(ltGoodDirNormOrigVec);
+                ltGoodDirOrigMat=simpleInterp(ltGoodDirOrigMat,true);
+                ltGoodDirNormOrigVec=interp1(timeVec,...
+                    ltGoodDirNormOrigVec,newTimeVec,'nearest','extrap');
                 projArray=simpleInterp(projArray);
                 %
                 lsGoodDirOrigVec=ltGoodDirOrigMat(:,indSTime);
                 lsGoodDirNormOrig=ltGoodDirNormOrigVec(indSTime);
                 projSTimeMat = projArray(:,:,indSTime);
-                function interpArray=simpleInterp(inpArray)
-                    import gras.interp.MatrixInterpolantFactory;
+                %
+                function interpArray=simpleInterp(inpArray,isVector)
+                    import gras.interp.MatrixInterpolantFactory;        
+                    if nargin<2
+                        isVector=false;
+                    end
+                    if isVector
+                        nDims=size(inpArray,1);                        
+                        nPoints=size(inpArray,2);
+                        inpArray=reshape(inpArray,[nDims,1,nPoints]);
+                    end
                     splineObj=MatrixInterpolantFactory.createInstance(...
-                        'column',inpArray,timeVec);
+                        'nearest',inpArray,timeVec);
                     interpArray=splineObj.evaluate(newTimeVec);
+                    if isVector
+                        interpArray=permute(interpArray,[1 3 2]);
+                    end
                 end
             end
         end
