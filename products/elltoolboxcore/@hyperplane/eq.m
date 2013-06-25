@@ -59,8 +59,11 @@ isnFirstScalar=nFirstElems > 1;
 isnSecScalar=nSecElems > 1;
 [~, relTol] = getAbsTol(fstHypArr);
 %
-SEll1Array = fstHypArr.toStruct();
-SEll2Array = secHypArr.toStruct();
+[SHp1Array, SFieldNiceNames] = fstHypArr.toStruct();
+SHp2Array = secHypArr.toStruct();
+
+SHp1Array = arrayfun(@formCompStruct, SHp1Array);
+SHp2Array = arrayfun(@formCompStruct, SHp2Array);
 %
 if isnFirstScalar&&isnSecScalar
     
@@ -71,17 +74,23 @@ if isnFirstScalar&&isnSecScalar
     compare();
     isPosArr = reshape(isPosArr, firstSizeVec);
 elseif isnFirstScalar
-    SEll2Array=repmat(SEll2Array, firstSizeVec);
+    SHp2Array=repmat(SHp2Array, firstSizeVec);
     compare();
     
     isPosArr = reshape(isPosArr, firstSizeVec);
 else
-    SEll1Array=repmat(SEll1Array, secSizeVec);
+    SHp1Array = repmat(SHp1Array, secSizeVec);
     compare();
     isPosArr = reshape(isPosArr, secSizeVec);
 end
+
     function compare()
-        [isPosArr,reportStr]=modgen.struct.structcomparevec(SEll1Array,...
-            SEll2Array,relTol);
+        [isPosArr,reportStr] = modgen.struct.structcomparevec(SHp1Array,...
+            SHp2Array,relTol);
+    end
+
+    function SComp = formCompStruct(SHp)
+        SComp.(SFieldNiceNames.normal) = SHp.normal;
+        SComp.(SFieldNiceNames.shift) = SHp.shift;
     end
 end
