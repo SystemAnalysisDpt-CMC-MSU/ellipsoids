@@ -47,7 +47,7 @@ classdef ContinuousReachTestCase < mlunitext.test_case
                 else
                     projReachObj = reachObj.getCopy();
                 end
-                plotter = projReachObj.plot_ea();
+                plotter = projReachObj.plotEa();
                 scaleFactor = reachObj.getEaScaleFactor();
             elseif approxType == EApproxType.Internal
                 ellArray = reachObj.get_ia();
@@ -57,7 +57,7 @@ classdef ContinuousReachTestCase < mlunitext.test_case
                 else
                     projReachObj = reachObj.getCopy();
                 end
-                plotter = projReachObj.plot_ia();
+                plotter = projReachObj.plotIa();
                 scaleFactor = reachObj.getIaScaleFactor();
             end
             [dirCVec timeVec] = reachObj.get_directions();
@@ -195,13 +195,13 @@ classdef ContinuousReachTestCase < mlunitext.test_case
         function self = testPlotEa(self)
             import gras.ellapx.enums.EApproxType;
             self.runPlotTest(EApproxType.External);
-            self.reachObj.plot_ea();
+            self.reachObj.plotEa();
         end
         %
         function self = testPlotIa(self)
             import gras.ellapx.enums.EApproxType;
             self.runPlotTest(EApproxType.Internal);
-            self.reachObj.plot_ia();
+            self.reachObj.plotIa();
         end
         %
         function self = testDimension(self)
@@ -310,8 +310,8 @@ classdef ContinuousReachTestCase < mlunitext.test_case
                 projReachSet =...
                     self.reachObj.projection(eye(dim, 3));
             end
-            self.runAndCheckError('projReachSet.plot_ea()', 'wrongInput');
-            self.runAndCheckError('projReachSet.plot_ia()', 'wrongInput');
+            self.runAndCheckError('projReachSet.plotEa()', 'wrongInput');
+            self.runAndCheckError('projReachSet.plotIa()', 'wrongInput');
         end
         %
         function self = testGetCopy(self)

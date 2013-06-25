@@ -72,19 +72,19 @@ DEFAULT_LINE_WIDTH = 1;
 DEFAULT_SHAD = 0.4;
 isObj = true;
 [reg,~,plObj,isNewFigure,isFill,lineWidth,colorVec,shadVec,priorHold,...
-    postHold, isTitle, isRelPlotterSpec,~,isIsFill,isLineWidth,...
+    postHold, isTitle, isLabel,isRelPlotterSpec,~,isIsFill,isLineWidth,...
     isColorVec,isShad,~,...
-    isPostHold,~]=...
+    isPostHold,~,~]=...
     modgen.common.parseparext(varargin,...
     {'relDataPlotter','newFigure','fill','lineWidth','color','shade',...
-    'priorHold','postHold','isTitle';...
-    [],0,[],[],[],0,false,false,false...
+    'priorHold','postHold','isTitle','isLabel';...
+    [],0,[],[],[],0,false,false,false,false...
     ;@(x)isa(x,'smartdb.disp.RelationDataPlotter'),...
     @(x)isa(x,'logical'),@(x)(isa(x,'logical')||isa(x,'double')),...
     @(x)isa(x,'double'),...
     @(x)isa(x,'double'),...
     @(x)isa(x,'double'), @(x)isa(x,'logical'),@(x)isa(x,'logical'),...
-    @(x)isa(x,'logical')});
+    @(x)isa(x,'logical'),@(x)isa(x,'logical')});
 checkIsWrongInput();
 
 if ~isRelPlotterSpec
@@ -150,7 +150,8 @@ if isObj
             @axesSetPropDoNothingFunc,{},...
             @plotCreateFillPlotFunc,...
             {'xCMat','faceCMat','clrVec','fill','shadVec', ...
-            'widVec','plotPatch','title'},'axesPostPlotFunc',postFun,...
+            'widVec','plotPatch','title','xlab','ylab'},...
+            'axesPostPlotFunc',postFun,...
             'isAutoHoldOn',false);
         
     elseif (nDim==3)
@@ -160,7 +161,8 @@ if isObj
             @axesSetPropDoNothingFunc,{},...
             @plotCreatePatchFunc,...
             {'verCMat','faceCMat','faceVertexCDataCMat',...
-            'shadVec','clrVec','plotPatch','title'},'axesPostPlotFunc',postFun,...
+            'shadVec','clrVec','plotPatch','title','xlab','ylab',...
+            'zlab'},'axesPostPlotFunc',postFun,...
             'isAutoHoldOn',false);
     end
 end
@@ -170,11 +172,27 @@ end
 
 
     function prepareForPlot()
-        if ~isTitle 
+        if ~(isTitle && isLabel) 
             [xCMat,fCMat] = calcBodyPoints(bodyArr);
             titl = '';
+            xlab  = '';
+            ylab = '';
+            zlab = '';
         else
-            [xCMat,fCMat,titl] = calcBodyPoints(bodyArr);
+            if ~isLabel
+                [xCMat,fCMat,titl] = calcBodyPoints(bodyArr);
+                xlab  = '';
+                ylab = '';
+                zlab = '';
+            else
+                if ~isTitle
+                    [xCMat,fCMat,xlab,ylab,zlab] = calcBodyPoints(bodyArr);
+                    titl = '';                    
+                else
+                    [xCMat,fCMat,titl,xlab,ylab,zlab]...
+                        = calcBodyPoints(bodyArr);
+                end
+            end
         end
         if numel(cell2mat(xCMat)) > 0
             
@@ -229,6 +247,9 @@ end
             SData.plotPatch = repmat({fPlotPatch},bodyPlotNum,1);
             SData.figureNumCMat = repmat({1},bodyPlotNum,1);
             SData.title = repmat({titl},bodyPlotNum,1);
+            SData.xlab = repmat({xlab},bodyPlotNum,1);
+            SData.ylab = repmat({ylab},bodyPlotNum,1);
+            SData.zlab = repmat({zlab},bodyPlotNum,1);
             SData.widVec = lineWidth.';
             SData.shadVec = shadVec.';
             SData.fill = (isFill)';
@@ -453,15 +474,17 @@ end
     end
 end
 function hVec=plotCreateFillPlotFunc(hAxes,X,faces,clrVec,isFill,...
-    shade,widVec,plotPatch,titl,varargin)
+    shade,widVec,plotPatch,titl,xlab,ylab,varargin)
 if ~isFill
     shade = 0;
 end
 h1 = plotPatch('Vertices',X','Faces',faces,'Parent',hAxes);
 set(h1, 'EdgeColor', clrVec, 'LineWidth', widVec,'FaceAlpha',shade,...
     'FaceColor',clrVec);
-hVec = h1;
 title(titl);
+xlabel(xlab);
+ylabel(ylab);
+hVec = h1;
 end
 function figureSetPropFunc(hFigure,figureName,~)
 set(hFigure,'Name',figureName);
@@ -481,7 +504,7 @@ function axesName=axesGetNameSurfFunc(name,~)
 axesName=name;
 end
 function hVec=plotCreatePatchFunc(hAxes,vertices,faces,...
-    faceVertexCData,faceAlpha,clrVec,plotPatch,titl)
+    faceVertexCData,faceAlpha,clrVec,plotPatch,titl,xlab,ylab,zlab)
 import modgen.graphics.camlight;
 LIGHT_TYPE_LIST={{'left'},{40,-65},{-20,25}};
 hVec = plotPatch('Vertices',vertices', 'Faces', faces, ...
@@ -496,4 +519,7 @@ lighting(hAxes,'phong');
 material(hAxes,'metal');
 view(hAxes,3);
 title(titl);
+xlabel(xlab);
+ylabel(ylab);
+zlabel(zlab);
 end

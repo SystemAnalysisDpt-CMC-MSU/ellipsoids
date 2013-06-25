@@ -74,11 +74,11 @@ classdef ReachPlotTestCase < mlunitext.test_case
         
         function testPlotIA(self)
             import gras.ellapx.enums.EApproxType;
-            checkPlot(self, 'plot_ia', EApproxType.Internal);
+            checkPlot(self, 'plotIa', EApproxType.Internal);
         end
         function testPlotEA(self)
             import gras.ellapx.enums.EApproxType;
-            checkPlot(self, 'plot_ea', EApproxType.External);
+            checkPlot(self, 'plotEa', EApproxType.External);
         end
         
         function checkPlot(self, namePlot, approxType)
