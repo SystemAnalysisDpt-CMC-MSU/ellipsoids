@@ -46,7 +46,7 @@ classdef SuiteRegression < mlunitext.test_case
         function testRegression(self)
             NOT_COMPARED_FIELD_LIST={'resDir','plotterObj'};
             MAX_TOL=1e-6;
-            MAX_REL_TOL=1e-6;
+            MAX_REL_TOL=2e-6;
             SSORT_KEYS.ellTubeProjRel={'projSTimeMat','projType',...
                 'sTime','lsGoodDirOrigVec'};
             SSORT_KEYS.ellTubeRel={'sTime','lsGoodDirVec'};
