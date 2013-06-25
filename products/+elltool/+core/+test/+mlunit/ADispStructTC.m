@@ -6,20 +6,24 @@ classdef ADispStructTC < mlunitext.test_case
     %            Faculty of Computational Mathematics
     %            and Computer Science,
     %            System Analysis Department 2013 $
-    methods (Abstract, Static, Access = public)
-        getToStructObj(iTest)
-        getToStructStruct(iTest)
-        getToStructIsPropIncluded(iTest)
-        getToStructResult(iTest)
-        getFromStructObj(iTest)
-        getFromStructStruct(iTest)
-        getFromStructResult(iTest)
-        getDisplayObj(iTest)
-        getDisplayStrings(iTest)
-        getDisplayResult(iTest)
-        getEqFstObj(iTest)
-        getEqSndObj(iTest)
-        getEqResult(iTest)
+    methods (Abstract, Static, Access = protected)
+        getToStructObj()
+        getToStructStruct()
+        getToStructIsPropIncluded()
+        getToStructResult()
+        getToStructTestNumber()
+        getFromStructObj()
+        getFromStructStruct()
+        getFromStructResult()
+        getFromStructTestNumber()
+        getDisplayObj()
+        getDisplayStrings()
+        getDisplayResult()
+        getDisplayTestNumber()
+        getEqFstObj()
+        getEqSndObj()
+        getEqResult()
+        getEqTestNumber()
     end
     methods (Access = public)
         function self = ADispStructTC(varargin)
@@ -54,35 +58,48 @@ classdef ADispStructTC < mlunitext.test_case
         end
         
         function self = testToStuct(self)
-            for iTest = 1 : 7
-                auxToStructTest(self, self.getToStructObj(iTest),...
-                    self.getToStructStruct(iTest),...
-                    self.getToStructIsPropIncluded(iTest),...
-                    self.getToStructResult(iTest));
+            objArrCVec = self.getToStructObj();
+            SArrCVec = self.getToStructStruct();
+            isPropCVec = self.getToStructIsPropIncluded();
+            isResultCVec = self.getToStructResult();
+            for iTest = 1 : self.getToStructTestNumber()
+                auxToStructTest(self, objArrCVec{iTest},...
+                    SArrCVec{iTest},...
+                    isPropCVec{iTest},...
+                    isResultCVec{iTest});
             end
         end
         
         function self = testFromStruct(self)
-            for iTest = 1 : 6
-                auxFromStructTest(self, self.getFromStructStruct(iTest),...
-                    self.getFromStructObj(iTest),...
-                    self.getFromStructResult(iTest));
+            SArrCVec = self.getFromStructStruct();
+            objArrCVec = self.getFromStructObj();
+            isResultCVec = self.getFromStructResult();
+            for iTest = 1 : self.getFromStructTestNumber()
+                auxFromStructTest(self, SArrCVec{iTest},...
+                    objArrCVec{iTest},...
+                    isResultCVec{iTest});
             end
         end
         
         function self = testDisplay(self)
-            for iTest = 1 : 6
-                auxDisplayTest(self, self.getDisplayObj(iTest),...
-                    self.getDisplayStrings(iTest),...
-                    self.getDisplayResult(iTest));
+            objArrCVec = self.getDisplayObj();
+            stringsCVec = self.getDisplayStrings();
+            isResultCVec = self.getDisplayResult();
+            for iTest = 1 : self.getDisplayTestNumber();
+                auxDisplayTest(self, objArrCVec{iTest},...
+                    stringsCVec{iTest},...
+                    isResultCVec{iTest});
             end
         end
         
         function self = testEq(self)
-            for iTest = 1 : 6
-                auxEqTest(self, self.getEqFstObj(iTest),...
-                    self.getEqSndObj(iTest),...
-                    self.getEqResult(iTest));
+            fstObjArrCVec = self.getEqFstObj();
+            sndObjArrCVec = self.getEqSndObj();
+            isResultCVec = self.getEqResult();
+            for iTest = 1 : self.getEqTestNumber();
+                auxEqTest(self, fstObjArrCVec{iTest},...
+                    sndObjArrCVec{iTest},...
+                    isResultCVec{iTest});
             end
         end
     end

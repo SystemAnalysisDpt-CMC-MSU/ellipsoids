@@ -6,202 +6,161 @@ classdef HyperplaneDispStructTC < elltool.core.test.mlunit.ADispStructTC
     %            Faculty of Computational Mathematics
     %            and Computer Science,
     %            System Analysis Department 2013 $
-    methods (Static)
-        function objArr = getToStructObj(iTest)
-            switch iTest
-                case 1
-                    objArr = hyperplane([1, 1, 2]', 3);
-                case 2
-                    objArr = hyperplane();
-                case 3
-                    objArr = hyperplane([1, 1, 2]', 3);
-                case 4
-                    objArr = hyperplane([1, 1, 2]', 3);
-                case 5
-                    objArr = hyperplane([1, 1, 2]', 2);
-                case 6
-                    objArr = hyperplane.fromRepMat(1, 1, [5 5 5]);
-                case 7
-                    objArr = hyperplane.fromRepMat(1, 1, [5 5 5]);
-                    objArr(1) = hyperplane();
+    methods (Access = protected, Static)
+        
+        function objArrCVec = getToStructObj()
+            objArrCVec = {hyperplane([1, 1, 2]', 3),...
+                hyperplane(),...
+                hyperplane([1, 1, 2]', 3),...
+                hyperplane([1, 1, 2]', 3),...
+                hyperplane([1, 1, 2]', 2),...
+                hyperplane.fromRepMat(1, 1, [5 5 5]),...
+                hyperplane.fromRepMat(1, 1, [5 5 5])};
+            objArrCVec{7}(1) = hyperplane();
+        end
+        
+        function SArrCVec = getToStructStruct()
+            SArrCVec = {struct('normal', [1, 1, 2]', 'shift', 3),...
+                struct('normal', [], 'shift', []),...
+                struct('normal', [], 'shift', []),...
+                struct('normal', [1, 1, 2]', 'shift',...
+                3, 'absTol', 1e-7),...
+                struct('normal', [1, 1, 2]', 'shift', ...
+                3, 'absTol', 1e-7),...
+                struct('normal', num2cell(ones(5, 5, 5)), ...
+                'shift', num2cell(ones(5, 5, 5))),...
+                struct('normal', num2cell(ones(5, 5, 5)), ...
+                'shift', num2cell(ones(5, 5, 5)))};
+            SArrCVec{1} = normalize(SArrCVec{1});
+            SArrCVec{4} = normalize(SArrCVec{4});
+            SArrCVec{5} = normalize(SArrCVec{5});
+            
+            function SHpNormalized = normalize(SHp)
+                SHpNormalized = SHp;
+                SHpNormalized.shift = ...
+                    SHpNormalized.shift/norm(SHpNormalized.normal);
+                SHpNormalized.normal =...
+                    SHpNormalized.normal/norm(SHpNormalized.normal);
             end
         end
         
-        function SArr = getToStructStruct(iTest)
-            switch iTest
-                case 1
-                    SArr = struct('normal', [1, 1, 2]', 'shift', 3);
-                    SArr.shift = SArr.shift/norm(SArr.normal);
-                    SArr.normal = SArr.normal/norm(SArr.normal);
-                case 2
-                    SArr = struct('normal', [], 'shift', []);
-                case 3
-                    SArr = struct('normal', [], 'shift', []);
-                case 4
-                    SArr = struct('normal', [1, 1, 2]', 'shift',...
-                        3, 'absTol', 1e-7);
-                    SArr.shift = SArr.shift/norm(SArr.normal);
-                    SArr.normal = SArr.normal/norm(SArr.normal);
-                case 5
-                    SArr = struct('normal', [1, 1, 2]', 'shift', ...
-                        3, 'absTol', 1e-7);
-                    SArr.shift = SArr.shift/norm(SArr.normal);
-                    SArr.normal = SArr.normal/norm(SArr.normal);
-                case 6
-                    SArr = struct('normal', num2cell(ones(5, 5, 5)), ...
-                        'shift', num2cell(ones(5, 5, 5)));
-                case 7
-                    SArr = struct('normal', num2cell(ones(5, 5, 5)), ...
-                        'shift', num2cell(ones(5, 5, 5)));
-            end
+        function isPropsCVec = getToStructIsPropIncluded()
+            isPropsCVec = {false, false, false, true,...
+                false, false, false};
         end
         
-        function isProps = getToStructIsPropIncluded(iTest)
-            isProps = iTest == 4;
+        function isResultCVec = getToStructResult()
+            isResultCVec = {true, true, false, true, false, true, false};
         end
         
-        function result = getToStructResult(iTest)
-            falseAnswers = [3, 5, 7];
-            result = isempty(find(falseAnswers == iTest, 1));
+        function testNumber = getToStructTestNumber()
+            testNumber = 7;
         end
         
-        function objArr = getFromStructObj(iTest)
-            switch iTest
-                case 1
-                    objArr = hyperplane([1, 2]', 3);
-                case 2
-                    objArr = hyperplane([1, 2]', 3);
-                case 3
-                    objArr = hyperplane();
-                case 4
-                    objArr = hyperplane([1, 2]', 3);
-                case 5
-                    objArr = hyperplane.fromRepMat(1, 1, [5 5 5]);
-                case 6
-                    objArr = hyperplane.fromRepMat(1, 1, [5 5 5]);
-                    objArr(1) = hyperplane();
-            end
+        function objArrCVec = getFromStructObj()
+            objArrCVec = {hyperplane([1, 2]', 3),...
+                hyperplane([1, 2]', 3),...
+                hyperplane(),...
+                hyperplane([1, 2]', 3),...
+                hyperplane.fromRepMat(1, 1, [5 5 5]),...
+                hyperplane.fromRepMat(1, 1, [5 5 5])};
+            objArrCVec{6}(1) = hyperplane();
         end
         
-        function SArr = getFromStructStruct(iTest)
-            switch iTest
-                case 1
-                    SArr = struct('normal', [1, 2]', 'shift', 3);
-                case 2
-                    SArr = struct('normal', [1, 2]', 'shift', 3);
-                case 3
-                    SArr = struct('normal', [1, 2]', 'shift', 3,...
-                        'absTol', 1e-5);
-                case 4
-                    SArr = struct('normal', [1, 2]', 'shift', 3,...
-                        'absTol', 1e-5);
-                case 5
-                    SArr = struct('normal', num2cell(ones(5, 5, 5)), ...
-                        'shift', num2cell(ones(5, 5, 5)));
-                case 6
-                    SArr = struct('normal', num2cell(ones(5, 5, 5)), ...
-                        'shift', num2cell(ones(5, 5, 5)));
-            end
+        function SArrCVec = getFromStructStruct()
+            SArrCVec = {struct('normal', [1, 2]', 'shift', 3),...
+                struct('normal', [1, 2]', 'shift', 3),...
+                struct('normal', [1, 2]', 'shift', 3,...
+                'absTol', 1e-5),...
+                struct('normal', [1, 2]', 'shift', 3,...
+                'absTol', 1e-5),...
+                struct('normal', num2cell(ones(5, 5, 5)), ...
+                'shift', num2cell(ones(5, 5, 5))),...
+                struct('normal', num2cell(ones(5, 5, 5)), ...
+                'shift', num2cell(ones(5, 5, 5)))};
         end
         
-        function result = getFromStructResult(iTest)
-            falseAnswers = [3, 4, 6];
-            result = isempty(find(falseAnswers == iTest, 1));
+        function isResultCVec = getFromStructResult()
+            isResultCVec = {true, true, false, false, true, false};
         end
         
-        function objArr = getDisplayObj(iTest)
-            switch iTest
-                case 1
-                    objArr = hyperplane([1, 2]', 3);
-                case 2
-                    objArr = hyperplane();
-                case 3
-                    objArr = hyperplane([1, 1]', 3);
-                case 4
-                    objArr = hyperplane.fromStruct(struct('normal',...
-                        num2cell(ones(5, 5, 5)), ...
-                        'shift', num2cell(ones(5, 5, 5))));
-                case 5
-                    objArr = hyperplane([1, 2]', 3);
-                    objArr = [objArr objArr];
-                case 6
-                    objArr = ellipsoid();
-            end
+        function testNumber = getFromStructTestNumber()
+            testNumber = 6;
         end
         
-        function stringsCVec = getDisplayStrings(iTest)
+        function objArrCVec = getDisplayObj()
+            objArrCVec = {hyperplane([1, 2]', 3),...
+                hyperplane(),...
+                hyperplane([1, 1]', 3),...
+                hyperplane.fromStruct(struct('normal',...
+                num2cell(ones(5, 5, 5)), ...
+                'shift', num2cell(ones(5, 5, 5)))),...
+                hyperplane([1, 2]', 3),...
+                ellipsoid()};
+            objArrCVec{5} = [objArrCVec{5} objArrCVec{5}];
+        end
+        
+        function stringsCVec = getDisplayStrings()
             stringsCVec = {'hyperplane object', ...
                 'Properties',...
                 'shift',...
                 'normal',...
                 'Hyperplane shift'};
-            if (iTest > 4)
-                stringsCVec = horzcat(stringsCVec, 'ObjArr(1)');
-            end
+            stringsCVec = repmat({stringsCVec}, 1, 6);
+            stringsCVec{5} = horzcat(stringsCVec{5}, 'ObjArr(1)');
         end
         
-        function result = getDisplayResult(iTest)
-            result = iTest ~= 6;
+        function isResultCVec = getDisplayResult()
+            isResultCVec = {true, true, true, true, true, false};
         end
         
-        function objArr = getEqFstObj(iTest)
-            switch iTest
-                case 1
-                    objArr = hyperplane([1, 2]', 3);
-                case 2
-                    objArr = hyperplane();
-                case 3
-                    objArr = hyperplane([1, 1]', 3);
-                case 4
-                    objArr = hyperplane([1, 2]', 3);
-                case 5
-                    objArr = hyperplane([1, 2]', 3);
-                case 6
-                    objArr = hyperplane.fromStruct(struct('normal',...
-                        num2cell(ones(5, 5, 5)), ...
-                        'shift', num2cell(ones(5, 5, 5))));
-                case 7
-                    objArr = hyperplane.fromStruct(struct('normal',...
-                        num2cell(ones(5, 5, 5)), ...
-                        'shift', num2cell(ones(5, 5, 5))));
-                case 8
-                    objArr = hyperplane([1, 2]', 3);
-                    objArr = [objArr objArr];
-            end
+        function testNumber = getDisplayTestNumber()
+            testNumber = 6;
         end
         
-        function objArr = getEqSndObj(iTest)
-            switch iTest
-                case 1
-                    objArr = hyperplane([1, 2]', 3);
-                case 2
-                    objArr = hyperplane();
-                case 3
-                    objArr = hyperplane([1, 1]', 3);
-                case 4
-                    objArr = hyperplane([1, 1]', 3);
-                case 5
-                    objArr = hyperplane();
-                case 6
-                    objArr = hyperplane.fromStruct(struct('normal',...
-                        num2cell(ones(5, 5, 5)), ...
-                        'shift', num2cell(ones(5, 5, 5))));
-                case 7
-                    objArr = hyperplane.fromStruct(struct('normal',...
-                        num2cell(ones(5, 5, 5)), ...
-                        'shift', num2cell(ones(5, 5, 5))));
-                    objArr(1) = hyperplane();
-                case 8
-                    objArr = hyperplane([1, 2]', 3);
-                    objArr = [objArr objArr];
-            end
+        function objArrCVec = getEqFstObj()
+            objArrCVec = {hyperplane([1, 2]', 3),...
+                hyperplane(),...
+                hyperplane([1, 1]', 3),...
+                hyperplane([1, 2]', 3),...
+                hyperplane([1, 2]', 3),...
+                hyperplane.fromStruct(struct('normal',...
+                num2cell(ones(5, 5, 5)), ...
+                'shift', num2cell(ones(5, 5, 5)))),...
+                hyperplane.fromStruct(struct('normal',...
+                num2cell(ones(5, 5, 5)), ...
+                'shift', num2cell(ones(5, 5, 5)))),...
+                hyperplane([1, 2]', 3)};
+            objArrCVec{8} = [objArrCVec{8} objArrCVec{8}];
         end
         
-        function result = getEqResult(iTest)
-            falseAnswers = [4, 5, 7];
-            result = isempty(find(falseAnswers == iTest, 1));
+        function objArrCVec = getEqSndObj()
+            objArrCVec = {hyperplane([1, 2]', 3),...
+                hyperplane(),...
+                hyperplane([1, 1]', 3),...
+                hyperplane([1, 1]', 3),...
+                hyperplane(),...
+                hyperplane.fromStruct(struct('normal',...
+                num2cell(ones(5, 5, 5)), ...
+                'shift', num2cell(ones(5, 5, 5)))),...
+                hyperplane.fromStruct(struct('normal',...
+                num2cell(ones(5, 5, 5)), ...
+                'shift', num2cell(ones(5, 5, 5)))),...
+                hyperplane([1, 2]', 3)};
+            objArrCVec{7}(1) = hyperplane();
+            objArrCVec{8} = [objArrCVec{8} objArrCVec{8}];
         end
         
+        function isResultCVec = getEqResult()
+            isResultCVec = {true, true, true, false, false, true, false, true};
+        end
+        
+        function testNumber = getEqTestNumber()
+            testNumber = 8;
+        end
+    end
+    
+    methods (Access = public)
         function self = HyperplaneDispStructTC(varargin)
             self = self@elltool.core.test.mlunit.ADispStructTC(varargin{:});
         end
