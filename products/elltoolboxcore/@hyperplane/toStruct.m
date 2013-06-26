@@ -55,8 +55,8 @@ else
         hpNormVec = -hpNormVec;
     end
     SHp = struct('normal', hpNormVec, 'shift', hpScal);
+end
     if (isPropIncluded)
         SHp.absTol = hpObj.absTol;
     end
-end
 end

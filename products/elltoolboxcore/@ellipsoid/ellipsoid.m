@@ -1,4 +1,4 @@
-classdef ellipsoid < handle
+classdef ellipsoid < elltool.core.AuxGenEllipsoid
     %ELLIPSOID class of ellipsoids
     properties (Access=private,Hidden)
         centerVec

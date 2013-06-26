@@ -1,4 +1,4 @@
-function [isPosArr reportStr] = eq(fstHypArr, secHypArr)
+function isEqualArr = eq(fstHypArr, secHypArr, varargin)
 %
 % EQ - check if two hyperplanes are the same.
 %
@@ -8,14 +8,15 @@ function [isPosArr reportStr] = eq(fstHypArr, secHypArr)
 %           first array of hyperplanes.
 %       secHypArr: hyperplane [nDims1, nDims2, ...]/hyperplane [1, 1] -
 %           second array of hyperplanes.
-%
+%   optional:
+%       maxTol: double[1,1] - maximum tolerance, used
+%           intstead of ellFirstArr.getRelTol()
 % Output:
-%   isPosArr: logical[nDims1, nDims2, ...] - true -
+%   isEqualArr: logical[nDims1, nDims2, ...] - true -
 %       if fstHypArr(iDim1, iDim2, ...) == secHypArr(iDim1, iDim2, ...),
 %       false - otherwise. If size of fstHypArr is [1, 1], then checks
 %       if fstHypArr == secHypArr(iDim1, iDim2, ...)
 %       for all iDim1, iDim2, ... , and vice versa.
-%   reportStr: char[1,] - comparison report
 %
 % Example:
 %   firstHypObj = hyperplane([-1; 1]);
@@ -27,70 +28,13 @@ function [isPosArr reportStr] = eq(fstHypArr, secHypArr)
 %
 %        0     1     0
 %
-% $Author: Vadim Kaushansky  <vkaushanskiy@gmail.com> $
-% $Date: Nov-2012$
-% $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Computer Science,
-%            System Analysis Department 2012 $
 %
-% $Authors:
-%   Peter Gagarinov  <pgagarinov@gmail.com> $
-%   $Date: Dec-2012$
-%   Aushkap Nikolay <n.aushkap@gmail.com> $
-%   $Date: Dec-2012$
-% $Copyright: Moscow State University,
-%             Faculty of Computational Mathematics
-%             and Computer Science,
-%             System Analysis Department 2012 $
+%$Author: Alexander Karev <Alexander.Karev.30@gmail.com> $
+%$Date: 2013-06$
+%$Copyright: Moscow State University,
+%            Faculty of Computational Mathematics
+%            and Computer Science,
+%            System Analysis Department 2013 $
 
-import modgen.common.throwerror;
-import modgen.struct.structcomparevec;
-import elltool.conf.Properties;
-%
-hyperplane.checkIsMe(fstHypArr);
-hyperplane.checkIsMe(secHypArr);
-%
-nFirstElems = numel(fstHypArr);
-nSecElems = numel(secHypArr);
-
-firstSizeVec = size(fstHypArr);
-secSizeVec = size(secHypArr);
-isnFirstScalar=nFirstElems > 1;
-isnSecScalar=nSecElems > 1;
-[~, relTol] = getAbsTol(fstHypArr);
-%
-[SHp1Array, SFieldNiceNames] = fstHypArr.toStruct();
-SHp2Array = secHypArr.toStruct();
-
-SHp1Array = arrayfun(@formCompStruct, SHp1Array);
-SHp2Array = arrayfun(@formCompStruct, SHp2Array);
-%
-if isnFirstScalar&&isnSecScalar
-    
-    if ~isequal(firstSizeVec, secSizeVec)
-        throwerror('wrongSizes',...
-            'sizes of hyperplane arrays do not... match');
-    end;
-    compare();
-    isPosArr = reshape(isPosArr, firstSizeVec);
-elseif isnFirstScalar
-    SHp2Array=repmat(SHp2Array, firstSizeVec);
-    compare();
-    
-    isPosArr = reshape(isPosArr, firstSizeVec);
-else
-    SHp1Array = repmat(SHp1Array, secSizeVec);
-    compare();
-    isPosArr = reshape(isPosArr, secSizeVec);
-end
-
-    function compare()
-        [isPosArr,reportStr] = modgen.struct.structcomparevec(SHp1Array,...
-            SHp2Array,relTol);
-    end
-
-    function SComp = formCompStruct(SHp)
-        SComp.(SFieldNiceNames.normal) = SHp.normal;
-        SComp.(SFieldNiceNames.shift) = SHp.shift;
-    end
+[isEqualArr, ~] = fstHypArr.isEqual(secHypArr);
 end
