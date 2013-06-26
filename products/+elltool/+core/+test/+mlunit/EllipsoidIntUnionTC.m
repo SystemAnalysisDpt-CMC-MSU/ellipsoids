@@ -138,17 +138,19 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             test2Mat = test2SqrtMat*test2SqrtMat.';
             [isEq, reportStr] = eq(ellipsoid(test1Mat), ellipsoid(test2Mat));
             mlunitext.assert_equals(false, isEq);
-            mlunitext.assert_equals('(1).Q-->Max. difference (1.010000e-05) is greater than the specified tolerance(1.000000e-05)',...
-                reportStr);
-            
+            ansStr = ...
+                '\(1).Q-->.*\(1.010000e\-05).*tolerance.\(1.000000e\-05)';
+            checkRep();
+            %            
             test1Mat = eye(2);
             test2SqrtMat = eye(2) + 0.5*MAX_TOL;
             test2Mat = test2SqrtMat*test2SqrtMat.';
             [isEq, reportStr] = eq(ellipsoid(test1Mat),...
                 ellipsoid(test2Mat));
             mlunitext.assert_equals(true, isEq);
-            mlunitext.assert_equals('', reportStr);
-            
+            ansStr = '';
+            checkRep();
+            %
             test1Mat = eye(2);
             test2SqrtMat = eye(2) + MAX_TOL;
             test2Mat = test2SqrtMat*test2SqrtMat.';
@@ -156,7 +158,16 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
                 ellipsoid(test2Mat));
             mlunitext.assert_equals(false, isEq);
             mlunitext.assert_equals(false, isEq);
-            mlunitext.assert_equals(reportStr, '(1).Q-->Max. difference (1.000000e-05) is greater than the specified tolerance(1.000000e-05)');
+            ansStr = ...
+                '\(1).Q-->.*\(1.000000e\-05).*tolerance.\(1.000000e\-05)';
+            checkRep();
+            function checkRep()
+                isRepEq = isequal(reportStr, ansStr);
+                if ~isRepEq
+                    isRepEq = ~isempty(regexp(reportStr, ansStr, 'once'));
+                end
+                mlunitext.assert_equals(isRepEq, true);
+            end
         end
         
         function testIsInternalCenter(~)

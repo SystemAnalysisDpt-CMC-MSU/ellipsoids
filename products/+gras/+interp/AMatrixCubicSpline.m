@@ -93,25 +93,29 @@ classdef AMatrixCubicSpline<gras.mat.IMatrixFunction
         function [mSizeVec,nDims,nRows,nCols]=getSizeProps(dataArray)
             dSizeVec=size(dataArray);
             mSizeVec=dSizeVec(1:end-1);
-            nDims=length(mSizeVec);
+            mSizeLen=length(mSizeVec);
+            nDims=2-(any(mSizeVec == 1) || (mSizeLen < 2));
             nRows=mSizeVec(1);
-            if nDims==2
+            if mSizeLen == 2
                 nCols=mSizeVec(2);
             else
                 nCols=1;
+                mSizeVec = cat(2, mSizeVec, 1);
             end
         end
     end
     methods (Access=protected)
         function initialize(self,ppFormList,mSizeVec,timeVec)
-            nDims=length(mSizeVec);
+            mSizeLen=length(mSizeVec);
+            nDims=2-(any(mSizeVec == 1) || (mSizeLen < 2));
             nRows=mSizeVec(1);
             nTimePoints=length(timeVec);
             %
-            if nDims==2
+            if mSizeLen == 2
                 nCols=mSizeVec(2);
             else
                 nCols=1;
+                mSizeVec = cat(2, mSizeVec, 1);
             end
             self.nRows=nRows;
             self.nCols=nCols;

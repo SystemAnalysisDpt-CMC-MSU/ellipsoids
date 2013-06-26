@@ -13,6 +13,8 @@ classdef MatrixInterpolantFactory
                     obj=gras.interp.MatrixColCubicSpline(varargin{:});
                 case 'row',
                     obj=gras.interp.MatrixRowCubicSpline(varargin{:});
+                case 'scalar'
+                    obj=gras.interp.MatrixScalarCubicSpline(varargin{:});
                 case 'column_triu'
                     obj=gras.interp.MatrixColTriuCubicSpline(varargin{:});
                 case 'symm_column_triu',
