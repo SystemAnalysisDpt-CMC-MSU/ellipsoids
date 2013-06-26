@@ -5,8 +5,7 @@ classdef AReachProblemLTIDynamics<...
             %
             import modgen.cell.cellstr2func;
             import gras.gen.MatVector;
-            import gras.mat.fcnlib.ConstMatrixFunction;
-            import gras.mat.fcnlib.ConstColFunction;
+            import gras.mat.ConstMatrixFunctionFactory;
             import gras.mat.MatrixOperationsFactory;
             %
             % call superclass constructor
@@ -24,10 +23,13 @@ classdef AReachProblemLTIDynamics<...
             %
             % compute A(t), B(t)p(t) and B(t)P(t)B'(t) dynamics
             %
-            self.AtDynamics = ConstMatrixFunction(AMat);
-            self.BptDynamics = ConstColFunction(BMat*pVec);
+            self.AtDynamics = ...
+                ConstMatrixFunctionFactory.createInstance(AMat);
+            self.BptDynamics = ...
+                ConstMatrixFunctionFactory.createInstance(BMat*pVec);
             self.BPBTransDynamics = ...
-                ConstMatrixFunction(BMat*PMat*(BMat.'));
+                ConstMatrixFunctionFactory.createInstance(...
+                BMat*PMat*(BMat.'));
         end
     end
 end

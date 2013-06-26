@@ -8,16 +8,21 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
         FCODE_M_ARRAY
     end
     methods (Static, Access=protected,Sealed)
-        function [xTouchMat,xTouchOpMat]=calcTouchCurves(QArray,aMat,...
-                ltGoodDirMat)
-            import gras.ellapx.common.*;
+        function [xTouchMat,xTouchOpMat]=calcTouchCurves(QArray, ...
+                aMat, ltGoodDirMat)
             import gras.gen.SquareMatVector;
-            Qsize=size(QArray);
-            tmp=SquareMatVector.rMultiplyByVec(QArray,ltGoodDirMat);
-            denominator=realsqrt(abs(sum(tmp.*ltGoodDirMat)));
-            temp=tmp./denominator(ones(1,Qsize(2)),:);
-            xTouchOpMat=aMat-temp;
-            xTouchMat=aMat+temp;
+            %
+            centRegCurve = calcCentCurve(...
+                @SquareMatVector.rMultiplyByVec);
+            %
+            xTouchOpMat= aMat - centRegCurve;
+            xTouchMat= aMat + centRegCurve;
+            function curveMat = calcCentCurve(rMulByVecOp)
+                tempVec = rMulByVecOp(QArray, ltGoodDirMat);
+                denomVec = realsqrt(abs(dot(ltGoodDirMat, tempVec, 1)));
+                curveMat = tempVec ./ denomVec(...
+                    ones(1, size(QArray, 2)), :);
+            end
         end
         %
         function STubeData=scaleTubeData(STubeData,scaleFactorVec)
@@ -139,8 +144,8 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
         function dependencyFieldList=getTouchCurveDependencyFieldList(~)
             dependencyFieldList={'sTime','lsGoodDirVec','MArray'};
         end
-        function checkTouchCurveVsQNormArray(~,tubeRel,curveRel,...
-                fTolFunc,checkName,fFilterFunc)
+        function checkTouchCurveVsQNormArray(self,tubeRel,curveRel,...
+                fDistFunc,checkName,fFilterFunc)
             nTubes=tubeRel.getNTuples();
             nCurves=curveRel.getNTuples();
             QArrayList=tubeRel.QArray;
@@ -174,16 +179,27 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             end
             function checkNorm(QArray,aMat,xTouchCurveMat,...
                     calcPrecision,fieldName)
+                import gras.gen.SymmetricMatVector
                 import modgen.common.throwerror;
-                normVec=gras.gen.SquareMatVector.lrDivideVec(...
-                    QArray,xTouchCurveMat-aMat);
-                actualPrecision=max(fTolFunc(normVec));
-                isOk=actualPrecision<=calcPrecision;
+                %
+                actualRegPrecision = checkPrecision(...
+                    @SymmetricMatVector.lrDivideVec);
+                actualSvdPrecision = checkPrecision(...
+                    @SymmetricMatVector.lrSvdDivideVec);
+                actualPrecision = min([actualSvdPrecision, ...
+                    actualRegPrecision]);
+                %
+                isOk = (actualPrecision <= calcPrecision);
                 if ~isOk
                     throwerror('wrongInput:touchLineValueFunc',...
                         ['check [%s] has failed for %s, ',...
-                        'expected precision=%d, actual precision=%d'],...
-                        checkName,fieldName,calcPrecision,actualPrecision);
+                        'expected precision=%d, actual precision=%d'], ...
+                        checkName, fieldName, calcPrecision, ...
+                        actualPrecision);
+                end
+                function normVal = checkPrecision(lrDivByVecOp)
+                    normVec = lrDivByVecOp(QArray, xTouchCurveMat - aMat);
+                    normVal = max(fDistFunc(normVec));
                 end
             end
         end
@@ -246,13 +262,13 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             %
             intRel=fullRel.getTuplesFilteredBy('approxType',EApproxType.Internal);
             self.checkTouchCurveVsQNormArray(intRel,fullRel,...
-                @(x)max(1-x),...
+                @(x)1-x,...
                 'any touch line is always outside any internal approx',...
                 @(x,y)true);
             %
             extRel=fullRel.getTuplesFilteredBy('approxType',EApproxType.External);
             self.checkTouchCurveVsQNormArray(extRel,fullRel,...
-                @(x)max(x-1),...
+                @(x)x-1,...
                 'any touch line is always within any external approx',...
                 @(x,y)true);
             %

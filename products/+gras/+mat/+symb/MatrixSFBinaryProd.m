@@ -42,15 +42,21 @@ classdef MatrixSFBinaryProd<gras.mat.IMatrixFunction
                 self.nRows=0;
                 self.mSizeVec=[0,0];
             else
-                checkgenext(['iscellofstring(x1)&&ndims(x1)==2&&',...
-                    'iscellofstring(x2)&&ndims(x2)==2&&',...
-                    'size(x1,2)==size(x2,1)'],...
+                size1Vec = size(formula1CMat);
+                size2Vec = size(formula2CMat);
+                checkgenext('iscellofstring(x1)&&iscellofstring(x2)',...
                     2,formula1CMat,formula2CMat);
+                checkgenext(['(x1(1)==1&&x1(2)==1)||(x2(1)==1&&x2(2)==1)',...
+                    '||(x1(2)==x2(1))'], 2, size1Vec, size2Vec);
                 %
-                sizeVec=[size(formula1CMat,1),size(formula2CMat,2)];
-                self.nDims=length(sizeVec);
-                self.nCols=sizeVec(1);
-                self.nRows=sizeVec(2);
+                if ~(all(size1Vec == 1) || all(size2Vec == 1))
+                    sizeVec=[size1Vec(1), size2Vec(2)];
+                else
+                    sizeVec = max(size1Vec, size2Vec);
+                end
+                self.nDims=2-any(sizeVec == 1);
+                self.nRows=sizeVec(1);
+                self.nCols=sizeVec(2);
                 self.mSizeVec=sizeVec;
                 self.formula1Func=cellstr2func(formula1CMat,'t');
                 self.formula2Func=cellstr2func(formula2CMat,'t');
