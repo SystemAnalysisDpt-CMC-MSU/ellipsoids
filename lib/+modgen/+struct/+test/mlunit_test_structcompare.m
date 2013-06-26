@@ -117,7 +117,7 @@ classdef mlunit_test_structcompare < mlunitext.test_case
         function self = test_complex1_negative(self)
             [isEqual,reportStr]=modgen.struct.structcompare(self.SXComp,self.SYComp,0);
             mlunitext.assert_equals(isEqual,false);
-            mlunitext.assert_equals(numel(findstr(sprintf('\n'),reportStr)),5);
+            mlunitext.assert_equals(numel(strfind(reportStr,sprintf('\n'))),5);
         end
         function self = test_optional_tolerance_arg(self)
             [isEqual,reportStr]=modgen.struct.structcompare(self.SXComp,self.SYComp,0);
@@ -130,15 +130,15 @@ classdef mlunit_test_structcompare < mlunitext.test_case
             S2=struct('a',2,'b',repmat([1 nan 2],2,1));
             [isEqual,reportStr]=modgen.struct.structcompare(S1,S2,0.1);
             mlunitext.assert_equals(isEqual,false);
-            mlunitext.assert_equals(2,numel(findstr('Max. difference',reportStr)));
+            mlunitext.assert_equals(2,numel(strfind(reportStr,'Max.')));
         end
         function self = test_differentsize_negative(self)
             S1=struct('a',1,'b',repmat([2 nan 3 3],2,1));
             S2=struct('a',2,'b',repmat([1 nan 2],2,1));
             [isEqual,reportStr]=modgen.struct.structcompare(S1,S2,0.1);
             mlunitext.assert_equals(isEqual,false);
-            mlunitext.assert_equals(1,numel(findstr('Max. difference',reportStr)));
-            mlunitext.assert_equals(1,numel(findstr('Different sizes',reportStr)));
+            mlunitext.assert_equals(1,numel(strfind(reportStr,'Max.')));
+            mlunitext.assert_equals(1,numel(strfind(reportStr,'Different sizes')));
         end
         function self = test_cell_positive(self)
             S1=struct('a',1,'b',{{NaN;struct('c',{'aaa'})}});
@@ -150,12 +150,56 @@ classdef mlunit_test_structcompare < mlunitext.test_case
             S2=struct('a',1,'b',{{NaN;struct('c',{'bbb'})}});
             [isEqual,reportStr]=modgen.struct.structcompare(S1,S2,0);
             mlunitext.assert_equals(isEqual,false);
-            mlunitext.assert_equals(1,numel(findstr('values are different',reportStr)));
+            mlunitext.assert_equals(1,numel(strfind(reportStr,'values are different')));
         end
         function self = test_simplestruct_order_positive(self)
             S1=struct('a',1,'b',2);
             S2=struct('b',2,'a',1);
             isEqual=modgen.struct.structcompare(S1,S2,0);
+            mlunitext.assert_equals(isEqual,true);
+        end
+        function self = test_relative_negative(self)
+            S1=struct('a',1e+10,'b',2e+12);
+            %
+            S2=struct('b',2e+12, 'a',1e+10 + 1e+6);
+            [isEqual,reportStr]=modgen.struct.structcompare(S1, S2, ...
+                1e-10, 1e-5);
+            check_neg(1);
+            %
+            S2=struct('b',2e+12 - 1e+2, 'a',1e+10 + 1e+6);
+            [isEqual,reportStr]=modgen.struct.structcompare(S1, S2, ...
+                1e+3, 1e-5);
+            check_neg(1);
+            %
+            S2=struct('b',2e+12 - 1e+9, 'a',1e+10 + 1e+6);
+            [isEqual,reportStr]=modgen.struct.structcompare(S1, S2, ...
+                1e+3, 1e-5);
+            check_neg(2);
+            %
+            S1=struct('a',1e+6 - 2,'b',2e+6, 'c', 'aab');
+            S2=struct('a',1e+6,'b',2e+6 + 4, 'c', 'aab');
+            [isEqual,reportStr]=modgen.struct.structcompare(S1, S2, ...
+                1, 1e-7);
+            check_neg(2);
+            function check_neg(repMsgCount)
+                mlunitext.assert_equals(isEqual,false);
+                mlunitext.assert_equals(repMsgCount, ...
+                    numel(strfind(reportStr, 'Max. relative difference')));
+            end
+        end
+        function self = test_relative_positive(self)
+            S1=struct('a',1e+6 - 0.5,'b',2e+6, 'c', 'aab');
+            S2=struct('a',1e+6,'b',2e+6 +1, 'c', 'aab');
+            isEqual=modgen.struct.structcompare(S1, S2, 1e-10, 1e-6);
+            mlunitext.assert_equals(isEqual,true);
+            %
+            S1=struct('a',1e+10,'b',2e+12);
+            S2=struct('b',2e+12, 'a',1e+10 + 1e+2);
+            isEqual=modgen.struct.structcompare(S1, S2, 1e-10, 1e-5);
+            mlunitext.assert_equals(isEqual,true);
+            %
+            S2=struct('b',2e+12 - 1e+4, 'a',1e+10 + 1e+2);
+            isEqual=modgen.struct.structcompare(S1, S2, 1e+3, 1e-5);
             mlunitext.assert_equals(isEqual,true);
         end
     end

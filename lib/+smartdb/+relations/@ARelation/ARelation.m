@@ -29,7 +29,10 @@ classdef ARelation<smartdb.cubes.CubeStruct
             %     maxTolerance: double [1,1] - maximum allowed tolerance            
             %
             %     compareMetaDataBackwardRef: logical[1,1] if true, the CubeStruct's
-            %         referenced from the meta data objects are also compared            
+            %         referenced from the meta data objects are also compared
+            %
+            %     maxRelativeTolerance: double [1,1] - maximum allowed
+            %     relative tolerance
             %
             % Output:
             %   isEq: logical[1,1] - result of comparison
@@ -68,7 +71,11 @@ classdef ARelation<smartdb.cubes.CubeStruct
                     case 'comparemetadatabackwardref',
                         isCompareCubeStructBackwardRef=prop{k+1};
                     case 'maxtolerance',
-                        inpArgList={'maxTolerance',prop{k+1}};
+                        inpArgList=[inpArgList, {'maxTolerance', ...
+                            prop{k+1}}];
+                    case 'maxrelativetolerance'
+                        inpArgList=[inpArgList, {'maxRelativeTolerance',...
+                            prop{k+1}}];
                     otherwise,
                         error([upper(mfilename),':wrongInput'],...
                             'unidentified property name: %s ',prop{k});

@@ -5,10 +5,10 @@ classdef SuiteBasic < mlunitext.test_case
         end
         %
         function testConstMatrixFunction(self)
-            import gras.mat.fcnlib.ConstMatrixFunction;
+            import gras.mat.ConstMatrixFunctionFactory;
             %
-            f = ConstMatrixFunction(zeros(1));
-            mlunitext.assert_equals(f.getDimensionality,2);
+            f = ConstMatrixFunctionFactory.createInstance(zeros(1));
+            mlunitext.assert_equals(f.getDimensionality,1);
             mlunitext.assert_equals(f.getNRows,1);
             mlunitext.assert_equals(f.getNCols,1);
             mlunitext.assert_equals(all(f.getMatrixSize == [1 1]), true);
@@ -17,7 +17,7 @@ classdef SuiteBasic < mlunitext.test_case
             isOkArray = ( aArrayExpected == aArrayObtained );
             mlunitext.assert_equals(all(isOkArray(:)),true);
             %
-            f = ConstMatrixFunction(zeros(2));
+            f = ConstMatrixFunctionFactory.createInstance(zeros(2));
             mlunitext.assert_equals(f.getDimensionality,2);
             mlunitext.assert_equals(f.getNRows,2);
             mlunitext.assert_equals(f.getNCols,2);
@@ -27,8 +27,8 @@ classdef SuiteBasic < mlunitext.test_case
             isOkArray = ( aArrayExpected == aArrayObtained );
             mlunitext.assert_equals(all(isOkArray(:)),true);
             %
-            f = ConstMatrixFunction(zeros(1,2));
-            mlunitext.assert_equals(f.getDimensionality,2);
+            f = ConstMatrixFunctionFactory.createInstance(zeros(1,2));
+            mlunitext.assert_equals(f.getDimensionality,1);
             mlunitext.assert_equals(f.getNRows,1);
             mlunitext.assert_equals(f.getNCols,2);
             mlunitext.assert_equals(all(f.getMatrixSize == [1 2]), true);
@@ -37,8 +37,8 @@ classdef SuiteBasic < mlunitext.test_case
             isOkArray = ( aArrayExpected == aArrayObtained );
             mlunitext.assert_equals(all(isOkArray(:)),true);
             %
-            f = ConstMatrixFunction(zeros(2,1));
-            mlunitext.assert_equals(f.getDimensionality,2);
+            f = ConstMatrixFunctionFactory.createInstance(zeros(2,1));
+            mlunitext.assert_equals(f.getDimensionality,1);
             mlunitext.assert_equals(f.getNRows,2);
             mlunitext.assert_equals(f.getNCols,1);
             mlunitext.assert_equals(all(f.getMatrixSize == [2 1]), true);
@@ -47,7 +47,7 @@ classdef SuiteBasic < mlunitext.test_case
             isOkArray = ( aArrayExpected == aArrayObtained );
             mlunitext.assert_equals(all(isOkArray(:)),true);
             %
-            f = ConstMatrixFunction(zeros(2,3));
+            f = ConstMatrixFunctionFactory.createInstance(zeros(2,3));
             mlunitext.assert_equals(f.getDimensionality,2);
             mlunitext.assert_equals(f.getNRows,2);
             mlunitext.assert_equals(f.getNCols,3);
@@ -57,7 +57,7 @@ classdef SuiteBasic < mlunitext.test_case
             isOkArray = ( aArrayExpected == aArrayObtained );
             mlunitext.assert_equals(all(isOkArray(:)),true);
             %
-            f = ConstMatrixFunction(zeros(3,2));
+            f = ConstMatrixFunctionFactory.createInstance(zeros(3,2));
             mlunitext.assert_equals(f.getDimensionality,2);
             mlunitext.assert_equals(f.getNRows,3);
             mlunitext.assert_equals(f.getNCols,2);
@@ -67,21 +67,21 @@ classdef SuiteBasic < mlunitext.test_case
             isOkArray = ( aArrayExpected == aArrayObtained );
             mlunitext.assert_equals(all(isOkArray(:)),true);
             %
-            self.runAndCheckError(...
-                'gras.mat.fcnlib.ConstMatrixFunction([])', ...
-                'CHECKVAR:wrongInput');
+            self.runAndCheckError([...
+                'gras.mat.ConstMatrixFunctionFactory.createInstance', ...
+                '([])'], 'CHECKVAR:wrongInput');
             %
-            self.runAndCheckError(...
-                'gras.mat.fcnlib.ConstMatrixFunction(zeros([2 2 2]))', ...
-                'CHECKVAR:wrongInput');
+            self.runAndCheckError([...
+                'gras.mat.ConstMatrixFunctionFactory.createInstance', ...
+                '(zeros([2 2 2]))'], 'CHECKVAR:wrongInput');
             %
-            self.runAndCheckError(...
-                'gras.mat.fcnlib.ConstMatrixFunction({})', ...
-                'CHECKVAR:wrongInput');
+            self.runAndCheckError([...
+                'gras.mat.ConstMatrixFunctionFactory.createInstance', ...
+                '({})'], 'CHECKVAR:wrongInput');
             %
-            self.runAndCheckError(...
-                'gras.mat.fcnlib.ConstMatrixFunction({1,2;3,4})', ...
-                'CHECKVAR:wrongInput');
+            self.runAndCheckError([...
+                'gras.mat.ConstMatrixFunctionFactory.createInstance', ...
+                '({1,2;3,4})'], 'CHECKVAR:wrongInput');
             %
         end
         function testConstRowFunction(self)
@@ -194,17 +194,17 @@ classdef SuiteBasic < mlunitext.test_case
             %
             f = gras.mat.ConstMatrixFunctionFactory.createInstance(...
                 {'1'});
-            mlunitext.assert_equals(isa(f,'gras.mat.fcnlib.ConstMatrixFunction'),...
-                true);
-            aMatExpected = [1];
+            mlunitext.assert_equals(isa(f, ...
+                'gras.mat.fcnlib.ConstScalarFunction'), true);
+            aMatExpected = 1;
             aMatObtained = f.evaluate(0);
             isOkMat = ( aMatExpected == aMatObtained );
             mlunitext.assert_equals(all(isOkMat(:)),true);
             %
             f = gras.mat.ConstMatrixFunctionFactory.createInstance(...
                 {'1','2';'3','4'});
-            mlunitext.assert_equals(isa(f,'gras.mat.fcnlib.ConstMatrixFunction'),...
-                true);
+            mlunitext.assert_equals(isa(f, ...
+                'gras.mat.fcnlib.ConstMatrixFunction'), true);
             aMatExpected = [1 2; 3 4];
             aMatObtained = f.evaluate(0);
             isOkMat = ( aMatExpected == aMatObtained );
@@ -212,8 +212,8 @@ classdef SuiteBasic < mlunitext.test_case
             %
             f = gras.mat.ConstMatrixFunctionFactory.createInstance(...
                 {'1','2'});
-            mlunitext.assert_equals(isa(f,'gras.mat.fcnlib.ConstRowFunction'),...
-                true);
+            mlunitext.assert_equals(isa(f, ...
+                'gras.mat.fcnlib.ConstRowFunction'), true);
             aMatExpected = [1 2];
             aMatObtained = f.evaluate(0);
             isOkMat = ( aMatExpected == aMatObtained );
@@ -221,28 +221,28 @@ classdef SuiteBasic < mlunitext.test_case
             %
             f = gras.mat.ConstMatrixFunctionFactory.createInstance(...
                 {'1';'2'});
-            mlunitext.assert_equals(isa(f,'gras.mat.fcnlib.ConstColFunction'),...
-                true);
+            mlunitext.assert_equals(isa(f, ...
+                'gras.mat.fcnlib.ConstColFunction'), true);
             aMatExpected = [1; 2];
             aMatObtained = f.evaluate(0);
             isOkMat = ( aMatExpected == aMatObtained );
             mlunitext.assert_equals(all(isOkMat(:)),true);
             %
-            self.runAndCheckError(...
-                'gras.mat.ConstMatrixFunctionFactory.createInstance([])', ...
-                'CHECKVAR:wrongInput');
+            self.runAndCheckError([...
+                'gras.mat.ConstMatrixFunctionFactory.createInstance', ...
+                '([])'], 'CHECKVAR:wrongInput');
             %
-            self.runAndCheckError(...
-                'gras.mat.ConstMatrixFunctionFactory.createInstance({})', ...
-                'CHECKVAR:wrongInput');
+            self.runAndCheckError([...
+                'gras.mat.ConstMatrixFunctionFactory.createInstance', ...
+                '({})'], 'CHECKVAR:wrongInput');
             %
-            self.runAndCheckError(...
-                'gras.mat.ConstMatrixFunctionFactory.createInstance({''t''})', ...
-                'CHECKVAR:wrongInput');
+            self.runAndCheckError([...
+                'gras.mat.ConstMatrixFunctionFactory.createInstance', ...
+                '({''t''})'], 'CHECKVAR:wrongInput');
             %
-            self.runAndCheckError(...
-                'gras.mat.ConstMatrixFunctionFactory.createInstance({1,''t'';1,1})', ...
-                'CHECKVAR:wrongInput');
+            self.runAndCheckError([...
+                'gras.mat.ConstMatrixFunctionFactory.createInstance', ...
+                '({1,''t'';1,1})'], 'CHECKVAR:wrongInput');
             %
         end
     end

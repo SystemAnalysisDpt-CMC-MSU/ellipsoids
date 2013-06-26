@@ -16,10 +16,14 @@ classdef ConstMatrixFunctionFactory
             end
             %
             [nRows, nCols] = size(mMat);
-            if nCols == 1 && nRows > 1
-                obj = ConstColFunction(mMat);
-            elseif nRows == 1 && nCols > 1
-                obj = ConstRowFunction(mMat);
+            if any([nRows, nCols] == 1)
+                if nRows > 1
+                    obj = ConstColFunction(mMat);
+                elseif nCols > 1
+                    obj = ConstRowFunction(mMat);
+                else
+                    obj = ConstScalarFunction(mMat);
+                end
             else
                 obj = ConstMatrixFunction(mMat);
             end

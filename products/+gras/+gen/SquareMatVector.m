@@ -10,32 +10,6 @@ classdef SquareMatVector<gras.gen.MatVector
                 invDataArray(:,:,t)=inv(dataArray(:,:,t));
             end
         end
-        function resArray=evalMFunc(fHandle,dataArray,varargin)
-            import modgen.common.throwerror;
-            [~,~,isUniformOutput,isSizeKept]=modgen.common.parseparext(varargin,...
-                {'UniformOutput','keepSize';...
-                true,false;...
-                'islogical(x)&&isscalar(x)','islogical(x)&&isscalar(x)'},0);
-            nElems=size(dataArray,3);
-            if ~isUniformOutput
-                resArray=cell(nElems,1);
-                for iElem=1:nElems
-                    resArray{iElem}=fHandle(dataArray(:,:,iElem));
-                end
-            else
-                if isSizeKept
-                    resArray=dataArray;
-                    for iElem=1:nElems
-                        resArray(:,:,iElem)=fHandle(dataArray(:,:,iElem));
-                    end
-                else
-                    resArray=zeros(nElems,1);
-                    for iElem=1:nElems
-                        resArray(iElem)=fHandle(dataArray(:,:,iElem));
-                    end
-                end
-            end
-        end
         function sqrtDataArray=sqrtmpos(dataArray)
             sizeVec=size(dataArray);
             if length(sizeVec)==2

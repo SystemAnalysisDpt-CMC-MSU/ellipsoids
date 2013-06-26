@@ -31,18 +31,32 @@ classdef MatrixSFTripleProd<gras.mat.IMatrixFunction
                 self.nCols=0;
                 self.nRows=0;
                 self.mSizeVec=[0,0];
-            else
-                checkgenext(['iscellofstring(x1)&&ndims(x1)==2&&',...
-                    'iscellofstring(x2)&&ndims(x2)==2&&',...
-                    'iscellofstring(x3)&&ndims(x3)==2&&',...
-                    'size(x1,2)==size(x2,1)&&size(x2,2)==size(x3,1)'],...
-                    3,formula1CMat,formula2CMat,formula3CMat);
+            else                
+                checkgenext(['iscellofstring(x1)&&iscellofstring(x2)&&',...
+                    'iscellofstring(x3)'], 3, formula1CMat, ...
+                    formula2CMat, formula3CMat);
+                size1Vec = size(formula1CMat);
+                size2Vec = size(formula2CMat);
+                size3Vec = size(formula3CMat);
+                checkgenext(['((x1(1)==1&&x1(2)==1)||(x2(1)==1&&', ...
+                    'x2(2)==1)||(x1(2)==x2(1)))&&((x2(1)==1&&x2(2)==1)',...
+                    '||(x3(1)==1&&x3(2)==1)||(x2(2)==x3(1)))'], 3, ...
+                    size1Vec, size2Vec, size3Vec);
                 %
-                sizeVec=[size(formula1CMat,1),size(formula3CMat,2)];
+                if ~(all(size1Vec == 1) || all(size2Vec == 1))
+                    sizeVec = [size1Vec(1), size2Vec(2)];
+                else
+                    sizeVec = max(size1Vec, size2Vec);
+                end
+                if ~(all(sizeVec == 1) || all(size3Vec == 1))
+                    sizeVec = [sizeVec(1), size3Vec(2)];
+                else
+                    sizeVec = max(sizeVec, size3Vec);
+                end
                 %
-                self.nDims=length(sizeVec);
-                self.nCols=sizeVec(1);
-                self.nRows=sizeVec(2);
+                self.nDims=2-any(sizeVec == 1);
+                self.nRows=sizeVec(1);
+                self.nCols=sizeVec(2);
                 self.mSizeVec=sizeVec;
                 %
                 self.formula1Func=cellstr2func(formula1CMat,'t');

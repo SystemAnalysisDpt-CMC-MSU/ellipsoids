@@ -841,7 +841,6 @@ classdef EllipsoidTestCase < mlunitext.test_case
             import elltool.conf.Properties;
             MAX_TOL = Properties.getRelTol();
             
-            
             testMat = eye(2);
             checkEllEqual(ellipsoid(testMat), ellipsoid(testMat), true, '');
             
@@ -897,33 +896,33 @@ classdef EllipsoidTestCase < mlunitext.test_case
             checkEllEqual(testEllHighDim1, testEllHighDim1, true, '');
             
             checkEllEqual(testEllHighDim1, testEllHighDim2, false, ...
-                '(1).Q-->Max. difference (2.316625e+00) is greater than the specified tolerance(1.000000e-05)');
+                '\(1).Q-->.*\(2.316625e\+00).*tolerance.\(1.000000e\-05)');
             
             [testEllHighDim1 testEllHighDim2] = createTypicalHighDimEll(2);
             checkEllEqual(testEllHighDim1, testEllHighDim1, true, '');
             
             
             checkEllEqual(testEllHighDim1, testEllHighDim2, false, ...
-                '(1).Q-->Max. difference (2.316625e+00) is greater than the specified tolerance(1.000000e-05)');
+                '\(1).Q-->.*\(2.316625e\+00).*tolerance.\(1.000000e\-05)');
             
             [testEllHighDim1 testEllHighDim2] = createTypicalHighDimEll(3);
             checkEllEqual(testEllHighDim1, testEllHighDim1, true, '');
             
             checkEllEqual(testEllHighDim1, testEllHighDim2, false, ...
-                '(1).Q-->Max. difference (2.316625e+00) is greater than the specified tolerance(1.000000e-05)');
+                '\(1).Q-->.*\(2.316625e\+00).*tolerance.\(1.000000e\-05)');
             
             
             checkEllEqual(testEllipsoid1, testEllipsoid1, true, '');
             
             checkEllEqual(testEllipsoid2, testEllipsoid1, false, ...
-                '(1).q-->Max. difference (1) is greater than the specified tolerance(1.000000e-05)');
+                '\(1).q-->.*\(1.000000e\+00).*tolerance.\(1.000000e\-05)');
             
             checkEllEqual(testEllipsoid3, testEllipsoid2, false, ...
-                '(1).Q-->Max. difference (4.142136e-01) is greater than the specified tolerance(1.000000e-05)');
+                '\(1).Q-->.*\(4.142136e\-01).*tolerance.\(1.000000e\-05)');
             
             
             checkEllEqual(testEllipsoid3, testEllipsoid2, false, ...
-                '(1).Q-->Max. difference (4.142136e-01) is greater than the specified tolerance(1.000000e-05)');
+                '\(1).Q-->.*\(4.142136e\-01).*tolerance.\(1.000000e\-05)');
             
             ansStr = sprintf('(1).Q-->Different sizes (left: [2 2], right: [3 3])\n(1).q-->Different sizes (left: [2 1], right: [3 1])');
             checkEllEqual(testEllipsoidZeros2, testEllipsoidZeros3, false, ansStr);
@@ -1527,7 +1526,11 @@ end
 function checkEllEqual(testEll1Vec, testEll2Vec, isEqual, ansStr)
 [isEq, reportStr] = eq(testEll1Vec, testEll2Vec);
 mlunitext.assert_equals(isEq, isEqual);
-mlunitext.assert_equals(reportStr, ansStr);
+isRepEq = isequal(reportStr, ansStr);
+if ~isRepEq
+    isRepEq = ~isempty(regexp(reportStr, ansStr, 'once'));
+end
+mlunitext.assert_equals(isRepEq, true);
 end
 %
 function [varargout] = createTypicalHighDimEll(flag)

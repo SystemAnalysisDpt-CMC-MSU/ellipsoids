@@ -159,12 +159,12 @@ classdef HyperplaneTestCase < mlunitext.test_case
             testHypHighDimFst = hyperplane([1:1:75]', 1);
             testHypHighDimSec = hyperplane([1:1:75]', 2);
             checkHypEqual(testHypHighDimFst, testHypHighDimSec, false, ...
-                '(1).shift-->Max. difference (2.640278e-03) is greater than the specified tolerance(1.000000e-07)');
+                '\(1).shift-->.*\(2.640278e\-03).*tolerance.\(1.000000e\-07)');
             %
             testFstHyp = hyperplane([1; 0], 0);
             testSecHyp = hyperplane([1; 0], 0);
             testThrHyp = hyperplane([2; 1], 0);
-            str = ['(1).shift-->Max. difference (2.640278e-03) is greater than the specified tolerance(1.000000e-07)' char(10) '(3).normal-->Max. difference (4.472136e-01) is greater than the specified tolerance(1.000000e-07)'];
+            str = '\(1).shift-->.*\(2.640278e\-03).*tolerance.\(1.000000e\-07)\n\(3).normal-->.*\(4.472136e\-01).*tolerance.\(1.000000e\-07)';
             checkHypEqual([testHypHighDimFst testFstHyp testFstHyp], ...
                 [testHypHighDimSec testSecHyp testThrHyp], ...
                 [false true false], str);
@@ -342,5 +342,9 @@ end
 function checkHypEqual(testFstHypArr, testSecHypArr, isEqualArr, ansStr)
     [isEqArr, reportStr] = eq(testFstHypArr, testSecHypArr);
     mlunitext.assert_equals(isEqArr, isEqualArr);
-    mlunitext.assert_equals(reportStr, ansStr);
+    isRepEq = isequal(reportStr, ansStr);
+    if ~isRepEq
+        isRepEq = ~isempty(regexp(reportStr, ansStr, 'once'));
+    end
+    mlunitext.assert_equals(isRepEq, true);
 end

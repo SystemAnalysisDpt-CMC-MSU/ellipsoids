@@ -115,6 +115,8 @@ classdef EllTubeTouchCurveBasic<handle
     end
     methods (Access=private)
         function checkTouchCurveIndependence(self,rel)
+            import gras.gen.absrelcompare;
+            %
             dependencyFieldList=self.getTouchCurveDependencyFieldList;
             fCheckFieldTransfList=self.getTouchCurveDependencyCheckTransFuncList();
             checkFieldList=self.getTouchCurveDependencyCheckedFieldList;
@@ -147,19 +149,54 @@ classdef EllTubeTouchCurveBasic<handle
                                     throwError('size',fieldName);
                                 end
                                 %
-                                actTol=max(reshape(abs(valList{iTuple}{1}-...
-                                    valList{iTuple}{iVal}),[],1));
                                 expTol=(tolVec(1)+tolVec(iVal));
-                                isOk=actTol<=expTol;
+                                %
+                                [isOk, actAbsTol, isRelTolUsed, ...
+                                    actRelTol] = absrelcompare(...
+                                    valList{iTuple}{1}, ...
+                                    valList{iTuple}{iVal}, expTol, ...
+                                    expTol, @vecArrNorm);
                                 if ~isOk
-                                    optMsg=sprintf(['actual tolerance=%g',...
-                                        ', expected tolerance=%g'],actTol,...
-                                        expTol);
+                                    if ~isRelTolUsed
+                                        optMsg=sprintf(...
+                                            ['absolute tolerance=%g,',...
+                                            ' expected tolerance=%g'], ...
+                                            actAbsTol, expTol);
+                                    else
+                                        optMsg=sprintf(...
+                                            ['relative tolerance=%g,'...
+                                            ' absolute tolerance=%g,',...
+                                            ' expected tolerance=%g'], ...
+                                            actRelTol, actAbsTol, expTol);
+                                    end
                                     throwError('value',fieldName,optMsg);
                                 end
                             end
                         end
                     end
+                end
+            end
+            function normVec = vecArrNorm(inpMat)
+                import gras.gen.MatVector;
+                %
+                nDims = size(inpMat);
+                if all(nDims(1:2) == 1)
+                    nDims = 1;
+                end
+                nDims = length(nDims);
+                switch nDims
+                    case 1
+                        normVec = squeeze(abs(inpMat))';
+                    case 2
+                        normVec = MatVector.evalMFunc(@norm, shiftdim(...
+                            inpMat, -1))';
+                    case 3
+                        normVec = MatVector.evalMFunc(@norm, inpMat)';
+                    otherwise
+                        optMsg=sprintf(...
+                            ['Arrays with dimensionality = %u are not', ...
+                            ' supported'], nDims);
+                        throwError('value', fieldName, optMsg);
                 end
             end
             function throwError(tagName,fieldName,optMsg)
