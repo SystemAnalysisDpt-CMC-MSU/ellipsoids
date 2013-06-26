@@ -436,51 +436,67 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                     'ltGoodDirNormOrigVec','approxType','QArray','aMat','MArray'});
             end
         end
-        
-        function plObj = plotExtOrInt(self,fExtOrInt,varargin)
+        function plObj = plotExt(self,varargin)
+            plObj = self.plotExtOrInternal(@min,varargin{:});
+        end
+        function plObj = plotInt(self,varargin)
+            plObj = self.plotExtOrInternal(@max,varargin{:});
+        end
+    end
+    methods (Access = private)
+        function plObj = plotExtOrInternal(self,fExtOrInt,varargin)
             import elltool.plot.plotgeombodyarr;
-            [reg,~,isShowDiscrete]=...
+            [reg,~,isShowDiscrete,nPlotPoints]=...
                 modgen.common.parseparext(varargin,...
-                {'showDiscrete' ;...
-                false;
-                @(x)isa(x,'logical')});
+                {'showDiscrete','nPoints' ;...
+                false, 600;
+                @(x)isa(x,'logical'),@(x)isa(x,'double')});
             switchmode = false;
             dim = self.dim(1);
             if (dim == 3) && ( size(self.timeVec{1},2) ~= 1)
                 throwerror('wrongDim',...
                     '3d Tube can be displayed only after cutting');
             end
-            ABS_TOL = elltool.conf.Properties.getAbsTol();
-            if (dim == 3) || (size(self.timeVec{1},2) >1)
-                tempEll = ellipsoid(ones(3));
-            else
-                tempEll = ellipsoid(ones(2));
-            end
+            absTol = max(self.calcPrecision);
             isCenter = false;
-            nPlotPoints = [getNPlot2dPoints(tempEll),...
-                getNPlot3dPoints(tempEll)];
             
-            [plObj,nDim,isHold]= plotgeombodyarr('ellipsoid',...
-                @fCalcBodyArr,@patch,tempEll,reg{:},'isTitle',true,...
+            
+            [plObj,nDim,isHold]= plotgeombodyarr(...
+                @(x)isa(x,'gras.ellapx.smartdb.rels.EllTubeProj'),...
+                @fDim,...
+                @fCalcBodyArr,@patch,self,reg{:},'isTitle',true,...
                 'isLabel',true);
             if (isCenter)
                 reg = modgen.common.parseparext(reg,...
                     {'relDataPlotter','priorHold','postHold';...
                     [],[],[];
                     });
-                plObj= plotgeombodyarr('ellipsoid',@fCalcCenterTriArr,...
+                plObj= plotgeombodyarr(...
+                    @(x)isa(x,'gras.ellapx.smartdb.rels.EllTubeProj'),...
+                    @fDim,...
+                    @fCalcCenterTriArr,...
                     @(varargin)patch(varargin{:},'marker','*'),...
-                    tempEll,reg{:},'relDataPlotter',plObj, 'priorHold',...
+                    self,reg{:},'relDataPlotter',plObj, 'priorHold',...
                     true,'postHold',isHold,'isTitle',true,...
                     'isLabel',true);
             end
             if (isShowDiscrete)
                 switchmode = true;
-                plObj= plotgeombodyarr('ellipsoid',@fCalcBodyArr,...
+                plObj= plotgeombodyarr(...
+                    @(x)isa(x,'gras.ellapx.smartdb.rels.EllTubeProj'),...
+                    @fDim,@fCalcBodyArr,...
                     @patch,...
-                    tempEll,'r','relDataPlotter',plObj, 'priorHold',...
+                    self,'r','relDataPlotter',plObj, 'priorHold',...
                     true,'postHold',isHold,'isTitle',true,...
                     'isLabel',true);
+            end
+            function dimOut = fDim(obj)
+                dim = obj.dim(1);
+                if (dim == 3) || (size(obj.timeVec{1},2) >1)
+                    dimOut = 3;
+                else
+                    dimOut = 2;
+                end
             end
             function [xCMat,fCMat,titl,xlab,ylab,zlab] =...
                     fCalcCenterTriArr(~,varargin)
@@ -493,14 +509,15 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
             end
             
             function [xCMat,fCMat,titl,xlab,ylab,zlab] =...
-                    fCalcBodyArr(~,varargin)
-                allEllMat = cat(4, self.QArray{:});
+                    fCalcBodyArr(obj,varargin)
+                allEllMat = cat(4, obj.QArray{:});
+                dim = obj.dim(1);
                 [lGridMat, fMat] = ellipsoid.getGrid(dim,...
-                    nPlotPoints(dim-1));
+                    nPlotPoints);
                 lGridMat = lGridMat';
                 nDim = size(lGridMat, 2);
-                mDim =  size(self.timeVec{1}, 2);
-                if size(self.timeVec{1}, 2) == 1
+                mDim =  size(obj.timeVec{1}, 2);
+                if size(obj.timeVec{1}, 2) == 1
                     allEllMat = shiftdim(...
                         shiftdim(shiftdim(allEllMat(:,:,end,:),2)),1);
                     
@@ -508,22 +525,22 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                     xMat = calcPoints(1,3);
                     xCMat = {[xMat xMat(:,1)]};
                     fCMat = {fMat};
-                    titl = 'Tube at time ' + num2str (self.timeVec{1});
+                    titl = 'Tube at time ' + num2str (obj.timeVec{1});
                     if dim == 2
                         isCenter = true;
                     end
                     xlab = 'x_1';
                     ylab = 'x_2';
                     zlab = '';
-                else 
+                else
                     if switchmode
                         fMat = zeros(mDim,(nDim+1));
                     end
-                    xMat = zeros(3,nDim*mDim);                    
-                    for iTime = 1:size(self.timeVec{1}, 2)
+                    xMat = zeros(3,nDim*mDim);
+                    for iTime = 1:size(obj.timeVec{1}, 2)
                         xTemp = calcPoints(iTime,4);
                         xMat(:,(iTime-1)*nDim+1:iTime*nDim) =...
-                            [self.timeVec{1}(iTime)*ones(1,nDim); xTemp];
+                            [obj.timeVec{1}(iTime)*ones(1,nDim); xTemp];
                         if switchmode
                             f2Mat = repmat((iTime-1)*nDim,...
                                 size(nDim+1))+[1:nDim 1];
@@ -533,7 +550,7 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                     end
                     if ~switchmode
                         fMat = ell_triag_facets...
-                            (nPlotPoints(1),mDim);
+                            (nPlotPoints,mDim);
                     end
                     xCMat = {xMat};
                     fCMat = {fMat};
@@ -546,7 +563,7 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                 
                 function xMat = calcPoints(ind,needDim)
                     xMat = zeros(dim,nDim);
-                    centerVec = self.aMat{1}(:,ind);
+                    centerVec = obj.aMat{1}(:,ind);
                     suppAllMat = zeros(size(allEllMat,needDim),nDim);
                     bpAllCell = cell(size(allEllMat,needDim),nDim);
                     ind3 = 1;
@@ -559,7 +576,7 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                     function calcSupMat(tempEll)
                         import gras.geom.ell.rhomat
                         [supMat, bpMat] = rhomat(tempEll,...
-                            lGridMat,ABS_TOL);
+                            lGridMat,absTol);
                         suppAllMat(ind3,:) = supMat;
                         for indBP=1:size(bpAllCell,2)
                             bpAllCell{ind3,indBP} = bpMat(:,indBP);

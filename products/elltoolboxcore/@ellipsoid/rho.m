@@ -127,11 +127,9 @@ else % multiple ellipsoids, multiple directions
 end
 %
     function [supFun xVec] = fRhoForDir(ellObj,dirVec)
-        import gras.gen.sqrtpos;
         [cenVec ellMat]=double(ellObj);
         absTol=ellObj.getAbsTol();
-        sq  = sqrtpos(dirVec'*ellMat*dirVec,absTol);
-        supFun = cenVec'*dirVec + sq;
-        xVec = ((ellMat*dirVec)/sq) + cenVec;
+        [supFun xVec] = gras.geom.ell.rhomat(ellMat, dirVec,absTol,...
+            cenVec);
     end
 end

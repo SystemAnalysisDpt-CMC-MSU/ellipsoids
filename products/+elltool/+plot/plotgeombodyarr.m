@@ -1,4 +1,4 @@
-function  [plObj,nDim,isHold] = plotgeombodyarr(objClassName,...
+function  [plObj,nDim,isHold] = plotgeombodyarr(fIsObjClassName,fDim,...
     calcBodyPoints,fPlotPatch,varargin)
 %
 % plotgeombodyarr - plots objects in 2D or 3D.
@@ -99,7 +99,7 @@ end
 if isCharColor && isColorVec
     throwerror('ConflictingColor', 'Conflicting using of color property');
 end
-nDim = max(dimension(bodyArr));
+nDim = max(fDim(bodyArr));
 if nDim == 3 && isLineWidth
     throwerror('wrongProperty', 'LineWidth is not supported by 3D objects');
 end
@@ -260,7 +260,7 @@ end
     function checkDimensions()
         import elltool.conf.Properties;
         import modgen.common.throwerror;
-        ellsArrDims = dimension(bodyArr);
+        ellsArrDims = fDim(bodyArr);
         mDim    = min(ellsArrDims);
         nDim    = max(ellsArrDims);
         if mDim ~= nDim
@@ -380,7 +380,7 @@ end
                     throwerror('wrongPropertyValue', ...
                         'There is no value for property.');
                 end
-            elseif ~isa(value, objClassName) && ~ischar(value)
+            elseif ~fIsObjClassName(value) && ~ischar(value)
                 throwerror('wrongPropertyType',...
                     'Property must be a string.');
             end
@@ -415,7 +415,7 @@ end
         function [ellVec, uColorVec, vColorVec] = getParams(ellArr, ...
                 nextObjArr, isnLastElem)
             import modgen.common.throwerror;
-            if isa(ellArr, objClassName)
+            if fIsObjClassName(ellArr)
                 cnt    = numel(ellArr);
                 ellVec = reshape(ellArr, cnt, 1);
                 

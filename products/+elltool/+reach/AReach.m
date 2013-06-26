@@ -1244,30 +1244,40 @@ classdef AReach < elltool.reach.IReach
         function eaPlotter = plotByEa(self, varargin)
             import gras.ellapx.enums.EApproxType;
             eaPlotter = self.plotByApprox(EApproxType.External,...
-                @min, varargin{:});
+                varargin{:});
             
         end
         function iaPlotter = plotByIa(self, varargin)
             import gras.ellapx.enums.EApproxType;
             iaPlotter = self.plotByApprox(EApproxType.Internal,...
-                @max, varargin{:});
+                varargin{:});
             
         end
         function plotter = plotByApprox(self, approxType,...
-                fExtOrInt,varargin)
+                varargin)
             import gras.ellapx.smartdb.F;
             import gras.ellapx.enums.EProjType;
             dim = self.dimension;
-            if ~self.isprojection()
-                projReachObj = self.projection(eye(dim));
-                plotter = projReachObj.ellTubeRel.getTuplesFilteredBy(...
-                F.APPROX_TYPE, approxType).plotExtOrInt(fExtOrInt,...
-                varargin{:});
+            if (strcmp(char(approxType),'Internal'))
+                if ~self.isprojection()
+                    projReachObj = self.projection(eye(dim));
+                    plotter = projReachObj.ellTubeRel.getTuplesFilteredBy(...
+                        F.APPROX_TYPE, approxType).plotInt(varargin{:});
+                else
+                    plotter = self.ellTubeRel.getTuplesFilteredBy(...
+                        F.APPROX_TYPE, approxType).plotInt(varargin{:});
+                end
             else
-                plotter = self.ellTubeRel.getTuplesFilteredBy(...
-                F.APPROX_TYPE, approxType).plotExtOrInt(fExtOrInt,...
-                varargin{:});
-            end                       
+                if ~self.isprojection()
+                    projReachObj = self.projection(eye(dim));
+                    plotter = projReachObj.ellTubeRel.getTuplesFilteredBy(...
+                        F.APPROX_TYPE, approxType).plotExt(varargin{:});
+                else
+                    plotter = self.ellTubeRel.getTuplesFilteredBy(...
+                        F.APPROX_TYPE, approxType).plotExt(varargin{:});
+                end
+            end
+            
         end
         function outReachObj = refine(self, l0Mat)
             import modgen.common.throwerror;

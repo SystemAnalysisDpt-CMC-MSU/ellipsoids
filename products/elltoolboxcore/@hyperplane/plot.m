@@ -62,7 +62,8 @@ import elltool.plot.plotgeombodyarr;
     @(x)isa(x,'double'),...
     @(x)isa(x,'double')});
 
-[plObj]= plotgeombodyarr('hyperplane',@fCalcBodyTriArr,@patch,reg{:});
+[plObj]= plotgeombodyarr(@(x)isa(x,'hyperplane'),...
+        @(x)dimension(x),@fCalcBodyTriArr,@patch,reg{:});
 
 
 
