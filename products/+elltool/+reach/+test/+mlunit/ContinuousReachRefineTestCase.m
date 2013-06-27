@@ -220,7 +220,7 @@ function checkEq(initMat,compMat,methodName)
 import modgen.common.throwerror;
 import modgen.cell.cellstr2expression;
 %
-NON_OBJ_OUT_METHOD_LIST = {'dimension','iscut','isprojection','isempty'};
+NON_OBJ_OUT_METHOD_LIST = {'dimension','iscut','isprojection','isEmpty'};
 OBJ_OUT_METHOD_LIST = {'getCopy','repMat'};
 switch methodName
     case NON_OBJ_OUT_METHOD_LIST

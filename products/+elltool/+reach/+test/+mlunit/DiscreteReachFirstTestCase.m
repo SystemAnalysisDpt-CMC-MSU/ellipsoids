@@ -46,8 +46,7 @@ classdef DiscreteReachFirstTestCase < mlunitext.test_case
             newReachObj = reachSetObj.evolve(timeVec(2) + 1);
             projReachSetObj.isprojection();
             firstCutReachObj.iscut();
-            newReachObj.isempty();
-            mlunitext.assert_equals(true, true);
+            newReachObj.isEmpty();
         end
         %
         function self = testSecondBasicTest(self)
@@ -81,8 +80,7 @@ classdef DiscreteReachFirstTestCase < mlunitext.test_case
             newReachObj = reachSetObj.evolve(2 * timeVec(2));
             projReachSetObj.isprojection();
             firstCutReachObj.iscut();
-            newReachObj.isempty();
-            mlunitext.assert_equals(true, true);
+            newReachObj.isEmpty();
         end
     end
 end

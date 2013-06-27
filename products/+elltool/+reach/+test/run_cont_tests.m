@@ -38,10 +38,11 @@ crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
 crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
 %
 confCMat = {
-    'demo3firstTest',  [1 0 1 0 1 0 1 0 1 1];
-    'demo3secondTest', [0 0 0 0 0 0 0 0 1 0];
-    'demo3thirdTest',  [0 0 0 0 0 1 0 1 1 0];
-    'demo3fourthTest', [0 0 0 1 1 1 0 0 1 0];
+    'demo3firstTest',  [1 0 1 0 1 0 1 0 1 1 0];
+    'demo3secondTest', [0 0 0 0 0 0 0 0 1 0 0];
+    'demo3thirdTest',  [0 0 0 0 0 1 0 1 1 0 0];
+    'demo3fourthTest', [0 0 0 1 1 1 0 0 1 0 0];
+    'test2dbad',       [0 0 0 0 0 0 0 0 0 0 1]...
     };
 %
 nConfs = size(confCMat, 1);
@@ -101,6 +102,13 @@ for iConf = 1:nConfs
         suiteList{end + 1} = loader.load_tests_from_test_case(...
             'elltool.reach.test.mlunit.ContinuousReachFirstTestCase',...
             confName, crm, crmSys,'marker',confName);
+    end
+    if confTestsVec(11)
+        MODE_LIST = {'fix'};%allowed modes: fix, rand        
+        suiteList{end + 1} = loader.load_tests_from_test_case(...
+            'elltool.reach.test.mlunit.ContinuousReachProjAdvTestCase',...
+            confName, crm, crmSys, MODE_LIST,...
+            'marker',confName);    
     end
 end
 suiteList{end + 1} = loader.load_tests_from_test_case(...

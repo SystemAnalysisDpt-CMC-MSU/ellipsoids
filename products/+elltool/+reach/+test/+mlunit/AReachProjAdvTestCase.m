@@ -1,8 +1,8 @@
 classdef AReachProjAdvTestCase < mlunitext.test_case
     properties (Access=private, Constant)
-        FIELDS_NOT_TO_COMPARE={'LT_GOOD_DIR_NORM_ORIG_VEC';'PROJ_S_MAT';...
-            'LS_GOOD_DIR_ORIG_VEC';'LS_GOOD_DIR_NORM_ORIG';...
-            'LT_GOOD_DIR_ORIG_MAT'};
+        FIELD_CODES_NOT_TO_COMPARE={'LT_GOOD_DIR_NORM_ORIG_VEC','PROJ_S_MAT',...
+            'LS_GOOD_DIR_ORIG_VEC','LS_GOOD_DIR_NORM_ORIG',...
+            'LT_GOOD_DIR_ORIG_MAT','PROJ_ARRAY'};
         COMP_PRECISION = 1e-3;
         PROJECTION_DIM8_MAT =...
             [-0.1936    0.0434    0.1801    0.3372   -0.0717    0.7744   -0.4447    0.1091;
@@ -72,6 +72,7 @@ classdef AReachProjAdvTestCase < mlunitext.test_case
         end 
         %
         function auxTestProjection(self,indVec,caseName,projMat)
+            import gras.ellapx.smartdb.F;
             newAtMat = self.multiplyCMat(self.SysParam.atCMat,projMat,inv(projMat));
             newBtMat = self.multiplyCMat(self.SysParam.btCMat,projMat);
             newCtMat = self.multiplyCMat(self.SysParam.ctCMat,projMat);
@@ -104,9 +105,12 @@ classdef AReachProjAdvTestCase < mlunitext.test_case
                 self.reachObj.projection(directionsMat(indVec,:)');
             checkPlot(firstProjReachObj);
             %
+            fieldNotToCompareList=F().getNameList(...
+                self.FIELD_CODES_NOT_TO_COMPARE);
             [isEqual,reportStr] = secondProjReachObj.isEqual(...
                 firstProjReachObj,...
-                'notComparedFieldList', self.FIELDS_NOT_TO_COMPARE);
+                'notComparedFieldList',fieldNotToCompareList);
+            %
             failMsg=sprintf('failure for case %s, %s',caseName,reportStr);
             mlunitext.assert_equals(true,isEqual,failMsg);
             function checkPlot(reachObj)
