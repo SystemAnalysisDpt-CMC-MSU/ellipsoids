@@ -8,6 +8,44 @@ classdef SuiteEllTube < mlunitext.test_case
         function tear_down(~)
             close all;
         end
+        function testProjectTouch(~)
+            q11 = @(t)[cos(5*(t-2)) sin(5*(t-2)); -sin(5*(t-2)) cos(5*(t-2))];
+            q1 = @(t) q11(t)'*diag([1 4])*q11(t);
+            q22 = @(t)[cos(7*(t-4)) sin(7*(t-4)); -sin(7*(t-4)) cos(7*(t-4))];
+            q2 = @(t) q22(t)'*diag([1 4])*q22(t);
+            QArrList = {cat(3,q1(1),q1(2),q1(3),q1(4),q1(5)); cat(3,q2(1),q2(2),q2(3),q2(4),q2(5))};
+            aMat = repmat([1 0]',[1,5]);
+            timeVec = 1:5;
+            ltGDir = {cat(3,q11(1)'*[1;0], q11(2)'*[1;0], q11(3)'*[1;0], q11(4)'*[1;0], q11(5)'*[1;0]);...
+                cat(3,q22(1)'*[1;0], q22(2)'*[1;0], q22(3)'*[1;0], q22(4)'*[1;0] ,q22(5)'*[1;0])};
+            sTime =[2; 4];
+            approxType = gras.ellapx.enums.EApproxType(1);
+            calcPrecision = 10^(-3);
+            rel = gras.ellapx.smartdb.rels...
+                .EllTube.fromQArrays(QArrList(1),aMat...
+                ,timeVec,ltGDir{1},sTime(1),approxType,...
+                char.empty(1,0),char.empty(1,0),...
+                calcPrecision);
+            rel.unionWith(...
+                gras.ellapx.smartdb.rels...
+                .EllTube.fromQArrays(QArrList(2),aMat...
+                ,timeVec,ltGDir{2},sTime(2),approxType,...
+                char.empty(1,0),char.empty(1,0),...
+                calcPrecision));
+            
+            projSpaceList = {[1 0; 0 1].'};
+            projType = gras.ellapx.enums.EProjType.Static;
+            relStatProj = ...
+                rel.project(projType,projSpaceList,@fGetProjMat);
+            function [projOrthMatArray, projOrthMatTransArray] =...
+                    fGetProjMat(projMat, timeVec, varargin)
+                nTimePoints = length(timeVec);
+                projOrthMatArray = repmat(projMat, [1, 1, nTimePoints]);
+                projOrthMatTransArray = repmat(projMat.',...
+                    [1,1,nTimePoints]);
+            end
+            
+        end
         function testCutAndCat(~)
             nDims=2;
             nTubes=3;
