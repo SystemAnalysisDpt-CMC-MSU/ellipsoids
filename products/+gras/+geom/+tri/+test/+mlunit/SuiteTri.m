@@ -207,7 +207,19 @@ classdef SuiteTri < mlunitext.test_case
                     mlunitext.assert_equals(true,isPos,...
                         'not all vertices are on the unit sphere');
                 end
+                
             end
+        end
+        function testSphereTriExt(~)
+            import gras.geom.tri.spheretriext
+            dim = 2;
+            N_POINTS = 500;
+            RIGHT_POINTS_3D = 642;
+            [vMat ~] = spheretriext(dim, N_POINTS);
+            mlunitext.assert_equals(size(vMat,1),N_POINTS);
+            dim = 3;
+            [vMat ~] = spheretriext(dim, N_POINTS);
+            mlunitext.assert_equals(size(vMat,1),RIGHT_POINTS_3D);
         end
     end
 end

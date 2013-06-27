@@ -209,7 +209,9 @@ classdef EllTubePlotPropTest < mlunitext.test_case
                 colorFieldList, lineWidthFieldList, transFieldList)   
             
         end
-        
+        function testPlotInt(self)
+            
+        end
         function testPlotAdvanced(self)
             fExpTrans = @fTransByParam;
             fExpColor = @fColorByParam;

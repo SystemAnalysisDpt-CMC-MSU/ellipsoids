@@ -18,9 +18,9 @@ basisMat = [1 0 0 0; 0 1 0 0]';  % orthogonal basis of (x1, x2) subspace
 psObj = rsObj.projection(basisMat);  % reach set projection
 % plot projection of reach set external approximation:
 subplot(2, 2, 1);
-psObj.plot_ea('g');  % plot the whole reach tube
+psObj.plotEa('g');  % plot the whole reach tube
 subplot(2, 2, 2);
 %
 % ReachContinuous's cut() doesn't work with projections:
 psObj = psObj.cut(4);
-psObj.plot_ea('g');  % plot reach set approximation at time t = 4
+psObj.plotEa('g');  % plot reach set approximation at time t = 4
