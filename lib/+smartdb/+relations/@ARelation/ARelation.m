@@ -70,12 +70,8 @@ classdef ARelation<smartdb.cubes.CubeStruct
                         end
                     case 'comparemetadatabackwardref',
                         isCompareCubeStructBackwardRef=prop{k+1};
-                    case 'maxtolerance',
-                        inpArgList=[inpArgList, {'maxTolerance', ...
-                            prop{k+1}}];
-                    case 'maxrelativetolerance'
-                        inpArgList=[inpArgList, {'maxRelativeTolerance',...
-                            prop{k+1}}];
+                    case {'maxtolerance','maxrelativetolerance'},
+                        inpArgList=[inpArgList, prop([k,k+1])];
                     otherwise,
                         error([upper(mfilename),':wrongInput'],...
                             'unidentified property name: %s ',prop{k});

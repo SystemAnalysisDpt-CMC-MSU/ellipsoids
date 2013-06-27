@@ -58,8 +58,6 @@ classdef AReach < elltool.reach.IReach
             [elltool.reach.AReach.FIRST_COMMON_PART_BAD_ELL_STR,...
             'initial set', ...
             elltool.reach.AReach.SECOND_COMMON_PART_BAD_ELL_STR];
-        %
-        TMP_COMP_PRECISION=1e-2;
     end
     %
     properties (Access = protected)
@@ -901,8 +899,7 @@ classdef AReach < elltool.reach.IReach
             %             System Analysis Department 2013 $
             %
             [isEqual, reportStr] = self.ellTubeRel.isEqual(...
-                reachObj.ellTubeRel,...
-                'maxTolerance',self.TMP_COMP_PRECISION,varargin{:});
+                reachObj.ellTubeRel,varargin{:});
         end
         %
         function display(self)
@@ -1474,7 +1471,7 @@ classdef AReach < elltool.reach.IReach
             import gras.ellapx.lreachuncert.probdyn.LReachProblemDynamicsFactory;
             import gras.ellapx.uncertcalc.EllApxBuilder;
             import modgen.common.throwerror;
-            MAX_ALLOWED_CAT_ABS_TOL=1e-12;
+            MAX_ALLOWED_CAT_TOL=1e-12;
             %
             % check and analize input
             %
@@ -1548,7 +1545,8 @@ classdef AReach < elltool.reach.IReach
             [~, indRelVec] = sort(indVec);
             newEllTubeRel = newEllTubeRel.getTuples(indRelVec);
             %
-            inpArgList={'commonTimeAbsTol',MAX_ALLOWED_CAT_ABS_TOL};
+            inpArgList={'commonTimeAbsTol',MAX_ALLOWED_CAT_TOL,...
+                'commonTimeRelTol',MAX_ALLOWED_CAT_TOL};
             if self.isBackward
                 newReachObj.ellTubeRel =...
                     newEllTubeRel.cat(self.ellTubeRel,inpArgList{:},...

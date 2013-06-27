@@ -851,6 +851,9 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             %         
             %     maxTolerance: double [1,1] - maximum allowed tolerance            
             %
+            %     maxRelativeTolerance: double [1,1] - maximum allowed relative
+            %        tolerance            
+            %            
             %     compareMetaDataBackwardRef: logical[1,1] if true, the CubeStruct's
             %         referenced from the meta data objects are also compared            
             %
@@ -1033,6 +1036,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 [isPos, eqReportStr] = compEllTubeReduced.isEqual(...
                     ellTubeReduced,...
                     'maxTolerance', maxCompareTol,...
+                    'maxRelativeTolerance', maxCompareTol,...
                     'checkTupleOrder',isTupleOrderChecked,...
                     reg{:});
             end

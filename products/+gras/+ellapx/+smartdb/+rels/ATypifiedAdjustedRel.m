@@ -11,9 +11,10 @@ classdef ATypifiedAdjustedRel<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel
             self.checkIfObjectScalar();
             otherRel.checkIfObjectScalar();
             [reg,prop]=modgen.common.parseparams(varargin,...
-                {'maxPrecision'});
-            self.sortDetermenisticallyInternal(prop{:});
-            otherRel.sortDetermenisticallyInternal(prop{:});
+                {'maxTolerance'});
+            self.sortDetermenisticallyInternal(prop{2:end});
+            otherRel.sortDetermenisticallyInternal(prop{2:end});
+            %
             [isOk,reportStr]=self.isEqualAdjustedInternal(otherRel,...
                 reg{:},prop{:});
         end
@@ -22,15 +23,15 @@ classdef ATypifiedAdjustedRel<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel
         end
     end
     methods (Access=protected)
-        function sortDetermenisticallyInternal(self,maxPrecision)
+        function sortDetermenisticallyInternal(self,maxTolerance)
             import modgen.common.checkvar;
             MAX_PREC_DEFAULT=1e-6;
             if nargin<2
-                maxPrecision=MAX_PREC_DEFAULT;
+                maxTolerance=MAX_PREC_DEFAULT;
             else
-                checkvar(maxPrecision,'isfloat(x)&&isscalar(x)&&(x>0)');
+                checkvar(maxTolerance,'isfloat(x)&&isscalar(x)&&(x>0)');
             end
-            nRoundDigits=-fix(log(maxPrecision)/log(10));            
+            nRoundDigits=-fix(log(maxTolerance)/log(10));            
             %
             sortFieldList=self.getDetermenisticSortFieldList();
             sortableRel=self.getFieldProjection(sortFieldList);
