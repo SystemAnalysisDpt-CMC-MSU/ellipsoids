@@ -30,6 +30,9 @@ function [isEq,reportStr]=isEqual(self,otherObj,varargin)
 %
 %     maxTolerance: double [1,1] - maximum allowed tolerance
 %
+%     maxRelativeTolerance: double [1,1] - maximum allowed relative
+%        tolerance
+%
 %     leftIndCVec: cell[1,nLeftIndDims] - list of indices to be applied to
 %       the dimensions of left-hand side CubeStruct object
 %
@@ -80,6 +83,8 @@ end
 [~,prop]=modgen.common.parseparams(varargin,[],0);
 nProp=length(prop);
 maxTolerance=0;
+isRelComparison=false;
+maxRelTolerance=0;
 isFieldOrderCheck=false;
 isSortedBeforeCompare=false;
 isCompareCubeStructBackwardRef=true;
@@ -108,6 +113,10 @@ for k=1:2:nProp-1
         case 'maxtolerance',
             maxTolerance=prop{k+1};
             checkgen(maxTolerance,'isscalar(x)&&isnumeric(x)&&x>=0');
+        case 'maxrelativetolerance'
+            isRelComparison=true;
+            maxRelTolerance=prop{k+1};
+            checkgen(maxRelTolerance,'isscalar(x)&&isnumeric(x)&&x>=0');
         case 'leftindcvec',
             leftIndCVec=prop{k+1};
             isLeftIndCVecSpec=true;
@@ -300,11 +309,19 @@ end
         for iStruct=1:nStructs
             if iStruct==1,
                 curTolerance=maxTolerance;
+                curRelTolerance=maxRelTolerance;
             else
                 curTolerance=0;
+                curRelTolerance=0;
+            end
+            if isRelComparison
+                inpArgs={curRelTolerance};
+            else
+                inpArgs={};
             end
             [isEqCur,reportStrCur]=compFuncHandle(...
-                resSelfCVec{iStruct},resOtherCVec{iStruct},curTolerance);
+                resSelfCVec{iStruct},resOtherCVec{iStruct},curTolerance,...
+                inpArgs{:});
             if ~isempty(reportStrCur),
                 reportStrList{iStruct}=sprintf('(%s):%s',structNameList{iStruct},reportStrCur);
             end

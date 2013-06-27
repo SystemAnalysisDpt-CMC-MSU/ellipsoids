@@ -18,7 +18,7 @@ classdef QuadraticFormSqrtFunc<gras.mat.AMatrixOpFunc
                     tmpArray(:,:,iTimePoint) = ...
                         mArray(:,:,iTimePoint)*xArray(:,:,iTimePoint);
                 end
-                resVec = shiftdim(realsqrt(sum(tmpArray.*xArray,1)),1);
+                resVec = realsqrt(sum(tmpArray.*xArray,1));
             end
         end
     end

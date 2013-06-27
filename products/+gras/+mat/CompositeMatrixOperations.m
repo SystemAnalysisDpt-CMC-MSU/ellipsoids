@@ -23,7 +23,13 @@ classdef CompositeMatrixOperations<gras.mat.AMatrixOperations
             if isempty(obj)
                 obj=gras.mat.fcnlib.MatrixUMinusFunc(mMatFunc);
             end
-        end        
+        end
+        function obj=realsqrt(self,mMatFunc)
+            obj=realsqrt@gras.mat.AMatrixOperations(self,mMatFunc);
+            if isempty(obj)
+                obj=gras.mat.fcnlib.MatrixRealSqrtFunc(mMatFunc);
+            end
+        end   
         function obj=transpose(self,mMatFunc)
             obj=transpose@gras.mat.AMatrixOperations(self,mMatFunc);
             if isempty(obj)
@@ -52,6 +58,28 @@ classdef CompositeMatrixOperations<gras.mat.AMatrixOperations
             obj=expmt@gras.mat.AMatrixOperations(self,mMatFunc,t0);
             if isempty(obj)
                 obj=gras.mat.fcnlib.MatrixExpTimeFunc(mMatFunc,t0);
+            end
+        end
+        function obj=matdot(self,lMatFunc,rMatFunc)
+            obj=matdot@gras.mat.AMatrixOperations(self,lMatFunc,rMatFunc);
+            if isempty(obj)
+                obj=gras.mat.fcnlib.MatrixDotFunc(lMatFunc,rMatFunc);
+            end
+        end 
+        function obj=rMultiplyByScalar(self,lMatFunc,rScalFunc)
+            obj=rMultiplyByScalar@gras.mat.AMatrixOperations(...
+                self,lMatFunc,rScalFunc);
+            if isempty(obj)
+                obj=gras.mat.fcnlib.MatrixBinaryTimesFunc(...
+                    lMatFunc,rScalFunc);
+            end
+        end
+        function obj=rDivideByScalar(self,lMatFunc,rScalFunc)
+            obj=rDivideByScalar@gras.mat.AMatrixOperations(...
+                self,lMatFunc,rScalFunc);
+            if isempty(obj)
+                obj=gras.mat.fcnlib.MatrixRDivideByScalarFunc(...
+                    lMatFunc,rScalFunc);
             end
         end
         function obj=rMultiplyByVec(self,lMatFunc,rColFunc)

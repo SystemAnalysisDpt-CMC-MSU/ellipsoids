@@ -356,9 +356,6 @@ classdef SuiteEllTube < mlunitext.test_case
             end
         end
         %
-
-        
-        
         function testPlotTouch(self)
             [relStatProj,relDynProj]=checkMaster(1);
             [rel2StatProj,rel2DynProj]=checkMaster(10);
@@ -1020,6 +1017,57 @@ classdef SuiteEllTube < mlunitext.test_case
                nTimePoints=length(timeVec);
                projOrthMatArray=repmat(projMat,[1,1,nTimePoints]);
                projOrthMatTransArray=repmat(projMat.',[1,1,nTimePoints]);
+            end
+        end
+        function self = testRelativeComparison(self)
+            nPoints=5;
+            relTolerance=0.01;
+            lsGoodDirVec=[1;0;1];
+            timeVec=1:nPoints;
+            sTime=nPoints;
+            fCheckFun = @(x, y) x.isEqual(y, 'MaxRelativeTolerance', ...
+                relTolerance);
+            %
+            qArrayListBase = repmat({repmat(diag([1 2 3]), [1, 1, ...
+                nPoints])}, 1, 1);
+            firstEllTube = createSimpleRel(lsGoodDirVec, ...
+                qArrayListBase, timeVec, sTime);
+            %
+            qArrayList = {qArrayListBase{:} .* (1 - 0.5 * relTolerance)};
+            secondEllTube = createSimpleRel(lsGoodDirVec, ...
+                qArrayList, timeVec, sTime);
+            [isEqual,reportStr] = fCheckFun(firstEllTube, secondEllTube);
+            mlunitext.assert(isEqual,reportStr);
+            %
+            qArrayList = {qArrayListBase{:} .* (1 + 2 * relTolerance)};
+            secondEllTube = createSimpleRel(lsGoodDirVec, ...
+                qArrayList, timeVec, sTime);
+            [isEqual,~] = fCheckFun(firstEllTube, secondEllTube);
+            mlunitext.assert(~isEqual, ['Ellipsoids relative', ...
+                ' difference must be greater than  tolerance']);
+            %
+            function rel = createSimpleRel(lsGoodDirVec, qArrayList, ...
+                    timeVec, sTime)
+                import gras.ellapx.smartdb.rels.EllTube;
+                %
+                calcPrecision = 0.001;
+                nTubes = size(qArrayList, 2);
+                approxSchemaDescr = char.empty(1,0);
+                approxSchemaName = char.empty(1,0);
+                approxType = gras.ellapx.enums.EApproxType.Internal;
+                nTimePoints = timeVec(end);
+                if ~isempty(qArrayList)
+                    nDims = size(qArrayList{1}, 1);
+                else
+                    rel = [];
+                    return;
+                end
+                aMat = zeros(nDims,nTimePoints);
+                ltGoodDirArray = repmat(lsGoodDirVec,[1,nTubes,nTimePoints]);
+                %
+                rel = EllTube.fromQArrays(qArrayList, aMat, timeVec,...
+                ltGoodDirArray, sTime, approxType, approxSchemaName,...
+                approxSchemaDescr, calcPrecision);
             end
         end
     end

@@ -92,8 +92,37 @@ classdef AMatrixOperations<gras.mat.IMatrixOperations
                 obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
             end
         end
+        function obj=realsqrt(self,mMatFunc)
+            if self.isMatFuncConst(mMatFunc)
+                obj = self.constUnaryOperation(@realsqrt,mMatFunc);
+            else
+                obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
+            end
+        end
         function obj=expmt(self,mMatFunc,t0)
             obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
+        end
+        function obj=matdot(self,lMatFunc,rMatFunc)
+            import gras.gen.matdot;
+            if self.isMatFuncConst(lMatFunc,rMatFunc)
+                obj = self.constBinaryOperation(@matdot,lMatFunc,rMatFunc);
+            else
+                obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
+            end
+        end
+        function obj=rMultiplyByScalar(self,lMatFunc,rScalFunc)
+            if self.isMatFuncConst(lMatFunc,rScalFunc)
+                obj = self.constBinaryOperation(@times,lMatFunc,rScalFunc);
+            else
+                obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
+            end
+        end
+        function obj=rDivideByScalar(self,lMatFunc,rScalFunc)
+            if self.isMatFuncConst(lMatFunc,rScalFunc)
+                obj = self.constBinaryOperation(@rdivide,lMatFunc,rScalFunc);
+            else
+                obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
+            end
         end
         function obj=rMultiplyByVec(self,lMatFunc,rColFunc)
             if self.isMatFuncConst(lMatFunc,rColFunc)
@@ -150,17 +179,6 @@ classdef AMatrixOperations<gras.mat.IMatrixOperations
         function obj=quadraticFormSqrt(self,mMatFunc,xColFunc)
             obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
         end
-        function obj = fromSymbMatrix(self, mCMat)
-            import gras.mat.symb.MatrixSymbFormulaBased;
-            import gras.mat.ConstMatrixFunctionFactory;
-            import gras.mat.symb.iscellofstringconst;
-            %
-            if iscellofstringconst(mCMat)
-                obj = ConstMatrixFunctionFactory.createInstance(mCMat);
-            else
-                obj = MatrixSymbFormulaBased(mCMat);
-            end
-        end
         function obj = rSymbMultiply(self, lCMat, mCMat, rCMat)
             import gras.mat.symb.MatrixSFTripleProd;
             import gras.mat.symb.MatrixSFBinaryProd;
@@ -203,6 +221,19 @@ classdef AMatrixOperations<gras.mat.IMatrixOperations
                     mMat*vVec);
             else
                 obj = MatrixSFBinaryProdByVec(mCMat,vCVec);
+            end
+        end
+    end
+    methods(Static)
+        function obj = fromSymbMatrix(mCMat)
+            import gras.mat.symb.MatrixSymbFormulaBased;
+            import gras.mat.ConstMatrixFunctionFactory;
+            import gras.mat.symb.iscellofstringconst;
+            %
+            if iscellofstringconst(mCMat)
+                obj = ConstMatrixFunctionFactory.createInstance(mCMat);
+            else
+                obj = MatrixSymbFormulaBased(mCMat);
             end
         end
     end

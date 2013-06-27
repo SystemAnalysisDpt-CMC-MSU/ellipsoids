@@ -1,24 +1,24 @@
 classdef MatrixBinaryTimesFunc<gras.mat.AMatrixBinaryOpFunc
     methods
         function self=MatrixBinaryTimesFunc(lMatFunc, rMatFunc)
-            %
             self=self@gras.mat.AMatrixBinaryOpFunc(lMatFunc,...
                 rMatFunc,@mtimes);
             %
             lSizeVec = lMatFunc.getMatrixSize();
             rSizeVec = rMatFunc.getMatrixSize();
             %
-            modgen.common.type.simple.checkgenext('x1(2)==x2(1)', 2,...
-                lSizeVec, rSizeVec);
-            %
-            self.nRows = lSizeVec(1);
-            self.nCols = rSizeVec(2);
-            %
-            if self.nRows == 1 || self.nCols == 1
-                self.nDims = 1;
+            if all([any(lSizeVec ~= 1), any(rSizeVec ~= 1)])
+                modgen.common.type.simple.checkgenext('x1(2)==x2(1)', ...
+                    2, lSizeVec, rSizeVec);
+                sSizeVec = [lSizeVec(1), rSizeVec(2)];
             else
-                self.nDims = 2;
+                sSizeVec = max(lSizeVec, rSizeVec);
             end
+            %
+            self.nRows = sSizeVec(1);
+            self.nCols = sSizeVec(2);
+            %
+            self.nDims = 2 - any(sSizeVec == 1);
         end
     end
 end
