@@ -1,10 +1,4 @@
 classdef AGenEllipsoid < handle
-    methods (Access = public)
-        function ellObj = AGenEllipsoid(varargin)
-            
-        end
-    end
-    
     methods (Access = protected, Abstract, Static)
         formCompStruct(SEll, SFieldNiceNames, absTol, isPropIncluded)
     end
@@ -19,8 +13,6 @@ classdef AGenEllipsoid < handle
             %
             nFirstElems = numel(ellFirstArr);
             nSecElems = numel(ellSecArr);
-            ellFirstArr
-            ellSecArr
             modgen.common.checkvar( ellFirstArr, 'numel(x) > 0', 'errorTag', ...
                 'wrongInput:emptyArray', 'errorMessage', ...
                 'Each array must be not empty.');
