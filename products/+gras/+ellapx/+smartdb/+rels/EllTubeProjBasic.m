@@ -512,20 +512,20 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                     fCalcBodyArr(obj,varargin)
                 allEllMat = cat(4, obj.QArray{:});
                 dim = obj.dim(1);
-                [lGridMat, fMat] = ellipsoid.getGrid(dim,...
+                [lGridMat, fMat] = gras.geom.tri. spheretriext(dim,...
                     nPlotPoints);
                 lGridMat = lGridMat';
                 nDim = size(lGridMat, 2);
                 mDim =  size(obj.timeVec{1}, 2);
                 if size(obj.timeVec{1}, 2) == 1
-                    allEllMat = shiftdim(...
-                        shiftdim(shiftdim(allEllMat(:,:,end,:),2)),1);
+%                     allEllMat = shiftdim(...
+%                         shiftdim(shiftdim(allEllMat(:,:,end,:),2)),1);
                     
                     
                     xMat = calcPoints(1,3);
                     xCMat = {[xMat xMat(:,1)]};
                     fCMat = {fMat};
-                    titl = 'Tube at time ' + num2str (obj.timeVec{1});
+                    titl = ['Tube at time '  num2str(obj.timeVec{1})];
                     if dim == 2
                         isCenter = true;
                     end

@@ -480,7 +480,7 @@ if ~isFill
 end
 h1 = plotPatch('Vertices',X','Faces',faces,'Parent',hAxes);
 set(h1, 'EdgeColor', clrVec, 'LineWidth', widVec,'FaceAlpha',shade,...
-    'FaceColor',clrVec);
+    'FaceColor',clrVec,'DisplayName','1');
 title(titl);
 xlabel(xlab);
 ylabel(ylab);
@@ -509,7 +509,8 @@ import modgen.graphics.camlight;
 LIGHT_TYPE_LIST={{'left'},{40,-65},{-20,25}};
 hVec = plotPatch('Vertices',vertices', 'Faces', faces, ...
     'FaceVertexCData', faceVertexCData, 'FaceColor','flat', ...
-    'FaceAlpha', faceAlpha,'EdgeColor',clrVec,'Parent',hAxes);
+    'FaceAlpha', faceAlpha,'EdgeColor',clrVec,'Parent',hAxes,...
+    'DisplayName','1');
 hLightVec=cellfun(@(x)camlight(hAxes,x{:}),LIGHT_TYPE_LIST);
 hVec=[hVec,hLightVec];
 if size(vertices,2) > 1
