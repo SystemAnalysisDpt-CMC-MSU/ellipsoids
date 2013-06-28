@@ -9,8 +9,7 @@ classdef LReachProblemLTIDynamics<...
             import gras.interp.MatrixInterpolantFactory;
             import gras.gen.MatVector;
             import gras.ode.MatrixODESolver;
-            import gras.mat.fcnlib.ConstMatrixFunction;
-            import gras.mat.fcnlib.ConstColFunction;
+            import gras.mat.ConstMatrixFunctionFactory;
             %
             if ~isa(problemDef,'gras.ellapx.lreachuncert.probdef.ReachContLTIProblemDef')
                 modgen.common.throwerror('wrongInput',...
@@ -36,8 +35,11 @@ classdef LReachProblemLTIDynamics<...
             qVec = MatVector.fromFormulaMat(problemDef.getqCVec(),0);
             CqVec = CMat*qVec;
             %
-            self.CqtDynamics = ConstColFunction(CqVec);
-            self.CQCTransDynamics = ConstMatrixFunction(CMat*QMat*(CMat.'));
+            self.CqtDynamics = ...
+                ConstMatrixFunctionFactory.createInstance(CqVec);
+            self.CQCTransDynamics = ...
+                ConstMatrixFunctionFactory.createInstance(...
+                CMat*QMat*(CMat.'));
             %
             % compute x(t)
             %

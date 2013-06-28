@@ -34,7 +34,7 @@ classdef MatrixColTriuCubicSpline<gras.interp.AMatrixCubicSpline
     methods (Access=public)
         function resArray=evaluate(self,timeVec)
             nRows=self.mSizeVec(1);
-            nDims=length(self.mSizeVec);
+            nDims=self.nDims;
             nCols=self.nCols;
             nTimePoints=length(timeVec);
             switch nDims
