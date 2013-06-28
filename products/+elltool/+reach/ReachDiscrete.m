@@ -195,7 +195,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             approxSchemaDescr = char.empty(1,0);
             approxSchemaName = char.empty(1,0);
             timeVec = probDynObj.getTimeVec();
-            sTime=timeVec(1);            
+            sTime=timeVec(1);
             if self.isBackward
                 timeVec = fliplr(timeVec);
             end
@@ -236,10 +236,11 @@ classdef ReachDiscrete < elltool.reach.AReach
                         'UniformOutput', false);
                     ltGoodDirArray = flipdim(ltGoodDirArray, 3);
                 end
+                %
                 rel = gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
                     qArrayList, aMat, timeVec, ltGoodDirArray, ...
                     sTime, approxType, approxSchemaName, ...
-                    approxSchemaDescr, self.relTol / 10);
+                    approxSchemaDescr,calcPrecision);
             end
         end
     end

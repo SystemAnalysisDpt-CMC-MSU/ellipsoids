@@ -1,9 +1,11 @@
 classdef AReachProjAdvTestCase < mlunitext.test_case
     properties (Access=private, Constant)
+        CMP_PREC_FACTOR=10;%we increase comp precision to account
+        %for errors introduced during projecting
+        %
         FIELD_CODES_NOT_TO_COMPARE={'LT_GOOD_DIR_NORM_ORIG_VEC','PROJ_S_MAT',...
             'LS_GOOD_DIR_ORIG_VEC','LS_GOOD_DIR_NORM_ORIG',...
             'LT_GOOD_DIR_ORIG_MAT','PROJ_ARRAY'};
-        COMP_PRECISION = 1e-3;
         PROJECTION_DIM8_MAT =...
             [-0.1936    0.0434    0.1801    0.3372   -0.0717    0.7744   -0.4447    0.1091;
             -0.4176   -0.3222   -0.1170    0.2453   -0.7028   -0.2820   -0.0221    0.2718;
@@ -51,7 +53,7 @@ classdef AReachProjAdvTestCase < mlunitext.test_case
                 newDoubleMat = doubleMultMatLeft*doubleMat*...
                     doubleMultMatRight;
             end
-        end   
+        end
     end
     methods (Access = protected)
         %
@@ -69,10 +71,11 @@ classdef AReachProjAdvTestCase < mlunitext.test_case
             l0CMat = self.crm.getParam(...
                 'goodDirSelection.methodProps.manual.lsGoodDirSets.set1');
             self.SysParam.l0Mat = cell2mat(l0CMat.').';
-        end 
+        end
         %
         function auxTestProjection(self,indVec,caseName,projMat)
             import gras.ellapx.smartdb.F;
+            import elltool.conf.Properties;
             newAtMat = self.multiplyCMat(self.SysParam.atCMat,projMat,inv(projMat));
             newBtMat = self.multiplyCMat(self.SysParam.btCMat,projMat);
             newCtMat = self.multiplyCMat(self.SysParam.ctCMat,projMat);
@@ -107,9 +110,15 @@ classdef AReachProjAdvTestCase < mlunitext.test_case
             %
             fieldNotToCompareList=F().getNameList(...
                 self.FIELD_CODES_NOT_TO_COMPARE);
+            %
+            maxTolerance=Properties.getAbsTol()*self.CMP_PREC_FACTOR;
+            maxRelTolerance=Properties.getRelTol()*self.CMP_PREC_FACTOR;
+            %
             [isEqual,reportStr] = secondProjReachObj.isEqual(...
                 firstProjReachObj,...
-                'notComparedFieldList',fieldNotToCompareList);
+                'notComparedFieldList',fieldNotToCompareList,...
+                'maxTolerance',maxTolerance,...
+                'maxRelativeTolerance',maxRelTolerance);
             %
             failMsg=sprintf('failure for case %s, %s',caseName,reportStr);
             mlunitext.assert_equals(true,isEqual,failMsg);
@@ -131,7 +140,7 @@ classdef AReachProjAdvTestCase < mlunitext.test_case
         end
         function tear_down(~)
             close all;
-        end   
+        end
         %
         function self = set_up_param(self, confName, crm, crmSys, inpModeList)
             self.crm = crm;
@@ -158,10 +167,11 @@ classdef AReachProjAdvTestCase < mlunitext.test_case
             DistBounds.shape = self.SysParam.qtCMat;
             %
             self.linSys = self.linSysFactory.create(self.SysParam.atCMat,...
-                self.SysParam.btCMat, ControlBounds, self.SysParam.ctCMat, DistBounds);
+                self.SysParam.btCMat, ControlBounds,...
+                self.SysParam.ctCMat, DistBounds);
             self.reachObj = self.reachObfFactory.create(self.linSys,...
                 ellipsoid(self.SysParam.x0Vec, self.SysParam.x0Mat),...
-                self.SysParam.l0Mat, self.timeVec);          
+                self.SysParam.l0Mat, self.timeVec);
         end
         %
         function self = testProjection(self)
@@ -181,11 +191,11 @@ classdef AReachProjAdvTestCase < mlunitext.test_case
             end
             if ismember('rand', self.modeList)
                 [projMat, ~] = qr(rand(size(self.SysParam.atCMat)));
-            end  
-            isNotModeVec = ~ismember(self.modeList,self.ALLOWED_MODE_LIST); 
+            end
+            isNotModeVec = ~ismember(self.modeList,self.ALLOWED_MODE_LIST);
             if isNotModeVec
-                    throwerror('wrongInput:badMode',...
-                        'mode %s is not supported',self.modeList(isNotModeVec));
+                throwerror('wrongInput:badMode',...
+                    'mode %s is not supported',self.modeList(isNotModeVec));
             end
             cellfun(@(x) self.auxTestProjection(indVec,x,projMat), self.modeList);
         end

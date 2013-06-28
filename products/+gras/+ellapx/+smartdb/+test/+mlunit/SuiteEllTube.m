@@ -32,7 +32,6 @@ classdef SuiteEllTube < mlunitext.test_case
                 ,timeVec,ltGDir{2},sTime(2),approxType,...
                 char.empty(1,0),char.empty(1,0),...
                 calcPrecision));
-            
             projSpaceList = {[1 0; 0 1].'};
             projType = gras.ellapx.enums.EProjType.Static;
             relStatProj = ...
@@ -44,8 +43,36 @@ classdef SuiteEllTube < mlunitext.test_case
                 projOrthMatTransArray = repmat(projMat.',...
                     [1,1,nTimePoints]);
             end
-            
         end
+        %
+        function testSizeConsistency(self)
+            nPoints=3;
+            nTubes=2;
+            [rel,relStatProj,relDynProj]=auxGenSimpleTubeAndProj(self,...
+                nPoints,nTubes);
+            check(rel);
+            check(relStatProj);
+            check(relDynProj);
+            function check(rel)
+                fieldNameList=rel.getFieldNameList();
+                nFields=numel(fieldNameList);
+                for iField=1:nFields
+                    fieldName=fieldNameList{iField};
+                    SData=rel.getData();
+                    if iscell(SData.(fieldName))
+                        SData.(fieldName)=cat(2,SData.(fieldName),...
+                            SData.(fieldName));
+                        self.runAndCheckError(@checkField,...
+                            'wrongInput:badSize','reportStr',...
+                            sprintf('failure for field %s',fieldName));
+                    end
+                end
+                function checkField()
+                    rel.createInstance(SData);
+                end
+            end
+        end
+        %
         function testCutAndCat(~)
             nDims=2;
             nTubes=3;
@@ -405,7 +432,7 @@ classdef SuiteEllTube < mlunitext.test_case
             self.runAndCheckError('rel3=rel1.cat(rel2);',...
                 'wrongInput:commonValuesDiff');
             rel1.cat(rel2,'isCommonValuesChecked',false);
-            rel3=rel1.cat(rel2,'commonTimeAbsTol',2);
+            rel3=rel1.cat(rel2,'commonTimeAbsTol',2,'commonTimeRelTol',1);
             check(rel3,nFirstPoints,rel1,nFirstPoints);
             self.runAndCheckError(...
                 'rel3=rel1.cat(rel2,''isReplacedByNew'',true);',...
@@ -413,7 +440,7 @@ classdef SuiteEllTube < mlunitext.test_case
             rel1.cat(rel2,'isReplacedByNew',true,...
                 'isCommonValuesChecked',false);
             rel3=rel1.cat(rel2,'isReplacedByNew',true,...
-                'commonTimeAbsTol',2);
+                'commonTimeAbsTol',2,'commonTimeRelTol',1);
             check(rel3,nFirstPoints,rel2,1);
             %
             function check(relLeft,indLeft,relRight,indRight)
