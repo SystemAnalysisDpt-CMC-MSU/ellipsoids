@@ -3,28 +3,26 @@ classdef ExtEllApxBuilder<gras.ellapx.lreachplain.ATightEllApxBuilder
         APPROX_SCHEMA_NAME='ExternalQ'
         APPROX_SCHEMA_DESCR='External approximation based on matrix ODE for Q'
     end
-    properties (Access=private)
-        slBPBlSqrtDynamicsList
-    end
     methods (Access=protected)
-        function resMat=calcEllApxMatrixDeriv(self,ADynamics,BPBTransDynamics,...
-                slBPBlSqrtDynamics,ltSpline,t,QMat)
+        function resMat=calcEllApxMatrixDeriv(self,ADynamics,...
+                BPBTransDynamics,ltSpline,t,QMat)
             import modgen.common.throwerror;
             AMat=ADynamics.evaluate(t);
-            piNumerator=slBPBlSqrtDynamics.evaluate(t);
-            ltVec=ltSpline.evaluate(t);
+            ltVec=ltSpline.evaluate(t);            
+            BPBTransMat=BPBTransDynamics.evaluate(t);
+            piNumerator=realsqrt(sum((BPBTransMat*ltVec).*ltVec));
             piDenominator=realsqrt(sum((QMat*ltVec).*ltVec));
             if piNumerator<=self.absTol
                 throwerror('wrongInput:degenerateControlBounds',...
-                    ['degenerate matrices B,P for constraints ',...
-                    'contraints are not supported']);
+                    ['matrices B,P for control ',...
+                    'contraints are either degenerate or ill-conditioned']);
             elseif piDenominator<=self.absTol
                 throwerror('wrongInput:estimateDegraded',...
                     'the estimate has degraded, reason unknown');
             end          
             tmpMat=AMat*QMat;
             resMat=tmpMat+tmpMat.'+(piNumerator./piDenominator).*QMat+...
-                (piDenominator./piNumerator).*BPBTransDynamics.evaluate(t);
+                (piDenominator./piNumerator).*BPBTransMat;
             resMat=(resMat+resMat.')*0.5;
         end
         function fHandle=getEllApxMatrixDerivFunc(self,iGoodDir)
@@ -32,9 +30,8 @@ classdef ExtEllApxBuilder<gras.ellapx.lreachplain.ATightEllApxBuilder
                 @(t,y)calcEllApxMatrixDeriv(self,...
                 self.getProblemDef().getAtDynamics,...
                 self.getProblemDef.getBPBTransDynamics,...
-                self.slBPBlSqrtDynamicsList{iGoodDir},...
-                self.getGoodDirSet.getGoodDirOneCurveSpline(...
-                iGoodDir),t,y);
+                self.getGoodDirSet.getRGoodDirOneCurveSpline(iGoodDir),...
+                t,y);
         end
         function QArray=adjustEllApxMatrixVec(~,QArray)
         end
@@ -51,38 +48,10 @@ classdef ExtEllApxBuilder<gras.ellapx.lreachplain.ATightEllApxBuilder
             apxSchemaDescr=self.APPROX_SCHEMA_DESCR;
         end
     end
-    methods (Access=private)
-        function self=prepareODEData(self)
-            import gras.ellapx.common.*;
-            import gras.mat.MatrixOperationsFactory;
-            import gras.ellapx.lreachplain.IntEllApxBuilder;
-            %
-            nGoodDirs=self.getNGoodDirs();
-            pDefObj=self.getProblemDef();
-            timeVec=pDefObj.getTimeVec;
-            %
-            % calculate <l,BPB' l>^{1/2}
-            %
-            matOpFactory = MatrixOperationsFactory.create(timeVec);
-            %
-            BPBTransDynamics = pDefObj.getBPBTransDynamics();
-            goodDirSet = self.getGoodDirSet();
-            self.slBPBlSqrtDynamicsList = cell(1, nGoodDirs);
-            %
-            for iGoodDir = 1:nGoodDirs
-                ltSpline = goodDirSet.getGoodDirOneCurveSpline(iGoodDir);
-                %
-                self.slBPBlSqrtDynamicsList{iGoodDir} = ...
-                    matOpFactory.quadraticFormSqrt(BPBTransDynamics,...
-                    ltSpline);
-            end
-        end
-    end
     methods
         function self=ExtEllApxBuilder(varargin)
             self=self@gras.ellapx.lreachplain.ATightEllApxBuilder(...
                 varargin{:});
-            self.prepareODEData();
         end
     end
 end

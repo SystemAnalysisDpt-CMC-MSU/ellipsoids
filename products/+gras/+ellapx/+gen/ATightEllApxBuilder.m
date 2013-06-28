@@ -49,6 +49,8 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.IEllApxBuilder
                 timeLimsVec,nTimePoints,calcPrecision)
             import gras.ellapx.gen.ATightEllApxBuilder;
             import modgen.common.throwerror;
+            ABS_TOL_FACTOR=1e-2;%this is a temporary measure until 
+            %we specify absTol and relTol separately
             if ~isa(pDefObj,...
                     'gras.ellapx.lreachplain.probdyn.IReachProblemDynamics')
                 throwerror('wrongInput','incorrect type of pDefObj');
@@ -71,7 +73,7 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.IEllApxBuilder
             self.odeAbsCalcPrecision=calcPrecision*precisionFactor;
             self.odeRelCalcPrecision=calcPrecision*precisionFactor;               
             self.calcPrecision=calcPrecision;
-            self.absTol=calcPrecision;
+            self.absTol=calcPrecision*ABS_TOL_FACTOR;
             %% check that there is no disturbance
             self.pDefObj=pDefObj;   
             self.goodDirSetObj=goodDirSetObj;

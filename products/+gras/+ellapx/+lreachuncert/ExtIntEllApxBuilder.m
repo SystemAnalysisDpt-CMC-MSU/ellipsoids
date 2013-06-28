@@ -11,10 +11,6 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
     properties (Access=private)
         sMethodName
         ellTubeRel
-        slBPBlSqrtDynamicsList
-        slCQClSqrtDynamicsList
-        BPBTransSqrtLDynamicsList
-        CQCTransSqrtLDynamicsList
         ltSplineList
         %
         minQMatEig
@@ -55,10 +51,6 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
                 self.getProblemDef().getAtDynamics,...
                 self.getProblemDef().getBPBTransDynamics,...
                 self.getProblemDef().getCQCTransDynamics,...
-                self.slBPBlSqrtDynamicsList{iGoodDir},...
-                self.slCQClSqrtDynamicsList{iGoodDir},...
-                self.BPBTransSqrtLDynamicsList{iGoodDir},...
-                self.CQCTransSqrtLDynamicsList{iGoodDir},...
                 self.ltSplineList{iGoodDir},...
                 t,varargin{:});
         end
@@ -90,101 +82,73 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
         end
         function [dQIntMat,dQExtMat]=calcEllApxMatrixDeriv(self,AtDynamics,...
                 BPBTransDynamics,CQCTransDynamics,...
-                slBPBlSqrtDynamics,slCQClSqrtDynamics,...
-                BPBTransSqrtLDynamics,CQCTransSqrtLDynamics,...
                 ltSpline,t,QIntMat,QExtMat)
             import modgen.common.throwerror;
             import gras.la.ismatposdef;
+            import gras.la.sqrtmpos;
             A=AtDynamics.evaluate(t);
             ltVec=ltSpline.evaluate(t);
             %
             %% Internal approximation
-            rSqrtlVec=BPBTransSqrtLDynamics.evaluate(t);
-            R=BPBTransDynamics.evaluate(t);
-            R_sqrt=gras.la.sqrtmpos(R);
+            BPBTransMat=BPBTransDynamics.evaluate(t);
+            BPBTransSqrtMat=sqrtmpos(BPBTransMat);
             %
-            D=CQCTransDynamics.evaluate(t);
-            D_sqrt=gras.la.sqrtmpos(D);
+            CQCTransMat=CQCTransDynamics.evaluate(t);
             %
             [VMat,DMat]=eig(QIntMat);
             if ~ismatposdef(QIntMat,self.calcPrecision,true)
                 throwerror('wrongState','internal approx has degraded');
             end
             Q_star=VMat*realsqrt(DMat)*transpose(VMat);
-            S=self.getOrthTranslMatrix(Q_star,R_sqrt,rSqrtlVec,Q_star*ltVec);
+            S=self.getOrthTranslMatrix(Q_star,BPBTransSqrtMat,...
+                BPBTransSqrtMat*ltVec,Q_star*ltVec);
             %
-            piNumerator=slCQClSqrtDynamics.evaluate(t);
-            piDenominator=realsqrt(sum((QIntMat*ltVec).*ltVec));
+            piNumerator=realsqrt(ltVec.'*CQCTransMat*ltVec);
+            piDenominator=realsqrt(sum((QIntMat*ltVec).*ltVec));                        
             if piNumerator<=self.absTol
                 throwerror('wrongInput',...
-                    ['degenerate matrices C,Q for disturbance ',...
-                    'contraints are not supported']);
+                    ['matrices C,Q for disturbance ',...
+                    'contraints are either degenerate or ill-conditioned']);
             elseif piDenominator<=self.absTol
                 throwerror('wrongInput',...
-                    'the estimate has degraded, reason unknown');
+                    'the internal estimate has degraded, reason unknown');
             end
             %
-            tmp=(A*Q_star+R_sqrt*transpose(S))*transpose(Q_star);
+            tmp=(A*Q_star+BPBTransSqrtMat*transpose(S))*transpose(Q_star);
             dQIntMat=tmp+transpose(tmp)-...
                 piNumerator.*QIntMat./piDenominator-...
-                piDenominator.*D./piNumerator;
+                piDenominator.*CQCTransMat./piNumerator;
             %
             %% External approximation
+            CQCTransSqrtMat=sqrtmpos(CQCTransMat);            
             [VMat,DMat]=eig(QExtMat);
             if ~ismatposdef(QExtMat,self.absTol)
                 throwerror('wrongState','external approx has degraded');
             end
             Q_star=VMat*realsqrt(DMat)*transpose(VMat);
-            piNumerator=slBPBlSqrtDynamics.evaluate(t);
+            piNumerator=realsqrt(ltVec.'*BPBTransMat*ltVec);
             piDenominator=realsqrt(sum((QExtMat*ltVec).*ltVec));
-            dSqrtlVec=CQCTransSqrtLDynamics.evaluate(t);
-            S=self.getOrthTranslMatrix(Q_star,D_sqrt,dSqrtlVec,Q_star*ltVec);
-            tmp=(A*Q_star-D_sqrt*transpose(S))*transpose(Q_star);
+            if piNumerator<=self.absTol
+                throwerror('wrongInput',...
+                    ['matrices B,P for control ',...
+                    'contraints are either degenerate or ill-conditioned']);
+            elseif piDenominator<=self.absTol
+                throwerror('wrongInput',...
+                    'the external estimate has degraded, reason unknown');
+            end            
+            S=self.getOrthTranslMatrix(Q_star,CQCTransSqrtMat,...
+                CQCTransSqrtMat*ltVec,Q_star*ltVec);
+            tmp=(A*Q_star-CQCTransSqrtMat*transpose(S))*transpose(Q_star);
             dQExtMat=tmp+transpose(tmp)+...
                 piNumerator.*QExtMat./piDenominator+...
-                piDenominator.*R./piNumerator;
+                piDenominator.*BPBTransMat./piNumerator;
             dQExtMat=(dQExtMat+dQExtMat.')*0.5;
         end
     end
     methods (Access=private)
         function self=prepareODEData(self)
-            import gras.ellapx.common.*;
-            import gras.ellapx.lreachplain.IntEllApxBuilder;
-            import gras.mat.MatrixOperationsFactory;
-            %
-            nGoodDirs=self.getNGoodDirs();
-            pDefObj=self.getProblemDef();
-            timeVec=pDefObj.getTimeVec;
-            %
-            % calculate <l,Ml>^{1/2} and M^{1/2}l for BPB' and CQC'
-            %
-            matOpFactory = MatrixOperationsFactory.create(timeVec);
-            %
-            BPBTransDynamics = pDefObj.getBPBTransDynamics();
-            CQCTransDynamics = pDefObj.getCQCTransDynamics();
-            BPBTransSqrtDynamics = matOpFactory.sqrtmpos(BPBTransDynamics);
-            CQCTransSqrtDynamics = matOpFactory.sqrtmpos(CQCTransDynamics);
-            %
             self.ltSplineList = ...
-                self.getGoodDirSet().getGoodDirOneCurveSplineList();
-            %
-            self.slBPBlSqrtDynamicsList = cell(1, nGoodDirs);
-            self.slCQClSqrtDynamicsList = cell(1, nGoodDirs);
-            self.BPBTransSqrtLDynamicsList = cell(1, nGoodDirs);
-            self.CQCTransSqrtLDynamicsList = cell(1, nGoodDirs);
-            %
-            for iGoodDir = 1:nGoodDirs
-                ltSpline = self.ltSplineList{iGoodDir};
-                %
-                self.slBPBlSqrtDynamicsList{iGoodDir} = ...
-                    matOpFactory.quadraticFormSqrt(BPBTransDynamics,ltSpline);
-                self.slCQClSqrtDynamicsList{iGoodDir} = ...
-                    matOpFactory.quadraticFormSqrt(CQCTransDynamics,ltSpline);
-                self.BPBTransSqrtLDynamicsList{iGoodDir} = ...
-                    matOpFactory.rMultiply(BPBTransSqrtDynamics,ltSpline);
-                self.CQCTransSqrtLDynamicsList{iGoodDir} = ...
-                    matOpFactory.rMultiply(CQCTransSqrtDynamics,ltSpline);
-            end
+                self.getGoodDirSet().getRGoodDirOneCurveSplineList();
         end
         function build(self)
             import gras.ellapx.lreachplain.ATightEllApxBuilder;
@@ -264,7 +228,7 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             %
             goodDirSetObj=self.getGoodDirSet();
             sTime=goodDirSetObj.getsTime();
-            ltGoodDirArray=goodDirSetObj.getGoodDirCurveSpline(...
+            ltGoodDirArray=goodDirSetObj.getRGoodDirCurveSpline(...
                 ).evaluate(resTimeVec);
             %
             self.ellTubeRel=...

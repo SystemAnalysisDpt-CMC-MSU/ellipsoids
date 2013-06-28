@@ -57,7 +57,7 @@ classdef ATightIntEllApxBuilder<gras.ellapx.lreachplain.ATightEllApxBuilder
             self.BPBTransSqrtDynamics = ...
                 matOpFactory.sqrtmpos(BPBTransDynamics);
             self.ltSplineList = ...
-                self.getGoodDirSet().getGoodDirOneCurveSplineList();
+                self.getGoodDirSet().getRGoodDirOneCurveSplineList();
         end
     end
     methods
