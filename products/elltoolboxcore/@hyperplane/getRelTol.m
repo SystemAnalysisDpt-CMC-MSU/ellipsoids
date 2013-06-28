@@ -44,4 +44,4 @@ function [relTolArr, relTolVal] = getRelTol(hpArr, varargin)
 %            System Analysis Department 2013 $
 %
 
-[relTolArr, relTolVal] = hpArr.getProperty('absTol',varargin{:});
+[relTolArr, relTolVal] = hpArr.getProperty('relTol',varargin{:});

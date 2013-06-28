@@ -646,7 +646,7 @@ function checkEqAndNq(self, isEqCheck)
                 createTypicalArray(flag);
         end
         if isEqCheck
-            [isTestArray, reportStr] = eq(test1EllArray, test2EllArray);
+            [isTestArray, reportStr] = isEqual(test1EllArray, test2EllArray);
         else
             isAnsArray = ~isAnsArray;
             isTestArray = ne(test1EllArray, test2EllArray);

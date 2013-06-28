@@ -42,5 +42,5 @@ function [isPosArr reportStr] = ne(fstHypArr, secHypArr)
 %             and Computer Science,
 %             System Analysis Department 2012 $
 
-[isPosArr reportStr] = eq(fstHypArr, secHypArr);
+[isPosArr reportStr] = isEqual(fstHypArr, secHypArr);
 isPosArr = ~isPosArr;

@@ -863,10 +863,8 @@ classdef EllipsoidTestCase < mlunitext.test_case
             maxTol = 1;
             ell1 = ellipsoid(firstMat);
             ell2 = ellipsoid(secVec,secMat);
-            [isOk,reportStr]=ell1.eq(ell2);
+            [isOk,reportStr]=ell1.isEqual(ell2);
             mlunitext.assert(~isOk,reportStr);
-            [isOk,reportStr]=ell1.eq(ell2,maxTol);
-            mlunitext.assert(isOk,reportStr);
             %
             %
             testEll = ellipsoid(eye(2));
@@ -1192,7 +1190,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
             
             resEll = mtimes(testHighDimMat, testEllHighDim);
             ansEll = ellipsoid(zeros(12, 1), testHighDimMat*testHighDimShapeMat*testHighDimMat');
-            [isEq, reportStr] = eq(resEll, ansEll);
+            [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
             
             [testHighDimShapeMat testHighDimMat] = createTypicalHighDimEll(5);
@@ -1200,7 +1198,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
             
             resEll = mtimes(testHighDimMat, testEllHighDim);
             ansEll = ellipsoid(zeros(20, 1), testHighDimMat*testHighDimShapeMat*testHighDimMat');
-            [isEq, reportStr] = eq(resEll, ansEll);
+            [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
             
             [testHighDimShapeMat testHighDimMat] = createTypicalHighDimEll(6);
@@ -1208,7 +1206,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
             
             resEll = mtimes(testHighDimMat, testEllHighDim);
             ansEll = ellipsoid(zeros(100, 1), testHighDimMat*testHighDimShapeMat*testHighDimMat');
-            [isEq, reportStr] = eq(resEll, ansEll);
+            [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
             
             % [~, AMat] = eig(rand(4,4)); fixed case
@@ -1221,13 +1219,13 @@ classdef EllipsoidTestCase < mlunitext.test_case
             testEllipsoid3 = ellipsoid(diag(1:1:4));
             resEll = mtimes(AMat, testEllipsoid3);
             ansEll = ellipsoid(zeros(4, 1), AMat*diag(1:1:4)*AMat');
-            [isEq, reportStr] = eq(resEll, ansEll);
+            [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
             
             AMat = 2*eye(2);
             resEll = mtimes(AMat, testEllipsoid1);
             ansEll = ellipsoid([2; 2], 4*eye(2));
-            [isEq, reportStr] = eq(resEll, ansEll);
+            [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
             
             AMat = eye(3);
@@ -1241,19 +1239,19 @@ classdef EllipsoidTestCase < mlunitext.test_case
             AMat = zeros(2);
             resEll = mtimes(AMat, testEllipsoid1);
             ansEll = ellipsoid(zeros(2));
-            [isEq, reportStr] = eq(resEll, ansEll);
+            [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
             
             AMat = [1 2; 3 4; 5 6];
             resEll = mtimes(AMat, testEllipsoid1);
             ansEll = ellipsoid([3; 7; 11], [5 11 17; 11 25 39; 17 39 61]);
-            [isEq, reportStr] = eq(resEll, ansEll);
+            [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
             
             testEllipsoid1 = ellipsoid([0; 0], zeros(2));
             resEll = mtimes(AMat, testEllipsoid1);
             ansEll = ellipsoid(zeros(3));
-            [isEq, reportStr] = eq(resEll, ansEll);
+            [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
         end
         %
@@ -1359,7 +1357,8 @@ classdef EllipsoidTestCase < mlunitext.test_case
             secondCutEllMat = ellMat(2 : 3, 2 : 3);
             thirdCutEllMat = ellMat(1 : 2, 2 : 3);
             self.runAndCheckError(...
-                'copiedEllMat.isEqual(firstCutEllMat)', 'wrongInput');
+                'copiedEllMat.isEqual(firstCutEllMat)', ...
+                'wrongSizes');
             isEqualMat = firstCutEllMat.isEqual(secondCutEllMat);
             isOkMat = isEqualMat == [1 0; 1 0];
             isOk = all(isOkMat(:));
@@ -1523,9 +1522,9 @@ switch flag
 end
 end
 %
-function checkEllEqual(testEll1Vec, testEll2Vec, isEqual, ansStr)
-[isEq, reportStr] = eq(testEll1Vec, testEll2Vec);
-mlunitext.assert_equals(isEq, isEqual);
+function checkEllEqual(testEll1Vec, testEll2Vec, isEqRight, ansStr)
+[isEq, reportStr] = isEqual(testEll1Vec, testEll2Vec);
+mlunitext.assert_equals(isEq, isEqRight);
 isRepEq = isequal(reportStr, ansStr);
 if ~isRepEq
     isRepEq = ~isempty(regexp(reportStr, ansStr, 'once'));

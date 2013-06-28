@@ -1,9 +1,10 @@
-classdef hyperplane < elltool.core.AuxGenEllipsoid
+classdef hyperplane < elltool.core.AGenEllipsoid
     %HYPERPLANE - a class for hyperplanes
     properties (Access=private)
         normal
         shift
         absTol
+        relTol
     end
     methods
         
@@ -123,8 +124,13 @@ classdef hyperplane < elltool.core.AuxGenEllipsoid
             if nargin == 0
                 hypObjArr = hyperplane(0, 0);
             else
-                neededPropNameList = {'absTol'};
-                absTolVal = elltool.conf.Properties.parseProp(varargin,...
+                neededPropNameList = {'absTol', 'relTol'};
+                %                 absTolVal = elltool.conf.Properties.parseProp(varargin,...
+                %                     neededPropNameList);
+                [regParamList,propNameValList]=modgen.common.parseparams(...
+                    varargin, neededPropNameList);
+                [absTolVal, relTolVal] =...
+                    elltool.conf.Properties.parseProp(propNameValList,...
                     neededPropNameList);
                 %
                 if nargin < 2
@@ -155,6 +161,7 @@ classdef hyperplane < elltool.core.AuxGenEllipsoid
                     hypObjArr.normal = hypNormArr;
                     hypObjArr.shift  = hypConstArr;
                     hypObjArr.absTol = absTolVal;
+                    hypObjArr.relTol = relTolVal;
                 else
                     if (nHypArrDims == 2) && ~iscolumn(hypNormArr)&&...
                             nConstDims==2&&isrow(hypConstArr)
@@ -179,27 +186,28 @@ classdef hyperplane < elltool.core.AuxGenEllipsoid
                         [nElems outSizeVec] = setSizes(hypConstArr);
                         build();
                         arrayfun(@(x, y) setProp(x, hypNormArr, y, ...
-                            absTolVal), indArr, hypConstArr);
+                            absTolVal, relTolVal), indArr, hypConstArr);
                     elseif isConstScal
                         cellBuild();
                         [nElems outSizeVec] = setSizes(hypNormCArr);
                         build();
                         arrayfun(@(x, y) setProp(x, y{1}, ...
-                            hypConstArr, absTolVal), indArr, hypNormCArr);
+                            hypConstArr, absTolVal, relTolVal), indArr, hypNormCArr);
                     else
                         cellBuild();
                         [nElems outSizeVec] = setSizes(hypNormCArr);
                         build();
                         arrayfun(@(x, y, z) setProp(x, y{1}, z, ...
-                            absTolVal), indArr, hypNormCArr, hypConstArr);
+                            absTolVal, relTolVal), indArr, hypNormCArr, hypConstArr);
                     end
                 end
             end
             %
-            function setProp(iObj, nrmVec, shft, curAbsTol)
+            function setProp(iObj, nrmVec, shft, curAbsTol, curRelTol)
                 hypObjArr(iObj).normal = nrmVec;
                 hypObjArr(iObj).shift = shft;
                 hypObjArr(iObj).absTol = curAbsTol;
+                hypObjArr(iObj).relTol = curRelTol;
             end
             %
             function build()
@@ -222,6 +230,16 @@ classdef hyperplane < elltool.core.AuxGenEllipsoid
         checkIsMe(someObj)
         hpArr = fromRepMat(varargin)
         hpObj = fromStruct(SHpObj)
+    end
+    
+    methods (Access = protected, Static)
+        function SComp = formCompStruct(SHp, SFieldNiceNames, ~, isPropIncluded)
+            SComp.(SFieldNiceNames.normal) = SHp.normal;
+            SComp.(SFieldNiceNames.shift) = SHp.shift;
+            if (isPropIncluded)
+                SComp.(SFieldNiceNames.absTol) = SHp.absTol;
+            end
+        end
     end
 end
 %

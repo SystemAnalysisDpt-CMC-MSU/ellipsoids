@@ -28,7 +28,7 @@ function [propArr, propVal] = getProperty(hpArr,propName,fPropFun)
 %            System Analysis Department 2013 $
 %
 import modgen.common.throwerror;
-propNameList = {'absTol'};
+propNameList = {'absTol', 'relTol'};
 if ~any(strcmp(propName,propNameList))
     throwerror('wrongInput',[propName,':no such property']);
 end
@@ -36,8 +36,7 @@ end
 if nargin == 2
     fPropFun = @min;
 end
-
-propArr= arrayfun(@(x)x.(propName),hpArr);
+propArr = arrayfun(@(x)x.(propName), hpArr);
 
 if nargout == 2
     propVal = fPropFun(propArr(:));

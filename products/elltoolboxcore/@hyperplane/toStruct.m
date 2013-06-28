@@ -39,6 +39,8 @@ SFieldDescr = struct('normal', 'Hyperplane normal.',...
 if (isPropIncluded)
     SFieldNiceNames.absTol = 'absTol';
     SFieldDescr.absTol = 'Absolute tolerance.';
+    SFieldNiceNames.relTol = 'relTol';
+    SFieldDescr.relTol = 'Relative tolerance.';
 end
 end
 
@@ -58,5 +60,6 @@ else
 end
     if (isPropIncluded)
         SHp.absTol = hpObj.absTol;
+        SHp.relTol = hpObj.relTol;
     end
 end

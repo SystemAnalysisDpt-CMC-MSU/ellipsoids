@@ -19,15 +19,6 @@ function [isEqualArr, reportStr] = isEqual(ellFirstArr, ellSecArr, varargin)
 %       corresponding ellipsoids are equal and false otherwise.
 % 
 %   reportStr: char[1,] - comparison report.
-% 
-% Example:
-%   firstEllObj = ellipsoid([-1; 1], [2 0; 0 3]);
-%   secEllObj = ellipsoid([1 2], eye(2));
-%   isEqual(firstEllObj, secEllObj)
-%
-%   ans =
-%
-%        0
 %
 %$Author: Alexander Karev <Alexander.Karev.30@gmail.com> $
 %$Date: 2013-06$
@@ -35,23 +26,9 @@ function [isEqualArr, reportStr] = isEqual(ellFirstArr, ellSecArr, varargin)
 %            Faculty of Computational Mathematics
 %            and Computer Science,
 %            System Analysis Department 2013 $
+
 [~, ~, isPropIncluded] = ...
            modgen.common.parseparext(varargin, {'isPropIncluded'; false});
 [isEqualArr, reportStr] = ellFirstArr.isEqualInternal(ellSecArr, ...
-    isPropIncluded, @formCompStruct);
-
-    function SComp = formCompStruct(SEll, SFieldNiceNames, absTol)
-        if (~isempty(SEll.shapeMat))
-            SComp.(SFieldNiceNames.shapeMat) = gras.la.sqrtmpos(SEll.shapeMat, absTol);
-        else
-            SComp.(SFieldNiceNames.shapeMat) = [];
-        end
-        SComp.(SFieldNiceNames.centerVec) = SEll.centerVec;
-        if (isPropIncluded)
-            SComp.(SFieldNiceNames.absTol) = SEll.absTol;
-            SComp.(SFieldNiceNames.relTol) = SEll.relTol;
-            SComp.(SFieldNiceNames.nPlot2dPoints) = SEll.nPlot2dPoints;
-            SComp.(SFieldNiceNames.nPlot3dPoints) = SEll.nPlot3dPoints;
-        end
-    end
+    isPropIncluded);
 end
