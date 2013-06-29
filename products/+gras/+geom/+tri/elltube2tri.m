@@ -1,4 +1,4 @@
-function facets = ell_triag_facets(epoints_num, points_num)
+function facets = elltube2tri(epoints_num, points_num)
 %
 % ELL_TRIAG_FACETS - generates triangular facets to be used 
 %                    in PATCH function call.
