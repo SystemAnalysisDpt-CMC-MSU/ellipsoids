@@ -74,6 +74,45 @@ classdef SuiteBasic < mlunitext.test_case
             mlunitext.assert_equals(true,maxTol<=MAX_TOL)
         end
         %
+        function testRMultiply(self)
+            import gras.gen.MatVector;
+            %
+            CALC_PRECISION = 1e-5;
+            SData = load([mfilename('fullpath') filesep '..' filesep...
+                'TestData', filesep, 'matvector_data.mat']);
+            aArray = SData.aArray;
+            bMat = aArray(:,:,1);
+            bArray = aArray(:,:,2:end);
+            %
+            % 10x10x100 by 10x10x100
+            %
+            cArray = MatVector.rMultiply(aArray,aArray);
+            dArray = zeros(size(aArray));
+            for iPoint = 1:size(aArray,3)
+                dArray(:,:,iPoint) = aArray(:,:,iPoint)*aArray(:,:,iPoint);
+            end
+            check(cArray, dArray);
+            %
+            % 10x10x100 by 10x10x1
+            %
+            cArray = MatVector.rMultiply(aArray,bMat);
+            dArray = zeros(size(aArray));
+            for iPoint = 1:size(aArray,3)
+                dArray(:,:,iPoint) = aArray(:,:,iPoint)*bMat;
+            end
+            check(cArray, dArray);
+            %
+            % 10x10x100 by 10x10x99
+            %
+            self.runAndCheckError('gras.gen.MatVector.rMultiply(aArray,bArray)',...
+                'wrongInput');
+            %
+            function check(aArray, bArray)
+                rArray = aArray - bArray;
+                mlunitext.assert(max(abs(rArray(:))) < CALC_PRECISION);
+            end
+        end
+        %
         function testSortrowstol(self)
             inpMat=[1 2;1+1e-14 1];
             check([1;2],1e-16);
@@ -125,6 +164,41 @@ classdef SuiteBasic < mlunitext.test_case
                     indExpMinSide));
             end
             
+        end
+        %
+        function testCompareMatVectorMultiply(self)
+            import gras.gen.MatVector;
+            %
+            CALC_PRECISION = 1e-5;
+            SData = load([mfilename('fullpath') filesep '..' filesep...
+                'TestData', filesep, 'matvector_data.mat']);
+            aArray = SData.aArray;
+            bMat = squeeze(aArray(1,:,:));
+            %
+            cArray = MatVector.rMultiply(aArray,aArray,false);
+            dArray = MatVector.rMultiply(aArray,aArray,true);
+            check(cArray, dArray);
+            %
+            cArray = MatVector.rMultiply(aArray(1:5,1:6,:),...
+                aArray(1:6,1:7,:),aArray(1:7,1:8,:),false);
+            dArray = MatVector.rMultiply(aArray(1:5,1:6,:),...
+                aArray(1:6,1:7,:),aArray(1:7,1:8,:),true);
+            check(cArray, dArray);
+            %
+            cMat = MatVector.rMultiplyByVec(aArray,bMat,false);
+            dMat = MatVector.rMultiplyByVec(aArray,bMat,true);
+            check(cMat, dMat);
+            %
+            cMat = MatVector.rMultiplyByVec(aArray(1:7,1:10,1:100),...
+                bMat(1:10,1:100),false);
+            dMat = MatVector.rMultiplyByVec(aArray(1:7,1:10,1:100),...
+                bMat(1:10,1:100),true);
+            check(cMat, dMat);
+            %
+            function check(aArray, bArray)
+                rArray = aArray - bArray;
+                mlunitext.assert(max(abs(rArray(:))) < CALC_PRECISION);
+            end
         end
         function testMatDot(self)
             import gras.gen.matdot;

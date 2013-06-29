@@ -42,8 +42,8 @@ classdef PosDefMatCholCubicSpline<gras.interp.MatrixColTriuCubicSpline
                 triuDataArray,timeVec);
         end
     end
-    methods (Access=protected)
-        function dataArray=evaluateInternal(self,timeVec,varargin)
+    methods (Access=public)
+        function dataArray=evaluate(self,timeVec,varargin)
             % EVALUATE
             %
             % Input:
@@ -56,7 +56,7 @@ classdef PosDefMatCholCubicSpline<gras.interp.MatrixColTriuCubicSpline
             %
             %
             dataArray=...
-                evaluateInternal@gras.interp.MatrixColTriuCubicSpline(...
+                evaluate@gras.interp.MatrixColTriuCubicSpline(...
                 self,timeVec);
             %
             for iTime=1:size(dataArray,3)

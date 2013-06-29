@@ -7,9 +7,9 @@ classdef MatrixColTriuSymmCubicSpline<gras.interp.MatrixColTriuCubicSpline
     properties (Constant,GetAccess=private)
         CHECK_MATRIX_SYMMETRY_TOL=1e-14
     end
-    methods (Access=protected)
-        function resArray=evaluateInternal(self,timeVec)
-            resArray=evaluateInternal@...
+    methods (Access=public)
+        function resArray=evaluate(self,timeVec)
+            resArray=evaluate@...
                 gras.interp.MatrixColTriuCubicSpline(self,timeVec);
             nCols=self.nCols;
             for k=1:1:nCols-1

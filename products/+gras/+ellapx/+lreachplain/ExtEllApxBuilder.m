@@ -10,12 +10,18 @@ classdef ExtEllApxBuilder<gras.ellapx.lreachplain.ATightEllApxBuilder
         function resMat=calcEllApxMatrixDeriv(~,ADynamics,BPBTransDynamics,...
                 slBPBlSqrtDynamics,ltSpline,t,QMat)
             AMat=ADynamics.evaluate(t);
-            piNumerator=slBPBlSqrtDynamics.evaluate(t);
             ltVec=ltSpline.evaluate(t);
+            RMat=BPBTransDynamics.evaluate(t);
+            %
+            piNumerator=slBPBlSqrtDynamics.evaluate(t);
             piDenominator=realsqrt(sum((QMat*ltVec).*ltVec));
+            if (piNumerator<=0)||(piDenominator<=0)
+                throwerror('wrongInput', ['the estimate has degraded, '...
+                    'reason unknown']);
+            end
+            piFactor=piNumerator/piDenominator;
             tmpMat=AMat*QMat;
-            resMat=tmpMat+tmpMat.'+(piNumerator./piDenominator).*QMat+...
-                (piDenominator./piNumerator).*BPBTransDynamics.evaluate(t);
+            resMat=tmpMat+tmpMat.'+piFactor*QMat+RMat/piFactor;
             resMat=(resMat+resMat.')*0.5;
         end
         function fHandle=getEllApxMatrixDerivFunc(self,iGoodDir)
