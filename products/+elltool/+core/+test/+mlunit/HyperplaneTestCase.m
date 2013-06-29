@@ -25,7 +25,7 @@ classdef HyperplaneTestCase < mlunitext.test_case
             %hyperplanes contents and normals and constants, from which it 
             %was constructed(in function isNormalAndConstantRight)
             %
-            SInpData =  self.auxReadFile(self);
+            SInpData = self.auxReadFile(self);
             testNormalVec = SInpData.testNormalVec;
             testConst = SInpData.testConstant;
             %
@@ -141,11 +141,19 @@ classdef HyperplaneTestCase < mlunitext.test_case
             mlunitext.assert(isOk);
         end
         %
-        %
         function self = testEqAndNe(self)
             SInpData =  self.auxReadFile(self);
             testHyperplanesVec = SInpData.testHyperplanesVec;
             compareHyperplanesVec = SInpData.compareHyperplanesVec;
+            addRelTol = @(S)hyperplane(S.normal, S.shift);
+            for iHp = 1 : numel(testHyperplanesVec)
+                testHyperplanesVec(iHp) = ...
+                    addRelTol(testHyperplanesVec(iHp).toStruct(true));
+            end
+            for iHp = 1 : numel(compareHyperplanesVec)
+                compareHyperplanesVec(iHp) = ...
+                    addRelTol(compareHyperplanesVec(iHp).toStruct());
+            end
             isEqVec = SInpData.isEqVec;
             %
             testedIsEqVec = eq(testHyperplanesVec,compareHyperplanesVec);
@@ -160,12 +168,12 @@ classdef HyperplaneTestCase < mlunitext.test_case
             testHypHighDimFst = hyperplane([1:1:75]', 1);
             testHypHighDimSec = hyperplane([1:1:75]', 2);
             checkHypEqual(testHypHighDimFst, testHypHighDimSec, false, ...
-                '\(1).shift-->.*\(2.640278e\-03).*tolerance.\(1.000000e\-07)');
+                '\(1).shift-->.*\(2.640278e\-03).*tolerance.\(1.000000e\-05)');
             %
             testFstHyp = hyperplane([1; 0], 0);
             testSecHyp = hyperplane([1; 0], 0);
             testThrHyp = hyperplane([2; 1], 0);
-            str = '\(1).shift-->.*\(2.640278e\-03).*tolerance.\(1.000000e\-07)\n\(3).normal-->.*\(4.472136e\-01).*tolerance.\(1.000000e\-07)';
+            str = '\(1).shift-->.*\(2.640278e\-03).*tolerance.\(1.000000e\-05)\n\(3).normal-->.*\(4.472136e\-01).*tolerance.\(1.000000e\-05)';
             checkHypEqual([testHypHighDimFst testFstHyp testFstHyp], ...
                 [testHypHighDimSec testSecHyp testThrHyp], ...
                 [false true false], str);
@@ -175,7 +183,7 @@ classdef HyperplaneTestCase < mlunitext.test_case
             SInpData =  self.auxReadFile(self);
             testHyperplanesVec = SInpData.testHyperplanesVec;
             isEmptyVec = SInpData.isEmptyVec;
-            isEmptyTestedVec = isempty(testHyperplanesVec);
+            isEmptyTestedVec = isEmpty(testHyperplanesVec);
             isOk = all(isEmptyVec == isEmptyTestedVec);
             mlunitext.assert(isOk);
             
@@ -183,7 +191,7 @@ classdef HyperplaneTestCase < mlunitext.test_case
             nSecDim = 20;
             nThrDim = 30;
             testHypArr(nFstDim, nSecDim, nThrDim) = hyperplane();
-            isEmptyArr = isempty(testHypArr);
+            isEmptyArr = isEmpty(testHypArr);
             isOk = all(isEmptyArr);
             mlunitext.assert(isOk);
         end
@@ -256,8 +264,8 @@ classdef HyperplaneTestCase < mlunitext.test_case
             self.runAndCheckError('hyperplane(nanVec,testConstant)',...
                 'wrongInput');
         end
-       %
-       function self = testGetAbsTol(self)
+        %
+        function self = testGetAbsTol(self)
            normVec = ones(3,1);
            const = 0;
            testAbsTol = 1;
@@ -274,7 +282,55 @@ classdef HyperplaneTestCase < mlunitext.test_case
             %  
             isOk = all(isOkArr(:));
             mlunitext.assert(isOk);
-       end
+        end
+        %
+        function self = testToStruct(self)
+            normalCVec{1} = [1 2 3]';
+            shiftCVec{1} = 3;
+            normalCVec{2} = [2 3 4]';
+            shiftCVec{2} = -2;
+            normalCVec{3} = [1 0]';
+            shiftCVec{3} = 1;
+            normalCVec{4} = [1 0 0 0]';
+            shiftCVec{4} = 5;
+            for iElem = 1 : 4
+                hpVec(iElem) = hyperplane(normalCVec{iElem}, shiftCVec{iElem});
+            end
+            SHpVec = cellfun(@auxToStruct, normalCVec, shiftCVec);
+            ObtainedHpStruct = hpVec(1).toStruct();
+            isOk = isEqual(ObtainedHpStruct, SHpVec(1));
+            ObtainedHpStructVec = hpVec.toStruct();
+            isOk = isOk && all(arrayfun(@isEqual, ObtainedHpStructVec, SHpVec));
+               
+            mlunitext.assert_equals(true, isOk);
+            
+            function isEq = isEqual(SHp1, SHp2)
+                isEq = abs(SHp1.shift - SHp2.shift) < 1e-6;
+                isEq = isEq && all(abs(SHp1.normal - SHp2.normal) < 1e-6);
+            end
+            
+            function struct = auxToStruct(normal, shift)
+                multiplier = 1/norm(normal);
+                if (shift < 0)
+                    multiplier = -multiplier;
+                end
+                struct.shift = shift * multiplier;
+                struct.normal = normal * multiplier;
+            end
+        end
+        
+        function self = testRelTol(self)
+            hp = hyperplane();
+            auxTestRelTol(hp, 1e-5);
+            
+            hp = hyperplane(1, 1, 'relTol', 1e-3);
+            auxTestRelTol(hp, 1e-3);
+            
+            function auxTestRelTol(hp, relTol)
+                isOk = hp.toStruct(true).relTol == relTol;
+                mlunitext.assert_equals(true, isOk)
+            end
+        end
     end
     %
     methods(Static, Access = private)
@@ -306,7 +362,7 @@ classdef HyperplaneTestCase < mlunitext.test_case
 end
 
 function checkHypEqual(testFstHypArr, testSecHypArr, isEqualArr, ansStr)
-    [isEqArr, reportStr] = eq(testFstHypArr, testSecHypArr);
+    [isEqArr, reportStr] = isEqual(testFstHypArr, testSecHypArr);
     mlunitext.assert_equals(isEqArr, isEqualArr);
     isRepEq = isequal(reportStr, ansStr);
     if ~isRepEq
