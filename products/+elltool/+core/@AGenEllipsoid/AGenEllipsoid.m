@@ -13,13 +13,15 @@ classdef AGenEllipsoid < handle
             %
             nFirstElems = numel(ellFirstArr);
             nSecElems = numel(ellSecArr);
-            modgen.common.checkvar( ellFirstArr, 'numel(x) > 0', 'errorTag', ...
-                'wrongInput:emptyArray', 'errorMessage', ...
-                'Each array must be not empty.');
+            if (nFirstElems == 0 && nSecElems == 0)
+                isEqualArr = true;
+                reportStr = '';
+                return;
+            elseif (nFirstElems == 0 || nSecElems == 0)
+                throwerror('wrongInput:emptyArray',...
+                    'input ellipsoidal arrays should be empty at the same time');
+            end
             
-            modgen.common.checkvar( ellSecArr, 'numel(x) > 0', 'errorTag', ...
-                'wrongInput:emptyArray', 'errorMessage', ...
-                'Each array must be not empty.');
             [~, absTol] = ellFirstArr.getAbsTol;
             firstSizeVec = size(ellFirstArr);
             secSizeVec = size(ellSecArr);

@@ -934,7 +934,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
             
             testNotEllipsoid = [];
             %'==: both arguments must be ellipsoids.'
-            self.runAndCheckError('eq(testEllipsoidEmpty, testNotEllipsoid)','wrongInput');
+            self.runAndCheckError('eq(testEllipsoidEmpty, testNotEllipsoid)','wrongInput:emptyArray');
             
             %'==: sizes of ellipsoidal arrays do not match.'
             self.runAndCheckError('eq([testEllipsoidEmpty testEllipsoidEmpty], [testEllipsoidEmpty; testEllipsoidEmpty])','wrongSizes');
