@@ -438,14 +438,14 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
         end
         function plObj = plotExt(self,varargin)
             import gras.ellapx.enums.EApproxType;
-            approxType = gras.ellapx.enums.EApproxType(1);
+            approxType = gras.ellapx.enums.EApproxType.External;
             plObj = self.getTuplesFilteredBy(...
                 'approxType', approxType)...
                 .plotExtOrInternal(@calcPointsExt,varargin{:});
         end
         function plObj = plotInt(self,varargin)
             import gras.ellapx.enums.EApproxType;
-            approxType = gras.ellapx.enums.EApproxType(0);
+            approxType = gras.ellapx.enums.EApproxType.Internal;
             plObj = self.getTuplesFilteredBy(...
                 'approxType', approxType)...
                 .plotExtOrInternal(@calcPointsInt,varargin{:});
@@ -612,12 +612,10 @@ for iTube = 1:tubeNum
     end
 end
 [~,xInd] = max(suppAllMat,[],1);
-arrayfun(@(x) calcXMat(x), 1:size(xInd,2),...
-    'UniformOutput', false);
-    function calcXMat(ind2)
-        xMat(:,ind2) = bpAllCMat{xInd(ind2),ind2}...
+for iX = 1:xInd
+    xMat(:,iX) = bpAllCMat{xInd(iX),iX}...
             +centerVec;
-    end
+end
 end
 function xMat = calcPointsExt(iTime,nDim,lGridMat,dim,qArr,...
     centerVec,~)
@@ -638,10 +636,9 @@ for iDir = 1:nDim
     bpAllCMat{2,iDir} = lVec/sqrt(outVec(2));
 end
 [~,xInd] = max(distAllMat,[],1);
-arrayfun(@(x) calcXMat(x), 1:size(xInd,2),...
-    'UniformOutput', false);
-    function calcXMat(ind2)
-        xMat(:,ind2) = bpAllCMat{xInd(ind2),ind2}...
+for iX = 1:xInd
+    xMat(:,iX) = bpAllCMat{xInd(iX),iX}...
             +centerVec;
-    end
+end
+
 end
