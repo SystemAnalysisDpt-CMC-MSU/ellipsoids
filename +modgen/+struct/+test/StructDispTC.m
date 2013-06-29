@@ -13,6 +13,10 @@ classdef StructDispTC < mlunitext.test_case
     methods
         function self = StructDispTC(varargin)
             self = self@mlunitext.test_case(varargin{:});
+            [~,className]=modgen.common.getcallernameext(1);
+            shortClassName=mfilename('classname');
+            self.testDataRootDir=[fileparts(which(className)),filesep,'TestData',...
+                filesep,shortClassName];
         end
         function self = set_up_param(self,varargin)
         end
@@ -102,7 +106,7 @@ classdef StructDispTC < mlunitext.test_case
                     SRes.inpArgList=inpArgList;
                     SRes.resStr=resStr;
                     %
-                    %resMap.put(inpKey,SRes);
+%                     resMap.put(inpKey,SRes);
                     SExpRes=resMap.get(inpKey);
                     [isPos,reportStr]=...
                         modgen.struct.structcompare(SRes,SExpRes);
