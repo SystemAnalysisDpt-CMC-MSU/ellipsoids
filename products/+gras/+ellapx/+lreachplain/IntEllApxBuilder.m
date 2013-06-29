@@ -8,24 +8,23 @@ classdef IntEllApxBuilder<gras.ellapx.lreachplain.ATightIntEllApxBuilder
         APPROX_SCHEMA_DESCR='Internal approximation based on matrix ODE for sqrt(Q)'
     end
     methods (Access=protected)
-        function res=calcEllApxMatrixDeriv(self,AtDynamics,...
-                BPBSqrtDynamics,ltSpline,l0Vec,t,Q_star)
-            A=AtDynamics.evaluate(t);
+        function dMat=calcEllApxMatrixDeriv(self,AtDynamics,...
+                BPBSqrtDynamics,ltSpline,l0Vec,t,QMat)
+            AMat=AtDynamics.evaluate(t);
             ltVec=ltSpline.evaluate(t);
-            R_sqrt=BPBSqrtDynamics.evaluate(t);
-            %
-            S=self.getOrthTranslMatrix(Q_star,R_sqrt,R_sqrt*ltVec,l0Vec);
-            res=A*Q_star+R_sqrt*transpose(S);
-        end 
+            RSqrtMat=BPBSqrtDynamics.evaluate(t);
+            SMat=self.getOrthTranslMatrix(QMat,RSqrtMat,RSqrtMat*ltVec,l0Vec);
+            dMat=AMat*QMat+RSqrtMat*transpose(SMat);
+        end
         function fHandle=getEllApxMatrixDerivFunc(self,iGoodDir)
-                fHandle=...
-                    @(t,y)calcEllApxMatrixDeriv(self,...
-                    self.getProblemDef().getAtDynamics(),...
-                    self.getBPBTransSqrtDynamics(),...
-                    self.getltSpline(iGoodDir),...
-                    self.l0Mat(:,iGoodDir),...
-                    t,y);     
-        end        
+            fHandle=...
+                @(t,y)calcEllApxMatrixDeriv(self,...
+                self.getProblemDef().getAtDynamics(),...
+                self.getBPBTransSqrtDynamics(),...
+                self.getltSpline(iGoodDir),...
+                self.l0Mat(:,iGoodDir),...
+                t,y);
+        end
         function QArray=adjustEllApxMatrixVec(~,QArray)
             import gras.gen.SquareMatVector;
             QArray=SquareMatVector.rMultiply(QArray,SquareMatVector.transpose(...
@@ -39,15 +38,15 @@ classdef IntEllApxBuilder<gras.ellapx.lreachplain.ATightIntEllApxBuilder
         function [apxSchemaName,apxSchemaDescr]=getApxSchemaNameAndDescr(self)
             apxSchemaName=self.APPROX_SCHEMA_NAME;
             apxSchemaDescr=self.APPROX_SCHEMA_DESCR;
-        end    
+        end
     end
     methods
         function self=IntEllApxBuilder(varargin)
             self=self@gras.ellapx.lreachplain.ATightIntEllApxBuilder(...
                 varargin{:});
             X0sqrt=gras.la.sqrtmpos(self.getProblemDef().getX0Mat);
-            self.S0X0SqrtMat=X0sqrt;            
-            pDefObj=self.getProblemDef();            
+            self.S0X0SqrtMat=X0sqrt;
+            pDefObj=self.getProblemDef();
             sysDim=pDefObj.getDimensionality();
             pTimeLimsVec=pDefObj.getTimeLimsVec();
             startTime=pTimeLimsVec(1);

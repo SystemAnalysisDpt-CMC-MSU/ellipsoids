@@ -1,145 +1,140 @@
 classdef EllApxBuilder<handle
-    %IELLTUBEPROJECTOR Summary of this class goes here
-    %   Detailed explanation goes here
     properties
         ellTubeBuilder
         intApxScaleFactor
         extApxScaleFactor
     end
-    %   
-    methods (Access=private)
+    %
+    methods (Access=protected)
         function scaleFactor=getScaleFactorByApxType(self,apxType)
             import gras.ellapx.enums.EApproxType;
-            import gras.ellapx.uncertcalc.EllApxBuilder;
-            if apxType==EApproxType.Internal
-                scaleFactor=self.intApxScaleFactor;
-            elseif apxType==EApproxType.External
-                scaleFactor=self.extApxScaleFactor;
-            else
-                scaleFactor=1;
+            switch apxType
+                case EApproxType.Internal
+                    scaleFactor=self.intApxScaleFactor;
+                case EApproxType.External
+                    scaleFactor=self.extApxScaleFactor;
+                otherwise
+                    scaleFactor=1;
             end
-        end        
+        end
     end
-    methods (Static,Access=private)
-        function builderList=buildApxGroupGeneric(apxBranchName,...
-                confRepoMgr,schemaNameList,classNameList,fBuildOne)
-            nInternalSchemas=length(schemaNameList);
-            nSchemas=nInternalSchemas;
-            builderList=cell(1,nSchemas);
-            isBuilderActiveVec=false(1,nSchemas);
-            if confRepoMgr.getParam([apxBranchName,'.isEnabled']);
-                for iSchema=1:nInternalSchemas
-                    schemaName=schemaNameList{iSchema};
-                    className=classNameList{iSchema};
-                    branchName=[apxBranchName,'.schemas.',schemaName];
-                    if confRepoMgr.getParam([branchName,'.isEnabled']);
-                        isBuilderActiveVec(iSchema)=true;
-                        builderList{iSchema}=fBuildOne(...
-                            [branchName,'.props'],className);
+    %
+    methods (Static,Access=public)
+        function fHandle=getApxBuilder(apxName,schemaName)
+            import gras.ellapx.*
+            fHandle=function_handle.empty;
+            switch apxName
+                case 'internalApx'
+                    switch schemaName
+                        case 'noUncertSqrtQ'
+                            fHandle=@lreachplain.IntEllApxBuilder;
+                        case 'noUncertJustQ'
+                            fHandle=@lreachplain.IntProperEllApxBuilder;
+                        case 'uncertMixed'
+                            fHandle=@lreachuncert.MixedIntEllApxBuilder;
                     end
+                case 'externalApx'
+                    switch schemaName
+                        case 'justQ'
+                            fHandle=@lreachplain.ExtEllApxBuilder;
+                    end
+                case 'extIntApx'
+                    switch schemaName
+                        case 'uncert'
+                            fHandle=@lreachuncert.ExtIntEllApxBuilder;
+                    end
+            end
+            if isempty(fHandle)
+                modgen.common.throwerror('wrongInput',...
+                    'Unsupported schema: %s.%s',apxName,schemaName);
+            end
+        end
+        %
+        function builderList=buildApxGroupGeneric(apxName,confRepoMgr,...
+                fBuildOne)
+            import gras.ellapx.uncertcalc.EllApxBuilder
+            %
+            builderList={};
+            apxPath=['ellipsoidalApxProps.',apxName];
+            %
+            if ~getParamIfExists([apxPath,'.isEnabled'],false)
+                return
+            end
+            %
+            schemasPath=[apxPath,'.schemas'];
+            schemaNameList=fieldnames(confRepoMgr.getParam(schemasPath));
+            nSchemas=length(schemaNameList);
+            %
+            builderList=cell(1,nSchemas);
+            for iSchema=1:nSchemas
+                schemaName=schemaNameList{iSchema};
+                schemaPath=[schemasPath,'.',schemaName];
+                if confRepoMgr.getParam([schemaPath,'.isEnabled'])
+                    builderList{iSchema}=fBuildOne(...
+                        EllApxBuilder.getApxBuilder(apxName,schemaName),...
+                        getParamIfExists([schemaPath,'.props'],struct));
                 end
             end
-            builderList=builderList(isBuilderActiveVec);
-        end
-        function builderObj=buildOneInternalApx(confRepoMgr,...
-                pDefObj,goodDirSetObj,...
-                calcTimeLimVec,calcPrecision,propBranchName,className)
+            builderList=builderList(~cellfun(@isempty,builderList));
             %
-            sMethodName=confRepoMgr.getParam([propBranchName,...
-                '.selectionMethodForSMatrix']);
-            builderObj=feval(className,pDefObj,goodDirSetObj,...
-                calcTimeLimVec,calcPrecision,sMethodName);
+            function value=getParamIfExists(paramPath,default)
+                if confRepoMgr.isParam(paramPath);
+                    value=confRepoMgr.getParam(paramPath);
+                else
+                    value=default;
+                end
+            end
         end
         %
-        function builderObj=buildOneExtIntApx(confRepoMgr,...
-                pDefObj,goodDirSetObj,...
-                calcTimeLimVec,calcPrecision,propBranchName,className)
-            %
-            sMethodName=confRepoMgr.getParam([propBranchName,...
-                '.selectionMethodForSMatrix']);
-            minQSqrtMatEig=confRepoMgr.getParam([propBranchName,...
-                '.minQSqrtMatEig']);
-            %
-            builderObj=feval(className,pDefObj,goodDirSetObj,...
-                calcTimeLimVec,calcPrecision,sMethodName,...
-                minQSqrtMatEig);
-        end        
-        %
-        function builderObj=buildOneExternalApx(~,...
-                pDefObj,goodDirSetObj,...
-                calcTimeLimVec,calcPrecision,~,className)
-            builderObj=feval(className,pDefObj,goodDirSetObj,...
-                calcTimeLimVec,calcPrecision);
+        function builderObj=buildOneApx(pDynObj,goodDirSetObj,...
+                calcTimeLimVec,calcPrecision,fHandle,SProps)
+            paramsCMat = [fieldnames(SProps),struct2cell(SProps)].';
+            builderObj=fHandle(pDynObj,goodDirSetObj,calcTimeLimVec,...
+                calcPrecision,paramsCMat{:});
         end
     end
+    %
     methods
-        function self=EllApxBuilder(confRepoMgr,pDefObj,goodDirSetObj)
+        function [ellTubeRel,ellUnionTubeRel]=build(self)
+            import gras.ellapx.smartdb.rels.EllUnionTube;
+            ellTubeRel=self.ellTubeBuilder.getEllTubes();
+            ellTubeRel.scale(@self.getScaleFactorByApxType,{'approxType'});
+            ellUnionTubeRel=EllUnionTube.fromEllTubes(ellTubeRel);
+        end
+        %
+        function self=EllApxBuilder(confRepoMgr,pDynObj,goodDirSetObj)
             import gras.ellapx.uncertcalc.EllApxBuilder;
-            %% Define constants
-            INTERNAL_SCHEMA_NAME_LIST={'noUncertSqrtQ','noUncertJustQ'};
-            INTERNAL_CLASS_NAME_LIST={...
-                'gras.ellapx.lreachplain.IntEllApxBuilder',...
-                'gras.ellapx.lreachplain.IntProperEllApxBuilder'};
-            %
-            EXTERNAL_SCHEMA_NAME_LIST={'justQ'};
-            EXTERNAL_CLASS_NAME_LIST={...
-                'gras.ellapx.lreachplain.ExtEllApxBuilder'};
-            %
-            EXTINT_SCHEMA_NAME_LIST={'uncert'};
-            EXTINT_CLASS_NAME_LIST={...
-                'gras.ellapx.lreachuncert.ExtIntEllApxBuilder'};            
             %
             calcTimeLimVec=confRepoMgr.getParam(...
                 'genericProps.calcTimeLimVec');
-            %
             calcPrecision=confRepoMgr.getParam(...
                 'genericProps.calcPrecision');
-            %% Build internal approximations
-            fBuildIntOne=@(x,y)EllApxBuilder.buildOneInternalApx(...
-                confRepoMgr,pDefObj,goodDirSetObj,calcTimeLimVec,...
-                calcPrecision,x,y);
+            %
+            fBuildOne=@(x,y)EllApxBuilder.buildOneApx(pDynObj,...
+                goodDirSetObj,calcTimeLimVec,calcPrecision,x,y);
+            %
             intBuilderList=EllApxBuilder.buildApxGroupGeneric(...
-                'ellipsoidalApxProps.internalApx',confRepoMgr,...
-                INTERNAL_SCHEMA_NAME_LIST,INTERNAL_CLASS_NAME_LIST,...
-                fBuildIntOne);
-            %% Build external approximations
-            fBuildExtOne=@(x,y)EllApxBuilder.buildOneExternalApx(...
-                confRepoMgr,pDefObj,goodDirSetObj,calcTimeLimVec,...
-                calcPrecision,x,y);
+                'internalApx',confRepoMgr,fBuildOne);
             extBuilderList=EllApxBuilder.buildApxGroupGeneric(...
-                'ellipsoidalApxProps.externalApx',confRepoMgr,...
-                EXTERNAL_SCHEMA_NAME_LIST,EXTERNAL_CLASS_NAME_LIST,...
-                fBuildExtOne);
-            %%
-            %% Build external-internal approximations
-            fBuildExtIntOne=@(x,y)EllApxBuilder.buildOneExtIntApx(...
-                confRepoMgr,pDefObj,goodDirSetObj,calcTimeLimVec,...
-                calcPrecision,x,y);
+                'externalApx',confRepoMgr,fBuildOne);
             extIntBuilderList=EllApxBuilder.buildApxGroupGeneric(...
-                'ellipsoidalApxProps.extIntApx',confRepoMgr,...
-                EXTINT_SCHEMA_NAME_LIST,EXTINT_CLASS_NAME_LIST,...
-                fBuildExtIntOne);
+                'extIntApx',confRepoMgr,fBuildOne);
             %
             self.ellTubeBuilder=gras.ellapx.gen.EllApxCollectionBuilder(...
                 [intBuilderList,extBuilderList,extIntBuilderList]);
             %
-            self.intApxScaleFactor=confRepoMgr.getParam(...
-                'ellipsoidalApxProps.internalApx.dispScaleFactor');
-            self.extApxScaleFactor=confRepoMgr.getParam(...
-                'ellipsoidalApxProps.externalApx.dispScaleFactor');
+            self.intApxScaleFactor=getParamIfExists(...
+                'ellipsoidalApxProps.internalApx.dispScaleFactor',1);
+            self.extApxScaleFactor=getParamIfExists(...
+                'ellipsoidalApxProps.externalApx.dispScaleFactor',1);
             %
-        end
-        function [ellTubeRel,ellUnionTubeRel]=build(self)
-            import gras.ellapx.smartdb.rels.EllUnionTube;
-            import gras.ellapx.uncertcalc.EllApxBuilder;
-            ellTubeRel=self.ellTubeBuilder.getEllTubes();
-            ellTubeRel.scale(...
-                @(apxType)getScaleFactorByApxType(self,apxType),...
-                {'approxType'});
-            %
-            ellUnionTubeRel=EllUnionTube.fromEllTubes(ellTubeRel);
-            
+            function value=getParamIfExists(paramPath,default)
+                if confRepoMgr.isParam(paramPath);
+                    value=confRepoMgr.getParam(paramPath);
+                else
+                    value=default;
+                end
+            end
         end
     end
 end
-        

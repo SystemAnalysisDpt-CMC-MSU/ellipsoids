@@ -228,5 +228,37 @@ classdef SuiteBasic < mlunitext.test_case
                 %
             end
         end
+        %
+        function testMatrixCubicSplineSinglePoint(self)
+            nRows = 10;
+            nCols = 11;
+            nTimePoints = 1000;
+            absTol = elltool.conf.Properties.getAbsTol();
+            %
+            timeVec = linspace(1, 10, nTimePoints);
+            mArray = zeros(nRows, nCols, nTimePoints);
+            %
+            for iTimePoint = 1:nTimePoints
+                mArray(:,:,iTimePoint) = 10*sin(10*timeVec(iTimePoint));
+            end
+            %
+            splineObj = gras.interp.MatrixColCubicSpline(mArray, timeVec);
+            %
+            evalTimeVec = ( timeVec(2:end) + timeVec(1:end-1) ) / 2;
+            evalTimeVec = [timeVec(1),evalTimeVec,timeVec(end)];
+            nEvalTimePoints = numel(evalTimeVec);
+            %
+            aArray = zeros(nRows, nCols, nEvalTimePoints);
+            %
+            for iTimePoint = 1:nEvalTimePoints
+                aArray(:,:,iTimePoint) = ...
+                    splineObj.evaluate(evalTimeVec(iTimePoint));
+            end
+            %
+            bArray = splineObj.evaluate(evalTimeVec);
+            %
+            rArray = aArray - bArray;
+            mlunitext.assert(max(abs(rArray(:))) < absTol);
+        end
     end
 end

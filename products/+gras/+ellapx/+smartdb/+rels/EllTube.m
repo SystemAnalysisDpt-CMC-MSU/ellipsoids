@@ -186,7 +186,7 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
     methods
         function plObj=plot(self,plObj)
             % PLOT - displays ellipsoidal tubes using the specified RelationDataPlotter
-            % 
+            %
             %
             % Input:
             %   regular:
@@ -343,7 +343,7 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
             STubeData=EllTubeBasic.fromQArraysInternal(QArrayList,aMat,...
                 MArrayList,varargin{:});
             ellTubeRel=EllTube(STubeData);
-        end       
+        end
         function ellTubeRel = fromEllMArray(qEllArray, ellMArr, varargin)
         % FROMELLMARRAY  - creates a relation object using an array of ellipsoids.
         %                  This method uses regularizer in the form of a matrix 
@@ -379,8 +379,8 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
             STubeData=EllTubeBasic.fromQArraysInternal({qArray}, aMat,...
                 {ellMArr},varargin{:},...
                 EllTube.DEFAULT_SCALE_FACTOR(1));
-            ellTubeRel=EllTube(STubeData);           
-            %            
+            ellTubeRel=EllTube(STubeData);
+            %
             function fCalcAMatAndQArray(iPoint)
                 [aMat(:, iPoint), qArray(:,:,iPoint)] =...
                     parameters(qEllArray(iPoint));
@@ -590,7 +590,7 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
                 isSysNewTimeIndVec(indClosestVec) = true;
             else
                 isSysTimeLowerVec = timeVec < cutStartTime;
-                isSysTimeGreaterVec = timeVec > cutEndTime;  
+                isSysTimeGreaterVec = timeVec > cutEndTime;
                 [unTimeVec, unVec, notUnVec] = unique(timeVec);
                 isSysNewTimeIndVec = false(size(timeVec));
                 isSysNewTimeIndVec(unVec) = true;
@@ -660,6 +660,55 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
                 ellTubeProjRel=EllTubeProj(rel);
             else
                 ellTubeProjRel=EllTubeProj();
+            end
+        end
+        function ellTubeProjRel=projectToOrths(self,indVec,projType)
+            %
+            % PROJECTTOORTHS - project elltube onto subspace defined by
+            % vectors of standart basis with indices specified in indVec
+            %
+            % Input:
+            %   regular:
+            %       self: gras.ellapx.smartdb.rels.EllTube[1, 1] - elltube
+            %           object
+            %       indVec: double[1, nProjDims] - indices specifying a subset of
+            %           standart basis
+            %   optional:
+            %       projType: gras.ellapx.enums.EProjType[1, 1] -  type of
+            %           projection
+            %
+            % Output:
+            %   regular:
+            %       ellTubeProjRel: gras.ellapx.smartdb.rels.EllTubeProj[1, 1] - 
+            %           elltube projection
+            %
+            % Example:
+            %   ellTubeProjRel = ellTubeRel.projectToOrths([1,2])
+            %   projType = gras.ellapx.enums.EProjType.DynamicAlongGoodCurve
+            %   ellTubeProjRel = ellTubeRel.projectToOrths([3,4,5], projType)
+            %
+            % $Author: Ivan Menshikov <ivan.v.menshikov@gmail.com>$
+            % $Copyright: Moscow State University,
+            %             Faculty of Computational
+            %             Mathematics and Computer Science,
+            %             System Analysis Department 2013 $
+            %
+            %
+            dim = min(self.dim);
+            %
+            if nargin < 3
+                projType = gras.ellapx.enums.EProjType.Static;
+            end
+            %
+            projMat = eye(dim);
+            projMat = projMat(:,indVec).';
+            ellTubeProjRel = self.project(projType,{projMat},@fGetProjMat);
+            %
+            function [projOrthMatArray,projOrthMatTransArray]=...
+                    fGetProjMat(projMat,timeVec,varargin)
+                nPoints=length(timeVec);
+                projOrthMatArray=repmat(projMat,[1,1,nPoints]);
+                projOrthMatTransArray=repmat(projMat.',[1,1,nPoints]);
             end
         end
     end
