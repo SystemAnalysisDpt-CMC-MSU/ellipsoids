@@ -129,12 +129,20 @@ classdef MatVector
             end
             %
             [nARows, nACols, nTimePoints] = size(aArray);
-            nBCols = size(bArray,2);
-            nCCols = size(cArray,2);
+            [nBRows, nBCols, ~] = size(bArray);
+            [nCRows, nCCols, ~] = size(cArray);
+            %
+            isAArrayScalar = (nARows == 1 && nACols == 1);
+            isBArrayScalar = (nBRows == 1 && nBCols == 1);
+            isBinaryOperation = isempty(cArray);
+            %
+            if isAArrayScalar || isBArrayScalar
+                useSparseMatrix = false;
+            end
             %
             if useSparseMatrix
                 aMat = reshape(aArray,nARows,nACols*nTimePoints);
-                if isempty(cArray)
+                if isBinaryOperation
                     dMat = aMat*getSparseMat(bArray);
                     dArray = reshape(dMat,nARows,nBCols,nTimePoints);
                 else
@@ -142,8 +150,15 @@ classdef MatVector
                     dArray = reshape(dMat,nARows,nCCols,nTimePoints);
                 end
             else
-                if isempty(cArray)
-                    dArray = zeros(nARows,nBCols,nTimePoints);
+                if isBinaryOperation
+                    if isAArrayScalar
+                        dArray = zeros(nBRows,nBCols,nTimePoints);    
+                    elseif isBArrayScalar
+                        dArray = zeros(nARows,nACols,nTimePoints);
+                    else
+                        dArray = zeros(nARows,nBCols,nTimePoints);
+                    end
+                    %
                     if size(bArray,3) == nTimePoints
                         for iTimePoint = 1:nTimePoints
                             dArray(:,:,iTimePoint) = aArray(:,:,iTimePoint)...
@@ -159,7 +174,16 @@ classdef MatVector
                             'Incorrect size of bArray');
                     end
                 else
-                    dArray = zeros(nARows,nCCols,nTimePoints);
+                    if isAArrayScalar && isBArrayScalar
+                        dArray = zeros(nCRows,nCCols,nTimePoints);   
+                    elseif isAArrayScalar
+                        dArray = zeros(nBRows,nCCols,nTimePoints);    
+                    elseif isBArrayScalar
+                        dArray = zeros(nARows,nCCols,nTimePoints);
+                    else
+                        dArray = zeros(nARows,nCCols,nTimePoints);
+                    end
+                    %
                     for iTimePoint = 1:nTimePoints
                         dArray(:,:,iTimePoint) = aArray(:,:,iTimePoint)...
                             *bArray(:,:,iTimePoint)*cArray(:,:,iTimePoint);
