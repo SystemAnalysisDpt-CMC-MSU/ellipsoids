@@ -221,5 +221,19 @@ classdef SuiteTri < mlunitext.test_case
             [vMat ~] = spheretriext(dim, N_POINTS);
             mlunitext.assert_equals(size(vMat,1),RIGHT_POINTS_3D);
         end
+        function testEllTube2Tri(~)
+            import gras.geom.tri.elltube2tri
+            xMat = [0 0 0; 0 0 1; 0 1 0;1 0 0; 1 0 1; 1 1 0];
+            fMat = elltube2tri(3,2);
+            patch('Vertices', xMat,'Faces',fMat,'FaceColor',[1 0 0]);
+            close all;
+        end
+        function testEllTubeDiscrTri(~)
+            import gras.geom.tri.elltubediscrtri
+            xMat = [0 0 0; 0 0 1; 0 1 0;1 0 0; 1 0 1; 1 1 0];
+            fMat = elltubediscrtri(3,2);
+            patch('Vertices', xMat,'Faces',fMat,'FaceColor',[1 0 0]);
+            close all;
+        end
     end
 end

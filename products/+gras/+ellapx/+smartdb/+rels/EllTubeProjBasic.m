@@ -612,7 +612,7 @@ for iTube = 1:tubeNum
     end
 end
 [~,xInd] = max(suppAllMat,[],1);
-for iX = 1:xInd
+for iX = 1:size(xInd,2)
     xMat(:,iX) = bpAllCMat{xInd(iX),iX}...
             +centerVec;
 end
@@ -636,7 +636,7 @@ for iDir = 1:nDim
     bpAllCMat{2,iDir} = lVec/sqrt(outVec(2));
 end
 [~,xInd] = max(distAllMat,[],1);
-for iX = 1:xInd
+for iX = 1:size(xInd,2)
     xMat(:,iX) = bpAllCMat{xInd(iX),iX}...
             +centerVec;
 end

@@ -18,10 +18,10 @@ classdef EllTubePlotTestCase < mlunitext.test_case
             checkParams(plObj, 1, 1, 0.4, [0 1 0]);
             
             
-            plObj = rel.plotExt('color',[1 0 1]);
-            checkParams(plObj, 1, 1, 0.4, [1 0 1]);
+            plObj = rel.plotExt('b');
+            checkParams(plObj, 1, 1, 0.4, [0 0 1]);
             
-           
+            
             rel = self.createTubeWithProj(2,2);
             
             plObj = rel.plotInt('linewidth', 4, ...
@@ -36,20 +36,59 @@ classdef EllTubePlotTestCase < mlunitext.test_case
                 'color', [0, 1, 1]);
             checkParams(plObj, [], 1, 0.1, [0 1 1]);
             plObj = rel.plotExt('shade', 0.3, ...
-                'color', [1, 1, 0]);
-            checkParams(plObj, [],1, 0.3, [1 1 0]);
+                'g');
+            checkParams(plObj, [],1, 0.3, [0 1 0]);
             
-
-            
-            
-        end
-        function testPlotInt(~)
             
             
             
         end
-        function testPlotExt(~)
+        function testPlotInt(self)
+            import gras.ellapx.enums.EApproxType;
+            approxType = gras.ellapx.enums.EApproxType.Internal;
+            fRight = @(a,b,c) a+b>=c;
+           
+            rel = self.createTubeWithProj(2,1);            
+            plObj = rel.plotInt();            
+            rel2 = rel.getTuplesFilteredBy(...
+                'approxType', approxType);
+            checkPoints(rel2,plObj,1,fRight);
             
+            rel = self.createTubeWithProj(2,2);            
+            plObj = rel.plotInt();            
+            rel2 = rel.getTuplesFilteredBy(...
+                'approxType', approxType);
+            checkPoints(rel2,plObj,2,fRight);
+            
+            rel = self.createTubeWithProj(3,3);            
+            plObj = rel.plotInt();            
+            rel2 = rel.getTuplesFilteredBy(...
+                'approxType', approxType);
+            checkPoints(rel2,plObj,3,fRight);
+            
+        end
+        function testPlotExt(self)
+            import gras.ellapx.enums.EApproxType;
+            fRight = @(a,b,c) a-b<=c;
+            
+            rel = self.createTubeWithProj(2,1);            
+            plObj = rel.plotExt();
+            approxType = gras.ellapx.enums.EApproxType.External;
+            rel2 = rel.getTuplesFilteredBy(...
+                'approxType', approxType);
+            checkPoints(rel2,plObj,1,fRight);
+            
+            rel = self.createTubeWithProj(2,2);            
+            plObj = rel.plotExt();            
+            rel2 = rel.getTuplesFilteredBy(...
+                'approxType', approxType);
+            checkPoints(rel2,plObj,2,fRight);
+            
+            rel = self.createTubeWithProj(3,3);            
+            plObj = rel.plotExt();            
+            rel2 = rel.getTuplesFilteredBy(...
+                'approxType', approxType);
+            checkPoints(rel2,plObj,3,fRight);
             
         end
     end
@@ -193,4 +232,89 @@ else
 end
 mlunitext.assert_equals(isEq, 1);
 mlunitext.assert_equals(numel(isFill) > 0, fill);
+end
+
+function checkPoints(rel,plObj,curCase,fRight)
+ABS_TOL = 10^(-5);
+SHPlot =  plObj.getPlotStructure().figToAxesToHMap.toStruct();
+plEllObjVec = get(SHPlot.figure_g1.ax, 'Children');
+plEllObjVec = plEllObjVec(~strcmp(get(plEllObjVec,'Type'),'light'));
+plEllObjVec = plEllObjVec(~strcmp(get(plEllObjVec, 'Marker'), '*'));
+isEq = true;
+[xData,yData,zData] = getData(plEllObjVec);
+timeVec = rel.timeVec{1};
+qArr = rel.QArray;
+aMat = rel.aMat;
+curInd = 1;
+switch curCase
+    case 1
+        [xData,xInd] = sort(xData);
+        prev = 1;
+        yData = yData(xInd);
+        zData = zData(xInd);
+        for iTime = 1:size(timeVec,2)
+            numberPoints = numel(find(xData == xData(prev)));
+            for iDir = 1:numberPoints
+                for iTube = 1:numel(qArr)
+                    yP = yData(curInd);
+                    zP = zData(curInd);
+                    qMat = qArr{iTube}(:,:,iTime);
+                    cVec = aMat{iTube}(:,iTime);
+                    yP = yP-cVec(1);
+                    zP = zP-cVec(2);
+                    if ~fRight([yP zP]/qMat*[yP zP]'-1,ABS_TOL,0)
+                        isEq = false;
+                    end
+                end
+                curInd = curInd+1;
+            end
+            prev = prev + numberPoints;
+        end
+    case 2
+        for iDir = 1:size(xData,2)
+            for iTube = 1:numel(qArr)
+                xP = xData(curInd);
+                yP = yData(curInd);
+                qMat = qArr{iTube}(:,:,1);
+                cVec = aMat{iTube}(:,1);
+                xP = xP-cVec(1);
+                yP = yP-cVec(2);
+                if ~fRight([xP yP]/qMat*[xP yP]'-1,ABS_TOL,0)
+                    isEq = false;
+                end
+            end
+            curInd = curInd+1;
+        end
+        
+    case 3
+        for iDir = 1:size(xData,2)
+            for iTube = 1:numel(qArr)
+                xP = xData(curInd);
+                yP = yData(curInd);
+                zP = zData(curInd);
+                qMat = qArr{iTube}(:,:,1);
+                cVec = aMat{iTube}(:,1);
+                xP = xP-cVec(1);
+                yP = yP-cVec(2);
+                zP = zP-cVec(3);
+                
+                if ~fRight([xP yP zP]/qMat*[xP yP zP]'-1,ABS_TOL,0)
+                    isEq = false;
+                end
+            end
+            curInd = curInd+1;
+        end
+end
+mlunitext.assert_equals(isEq, 1);
+end
+
+
+function [outXData, outYData, outZData] = getData(hObj)
+outXData = get(hObj, 'XData');
+outYData = get(hObj, 'YData');
+outZData = get(hObj, 'ZData');
+outXData = outXData(:)';
+outYData = outYData(:)';
+outZData = outZData(:)';
+
 end
