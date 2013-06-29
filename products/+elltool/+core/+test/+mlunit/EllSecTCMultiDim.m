@@ -377,8 +377,8 @@ switch nArg
         resEllVec = func(firstArg, secondArg, thirdArg, fourthArg);
     otherwise
 end
-[isEqual, reportStr] = eq(resEllVec, ansEllVec);
-mlunitext.assert_equals(true, all(isEqual), reportStr);
+[isEq, reportStr] = isEqual(resEllVec, ansEllVec);
+mlunitext.assert_equals(true, all(isEq), reportStr);
 end
 function objectArray = createObjectArray(arraySize, func, firstArg, ...
     secondArg, nArg)
