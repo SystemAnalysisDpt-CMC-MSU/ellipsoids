@@ -89,61 +89,119 @@ classdef MatVector
             end
         end
         %
-        function Bpt_data=rMultiplyByVec(Bt_data,pt_data)
-            import modgen.common.throwerror;
-            if ndims(pt_data)~=2
-                throwerror('wrongInput',...
-                    'pt_data is expected to be 2-dimensional array');
+        function cMat = rMultiplyByVec(aArray,bMat,useSparseMatrix)
+            if nargin < 3
+                useSparseMatrix = true;
             end
-            psize=size(pt_data);
-            bsize=size(Bt_data);
-            Bpt_data=zeros([bsize(1) psize(2) ]);
-            for t=1:1:psize(2)
-                Bpt_data(:,t)=Bt_data(:,:,t)*pt_data(:,t);
-            end;
+            [nRows, nCols, nTimePoints] = size(aArray);
+            if useSparseMatrix
+                iVec = 1:nCols*nTimePoints;
+                jVec = reshape(repmat(1:nTimePoints,nCols,1), ...
+                    nCols*nTimePoints,1);
+                bSparseMat = sparse(iVec,jVec,bMat, ...
+                    nCols*nTimePoints,nTimePoints,nCols*nTimePoints);
+                cMat = reshape(aArray,nRows,nCols*nTimePoints)*bSparseMat;
+            else
+                cMat = zeros(nRows,nTimePoints);
+                for iTimePoint = 1:nTimePoints
+                    cMat(:,iTimePoint) = ...
+                        aArray(:,:,iTimePoint)*bMat(:,iTimePoint);
+                end;
+            end
         end
         %
-        function Bpt_data=rMultiply(Bt_data,pt_data,qt_data)
-            import modgen.common.throwerror;
-            psize=[size(pt_data),1];
-            bsize=size(Bt_data);
-            nElems=size(Bt_data,3);
-            nRightElems=size(pt_data,3);
-            if (nRightElems>1)&&(nElems~=nRightElems)
-                throwerror('wrongInput',...
-                    ['number of elements in both matrix vectors ',...
-                    'should be the same']);
-            end
-            if ~(all(bsize(1:2) == 1) || all(psize(1:2) == 1))
-                resSizeVec = [bsize(1), psize(2), nElems];
-            else
-                resSizeVec = [max(bsize(1:2), psize(1:2)), nElems];
-            end
+        function dArray = rMultiply(aArray, bArray, varargin)
             switch nargin
-                case 2,
-                    Bpt_data=zeros(resSizeVec);
-                    if nRightElems>1
-                        for t=1:1:nElems
-                            Bpt_data(:,:,t)=Bt_data(:,:,t)*pt_data(:,:,t);
+                case 4
+                    cArray = varargin{1};
+                    useSparseMatrix = varargin{2};
+                case 3
+                    if isscalar(varargin{1})
+                        cArray = [];
+                        useSparseMatrix = varargin{1};
+                    else
+                        cArray = varargin{1};
+                        useSparseMatrix = false;
+                    end
+                case 2
+                    cArray = [];
+                    useSparseMatrix = false;
+            end
+            %
+            [nARows, nACols, nTimePoints] = size(aArray);
+            [nBRows, nBCols, ~] = size(bArray);
+            [nCRows, nCCols, ~] = size(cArray);
+            %
+            isAArrayScalar = (nARows == 1 && nACols == 1);
+            isBArrayScalar = (nBRows == 1 && nBCols == 1);
+            isBinaryOperation = isempty(cArray);
+            %
+            if isAArrayScalar || isBArrayScalar
+                useSparseMatrix = false;
+            end
+            %
+            if useSparseMatrix
+                aMat = reshape(aArray,nARows,nACols*nTimePoints);
+                if isBinaryOperation
+                    dMat = aMat*getSparseMat(bArray);
+                    dArray = reshape(dMat,nARows,nBCols,nTimePoints);
+                else
+                    dMat = aMat*getSparseMat(bArray)*getSparseMat(cArray);
+                    dArray = reshape(dMat,nARows,nCCols,nTimePoints);
+                end
+            else
+                if isBinaryOperation
+                    if isAArrayScalar
+                        dArray = zeros(nBRows,nBCols,nTimePoints);    
+                    elseif isBArrayScalar
+                        dArray = zeros(nARows,nACols,nTimePoints);
+                    else
+                        dArray = zeros(nARows,nBCols,nTimePoints);
+                    end
+                    %
+                    if size(bArray,3) == nTimePoints
+                        for iTimePoint = 1:nTimePoints
+                            dArray(:,:,iTimePoint) = aArray(:,:,iTimePoint)...
+                                *bArray(:,:,iTimePoint);
+                        end
+                    elseif size(bArray,3) == 1
+                        for iTimePoint = 1:nTimePoints
+                            dArray(:,:,iTimePoint) = aArray(:,:,iTimePoint)...
+                                *bArray;
                         end
                     else
-                        for t=1:1:nElems
-                            Bpt_data(:,:,t)=Bt_data(:,:,t)*pt_data;
-                        end
+                        modgen.common.throwerror('wrongInput', ...
+                            'Incorrect size of bArray');
                     end
-                case 3,
-                    qsize=size(qt_data);
-                    if ~(all(resSizeVec(1:2) == 1) || all(qsize(1:2) == 1))
-                        resSizeVec = [resSizeVec(1), qsize(2), nElems];
+                else
+                    if isAArrayScalar && isBArrayScalar
+                        dArray = zeros(nCRows,nCCols,nTimePoints);   
+                    elseif isAArrayScalar
+                        dArray = zeros(nBRows,nCCols,nTimePoints);    
+                    elseif isBArrayScalar
+                        dArray = zeros(nARows,nCCols,nTimePoints);
                     else
-                        resSizeVec = [max(resSizeVec(1:2), ...
-                            qsize(1:2)), nElems];
+                        dArray = zeros(nARows,nCCols,nTimePoints);
                     end
-                    Bpt_data=zeros(resSizeVec);
-                    for t=1:1:psize(3)
-                        Bpt_data(:,:,t)=Bt_data(:,:,t)*...
-                            pt_data(:,:,t)*qt_data(:,:,t);
+                    %
+                    for iTimePoint = 1:nTimePoints
+                        dArray(:,:,iTimePoint) = aArray(:,:,iTimePoint)...
+                            *bArray(:,:,iTimePoint)*cArray(:,:,iTimePoint);
                     end
+                end
+            end
+            %
+            function rSparseMat = getSparseMat(rArray)
+                [nRows, nCols, ~] = size(rArray);
+                iMat = repmat(1:nRows*nTimePoints,nCols,1);
+                iArray = reshape(iMat,nCols,nRows,nTimePoints);
+                iArray = permute(iArray,[2 1 3]);
+                iVec = reshape(iArray,nRows*nCols*nTimePoints,1);
+                jVec = reshape(repmat(1:nCols*nTimePoints,nRows,1),...
+                    nRows*nCols*nTimePoints,1);
+                rSparseMat = sparse(iVec,jVec,rArray(:),...
+                    nRows*nTimePoints,nCols*nTimePoints,...
+                    nRows*nCols*nTimePoints);
             end
         end
     end
