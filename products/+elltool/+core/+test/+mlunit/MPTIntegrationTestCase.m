@@ -187,24 +187,6 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
         function self = testIntersectionIA(self)
             import elltool.exttbx.mpt.gen.*;
             %
-            ell1 = ellipsoid(eye(3));
-            sh2Mat = [1 3 0; 0 0 2; 0 3 1];
-            ell2 = ellipsoid(sh2Mat*sh2Mat');
-            transfMat = [2 1 0; 1 1 1; 3 8 2];
-            sh3Mat = transfMat*transfMat';
-            c3Vec = [0.3; 0.2; 0.5];
-            ell3 = ellipsoid(c3Vec,sh3Mat);
-            %
-            poly1 =ell2.toPolytope(20);
-            %
-            poly2 =ell2.toPolytope(80);
-            %
-            %intersection with unit ball
-            EXP_MAX_TOL1 = 0.05;
-            myTestIntersectionIA(ell1,ell2,poly1,poly2,EXP_MAX_TOL1)
-            %intersection with ellipsoid with different center
-            EXP_MAX_TOL2 = 0.25;
-            myTestIntersectionIA(ell3,ell2,poly1,poly2,EXP_MAX_TOL2)
             %ellipsoid lies in polytope
             ell4 = ellipsoid(eye(2));
             poly4 = polytope([eye(2); -eye(2)], ones(4,1));
@@ -247,28 +229,6 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             [~,ellPoly8Mat] = double(ellPolyIA8);
             mlunitext.assert(all(ellPoly8Mat(:) == 0));
             %
-            %
-            function myTestIntersectionIA(ell1,ell2,triEll2,triEll2n2,...
-                    expTol)
-                ellEllIA = intersection_ia(ell1,ell2);
-                ellPolyIA1 = intersection_ia(ell1,triEll2);
-                ellPolyIA2 = intersection_ia(ell1,triEll2n2);
-                %
-                [isEq, reportStr] = ellEllIA.eq(ellPolyIA1,expTol);
-                mlunitext.assert(isEq, reportStr);
-                %                
-                [isEq2, reportStr2] = ellEllIA.eq(ellPolyIA2,expTol);
-                mlunitext.assert(isEq2, reportStr2);
-                %
-                [ellEllVec ellEllMat] = double(ellEllIA);
-                [ellPoly1Vec ellPoly1Mat] = double(ellPolyIA1);
-                [ellPoly2Vec ellPoly2Mat] = double(ellPolyIA2);                
-                tol1 = norm(ellEllVec - ellPoly1Vec) + ...
-                    norm(ellEllMat - ellPoly1Mat);
-                tol2 = norm(ellEllVec - ellPoly2Vec) + ...
-                    norm(ellEllMat - ellPoly2Mat);
-                mlunitext.assert(tol2 < tol1);
-           end
         end
         %
         %

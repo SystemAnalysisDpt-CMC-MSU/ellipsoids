@@ -1,61 +1,59 @@
-function display(myEllMat)
+function display(ellArr)
 %
 % DISPLAY - Displays the details of the ellipsoid object.
 %
 % Input:
 %   regular:
 %       myEllMat: ellipsoid [mRows, nCols] - matrix of ellipsoids.
-%           
+%
 % Example:
 %   ellObj = ellipsoid([-2; -1], [2 -1; -1 1]);
 %   display(ellObj)
-% 
+%
 %   ellObj =
-% 
+%
 %   Center:
 %       -2
 %       -1
-% 
+%
 %   Shape Matrix:
 %        2    -1
 %       -1     1
-% 
+%
 %   Nondegenerate ellipsoid in R^2.
-% 
-% 
+%
+%
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright: The Regents of the University of California 
+% $Copyright: The Regents of the University of California
 %             2004-2008 $
+MAX_DISP_ELEM = 15;
+DEFAULT_NAME = 'ellArr';
 
 fprintf('\n');
-disp([inputname(1) ' =']);
-
-sizeVec = size(myEllMat);
-nDims = numel(sizeVec);
-isEmpty = isempty(myEllMat);
-if (nDims > 1 && (sizeVec(1) > 1 || sizeVec(2) > 1) )|| isEmpty
-    if isEmpty
-        fprintf('Empty array of ellipsoids with dimensionality ');
-    else
-        fprintf('Array of ellipsoids with dimensionality ');
-    end
-    for iDim = 1:nDims-1
-        fprintf('%dx', sizeVec(iDim));
-    end
-    fprintf('%d\n\n', sizeVec(nDims));
-else
-    fprintf('\n');
-    fprintf('Center:\n'); disp(myEllMat.centerVec);
-    fprintf('Shape Matrix:\n'); disp(myEllMat.shapeMat);
-    if myEllMat.isEmpty()
-        fprintf('Empty ellipsoid.\n\n');
-    else
-        [spaceDim, ellDim]    = dimension(myEllMat);
-        if ellDim < spaceDim
-            fprintf('Degenerate (rank %d) ellipsoid in R^%d.\n\n', ...
-                ellDim, spaceDim);
-        else
-            fprintf('Nondegenerate ellipsoid in R^%d.\n\n', spaceDim);
-        end
-    end
+variableName = inputname(1);
+if (isempty(variableName))
+    variableName = DEFAULT_NAME;
 end
+[SDataArray, SFieldNames, SFieldDescription] = ...
+    ellArr.toStruct(false);
+sizeVec = size(ellArr);
+Properties = struct('actualClass', 'ellipsoid', 'size', sizeVec);
+fprintf('-------ellipsoid object-------\n');
+fprintf('Properties:\n');
+strucdisp(Properties);
+fprintf('\n');
+fprintf('Fields (name, type, description):\n');
+fprintf(['    ', SFieldNames.shapeMat, '    double    ',...
+    SFieldDescription.shapeMat, '\n']);
+fprintf(['    ', SFieldNames.centerVec, '    double    ',...
+    SFieldDescription.centerVec, '\n']);
+fprintf('\nData: \n');
+
+if (numel(SDataArray) == 0)
+    fprintf('[Empty array]\n');
+else
+    strucdisp(SDataArray, 'maxArrayLength', MAX_DISP_ELEM, ...
+        'defaultName', variableName);
+end
+end
+

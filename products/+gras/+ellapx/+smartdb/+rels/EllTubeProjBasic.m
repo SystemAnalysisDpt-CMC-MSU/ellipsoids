@@ -440,15 +440,15 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
             import gras.ellapx.enums.EApproxType;
             approxType = gras.ellapx.enums.EApproxType(1);
             plObj = self.getTuplesFilteredBy(...
-                        'approxType', approxType)...
-                        .plotExtOrInternal('external',varargin{:});
+                'approxType', approxType)...
+                .plotExtOrInternal(@calcPointsExt,varargin{:});
         end
         function plObj = plotInt(self,varargin)
             import gras.ellapx.enums.EApproxType;
             approxType = gras.ellapx.enums.EApproxType(0);
             plObj = self.getTuplesFilteredBy(...
-                        'approxType', approxType)...
-                        .plotExtOrInternal('internal',varargin{:});
+                'approxType', approxType)...
+                .plotExtOrInternal(@calcPointsInt,varargin{:});
         end
     end
     methods (Access = private)
@@ -555,7 +555,7 @@ titl = ['Tube at time ' num2str(obj.timeVec{1})];
 end
 
 function [xCMat,fCMat,titl,xlab,ylab,zlab] =...
-    fCalcBodyArr(obj,fTri,appType,...
+    fCalcBodyArr(obj,fTri,fCalcPoints,...
     nPlotPoints)
 dim = obj.dim(1);
 [lGridMat, fMat] = gras.geom.tri.spheretriext(dim,...
@@ -565,9 +565,10 @@ timeVec = obj.timeVec{1};
 nDim = size(lGridMat, 2);
 mDim = size(timeVec, 2);
 qArr = cat(4, obj.QArray{:});
-
+absTol = max(obj.calcPrecision);
 if mDim == 1
-    xMat = calcPoints(obj,1,appType,nDim,lGridMat,dim,qArr);
+    xMat = fCalcPoints(1,nDim,lGridMat,dim,qArr,...
+        obj.aMat{1}(:,1),absTol);
     xCMat = {[xMat xMat(:,1)]};
     fCMat = {fMat};
     titl = ['Tube at time '  num2str(timeVec)];
@@ -578,7 +579,8 @@ else
     fMat = fTri(nDim,mDim);
     xMat = zeros(3,nDim*mDim);
     for iTime = 1:mDim
-        xTemp = calcPoints(obj,iTime,appType,nDim,lGridMat,dim,qArr);
+        xTemp = fCalcPoints(iTime,nDim,lGridMat,dim,qArr,...
+            obj.aMat{1}(:,iTime),absTol);
         xMat(:,(iTime-1)*nDim+1:iTime*nDim) =...
             [timeVec(iTime)*ones(1,nDim); xTemp];
     end
@@ -592,50 +594,54 @@ end
 end
 
 
-function xMat = calcPoints(obj,ind,appType,nDim,lGridMat,dim,qArr)
-centerVec = obj.aMat{1}(:,ind);
-absTol = max(obj.calcPrecision);
+function xMat = calcPointsInt(iTime,nDim,lGridMat,dim,qArr,...
+    centerVec,absTol)
+import gras.geom.ell.rhomat
 xMat = zeros(dim,nDim);
-kDim = size(qArr,4);
+tubeNum = size(qArr,4);
 
-suppAllMat = zeros(kDim,nDim);
-bpAllCell = cell(kDim,nDim);
-if strcmp(appType,'internal')
-    arrayfun(@(x) calcSupMatInt(x),...
-        1:kDim,...
-        'UniformOutput', false);
-else
-    arrayfun(@(x) calcXMatExt(x),...
-        1:nDim,...
-        'UniformOutput', false);
+suppAllMat = zeros(tubeNum,nDim);
+bpAllCMat = cell(tubeNum,nDim);
+for iTube = 1:tubeNum
+    curEll = qArr(:,:,iTime,iTube);
+    [supMat, bpMat] = rhomat(curEll,...
+        lGridMat,absTol);
+    suppAllMat(iTube,:) = supMat;
+    for indBP=1:size(bpAllCMat,2)
+        bpAllCMat{iTube,indBP} = bpMat(:,indBP);
+    end
 end
-
 [~,xInd] = max(suppAllMat,[],1);
 arrayfun(@(x) calcXMat(x), 1:size(xInd,2),...
     'UniformOutput', false);
-    function calcSupMatInt(ind2)
-        import gras.geom.ell.rhomat
-        tempEll = qArr(:,:,ind,ind2);
-        [supMat, bpMat] = rhomat(tempEll,...
-            lGridMat,absTol);
-        suppAllMat(ind2,:) = supMat;
-        for indBP=1:size(bpAllCell,2)
-            bpAllCell{ind2,indBP} = bpMat(:,indBP);
-        end
-    end
-    function calcXMatExt(ind2)
-        q2Arr = reshape(qArr(:,:,ind,:), [dim dim kDim]);
-        lVec = lGridMat(:,ind2);
-        outVec = gras.gen.SquareMatVector...
-            .lrDivideVec(q2Arr,...
-            lVec);
-        suppAllMat(:,ind2) = outVec;
-        
-        bpAllCell{1,ind2} = lVec/sqrt(outVec(1));
-        bpAllCell{2,ind2} = lVec/sqrt(outVec(2));
-    end
     function calcXMat(ind2)
-        xMat(:,ind2) = bpAllCell{xInd(ind2),ind2}...
+        xMat(:,ind2) = bpAllCMat{xInd(ind2),ind2}...
+            +centerVec;
+    end
+end
+function xMat = calcPointsExt(iTime,nDim,lGridMat,dim,qArr,...
+    centerVec,~)
+xMat = zeros(dim,nDim);
+tubeNum = size(qArr,4);
+
+distAllMat = zeros(tubeNum,nDim);
+bpAllCMat = cell(tubeNum,nDim);
+for iDir = 1:nDim
+    q2Arr = reshape(qArr(:,:,iTime,:), [dim dim tubeNum]);
+    lVec = lGridMat(:,iDir);
+    outVec = gras.gen.SquareMatVector...
+        .lrDivideVec(q2Arr,...
+        lVec);
+    distAllMat(:,iDir) = outVec;
+    
+    bpAllCMat{1,iDir} = lVec/sqrt(outVec(1));
+    bpAllCMat{2,iDir} = lVec/sqrt(outVec(2));
+end
+[~,xInd] = max(distAllMat,[],1);
+arrayfun(@(x) calcXMat(x), 1:size(xInd,2),...
+    'UniformOutput', false);
+    function calcXMat(ind2)
+        xMat(:,ind2) = bpAllCMat{xInd(ind2),ind2}...
             +centerVec;
     end
 end

@@ -111,7 +111,7 @@ classdef SquareMatVector<gras.gen.MatVector
             else
                 outVec=zeros(1,nElems);
                 if size(InpAArray,2)==1
-                    for iElem=1:size(InpBArray,2)
+                    for iElem=1:nMatElems
                         outVec(iElem)=transpose(InpAArray)*...
                             (InpBArray(:,:,iElem)\InpAArray);
                     end

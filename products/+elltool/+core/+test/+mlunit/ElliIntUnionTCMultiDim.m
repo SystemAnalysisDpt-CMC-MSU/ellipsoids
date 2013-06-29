@@ -351,8 +351,8 @@ function checkEllunionEaAndEllintersectionIa(self, isEllunionEa)
         else
             resEllVec = ellintersection_ia(testEllArray);
         end
-        [isEqual, reportStr] = eq(resEllVec, resultEll);
-        mlunitext.assert_equals(true, isEqual, reportStr);
+        [isEq, reportStr] = isEqual(resEllVec, resultEll);
+        mlunitext.assert_equals(true, isEq, reportStr);
     end
     function testError(flag)
         if (flag > 0)
