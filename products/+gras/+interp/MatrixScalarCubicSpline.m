@@ -11,11 +11,11 @@ classdef MatrixScalarCubicSpline<gras.interp.AMatrixCubicSpline
             ppFormList{1}=csapi(timeVec,dataArray);
         end
     end
-    methods (Access=protected)
-        function resArray=evaluateInternal(self,timeVec)
+    methods (Access=public)
+        function resArray=evaluate(self,timeVec)
             nTimePoints=length(timeVec);
             resArray=zeros(1,1,nTimePoints);
-            resArray(:,:,:)=fnval(self.ppFormList{1},timeVec);
+            resArray(:,:,:)=ppval(self.ppFormList{1},timeVec);
         end
     end
     methods
