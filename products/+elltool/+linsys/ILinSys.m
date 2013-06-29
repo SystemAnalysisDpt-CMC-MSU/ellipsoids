@@ -225,11 +225,11 @@ classdef ILinSys < handle
         %   SUBounds.center = {'sin(t)'; 'cos(t)'};  
         %   SUBounds.shape = [9 0; 0 2];
         %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-        %   isLtiArr = sys.islti();
+        %   isLtiArr = sys.isLti();
         %   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-        %   isLtiArr = dsys.islti();
+        %   isLtiArr = dsys.isLti();
         %
-        isLtiArr = islti(self)
+        isLtiArr = isLti(self)
         %
         % GETABSTOL - gives array the same size as linsysArr with values of absTol  
         %             properties for each hyperplane in hplaneArr.

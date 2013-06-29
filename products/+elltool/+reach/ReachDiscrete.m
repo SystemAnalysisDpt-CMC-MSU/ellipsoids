@@ -20,6 +20,9 @@ classdef ReachDiscrete < elltool.reach.AReach
         ETAG_SH_MAT_CALC_FAILURE = ':ShapeMatCalcFailure';
         EMSG_APPROX_SHAPE_MAT_CALC_PROB = ['There is a problem with ',...
             'calculation of approximation''s shape matrix. '];
+        %
+        ETAG_DEGRADE=':degradedEstimate';
+        EMSG_DEGRADE='Ellipsoidal estimate is degenerate';
     end
     %
     properties (Access = private)
@@ -251,6 +254,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             import gras.ellapx.gen.RegProblemDynamicsFactory;
             import gras.ellapx.lreachplain.GoodDirsContinuousFactory;
             import modgen.common.throwerror;
+            import modgen.string.catwithsep;
             %
             try
                 ellTubeRel = self.auxMakeEllTubeRel(...
@@ -260,12 +264,21 @@ classdef ReachDiscrete < elltool.reach.AReach
                 errorStr = '';
                 errorTag = '';
                 %
-                if isMatch('MODGEN:COMMON:CHECKMULTVAR:wrongInput')
-                    errorStr = [self.EMSG_APPROX_SHAPE_MAT_CALC_PROB, ...
+                if isMatch('wrongInput:shapeMat')
+                    errorStr = catwithsep(...
+                        {self.EMSG_APPROX_SHAPE_MAT_CALC_PROB, ...
                         self.EMSG_BAD_TIME_VEC, self.EMSG_BAD_CONTROL, ...
-                        self.EMSG_BAD_DIST, self.EMSG_BAD_INIT_SET];
+                        self.EMSG_BAD_DIST, self.EMSG_BAD_INIT_SET},...
+                        sprintf('\n'));
                     errorTag = [self.ETAG_WR_INP, ...
                         self.ETAG_SH_MAT_CALC_FAILURE];
+                elseif isMatch('CHECKDATACONSISTENCY:wrongInput:QArrayNotPos')
+                    errorTag = [self.ETAG_WR_INP,self.ETAG_DEGRADE];
+                    errorStr = catwithsep(...
+                        {self.EMSG_DEGRADE,...
+                        self.EMSG_BAD_TIME_VEC,  ...
+                        self.EMSG_BAD_DIST, self.EMSG_BAD_INIT_SET},...
+                        sprintf('\n'));
                 end
                 if isempty(errorStr)
                     rethrow(meObj);

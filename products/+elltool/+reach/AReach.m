@@ -106,7 +106,7 @@ classdef AReach < elltool.reach.IReach
     %
     methods (Static, Abstract, Access = protected)
         linSys = getProbDynamics(atStrCMat, btStrCMat, ...
-            ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat, qtStrCVec, ...
+            ptStrCMat, ptStrCVec, ctStrCMat, qtStrCMat, qtStrCVec, ...
             x0Mat, x0Vec, timeVec, calcPrecision, isDisturb)
     end
     %
@@ -339,7 +339,7 @@ classdef AReach < elltool.reach.IReach
         %
     end
     methods (Static, Access = protected)
-        function [atStrCMat btStrCMat gtStrCMat ptStrCMat ptStrCVec ...
+        function [atStrCMat btStrCMat ctStrCMat ptStrCMat ptStrCVec ...
                 qtStrCMat qtStrCVec] = prepareSysParam(linSys)
             atMat = linSys.getAtMat();
             btMat = linSys.getBtMat();
@@ -358,9 +358,9 @@ classdef AReach < elltool.reach.IReach
                 ctMat = zeros(size(btMat));
             end
             if ~iscell(ctMat)
-                gtStrCMat = getStrCMat(ctMat);
+                ctStrCMat = getStrCMat(ctMat);
             else
-                gtStrCMat = ctMat;
+                ctStrCMat = ctMat;
             end
             uEll = linSys.getUBoundsEll();
             [ptVec ptMat] =getEllParams(uEll, btMat);
@@ -416,12 +416,12 @@ classdef AReach < elltool.reach.IReach
             end
         end
         %
-        function isDisturb = isDisturbance(gtStrCMat, qtStrCMat)
+        function isDisturb = isDisturbance(ctStrCMat, qtStrCMat)
             import gras.mat.symb.iscellofstringconst;
             import gras.gen.MatVector;
             isDisturb = true;
-            if iscellofstringconst(gtStrCMat)
-                gtMat = MatVector.fromFormulaMat(gtStrCMat, 0);
+            if iscellofstringconst(ctStrCMat)
+                gtMat = MatVector.fromFormulaMat(ctStrCMat, 0);
                 if all(gtMat(:) == 0)
                     isDisturb = false;
                 end
@@ -479,17 +479,17 @@ classdef AReach < elltool.reach.IReach
                         oldData.QArray{il0Num}(:, :, end);
                 end
             end
-            [atStrCMat btStrCMat gtStrCMat ptStrCMat ptStrCVec ...
+            [atStrCMat btStrCMat ctStrCMat ptStrCMat ptStrCVec ...
                 qtStrCMat qtStrCVec] = ...
                 self.prepareSysParam(newLinSys, newTimeVec);
             %
             % ext/int-approx on the next time interval
             %
             dataCVec = cell(1, l0VecNum);
-            isDisturbance = self.isDisturbance(gtStrCMat, qtStrCMat);
+            isDisturbance = self.isDisturbance(ctStrCMat, qtStrCMat);
             for il0Num = l0VecNum: -1 : 1
                 probDynObj = self.getProbDynamics(atStrCMat, ...
-                    btStrCMat, ptStrCMat, ptStrCVec, gtStrCMat, ...
+                    btStrCMat, ptStrCMat, ptStrCVec, ctStrCMat, ...
                     qtStrCMat, qtStrCVec, x0MatArray(:, :, il0Num), ...
                     x0VecMat(:, il0Num), newTimeVec, self.relTol, ...
                     isDisturbance);
@@ -774,10 +774,10 @@ classdef AReach < elltool.reach.IReach
                 % create gras LinSys object
                 %
                 [x0Vec, x0Mat] = double(x0Ell);
-                [atStrCMat, btStrCMat, gtStrCMat, ptStrCMat, ptStrCVec,...
+                [atStrCMat, btStrCMat, ctStrCMat, ptStrCMat, ptStrCVec,...
                     qtStrCMat, qtStrCVec] =...
                     self.prepareSysParam(linSys, timeVec);
-                isDisturbance = self.isDisturbance(gtStrCMat, qtStrCMat);
+                isDisturbance = self.isDisturbance(ctStrCMat, qtStrCMat);
                 %
                 % Normalize good directions
                 %
@@ -785,7 +785,7 @@ classdef AReach < elltool.reach.IReach
                 l0Mat = self.getNormMat(l0Mat, sysDim);
                 %
                 probDynObj = self.getProbDynamics(atStrCMat, btStrCMat,...
-                    ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat, qtStrCVec,...
+                    ptStrCMat, ptStrCVec, ctStrCMat, qtStrCMat, qtStrCVec,...
                     x0Mat, x0Vec, timeVec, self.relTol, isDisturbance);
                 approxTypeVec = [EApproxType.External, EApproxType.Internal];
                 %

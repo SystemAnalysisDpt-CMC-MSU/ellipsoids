@@ -1,4 +1,4 @@
-function results = run_most_cont_tests(varargin)
+function results = run_cont_tests(varargin)
 % RUN_MOST_CONT_TESTS runs most of the tests based on specified patters
 % for markers, test cases, tests names
 %

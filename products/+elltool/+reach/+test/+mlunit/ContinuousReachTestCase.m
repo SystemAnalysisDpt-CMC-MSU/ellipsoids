@@ -366,7 +366,8 @@ classdef ContinuousReachTestCase < mlunitext.test_case
             expL0Mat=expL0Mat./...
                 repmat(realsqrt(dot(expL0Mat,expL0Mat,1)),nDims,1);
             %
-            reachObj=self.reachFactoryObj.createInstance('l0Mat',expL0Mat);
+            reachObj=self.reachFactoryObj.createInstance('l0Mat',...
+                expL0Mat,'isRegEnabled',true);
             checkApxFilter(reachObj,[true,false]);
             checkApxFilter(reachObj,[false,true]);
             %

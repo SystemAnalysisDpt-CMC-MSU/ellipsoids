@@ -1,4 +1,4 @@
-function results = run_most_discr_tests(varargin)
+function results = run_discr_tests(varargin)
 % RUN_MOST_DISCR_TESTS runs most of the tests based on specified patters
 % for markers, test cases, tests names
 %
