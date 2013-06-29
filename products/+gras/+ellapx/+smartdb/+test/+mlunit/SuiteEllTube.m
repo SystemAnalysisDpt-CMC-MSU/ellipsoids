@@ -684,74 +684,104 @@ classdef SuiteEllTube < mlunitext.test_case
         end
         function testPlotIntAndExtProperties(~)
             
+            projSpaceList = {[1 0; 0 1]};
+            projSpace2List = {[1 0 0; 0 1 0; 0 0 1]};
+            projType = gras.ellapx.enums.EProjType.Static;
+            rel = gras.ellapx.smartdb...
+                .test.mlunit.SuiteEllTube.createTube(1,0,0.5);
+            relStatProj = ...
+                rel.project(projType,projSpaceList,@fGetProjMat);
+            plObj = relStatProj.plotInt('color',[0 1 0]);
+            checkParams(plObj, 1, 1, 0.4, [0 1 0]);
+            rel = gras.ellapx.smartdb...
+                .test.mlunit.SuiteEllTube.createTube(2,0,0.5);
+            relStatProj = ...
+                rel.project(projType,projSpaceList,@fGetProjMat);
+            plObj = relStatProj.plotInt('linewidth', 4, ...
+                'fill', true, 'shade', 0.8);
+            checkParams(plObj, 4, 1, 0.8, [1 0 0]);
+            rel = gras.ellapx.smartdb...
+                .test.mlunit.SuiteEllTube.createTube(3,0,0.5,0.2);
+            relStatProj = ...
+                rel.project(projType,projSpace2List,@fGetProjMat);
+            plObj = relStatProj.plotInt('fill', true, 'shade', 0.1, ...
+                'color', [0, 1, 1]);
+            checkParams(plObj, [], 1, 0.1, [0 1 1]);
+            
+            rel = gras.ellapx.smartdb...
+                .test.mlunit.SuiteEllTube.createTube(1,1,4);
+            relStatProj = ...
+                rel.project(projType,projSpaceList,@fGetProjMat);
+            plObj = relStatProj.plotExt('color',[1 0 1]);
+            checkParams(plObj, 1, 1, 0.4, [1 0 1]);
+            rel = gras.ellapx.smartdb...
+                .test.mlunit.SuiteEllTube.createTube(2,1,4);
+            relStatProj = ...
+                rel.project(projType,projSpaceList,@fGetProjMat);
+            plObj = relStatProj.plotExt('linewidth', 3, ...
+                'fill', 0);
+            checkParams(plObj, 3, 0, 0, [1 0 0]);
+            rel = gras.ellapx.smartdb...
+                .test.mlunit.SuiteEllTube.createTube(3,1,4,2);
+            relStatProj = ...
+                rel.project(projType,projSpace2List,@fGetProjMat);
+            plObj = relStatProj.plotExt('shade', 0.3, ...
+                'color', [1, 1, 0]);
+            checkParams(plObj, [],1, 0.3, [1 1 0]);
+            
         end
         function testPlotInt(~)
-            rel = gras.ellapx.smartdb...
-                .test.mlunit.SuiteEllTube.createTube(1,0);
-            projSpaceList = {[1 0; 0 1].'};
-            projType = gras.ellapx.enums.EProjType.Static;
-            relStatProj = ...
-                rel.project(projType,projSpaceList,@fGetProjMat)
-            function [projOrthMatArray, projOrthMatTransArray] =...
-                    fGetProjMat(projMat, timeVec, varargin)
-                nTimePoints = length(timeVec);
-                projOrthMatArray = repmat(projMat, [1, 1, nTimePoints]);
-                projOrthMatTransArray = repmat(projMat.',...
-                    [1,1,nTimePoints]);
-            end
+            
+            
+            
         end
         function testPlotExt(~)
-            rel = gras.ellapx.smartdb...
-                .test.mlunit.SuiteEllTube.createTube(1,1);
-            projSpaceList = {[1 0; 0 1].'};
-            projType = gras.ellapx.enums.EProjType.Static;
-            relStatProj = ...
-                rel.project(projType,projSpaceList,@fGetProjMat)
-            function [projOrthMatArray, projOrthMatTransArray] =...
-                    fGetProjMat(projMat, timeVec, varargin)
-                nTimePoints = length(timeVec);
-                projOrthMatArray = repmat(projMat, [1, 1, nTimePoints]);
-                projOrthMatTransArray = repmat(projMat.',...
-                    [1,1,nTimePoints]);
-            end
+            
+            
         end
     end
     methods (Static)
-        function rel = createTube(ind,appType,diagEl)
-            q11 = @(t)[cos(5*(t-2)) sin(5*(t-2));...
+        function rel = createTube(ind,appType,diagEl1,diagEl2)
+            transMat2d = @(t)[cos(5*(t-2)) sin(5*(t-2));...
                 -sin(5*(t-2)) cos(5*(t-2))];
-            q22 = @(t)[cos(7*(t-4)) sin(7*(t-4));...
+            trans2Mat2d = @(t)[cos(7*(t-4)) sin(7*(t-4));...
                 -sin(7*(t-4)) cos(7*(t-4))];
-            q12 = @(t)[cos(5*(t-2)) sin(5*(t-2)) 0;...
+            trans2Mat3d = @(t)[cos(5*(t-2)) sin(5*(t-2)) 0;...
                 -sin(5*(t-2)) cos(5*(t-2)) 0; 0 0 1];
             approxType = gras.ellapx.enums.EApproxType(appType);
             calcPrecision = 10^(-3);
             switch ind
                 case 1
-                    q1 = @(t) q11(t)'*diag([1 diagEl])*q11(t);
-                    q2 = @(t) q22(t)'*diag([1 diagEl])*q22(t);
+                    q1 = @(t) transMat2d(t)'*diag([1 diagEl1])*transMat2d(t);
+                    q2 = @(t) trans2Mat2d(t)'*diag([1 diagEl1])...
+                        *trans2Mat2d(t);
                     QArrList = {cat(3,q1(1),q1(2),q1(3),q1(4),q1(5));...
                         cat(3,q2(1),q2(2),q2(3),q2(4),q2(5))};
                     aMat = repmat([1 0]',[1,5]);
                     timeVec = 1:5;
-                    ltGDir = {cat(3,q11(1)'*[1;0], q11(2)'*[1;0],...
-                        q11(3)'*[1;0], q11(4)'*[1;0], q11(5)'*[1;0]);...
-                        cat(3,q22(1)'*[1;0], q22(2)'*[1;0],...
-                        q22(3)'*[1;0], q22(4)'*[1;0] ,q22(5)'*[1;0])};
+                    ltGDir = {cat(3,transMat2d(1)'*[1;0],...
+                        transMat2d(2)'*[1;0],...
+                        transMat2d(3)'*[1;0], transMat2d(4)'*[1;0], ...
+                        transMat2d(5)'*[1;0]);...
+                        cat(3,trans2Mat2d(1)'*[1;0],...
+                        trans2Mat2d(2)'*[1;0],...
+                        trans2Mat2d(3)'*[1;0], trans2Mat2d(4)'*[1;0] ,...
+                        trans2Mat2d(5)'*[1;0])};
                     sTime =[2; 4];
                 case 2
-                    QArrList = {diag([1 dialEl ]);...
-                        q11(1)'*diag([1 diagEl])*q11(1)};
+                    QArrList = {diag([1 diagEl1 ]);...
+                        transMat2d(1)'*diag([1 diagEl1])*transMat2d(1)};
                     aMat = [1;0];
                     timeVec = 1;
-                    ltGDir = {[1;0];q11(1)'*[1;0]};
+                    ltGDir = {[1;0];transMat2d(1)'*[1;0]};
                     sTime = [1 1];
                 case 3
-                    QArrList = {diag([1 1 4 ]);...
-                        q12(1)'*diag([1 1 4])*q12(1)};
+                    QArrList = {diag([1 diagEl2 diagEl1 ]);...
+                        trans2Mat3d(1)'*diag([1 diagEl2 diagEl1])...
+                        *trans2Mat3d(1)};
                     aMat = [1;0;0];
                     timeVec = 1;
-                    ltGDir = {[1;0;0];q12(1)'*[1;0;0]};
+                    ltGDir = {[1;0;0];trans2Mat3d(1)'*[1;0;0]};
                     sTime = [1 1];
             end
             rel = gras.ellapx.smartdb.rels...
@@ -767,4 +797,49 @@ classdef SuiteEllTube < mlunitext.test_case
                 calcPrecision));
         end
     end
+end
+function [projOrthMatArray, projOrthMatTransArray] =...
+    fGetProjMat(projMat, timeVec, varargin)
+nTimePoints = length(timeVec);
+projOrthMatArray = repmat(projMat, [1, 1, nTimePoints]);
+projOrthMatTransArray = repmat(projMat.',...
+    [1,1,nTimePoints]);
+end
+function checkParams(plObj, linewidth, fill, shade, colorVec)
+SHPlot =  plObj.getPlotStructure().figToAxesToHMap.toStruct();
+plEllObjVec = get(SHPlot.figure_g1.ax, 'Children');
+plEllObjVec = plEllObjVec(~strcmp(get(plEllObjVec,'Type'),'light'));
+plEllObjVec = plEllObjVec(~strcmp(get(plEllObjVec, 'Marker'), '*'));
+isEq = true;
+if strcmp(get(plEllObjVec, 'type'), 'line')
+    linewidthPl = get(plEllObjVec, 'linewidth');
+    colorPlVec = get(plEllObjVec, 'Color');
+    if numel(linewidth) > 0
+        isEq = isEq & eq(linewidth, linewidthPl);
+    end
+    if numel(colorVec) > 0
+        isEq = isEq & eq(colorVec, colorPlVec);
+    end
+elseif strcmp(get(plEllObjVec, 'type'), 'patch')
+    shadePl = get(plEllObjVec, 'FaceAlpha');
+    if numel(shade) > 0
+        isEq = isEq & eq(shade, shadePl);
+    end
+    colorPlMat = get(plEllObjVec, 'FaceVertexCData');
+    if numel(colorPlMat) > 0
+        colorPlVec = colorPlMat(1, :);
+        if numel(colorVec) > 0
+            isEq = isEq & all(colorVec == colorPlVec);
+        end
+    end
+    if get(plEllObjVec, 'FaceAlpha') > 0
+        isFill = true;
+    else
+        isFill = [];
+    end
+else
+    isFill = [];
+end
+mlunitext.assert_equals(isEq, 1);
+mlunitext.assert_equals(numel(isFill) > 0, fill);
 end
