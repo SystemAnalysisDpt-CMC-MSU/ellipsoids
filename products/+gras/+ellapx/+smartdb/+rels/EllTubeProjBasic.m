@@ -453,6 +453,7 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
     end
     methods (Access = private)
         function plObj = plotExtOrInternal(self,appType,varargin)
+            import modgen.common.throwerror;
             import elltool.plot.plotgeombodyarr;
             import gras.geom.tri.elltube2tri;
             import gras.geom.tri.elltubediscrtri;
@@ -461,6 +462,10 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                 {'showDiscrete','nPoints' ;...
                 false, 600;
                 @(x)isa(x,'logical'),@(x)isa(x,'double')});
+            if numel(self.QArray) == 0
+                throwerror('wrongMethod',...
+                    'number of tubes is 0');
+            end
             
             checkDimensions(self);
             checkCenterVecAndTimeVec(self);

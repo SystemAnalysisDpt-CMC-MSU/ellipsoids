@@ -15,29 +15,29 @@ classdef EllTubePlotTestCase < mlunitext.test_case
             
             
             plObj = rel.plotInt('color',[0 1 0]);
-            checkParams(plObj, 1, 1, 0.4, [0 1 0]);
+            self.checkParams(plObj, 1, 1, 0.4, [0 1 0]);
             
             
             plObj = rel.plotExt('b');
-            checkParams(plObj, 1, 1, 0.4, [0 0 1]);
+            self.checkParams(plObj, 1, 1, 0.4, [0 0 1]);
             
             
             rel = self.createTubeWithProj(2,2);
             
             plObj = rel.plotInt('linewidth', 4, ...
                 'fill', true, 'shade', 0.8);
-            checkParams(plObj, 4, 1, 0.8, [1 0 0]);
+            self.checkParams(plObj, 4, 1, 0.8, [1 0 0]);
             plObj = rel.plotExt('linewidth', 3, ...
                 'fill', 0);
-            checkParams(plObj, 3, 0, 0, [1 0 0]);
+            self.checkParams(plObj, 3, 0, 0, [1 0 0]);
             rel = self.createTubeWithProj(3,3);
             
             plObj = rel.plotInt('fill', true, 'shade', 0.1, ...
                 'color', [0, 1, 1]);
-            checkParams(plObj, [], 1, 0.1, [0 1 1]);
+            self.checkParams(plObj, [], 1, 0.1, [0 1 1]);
             plObj = rel.plotExt('shade', 0.3, ...
                 'g');
-            checkParams(plObj, [],1, 0.3, [0 1 0]);
+            self.checkParams(plObj, [],1, 0.3, [0 1 0]);
             
             
             
@@ -52,19 +52,19 @@ classdef EllTubePlotTestCase < mlunitext.test_case
             plObj = rel.plotInt();
             rel2 = rel.getTuplesFilteredBy(...
                 'approxType', approxType);
-            checkPoints(rel2,plObj,1,fRight,rel.projSTimeMat{1});
+            self.checkPoints(rel2,plObj,1,fRight,rel.projSTimeMat{1});
             
             rel = self.createTubeWithProj(2,2);
             plObj = rel.plotInt();
             rel2 = rel.getTuplesFilteredBy(...
                 'approxType', approxType);
-            checkPoints(rel2,plObj,2,fRight,rel.projSTimeMat{1});
+            self.checkPoints(rel2,plObj,2,fRight,rel.projSTimeMat{1});
             
             rel = self.createTubeWithProj(3,3);
             plObj = rel.plotInt();
             rel2 = rel.getTuplesFilteredBy(...
                 'approxType', approxType);
-            checkPoints(rel2,plObj,3,fRight,rel.projSTimeMat{1});
+            self.checkPoints(rel2,plObj,3,fRight,rel.projSTimeMat{1});
             
         end
         function testPlotExt(self)
@@ -76,19 +76,19 @@ classdef EllTubePlotTestCase < mlunitext.test_case
             approxType = gras.ellapx.enums.EApproxType.External;
             rel2 = rel.getTuplesFilteredBy(...
                 'approxType', approxType);
-            checkPoints(rel2,plObj,1,fRight,rel.projSTimeMat{1});
+            self.checkPoints(rel2,plObj,1,fRight,rel.projSTimeMat{1});
             
             rel = self.createTubeWithProj(2,2);
             plObj = rel.plotExt();
             rel2 = rel.getTuplesFilteredBy(...
                 'approxType', approxType);
-            checkPoints(rel2,plObj,2,fRight,rel.projSTimeMat{1});
+            self.checkPoints(rel2,plObj,2,fRight,rel.projSTimeMat{1});
             
             rel = self.createTubeWithProj(3,3);
             plObj = rel.plotExt();
             rel2 = rel.getTuplesFilteredBy(...
                 'approxType', approxType);
-            checkPoints(rel2,plObj,3,fRight,rel.projSTimeMat{1});
+            self.checkPoints(rel2,plObj,3,fRight,rel.projSTimeMat{1});
             
         end
     end
@@ -184,6 +184,142 @@ classdef EllTubePlotTestCase < mlunitext.test_case
                 char.empty(1,0),char.empty(1,0),...
                 calcPrecision));
         end
+        function checkParams(plObj, linewidth, fill, shade, colorVec)
+            SHPlot =  plObj.getPlotStructure().figToAxesToHMap.toStruct();
+            plEllObjVec = get(SHPlot.figure_g1.ax, 'Children');
+            plEllObjVec = plEllObjVec(~strcmp(get(plEllObjVec,...
+                'Type'),'light'));
+            plEllObjVec = plEllObjVec(~strcmp(get(plEllObjVec,...
+                'Marker'), '*'));
+            isEq = true;
+            if strcmp(get(plEllObjVec, 'type'), 'line')
+                linewidthPl = get(plEllObjVec, 'linewidth');
+                colorPlVec = get(plEllObjVec, 'Color');
+                if numel(linewidth) > 0
+                    isEq = isEq & eq(linewidth, linewidthPl);
+                end
+                if numel(colorVec) > 0
+                    isEq = isEq & eq(colorVec, colorPlVec);
+                end
+            elseif strcmp(get(plEllObjVec, 'type'), 'patch')
+                shadePl = get(plEllObjVec, 'FaceAlpha');
+                if numel(shade) > 0
+                    isEq = isEq & eq(shade, shadePl);
+                end
+                colorPlMat = get(plEllObjVec, 'FaceVertexCData');
+                if numel(colorPlMat) > 0
+                    colorPlVec = colorPlMat(1, :);
+                    if numel(colorVec) > 0
+                        isEq = isEq & all(colorVec == colorPlVec);
+                    end
+                end
+                if get(plEllObjVec, 'FaceAlpha') > 0
+                    isFill = true;
+                else
+                    isFill = [];
+                end
+            else
+                isFill = [];
+            end
+            mlunitext.assert_equals(isEq, 1);
+            mlunitext.assert_equals(numel(isFill) > 0, fill);
+        end
+        
+        function checkPoints(rel,plObj,curCase,fRight,projMat)
+            ABS_TOL = 10^(-5);
+            SHPlot =  plObj.getPlotStructure().figToAxesToHMap.toStruct();
+            xTitl = get(get(SHPlot.figure_g1.ax,'xLabel'),'String');
+            yTitl =  get(get(SHPlot.figure_g1.ax,'yLabel'),'String');
+            zTitl =  get(get(SHPlot.figure_g1.ax,'zLabel'),'String');
+            plEllObjVec = get(SHPlot.figure_g1.ax, 'Children');
+            plEllObjVec = plEllObjVec(~strcmp(get(plEllObjVec,...
+                'Type'),'light'));
+            plEllObjVec = plEllObjVec(~strcmp(get(plEllObjVec,...
+                'Marker'), '*'));
+            isEq = true;
+            [xData,yData,zData] = getData(plEllObjVec);
+            timeVec = rel.timeVec{1};
+            qArrList = rel.QArray;
+            aMat = rel.aMat;
+            curInd = 1;
+            switch curCase
+                case 1
+                    
+                    isEq = strcmp(xTitl,'t')&&strcmp(yTitl,...
+                        ['[' num2str(projMat(:,1))' ']'])...
+                        &&strcmp(zTitl,['[' num2str(projMat(:,2))' ']']);
+                    
+                    [xData,xInd] = sort(xData);
+                    prev = 1;
+                    yData = yData(xInd);
+                    zData = zData(xInd);
+                    for iTime = 1:size(timeVec,2)
+                        numberPoints = numel(find(xData == xData(prev)));
+                        for iDir = 1:numberPoints
+                            for iTube = 1:numel(qArrList)
+                                yP = yData(curInd);
+                                zP = zData(curInd);
+                                qMat = qArrList{iTube}(:,:,iTime);
+                                cVec = aMat{iTube}(:,iTime);
+                                yP = yP-cVec(1);
+                                zP = zP-cVec(2);
+                                if ~fRight([yP zP]/qMat*[yP zP]'-1,...
+                                        ABS_TOL,0)
+                                    isEq = false;
+                                end
+                            end
+                            curInd = curInd+1;
+                        end
+                        prev = prev + numberPoints;
+                    end
+                case 2
+                    isEq = strcmp(xTitl,...
+                        ['[' num2str(projMat(:,1))' ']'])...
+                        &&strcmp(yTitl,['[' num2str(projMat(:,2))' ']']);
+                    for iDir = 1:size(xData,2)
+                        for iTube = 1:numel(qArrList)
+                            xP = xData(curInd);
+                            yP = yData(curInd);
+                            qMat = qArrList{iTube}(:,:,1);
+                            cVec = aMat{iTube}(:,1);
+                            xP = xP-cVec(1);
+                            yP = yP-cVec(2);
+                            if ~fRight([xP yP]/qMat*[xP yP]'-1,ABS_TOL,0)
+                                isEq = false;
+                            end
+                        end
+                        curInd = curInd+1;
+                    end
+                    
+                case 3
+                    isEq = strcmp(xTitl,...
+                        ['[' num2str(projMat(:,1))' ']'])...
+                        &&strcmp(yTitl,['[' num2str(projMat(:,2))' ']'])...
+                        &&strcmp(zTitl,['[' num2str(projMat(:,3))' ']']);
+                    for iDir = 1:size(xData,2)
+                        for iTube = 1:numel(qArrList)
+                            xP = xData(curInd);
+                            yP = yData(curInd);
+                            zP = zData(curInd);
+                            qMat = qArrList{iTube}(:,:,1);
+                            cVec = aMat{iTube}(:,1);
+                            xP = xP-cVec(1);
+                            yP = yP-cVec(2);
+                            zP = zP-cVec(3);
+                            
+                            if ~fRight([xP yP zP]/qMat*[xP yP zP]'-1,...
+                                    ABS_TOL,0)
+                                isEq = false;
+                            end
+                        end
+                        curInd = curInd+1;
+                    end
+            end
+            mlunitext.assert_equals(isEq, 1);
+        end
+        
+        
+        
     end
     
 end
@@ -195,133 +331,7 @@ projOrthMatArray = repmat(projMat, [1, 1, nTimePoints]);
 projOrthMatTransArray = repmat(projMat.',...
     [1,1,nTimePoints]);
 end
-function checkParams(plObj, linewidth, fill, shade, colorVec)
-SHPlot =  plObj.getPlotStructure().figToAxesToHMap.toStruct();
-plEllObjVec = get(SHPlot.figure_g1.ax, 'Children');
-plEllObjVec = plEllObjVec(~strcmp(get(plEllObjVec,'Type'),'light'));
-plEllObjVec = plEllObjVec(~strcmp(get(plEllObjVec, 'Marker'), '*'));
-isEq = true;
-if strcmp(get(plEllObjVec, 'type'), 'line')
-    linewidthPl = get(plEllObjVec, 'linewidth');
-    colorPlVec = get(plEllObjVec, 'Color');
-    if numel(linewidth) > 0
-        isEq = isEq & eq(linewidth, linewidthPl);
-    end
-    if numel(colorVec) > 0
-        isEq = isEq & eq(colorVec, colorPlVec);
-    end
-elseif strcmp(get(plEllObjVec, 'type'), 'patch')
-    shadePl = get(plEllObjVec, 'FaceAlpha');
-    if numel(shade) > 0
-        isEq = isEq & eq(shade, shadePl);
-    end
-    colorPlMat = get(plEllObjVec, 'FaceVertexCData');
-    if numel(colorPlMat) > 0
-        colorPlVec = colorPlMat(1, :);
-        if numel(colorVec) > 0
-            isEq = isEq & all(colorVec == colorPlVec);
-        end
-    end
-    if get(plEllObjVec, 'FaceAlpha') > 0
-        isFill = true;
-    else
-        isFill = [];
-    end
-else
-    isFill = [];
-end
-mlunitext.assert_equals(isEq, 1);
-mlunitext.assert_equals(numel(isFill) > 0, fill);
-end
 
-function checkPoints(rel,plObj,curCase,fRight,projVec)
-ABS_TOL = 10^(-5);
-SHPlot =  plObj.getPlotStructure().figToAxesToHMap.toStruct();
-xTitl = get(get(SHPlot.figure_g1.ax,'xLabel'),'String');
-yTitl =  get(get(SHPlot.figure_g1.ax,'yLabel'),'String');
-zTitl =  get(get(SHPlot.figure_g1.ax,'zLabel'),'String');
-plEllObjVec = get(SHPlot.figure_g1.ax, 'Children');
-plEllObjVec = plEllObjVec(~strcmp(get(plEllObjVec,'Type'),'light'));
-plEllObjVec = plEllObjVec(~strcmp(get(plEllObjVec, 'Marker'), '*'));
-isEq = true;
-[xData,yData,zData] = getData(plEllObjVec);
-timeVec = rel.timeVec{1};
-qArrList = rel.QArray;
-aMat = rel.aMat;
-curInd = 1;
-switch curCase
-    case 1
-        
-        isEq = strcmp(xTitl,'t')&&strcmp(yTitl,...
-            ['[' num2str(projVec(:,1))' ']'])...
-            &&strcmp(zTitl,['[' num2str(projVec(:,2))' ']']);
-        
-        [xData,xInd] = sort(xData);
-        prev = 1;
-        yData = yData(xInd);
-        zData = zData(xInd);
-        for iTime = 1:size(timeVec,2)
-            numberPoints = numel(find(xData == xData(prev)));
-            for iDir = 1:numberPoints
-                for iTube = 1:numel(qArrList)
-                    yP = yData(curInd);
-                    zP = zData(curInd);
-                    qMat = qArrList{iTube}(:,:,iTime);
-                    cVec = aMat{iTube}(:,iTime);
-                    yP = yP-cVec(1);
-                    zP = zP-cVec(2);
-                    if ~fRight([yP zP]/qMat*[yP zP]'-1,ABS_TOL,0)
-                        isEq = false;
-                    end
-                end
-                curInd = curInd+1;
-            end
-            prev = prev + numberPoints;
-        end
-    case 2
-        isEq = strcmp(xTitl,...
-            ['[' num2str(projVec(:,1))' ']'])...
-            &&strcmp(yTitl,['[' num2str(projVec(:,2))' ']']);
-        for iDir = 1:size(xData,2)
-            for iTube = 1:numel(qArrList)
-                xP = xData(curInd);
-                yP = yData(curInd);
-                qMat = qArrList{iTube}(:,:,1);
-                cVec = aMat{iTube}(:,1);
-                xP = xP-cVec(1);
-                yP = yP-cVec(2);
-                if ~fRight([xP yP]/qMat*[xP yP]'-1,ABS_TOL,0)
-                    isEq = false;
-                end
-            end
-            curInd = curInd+1;
-        end
-        
-    case 3
-        isEq = strcmp(xTitl,...
-            ['[' num2str(projVec(:,1))' ']'])...
-            &&strcmp(yTitl,['[' num2str(projVec(:,2))' ']'])...
-            &&strcmp(zTitl,['[' num2str(projVec(:,3))' ']']);
-        for iDir = 1:size(xData,2)
-            for iTube = 1:numel(qArrList)
-                xP = xData(curInd);
-                yP = yData(curInd);
-                zP = zData(curInd);
-                qMat = qArrList{iTube}(:,:,1);
-                cVec = aMat{iTube}(:,1);
-                xP = xP-cVec(1);
-                yP = yP-cVec(2);
-                zP = zP-cVec(3);
-                
-                if ~fRight([xP yP zP]/qMat*[xP yP zP]'-1,ABS_TOL,0)
-                    isEq = false;
-                end
-            end
-            curInd = curInd+1;
-        end
-end
-mlunitext.assert_equals(isEq, 1);
-end
 
 
 function [outXData, outYData, outZData] = getData(hObj)

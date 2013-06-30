@@ -9,19 +9,20 @@ classdef ReachPlotTestCase < mlunitext.test_case
                 transFieldList, namePlot, approxType)
             
             plObj = feval(namePlot, self.reachObj, passedArgList{:});
-            relByAppType = getTupleByApproxType(self, approxType);
+            relByAppType = self.getTupleByApproxType( approxType);
             
             gras.ellapx.smartdb.test.mlunit.EllTubePlotPropTest...
                 .checkPlotProp(relByAppType, plObj, fColor, fLineWidth,...
                 fTrans, colorFieldList, lineWidthFieldList, transFieldList)
-            function relByAppType = getTupleByApproxType(self, approxType)
+            
+        end
+        function relByAppType = getTupleByApproxType(self, approxType)
                 import gras.ellapx.smartdb.F;
                 APPROX_TYPE = F.APPROX_TYPE;
                 ellTubeRel = self.reachObj.getEllTubeRel();
                 relByAppType = ellTubeRel.getTuplesFilteredBy(...
                        APPROX_TYPE, approxType);
             end
-        end
     end
     
     methods
@@ -72,15 +73,77 @@ classdef ReachPlotTestCase < mlunitext.test_case
             end
         end
         
-        function testPlotIA(self)
+        function testPlotIa(self)
             import gras.ellapx.enums.EApproxType;
             checkPlot(self, 'plotIa', EApproxType.Internal);
         end
-        function testPlotEA(self)
+        function testPlotByIa(self)
+            import gras.ellapx.enums.EApproxType;
+            fRight = @(a,b,c) a+b>=c;
+            check2Plot(self, 'plotByIa',EApproxType.Internal,fRight);
+        end
+        function testPlotEa(self)
             import gras.ellapx.enums.EApproxType;
             checkPlot(self, 'plotEa', EApproxType.External);
         end
-        
+        function testPlotByEa(self)
+            import gras.ellapx.enums.EApproxType;
+            fRight = @(a,b,c) a-b<=c;
+            check2Plot(self, 'plotByEa',EApproxType.External,fRight);
+        end
+        function check2Plot(self,namePlot,approxType,fRight)
+            import gras.ellapx.smartdb.test.mlunit.EllTubePlotTestCase
+            rel = self.getTupleByApproxType(approxType);
+            if numel(rel.QArray) > 0
+                timeVec = rel.timeVec{1};
+                nDim = size(rel.QArray{1}, 1);
+                mDim = size(timeVec, 2);
+                if mDim == 1
+                    if nDim == 2
+                        curCase = 2;
+                    else
+                        curCase = 3;
+                    end
+                else
+                    curCase = 1;
+                end
+                switch curCase
+                    case 1
+                        plObj = feval(namePlot, self.reachObj,...
+                             'b');
+                        gras.ellapx.smartdb.test.mlunit...
+                            .EllTubePlotTestCase...
+                            .checkParams(plObj, 1, 1, 0.4, [0 0 1]);
+                        gras.ellapx.smartdb.test.mlunit...
+                            .EllTubePlotTestCase...
+                            .checkPoints...
+                            (rel,plObj,1,fRight,rel.projSTimeMat{1});
+                    case 2
+                        plObj = feval(namePlot, self.reachObj,...
+                            'linewidth', 4, ...
+                            'fill', true, 'shade', 0.8);                     
+                        gras.ellapx.smartdb.test.mlunit...
+                            .EllTubePlotTestCase...
+                            .checkParamsheckParams(plObj, 4, 1,...
+                            0.8, [1 0 0]);
+                        gras.ellapx.smartdb.test.mlunit...
+                            .EllTubePlotTestCase...
+                            .checkPoints...
+                            (rel,plObj,2,fRight,rel.projSTimeMat{1});
+                    case 3
+                        plObj = feval(namePlot, self.reachObj,...
+                            'fill', true, 'shade', 0.1, ...
+                            'color', [0, 1, 1]);      
+                        gras.ellapx.smartdb.test.mlunit...
+                            .EllTubePlotTestCase...
+                            .checkParams(plObj, [], 1, 0.1, [0 1 1]);
+                        gras.ellapx.smartdb.test.mlunit...
+                            .EllTubePlotTestCase...
+                            .checkPoints...
+                            (rel,plObj,3,fRight,rel.projSTimeMat{1});
+                end               
+            end
+        end
         function checkPlot(self, namePlot, approxType)
             import gras.ellapx.smartdb.test.mlunit.EllTubePlotPropTest
             import gras.ellapx.enums.EApproxType;
