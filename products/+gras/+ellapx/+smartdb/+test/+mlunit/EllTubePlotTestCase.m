@@ -47,48 +47,48 @@ classdef EllTubePlotTestCase < mlunitext.test_case
             import gras.ellapx.enums.EApproxType;
             approxType = gras.ellapx.enums.EApproxType.Internal;
             fRight = @(a,b,c) a+b>=c;
-           
-            rel = self.createTubeWithProj(2,1);            
-            plObj = rel.plotInt();            
-            rel2 = rel.getTuplesFilteredBy(...
-                'approxType', approxType);
-            checkPoints(rel2,plObj,1,fRight);
             
-            rel = self.createTubeWithProj(2,2);            
-            plObj = rel.plotInt();            
+            rel = self.createTubeWithProj(2,1);
+            plObj = rel.plotInt();
             rel2 = rel.getTuplesFilteredBy(...
                 'approxType', approxType);
-            checkPoints(rel2,plObj,2,fRight);
+            checkPoints(rel2,plObj,1,fRight,rel.projSTimeMat{1});
             
-            rel = self.createTubeWithProj(3,3);            
-            plObj = rel.plotInt();            
+            rel = self.createTubeWithProj(2,2);
+            plObj = rel.plotInt();
             rel2 = rel.getTuplesFilteredBy(...
                 'approxType', approxType);
-            checkPoints(rel2,plObj,3,fRight);
+            checkPoints(rel2,plObj,2,fRight,rel.projSTimeMat{1});
+            
+            rel = self.createTubeWithProj(3,3);
+            plObj = rel.plotInt();
+            rel2 = rel.getTuplesFilteredBy(...
+                'approxType', approxType);
+            checkPoints(rel2,plObj,3,fRight,rel.projSTimeMat{1});
             
         end
         function testPlotExt(self)
             import gras.ellapx.enums.EApproxType;
             fRight = @(a,b,c) a-b<=c;
             
-            rel = self.createTubeWithProj(2,1);            
+            rel = self.createTubeWithProj(2,1);
             plObj = rel.plotExt();
             approxType = gras.ellapx.enums.EApproxType.External;
             rel2 = rel.getTuplesFilteredBy(...
                 'approxType', approxType);
-            checkPoints(rel2,plObj,1,fRight);
+            checkPoints(rel2,plObj,1,fRight,rel.projSTimeMat{1});
             
-            rel = self.createTubeWithProj(2,2);            
-            plObj = rel.plotExt();            
+            rel = self.createTubeWithProj(2,2);
+            plObj = rel.plotExt();
             rel2 = rel.getTuplesFilteredBy(...
                 'approxType', approxType);
-            checkPoints(rel2,plObj,2,fRight);
+            checkPoints(rel2,plObj,2,fRight,rel.projSTimeMat{1});
             
-            rel = self.createTubeWithProj(3,3);            
-            plObj = rel.plotExt();            
+            rel = self.createTubeWithProj(3,3);
+            plObj = rel.plotExt();
             rel2 = rel.getTuplesFilteredBy(...
                 'approxType', approxType);
-            checkPoints(rel2,plObj,3,fRight);
+            checkPoints(rel2,plObj,3,fRight,rel.projSTimeMat{1});
             
         end
     end
@@ -234,20 +234,28 @@ mlunitext.assert_equals(isEq, 1);
 mlunitext.assert_equals(numel(isFill) > 0, fill);
 end
 
-function checkPoints(rel,plObj,curCase,fRight)
+function checkPoints(rel,plObj,curCase,fRight,projVec)
 ABS_TOL = 10^(-5);
 SHPlot =  plObj.getPlotStructure().figToAxesToHMap.toStruct();
+xTitl = get(get(SHPlot.figure_g1.ax,'xLabel'),'String');
+yTitl =  get(get(SHPlot.figure_g1.ax,'yLabel'),'String');
+zTitl =  get(get(SHPlot.figure_g1.ax,'zLabel'),'String');
 plEllObjVec = get(SHPlot.figure_g1.ax, 'Children');
 plEllObjVec = plEllObjVec(~strcmp(get(plEllObjVec,'Type'),'light'));
 plEllObjVec = plEllObjVec(~strcmp(get(plEllObjVec, 'Marker'), '*'));
 isEq = true;
 [xData,yData,zData] = getData(plEllObjVec);
 timeVec = rel.timeVec{1};
-qArr = rel.QArray;
+qArrList = rel.QArray;
 aMat = rel.aMat;
 curInd = 1;
 switch curCase
     case 1
+        
+        isEq = strcmp(xTitl,'t')&&strcmp(yTitl,...
+            ['[' num2str(projVec(:,1))' ']'])...
+            &&strcmp(zTitl,['[' num2str(projVec(:,2))' ']']);
+        
         [xData,xInd] = sort(xData);
         prev = 1;
         yData = yData(xInd);
@@ -255,10 +263,10 @@ switch curCase
         for iTime = 1:size(timeVec,2)
             numberPoints = numel(find(xData == xData(prev)));
             for iDir = 1:numberPoints
-                for iTube = 1:numel(qArr)
+                for iTube = 1:numel(qArrList)
                     yP = yData(curInd);
                     zP = zData(curInd);
-                    qMat = qArr{iTube}(:,:,iTime);
+                    qMat = qArrList{iTube}(:,:,iTime);
                     cVec = aMat{iTube}(:,iTime);
                     yP = yP-cVec(1);
                     zP = zP-cVec(2);
@@ -271,11 +279,14 @@ switch curCase
             prev = prev + numberPoints;
         end
     case 2
+        isEq = strcmp(xTitl,...
+            ['[' num2str(projVec(:,1))' ']'])...
+            &&strcmp(yTitl,['[' num2str(projVec(:,2))' ']']);
         for iDir = 1:size(xData,2)
-            for iTube = 1:numel(qArr)
+            for iTube = 1:numel(qArrList)
                 xP = xData(curInd);
                 yP = yData(curInd);
-                qMat = qArr{iTube}(:,:,1);
+                qMat = qArrList{iTube}(:,:,1);
                 cVec = aMat{iTube}(:,1);
                 xP = xP-cVec(1);
                 yP = yP-cVec(2);
@@ -287,12 +298,16 @@ switch curCase
         end
         
     case 3
+        isEq = strcmp(xTitl,...
+            ['[' num2str(projVec(:,1))' ']'])...
+            &&strcmp(yTitl,['[' num2str(projVec(:,2))' ']'])...
+            &&strcmp(zTitl,['[' num2str(projVec(:,3))' ']']);
         for iDir = 1:size(xData,2)
-            for iTube = 1:numel(qArr)
+            for iTube = 1:numel(qArrList)
                 xP = xData(curInd);
                 yP = yData(curInd);
                 zP = zData(curInd);
-                qMat = qArr{iTube}(:,:,1);
+                qMat = qArrList{iTube}(:,:,1);
                 cVec = aMat{iTube}(:,1);
                 xP = xP-cVec(1);
                 yP = yP-cVec(2);

@@ -485,6 +485,7 @@ title(titl);
 xlabel(xlab);
 ylabel(ylab);
 hVec = h1;
+view(hAxes,2);
 end
 function figureSetPropFunc(hFigure,figureName,~)
 set(hFigure,'Name',figureName);

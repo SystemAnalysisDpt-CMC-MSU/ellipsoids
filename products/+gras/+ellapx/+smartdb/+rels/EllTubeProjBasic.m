@@ -463,7 +463,7 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                 @(x)isa(x,'logical'),@(x)isa(x,'double')});
             
             checkDimensions(self);
-            checkCenterVec(self);
+            checkCenterVecAndTimeVec(self);
             dim = self.dim(1);
             if (dim == 3) && ( size(self.timeVec{1},2) ~= 1)
                 throwerror('wrongDim',...
@@ -523,15 +523,22 @@ if (mDim < 2) || (nDim > 3)
     throwerror('wrongDim','object dimension can be  2 or 3');
 end
 end
-function checkCenterVec(self)
+function checkCenterVecAndTimeVec(self)
 import modgen.common.throwerror;
-for iTime = 1:size(self.timeVec,2)
+for iTime = 1:size(self.timeVec{1},2)
     centerVec = self.aMat{1}(:,iTime);
     for iTube = 1:numel(self.QArray)
         if (self.aMat{iTube}(:,iTime)~=centerVec)
             throwerror('differentCenterVec', ...
                 'Center vectors must be equal.');
         end
+    end
+end
+timeVec = self.timeVec{1};
+for iTube = 1:numel(self.QArray)
+    if (self.timeVec{iTube}~=timeVec)
+        throwerror('differentCenterVec', ...
+            'Center vectors must be equal.');
     end
 end
 end
@@ -548,8 +555,8 @@ function [xCMat,fCMat,titl,xlab,ylab,zlab] =...
     fCalcCenterTriArr(obj,varargin)
 xCMat = {obj.aMat{1}(:,1)};
 fCMat = {[1 1]};
-xlab = 'x_1';
-ylab = 'x_2';
+xlab = ['[' num2str(obj.projSTimeMat{1}(:,1))' ']'];
+ylab = ['[' num2str(obj.projSTimeMat{1}(:,2))' ']'];
 zlab = '';
 titl = ['Tube at time ' num2str(obj.timeVec{1})];
 end
@@ -566,20 +573,26 @@ nDim = size(lGridMat, 2);
 mDim = size(timeVec, 2);
 qArr = cat(4, obj.QArray{:});
 absTol = max(obj.calcPrecision);
+
 if mDim == 1
-    xMat = fCalcPoints(1,nDim,lGridMat,dim,qArr,...
+    xMat = fCalcPoints(nDim,lGridMat,dim,squeeze(qArr(:,:,1,:)),...
         obj.aMat{1}(:,1),absTol);
     xCMat = {[xMat xMat(:,1)]};
     fCMat = {fMat};
     titl = ['Tube at time '  num2str(timeVec)];
-    xlab = 'x_1';
-    ylab = 'x_2';
-    zlab = '';
+    xlab = ['[' num2str(obj.projSTimeMat{1}(:,1))' ']'];
+    ylab = ['[' num2str(obj.projSTimeMat{1}(:,2))' ']'];
+    if size(lGridMat, 1) == 3
+        zlab =  ['[' num2str(obj.projSTimeMat{1}(:,3))' ']'];
+    else
+        zlab = '';
+    end
 else
     fMat = fTri(nDim,mDim);
     xMat = zeros(3,nDim*mDim);
     for iTime = 1:mDim
-        xTemp = fCalcPoints(iTime,nDim,lGridMat,dim,qArr,...
+        xTemp = fCalcPoints(nDim,lGridMat,dim,...
+            squeeze(qArr(:,:,iTime,:)),...
             obj.aMat{1}(:,iTime),absTol);
         xMat(:,(iTime-1)*nDim+1:iTime*nDim) =...
             [timeVec(iTime)*ones(1,nDim); xTemp];
@@ -587,23 +600,23 @@ else
     xCMat = {xMat};
     fCMat = {fMat};
     titl = 'reach tube';
-    ylab = 'x_1';
-    zlab = 'x_2';
+    ylab = ['[' num2str(obj.projSTimeMat{1}(:,1))' ']'];
+    zlab = ['[' num2str(obj.projSTimeMat{1}(:,2))' ']'];
     xlab = 't';
 end
 end
 
 
-function xMat = calcPointsInt(iTime,nDim,lGridMat,dim,qArr,...
+function xMat = calcPointsInt(nDim,lGridMat,dim,qArr,...
     centerVec,absTol)
 import gras.geom.ell.rhomat
 xMat = zeros(dim,nDim);
-tubeNum = size(qArr,4);
+tubeNum = size(qArr,3);
 
 suppAllMat = zeros(tubeNum,nDim);
 bpAllCMat = cell(tubeNum,nDim);
 for iTube = 1:tubeNum
-    curEll = qArr(:,:,iTime,iTube);
+    curEll = qArr(:,:,iTube);
     [supMat, bpMat] = rhomat(curEll,...
         lGridMat,absTol);
     suppAllMat(iTube,:) = supMat;
@@ -612,23 +625,22 @@ for iTube = 1:tubeNum
     end
 end
 [~,xInd] = max(suppAllMat,[],1);
-for iX = 1:size(xInd,2)
-    xMat(:,iX) = bpAllCMat{xInd(iX),iX}...
-            +centerVec;
+for iDir = 1:size(xInd,2)
+    xMat(:,iDir) = bpAllCMat{xInd(iDir),iDir}...
+        +centerVec;
 end
 end
-function xMat = calcPointsExt(iTime,nDim,lGridMat,dim,qArr,...
+function xMat = calcPointsExt(nDim,lGridMat,dim,qArr,...
     centerVec,~)
 xMat = zeros(dim,nDim);
-tubeNum = size(qArr,4);
+tubeNum = size(qArr,3);
 
 distAllMat = zeros(tubeNum,nDim);
 bpAllCMat = cell(tubeNum,nDim);
 for iDir = 1:nDim
-    q2Arr = reshape(qArr(:,:,iTime,:), [dim dim tubeNum]);
     lVec = lGridMat(:,iDir);
     outVec = gras.gen.SquareMatVector...
-        .lrDivideVec(q2Arr,...
+        .lrDivideVec(qArr,...
         lVec);
     distAllMat(:,iDir) = outVec;
     
@@ -636,9 +648,9 @@ for iDir = 1:nDim
     bpAllCMat{2,iDir} = lVec/sqrt(outVec(2));
 end
 [~,xInd] = max(distAllMat,[],1);
-for iX = 1:size(xInd,2)
-    xMat(:,iX) = bpAllCMat{xInd(iX),iX}...
-            +centerVec;
+for iDir = 1:size(xInd,2)
+    xMat(:,iDir) = bpAllCMat{xInd(iDir),iDir}...
+        +centerVec;
 end
 
 end
