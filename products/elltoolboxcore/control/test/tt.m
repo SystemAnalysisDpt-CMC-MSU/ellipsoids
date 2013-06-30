@@ -14,7 +14,7 @@
   sys      = linsys(A, B, P);
   rs       = reach(sys, X0, L0, T);
 
-  plot_ea(rs); hold on;
-  plot_ia(rs); hold on;
+  plotEa(rs); hold on;
+  plotIa(rs); hold on;
 
 	  

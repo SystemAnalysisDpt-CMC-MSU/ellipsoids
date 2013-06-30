@@ -19,7 +19,7 @@ s2  = linsys(A1, B1, U);
 rs1 = reach(s1, X0, L0, T, o);
 rs2 = evolve(rs1, T1, s2);
 
-plot_ea(rs1); hold on;
-plot_ia(rs1); hold on;
-plot_ea(rs2, 'r'); hold on;
-plot_ia(rs2, 'y'); hold on;
+plotEa(rs1); hold on;
+plotIa(rs1); hold on;
+plotEa(rs2, 'r'); hold on;
+plotIa(rs2, 'y'); hold on;

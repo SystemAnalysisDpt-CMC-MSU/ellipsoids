@@ -26,15 +26,15 @@ clear P1;
   o.save_all = 1;
   rs       = reach(sys, X0, L0, T, o);
 
-  plot_ea(rs); hold on;
-%  plot_ia(rs); hold on;
+  plotEa(rs); hold on;
+%  plotIa(rs); hold on;
 
   rs = evolve(rs, 10, sys2);
 
-  plot_ea(rs, 'r'); hold on;
-%  plot_ia(rs, 'y'); hold on;
+  plotEa(rs, 'r'); hold on;
+%  plotIa(rs, 'y'); hold on;
 	  
   rs = evolve(rs, 15, sys3);
 
-  plot_ea(rs, 'g'); hold on;
-%  plot_ia(rs, 'c'); hold on;
+  plotEa(rs, 'g'); hold on;
+%  plotIa(rs, 'c'); hold on;

@@ -26,12 +26,12 @@ if nDim==2
     if nargin<2
         nPoints = ellObj.nPlot2dPoints;
     end
-    fGetGrid=@(x)ellipsoid.getGrid(2,x);
+    fGetGrid=@(x)gras.geom.tri.spheretriext(2,x);
 elseif nDim==3
     if nargin<2
         nPoints = ellObj.nPlot3dPoints;
     end
-    fGetGrid=@(x)ellipsoid.getGrid(3,x);
+    fGetGrid=@(x)gras.geom.tri.spheretriext(3,x);
 else
     throwerror('wrongDim','ellipsoid must be of dimension 2 or 3');
 end
