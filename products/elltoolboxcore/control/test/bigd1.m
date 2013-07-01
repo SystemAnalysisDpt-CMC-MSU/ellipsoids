@@ -29,4 +29,4 @@
 
  ps=projection(rs, BB);
 
- plotEa(ps); hold on; plotIa(ps);
+ plotByEa(ps); hold on; plotByIa(ps);

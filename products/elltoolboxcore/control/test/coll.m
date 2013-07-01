@@ -26,8 +26,8 @@ clear P;
   end
   brs      = reach(sys, M, L1, [T 0], o);
 
-  plotEa(rs); hold on;
-  plotEa(brs, 'g'); hold on;
+  plotByEa(rs); hold on;
+  plotByEa(brs, 'g'); hold on;
 
 
   [gc1, t1] = get_goodcurves(cut(rs,[0 0.886]));  gc1 = gc1{1};

@@ -20,7 +20,7 @@ if nargin>0
 end
 nConfs = size(confCMat, 1);
 suiteList = {};
-%
+
 for iConf = 1:nConfs
     confName = confCMat{iConf, 1};
     confTestsVec = confCMat{iConf, 2};
@@ -72,10 +72,10 @@ suiteList{end + 1} = loader.load_tests_from_test_case(...
 suiteList{end + 1} = loader.load_tests_from_test_case(...
     'elltool.reach.test.mlunit.ReachPlotTestCase',...
      ReachFactory('demo3firstTest', crm, crmSys, false, false));
-%
+
 suiteList{end + 1} = loader.load_tests_from_test_case(...
     'elltool.reach.test.mlunit.MPTIntegrationTestCase');
-%
+
 testLists = cellfun(@(x)x.tests,suiteList,'UniformOutput',false);
 suite = mlunitext.test_suite(horzcat(testLists{:}));
 %

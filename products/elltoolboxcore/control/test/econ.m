@@ -18,5 +18,5 @@
   BB = [0 0 0 0 1 0; 0 0 0 0 0 1]';
   ps = projection(rs, BB);
   
-  plotEa(ps); hold on;
-  plotIa(ps); hold on;
+  plotByEa(ps); hold on;
+  plotByIa(ps); hold on;

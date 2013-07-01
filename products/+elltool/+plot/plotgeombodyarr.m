@@ -97,7 +97,7 @@ if ~isRelPlotterSpec
 end
 [bodyArr, uColorVec, vColorVec, isCharColor] = getParams(reg);
 if isCharColor && isColorVec
-    throwerror('ConflictingColor', 'Conflicting using of color property');
+    isColorVec = false;
 end
 nDim = max(fDim(bodyArr));
 if nDim == 3 && isLineWidth

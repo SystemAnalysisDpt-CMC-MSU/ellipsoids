@@ -11,6 +11,6 @@ basisMat = [1 0 0 1; 0 1 1 0].';  % basis of 2-dimensional subspace
 
 % project reach set rs onto basis basisMat
 psObj = rsObj.projection(basisMat);
-psObj.plotEa();  % plot external approximation
+psObj.plotByEa();  % plot external approximation
 hold on;
-psObj.plotIa();  % plot internal approximation
+psObj.plotByIa();  % plot internal approximation

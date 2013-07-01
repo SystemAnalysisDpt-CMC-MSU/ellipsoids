@@ -50,8 +50,8 @@ s2 = elltool.linsys.LinSysFactory.create(A2, B2, CB);
 % >> T = 10;
 % >> L0 = [1 0; 0 1]';
 % >> rs = elltool.reach.ReachContinuous(lsys, X0, L0, T);
-% >> rs.plotEa(); hold on;
-% >> rs.plotIa();
+% >> rs.plotByEa(); hold on;
+% >> rs.plotByIa();
 % >> ylabel('V_C'); zlabel('i_L');
 %
 % On your screen you see the reach set evolving in time from 0 to 10 (reach tube). Its external and internal approximations are computed for two directions specified by matrix L0. Function 'plotEa' plots external (blue by default), and function 'plotIa' - internal (green by default) approximations.
@@ -59,9 +59,9 @@ rs = elltool.reach.ReachContinuous(s, X0, L0, [0 T],...
     'isRegEnabled', true, 'isJustCheck', false, 'regTol', 1e-4);
 ell_plot([0; 0; 0], 'k.');
 cla;
-rs.plotEa();
+rs.plotByEa();
 hold on;
-rs.plotIa();
+rs.plotByIa();
 ylabel('V_C');
 zlabel('i_L');
 %%
@@ -76,26 +76,26 @@ zlabel('i_L');
 % Now we continue computing the reach set for the time interval [10, 20] due to the new dynamics:
 %
 % >> rs2 = rs.evolve(20, s2);
-% >> rs2.plotEa('r'); hold on; rs2.plotIa('y');
+% >> rs2.plotByEa('r'); hold on; rs2.plotByIa('y');
 %
 % plots external (red) and internal (yellow) approximations of the reach set of the system for the time interval [10, 20] and the new dynamics.
 % Function 'evolve' can be used for computing the reach sets of switching systems.
 %
 rs2 = rs.evolve(20, s2);
-rs2.plotEa('color', [1 0 0], 'shade', 0.3);
-rs2.plotIa('color', [1 1 0], 'shade', 0.1);
+rs2.plotByEa('color', [1 0 0], 'shade', 0.3);
+rs2.plotByIa('color', [1 1 0], 'shade', 0.1);
 %%
 % To analyze the reachability of the system on some specific time segment within the computed time interval, use 'cut' function:
 %
 % >> ct = rs.cut([3 6]);
-% >> ct.plotEa(); hold on; ct.plotIa();
+% >> ct.plotByEa(); hold on; ct.plotByIa();
 %
 % plots the reach tube approximations on the time interval [3, 6].
 ct = rs.cut([3 6]);
 cla;
-ct.plotEa();
+ct.plotByEa();
 hold on;
-ct.plotIa();
+ct.plotByIa();
 hold off;
 ylabel('V_C');
 zlabel('i_L');
@@ -103,15 +103,15 @@ zlabel('i_L');
 % Function 'cut' can also be used to obtain a snapshot of the reach set at given time within the computed time interval:
 %
 % >> ct = ct.cut(5);
-% >> ct.plotEa(); hold on; ct.plotIa();
+% >> ct.plotByEa(); hold on; ct.plotByIa();
 %
 % plots the reach set approximations at time 5.
 cla;
 ct = ct.cut(5);
 %
-ct.plotEa();
+ct.plotByEa();
 hold on;
-ct.plotIa();
+ct.plotByIa();
 xlabel('V_C');
 ylabel('i_L');
 %%
@@ -158,9 +158,9 @@ hold off;
 E1 = ellipsoid([2; -1], [4 -2; -2 2]);
 E2 = ell_unitball(2) - [6; -1];
 %
-ct.plotEa();
+ct.plotByEa();
 hold on;
-ct.plotIa();
+ct.plotByIa();
 plot(E1, 'r', E2, 'k', 'lineWidth',2);
 hold off;
 xlabel('V_C');
@@ -175,7 +175,7 @@ ylabel('i_L');
 % Now the reach set of the system can be computed and plotted just as before:
 %
 % >> rs = elltool.reach.ReachContinuous(lsys, X0, L0, [0 4]);
-% >> rs.plotEa(); hold on; rs.plotIa();
+% >> rs.plotByEa(); hold on; rs.plotByIa();
 A = {'0' '-10'; '1/(2 + sin(t))' '-4/(2 + sin(t))'};
 B = {'10' '0'; '0' '1/(2 + sin(t))'};
 s = elltool.linsys.LinSysFactory.create(A, B, CB);
@@ -184,9 +184,9 @@ rs = elltool.reach.ReachContinuous(s, X0, L0, [0 4],...
 cla;
 ell_plot([0; 0; 0], '.');
 cla;
-rs.plotEa();
+rs.plotByEa();
 hold on;
-rs.plotIa();
+rs.plotByIa();
 ylabel('V_C');
 zlabel('i_L');
 %%
@@ -221,7 +221,7 @@ hold off;
 % Compute and plot the reach tube approximations:
 %
 % >> rs = elltool.reach.ReachContinuous(s, X0, L0, [0 4]);
-% >> rs.plotEa(); hold on; rs.plotIa();
+% >> rs.plotByEa(); hold on; rs.plotByIa();
 G = [1; 0];
 V.center = {'2*cos(t)'};
 V.shape = {'0.09*(sin(t))^2'};
@@ -229,9 +229,9 @@ s = elltool.linsys.LinSysFactory.create(A, B, CB, G, V);
 rs = elltool.reach.ReachContinuous(s, X0, L0, [0 4],...
     'isRegEnabled', true, 'isJustCheck', false, 'regTol', 1e-2);
 cla;
-rs.plotEa();
+rs.plotByEa();
 hold on;
-rs.plotIa();
+rs.plotByIa();
 hold off;
 ylabel('V_C');
 zlabel('i_L');
@@ -285,15 +285,15 @@ L = [1 0 -1 1; 0 -1 1 1]';
 % >> L = [1 0 -1 0; 0 -1 1 1]';
 % >> rs = elltool.reach.ReachContinuous(lsys, X0, L, T);
 % >> ps = prs.projection([1 0 0 0; 0 1 0 0]');
-% >> ps.plotEa(); hold on; ps.plotIa();
+% >> ps.plotByEa(); hold on; ps.plotByIa();
 rs = elltool.reach.ReachContinuous(s, X0, L, [0 T],...
     'isRegEnabled', true, 'isJustCheck', false, 'regTol', 1e-5);
 ps = rs.projection([1 0 0 0; 0 1 0 0]');
 ell_plot([0; 0; 0], 'k.');
 cla;
-ps.plotEa();
+ps.plotByEa();
 hold on;
-ps.plotIa();
+ps.plotByIa();
 %%
 % Function 'get_center' is used to obtain the trajectory of the center of the reach set:
 %
@@ -311,7 +311,7 @@ hold off;
 % >> T = [1 0];
 % >> brs = elltool.reach.ReachContinuous(lsys, X0, L, T);
 % >> bps = brs.projection([1 0 0 0; 0 1 0 0]');
-% >> bps.plotEa(); hold on; bps.plotIa();
+% >> bps.plotByEa(); hold on; bps.plotByIa();
 
 % plots approximations of backward reach tube of the system for target point [2; 3] (used to be initial condition in the previous example, hence, is still denoted X0 in the code), terminating time 1 and initial time 0.
 T = [1 0];
@@ -319,7 +319,7 @@ brs = elltool.reach.ReachContinuous(s, X0, L, T,...
     'isRegEnabled', true, 'isJustCheck', false, 'regTol', 1e-5);
 bps = brs.projection([1 0 0 0; 0 1 0 0]');
 cla;
-bps.plotEa(); hold on; bps.plotIa(); hold off;
+bps.plotByEa(); hold on; bps.plotByIa(); hold off;
 %%
 % As an example of discrete-time linear system, we shall consider economic model entitled 'multiplier-accelerator', which is due to Samuelson (1939). It addresses the problem of income determination and business cycle.
 % Denote:
@@ -365,16 +365,16 @@ L0 = [1 0 0 0 0 0; 0 1 0 0 0 0; 0 0 1 0 0 1; 0 1 0 1 1 0; 0 0 -1 1 0 1; 0 0 0 -1
 % >> rs = elltool.reach.ReachDiscrete(lsys, X0, L0, N);
 % >> BB = [0 0 0 0 1 0; 0 0 0 0 0 1]';
 % >> ps = rs.projection(BB);
-% >> ps.plotEa(); hold on; ps.plotIa();
+% >> ps.plotByEa(); hold on; ps.plotByIa();
 %
 % Forward reach sets can be computed for singular discrete-time systems as well. Backward reach sets, on the other hand, can be computed only for nonsingular discrete-time systems.
 timeLimsVec = [1 4];
 rs = elltool.reach.ReachDiscrete(lsys, X0, L0, timeLimsVec);
 BB = [0 0 0 0 1 0; 0 0 0 0 0 1]';
 ps = rs.projection(BB);
-plotEa(ps);
+plotByEa(ps);
 hold on;
-plotIa(ps);
+plotByIa(ps);
 hold off;
 ylabel('V[k]');
 zlabel('Y[k]');

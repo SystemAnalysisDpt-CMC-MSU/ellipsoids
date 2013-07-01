@@ -437,6 +437,52 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
             end
         end
         function plObj = plotExt(self,varargin)
+            % PLOTExt - plots external approximation of ellTube.
+            %
+            %
+            % Usage:
+            %       obj.plotExt() - plots external approximation of ellTube.
+            %       obj.plotExt('Property',PropValue,...) - plots external approximation
+            %                                               of ellTube with setting
+            %                                               properties.
+            %
+            % Input:
+            %   regular:
+            %       obj:  EllTubeProj: EllTubeProj object
+            %   optional:
+            %       colorSpec: char[1,1] - color specification code, can be 'r','g',
+            %                    etc (any code supported by built-in Matlab function).
+            %
+            %   properties:
+            %
+            %       'fill': logical[1,1]  -
+            %               if true, approximation in 2D will be filled with color.
+            %        Default value is false.
+            %       'lineWidth': double[1,1]  -
+            %                    line width for  2D plots. Default value is 1.
+            %       'color': double[1,3] -
+            %                sets default color in the form [x y z].
+            %                   Default value is [0.5 0.5 0.5].
+            %       'shade': double[1,1] -
+            %       level of transparency between 0 and 1 (0 - transparent, 1 - opaque).
+            %                Default value is 0.4.
+            %
+            %       'relDataPlotter' - relation data plotter object.
+            %       'showDiscrete':logical[1,1]  -
+            %           if true, approximation in 3D will be filled in every time slice
+            %       'numPointsInOneTime': double[1,1] -
+            %           number of points in every time slice.
+            % Output:
+            %   regular:
+            %       plObj: smartdb.disp.RelationDataPlotter[1,1] - returns the relation
+            %       data plotter object.
+            %
+            
+            
+            % $Author: <Ilya Lyubich>  <lubi4ig@gmail.com> $    $Date: <30 January  2013> $
+            % $Copyright: Moscow State University,
+            %            Faculty of Computational Mathematics and Cybernetics,
+            %            System Analysis Department 2013 $
             import gras.ellapx.enums.EApproxType;
             approxType = gras.ellapx.enums.EApproxType.External;
             plObj = self.getTuplesFilteredBy(...
@@ -444,6 +490,52 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                 .plotExtOrInternal(@calcPointsExt,varargin{:});
         end
         function plObj = plotInt(self,varargin)
+            % PLOTINT - plots internal approximation of ellTube.
+            %
+            %
+            % Usage:
+            %       obj.plotInt() - plots internal approximation of ellTube.
+            %       obj.plotInt('Property',PropValue,...) - plots internal approximation
+            %                                               of ellTube with setting
+            %                                               properties.
+            %
+            % Input:
+            %   regular:
+            %       obj:  EllTubeProj: EllTubeProj object
+            %   optional:
+            %       colorSpec: char[1,1] - color specification code, can be 'r','g',
+            %                    etc (any code supported by built-in Matlab function).
+            %
+            %   properties:
+            %
+            %       'fill': logical[1,1]  -
+            %               if true, approximation in 2D will be filled with color.
+            %        Default value is false.
+            %       'lineWidth': double[1,1]  -
+            %                    line width for  2D plots. Default value is 1.
+            %       'color': double[1,3] -
+            %                sets default color in the form [x y z].
+            %                   Default value is [0.5 0.5 0.5].
+            %       'shade': double[1,1] -
+            %       level of transparency between 0 and 1 (0 - transparent, 1 - opaque).
+            %                Default value is 0.4.
+            %
+            %       'relDataPlotter' - relation data plotter object.
+            %       'showDiscrete':logical[1,1]  -
+            %           if true, approximation in 3D will be filled in every time slice
+            %       'numPointsInOneTime': double[1,1] -
+            %           number of points in every time slice.
+            % Output:
+            %   regular:
+            %       plObj: smartdb.disp.RelationDataPlotter[1,1] - returns the relation
+            %       data plotter object.
+            %
+            
+            
+            % $Author: <Ilya Lyubich>  <lubi4ig@gmail.com> $    $Date: <30 January  2013> $
+            % $Copyright: Moscow State University,
+            %            Faculty of Computational Mathematics and Cybernetics,
+            %            System Analysis Department 2013 $
             import gras.ellapx.enums.EApproxType;
             approxType = gras.ellapx.enums.EApproxType.Internal;
             plObj = self.getTuplesFilteredBy(...
@@ -457,11 +549,11 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
             import elltool.plot.plotgeombodyarr;
             import gras.geom.tri.elltube2tri;
             import gras.geom.tri.elltubediscrtri;
-            [reg,~,isShowDiscrete,nPlotPoints]=...
+            [reg,~,isShowDiscrete,nPlotPoints,colorVec]=...
                 modgen.common.parseparext(varargin,...
-                {'showDiscrete','nPoints' ;...
-                false, 600;
-                @(x)isa(x,'logical'),@(x)isa(x,'double')});
+                {'showDiscrete','numPointsInOneTime','color' ;...
+                false, 600, [0.5 0.5 0.5];
+                @(x)isa(x,'logical'),@(x)isa(x,'double'),@(x)isa(x,'double')});
             if numel(self.QArray) == 0
                 throwerror('wrongMethod',...
                     'number of tubes is 0');
@@ -485,7 +577,7 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                 @(x)isa(x,'gras.ellapx.smartdb.rels.EllTubeProj'),...
                 @fDim,...
                 @(x)fCalcBodyArr(x,@elltube2tri,appType,nPlotPoints),...
-                @patch,self,reg{:},'isTitle',true,...
+                @patch,self,reg{:},'color',colorVec,'isTitle',true,...
                 'isLabel',true);
             if (isCenter)
                 reg = modgen.common.parseparext(reg,...
@@ -497,7 +589,8 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                     @fDim,...
                     @fCalcCenterTriArr,...
                     @(varargin)patch(varargin{:},'marker','*'),...
-                    self,reg{:},'relDataPlotter',plObj, 'priorHold',...
+                    self,reg{:},'color',colorVec,'relDataPlotter',plObj,...
+                    'priorHold',...
                     true,'postHold',isHold,'isTitle',true,...
                     'isLabel',true);
             end
@@ -530,20 +623,22 @@ end
 end
 function checkCenterVecAndTimeVec(self)
 import modgen.common.throwerror;
-for iTime = 1:size(self.timeVec{1},2)
+nTubes = numel(self.QArray);
+aMatCell = self.aMat;
+timeVec = self.timeVec{1};
+for iTime = 1:size(timeVec,2)
     centerVec = self.aMat{1}(:,iTime);
-    for iTube = 1:numel(self.QArray)
-        if (self.aMat{iTube}(:,iTime)~=centerVec)
+    for iTube = 2:nTubes
+        if (aMatCell{iTube}(:,iTime)~=centerVec)
             throwerror('differentCenterVec', ...
                 'Center vectors must be equal.');
         end
     end
 end
-timeVec = self.timeVec{1};
-for iTube = 1:numel(self.QArray)
+for iTube = 2:numel(nTubes)
     if (self.timeVec{iTube}~=timeVec)
-        throwerror('differentCenterVec', ...
-            'Center vectors must be equal.');
+        throwerror('differentTimeVec', ...
+            'Time vectors must be equal.');
     end
 end
 end
@@ -556,105 +651,107 @@ else
 end
 end
 
-function [xCMat,fCMat,titl,xlab,ylab,zlab] =...
+function [xCMat,fCMat,titlStr,xlab,ylab,zlab] =...
     fCalcCenterTriArr(obj,varargin)
+prefixTitl =  'Reach tube cut at time';
 xCMat = {obj.aMat{1}(:,1)};
 fCMat = {[1 1]};
-xlab = ['[' num2str(obj.projSTimeMat{1}(:,1))' ']'];
-ylab = ['[' num2str(obj.projSTimeMat{1}(:,2))' ']'];
+xlab = ['[' obj.goodDirProp2Str(1,1) ']'];
+ylab = ['[' obj.goodDirProp2Str(2,1) ']'];
 zlab = '';
-titl = ['Tube at time ' num2str(obj.timeVec{1})];
+titlStr = [prefixTitl  num2str(obj.timeVec{1})];
 end
 
-function [xCMat,fCMat,titl,xlab,ylab,zlab] =...
+function [xMatCell,fMatCell,titlStr,xlab,ylab,zlab] =...
     fCalcBodyArr(obj,fTri,fCalcPoints,...
     nPlotPoints)
-dim = obj.dim(1);
-[lGridMat, fMat] = gras.geom.tri.spheretriext(dim,...
+prefixTitl =  'Reach tube cut at time';
+nDims = obj.dim(1);
+[lGridMat, fMat] = gras.geom.tri.spheretriext(nDims,...
     nPlotPoints);
 lGridMat = lGridMat';
 timeVec = obj.timeVec{1};
-nDim = size(lGridMat, 2);
-mDim = size(timeVec, 2);
+nDir = size(lGridMat, 2);
+nTimePoints = size(timeVec, 2);
 qArr = cat(4, obj.QArray{:});
 absTol = max(obj.calcPrecision);
 
-if mDim == 1
-    xMat = fCalcPoints(nDim,lGridMat,dim,squeeze(qArr(:,:,1,:)),...
+if nTimePoints == 1
+    xMat = fCalcPoints(nDir,lGridMat,nDims,squeeze(qArr(:,:,1,:)),...
         obj.aMat{1}(:,1),absTol);
-    xCMat = {[xMat xMat(:,1)]};
-    fCMat = {fMat};
-    titl = ['Tube at time '  num2str(timeVec)];
-    xlab = ['[' num2str(obj.projSTimeMat{1}(:,1))' ']'];
-    ylab = ['[' num2str(obj.projSTimeMat{1}(:,2))' ']'];
+    xMatCell = {[xMat xMat(:,1)]};
+    fMatCell = {fMat};
+    titlStr = [prefixTitl  num2str(timeVec)];
+    xlab = ['[' obj.goodDirProp2Str(1,1) ']'];
+    ylab = ['[' obj.goodDirProp2Str(2,1) ']'];
     if size(lGridMat, 1) == 3
-        zlab =  ['[' num2str(obj.projSTimeMat{1}(:,3))' ']'];
+        zlab =  ['[' obj.goodDirProp2Str(3,1) ']'];
     else
         zlab = '';
     end
 else
-    fMat = fTri(nDim,mDim);
-    xMat = zeros(3,nDim*mDim);
-    for iTime = 1:mDim
-        xTemp = fCalcPoints(nDim,lGridMat,dim,...
+    fMat = fTri(nDir,nTimePoints);
+    xMat = zeros(3,nDir*nTimePoints);
+    for iTime = 1:nTimePoints
+        xSliceTimeVec = fCalcPoints(nDir,lGridMat,nDims,...
             squeeze(qArr(:,:,iTime,:)),...
             obj.aMat{1}(:,iTime),absTol);
-        xMat(:,(iTime-1)*nDim+1:iTime*nDim) =...
-            [timeVec(iTime)*ones(1,nDim); xTemp];
+        xMat(:,(iTime-1)*nDir+1:iTime*nDir) =...
+            [timeVec(iTime)*ones(1,nDir); xSliceTimeVec];
     end
-    xCMat = {xMat};
-    fCMat = {fMat};
-    titl = 'reach tube';
-    ylab = ['[' num2str(obj.projSTimeMat{1}(:,1))' ']'];
-    zlab = ['[' num2str(obj.projSTimeMat{1}(:,2))' ']'];
+    xMatCell = {xMat};
+    fMatCell = {fMat};
+    titlStr = 'reach tube';
+    ylab = ['[' obj.goodDirProp2Str(1,1) ']'];
+    zlab = ['[' obj.goodDirProp2Str(2,1) ']'];
     xlab = 't';
 end
 end
 
 
-function xMat = calcPointsInt(nDim,lGridMat,dim,qArr,...
+function xMat = calcPointsInt(nDir,lGridMat,nDims,qArr,...
     centerVec,absTol)
 import gras.geom.ell.rhomat
-xMat = zeros(dim,nDim);
+xMat = zeros(nDims,nDir);
 tubeNum = size(qArr,3);
 
-suppAllMat = zeros(tubeNum,nDim);
-bpAllCMat = cell(tubeNum,nDim);
+supAllVec = zeros(tubeNum,nDir);
+supVecAllCMat = cell(tubeNum,nDir);
 for iTube = 1:tubeNum
-    curEll = qArr(:,:,iTube);
-    [supMat, bpMat] = rhomat(curEll,...
+    curEllMat = qArr(:,:,iTube);
+    [supMat, bpMat] = rhomat(curEllMat,...
         lGridMat,absTol);
-    suppAllMat(iTube,:) = supMat;
-    for indBP=1:size(bpAllCMat,2)
-        bpAllCMat{iTube,indBP} = bpMat(:,indBP);
+    supAllVec(iTube,:) = supMat;
+    for indBP=1:size(supVecAllCMat,2)
+        supVecAllCMat{iTube,indBP} = bpMat(:,indBP);
     end
 end
-[~,xInd] = max(suppAllMat,[],1);
+[~,xInd] = max(supAllVec,[],1);
 for iDir = 1:size(xInd,2)
-    xMat(:,iDir) = bpAllCMat{xInd(iDir),iDir}...
+    xMat(:,iDir) = supVecAllCMat{xInd(iDir),iDir}...
         +centerVec;
 end
 end
-function xMat = calcPointsExt(nDim,lGridMat,dim,qArr,...
+function xMat = calcPointsExt(nDir,lGridMat,nDims,qArr,...
     centerVec,~)
-xMat = zeros(dim,nDim);
+xMat = zeros(nDims,nDir);
 tubeNum = size(qArr,3);
 
-distAllMat = zeros(tubeNum,nDim);
-bpAllCMat = cell(tubeNum,nDim);
-for iDir = 1:nDim
+distAllMat = zeros(tubeNum,nDir);
+BoundaryPointsAllCMat = cell(tubeNum,nDir);
+for iDir = 1:nDir
     lVec = lGridMat(:,iDir);
-    outVec = gras.gen.SquareMatVector...
+    distVec = gras.gen.SquareMatVector...
         .lrDivideVec(qArr,...
         lVec);
-    distAllMat(:,iDir) = outVec;
+    distAllMat(:,iDir) = distVec;
     
-    bpAllCMat{1,iDir} = lVec/sqrt(outVec(1));
-    bpAllCMat{2,iDir} = lVec/sqrt(outVec(2));
+    BoundaryPointsAllCMat{1,iDir} = lVec/realsqrt(distVec(1));
+    BoundaryPointsAllCMat{2,iDir} = lVec/realsqrt(distVec(2));
 end
 [~,xInd] = max(distAllMat,[],1);
 for iDir = 1:size(xInd,2)
-    xMat(:,iDir) = bpAllCMat{xInd(iDir),iDir}...
+    xMat(:,iDir) = BoundaryPointsAllCMat{xInd(iDir),iDir}...
         +centerVec;
 end
 

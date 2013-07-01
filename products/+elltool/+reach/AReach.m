@@ -583,8 +583,9 @@ classdef AReach < elltool.reach.IReach
             end
             
             %
+            [~, dim] = self.dimension();
             if self.isProj
-                [~, dim] = self.dimension();
+                
                 if dim < 2 || dim > 3
                     throwerror('wrongInput',...
                         'Dimension of projection must be 2 or 3.');
@@ -597,9 +598,17 @@ classdef AReach < elltool.reach.IReach
                         'fGetFill', @(x)(isFill));
                 end
             else
-                plObj = smartdb.disp.RelationDataPlotter();
-                plotter = self.ellTubeRel.getTuplesFilteredBy(...
+                 if dim < 2 || dim > 3
+                    plObj = smartdb.disp.RelationDataPlotter();
+                    plotter = self.ellTubeRel.getTuplesFilteredBy(...
                     APPROX_TYPE, approxType).plot(plObj);
+                else
+                   projReachObj = self.projection(eye(dim));
+                   plObj = smartdb.disp.RelationDataPlotter();
+                    plotter = projReachObj.ellTubeRel.getTuplesFilteredBy(...
+                    APPROX_TYPE, approxType).plot(plObj);
+                end
+                
             end
             function colCodeVec = getColorVec(colChar)
                 if ~(ischar(colChar))
@@ -1258,26 +1267,45 @@ classdef AReach < elltool.reach.IReach
                 varargin)
             import gras.ellapx.smartdb.F;
             import gras.ellapx.enums.EProjType;
+            import gras.ellapx.enums.EApproxType;
+            import modgen.common.throwerror;
             dim = self.dimension;
-            if (strcmp(char(approxType),'Internal'))
-                if ~self.isprojection()
-                    projReachObj = self.projection(eye(dim));
-                    plotter = projReachObj.ellTubeRel.getTuplesFilteredBy(...
-                        F.APPROX_TYPE, approxType).plotInt(varargin{:});
-                else
-                    plotter = self.ellTubeRel.getTuplesFilteredBy(...
-                        F.APPROX_TYPE, approxType).plotInt(varargin{:});
-                end
-            else
-                if ~self.isprojection()
-                    projReachObj = self.projection(eye(dim));
-                    plotter = projReachObj.ellTubeRel.getTuplesFilteredBy(...
-                        F.APPROX_TYPE, approxType).plotExt(varargin{:});
-                else
-                    plotter = self.ellTubeRel.getTuplesFilteredBy(...
-                        F.APPROX_TYPE, approxType).plotExt(varargin{:});
-                end
+            if dim > 3 ||  dim < 2
+                throwerror('WrongDim',...
+                        'object dimension can be  2 or 3');
             end
+            nPoints = [ self.nPlot2dPoints self.nPlot3dPoints];
+            switch approxType
+                case EApproxType.Internal
+                    if ~self.isprojection()
+                        projReachObj = self.projection(eye(dim));
+                        
+                    else
+                        projReachObj= self;
+                    end
+                    plotter = projReachObj.ellTubeRel...
+                        .getTuplesFilteredBy(...
+                        F.APPROX_TYPE, approxType)...
+                        .plotInt(varargin{:},...
+                        'numPointsInOneTime',nPoints(dim-1));
+                case EApproxType.External
+                    if ~self.isprojection()
+                        projReachObj = self.projection(eye(dim));
+                        
+                    else
+                        projReachObj= self;
+                    end
+                    plotter = projReachObj.ellTubeRel...
+                        .getTuplesFilteredBy(...
+                        F.APPROX_TYPE, approxType)...
+                        .plotExt(varargin{:},...
+                        'numPointsInOneTime',nPoints(dim-1));
+                otherwise
+                    throwerror('WrongApproxType',...
+                        'approxType %s is not supported',char(approxType));
+            end
+            
+            
             
         end
         function outReachObj = refine(self, l0Mat)
