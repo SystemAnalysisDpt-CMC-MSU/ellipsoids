@@ -1,17 +1,18 @@
-function results=run_regr_tests(confNameList)
+function results=run_regr_tests(varargin)
 runner = mlunitext.text_test_runner(1, 1);
 loader = mlunitext.test_loader;
 crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
-if nargin>0
+
+[reg,~,prop]=modgen.common.parseparext(varargin,...
+    {'reCache';false;'islogical(x)'},[0 1],'propRetMode','list');
+if ~isempty(reg)
+    confNameList=reg{1};
     if ischar(confNameList)
         confNameList={confNameList};
     end
-end
-%
-if nargin==0
+else
     confNameList=crm.deployConfTemplate('*');
 end
-%confNameList = {'advanced'};
 %
 notToTestConfNameList = {'discrSecondTest'};
 testConfIndArray = ones(1, length(confNameList));
@@ -29,7 +30,7 @@ for iConf=nConfs:-1:1
     confName=confNameList{iConf};
     suiteList{iConf}=loader.load_tests_from_test_case(...
         'gras.ellapx.uncertcalc.test.regr.mlunit.SuiteRegression',{confName},...
-        crm,crmSys,'marker',confName);
+        crm,crmSys,prop{:},'marker',confName);
 end
 testLists=cellfun(@(x)x.tests,suiteList,'UniformOutput',false);
 suite=mlunitext.test_suite(horzcat(testLists{:}));

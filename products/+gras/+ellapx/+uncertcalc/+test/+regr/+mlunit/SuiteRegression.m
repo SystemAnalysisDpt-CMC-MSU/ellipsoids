@@ -5,6 +5,7 @@ classdef SuiteRegression < mlunitext.test_case
         crm
         crmSys
         resTmpDir
+        isReCache
     end
     methods
         function self = SuiteRegression(varargin)
@@ -22,18 +23,21 @@ classdef SuiteRegression < mlunitext.test_case
             rmdir(self.resTmpDir,'s');
         end
         function self = set_up_param(self,varargin)
-            if nargin>2
-                self.crm=varargin{2};
+            [reg,~,self.isReCache]=modgen.common.parseparext(varargin,...
+                {'reCache';false;'islogical(x)'});
+            nRegs=length(reg);
+            if nRegs>2
+                self.crm=reg{2};
             else
                 self.crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
             end
-            if nargin>3
-                self.crmSys=varargin{3};
+            if nRegs>3
+                self.crmSys=reg{3};
             else
                 self.crmSys=...
                     gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
             end
-            confNameList=varargin{1};
+            confNameList=reg{1};
             if strcmp(confNameList,'*')
                 self.crm.deployConfTemplate('*');
                 confNameList=self.crm.getConfNameList();
@@ -84,7 +88,7 @@ classdef SuiteRegression < mlunitext.test_case
                 compFieldNameList=setdiff(fieldnames(SRunProp),...
                     NOT_COMPARED_FIELD_LIST);
                 SRunProp=pathfilterstruct(SRunProp,compFieldNameList);
-                if ~resMap.isKey(inpKey);
+                if self.isReCache||~resMap.isKey(inpKey);
                     SExpRes=SRunProp;
                     resMap.put(inpKey,SExpRes);
                 end
