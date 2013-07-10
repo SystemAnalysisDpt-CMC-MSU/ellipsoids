@@ -391,27 +391,27 @@ classdef AReach < elltool.reach.IReach
                     arrayfun(@num2str, inpMat, 'UniformOutput', false);
             end
             function [centerVec, shapeMat] = getEllParams(inpEll, relMat)
-                if ~isempty(inpEll)
-                    if isa(inpEll, 'ellipsoid')
-                        [centerVec shapeMat] = double(inpEll);
-                    elseif isstruct(inpEll)
-                        if isfield(inpEll, 'center')
-                            centerVec = inpEll.center;
-                        else
-                            centerVec = zeros(size(relMat, 2), 1);
-                        end
-                        if isfield(inpEll, 'shape')
-                            shapeMat = inpEll.shape;
-                        else
-                            shapeMat = zeros(size(relMat, 2));
-                        end
+                if isa(inpEll, 'ellipsoid')
+                    if inpEll.isEmpty()
+                        shapeMat = zeros(size(relMat, 2));
+                        centerVec = zeros(size(relMat, 2), 1);
                     else
-                        modgen.common.throwerror('wrongInput',...
-                            'input must be either ellipsid or structure');
+                        [centerVec shapeMat] = double(inpEll);
+                    end
+                elseif isstruct(inpEll)
+                    if isfield(inpEll, 'center')
+                        centerVec = inpEll.center;
+                    else
+                        centerVec = zeros(size(relMat, 2), 1);
+                    end
+                    if isfield(inpEll, 'shape')
+                        shapeMat = inpEll.shape;
+                    else
+                        shapeMat = zeros(size(relMat, 2));
                     end
                 else
-                    shapeMat = zeros(size(relMat, 2));
-                    centerVec = zeros(size(relMat, 2), 1);
+                    modgen.common.throwerror('wrongInput',...
+                        'input must be either ellipsid or structure');
                 end
             end
         end
@@ -699,6 +699,11 @@ classdef AReach < elltool.reach.IReach
                         self.EMSG_BAD_TIME_VEC, self.EMSG_BAD_CONTROL, ...
                         self.EMSG_BAD_DIST, self.EMSG_BAD_INIT_SET];
                     errorTag = [self.ETAG_WR_INP, self.ETAG_BAD_CALC_PREC];
+                elseif isMatch(['SMARTDB:RELS:ELLTUBEBASIC:',...
+                        'CHECKDATACONSISTENCY:wrongInput:QArrayNotPos'])
+                    errorStr = [self.EMSG_R_PROB, self.EMSG_USE_REG];
+                    errorTag = [self.ETAG_WR_INP, self.ETAG_R_PROB, ...
+                        self.ETAG_LOW_REG_TOL];                    
                 elseif isMatch('MODGEN:COMMON:CHECKVAR:wrongInput')
                     errorStr = [self.EMSG_R_PROB, self.EMSG_USE_REG];
                     errorTag = [self.ETAG_WR_INP, ...

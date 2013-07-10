@@ -49,6 +49,7 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.IEllApxBuilder
                 timeLimsVec,nTimePoints,calcPrecision)
             import gras.ellapx.gen.ATightEllApxBuilder;
             import modgen.common.throwerror;
+            import gras.la.ismatposdef;            
             ABS_TOL_FACTOR=1e-2;%this is a temporary measure until 
             %we specify absTol and relTol separately
             if ~isa(pDefObj,...
@@ -74,6 +75,12 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.IEllApxBuilder
             self.odeRelCalcPrecision=calcPrecision*precisionFactor;               
             self.calcPrecision=calcPrecision;
             self.absTol=calcPrecision*ABS_TOL_FACTOR;
+            %
+            x0Mat = pDefObj.getX0Mat();            
+            if ~ismatposdef(x0Mat, self.absTol)
+                throwerror('wrongInput',...
+                    'Initial set is not positive definite.');
+            end            
             %% check that there is no disturbance
             self.pDefObj=pDefObj;   
             self.goodDirSetObj=goodDirSetObj;
