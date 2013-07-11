@@ -5,9 +5,6 @@ classdef AReachProjTestCase < mlunitext.test_case
         COMP_PRECISION = 5e-5;
     end
     properties (Access = protected)
-        testDataRootDir
-        etalonDataRootDir
-        etalonDataBranchKey
         confName
         crm
         crmSys
@@ -17,6 +14,7 @@ classdef AReachProjTestCase < mlunitext.test_case
         calcPrecision
         linSysFactory
         reachObfFactory
+        addArgList
     end
     methods (Access = private)
         function [atDefCMat, btDefCMat, ctDefCMat, ptDefCMat,...
@@ -40,17 +38,7 @@ classdef AReachProjTestCase < mlunitext.test_case
         function self = AReachProjTestCase(linSysFactory, ...
                 reachObfFactory, varargin)
             self = self@mlunitext.test_case(varargin{:});
-            [~, className] = modgen.common.getcallernameext(1);
-            shortClassName = mfilename('classname');
-            self.testDataRootDir = [fileparts(which(className)),...
-                filesep, 'TestData', filesep, shortClassName];
-            % obtain the path of etalon data
-            regrClassName =...
-                'gras.ellapx.uncertcalc.test.regr.mlunit.SuiteRegression';
-            shortRegrClassName = 'SuiteRegression';
-            self.etalonDataRootDir = [fileparts(which(regrClassName)),...
-                filesep, 'TestData', filesep, shortRegrClassName];
-            self.etalonDataBranchKey = 'testRegression_out';
+            %
             self.linSysFactory = linSysFactory;
             self.reachObfFactory = reachObfFactory;
         end
@@ -82,14 +70,16 @@ classdef AReachProjTestCase < mlunitext.test_case
             DistBounds = struct();
             DistBounds.center = qtDefCVec;
             DistBounds.shape = qtDefCMat;
+            self.addArgList={...
+                'isRegEnabled', isRegEnabled,...
+                'isJustCheck', isJustCheck,...
+                'regTol', regTol};
             %
             self.linSys = self.linSysFactory.create(atDefCMat, btDefCMat,...
                 ControlBounds, ctDefCMat, DistBounds);
             self.reachObj = self.reachObfFactory.create(self.linSys,...
                 ellipsoid(x0DefVec, x0DefMat), l0Mat, self.timeVec,...
-                'isRegEnabled', isRegEnabled,...
-                'isJustCheck', isJustCheck,...
-                'regTol', regTol);
+                self.addArgList{:});
         end
         %
         function self = testProjection(self)
@@ -125,21 +115,27 @@ classdef AReachProjTestCase < mlunitext.test_case
             DistBounds.center = newQtCVec;
             DistBounds.shape = newQtCMat;
             %
+            reachClassName=class(self.reachObj);
             oldDim = self.reachObj.dimension();
+            x0Ell=ellipsoid(newX0Vec, newX0Mat);
+            timeVec=self.timeVec;
+            %
             newLinSys = self.linSysFactory.create(newAtCMat, ...
                 newBtCMat, ControlBounds, newCtCMat, DistBounds);
-            firstNewReachObj = feval(class(self.reachObj), newLinSys,...
-                ellipsoid(newX0Vec, newX0Mat), new1L0Mat, self.timeVec);
-            secondNewReachObj = feval(class(self.reachObj), newLinSys,...
-                ellipsoid(newX0Vec, newX0Mat), new2L0Mat, self.timeVec);
+            %
+            firstNewReachObj = feval(reachClassName, newLinSys,...
+                x0Ell, new1L0Mat, timeVec,self.addArgList{:});
+            secondNewReachObj = feval(reachClassName, newLinSys,...
+                x0Ell, new2L0Mat, timeVec,self.addArgList{:});
             firstProjReachObj =...
                 firstNewReachObj.projection([eye(oldDim); zeros(oldDim)]);
             secondProjReachObj =...
                 secondNewReachObj.projection([zeros(oldDim); eye(oldDim)]);
-            isEqual = self.reachObj.isEqual(firstProjReachObj);
-            mlunitext.assert_equals(true, isEqual);
-            isEqual = self.reachObj.isEqual(secondProjReachObj);
-            mlunitext.assert_equals(true, isEqual);
+            [isEqual,reportStr] = self.reachObj.isEqual(firstProjReachObj);
+            mlunitext.assert(isEqual,reportStr);
+            %
+            [isEqual,reportStr] = self.reachObj.isEqual(secondProjReachObj);
+            mlunitext.assert(isEqual,reportStr);
         end
     end
 end

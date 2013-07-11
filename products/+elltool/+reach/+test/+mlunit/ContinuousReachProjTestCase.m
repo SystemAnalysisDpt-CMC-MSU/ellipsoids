@@ -1,5 +1,9 @@
 classdef ContinuousReachProjTestCase < ...
         elltool.reach.test.mlunit.AReachProjTestCase
+    properties (Access=protected)
+        etalonDataRootDir
+        etalonDataBranchKey        
+    end
     methods (Access = private)
         function isEqual = isEqualApprox(self, expRel, approxType)
             import modgen.common.throwerror;
@@ -46,6 +50,13 @@ classdef ContinuousReachProjTestCase < ...
                 elltool.linsys.LinSysContinuousFactory(), ...
                 elltool.reach.ReachContinuousFactory(), ...
                 varargin{:});
+            %
+            regrClassName =...
+                'gras.ellapx.uncertcalc.test.regr.mlunit.SuiteRegression';
+            shortRegrClassName = 'SuiteRegression';
+            self.etalonDataRootDir = [fileparts(which(regrClassName)),...
+                filesep, 'TestData', filesep, shortRegrClassName];
+            self.etalonDataBranchKey = 'testRegression_out';            
         end
         function self = testGetEllTubeRel(self)
             mlunitext.assert(all(self.reachObj.get_ia() == ...
