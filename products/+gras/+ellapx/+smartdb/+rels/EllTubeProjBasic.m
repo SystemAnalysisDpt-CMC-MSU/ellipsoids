@@ -745,9 +745,9 @@ for iDir = 1:nDir
         .lrDivideVec(qArr,...
         lVec);
     distAllMat(:,iDir) = distVec;
-    
-    BoundaryPointsAllCMat{1,iDir} = lVec/realsqrt(distVec(1));
-    BoundaryPointsAllCMat{2,iDir} = lVec/realsqrt(distVec(2));
+    for iTube = 1:tubeNum
+        BoundaryPointsAllCMat{iTube,iDir} = lVec/realsqrt(distVec(iTube));
+    end
 end
 [~,xInd] = max(distAllMat,[],1);
 for iDir = 1:size(xInd,2)
