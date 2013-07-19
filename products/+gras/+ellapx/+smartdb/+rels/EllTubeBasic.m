@@ -13,27 +13,45 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             fieldsList=F().getNameList({'APPROX_SCHEMA_DESCR';'DIM';...
                 'APPROX_SCHEMA_NAME';'APPROX_TYPE';'CALC_PRECISION';...
                 'IND_S_TIME';'LS_GOOD_DIR_NORM';'LS_GOOD_DIR_VEC';'S_TIME';...
-                'SCALE_FACTOR';'XS_TOUCH_OP_VEC';'XS_TOUCH_VEC'});
+                'SCALE_FACTOR';'XS_TOUCH_OP_VEC';'XS_TOUCH_VEC';...
+                'IS_LS_TOUCH'});
         end
     end
     methods (Access = protected)
+        function propNameList=getPostDataHookPropNameList(~)
+            propNameList={'denormGoodDirs'};
+        end
+        function SData=postGetDataHook(self,SData,varargin)
+            import modgen.common.parseparext;
+            [~,~,isDenorm]=parseparext(varargin,...
+                {'denormGoodDirs';false;@(x)isscalar(x)&&islogical(x)});
+            if isDenorm
+                SData=self.deNormGoodDirs(SData);
+            end
+        end
         function fieldList=getDetermenisticSortFieldList(~)        
             fieldList={'sTime','lsGoodDirVec','approxType'};
         end
         function fieldsList = getSFieldsList(~)
             import gras.ellapx.smartdb.F;
             fieldsList = F().getNameList({'LS_GOOD_DIR_VEC';'LS_GOOD_DIR_NORM';...
-                'XS_TOUCH_VEC';'XS_TOUCH_OP_VEC'});
+                'XS_TOUCH_VEC';'XS_TOUCH_OP_VEC';'IS_LS_TOUCH'});
         end
         function fieldsList = getTFieldsList(~)
             import  gras.ellapx.smartdb.F;
             fieldsList = F().getNameList({'LT_GOOD_DIR_MAT';...
                 'LT_GOOD_DIR_NORM_VEC';'X_TOUCH_CURVE_MAT';...
-                'X_TOUCH_OP_CURVE_MAT'});
+                'X_TOUCH_OP_CURVE_MAT';'IS_LT_TOUCH_VEC'});
         end
         function fieldsList = getScalarFieldsList(~)
             import  gras.ellapx.smartdb.F;
-            fieldsList = F().getNameList({'LS_GOOD_DIR_NORM'});
+            fieldsList = F().getNameList({'LS_GOOD_DIR_NORM';...
+                'IS_LS_TOUCH'});
+        end
+        function fieldList=getNotComparedFieldsList(~)
+            import  gras.ellapx.smartdb.F;
+            fieldList = F().getNameList({'IND_S_TIME';...
+                'LT_GOOD_DIR_NORM_VEC';'LS_GOOD_DIR_NORM'});  
         end
     end
     methods(Access=protected, Abstract)
@@ -105,6 +123,10 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             STubeData.ltGoodDirNormVec=cell(nLDirs,1);
             STubeData.lsGoodDirNorm=zeros(nLDirs,1);
             %
+            STubeData.isLsTouch=false(nLDirs,1);
+            %
+            STubeData.isLtTouchVec=cell(nLDirs,1);
+            %
             for iLDir=1:nLDirs
                 timeVec=STubeData.timeVec{iLDir};
                 sTime=STubeData.sTime(iLDir);
@@ -113,16 +135,66 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     throwerror('wrongInput:sTimeOutOfBounds',...
                         'sTime is expected to be among elements of timeVec');
                 end      
+                %
+                absTol=STubeData.calcPrecision(iLDir);
+                %
                 ltGoodDirMat=STubeData.ltGoodDirMat{iLDir};
                 lsGoodDirVec=ltGoodDirMat(:,indSTime);
                 STubeData.indSTime(iLDir)=indSTime;
+                %
+                lsGoodDirNorm=...
+                    realsqrt(sum(lsGoodDirVec.*lsGoodDirVec));  
+                ltGoodDirNormVec=...
+                    realsqrt(sum(ltGoodDirMat.*ltGoodDirMat,1));  
+                %
+                isLsTouch=lsGoodDirNorm>absTol;
+                %
+                %
+                if isLsTouch
+                    lsGoodDirVec=lsGoodDirVec./lsGoodDirNorm;
+                end
+                %
+                isLtTouchVec=ltGoodDirNormVec>absTol;
+                %
+                ltGoodDirMat(:,isLtTouchVec)=ltGoodDirMat(:,isLtTouchVec)./...
+                    repmat(ltGoodDirNormVec(isLtTouchVec),...
+                    size(ltGoodDirMat,1),1);
+                %
+                STubeData.ltGoodDirMat{iLDir}=ltGoodDirMat;
                 STubeData.lsGoodDirVec{iLDir}=lsGoodDirVec;
-                STubeData.lsGoodDirNorm(iLDir)=...
-                    realsqrt(sum(lsGoodDirVec.*lsGoodDirVec));                
-                STubeData.ltGoodDirNormVec{iLDir}=realsqrt(sum(...
-                    ltGoodDirMat.*ltGoodDirMat,1));                
+                STubeData.ltGoodDirNormVec{iLDir}=ltGoodDirNormVec;
+                STubeData.lsGoodDirNorm(iLDir)=lsGoodDirNorm;
+                %
+                STubeData.isLsTouch(iLDir)=isLsTouch;
+                %
+                STubeData.isLtTouchVec{iLDir}=isLtTouchVec;
             end
-        end        
+        end     
+        function STubeData=deNormGoodDirs(STubeData)
+            nLDirs=length(STubeData.QArray);  
+            for iLDir=1:nLDirs   
+                isLtTouchVec=STubeData.isLtTouchVec{iLDir};
+                isLsTouch=STubeData.isLsTouch(iLDir);
+                ltGoodDirMat=STubeData.ltGoodDirMat{iLDir};
+                lsGoodDirVec=STubeData.lsGoodDirVec{iLDir};
+                lsGoodDirNorm=STubeData.lsGoodDirNorm(iLDir);
+                ltGoodDirNormVec=STubeData.ltGoodDirNormVec{iLDir};
+                %
+                ltGoodDirMat(:,isLtTouchVec)=...
+                    ltGoodDirMat(:,isLtTouchVec).*...
+                    repmat(ltGoodDirNormVec(isLtTouchVec),...
+                    size(ltGoodDirMat,1),1);
+                if isLsTouch
+                    lsGoodDirVec=lsGoodDirVec.*lsGoodDirNorm;
+                end 
+                %
+                STubeData.ltGoodDirMat{iLDir}=ltGoodDirMat;
+                STubeData.lsGoodDirVec{iLDir}=lsGoodDirVec;
+                STubeData.ltGoodDirNormVec{iLDir}=...
+                    ones(size(STubeData.ltGoodDirNormVec{iLDir}));
+            end
+            STubeData.lsGoodDirNorm=ones(size(STubeData.lsGoodDirNorm));
+        end
         function STubeData=fromQArraysInternal(QArrayList,aMat,...
                 MArrayList,timeVec,ltGoodDirArray,sTime,approxType,...
                 approxSchemaName,approxSchemaDescr,calcPrecision,scaleFactorVec)
@@ -466,7 +538,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
         function SData = getInterpDataInternal(self, newTimeVec)
             import gras.ellapx.smartdb.F;
             import gras.ellapx.smartdb.rels.EllTubeBasic;
-            SData=self.getData();
+            SData=self.getData('denormGoodDirs',true);
             [SData.QArray, SData.aMat, SData.MArray,...
                     SData.ltGoodDirMat,SData.timeVec,sTimeList] =...
                     cellfun(@fInterpTuple,SData.QArray,...
@@ -573,15 +645,11 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     tubeProjDataCMat{iGroup,iProj}.xTouchOpCurveMat=cell(nLDirs,1);
                     %
                     tubeProjDataCMat{iGroup,iProj}.sTime=repmat(sTime,nLDirs,1);
-                    tubeProjDataCMat{iGroup,iProj}.indSTime=repmat(...
-                        indSTime,nLDirs,1);
                     %
                     tubeProjDataCMat{iGroup,iProj}.timeVec=repmat({timeVec},nLDirs,1);
                     %
                     tubeProjDataCMat{iGroup,iProj}.lsGoodDirVec=cell(nLDirs,1);
                     tubeProjDataCMat{iGroup,iProj}.ltGoodDirMat=cell(nLDirs,1);
-                    tubeProjDataCMat{iGroup,iProj}.lsGoodDirNorm=zeros(nLDirs,1);
-                    tubeProjDataCMat{iGroup,iProj}.ltGoodDirNormVec=cell(nLDirs,1);
                     tubeProjDataCMat{iGroup,iProj}.lsGoodDirNormOrig=zeros(nLDirs,1);
                     tubeProjDataCMat{iGroup,iProj}.ltGoodDirNormOrigVec=cell(nLDirs,1);
                     tubeProjDataCMat{iGroup,iProj}.lsGoodDirOrigVec=cell(nLDirs,1);
@@ -644,15 +712,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                         %the following statement only valid for orthogonal projections
                         tubeProjDataCMat{iGroup,iProj}.lsGoodDirVec{iLDir}=projOrthSTimeMat*...
                             STubeData.lsGoodDirVec{iOLDir};
-                        %calculate norms
-                        lsGoodDirVec = tubeProjDataCMat{iGroup,iProj}.lsGoodDirVec{iLDir};
-                        tubeProjDataCMat{iGroup,iProj}.lsGoodDirNorm(iLDir)=...
-                            realsqrt(sum(lsGoodDirVec.*lsGoodDirVec));
                         %
-                        tubeProjDataCMat{iGroup,iProj}.ltGoodDirNormVec{iLDir}=...
-                            realsqrt(sum(...
-                            tubeProjDataCMat{iGroup,iProj}.ltGoodDirMat{iLDir}.*...
-                            tubeProjDataCMat{iGroup,iProj}.ltGoodDirMat{iLDir},1));
                         %record original norm values
                         tubeProjDataCMat{iGroup,iProj}.lsGoodDirNormOrig(iLDir)=...
                             STubeData.lsGoodDirNorm(iOLDir);
@@ -674,6 +734,8 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                         tubeProjDataCMat{iGroup,iProj}.xsTouchOpVec{iLDir}=projOrthSTimeMat*...
                             STubeData.xsTouchOpVec{iOLDir};
                     end
+                    tubeProjDataCMat{iGroup,iProj}=...
+                        self.calcGoodCurveData(tubeProjDataCMat{iGroup,iProj});
                 end
             end
             ellTubeProjRel=...
@@ -770,6 +832,11 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             SData = self.getData();
             SThinFunResult = SData;
             timeVec = SData.timeVec{1};
+            isOkVec=cellfun(@(x)isequal(x,timeVec),SData.timeVec(2:end));
+            if ~all(isOkVec)
+                throwerror('wrongInput',...
+                    'all timeVec are expected to be equal');
+            end
             nPoints = numel(timeVec);
             if isa(indVec, 'double')
                 if min(indVec) < 1 || max(indVec) > nPoints
@@ -790,15 +857,21 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 @(field)field(isNeededIndVec), SData.timeVec,...
                 'UniformOutput', false);
             %
-            if (isNeededIndVec(SData.indSTime))
-                SThinFunResult.sTime(:) = SData.sTime(1);
-                SThinFunResult.indSTime(:) = ...
-                    find(find(isNeededIndVec)==SData.indSTime(1));
-            else
-                SThinFunResult.sTime(:) =...
-                    timeVec(find(isNeededIndVec, 1));
-                SThinFunResult.indSTime(:) = 1;
+            isLeftVec=isNeededIndVec(SData.indSTime);            
+            if any(isLeftVec)
+                indTempVec=zeros(size(timeVec));
+                indTempVec(isNeededIndVec)=1;
+                indTempVec=cumsum(indTempVec);            
+                SThinFunResult.indSTime(isLeftVec)=...
+                    indTempVec(SData.indSTime(isLeftVec));
             end
+            isnLeftVec=~isLeftVec;
+            if any(isnLeftVec)
+                SThinFunResult.sTime(isnLeftVec) =...
+                    timeVec(find(isNeededIndVec, 1));
+                SThinFunResult.indSTime(isnLeftVec) = 1;
+            end
+            %
             fieldsNotToCatVec =...
                 self.getNoCatOrCutFieldsList();
             fieldsToCutVec =...
@@ -817,8 +890,9 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             %
             function cutStructSTimeField(fieldNameTo, fieldNameFrom)
                 SThinFunResult.(fieldNameTo) =...
-                    cellfun(@(field)field(:,SThinFunResult.indSTime(1)),...
+                    cellfun(@(fieldVal,ind)fieldVal(:,ind),...
                     SThinFunResult.(fieldNameFrom),...
+                    num2cell(SThinFunResult.indSTime),...
                     'UniformOutput', false);
             end
             %
@@ -921,9 +995,8 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 maxRelCompareTol=maxCompareTol;
             end
             %
-            MUST_FIELD_CODES_NOT_TO_COMPARE={'IND_S_TIME','TIME_VEC'};
             notComparedFieldList=[notComparedFieldList,...
-                F().getNameList(MUST_FIELD_CODES_NOT_TO_COMPARE)];
+                self.getNotComparedFieldsList()];
             %
             %TODO: the following line is temporary solution until we
             %replace calcPrecision with absTol and relTol

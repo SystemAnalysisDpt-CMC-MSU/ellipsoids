@@ -1,5 +1,5 @@
 classdef EllUnionTube<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&...
-        gras.ellapx.smartdb.rels.EllTubeBasic&...
+        gras.ellapx.smartdb.rels.EllTubeBasic&...        
         gras.ellapx.smartdb.rels.EllUnionTubeBasic&...
         gras.ellapx.smartdb.rels.AEllTubeProjectable
     % EllUionTube - class which keeps ellipsoidal tubes by the instant of
@@ -49,67 +49,29 @@ classdef EllUnionTube<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&...
     methods 
         function fieldsList = getNoCatOrCutFieldsList(self)
             import  gras.ellapx.smartdb.F;
-            ellTubeBasicList = self.getNoCatOrCutFieldsList@...
-                gras.ellapx.smartdb.rels.EllTubeBasic;
-            fieldsList=[ellTubeBasicList;...
-                F().getNameList({'ELL_UNION_TIME_DIRECTION';...
-                'IS_LS_TOUCH';'IS_LS_TOUCH_OP'})];
+            fieldsList = [getNoCatOrCutFieldsList@gras.ellapx.smartdb.rels.EllTubeBasic(self);
+                getNoCatOrCutFieldsList@gras.ellapx.smartdb.rels.EllUnionTubeBasic(self)];
         end        
     end
     methods (Access = protected)
         function fieldsList = getSFieldsList(self)
             import  gras.ellapx.smartdb.F;
-            ellTubeBasicList = self.getSFieldsList@...
-                gras.ellapx.smartdb.rels.EllTubeBasic;
-            fieldsList=[ellTubeBasicList;...
-                F().getNameList({'IS_LS_TOUCH';'IS_LS_TOUCH_OP'})];
+            fieldsList = [getSFieldsList@gras.ellapx.smartdb.rels.EllTubeBasic(self);
+                getSFieldsList@gras.ellapx.smartdb.rels.EllUnionTubeBasic(self)];
         end
         function fieldsList = getTFieldsList(self)
             import  gras.ellapx.smartdb.F;
-            ellTubeBasicList = self.getTFieldsList@...
-                gras.ellapx.smartdb.rels.EllTubeBasic;
-            fieldsList=[ellTubeBasicList;...
-                F().getNameList({'IS_LT_TOUCH_VEC';'IS_LT_TOUCH_OP_VEC'})];
+            fieldsList = [getTFieldsList@gras.ellapx.smartdb.rels.EllTubeBasic(self);
+                getTFieldsList@gras.ellapx.smartdb.rels.EllUnionTubeBasic(self)];
         end
         function fieldsList = getScalarFieldsList(self)
             import  gras.ellapx.smartdb.F;
-            ellTubeBasicList = self.getScalarFieldsList@...
-                gras.ellapx.smartdb.rels.EllTubeBasic;
-            fieldsList=[ellTubeBasicList;...
-                F().getNameList({'IS_LS_TOUCH';'IS_LS_TOUCH_OP'})];
+            fieldsList = [getScalarFieldsList@gras.ellapx.smartdb.rels.EllTubeBasic(self);
+                getScalarFieldsList@gras.ellapx.smartdb.rels.EllUnionTubeBasic(self)];
         end
-    end
-    methods(Access=protected)
         function checkDataConsistency(self)
             checkDataConsistency@gras.ellapx.smartdb.rels.EllTubeBasic(self);
-            nTubes=self.getNTuples();
-            timeVecList=self.timeVec;
-            timeTouchEndVecList=self.timeTouchEndVec;
-            timeTouchOpEndVecList=self.timeTouchOpEndVec;
-            isLtTouchVecList=self.isLtTouchVec;
-            isLtTouchOpVecList=self.isLtTouchOpVec;
-            %
-            for iTube=1:nTubes
-                startTime=min(timeVecList{iTube});
-                endTime=max(timeVecList{iTube});
-                check(timeTouchEndVecList{iTube},...
-                    isLtTouchVecList{iTube},'');
-                check(timeTouchOpEndVecList{iTube},...
-                    isLtTouchOpVecList{iTube},'Op');
-            end
-            %
-            function check(timeTouchEndVec,isLtTouchVec,tag)
-                import modgen.common.throwerror;
-                isOk=all(timeTouchEndVec<=endTime&...
-                    timeTouchEndVec>=startTime|...
-                    xor(isnan(timeTouchEndVec),isLtTouchVec));
-                if ~isOk
-                    throwerror('wrongInput',...
-                        ['Values of timeTouch%sEndVec are expected to be within ',...
-                        '[startTime,endTime] range and consistent ',...
-                        'with isLtTouch%Vec'],tag);
-                end
-            end
+            checkDataConsistency@gras.ellapx.smartdb.rels.EllUnionTubeBasic(self);
         end
         function changeDataPostHook(self)
             self.checkDataConsistency();

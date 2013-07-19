@@ -74,9 +74,12 @@ classdef ContinuousReachProjTestCase < ...
 
         end
         function self = testGetEllTubeUnionRel(self)
+            NOT_COMPARE_FIELD_LIST={'isLsTouch','isLtTouchVec'};
             ellTubeRel = self.reachObj.getEllTubeRel();
             ellTubeUnionRel = self.reachObj.getEllTubeUnionRel();
-            compFieldList = fieldnames(ellTubeRel());
+            compFieldList = setdiff(fieldnames(ellTubeRel()),...
+                NOT_COMPARE_FIELD_LIST);
+            %
             [isOk, reportStr] = ...
                 ellTubeUnionRel.getFieldProjection(compFieldList). ...
                 isEqual(ellTubeRel.getFieldProjection(compFieldList));

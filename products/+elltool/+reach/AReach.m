@@ -78,7 +78,7 @@ classdef AReach < elltool.reach.IReach
         isJustCheck
         regTol
     end
-    methods 
+    methods
         function set.ellTubeRel(self,rel)
             self.checkIndSTime(rel);
             self.ellTubeRel=rel;
@@ -453,7 +453,7 @@ classdef AReach < elltool.reach.IReach
             [filteredTubes, isThereVec] =...
                 self.ellTubeRel.getTuplesFilteredBy(...
                 APPROX_TYPE, approxType);
-            oldData = filteredTubes.getData();
+            oldData = filteredTubes.getData('denormGoodDirs',true);
             indVec = find(isThereVec);
             %
             sysDimRows = size(oldData.QArray{1}, 1);
@@ -466,14 +466,18 @@ classdef AReach < elltool.reach.IReach
             x0MatArray = zeros(sysDimRows, sysDimCols, l0VecNum);
             if self.isBackward
                 for il0Num = 1 : l0VecNum
-                    l0Mat(:, il0Num) = oldData.ltGoodDirMat{il0Num}(:, 1);
+                    l0Mat(:, il0Num) =...
+                        oldData.ltGoodDirMat{il0Num}(:, 1);
+                    %
                     x0VecMat(:, il0Num) = oldData.aMat{il0Num}(:, 1);
                     x0MatArray(:, :, il0Num) =...
                         oldData.QArray{il0Num}(:, :, 1);
                 end
             else
                 for il0Num = 1 : l0VecNum
-                    l0Mat(:, il0Num) = oldData.ltGoodDirMat{il0Num}(:, end);
+                    l0Mat(:, il0Num) =...
+                        oldData.ltGoodDirMat{il0Num}(:, end);
+                    %
                     x0VecMat(:, il0Num) = oldData.aMat{il0Num}(:, end);
                     x0MatArray(:, :, il0Num) =...
                         oldData.QArray{il0Num}(:, :, end);
@@ -544,7 +548,7 @@ classdef AReach < elltool.reach.IReach
                 [reg, ~, colorVec, shade, lineWidth, isFill,...
                     isColorVec, ~, ~, ~] = ...
                     modgen.common.parseparext(varargin,...
-                    {'color', 'shade', 'width', 'fill';... 
+                    {'color', 'shade', 'width', 'fill';...
                     DEFAULT_EA_COLOR_VEC, DEFAULT_EA_SHADE,...
                     DEFAULT_LINE_WIDTH, DEFAULT_FILL;...
                     'isvector(x)',...
@@ -554,7 +558,7 @@ classdef AReach < elltool.reach.IReach
                 [reg, ~, colorVec, shade, lineWidth, isFill,...
                     isColorVec, ~, ~, ~] = ...
                     modgen.common.parseparext(varargin,...
-                    {'color', 'shade', 'width', 'fill';... 
+                    {'color', 'shade', 'width', 'fill';...
                     DEFAULT_IA_COLOR_VEC, DEFAULT_IA_SHADE,...
                     DEFAULT_LINE_WIDTH, DEFAULT_FILL;...
                     'isvector(x)',...
@@ -578,7 +582,7 @@ classdef AReach < elltool.reach.IReach
             if ischar(colorVec)
                 colorVec = getColorVec(colorVec);
             end
-
+            
             %
             if self.isProj
                 [~, dim] = self.dimension();
@@ -596,7 +600,7 @@ classdef AReach < elltool.reach.IReach
             else
                 plObj = smartdb.disp.RelationDataPlotter();
                 plotter = self.ellTubeRel.getTuplesFilteredBy(...
-                        APPROX_TYPE, approxType).plot(plObj);
+                    APPROX_TYPE, approxType).plot(plObj);
             end
             function colCodeVec = getColorVec(colChar)
                 if ~(ischar(colChar))
@@ -637,7 +641,7 @@ classdef AReach < elltool.reach.IReach
                             'ColorVec is a vector of length 3');
                     end
                 end
-        
+                
                 function checkIfNoColorCharPresent(value)
                     import modgen.common.throwerror;
                     if ischar(value)&&(numel(value)==1)&&~isColorDef(value)
@@ -703,7 +707,7 @@ classdef AReach < elltool.reach.IReach
                         'CHECKDATACONSISTENCY:wrongInput:QArrayNotPos'])
                     errorStr = [self.EMSG_R_PROB, self.EMSG_USE_REG];
                     errorTag = [self.ETAG_WR_INP, self.ETAG_R_PROB, ...
-                        self.ETAG_LOW_REG_TOL];                    
+                        self.ETAG_LOW_REG_TOL];
                 elseif isMatch('MODGEN:COMMON:CHECKVAR:wrongInput')
                     errorStr = [self.EMSG_R_PROB, self.EMSG_USE_REG];
                     errorTag = [self.ETAG_WR_INP, ...
@@ -728,7 +732,7 @@ classdef AReach < elltool.reach.IReach
             import modgen.common.checkvar;
             import modgen.common.throwerror;
             import elltool.conf.Properties;
-            import gras.ellapx.enums.EApproxType;            
+            import gras.ellapx.enums.EApproxType;
             %
             if nargin>0
                 NEEDED_PROP_LIST =...
@@ -1223,13 +1227,13 @@ classdef AReach < elltool.reach.IReach
             if outReachObj.isBackward
                 timeLimsVec = ...
                     [outReachObj.switchSysTimeVec(end),...
-                     outReachObj.switchSysTimeVec(end - 1)];
+                    outReachObj.switchSysTimeVec(end - 1)];
             else
                 timeLimsVec = ...
                     [outReachObj.switchSysTimeVec(1),...
-                     outReachObj.switchSysTimeVec(2)];
+                    outReachObj.switchSysTimeVec(2)];
             end
-
+            
             x0Ell = outReachObj.x0Ellipsoid;
             %
             % Normalize good directions
@@ -1237,14 +1241,14 @@ classdef AReach < elltool.reach.IReach
             nDim = dimension(x0Ell);
             l0Mat = outReachObj.getNormMat(l0Mat, nDim);
             reachSetObj = feval(class(outReachObj), linSys, x0Ell,...
-                    l0Mat, timeLimsVec);
+                l0Mat, timeLimsVec);
             %
             for iLinSys = 2 : sysTimeVecLenght
                 reachSetObj = ...
                     reachSetObj.evolve(...
-                        getNewTime(outReachObj.switchSysTimeVec,...
-                                   outReachObj.isBackward,iLinSys),...
-                        outReachObj.linSysCVec{iLinSys});
+                    getNewTime(outReachObj.switchSysTimeVec,...
+                    outReachObj.isBackward,iLinSys),...
+                    outReachObj.linSysCVec{iLinSys});
             end
             %
             if outReachObj.isProj
@@ -1254,7 +1258,7 @@ classdef AReach < elltool.reach.IReach
             else
                 outReachObj.ellTubeRel.unionWith(reachSetObj.getEllTubeRel());
             end
-
+            
             function newTime = getNewTime(sysTimeVec,isBackward,ind)
                 if isBackward
                     newTime = sysTimeVec(end - ind);
@@ -1547,7 +1551,7 @@ classdef AReach < elltool.reach.IReach
             newEllTubeRel =...
                 gras.ellapx.smartdb.rels.EllTube.fromStructList(...
                 'gras.ellapx.smartdb.rels.EllTube', dataCVec);
-            self.checkIndSTime(newEllTubeRel);            
+            self.checkIndSTime(newEllTubeRel);
             %
             indVec = [indIntVec; indExtVec];
             [~, indRelVec] = sort(indVec);

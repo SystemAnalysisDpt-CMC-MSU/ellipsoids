@@ -56,37 +56,28 @@ classdef EllUnionTubeStaticProj<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&..
     methods
         function fieldsList = getNoCatOrCutFieldsList(self)
             import  gras.ellapx.smartdb.F;
-            ellTubeBasicList = self.getNoCatOrCutFieldsList@...
-                gras.ellapx.smartdb.rels.EllTubeProjBasic;
-            fieldsList=[ellTubeBasicList;...
-                F().getNameList({'ELL_UNION_TIME_DIRECTION';...
-                'IS_LS_TOUCH';'IS_LS_TOUCH_OP'})];
+            fieldsList = [getNoCatOrCutFieldsList@gras.ellapx.smartdb.rels.EllTubeProjBasic(self);
+                getNoCatOrCutFieldsList@gras.ellapx.smartdb.rels.EllUnionTubeBasic(self)];
         end
     end
-    methods (Access = protected)
+    
+    methods(Access=protected)
         function fieldsList = getSFieldsList(self)
             import  gras.ellapx.smartdb.F;
-            ellTubeBasicList = self.getSFieldsList@...
-                gras.ellapx.smartdb.rels.EllTubeProjBasic;
-            fieldsList=[ellTubeBasicList;...
-                F().getNameList({'IS_LS_TOUCH';'IS_LS_TOUCH_OP'})];
+            fieldsList = [getSFieldsList@gras.ellapx.smartdb.rels.EllTubeProjBasic(self);
+                getSFieldsList@gras.ellapx.smartdb.rels.EllUnionTubeBasic(self)];
         end
         function fieldsList = getTFieldsList(self)
             import  gras.ellapx.smartdb.F;
-            ellTubeBasicList = self.getTFieldsList@...
-                gras.ellapx.smartdb.rels.EllTubeProjBasic;
-            fieldsList=[ellTubeBasicList;...
-                F().getNameList({'IS_LT_TOUCH_VEC';'IS_LT_TOUCH_OP_VEC'})];
+            fieldsList = [getTFieldsList@gras.ellapx.smartdb.rels.EllTubeProjBasic(self);
+                getTFieldsList@gras.ellapx.smartdb.rels.EllUnionTubeBasic(self)];
         end
         function fieldsList = getScalarFieldsList(self)
             import  gras.ellapx.smartdb.F;
-            ellTubeBasicList = self.getScalarFieldsList@...
-                gras.ellapx.smartdb.rels.EllTubeProjBasic;
-            fieldsList=[ellTubeBasicList;...
-                F().getNameList({'IS_LS_TOUCH';'IS_LS_TOUCH_OP'})];
+            fieldsList = [getScalarFieldsList@gras.ellapx.smartdb.rels.EllTubeProjBasic(self);
+                getScalarFieldsList@gras.ellapx.smartdb.rels.EllUnionTubeBasic(self)];
         end
-    end
-    methods(Access=protected)
+        
         function checkDataConsistency(self)
             import gras.ellapx.enums.EProjType;
             import modgen.common.throwerror;
@@ -475,7 +466,7 @@ classdef EllUnionTubeStaticProj<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&..
                 isEqualAdjustedInternal@gras.ellapx.smartdb.rels.EllTubeProjBasic(...
                 selfReducedRel,otherReducedRel,varargin{:});
         end
-    end    
+    end
     methods (Static)
         function ellUnionProjRel=fromEllTubes(ellTubeRel)
             % FROMELLTUBES - returns union of the ellipsoidal tubes on time

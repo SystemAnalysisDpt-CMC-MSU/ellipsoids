@@ -18,6 +18,8 @@ classdef EllTubeTouchCurveBasic<handle
         FCODE_X_TOUCH_OP_CURVE_MAT
         FCODE_XS_TOUCH_VEC
         FCODE_XS_TOUCH_OP_VEC
+        FCODE_IS_LS_TOUCH
+        FCODE_IS_LT_TOUCH_VEC
     end
     properties (Constant,Hidden, GetAccess=protected)
         N_GOOD_DIR_DISP_DIGITS=5;
@@ -69,27 +71,59 @@ classdef EllTubeTouchCurveBasic<handle
         function fieldNameList=getProjectionDependencyFieldList(~)
             fieldNameList={'timeVec','sTime','dim','indSTime'};
         end
-        
         function checkDataConsistency(self)
             import modgen.common.throwerror;
             import gras.gen.SquareMatVector;
             import modgen.common.num2cell;
-            TS_CHECK_TOL=1e-14;            
-            %% Check for a consistency between lsGoodDirVec and lsGoodDirNorm
-            lsGoodDirNormExpVec=cellfun(@(x)realsqrt(sum(x.*x)),self.lsGoodDirVec);
-            isOk=max(abs(self.lsGoodDirNorm-lsGoodDirNormExpVec))<=...
-                TS_CHECK_TOL;
-            if ~isOk
+            TS_CHECK_TOL=1e-14;   
+            calcPrecList=num2cell(self.calcPrecision);
+            %% Check ltGoodDirNormVec >=calcPrecision
+            isNormLtPositiveVec=...
+                cellfun(@(x,y,z)all(x(y)>=z)&&all(x(~y)>=0),self.ltGoodDirNormVec,...
+                self.isLtTouchVec,calcPrecList);
+            %
+            if ~all(isNormLtPositiveVec)
+                throwerror('wrongInput',...
+                    ['ltGoodDirNormVec is expected to ',...
+                    'contain values higher than calcPrecision']);
+            end
+            %% Check that lsGoodDirNorm >=calcPrecision
+            if ~(all(self.lsGoodDirNorm(self.isLsTouch)>...
+                    self.calcPrecision(self.isLsTouch))&&...
+                    all(self.lsGoodDirNorm(~self.isLsTouch)>=0))
+                throwerror('wrongInput',...
+                    ['lsGoodDirNorm is expected to ',...
+                    'Be higher than calcPrecision']);
+            end
+            %
+            %% Check that lsGoodDirVec has norm equal to one
+            isNormLsEqualsToOneVec=cellfun(...
+                @(x)all(abs(sum(x.*x)-1)<=TS_CHECK_TOL),...
+                self.lsGoodDirVec(self.isLsTouch));
+            if ~all(isNormLsEqualsToOneVec)
                 throwerror('wrongInput',...
                     'failed check for lsGoodDirVec and lsGoodDirNorm');
             end
-            %% Check for consistency between ltGoodDirMat and lsGoodDirNormVec
-            ltGoodDirNormVecExpCVec=cellfun(@(x)realsqrt(sum(x.*x,1)),...
-                self.ltGoodDirMat,'UniformOutput',false);
-            if ~isequal(self.ltGoodDirNormVec,...
-                    ltGoodDirNormVecExpCVec)
+            %% Check for NaNs in lsGoodDirVec
+            isLsNanVec=cellfun(@(x)any(isnan(x)),self.lsGoodDirVec);
+            if any(isLsNanVec)
+                throwerror('wrongInput',...
+                    'lsGoodDirVec cannot contain NaN values');
+            end
+            %% Check that all vectors in ltGoodDirMat have norm equal to one
+            isNormLtEqualsToOneVec=...
+                cellfun(...
+                @(x,y)all(abs(sum(x(:,y).*x(:,y),1)-1)<=TS_CHECK_TOL),...
+                self.ltGoodDirMat,self.isLtTouchVec);
+            if ~all(isNormLtEqualsToOneVec)
                 throwerror('wrongInput',...
                     'failed check for ltGoodDirMat and lsGoodDirNormVec');
+            end
+            %% Check for NaNs in ltGoodDirMat
+            isNanVec=cellfun(@(x)any(isnan(x(:))),self.ltGoodDirMat);
+            if any(isNanVec)
+                throwerror('wrongInput',...
+                    'ltGoodDirMat cannot contain NaN values');
             end
             %% Check for consistency between ls and lt fields
             %

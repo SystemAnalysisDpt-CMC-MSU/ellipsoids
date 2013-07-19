@@ -213,8 +213,14 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
                 nInd=length(self.projSTimeMat);
                 compareLsGoodDirVec=cell(nInd,1);
                 indList=cell(nInd,1);
+                isLsTouchVec=self.isLsTouch;
                 for iInd=1:nInd
-                    compareLsGoodDirVec{iInd}=self.projSTimeMat{iInd}*self.lsGoodDirOrigVec{iInd};
+                    compareLsGoodDirVec{iInd}=self.projSTimeMat{iInd}*...
+                        self.lsGoodDirOrigVec{iInd};
+                    if isLsTouchVec(iInd)
+                        compareLsGoodDirVec{iInd}=compareLsGoodDirVec{iInd}./...
+                            norm(compareLsGoodDirVec{iInd});
+                    end
                     indList{iInd}=1:size(self.projSTimeMat{iInd},1);
                 end
                 self.checkSVsTConsistency(self.lsGoodDirVec,...

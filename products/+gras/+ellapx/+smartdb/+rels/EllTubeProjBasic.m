@@ -32,6 +32,13 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
             fieldsList=[ellTubeBasicList;...
                 F().getNameList({'LS_GOOD_DIR_NORM_ORIG'})];
         end
+        function fieldList=getNotComparedFieldsList(self)
+            import  gras.ellapx.smartdb.F;
+            fieldList = self.getNotComparedFieldsList@...
+                gras.ellapx.smartdb.rels.EllTubeBasic;
+            fieldList=[fieldList;F().getNameList(...
+                {'LT_GOOD_DIR_NORM_ORIG_VEC';'LS_GOOD_DIR_NORM_ORIG'})];  
+        end        
     end
     methods
         function fieldsList = getNoCatOrCutFieldsList(self)

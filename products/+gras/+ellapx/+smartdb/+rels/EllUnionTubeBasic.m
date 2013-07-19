@@ -4,22 +4,66 @@ classdef EllUnionTubeBasic<handle
     properties (Constant,Hidden)
         FCODE_ELL_UNION_TIME_DIRECTION
         %
-        FCODE_IS_LS_TOUCH
-        FCODE_IS_LS_TOUCH_OP
-        %
-        FCODE_IS_LT_TOUCH_VEC
-        FCODE_IS_LT_TOUCH_OP_VEC
-        %
         FCODE_TIME_TOUCH_END_VEC
-        FCODE_TIME_TOUCH_OP_END_VEC        
+        FCODE_TIME_TOUCH_OP_END_VEC   
+        FCODE_IS_LS_TOUCH_OP        
+        FCODE_IS_LT_TOUCH_OP_VEC        
     end
     methods(Access=protected)
         setDataInternal(~);
     end
-    methods (Access = protected)
+   methods 
+        function fieldsList = getNoCatOrCutFieldsList(~)
+            import  gras.ellapx.smartdb.F;
+            fieldsList=F().getNameList({'ELL_UNION_TIME_DIRECTION';...
+                'IS_LS_TOUCH_OP'});
+        end        
+    end
+    methods(Access=protected)
+        function fieldsList = getSFieldsList(~)
+            import gras.ellapx.smartdb.F;
+            fieldsList = F().getNameList({'IS_LS_TOUCH_OP'});
+        end
+        function fieldsList = getTFieldsList(~)
+            import  gras.ellapx.smartdb.F;
+            fieldsList = F().getNameList({'IS_LT_TOUCH_OP_VEC'});
+        end
+        function fieldsList = getScalarFieldsList(~)
+            import  gras.ellapx.smartdb.F;
+            fieldsList = F().getNameList({'IS_LS_TOUCH_OP'});
+        end
         function checkDataConsistency(self)
+            %
+            nTubes=self.getNTuples();
+            timeVecList=self.timeVec;
+            timeTouchEndVecList=self.timeTouchEndVec;
+            timeTouchOpEndVecList=self.timeTouchOpEndVec;
+            isLtTouchVecList=self.isLtTouchVec;
+            isLtTouchOpVecList=self.isLtTouchOpVec;
+            %
+            for iTube=1:nTubes
+                startTime=min(timeVecList{iTube});
+                endTime=max(timeVecList{iTube});
+                check(timeTouchEndVecList{iTube},...
+                    isLtTouchVecList{iTube},'');
+                check(timeTouchOpEndVecList{iTube},...
+                    isLtTouchOpVecList{iTube},'Op');
+            end
             checkTAndS('isLtTouchVec','timeTouchEndVec');
-            checkTAndS('isLtTouchOpVec','timeTouchOpEndVec');
+            checkTAndS('isLtTouchOpVec','timeTouchOpEndVec');            
+            %
+            function check(timeTouchEndVec,isLtTouchVec,tag)
+                import modgen.common.throwerror;
+                isOk=all(timeTouchEndVec<=endTime&...
+                    timeTouchEndVec>=startTime|...
+                    xor(isnan(timeTouchEndVec),isLtTouchVec));
+                if ~isOk
+                    throwerror('wrongInput',...
+                        ['Values of timeTouch%sEndVec are expected to be within ',...
+                        '[startTime,endTime] range and consistent ',...
+                        'with isLtTouch%Vec'],tag);
+                end
+            end
             function checkTAndS(fieldIsLtTouch,fieldTimeTouchEnd)
                 cellfun(@checkOneTAndS,self.(fieldIsLtTouch),...
                     self.(fieldTimeTouchEnd));

@@ -55,7 +55,40 @@ classdef ATypifiedAdjustedRel<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel
             end
         end        
     end
+    methods 
+        function varargout=getData(self,varargin)
+            import modgen.common.parseparext;
+            import modgen.common.parseparams;
+            hookPropNameList=getPostDataHookPropNameList(self);
+            [getDataPropList,hookPropList]=parseparams(varargin,...
+                hookPropNameList);
+            if nargout>0
+                varargout=cell(1,nargout);
+                [~,~,structNameList,isStructNameListSpec]=...
+                    parseparext(getDataPropList,...
+                    {'structNameList';{};@iscellstr});
+                %
+                [varargout{:}]=...
+                    getData@gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel(...
+                    self,getDataPropList{:});
+                if isStructNameListSpec
+                    [isThereVec,indLoc]=ismember(self.completeStructNameList,structNameList);
+                    if isThereVec(1)
+                        varargout{indLoc(1)}=...
+                            self.postGetDataHook(varargout{indLoc(1)},hookPropList{:});
+                    end
+                else
+                    varargout{1}=self.postGetDataHook(varargout{1},hookPropList{:});
+                end
+            else
+                getData@gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel(...
+                    self,getDataPropList{:});
+            end
+        end
+    end
     methods (Abstract,Access=protected)
+        propNameList=getPostDataHookPropNameList(self)
+        SData=postGetDataHook(self,SData,varargin)
         [isOk,reportStr]=isEqualAdjustedInternal(self,varargin)
         fieldList=getDetermenisticSortFieldList(self)
     end
