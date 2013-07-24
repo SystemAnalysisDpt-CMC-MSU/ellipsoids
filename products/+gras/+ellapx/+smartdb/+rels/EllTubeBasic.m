@@ -313,7 +313,12 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 end
                 function normVal = checkPrecision(lrDivByVecOp)
                     normVec = lrDivByVecOp(QArray, xTouchCurveMat - aMat);
-                    normVal = max(fDistFunc(normVec));
+                    isnNanVec=~isnan(normVec);
+                    if any(isnNanVec)
+                        normVal = max(fDistFunc(normVec(isnNanVec)));
+                    else
+                        normVal=0;
+                    end
                 end
             end
         end
@@ -592,9 +597,16 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             import gras.ellapx.uncertcalc.common.*;
             import modgen.common.throwerror;
             import gras.ellapx.common.*;
-            import import gras.ellapx.enums.EProjType;
+            import gras.ellapx.enums.EProjType;
             import gras.gen.SquareMatVector;
             import gras.ellapx.smartdb.rels.EllTubeBasic;
+            import modgen.common.checkvar;
+            %
+            checkvar(projType,@(x)isa(x,'gras.ellapx.enums.EProjType')&&...
+                isscalar(x));
+            checkvar(projMatList,@(x)iscell(x)&&...
+                all(cellfun(@(x)isnumeric(x)&&ismatrix(x),projMatList)));
+            checkvar(fGetProjMat,'isfunction(x)');
             %
             projDependencyFieldNameList=...
                 self.getProjectionDependencyFieldList();

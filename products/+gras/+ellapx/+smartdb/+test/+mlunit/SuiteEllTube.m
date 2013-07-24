@@ -277,6 +277,23 @@ classdef SuiteEllTube < mlunitext.test_case
             end
             %
         end
+        %
+        function testProjectAdv(self)
+            nFirstPoints=100;
+            nTubes=2;
+            rel=self.auxGenSimpleTubeAndProj(...
+                nFirstPoints,nTubes,nFirstPoints);
+            check([0 -1]);
+            check([1 -1]);
+            check([1 0]);
+            function check(projMat)
+                rel1Proj=rel.projectStatic(projMat);
+                rel2Proj=rel.projectStatic({projMat});
+                [isPos,reportStr]=rel1Proj.isEqual(rel2Proj);
+                mlunitext.assert(isPos,reportStr);
+            end
+        end
+        %
         function testProjectionAndScale(~)
             relProj=gras.ellapx.smartdb.rels.EllTubeProj(); %#ok<NASGU>
             %
@@ -1029,6 +1046,16 @@ classdef SuiteEllTube < mlunitext.test_case
             end
         end
         %
+        function testUnionFromEllTubesAdvanced(self)
+            nTubes=3;
+            nPoints=10;
+            [rel,relStatProj]=auxGenSimpleTubeAndProj(self,...
+                nPoints,nTubes);
+            rel1=gras.ellapx.smartdb.rels.EllUnionTube.fromEllTubes(...
+                rel);
+            rel2=gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.fromEllTubes(...
+                relStatProj);
+        end
         function self = testUnionFromEllTubes(self)
             check([0 2]);
             check([1 2]);
@@ -1055,6 +1082,11 @@ classdef SuiteEllTube < mlunitext.test_case
                     ltGoodDirArray, sTime, EApproxType.External, ...
                     approxSchemaName,...
                     approxSchemaDescr, calcPrecision);
+                %
+                testEllUnionTube=...
+                    gras.ellapx.smartdb.rels.EllUnionTube.fromEllTubes(...
+                    testEllTube);
+                %
                 projSpaceList = {[1 0 0; 0 1 1]};
                 projType = gras.ellapx.enums.EProjType.Static;
                 testEllProj = testEllTube.project(projType,projSpaceList,...

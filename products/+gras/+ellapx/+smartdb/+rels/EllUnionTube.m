@@ -69,6 +69,16 @@ classdef EllUnionTube<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&...
             fieldsList = [getScalarFieldsList@gras.ellapx.smartdb.rels.EllTubeBasic(self);
                 getScalarFieldsList@gras.ellapx.smartdb.rels.EllUnionTubeBasic(self)];
         end
+        function [valFieldNameList,touchFieldNameList]=...
+                getPossibleNanFieldList(self)
+            [valFieldNameList,touchFieldNameList]=...
+                getPossibleNanFieldList@gras.ellapx.smartdb.rels.EllUnionTubeBasic(self);
+        end     
+        function fieldsList=getTouchCurveDependencyFieldList(self)
+            fieldsList = [...
+                getTouchCurveDependencyFieldList@gras.ellapx.smartdb.rels.EllTubeBasic(self),...
+                getTouchCurveDependencyFieldList@gras.ellapx.smartdb.rels.EllUnionTubeBasic(self)];
+        end           
         function checkDataConsistency(self)
             checkDataConsistency@gras.ellapx.smartdb.rels.EllTubeBasic(self);
             checkDataConsistency@gras.ellapx.smartdb.rels.EllUnionTubeBasic(self);

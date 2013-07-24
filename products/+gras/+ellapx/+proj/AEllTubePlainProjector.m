@@ -7,13 +7,13 @@ classdef AEllTubePlainProjector<gras.ellapx.proj.IEllTubeProjector
         projType=getProjType(self)
     end
     properties (Access=private)
-        projSpaceList
+        projMatList
     end
     methods
-        function self=AEllTubePlainProjector(projSpaceList)
-            self.projSpaceList=projSpaceList;
+        function self=AEllTubePlainProjector(projMatList)
+            self.projMatList=projMatList;
         end
-        function ellTubeProjRel=project(self,ellTubeRel)
+        function [ellTubeProjRel,indProj2OrigVec]=project(self,ellTubeRel)
             % PROJECT creates projections of specified ellipsoidal tubes
             %
             % Input:
@@ -23,30 +23,18 @@ classdef AEllTubePlainProjector<gras.ellapx.proj.IEllTubeProjector
             % Output:
             %   resRel: gras.ellapx.common.smartdb.rels.EllTubeProjBasic[1,1] - resulting
             %       relation containing the projected tubes
+            %    indProj2OrigVec:cell[nDim, 1] - index of the line number from
+            %       which is obtained the projection
             %
-            % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011 $ 
+            % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011 $
             % $Copyright: Moscow State University,
             %            Faculty of Computational Mathematics and Computer Science,
             %            System Analysis Department 2011 $
             %
-            
-            %fProj(sTime,timeVec,dim,indSTime,projSpaceVec)
             fProj=@(varargin)getProjectionMatrix(self,varargin{:});
             projType=self.getProjType;
-            %
-            nProj=length(self.projSpaceList);
-            projMatList=cell(1,nProj);
-            nDims=length(self.projSpaceList{1});
-            for iProj=1:nProj
-                projSpaceVec=self.projSpaceList{iProj};
-                projDimNumVec=find(projSpaceVec);
-                nProjDims=length(projDimNumVec);
-                indVec=sub2ind([nProjDims, nDims],1:nProjDims,projDimNumVec);
-                projMatList{iProj}=zeros(nProjDims,nDims);
-                projMatList{iProj}(indVec)=1;
-            end
-            ellTubeProjRel=ellTubeRel.project(projType,...
-                projMatList,fProj);
+            [ellTubeProjRel,indProj2OrigVec]=ellTubeRel.project(projType,...
+                self.projMatList,fProj);
         end
     end
 end

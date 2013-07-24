@@ -20,6 +20,10 @@ classdef EllUnionTubeBasic<handle
         end        
     end
     methods(Access=protected)
+        function dependencyFieldList=getTouchCurveDependencyFieldList(~)
+            import  gras.ellapx.smartdb.F;
+            dependencyFieldList=F().getNameList({'APPROX_TYPE'});
+        end        
         function fieldsList = getSFieldsList(~)
             import gras.ellapx.smartdb.F;
             fieldsList = F().getNameList({'IS_LS_TOUCH_OP'});
@@ -32,7 +36,17 @@ classdef EllUnionTubeBasic<handle
             import  gras.ellapx.smartdb.F;
             fieldsList = F().getNameList({'IS_LS_TOUCH_OP'});
         end
+        function [valFieldNameList,touchFieldNameList]=...
+                getPossibleNanFieldList(~)
+            valFieldNameList={'xsTouchVec','xTouchCurveMat',...
+                'xsTouchOpVec','xTouchOpCurveMat','timeTouchEndVec',...
+                'timeTouchOpEndVec'};
+            touchFieldNameList={'isLsTouch','isLtTouchVec',...
+                'isLsTouchOp','isLtTouchOpVec','isLtTouchVec',...
+                'isLtTouchOpVec'};
+        end
         function checkDataConsistency(self)
+            %
             %
             nTubes=self.getNTuples();
             timeVecList=self.timeVec;
@@ -122,13 +136,11 @@ classdef EllUnionTubeBasic<handle
             
             nTubes=ellTubeRel.getNTuples();
             SData=ellTubeRel.getData();
-            SData.isLtTouchVec=cell(nTubes,1);
             SData.timeTouchEndVec=cell(nTubes,1);
             %
             SData.isLtTouchOpVec=cell(nTubes,1);
             SData.timeTouchOpEndVec=cell(nTubes,1);
             %
-            SData.isLsTouch=false(nTubes,1);
             SData.isLsTouchOp=false(nTubes,1);
             %
             SData.ellUnionTimeDirection=repmat(...
@@ -147,30 +159,39 @@ classdef EllUnionTubeBasic<handle
                 timeVec=SData.timeVec{iTube};
                 indSTime=SData.indSTime(iTube);
                 %
+                isOrigLtTouchVec=SData.isLtTouchVec{iTube};
                 [SData.isLtTouchVec{iTube},SData.isLsTouch(iTube),...
+                    SData.xTouchCurveMat{iTube},SData.xsTouchVec{iTube},...
                     SData.timeTouchEndVec{iTube}]=fCalcTouchArea(...
-                    SData.xTouchCurveMat{iTube});
+                    SData.xTouchCurveMat{iTube},isOrigLtTouchVec);
                 %
                 [SData.isLtTouchOpVec{iTube},SData.isLsTouchOp(iTube),...
+                    SData.xTouchOpCurveMat{iTube},SData.xsTouchOpVec{iTube},...
                     SData.timeTouchOpEndVec{iTube}]=fCalcTouchArea(...
-                    SData.xTouchOpCurveMat{iTube});                
+                    SData.xTouchOpCurveMat{iTube},isOrigLtTouchVec);                
                %
             end
             self.setDataInternal(SData);
             %
-            function [isLtTouchVec,isLsTouch,timeTouchEndVec]=...
-                    calcNeverTouchArea(~)
+            function [isLtTouchVec,isLsTouch,...
+                    xTouchCurveMat,xsTouchVec,...
+                    timeTouchEndVec]=...
+                    calcNeverTouchArea(xTouchCurveMat,~)
                 nTimes=length(timeVec);                
                 isLtTouchVec=false(1,nTimes);                
                 isLsTouch=false;
                 timeTouchEndVec=nan(1,nTimes);
+                xTouchCurveMat=nan(size(xTouchCurveMat));
+                xsTouchVec=xTouchCurveMat(:,indSTime);
             end
-            function [isLtTouchVec,isLsTouch,timeTouchEndVec]=...
-                    calcTouchArea(xTouchCurveMat)
+            %
+            function [isLtTouchVec,isLsTouch,...
+                    xTouchCurveMat,xsTouchVec,...                    
+                    timeTouchEndVec]=...
+                    calcTouchArea(xTouchCurveMat,isLtTouchVec)
                 nTimes=length(timeVec);                
-                isTouchCandidateVec=true(1,nTimes);
+                isTouchCandidateVec=isLtTouchVec;
                 indTimeTouchEndVec=nan(1,nTimes);
-                isLtTouchVec=false(1,nTimes);
                 %
                 valueFuncVec=nan(1,nTimes);
                 %
@@ -202,6 +223,8 @@ classdef EllUnionTubeBasic<handle
                 timeTouchEndVec=nan(1,nTimes);                                
                 timeTouchEndVec(isnNanTimeTouchEndVec)=...
                     timeVec(indTimeTouchEndVec(isnNanTimeTouchEndVec));
+                xTouchCurveMat(:,~isLtTouchVec)=nan;
+                xsTouchVec=xTouchCurveMat(:,indSTime);
             end
         end
     end

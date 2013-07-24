@@ -91,7 +91,7 @@ classdef MatVector
         %
         function Bpt_data=rMultiplyByVec(Bt_data,pt_data)
             import modgen.common.throwerror;
-            if ndims(pt_data)~=2
+            if ~ismatrix(pt_data)
                 throwerror('wrongInput',...
                     'pt_data is expected to be 2-dimensional array');
             end

@@ -4,7 +4,6 @@ classdef ATypifiedAdjustedRel<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel
     methods 
         function self=ATypifiedAdjustedRel(varargin)
             self=self@gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel(varargin{:});
-         
         end
         %
         function [isOk,reportStr]=isEqual(self,otherRel,varargin)

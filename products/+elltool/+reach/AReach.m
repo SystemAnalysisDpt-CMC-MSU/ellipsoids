@@ -513,12 +513,6 @@ classdef AReach < elltool.reach.IReach
             import gras.ellapx.enums.EProjType;
             import gras.ellapx.smartdb.F;
             APPROX_TYPE = F.APPROX_TYPE;
-            fProj =...
-                @(~, timeVec, varargin)...
-                deal(repmat(projMat.', [1 1 numel(timeVec)]),...
-                repmat(projMat, [1 1 numel(timeVec)]));
-            ProjCMatList = {projMat'};
-            projType = EProjType.Static;
             if nargin > 2
                 localEllTubeRel =...
                     self.ellTubeRel.getTuplesFilteredBy(...
@@ -529,8 +523,7 @@ classdef AReach < elltool.reach.IReach
             if nargin == 4
                 localEllTubeRel.scale(@(x) scaleFactor, {APPROX_TYPE});
             end
-            ellTubeProjRel = localEllTubeRel.project(projType,...
-                ProjCMatList, fProj);
+            ellTubeProjRel = localEllTubeRel.projectStatic({projMat'});
         end
         function plotter = plotApprox(self, approxType, varargin)
             import gras.ellapx.enums.EApproxType;

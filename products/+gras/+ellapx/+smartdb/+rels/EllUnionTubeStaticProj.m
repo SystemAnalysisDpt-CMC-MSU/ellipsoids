@@ -77,7 +77,17 @@ classdef EllUnionTubeStaticProj<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&..
             fieldsList = [getScalarFieldsList@gras.ellapx.smartdb.rels.EllTubeProjBasic(self);
                 getScalarFieldsList@gras.ellapx.smartdb.rels.EllUnionTubeBasic(self)];
         end
-        
+        function [valFieldNameList,touchFieldNameList]=...
+                getPossibleNanFieldList(self)
+            [valFieldNameList,touchFieldNameList]=...
+                getPossibleNanFieldList@gras.ellapx.smartdb.rels.EllUnionTubeBasic(self);
+        end
+        function fieldsList=getTouchCurveDependencyFieldList(self)
+            fieldsList = [...
+                getTouchCurveDependencyFieldList@gras.ellapx.smartdb.rels.EllTubeProjBasic(self),...
+                getTouchCurveDependencyFieldList@gras.ellapx.smartdb.rels.EllUnionTubeBasic(self)];
+        end
+        %
         function checkDataConsistency(self)
             import gras.ellapx.enums.EProjType;
             import modgen.common.throwerror;
