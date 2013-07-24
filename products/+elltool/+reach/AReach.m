@@ -443,6 +443,53 @@ classdef AReach < elltool.reach.IReach
         end
     end
     %
+    methods (Access = protected)
+        function plotter = plotByApprox(self, approxType,...
+                varargin)
+            import gras.ellapx.smartdb.F;
+            import gras.ellapx.enums.EProjType;
+            import gras.ellapx.enums.EApproxType;
+            import modgen.common.throwerror;
+            dim = self.dimension;
+            if dim > 3 ||  dim < 2
+                throwerror('WrongDim',...
+                        'object dimension can be  2 or 3');
+            end
+            nPoints = [ self.nPlot2dPoints self.nPlot3dPoints];
+            switch approxType
+                case EApproxType.Internal
+                    if ~self.isprojection()
+                        projReachObj = self.projection(eye(dim));
+                        
+                    else
+                        projReachObj= self;
+                    end
+                    plotter = projReachObj.ellTubeRel...
+                        .getTuplesFilteredBy(...
+                        F.APPROX_TYPE, approxType)...
+                        .plotInt(varargin{:},...
+                        'numPointsInOneTime',nPoints(dim-1));
+                case EApproxType.External
+                    if ~self.isprojection()
+                        projReachObj = self.projection(eye(dim));
+                        
+                    else
+                        projReachObj= self;
+                    end
+                    plotter = projReachObj.ellTubeRel...
+                        .getTuplesFilteredBy(...
+                        F.APPROX_TYPE, approxType)...
+                        .plotExt(varargin{:},...
+                        'numPointsInOneTime',nPoints(dim-1));
+                otherwise
+                    throwerror('WrongApproxType',...
+                        'approxType %s is not supported',char(approxType));
+            end
+            
+            
+            
+        end
+    end
     methods (Access = private)
         function [dataCVec, indVec] = evolveApprox(self, ...
                 newTimeVec, newLinSys, approxType)
@@ -1263,51 +1310,7 @@ classdef AReach < elltool.reach.IReach
                 varargin{:});
             
         end
-        function plotter = plotByApprox(self, approxType,...
-                varargin)
-            import gras.ellapx.smartdb.F;
-            import gras.ellapx.enums.EProjType;
-            import gras.ellapx.enums.EApproxType;
-            import modgen.common.throwerror;
-            dim = self.dimension;
-            if dim > 3 ||  dim < 2
-                throwerror('WrongDim',...
-                        'object dimension can be  2 or 3');
-            end
-            nPoints = [ self.nPlot2dPoints self.nPlot3dPoints];
-            switch approxType
-                case EApproxType.Internal
-                    if ~self.isprojection()
-                        projReachObj = self.projection(eye(dim));
-                        
-                    else
-                        projReachObj= self;
-                    end
-                    plotter = projReachObj.ellTubeRel...
-                        .getTuplesFilteredBy(...
-                        F.APPROX_TYPE, approxType)...
-                        .plotInt(varargin{:},...
-                        'numPointsInOneTime',nPoints(dim-1));
-                case EApproxType.External
-                    if ~self.isprojection()
-                        projReachObj = self.projection(eye(dim));
-                        
-                    else
-                        projReachObj= self;
-                    end
-                    plotter = projReachObj.ellTubeRel...
-                        .getTuplesFilteredBy(...
-                        F.APPROX_TYPE, approxType)...
-                        .plotExt(varargin{:},...
-                        'numPointsInOneTime',nPoints(dim-1));
-                otherwise
-                    throwerror('WrongApproxType',...
-                        'approxType %s is not supported',char(approxType));
-            end
-            
-            
-            
-        end
+        
         function outReachObj = refine(self, l0Mat)
             import modgen.common.throwerror;
             import gras.ellapx.enums.EApproxType;

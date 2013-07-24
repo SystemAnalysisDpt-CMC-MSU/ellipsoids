@@ -15,13 +15,15 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
         end
         %
         function axesName=axesGetKeyTubeFunc(self,~,projSTimeMat,varargin)
-            axesName=['Ellipsoidal tubes, proj. on subspace ',...
-                self.projSpecVec2Str(projSTimeMat)];
+            axesName=['Ellipsoidal tubes, proj. on subspace [',...
+                num2str(projSTimeMat(:,1)','%g '),';',...
+                num2str(projSTimeMat(:,2)','%g '),']'];
         end
         %
         function axesName=axesGetKeyGoodCurveFunc(self,~,projSTimeMat,varargin)
-            axesName=['Good directions: proj. on subspace ',...
-                self.projSpecVec2Str(projSTimeMat)];
+            axesName =['Good directions: proj. on subspace [',...
+                num2str(projSTimeMat(:,1)','%g '),';',...
+                num2str(projSTimeMat(:,2)','%g '),']'];
         end
         function hVec=axesSetPropGoodCurveFunc(self,hAxes,axesName,...
                 projSTimeMat,varargin)
@@ -59,10 +61,12 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
             import modgen.graphics.camlight;
 
             title(hAxes,axesName);
-            checkgen(projSTimeMat,@(x)size(x,1)==2);
-            indDimVec=find(sum(projSTimeMat));
-            yLabel=sprintf('x_%d',indDimVec(1));
-            zLabel=sprintf('x_%d',indDimVec(2));
+%             checkgen(projSTimeMat,@(x)size(x,1)==2);
+%             indDimVec=find(sum(projSTimeMat));
+%             yLabel=sprintf('x_%d',indDimVec(1));
+%             zLabel=sprintf('x_%d',indDimVec(2));
+            yLabel = ['[',num2str(projSTimeMat(:,1)','%g '),']',];
+            zLabel = ['[',num2str(projSTimeMat(:,2)','%g '),']',];
             xLabel='time';
             %
             set(hAxes,'XLabel',...
@@ -98,9 +102,9 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
             isGoodCurvesSeparately=...
                 RelDispConfigurator.getIsGoodCurvesSeparately();
             figureGroupKeyName=[groupName,'_',lower(char(projType)),...
-                '_sp',self.projSpecVec2Str(projSTimeMat),'_st',...
-                num2str(sTime)];
-            if isGoodCurvesSeparately
+                '_sp[',num2str(projSTimeMat(:,1)','%g '),';',...
+                num2str(projSTimeMat(:,2)','%g '),']'];
+            if isGoodCurvesSeparately 
                 goodCurveStr=self.goodDirProp2Str(lsGoodDirOrigVec,sTime);
                 figureGroupKeyName=[figureGroupKeyName,', ',goodCurveStr];
             end
@@ -127,9 +131,15 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
                 ~,~,~,~,...
                 ~,ltGoodDirNormVec,ltGoodDirNormOrigVec,...
                 varargin)
+            import modgen.common.throwerror;
             ONE_NORM_COLOR_RGB_VEC=[1 0 0];%RED
             ZERO_NORM_COLOR_RGB_VEC=[1 1 0];%YELLOW
             normRatioVec=ltGoodDirNormVec./ltGoodDirNormOrigVec;
+            if ~(all(normRatioVec >= 0) && all(normRatioVec <= 1))
+                throwerror('wrongInput',...
+                    ['all elementss of normRatioVec',... 
+                    'are expected to be greater 0 and less then 1']);
+            end
             nPoints=length(normRatioVec);
             cMat=repmat(ZERO_NORM_COLOR_RGB_VEC,nPoints,1)+...
                 normRatioVec.'*(ONE_NORM_COLOR_RGB_VEC-...
