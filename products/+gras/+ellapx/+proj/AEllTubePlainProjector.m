@@ -7,11 +7,11 @@ classdef AEllTubePlainProjector<gras.ellapx.proj.IEllTubeProjector
         projType=getProjType(self)
     end
     properties (Access=private)
-        projSpaceList
+        projMatList
     end
     methods
         function self=AEllTubePlainProjector(projSpaceList)
-            self.projSpaceList=projSpaceList;
+            self.projMatList=projSpaceList;
         end
         function ellTubeProjRel=project(self,ellTubeRel)
             % PROJECT creates projections of specified ellipsoidal tubes
@@ -34,17 +34,7 @@ classdef AEllTubePlainProjector<gras.ellapx.proj.IEllTubeProjector
             fProj=@(varargin)getProjectionMatrix(self,varargin{:});
             projType=self.getProjType;
             %
-            nProj=length(self.projSpaceList);
-            projMatList=cell(1,nProj);
-            nDims=length(self.projSpaceList{1});
-            for iProj=1:nProj
-                projSpaceVec=self.projSpaceList{iProj};
-                projDimNumVec=find(projSpaceVec);
-                nProjDims=length(projDimNumVec);
-                indVec=sub2ind([nProjDims, nDims],1:nProjDims,projDimNumVec);
-                projMatList{iProj}=zeros(nProjDims,nDims);
-                projMatList{iProj}(indVec)=1;
-            end
+            projMatList=self.projMatList;
             ellTubeProjRel=ellTubeRel.project(projType,...
                 projMatList,fProj);
         end

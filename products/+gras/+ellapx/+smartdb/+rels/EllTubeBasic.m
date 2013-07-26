@@ -530,9 +530,9 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     end
                     %
                     tubeProjDataCMat{iGroup,iProj}.dim=...
-                        repmat(size(projMat,1),nLDirs,1);
+                        repmat(size(projOrthMatArray,1),nLDirs,1);
                     tubeProjDataCMat{iGroup,iProj}.projSTimeMat=...
-                        repmat({projMat},nLDirs,1);
+                        repmat({projOrthMatArray},nLDirs,1);
                     tubeProjDataCMat{iGroup,iProj}.projType=...
                         repmat(projType,nLDirs,1);
                     %

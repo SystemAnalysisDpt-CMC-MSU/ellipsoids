@@ -16,14 +16,14 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
         %
         function axesName=axesGetKeyTubeFunc(self,~,projSTimeMat,varargin)
             axesName=['Ellipsoidal tubes, proj. on subspace [',...
-                num2str(projSTimeMat(:,1)','%g '),';',...
-                num2str(projSTimeMat(:,2)','%g '),']'];
+                num2str(projSTimeMat(:,1)','%.2g '),';',...
+                num2str(projSTimeMat(:,2)','%.2g '),']'];
         end
         %
         function axesName=axesGetKeyGoodCurveFunc(self,~,projSTimeMat,varargin)
             axesName =['Good directions: proj. on subspace [',...
-                num2str(projSTimeMat(:,1)','%g '),';',...
-                num2str(projSTimeMat(:,2)','%g '),']'];
+                num2str(projSTimeMat(:,1)','%.2g '),';',...
+                num2str(projSTimeMat(:,2)','%.2g '),']'];
         end
         function hVec=axesSetPropGoodCurveFunc(self,hAxes,axesName,...
                 projSTimeMat,varargin)
@@ -65,8 +65,8 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
 %             indDimVec=find(sum(projSTimeMat));
 %             yLabel=sprintf('x_%d',indDimVec(1));
 %             zLabel=sprintf('x_%d',indDimVec(2));
-            yLabel = ['[',num2str(projSTimeMat(:,1)','%g '),']',];
-            zLabel = ['[',num2str(projSTimeMat(:,2)','%g '),']',];
+            yLabel = ['[',num2str(projSTimeMat(:,1)','%.2g '),']',];
+            zLabel = ['[',num2str(projSTimeMat(:,2)','%.2g '),']',];
             xLabel='time';
             %
             set(hAxes,'XLabel',...
@@ -102,8 +102,8 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
             isGoodCurvesSeparately=...
                 RelDispConfigurator.getIsGoodCurvesSeparately();
             figureGroupKeyName=[groupName,'_',lower(char(projType)),...
-                '_sp[',num2str(projSTimeMat(:,1)','%g '),';',...
-                num2str(projSTimeMat(:,2)','%g '),']'];
+                '_sp[',num2str(projSTimeMat(:,1)','%.2g '),';',...
+                num2str(projSTimeMat(:,2)','%.2g '),']'];
             if isGoodCurvesSeparately 
                 goodCurveStr=self.goodDirProp2Str(lsGoodDirOrigVec,sTime);
                 figureGroupKeyName=[figureGroupKeyName,', ',goodCurveStr];

@@ -11,7 +11,7 @@ classdef EllTubeStaticSpaceProjector<gras.ellapx.proj.AEllTubePlainProjector
             projType=gras.ellapx.enums.EProjType.Static;            
         end
         function [projOrthMatArray,projOrthMatTransArray]=...
-                getProjectionMatrix(~,projMat,timeVec,varargin)
+                getProjectionMatrix(self,projMat,timeVec,varargin)
             import modgen.common.throwwarn
             ABS_TOL = 1e-12;
             if ~all(abs(projMat*projMat'-eye(size(projMat,1)))< ABS_TOL)
