@@ -132,14 +132,17 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
                 ~,ltGoodDirNormVec,ltGoodDirNormOrigVec,...
                 varargin)
             import modgen.common.throwerror;
+            ABS_TOL = 1e-12;
             ONE_NORM_COLOR_RGB_VEC=[1 0 0];%RED
             ZERO_NORM_COLOR_RGB_VEC=[1 1 0];%YELLOW
             normRatioVec=ltGoodDirNormVec./ltGoodDirNormOrigVec;
-            if ~(all(normRatioVec >= 0) && all(normRatioVec <= 1))
+            if ~(all(normRatioVec >= -ABS_TOL) && all(normRatioVec <= 1+ABS_TOL))
                 throwerror('wrongInput',...
-                    ['all elementss of normRatioVec',... 
+                    ['all elements of normRatioVec',... 
                     'are expected to be greater 0 and less then 1']);
             end
+            normRatioVec(normRatioVec > 1) = 1;
+            normRatioVec(normRatioVec < 0) = 0;
             nPoints=length(normRatioVec);
             cMat=repmat(ZERO_NORM_COLOR_RGB_VEC,nPoints,1)+...
                 normRatioVec.'*(ONE_NORM_COLOR_RGB_VEC-...

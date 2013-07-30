@@ -15,7 +15,7 @@ classdef EllTubeStaticSpaceProjector<gras.ellapx.proj.AEllTubePlainProjector
             import modgen.common.throwwarn
             ABS_TOL = 1e-12;
             if ~all(abs(projMat*projMat'-eye(size(projMat,1)))< ABS_TOL)
-                throwwarn('WrongInput','projMat doesn''t Orthogonal ');
+                throwwarn('WrongInput','projMat is not orthogonal');
                 projMat = gras.la.matorth(projMat);
             end
             nTimes=length(timeVec);
