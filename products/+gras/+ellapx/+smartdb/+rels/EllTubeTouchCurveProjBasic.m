@@ -48,7 +48,8 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
                 set(hAxes,'UserData',true);
             end
         end
-        function hVec=axesSetPropTubeFunc(self,hAxes,axesName,projSTimeMat,varargin)
+        function hVec=axesSetPropTubeFunc(self,hAxes,axesName,...
+                projSTimeMat,varargin)
             import modgen.common.type.simple.checkgen;
             import gras.ellapx.smartdb.RelDispConfigurator;
             self.scaleAxesHeight(hAxes,1.1,true);

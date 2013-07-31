@@ -141,6 +141,7 @@ else
         postFun = @axesSetPropDoNothing2Func;
     end
 end
+
 if isObj
     rel=smartdb.relations.DynamicRelation(SData);
     if (nDim==2)||(nDim == 1)

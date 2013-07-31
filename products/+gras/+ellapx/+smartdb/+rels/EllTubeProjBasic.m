@@ -24,7 +24,7 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
         end
     end
     methods (Static = true, Access = protected)
-        function [plotPropProcObj, plObj] = parceInput(plotFullFieldList,...
+        function [plotPropProcObj, plObj, isRegSpec] = parceInput(plotFullFieldList,...
                 varargin)
             import gras.ellapx.smartdb.PlotPropProcessor;
             import modgen.common.parseparext;
@@ -229,7 +229,7 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                     'EdgeLighting','phong','FaceLighting','phong');
                 material('metal');
             end
-            hold(hAxes,'on');
+            
         end
         function hVec=axesSetPropRegTubeFunc(self,hAxes,axesName,projSTimeMat,varargin)
             import modgen.common.type.simple.checkgen;
@@ -363,10 +363,10 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                 'xTouchOpCurveMat','ltGoodDirNormVec',...
                 'ltGoodDirNormOrigVec','approxType','QArray','aMat','MArray'};
             
-            [plotPropProcObj, plObj] = gras.ellapx.smartdb...
+            [plotPropProcObj, plObj,isRelPlotterSpec] = gras.ellapx.smartdb...
                 .rels.EllTubeProjBasic.parceInput(PLOT_FULL_FIELD_LIST,...
                 varargin{:});
-            
+            isHoldFin = fPostHold(isRelPlotterSpec);
             if self.getNTuples()>0
                 %
                 fGetReachGroupKey=...
@@ -394,16 +394,17 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                 fPlotRegTube=@(varargin)plotCreateRegTubeFunc(self,varargin{:});
                 fPlotCurve=@(varargin)plotCreateGoodDirFunc(self,...
                     plotPropProcObj, varargin{:});
+                fPostFun = @(varargin)axesPostPlotFunc(isHoldFin,varargin{:});
                 %
                 isEmptyRegVec=cellfun(@(x)all(x(:) == 0), self.MArray);
                 
-                plotInternal(isEmptyRegVec,false);
-                plotInternal(~isEmptyRegVec,true);
+                plotInternal(isEmptyRegVec,false,true);
+                plotInternal(~isEmptyRegVec,true,false);
             else
                 logger=Log4jConfigurator.getLogger();
                 logger.warn('nTuples=0, there is nothing to plot');
             end
-            function plotInternal(isTupleVec,isRegPlot)
+            function plotInternal(isTupleVec,isRegPlot,isAutoHoldOn)
                 if all(isTupleVec)
                     rel=self;
                 else
@@ -435,7 +436,10 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                     {'projType','timeVec','lsGoodDirOrigVec',...
                     'ltGoodDirMat','sTime','xTouchCurveMat',...
                     'xTouchOpCurveMat','ltGoodDirNormVec',...
-                    'ltGoodDirNormOrigVec','approxType','QArray','aMat','MArray'});
+                    'ltGoodDirNormOrigVec','approxType','QArray',...
+                    'aMat','MArray'},...
+                    'axesPostPlotFunc',fPostFun,...
+                    'isAutoHoldOn',isAutoHoldOn);
             end
         end
         function plObj = plotExt(self,varargin)
@@ -582,10 +586,13 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                     'ltGoodDirNormOrigVec','approxType','QArray','aMat',...
                     'MArray','dim'};
                 %
-                [plotPropProcObj, plObj] = gras.ellapx.smartdb...
+                %
+                [plotPropProcObj, plObj, isRelPlotterSpec] = gras.ellapx.smartdb...
                     .rels.EllTubeProjBasic.parceInput(PLOT_FULL_FIELD_LIST,...
                     reg{:});
                 %                 %
+                isHoldFin = fPostHold(isRelPlotterSpec);
+                
                 fGetReachGroupKey=...
                     @(varargin)figureGetNamedGroupKey2Func(self,...
                     'reachTube',varargin{:});
@@ -595,8 +602,10 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                 %
                 fGetTubeAxisKey=@(varargin)axesGetKeyTubeFunc(self,varargin{:});
                 %
-                fSetTubeAxisProp=@(varargin)axesSetPropTubeFunc(self,varargin{:});
+                fSetTubeAxisProp=@(varargin)...
+                    axesSetPropTubeFunc(self,varargin{:});
                 %
+                fPostFun = @(varargin)axesPostPlotFunc(isHoldFin,varargin{:});
                 if isShowDiscrete
                     fPlotReachTube=...
                         @(varargin)plotCreateReachApproxTubeFunc(...
@@ -624,13 +633,15 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
             fSetFigPropList = {fSetReachFigProp};
             fGetAxisKeyList = {fGetTubeAxisKey};
             fSetAxiPropList = {fSetTubeAxisProp};
-            fPlotList = {fPlotReachTube};
+            fPlotList = {fPlotReachTube};  
             if (fDim(self.dim,self.timeVec) == 2)
                 fGetGroupKeyList = [fGetGroupKeyList,{fGetReachGroupKey}];
                 fSetFigPropList = [fSetFigPropList,{fSetReachFigProp}];
                 fGetAxisKeyList = [fGetAxisKeyList,{fGetTubeAxisKey}];
                 fSetAxiPropList = [fSetAxiPropList,{fSetTubeAxisProp}];
                 fPlotList = [fPlotList,{fPlotCenter}];
+            else
+                
             end
             plObj.plotGeneric(rel,...
                 fGetGroupKeyList,...
@@ -646,7 +657,9 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                 'ltGoodDirMat','sTime','xTouchCurveMat',...
                 'xTouchOpCurveMat','ltGoodDirNormVec',...
                 'ltGoodDirNormOrigVec','approxType','QArray','aMat',...
-                'MArray','dim','calcPrecision'});
+                'MArray','dim','calcPrecision'},...
+                'axesPostPlotFunc',fPostFun,...
+                'isAutoHoldOn',false);
             
             
             
@@ -709,20 +722,24 @@ if (mDim < 2) || (nDim > 3)
     throwerror('wrongDim','object dimension can be  2 or 3');
 end
 end
-function checkCenterVecAndTimeVec(aMat,timeVec)
+function checkCenterVecAndTimeVec(aMat,timeVec,calcPrecision)
 import modgen.common.throwerror;
 nTubes = numel(aMat);
-aMatCell = aMat;
+aMatList = aMat;
 timeVec = timeVec{1};
-for iTime = 1:size(timeVec,2)
-    centerVec = aMat{1}(:,iTime);
-    for iTube = 2:nTubes
-        if (aMatCell{iTube}(:,iTime)~=centerVec)
-            throwerror('differentCenterVec', ...
-                'Center vectors must be equal.');
-        end
+maxTol=max(calcPrecision);
+
+
+
+for iTube = 2:nTubes
+    [isEqual,~,~,~,~,reportStr]= gras.gen.absrelcompare(aMatList{1},...
+        aMatList{iTube},maxTol,maxTol,@abs);
+    if ~isEqual
+        throwerror('wrongInput:diffCenters',...
+            ['centers are different: ',reportStr]);
     end
 end
+
 for iTube = 2:numel(nTubes)
     if (timeVec{iTube}~=timeVec)
         throwerror('differentTimeVec', ...
@@ -760,10 +777,10 @@ patchColorVec = plotPropProcObj.getColor(vararginForProc(:));
 patchAlpha = plotPropProcObj.getTransparency(vararginForProc(:));
 patchWidth = plotPropProcObj.getLineWidth(vararginForProc(:));
 h1 = fPatch('Vertices',vMat','Faces',fMat,'Parent',hAxes);
-    set(h1, 'EdgeColor', patchColorVec, 'LineWidth', patchWidth,'FaceAlpha',patchAlpha,...
-        'FaceColor',patchColorVec);
-    hVec = h1;
-    view(hAxes,[90 0 0]);
+set(h1, 'EdgeColor', patchColorVec, 'LineWidth', patchWidth,'FaceAlpha',patchAlpha,...
+    'FaceColor',patchColorVec);
+hVec = h1;
+view(hAxes,[90 0 0]);
 
 
 end
@@ -846,7 +863,7 @@ function [vMat,fMat] = calcPoints(fTri,fCalcPoints,...
 
 
 nDims = dim(1);
-checkCenterVecAndTimeVec(aMat,timeVec);
+checkCenterVecAndTimeVec(aMat,timeVec,calcPrecision);
 [lGridMat, fMat] = gras.geom.tri.spheretriext(nDims,...
     nPlotPoints);
 lGridMat = lGridMat';
@@ -904,24 +921,51 @@ end
 function xMat = calcPointsExt(nDir,lGridMat,nDims,qArr,...
     centerVec,~)
 xMat = zeros(nDims,nDir);
-tubeNum = size(qArr,3);
+nTubes = size(qArr,3);
 
-distAllMat = zeros(tubeNum,nDir);
-BoundaryPointsAllCMat = cell(tubeNum,nDir);
+distAllMat = zeros(nTubes,nDir);
+boundaryPointsAllCMat = cell(nTubes,nDir);
 for iDir = 1:nDir
     lVec = lGridMat(:,iDir);
     distVec = gras.gen.SquareMatVector...
         .lrDivideVec(qArr,...
         lVec);
     distAllMat(:,iDir) = distVec;
-    for iTube = 1:tubeNum
-        BoundaryPointsAllCMat{iTube,iDir} = lVec/realsqrt(distVec(iTube));
+    for iTube = 1:nTubes
+        boundaryPointsAllCMat{iTube,iDir} = lVec/realsqrt(distVec(iTube));
     end
 end
 [~,xInd] = max(distAllMat,[],1);
 for iDir = 1:size(xInd,2)
-    xMat(:,iDir) = BoundaryPointsAllCMat{xInd(iDir),iDir}...
+    xMat(:,iDir) = boundaryPointsAllCMat{xInd(iDir),iDir}...
         +centerVec;
 end
 
+end
+function isHold = fPostHold(isRelPlotterSpec)
+hFigure = get(0,'CurrentFigure');
+if isempty(hFigure)
+    isHold=false;
+else
+    hAx = get(hFigure,'currentaxes');
+    if isempty(hAx)
+        isHold=false;
+    elseif ~ishold(hAx)
+        if ~isRelPlotterSpec
+            cla;
+        end
+        isHold = false;
+    else
+        isHold = true;
+    end
+end
+
+end
+function hVec=axesPostPlotFunc(isHold,hAxes,varargin)
+if isHold
+    hold(hAxes,'on');
+else
+    hold(hAxes,'off');
+end
+hVec = [];
 end

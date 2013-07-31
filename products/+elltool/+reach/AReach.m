@@ -450,16 +450,16 @@ classdef AReach < elltool.reach.IReach
             import gras.ellapx.enums.EProjType;
             import gras.ellapx.enums.EApproxType;
             import modgen.common.throwerror;
-            dim = self.dimension;
-            if dim > 3 ||  dim < 2
+            nDims = self.dimension;
+            if nDims > 3 ||  nDims < 2
                 throwerror('WrongDim',...
                         'object dimension can be  2 or 3');
             end
-            nPoints = [ self.nPlot2dPoints self.nPlot3dPoints];
+            nPointsVec = [ self.nPlot2dPoints self.nPlot3dPoints];
             switch approxType
                 case EApproxType.Internal
                     if ~self.isprojection()
-                        projReachObj = self.projection(eye(dim));
+                        projReachObj = self.projection(eye(nDims));
                         
                     else
                         projReachObj= self;
@@ -468,10 +468,10 @@ classdef AReach < elltool.reach.IReach
                         .getTuplesFilteredBy(...
                         F.APPROX_TYPE, approxType)...
                         .plotInt(varargin{:},...
-                        'numPointsInOneTime',nPoints(dim-1));
+                        'nSpacePartPoins',nPointsVec(nDims-1));
                 case EApproxType.External
                     if ~self.isprojection()
-                        projReachObj = self.projection(eye(dim));
+                        projReachObj = self.projection(eye(nDims));
                         
                     else
                         projReachObj= self;
@@ -480,7 +480,7 @@ classdef AReach < elltool.reach.IReach
                         .getTuplesFilteredBy(...
                         F.APPROX_TYPE, approxType)...
                         .plotExt(varargin{:},...
-                        'numPointsInOneTime',nPoints(dim-1));
+                        'numPointsInOneTime',nPointsVec(nDims-1));
                 otherwise
                     throwerror('WrongApproxType',...
                         'approxType %s is not supported',char(approxType));
