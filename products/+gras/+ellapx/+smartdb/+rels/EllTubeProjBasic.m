@@ -397,8 +397,11 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                 fPostFun = @(varargin)axesPostPlotFunc(isHoldFin,varargin{:});
                 %
                 isEmptyRegVec=cellfun(@(x)all(x(:) == 0), self.MArray);
-                
-                plotInternal(isEmptyRegVec,false,true);
+                if all(isEmptyRegVec)
+                    plotInternal(isEmptyRegVec,false,false);
+                else
+                    plotInternal(isEmptyRegVec,false,true);
+                end
                 plotInternal(~isEmptyRegVec,true,false);
             else
                 logger=Log4jConfigurator.getLogger();
