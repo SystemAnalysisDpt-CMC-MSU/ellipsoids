@@ -366,7 +366,7 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
             [plotPropProcObj, plObj,isRelPlotterSpec] = gras.ellapx.smartdb...
                 .rels.EllTubeProjBasic.parceInput(PLOT_FULL_FIELD_LIST,...
                 varargin{:});
-            isHoldFin = fPostHold(isRelPlotterSpec);
+            isHoldFin = fPostHold(self,isRelPlotterSpec);
             if self.getNTuples()>0
                 %
                 fGetReachGroupKey=...
@@ -394,7 +394,7 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                 fPlotRegTube=@(varargin)plotCreateRegTubeFunc(self,varargin{:});
                 fPlotCurve=@(varargin)plotCreateGoodDirFunc(self,...
                     plotPropProcObj, varargin{:});
-                fPostFun = @(varargin)axesPostPlotFunc(isHoldFin,varargin{:});
+                fPostFun = @(varargin)axesPostPlotFunc(self,isHoldFin,varargin{:});
                 %
                 isEmptyRegVec=cellfun(@(x)all(x(:) == 0), self.MArray);
                 if all(isEmptyRegVec)
@@ -594,7 +594,7 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                     .rels.EllTubeProjBasic.parceInput(PLOT_FULL_FIELD_LIST,...
                     reg{:});
                 %                 %
-                isHoldFin = fPostHold(isRelPlotterSpec);
+                isHoldFin = fPostHold(self,isRelPlotterSpec);
                 
                 fGetReachGroupKey=...
                     @(varargin)figureGetNamedGroupKey2Func(self,...
@@ -608,7 +608,7 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                 fSetTubeAxisProp=@(varargin)...
                     axesSetPropTubeFunc(self,varargin{:});
                 %
-                fPostFun = @(varargin)axesPostPlotFunc(isHoldFin,varargin{:});
+                fPostFun = @(varargin)axesPostPlotFunc(self,isHoldFin,varargin{:});
                 if isShowDiscrete
                     fPlotReachTube=...
                         @(varargin)plotCreateReachApproxTubeFunc(...
@@ -636,7 +636,7 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
             fSetFigPropList = {fSetReachFigProp};
             fGetAxisKeyList = {fGetTubeAxisKey};
             fSetAxiPropList = {fSetTubeAxisProp};
-            fPlotList = {fPlotReachTube};  
+            fPlotList = {fPlotReachTube};
             if (fDim(self.dim,self.timeVec) == 2)
                 fGetGroupKeyList = [fGetGroupKeyList,{fGetReachGroupKey}];
                 fSetFigPropList = [fSetFigPropList,{fSetReachFigProp}];
@@ -945,30 +945,4 @@ for iDir = 1:size(xInd,2)
 end
 
 end
-function isHold = fPostHold(isRelPlotterSpec)
-hFigure = get(0,'CurrentFigure');
-if isempty(hFigure)
-    isHold=false;
-else
-    hAx = get(hFigure,'currentaxes');
-    if isempty(hAx)
-        isHold=false;
-    elseif ~ishold(hAx)
-        if ~isRelPlotterSpec
-            cla;
-        end
-        isHold = false;
-    else
-        isHold = true;
-    end
-end
 
-end
-function hVec=axesPostPlotFunc(isHold,hAxes,varargin)
-if isHold
-    hold(hAxes,'on');
-else
-    hold(hAxes,'off');
-end
-hVec = [];
-end

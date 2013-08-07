@@ -25,6 +25,33 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
                 num2str(projSTimeMat(:,1)','%.2g '),';',...
                 num2str(projSTimeMat(:,2)','%.2g '),']'];
         end
+        function hVec=axesPostPlotFunc(self,isHold,hAxes,varargin)
+            if isHold
+                hold(hAxes,'on');
+            else
+                hold(hAxes,'off');
+            end
+            hVec = [];
+        end
+        function isHold = fPostHold(self,isRelPlotterSpec)
+            hFigure = get(0,'CurrentFigure');
+            if isempty(hFigure)
+                isHold=false;
+            else
+                hAx = get(hFigure,'currentaxes');
+                if isempty(hAx)
+                    isHold=false;
+                elseif ~ishold(hAx)
+                    if ~isRelPlotterSpec
+                        cla;
+                    end
+                    isHold = false;
+                else
+                    isHold = true;
+                end
+            end
+            
+        end
         function hVec=axesSetPropGoodCurveFunc(self,hAxes,axesName,...
                 projSTimeMat,varargin)
             import modgen.common.type.simple.checkgen;
