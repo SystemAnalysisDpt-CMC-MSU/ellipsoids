@@ -450,12 +450,19 @@ classdef AReach < elltool.reach.IReach
             import gras.ellapx.enums.EProjType;
             import gras.ellapx.enums.EApproxType;
             import modgen.common.throwerror;
+            [reg,~,isShowDiscrete,nPlotPoints]=...
+                    modgen.common.parseparext(varargin,...
+                    {'showDiscrete','nSpacePartPoins' ;...
+                    false, self.nPlot3dPoints;
+                    @(x)isa(x,'logical'),@(x)isa(x,'double')});
+            [colorVec, shade, lineWidth, isFill,reg] =...
+                parceInputForPlot(approxType,reg{:});
+            
             nDims = self.dimension;
             if nDims > 3 ||  nDims < 2
                 throwerror('WrongDim',...
-                        'object dimension can be  2 or 3');
+                    'object dimension can be  2 or 3');
             end
-            nPointsVec = [ self.nPlot2dPoints self.nPlot3dPoints];
             switch approxType
                 case EApproxType.Internal
                     if ~self.isprojection()
@@ -467,8 +474,12 @@ classdef AReach < elltool.reach.IReach
                     plotter = projReachObj.ellTubeRel...
                         .getTuplesFilteredBy(...
                         F.APPROX_TYPE, approxType)...
-                        .plotInt(varargin{:},...
-                        'nSpacePartPoins',nPointsVec(nDims-1));
+                        .plotInt(reg{:},'fGetColor',...
+                        @(x)(colorVec), 'fGetAlpha', @(x)(shade),...
+                        'fGetLineWidth', @(x)(lineWidth),...
+                        'fGetFill', @(x)(isFill),...
+                        'nSpacePartPoins',nPlotPoints,...
+                        'showDiscrete',isShowDiscrete);
                 case EApproxType.External
                     if ~self.isprojection()
                         projReachObj = self.projection(eye(nDims));
@@ -479,8 +490,12 @@ classdef AReach < elltool.reach.IReach
                     plotter = projReachObj.ellTubeRel...
                         .getTuplesFilteredBy(...
                         F.APPROX_TYPE, approxType)...
-                        .plotExt(varargin{:},...
-                        'numPointsInOneTime',nPointsVec(nDims-1));
+                        .plotExt(reg{:},'fGetColor',...
+                        @(x)(colorVec), 'fGetAlpha', @(x)(shade),...
+                        'fGetLineWidth', @(x)(lineWidth),...
+                        'fGetFill', @(x)(isFill),...
+                        'nSpacePartPoins',nPlotPoints,...
+                        'showDiscrete',isShowDiscrete);
                 otherwise
                     throwerror('WrongApproxType',...
                         'approxType %s is not supported',char(approxType));
@@ -583,155 +598,41 @@ classdef AReach < elltool.reach.IReach
             import modgen.common.throwerror;
             import gras.ellapx.smartdb.F;
             APPROX_TYPE = F.APPROX_TYPE;
-            DEFAULT_EA_COLOR_VEC = [0 0 1];
-            DEFAULT_IA_COLOR_VEC = [0 1 0];
-            DEFAULT_LINE_WIDTH = 2;
-            DEFAULT_EA_SHADE = 0.3;
-            DEFAULT_IA_SHADE = 0.1;
-            DEFAULT_FILL = false;
-            %
-            if approxType == EApproxType.External
-                [reg, ~, colorVec, shade, lineWidth, isFill,...
-                    isColorVec, ~, ~, ~] = ...
-                    modgen.common.parseparext(varargin,...
-                    {'color', 'shade', 'width', 'fill';...
-                    DEFAULT_EA_COLOR_VEC, DEFAULT_EA_SHADE,...
-                    DEFAULT_LINE_WIDTH, DEFAULT_FILL;...
-                    'isvector(x)',...
-                    @(x)(isa(x, 'double') && (x >= 0) && (x <= 1)),...
-                    @(x)(isa(x, 'double') && (x > 0)), 'islogical(x)'});
-            else
-                [reg, ~, colorVec, shade, lineWidth, isFill,...
-                    isColorVec, ~, ~, ~] = ...
-                    modgen.common.parseparext(varargin,...
-                    {'color', 'shade', 'width', 'fill';...
-                    DEFAULT_IA_COLOR_VEC, DEFAULT_IA_SHADE,...
-                    DEFAULT_LINE_WIDTH, DEFAULT_FILL;...
-                    'isvector(x)',...
-                    @(x)(isa(x, 'double') && (x >= 0) && (x <= 1)),...
-                    @(x)(isa(x, 'double') && (x > 0)), 'islogical(x)'});
-            end
-            %
-            checkIsWrongInput();
-            %
-            if (nargin > 2) && ~isempty(reg)
-                if ischar(reg{1})
-                    if isColorVec
-                        throwerror('ConflictingColor',...
-                            'Conflicting using of color property');
-                    else
-                        colorVec = getColorVec(reg{1});
-                    end
-                end
-            end
             
-            if ischar(colorVec)
-                colorVec = getColorVec(colorVec);
-            end
-            
+            [colorVec, shade, lineWidth, isFill,reg] =...
+                parceInputForPlot(approxType,varargin{:});
             %
             [~, dim] = self.dimension();
+            
+            
             if self.isProj
                 
                 if dim < 2 || dim > 3
                     throwerror('wrongInput',...
                         'Dimension of projection must be 2 or 3.');
                 else
-                    plObj = smartdb.disp.RelationDataPlotter();
                     plotter = self.ellTubeRel.getTuplesFilteredBy(...
-                        APPROX_TYPE, approxType).plot(plObj, 'fGetColor',...
+                        APPROX_TYPE, approxType).plot(reg{:}, 'fGetColor',...
                         @(x)(colorVec), 'fGetAlpha', @(x)(shade),...
                         'fGetLineWidth', @(x)(lineWidth),...
                         'fGetFill', @(x)(isFill));
                 end
             else
-                 if dim < 2 || dim > 3
+                if dim < 2 || dim > 3
                     plObj = smartdb.disp.RelationDataPlotter();
                     plotter = self.ellTubeRel.getTuplesFilteredBy(...
-                    APPROX_TYPE, approxType).plot(plObj);
+                        APPROX_TYPE, approxType).plot(plObj);
                 else
-                   projReachObj = self.projection(eye(dim));
-                   plObj = smartdb.disp.RelationDataPlotter();
+                    projReachObj = self.projection(eye(dim));
+                    plObj = smartdb.disp.RelationDataPlotter();
                     plotter = projReachObj.ellTubeRel.getTuplesFilteredBy(...
-                    APPROX_TYPE, approxType).plot(plObj);
+                        APPROX_TYPE, approxType).plot(plObj);
                 end
                 
-            end
-            function colCodeVec = getColorVec(colChar)
-                if ~(ischar(colChar))
-                    colCodeVec = [0 0 0];
-                    return;
-                end
-                switch colChar
-                    case 'r',
-                        colCodeVec = [1 0 0];
-                    case 'g',
-                        colCodeVec = [0 1 0];
-                    case 'b',
-                        colCodeVec = [0 0 1];
-                    case 'y',
-                        colCodeVec = [1 1 0];
-                    case 'c',
-                        colCodeVec = [0 1 1];
-                    case 'm',
-                        colCodeVec = [1 0 1];
-                    case 'w',
-                        colCodeVec = [1 1 1];
-                    otherwise,
-                        colCodeVec = [0 0 0];
-                end
             end
             
-            function checkIsWrongInput()
-                import modgen.common.throwerror;
-                cellfun(@(x)checkIfNoColorCharPresent(x),reg);
-                cellfun(@(x)checkRightPropName(x),reg);
-                checkIfNoColorCharPresent(colorVec);
-                checkColorSize(colorVec);
-                
-                function checkColorSize(colorVec)
-                    import modgen.common.throwerror;
-                    if isa(colorVec, 'double') && (size(colorVec, 2) ~= 3)
-                        throwerror('wrongColorVecSize', ...
-                            'ColorVec is a vector of length 3');
-                    end
-                end
-                
-                function checkIfNoColorCharPresent(value)
-                    import modgen.common.throwerror;
-                    if ischar(value)&&(numel(value)==1)&&~isColorDef(value)
-                        throwerror('wrongColorChar', ...
-                            'You can''t use this symbol as a color');
-                    end
-                    function isColor = isColorDef(value)
-                        isColor = eq(value, 'r') | eq(value, 'g') |...
-                            eq(value, 'b') | ...
-                            eq(value, 'y') | eq(value, 'c') | ...
-                            eq(value, 'm') | eq(value, 'w');
-                    end
-                end
-                function checkRightPropName(value)
-                    import modgen.common.throwerror;
-                    if ischar(value)&&(numel(value)>1)
-                        if ~isRightProp(value)
-                            throwerror('wrongProperty', ...
-                                'This property doesn''t exist');
-                        else
-                            throwerror('wrongPropertyValue', ...
-                                'There is no value for property.');
-                        end
-                    elseif ~ischar(value)
-                        throwerror('wrongPropertyType',...
-                            'Property must be a string.');
-                    end
-                    function isRProp = isRightProp(value)
-                        isRProp = strcmpi(value, 'fill') |...
-                            strcmpi(value, 'width') | ...
-                            strcmpi(value, 'shade') | strcmpi(value,...
-                            'color');
-                    end
-                end
-            end
+            
+            
         end
         %
         function ellTubeRel = makeEllTubeRel(self, probDynObj, l0Mat,...
@@ -1612,4 +1513,92 @@ classdef AReach < elltool.reach.IReach
             end
         end
     end
+end
+function [colorVec, shade, lineWidth, isFill,reg] =...
+    parceInputForPlot(approxType,varargin)
+import gras.ellapx.enums.EApproxType;
+import modgen.common.throwerror;
+import gras.ellapx.smartdb.F;
+DEFAULT_EA_COLOR_VEC = [0 0 1];
+DEFAULT_IA_COLOR_VEC = [0 1 0];
+DEFAULT_LINE_WIDTH = 2;
+DEFAULT_EA_SHADE = 0.3;
+DEFAULT_IA_SHADE = 0.1;
+DEFAULT_FILL = false;
+%
+if approxType == EApproxType.External
+    [reg, ~, colorVec, shade, lineWidth, isFill,...
+        isColorVec, ~, ~, ~] = ...
+        modgen.common.parseparext(varargin,...
+        {'color', 'shade', 'width', 'fill';...
+        DEFAULT_EA_COLOR_VEC, DEFAULT_EA_SHADE,...
+        DEFAULT_LINE_WIDTH, DEFAULT_FILL;...
+        'isvector(x)',...
+        @(x)(isa(x, 'double') && (x >= 0) && (x <= 1)),...
+        @(x)(isa(x, 'double') && (x > 0)), 'islogical(x)'});
+else
+    [reg, ~, colorVec, shade, lineWidth, isFill,...
+        isColorVec, ~, ~, ~] = ...
+        modgen.common.parseparext(varargin,...
+        {'color', 'shade', 'width', 'fill';...
+        DEFAULT_IA_COLOR_VEC, DEFAULT_IA_SHADE,...
+        DEFAULT_LINE_WIDTH, DEFAULT_FILL;...
+        'isvector(x)',...
+        @(x)(isa(x, 'double') && (x >= 0) && (x <= 1)),...
+        @(x)(isa(x, 'double') && (x > 0)), 'islogical(x)'});
+end
+%
+if ischar(colorVec)
+    colorVec = getColorVec(colorVec);
+end
+
+
+%
+if ~isempty(reg)
+    if ischar(reg{1})      
+        if isColorVec
+            throwerror('ConflictingColor',...
+                'Conflicting using of color property');
+        else
+            colorVec = getColorVec(reg{1});
+        end
+        reg(1) = [];
+    elseif numel(reg) > 1
+        if ischar(reg{2})
+            if isColorVec
+                throwerror('ConflictingColor',...
+                    'Conflicting using of color property');
+            else
+                colorVec = getColorVec(reg{2});
+            end
+            reg(2) = [];
+        end
+    end
+end
+
+
+end
+function colCodeVec = getColorVec(colChar)
+if ~(ischar(colChar))
+    colCodeVec = [0 0 0];
+    return;
+end
+switch colChar
+    case 'r',
+        colCodeVec = [1 0 0];
+    case 'g',
+        colCodeVec = [0 1 0];
+    case 'b',
+        colCodeVec = [0 0 1];
+    case 'y',
+        colCodeVec = [1 1 0];
+    case 'c',
+        colCodeVec = [0 1 1];
+    case 'm',
+        colCodeVec = [1 0 1];
+    case 'w',
+        colCodeVec = [1 1 1];
+    otherwise,
+        colCodeVec = [0 0 0];
+end
 end

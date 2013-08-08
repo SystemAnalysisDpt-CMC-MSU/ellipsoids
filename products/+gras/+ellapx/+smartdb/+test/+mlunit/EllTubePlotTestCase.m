@@ -85,30 +85,43 @@ classdef EllTubePlotTestCase < mlunitext.test_case
             
             
             
-            plObj = rel.plotInt('color',[0 1 0]);
-            self.checkParams(plObj, 1, false, 0.4, [0 1 0],1);
+            plObj = rel.plotInt('fGetColor',@(approxType)[1 0 0],...
+                'colorFieldList', {'approxType'});
+            self.checkParams(plObj, 2, true, 0.1, [1 0 0],1);
             
             
-            plObj = rel.plotExt('b');
-            self.checkParams(plObj, 1, false, 0.4, [0 0 1],1);
+            plObj = rel.plotExt('fGetColor',@(approxType)[0 1 0],...
+                'colorFieldList', {'approxType'});
+            self.checkParams(plObj, 2, true, 0.3, [0 1 0],1);
             
             
             rel = self.createTubeWithProj(2,2);
             
-            plObj = rel.plotInt('linewidth', 4, ...
-                'fill', true, 'shade', 0.8);
-            self.checkParams(plObj, 4, true, 0.8, [.5 .5 .5],2);
-            plObj = rel.plotExt('linewidth', 3, ...
-                'fill', 0);
-            self.checkParams(plObj, 3, false, 0, [.5 .5 .5],2);
+            plObj = rel.plotInt('fGetLineWidth', @(x)4,...
+                'lineWidthFieldList', {'approxType'},...
+                'fGetFill',@(x) true,...
+                'fillFieldList',{'approxType'},...
+                'fGetAlpha',@(x) 0.8,...
+                'alphaFieldList',{'approxType'});
+            self.checkParams(plObj, 4, true, 0.8, [0 1 0],2);
+            plObj = rel.plotExt('fGetLineWidth', @(x)3,...
+                'lineWidthFieldList', {'approxType'},...
+                'fGetFill',@(x) false,...
+                'fillFieldList',{'approxType'});
+            self.checkParams(plObj, 3, false, 0, [0 0 1],2);
             rel = self.createTubeWithProj(3,3);
             
-            plObj = rel.plotInt('fill', true, 'shade', 0.1, ...
-                'color', [0, 1, 1]);
-            self.checkParams(plObj, [], true, 0.1, [0 1 1],3);
-            plObj = rel.plotExt('shade', 0.3, ...
-                'g');
-            self.checkParams(plObj, [],true, 0.3, [0 1 0],3);
+            plObj = rel.plotInt('fGetColor',@(approxType)[0 1 1],...
+                'colorFieldList', {'approxType'},...
+                'fGetFill',@(x) true,...
+                'fillFieldList',{'approxType'},...
+                'fGetAlpha',@(x) 0.3,...
+                'alphaFieldList',{'approxType'});
+            
+            self.checkParams(plObj, [], true, 0.3, [0 1 1],3);
+            plObj = rel.plotExt('fGetAlpha',@(x) 0.8,...
+                'alphaFieldList',{'approxType'});
+            self.checkParams(plObj, [],true, 0.8, [0 0 1],3);
             
             
             
@@ -154,12 +167,18 @@ classdef EllTubePlotTestCase < mlunitext.test_case
     end
     methods (Static)
         function relStatProj  = createTubeWithProj(dim,ind)
-            projSpaceList = {eye(dim)};
-            projType = gras.ellapx.enums.EProjType.Static;
+            import gras.ellapx.proj.EllTubeStaticSpaceProjector;
+           
+            if dim == 2
+                projSpaceList = {[2 1; 1 3]};
+            else
+                projSpaceList = {[2 1 0; 1 3 1; 2 0 0]};
+            end
+%             projType = gras.ellapx.enums.EProjType.Static;
             rel = gras.ellapx.smartdb...
                 .test.mlunit.EllTubePlotTestCase.createTube(ind);
-            relStatProj = ...
-                rel.project(projType,projSpaceList,@fGetProjMat);
+            projObj=EllTubeStaticSpaceProjector(projSpaceList);
+            relStatProj=projObj.project(rel);
         end
         function rel = createTube(ind)
             fTransMat2d = @(t)[cos(5*(t-2)) sin(5*(t-2));...
@@ -247,7 +266,9 @@ classdef EllTubePlotTestCase < mlunitext.test_case
         function checkParams(plObj, linewidth, fill, shade, colorVec,...
                 curCase)
             SHPlot =  plObj.getPlotStructure().figToAxesToHMap.toStruct();
-            plEllObjVec = get(SHPlot.figure_g1.ax, 'Children');
+            [~, handleVecList] = modgen.struct.getleavelist(SHPlot);
+            handleVec = [handleVecList{:}];
+            plEllObjVec = get(handleVec, 'Children');
             plEllObjVec = plEllObjVec(~strcmp(get(plEllObjVec,...
                 'Type'),'light'));
             plEllObjVec = plEllObjVec(~strcmp(get(plEllObjVec,...
@@ -262,7 +283,12 @@ classdef EllTubePlotTestCase < mlunitext.test_case
                             isEq = isEq & all(colorVec == colorPlVec);
                         end
                     end
-                    isFill = false;
+                    shadePl = get(plEllObjVec, 'FaceAlpha');
+                    if shadePl == 0
+                        isFill = false;
+                    else
+                        isFill = true;
+                    end
                 case 2
                     linewidthPl = get(plEllObjVec, 'linewidth');
                     colorPlVec = get(plEllObjVec, 'EdgeColor');
@@ -306,10 +332,12 @@ classdef EllTubePlotTestCase < mlunitext.test_case
         function checkPoints(rel,plObj,curCase,fRight)
             ABS_TOL = 10^(-5);
             SHPlot =  plObj.getPlotStructure().figToAxesToHMap.toStruct();
-            xTitl = get(get(SHPlot.figure_g1.ax,'xLabel'),'String');
-            yTitl =  get(get(SHPlot.figure_g1.ax,'yLabel'),'String');
-            zTitl =  get(get(SHPlot.figure_g1.ax,'zLabel'),'String');
-            plEllObjVec = get(SHPlot.figure_g1.ax, 'Children');
+            [~, handleVecList] = modgen.struct.getleavelist(SHPlot);
+            handleVec = [handleVecList{:}];
+            xTitl = get(get(handleVec,'xLabel'),'String');
+            yTitl =  get(get(handleVec,'yLabel'),'String');
+            zTitl =  get(get(handleVec,'zLabel'),'String');
+            plEllObjVec = get(handleVec, 'Children');
             plEllObjVec = plEllObjVec(~strcmp(get(plEllObjVec,...
                 'Type'),'light'));
             plEllObjVec = plEllObjVec(~strcmp(get(plEllObjVec,...
@@ -323,9 +351,12 @@ classdef EllTubePlotTestCase < mlunitext.test_case
             switch curCase
                 case 1
                     
-                    isEq = strcmp(xTitl,'t')&&strcmp(yTitl,...
-                        '[lsGoodDirVec=1,sTime=1]')...
-                        &&strcmp(zTitl,'[lsGoodDirVec=2,sTime=1]');
+                    isEq = strcmp(xTitl,'time')&&strcmp(yTitl,...
+                        ['[',num2str(rel...
+                        .projSTimeMat{1}(:,1)','%.2g '),']'])...
+                        &&strcmp(zTitl,...
+                        ['[',num2str(rel...
+                        .projSTimeMat{1}(:,2)','%.2g '),']',]);
                     
                     [xDataVec,xInd] = sort(xDataVec);
                     prev = 1;
@@ -352,13 +383,16 @@ classdef EllTubePlotTestCase < mlunitext.test_case
                         prev = prev + numberPoints;
                     end
                 case 2
-                    isEq = strcmp(xTitl,...
-                        '[lsGoodDirVec=1,sTime=1]')...
-                        &&strcmp(yTitl,'[lsGoodDirVec=2,sTime=1]');
+                    isEq = strcmp(xTitl,'time')&&strcmp(yTitl,...
+                        ['[',num2str(rel...
+                        .projSTimeMat{1}(:,1)','%.2g '),']'])...
+                        &&strcmp(zTitl,...
+                        ['[',num2str(rel...
+                        .projSTimeMat{1}(:,2)','%.2g '),']',]);
                     for iDir = 1:size(xDataVec,2)
                         for iTube = 1:numel(qArrList)
-                            xP = xDataVec(curInd);
-                            yP = yDataVec(curInd);
+                            xP = yDataVec(curInd);
+                            yP = zDataVec(curInd);
                             qMat = qArrList{iTube}(:,:,1);
                             cVec = aMat{iTube}(:,1);
                             xP = xP-cVec(1);
@@ -371,10 +405,15 @@ classdef EllTubePlotTestCase < mlunitext.test_case
                     end
                     
                 case 3
-                    isEq =strcmp(xTitl,...
-                        '[lsGoodDirVec=1,sTime=1]')...
-                        &&strcmp(yTitl,'[lsGoodDirVec=2,sTime=1]')...
-                        &&strcmp(zTitl,'[lsGoodDirVec=3,sTime=1]');
+                    isEq = strcmp(xTitl,...
+                        ['[',num2str(rel...
+                        .projSTimeMat{1}(:,1)','%.2g '),']'])...
+                        &&strcmp(yTitl,...
+                        ['[',num2str(rel...
+                        .projSTimeMat{1}(:,2)','%.2g '),']'])...
+                        &&strcmp(zTitl,...
+                        ['[',num2str(rel...
+                        .projSTimeMat{1}(:,3)','%.2g '),']',]);
                     for iDir = 1:size(xDataVec,2)
                         for iTube = 1:numel(qArrList)
                             xP = xDataVec(curInd);

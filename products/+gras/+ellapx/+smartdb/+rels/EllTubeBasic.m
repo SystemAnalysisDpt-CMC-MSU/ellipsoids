@@ -488,7 +488,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             import gras.ellapx.smartdb.rels.EllTubeBasic;
             import gras.ellapx.proj.EllTubeStaticSpaceProjector;
             %
-            ABS_TOL=1e-12;
+            ABS_TOL=1e-4;
             %
             projDependencyFieldNameList=...
                 self.getProjectionDependencyFieldList();
@@ -522,8 +522,9 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     %%
                     expEigArr=gras.gen.SquareMatVector.rMultiply...
                         (projOrthMatArray,projOrthMatTransArray);
-                    if ~all(abs(expEigArr-repmat(eye(size(expEigArr,1)),...
-                        [1,1,size(expEigArr,3)]))<ABS_TOL)
+                    expOne = (abs(expEigArr-repmat(eye(size(expEigArr,1)),...
+                        [1,1,size(expEigArr,3)]))<ABS_TOL);
+                    if ~all(expOne(:))
                          throwerror('wrongInput',...
                             ['projOrthMatArray and projOrthMatTransArray',...
                             ' must be orthogonal']);
