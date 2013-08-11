@@ -451,21 +451,22 @@ classdef AReach < elltool.reach.IReach
             import gras.ellapx.enums.EApproxType;
             import modgen.common.throwerror;
             [reg,~,isShowDiscrete,nPlotPoints]=...
-                    modgen.common.parseparext(varargin,...
-                    {'showDiscrete','nSpacePartPoins' ;...
-                    false, self.nPlot3dPoints;
-                    @(x)isa(x,'logical'),@(x)isa(x,'double')});
+                modgen.common.parseparext(varargin,...
+                {'showDiscrete','nSpacePartPoins' ;...
+                false, self.nPlot3dPoints;
+                @(x)isa(x,'logical'),@(x)isa(x,'double')});
             [colorVec, shade, lineWidth, isFill,reg] =...
                 parceInputForPlot(approxType,reg{:});
             
-            nDims = self.dimension;
-            if nDims > 3 ||  nDims < 2
-                throwerror('WrongDim',...
-                    'object dimension can be  2 or 3');
-            end
+            
             switch approxType
                 case EApproxType.Internal
                     if ~self.isprojection()
+                        nDims = self.dimension;
+                        if nDims > 3 ||  nDims < 2
+                            throwerror('WrongDim',...
+                                'object dimension can be  2 or 3');
+                        end
                         projReachObj = self.projection(eye(nDims));
                         
                     else
@@ -482,6 +483,11 @@ classdef AReach < elltool.reach.IReach
                         'showDiscrete',isShowDiscrete);
                 case EApproxType.External
                     if ~self.isprojection()
+                        nDims = self.dimension;
+                        if nDims > 3 ||  nDims < 2
+                            throwerror('WrongDim',...
+                                'object dimension can be  2 or 3');
+                        end
                         projReachObj = self.projection(eye(nDims));
                         
                     else
@@ -574,10 +580,6 @@ classdef AReach < elltool.reach.IReach
             import gras.ellapx.enums.EProjType;
             import gras.ellapx.smartdb.F;
             APPROX_TYPE = F.APPROX_TYPE;
-            fProj =...
-                @(~, timeVec, varargin)...
-                deal(repmat(projMat.', [1 1 numel(timeVec)]),...
-                repmat(projMat, [1 1 numel(timeVec)]));
             ProjCMatList = {projMat'};
             projType = EProjType.Static;
             if nargin > 2
@@ -591,8 +593,18 @@ classdef AReach < elltool.reach.IReach
                 localEllTubeRel.scale(@(x) scaleFactor, {APPROX_TYPE});
             end
             ellTubeProjRel = localEllTubeRel.project(projType,...
-                ProjCMatList, fProj);
+                ProjCMatList, @fProj);
+            function [projOrthMatArray,projOrthMatTransArray] ...
+                    = fProj(projMat,timeVec,varargin)
+                kSize = size(projMat,1);
+                projMat = gras.la.matorth(projMat');
+                projMat = projMat(1:kSize,:);
+                nTimes=length(timeVec);
+                projOrthMatArray=repmat(projMat,[1 1 nTimes]);
+                projOrthMatTransArray=repmat(projMat.',[1 1 nTimes]);
+            end
         end
+        
         function plotter = plotApprox(self, approxType, varargin)
             import gras.ellapx.enums.EApproxType;
             import modgen.common.throwerror;
@@ -1555,7 +1567,7 @@ end
 
 %
 if ~isempty(reg)
-    if ischar(reg{1})      
+    if ischar(reg{1})
         if isColorVec
             throwerror('ConflictingColor',...
                 'Conflicting using of color property');

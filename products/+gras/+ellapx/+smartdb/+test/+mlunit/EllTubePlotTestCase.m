@@ -132,19 +132,27 @@ classdef EllTubePlotTestCase < mlunitext.test_case
             approxType = gras.ellapx.enums.EApproxType.Internal;
             fRight = @(a,b,c) a+b>=c;
             fPlot = @(x) x.plotInt;
-            testPlot(self,approxType,fPlot,fRight);
+            fTestPlot(self,approxType,fPlot,fRight);
             
             
+        end
+        function testPlotInfN(self)
+            %when n-> infty a union of internal approximations
+            %converges to a union of internal estiamtes
+            rel = self.createTube2(50,1);
+            plObj = rel.plotExt();
+            plObj = rel.plotInt(plObj);
+            self.check2Points(plObj);
         end
         function testPlotExt(self)
             import gras.ellapx.enums.EApproxType;
             fRight = @(a,b,c) a-b<=c;
             approxType = gras.ellapx.enums.EApproxType.External;
             fPlot = @(x) x.plotExt;
-            testPlot(self,approxType,fPlot,fRight);
+            fTestPlot(self,approxType,fPlot,fRight);
             
         end
-        function testPlot(self,approxType,fPlot,fRight)
+        function fTestPlot(self,approxType,fPlot,fRight)
             rel = self.createTubeWithProj(2,1);
             plObj = fPlot(rel);
             
@@ -177,6 +185,42 @@ classdef EllTubePlotTestCase < mlunitext.test_case
 %             projType = gras.ellapx.enums.EProjType.Static;
             rel = gras.ellapx.smartdb...
                 .test.mlunit.EllTubePlotTestCase.createTube(ind);
+            projObj=EllTubeStaticSpaceProjector(projSpaceList);
+            relStatProj=projObj.project(rel);
+        end
+        function relStatProj = createTube2(nTube,nTime)
+            import gras.ellapx.proj.EllTubeStaticSpaceProjector;
+            q11 = @(t)[ cos(2*pi*t/nTube) sin(2*pi*t/nTube) ;...
+                -sin(2*pi*t/nTube)  cos(2*pi*t/nTube) ];
+            ltGDir = [];
+            QArrList = cell(nTube+1,1);
+            Q2ArrList = cell(nTube+1,1);
+            sTime =1;
+            timeVec = 1:nTime;
+            for i= 0:nTube
+                ltGDir = [ltGDir ([1 0]*q11(i))'];
+                QArrListTemp = repmat(q11(i)'*diag([1 4])*q11(i),[1,1,nTime]);
+                QArrList{i+1} = QArrListTemp;
+                Q2ArrListTemp = repmat(q11(i)'*diag([1 0.5])*q11(i),[1,1,nTime]);
+                Q2ArrList{i+1} = Q2ArrListTemp;
+            end
+
+            ltGDir = repmat(ltGDir,[1 1 nTime]);
+            aMat = repmat([0 0]',[1,nTime]);
+            approxExtType = gras.ellapx.enums.EApproxType.External;
+            approxIntType = gras.ellapx.enums.EApproxType.Internal;
+            calcPrecision = 10^(-3);
+            
+            rel = gras.ellapx.smartdb.rels.EllTube.fromQArrays(QArrList',aMat...
+                ,timeVec,ltGDir,sTime',approxExtType,...
+                char.empty(1,0),char.empty(1,0),...
+                calcPrecision);
+            rel.unionWith(...
+                gras.ellapx.smartdb.rels.EllTube.fromQArrays(Q2ArrList',aMat...
+                ,timeVec,ltGDir,sTime',approxIntType,...
+                char.empty(1,0),char.empty(1,0),...
+                calcPrecision));
+            projSpaceList = {[1 0; 0 1].'};
             projObj=EllTubeStaticSpaceProjector(projSpaceList);
             relStatProj=projObj.project(rel);
         end
@@ -328,7 +372,27 @@ classdef EllTubePlotTestCase < mlunitext.test_case
             mlunitext.assert_equals(isEq, true);
             mlunitext.assert_equals(isFill, fill);
         end
-        
+        function check2Points(plObj)
+            ABS_TOL = 10^(-2);
+            SHPlot =  plObj.getPlotStructure().figToAxesToHMap.toStruct();
+            [~, handleVecList] = modgen.struct.getleavelist(SHPlot);
+            handleVec = [handleVecList{:}];
+            plEllObjVec = get(handleVec, 'Children');
+            plEllObjVec = plEllObjVec(~strcmp(get(plEllObjVec,...
+                'Type'),'light'));
+            plEllObjVec = plEllObjVec(~strcmp(get(plEllObjVec,...
+                'Marker'), '*'));
+            isEq = true;
+            [~,yDataVec,zDataVec] = getData(plEllObjVec);
+            yDataVec = [ yDataVec{1}; yDataVec{2}];
+            zDataVec = [ zDataVec{1}; zDataVec{2}];
+            for iPoint = 1:size(yDataVec,1)
+                if abs(yDataVec(iPoint)^2+zDataVec(iPoint)^2-1)>ABS_TOL
+                    isEq = false;
+                end
+            end
+            mlunitext.assert_equals(isEq, true);
+        end
         function checkPoints(rel,plObj,curCase,fRight)
             ABS_TOL = 10^(-5);
             SHPlot =  plObj.getPlotStructure().figToAxesToHMap.toStruct();

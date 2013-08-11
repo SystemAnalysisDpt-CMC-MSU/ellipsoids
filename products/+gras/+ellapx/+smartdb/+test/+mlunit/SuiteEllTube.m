@@ -207,6 +207,7 @@ classdef SuiteEllTube < mlunitext.test_case
             %
         end
         function testProjectionAndScale(~)
+            import gras.ellapx.proj.EllTubeStaticSpaceProjector;
             relProj=gras.ellapx.smartdb.rels.EllTubeProj(); %#ok<NASGU>
             %
             nPoints = 5;
@@ -225,10 +226,14 @@ classdef SuiteEllTube < mlunitext.test_case
                 1,nTubes);
             QArrayList = repmat({repmat(diag([1 2 3]),[1,1,nPoints])},1,nTubes);
             scaleFactor = 1.01;
-            projType=gras.ellapx.enums.EProjType.Static;
-            projMatList={[1 0 1;0 1 1],[1 0 0;0 1 0]};
             rel=create();
-            relProj=rel.project(projType,projMatList,@fGetProjMat);
+            projMatList={[1 0 1;0 1 1],[1 0 0;0 1 0]};
+            projObj=EllTubeStaticSpaceProjector(projMatList);
+            relProj=projObj.project(rel);
+           
+            
+            
+            
             relProj.plot();
             %
             MBeforeArray=rel.MArray;
@@ -241,7 +246,9 @@ classdef SuiteEllTube < mlunitext.test_case
             [isEqual,reportStr]=rel.isEqual(rel2);
             mlunitext.assert_equals(true,isEqual,reportStr);
             %
-            relProjOrthExp=rel.project(projType,{[0 1 0;0 0 1]},@fGetProjMat);
+            projType = gras.ellapx.enums.EProjType.Static;
+            projObj=EllTubeStaticSpaceProjector({[0 1 0;0 0 1]});
+            relProjOrthExp=projObj.project(rel);
             relProjOrthGot=rel.projectToOrths([2,3],projType);
             [isEqual,reportStr]=relProjOrthExp.isEqual(relProjOrthGot);
             mlunitext.assert_equals(true,isEqual,reportStr);
@@ -610,6 +617,7 @@ classdef SuiteEllTube < mlunitext.test_case
             import gras.ellapx.enums.EApproxType;
             import gras.ellapx.smartdb.rels.EllUnionTubeStaticProj;
             import gras.ellapx.smartdb.rels.EllUnionTube;
+            import gras.ellapx.proj.EllTubeStaticSpaceProjector;
             %
             qMatArray(:,:,2) = [1,0,0;0,2,0;0,0,3];
             qMatArray(:,:,1) = [5,0,0;0,6,0;0,0,7];
@@ -631,14 +639,12 @@ classdef SuiteEllTube < mlunitext.test_case
                 approxSchemaName,...
                 approxSchemaDescr, calcPrecision);
             projSpaceList = {[1 0 0; 0 1 1]};
-            projType = gras.ellapx.enums.EProjType.Static;
-            testEllProj = testEllTube.project(projType,projSpaceList,...
-                @fGetProjMat);
+            projObj=EllTubeStaticSpaceProjector(projSpaceList);
+            testEllProj=projObj.project(testEllTube);
             testEllUnionStaticProj = ...
                 EllUnionTubeStaticProj.fromEllTubes(testEllProj);
             testEllUnionTube = EllUnionTube.fromEllTubes(testEllTube);
-            testEllUnionStaticProj0 = testEllUnionTube.project(...
-                projType,projSpaceList,@fGetProjMat);
+            testEllUnionStaticProj0=projObj.project(testEllUnionTube);
             [isEqual, reportStr] = testEllUnionStaticProj.isEqual(...
                 testEllUnionStaticProj0);
             mlunitext.assert(isEqual, reportStr);
