@@ -284,7 +284,7 @@ classdef SuiteEllTube < mlunitext.test_case
             rel=self.auxGenSimpleTubeAndProj(...
                 nFirstPoints,nTubes,nFirstPoints);
             check([0 -1]);
-            check([1 -1]);
+            check([1 -1]./norm([1 -1]));
             check([1 0]);
             function check(projMat)
                 rel1Proj=rel.projectStatic(projMat);
@@ -314,7 +314,7 @@ classdef SuiteEllTube < mlunitext.test_case
             QArrayList = repmat({repmat(diag([1 2 3]),[1,1,nPoints])},1,nTubes);
             scaleFactor = 1.01;
             projType=gras.ellapx.enums.EProjType.Static;
-            projMatList={[1 0 1;0 1 1],[1 0 0;0 1 0]};
+            projMatList={[1 0 1;0 1 0],[1 0 0;0 1 0]};
             rel=create();
             relProj=rel.project(projType,projMatList,@fGetProjMat);
             relProj.plot();

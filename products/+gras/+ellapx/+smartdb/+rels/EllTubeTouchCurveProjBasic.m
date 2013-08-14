@@ -210,20 +210,22 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
                 self.checkSVsTConsistency(self.lsGoodDirOrigVec,...
                     self.ltGoodDirOrigMat,indSTime,'lsGoodDirNormOrig',...
                     'ltGoodDirNormOrigVec',fCheck2d);
-                nInd=length(self.projSTimeMat);
+                isLsTouchVec=self.isLsTouch;                
+                indTouchVec=find(isLsTouchVec);
+                nInd=sum(isLsTouchVec);
                 compareLsGoodDirVec=cell(nInd,1);
                 indList=cell(nInd,1);
-                isLsTouchVec=self.isLsTouch;
+                %
                 for iInd=1:nInd
-                    compareLsGoodDirVec{iInd}=self.projSTimeMat{iInd}*...
-                        self.lsGoodDirOrigVec{iInd};
-                    if isLsTouchVec(iInd)
-                        compareLsGoodDirVec{iInd}=compareLsGoodDirVec{iInd}./...
-                            norm(compareLsGoodDirVec{iInd});
-                    end
-                    indList{iInd}=1:size(self.projSTimeMat{iInd},1);
+                    indTouch=indTouchVec(iInd);
+                    compareLsGoodDirVec{iInd}=self.projSTimeMat{indTouch}*...
+                        self.lsGoodDirOrigVec{indTouch};
+                    compareLsGoodDirVec{iInd}=compareLsGoodDirVec{iInd}./...
+                        norm(compareLsGoodDirVec{iInd});
                 end
-                self.checkSVsTConsistency(self.lsGoodDirVec,...
+                %
+                fCheck=@(x,y,z)max(abs(x-y))<=TS_CHECK_TOL;
+                self.checkSVsTConsistency(self.lsGoodDirVec(indTouchVec),...
                     compareLsGoodDirVec,indList,...
                     'lsGoodDirVec','lsGoodDirOrigVec',fCheck);
             end
