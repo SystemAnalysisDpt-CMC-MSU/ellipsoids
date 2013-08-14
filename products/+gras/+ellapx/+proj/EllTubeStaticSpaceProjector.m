@@ -19,7 +19,7 @@ classdef EllTubeStaticSpaceProjector<gras.ellapx.proj.AEllTubePlainProjector
 %                 throwwarn('WrongInput','projMat is not orthogonal');
 %             end
             projMat = gras.la.matorth(projMat');
-            projMat = projMat(1:kSize,:);
+            projMat = projMat(:,1:kSize)';
             nTimes=length(timeVec);
             projOrthMatArray=repmat(projMat,[1 1 nTimes]);
             projOrthMatTransArray=repmat(projMat.',[1 1 nTimes]);            
