@@ -83,7 +83,8 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             %
             STubeData.QArray=cellfun(@(x,y)x.*y,STubeData.QArray,...
                 scaleQFactorList,'UniformOutput',false);
-            STubeData.QArray=cellfun(@(x)0.5*(x+SquareMatVector.transpose(x)),STubeData.QArray,...
+            STubeData.QArray=cellfun(@(x)0.5*(x+SquareMatVector.transpose(x)),...
+                STubeData.QArray,...
                 'UniformOutput',false);
             STubeData.MArray=cellfun(@(x,y)x.*y,STubeData.MArray,...
                 scaleQFactorList,'UniformOutput',false);
@@ -602,8 +603,6 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             import gras.ellapx.smartdb.rels.EllTubeBasic;
             import modgen.common.checkvar;
             import gras.gen.SquareMatVector;
-            ABS_TOL=1e-7;
-            %
             checkvar(projType,@(x)isa(x,'gras.ellapx.enums.EProjType')&&...
                 isscalar(x));
             checkvar(projMatList,@(x)iscell(x)&&...
@@ -691,6 +690,8 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     %
                     for iLDir=1:nLDirs
                         iOLDir=indLDirs(iLDir);
+                        %
+                        absTol=STubeData.calcPrecision(iOLDir);
                         tubeProjDataCMat{iGroup,iProj}.lsGoodDirOrigVec{iLDir}=...
                             STubeData.lsGoodDirVec{iOLDir};
                         tubeProjDataCMat{iGroup,iProj}.ltGoodDirOrigMat{iLDir}=...
@@ -736,8 +737,8 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                         ltProjGoodDirNormVec=...
                             realsqrt(dot(ltGoodDirMat,ltGoodDirMat,1));
                         %
-                        %compare norms of original and projected directions
-                        isnLtTouchVec=abs(ltProjGoodDirNormVec-1)>ABS_TOL;
+                        %check norm of projected direction
+                        isnLtTouchVec=abs(ltProjGoodDirNormVec-1)>absTol;
                         ltGoodDirMat(:,isnLtTouchVec)=0;
                         ltGoodDirMat=ltGoodDirMat.*repmat(ltGoodDirNormOrigVec,dimProj,1);
                         %store final ltGoodDirMat and lsGoodDirVec

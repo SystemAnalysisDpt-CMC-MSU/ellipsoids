@@ -7,7 +7,7 @@ classdef EllUnionTubeBasic<handle
         FCODE_TIME_TOUCH_END_VEC
         FCODE_TIME_TOUCH_OP_END_VEC   
         FCODE_IS_LS_TOUCH_OP        
-        FCODE_IS_LT_TOUCH_OP_VEC        
+        FCODE_IS_LT_TOUCH_OP_VEC   
     end
     methods(Access=protected)
         setDataInternal(~);

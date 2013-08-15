@@ -279,14 +279,20 @@ classdef SuiteEllTube < mlunitext.test_case
         end
         %
         function testProjectAdv(self)
+            import gras.ellapx.smartdb.rels.EllUnionTube;
             nFirstPoints=100;
             nTubes=2;
-            rel=self.auxGenSimpleTubeAndProj(...
+            [rel]=self.auxGenSimpleTubeAndProj(...
                 nFirstPoints,nTubes,nFirstPoints);
+            %
+            unionEllTube = EllUnionTube.fromEllTubes(rel);
+            %
+            check([1 0]);            
             check([0 -1]);
-            check([1 -1]./norm([1 -1]));
-            check([1 0]);
+            check([1 -1]);
             function check(projMat)
+                rel0Proj=unionEllTube.projectStatic(projMat);                
+                %                
                 rel1Proj=rel.projectStatic(projMat);
                 rel2Proj=rel.projectStatic({projMat});
                 [isPos,reportStr]=rel1Proj.isEqual(rel2Proj);
