@@ -972,11 +972,20 @@ classdef AReach < elltool.reach.IReach
             APPROX_TYPE = F.APPROX_TYPE;
             SData = self.ellTubeRel.getTuplesFilteredBy(APPROX_TYPE,...
                 EApproxType.External);
-            directionsCVec = SData.ltGoodDirMat.';
+            if self.isprojection()
+                ltGoodDirFieldName='ltGoodDirOrigProjMat';
+            else
+                ltGoodDirFieldName='ltGoodDirMat';
+            end
+            directionsCVec = SData.(ltGoodDirFieldName).';
+            lsGoodDirVecList=cellfun(@(x,y)x(:,y),...
+                SData.(ltGoodDirFieldName),...
+                num2cell(SData.indSTime),'UniformOutput',false);
+            %
             if nargout > 1
                 timeVec = SData.timeVec{1};
                 if nargout>2
-                    l0Mat=horzcat(SData.lsGoodDirVec{:});
+                    l0Mat=horzcat(lsGoodDirVecList{:});
                 end
             end
         end

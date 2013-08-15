@@ -669,8 +669,10 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     tubeProjDataCMat{iGroup,iProj}.ltGoodDirMat=cell(nLDirs,1);
                     tubeProjDataCMat{iGroup,iProj}.lsGoodDirNormOrig=zeros(nLDirs,1);
                     tubeProjDataCMat{iGroup,iProj}.ltGoodDirNormOrigVec=cell(nLDirs,1);
+                    tubeProjDataCMat{iGroup,iProj}.ltGoodDirNormOrigProjVec=cell(nLDirs,1);
                     tubeProjDataCMat{iGroup,iProj}.lsGoodDirOrigVec=cell(nLDirs,1);
                     tubeProjDataCMat{iGroup,iProj}.ltGoodDirOrigMat=cell(nLDirs,1);
+                    tubeProjDataCMat{iGroup,iProj}.ltGoodDirOrigProjMat=cell(nLDirs,1);
                     %
                     tubeProjDataCMat{iGroup,iProj}.xsTouchVec=cell(nLDirs,1);
                     tubeProjDataCMat{iGroup,iProj}.xsTouchOpVec=cell(nLDirs,1);
@@ -736,6 +738,12 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                         %recalculate norms of projections
                         ltProjGoodDirNormVec=...
                             realsqrt(dot(ltGoodDirMat,ltGoodDirMat,1));
+                        isPosVec=ltProjGoodDirNormVec>absTol;                        
+                        %
+                        tubeProjDataCMat{iGroup,iProj}.ltGoodDirOrigProjMat{iLDir}(:,isPosVec)=...
+                            ltGoodDirMat(:,isPosVec)./repmat(ltProjGoodDirNormVec(isPosVec),dimProj,1);
+                        tubeProjDataCMat{iGroup,iProj}.ltGoodDirNormOrigProjVec{iLDir}=...
+                            ltGoodDirNormOrigVec.*ltProjGoodDirNormVec;
                         %
                         %check norm of projected direction
                         isnLtTouchVec=abs(ltProjGoodDirNormVec-1)>absTol;

@@ -285,13 +285,18 @@ classdef SuiteEllTube < mlunitext.test_case
             [rel]=self.auxGenSimpleTubeAndProj(...
                 nFirstPoints,nTubes,nFirstPoints);
             %
+            rel.aMat=cellfun(@(x,y)repmat(sin(x/10),y,1),rel.timeVec,...
+                num2cell(rel.dim),...
+                'UniformOutput',false);
             unionEllTube = EllUnionTube.fromEllTubes(rel);
             %
             check([1 0]);            
             check([0 -1]);
             check([1 -1]);
             function check(projMat)
-                rel0Proj=unionEllTube.projectStatic(projMat);                
+                rel0Proj=unionEllTube.projectStatic(projMat); 
+                [isOk,reportStr]=rel0Proj.isEqual(rel0Proj);
+                mlunitext.assert(isOk,reportStr);
                 %                
                 rel1Proj=rel.projectStatic(projMat);
                 rel2Proj=rel.projectStatic({projMat});
@@ -563,8 +568,9 @@ classdef SuiteEllTube < mlunitext.test_case
                 nDims=2;
                 lsGoodDirVec=[1;0];
                 QArrayList=createQArrayList(ones(1,nDims));
-                aMat=zeros(nDims,nPoints);
+                %aMat=zeros(nDims,nPoints);
                 timeVec=indStart:(indStart+nPoints-1);
+                aMat=repmat(sin(timeVec/10),nDims,1);                
                 sTime=indSTime;
                 approxType=gras.ellapx.enums.EApproxType.Internal;
                 %

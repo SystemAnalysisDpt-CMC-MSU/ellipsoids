@@ -79,8 +79,10 @@ classdef EllUnionTubeBasic<handle
                 end
             end
             function checkTAndS(fieldIsLtTouch,fieldTimeTouchEnd)
-                cellfun(@checkOneTAndS,self.(fieldIsLtTouch),...
-                    self.(fieldTimeTouchEnd));
+                if self.getNTuples()>0
+                    cellfun(@checkOneTAndS,self.(fieldIsLtTouch),...
+                        self.(fieldTimeTouchEnd));
+                end
                 function checkOneTAndS(isLtTouchVec,timeTouchEndVec)
                     import modgen.common.throwerror;
                     timeTouchNotNanVec=timeTouchEndVec(isLtTouchVec);

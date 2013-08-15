@@ -8,6 +8,8 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
 		FCODE_LT_GOOD_DIR_ORIG_MAT 
         FCODE_LS_GOOD_DIR_ORIG_VEC
         %
+        FCODE_LT_GOOD_DIR_NORM_ORIG_PROJ_VEC
+        FCODE_LT_GOOD_DIR_ORIG_PROJ_MAT
     end
     methods (Access=protected)
         function resStr=projSpecVec2Str(~,projSTimeMat)
@@ -127,11 +129,11 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
         %
         function [cMat,cOpMat]=getGoodDirColor(self,hAxes,~,~,...
                 ~,~,~,~,...
-                ~,ltGoodDirNormVec,ltGoodDirNormOrigVec,...
-                varargin)
+                ~,~,ltGoodDirNormOrigVec,...
+                ~,~,~,~,ltGoodDirNormOrigProjVec,varargin)
             ONE_NORM_COLOR_RGB_VEC=[1 0 0];%RED
             ZERO_NORM_COLOR_RGB_VEC=[1 1 0];%YELLOW
-            normRatioVec=ltGoodDirNormVec./ltGoodDirNormOrigVec;
+            normRatioVec=ltGoodDirNormOrigProjVec./ltGoodDirNormOrigVec;
             nPoints=length(normRatioVec);
             cMat=repmat(ZERO_NORM_COLOR_RGB_VEC,nPoints,1)+...
                 normRatioVec.'*(ONE_NORM_COLOR_RGB_VEC-...
@@ -144,26 +146,27 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
         function hVec = plotCreateGoodDirFunc(self, plotPropProcObj,...
                 hAxes, varargin)
             
-            [~, timeVec, lsGoodDirOrigVec, ltGoodDirMat, sTime,...
-                ~, ~, ~, ltGoodDirNormOrigVec] = deal(varargin{1:9});
-            
+            [~, timeVec, lsGoodDirOrigVec, ~, sTime,...
+                ~, ~, ~,~,~,~,~,~,...
+                ~,ltGoodDirOrigProjMat] = deal(varargin{:});
+            %
             import gras.ellapx.enums.EProjType;
             import gras.ellapx.smartdb.PlotPropProcessor;
-            
-            [cMat, cOpMat]=self.getGoodDirColor(hAxes, varargin{:});
-            
-            lineWidth = plotPropProcObj.getLineWidth(varargin(:));
-            
-            hVec(2)=dispDirCurve(ltGoodDirMat,lsGoodDirOrigVec,cMat);
             %
-            hVec(1)=dispDirCurve(-ltGoodDirMat,-lsGoodDirOrigVec,cOpMat);
+            [cMat, cOpMat]=self.getGoodDirColor(hAxes, varargin{:});
+            %
+            lineWidth = plotPropProcObj.getLineWidth(varargin(:));
+            %
+            hVec(2)=dispDirCurve(ltGoodDirOrigProjMat,lsGoodDirOrigVec,cMat);
+            %
+            hVec(1)=dispDirCurve(-ltGoodDirOrigProjMat,-lsGoodDirOrigVec,cOpMat);
             axis(hAxes,'vis3d');
             function hVec=dispDirCurve(ltGoodDirMat,lsGoodDirOrigVec,cMat)
                 import modgen.graphics.plot3adv;
                 goodDirStr=self.goodDirProp2Str(lsGoodDirOrigVec,...
                     sTime);                
                 plotName=['Good directions curve: ',goodDirStr];
-                vMat=ltGoodDirMat./repmat(ltGoodDirNormOrigVec,2,1);
+                vMat=ltGoodDirMat;
                 hVec=plot3adv(timeVec.',vMat(1,:).',vMat(2,:).',cMat,...
                     'lineWidth', lineWidth,'Parent',hAxes,'DisplayName',plotName);
             end
@@ -228,6 +231,22 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
                 self.checkSVsTConsistency(self.lsGoodDirVec(indTouchVec),...
                     compareLsGoodDirVec,indList,...
                     'lsGoodDirVec','lsGoodDirOrigVec',fCheck);
+                %
+                isNanMatList=cellfun(@isnan,self.ltGoodDirMat,...
+                    'UniformOutput',false);
+                %
+                self.checkSVsTConsistency(self.ltGoodDirMat,...
+                    self.ltGoodDirOrigProjMat,isNanMatList,...
+                    'ltGoodDirMat','ltGoodDirOrigProjMat',...
+                    @(x,y,z)isequal(x(z),y(z)));     
+                %
+                isNanNormVecList=cellfun(@isnan,self.ltGoodDirNormVec,...
+                    'UniformOutput',false);                
+                self.checkSVsTConsistency(self.ltGoodDirNormVec,...
+                    self.ltGoodDirNormOrigProjVec,isNanNormVecList,...
+                    'ltGoodDirNormVec','ltGoodDirNormOrigProjVec',...
+                    @(x,y,z)isequal(x(z),y(z)));                     
+                %
             end
         end
     end

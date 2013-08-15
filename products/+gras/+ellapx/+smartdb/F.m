@@ -98,6 +98,14 @@ classdef F<smartdb.gen.AFieldDefs
         LT_GOOD_DIR_NORM_ORIG_VEC_D='Norm of the original (not projected) good direction curve';
         LT_GOOD_DIR_NORM_ORIG_VEC_T={'cell','double'};
         %
+        LT_GOOD_DIR_NORM_ORIG_PROJ_VEC='ltGoodDirNormOrigProjVec';
+        LT_GOOD_DIR_NORM_ORIG_PROJ_VEC_D='Norm of the projecttion of original good direction curve';
+        LT_GOOD_DIR_NORM_ORIG_PROJ_VEC_T={'cell','double'};
+        %
+        LT_GOOD_DIR_ORIG_PROJ_MAT = 'ltGoodDirOrigProjMat';
+        LT_GOOD_DIR_ORIG_PROJ_MAT_D = 'Projectition of original good direction curve';
+        LT_GOOD_DIR_ORIG_PROJ_MAT_T = {'cell', 'double'};        
+        %
         LS_GOOD_DIR_NORM_ORIG='lsGoodDirNormOrig';
         LS_GOOD_DIR_NORM_ORIG_D='Norm of the original (not projected) good direction at time s';
         LS_GOOD_DIR_NORM_ORIG_T={'double'};
@@ -142,7 +150,6 @@ classdef F<smartdb.gen.AFieldDefs
         TIME_TOUCH_OP_END_VEC='timeTouchOpEndVec';
         TIME_TOUCH_OP_END_VEC_D='Touch point curve for good direction';
         TIME_TOUCH_OP_END_VEC_T={'cell','double'};
-        %
         %
         SCALE_FACTOR='scaleFactor';
         SCALE_FACTOR_D='Tube scale factor';

@@ -467,16 +467,16 @@ classdef EllUnionTubeStaticProj<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&..
             end
         end
     end
-    methods (Access=protected)
-        function [isOk,reportStr]=isEqualAdjustedInternal(self,otherRel,varargin)
-            import gras.ellapx.smartdb.rels.EllTubeProj;
-            selfReducedRel=EllTubeProj(self,'checkStruct',false(1,3));
-            otherReducedRel=EllTubeProj(otherRel,'checkStruct',false(1,3));
-            [isOk,reportStr]=...
-                isEqualAdjustedInternal@gras.ellapx.smartdb.rels.EllTubeProjBasic(...
-                selfReducedRel,otherReducedRel,varargin{:});
-        end
-    end
+%     methods (Access=protected)
+%         function [isOk,reportStr]=isEqualAdjustedInternal(self,otherRel,varargin)
+%             import gras.ellapx.smartdb.rels.EllTubeProj;
+%             selfReducedRel=EllTubeProj(self,'checkStruct',false(1,3));
+%             otherReducedRel=EllTubeProj(otherRel,'checkStruct',false(1,3));
+%             [isOk,reportStr]=...
+%                 isEqualAdjustedInternal@gras.ellapx.smartdb.rels.EllTubeProjBasic(...
+%                 selfReducedRel,otherReducedRel,varargin{:});
+%         end
+%     end
     methods (Static)
         function ellUnionProjRel=fromEllTubes(ellTubeRel)
             % FROMELLTUBES - returns union of the ellipsoidal tubes on time

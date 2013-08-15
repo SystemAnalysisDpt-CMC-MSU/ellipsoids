@@ -664,6 +664,7 @@ classdef EllTube<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&...
                 ellTubeProjRel=EllTubeProj(rel);
             else
                 ellTubeProjRel=EllTubeProj();
+                indProj2OrigVec=zeros(0,1);
             end
         end
     end

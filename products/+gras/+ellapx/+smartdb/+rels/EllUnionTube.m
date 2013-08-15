@@ -200,6 +200,7 @@ classdef EllUnionTube<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&...
                 ellTubeProjRel=EllUnionTubeStaticProj(projRel);
             else
                 ellTubeProjRel=EllUnionTubeStaticProj();
+                indProj2OrigVec=zeros(0,1);
             end
             function isTouchVec=calcTouchCandidateVec(normVec,indTimeVec,absTol)
                 isTouchVec=false(size(normVec));
