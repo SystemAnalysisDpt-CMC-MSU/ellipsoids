@@ -1010,7 +1010,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 maxRelCompareTol=maxCompareTol;
             end
             %
-            notComparedFieldList=[notComparedFieldList,...
+            notComparedFieldList=[notComparedFieldList(:);...
                 self.getNotComparedFieldsList()];
             %
             %TODO: the following line is temporary solution until we
