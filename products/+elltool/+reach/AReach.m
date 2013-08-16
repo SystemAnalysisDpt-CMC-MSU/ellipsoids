@@ -1212,12 +1212,93 @@ classdef AReach < elltool.reach.IReach
         end
         %
         function eaPlotter = plotByEa(self, varargin)
+            %
+            % plotByEa - plots external approximation of reach tube.
+            %
+            %
+            % Usage:
+            %       plotByEa(self,'Property',PropValue,...)
+            %       - plots external approximation of reach tube
+            %            with  setting properties
+            %
+            % Input:
+            %   regular:
+            %       self: - reach tube
+            %
+            %   optional:
+            %       relDataPlotter:smartdb.disp.RelationDataPlotter[1,1] - relation data plotter object.
+            %       charColor: char[1,1]  - color specification code, can be 'r','g',
+            %                      etc (any code supported by built-in Matlab function).
+            %   properties:
+            %
+            %       'fill': logical[1,1]  -
+            %               if 1, tube in 2D will be filled with color.
+            %               Default value is true.
+            %       'lineWidth': double[1,1]  -
+            %                    line width for 2D plots. Default value is 2.
+            %       'color': double[1,3] -
+            %                sets default colors in the form [x y z].
+            %                   Default value is [0 0 1].
+            %       'shade': double[1,1]  -
+            %      level of transparency between 0 and 1 (0 - transparent, 1 - opaque).
+            %                Default value is 0.3.
+            %
+            % Output:
+            %   regular:
+            %       plObj: smartdb.disp.RelationDataPlotter[1,1] - returns the relation
+            %       data plotter object.
+            %
+            %
+            % $Author: <Ilya Lyubich>  <lubi4ig@gmail.com> $    $Date: <15 July 2013> $
+            % $Copyright: Moscow State University,
+            %            Faculty of Computational Mathematics and Cybernetics,
+            %            System Analysis Department 2013 $
             import gras.ellapx.enums.EApproxType;
             eaPlotter = self.plotByApprox(EApproxType.External,...
                 varargin{:});
             
         end
         function iaPlotter = plotByIa(self, varargin)
+            % plotByIa - plots internal approximation of reach tube.
+            %
+            %
+            % Usage:
+            %       plotByIa(self,'Property',PropValue,...)
+            %       - plots internal approximation of reach tube
+            %            with  setting properties
+            %
+            % Input:
+            %   regular:
+            %       self: - reach tube
+            %
+            %   optional:
+            %       relDataPlotter:smartdb.disp.RelationDataPlotter[1,1] - relation data plotter object.
+            %       charColor: char[1,1]  - color specification code, can be 'r','g',
+            %                      etc (any code supported by built-in Matlab function).
+            %   properties:
+            %
+            %       'fill': logical[1,1]  -
+            %               if 1, tube in 2D will be filled with color.
+            %               Default value is true.
+            %       'lineWidth': double[1,1]  -
+            %                    line width for 2D plots. Default value is 2.
+            %       'color': double[1,3] -
+            %                sets default colors in the form [x y z].
+            %                   Default value is [0 1 0].
+            %       'shade': double[1,1]  -
+            %      level of transparency between 0 and 1 (0 - transparent, 1 - opaque).
+            %                Default value is 0.1.
+            %
+            % Output:
+            %   regular:
+            %       plObj: smartdb.disp.RelationDataPlotter[1,1] - returns the relation
+            %       data plotter object.
+            %
+            %
+            % $Author: <Ilya Lyubich>  <lubi4ig@gmail.com> $    $Date: <15 July 2013> $
+            % $Copyright: Moscow State University,
+            %            Faculty of Computational Mathematics and Cybernetics,
+            %            System Analysis Department 2013 $
             import gras.ellapx.enums.EApproxType;
             iaPlotter = self.plotByApprox(EApproxType.Internal,...
                 varargin{:});

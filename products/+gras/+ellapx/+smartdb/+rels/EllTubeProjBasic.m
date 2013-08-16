@@ -446,7 +446,7 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
             end
         end
         function plObj = plotExt(self,varargin)
-            % PLOTExt - plots external approximation of ellTube.
+            % PLOTEXT - plots external approximation of ellTube.
             %
             %
             % Usage:
@@ -459,27 +459,38 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
             %   regular:
             %       obj:  EllTubeProj: EllTubeProj object
             %   optional:
+            %       relDataPlotter:smartdb.disp.RelationDataPlotter[1,1] - relation data plotter object.
             %       colorSpec: char[1,1] - color specification code, can be 'r','g',
             %                    etc (any code supported by built-in Matlab function).
             %
             %   properties:
             %
-            %       'fill': logical[1,1]  -
-            %               if true, approximation in 2D will be filled with color.
-            %        Default value is false.
-            %       'lineWidth': double[1,1]  -
-            %                    line width for  2D plots. Default value is 1.
-            %       'color': double[1,3] -
-            %                sets default color in the form [x y z].
-            %                   Default value is [0.5 0.5 0.5].
-            %       'shade': double[1,1] -
-            %       level of transparency between 0 and 1 (0 - transparent, 1 - opaque).
-            %                Default value is 0.4.
-            %
-            %       'relDataPlotter' - relation data plotter object.
+            %       fGetColor: function_handle[1, 1] -
+            %           function that specified colorVec for
+            %           ellipsoidal tubes
+            %       fGetAlpha: function_handle[1, 1] -
+            %           function that specified transparency
+            %           value for ellipsoidal tubes
+            %       fGetLineWidth: function_handle[1, 1] -
+            %           function that specified lineWidth for good curves
+            %       fGetFill: function_handle[1, 1] - this
+            %           property not used in this version
+            %       colorFieldList: cell[nColorFields, ] of char[1, ] -
+            %           list of parameters for color function
+            %       alphaFieldList: cell[nAlphaFields, ] of char[1, ] -
+            %           list of parameters for transparency function
+            %       lineWidthFieldList: cell[nLineWidthFields, ]
+            %           of char[1, ] - list of parameters for lineWidth
+            %           function
+            %       fillFieldList: cell[nIsFillFields, ] of char[1, ] -
+            %           list of parameters for fill function
+            %       plotSpecFieldList: cell[nPlotFields, ] of char[1, ] -
+            %           defaul list of parameters. If for any function in
+            %           properties not specified list of parameters,
+            %           this one will be used
             %       'showDiscrete':logical[1,1]  -
             %           if true, approximation in 3D will be filled in every time slice
-            %       'numPointsInOneTime': double[1,1] -
+            %       'nSpacePartPoins': double[1,1] -
             %           number of points in every time slice.
             % Output:
             %   regular:
@@ -512,39 +523,44 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
             %   regular:
             %       obj:  EllTubeProj: EllTubeProj object
             %   optional:
+            %       relDataPlotter:smartdb.disp.RelationDataPlotter[1,1] - relation data plotter object.
             %       colorSpec: char[1,1] - color specification code, can be 'r','g',
             %                    etc (any code supported by built-in Matlab function).
             %
             %   properties:
             %
-            %       'fill': logical[1,1]  -
-            %               if true, approximation in 2D will be filled with color.
-            %        Default value is false.
-            %       'lineWidth': double[1,1]  -
-            %                    line width for  2D plots. Default value is 1.
-            %       'color': double[1,3] -
-            %                sets default color in the form [x y z].
-            %                   Default value is [0.5 0.5 0.5].
-            %       'shade': double[1,1] -
-            %       level of transparency between 0 and 1 (0 - transparent, 1 - opaque).
-            %                Default value is 0.4.
-            %
-            %       'relDataPlotter' - relation data plotter object.
+            %       fGetColor: function_handle[1, 1] -
+            %           function that specified colorVec for
+            %           ellipsoidal tubes
+            %       fGetAlpha: function_handle[1, 1] -
+            %           function that specified transparency
+            %           value for ellipsoidal tubes
+            %       fGetLineWidth: function_handle[1, 1] -
+            %           function that specified lineWidth for good curves
+            %       fGetFill: function_handle[1, 1] - this
+            %           property not used in this version
+            %       colorFieldList: cell[nColorFields, ] of char[1, ] -
+            %           list of parameters for color function
+            %       alphaFieldList: cell[nAlphaFields, ] of char[1, ] -
+            %           list of parameters for transparency function
+            %       lineWidthFieldList: cell[nLineWidthFields, ]
+            %           of char[1, ] - list of parameters for lineWidth
+            %           function
+            %       fillFieldList: cell[nIsFillFields, ] of char[1, ] -
+            %           list of parameters for fill function
+            %       plotSpecFieldList: cell[nPlotFields, ] of char[1, ] -
+            %           defaul list of parameters. If for any function in
+            %           properties not specified list of parameters,
+            %           this one will be used
             %       'showDiscrete':logical[1,1]  -
             %           if true, approximation in 3D will be filled in every time slice
-            %       'numPointsInOneTime': double[1,1] -
+            %       'nSpacePartPoins': double[1,1] -
             %           number of points in every time slice.
             % Output:
             %   regular:
             %       plObj: smartdb.disp.RelationDataPlotter[1,1] - returns the relation
             %       data plotter object.
             %
-            
-            
-            % $Author: <Ilya Lyubich>  <lubi4ig@gmail.com> $    $Date: <30 January  2013> $
-            % $Copyright: Moscow State University,
-            %            Faculty of Computational Mathematics and Cybernetics,
-            %            System Analysis Department 2013 $
             import gras.ellapx.enums.EApproxType;
             approxType = gras.ellapx.enums.EApproxType.Internal;
             plObj = self.getTuplesFilteredBy(...
