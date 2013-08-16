@@ -200,6 +200,7 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
         function checkDataConsistency(self)
             import gras.gen.SquareMatVector;
             %
+            ABS_TOL=1e-14;
             if self.getNTuples()>0
                 %
                 TS_CHECK_TOL=1e-13;
@@ -238,7 +239,7 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
                     self.ltGoodDirOrigProjMat,'ltGoodDirMat',...
                     'ltGoodDirOrigProjMat');
                 %         
-                fCheck=@(x,y,z)all(all(abs(x(:,z)-y(:,z))<2*eps));
+                fCheck=@(x,y,z)all(all(abs(x(:,z)-y(:,z))<ABS_TOL));
                 self.checkSVsTConsistency(self.ltGoodDirMat,...
                     self.ltGoodDirOrigProjMat,isnZeroNormVecList,...
                     'ltGoodDirMat','ltGoodDirOrigProjMat',...
