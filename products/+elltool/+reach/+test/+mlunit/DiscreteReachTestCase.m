@@ -159,6 +159,8 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             k1 = self.tIntervalVec(2);
             
             nDirections = size(self.l0Mat, 2);
+            nDims=size(self.l0Mat, 1);
+            %
             pCMat = self.linSys.getUBoundsEll().shape;
             
             syms t;
@@ -175,12 +177,12 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             else
                 tVec = k0:k1;
             end
-            
-            [directionsCVec ~] = self.reachObj.get_directions();
+            %
             [trCenterMat ~] = self.reachObj.get_center();
-            
+            [directionsList,~]=self.reachObj.get_directions();
+            %
             x0Mat = double(self.x0Ell);
-            
+            %
             supFunMat = zeros(nTimeStep, nDirections);
             for iDirection = 1:nDirections
                 lVec = self.l0Mat(:, iDirection);
@@ -194,17 +196,17 @@ classdef DiscreteReachTestCase < mlunitext.test_case
                             rMatCalc(tVec(kTime + 1)) * ltVec);
                     else
                         ltVec= self.fundCMat{1, kTime + 1}' * lVec;
-                        ltVec=ltVec./norm(ltVec);
                         supFunMat(kTime + 1, iDirection) = ...
                             supFunMat(kTime, iDirection) + ...
                             sqrt(ltVec'*rMatCalc(tVec(kTime)) * ltVec);
                     end
                 end
-                
+                %
                 for kTime = 1:nTimeStep
-                    curDirectionVec = directionsCVec{iDirection}(:, kTime);
-                    supFunMat(kTime, iDirection) = supFunMat(kTime, iDirection) + ...
-                        curDirectionVec' * trCenterMat(:, kTime);
+                    curDirectionVec=self.fundCMat{1, kTime}' * lVec;
+                    normVal=norm(curDirectionVec);
+                    supFunMat(kTime, iDirection) = supFunMat(kTime, iDirection)./normVal + ...
+                        curDirectionVec' * trCenterMat(:, kTime)./normVal;
                 end
             end
             
@@ -288,7 +290,7 @@ classdef DiscreteReachTestCase < mlunitext.test_case
         end
         
         function self = testGetEa(self)
-            expectedSupFunMat = self.calculateSupFunMat(self);
+            expectedSupFunMat = self.calculateSupFunMat();
             
             k0 = self.tIntervalVec(1);
             k1 = self.tIntervalVec(2);
