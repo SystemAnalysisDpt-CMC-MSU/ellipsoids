@@ -84,22 +84,8 @@ classdef DiscreteReachRegTestCase < mlunitext.test_case
             DistBounds.center = {'2*cos(t)'};
             ControlBounds = self.ControlBounds;
             DistBounds = self.DistBounds;
-            
-            % 1
-            
-            timeVec = [0 23];
-            ControlBoundsTest = 100 * ellipsoid(eye(2));
-            linSys = elltool.linsys.LinSysDiscrete(...
-                atDefCMat, btDefCMat, ControlBounds);
-            self.runAndCheckError(...
-                ['elltool.reach.ReachDiscrete(linSys, x0Ell,',...
-                'l0Mat, timeVec, ''isRegEnabled'', true, ',...
-                '''isJustCheck'', false, ''regTol'', 0.01)'],...
-                ['ELLTOOL:REACH:AREACH:',...
-                'MAKEELLTUBEREL:wrongInput:BadCalcPrec']);
-            
-            % 2
-            
+            %
+            %% 1
             btDefCMat = {'sin(t - 1)' 'sin(t - 1)'; 'sin(t - 1)' 'sin(t - 1)'; ...
                 'sin(t - 1)' 'sin(t - 1)'; 'sin(t - 1)' 'sin(t - 1)'};
             timeVec = [0 5];
@@ -110,22 +96,42 @@ classdef DiscreteReachRegTestCase < mlunitext.test_case
                 ['elltool.reach.ReachDiscrete(linSys, x0Ell,',...
                 'l0Mat, timeVec, ''isRegEnabled'', true, ',...
                 '''isJustCheck'', true, ''regTol'', regTol)'],...
-                ['ELLTOOL:REACH:AREACH:MAKEELLTUBEREL:',...
-                'wrongInput:regProblem:onlyCheckIsEnabled']);
-            
-            % 3
-            
-            btDefCMat = self.btDefCMat;
-            timeVec = [0 50];
-            ControlBoundsTest = ellipsoid(eye(2));
-            linSys = elltool.linsys.LinSysDiscrete(...
-                atDefCMat, btDefCMat, ControlBounds);
-            self.runAndCheckError(...
-                ['elltool.reach.ReachDiscrete(linSys, x0Ell,',...
-                'l0Mat, timeVec, ''isRegEnabled'', false, ',...
-                '''isJustCheck'', false, ''regTol'', 1e-5)'],...
-                ['ELLTOOL:REACH:REACHDISCRETE:',...
-                'AUXMAKEELLTUBEREL:wrongInput:ShapeMatCalcFailure']);
+                'MAKEELLTUBEREL:wrongInput:regProblem:onlyCheckIsEnabled');
+            %
+            %% 2 OVERFLOW
+            self.runAndCheckError(@runBad2,...
+                'MAKEELLTUBEREL:wrongInput:ShapeMatCalcFailure');
+            %
+            %% 3 DEGRADED ESTIMATE, DEGRADED INITIAL SET
+            self.runAndCheckError(@runBad3,...
+                'MAKEELLTUBEREL:wrongInput:degradedEstimate');
+            %
+            function runBad3()%degraded estimate
+                btDefCMat = self.btDefCMat;
+                ctDefMat=diag([0 1 1 1]);
+                timeVec = [0 1];
+                ControlBoundsTest = ellipsoid(eye(2));
+                l0Mat=eye(4);
+                vVec=ones(4,1);
+                linSys = elltool.linsys.LinSysDiscrete(...
+                    atDefCMat, btDefCMat, ControlBoundsTest,ctDefMat,...
+                    vVec);
+                x0Ell=ellipsoid(diag([0 1 1 1]));
+                %
+                elltool.reach.ReachDiscrete(linSys, x0Ell,...
+                    l0Mat, timeVec);
+            end
+                %
+            function runBad2()%overflow
+                btDefCMat = self.btDefCMat;
+                timeVec = [0 50];
+                ControlBoundsTest = ellipsoid(eye(2));
+                linSys = elltool.linsys.LinSysDiscrete(...
+                    atDefCMat, btDefCMat, ControlBounds);
+                elltool.reach.ReachDiscrete(linSys, x0Ell,...
+                    l0Mat, timeVec, 'isRegEnabled', false,...
+                    'isJustCheck', false, 'regTol', 1e-5);
+            end
         end
     end
     

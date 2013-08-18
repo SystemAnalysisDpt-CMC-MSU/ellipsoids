@@ -89,9 +89,14 @@ classdef MatVector
             end
         end
         %
-        function cMat = rMultiplyByVec(aArray,bMat,useSparseMatrix)
+        function cMat=rMultiplyByVec(aArray,bMat,useSparseMatrix)
+            import modgen.common.throwerror;
             if nargin < 3
                 useSparseMatrix = true;
+			end
+            if ~ismatrix(bMat)
+                throwerror('wrongInput',...
+                    'bMat is expected to be 2-dimensional array');
             end
             [nRows, nCols, nTimePoints] = size(aArray);
             if useSparseMatrix
@@ -106,7 +111,7 @@ classdef MatVector
                 for iTimePoint = 1:nTimePoints
                     cMat(:,iTimePoint) = ...
                         aArray(:,:,iTimePoint)*bMat(:,iTimePoint);
-                end;
+                end
             end
         end
         %

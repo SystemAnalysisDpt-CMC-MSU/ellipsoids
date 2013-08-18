@@ -4,7 +4,7 @@ function oMat=matorth(srcMat)
 %
 % Input:
 %   regular:
-%       srcMat: double[nDims,1]
+%       srcMat: double[nDims,nCols]
 %
 % Output:
 %   oMat: double[nDims,nDims]

@@ -22,8 +22,8 @@ function [message,stacktrace]=obj2str(err,varargin)
 %
 
 
-stacktrace = modgen.exception.me.printstack(err.stack,varargin{:});
-[message, stacktrace] = modgen.exception.me.parsemessage(err.message, stacktrace);
+[message, Stack] = modgen.exception.me.parsemessage(err.message, err.stack);
+stacktrace = modgen.exception.me.printstack(Stack,varargin{:});
 stacktrace = sprintf('%s\n', stacktrace);
 nCause=length(err.cause);
 for iCause=1:nCause

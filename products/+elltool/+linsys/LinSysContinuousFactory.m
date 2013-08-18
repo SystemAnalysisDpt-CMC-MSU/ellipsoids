@@ -6,7 +6,8 @@ classdef LinSysContinuousFactory
     %
     %  create - Returns LinSysContinuous object.
     %
-    % $Authors: Igor Kitsenko <kitsenko@gmail.com> $              $Date: March-2013 $
+    % $Authors: Igor Kitsenko <kitsenko@gmail.com> $    $Date: March-2013 $
+    % $Authors: Igor Kitsenko <pgagarinov@gmail.com> $  $Date: June-2013 $    
     % $Copyright: Moscow State University,
     %            Faculty of Computational Mathematics and Computer Science,
     %            System Analysis Department 2012 $
@@ -17,8 +18,7 @@ classdef LinSysContinuousFactory
             % CREATE returns continuous-time linear system object.
             %
             % Continuous-time linear system:
-            %           dx/dt  =  A(t) x(t)  +  B(t) u(t)  +  G(t) v(t)
-            %            y(t)  =  C(t) x(t)  +  w(t)
+            %           dx/dt  =  A(t) x(t)  +  B(t) u(t)  +  C(t) v(t)
             %
             % Input:
             %   regular:
@@ -31,17 +31,11 @@ classdef LinSysContinuousFactory
             %       uBoundsEll: ellipsoid[1, 1]/struct[1, 1] -
             %           control bounds ellipsoid.
             %
-            %       gtInpMat: double[nDim, lDim]/cell[nDim, lDim] -
-            %           matrix G.
+            %       ctInpMat: double[nDim, lDim]/cell[nDim, lDim] -
+            %           matrix C.
             %
             %       distBoundsEll: ellipsoid[1, 1]/struct[1, 1] -
             %           disturbance bounds ellipsoid.
-            %
-            %       ctInpMat: double[mDim, nDim]/cell[mDim, nDim]-
-            %           matrix C.
-            %
-            %       noiseBoundsEll: ellipsoid[1, 1]/struct[1, 1] -
-            %           noise bounds ellipsoid.
             %
             %       discrFlag: char[1, 1] - if discrFlag set:
             %           'd' - to discrete-time linSys

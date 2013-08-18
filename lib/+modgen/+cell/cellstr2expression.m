@@ -16,7 +16,7 @@ function resStr = cellstr2expression(inpCMat)
 %            System Analysis Department 2012 $
 %
 %
-if ndims(inpCMat)~=2
+if ~ismatrix(inpCMat)
     modgen.common.throwerror('wrongInput',...
         'only 2 dimensional arrays are supported');
 end

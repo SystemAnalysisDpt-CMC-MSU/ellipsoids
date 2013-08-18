@@ -15,17 +15,17 @@ classdef SuiteSupportFunction < mlunitext.test_case
         ABS_TOL_FACTOR = 1e-3;
     end
     methods (Static)
-        function dSFunc = derSolFunction(t, x, fxVec, fTransRstMat, fAtMat,...
-                fBtMat, fPtVec, fPtMat)
+        function dSFunc = derSolFunction(t, x, fGetGoodDirVec,...
+                fTransRstMat, fAtMat, fPtVec, fPtMat)
             import gras.gen.matdot;
             %
-            cacheVec = (fxVec(t)') * fBtMat(t);
+            lVec=fGetGoodDirVec(t);
             % derivative Rtt0 function
-            cacheMat = fTransRstMat(t)';
-            cacheAMat = cacheMat * fAtMat(t);
-            dSFunc = cacheVec * fPtVec(t) + ...
-                realsqrt(cacheVec * fPtMat(t) * (cacheVec')) + ...
-                x * matdot(cacheMat, cacheAMat);
+            transMat = fTransRstMat(t)';
+            cacheAMat = transMat * fAtMat(t);
+            dSFunc = lVec.' * fPtVec(t) + ...
+                realsqrt(lVec.' * fPtMat(t) * lVec) + ...
+                x * matdot(transMat, cacheAMat);
         end
     end
     methods
@@ -103,19 +103,20 @@ classdef SuiteSupportFunction < mlunitext.test_case
                     calcPrecision);
                 mlunitext.assert_equals(true,isOk);
                 %
-                AtCMat = self.crmSys.getParam('At');
-                fAtMatCalc = @(t) ...
-                    matOpObj.fromSymbMatrix(AtCMat).evaluate(t);
-                BtCMat = self.crmSys.getParam('Bt');
-                fBtMatCalc = @(t) ...
-                    matOpObj.fromSymbMatrix(BtCMat).evaluate(t);
-                PtCVec = self.crmSys.getParam('control_restriction.a');
-                fPtVecCalc = @(t) ...
-                    matOpObj.fromSymbMatrix(PtCVec).evaluate(t);
-                PtCMat = self.crmSys.getParam('control_restriction.Q');
-                fPtMatCalc = @(t) ...
-                    matOpObj.fromSymbMatrix(PtCMat).evaluate(t);
-                x0Vec = self.crmSys.getParam('initial_set.a');
+                pDynObj=SRunAuxProp.pDynObj;
+                %
+                atMatDynObj=pDynObj.getAtDynamics();
+                %
+                fAtMatCalc = @(t)atMatDynObj.evaluate(t);
+                %
+                ptVecDynObj = pDynObj.getBptDynamics();
+                fPtVecCalc = @(t)ptVecDynObj.evaluate(t);
+                %
+                ptMatDynObj=pDynObj.getBPBTransDynamics();
+                fPtMatCalc = @(t)ptMatDynObj.evaluate(t);
+                %
+                x0Vec = pDynObj.getx0Vec;
+                x0Mat=pDynObj.getX0Mat;
                 %
                 timeCVec = SRunProp.ellTubeRel.timeVec;
                 nTuples = SRunProp.ellTubeRel.getNTuples;
@@ -163,13 +164,13 @@ classdef SuiteSupportFunction < mlunitext.test_case
                     currGoodDirVec = curGoodDirVecDynamicsObj.evaluate(...
                         curTimeVec(1));
                     supFun0 =...
-                        currGoodDirVec.' * curEllCenterMat(:, 1) +...
+                        currGoodDirVec.' * x0Vec +...
                         realsqrt(currGoodDirVec.' *...
-                        curEllMatArray(:, :, 1) * currGoodDirVec);
+                        x0Mat * currGoodDirVec);
                     %
                     [~, expResultMat] =...
                         ode45(@(t, x) self.derSolFunction(t,...
-                        x, fCalclVec, fCalcTransMat, fAtMatCalc, fBtMatCalc, ...
+                        x, fCalclVec, fCalcTransMat, fAtMatCalc, ...
                         fPtVecCalc, fPtMatCalc), curTimeVec,...
                         supFun0, OdeOptionsStruct);
                     %
@@ -185,9 +186,9 @@ classdef SuiteSupportFunction < mlunitext.test_case
                         expResultMat(:), calcPrecision, calcPrecision, ...
                         @abs);
                     if ~isOk
-                        reportStr = horzcat('Support function values ',...
+                        reportResStr = horzcat('Support function values ',...
                             reportStr);
-                        throwerror('tol', reportStr);
+                        throwerror('tol', reportResStr);
                     end
                 end
             end

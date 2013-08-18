@@ -259,6 +259,7 @@ classdef IReach < handle
         %       grid.
         %       
         %    timeVec: double[1, nPoints] - array of time values.
+        %    l0Mat: double[nDirs,nDims] - matrix of good directions at t0
         %
         % Example:
         %   aMat = [0 1; 0 0]; bMat = eye(2);
@@ -643,20 +644,20 @@ classdef IReach < handle
         %   dRsObj = elltool.reach.ReachRiscrete(dsys, x0EllObj, dirsMat, timeVec);
         %   rsObjArr = rsObj.repMat(1,2);
         %   dRsObjArr = dRsObj.repMat(1,2);
-        %   dRsObj.isempty();        
-        %   rsObj.isempty()
+        %   dRsObj.isEmpty();        
+        %   rsObj.isEmpty()
         %
         %   ans =
         %
         %        0
         %
-        %   dRsObjArr.isempty();
-        %   rsObjArr.isempty()
+        %   dRsObjArr.isEmpty();
+        %   rsObjArr.isEmpty()
         %
         %   ans = 
         %       [ 0  0 ]
         %
-        isEmptyArr = isempty(self)
+        isEmptyArr = isEmpty(self)
         %
         % REPMAT - is analogous to built-in repmat function with one exception - it
         %          copies the objects, not just the handles

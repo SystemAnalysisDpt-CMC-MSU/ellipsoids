@@ -1,4 +1,4 @@
-classdef NNDefMatCholCubicSpline<gras.interp.PosDefMatCholCubicSpline
+classdef NNDefMatCholMultCubicSpline<gras.interp.PosDefMatCholCubicSpline
     % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-10$
     % $Copyright: Moscow State University,
     %            Faculty of Computational Mathematics and Computer Science,
@@ -7,8 +7,8 @@ classdef NNDefMatCholCubicSpline<gras.interp.PosDefMatCholCubicSpline
         multInterpObj
     end
     methods
-        function self=NNDefMatCholCubicSpline(varargin)
-            % NNDefMatCholCubicSpline imlements an interpolation for
+        function self=NNDefMatCholMultCubicSpline(varargin)
+            % NNDefMatCholMultCubicSpline imlements an interpolation for
             % matrices represented as a product B*P*B' where P>0 and B is
             % arbitrary
             %
@@ -45,8 +45,8 @@ classdef NNDefMatCholCubicSpline<gras.interp.PosDefMatCholCubicSpline
             self.multInterpObj=gras.interp.MatrixColCubicSpline(multArgList{:});
         end
     end
-    methods (Access=public)
-        function dataArray=evaluate(self,timeVec,varargin)
+    methods (Access=protected)
+        function dataArray=evaluateInternal(self,timeVec,varargin)
             % EVALUATE
             %
             % Input:
@@ -59,7 +59,7 @@ classdef NNDefMatCholCubicSpline<gras.interp.PosDefMatCholCubicSpline
             %
             %
             posDataArray=...
-                evaluate@gras.interp.PosDefMatCholCubicSpline(...
+                evaluateInternal@gras.interp.PosDefMatCholCubicSpline(...
                 self,timeVec);
             multDataArray=self.multInterpObj.evaluate(timeVec);
             %

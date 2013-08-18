@@ -2,14 +2,14 @@ classdef ContinuousReachRefineTestCase < mlunitext.test_case
     properties (Access = private, Constant)
         SIZE_LIST = {[2 2], [2 2 3], [0 0 1 0 1]};
         ARRAY_METHODS_LIST = {'dimension', 'iscut', 'isprojection',...
-            'isempty'};
-    end    
+            'isEmpty'};
+    end
     properties (Access=private)
         l0P1Mat
         l0P2Mat
         reachFactObj
     end
-     methods
+    methods
         function self = ContinuousReachRefineTestCase(varargin)
             self = self@mlunitext.test_case(varargin{:});
         end
@@ -27,7 +27,8 @@ classdef ContinuousReachRefineTestCase < mlunitext.test_case
             import gras.ellapx.smartdb.F;
             %
             reachObj = self.reachFactObj.createInstance();
-            reachWholeObj = self.reachFactObj.createInstance('l0Mat',self.l0P1Mat);
+            reachWholeObj = self.reachFactObj.createInstance(...
+                'l0Mat',self.l0P1Mat);
             %
             reachWholeObj = reachWholeObj.refine(self.l0P2Mat);
             isEqual = reachObj.isEqual(reachWholeObj);
@@ -39,7 +40,7 @@ classdef ContinuousReachRefineTestCase < mlunitext.test_case
                 reachSingleObj=self.reachFactObj.createInstance();
                 cellfun(@(x) checkSingleMethod(reachSingleObj,x,sizeVec),...
                     self.ARRAY_METHODS_LIST);
-            end   
+            end
         end
         function self = testGetCopyMethod(self)
             cellfun(@(x) checkGetCopy(self,x), self.SIZE_LIST);
@@ -49,7 +50,7 @@ classdef ContinuousReachRefineTestCase < mlunitext.test_case
                 reachArr = repmat(reachSingleObj,sizeVec);
                 compReachArr = reachArr.getCopy();
                 checkEq(reachArr,compReachArr,'getCopy');
-            end 
+            end
         end
         function self = testRepMatMethod(self)
             cellfun(@(x) checkRepMat(self,x), self.SIZE_LIST);
@@ -58,8 +59,8 @@ classdef ContinuousReachRefineTestCase < mlunitext.test_case
                 reachArr = repmat(reachSingleObj,sizeVec);
                 compReachArr = reachSingleObj.repMat(sizeVec);
                 checkEq(reachArr,compReachArr,'repMat');
-            end    
-        end    
+            end
+        end
         function self = testRefMisc(self)
             %Check Evolve after Refine
             checkEvRef(1);
@@ -67,33 +68,33 @@ classdef ContinuousReachRefineTestCase < mlunitext.test_case
             %
             [lDirMat l1DirMat l2DirMat] = setDir(1);
             %Check Refine direct time
-            timeVec=[0 0.5];
+            timeVec=[0 1];
             reachSetObj=buildRS(l1DirMat,timeVec);
             checkRefine(reachSetObj,l2DirMat,lDirMat);
             %
             %Check refine reverse time
-            timeVec=[0.5 0];
+            timeVec=[1 0];
             reachSetObj=buildRS(l1DirMat,timeVec);
             checkRefine(reachSetObj,l2DirMat,lDirMat);
             %
             % Check after evolve
-            newEndTime=1;
-            timeVec=[0 0.5];
+            newEndTime=2;
+            timeVec=[0 1];
             reachSetObj=buildRS(l1DirMat,timeVec);
             reachSetObj = reachSetObj.evolve(newEndTime);
-            timeVec=[0 1];
+            timeVec=[0 2];
             checkRefine(reachSetObj,l2DirMat,lDirMat);
             %
             % Check after evolve, reverse time
             newEndTime=0;
-            timeVec=[1 0.5];
+            timeVec=[2 1];
             reachSetObj=buildRS(l1DirMat,timeVec);
-            reachSetObj = reachSetObj.evolve(newEndTime)
-            timeVec = [1 0];
+            reachSetObj = reachSetObj.evolve(newEndTime);
+            timeVec = [2 0];
             checkRefine(reachSetObj,l2DirMat,lDirMat);
             %
             % Check projection
-            timeVec=[0 0.5];
+            timeVec=[0 1];
             reachSetObj=buildRS(l1DirMat,timeVec);
             %
             projMat=[1,0;0,1];
@@ -129,15 +130,15 @@ classdef ContinuousReachRefineTestCase < mlunitext.test_case
                 checkRes(reachObjNew,reachSetObj);
             end
             function checkEvRef(typeVal)
-                [lDirMat l1DirMat l2DirMat] = setDir(typeVal);              
-                timeVec=[0 0.5];
+                [lDirMat l1DirMat l2DirMat] = setDir(typeVal);
+                timeVec=[0 1];
                 reachObjNew=buildRS(l1DirMat,timeVec);
                 reachObjNew = reachObjNew.refine(l2DirMat);
-                timeVec=[0 1];
+                timeVec=[0 2];
                 reachObjNew = reachObjNew.evolve(timeVec(end));
                 reachSetObj=buildRS(lDirMat,timeVec);
                 checkRes(reachObjNew,reachSetObj);
-            end            
+            end
             function reachObj = buildRS(lDirMat,timeVec)
                 aMat=[1 2; 2 1];
                 bMat=[1 2;0 1];
@@ -150,30 +151,32 @@ classdef ContinuousReachRefineTestCase < mlunitext.test_case
         end
         function self = testEvRefDiffSyst(self)
             lDirMat=[1,-1,0,1;
-                     0,1,1,-2;
-                     0,0,0,1];
+                0,1,1,-2;
+                0,0,0,1];
             l1DirMat=lDirMat(:,1:2);
             l2DirMat=lDirMat(:,3:end);
             %
-            SUBounds = ellipsoid(eye(3));
+            pMat=eye(3);
             %
             a1Mat=[1 2 0; 2 1 0; 0 0 1];
             b1Mat=[1 2 0;0 1 0; 0 0 1];
             %
             a2Mat=eye(3);
             b2Mat=[1 0 0; 0 1 0; 0 0 1];
-            sys2 = elltool.linsys.LinSysContinuous(a2Mat, b2Mat, SUBounds);
+            sys2 = self.reachFactObj.createSysInstance(a2Mat,...
+                b2Mat, pMat);
             %
             a3Mat=[2 1 -1; 1 2 0; 1 0 1];
             b3Mat=[1 0 -1; 0 1 0; -1 0 2];
-            sys3 = elltool.linsys.LinSysContinuous(a3Mat, b3Mat, SUBounds);
+            sys3 = self.reachFactObj.createSysInstance(a3Mat,...
+                b3Mat, pMat);
             %
             %Straightforward time
-            timeVec = [0 0.5 1 1.5];
+            timeVec = [0 1 2 3];
             checkEvRef(timeVec);
             %
             %Reverse time
-            timeVec = [1.5 1 0.5 0];
+            timeVec = [3 2 1 0];
             checkEvRef(timeVec);
             
             function reachObj = buildReachObj(aMat, bMat, lDirMat,timeVec)
@@ -214,32 +217,32 @@ classdef ContinuousReachRefineTestCase < mlunitext.test_case
     end
 end
 function checkEq(initMat,compMat,methodName)
-    import modgen.common.throwerror;
-    import modgen.cell.cellstr2expression;
-    %
-    NON_OBJ_OUT_METHOD_LIST = {'dimension','iscut','isprojection','isempty'};
-    OBJ_OUT_METHOD_LIST = {'getCopy','repMat'};
-    switch methodName
-        case NON_OBJ_OUT_METHOD_LIST
-            [isEq failMsg] = checkSimpleEq(initMat,compMat,methodName);
-        case OBJ_OUT_METHOD_LIST    
-            [isEq failMsg] = checkObjEq(initMat,compMat,methodName);
-        otherwise
-            throwerror('wrongInput:unknownMethod',...
-                        'Unexpected method: %s. Allowed methods: %s,%s',...
-             methodName,...
-             cellstr2expression({NON_OBJ_OUT_METHOD_LIST{:}, OBJ_OUT_METHOD_LIST{:}}));
-    end
-    mlunitext.assert_equals(true,isEq,failMsg);
-    %
+import modgen.common.throwerror;
+import modgen.cell.cellstr2expression;
+%
+NON_OBJ_OUT_METHOD_LIST = {'dimension','iscut','isprojection','isEmpty'};
+OBJ_OUT_METHOD_LIST = {'getCopy','repMat'};
+switch methodName
+    case NON_OBJ_OUT_METHOD_LIST
+        [isEq failMsg] = checkSimpleEq(initMat,compMat,methodName);
+    case OBJ_OUT_METHOD_LIST
+        [isEq failMsg] = checkObjEq(initMat,compMat,methodName);
+    otherwise
+        throwerror('wrongInput:unknownMethod',...
+            'Unexpected method: %s. Allowed methods: %s,%s',...
+            methodName,...
+            cellstr2expression({NON_OBJ_OUT_METHOD_LIST{:}, OBJ_OUT_METHOD_LIST{:}}));
+end
+mlunitext.assert_equals(true,isEq,failMsg);
+%
     function [isEq failMsg] = checkSimpleEq(initMat,compMat,methodName)
         failMsg = [];
         isEq = isequal(initMat, compMat.(methodName));
         if ~isEq
             failMsg = sprintf('failure for %s() method;',methodName);
-        end    
+        end
     end
-    %
+%
     function [isEq failMsg] = checkObjEq(initMat,compMat,methodName)
         isEq = arrayfun(@(x,y) x.isEqual(y), initMat, compMat);
         if ~isEq
@@ -252,11 +255,11 @@ function checkEq(initMat,compMat,methodName)
     end
 end
 function checkSingleMethod(reachObj,methodName,sizeVec)
-    reachObjMat = reachObj.repMat(sizeVec);
-    dimMat = repmat(reachObj.(methodName),sizeVec);
-    checkEq(dimMat,reachObjMat,methodName);
+reachObjMat = reachObj.repMat(sizeVec);
+dimMat = repmat(reachObj.(methodName),sizeVec);
+checkEq(dimMat,reachObjMat,methodName);
 end
 function checkRes(reachObjNew,reachSetObj)
-    isEqual = reachSetObj.isEqual(reachObjNew);
-    mlunitext.assert_equals(true,isEqual);
+[isEqual,reportStr] = reachSetObj.isEqual(reachObjNew);
+mlunitext.assert_equals(true,isEqual,reportStr);
 end

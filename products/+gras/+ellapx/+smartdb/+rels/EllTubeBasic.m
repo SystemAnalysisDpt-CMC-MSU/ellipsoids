@@ -7,6 +7,56 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
         FCODE_SCALE_FACTOR
         FCODE_M_ARRAY
     end
+    methods
+        function fieldsList = getNoCatOrCutFieldsList(~)
+            import  gras.ellapx.smartdb.F;
+            fieldsList=F().getNameList({'APPROX_SCHEMA_DESCR';'DIM';...
+                'APPROX_SCHEMA_NAME';'APPROX_TYPE';'CALC_PRECISION';...
+                'IND_S_TIME';'LS_GOOD_DIR_NORM';'LS_GOOD_DIR_VEC';'S_TIME';...
+                'SCALE_FACTOR';'XS_TOUCH_OP_VEC';'XS_TOUCH_VEC';...
+                'IS_LS_TOUCH'});
+        end
+    end
+    methods (Access = protected)
+        function propNameList=getPostDataHookPropNameList(~)
+            propNameList={'denormGoodDirs'};
+        end
+        function SData=postGetDataHook(self,SData,varargin)
+            import modgen.common.parseparext;
+            [~,~,isDenorm]=parseparext(varargin,...
+                {'denormGoodDirs';false;@(x)isscalar(x)&&islogical(x)});
+            if isDenorm
+                SData=self.deNormGoodDirs(SData);
+            end
+        end
+        function fieldList=getDetermenisticSortFieldList(~)
+            fieldList={'sTime','lsGoodDirVec','approxType'};
+        end
+        function fieldsList = getSFieldsList(~)
+            import gras.ellapx.smartdb.F;
+            fieldsList = F().getNameList({'LS_GOOD_DIR_VEC';'LS_GOOD_DIR_NORM';...
+                'XS_TOUCH_VEC';'XS_TOUCH_OP_VEC';'IS_LS_TOUCH'});
+        end
+        function fieldsList = getTFieldsList(~)
+            import  gras.ellapx.smartdb.F;
+            fieldsList = F().getNameList({'LT_GOOD_DIR_MAT';...
+                'LT_GOOD_DIR_NORM_VEC';'X_TOUCH_CURVE_MAT';...
+                'X_TOUCH_OP_CURVE_MAT';'IS_LT_TOUCH_VEC'});
+        end
+        function fieldsList = getScalarFieldsList(~)
+            import  gras.ellapx.smartdb.F;
+            fieldsList = F().getNameList({'LS_GOOD_DIR_NORM';...
+                'IS_LS_TOUCH'});
+        end
+        function fieldList=getNotComparedFieldsList(~)
+            import  gras.ellapx.smartdb.F;
+            fieldList = F().getNameList({'IND_S_TIME';...
+                'LT_GOOD_DIR_NORM_VEC';'LS_GOOD_DIR_NORM'});
+        end
+    end
+    methods(Access=protected, Abstract)
+        checkIfObjectScalar(~);
+    end
     methods (Static, Access=protected,Sealed)
         function [xTouchMat,xTouchOpMat]=calcTouchCurves(QArray, ...
                 aMat, ltGoodDirMat)
@@ -33,7 +83,8 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             %
             STubeData.QArray=cellfun(@(x,y)x.*y,STubeData.QArray,...
                 scaleQFactorList,'UniformOutput',false);
-            STubeData.QArray=cellfun(@(x)0.5*(x+SquareMatVector.transpose(x)),STubeData.QArray,...
+            STubeData.QArray=cellfun(@(x)0.5*(x+SquareMatVector.transpose(x)),...
+                STubeData.QArray,...
                 'UniformOutput',false);
             STubeData.MArray=cellfun(@(x,y)x.*y,STubeData.MArray,...
                 scaleQFactorList,'UniformOutput',false);
@@ -65,6 +116,86 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     STubeData.xTouchOpCurveMat{iLDir}(:,indSTime);
             end
         end
+        function STubeData=calcGoodCurveData(STubeData)
+            import modgen.common.throwerror;
+            nLDirs=length(STubeData.QArray);
+            STubeData.indSTime=zeros(nLDirs,1);
+            STubeData.lsGoodDirVec=cell(nLDirs,1);
+            STubeData.ltGoodDirNormVec=cell(nLDirs,1);
+            STubeData.lsGoodDirNorm=zeros(nLDirs,1);
+            %
+            STubeData.isLsTouch=false(nLDirs,1);
+            %
+            STubeData.isLtTouchVec=cell(nLDirs,1);
+            %
+            for iLDir=1:nLDirs
+                timeVec=STubeData.timeVec{iLDir};
+                sTime=STubeData.sTime(iLDir);
+                indSTime=find(sTime==timeVec,1,'first');
+                if isempty(indSTime)
+                    throwerror('wrongInput:sTimeOutOfBounds',...
+                        'sTime is expected to be among elements of timeVec');
+                end
+                %
+                absTol=STubeData.calcPrecision(iLDir);
+                %
+                ltGoodDirMat=STubeData.ltGoodDirMat{iLDir};
+                lsGoodDirVec=ltGoodDirMat(:,indSTime);
+                STubeData.indSTime(iLDir)=indSTime;
+                %
+                lsGoodDirNorm=...
+                    realsqrt(sum(lsGoodDirVec.*lsGoodDirVec));
+                ltGoodDirNormVec=...
+                    realsqrt(sum(ltGoodDirMat.*ltGoodDirMat,1));
+                %
+                isLsTouch=lsGoodDirNorm>absTol;
+                %
+                %
+                if isLsTouch
+                    lsGoodDirVec=lsGoodDirVec./lsGoodDirNorm;
+                end
+                %
+                isLtTouchVec=ltGoodDirNormVec>absTol;
+                %
+                ltGoodDirMat(:,isLtTouchVec)=ltGoodDirMat(:,isLtTouchVec)./...
+                    repmat(ltGoodDirNormVec(isLtTouchVec),...
+                    size(ltGoodDirMat,1),1);
+                %
+                STubeData.ltGoodDirMat{iLDir}=ltGoodDirMat;
+                STubeData.lsGoodDirVec{iLDir}=lsGoodDirVec;
+                STubeData.ltGoodDirNormVec{iLDir}=ltGoodDirNormVec;
+                STubeData.lsGoodDirNorm(iLDir)=lsGoodDirNorm;
+                %
+                STubeData.isLsTouch(iLDir)=isLsTouch;
+                %
+                STubeData.isLtTouchVec{iLDir}=isLtTouchVec;
+            end
+        end
+        function STubeData=deNormGoodDirs(STubeData)
+            nLDirs=length(STubeData.QArray);
+            for iLDir=1:nLDirs
+                isLtTouchVec=STubeData.isLtTouchVec{iLDir};
+                isLsTouch=STubeData.isLsTouch(iLDir);
+                ltGoodDirMat=STubeData.ltGoodDirMat{iLDir};
+                lsGoodDirVec=STubeData.lsGoodDirVec{iLDir};
+                lsGoodDirNorm=STubeData.lsGoodDirNorm(iLDir);
+                ltGoodDirNormVec=STubeData.ltGoodDirNormVec{iLDir};
+                %
+                ltGoodDirMat(:,isLtTouchVec)=...
+                    ltGoodDirMat(:,isLtTouchVec).*...
+                    repmat(ltGoodDirNormVec(isLtTouchVec),...
+                    size(ltGoodDirMat,1),1);
+                if isLsTouch
+                    lsGoodDirVec=lsGoodDirVec.*lsGoodDirNorm;
+                end
+                %
+                STubeData.ltGoodDirMat{iLDir}=ltGoodDirMat;
+                STubeData.lsGoodDirVec{iLDir}=lsGoodDirVec;
+                STubeData.ltGoodDirNormVec{iLDir}=...
+                    ones(size(STubeData.ltGoodDirNormVec{iLDir}));
+            end
+            STubeData.lsGoodDirNorm=ones(size(STubeData.lsGoodDirNorm));
+        end
         function STubeData=fromQArraysInternal(QArrayList,aMat,...
                 MArrayList,timeVec,ltGoodDirArray,sTime,approxType,...
                 approxSchemaName,approxSchemaDescr,calcPrecision,scaleFactorVec)
@@ -85,13 +216,6 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 '&&isrow(x1)&&isrow(x2)&&isrow(x3)&&isnumeric(x3)'],3,...
                 QArrayList,MArrayList,scaleFactorVec);
             %
-            indSTime=find(sTime==timeVec,1,'first');
-            if isempty(indSTime)
-                throwerror('wrongInput:sTimeOutOfBounds',...
-                    'sTime is expected to be among elements of timeVec');
-            end
-            %
-            lsGoodDirMat=ltGoodDirArray(:,:,indSTime);
             nLDirs=length(QArrayList);
             STubeData=struct;
             %
@@ -127,29 +251,16 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 nLDirs,1);
             end
             %
-            STubeData.lsGoodDirVec=cell(nLDirs,1);
             STubeData.ltGoodDirMat=cell(nLDirs,1);
             %
-            STubeData.lsGoodDirNorm=zeros(nLDirs,1);
             STubeData.ltGoodDirNormVec=cell(nLDirs,1);
             STubeData.calcPrecision=repmat(calcPrecision,nLDirs,1);
             %
-            STubeData.indSTime=repmat(indSTime,nLDirs,1);
-            %
             for iLDir=1:1:nLDirs
-                lsGoodDirVec=lsGoodDirMat(:,iLDir);
-                STubeData.lsGoodDirVec{iLDir}=lsGoodDirVec;
-                STubeData.lsGoodDirNorm(iLDir)=...
-                    realsqrt(sum(lsGoodDirVec.*lsGoodDirVec));
-                %
-                ltGoodDirMat=squeeze(ltGoodDirArray(:,iLDir,:));
-                %
-                STubeData.ltGoodDirMat{iLDir}=ltGoodDirMat;
-                %
-                STubeData.ltGoodDirNormVec{iLDir}=realsqrt(sum(...
-                    ltGoodDirMat.*ltGoodDirMat,1));
-                %
+                STubeData.ltGoodDirMat{iLDir}=...
+                    squeeze(ltGoodDirArray(:,iLDir,:));
             end
+            STubeData=EllTubeBasic.calcGoodCurveData(STubeData);
             STubeData=EllTubeBasic.scaleTubeData(STubeData,scaleFactorVec.');
             STubeData=EllTubeBasic.calcTouchCurveData(STubeData);
         end
@@ -213,11 +324,16 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 end
                 function normVal = checkPrecision(lrDivByVecOp)
                     normVec = lrDivByVecOp(QArray, xTouchCurveMat - aMat);
-                    normVal = max(fDistFunc(normVec));
+                    isnNanVec=~isnan(normVec);
+                    if any(isnNanVec)
+                        normVal = max(fDistFunc(normVec(isnNanVec)));
+                    else
+                        normVal=0;
+                    end
                 end
             end
         end
-        function checkIntWithinExt(self,intRel,extRel)
+        function checkIntWithinExt(~,intRel,extRel)
             [~,~,~,indIntForwardVec,indIntBackwardVec]=...
                 intRel.getUniqueData('fieldNameList',{'aMat'});
             [~,~,~,indExtForwardVec,indExtBackwardVec]=...
@@ -294,6 +410,18 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             import modgen.common.num2cell;
             %
             if self.getNTuples()>0
+                sizeMat=self.getFieldValueSizeMat();
+                isBadVec=any(sizeMat(:,2:end)~=1,2);
+                if any(isBadVec)
+                    fieldNameList=self.getFieldNameList();
+                    fieldListStr=...
+                        modgen.cell.cellstr2expression(...
+                        fieldNameList(isBadVec));
+                    throwerror('wrongInput:badSize',...
+                        ['fields %s have incorrect ',...
+                        'size along second or higher dimension'],...
+                        fieldListStr);
+                end
                 checkFieldList={'QArray','aMat','scaleFactor',...
                     'MArray','dim','sTime','approxSchemaName',...
                     'approxSchemaDescr','approxType','timeVec',...
@@ -353,7 +481,47 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 import gras.gen.SquareMatVector;
                 errTagStr='';
                 reasonStr='';
+                %
+                nPoints=size(timeVec,2);
+                nDims=size(QArray,1);
+                isOk=size(QArray,3)==nPoints&&...
+                    size(MArray,3)==nPoints&&...
+                    size(aMat,2)==nPoints&&...
+                    size(ltGoodDirMat,2)==nPoints&&...
+                    size(xTouchCurveMat,2)==nPoints&&...
+                    size(xTouchOpCurveMat,2)==nPoints&&...
+                    size(timeVec,1)==1&&...
+                    ismatrix(timeVec)&&size(MArray,1)==nDims&&...
+                    size(MArray,2)==nDims&&size(QArray,2)==nDims&&...
+                    size(ltGoodDirMat,1)==nDims&&...
+                    size(xTouchCurveMat,1)==nDims&&...
+                    size(xsTouchVec,1)==nDims&&...
+                    size(xsTouchOpVec,1)==nDims&&...
+                    size(lsGoodDirVec,1)==nDims&&...
+                    size(ltGoodDirNormVec,2)==nPoints&&...
+                    size(ltGoodDirNormVec,1)==1&&...
+                    numel(indSTime)==1&&...
+                    numel(scaleFactor)==1&&numel(lsGoodDirNorm)==1&&...
+                    numel(dim)==1&&numel(sTime)==1&&...
+                    numel(calcPrecision)==1&&...
+                    size(approxSchemaName,1)==1&&...
+                    size(approxSchemaName,2)==numel(approxSchemaName)&&...
+                    size(approxSchemaDescr,1)==1&&...
+                    size(approxSchemaDescr,2)==numel(approxSchemaDescr)&&...
+                    numel(approxType)==1&&size(aMat,1)==nDims&&...
+                    dim==nDims&&indSTime>=1&&indSTime<=numel(timeVec);
+                if ~isOk
+                    reasonStr='Fields have inconsistent sizes';
+                    errTagStr='badSize';
+                    return;
+                end
                 isOk=false;
+                if timeVec(indSTime)~=sTime
+                    errTagStr='indSTimeBad';
+                    reasonStr='timeVec(indSTime) is not equal to sTime';
+                    return;
+                end
+                %
                 isNotPosDefVec=SquareMatVector.evalMFunc(...
                     @(x)~gras.la.ismatposdef(x,calcPrecision),QArray);
                 if any(isNotPosDefVec)
@@ -380,112 +548,76 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     reasonStr='MArray is negatively defined';
                     return;
                 end
-                nPoints=size(timeVec,2);
-                nDims=size(QArray,1);
-                isOk=size(QArray,3)==nPoints&&...
-                    size(MArray,3)==nPoints&&...
-                    size(aMat,2)==nPoints&&...
-                    size(ltGoodDirMat,2)==nPoints&&...
-                    size(xTouchCurveMat,2)==nPoints&&...
-                    size(xTouchOpCurveMat,2)==nPoints&&...
-                    size(timeVec,1)==1&&...
-                    ndims(timeVec)==2&&size(MArray,1)==nDims&&...
-                    size(MArray,2)==nDims&&size(QArray,2)==nDims&&...
-                    size(ltGoodDirMat,1)==nDims&&...
-                    size(xTouchCurveMat,1)==nDims&&...
-                    size(xsTouchVec,1)==nDims&&...
-                    size(xsTouchOpVec,1)==nDims&&...
-                    size(lsGoodDirVec,1)==nDims&&...
-                    size(ltGoodDirNormVec,2)==nPoints&&...
-                    size(ltGoodDirNormVec,1)==1&&...
-                    numel(indSTime)==1&&...
-                    numel(scaleFactor)==1&&numel(lsGoodDirNorm)==1&&...
-                    numel(dim)==1&&numel(sTime)==1&&...
-                    numel(calcPrecision)==1&&...
-                    size(approxSchemaName,1)==1&&...
-                    size(approxSchemaName,2)==numel(approxSchemaName)&&...
-                    size(approxSchemaDescr,1)==1&&...
-                    size(approxSchemaDescr,2)==numel(approxSchemaDescr)&&...
-                    numel(approxType)==1&&size(aMat,1)==nDims&&...
-                    dim==nDims;
-                if ~isOk
-                    reasonStr='Fields have inconsistent sizes';
-                    errTagStr='badSize';
-                    return;
-                end
                 isOk=true;
             end
         end
-    end
-    methods
-        function [ellTubeProjRel,indProj2OrigVec]=project(self,projType,...
-                projMatList,fGetProjMat)
-            % PROJECT - computes projection of the relation object onto given time 
-            %           dependent subspase
-            %           
-            % 
-            % Input:
-            %  regular:
-            %    self.
-            %    projType - type of the projection.
-            %        Takes the following values: 'Static'
-            %                                    'DynamicAlongGoodCurve'
-            %    projMatList:double[nDim, nSpDim] - matrices' array of the orthoganal  
-            %             basis vectors
-            %    fGetProjMat - function which creates vector of the projection 
-            %             matrices
-            %        Input:
-            %         regular:
-            %           projMat:double[nDim, mDim] - matrix of the projection at the
-            %             instant of time
-            %           timeVec:double[1, nDim] - time interval
-            %         optional:
-            %            sTime:double[1,1] - instant of time
-            %        Output:
-            %           projOrthMatArray:double[1, nSpDim] - vector of the projection 
-            %             matrices
-            %           projOrthMatTransArray:double[nSpDim, 1] - transposed vector of
-            %             the projection matrices
-            % Output:
-            %    ellTubeProjRel:smartdb.relation.StaticRelation[1, 1]/
-            %        smartdb.relation.DynamicRelation[1, 1]- projected relation
-            %    indProj2OrigVec:cell[nDim, 1] - index of the line number from 
-            %             which is obtained the projection
+        function SData = getInterpDataInternal(self, newTimeVec)
+            import gras.ellapx.smartdb.F;
+            import gras.ellapx.smartdb.rels.EllTubeBasic;
+            SData=self.getData('denormGoodDirs',true);
+            [SData.QArray, SData.aMat, SData.MArray,...
+                SData.ltGoodDirMat,SData.timeVec,sTimeList] =...
+                cellfun(@fInterpTuple,SData.QArray,...
+                SData.aMat, SData.MArray,...
+                SData.ltGoodDirMat,SData.timeVec,...
+                num2cell(SData.sTime),...
+                'UniformOutput',false);
+            SData.sTime=vertcat(sTimeList{:});
+            SData=EllTubeBasic.calcGoodCurveData(SData);
+            SData=EllTubeBasic.calcTouchCurveData(SData);
             %
-            % Example:
-            %   function example
-            %    aMat = [0 1; 0 0]; bMat = eye(2);  
-            %    SUBounds = struct();
-            %    SUBounds.center = {'sin(t)'; 'cos(t)'};  
-            %    SUBounds.shape = [9 0; 0 2]; 
-            %    sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-            %    x0EllObj = ell_unitball(2);
-            %    timeVec = [0 10]; 
-            %    dirsMat = [1 0; 0 1]';  
-            %    rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-            %    ellTubeObj = rsObj.getEllTubeRel();
-            %    unionEllTube = ...
-            %     gras.ellapx.smartdb.rels.EllUnionTube.fromEllTubes(ellTubeObj);
-            %    projSpaceList = {[1 0;0 1]};
-            %    projType = gras.ellapx.enums.EProjType.Static;
-            %    statEllTubeProj = unionEllTube.project(projType,projSpaceList,...
-            %       @fGetProjMat);
-            %    plObj=smartdb.disp.RelationDataPlotter();
-            %    statEllTubeProj.plot(plObj);
-            % end
-            % 
-            % function [projOrthMatArray,projOrthMatTransArray]=fGetProjMat(projMat,...
-            %     timeVec,varargin)
-            %   nTimePoints=length(timeVec);
-            %   projOrthMatArray=repmat(projMat,[1,1,nTimePoints]);
-            %   projOrthMatTransArray=repmat(projMat.',[1,1,nTimePoints]);
-            %  end
+            function [QArray, aMat, MArray,ltGoodDirMat,timeVec,sTime] =...
+                    fInterpTuple(QArray, aMat, MArray,ltGoodDirMat,...
+                    timeVec,sTime)
+                nDims=size(QArray,1);
+                nPoints=size(QArray,3);
+                %
+                QArray = simpleInterp(QArray);
+                %
+                MArray = simpleInterp(MArray);
+                ltGoodDirMat = simpleInterp(ltGoodDirMat,true);
+                aMat = simpleInterp(aMat,true);
+                timeVec=newTimeVec;
+                distVec=abs(sTime-newTimeVec);
+                [~,indMin]=min(distVec);
+                sTime=newTimeVec(indMin);
+                %
+                function interpArray=simpleInterp(inpArray,isVector)
+                    import gras.interp.MatrixInterpolantFactory;
+                    if nargin<2
+                        isVector=false;
+                    end
+                    if isVector
+                        nDims=size(inpArray,1);
+                        nPoints=size(inpArray,2);
+                        inpArray=reshape(inpArray,[nDims,1,nPoints]);
+                    end
+                    splineObj=MatrixInterpolantFactory.createInstance(...
+                        'nearest',inpArray,timeVec);
+                    interpArray=splineObj.evaluate(newTimeVec);
+                    if isVector
+                        interpArray=permute(interpArray,[1 3 2]);
+                    end
+                end
+            end
+        end
+    end
+    methods (Access=protected)
+        function [ellTubeProjRel,indProj2OrigVec]=projectInternal(self,projType,...
+                projMatList,fGetProjMat)
             import gras.ellapx.uncertcalc.common.*;
             import modgen.common.throwerror;
             import gras.ellapx.common.*;
-            import import gras.ellapx.enums.EProjType;
+            import gras.ellapx.enums.EProjType;
             import gras.gen.SquareMatVector;
             import gras.ellapx.smartdb.rels.EllTubeBasic;
+            import modgen.common.checkvar;
+            import gras.gen.SquareMatVector;
+            checkvar(projType,@(x)isa(x,'gras.ellapx.enums.EProjType')&&...
+                isscalar(x));
+            checkvar(projMatList,@(x)iscell(x)&&...
+                all(cellfun(@(x)isnumeric(x)&&ismatrix(x),projMatList)));
+            checkvar(fGetProjMat,'isfunction(x)');
             %
             projDependencyFieldNameList=...
                 self.getProjectionDependencyFieldList();
@@ -513,15 +645,21 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 %
                 for iProj=nProj:-1:1
                     projMat=projMatList{iProj};
+                    dimProj=size(projMat,1);
                     %% Create projection matrix vector
-                    [projOrthMatArray,projOrthMatTransArray]=...
+                    [projArray,projTransArray]=...
                         fGetProjMat(projMat,timeVec,sTime,dim,indSTime);
                     %%
+                    projOrthArray=SquareMatVector.evalMFunc(...
+                        @(x)transpose(gras.la.matorthcol(transpose(x))),...
+                        projArray,'keepSize',true);
                     %
                     tubeProjDataCMat{iGroup,iProj}.dim=...
                         repmat(size(projMat,1),nLDirs,1);
                     tubeProjDataCMat{iGroup,iProj}.projSTimeMat=...
                         repmat({projMat},nLDirs,1);
+                    tubeProjDataCMat{iGroup,iProj}.projArray=...
+                        repmat({projArray},nLDirs,1);
                     tubeProjDataCMat{iGroup,iProj}.projType=...
                         repmat(projType,nLDirs,1);
                     %
@@ -534,18 +672,17 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     tubeProjDataCMat{iGroup,iProj}.xTouchOpCurveMat=cell(nLDirs,1);
                     %
                     tubeProjDataCMat{iGroup,iProj}.sTime=repmat(sTime,nLDirs,1);
-                    tubeProjDataCMat{iGroup,iProj}.indSTime=repmat(...
-                        indSTime,nLDirs,1);
                     %
                     tubeProjDataCMat{iGroup,iProj}.timeVec=repmat({timeVec},nLDirs,1);
                     %
                     tubeProjDataCMat{iGroup,iProj}.lsGoodDirVec=cell(nLDirs,1);
                     tubeProjDataCMat{iGroup,iProj}.ltGoodDirMat=cell(nLDirs,1);
-                    tubeProjDataCMat{iGroup,iProj}.lsGoodDirNorm=zeros(nLDirs,1);
-                    tubeProjDataCMat{iGroup,iProj}.ltGoodDirNormVec=cell(nLDirs,1);
                     tubeProjDataCMat{iGroup,iProj}.lsGoodDirNormOrig=zeros(nLDirs,1);
                     tubeProjDataCMat{iGroup,iProj}.ltGoodDirNormOrigVec=cell(nLDirs,1);
+                    tubeProjDataCMat{iGroup,iProj}.ltGoodDirNormOrigProjVec=cell(nLDirs,1);
                     tubeProjDataCMat{iGroup,iProj}.lsGoodDirOrigVec=cell(nLDirs,1);
+                    tubeProjDataCMat{iGroup,iProj}.ltGoodDirOrigMat=cell(nLDirs,1);
+                    tubeProjDataCMat{iGroup,iProj}.ltGoodDirOrigProjMat=cell(nLDirs,1);
                     %
                     tubeProjDataCMat{iGroup,iProj}.xsTouchVec=cell(nLDirs,1);
                     tubeProjDataCMat{iGroup,iProj}.xsTouchOpVec=cell(nLDirs,1);
@@ -563,19 +700,21 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     tubeProjDataCMat{iGroup,iProj}.scaleFactor=...
                         STubeData.scaleFactor(indLDirs);
                     %
-                    projOrthSTimeMat=projOrthMatArray(:,:,indSTime);
-                    %
                     for iLDir=1:nLDirs
                         iOLDir=indLDirs(iLDir);
+                        %
+                        absTol=STubeData.calcPrecision(iOLDir);
                         tubeProjDataCMat{iGroup,iProj}.lsGoodDirOrigVec{iLDir}=...
                             STubeData.lsGoodDirVec{iOLDir};
+                        tubeProjDataCMat{iGroup,iProj}.ltGoodDirOrigMat{iLDir}=...
+                            STubeData.ltGoodDirMat{iOLDir};
                         tubeProjDataCMat{iGroup,iProj}.ltGoodDirMat{iLDir}=...
-                            SquareMatVector.rMultiplyByVec(projOrthMatArray,...
+                            SquareMatVector.rMultiplyByVec(projArray,...
                             STubeData.ltGoodDirMat{iOLDir});
                         %project configuration matrices
                         tubeProjDataCMat{iGroup,iProj}.QArray{iLDir}=...
-                            SquareMatVector.rMultiply(projOrthMatArray,...
-                            STubeData.QArray{iOLDir},projOrthMatTransArray);
+                            SquareMatVector.rMultiply(projArray,...
+                            STubeData.QArray{iOLDir},projTransArray);
                         %Matrices must remain symmetric
                         tubeProjDataCMat{iGroup,iProj}.QArray{iLDir}=...
                             0.5*(tubeProjDataCMat{iGroup,iProj}.QArray{iLDir}+...
@@ -583,12 +722,12 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                             tubeProjDataCMat{iGroup,iProj}.QArray{iLDir}));
                         %project centers
                         tubeProjDataCMat{iGroup,iProj}.aMat{iLDir}=...
-                            SquareMatVector.rMultiplyByVec(projOrthMatArray,...
+                            SquareMatVector.rMultiplyByVec(projArray,...
                             STubeData.aMat{iOLDir});
                         %project regularization matrix
                         tubeProjDataCMat{iGroup,iProj}.MArray{iLDir}=...
-                            SquareMatVector.rMultiply(projOrthMatArray,...
-                            STubeData.MArray{iOLDir},projOrthMatTransArray);
+                            SquareMatVector.rMultiply(projArray,...
+                            STubeData.MArray{iOLDir},projTransArray);
                         %Matrices must remain symmetric
                         tubeProjDataCMat{iGroup,iProj}.MArray{iLDir}=...
                             0.5*(tubeProjDataCMat{iGroup,iProj}.MArray{iLDir}+...
@@ -596,42 +735,41 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                             tubeProjDataCMat{iGroup,iProj}.MArray{iLDir}));
                         %
                         %the following statement only valid for orthogonal projections
-                        tubeProjDataCMat{iGroup,iProj}.ltGoodDirMat{iLDir}=...
-                            SquareMatVector.rMultiplyByVec(projOrthMatArray,...
+                        ltGoodDirMat=...
+                            SquareMatVector.rMultiplyByVec(projOrthArray,...
                             STubeData.ltGoodDirMat{iOLDir});
-                        %the following statement only valid for orthogonal projections
-                        tubeProjDataCMat{iGroup,iProj}.lsGoodDirVec{iLDir}=projOrthSTimeMat*...
-                            STubeData.lsGoodDirVec{iOLDir};
-                        %calculate norms
-                        lsGoodDirVec = tubeProjDataCMat{iGroup,iProj}.lsGoodDirVec{iLDir};
-                        tubeProjDataCMat{iGroup,iProj}.lsGoodDirNorm(iLDir)=...
-                            realsqrt(sum(lsGoodDirVec.*lsGoodDirVec));
                         %
-                        tubeProjDataCMat{iGroup,iProj}.ltGoodDirNormVec{iLDir}=...
-                            realsqrt(sum(...
-                            tubeProjDataCMat{iGroup,iProj}.ltGoodDirMat{iLDir}.*...
-                            tubeProjDataCMat{iGroup,iProj}.ltGoodDirMat{iLDir},1));
                         %record original norm values
                         tubeProjDataCMat{iGroup,iProj}.lsGoodDirNormOrig(iLDir)=...
                             STubeData.lsGoodDirNorm(iOLDir);
-                        tubeProjDataCMat{iGroup,iProj}.ltGoodDirNormOrigVec{iLDir}=...
+                        ltGoodDirNormOrigVec=...
                             STubeData.ltGoodDirNormVec{iOLDir};
+                        tubeProjDataCMat{iGroup,iProj}.ltGoodDirNormOrigVec{iLDir}=ltGoodDirNormOrigVec;
+                        %recalculate norms of projections
+                        ltProjGoodDirNormVec=...
+                            realsqrt(dot(ltGoodDirMat,ltGoodDirMat,1));
+                        isPosVec=ltProjGoodDirNormVec>absTol;                        
                         %
-                        %project touch lines
-                        tubeProjDataCMat{iGroup,iProj}.xTouchCurveMat{iLDir}=...
-                            SquareMatVector.rMultiplyByVec(...
-                            projOrthMatArray,STubeData.xTouchCurveMat{iOLDir});
+                        tubeProjDataCMat{iGroup,iProj}.ltGoodDirOrigProjMat{iLDir}=ltGoodDirMat;
+                        tubeProjDataCMat{iGroup,iProj}.ltGoodDirOrigProjMat{iLDir}(:,isPosVec)=...
+                            ltGoodDirMat(:,isPosVec)./repmat(ltProjGoodDirNormVec(isPosVec),dimProj,1);
+                        tubeProjDataCMat{iGroup,iProj}.ltGoodDirNormOrigProjVec{iLDir}=...
+                            ltGoodDirNormOrigVec.*ltProjGoodDirNormVec;
                         %
-                        tubeProjDataCMat{iGroup,iProj}.xTouchOpCurveMat{iLDir}=...
-                            SquareMatVector.rMultiplyByVec(...
-                            projOrthMatArray,STubeData.xTouchOpCurveMat{iOLDir});
-                        %project touch points at time as
-                        tubeProjDataCMat{iGroup,iProj}.xsTouchVec{iLDir}=projOrthSTimeMat*...
-                            STubeData.xsTouchVec{iOLDir};
+                        %check norm of projected direction
+                        isnLtTouchVec=abs(ltProjGoodDirNormVec-1)>absTol;
+                        ltGoodDirMat(:,isnLtTouchVec)=0;
+                        ltGoodDirMat=ltGoodDirMat.*repmat(ltGoodDirNormOrigVec,dimProj,1);
+                        %store final ltGoodDirMat and lsGoodDirVec
+                        tubeProjDataCMat{iGroup,iProj}.ltGoodDirMat{iLDir}=ltGoodDirMat;
+                        %the following statement only valid for orthogonal projections
+                        tubeProjDataCMat{iGroup,iProj}.lsGoodDirVec{iLDir}=ltGoodDirMat(:,indSTime);
                         %
-                        tubeProjDataCMat{iGroup,iProj}.xsTouchOpVec{iLDir}=projOrthSTimeMat*...
-                            STubeData.xsTouchOpVec{iOLDir};
                     end
+                    tubeProjDataCMat{iGroup,iProj}=...
+                        self.calcGoodCurveData(tubeProjDataCMat{iGroup,iProj});
+                    tubeProjDataCMat{iGroup,iProj}=...
+                        EllTubeBasic.calcTouchCurveData(tubeProjDataCMat{iGroup,iProj});
                 end
             end
             ellTubeProjRel=...
@@ -641,18 +779,20 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             indProj2OrigCMat=repmat(indProj2OrigCVec,1,nProj);
             indProj2OrigVec=vertcat(indProj2OrigCMat{:});
         end
+    end
+    methods
         function [apprEllMat timeVec] = getEllArray(self, approxType)
-           % GETELLARRAY - returns array of matrix's ellipsoid according to
-           %               approxType
-           %
-           % Input:
-           %  regular:
-           %     self.
-           %     approxType:char[1,] - type of approximation(internal/external)
-           %
-           % Output:
-           %   apprEllMat:double[nDim1,..., nDimN] - array of array of ellipsoid's 
-           %            matrices
+            % GETELLARRAY - returns array of matrix's ellipsoid according to
+            %               approxType
+            %
+            % Input:
+            %  regular:
+            %     self.
+            %     approxType:char[1,] - type of approximation(internal/external)
+            %
+            % Output:
+            %   apprEllMat:double[nDim1,..., nDimN] - array of array of ellipsoid's
+            %            matrices
             import gras.ellapx.enums.EApproxType;
             import gras.ellapx.smartdb.F;
             APPROX_TYPE = F.APPROX_TYPE;
@@ -668,10 +808,382 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             if nargout > 1
                 if (~isempty(SData.timeVec))
                     timeVec = SData.timeVec{1};
-                else 
+                else
                     timeVec = [];
                 end
             end
+        end
+        %
+        % INTERP - interpolates ellipsoidal tube on a new time vector
+        %
+        % Input:
+        %   regular:
+        %       self.
+        %
+        %       timeVec: double[nPoints] - sorted time vector to interpolate on.
+        %                Must begin with self.timeVec[1] and end with
+        %                self.timeVec[end]
+        %
+        % Output:
+        %   obj: gras.ellapx.smartdb.rels.EllTubeBasic[1, 1] - interpolated
+        %        ellipsoidal tube
+        %
+        % $Author: Daniil Stepenskiy <reinkarn@gmail.com> $
+        % $Date: May-2013 $
+        % $Copyright: Moscow State University,
+        %             Faculty of Computational
+        %             Mathematics and Computer Science,
+        %             System Analysis Department 2013 $
+        function interpEllTube = interp(self, timeVec)
+            import gras.interp.MatrixInterpolantFactory;
+            import gras.ellapx.smartdb.rels.EllTube;
+            import modgen.common.throwerror;
+            %
+            self.checkIfObjectScalar();
+            if (isempty(timeVec))
+                throwerror('wrongInput',...
+                    'time vector should not be empty');
+            end
+            if (~ismatrix(timeVec) || size(timeVec, 1)~=1)
+                throwerror('wrongInput',...
+                    'timeVec must be an array');
+            end
+            selfTimeVec = self.timeVec{1};
+            if (timeVec(end) > selfTimeVec(end) ||...
+                    timeVec(1) < selfTimeVec(1))
+                throwerror('wrongInput',...
+                    'no extrapolation allowed');
+            end
+            %
+            SData = self.getInterpDataInternal(timeVec);
+            interpEllTube = self.createInstance(SData);
+        end
+        %
+        function thinnedEllTubeRel =...
+                thinOutTuples(self, indVec)
+            import gras.ellapx.smartdb.F;
+            import modgen.common.throwerror;
+            SData = self.getData();
+            SThinFunResult = SData;
+            timeVec = SData.timeVec{1};
+            isOkVec=cellfun(@(x)isequal(x,timeVec),SData.timeVec(2:end));
+            if ~all(isOkVec)
+                throwerror('wrongInput',...
+                    'all timeVec are expected to be equal');
+            end
+            nPoints = numel(timeVec);
+            if isa(indVec, 'double')
+                if min(indVec) < 1 || max(indVec) > nPoints
+                    throwerror('wrongInput','Indexes are out of range.');
+                end
+                isNeededIndVec = false(size(timeVec));
+                isNeededIndVec(indVec) = true;
+            elseif islogical(indVec)
+                if numel(indVec) ~= nPoints
+                    throwerror('wrongInput','Indexes are out of range.');
+                end
+                isNeededIndVec = indVec;
+            else
+                throwerror('wrongInput',...
+                    'indVec should be double or logical');
+            end
+            SThinFunResult.timeVec=cellfun(...
+                @(field)field(isNeededIndVec), SData.timeVec,...
+                'UniformOutput', false);
+            %
+            isLeftVec=isNeededIndVec(SData.indSTime);
+            if any(isLeftVec)
+                indTempVec=zeros(size(timeVec));
+                indTempVec(isNeededIndVec)=1;
+                indTempVec=cumsum(indTempVec);
+                SThinFunResult.indSTime(isLeftVec)=...
+                    indTempVec(SData.indSTime(isLeftVec));
+            end
+            isnLeftVec=~isLeftVec;
+            if any(isnLeftVec)
+                SThinFunResult.sTime(isnLeftVec) =...
+                    timeVec(find(isNeededIndVec, 1));
+                SThinFunResult.indSTime(isnLeftVec) = 1;
+            end
+            %
+            fieldsNotToCatVec =...
+                self.getNoCatOrCutFieldsList();
+            fieldsToCutVec =...
+                setdiff(fieldnames(SData), fieldsNotToCatVec);
+            cellfun(@(field) cutStructField(field), fieldsToCutVec);
+            cellfun(@cutStructSTimeField, self.getSFieldsList(),...
+                self.getTFieldsList());
+            cellfun(@(field)fMakeCell(field),self.getScalarFieldsList());
+            %
+            thinnedEllTubeRel = self.createInstance(SThinFunResult);
+            %
+            function fMakeCell(fieldName)
+                SThinFunResult.(fieldName) = ...
+                    cell2mat(SThinFunResult.(fieldName));
+            end
+            %
+            function cutStructSTimeField(fieldNameTo, fieldNameFrom)
+                SThinFunResult.(fieldNameTo) =...
+                    cellfun(@(fieldVal,ind)fieldVal(:,ind),...
+                    SThinFunResult.(fieldNameFrom),...
+                    num2cell(SThinFunResult.indSTime),...
+                    'UniformOutput', false);
+            end
+            %
+            function cutResObj = getCutObj(whatToCutObj, isCutTimeVec)
+                dim = ndims(whatToCutObj);
+                if dim == 1
+                    cutResObj = whatToCutObj(isCutTimeVec);
+                elseif dim == 2
+                    cutResObj = whatToCutObj(:, isCutTimeVec);
+                elseif dim == 3
+                    cutResObj = whatToCutObj(:, :, isCutTimeVec);
+                end
+            end
+            %
+            function cutStructField(fieldName)
+                SThinFunResult.(fieldName) = cellfun(@(StructFieldVal)...
+                    getCutObj(StructFieldVal, isNeededIndVec),...
+                    SData.(fieldName), 'UniformOutput', false);
+            end
+        end
+    end
+    methods (Access=protected)
+        function [isPos, reportStr] = isEqualAdjustedInternal(self, ellTubeObj, varargin)
+            % ISEQUAL - compares current relation object with other relation object and
+            %           returns true if they are equal, otherwise it returns false
+            %
+            %
+            % Usage: isEq=isEqual(self,otherObj)
+            %
+            % Input:
+            %   regular:
+            %     self: ARelation [1,1] - current relation object
+            %     otherObj: ARelation [1,1] - other relation object
+            %
+            %   properties:
+            %     checkFieldOrder/isFieldOrderCheck: logical [1,1] - if true, then fields
+            %         in compared relations must be in the same order, otherwise the
+            %         order is not  important (false by default)
+            %     checkTupleOrder: logical[1,1] -  if true, then the tuples in the
+            %         compared relations are expected to be in the same order,
+            %         otherwise the order is not important (false by default)
+            %
+            %     maxTolerance: double [1,1] - maximum allowed tolerance
+            %
+            %     maxRelativeTolerance: double [1,1] - maximum allowed relative
+            %        tolerance
+            %
+            %     compareMetaDataBackwardRef: logical[1,1] if true, the CubeStruct's
+            %         referenced from the meta data objects are also compared
+            %
+            %     notComparedFieldList: cell[1,nFields] of char[1,] - list
+            %        of fields that are not compared
+            %
+            %     areTimeBoundsCompared: logical[1,1] - if false,
+            %       ellipsoidal tubes are compared on intersection of
+            %       definition domains
+            %
+            % Output:
+            %   isEq: logical[1,1] - result of comparison
+            %   reportStr: char[1,] - report of comparsion
+            %
+            %
+            % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2013-06-13 $
+            % $Copyright: Moscow State University,
+            %            Faculty of Computational Mathematics and Computer Science,
+            %            System Analysis Department 2012 $
+            %
+            import gras.ellapx.smartdb.F;
+            import gras.ellapx.enums.EApproxType;
+            import elltool.logging.Log4jConfigurator;
+            import modgen.common.throwerror;
+            %
+            self.checkIfObjectScalar();
+            ellTubeObj.checkIfObjectScalar();
+            if (~isempty(setdiff(self.getFieldNameList(),...
+                    ellTubeObj.getFieldNameList())))
+                throwerror('wrongInput',...
+                    'tubes must be of the same type');
+            end
+            persistent logger;
+            reportStr = '';
+            [reg, ~,maxCompareTol,maxRelCompareTol,...
+                notComparedFieldList,areTimeBoundsCompared,...
+                isTupleOrderChecked,isMaxCompareTolSpec,...
+                isMaxRelCompareTolSpec] = ...
+                modgen.common.parseparext(...
+                varargin,{...
+                'maxTolerance','maxRelativeTolerance','notComparedFieldList',...
+                'areTimeBoundsCompared','checkTupleOrder';...
+                [],[],{},false,true;...
+                'isscalar(x)&&isnumeric(x)&&x>0',...
+                'isscalar(x)&&isnumeric(x)&&x>0',...
+                'iscellofstring(x)&&isrow(x)',...
+                'isscalar(x)&&islogical(x)','isscalar(x)&&islogical(x)'});
+            if ~isMaxCompareTolSpec
+                maxCompareTol=max(self.calcPrecision)+...
+                    max(ellTubeObj.calcPrecision);
+            end
+            if ~isMaxRelCompareTolSpec
+                maxRelCompareTol=maxCompareTol;
+            end
+            %
+            notComparedFieldList=[notComparedFieldList(:);...
+                self.getNotComparedFieldsList()];
+            %
+            %TODO: the following line is temporary solution until we
+            %replace calcPrecision with absTol and relTol
+            absTol = maxCompareTol;
+            %
+            ellTube = self;
+            compEllTube = ellTubeObj;
+            %
+            isFirstEmpty=ellTube.getNTuples()==0;
+            isSecondEmpty=compEllTube.getNTuples()==0;
+            if isFirstEmpty&&isSecondEmpty
+                isPos = true;
+                reportStr = 'Comparing empty elltubes';
+            elseif isFirstEmpty||isSecondEmpty
+                isPos = false;
+                reportStr = 'Comparing empty elltube with nonempty';
+            else
+                isPos=true;
+                pointsNum = numel(ellTube.timeVec{1});
+                newPointsNum = numel(compEllTube.timeVec{1});
+                firstTimeVec = ellTube.timeVec{1};
+                secondTimeVec = compEllTube.timeVec{1};
+                %
+                if isempty(logger)
+                    logger=Log4jConfigurator.getLogger();
+                end
+                %
+                if logger.isDebugEnabled
+                    if pointsNum ~= newPointsNum
+                        logger.debug('Inequal time knots count');
+                    else
+                        logger.debug('Equal time knots count');
+                    end
+                end
+                %
+                % Checking time bounds equality
+                %
+                areEndTimesDifferent = ...
+                    abs(firstTimeVec(end)-secondTimeVec(end)) > absTol;
+                areBeginTimesDifferent = ...
+                    abs(firstTimeVec(1)-secondTimeVec(1)) > absTol;
+                if areTimeBoundsCompared
+                    if areBeginTimesDifferent
+                        isPos = false;
+                        reportStr=[reportStr, ...
+                            sprintf('Ending times differ by %f. ',...
+                            abs(firstTimeVec(end)-secondTimeVec(end)))];
+                    elseif areEndTimesDifferent
+                        isPos = false;
+                        reportStr=[reportStr, ...
+                            sprintf('Beginning times differ by %f. ',...
+                            abs(firstTimeVec(1)-secondTimeVec(1)))];
+                    end
+                end
+                if isPos
+                    % Checking enclosion of time vectors
+                    areFirstTimesInsideSecond = ...
+                        (firstTimeVec(end)<=secondTimeVec(end)) &&...
+                        (firstTimeVec(1)>=secondTimeVec(1));
+                    %
+                    areSecondTimesInsideFirst = ...
+                        (secondTimeVec(end)<=firstTimeVec(end)) &&...
+                        (secondTimeVec(1)>=firstTimeVec(1));
+                    %
+                    if (length(firstTimeVec) < length(secondTimeVec) &&...
+                            areFirstTimesInsideSecond)
+                        [isTimeVecsEnclosed, secondIndexVec] = ...
+                            fIsGridSubsetOfGrid(secondTimeVec, firstTimeVec);
+                    else
+                        [isTimeVecsEnclosed, firstIndexVec] = ...
+                            fIsGridSubsetOfGrid(firstTimeVec, secondTimeVec);
+                    end
+                    %
+                    fieldsToCompList=setdiff(ellTube.getFieldNameList,...
+                        notComparedFieldList);
+                    %
+                    if isTimeVecsEnclosed
+                        reportStr = [reportStr,...
+                            'Enclosed time vectors. Common times checked. '];
+                        if numel(firstTimeVec) < numel(secondTimeVec)
+                            compEllTube = ...
+                                compEllTube.thinOutTuples(secondIndexVec);
+                        elseif (length(firstTimeVec) > length(secondTimeVec))
+                            ellTube = ellTube.thinOutTuples(firstIndexVec);
+                        end
+                        [isPos,eqReportStr]=getIsEqualProj();
+                    else
+                        %
+                        % Time vectors are not enclosed,
+                        %
+                        % So interpolating from common time knots
+                        %
+                        reportStr = [reportStr, 'Interpolated from common ',...
+                            'time points. '];
+                        unionTimeVec = union(firstTimeVec, secondTimeVec);
+                        %
+                        if areTimeBoundsCompared || (~areEndTimesDifferent &&...
+                                ~areBeginTimesDifferent)
+                            %do nothing
+                        elseif areFirstTimesInsideSecond
+                            isInsideVec=unionTimeVec<=firstTimeVec(2)&...
+                                unionTimeVec>=firstTimeVec(1);
+                            unionTimeVec=unionTimeVec(isInsideVec);
+                        elseif areSecondTimesInsideFirst
+                            isInsideVec=unionTimeVec<=secondTimeVec(2)&...
+                                unionTimeVec>=secondTimeVec(1);
+                            unionTimeVec=unionTimeVec(isInsideVec);
+                        end
+                        if areFirstTimesInsideSecond||areSecondTimesInsideFirst
+                            ellTube = ellTube.interp(unionTimeVec);
+                            compEllTube = compEllTube.interp(unionTimeVec);
+                            [isPos,eqReportStr]=getIsEqualProj();
+                        else
+                            isPos = false;
+                            eqReportStr = 'Cannot interpolate: shifted bounds. ';
+                        end
+                    end
+                    reportStr = [reportStr,sprintf('\n'),eqReportStr];
+                end
+            end
+            function [isPos,eqReportStr]=getIsEqualProj()
+                compEllTubeReduced=compEllTube.getFieldProjection(...
+                    fieldsToCompList);
+                ellTubeReduced=ellTube.getFieldProjection(...
+                    fieldsToCompList);
+                %
+                [isPos, eqReportStr] = compEllTubeReduced.isEqual(...
+                    ellTubeReduced,...
+                    'maxTolerance', maxCompareTol,...
+                    'maxRelativeTolerance', maxRelCompareTol,...
+                    'checkTupleOrder',isTupleOrderChecked,...
+                    reg{:});
+            end
+            %
+            function [isSubset, indThereVec] = ...
+                    fIsGridSubsetOfGrid(greaterVec, smallerVec)
+                if (length(greaterVec) < length(smallerVec))
+                    isSubset = false;
+                else
+                    [smallerMat,greaterMat]=ndgrid(smallerVec,greaterVec);
+                    isCloseMat=abs(smallerMat-greaterMat)<=absTol;
+                    isSubset=all(any(isCloseMat,2));
+                    nFirstElems=numel(smallerVec);
+                    indThereVec=zeros(1,nFirstElems);
+                    for iElem=1:nFirstElems
+                        indFirst=find(isCloseMat(iElem,:),1,'first');
+                        if ~isempty(indFirst)
+                            indThereVec(iElem)=indFirst;
+                        end
+                    end
+                end
+            end
+            %
         end
     end
 end

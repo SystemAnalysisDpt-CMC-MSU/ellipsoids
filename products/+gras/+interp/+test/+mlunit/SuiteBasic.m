@@ -111,11 +111,56 @@ classdef SuiteBasic < mlunitext.test_case
                 end
             end
         end
+        function testLinearInterp(~)
+            CMP_TOL=1e-14;
+            inpArray(:,:,1)=[1 2;3 4];
+            inpArray(:,:,2)=inpArray(:,:,1)*2;
+            inpArray(:,:,3)=inpArray(:,:,1)*3;
+            timeVec=[-1 3 7]+0.1;
+            interpTimeVec=[1 5]+0.1;
+            expArray(:,:,1)=[1 2;3 4]*1.5;
+            expArray(:,:,2)=[1 2;3 4]*2.5;
+            intObj=gras.interp.MatrixInterpolantFactory.createInstance(...
+                'linear',inpArray,timeVec);
+            resArray=intObj.evaluate(interpTimeVec);
+            isOk=max(abs(expArray(:)-resArray(:)))<=CMP_TOL;
+            mlunitext.assert(isOk);
+        end
+        function testNNDedTriuSpline(~)
+            ZERO_EIG_TOL=1e-7;
+            MAX_COMP_TOL=1e-14;
+            N_TIME_POINTS=100;
+            nTimes=N_TIME_POINTS;
+            timeVec=1:nTimes;
+            dataArray=rand(8,8,nTimes);
+            check(0.5,false);
+            check(3,true);
+            %
+            function check(tolFactor,isExpOk)
+                import gras.interp.MatrixInterpolantFactory;
+                symmArray=zeros(size(dataArray));
+                for iTime=1:nTimes
+                    symmMat=dataArray(:,:,iTime)*transpose(dataArray(:,:,iTime));
+                    [oMat,dMat]=eig(symmMat);
+                    dVec=diag(dMat);
+                    dVec=max(dVec,tolFactor*ZERO_EIG_TOL);
+                    dVec(end)=tolFactor*ZERO_EIG_TOL;
+                    dMat=diag(dVec);
+                    symmArray(:,:,iTime)=oMat*dMat*oMat.';
+                end
+                sObj=MatrixInterpolantFactory.createInstance(...
+                    'nndef_triu',symmArray,timeVec,'zeroEigTol',ZERO_EIG_TOL);
+                resArray=sObj.evaluate(timeVec);
+                maxTol=max(abs(resArray(:)-symmArray(:)));
+                isOk=maxTol<=MAX_COMP_TOL;
+                mlunitext.assert_equals(isExpOk,isOk);
+            end
+        end
         function testMatrixCubicSplineBasic(self)
             MAX_TOL=1e-13;
             N_TIME_POINTS=100;
             dataArray=rand(8,7,N_TIME_POINTS);
-            timeVec=1:100;
+            timeVec=1:N_TIME_POINTS;
             checkBulk();
             dataArray=rand(7,8,N_TIME_POINTS);
             checkBulk();
@@ -138,11 +183,14 @@ classdef SuiteBasic < mlunitext.test_case
             dataArray(:,:,10)=rand(8,8);
             checkN('symm_column_triu');
             checkN('posdef_chol');
+            check('linear');
+            check('nearest');
             dataArray=gras.gen.MatVector.triu(dataArray);
             check('column_triu');
             dataArray=rand(8,N_TIME_POINTS);
             check('column');
             check('row');
+
             %%
             posArray=rand(8,8,N_TIME_POINTS);
             for iTime=1:N_TIME_POINTS
@@ -151,10 +199,10 @@ classdef SuiteBasic < mlunitext.test_case
             multArray=rand(8,8,N_TIME_POINTS);
             dataArray=gras.gen.SquareMatVector.lrMultiply(posArray,...
                 multArray,'L');
-            check('nndef_chol',{multArray,posArray,timeVec});
-            checkN('nndef_chol',{multArray(:,:,1:end-1),posArray,timeVec});
-            checkN('nndef_chol',{multArray(:,1:end-1,:),posArray,timeVec});
-            checkN('nndef_chol',{multArray,-posArray,timeVec});
+            check('nndef_chol_mult',{multArray,posArray,timeVec});
+            checkN('nndef_chol_mult',{multArray(:,:,1:end-1),posArray,timeVec});
+            checkN('nndef_chol_mult',{multArray(:,1:end-1,:),posArray,timeVec});
+            checkN('nndef_chol_mult',{multArray,-posArray,timeVec});
             %
             function checkBulk()
                 check('column');

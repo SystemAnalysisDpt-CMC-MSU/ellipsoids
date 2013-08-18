@@ -1,6 +1,8 @@
 crsObjVec = [];
-for i = 1:size(dVec, 2)
-     rsObj = elltool.reach.ReachDiscrete(secSys, intersectEllVec(dVec(i)), ...
-             dirsMat, [dVec(i)-1 nSteps]);
+for iInd = 1:size(indNonEmptyVec, 2)
+    curTimeLimVec=[indNonEmptyVec(iInd)-1 nSteps];
+     rsObj = elltool.reach.ReachDiscrete(secSys,...
+         intersectEllVec(indNonEmptyVec(iInd)), ...
+             dirsMat, curTimeLimVec,'isRegEnabled',true);
      crsObjVec = [crsObjVec rsObj];
 end

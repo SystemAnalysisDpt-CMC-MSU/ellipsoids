@@ -1,30 +1,31 @@
-classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
-        gras.ellapx.smartdb.rels.EllTubeBasic
+classdef EllTube<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&...
+        gras.ellapx.smartdb.rels.EllTubeBasic&...
+        gras.ellapx.smartdb.rels.AEllTubeProjectable
     % EllTube - class which keeps ellipsoidal tubes
-    % 
+    %
     % Fields:
-    %   QArray:cell[1, nElem] - Array of ellipsoid matrices                              
-    %   aMat:cell[1, nElem] - Array of ellipsoid centers                               
-    %   scaleFactor:double[1, 1] - Tube scale factor                                        
-    %   MArray:cell[1, nElem] - Array of regularization ellipsoid matrices                
-    %   dim :double[1, 1] - Dimensionality                                          
-    %   sTime:double[1, 1] - Time s                                                   
-    %   approxSchemaName:cell[1,] - Name                                                      
-    %   approxSchemaDescr:cell[1,] - Description                                               
-    %   approxType:gras.ellapx.enums.EApproxType - Type of approximation 
+    %   QArray:cell[1, nElem] - Array of ellipsoid matrices
+    %   aMat:cell[1, nElem] - Array of ellipsoid centers
+    %   scaleFactor:double[1, 1] - Tube scale factor
+    %   MArray:cell[1, nElem] - Array of regularization ellipsoid matrices
+    %   dim :double[1, 1] - Dimensionality
+    %   sTime:double[1, 1] - Time s
+    %   approxSchemaName:cell[1,] - Name
+    %   approxSchemaDescr:cell[1,] - Description
+    %   approxType:gras.ellapx.enums.EApproxType - Type of approximation
     %                 (external, internal, not defined)
-    %   timeVec:cell[1, m] - Time vector                                             
-    %   calcPrecision:double[1, 1] - Calculation precision                                    
-    %   indSTime:double[1, 1]  - index of sTime within timeVec                             
-    %   ltGoodDirMat:cell[1, nElem] - Good direction curve                                     
-    %   lsGoodDirVec:cell[1, nElem] - Good direction at time s                                  
-    %   ltGoodDirNormVec:cell[1, nElem] - Norm of good direction curve                              
-    %   lsGoodDirNorm:double[1, 1] - Norm of good direction at time s                         
-    %   xTouchCurveMat:cell[1, nElem] - Touch point curve for good 
-    %                                   direction                     
-    %   xTouchOpCurveMat:cell[1, nElem] - Touch point curve for direction 
+    %   timeVec:cell[1, m] - Time vector
+    %   calcPrecision:double[1, 1] - Calculation precision
+    %   indSTime:double[1, 1]  - index of sTime within timeVec
+    %   ltGoodDirMat:cell[1, nElem] - Good direction curve
+    %   lsGoodDirVec:cell[1, nElem] - Good direction at time s
+    %   ltGoodDirNormVec:cell[1, nElem] - Norm of good direction curve
+    %   lsGoodDirNorm:double[1, 1] - Norm of good direction at time s
+    %   xTouchCurveMat:cell[1, nElem] - Touch point curve for good
+    %                                   direction
+    %   xTouchOpCurveMat:cell[1, nElem] - Touch point curve for direction
     %                                     opposite to good direction
-    %   xsTouchVec:cell[1, nElem]  - Touch point at time s                                    
+    %   xsTouchVec:cell[1, nElem]  - Touch point at time s
     %   xsTouchOpVec :cell[1, nElem] - Touch point at time s
     %
     %   TODO: correct description of the fields in gras.ellapx.smartdb.rels.EllTube
@@ -35,10 +36,6 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
     end
     properties (GetAccess=private,Constant)
         DEFAULT_SCALE_FACTOR=1;
-        FIELDS_NOT_TO_CAT_OR_CUT={'APPROX_SCHEMA_DESCR';'DIM';...
-            'APPROX_SCHEMA_NAME';'APPROX_TYPE';'CALC_PRECISION';...
-            'IND_S_TIME';'LS_GOOD_DIR_NORM';'LS_GOOD_DIR_VEC';'S_TIME';...
-            'SCALE_FACTOR';'XS_TOUCH_OP_VEC';'XS_TOUCH_VEC'};
     end
     methods (Access=protected)
         function figureGroupKeyName=figureGetGroupKeyFunc(self,sTime,lsGoodDirVec)
@@ -99,7 +96,7 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
             else
                 hMVec=[];
             end
-            
+            %
             hVec=[hQVec,hMVec];
             %
             axis(hAxes,'tight');
@@ -235,31 +232,31 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
     end
     methods (Static)
         function ellTubeRel=fromQArrays(QArrayList,aMat,varargin)
-        % FROMQARRAYS  - creates a relation object using an array of ellipsoids,
-        %                described by the array of ellipsoid matrices and
-        %                array of ellipsoid centers.This method used default 
-        %                scale factor.
-        %
-        % Input:
-        %   regular:
-        %     QArrayList: double[nDim1, nDim2, ..., nDimN] - array of ellipsoid 
-        %         matrices
-        %     aMat: double[nDim1, nDim2, ..., nDimN] - array of ellipsoid centers
-        %
-        % Optional:
-        %    MArrayList:cell[1, nElem] - array of regularization ellipsoid matrices
-        %    timeVec:cell[1, m] - time vector 
-        %    ltGoodDirArray:cell[1, nElem] - good direction at time s  
-        %    sTime:double[1, 1] - time s    
-        %    approxType:gras.ellapx.enums.EApproxType - type of approximation 
-        %                 (external, internal, not defined)
-        %    approxSchemaName:cell[1,] - name of the schema
-        %    approxSchemaDescr:cell[1,] - description of the schema     
-        %    calcPrecision:double[1, 1] - calculation precision 
-        % 
-        % Output:
-        %    ellTubeRel: smartdb.relation.StaticRelation[1, 1] - constructed relation
-        %        object
+            % FROMQARRAYS  - creates a relation object using an array of ellipsoids,
+            %                described by the array of ellipsoid matrices and
+            %                array of ellipsoid centers.This method used default
+            %                scale factor.
+            %
+            % Input:
+            %   regular:
+            %     QArrayList: double[nDim1, nDim2, ..., nDimN] - array of ellipsoid
+            %         matrices
+            %     aMat: double[nDim1, nDim2, ..., nDimN] - array of ellipsoid centers
+            %
+            % Optional:
+            %    MArrayList:cell[1, nElem] - array of regularization ellipsoid matrices
+            %    timeVec:cell[1, m] - time vector
+            %    ltGoodDirArray:cell[1, nElem] - good direction at time s
+            %    sTime:double[1, 1] - time s
+            %    approxType:gras.ellapx.enums.EApproxType - type of approximation
+            %                 (external, internal, not defined)
+            %    approxSchemaName:cell[1,] - name of the schema
+            %    approxSchemaDescr:cell[1,] - description of the schema
+            %    calcPrecision:double[1, 1] - calculation precision
+            %
+            % Output:
+            %    ellTubeRel: smartdb.relation.StaticRelation[1, 1] - constructed relation
+            %        object
             import gras.ellapx.smartdb.rels.EllTube;
             import gras.ellapx.smartdb.rels.EllTubeBasic;
             %
@@ -272,33 +269,33 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
         end
         function ellTubeRel=fromQMArrays(QArrayList,aMat,MArrayList,...
                 varargin)
-        % FROMQMARRAYS  - creates a relation object using an array of ellipsoids,
-        %                 described by the array of ellipsoid matrices and
-        %                 array of ellipsoid centers. Also this method uses 
-        %                 regularizer in the form of a matrix function. This method 
-        %                 used default scale factor.
-        %           
-        % Input:
-        %   regular:
-        %   QArrayList: double[nDim1, nDim2, ..., nDimN] - array of ellipsoid 
-        %         matrices
-        %   aMat: double[nDim1, nDim2, ..., nDimN] - array of ellipsoid centers 
-        %   MArrayList: double[nDim1, nDim2, ..., nDimN] - ellipsoid  matrices of 
-        %         regularization
-        %
-        %  optional:
-        %    timeVec:cell[1, m] - time vector 
-        %    ltGoodDirArray:cell[1, nElem] - good direction at time s  
-        %    sTime:double[1, 1] - time s    
-        %    approxType:gras.ellapx.enums.EApproxType - type of approximation 
-        %                 (external, internal, not defined)
-        %    approxSchemaName:cell[1,] - name of the schema
-        %    approxSchemaDescr:cell[1,] - description of the schema     
-        %    calcPrecision:double[1, 1] - calculation precision 
-        % 
-        % Output:
-        %    ellTubeRel: smartdb.relation.StaticRelation[1, 1] - constructed relation
-        %          object
+            % FROMQMARRAYS  - creates a relation object using an array of ellipsoids,
+            %                 described by the array of ellipsoid matrices and
+            %                 array of ellipsoid centers. Also this method uses
+            %                 regularizer in the form of a matrix function. This method
+            %                 used default scale factor.
+            %
+            % Input:
+            %   regular:
+            %   QArrayList: double[nDim1, nDim2, ..., nDimN] - array of ellipsoid
+            %         matrices
+            %   aMat: double[nDim1, nDim2, ..., nDimN] - array of ellipsoid centers
+            %   MArrayList: double[nDim1, nDim2, ..., nDimN] - ellipsoid  matrices of
+            %         regularization
+            %
+            %  optional:
+            %    timeVec:cell[1, m] - time vector
+            %    ltGoodDirArray:cell[1, nElem] - good direction at time s
+            %    sTime:double[1, 1] - time s
+            %    approxType:gras.ellapx.enums.EApproxType - type of approximation
+            %                 (external, internal, not defined)
+            %    approxSchemaName:cell[1,] - name of the schema
+            %    approxSchemaDescr:cell[1,] - description of the schema
+            %    calcPrecision:double[1, 1] - calculation precision
+            %
+            % Output:
+            %    ellTubeRel: smartdb.relation.StaticRelation[1, 1] - constructed relation
+            %          object
             import gras.ellapx.smartdb.rels.EllTube;
             import gras.ellapx.smartdb.rels.EllTubeBasic;
             %
@@ -309,34 +306,34 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
         end
         function ellTubeRel=fromQMScaledArrays(QArrayList,aMat,MArrayList,...
                 varargin)
-        % FROMQMSCALEDARRAYS  - creates a relation object using an array of ellipsoids,
-        %                       described by the array of ellipsoid matrices and
-        %                       array of ellipsoid centers. Also this method uses 
-        %                       regularizer in the form of a matrix function. 
-        %           
-        %
-        % Input:
-        %   regular:
-        %     QArrayList: double[nDim1, nDim2, ..., nDimN] - array of ellipsoid 
-        %         matrices
-        %     aMat: double[nDim1, nDim2, ..., nDimN] - array of ellipsoid centers 
-        %     MArrayList: double[nDim1, nDim2, ..., nDimN] - ellipsoid matrices 
-        %               of regularization
-        %     scaleFactor:double[1, 1] - tube scale factor
-        %
-        %  optional:
-        %    timeVec:cell[1, m] - time vector 
-        %    ltGoodDirArray:cell[1, nElem] - good direction at time s  
-        %    sTime:double[1, 1] - time s    
-        %    approxType:gras.ellapx.enums.EApproxType - type of approximation 
-        %                 (external, internal, not defined)
-        %    approxSchemaName:cell[1,] - name of the schema
-        %    approxSchemaDescr:cell[1,] - description of the schema     
-        %    calcPrecision:double[1, 1] - calculation precision
-        %
-        % Output:
-        %    ellTubeRel: smartdb.relation.StaticRelation[1, 1] - constructed relation
-        %          object
+            % FROMQMSCALEDARRAYS  - creates a relation object using an array of ellipsoids,
+            %                       described by the array of ellipsoid matrices and
+            %                       array of ellipsoid centers. Also this method uses
+            %                       regularizer in the form of a matrix function.
+            %
+            %
+            % Input:
+            %   regular:
+            %     QArrayList: double[nDim1, nDim2, ..., nDimN] - array of ellipsoid
+            %         matrices
+            %     aMat: double[nDim1, nDim2, ..., nDimN] - array of ellipsoid centers
+            %     MArrayList: double[nDim1, nDim2, ..., nDimN] - ellipsoid matrices
+            %               of regularization
+            %     scaleFactor:double[1, 1] - tube scale factor
+            %
+            %  optional:
+            %    timeVec:cell[1, m] - time vector
+            %    ltGoodDirArray:cell[1, nElem] - good direction at time s
+            %    sTime:double[1, 1] - time s
+            %    approxType:gras.ellapx.enums.EApproxType - type of approximation
+            %                 (external, internal, not defined)
+            %    approxSchemaName:cell[1,] - name of the schema
+            %    approxSchemaDescr:cell[1,] - description of the schema
+            %    calcPrecision:double[1, 1] - calculation precision
+            %
+            % Output:
+            %    ellTubeRel: smartdb.relation.StaticRelation[1, 1] - constructed relation
+            %          object
             import gras.ellapx.smartdb.rels.EllTube;
             import gras.ellapx.smartdb.rels.EllTubeBasic;
             %
@@ -345,29 +342,29 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
             ellTubeRel=EllTube(STubeData);
         end
         function ellTubeRel = fromEllMArray(qEllArray, ellMArr, varargin)
-        % FROMELLMARRAY  - creates a relation object using an array of ellipsoids.
-        %                  This method uses regularizer in the form of a matrix 
-        %                  function.
-        %
-        % Input:
-        %   regular:
-        %     qEllArray: ellipsoid[nDim1, nDim2, ..., nDimN] - array of ellipsoids
-        %     ellMArr: double[nDim1, nDim2, ..., nDimN] - regularization ellipsoid 
-        %         matrices
-        %
-        %   optional:
-        %    timeVec:cell[1, m] - time vector 
-        %    ltGoodDirArray:cell[1, nElem] - good direction at time s  
-        %    sTime:double[1, 1] - time s    
-        %    approxType:gras.ellapx.enums.EApproxType - type of approximation 
-        %                 (external, internal, not defined)
-        %    approxSchemaName:cell[1,] - name of the schema
-        %    approxSchemaDescr:cell[1,] - description of the schema     
-        %    calcPrecision:double[1, 1] - calculation precision
-        % 
-        % Output:
-        %    ellTubeRel: smartdb.relation.StaticRelation[1, 1] - constructed relation 
-        %          object
+            % FROMELLMARRAY  - creates a relation object using an array of ellipsoids.
+            %                  This method uses regularizer in the form of a matrix
+            %                  function.
+            %
+            % Input:
+            %   regular:
+            %     qEllArray: ellipsoid[nDim1, nDim2, ..., nDimN] - array of ellipsoids
+            %     ellMArr: double[nDim1, nDim2, ..., nDimN] - regularization ellipsoid
+            %         matrices
+            %
+            %   optional:
+            %    timeVec:cell[1, m] - time vector
+            %    ltGoodDirArray:cell[1, nElem] - good direction at time s
+            %    sTime:double[1, 1] - time s
+            %    approxType:gras.ellapx.enums.EApproxType - type of approximation
+            %                 (external, internal, not defined)
+            %    approxSchemaName:cell[1,] - name of the schema
+            %    approxSchemaDescr:cell[1,] - description of the schema
+            %    calcPrecision:double[1, 1] - calculation precision
+            %
+            % Output:
+            %    ellTubeRel: smartdb.relation.StaticRelation[1, 1] - constructed relation
+            %          object
             import gras.ellapx.smartdb.rels.EllTube;
             import gras.ellapx.smartdb.rels.EllTubeBasic;
             nPoints = length(qEllArray);
@@ -387,25 +384,25 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
             end
         end
         function ellTubeRel = fromEllArray(qEllArray, varargin)
-        % FROMELLARRAY  - creates a relation object using an array of ellipsoids 
-        %
-        % Input:
-        %   regular:
-        %     qEllArray: ellipsoid[nDim1, nDim2, ..., nDimN] - array of ellipsoids
-        %
-        %   optional:
-        %    timeVec:cell[1, m] - time vector 
-        %    ltGoodDirArray:cell[1, nElem] - good direction at time s  
-        %    sTime:double[1, 1] - time s    
-        %    approxType:gras.ellapx.enums.EApproxType - type of approximation 
-        %                 (external, internal, not defined)
-        %    approxSchemaName:cell[1,] - name of the schema
-        %    approxSchemaDescr:cell[1,] - description of the schema     
-        %    calcPrecision:double[1, 1] - calculation precision
-        % 
-        % Output:
-        %    ellTubeRel: smartdb.relation.StaticRelation[1, 1] - constructed relation
-        %        object
+            % FROMELLARRAY  - creates a relation object using an array of ellipsoids
+            %
+            % Input:
+            %   regular:
+            %     qEllArray: ellipsoid[nDim1, nDim2, ..., nDimN] - array of ellipsoids
+            %
+            %   optional:
+            %    timeVec:cell[1, m] - time vector
+            %    ltGoodDirArray:cell[1, nElem] - good direction at time s
+            %    sTime:double[1, 1] - time s
+            %    approxType:gras.ellapx.enums.EApproxType - type of approximation
+            %                 (external, internal, not defined)
+            %    approxSchemaName:cell[1,] - name of the schema
+            %    approxSchemaDescr:cell[1,] - description of the schema
+            %    calcPrecision:double[1, 1] - calculation precision
+            %
+            % Output:
+            %    ellTubeRel: smartdb.relation.StaticRelation[1, 1] - constructed relation
+            %        object
             import gras.ellapx.smartdb.rels.EllTube;
             import gras.ellapx.smartdb.rels.EllTubeBasic;
             nPoints = length(qEllArray);
@@ -414,129 +411,156 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
             ellTubeRel = EllTube.fromEllMArray(...
                 qEllArray, mArray, varargin{:});
         end
-        function cutResObj = getCutObj(whatToCutObj, isCutTimeVec)
-            dim = ndims(whatToCutObj);
-            if dim == 1
-                cutResObj = whatToCutObj(isCutTimeVec);
-            elseif dim == 2
-                cutResObj = whatToCutObj(:, isCutTimeVec);
-            elseif dim == 3
-                cutResObj = whatToCutObj(:, :, isCutTimeVec);
-            end
-        end
-        function isNeededIndVec = getLogicalInd(indVec, timeVec)
-            import modgen.common.throwerror
-            %
-            nPoints = numel(timeVec);
-            if isa(indVec, 'double')
-                if min(indVec) < 1 || max(indVec) > nPoints
-                    throwerror('wrongInput', 'Indexes are out of range.');
-                end
-                isNeededIndVec = false(size(timeVec));
-                isNeededIndVec(indVec) = true;
-            elseif islogical(indVec)
-                if numel(indVec) ~= nPoints
-                    throwerror('wrongInput', 'Indexes are out of range.');
-                end
-                isNeededIndVec = indVec;
-            else
-                throwerror('wrongInput',...
-                    'indVec should be double or logical');
-            end
-        end
     end
     methods
-        function thinnedEllTubeRel = thinOutTuples(self, indVec)
-            % THINOUTTUPLES  - delete tuples from relation object
-            % 
-            % Input:
-            %   regular:
-            %     self.
-            %     indVec:logical[1, nDim]/double[1, nDim] - indexes of tuples which
-            %             we must remove
-            %
-            % Output:
-            %   thinnedEllTubeRel: smartdb.relation.StaticRelation[1, 1]/
-            %       smartdb.relation.DynamicRelation[1, 1] - relation object without 
-            %       tuples
-            %       
-            import gras.ellapx.smartdb.F;
-            import modgen.common.throwerror;
-            FIELD_NAME_LIST_TO = {F.LS_GOOD_DIR_VEC;F.LS_GOOD_DIR_NORM;...
-                F.XS_TOUCH_VEC;F.XS_TOUCH_OP_VEC};
-            FIELD_NAME_LIST_FROM = {F.LT_GOOD_DIR_MAT;...
-                F.LT_GOOD_DIR_NORM_VEC;F.X_TOUCH_CURVE_MAT;...
-                F.X_TOUCH_OP_CURVE_MAT};
-            SData = self.getData();
-            SThinFunResult = SData;
-            timeVec = SData.timeVec{1};
-            isNeededIndVec = self.getLogicalInd(indVec, timeVec);
-            %
-            fieldsNotToCatVec =...
-                F.getNameList(self.FIELDS_NOT_TO_CAT_OR_CUT);
-            fieldsToCutVec =...
-                setdiff(fieldnames(SData), fieldsNotToCatVec);
-            cellfun(@(field) cutStructField(field), fieldsToCutVec);
-            cellfun(@cutStructSTimeField,...
-                FIELD_NAME_LIST_TO, FIELD_NAME_LIST_FROM);
-            SThinFunResult.lsGoodDirNorm =...
-                cell2mat(SThinFunResult.lsGoodDirNorm);
-            SThinFunResult.sTime(:) =...
-                timeVec(find(isNeededIndVec, 1));
-            SThinFunResult.indSTime(:) = 1;
-            %
-            thinnedEllTubeRel = self.createInstance(SThinFunResult);
-            %
-            function cutStructSTimeField(fieldNameTo, fieldNameFrom)
-                SThinFunResult.(fieldNameTo) =...
-                    cellfun(@(field) field(:, 1),...
-                    SThinFunResult.(fieldNameFrom),...
-                    'UniformOutput', false);
-            end
-            %
-            function cutStructField(fieldName)
-                SThinFunResult.(fieldName) = cellfun(@(StructFieldVal)...
-                    self.getCutObj(StructFieldVal, isNeededIndVec),...
-                    SData.(fieldName), 'UniformOutput', false);
-            end
-        end
-        function catEllTubeRel = cat(self, newEllTubeRel, indVec)
+        function catEllTubeRel = cat(self, newEllTubeRel,...
+                varargin)
             % CAT  - concatenates data from relation objects.
             %
             % Input:
-            %  regular:
-            %    self.
-            %    newEllTubeRel: smartdb.relation.StaticRelation[1, 1]/
-            %      smartdb.relation.DynamicRelation[1, 1] - relation object
+            %   regular:
+            %       self.
+            %       newEllTubeRel: smartdb.relation.StaticRelation[1, 1]/
+            %           smartdb.relation.DynamicRelation[1, 1] - relation object
+            %   properties:
+            %       isReplacedByNew: logical[1,1] - if true, sTime and
+            %           values of properties corresponding to sTime are taken
+            %           from newEllTubeRel. Common times in self and
+            %           newEllTubeRel are allowed, however the values for
+            %           those times are taken either from self or from
+            %           newEllTubeRel depending on value of isReplacedByNew
+            %           property
+            %
+            %       isCommonValuesChecked: logical[1,1] - if true, values
+            %           at common times (if such are found) are checked for
+            %           strong equality (with zero precision). If not equal
+            %           - an exception is thrown. True by default.
+            %
+            %       commonTimeAbsTol: double[1,1] - absolute tolerance used
+            %           for comparing values at common times, =0 by default
+            %
+            %       commonTimeRelTol: double[1,1] - absolute tolerance used
+            %           for comparing values at common times, =0 by default
             %
             % Output:
-            %    catEllTubeRel:smartdb.relation.StaticRelation[1, 1]/
-            %      smartdb.relation.DynamicRelation[1, 1] - relation object resulting 
-            %      from CAT operation
+            %   catEllTubeRel:smartdb.relation.StaticRelation[1, 1]/
+            %       smartdb.relation.DynamicRelation[1, 1] - relation object
+            %       resulting from CAT operation
+            %
             import gras.ellapx.smartdb.F;
+            import modgen.common.parseparext;
+            import modgen.common.throwerror;
+            [~,~,isReplacedByNew,isCommonValuesChecked,...
+                commonTimeAbsTol,commonTimeRelTol]=...
+                parseparext(varargin,...
+                {'isReplacedByNew','isCommonValuesChecked',...
+                'commonTimeAbsTol','commonTimeRelTol';...
+                false,true,0,0;...
+                'islogical(x)&&isscalar(x)',...
+                'islogical(x)&&isscalar(x)',...
+                'isfloat(x)&&isscalar(x)&&(x>=0)',...
+                'isfloat(x)&&isscalar(x)&&(x>=0)'},...
+                0);
+            %
             SDataFirst = self.getData();
             SDataSecond = newEllTubeRel.getData();
-            SCatFunResult = SDataFirst;
-            timeVec = SDataSecond.timeVec{1};
-            if nargin == 2
-                indVec = true(size(timeVec));
+            %
+            isNotOkVec=cellfun(@(x,y)x(end)>y(1),...
+                SDataFirst.timeVec,SDataSecond.timeVec);
+            if any(isNotOkVec)
+                throwerror('wrongInput:commonTimeVecEntries',...
+                    ['cannot concatenate relations ',...
+                    'with overlapping time limits']);
             end
-            isNeededIndVec = self.getLogicalInd(indVec, timeVec);
-            fieldsNotToCatVec =...
-                F.getNameList(self.FIELDS_NOT_TO_CAT_OR_CUT);
+            %
+            isDelCommonTimeList=cellfun(@(x,y)x(end)==y(1),...
+                SDataFirst.timeVec,SDataSecond.timeVec,'UniformOutput',false);
+            %
+            SCatFunResult = SDataFirst;
+            fieldsNotToCatVec=self.getNoCatOrCutFieldsList();
             fieldsToCatVec =...
                 setdiff(fieldnames(SDataFirst), fieldsNotToCatVec);
-            cellfun(@(field) catStructField(field, isNeededIndVec),...
-                fieldsToCatVec);
+            %
+            fCut=@(varargin)catArr(...
+                varargin{:},isReplacedByNew);
+            %
+            cellfun(@(x)catStructField(x,fCut),fieldsToCatVec);
+            %
+            if isReplacedByNew
+                nRepFields=length(fieldsNotToCatVec);
+                for iField=1:nRepFields
+                    fieldName=fieldsNotToCatVec{iField};
+                    SCatFunResult.(fieldName)=SDataSecond.(fieldName);
+                end
+                sTimeVec=SDataSecond.sTime;
+            else
+                sTimeVec=SDataFirst.sTime;
+            end
+            SCatFunResult.indSTime=...
+                cellfun(@(x,y)find(x==y,1,'first'),...
+                SCatFunResult.timeVec,num2cell(sTimeVec));
+            %
             catEllTubeRel = self.createInstance(SCatFunResult);
             %
-            function catStructField(fieldName, isNeededIndVec)
+            function catStructField(fieldName,fCut)
                 SCatFunResult.(fieldName) =...
-                    cellfun(@(firstStructFieldVal, secondStructFieldVal)...
-                    cat(ndims(firstStructFieldVal), firstStructFieldVal,...
-                    self.getCutObj(secondStructFieldVal,...
-                    isNeededIndVec)), SDataFirst.(fieldName),...
-                    SDataSecond.(fieldName), 'UniformOutput', false);
+                    cellfun(@(varargin)fCut(varargin{:},fieldName),...
+                    SDataFirst.(fieldName),...
+                    SDataSecond.(fieldName),...
+                    isDelCommonTimeList,...
+                    'UniformOutput', false);
+            end
+            %
+            function resArr = catArr(leftArr,rightArr,isCommon,...
+                    fieldName,isRightTaken)
+                import modgen.common.throwerror;
+                nDims = ndims(leftArr);
+                if nDims<2||nDims>3
+                    throwerror('wrongInput',...
+                        sprintf(...
+                        'dimensionality %d is not supported, field %s',...
+                        nDims,fieldName));
+                end
+                if isCommon
+                    if isCommonValuesChecked
+                        if nDims==2
+                            leftCutArr=leftArr(:,end);
+                            rightCutArr=rightArr(:,1);
+                        else
+                            leftCutArr=leftArr(:,:,end);
+                            rightCutArr=rightArr(:,:,1);
+                        end
+                        if isnumeric(leftCutArr)
+                            [isEq,~,~,~,~,suffixStr]=...
+                                gras.gen.absrelcompare(leftCutArr(:),...
+                                rightCutArr(:),commonTimeAbsTol,...
+                                commonTimeRelTol,@norm);
+                        else
+                            isEq=isequal(leftCutArr,rightCutArr);
+                        end
+                        if ~isEq
+                            throwerror('wrongInput:commonValuesDiff',...
+                                ['field %s values at common times ',...
+                                'are different ',suffixStr],...
+                                fieldName);
+                        end
+                    end
+                    if nDims==2
+                        if isRightTaken
+                            resArr=cat(2,leftArr(:,1:end-1),rightArr);
+                        else
+                            resArr=cat(2,leftArr,rightArr(:,2:end));
+                        end
+                    else
+                        if isRightTaken
+                            resArr=cat(3,leftArr(:,:,1:end-1),rightArr);
+                        else
+                            resArr=cat(3,leftArr,rightArr(:,:,2:end));
+                        end
+                    end
+                else
+                    resArr=cat(nDims,leftArr,rightArr);
+                end
             end
         end
         function cutEllTubeRel = cut(self, cutTimeVec)
@@ -546,10 +570,10 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
             %  regular:
             %     self.
             %     cutTimeVec: double[1, 2]/ double[1, 1] - time interval to cut
-            % 
+            %
             % Output:
             % cutEllTubeRel: smartdb.relation.StaticRelation[1, 1]/
-            %      smartdb.relation.DynamicRelation[1, 1] - relation object resulting 
+            %      smartdb.relation.DynamicRelation[1, 1] - relation object resulting
             %      from CUT operation
             import gras.ellapx.smartdb.F;
             import modgen.common.throwerror;
@@ -564,46 +588,28 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
             cutStartTime = cutTimeVec(1);
             cutEndTime = cutTimeVec(2);
             if cutStartTime > cutEndTime
-                throwerror('wrongInput', 's0 must be LEQ than s1.');
+                throwerror('wrongInput', 's0 must be less or equal than s1.');
             end
             timeVec = self.timeVec{1};
-            sysStartTime = timeVec(1);
-            sysEndTime = timeVec(end);
-            if sysStartTime < sysEndTime
-                if cutStartTime < sysStartTime ||...
-                        cutStartTime > sysEndTime ||...
-                        cutEndTime < sysStartTime ||...
-                        cutEndTime > sysEndTime
-                    throwerror('wrongInput', 'wrong input format.');
-                end
-            else
-                if cutStartTime > sysStartTime ||...
-                        cutStartTime < sysEndTime ||...
-                        cutEndTime > sysStartTime ||...
-                        cutEndTime < sysEndTime
-                    throwerror('wrongInput', 'wrong input format.');
-                end
-            end
-            if cutTimeVec(1) == cutTimeVec(2)
-                indClosestVec = find(timeVec <= cutStartTime, 1, 'last');
-                isSysNewTimeIndVec = false(size(timeVec));
-                isSysNewTimeIndVec(indClosestVec) = true;
-            else
-                isSysTimeLowerVec = timeVec < cutStartTime;
-                isSysTimeGreaterVec = timeVec > cutEndTime;
-                [unTimeVec, unVec, notUnVec] = unique(timeVec);
-                isSysNewTimeIndVec = false(size(timeVec));
-                isSysNewTimeIndVec(unVec) = true;
-                isSysNewTimeIndVec = isSysNewTimeIndVec &...
-                    ~(isSysTimeLowerVec | isSysTimeGreaterVec);
+            startTime = timeVec(1);
+            endTime = timeVec(end);
+            %
+            if cutStartTime < startTime ||...
+                    cutStartTime > endTime ||...
+                    cutEndTime < startTime ||...
+                    cutEndTime > endTime
+                throwerror('wrongInput',...
+                    'cutTimeVec is out of allowed range');
             end
             %
-            cutEllTubeRel =...
-                self.thinOutTuples(isSysNewTimeIndVec);
+            isWithinVec=(timeVec<=cutEndTime)&(timeVec>=cutStartTime);
+            resTimeVec=union(timeVec(isWithinVec),cutTimeVec);
+            %
+            cutEllTubeRel=self.interp(resTimeVec);
         end
         function scale(self,fCalcFactor,fieldNameList)
             % SCALE - scales relation object
-            %             
+            %
             %  Input:
             %   regular:
             %      self.
@@ -617,10 +623,10 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
             %             factor:double[1, 1] - calculated factor
             %
             %       fieldNameList:cell[1,nElem]/char[1,] - names of the fields
-            %       
+            %
             %  Output:
             %       none
-            % 
+            %
             % Example:
             %   nPoints=5;
             %   calcPrecision=0.001;
@@ -648,18 +654,17 @@ classdef EllTube<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel&...
                 EllTubeBasic.scaleTubeData(self.getData(),scaleFactorVec));
         end
         function self=EllTube(varargin)
-            self=self@gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel(...
+            self=self@gras.ellapx.smartdb.rels.ATypifiedAdjustedRel(...
                 varargin{:});
         end
         function [ellTubeProjRel,indProj2OrigVec]=project(self,varargin)
             import gras.ellapx.smartdb.rels.EllTubeProj;
             if self.getNTuples()>0
-                [rel,indProj2OrigVec]=project@...
-                    gras.ellapx.smartdb.rels.EllTubeBasic(...
-                    self,varargin{:});
+                [rel,indProj2OrigVec]=self.projectInternal(varargin{:});
                 ellTubeProjRel=EllTubeProj(rel);
             else
                 ellTubeProjRel=EllTubeProj();
+                indProj2OrigVec=zeros(0,1);
             end
         end
         function ellTubeProjRel=projectToOrths(self,indVec,projType)
