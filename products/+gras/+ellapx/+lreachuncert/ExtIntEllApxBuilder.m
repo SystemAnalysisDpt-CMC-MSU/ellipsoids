@@ -9,7 +9,6 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
         N_MAX_REG_STEPS=6;
     end
     properties (Access=private)
-        sMethodName
         ellTubeRel
         ltSplineList
         %
@@ -18,32 +17,8 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
         goodDirSetObj
     end
     methods (Access=protected)
-        function S=getOrthTranslMatrix(self,Q_star,R_sqrt,b,a)
-            import gras.la.*;
-            methodName=self.sMethodName;
-            switch methodName
-                case 'hausholder'
-                    S=orthtranslhaus(b,a);
-                case 'gram',
-                    S=orthtransl(b,a);
-                case 'direction',
-                    aMaxVec=R_sqrt*l;
-                    bMaxVec=Q_star*l;
-                    S=orthtranslmaxdir(b,a,bMaxVec,aMaxVec);
-                case 'trace',
-                    maxMat=R_sqrt*Q_star;
-                    S=orthtranslmaxtr(b,a,maxMat);
-                case 'volume',
-                    maxMat=R_sqrt/(Q_star.');
-                    S=orthtranslmaxtr(b,a,maxMat);
-                otherwise,
-                    modgen.common.throwerror('wrongInput',...
-                        'method %s is not supported',methodName);
-            end
-        end
-        %
-        function resObj=getBPBTransSqrtDynamics(self,iGoodDir)
-            resObj=self.BPBTransSqrtDynamicsList{iGoodDir};
+        function resObj=getBPBTransSqrtDynamics(self)
+            resObj=self.BPBTransSqrtDynamics;
         end
         function fHandle=getEllApxMatrixDerivFunc(self,iGoodDir)
             fHandle=...
@@ -58,15 +33,14 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
                 calcRegEllApxMatrix(self,QIntMat,QExtMat)
             STRICT_Q_MAT_EIG_FACTOR=0.1;
             TOL_ADJUSTMNET=100*eps;
-            minQMatEig=self.minQMatEig;
-            strinctMinQMatEig=minQMatEig*STRICT_Q_MAT_EIG_FACTOR;
+            strinctMinQMatEig=self.minQMatEig*STRICT_Q_MAT_EIG_FACTOR;
             %
             [VMat,DMat]=eig(QIntMat,'nobalance');
             dVec=diag(DMat);
             isStrictViol=any(dVec-strinctMinQMatEig<0);
             if ~isStrictViol
-                if any(dVec<minQMatEig)
-                    mVec=-min(dVec-minQMatEig,0)+TOL_ADJUSTMNET;
+                if any(dVec<self.minQMatEig)
+                    mVec=-min(dVec-self.minQMatEig,0)+TOL_ADJUSTMNET;
                     MMat=VMat*diag(mVec)*transpose(VMat);
                     MMat=0.5*(MMat+MMat.');
                     regQIntMat=QIntMat+MMat;
@@ -80,8 +54,8 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
                 regQExtMat=nan(size(QIntMat));
             end
         end
-        function [dQIntMat,dQExtMat]=calcEllApxMatrixDeriv(self,AtDynamics,...
-                BPBTransDynamics,CQCTransDynamics,...
+        function [dQIntMat,dQExtMat]=calcEllApxMatrixDeriv(self,...
+                AtDynamics,BPBTransDynamics,CQCTransDynamics,...
                 ltSpline,t,QIntMat,QExtMat)
             import modgen.common.throwerror;
             import gras.la.ismatposdef;
@@ -259,7 +233,7 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
     end
     methods
         function self=ExtIntEllApxBuilder(pDefObj,goodDirSetObj,...
-                timeLimsVec,calcPrecision,sMethodName,minQSqrtMatEig)
+                timeLimsVec,calcPrecision,varargin)
             import gras.ellapx.lreachuncert.ExtIntEllApxBuilder;
             import modgen.common.throwerror;
             import gras.la.ismatposdef;
@@ -271,6 +245,11 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
                 throwerror('wrongInput',...
                     'Initial set is not positive definite.');
             end
+            %
+            [~,~,sMethodName,minQSqrtMatEig] = ...
+                modgen.common.parseparext(varargin, ...
+                {'selectionMethodForSMatrix','minQSqrtMatEig'}, 0, 2);
+            %
             self.minQMatEig=minQSqrtMatEig*minQSqrtMatEig;
             self.goodDirSetObj=goodDirSetObj;
             self.sMethodName=sMethodName;

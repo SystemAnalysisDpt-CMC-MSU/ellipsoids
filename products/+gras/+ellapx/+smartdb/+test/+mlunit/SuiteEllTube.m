@@ -340,6 +340,11 @@ classdef SuiteEllTube < mlunitext.test_case
             [isEqual,reportStr]=rel.isEqual(rel2);
             mlunitext.assert_equals(true,isEqual,reportStr);
             %
+            relProjOrthExp=rel.project(projType,{[0 1 0;0 0 1]},@fGetProjMat);
+            relProjOrthGot=rel.projectToOrths([2,3],projType);
+            [isEqual,reportStr]=relProjOrthExp.isEqual(relProjOrthGot);
+            mlunitext.assert_equals(true,isEqual,reportStr);
+            %
             function [projOrthMatArray,projOrthMatTransArray]=...
                     fGetProjMat(projMat,timeVec,varargin)
                 nPoints=length(timeVec);
@@ -626,7 +631,7 @@ classdef SuiteEllTube < mlunitext.test_case
                     approxSchemaDescr, calcPrecision);
             end
         end
-        function testSimpleCreate(self)
+        function aux_testSimpleCreate(self,isApproxSchemaUniform)
             nPoints=3;
             calcPrecision=0.001;
             approxSchemaDescr=char.empty(1,0);
@@ -668,11 +673,25 @@ classdef SuiteEllTube < mlunitext.test_case
             end
             function rel=create()
                 ltGoodDirArray=repmat(lsGoodDirVec,[1,nTubes,nPoints]);
-                rel=gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
-                    QArrayList,aMat,timeVec,...
-                    ltGoodDirArray,sTime,approxType,approxSchemaName,...
-                    approxSchemaDescr,calcPrecision);
+                if isApproxSchemaUniform
+                    rel=gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
+                        QArrayList,aMat,timeVec,...
+                        ltGoodDirArray,sTime,approxType,approxSchemaName,...
+                        approxSchemaDescr,calcPrecision);
+                else
+                    approxTypeVec = repmat(approxType,nTubes,1);
+                    approxSchemaNameCVec = repmat({approxSchemaName},nTubes,1);
+                    approxSchemaDescrCVec = repmat({approxSchemaDescr},nTubes,1);
+                    rel=gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
+                        QArrayList,aMat,timeVec,...
+                        ltGoodDirArray,sTime,approxTypeVec,approxSchemaNameCVec,...
+                        approxSchemaDescrCVec,calcPrecision);
+                end
             end
+        end
+        function testSimpleCreate(self)
+            self.aux_testSimpleCreate(true);
+            self.aux_testSimpleCreate(false);
         end
         
         function testCreateSTimeOutOfBounds(self)
@@ -778,9 +797,9 @@ classdef SuiteEllTube < mlunitext.test_case
                 approxSchemaDescr, calcPrecision);
             [extFromEllTubeEllArray extTimeVec] =...
                 extFromEllArrayEllTube.getEllArray(EApproxType.External);
-            [isOk, reportStr] = extFromEllTubeEllArray(1).eq(ellArray(1));
+            [isOk, reportStr] = extFromEllTubeEllArray(1).isEqual(ellArray(1));
             mlunitext.assert(isOk,reportStr);
-            [isOk, reportStr] = extFromEllTubeEllArray(2).eq(ellArray(2));
+            [isOk, reportStr] = extFromEllTubeEllArray(2).isEqual(ellArray(2));
             mlunitext.assert(isOk,reportStr);
             mlunitext.assert(all(extTimeVec == [1 2]));
             %
@@ -792,9 +811,9 @@ classdef SuiteEllTube < mlunitext.test_case
                 approxSchemaDescr, calcPrecision);
             [intFromEllTubeEllArray intTimeVec] =...
                 intFromEllArrayEllTube.getEllArray(EApproxType.Internal);
-            [isOk, reportStr] = intFromEllTubeEllArray(1).eq(ellArray(1));
+            [isOk, reportStr] = intFromEllTubeEllArray(1).isEqual(ellArray(1));
             mlunitext.assert(isOk,reportStr);
-            [isOk, reportStr] = intFromEllTubeEllArray(2).eq(ellArray(2));
+            [isOk, reportStr] = intFromEllTubeEllArray(2).isEqual(ellArray(2));
             mlunitext.assert(isOk,reportStr);
             mlunitext.assert(all(intTimeVec == [1 2]));
             % no assertions, just error test

@@ -1,4 +1,4 @@
-function display(hypArr)
+function display(hpArr)
 %
 % DISPLAY - Displays hyperplane object.
 %
@@ -6,29 +6,29 @@ function display(hypArr)
 %   regular:
 %       myHypArr: hyperplane [hpDim1, hpDim2, ...] - array
 %           of hyperplanes.
-% 
+%
 % Example:
 %   hypObj = hyperplane([-1; 1]);
 %   display(hypObj)
-% 
+%
 %   hypObj =
 %   size: [1 1]
-% 
+%
 %   Element: [1 1]
 %   Normal:
 %       -1
 %        1
-% 
+%
 %   Shift:
 %        0
-% 
+%
 %   Hyperplane in R^2.
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 
+% $Copyright:  The Regents of the University of California
 %              2004-2008 $
 %
-% $Author: Aushkap Nikolay <n.aushkap@gmail.com> $  
+% $Author: Aushkap Nikolay <n.aushkap@gmail.com> $
 % $Date: 07-12-2012$
 % $Copyright: Moscow State University,
 %             Faculty of Computational Mathematics
@@ -36,46 +36,30 @@ function display(hypArr)
 %             System Analysis Department 2012 $
 
 MAX_DISP_ELEM = 15;
+DEFAULT_NAME = 'hpArr';
 
 fprintf('\n');
-if (isscalar(hypArr))
-    disp([inputname(1) ' =']);
+variableName = inputname(1);
+if (isempty(variableName))
+    variableName = DEFAULT_NAME;
+end
+
+sizeVec = size(hpArr);
+Properties = struct('actualClass', 'hyperplane', 'size', sizeVec);
+fprintf('-------hyperplane object-------\n');
+fprintf('Properties:\n');
+strucdisp(Properties);
+fprintf('\n');
+fprintf('Fields (name, type, description):\n');
+fprintf('    ''normal''    ''double''    ''Hyperplane normal''\n');
+fprintf('    ''shift''     ''double''    ''Hyperplane shift''\n');
+fprintf('\nData: \n');
+if (numel(hpArr) == 0)
+    fprintf('[Empty array]\n');
 else
-    fprintf('array of hyperplanes: \n');
+    strucdisp(hpArr.toStruct(), 'maxArrayLength', MAX_DISP_ELEM, ...
+        'defaultName', variableName);
 end
-sizeVec = size(hypArr);
-fprintf('size: %s\n', mat2str(sizeVec));
-
-nHyp = numel(hypArr);
-nDispElem = min(nHyp, MAX_DISP_ELEM);
-
-nDims = ndims(hypArr);
-indList = cell(1, nDims);
-indArr = reshape(1:numel(hypArr), sizeVec);
-arrayfun(@(x, y) subDisplay(x, y), indArr(1:nDispElem), ...
-    hypArr(1:nDispElem));
-
-if (nHyp > MAX_DISP_ELEM)
-    fprintf('... <<%s elements more>> ...\n', ...
-        mat2str((nHyp - MAX_DISP_ELEM)));
 end
 
-    function subDisplay(indCur, inpHyp)
-        [indList{:}] = ind2sub(sizeVec, indCur);
-        indVec = [indList{:}];
-        fprintf('\n');
-        fprintf('Element: %s',mat2str(indVec));
-        fprintf('\n');
-        fprintf('Normal:\n'); disp(inpHyp.normal);
-        fprintf('Shift:\n'); disp(inpHyp.shift);
-        
-        nDims = dimension(inpHyp);
-        if nDims < 1
-            fprintf('Empty hyperplane.\n\n');
-        else
-            fprintf('Hyperplane in R^%d.\n\n', nDims);
-        end
-    end
-
-end
 

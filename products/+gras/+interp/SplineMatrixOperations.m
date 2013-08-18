@@ -29,8 +29,9 @@ classdef SplineMatrixOperations<gras.mat.AMatrixOperations
                 rScalFunc, varargin)
             lDataArray = lMatFunc.evaluate(self.timeVec);
             lsizeVec = size(lDataArray);
-            rDataArray = repmat(rScalFunc.evaluate(self.timeVec), ...
-                [lsizeVec(1:2), 1]);
+            rDataVec = zeros(1,1,numel(self.timeVec));
+            rDataVec(1,1,:) = rScalFunc.evaluate(self.timeVec);
+            rDataArray = repmat(rDataVec, [lsizeVec(1:2), 1]);
             resDataArray = fHandle(lDataArray, rDataArray, varargin{:});
             obj = gras.interp.MatrixInterpolantFactory.createInstance(...
                 'column',resDataArray,self.timeVec);

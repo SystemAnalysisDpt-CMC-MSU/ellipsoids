@@ -30,7 +30,26 @@ classdef SuiteOrthTransl < mlunitext.test_case
             %
             function check(expErrorTag)
             self.runAndCheckError('gras.la.orthtransl(srcVec,dstVec)',...
-                expErrorTag);                
+                expErrorTag);
+            self.runAndCheckError('gras.la.orthtranslqr(srcVec,dstVec)',...
+                expErrorTag);
+            end
+        end
+        function testOrthTranslQr(self)
+            CALC_PRECISION = 1e-10;
+            %
+            check(1, -1);
+            check(10, 2);
+            check([1;0], [0;1]);
+            check(self.srcTlMat(:,1), self.dstTlMat(:,1));
+            check(self.srcTlMat(:,2), self.dstTlMat(:,2));
+            %
+            function check(srcVec,dstVec)
+                ind = find(dstVec, 1, 'first');
+                oMat = gras.la.orthtranslqr(srcVec,dstVec);
+                gotVec = oMat*srcVec;
+                diffVec = abs(dstVec/dstVec(ind) - gotVec/gotVec(ind));
+                mlunitext.assert(all(diffVec < CALC_PRECISION));
             end
         end
         function testMatOrth(self)

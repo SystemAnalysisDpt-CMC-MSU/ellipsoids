@@ -200,7 +200,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 MArrayList,timeVec,ltGoodDirArray,sTime,approxType,...
                 approxSchemaName,approxSchemaDescr,calcPrecision,scaleFactorVec)
             %
-            % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $        $Date: 2011 $
+            % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011 $
             % $Copyright: Moscow State University,
             %            Faculty of Computational Mathematics and Computer Science,
             %            System Analysis Department 2011 $
@@ -220,11 +220,6 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             STubeData=struct;
             %
             STubeData.scaleFactor=ones(nLDirs,1);
-            if (numel(approxType) == 1)
-                STubeData.approxType=repmat(approxType,nLDirs,1);
-            else
-                STubeData.approxType = approxType;
-            end
             STubeData.QArray=QArrayList.';
             STubeData.aMat=repmat({aMat},nLDirs,1);
             %
@@ -236,10 +231,25 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             %
             STubeData.timeVec=repmat({timeVec},nLDirs,1);
             %
-            STubeData.approxSchemaName=repmat({approxSchemaName},...
+            if length(approxType) > 1
+                STubeData.approxType=approxType;
+            else
+                STubeData.approxType=repmat(approxType,nLDirs,1);
+            end
+            %
+            if iscell(approxSchemaName)
+                STubeData.approxSchemaName=approxSchemaName;
+            else
+                STubeData.approxSchemaName=repmat({approxSchemaName},...
                 nLDirs,1);
-            STubeData.approxSchemaDescr=repmat({approxSchemaDescr},...
+            end
+            %
+            if iscell(approxSchemaDescr)
+                STubeData.approxSchemaDescr=approxSchemaDescr;
+            else
+                STubeData.approxSchemaDescr=repmat({approxSchemaDescr},...
                 nLDirs,1);
+            end
             %
             STubeData.ltGoodDirMat=cell(nLDirs,1);
             %

@@ -21,20 +21,39 @@ classdef MatrixColCubicSpline<gras.interp.AMatrixCubicSpline
             end
         end
     end
-    methods (Access=protected)
-        function resArray=evaluateInternal(self,timeVec)
-            nDims=self.nDims;
-            nRows=self.nRows;
-            nCols=self.nCols;
-            nTimePoints=length(timeVec);
-            switch nDims
-                case 1
-                    resArray=fnval(self.ppFormList{1},timeVec);
-                case 2
-                    resArray=zeros(nRows,nCols,nTimePoints);
-                    for k=1:1:nCols
-                        resArray(:,k,:)=fnval(self.ppFormList{k},timeVec);
-                    end
+    methods (Access=public)
+        function resArray = evaluate(self, timeVec)
+            nDims = self.nDims;
+            nRows = self.nRows;
+            nCols = self.nCols;
+            nTimePoints = length(timeVec);            
+            if nTimePoints == 1
+                if timeVec >= self.timeVec(end)
+                    iPiece = self.nTimePoints - 1;
+                elseif timeVec <= self.timeVec(1)
+                    iPiece = 1;
+                else
+                    iPiece = find(self.timeVec > timeVec, 1, 'first') - 1;
+                end
+                %
+                tPoint = timeVec - self.timeVec(iPiece);
+                tVec = [tPoint^3;tPoint^2;tPoint;1];
+                iPieces = (1:nRows) + (iPiece-1)*nRows;
+                %
+                resArray = zeros(nRows, nCols);
+                for k = 1:nCols
+                    resArray(:,k) = self.ppFormList{k}.coefs(iPieces,:)*tVec;
+                end
+            else
+                switch nDims
+                    case 1
+                        resArray = ppval(self.ppFormList{1}, timeVec);
+                    case 2
+                        resArray = zeros(nRows, nCols, nTimePoints);
+                        for k=1:1:nCols
+                            resArray(:,k,:) = ppval(self.ppFormList{k},timeVec);
+                        end
+                end                
             end
         end
     end

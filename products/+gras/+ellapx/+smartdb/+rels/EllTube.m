@@ -667,5 +667,54 @@ classdef EllTube<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&...
                 indProj2OrigVec=zeros(0,1);
             end
         end
+        function ellTubeProjRel=projectToOrths(self,indVec,projType)
+            %
+            % PROJECTTOORTHS - project elltube onto subspace defined by
+            % vectors of standart basis with indices specified in indVec
+            %
+            % Input:
+            %   regular:
+            %       self: gras.ellapx.smartdb.rels.EllTube[1, 1] - elltube
+            %           object
+            %       indVec: double[1, nProjDims] - indices specifying a subset of
+            %           standart basis
+            %   optional:
+            %       projType: gras.ellapx.enums.EProjType[1, 1] -  type of
+            %           projection
+            %
+            % Output:
+            %   regular:
+            %       ellTubeProjRel: gras.ellapx.smartdb.rels.EllTubeProj[1, 1] - 
+            %           elltube projection
+            %
+            % Example:
+            %   ellTubeProjRel = ellTubeRel.projectToOrths([1,2])
+            %   projType = gras.ellapx.enums.EProjType.DynamicAlongGoodCurve
+            %   ellTubeProjRel = ellTubeRel.projectToOrths([3,4,5], projType)
+            %
+            % $Author: Ivan Menshikov <ivan.v.menshikov@gmail.com>$
+            % $Copyright: Moscow State University,
+            %             Faculty of Computational
+            %             Mathematics and Computer Science,
+            %             System Analysis Department 2013 $
+            %
+            %
+            dim = min(self.dim);
+            %
+            if nargin < 3
+                projType = gras.ellapx.enums.EProjType.Static;
+            end
+            %
+            projMat = eye(dim);
+            projMat = projMat(:,indVec).';
+            ellTubeProjRel = self.project(projType,{projMat},@fGetProjMat);
+            %
+            function [projOrthMatArray,projOrthMatTransArray]=...
+                    fGetProjMat(projMat,timeVec,varargin)
+                nPoints=length(timeVec);
+                projOrthMatArray=repmat(projMat,[1,1,nPoints]);
+                projOrthMatTransArray=repmat(projMat.',[1,1,nPoints]);
+            end
+        end
     end
 end

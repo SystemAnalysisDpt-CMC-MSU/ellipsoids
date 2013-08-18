@@ -26,5 +26,5 @@ function [isNeqArr, reportStr] = ne(ellFirstArr, ellSecArr)
 % $Copyright:  The Regents of the University of California 
 %              2004-2008 $
 
-[isEqualArr, reportStr] = eq(ellFirstArr, ellSecArr);
+[isEqualArr, reportStr] = isEqual(ellFirstArr, ellSecArr);
 isNeqArr = ~isEqualArr;
