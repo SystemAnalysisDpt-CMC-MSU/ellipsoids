@@ -42,12 +42,13 @@ function resStr=strucdisp(SInp,varargin)
 %           used
 %
 %
-% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-12-08 $ 
+% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-12-08 $
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2011 $
 %
 %
+
 import modgen.common.type.simple.checkgen;
 import modgen.common.parseparext;
 %% Constants
@@ -57,18 +58,22 @@ DEFAULT_MAX_ARRAY_LENGTH=10;
 DEFAULT_DEPTH=-1;
 DEFAULT_PRINT_VALUES=true;
 DEFAULT_NUMBER_FORMAT='%g';
+DEFAULT_NAME = 'Structure';
 %% Main program
 %%%%% start program %%%%%
-checkgen(SInp,'isstruct(x)&&isvec(x)');
-[reg,~,depth,inpPrintValues,maxArrayLength,numberFormat]=parseparext(varargin,...
-    {'depth','printValues','maxArrayLength','numberFormat';...
+checkgen(SInp,'isstruct(x)');
+[reg,~,depth,inpPrintValues,maxArrayLength,numberFormat,structureName]=parseparext(varargin,...
+    {'depth','printValues','maxArrayLength','numberFormat','defaultName';...
     DEFAULT_DEPTH,...
     DEFAULT_PRINT_VALUES,...
     DEFAULT_MAX_ARRAY_LENGTH,...
-    DEFAULT_NUMBER_FORMAT;
+    DEFAULT_NUMBER_FORMAT,...
+    DEFAULT_NAME;
     'isscalar(x)&&isnumeric(x)&&fix(x)==x',...
     'islogical(x)&&isscalar(x)',...
-    'isscalar(x)&&isnumeric(x)&&fix(x)==x&&x>0','isstring(x)'},[0,1],...
+    'isscalar(x)&&isnumeric(x)&&fix(x)==x&&x>0',...
+    'isstring(x)',...
+    'isstring(x)'},[0,1],...
     'regDefList',{''});
 fileName=reg{1};
 % start recursive function
@@ -117,17 +122,34 @@ end
         % In case of a vector, this recursive function is recalled for each of
         % the vector elements. But if the values don't have to be printed, only
         % the size of the structure and its fields are printed.
-        if length(Structure) > 1
+        if numel(Structure) > 1
             if (printValues == 0)
                 varStr = createArraySize(Structure, 'Structure');
-                listStr = [{' '}; {['Structure', varStr]}];
+                listStr = [{' '}; {[structureName, varStr]}];
                 body = recFieldPrint(Structure(1), indent);
                 listStr = [listStr; body; {'   O'}];
             else
-                for iStruc = 1 : length(Structure)
-                    listStr = [listStr; {' '}; {sprintf('Structure(%d)', iStruc)}];
+                sizeVec = size(Structure);
+                indexVec = ones(1, length(sizeVec));
+                for iStruc = 1 : min(numel(Structure), maxArrayLength)
+                    if (~isvector(Structure))
+                        indexStr = [structureName, '('];
+                        for iDimension = 1 : length(sizeVec) - 1
+                            indexStr = [indexStr, sprintf('%d, ',...
+                                indexVec(iDimension))];
+                        end
+                        indexStr = [indexStr, sprintf('%d)', indexVec(end))];
+                        indexVec = incrementIndexVec(indexVec, sizeVec);
+                    else
+                        indexStr = sprintf([structureName,'(%d)'], iStruc);
+                    end
+                    listStr = [listStr; {' '}; {indexStr}];
                     body = recFieldPrint(Structure(iStruc), indent);
                     listStr = [listStr; body; {'   O'}];
+                end
+                if (numel(Structure) > maxArrayLength)
+                    listStr = [listStr; {' '}; sprintf('<<%d elements more>>', ...
+                        numel(Structure) - maxArrayLength)];
                 end
             end
             return
@@ -326,8 +348,8 @@ end
                 * DASH_SYMBOL_CODE);
             if (size(Structure.(Field), 1) > 1) && (size(Structure.(Field), 2) > 1)
                 varStr = createArraySize(Structure.(Field), 'char');
-%             elseif length(Field) > maxStrLength
-%                 varStr = sprintf(' ''%s...''', Structure.(Field(1:maxStrLength)));
+                %             elseif length(Field) > maxStrLength
+                %                 varStr = sprintf(' ''%s...''', Structure.(Field(1:maxStrLength)));
             else
                 varStr = sprintf(' ''%s''', Structure.(Field));
             end
@@ -347,9 +369,23 @@ end
             Field = cell2mat(logicalFields(iField));
             filler = char(ones(1, maxFieldLength - length(Field) + 2)...
                 * DASH_SYMBOL_CODE);
-            if isscalar(Structure.(Field))
-                logicalValue = {'False', 'True'};
-                varStr = sprintf(' %s', logicalValue{Structure.(Field) + 1});
+            if (isscalar(Structure.(Field)))
+                if (Structure.(Field))
+                    varStr = ' true';
+                else
+                    varStr = ' false';
+                end
+            elseif (isvector(Structure.(Field)) && ...
+                    length(Structure.(Field)) <= maxArrayLength)
+                varStr = '';
+                for iIndex = 1 : numel(Structure.(Field))
+                    if (Structure.(Field)(iIndex))
+                        varStr = [varStr, 'true '];
+                    else
+                        varStr = [varStr, 'false '];
+                    end
+                end
+                varStr = ['[' varStr(1:length(varStr) - 1) ']'];
             else
                 varStr = createArraySize(Structure.(Field), 'Logic array');
             end
@@ -404,9 +440,9 @@ end
                 varStr = createArraySize(Structure.(Field), 'Array');
                 varCell = {[strIndent '   |' filler ' ' Field ' :' varStr]};
             else
-%                matrixSize = size(Structure.(Field));
-%                 filler2 = char(ones(1, maxFieldLength + 6) * FILLER_SYMBOL_CODE);
-%                 dashes = char(ones(1, 12 * matrixSize(2) + 1) * DASH_SYMBOL_CODE);
+                %                matrixSize = size(Structure.(Field));
+                %                 filler2 = char(ones(1, maxFieldLength + 6) * FILLER_SYMBOL_CODE);
+                %                 dashes = char(ones(1, 12 * matrixSize(2) + 1) * DASH_SYMBOL_CODE);
                 curPrintFormat=numberFormat;
                 printedFieldValue=cellfun(@(x)sprintf(curPrintFormat,x),...
                     num2cell(Structure.(Field)),'UniformOutput',false);
@@ -455,7 +491,7 @@ end
             fieldValue,'UniformOutput',false);
         nDashes=(maxStringLength+1)* matrixSize(2)+1;
         filler2 = char(ones(1, maxFieldLength + 6) * FILLER_SYMBOL_CODE);
-        dashes = char(ones(1, nDashes)* DASH_SYMBOL_CODE);        
+        dashes = char(ones(1, nDashes)* DASH_SYMBOL_CODE);
         varCell = {[strIndent '   |' filler2 dashes]};
         %
         % first line with field name
@@ -472,7 +508,17 @@ end
 
 end
 
-
+function newIndexVec = incrementIndexVec(indexVec, sizeVec)
+newIndexVec = indexVec;
+for iDimension = 1 : length(sizeVec)
+    newIndexVec(iDimension) = newIndexVec(iDimension) + 1;
+    if (newIndexVec(iDimension) <= sizeVec(iDimension))
+        break;
+    else
+        newIndexVec(iDimension) = 1;
+    end
+end
+end
 
 %% FUNCTION: getIndentation
 % This function creates the hierarchical indentations
