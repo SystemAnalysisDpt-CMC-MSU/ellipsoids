@@ -7,10 +7,10 @@ classdef MatrixNNDefTriuCubicSpline<gras.interp.MatrixColTriuSymmCubicSpline
     properties (Access=private)
         zeroEigTol
     end
-    methods (Access=protected)
-        function resArray=evaluateInternal(self,timeVec)
+    methods 
+        function resArray=evaluate(self,timeVec)
             absTol=self.zeroEigTol;
-            resArray=evaluateInternal@...
+            resArray=evaluate@...
                 gras.interp.MatrixColTriuSymmCubicSpline(self,timeVec);
             nTimes=size(resArray,3);
             for iTime=1:nTimes

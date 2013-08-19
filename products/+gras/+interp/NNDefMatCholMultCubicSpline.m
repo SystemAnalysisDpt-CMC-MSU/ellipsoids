@@ -45,8 +45,8 @@ classdef NNDefMatCholMultCubicSpline<gras.interp.PosDefMatCholCubicSpline
             self.multInterpObj=gras.interp.MatrixColCubicSpline(multArgList{:});
         end
     end
-    methods (Access=protected)
-        function dataArray=evaluateInternal(self,timeVec,varargin)
+    methods 
+        function dataArray=evaluate(self,timeVec,varargin)
             % EVALUATE
             %
             % Input:
@@ -59,7 +59,7 @@ classdef NNDefMatCholMultCubicSpline<gras.interp.PosDefMatCholCubicSpline
             %
             %
             posDataArray=...
-                evaluateInternal@gras.interp.PosDefMatCholCubicSpline(...
+                evaluate@gras.interp.PosDefMatCholCubicSpline(...
                 self,timeVec);
             multDataArray=self.multInterpObj.evaluate(timeVec);
             %
