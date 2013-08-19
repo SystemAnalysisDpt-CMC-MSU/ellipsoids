@@ -533,8 +533,7 @@ classdef test_suite<handle
             %             and Computer Science,
             %             System Analysis Department 2012-2013$
             %
-            import elltool.reach.ReachFactory;
-            import elltool.logging.Log4jConfigurator;
+            import modgen.logging.log4j.Log4jConfigurator;
             DISP_VERT_SEP_STR='--------------------------';
             %
             if nargin<4
