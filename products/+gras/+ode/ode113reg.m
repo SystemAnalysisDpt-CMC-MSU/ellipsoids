@@ -306,11 +306,15 @@ while ~isDone
         % Test if step successful
         isFailedStep = isRejectedStep||(err>rtol);
         if isFailedStep                      % Failed step
-            
             nfailed = nfailed + 1;
             if absh <= hmin
-                warning(message('MATLAB:ode45:IntegrationTolNotMet', ...
-                    sprintf( '%e', t ), sprintf( '%e', hmin )));
+                messageObj=message('MATLAB:ode45:IntegrationTolNotMet', ...
+                    sprintf( '%e', t ), sprintf( '%e', hmin ));
+                if isRejectedStep
+                    error(messageObj);
+                else
+                    warning(messageObj);
+                end
                 shrinkResults();
                 prDispObj.finish();
                 return;

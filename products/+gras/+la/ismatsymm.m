@@ -16,7 +16,6 @@ function isSymm = ismatsymm(qMat)
 %
 
 import modgen.common.throwerror;
-
 [nRows, nCols] = size(qMat);
 if (nRows~=nCols)
     throwerror('wrongInput:nonSquareMat',...

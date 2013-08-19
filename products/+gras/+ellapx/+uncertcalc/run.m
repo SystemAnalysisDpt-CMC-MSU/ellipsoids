@@ -1,4 +1,4 @@
-function [SRunProp, varargout]=run(confName,varargin)
+function [SRunProp, SRunAuxProp]=run(confName,varargin)
 import gras.ellapx.uncertcalc.log.Log4jConfigurator;
 import gras.ellapx.uncertcalc.*;
 import gras.ellapx.common.*;
@@ -112,10 +112,9 @@ SRunProp.ellTubeProjRel=ellTubeProjRel;
 SRunProp.ellUnionTubeRel=ellUnionTubeRel;
 SRunProp.ellUnionTubeStaticProjRel=ellUnionTubeStaticProjRel;
 %
-if nargout > 1
-    SRunAuxProp.goodDirSetObj = goodDirSetObj;
-    varargout{1}= SRunAuxProp;
-end
+SRunAuxProp.goodDirSetObj = goodDirSetObj;
+SRunAuxProp.pDynObj=pDynObj;
+%
 %
 SRunProp.resDir=resDir;
 logger.info(['total time:',num2str(toc(tStartGlobal))]);

@@ -72,7 +72,7 @@ classdef ILinSys < handle
         %       self: elltool.linsys.ILinSys[1, 1] - linear system.
         %
         % Output:
-        %   gMat: double[gMatDim, gMatDim]/cell[gMatDim, gMatDim] - matrix G.
+        %   cMat: double[cMatDim, cMatDim]/cell[cMatDim, cMatDim] - matrix C.
         %
         % Examples:
         %   aMat = [0 1; 0 0]; bMat = eye(2);
@@ -81,9 +81,9 @@ classdef ILinSys < handle
         %   SUBounds.shape = [9 0; 0 2];
         %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
         %   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-        %   gMat = sys.getGtMat();
+        %   gMat = sys.getCtMat();
         %
-        gMat = getGtMat(self)
+        gMat = getCtMat(self)
         %
         % Input:
         %   regular:
@@ -103,51 +103,6 @@ classdef ILinSys < handle
         %
         distEll = getDistBoundsEll(self)
         %
-        % Input:
-        %   regular:
-        %       self: elltool.linsys.ILinSys[1, 1] - linear system.
-        %
-        % Output:
-        %   cMat: double[cMatDim, cMatDim]/cell[cMatDim, cMatDim] - matrix C.
-        %
-        % Examples:
-        %   aMat = [0 1; 0 0]; bMat = eye(2);
-        %   SUBounds = struct();
-        %   SUBounds.center = {'sin(t)'; 'cos(t)'};  
-        %   SUBounds.shape = [9 0; 0 2];
-        %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-        %   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-        %   cMat = sys.getCtMat()
-        %
-        %   cMat =
-        % 
-        %        1     0
-        %        0     1
-        %
-        cMat = getCtMat(self)
-        %
-        % Input:
-        %   regular:
-        %       self: elltool.linsys.ILinSys[1, 1] - linear system.
-        %
-        % Output:
-        %   noiseEll: ellipsoid[1, 1]/struct[1, 1] - noise bounds ellipsoid.
-        %
-        % Examples:
-        %   aMat = [0 1; 0 0]; bMat = eye(2);
-        %   SUBounds = struct();
-        %   SUBounds.center = {'sin(t)'; 'cos(t)'};  
-        %   SUBounds.shape = [9 0; 0 2];
-        %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-        %   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-        %   noiseEll = dsys.getNoiseBoundsEll()
-        %
-        %   noiseEll =
-        % 
-        %        []
-        %
-        noiseEll = getNoiseBoundsEll(self)
-        %
         % DIMENSION - returns dimensions of state, input, output and disturbance
         %             spaces.
         % Input:
@@ -160,8 +115,6 @@ classdef ILinSys < handle
         %       dimensions.
         %
         %   inpDimArr: double[nDims1, nDims2,...] - array of input dimensions.
-        %
-        %   outDimArr: double[nDims1, nDims2,...] - array of output dimensions.
         %
         %   distDimArr: double[nDims1, nDims2,...] - array of disturbance
         %         dimensions.
@@ -184,10 +137,6 @@ classdef ILinSys < handle
         %        2
         %
         %
-        %   outDimArr = 
-        %      
-        %        2
-        %
         %
         %   distDimArr = 
         %      
@@ -196,31 +145,10 @@ classdef ILinSys < handle
         %   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
         %   dsys.dimension();
         %
-        [stateDimArr, inpDimArr, outDimArr, distDimArr] =...
+        [stateDimArr, inpDimArr, distDimArr] =...
             dimension(self)
+        % HASDISTURBANCE - returns true if system has disturbance
         %
-        % DISPLAY - displays the details of linear system object.
-        %
-        % Input:
-        %   regular:
-        %       self: elltool.linsys.ILinSys[1, 1] - linear system.
-        %
-        % Output:
-        %   None.
-        %
-        % Example:
-        %   aMat = [0 1; 0 0]; bMat = eye(2);
-        %   SUBounds = struct();
-        %   SUBounds.center = {'sin(t)'; 'cos(t)'};  
-        %   SUBounds.shape = [9 0; 0 2];
-        %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-        %   sys.display()
-        %
-        display(self)
-        %
-        % HASDISTURBANCE - checks if linear system has unknown bounded 
-        %                  isturbance.
-        % 
         % Input:
         %   regular:
         %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array of 
@@ -240,43 +168,16 @@ classdef ILinSys < handle
         %   SUBounds.center = {'sin(t)'; 'cos(t)'};  
         %   SUBounds.shape = [9 0; 0 2];
         %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-        %   sys.hasdisturbance()
+        %   sys.hasDisturbance()
         %
         %   ans = 
         %      
         %        0
         %   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-        %   dsys.hasdisturbance();
+        %   dsys.hasDisturbance();
         %
-        isDisturbanceArr = hasdisturbance(self)
+        isDisturbanceArr = hasDisturbance(self)
         %
-        % HASNOISE - checks if linear system has unknown bounded noise.
-        %
-        % Input:
-        %   regular:
-        %       self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array of linear
-        %             systems.
-        %
-        % Output:
-        %   isNoiseMat: logical[nDims1, nDims2,...] - array such that it's element at  
-        %       each position is true if corresponding linear system has noise, and 
-        %       false otherwise.
-        %
-        % Examples:
-        %   aMat = [0 1; 0 0]; bMat = eye(2);
-        %   SUBounds = struct();
-        %   SUBounds.center = {'sin(t)'; 'cos(t)'};  
-        %   SUBounds.shape = [9 0; 0 2];
-        %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-        %   sys.hasnoise()
-        %
-        %   ans = 
-        %      
-        %        0
-        %   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-        %   dsys.hasnoise();
-        %
-        isNoiseArr = hasnoise(self)
         %
         % ISEMPTY - checks if linear system is empty.
         %
@@ -296,15 +197,15 @@ classdef ILinSys < handle
         %   SUBounds.center = {'sin(t)'; 'cos(t)'};  
         %   SUBounds.shape = [9 0; 0 2];
         %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-        %   sys.isempty()
+        %   sys.isEmpty()
         %
         %   ans = 
         %      
         %        0
         %   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-        %   dsys.isempty();
+        %   dsys.isEmpty();
         %
-        isEmptyArr = isempty(self)
+        isEmptyArr = isEmpty(self)
         %
         % ISLTI - checks if linear system is time-invariant.
         %
@@ -324,11 +225,11 @@ classdef ILinSys < handle
         %   SUBounds.center = {'sin(t)'; 'cos(t)'};  
         %   SUBounds.shape = [9 0; 0 2];
         %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-        %   isLtiArr = sys.islti();
+        %   isLtiArr = sys.isLti();
         %   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-        %   isLtiArr = dsys.islti();
+        %   isLtiArr = dsys.isLti();
         %
-        isLtiArr = islti(self)
+        isLtiArr = isLti(self)
         %
         % GETABSTOL - gives array the same size as linsysArr with values of absTol  
         %             properties for each hyperplane in hplaneArr.

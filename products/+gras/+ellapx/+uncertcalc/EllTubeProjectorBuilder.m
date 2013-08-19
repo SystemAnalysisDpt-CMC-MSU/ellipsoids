@@ -14,6 +14,11 @@ classdef EllTubeProjectorBuilder<handle
             SProjSets=confRepoMgr.getParam(...
                 'projectionProps.projSpaceSets');
             projSpaceList=SProjSets.(projSetName);
+            
+            projMatList=cellfun(@(x)eye(numel(x)),projSpaceList,...
+                'UniformOutput',false);
+            projMatList=cellfun(@(x,y)x(y,:),projMatList,projSpaceList,...
+                'UniformOutput',false);
             %
             for iNum = 1:numel(projSpaceList)
                 projMat = double(diag(projSpaceList{iNum}));
@@ -27,11 +32,11 @@ classdef EllTubeProjectorBuilder<handle
             projectorList=cell(1,2);
             if isDynamicEnabled
                 projectorList{2}=EllTubeDynamicSpaceProjector(...
-                    projSpaceList,goodDirSetObj);
+                    projMatList,goodDirSetObj);
             end
             %
             if isStaticEnabled
-                staticProjectorObj=EllTubeStaticSpaceProjector(projSpaceList);
+                staticProjectorObj=EllTubeStaticSpaceProjector(projMatList);
                 projectorList{1}=staticProjectorObj;
             end
             isnEmptyVec=~cellfun('isempty',projectorList);

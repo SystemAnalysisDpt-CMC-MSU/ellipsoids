@@ -11,11 +11,17 @@ classdef SuiteEllTube < mlunitext.test_case
         function testProjectTouch(~)
             rel = gras.ellapx.smartdb...
                 .test.mlunit.EllTubePlotTestCase.createTube(1);
-            
             projSpaceList = {[1 0; 0 1].'};
             projType = gras.ellapx.enums.EProjType.Static;
             relStatProj = ...
                 rel.project(projType,projSpaceList,@fGetProjMat);
+            %
+            %
+            ellTubeUnionRel=...
+                EllUnionTubeStaticProj.fromEllTubes(relStatProj);
+            ellTubeUnionRel = ...
+                EllUnionTube.fromEllTubes(rel);
+            
             function [projOrthMatArray, projOrthMatTransArray] =...
                     fGetProjMat(projMat, timeVec, varargin)
                 nTimePoints = length(timeVec);
@@ -23,8 +29,36 @@ classdef SuiteEllTube < mlunitext.test_case
                 projOrthMatTransArray = repmat(projMat.',...
                     [1,1,nTimePoints]);
             end
-            
         end
+        %
+        function testSizeConsistency(self)
+            nPoints=3;
+            nTubes=2;
+            [rel,relStatProj,relDynProj]=auxGenSimpleTubeAndProj(self,...
+                nPoints,nTubes);
+            check(rel);
+            check(relStatProj);
+            check(relDynProj);
+            function check(rel)
+                fieldNameList=rel.getFieldNameList();
+                nFields=numel(fieldNameList);
+                for iField=1:nFields
+                    fieldName=fieldNameList{iField};
+                    SData=rel.getData();
+                    if iscell(SData.(fieldName))
+                        SData.(fieldName)=cat(2,SData.(fieldName),...
+                            SData.(fieldName));
+                        self.runAndCheckError(@checkField,...
+                            'wrongInput:badSize','reportStr',...
+                            sprintf('failure for field %s',fieldName));
+                    end
+                end
+                function checkField()
+                    rel.createInstance(SData);
+                end
+            end
+        end
+        %
         function testCutAndCat(~)
             nDims=2;
             nTubes=3;
@@ -32,7 +66,8 @@ classdef SuiteEllTube < mlunitext.test_case
             cutTimeVec = [20, 80];
             timeVec = 1 : 100;
             evolveTimeVec = 101 : 200;
-            fieldToExcludeList = {'sTime','lsGoodDirVec'};
+            rel=create();
+            fieldToExcludeList = rel.getNoCatOrCutFieldsList();
             % cut: test interval
             rel = create(timeVec);
             cutRel = rel.cut(cutTimeVec);
@@ -55,32 +90,44 @@ classdef SuiteEllTube < mlunitext.test_case
             secondRel = create(evolveTimeVec);
             expRel = create([timeVec evolveTimeVec]);
             catRel = firstRel.cat(secondRel);
-            [isOk,reportStr] = ...
-                catRel.getFieldProjection(fieldList).isEqual(...
-                expRel.getFieldProjection(fieldList));
-            mlunitext.assert(isOk, reportStr);
+            check();
+            catRel = firstRel.cat(secondRel,'isReplacedByNew',true);
+            check();
+            isOk=all(cellfun(@(x)isequal(catRel.(x),secondRel.(x)),...
+                setdiff(fieldToExcludeList,{'sTime','indSTime'})));
+            mlunitext.assert(isOk);
+            function check()
+                [isOk,reportStr] = ...
+                    catRel.getFieldProjection(fieldList).isEqual(...
+                    expRel.getFieldProjection(fieldList));
+                mlunitext.assert(isOk, reportStr);
+            end
             %
             function rel = create(timeVec)
-                nPoints = numel(timeVec);
-                aMat=zeros(nDims,nPoints);
-                %
-                QArray = zeros(nDims,nDims,nPoints);
-                for iPoint = 1:nPoints
-                    QArray(:,:,iPoint) = timeVec(iPoint)*eye(nDims);
+                if nargin==0
+                    rel=gras.ellapx.smartdb.rels.EllTube();
+                else
+                    nPoints = numel(timeVec);
+                    aMat=zeros(nDims,nPoints);
+                    %
+                    QArray = zeros(nDims,nDims,nPoints);
+                    for iPoint = 1:nPoints
+                        QArray(:,:,iPoint) = timeVec(iPoint)*eye(nDims);
+                    end
+                    QArrayList=repmat({QArray},1,nTubes);
+                    %
+                    ltSingleGoodDirArray = zeros(nDims,1,nPoints);
+                    for iPoint = 1:nPoints
+                        ltSingleGoodDirArray(:,:,iPoint) = ...
+                            timeVec(iPoint)*eye(nDims,1);
+                    end
+                    ltGoodDirArray=repmat(ltSingleGoodDirArray,1,nTubes);
+                    %
+                    rel = gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
+                        QArrayList,aMat,timeVec,ltGoodDirArray,timeVec(1),...
+                        gras.ellapx.enums.EApproxType.Internal,...
+                        char.empty(1,0),char.empty(1,0),calcPrecision);
                 end
-                QArrayList=repmat({QArray},1,nTubes);
-                %
-                ltSingleGoodDirArray = zeros(nDims,1,nPoints);
-                for iPoint = 1:nPoints
-                    ltSingleGoodDirArray(:,:,iPoint) = ...
-                        timeVec(iPoint)*eye(nDims,1);
-                end
-                ltGoodDirArray=repmat(ltSingleGoodDirArray,1,nTubes);
-                %
-                rel = gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
-                    QArrayList,aMat,timeVec,ltGoodDirArray,timeVec(1),...
-                    gras.ellapx.enums.EApproxType.Internal,...
-                    char.empty(1,0),char.empty(1,0),calcPrecision);
             end
         end
         function testRegCreate(self)
@@ -206,8 +253,35 @@ classdef SuiteEllTube < mlunitext.test_case
             end
             %
         end
+        %
+        function testProjectAdv(self)
+            import gras.ellapx.smartdb.rels.EllUnionTube;
+            nFirstPoints=100;
+            nTubes=2;
+            [rel]=self.auxGenSimpleTubeAndProj(...
+                nFirstPoints,nTubes,nFirstPoints);
+            %
+            rel.aMat=cellfun(@(x,y)repmat(sin(x/10),y,1),rel.timeVec,...
+                num2cell(rel.dim),...
+                'UniformOutput',false);
+            unionEllTube = EllUnionTube.fromEllTubes(rel);
+            %
+            check([1 0]);            
+            check([0 -1]);
+            check([1 -1]);
+            function check(projMat)
+                rel0Proj=unionEllTube.projectStatic(projMat); 
+                [isOk,reportStr]=rel0Proj.isEqual(rel0Proj);
+                mlunitext.assert(isOk,reportStr);
+                %                
+                rel1Proj=rel.projectStatic(projMat);
+                rel2Proj=rel.projectStatic({projMat});
+                [isPos,reportStr]=rel1Proj.isEqual(rel2Proj);
+                mlunitext.assert(isPos,reportStr);
+            end
+        end
+        %
         function testProjectionAndScale(~)
-            import gras.ellapx.proj.EllTubeStaticSpaceProjector;
             relProj=gras.ellapx.smartdb.rels.EllTubeProj(); %#ok<NASGU>
             %
             nPoints = 5;
@@ -231,7 +305,6 @@ classdef SuiteEllTube < mlunitext.test_case
             projObj=EllTubeStaticSpaceProjector(projMatList);
             relProj=projObj.project(rel);
            
-            
             
             
             relProj.plot();
@@ -368,43 +441,160 @@ classdef SuiteEllTube < mlunitext.test_case
                 end
             end
         end
-        %
-        function [rel,relStatProj,relDynProj]=auxGenSimpleTubeAndProj(~,...
-                nPoints,nTubes)
-            calcPrecision=0.001;
-            approxSchemaDescr=char.empty(1,0);
-            approxSchemaName=char.empty(1,0);
-            nDims=2;
-            if nargin<3
-                nTubes=1;
+        function testCatCommonTime(self)
+            nFirstPoints=100;
+            nSecPoints=150;
+            nTubes=2;
+            rel1=self.auxGenSimpleTubeAndProj(...
+                nFirstPoints,nTubes,nFirstPoints);
+            %
+            rel2=self.auxGenSimpleTubeAndProj(...
+                nSecPoints,nTubes,nSecPoints+nFirstPoints-1,nFirstPoints);
+            %
+            rel1.sortDetermenistically();
+            rel2.sortDetermenistically();
+            self.runAndCheckError('rel3=rel1.cat(rel2);',...
+                'wrongInput:commonValuesDiff');
+            rel1.cat(rel2,'isCommonValuesChecked',false);
+            rel3=rel1.cat(rel2,'commonTimeAbsTol',2,'commonTimeRelTol',1);
+            check(rel3,nFirstPoints,rel1,nFirstPoints);
+            self.runAndCheckError(...
+                'rel3=rel1.cat(rel2,''isReplacedByNew'',true);',...
+                'wrongInput:commonValuesDiff');
+            rel1.cat(rel2,'isReplacedByNew',true,...
+                'isCommonValuesChecked',false);
+            rel3=rel1.cat(rel2,'isReplacedByNew',true,...
+                'commonTimeAbsTol',2,'commonTimeRelTol',1);
+            check(rel3,nFirstPoints,rel2,1);
+            %
+            function check(relLeft,indLeft,relRight,indRight)
+                import modgen.cell.cellstr2expression;
+                fieldNameList=setdiff(relLeft.getFieldNameList(),...
+                    relLeft.getNoCatOrCutFieldsList());
+                %
+                nFields=length(fieldNameList);
+                isOkVec=false(1,nFields);
+                for iField=1:nFields
+                    fieldName=fieldNameList{iField};
+                    if isnumeric(relLeft.(fieldName))
+                        isOkVec(iField)=isequal(relLeft.(fieldName),...
+                            relRight.(fieldName));
+                    else
+                        isOkVec(iField)=...
+                            all(cellfun(...
+                            @(x,y)isEqSmart(x,y,indLeft,indRight),...
+                            relLeft.(fieldName),relRight.(fieldName)));
+                    end
+                end
+                isOk=all(isOkVec);
+                mlunitext.assert(isOk,sprintf('not consistent fields %s',...
+                    cellstr2expression(fieldNameList(~isOkVec))));
+                %
+                function isOk=isEqSmart(leftArr,rightArr,indLeft,indRight)
+                    nDims=ndims(leftArr);
+                    leftArr=permute(leftArr,[nDims,1:nDims-1]);
+                    rightArr=permute(rightArr,[nDims,1:nDims-1]);
+                    isOk=isequal(leftArr(indLeft,:),rightArr(indRight,:));
+                end
             end
-            lsGoodDirVec=[1;0];
-            qMat=eye(nDims);
-            QArrayList=repmat({repmat(qMat,[1,1,nPoints])},1,nTubes);
-            aMat=zeros(nDims,nPoints);
-            timeVec=1:nPoints;
-            sTime=nPoints;
-            approxType=gras.ellapx.enums.EApproxType.Internal;
+        end
+        function testThinOutTuples(self)
+            nFirstPoints=100;
+            nTubes=2;
+            rel=self.auxGenSimpleTubeAndProj(...
+                nFirstPoints,nTubes,nFirstPoints);
+            rel2=rel.thinOutTuples([2,100]);
+            rel2=rel.thinOutTuples(1:100);
+            rel2=rel.thinOutTuples(1:2);
+        end
+        function testCatAdvanced(self)
+            nFirstPoints=100;
+            nSecPoints=150;
+            nTubes=2;
+            rel1=self.auxGenSimpleTubeAndProj(...
+                nFirstPoints,nTubes,nFirstPoints);
+            rel2=self.auxGenSimpleTubeAndProj(...
+                nSecPoints,nTubes,nSecPoints+nFirstPoints,nFirstPoints+1);
+            catRel=rel1.cat(rel2,'isReplacedByNew',true);
+            isOk=all(catRel.indSTime==(nFirstPoints+nSecPoints));
+            mlunitext.assert(isOk);
             %
-            rel=create();
-            qMat=diag([1,2]);
-            QArrayList=repmat({repmat(qMat,[1,1,nPoints])},1,nTubes);
-            approxType=gras.ellapx.enums.EApproxType.External;
-            rel.unionWith(create());
-            relWithReg=rel.getCopy();
-            relWithReg.scale(@(varargin)0.5,{});
+            self.runAndCheckError(@badAction,...
+                'wrongInput:commonTimeVecEntries');
             %
-            relWithReg.MArray=cellfun(@(x)x*0.1,relWithReg.QArray,...
-                'UniformOutput',false);
-            rel.unionWith(relWithReg);
-            %
-            projSpaceList = {[1 0; 0 1].'};
-            %
-            projType=gras.ellapx.enums.EProjType.Static;
-            relStatProj=rel.project(projType,projSpaceList,@fGetProjMat);
-            %
-            projType=gras.ellapx.enums.EProjType.DynamicAlongGoodCurve;
-            relDynProj=rel.project(projType,projSpaceList,@fGetProjMat);
+            function badAction()
+                rel1.cat(rel1);
+            end
+        end
+        %
+        function varargout=auxGenSimpleTubeAndProj(~,...
+                nPoints,nTubes,indSTime,indStart)
+            persistent hashMap;
+            if nargin<5
+                indStart=1;
+                if nargin<4
+                    indSTime=nPoints;
+                    if nargin<3
+                        nTubes=1;
+                    end
+                end
+            end
+            if isempty(hashMap)
+                hashMap=containers.Map();
+            end
+            varargout=cell(1,nargout);
+            keyStr=mat2str([nargout,nPoints,nTubes,indSTime]);
+            if hashMap.isKey(keyStr)
+                argList=hashMap(keyStr);
+                [varargout{:}]=deal(argList{:});
+            else
+                calcPrecision=0.001;
+                approxSchemaDescr=char.empty(1,0);
+                approxSchemaName=char.empty(1,0);
+                nDims=2;
+                lsGoodDirVec=[1;0];
+                QArrayList=createQArrayList(ones(1,nDims));
+                %aMat=zeros(nDims,nPoints);
+                timeVec=indStart:(indStart+nPoints-1);
+                aMat=repmat(sin(timeVec/10),nDims,1);                
+                sTime=indSTime;
+                approxType=gras.ellapx.enums.EApproxType.Internal;
+                %
+                rel=create();
+                qMat=diag([1,2]);
+                QArrayList=createQArrayList(1:nDims);
+                approxType=gras.ellapx.enums.EApproxType.External;
+                rel.unionWith(create());
+                relWithReg=rel.getCopy();
+                relWithReg.scale(@(varargin)0.5,{});
+                %
+                relWithReg.MArray=cellfun(@(x)x*0.1,relWithReg.QArray,...
+                    'UniformOutput',false);
+                rel.unionWith(relWithReg);
+                varargout{1}=rel;
+                %
+                if nargout>1
+                    projSpaceList = {[1 0; 0 1].'};
+                    %
+                    projType=gras.ellapx.enums.EProjType.Static;
+                    relStatProj=rel.project(projType,projSpaceList,@fGetProjMat);
+                    varargout{2}=relStatProj;
+                    if nargout>2
+                        projType=gras.ellapx.enums.EProjType.DynamicAlongGoodCurve;
+                        relDynProj=rel.project(projType,projSpaceList,@fGetProjMat);
+                        varargout{3}=relDynProj;
+                    end
+                end
+                hashMap(keyStr)=varargout;
+            end
+            function QArrayList=createQArrayList(diagVec)
+                qMat=diag(diagVec);
+                multVec=linspace(1,2,nPoints);
+                QArray=repmat(qMat,[1,1,nPoints]);
+                QArray=QArray.*repmat(shiftdim(multVec,-1),...
+                    [nDims,nDims,1]);
+                QArrayList=repmat({QArray},1,nTubes);
+            end
             function [projOrthMatArray, projOrthMatTransArray] =...
                     fGetProjMat(projMat, timeVec, varargin)
                 nTimePoints = length(timeVec);
@@ -412,7 +602,10 @@ classdef SuiteEllTube < mlunitext.test_case
                 projOrthMatTransArray = repmat(projMat.', [1,1,nTimePoints]);
             end
             function rel = create()
-                ltGoodDirArray=repmat(lsGoodDirVec,[1,nTubes,nPoints]);
+                multVec=cos(linspace(1,2,nPoints)/(10*pi))+...
+                    linspace(1,2,nPoints);
+                ltGoodDirArray=repmat(lsGoodDirVec,[1,nTubes,nPoints]).*...
+                    repmat(reshape(multVec,[1,1,nPoints]),[nDims,nTubes]);
                 rel=gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
                     QArrayList, aMat, timeVec,...
                     ltGoodDirArray, sTime, approxType, approxSchemaName,...
@@ -612,48 +805,319 @@ classdef SuiteEllTube < mlunitext.test_case
             [~, ~] =...
                 extFromEllArrayEllTube.getEllArray(EApproxType.Internal);
         end
-        %
-        function self = testUnionFromEllTubes(self)
-            import gras.ellapx.enums.EApproxType;
-            import gras.ellapx.smartdb.rels.EllUnionTubeStaticProj;
-            import gras.ellapx.smartdb.rels.EllUnionTube;
-            import gras.ellapx.proj.EllTubeStaticSpaceProjector;
-            %
-            qMatArray(:,:,2) = [1,0,0;0,2,0;0,0,3];
-            qMatArray(:,:,1) = [5,0,0;0,6,0;0,0,7];
-            aMat(:,2) = [1,2,3];
-            aMat(:,1) = [5,6,7];
-            ellArray = ellipsoid(aMat,qMatArray);
-            timeVec = [1,2];
-            sTime = 2;
-            lsGoodDirMat=[1,0,0;0,1,0;0,0,1];
+        
+        function [qMatArray, aMat, timeVec, sTime, lsGoodDirArray,...
+                approxSchemaDescr, approxSchemaName] = ...
+                getSimpleInputData(~)
+            qMatArray(:,:,3) = [1,0;0,2];
+            qMatArray(:,:,2) = [3,0;0,4];
+            qMatArray(:,:,1) = [5,0;0,6];
+            aMat(:,3) = [1,2];
+            aMat(:,2) = [3,4];
+            aMat(:,1) = [5,6];
+            timeVec = [1,2,3];
+            sTime = 1;
+            lsGoodDirMat=[1;0];
             lsGoodDirArray(:,:,1) = lsGoodDirMat;
             lsGoodDirArray(:,:,2) = lsGoodDirMat;
+            lsGoodDirArray(:,:,3) = lsGoodDirMat;
             approxSchemaDescr=char.empty(1,0);
             approxSchemaName=char.empty(1,0);
-            calcPrecision=0.001;
-            testEllTube = ...
-                gras.ellapx.smartdb.rels.EllTube.fromEllArray(...
-                ellArray, timeVec,...
-                lsGoodDirArray, sTime, EApproxType.External, ...
-                approxSchemaName,...
-                approxSchemaDescr, calcPrecision);
-            projSpaceList = {[1 0 0; 0 1 1]};
-            projObj=EllTubeStaticSpaceProjector(projSpaceList);
-            testEllProj=projObj.project(testEllTube);
-            testEllUnionStaticProj = ...
-                EllUnionTubeStaticProj.fromEllTubes(testEllProj);
-            testEllUnionTube = EllUnionTube.fromEllTubes(testEllTube);
-            testEllUnionStaticProj0=projObj.project(testEllUnionTube);
-            [isEqual, reportStr] = testEllUnionStaticProj.isEqual(...
-                testEllUnionStaticProj0);
-            mlunitext.assert(isEqual, reportStr);
+        end
+        function testInterpAdvanced(self)
+            nTubes=3;
+            nPoints=10;
+            [rel,relStatProj,relDynProj]=auxGenSimpleTubeAndProj(self,...
+                nPoints,nTubes);
+            %
+            timeVec=rel.timeVec{1};
+            checkScalarTime(min(timeVec),rel);
+            checkScalarTime(max(timeVec),rel);
+            checkScalarTime(max(timeVec),relStatProj);
+            checkScalarTime(min(timeVec),relStatProj);
+            checkScalarTime(max(timeVec),relDynProj);
+            checkScalarTime(min(timeVec),relDynProj);
+            %
+            function checkScalarTime(interpTime,inpRel)
+                interpRel=inpRel.interp(interpTime);
+                mlunitext.assert(all(cellfun(@(x)numel(x)==1,...
+                    interpRel.timeVec)));
+            end
+        end
+        function self = testInterp(self)
+            import gras.ellapx.enums.EApproxType;
+            %
+            INTERP_TIME_VEC=[1,1.6,2,2.3,3];
+            [qMatArray, aMat, timeVec, sTime, lsGoodDirArray,...
+                approxSchemaDescr, approxSchemaName] = ...
+                self.getSimpleInputData();
+            approxType = EApproxType.Internal;
+            CALC_PRECISION=0.01;
+            fromMat1EllTube = ...
+                gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
+                {qMatArray}, aMat, timeVec,...
+                lsGoodDirArray, sTime, approxType, approxSchemaName,...
+                approxSchemaDescr, CALC_PRECISION);
+            fromMat1EllTubeDouble = ...
+                gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
+                {qMatArray, qMatArray}, aMat, timeVec,...
+                [lsGoodDirArray,lsGoodDirArray], sTime,...
+                approxType, approxSchemaName,...
+                approxSchemaDescr, CALC_PRECISION);
+            interpEllTube = fromMat1EllTube.interp(INTERP_TIME_VEC);
+            interpDoubleEllTube =...
+                fromMat1EllTubeDouble.interp(INTERP_TIME_VEC);
+            mlunitext.assert(all(interpEllTube.aMat{1}(:,2)==[3;4]));
+            mlunitext.assert(...
+                all(interpEllTube.aMat{1}(:,4)==[3;4]));
+            mlunitext.assert(...
+                all(interpEllTube.QArray{1}(:,:,4)==[3,0;0,4]));
+            mlunitext.assert(...
+                all(interpEllTube.QArray{1}(:,:,2)==[3,0;0,4]));
+            mlunitext.assert(all(interpDoubleEllTube.aMat{1}(:,2)==[3;4]));
+            mlunitext.assert(all(interpDoubleEllTube.aMat{2}(:,4)==[3;4]));
+            mlunitext.assert(...
+                all(interpDoubleEllTube.QArray{1}(:,:,4)==[3,0;0,4]));
+            mlunitext.assert(...
+                all(interpDoubleEllTube.QArray{2}(:,:,2)==[3,0;0,4]));
+            %
+            projSpaceList = {[1,0;0,1].'};
+            projType=gras.ellapx.enums.EProjType.DynamicAlongGoodCurve;
+            interpProjTube =...
+                interpEllTube.project(projType, projSpaceList,...
+                @fGetProjMat);
+            noInterpProjTube = fromMat1EllTube.project(projType, ...
+                projSpaceList, @fGetProjMat);
+            interpProj2Tube = noInterpProjTube.interp([1,1.5,2,2.5,3]);
+            mlunitext.assert(all(all(interpProj2Tube.aMat{1}-...
+                interpProjTube.aMat{1} < CALC_PRECISION)));
+            mlunitext.assert(all(all(all(interpProj2Tube.QArray{1}-...
+                interpProjTube.QArray{1} < CALC_PRECISION))));
+            self.runAndCheckError(...
+                'fromMat1EllTube.interp([])','wrongInput');
+            self.runAndCheckError(...
+                'fromMat1EllTube.interp([0])','wrongInput');
+            self.runAndCheckError(...
+                'fromMat1EllTube.interp([10])','wrongInput');
+            self.runAndCheckError(...
+                'fromMat1EllTube.interp([1,2;3,4])','wrongInput');
+            ellTubeVec = [interpEllTube, interpEllTube];
+            self.runAndCheckError(...
+                'ellTubeVec.interp([2])',':noScalarObj');
             %
             function [projOrthMatArray,projOrthMatTransArray]=...
                     fGetProjMat(projMat,timeVec,varargin)
                 nTimePoints=length(timeVec);
                 projOrthMatArray=repmat(projMat,[1,1,nTimePoints]);
                 projOrthMatTransArray=repmat(projMat.',[1,1,nTimePoints]);
+            end
+        end
+        %
+        function self = testIsEqual(self)
+            import gras.ellapx.enums.EApproxType;
+            import gras.ellapx.smartdb.rels.EllUnionTube;
+            import gras.ellapx.smartdb.rels.EllUnionTubeStaticProj;
+            %
+            IS_LINEAR_INTERP=false;
+            [qMatArray, aMat, timeVec, sTime, lsGoodDirArray,...
+                approxSchemaDescr, approxSchemaName] = ...
+                self.getSimpleInputData();
+            approx1Type = EApproxType.Internal;
+            approx2Type = EApproxType.External;
+            CHECK_INEQUALITY = 1;
+            CALC_PRECISION=0.01;
+            mixedExtIntEllTube = ...
+                gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
+                {qMatArray,qMatArray,qMatArray}, aMat, timeVec,...
+                [lsGoodDirArray,lsGoodDirArray,lsGoodDirArray], sTime, ...
+                [approx1Type,approx2Type,approx1Type]',...
+                approxSchemaName,...
+                approxSchemaDescr, CALC_PRECISION);
+            mixedExtInt2EllTube = ...
+                gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
+                {qMatArray,qMatArray,qMatArray}, aMat, timeVec,...
+                [lsGoodDirArray,lsGoodDirArray,lsGoodDirArray], sTime, ...
+                [approx1Type,approx1Type,approx2Type]',...
+                approxSchemaName,...
+                approxSchemaDescr, CALC_PRECISION);
+            nonMixedEllTube = ...
+                gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
+                {qMatArray,qMatArray,qMatArray}, aMat, timeVec,...
+                [lsGoodDirArray,lsGoodDirArray,lsGoodDirArray], sTime, ...
+                [approx1Type,approx1Type,approx1Type]',...
+                approxSchemaName,...
+                approxSchemaDescr, CALC_PRECISION);
+            % nonscalar input
+            myEllTubeArr = [nonMixedEllTube,nonMixedEllTube];
+            self.runAndCheckError(...
+                'myEllTubeArr.isEqual(nonMixedEllTube)','noScalarObj');
+            self.runAndCheckError(...
+                'nonMixedEllTube.isEqual(myEllTubeArr)','noScalarObj');
+            % self equal
+            fCheckIsEqual(mixedExtIntEllTube, mixedExtIntEllTube);
+            fCheckIsEqual(nonMixedEllTube, nonMixedEllTube);
+            % inequal because of different approxType
+            fCheckIsEqual(nonMixedEllTube, mixedExtIntEllTube, ...
+                CHECK_INEQUALITY);
+            fCheckIsEqual(mixedExtIntEllTube, nonMixedEllTube, ...
+                CHECK_INEQUALITY);
+            % equality of differently sorted tubes
+            fCheckIsEqual(mixedExtIntEllTube, mixedExtInt2EllTube);
+            % enclosed time vectors
+            interpTimeVec = [1,1.5,2,2.5,3];
+            interpMixedEllTube = ...
+                mixedExtIntEllTube.interp(interpTimeVec);
+            interpMixed2EllTube = ...
+                mixedExtInt2EllTube.interp(interpTimeVec);
+            fCheckIsEqual(mixedExtIntEllTube, interpMixedEllTube);
+            fCheckIsEqual(interpMixedEllTube, mixedExtInt2EllTube);
+            fCheckIsEqual(interpMixed2EllTube, mixedExtInt2EllTube);
+            % inenclosed time vectors
+            q2MatArray = qMatArray(:,:,1:2:3);
+            a2Mat = aMat(:,1:2:3);
+            ls2GoodDirArray = lsGoodDirArray(:,:,1:2:3);
+            smallerTimeVec = [1,3];
+            smallerMixedEllTube = ...
+                gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
+                {q2MatArray,q2MatArray,q2MatArray}, a2Mat, ...
+                smallerTimeVec,...
+                [ls2GoodDirArray,ls2GoodDirArray,ls2GoodDirArray],sTime,...
+                [approx1Type,approx2Type,approx1Type]',...
+                approxSchemaName,...
+                approxSchemaDescr, CALC_PRECISION);
+            fCheckIsEqual(smallerMixedEllTube, mixedExtInt2EllTube);
+            interp2TimeVec = [1,1.5,3];
+            interpSmallerEllTube = smallerMixedEllTube.interp(...
+                interp2TimeVec);
+            %
+            if IS_LINEAR_INTERP
+                fCheckIsEqual(interpSmallerEllTube, mixedExtInt2EllTube);
+            end
+            %
+            % different time vectors
+            badTimeVec = [1,4];
+            badTimedMixedEllTube = ...
+                gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
+                {q2MatArray,q2MatArray,q2MatArray}, a2Mat, badTimeVec,...
+                [ls2GoodDirArray,ls2GoodDirArray,ls2GoodDirArray],sTime,...
+                [approx1Type,approx2Type,approx1Type]',...
+                approxSchemaName,...
+                approxSchemaDescr, CALC_PRECISION);
+            %
+            if IS_LINEAR_INTERP
+                fCheckIsEqual(badTimedMixedEllTube, smallerMixedEllTube,...
+                    CHECK_INEQUALITY);
+            end
+            % projection
+            projSpaceList = {[1,0;0,1].'};
+            projType=gras.ellapx.enums.EProjType.Static;
+            projEllTube = mixedExtIntEllTube.project(projType,...
+                projSpaceList, @fGetProjMat);
+            self.runAndCheckError(...
+                ['projEllTube.isEqual('...
+                'mixedExtIntEllTube)'],'wrongInput');
+            proj2EllTube = interpMixedEllTube.project(projType,...
+                projSpaceList, @fGetProjMat);
+            fCheckIsEqual(projEllTube, proj2EllTube);
+            proj2EllTube = interpSmallerEllTube.project(projType,...
+                projSpaceList, @fGetProjMat);
+            if IS_LINEAR_INTERP
+                fCheckIsEqual(proj2EllTube, projEllTube);
+            end
+            mlunitext.assert(isEqual, reportStr);
+            % union
+            unionEllTube = EllUnionTube.fromEllTubes(...
+                mixedExtIntEllTube);
+            union2EllTube = EllUnionTube.fromEllTubes(...
+                mixedExtInt2EllTube);
+            fCheckIsEqual(unionEllTube, union2EllTube);
+            unionProjEllTube = ...
+                EllUnionTubeStaticProj.fromEllTubes(...
+                proj2EllTube);
+            unionProj2EllTube = ...
+                EllUnionTubeStaticProj.fromEllTubes(...
+                projEllTube);
+            if IS_LINEAR_INTERP
+                fCheckIsEqual(unionProjEllTube, unionProj2EllTube);
+            end
+            %
+            function fCheckIsEqual(ellTube1, ellTube2, notEqual)
+                [isEqual, reportStr] = ellTube1.isEqual(...
+                    ellTube2);
+                if (nargin == 3 && notEqual == 1)
+                    mlunitext.assert(~isEqual, reportStr);
+                else
+                    mlunitext.assert(isEqual, reportStr);
+                end
+            end
+            function [projOrthMatArray,projOrthMatTransArray]=...
+                    fGetProjMat(projMat,timeVec,varargin)
+                nTimePoints=length(timeVec);
+                projOrthMatArray=repmat(projMat,[1,1,nTimePoints]);
+                projOrthMatTransArray=repmat(projMat.',[1,1,nTimePoints]);
+            end
+        end
+        %
+        function testUnionFromEllTubesAdvanced(self)
+            nTubes=3;
+            nPoints=10;
+            [rel,relStatProj]=auxGenSimpleTubeAndProj(self,...
+                nPoints,nTubes);
+            rel1=gras.ellapx.smartdb.rels.EllUnionTube.fromEllTubes(...
+                rel);
+            rel2=gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.fromEllTubes(...
+                relStatProj);
+        end
+        function self = testUnionFromEllTubes(self)
+            check([0 2]);
+            check([1 2]);
+            function check(multVec)
+                import gras.ellapx.enums.EApproxType;
+                import gras.ellapx.smartdb.rels.EllUnionTubeStaticProj;
+                import gras.ellapx.smartdb.rels.EllUnionTube;
+                qMatArray(:,:,2) = [1,0,0.1;0,2,0;0.1,0,3];
+                qMatArray(:,:,1) = [5,0,0.1;0,6,0;0.1,0,7];
+                aMat(:,2) = [1,2,3];
+                aMat(:,1) = [5,6,7];
+                ellArray = ellipsoid(aMat,qMatArray);
+                timeVec = [1,2];
+                sTime = 2;
+                lsGoodDirMat=[1,0,0;0,2,0;0,0,3];
+                ltGoodDirArray(:,:,1) = lsGoodDirMat*multVec(1);
+                ltGoodDirArray(:,:,2) = lsGoodDirMat*multVec(2);
+                approxSchemaDescr=char.empty(1,0);
+                approxSchemaName=char.empty(1,0);
+                calcPrecision=0.001;
+                testEllTube = ...
+                    gras.ellapx.smartdb.rels.EllTube.fromEllArray(...
+                    ellArray, timeVec,...
+                    ltGoodDirArray, sTime, EApproxType.External, ...
+                    approxSchemaName,...
+                    approxSchemaDescr, calcPrecision);
+                %
+                testEllUnionTube=...
+                    gras.ellapx.smartdb.rels.EllUnionTube.fromEllTubes(...
+                    testEllTube);
+                %
+                projSpaceList = {[1 0 0; 0 1 1]};
+                projType = gras.ellapx.enums.EProjType.Static;
+                testEllProj = testEllTube.project(projType,projSpaceList,...
+                    @fGetProjMat);
+                testEllUnionStaticProj = ...
+                    EllUnionTubeStaticProj.fromEllTubes(testEllProj);
+                testEllUnionTube = EllUnionTube.fromEllTubes(testEllTube);
+                testEllUnionStaticProj0 = testEllUnionTube.project(...
+                    projType,projSpaceList,@fGetProjMat);
+                [isEqual, reportStr] = testEllUnionStaticProj.isEqual(...
+                    testEllUnionStaticProj0);
+                mlunitext.assert(isEqual, reportStr);
+                %
+                function [projOrthMatArray,projOrthMatTransArray]=...
+                        fGetProjMat(projMat,timeVec,varargin)
+                    nTimePoints=length(timeVec);
+                    projOrthMatArray=repmat(projMat,[1,1,nTimePoints]);
+                    projOrthMatTransArray=repmat(projMat.',[1,1,nTimePoints]);
+                end
             end
         end
         function self = testRelativeComparison(self)
@@ -707,6 +1171,5 @@ classdef SuiteEllTube < mlunitext.test_case
                     approxSchemaDescr, calcPrecision);
             end
         end
-        
     end
 end

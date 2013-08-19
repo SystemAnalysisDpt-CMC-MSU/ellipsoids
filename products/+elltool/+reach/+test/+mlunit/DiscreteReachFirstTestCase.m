@@ -14,16 +14,13 @@ classdef DiscreteReachFirstTestCase < mlunitext.test_case
                 filesep, 'TestData', filesep, shortClassName];
         end
         %
-%         function self = set_up_param(self)
-%         end
-        
         function self = testFirstBasicTest(self)
             loadFileStr = strcat(self.testDataRootDir,...
                 '/demo3DiscreteTest.mat');
             load(loadFileStr, 'aMat', 'bMat', 'ControlBounds',...
                 'x0Ell', 'l0Mat', 'timeVec');
             linSysObj = elltool.linsys.LinSysFactory.create(aMat, bMat,...
-                ControlBounds, [], [], [], [], 'd');
+                ControlBounds,[],[], 'd');
             %timeVec = [0, 3];
             reachSetObj = elltool.reach.ReachDiscrete(linSysObj,...
                 x0Ell, l0Mat, timeVec);
@@ -49,8 +46,7 @@ classdef DiscreteReachFirstTestCase < mlunitext.test_case
             newReachObj = reachSetObj.evolve(timeVec(2) + 1);
             projReachSetObj.isprojection();
             firstCutReachObj.iscut();
-            newReachObj.isempty();
-            mlunitext.assert_equals(true, true);
+            newReachObj.isEmpty();
         end
         %
         function self = testSecondBasicTest(self)
@@ -59,7 +55,7 @@ classdef DiscreteReachFirstTestCase < mlunitext.test_case
             load(loadFileStr, 'aMat', 'bMat', 'ControlBounds',...
                 'gMat', 'DistorbBounds', 'x0Ell', 'l0Mat', 'timeVec');
             linSysObj = elltool.linsys.LinSysFactory.create(aMat, bMat,...
-                ControlBounds, gMat, DistorbBounds, [], [], 'd');
+                ControlBounds, gMat, DistorbBounds,'d');
             reachSetObj = elltool.reach.ReachDiscrete(linSysObj,...
                 x0Ell, l0Mat, timeVec);
             evalc('reachSetObj.display();');
@@ -84,8 +80,7 @@ classdef DiscreteReachFirstTestCase < mlunitext.test_case
             newReachObj = reachSetObj.evolve(2 * timeVec(2));
             projReachSetObj.isprojection();
             firstCutReachObj.iscut();
-            newReachObj.isempty();
-            mlunitext.assert_equals(true, true);
+            newReachObj.isEmpty();
         end
     end
 end

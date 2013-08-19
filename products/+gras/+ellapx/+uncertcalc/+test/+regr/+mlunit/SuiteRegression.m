@@ -5,6 +5,7 @@ classdef SuiteRegression < mlunitext.test_case
         crm
         crmSys
         resTmpDir
+        isReCache
     end
     methods
         function self = SuiteRegression(varargin)
@@ -22,18 +23,21 @@ classdef SuiteRegression < mlunitext.test_case
             rmdir(self.resTmpDir,'s');
         end
         function self = set_up_param(self,varargin)
-            if nargin>2
-                self.crm=varargin{2};
+            [reg,~,self.isReCache]=modgen.common.parseparext(varargin,...
+                {'reCache';false;'islogical(x)'});
+            nRegs=length(reg);
+            if nRegs>2
+                self.crm=reg{2};
             else
                 self.crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
             end
-            if nargin>3
-                self.crmSys=varargin{3};
+            if nRegs>3
+                self.crmSys=reg{3};
             else
                 self.crmSys=...
                     gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
             end
-            confNameList=varargin{1};
+            confNameList=reg{1};
             if strcmp(confNameList,'*')
                 self.crm.deployConfTemplate('*');
                 confNameList=self.crm.getConfNameList();
@@ -45,25 +49,14 @@ classdef SuiteRegression < mlunitext.test_case
         end
         function testRegression(self)
             NOT_COMPARED_FIELD_LIST={'resDir','plotterObj'};
-            MAX_TOL=1e-6;
-            MAX_REL_TOL=1e-6;
-            SSORT_KEYS.ellTubeProjRel={'projSTimeMat','projType',...
-                'sTime','lsGoodDirOrigVec'};
-            SSORT_KEYS.ellTubeRel={'sTime','lsGoodDirVec'};
-            SSORT_KEYS.ellUnionTubeRel={'sTime','lsGoodDirVec'};
-            SSORT_KEYS.ellUnionTubeStaticProjRel=...
-                {'projSTimeMat','projType','sTime','lsGoodDirOrigVec'};
             %
-            ROUND_FIELD_LIST={'lsGoodDirOrigVec','lsGoodDirVec'};
             %
-            nRoundDigits=-fix(log(MAX_TOL)/log(10));
-            %
-            crm=self.crm;
-            crmSys=self.crmSys;
-            confNameList=self.confNameList;
-            nConfs=length(confNameList);
+            curCrm=self.crm;
+            curCrmSys=self.crmSys;
+            curConfNameList=self.confNameList;
+            nConfs=length(curConfNameList);
             for iConf=1:nConfs
-                crm.deployConfTemplate(confNameList{iConf});
+                curCrm.deployConfTemplate(curConfNameList{iConf});
             end
             %
             methodName=modgen.common.getcallernameext(1);
@@ -74,20 +67,20 @@ classdef SuiteRegression < mlunitext.test_case
                 'useHashedPath',false,'useHashedKeys',true);
             %
             for iConf=1:nConfs
-                confName=confNameList{iConf};
+                confName=curConfNameList{iConf};
                 inpKey=confName;
-                crm.selectConf(confName,'reloadIfSelected',false);
-                crm.setParam('customResultDir.dirName',self.resTmpDir,...
+                curCrm.selectConf(confName,'reloadIfSelected',false);
+                curCrm.setParam('customResultDir.dirName',self.resTmpDir,...
                         'writeDepth','cache');
-                crm.setParam('customResultDir.isEnabled',true,...
+                curCrm.setParam('customResultDir.isEnabled',true,...
                         'writeDepth','cache');
                 SRunProp=gras.ellapx.uncertcalc.run(confName,...
-                    'confRepoMgr',crm,'sysConfRepoMgr',crmSys);
-                if crm.getParam('plottingProps.isEnabled')
+                    'confRepoMgr',curCrm,'sysConfRepoMgr',curCrmSys);
+                if curCrm.getParam('plottingProps.isEnabled')
                     SRunProp.plotterObj.closeAllFigures();
                 end
                 %
-                calcPrecision=crm.getParam('genericProps.calcPrecision');                
+                calcPrecision=curCrm.getParam('genericProps.calcPrecision');                
                 isOk=all(SRunProp.ellTubeProjRel.calcPrecision<=...
                     calcPrecision);
                 mlunitext.assert_equals(true,isOk);
@@ -95,7 +88,7 @@ classdef SuiteRegression < mlunitext.test_case
                 compFieldNameList=setdiff(fieldnames(SRunProp),...
                     NOT_COMPARED_FIELD_LIST);
                 SRunProp=pathfilterstruct(SRunProp,compFieldNameList);
-                if ~resMap.isKey(inpKey);
+                if self.isReCache||~resMap.isKey(inpKey);
                     SExpRes=SRunProp;
                     resMap.put(inpKey,SExpRes);
                 end
@@ -106,29 +99,12 @@ classdef SuiteRegression < mlunitext.test_case
                     expRel=SExpRes.(fieldName);
                     rel=SRunProp.(fieldName);
                     %
-                    keyList=SSORT_KEYS.(fieldName);
-                    isRoundVec=ismember(keyList,ROUND_FIELD_LIST);
-                    roundKeyList=keyList(isRoundVec);
-                    nRoundKeys=length(roundKeyList);
-                    %
-                    for iRound=1:nRoundKeys
-                        roundKey=roundKeyList{iRound};
-                        rel.applySetFunc(@(x)roundn(x,-nRoundDigits),...
-                            roundKey);
-                        expRel.applySetFunc(@(x)roundn(x,-nRoundDigits),...
-                            roundKey);
-                    end
-                    rel.sortBy(SSORT_KEYS.(fieldName));
-                    expRel.sortBy(SSORT_KEYS.(fieldName));
-                    %
                     %expRel=smartdb.relations.DynamicRelation(expRel);
                     %expRel.removeFields('approxSchemaName');
                     %rel=smartdb.relations.DynamicRelation(rel);
                     %rel.removeFields('approxSchemaName');
                     %
-                    [isOk,reportStr]=expRel.isEqual(rel,'maxTolerance',...
-                        MAX_TOL, 'maxRelativeTolerance', MAX_REL_TOL, ...
-                        'checkTupleOrder',true);
+                    [isOk,reportStr]=expRel.isEqual(rel);
                     %
                     reportStr=sprintf('confName=%s\n %s',confName,...
                         reportStr);

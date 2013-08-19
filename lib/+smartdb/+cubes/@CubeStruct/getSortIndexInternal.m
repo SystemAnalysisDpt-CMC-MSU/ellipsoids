@@ -38,13 +38,14 @@ for k=1:2:nProp-1
         case 'direction'
             Direction=prop{k+1};
         otherwise,
-            error([upper(mfilename),':wrongInput'],'Unidentified property name: %s ',prop{k});
+            error([upper(mfilename),':wrongInput'],...
+                'Unidentified property name: %s ',prop{k});
     end
 end
 %% Initial actions
 if nargin<3,
     error([upper(mfilename),':wrongInput'],...
-        'sortFieldNameList must be given for grouping');
+        'sortDim must be given for grouping');
 end
 if ischar(sortFieldNameList),
     sortFieldNameList={sortFieldNameList};

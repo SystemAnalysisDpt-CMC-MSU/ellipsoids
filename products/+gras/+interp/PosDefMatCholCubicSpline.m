@@ -2,7 +2,7 @@ classdef PosDefMatCholCubicSpline<gras.interp.MatrixColTriuCubicSpline
     % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-08$
     % $Copyright: Moscow State University,
     %            Faculty of Computational Mathematics and Computer Science,
-    %            System Analysis Department 2011 $    
+    %            System Analysis Department 2011 $
     methods
         function self=PosDefMatCholCubicSpline(varargin)
             self=self@gras.interp.MatrixColTriuCubicSpline(varargin{:});
@@ -23,9 +23,9 @@ classdef PosDefMatCholCubicSpline<gras.interp.MatrixColTriuCubicSpline
             triuDataArray=zeros(sizeVec);
             nTimePoints=length(timeVec);
             try
-            for iTime=1:nTimePoints
-                triuDataArray(:,:,iTime)=chol(dataArray(:,:,iTime));
-            end
+                for iTime=1:nTimePoints
+                    triuDataArray(:,:,iTime)=chol(dataArray(:,:,iTime));
+                end
             catch meObj
                 if strcmp(meObj.identifier,'MATLAB:posdef')
                     newMeObj=throwerror('wrongInput:posDef',...
@@ -63,6 +63,6 @@ classdef PosDefMatCholCubicSpline<gras.interp.MatrixColTriuCubicSpline
                 dataArray(:,:,iTime)=transpose(dataArray(:,:,iTime))*...
                     dataArray(:,:,iTime);
             end
-        end        
+        end
     end
 end

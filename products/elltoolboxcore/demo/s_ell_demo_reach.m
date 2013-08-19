@@ -22,27 +22,27 @@ L = 0.5;
 L2 = 1;
 C = 0.1;
 %%
-% Using capacitor voltage and inductor current as state variables, we arrive at the linear system shown above. Now we assign A and B matrix values, define control bounds CB and declare a linear system object lsys:
+% Using capacitor voltage and inductor current as state variables, we arrive at the linear system shown above. Now we assign A and B matrix values, define control bounds P and declare a linear system object lsys:
 %
 % >> R = 4; L = 0.5; C = 0.1;
 % >> A = [0 -1/C; 1/L -R/L];
 % >> B = [1/C 0; 0 1/L];
-% >> CB = ell_unitball(2);
-% >> lsys = elltool.linsys.LinSysFactory.create(A, B, CB);
+% >> P = ell_unitball(2);
+% >> lsys = elltool.linsys.LinSysFactory.create(A, B, P);
 cla;
 image(imread('circuitls.jpg'));
 axis off;
 grid off;
 A = [0 -1/C; 1/L -R/L];
 B = [1/C 0; 0 1/L];
-CB = ell_unitball(2);
+P = ell_unitball(2);
 A2 = [0 -1/C; 1/L2 -R2/L2];
 B2 = [1/C 0; 0 1/L2];
 X0 = 1e-5*ell_unitball(2);
 T = 10;
 L0 = [1 0; 0 1]';
-s = elltool.linsys.LinSysFactory.create(A, B, CB);
-s2 = elltool.linsys.LinSysFactory.create(A2, B2, CB);
+s = elltool.linsys.LinSysFactory.create(A, B, P);
+s2 = elltool.linsys.LinSysFactory.create(A2, B2, P);
 %%
 % We are ready to compute the reach set approximations of this system on some time interval, say T = [0, 10], for zero initial conditions and plot them:
 %
@@ -71,7 +71,7 @@ zlabel('i_L');
 % >> R2 = 2;
 % >> A2 = [0 -1/C; 1/L2 -R2/L2];
 % >> B2 = [1/C 0; 0 1/L2];
-% >> lsys2 = elltool.linsys.LinSysFactory.create(A2, B2, CB);
+% >> lsys2 = elltool.linsys.LinSysFactory.create(A2, B2, P);
 %
 % Now we continue computing the reach set for the time interval [10, 20] due to the new dynamics:
 %
@@ -170,7 +170,7 @@ ylabel('i_L');
 %
 % >> A = {'0' '-10'; '1/(2 + sin(t))' '-4/(2 + sin(t))'};
 % >> B = {'10' '0'; '0' '1/(2 + sin(t))'};
-% >> s = elltool.linsys.LinSysFactory.create(A, B, CB);
+% >> s = elltool.linsys.LinSysFactory.create(A, B, P);
 %
 % Now the reach set of the system can be computed and plotted just as before:
 %
@@ -178,7 +178,7 @@ ylabel('i_L');
 % >> rs.plotByEa(); hold on; rs.plotByIa();
 A = {'0' '-10'; '1/(2 + sin(t))' '-4/(2 + sin(t))'};
 B = {'10' '0'; '0' '1/(2 + sin(t))'};
-s = elltool.linsys.LinSysFactory.create(A, B, CB);
+s = elltool.linsys.LinSysFactory.create(A, B, P);
 rs = elltool.reach.ReachContinuous(s, X0, L0, [0 4],...
     'isRegEnabled', true, 'isJustCheck', false, 'regTol', 1e-4);
 cla;
@@ -210,22 +210,22 @@ hold off;
 %
 % Let disturbance bounds depend on time:
 %
-% >> V.center = {'2*cos(t)'};
-% >> V.shape = {'0.09*(sin(t))^2'};
-% >> G = [1; 0];
+% >> Q.center = {'2*cos(t)'};
+% >> Q.shape = {'0.09*(sin(t))^2'};
+% >> C = [1; 0];
 %
 % Now we declare the linear system object with disturbance:
 %
-% >> lsys = elltool.linsys.LinSysFactory.create(A, B, CB, G, V);
+% >> lsys = elltool.linsys.LinSysFactory.create(A, B, P, C, Q);
 %
 % Compute and plot the reach tube approximations:
 %
 % >> rs = elltool.reach.ReachContinuous(s, X0, L0, [0 4]);
 % >> rs.plotByEa(); hold on; rs.plotByIa();
-G = [1; 0];
-V.center = {'2*cos(t)'};
-V.shape = {'0.09*(sin(t))^2'};
-s = elltool.linsys.LinSysFactory.create(A, B, CB, G, V);
+C = [1; 0];
+Q.center = {'2*cos(t)'};
+Q.shape = {'0.09*(sin(t))^2'};
+s = elltool.linsys.LinSysFactory.create(A, B, P, C, Q);
 rs = elltool.reach.ReachContinuous(s, X0, L0, [0 4],...
     'isRegEnabled', true, 'isJustCheck', false, 'regTol', 1e-2);
 cla;
@@ -354,7 +354,7 @@ clear U;
 U.center = {'(k+7)/100'; '2'};
 U.shape = [0.02 0; 0 1];
 X0 = ellipsoid([1; 0.5; -0.5; 1.10; 0.55; 0], eye(6));
-lsys = elltool.linsys.LinSysFactory.create(A, B, U, [], [], [], [], 'd');
+lsys = elltool.linsys.LinSysFactory.create(A, B, U, [], [], 'd');
 L0 = [1 0 0 0 0 0; 0 1 0 0 0 0; 0 0 1 0 0 1; 0 1 0 1 1 0; 0 0 -1 1 0 1; 0 0 0 -1 1 1]';
 %%
 % Now we compute the reach set for time interval [1 4] and plot the projection onto (V[k], Y[k]) subspace:

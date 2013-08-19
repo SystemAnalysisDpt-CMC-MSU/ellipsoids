@@ -5,10 +5,16 @@ classdef MatrixInterpolantFactory
             import modgen.common.throwerror;
             checkgen(type,'isstring(x)');
             switch lower(type)
+                case 'linear',
+                    obj=gras.interp.MatrixLinearInterp(varargin{:});
+                case 'nearest',
+                    obj=gras.interp.MatrixNearestInterp(varargin{:});                    
                 case 'posdef_chol',
                     obj=gras.interp.PosDefMatCholCubicSpline(varargin{:});
-                case 'nndef_chol',
-                    obj=gras.interp.NNDefMatCholCubicSpline(varargin{:});
+                case 'nndef_chol_mult',
+                    obj=gras.interp.NNDefMatCholMultCubicSpline(varargin{:});
+                case 'nndef_triu',
+                    obj=gras.interp.MatrixNNDefTriuCubicSpline(varargin{:});
                 case 'column',
                     obj=gras.interp.MatrixColCubicSpline(varargin{:});
                 case 'row',

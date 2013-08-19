@@ -52,11 +52,19 @@ classdef SuiteOrthTransl < mlunitext.test_case
                 mlunitext.assert(all(diffVec < CALC_PRECISION));
             end
         end
-        function test_matorth(self)
+        function testMatOrth(self)
             inpMat=self.srcTlMat;
-            %
-            oMat=gras.la.matorth(inpMat);
-            self.aux_checkOrthPlain(oMat,'matorth');
+            nCols=size(inpMat,2);
+            for iCol=1:nCols
+                check(inpMat(:,1:iCol));
+            end
+            function check(inpMat)
+                %
+                oMat=gras.la.matorth(inpMat);
+                oRedMat=gras.la.matorthcol(inpMat);
+                mlunitext.assert(isequal(oMat(:,1:size(inpMat,2)),oRedMat));
+                self.aux_checkOrthPlain(oMat,'matorth');
+            end
         end
         function test_orthtranslmax(self)
             %

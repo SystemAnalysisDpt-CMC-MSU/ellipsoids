@@ -1,11 +1,15 @@
 classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
     properties (Constant,Hidden)
         FCODE_PROJ_S_MAT
+        FCODE_PROJ_ARRAY
         FCODE_PROJ_TYPE
         FCODE_LT_GOOD_DIR_NORM_ORIG_VEC
         FCODE_LS_GOOD_DIR_NORM_ORIG
+		FCODE_LT_GOOD_DIR_ORIG_MAT 
         FCODE_LS_GOOD_DIR_ORIG_VEC
         %
+        FCODE_LT_GOOD_DIR_NORM_ORIG_PROJ_VEC
+        FCODE_LT_GOOD_DIR_ORIG_PROJ_MAT
     end
     methods (Access=protected)
         function resStr=projSpecVec2Str(~,projSTimeMat)
@@ -184,13 +188,13 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
         %
         function [cMat,cOpMat]=getGoodDirColor(self,hAxes,~,~,...
                 ~,~,~,~,...
-                ~,ltGoodDirNormVec,ltGoodDirNormOrigVec,...
-                varargin)
+                ~,~,ltGoodDirNormOrigVec,...
+                ~,~,~,~,ltGoodDirNormOrigProjVec,varargin)
             import modgen.common.throwerror;
             ABS_TOL = 1e-3;
             ONE_NORM_COLOR_RGB_VEC=[1 0 0];%RED
             ZERO_NORM_COLOR_RGB_VEC=[1 1 0];%YELLOW
-            normRatioVec=ltGoodDirNormVec./ltGoodDirNormOrigVec;
+            normRatioVec=ltGoodDirNormOrigProjVec./ltGoodDirNormOrigVec;
             if ~(all(normRatioVec >= -ABS_TOL) && all(normRatioVec <= 1+ABS_TOL))
                 throwerror('wrongInput',...
                     ['all elements of normRatioVec',... 
@@ -210,26 +214,27 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
         function hVec = plotCreateGoodDirFunc(self, plotPropProcObj,...
                 hAxes, varargin)
             
-            [~, timeVec, lsGoodDirOrigVec, ltGoodDirMat, sTime,...
-                ~, ~, ~, ltGoodDirNormOrigVec] = deal(varargin{1:9});
-            
+            [~, timeVec, lsGoodDirOrigVec, ~, sTime,...
+                ~, ~, ~,~,~,~,~,~,...
+                ~,ltGoodDirOrigProjMat] = deal(varargin{1:15});
+            %
             import gras.ellapx.enums.EProjType;
             import gras.ellapx.smartdb.PlotPropProcessor;
-            
-            [cMat, cOpMat]=self.getGoodDirColor(hAxes, varargin{:});
-            
-            lineWidth = plotPropProcObj.getLineWidth(varargin(:));
-            
-            hVec(2)=dispDirCurve(ltGoodDirMat,lsGoodDirOrigVec,cMat);
             %
-            hVec(1)=dispDirCurve(-ltGoodDirMat,-lsGoodDirOrigVec,cOpMat);
+            [cMat, cOpMat]=self.getGoodDirColor(hAxes, varargin{:});
+            %
+            lineWidth = plotPropProcObj.getLineWidth(varargin(:));
+            %
+            hVec(2)=dispDirCurve(ltGoodDirOrigProjMat,lsGoodDirOrigVec,cMat);
+            %
+            hVec(1)=dispDirCurve(-ltGoodDirOrigProjMat,-lsGoodDirOrigVec,cOpMat);
             axis(hAxes,'vis3d');
             function hVec=dispDirCurve(ltGoodDirMat,lsGoodDirOrigVec,cMat)
                 import modgen.graphics.plot3adv;
                 goodDirStr=self.goodDirProp2Str(lsGoodDirOrigVec,...
                     sTime);                
                 plotName=['Good directions curve: ',goodDirStr];
-                vMat=ltGoodDirMat./repmat(ltGoodDirNormOrigVec,2,1);
+                vMat=ltGoodDirMat;
                 hVec=plot3adv(timeVec.',vMat(1,:).',vMat(2,:).',cMat,...
                     'lineWidth', lineWidth,'Parent',hAxes,'DisplayName',plotName);
             end
@@ -261,27 +266,73 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
         end
         %
         function checkDataConsistency(self)
-            import modgen.common.throwerror;
             import gras.gen.SquareMatVector;
             %
+            ABS_TOL=1e-14;
             if self.getNTuples()>0
                 %
                 TS_CHECK_TOL=1e-13;
                 fCheck=@(x,y,z)max(abs(x-y(z)))<=TS_CHECK_TOL;
+                fCheck2d=@(x,y,z)max(abs(x-y(:,z)))<=TS_CHECK_TOL;
                 indSTime=num2cell(self.indSTime);
                 self.checkSVsTConsistency(num2cell(self.lsGoodDirNormOrig),...
                     self.ltGoodDirNormOrigVec,indSTime,'lsGoodDirNormOrig',...
                     'ltGoodDirNormOrigVec',fCheck);
-                nInd=length(self.projSTimeMat);
+                self.checkSVsTConsistency(self.lsGoodDirOrigVec,...
+                    self.ltGoodDirOrigMat,indSTime,'lsGoodDirNormOrig',...
+                    'ltGoodDirNormOrigVec',fCheck2d);
+                isLsTouchVec=self.isLsTouch;                
+                indTouchVec=find(isLsTouchVec);
+                nInd=sum(isLsTouchVec);
                 compareLsGoodDirVec=cell(nInd,1);
                 indList=cell(nInd,1);
+                %
                 for iInd=1:nInd
-                    compareLsGoodDirVec{iInd}=self.projSTimeMat{iInd}*self.lsGoodDirOrigVec{iInd};
-                    indList{iInd}=1:size(self.projSTimeMat{iInd},1);
+                    indTouch=indTouchVec(iInd);
+                    compareLsGoodDirVec{iInd}=self.projSTimeMat{indTouch}*...
+                        self.lsGoodDirOrigVec{indTouch};
+                    compareLsGoodDirVec{iInd}=compareLsGoodDirVec{iInd}./...
+                        norm(compareLsGoodDirVec{iInd});
                 end
-                self.checkSVsTConsistency(self.lsGoodDirVec,...
+                %
+                fCheck=@(x,y,z)max(abs(x-y))<=TS_CHECK_TOL;
+                %
+                self.checkSVsTConsistency(self.lsGoodDirVec(indTouchVec),...
                     compareLsGoodDirVec,indList,...
                     'lsGoodDirVec','lsGoodDirOrigVec',fCheck);
+                %
+                isnZeroNormVecList=cellfun(@(x)x>0,self.ltGoodDirNormVec,...
+                    'UniformOutput',false);
+                %
+                checkEqualSize(self.ltGoodDirMat,...
+                    self.ltGoodDirOrigProjMat,'ltGoodDirMat',...
+                    'ltGoodDirOrigProjMat');
+                %         
+                fCheck=@(x,y,z)gras.gen.absrelcompare(...
+                    x(:,z),y(:,z),ABS_TOL,ABS_TOL,@norm);
+                self.checkSVsTConsistency(self.ltGoodDirMat,...
+                    self.ltGoodDirOrigProjMat,isnZeroNormVecList,...
+                    'ltGoodDirMat','ltGoodDirOrigProjMat',...
+                    fCheck);     
+                %
+                 checkEqualSize(self.ltGoodDirNormVec,...
+                    self.ltGoodDirNormOrigProjVec,'ltGoodDirNormVec',...
+                    'ltGoodDirNormOrigProjVec');
+                %
+                self.checkSVsTConsistency(self.ltGoodDirNormVec,...
+                    self.ltGoodDirNormOrigProjVec,isnZeroNormVecList,...
+                    'ltGoodDirNormVec','ltGoodDirNormOrigProjVec',...
+                    fCheck);                     
+                %
+            end
+            function checkEqualSize(aArr,bArr,aName,bName)
+                import modgen.common.throwerror;                
+                isOkVec=cellfun(@(x,y)isequal(size(x),size(y)),...
+                    aArr,bArr);
+                if ~all(isOkVec)
+                    throwerror('wrongInput',...
+                        '%s and %s should have equal sizes',aName,bName);
+                end
             end
         end
     end

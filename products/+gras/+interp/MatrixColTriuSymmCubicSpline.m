@@ -24,8 +24,6 @@ classdef MatrixColTriuSymmCubicSpline<gras.interp.MatrixColTriuCubicSpline
             %
             % Input:
             %   regular:
-            %       isSymm: logical[1,1] - if true, matrix is required to
-            %           be symmetrical
             %       dataArray: double[nCols,nRows,nTimePoints]
             %               /double[nRows,nTimes] - data array
             %       timeVec: double[1,nTimePoints] -
@@ -34,9 +32,9 @@ classdef MatrixColTriuSymmCubicSpline<gras.interp.MatrixColTriuCubicSpline
             import gras.interp.MatrixColTriuSymmCubicSpline
             import modgen.common.throwerror;
             self=self@gras.interp.MatrixColTriuCubicSpline(varargin{:});
-            if nargin==2
+            if nargin>1
                 dataArray=varargin{1};
-                nTimePoints=length(varargin{2});
+                nTimePoints=size(dataArray,3);
                 symmCheckTol=MatrixColTriuSymmCubicSpline.CHECK_MATRIX_SYMMETRY_TOL;
                 for iTime=1:nTimePoints
                     if (max(max(abs(dataArray(:,:,iTime)-...
@@ -49,7 +47,7 @@ classdef MatrixColTriuSymmCubicSpline<gras.interp.MatrixColTriuCubicSpline
                             iTime);
                     end
                 end
-            end
+            end            
         end
     end
 end

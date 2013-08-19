@@ -13,6 +13,7 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.IEllApxBuilder
     end
     properties (SetAccess=private,GetAccess=protected)
         calcPrecision
+        absTol
     end
     properties (Constant,GetAccess=private)
         MAX_PRECISION_FACTOR=0.003;
@@ -69,6 +70,9 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.IEllApxBuilder
                 timeLimsVec,nTimePoints,calcPrecision)
             import gras.ellapx.gen.ATightEllApxBuilder;
             import modgen.common.throwerror;
+            import gras.la.ismatposdef;            
+            ABS_TOL_FACTOR=1e-2;%this is a temporary measure until 
+            %we specify absTol and relTol separately
             if ~isa(pDefObj,...
                     'gras.ellapx.lreachplain.probdyn.IReachProblemDynamics')
                 throwerror('wrongInput','incorrect type of pDefObj');
@@ -91,6 +95,13 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.IEllApxBuilder
             self.odeAbsCalcPrecision=calcPrecision*precisionFactor;
             self.odeRelCalcPrecision=calcPrecision*precisionFactor;
             self.calcPrecision=calcPrecision;
+            self.absTol=calcPrecision*ABS_TOL_FACTOR;
+            %
+            x0Mat = pDefObj.getX0Mat();            
+            if ~ismatposdef(x0Mat, self.absTol)
+                throwerror('wrongInput',...
+                    'Initial set is not positive definite.');
+            end            
             %% check that there is no disturbance
             self.pDefObj=pDefObj;
             self.goodDirSetObj=goodDirSetObj;

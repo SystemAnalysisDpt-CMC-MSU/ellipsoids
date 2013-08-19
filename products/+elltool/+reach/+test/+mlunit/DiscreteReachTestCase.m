@@ -12,7 +12,7 @@ classdef DiscreteReachTestCase < mlunitext.test_case
         expDim
         fundCMat
     end
-    methods (Static)
+    methods (Access=protected)
         function fundCMat = calculateFundamentalMatrix(self)
             k0 = self.tIntervalVec(1);
             k1 = self.tIntervalVec(2);
@@ -115,7 +115,8 @@ classdef DiscreteReachTestCase < mlunitext.test_case
                 directionsCVec{iDirection}(:, 1) = l0Vec;
                 for kTime = 1:nTimeStep - 1
                     lVec = self.fundCMat{1, kTime + 1}' * l0Vec;
-                    directionsCVec{iDirection}(:, kTime + 1) = lVec;
+                    directionsCVec{iDirection}(:, kTime + 1) = ...
+                        lVec./norm(lVec);
                 end
             end
             
@@ -158,6 +159,8 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             k1 = self.tIntervalVec(2);
             
             nDirections = size(self.l0Mat, 2);
+            nDims=size(self.l0Mat, 1);
+            %
             pCMat = self.linSys.getUBoundsEll().shape;
             
             syms t;
@@ -174,35 +177,36 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             else
                 tVec = k0:k1;
             end
-            
-            [directionsCVec ~] = self.reachObj.get_directions();
+            %
             [trCenterMat ~] = self.reachObj.get_center();
-            
+            [directionsList,~]=self.reachObj.get_directions();
+            %
             x0Mat = double(self.x0Ell);
-            
+            %
             supFunMat = zeros(nTimeStep, nDirections);
-            
             for iDirection = 1:nDirections
                 lVec = self.l0Mat(:, iDirection);
                 supFunMat(1, iDirection) = sqrt(lVec' * x0Mat * lVec);
                 for kTime = 1:nTimeStep - 1
                     if isBack
+                        ltVec= self.fundCMat{1, kTime}' * lVec;
                         supFunMat(kTime + 1, iDirection) = ...
                             supFunMat(kTime, iDirection) + ...
-                            sqrt(lVec' * self.fundCMat{1, kTime} * ...
-                            rMatCalc(tVec(kTime + 1)) * self.fundCMat{1, kTime}' * lVec);
+                            sqrt(ltVec.' * ...
+                            rMatCalc(tVec(kTime + 1)) * ltVec);
                     else
+                        ltVec= self.fundCMat{1, kTime + 1}' * lVec;
                         supFunMat(kTime + 1, iDirection) = ...
                             supFunMat(kTime, iDirection) + ...
-                            sqrt(lVec' * self.fundCMat{1, kTime + 1} * ...
-                            rMatCalc(tVec(kTime)) * self.fundCMat{1, kTime + 1}' * lVec);
+                            sqrt(ltVec'*rMatCalc(tVec(kTime)) * ltVec);
                     end
                 end
-                
+                %
                 for kTime = 1:nTimeStep
-                    curDirectionVec = directionsCVec{iDirection}(:, kTime);
-                    supFunMat(kTime, iDirection) = supFunMat(kTime, iDirection) + ...
-                        curDirectionVec' * trCenterMat(:, kTime);
+                    curDirectionVec=self.fundCMat{1, kTime}' * lVec;
+                    normVal=norm(curDirectionVec);
+                    supFunMat(kTime, iDirection) = supFunMat(kTime, iDirection)./normVal + ...
+                        curDirectionVec' * trCenterMat(:, kTime)./normVal;
                 end
             end
             
@@ -227,7 +231,7 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             self.tIntervalVec = reachFactObj.getTVec();
             self.x0Ell = reachFactObj.getX0Ell();
             self.l0Mat = reachFactObj.getL0Mat();
-            self.fundCMat = self.calculateFundamentalMatrix(self);
+            self.fundCMat = self.calculateFundamentalMatrix();
         end
         
         function self = testGetSystem(self)
@@ -241,7 +245,7 @@ classdef DiscreteReachTestCase < mlunitext.test_case
         
         function self = testGetCenter(self)
             [trCenterMat ~] = self.reachObj.get_center();
-            expectedTrCenterMat = self.calculateTrajectoryCenterMat(self);
+            expectedTrCenterMat = self.calculateTrajectoryCenterMat();
             
             isEqual =...
                 all(max(abs(expectedTrCenterMat - trCenterMat), [], 1)...
@@ -250,7 +254,7 @@ classdef DiscreteReachTestCase < mlunitext.test_case
         end
         
         function self = testGetDirections(self)
-            expectedDirectionsCVec = self.calculateDirectionsCVec(self);
+            expectedDirectionsCVec = self.calculateDirectionsCVec();
             [directionsCVec ~] = self.reachObj.get_directions();
             
             nDirections = size(self.l0Mat, 2);
@@ -263,7 +267,7 @@ classdef DiscreteReachTestCase < mlunitext.test_case
         end
         
         function self = testGetGoodCurves(self)
-            expectedGoodCurvesCVec = self.calculateGoodCurvesCVec(self);
+            expectedGoodCurvesCVec = self.calculateGoodCurvesCVec();
             [goodCurvesCVec ~] = self.reachObj.get_goodcurves();
             
             k0 = self.tIntervalVec(1);
@@ -286,7 +290,7 @@ classdef DiscreteReachTestCase < mlunitext.test_case
         end
         
         function self = testGetEa(self)
-            expectedSupFunMat = self.calculateSupFunMat(self);
+            expectedSupFunMat = self.calculateSupFunMat();
             
             k0 = self.tIntervalVec(1);
             k1 = self.tIntervalVec(2);
@@ -316,7 +320,7 @@ classdef DiscreteReachTestCase < mlunitext.test_case
         end
         
         function self = testGetIa(self)
-            expectedSupFunMat = self.calculateSupFunMat(self);
+            expectedSupFunMat = self.calculateSupFunMat();
             
             k0 = self.tIntervalVec(1);
             k1 = self.tIntervalVec(2);
@@ -341,7 +345,7 @@ classdef DiscreteReachTestCase < mlunitext.test_case
             
             isEqual = all(max(abs(expectedSupFunMat - eaSupFunValueMat), [], 2) < ...
                 self.COMP_PRECISION);
-            
+            %
             mlunitext.assert_equals(true, isEqual);
         end
     end
