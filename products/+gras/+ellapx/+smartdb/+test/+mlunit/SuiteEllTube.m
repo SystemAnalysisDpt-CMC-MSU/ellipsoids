@@ -9,6 +9,7 @@ classdef SuiteEllTube < mlunitext.test_case
             close all;
         end
         function testProjectTouch(~)
+            import gras.ellapx.smartdb.rels.EllUnionTube;
             rel = gras.ellapx.smartdb...
                 .test.mlunit.EllTubePlotTestCase.createTube(1);
             projSpaceList = {[1 0; 0 1].'};
@@ -18,9 +19,9 @@ classdef SuiteEllTube < mlunitext.test_case
             %
             %
             ellTubeUnionRel=...
-                EllUnionTubeStaticProj.fromEllTubes(relStatProj);
+                gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.fromEllTubes(relStatProj);
             ellTubeUnionRel = ...
-                EllUnionTube.fromEllTubes(rel);
+                gras.ellapx.smartdb.rels.EllUnionTube.fromEllTubes(rel);
             
             function [projOrthMatArray, projOrthMatTransArray] =...
                     fGetProjMat(projMat, timeVec, varargin)
@@ -282,6 +283,7 @@ classdef SuiteEllTube < mlunitext.test_case
         end
         %
         function testProjectionAndScale(~)
+            import gras.ellapx.proj.EllTubeStaticSpaceProjector;
             relProj=gras.ellapx.smartdb.rels.EllTubeProj(); %#ok<NASGU>
             %
             nPoints = 5;
