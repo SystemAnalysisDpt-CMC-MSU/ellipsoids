@@ -31,6 +31,37 @@ classdef SuiteEllTube < mlunitext.test_case
                     [1,1,nTimePoints]);
             end
         end
+        function testProjectionOneDimension(~)
+            import gras.ellapx.smartdb.RelDispConfigurator;
+            import gras.ellapx.smartdb.rels.EllUnionTube;
+            import gras.ellapx.proj.EllTubeStaticSpaceProjector;
+            n = 4;
+            T = 1;
+            q11 = @(t)[ cos(2*pi*t/n) sin(2*pi*t/n) ; -sin(2*pi*t/n)  cos(2*pi*t/n) ];
+            ltGDir = [];
+            QArrList = cell(n+1,1);
+            sTime =1;
+            timeVec = 1:T;
+            for i= 0:n
+                ltGDir = [ltGDir ([1 0]*q11(i))'];
+                QArrListTemp = repmat(q11(i)'*diag([1 4])*q11(i),[1,1,T]);
+                QArrList{i+1} = QArrListTemp;
+            end
+            
+            ltGDir = repmat(ltGDir,[1 1 T]);
+            aMat = repmat([1 0]',[1,T]);
+            approxType = gras.ellapx.enums.EApproxType(1);
+            calcPrecision = 10^(-3);
+            rel = gras.ellapx.smartdb.rels.EllUnionTube.fromEllTubes(gras.ellapx.smartdb.rels.EllTube.fromQArrays(QArrList',aMat...
+                ,timeVec,ltGDir,sTime',approxType,...
+                char.empty(1,0),char.empty(1,0),...
+                calcPrecision));
+            projSpaceList = {eye(1, 2)};
+            projType = gras.ellapx.enums.EProjType.Static;
+            
+            projObj=EllTubeStaticSpaceProjector(projSpaceList);
+            relStatProj=projObj.project(rel);
+        end
         %
         function testSizeConsistency(self)
             nPoints=3;
@@ -267,14 +298,14 @@ classdef SuiteEllTube < mlunitext.test_case
                 'UniformOutput',false);
             unionEllTube = EllUnionTube.fromEllTubes(rel);
             %
-            check([1 0]);            
+            check([1 0]);
             check([0 -1]);
             check([1 -1]);
             function check(projMat)
-                rel0Proj=unionEllTube.projectStatic(projMat); 
+                rel0Proj=unionEllTube.projectStatic(projMat);
                 [isOk,reportStr]=rel0Proj.isEqual(rel0Proj);
                 mlunitext.assert(isOk,reportStr);
-                %                
+                %
                 rel1Proj=rel.projectStatic(projMat);
                 rel2Proj=rel.projectStatic({projMat});
                 [isPos,reportStr]=rel1Proj.isEqual(rel2Proj);
@@ -306,7 +337,7 @@ classdef SuiteEllTube < mlunitext.test_case
             projMatList={[1 0 1;0 1 1],[1 0 0;0 1 0]};
             projObj=EllTubeStaticSpaceProjector(projMatList);
             relProj=projObj.project(rel);
-           
+            
             
             
             relProj.plot();
@@ -558,7 +589,7 @@ classdef SuiteEllTube < mlunitext.test_case
                 QArrayList=createQArrayList(ones(1,nDims));
                 %aMat=zeros(nDims,nPoints);
                 timeVec=indStart:(indStart+nPoints-1);
-                aMat=repmat(sin(timeVec/10),nDims,1);                
+                aMat=repmat(sin(timeVec/10),nDims,1);
                 sTime=indSTime;
                 approxType=gras.ellapx.enums.EApproxType.Internal;
                 %
