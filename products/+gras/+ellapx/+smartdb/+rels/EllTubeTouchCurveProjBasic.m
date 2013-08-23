@@ -105,12 +105,8 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
             import modgen.common.type.simple.checkgen;
             import gras.ellapx.smartdb.RelDispConfigurator;
             import modgen.graphics.camlight;
-
+            %
             title(hAxes,axesName);
-%             checkgen(projSTimeMat,@(x)size(x,1)==2);
-%             indDimVec=find(sum(projSTimeMat));
-%             yLabel=sprintf('x_%d',indDimVec(1));
-%             zLabel=sprintf('x_%d',indDimVec(2));
             if size(projSTimeMat,2) == 2
                 yLabel = ['[',num2str(projSTimeMat(:,1)','%.2g '),']',];
                 zLabel = ['[',num2str(projSTimeMat(:,2)','%.2g '),']',];
