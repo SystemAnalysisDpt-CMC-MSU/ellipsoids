@@ -105,7 +105,7 @@ classdef MatVector
                     nCols*nTimePoints,1);
                 bSparseMat = sparse(iVec,jVec,bMat, ...
                     nCols*nTimePoints,nTimePoints,nCols*nTimePoints);
-                cMat = reshape(aArray,nRows,nCols*nTimePoints)*bSparseMat;
+                cMat = full(reshape(aArray,nRows,nCols*nTimePoints)*bSparseMat);
             else
                 cMat = zeros(nRows,nTimePoints);
                 for iTimePoint = 1:nTimePoints

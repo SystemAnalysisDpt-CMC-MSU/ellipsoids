@@ -157,9 +157,11 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 %
                 isLtTouchVec=ltGoodDirNormVec>absTol;
                 %
-                ltGoodDirMat(:,isLtTouchVec)=ltGoodDirMat(:,isLtTouchVec)./...
-                    repmat(ltGoodDirNormVec(isLtTouchVec),...
-                    size(ltGoodDirMat,1),1);
+                if any(isLtTouchVec)
+                    ltGoodDirMat(:,isLtTouchVec)=ltGoodDirMat(:,isLtTouchVec)./...
+                        repmat(ltGoodDirNormVec(isLtTouchVec),...
+                        size(ltGoodDirMat,1),1);
+                end
                 %
                 STubeData.ltGoodDirMat{iLDir}=ltGoodDirMat;
                 STubeData.lsGoodDirVec{iLDir}=lsGoodDirVec;
@@ -754,8 +756,10 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                         isPosVec=ltProjGoodDirNormVec>absTol;                        
                         %
                         tubeProjDataCMat{iGroup,iProj}.ltGoodDirOrigProjMat{iLDir}=ltGoodDirMat;
-                        tubeProjDataCMat{iGroup,iProj}.ltGoodDirOrigProjMat{iLDir}(:,isPosVec)=...
-                            ltGoodDirMat(:,isPosVec)./repmat(ltProjGoodDirNormVec(isPosVec),dimProj,1);
+                        if any(isPosVec)
+                            tubeProjDataCMat{iGroup,iProj}.ltGoodDirOrigProjMat{iLDir}(:,isPosVec)=...
+                                ltGoodDirMat(:,isPosVec)./repmat(ltProjGoodDirNormVec(isPosVec),dimProj,1);
+                        end
                         tubeProjDataCMat{iGroup,iProj}.ltGoodDirNormOrigProjVec{iLDir}=...
                             ltGoodDirNormOrigVec.*ltProjGoodDirNormVec;
                         %
