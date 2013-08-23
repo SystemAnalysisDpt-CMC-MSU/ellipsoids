@@ -263,6 +263,7 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
         %
         function checkDataConsistency(self)
             import gras.gen.SquareMatVector;
+            import modgen.common.throwerror;
             %
             ABS_TOL=1e-14;
             if self.getNTuples()>0
@@ -318,7 +319,14 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
                 self.checkSVsTConsistency(self.ltGoodDirNormVec,...
                     self.ltGoodDirNormOrigProjVec,isnZeroNormVecList,...
                     'ltGoodDirNormVec','ltGoodDirNormOrigProjVec',...
-                    fCheck);                     
+                    fCheck);  
+                fCheck=@(x,y,z,v)(size(x,1)==y)&&(size(x,2)==numel(z))&&...
+                    (size(x,3)==numel(v))&&(ndims(z)<=3);
+                isOkVec=cellfun(fCheck,self.projArray,num2cell(self.dim),...
+                    self.lsGoodDirOrigVec,self.timeVec);
+                if ~all(isOkVec)
+                    throwerror('wrongInput','projArray has inconsistent size');
+                end
                 %
             end
             function checkEqualSize(aArr,bArr,aName,bName)

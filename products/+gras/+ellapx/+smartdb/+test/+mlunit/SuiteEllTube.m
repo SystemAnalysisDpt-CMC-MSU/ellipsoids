@@ -91,32 +91,78 @@ classdef SuiteEllTube < mlunitext.test_case
             end
         end
         %
-        function testCutAndCat(~)
+        function testCut(~)
+            calcPrecision=0.001;
+            nTubes=3;
+            nDims=2;
+            cutTimeVec = [20, 80];
+            nPoints=100;
+            %
+            timeVec = 1 : nPoints;
+            [rel,relProj]=create(timeVec);
+            checkMaster(relProj,2);
+            checkMaster(rel,1);            
+            %
+            function checkMaster(rel,outNum)
+                check(rel,cutTimeVec,outNum);
+                check(rel,timeVec(end)/2,outNum);
+            end
+            function check(rel,cutTimeVec,outNum)
+                cutRel = rel.cut([cutTimeVec(1),cutTimeVec(end)]);
+                outList=cell(1,2);
+                [outList{:}]=create(cutTimeVec(1):cutTimeVec(end));
+                expRel=outList{outNum};
+                %
+                fieldToExcludeList = rel.getNoCatOrCutFieldsList();                
+                fieldList = setdiff(cutRel.getFieldNameList(),fieldToExcludeList);
+                %
+                [isOk,reportStr] = ...
+                    cutRel.getFieldProjection(fieldList).isEqual(...
+                    expRel.getFieldProjection(fieldList));
+                mlunitext.assert(isOk, reportStr);                 
+            end
+            %
+            function [rel,varargout] = create(timeVec)
+                if nargin==0
+                    rel=gras.ellapx.smartdb.rels.EllTube();
+                else
+                    nPoints = numel(timeVec);
+                    aMat=zeros(nDims,nPoints);
+                    %
+                    QArray = zeros(nDims,nDims,nPoints);
+                    for iPoint = 1:nPoints
+                        QArray(:,:,iPoint) = timeVec(iPoint)*eye(nDims);
+                    end
+                    QArrayList=repmat({QArray},1,nTubes);
+                    %
+                    ltSingleGoodDirArray = zeros(nDims,1,nPoints);
+                    for iPoint = 1:nPoints
+                        ltSingleGoodDirArray(:,:,iPoint) = ...
+                            timeVec(iPoint)*eye(nDims,1);
+                    end
+                    ltGoodDirArray=repmat(ltSingleGoodDirArray,1,nTubes);
+                    %
+                    rel = gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
+                        QArrayList,aMat,timeVec,ltGoodDirArray,timeVec(1),...
+                        gras.ellapx.enums.EApproxType.Internal,...
+                        char.empty(1,0),char.empty(1,0),calcPrecision);
+                    if nargout>1
+                        projMatList = {[1 0; 0 1].'};
+                        %
+                        relStatProj=rel.projectStatic(projMatList);
+                        varargout{1}=relStatProj;
+                    end                    
+                end
+            end            
+        end
+        function testCat(~)
             nDims=2;
             nTubes=3;
             calcPrecision=0.001;
-            cutTimeVec = [20, 80];
             timeVec = 1 : 100;
             evolveTimeVec = 101 : 200;
             rel=create();
             fieldToExcludeList = rel.getNoCatOrCutFieldsList();
-            % cut: test interval
-            rel = create(timeVec);
-            cutRel = rel.cut(cutTimeVec);
-            expRel = create(cutTimeVec(1) : cutTimeVec(2));
-            fieldList = setdiff(fieldnames(cutRel),fieldToExcludeList);
-            [isOk,reportStr] = ...
-                cutRel.getFieldProjection(fieldList).isEqual(...
-                expRel.getFieldProjection(fieldList));
-            mlunitext.assert(isOk, reportStr);
-            % cut: test point
-            rel = create(timeVec);
-            cutRel = rel.cut(timeVec(end) / 2);
-            expRel = create(timeVec(end) / 2);
-            [isOk,reportStr] = ...
-                cutRel.getFieldProjection(fieldList).isEqual(...
-                expRel.getFieldProjection(fieldList));
-            mlunitext.assert(isOk, reportStr);
             % cat: test
             firstRel = create(timeVec);
             secondRel = create(evolveTimeVec);
@@ -129,6 +175,7 @@ classdef SuiteEllTube < mlunitext.test_case
                 setdiff(fieldToExcludeList,{'sTime','indSTime'})));
             mlunitext.assert(isOk);
             function check()
+                fieldList = setdiff(catRel.getFieldNameList(),fieldToExcludeList);
                 [isOk,reportStr] = ...
                     catRel.getFieldProjection(fieldList).isEqual(...
                     expRel.getFieldProjection(fieldList));
@@ -607,14 +654,14 @@ classdef SuiteEllTube < mlunitext.test_case
                 varargout{1}=rel;
                 %
                 if nargout>1
-                    projSpaceList = {[1 0; 0 1].'};
+                    projMatList = {[1 0; 0 1].'};
                     %
                     projType=gras.ellapx.enums.EProjType.Static;
-                    relStatProj=rel.project(projType,projSpaceList,@fGetProjMat);
+                    relStatProj=rel.project(projType,projMatList,@fGetProjMat);
                     varargout{2}=relStatProj;
                     if nargout>2
                         projType=gras.ellapx.enums.EProjType.DynamicAlongGoodCurve;
-                        relDynProj=rel.project(projType,projSpaceList,@fGetProjMat);
+                        relDynProj=rel.project(projType,projMatList,@fGetProjMat);
                         varargout{3}=relDynProj;
                     end
                 end

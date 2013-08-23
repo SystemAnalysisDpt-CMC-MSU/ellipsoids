@@ -1348,39 +1348,34 @@ classdef AReach < elltool.reach.IReach
                 throwerror('wrongInput',...
                     'Time vector must consist of one or two elements.');
             end
-            if self.isProj
-                throwerror('wrongInput',...
-                    'Method cut does not work with projections.');
-            else
-                cutObj = self.getCopy();
-                if cutTimeVec(1) > cutTimeVec(end)
-                    cutTimeVec = fliplr(cutTimeVec);
-                end
-                switchTimeVec = self.switchSysTimeVec;
-                cutObj.ellTubeRel = self.ellTubeRel.cut(cutTimeVec);
-                switchTimeIndVec =...
-                    switchTimeVec > cutTimeVec(1) &...
-                    switchTimeVec < cutTimeVec(end);
-                switchSystemsTimeVec = [cutTimeVec(1)...
-                    switchTimeVec(switchTimeIndVec) cutTimeVec(end)];
-                if cutTimeVec(1) == cutTimeVec(end)
-                    switchSystemsTimeVec = switchSystemsTimeVec(1:end - 1);
-                end
-                cutObj.switchSysTimeVec = switchSystemsTimeVec;
-                firstIntInd = find(switchTimeIndVec == true, 1);
-                if ~isempty(firstIntInd)
-                    switchTimeIndVec(firstIntInd - 1) = true;
-                else
-                    firstGreaterInd =...
-                        find(switchTimeVec >= cutTimeVec(end), 1);
-                    switchTimeIndVec(max(1, firstGreaterInd - 1)) = true;
-                end
-                maxIncludedInd = find(switchTimeIndVec == 1, 1, 'last');
-                switchTimeIndVec(1 : maxIncludedInd) = true;
-                cutObj.linSysCVec =...
-                    self.linSysCVec(switchTimeIndVec(1 : end - 1));
-                cutObj.isCut = true;
+            cutObj = self.getCopy();
+            if cutTimeVec(1) > cutTimeVec(end)
+                cutTimeVec = fliplr(cutTimeVec);
             end
+            switchTimeVec = self.switchSysTimeVec;
+            cutObj.ellTubeRel = self.ellTubeRel.cut(cutTimeVec);
+            switchTimeIndVec =...
+                switchTimeVec > cutTimeVec(1) &...
+                switchTimeVec < cutTimeVec(end);
+            switchSystemsTimeVec = [cutTimeVec(1)...
+                switchTimeVec(switchTimeIndVec) cutTimeVec(end)];
+            if cutTimeVec(1) == cutTimeVec(end)
+                switchSystemsTimeVec = switchSystemsTimeVec(1:end - 1);
+            end
+            cutObj.switchSysTimeVec = switchSystemsTimeVec;
+            firstIntInd = find(switchTimeIndVec == true, 1);
+            if ~isempty(firstIntInd)
+                switchTimeIndVec(firstIntInd - 1) = true;
+            else
+                firstGreaterInd =...
+                    find(switchTimeVec >= cutTimeVec(end), 1);
+                switchTimeIndVec(max(1, firstGreaterInd - 1)) = true;
+            end
+            maxIncludedInd = find(switchTimeIndVec == 1, 1, 'last');
+            switchTimeIndVec(1 : maxIncludedInd) = true;
+            cutObj.linSysCVec =...
+                self.linSysCVec(switchTimeIndVec(1 : end - 1));
+            cutObj.isCut = true;
         end
         %
         function copyReachObjArr = getCopy(self,varargin)

@@ -954,6 +954,50 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     SData.(fieldName), 'UniformOutput', false);
             end
         end
+        % CUT - extracts the piece of the relation object from given start time to
+        %       given end time.
+        % Input:
+        %  regular:
+        %     self.
+        %     cutTimeVec: double[1, 2]/ double[1, 1] - time interval to cut
+        %
+        % Output:
+        % cutEllTubeRel: smartdb.relation.StaticRelation[1, 1]/
+        %      smartdb.relation.DynamicRelation[1, 1] - relation object resulting
+        %      from CUT operation
+        function cutEllTubeRel = cut(self, cutTimeVec)
+            import gras.ellapx.smartdb.F;
+            import modgen.common.throwerror;
+            %
+            if numel(cutTimeVec) == 1
+                cutTimeVec = [cutTimeVec(1) cutTimeVec(1)];
+            end
+            if numel(cutTimeVec) ~= 2
+                throwerror('wrongInput', ['input vector should ',...
+                    'contain 1 or 2 elements.']);
+            end
+            cutStartTime = cutTimeVec(1);
+            cutEndTime = cutTimeVec(2);
+            if cutStartTime > cutEndTime
+                throwerror('wrongInput', 's0 must be less or equal than s1.');
+            end
+            timeVec = self.timeVec{1};
+            startTime = timeVec(1);
+            endTime = timeVec(end);
+            %
+            if cutStartTime < startTime ||...
+                    cutStartTime > endTime ||...
+                    cutEndTime < startTime ||...
+                    cutEndTime > endTime
+                throwerror('wrongInput',...
+                    'cutTimeVec is out of allowed range');
+            end
+            %
+            isWithinVec=(timeVec<=cutEndTime)&(timeVec>=cutStartTime);
+            resTimeVec=union(timeVec(isWithinVec),cutTimeVec);
+            %
+            cutEllTubeRel=self.interp(resTimeVec);
+        end        
     end
     methods (Access=protected)
         function [isPos, reportStr] = isEqualAdjustedInternal(self, ellTubeObj, varargin)

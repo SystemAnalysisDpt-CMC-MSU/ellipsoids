@@ -29,7 +29,6 @@ import modgen.common.checkmultvar;
 checkmultvar(['size(x1,1)==2&&size(x1,2)==2&&size(x2,1)==2&&',...
     'size(x1,3)==size(x2,2)&&ndims(x1)<=3&&ismatrix(x2)'],2,QArray,aMat);
 %
-checkvar(QArray,'size(x,1)==2&&size(x,2)==2');
 qSizeVec=[size(QArray),1];
 aMat=aMat(:).';
 aaMat=aMat(ones(1,nSPoints),:);
