@@ -19,29 +19,13 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
         end
         %
         function axesName=axesGetKeyTubeFunc(self,~,projSTimeMat,varargin)
-            if size(projSTimeMat,2) == 2
-                axesName=['Ellipsoidal tubes, proj. on subspace [',...
-                    num2str(projSTimeMat(:,1)','%.2g '),';',...
-                    num2str(projSTimeMat(:,2)','%.2g '),']'];
-            else
-                axesName=['Ellipsoidal tubes, proj. on subspace [',...
-                    num2str(projSTimeMat(:,1)','%.2g '),';',...
-                    num2str(projSTimeMat(:,2)','%.2g '),';',...
-                    num2str(projSTimeMat(:,3)','%.2g '),']'];
-            end
+            axesName = ['Ellipsoidal tubes, proj. on subspace ',...
+                projMat2str(projSTimeMat)];
         end
         %
         function axesName=axesGetKeyGoodCurveFunc(self,~,projSTimeMat,varargin)
-            if size(projSTimeMat,2) == 2
-                axesName=['Good directions: proj. on subspace [',...
-                    num2str(projSTimeMat(:,1)','%.2g '),';',...
-                    num2str(projSTimeMat(:,2)','%.2g '),']'];
-            else
-                axesName=['Good directions: proj. on subspace [',...
-                    num2str(projSTimeMat(:,1)','%.2g '),';',...
-                    num2str(projSTimeMat(:,2)','%.2g '),';',...
-                    num2str(projSTimeMat(:,3)','%.2g '),']'];
-            end
+            axesName = ['Good directions: proj. on subspace ',...
+                projMat2str(projSTimeMat)];
         end
         function hVec=axesPostPlotFunc(self,isHold,hAxes,varargin)
             if isHold
@@ -107,14 +91,14 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
             import modgen.graphics.camlight;
             %
             title(hAxes,axesName);
-            if size(projSTimeMat,2) == 2
-                yLabel = ['[',num2str(projSTimeMat(:,1)','%.2g '),']',];
-                zLabel = ['[',num2str(projSTimeMat(:,2)','%.2g '),']',];
+            if size(projSTimeMat,1) == 2
+                yLabel = ['[',num2str(projSTimeMat(1,:),'%.2g '),']',];
+                zLabel = ['[',num2str(projSTimeMat(2,:),'%.2g '),']',];
                 xLabel='time';
             else
-                xLabel = ['[',num2str(projSTimeMat(:,1)','%.2g '),']',];
-                yLabel = ['[',num2str(projSTimeMat(:,2)','%.2g '),']',];
-                zLabel = ['[',num2str(projSTimeMat(:,3)','%.2g '),']',];
+                xLabel = ['[',num2str(projSTimeMat(1,:),'%.2g '),']',];
+                yLabel = ['[',num2str(projSTimeMat(2,:),'%.2g '),']',];
+                zLabel = ['[',num2str(projSTimeMat(3,:),'%.2g '),']',];
             end
             %
             set(hAxes,'XLabel',...
@@ -340,4 +324,16 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
             end
         end
     end
+end
+function projStrName = projMat2str(projSTimeMat)
+projStrName = '[';
+for iDim = 1: size(projSTimeMat,1)
+    projStrName=[projStrName,...
+        num2str(projSTimeMat(iDim,:),'%.2g ')];
+    if iDim < size(projSTimeMat,1)
+        projStrName = [projStrName, ';'];
+    else
+        projStrName = [projStrName, ']'];
+    end
+end
 end
