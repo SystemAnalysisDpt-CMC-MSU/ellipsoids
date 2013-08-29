@@ -324,12 +324,11 @@ classdef ContinuousReachTestCase < mlunitext.test_case
             end
         end
         %
-        function self = testNegativeCut(self)
+        function self = testProjectionCut(self)
             projReachObj =...
                 self.reachObj.projection(eye(self.reachObj.dimension(), 2));
             newTimeVec = [sum(self.tVec)/2, self.tVec(2)];
-            self.runAndCheckError('projReachObj.cut(newTimeVec)',...
-                'wrongInput');
+            projReachObj.cut(newTimeVec);
         end
         %
         function self = testNegativePlot(self)
