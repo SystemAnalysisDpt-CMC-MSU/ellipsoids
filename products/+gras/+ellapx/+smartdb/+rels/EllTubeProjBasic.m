@@ -71,7 +71,7 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                 varargin)
             import gras.ellapx.smartdb.PlotPropProcessor;
             import modgen.common.parseparext;
-            
+            import modgen.common.throwerror;
             plotSpecFieldListDefault = {'approxType'};
             colorFieldListDefault = {'approxType'};
             alphaFieldListDefault = {'approxType'};
@@ -458,7 +458,6 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
             import gras.ellapx.smartdb.rels.EllTubeProjBasic;
             import modgen.logging.log4j.Log4jConfigurator;
             import modgen.common.throwerror;
-            %
             PLOT_FULL_FIELD_LIST =...
                 {'projType','timeVec','lsGoodDirOrigVec',...
                 'ltGoodDirMat','sTime','xTouchCurveMat',...
