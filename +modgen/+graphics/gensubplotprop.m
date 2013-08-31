@@ -23,7 +23,11 @@ function theAxis = gensubplotprop(nRows, nCols, plotId, varargin)
             %             System Analysis Department 2013 $
             %
 inset = [.2, .18, .04, .1];
+%
 parent = get(0, 'CurrentFigure');
+%
+[~,~,parent]=modgen.common.parseparext(varargin,{'Parent';parent});
+%
 ancestorFigure = parent;
 if ~isempty(parent) && ~isempty(get(parent, 'CurrentAxes'))
     parent = get(get(parent, 'CurrentAxes'), 'Parent');
