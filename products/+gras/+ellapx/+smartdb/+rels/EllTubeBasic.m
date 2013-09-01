@@ -243,14 +243,14 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 STubeData.approxSchemaName=approxSchemaName;
             else
                 STubeData.approxSchemaName=repmat({approxSchemaName},...
-                nLDirs,1);
+                    nLDirs,1);
             end
             %
             if iscell(approxSchemaDescr)
                 STubeData.approxSchemaDescr=approxSchemaDescr;
             else
                 STubeData.approxSchemaDescr=repmat({approxSchemaDescr},...
-                nLDirs,1);
+                    nLDirs,1);
             end
             %
             STubeData.ltGoodDirMat=cell(nLDirs,1);
@@ -753,7 +753,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                         %recalculate norms of projections
                         ltProjGoodDirNormVec=...
                             realsqrt(dot(ltGoodDirMat,ltGoodDirMat,1));
-                        isPosVec=ltProjGoodDirNormVec>absTol;                        
+                        isPosVec=ltProjGoodDirNormVec>absTol;
                         %
                         tubeProjDataCMat{iGroup,iProj}.ltGoodDirOrigProjMat{iLDir}=ltGoodDirMat;
                         if any(isPosVec)
@@ -997,7 +997,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             resTimeVec=union(timeVec(isWithinVec),cutTimeVec);
             %
             cutEllTubeRel=self.interp(resTimeVec);
-        end        
+        end
     end
     methods (Access=protected)
         function [isPos, reportStr] = isEqualAdjustedInternal(self, ellTubeObj, varargin)

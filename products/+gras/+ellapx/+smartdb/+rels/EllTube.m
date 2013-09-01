@@ -640,7 +640,7 @@ classdef EllTube<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&...
             %
             % Output:
             %   regular:
-            %       ellTubeProjRel: gras.ellapx.smartdb.rels.EllTubeProj[1, 1] - 
+            %       ellTubeProjRel: gras.ellapx.smartdb.rels.EllTubeProj[1, 1] -
             %           elltube projection
             %
             % Example:

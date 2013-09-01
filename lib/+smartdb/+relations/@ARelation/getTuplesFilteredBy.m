@@ -1,6 +1,6 @@
 function [obj,isThereVec]=getTuplesFilteredBy(self,filterFieldName,filterValueVec,...
     varargin)
-% GETTUPLESFILTEREDBY - selects tuples from given relation such that a  
+% GETTUPLESFILTEREDBY - selects tuples from given relation such that a
 %                       fixed index field contains values from a given set
 %                       of value and returns the result as new relation
 %
@@ -8,22 +8,22 @@ function [obj,isThereVec]=getTuplesFilteredBy(self,filterFieldName,filterValueVe
 %   regular:
 %     self: ARelation [1,1] - class object
 %     filterFieldName: char - name of index field
-%     filterValueVec: numeric/ cell of char [nValues,1] - vector of index 
+%     filterValueVec: numeric/ cell of char [nValues,1] - vector of index
 %         values
 %
 %   properties:
 %     keepNulls: logical[1,1] - if true, null values are not filteed out,
-%        and removed otherwise, 
+%        and removed otherwise,
 %           default: false
-%  
+%
 % Output:
 %   regular:
-%     obj: ARelation [1,1] - new class object containing only selected 
+%     obj: ARelation [1,1] - new class object containing only selected
 %         tuples
-%     isThereVec: logical[nTuples,1] - contains true for the kept tuples  
+%     isThereVec: logical[nTuples,1] - contains true for the kept tuples
 %
 %
-% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2012-09-21 $ 
+% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2012-09-21 $
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $

@@ -35,7 +35,7 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
             end
             hVec = [];
         end
-        function isHold = fPostHold(self,isRelPlotterSpec)
+        function isHold = fPostHold(varargin)
             hFigure = get(0,'CurrentFigure');
             if isempty(hFigure)
                 isHold=false;
@@ -44,9 +44,6 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
                 if isempty(hAx)
                     isHold=false;
                 elseif ~ishold(hAx)
-                    if ~isRelPlotterSpec
-                        cla;
-                    end
                     isHold = false;
                 else
                     isHold = true;

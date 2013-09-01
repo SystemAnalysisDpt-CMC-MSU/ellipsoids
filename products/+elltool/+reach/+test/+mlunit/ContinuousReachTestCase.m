@@ -272,15 +272,15 @@ classdef ContinuousReachTestCase < mlunitext.test_case
             checkScalarCut(tStart);
             %
             checkCut([tMid,tEnd]);
-            checkCut([tStart,tMid]);            
+            checkCut([tStart,tMid]);
             %
             function checkScalarCut(tScalar)
-            cutReachObj = self.reachObj.cut(tScalar);
-            cutReachObj.dimension();                
+                cutReachObj = self.reachObj.cut(tScalar);
+                cutReachObj.dimension();
             end
             %
             function checkCut(newTimeVec)
-                import gras.ellapx.enums.EApproxType;    
+                import gras.ellapx.enums.EApproxType;
                 import gras.ellapx.smartdb.F;
                 %
                 cutReachObj = origReachObj.cut(newTimeVec);
@@ -305,7 +305,7 @@ classdef ContinuousReachTestCase < mlunitext.test_case
                         end
                         l0Vec = l0Vec ./ norm(l0Vec);
                         %
-                        newApxTimeVec=newTimeVec;                        
+                        newApxTimeVec=newTimeVec;
                         if isBackward
                             newApxTimeVec=fliplr(newTimeVec);
                         end

@@ -43,41 +43,41 @@ classdef EllTubePlotTestCase < mlunitext.test_case
             plObj = relStatProj.plot();
         end
         function testDifferentProjMat(self)
-             %touchTest
-             import gras.ellapx.smartdb.RelDispConfigurator;
-             import gras.ellapx.smartdb.rels.EllUnionTube;
-             n = 3;
-             T = 2;
-             q11 = @(t)[ cos(2*pi*t/n) sin(2*pi*t/n) ; -sin(2*pi*t/n)  cos(2*pi*t/n) ];
-             ltGDir = [];
-             QArrList = cell(n+1,1);
-             sTime =1;
-             timeVec = 1:T;
-             for i= 0:n
+            %touchTest
+            import gras.ellapx.smartdb.RelDispConfigurator;
+            import gras.ellapx.smartdb.rels.EllUnionTube;
+            n = 3;
+            T = 2;
+            q11 = @(t)[ cos(2*pi*t/n) sin(2*pi*t/n) ; -sin(2*pi*t/n)  cos(2*pi*t/n) ];
+            ltGDir = [];
+            QArrList = cell(n+1,1);
+            sTime =1;
+            timeVec = 1:T;
+            for i= 0:n
                 ltGDir = [ltGDir ([1 0]*q11(i))'];
                 QArrListTemp = repmat(q11(i)'*diag([1 4])*q11(i),[1,1,T]);
                 QArrList{i+1} = QArrListTemp;
-             end
-
-             ltGDir = repmat(ltGDir,[1 1 T]);
-             aMat = repmat([1 0]',[1,T]);
-             approxType = gras.ellapx.enums.EApproxType(1);
-             calcPrecision = 10^(-3);
-             rel = gras.ellapx.smartdb.rels.EllTube.fromQArrays(QArrList',aMat...
+            end
+            
+            ltGDir = repmat(ltGDir,[1 1 T]);
+            aMat = repmat([1 0]',[1,T]);
+            approxType = gras.ellapx.enums.EApproxType(1);
+            calcPrecision = 10^(-3);
+            rel = gras.ellapx.smartdb.rels.EllTube.fromQArrays(QArrList',aMat...
                 ,timeVec,ltGDir,sTime',approxType,...
                 char.empty(1,0),char.empty(1,0),...
                 calcPrecision);
-             projSpaceList = {[1 0; 0 1].'};
-             projSpace2List = {q11(0.523)};
-             projType = gras.ellapx.enums.EProjType.Static;
-             relStatProj = ...
-             rel.project(projType,projSpaceList,@fGetProjMat);
-             relStatProj2 = ...
-             rel.project(projType,projSpace2List,@fGetProjMat);
-             relStatProj.unionWith(relStatProj2);
-
-             RelDispConfigurator.setIsGoodCurvesSeparately(false);
-             pl = relStatProj.plot();
+            projSpaceList = {[1 0; 0 1].'};
+            projSpace2List = {q11(0.523)};
+            projType = gras.ellapx.enums.EProjType.Static;
+            relStatProj = ...
+                rel.project(projType,projSpaceList,@fGetProjMat);
+            relStatProj2 = ...
+                rel.project(projType,projSpace2List,@fGetProjMat);
+            relStatProj.unionWith(relStatProj2);
+            
+            RelDispConfigurator.setIsGoodCurvesSeparately(false);
+            pl = relStatProj.plot();
         end
         function testPlotIntAndExtProperties(self)
             
@@ -176,13 +176,12 @@ classdef EllTubePlotTestCase < mlunitext.test_case
     methods (Static)
         function relStatProj  = createTubeWithProj(dim,ind)
             import gras.ellapx.proj.EllTubeStaticSpaceProjector;
-           
+            
             if dim == 2
                 projSpaceList = {[2 1; 1 3]};
             else
                 projSpaceList = {[2 1 0; 1 3 1; 2 0 0]};
             end
-%             projType = gras.ellapx.enums.EProjType.Static;
             rel = gras.ellapx.smartdb...
                 .test.mlunit.EllTubePlotTestCase.createTube(ind);
             projObj=EllTubeStaticSpaceProjector(projSpaceList);
@@ -204,7 +203,7 @@ classdef EllTubePlotTestCase < mlunitext.test_case
                 Q2ArrListTemp = repmat(q11(i)'*diag([1 0.5])*q11(i),[1,1,nTime]);
                 Q2ArrList{i+1} = Q2ArrListTemp;
             end
-
+            
             ltGDir = repmat(ltGDir,[1 1 nTime]);
             aMat = repmat([0 0]',[1,nTime]);
             approxExtType = gras.ellapx.enums.EApproxType.External;

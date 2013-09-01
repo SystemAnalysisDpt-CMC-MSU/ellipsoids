@@ -6,9 +6,9 @@ function  [plObj,nDim,isHold] = plotgeombodyarr(fIsObjClassName,fDim,...
 %
 % Usage:
 %       plotgeombodyarr(objClassName,rebuildOneDim2TwoDim,calcBodyPoints,
-%       plotPatch,objArr,'Property',PropValue,...) 
+%       plotPatch,objArr,'Property',PropValue,...)
 %       - plots array of objClassName objects
-%           using calcBodyPoints function to calculate points,  
+%           using calcBodyPoints function to calculate points,
 %rebuildOneDim2TwoDim to rebuild one dim ibjects to two dim if it is needed,
 %           plotPatch to plot objects with  setting properties
 %
@@ -32,16 +32,16 @@ function  [plObj,nDim,isHold] = plotgeombodyarr(fIsObjClassName,fDim,...
 %                                            N-th objects array
 %       colorNSpec - same as color1Spec but for bodyNArr.
 %   properties:
-%       'newFigure': logical[1,1] - if 1, 
+%       'newFigure': logical[1,1] - if 1,
 %                   each plot command will open a new figure window.
 %                    Default value is 0.
 %       'fill': logical[1,1]/logical[dim11Size,dim12Size,...,dim1kSize]  -
-%               if 1, ellipsoids in 2D will be filled with color. 
+%               if 1, ellipsoids in 2D will be filled with color.
 %               Default value is 0.
 %       'lineWidth': double[1,1]/double[dim11Size,dim12Size,...,dim1kSize]  -
 %                    line width for 1D and 2D plots. Default value is 1.
 %       'color': double[1,3]/double[dim11Size,dim12Size,...,dim1kSize,3] -
-%                sets default colors in the form [x y z]. 
+%                sets default colors in the form [x y z].
 %                   Default value is [1 0 0].
 %       'shade': double[1,1]/double[dim11Size,dim12Size,...,dim1kSize]  -
 %      level of transparency between 0 and 1 (0 - transparent, 1 - opaque).
@@ -57,7 +57,7 @@ function  [plObj,nDim,isHold] = plotgeombodyarr(fIsObjClassName,fDim,...
 %       data plotter object.
 %       nDim: double[1,1] - dimension of objects,
 %       isHold: logical[1,1] - true, if before plotting was hold on,
-%       bodyArr: objClassName: [dim21Size,dim22Size,...,dim2kSize] - 
+%       bodyArr: objClassName: [dim21Size,dim22Size,...,dim2kSize] -
 %       array of input objects
 %
 % $Author: <Ilya Lyubich>  <lubi4ig@gmail.com> $    $Date: <11 January 2013> $
@@ -173,9 +173,9 @@ end
 
 
     function prepareForPlot()
-       
+        
         [xCMat,fCMat] = calcBodyPoints(bodyArr);
-            
+        
         if numel(cell2mat(xCMat)) > 0
             
             bodyPlotNum = numel(xCMat);
@@ -295,7 +295,7 @@ end
                 else
                     if nParams ~= bodyPlotNum
                         throwerror('wrongParamsNumber',...
-                     'Number of params is not equal to number of objects');
+                            'Number of params is not equal to number of objects');
                     end
                     outParamVec = reshape(inParamArr, 1, nParams);
                 end

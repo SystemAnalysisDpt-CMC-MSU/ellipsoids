@@ -8,21 +8,17 @@ classdef EllTubeStaticSpaceProjector<gras.ellapx.proj.AEllTubePlainProjector
     end
     methods (Access=protected)
         function projType=getProjType(~)
-            projType=gras.ellapx.enums.EProjType.Static;            
+            projType=gras.ellapx.enums.EProjType.Static;
         end
         function [projOrthMatArray,projOrthMatTransArray]=...
                 getProjectionMatrix(self,projMat,timeVec,varargin)
             import modgen.common.throwwarn
-%             ABS_TOL = 1e-12;
             kSize = size(projMat,1);
-%             if ~all(abs(projMat*projMat'-eye(kSize))< ABS_TOL)
-%                 throwwarn('WrongInput','projMat is not orthogonal');
-%             end
             projMat = gras.la.matorth(projMat');
             projMat = projMat(:,1:kSize)';
             nTimes=length(timeVec);
             projOrthMatArray=repmat(projMat,[1 1 nTimes]);
-            projOrthMatTransArray=repmat(projMat.',[1 1 nTimes]);            
+            projOrthMatTransArray=repmat(projMat.',[1 1 nTimes]);
         end
     end
 end
