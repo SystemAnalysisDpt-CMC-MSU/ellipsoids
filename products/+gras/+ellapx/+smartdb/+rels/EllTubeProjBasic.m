@@ -117,13 +117,10 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
             
             if ~isRegSpec
                 plObj = smartdb.disp.RelationDataPlotter();
-                %                 plObj = smartdb.disp.RelationDataPlotter(...
-                %                     'figureGetNewHandleFunc',...
-                %                     @(varargin)gcf,'axesGetNewHandleFunc',@(varargin)gca);
             else
                 plObj=reg{1};
             end
-            
+            %
             function checkListOfField()
                 if isPlotSpecFieldList
                     if ~isColorList
@@ -174,75 +171,85 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
             dependencyFieldList={'sTime','lsGoodDirOrigVec',...
                 'projType','projSTimeMat','MArray'};
         end
-        
-        function patchColor = getRegTubeColor(~, ~)
+        %
+        function patchColor = getRegTubeColor(~,varargin)
             patchColor = [1 0 0];
         end
         
-        function patchAlpha = getRegTubeAlpha(~, ~)
+        function patchAlpha = getRegTubeAlpha(~,varargin)
             patchAlpha = 1;
         end
         %
         function hVec = plotCreateReachTubeFunc(self, plotPropProcessorObj,...
-                hAxes,projType,...
-                timeVec, lsGoodDirOrigVec, ltGoodDirMat,sTime,...
-                xTouchCurveMat, xTouchOpCurveMat, ltGoodDirNormVec,...
-                ltGoodDirNormOrigVec, approxType, QArray, aMat, MArray,...
-                varargin)
-            
+                hAxes,varargin)
             import gras.ellapx.enums.EApproxType;
             %
+            [approxType,QArray,aMat,MArray]=deal(varargin{10:13});
+            modgen.common.checkvar(approxType,...
+                @(x)isa(x,'gras.ellapx.enums.EApproxType'));            
             tubeNamePrefix = self.REACH_TUBE_PREFIX;
-            hVec = plotCreateGenericTubeFunc(self,...
-                plotPropProcessorObj, hAxes, projType,...
-                timeVec, lsGoodDirOrigVec, ltGoodDirMat, sTime,...
-                xTouchCurveMat, xTouchOpCurveMat, ltGoodDirNormVec,...
-                ltGoodDirNormOrigVec,...
-                approxType, QArray, aMat, tubeNamePrefix);
-            
+            %
+            patchColorVec = plotPropProcessorObj.getColor(varargin(:));
+            patchAlpha = plotPropProcessorObj.getTransparency(varargin(:));   
+            %
+            hVec = plotCreateGenericTubeFunc(self,patchColorVec,...
+                patchAlpha,hAxes, varargin{1:9},approxType,...
+                QArray, aMat, tubeNamePrefix);
+            %
             axis(hAxes, 'tight');
             axis(hAxes, 'normal');
+            %
             if approxType == EApproxType.External
                 hTouchVec=self.plotCreateTubeTouchCurveFunc(hAxes,...
-                    plotPropProcessorObj, projType,...
-                    timeVec, lsGoodDirOrigVec, ltGoodDirMat, sTime,...
-                    xTouchCurveMat,xTouchOpCurveMat, ltGoodDirNormVec,...
-                    ltGoodDirNormOrigVec, approxType, QArray, aMat, MArray,...
-                    varargin{:});
+                    plotPropProcessorObj,varargin{:});
                 hVec=[hVec,hTouchVec];
             end
             if approxType == EApproxType.Internal
-                hAddVec = plotCreateRegTubeFunc(self, plotPropProcessorObj,...
-                    hAxes, projType,...
-                    timeVec, lsGoodDirOrigVec, ltGoodDirMat,sTime,...
-                    xTouchCurveMat, xTouchOpCurveMat, ltGoodDirNormVec,...
-                    ltGoodDirNormOrigVec, approxType, QArray, aMat, MArray);
+                hAddVec = plotCreateRegTubeFuncInternal(self,...
+                    hAxes,varargin{1:9},...
+                    approxType,MArray,aMat);
                 hVec=[hVec, hAddVec];
             end
         end
-        function hVec = plotCreateRegTubeFunc(self, plotPropProcessorObj,...
-                hAxes, projType,...
-                timeVec, lsGoodDirOrigVec, ltGoodDirMat, sTime,...
-                xTouchCurveMat, xTouchOpCurveMat, ltGoodDirNormVec,...
-                ltGoodDirNormOrigVec,...
-                approxType,~,aMat,MArray,...
-                varargin)
+        function hVec = plotCreateRegTubeFuncInternal(self,...
+                hAxes,varargin)
             import gras.ellapx.enums.EApproxType;
+            %
+            patchColorVec = self.getRegTubeColor(varargin(:));
+            patchAlpha = self.getRegTubeAlpha(varargin{:});
+            %
+            [approxType,MArray,aMat]=deal(varargin{10:12});
+            modgen.common.checkvar(approxType,...
+                @(x)isa(x,'gras.ellapx.enums.EApproxType'));            
             %
             if approxType == EApproxType.Internal
                 tubeNamePrefix = self.REG_TUBE_PREFIX;
-                hVec = self.plotCreateGenericTubeFunc(plotPropProcessorObj,...
-                    hAxes,  projType,...
-                    timeVec, lsGoodDirOrigVec, ltGoodDirMat, sTime,...
-                    xTouchCurveMat, xTouchOpCurveMat, ltGoodDirNormVec,...
-                    ltGoodDirNormOrigVec,...
-                    approxType, MArray, zeros(size(aMat)), tubeNamePrefix);
+                hVec = self.plotCreateGenericTubeFunc(...
+                    patchColorVec,patchAlpha,hAxes,varargin{1:9},...
+                    approxType,MArray, aMat, tubeNamePrefix);
+            else
+                hVec=[];
+            end
+        end        
+        function hVec = plotCreateRegTubeFunc(self,...
+                hAxes,varargin)
+            import gras.ellapx.enums.EApproxType;
+            %
+            [approxType,~,aMat,MArray]=deal(varargin{10:13});
+            modgen.common.checkvar(approxType,...
+                @(x)isa(x,'gras.ellapx.enums.EApproxType'));            
+            %
+            if approxType == EApproxType.Internal
+                tubeNamePrefix = self.REG_TUBE_PREFIX;
+                hVec = self.plotCreateRegTubeFuncInternal(...
+                    hAxes,varargin{1:9},...
+                    approxType,MArray, zeros(size(aMat)), tubeNamePrefix);
             else
                 hVec=[];
             end
         end
         function hVec = plotCreateGenericTubeFunc(self,...
-                plotPropProcessorObj, hAxes, varargin)
+                patchColorVec,patchAlpha, hAxes, varargin)
             
             [~, timeVec, lsGoodDirOrigVec, ~, sTime,...
                 ~, ~, ~,~, approxType, QArray, aMat,...
@@ -250,25 +257,29 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
             
             nSPoints=self.N_SPOINTS;
             goodDirStr=self.goodDirProp2Str(lsGoodDirOrigVec,sTime);
-            patchName=sprintf('%s Tube, %s: %s',tubeNamePrefix,...
-                char(approxType),goodDirStr);
+            nTimePoints=length(timeVec);
+            %
+            if nTimePoints==1
+                graphObjTypeName='Set';
+            else
+                graphObjTypeName='Tube';
+            end
+            graphObjectName=sprintf('%s %s, %s: %s',tubeNamePrefix,...
+                graphObjTypeName,char(approxType),goodDirStr);
             [vMat,fMat]=gras.geom.tri.elltubetri(...
                 QArray,aMat,timeVec,nSPoints);
-            nTimePoints=length(timeVec);
-            
-            patchColorVec = plotPropProcessorObj.getColor(varargin(:));
-            patchAlpha = plotPropProcessorObj.getTransparency(varargin(:));
-            
+            %
             if nTimePoints==1
                 nVerts=size(vMat,1);
                 indVertVec=[1:nVerts,1];
                 hVec=line('Parent',hAxes,'xData',vMat(indVertVec,1),...
                     'yData',vMat(indVertVec,2),...
-                    'zData',vMat(indVertVec,3),'Color',patchColorVec);
+                    'zData',vMat(indVertVec,3),'Color',patchColorVec,...
+                    'DisplayName',graphObjectName);
                 view(hAxes,[90 0 0]);
             else
                 hVec=patch('FaceColor', 'interp', 'EdgeColor', 'none',...
-                    'DisplayName', patchName,...
+                    'DisplayName', graphObjectName,...
                     'FaceAlpha', patchAlpha,...
                     'FaceVertexCData', repmat(patchColorVec,size(vMat,1),1),...
                     'Faces',fMat,'Vertices',vMat,'Parent',hAxes,...
@@ -506,7 +517,7 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                 fPostFun = @(varargin)axesPostPlotFunc(self,isHoldFin,varargin{:});
                 %
                 isEmptyRegVec=cellfun(@(x)all(x(:) == 0), self.MArray);
-                
+                %
                 if all(isEmptyRegVec)
                     plotInternal(isEmptyRegVec,false,false);
                 else
@@ -672,6 +683,19 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                 .plotExtOrInternal(@calcPointsInt,varargin{:});
         end
     end
+    methods (Access=protected)
+        function checkForNoReg(self)
+            import modgen.common.throwerror;
+            isNoReg=all(cellfun(@(x)all(x(:) == 0), self.MArray));
+            if ~isNoReg
+                throwerror('wrongInput',...
+                    ['plotting of ellipsoidal reachability ',...
+                    'domains for regularized tubes is not yet',...
+                    ' implemented, you may still use "plot" method ',...
+                    'to plot ellipsoidal tubes though']);
+            end
+        end
+    end
     methods (Access = private)
         function plObj = plotExtOrInternal(self,fCalcPoints,varargin)
             import modgen.common.throwerror;
@@ -679,9 +703,6 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
             import gras.geom.tri.elltubediscrtri;
             import gras.ellapx.smartdb.rels.EllTubeProjBasic;
             import modgen.logging.log4j.Log4jConfigurator;
-            
-            
-            %
             %
             if self.getNTuples()>0
                 [reg,~,isShowDiscrete,nPlotPoints]=...
@@ -689,18 +710,14 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                     {'showDiscrete','nSpacePartPoins' ;...
                     false, 600;
                     @(x)isa(x,'logical'),@(x)isa(x,'double')});
-                
-                
+                %
                 checkDimensions(self);
                 dim = self.dim(1);
                 if (dim == 3) && ( size(self.timeVec{1},2) ~= 1)
                     throwerror('wrongInput',...
                         '3d Tube can be displayed only after cutting');
                 end
-                
-                
-                
-                
+                %                
                 PLOT_FULL_FIELD_LIST =...
                     {'projType','timeVec','lsGoodDirOrigVec',...
                     'ltGoodDirMat','sTime','xTouchCurveMat',...
@@ -708,6 +725,7 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                     'ltGoodDirNormOrigVec','approxType','QArray','aMat',...
                     'MArray','dim'};
                 %
+                self.checkForNoReg();
                 %
                 [plotPropProcObj, plObj, isRelPlotterSpec] = gras.ellapx.smartdb...
                     .rels.EllTubeProjBasic.parceInput(PLOT_FULL_FIELD_LIST,...
@@ -743,8 +761,6 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                     @(varargin) plotCenter2dCase(...
                     @(varargin)patch(varargin{:},'marker','*'),...
                     plotPropProcObj, varargin{:});%
-                
-                
             else
                 logger=Log4jConfigurator.getLogger();
                 logger.warn('nTuples=0, there is nothing to plot');
@@ -800,8 +816,6 @@ else
         num2str(projSTimeMat(2,:),'%.2g '),';',...
         num2str(projSTimeMat(3,:),'%.2g '),']'];
 end
-
-
 end
 function checkDimensions(self)
 import modgen.common.throwerror;
@@ -816,15 +830,14 @@ if (mDim < 2) || (nDim > 3)
     throwerror('wrongDim','object dimension can be  2 or 3');
 end
 end
+%
 function checkCenterVecAndTimeVec(aMat,timeVec,calcPrecision)
 import modgen.common.throwerror;
 nTubes = numel(aMat);
 aMatList = aMat;
 timeVec = timeVec{1};
 maxTol=max(calcPrecision);
-
-
-
+%
 for iTube = 2:nTubes
     [isEqual,~,~,~,~,reportStr]= gras.gen.absrelcompare(aMatList{1},...
         aMatList{iTube},maxTol,maxTol,@abs);
@@ -833,7 +846,7 @@ for iTube = 2:nTubes
             ['centers are different: ',reportStr]);
     end
 end
-
+%
 for iTube = 2:numel(nTubes)
     if (timeVec{iTube}~=timeVec)
         throwerror('differentTimeVec', ...
@@ -841,6 +854,7 @@ for iTube = 2:numel(nTubes)
     end
 end
 end
+%
 function dimOut = fDim(dim,timeVec)
 dim = dim(1);
 if (dim == 3) || (size(timeVec{1},2) >1)
@@ -849,7 +863,7 @@ else
     dimOut = 2;
 end
 end
-
+%
 function hVec =...
     plotCenter2dCase(fPatch,plotPropProcObj,hAxes,projType,...
     timeVec, lsGoodDirOrigVec, ltGoodDirMat,sTime,...
@@ -870,10 +884,8 @@ set(h1, 'EdgeColor', patchColorVec, 'LineWidth', patchWidth,'FaceAlpha',patchAlp
     'FaceColor',patchColorVec);
 hVec = h1;
 view(hAxes,[90 0 0]);
-
-
 end
-
+%
 function hVec =...
     plotCreateReachApproxTubeFunc(fTri,fCalcPoints,fPatch,...
     nPlotPoints,plotPropProcObj,hAxes,projType,...
@@ -918,12 +930,10 @@ function [vMat,fMat] = calcPoints(fTri,fCalcPoints,...
     timeVec,...
     QArray, aMat, dim,...
     calcPrecision, varargin)
-
-
+%
 nDims = dim(1);
 checkCenterVecAndTimeVec(aMat,timeVec,calcPrecision);
-[lGridMat, fMat] = gras.geom.tri.spheretriext(nDims,...
-    nPlotPoints);
+[lGridMat, fMat] = gras.geom.tri.spheretriext(nDims,nPlotPoints);
 lGridMat = lGridMat';
 timeVec = timeVec{1};
 nDir = size(lGridMat, 2);
@@ -951,14 +961,13 @@ else
     vMat = xMat;
 end
 end
-
-
+%
 function xMat = calcPointsInt(nDir,lGridMat,nDims,qArr,...
     centerVec,absTol)
 import gras.geom.ell.rhomat
 xMat = zeros(nDims,nDir);
 tubeNum = size(qArr,3);
-
+%
 supAllVec = zeros(tubeNum,nDir);
 supVecAllCMat = cell(tubeNum,nDir);
 for iTube = 1:tubeNum
@@ -976,11 +985,11 @@ for iDir = 1:size(xInd,2)
         +centerVec;
 end
 end
+%
 function xMat = calcPointsExt(nDir,lGridMat,nDims,qArr,...
     centerVec,~)
 xMat = zeros(nDims,nDir);
 nTubes = size(qArr,3);
-
 distAllMat = zeros(nTubes,nDir);
 boundaryPointsAllCMat = cell(nTubes,nDir);
 for iDir = 1:nDir
@@ -998,5 +1007,4 @@ for iDir = 1:size(xInd,2)
     xMat(:,iDir) = boundaryPointsAllCMat{xInd(iDir),iDir}...
         +centerVec;
 end
-
 end

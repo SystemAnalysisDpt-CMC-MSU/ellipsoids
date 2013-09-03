@@ -495,7 +495,7 @@ classdef SuiteEllTube < mlunitext.test_case
             end
         end
         %
-        function testPlotTouch(self)
+        function testPlotReg(self)
             [relStatProj,relDynProj]=checkMaster(1);
             [rel2StatProj,rel2DynProj]=checkMaster(10);
             rel=smartdb.relationoperators.union(relStatProj,relDynProj,...

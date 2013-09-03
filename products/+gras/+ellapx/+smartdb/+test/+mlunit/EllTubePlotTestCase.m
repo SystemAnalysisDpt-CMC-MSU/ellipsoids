@@ -9,7 +9,7 @@ classdef EllTubePlotTestCase < mlunitext.test_case
             close all;
         end
         
-        function testOneTime(self)
+        function testOneTime(~)
             %touch test
             import gras.ellapx.smartdb.RelDispConfigurator;
             import gras.ellapx.smartdb.rels.EllUnionTube;
@@ -22,7 +22,6 @@ classdef EllTubePlotTestCase < mlunitext.test_case
             sTime =1;
             timeVec = 1:T;
             for i= 0:n
-                ltGDir = [ltGDir ([1 0]*q11(i))'];
                 QArrListTemp = repmat(q11(i)'*diag([1 4])*q11(i),[1,1,T]);
                 QArrList{i+1} = QArrListTemp;
             end
@@ -80,23 +79,19 @@ classdef EllTubePlotTestCase < mlunitext.test_case
             pl = relStatProj.plot();
         end
         function testPlotIntAndExtProperties(self)
-            
+            %
             rel = self.createTubeWithProj(2,1);
-            
-            
-            
+            %
             plObj = rel.plotInt('fGetColor',@(approxType)[1 0 0],...
                 'colorFieldList', {'approxType'});
             self.checkParams(plObj, 2, true, 0.1, [1 0 0],1);
-            
-            
+            %
             plObj = rel.plotExt('fGetColor',@(approxType)[0 1 0],...
                 'colorFieldList', {'approxType'});
             self.checkParams(plObj, 2, true, 0.3, [0 1 0],1);
-            
-            
+            %
             rel = self.createTubeWithProj(2,2);
-            
+            %
             plObj = rel.plotInt('fGetLineWidth', @(x)4,...
                 'lineWidthFieldList', {'approxType'},...
                 'fGetFill',@(x) true,...
@@ -110,7 +105,7 @@ classdef EllTubePlotTestCase < mlunitext.test_case
                 'fillFieldList',{'approxType'});
             self.checkParams(plObj, 3, false, 0, [0 0 1],2);
             rel = self.createTubeWithProj(3,3);
-            
+            %
             plObj = rel.plotInt('fGetColor',@(approxType)[0 1 1],...
                 'colorFieldList', {'approxType'},...
                 'fGetFill',@(x) true,...
@@ -123,9 +118,6 @@ classdef EllTubePlotTestCase < mlunitext.test_case
                 'alphaFieldList',{'approxType'});
             self.checkParams(plObj, [],true, 0.8, [0 0 1],3);
             
-            
-            
-            
         end
         function testPlotInt(self)
             import gras.ellapx.enums.EApproxType;
@@ -133,8 +125,6 @@ classdef EllTubePlotTestCase < mlunitext.test_case
             fRight = @(a,b,c) a+b>=c;
             fPlot = @(x) x.plotInt;
             fTestPlot(self,approxType,fPlot,fRight);
-            
-            
         end
         function testPlotInfN(self)
             %when n-> infty a union of internal approximations
@@ -172,7 +162,9 @@ classdef EllTubePlotTestCase < mlunitext.test_case
                 'approxType', approxType);
             self.checkPoints(rel2,plObj,3,fRight);
         end
+        %
     end
+    
     methods (Static)
         function relStatProj  = createTubeWithProj(dim,ind)
             import gras.ellapx.proj.EllTubeStaticSpaceProjector;
@@ -413,14 +405,13 @@ classdef EllTubePlotTestCase < mlunitext.test_case
             curInd = 1;
             switch curCase
                 case 1
-                    
                     isEq = strcmp(xTitl,'time')&&strcmp(yTitl,...
                         ['[',num2str(rel...
                         .projSTimeMat{1}(1,:),'%.2g '),']'])...
                         &&strcmp(zTitl,...
                         ['[',num2str(rel...
                         .projSTimeMat{1}(2,:),'%.2g '),']',]);
-                    
+                    %
                     [xDataVec,xInd] = sort(xDataVec);
                     prev = 1;
                     yDataVec = yDataVec(xInd);
@@ -498,13 +489,9 @@ classdef EllTubePlotTestCase < mlunitext.test_case
             end
             mlunitext.assert_equals(isEq, true);
         end
-        
-        
-        
     end
-    
 end
-
+%
 function [projOrthMatArray, projOrthMatTransArray] =...
     fGetProjMat(projMat, timeVec, varargin)
 nTimePoints = length(timeVec);
@@ -512,9 +499,7 @@ projOrthMatArray = repmat(projMat, [1, 1, nTimePoints]);
 projOrthMatTransArray = repmat(projMat.',...
     [1,1,nTimePoints]);
 end
-
-
-
+%
 function [outXDataVec, outYDataVec, outZDataVec] = getData(hObj)
 outXDataMat = get(hObj, 'XData');
 outYDataMat = get(hObj, 'YData');
@@ -522,5 +507,4 @@ outZDataMat = get(hObj, 'ZData');
 outXDataVec = outXDataMat(:)';
 outYDataVec = outYDataMat(:)';
 outZDataVec = outZDataMat(:)';
-
 end
