@@ -22,6 +22,7 @@ classdef EllTubePlotTestCase < mlunitext.test_case
             sTime =1;
             timeVec = 1:T;
             for i= 0:n
+                ltGDir = [ltGDir ([1 0]*q11(i))'];                
                 QArrListTemp = repmat(q11(i)'*diag([1 4])*q11(i),[1,1,T]);
                 QArrList{i+1} = QArrListTemp;
             end

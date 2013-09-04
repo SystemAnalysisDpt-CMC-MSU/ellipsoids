@@ -14,7 +14,7 @@ classdef ETManualTC < mlunitext.test_case
             snippetsPattern = [snippetsDir, filesep, '*.m'];
             fileList = dir(snippetsPattern);
             nFiles = length(fileList);
-            BAD_SNIPPET_NAMES = {'s_chapter06_section02_snippet02.m'};
+            BAD_SNIPPET_NAMES = {};
             oldFolder = cd(snippetsDir);
             for iFile = 1 : nFiles
                 isBad = false;

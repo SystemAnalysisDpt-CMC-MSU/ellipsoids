@@ -229,9 +229,12 @@ s = elltool.linsys.LinSysFactory.create(A, B, P, C, Q);
 rs = elltool.reach.ReachContinuous(s, X0, L0, [0 4],...
     'isRegEnabled', true, 'isJustCheck', false, 'regTol', 1e-2);
 cla;
-rs.plotByEa();
+%rs.plotByEa();we do not reachability set hever and just plot the
+%approximations because reach-set is a regularized one and regularization
+%is different for every direction
+rs.plotEa()
 hold on;
-rs.plotByIa();
+rs.plotIa();
 hold off;
 ylabel('V_C');
 zlabel('i_L');
