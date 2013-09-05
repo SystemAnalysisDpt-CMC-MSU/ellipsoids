@@ -315,7 +315,6 @@ classdef EllUnionTubeStaticProj<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&..
             minRefineFactor=ceil(nMinTimePoints/nTimePoints);
             %
             onesVec=ones(size(timeVec));
-            QMatList=shiftdim(mat2cell(QArray,nDims,nDims,onesVec),1);
             if numel (onesVec) == 1
                 QMatList=shiftdim(mat2cell(QArray,nDims,nDims),1);
             else

@@ -22,7 +22,7 @@ classdef EllTubePlotTestCase < mlunitext.test_case
             sTime =1;
             timeVec = 1:T;
             for i= 0:n
-                ltGDir = [ltGDir ([1 0]*q11(i))'];                
+                ltGDir = [ltGDir ([1 0]*q11(i))'];                 %#ok<AGROW>
                 QArrListTemp = repmat(q11(i)'*diag([1 4])*q11(i),[1,1,T]);
                 QArrList{i+1} = QArrListTemp;
             end
@@ -40,7 +40,7 @@ classdef EllTubePlotTestCase < mlunitext.test_case
             projType = gras.ellapx.enums.EProjType.Static;
             relStatProj = ...
                 rel.project(projType,projSpaceList,@fGetProjMat);
-            plObj = relStatProj.plot();
+            plObj = relStatProj.plot(); %#ok<NASGU>
         end
         function testDifferentProjMat(self)
             %touchTest
