@@ -19,7 +19,7 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
         end
         %
         function axesName=axesGetKeyTubeFunc(self,~,projSTimeMat,varargin)
-            axesName = ['Ellipsoidal tubes, proj. on subspace ',...
+            axesName = ['Ellipsoidal/reach tubes tubes, proj. on subspace ',...
                 projMat2str(projSTimeMat)];
         end
         %
@@ -79,7 +79,6 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
             import modgen.common.type.simple.checkgen;
             import gras.ellapx.smartdb.RelDispConfigurator;
             self.scaleAxesHeight(hAxes,1.1,true);
-            axis(hAxes,'auto');            
             hVec=self.axesSetPropBasic(hAxes,axesName,projSTimeMat,varargin{:});
         end
         function hVec=axesSetPropBasic(~,hAxes,axesName,projSTimeMat,varargin)
@@ -113,7 +112,8 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
             %
             lightTypeList={{'left'},{40,65},{-20,25}};
             hLightVec=cellfun(@(x)camlight(hAxes,x{:}),lightTypeList);
-            hVec=[hVec,hLightVec];            
+            hVec=[hVec,hLightVec];   
+            axis(hAxes,'auto');
         end
         %
         function figureGroupKeyName=figureGetGroupKeyFunc(self,projType,...
@@ -205,7 +205,7 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
             hVec(2)=dispDirCurve(ltGoodDirOrigProjMat,lsGoodDirOrigVec,cMat);
             %
             hVec(1)=dispDirCurve(-ltGoodDirOrigProjMat,-lsGoodDirOrigVec,cOpMat);
-            axis(hAxes,'vis3d');
+           % axis(hAxes,'vis3d');
             function hVec=dispDirCurve(ltGoodDirMat,lsGoodDirOrigVec,cMat)
                 import modgen.graphics.plot3adv;
                 goodDirStr=self.goodDirProp2Str(lsGoodDirOrigVec,...

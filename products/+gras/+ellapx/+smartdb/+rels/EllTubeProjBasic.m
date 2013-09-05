@@ -204,12 +204,12 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                     plotPropProcessorObj,varargin{:});
                 hVec=[hVec,hTouchVec];
             end
-            if approxType == EApproxType.Internal
-                hAddVec = plotCreateRegTubeFuncInternal(self,...
-                    hAxes,varargin{1:9},...
-                    approxType,MArray,aMat);
-                hVec=[hVec, hAddVec];
-            end
+            %
+            hAddVec = plotCreateRegTubeFuncInternal(self,...
+                hAxes,varargin{1:9},...
+                approxType,MArray,aMat);
+            hVec=[hVec, hAddVec];
+            %
         end
         function hVec = plotCreateRegTubeFuncInternal(self,...
                 hAxes,varargin)
@@ -287,6 +287,13 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
             set(hAxes,'PlotBoxAspectRatio',[3 1 1]);
             hVec=self.axesSetPropBasic(hAxes,axesName,projSTimeMat,varargin{:});
         end
+        function hVec=axesSetPropReachTubeFunc(self,hAxes,axesName,projSTimeMat,varargin)
+            import modgen.common.type.simple.checkgen;
+            import gras.ellapx.smartdb.RelDispConfigurator;
+%            set(hAxes,'PlotBoxAspectRatio',[3 1 1]);
+            hVec=self.axesSetPropBasic(hAxes,axesName,projSTimeMat,varargin{:});
+        end
+        
     end
     methods (Access=protected)
         function checkTouchCurves(self,fullRel)
@@ -736,7 +743,7 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                 fGetTubeAxisKey=@(varargin)axesGetKeyTubeFunc(self,varargin{:});
                 %
                 fSetTubeAxisProp=@(varargin)...
-                    axesSetPropTubeFunc(self,varargin{:});
+                    axesSetPropReachTubeFunc(self,varargin{:});
                 %
                 fPostFun = @(varargin)axesPostPlotFunc(self,isHoldFin,varargin{:});
                 if isShowDiscrete
@@ -766,10 +773,10 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
             fSetAxiPropList = {fSetTubeAxisProp};
             fPlotList = {fPlotReachTube};
             if (fDim(self.dim,self.timeVec) == 2)
-                fGetGroupKeyList = [fGetGroupKeyList,{fGetReachGroupKey}];
-                fSetFigPropList = [fSetFigPropList,{fSetReachFigProp}];
-                fGetAxisKeyList = [fGetAxisKeyList,{fGetTubeAxisKey}];
-                fSetAxiPropList = [fSetAxiPropList,{fSetTubeAxisProp}];
+%                 fGetGroupKeyList = [fGetGroupKeyList,{fGetReachGroupKey}];
+%                 fSetFigPropList = [fSetFigPropList,{fSetReachFigProp}];
+%                 fGetAxisKeyList = [fGetAxisKeyList,{fGetTubeAxisKey}];
+%                 fSetAxiPropList = [fSetAxiPropList,{fSetTubeAxisProp}];
                 fPlotList = [fPlotList,{fPlotCenter}];
             else
                 
