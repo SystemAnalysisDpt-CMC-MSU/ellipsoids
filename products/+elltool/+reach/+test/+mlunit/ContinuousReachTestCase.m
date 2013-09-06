@@ -21,7 +21,7 @@ classdef ContinuousReachTestCase < mlunitext.test_case
         function verticesCVec =...
                 getVerticesFromHMap(axesHMap, specStr)
             axesHMapKeysCVec = axesHMap.keys;
-            if strcmp(specStr, 'Ellipsoidal tubes')
+            if strcmp(specStr, 'Ellipsoidal/reach tubes')
                 findStr = 'Reach Tube';
             else
                 findStr = 'Good directions curve';
@@ -81,7 +81,7 @@ classdef ContinuousReachTestCase < mlunitext.test_case
                 axesHMap = axesHMapList{iAxesHMap};
                 %
                 rtVerticesVec = self.getVerticesFromHMap(axesHMap,...
-                    'Ellipsoidal tubes');
+                    'Ellipsoidal/reach tubes');
                 gdVerticesCVec = self.getVerticesFromHMap(axesHMap,...
                     'Good directions');
                 %
