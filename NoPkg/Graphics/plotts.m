@@ -7,11 +7,11 @@ function groupHandles=plotts(varargin)
 %
 % Usage: plotts(propList)
 %
-% input:
-%   regular:
+% Input:
+%   properties(regular):
 %         xCell: cell [1,nGraphs]
 %         yCell: cell [1,nGraphs]
-%   optional:
+%   properties(optional):
 %         displayLegend: logical [1,1] - true enables displaying of a
 %            legend
 %         linkAxes: char[1,1]
@@ -32,6 +32,12 @@ function groupHandles=plotts(varargin)
 %         figureName: char, default: ''
 %         graphPlotSpecs: cell [1,nGraphs]
 %         graphRgbColors: cell [1,nGraphs], {[R G B]},R,G,B \in [0,1]
+%         graphZoomDirList: cell[1,nGroups] of char[1,1], can have the
+%            following values:
+%               'b' - 'both' - zoom in both directions
+%               'v' - 'vertical' - zoom in vertical direction
+%               'h' - 'horizontal' - zoom in horizontal direction
+%
 %         graphTypes: cell [1,nGraphs] : ['bar',{'plot'},'stairs',
 %                                   'scatter','widthbar', 'edgebar'],
 %               'scatter' method uses lineWidth to determine size of
@@ -116,7 +122,7 @@ function groupHandles=plotts(varargin)
 %                   specification as dragCallback
 %         isSortByXAxis: specified whether the data is sorted by x-axes
 %                   value before displaying
-% notes:
+%   notes:
 %       graphRgbColors has a color specify priority over graphPlotSpecs
 %          if you give color parameters in graphPlotSpecs {'r.-'},
 %          and also specify graphRgbColors {[1 1 0]}. then after all
@@ -145,18 +151,8 @@ function groupHandles=plotts(varargin)
 %       ,12,'xlim',{[1,10]},'ylim',{[0,6]});
 %
 %
-% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-03-29 $ 
-% $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Computer Science,
-%            System Analysis Department 2011 $
+% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 5-Sep-2013 $
 %
-% modified by Shakhov Vladimir (rgb color setting, linewidth for each graph)
-% modified by Shakhov Vladimir.(support for dragndrop functionality)
-%          graphLegendsLocation and roundXLabels)
-%          'widthbar' method)
-%          'edgebar' method)
-%           scale, xLim and yLim)
-%          'stairs' and 'scatter' method)
 linkAxesSpec='none';
 synchroDates=1;
 groupMembership=[];
@@ -169,6 +165,7 @@ graphLegendsLocation='WestOutside';
 figureName=[];
 graphPlotSpecs=[];
 graphRgbColors=[];
+graphZoomDirList=[];
 graphTypes=[];
 fontSize=8;
 fontWeight='normal';
@@ -270,6 +267,8 @@ for k=1:2:nProp-1
             groupXLabelRotation=prop{k+1};
         case 'groupylabelrotation',
             groupYLabelRotation=prop{k+1};
+        case 'graphzoomdirlist',
+            graphZoomDirList=prop{k+1};
         case 'xlim'
             xLim=prop{k+1};
         case 'ylim'
@@ -317,7 +316,14 @@ nGroups=length(unique(groupMembership));
 if isempty(groupAreaDistr)
     groupAreaDistr=ones(1,nGroups)/nGroups;
 end
-
+if isempty(graphZoomDirList)
+    graphZoomDirList=cell(1,nGroups);
+    graphZoomDirList(:)={'b'};
+else
+    graphZoomDirList=strrep(graphZoomDirList,'h','Horizontal');
+    graphZoomDirList=strrep(graphZoomDirList,'v','Vertical');
+    graphZoomDirList=strrep(graphZoomDirList,'b','Both');
+end
 if isempty(groupYLabelRotation)
     groupYLabelRotation=ones(1,nGroups)*90;
 end
@@ -327,6 +333,9 @@ end
 if isempty(xTypes)
     xTypes=cell(1,nGroups);
     xTypes(:)={'dates'};
+end
+if isempty(roundXLabels)
+    roundXLabels=nan(1,nGroups);
 end
 if isempty(graphTypes)
     graphTypes=cell(1,nGraphs);
@@ -553,7 +562,7 @@ for iGroup=1:1:nGroups
                 if ~isempty(markerSize)
                     set(areaHandle,'markerSize',markerSize(iCell));
                 end
-
+                
                 set(areaHandle,'edgeColor','w');
         end
         hold(groupHandles(iGroup),'on');
@@ -609,36 +618,25 @@ for iGroup=1:1:nGroups
     
     
     % xticklabels depends on xTypes and scale.
+    hZoom = zoom(fHandle);
+    hPan=pan(fHandle);
+    setAxesZoomMotion(hZoom,groupHandles(iGroup),graphZoomDirList{iGroup});
     switch xTypes{iGroup}
         case 'numbers',
-            x=get(h,'xtick');
-            if isequal(scale{iGroup},'sqrtscale') && ~isnan(scaleParam(iGroup))
-                x=(2*(x>=0)-1).*x.^2+scaleParam(iGroup);
-            end
-            if isequal(scale{iGroup},'logarithm')
-                
-                x=(2*(x>=0)-1).*(exp(abs(x))-1)+scaleParam(iGroup);
-            end
-            set(h,'xticklabel',x);
-            
-            if length(roundXLabels)>=iGroup;
-                x=get(h,'xtick');
-                if isequal(scale{iGroup},'sqrtscale') && ~isnan(scaleParam(iGroup))
-                    x=(2*(x>=0)-1).*x.^2+scaleParam(iGroup);
-                end
-                if isequal(scale{iGroup},'logarithm')
-                    x=(2*(x>=0)-1).*(exp(abs(x))-1)+scaleParam(iGroup);
-                end
-                set(h,'xticklabel',round(x*10^roundXLabels(iGroup))/10^roundXLabels(iGroup));
-            end
+            %
+            SEvent.Axes=h;
+            zoomNumberCallback([],SEvent,...
+                scale{iGroup},scaleParam(iGroup),roundXLabels(iGroup));
+            %
+            fZoomCallback=@(obj,event)zoomNumberCallback(obj,event,...
+                scale{iGroup},scaleParam(iGroup),roundXLabels(iGroup));
+            set(hZoom,'ActionPostCallback',fZoomCallback);
+            set(hPan,'ActionPostCallback',fZoomCallback);
+            %
         case 'dates',
-            hZoom = zoom(fHandle);
-            hPan=pan(fHandle);
             datetick(groupHandles(iGroup),'x');
-            %setAxesZoomMotion(hZoom,groupHandles(iGroup),'horizontal');
-            setAxesZoomMotion(hZoom,groupHandles(iGroup),'both');
-            set(hZoom,'ActionPostCallback',@zoomcallback);
-            set(hPan,'ActionPostCallback',@zoomcallback);
+            set(hZoom,'ActionPostCallback',@zoomDatesCallback);
+            set(hPan,'ActionPostCallback',@zoomDatesCallback);
             %
             % we use xtick for scaled data and xticklabel for original data.
         case 'set',
@@ -662,7 +660,8 @@ end
 if ~strcmp(linkAxesSpec,'none')
     linkaxes(groupHandles,linkAxesSpec);
     if strcmp(linkAxesSpec,'x')
-        hAxesVec=groupHandles(strcmp(xTypes,'dates'));
+        hAxesVec=groupHandles(strcmp(xTypes,'dates')|...
+            strcmp(xTypes,'numbers'));
         hlink=linkprop(hAxesVec,{'XTickLabel','XTick'});
         KEY = 'graphics_linkxticklabel';
         for i=1:length(hAxesVec)
@@ -682,9 +681,6 @@ end
 
 
 end
-
-
-
 
 
 function [ plotHandles ] = plotdragndrops( fHandle,dragData )
@@ -748,7 +744,7 @@ plotrefresh(axesHandle,1:nGraphs);
 %
 %
 end
-function pointbuttondown(plotHandle,event,indCurve)
+function pointbuttondown(plotHandle,~,indCurve)
 % on point click event
 %here we need to find the most close point
 
@@ -788,7 +784,7 @@ if isNear
 end
 end
 %
-function figuremousemove(figureHandle,event)
+function figuremousemove(figureHandle,~)
 % on mouse move
 FigureData=guidata(figureHandle);
 %
@@ -821,7 +817,7 @@ end
 %
 
 %
-function figuremouseup(figureHandle,event,position)
+function figuremouseup(figureHandle,~,~)
 % on mouse up
 FigureData=guidata(figureHandle);
 FigureData.dragData.dragmode='normal';
@@ -840,8 +836,6 @@ dragData=FigureData.dragData;
 %
 xLimOld=FigureData.dragData.axesXLims;
 yLimOld=FigureData.dragData.axesYLims;
-%
-nGraphs=length(FigureData.dragData.xData);
 %
 for iGraph=1:length(changedCurves)
     indGraph=changedCurves(iGraph);
@@ -875,7 +869,6 @@ if (any(xLimOld~=xLim))
     xlim(axesHandle,xLimScr);
 end
 %
-
 if (any(yLimOld~=yLim))
     FigureData.dragData.axesYLims=yLim;
     %
@@ -901,6 +894,33 @@ FigureData.dragData.dragScale=[wData/wAxes hData/hAxes xLimScr(1) yLimScr(1)];
 guidata(figureHandle,FigureData);
 %
 end
-function zoomcallback(obj,eventdata)
-    datetick(eventdata.Axes,'keeplimits');
+%
+function zoomDatesCallback(~,eventdata)
+datetick(eventdata.Axes,'keeplimits');
 end
+%
+function zoomNumberCallback(~,eventdata,scale,scaleParam,roundXLabel)
+h=eventdata.Axes;
+set(h,'XTickMode','auto');
+x=get(h,'xtick');
+if isequal(scale,'sqrtscale') && ~isnan(scaleParam)
+    x=(2*(x>=0)-1).*x.^2+scaleParam;
+end
+if isequal(scale,'logarithm')
+    x=(2*(x>=0)-1).*(exp(abs(x))-1)+scaleParam;
+end
+set(h,'xticklabel',x);
+%
+if ~isnan(roundXLabel)
+    x=get(h,'xtick');
+    if isequal(scale,'sqrtscale') && ~isnan(scaleParam)
+        x=(2*(x>=0)-1).*x.^2+scaleParam(iGroup);
+    end
+    if isequal(scale,'logarithm')
+        x=(2*(x>=0)-1).*(exp(abs(x))-1)+scaleParam;
+    end
+    set(h,'xticklabel',round(x*10^roundXLabel)/10^roundXLabel);
+end
+end
+
+
