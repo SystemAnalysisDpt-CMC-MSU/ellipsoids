@@ -196,7 +196,7 @@ classdef EllTubeTouchCurveBasic<handle
     end
     methods (Access=private)
         function checkTouchCurveIndependence(self,rel)
-            import gras.gen.absrelcompare;
+            import modgen.common.absrelcompare;
             %
             dependencyFieldList=self.getTouchCurveDependencyFieldList;
             fCheckFieldTransfList=self.getTouchCurveDependencyCheckTransFuncList();

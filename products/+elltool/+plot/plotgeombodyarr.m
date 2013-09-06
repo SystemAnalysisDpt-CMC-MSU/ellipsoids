@@ -115,17 +115,21 @@ else
     hAx = get(hFigure,'currentaxes');
     if isempty(hAx)
         isHold=false;
-    elseif ~ishold(hAx)
-        if priorHold
-            isHold = true;
-        else
-            if ~isRelPlotterSpec
-                cla;
-            end
-            isHold = false;
-        end
     else
-        isHold = true;
+        axis on;
+        axis auto;
+        if ~ishold(hAx)
+            if priorHold
+                isHold = true;
+            else
+                if ~isRelPlotterSpec
+                    cla;
+                end
+                isHold = false;
+            end
+        else
+            isHold = true;
+        end
     end
 end
 if isPostHold

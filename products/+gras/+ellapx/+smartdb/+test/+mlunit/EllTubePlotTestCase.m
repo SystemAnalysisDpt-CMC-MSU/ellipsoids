@@ -42,7 +42,7 @@ classdef EllTubePlotTestCase < mlunitext.test_case
                 rel.project(projType,projSpaceList,@fGetProjMat);
             plObj = relStatProj.plot(); %#ok<NASGU>
         end
-        function testDifferentProjMat(self)
+        function testDifferentProjMat(~)
             %touchTest
             import gras.ellapx.smartdb.RelDispConfigurator;
             import gras.ellapx.smartdb.rels.EllUnionTube;
@@ -77,7 +77,7 @@ classdef EllTubePlotTestCase < mlunitext.test_case
             relStatProj.unionWith(relStatProj2);
             
             RelDispConfigurator.setIsGoodCurvesSeparately(false);
-            pl = relStatProj.plot();
+            pl = relStatProj.plot(); %#ok<NASGU>
         end
         function testPlotIntAndExtProperties(self)
             %
@@ -190,7 +190,7 @@ classdef EllTubePlotTestCase < mlunitext.test_case
             sTime =1;
             timeVec = 1:nTime;
             for i= 0:nTube
-                ltGDir = [ltGDir ([1 0]*q11(i))'];
+                ltGDir = [ltGDir ([1 0]*q11(i))']; %#ok<AGROW>
                 QArrListTemp = repmat(q11(i)'*diag([1 4])*q11(i),[1,1,nTime]);
                 QArrList{i+1} = QArrListTemp;
                 Q2ArrListTemp = repmat(q11(i)'*diag([1 0.5])*q11(i),[1,1,nTime]);
@@ -404,14 +404,13 @@ classdef EllTubePlotTestCase < mlunitext.test_case
             qArrList = rel.QArray;
             aMat = rel.aMat;
             curInd = 1;
+            projSTimeMat = rel.projSTimeMat{1};
             switch curCase
                 case 1
                     isEq = strcmp(xTitl,'time')&&strcmp(yTitl,...
-                        ['[',num2str(rel...
-                        .projSTimeMat{1}(1,:),'%.2g '),']'])...
+                        rel.projRow2str(projSTimeMat,1))...
                         &&strcmp(zTitl,...
-                        ['[',num2str(rel...
-                        .projSTimeMat{1}(2,:),'%.2g '),']',]);
+                        rel.projRow2str(projSTimeMat,2));
                     %
                     [xDataVec,xInd] = sort(xDataVec);
                     prev = 1;
@@ -439,11 +438,9 @@ classdef EllTubePlotTestCase < mlunitext.test_case
                     end
                 case 2
                     isEq = strcmp(xTitl,'time')&&strcmp(yTitl,...
-                        ['[',num2str(rel...
-                        .projSTimeMat{1}(1,:),'%.2g '),']'])...
+                        rel.projRow2str(projSTimeMat,1))...
                         &&strcmp(zTitl,...
-                        ['[',num2str(rel...
-                        .projSTimeMat{1}(2,:),'%.2g '),']',]);
+                        rel.projRow2str(projSTimeMat,2));
                     for iDir = 1:size(xDataVec,2)
                         for iTube = 1:numel(qArrList)
                             xP = yDataVec(curInd);
@@ -461,14 +458,11 @@ classdef EllTubePlotTestCase < mlunitext.test_case
                     
                 case 3
                     isEq = strcmp(xTitl,...
-                        ['[',num2str(rel...
-                        .projSTimeMat{1}(1,:),'%.2g '),']'])...
+                        rel.projRow2str(projSTimeMat,1))...
                         &&strcmp(yTitl,...
-                        ['[',num2str(rel...
-                        .projSTimeMat{1}(2,:),'%.2g '),']'])...
+                        rel.projRow2str(projSTimeMat,2))...
                         &&strcmp(zTitl,...
-                        ['[',num2str(rel...
-                        .projSTimeMat{1}(3,:),'%.2g '),']',]);
+                        rel.projRow2str(projSTimeMat,3));
                     for iDir = 1:size(xDataVec,2)
                         for iTube = 1:numel(qArrList)
                             xP = xDataVec(curInd);

@@ -107,7 +107,7 @@ end
 
 function [isEqual,reportStr]=compfun(x,y,absTol,relTol)
 % COMPFUN compares two different objects (ideally - of any type)
-import gras.gen.absrelcompare;
+import modgen.common.absrelcompare;
 %
 reportStr='';
 isEqual=false;
