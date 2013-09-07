@@ -8,65 +8,37 @@ classdef EllTubePlotTestCase < mlunitext.test_case
         function tear_down(~)
             close all;
         end
-        
-        function testOneTime(~)
+         function testDifferentProjTypes(self)
+            rel = self.createTube3(3,4,2);
+            projMatList = {[1 0; 0 1].'};
+                    %
+            projType=gras.ellapx.enums.EProjType.Static;
+            relStatProj=rel.project(projType,projMatList,...
+               @fGetProjMat);
+            projType=gras.ellapx.enums.EProjType.DynamicAlongGoodCurve;
+            relDynProj=rel.project(projType,projMatList,@fGetProjMat);
+            rel=smartdb.relationoperators.union(relStatProj,relDynProj);
+            plObj=rel.plotExt(); %#ok<NASGU>
+        end
+        function testOneTime(self)
             %touch test
             import gras.ellapx.smartdb.RelDispConfigurator;
             import gras.ellapx.smartdb.rels.EllUnionTube;
-            n = 5;
-            T = 1;
-            q11 = @(t)[ cos(2*pi*t/n) sin(2*pi*t/n) ; -sin(2*pi*t/n) ...
-                cos(2*pi*t/n) ];
-            ltGDir = [];
-            QArrList = cell(n+1,1);
-            sTime =1;
-            timeVec = 1:T;
-            for i= 0:n
-                ltGDir = [ltGDir ([1 0]*q11(i))'];                 %#ok<AGROW>
-                QArrListTemp = repmat(q11(i)'*diag([1 4])*q11(i),[1,1,T]);
-                QArrList{i+1} = QArrListTemp;
-            end
-            
-            ltGDir = repmat(ltGDir,[1 1 T]);
-            aMat = repmat([1 0]',[1,T]);
-            approxType = gras.ellapx.enums.EApproxType(1);
-            calcPrecision = 10^(-3);
-            rel = gras.ellapx.smartdb.rels.EllUnionTube.fromEllTubes(...
-                gras.ellapx.smartdb.rels.EllTube.fromQArrays(QArrList',aMat...
-                ,timeVec,ltGDir,sTime',approxType,...
-                char.empty(1,0),char.empty(1,0),...
-                calcPrecision));
+            rel = self.createTube3(5,1,1);
             projSpaceList = {[1 0; 0 1].'};
             projType = gras.ellapx.enums.EProjType.Static;
             relStatProj = ...
                 rel.project(projType,projSpaceList,@fGetProjMat);
             plObj = relStatProj.plot(); %#ok<NASGU>
         end
-        function testDifferentProjMat(~)
+        function testDifferentProjMat(self)
             %touchTest
             import gras.ellapx.smartdb.RelDispConfigurator;
             import gras.ellapx.smartdb.rels.EllUnionTube;
-            n = 3;
-            T = 2;
-            q11 = @(t)[ cos(2*pi*t/n) sin(2*pi*t/n) ; -sin(2*pi*t/n)  cos(2*pi*t/n) ];
-            ltGDir = [];
-            QArrList = cell(n+1,1);
-            sTime =1;
-            timeVec = 1:T;
-            for i= 0:n
-                ltGDir = [ltGDir ([1 0]*q11(i))'];
-                QArrListTemp = repmat(q11(i)'*diag([1 4])*q11(i),[1,1,T]);
-                QArrList{i+1} = QArrListTemp;
-            end
-            
-            ltGDir = repmat(ltGDir,[1 1 T]);
-            aMat = repmat([1 0]',[1,T]);
-            approxType = gras.ellapx.enums.EApproxType(1);
-            calcPrecision = 10^(-3);
-            rel = gras.ellapx.smartdb.rels.EllTube.fromQArrays(QArrList',aMat...
-                ,timeVec,ltGDir,sTime',approxType,...
-                char.empty(1,0),char.empty(1,0),...
-                calcPrecision);
+            nTube = 3;
+            q11 = @(t)[ cos(2*pi*t/nTube) sin(2*pi*t/nTube) ; -sin(2*pi*t/nTube) ...
+                cos(2*pi*t/nTube) ];
+            rel = self.createTube3(3,4,2);
             projSpaceList = {[1 0; 0 1].'};
             projSpace2List = {q11(0.523)};
             projType = gras.ellapx.enums.EProjType.Static;
@@ -215,6 +187,36 @@ classdef EllTubePlotTestCase < mlunitext.test_case
             projSpaceList = {[1 0; 0 1].'};
             projObj=EllTubeStaticSpaceProjector(projSpaceList);
             relStatProj=projObj.project(rel);
+        end
+        function rel = createTube3(nTube,nTime,ind)
+            q11 = @(t)[ cos(2*pi*t/nTube) sin(2*pi*t/nTube) ; -sin(2*pi*t/nTube) ...
+                cos(2*pi*t/nTube) ];
+            ltGDir = [];
+            QArrList = cell(nTube+1,1);
+            sTime =1;
+            timeVec = 1:nTime;
+            for i= 0:nTube
+                ltGDir = [ltGDir ([1 0]*q11(i))'];                 %#ok<AGROW>
+                QArrListTemp = repmat(q11(i)'*diag([1 4])*q11(i),[1,1,nTime]);
+                QArrList{i+1} = QArrListTemp;
+            end
+            
+            ltGDir = repmat(ltGDir,[1 1 nTime]);
+            aMat = repmat([1 0]',[1,nTime]);
+            approxType = gras.ellapx.enums.EApproxType.External;
+            calcPrecision = 10^(-3);
+            if ind == 1
+                rel = gras.ellapx.smartdb.rels.EllUnionTube.fromEllTubes(...
+                    gras.ellapx.smartdb.rels.EllTube.fromQArrays(QArrList',aMat...
+                    ,timeVec,ltGDir,sTime',approxType,...
+                    char.empty(1,0),char.empty(1,0),...
+                    calcPrecision));
+            elseif ind == 2
+                rel = gras.ellapx.smartdb.rels.EllTube.fromQArrays(QArrList',aMat...
+                    ,timeVec,ltGDir,sTime',approxType,...
+                    char.empty(1,0),char.empty(1,0),...
+                    calcPrecision);
+            end
         end
         function rel = createTube(ind)
             fTransMat2d = @(t)[cos(5*(t-2)) sin(5*(t-2));...

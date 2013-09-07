@@ -495,6 +495,7 @@ classdef SuiteEllTube < mlunitext.test_case
             end
         end
         %
+       
         function testPlotReg(self)
             [relStatProj,relDynProj]=checkMaster(1);
             [rel2StatProj,rel2DynProj]=checkMaster(10);
