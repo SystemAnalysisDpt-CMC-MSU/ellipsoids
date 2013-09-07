@@ -214,7 +214,7 @@ classdef EllUnionTubeStaticProj<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&..
 
             axesName=['Ellipsoidal union tubes, proj. on subspace ',...
                 self.projMat2str(projSTimeMat)];
-
+        end
         function figureSetPropFunc(self,hFigure,varargin)
             figureSetPropFunc@gras.ellapx.smartdb.rels.EllTubeProjBasic(...
                 self,hFigure,varargin{:});
@@ -388,7 +388,7 @@ classdef EllUnionTubeStaticProj<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&..
             [vMat,fMat]=gras.geom.tri.shrinkfacetri(vMat,fMat,minTimeDelta);
             %
             if numel(timeVec) == 1
-                vMat = vMat(find(~(vMat(:,1)-timeVec)),2:3);
+                vMat = vMat(find(~(vMat(:,1)-timeVec)),2:3); %#ok<FNDSB>
                 fMat = convhulln(vMat);
                 vMat = [repmat(timeVec,[size(vMat,1),1]),vMat];
                 hVec=patch( 'DisplayName',patchName,...
