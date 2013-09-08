@@ -46,6 +46,7 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
                 else
                     axis on;
                     axis auto;
+                    grid on;
                     if ~ishold(hAx)
                         isHold = false;
                     else
