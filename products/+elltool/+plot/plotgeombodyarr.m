@@ -116,9 +116,7 @@ else
     if isempty(hAx)
         isHold=false;
     else
-        axis on;
-        axis auto;
-        grid on;
+        
         if ~ishold(hAx)
             if priorHold
                 isHold = true;
@@ -474,10 +472,16 @@ function figureGroupName=figureGetGroupNameFunc(figureName)
 figureGroupName=figureName;
 end
 function hVec=axesSetPropDoNothingFunc(hAxes,~)
+axis(hAxes,'on');
+axis(hAxes,'auto');
+grid(hAxes,'on');
 hold(hAxes,'on');
 hVec=[];
 end
 function hVec=axesSetPropDoNothing2Func(hAxes,~)
+axis(hAxes,'on');
+axis(hAxes,'auto');
+grid(hAxes,'on');
 hold(hAxes,'off');
 hVec=[];
 end

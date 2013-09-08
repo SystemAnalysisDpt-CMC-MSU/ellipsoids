@@ -44,9 +44,6 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
                 if isempty(hAx)
                     isHold=false;
                 else
-                    axis on;
-                    axis auto;
-                    grid on;
                     if ~ishold(hAx)
                         isHold = false;
                     else
@@ -83,6 +80,9 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
                 projSTimeMat,varargin)
             import modgen.common.type.simple.checkgen;
             import gras.ellapx.smartdb.RelDispConfigurator;
+            axis(hAxes,'on');
+            axis(hAxes,'auto');
+            grid(hAxes,'on');
             self.scaleAxesHeight(hAxes,1.1,true);
             hVec=self.axesSetPropBasic(hAxes,axesName,projSTimeMat,varargin{:});
         end
