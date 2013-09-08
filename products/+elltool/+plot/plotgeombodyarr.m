@@ -118,6 +118,7 @@ else
     else
         axis on;
         axis auto;
+        grid on;
         if ~ishold(hAx)
             if priorHold
                 isHold = true;

@@ -404,7 +404,8 @@ classdef EllTubePlotTestCase < mlunitext.test_case
             isEq = true;
             [xDataVec,yDataVec,zDataVec] = getData(plEllObjVec);
             name =  get(plEllObjVec,'DisplayName');
-            isEq = isEq & strcmp(name,'EllTube');
+            isEq = isEq & strcmp(name,['Reach Tube: by ',...
+                char(rel.approxType(1))]);
             timeVec = rel.timeVec{1};
             qArrList = rel.QArray;
             aMat = rel.aMat;

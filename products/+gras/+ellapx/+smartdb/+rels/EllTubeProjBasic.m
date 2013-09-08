@@ -772,10 +772,10 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
             fSetAxiPropList = {fSetTubeAxisProp};
             fPlotList = {fPlotReachTube};
             if (fDim(self.dim,self.timeVec) == 2)
-%                 fGetGroupKeyList = [fGetGroupKeyList,{fGetReachGroupKey}];
-%                 fSetFigPropList = [fSetFigPropList,{fSetReachFigProp}];
-%                 fGetAxisKeyList = [fGetAxisKeyList,{fGetTubeAxisKey}];
-%                 fSetAxiPropList = [fSetAxiPropList,{fSetTubeAxisProp}];
+                fGetGroupKeyList = [fGetGroupKeyList,{fGetReachGroupKey}];
+                fSetFigPropList = [fSetFigPropList,{fSetReachFigProp}];
+                fGetAxisKeyList = [fGetAxisKeyList,{fGetTubeAxisKey}];
+                fSetAxiPropList = [fSetAxiPropList,{fSetTubeAxisProp}];
                 fPlotList = [fPlotList,{fPlotCenter}];
             end
             plObj.plotGeneric(rel,...
@@ -798,7 +798,7 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
             else
                 logger=Log4jConfigurator.getLogger();
                 logger.warn('nTuples=0, there is nothing to plot');
-                plObj = [];
+                plObj = smartdb.disp.RelationDataPlotter();
             end
         end
     end
@@ -866,7 +866,7 @@ function hVec =...
     ~, varargin)
 vMat = [timeVec{1};aMat{1}(:,1)];
 fMat = [1 1];
-graphObjectName = 'EllTube';
+graphObjectName =  ['Reach Tube: by ', char(approxType(1))];
 vararginForProc = {projType(1),...
     timeVec{1}, lsGoodDirOrigVec{1}, ltGoodDirMat{1},sTime(1),...
     xTouchCurveMat{1}, xTouchOpCurveMat{1}, ltGoodDirNormVec{1},...
@@ -889,7 +889,7 @@ function hVec =...
     ltGoodDirNormOrigVec, approxType, QArray, aMat, MArray,dim,...
     calcPrecision)
 import modgen.graphics.camlight;
-graphObjectName = 'EllTube';
+graphObjectName =  ['Reach Tube: by ', char(approxType(1))];
 [vMat,fMat] = calcPoints(fTri,fCalcPoints,...
     nPlotPoints,...
     timeVec,  QArray, aMat,dim,...
