@@ -64,6 +64,12 @@ classdef mlunit_test_structcompare < mlunitext.test_case
             end
         end
         %
+        function testInf(~)
+            S1=struct('a',1,'b',[nan inf -inf 1]);
+            isEqual=modgen.struct.structcompare(S1,S1,0);
+            mlunitext.assert_equals(isEqual,true);
+        end
+        %
         function self = test_simplestruct_negative(self)
             S1=struct('a',1,'b',nan);
             S2=struct('a',1,'b',2);
