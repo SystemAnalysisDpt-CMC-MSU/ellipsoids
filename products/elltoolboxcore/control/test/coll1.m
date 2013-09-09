@@ -11,7 +11,7 @@
  fc = get_center(ct);
  bc = get_center(bct);
  gc2 = -(gc2 - bc) + bc;
- plot_ea(ct); hold on;
- plot_ea(bct,'g'); hold on;
+ plotByEa(ct); hold on;
+ plotByEa(bct,'g'); hold on;
  ell_plot(gc1,'r*');
  ell_plot(gc2,'k*');

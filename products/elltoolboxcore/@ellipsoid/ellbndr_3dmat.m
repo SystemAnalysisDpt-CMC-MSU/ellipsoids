@@ -24,13 +24,13 @@ function [ bpMat, fMat] = ellbndr_3dmat(nPoints, cenVec, qMat,absTol)
 %            Faculty of Computational Mathematics and Cybernetics,
 %            System Analysis Department 2013 $
 %
-if nargin<2
+if nargin<3
     cenVec=zeros(3,1);
 end
-if nargin<3
+if nargin<4
     qMat=eye(3);
 end
-if nargin<4
+if nargin<5
     absTol=elltool.conf.Properties.getAbsTol();
 end
 %

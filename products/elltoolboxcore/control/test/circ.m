@@ -10,5 +10,5 @@ L0 = [0 1; 1 1; 1 0; 1 -1]';
 s  = linsys(A, B, I);
 rs = reach(s, X0, L0, T, o);
 
-plot_ea(rs); hold on;
-plot_ia(rs); hold on;
+plotByEa(rs); hold on;
+plotByIa(rs); hold on;

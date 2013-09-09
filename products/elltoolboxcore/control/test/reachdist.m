@@ -19,5 +19,5 @@
   o.save_all = 1;
   rs = reach(s, X0, L0, T, o);
 
-  plot_ea(rs); hold on;
-  plot_ia(rs);
+  plotByEa(rs); hold on;
+  plotByIa(rs);

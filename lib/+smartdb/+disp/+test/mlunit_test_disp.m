@@ -83,6 +83,110 @@ classdef mlunit_test_disp < mlunitext.test_case
                 repmat(x,1,48)]);
         end
         %
+        function test_RelDataPlotterMoreAxes(~)
+            plObj=smartdb.disp.RelationDataPlotter;
+            SData.firstPoint = {[2,1]};
+            rel=smartdb.relations.DynamicRelation(SData);
+            fGetGroupKey=...
+                @(varargin)figureGetGroupNameFunc('1');
+            fGetAxisKeyList = {@(varargin)axesGetNameSurfFunc('1')};
+            fGetGroupKeyList = {fGetGroupKey};
+            plObj.plotGeneric(rel,...
+                fGetGroupKeyList,...
+                {},...
+                @figureSetPropFunc,{},...
+                fGetAxisKeyList,...
+                {},...
+                @axesSetPropDoNothingFunc,{},...
+                @plotPointFunc,...
+                {'firstPoint'},...
+                'axesPostPlotFunc',@axesSetPropDoNothingFunc,...
+                'isAutoHoldOn',false);
+            fGetGroupKeyList = {fGetGroupKey,fGetGroupKey};
+            fGetAxisKeyList = {@(varargin)axesGetNameSurfFunc('1'),...
+                @(varargin)axesGetNameSurfFunc('2')};
+            plObj.plotGeneric(rel,...
+                fGetGroupKeyList,...
+                {},{@figureSetPropFunc,@figureSetPropFunc},{},...
+                fGetAxisKeyList,...
+                {},...
+                {@axesSetPropDoNothingFunc,...
+                @axesSetPropDoNothingFunc},{},...
+                {@plotPoint2Func,@plotPointFunc},...
+                {'firstPoint'},...
+                'axesPostPlotFunc',@axesSetPropDoNothingFunc,...
+                'isAutoHoldOn',false);
+            SHPlot =  plObj.getPlotStructure().figToAxesToHMap.toStruct();
+            [~, handleVecList] = modgen.struct.getleavelist(SHPlot);
+            mlunitext.assert_equals(numel(handleVecList), 2);
+            function hVec = plotPoint2Func(hAxes,point)
+                hVec = plot(hAxes,2*point(1),2*point(2),'*r');
+            end
+            function hVec = plotPointFunc(hAxes,point)
+                hVec = plot(hAxes,point(1),point(2),'*');
+            end
+            function figureGroupName=figureGetGroupNameFunc(figureName)
+                figureGroupName=figureName;
+            end
+            function figureSetPropFunc(hFigure,figureName,~)
+                set(hFigure,'Name',figureName);
+            end
+            function axesName=axesGetNameSurfFunc(name,~)
+                axesName=name;
+            end
+            function hVec=axesSetPropDoNothingFunc(hAxes,~)
+                hold(hAxes,'on');
+                hVec=[];
+            end
+        end
+        function test_getPlotStructure(self)
+            import gras.ellapx.smartdb.RelDispConfigurator;
+            import gras.ellapx.smartdb.rels.EllUnionTube;
+            import gras.ellapx.proj.EllTubeStaticSpaceProjector;
+            n = 4;
+            T = 1;
+            q11 = @(t)[ cos(2*pi*t/n) sin(2*pi*t/n) ; -sin(2*pi*t/n)  cos(2*pi*t/n) ];
+            ltGDir = [];
+            QArrList = cell(n+1,1);
+            sTime =1;
+            timeVec = 1:T;
+            for iHandleVec= 0:n
+                ltGDir = [ltGDir ([1 0]*q11(iHandleVec))'];
+                QArrListTemp = repmat(q11(iHandleVec)'*diag([1 4])*q11(iHandleVec),[1,1,T]);
+                QArrList{iHandleVec+1} = QArrListTemp;
+            end
+            
+            ltGDir = repmat(ltGDir,[1 1 T]);
+            aMat = repmat([1 0]',[1,T]);
+            approxType = gras.ellapx.enums.EApproxType(1);
+            calcPrecision = 10^(-3);
+            
+            rel =gras.ellapx.smartdb.rels.EllTube.fromQArrays(QArrList',aMat...
+                ,timeVec,ltGDir,sTime',approxType,...
+                char.empty(1,0),char.empty(1,0),...
+                calcPrecision);
+           
+            projSpace2List = {[1 1;1 0].'};
+            
+            projObj=EllTubeStaticSpaceProjector(projSpace2List);
+            relStatProj=projObj.project(rel);
+            
+            rel2=smartdb.relations.DynamicRelation(relStatProj);
+            rel2.groupBy({'projSTimeMat'});
+            RelDispConfigurator.setIsGoodCurvesSeparately(true);
+            pl = relStatProj.plot('fGetColor',@(x)[1,0,0],...
+                'colorFieldList', {'approxType'});
+            SFigHandles=pl.getPlotStructure.figHMap.toStruct();
+            SAxesHandles=pl.getPlotStructure.figToAxesToHMap.toStruct();
+            [~, handleVecList] = modgen.struct.getleavelist(SFigHandles);
+            [~, axesVecList] = modgen.struct.getleavelist(SAxesHandles);
+            for iHandleVec = 1: size(handleVecList,1)
+                mlunitext.assert(handleVecList{iHandleVec},...
+                    axesVecList{2*iHandleVec-1});
+                mlunitext.assert(handleVecList{iHandleVec},...
+                    axesVecList{2*iHandleVec});
+            end
+        end
         function test_RelDataPlotterAutoHoldOn(self)
             
             plObj=process([]);

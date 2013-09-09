@@ -29,16 +29,14 @@ firstPsObj = firstRsObj.projection(basisMat);
 secPsObj = secRsObj.projection(basisMat);
 
 % plot the results:
-subplot(2, 2, 1);
-firstPsObj.plot_ea('r');  % external apprx. of reach set 1 (red)
-hold on;
-firstPsObj.plot_ia('g');  % internal apprx. of reach set 1 (green)
-secPsObj.plot_ea('y');  % external apprx. of reach set 2 (yellow)
-secPsObj.plot_ia('b');  % internal apprx. of reach set 2 (blue)
 
-% plot the 3-dimensional reach set at time t = 3:
-subplot(2, 2, 2);
-secRsObj = secRsObj.cut(3);
-secRsObj.plot_ea('y');
+firstPsObj.plotByEa('r');  % external apprx. of reach set 1 (red)
 hold on;
-secRsObj.plot_ia('b');
+firstPsObj.plotByIa('g');  % internal apprx. of reach set 1 (green)
+secPsObj.plotByEa('y');  % external apprx. of reach set 2 (yellow)
+secPsObj.plotByIa('b');  % internal apprx. of reach set 2 (blue)
+% plot the 3-dimensional reach set at time t = 3:
+secRsObj = secRsObj.cut(3);
+secRsObj.plotByEa('y');
+hold on;
+secRsObj.plotByIa('b');

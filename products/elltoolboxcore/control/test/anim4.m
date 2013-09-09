@@ -59,7 +59,7 @@ C =0.25;
    end
 
    rs = reach(s, X0, L0, [t0 T], o);
-   plot_ea(rs); hold on;
+   plotByEa(rs); hold on;
    ell_plot(yy, 'r', 'LineWidth', 2);
    ell_plot(xi, 'ko');
    ell_plot([t0; x0], 'k*');

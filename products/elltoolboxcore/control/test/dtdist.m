@@ -21,5 +21,5 @@ o.minmax = 1;
 
 rs2 = reach(s, X0, L, N, o);
 
-plot_ea(rs1); hold on;
-plot_ea(rs2, 'g'); hold on;
+plotByEa(rs1); hold on;
+plotByEa(rs2, 'g'); hold on;

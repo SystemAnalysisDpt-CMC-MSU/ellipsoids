@@ -39,8 +39,8 @@ classdef DiscreteReachFirstTestCase < mlunitext.test_case
             projReachSetObj = reachSetObj.projection(projBasMat);
             fig = figure();
             hold on;
-            projReachSetObj.plot_ea();
-            projReachSetObj.plot_ia();
+            projReachSetObj.plotEa();
+            projReachSetObj.plotIa();
             hold off;
             close(fig);
             newReachObj = reachSetObj.evolve(timeVec(2) + 1);
@@ -73,8 +73,8 @@ classdef DiscreteReachFirstTestCase < mlunitext.test_case
             projReachSetObj = reachSetObj.projection(projBasMat);
             fig = figure();
             hold on;
-            projReachSetObj.plot_ea();
-            projReachSetObj.plot_ia();
+            projReachSetObj.plotEa();
+            projReachSetObj.plotIa();
             hold off;
             close(fig);
             newReachObj = reachSetObj.evolve(2 * timeVec(2));

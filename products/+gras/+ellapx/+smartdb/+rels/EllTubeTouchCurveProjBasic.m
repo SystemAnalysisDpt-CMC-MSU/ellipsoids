@@ -5,7 +5,7 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
         FCODE_PROJ_TYPE
         FCODE_LT_GOOD_DIR_NORM_ORIG_VEC
         FCODE_LS_GOOD_DIR_NORM_ORIG
-		FCODE_LT_GOOD_DIR_ORIG_MAT 
+        FCODE_LT_GOOD_DIR_ORIG_MAT
         FCODE_LS_GOOD_DIR_ORIG_VEC
         %
         FCODE_LT_GOOD_DIR_NORM_ORIG_PROJ_VEC
@@ -19,13 +19,39 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
         end
         %
         function axesName=axesGetKeyTubeFunc(self,~,projSTimeMat,varargin)
-            axesName=['Ellipsoidal tubes, proj. on subspace ',...
-                self.projSpecVec2Str(projSTimeMat)];
+            axesName = ['Ellipsoidal/reach tubes tubes, proj. on subspace ',...
+                self.projMat2str(projSTimeMat)];
         end
         %
         function axesName=axesGetKeyGoodCurveFunc(self,~,projSTimeMat,varargin)
-            axesName=['Good directions: proj. on subspace ',...
-                self.projSpecVec2Str(projSTimeMat)];
+            axesName = ['Good directions: proj. on subspace ',...
+                self.projMat2str(projSTimeMat)];
+        end
+        function hVec=axesPostPlotFunc(~,isHold,hAxes,varargin)
+            if isHold
+                hold(hAxes,'on');
+            else
+                hold(hAxes,'off');
+            end
+            hVec = [];
+        end
+        function isHold = fPostHold(varargin)
+            hFigure = get(0,'CurrentFigure');
+            if isempty(hFigure)
+                isHold=false;
+            else
+                hAx = get(hFigure,'currentaxes');
+                if isempty(hAx)
+                    isHold=false;
+                else
+                    if ~ishold(hAx)
+                        isHold = false;
+                    else
+                        isHold = true;
+                    end
+                end
+            end
+            
         end
         function hVec=axesSetPropGoodCurveFunc(self,hAxes,axesName,...
                 projSTimeMat,varargin)
@@ -35,7 +61,7 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
             %
             ylim(hAxes,[-1 1]);
             zlim(hAxes,[-1 1]);
-            set(hAxes,'PlotBoxAspectRatio',[6 1 1]);            
+            set(hAxes,'PlotBoxAspectRatio',[6 1 1]);
             hVec=self.axesSetPropBasic(hAxes,axesName,projSTimeMat,varargin{:});
         end
         %
@@ -50,24 +76,31 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
                 set(hAxes,'UserData',true);
             end
         end
-        function hVec=axesSetPropTubeFunc(self,hAxes,axesName,projSTimeMat,varargin)
+        function hVec=axesSetPropTubeFunc(self,hAxes,axesName,...
+                projSTimeMat,varargin)
             import modgen.common.type.simple.checkgen;
             import gras.ellapx.smartdb.RelDispConfigurator;
+            axis(hAxes,'on');
+            axis(hAxes,'auto');
+            grid(hAxes,'on');
             self.scaleAxesHeight(hAxes,1.1,true);
-            axis(hAxes,'auto');            
             hVec=self.axesSetPropBasic(hAxes,axesName,projSTimeMat,varargin{:});
         end
-        function hVec=axesSetPropBasic(~,hAxes,axesName,projSTimeMat,varargin)
+        function hVec=axesSetPropBasic(self,hAxes,axesName,projSTimeMat,varargin)
             import modgen.common.type.simple.checkgen;
             import gras.ellapx.smartdb.RelDispConfigurator;
             import modgen.graphics.camlight;
-
+            %
             title(hAxes,axesName);
-            checkgen(projSTimeMat,@(x)size(x,1)==2);
-            indDimVec=find(sum(projSTimeMat));
-            yLabel=sprintf('x_%d',indDimVec(1));
-            zLabel=sprintf('x_%d',indDimVec(2));
-            xLabel='time';
+            if size(projSTimeMat,1) == 2
+                yLabel = self.projRow2str(projSTimeMat,1);
+                zLabel = self.projRow2str(projSTimeMat,2);
+                xLabel='time';
+            else
+                xLabel = self.projRow2str(projSTimeMat,1);
+                yLabel = self.projRow2str(projSTimeMat,2);
+                zLabel = self.projRow2str(projSTimeMat,3);
+            end
             %
             set(hAxes,'XLabel',...
                 text('String',xLabel,'Interpreter','tex','Parent',hAxes));
@@ -79,12 +112,13 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
             view(hAxes,viewAngleVec);
             set(hAxes,'xtickmode','auto',...
                 'ytickmode','auto',...
-                'ztickmode','auto','xgrid','on','ygrid','on','zgrid','on'); 
+                'ztickmode','auto','xgrid','on','ygrid','on','zgrid','on');
             hVec=[];
             %
             lightTypeList={{'left'},{40,65},{-20,25}};
             hLightVec=cellfun(@(x)camlight(hAxes,x{:}),lightTypeList);
-            hVec=[hVec,hLightVec];            
+            hVec=[hVec,hLightVec];
+            axis(hAxes,'auto');
         end
         %
         function figureGroupKeyName=figureGetGroupKeyFunc(self,projType,...
@@ -101,14 +135,15 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
             import gras.ellapx.smartdb.RelDispConfigurator;
             isGoodCurvesSeparately=...
                 RelDispConfigurator.getIsGoodCurvesSeparately();
+            
             figureGroupKeyName=[groupName,'_',lower(char(projType)),...
-                '_sp',self.projSpecVec2Str(projSTimeMat),'_st',...
-                num2str(sTime)];
+                '_sp',self.projMat2str(projSTimeMat)];
+            
             if isGoodCurvesSeparately
                 goodCurveStr=self.goodDirProp2Str(lsGoodDirOrigVec,sTime);
                 figureGroupKeyName=[figureGroupKeyName,', ',goodCurveStr];
             end
-        end        
+        end
         %
         function figureSetPropFunc(self,hFigure,figName,indGroup,...
                 projType,projSTimeMat,sTime,varargin)
@@ -125,15 +160,24 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
             set(hFigure,'NumberTitle','off','WindowStyle','docked',...
                 'RendererMode','manual','Renderer','OpenGL','Name',...
                 figureGroupName,'PaperPositionMode','auto');
-        end        
+        end
         %
         function [cMat,cOpMat]=getGoodDirColor(self,hAxes,~,~,...
                 ~,~,~,~,...
                 ~,~,ltGoodDirNormOrigVec,...
                 ~,~,~,~,ltGoodDirNormOrigProjVec,varargin)
+            import modgen.common.throwerror;
+            ABS_TOL = 1e-3;
             ONE_NORM_COLOR_RGB_VEC=[1 0 0];%RED
             ZERO_NORM_COLOR_RGB_VEC=[1 1 0];%YELLOW
             normRatioVec=ltGoodDirNormOrigProjVec./ltGoodDirNormOrigVec;
+            if ~(all(normRatioVec >= -ABS_TOL) && all(normRatioVec <= 1+ABS_TOL))
+                throwerror('wrongInput',...
+                    ['all elements of normRatioVec',...
+                    'are expected to be greater 0 and less then 1']);
+            end
+            normRatioVec(normRatioVec > 1) = 1;
+            normRatioVec(normRatioVec < 0) = 0;
             nPoints=length(normRatioVec);
             cMat=repmat(ZERO_NORM_COLOR_RGB_VEC,nPoints,1)+...
                 normRatioVec.'*(ONE_NORM_COLOR_RGB_VEC-...
@@ -142,7 +186,7 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
         end
         function [cMat,cOpMat]=getGoodCurveColor(self,varargin)
             [cMat,cOpMat]=self.getGoodDirColor(varargin{:});
-        end        
+        end
         function hVec = plotCreateGoodDirFunc(self, plotPropProcObj,...
                 hAxes, varargin)
             
@@ -160,11 +204,11 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
             hVec(2)=dispDirCurve(ltGoodDirOrigProjMat,lsGoodDirOrigVec,cMat);
             %
             hVec(1)=dispDirCurve(-ltGoodDirOrigProjMat,-lsGoodDirOrigVec,cOpMat);
-            axis(hAxes,'vis3d');
+            % axis(hAxes,'vis3d');
             function hVec=dispDirCurve(ltGoodDirMat,lsGoodDirOrigVec,cMat)
                 import modgen.graphics.plot3adv;
                 goodDirStr=self.goodDirProp2Str(lsGoodDirOrigVec,...
-                    sTime);                
+                    sTime);
                 plotName=['Good directions curve: ',goodDirStr];
                 vMat=ltGoodDirMat;
                 hVec=plot3adv(timeVec.',vMat(1,:).',vMat(2,:).',cMat,...
@@ -172,8 +216,8 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
             end
         end
         function hVec=plotCreateTubeTouchCurveFunc(self,...
-                    hAxes, plotPropProcessorObj, varargin)   
-                
+                hAxes, plotPropProcessorObj, varargin)
+            
             [~, timeVec, lsGoodDirOrigVec, ~, sTime, xTouchCurveMat,...
                 xTouchOpCurveMat, ~, ~] = deal(varargin{1:9});
             
@@ -199,6 +243,7 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
         %
         function checkDataConsistency(self)
             import gras.gen.SquareMatVector;
+            import modgen.common.throwerror;
             %
             ABS_TOL=1e-14;
             if self.getNTuples()>0
@@ -213,7 +258,7 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
                 self.checkSVsTConsistency(self.lsGoodDirOrigVec,...
                     self.ltGoodDirOrigMat,indSTime,'lsGoodDirNormOrig',...
                     'ltGoodDirNormOrigVec',fCheck2d);
-                isLsTouchVec=self.isLsTouch;                
+                isLsTouchVec=self.isLsTouch;
                 indTouchVec=find(isLsTouchVec);
                 nInd=sum(isLsTouchVec);
                 compareLsGoodDirVec=cell(nInd,1);
@@ -239,26 +284,33 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
                 checkEqualSize(self.ltGoodDirMat,...
                     self.ltGoodDirOrigProjMat,'ltGoodDirMat',...
                     'ltGoodDirOrigProjMat');
-                %         
+                %
                 fCheck=@(x,y,z)modgen.common.absrelcompare(...
                     x(:,z),y(:,z),ABS_TOL,ABS_TOL,@norm);
                 self.checkSVsTConsistency(self.ltGoodDirMat,...
                     self.ltGoodDirOrigProjMat,isnZeroNormVecList,...
                     'ltGoodDirMat','ltGoodDirOrigProjMat',...
-                    fCheck);     
+                    fCheck);
                 %
-                 checkEqualSize(self.ltGoodDirNormVec,...
+                checkEqualSize(self.ltGoodDirNormVec,...
                     self.ltGoodDirNormOrigProjVec,'ltGoodDirNormVec',...
                     'ltGoodDirNormOrigProjVec');
                 %
                 self.checkSVsTConsistency(self.ltGoodDirNormVec,...
                     self.ltGoodDirNormOrigProjVec,isnZeroNormVecList,...
                     'ltGoodDirNormVec','ltGoodDirNormOrigProjVec',...
-                    fCheck);                     
+                    fCheck);
+                fCheck=@(x,y,z,v)(size(x,1)==y)&&(size(x,2)==numel(z))&&...
+                    (size(x,3)==numel(v))&&(ndims(z)<=3);
+                isOkVec=cellfun(fCheck,self.projArray,num2cell(self.dim),...
+                    self.lsGoodDirOrigVec,self.timeVec);
+                if ~all(isOkVec)
+                    throwerror('wrongInput','projArray has inconsistent size');
+                end
                 %
             end
             function checkEqualSize(aArr,bArr,aName,bName)
-                import modgen.common.throwerror;                
+                import modgen.common.throwerror;
                 isOkVec=cellfun(@(x,y)isequal(size(x),size(y)),...
                     aArr,bArr);
                 if ~all(isOkVec)
@@ -266,6 +318,14 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
                         '%s and %s should have equal sizes',aName,bName);
                 end
             end
+        end
+    end
+    methods (Static = true, Access = public)
+        function projStrName = projMat2str(projSTimeMat)
+            projStrName = mat2str(projSTimeMat,2);
+        end
+        function projStrName = projRow2str(projSTimeMat,row)
+            projStrName = mat2str(projSTimeMat(row,:),2);
         end
     end
 end

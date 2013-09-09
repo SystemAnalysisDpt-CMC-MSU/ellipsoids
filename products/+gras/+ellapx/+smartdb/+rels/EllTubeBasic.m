@@ -157,9 +157,11 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 %
                 isLtTouchVec=ltGoodDirNormVec>absTol;
                 %
-                ltGoodDirMat(:,isLtTouchVec)=ltGoodDirMat(:,isLtTouchVec)./...
-                    repmat(ltGoodDirNormVec(isLtTouchVec),...
-                    size(ltGoodDirMat,1),1);
+                if any(isLtTouchVec)
+                    ltGoodDirMat(:,isLtTouchVec)=ltGoodDirMat(:,isLtTouchVec)./...
+                        repmat(ltGoodDirNormVec(isLtTouchVec),...
+                        size(ltGoodDirMat,1),1);
+                end
                 %
                 STubeData.ltGoodDirMat{iLDir}=ltGoodDirMat;
                 STubeData.lsGoodDirVec{iLDir}=lsGoodDirVec;
@@ -241,14 +243,14 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 STubeData.approxSchemaName=approxSchemaName;
             else
                 STubeData.approxSchemaName=repmat({approxSchemaName},...
-                nLDirs,1);
+                    nLDirs,1);
             end
             %
             if iscell(approxSchemaDescr)
                 STubeData.approxSchemaDescr=approxSchemaDescr;
             else
                 STubeData.approxSchemaDescr=repmat({approxSchemaDescr},...
-                nLDirs,1);
+                    nLDirs,1);
             end
             %
             STubeData.ltGoodDirMat=cell(nLDirs,1);
@@ -619,6 +621,8 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 all(cellfun(@(x)isnumeric(x)&&ismatrix(x),projMatList)));
             checkvar(fGetProjMat,'isfunction(x)');
             %
+            ABS_TOL=1e-4;
+            %
             projDependencyFieldNameList=...
                 self.getProjectionDependencyFieldList();
             %
@@ -657,7 +661,8 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     tubeProjDataCMat{iGroup,iProj}.dim=...
                         repmat(size(projMat,1),nLDirs,1);
                     tubeProjDataCMat{iGroup,iProj}.projSTimeMat=...
-                        repmat({projMat},nLDirs,1);
+                        repmat({projArray(:,:,...
+                        indSTime)},nLDirs,1);
                     tubeProjDataCMat{iGroup,iProj}.projArray=...
                         repmat({projArray},nLDirs,1);
                     tubeProjDataCMat{iGroup,iProj}.projType=...
@@ -748,11 +753,13 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                         %recalculate norms of projections
                         ltProjGoodDirNormVec=...
                             realsqrt(dot(ltGoodDirMat,ltGoodDirMat,1));
-                        isPosVec=ltProjGoodDirNormVec>absTol;                        
+                        isPosVec=ltProjGoodDirNormVec>absTol;
                         %
                         tubeProjDataCMat{iGroup,iProj}.ltGoodDirOrigProjMat{iLDir}=ltGoodDirMat;
-                        tubeProjDataCMat{iGroup,iProj}.ltGoodDirOrigProjMat{iLDir}(:,isPosVec)=...
-                            ltGoodDirMat(:,isPosVec)./repmat(ltProjGoodDirNormVec(isPosVec),dimProj,1);
+                        if any(isPosVec)
+                            tubeProjDataCMat{iGroup,iProj}.ltGoodDirOrigProjMat{iLDir}(:,isPosVec)=...
+                                ltGoodDirMat(:,isPosVec)./repmat(ltProjGoodDirNormVec(isPosVec),dimProj,1);
+                        end
                         tubeProjDataCMat{iGroup,iProj}.ltGoodDirNormOrigProjVec{iLDir}=...
                             ltGoodDirNormOrigVec.*ltProjGoodDirNormVec;
                         %
@@ -946,6 +953,50 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     getCutObj(StructFieldVal, isNeededIndVec),...
                     SData.(fieldName), 'UniformOutput', false);
             end
+        end
+        % CUT - extracts the piece of the relation object from given start time to
+        %       given end time.
+        % Input:
+        %  regular:
+        %     self.
+        %     cutTimeVec: double[1, 2]/ double[1, 1] - time interval to cut
+        %
+        % Output:
+        % cutEllTubeRel: smartdb.relation.StaticRelation[1, 1]/
+        %      smartdb.relation.DynamicRelation[1, 1] - relation object resulting
+        %      from CUT operation
+        function cutEllTubeRel = cut(self, cutTimeVec)
+            import gras.ellapx.smartdb.F;
+            import modgen.common.throwerror;
+            %
+            if numel(cutTimeVec) == 1
+                cutTimeVec = [cutTimeVec(1) cutTimeVec(1)];
+            end
+            if numel(cutTimeVec) ~= 2
+                throwerror('wrongInput', ['input vector should ',...
+                    'contain 1 or 2 elements.']);
+            end
+            cutStartTime = cutTimeVec(1);
+            cutEndTime = cutTimeVec(2);
+            if cutStartTime > cutEndTime
+                throwerror('wrongInput', 's0 must be less or equal than s1.');
+            end
+            timeVec = self.timeVec{1};
+            startTime = timeVec(1);
+            endTime = timeVec(end);
+            %
+            if cutStartTime < startTime ||...
+                    cutStartTime > endTime ||...
+                    cutEndTime < startTime ||...
+                    cutEndTime > endTime
+                throwerror('wrongInput',...
+                    'cutTimeVec is out of allowed range');
+            end
+            %
+            isWithinVec=(timeVec<=cutEndTime)&(timeVec>=cutStartTime);
+            resTimeVec=union(timeVec(isWithinVec),cutTimeVec);
+            %
+            cutEllTubeRel=self.interp(resTimeVec);
         end
     end
     methods (Access=protected)

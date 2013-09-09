@@ -14,8 +14,8 @@
   rs = reach(ds, X0, L0, N,o);
 
   rs = refine(rs, L);
-  plot_ea(rs); hold on;
-  plot_ia(rs);
+  plotByEa(rs); hold on;
+  plotByIa(rs);
 
 
   E  = get_ea(rs);

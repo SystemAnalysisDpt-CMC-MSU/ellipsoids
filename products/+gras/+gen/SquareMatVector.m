@@ -107,13 +107,19 @@ classdef SquareMatVector<gras.gen.MatVector
             %
             nMatElems=size(InpBArray,3);
             if nMatElems==1
-                bInvMat=inv(InpBArray);
-                outVec=sum((bInvMat*InpAArray).*InpAArray,1);
+                outVec=sum((InpBArray\InpAArray).*InpAArray,1);
             else
                 outVec=zeros(1,nElems);
-                for iElem=1:nElems
-                    outVec(iElem)=transpose(InpAArray(:,iElem))*...
-                        (InpBArray(:,:,iElem)\InpAArray(:,iElem));
+                if size(InpAArray,2)==1
+                    for iElem=1:nMatElems
+                        outVec(iElem)=transpose(InpAArray)*...
+                            (InpBArray(:,:,iElem)\InpAArray);
+                    end
+                else
+                    for iElem=1:nElems
+                        outVec(iElem)=transpose(InpAArray(:,iElem))*...
+                            (InpBArray(:,:,iElem)\InpAArray(:,iElem));
+                    end
                 end
             end
         end

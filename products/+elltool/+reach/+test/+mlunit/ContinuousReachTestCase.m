@@ -21,7 +21,7 @@ classdef ContinuousReachTestCase < mlunitext.test_case
         function verticesCVec =...
                 getVerticesFromHMap(axesHMap, specStr)
             axesHMapKeysCVec = axesHMap.keys;
-            if strcmp(specStr, 'Ellipsoidal tubes')
+            if strcmp(specStr, 'Ellipsoidal/reach tubes')
                 findStr = 'Reach Tube';
             else
                 findStr = 'Good directions curve';
@@ -50,7 +50,7 @@ classdef ContinuousReachTestCase < mlunitext.test_case
                 else
                     projReachObj = reachObj.getCopy();
                 end
-                plotter = projReachObj.plot_ea();
+                plotter = projReachObj.plotEa();
                 scaleFactor = reachObj.getEaScaleFactor();
             elseif approxType == EApproxType.Internal
                 ellArray = reachObj.get_ia();
@@ -60,7 +60,7 @@ classdef ContinuousReachTestCase < mlunitext.test_case
                 else
                     projReachObj = reachObj.getCopy();
                 end
-                plotter = projReachObj.plot_ia();
+                plotter = projReachObj.plotIa();
                 scaleFactor = reachObj.getIaScaleFactor();
             end
             [dirCVec timeVec] = reachObj.get_directions();
@@ -81,7 +81,7 @@ classdef ContinuousReachTestCase < mlunitext.test_case
                 axesHMap = axesHMapList{iAxesHMap};
                 %
                 rtVerticesVec = self.getVerticesFromHMap(axesHMap,...
-                    'Ellipsoidal tubes');
+                    'Ellipsoidal/reach tubes');
                 gdVerticesCVec = self.getVerticesFromHMap(axesHMap,...
                     'Good directions');
                 %
@@ -199,13 +199,13 @@ classdef ContinuousReachTestCase < mlunitext.test_case
         function self = testPlotEa(self)
             import gras.ellapx.enums.EApproxType;
             self.runPlotTest(EApproxType.External);
-            self.reachObj.plot_ea();
+            self.reachObj.plotEa();
         end
         %
         function self = testPlotIa(self)
             import gras.ellapx.enums.EApproxType;
             self.runPlotTest(EApproxType.Internal);
-            self.reachObj.plot_ia();
+            self.reachObj.plotIa();
         end
         %
         function self = testDimension(self)
@@ -272,15 +272,15 @@ classdef ContinuousReachTestCase < mlunitext.test_case
             checkScalarCut(tStart);
             %
             checkCut([tMid,tEnd]);
-            checkCut([tStart,tMid]);            
+            checkCut([tStart,tMid]);
             %
             function checkScalarCut(tScalar)
-            cutReachObj = self.reachObj.cut(tScalar);
-            cutReachObj.dimension();                
+                cutReachObj = self.reachObj.cut(tScalar);
+                cutReachObj.dimension();
             end
             %
             function checkCut(newTimeVec)
-                import gras.ellapx.enums.EApproxType;    
+                import gras.ellapx.enums.EApproxType;
                 import gras.ellapx.smartdb.F;
                 %
                 cutReachObj = origReachObj.cut(newTimeVec);
@@ -305,7 +305,7 @@ classdef ContinuousReachTestCase < mlunitext.test_case
                         end
                         l0Vec = l0Vec ./ norm(l0Vec);
                         %
-                        newApxTimeVec=newTimeVec;                        
+                        newApxTimeVec=newTimeVec;
                         if isBackward
                             newApxTimeVec=fliplr(newTimeVec);
                         end
@@ -324,12 +324,11 @@ classdef ContinuousReachTestCase < mlunitext.test_case
             end
         end
         %
-        function self = testNegativeCut(self)
+        function self = testProjectionCut(self)
             projReachObj =...
                 self.reachObj.projection(eye(self.reachObj.dimension(), 2));
             newTimeVec = [sum(self.tVec)/2, self.tVec(2)];
-            self.runAndCheckError('projReachObj.cut(newTimeVec)',...
-                'wrongInput');
+            projReachObj.cut(newTimeVec);
         end
         %
         function self = testNegativePlot(self)
@@ -341,8 +340,8 @@ classdef ContinuousReachTestCase < mlunitext.test_case
                 projReachSet =...
                     self.reachObj.projection(eye(dim, 3));
             end
-            self.runAndCheckError('projReachSet.plot_ea()', 'wrongInput');
-            self.runAndCheckError('projReachSet.plot_ia()', 'wrongInput');
+            self.runAndCheckError('projReachSet.plotEa()', 'wrongInput');
+            self.runAndCheckError('projReachSet.plotIa()', 'wrongInput');
         end
         %
         function self = testGetCopy(self)

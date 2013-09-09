@@ -1,4 +1,4 @@
-function [vGridMat, fGridMat] = getGrid(nDim,nPoints)
+function [vGridMat, fGridMat] = spheretriext(nDim,nPoints)
 %
 % GETGRID - compute  grid of 2d or 3d sphere.
 %

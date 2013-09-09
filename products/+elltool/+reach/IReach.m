@@ -539,14 +539,66 @@ classdef IReach < handle
         %   timeVec = [0 10];  
         %   dirsMat = [1 0; 0 1]';
         %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-        %   rsObj.plot_ea();
+        %   rsObj.plotEa();
         %   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds); 
+        %   
         %   dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
-        %   dRsObj.plot_ea();
+        %   dRsObj.plotEa();
         %
-        plot_ea(self, varargin)
+        plotEa(self, varargin)
         %
-        % PLOT_IA - plots internal approximations of 2D and 3D reach sets.
+        % PLOTBYEA - plot external approximation of 2D and 3D reach sets.
+        %
+        % Input:
+        %   regular:
+        %       self.
+        %
+        %   optional:
+        %       colorSpec: char[1,1] - color specification code, can be 'r','g',
+        %                    etc (any code supported by built-in Matlab function).
+        %
+        %   properties:
+        %
+        %       'fill': logical[1,1]  -
+        %               if true, approximation in 2D will be filled with color.
+        %        Default value is false.
+        %       'lineWidth': double[1,1]  -
+        %                    line width for  2D plots. Default value is 1.
+        %       'color': double[1,3] -
+        %                sets default color in the form [x y z].
+        %                   Default value is [0.5 0.5 0.5].
+        %       'shade': double[1,1] -
+        %       level of transparency between 0 and 1 (0 - transparent, 1 - opaque).
+        %                Default value is 0.4.
+        %
+        %       'relDataPlotter' - relation data plotter object.
+        %       'showDiscrete':logical[1,1]  -
+        %           if true, approximation in 3D will be filled in every time slice
+        %       'numPointsInOneTime': double[1,1] -
+        %           number of points in every time slice.
+        %
+        % Output:
+        %   regular:
+        %       plObj: smartdb.disp.RelationDataPlotter[1,1] - returns the relation
+        %       data plotter object.
+        % Example:
+        %   aMat = [0 1; 0 0]; bMat = eye(2);
+        %   SUBounds = struct();
+        %   SUBounds.center = {'sin(t)'; 'cos(t)'};
+        %   SUBounds.shape = [9 0; 0 2];
+        %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+        %   x0EllObj = ell_unitball(2);
+        %   timeVec = [0 10];
+        %   dirsMat = [1 0; 0 1]';
+        %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+        %   rsObj.plotEa();
+        %   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+        %   dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
+        %   dRsObj.plotByEa();
+        %
+        plObj = plotByEa(self, varargin)
+        %
+        % PLOTIA - plots internal approximations of 2D and 3D reach sets.
         %
         % Input:
         %   regular:
@@ -554,47 +606,98 @@ classdef IReach < handle
         %
         %   optional:
         %       colorSpec: char[1, 1] - set color to plot in following way:
-        %                              'r' - red color, 
+        %                              'r' - red color,
         %                              'g' - green color,
-        %                              'b' - blue color, 
+        %                              'b' - blue color,
         %                              'y' - yellow color,
         %                              'c' - cyan color,
         %                              'm' - magenta color,
         %                              'w' - white color.
         %
         %       OptStruct: struct[1, 1] with fields:
-        %           color: double[1, 3] - sets color of the picture in the form 
+        %           color: double[1, 3] - sets color of the picture in the form
         %                 [x y z].
-        %           width: double[1, 1] - sets line width for 2D plots. 
-        %           shade: double[1, 1] in [0; 1] interval - sets transparency level  
+        %           width: double[1, 1] - sets line width for 2D plots.
+        %           shade: double[1, 1] in [0; 1] interval - sets transparency level
         %                 (0 - transparent, 1 - opaque).
         %            fill: double[1, 1] - if set to 1, reach set will be filled with
-        %                 color. 
+        %                 color.
         %
         % Example:
         %   aMat = [0 1; 0 0]; bMat = eye(2);
         %   SUBounds = struct();
-        %   SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        %   SUBounds.center = {'sin(t)'; 'cos(t)'};
         %   SUBounds.shape = [9 0; 0 2];
-        %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds); 
-        %   x0EllObj = ell_unitball(2);  
-        %   timeVec = [0 10];  
+        %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+        %   x0EllObj = ell_unitball(2);
+        %   timeVec = [0 10];
         %   dirsMat = [1 0; 0 1]';
         %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-        %   rsObj.plot_ia();
-        %   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds); 
+        %   rsObj.plotIa();
+        %   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
         %   dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
-        %   dRsObj.plot_ia();
+        %   dRsObj.plotIa();
         %
-        plot_ia(self, varargin)
+        plObj = plotIa(self, varargin)
         %
-        % PROJECTION - projects the reach set self onto the orthogonal basis   
+        % PLOTBYIA - plot internal approximation of 2D and 3D reach sets.
+        %
+        % Input:
+        %   regular:
+        %       self.
+        %
+        %   optional:
+        %       colorSpec: char[1,1] - color specification code, can be 'r','g',
+        %                    etc (any code supported by built-in Matlab function).
+        %
+        %   properties:
+        %
+        %       'fill': logical[1,1]  -
+        %               if true, approximation in 2D will be filled with color.
+        %        Default value is false.
+        %       'lineWidth': double[1,1]  -
+        %                    line width for  2D plots. Default value is 1.
+        %       'color': double[1,3] -
+        %                sets default color in the form [x y z].
+        %                   Default value is [0.5 0.5 0.5].
+        %       'shade': double[1,1] -
+        %       level of transparency between 0 and 1 (0 - transparent, 1 - opaque).
+        %                Default value is 0.4.
+        %
+        %       'relDataPlotter' - relation data plotter object.
+        %       'showDiscrete':logical[1,1]  -
+        %           if true, approximation in 3D will be filled in every time slice
+        %       'numPointsInOneTime': double[1,1] -
+        %           number of points in every time slice.
+        %
+        % Output:
+        %   regular:
+        %       plObj: smartdb.disp.RelationDataPlotter[1,1] - returns the relation
+        %       data plotter object.
+        % Example:
+        %   aMat = [0 1; 0 0]; bMat = eye(2);
+        %   SUBounds = struct();
+        %   SUBounds.center = {'sin(t)'; 'cos(t)'};
+        %   SUBounds.shape = [9 0; 0 2];
+        %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+        %   x0EllObj = ell_unitball(2);
+        %   timeVec = [0 10];
+        %   dirsMat = [1 0; 0 1]';
+        %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+        %   rsObj.plotEa();
+        %   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+        %   dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
+        %   dRsObj.plotByEa();
+        %
+        plObj = plotByIa(self, varargin)
+        %
+        % PROJECTION - projects the reach set self onto the orthogonal basis
         %              specified by the columns of matrix projMat.
         %
         % Input:
         %   regular:
-        %       self. 
-        %       projMat: double[nRows, nCols] - projection matrix, where nRows  
+        %       self.
+        %       projMat: double[nRows, nCols] - projection matrix, where nRows
         %           is dimension of reach set, nCols <= nRows.
         %
         % Output:
@@ -603,12 +706,12 @@ classdef IReach < handle
         % Examples:
         %   aMat = [0 1; 0 0]; bMat = eye(2);
         %   SUBounds = struct();
-        %   SUBounds.center = {'sin(t)'; 'cos(t)'};  
+        %   SUBounds.center = {'sin(t)'; 'cos(t)'};
         %   SUBounds.shape = [9 0; 0 2];
         %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
         %   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-        %   x0EllObj = ell_unitball(2);  
-        %   timeVec = [0 10];  
+        %   x0EllObj = ell_unitball(2);
+        %   timeVec = [0 10];
         %   dirsMat = [1 0; 0 1]';
         %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
         %   dRsObj = elltool.reach.ReachRiscrete(dsys, x0EllObj, dirsMat, timeVec);
@@ -616,6 +719,7 @@ classdef IReach < handle
         %   projObj = rsObj.projection(projMat);
         %   dProjObj = dRsObj.projection(projMat);
         %
+        
         projObj = projection(self, projMat)
         %
         % ISEMPTY - checks if given reach set array is an array of empty objects.

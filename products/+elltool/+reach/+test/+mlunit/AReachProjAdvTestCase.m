@@ -124,8 +124,8 @@ classdef AReachProjAdvTestCase < mlunitext.test_case
             mlunitext.assert_equals(true,isEqual,failMsg);
             function checkPlot(reachObj)
                 if numel(indVec)==2
-                    reachObj.plot_ia();
-                    reachObj.plot_ea();
+                    reachObj.plotIa();
+                    reachObj.plotEa();
                 end
             end
         end

@@ -50,5 +50,5 @@ else
         nPlotPoints=floor(nPlotPoints*factor);
     end
 end
-[vGridMat, fGridMat] = ellipsoid.getGrid(nDim,nPlotPoints);
+[vGridMat, fGridMat] =  gras.geom.tri. spheretriext(nDim,nPlotPoints);
 vGridMat(vGridMat == 0) = eps;

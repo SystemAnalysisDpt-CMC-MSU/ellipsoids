@@ -1,10 +1,11 @@
-function [supArr, bpMat] = rhomat(ellShapeMat,ellCenterVec,absTol, dirsMat)
+function [supArr, bpMat] = rhomat(ellShapeMat, dirsMat,absTol,ellCenterVec)
 %
 % RHOMAT - computes the values of the support function for given
 % ellipsoid's shape matrix and center vector and given direction.
 %
 %
-%	[supArr, bpMat] = RHO(ellShapeMat, ellCenterVec,absTol, dirstMat)  Computes the support function
+%	[supArr, bpMat] = RHOMAT(ellShapeMat,  dirstMat,absTol,ellCenterVec)
+%       Computes the support function
 %       of the ellipsoid in directions specified by the columns of
 %       matrix dirsMat, and boundary points bpMat of this ellipsoid that
 %       correspond to directions in dirsMat.
@@ -20,9 +21,10 @@ function [supArr, bpMat] = rhomat(ellShapeMat,ellCenterVec,absTol, dirsMat)
 % Input:
 %   regular:
 %       ellShapeMat: double[nDim,nDim] - shape matrix
+%       dirsMat: double[nDim,nDirs] - matrix of directions.
+%   optional:
 %       ellCenterVec: double[nDim,1] - center matrix
 %       absTol: double[1,1] - if ellipsoid is degenerate
-%       dirsMat: double[nDim,nDirs] - matrix of directions.
 %
 % Output:
 %	supArr: double [nDims1,nDims2,...,nDimsN] - support function
@@ -40,9 +42,21 @@ function [supArr, bpMat] = rhomat(ellShapeMat,ellCenterVec,absTol, dirsMat)
 %
 
 
-
-tempMat  = max(sqrt(sum(dirsMat'*ellShapeMat.*dirsMat',2)), absTol);
-supArr = ellCenterVec'*dirsMat + tempMat';
-bpMat = ((ellShapeMat*dirsMat)./repmat(tempMat',size(ellShapeMat,1),1)) + repmat(ellCenterVec,1,size(dirsMat,2));
-
+if nargin < 4
+    ellCenterVec = zeros(size(ellShapeMat,1),1);
+    if nargin < 3
+        absTol = elltool.conf.Properties.getAbsTol();
+    end
+end
+if size(dirsMat,2) == 1
+    sq  = gras.gen.sqrtpos(dirsMat'*ellShapeMat*dirsMat,absTol);
+    supArr = ellCenterVec'*dirsMat + sq;
+    bpMat = ((ellShapeMat*dirsMat)/sq) + ellCenterVec;
+else
+    tempMat  = gras.gen.sqrtpos(sum(dirsMat'*ellShapeMat.*dirsMat',2),...
+        absTol);
+    supArr = ellCenterVec'*dirsMat + tempMat';
+    bpMat = ((ellShapeMat*dirsMat)./repmat(tempMat',...
+        size(ellShapeMat,1),1))...
+        + repmat(ellCenterVec,1,size(dirsMat,2));
 end

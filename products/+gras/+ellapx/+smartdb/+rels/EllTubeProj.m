@@ -47,5 +47,6 @@ classdef EllTubeProj<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&...
             self=self@gras.ellapx.smartdb.rels.ATypifiedAdjustedRel(...
                 varargin{:}); 
         end
+        
     end
 end

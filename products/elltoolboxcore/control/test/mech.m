@@ -28,6 +28,6 @@
  BB = [1 0 0 0; 0 1 0 0]';
  ps = projection(rs, BB);
 
- plot_ea(ps); hold on;
- plot_ia(ps); hold on;
+ plotByEa(ps); hold on;
+ plotByIa(ps); hold on;
 

@@ -1,4 +1,4 @@
-function  [plObj,nDim,isHold] = plotgeombodyarr(objClassName,...
+function  [plObj,nDim,isHold] = plotgeombodyarr(fIsObjClassName,fDim,...
     calcBodyPoints,fPlotPatch,varargin)
 %
 % plotgeombodyarr - plots objects in 2D or 3D.
@@ -6,9 +6,9 @@ function  [plObj,nDim,isHold] = plotgeombodyarr(objClassName,...
 %
 % Usage:
 %       plotgeombodyarr(objClassName,rebuildOneDim2TwoDim,calcBodyPoints,
-%       plotPatch,objArr,'Property',PropValue,...) 
+%       plotPatch,objArr,'Property',PropValue,...)
 %       - plots array of objClassName objects
-%           using calcBodyPoints function to calculate points,  
+%           using calcBodyPoints function to calculate points,
 %rebuildOneDim2TwoDim to rebuild one dim ibjects to two dim if it is needed,
 %           plotPatch to plot objects with  setting properties
 %
@@ -32,16 +32,16 @@ function  [plObj,nDim,isHold] = plotgeombodyarr(objClassName,...
 %                                            N-th objects array
 %       colorNSpec - same as color1Spec but for bodyNArr.
 %   properties:
-%       'newFigure': logical[1,1] - if 1, 
+%       'newFigure': logical[1,1] - if 1,
 %                   each plot command will open a new figure window.
 %                    Default value is 0.
 %       'fill': logical[1,1]/logical[dim11Size,dim12Size,...,dim1kSize]  -
-%               if 1, ellipsoids in 2D will be filled with color. 
+%               if 1, ellipsoids in 2D will be filled with color.
 %               Default value is 0.
 %       'lineWidth': double[1,1]/double[dim11Size,dim12Size,...,dim1kSize]  -
 %                    line width for 1D and 2D plots. Default value is 1.
 %       'color': double[1,3]/double[dim11Size,dim12Size,...,dim1kSize,3] -
-%                sets default colors in the form [x y z]. 
+%                sets default colors in the form [x y z].
 %                   Default value is [1 0 0].
 %       'shade': double[1,1]/double[dim11Size,dim12Size,...,dim1kSize]  -
 %      level of transparency between 0 and 1 (0 - transparent, 1 - opaque).
@@ -57,7 +57,7 @@ function  [plObj,nDim,isHold] = plotgeombodyarr(objClassName,...
 %       data plotter object.
 %       nDim: double[1,1] - dimension of objects,
 %       isHold: logical[1,1] - true, if before plotting was hold on,
-%       bodyArr: objClassName: [dim21Size,dim22Size,...,dim2kSize] - 
+%       bodyArr: objClassName: [dim21Size,dim22Size,...,dim2kSize] -
 %       array of input objects
 %
 % $Author: <Ilya Lyubich>  <lubi4ig@gmail.com> $    $Date: <11 January 2013> $
@@ -72,17 +72,19 @@ DEFAULT_LINE_WIDTH = 1;
 DEFAULT_SHAD = 0.4;
 isObj = true;
 [reg,~,plObj,isNewFigure,isFill,lineWidth,colorVec,shadVec,priorHold,...
-    postHold, isRelPlotterSpec,~,isIsFill,isLineWidth,isColorVec,isShad,~,...
-    isPostHold]=...
+    postHold, isRelPlotterSpec,~,isIsFill,isLineWidth,...
+    isColorVec,isShad,~,...
+    isPostHold,]=...
     modgen.common.parseparext(varargin,...
     {'relDataPlotter','newFigure','fill','lineWidth','color','shade',...
     'priorHold','postHold';...
-    [],0,[],[],[],0,false,false...
+    [],0,[],[],[],0,false,false,...
     ;@(x)isa(x,'smartdb.disp.RelationDataPlotter'),...
     @(x)isa(x,'logical'),@(x)(isa(x,'logical')||isa(x,'double')),...
     @(x)isa(x,'double'),...
     @(x)isa(x,'double'),...
-    @(x)isa(x,'double'), @(x)isa(x,'logical'),@(x)isa(x,'logical')});
+    @(x)isa(x,'double'), @(x)isa(x,'logical'),@(x)isa(x,'logical'),...
+    });
 checkIsWrongInput();
 
 if ~isRelPlotterSpec
@@ -95,9 +97,9 @@ if ~isRelPlotterSpec
 end
 [bodyArr, uColorVec, vColorVec, isCharColor] = getParams(reg);
 if isCharColor && isColorVec
-    throwerror('ConflictingColor', 'Conflicting using of color property');
+    isColorVec = false;
 end
-nDim = max(dimension(bodyArr));
+nDim = max(fDim(bodyArr));
 if nDim == 3 && isLineWidth
     throwerror('wrongProperty', 'LineWidth is not supported by 3D objects');
 end
@@ -113,17 +115,20 @@ else
     hAx = get(hFigure,'currentaxes');
     if isempty(hAx)
         isHold=false;
-    elseif ~ishold(hAx)
-        if priorHold
-            isHold = true;
-        else
-            if ~isRelPlotterSpec
-                cla;
-            end
-            isHold = false;
-        end
     else
-        isHold = true;
+        
+        if ~ishold(hAx)
+            if priorHold
+                isHold = true;
+            else
+                if ~isRelPlotterSpec
+                    cla;
+                end
+                isHold = false;
+            end
+        else
+            isHold = true;
+        end
     end
 end
 if isPostHold
@@ -139,6 +144,7 @@ else
         postFun = @axesSetPropDoNothing2Func;
     end
 end
+
 if isObj
     rel=smartdb.relations.DynamicRelation(SData);
     if (nDim==2)||(nDim == 1)
@@ -148,7 +154,8 @@ if isObj
             @axesSetPropDoNothingFunc,{},...
             @plotCreateFillPlotFunc,...
             {'xCMat','faceCMat','clrVec','fill','shadVec', ...
-            'widVec','plotPatch'},'axesPostPlotFunc',postFun,...
+            'widVec','plotPatch'},...
+            'axesPostPlotFunc',postFun,...
             'isAutoHoldOn',false);
         
     elseif (nDim==3)
@@ -158,7 +165,8 @@ if isObj
             @axesSetPropDoNothingFunc,{},...
             @plotCreatePatchFunc,...
             {'verCMat','faceCMat','faceVertexCDataCMat',...
-            'shadVec','clrVec','plotPatch'},'axesPostPlotFunc',postFun,...
+            'shadVec','clrVec','plotPatch',...
+            },'axesPostPlotFunc',postFun,...
             'isAutoHoldOn',false);
     end
 end
@@ -168,7 +176,9 @@ end
 
 
     function prepareForPlot()
+        
         [xCMat,fCMat] = calcBodyPoints(bodyArr);
+        
         if numel(cell2mat(xCMat)) > 0
             
             bodyPlotNum = numel(xCMat);
@@ -221,7 +231,6 @@ end
             SData.axesNumCMat = repmat({1},bodyPlotNum,1);
             SData.plotPatch = repmat({fPlotPatch},bodyPlotNum,1);
             SData.figureNumCMat = repmat({1},bodyPlotNum,1);
-            
             SData.widVec = lineWidth.';
             SData.shadVec = shadVec.';
             SData.fill = (isFill)';
@@ -232,7 +241,7 @@ end
     function checkDimensions()
         import elltool.conf.Properties;
         import modgen.common.throwerror;
-        ellsArrDims = dimension(bodyArr);
+        ellsArrDims = fDim(bodyArr);
         mDim    = min(ellsArrDims);
         nDim    = max(ellsArrDims);
         if mDim ~= nDim
@@ -289,7 +298,7 @@ end
                 else
                     if nParams ~= bodyPlotNum
                         throwerror('wrongParamsNumber',...
-                     'Number of params is not equal to number of objects');
+                            'Number of params is not equal to number of objects');
                     end
                     outParamVec = reshape(inParamArr, 1, nParams);
                 end
@@ -352,7 +361,7 @@ end
                     throwerror('wrongPropertyValue', ...
                         'There is no value for property.');
                 end
-            elseif ~isa(value, objClassName) && ~ischar(value)
+            elseif ~fIsObjClassName(value) && ~ischar(value)
                 throwerror('wrongPropertyType',...
                     'Property must be a string.');
             end
@@ -387,7 +396,7 @@ end
         function [ellVec, uColorVec, vColorVec] = getParams(ellArr, ...
                 nextObjArr, isnLastElem)
             import modgen.common.throwerror;
-            if isa(ellArr, objClassName)
+            if fIsObjClassName(ellArr)
                 cnt    = numel(ellArr);
                 ellVec = reshape(ellArr, cnt, 1);
                 
@@ -452,8 +461,9 @@ if ~isFill
 end
 h1 = plotPatch('Vertices',X','Faces',faces,'Parent',hAxes);
 set(h1, 'EdgeColor', clrVec, 'LineWidth', widVec,'FaceAlpha',shade,...
-    'FaceColor',clrVec);
+    'FaceColor',clrVec,'DisplayName','1');
 hVec = h1;
+view(hAxes,2);
 end
 function figureSetPropFunc(hFigure,figureName,~)
 set(hFigure,'Name',figureName);
@@ -462,10 +472,16 @@ function figureGroupName=figureGetGroupNameFunc(figureName)
 figureGroupName=figureName;
 end
 function hVec=axesSetPropDoNothingFunc(hAxes,~)
+axis(hAxes,'on');
+axis(hAxes,'auto');
+grid(hAxes,'on');
 hold(hAxes,'on');
 hVec=[];
 end
 function hVec=axesSetPropDoNothing2Func(hAxes,~)
+axis(hAxes,'on');
+axis(hAxes,'auto');
+grid(hAxes,'on');
 hold(hAxes,'off');
 hVec=[];
 end
@@ -478,7 +494,8 @@ import modgen.graphics.camlight;
 LIGHT_TYPE_LIST={{'left'},{40,-65},{-20,25}};
 hVec = plotPatch('Vertices',vertices', 'Faces', faces, ...
     'FaceVertexCData', faceVertexCData, 'FaceColor','flat', ...
-    'FaceAlpha', faceAlpha,'EdgeColor',clrVec,'Parent',hAxes);
+    'FaceAlpha', faceAlpha,'EdgeColor',clrVec,'Parent',hAxes,...
+    'DisplayName','1');
 hLightVec=cellfun(@(x)camlight(hAxes,x{:}),LIGHT_TYPE_LIST);
 hVec=[hVec,hLightVec];
 if size(vertices,2) > 1

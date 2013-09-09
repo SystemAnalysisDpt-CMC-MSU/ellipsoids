@@ -1,4 +1,4 @@
-function [ bpMat, fVec] = ellbndr_2dmat(  nPoints, cenVec, qMat,absTol)
+function [ bpMat, fVec] = ellbndr_2dmat(nPoints, cenVec, qMat,absTol)
 %
 % ELLBNDR_2DMAT - computes the boudary of 2D ellipsoid given its center
 %                 and shape matrix
@@ -24,13 +24,13 @@ function [ bpMat, fVec] = ellbndr_2dmat(  nPoints, cenVec, qMat,absTol)
 %            Faculty of Computational Mathematics and Cybernetics,
 %            System Analysis Department 2013 $
 %
-if nargin<2
+if nargin<3
     cenVec=zeros(2,1);
 end
-if nargin<3
+if nargin<4
     qMat=eye(2);
 end
-if nargin<4
+if nargin<5
     absTol=elltool.conf.Properties.getAbsTol();
 end
 if nargout>1

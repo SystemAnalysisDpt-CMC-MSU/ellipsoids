@@ -8,13 +8,17 @@ classdef EllTubeStaticSpaceProjector<gras.ellapx.proj.AEllTubePlainProjector
     end
     methods (Access=protected)
         function projType=getProjType(~)
-            projType=gras.ellapx.enums.EProjType.Static;            
+            projType=gras.ellapx.enums.EProjType.Static;
         end
         function [projOrthMatArray,projOrthMatTransArray]=...
-                getProjectionMatrix(~,projMat,timeVec,varargin)
+                getProjectionMatrix(self,projMat,timeVec,varargin)
+            import modgen.common.throwwarn
+            kSize = size(projMat,1);
+            projMat = gras.la.matorth(projMat');
+            projMat = projMat(:,1:kSize)';
             nTimes=length(timeVec);
             projOrthMatArray=repmat(projMat,[1 1 nTimes]);
-            projOrthMatTransArray=repmat(projMat.',[1 1 nTimes]);            
+            projOrthMatTransArray=repmat(projMat.',[1 1 nTimes]);
         end
     end
 end

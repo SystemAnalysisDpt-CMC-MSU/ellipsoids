@@ -20,6 +20,11 @@ classdef EllTubeProjectorBuilder<handle
             projMatList=cellfun(@(x,y)x(y,:),projMatList,projSpaceList,...
                 'UniformOutput',false);
             %
+            for iNum = 1:numel(projSpaceList)
+                projMat = double(diag(projSpaceList{iNum}));
+                projSpaceList{iNum} = projMat(:,sum(abs(projMat))>0)';
+            end
+            %
             isDynamicEnabled=confRepoMgr.getParam(...
                 'projectionProps.isDynamicProjEnabled');
             isStaticEnabled=confRepoMgr.getParam(...

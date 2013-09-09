@@ -445,6 +445,74 @@ classdef AReach < elltool.reach.IReach
         end
     end
     %
+    methods (Access = protected)
+        function plotter = plotByApprox(self, approxType,...
+                varargin)
+            import gras.ellapx.smartdb.F;
+            import gras.ellapx.enums.EProjType;
+            import gras.ellapx.enums.EApproxType;
+            import modgen.common.throwerror;
+            [reg,~,isShowDiscrete,nPlotPoints]=...
+                modgen.common.parseparext(varargin,...
+                {'showDiscrete','nSpacePartPoins' ;...
+                false, self.nPlot3dPoints;
+                @(x)isa(x,'logical'),@(x)isa(x,'double')});
+            [colorVec, shade, lineWidth, isFill,reg] =...
+                parceInputForPlot(approxType,reg{:});
+            
+            
+            switch approxType
+                case EApproxType.Internal
+                    if ~self.isprojection()
+                        nDims = self.dimension;
+                        if nDims > 3 ||  nDims < 2
+                            throwerror('WrongDim',...
+                                'object dimension can be  2 or 3');
+                        end
+                        projReachObj = self.projection(eye(nDims));
+                        
+                    else
+                        projReachObj= self;
+                    end
+                    plotter = projReachObj.ellTubeRel...
+                        .getTuplesFilteredBy(...
+                        F.APPROX_TYPE, approxType)...
+                        .plotInt(reg{:},'fGetColor',...
+                        @(x)(colorVec), 'fGetAlpha', @(x)(shade),...
+                        'fGetLineWidth', @(x)(lineWidth),...
+                        'fGetFill', @(x)(isFill),...
+                        'nSpacePartPoins',nPlotPoints,...
+                        'showDiscrete',isShowDiscrete);
+                case EApproxType.External
+                    if ~self.isprojection()
+                        nDims = self.dimension;
+                        if nDims > 3 ||  nDims < 2
+                            throwerror('WrongDim',...
+                                'object dimension can be  2 or 3');
+                        end
+                        projReachObj = self.projection(eye(nDims));
+                        
+                    else
+                        projReachObj= self;
+                    end
+                    plotter = projReachObj.ellTubeRel...
+                        .getTuplesFilteredBy(...
+                        F.APPROX_TYPE, approxType)...
+                        .plotExt(reg{:},'fGetColor',...
+                        @(x)(colorVec), 'fGetAlpha', @(x)(shade),...
+                        'fGetLineWidth', @(x)(lineWidth),...
+                        'fGetFill', @(x)(isFill),...
+                        'nSpacePartPoins',nPlotPoints,...
+                        'showDiscrete',isShowDiscrete);
+                otherwise
+                    throwerror('WrongApproxType',...
+                        'approxType %s is not supported',char(approxType));
+            end
+            
+            
+            
+        end
+    end
     methods (Access = private)
         function [dataCVec, indVec] = evolveApprox(self, ...
                 newTimeVec, newLinSys, approxType)
@@ -513,6 +581,8 @@ classdef AReach < elltool.reach.IReach
             import gras.ellapx.enums.EProjType;
             import gras.ellapx.smartdb.F;
             APPROX_TYPE = F.APPROX_TYPE;
+            ProjCMatList = {projMat'};
+            projType = EProjType.Static;
             if nargin > 2
                 localEllTubeRel =...
                     self.ellTubeRel.getTuplesFilteredBy(...
@@ -523,153 +593,58 @@ classdef AReach < elltool.reach.IReach
             if nargin == 4
                 localEllTubeRel.scale(@(x) scaleFactor, {APPROX_TYPE});
             end
-            ellTubeProjRel = localEllTubeRel.projectStatic({projMat'});
+            ellTubeProjRel = localEllTubeRel.project(projType,...
+                ProjCMatList, @fProj);
+            function [projOrthMatArray,projOrthMatTransArray] ...
+                    = fProj(projMat,timeVec,varargin)
+                kSize = size(projMat,1);
+                projMat = gras.la.matorth(projMat');
+                projMat = projMat(:,1:kSize)';
+                nTimes=length(timeVec);
+                projOrthMatArray=repmat(projMat,[1 1 nTimes]);
+                projOrthMatTransArray=repmat(projMat.',[1 1 nTimes]);
+            end
         end
         function plotter = plotApprox(self, approxType, varargin)
             import gras.ellapx.enums.EApproxType;
             import modgen.common.throwerror;
             import gras.ellapx.smartdb.F;
             APPROX_TYPE = F.APPROX_TYPE;
-            DEFAULT_EA_COLOR_VEC = [0 0 1];
-            DEFAULT_IA_COLOR_VEC = [0 1 0];
-            DEFAULT_LINE_WIDTH = 2;
-            DEFAULT_EA_SHADE = 0.3;
-            DEFAULT_IA_SHADE = 0.1;
-            DEFAULT_FILL = false;
-            %
-            if approxType == EApproxType.External
-                [reg, ~, colorVec, shade, lineWidth, isFill,...
-                    isColorVec, ~, ~, ~] = ...
-                    modgen.common.parseparext(varargin,...
-                    {'color', 'shade', 'width', 'fill';...
-                    DEFAULT_EA_COLOR_VEC, DEFAULT_EA_SHADE,...
-                    DEFAULT_LINE_WIDTH, DEFAULT_FILL;...
-                    'isvector(x)',...
-                    @(x)(isa(x, 'double') && (x >= 0) && (x <= 1)),...
-                    @(x)(isa(x, 'double') && (x > 0)), 'islogical(x)'});
-            else
-                [reg, ~, colorVec, shade, lineWidth, isFill,...
-                    isColorVec, ~, ~, ~] = ...
-                    modgen.common.parseparext(varargin,...
-                    {'color', 'shade', 'width', 'fill';...
-                    DEFAULT_IA_COLOR_VEC, DEFAULT_IA_SHADE,...
-                    DEFAULT_LINE_WIDTH, DEFAULT_FILL;...
-                    'isvector(x)',...
-                    @(x)(isa(x, 'double') && (x >= 0) && (x <= 1)),...
-                    @(x)(isa(x, 'double') && (x > 0)), 'islogical(x)'});
-            end
-            %
-            checkIsWrongInput();
-            %
-            if (nargin > 2) && ~isempty(reg)
-                if ischar(reg{1})
-                    if isColorVec
-                        throwerror('ConflictingColor',...
-                            'Conflicting using of color property');
-                    else
-                        colorVec = getColorVec(reg{1});
-                    end
-                end
-            end
             
-            if ischar(colorVec)
-                colorVec = getColorVec(colorVec);
-            end
-            
+            [colorVec, shade, lineWidth, isFill,reg] =...
+                parceInputForPlot(approxType,varargin{:});
             %
+            [~, dim] = self.dimension();
+            
+            
             if self.isProj
-                [~, dim] = self.dimension();
+                
                 if dim < 2 || dim > 3
                     throwerror('wrongInput',...
                         'Dimension of projection must be 2 or 3.');
                 else
-                    plObj = smartdb.disp.RelationDataPlotter();
                     plotter = self.ellTubeRel.getTuplesFilteredBy(...
-                        APPROX_TYPE, approxType).plot(plObj, 'fGetColor',...
+                        APPROX_TYPE, approxType).plot(reg{:}, 'fGetColor',...
                         @(x)(colorVec), 'fGetAlpha', @(x)(shade),...
                         'fGetLineWidth', @(x)(lineWidth),...
                         'fGetFill', @(x)(isFill));
                 end
             else
-                plObj = smartdb.disp.RelationDataPlotter();
-                plotter = self.ellTubeRel.getTuplesFilteredBy(...
-                    APPROX_TYPE, approxType).plot(plObj);
-            end
-            function colCodeVec = getColorVec(colChar)
-                if ~(ischar(colChar))
-                    colCodeVec = [0 0 0];
-                    return;
+                if dim < 2 || dim > 3
+                    plObj = smartdb.disp.RelationDataPlotter();
+                    plotter = self.ellTubeRel.getTuplesFilteredBy(...
+                        APPROX_TYPE, approxType).plot(plObj);
+                else
+                    projReachObj = self.projection(eye(dim));
+                    plObj = smartdb.disp.RelationDataPlotter();
+                    plotter = projReachObj.ellTubeRel.getTuplesFilteredBy(...
+                        APPROX_TYPE, approxType).plot(plObj);
                 end
-                switch colChar
-                    case 'r',
-                        colCodeVec = [1 0 0];
-                    case 'g',
-                        colCodeVec = [0 1 0];
-                    case 'b',
-                        colCodeVec = [0 0 1];
-                    case 'y',
-                        colCodeVec = [1 1 0];
-                    case 'c',
-                        colCodeVec = [0 1 1];
-                    case 'm',
-                        colCodeVec = [1 0 1];
-                    case 'w',
-                        colCodeVec = [1 1 1];
-                    otherwise,
-                        colCodeVec = [0 0 0];
-                end
+                
             end
             
-            function checkIsWrongInput()
-                import modgen.common.throwerror;
-                cellfun(@(x)checkIfNoColorCharPresent(x),reg);
-                cellfun(@(x)checkRightPropName(x),reg);
-                checkIfNoColorCharPresent(colorVec);
-                checkColorSize(colorVec);
-                
-                function checkColorSize(colorVec)
-                    import modgen.common.throwerror;
-                    if isa(colorVec, 'double') && (size(colorVec, 2) ~= 3)
-                        throwerror('wrongColorVecSize', ...
-                            'ColorVec is a vector of length 3');
-                    end
-                end
-                
-                function checkIfNoColorCharPresent(value)
-                    import modgen.common.throwerror;
-                    if ischar(value)&&(numel(value)==1)&&~isColorDef(value)
-                        throwerror('wrongColorChar', ...
-                            'You can''t use this symbol as a color');
-                    end
-                    function isColor = isColorDef(value)
-                        isColor = eq(value, 'r') | eq(value, 'g') |...
-                            eq(value, 'b') | ...
-                            eq(value, 'y') | eq(value, 'c') | ...
-                            eq(value, 'm') | eq(value, 'w');
-                    end
-                end
-                function checkRightPropName(value)
-                    import modgen.common.throwerror;
-                    if ischar(value)&&(numel(value)>1)
-                        if ~isRightProp(value)
-                            throwerror('wrongProperty', ...
-                                'This property doesn''t exist');
-                        else
-                            throwerror('wrongPropertyValue', ...
-                                'There is no value for property.');
-                        end
-                    elseif ~ischar(value)
-                        throwerror('wrongPropertyType',...
-                            'Property must be a string.');
-                    end
-                    function isRProp = isRightProp(value)
-                        isRProp = strcmpi(value, 'fill') |...
-                            strcmpi(value, 'width') | ...
-                            strcmpi(value, 'shade') | strcmpi(value,...
-                            'color');
-                    end
-                end
-            end
+            
+            
         end
         %
         function ellTubeRel = makeEllTubeRel(self, probDynObj, l0Mat,...
@@ -1198,16 +1173,113 @@ classdef AReach < elltool.reach.IReach
             projObj.projectionBasisMat = projMat;
         end
         %
-        function eaPlotter = plot_ea(self, varargin)
+        
+        function eaPlotter = plotEa(self, varargin)
             import gras.ellapx.enums.EApproxType;
             eaPlotter = self.plotApprox(EApproxType.External, varargin{:});
         end
         %
-        function iaPlotter = plot_ia(self, varargin)
+        
+        function iaPlotter = plotIa(self, varargin)
             import gras.ellapx.enums.EApproxType;
-            iaPlotter = self.plotApprox(EApproxType.Internal, varargin{:});
+            iaPlotter = self.plotApprox(EApproxType.Internal,...
+                varargin{:});
         end
         %
+        function eaPlotter = plotByEa(self, varargin)
+            %
+            % plotByEa - plots external approximation of reach tube.
+            %
+            %
+            % Usage:
+            %       plotByEa(self,'Property',PropValue,...)
+            %       - plots external approximation of reach tube
+            %            with  setting properties
+            %
+            % Input:
+            %   regular:
+            %       self: - reach tube
+            %
+            %   optional:
+            %       relDataPlotter:smartdb.disp.RelationDataPlotter[1,1] - relation data plotter object.
+            %       charColor: char[1,1]  - color specification code, can be 'r','g',
+            %                      etc (any code supported by built-in Matlab function).
+            %   properties:
+            %
+            %       'fill': logical[1,1]  -
+            %               if 1, tube in 2D will be filled with color.
+            %               Default value is true.
+            %       'lineWidth': double[1,1]  -
+            %                    line width for 2D plots. Default value is 2.
+            %       'color': double[1,3] -
+            %                sets default colors in the form [x y z].
+            %                   Default value is [0 0 1].
+            %       'shade': double[1,1]  -
+            %      level of transparency between 0 and 1 (0 - transparent, 1 - opaque).
+            %                Default value is 0.3.
+            %
+            % Output:
+            %   regular:
+            %       plObj: smartdb.disp.RelationDataPlotter[1,1] - returns the relation
+            %       data plotter object.
+            %
+            %
+            % $Author: <Ilya Lyubich>  <lubi4ig@gmail.com> $    $Date: <15 July 2013> $
+            % $Copyright: Moscow State University,
+            %            Faculty of Computational Mathematics and Cybernetics,
+            %            System Analysis Department 2013 $
+            import gras.ellapx.enums.EApproxType;
+            eaPlotter = self.plotByApprox(EApproxType.External,...
+                varargin{:});
+            
+        end
+        function iaPlotter = plotByIa(self, varargin)
+            % plotByIa - plots internal approximation of reach tube.
+            %
+            %
+            % Usage:
+            %       plotByIa(self,'Property',PropValue,...)
+            %       - plots internal approximation of reach tube
+            %            with  setting properties
+            %
+            % Input:
+            %   regular:
+            %       self: - reach tube
+            %
+            %   optional:
+            %       relDataPlotter:smartdb.disp.RelationDataPlotter[1,1] - relation data plotter object.
+            %       charColor: char[1,1]  - color specification code, can be 'r','g',
+            %                      etc (any code supported by built-in Matlab function).
+            %   properties:
+            %
+            %       'fill': logical[1,1]  -
+            %               if 1, tube in 2D will be filled with color.
+            %               Default value is true.
+            %       'lineWidth': double[1,1]  -
+            %                    line width for 2D plots. Default value is 2.
+            %       'color': double[1,3] -
+            %                sets default colors in the form [x y z].
+            %                   Default value is [0 1 0].
+            %       'shade': double[1,1]  -
+            %      level of transparency between 0 and 1 (0 - transparent, 1 - opaque).
+            %                Default value is 0.1.
+            %
+            % Output:
+            %   regular:
+            %       plObj: smartdb.disp.RelationDataPlotter[1,1] - returns the relation
+            %       data plotter object.
+            %
+            %
+            % $Author: <Ilya Lyubich>  <lubi4ig@gmail.com> $    $Date: <15 July 2013> $
+            % $Copyright: Moscow State University,
+            %            Faculty of Computational Mathematics and Cybernetics,
+            %            System Analysis Department 2013 $
+            import gras.ellapx.enums.EApproxType;
+            iaPlotter = self.plotByApprox(EApproxType.Internal,...
+                varargin{:});
+            
+        end
+        
         function outReachObj = refine(self, l0Mat)
             import modgen.common.throwerror;
             import gras.ellapx.enums.EApproxType;
@@ -1276,39 +1348,34 @@ classdef AReach < elltool.reach.IReach
                 throwerror('wrongInput',...
                     'Time vector must consist of one or two elements.');
             end
-            if self.isProj
-                throwerror('wrongInput',...
-                    'Method cut does not work with projections.');
-            else
-                cutObj = self.getCopy();
-                if cutTimeVec(1) > cutTimeVec(end)
-                    cutTimeVec = fliplr(cutTimeVec);
-                end
-                switchTimeVec = self.switchSysTimeVec;
-                cutObj.ellTubeRel = self.ellTubeRel.cut(cutTimeVec);
-                switchTimeIndVec =...
-                    switchTimeVec > cutTimeVec(1) &...
-                    switchTimeVec < cutTimeVec(end);
-                switchSystemsTimeVec = [cutTimeVec(1)...
-                    switchTimeVec(switchTimeIndVec) cutTimeVec(end)];
-                if cutTimeVec(1) == cutTimeVec(end)
-                    switchSystemsTimeVec = switchSystemsTimeVec(1:end - 1);
-                end
-                cutObj.switchSysTimeVec = switchSystemsTimeVec;
-                firstIntInd = find(switchTimeIndVec == true, 1);
-                if ~isempty(firstIntInd)
-                    switchTimeIndVec(firstIntInd - 1) = true;
-                else
-                    firstGreaterInd =...
-                        find(switchTimeVec >= cutTimeVec(end), 1);
-                    switchTimeIndVec(max(1, firstGreaterInd - 1)) = true;
-                end
-                maxIncludedInd = find(switchTimeIndVec == 1, 1, 'last');
-                switchTimeIndVec(1 : maxIncludedInd) = true;
-                cutObj.linSysCVec =...
-                    self.linSysCVec(switchTimeIndVec(1 : end - 1));
-                cutObj.isCut = true;
+            cutObj = self.getCopy();
+            if cutTimeVec(1) > cutTimeVec(end)
+                cutTimeVec = fliplr(cutTimeVec);
             end
+            switchTimeVec = self.switchSysTimeVec;
+            cutObj.ellTubeRel = self.ellTubeRel.cut(cutTimeVec);
+            switchTimeIndVec =...
+                switchTimeVec > cutTimeVec(1) &...
+                switchTimeVec < cutTimeVec(end);
+            switchSystemsTimeVec = [cutTimeVec(1)...
+                switchTimeVec(switchTimeIndVec) cutTimeVec(end)];
+            if cutTimeVec(1) == cutTimeVec(end)
+                switchSystemsTimeVec = switchSystemsTimeVec(1:end - 1);
+            end
+            cutObj.switchSysTimeVec = switchSystemsTimeVec;
+            firstIntInd = find(switchTimeIndVec == true, 1);
+            if ~isempty(firstIntInd)
+                switchTimeIndVec(firstIntInd - 1) = true;
+            else
+                firstGreaterInd =...
+                    find(switchTimeVec >= cutTimeVec(end), 1);
+                switchTimeIndVec(max(1, firstGreaterInd - 1)) = true;
+            end
+            maxIncludedInd = find(switchTimeIndVec == 1, 1, 'last');
+            switchTimeIndVec(1 : maxIncludedInd) = true;
+            cutObj.linSysCVec =...
+                self.linSysCVec(switchTimeIndVec(1 : end - 1));
+            cutObj.isCut = true;
         end
         %
         function copyReachObjArr = getCopy(self,varargin)
@@ -1572,4 +1639,91 @@ classdef AReach < elltool.reach.IReach
         end
     end
 end
+function [colorVec, shade, lineWidth, isFill,reg] =...
+    parceInputForPlot(approxType,varargin)
+import gras.ellapx.enums.EApproxType;
+import modgen.common.throwerror;
+import gras.ellapx.smartdb.F;
+DEFAULT_EA_COLOR_VEC = [0 0 1];
+DEFAULT_IA_COLOR_VEC = [0 1 0];
+DEFAULT_LINE_WIDTH = 2;
+DEFAULT_EA_SHADE = 0.3;
+DEFAULT_IA_SHADE = 0.1;
+DEFAULT_FILL = false;
+%
+if approxType == EApproxType.External
+    [reg, ~, colorVec, shade, lineWidth, isFill,...
+        isColorVec, ~, ~, ~] = ...
+        modgen.common.parseparext(varargin,...
+        {'color', 'shade', 'width', 'fill';...
+        DEFAULT_EA_COLOR_VEC, DEFAULT_EA_SHADE,...
+        DEFAULT_LINE_WIDTH, DEFAULT_FILL;...
+        'isvector(x)',...
+        @(x)(isa(x, 'double') && (x >= 0) && (x <= 1)),...
+        @(x)(isa(x, 'double') && (x > 0)), 'islogical(x)'});
+else
+    [reg, ~, colorVec, shade, lineWidth, isFill,...
+        isColorVec, ~, ~, ~] = ...
+        modgen.common.parseparext(varargin,...
+        {'color', 'shade', 'width', 'fill';...
+        DEFAULT_IA_COLOR_VEC, DEFAULT_IA_SHADE,...
+        DEFAULT_LINE_WIDTH, DEFAULT_FILL;...
+        'isvector(x)',...
+        @(x)(isa(x, 'double') && (x >= 0) && (x <= 1)),...
+        @(x)(isa(x, 'double') && (x > 0)), 'islogical(x)'});
+end
+%
+if ischar(colorVec)
+    colorVec = getColorVec(colorVec);
+end
 
+
+%
+if ~isempty(reg)
+    if ischar(reg{1})
+        if isColorVec
+            throwerror('ConflictingColor',...
+                'Conflicting using of color property');
+        else
+            colorVec = getColorVec(reg{1});
+        end
+        reg(1) = [];
+    elseif numel(reg) > 1
+        if ischar(reg{2})
+            if isColorVec
+                throwerror('ConflictingColor',...
+                    'Conflicting using of color property');
+            else
+                colorVec = getColorVec(reg{2});
+            end
+            reg(2) = [];
+        end
+    end
+end
+
+
+end
+function colCodeVec = getColorVec(colChar)
+if ~(ischar(colChar))
+    colCodeVec = [0 0 0];
+    return;
+end
+switch colChar
+    case 'r',
+        colCodeVec = [1 0 0];
+    case 'g',
+        colCodeVec = [0 1 0];
+    case 'b',
+        colCodeVec = [0 0 1];
+    case 'y',
+        colCodeVec = [1 1 0];
+    case 'c',
+        colCodeVec = [0 1 1];
+    case 'm',
+        colCodeVec = [1 0 1];
+    case 'w',
+        colCodeVec = [1 1 1];
+    otherwise,
+        colCodeVec = [0 0 0];
+end
+end

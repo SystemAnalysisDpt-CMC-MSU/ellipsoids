@@ -294,16 +294,19 @@ classdef ellipsoid < elltool.core.AGenEllipsoid
     
     methods(Static)
         ellArr = fromRepMat(varargin)
-        [vGridMat, fGridMat] = getGrid(nDim,nPoints)
         ellArr = fromStruct(SEllArr)
     end
     methods(Static,Access = private)
         res = my_color_table(ch)
         regQMat = regularize(qMat,absTol)
         clrDirsMat = rm_bad_directions(q1Mat, q2Mat, dirsMat,absTol)
-        [isBadDirVec,pUniversalVec] = isbaddirectionmat(q1Mat, q2Mat, dirsMat,absTol)
+        [isBadDirVec,pUniversalVec] = isbaddirectionmat(q1Mat, q2Mat,...
+            dirsMat,absTol)
         [supArr, bpMat] = rhomat(ellShapeMat,ellCenterVec,absTol, dirsMat)
-        [diffBoundMat, isPlotCenter3d] = calcdiffonedir(fstEll,secEll,lMat,pUniversalVec,isGoodDirVec)
+        [diffBoundMat, isPlotCenter3d] = calcdiffonedir(fstEll,secEll,...
+            lMat,pUniversalVec,isGoodDirVec)
+        [ bpMat, fMat] = ellbndr_3dmat(nPoints, cenVec, qMat,absTol)
+        [ bpMat, fMat] = ellbndr_2dmat(nPoints, cenVec, qMat,absTol)
     end
     methods(Access = private)
         [propMat, propVal] = getProperty(hplaneMat,propName, fPropFun)

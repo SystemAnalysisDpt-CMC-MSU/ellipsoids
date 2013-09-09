@@ -176,11 +176,15 @@ classdef EllUnionTubeStaticProj<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&..
                 'timeTouchEndVec','timeTouchOpEndVec',...
                 'isLtTouchVec','isLtTouchOpVec'};
             
-            [plotPropProcObj, plObj] = gras.ellapx.smartdb...
+            [plotPropProcObj, plObj,isRelPlotterSpec] = gras.ellapx.smartdb...
                 .rels.EllTubeProjBasic.parceInput(PLOT_FULL_FIELD_LIST,...
                 varargin{:});
             
+            isHoldFin = fPostHold(self,isRelPlotterSpec);
+            fPostFun = @(varargin)axesPostPlotFunc(self,isHoldFin,varargin{:});
             if self.getNTuples()>0
+                %
+                self.checkForNoReg();
                 %
                 plObj.plotGeneric(self,...
                     @(varargin)figureGetGroupKeyFunc(self,varargin{:}),...
@@ -196,7 +200,9 @@ classdef EllUnionTubeStaticProj<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&..
                     {@(varargin)plotCreateReachTubeFunc(self, plotPropProcObj,...
                     varargin{:}),...
                     @(varargin)plotCreateGoodDirFunc(self, plotPropProcObj,...
-                    varargin{:})},PLOT_FULL_FIELD_LIST);
+                    varargin{:})},PLOT_FULL_FIELD_LIST,...
+                    'axesPostPlotFunc',fPostFun,...
+                    'isAutoHoldOn',isHoldFin);
             else
                 logger=Log4jConfigurator.getLogger();
                 logger.warn('nTuples=0, there is nothing to plot');
@@ -205,8 +211,9 @@ classdef EllUnionTubeStaticProj<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&..
     end
     methods (Access=protected)
         function axesName=axesGetKeyTubeFunc(self,~,projSTimeMat,varargin)
+
             axesName=['Ellipsoidal union tubes, proj. on subspace ',...
-                self.projSpecVec2Str(projSTimeMat)];
+                self.projMat2str(projSTimeMat)];
         end
         function figureSetPropFunc(self,hFigure,varargin)
             figureSetPropFunc@gras.ellapx.smartdb.rels.EllTubeProjBasic(...
@@ -257,9 +264,13 @@ classdef EllUnionTubeStaticProj<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&..
             ZERO_NORM_COLOR_RGB_VEC=[1 1 1];%WHITE
             normRatioVec=ltGoodDirNormVec./ltGoodDirNormOrigVec;
             nPoints=length(normRatioVec);
-            cMat=repmat(ZERO_NORM_COLOR_RGB_VEC,nPoints,1)+...
-                normRatioVec.'*(ONE_NORM_COLOR_RGB_VEC-...
-                ZERO_NORM_COLOR_RGB_VEC);
+            if numel(normRatioVec) == 0
+                cMat = double.empty(0,3);
+            else
+                cMat=repmat(ZERO_NORM_COLOR_RGB_VEC,nPoints,1)+...
+                    normRatioVec.'*(ONE_NORM_COLOR_RGB_VEC-...
+                    ZERO_NORM_COLOR_RGB_VEC);
+            end
         end
         
         function hVec=plotCreateReachTubeFunc(self, plotPropProcObj,...
@@ -297,7 +308,11 @@ classdef EllUnionTubeStaticProj<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&..
             minRefineFactor=ceil(nMinTimePoints/nTimePoints);
             %
             onesVec=ones(size(timeVec));
-            QMatList=shiftdim(mat2cell(QArray,nDims,nDims,onesVec),1);
+            if numel (onesVec) == 1
+                QMatList=shiftdim(mat2cell(QArray,nDims,nDims),1);
+            else
+                QMatList=shiftdim(mat2cell(QArray,nDims,nDims,onesVec),1);
+            end
             aVecList=mat2cell(aMat,nDims,onesVec);
             timeList=num2cell(timeVec);
             %
@@ -313,14 +328,16 @@ classdef EllUnionTubeStaticProj<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&..
                 'UniformOutput',false);
             resTimeVec=[resTimeVecList{:}];
             %
-            QMatSpline=MatrixInterpolantFactory.createInstance(...
-                'symm_column_triu',QArray,timeVec);
-            aVecSpline=MatrixInterpolantFactory.createInstance(...
-                'column',aMat,timeVec);
-            %
-            timeVec=resTimeVec;
-            QArray=QMatSpline.evaluate(timeVec);
-            aMat=aVecSpline.evaluate(timeVec);
+            if numel(timeVec) > 1
+                QMatSpline=MatrixInterpolantFactory.createInstance(...
+                    'symm_column_triu',QArray,timeVec);
+                aVecSpline=MatrixInterpolantFactory.createInstance(...
+                    'column',aMat,timeVec);
+                %
+                timeVec=resTimeVec;
+                QArray=QMatSpline.evaluate(timeVec);
+                aMat=aVecSpline.evaluate(timeVec);
+            end
             %
             xMax=max(shiftdim(realsqrt(QArray(1,1,:)),1)+aMat(1,:));
             xMin=min(-shiftdim(realsqrt(QArray(1,1,:)),1)+aMat(1,:));
@@ -355,7 +372,13 @@ classdef EllUnionTubeStaticProj<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&..
                 vArray(iTime,:)=min(vArray(iTime,:),vArray(iTime-1,:));
             end
             %build isosurface
-            [tttArray,xxxArray,yyyArray]=ndgrid(timeVec,xVec,yVec);
+            if numel(timeVec) == 1
+                vArray = repmat(vArray,[2,1,1]);
+                time2Vec = [timeVec;2*timeVec];
+            else
+                time2Vec = timeVec;
+            end
+            [tttArray,xxxArray,yyyArray]=ndgrid(time2Vec,xVec,yVec);
             [fMat,vMat] = isosurface(tttArray,xxxArray,yyyArray,vArray,1);
             %shrink faces
             maxRangeVec=max(vMat,[],1);
@@ -364,15 +387,27 @@ classdef EllUnionTubeStaticProj<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&..
             minTimeDelta=MAX_EDGE_LENGTH_FACTOR*surfDiam;
             [vMat,fMat]=gras.geom.tri.shrinkfacetri(vMat,fMat,minTimeDelta);
             %
-            hVec=patch('FaceColor','interp','EdgeColor','none',...
-                'DisplayName',patchName,...
-                'FaceAlpha',patchAlpha,...
-                'FaceVertexCData',repmat(patchColorVec,size(vMat,1),1),...
-                'Faces',fMat,'Vertices',vMat,'Parent',hAxes,...
-                'EdgeLighting','phong','FaceLighting','phong');
-            material('metal');
-            axis(hAxes,'tight');
-            axis(hAxes,'normal');
+            if numel(timeVec) == 1
+                vMat = vMat(find(~(vMat(:,1)-timeVec)),2:3); %#ok<FNDSB>
+                fMat = convhulln(vMat);
+                vMat = [repmat(timeVec,[size(vMat,1),1]),vMat];
+                hVec=patch( 'DisplayName',patchName,...
+                    'FaceAlpha',patchAlpha,...
+                    'FaceVertexCData',repmat(patchColorVec,size(vMat,1),1),...
+                    'Faces',fMat,'Vertices',vMat,'Parent',hAxes,...
+                    'EdgeColor',patchColorVec);
+                view(hAxes, [90 0 0]);
+            else
+                hVec=patch('FaceColor','interp','EdgeColor','none',...
+                    'DisplayName',patchName,...
+                    'FaceAlpha',patchAlpha,...
+                    'FaceVertexCData',repmat(patchColorVec,size(vMat,1),1),...
+                    'Faces',fMat,'Vertices',vMat,'Parent',hAxes,...
+                    'EdgeLighting','phong','FaceLighting','phong');
+                material('metal');
+                axis(hAxes,'tight');
+                axis(hAxes,'normal');
+            end
             hold(hAxes,'on');
             %
             if approxType==EApproxType.External
@@ -454,16 +489,16 @@ classdef EllUnionTubeStaticProj<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&..
             end
         end
     end
-%     methods (Access=protected)
-%         function [isOk,reportStr]=isEqualAdjustedInternal(self,otherRel,varargin)
-%             import gras.ellapx.smartdb.rels.EllTubeProj;
-%             selfReducedRel=EllTubeProj(self,'checkStruct',false(1,3));
-%             otherReducedRel=EllTubeProj(otherRel,'checkStruct',false(1,3));
-%             [isOk,reportStr]=...
-%                 isEqualAdjustedInternal@gras.ellapx.smartdb.rels.EllTubeProjBasic(...
-%                 selfReducedRel,otherReducedRel,varargin{:});
-%         end
-%     end
+    %     methods (Access=protected)
+    %         function [isOk,reportStr]=isEqualAdjustedInternal(self,otherRel,varargin)
+    %             import gras.ellapx.smartdb.rels.EllTubeProj;
+    %             selfReducedRel=EllTubeProj(self,'checkStruct',false(1,3));
+    %             otherReducedRel=EllTubeProj(otherRel,'checkStruct',false(1,3));
+    %             [isOk,reportStr]=...
+    %                 isEqualAdjustedInternal@gras.ellapx.smartdb.rels.EllTubeProjBasic(...
+    %                 selfReducedRel,otherReducedRel,varargin{:});
+    %         end
+    %     end
     methods (Static)
         function ellUnionProjRel=fromEllTubes(ellTubeRel)
             % FROMELLTUBES - returns union of the ellipsoidal tubes on time

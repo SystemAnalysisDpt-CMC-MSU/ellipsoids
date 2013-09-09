@@ -13,16 +13,16 @@ firstBpsObj = firstBrsObj.projection(basisMat);
 secBpsObj = secBrsObj.projection(basisMat);
 
 % plot the results:
-subplot(2, 2, 3);
-firstBpsObj.plot_ea('r'); % external apprx. of backward reach set 1 (red)
+
+firstBpsObj.plotByEa('r'); % external apprx. of backward reach set 1 (red)
 hold on;
-firstBpsObj.plot_ia('g'); % internal apprx. of backward reach set 1 (green)
-secBpsObj.plot_ea('y'); % external apprx. of backward reach set 2 (yellow)
-secBpsObj.plot_ia('b'); % internal apprx. of backward reach set 2 (blue)
+firstBpsObj.plotByIa('g'); % internal apprx. of backward reach set 1 (green)
+secBpsObj.plotByEa('y'); % external apprx. of backward reach set 2 (yellow)
+secBpsObj.plotByIa('b'); % internal apprx. of backward reach set 2 (blue)
 
 % plot the 3-dimensional backward reach set at time t = 0:
-subplot(2, 2, 4);
+
 firstBrsObj = firstBrsObj.cut(0);
-firstBrsObj.plot_ea('r');
+firstBrsObj.plotByEa('r');
 hold on;
-firstBrsObj.plot_ia('g');
+firstBrsObj.plotByIa('g');
