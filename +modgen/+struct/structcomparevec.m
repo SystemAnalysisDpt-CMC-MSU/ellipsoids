@@ -135,10 +135,27 @@ if isnumeric(x)
             reportStr='Nans are on the different places';
             return;
         end
+        isMinusInfX=x==-Inf;
+        isMinusInfY=y==-Inf;
+        if ~isequal(isMinusInfX,isMinusInfY);
+            reportStr='-Infs are on the different places';
+            return;
+        end
+        isInfX=x==Inf;
+        isInfY=y==Inf;        
+        if ~isequal(isInfX,isInfY);
+            reportStr='-Inf are on the different places';
+            return;
+        end
+        isCompX=~(isNanX|isMinusInfX|isInfX);
+        isCompY=~(isNanY|isMinusInfY|isInfY);
+    else
+        isCompX=true(size(x));
+        isCompY=true(size(y));
     end
     %
-    [isEqual, ~, ~, ~, ~, reportStr] = absrelcompare(x(~isnan(x)), ...
-        y(~isnan(y)), absTol, relTol, @abs);
+    [isEqual, ~, ~, ~, ~, reportStr] = absrelcompare(x(isCompX), ...
+        y(isCompY), absTol, relTol, @abs);
     %
     if ~isEqual
         reportStr = horzcat('Max. ', reportStr);
