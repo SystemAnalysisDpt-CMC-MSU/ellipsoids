@@ -73,7 +73,7 @@
 		<dirName type="char" >C:/SVN_Local/_GrasResults</dirName>
 	</customResultDir>
 	<plottingProps type="struct" >
-		<isEnabled type="boolean" >0</isEnabled>
+		<isEnabled type="boolean" >1</isEnabled>
 		<viewAngleVec type="double" >-37.5 30</viewAngleVec>
 		<isGoodCurvesSeparately type="boolean" >1</isGoodCurvesSeparately>
 	</plottingProps>

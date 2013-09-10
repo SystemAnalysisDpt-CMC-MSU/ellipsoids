@@ -448,27 +448,6 @@ Output:
       fVec: double[1,nFaces] - indices of points in each face of
           bpMat graph
 \end{verbatim}
-\subsection{\texorpdfstring{ellipsoid.ellbndr\_2dmat}{ellbndr\_2dmat}}\label{method:ellipsoid.ellbndr2dmat}
-\begin{verbatim}
-ELLBNDR_2DMAT - computes the boudary of 2D ellipsoid given its center
-                and shape matrix
-Input:
-  regular:
-      nPoints: double[1,1] - number of resulting points of ellipsoid boudary
-  optional:
-      cenVec: double[nDim,1] - center of ellipsoid, by default equals zero
-              vector
-      qMat: double[nDim,nDim] - shape matrix of ellipsoid, by default
-            equals to identity matrix
-      absTol: double[1,1] - absolute tolerance
-
-Output:
-  regular:
-      bpMat: double[nPoints,2] - boundary points of ellipsoid
-  optional:
-      fVec: double[1,nFaces] - indices of points in each face of
-          bpMat graph
-\end{verbatim}
 \subsection{\texorpdfstring{ellipsoid.ellbndr\_3d}{ellbndr\_3d}}\label{method:ellipsoid.ellbndr3d}
 \begin{verbatim}
 ELLBNDR_3D - compute the boundary of 3D ellipsoid.
@@ -485,27 +464,6 @@ Output:
       bpMat: double[nPoints,3] - boundary points of ellipsoid
   optional:
       fMat: double[nFaces,3] - indices of face verties in bpMat
-\end{verbatim}
-\subsection{\texorpdfstring{ellipsoid.ellbndr\_3dmat}{ellbndr\_3dmat}}\label{method:ellipsoid.ellbndr3dmat}
-\begin{verbatim}
-ELLBNDR_3DMAT - computes the boudary of 3D ellipsoid given its center
-                and shape matrix
-
-Input:
-  regular:
-      nPoints: double[1,1] - number of resulting points of ellipsoid boudary
-  optional:
-      cenVec: double[nDim,1] - center of ellipsoid, by default equals zero
-              vector
-      qMat: double[nDim,nDim] - shape matrix of ellipsoid, by default
-            equals to identity matrix
-      absTol: double[1,1] - absolute tolerance
-
-Output:
-  regular:
-      bpMat: doulbe[nPoints,3] - boundary points of ellipsoid
-  optional:
-      fMat: double[3,nFaces] - indices of face verties in bpMat
 \end{verbatim}
 \subsection{\texorpdfstring{ellipsoid.ellintersection\_ia}{ellintersection\_ia}}\label{method:ellipsoid.ellintersectionia}
 \begin{verbatim}
@@ -686,6 +644,43 @@ Input:
       nPlot3dPoints: double [1,1] - number of points for 3D plot
           with default value 200.
 \end{verbatim}
+\subsection{\texorpdfstring{ellipsoid.fromStruct}{fromStruct}}\label{method:ellipsoid.fromStruct}
+\begin{verbatim}
+fromStruct -- converts structure array into ellipsoid array.
+
+Input:
+  regular:
+      SEllArr: struct [nDim1, nDim2, ...] - array
+          of structures with the following fields:
+
+      q: double[1, nEllDim] - the center of ellipsoid
+      Q: double[nEllDim, nEllDim] - the shape matrix of ellipsoid
+Output:
+      ellArr: ellipsoid [nDim1, nDim2, ...] - ellipsoid array with size of
+          SEllArr.
+
+Example:
+s = struct('Q', eye(2), 'q', [0 0]);
+ellipsoid.fromStruct(s)
+
+-------ellipsoid object-------
+Properties:
+   |
+   |-- actualClass : 'ellipsoid'
+   |--------- size : [1, 1]
+
+Fields (name, type, description):
+    'Q'    'double'    'Configuration matrix'
+    'q'    'double'    'Center'
+
+Data:
+   |
+   |-- q : [0 0]
+   |       -----
+   |-- Q : |1|0|
+   |       |0|1|
+   |       -----
+\end{verbatim}
 \subsection{\texorpdfstring{ellipsoid.getAbsTol}{getAbsTol}}\label{method:ellipsoid.getAbsTol}
 \begin{verbatim}
 GETABSTOL - gives the array of absTol for all elements in ellArr
@@ -789,22 +784,6 @@ Example:
 
   copyEllVec =
   1x2 array of ellipsoids.
-\end{verbatim}
-\subsection{\texorpdfstring{ellipsoid.getGrid}{getGrid}}\label{method:ellipsoid.getGrid}
-\begin{verbatim}
-GETGRID - compute  grid of 2d or 3d sphere.
-
-Input:
-  regular:
-      nDim: double [1, 1]- dimension of space.
-      nPoints: number of boundary points
-
-Output:
-  regular:
-      bpMat: double[nPoints,nDim] - boundary points of sphere
-  optional:
-      fVec: double[1,nFaces]/double[nPoints,3] - indices of points in
-          each face of bpMat graph
 \end{verbatim}
 \subsection{\texorpdfstring{ellipsoid.getInv}{getInv}}\label{method:ellipsoid.getInv}
 \begin{verbatim}
@@ -1348,31 +1327,25 @@ Example:
 \subsection{\texorpdfstring{ellipsoid.isEqual}{isEqual}}\label{method:ellipsoid.isEqual}
 \begin{verbatim}
 ISEQUAL - produces logical array the same size as
-          ell1Arr/ell1Arr (if they have the same).
+          ellFirstArr/ellFirstArr (if they have the same).
           isEqualArr[iDim1, iDim2,...] is true if corresponding
           ellipsoids are equal and false otherwise.
 
-
 Input:
   regular:
-      ell1Arr: ellipsoid[nDim1, nDim2,...] - multidimensional array
+      ellFirstArr: ellipsoid[nDim1, nDim2,...] - multidimensional array
           of ellipsoids.
-      ell2Arr: ellipsoid[nDim1, nDim2,...] - multidimensional array
+      ellSecArr: ellipsoid[nDim1, nDim2,...] - multidimensional array
           of ellipsoids.
-
+  properties:
+      'isPropIncluded': makes to compare second value properties, such as
+      absTol etc.
 Output:
   isEqualArr: logical[nDim1, nDim2,...] - multidimension array of
       logical values. isEqualArr[iDim1, iDim2,...] is true if
       corresponding ellipsoids are equal and false otherwise.
 
-Example:
-  firstEllObj = ellipsoid([-1; 1], [2 0; 0 3]);
-  secEllObj = ellipsoid([1 2], eye(2));
-  isEqual(firstEllObj, secEllObj)
-
-  ans =
-
-       0
+  reportStr: char[1,] - comparison report.
 \end{verbatim}
 \subsection{\texorpdfstring{ellipsoid.isInside}{isInside}}\label{method:ellipsoid.isInside}
 \begin{verbatim}
@@ -2656,6 +2629,34 @@ Output:
   regular:
       poly: polytope[1,1] - polytop in 3D or 2D.
 \end{verbatim}
+\subsection{\texorpdfstring{ellipsoid.toStruct}{toStruct}}\label{method:ellipsoid.toStruct}
+\begin{verbatim}
+toStruct -- converts ellipsoid array into structural array.
+
+Input:
+  regular:
+      ellArr: ellipsoid [nDim1, nDim2, ...] - array
+          of ellipsoids.
+Output:
+  SDataArr: struct[nDims1,...,nDimsk] - structure array same size, as
+      ellArr, contain all data.
+  SFieldNiceNames: struct[1,1] - structure with the same fields as SDataArr. Field values
+      contain the nice names.
+  SFieldDescr: struct[1,1] - structure with same fields as SDataArr,
+      values contain field descriptions.
+
+      q: double[1, nEllDim] - the center of ellipsoid
+      Q: double[nEllDim, nEllDim] - the shape matrix of ellipsoid
+
+Example:
+  ellObj = ellipsoid([1 1]', eye(2));
+  ellObj.toStruct()
+
+  ans =
+
+  Q: [2x2 double]
+  q: [1 1]
+\end{verbatim}
 \subsection{\texorpdfstring{ellipsoid.trace}{trace}}\label{method:ellipsoid.trace}
 \begin{verbatim}
 TRACE - returns the trace of the ellipsoid.
@@ -2905,6 +2906,72 @@ Example:
 
        0
 \end{verbatim}
+\subsection{\texorpdfstring{hyperplane.fromRepMat}{fromRepMat}}\label{method:hyperplane.fromRepMat}
+\begin{verbatim}
+FROMREPMAT - returns array of equal hyperplanes the same
+             size as stated in sizeVec argument
+
+  hpArr = fromRepMat(sizeVec) - creates an array  size
+           sizeVec of empty hyperplanes.
+
+  hpArr = fromRepMat(normalVec,sizeVec) - creates an array
+           size sizeVec of hyperplanes with normal
+           normalVec.
+
+  hpArr = fromRepMat(normalVec,shift,sizeVec) - creates an
+           array size sizeVec of hyperplanes with normal normalVec
+           and hyperplane shift shift.
+
+Input:
+  Case1:
+      regular:
+          sizeVec: double[1,n] - vector of size, have
+          integer values.
+
+  Case2:
+      regular:
+          normalVec: double[nDim, 1] - normal of
+          hyperplanes.
+          sizeVec: double[1, n] - vector of size, have
+          integer values.
+
+  Case3:
+      regular:
+          normalVec: double[nDim, 1] - normal of
+          hyperplanes.
+          shift: double[1, 1] - shift of hyperplane.
+          sizeVec: double[1,n] - vector of size, have
+          integer values.
+
+  properties:
+      absTol: double [1,1] - absolute tolerance with default
+          value 10^(-7)
+\end{verbatim}
+\subsection{\texorpdfstring{hyperplane.fromStruct}{fromStruct}}\label{method:hyperplane.fromStruct}
+\begin{verbatim}
+fromStruct -- converts structural array into hyperplanes array.
+
+Input:
+  regular:
+  SHpArr: struct [hpDim1, hpDim2, ...] -  structural array with following fields:
+
+       normal: double[nHpDim, 1] - the normal of hyperplane
+       shift: double[1, 1] - the shift of hyperplane
+
+Output:
+  hpArr : hyperplane [nDim1, nDim2, ...] - hyperplane array with size of
+      SHpArr.
+
+
+Example:
+  hpObj = hyperplane([1 1]', 1);
+  hpObj.toStruct()
+
+  ans =
+
+  normal: [2x1 double]
+  shift: 0.7071
+\end{verbatim}
 \subsection{\texorpdfstring{hyperplane.getAbsTol}{getAbsTol}}\label{method:hyperplane.getAbsTol}
 \begin{verbatim}
 GETABSTOL - gives the array of absTol for all elements in hplaneArr
@@ -2941,6 +3008,90 @@ Example:
   ans =
 
      1.0e-07 *
+
+      1.0000    1.0000
+\end{verbatim}
+\subsection{\texorpdfstring{hyperplane.getCopy}{getCopy}}\label{method:hyperplane.getCopy}
+\begin{verbatim}
+GETCOPY - gives array the same size as hpArr with copies of elements of
+          hpArr.
+
+Input:
+  regular:
+      hpArr: hyperplane[nDim1, nDim2,...] - multidimensional array of
+          hyperplanes.
+
+Output:
+  copyHpArr: hyperplane[nDim1, nDim2,...] - multidimension array of
+      copies of elements of hpArr.
+
+Example:
+  firstHpObj = hyperplane([-1; 1], [2 0; 0 3]);
+  secHpObj = hyperplane([1; 2], eye(2));
+  hpVec = [firstHpObj secHpObj];
+  copyHpVec = getCopy(hpVec)
+
+  copyHpVec =
+  1x2 array of hyperplanes.
+\end{verbatim}
+\subsection{\texorpdfstring{hyperplane.getProperty}{getProperty}}\label{method:hyperplane.getProperty}
+\begin{verbatim}
+GETPROPERTY - gives array the same size as hpArr with values of
+              propName properties for each hyperplane in hpArr.
+              Private method, used in every public property getter.
+
+Input:
+  regular:
+      hpArr: hyperplane[nDim1, nDim2,...] - mltidimensional array
+          of hyperplanes
+      propName: char[1,N] - name property
+  optional:
+      fPropFun: function_handle[1,1] - function that apply
+          to the propArr. The default is @min.
+
+Output:
+  regular:
+      propArr: double[nDim1, nDim2,...] - multidimension array of
+          propName properties for hyperplanes in rsArr
+  optional:
+      propVal: double[1, 1] - return result of work fPropFun with
+          the propArr
+\end{verbatim}
+\subsection{\texorpdfstring{hyperplane.getRelTol}{getRelTol}}\label{method:hyperplane.getRelTol}
+\begin{verbatim}
+GETRELTOL - gives the array of relTol for all elements in hpArr
+
+Input:
+  regular:
+      hpArr: hyperplane[nDim1, nDim2, ...] - multidimension array
+          of hyperplanes
+  optional:
+      fRelTolFun: function_handle[1,1] - function that apply
+          to the relTolArr. The default is @min.
+Output:
+  regular:
+      relTolArr: double [relTol1, relTol2, ...] - return relTol for
+          each element in hpArr
+  optional:
+      relTol: double[1,1] - return result of work fRelTolFun with
+          the relTolArr
+
+Usage:
+  use [~,relTol] = hpArr.getRelTol() if you want get only
+      relTol,
+  use [relTolArr,relTol] = hpArr.getRelTol() if you want get
+      relTolArr and relTol,
+  use relTolArr = hpArr.getRelTol() if you want get only relTolArr
+
+Example:
+  firsthpObj = hyperplane([-1; 1], 1);
+  sechpObj = hyperplane([1 ;2], 2);
+  hpVec = [firsthpObj sechpObj];
+  hpVec.getRelTol()
+
+  ans =
+
+     1.0e-05 *
 
       1.0000    1.0000
 \end{verbatim}
@@ -3043,7 +3194,7 @@ Example:
   hypConstVec = [1 -5 0];
   hypObj = hyperplane(hypNormMat, hypConstVec);
 \end{verbatim}
-\subsection{\texorpdfstring{hyperplane.isempty}{isempty}}\label{method:hyperplane.isempty}
+\subsection{\texorpdfstring{hyperplane.isEmpty}{isEmpty}}\label{method:hyperplane.isEmpty}
 \begin{verbatim}
 ISEMPTY - checks if hyperplanes in H are empty.
 
@@ -3064,6 +3215,29 @@ Example:
   ans =
 
        1
+\end{verbatim}
+\subsection{\texorpdfstring{hyperplane.isEqual}{isEqual}}\label{method:hyperplane.isEqual}
+\begin{verbatim}
+ISEQUAL - produces logical array the same size as
+          ellFirstArr/ellFirstArr (if they have the same).
+          isEqualArr[iDim1, iDim2,...] is true if corresponding
+          ellipsoids are equal and false otherwise.
+
+Input:
+  regular:
+      ellFirstArr: ellipsoid[nDim1, nDim2,...] - multidimensional array
+          of ellipsoids.
+      ellSecArr: ellipsoid[nDim1, nDim2,...] - multidimensional array
+          of ellipsoids.
+  properties:
+      'isPropIncluded': makes to compare second value properties, such as
+      absTol etc.
+Output:
+  isEqualArr: logical[nDim1, nDim2,...] - multidimension array of
+      logical values. isEqualArr[iDim1, iDim2,...] is true if
+      corresponding ellipsoids are equal and false otherwise.
+
+  reportStr: char[1,] - comparison report.
 \end{verbatim}
 \subsection{\texorpdfstring{hyperplane.isparallel}{isparallel}}\label{method:hyperplane.isparallel}
 \begin{verbatim}
@@ -3171,6 +3345,22 @@ Output:
   regular:
       plObj: smartdb.disp.RelationDataPlotter[1,1] - returns the relation
       data plotter object.
+\end{verbatim}
+\subsection{\texorpdfstring{hyperplane.toStruct}{toStruct}}\label{method:hyperplane.toStruct}
+\begin{verbatim}
+toStruct -- converts hyperplanes array into structural array.
+
+Input:
+  regular:
+      hpArr: hyperplane [hpDim1, hpDim2, ...] - array
+          of hyperplanes.
+
+Output:
+  ShpArr : struct[nDim1, nDim2, ...] - structural array with size of
+      hpArr with the following fields:
+
+      normal: double[nHpDim, 1] - the normal of hyperplane
+      shift: double[1, 1] - the shift of hyperplane
 \end{verbatim}
 \subsection{\texorpdfstring{hyperplane.uminus}{uminus}}\label{method:hyperplane.uminus}
 \begin{verbatim}
@@ -3286,10 +3476,13 @@ Example:
               nPlot3dPoints: 200
                     logging: [1x1 struct]
 \end{verbatim}
+\subsection{\texorpdfstring{elltool.conf.Properties.getRegTol}{getRegTol}}\label{method:elltool.conf.Properties.getRegTol}
+\begin{verbatim}
+
+\end{verbatim}
 \subsection{\texorpdfstring{elltool.conf.Properties.getRelTol}{getRelTol}}\label{method:elltool.conf.Properties.getRelTol}
 \begin{verbatim}
-Example:
-  elltool.conf.Properties.getRelTol();
+
 \end{verbatim}
 \subsection{\texorpdfstring{elltool.conf.Properties.getVersion}{getVersion}}\label{method:elltool.conf.Properties.getVersion}
 \begin{verbatim}
@@ -3304,51 +3497,67 @@ Example:
 \subsection{\texorpdfstring{elltool.conf.Properties.parseProp}{parseProp}}\label{method:elltool.conf.Properties.parseProp}
 \begin{verbatim}
 PARSEPROP - parses input into cell array with values of properties listed
-            in neededPropNameList.
-            Values are  taken from args or, if there no value for some
-            property in args, in current Properties.
+           in neededPropNameList.
+           Values are  taken from args or, if there no value for some
+           property in args, in current Properties.
 
 
- Input:
-   regular:
-       args:cell[1,] - cell array of arguments that should be parsed.
-       neededPropNameList:cell[1,] or empty cell - cell array of strings,
-       containing names of parameters, that output should consist of.
-       Possible properties:
-               version
-               isVerbose
-               absTol
-               relTol
-               nTimeGridPoints
-               ODESolverName
-               isODENormControl
-               isEnabledOdeSolverOptions
-               nPlot2dPoints
-               nPlot3dPoints
-           trying to specify other properties would be regarded as an
-           error.
+Input:
+  regular:
+      args: cell[1,] of any[] - cell array of arguments that
+          should be parsed.
+  optional
+      neededPropNameList: cell[1,nProp] of char[1,] - cell array of strings
+          containing names of parameters, that output should consist of.
+          The following properties are supported:
+              version
+              isVerbose
+              absTol
+              relTol
+              regTol
+              ODESolverName
+              isODENormControl
+              isEnabledOdeSolverOptions
+              nPlot2dPoints
+              nPlot3dPoints
+              nTimeGridPoints
+          trying to specify other properties would be result in error
+          If neededPropNameList is not specified, the list of all
+          supported properties is assumed.
 
- Output:
-   varargout:cell array[1,] - cell array with values of properties listed
-                              in neededPropNameList in the same order as
-                              they listed in neededPropNameList
+Output:
+  propVal1:  - value of the first property specified
+                             in neededPropNameList in the same order as
+                             they listed in neededPropNameList
+      ....
+  propValN:  - value of the last property from neededPropNameList
+  restList: cell[1,nRest] - list of the input arguments that were not
+      recognized as properties
 
- Example:
-   testAbsTol = 1;
-   testRelTol = 2;
-   nPlot2dPoints = 3;
-   someArg = 4;
-   args = {'absTol',testAbsTol, 'relTol',testRelTol,'nPlot2dPoints',nPlot2dPoints, 'someOtherArg', someArg};
-   neededProp = {'absTol','relTol'};
-   [absTol, relTol] = elltool.conf.Properties.parseProp(args,neededProp)
+Example:
+    testAbsTol = 1;
+    testRelTol = 2;
+    nPlot2dPoints = 3;
+    someArg = 4;
+    args = {'absTol',testAbsTol, 'relTol',testRelTol,'nPlot2dPoints',...
+        nPlot2dPoints, 'someOtherArg', someArg};
+    neededPropList = {'absTol','relTol'};
+    [absTol, relTol,resList]=elltool.conf.Properties.parseProp(args,...
+        neededPropList)
 
-   absTol =
+    absTol =
 
-        1
+         1
 
-   relTol =
 
-        2
+    relTol =
+
+         2
+
+
+    resList =
+
+        'nPlot2dPoints'    [3]    'someOtherArg'    [4]
 \end{verbatim}
 \subsection{\texorpdfstring{elltool.conf.Properties.setConfRepoMgr}{setConfRepoMgr}}\label{method:elltool.conf.Properties.setConfRepoMgr}
 \begin{verbatim}
@@ -4683,6 +4892,9 @@ Input:
     compareMetaDataBackwardRef: logical[1,1] if true, the CubeStruct's
         referenced from the meta data objects are also compared
 
+    maxRelativeTolerance: double [1,1] - maximum allowed
+    relative tolerance
+
 Output:
   isEq: logical[1,1] - result of comparison
   reportStr: char[1,] - report of comparsion
@@ -4745,7 +4957,7 @@ ISMEMBER - performs ismember operation for tuples of two relations by key
 Usage: isTuple=isMemberTuples(self,otherRel,keyFieldNameList) or
        [isTuple indTuples]=isMemberTuples(self,otherRel,keyFieldNameList)
 
-input:
+Input:
   regular:
     self: ARelation [1,1] - class object
     other: ARelation [1,1] - other class object
@@ -4753,7 +4965,7 @@ input:
     keyFieldNameList: char or char cell [1,nKeyFields] - list of fields
         to which ismember is applied; by default all fields of first
         (self) object are used
-output:
+Output:
   regular:
     isTuple: logical [nTuples,1] - determines for each tuple of first
         (self) object whether combination of values for key fields is in
@@ -4802,6 +5014,9 @@ Input:
 
     compareMetaDataBackwardRef: logical[1,1] if true, the CubeStruct's
         referenced from the meta data objects are also compared
+
+    maxRelativeTolerance: double [1,1] - maximum allowed
+    relative tolerance
 
 Output:
   isEq: logical[1,1] - result of comparison
@@ -5388,7 +5603,6 @@ See the description of the following methods in section \ref{secClassDescr:smart
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.display]{display}
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.fromStructList]{fromStructList}
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.getCopy]{getCopy}
- \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.getData]{getData}
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.getFieldDescrList]{getFieldDescrList}
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.getFieldIsNull]{getFieldIsNull}
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.getFieldIsValueNull]{getFieldIsValueNull}
@@ -5413,7 +5627,6 @@ See the description of the following methods in section \ref{secClassDescr:smart
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.getUniqueTuples]{getUniqueTuples}
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.initByEmptyDataSet]{initByEmptyDataSet}
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.initByNullDataSet]{initByNullDataSet}
- \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.isEqual]{isEqual}
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.isFields]{isFields}
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.isMemberAlongDim]{isMemberAlongDim}
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.isMemberTuples]{isMemberTuples}
@@ -5443,29 +5656,38 @@ See the description of the following methods in section \ref{secClassDescr:smart
 CAT  - concatenates data from relation objects.
 
 Input:
- regular:
-   self.
-   newEllTubeRel: smartdb.relation.StaticRelation[1, 1]/
-     smartdb.relation.DynamicRelation[1, 1] - relation object
+  regular:
+      self.
+      newEllTubeRel: smartdb.relation.StaticRelation[1, 1]/
+          smartdb.relation.DynamicRelation[1, 1] - relation object
+  properties:
+      isReplacedByNew: logical[1,1] - if true, sTime and
+          values of properties corresponding to sTime are taken
+          from newEllTubeRel. Common times in self and
+          newEllTubeRel are allowed, however the values for
+          those times are taken either from self or from
+          newEllTubeRel depending on value of isReplacedByNew
+          property
+
+      isCommonValuesChecked: logical[1,1] - if true, values
+          at common times (if such are found) are checked for
+          strong equality (with zero precision). If not equal
+          - an exception is thrown. True by default.
+
+      commonTimeAbsTol: double[1,1] - absolute tolerance used
+          for comparing values at common times, =0 by default
+
+      commonTimeRelTol: double[1,1] - absolute tolerance used
+          for comparing values at common times, =0 by default
 
 Output:
-   catEllTubeRel:smartdb.relation.StaticRelation[1, 1]/
-     smartdb.relation.DynamicRelation[1, 1] - relation object resulting
-     from CAT operation
+  catEllTubeRel:smartdb.relation.StaticRelation[1, 1]/
+      smartdb.relation.DynamicRelation[1, 1] - relation object
+      resulting from CAT operation
 \end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.cut}{cut}}\label{method:gras.ellapx.smartdb.rels.EllTube.cut}
 \begin{verbatim}
-CUT - extracts the piece of the relation object from given start time to
-      given end time.
-Input:
- regular:
-    self.
-    cutTimeVec: double[1, 2]/ double[1, 1] - time interval to cut
 
-Output:
-cutEllTubeRel: smartdb.relation.StaticRelation[1, 1]/
-     smartdb.relation.DynamicRelation[1, 1] - relation object resulting
-     from CUT operation
 \end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.fromEllArray}{fromEllArray}}\label{method:gras.ellapx.smartdb.rels.EllTube.fromEllArray}
 \begin{verbatim}
@@ -5604,6 +5826,74 @@ Output:
    ellTubeRel: smartdb.relation.StaticRelation[1, 1] - constructed relation
          object
 \end{verbatim}
+\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.getData}{getData}}\label{method:gras.ellapx.smartdb.rels.EllTube.getData}
+\begin{verbatim}
+GETDATA - returns an indexed projection of CubeStruct object's content
+
+Input:
+  regular:
+      self: CubeStruct [1,1] - the object
+
+  optional:
+
+      subIndCVec:
+        Case#1: numeric[1,]/numeric[,1]
+
+        Case#2: cell[1,nDims]/cell[nDims,1] of double [nSubElem_i,1]
+              for i=1,...,nDims
+
+          -array of indices of field value slices that are selected
+          to be returned; if not given (default),
+          no indexation is performed
+
+        Note!: numeric components of subIndVec are allowed to contain
+           zeros which are be treated as they were references to null
+           data slices
+
+      dimVec: numeric[1,nDims]/numeric[nDims,1] - vector of dimension
+          numbers corresponding to subIndCVec
+
+  properties:
+
+      fieldNameList: char[1,]/cell[1,nFields] of char[1,]
+          list of field names to return
+
+      structNameList: char[1,]/cell[1,nStructs] of char[1,]
+          list of internal structures to return (by default it
+          is {SData, SIsNull, SIsValueNull}
+
+      replaceNull: logical[1,1] if true, null values are replaced with
+          certain default values uniformly across all the cells,
+              default value is false
+
+      nullReplacements: cell[1,nReplacedFields]  - list of null
+          replacements for each of the fields
+
+      nullReplacementFields: cell[1,nReplacedFields] - list of fields in
+         which the nulls are to be replaced with the specified values,
+         if not specified it is assumed that all fields are to be
+         replaced
+
+         NOTE!: all fields not listed in this parameter are replaced with
+         the default values
+
+      checkInputs: logical[1,1] - true by default (input arguments are
+         checked for correctness
+
+Output:
+  regular:
+    SData: struct [1,1] - structure containing values of
+        fields at the selected slices, each field is an array
+        containing values of the corresponding type
+
+    SIsNull: struct [1,1] - structure containing a nested
+        array with is-null indicators for each CubeStruct cell content
+
+    SIsValueNull: struct [1,1] - structure containing a
+       logical array [] for each of the fields (true
+       means that a corresponding cell doesn't not contain
+          any value
+\end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.getEllArray}{getEllArray}}\label{method:gras.ellapx.smartdb.rels.EllTube.getEllArray}
 \begin{verbatim}
 GETELLARRAY - returns array of matrix's ellipsoid according to
@@ -5640,6 +5930,47 @@ Input:
 Output:
   resRel: smartdb.relations.ARelation[1,1] - join result
 \end{verbatim}
+\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.getNoCatOrCutFieldsList}{getNoCatOrCutFieldsList}}\label{method:gras.ellapx.smartdb.rels.EllTube.getNoCatOrCutFieldsList}
+\begin{verbatim}
+
+\end{verbatim}
+\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.interp}{interp}}\label{method:gras.ellapx.smartdb.rels.EllTube.interp}
+\begin{verbatim}
+
+\end{verbatim}
+\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.isEqual}{isEqual}}\label{method:gras.ellapx.smartdb.rels.EllTube.isEqual}
+\begin{verbatim}
+ISEQUAL - compares current relation object with other relation object and
+          returns true if they are equal, otherwise it returns false
+
+
+Usage: isEq=isEqual(self,otherObj)
+
+Input:
+  regular:
+    self: ARelation [1,1] - current relation object
+    otherObj: ARelation [1,1] - other relation object
+
+  properties:
+    checkFieldOrder/isFieldOrderCheck: logical [1,1] - if true, then fields
+        in compared relations must be in the same order, otherwise the
+        order is not  important (false by default)
+    checkTupleOrder: logical[1,1] -  if true, then the tuples in the
+        compared relations are expected to be in the same order,
+        otherwise the order is not important (false by default)
+
+    maxTolerance: double [1,1] - maximum allowed tolerance
+
+    compareMetaDataBackwardRef: logical[1,1] if true, the CubeStruct's
+        referenced from the meta data objects are also compared
+
+    maxRelativeTolerance: double [1,1] - maximum allowed
+    relative tolerance
+
+Output:
+  isEq: logical[1,1] - result of comparison
+  reportStr: char[1,] - report of comparsion
+\end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.plot}{plot}}\label{method:gras.ellapx.smartdb.rels.EllTube.plot}
 \begin{verbatim}
 PLOT - displays ellipsoidal tubes using the specified RelationDataPlotter
@@ -5655,17 +5986,16 @@ Input:
 \begin{verbatim}
 PROJECT - computes projection of the relation object onto given time
           dependent subspase
-
-
 Input:
- regular:
-   self.
-   projType - type of the projection.
-       Takes the following values: 'Static'
-                                   'DynamicAlongGoodCurve'
-   projMatList:double[nDim, nSpDim] - matrices' array of the orthoganal
-            basis vectors
-   fGetProjMat - function which creates vector of the projection
+  regular:
+      self.
+      projType: gras.ellapx.enums.EProjType[1,1] -
+          type of the projection, can be
+          'Static' and 'DynamicAlongGoodCurve'
+      projMatList: cell[1,nProj] of double[nSpDim,nDim] - list of
+          projection matrices, not necessarily orthogonal
+   fGetProjMat: function_handle[1,1] - function which creates
+      vector of the projection
             matrices
        Input:
         regular:
@@ -5680,8 +6010,10 @@ Input:
           projOrthMatTransArray:double[nSpDim, 1] - transposed vector of
             the projection matrices
 Output:
-   ellTubeProjRel:smartdb.relation.StaticRelation[1, 1]/
-       smartdb.relation.DynamicRelation[1, 1]- projected relation
+   ellTubeProjRel: gras.ellapx.smartdb.rels.EllTubeProj[1, 1]/
+       gras.ellapx.smartdb.rels.EllTubeUnionProj[1, 1] -
+          projected ellipsoidal tube
+
    indProj2OrigVec:cell[nDim, 1] - index of the line number from
             which is obtained the projection
 
@@ -5699,9 +6031,9 @@ Example:
    ellTubeObj = rsObj.getEllTubeRel();
    unionEllTube = ...
     gras.ellapx.smartdb.rels.EllUnionTube.fromEllTubes(ellTubeObj);
-   projSpaceList = {[1 0;0 1]};
+   projMatList = {[1 0;0 1]};
    projType = gras.ellapx.enums.EProjType.Static;
-   statEllTubeProj = unionEllTube.project(projType,projSpaceList,...
+   statEllTubeProj = unionEllTube.project(projType,projMatList,...
       @fGetProjMat);
    plObj=smartdb.disp.RelationDataPlotter();
    statEllTubeProj.plot(plObj);
@@ -5713,6 +6045,35 @@ function [projOrthMatArray,projOrthMatTransArray]=fGetProjMat(projMat,...
   projOrthMatArray=repmat(projMat,[1,1,nTimePoints]);
   projOrthMatTransArray=repmat(projMat.',[1,1,nTimePoints]);
  end
+\end{verbatim}
+\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.projectStatic}{projectStatic}}\label{method:gras.ellapx.smartdb.rels.EllTube.projectStatic}
+\begin{verbatim}
+
+\end{verbatim}
+\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.projectToOrths}{projectToOrths}}\label{method:gras.ellapx.smartdb.rels.EllTube.projectToOrths}
+\begin{verbatim}
+PROJECTTOORTHS - project elltube onto subspace defined by
+vectors of standart basis with indices specified in indVec
+
+Input:
+  regular:
+      self: gras.ellapx.smartdb.rels.EllTube[1, 1] - elltube
+          object
+      indVec: double[1, nProjDims] - indices specifying a subset of
+          standart basis
+  optional:
+      projType: gras.ellapx.enums.EProjType[1, 1] -  type of
+          projection
+
+Output:
+  regular:
+      ellTubeProjRel: gras.ellapx.smartdb.rels.EllTubeProj[1, 1] -
+          elltube projection
+
+Example:
+  ellTubeProjRel = ellTubeRel.projectToOrths([1,2])
+  projType = gras.ellapx.enums.EProjType.DynamicAlongGoodCurve
+  ellTubeProjRel = ellTubeRel.projectToOrths([3,4,5], projType)
 \end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.scale}{scale}}\label{method:gras.ellapx.smartdb.rels.EllTube.scale}
 \begin{verbatim}
@@ -5755,20 +6116,13 @@ Example:
         approxSchemaName, approxSchemaDescr, calcPrecision);
   fromMatEllTube.scale(@(varargin)2,{});
 \end{verbatim}
+\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.sortDetermenistically}{sortDetermenistically}}\label{method:gras.ellapx.smartdb.rels.EllTube.sortDetermenistically}
+\begin{verbatim}
+
+\end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTube.thinOutTuples}{thinOutTuples}}\label{method:gras.ellapx.smartdb.rels.EllTube.thinOutTuples}
 \begin{verbatim}
-THINOUTTUPLES  - delete tuples from relation object
 
-Input:
-  regular:
-    self.
-    indVec:logical[1, nDim]/double[1, nDim] - indexes of tuples which
-            we must remove
-
-Output:
-  thinnedEllTubeRel: smartdb.relation.StaticRelation[1, 1]/
-      smartdb.relation.DynamicRelation[1, 1] - relation object without
-      tuples
 \end{verbatim}
 \section{gras.ellapx.smartdb.rels.EllTubeProj}\label{secClassDescr:gras.ellapx.smartdb.rels.EllTubeProj}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.EllTubeProj}{EllTubeProj}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.EllTubeProj}
@@ -5831,7 +6185,6 @@ See the description of the following methods in section \ref{secClassDescr:smart
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.display]{display}
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.fromStructList]{fromStructList}
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.getCopy]{getCopy}
- \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.getData]{getData}
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.getFieldDescrList]{getFieldDescrList}
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.getFieldIsNull]{getFieldIsNull}
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.getFieldIsValueNull]{getFieldIsValueNull}
@@ -5856,7 +6209,6 @@ See the description of the following methods in section \ref{secClassDescr:smart
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.getUniqueTuples]{getUniqueTuples}
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.initByEmptyDataSet]{initByEmptyDataSet}
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.initByNullDataSet]{initByNullDataSet}
- \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.isEqual]{isEqual}
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.isFields]{isFields}
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.isMemberAlongDim]{isMemberAlongDim}
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.isMemberTuples]{isMemberTuples}
@@ -5881,6 +6233,78 @@ See the description of the following methods in section \ref{secClassDescr:smart
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.writeToCSV]{writeToCSV}
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.writeToXLS]{writeToXLS}
 \end{list}
+\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.cut}{cut}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.cut}
+\begin{verbatim}
+
+\end{verbatim}
+\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.getData}{getData}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.getData}
+\begin{verbatim}
+GETDATA - returns an indexed projection of CubeStruct object's content
+
+Input:
+  regular:
+      self: CubeStruct [1,1] - the object
+
+  optional:
+
+      subIndCVec:
+        Case#1: numeric[1,]/numeric[,1]
+
+        Case#2: cell[1,nDims]/cell[nDims,1] of double [nSubElem_i,1]
+              for i=1,...,nDims
+
+          -array of indices of field value slices that are selected
+          to be returned; if not given (default),
+          no indexation is performed
+
+        Note!: numeric components of subIndVec are allowed to contain
+           zeros which are be treated as they were references to null
+           data slices
+
+      dimVec: numeric[1,nDims]/numeric[nDims,1] - vector of dimension
+          numbers corresponding to subIndCVec
+
+  properties:
+
+      fieldNameList: char[1,]/cell[1,nFields] of char[1,]
+          list of field names to return
+
+      structNameList: char[1,]/cell[1,nStructs] of char[1,]
+          list of internal structures to return (by default it
+          is {SData, SIsNull, SIsValueNull}
+
+      replaceNull: logical[1,1] if true, null values are replaced with
+          certain default values uniformly across all the cells,
+              default value is false
+
+      nullReplacements: cell[1,nReplacedFields]  - list of null
+          replacements for each of the fields
+
+      nullReplacementFields: cell[1,nReplacedFields] - list of fields in
+         which the nulls are to be replaced with the specified values,
+         if not specified it is assumed that all fields are to be
+         replaced
+
+         NOTE!: all fields not listed in this parameter are replaced with
+         the default values
+
+      checkInputs: logical[1,1] - true by default (input arguments are
+         checked for correctness
+
+Output:
+  regular:
+    SData: struct [1,1] - structure containing values of
+        fields at the selected slices, each field is an array
+        containing values of the corresponding type
+
+    SIsNull: struct [1,1] - structure containing a nested
+        array with is-null indicators for each CubeStruct cell content
+
+    SIsValueNull: struct [1,1] - structure containing a
+       logical array [] for each of the fields (true
+       means that a corresponding cell doesn't not contain
+          any value
+\end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.getEllArray}{getEllArray}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.getEllArray}
 \begin{verbatim}
 GETELLARRAY - returns array of matrix's ellipsoid according to
@@ -5917,6 +6341,10 @@ Input:
 Output:
   resRel: smartdb.relations.ARelation[1,1] - join result
 \end{verbatim}
+\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.getNoCatOrCutFieldsList}{getNoCatOrCutFieldsList}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.getNoCatOrCutFieldsList}
+\begin{verbatim}
+
+\end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.getReachTubeNamePrefix}{getReachTubeNamePrefix}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.getReachTubeNamePrefix}
 \begin{verbatim}
 GETREACHTUBEANEPREFIX - return prefix of the reach tube
@@ -5933,95 +6361,204 @@ Input:
   regular:
      self.
 \end{verbatim}
+\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.interp}{interp}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.interp}
+\begin{verbatim}
+
+\end{verbatim}
+\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.isEqual}{isEqual}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.isEqual}
+\begin{verbatim}
+ISEQUAL - compares current relation object with other relation object and
+          returns true if they are equal, otherwise it returns false
+
+
+Usage: isEq=isEqual(self,otherObj)
+
+Input:
+  regular:
+    self: ARelation [1,1] - current relation object
+    otherObj: ARelation [1,1] - other relation object
+
+  properties:
+    checkFieldOrder/isFieldOrderCheck: logical [1,1] - if true, then fields
+        in compared relations must be in the same order, otherwise the
+        order is not  important (false by default)
+    checkTupleOrder: logical[1,1] -  if true, then the tuples in the
+        compared relations are expected to be in the same order,
+        otherwise the order is not important (false by default)
+
+    maxTolerance: double [1,1] - maximum allowed tolerance
+
+    compareMetaDataBackwardRef: logical[1,1] if true, the CubeStruct's
+        referenced from the meta data objects are also compared
+
+    maxRelativeTolerance: double [1,1] - maximum allowed
+    relative tolerance
+
+Output:
+  isEq: logical[1,1] - result of comparison
+  reportStr: char[1,] - report of comparsion
+\end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.plot}{plot}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.plot}
 \begin{verbatim}
-PLOT - displays ellipsoidal tubes using the specified RelationDataPlotter
+PLOT - displays ellipsoidal tubes using the specified
+  RelationDataPlotter
 
 Input:
   regular:
       self:
   optional:
-      plObj: smartdb.disp.RelationDataPlotter[1,1] - plotter object used
-          for displaying ellipsoidal tubes
+      plObj: smartdb.disp.RelationDataPlotter[1,1] - plotter
+          object used for displaying ellipsoidal tubes
   properties:
-      fGetTubeColor: function_handle[1,1] - function with the following
-            signature:
-          Input:
-              regular:
-                  apxType: gras.ellapx.enums.EApproxType[1,1]
-                      - approximation type
-          Output:
-              patchColor: double[1,3] - RGB color vector
-              patchAlpha: double[1,1] - transparency level
-                  within [0,1] range
-          if not specified, an internal function getPatchColorByApxType
-              is used.
+      fGetColor: function_handle[1, 1] -
+          function that specified colorVec for
+          ellipsoidal tubes
+      fGetAlpha: function_handle[1, 1] -
+          function that specified transparency
+          value for ellipsoidal tubes
+      fGetLineWidth: function_handle[1, 1] -
+          function that specified lineWidth for good curves
+      fGetFill: function_handle[1, 1] - this
+          property not used in this version
+      colorFieldList: cell[nColorFields, ] of char[1, ] -
+          list of parameters for color function
+      alphaFieldList: cell[nAlphaFields, ] of char[1, ] -
+          list of parameters for transparency function
+      lineWidthFieldList: cell[nLineWidthFields, ]
+          of char[1, ] - list of parameters for lineWidth
+          function
+      fillFieldList: cell[nIsFillFields, ] of char[1, ] -
+          list of parameters for fill function
+      plotSpecFieldList: cell[nPlotFields, ] of char[1, ] -
+          defaul list of parameters. If for any function in
+          properties not specified list of parameters,
+          this one will be used
+
 Output:
   plObj: smartdb.disp.RelationDataPlotter[1,1] - plotter
           object used for displaying ellipsoidal tubes
 \end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.project}{project}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.project}
+\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.plotExt}{plotExt}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.plotExt}
 \begin{verbatim}
-PROJECT - computes projection of the relation object onto given time
-          dependent subspase
+PLOTEXT - plots external approximation of ellTube.
 
+
+Usage:
+      obj.plotExt() - plots external approximation of ellTube.
+      obj.plotExt('Property',PropValue,...) - plots external approximation
+                                              of ellTube with setting
+                                              properties.
 
 Input:
- regular:
-   self.
-   projType - type of the projection.
-       Takes the following values: 'Static'
-                                   'DynamicAlongGoodCurve'
-   projMatList:double[nDim, nSpDim] - matrices' array of the orthoganal
-            basis vectors
-   fGetProjMat - function which creates vector of the projection
-            matrices
-       Input:
-        regular:
-          projMat:double[nDim, mDim] - matrix of the projection at the
-            instant of time
-          timeVec:double[1, nDim] - time interval
-        optional:
-           sTime:double[1,1] - instant of time
-       Output:
-          projOrthMatArray:double[1, nSpDim] - vector of the projection
-            matrices
-          projOrthMatTransArray:double[nSpDim, 1] - transposed vector of
-            the projection matrices
+  regular:
+      obj:  EllTubeProj: EllTubeProj object
+  optional:
+      relDataPlotter:smartdb.disp.RelationDataPlotter[1,1] - relation data plotter object.
+      colorSpec: char[1,1] - color specification code, can be 'r','g',
+                   etc (any code supported by built-in Matlab function).
+
+  properties:
+
+      fGetColor: function_handle[1, 1] -
+          function that specified colorVec for
+          ellipsoidal tubes
+      fGetAlpha: function_handle[1, 1] -
+          function that specified transparency
+          value for ellipsoidal tubes
+      fGetLineWidth: function_handle[1, 1] -
+          function that specified lineWidth for good curves
+      fGetFill: function_handle[1, 1] - this
+          property not used in this version
+      colorFieldList: cell[nColorFields, ] of char[1, ] -
+          list of parameters for color function
+      alphaFieldList: cell[nAlphaFields, ] of char[1, ] -
+          list of parameters for transparency function
+      lineWidthFieldList: cell[nLineWidthFields, ]
+          of char[1, ] - list of parameters for lineWidth
+          function
+      fillFieldList: cell[nIsFillFields, ] of char[1, ] -
+          list of parameters for fill function
+      plotSpecFieldList: cell[nPlotFields, ] of char[1, ] -
+          defaul list of parameters. If for any function in
+          properties not specified list of parameters,
+          this one will be used
+      'showDiscrete':logical[1,1]  -
+          if true, approximation in 3D will be filled in every time slice
+      'nSpacePartPoins': double[1,1] -
+          number of points in every time slice.
 Output:
-   ellTubeProjRel:smartdb.relation.StaticRelation[1, 1]/
-       smartdb.relation.DynamicRelation[1, 1]- projected relation
-   indProj2OrigVec:cell[nDim, 1] - index of the line number from
-            which is obtained the projection
+  regular:
+      plObj: smartdb.disp.RelationDataPlotter[1,1] - returns the relation
+      data plotter object.
+\end{verbatim}
+\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.plotInt}{plotInt}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.plotInt}
+\begin{verbatim}
+PLOTINT - plots internal approximation of ellTube.
 
-Example:
-  function example
-   aMat = [0 1; 0 0]; bMat = eye(2);
-   SUBounds = struct();
-   SUBounds.center = {'sin(t)'; 'cos(t)'};
-   SUBounds.shape = [9 0; 0 2];
-   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-   x0EllObj = ell_unitball(2);
-   timeVec = [0 10];
-   dirsMat = [1 0; 0 1]';
-   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-   ellTubeObj = rsObj.getEllTubeRel();
-   unionEllTube = ...
-    gras.ellapx.smartdb.rels.EllUnionTube.fromEllTubes(ellTubeObj);
-   projSpaceList = {[1 0;0 1]};
-   projType = gras.ellapx.enums.EProjType.Static;
-   statEllTubeProj = unionEllTube.project(projType,projSpaceList,...
-      @fGetProjMat);
-   plObj=smartdb.disp.RelationDataPlotter();
-   statEllTubeProj.plot(plObj);
-end
 
-function [projOrthMatArray,projOrthMatTransArray]=fGetProjMat(projMat,...
-    timeVec,varargin)
-  nTimePoints=length(timeVec);
-  projOrthMatArray=repmat(projMat,[1,1,nTimePoints]);
-  projOrthMatTransArray=repmat(projMat.',[1,1,nTimePoints]);
- end
+Usage:
+      obj.plotInt() - plots internal approximation of ellTube.
+      obj.plotInt('Property',PropValue,...) - plots internal approximation
+                                              of ellTube with setting
+                                              properties.
+
+Input:
+  regular:
+      obj:  EllTubeProj: EllTubeProj object
+  optional:
+      relDataPlotter:smartdb.disp.RelationDataPlotter[1,1] - relation data plotter object.
+      colorSpec: char[1,1] - color specification code, can be 'r','g',
+                   etc (any code supported by built-in Matlab function).
+
+  properties:
+
+      fGetColor: function_handle[1, 1] -
+          function that specified colorVec for
+          ellipsoidal tubes
+      fGetAlpha: function_handle[1, 1] -
+          function that specified transparency
+          value for ellipsoidal tubes
+      fGetLineWidth: function_handle[1, 1] -
+          function that specified lineWidth for good curves
+      fGetFill: function_handle[1, 1] - this
+          property not used in this version
+      colorFieldList: cell[nColorFields, ] of char[1, ] -
+          list of parameters for color function
+      alphaFieldList: cell[nAlphaFields, ] of char[1, ] -
+          list of parameters for transparency function
+      lineWidthFieldList: cell[nLineWidthFields, ]
+          of char[1, ] - list of parameters for lineWidth
+          function
+      fillFieldList: cell[nIsFillFields, ] of char[1, ] -
+          list of parameters for fill function
+      plotSpecFieldList: cell[nPlotFields, ] of char[1, ] -
+          defaul list of parameters. If for any function in
+          properties not specified list of parameters,
+          this one will be used
+      'showDiscrete':logical[1,1]  -
+          if true, approximation in 3D will be filled in every time slice
+      'nSpacePartPoins': double[1,1] -
+          number of points in every time slice.
+Output:
+  regular:
+      plObj: smartdb.disp.RelationDataPlotter[1,1] - returns the relation
+      data plotter object.
+\end{verbatim}
+\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.projMat2str}{projMat2str}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.projMat2str}
+\begin{verbatim}
+
+\end{verbatim}
+\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.projRow2str}{projRow2str}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.projRow2str}
+\begin{verbatim}
+
+\end{verbatim}
+\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.sortDetermenistically}{sortDetermenistically}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.sortDetermenistically}
+\begin{verbatim}
+
+\end{verbatim}
+\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllTubeProj.thinOutTuples}{thinOutTuples}}\label{method:gras.ellapx.smartdb.rels.EllTubeProj.thinOutTuples}
+\begin{verbatim}
+
 \end{verbatim}
 \section{gras.ellapx.smartdb.rels.EllUnionTube}\label{secClassDescr:gras.ellapx.smartdb.rels.EllUnionTube}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTube.EllUnionTube}{EllUnionTube}}\label{method:gras.ellapx.smartdb.rels.EllUnionTube.EllUnionTube}
@@ -6091,7 +6628,6 @@ See the description of the following methods in section \ref{secClassDescr:smart
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.display]{display}
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.fromStructList]{fromStructList}
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.getCopy]{getCopy}
- \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.getData]{getData}
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.getFieldDescrList]{getFieldDescrList}
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.getFieldIsNull]{getFieldIsNull}
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.getFieldIsValueNull]{getFieldIsValueNull}
@@ -6116,7 +6652,6 @@ See the description of the following methods in section \ref{secClassDescr:smart
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.getUniqueTuples]{getUniqueTuples}
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.initByEmptyDataSet]{initByEmptyDataSet}
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.initByNullDataSet]{initByNullDataSet}
- \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.isEqual]{isEqual}
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.isFields]{isFields}
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.isMemberAlongDim]{isMemberAlongDim}
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.isMemberTuples]{isMemberTuples}
@@ -6141,6 +6676,10 @@ See the description of the following methods in section \ref{secClassDescr:smart
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.writeToCSV]{writeToCSV}
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.writeToXLS]{writeToXLS}
 \end{list}
+\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTube.cut}{cut}}\label{method:gras.ellapx.smartdb.rels.EllUnionTube.cut}
+\begin{verbatim}
+
+\end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTube.fromEllTubes}{fromEllTubes}}\label{method:gras.ellapx.smartdb.rels.EllUnionTube.fromEllTubes}
 \begin{verbatim}
 FROMELLTUBES - returns union of the ellipsoidal tubes on time
@@ -6153,6 +6692,74 @@ Input:
 Output:
 ellUnionTubeRel: ellapx.smartdb.rel.EllUnionTube - union of the
             ellipsoidal tubes
+\end{verbatim}
+\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTube.getData}{getData}}\label{method:gras.ellapx.smartdb.rels.EllUnionTube.getData}
+\begin{verbatim}
+GETDATA - returns an indexed projection of CubeStruct object's content
+
+Input:
+  regular:
+      self: CubeStruct [1,1] - the object
+
+  optional:
+
+      subIndCVec:
+        Case#1: numeric[1,]/numeric[,1]
+
+        Case#2: cell[1,nDims]/cell[nDims,1] of double [nSubElem_i,1]
+              for i=1,...,nDims
+
+          -array of indices of field value slices that are selected
+          to be returned; if not given (default),
+          no indexation is performed
+
+        Note!: numeric components of subIndVec are allowed to contain
+           zeros which are be treated as they were references to null
+           data slices
+
+      dimVec: numeric[1,nDims]/numeric[nDims,1] - vector of dimension
+          numbers corresponding to subIndCVec
+
+  properties:
+
+      fieldNameList: char[1,]/cell[1,nFields] of char[1,]
+          list of field names to return
+
+      structNameList: char[1,]/cell[1,nStructs] of char[1,]
+          list of internal structures to return (by default it
+          is {SData, SIsNull, SIsValueNull}
+
+      replaceNull: logical[1,1] if true, null values are replaced with
+          certain default values uniformly across all the cells,
+              default value is false
+
+      nullReplacements: cell[1,nReplacedFields]  - list of null
+          replacements for each of the fields
+
+      nullReplacementFields: cell[1,nReplacedFields] - list of fields in
+         which the nulls are to be replaced with the specified values,
+         if not specified it is assumed that all fields are to be
+         replaced
+
+         NOTE!: all fields not listed in this parameter are replaced with
+         the default values
+
+      checkInputs: logical[1,1] - true by default (input arguments are
+         checked for correctness
+
+Output:
+  regular:
+    SData: struct [1,1] - structure containing values of
+        fields at the selected slices, each field is an array
+        containing values of the corresponding type
+
+    SIsNull: struct [1,1] - structure containing a nested
+        array with is-null indicators for each CubeStruct cell content
+
+    SIsValueNull: struct [1,1] - structure containing a
+       logical array [] for each of the fields (true
+       means that a corresponding cell doesn't not contain
+          any value
 \end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTube.getEllArray}{getEllArray}}\label{method:gras.ellapx.smartdb.rels.EllUnionTube.getEllArray}
 \begin{verbatim}
@@ -6190,21 +6797,61 @@ Input:
 Output:
   resRel: smartdb.relations.ARelation[1,1] - join result
 \end{verbatim}
+\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTube.getNoCatOrCutFieldsList}{getNoCatOrCutFieldsList}}\label{method:gras.ellapx.smartdb.rels.EllUnionTube.getNoCatOrCutFieldsList}
+\begin{verbatim}
+
+\end{verbatim}
+\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTube.interp}{interp}}\label{method:gras.ellapx.smartdb.rels.EllUnionTube.interp}
+\begin{verbatim}
+
+\end{verbatim}
+\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTube.isEqual}{isEqual}}\label{method:gras.ellapx.smartdb.rels.EllUnionTube.isEqual}
+\begin{verbatim}
+ISEQUAL - compares current relation object with other relation object and
+          returns true if they are equal, otherwise it returns false
+
+
+Usage: isEq=isEqual(self,otherObj)
+
+Input:
+  regular:
+    self: ARelation [1,1] - current relation object
+    otherObj: ARelation [1,1] - other relation object
+
+  properties:
+    checkFieldOrder/isFieldOrderCheck: logical [1,1] - if true, then fields
+        in compared relations must be in the same order, otherwise the
+        order is not  important (false by default)
+    checkTupleOrder: logical[1,1] -  if true, then the tuples in the
+        compared relations are expected to be in the same order,
+        otherwise the order is not important (false by default)
+
+    maxTolerance: double [1,1] - maximum allowed tolerance
+
+    compareMetaDataBackwardRef: logical[1,1] if true, the CubeStruct's
+        referenced from the meta data objects are also compared
+
+    maxRelativeTolerance: double [1,1] - maximum allowed
+    relative tolerance
+
+Output:
+  isEq: logical[1,1] - result of comparison
+  reportStr: char[1,] - report of comparsion
+\end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTube.project}{project}}\label{method:gras.ellapx.smartdb.rels.EllUnionTube.project}
 \begin{verbatim}
 PROJECT - computes projection of the relation object onto given time
           dependent subspase
-
-
 Input:
- regular:
-   self.
-   projType - type of the projection.
-       Takes the following values: 'Static'
-                                   'DynamicAlongGoodCurve'
-   projMatList:double[nDim, nSpDim] - matrices' array of the orthoganal
-            basis vectors
-   fGetProjMat - function which creates vector of the projection
+  regular:
+      self.
+      projType: gras.ellapx.enums.EProjType[1,1] -
+          type of the projection, can be
+          'Static' and 'DynamicAlongGoodCurve'
+      projMatList: cell[1,nProj] of double[nSpDim,nDim] - list of
+          projection matrices, not necessarily orthogonal
+   fGetProjMat: function_handle[1,1] - function which creates
+      vector of the projection
             matrices
        Input:
         regular:
@@ -6219,8 +6866,10 @@ Input:
           projOrthMatTransArray:double[nSpDim, 1] - transposed vector of
             the projection matrices
 Output:
-   ellTubeProjRel:smartdb.relation.StaticRelation[1, 1]/
-       smartdb.relation.DynamicRelation[1, 1]- projected relation
+   ellTubeProjRel: gras.ellapx.smartdb.rels.EllTubeProj[1, 1]/
+       gras.ellapx.smartdb.rels.EllTubeUnionProj[1, 1] -
+          projected ellipsoidal tube
+
    indProj2OrigVec:cell[nDim, 1] - index of the line number from
             which is obtained the projection
 
@@ -6238,9 +6887,9 @@ Example:
    ellTubeObj = rsObj.getEllTubeRel();
    unionEllTube = ...
     gras.ellapx.smartdb.rels.EllUnionTube.fromEllTubes(ellTubeObj);
-   projSpaceList = {[1 0;0 1]};
+   projMatList = {[1 0;0 1]};
    projType = gras.ellapx.enums.EProjType.Static;
-   statEllTubeProj = unionEllTube.project(projType,projSpaceList,...
+   statEllTubeProj = unionEllTube.project(projType,projMatList,...
       @fGetProjMat);
    plObj=smartdb.disp.RelationDataPlotter();
    statEllTubeProj.plot(plObj);
@@ -6252,6 +6901,18 @@ function [projOrthMatArray,projOrthMatTransArray]=fGetProjMat(projMat,...
   projOrthMatArray=repmat(projMat,[1,1,nTimePoints]);
   projOrthMatTransArray=repmat(projMat.',[1,1,nTimePoints]);
  end
+\end{verbatim}
+\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTube.projectStatic}{projectStatic}}\label{method:gras.ellapx.smartdb.rels.EllUnionTube.projectStatic}
+\begin{verbatim}
+
+\end{verbatim}
+\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTube.sortDetermenistically}{sortDetermenistically}}\label{method:gras.ellapx.smartdb.rels.EllUnionTube.sortDetermenistically}
+\begin{verbatim}
+
+\end{verbatim}
+\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTube.thinOutTuples}{thinOutTuples}}\label{method:gras.ellapx.smartdb.rels.EllUnionTube.thinOutTuples}
+\begin{verbatim}
+
 \end{verbatim}
 \section{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj}\label{secClassDescr:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.EllUnionTubeStaticProj}{EllUnionTubeStaticProj}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.EllUnionTubeStaticProj}
@@ -6329,7 +6990,6 @@ See the description of the following methods in section \ref{secClassDescr:smart
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.display]{display}
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.fromStructList]{fromStructList}
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.getCopy]{getCopy}
- \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.getData]{getData}
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.getFieldDescrList]{getFieldDescrList}
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.getFieldIsNull]{getFieldIsNull}
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.getFieldIsValueNull]{getFieldIsValueNull}
@@ -6354,7 +7014,6 @@ See the description of the following methods in section \ref{secClassDescr:smart
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.getUniqueTuples]{getUniqueTuples}
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.initByEmptyDataSet]{initByEmptyDataSet}
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.initByNullDataSet]{initByNullDataSet}
- \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.isEqual]{isEqual}
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.isFields]{isFields}
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.isMemberAlongDim]{isMemberAlongDim}
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.isMemberTuples]{isMemberTuples}
@@ -6379,6 +7038,91 @@ See the description of the following methods in section \ref{secClassDescr:smart
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.writeToCSV]{writeToCSV}
  \item \hyperref[method:smartdb.relations.ATypifiedStaticRelation.writeToXLS]{writeToXLS}
 \end{list}
+\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.cut}{cut}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.cut}
+\begin{verbatim}
+
+\end{verbatim}
+\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.fromEllTubes}{fromEllTubes}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.fromEllTubes}
+\begin{verbatim}
+FROMELLTUBES - returns union of the ellipsoidal tubes on time
+
+Input:
+   ellTubeRel: smartdb.relation.StaticRelation[1, 1]/
+      smartdb.relation.DynamicRelation[1, 1] - relation
+      object
+
+Output:
+ellUnionTubeRel: ellapx.smartdb.rel.EllUnionTube - union of the
+            ellipsoidal tubes
+\end{verbatim}
+\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getData}{getData}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getData}
+\begin{verbatim}
+GETDATA - returns an indexed projection of CubeStruct object's content
+
+Input:
+  regular:
+      self: CubeStruct [1,1] - the object
+
+  optional:
+
+      subIndCVec:
+        Case#1: numeric[1,]/numeric[,1]
+
+        Case#2: cell[1,nDims]/cell[nDims,1] of double [nSubElem_i,1]
+              for i=1,...,nDims
+
+          -array of indices of field value slices that are selected
+          to be returned; if not given (default),
+          no indexation is performed
+
+        Note!: numeric components of subIndVec are allowed to contain
+           zeros which are be treated as they were references to null
+           data slices
+
+      dimVec: numeric[1,nDims]/numeric[nDims,1] - vector of dimension
+          numbers corresponding to subIndCVec
+
+  properties:
+
+      fieldNameList: char[1,]/cell[1,nFields] of char[1,]
+          list of field names to return
+
+      structNameList: char[1,]/cell[1,nStructs] of char[1,]
+          list of internal structures to return (by default it
+          is {SData, SIsNull, SIsValueNull}
+
+      replaceNull: logical[1,1] if true, null values are replaced with
+          certain default values uniformly across all the cells,
+              default value is false
+
+      nullReplacements: cell[1,nReplacedFields]  - list of null
+          replacements for each of the fields
+
+      nullReplacementFields: cell[1,nReplacedFields] - list of fields in
+         which the nulls are to be replaced with the specified values,
+         if not specified it is assumed that all fields are to be
+         replaced
+
+         NOTE!: all fields not listed in this parameter are replaced with
+         the default values
+
+      checkInputs: logical[1,1] - true by default (input arguments are
+         checked for correctness
+
+Output:
+  regular:
+    SData: struct [1,1] - structure containing values of
+        fields at the selected slices, each field is an array
+        containing values of the corresponding type
+
+    SIsNull: struct [1,1] - structure containing a nested
+        array with is-null indicators for each CubeStruct cell content
+
+    SIsValueNull: struct [1,1] - structure containing a
+       logical array [] for each of the fields (true
+       means that a corresponding cell doesn't not contain
+          any value
+\end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getEllArray}{getEllArray}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getEllArray}
 \begin{verbatim}
 GETELLARRAY - returns array of matrix's ellipsoid according to
@@ -6415,6 +7159,10 @@ Input:
 Output:
   resRel: smartdb.relations.ARelation[1,1] - join result
 \end{verbatim}
+\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getNoCatOrCutFieldsList}{getNoCatOrCutFieldsList}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getNoCatOrCutFieldsList}
+\begin{verbatim}
+
+\end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getReachTubeNamePrefix}{getReachTubeNamePrefix}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getReachTubeNamePrefix}
 \begin{verbatim}
 GETREACHTUBEANEPREFIX - return prefix of the reach tube
@@ -6431,89 +7179,209 @@ Input:
   regular:
      self.
 \end{verbatim}
+\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.interp}{interp}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.interp}
+\begin{verbatim}
+
+\end{verbatim}
+\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.isEqual}{isEqual}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.isEqual}
+\begin{verbatim}
+ISEQUAL - compares current relation object with other relation object and
+          returns true if they are equal, otherwise it returns false
+
+
+Usage: isEq=isEqual(self,otherObj)
+
+Input:
+  regular:
+    self: ARelation [1,1] - current relation object
+    otherObj: ARelation [1,1] - other relation object
+
+  properties:
+    checkFieldOrder/isFieldOrderCheck: logical [1,1] - if true, then fields
+        in compared relations must be in the same order, otherwise the
+        order is not  important (false by default)
+    checkTupleOrder: logical[1,1] -  if true, then the tuples in the
+        compared relations are expected to be in the same order,
+        otherwise the order is not important (false by default)
+
+    maxTolerance: double [1,1] - maximum allowed tolerance
+
+    compareMetaDataBackwardRef: logical[1,1] if true, the CubeStruct's
+        referenced from the meta data objects are also compared
+
+    maxRelativeTolerance: double [1,1] - maximum allowed
+    relative tolerance
+
+Output:
+  isEq: logical[1,1] - result of comparison
+  reportStr: char[1,] - report of comparsion
+\end{verbatim}
 \subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.plot}{plot}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.plot}
 \begin{verbatim}
-PLOT - displays ellipsoidal tubes using the specified RelationDataPlotter
+PLOT - displays ellipsoidal tubes using the specified
+  RelationDataPlotter
 
 Input:
   regular:
       self:
+  optional:
       plObj: smartdb.disp.RelationDataPlotter[1,1] - plotter
           object used for displaying ellipsoidal tubes
-\end{verbatim}
-\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.project}{project}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.project}
-\begin{verbatim}
-PROJECT - computes projection of the relation object onto given time
-          dependent subspase
+  properties:
+      fGetColor: function_handle[1, 1] -
+          function that specified colorVec for
+          ellipsoidal tubes
+      fGetAlpha: function_handle[1, 1] -
+          function that specified transparency
+          value for ellipsoidal tubes
+      fGetLineWidth: function_handle[1, 1] -
+          function that specified lineWidth for good curves
+      fGetFill: function_handle[1, 1] - this
+          property not used in this version
+      colorFieldList: cell[nColorFields, ] of char[1, ] -
+          list of parameters for color function
+      alphaFieldList: cell[nAlphaFields, ] of char[1, ] -
+          list of parameters for transparency function
+      lineWidthFieldList: cell[nLineWidthFields, ]
+          of char[1, ] - list of parameters for lineWidth
+          function
+      fillFieldList: cell[nIsFillFields, ] of char[1, ] -
+          list of parameters for fill function
+      plotSpecFieldList: cell[nPlotFields, ] of char[1, ] -
+          defaul list of parameters. If for any function in
+          properties not specified list of parameters,
+          this one will be used
 
+Output:
+  plObj: smartdb.disp.RelationDataPlotter[1,1] - plotter
+          object used for displaying ellipsoidal tubes
+\end{verbatim}
+\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.plotExt}{plotExt}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.plotExt}
+\begin{verbatim}
+PLOTEXT - plots external approximation of ellTube.
+
+
+Usage:
+      obj.plotExt() - plots external approximation of ellTube.
+      obj.plotExt('Property',PropValue,...) - plots external approximation
+                                              of ellTube with setting
+                                              properties.
 
 Input:
- regular:
-   self.
-   projType - type of the projection.
-       Takes the following values: 'Static'
-                                   'DynamicAlongGoodCurve'
-   projMatList:double[nDim, nSpDim] - matrices' array of the orthoganal
-            basis vectors
-   fGetProjMat - function which creates vector of the projection
-            matrices
-       Input:
-        regular:
-          projMat:double[nDim, mDim] - matrix of the projection at the
-            instant of time
-          timeVec:double[1, nDim] - time interval
-        optional:
-           sTime:double[1,1] - instant of time
-       Output:
-          projOrthMatArray:double[1, nSpDim] - vector of the projection
-            matrices
-          projOrthMatTransArray:double[nSpDim, 1] - transposed vector of
-            the projection matrices
+  regular:
+      obj:  EllTubeProj: EllTubeProj object
+  optional:
+      relDataPlotter:smartdb.disp.RelationDataPlotter[1,1] - relation data plotter object.
+      colorSpec: char[1,1] - color specification code, can be 'r','g',
+                   etc (any code supported by built-in Matlab function).
+
+  properties:
+
+      fGetColor: function_handle[1, 1] -
+          function that specified colorVec for
+          ellipsoidal tubes
+      fGetAlpha: function_handle[1, 1] -
+          function that specified transparency
+          value for ellipsoidal tubes
+      fGetLineWidth: function_handle[1, 1] -
+          function that specified lineWidth for good curves
+      fGetFill: function_handle[1, 1] - this
+          property not used in this version
+      colorFieldList: cell[nColorFields, ] of char[1, ] -
+          list of parameters for color function
+      alphaFieldList: cell[nAlphaFields, ] of char[1, ] -
+          list of parameters for transparency function
+      lineWidthFieldList: cell[nLineWidthFields, ]
+          of char[1, ] - list of parameters for lineWidth
+          function
+      fillFieldList: cell[nIsFillFields, ] of char[1, ] -
+          list of parameters for fill function
+      plotSpecFieldList: cell[nPlotFields, ] of char[1, ] -
+          defaul list of parameters. If for any function in
+          properties not specified list of parameters,
+          this one will be used
+      'showDiscrete':logical[1,1]  -
+          if true, approximation in 3D will be filled in every time slice
+      'nSpacePartPoins': double[1,1] -
+          number of points in every time slice.
 Output:
-   ellTubeProjRel:smartdb.relation.StaticRelation[1, 1]/
-       smartdb.relation.DynamicRelation[1, 1]- projected relation
-   indProj2OrigVec:cell[nDim, 1] - index of the line number from
-            which is obtained the projection
+  regular:
+      plObj: smartdb.disp.RelationDataPlotter[1,1] - returns the relation
+      data plotter object.
+\end{verbatim}
+\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.plotInt}{plotInt}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.plotInt}
+\begin{verbatim}
+PLOTINT - plots internal approximation of ellTube.
 
-Example:
-  function example
-   aMat = [0 1; 0 0]; bMat = eye(2);
-   SUBounds = struct();
-   SUBounds.center = {'sin(t)'; 'cos(t)'};
-   SUBounds.shape = [9 0; 0 2];
-   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-   x0EllObj = ell_unitball(2);
-   timeVec = [0 10];
-   dirsMat = [1 0; 0 1]';
-   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-   ellTubeObj = rsObj.getEllTubeRel();
-   unionEllTube = ...
-    gras.ellapx.smartdb.rels.EllUnionTube.fromEllTubes(ellTubeObj);
-   projSpaceList = {[1 0;0 1]};
-   projType = gras.ellapx.enums.EProjType.Static;
-   statEllTubeProj = unionEllTube.project(projType,projSpaceList,...
-      @fGetProjMat);
-   plObj=smartdb.disp.RelationDataPlotter();
-   statEllTubeProj.plot(plObj);
-end
 
-function [projOrthMatArray,projOrthMatTransArray]=fGetProjMat(projMat,...
-    timeVec,varargin)
-  nTimePoints=length(timeVec);
-  projOrthMatArray=repmat(projMat,[1,1,nTimePoints]);
-  projOrthMatTransArray=repmat(projMat.',[1,1,nTimePoints]);
- end
+Usage:
+      obj.plotInt() - plots internal approximation of ellTube.
+      obj.plotInt('Property',PropValue,...) - plots internal approximation
+                                              of ellTube with setting
+                                              properties.
+
+Input:
+  regular:
+      obj:  EllTubeProj: EllTubeProj object
+  optional:
+      relDataPlotter:smartdb.disp.RelationDataPlotter[1,1] - relation data plotter object.
+      colorSpec: char[1,1] - color specification code, can be 'r','g',
+                   etc (any code supported by built-in Matlab function).
+
+  properties:
+
+      fGetColor: function_handle[1, 1] -
+          function that specified colorVec for
+          ellipsoidal tubes
+      fGetAlpha: function_handle[1, 1] -
+          function that specified transparency
+          value for ellipsoidal tubes
+      fGetLineWidth: function_handle[1, 1] -
+          function that specified lineWidth for good curves
+      fGetFill: function_handle[1, 1] - this
+          property not used in this version
+      colorFieldList: cell[nColorFields, ] of char[1, ] -
+          list of parameters for color function
+      alphaFieldList: cell[nAlphaFields, ] of char[1, ] -
+          list of parameters for transparency function
+      lineWidthFieldList: cell[nLineWidthFields, ]
+          of char[1, ] - list of parameters for lineWidth
+          function
+      fillFieldList: cell[nIsFillFields, ] of char[1, ] -
+          list of parameters for fill function
+      plotSpecFieldList: cell[nPlotFields, ] of char[1, ] -
+          defaul list of parameters. If for any function in
+          properties not specified list of parameters,
+          this one will be used
+      'showDiscrete':logical[1,1]  -
+          if true, approximation in 3D will be filled in every time slice
+      'nSpacePartPoins': double[1,1] -
+          number of points in every time slice.
+Output:
+  regular:
+      plObj: smartdb.disp.RelationDataPlotter[1,1] - returns the relation
+      data plotter object.
+\end{verbatim}
+\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.projMat2str}{projMat2str}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.projMat2str}
+\begin{verbatim}
+
+\end{verbatim}
+\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.projRow2str}{projRow2str}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.projRow2str}
+\begin{verbatim}
+
+\end{verbatim}
+\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.sortDetermenistically}{sortDetermenistically}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.sortDetermenistically}
+\begin{verbatim}
+
+\end{verbatim}
+\subsection{\texorpdfstring{gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.thinOutTuples}{thinOutTuples}}\label{method:gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.thinOutTuples}
+\begin{verbatim}
+
 \end{verbatim}
 \section{elltool.reach.AReach}\label{secClassDescr:elltool.reach.AReach}
 \subsection{\texorpdfstring{elltool.reach.AReach.AReach}{AReach}}\label{method:elltool.reach.AReach.AReach}
 \begin{verbatim}
-Kirill Mayantsev
-<kirill.mayantsev@gmail.com>$
-$Date: March-2013 $
-$Copyright: Moscow State University,
-            Faculty of Computational Mathematics
-            and Computer Science,
-            System Analysis Department 2013$
+
 \end{verbatim}
 \subsection{\texorpdfstring{elltool.reach.AReach.cut}{cut}}\label{method:elltool.reach.AReach.cut}
 \begin{verbatim}
@@ -6665,37 +7533,299 @@ Example:
   newRsObj = rsObj.evolve(12);
   newDRsObj = dRsObj.evolve(11);
 \end{verbatim}
-\subsection{\texorpdfstring{elltool.reach.AReach.getCopy}{getCopy}}\label{method:elltool.reach.AReach.getCopy}
+\subsection{\texorpdfstring{elltool.reach.AReach.getAbsTol}{getAbsTol}}\label{method:elltool.reach.AReach.getAbsTol}
 \begin{verbatim}
-
-GETCOPY - returns the copy of ReachContinuous/ReachDiscrete
-          array of objects
+GETABSTOL - gives the array of absTol for all elements
+  in rsArr
 
 Input:
   regular:
-      self - multidimensional array of
-             ReachContinuous/ReachDiscrete objects
+      rsArr: elltool.reach.AReach[nDim1, nDim2, ...] -
+          multidimension array of reach sets
+  optional:
+      fAbsTolFun: function_handle[1,1] - function that is
+          applied to the absTolArr. The default is @min.
 
 Output:
- copyReachObjArr: elltool.reach.ReachContinuous/ReachDiscrete -
-      copy of the given array of objects.
+  regular:
+      absTolArr: double [absTol1, absTol2, ...] - return
+          absTol for each element in rsArr
+  optional:
+      absTol: double[1,1] - return result of work fAbsTolFun
+          with the absTolArr
 
- Example:
-   aMat = [0 1; 0 0]; bMat = eye(2);
-   SUBounds = struct();
-   SUBounds.center = {'sin(t)'; 'cos(t)'};
-   SUBounds.shape = [9 0; 0 2];
-   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-   x0EllObj = ell_unitball(2);
-   timeVec = [0 10];
-   dirsMat = [1 0; 0 1]';
-   reachObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-   reachObjArr = reachObj.repMat(1,2);
-   copyReachObj = reachObj.getCopy();
-   copyReachObjArr = reachObjArr.getCopy();
+Usage:
+  use [~,absTol] = rsArr.getAbsTol() if you want get only
+      absTol,
+  use [absTolArr,absTol] = rsArr.getAbsTol() if you want
+      get absTolArr and absTol,
+  use absTolArr = rsArr.getAbsTol() if you want get only
+      absTolArr
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.AReach.getCopy}{getCopy}}\label{method:elltool.reach.AReach.getCopy}
+\begin{verbatim}
+Input:
+  regular:
+      self:
+  properties:
+      l0Mat: double[nDims,nDirs] - matrix of good
+          directions at time s
+      isIntExtApxVec: logical[1,2] - two element vector with the
+         first element corresponding to internal approximations
+        and second - to external ones. An element equal to
+         false means that the corresponding approximation type
+         is filtered out. Default value is [true,true]
+Example:
+    aMat = [0 1; 0 0]; bMat = eye(2);
+    SUBounds = struct();
+    SUBounds.center = {'sin(t)'; 'cos(t)'};
+    SUBounds.shape = [9 0; 0 2];
+    sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+    x0EllObj = ell_unitball(2);
+    timeVec = [0 10];
+    dirsMat = [1 0; 0 1; 1 1;1 2]';
+    rsObj = elltool.reach.ReachContinuous(sys, x0EllObj,...
+      dirsMat, timeVec);
 
-   copyReachObj = ReachContinuous object
-   copyReachObjArr = 1x2 array of ReachContinuous objects
+    copyRsObj = rsObj.getCopy()
+
+    Reach set of the continuous-time linear system in R^2 in
+      the time interval [0, 10].
+
+    Initial set at time k0 = 0:
+    Ellipsoid with parameters
+    Center:
+         0
+         0
+
+    Shape Matrix:
+         1     0
+         0     1
+
+    Number of external approximations: 4
+    Number of internal approximations: 4
+
+    copyRsObj = rsObj.getCopy('l0Mat',[0;1],'approxType',...
+      [true,false])
+
+    Reach set of the continuous-time linear system in R^2 in
+      the time interval [0, 10].
+
+    Initial set at time k0 = 0:
+    Ellipsoid with parameters
+    Center:
+         0
+         0
+
+    Shape Matrix:
+         1     0
+         0     1
+
+    Number of external approximations: 1
+    Number of internal approximations: 1
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.AReach.getEaScaleFactor}{getEaScaleFactor}}\label{method:elltool.reach.AReach.getEaScaleFactor}
+\begin{verbatim}
+GET_EASCALEFACTOR - return the scale factor for external approximation
+                    of reach tube
+
+Input:
+  regular:
+      self.
+
+Output:
+  regular:
+      eaScaleFactor: double[1, 1] - scale factor.
+
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [10 0];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  rsObj.getEaScaleFactor()
+
+  ans =
+
+      1.0200
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.AReach.getEllTubeRel}{getEllTubeRel}}\label{method:elltool.reach.AReach.getEllTubeRel}
+\begin{verbatim}
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  rsObj.getEllTubeRel();
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.AReach.getEllTubeUnionRel}{getEllTubeUnionRel}}\label{method:elltool.reach.AReach.getEllTubeUnionRel}
+\begin{verbatim}
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  getEllTubeUnionRel(rsObj);
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.AReach.getIaScaleFactor}{getIaScaleFactor}}\label{method:elltool.reach.AReach.getIaScaleFactor}
+\begin{verbatim}
+GET_IASCALEFACTOR - return the scale factor for internal approximation
+                    of reach tube
+
+Input:
+  regular:
+      self.
+
+Output:
+  regular:
+      iaScaleFactor: double[1, 1] - scale factor.
+
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [10 0];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  rsObj.getIaScaleFactor()
+
+  ans =
+
+      1.0200
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.AReach.getInitialSet}{getInitialSet}}\label{method:elltool.reach.AReach.getInitialSet}
+\begin{verbatim}
+GETINITIALSET - return the initial set for linear system, which is solved
+                for building reach tube.
+
+Input:
+  regular:
+      self.
+
+Output:
+  regular:
+      x0Ell: ellipsoid[1, 1] - ellipsoid x0, which was initial set for
+          linear system.
+
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [10 0];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  x0Ell = rsObj.getInitialSet()
+
+  x0Ell =
+
+  Center:
+       0
+       0
+
+  Shape Matrix:
+       1     0
+       0     1
+
+  Nondegenerate ellipsoid in R^2.
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.AReach.getNPlot2dPoints}{getNPlot2dPoints}}\label{method:elltool.reach.AReach.getNPlot2dPoints}
+\begin{verbatim}
+GETNPLOT2DPOINTS - gives array  the same size as rsArr of
+  value of nPlot2dPoints property for each element in rsArr -
+  array of reach sets
+
+Input:
+  regular:
+    rsArr:elltool.reach.AReach[nDims1,nDims2,...] - reach
+      set array
+
+Output:
+  nPlot2dPointsArr:double[nDims1,nDims2,...] - array of
+      values of nTimeGridPoints property for each reach set
+      in rsArr
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.AReach.getNPlot3dPoints}{getNPlot3dPoints}}\label{method:elltool.reach.AReach.getNPlot3dPoints}
+\begin{verbatim}
+GETNPLOT3DPOINTS - gives array  the same size as rsArr of
+  value of nPlot3dPoints property for each element in rsArr
+  array of reach sets
+
+Input:
+  regular:
+      rsArr:reach[nDims1,nDims2,...] - reach set array
+
+Output:
+  nPlot3dPointsArr:double[nDims1,nDims2,...]- array of values
+      of nPlot3dPoints property for each reach set in rsArr
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.AReach.getNTimeGridPoints}{getNTimeGridPoints}}\label{method:elltool.reach.AReach.getNTimeGridPoints}
+\begin{verbatim}
+GETNTIMEGRIDPOINTS - gives array  the same size as rsArr of
+  value of nTimeGridPoints property for each element in rsArr
+  array of reach sets
+
+Input:
+  regular:
+      rsArr: elltool.reach.AReach [nDims1,nDims2,...] - reach
+          set array
+
+Output:
+  nTimeGridPointsArr: double[nDims1,nDims2,...]- array of
+      values of nTimeGridPoints property for each reach set
+      in rsArr
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.AReach.getRelTol}{getRelTol}}\label{method:elltool.reach.AReach.getRelTol}
+\begin{verbatim}
+GETRELTOL - gives the array of relTol for all elements in
+ellArr
+
+Input:
+  regular:
+      rsArr: elltool.reach.AReach[nDim1,nDim2, ...] -
+          multidimension array of reach sets.
+  optional
+      fRelTolFun: function_handle[1,1] - function that is
+          applied to the relTolArr. The default is @min.
+
+Output:
+  regular:
+      relTolArr: double [relTol1, relTol2, ...] - return
+          relTol for each element in rsArr.
+  optional:
+      relTol: double[1,1] - return result of work fRelTolFun
+          with the relTolArr
+
+Usage:
+  use [~,relTol] = rsArr.getRelTol() if you want get only
+      relTol,
+  use [relTolArr,relTol] = rsArr.getRelTol() if you want get
+      relTolArr and relTol,
+  use relTolArr = rsArr.getRelTol() if you want get only
+      relTolArr
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.AReach.getSwitchTimeVec}{getSwitchTimeVec}}\label{method:elltool.reach.AReach.getSwitchTimeVec}
+\begin{verbatim}
+
 \end{verbatim}
 \subsection{\texorpdfstring{elltool.reach.AReach.get\_center}{get\_center}}\label{method:elltool.reach.AReach.getcenter}
 \begin{verbatim}
@@ -6771,6 +7901,7 @@ Output:
       grid.
 
    timeVec: double[1, nPoints] - array of time values.
+   l0Mat: double[nDirs,nDims] - matrix of good directions at t0
 
 Example:
   aMat = [0 1; 0 0]; bMat = eye(2);
@@ -6942,6 +8073,123 @@ Example:
 
                   1
 \end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.AReach.isEmpty}{isEmpty}}\label{method:elltool.reach.AReach.isEmpty}
+\begin{verbatim}
+
+ISEMPTY - checks if given reach set array is an array of empty objects.
+
+Input:
+  regular:
+      self - multidimensional array of
+             ReachContinuous/ReachDiscrete objects
+
+Output:
+  isEmptyArr: logical[nDim1, nDim2, nDim3,...] -
+              isEmpty(iDim1, iDim2, iDim3,...) = true - if self(iDim1, iDim2, iDim3,...) is empty,
+                                               = false - otherwise.
+
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  dsys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  dRsObj = elltool.reach.ReachRiscrete(dsys, x0EllObj, dirsMat, timeVec);
+  rsObjArr = rsObj.repMat(1,2);
+  dRsObjArr = dRsObj.repMat(1,2);
+  dRsObj.isEmpty();
+  rsObj.isEmpty()
+
+  ans =
+
+       0
+
+  dRsObjArr.isEmpty();
+  rsObjArr.isEmpty()
+
+  ans =
+      [ 0  0 ]
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.AReach.isEqual}{isEqual}}\label{method:elltool.reach.AReach.isEqual}
+\begin{verbatim}
+ISEQUAL - checks for equality given reach set objects
+
+Input:
+  regular:
+      self.
+      reachObj:
+          elltool.reach.AReach[1, 1] - each set object, which
+           compare with self.
+  optional:
+      indTupleVec: double[1,] - tube numbers that are
+          compared
+      approxType: gras.ellapx.enums.EApproxType[1, 1] -  type of
+          approximation, which will be compared.
+  properties:
+      notComparedFieldList: cell[1,k] - fields not to compare
+          in tubes. Default: LT_GOOD_DIR_*, LS_GOOD_DIR_*,
+          IND_S_TIME, S_TIME, TIME_VEC
+      areTimeBoundsCompared: logical[1,1] - treat tubes with
+          different timebounds as inequal if 'true'.
+          Default: false
+
+Output:
+  regular:
+      ISEQUAL: logical[1, 1] - true - if reach set objects are equal.
+          false - otherwise.
+
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  copyRsObj = rsObj.getCopy();
+  isEqual = isEqual(rsObj, copyRsObj)
+
+  isEqual =
+
+          1
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.AReach.isbackward}{isbackward}}\label{method:elltool.reach.AReach.isbackward}
+\begin{verbatim}
+ISBACKWARD - checks if given reach set object was obtained by solving
+             the system in reverse time.
+
+Input:
+  regular:
+      self.
+
+Output:
+  regular:
+      isBackward: logical[1, 1] - true - if self was obtained by solving
+          in reverse time, false - otherwise.
+
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [10 0];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  rsObj.isbackward()
+
+  ans =
+
+       1
+\end{verbatim}
 \subsection{\texorpdfstring{elltool.reach.AReach.iscut}{iscut}}\label{method:elltool.reach.AReach.iscut}
 \begin{verbatim}
 ISCUT - checks if given array of reach set objects is a cut of
@@ -6977,48 +8225,6 @@ Example:
   cutObjArr = cutObj.repMat(1,2);
   iscut(cutObjArr);
   iscut(cutObj);
-\end{verbatim}
-\subsection{\texorpdfstring{elltool.reach.AReach.isempty}{isempty}}\label{method:elltool.reach.AReach.isempty}
-\begin{verbatim}
-
-ISEMPTY - checks if given reach set array is an array of empty objects.
-
-Input:
-  regular:
-      self - multidimensional array of
-             ReachContinuous/ReachDiscrete objects
-
-Output:
-  isEmptyArr: logical[nDim1, nDim2, nDim3,...] -
-              isEmpty(iDim1, iDim2, iDim3,...) = true - if self(iDim1, iDim2, iDim3,...) is empty,
-                                               = false - otherwise.
-
-Example:
-  aMat = [0 1; 0 0]; bMat = eye(2);
-  SUBounds = struct();
-  SUBounds.center = {'sin(t)'; 'cos(t)'};
-  SUBounds.shape = [9 0; 0 2];
-  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  dsys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  x0EllObj = ell_unitball(2);
-  timeVec = [0 10];
-  dirsMat = [1 0; 0 1]';
-  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-  dRsObj = elltool.reach.ReachRiscrete(dsys, x0EllObj, dirsMat, timeVec);
-  rsObjArr = rsObj.repMat(1,2);
-  dRsObjArr = dRsObj.repMat(1,2);
-  dRsObj.isempty();
-  rsObj.isempty()
-
-  ans =
-
-       0
-
-  dRsObjArr.isempty();
-  rsObjArr.isempty()
-
-  ans =
-      [ 0  0 ]
 \end{verbatim}
 \subsection{\texorpdfstring{elltool.reach.AReach.isprojection}{isprojection}}\label{method:elltool.reach.AReach.isprojection}
 \begin{verbatim}
@@ -7058,7 +8264,81 @@ Example:
   isprojection(projObj);
   isprojection(projObjArr);
 \end{verbatim}
-\subsection{\texorpdfstring{elltool.reach.AReach.plot\_ea}{plot\_ea}}\label{method:elltool.reach.AReach.plotea}
+\subsection{\texorpdfstring{elltool.reach.AReach.plotByEa}{plotByEa}}\label{method:elltool.reach.AReach.plotByEa}
+\begin{verbatim}
+plotByEa - plots external approximation of reach tube.
+
+
+Usage:
+      plotByEa(self,'Property',PropValue,...)
+      - plots external approximation of reach tube
+           with  setting properties
+
+Input:
+  regular:
+      self: - reach tube
+
+  optional:
+      relDataPlotter:smartdb.disp.RelationDataPlotter[1,1] - relation data plotter object.
+      charColor: char[1,1]  - color specification code, can be 'r','g',
+                     etc (any code supported by built-in Matlab function).
+  properties:
+
+      'fill': logical[1,1]  -
+              if 1, tube in 2D will be filled with color.
+              Default value is true.
+      'lineWidth': double[1,1]  -
+                   line width for 2D plots. Default value is 2.
+      'color': double[1,3] -
+               sets default colors in the form [x y z].
+                  Default value is [0 0 1].
+      'shade': double[1,1]  -
+     level of transparency between 0 and 1 (0 - transparent, 1 - opaque).
+               Default value is 0.3.
+
+Output:
+  regular:
+      plObj: smartdb.disp.RelationDataPlotter[1,1] - returns the relation
+      data plotter object.
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.AReach.plotByIa}{plotByIa}}\label{method:elltool.reach.AReach.plotByIa}
+\begin{verbatim}
+plotByIa - plots internal approximation of reach tube.
+
+
+Usage:
+      plotByIa(self,'Property',PropValue,...)
+      - plots internal approximation of reach tube
+           with  setting properties
+
+Input:
+  regular:
+      self: - reach tube
+
+  optional:
+      relDataPlotter:smartdb.disp.RelationDataPlotter[1,1] - relation data plotter object.
+      charColor: char[1,1]  - color specification code, can be 'r','g',
+                     etc (any code supported by built-in Matlab function).
+  properties:
+
+      'fill': logical[1,1]  -
+              if 1, tube in 2D will be filled with color.
+              Default value is true.
+      'lineWidth': double[1,1]  -
+                   line width for 2D plots. Default value is 2.
+      'color': double[1,3] -
+               sets default colors in the form [x y z].
+                  Default value is [0 1 0].
+      'shade': double[1,1]  -
+     level of transparency between 0 and 1 (0 - transparent, 1 - opaque).
+               Default value is 0.1.
+
+Output:
+  regular:
+      plObj: smartdb.disp.RelationDataPlotter[1,1] - returns the relation
+      data plotter object.
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.AReach.plotEa}{plotEa}}\label{method:elltool.reach.AReach.plotEa}
 \begin{verbatim}
 
 PLOT_EA - plots external approximations of 2D and 3D reach sets.
@@ -7099,15 +8379,16 @@ Example:
   timeVec = [0 10];
   dirsMat = [1 0; 0 1]';
   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-  rsObj.plot_ea();
+  rsObj.plotEa();
   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
+
   dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
-  dRsObj.plot_ea();
+  dRsObj.plotEa();
 \end{verbatim}
-\subsection{\texorpdfstring{elltool.reach.AReach.plot\_ia}{plot\_ia}}\label{method:elltool.reach.AReach.plotia}
+\subsection{\texorpdfstring{elltool.reach.AReach.plotIa}{plotIa}}\label{method:elltool.reach.AReach.plotIa}
 \begin{verbatim}
 
-PLOT_IA - plots internal approximations of 2D and 3D reach sets.
+PLOTIA - plots internal approximations of 2D and 3D reach sets.
 
 Input:
   regular:
@@ -7142,41 +8423,14 @@ Example:
   timeVec = [0 10];
   dirsMat = [1 0; 0 1]';
   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-  rsObj.plot_ia();
+  rsObj.plotIa();
   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
   dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
-  dRsObj.plot_ia();
+  dRsObj.plotIa();
 \end{verbatim}
 \subsection{\texorpdfstring{elltool.reach.AReach.projection}{projection}}\label{method:elltool.reach.AReach.projection}
 \begin{verbatim}
 
-PROJECTION - projects the reach set self onto the orthogonal basis
-             specified by the columns of matrix projMat.
-
-Input:
-  regular:
-      self.
-      projMat: double[nRows, nCols] - projection matrix, where nRows
-          is dimension of reach set, nCols <= nRows.
-
-Output:
-  projObj: elltool.reach.IReach[1, 1] - projected reach set.
-
-Examples:
-  aMat = [0 1; 0 0]; bMat = eye(2);
-  SUBounds = struct();
-  SUBounds.center = {'sin(t)'; 'cos(t)'};
-  SUBounds.shape = [9 0; 0 2];
-  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-  x0EllObj = ell_unitball(2);
-  timeVec = [0 10];
-  dirsMat = [1 0; 0 1]';
-  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-  dRsObj = elltool.reach.ReachRiscrete(dsys, x0EllObj, dirsMat, timeVec);
-  projMat = eye(2);
-  projObj = rsObj.projection(projMat);
-  dProjObj = dRsObj.projection(projMat);
 \end{verbatim}
 \subsection{\texorpdfstring{elltool.reach.AReach.refine}{refine}}\label{method:elltool.reach.AReach.refine}
 \begin{verbatim}
@@ -7239,16 +8493,24 @@ Output:
 \subsection{\texorpdfstring{elltool.reach.ReachContinuous.ReachContinuous}{ReachContinuous}}\label{method:elltool.reach.ReachContinuous.ReachContinuous}
 \begin{verbatim}
 ReachContinuous - computes reach set approximation of the continuous
-                  linear system for the given time interval.
+    linear system for the given time interval.
 Input:
     regular:
-      linSys: elltool.linsys.LinSys object - given linear system
-      x0Ell: ellipsoid[1, 1] - ellipsoidal set of initial conditions
-      l0Mat: matrix of double - l0Mat
-      timeVec: double[1, 2] - time interval; timeVec(1) must be less
-           then timeVec(2)
-      OptStruct: structure[1,1] in this class OptStruct doesn't matter
-          anything
+      linSys: elltool.linsys.LinSys object -
+          given linear system .
+      x0Ell: ellipsoid[1, 1] - ellipsoidal set of
+          initial conditions.
+      l0Mat: double[nRows, nColumns] - initial good directions
+          matrix.
+      timeVec: double[1, 2] - time interval.
+
+    properties:
+      isRegEnabled: logical[1, 1] - if it is 'true' constructor
+          is allowed to use regularization.
+      isJustCheck: logical[1, 1] - if it is 'true' constructor
+          just check if square matrices are degenerate, if it is
+          'false' all degenerate matrices will be regularized.
+      regTol: double[1, 1] - regularization precision.
 
 Output:
   regular:
@@ -7271,742 +8533,42 @@ See the description of the following methods in section \ref{secClassDescr:ellto
  for elltool.reach.AReach:
 
 \begin{list}{}{}
+ \item \hyperref[method:elltool.reach.AReach.cut]{cut}
+ \item \hyperref[method:elltool.reach.AReach.dimension]{dimension}
+ \item \hyperref[method:elltool.reach.AReach.display]{display}
+ \item \hyperref[method:elltool.reach.AReach.evolve]{evolve}
+ \item \hyperref[method:elltool.reach.AReach.getAbsTol]{getAbsTol}
+ \item \hyperref[method:elltool.reach.AReach.getCopy]{getCopy}
+ \item \hyperref[method:elltool.reach.AReach.getEaScaleFactor]{getEaScaleFactor}
+ \item \hyperref[method:elltool.reach.AReach.getEllTubeRel]{getEllTubeRel}
+ \item \hyperref[method:elltool.reach.AReach.getEllTubeUnionRel]{getEllTubeUnionRel}
+ \item \hyperref[method:elltool.reach.AReach.getIaScaleFactor]{getIaScaleFactor}
+ \item \hyperref[method:elltool.reach.AReach.getInitialSet]{getInitialSet}
+ \item \hyperref[method:elltool.reach.AReach.getNPlot2dPoints]{getNPlot2dPoints}
+ \item \hyperref[method:elltool.reach.AReach.getNPlot3dPoints]{getNPlot3dPoints}
+ \item \hyperref[method:elltool.reach.AReach.getNTimeGridPoints]{getNTimeGridPoints}
+ \item \hyperref[method:elltool.reach.AReach.getRelTol]{getRelTol}
+ \item \hyperref[method:elltool.reach.AReach.getSwitchTimeVec]{getSwitchTimeVec}
+ \item \hyperref[method:elltool.reach.AReach.get_center]{get\_center}
+ \item \hyperref[method:elltool.reach.AReach.get_directions]{get\_directions}
+ \item \hyperref[method:elltool.reach.AReach.get_ea]{get\_ea}
+ \item \hyperref[method:elltool.reach.AReach.get_goodcurves]{get\_goodcurves}
+ \item \hyperref[method:elltool.reach.AReach.get_ia]{get\_ia}
+ \item \hyperref[method:elltool.reach.AReach.get_system]{get\_system}
  \item \hyperref[method:elltool.reach.AReach.intersect]{intersect}
+ \item \hyperref[method:elltool.reach.AReach.isEmpty]{isEmpty}
+ \item \hyperref[method:elltool.reach.AReach.isEqual]{isEqual}
+ \item \hyperref[method:elltool.reach.AReach.isbackward]{isbackward}
  \item \hyperref[method:elltool.reach.AReach.iscut]{iscut}
- \item \hyperref[method:elltool.reach.AReach.isempty]{isempty}
  \item \hyperref[method:elltool.reach.AReach.isprojection]{isprojection}
+ \item \hyperref[method:elltool.reach.AReach.plotByEa]{plotByEa}
+ \item \hyperref[method:elltool.reach.AReach.plotByIa]{plotByIa}
+ \item \hyperref[method:elltool.reach.AReach.plotEa]{plotEa}
+ \item \hyperref[method:elltool.reach.AReach.plotIa]{plotIa}
+ \item \hyperref[method:elltool.reach.AReach.projection]{projection}
+ \item \hyperref[method:elltool.reach.AReach.refine]{refine}
  \item \hyperref[method:elltool.reach.AReach.repMat]{repMat}
 \end{list}
-\subsection{\texorpdfstring{elltool.reach.ReachContinuous.cut}{cut}}\label{method:elltool.reach.ReachContinuous.cut}
-\begin{verbatim}
-CUT - extracts the piece of reach tube from given start time to given
-      end time. Given reach set self, find states that are reachable
-      within time interval specified by cutTimeVec. If cutTimeVec
-      is a scalar, then reach set at given time is returned.
-
-Input:
-  regular:
-      self.
-
-   cutTimeVec: double[1, 2]/double[1, 1] - time interval to cut.
-
-Output:
-  cutObj: elltool.reach.IReach[1, 1] - reach set resulting from the CUT
-        operation.
-
-Example:
-  aMat = [0 1; 0 0]; bMat = eye(2);
-  SUBounds = struct();
-  SUBounds.center = {'sin(t)'; 'cos(t)'};
-  SUBounds.shape = [9 0; 0 2];
-  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  x0EllObj = ell_unitball(2);
-  timeVec = [0 10];
-  dirsMat = [1 0; 0 1]';
-  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-  cutObj = rsObj.cut([3 5]);
-  dRsObj = elltool.reach.ReachDiscrete(dtsys, x0EllObj, dirsMat, timeVec);
-  dCutObj = dRsObj.cut([3 5]);
-\end{verbatim}
-\subsection{\texorpdfstring{elltool.reach.ReachContinuous.dimension}{dimension}}\label{method:elltool.reach.ReachContinuous.dimension}
-\begin{verbatim}
-
-DIMENSION - returns array of dimensions of given reach set array.
-
-Input:
-  regular:
-      self - multidimensional array of
-             ReachContinuous/ReachDiscrete objects
-
-Output:
-  rSdimArr: double[nDim1, nDim2,...] - array of reach set dimensions.
-  sSdimArr: double[nDim1, nDim2,...] - array of state space dimensions.
-
-Example:
-  aMat = [0 1; 0 0]; bMat = eye(2);
-  SUBounds = struct();
-  SUBounds.center = {'sin(t)'; 'cos(t)'};
-  SUBounds.shape = [9 0; 0 2];
-  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  x0EllObj = ell_unitball(2);
-  timeVec = [0 10];
-  dirsMat = [1 0; 0 1]';
-  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-  rsObjArr = rsObj.repMat(1,2);
-  [rSdim sSdim] = rsObj.dimension()
-
-  rSdim =
-
-           2
-
-
-  sSdim =
-
-           2
-
-  [rSdim sSdim] = rsObjArr.dimension()
-
-  rSdim =
-          [ 2  2 ]
-
-  sSdim =
-          [ 2  2 ]
-\end{verbatim}
-\subsection{\texorpdfstring{elltool.reach.ReachContinuous.display}{display}}\label{method:elltool.reach.ReachContinuous.display}
-\begin{verbatim}
-
-DISPLAY - displays the reach set object.
-
-Input:
-  regular:
-      self.
-
-Output:
-  None.
-
-Example:
-  aMat = [0 1; 0 0]; bMat = eye(2);
-  SUBounds = struct();
-  SUBounds.center = {'sin(t)'; 'cos(t)'};
-  SUBounds.shape = [9 0; 0 2];
-  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  x0EllObj = ell_unitball(2);
-  timeVec = [0 10];
-  dirsMat = [1 0; 0 1]';
-  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-  rsObj.display()
-
-  rsObj =
-  Reach set of the continuous-time linear system in R^2 in the time...
-       interval [0, 10].
-
-  Initial set at time t0 = 0:
-  Ellipsoid with parameters
-  Center:
-       0
-       0
-
-  Shape Matrix:
-       1     0
-       0     1
-
-  Number of external approximations: 2
-  Number of internal approximations: 2
-\end{verbatim}
-\subsection{\texorpdfstring{elltool.reach.ReachContinuous.evolve}{evolve}}\label{method:elltool.reach.ReachContinuous.evolve}
-\begin{verbatim}
-
-EVOLVE - computes further evolution in time of the
-         already existing reach set.
-
-Input:
-  regular:
-      self.
-
-      newEndTime: double[1, 1] - new end time.
-
-  optional:
-      linSys: elltool.linsys.LinSys[1, 1] - new linear system.
-
-Output:
-  newReachObj: reach[1, 1] - reach set on time  interval
-        [oldT0 newEndTime].
-
-Example:
-  aMat = [0 1; 0 0]; bMat = eye(2);
-  SUBounds = struct();
-  SUBounds.center = {'sin(t)'; 'cos(t)'};
-  SUBounds.shape = [9 0; 0 2];
-  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-  x0EllObj = ell_unitball(2);
-  timeVec = [0 10];
-  dirsMat = [1 0; 0 1]';
-  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-  dRsObj = elltool.reach.ReachDiscrete(dsys, x0EllObj, dirsMat, timeVec);
-  newRsObj = rsObj.evolve(12);
-  newDRsObj = dRsObj.evolve(11);
-\end{verbatim}
-\subsection{\texorpdfstring{elltool.reach.ReachContinuous.getCopy}{getCopy}}\label{method:elltool.reach.ReachContinuous.getCopy}
-\begin{verbatim}
-Example:
-  aMat = [0 1; 0 0]; bMat = eye(2);
-  SUBounds = struct();
-  SUBounds.center = {'sin(t)'; 'cos(t)'};
-  SUBounds.shape = [9 0; 0 2];
-  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  x0EllObj = ell_unitball(2);
-  timeVec = [0 10];
-  dirsMat = [1 0; 0 1]';
-  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-  copyRsObj = rsObj.getCopy()
-  copyRsObj =
-  Reach set of the continuous-time linear system in R^2 in the time ...
-            interval [0, 10].
-
-  Initial set at time t0 = 0:
-  Ellipsoid with parameters
-  Center:
-       0
-       0
-
-  Shape Matrix:
-       1     0
-       0     1
-
-  Number of external approximations: 2
-  Number of internal approximations: 2
-\end{verbatim}
-\subsection{\texorpdfstring{elltool.reach.ReachContinuous.getEaScaleFactor}{getEaScaleFactor}}\label{method:elltool.reach.ReachContinuous.getEaScaleFactor}
-\begin{verbatim}
-GET_EASCALEFACTOR - return the scale factor for external approximation
-                    of reach tube
-
-Input:
-  regular:
-      self.
-
-Output:
-  regular:
-      eaScaleFactor: double[1, 1] - scale factor.
-
-Example:
-  aMat = [0 1; 0 0]; bMat = eye(2);
-  SUBounds = struct();
-  SUBounds.center = {'sin(t)'; 'cos(t)'};
-  SUBounds.shape = [9 0; 0 2];
-  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  x0EllObj = ell_unitball(2);
-  timeVec = [10 0];
-  dirsMat = [1 0; 0 1]';
-  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-  rsObj.getEaScaleFactor()
-
-  ans =
-
-      1.0200
-\end{verbatim}
-\subsection{\texorpdfstring{elltool.reach.ReachContinuous.getEllTubeRel}{getEllTubeRel}}\label{method:elltool.reach.ReachContinuous.getEllTubeRel}
-\begin{verbatim}
-Example:
-  aMat = [0 1; 0 0]; bMat = eye(2);
-  SUBounds = struct();
-  SUBounds.center = {'sin(t)'; 'cos(t)'};
-  SUBounds.shape = [9 0; 0 2];
-  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  x0EllObj = ell_unitball(2);
-  timeVec = [0 10];
-  dirsMat = [1 0; 0 1]';
-  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-  rsObj. getEllTubeRel();
-\end{verbatim}
-\subsection{\texorpdfstring{elltool.reach.ReachContinuous.getEllTubeUnionRel}{getEllTubeUnionRel}}\label{method:elltool.reach.ReachContinuous.getEllTubeUnionRel}
-\begin{verbatim}
-Example:
-  aMat = [0 1; 0 0]; bMat = eye(2);
-  SUBounds = struct();
-  SUBounds.center = {'sin(t)'; 'cos(t)'};
-  SUBounds.shape = [9 0; 0 2];
-  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  x0EllObj = ell_unitball(2);
-  timeVec = [0 10];
-  dirsMat = [1 0; 0 1]';
-  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-  getEllTubeUnionRel(rsObj);
-\end{verbatim}
-\subsection{\texorpdfstring{elltool.reach.ReachContinuous.getIaScaleFactor}{getIaScaleFactor}}\label{method:elltool.reach.ReachContinuous.getIaScaleFactor}
-\begin{verbatim}
-GET_IASCALEFACTOR - return the scale factor for internal approximation
-                    of reach tube
-
-Input:
-  regular:
-      self.
-
-Output:
-  regular:
-      iaScaleFactor: double[1, 1] - scale factor.
-
-Example:
-  aMat = [0 1; 0 0]; bMat = eye(2);
-  SUBounds = struct();
-  SUBounds.center = {'sin(t)'; 'cos(t)'};
-  SUBounds.shape = [9 0; 0 2];
-  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  x0EllObj = ell_unitball(2);
-  timeVec = [10 0];
-  dirsMat = [1 0; 0 1]';
-  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-  rsObj.getIaScaleFactor()
-
-  ans =
-
-      1.0200
-\end{verbatim}
-\subsection{\texorpdfstring{elltool.reach.ReachContinuous.getInitialSet}{getInitialSet}}\label{method:elltool.reach.ReachContinuous.getInitialSet}
-\begin{verbatim}
-GETINITIALSET - return the initial set for linear system, which is solved
-                for building reach tube.
-
-Input:
-  regular:
-      self.
-
-Output:
-  regular:
-      x0Ell: ellipsoid[1, 1] - ellipsoid x0, which was initial set for
-          linear system.
-
-Example:
-  aMat = [0 1; 0 0]; bMat = eye(2);
-  SUBounds = struct();
-  SUBounds.center = {'sin(t)'; 'cos(t)'};
-  SUBounds.shape = [9 0; 0 2];
-  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  x0EllObj = ell_unitball(2);
-  timeVec = [10 0];
-  dirsMat = [1 0; 0 1]';
-  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-  x0Ell = rsObj.getInitialSet()
-
-  x0Ell =
-
-  Center:
-       0
-       0
-
-  Shape Matrix:
-       1     0
-       0     1
-
-  Nondegenerate ellipsoid in R^2.
-\end{verbatim}
-\subsection{\texorpdfstring{elltool.reach.ReachContinuous.get\_center}{get\_center}}\label{method:elltool.reach.ReachContinuous.getcenter}
-\begin{verbatim}
-
-GET_CENTER - returns the trajectory of the center of the reach set.
-
-Input:
-  regular:
-      self.
-
-Output:
-  trCenterMat: double[nDim, nPoints] - array of points that form the
-      trajectory of the reach set center, where nDim is reach set
-      dimentsion, nPoints - number of points in time grid.
-
-  timeVec: double[1, nPoints] - array of time values.
-
-Example:
-  aMat = [0 1; 0 0]; bMat = eye(2);
-  SUBounds = struct();
-  SUBounds.center = {'sin(t)'; 'cos(t)'};
-  SUBounds.shape = [9 0; 0 2];
-  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  x0EllObj = ell_unitball(2);
-  timeVec = [0 10];
-  dirsMat = [1 0; 0 1]';
-  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-  [trCenterMat timeVec] = rsObj.get_center();
-\end{verbatim}
-\subsection{\texorpdfstring{elltool.reach.ReachContinuous.get\_directions}{get\_directions}}\label{method:elltool.reach.ReachContinuous.getdirections}
-\begin{verbatim}
-
-GET_DIRECTIONS - returns the values of direction vectors for time grid
-                 values.
-
-Input:
-  regular:
-      self.
-
-Output:
-  directionsCVec: cell[1, nPoints] of double [nDim, nDir] - array of
-      cells, where each cell is a sequence of direction vector values
-      that correspond to the time values of the grid, where nPoints is
-      number of points in time grid.
-
-  timeVec: double[1, nPoints] - array of time values.
-
-Example:
-  aMat = [0 1; 0 0]; bMat = eye(2);
-  SUBounds = struct();
-  SUBounds.center = {'sin(t)'; 'cos(t)'};
-  SUBounds.shape = [9 0; 0 2];
-  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  x0EllObj = ell_unitball(2);
-  timeVec = [0 10];
-  dirsMat = [1 0; 0 1]';
-  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-  [directionsCVec timeVec] = rsObj.get_directions();
-\end{verbatim}
-\subsection{\texorpdfstring{elltool.reach.ReachContinuous.get\_ea}{get\_ea}}\label{method:elltool.reach.ReachContinuous.getea}
-\begin{verbatim}
-
-GET_EA - returns array of ellipsoid objects representing external
-         approximation of the reach  tube.
-
-Input:
-  regular:
-      self.
-
-Output:
-  eaEllMat: ellipsoid[nAppr, nPoints] - array of ellipsoids, where nAppr
-      is the number of approximations, nPoints is number of points in time
-      grid.
-
-   timeVec: double[1, nPoints] - array of time values.
-
-Example:
-  aMat = [0 1; 0 0]; bMat = eye(2);
-  SUBounds = struct();
-  SUBounds.center = {'sin(t)'; 'cos(t)'};
-  SUBounds.shape = [9 0; 0 2];
-  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  x0EllObj = ell_unitball(2);
-  timeVec = [0 10];
-  dirsMat = [1 0; 0 1]';
-  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-  [eaEllMat timeVec] = rsObj.get_ea();
-
-  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-  dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
-  [eaEllMat timeVec] = dRsObj.get_ea();
-\end{verbatim}
-\subsection{\texorpdfstring{elltool.reach.ReachContinuous.get\_goodcurves}{get\_goodcurves}}\label{method:elltool.reach.ReachContinuous.getgoodcurves}
-\begin{verbatim}
-GET_GOODCURVES - returns the 'good curve' trajectories of the reach set.
-
-Input:
-  regular:
-      self.
-
-Output:
-  goodCurvesCVec: cell[1, nPoints] of double [x, y] - array of cells,
-      where each cell is array of points that form a 'good curve'.
-
-  timeVec: double[1, nPoints] - array of time values.
-
-Example:
-  aMat = [0 1; 0 0]; bMat = eye(2);
-  SUBounds = struct();
-  SUBounds.center = {'sin(t)'; 'cos(t)'};
-  SUBounds.shape = [9 0; 0 2];
-  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  x0EllObj = ell_unitball(2);
-  timeVec = [0 10];
-  dirsMat = [1 0; 0 1]';
-  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-  [goodCurvesCVec timeVec] = rsObj.get_goodcurves();
-
-  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-  dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
-  [goodCurvesCVec timeVec] = dRsObj.get_goodcurves();
-\end{verbatim}
-\subsection{\texorpdfstring{elltool.reach.ReachContinuous.get\_ia}{get\_ia}}\label{method:elltool.reach.ReachContinuous.getia}
-\begin{verbatim}
-
-GET_IA - returns array of ellipsoid objects representing internal
-         approximation of the  reach tube.
-
-Input:
-  regular:
-      self.
-
-Output:
-  iaEllMat: ellipsoid[nAppr, nPoints] - array of ellipsoids, where nAppr
-      is the number of approximations, nPoints is number of points in time
-      grid.
-
-  timeVec: double[1, nPoints] - array of time values.
-
-Example:
-  aMat = [0 1; 0 0]; bMat = eye(2);
-  SUBounds = struct();
-  SUBounds.center = {'sin(t)'; 'cos(t)'};
-  SUBounds.shape = [9 0; 0 2];
-  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  x0EllObj = ell_unitball(2);
-  timeVec = [0 10];
-  dirsMat = [1 0; 0 1]';
-  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-  [iaEllMat timeVec] = rsObj.get_ia();
-\end{verbatim}
-\subsection{\texorpdfstring{elltool.reach.ReachContinuous.get\_system}{get\_system}}\label{method:elltool.reach.ReachContinuous.getsystem}
-\begin{verbatim}
-
-GET_SYSTEM - returns the linear system for which the reach set is
-             computed.
-
-Input:
-  regular:
-      self.
-
-Output:
-  linSys: elltool.linsys.LinSys[1, 1] - linear system object.
-
-Example:
-  aMat = [0 1; 0 0]; bMat = eye(2);
-  SUBounds = struct();
-  SUBounds.center = {'sin(t)'; 'cos(t)'};
-  SUBounds.shape = [9 0; 0 2];
-  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  x0EllObj = ell_unitball(2);
-  timeVec = [0 10];
-  dirsMat = [1 0; 0 1]';
-  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-  linSys = rsObj.get_system()
-
-  self =
-  A:
-       0     1
-       0     0
-
-
-  B:
-       1     0
-       0     1
-
-
-  Control bounds:
-     2-dimensional ellipsoid with center
-      'sin(t)'
-      'cos(t)'
-
-     and shape matrix
-       9     0
-       0     2
-
-
-  C:
-       1     0
-       0     1
-
-  2-input, 2-output continuous-time linear time-invariant system of
-          dimension 2:
-  dx/dt  =  A x(t)  +  B u(t)
-   y(t)  =  C x(t)
-
-  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-  dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
-  dRsObj.get_system();
-\end{verbatim}
-\subsection{\texorpdfstring{elltool.reach.ReachContinuous.isEqual}{isEqual}}\label{method:elltool.reach.ReachContinuous.isEqual}
-\begin{verbatim}
-ISEQUAL - checks for equality given reach set objects
-
-Input:
-  regular:
-      self.
-      reachObj:
-          elltool.reach.ReachContinuous[1, 1] - each set object, which
-           compare with self.
-  optional:
-      tuple: int[1, 1] - number of tuple for which will be compared.
-      approxType: gras.ellapx.enums.EApproxType[1, 1] -  type of
-          approximation, which will be compared.
-
-Output:
-  regular:
-      ISEQUAL: logical[1, 1] - true - if reach set objects are equal.
-          false - otherwise.
-
-Example:
-  aMat = [0 1; 0 0]; bMat = eye(2);
-  SUBounds = struct();
-  SUBounds.center = {'sin(t)'; 'cos(t)'};
-  SUBounds.shape = [9 0; 0 2];
-  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  x0EllObj = ell_unitball(2);
-  timeVec = [0 10];
-  dirsMat = [1 0; 0 1]';
-  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-  copyRsObj = rsObj.getCopy();
-  isEqual = isEqual(rsObj, copyRsObj)
-
-  isEqual =
-
-          1
-\end{verbatim}
-\subsection{\texorpdfstring{elltool.reach.ReachContinuous.isbackward}{isbackward}}\label{method:elltool.reach.ReachContinuous.isbackward}
-\begin{verbatim}
-ISBACKWARD - checks if given reach set object was obtained by solving
-             the system in reverse time.
-
-Input:
-  regular:
-      self.
-
-Output:
-  regular:
-      isBackward: logical[1, 1] - true - if self was obtained by solving
-          in reverse time, false - otherwise.
-
-Example:
-  aMat = [0 1; 0 0]; bMat = eye(2);
-  SUBounds = struct();
-  SUBounds.center = {'sin(t)'; 'cos(t)'};
-  SUBounds.shape = [9 0; 0 2];
-  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  x0EllObj = ell_unitball(2);
-  timeVec = [10 0];
-  dirsMat = [1 0; 0 1]';
-  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-  rsObj.isbackward()
-
-  ans =
-
-       1
-\end{verbatim}
-\subsection{\texorpdfstring{elltool.reach.ReachContinuous.plot\_ea}{plot\_ea}}\label{method:elltool.reach.ReachContinuous.plotea}
-\begin{verbatim}
-
-PLOT_EA - plots external approximations of 2D and 3D reach sets.
-
-Input:
-  regular:
-      self.
-
-  optional:
-      colorSpec: char[1, 1] - set color to plot in following way:
-                             'r' - red color,
-                             'g' - green color,
-                             'b' - blue color,
-                             'y' - yellow color,
-                             'c' - cyan color,
-                             'm' - magenta color,
-                             'w' - white color.
-
-      OptStruct: struct[1, 1] with fields:
-          color: double[1, 3] - sets color of the picture in the form
-                [x y z].
-          width: double[1, 1] - sets line width for 2D plots.
-          shade: double[1, 1] in [0; 1] interval - sets transparency level
-                (0 - transparent, 1 - opaque).
-           fill: double[1, 1] - if set to 1, reach set will be filled with
-                 color.
-
-Output:
-  None.
-
-Example:
-  aMat = [0 1; 0 0]; bMat = eye(2);
-  SUBounds = struct();
-  SUBounds.center = {'sin(t)'; 'cos(t)'};
-  SUBounds.shape = [9 0; 0 2];
-  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  x0EllObj = ell_unitball(2);
-  timeVec = [0 10];
-  dirsMat = [1 0; 0 1]';
-  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-  rsObj.plot_ea();
-  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-  dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
-  dRsObj.plot_ea();
-\end{verbatim}
-\subsection{\texorpdfstring{elltool.reach.ReachContinuous.plot\_ia}{plot\_ia}}\label{method:elltool.reach.ReachContinuous.plotia}
-\begin{verbatim}
-
-PLOT_IA - plots internal approximations of 2D and 3D reach sets.
-
-Input:
-  regular:
-      self.
-
-  optional:
-      colorSpec: char[1, 1] - set color to plot in following way:
-                             'r' - red color,
-                             'g' - green color,
-                             'b' - blue color,
-                             'y' - yellow color,
-                             'c' - cyan color,
-                             'm' - magenta color,
-                             'w' - white color.
-
-      OptStruct: struct[1, 1] with fields:
-          color: double[1, 3] - sets color of the picture in the form
-                [x y z].
-          width: double[1, 1] - sets line width for 2D plots.
-          shade: double[1, 1] in [0; 1] interval - sets transparency level
-                (0 - transparent, 1 - opaque).
-           fill: double[1, 1] - if set to 1, reach set will be filled with
-                color.
-
-Example:
-  aMat = [0 1; 0 0]; bMat = eye(2);
-  SUBounds = struct();
-  SUBounds.center = {'sin(t)'; 'cos(t)'};
-  SUBounds.shape = [9 0; 0 2];
-  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  x0EllObj = ell_unitball(2);
-  timeVec = [0 10];
-  dirsMat = [1 0; 0 1]';
-  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-  rsObj.plot_ia();
-  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-  dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
-  dRsObj.plot_ia();
-\end{verbatim}
-\subsection{\texorpdfstring{elltool.reach.ReachContinuous.projection}{projection}}\label{method:elltool.reach.ReachContinuous.projection}
-\begin{verbatim}
-
-PROJECTION - projects the reach set self onto the orthogonal basis
-             specified by the columns of matrix projMat.
-
-Input:
-  regular:
-      self.
-      projMat: double[nRows, nCols] - projection matrix, where nRows
-          is dimension of reach set, nCols <= nRows.
-
-Output:
-  projObj: elltool.reach.IReach[1, 1] - projected reach set.
-
-Examples:
-  aMat = [0 1; 0 0]; bMat = eye(2);
-  SUBounds = struct();
-  SUBounds.center = {'sin(t)'; 'cos(t)'};
-  SUBounds.shape = [9 0; 0 2];
-  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-  x0EllObj = ell_unitball(2);
-  timeVec = [0 10];
-  dirsMat = [1 0; 0 1]';
-  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-  dRsObj = elltool.reach.ReachRiscrete(dsys, x0EllObj, dirsMat, timeVec);
-  projMat = eye(2);
-  projObj = rsObj.projection(projMat);
-  dProjObj = dRsObj.projection(projMat);
-\end{verbatim}
-\subsection{\texorpdfstring{elltool.reach.ReachContinuous.refine}{refine}}\label{method:elltool.reach.ReachContinuous.refine}
-\begin{verbatim}
-
-REFINE - adds new approximations computed for the specified directions
-         to the given reach set or to the projection of reach set.
-
-Input:
-  regular:
-      self.
-      l0Mat: double[nDim, nDir] - matrix of directions for new
-          approximation
-
-Output:
-  regular:
-      reachObj: reach[1,1] - refine reach set for the directions
-          specified in l0Mat
-
-Example:
-  aMat = [0 1; 0 0]; bMat = eye(2);
-  SUBounds = struct();
-  SUBounds.center = {'sin(t)'; 'cos(t)'};
-  SUBounds.shape = [9 0; 0 2];
-  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  x0EllObj = ell_unitball(2);
-  timeVec = [0 10];
-  dirsMat = [1 0; 0 1]';
-  newDirsMat = [1; -1];
-  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-  rsObj = rsObj.refine(newDirsMat);
-\end{verbatim}
 \section{elltool.reach.ReachDiscrete}\label{secClassDescr:elltool.reach.ReachDiscrete}
 \subsection{\texorpdfstring{elltool.reach.ReachDiscrete.ReachDiscrete}{ReachDiscrete}}\label{method:elltool.reach.ReachDiscrete.ReachDiscrete}
 \begin{verbatim}
@@ -8017,41 +8579,23 @@ ReachDiscrete - computes reach set approximation of the discrete linear
 Input:
     linSys: elltool.linsys.LinSys object - given linear system
     x0Ell: ellipsoid[1, 1] - ellipsoidal set of initial conditions
-    l0Mat: matrix of double - l0Mat
+    l0Mat: double[nRows, nColumns] - initial good directions
+          matrix.
     timeVec: double[1, 2] - time interval
-    OptStruct: struct[1, 1] - structure with
-    fields:
-        approximation: int[1, 1] - field, which mean the following values
-         for type approximation:
-          = 0 for external,
-          = 1 for internal,
-          = 2 for both (default).
-        save_all: logical [1, 1] - field, which
-          = 1 if save intermediate calculation data,
-          = 0 (default) if delete intermediate calculation data.
-        minmax: logical[1, 1] - field, which:
+    properties:
+      isRegEnabled: logical[1, 1] - if it is 'true' constructor
+          is allowed to use regularization.
+      isJustCheck: logical[1, 1] - if it is 'true' constructor
+          just check if square matrices are degenerate, if it is
+          'false' all degenerate matrices will be regularized.
+      regTol: double[1, 1] - regularization precision.
+      minmax: logical[1, 1] - field, which:
           = 1 compute minmax reach set,
           = 0 (default) compute maxmin reach set.
-        This option makes sense only for discrete-time systems with
-        disturbance.
-
-self = ReachDiscrete(linSys, x0Ell, l0Mat,timeVec, Options, prop) is the
-same as self = ReachDiscrete(linSys, x0Ell, l0Mat, timeVec, Options), but
-with "Properties"  specified in  prop.
-In other cases "Properties" are taken from current values stored in
-elltool.conf.Properties
-
-As "Properties" we understand here such list of ellipsoid properties:
-        absTol
-        relTol
-        nPlot2dPoints
-        Plot3dPoints
-        nTimeGridPoints
 
 Output:
   regular:
-      self - reach set object.
-
+    self - reach set object.
 Example:
   adMat = [0 1; -1 -0.5];
   bdMat = [0; 1];
@@ -8068,559 +8612,42 @@ See the description of the following methods in section \ref{secClassDescr:ellto
  for elltool.reach.AReach:
 
 \begin{list}{}{}
+ \item \hyperref[method:elltool.reach.AReach.cut]{cut}
+ \item \hyperref[method:elltool.reach.AReach.dimension]{dimension}
+ \item \hyperref[method:elltool.reach.AReach.display]{display}
+ \item \hyperref[method:elltool.reach.AReach.evolve]{evolve}
+ \item \hyperref[method:elltool.reach.AReach.getAbsTol]{getAbsTol}
+ \item \hyperref[method:elltool.reach.AReach.getCopy]{getCopy}
+ \item \hyperref[method:elltool.reach.AReach.getEaScaleFactor]{getEaScaleFactor}
+ \item \hyperref[method:elltool.reach.AReach.getEllTubeRel]{getEllTubeRel}
+ \item \hyperref[method:elltool.reach.AReach.getEllTubeUnionRel]{getEllTubeUnionRel}
+ \item \hyperref[method:elltool.reach.AReach.getIaScaleFactor]{getIaScaleFactor}
+ \item \hyperref[method:elltool.reach.AReach.getInitialSet]{getInitialSet}
+ \item \hyperref[method:elltool.reach.AReach.getNPlot2dPoints]{getNPlot2dPoints}
+ \item \hyperref[method:elltool.reach.AReach.getNPlot3dPoints]{getNPlot3dPoints}
+ \item \hyperref[method:elltool.reach.AReach.getNTimeGridPoints]{getNTimeGridPoints}
+ \item \hyperref[method:elltool.reach.AReach.getRelTol]{getRelTol}
+ \item \hyperref[method:elltool.reach.AReach.getSwitchTimeVec]{getSwitchTimeVec}
+ \item \hyperref[method:elltool.reach.AReach.get_center]{get\_center}
+ \item \hyperref[method:elltool.reach.AReach.get_directions]{get\_directions}
+ \item \hyperref[method:elltool.reach.AReach.get_ea]{get\_ea}
+ \item \hyperref[method:elltool.reach.AReach.get_goodcurves]{get\_goodcurves}
+ \item \hyperref[method:elltool.reach.AReach.get_ia]{get\_ia}
+ \item \hyperref[method:elltool.reach.AReach.get_system]{get\_system}
  \item \hyperref[method:elltool.reach.AReach.intersect]{intersect}
+ \item \hyperref[method:elltool.reach.AReach.isEmpty]{isEmpty}
+ \item \hyperref[method:elltool.reach.AReach.isEqual]{isEqual}
+ \item \hyperref[method:elltool.reach.AReach.isbackward]{isbackward}
  \item \hyperref[method:elltool.reach.AReach.iscut]{iscut}
- \item \hyperref[method:elltool.reach.AReach.isempty]{isempty}
  \item \hyperref[method:elltool.reach.AReach.isprojection]{isprojection}
+ \item \hyperref[method:elltool.reach.AReach.plotByEa]{plotByEa}
+ \item \hyperref[method:elltool.reach.AReach.plotByIa]{plotByIa}
+ \item \hyperref[method:elltool.reach.AReach.plotEa]{plotEa}
+ \item \hyperref[method:elltool.reach.AReach.plotIa]{plotIa}
+ \item \hyperref[method:elltool.reach.AReach.projection]{projection}
+ \item \hyperref[method:elltool.reach.AReach.refine]{refine}
  \item \hyperref[method:elltool.reach.AReach.repMat]{repMat}
 \end{list}
-\subsection{\texorpdfstring{elltool.reach.ReachDiscrete.cut}{cut}}\label{method:elltool.reach.ReachDiscrete.cut}
-\begin{verbatim}
-CUT - extracts the piece of reach tube from given start time to given
-      end time. Given reach set self, find states that are reachable
-      within time interval specified by cutTimeVec. If cutTimeVec
-      is a scalar, then reach set at given time is returned.
-
-Input:
-  regular:
-      self.
-
-   cutTimeVec: double[1, 2]/double[1, 1] - time interval to cut.
-
-Output:
-  cutObj: elltool.reach.IReach[1, 1] - reach set resulting from the CUT
-        operation.
-
-Example:
-  aMat = [0 1; 0 0]; bMat = eye(2);
-  SUBounds = struct();
-  SUBounds.center = {'sin(t)'; 'cos(t)'};
-  SUBounds.shape = [9 0; 0 2];
-  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  x0EllObj = ell_unitball(2);
-  timeVec = [0 10];
-  dirsMat = [1 0; 0 1]';
-  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-  cutObj = rsObj.cut([3 5]);
-  dRsObj = elltool.reach.ReachDiscrete(dtsys, x0EllObj, dirsMat, timeVec);
-  dCutObj = dRsObj.cut([3 5]);
-\end{verbatim}
-\subsection{\texorpdfstring{elltool.reach.ReachDiscrete.dimension}{dimension}}\label{method:elltool.reach.ReachDiscrete.dimension}
-\begin{verbatim}
-
-DIMENSION - returns array of dimensions of given reach set array.
-
-Input:
-  regular:
-      self - multidimensional array of
-             ReachContinuous/ReachDiscrete objects
-
-Output:
-  rSdimArr: double[nDim1, nDim2,...] - array of reach set dimensions.
-  sSdimArr: double[nDim1, nDim2,...] - array of state space dimensions.
-
-Example:
-  aMat = [0 1; 0 0]; bMat = eye(2);
-  SUBounds = struct();
-  SUBounds.center = {'sin(t)'; 'cos(t)'};
-  SUBounds.shape = [9 0; 0 2];
-  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  x0EllObj = ell_unitball(2);
-  timeVec = [0 10];
-  dirsMat = [1 0; 0 1]';
-  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-  rsObjArr = rsObj.repMat(1,2);
-  [rSdim sSdim] = rsObj.dimension()
-
-  rSdim =
-
-           2
-
-
-  sSdim =
-
-           2
-
-  [rSdim sSdim] = rsObjArr.dimension()
-
-  rSdim =
-          [ 2  2 ]
-
-  sSdim =
-          [ 2  2 ]
-\end{verbatim}
-\subsection{\texorpdfstring{elltool.reach.ReachDiscrete.display}{display}}\label{method:elltool.reach.ReachDiscrete.display}
-\begin{verbatim}
-
-DISPLAY - displays the reach set object.
-
-Input:
-  regular:
-      self.
-
-Output:
-  None.
-
-Example:
-  aMat = [0 1; 0 0]; bMat = eye(2);
-  SUBounds = struct();
-  SUBounds.center = {'sin(t)'; 'cos(t)'};
-  SUBounds.shape = [9 0; 0 2];
-  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  x0EllObj = ell_unitball(2);
-  timeVec = [0 10];
-  dirsMat = [1 0; 0 1]';
-  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-  rsObj.display()
-
-  rsObj =
-  Reach set of the continuous-time linear system in R^2 in the time...
-       interval [0, 10].
-
-  Initial set at time t0 = 0:
-  Ellipsoid with parameters
-  Center:
-       0
-       0
-
-  Shape Matrix:
-       1     0
-       0     1
-
-  Number of external approximations: 2
-  Number of internal approximations: 2
-\end{verbatim}
-\subsection{\texorpdfstring{elltool.reach.ReachDiscrete.evolve}{evolve}}\label{method:elltool.reach.ReachDiscrete.evolve}
-\begin{verbatim}
-
-EVOLVE - computes further evolution in time of the
-         already existing reach set.
-
-Input:
-  regular:
-      self.
-
-      newEndTime: double[1, 1] - new end time.
-
-  optional:
-      linSys: elltool.linsys.LinSys[1, 1] - new linear system.
-
-Output:
-  newReachObj: reach[1, 1] - reach set on time  interval
-        [oldT0 newEndTime].
-
-Example:
-  aMat = [0 1; 0 0]; bMat = eye(2);
-  SUBounds = struct();
-  SUBounds.center = {'sin(t)'; 'cos(t)'};
-  SUBounds.shape = [9 0; 0 2];
-  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-  x0EllObj = ell_unitball(2);
-  timeVec = [0 10];
-  dirsMat = [1 0; 0 1]';
-  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-  dRsObj = elltool.reach.ReachDiscrete(dsys, x0EllObj, dirsMat, timeVec);
-  newRsObj = rsObj.evolve(12);
-  newDRsObj = dRsObj.evolve(11);
-\end{verbatim}
-\subsection{\texorpdfstring{elltool.reach.ReachDiscrete.getCopy}{getCopy}}\label{method:elltool.reach.ReachDiscrete.getCopy}
-\begin{verbatim}
-GETCOPY - create a new copy of Self reach object.
-
-Input:
-  self: reach[1, 1] - reach set object, copy of which should be create.
-
-Output:
-    newReachObj - reach set object.
-
-Example:
-  adMat = [0 1; -1 -0.5];
-  bdMat = [0; 1];
-  udBoundsEllObj  = ellipsoid(1);
-  dtsys = elltool.linsys.LinSysDiscrete(adMat, bdMat, udBoundsEllObj);
-  x0EllObj = ell_unitball(2);
-  timeVec = [0 10];
-  dirsMat = [1 0; 0 1]';
-  dRsObj = elltool.reach.ReachDiscrete(dtsys, x0EllObj, dirsMat, timeVec);
-  newDRsObj = dRsObj.getCopy();
-\end{verbatim}
-\subsection{\texorpdfstring{elltool.reach.ReachDiscrete.get\_center}{get\_center}}\label{method:elltool.reach.ReachDiscrete.getcenter}
-\begin{verbatim}
-
-GET_CENTER - returns the trajectory of the center of the reach set.
-
-Input:
-  regular:
-      self.
-
-Output:
-  trCenterMat: double[nDim, nPoints] - array of points that form the
-      trajectory of the reach set center, where nDim is reach set
-      dimentsion, nPoints - number of points in time grid.
-
-  timeVec: double[1, nPoints] - array of time values.
-
-Example:
-  aMat = [0 1; 0 0]; bMat = eye(2);
-  SUBounds = struct();
-  SUBounds.center = {'sin(t)'; 'cos(t)'};
-  SUBounds.shape = [9 0; 0 2];
-  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  x0EllObj = ell_unitball(2);
-  timeVec = [0 10];
-  dirsMat = [1 0; 0 1]';
-  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-  [trCenterMat timeVec] = rsObj.get_center();
-\end{verbatim}
-\subsection{\texorpdfstring{elltool.reach.ReachDiscrete.get\_directions}{get\_directions}}\label{method:elltool.reach.ReachDiscrete.getdirections}
-\begin{verbatim}
-
-GET_DIRECTIONS - returns the values of direction vectors for time grid
-                 values.
-
-Input:
-  regular:
-      self.
-
-Output:
-  directionsCVec: cell[1, nPoints] of double [nDim, nDir] - array of
-      cells, where each cell is a sequence of direction vector values
-      that correspond to the time values of the grid, where nPoints is
-      number of points in time grid.
-
-  timeVec: double[1, nPoints] - array of time values.
-
-Example:
-  aMat = [0 1; 0 0]; bMat = eye(2);
-  SUBounds = struct();
-  SUBounds.center = {'sin(t)'; 'cos(t)'};
-  SUBounds.shape = [9 0; 0 2];
-  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  x0EllObj = ell_unitball(2);
-  timeVec = [0 10];
-  dirsMat = [1 0; 0 1]';
-  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-  [directionsCVec timeVec] = rsObj.get_directions();
-\end{verbatim}
-\subsection{\texorpdfstring{elltool.reach.ReachDiscrete.get\_ea}{get\_ea}}\label{method:elltool.reach.ReachDiscrete.getea}
-\begin{verbatim}
-
-GET_EA - returns array of ellipsoid objects representing external
-         approximation of the reach  tube.
-
-Input:
-  regular:
-      self.
-
-Output:
-  eaEllMat: ellipsoid[nAppr, nPoints] - array of ellipsoids, where nAppr
-      is the number of approximations, nPoints is number of points in time
-      grid.
-
-   timeVec: double[1, nPoints] - array of time values.
-
-Example:
-  aMat = [0 1; 0 0]; bMat = eye(2);
-  SUBounds = struct();
-  SUBounds.center = {'sin(t)'; 'cos(t)'};
-  SUBounds.shape = [9 0; 0 2];
-  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  x0EllObj = ell_unitball(2);
-  timeVec = [0 10];
-  dirsMat = [1 0; 0 1]';
-  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-  [eaEllMat timeVec] = rsObj.get_ea();
-
-  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-  dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
-  [eaEllMat timeVec] = dRsObj.get_ea();
-\end{verbatim}
-\subsection{\texorpdfstring{elltool.reach.ReachDiscrete.get\_goodcurves}{get\_goodcurves}}\label{method:elltool.reach.ReachDiscrete.getgoodcurves}
-\begin{verbatim}
-GET_GOODCURVES - returns the 'good curve' trajectories of the reach set.
-
-Input:
-  regular:
-      self.
-
-Output:
-  goodCurvesCVec: cell[1, nPoints] of double [x, y] - array of cells,
-      where each cell is array of points that form a 'good curve'.
-
-  timeVec: double[1, nPoints] - array of time values.
-
-Example:
-  aMat = [0 1; 0 0]; bMat = eye(2);
-  SUBounds = struct();
-  SUBounds.center = {'sin(t)'; 'cos(t)'};
-  SUBounds.shape = [9 0; 0 2];
-  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  x0EllObj = ell_unitball(2);
-  timeVec = [0 10];
-  dirsMat = [1 0; 0 1]';
-  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-  [goodCurvesCVec timeVec] = rsObj.get_goodcurves();
-
-  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-  dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
-  [goodCurvesCVec timeVec] = dRsObj.get_goodcurves();
-\end{verbatim}
-\subsection{\texorpdfstring{elltool.reach.ReachDiscrete.get\_ia}{get\_ia}}\label{method:elltool.reach.ReachDiscrete.getia}
-\begin{verbatim}
-
-GET_IA - returns array of ellipsoid objects representing internal
-         approximation of the  reach tube.
-
-Input:
-  regular:
-      self.
-
-Output:
-  iaEllMat: ellipsoid[nAppr, nPoints] - array of ellipsoids, where nAppr
-      is the number of approximations, nPoints is number of points in time
-      grid.
-
-  timeVec: double[1, nPoints] - array of time values.
-
-Example:
-  aMat = [0 1; 0 0]; bMat = eye(2);
-  SUBounds = struct();
-  SUBounds.center = {'sin(t)'; 'cos(t)'};
-  SUBounds.shape = [9 0; 0 2];
-  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  x0EllObj = ell_unitball(2);
-  timeVec = [0 10];
-  dirsMat = [1 0; 0 1]';
-  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-  [iaEllMat timeVec] = rsObj.get_ia();
-\end{verbatim}
-\subsection{\texorpdfstring{elltool.reach.ReachDiscrete.get\_system}{get\_system}}\label{method:elltool.reach.ReachDiscrete.getsystem}
-\begin{verbatim}
-
-GET_SYSTEM - returns the linear system for which the reach set is
-             computed.
-
-Input:
-  regular:
-      self.
-
-Output:
-  linSys: elltool.linsys.LinSys[1, 1] - linear system object.
-
-Example:
-  aMat = [0 1; 0 0]; bMat = eye(2);
-  SUBounds = struct();
-  SUBounds.center = {'sin(t)'; 'cos(t)'};
-  SUBounds.shape = [9 0; 0 2];
-  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  x0EllObj = ell_unitball(2);
-  timeVec = [0 10];
-  dirsMat = [1 0; 0 1]';
-  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-  linSys = rsObj.get_system()
-
-  self =
-  A:
-       0     1
-       0     0
-
-
-  B:
-       1     0
-       0     1
-
-
-  Control bounds:
-     2-dimensional ellipsoid with center
-      'sin(t)'
-      'cos(t)'
-
-     and shape matrix
-       9     0
-       0     2
-
-
-  C:
-       1     0
-       0     1
-
-  2-input, 2-output continuous-time linear time-invariant system of
-          dimension 2:
-  dx/dt  =  A x(t)  +  B u(t)
-   y(t)  =  C x(t)
-
-  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-  dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
-  dRsObj.get_system();
-\end{verbatim}
-\subsection{\texorpdfstring{elltool.reach.ReachDiscrete.plot\_ea}{plot\_ea}}\label{method:elltool.reach.ReachDiscrete.plotea}
-\begin{verbatim}
-
-PLOT_EA - plots external approximations of 2D and 3D reach sets.
-
-Input:
-  regular:
-      self.
-
-  optional:
-      colorSpec: char[1, 1] - set color to plot in following way:
-                             'r' - red color,
-                             'g' - green color,
-                             'b' - blue color,
-                             'y' - yellow color,
-                             'c' - cyan color,
-                             'm' - magenta color,
-                             'w' - white color.
-
-      OptStruct: struct[1, 1] with fields:
-          color: double[1, 3] - sets color of the picture in the form
-                [x y z].
-          width: double[1, 1] - sets line width for 2D plots.
-          shade: double[1, 1] in [0; 1] interval - sets transparency level
-                (0 - transparent, 1 - opaque).
-           fill: double[1, 1] - if set to 1, reach set will be filled with
-                 color.
-
-Output:
-  None.
-
-Example:
-  aMat = [0 1; 0 0]; bMat = eye(2);
-  SUBounds = struct();
-  SUBounds.center = {'sin(t)'; 'cos(t)'};
-  SUBounds.shape = [9 0; 0 2];
-  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  x0EllObj = ell_unitball(2);
-  timeVec = [0 10];
-  dirsMat = [1 0; 0 1]';
-  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-  rsObj.plot_ea();
-  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-  dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
-  dRsObj.plot_ea();
-\end{verbatim}
-\subsection{\texorpdfstring{elltool.reach.ReachDiscrete.plot\_ia}{plot\_ia}}\label{method:elltool.reach.ReachDiscrete.plotia}
-\begin{verbatim}
-
-PLOT_IA - plots internal approximations of 2D and 3D reach sets.
-
-Input:
-  regular:
-      self.
-
-  optional:
-      colorSpec: char[1, 1] - set color to plot in following way:
-                             'r' - red color,
-                             'g' - green color,
-                             'b' - blue color,
-                             'y' - yellow color,
-                             'c' - cyan color,
-                             'm' - magenta color,
-                             'w' - white color.
-
-      OptStruct: struct[1, 1] with fields:
-          color: double[1, 3] - sets color of the picture in the form
-                [x y z].
-          width: double[1, 1] - sets line width for 2D plots.
-          shade: double[1, 1] in [0; 1] interval - sets transparency level
-                (0 - transparent, 1 - opaque).
-           fill: double[1, 1] - if set to 1, reach set will be filled with
-                color.
-
-Example:
-  aMat = [0 1; 0 0]; bMat = eye(2);
-  SUBounds = struct();
-  SUBounds.center = {'sin(t)'; 'cos(t)'};
-  SUBounds.shape = [9 0; 0 2];
-  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  x0EllObj = ell_unitball(2);
-  timeVec = [0 10];
-  dirsMat = [1 0; 0 1]';
-  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-  rsObj.plot_ia();
-  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-  dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
-  dRsObj.plot_ia();
-\end{verbatim}
-\subsection{\texorpdfstring{elltool.reach.ReachDiscrete.projection}{projection}}\label{method:elltool.reach.ReachDiscrete.projection}
-\begin{verbatim}
-
-PROJECTION - projects the reach set self onto the orthogonal basis
-             specified by the columns of matrix projMat.
-
-Input:
-  regular:
-      self.
-      projMat: double[nRows, nCols] - projection matrix, where nRows
-          is dimension of reach set, nCols <= nRows.
-
-Output:
-  projObj: elltool.reach.IReach[1, 1] - projected reach set.
-
-Examples:
-  aMat = [0 1; 0 0]; bMat = eye(2);
-  SUBounds = struct();
-  SUBounds.center = {'sin(t)'; 'cos(t)'};
-  SUBounds.shape = [9 0; 0 2];
-  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-  x0EllObj = ell_unitball(2);
-  timeVec = [0 10];
-  dirsMat = [1 0; 0 1]';
-  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-  dRsObj = elltool.reach.ReachRiscrete(dsys, x0EllObj, dirsMat, timeVec);
-  projMat = eye(2);
-  projObj = rsObj.projection(projMat);
-  dProjObj = dRsObj.projection(projMat);
-\end{verbatim}
-\subsection{\texorpdfstring{elltool.reach.ReachDiscrete.refine}{refine}}\label{method:elltool.reach.ReachDiscrete.refine}
-\begin{verbatim}
-REFINE - adds new approximations computed for the specified directions
-         to the given reach set.
-
-
-Description:
-------------
-
-RRS = REFINE(RS, L0, OPTIONS)
-       Given nonempty reach set RS and direction
-       vectors specified by matrix L0,
-       adds new approximations computed for those
-       directions to this reach set.
-       This refinement is possible only if the reach
-       set was obtained by the REACH call with option
-       'save_all' set to 1 (intermediate calculation
-       information is saved in the reach set object).
-       Optional OPTIONS parameter is a structure:
-         Options.approximation = 0 for external,
-                               = 1 for internal,
-                               = 2 for both (default).
-         Options.save_all = 1 (default) to save intermediate
-                              calculation data,
-                          = 0 to delete intermediate
-                              calculation data.
-         Options.minmax = 1 compute minmax reach set,
-         Options.minmax = 0 (default) compute maxmin reach set.
-                        This option makes sense only for
-                       discrete-time systems with disturbance.
-
-   WARNING! This function does not work with reach set objects resulting
-            form CUT and/or PROJECTION operation.
-
-
-
-Output:
--------
-
-   RRS - refined reach set.
-
-
-See also:
----------
-
-   REACH/REACH.
-\end{verbatim}
 \section{elltool.reach.ReachFactory}\label{secClassDescr:elltool.reach.ReachFactory}
 \subsection{\texorpdfstring{elltool.reach.ReachFactory.ReachFactory}{ReachFactory}}\label{method:elltool.reach.ReachFactory.ReachFactory}
 \begin{verbatim}
@@ -8638,6 +8665,10 @@ Example:
   crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
   rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
   reachObj = rsObj.createInstance();
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.ReachFactory.createSysInstance}{createSysInstance}}\label{method:elltool.reach.ReachFactory.createSysInstance}
+\begin{verbatim}
+
 \end{verbatim}
 \subsection{\texorpdfstring{elltool.reach.ReachFactory.getDim}{getDim}}\label{method:elltool.reach.ReachFactory.getDim}
 \begin{verbatim}
@@ -8711,12 +8742,10 @@ Example:
 ALinSys - constructor abstract class of linear system.
 
 Continuous-time linear system:
-          dx/dt  =  A(t) x(t)  +  B(t) u(t)  +  G(t) v(t)
-           y(t)  =  C(t) x(t)  +  w(t)
+          dx/dt  =  A(t) x(t)  +  B(t) u(t)  +  C(t) v(t)
 
 Discrete-time linear system:
-          x[k+1]  =  A[k] x[k]  +  B[k] u[k]  +  G[k] v[k]
-            y[k]  =  C[k] x[k]  +  w[k]
+          x[k+1]  =  A[k] x[k]  +  B[k] u[k]  +  C[k] v[k]
 
 Input:
   regular:
@@ -8727,16 +8756,10 @@ Input:
       uBoundsEll: ellipsoid[1, 1]/struct[1, 1] - control bounds
           ellipsoid.
 
-      gtInpMat: double[nDim, lDim]/cell[nDim, lDim] - matrix G.
+      ctInpMat: double[nDim, lDim]/cell[nDim, lDim] - matrix G.
 
-      distBoundsEll: ellipsoid[1, 1]/struct[1, 1] - disturbance bounds
+      vBoundsEll: ellipsoid[1, 1]/struct[1, 1] - disturbance bounds
           ellipsoid.
-
-      ctInpMat: double[mDim, nDim]/cell[mDim, nDim]- matrix C.
-
-      noiseBoundsEll: ellipsoid[1, 1]/struct[1, 1] -  noise bounds
-         ellipsoid.
-
       discrFlag: char[1, 1] - if discrFlag set:
           'd' - to discrete-time linSys
           not 'd' - to continuous-time linSys.
@@ -8761,8 +8784,6 @@ Output:
 
   inpDimArr: double[nDims1, nDims2,...] - array of input dimensions.
 
-  outDimArr: double[nDims1, nDims2,...] - array of output dimensions.
-
   distDimArr: double[nDims1, nDims2,...] - array of disturbance
         dimensions.
 
@@ -8784,10 +8805,6 @@ Examples:
        2
 
 
-  outDimArr =
-
-       2
-
 
   distDimArr =
 
@@ -8798,23 +8815,14 @@ Examples:
 \end{verbatim}
 \subsection{\texorpdfstring{elltool.linsys.ALinSys.display}{display}}\label{method:elltool.linsys.ALinSys.display}
 \begin{verbatim}
-
 DISPLAY - displays the details of linear system object.
 
 Input:
   regular:
-      self: elltool.linsys.ILinSys[1, 1] - linear system.
+      self: elltool.linsys.ALinSys[1, 1] - linear system.
 
 Output:
   None.
-
-Example:
-  aMat = [0 1; 0 0]; bMat = eye(2);
-  SUBounds = struct();
-  SUBounds.center = {'sin(t)'; 'cos(t)'};
-  SUBounds.shape = [9 0; 0 2];
-  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  sys.display()
 \end{verbatim}
 \subsection{\texorpdfstring{elltool.linsys.ALinSys.getAbsTol}{getAbsTol}}\label{method:elltool.linsys.ALinSys.getAbsTol}
 \begin{verbatim}
@@ -8922,12 +8930,7 @@ Examples:
   SUBounds.shape = [9 0; 0 2];
   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-  cMat = sys.getCtMat()
-
-  cMat =
-
-       1     0
-       0     1
+  gMat = sys.getCtMat();
 \end{verbatim}
 \subsection{\texorpdfstring{elltool.linsys.ALinSys.getDistBoundsEll}{getDistBoundsEll}}\label{method:elltool.linsys.ALinSys.getDistBoundsEll}
 \begin{verbatim}
@@ -8948,48 +8951,6 @@ Examples:
   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
   distEll = sys.getDistBoundsEll();
 \end{verbatim}
-\subsection{\texorpdfstring{elltool.linsys.ALinSys.getGtMat}{getGtMat}}\label{method:elltool.linsys.ALinSys.getGtMat}
-\begin{verbatim}
-
-Input:
-  regular:
-      self: elltool.linsys.ILinSys[1, 1] - linear system.
-
-Output:
-  gMat: double[gMatDim, gMatDim]/cell[gMatDim, gMatDim] - matrix G.
-
-Examples:
-  aMat = [0 1; 0 0]; bMat = eye(2);
-  SUBounds = struct();
-  SUBounds.center = {'sin(t)'; 'cos(t)'};
-  SUBounds.shape = [9 0; 0 2];
-  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-  gMat = sys.getGtMat();
-\end{verbatim}
-\subsection{\texorpdfstring{elltool.linsys.ALinSys.getNoiseBoundsEll}{getNoiseBoundsEll}}\label{method:elltool.linsys.ALinSys.getNoiseBoundsEll}
-\begin{verbatim}
-
-Input:
-  regular:
-      self: elltool.linsys.ILinSys[1, 1] - linear system.
-
-Output:
-  noiseEll: ellipsoid[1, 1]/struct[1, 1] - noise bounds ellipsoid.
-
-Examples:
-  aMat = [0 1; 0 0]; bMat = eye(2);
-  SUBounds = struct();
-  SUBounds.center = {'sin(t)'; 'cos(t)'};
-  SUBounds.shape = [9 0; 0 2];
-  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-  noiseEll = dsys.getNoiseBoundsEll()
-
-  noiseEll =
-
-       []
-\end{verbatim}
 \subsection{\texorpdfstring{elltool.linsys.ALinSys.getUBoundsEll}{getUBoundsEll}}\label{method:elltool.linsys.ALinSys.getUBoundsEll}
 \begin{verbatim}
 
@@ -9009,11 +8970,9 @@ Examples:
   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
   uEll = dsys.getUBoundsEll();
 \end{verbatim}
-\subsection{\texorpdfstring{elltool.linsys.ALinSys.hasdisturbance}{hasdisturbance}}\label{method:elltool.linsys.ALinSys.hasdisturbance}
+\subsection{\texorpdfstring{elltool.linsys.ALinSys.hasDisturbance}{hasDisturbance}}\label{method:elltool.linsys.ALinSys.hasDisturbance}
 \begin{verbatim}
-
-HASDISTURBANCE - checks if linear system has unknown bounded
-                 isturbance.
+HASDISTURBANCE - returns true if system has disturbance
 
 Input:
   regular:
@@ -9034,18 +8993,19 @@ Examples:
   SUBounds.center = {'sin(t)'; 'cos(t)'};
   SUBounds.shape = [9 0; 0 2];
   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  sys.hasdisturbance()
+  sys.hasDisturbance()
 
   ans =
 
        0
   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-  dsys.hasdisturbance();
+  dsys.hasDisturbance();
 \end{verbatim}
-\subsection{\texorpdfstring{elltool.linsys.ALinSys.hasnoise}{hasnoise}}\label{method:elltool.linsys.ALinSys.hasnoise}
+\subsection{\texorpdfstring{elltool.linsys.ALinSys.isEmpty}{isEmpty}}\label{method:elltool.linsys.ALinSys.isEmpty}
 \begin{verbatim}
 
-HASNOISE - checks if linear system has unknown bounded noise.
+
+ISEMPTY - checks if linear system is empty.
 
 Input:
   regular:
@@ -9053,8 +9013,8 @@ Input:
             systems.
 
 Output:
-  isNoiseMat: logical[nDims1, nDims2,...] - array such that it's element at
-      each position is true if corresponding linear system has noise, and
+  isEmptyMat: logical[nDims1, nDims2,...] - array such that it's element at
+      each position is true if corresponding linear system is empty, and
       false otherwise.
 
 Examples:
@@ -9063,13 +9023,13 @@ Examples:
   SUBounds.center = {'sin(t)'; 'cos(t)'};
   SUBounds.shape = [9 0; 0 2];
   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  sys.hasnoise()
+  sys.isEmpty()
 
   ans =
 
        0
   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-  dsys.hasnoise();
+  dsys.isEmpty();
 \end{verbatim}
 \subsection{\texorpdfstring{elltool.linsys.ALinSys.isEqual}{isEqual}}\label{method:elltool.linsys.ALinSys.isEqual}
 \begin{verbatim}
@@ -9112,36 +9072,7 @@ Examples:
 
        1
 \end{verbatim}
-\subsection{\texorpdfstring{elltool.linsys.ALinSys.isempty}{isempty}}\label{method:elltool.linsys.ALinSys.isempty}
-\begin{verbatim}
-
-ISEMPTY - checks if linear system is empty.
-
-Input:
-  regular:
-      self: elltool.linsys.LinSys[nDims1, nDims2,...] - an array of linear
-            systems.
-
-Output:
-  isEmptyMat: logical[nDims1, nDims2,...] - array such that it's element at
-      each position is true if corresponding linear system is empty, and
-      false otherwise.
-
-Examples:
-  aMat = [0 1; 0 0]; bMat = eye(2);
-  SUBounds = struct();
-  SUBounds.center = {'sin(t)'; 'cos(t)'};
-  SUBounds.shape = [9 0; 0 2];
-  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  sys.isempty()
-
-  ans =
-
-       0
-  dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-  dsys.isempty();
-\end{verbatim}
-\subsection{\texorpdfstring{elltool.linsys.ALinSys.islti}{islti}}\label{method:elltool.linsys.ALinSys.islti}
+\subsection{\texorpdfstring{elltool.linsys.ALinSys.isLti}{isLti}}\label{method:elltool.linsys.ALinSys.isLti}
 \begin{verbatim}
 
 ISLTI - checks if linear system is time-invariant.
@@ -9162,9 +9093,9 @@ Examples:
   SUBounds.center = {'sin(t)'; 'cos(t)'};
   SUBounds.shape = [9 0; 0 2];
   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  isLtiArr = sys.islti();
+  isLtiArr = sys.isLti();
   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
-  isLtiArr = dsys.islti();
+  isLtiArr = dsys.isLti();
 \end{verbatim}
 \section{elltool.linsys.LinSysContinuous}\label{secClassDescr:elltool.linsys.LinSysContinuous}
 \subsection{\texorpdfstring{elltool.linsys.LinSysContinuous.LinSysContinuous}{LinSysContinuous}}\label{method:elltool.linsys.LinSysContinuous.LinSysContinuous}
@@ -9172,8 +9103,7 @@ Examples:
 LINSYSCONTINUOUS - Constructor of continuous linear system object.
 
 Continuous-time linear system:
-          dx/dt  =  A(t) x(t)  +  B(t) u(t)  +  G(t) v(t)
-           y(t)  =  C(t) x(t)  +  w(t)
+          dx/dt  =  A(t) x(t)  +  B(t) u(t)  +  C(t) v(t)
 
 Input:
   regular:
@@ -9181,18 +9111,14 @@ Input:
 
       btInpMat: double[nDim, kDim]/cell[nDim, kDim] - matrix B.
 
+  optional:
       uBoundsEll: ellipsoid[1, 1]/struct[1, 1] - control bounds
             ellipsoid.
 
-      gtInpMat: double[nDim, lDim]/cell[nDim, lDim] - matrix G.
+      ctInpMat: double[nDim, lDim]/cell[nDim, lDim] - matrix G.
 
       distBoundsEll: ellipsoid[1, 1]/struct[1, 1] - disturbance
             bounds ellipsoid.
-
-      ctInpMat: double[mDim, nDim]/cell[mDim, nDim]- matrix C.
-
-      noiseBoundsEll: ellipsoid[1, 1]/struct[1, 1] - noise bounds
-            ellipsoid.
 
       discrFlag: char[1, 1] - if discrFlag set:
              'd' - to discrete-time linSys,
@@ -9217,67 +9143,39 @@ See the description of the following methods in section \ref{secClassDescr:ellto
 
 \begin{list}{}{}
  \item \hyperref[method:elltool.linsys.ALinSys.dimension]{dimension}
+ \item \hyperref[method:elltool.linsys.ALinSys.display]{display}
  \item \hyperref[method:elltool.linsys.ALinSys.getAbsTol]{getAbsTol}
  \item \hyperref[method:elltool.linsys.ALinSys.getAtMat]{getAtMat}
  \item \hyperref[method:elltool.linsys.ALinSys.getBtMat]{getBtMat}
  \item \hyperref[method:elltool.linsys.ALinSys.getCopy]{getCopy}
  \item \hyperref[method:elltool.linsys.ALinSys.getCtMat]{getCtMat}
  \item \hyperref[method:elltool.linsys.ALinSys.getDistBoundsEll]{getDistBoundsEll}
- \item \hyperref[method:elltool.linsys.ALinSys.getGtMat]{getGtMat}
- \item \hyperref[method:elltool.linsys.ALinSys.getNoiseBoundsEll]{getNoiseBoundsEll}
  \item \hyperref[method:elltool.linsys.ALinSys.getUBoundsEll]{getUBoundsEll}
- \item \hyperref[method:elltool.linsys.ALinSys.hasdisturbance]{hasdisturbance}
- \item \hyperref[method:elltool.linsys.ALinSys.hasnoise]{hasnoise}
+ \item \hyperref[method:elltool.linsys.ALinSys.hasDisturbance]{hasDisturbance}
+ \item \hyperref[method:elltool.linsys.ALinSys.isEmpty]{isEmpty}
  \item \hyperref[method:elltool.linsys.ALinSys.isEqual]{isEqual}
- \item \hyperref[method:elltool.linsys.ALinSys.isempty]{isempty}
- \item \hyperref[method:elltool.linsys.ALinSys.islti]{islti}
+ \item \hyperref[method:elltool.linsys.ALinSys.isLti]{isLti}
 \end{list}
-\subsection{\texorpdfstring{elltool.linsys.LinSysContinuous.display}{display}}\label{method:elltool.linsys.LinSysContinuous.display}
-\begin{verbatim}
-
-DISPLAY - displays the details of linear system object.
-
-Input:
-  regular:
-      self: elltool.linsys.ILinSys[1, 1] - linear system.
-
-Output:
-  None.
-
-Example:
-  aMat = [0 1; 0 0]; bMat = eye(2);
-  SUBounds = struct();
-  SUBounds.center = {'sin(t)'; 'cos(t)'};
-  SUBounds.shape = [9 0; 0 2];
-  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  sys.display()
-\end{verbatim}
 \section{elltool.linsys.LinSysDiscrete}\label{secClassDescr:elltool.linsys.LinSysDiscrete}
 \subsection{\texorpdfstring{elltool.linsys.LinSysDiscrete.LinSysDiscrete}{LinSysDiscrete}}\label{method:elltool.linsys.LinSysDiscrete.LinSysDiscrete}
 \begin{verbatim}
 LINSYSDISCRETE - constructor of discrete linear system object.
 
 Discrete-time linear system:
-          x[k+1]  =  A[k] x[k]  +  B[k] u[k]  +  G[k] v[k]
-            y[k]  =  C[k] x[k]  +  w[k]
+          x[k+1]  =  A[k] x[k]  +  B[k] u[k]  +  C[k] v[k]
 
 Input:
   regular:
       atInpMat: double[nDim, nDim]/cell[nDim, nDim] - matrix A.
 
       btInpMat: double[nDim, kDim]/cell[nDim, kDim] - matrix B.
-
+  optional:
       uBoundsEll: ellipsoid[1, 1]/struct[1, 1] - control bounds
           ellipsoid.
 
-      gtInpMat: double[nDim, lDim]/cell[nDim, lDim] - matrix G.
+      ctInpMat: double[nDim, lDim]/cell[nDim, lDim] - matrix G.
 
       distBoundsEll: ellipsoid[1, 1]/struct[1, 1] - disturbance bounds
-          ellipsoid.
-
-      ctInpMat: double[mDim, nDim]/cell[mDim, nDim]- matrix C.
-
-      noiseBoundsEll: ellipsoid[1, 1]/struct[1, 1] - noise bounds
           ellipsoid.
 
       discrFlag: char[1, 1] - if discrFlag set:
@@ -9292,11 +9190,10 @@ Example:
      atMat = {'0' '1 + cos(pi*k/2)'; '-2' '0'};
      btMat =  [0; 1];
      uBoundsEllObj = ellipsoid(4);
-     gtMat = [1; 0];
+     ctMat = [1; 0];
      distBounds = 1/(k+1);
-     ctVec = [1 0];
      lsys = elltool.linsys.LinSysDiscrete(atMat, btMat,...
-         uBoundsEllObj, gtMat,distBounds, ctVec);
+         uBoundsEllObj, ctMat,distBounds);
   end
 \end{verbatim}
 
@@ -9306,41 +9203,19 @@ See the description of the following methods in section \ref{secClassDescr:ellto
 
 \begin{list}{}{}
  \item \hyperref[method:elltool.linsys.ALinSys.dimension]{dimension}
+ \item \hyperref[method:elltool.linsys.ALinSys.display]{display}
  \item \hyperref[method:elltool.linsys.ALinSys.getAbsTol]{getAbsTol}
  \item \hyperref[method:elltool.linsys.ALinSys.getAtMat]{getAtMat}
  \item \hyperref[method:elltool.linsys.ALinSys.getBtMat]{getBtMat}
  \item \hyperref[method:elltool.linsys.ALinSys.getCopy]{getCopy}
  \item \hyperref[method:elltool.linsys.ALinSys.getCtMat]{getCtMat}
  \item \hyperref[method:elltool.linsys.ALinSys.getDistBoundsEll]{getDistBoundsEll}
- \item \hyperref[method:elltool.linsys.ALinSys.getGtMat]{getGtMat}
- \item \hyperref[method:elltool.linsys.ALinSys.getNoiseBoundsEll]{getNoiseBoundsEll}
  \item \hyperref[method:elltool.linsys.ALinSys.getUBoundsEll]{getUBoundsEll}
- \item \hyperref[method:elltool.linsys.ALinSys.hasdisturbance]{hasdisturbance}
- \item \hyperref[method:elltool.linsys.ALinSys.hasnoise]{hasnoise}
+ \item \hyperref[method:elltool.linsys.ALinSys.hasDisturbance]{hasDisturbance}
+ \item \hyperref[method:elltool.linsys.ALinSys.isEmpty]{isEmpty}
  \item \hyperref[method:elltool.linsys.ALinSys.isEqual]{isEqual}
- \item \hyperref[method:elltool.linsys.ALinSys.isempty]{isempty}
- \item \hyperref[method:elltool.linsys.ALinSys.islti]{islti}
+ \item \hyperref[method:elltool.linsys.ALinSys.isLti]{isLti}
 \end{list}
-\subsection{\texorpdfstring{elltool.linsys.LinSysDiscrete.display}{display}}\label{method:elltool.linsys.LinSysDiscrete.display}
-\begin{verbatim}
-
-DISPLAY - displays the details of linear system object.
-
-Input:
-  regular:
-      self: elltool.linsys.ILinSys[1, 1] - linear system.
-
-Output:
-  None.
-
-Example:
-  aMat = [0 1; 0 0]; bMat = eye(2);
-  SUBounds = struct();
-  SUBounds.center = {'sin(t)'; 'cos(t)'};
-  SUBounds.shape = [9 0; 0 2];
-  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  sys.display()
-\end{verbatim}
 \section{elltool.linsys.LinSysFactory}\label{secClassDescr:elltool.linsys.LinSysFactory}
 \subsection{\texorpdfstring{elltool.linsys.LinSysFactory.LinSysFactory}{LinSysFactory}}\label{method:elltool.linsys.LinSysFactory.LinSysFactory}
 \begin{verbatim}
@@ -9351,15 +9226,12 @@ Factory class of linear system objects of the Ellipsoidal Toolbox.
 CREATE - returns linear system object.
 
 Continuous-time linear system:
-          dx/dt  =  A(t) x(t)  +  B(t) u(t)  +  G(t) v(t)
-           y(t)  =  C(t) x(t)  +  w(t)
+          dx/dt  =  A(t) x(t)  +  B(t) u(t)  +  C(t) v(t)
 
 Discrete-time linear system:
-          x[k+1]  =  A[k] x[k]  +  B[k] u[k]  +  G[k] v[k]
-            y[k]  =  C[k] x[k]  +  w[k]
+          x[k+1]  =  A[k] x[k]  +  B[k] u[k]  +  C[k] v[k]
 
 Input:
-  regular:
   regular:
       atInpMat: double[nDim, nDim]/cell[nDim, nDim] - matrix A.
 
@@ -9368,15 +9240,10 @@ Input:
       uBoundsEll: ellipsoid[1, 1]/struct[1, 1] - control bounds
           ellipsoid.
 
-      gtInpMat: double[nDim, lDim]/cell[nDim, lDim] - matrix G.
+      ctInpMat: double[nDim, lDim]/cell[nDim, lDim] - matrix G.
 
       distBoundsEll: ellipsoid[1, 1]/struct[1, 1] - disturbance bounds
           ellipsoid.
-
-      ctInpMat: double[mDim, nDim]/cell[mDim, nDim]- matrix C.
-
-      noiseBoundsEll: ellipsoid[1, 1]/struct[1, 1] -  noise bounds
-         ellipsoid.
 
       discrFlag: char[1, 1] - if discrFlag set:
           'd' - to discrete-time linSys

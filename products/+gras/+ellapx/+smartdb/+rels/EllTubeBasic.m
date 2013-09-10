@@ -621,8 +621,6 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 all(cellfun(@(x)isnumeric(x)&&ismatrix(x),projMatList)));
             checkvar(fGetProjMat,'isfunction(x)');
             %
-            ABS_TOL=1e-4;
-            %
             projDependencyFieldNameList=...
                 self.getProjectionDependencyFieldList();
             %
