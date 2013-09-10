@@ -8,6 +8,55 @@ classdef EllTubePlotTestCase < mlunitext.test_case
         function tear_down(~)
             close all;
         end
+		
+        function test_getPlotStructure(self)
+            import gras.ellapx.smartdb.RelDispConfigurator;
+            import gras.ellapx.smartdb.rels.EllUnionTube;
+            import gras.ellapx.proj.EllTubeStaticSpaceProjector;
+            n = 4;
+            T = 1;
+            q11 = @(t)[ cos(2*pi*t/n) sin(2*pi*t/n) ; -sin(2*pi*t/n)  cos(2*pi*t/n) ];
+            ltGDir = [];
+            QArrList = cell(n+1,1);
+            sTime =1;
+            timeVec = 1:T;
+            for iHandleVec= 0:n
+                ltGDir = [ltGDir ([1 0]*q11(iHandleVec))'];
+                QArrListTemp = repmat(q11(iHandleVec)'*diag([1 4])*q11(iHandleVec),[1,1,T]);
+                QArrList{iHandleVec+1} = QArrListTemp;
+            end
+            
+            ltGDir = repmat(ltGDir,[1 1 T]);
+            aMat = repmat([1 0]',[1,T]);
+            approxType = gras.ellapx.enums.EApproxType(1);
+            calcPrecision = 10^(-3);
+            
+            rel =gras.ellapx.smartdb.rels.EllTube.fromQArrays(QArrList',aMat...
+                ,timeVec,ltGDir,sTime',approxType,...
+                char.empty(1,0),char.empty(1,0),...
+                calcPrecision);
+           
+            projSpace2List = {[1 1;1 0].'};
+            
+            projObj=EllTubeStaticSpaceProjector(projSpace2List);
+            relStatProj=projObj.project(rel);
+            
+            rel2=smartdb.relations.DynamicRelation(relStatProj);
+            rel2.groupBy({'projSTimeMat'});
+            RelDispConfigurator.setIsGoodCurvesSeparately(true);
+            pl = relStatProj.plot('fGetColor',@(x)[1,0,0],...
+                'colorFieldList', {'approxType'});
+            SFigHandles=pl.getPlotStructure.figHMap.toStruct();
+            SAxesHandles=pl.getPlotStructure.figToAxesToHMap.toStruct();
+            [~, handleVecList] = modgen.struct.getleavelist(SFigHandles);
+            [~, axesVecList] = modgen.struct.getleavelist(SAxesHandles);
+            for iHandleVec = 1: size(handleVecList,1)
+                mlunitext.assert(handleVecList{iHandleVec},...
+                    axesVecList{2*iHandleVec-1});
+                mlunitext.assert(handleVecList{iHandleVec},...
+                    axesVecList{2*iHandleVec});
+            end
+        end		
          function testDifferentProjTypes(self)
             rel = self.createTube3(3,4,2);
             projMatList = {[1 0; 0 1].'};
