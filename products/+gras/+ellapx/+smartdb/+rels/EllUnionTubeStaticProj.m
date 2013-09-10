@@ -184,8 +184,6 @@ classdef EllUnionTubeStaticProj<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&..
             fPostFun = @(varargin)axesPostPlotFunc(self,isHoldFin,varargin{:});
             if self.getNTuples()>0
                 %
-                self.checkForNoReg();
-                %
                 plObj.plotGeneric(self,...
                     @(varargin)figureGetGroupKeyFunc(self,varargin{:}),...
                     {'projType','projSTimeMat','sTime','lsGoodDirOrigVec'},...
@@ -330,7 +328,7 @@ classdef EllUnionTubeStaticProj<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&..
             %
             if numel(timeVec) > 1
                 QMatSpline=MatrixInterpolantFactory.createInstance(...
-                    'symm_column_triu',QArray,timeVec);
+                    'linear',QArray,timeVec);
                 aVecSpline=MatrixInterpolantFactory.createInstance(...
                     'column',aMat,timeVec);
                 %
