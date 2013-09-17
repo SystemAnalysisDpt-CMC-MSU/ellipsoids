@@ -514,7 +514,7 @@ classdef AReach < elltool.reach.IReach
         end
     end
     methods (Access = private)
-        function [dataCVec, indVec] = evolveApprox(self, ...
+        function [ellTubeRelList, indVec] = evolveApprox(self, ...
                 newTimeVec, newLinSys, approxType)
             import gras.ellapx.smartdb.F;
             APPROX_TYPE = F.APPROX_TYPE;
@@ -557,7 +557,7 @@ classdef AReach < elltool.reach.IReach
             %
             % ext/int-approx on the next time interval
             %
-            dataCVec = cell(1, l0VecNum);
+            ellTubeRelList = cell(1, l0VecNum);
             isDisturbance = self.isDisturbance(ctStrCMat, qtStrCMat);
             for il0Num = l0VecNum: -1 : 1
                 probDynObj = self.getProbDynamics(atStrCMat, ...
@@ -568,7 +568,7 @@ classdef AReach < elltool.reach.IReach
                 ellTubeRelVec{il0Num} = self.makeEllTubeRel(...
                     probDynObj, l0Mat(:, il0Num), ...
                     newTimeVec, isDisturbance, self.relTol, approxType);
-                dataCVec{il0Num} = ...
+                ellTubeRelList{il0Num} = ...
                     ellTubeRelVec{il0Num}.getTuplesFilteredBy(...
                     APPROX_TYPE, approxType).getData();
             end
