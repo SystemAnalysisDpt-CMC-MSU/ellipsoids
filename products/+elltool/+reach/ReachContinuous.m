@@ -92,11 +92,6 @@ classdef ReachContinuous < elltool.reach.AReach
                     timeVec, calcPrecision);
             end
         end
-        %
-        function newEllTubeRel = transformEllTube(ellTubeRel)
-            newEllTubeRel = ...
-                elltool.reach.ReachContinuous.rotateEllTubeRel(ellTubeRel);
-        end
     end
     %
     methods (Access = private)
