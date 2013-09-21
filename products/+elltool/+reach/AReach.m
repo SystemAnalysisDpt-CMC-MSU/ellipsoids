@@ -1704,26 +1704,5 @@ end
 
 end
 function colCodeVec = getColorVec(colChar)
-if ~(ischar(colChar))
-    colCodeVec = [0 0 0];
-    return;
-end
-switch colChar
-    case 'r',
-        colCodeVec = [1 0 0];
-    case 'g',
-        colCodeVec = [0 1 0];
-    case 'b',
-        colCodeVec = [0 0 1];
-    case 'y',
-        colCodeVec = [1 1 0];
-    case 'c',
-        colCodeVec = [0 1 1];
-    case 'm',
-        colCodeVec = [1 0 1];
-    case 'w',
-        colCodeVec = [1 1 1];
-    otherwise,
-        colCodeVec = [0 0 0];
-end
+    colCodeVec = elltool.plot.colorcode2rgb(colChar);
 end

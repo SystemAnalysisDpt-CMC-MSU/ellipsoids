@@ -421,36 +421,7 @@ end
             end
         end
         function res = myColorTable(ch)
-            if ~(ischar(ch))
-                res = [0 0 0];
-                return;
-            end
-            
-            switch ch
-                case 'r',
-                    res = [1 0 0];
-                    
-                case 'g',
-                    res = [0 1 0];
-                    
-                case 'b',
-                    res = [0 0 1];
-                    
-                case 'y',
-                    res = [1 1 0];
-                    
-                case 'c',
-                    res = [0 1 1];
-                    
-                case 'm',
-                    res = [1 0 1];
-                    
-                case 'w',
-                    res = [1 1 1];
-                    
-                otherwise,
-                    res = [0 0 0];
-            end
+           res = elltool.plot.colorcode2rgb(ch);
         end
     end
 end
