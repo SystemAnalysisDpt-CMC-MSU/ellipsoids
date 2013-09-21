@@ -1,4 +1,4 @@
-function [tout,yout,dyRegMat] = ode45reg(fOdeDeriv,fOdeReg,tspan,y0,...
+function [tout,yout,dyRegMat,interpObj] = ode45reg(fOdeDeriv,fOdeReg,tspan,y0,...
     options,varargin)
 % ODE45REG is an extension of built-in ode45 solver capable of solving ODEs
 % with right hand-side functions having a limited definition area
@@ -48,6 +48,13 @@ import modgen.common.throwerror;
 import modgen.common.type.simple.*;
 solver_name = 'ode45reg';
 
+%% Блок моих переменных
+if nargout == 4
+    interpObj =  gras.ode.VecOde45RegInterp(fOdeReg);
+end
+
+
+
 %% Constants
 N_MAX_REG_STEPS_DEFAULT=3;
 N_PROGRESS_DOTS_SHOWN=10;
@@ -78,6 +85,15 @@ checkgen(fOdeReg,'isfunction(x)');
     options, threshold, rtol, normcontrol, normy, hmax, htry, htspan,...
     dataType,absTol] = ...
     odearguments(solver_name,fOdeDeriv, tspan, y0, options);
+
+if nargout == 4
+    interpObj.dataType = dataType;
+    interpObj.neq = neq;
+    interpObj.t0 = t0;
+    interpObj.y0 = y0;
+    interpObj.next = next;
+end;
+
 if ~isRegMaxStepTolSpec
     regMaxStepTol=absTol*10;
 end
@@ -306,6 +322,17 @@ while ~isDone
             nout_new =  0;
             tout_new = [];
             yout_new = [];
+            
+            if nargout == 4
+                interpObj.tnew_arr = [interpObj.tnew_arr {tnew}];
+                interpObj.ynew_arr = [interpObj.ynew_arr {ynew}];
+                interpObj.t_arr = [interpObj.t_arr {t}];
+                interpObj.y_arr = [interpObj.y_arr {y}];
+                interpObj.h_arr = [interpObj.h_arr {h}];
+                interpObj.f_arr = [interpObj.f_arr {f}];
+                interpObj.dyNewCorrVec = [interpObj.dyNewCorrVec {dyNewCorrVec}];
+            end
+            
             while next <= ntspan
                 if tnew < tspan(next)
                     break;

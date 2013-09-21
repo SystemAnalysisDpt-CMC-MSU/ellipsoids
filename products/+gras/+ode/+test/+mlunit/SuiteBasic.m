@@ -403,5 +403,48 @@ classdef SuiteBasic < mlunitext.test_case
                 end
             end
         end
+        function self = testInterp(self)
+            function f=fDeriv(t,y)
+                f=zeros(size(y));
+            end
+            function [isStrictViolVec,yRegMat]=fReg(~,yMat)
+                isStrictViolVec=false(1,size(yMat,2));
+                yRegMat=max(yMat,0);
+            end
+            function [isStrictViolVec,yRegMat]=fRegDummy(~,yMat)
+                isStrictViolVec=false(1,size(yMat,2));
+                yRegMat=yMat;
+            end
+            check(7);
+            check(20);
+            check(100);
+            'testInterp working good'
+            function check(nPoints)
+                tStart=0;
+                tEnd=4*pi;
+                tVec=transpose(linspace(tStart,tEnd,nPoints));
+                nTimePoints=length(tVec);
+                initVec=[0 1 2 3];
+                absTol=0.001;
+                odePropList={'NormControl','on','RelTol',absTol,'AbsTol',absTol};
+                %%
+                %
+                %check that for the positive solution ode113reg works in the same
+                %way as plain ode45
+                tVecBegin = linspace(0,4*pi,17);
+                [~,yMat,yRegMat,interpObj]=...
+                    feval(self.odeSolver, @(t,y)cos(y),@fRegDummy,tVecBegin,initVec,...
+                    odePropList{:});
+                
+                tVecVary = [0 0.1 0.2 0.25 0.9 2 3 6 6.1 6.2 6.5 7 8 9 10 11 4*pi];
+                [~,yMat,yRegMat,~]=...
+                    feval(self.odeSolver, @(t,y)cos(y),@fRegDummy,tVecVary,initVec,...
+                    odePropList{:});
+                [~,yyMat,yyRegMat] = interpObj.evaluate(tVecVary);
+                norm_res_y = norm(yMat - yyMat)
+                norm_res_yReg = norm(yRegMat - yyRegMat)
+                mlunitext.assert_equals(true,isequal(yMat,yyMat),'matrix are not equal');
+            end
+        end
     end
 end
