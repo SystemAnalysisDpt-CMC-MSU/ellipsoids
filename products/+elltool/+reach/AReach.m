@@ -77,6 +77,10 @@ classdef AReach < elltool.reach.IReach
         isRegEnabled
         isJustCheck
         regTol
+        intProbDynList
+        intGoodDirSetList
+        extProbDynList
+        extGoodDirSetList
     end
     methods
         function set.ellTubeRel(self,rel)
@@ -112,7 +116,7 @@ classdef AReach < elltool.reach.IReach
     %
     methods (Abstract, Access = protected)
         %
-        ellTubeRel = internalMakeEllTubeRel(self, probDynObj, l0Mat, ...
+        [ellTubeRel,goodDirSetObj] = internalMakeEllTubeRel(self, probDynObj, l0Mat, ...
             timeVec, isDisturb, calcPrecision, approxTypeVec)
     end
     %
@@ -514,7 +518,7 @@ classdef AReach < elltool.reach.IReach
         end
     end
     methods (Access = private)
-        function [ellTubeRelList, indVec] = evolveApprox(self, ...
+        function [ellTubeRelList, indVec,probDynObjCell,goodDirSetObjCell] = evolveApprox(self, ...
                 newTimeVec, newLinSys, approxType)
             import gras.ellapx.smartdb.F;
             APPROX_TYPE = F.APPROX_TYPE;
@@ -565,13 +569,14 @@ classdef AReach < elltool.reach.IReach
                     qtStrCMat, qtStrCVec, x0MatArray(:, :, il0Num), ...
                     x0VecMat(:, il0Num), newTimeVec, self.relTol, ...
                     isDisturbance);
-                ellTubeRelVec{il0Num} = self.makeEllTubeRel(...
+                [ellTubeRelVec{il0Num},goodDirSetObjCell{il0Num}] = self.makeEllTubeRel(...
                     probDynObj, l0Mat(:, il0Num), ...
                     newTimeVec, isDisturbance, self.relTol, approxType);
                 ellTubeRelList{il0Num} = ...
                     ellTubeRelVec{il0Num}.getTuplesFilteredBy(...
                     APPROX_TYPE, approxType).getData();
-            end
+                probDynObjCell{il0Num}=probDynObj;
+            end 
         end
     end
     %
@@ -647,7 +652,7 @@ classdef AReach < elltool.reach.IReach
             
         end
         %
-        function ellTubeRel = makeEllTubeRel(self, probDynObj, l0Mat,...
+        function [ellTubeRel, goodDirSetObj] = makeEllTubeRel(self, probDynObj, l0Mat,...
                 timeVec, isDisturb, calcPrecision, approxTypeVec)
             import gras.ellapx.enums.EApproxType;
             import gras.ellapx.gen.RegProblemDynamicsFactory;
@@ -656,7 +661,7 @@ classdef AReach < elltool.reach.IReach
             probDynObj = RegProblemDynamicsFactory.create(probDynObj,...
                 self.isRegEnabled, self.isJustCheck, self.regTol);
             try
-                ellTubeRel = self.internalMakeEllTubeRel(...
+                [ellTubeRel, goodDirSetObj] = self.internalMakeEllTubeRel(...
                     probDynObj,  l0Mat, timeVec, isDisturb, ...
                     calcPrecision, approxTypeVec);
             catch meObj
@@ -769,8 +774,12 @@ classdef AReach < elltool.reach.IReach
                 %temporary plug used until we replace calcPrecision with
                 %separate relTol and absTol fields in EllTube classes
                 calcPrecision=max(self.relTol,self.absTol);
-                self.ellTubeRel = self.makeEllTubeRel(probDynObj, l0Mat,...
+                [self.ellTubeRel,goodDirSetObj] = self.makeEllTubeRel(probDynObj, l0Mat,...
                     timeVec, isDisturbance, calcPrecision, approxTypeVec);
+                self.intGoodDirSetList={goodDirSetObj};
+                self.intProbDynList={probDynObj};
+                self.extGoodDirSetList={goodDirSetObj};
+                self.extProbDynList={probDynObj};
             end
         end
         %
@@ -1469,6 +1478,10 @@ classdef AReach < elltool.reach.IReach
                 copyReachObj.isProj = reachObj.isProj;
                 copyReachObj.isBackward = reachObj.isBackward;
                 copyReachObj.projectionBasisMat = reachObj.projectionBasisMat;
+                copyReachObj.intProbDynList=reachObj.intProbDynList;
+                copyReachObj.extProbDynList=reachObj.extProbDynList;
+                copyReachObj.intGoodDirSetList=reachObj.intGoodDirSetList;
+                copyReachObj.extGoodDirSetList=reachObj.extGoodDirSetList;               
                 %
                 curEllTubeRel=reachObj.ellTubeRel;
                 nTuples=curEllTubeRel.getNTuples();
@@ -1516,6 +1529,86 @@ classdef AReach < elltool.reach.IReach
             %   rsObj.getEllTubeRel();
             %
             ellTubeRel = self.ellTubeRel;
+        end
+        %
+        function intProbDynList = getIntProbDynamicsList(self)
+            % Example:
+            %   aMat = [0 1; 0 0]; bMat = eye(2);
+            %   SUBounds = struct();
+            %   SUBounds.center = {'sin(t)'; 'cos(t)'};
+            %   SUBounds.shape = [9 0; 0 2];
+            %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+            %   x0EllObj = ell_unitball(2);
+            %   timeVec = [0 10];
+            %   dirsMat = [1 0; 0 1]';
+            %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+            %   rsObj.getIntProbDynamicsList();
+            %
+            intProbDynList = self.intProbDynList;
+        end
+        %
+        function intGoodDirSetList = getIntGoodDirSetList(self)
+            % Example:
+            %   aMat = [0 1; 0 0]; bMat = eye(2);
+            %   SUBounds = struct();
+            %   SUBounds.center = {'sin(t)'; 'cos(t)'};
+            %   SUBounds.shape = [9 0; 0 2];
+            %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+            %   x0EllObj = ell_unitball(2);
+            %   timeVec = [0 10];
+            %   dirsMat = [1 0; 0 1]';
+            %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+            %   rsObj.getIntGoodDirSetList();
+            %
+            intGoodDirSetList = self.intGoodDirSetList;
+        end
+        %
+        function extProbDynList = getExtProbDynamicsList(self)
+            % Example:
+            %   aMat = [0 1; 0 0]; bMat = eye(2);
+            %   SUBounds = struct();
+            %   SUBounds.center = {'sin(t)'; 'cos(t)'};
+            %   SUBounds.shape = [9 0; 0 2];
+            %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+            %   x0EllObj = ell_unitball(2);
+            %   timeVec = [0 10];
+            %   dirsMat = [1 0; 0 1]';
+            %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+            %   rsObj.getExtProbDynamicsList();
+            %
+            extProbDynList = self.extProbDynList;
+        end
+           %
+        function extGoodDirSetList = getExtGoodDirSetList(self)
+            % Example:
+            %   aMat = [0 1; 0 0]; bMat = eye(2);
+            %   SUBounds = struct();
+            %   SUBounds.center = {'sin(t)'; 'cos(t)'};
+            %   SUBounds.shape = [9 0; 0 2];
+            %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+            %   x0EllObj = ell_unitball(2);
+            %   timeVec = [0 10];
+            %   dirsMat = [1 0; 0 1]';
+            %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+            %   rsObj.getExtGoodDirSetList();
+            %
+            extGoodDirSetList = self.extGoodDirSetList;
+        end
+         %
+        function linSysCVec = getSystemList(self)
+            % Example:
+            %   aMat = [0 1; 0 0]; bMat = eye(2);
+            %   SUBounds = struct();
+            %   SUBounds.center = {'sin(t)'; 'cos(t)'};
+            %   SUBounds.shape = [9 0; 0 2];
+            %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+            %   x0EllObj = ell_unitball(2);
+            %   timeVec = [0 10];
+            %   dirsMat = [1 0; 0 1]';
+            %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+            %   rsObj.getSystemList();
+            %
+            linSysCVec = self.linSysCVec;
         end
         %
         function ellTubeUnionRel = getEllTubeUnionRel(self)
@@ -1609,14 +1702,22 @@ classdef AReach < elltool.reach.IReach
             newReachObj.linSysCVec = [newReachObj.linSysCVec {newLinSys}];
             newReachObj.isCut = false;
             %
-            [dataIntCVec, indIntVec] = self.evolveApprox(newTimeVec, ...
+            [dataIntCVec, indIntVec,intProbDynCell,intGoodDirSetCell] = self.evolveApprox(newTimeVec, ...
                 newLinSys, EApproxType.Internal);
-            [dataExtCVec, indExtVec] = self.evolveApprox(newTimeVec, ...
+            [dataExtCVec, indExtVec,extProbDynCell,extGoodDirSetCell] = self.evolveApprox(newTimeVec, ...
                 newLinSys, EApproxType.External);
             dataCVec = [dataIntCVec, dataExtCVec];
             %
             % cat old and new ellTubeRel
             %
+            self.intProbDynList=[self.intProbDynList {intProbDynCell}];
+            self.extProbDynList=[self.extProbDynList {extProbDynCell}];
+            self.intGoodDirSetList=[self.intGoodDirSetList {intGoodDirSetCell}];
+            self.extGoodDirSetList=[self.extGoodDirSetList {extGoodDirSetCell}];
+            newReachObj.intProbDynList=[newReachObj.intProbDynList {intProbDynCell}];
+            newReachObj.extProbDynList=[newReachObj.extProbDynList {extProbDynCell}];
+            newReachObj.intGoodDirSetList=[newReachObj.intGoodDirSetList {intGoodDirSetCell}];
+            newReachObj.extGoodDirSetList=[newReachObj.extGoodDirSetList {extGoodDirSetCell}];
             newEllTubeRel =...
                 gras.ellapx.smartdb.rels.EllTube.fromStructList(...
                 'gras.ellapx.smartdb.rels.EllTube', dataCVec);

@@ -95,7 +95,7 @@ classdef ReachContinuous < elltool.reach.AReach
     end
     %
     methods (Access = private)
-        function ellTubeRel = auxMakeEllTubeRel(self, probDynObj, ...
+        function [ellTubeRel,goodDirSetObj] = auxMakeEllTubeRel(self, probDynObj, ...
                 l0Mat, timeVec, isDisturb, calcPrecision, approxTypeVec)
             import gras.ellapx.enums.EApproxType;
             import gras.ellapx.gen.RegProblemDynamicsFactory;
@@ -157,7 +157,7 @@ classdef ReachContinuous < elltool.reach.AReach
         %
     end
     methods (Access=protected)
-        function ellTubeRel = internalMakeEllTubeRel(self, probDynObj, l0Mat,...
+        function [ellTubeRel,goodDirSetObj] = internalMakeEllTubeRel(self, probDynObj, l0Mat,...
                 timeVec, isDisturb, calcPrecision, approxTypeVec)
             import gras.ellapx.enums.EApproxType;
             import gras.ellapx.gen.RegProblemDynamicsFactory;
@@ -165,7 +165,7 @@ classdef ReachContinuous < elltool.reach.AReach
             import modgen.common.throwerror;
             %
             try
-                ellTubeRel = self.auxMakeEllTubeRel(...
+                [ellTubeRel,goodDirSetObj] = self.auxMakeEllTubeRel(...
                     probDynObj,  l0Mat, timeVec, isDisturb, ...
                     calcPrecision, approxTypeVec);
                 if self.isbackward()
