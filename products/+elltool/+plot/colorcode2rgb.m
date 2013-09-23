@@ -1,10 +1,11 @@
 function rgbVec = colorcode2rgb(colorCode)
 %     COLORCODE2RGB - translates to RGB color codes.
 % Input:
-%     Argument must be a character.
+%     regular:
+%         colorCode: char[1,1] - color code.  
 %
 % Output:
-%     RGB color code.
+%     rgbVec: double[1,3] - RGB color code.
 %
 %
 % $Author: <Sergei Drozhzhin>  <SeregaDrozh@gmail.com> $    $Date: <21 September 2013> $

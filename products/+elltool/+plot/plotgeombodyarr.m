@@ -402,7 +402,7 @@ end
                 
                 if isnLastElem && ischar(nextObjArr)
                     isCharColor = true;
-                    colorVec1 = myColorTable(nextObjArr);
+                    colorVec1 = elltool.plot.colorcode2rgb(nextObjArr);
                     val = 1;
                 else
                     colorVec1 = BLACK_COLOR;
@@ -419,9 +419,6 @@ end
                         'Wrong combination of color chars');
                 end
             end
-        end
-        function res = myColorTable(ch)
-           res = elltool.plot.colorcode2rgb(ch);
         end
     end
 end
