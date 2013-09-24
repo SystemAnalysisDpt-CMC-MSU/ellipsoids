@@ -1,4 +1,4 @@
-classdef AGenEllipsoid < handle
+classdef AEllipsoid < handle
     methods (Access = protected, Abstract, Static)
         formCompStruct(SEll, SFieldNiceNames, absTol, isPropIncluded)
     end
