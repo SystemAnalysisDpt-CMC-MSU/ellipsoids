@@ -31,7 +31,7 @@ of initial direction values that corresponds to the number of ellipsoidal
 approximations, and obtain external and internal ellipsoidal approximations
 of the reach set:
 \verbmcodef[Computation of the reach set]
-{mcodesnippets/s_chapter06_section01_snippet01.m}
+{../products/+elltool/+doc/+snip/s_chapter06_section01_snippet01.m}
 
 In figure \ref{ellpolyfig}, the time required to compute both external
 and internal ellipsoidal approximations, with $32$ ellipsoids each,
@@ -86,7 +86,7 @@ for given time by computing the reach set of the linear system (\ref{spmassls})
 and taking its projection onto $(x_1, x_2)$ subspace.
 \newpage
 \verbmcodef[Computation and projection of the reach set]
-{mcodesnippets/s_chapter06_section02_snippet01.m}
+{../products/+elltool/+doc/+snip/s_chapter06_section02_snippet01.m}
 Figure \ref{mechreachfig}(a) shows the reach set of the system
 (\ref{spmass1}-\ref{spmass2}) evolving in time from $t=0$ to $t=4$.
 Figure \ref{mechreachfig}(b) presents a snapshot of this reach set at time
@@ -116,7 +116,7 @@ Assuming that $[v_1 ~~ v_2]^T$ is unknown but bounded by ellipsoid
 $\EE(0, \frac{1}{4}I)$, we can compute the closed-loop reach set of the system
 with disturbance.
 \verbmcodef[Computation of the closed-loop reach set]
-{mcodesnippets/s_chapter06_section02_snippet02.m}
+{../products/+elltool/+doc/+snip/s_chapter06_section02_snippet02.m}
 
 Figure \ref{mechreachfig}(c) shows the reach set of the system
 (\ref{smdist1}-\ref{smdist2}) evolving in time from $t=0$ to $t=4$.
@@ -198,7 +198,7 @@ x_3\end{array}\right] + \left[\begin{array}{c}
 We can compute the reach set of (\ref{rlceq2}) for some time $t>2$, say, $t=3$.
 
 \verbmcodef[Computation of the reach set for time interval]
-{mcodesnippets/s_chapter06_section03_snippet01.m}
+{../products/+elltool/+doc/+snip/s_chapter06_section03_snippet01.m}
 
 Figure \ref{rlcreachfig}(a) shows how the reach set projection
 onto $(x_1, x_2)$ of system (\ref{rlceq2})
@@ -215,7 +215,7 @@ To find out where the system should start at time $t=0$ in order to reach
 a neighborhood {\tt M} of the origin at time $t=3$,
 we compute the backward reach set from $t=3$ to $t=0$.
 \verbmcodef[Computation of the backward reach set]
-{mcodesnippets/s_chapter06_section03_snippet02.m}
+{../products/+elltool/+doc/+snip/s_chapter06_section03_snippet02.m}
 \easyfigure[ht][0.7\textwidth]{rlcreach.eps}{Forward and backward reach sets of the switched system
 (external and internal approximations).
 The dynamics switches at $t=2$.
@@ -339,7 +339,7 @@ $H([0 ~ 1 ~ 0 ~ 0]^T, x_{M2})$ is the guard.
 We indicate how to implement the reach set computation of this hybrid system.
 We first define the two linear systems and the guard.
 \verbmcodef[Reach set computation of the hybrid system]
-{mcodesnippets/s_chapter06_section04_snippet01.m}
+{../products/+elltool/+doc/+snip/s_chapter06_section04_snippet01.m}
 
 We assume that initially the system is in free-flow mode.
 Given a set of initial conditions, we  compute the reach set according
@@ -347,12 +347,12 @@ to dynamics (\ref{fflow}) for certain number of time steps.
 We will consider the external approximation of the reach set by a single
 ellipsoid.
 \verbmcodef[Get the external approximation of the reach set by a single
-ellipsoid]{mcodesnippets/s_chapter06_section04_snippet02.m}
+ellipsoid]{../products/+elltool/+doc/+snip/s_chapter06_section04_snippet02.m}
 
 Having obtained the ellipsoidal array {\tt externalEllMat} representing the reach set
 evolving in time, we  determine the  ellipsoids in the array that
 intersect the guard.
-\verbmcodef[Determination of  the  ellipsoids as an array that intersect the guard]{mcodesnippets/s_chapter06_section04_snippet03.m}
+\verbmcodef[Determination of  the  ellipsoids as an array that intersect the guard]{../products/+elltool/+doc/+snip/s_chapter06_section04_snippet03.m}
 
 Analyzing the values in array {\tt dVec}, we conclude that the free-flow reach set
 has nonempty intersection with hyperplane {\tt grdHyp} at $t=18$
@@ -384,7 +384,7 @@ guard is nonempty, we establish a new initial time and a set of initial
 conditions for the reach set computation according to dynamics (\ref{cflow}).
 The initial time is the array index minus one, and the set of initial
 conditions is the intersection of the free-flow reach set with the guard.
-\verbmcodef[The union of reach sets in array]{mcodesnippets/s_chapter06_section04_snippet04.m}
+\verbmcodef[The union of reach sets in array]{../products/+elltool/+doc/+snip/s_chapter06_section04_snippet04.m}
 
 The union of reach sets in array {\tt crs} forms the reach set for
 the congested dynamics.
