@@ -291,7 +291,6 @@ classdef ellipsoid < elltool.core.AGenEllipsoid
             end
         end
     end
-    
     methods(Static)
         ellArr = fromRepMat(varargin)
         ellArr = fromStruct(SEllArr)
@@ -313,11 +312,10 @@ classdef ellipsoid < elltool.core.AGenEllipsoid
         [bpMat, fVec] = getGridByFactor(ellObj,factorVec)
         checkDoesContainArgs(ell,poly)
         doesContain = doesContainPoly(ellArr,polytope,varagin)
-    end
+    end 
     methods (Static)
         checkIsMe(someObj,varargin)
     end
-    
     methods (Access=private)
         function isArrEq = isMatEqualInternal(self,aArr,bArr)
             % ISMATEQUALINTERNAL - returns isArrEq - logical 1(true) if
@@ -350,7 +348,6 @@ classdef ellipsoid < elltool.core.AGenEllipsoid
             end
         end
     end
-    
     methods (Access = protected, Static)
         function SComp = formCompStruct(SEll, SFieldNiceNames, absTol, isPropIncluded)
             if (~isempty(SEll.shapeMat))
@@ -367,6 +364,4 @@ classdef ellipsoid < elltool.core.AGenEllipsoid
             end
         end
     end
-    
-    
 end
