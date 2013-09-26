@@ -391,7 +391,6 @@ classdef GenEllipsoid < handle
         end
     end
     methods (Static,Access = private)
-        resVec = elltool.plot.colorcode2rgb(ch);
         [isOk, pPar] = getIsGoodDirForMat(ellQ1Mat,ellQ2Mat,dirVec,absTol)
         sqMat = findSqrtOfMatrix(qMat,absTol)
         isBigger=checkBigger(ellObj1,ellObj2,nDimSpace,absTol)

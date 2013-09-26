@@ -16,6 +16,16 @@ classdef AGeomBodyPlotTestCase < mlunitext.test_case
         function self = tear_down(self,varargin)
             close all;
         end
+        
+        function self = testNegRGB(self)
+            self.runAndCheckError('elltool.plot.colorcode2rgb(2)',...
+                'wrongInput');
+            self.runAndCheckError('elltool.plot.colorcode2rgb(''q'')',...
+                'wrongInput');
+            self.runAndCheckError('elltool.plot.colorcode2rgb(''rgbycmkw'')',...
+                'wrongInput');
+        end
+        
         function self = testWrongInput(self)
             
             testFirEll = self.getInstance(eye(2));

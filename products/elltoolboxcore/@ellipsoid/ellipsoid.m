@@ -297,7 +297,6 @@ classdef ellipsoid < elltool.core.AGenEllipsoid
         ellArr = fromStruct(SEllArr)
     end
     methods(Static,Access = private)
-        res = elltool.plot.colorcode2rgb(ch)
         regQMat = regularize(qMat,absTol)
         clrDirsMat = rm_bad_directions(q1Mat, q2Mat, dirsMat,absTol)
         [isBadDirVec,pUniversalVec] = isbaddirectionmat(q1Mat, q2Mat,...
