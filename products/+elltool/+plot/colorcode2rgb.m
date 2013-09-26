@@ -22,12 +22,12 @@ elseif (numel(colorCode) >= 2 || numel(colorCode)==0)
     modgen.common.throwerror('wrongInput',...
         'input must be char[1,1]');
 else
-    colorCodeVec = strfind(AVAILABLE_COLORS, colorCode);
-    if ( isempty(colorCodeVec) )
+    colorCodeInd = strfind(AVAILABLE_COLORS, colorCode);
+    if ( isempty(colorCodeInd) )
         modgen.common.throwerror('wrongInput',...
             'input must be one of the following symbols : r, g, b, y, c , m, w or k');
     end
 end
-rgbVec = rem(floor((colorCodeVec - 1) * [0.25 0.5 1]),2);
+rgbVec = rem(floor((colorCodeInd - 1) * [0.25 0.5 1]),2);
 end
 
