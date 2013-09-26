@@ -22,7 +22,6 @@ elseif (numel(colorCode) >= 2 || numel(colorCode)==0)
 elseif ( isempty(strfind('kbgcrmyw', colorCode)) )
     modgen.common.throwerror('wrongInput',...
         'input must be one of the following symbols : r, g, b, y, c , m, w or k');
-    rgbVec = [0 0 0];
 else
     rgbVec = rem(floor((strfind('kbgcrmyw', colorCode) - 1) * [0.25 0.5 1]),2);
 end
