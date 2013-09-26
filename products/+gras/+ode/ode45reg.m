@@ -92,6 +92,7 @@ if nargout == 4
     interpObj.t0 = t0;
     interpObj.y0 = y0;
     interpObj.next = next;
+    interpObj.tfinal = tfinal;
 end;
 
 if ~isRegMaxStepTolSpec
@@ -324,14 +325,14 @@ while ~isDone
             yout_new = [];
             
             if nargout == 4
-                interpObj.tnew_arr = [interpObj.tnew_arr {tnew}];
-                interpObj.ynew_arr = [interpObj.ynew_arr {ynew}];
-                interpObj.t_arr = [interpObj.t_arr {t}];
-                interpObj.y_arr = [interpObj.y_arr {y}];
-                interpObj.h_arr = [interpObj.h_arr {h}];
-                interpObj.f_arr = [interpObj.f_arr {f}];
+                interpObj.tnewVec = [interpObj.tnewVec tnew];
+                interpObj.ynewCVec = [interpObj.ynewCVec {ynew}];
+                interpObj.tCVec = [interpObj.tCVec {t}];
+                interpObj.yCVec = [interpObj.yCVec {y}];
+                interpObj.hCVec = [interpObj.hCVec {h}];
+                interpObj.fCVec = [interpObj.fCVec {f}];
                 interpObj.dyNewCorrVec = [interpObj.dyNewCorrVec {dyNewCorrVec}];
-            end
+            end;
             
             while next <= ntspan
                 if tnew < tspan(next)
@@ -387,6 +388,9 @@ while ~isDone
     % Already have f(tnew,ynew)
     
 end
+if nargout == 4
+    interpObj.oldnout = nout;
+end;
 shrinkResults();
 prDispObj.finish();
     function shrinkResults()
