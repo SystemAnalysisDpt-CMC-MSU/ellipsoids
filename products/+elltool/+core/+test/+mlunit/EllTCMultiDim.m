@@ -78,8 +78,7 @@ classdef EllTCMultiDim < mlunitext.test_case
             % Create data.
             hMat=-eye(2);
             kVec=[-2 1]';
-            qStruct=Polyhedron(hMat,kVec);
-            testPolObj=polytope(qStruct);
+            testPolObj=polytope(hMat,kVec);
             %
             checkMultyInput(testEllArray,testPolObj,false);
             %
