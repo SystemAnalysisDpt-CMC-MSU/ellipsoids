@@ -78,7 +78,6 @@ function outEllArr = intersection_ia(myEllArr, objArr)
 
 import modgen.common.throwerror;
 import modgen.common.checkmultvar;
-
 ellipsoid.checkIsMe(myEllArr,'first');
 modgen.common.checkvar(objArr,@(x) isa(x, 'ellipsoid') ||...
     isa(x, 'hyperplane') || isa(x, 'polytope'),...

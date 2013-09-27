@@ -438,7 +438,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
              h60D = [eye(60); -eye(60)];
              h60D(121,:) = [-1 1 zeros(1,58)];
              k60D = [4; 0; ones(58,1); 0; 4; ones(58,1); -4];
-             testPoly60D = polytope(struct('H',h60D,'K',k60D));
+             testPoly60D = polytope(h60D,k60D);
              ellArr = ellipsoid.fromRepMat(eye(2),[2,2,2]);
          end
          %

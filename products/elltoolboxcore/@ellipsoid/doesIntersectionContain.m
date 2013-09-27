@@ -129,11 +129,11 @@ end
 if isa(secObjArr, 'polytope')
     
     isAnyEllDeg = any(isdegenerate(fstEllArr(:)));
-    if mode == 'i'
-        polyVec = and(secObjArr);
-    else
-        polyVec = secObjArr; 
-    end
+      if mode == 'i'
+          polyVec = and(secObjArr(1),secObjArr(2));
+      else
+         polyVec = secObjArr; 
+      end
     [~, nCols] = size(polyVec);
     isBndVec = false(1,nCols);
     isPolyDegVec = false(1,nCols);
