@@ -27,14 +27,14 @@ classdef AGeomBodyPlotTestCase < mlunitext.test_case
         end
         
         function self = testPositiveRGB(self)
-            mlunitext.assert_equals(elltool.plot.colorcode2rgb('r'), [1 0 0]);
-            mlunitext.assert_equals(elltool.plot.colorcode2rgb('g'), [0 1 0]);
-            mlunitext.assert_equals(elltool.plot.colorcode2rgb('b'), [0 0 1]);
-            mlunitext.assert_equals(elltool.plot.colorcode2rgb('y'), [1 1 0]);
-            mlunitext.assert_equals(elltool.plot.colorcode2rgb('c'), [0 1 1]);
-            mlunitext.assert_equals(elltool.plot.colorcode2rgb('m'), [1 0 1]);
-            mlunitext.assert_equals(elltool.plot.colorcode2rgb('w'), [1 1 1]);
-            mlunitext.assert_equals(elltool.plot.colorcode2rgb('k'), [0 0 0]);
+            cVec = cellfun(@(x)elltool.plot.colorcode2rgb(x),...
+                {'r', 'g', 'b', 'y', 'c', 'm', 'w', 'k'},...
+                'UniformOutput', false);
+            crgbVec = {[1 0 0], [0 1 0], [0 0 1], [1 1 0], [0 1 1],...
+                [1 0 1], [1 1 1], [0 0 0]};
+            isOk = isequal(cVec, crgbVec);
+            mlunitext.assert_equals(true, isOk);
+            
         end
         
         function self = testWrongInput(self)

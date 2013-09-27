@@ -18,7 +18,7 @@ AVAILABLE_COLORS_VEC = 'kbgcrmyw';
 if ~(ischar(colorCode))
     modgen.common.throwerror('wrongInput',...
         'input must be char');
-elseif (~iscalar(colorCode))
+elseif (~isscalar(colorCode))
     modgen.common.throwerror('wrongInput',...
         'input must be char[1,1]');
 else
