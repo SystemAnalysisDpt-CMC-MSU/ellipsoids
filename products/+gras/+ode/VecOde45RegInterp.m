@@ -6,25 +6,29 @@ classdef VecOde45RegInterp
         yCVec = [];
         hCVec = [];
         fCVec = [];
-        fOdeRegFunc = [];
-        dataType = [];
-        neq = [];
-        t0 = [];
-        y0 = [];
-        tfinal = [];
-        next = [];
+        fOdeRegFunc;
+        dataType;
+        neq;
+        t0;
+        y0Vec = [];
+        tfinal;
+        next;
         dyNewCorrVec = [];
-        oldnout = [];
+        oldnout;
     end
     methods
         function interpObj = VecOde45RegInterp(fOdeReg)
             % VECODE45REGINTERP - VecOde45RegInterp class constructor
             % Input:
             %   regular:
-            %       fOdeReg: handle-function[1,1]
-            %
+            %       fOdeReg: function_handle[1,1] - function responsible 
+            %           for regularizing the phase variables as 
+            %           [isStrictViolation,yReg]=fOdeReg(t,y) where
+            %           isStrictViolation is supposed to be true when y is
+            %           outside of definition area of the right-hand side
+            %           function
             % Output:
-            %   interpObj: VecOde45RegInterp[1,1]
+            %   interpObj: gras.ode.VecOde45RegInterp[1,1]
             % $Author: Vadim Danilov <vadimdanilov93@gmail.com> $  
             % $Date: 24-09-2013$
             % $Copyright: Moscow State University,
@@ -38,22 +42,20 @@ classdef VecOde45RegInterp
             % Input:
             %   regular:
             %       self: VecOde45RegInterp[1,1] - all the data nessecary 
-            %       for calculation on an arbitrary time grid is stored in
-            %       this object
+            %           for calculation on an arbitrary time grid is stored in
+            %           this object
             %       timeVec: double[1,nPoints] - time range, same meaning 
-            %       as in ode45
+            %           as in ode45
             %   Output:
             %       tout: double[nPoints,1] - time grid, same meaning as in
-            %       ode45
-            %
+            %           ode45            %
             %       yout: double[nPoints,nDims] - solution, same meaning as
-            %       in ode45
-            %
+            %           in ode45            %
             %       dyRegMat: double[nPoints,nDims] - regularizing
-            %       derivative addition
-            %       to the right-hand side function value performed at each
-            %       step, basically yout is a solution of
-            %       dot(y)=fOdeDeriv(t,y)+dyRegMat(t,y)
+            %           derivative addition to the right-hand side
+            %           function value performed at each step, basically
+            %           yout is a solution of
+            %           dot(y)=fOdeDeriv(t,y)+dyRegMat(t,y)
             %
             % $Author: Vadim Danilov  <vadimdanilov93@gmail.com>
             % $	$Date: 2013$
@@ -101,7 +103,7 @@ classdef VecOde45RegInterp
                             self.yCVec{ind0},self.hCVec{ind0},self.fCVec{ind0},self.fOdeRegFunc);
             else
                 tout(nout) = self.t0;
-                yout(:,nout) = self.y0;
+                yout(:,nout) = self.y0Vec;
             end;
                 
             for i = 1:nIter;
