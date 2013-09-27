@@ -1,4 +1,4 @@
-classdef GenEllipsoid < handle
+classdef GenEllipsoid < elltool.core.AEllipsoid
     % GENELLIPSOID - class of generalized ellipsoids
     %
     % Input:
@@ -43,6 +43,8 @@ classdef GenEllipsoid < handle
     properties (Constant,GetAccess = private)
         CHECK_TOL=1e-09;
     end
+    
+    
     methods (Static,Access=private)
         function checkIsMe(objArr)
             import modgen.common.checkvar;
@@ -164,6 +166,9 @@ classdef GenEllipsoid < handle
     end
     methods
         function ellObj = GenEllipsoid(varargin)
+            %
+            ellObj = ellObj@elltool.core.AEllipsoid();    
+            %
             import modgen.common.throwerror
             import elltool.core.GenEllipsoid;
             import gras.la.ismatsymm;

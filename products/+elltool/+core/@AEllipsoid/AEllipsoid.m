@@ -1,5 +1,6 @@
 classdef AEllipsoid < handle
-    methods (Access = protected, Abstract, Static)
+    %methods (Access = protected, Abstract, Static)
+    methods (Access = protected, Static)
         formCompStruct(SEll, SFieldNiceNames, absTol, isPropIncluded)
     end
     

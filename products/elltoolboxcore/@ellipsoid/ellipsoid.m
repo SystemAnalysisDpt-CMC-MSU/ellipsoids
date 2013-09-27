@@ -1,4 +1,4 @@
-classdef ellipsoid < elltool.core.AGenEllipsoid
+classdef ellipsoid < elltool.core.AEllipsoid
     %ELLIPSOID class of ellipsoids
     properties (Access=private,Hidden)
         centerVec
@@ -190,11 +190,16 @@ classdef ellipsoid < elltool.core.AGenEllipsoid
             %             Faculty of Computational Mathematics and and Computer Science,
             %             System Analysis Department 2012-2013 $
             %
+            
+            ellMat = ellMat@elltool.core.AEllipsoid();
+            
             import modgen.common.throwerror;
             import modgen.common.checkvar;
             import modgen.common.checkmultvar;
             import gras.la.ismatsymm;
             %
+            
+            
             NEEDED_PROP_NAME_LIST = {'absTol','relTol',...
                 'nPlot2dPoints','nPlot3dPoints'};
             [regParamList,propNameValList]=modgen.common.parseparams(...
