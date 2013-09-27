@@ -43,8 +43,7 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
     properties (Constant,GetAccess = private)
         CHECK_TOL=1e-09;
     end
-    
-    
+        
     methods (Static,Access=private)
         function checkIsMe(objArr)
             import modgen.common.checkvar;
