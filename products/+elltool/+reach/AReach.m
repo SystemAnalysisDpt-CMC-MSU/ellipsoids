@@ -1908,7 +1908,7 @@ else
 end
 %
 if ischar(colorVec)
-    colorVec = getColorVec(colorVec);
+    colorVec = elltoll.plot.colorcode2rgb(colorVec);
 end
 
 
@@ -1919,7 +1919,7 @@ if ~isempty(reg)
             throwerror('ConflictingColor',...
                 'Conflicting using of color property');
         else
-            colorVec = getColorVec(reg{1});
+            colorVec = elltool.plot.colorcode2rgb(reg{1});
         end
         reg(1) = [];
     elseif numel(reg) > 1
@@ -1928,7 +1928,7 @@ if ~isempty(reg)
                 throwerror('ConflictingColor',...
                     'Conflicting using of color property');
             else
-                colorVec = getColorVec(reg{2});
+                colorVec = elltool.plot.colorcode2rgb(reg{2});
             end
             reg(2) = [];
         end
@@ -1936,28 +1936,4 @@ if ~isempty(reg)
 end
 
 
-end
-function colCodeVec = getColorVec(colChar)
-if ~(ischar(colChar))
-    colCodeVec = [0 0 0];
-    return;
-end
-switch colChar
-    case 'r',
-        colCodeVec = [1 0 0];
-    case 'g',
-        colCodeVec = [0 1 0];
-    case 'b',
-        colCodeVec = [0 0 1];
-    case 'y',
-        colCodeVec = [1 1 0];
-    case 'c',
-        colCodeVec = [0 1 1];
-    case 'm',
-        colCodeVec = [1 0 1];
-    case 'w',
-        colCodeVec = [1 1 1];
-    otherwise,
-        colCodeVec = [0 0 0];
-end
 end
