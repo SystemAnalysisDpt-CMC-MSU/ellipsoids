@@ -237,7 +237,7 @@ classdef ContinuousReachTestCase < mlunitext.test_case
             sysTimeVecLenght=numel(linSys);             
             %2)comparing results of linSys and probDynObj.getBPBgetBPBTransDynamics().evaluate(t)
             
-            % should I do that for all time in timeVec? Now only system in switch time are checked
+            % should I do that for all time in timeVec? Now only systems in switch time are checked
             % incorrect result for matrices containing elements such as '2/3' because of round-off
             ProbDynamicsListLenght=numel(intProbDynamicsList);
             firsttime=switchSysTimeVec(2);

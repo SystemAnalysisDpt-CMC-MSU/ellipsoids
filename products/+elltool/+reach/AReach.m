@@ -1544,7 +1544,7 @@ classdef AReach < elltool.reach.IReach
             % Output:
             %   regular:
             %       intProbDynamicsList: cell array of cell arrays filled
-            %       with objects which describe the system dynamics between
+            %       with objects which describes the system dynamics between
             %       switch time. intProbDynamicsList is constructed during 
             %       the internal approximations and has the following structure:
             %       {{objSys1},{objSys2dir1,...,objSys2dirn},...,{objSyskdir1,...,objSyskdirn}}.
@@ -1593,7 +1593,7 @@ classdef AReach < elltool.reach.IReach
             % Output:
             %   regular:
             %       intGoodDirSetList: cell array of cell arrays filled
-            %       with objects which containe the good directions and curves data
+            %       with objects which containes the good directions and curves data
             %       between switch time. intProbDynamicsList is constructed during 
             %       the internal approximations and has the following structure:
             %       {{objSys1},{objSys2dir1,...,objSys2dirn},...,{objSyskdir1,...,objSyskdirn}}.
@@ -1642,7 +1642,7 @@ classdef AReach < elltool.reach.IReach
             % Output:
             %   regular:
             %       extProbDynamicsList: cell array of cell arrays filled
-            %       with objects which describe the system dynamics between
+            %       with objects which describes the system dynamics between
             %       switch time. extProbDynamicsList is constructed during 
             %       the external approximations and has the following structure:
             %       {{objSys1},{objSys2dir1,...,objSys2dirn},...,{objSyskdir1,...,objSyskdirn}}.
@@ -1691,7 +1691,7 @@ classdef AReach < elltool.reach.IReach
             % Output:
             %   regular:
             %       extGoodDirSetList: cell array of cell arrays filled
-            %       with objects which containe the good curve data between
+            %       with objects which containes the good curve data between
             %       switch time. extGoodDirSetList is constructed during 
             %       the external approximations and has the following structure:
             %       {{objSys1},{objSys2dir1,...,objSys2dirn},...,{objSyskdir1,...,objSyskdirn}}.
