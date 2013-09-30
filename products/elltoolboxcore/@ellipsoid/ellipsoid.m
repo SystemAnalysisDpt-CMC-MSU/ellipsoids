@@ -32,11 +32,11 @@ classdef ellipsoid < elltool.core.AGenEllipsoid
             %
             % Output:
             %   regular:
-            %       bpMat: double[nPoints,nDim] - boundary points of ellipsoid
+            %       bpMat: double[nDim,nPoints+1] - boundary points of ellipsoid
             %       fMat: double[1,nFaces]/double[nFacex,nDim] - indices of points in
             %           each face of bpMat graph. 
             %   optional:
-            %       supVec: double[nPoints] - vector of values of the support function
+            %       supVec: double[nPoints+1] - vector of values of the support function
             %           in directions (bpMat - cenMat).
             %
             % $Author: <Sergei Drozhzhin>  <SeregaDrozh@gmail.com> $    $Date: <28 September 2013> $
@@ -67,6 +67,7 @@ classdef ellipsoid < elltool.core.AGenEllipsoid
             bpMat = dirMat*gras.la.sqrtmpos(qMat,ellObj.getAbsTol());
             cenMat = repmat(cenVec',size(dirMat,1),1);
             bpMat = bpMat+cenMat;
+            bpMat = [bpMat; bpMat(1,:)];
             if(nargout > 2)
                 for ind = 1 : size(bpMat,1)
                     if(nDim == 2)
@@ -76,7 +77,7 @@ classdef ellipsoid < elltool.core.AGenEllipsoid
                     end
                 end
             end
-            
+            bpMat = bpMat';
         end
         
         
@@ -84,7 +85,7 @@ classdef ellipsoid < elltool.core.AGenEllipsoid
         function [vGridMat, fGridMat, supVec] = getRhoBoundaryByFactor(ellObj,factorVec)
             %
             %   GETRHOBOUNDARYBYFACTOR - computes grid of 2d or 3d ellipsoid and vertices
-            %                         for each face in the grid
+            %                         for each face in the grid and support function values.
             %
             % Input:
             %   regular:
@@ -100,10 +101,10 @@ classdef ellipsoid < elltool.core.AGenEllipsoid
             %
             % Output:
             %   regular:
-            %       vGridat: double[nPoints,nDim] - vertices of the grid
+            %       vGridat: double[nDim,nPoints+1] - vertices of the grid
             %       fGridMat: double[1,nPoints+1]/double[nFaces,3] - indices of vertices in
             %           each face in the grid (2d/3d cases)
-            %       supVec: double[nPoints] - vector of values of the support function
+            %       supVec: double[nPoints+1] - vector of values of the support function
             %
             % $Author: <Sergei Drozhzhin>  <SeregaDrozh@gmail.com> $    $Date: <28 September 2013> $
             % $Copyright: Lomonosov Moscow State University,

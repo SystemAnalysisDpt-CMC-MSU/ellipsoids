@@ -96,8 +96,8 @@ end
             [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr);
         end
         [lGridMat, fGridMat] = getGridByFactor(ellsArr(1));
-        [xMat, fCMat] = arrayfun(@(x) getRhoBoundary(x, nDim), ellsArr, ...    
-            'UniformOutput', false);
+        [xMat, fCMat] = arrayfun(@(x) getRhoBoundary(x, size(lGridMat, 1)), ellsArr, ...    
+            'UniformOutput', false)
         xSumCMat = 0;
         for iXMat=1:numel(xMat)
             xSumCMat = xSumCMat + xMat{iXMat};
