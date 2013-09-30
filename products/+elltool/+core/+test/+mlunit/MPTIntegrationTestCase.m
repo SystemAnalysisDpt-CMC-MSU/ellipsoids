@@ -336,7 +336,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             v2Mat = vMat*transfMat' + repmat(transfVec',[size(vMat,1),1]);
             poly2 = tri2poly(v2Mat,fMat);
             
-            expPoly2 = expPoly1*transfMat + transfVec;
+            expPoly2 = transfMat*expPoly1 + transfVec;
             mlunitext.assert(poly2 == expPoly2);  
             %
             v3Mat = [1 0 0; 0 1 0; 0 0 1; 0 0 0];
@@ -360,7 +360,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             transf2Vec = [-1; 1];
             v5Mat = v4Mat*transf2Mat' + repmat(transf2Vec',[5,1]);
             poly5 = tri2poly(v5Mat, f4Mat);
-            expPoly5 = expPoly4*transf2Mat+ transf2Vec;
+            expPoly5 = transf2Mat*expPoly4+ transf2Vec;
             mlunitext.assert(poly5 == expPoly5);
         end
         

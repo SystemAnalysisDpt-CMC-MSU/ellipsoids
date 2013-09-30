@@ -126,8 +126,7 @@ else
     mode = modeNameAndVal{2};
 end
 
-if isa(secObjArr, 'polytope')
-    
+if isa(secObjArr,'polytope')
     isAnyEllDeg = any(isdegenerate(fstEllArr(:)));
       if mode == 'i'
           polyVec = and(secObjArr(1),secObjArr(2));

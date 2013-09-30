@@ -6,7 +6,6 @@ classdef MPTController < elltool.exttbx.IExtTBXController
     end
     methods
         function fullSetup(self,absTol,relTol,isVerbose)   
-            
             self.checkIfOnPath();
             if isempty(whos('global',self.MPT_GLOBAL_OPT))
                 if isVerbose
@@ -15,10 +14,7 @@ classdef MPTController < elltool.exttbx.IExtTBXController
                     verbose = 1;
                 end
                 mpt_init();
-                global MPTOPTIONS;
-                MPTOPTIONS.abs_tol=1e-7;
-                MPTOPTIONS.rel_tol=1e-5;
-                MPTOPTIONS.verbose=verbose;
+                mptopt('abs_tol',absTol,'rel_tol',relTol,'verbose',verbose);
                 self.checkIfSetUp();
             end
         end
