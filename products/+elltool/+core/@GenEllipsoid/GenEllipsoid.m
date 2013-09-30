@@ -40,10 +40,19 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
         diagMat
         eigvMat
     end
+
     properties (Constant,GetAccess = private)
         CHECK_TOL=1e-09;
     end
-        
+    
+    %MAGIC!
+    methods
+        function shapeMat=get.shapeMat(self,shMat)
+              shapeMat=self.eigvMat*self.diagMat*transpose(self.eigvMat);
+        end
+    end
+    %end_MAGIC!
+    
     methods (Static,Access=private)
         function checkIsMe(objArr)
             import modgen.common.checkvar;

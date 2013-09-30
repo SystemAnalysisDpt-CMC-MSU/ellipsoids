@@ -2,6 +2,11 @@ classdef AEllipsoid < handle
     %methods (Access = protected, Abstract, Static)
     methods (Access = protected, Static)
         formCompStruct(SEll, SFieldNiceNames, absTol, isPropIncluded)
+        
+    end
+        
+    methods (Abstract)
+        shapeMat=get.shapeMat(self,shMat)
     end
     
     methods (Access = protected)

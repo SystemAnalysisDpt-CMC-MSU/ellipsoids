@@ -191,7 +191,6 @@ classdef ellipsoid < elltool.core.AEllipsoid
             %             Faculty of Computational Mathematics and and Computer Science,
             %             System Analysis Department 2012-2013 $
             %
-            
             ellMat = ellMat@elltool.core.AEllipsoid();
             
             import modgen.common.throwerror;
