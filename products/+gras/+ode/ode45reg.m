@@ -309,6 +309,17 @@ while ~isDone
         end
     end
     nsteps = nsteps + 1;
+    
+    if nargout == 4
+        interpObj.tnewVec = [interpObj.tnewVec tnew];
+        interpObj.ynewCVec = [interpObj.ynewCVec {ynew}];
+        interpObj.tCVec = [interpObj.tCVec {t}];
+     	interpObj.yCVec = [interpObj.yCVec {y}];
+       	interpObj.hCVec = [interpObj.hCVec {h}];
+        interpObj.fCVec = [interpObj.fCVec {f}];
+        interpObj.dyNewCorrVec = [interpObj.dyNewCorrVec {dyNewCorrVec}];
+    end;
+    
     switch outputAt
         case 'SolverSteps'        % computed points, no refinement
             nout_new = 1;
@@ -323,16 +334,6 @@ while ~isDone
             nout_new =  0;
             tout_new = [];
             yout_new = [];
-            
-            if nargout == 4
-                interpObj.tnewVec = [interpObj.tnewVec tnew];
-                interpObj.ynewCVec = [interpObj.ynewCVec {ynew}];
-                interpObj.tCVec = [interpObj.tCVec {t}];
-                interpObj.yCVec = [interpObj.yCVec {y}];
-                interpObj.hCVec = [interpObj.hCVec {h}];
-                interpObj.fCVec = [interpObj.fCVec {f}];
-                interpObj.dyNewCorrVec = [interpObj.dyNewCorrVec {dyNewCorrVec}];
-            end;
             
             while next <= ntspan
                 if tnew < tspan(next)
