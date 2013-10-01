@@ -129,7 +129,12 @@ end
 if isa(secObjArr,'polytope')
     isAnyEllDeg = any(isdegenerate(fstEllArr(:)));
       if mode == 'i'
-          polyVec = and(secObjArr(1),secObjArr(2));
+          secObjArr_size = size(secObjArr);
+          nElems = secObjArr_size(2);
+          polyVec = secObjArr(1);
+          for iElem = 2:nElems
+              polyVec = and(polyVec,secObjArr(iElem));
+          end
       else
          polyVec = secObjArr; 
       end
