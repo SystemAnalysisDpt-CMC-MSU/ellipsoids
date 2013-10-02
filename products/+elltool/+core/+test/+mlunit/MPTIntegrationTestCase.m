@@ -119,6 +119,8 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             polyK2Vec = [0.5; 0.05; sqrt(3)/2; 0];
             polyK3Vec = [1; 0.05; 0.8; 0.8];
             polyK4Vec = [0.5; -0.1; 0.1; 0.1];
+            polyK5Vec = [2; -0.3; 0.3; 0];
+            polyK6Vec = [1.5; -0.6; 0.6; 0];
             polyK3DVec = 0.1 * ones(6,1);
             polyK15DVec = (1/sqrt(nDims))*ones(nDims*2,1);
             %
@@ -126,10 +128,12 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             poly2 = polytope(polyConstrMat,polyK2Vec);
             poly3 = polytope(polyConstrMat,polyK3Vec);
             poly4 = polytope(polyConstrMat,polyK4Vec);
+            poly5 = polytope(polyConstrMat,polyK5Vec);
+            poly6 = polytope(polyConstrMat,polyK6Vec);
             poly3D = polytope(polyConstr3DMat,polyK3DVec);
             poly14D = polytope(polyConstr15DMat,polyK15DVec);
             %
-            isExpVec = [1, 0, 1, 1, 1, 0, 1, 0, -1];
+            isExpVec = [1, 0, 1, 1, 1, 0, 1, 0, -1, 0, 1, 0];
             
             self.myTestIsCII(ell1, [poly1, poly2], 'u',isExpVec(1),true,...
                 'no')
@@ -149,9 +153,20 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             self.myTestIsCII([ell1, ell2], [poly1, poly2], 'u',...
                 isExpVec(6),true,'no')
             %
-            self.myTestIsCII([ell1, ell3], poly1, 'u',isExpVec(8),false,'no')
+            self.myTestIsCII([ell1, ell3], poly1, 'u',isExpVec(8),false,...
+                'no')
             %
-            self.myTestIsCII(ell1, [poly1, poly4],'i',isExpVec(9),false,'no')
+            self.myTestIsCII(ell1, [poly1, poly4],'i',isExpVec(9),false,...
+                'no')
+            %
+            self.myTestIsCII(ell1, [poly1, poly2, poly3],'u',...
+                isExpVec(10),true,'no')
+            %
+            self.myTestIsCII([ell1,ell2], [poly3, poly5, poly2],'i',...
+                isExpVec(11),true,'no')
+            %
+            self.myTestIsCII(ell2, [poly3, poly5, poly6],'i',...
+                isExpVec(12),true,'no')
             %
             self.runAndCheckError(strcat('doesIntersectionContain',...
                 '(ell1, poly3D)'),'wrongSizes');
@@ -163,7 +178,6 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             self.myTestIsCII(ell9D, poly9D, 'u',isExpVec(7),true,'low')
             self.myTestIsCII(ell14D, poly14D, 'u',isExpVec(7),true,'high')
         end
-        %
         %
         function self = testPoly2HypAndHyp2Poly(self)
             polyConstMat = [-1 2 3; 3 4 2; 0 1 2];
