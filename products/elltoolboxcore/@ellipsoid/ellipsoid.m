@@ -19,7 +19,7 @@ classdef ellipsoid < elltool.core.AGenEllipsoid
             self.shapeMat=shMat;
         end
         
-        function [bpMat, fMat, supVec] = getRhoBoundary(ellObj,nPoints)
+        function [bpMat, fMat, supVec,lGridMat] = getRhoBoundary(ellObj,nPoints)
             %
             % GETRHOBOUNDARY - computes the boundary of an ellipsoid and
             % support function values.
@@ -38,6 +38,7 @@ classdef ellipsoid < elltool.core.AGenEllipsoid
             %   optional:
             %       supVec: double[nPoints+1] - vector of values of the support function
             %           in directions (bpMat - cenMat).
+            %       lGridMat: double[nPoints+1] - array of directions.
             %
             % $Author: <Sergei Drozhzhin>  <SeregaDrozh@gmail.com> $    $Date: <28 September 2013> $
             % $Copyright: Lomonosov Moscow State University,
@@ -51,38 +52,49 @@ classdef ellipsoid < elltool.core.AGenEllipsoid
                 if nargin < 2
                     nPoints = ellObj.nPlot2dPoints;
                 end
-                fGetGrid=@(x)gras.geom.tri.spheretriext(2,x);
+                fGetGrid = @(x)gras.geom.tri.spheretriext(2,x);
             elseif nDim == 3
                 if nargin < 2
                     nPoints = ellObj.nPlot3dPoints;
                 end
-                fGetGrid=@(x)gras.geom.tri.spheretriext(3,x);
+                fGetGrid = @(x)gras.geom.tri.spheretriext(3,x);
             else
                 throwerror('wrongDim','ellipsoid must be of dimension 2 or 3');
             end
-            
-            [dirMat, fMat]=fGetGrid(nPoints);
+            [dirMat, fMat] = fGetGrid(nPoints);
             
             [cenVec qMat] = double(ellObj);
-            bpMat = dirMat*gras.la.sqrtmpos(qMat,ellObj.getAbsTol());
-            cenMat = repmat(cenVec',size(dirMat,1),1);
-            bpMat = bpMat+cenMat;
+            bpMat = dirMat*gras.la.sqrtmpos(qMat, ellObj.getAbsTol());
+            cenMat = repmat(cenVec.',size(dirMat, 1), 1);
+            bpMat = bpMat + cenMat;
             bpMat = [bpMat; bpMat(1,:)];
+            cenMat = [cenMat; cenMat(1,:)];
+            dirstMat = bpMat - cenMat;
             if(nargout > 2)
-                for ind = 1 : size(bpMat,1)
-                    if(nDim == 2)
-                        supVec(ind,:) = rho(ellObj,[bpMat(ind,1)-cenMat(1,1);-cenMat(1,2) + bpMat(ind,2)]);
-                    else
-                        supVec(ind,:) = rho(ellObj,[bpMat(ind,1)-cenMat(1,1);-cenMat(1,2) + bpMat(ind,2);-cenMat(1,2) + bpMat(ind,2)]);
-                    end
+                dirstMatX = dirstMat(:, 1);
+                dirstMatY = dirstMat(:, 2);
+                if(nDim == 2)
+                    cSupVec = arrayfun(@(x, y)rho(ellObj, [x; y]), dirstMatX,...
+                        dirstMatY, 'UniformOutput', false);
+                    supVec = cell2mat(cSupVec);
+                else
+                    dirstMatZ = dirstMat(:, 3);
+                    cSupVec = arrayfun(@(x, y, z)rho(ellObj, [x; y; z]),...
+                        dirstMatX, dirstMatY, dirstMatZ, 'UniformOutput', false);
+                    supVec = cell2mat(cSupVec);
+                end
+                if (nargout > 3)
+                    lGridMat = dirstMat;
                 end
             end
-            bpMat = bpMat';
+            bpMat = bpMat.';
+                
+                
         end
         
         
         
-        function [vGridMat, fGridMat, supVec] = getRhoBoundaryByFactor(ellObj,factorVec)
+        function [vGridMat, fGridMat, supVec, lGridMat] = getRhoBoundaryByFactor(ellObj,factorVec)
             %
             %   GETRHOBOUNDARYBYFACTOR - computes grid of 2d or 3d ellipsoid and vertices
             %                         for each face in the grid and support function values.
@@ -104,7 +116,9 @@ classdef ellipsoid < elltool.core.AGenEllipsoid
             %       vGridat: double[nDim,nPoints+1] - vertices of the grid
             %       fGridMat: double[1,nPoints+1]/double[nFaces,3] - indices of vertices in
             %           each face in the grid (2d/3d cases)
+            %   optional:
             %       supVec: double[nPoints+1] - vector of values of the support function
+            %       lGridMat: double[nPoints+1] - array of directions.
             %
             % $Author: <Sergei Drozhzhin>  <SeregaDrozh@gmail.com> $    $Date: <28 September 2013> $
             % $Copyright: Lomonosov Moscow State University,
@@ -113,28 +127,35 @@ classdef ellipsoid < elltool.core.AGenEllipsoid
             %
             import modgen.common.throwerror
             nDim=dimension(ellObj);
-            
             if nDim<2 || nDim>3
                 throwerror('wrongDim','ellipsoid must be of dimension 2 or 3');
             end
             
-            if nargin<2
-                factor=1;
+            if nargin < 2
+                factor = 1;
             else
-                factor=factorVec(nDim-1);
+                factor = factorVec(nDim - 1);
             end
-            if nDim==2
-                nPlotPoints=ellObj.nPlot2dPoints;
-                if ~(factor==1)
-                    nPlotPoints=floor(nPlotPoints*factor);
+            if nDim == 2
+                nPlotPoints = ellObj.nPlot2dPoints;
+                if ~(factor == 1)
+                    nPlotPoints = floor(nPlotPoints*factor);
                 end
             else
-                nPlotPoints=ellObj.nPlot3dPoints;
-                if ~(factor==1)
-                    nPlotPoints=floor(nPlotPoints*factor);
+                nPlotPoints = ellObj.nPlot3dPoints;
+                if ~(factor == 1)
+                    nPlotPoints = floor(nPlotPoints*factor);
                 end
             end
-            [vGridMat,fGridMat, supVec] = getRhoBoundary(ellObj,nPlotPoints);
+            if(nargout > 3)
+                [vGridMat, fGridMat, supVec, lGridMat] =...
+                    getRhoBoundary(ellObj, nPlotPoints);
+            elseif(nargout > 2)
+                [vGridMat, fGridMat, supVec] =...
+                    getRhoBoundary(ellObj, nPlotPoints);
+            else
+                [vGridMat, fGridMat] = getRhoBoundary(ellObj, nPlotPoints);
+            end
             vGridMat(vGridMat == 0) = eps;
         end
 
