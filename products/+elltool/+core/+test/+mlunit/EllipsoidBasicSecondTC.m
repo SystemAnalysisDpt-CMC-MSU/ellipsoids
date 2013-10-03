@@ -3,105 +3,76 @@ classdef EllipsoidBasicSecondTC < mlunitext.test_case
         testDataRootDir
     end    
     methods
-        function self = testGetBoundary(self)
-            test1Ell = ellipsoid(eye(2));
-            test2Ell = ellipsoid([1; 0], [1 0; 0 1]);
-            test3Ell = ellipsoid([0; 0], [0 0; 0 0]);
-            test4Ell = ellipsoid([2; 1], [4 0; 0 4]);
-            
-            testEll = {test1Ell, test2Ell, test3Ell, test4Ell};
-            testNumPoints = {6, 6, 6, 6};
-            [cBpVec cFVec] = cellfun(@(x,y)getBoundary(x,y),testEll,testNumPoints,...
-                'UniformOutput', false);
-            cBpRightVec = {[1 0; 0.5 sqrt(3) / 2; -0.5 sqrt(3) / 2; -1 0;...
+        function self = testGetBoundary(self)            
+            [testEllCVec testNumPointsCVec]  = getEllFun(1);
+            [bpCMat fCVec] = cellfun(@(x,y)getBoundary(x,y),testEllCVec,...
+                testNumPointsCVec, 'UniformOutput', false);
+            bpRightCMat = {[1 0; 0.5 sqrt(3) / 2; -0.5 sqrt(3) / 2; -1 0;...
                 -0.5 -sqrt(3) / 2; 0.5 -sqrt(3) / 2],...
                 [2 0; 1.5 sqrt(3) / 2; 0.5 sqrt(3) / 2; 0 0;...
                 0.5 -sqrt(3) / 2; 1.5 -sqrt(3) / 2],...
                 [0 0; 0 0; 0 0; 0 0; 0 0; 0 0],...
                 [4 1; 3 sqrt(3)+1; 1 sqrt(3)+1; 0 1; 1 -sqrt(3) + 1;...
                 3 -sqrt(3) + 1]};
-            cFRightVec = {[1 2 3 4 5 6 7]};
-            cFRightVec = repmat(cFRightVec,1,4);
-            isOk = isequalEps(cBpVec, cFVec, cBpRightVec, cFRightVec, 1.0e-12);
-            mlunitext.assert_equals(true, isOk);
+            fRightCVec = {[1 2 3 4 5 6 7]};
+            fRightCVec = repmat(fRightCVec,1,4);
+            isOk = compareCells(bpCMat, fCVec, bpRightCMat, fRightCVec);
+            mlunitext.assert(isOk);
             
         end
         
         function self = testGetBoundaryByFactor(self)
-            test1Ell = ellipsoid(eye(2));
-            test2Ell = ellipsoid([1; 0], [1 0; 0 1]);
-            test3Ell = ellipsoid([0; 0], [0 0; 0 0]);
-            test4Ell = ellipsoid([2; 1], [4 0; 0 4]);
-            testEll = {test1Ell, test2Ell, test3Ell, test4Ell};
-            testNumPoints = {6, 6, 6, 6};
-            
-            
-            [cBpVec cFVec] = cellfun(@(x,y)getBoundaryByFactor(x,y),testEll,testNumPoints,...
-                'UniformOutput', false);
-            testNumRightPoints = {1200, 1200, 1200, 1200};
-            [cBpRightVec cFRightVec] = cellfun(@(x,y)getBoundary(x,y),testEll,testNumRightPoints,...
-                'UniformOutput', false);
-            isOk = isequalEps(cBpVec, cFVec, cBpRightVec, cFRightVec, 1.0e-12);
-            mlunitext.assert_equals(true, isOk);
+          [testEllCVec testNumPointsCVec]  = getEllFun(1);         
+          [bpCMat fCVec] = cellfun(@(x,y)getBoundaryByFactor(x,y),testEllCVec,...
+              testNumPointsCVec, 'UniformOutput', false);
+          testNumRightPointsCVec = {1200, 1200, 1200, 1200};
+          [bpRightCMat fRightCVec] = cellfun(@(x,y)getBoundary(x,y),...
+              testEllCVec,testNumRightPointsCVec, 'UniformOutput', false);
+          isOk = compareCells(bpCMat, fCVec, bpRightCMat, fRightCVec);
+          mlunitext.assert(isOk);
             
         end
         
         function self = testGetRhoBoundary(self)
-            test1Ell = ellipsoid(eye(2));
-            test2Ell = ellipsoid([1; 3], [3 1; 1 1]);
-            test3Ell = ellipsoid([0; 0], [0 0; 0 0]);
-            test4Ell = ellipsoid([2; 1], [4 -1; -1 1]);
-            test5Ell = ellipsoid([1;5;4],eye(3));
-            test6Ell = ellipsoid([0; 0; 0],[0 0 0; 0 0 0; 0 0 0]);
-            testEll = {test1Ell, test2Ell, test3Ell,...
-                test4Ell, test5Ell, test6Ell};
-            testNumPoints = {10, 20, 25, 35, 5, 10};
+            [testEllCVec testNumPointsCVec]  = getEllFun(2);
             
-            [cBpVec cFVec cSupVec cLGridVec] = cellfun(@(x,y)getRhoBoundary(x,y)...
-                ,testEll,testNumPoints, 'UniformOutput', false);
+            [bpCMat fCMat supCVec lGridCMat] = cellfun(@(x,y)getRhoBoundary(x,y)...
+                ,testEllCVec,testNumPointsCVec, 'UniformOutput', false);
             
-            [cBpRightVec cFRightVec] = cellfun(@(x,y)getBoundary(x,y),...
-                testEll,testNumPoints, 'UniformOutput', false);
+            [bpRightCMat fRightCMat] = cellfun(@(x,y)getBoundary(x,y),...
+                testEllCVec,testNumPointsCVec, 'UniformOutput', false);
             
-            cBpRightVec = {[cBpRightVec{1, 1}; cBpRightVec{1, 1}(1, :)],...
-                [cBpRightVec{1, 2}; cBpRightVec{1, 2}(1, :)],...
-                [cBpRightVec{1, 3}; cBpRightVec{1, 3}(1, :)],...
-                [cBpRightVec{1, 4}; cBpRightVec{1, 4}(1, :)],...
-                [cBpRightVec{1, 5}; cBpRightVec{1, 5}(1, :)],...
-                [cBpRightVec{1, 6}; cBpRightVec{1, 6}(1, :)],};
+            bpRightCMat = {[bpRightCMat{1, 1}; bpRightCMat{1, 1}(1, :)],...
+                [bpRightCMat{1, 2}; bpRightCMat{1, 2}(1, :)],...
+                [bpRightCMat{1, 3}; bpRightCMat{1, 3}(1, :)],...
+                [bpRightCMat{1, 4}; bpRightCMat{1, 4}(1, :)]};
             
-            [cSupRightVec cLGridRightVec] = cellfun(@(x,y)rhofun(x,y),...
-                testEll, cBpRightVec, 'UniformOutput', false);
+            [supRightCVec lGridRightCMat] = cellfun(@(x,y)rhofun(x,y),...
+                testEllCVec, bpRightCMat, 'UniformOutput', false);
             
-            cBpRightVec = {cBpRightVec{1, 1}', cBpRightVec{1, 2}',...
-                cBpRightVec{1, 3}', cBpRightVec{1, 4}',...
-                cBpRightVec{1, 5}', cBpRightVec{1, 6}'};
+            bpRightCMat = {bpRightCMat{1, 1}', bpRightCMat{1, 2}',...
+                bpRightCMat{1, 3}', bpRightCMat{1, 4}'};
              
-            isOk = isequal([cBpVec cFVec cSupVec cLGridVec],...
-                [cBpRightVec cFRightVec cSupRightVec cLGridRightVec]);
-            mlunitext.assert_equals(true, isOk);
+            isOk = isequal([bpCMat fCMat supCVec lGridCMat],...
+                [bpRightCMat fRightCMat supRightCVec lGridRightCMat]);
+            mlunitext.assert(isOk);
             
         end
         
         function self = testGetRhoBoundaryByFactor(self)
-            test1Ell = ellipsoid(eye(2));
-            test2Ell = ellipsoid([1; 3], [3 1; 1 1]);
-            test3Ell = ellipsoid([2; 1], [4 -1; -1 1]);
-            test4Ell = ellipsoid(eye(3));
-            testEll = {test1Ell, test2Ell, test3Ell,test4Ell};
-            testNumPoints = {10, 20, 35, [5, 5]};
+            [testEllCVec testNumPointsCVec]  = getEllFun(2);
             
-            [cBpVec cFVec cSupVec cLGridVec] = cellfun(@(x,y)getRhoBoundaryByFactor(x,y),testEll,testNumPoints,...
+            [bpCMat fCMat supCVec lGridCMat] = cellfun(@(x,y)getRhoBoundaryByFactor(x,y),...
+                testEllCVec,testNumPointsCVec, 'UniformOutput', false);
+            
+            testNumRightPointsCVec = {2000, 4000, 7000, 1000};
+            
+            [bpRightCMat fRightCMat, supRightCVec, lGridRightCMat] = ...
+                cellfun(@(x,y)getRhoBoundary(x,y),testEllCVec,testNumRightPointsCVec,...
                 'UniformOutput', false);
             
-            testNumRightPoints = {2000, 4000, 7000, 1000};
-            
-            [cBpRightVec cFRightVec, cSupRightVec, cLGridRightVec] = ...
-                cellfun(@(x,y)getRhoBoundary(x,y),testEll,testNumRightPoints,...
-                'UniformOutput', false);
-            
-            isOk = isequal([cBpVec cFVec cSupVec cLGridVec], [cBpRightVec cFRightVec, cSupRightVec, cLGridRightVec]);
-            mlunitext.assert_equals(true, isOk);   
+            isOk = isequal([bpCMat fCMat supCVec lGridCMat], [bpRightCMat fRightCMat, supRightCVec, lGridRightCMat]);
+            mlunitext.assert(isOk);   
             
         end
         
@@ -555,38 +526,39 @@ classdef EllipsoidBasicSecondTC < mlunitext.test_case
 end
 %
 
-function isFlag = isequalEps(cBpVec, cFVec, cBpRightVec, cFRightVec, eps)
-    if(abs(cell2mat(cBpRightVec) - cell2mat(cBpVec)) < eps )
-        if (isequal(cFVec, cFRightVec))
-            isFlag = 1;
-        else
-            isFlag = 0;
-        end
-    else
-        isFlag = 0;
-    end
+function isFlag = compareCells(bpCMat, fCVec, bpRightCMat, fRightCVec)
+    abstol = 1.0e-12;
+    [isEqual1,~,~,~,~] = modgen.common.absrelcompare(cell2mat(bpRightCMat),...
+        cell2mat(bpCMat),abstol,abstol,@norm);
+    [isEqual2,~,~,~,~] = modgen.common.absrelcompare(cell2mat(fCVec),...
+        cell2mat(fRightCVec),abstol,abstol,@norm);
+    isFlag = isEqual1 && isEqual2;
+   
+    
 end
 
-function [cSupRightVec cLGridRightVec] = rhofun(testEll, bpRightVec)
-    [cenVec, ~] = double(testEll);
-    cenVec = repmat(cenVec', size(bpRightVec, 1), 1);
-    nDim = dimension(testEll);
-    dirstMat = bpRightVec - cenVec;
-    dirstMatX = dirstMat(:, 1);
-    dirstMatY = dirstMat(:, 2);
-    if(nDim == 2)
-        cSupRightVec = arrayfun(@(x, y)rho(testEll, [x; y]), dirstMatX,...
-            dirstMatY, 'UniformOutput', false);
-        cSupRightVec = cell2mat(cSupRightVec);
-    else
-        dirstMatZ = dirstMat(:, 3);
-        cSupRightVec = arrayfun(@(x, y, z)rho(testEll, [x; y; z]),...
-            dirstMatX, dirstMatY, dirstMatZ, 'UniformOutput', false);
-        cSupRightVec = cell2mat(cSupRightVec);
-    end
-    cLGridRightVec = dirstMat;    
-    
+function [supRightVec lGridRightMat] = rhofun(testEll, bpRightVec)
+    [cenMat, ~] = double(testEll);
+    cenMat = repmat(cenMat', size(bpRightVec, 1), 1);
+    lGridRightMat = bpRightVec - cenMat;
+    supRightVec = (rho(testEll, lGridRightMat'))'; 
+end
 
+function [ellCVec pointsCVec] = getEllFun(flag)
+    if(flag == 1)
+        test1Ell = ellipsoid(eye(2));
+        test2Ell = ellipsoid([1; 0], [1 0; 0 1]);
+        test3Ell = ellipsoid([0; 0], [0 0; 0 0]);
+        test4Ell = ellipsoid([2; 1], [4 0; 0 4]);
+        pointsCVec = {6 6 6 6};
+    else
+        test1Ell = ellipsoid(eye(2));
+        test2Ell = ellipsoid([1; 3], [3 1; 1 1]);
+        test3Ell = ellipsoid([2; 1], [4 -1; -1 1]);
+        test4Ell = ellipsoid(eye(3));
+        pointsCVec = {10 20 35 [5, 5]};
+    end
+    ellCVec = {test1Ell, test2Ell, test3Ell, test4Ell};
 end
             
 

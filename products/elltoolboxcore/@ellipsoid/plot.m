@@ -80,22 +80,8 @@ end
 
 
     function [xCMat,fCMat] = fCalcBodyTriArr(bodyArr,varargin)
-        [xCMat,fCMat] = arrayfun(@(x)fCalcBodyTri(x),bodyArr,...
+        [xCMat,fCMat] = arrayfun(@(x)getRhoBoundary(x),bodyArr,...
             'UniformOutput',false);
-        function [xMat, fMat] = fCalcBodyTri(ell)
-            nDim = dimension(ell(1));
-            if nDim == 1
-                [ell,nDim] = rebuildOneDim2TwoDim(ell);
-            end
-            [lGetGridMat, fGetGridMat] = getGridByFactor(ell);
-            nPoints = size(lGetGridMat, 1);
-            xMat = zeros(nDim, nPoints+1);
-            [qCenVec,qMat] = ell.double();
-            xMat(:, 1:end-1) = sqrtm(qMat)*lGetGridMat.' + ...
-                repmat(qCenVec, 1, nPoints);
-            xMat(:, end) = xMat(:, 1);
-            fMat = fGetGridMat;
-        end
     end
 
     function [xCMat,fCMat] = fCalcCenterTriArr(bodyArr,varargin)
@@ -109,11 +95,6 @@ end
             fCenterMat = [1 1];
         end
     end
-
-
-
-
-
 
 
     function [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr)

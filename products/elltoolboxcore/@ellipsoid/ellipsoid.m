@@ -31,11 +31,9 @@ classdef ellipsoid < elltool.core.AGenEllipsoid
             %       nPoints: number of boundary points
             %
             % Output:
-            %   regular:
             %       bpMat: double[nDim,nPoints+1] - boundary points of ellipsoid
             %       fMat: double[1,nFaces]/double[nFacex,nDim] - indices of points in
             %           each face of bpMat graph. 
-            %   optional:
             %       supVec: double[nPoints+1] - vector of values of the support function
             %           in directions (bpMat - cenMat).
             %       lGridMat: double[nPoints+1] - array of directions.
@@ -69,29 +67,11 @@ classdef ellipsoid < elltool.core.AGenEllipsoid
             bpMat = bpMat + cenMat;
             bpMat = [bpMat; bpMat(1,:)];
             cenMat = [cenMat; cenMat(1,:)];
-            dirstMat = bpMat - cenMat;
-            if(nargout > 2)
-                dirstMatX = dirstMat(:, 1);
-                dirstMatY = dirstMat(:, 2);
-                if(nDim == 2)
-                    cSupVec = arrayfun(@(x, y)rho(ellObj, [x; y]), dirstMatX,...
-                        dirstMatY, 'UniformOutput', false);
-                    supVec = cell2mat(cSupVec);
-                else
-                    dirstMatZ = dirstMat(:, 3);
-                    cSupVec = arrayfun(@(x, y, z)rho(ellObj, [x; y; z]),...
-                        dirstMatX, dirstMatY, dirstMatZ, 'UniformOutput', false);
-                    supVec = cell2mat(cSupVec);
-                end
-                if (nargout > 3)
-                    lGridMat = dirstMat;
-                end
-            end
+            lGridMat = bpMat - cenMat;
+            supVec = (rho(ellObj, lGridMat'))';
             bpMat = bpMat.';
                 
-                
         end
-        
         
         
         function [vGridMat, fGridMat, supVec, lGridMat] = getRhoBoundaryByFactor(ellObj,factorVec)
@@ -112,11 +92,9 @@ classdef ellipsoid < elltool.core.AGenEllipsoid
             %           or nPlot3dPoints depending on the dimension of the ellObj
             %
             % Output:
-            %   regular:
             %       vGridat: double[nDim,nPoints+1] - vertices of the grid
             %       fGridMat: double[1,nPoints+1]/double[nFaces,3] - indices of vertices in
             %           each face in the grid (2d/3d cases)
-            %   optional:
             %       supVec: double[nPoints+1] - vector of values of the support function
             %       lGridMat: double[nPoints+1] - array of directions.
             %
@@ -147,16 +125,8 @@ classdef ellipsoid < elltool.core.AGenEllipsoid
                     nPlotPoints = floor(nPlotPoints*factor);
                 end
             end
-            if(nargout > 3)
-                [vGridMat, fGridMat, supVec, lGridMat] =...
-                    getRhoBoundary(ellObj, nPlotPoints);
-            elseif(nargout > 2)
-                [vGridMat, fGridMat, supVec] =...
-                    getRhoBoundary(ellObj, nPlotPoints);
-            else
-                [vGridMat, fGridMat] = getRhoBoundary(ellObj, nPlotPoints);
-            end
-            vGridMat(vGridMat == 0) = eps;
+            [vGridMat, fGridMat, supVec, lGridMat] =...
+                getRhoBoundary(ellObj, nPlotPoints);
         end
 
         
