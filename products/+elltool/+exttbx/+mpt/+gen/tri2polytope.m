@@ -52,7 +52,7 @@ for iFaces = 1:nFaces
         const = vMat(fMat(iFaces,1),:)*normalVec;
 
     else
-        if iFaces == nFaces
+        if (iFaces == nFaces)
             num = 1;
         else 
             num = iFaces+1;

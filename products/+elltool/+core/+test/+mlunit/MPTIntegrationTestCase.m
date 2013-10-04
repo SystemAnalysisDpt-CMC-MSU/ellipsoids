@@ -406,7 +406,31 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
                 mlunitext.assert(all(doesContainVec == expVec));
             end
         end
-        %    
+        %         
+        function self = testToPolytope(self)
+            ellConstrMat1 = [4 0; 0 9];
+            ellConstrMat2 = eye(2);
+            ellConstrMat3 = eye(3);
+            ellShift1 = [0; 0];            
+            ellShift2 = [0.5; 0];
+            ellShift3 = [0.05; -0.1; 0];
+            %
+            ell1 = ellipsoid(ellShift1,ellConstrMat1);            
+            ell2 = ellipsoid(ellShift2,ellConstrMat2);
+            ell3 = ellipsoid(ellShift3,ellConstrMat3);
+            poly1 = toPolytope(ell1);
+            poly2 = toPolytope(ell2);
+            poly3 = toPolytope(ell3);
+            %
+            flag = self.isBoundary_2D(ellShift1, ellConstrMat1, poly1);            
+            mlunitext.assert(flag);
+            flag = self.isBoundary_2D(ellShift2, ellConstrMat2, poly2);            
+            mlunitext.assert(flag);
+            flag = self.isBoundary_3D(ellShift3, ellConstrMat3, poly3);            
+            mlunitext.assert(flag);
+        end    
+    end
+    %    
     methods(Static)
          %
          function myTestIsCII(ellVec,polyVec,letter,isCIIExpVec,checkBoth,...
@@ -453,6 +477,37 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
              k60D = [4; 0; ones(58,1); 0; 4; ones(58,1); -4];
              testPoly60D = polytope(h60D,k60D);
              ellArr = ellipsoid.fromRepMat(eye(2),[2,2,2]);
+         end
+         %
+         function flag = isBoundary_2D(ellShift,ellConstrMat,poly)
+             polyhedron = toPolyhedron(poly);
+             Arr=polyhedron.V;
+             nPoints = size(Arr,1);
+             flag = 1;
+             eps = 1e-12;
+             for i = 1:nPoints
+                 if (abs(((Arr(i,1)-ellShift(1))^2/ellConstrMat(1,1))...
+                         +((Arr(i,2)-ellShift(2))^2/ellConstrMat(2,2))-1)>eps)
+                     flag = 0;
+                     i = nPoints + 1;
+                 end
+             end
+         end
+         %
+         function flag = isBoundary_3D(ellShift,ellConstrMat,poly)             
+             polyhedron = toPolyhedron(poly);
+             Arr=polyhedron.V;
+             nPoints = size(Arr,1);
+             flag = 1;
+             eps = 1e-12;
+             for i = 1:nPoints
+                 if (abs(((Arr(i,1)-ellShift(1))^2/ellConstrMat(1,1))...
+                         +((Arr(i,2)-ellShift(2))^2/ellConstrMat(2,2))...
+                         +((Arr(i,3)-ellShift(3))^2/ellConstrMat(3,3))-1)>eps)
+                     flag = 0;
+                     i = nPoints + 1;
+                 end
+             end
          end
          %
     end
