@@ -33,8 +33,13 @@ checkvar(vMat,@(x) isa(x,'double')&&(size(x,2) == 3 || size(x,2) == 2),...
      'errorTag','wrongInput','errorMessage',...
     'Matrix of vertices must be matrix from R^nx3.');
 %
-nFaces = size(fMat,1);
+
 nDims = size(vMat,2);
+if(nDims==3)
+  nFaces = size(fMat,1);
+else
+    nFaces = size(fMat,2)-1;
+end;
 normMat = zeros(nDims,nFaces);
 constVec = zeros(1,nFaces);
 %
@@ -44,16 +49,18 @@ for iFaces = 1:nFaces
             vMat(fMat(iFaces,2),:),vMat(fMat(iFaces,3),:) -...
             vMat(fMat(iFaces,1),:)))';
         notInFacetNum = getNumNotIn(fMat(iFaces,:));
+        const = vMat(fMat(iFaces,1),:)*normalVec;
+
     else
         if iFaces == nFaces
             num = 1;
         else 
             num = iFaces+1;
         end
-        normalVec = null(vMat(fMat(num),:)-vMat(fMat(iFaces),:));
-        notInFacetNum = getNumNotIn([fMat(num); fMat(iFaces)]);
+        normalVec = null(vMat(fMat(1,num),:)-vMat(fMat(1,iFaces),:));
+        notInFacetNum = getNumNotIn([fMat(1,num); fMat(1,iFaces)]);
+        const = vMat(fMat(1,iFaces),:)*normalVec;
     end
-    const = vMat(fMat(iFaces,1),:)*normalVec;
     lessConst = vMat(notInFacetNum,:)*normalVec;
     if const < lessConst
         normalVec = -normalVec;
