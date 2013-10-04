@@ -1,14 +1,12 @@
-classdef SuiteOde45Reg < mlunitext.test_case
-    properties (Access=private)
-        odeSolver;
-    end
+classdef SuiteOde45Reg < gras.ode.test.mlunit.SuiteBasic
     methods
         function self = SuiteOde45Reg(varargin)
-            self = self@mlunitext.test_case(varargin{:});
+            self = self@gras.ode.test.mlunit.SuiteBasic(varargin{:});
         end
         %
         function self = set_up_param(self,varargin)
             self.odeSolver = varargin{1};
+            self.odeSolverNonReg = varargin{2};
         end
         
         function self = testInterp(self)
@@ -21,67 +19,63 @@ classdef SuiteOde45Reg < mlunitext.test_case
             check(100);
             function check(nPoints)
                 initVec=[0 1 2 3];
-                absTol=1e-8;
-                odePropList={'NormControl','on','RelTol',absTol,'AbsTol',absTol};
+                ABS_TOL=1e-8;
+                odePropList={'NormControl','on','RelTol',ABS_TOL,'AbsTol',ABS_TOL};
                 %%
-                abstol = 1e-14;
-                function compare(yMat,yyMat,yRegMat,yyRegMat,abstol)
-                    [isEqual,~,~,~,~] = modgen.common.absrelcompare(yMat,yyMat,abstol,abstol,@norm);
+                function compare(yMat,yyMat,yRegMat,yyRegMat)
+                    COMPARE_TOL = 1e-14;
+                    [isEqual,~,~,~,~] = modgen.common.absrelcompare(yMat,yyMat,COMPARE_TOL,COMPARE_TOL,@norm);
                     mlunitext.assert_equals(true,isEqual,'matrix yMat and yyMat are not equal')
-                    [isEqual,~,~,~,~] = modgen.common.absrelcompare(yRegMat,yyRegMat,abstol,abstol,@norm);
+                    [isEqual,~,~,~,~] = modgen.common.absrelcompare(yRegMat,yyRegMat,COMPARE_TOL,COMPARE_TOL,@norm);
                     mlunitext.assert_equals(true,isEqual,'matrix yRegMat and yyRegMat are not equal');
+                end
+                function interpObj = help_for_compare(tVaryVec,tspanVec)
+                    [~,yMat,yRegMat,interpObj]=...
+                     feval(self.odeSolver, @(t,y)cos(y),@fRegDummy,tVaryVec,initVec,...
+                     odePropList{:});
+                    [~,yyMat,yyRegMat] = interpObj.evaluate(tspanVec);
                 end
                 %
                 %check that for the positive solution ode113reg works in the same
                 %way as plain ode45
                  tBeginVec = linspace(0,1,nPoints);
                  tBeginVec(2) = 1e-6;
-                 [~,yMat,yRegMat,interpObj]=...
-                     feval(self.odeSolver, @(t,y)cos(y),@fRegDummy,tBeginVec,initVec,...
-                     odePropList{:});
-                 [~,yyMat,yyRegMat] = interpObj.evaluate(tBeginVec);
-                 compare(yMat,yyMat,yRegMat,yyRegMat,abstol);
+                 interpObj = help_for_compare(tBeginVec,tBeginVec);
+                 compare(yMat,yyMat,yRegMat,yyRegMat);
                  
                 tVaryVec = tBeginVec.^2;
                 tVaryVec(2) = tBeginVec(2);
-                [~,yMat,yRegMat,~]=...
-                    feval(self.odeSolver, @(t,y)cos(y),@fRegDummy,tVaryVec,initVec,...
-                    odePropList{:});
-                [~,yyMat,yyRegMat] = interpObj.evaluate(tVaryVec);
-                compare(yMat,yyMat,yRegMat,yyRegMat,abstol);
+                help_for_compare(tVaryVec,tVaryVec);
+                compare(yMat,yyMat,yRegMat,yyRegMat);
                 
                 tVaryVec = 0:0.001:1;
                 tVaryVec(2) = tBeginVec(2);
                 threshold = 0.333;
-                [~,yMat,yRegMat,~]=...
-                    feval(self.odeSolver, @(t,y)cos(y),@fRegDummy,tVaryVec,initVec,...
-                    odePropList{:});
                 tspan = tVaryVec(tVaryVec >= threshold);
-                [~,yyMat,yyRegMat] = interpObj.evaluate(tspan);
-                compare(yMat(tVaryVec >= threshold,:),yyMat,yRegMat(tVaryVec >= threshold,:),yyRegMat,abstol);
+                help_for_compare(tVaryVec,tspan);
+                compare(yMat(tVaryVec >= threshold,:),yyMat,...
+                    yRegMat(tVaryVec >= threshold,:),yyRegMat);
                
                 tVaryVec = linspace(0,1,2*nPoints + 1);
                 tVaryVec(2) = tBeginVec(2);
-                [~,yMat,yRegMat,~]=...
-                    feval(self.odeSolver, @(t,y)cos(y),@fRegDummy,tVaryVec,initVec,...
-                    odePropList{:});
-                [~,yyMat,yyRegMat] = interpObj.evaluate(tVaryVec);
-                compare(yMat,yyMat,yRegMat,yyRegMat,abstol);
+                help_for_compare(tVaryVec,tVaryVec);
+                compare(yMat,yyMat,yRegMat,yyRegMat);
              
                 tVaryVec = sin(pi*tBeginVec/2);
                 tVaryVec(2) = tBeginVec(2);
-                [~,yMat,yRegMat,~]=...
-                    feval(self.odeSolver, @(t,y)cos(y),@fRegDummy,tVaryVec,initVec,...
-                    odePropList{:});
-                [~,yyMat,yyRegMat] = interpObj.evaluate(tVaryVec);
-                compare(yMat,yyMat,yRegMat,yyRegMat,abstol);
+                help_for_compare(tVaryVec,tVaryVec);
+                compare(yMat,yyMat,yRegMat,yyRegMat);
                 
                 [tVaryVec,yMat,yRegMat,~]=...
                     feval(self.odeSolver, @(t,y)cos(y),@fRegDummy,[0 1],initVec,...
                     odePropList{:});
                 [~,yyMat,yyRegMat] = interpObj.evaluate(tVaryVec');
-                abstol = 1e-8;
-                compare(yMat,yyMat,yRegMat,yyRegMat,abstol);
+                COMPARE_TOL = 1e-8;
+                [isEqual,~,~,~,~] = modgen.common.absrelcompare(yMat,yyMat,COMPARE_TOL,COMPARE_TOL,@norm);
+                mlunitext.assert_equals(true,isEqual,'matrix yMat and yyMat are not equal')
+                [isEqual,~,~,~,~] = modgen.common.absrelcompare(yRegMat,yyRegMat,COMPARE_TOL,COMPARE_TOL,@norm);
+                mlunitext.assert_equals(true,isEqual,'matrix yRegMat and yyRegMat are not equal');
+                
             end
         end
     end
