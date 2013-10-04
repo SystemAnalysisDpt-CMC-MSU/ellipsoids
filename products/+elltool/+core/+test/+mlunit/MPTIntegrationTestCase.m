@@ -406,17 +406,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
                 mlunitext.assert(all(doesContainVec == expVec));
             end
         end
-        %
-        function self = testToPolytope(self)
-            ellConstrMat = eye(3);
-            ellShift1 = [0.05; 0];
-            %
-            ell = ellipsoid(ellConstrMat);
-            isBound = toPolytope(ell);
-            mlunitext.assert(all(isBound == isExpBound));
-        end    
-    end
-    %    
+        %    
     methods(Static)
          %
          function myTestIsCII(ellVec,polyVec,letter,isCIIExpVec,checkBoth,...
