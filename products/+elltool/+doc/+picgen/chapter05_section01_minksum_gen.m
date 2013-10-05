@@ -1,4 +1,4 @@
-function minksum_gen (FileName)
+function chapter05_section01_minksum_gen (FileName)
 %     MINKSUM_GEN - creates picture "FileName.eps" 
 % Input:
 %     regular:
@@ -24,6 +24,9 @@ else
     fill (ellX, ellY, [0, 1, 0.5]);
     hold on
     plot (centrX, centrY, 'Marker', '*', 'MarkerSize', 8, 'Color', 'b');
-    saveas (gcf,  strcat (FileName, '.eps'));
+    [pathstr, ~, ~] = fileparts(which(modgen.common.getcallernameext(1)));
+    Part1ofPath = modgen.path.rmlastnpathparts(pathstr, 4);
+    Part2ofPath = strcat (FileName, '.eps');
+    saveas (gcf,  [Part1ofPath filesep 'doc' filesep 'pic' filesep Part2ofPath]);
 end
 end
