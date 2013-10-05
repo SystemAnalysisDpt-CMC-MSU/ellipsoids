@@ -109,7 +109,8 @@ import modgen.common.throwerror;
 import modgen.common.checkmultvar;
 
 persistent logger;
-
+disp(['Start:',datestr(now)])
+dbstack
 checkDoesContainArgs(fstEllArr,secObjArr);
 
 
@@ -159,41 +160,42 @@ if isa(secObjArr, 'polytope')
     if nargout < 2
         clear status;
     end
-    return;
-end
+else
 
 
-if mode == 'u'
-    res = 1;
-    isContain = arrayfun(@(x) all(all(doesContain(x, secObjVec))), fstEllArr);
-    if ~all( isContain(:) )
-        res=0;
-        return;
-    end
-elseif isscalar(secObjVec)
-    res = 1;
-    isContain = arrayfun(@(x) all(all(doesContain(x, secObjVec))), fstEllArr);
-    if ~all( isContain(:) )
-        res = 0;
-    end
-else    
-    if Properties.getIsVerbose()
-        if isempty(logger)
-            logger=Log4jConfigurator.getLogger();
+    if mode == 'u'
+        res = 1;
+        isContain = arrayfun(@(x) all(all(doesContain(x, secObjVec))), fstEllArr);
+        if ~all( isContain(:) )
+            res=0;
         end
-        logger.info('Invoking CVX...');
-    end
-    res = 1;
-    resMat  =arrayfun (@(x) qcqp(secObjVec,x), fstEllArr);
-    if any(resMat(:)<1)
-        res = 0;
-        if any(resMat(:)==-1)
-            res = -1;
-            status = 0;
+    elseif isscalar(secObjVec)
+        res = 1;
+        isContain = arrayfun(@(x) all(all(doesContain(x, secObjVec))), fstEllArr);
+        if ~all( isContain(:) )
+            res = 0;
         end
-        return;
+    else    
+        if Properties.getIsVerbose()
+            if isempty(logger)
+                logger=Log4jConfigurator.getLogger();
+            end
+            logger.info('Invoking CVX...');
+        end
+        res = 1;
+        resMat  =arrayfun (@(x) qcqp(secObjVec,x), fstEllArr);
+        if any(resMat(:)<1)
+            res = 0;
+            if any(resMat(:)==-1)
+                res = -1;
+                status = 0;
+            end
+        end
     end
 end
+
+disp(['Stop:',datestr(now)])
+
 
 end
 
