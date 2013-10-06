@@ -28,6 +28,7 @@ function [vGridMat, fGridMat] = getBoundaryByFactor(ellObj,factorVec)
 %            System Analysis Department 2013 $
 %
 import modgen.common.throwerror
+ellObj.checkIfScalar();
 nDim=dimension(ellObj);
 
 if nDim<2 || nDim>3
@@ -51,4 +52,3 @@ else
     end
 end
 [vGridMat, fGridMat] = getBoundary(ellObj,nPlotPoints);
-vGridMat(vGridMat == 0) = eps;

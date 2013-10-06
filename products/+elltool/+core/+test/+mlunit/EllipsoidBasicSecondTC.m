@@ -4,7 +4,7 @@ classdef EllipsoidBasicSecondTC < mlunitext.test_case
     end    
     methods
         function self = testGetBoundary(self)            
-            [testEllCVec testNumPointsCVec]  = getEllFun(1);
+            [testEllCVec testNumPointsCVec]  = getEllParams(1);
             [bpCMat fCVec] = cellfun(@(x,y)getBoundary(x,y),testEllCVec,...
                 testNumPointsCVec, 'UniformOutput', false);
             bpRightCMat = {[1 0; 0.5 sqrt(3) / 2; -0.5 sqrt(3) / 2; -1 0;...
@@ -14,15 +14,14 @@ classdef EllipsoidBasicSecondTC < mlunitext.test_case
                 [0 0; 0 0; 0 0; 0 0; 0 0; 0 0],...
                 [4 1; 3 sqrt(3)+1; 1 sqrt(3)+1; 0 1; 1 -sqrt(3) + 1;...
                 3 -sqrt(3) + 1]};
-            fRightCVec = {[1 2 3 4 5 6 7]};
-            fRightCVec = repmat(fRightCVec,1,4);
+            fRightCVec = repmat({1 2 3 4 5 6 7}, 1, 4);
             isOk = compareCells(bpCMat, fCVec, bpRightCMat, fRightCVec);
             mlunitext.assert(isOk);
             
         end
         
         function self = testGetBoundaryByFactor(self)
-          [testEllCVec testNumPointsCVec]  = getEllFun(1);         
+          [testEllCVec testNumPointsCVec]  = getEllParams(1);         
           [bpCMat fCVec] = cellfun(@(x,y)getBoundaryByFactor(x,y),testEllCVec,...
               testNumPointsCVec, 'UniformOutput', false);
           testNumRightPointsCVec = {1200, 1200, 1200, 1200};
@@ -34,7 +33,7 @@ classdef EllipsoidBasicSecondTC < mlunitext.test_case
         end
         
         function self = testGetRhoBoundary(self)
-            [testEllCVec testNumPointsCVec]  = getEllFun(2);
+            [testEllCVec testNumPointsCVec]  = getEllParams(2);
             
             [bpCMat fCMat supCVec lGridCMat] = cellfun(@(x,y)getRhoBoundary(x,y)...
                 ,testEllCVec,testNumPointsCVec, 'UniformOutput', false);
@@ -50,17 +49,24 @@ classdef EllipsoidBasicSecondTC < mlunitext.test_case
             [supRightCVec lGridRightCMat] = cellfun(@(x,y)rhofun(x,y),...
                 testEllCVec, bpRightCMat, 'UniformOutput', false);
             
-            bpRightCMat = {bpRightCMat{1, 1}', bpRightCMat{1, 2}',...
-                bpRightCMat{1, 3}', bpRightCMat{1, 4}'};
+            bpRightCMat = {bpRightCMat{1, 1}.', bpRightCMat{1, 2}.',...
+                bpRightCMat{1, 3}.', bpRightCMat{1, 4}.'};
              
             isOk = isequal([bpCMat fCMat supCVec lGridCMat],...
                 [bpRightCMat fRightCMat supRightCVec lGridRightCMat]);
             mlunitext.assert(isOk);
             
+            function [supRightVec lGridRightMat] = rhofun(testEll, bpRightVec)
+                [cenMat, ~] = double(testEll);
+                cenMat = repmat(cenMat.', size(bpRightVec, 1), 1);
+                lGridRightMat = bpRightVec - cenMat;
+                supRightVec = (rho(testEll, lGridRightMat.')).';
+            end
+            
         end
         
         function self = testGetRhoBoundaryByFactor(self)
-            [testEllCVec testNumPointsCVec]  = getEllFun(2);
+            [testEllCVec testNumPointsCVec]  = getEllParams(2);
             
             [bpCMat fCMat supCVec lGridCMat] = cellfun(@(x,y)getRhoBoundaryByFactor(x,y),...
                 testEllCVec,testNumPointsCVec, 'UniformOutput', false);
@@ -71,9 +77,68 @@ classdef EllipsoidBasicSecondTC < mlunitext.test_case
                 cellfun(@(x,y)getRhoBoundary(x,y),testEllCVec,testNumRightPointsCVec,...
                 'UniformOutput', false);
             
-            isOk = isequal([bpCMat fCMat supCVec lGridCMat], [bpRightCMat fRightCMat, supRightCVec, lGridRightCMat]);
+            isOk = isequal([bpCMat fCMat supCVec lGridCMat],...
+                [bpRightCMat fRightCMat, supRightCVec, lGridRightCMat]);
             mlunitext.assert(isOk);   
             
+        end
+        
+        function self = testNegBoundary(self)
+            checkDim(self);
+            checkScal(self);
+            
+            function checkDim (self)
+                self.runAndCheckError(@checkDimGB, 'wrongDim');
+                self.runAndCheckError(@checkDimGBBF, 'wrongDim');
+                self.runAndCheckError(@checkDimGRB, 'wrongDim');
+                self.runAndCheckError(@checkDimGRBBF, 'wrongDim');
+                
+                function checkDimGB()
+                    ellObj = ellipsoid(eye(4));
+                    getBoundary(ellObj);
+                end
+                function checkDimGBBF()
+                    ellObj = ellipsoid(eye(4));
+                    getBoundaryByFactor(ellObj);
+                end
+                function checkDimGRB()
+                    ellObj = ellipsoid(eye(4));
+                    getRhoBoundary(ellObj);
+                end
+                function checkDimGRBBF()
+                    ellObj = ellipsoid(eye(4));
+                    getRhoBoundaryByFactor(ellObj);
+                end
+                
+            end
+            
+            function checkScal(self)
+                self.runAndCheckError(@checkScalGB, 'wrongInput');
+                self.runAndCheckError(@checkScalGBBF, 'wrongInput');
+                self.runAndCheckError(@checkScalGRB, 'wrongInput');
+                self.runAndCheckError(@checkScalGRBBF, 'wrongInput');
+                
+                function checkScalGB()
+                    ellVec = [ellipsoid([1; 3], eye(2))...
+                        ellipsoid([2; 5], [4 1; 1 1])];
+                    getBoundary(ellVec);
+                end
+                function checkScalGBBF()
+                    ellVec = [ellipsoid([1; 3], eye(2))...
+                        ellipsoid([2; 5], [4 1; 1 1])];
+                    getBoundaryByFactor(ellVec);
+                end
+                function checkScalGRB()
+                    ellVec = [ellipsoid([1; 3], eye(2))...
+                        ellipsoid([2; 5], [4 1; 1 1])];
+                    getRhoBoundary(ellVec);
+                end
+                function checkScalGRBBF()
+                    ellVec = [ellipsoid([1; 3], eye(2))...
+                        ellipsoid([2; 5], [4 1; 1 1])];
+                    getRhoBoundaryByFactor(ellVec);
+                end
+            end
         end
         
         
@@ -527,24 +592,18 @@ end
 %
 
 function isFlag = compareCells(bpCMat, fCVec, bpRightCMat, fRightCVec)
-    abstol = 1.0e-12;
+    ABSTOL = 1.0e-12;
     [isEqual1,~,~,~,~] = modgen.common.absrelcompare(cell2mat(bpRightCMat),...
-        cell2mat(bpCMat),abstol,abstol,@norm);
+        cell2mat(bpCMat),ABSTOL,ABSTOL,@norm);
     [isEqual2,~,~,~,~] = modgen.common.absrelcompare(cell2mat(fCVec),...
-        cell2mat(fRightCVec),abstol,abstol,@norm);
+        cell2mat(fRightCVec),ABSTOL,ABSTOL,@norm);
     isFlag = isEqual1 && isEqual2;
    
     
 end
 
-function [supRightVec lGridRightMat] = rhofun(testEll, bpRightVec)
-    [cenMat, ~] = double(testEll);
-    cenMat = repmat(cenMat', size(bpRightVec, 1), 1);
-    lGridRightMat = bpRightVec - cenMat;
-    supRightVec = (rho(testEll, lGridRightMat'))'; 
-end
 
-function [ellCVec pointsCVec] = getEllFun(flag)
+function [ellCVec pointsCVec] = getEllParams(flag)
     if(flag == 1)
         test1Ell = ellipsoid(eye(2));
         test2Ell = ellipsoid([1; 0], [1 0; 0 1]);
