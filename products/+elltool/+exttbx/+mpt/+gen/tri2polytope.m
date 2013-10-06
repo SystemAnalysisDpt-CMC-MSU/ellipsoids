@@ -8,7 +8,7 @@
 %           vMat: double[nVerts,3]/double[nVerts,2] - (x,y,z) coordinates
 %                 of triangulation
 %                 vertices
-%           fMat: double[nFaces,3]/double[nFaces,1] - indices of face 
+%           fMat: double[nFaces,3]/double[nFaces,2] - indices of face 
 %                 verties in vertMat. 
 %
 % Output:
@@ -39,31 +39,23 @@ nFaces = size(fMat,1);
 normMat = zeros(nDims,nFaces);
 constVec = zeros(1,nFaces);
 %
-sz = size(vMat,1);
+nVertices = size(vMat,1);
 for iFaces = 1:nFaces
-    if nDims == 3
+     if nDims == 3
         normalVec = (cross(vMat(fMat(iFaces,3),:) - ...
             vMat(fMat(iFaces,2),:),vMat(fMat(iFaces,3),:) -...
             vMat(fMat(iFaces,1),:)))';
         notInFacetNum = getNumNotIn(fMat(iFaces,:));
-        const = vMat(fMat(iFaces,1),:)*normalVec;
 
     else
-        if (iFaces == nFaces)
-            num = 1;
-        else 
-            num = iFaces+1;
-        end
-        if (fMat(iFaces) > sz)
+
+        if (fMat(iFaces,2) > nVertices) || (fMat(iFaces,1) > nVertices)
             continue;
         end 
-        if (fMat(num) > sz)
-            num = 1;
-        end
-        normalVec = null(vMat(fMat(num),:)-vMat(fMat(iFaces),:));
-        notInFacetNum = getNumNotIn([fMat(num); fMat(iFaces)]);
-        const = vMat(fMat(iFaces,1),:)*normalVec;
-    end
+        normalVec = null(vMat(fMat(iFaces,2),:)-vMat(fMat(iFaces,1),:));
+        notInFacetNum = getNumNotIn(fMat(iFaces,:)); 
+     end
+    const = vMat(fMat(iFaces,1),:)*normalVec;
     lessConst = vMat(notInFacetNum,:)*normalVec;
     if const < lessConst
         normalVec = -normalVec;

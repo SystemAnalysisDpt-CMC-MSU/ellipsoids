@@ -363,7 +363,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             %
             % 2D Case
             v4Mat = [0 0; 2 0; 5 3; 4 6; 0 1];
-            f4Mat = [1; 2; 3; 4; 5];
+            f4Mat = [1 2; 2 3; 3 4; 4 5; 5 1];
             poly4 = tri2poly(v4Mat,f4Mat);
             expPoly4NormMat = [0 -1; 1 -1; 3 1; -5 4; -1 0];
             expPoly4ConstVec = [0; 2; 18; 4; 0];
@@ -422,10 +422,12 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             poly2 = toPolytope(ell2);
             poly3 = toPolytope(ell3);
             %
+            %test for 2D-case
             flag = self.isBoundary_2D(ellShift1, ellConstrMat1, poly1);            
             mlunitext.assert(flag);
             flag = self.isBoundary_2D(ellShift2, ellConstrMat2, poly2);            
             mlunitext.assert(flag);
+            %test for 3D-case
             flag = self.isBoundary_3D(ellShift3, ellConstrMat3, poly3);            
             mlunitext.assert(flag);
         end    
@@ -485,11 +487,15 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
              nPoints = size(Arr,1);
              flag = 1;
              eps = 1e-12;
+             err_count = 0;
              for i = 1:nPoints
                  if (abs(((Arr(i,1)-ellShift(1))^2/ellConstrMat(1,1))...
                          +((Arr(i,2)-ellShift(2))^2/ellConstrMat(2,2))-1)>eps)
-                     flag = 0;
-                     i = nPoints + 1;
+                     err_count = err_count + 1
+                     if err_count > 1
+                         flag = 0;
+                         i = nPoints + 1;
+                     end
                  end
              end
          end
