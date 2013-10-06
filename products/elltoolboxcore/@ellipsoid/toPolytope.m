@@ -42,10 +42,10 @@ if nDims == 2
         else
             index = iFaces + 1;
         end
-        ResizedfMat(iFaces,1) = fMat(iFaces);
-        ResizedfMat(iFaces,2) = fMat(index);
+        fResizedMat(iFaces,1) = fMat(iFaces);
+        fResizedMat(iFaces,2) = fMat(index);
     end
 else
-    ResizedfMat = fMat;
+    fResizedMat = fMat;
 end
-poly = elltool.exttbx.mpt.gen.tri2polytope(vMat,ResizedfMat);
+poly = elltool.exttbx.mpt.gen.tri2polytope(vMat,fResizedMat);
