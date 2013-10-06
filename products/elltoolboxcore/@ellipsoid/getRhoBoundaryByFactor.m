@@ -23,7 +23,7 @@ function [vGridMat, fGridMat, supVec, lGridMat] = getRhoBoundaryByFactor(ellObj,
 %        In the next step: fNum = 4*fNum, eNum = 2*eNum + 3*fNum, vNum = vNum
 %        + eNum. This process ends when vNum>=200*nPoints.
 %
-%    fGridMat: double[1, 200*nPoints+1]/double[4 * fNum, nDim]
+%    fGridMat: double[nFaces, nDim]/double[4 * fNum, nDim]
 %        - indices of vertices in each face in the grid (2d/3d cases).
 %
 %    supVec: double[200*nPoints+1, 1]/

@@ -9,12 +9,15 @@ function [bpMat, fMat] = getBoundary(ellObj,nPoints)
 %       nPoints: number of boundary points
 %
 % Output:
-%   regular:
-%       bpMat: double[nPoints,nDim] - boundary points of ellipsoid
-%   optional:
-%       fVec: double[1,nFaces]/double[nFacex,nDim] - indices of points in 
-%           each face of bpMat graph
+%    bpMat: double[nDim,nPoints+1]/
+%        double[nDim, ([nPoints/(vNum+eNum+1)]+1)*(vNum+eNum) + 1]
+%        - boundary points of ellipsoid.
+%        In the first step: vNum = 12, eNum = 30, fNum = 20.
+%        In the next step: fNum = 4*fNum, eNum = 2*eNum + 3*fNum, vNum = vNum
+%        + eNum. This process ends when vNum>=nPoints.
 %
+%    fMat: double[nFaces, nDim]/double[4 * fNum, nDim] - indices of points in
+%        each face of bpMat graph.
 % $Author: Vitaly Baranov <vetbar42@gmail.com>$ $Date: 13-04-2013$
 % $Copyright: Lomonosov Moscow State University,
 %             Faculty of Computational Mathematics and Cybernetics,

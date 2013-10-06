@@ -17,7 +17,7 @@ function [bpMat, fMat, supVec,lGridMat] = getRhoBoundary(ellObj,nPoints)
 %        In the next step: fNum = 4*fNum, eNum = 2*eNum + 3*fNum, vNum = vNum
 %        + eNum. This process ends when vNum>=nPoints.
 %
-%    fMat: double[1,nPoints+1]/double[4 * fNum, nDim] - indices of points in
+%    fMat: double[nFaces, nDim]/double[4 * fNum, nDim] - indices of points in
 %        each face of bpMat graph.
 %
 %    supVec: double[nPoints+1, 1]/
