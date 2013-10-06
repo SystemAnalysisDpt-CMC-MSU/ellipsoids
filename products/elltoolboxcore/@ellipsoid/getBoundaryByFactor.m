@@ -29,26 +29,26 @@ function [bpGridMat, fGridMat] = getBoundaryByFactor(ellObj,factorVec)
 %
 import modgen.common.throwerror
 ellObj.checkIfScalar();
-nDim=dimension(ellObj);
+nDim = dimension(ellObj);
 
-if nDim<2 || nDim>3
+if nDim < 2 || nDim > 3
     throwerror('wrongDim','ellipsoid must be of dimension 2 or 3');
 end
 
-if nargin<2
-    factor=1;
+if nargin < 2
+    factor = 1;
 else
-    factor=factorVec(nDim-1);
+    factor = factorVec(nDim - 1);
 end
-if nDim==2
-    nPlotPoints=ellObj.nPlot2dPoints;
-    if ~(factor==1)
-        nPlotPoints=floor(nPlotPoints*factor);
+if nDim == 2
+    nPlotPoints = ellObj.nPlot2dPoints;
+    if ~(factor == 1)
+        nPlotPoints = floor(nPlotPoints * factor);
     end
 else
-    nPlotPoints=ellObj.nPlot3dPoints;
-    if ~(factor==1)
-        nPlotPoints=floor(nPlotPoints*factor);
+    nPlotPoints = ellObj.nPlot3dPoints;
+    if ~(factor == 1)
+        nPlotPoints = floor(nPlotPoints * factor);
     end
 end
-[bpGridMat, fGridMat] = getBoundary(ellObj,nPlotPoints);
+[bpGridMat, fGridMat] = getBoundary(ellObj, nPlotPoints);

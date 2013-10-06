@@ -29,7 +29,7 @@ function [bpGridMat, fGridMat, supVec, lGridMat] = getRhoBoundaryByFactor(ellObj
 %
 import modgen.common.throwerror
 ellObj.checkIfScalar();
-nDim=dimension(ellObj);
+nDim = dimension(ellObj);
 
 if nargin < 2
     factor = 1;
@@ -39,12 +39,12 @@ end
 if nDim == 2
     nPlotPoints = ellObj.nPlot2dPoints;
     if ~(factor == 1)
-        nPlotPoints = floor(nPlotPoints*factor);
+        nPlotPoints = floor(nPlotPoints * factor);
     end
 elseif nDim == 3
     nPlotPoints = ellObj.nPlot3dPoints;
     if ~(factor == 1)
-        nPlotPoints = floor(nPlotPoints*factor);
+        nPlotPoints = floor(nPlotPoints * factor);
     end
 else
     throwerror('wrongDim','ellipsoid must be of dimension 2 or 3');

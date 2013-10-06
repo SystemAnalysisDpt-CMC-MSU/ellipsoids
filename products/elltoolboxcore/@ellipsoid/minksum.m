@@ -90,21 +90,21 @@ end
         xCenterCMat = {qSumMat};
         fCMat = {[1 1]};
     end
-    function [xSumCMat,fCMat] = fCalcBodyTriArr(ellsArr)
+    function [xSumCMat, fMatCArr] = fCalcBodyTriArr(ellsArr)
         nDim = dimension(ellsArr(1));
         if nDim == 1
-            [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr);
+            [ellsArr, ~] = rebuildOneDim2TwoDim(ellsArr);
         end
-        [lGridMat, fGridMat] = getGridByFactor(ellsArr(1));
-        [xMat, fCMat] = arrayfun(@(x) getRhoBoundary(x, size(lGridMat, 1)), ellsArr, ...    
-            'UniformOutput', false);
-        xMat = cellfun(@(x) x.', xMat, 'UniformOutput', false);
+        [lGridMat, ~] = getGridByFactor(ellsArr(1));
+        [xMatCArr, fMatCArr] = arrayfun(@(x) getRhoBoundary(x, size(lGridMat, 1)),...
+            ellsArr, 'UniformOutput', false);
+        xMatCArr = cellfun(@(x) x.', xMatCArr, 'UniformOutput', false);
         xSumCMat = 0;
-        for iXMat=1:numel(xMat)
-            xSumCMat = xSumCMat + xMat{iXMat};
+        for iXMat = 1 : numel(xMatCArr)
+            xSumCMat = xSumCMat + xMatCArr{iXMat};
         end
         xSumCMat = {xSumCMat};
-        fCMat = fCMat(1);
+        fMatCArr = fMatCArr(1);
     end
     function [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr)
         ellsCMat = arrayfun(@(x) oneDim2TwoDim(x), ellsArr, ...

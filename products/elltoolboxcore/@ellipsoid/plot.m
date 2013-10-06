@@ -78,10 +78,10 @@ if (nDim < 3)
 end
 
 
-    function [xCMat,fCMat] = fCalcBodyTriArr(bodyArr,varargin)
-        [xCMat,fCMat] = arrayfun(@(x)getRhoBoundary(x),bodyArr,...
-            'UniformOutput',false);
-        xCMat = cellfun(@(x) x.', xCMat, 'UniformOutput', false);
+    function [xMatCArr, fMatCArr] = fCalcBodyTriArr(bodyArr,varargin)
+        [xMatCArr, fMatCArr] = arrayfun(@(x)getRhoBoundary(x), bodyArr,...
+            'UniformOutput', false);
+        xMatCArr = cellfun(@(x) x.', xMatCArr, 'UniformOutput', false);
     end
 
     function [xCMat,fCMat] = fCalcCenterTriArr(bodyArr,varargin)

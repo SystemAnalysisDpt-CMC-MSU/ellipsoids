@@ -18,27 +18,27 @@ function [bpMat, fMat] = getBoundary(ellObj,nPoints)
 %
 import modgen.common.throwerror
 ellObj.checkIfScalar();
-nDim=dimension(ellObj);
-if nDim==2
-    if nargin<2
+nDim = dimension(ellObj);
+if nDim == 2
+    if nargin < 2
         nPoints = ellObj.nPlot2dPoints;
     end
-    fGetGrid=@(x)gras.geom.tri.spheretriext(nDim,x);
-elseif nDim==3
-    if nargin<2
+    fGetGrid = @(x)gras.geom.tri.spheretriext(nDim, x);
+elseif nDim == 3
+    if nargin < 2
         nPoints = ellObj.nPlot3dPoints;
     end
-    fGetGrid=@(x)gras.geom.tri.spheretriext(nDim,x);
+    fGetGrid = @(x)gras.geom.tri.spheretriext(nDim, x);
 else
     throwerror('wrongDim','ellipsoid must be of dimension 2 or 3');
 end
-if nargout>1
-    [dirMat, fMat]=fGetGrid(nPoints);
+if nargout > 1
+    [dirMat, fMat] = fGetGrid(nPoints);
 else
-    dirMat=fGetGrid(nPoints);
+    dirMat = fGetGrid(nPoints);
 end
 %
-[cenVec qMat]=double(ellObj);
-bpMat=dirMat*gras.la.sqrtmpos(qMat,ellObj.getAbsTol());
-cenMat=repmat(cenVec.',size(dirMat,1),1);
-bpMat=bpMat+cenMat;
+[cenVec qMat] = double(ellObj);
+bpMat = dirMat * gras.la.sqrtmpos(qMat, ellObj.getAbsTol());
+cenMat = repmat(cenVec.', size(dirMat, 1), 1);
+bpMat = bpMat + cenMat;

@@ -29,23 +29,23 @@ if nDim == 2
     if nargin < 2
         nPoints = ellObj.nPlot2dPoints;
     end
-    fGetGrid = @(x)gras.geom.tri.spheretriext(nDim,x);
+    fGetGrid = @(x)gras.geom.tri.spheretriext(nDim, x);
 elseif nDim == 3
     if nargin < 2
         nPoints = ellObj.nPlot3dPoints;
     end
-    fGetGrid = @(x)gras.geom.tri.spheretriext(nDim,x);
+    fGetGrid = @(x)gras.geom.tri.spheretriext(nDim, x);
 else
     throwerror('wrongDim','ellipsoid must be of dimension 2 or 3');
 end
 [dirMat, fMat] = fGetGrid(nPoints);
 
 [cenVec qMat] = double(ellObj);
-bpMat = dirMat*gras.la.sqrtmpos(qMat, ellObj.getAbsTol());
-cenMat = repmat(cenVec.',size(dirMat, 1), 1);
+bpMat = dirMat * gras.la.sqrtmpos(qMat, ellObj.getAbsTol());
+cenMat = repmat(cenVec.', size(dirMat, 1), 1);
 bpMat = bpMat + cenMat;
-bpMat = [bpMat; bpMat(1,:)];
-cenMat = [cenMat; cenMat(1,:)];
+bpMat = [bpMat; bpMat(1, :)];
+cenMat = [cenMat; cenMat(1, :)];
 lGridMat = bpMat - cenMat;
 supVec = (rho(ellObj, lGridMat.')).';
 
