@@ -33,4 +33,4 @@ checkvar(ell, @(x) isa(x,'ellipsoid') && numel(x) == 1&&...
 %
 %
 [vMat,fMat] = getBoundary(ell,varargin{2:end});
-poly = elltool.exttbx.mpt.gen.tri2polytope(vMat,fMat);
+poly = elltool.exttbx.mpt.gen.tri2polytope(vMat,fMat');
