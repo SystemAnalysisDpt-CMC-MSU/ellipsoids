@@ -17,15 +17,9 @@ function [bpGridMat, fGridMat] = getBoundaryByFactor(ellObj,factorVec)
 %
 % Output:
 %   regular:
-%       bpGridMat: double[nVertices,nDims]/
-%           double[nDims, ([nPoints/(vNum+eNum+1)]+1)*(vNum+eNum) + 1]
-%           - vertices of the grid.
-%              In the first step: vNum = 12, eNum = 30, fNum = 20.
-%              In the next step: fNum = 4*fNum, eNum = 2*eNum + 3*fNum, vNum = vNum
-%              + eNum. This process ends when vNum>=nPlot3dPoints*nPoints.
-%
-%       fGridMat: double[nFaces, nDims]/double[4 * fNum, nDims]
-%           - indices of vertices in each face in the grid (2d/3d cases).
+%       bpGridMat: double[nVertices,nDims] - vertices of the grid.
+%       fGridMat: double[nFaces, nDims] - indices of vertices in each 
+%           face in the grid (2d/3d cases).
 %
 % $Author:  Vitaly Baranov  <vetbar42@gmail.com> $    $Date: <04-2013> $
 % $Author: Ilya Lyubich  <lubi4ig@gmail.com> $    $Date: <03-2013> $

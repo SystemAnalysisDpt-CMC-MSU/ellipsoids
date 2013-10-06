@@ -60,7 +60,6 @@ function plObj = plot(varargin)
 %            Faculty of Computational Mathematics and Cybernetics,
 %            System Analysis Department 2012 $
 
-
 import elltool.plot.plotgeombodyarr;
 [plObj,nDim,isHold]= plotgeombodyarr(@(x)isa(x,'ellipsoid'),...
     @(x)dimension(x),@fCalcBodyTriArr,...
@@ -82,6 +81,9 @@ end
     function [xCMat,fCMat] = fCalcBodyTriArr(bodyArr,varargin)
         [xCMat,fCMat] = arrayfun(@(x)getRhoBoundary(x),bodyArr,...
             'UniformOutput',false);
+        for i = 1 : size(xCMat,2)
+            xCMat{1,i} = xCMat{1,i}.';
+        end
     end
 
     function [xCMat,fCMat] = fCalcCenterTriArr(bodyArr,varargin)
