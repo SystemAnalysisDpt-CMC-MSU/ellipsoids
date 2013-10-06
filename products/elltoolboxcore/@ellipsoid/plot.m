@@ -81,9 +81,7 @@ end
     function [xCMat,fCMat] = fCalcBodyTriArr(bodyArr,varargin)
         [xCMat,fCMat] = arrayfun(@(x)getRhoBoundary(x),bodyArr,...
             'UniformOutput',false);
-        for i = 1 : size(xCMat,2)
-            xCMat{1,i} = xCMat{1,i}.';
-        end
+        xCMat = cellfun(@(x) x.', xCMat, 'UniformOutput', false);
     end
 
     function [xCMat,fCMat] = fCalcCenterTriArr(bodyArr,varargin)

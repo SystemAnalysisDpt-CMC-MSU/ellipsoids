@@ -98,9 +98,7 @@ end
         [lGridMat, fGridMat] = getGridByFactor(ellsArr(1));
         [xMat, fCMat] = arrayfun(@(x) getRhoBoundary(x, size(lGridMat, 1)), ellsArr, ...    
             'UniformOutput', false);
-        for i = 1 : size(xMat,2)
-            xMat{1,i} = xMat{1,i}.';
-        end
+        xMat = cellfun(@(x) x.', xMat, 'UniformOutput', false);
         xSumCMat = 0;
         for iXMat=1:numel(xMat)
             xSumCMat = xSumCMat + xMat{iXMat};
