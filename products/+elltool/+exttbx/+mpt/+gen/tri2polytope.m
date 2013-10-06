@@ -23,6 +23,7 @@
 %
 %
 import modgen.common.checkvar;
+import modgen.common.throwerror
 %
 checkvar(fMat,@(x) isa(x,'double')&&...
     all(mod(x(:),1) == 0) && all(x(:) > 0), 'errorTag',...
@@ -50,7 +51,7 @@ for iFaces = 1:nFaces
     else
 
         if (fMat(iFaces,2) > nVertices) || (fMat(iFaces,1) > nVertices)
-            continue;
+            throwerror('wrongIndex','attemp to access nonexistent element');
         end 
         normalVec = null(vMat(fMat(iFaces,2),:)-vMat(fMat(iFaces,1),:));
         notInFacetNum = getNumNotIn(fMat(iFaces,:)); 

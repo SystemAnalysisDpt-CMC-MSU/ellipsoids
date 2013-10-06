@@ -35,19 +35,20 @@ checkvar(ell, @(x) isa(x,'ellipsoid') && numel(x) == 1&&...
 [vMat,fMat] = getBoundary(ell,varargin{2:end});
 nDims = size(vMat,2);
 nFaces = size(fMat,2);
+%new format of fMat
 if nDims == 2
     for iFaces = 1:nFaces
         if(iFaces == nFaces)
-            num = 1;
+            index = 1;
         else
-            num = iFaces + 1;
+            index = iFaces + 1;
         end
-        fMat_new(iFaces,1) = fMat(iFaces);
-        fMat_new(iFaces,2) = fMat(num);
+        fMatPointsIdx(iFaces,1) = fMat(iFaces);
+        fMatPointsIdx(iFaces,2) = fMat(index);
     end
 else
-    fMat_new = fMat;
+    fMatPointsIdx = fMat;
 end
 
 
-poly = elltool.exttbx.mpt.gen.tri2polytope(vMat,fMat_new);
+poly = elltool.exttbx.mpt.gen.tri2polytope(vMat,fMatPointsIdx);
