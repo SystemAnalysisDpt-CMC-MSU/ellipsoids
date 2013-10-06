@@ -410,27 +410,27 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
         end
         %
         function self = testToPolytope(self)
-            ellConstrMat1 = [4 0; 0 9];
-            ellConstrMat2 = eye(2);
-            ellConstrMat3 = eye(3);
-            ellShift1 = [0; 0];
-            ellShift2 = [0.5; 0];
-            ellShift3 = [0.05; -0.1; 0];
+            ell1ConstrMat = [4 0; 0 9];
+            ell2ConstrMat = eye(2);
+            ell3ConstrMat = eye(3);
+            ell1ShiftVec = [0; 0];
+            ell2ShiftVec = [0.5; 0];
+            ell3ShiftVec = [0.05; -0.1; 0];
             %
-            ell1 = ellipsoid(ellShift1,ellConstrMat1);
-            ell2 = ellipsoid(ellShift2,ellConstrMat2);
-            ell3 = ellipsoid(ellShift3,ellConstrMat3);
+            ell1 = ellipsoid(ell1ShiftVec,ell1ConstrMat);
+            ell2 = ellipsoid(ell2ShiftVec,ell2ConstrMat);
+            ell3 = ellipsoid(ell3ShiftVec,ell3ConstrMat);
             poly1 = toPolytope(ell1);
             poly2 = toPolytope(ell2);
             poly3 = toPolytope(ell3);
             %
             %test for 2D-case
-            isBound = self.isBoundary(ellShift1, ellConstrMat1, poly1);
+            isBound = self.isBoundary(ell1ShiftVec, ell1ConstrMat, poly1);
             mlunitext.assert(isBound);
-            isBound = self.isBoundary(ellShift2, ellConstrMat2, poly2);
+            isBound = self.isBoundary(ell2ShiftVec, ell2ConstrMat, poly2);
             mlunitext.assert(isBound);
             %test for 3D-case
-            isBound = self.isBoundary(ellShift3, ellConstrMat3, poly3);
+            isBound = self.isBoundary(ell3ShiftVec, ell3ConstrMat, poly3);
             mlunitext.assert(isBound);
         end
     end
@@ -483,7 +483,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             ellArr = ellipsoid.fromRepMat(eye(2),[2,2,2]);
         end
         %
-        function isBound = isBoundary(ellShift,ellConstrMat,poly)
+        function isBound = isBoundary(ellShiftVec,ellConstrMat,poly)
             import modgen.common.absrelcompare;
             polyhedron = toPolyhedron(poly);
             pointsArray=polyhedron.V;
@@ -492,13 +492,13 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             nDims = size(pointsArray,2);
             for i = 1:nPoints
                 if nDims == 3
-                    [isEqual, absDiff] = absrelcompare(((pointsArray(i,1) - ellShift(1))^2/ellConstrMat(1,1))...
-                        +((pointsArray(i,2)-ellShift(2))^2/ellConstrMat(2,2))...
-                        +((pointsArray(i,3)-ellShift(3))^2/ellConstrMat(3,3)),...
+                    [isEqual, absDiff] = absrelcompare(((pointsArray(i,1) - ellShiftVec(1))^2/ellConstrMat(1,1))...
+                        +((pointsArray(i,2)-ellShiftVec(2))^2/ellConstrMat(2,2))...
+                        +((pointsArray(i,3)-ellShiftVec(3))^2/ellConstrMat(3,3)),...
                         1,1e-07,[],@abs);
                 else
-                    [isEqual, absDiff] = absrelcompare(((pointsArray(i,1)-ellShift(1))^2/ellConstrMat(1,1))...
-                        +((pointsArray(i,2)-ellShift(2))^2/ellConstrMat(2,2)),...
+                    [isEqual, absDiff] = absrelcompare(((pointsArray(i,1)-ellShiftVec(1))^2/ellConstrMat(1,1))...
+                        +((pointsArray(i,2)-ellShiftVec(2))^2/ellConstrMat(2,2)),...
                         1,1e-07,[],@abs);
                 end
                 if ~isEqual
