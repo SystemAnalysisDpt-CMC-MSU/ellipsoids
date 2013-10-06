@@ -9,9 +9,9 @@ function [vGridMat, fGridMat] = spheretriext(nDim,nPoints)
 %
 % Output:
 %   regular:
-%       bpMat: double[nPoints,nDim] - boundary points of sphere
+%       bpMat: double[nPoints,nDims] - boundary points of sphere
 %   optional:
-%       fVec: double[1,nFaces]/double[nPoints,3] - indices of points in 
+%       fVec: double[nFaces, nDims]/double[nPoints,nDims] - indices of points in 
 %           each face of bpMat graph
 %
 % $Author: Vitaly Baranov <vetbar42@gmail.com>$ $Date: 13-04-2013$

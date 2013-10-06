@@ -10,22 +10,22 @@ function [bpMat, fMat, supVec,lGridMat] = getRhoBoundary(ellObj,nPoints)
 %       nPoints: number of boundary points
 %
 % Output:
-%    bpMat: double[nDim,nPoints+1]/
-%        double[nDim, ([nPoints/(vNum+eNum+1)]+1)*(vNum+eNum) + 1]
+%    bpMat: double[nDims,nPoints+1]/
+%        double[nDims, ([nPoints/(vNum+eNum+1)]+1)*(vNum+eNum) + 1]
 %        - boundary points of ellipsoid.
-%        In the first step: vNum = 12, eNum = 30, fNum = 20.
-%        In the next step: fNum = 4*fNum, eNum = 2*eNum + 3*fNum, vNum = vNum
-%        + eNum. This process ends when vNum>=nPoints.
+%           In the first step: vNum = 12, eNum = 30, fNum = 20.
+%           In the next step: fNum = 4*fNum, eNum = 2*eNum + 3*fNum, vNum = vNum
+%           + eNum. This process ends when vNum>=nPoints.
 %
-%    fMat: double[nFaces, nDim]/double[4 * fNum, nDim] - indices of points in
+%    fMat: double[nFaces, nDims]/double[4 * fNum, nDims] - indices of points in
 %        each face of bpMat graph.
 %
 %    supVec: double[nPoints+1, 1]/
 %        double[([nPoints/(vNum+eNum+1)]+1)*(vNum+eNum) + 1, 1]
 %        - vector of values of the support function in directions (bpMat - cenMat).
 %
-%    lGridMat: double[nPoints+1, nDim]/
-%        double[([nPoints/(vNum+eNum+1)]+1)*(vNum+eNum) + 1, nDim]
+%    lGridMat: double[nPoints+1, nDims]/
+%        double[([nPoints/(vNum+eNum+1)]+1)*(vNum+eNum) + 1, nDims]
 %        - array of directions.
 %
 % $Author: <Sergei Drozhzhin>  <SeregaDrozh@gmail.com> $    $Date: <28 September 2013> $

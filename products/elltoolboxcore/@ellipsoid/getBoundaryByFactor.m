@@ -1,4 +1,4 @@
-function [vGridMat, fGridMat] = getBoundaryByFactor(ellObj,factorVec)
+function [bpGridMat, fGridMat] = getBoundaryByFactor(ellObj,factorVec)
 %
 %   GETBOUNDARYBYFACTOR - computes grid of 2d or 3d ellipsoid and vertices
 %                         for each face in the grid
@@ -17,15 +17,15 @@ function [vGridMat, fGridMat] = getBoundaryByFactor(ellObj,factorVec)
 %
 % Output:
 %   regular:
-%     vGridat: double[nDim, 200*nPoints+1]/
-%     double[nDim, ([nPoints/(vNum+eNum+1)]+1)*(vNum+eNum) + 1]
-%     - vertices of the grid.
-%     In the first step: vNum = 12, eNum = 30, fNum = 20. 
-%     In the next step: fNum = 4*fNum, eNum = 2*eNum + 3*fNum, vNum = vNum
-%     + eNum. This process ends when vNum>=200*nPoints.
+%       bpGridMat: double[nVertices,nDims]/
+%           double[nDims, ([nPoints/(vNum+eNum+1)]+1)*(vNum+eNum) + 1]
+%           - vertices of the grid.
+%              In the first step: vNum = 12, eNum = 30, fNum = 20.
+%              In the next step: fNum = 4*fNum, eNum = 2*eNum + 3*fNum, vNum = vNum
+%              + eNum. This process ends when vNum>=nPlot3dPoints*nPoints.
 %
-%     fGridMat: double[nFaces, nDim]/double[4 * fNum, nDim]
-%        - indices of vertices in each face in the grid (2d/3d cases).
+%       fGridMat: double[nFaces, nDims]/double[4 * fNum, nDims]
+%           - indices of vertices in each face in the grid (2d/3d cases).
 %
 % $Author:  Vitaly Baranov  <vetbar42@gmail.com> $    $Date: <04-2013> $
 % $Author: Ilya Lyubich  <lubi4ig@gmail.com> $    $Date: <03-2013> $
@@ -57,4 +57,4 @@ else
         nPlotPoints=floor(nPlotPoints*factor);
     end
 end
-[vGridMat, fGridMat] = getBoundary(ellObj,nPlotPoints);
+[bpGridMat, fGridMat] = getBoundary(ellObj,nPlotPoints);

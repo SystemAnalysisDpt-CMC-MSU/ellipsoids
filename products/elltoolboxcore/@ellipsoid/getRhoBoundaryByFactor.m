@@ -1,4 +1,4 @@
-function [vGridMat, fGridMat, supVec, lGridMat] = getRhoBoundaryByFactor(ellObj,factorVec)
+function [bpGridMat, fGridMat, supVec, lGridMat] = getRhoBoundaryByFactor(ellObj,factorVec)
 %
 %GETRHOBOUNDARYBYFACTOR - computes grid of 2d or 3d ellipsoid and vertices
 %                     for each face in the grid and support function values.
@@ -16,22 +16,22 @@ function [vGridMat, fGridMat, supVec, lGridMat] = getRhoBoundaryByFactor(ellObj,
 %           or nPlot3dPoints depending on the dimension of the ellObj
 %
 % Output:
-%    vGridat: double[nDim, 200*nPoints+1]/
-%        double[nDim, ([nPoints/(vNum+eNum+1)]+1)*(vNum+eNum) + 1]
+%    bpGridMat: double[nVertices, nDims]/
+%        double[([nPoints/(vNum+eNum+1)]+1)*(vNum+eNum) + 1, nDims]
 %        - vertices of the grid.
-%        In the first step: vNum = 12, eNum = 30, fNum = 20. 
-%        In the next step: fNum = 4*fNum, eNum = 2*eNum + 3*fNum, vNum = vNum
-%        + eNum. This process ends when vNum>=200*nPoints.
+%           In the first step: vNum = 12, eNum = 30, fNum = 20.
+%           In the next step: fNum = 4*fNum, eNum = 2*eNum + 3*fNum, vNum = vNum
+%           + eNum. This process ends when vNum>=nPlot3dPoints*nPoints.
 %
-%    fGridMat: double[nFaces, nDim]/double[4 * fNum, nDim]
+%    fGridMat: double[nFaces, nDims]/double[4 * fNum, nDims]
 %        - indices of vertices in each face in the grid (2d/3d cases).
 %
-%    supVec: double[200*nPoints+1, 1]/
-%         double[([nPoints/(vNum+eNum+1)]+1)*(vNum+eNum) + 1, 1]
-%         - vector of values of the support function.
-%    lGridMat: double[200*nPoints+1, nDim]/
-%         double[([nPoints/(vNum+eNum+1)]+1)*(vNum+eNum) + 1, nDim]
-%         - array of directions.
+%    supVec: double[nVertices, 1]/
+%        double[([nPoints/(vNum+eNum+1)]+1)*(vNum+eNum) + 1, 1]
+%        - vector of values of the support function.
+%    lGridMat: double[nVertices, nDims]/
+%        double[([nPoints/(vNum+eNum+1)]+1)*(vNum+eNum) + 1, nDims]
+%        - array of directions.
 %
 % $Author: <Sergei Drozhzhin>  <SeregaDrozh@gmail.com> $    $Date: <28 September 2013> $
 % $Copyright: Lomonosov Moscow State University,
@@ -60,8 +60,9 @@ elseif nDim == 3
 else
     throwerror('wrongDim','ellipsoid must be of dimension 2 or 3');
 end
-[vGridMat, fGridMat, supVec, lGridMat] =...
+[bpGridMat, fGridMat, supVec, lGridMat] =...
     getRhoBoundary(ellObj, nPlotPoints);
+bpGridMat = bpGridMat.';
 end
 
 
