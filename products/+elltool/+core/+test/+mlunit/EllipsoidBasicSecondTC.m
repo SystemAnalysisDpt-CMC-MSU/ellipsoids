@@ -22,12 +22,12 @@ classdef EllipsoidBasicSecondTC < mlunitext.test_case
         
         function self = testGetBoundaryByFactor(self)
           [testEllCVec testNumPointsCVec]  = getEllParams(1);         
-          [bpCMat fCVec] = cellfun(@(x,y)getBoundaryByFactor(x,y),testEllCVec,...
+          [bpCMat fCMat] = cellfun(@(x,y)getBoundaryByFactor(x,y),testEllCVec,...
               testNumPointsCVec, 'UniformOutput', false);
           testNumRightPointsCVec = {1200, 1200, 1200, 1200};
-          [bpRightCMat fRightCVec] = cellfun(@(x,y)getBoundary(x,y),...
+          [bpRightCMat fRightCMat] = cellfun(@(x,y)getBoundary(x,y),...
               testEllCVec,testNumRightPointsCVec, 'UniformOutput', false);
-          isOk = compareCells(bpCMat, fCVec, bpRightCMat, fRightCVec);
+          isOk = compareCells(bpCMat, fCMat, bpRightCMat, fRightCMat);
           mlunitext.assert(isOk);
             
         end
@@ -591,12 +591,12 @@ classdef EllipsoidBasicSecondTC < mlunitext.test_case
 end
 %
 
-function isFlag = compareCells(bpCMat, fCVec, bpRightCMat, fRightCVec)
+function isFlag = compareCells(bpCMat, fCMat, bpRightCMat, fRightCMat)
     ABSTOL = 1.0e-12;
     [isEqual1,~,~,~,~] = modgen.common.absrelcompare(cell2mat(bpRightCMat),...
         cell2mat(bpCMat),ABSTOL,ABSTOL,@norm);
-    [isEqual2,~,~,~,~] = modgen.common.absrelcompare(cell2mat(fCVec),...
-        cell2mat(fRightCVec),ABSTOL,ABSTOL,@norm);
+    [isEqual2,~,~,~,~] = modgen.common.absrelcompare(cell2mat(fCMat),...
+        cell2mat(fRightCMat),ABSTOL,ABSTOL,@norm);
     isFlag = isEqual1 && isEqual2;
    
     
