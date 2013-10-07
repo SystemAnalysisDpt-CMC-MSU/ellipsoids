@@ -171,29 +171,21 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             MExtArrayList=cell(1,nLDirs);
             %
             %% Calculating approximations
+            
             for iDir=1:1:nLDirs
-                logStr=sprintf(...
-                    'solving ode for direction \n %s  defined at time %f',...
-                    mat2str(lsGoodDirMat(:,iDir).'),sTime);
-                tStart=tic;
-                logger.info([logStr,'...']);
-                fHandle=self.getEllApxMatrixDerivFunc(iDir);
-                initValueMat=self.getEllApxMatrixInitValue(iDir);
-                %
-                [~,QStarIntArray,QStarExtArray,MIntArray,MExtArray]=...
-                    solverObj.solve({fHandle,fOdeReg},...
-                    solveTimeVec,initValueMat,initValueMat);
-                if isFirstPointToRemove
-                    QStarIntArray(:,:,1)=[];
-                    QStarExtArray(:,:,1)=[];
-                end
-                %
-                QIntArrayList{iDir}=self.adjustEllApxMatrixVec(QStarIntArray);
-                MIntArrayList{iDir}=MIntArray;
-                QExtArrayList{iDir}=self.adjustEllApxMatrixVec(QStarExtArray);
-                MExtArrayList{iDir}=MExtArray;
-                logger.info(sprintf([logStr,':done, %.3f sec. elapsed'],...
-                    toc(tStart)));
+                lsGoodDirMat1=lsGoodDirMat(:,iDir).';
+                selfGetEllApxMatrixDerivFunc1=self.getEllApxMatrixDerivFunc(iDir);
+                selfGetEllApxMatrixInitValue1=self.getEllApxMatrixInitValue(iDir);
+                solverObjSolve1=solverObj.solve({selfGetEllApxMatrixDerivFunc1,fOdeReg},...
+                    solveTimeVec, selfGetEllApxMatrixInitValue1, selfGetEllApxMatrixInitValue1);
+                [QIntArrayListIDir, MIntArrayListIDir, QExtArrayListIDir,  MExtArrayListIDir]=elltool.pcalc.fCalcTube4(self, sTime, lsGoodDirMat1,...
+            selfGetEllApxMatrixDerivFunc1, selfGetEllApxMatrixInitValue1, ...
+            solverObjSolve1, isFirstPointToRemove,  logger)
+                QIntArrayList{iDir}=QIntArrayListIDir;
+                MIntArrayList{iDir}=MIntArrayListIDir;
+                QExtArrayList{iDir}=QExtArrayListIDir;
+                MExtArrayList{iDir}=MExtArrayListIDir;
+                
             end
             %
             aMat=pDefObj.getxtDynamics.evaluate(resTimeVec);
