@@ -1,5 +1,5 @@
 classdef VecOde45RegInterp
-    properties
+    properties  (Access=private)
         tnewVec = []; 
         ynewCVec = [];
         tCVec = [];
@@ -13,20 +13,16 @@ classdef VecOde45RegInterp
         y0Vec = [];
         tfinal;
         next;
-        dyNewCorrVec = [];
+        dyNewCorrCVec = [];
         oldnout;
     end
     methods
-        function interpObj = VecOde45RegInterp(fOdeReg)
+        function interpObj = VecOde45RegInterp(SData)
             % VECODE45REGINTERP - VecOde45RegInterp class constructor
             % Input:
             %   regular:
-            %       fOdeReg: function_handle[1,1] - function responsible 
-            %           for regularizing the phase variables as 
-            %           [isStrictViolation,yReg]=fOdeReg(t,y) where
-            %           isStrictViolation is supposed to be true when y is
-            %           outside of definition area of the right-hand side
-            %           function
+            %       SData: structure that stores all the data needed
+            %           to build the solution on an arbitrary grid
             % Output:
             %   interpObj: gras.ode.VecOde45RegInterp[1,1]
             % $Author: Vadim Danilov <vadimdanilov93@gmail.com> $  
@@ -34,7 +30,58 @@ classdef VecOde45RegInterp
             % $Copyright: Moscow State University,
             %  Faculty of Computational Mathematics and Cybernetics,
             %  Science, System Analysis Department 2013 $
-            interpObj.fOdeRegFunc = fOdeReg;
+            
+            import modgen.common.throwerror;            
+            
+            function sizeOfField = getFieldLength(SData,nameField)
+                import modgen.common.throwerror;  
+                sizeOfField = 0;
+                if isfield(SData,nameField) == 1
+                    sizeOfField = length(getfield(SData,nameField));
+                else
+                    throwerror('wrongInput', ['filed ' nameField ' not exist in SData']);
+                end;
+            end
+            function isExist = checkField(SData,nameField)
+                import modgen.common.throwerror;  
+                isExist = isfield(SData,nameField);
+                if isExist
+                    if isempty(getfield(SData,nameField))
+                        throwerror('wrongInput', ['filed ' nameField ' is empty']);
+                    end;
+                end;
+            end            
+            maskVec = zeros(1,15);
+            sizeFirstField = getFieldLength(SData,'tnewVec');
+            resCheckVec = [getFieldLength(SData,'tnewVec') getFieldLength(SData,'ynewCVec')...
+                           getFieldLength(SData,'tCVec') getFieldLength(SData,'yCVec')...
+                           getFieldLength(SData,'hCVec') getFieldLength(SData,'fCVec')...
+                           getFieldLength(SData,'dyNewCorrCVec') checkField(SData,'fOdeRegFunc')...
+                           checkField(SData,'dataType') checkField(SData,'neq')...
+                           checkField(SData,'t0') checkField(SData,'y0Vec')...
+                           checkField(SData,'tfinal') checkField(SData,'next')...
+                           checkField(SData,'oldnout')];
+            resCheckVec(1,1:7) = resCheckVec(1,1:7) - sizeFirstField;
+            resCheckVec(1,8:15) = resCheckVec(1,8:15) - 1;
+            if ~isequal(maskVec,resCheckVec)
+                throwerror('wrongInput', 'one of fields of SData is not exist or have wrong size');
+            end;
+            
+            interpObj.tnewVec = SData.tnewVec; 
+            interpObj.ynewCVec = SData.ynewCVec;
+            interpObj.tCVec = SData.tCVec;
+            interpObj.yCVec = SData.yCVec;
+            interpObj.hCVec = SData.hCVec;
+            interpObj.fCVec = SData.fCVec;
+            interpObj.fOdeRegFunc = SData.fOdeRegFunc;
+            interpObj.dataType = SData.dataType;
+            interpObj.neq = SData.neq;
+            interpObj.t0 = SData.t0;
+            interpObj.y0Vec = SData.y0Vec;
+            interpObj.tfinal = SData.tfinal;
+            interpObj.next = SData.next;
+            interpObj.dyNewCorrCVec = SData.dyNewCorrCVec;
+            interpObj.oldnout = SData.oldnout;
         end
         function [tout, yout, dyRegMat] = evaluate(self, timeVec)
             % EVALUATE - this method duplicates the function's 
@@ -63,8 +110,9 @@ classdef VecOde45RegInterp
             %            Faculty of Computational Mathematics and Computer
             %            Science, System Analysis Department 2013 $
             %
-            function yinterp = ntrp45(tinterp,t,y,h,f,fOdeReg)
-                BI = [
+            function yInterpVec = ntrp45(tInterp,tAdaptivGrid,yAdaptivGridVec,...
+                                      stepGrid,fVec,fOdeRegFunc)
+                biMat = [
                         1       -183/64      37/12       -145/128
                         0          0           0            0
                         0       1500/371    -1000/159    1000/371
@@ -73,13 +121,12 @@ classdef VecOde45RegInterp
                         0        -11/7        11/3        -55/28
                         0         3/2         -4            5/2
                     ];
-                s = (tinterp - t)/h;  
-                [~,yinterp] = fOdeReg(tinterp,y(:,ones(size(tinterp)))+...
-                    f*(h*BI)*cumprod([s;s;s;s]));
+                s = (tInterp - tAdaptivGrid)/stepGrid;  
+                [~,yInterpVec] = fOdeRegFunc(tInterp,yAdaptivGridVec(:,ones(size(tInterp)))+...
+                    fVec*(stepGrid*biMat)*cumprod([s;s;s;s]));
             end
             
             import modgen.common.throwerror;
-            
             nIter = size(self.tnewVec,2);
             nTspan = size(timeVec,2);
             if nTspan > 2
@@ -131,7 +178,7 @@ classdef VecOde45RegInterp
                     idx = oldnout+1:nout;
                     tout(idx) = tout_new;
                     yout(:,idx) = yout_new;
-                    dyRegMat(:,idx)=repmat(self.dyNewCorrVec{i},1,nout_new);
+                    dyRegMat(:,idx)=repmat(self.dyNewCorrCVec{i},1,nout_new);
                 end
                 
             end

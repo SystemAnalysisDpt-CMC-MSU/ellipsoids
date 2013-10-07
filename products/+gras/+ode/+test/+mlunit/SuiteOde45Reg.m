@@ -29,41 +29,39 @@ classdef SuiteOde45Reg < gras.ode.test.mlunit.SuiteBasic
                     [isEqual,~,~,~,~] = modgen.common.absrelcompare(yRegMat,yyRegMat,COMPARE_TOL,COMPARE_TOL,@norm);
                     mlunitext.assert_equals(true,isEqual,'matrix yRegMat and yyRegMat are not equal');
                 end
-                function interpObj = help_for_compare(tVaryVec,tspanVec)
+                function interpObj = helpForComparision(tVaryVec,tspanVec)
                     [~,yMat,yRegMat,interpObj]=...
                      feval(self.odeSolver, @(t,y)cos(y),@fRegDummy,tVaryVec,initVec,...
                      odePropList{:});
                     [~,yyMat,yyRegMat] = interpObj.evaluate(tspanVec);
                 end
-                %
-                %check that for the positive solution ode113reg works in the same
-                %way as plain ode45
+                
                  tBeginVec = linspace(0,1,nPoints);
                  tBeginVec(2) = 1e-6;
-                 interpObj = help_for_compare(tBeginVec,tBeginVec);
+                 interpObj = helpForComparision(tBeginVec,tBeginVec);
                  compare(yMat,yyMat,yRegMat,yyRegMat);
                  
                 tVaryVec = tBeginVec.^2;
                 tVaryVec(2) = tBeginVec(2);
-                help_for_compare(tVaryVec,tVaryVec);
+                helpForComparision(tVaryVec,tVaryVec);
                 compare(yMat,yyMat,yRegMat,yyRegMat);
                 
                 tVaryVec = 0:0.001:1;
                 tVaryVec(2) = tBeginVec(2);
                 threshold = 0.333;
                 tspan = tVaryVec(tVaryVec >= threshold);
-                help_for_compare(tVaryVec,tspan);
+                helpForComparision(tVaryVec,tspan);
                 compare(yMat(tVaryVec >= threshold,:),yyMat,...
                     yRegMat(tVaryVec >= threshold,:),yyRegMat);
                
                 tVaryVec = linspace(0,1,2*nPoints + 1);
                 tVaryVec(2) = tBeginVec(2);
-                help_for_compare(tVaryVec,tVaryVec);
+                helpForComparision(tVaryVec,tVaryVec);
                 compare(yMat,yyMat,yRegMat,yyRegMat);
              
                 tVaryVec = sin(pi*tBeginVec/2);
                 tVaryVec(2) = tBeginVec(2);
-                help_for_compare(tVaryVec,tVaryVec);
+                helpForComparision(tVaryVec,tVaryVec);
                 compare(yMat,yyMat,yRegMat,yyRegMat);
                 
                 [tVaryVec,yMat,yRegMat,~]=...

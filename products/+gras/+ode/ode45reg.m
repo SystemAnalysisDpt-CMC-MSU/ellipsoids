@@ -38,8 +38,11 @@ function [tout,yout,dyRegMat,interpObj] = ode45reg(fOdeDeriv,fOdeReg,tspan,y0Vec
 %   dyRegMat: double[nPoints,nDims] - regularizing derivative addition
 %       to the right-hand side function value performed at each step,
 %       basically yout is a solution of dot(y)=fOdeDeriv(t,y)+dyRegMat(t,y)
+%   interpObj: gras.ode.VecOde45RegInterp[1,1] - all the data nessecary 
+%       for calculation on an arbitrary time grid is stored in  this object
 %
 % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011$
+% $Author: Vadim Danilov <vadimdanilov93@gmail.com> $   $Data: 2013$
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2011 $
@@ -47,12 +50,6 @@ function [tout,yout,dyRegMat,interpObj] = ode45reg(fOdeDeriv,fOdeReg,tspan,y0Vec
 import modgen.common.throwerror;
 import modgen.common.type.simple.*;
 solver_name = 'ode45reg';
-
-%% Блок моих переменных
-if nargout == 4
-    interpObj =  gras.ode.VecOde45RegInterp(fOdeReg);
-end
-
 
 
 %% Constants
@@ -87,12 +84,20 @@ checkgen(fOdeReg,'isfunction(x)');
     odearguments(solver_name,fOdeDeriv, tspan, y0Vec, options);
 
 if nargout == 4
-    interpObj.dataType = dataType;
-    interpObj.neq = neq;
-    interpObj.t0 = t0;
-    interpObj.y0Vec = y0Vec;
-    interpObj.next = next;
-    interpObj.tfinal = tfinal;
+    SInterp.fOdeRegFunc = fOdeReg;
+    SInterp.dataType = dataType;
+    SInterp.neq = neq;
+    SInterp.t0 = t0;
+    SInterp.y0Vec = y0Vec;
+    SInterp.next = next;
+    SInterp.tfinal = tfinal;
+    SInterp.tnewVec = [];
+    SInterp.ynewCVec = [];
+    SInterp.tCVec = [];
+    SInterp.yCVec = [];
+    SInterp.hCVec = [];
+    SInterp.fCVec = [];
+    SInterp.dyNewCorrCVec = [];
 end;
 
 if ~isRegMaxStepTolSpec
@@ -311,13 +316,13 @@ while ~isDone
     nsteps = nsteps + 1;
     
     if nargout == 4
-        interpObj.tnewVec = [interpObj.tnewVec tnew];
-        interpObj.ynewCVec = [interpObj.ynewCVec {ynew}];
-        interpObj.tCVec = [interpObj.tCVec {t}];
-     	interpObj.yCVec = [interpObj.yCVec {y}];
-       	interpObj.hCVec = [interpObj.hCVec {h}];
-        interpObj.fCVec = [interpObj.fCVec {f}];
-        interpObj.dyNewCorrVec = [interpObj.dyNewCorrVec {dyNewCorrVec}];
+        SInterp.tnewVec = [SInterp.tnewVec tnew];
+        SInterp.ynewCVec = [SInterp.ynewCVec {ynew}];
+        SInterp.tCVec = [SInterp.tCVec {t}];
+     	SInterp.yCVec = [SInterp.yCVec {y}];
+       	SInterp.hCVec = [SInterp.hCVec {h}];
+        SInterp.fCVec = [SInterp.fCVec {f}];
+        SInterp.dyNewCorrCVec = [SInterp.dyNewCorrCVec {dyNewCorrVec}];
     end;
     
     switch outputAt
@@ -390,9 +395,12 @@ while ~isDone
     
 end
 if nargout == 4
-    interpObj.oldnout = nout;
+    SInterp.oldnout = nout;
 end;
 shrinkResults();
+if nargout == 4
+    interpObj = gras.ode.VecOde45RegInterp(SInterp);
+end;
 prDispObj.finish();
     function shrinkResults()
         tout = tout(1:nout).';
