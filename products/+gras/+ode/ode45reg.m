@@ -86,13 +86,13 @@ checkgen(fOdeReg,'isfunction(x)');
 if nargout == 4
     SInterp.fOdeRegFunc = fOdeReg;
     SInterp.dataType = dataType;
-    SInterp.neq = neq;
-    SInterp.t0 = t0;
-    SInterp.y0Vec = y0Vec;
-    SInterp.next = next;
-    SInterp.tfinal = tfinal;
-    SInterp.tnewVec = [];
-    SInterp.ynewCVec = [];
+    SInterp.nEquations = neq;
+    SInterp.tBegin = t0;
+    SInterp.yBeginVec = y0Vec;
+    SInterp.iNext = next;
+    SInterp.tFinal = tfinal;
+    SInterp.tNewVec = [];
+    SInterp.yNewCVec = [];
     SInterp.tCVec = [];
     SInterp.yCVec = [];
     SInterp.hCVec = [];
@@ -316,8 +316,8 @@ while ~isDone
     nsteps = nsteps + 1;
     
     if nargout == 4
-        SInterp.tnewVec = [SInterp.tnewVec tnew];
-        SInterp.ynewCVec = [SInterp.ynewCVec {ynew}];
+        SInterp.tNewVec = [SInterp.tNewVec tnew];
+        SInterp.yNewCVec = [SInterp.yNewCVec {ynew}];
         SInterp.tCVec = [SInterp.tCVec {t}];
      	SInterp.yCVec = [SInterp.yCVec {y}];
        	SInterp.hCVec = [SInterp.hCVec {h}];
@@ -394,11 +394,9 @@ while ~isDone
     % Already have f(tnew,ynew)
     
 end
-if nargout == 4
-    SInterp.oldnout = nout;
-end;
 shrinkResults();
 if nargout == 4
+    SInterp.nOldCountElements = nout;
     interpObj = gras.ode.VecOde45RegInterp(SInterp);
 end;
 prDispObj.finish();

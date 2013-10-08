@@ -20,19 +20,24 @@ classdef SuiteOde45Reg < gras.ode.test.mlunit.SuiteBasic
             function check(nPoints)
                 initVec=[0 1 2 3];
                 ABS_TOL=1e-8;
-                odePropList={'NormControl','on','RelTol',ABS_TOL,'AbsTol',ABS_TOL};
+                odePropList={'NormControl','on','RelTol',ABS_TOL,...
+                    'AbsTol',ABS_TOL};
                 %%
                 function compare(yMat,yyMat,yRegMat,yyRegMat)
                     COMPARE_TOL = 1e-14;
-                    [isEqual,~,~,~,~] = modgen.common.absrelcompare(yMat,yyMat,COMPARE_TOL,COMPARE_TOL,@norm);
-                    mlunitext.assert_equals(true,isEqual,'matrix yMat and yyMat are not equal')
-                    [isEqual,~,~,~,~] = modgen.common.absrelcompare(yRegMat,yyRegMat,COMPARE_TOL,COMPARE_TOL,@norm);
-                    mlunitext.assert_equals(true,isEqual,'matrix yRegMat and yyRegMat are not equal');
+                    [isEqual,~,~,~,~] = modgen.common.absrelcompare(...
+                        yMat,yyMat,COMPARE_TOL,COMPARE_TOL,@norm);
+                    mlunitext.assert_equals(true,isEqual,...
+                        'matrix yMat and yyMat are not equal')
+                    [isEqual,~,~,~,~] = modgen.common.absrelcompare(...
+                        yRegMat,yyRegMat,COMPARE_TOL,COMPARE_TOL,@norm);
+                    mlunitext.assert_equals(true,isEqual,...
+                        'matrix yRegMat and yyRegMat are not equal');
                 end
                 function interpObj = helpForComparision(tVaryVec,tspanVec)
                     [~,yMat,yRegMat,interpObj]=...
-                     feval(self.odeSolver, @(t,y)cos(y),@fRegDummy,tVaryVec,initVec,...
-                     odePropList{:});
+                     feval(self.odeSolver, @(t,y)cos(y),@fRegDummy,...
+                     tVaryVec,initVec,odePropList{:});
                     [~,yyMat,yyRegMat] = interpObj.evaluate(tspanVec);
                 end
                 
@@ -65,14 +70,19 @@ classdef SuiteOde45Reg < gras.ode.test.mlunit.SuiteBasic
                 compare(yMat,yyMat,yRegMat,yyRegMat);
                 
                 [tVaryVec,yMat,yRegMat,~]=...
-                    feval(self.odeSolver, @(t,y)cos(y),@fRegDummy,[0 1],initVec,...
+                    feval(self.odeSolver, @(t,y)cos(y),@fRegDummy,...
+                    [0 1],initVec,...
                     odePropList{:});
                 [~,yyMat,yyRegMat] = interpObj.evaluate(tVaryVec');
                 COMPARE_TOL = 1e-8;
-                [isEqual,~,~,~,~] = modgen.common.absrelcompare(yMat,yyMat,COMPARE_TOL,COMPARE_TOL,@norm);
-                mlunitext.assert_equals(true,isEqual,'matrix yMat and yyMat are not equal')
-                [isEqual,~,~,~,~] = modgen.common.absrelcompare(yRegMat,yyRegMat,COMPARE_TOL,COMPARE_TOL,@norm);
-                mlunitext.assert_equals(true,isEqual,'matrix yRegMat and yyRegMat are not equal');
+                [isEqual,~,~,~,~] = modgen.common.absrelcompare(yMat,...
+                    yyMat,COMPARE_TOL,COMPARE_TOL,@norm);
+                mlunitext.assert_equals(true,isEqual,...
+                    'matrix yMat and yyMat are not equal')
+                [isEqual,~,~,~,~] = modgen.common.absrelcompare(yRegMat,...
+                    yyRegMat,COMPARE_TOL,COMPARE_TOL,@norm);
+                mlunitext.assert_equals(true,isEqual,...
+                    'matrix yRegMat and yyRegMat are not equal');
                 
             end
         end
