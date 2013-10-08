@@ -221,8 +221,7 @@ classdef ContinuousReachTestCase < mlunitext.test_case
         %
         function self = testDynGetters(self)
             isOk=1;
-            isEqual=1;
-            CMP_TOL=10^(-16);
+            CMP_TOL=10^(-10);
             ellTubeRel=self.reachObj.getEllTubeRel();
             switchSysTimeVec=self.reachObj.getSwitchTimeVec();
             switchTimeVecLenght=numel(switchSysTimeVec);
@@ -232,10 +231,9 @@ classdef ContinuousReachTestCase < mlunitext.test_case
             extGoodDirSetList=self.reachObj.getExtGoodDirSetList();            
             intEllTube=ellTubeRel.getTuplesFilteredBy('approxType',0); % now there are only internal tubes in the table
             nTube=intEllTube.getNTuples();
-            extEllTube=ellTubeRel.getTuplesFilteredBy('approxType',1); % there are only external tubes in the table         
-            %don't forget to compare the dimensionality of objList{2} (if it exists) and NTubes
-            linSys=self.reachObj.getSystemList();
-            sysTimeVecLenght=numel(linSys); 
+            extEllTube=ellTubeRel.getTuplesFilteredBy('approxType',1); % there are only external tubes in the table                    
+            linSysList=self.reachObj.getSystemList();
+            sysTimeVecLenght=numel(linSysList); 
             regTol=self.reachFactoryObj.getRelTol();
             isRegEnabled=self.reachFactoryObj.getIsRegEnabled();
             isJustCheck=self.reachFactoryObj.getIsJustCheck();
@@ -243,26 +241,34 @@ classdef ContinuousReachTestCase < mlunitext.test_case
             %2)comparing results of linSys and probDynObj.getBPBgetBPBTransDynamics().evaluate(t)
             
             % should I do that for all time in timeVec? Now only systems in switch time are checked
-            % incorrect result for matrices containing elements such as '2/3'
-            ProbDynamicsListLenght=numel(intProbDynamicsList);
-            firsttime=switchSysTimeVec(2);
-            
-            intpDynBPBMat=intProbDynamicsList{1}.getBPBTransDynamics().evaluate(firsttime);         
-            extpDynBPBMat=extProbDynamicsList{1}.getBPBTransDynamics().evaluate(firsttime);    
-            t=firsttime;
-            [isEqual,BPBMat]=compareBPBandpDynBPB(1,intpDynBPBMat,t);
-            [extIsEqual,BPBMat]=compareBPBandpDynBPB(1,extpDynBPBMat,t);
-            isEqual=isEqual*extIsEqual;
-            if (sysTimeVecLenght==ProbDynamicsListLenght)&&(sysTimeVecLenght>1)
-                for iLinSys = 2 : sysTimeVecLenght
-                    itime=switchSysTimeVec(iLinSys+1);                    
+            % what about regularisation of result obtained from probDynObj in 
+            % third data set ('demo3fourthTestSys')?
+            probDynamicsListLenght=numel(intProbDynamicsList); 
+            intTVec=intEllTube.timeVec{1};
+            extTVec=extEllTube.timeVec{1};
+            intSwitchIndexVec=makeSwitchIndVec(intTVec);   
+            t=findCurrentTime(intTVec,2,intSwitchIndexVec);
+            intpDynBPBMat=intProbDynamicsList{1}.getBPBTransDynamics().evaluate(t);         
+            extpDynBPBMat=extProbDynamicsList{1}.getBPBTransDynamics().evaluate(t);                                 
+            isEqual=compareBPBandpDynBPB(1,intpDynBPBMat,t);
+            isOk=isEqual&&isOk;
+            extIsEqual=compareBPBandpDynBPB(1,extpDynBPBMat,t);
+            isOk=extIsEqual&&isOk;
+            if (sysTimeVecLenght==probDynamicsListLenght)&&(sysTimeVecLenght>1)
+                for iLinSys = 2 : sysTimeVecLenght                  
+                    itime=findCurrentTime(intTVec,iLinSys+1,intSwitchIndexVec);
                     intpDynBPBMat=intProbDynamicsList{iLinSys}{1}.getBPBTransDynamics().evaluate(itime);
                     extpDynBPBMat=extProbDynamicsList{iLinSys}{1}.getBPBTransDynamics().evaluate(itime);
-                    [isEqual,BPBMat]=compareBPBandpDynBPB(iLinSys,intpDynBPBMat,itime);
-                    [extIsEqual,BPBMat]=compareBPBandpDynBPB(iLinSys,extpDynBPBMat,itime);
-                    isEqual=isEqual*extIsEqual;
+                    isEqual=compareBPBandpDynBPB(iLinSys,intpDynBPBMat,itime);
+                    isOk=isEqual&&isOk;
+                    extIsEqual=compareBPBandpDynBPB(iLinSys,extpDynBPBMat,itime);
+                    isOk=extIsEqual&&isOk;
                 end;               
             end;
+            if (sysTimeVecLenght~=probDynamicsListLenght)
+                isOk=0;
+            end;
+            
             %1) comparison of the results obtained from getEllTubeRel and probDynObj.getX0Mat();
             
             isEqual=compareX0Mat(intEllTube,intProbDynamicsList,nTube);
@@ -272,146 +278,169 @@ classdef ContinuousReachTestCase < mlunitext.test_case
            
             %3) comparison of good directions obtained from GoodDirSetList and EllTubeRel 
             
-            %obtained results are not equal!!! Why?
-            
-%           timeCVec = intEllTube.timeVec;
-            nTuples = intEllTube.getNTuples;
-            goodDirSetObj=intGoodDirSetList{1};
-            calcPrecision=regTol;
-            
-            lsGoodDirMat = goodDirSetObj.getlsGoodDirMat();
-            for iGoodDir = 1:size(lsGoodDirMat, 2)
-                lsGoodDirMat(:, iGoodDir) = ...
-                    lsGoodDirMat(:, iGoodDir) / ...
-                        norm(lsGoodDirMat(:, iGoodDir));
-            end
-            lsGoodDirCMat = intEllTube.lsGoodDirVec();
- %           curGoodDirObj = goodDirSetObj;
- 
-            %find the corresponding indexes for good directions obtained from EllTube
-            %in goodDirSetObj
-            GoodDirOrdered=[];
-            for iTuple = 1 : nTuples
-%               curTimeVec = timeCVec{iTuple};
-                    %
-                    % good directions' indexes mapping
-                    %
-                curGoodDirVec = lsGoodDirCMat{iTuple};
-                curGoodDirVec = curGoodDirVec / norm(curGoodDirVec);
-                for iGoodDir = 1:size(lsGoodDirMat, 2)
-                    isFound = norm(curGoodDirVec - ...
-                    lsGoodDirMat(:, iGoodDir)) <= calcPrecision;
-                    if isFound
-                    	break;
-                    end
-                end
-                mlunitext.assert_equals(true, isFound,...
-                    'Vector mapping - good dir vector not found');
-                GoodDirOrdered=[GoodDirOrdered iGoodDir];
-
-            end
-
-            for iTuple=1:nTube
-                GoodDirMat=intEllTube.ltGoodDirMat{iTuple};
-                timeVec=intEllTube.timeVec{iTuple};
-                switchIndex=[];
-                for iSwitch=1:switchTimeVecLenght
-                    sIndex=find(timeVec==switchSysTimeVec(iSwitch));
-                    switchIndex=[switchIndex sIndex];
-                end;
-
-                [previousTime,currentTime,CurrentGoodDirMat]=setTimeIntervalForGoodDirCompare(1,timeVec);
-                iTimeVec=timeVec(previousTime:currentTime);
-                intGoodDirSetObj=intGoodDirSetList{1};
-                NGoodDirs=intGoodDirSetObj.getNGoodDirs();
-                GoodDirOneCurveSplineList=intGoodDirSetObj.getRGoodDirOneCurveSplineList();
-                properITube=GoodDirOrdered(iTuple);                
-                GoodDirOne=GoodDirOneCurveSplineList{properITube}.evaluate(iTimeVec);
-                %CurrentGoodDirMat is not equal to GoodDirOne
-                if (sysTimeVecLenght==ProbDynamicsListLenght)&&(sysTimeVecLenght>1)
-                    for iLinSys = 2 : sysTimeVecLenght                                            
-                        [previousTime, currentTime, CurrentGoodDirMat]=...
-                            setTimeIntervalForGoodDirCompare(iLinSys,timeVec);
-                        iTimeVec=timeVec(previousTime:currentTime);
-                        itime=switchSysTimeVec(iLinSys+1);
-                        intGoodDirSetObj=intGoodDirSetList{iLinSys}{properITube};
-                        NGoodDirs=intGoodDirSetObj.getNGoodDirs();
-                        GoodDirOneCurveSplineList=intGoodDirSetObj.getRGoodDirOneCurveSplineList();
-                        GoodDirOne=GoodDirOneCurveSplineList{1}.evaluate(iTimeVec);
-                        %CurrentGoodDirMat is not equal to GoodDirOne
-                    end;
-                end;                
-            end;
-                       
+            isEqual=compareGoodCurves(intEllTube,intGoodDirSetList);
+            isOk=isOk&&isEqual;
+            isEqual=compareGoodCurves(extEllTube,extGoodDirSetList);
+            isOk=isOk&&isEqual;
             isOk
-            function [isEqual,BPBMat]=compareBPBandpDynBPB(iLinSys,pDynBPBMat,tEval)
-                BCellMat=linSys{iLinSys}.getBtMat();
-                %BMat=cell2mat(cellfun(@(x)str2num(x),BMatCell,'UniformOutput',false));
+            function isEqual=compareBPBandpDynBPB(iLinSys,pDynBPBMat,tEval)
+                bCMat=linSysList{iLinSys}.getBtMat();              
                 t=tEval;
-                BMat=cellfun(@eval,BCellMat);
-                UBoundsEll=linSys{iLinSys}.getUBoundsEll();
-                PCellMat=UBoundsEll.shape(); 
-                %PMat=cell2mat(cellfun(@(x)str2num(x),PMatCell,'UniformOutput',false));               
-                PMat=cellfun(@eval,PCellMat);
-                BPBMat=BMat*PMat*(BMat)'; 
+                bMat=cellfun(@eval,bCMat);
+                uBoundsEll=linSysList{iLinSys}.getUBoundsEll();
+                pCMat=uBoundsEll.shape();                              
+                pMat=cellfun(@eval,pCMat);
+                bpbMat=bMat*pMat*(bMat)'; 
                 if (isReg)
                     fPosReg=@(x)gras.mat.MatrixPosReg(x,regTol);
-                    BPBMatReg=gras.mat.AConstMatrixFunction(BPBMat);
-                    BPBPosReg=fPosReg(BPBMatReg);
-                    BPBMatAfterReg=BPBPosReg.evaluate(1);
-                end;
-                                          
-                [isEqual, absDiff]=modgen.common.absrelcompare(BPBMat,pDynBPBMat, CMP_TOL, [], @abs);
-            end
-            function curTime=findCurrentTime(iTubeTimeVec,iSwitch)
-                isBackward=self.reachObj.isbackward();                              
-                if (isBackward)
-                    iTubeTimeVecSize=size(iTubeTimeVec);
-                    curTime=iTubeTimeVecSize(2)-switchIndex(iSwitch)+1;
-                else 
-                    curTime=switchIndex(iSwitch);
-                end; 
-            end
-            function isEqual=compareX0Mat(EllTube,ProbDynamicsList,nTube)  
+                    bpbMatReg=gras.mat.AConstMatrixFunction(bpbMat);
+                    bpbPosReg=fPosReg(bpbMatReg);
+%                     BPBMatAfterReg=bpbPosReg.evaluate(1);
+                    bpbMatReg=bpbPosReg.evaluate(t);
+                end;                                         
+                [isEqual, absDiff]=modgen.common.absrelcompare(bpbMat,pDynBPBMat, CMP_TOL, [], @abs);
+            end  
+            %
+            function isEqual=compareX0Mat(EllTube,probDynamicsList,nTube)  
                 isEqual=1;
                 for iTube=1:nTube
-                    timeVec=EllTube.timeVec{iTube};
-                    switchIndex=[];
-                    for iSwitch=1:switchTimeVecLenght
-                        sIndex=find(timeVec==switchSysTimeVec(iSwitch));
-                        switchIndex=[switchIndex sIndex];
-                    end;                
-                    probDynObj=ProbDynamicsList{1};
-                    QDynArray=probDynObj.getX0Mat();                
-                    currentTime=findCurrentTime(timeVec,1);
-                    QArray=EllTube.QArray{iTube}(:,:,currentTime);                 
-                    [isCurrentEqual, absDiff]=modgen.common.absrelcompare(QDynArray,QArray, CMP_TOL, [], @abs);
-                    isEqual=isEqual&&isCurrentEqual;
-                    if (switchTimeVecLenght-1>=2)
-                        for iSwitch=2:switchTimeVecLenght-1
-                            probDynObj=ProbDynamicsList{iSwitch}{iTube};
-                            QDynArray=probDynObj.getX0Mat();
-                            currentTime=findCurrentTime(timeVec,iSwitch);
-                            QArray=EllTube.QArray{iTube}(:,:,currentTime);                        
-                            [isCurrentEqual, absDiff]=modgen.common.absrelcompare(QDynArray,...
-                                QArray, CMP_TOL, [], @abs);
-                            isEqual=isEqual&&isCurrentEqual;
-                        end;
+                    timeVec=EllTube.timeVec{iTube};                    
+                    switchIndexVec=makeSwitchIndVec(timeVec);
+                    probDynObj=probDynamicsList{1};
+                    qDynArray=probDynObj.getX0Mat();                
+                    currentTime=findCurrentTime(timeVec,1,switchIndexVec);
+                    qArray=EllTube.QArray{iTube}(:,:,currentTime);                 
+                    [isCurrentEqual, absDiff]=modgen.common.absrelcompare(qDynArray,qArray, CMP_TOL, [], @abs);
+                    isEqual=isEqual&&isCurrentEqual;  
+                    if ((switchTimeVecLenght-1>=2)&&(nTube~=numel(probDynamicsList{2}))...
+                            ||(sysTimeVecLenght~=probDynamicsListLenght))
+                        isEqual=0;                        
                     end;
-                end;                                
+                    if (switchTimeVecLenght-1>=2)&&(isEqual)                        
+                        for iSwitch=2:switchTimeVecLenght-1
+                            probDynObj=probDynamicsList{iSwitch}{iTube};
+                            qDynArray=probDynObj.getX0Mat();
+                            currentTime=findCurrentTime(timeVec,iSwitch,switchIndexVec);
+                            qArray=EllTube.QArray{iTube}(:,:,currentTime);                        
+                            [isCurrentEqual, absDiff]=modgen.common.absrelcompare(qDynArray,...
+                                qArray, CMP_TOL, [], @abs);
+                            isEqual=isEqual&&isCurrentEqual;
+                        end;                 
+                    end;
+                end;                   
+            end   
+            %
+            function curTime=findCurrentTime(iTubeTimeVec,iSwitch,switchIndexVec)
+                    isBackward=self.reachObj.isbackward();                              
+                    if (isBackward)
+                        iTubeTimeVecSize=size(iTubeTimeVec);
+                        curTime=iTubeTimeVecSize(2)-switchIndexVec(iSwitch)+1;
+                    else 
+                        curTime=switchIndexVec(iSwitch);
+                    end; 
             end
-            function [previousTime, currentTime, CurrentGoodDirMat]=...
-                    setTimeIntervalForGoodDirCompare(iCurLinSys,iTimeVec)
+            %
+            function switchIndexVec=makeSwitchIndVec(timeVec)
+                switchIndexVec=zeros(1,switchTimeVecLenght);
+                for iSwitch=1:switchTimeVecLenght
+                    sIndex=find(timeVec==switchSysTimeVec(iSwitch));
+                    switchIndexVec(iSwitch)=sIndex;
+                end;  
+            end
+            %
+            function isEqual=compareGoodCurves(ellTube,goodDirSetList)
+                isEqual=1; 
+                nTuples = ellTube.getNTuples;
+                goodDirSetObj=goodDirSetList{1};
+                calcPrecision=regTol;            
+                lsGoodDirMat = goodDirSetObj.getlsGoodDirMat();
+                for iGoodDir = 1:size(lsGoodDirMat, 2)
+                    lsGoodDirMat(:, iGoodDir) = ...
+                        lsGoodDirMat(:, iGoodDir) / ...
+                            norm(lsGoodDirMat(:, iGoodDir));
+                end
+                lsGoodDirCMat = ellTube.lsGoodDirVec();
+                %find the corresponding indexes for good directions obtained from EllTube
+                %in goodDirSetObj
+                goodDirOrderedVec=zeros(1,nTuples);
+                for iTuple = 1 : nTuples
+                        %
+                        % good directions' indexes mapping
+                        %
+                    curGoodDirVec = lsGoodDirCMat{iTuple};
+                    curGoodDirVec = curGoodDirVec / norm(curGoodDirVec);
+                    for iGoodDir = 1:size(lsGoodDirMat, 2)
+                        isFound = norm(curGoodDirVec - ...
+                        lsGoodDirMat(:, iGoodDir)) <= calcPrecision;
+                        if isFound
+                            break;
+                        end
+                    end
+                    mlunitext.assert_equals(true, isFound,...
+                        'Vector mapping - good dir vector not found');
+                    goodDirOrderedVec(iTuple)=iGoodDir;
+
+                end
+                for iTuple=1:nTuples
+                    goodDirMat=ellTube.ltGoodDirMat{iTuple};
+                    timeVec=ellTube.timeVec{iTuple};
+                    switchIndVec=makeSwitchIndVec(timeVec);
+                    [previousTime,currentTime,currentGoodDirMat]=setTimeIntervalForGoodDirCompare(1,...
+                        timeVec,goodDirMat,switchIndVec);
+                    iTimeVec=timeVec(previousTime:currentTime);
+                    goodDirSetObj=goodDirSetList{1};
+                    goodDirOneCurveSplineList=goodDirSetObj.getRGoodDirOneCurveSplineList();
+                    properITube=goodDirOrderedVec(iTuple);                
+                    goodDirOne=goodDirOneCurveSplineList{properITube}.evaluate(iTimeVec);
+                    isCurEqual=compareOneGoodCurveFromGoodDirMatAndGoodDirList(currentGoodDirMat,goodDirOne);
+                    isEqual=isEqual&&isCurEqual;
+                    if ((switchTimeVecLenght-1>=2)&&(nTuples~=numel(goodDirSetList{2}))...
+                                ||(sysTimeVecLenght~=numel(goodDirSetList)))
+                        isEqual=0;                        
+                    end;                
+                    if (isEqual)&&(sysTimeVecLenght>1)
+                        for iLinSys = 2 : sysTimeVecLenght                                            
+                            [previousTime, currentTime, currentGoodDirMat]=...
+                                setTimeIntervalForGoodDirCompare(iLinSys,timeVec,...
+                                goodDirMat,switchIndVec);
+                            iTimeVec=timeVec(previousTime:currentTime);
+                            goodDirSetObj=goodDirSetList{iLinSys}{properITube};
+                            goodDirOneCurveSplineList=goodDirSetObj.getRGoodDirOneCurveSplineList();
+                            goodDirOne=goodDirOneCurveSplineList{1}.evaluate(iTimeVec);
+                            isCurEqual=compareOneGoodCurveFromGoodDirMatAndGoodDirList(currentGoodDirMat,...
+                                goodDirOne);
+                            isEqual=isEqual&&isCurEqual;
+                        end;
+                    end;                
+                end;
+                %
+                function isCurEqual=compareOneGoodCurveFromGoodDirMatAndGoodDirList(goodDirMat,...
+                        goodDirCurve)
+                    isCurEqual=1;
+                    sizeGoodDirMat=size(goodDirMat);
+                    nDir=sizeGoodDirMat(2);
+                    for iDir=1:nDir
+                        goodNormDirMat=goodDirMat(:,iDir)./norm(goodDirMat(:,iDir));
+                        goodNormDirCurve=goodDirCurve(:,iDir)./norm(goodDirCurve(:,iDir));
+                        [isCurrentEqual, absDiff]=modgen.common.absrelcompare(goodNormDirMat,...
+                                    goodNormDirCurve, CMP_TOL, [], @abs);
+                        isCurEqual=isCurrentEqual&&isCurEqual;
+                    end;
+                end
+            end   
+            %
+            function [previousTime, currentTime, currentGoodDirMat]=...
+                    setTimeIntervalForGoodDirCompare(iCurLinSys,iTimeVec,goodDirMat,switchIndVec)
                 isBackward=self.reachObj.isbackward();
                 if (isBackward)
                     iTimeVecSize=size(iTimeVec);
-                    previousTime=iTimeVecSize(2)-switchIndex(iCurLinSys+1)+1;
-                    currentTime=iTimeVecSize(2)-switchIndex(iCurLinSys)+1;
-                    CurrentGoodDirMat=GoodDirMat(:,currentTime:-1:previousTime);
+                    previousTime=iTimeVecSize(2)-switchIndVec(iCurLinSys+1)+1;
+                    currentTime=iTimeVecSize(2)-switchIndVec(iCurLinSys)+1;
+                    currentGoodDirMat=goodDirMat(:,currentTime:-1:previousTime);
                 else 
-                    currentTime=switchIndex(iCurLinSys+1);
-                    previousTime=switchIndex(iCurLinSys);
-                    CurrentGoodDirMat=GoodDirMat(:,previousTime:currentTime);
+                    currentTime=switchIndVec(iCurLinSys+1);
+                    previousTime=switchIndVec(iCurLinSys);
+                    currentGoodDirMat=goodDirMat(:,previousTime:currentTime);
                 end                
             end
             
