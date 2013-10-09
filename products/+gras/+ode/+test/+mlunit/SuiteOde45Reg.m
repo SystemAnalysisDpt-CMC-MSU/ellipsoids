@@ -53,7 +53,7 @@ classdef SuiteOde45Reg < gras.ode.test.mlunit.SuiteBasic
                 
                 tVaryVec = 0:0.001:1;
                 tVaryVec(2) = tBeginVec(2);
-                threshold = 0.333;
+                threshold = 0.3333;
                 tspan = tVaryVec(tVaryVec >= threshold);
                 helpForComparision(tVaryVec,tspan);
                 compare(yMat(tVaryVec >= threshold,:),yyMat,...

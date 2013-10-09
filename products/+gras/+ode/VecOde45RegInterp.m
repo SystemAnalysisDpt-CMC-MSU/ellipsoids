@@ -1,20 +1,16 @@
 classdef VecOde45RegInterp
     properties  (Access=private)
-        tNewVec = [] 
-        yNewCVec = []
-        tCVec = []
+        tVec = [] 
         yCVec = []
-        hCVec = []
+        hVec = []
         fCVec = []
         fOdeRegFunc
         dataType
-        nEquations
+        nSysDims
         tBegin
         yBeginVec = []
         tFinal
-        iNext
         dyNewCorrCVec = []
-        nOldCountElements
     end
     methods
         function interpObj = VecOde45RegInterp(SData)
@@ -24,31 +20,26 @@ classdef VecOde45RegInterp
             %       SData: struct[1,1] - structure stores all the data
             %           needed to build the solution on an arbitrary grid
             %           
-            %           tNewVec: double[1,nIter] - new nodes of adaptive
+            %           tVec: double[1,nKnots] - nodes of adaptive
             %               time grid
-            %           yNewCVec: cell[1,nIter] - values of the resulting
-            %               function in nodes new adaptive time grid
-            %           tCVec: cell[1,nIter] - nodes of adaptive time grid
-            %           yCVec: cell[1,nIter] - values of the resulting
-            %               function in nodes adaptive time grid
-            %           hCVec: cell[1,nIter] - step of adaptive time grid 
-            %               on each iteration
-            %           fCVec: cell[1,nIter] - values ??of the derivatives
-            %           fOdeRegFunc: function_handle[1,1] -function
+            %           yCVec: cell[1,nKnots] of double[nSysDims,1] - 
+            %               values of the resulting function in nodes 
+            %               adaptive time grid
+            %           hVec: double[1,nKnots] - step of adaptive time grid
+            %           fCVec: cell[1,nKnots] of double[nSysDims,1] - 
+            %               values of the derivatives
+            %           fOdeRegFunc: function_handle[1,1] - function
             %               responsible for regularizing
-            %           dataType: char[1,1] - data type, result of the 
+            %           dataType: char[1] - data type, result of the 
             %               function superiorfloat()
-            %           nEquations: double[1,1] - the number of equations 
+            %           nSysDims: double[1,1] - the number of equations 
             %               in the system
             %           tBegin: double[1,1] - start time
-            %           yBeginVec: double[nEquations,1] - initial
+            %           yBeginVec: double[nSysDims,1] - initial
             %               conditions
             %           tFinal: double[1,1] - end time
-            %           iNext: double[1,1] - next iteration index
-            %           dyNewCorrCVec: cell[1,nIter] - list of new
-            %               correctional vectors
-            %           nOldCountElements: double[1,1] - the number of
-            %               elements in the previous iteration
+            %           dyNewCorrCVec: cell[1,nKnots] of double[nSysDims,1]
+            %               - list of new   correctional vectors
             %     
             % Output:
             %   interpObj: gras.ode.VecOde45RegInterp[1,1]
@@ -60,35 +51,32 @@ classdef VecOde45RegInterp
                           
             import modgen.common.throwerror;
             EXP_FIELD_LIST={'dataType','dyNewCorrCVec','fCVec',...
-                'fOdeRegFunc','hCVec','iNext','nEquations',...
-                'nOldCountElements','tBegin','tCVec','tFinal',...
-                'tNewVec','yBeginVec','yCVec','yNewCVec'};
-            fieldNameList=sort(fieldnames(SData))';
+                'fOdeRegFunc','hVec',...
+                'nSysDims','tBegin','tFinal','tVec','yBeginVec','yCVec'};
+            fieldNameList=sort(fieldnames(SData)).';
             if ~isequal(fieldNameList,EXP_FIELD_LIST)
                 throwerror('wrongInput',['one or more fields in SData' ...
                     ' are absent']);              
             end;
-            sizeStructFields = structfun(@length,SData);
-            if ~isequal(sizeStructFields(8:14)-sizeStructFields(8),...
-                    zeros(7,1))
+            sizeStructFieldsVec = structfun(@length,SData);
+            sizeStructFieldsVec(7:11)=sizeStructFieldsVec(7:11)...
+                -sizeStructFieldsVec(9);
+            sizeStructFieldsVec(7:8) = sizeStructFieldsVec(7:8) - 1;
+            if ~isequal(sizeStructFieldsVec(7:11),zeros(5,1));
                 throwerror('wrongInput',['one or more fields of SData '...
                     'have a wrong size']);
             end;
-            interpObj.tNewVec = SData.tNewVec; 
-            interpObj.yNewCVec = SData.yNewCVec;
-            interpObj.tCVec = SData.tCVec;
+            interpObj.tVec = SData.tVec;
             interpObj.yCVec = SData.yCVec;
-            interpObj.hCVec = SData.hCVec;
+            interpObj.hVec = SData.hVec;
             interpObj.fCVec = SData.fCVec;
             interpObj.fOdeRegFunc = SData.fOdeRegFunc;
             interpObj.dataType = SData.dataType;
-            interpObj.nEquations = SData.nEquations;
+            interpObj.nSysDims = SData.nSysDims;
             interpObj.tBegin = SData.tBegin;
             interpObj.yBeginVec = SData.yBeginVec;
             interpObj.tFinal = SData.tFinal;
-            interpObj.iNext = SData.iNext;
             interpObj.dyNewCorrCVec = SData.dyNewCorrCVec;
-            interpObj.nOldCountElements = SData.nOldCountElements;
         end
         function [tOutVec, yOutMat, dyRegMat] = evaluate(self, timeVec)
             % EVALUATE - this method duplicates the function's 
@@ -136,11 +124,11 @@ classdef VecOde45RegInterp
             end
             
             import modgen.common.throwerror;
-            nIter = size(self.tNewVec,2);
+            nIter = size(self.tVec,2);
             nTspan = size(timeVec,2);
             if nTspan > 2
                 tOutVec = zeros(1,nTspan,self.dataType);
-                yOutMat = zeros(self.nEquations,nTspan,self.dataType);
+                yOutMat = zeros(self.nSysDims,nTspan,self.dataType);
                 dyRegMat=yOutMat;
             else
                 throwerror('wrongInput',['length of timeVec should be'... 
@@ -153,39 +141,40 @@ classdef VecOde45RegInterp
             end;
             
             nOut = 1;
-            indVec = 1:nIter;
+            indVec = 2:nIter;
             if self.tBegin ~= timeVec(1)
-                indVec = indVec(self.tNewVec > timeVec(1) & ...
-                    self.tNewVec < timeVec(nTspan));
+                indVec = indVec(self.tVec(2:end) > timeVec(1) & ...
+                    self.tVec(2:end) < timeVec(nTspan));
                 ind0 = indVec(1);
                 tOutVec(nOut) = timeVec(1);
-                yOutMat(:,nOut) = ntrp45(timeVec(1),self.tCVec{ind0},...
-                            self.yCVec{ind0},self.hCVec{ind0},...
-                            self.fCVec{ind0},self.fOdeRegFunc);
+                yOutMat(:,nOut) = ntrp45(timeVec(1),self.tVec(ind0-1),...
+                            self.yCVec{ind0-1},self.hVec(ind0-1),...
+                            self.fCVec{ind0-1},self.fOdeRegFunc);
             else
                 tOutVec(nOut) = self.tBegin;
                 yOutMat(:,nOut) = self.yBeginVec;
             end;
-                
-            for i = 1:nIter;
+            
+            iNext = 2;                
+            for iIter = 2:nIter;
                 nOutNew =  0;
                 tNewOutVec = [];
                 yNewOutMat = [];
-                while self.iNext <= nTspan
-                    if self.tNewVec(i) < timeVec(self.iNext)
+                while iNext <= nTspan
+                    if self.tVec(iIter) < timeVec(iNext)
                         break;
                     end
                     nOutNew = nOutNew + 1;
-                    tNewOutVec = [tNewOutVec, timeVec(self.iNext)];
-                    if timeVec(self.iNext) == self.tNewVec(i);
-                        yNewOutMat = [yNewOutMat, self.yNewCVec{i}];
+                    tNewOutVec = [tNewOutVec, timeVec(iNext)];
+                    if timeVec(iNext) == self.tVec(iIter);
+                        yNewOutMat = [yNewOutMat, self.yCVec{iIter}];
                     else
                         yNewOutMat = [yNewOutMat,...
-                            ntrp45(timeVec(self.iNext),self.tCVec{i},...
-                            self.yCVec{i},self.hCVec{i},self.fCVec{i},...
-                            self.fOdeRegFunc)];
+                            ntrp45(timeVec(iNext),self.tVec(iIter-1),...
+                            self.yCVec{iIter-1},self.hVec(iIter-1),...
+                            self.fCVec{iIter-1},self.fOdeRegFunc)];
                     end
-                    self.iNext = self.iNext + 1;
+                    iNext = iNext + 1;
                 end
                 
                 if nOutNew > 0
@@ -194,8 +183,8 @@ classdef VecOde45RegInterp
                     idx = nOldCountElements+1:nOut;
                     tOutVec(idx) = tNewOutVec;
                     yOutMat(:,idx) = yNewOutMat;
-                    dyRegMat(:,idx)=repmat(self.dyNewCorrCVec{i},1,...
-                        nOutNew);
+                    dyRegMat(:,idx)=repmat(self.dyNewCorrCVec{iIter-1},...
+                        1,nOutNew);
                 end
                 
             end
