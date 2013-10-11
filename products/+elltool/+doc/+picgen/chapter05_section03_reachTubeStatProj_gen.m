@@ -8,6 +8,6 @@ function chapter05_section03_reachTubeStatProj_gen
     close all
     elltool.doc.snip.s_chapter05_section03_snippet04;
     figHandle = findobj('Type','figure');
-    elltool.doc.picgen.PicGenController.savePicFileNameByCaller(figHandle(4));
+    elltool.doc.picgen.PicGenController.savePicFileNameByCaller(figHandle(4), 0.5, 0.6);
 
 end
