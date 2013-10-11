@@ -109,7 +109,8 @@ import modgen.common.throwerror;
 import modgen.common.checkmultvar;
 
 persistent logger;
-
+disp(['Start:',datestr(now)])
+dbstack
 checkDoesContainArgs(fstEllArr,secObjArr);
 
 
@@ -126,17 +127,13 @@ else
     mode = modeNameAndVal{2};
 end
 
-if isa(secObjArr,'polytope')
+if isa(secObjArr, 'polytope')
+    
     isAnyEllDeg = any(isdegenerate(fstEllArr(:)));
     if mode == 'i'
-        secObjArr_size = size(secObjArr);
-        nElems = secObjArr_size(2);
-        polyVec = secObjArr(1);
-        for iElem = 2:nElems
-            polyVec = and(polyVec,secObjArr(iElem));
-        end
+        polyVec = and(secObjArr);
     else
-        polyVec = secObjArr;
+        polyVec = secObjArr; 
     end
     [~, nCols] = size(polyVec);
     isBndVec = false(1,nCols);
@@ -155,7 +152,7 @@ if isa(secObjArr,'polytope')
         isInsideVec = false(1,nCols);
         for iCols = 1:nCols
             isInsideVec(iCols) = doesContainPoly(fstEllArr,...
-                polyVec(iCols),varargin);
+                                    polyVec(iCols),varargin);  
         end
         res = all(isInsideVec);
     end
@@ -163,41 +160,42 @@ if isa(secObjArr,'polytope')
     if nargout < 2
         clear status;
     end
-    return;
-end
-
-
-if mode == 'u'
-    res = 1;
-    isContain = arrayfun(@(x) all(all(doesContain(x, secObjVec))), fstEllArr);
-    if ~all( isContain(:) )
-        res=0;
-        return;
-    end
-elseif isscalar(secObjVec)
-    res = 1;
-    isContain = arrayfun(@(x) all(all(doesContain(x, secObjVec))), fstEllArr);
-    if ~all( isContain(:) )
-        res = 0;
-    end
 else
-    if Properties.getIsVerbose()
-        if isempty(logger)
-            logger=Log4jConfigurator.getLogger();
+
+
+    if mode == 'u'
+        res = 1;
+        isContain = arrayfun(@(x) all(all(doesContain(x, secObjVec))), fstEllArr);
+        if ~all( isContain(:) )
+            res=0;
         end
-        logger.info('Invoking CVX...');
-    end
-    res = 1;
-    resMat  =arrayfun (@(x) qcqp(secObjVec,x), fstEllArr);
-    if any(resMat(:)<1)
-        res = 0;
-        if any(resMat(:)==-1)
-            res = -1;
-            status = 0;
+    elseif isscalar(secObjVec)
+        res = 1;
+        isContain = arrayfun(@(x) all(all(doesContain(x, secObjVec))), fstEllArr);
+        if ~all( isContain(:) )
+            res = 0;
         end
-        return;
+    else    
+        if Properties.getIsVerbose()
+            if isempty(logger)
+                logger=Log4jConfigurator.getLogger();
+            end
+            logger.info('Invoking CVX...');
+        end
+        res = 1;
+        resMat  =arrayfun (@(x) qcqp(secObjVec,x), fstEllArr);
+        if any(resMat(:)<1)
+            res = 0;
+            if any(resMat(:)==-1)
+                res = -1;
+                status = 0;
+            end
+        end
     end
 end
+
+disp(['Stop:',datestr(now)])
+
 
 end
 
@@ -255,15 +253,15 @@ minimize(xVec'*invQMat*xVec + 2*(-invQMat*qVec)'*xVec + ...
     (qVec'*invQMat*qVec - 1))
 subject to
 for iCount = 1:nNumel
-    [qiVec, invQiMat] = parameters(fstEllArr(iCount));
-    if isdegenerate(fstEllArr(iCount))
-        invQiMat = ...
-            ellipsoid.regularize(invQiMat,getAbsTol(fstEllArr(iCount)));
-    end
-    invQiMat = ell_inv(invQiMat);
-    invQiMat = 0.5*(invQiMat + invQiMat');
-    xVec'*invQiMat*xVec + 2*(-invQiMat*qiVec)'*xVec + ...
-        (qiVec'*invQiMat*qiVec - 1) <= 0;
+        [qiVec, invQiMat] = parameters(fstEllArr(iCount));
+        if isdegenerate(fstEllArr(iCount))
+            invQiMat = ...
+                ellipsoid.regularize(invQiMat,getAbsTol(fstEllArr(iCount)));
+        end
+        invQiMat = ell_inv(invQiMat);
+        invQiMat = 0.5*(invQiMat + invQiMat');
+        xVec'*invQiMat*xVec + 2*(-invQiMat*qiVec)'*xVec + ...
+            (qiVec'*invQiMat*qiVec - 1) <= 0;
 end
 cvx_end
 

@@ -18,7 +18,6 @@ classdef ellipsoid < elltool.core.AGenEllipsoid
             end
             self.shapeMat=shMat;
         end
-        
     end
     %
     methods (Access=private)

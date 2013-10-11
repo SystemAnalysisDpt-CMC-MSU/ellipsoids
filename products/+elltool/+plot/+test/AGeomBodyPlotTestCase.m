@@ -118,6 +118,9 @@ classdef AGeomBodyPlotTestCase < mlunitext.test_case
             self.runAndCheckError...
                 ('plot([testFirEll], ''fill'',false)', ...
                 'wrongDim');
+            testFirEll = self.getInstance(1);
+            plot(testFirEll,'fill',true);
+            plot(testFirEll,'fill',false);
         end
         function self = testHoldOn(self)
             [testEll,numObj] = self.getInstance(eye(2));
