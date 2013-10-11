@@ -22,6 +22,7 @@ classdef Properties<modgen.common.obj.StaticPropStorage
             import elltool.conf.Properties;
             argList={Properties.getAbsTol(),Properties.getRelTol(),...
                 Properties.getIsVerbose()};
+            
         end
     end
     methods(Static)
