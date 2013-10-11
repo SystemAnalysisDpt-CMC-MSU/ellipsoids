@@ -54,7 +54,7 @@ function [ bpMat, fVec] = spherebndr_2d(nPoints)
 %            System Analysis Department 2013 $
 %
 if nargout>1
-    fVec = ([[1:nPoints; 2 : nPoints + 1] [nPoints + 1;1]]).';
+    fVec = ([[1:nPoints-1; 2 : nPoints] [nPoints ;1]]).';
 end
 bpMat = gras.geom.circlepart(nPoints);
 %

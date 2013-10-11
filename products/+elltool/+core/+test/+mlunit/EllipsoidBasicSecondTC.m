@@ -14,7 +14,7 @@ classdef EllipsoidBasicSecondTC < mlunitext.test_case
                 [0 0; 0 0; 0 0; 0 0; 0 0; 0 0],...
                 [4 1; 3 sqrt(3) + 1; 1 sqrt(3)+1; 0 1; 1 -sqrt(3) + 1;...
                 3 -sqrt(3) + 1]};
-            fRightCMat = repmat({[1 2; 2 3; 3 4; 4 5; 5 6; 6 7; 7 1]}, 1, 4);
+            fRightCMat = repmat({[1 2; 2 3; 3 4; 4 5; 5 6; 6 1]}, 1, 4);
             isOk = compareCells(bpCMat, fCMat, bpRightCMat, fRightCMat);
             mlunitext.assert(isOk);
             
