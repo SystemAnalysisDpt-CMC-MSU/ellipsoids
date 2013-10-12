@@ -1,10 +1,13 @@
 function run_helpcollector
-picgen_files = dir('+picgen/*.m')
+helpcollectorName = modgen.common.getcallername(1);
+[pathstrVec, ~, ~] = fileparts(which(helpcollectorName));
+dirName = [pathstrVec filesep '+picgen' filesep '*.m'];
+picgen_files = dir(dirName);
 for iElem = 1 : size(picgen_files, 1)
      picgenFileName = modgen.string.splitpart(picgen_files(iElem).name, '.', 'first');
      picgenFunctionName =  strcat ('elltool.doc.picgen.', picgenFileName);
      picgenFunction = str2func(picgenFunctionName);
-     picgenFunction()
+     picgenFunction();
 end
 
 import modgen.logging.log4j.Log4jConfigurator;

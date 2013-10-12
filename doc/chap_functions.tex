@@ -731,11 +731,8 @@ Input:
       nPoints: number of boundary points
 
 Output:
-  regular:
-      bpMat: double[nPoints,nDim] - boundary points of ellipsoid
-  optional:
-      fVec: double[1,nFaces]/double[nFacex,nDim] - indices of points in
-          each face of bpMat graph
+   bpMat: double[nPoints, nDims] - boundary points of ellipsoid.
+   fMat: double[nFaces, nDims] - indices of points in each face of bpMat graph.
 \end{verbatim}
 \subsection{\texorpdfstring{ellipsoid.getBoundaryByFactor}{getBoundaryByFactor}}\label{method:ellipsoid.getBoundaryByFactor}
 \begin{verbatim}
@@ -964,6 +961,30 @@ Example:
      1.0e-05 *
 
       1.0000    1.0000
+\end{verbatim}
+\subsection{\texorpdfstring{ellipsoid.getRhoBoundary}{getRhoBoundary}}\label{method:ellipsoid.getRhoBoundary}
+\begin{verbatim}
+GETRHOBOUNDARY - computes the boundary of an ellipsoid and
+support function values.
+
+Input:
+  regular:
+      ellObj: ellipsoid [1, 1]- ellipsoid of the dimention 2 or 3.
+  optional:
+      nPoints: number of boundary points
+
+Output:
+   bpMat: double[nPoints+1, nDims] - boundary points of ellipsoid.
+   fMat: double[nFaces, nDims] - indices of points in each face of
+       bpMat graph.
+   supVec: double[nPoints+1, 1] - vector of values of the support
+       function in directions (bpMat - cenMat).
+   lGridMat: double[nPoints+1, nDims] - array of directions.
+\end{verbatim}
+\subsection{\texorpdfstring{ellipsoid.getRhoBoundaryByFactor}{getRhoBoundaryByFactor}}\label{method:ellipsoid.getRhoBoundaryByFactor}
+\begin{verbatim}
+GETRHOBOUNDARYBYFACTOR - computes grid of 2d or 3d ellipsoid and vertices
+                     for each face in the grid and support function values.
 \end{verbatim}
 \subsection{\texorpdfstring{ellipsoid.getShape}{getShape}}\label{method:ellipsoid.getShape}
 \begin{verbatim}
