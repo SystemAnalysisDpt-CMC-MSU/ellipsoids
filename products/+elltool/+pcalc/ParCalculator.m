@@ -1,6 +1,6 @@
 classdef ParCalculator
     methods (Static)
-      function [varargout]=eval11(f, varargin)
+      function [varargout]=eval(f, varargin)
        %function [varargout]=eval11(f, arrayTubes)
             % EVAL - reads the parametr how many parallel processes could 
             %        be executed and launches function to make it possible 
@@ -20,8 +20,8 @@ classdef ParCalculator
          
         
          
-         
-         [varargout]=modgen.pcalc.auxdfeval(f, varargin);
+         varargout=cell(1,nargout);
+         [varargout{:}]=modgen.pcalc.auxdfeval(f, varargin{:});
         % [varargout]=modgen.pcalc.auxdfeval(f,args);
       
       
