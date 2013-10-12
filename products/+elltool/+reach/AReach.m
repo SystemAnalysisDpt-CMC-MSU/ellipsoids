@@ -77,10 +77,9 @@ classdef AReach < elltool.reach.IReach
         isRegEnabled
         isJustCheck
         regTol
-        intProbDynList
-        intGoodDirSetList
+        intProbDynList        
         extProbDynList
-        extGoodDirSetList
+        goodDirSetList
     end
     methods
         function set.ellTubeRel(self,rel)
@@ -569,13 +568,13 @@ classdef AReach < elltool.reach.IReach
                     qtStrCMat, qtStrCVec, x0MatArray(:, :, il0Num), ...
                     x0VecMat(:, il0Num), newTimeVec, self.relTol, ...
                     isDisturbance);
-                [ellTubeRelVec{il0Num},goodDirSetObjCell{il0Num}] = self.makeEllTubeRel(...
+                [ellTubeRelVec{il0Num},goodDirSetObjCell{il0Num},probDynObjCell{il0Num}] = self.makeEllTubeRel(...
                     probDynObj, l0Mat(:, il0Num), ...
                     newTimeVec, isDisturbance, self.relTol, approxType);
                 ellTubeRelList{il0Num} = ...
                     ellTubeRelVec{il0Num}.getTuplesFilteredBy(...
                     APPROX_TYPE, approxType).getData();
-                probDynObjCell{il0Num}=probDynObj;
+                %probDynObjCell{il0Num}=probDynObj;
             end 
         end
     end
@@ -652,7 +651,7 @@ classdef AReach < elltool.reach.IReach
             
         end
         %
-        function [ellTubeRel, goodDirSetObj] = makeEllTubeRel(self, probDynObj, l0Mat,...
+        function [ellTubeRel, goodDirSetObj, probDynObj] = makeEllTubeRel(self, probDynObj, l0Mat,...
                 timeVec, isDisturb, calcPrecision, approxTypeVec)
             import gras.ellapx.enums.EApproxType;
             import gras.ellapx.gen.RegProblemDynamicsFactory;
@@ -774,12 +773,11 @@ classdef AReach < elltool.reach.IReach
                 %temporary plug used until we replace calcPrecision with
                 %separate relTol and absTol fields in EllTube classes
                 calcPrecision=max(self.relTol,self.absTol);
-                [self.ellTubeRel,goodDirSetObj] = self.makeEllTubeRel(probDynObj, l0Mat,...
+                [self.ellTubeRel,goodDirSetObj,probDynObj] = self.makeEllTubeRel(probDynObj, l0Mat,...
                     timeVec, isDisturbance, calcPrecision, approxTypeVec);
-                self.intGoodDirSetList={goodDirSetObj};
-                self.intProbDynList={probDynObj};
-                self.extGoodDirSetList={goodDirSetObj};
-                self.extProbDynList={probDynObj};
+                self.goodDirSetList={{goodDirSetObj}};
+                self.intProbDynList={{probDynObj}};
+                self.extProbDynList={{probDynObj}};
             end
         end
         %
@@ -1480,8 +1478,7 @@ classdef AReach < elltool.reach.IReach
                 copyReachObj.projectionBasisMat = reachObj.projectionBasisMat;
                 copyReachObj.intProbDynList=reachObj.intProbDynList;
                 copyReachObj.extProbDynList=reachObj.extProbDynList;
-                copyReachObj.intGoodDirSetList=reachObj.intGoodDirSetList;
-                copyReachObj.extGoodDirSetList=reachObj.extGoodDirSetList;               
+                copyReachObj.goodDirSetList=reachObj.goodDirSetList;                              
                 %
                 curEllTubeRel=reachObj.ellTubeRel;
                 nTuples=curEllTubeRel.getNTuples();
@@ -1542,13 +1539,15 @@ classdef AReach < elltool.reach.IReach
             %       self: - reach tube
             %
             % Output:
-            %   regular:
-            %       intProbDynamicsList: cell array of cell arrays filled
-            %       with objects which describes the system dynamics between
-            %       switch time. intProbDynamicsList is constructed during 
-            %       the internal approximations and has the following structure:
-            %       {{objSys1},{objSys2dir1,...,objSys2dirn},...,{objSyskdir1,...,objSyskdirn}}.
-            %       Nested cell arrays have dimensionality equal to
+            %   intProbDynamicsList: cell[1,nLinSys] of cell[1,nTube] of
+            %   gras.ellapx.lreachplain.probdyn.LReachProblemDynamicsInterp -
+            %       list of of cell arrays filled with objects which describe 
+            %       the system dynamics between switch time. 
+            %       intProbDynamicsList is constructed during the internal 
+            %       approximations and has the following structure:
+            %       {{probDynObjSys1},{probDynObjSys2dir1,...,probDynObjSys2dirn},...,
+            %       {probDynObjSyskdir1,...,probDynObjSyskdirn}}.           
+            %       Nested cell arrays have dimensionality nTube equal to
             %       the number of directions.
             %
             % Example:
@@ -1569,36 +1568,27 @@ classdef AReach < elltool.reach.IReach
             %   rsObj2=rsObj.evolve(15, sys2);
             %   rsObj2.getIntProbDynamicsList()
             %   ans = 
-            %
-            %   Column 1
             % 
-            %     [1x1 gras.ellapx.lreachplain.probdyn.LReachProblemDynamicsInterp]
-            % 
-            %   Column 2
-            % 
-            %     {1x2 cell}
+            %       {1x1 cell}    {1x2 cell}
             %
             intProbDynList = self.intProbDynList;
         end
         %
-        function intGoodDirSetList = getIntGoodDirSetList(self)
+        function goodDirSetList = getGoodDirSetList(self)
             %
-            % GETGOODDIRSETLIST - returns the intGoodDirSetList 
+            % GETGOODDIRSETLIST - returns the goodDirSetList 
             %                           property
             %
             % Input:
             %   regular:
             %       self: - reach tube
-            %
+            %   
             % Output:
-            %   regular:
-            %       intGoodDirSetList: cell array of cell arrays filled
-            %       with objects which containes the good directions and curves data
-            %       between switch time. intProbDynamicsList is constructed during 
-            %       the internal approximations and has the following structure:
-            %       {{objSys1},{objSys2dir1,...,objSys2dirn},...,{objSyskdir1,...,objSyskdirn}}.
-            %       Nested cell arrays have dimensionality equal to
-            %       the number of directions.
+            %   goodDirSetList: cell[1,nLinSys] of cell[1,nTube] of 
+            %   gras.ellapx.lreachplain.GoodDirsContinuousGen - list of
+            %       cell arrays filled with gras.ellapx.lreachplain.GoodDirsContinuousGen 
+            %       objects which containe good directions and curves data
+            %       between switch time.
             %
             % Example:
             %   aMat = [0 1; 0 0]; bMat = eye(2);
@@ -1616,18 +1606,12 @@ classdef AReach < elltool.reach.IReach
             %   SUBounds2.shape = [5 0; 0 3];
             %   sys2 = elltool.linsys.LinSysContinuous(aMat2, bMat2, SUBounds2);
             %   rsObj2=rsObj.evolve(15, sys2);
-            %   rsObj2.getIntGoodDirSetList()
+            %   rsObj2.getGoodDirSetList()
             %   ans = 
+            % 
+            %       {1x1 cell}    {1x2 cell}
             %
-            %   Column 1
-            % 
-            %     [1x1 gras.ellapx.lreachplain.GoodDirsContinuousGen]
-            % 
-            %   Column 2
-            % 
-            %     {1x2 cell}
-            %
-            intGoodDirSetList = self.intGoodDirSetList;
+            goodDirSetList = self.goodDirSetList;
         end
         %
         function extProbDynList = getExtProbDynamicsList(self)
@@ -1640,14 +1624,12 @@ classdef AReach < elltool.reach.IReach
             %       self: - reach tube
             %
             % Output:
-            %   regular:
-            %       extProbDynamicsList: cell array of cell arrays filled
-            %       with objects which describes the system dynamics between
-            %       switch time. extProbDynamicsList is constructed during 
-            %       the external approximations and has the following structure:
-            %       {{objSys1},{objSys2dir1,...,objSys2dirn},...,{objSyskdir1,...,objSyskdirn}}.
-            %       Nested cell arrays have dimensionality equal to
-            %       the number of directions.
+            %   extProbDynamicsList: cell[1,nLinSys] of cell[1,nTube] of
+            %   gras.ellapx.lreachplain.probdyn.LReachProblemDynamicsInterp -
+            %       list of cell arrays filled with objects which describe 
+            %       the system dynamics between switch time. 
+            %       extProbDynamicsList is constructed during the external 
+            %       approximations.
             %
             % Example:
             %   aMat = [0 1; 0 0]; bMat = eye(2);
@@ -1667,67 +1649,12 @@ classdef AReach < elltool.reach.IReach
             %   rsObj2=rsObj.evolve(15, sys2);
             %   rsObj2.getExtProbDynamicsList()
             %   ans = 
-            %
-            %   Column 1
             % 
-            %     [1x1 gras.ellapx.lreachplain.probdyn.LReachProblemDynamicsInterp]
-            % 
-            %   Column 2
-            % 
-            %     {1x2 cell}
+            %       {1x1 cell}    {1x2 cell}
             %
             extProbDynList = self.extProbDynList;
         end
-           %
-        function extGoodDirSetList = getExtGoodDirSetList(self)
-            %
-            % GETEXTGOODDIRSETLIST - returns the extGoodDirSetList 
-            %                           property
-            %
-            % Input:
-            %   regular:
-            %       self: - reach tube
-            %
-            % Output:
-            %   regular:
-            %       extGoodDirSetList: cell array of cell arrays filled
-            %       with objects which containes the good curve data between
-            %       switch time. extGoodDirSetList is constructed during 
-            %       the external approximations and has the following structure:
-            %       {{objSys1},{objSys2dir1,...,objSys2dirn},...,{objSyskdir1,...,objSyskdirn}}.
-            %       Nested cell arrays have dimensionality equal to
-            %       the number of directions.
-            %
-            % Example:
-            %   aMat = [0 1; 0 0]; bMat = eye(2);
-            %   SUBounds = struct();
-            %   SUBounds.center = {'sin(t)'; 'cos(t)'};
-            %   SUBounds.shape = [9 0; 0 2];
-            %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-            %   x0EllObj = ell_unitball(2);
-            %   timeVec = [0 10];
-            %   dirsMat = [1 0; 0 1]';
-            %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-            %   aMat2 = [0 1; 1 0]; bMat2 = [0 1;1 0];
-            %   SUBounds2 = struct();
-            %   SUBounds2.center = {'sin(t)'; 'cos(t)'};
-            %   SUBounds2.shape = [5 0; 0 3];
-            %   sys2 = elltool.linsys.LinSysContinuous(aMat2, bMat2, SUBounds2);
-            %   rsObj2=rsObj.evolve(15, sys2);
-            %   rsObj2.getExtGoodDirSetList()
-            %   ans = 
-            %
-            %   Column 1
-            % 
-            %     [1x1 gras.ellapx.lreachplain.GoodDirsContinuousGen]
-            % 
-            %   Column 2
-            % 
-            %     {1x2 cell}
-            %
-            extGoodDirSetList = self.extGoodDirSetList;
-        end
-         %
+           %        
         function linSysCVec = getSystemList(self)
             % Example:
             %   aMat = [0 1; 0 0]; bMat = eye(2);
@@ -1835,9 +1762,9 @@ classdef AReach < elltool.reach.IReach
             newReachObj.linSysCVec = [newReachObj.linSysCVec {newLinSys}];
             newReachObj.isCut = false;
             %
-            [dataIntCVec, indIntVec,intProbDynCell,intGoodDirSetCell] = self.evolveApprox(newTimeVec, ...
+            [dataIntCVec, indIntVec,intProbDynCell,~] = self.evolveApprox(newTimeVec, ...
                 newLinSys, EApproxType.Internal);
-            [dataExtCVec, indExtVec,extProbDynCell,extGoodDirSetCell] = self.evolveApprox(newTimeVec, ...
+            [dataExtCVec, indExtVec,extProbDynCell,goodDirSetCell] = self.evolveApprox(newTimeVec, ...
                 newLinSys, EApproxType.External);
             dataCVec = [dataIntCVec, dataExtCVec];
             %
@@ -1845,12 +1772,10 @@ classdef AReach < elltool.reach.IReach
             %
             self.intProbDynList=[self.intProbDynList {intProbDynCell}];
             self.extProbDynList=[self.extProbDynList {extProbDynCell}];
-            self.intGoodDirSetList=[self.intGoodDirSetList {intGoodDirSetCell}];
-            self.extGoodDirSetList=[self.extGoodDirSetList {extGoodDirSetCell}];
+            self.goodDirSetList=[self.goodDirSetList {goodDirSetCell}];            
             newReachObj.intProbDynList=[newReachObj.intProbDynList {intProbDynCell}];
             newReachObj.extProbDynList=[newReachObj.extProbDynList {extProbDynCell}];
-            newReachObj.intGoodDirSetList=[newReachObj.intGoodDirSetList {intGoodDirSetCell}];
-            newReachObj.extGoodDirSetList=[newReachObj.extGoodDirSetList {extGoodDirSetCell}];
+            newReachObj.goodDirSetList=[newReachObj.goodDirSetList {goodDirSetCell}];
             newEllTubeRel =...
                 gras.ellapx.smartdb.rels.EllTube.fromStructList(...
                 'gras.ellapx.smartdb.rels.EllTube', dataCVec);
