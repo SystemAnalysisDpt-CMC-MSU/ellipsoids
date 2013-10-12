@@ -1,7 +1,7 @@
-function [bpGridMat, fGridMat] = getBoundaryByFactor(ellObj,factorVec)
+function [bpGridMat, fGridMat, supVec, lGridMat] = getRhoBoundaryByFactor(ellObj,factorVec)
 %
-%   GETBOUNDARYBYFACTOR - computes grid of 2d or 3d ellipsoid and vertices
-%                         for each face in the grid
+%GETRHOBOUNDARYBYFACTOR - computes grid of 2d or 3d ellipsoid and vertices
+%                     for each face in the grid and support function values.
 %
 % Input:
 %   regular:
@@ -16,13 +16,13 @@ function [bpGridMat, fGridMat] = getBoundaryByFactor(ellObj,factorVec)
 %           or nPlot3dPoints depending on the dimension of the ellObj
 %
 % Output:
-%   regular:
-%       bpGridMat: double[nVertices,nDims] - vertices of the grid.
-%       fGridMat: double[nFaces, nDims] - indices of vertices in each 
-%           face in the grid (2d/3d cases).
+%    bpGridMat: double[nVertices, nDims] - vertices of the grid.
+%    fGridMat: double[nFaces, nDims] - indices of vertices in each face 
+%        in the grid (2d/3d cases).
+%    supVec: double[nVertices, 1] - vector of values of the support function.
+%    lGridMat: double[nVertices, nDims] - array of directions.
 %
-% $Author:  Vitaly Baranov  <vetbar42@gmail.com> $    $Date: <04-2013> $
-% $Author: Ilya Lyubich  <lubi4ig@gmail.com> $    $Date: <03-2013> $
+% $Author: <Sergei Drozhzhin>  <SeregaDrozh@gmail.com> $    $Date: <28 September 2013> $
 % $Copyright: Lomonosov Moscow State University,
 %            Faculty of Computational Mathematics and Cybernetics,
 %            System Analysis Department 2013 $
@@ -30,10 +30,6 @@ function [bpGridMat, fGridMat] = getBoundaryByFactor(ellObj,factorVec)
 import modgen.common.throwerror
 ellObj.checkIfScalar();
 nDim = dimension(ellObj);
-
-if nDim < 2 || nDim > 3
-    throwerror('wrongDim','ellipsoid must be of dimension 2 or 3');
-end
 
 if nargin < 2
     factor = 1;
@@ -45,10 +41,16 @@ if nDim == 2
     if ~(factor == 1)
         nPlotPoints = floor(nPlotPoints * factor);
     end
-else
+elseif nDim == 3
     nPlotPoints = ellObj.nPlot3dPoints;
     if ~(factor == 1)
         nPlotPoints = floor(nPlotPoints * factor);
     end
+else
+    throwerror('wrongDim','ellipsoid must be of dimension 2 or 3');
 end
-[bpGridMat, fGridMat] = getBoundary(ellObj, nPlotPoints);
+[bpGridMat, fGridMat, supVec, lGridMat] =...
+    getRhoBoundary(ellObj, nPlotPoints);
+end
+
+
