@@ -8,6 +8,7 @@ function chapter06_section03_rlcreach_gen
     close all
     elltool.doc.snip.s_chapter06_section03_snippet01;
     elltool.doc.snip.s_chapter06_section03_snippet02;
+
     figHandle = findobj('Type','figure');
     combinedFig = figure;
     

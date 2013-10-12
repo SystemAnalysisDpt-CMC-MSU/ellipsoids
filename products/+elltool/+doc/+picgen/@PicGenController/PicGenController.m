@@ -13,6 +13,7 @@ classdef PicGenController
         % getPicFileNameByCaller - generates the full name for a picture
         % in order to save it later in doc/pic.
         % Output:
+        %    regular:
         %        fullPicFileName: char [1, ] - full file name for a picture.
         % Example:
         %   elltool.doc.picgen.PicGenController.getPicFileNameByCaller()
@@ -31,9 +32,10 @@ classdef PicGenController
         % savePicFileNameByCaller - changes figure's size and then
         % saves it in doc/pic.
         % Input:
-        %        figHandle:  figure [1,1] - figure to save.
-        %        figWidth:   numeric[1,1] - figure's width to set. 
-        %        figHeight:  numeric[1,1] - figure's height to set.
+        %   regular:
+        %       figHandle:  figure [1,1] - figure to save.
+        %       figWidth:   numeric[1,1] - figure's width to set. 
+        %       figHeight:  numeric[1,1] - figure's height to set.
         % Example:
         % elltool.doc.picgen.PicGenController.savePicFileNameByCaller(figHandle)
         %
@@ -42,9 +44,7 @@ classdef PicGenController
             set(figHandle, 'Units','normalized');
             set(figHandle,'WindowStyle','normal'); 
             set(figHandle, 'Position', [0.2 0.2 figWidth figHeight]);
-            get(figHandle, 'Position')
             set(figHandle, 'Position', [0.2 0.2 figWidth figHeight]);
-            get(figHandle, 'Position')
             print(figHandle,'-depsc', picFileName);
         end
         
