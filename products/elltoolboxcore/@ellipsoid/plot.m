@@ -60,7 +60,6 @@ function plObj = plot(varargin)
 %            Faculty of Computational Mathematics and Cybernetics,
 %            System Analysis Department 2012 $
 
-
 import elltool.plot.plotgeombodyarr;
 [plObj,nDim,isHold]= plotgeombodyarr(@(x)isa(x,'ellipsoid'),...
     @(x)dimension(x),@fCalcBodyTriArr,...
@@ -79,23 +78,10 @@ if (nDim < 3)
 end
 
 
-    function [xCMat,fCMat] = fCalcBodyTriArr(bodyArr,varargin)
-        [xCMat,fCMat] = arrayfun(@(x)fCalcBodyTri(x),bodyArr,...
-            'UniformOutput',false);
-        function [xMat, fMat] = fCalcBodyTri(ell)
-            nDim = dimension(ell(1));
-            if nDim == 1
-                [ell,nDim] = rebuildOneDim2TwoDim(ell);
-            end
-            [lGetGridMat, fGetGridMat] = getGridByFactor(ell);
-            nPoints = size(lGetGridMat, 1);
-            xMat = zeros(nDim, nPoints+1);
-            [qCenVec,qMat] = ell.double();
-            xMat(:, 1:end-1) = sqrtm(qMat)*lGetGridMat.' + ...
-                repmat(qCenVec, 1, nPoints);
-            xMat(:, end) = xMat(:, 1);
-            fMat = fGetGridMat;
-        end
+    function [xMatCArr, fMatCArr] = fCalcBodyTriArr(bodyArr,varargin)
+        [xMatCArr, fMatCArr] = arrayfun(@(x)getRhoBoundary(x), bodyArr,...
+            'UniformOutput', false);
+        xMatCArr = cellfun(@(x) x.', xMatCArr, 'UniformOutput', false);
     end
 
     function [xCMat,fCMat] = fCalcCenterTriArr(bodyArr,varargin)
@@ -109,11 +95,6 @@ end
             fCenterMat = [1 1];
         end
     end
-
-
-
-
-
 
 
     function [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr)
