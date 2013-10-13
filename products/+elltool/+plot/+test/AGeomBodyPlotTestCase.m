@@ -16,6 +16,27 @@ classdef AGeomBodyPlotTestCase < mlunitext.test_case
         function self = tear_down(self,varargin)
             close all;
         end
+        
+        function self = testNegRGB(self)
+            self.runAndCheckError('elltool.plot.colorcode2rgb(2)',...
+                'wrongInput');
+            self.runAndCheckError('elltool.plot.colorcode2rgb(''q'')',...
+                'wrongInput');
+            self.runAndCheckError('elltool.plot.colorcode2rgb(''rgbycmkw'')',...
+                'wrongInput');
+        end
+        
+        function self = testPositiveRGB(self)
+            cVec = cellfun(@(x)elltool.plot.colorcode2rgb(x),...
+                {'r', 'g', 'b', 'y', 'c', 'm', 'w', 'k'},...
+                'UniformOutput', false);
+            crgbVec = {[1 0 0], [0 1 0], [0 0 1], [1 1 0], [0 1 1],...
+                [1 0 1], [1 1 1], [0 0 0]};
+            isOk = isequal(cVec, crgbVec);
+            mlunitext.assert_equals(true, isOk);
+            
+        end
+        
         function self = testWrongInput(self)
             
             testFirEll = self.getInstance(eye(2));
@@ -97,9 +118,6 @@ classdef AGeomBodyPlotTestCase < mlunitext.test_case
             self.runAndCheckError...
                 ('plot([testFirEll], ''fill'',false)', ...
                 'wrongDim');
-            testFirEll = self.getInstance(1);
-            plot(testFirEll,'fill',true);
-            plot(testFirEll,'fill',false);
         end
         function self = testHoldOn(self)
             [testEll,numObj] = self.getInstance(eye(2));

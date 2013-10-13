@@ -495,14 +495,27 @@ classdef SuiteEllTube < mlunitext.test_case
             end
         end
         %
-       
         function testPlotReg(self)
             [relStatProj,relDynProj]=checkMaster(1);
             [rel2StatProj,rel2DynProj]=checkMaster(10);
+            %
+            relTenObj=smartdb.relationoperators.union(rel2StatProj,rel2DynProj);
+            callPlot(relTenObj,{'plotInt','plotExt'});
+            %
+            relOneObj=smartdb.relationoperators.union(relStatProj,relDynProj);
+            callPlot(relOneObj,{'plotInt','plotExt'});
+            %
             rel=smartdb.relationoperators.union(relStatProj,relDynProj,...
                 rel2StatProj,rel2DynProj);
-            plObj=rel.plot();
-            plObj.closeAllFigures();
+            callPlot(rel,{'plot'});
+            %
+            function callPlot(rel,methodNameList)
+                nMethods=length(methodNameList);
+                for iMethod=1:nMethods
+                    plObj=feval(methodNameList{iMethod},rel);
+                    plObj.closeAllFigures();
+                end
+            end
             function [relStatProj,relDynProj]=checkMaster(nPoints)
                 [~,relStatProj,relDynProj]=auxGenSimpleTubeAndProj(...
                     self,nPoints);
@@ -522,6 +535,7 @@ classdef SuiteEllTube < mlunitext.test_case
                 end
             end
         end
+        %
         function testCatCommonTime(self)
             nFirstPoints=100;
             nSecPoints=150;

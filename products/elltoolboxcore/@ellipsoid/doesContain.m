@@ -134,6 +134,7 @@ import elltool.logging.Log4jConfigurator;
 import modgen.common.throwerror;
 
 persistent logger;
+TRY_SOLVER_LIST={'SeDuMi','SDPT3'};
 
 [fstEllCentVec, fstEllShMat] = double(firstEll);
 [secEllCentVec, secEllShMat] = double(secondEll);
@@ -162,19 +163,30 @@ if Properties.getIsVerbose()
     end
     logger.info('Invoking CVX...');
 end
-cvx_begin sdp
-variable cvxxVec(1, 1)
-AMat <= cvxxVec*BMat
-cvxxVec >= 0
-cvx_end
-
-if strcmp(cvx_status,'Failed')
+nSolvers=length(TRY_SOLVER_LIST);
+for iSolver=1:nSolvers
+    cvx_begin sdp
+    cvx_solver(TRY_SOLVER_LIST{iSolver});
+    variable cvxxVec(1, 1)
+    AMat <= cvxxVec*BMat
+    cvxxVec >= 0
+    cvx_end
+    if strcmp(cvx_status,'Failed')
+        isCVXFailed=true;
+    else
+        isCVXFailed=false;
+        break;
+    end
+    
+end
+if isCVXFailed
     throwerror('cvxError','Cvx failed');
-end;
-if strcmp(cvx_status,'Solved') ...
-        || strcmp(cvx_status, 'Inaccurate/Solved')
-    res = true;
 else
-    res = false;
+    if strcmp(cvx_status,'Solved') ...
+            || strcmp(cvx_status, 'Inaccurate/Solved')
+        res = true;
+    else
+        res = false;
+    end
 end
 end
