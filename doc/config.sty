@@ -67,18 +67,18 @@ framesep=3mm,numbersep=2mm,fontsize=\small}
 %
 %----------------------------environmet for insertion of Matlab files
 %
-\def\ExPoint{\char37}
-\countdef\mycount=1 \mycount=\catcode`\% \catcode`\%=\active
-\newcommand{\verbmcodef}[2][Example]{\mycount=\catcode`\%
-\VerbatimInput[commandchars=\\\#\#,codes={\catcode`\%=\active},defineactive=\def%{\color{mcommcolor}\ExPoint},label=#1]{#2}}
- \catcode`\%=\mycount
+%\def\ExPoint{\char37}
+%\countdef\mycount=1 \mycount=\catcode`\% \catcode`\%=\active
+%\newcommand{\verbmcodef}[2][Example]{\mycount=\catcode`\%
+%\VerbatimInput[commandchars=\\\#\#,codes={\catcode`\%=\active},defineactive=\def%{\color{mcommcolor}\ExPoint},label=#1]{#2}}
+% \catcode`\%=\mycount
 
 %
 %----------------------------environmet to insert portions of Matlab code
 %
-\mycount=\catcode`\% \catcode`\%=\active
-\DefineVerbatimEnvironment{verbmcode}{Verbatim}{commandchars=\\\#\#,codes={\catcode`\%=\active},defineactive=\def%{\color{mcommcolor}\ExPoint}}
-\catcode`\%=\mycount
+%\mycount=\catcode`\% \catcode`\%=\active
+%\DefineVerbatimEnvironment{verbmcode}{Verbatim}{commandchars=\\\#\#,codes={\catcode`\%=% %\active},defineactive=\def%{\color{mcommcolor}\ExPoint}}
+%\catcode`\%=\mycount
 %\def\ExPoint{\char37}
 %\count255=\catcode`\% \catcode`\%=\active
 %\VerbatimInput[defineactive=\def%{\color{mcommcolor}\ExPoint}]{ex1.m}
