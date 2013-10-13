@@ -20,12 +20,12 @@ function chapter06_section04_hwreach_gen
     ylabel('x2');
     zlabel('x3');
     title('(a)');
-    plot(ellObj);
+    plot(ellObj, 'color', [0 0 1]);
     hold on
     [hypVec, hypScal] = grdHypObj.double;
     hyp = hyperplane([hypVec(1); hypVec(2); hypVec(3)], hypScal);
     [centVec, ~] = double(ellObj);
-    plot(hyp, 'center', [centVec(1) 200 centVec(3)], 'color', [1 0 1]);
+    plot(hyp, 'center', [centVec(1) 200 centVec(3)], 'color', [1 0 0]);
     set(leftupAxes, 'Position',  [ 0.1300    0.5838    0.3005    0.3412],...
          'CameraPosition',  1.0e+03 *[ -1.1392    0.0027    0.6616]);
    
@@ -35,9 +35,9 @@ function chapter06_section04_hwreach_gen
     ylabel('x2');
     zlabel('x3');
     title('(b)');
-    plot(ellObj);
+    plot(ellObj, 'color', [0 0 1]);
     hold on
-    plot(hyp, 'center', [centVec(1) 200 centVec(3)], 'color', [1 0 1]);
+    plot(hyp, 'center', [centVec(1) 200 centVec(3)], 'color', [1 0 0]);
     set(rightupAxes, 'Position',  [ 0.5703    0.5838    0.3005    0.3412],...
         'CameraPosition',  1.0e+03 *[-1.1572    0.3797    0.6193]);
     
@@ -47,9 +47,9 @@ function chapter06_section04_hwreach_gen
     ylabel('x2');
     zlabel('x3');
     title('(c)');
-    plot(ellObj);
+    plot(ellObj, 'color', [0 0 1]);
     hold on
-    plot(hyp, 'center', [centVec(1) 200 centVec(3)], 'color', [1 0 1]);
+    plot(hyp, 'center', [centVec(1) 200 centVec(3)], 'color', [1 0 0]);
     set(leftdownAxes, 'Position',  [0.1300    0.1100    0.3005    0.3412],...
          'CameraPosition', 1.0e+03 *[-1.4268    0.1381    0.4006]);
     
