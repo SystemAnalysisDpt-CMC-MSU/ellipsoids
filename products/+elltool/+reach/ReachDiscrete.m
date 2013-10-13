@@ -192,7 +192,7 @@ classdef ReachDiscrete < elltool.reach.AReach
            
             l0Mat=l0Mat(:, 1:nTubes);
             [M,N]=size(l0Mat);
-            k=zeros(1,N); k(1,:)=1;
+            k=zeros(1,nTubes); k(1,:)=N/nTubes;
             l0Mat1=mat2cell(l0Mat,M,[k]);
             
             probDynObj1=cell(1,nTubes);

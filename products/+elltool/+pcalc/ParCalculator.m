@@ -5,13 +5,13 @@ classdef ParCalculator
             % EVAL - reads the parametr how many parallel processes could 
             %        be executed and launches function to make it possible 
             %   
-            % Input: 
-            %  regular:
-            %    processorFunc: functionHandle/str - function to calculate 
-            %    across multiple workes
-            %    Workers: cell[1, nWorkes] - list of arguments          
-            % Output:
-            %   varargout: whatever processorFunc function return
+            % $Authors: Ekaterina Zilonova <zilonova.e.m@gmail.com>
+            %               $Date: October-2013 $
+            % $Copyright: Moscow State University,
+            %             Faculty of Computational Mathematics
+            %             and Computer Science,
+            %             System Analysis Department 2013 $
+            %
          
          % modgen.pcalc.auxdfeval.ClusterSize=elltool.conf.Properties.getConfRepoMgr.getParam('parallelCompProps.nMaxParProcess');
           

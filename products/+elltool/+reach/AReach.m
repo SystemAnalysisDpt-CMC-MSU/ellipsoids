@@ -513,6 +513,33 @@ classdef AReach < elltool.reach.IReach
             
         end
     end
+    methods (Static)
+        function  [ellTubeRelList]=fCalcTube2 (self,  ...
+                newTimeVec,  approxType, atStrCMat,...
+                btStrCMat, ptStrCMat, ptStrCVec, ctStrCMat, ...
+                qtStrCMat, qtStrCVec, x0MatArray, ...
+                x0VecMat,l0Mat,isDisturbance)
+            import gras.ellapx.smartdb.F;
+            
+            probDynObj = self.getProbDynamics(atStrCMat, ...
+                    btStrCMat, ptStrCMat, ptStrCVec, ctStrCMat, ...  
+                    qtStrCMat, qtStrCVec, x0MatArray, ...
+                    x0VecMat, newTimeVec, self.relTol, ...
+                    isDisturbance);
+                %ellTubeRelVec{il0Num} = self.makeEllTubeRel(...
+                ellTubeRelVec = self.makeEllTubeRel(...
+                    probDynObj, l0Mat, ...
+                    newTimeVec, isDisturbance, self.relTol, approxType);
+                %ellTubeRelList{il0Num} = ...
+                ellTubeRelList = ...
+                    ellTubeRelVec.getTuplesFilteredBy(...
+                    APPROX_TYPE, approxType).getData();
+                     %ellTubeRelVec{il0Num}.getTuplesFilteredBy(...
+ 
+ 
+          end 
+        
+    end    
     methods (Access = private)
        function [ellTubeRelList, indVec] = evolveApprox(self, ...
                 newTimeVec, newLinSys, approxType)
@@ -559,33 +586,58 @@ classdef AReach < elltool.reach.IReach
             %
             ellTubeRelList = cell(1, l0VecNum);
             isDisturbance = self.isDisturbance(ctStrCMat, qtStrCMat);
-            for il0Num = l0VecNum: -1 : 1
-             %function [varagout]=fCalcTube(il0Num, atStrCMat, btStrCMat, ctStrCMat, ptStrCMat, ptStrCVec, ...
-             %qtStrCMat, qtStrCVec, x0MatArray, x0VecMat, newTimeVec, self, ...
-             % )
-                x0MatArray1=x0MatArray(:, :, il0Num);
-                x0VecMat1=x0VecMat(:, il0Num);
-                l0Mat1=l0Mat(:, il0Num);
-               % [ ellTubeRelListITube ]=elltool.pcalc.fCalcTube2(self, self.relTol, ...
-                %newTimeVec,  approxType, atStrCMat,...
-                %btStrCMat, ptStrCMat, ptStrCVec, ctStrCMat, ...
-                %qtStrCMat, qtStrCVec, x0MatArray1, ...
-                %x0VecMat1,l0Mat1,isDisturbance);
-               %ellTubeRelList{il0Num}=ellTubeRelListITube;
-                probDynObj = self.getProbDynamics(atStrCMat, ...
-                    btStrCMat, ptStrCMat, ptStrCVec, ctStrCMat, ...
-                    qtStrCMat, qtStrCVec, x0MatArray1, ...
-                    x0VecMat1, newTimeVec, self.relTol, ...
-                    isDisturbance);
-                ellTubeRelVec{il0Num} = self.makeEllTubeRel(...
-                    probDynObj, l0Mat1, ...
-                   newTimeVec, isDisturbance, self.relTol, approxType);
-               ellTubeRelList{il0Num} = ...
-                   ellTubeRelVec{il0Num}.getTuplesFilteredBy(...
-                    APPROX_TYPE, approxType).getData();
+            
+            pCalc=elltool.pcalc.ParCalculator();
+           
+            l0Mat=l0Mat(:, 1:l0VecNum);
+            [M,N]=size(l0Mat);
+            k=zeros(1,l0VecNum); k(1,:)=N/l0VecNum;
+            l0Mat1=mat2cell(l0Mat,M,[k]);
+            
+            x0MatArray=x0MatArray(:, 1:l0VecNum);
+            [M,N]=size(x0MatArray);
+            k=zeros(1,l0VecNum); k(1,:)=N/l0VecNum;
+            x0MatArray1=mat2cell(x0MatArray,M,[k]);
+            
+            x0VecMat=x0VecMat(:, 1:l0VecNum);
+            [M,N]=size(x0VecMat);
+            k=zeros(1,l0VecNum); k(1,:)=N/l0VecNum;
+            x0VecMat1=mat2cell(x0VecMat,M,[k]);
+            
+            self1=cell(1,l0VecNum);
+            newTimeVec1=cell(1,l0VecNum);
+            approxType1=cell(1,l0VecNum);
+            atStrCMat1=cell(1,l0VecNum);
+            btStrCMat1=cell(1,l0VecNum);
+            ptStrCMat1=cell(1,l0VecNum);
+            ptStrCVec1=cell(1,l0VecNum);
+            ctStrCMat1=cell(1,l0VecNum);
+            qtStrCMat1=cell(1,l0VecNum);
+            qtStrCVec1=cell(1,l0VecNum);
+            isDisturbance1=cell(1,l0VecNum);
+            
+            self1(1,:)={self};
+            newTimeVec1(1,:)={newTimeVec};
+            approxType1(1,:)={approxType};
+            atStrCMat1(1,:)={atStrCMat};
+            btStrCMat1(1,:)={btStrCMat};
+            ptStrCMat1(1,:)={ptStrCMat};
+            ptStrCVec1(1,:)={ptStrCVec};
+            ctStrCMat1(1,:)={ctStrCMat};
+            qtStrCMat1(1,:)={qtStrCMat};
+            qtStrCVec1(1,:)={qtStrCVec};
+            isDisturbance1(1,:)={isDisturbance};
+       
+             [ellTubeRelList1]=pCalc.eval(@elltool.reach.AReach.fCalcTube2, self1,  ...
+                newTimeVec1,  approxType1, atStrCMat1,...
+                btStrCMat1, ptStrCMat1, ptStrCVec1, ctStrCMat1, ...
+                qtStrCMat1, qtStrCVec1, x0MatArray1, ...
+                x0VecMat1,l0Mat1,isDisturbance1)
+               
+             for il0Num = l0VecNum: -1 : 1
+                  ellTubeRelList{il0Num}=cell2mat(ellTubeRelList1(il0Num))
              end
- %           pCalc=elltool.pcalc.ParCalculator();
-%            tubeList=pCalc.eval(@fCalcTube, ellTubeRelList);
+            
         end
     end
     %

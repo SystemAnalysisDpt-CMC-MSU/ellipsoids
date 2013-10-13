@@ -6,6 +6,32 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
     properties (Access=private)
         ellTubeRel
     end
+    methods (Static)
+        function  [QArrayListL]=fCalcTube6(self,...
+              logger, solverObj,...
+              lsGoodDirMat, sTime, isFirstPointToRemove,solveTimeVec,...
+               fHandle, initValueMat)
+    
+                tStart=tic;
+                logStr=sprintf(...
+                    'solving ode for direction \n %s  defined at time %f',...
+                    mat2str(lsGoodDirMat.'),sTime);
+                logger.debug([logStr,'...']);
+                %fHandle=self.getEllApxMatrixDerivFunc(mas);
+                %initValueMat=self.getEllApxMatrixInitValue(l);
+                %
+                [~,data_Q_star]=solverObj.solve(fHandle,...
+                    solveTimeVec,initValueMat);
+                if isFirstPointToRemove
+                    data_Q_star(:,:,1)=[];
+                end
+                %
+                QArrayListL=self.adjustEllApxMatrixVec(data_Q_star);
+                logger.debug(sprintf([logStr,':done, %.3f sec. elapsed'],...
+                    toc(tStart)));
+            end
+        
+    end    
     methods (Access=private)
         function build(self)
             import gras.ellapx.lreachplain.ATightEllApxBuilder;
@@ -42,25 +68,54 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             end
             QArrayList=cell(1,nLDirs);
             %% Calculating internal approximation
-            for l=1:1:nLDirs
-                tStart=tic;
-                logStr=sprintf(...
-                    'solving ode for direction \n %s  defined at time %f',...
-                    mat2str(lsGoodDirMat(:,l).'),sTime);
-                logger.debug([logStr,'...']);
-                fHandle=self.getEllApxMatrixDerivFunc(l);
-                initValueMat=self.getEllApxMatrixInitValue(l);
-                %
-                [~,data_Q_star]=solverObj.solve(fHandle,...
-                    solveTimeVec,initValueMat);
-                if isFirstPointToRemove
-                    data_Q_star(:,:,1)=[];
-                end
-                %
-                QArrayList{l}=self.adjustEllApxMatrixVec(data_Q_star);
-                logger.debug(sprintf([logStr,':done, %.3f sec. elapsed'],...
-                    toc(tStart)));
+             pCalc=elltool.pcalc.ParCalculator();
+           
+            if (nLDirs ~= 1)
+            lsGoodDirMat=(lsGoodDirMat(:, 1:nLDirs));
+            [M,N]=size(lsGoodDirMat);
+            k=zeros(1,nLDirs); k(1,:)=N/nLDirs; 
+            lsGoodDirMat1=mat2cell(lsGoodDirMat,M,[k]);
+            
+           
+            
+             
+            initValueMat=getEllApxMatrixInitValue(self, 1:nLDirs);
+            [M,N]=size(initValueMat);
+            k=zeros(1,nLDirs); k(1,:)=N/nLDirs;
+            initValueMat1=mat2cell(initValueMat,M,[k]);
+            
+             fHandle=self.getEllApxMatrixDerivFunc(1:nLDirs);
+             [M,N]=size(fHandle(:,:));
+             k=zeros(1,nLDirs); k(1,:)=N/nLDirs;
+             fHandle1=mat2cell(fHandle(:,:),M,[k]);
+
+             self1=cell(1,nLDirs);
+            sTime1=cell(1,nLDirs);
+            solverObj1=cell(1,nLDirs);
+            isFirstPointToRemove1=cell(1,nLDirs);
+            logger1=cell(1,nLDirs);
+            solveTimeVec1=cell(1,nLDirs);
+            
+            
+            self1(1,:)={self};
+            sTime1(1,:)={sTime};
+            solverObj1(1,:)={solverObj};
+            isFirstPointToRemove1(1,:)={isFirstPointToRemove};
+            logger1(1,:)={logger};
+            solveTimeVec1(1,:)={solveTimeVec};
+            %fHandle1(1,:)={fHandle};
+            
+            % path=elltool.gras.ellapx.lreachplain.ATightEllApxBuilder();       
+            [QArrayListL]=pCalc.eval(@elltool.gras.ellapx.lreachplain.ATightEllApxBuilder.fCalcTube6,self1,...
+              logger1, solverObj1,...
+              lsGoodDirMat1, sTime1, isFirstPointToRemove1,solveTimeVec1,...
+               fHandle1, initValueMat1)
+               
+            for l=1:nLDirs
+                  QArrayList{l}=cell2mat(QArrayListL(iDir));
             end
+
+            
             %
             aMat=pDefObj.getxtDynamics.evaluate(resTimeVec);
             %
