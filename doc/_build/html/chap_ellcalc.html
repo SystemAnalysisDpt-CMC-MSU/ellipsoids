@@ -1,0 +1,1010 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Ellipsoidal Calculus &mdash; elltool_manual 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="elltool_manual 0.1 documentation" href="index.html" />
+    <link rel="next" title="Reachability" href="chap_reach.html" />
+    <link rel="prev" title="Introduction" href="chap_intro.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="chap_reach.html" title="Reachability"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="chap_intro.html" title="Introduction"
+             accesskey="P">previous</a> |</li>
+        <li><a href="main_manual.html">elltool_manual 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="ellipsoidal-calculus">
+<h1>Ellipsoidal Calculus<a class="headerlink" href="#ellipsoidal-calculus" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="basic-notions">
+<h2>Basic Notions<a class="headerlink" href="#basic-notions" title="Permalink to this headline">¶</a></h2>
+<p>We start with basic definitions. Ellipsoid <span class="math">{\mathcal E}(q,Q)</span> in
+<span class="math">{\bf R}^n</span> with center <span class="math">q</span> and shape matrix <span class="math">Q</span> is
+the set</p>
+<div class="math">
+\[{\mathcal E}(q,Q) = \{ x \in {\bf R}^n ~|~ \langle (x-q), Q^{-1}(x-q)\rangle\leqslant1 \},
+\label{ellipsoid}\]</div>
+<p>wherein <span class="math">Q</span> is positive definite (<span class="math">Q=Q^T</span> and
+<span class="math">\langle x, Qx\rangle>0</span> for all nonzero <span class="math">x\in{\bf R}^n</span>).
+[ellipsoiddef0] Here <span class="math">\langle\cdot,\cdot\rangle</span> denotes inner
+product. The support function of a set
+<span class="math">{\mathcal X}\subseteq{\bf R}^n</span> is</p>
+<div class="math">
+\[\rho(l~|~{\mathcal X}) = \sup_{x\in{\mathcal X}} \langle l,x\rangle.\]</div>
+<p>In particular, the support function of the ellipsoid ([ellipsoid]) is</p>
+<div class="math">
+\[\rho(l~|~{\mathcal E}(q,Q)) = \langle l, q\rangle + \langle l, Ql\rangle^{1/2}.
+\label{ellsupp}\]</div>
+<p>Although in ([ellipsoid]) <span class="math">Q</span> is assumed to be positive definite,
+in practice we may deal with situations when <span class="math">Q</span> is singular, that
+is, with degenerate ellipsoids flat in those directions for which the
+corresponding eigenvalues are zero. Therefore, it is useful to give an
+alternative definition of an ellipsoid using the expression ([ellsupp]).
+Ellipsoid <span class="math">{\mathcal E}(q,Q)</span> in <span class="math">{\bf R}^n</span> with center
+<span class="math">q</span> and shape matrix <span class="math">Q</span> is the set</p>
+<div class="math">
+\[{\mathcal E}(q,Q) = \{ x \in {\bf R}^n ~|~
+\langle l,x\rangle\leqslant\langle l,q\rangle + \langle l,Ql\rangle^{1/2}
+\mbox{ for all } l\in{\bf R}^n \},
+\label{ellipsoid2}\]</div>
+<p>wherein matrix <span class="math">Q</span> is positive semidefinite (<span class="math">Q=Q^T</span> and
+<span class="math">\langle x, Qx\rangle\geqslant0</span> for all <span class="math">x\in{\bf R}^n</span>).
+[ellipsoiddef] The volume of ellipsoid <span class="math">{\mathcal E}(q,Q)</span> is</p>
+<div class="math">
+\[{\bf Vol}(E(q,Q)) = {\bf Vol}_{\langle x,x\rangle\leqslant1}\sqrt{\det Q},
+\label{ellvolume}\]</div>
+<p>where <span class="math">{\bf Vol}_{\langle x,x\rangle\leqslant1}</span> is the volume of
+the unit ball in <span class="math">{\bf R}^n</span>:</p>
+<div class="math">
+\[\begin{split}{\bf Vol}_{\langle x,x\rangle\leqslant1} = \left\{\begin{array}{ll}
+\frac{\pi^{n/2}}{(n/2)!}, &amp;
+\mbox{ for even } n,\\
+\frac{2^n\pi^{(n-1)/2}\left((n-1)/2\right)!}{n!}, &amp;
+\mbox{ for odd } n. \end{array}\right.
+\label{ellunitball}\end{split}\]</div>
+<p>The distance from <span class="math">{\mathcal E}(q,Q)</span> to the fixed point <span class="math">a</span>
+is</p>
+<div class="math">
+\[{\bf dist}({\mathcal E}(q,Q),a) = \max_{\langle l,l\rangle=1}\left(\langle l,a\rangle -
+\rho(l ~|~ {\mathcal E}(q,Q)) \right) =
+\max_{\langle l,l\rangle=1}\left(\langle l,a\rangle - \langle l,q\rangle -
+\langle l,Ql\rangle^{1/2}\right). \label{dist_point}\]</div>
+<p>If <span class="math">{\bf dist}({\mathcal E}(q,Q),a) > 0</span>, <span class="math">a</span> lies outside
+<span class="math">{\mathcal E}(q,Q)</span>; if
+<span class="math">{\bf dist}({\mathcal E}(q,Q),a) = 0</span>, <span class="math">a</span> is a boundary
+point of <span class="math">{\mathcal E}(q,Q)</span>; if
+<span class="math">{\bf dist}({\mathcal E}(q,Q),a) < 0</span>, <span class="math">a</span> is an internal
+point of <span class="math">{\mathcal E}(q,Q)</span>.</p>
+<p>Given two ellipsoids, <span class="math">{\mathcal E}(q_1,Q_1)</span> and
+<span class="math">{\mathcal E}(q_2,Q_2)</span>, the distance between them is</p>
+<div class="math">
+\[\begin{split}\begin{aligned}
+{\bf dist}({\mathcal E}(q_1,Q_1),{\mathcal E}(q_2,Q_2)) &amp; = &amp; \max_{\langle l,l\rangle=1}
+\left(-\rho(-l ~|~ {\mathcal E}(q_1,Q_1)) - \rho(l ~|~ {\mathcal E}(q_2,Q_2))\right) \\
+&amp; = &amp; \max_{\langle l,l\rangle=1}\left(\langle l,q_1\rangle -
+\langle l,Q_1l\rangle^{1/2} - \langle l,q_2\rangle -
+\langle l,Q_2l\rangle^{1/2}\right). \label{dist_ell}\end{aligned}\end{split}\]</div>
+<p>If <span class="math">{\bf dist}({\mathcal E}(q_1,Q_1),{\mathcal E}(q_2,Q_2)) > 0</span>,
+the ellipsoids have no common points; if
+<span class="math">{\bf dist}({\mathcal E}(q_1,Q_1),{\mathcal E}(q_2,Q_2)) = 0</span>, the
+ellipsoids have one common point - they touch; if
+<span class="math">{\bf dist}({\mathcal E}(q_1,Q_1),{\mathcal E}(q_2,Q_2)) < 0</span>, the
+ellipsoids intersect.</p>
+<p>Finding <span class="math">{\bf dist}({\mathcal E}(q_1,Q_1),{\mathcal E}(q_2,Q_2))</span>
+using QCQP is</p>
+<div class="math">
+\[d({\mathcal E}(q_1,Q_1),{\mathcal E}(q_2,Q_2)) = \min \langle (x-y), (x-y)\rangle\]</div>
+<p>subject to:</p>
+<div class="math">
+\[\begin{split}\begin{aligned}
+\langle (q_1-x), Q_1^{-1}(q_1-x)\rangle &amp; \leqslant&amp; 1,\\
+\langle (q_2-x), Q_2^{-1}(q_2-y)\rangle &amp; \leqslant&amp; 1,\end{aligned}\end{split}\]</div>
+<p>where</p>
+<div class="math">
+\[\begin{split}d({\mathcal E}(q_1,Q_1),{\mathcal E}(q_2,Q_2))=\left\{\begin{array}{ll}
+{\bf dist}^2({\mathcal E}(q_1,Q_1),{\mathcal E}(q_2,Q_2)) &amp;
+\mbox{ if } {\bf dist}({\mathcal E}(q_1,Q_1),{\mathcal E}(q_2,Q_2))&gt;0, \\
+0 &amp; \mbox{ otherwise}. \end{array}\right.\end{split}\]</div>
+<p>Checking if <span class="math">k</span> nondegenerate ellipsoids
+<span class="math">{\mathcal E}(q_1,Q_1),\cdots,{\mathcal E}(q_k,Q_k)</span> have nonempty
+intersection, can be cast as a quadratically constrained quadratic
+programming (QCQP) problem:</p>
+<div class="math">
+\[\min 0\]</div>
+<p>subject to:</p>
+<div class="math">
+\[\langle (x-q_i),Q_i^{-1}(x-q_i)\rangle - 1 \leqslant0, ~~~ i=1,\cdots,k.\]</div>
+<p>If this problem is feasible, the intersection is nonempty. Given
+compact convex set <span class="math">{\mathcal X}\subseteq{\bf R}^n</span>, its polar
+set, denoted <span class="math">{\mathcal X}^\circ</span>, is</p>
+<div class="math">
+\[{\mathcal X}^\circ = \{x\in{\bf R}^n ~|~ \langle x,y\rangle\leqslant1, ~ y\in{\mathcal X}\},\]</div>
+<p>or, equivalently,</p>
+<div class="math">
+\[{\mathcal X}^\circ = \{l\in{\bf R}^n ~|~ \rho(l ~|~ {\mathcal X})\leqslant1\}.\]</div>
+<p>The properties of the polar set are</p>
+<ul class="simple">
+<li>If <span class="math">{\mathcal X}</span> contains the origin,
+<span class="math">({\mathcal X}^\circ)^\circ = {\mathcal X}</span>;</li>
+<li>If <span class="math">{\mathcal X}_1\subseteq{\mathcal X}_2</span>,
+<span class="math">{\mathcal X}_2^\circ\subseteq{\mathcal X}_1^\circ</span>;</li>
+<li>For any nonsingular matrix <span class="math">A\in{\bf R}^{n\times n}</span>,
+<span class="math">(A{\mathcal X})^\circ = (A^T)^{-1}{\mathcal X}^\circ</span>.</li>
+</ul>
+<p>If a nondegenerate ellipsoid <span class="math">{\mathcal E}(q,Q)</span> contains the
+origin, its polar set is also an ellipsoid:</p>
+<div class="math">
+\[\begin{split}\begin{aligned}
+{\mathcal E}^\circ(q,Q) &amp; = &amp; \{l\in{\bf R}^n ~|~ \langle l,q\rangle +
+\langle l,Ql\rangle^{1/2}\leqslant1 \}\\
+&amp; = &amp; \{l\in{\bf R}^n ~|~ \langle l,(Q-qq^T)^{-1}l\rangle +
+2\langle l,q\rangle\leqslant1 \}\\
+&amp; = &amp; \{l\in{\bf R}^n ~|~ \langle(l+(Q-qq^T)^{-1}q),
+(Q-qq^T)(l+(Q-qq^T)^{-1}q)\rangle\leqslant1+\langle q,(Q-qq^T)^{-1}q\rangle \}.\end{aligned}\end{split}\]</div>
+<p>The special case is</p>
+<div class="math">
+\[{\mathcal E}^\circ(0,Q) = {\mathcal E}(0,Q^{-1}).\]</div>
+<p>Given <span class="math">k</span> compact sets
+<span class="math">{\mathcal X}_1, \cdots, {\mathcal X}_k\subseteq{\bf R}^n</span>, their
+geometric (Minkowski) sum is</p>
+<div class="math">
+\[{\mathcal X}_1\oplus\cdots\oplus{\mathcal X}_k=\bigcup_{x_1\in{\mathcal X}_1}\cdots\bigcup_{x_k\in{\mathcal X}_k}
+\{x_1 + \cdots + x_k\} .  \label{minksum}\]</div>
+<p>Given two compact sets
+<span class="math">{\mathcal X}_1, {\mathcal X}_2 \subseteq{\bf R}^n</span>, their
+geometric (Minkowski) difference is</p>
+<div class="math">
+\[{\mathcal X}_1\dot{-}{\mathcal X}_2 = \{x\in{\bf R}^n ~|~ x + {\mathcal X}_2 \subseteq {\mathcal X}_1 \}.
+\label{minkdiff}\]</div>
+<p>Ellipsoidal calculus concerns the following set of operations:</p>
+<ul class="simple">
+<li>affine transformation of ellipsoid;</li>
+<li>geometric sum of finite number of ellipsoids;</li>
+<li>geometric difference of two ellipsoids;</li>
+<li>intersection of finite number of ellipsoids.</li>
+</ul>
+<p>These operations occur in reachability calculation and verification of
+piecewise affine dynamical systems. The result of all of these
+operations, except for the affine transformation, is <em>not</em> generally an
+ellipsoid but some convex set, for which we can compute external and
+internal ellipsoidal approximations.</p>
+<p>Additional operations implemented in the <em>Ellipsoidal Toolbox</em> include
+external and internal approximations of intersections of ellipsoids with
+hyperplanes, halfspaces and polytopes. Hyperplane <span class="math">H(c,\gamma)</span> in
+<span class="math">{\bf R}^n</span> is the set</p>
+<div class="math">
+\[H = \{x\in{\bf R}^n ~|~ \langle c, x\rangle = \gamma\}
+\label{hyperplane}\]</div>
+<p>with <span class="math">c\in{\bf R}^n</span> and <span class="math">\gamma\in{\bf R}</span> fixed.
+[hyperplanedef] The distance from ellipsoid <span class="math">{\mathcal E}(q,Q)</span> to
+hyperplane <span class="math">H(c,\gamma)</span> is</p>
+<div class="math">
+\[{\bf dist}({\mathcal E}(q,Q),H(c,\gamma)) =
+\frac{\left|\gamma-\langle c,q\rangle\right| -
+\langle c,Qc\rangle^{1/2}}{\langle c,c\rangle^{1/2}}. \label{dist_hp}\]</div>
+<p>If <span class="math">{\bf dist}({\mathcal E}(q,Q),H(c,\gamma))>0</span>, the ellipsoid
+and the hyperplane do not intersect; if
+<span class="math">{\bf dist}({\mathcal E}(q,Q),H(c,\gamma))=0</span>, the hyperplane is a
+supporting hyperplane for the ellipsoid; if
+<span class="math">{\bf dist}({\mathcal E}(q,Q),H(c,\gamma))<0</span>, the ellipsoid
+intersects the hyperplane. The intersection of an ellipsoid with a
+hyperplane is always an ellipsoid and can be computed directly.</p>
+<p>Checking if the intersection of <span class="math">k</span> nondegenerate ellipsoids
+<span class="math">E(q_1,Q_1),\cdots,{\mathcal E}(q_k,Q_k)</span> intersects hyperplane
+<span class="math">H(c,\gamma)</span>, is equivalent to the feasibility check of the QCQP
+problem:</p>
+<div class="math">
+\[\min 0\]</div>
+<p>subject to:</p>
+<div class="math">
+\[\begin{split}\begin{aligned}
+\langle (x-q_i),Q_i^{-1}(x-q_i)\rangle - 1 \leqslant0, &amp; &amp; i=1,\cdots,k,\\
+\langle c, x\rangle - \gamma = 0. &amp; &amp;\end{aligned}\end{split}\]</div>
+<p>A hyperplane defines two (closed) <em>halfspaces</em>:</p>
+<div class="math">
+\[{\bf S}_1 = \{x\in{\bf R}^n ~|~ \langle c, x\rangle \leqslant\gamma\}
+\label{halfspace1}\]</div>
+<p>and</p>
+<div class="math">
+\[{\bf S}_2 = \{x\in{\bf R}^n ~|~ \langle c, x\rangle \geqslant\gamma\}.
+\label{halfspace2}\]</div>
+<p>To avoid confusion, however, we shall further assume that a hyperplane
+<span class="math">H(c,\gamma)</span> specifies the halfspace in the sense ([halfspace1]).
+In order to refer to the other halfspace, the same hyperplane should be
+defined as <span class="math">H(-c,-\gamma)</span>.</p>
+<p>The idea behind the calculation of intersection of an ellipsoid with a
+halfspace is to treat the halfspace as an unbounded ellipsoid, that is,
+as the ellipsoid with the shape matrix all but one of whose eigenvalues
+are <span class="math">\infty</span>. [polytope] Polytope <span class="math">P(C,g)</span> is the
+intersection of a finite number of closed halfspaces:</p>
+<div class="math">
+\[P = \{x\in{\bf R}^n ~|~ Cx\leqslant g\},\]</div>
+<p>wherein <span class="math">C=[c_1 ~ \cdots ~ c_m]^T\in{\bf R}^{m\times n}</span> and
+<span class="math">g=[\gamma_1 ~ \cdots ~ \gamma_m]^T\in{\bf R}^m</span>. The distance
+from ellipsoid <span class="math">{\mathcal E}(q,Q)</span> to the polytope <span class="math">P(C,g)</span>
+is</p>
+<div class="math">
+\[{\bf dist}({\mathcal E}(q,Q),P(C,g))=\min_{y\in P(C,g)}{\bf dist}({\mathcal E}(q,Q),y),
+\label{dist_poly}\]</div>
+<p>where <span class="math">{\bf dist}({\mathcal E}(q,Q),y)</span> comes from
+([dist:sub:<cite>p</cite>oint]). If
+<span class="math">{\bf dist}({\mathcal E}(q,Q),P(C,g))>0</span>, the ellipsoid and the
+polytope do not intersect; if
+<span class="math">{\bf dist}({\mathcal E}(q,Q),P(C,g))=0</span>, the ellipsoid touches
+the polytope; if <span class="math">{\bf dist}({\mathcal E}(q,Q),P(C,g))<0</span>, the
+ellipsoid intersects the polytope.</p>
+<p>Checking if the intersection of <span class="math">k</span> nondegenerate ellipsoids
+<span class="math">E(q_1,Q_1),\cdots,{\mathcal E}(q_k,Q_k)</span> intersects polytope
+<span class="math">P(C,g)</span> is equivalent to the feasibility check of the QCQP
+problem:</p>
+<div class="math">
+\[\min 0\]</div>
+<p>subject to:</p>
+<div class="math">
+\[\begin{split}\begin{aligned}
+\langle (x-q_i),Q_i^{-1}(x-q_i)\rangle - 1 \leqslant0, &amp; &amp; i=1,\cdots,k,\\
+\langle c_j, x\rangle - \gamma_j \leqslant0, &amp; &amp; j=1,\cdots,m.\end{aligned}\end{split}\]</div>
+</div>
+<div class="section" id="operations-with-ellipsoids">
+<h2>Operations with Ellipsoids<a class="headerlink" href="#operations-with-ellipsoids" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="affine-transformation">
+<h3>Affine Transformation<a class="headerlink" href="#affine-transformation" title="Permalink to this headline">¶</a></h3>
+<p>The simplest operation with ellipsoids is an affine transformation. Let
+ellipsoid <span class="math">{\mathcal E}(q,Q)\subseteq{\bf R}^n</span>, matrix
+<span class="math">A\in{\bf R}^{m\times n}</span> and vector <span class="math">b\in{\bf R}^m</span>. Then</p>
+<div class="math">
+\[A{\mathcal E}(q,Q) + b = {\mathcal E}(Aq+b, AQA^T) .\label{affinetrans}\]</div>
+<p>Thus, ellipsoids are preserved under affine transformation. If the rows
+of <span class="math">A</span> are linearly independent (which implies
+<span class="math">m\leqslantn</span>), and <span class="math">b=0</span>, the affine transformation is
+called <em>projection</em>.</p>
+</div>
+<div class="section" id="geometric-sum">
+<h3>Geometric Sum<a class="headerlink" href="#geometric-sum" title="Permalink to this headline">¶</a></h3>
+<p>Consider the geometric sum ([minksum]) in which
+<span class="math">{\mathcal X}_1,\cdots</span>,<span class="math">{\mathcal X}_k</span> are nondegenerate
+ellipsoids <span class="math">{\mathcal E}(q_1,Q_1),\cdots</span>,
+<span class="math">{\mathcal E}(q_k,Q_k)\subseteq{\bf R}^n</span>. The resulting set is
+not generally an ellipsoid. However, it can be tightly approximated by
+the parametrized families of external and internal ellipsoids.</p>
+<p>Let parameter <span class="math">l</span> be some nonzero vector in <span class="math">{\bf R}^n</span>.
+Then the external approximation <span class="math">{\mathcal E}(q,Q_l^+)</span> and the
+internal approximation <span class="math">{\mathcal E}(q,Q_l^-)</span> of the sum
+<span class="math">{\mathcal E}(q_1,Q_1)\oplus\cdots\oplus{\mathcal E}(q_k,Q_k)</span> are
+<em>tight</em> along direction <span class="math">l</span>, i.e.,</p>
+<div class="math">
+\[{\mathcal E}(q,Q_l^-)\subseteq{\mathcal E}(q_1,Q_1)\oplus\cdots\oplus{\mathcal E}(q_k,Q_k)
+\subseteq{\mathcal E}(q,Q_l^+)\]</div>
+<p>and</p>
+<div class="math">
+\[\rho(\pm l ~|~ {\mathcal E}(q,Q_l^-)) =
+\rho(\pm l ~|~ {\mathcal E}(q_1,Q_1)\oplus\cdots\oplus{\mathcal E}(q_k,Q_k)) =
+\rho(\pm l ~|~ {\mathcal E}(q,Q_l^+)).\]</div>
+<p>Here the center <span class="math">q</span> is</p>
+<div class="math">
+\[q = q_1 + \cdots + q_k , \label{minksum_c}\]</div>
+<p>the shape matrix of the external ellipsoid <span class="math">Q_l^+</span> is</p>
+<div class="math">
+\[Q_l^+ = \left(\langle l,Q_1l\rangle^{1/2} + \cdots
++ \langle l,Q_kl\rangle^{1/2}\right)
+\left(\frac{1}{\langle l,Q_1l\rangle^{1/2}}Q_1 + \cdots +
+\frac{1}{\langle l,Q_kl\rangle^{1/2}}Q_k\right), \label{minksum_ea}\]</div>
+<p>and the shape matrix of the internal ellipsoid <span class="math">Q_l^-</span> is</p>
+<div class="math">
+\[Q_l^- = \left(Q_1^{1/2} + S_2Q_2^{1/2} + \cdots + S_kQ_k^{1/2}\right)^T
+\left(Q_1^{1/2} + S_2Q_2^{1/2} + \cdots + S_kQ_k^{1/2}\right),\label{minksum_ia}\]</div>
+<p>with matrices <span class="math">S_i</span>, <span class="math">i=2,\cdots,k</span>, being orthogonal
+(<span class="math">S_iS_i^T=I</span>) and such that vectors
+<span class="math">Q_1^{1/2}l, S_2Q_2^{1/2}l, \cdots, S_kQ_k^{1/2}l</span> are parallel.</p>
+<p>Varying vector <span class="math">l</span> we get exact external and internal
+approximations,</p>
+<div class="math">
+\[\bigcup_{\langle l,l\rangle=1} {\mathcal E}(q,Q_l^-) =
+{\mathcal E}(q_1,Q_1)\oplus\cdots\oplus{\mathcal E}(q_k,Q_k) =
+\bigcap_{\langle l,l\rangle=1} {\mathcal E}(q,Q_l^+) .\]</div>
+<p>For proofs of formulas given in this section, see Kurzhanski and Vályi
+(1997), Kurzhanski and Varaiya (2000).</p>
+<p>One last comment is about how to find orthogonal matrices
+<span class="math">S_2,\cdots,S_k</span> that align vectors
+<span class="math">Q_2^{1/2}l, \cdots, Q_k^{1/2}l</span> with <span class="math">Q_1^{1/2}l</span>. Let
+<span class="math">v_1</span> and <span class="math">v_2</span> be some unit vectors in <span class="math">{\bf R}^n</span>.
+We have to find matrix <span class="math">S</span> such that
+<span class="math">Sv_2\uparrow\uparrow v_1</span>. We suggest explicit formulas for the
+calculation of this matrix ( Dariyn and Kurzhanski (2012)):</p>
+<div class="math">
+\[\begin{split}&amp;&amp;T = I + Q_1(S - I)Q_1^T \label{valign1}, \\\end{split}\]\[\begin{split}&amp;&amp;S = \begin{pmatrix}
+     c &amp; s\\
+     -s &amp; c
+    \end{pmatrix},\quad c = \langle\hat{v_1},\ \hat{v_2}\rangle,\ \quad s = \sqrt{1 - c^2},\ \quad \hat{v_i} = \dfrac{v_i}{\|v_i\|} \label{valign2}\\\end{split}\]\[\begin{split}&amp;&amp;Q_1 = [q_1 \, q_2]\in \mathbb{R}^{n\times2},\ \quad q_1 = \hat{v_1},\ \quad q_2 = \begin{cases}
+s^{-1}(\hat{v_2} - c\hat{v_1}),&amp; s\ne 0\\
+0,&amp; s = 0.
+\end{cases} \label{valign3}\end{split}\]</div>
+</div>
+<div class="section" id="geometric-difference">
+<h3>Geometric Difference<a class="headerlink" href="#geometric-difference" title="Permalink to this headline">¶</a></h3>
+<p>Consider the geometric difference ([minkdiff]) in which the sets
+<span class="math">{\mathcal X}_1</span> and <span class="math">{\mathcal X}_2</span> are nondegenerate
+ellipsoids <span class="math">{\mathcal E}(q_1,Q_1)</span> and
+<span class="math">{\mathcal E}(q_2,Q_2)</span>. We say that ellipsoid
+<span class="math">{\mathcal E}(q_1,Q_1)</span> is <em>bigger</em> than ellipsoid
+<span class="math">{\mathcal E}(q_2,Q_2)</span> if</p>
+<div class="math">
+\[{\mathcal E}(0,Q_2) \subseteq {\mathcal E}(0,Q_1).\]</div>
+<p>If this condition is not fulfilled, the geometric difference
+<span class="math">{\mathcal E}(q_1,Q_1)\dot{-}{\mathcal E}(q_2,Q_2)</span> is an empty
+set:</p>
+<div class="math">
+\[{\mathcal E}(0,Q_2) \not\subseteq {\mathcal E}(0,Q_1) ~~~ \Rightarrow ~~~
+{\mathcal E}(q_1,Q_1) \dot{-}{\mathcal E}(q_2,Q_2) = \emptyset.\]</div>
+<p>If <span class="math">{\mathcal E}(q_1,Q_1)</span> is bigger than
+<span class="math">{\mathcal E}(q_2,Q_2)</span> and <span class="math">{\mathcal E}(q_2,Q_2)</span> is
+bigger than <span class="math">{\mathcal E}(q_1,Q_1)</span>, in other words, if
+<span class="math">Q_1=Q_2</span>,</p>
+<div class="math">
+\[{\mathcal E}(q_1,Q_1) \dot{-}{\mathcal E}(q_2,Q_2) = \{q_1-q_2\} ~~~ \mbox{and} ~~~
+{\mathcal E}(q_2,Q_2) \dot{-}{\mathcal E}(q_1,Q_1) = \{q_2-q_1\}.\]</div>
+<p>To check if ellipsoid <span class="math">{\mathcal E}(q_1,Q_1)</span> is bigger than
+ellipsoid <span class="math">{\mathcal E}(q_2,Q_2)</span>, we perform simultaneous
+diagonalization of matrices <span class="math">Q_1</span> and <span class="math">Q_2</span>, that is, we
+find matrix <span class="math">T</span> such that</p>
+<div class="math">
+\[TQ_1T^T = I ~~~ \mbox{and} ~~~ TQ_2T^T=D,\]</div>
+<p>where <span class="math">D</span> is some diagonal matrix. Simultaneous diagonalization
+of <span class="math">Q_1</span> and <span class="math">Q_2</span> is possible because both are symmetric
+positive definite (see Gantmacher (1960)). To find such matrix
+<span class="math">T</span>, we first do the SVD of <span class="math">Q_1</span>:</p>
+<div class="math">
+\[Q_1 = U_1\Sigma_1V_1^T . \label{simdiag1}\]</div>
+<p>Then the SVD of matrix
+<span class="math">\Sigma_1^{-1/2}U_1^TQ_2U_1\Sigma_1^{-1/2}</span>:</p>
+<div class="math">
+\[\Sigma_1^{-1/2}U_1^TQ_2U_1\Sigma_1^{-1/2} = U_2\Sigma_2V_2^T. \label{simdiag2}\]</div>
+<p>Now, <span class="math">T</span> is defined as</p>
+<div class="math">
+\[T = U_2^T \Sigma_1^{-1/2}U_1^T.  \label{simdiag3}\]</div>
+<p>If the biggest diagonal element (eigenvalue) of matrix <span class="math">D=TQ_2T^T</span>
+is less than or equal to <span class="math">1</span>,
+<span class="math">{\mathcal E}(0,Q_2)\subseteq{\mathcal E}(0,Q_1)</span>.</p>
+<p>Once it is established that ellipsoid <span class="math">{\mathcal E}(q_1,Q_1)</span> is
+bigger than ellipsoid <span class="math">{\mathcal E}(q_2,Q_2)</span>, we know that their
+geometric difference
+<span class="math">{\mathcal E}(q_1,Q_1)\dot{-}{\mathcal E}(q_2,Q_2)</span> is a nonempty
+convex compact set. Although it is not generally an ellipsoid, we can
+find tight external and internal approximations of this set parametrized
+by vector <span class="math">l\in{\bf R}^n</span>. Unlike geometric sum, however,
+ellipsoidal approximations for the geometric difference do not exist for
+every direction <span class="math">l</span>. Vectors for which the approximations do not
+exist are called <em>bad directions</em>.</p>
+<p>Given two ellipsoids <span class="math">{\mathcal E}(q_1,Q_1)</span> and
+<span class="math">{\mathcal E}(q_2,Q_2)</span> with
+<span class="math">{\mathcal E}(0,Q_2)\subseteq{\mathcal E}(0,Q_1)</span>, <span class="math">l</span> is a
+bad direction if</p>
+<div class="math">
+\[\begin{split}\frac{\langle l,Q_1l\rangle^{1/2}}{\langle l,Q_2l\rangle^{1/2}}&gt;r,\end{split}\]</div>
+<p>in which <span class="math">r</span> is a minimal root of the equation</p>
+<div class="math">
+\[{\bf det}(Q_1-rQ_2) = 0.\]</div>
+<p>To find <span class="math">r</span>, compute matrix <span class="math">T</span> by ([simdiag1]-[simdiag3])
+and define</p>
+<div class="math">
+\[r = \frac{1}{\max({\bf diag}(TQ_2T^T))}.\]</div>
+<p>If <span class="math">l</span> is <em>not</em> a bad direction, we can find tight external and
+internal ellipsoidal approximations <span class="math">{\mathcal E}(q,Q^+_l)</span> and
+<span class="math">{\mathcal E}(q,Q^-_l)</span> such that</p>
+<div class="math">
+\[{\mathcal E}(q,Q^-_l)\subseteq{\mathcal E}(q_1,Q_1)\dot{-}{\mathcal E}(q_2,Q_2)\subseteq{\mathcal E}(q,Q^+_l)\]</div>
+<p>and</p>
+<div class="math">
+\[\rho(\pm l ~|~ {\mathcal E}(q,Q_l^-)) =
+\rho(\pm l ~|~ {\mathcal E}(q_1,Q_1)\dot{-}{\mathcal E}(q_2,Q_2)) =
+\rho(\pm l ~|~ {\mathcal E}(q,Q_l^+)).\]</div>
+<p>The center <span class="math">q</span> is</p>
+<div class="math">
+\[q = q_1 - q_2;  \label{minkdiff_c}\]</div>
+<p>the shape matrix of the internal ellipsoid <span class="math">Q^-_l</span> is</p>
+<div class="math">
+\[\begin{split}\begin{aligned}
+&amp;&amp; P = \frac{\sqrt{\langle l, Q_1 l\rangle}}{\sqrt{\langle l, Q_2 \rangle}};\nonumber\\
+&amp;&amp; Q^-_l = \left(1 - \dfrac{1}{P}\right)Q_1 + \left(1 - P\right)Q_2.
+\label{minkdiff_ia}\end{aligned}\end{split}\]</div>
+<p>and the shape matrix of the external ellipsoid <span class="math">Q^+_l</span> is</p>
+<div class="math">
+\[Q^+_l = \left(Q_1^{1/2} - SQ_2^{1/2}\right)^T
+\left(Q_1^{1/2} - SQ_2^{1/2}\right).  \label{minkdiff_ea}\]</div>
+<p>Here <span class="math">S</span> is an orthogonal matrix such that vectors
+<span class="math">Q_1^{1/2}l</span> and <span class="math">SQ_2^{1/2}l</span> are parallel. <span class="math">S</span> is
+found from ([valign1]-[valign3]), with <span class="math">v_1=Q_2^{1/2}l</span> and
+<span class="math">v_2=Q_1^{1/2}l</span>.</p>
+<p>Running <span class="math">l</span> over all unit directions that are not bad, we get</p>
+<div class="math">
+\[\bigcup_{\langle l,l\rangle=1} {\mathcal E}(q,Q_l^-) =
+{\mathcal E}(q_1,Q_1)\dot{-}{\mathcal E}(q_2,Q_2) =
+\bigcap_{\langle l,l\rangle=1} {\mathcal E}(q,Q_l^+) .\]</div>
+<p>For proofs of formulas given in this section, see Kurzhanski and Vályi
+(1997).</p>
+</div>
+<div class="section" id="geometric-difference-sum">
+<h3>Geometric Difference-Sum<a class="headerlink" href="#geometric-difference-sum" title="Permalink to this headline">¶</a></h3>
+<p>Given ellipsoids <span class="math">{\mathcal E}(q_1,Q_1)</span>,
+<span class="math">{\mathcal E}(q_2,Q_2)</span> and <span class="math">{\mathcal E}(q_3,Q_3)</span>, it is
+possible to compute families of external and internal approximating
+ellipsoids for</p>
+<div class="math">
+\[{\mathcal E}(q_1,Q_1) \dot{-} {\mathcal E}(q_2,Q_2) \oplus {\mathcal E}(q_3,Q_3) \label{minkmp}\]</div>
+<p>parametrized by direction <span class="math">l</span>, if this set is nonempty
+(<span class="math">{\mathcal E}(0,Q_2)\subseteq{\mathcal E}(0,Q_1)</span>).</p>
+<p>First, using the result of the previous section, for any direction
+<span class="math">l</span> that is not bad, we obtain tight external
+<span class="math">{\mathcal E}(q_1-q_2, Q_l^{0+})</span> and internal
+<span class="math">{\mathcal E}(q_1-q_2, Q_l^{0-})</span> approximations of the set
+<span class="math">{\mathcal E}(q_1,Q_1)\dot{-}{\mathcal E}(q_2,Q_2)</span>.</p>
+<p>The second and last step is, using the result of section 2.2.2, to find
+tight external ellipsoidal approximation
+<span class="math">{\mathcal E}(q_1-q_2+q_3,Q_l^+)</span> of the sum
+<span class="math">{\mathcal E}(q_1-q_2,Q_l^{0+})\oplus{\mathcal E}(q_3,Q_3)</span>, and
+tight internal ellipsoidal approximation
+<span class="math">{\mathcal E}(q_1-q_2+q_3,Q_l^-)</span> for the sum
+<span class="math">{\mathcal E}(q_1-q_2,Q_l^{0-})\oplus{\mathcal E}(q_3,Q_3)</span>.</p>
+<p>As a result, we get</p>
+<div class="math">
+\[{\mathcal E}(q_1-q_2+q_3,Q_l^-) \subseteq
+{\mathcal E}(q_1,Q_1)\dot{-}{\mathcal E}(q_2,Q_2)\oplus{\mathcal E}(q_3,Q_3) \subseteq
+{\mathcal E}(q_1-q_2+q_3,Q_l^+)\]</div>
+<p>and</p>
+<div class="math">
+\[\rho(\pm l ~|~{\mathcal E}(q_1-q_2+q_3,Q_l^-)) =
+\rho(\pm l ~|~ {\mathcal E}(q_1,Q_1)\dot{-}{\mathcal E}(q_2,Q_2)\oplus{\mathcal E}(q_3,Q_3)) =
+\rho(\pm l ~|~ {\mathcal E}(q_1-q_2+q_3,Q_l^+)).\]</div>
+<p>Running <span class="math">l</span> over all unit vectors that are not bad, this
+translates to</p>
+<div class="math">
+\[\bigcup_{\langle l,l\rangle=1} {\mathcal E}(q_1-q_2+q_3,Q_l^-) =
+{\mathcal E}(q_1,Q_1)\dot{-}{\mathcal E}(q_2,Q_2)\oplus{\mathcal E}(q_3,Q_3) =
+\bigcap_{\langle l,l\rangle=1} {\mathcal E}(q_1-q_2+q_3,Q_l^+) .\]</div>
+</div>
+<div class="section" id="geometric-sum-difference">
+<h3>Geometric Sum-Difference<a class="headerlink" href="#geometric-sum-difference" title="Permalink to this headline">¶</a></h3>
+<p>Given ellipsoids <span class="math">{\mathcal E}(q_1,Q1)</span>,
+<span class="math">{\mathcal E}(q_2,Q_2)</span> and <span class="math">{\mathcal E}(q_3,Q_3)</span>, it is
+possible to compute families of external and internal approximating
+ellipsoids for</p>
+<div class="math">
+\[{\mathcal E}(q_1,Q_1) \oplus {\mathcal E}(q_2,Q_2) \dot{-} {\mathcal E}(q_3,Q_3) \label{minkpm}\]</div>
+<p>parametrized by direction <span class="math">l</span>, if this set is nonempty
+(<span class="math">{\mathcal E}(0,Q_3)\subseteq{\mathcal E}(0,Q_1)\oplus{\mathcal E}(0,Q_2)</span>).</p>
+<p>First, using the result of section 2.2.2, we obtain tight external
+<span class="math">{\mathcal E}(q_1+q_2,Q_l^{0+})</span> and internal
+<span class="math">{\mathcal E}(q_1+q_2,Q_l^{0-})</span> ellipsoidal approximations of the
+set <span class="math">{\mathcal E}(q_1,Q_1)\oplus{\mathcal E}(q_2,Q_2)</span>. In order
+for the set ([minkpm]) to be nonempty, inclusion
+<span class="math">{\mathcal E}(0,Q_3)\subseteq{\mathcal E}(0,Q_l^{0+})</span> must be
+true for any <span class="math">l</span>. Note, however, that even if ([minkpm]) is
+nonempty, it may be that
+<span class="math">{\mathcal E}(0,Q_3)\not\subseteq{\mathcal E}(0,Q_l^{0-})</span>, then
+internal approximation for this direction does not exist.</p>
+<p>Assuming that ([minkpm]) is nonempty and
+<span class="math">{\mathcal E}(0,Q_3)\subseteq{\mathcal E}(0,Q_l^{0-})</span>, the second
+step would be, using the results of section 2.2.3, to compute tight
+external ellipsoidal approximation
+<span class="math">{\mathcal E}(q_1+q_2-q_3,Q_l^+)</span> of the difference
+<span class="math">{\mathcal E}(q_1+q_2,Q_l^{0+})\dot{-}{\mathcal E}(q_3,Q_3)</span>,
+which exists only if <span class="math">l</span> is not bad, and tight internal
+ellipsoidal approximation <span class="math">{\mathcal E}(q_1+q_2-q_3,Q_l^-)</span> of the
+difference
+<span class="math">{\mathcal E}(q_1+q_2,Q_l^{0-})\dot{-}{\mathcal E}(q_3,Q_3)</span>,
+which exists only if <span class="math">l</span> is not bad for this difference.</p>
+<p>If approximation <span class="math">{\mathcal E}(q_1+q_2-q_3,Q_l^+)</span> exists, then</p>
+<div class="math">
+\[{\mathcal E}(q_1,Q_1)\oplus{\mathcal E}(q_2,Q_2)\dot{-}{\mathcal E}(q_3,Q_3) \subseteq
+{\mathcal E}(q_1+q_2-q_3,Q_l^+)\]</div>
+<p>and</p>
+<div class="math">
+\[\rho(\pm l ~|~ {\mathcal E}(q_1,Q_1)\oplus{\mathcal E}(q_2,Q_2)\dot{-}{\mathcal E}(q_3,Q_3)) =
+\rho(\pm l ~|~ {\mathcal E}(q_1+q_2-q_3,Q_l^+)).\]</div>
+<p>If approximation <span class="math">{\mathcal E}(q_1+q_2-q_3,Q_l^-)</span> exists, then</p>
+<div class="math">
+\[{\mathcal E}(q_1+q_2-q_3,Q_l^-) \subseteq
+{\mathcal E}(q_1,Q_1)\oplus{\mathcal E}(q_2,Q_2)\dot{-}{\mathcal E}(q_3,Q_3)\]</div>
+<p>and</p>
+<div class="math">
+\[\rho(\pm l ~|~{\mathcal E}(q_1+q_2-q_3,Q_l^-)) =
+\rho(\pm l ~|~ {\mathcal E}(q_1,Q_1)\oplus{\mathcal E}(q_2,Q_2)\dot{-}{\mathcal E}(q_3,Q_3)) .\]</div>
+<p>For any fixed direction <span class="math">l</span> it may be the case that neither
+external nor internal tight ellipsoidal approximations exist.</p>
+</div>
+<div class="section" id="intersection-of-ellipsoid-and-hyperplane">
+<h3>Intersection of Ellipsoid and Hyperplane<a class="headerlink" href="#intersection-of-ellipsoid-and-hyperplane" title="Permalink to this headline">¶</a></h3>
+<p>Let nondegenerate ellipsoid <span class="math">{\mathcal E}(q,Q)</span> and hyperplane
+<span class="math">H(c,\gamma)</span> be such that
+<span class="math">{\bf dist}({\mathcal E}(q,Q),H(c,\gamma))<0</span>. In other words,</p>
+<div class="math">
+\[{\mathcal E}_H(w,W) = {\mathcal E}(q,Q)\cap H(c,\gamma) \neq \emptyset .\]</div>
+<p>The intersection of ellipsoid with hyperplane, if nonempty, is always
+an ellipsoid. Here we show how to find it.</p>
+<p>First of all, we transform the hyperplane <span class="math">H(c,\gamma)</span> into
+<span class="math">H([1~0~\cdots~0]^T, 0)</span> by the affine transformation</p>
+<div class="math">
+\[y = Sx - \frac{\gamma}{\langle c,c\rangle^{1/2}}Sc,\]</div>
+<p>where <span class="math">S</span> is an orthogonal matrix found by ([valign1]-[valign3])
+with <span class="math">v_1=c</span> and <span class="math">v_2=[1~0~\cdots~0]^T</span>. The ellipsoid in
+the new coordinates becomes <span class="math">{\mathcal E}(q',Q')</span> with</p>
+<div class="math">
+\[\begin{split}\begin{aligned}
+q' &amp; = &amp; q-\frac{\gamma}{\langle c,c\rangle^{1/2}}Sc, \\
+Q' &amp; = &amp; SQS^T.\end{aligned}\end{split}\]</div>
+<p>Define matrix <span class="math">M=Q'^{-1}</span>; <span class="math">m_{11}</span> is its element in
+position <span class="math">(1,1)</span>, <span class="math">\bar{m}</span> is the first column of <span class="math">M</span>
+without the first element, and <span class="math">\bar{M}</span> is the submatrix of
+<span class="math">M</span> obtained by stripping <span class="math">M</span> of its first row and first
+column:</p>
+<div class="math">
+\[\begin{split}M = \left[\begin{array}{c|cl}
+m_{11} &amp; &amp; \bar{m}^T\\
+ &amp; \\
+\hline
+ &amp; \\
+\bar{m} &amp; &amp; \bar{M}\end{array}\right].\end{split}\]</div>
+<p>The ellipsoid resulting from the intersection is
+<span class="math">{\mathcal E}_H(w',W')</span> with</p>
+<div class="math">
+\[\begin{split}\begin{aligned}
+w' &amp; = &amp; q' + q_1'\left[\begin{array}{c}
+-1\\
+\bar{M}^{-1}\bar{m}\end{array}\right],\\
+W' &amp; = &amp; \left(1-q_1'^2(m_{11}-
+\langle\bar{m},\bar{M}^{-1}\bar{m}\rangle)\right)\left[\begin{array}{c|cl}
+0 &amp; &amp; {\bf 0}\\
+ &amp; \\
+\hline
+ &amp; \\
+{\bf 0} &amp; &amp; \bar{M}^{-1}\end{array}\right],\end{aligned}\end{split}\]</div>
+<p>in which <span class="math">q_1'</span> represents the first element of vector <span class="math">q'</span>.</p>
+<p>Finally, it remains to do the inverse transform of the coordinates to
+obtain ellipsoid <span class="math">{\mathcal E}_H(w,W)</span>:</p>
+<div class="math">
+\[\begin{split}\begin{aligned}
+w &amp; = &amp; S^Tw' + \frac{\gamma}{\langle c,c\rangle^{1/2}}c, \\
+W &amp; = &amp; S^TW'S.\end{aligned}\end{split}\]</div>
+</div>
+<div class="section" id="intersection-of-ellipsoid-and-ellipsoid">
+<h3>Intersection of Ellipsoid and Ellipsoid<a class="headerlink" href="#intersection-of-ellipsoid-and-ellipsoid" title="Permalink to this headline">¶</a></h3>
+<p>Given two nondegenerate ellipsoids <span class="math">{\mathcal E}(q_1,Q_1)</span> and
+<span class="math">{\mathcal E}(q_2,Q_2)</span>,
+<span class="math">{\bf dist}({\mathcal E}(q_1,Q_1),{\mathcal E}(q_2,Q_2))<0</span>
+implies that</p>
+<div class="math">
+\[{\mathcal E}(q_1,Q_1)\cap{\mathcal E}(q_2,Q_2)\neq\emptyset .\]</div>
+<p>This intersection can be approximated by ellipsoids from the outside
+and from the inside. Trivially, both <span class="math">{\mathcal E}(q_1,Q_1)</span> and
+<span class="math">{\mathcal E}(q_2,Q_2)</span> are external approximations of this
+intersection. Here, however, we show how to find the external
+ellipsoidal approximation of minimal volume.</p>
+<p>Define matrices</p>
+<div class="math">
+\[W_1 = Q_1^{-1}, ~~~~ W_2 = Q_2^{-1} .\label{wmatrices}\]</div>
+<p>Minimal volume external ellipsoidal approximation
+<span class="math">{\mathcal E}(q+,Q^+)</span> of the intersection
+<span class="math">{\mathcal E}(q_1,Q_1)\cap{\mathcal E}(q_2,Q_2)</span> is determined
+from the set of equations:</p>
+<div class="math">
+\[\begin{split}Q^+  = \alpha X^{-1}, \label{fusion1} \\\end{split}\]\[\begin{split}X  =  \pi W_1 + (1-\pi)W_2, \label{fusion2} \\\end{split}\]\[\begin{split}\alpha  =  1-\pi(1-\pi)\langle(q_2-q_1), W_2X^{-1}W_1(q_2-q_1)\rangle \label{fusion3}, \\\end{split}\]\[\begin{split}q^+  = X^{-1}(\pi W_1q_1 + (1-\pi)W_2q_2) \label{fusion4}, \\\end{split}\]\[\begin{split}0 =  \alpha({\bf det}(X))^2{\bf trace}(X^{-1}(W_1-W_2)) - \\
+&amp; &amp;  - n({\bf det}(X))^2 \big{(}2\langle q^+,W_1q_1-W_2q_2\rangle + \langle q^+,(W_2-W_1)q^+\rangle - \\
+&amp; &amp;  - \langle q_1,W_1q_1\rangle + \langle q_2,W_2q_2\rangle\big{)}, \label{fusion5}\end{split}\]</div>
+<p>with <span class="math">0\leqslant\pi\leqslant1</span>. We substitute <span class="math">X</span>,
+<span class="math">\alpha</span>, <span class="math">q^+</span> defined in ([fusion2]-[fusion4]) into
+([fusion5]) and get a polynomial of degree <span class="math">2n-1</span> with respect to
+<span class="math">\pi</span>, which has only one root in the interval <span class="math">[0,1]</span>,
+<span class="math">\pi_0</span>. Then, substituting <span class="math">\pi=\pi_0</span> into
+([fusion1]-[fusion4]), we obtain <span class="math">q^+</span> and <span class="math">Q^+</span>. Special
+cases are <span class="math">\pi_0=1</span>, whence
+<span class="math">{\mathcal E}(q^+,Q^+)={\mathcal E}(q_1,Q_1)</span>, and
+<span class="math">\pi_0=0</span>, whence
+<span class="math">{\mathcal E}(q^+,Q^+)={\mathcal E}(q_2,Q_2)</span>. These situations
+may occur if, for example, one ellipsoid is contained in the other:</p>
+<div class="math">
+\[\begin{split}{\mathcal E}(q_1,Q_1)\subseteq{\mathcal E}(q_2,Q_2) &amp; \Rightarrow &amp; \pi_0 = 1,\\\end{split}\]\[\begin{split}{\mathcal E}(q_2,Q_2)\subseteq{\mathcal E}(q_1,Q_1) &amp; \Rightarrow &amp; \pi_0 = 0.\\\end{split}\]</div>
+<p>The proof that the system of equations ([fusion1]-[fusion5]) correctly
+defines the minimal volume external ellipsoidal approximationi of the
+intersection <span class="math">{\mathcal E}(q_1,Q_1)\cap{\mathcal E}(q_2,Q_2)</span> is
+given in L. Ros (2002).</p>
+<p>To find the internal approximating ellipsoid
+<span class="math">{\mathcal E}(q^-,Q^-)\subseteq{\mathcal E}(q_1,Q_1)\cap{\mathcal E}(q_2,Q_2)</span>,
+define</p>
+<div class="math">
+\[\begin{split}\beta_1 &amp; = &amp; \min_{\langle x,W_2x\rangle=1}\langle x,W_1x\rangle, \label{beta1}\\\end{split}\]\[\begin{split}\beta_2 &amp; = &amp; \min_{\langle x,W_1x\rangle=1}\langle x,W_2x\rangle, \label{beta2}\end{split}\]</div>
+<p>Notice that ([beta1]) and ([beta2]) are QCQP problems. Parameters
+<span class="math">\beta_1</span> and <span class="math">\beta_2</span> are invariant with respect to affine
+coordinate transformation and describe the position of ellipsoids
+<span class="math">{\mathcal E}(q_1,Q_1)</span>, <span class="math">{\mathcal E}(q_2,Q_2)</span> with
+respect to each other:</p>
+<div class="math">
+\[\begin{split}\beta_1\geqslant1,~\beta_2\geqslant1 &amp; \Rightarrow &amp;
+{\bf int}({\mathcal E}(q_1,Q_1)\cap{\mathcal E}(q_2,Q_2))=\emptyset, \\\end{split}\]\[\begin{split}\beta_1\geqslant1,~\beta_2\leqslant1 &amp; \Rightarrow &amp; {\mathcal E}(q_1,Q_1)\subseteq{\mathcal E}(q_2,Q_2), \\\end{split}\]\[\begin{split}\beta_1\leqslant1,~\beta_2\geqslant1 &amp; \Rightarrow &amp; {\mathcal E}(q_2,Q_2)\subseteq{\mathcal E}(q_1,Q_1), \\\end{split}\]\[\begin{split}\beta_1&lt;1,~\beta_2&lt;1 &amp; \Rightarrow &amp;
+{\bf int}({\mathcal E}(q_1,Q_1)\cap{\mathcal E}(q_2,Q_2))\neq\emptyset \\\end{split}\]\[\begin{split}&amp; &amp; \mbox{and} ~ {\mathcal E}(q_1,Q_1)\not\subseteq{\mathcal E}(q_2,Q_2) \\\end{split}\]\[\begin{split}&amp; &amp; \mbox{and} ~ {\mathcal E}(q_2,Q_2)\not\subseteq{\mathcal E}(q_1,Q_1).\end{split}\]</div>
+<p>Define parametrized family of internal ellipsoids
+<span class="math">{\mathcal E}(q^-_{\theta_1\theta_2},Q^-_{\theta_1\theta_2})</span> with</p>
+<div class="math">
+\[\begin{split}q^-_{\theta_1\theta_2}  =  (\theta_1W_1 +
+\theta_2W_2)^{-1}(\theta_1W_1q_1 + \theta_2W_2q_2), \label{paramell1} \\\end{split}\]\[Q^-_{\theta_1\theta_2} =  (1 - \theta_1\langle q_1,W_1q_1\rangle -
+\theta_2\langle q_2,W_2q_2\rangle +
+\langle q^-_{\theta_1\theta_2},(Q^-)^{-1}q^-_{\theta_1\theta_2}\rangle)
+(\theta_1W_1 + \theta_2W_2)^{-1} .\label{paramell2}\]</div>
+<p>The best internal ellipsoid
+<span class="math">{\mathcal E}(q^-_{\hat{\theta}_1\hat{\theta}_2},Q^-_{\hat{\theta}_1\hat{\theta}_2})</span>
+in the class ([paramell1]-[paramell2]), namely, such that</p>
+<div class="math">
+\[{\mathcal E}(q^-_{{\theta}_1{\theta}_2},Q^-_{{\theta}_1{\theta}_2})\subseteq
+{\mathcal E}(q^-_{\hat{\theta}_1\hat{\theta}_2},Q^-_{\hat{\theta}_1\hat{\theta}_2})
+\subseteq {\mathcal E}(q_1,Q_1)\cap{\mathcal E}(q_2,Q_2)\]</div>
+<p>for all <span class="math">0\leqslant\theta_1,\theta_2\leqslant1</span>, is specified by
+the parameters</p>
+<div class="math">
+\[\hat{\theta}_1 = \frac{1-\hat{\beta}_2}{1-\hat{\beta}_1\hat{\beta}_2}, ~~~~
+\hat{\theta}_2 = \frac{1-\hat{\beta}_1}{1-\hat{\beta}_1\hat{\beta}_2},
+\label{thetapar}\]</div>
+<p>with</p>
+<div class="math">
+\[\hat{\beta}_1=\min(1,\beta_1), ~~~~ \hat{\beta}_2=\min(1,\beta_2).\]</div>
+<p>It is the ellipsoid that we look for:
+<span class="math">{\mathcal E}(q^-,Q^-)={\mathcal E}(q^-_{\hat{\theta}_1\hat{\theta}_2},Q^-_{\hat{\theta}_1\hat{\theta}_2})</span>.
+Two special cases are</p>
+<div class="math">
+\[\hat{\theta}_1=1, ~ \hat{\theta}_2=0 ~~~ \Rightarrow ~~~
+{\mathcal E}(q_1,Q_1)\subseteq{\mathcal E}(q_2,Q_2) ~~~ \Rightarrow ~~~
+{\mathcal E}(q^-,Q^-)={\mathcal E}(q_1,Q_1),\]</div>
+<p>and</p>
+<div class="math">
+\[\hat{\theta}_1=0, ~ \hat{\theta}_2=1 ~~~ \Rightarrow ~~~
+{\mathcal E}(q_2,Q_2)\subseteq{\mathcal E}(q_1,Q_1) ~~~ \Rightarrow ~~~
+{\mathcal E}(q^-,Q^-)={\mathcal E}(q_2,Q_2).\]</div>
+<p>The method of finding the internal ellipsoidal approximation of the
+intersection of two ellipsoids is described in Vazhentsev (1999).</p>
+</div>
+<div class="section" id="intersection-of-ellipsoid-and-halfspace">
+<h3>Intersection of Ellipsoid and Halfspace<a class="headerlink" href="#intersection-of-ellipsoid-and-halfspace" title="Permalink to this headline">¶</a></h3>
+<p>Finding the intersection of ellipsoid and halfspace can be reduced to
+finding the intersection of two ellipsoids, one of which is unbounded.
+Let <span class="math">{\mathcal E}(q_1,Q_1)</span> be a nondegenerate ellipsoid and let
+<span class="math">H(c,\gamma)</span> define the halfspace</p>
+<div class="math">
+\[{\bf S}(c,\gamma) = \{x\in{\bf R}^n ~|~ \langle c,x\rangle\leqslant\gamma\}.\]</div>
+<p>We have to determine if the intersection
+<span class="math">{\mathcal E}(q_1,Q_1)\cap{\bf S}(c,\gamma)</span> is empty, and if not,
+find its external and internal ellipsoidal approximations,
+<span class="math">{\mathcal E}(q^+,Q^+)</span> and <span class="math">{\mathcal E}(q^-,Q^-)</span>. Two
+trivial situations are:</p>
+<ul class="simple">
+<li><span class="math">{\bf dist}({\mathcal E}(q_1,Q_1),H(c,\gamma))>0</span> and
+<span class="math">\langle c, q_1\rangle>0</span>, which implies that
+<span class="math">{\mathcal E}(q_1,Q_1)\cap{\bf S}(c,\gamma)=\emptyset</span>;</li>
+<li><span class="math">{\bf dist}({\mathcal E}(q_1,Q_1),H(c,\gamma))>0</span> and
+<span class="math">\langle c, q_1\rangle<0</span>, so that
+<span class="math">{\mathcal E}(q_1,Q_1)\subseteq{\bf S}(c,\gamma)</span>, and then
+<span class="math">{\mathcal E}(q^+,Q^+)={\mathcal E}(q^-,Q^-)={\mathcal E}(q_1,Q_1)</span>.</li>
+</ul>
+<p>In case <span class="math">{\bf dist}({\mathcal E}(q_1,Q_1),H(c,\gamma)<0</span>, i.e. the
+ellipsoid intersects the hyperplane,</p>
+<div class="math">
+\[{\mathcal E}(q_1,Q_1)\cap{\bf S}(c,\gamma) =
+{\mathcal E}(q_1,Q_1)\cap\{x ~|~ \langle (x-q_2),W_2(x-q_2)\rangle\leqslant1\},\]</div>
+<p>with</p>
+<div class="math">
+\[\begin{split}q_2  =  (\gamma + 2\sqrt{\overline{\lambda}})c,\label{hsell1} \\\end{split}\]\[W_2  =  \frac{1}{4\overline{\lambda}}cc^T,\label{hsell2}\]</div>
+<p><span class="math">\overline{\lambda}</span> being the biggest eigenvalue of matrix
+<span class="math">Q_1</span>. After defining <span class="math">W_1=Q_1^{-1}</span>, we obtain
+<span class="math">{\mathcal E}(q^+,Q^+)</span> from equations ([fusion1]-[fusion5]), and
+<span class="math">{\mathcal E}(q^-,Q^-)</span> from ([paramell1]-[paramell2]),
+([thetapar]).</p>
+<p><strong>Remark.</strong> Notice that matrix <span class="math">W_2</span> has rank <span class="math">1</span>, which
+makes it singular for <span class="math">n>1</span>. Nevertheless, expressions
+([fusion1]-[fusion2]), ([paramell1]-[paramell2]) make sense because
+<span class="math">W_1</span> is nonsingular, <span class="math">\pi_0\neq0</span> and
+<span class="math">\hat{\theta}_1\neq0</span>.</p>
+<p>To find the ellipsoidal approximations <span class="math">{\mathcal E}(q^+,Q^+)</span> and
+<span class="math">{\mathcal E}(q^-,Q^-)</span> of the intersection of ellipsoid
+<span class="math">{\mathcal E}(q,Q)</span> and polytope <span class="math">P(C,g)</span>,
+<span class="math">C\in{\bf R}^{m\times n}</span>, <span class="math">b\in{\bf R}^m</span>, such that</p>
+<div class="math">
+\[{\mathcal E}(q^-,Q^-)\subseteq{\mathcal E}(q,Q)\cap P(C,g)\subseteq{\mathcal E}(q^+,Q^+),\]</div>
+<p>we first compute</p>
+<div class="math">
+\[{\mathcal E}(q^-_1,Q^-_1)\subseteq{\mathcal E}(q,Q)\cap{\bf S}(c_1,\gamma_1)\subseteq
+{\mathcal E}(q^+_1,Q^+_1),\]</div>
+<p>wherein <span class="math">{\bf S}(c_1,\gamma_1)</span> is the halfspace defined by the
+first row of matrix <span class="math">C</span>, <span class="math">c_1</span>, and the first element of
+vector <span class="math">g</span>, <span class="math">\gamma_1</span>. Then, one by one, we get</p>
+<div class="math">
+\[\begin{split}\begin{aligned}
+&amp; &amp; {\mathcal E}(q^-_2,Q^-_2)\subseteq{\mathcal E}(q^-_1,Q^-_1)\cap{\bf S}(c_2,\gamma_2), ~~~
+{\mathcal E}(q^+_1,Q^+_1)\cap{\bf S}(c_2,\gamma_2)\subseteq{\mathcal E}(q^+_2,Q^+_2), \\
+&amp; &amp; {\mathcal E}(q^-_3,Q^-_3)\subseteq{\mathcal E}(q^-_2,Q^-_2)\cap{\bf S}(c_3,\gamma_3), ~~~
+{\mathcal E}(q^+_2,Q^+_2)\cap{\bf S}(c_3,\gamma_3)\subseteq{\mathcal E}(q^+_3,Q^+_3), \\
+&amp; &amp; \cdots \\
+&amp; &amp; {\mathcal E}(q^-_m,Q^-_m)\subseteq{\mathcal E}(q^-_{m-1},Q^-_{m-1})\cap{\bf S}(c_m,\gamma_m), ~~~
+{\mathcal E}(q^+_{m-1},Q^+_{m-1})\cap{\bf S}(c_m,\gamma_m)\subseteq{\mathcal E}(q^+_m,Q^+_m), \\\end{aligned}\end{split}\]</div>
+<p>The resulting ellipsoidal approximations are</p>
+<div class="math">
+\[{\mathcal E}(q^+,Q^+)={\mathcal E}(q^+_m,Q^+_m), ~~~~ {\mathcal E}(q^-,Q^-)={\mathcal E}(q^-_m,Q^-_m) .\]</div>
+</div>
+<div class="section" id="checking-if">
+<h3>Checking if<a class="headerlink" href="#checking-if" title="Permalink to this headline">¶</a></h3>
+<p>Theorem of alternatives, also known as <em>:math:`S`-procedure</em> Boyd and
+Vandenberghe (2004), states that the implication</p>
+<div class="math">
+\[\langle x, A_1x\rangle + 2\langle b_1,x\rangle + c_1 \leqslant0
+~~ \Rightarrow ~~
+\langle x, A_2x\rangle + 2\langle b_2,x\rangle + c_2 \leqslant0,\]</div>
+<p>where <span class="math">A_i\in{\bf R}^{n\times n}</span> are symmetric matrices,
+<span class="math">b_i\in{\bf R}^n</span>, <span class="math">c_i\in{\bf R}</span>, <span class="math">i=1,2</span>, holds if
+and only if there exists <span class="math">\lambda>0</span> such that</p>
+<div class="math">
+\[\begin{split}\left[\begin{array}{cc}
+A_2 &amp; b_2\\
+b_2^T &amp; c_2\end{array}\right]
+\preceq
+\lambda\left[\begin{array}{cc}
+A_1 &amp; b_1\\
+b_1^T &amp; c_1\end{array}\right].\end{split}\]</div>
+<p>By <span class="math">S</span>-procedure,
+<span class="math">{\mathcal E}(q_1,Q_1)\subseteq{\mathcal E}(q_2,Q_2)</span> (both
+ellipsoids are assumed to be nondegenerate) if and only if the following
+SDP problem is feasible:</p>
+<div class="math">
+\[\min 0\]</div>
+<p>subject to:</p>
+<div class="math">
+\[\begin{split}\begin{aligned}
+\lambda &amp; &gt; &amp; 0, \\
+\left[\begin{array}{cc}
+Q_2^{-1} &amp; -Q_2^{-1}q_2\\
+(-Q_2^{-1}q_2)^T &amp; q_2^TQ_2^{-1}q_2-1\end{array}\right]
+&amp; \preceq &amp;
+\lambda \left[\begin{array}{cc}
+Q_1^{-1} &amp; -Q_1^{-1}q_1\\
+(-Q_1^{-1}q_1)^T &amp; q_1^TQ_1^{-1}q_1-1\end{array}\right]\end{aligned}\end{split}\]</div>
+<p>where <span class="math">\lambda\in{\bf R}</span> is the variable.</p>
+</div>
+<div class="section" id="minimum-volume-ellipsoids">
+<h3>Minimum Volume Ellipsoids<a class="headerlink" href="#minimum-volume-ellipsoids" title="Permalink to this headline">¶</a></h3>
+<p>The minimum volume ellipsoid that contains set <span class="math">S</span> is called
+<em>Löwner-John ellipsoid</em> of the set <span class="math">S</span>. To characterize it we
+rewrite general ellipsoid <span class="math">{\mathcal E}(q,Q)</span> as</p>
+<div class="math">
+\[{\mathcal E}(q,Q) = \{x ~|~ \langle (Ax + b), (Ax + b)\rangle \},\]</div>
+<p>where</p>
+<div class="math">
+\[A = Q^{-1/2} ~~~ \mbox{ and } ~~~ b = -Aq .\]</div>
+<p>For positive definite matrix <span class="math">A</span>, the volume of
+<span class="math">{\mathcal E}(q,Q)</span> is proportional to <span class="math">\det A^{-1}</span>. So,
+finding the minimum volume ellipsoid containing <span class="math">S</span> can be
+expressed as semidefinite programming (SDP) problem</p>
+<div class="math">
+\[\min \log \det A^{-1}\]</div>
+<p>subject to:</p>
+<div class="math">
+\[\sup_{v\in S} \langle (Av + b), (Av + b)\rangle \leqslant1,\]</div>
+<p>where the variables are <span class="math">A\in{\bf R}^{n\times n}</span> and
+<span class="math">b\in{\bf R}^n</span>, and there is an implicit constraint
+<span class="math">A\succ 0</span> (<span class="math">A</span> is positive definite). The objective and
+constraint functions are both convex in <span class="math">A</span> and <span class="math">b</span>, so this
+problem is convex. Evaluating the constraint function, however, requires
+solving a convex maximization problem, and is tractable only in certain
+special cases.</p>
+<p>For a finite set <span class="math">S=\{x_1,\cdots,x_m\}\subset{\bf R}^n</span>, an
+ellipsoid covers <span class="math">S</span> if and only if it covers its convex hull. So,
+finding the minimum volume ellipsoid covering <span class="math">S</span> is the same as
+finding the minimum volume ellipsoid containing the polytope
+<span class="math">{\bf conv}\{x_1,\cdots,x_m\}</span>. The SDP problem is</p>
+<div class="math">
+\[\min \log \det A^{-1}\]</div>
+<p>subject to:</p>
+<div class="math">
+\[\begin{split}\begin{aligned}
+A &amp; \succ &amp; 0, \\
+\langle (Ax_i + b), (Ax_i + b)\rangle &amp; \leqslant&amp; 1, ~~~ i=1..m.\end{aligned}\end{split}\]</div>
+<p>We can find the minimum volume ellipsoid containing the union of
+ellipsoids <span class="math">\bigcup_{i=1}^m{\mathcal E}(q_i,Q_i)</span>. Using the fact
+that for <span class="math">i=1..m</span>
+<span class="math">{\mathcal E}(q_i,Q_i)\subseteq{\mathcal E}(q,Q)</span> if and only if
+there exists <span class="math">\lambda_i>0</span> such that</p>
+<div class="math">
+\[\begin{split}\left[\begin{array}{cc}
+A^2 - \lambda_i Q_i^{-1} &amp; Ab + \lambda_i Q_i^{-1}q_i\\
+(Ab + \lambda_i Q_i^{-1}q_i)^T &amp; b^Tb-1 - \lambda_i (q_i^TQ_i^{-1}q_i-1) \end{array}
+\right] \preceq 0 .\end{split}\]</div>
+<p>Changing variable <span class="math">\tilde{b}=Ab</span>, we get convex SDP in the
+variables <span class="math">A</span>, <span class="math">\tilde{b}</span>, and
+<span class="math">\lambda_1,\cdots,\lambda_m</span>:</p>
+<div class="math">
+\[\min \log \det A^{-1}\]</div>
+<p>subject to:</p>
+<div class="math">
+\[\begin{split}\begin{aligned}
+\lambda_i &amp; &gt; &amp; 0,\\
+\left[\begin{array}{ccc}
+A^2-\lambda_iQ_i^{-1} &amp; \tilde{b}+\lambda_iQ_i^{-1}q_i &amp; 0 \\
+(\tilde{b}+\lambda_iQ_i^{-1}q_i)^T &amp; -1-\lambda_i(q_i^TQ_i^{-1}q_i-1) &amp; \tilde{b}^T \\
+0 &amp; \tilde{b} &amp; -A^2\end{array}\right] &amp; \preceq &amp; 0, ~~~ i=1..m.\end{aligned}\end{split}\]</div>
+<p>After <span class="math">A</span> and <span class="math">b</span> are found,</p>
+<div class="math">
+\[q=-A^{-1}b ~~~ \mbox{ and } ~~~ Q=(A^TA)^{-1}.\]</div>
+<p>The results on the minimum volume ellipsoids are explained and proven in
+Boyd and Vandenberghe (2004).</p>
+</div>
+<div class="section" id="maximum-volume-ellipsoids">
+<h3>Maximum Volume Ellipsoids<a class="headerlink" href="#maximum-volume-ellipsoids" title="Permalink to this headline">¶</a></h3>
+<p>Consider a problem of finding the maximum volume ellipsoid that lies
+inside a bounded convex set <span class="math">S</span> with nonempty interior. To
+formulate this problem we rewrite general ellipsoid
+<span class="math">{\mathcal E}(q,Q)</span> as</p>
+<div class="math">
+\[{\mathcal E}(q,Q) = \{Bx + q ~|~ \langle x,x\rangle\leqslant1\},\]</div>
+<p>where <span class="math">B=Q^{1/2}</span>, so the volume of <span class="math">{\mathcal E}(q,Q)</span> is
+proportional to <span class="math">\det B</span>.</p>
+<p>The maximum volume ellipsoid that lies inside <span class="math">S</span> can be found by
+solving the following SDP problem:</p>
+<div class="math">
+\[\max \log \det B\]</div>
+<p>subject to:</p>
+<div class="math">
+\[\sup_{\langle v,v\rangle\leqslant1} I_S(Bv+q)\leqslant0 ,\]</div>
+<p>in the variables <span class="math">B\in{\bf R}^{n\times n}</span> - symmetric matrix,
+and <span class="math">q\in{\bf R}^n</span>, with implicit constraint <span class="math">B\succ 0</span>,
+where <span class="math">I_S</span> is the indicator function:</p>
+<div class="math">
+\[\begin{split}I_S(x) = \left\{\begin{array}{ll}
+0, &amp; \mbox{ if } x\in S,\\
+\infty, &amp; \mbox{ otherwise.}\end{array}\right.\end{split}\]</div>
+<p>In case of polytope, <span class="math">S=P(C,g)</span> with <span class="math">P(C,g)</span> defined in
+([polytope]), the SDP has the form</p>
+<div class="math">
+\[\min \log \det B^{-1}\]</div>
+<p>subject to:</p>
+<div class="math">
+\[\begin{split}\begin{aligned}
+B &amp; \succ &amp; 0,\\
+\langle c_i, Bc_i\rangle + \langle c_i, q\rangle &amp; \leqslant&amp; \gamma_i,
+~~~ i=1..m.\end{aligned}\end{split}\]</div>
+<p>We can find the maximum volume ellipsoid that lies inside the
+intersection of given ellipsoids
+<span class="math">\bigcap_{i=1}^m{\mathcal E}(q_i,Q_i)</span>. Using the fact that for
+<span class="math">i=1..m</span> <span class="math">{\mathcal E}(q,Q)\subseteq{\mathcal E}(q_i,Q_i)</span>
+if and only if there exists <span class="math">\lambda_i>0</span> such that</p>
+<div class="math">
+\[\begin{split}\left[\begin{array}{cc}
+-\lambda_i - q^TQ_i^{-1}q + 2q_i^TQ_i^{-1}q - q_i^TQ_i^{-1}q_i + 1 &amp; (Q_i^{-1}q-Q_i^{-1}q_i)^TB\\
+B(Q_i^{-1}q-Q_i^{-1}q_i) &amp; \lambda_iI-BQ_i^{-1}B\end{array}\right] \succeq 0.\end{split}\]</div>
+<p>To find the maximum volume ellipsoid, we solve convex SDP in variables
+<span class="math">B</span>, <span class="math">q</span>, and <span class="math">\lambda_1,\cdots,\lambda_m</span>:</p>
+<div class="math">
+\[\min \log \det B^{-1}\]</div>
+<p>subject to:</p>
+<div class="math">
+\[\begin{split}\begin{aligned}
+\lambda_i &amp; &gt; &amp; 0, \\
+\left[\begin{array}{ccc}
+1-\lambda_i &amp; 0 &amp; (q - q_i)^T\\
+0 &amp; \lambda_iI &amp; B\\
+q - q_i &amp; B &amp; Q_i\end{array}\right] &amp; \succeq &amp; 0, ~~~ i=1..m.\end{aligned}\end{split}\]</div>
+<p>After <span class="math">B</span> and <span class="math">q</span> are found,</p>
+<div class="math">
+\[Q = B^TB.\]</div>
+<p>The results on the maximum volume ellipsoids are explained and proven in
+Boyd and Vandenberghe (2004).</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="main_manual.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Ellipsoidal Calculus</a><ul>
+<li><a class="reference internal" href="#basic-notions">Basic Notions</a></li>
+<li><a class="reference internal" href="#operations-with-ellipsoids">Operations with Ellipsoids</a><ul>
+<li><a class="reference internal" href="#affine-transformation">Affine Transformation</a></li>
+<li><a class="reference internal" href="#geometric-sum">Geometric Sum</a></li>
+<li><a class="reference internal" href="#geometric-difference">Geometric Difference</a></li>
+<li><a class="reference internal" href="#geometric-difference-sum">Geometric Difference-Sum</a></li>
+<li><a class="reference internal" href="#geometric-sum-difference">Geometric Sum-Difference</a></li>
+<li><a class="reference internal" href="#intersection-of-ellipsoid-and-hyperplane">Intersection of Ellipsoid and Hyperplane</a></li>
+<li><a class="reference internal" href="#intersection-of-ellipsoid-and-ellipsoid">Intersection of Ellipsoid and Ellipsoid</a></li>
+<li><a class="reference internal" href="#intersection-of-ellipsoid-and-halfspace">Intersection of Ellipsoid and Halfspace</a></li>
+<li><a class="reference internal" href="#checking-if">Checking if</a></li>
+<li><a class="reference internal" href="#minimum-volume-ellipsoids">Minimum Volume Ellipsoids</a></li>
+<li><a class="reference internal" href="#maximum-volume-ellipsoids">Maximum Volume Ellipsoids</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="chap_intro.html"
+                        title="previous chapter">Introduction</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="chap_reach.html"
+                        title="next chapter">Reachability</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/chap_ellcalc.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="chap_reach.html" title="Reachability"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="chap_intro.html" title="Introduction"
+             >previous</a> |</li>
+        <li><a href="main_manual.html">elltool_manual 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Lukashevichus K..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b2.
+    </div>
+  </body>
+</html>

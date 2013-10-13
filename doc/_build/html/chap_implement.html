@@ -1,0 +1,561 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Implementation &mdash; elltool_manual 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="elltool_manual 0.1 documentation" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="main_manual.html">elltool_manual 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="implementation">
+<h1>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="operations-with-ellipsoids">
+<h2>Operations with ellipsoids<a class="headerlink" href="#operations-with-ellipsoids" title="Permalink to this headline">¶</a></h2>
+<p>In the <em>Ellipsoidal Toolbox</em> we define a new class ellipsoid inside the
+MATLAB programming environment. The following three commands define the
+same ellipsoid <span class="math">{\mathcal E}(q,Q)</span>, with <span class="math">q\in{\bf R}^n</span> and
+<span class="math">Q\in{\bf R}^{n\times n}</span> being symmetric positive semidefinite:
+For the ellipsoid class we overload the following functions and
+operators:</p>
+<ul>
+<li><p class="first">isEmpty(ellObj) - checks if <span class="math">{\mathcal E}(q,Q)</span> is an empty
+ellipsoid.</p>
+</li>
+<li><p class="first">display(ellObj) - displays the details of ellipsoid
+<span class="math">{\mathcal E}(q,Q)</span>, namely, its center <span class="math">q</span> and the shape
+matrix <span class="math">Q</span>.</p>
+</li>
+<li><p class="first">plot(ellObj) - plots ellipsoid <span class="math">{\mathcal E}(q,Q)</span> if its
+dimension is not greater than 3.</p>
+</li>
+<li><p class="first">firstEllObj == secEllObj - checks if ellipsoids
+<span class="math">{\mathcal E}(q_1,Q_1)</span> and <span class="math">{\mathcal E}(q_2,Q_2)</span> are
+equal.</p>
+</li>
+<li><p class="first">firstEllObj = secEllObj - checks if ellipsoids
+<span class="math">{\mathcal E}(q_1,Q_1)</span> and <span class="math">{\mathcal E}(q_2,Q_2)</span> are
+not equal.</p>
+</li>
+<li><ul class="first simple">
+<li>concatenates the ellipsoids into the horizontal array, e.g. ellVec</li>
+</ul>
+<p>= [firstEllObj secEllObj thirdEllObj].</p>
+</li>
+<li><ul class="first simple">
+<li>concatenates the ellipsoids into the vertical array, e.g. ellMat =</li>
+</ul>
+<p>[firstEllObj secEllObj; thirdEllObj fourthEllObj] defines
+<span class="math">2\times 2</span> array of ellipsoids.</p>
+</li>
+<li><p class="first">firstEllObj &gt;= secEllObj - checks if the ellipsoid firstEllObj is
+bigger than the ellipsoid secEllObj, or equivalently
+<span class="math">{\mathcal E}(0,Q_1)\subseteq{\mathcal E}(0,Q_2)</span>.</p>
+</li>
+<li><p class="first">firstEllObj &lt;= secEllObj - checks if
+<span class="math">{\mathcal E}(0,Q_2)\subseteq{\mathcal E}(0,Q_1)</span>.</p>
+</li>
+<li><p class="first">-ellObj - defines ellipsoid <span class="math">{\mathcal E}(-q,Q)</span>.</p>
+</li>
+<li><p class="first">ellObj + bScal - defines ellipsoid <span class="math">{\mathcal E}(q+b,Q)</span>.</p>
+</li>
+<li><p class="first">ellObj - bScal - defines ellipsoid <span class="math">{\mathcal E}(q-b,Q)</span>.</p>
+</li>
+<li><p class="first">aMat * ellObj - defines ellipsoid <span class="math">{\mathcal E}(q,AQA^T)</span>.</p>
+</li>
+<li><p class="first">ellObj.inv() - inverts the shape matrix of the ellipsoid:
+<span class="math">{\mathcal E}(q,Q^{-1})</span>.</p>
+</li>
+</ul>
+<p>All the listed operations can be applied to a single ellipsoid as well
+as to a two-dimensional array of ellipsoids. For example, To access
+individual elements of the array, the usual MATLAB subindexing is used:
+Sometimes it may be useful to modify the shape of the ellipsoid without
+affecting its center. Say, we would like to bloat or squeeze the
+ellipsoid: Since function shape does not change the center of the
+ellipsoid, it only accepts scalars or square matrices as its second
+input parameter. Several functions access the internal data of the
+ellipsoid object: One way to check if two ellipsoids intersect, is to
+compute the distance between them ( (“Stanley Chan Article Homepage”),
+Lin and Han (2002)): This result indicates that the ellipsoid
+thirdEllObj does not intersect with the ellipsoid ellMat(2, 2), with all
+the other ellipsoids in ellMat it has nonempty intersection. If the
+intersection of the two ellipsoids is nonempty, it can be approximated
+by ellipsoids from the outside as well as from the inside. See
+<span class="math">\mbox{\!\!\@OldCite{ROS_SABATER_THOMAS_EN_ELLIPSOIDAL_CALCULUS_BASED_ON_PROPAGATION_AND_FUSION}}</span>
+for more information about these methods. It can be checked that
+resulting ellipsoid externalEllObj contains the given intersection,
+whereas internalEllObj is contained in this intersection: Function
+isInside in general checks if the intersection of ellipsoids in the
+given array contains the union or intersection of ellipsoids or
+polytopes.</p>
+<p>It is also possible to solve the feasibility problem, that is, to check
+if the intersection of more than two ellipsoids is empty: In this
+particular example the result <span class="math">-1</span> indicates that the intersection
+of ellipsoids in ellMat is empty. Function intersect in general checks
+if an ellipsoid, hyperplane or polytope intersects the union or the
+intersection of ellipsoids in the given array: For the ellipsoids in
+<span class="math">{\bf R}</span>, <span class="math">{\bf R}^2</span> and <span class="math">{\bf R}^3</span> the geometric
+sum can be computed explicitely and plotted: Figure
+<span class="math">\ref{minksumPic}</span> displays the geometric sum of ellipsoids. If
+the dimension of the space in which the ellipsoids are defined exceeds
+<span class="math">3</span>, an error is returned. The result of the geometric sum
+operation is not generally an ellipsoid, but it can be approximated by
+families of external and internal ellipsoids parametrized by the
+direction vector: Functions minksum_ea and minksum_ia work for
+ellipsoids of arbitrary dimension. They should be used for general
+computations whereas minksum is there merely for visualization purposes.</p>
+<p>If the geometric difference of two ellipsoids is not an empty set, it
+can be computed explicitely and plotted for ellipsoids in
+<span class="math">{\bf R}</span>, <span class="math">{\bf R}^2</span> and <span class="math">{\bf R}^3</span>: Figure
+<span class="math">\ref{minkdiffPic}</span> shows the geometric difference of ellipsoids.
+Similar to minksum, minkdiff is there for visualization purpose. It
+works only for dimensions <span class="math">1</span>, <span class="math">2</span> and <span class="math">3</span>, and for
+higher dimensions it returns an error. For arbitrary dimensions, the
+geometric difference can be approximated by families of external and
+internal ellipsoids parametrized by the direction vector, provided this
+direction is not bad: Operation ’difference-sum’ described in section
+2.2.4 is implemented in functions minkmp, minkmp_ea, minkmp_ia, the
+first one of which is used for visualization and works for dimensions
+not higher than <span class="math">3</span>, whereas the last two can deal with ellipsoids
+of arbitrary dimension. Figure <span class="math">\ref{minkPic}</span> displays results of
+the implementation of minkpm and minkmp operations. Similarly, operation
+’sum-difference’ described in section 2.2.5 is implemented in functions
+minkpm, minkpm_ea, minkpm_ia, the first one of which is used for
+visualization and works for dimensions not higher than <span class="math">3</span>,
+whereas the last two can deal with ellipsoids of arbitrary dimension.</p>
+</div>
+<div class="section" id="operations-with-hyperplanes">
+<h2>Operations with hyperplanes<a class="headerlink" href="#operations-with-hyperplanes" title="Permalink to this headline">¶</a></h2>
+<p>The class hyperplane of the <em>Ellipsoidal Toolbox</em> is used to describe
+hyperplanes and halfspaces. The following two commands define one and
+the same hyperplane but two different halfspaces:</p>
+<p>The following functions and operators are overloaded for the hyperplane
+class:</p>
+<ul>
+<li><p class="first">isempty(hypObj) - checks if hypObj is an empty hyperplane.</p>
+</li>
+<li><p class="first">display(hypObj) - displays the details of hyperplane
+<span class="math">H(c,\gamma)</span>, namely, its normal <span class="math">c</span> and the scalar
+<span class="math">\gamma</span>.</p>
+</li>
+<li><p class="first">plot(hypObj) - plots hyperplane <span class="math">H(c,\gamma)</span> if the dimension
+of the space in which it is defined is not greater than 3.</p>
+</li>
+<li><p class="first">firstHypObj == secHypObj - checks if hyperplanes
+<span class="math">H(c_1,\gamma_1)</span> and <span class="math">H(c_2,\gamma_2)</span> are equal.</p>
+</li>
+<li><p class="first">firstHypObj = secHypObj - checks if hyperplanes
+<span class="math">H(c_1,\gamma_1)</span> and <span class="math">H(c_2,\gamma_2)</span> are not equal.</p>
+</li>
+<li><ul class="first simple">
+<li>concatenates the hyperplanes into the horizontal array, e.g. hypVec</li>
+</ul>
+<p>= [firstHypObj secHypObj thirdHypObj].</p>
+</li>
+<li><ul class="first simple">
+<li>concatenates the hyperplanes into the vertical array, e.g. hypMat =</li>
+</ul>
+<p>[firstHypObj secHypObj; thirdHypObj fourthHypObj] - defines
+<span class="math">2\times 2</span> array of hyperplanes.</p>
+</li>
+<li><p class="first">-hypObj - defines hyperplane <span class="math">H(-c,-\gamma)</span>, which is the same
+as <span class="math">H(c,\gamma)</span> but specifies different halfspace.</p>
+</li>
+</ul>
+<p>There are several ways to access the internal data of the hyperplane
+object: All the functions of <em>Ellipsoidal Toolbox</em> that accept
+hyperplane object as parameter, work with single hyperplanes as well as
+with hyperplane arrays. One exception is the function parameters that
+allows only single hyperplane object.</p>
+<p>An array of hyperplanes can be converted to the polytope object of the
+Multi-Parametric Toolbox (Kvasnica et al. (2004), (“Multi-Parametric
+Toolbox Homepage”)), and back: Functions hyperplane2polytope and
+polytope2hyperplane require the Multi-Parametric Toolbox to be
+installed.</p>
+<p>We can compute distance from ellipsoids to hyperplanes and polytopes: A
+negative distance value in the case of ellipsoid and hyperplane means
+that the ellipsoid intersects the hyperplane. As we see in this example,
+ellipsoid firstEllObj intersects hyperplanes hypVec(1) and hypVec(3) and
+has no common points with hypVec(2) and hypVec(4). When distance
+function has a polytope as a parameter, it always returns nonnegative
+values to be consistent with distance function of the Multi-Parametric
+Toolbox. Here, the zero distance values mean that each ellipsoid in
+ellMat has nonempty intersection with polytope firstPolObj.</p>
+<p>It can be checked if the union or intersection of given ellipsoids
+intersects given hyperplanes or polytopes:</p>
+<p>The intersection of ellipsoid and hyperplane can be computed exactly:
+Functions intersection_ea and intersection_ia can be used with
+hyperplane objects, which in this case define halfspaces and polytope
+objects:</p>
+<p>Function isInside can be used to check if a polytope or union of
+polytopes is contained in the intersection of given ellipsoids:</p>
+<p>Functions distance, intersect, intersection_ia and isInside use the CVX
+interface ( (“CVX Homepage”)) to the external optimization package. The
+default optimization package included in the distribution of the
+<em>Ellipsoidal Toolbox</em> is SeDuMi (Sturm (1999), (“SeDuMi Homepage”)).</p>
+</div>
+<div class="section" id="operations-with-ellipsoidal-tubes">
+<h2>Operations with ellipsoidal tubes<a class="headerlink" href="#operations-with-ellipsoidal-tubes" title="Permalink to this headline">¶</a></h2>
+<p>There are several classes in <em>Ellipsoidal Toolbox</em> for operations with
+ellipsoidal tubes. The class gras.ellapx.smartdb.rels.EllTube is used to
+describe ellipsoidal tubes. The class
+gras.ellapx.smartdb.rels.EllUnionTube is used to store tubes by the
+instant of time:</p>
+<div class="math">
+\[{\mathcal X}_{U}[t]=\bigcup \limits_{\tau\leqslantt}{\mathcal X}[\tau],\]\[where :math:`{\mathcal X}[\tau]` is single ellipsoidal tube. The class\]</div>
+<p>gras.ellapx.smartdb.rels.EllTubeProj is used to describe the projection
+of the ellipsoidal tubes onto time dependent subspaces.There are two
+types of projection: static and dynamic. Also there is class
+gras.ellapx.smartdb.rels.EllUnionTubeStaticProj for description of the
+projection on static plane tubes by the instant of time. Next we provide
+some examples of the operations with ellipsoidal tubes. We may be
+interested in the data about ellipsoidal tube in some particular time
+interval, smaller than the one for which the ellipsoidal tube was
+computed, say <span class="math">2\leqslantt\leqslant4</span>. This data can be extracted
+by the cut function: We can compute the projection of the ellipsoidal
+tube onto time-dependent subspace.</p>
+<p>Figure <span class="math">\ref{project}</span> displays static and dynamic projections.
+Also we can see projections of good directions for ellipsoidal tubes.</p>
+<p>We can compute tubes by the instant of time using methodfromEllTubes:
+Figure <span class="math">\ref{unionTubeStatProj}</span> shows projection of ellipsoidal
+tubes by the instant of time. ellipsoidal tutbes.</p>
+<p>Also we can get initial data from the resulting tube: There is a method
+to display a content of ellipsoidal tubes. Figure <span class="math">\ref{dispPic}</span>
+displays all fields of the ellipsoidal tube.</p>
+<p>There are several methods to find the tubes with necessary parameters.
+Also you can use the method display to see the result of the method’s
+work. We can sort our tubes by certain fields:</p>
+</div>
+<div class="section" id="reachability">
+<h2>Reachability<a class="headerlink" href="#reachability" title="Permalink to this headline">¶</a></h2>
+<p>To compute the reach sets of the systems described in chapter 3, we
+define few new classes in the <em>Ellipsoidal Toolbox</em>: class
+LinSysContinuous for the continuous-time system description, class
+LinSysDiscrete for the discrete-time system description and classes
+ReachContinuous<span class="math">\backslash</span>ReachDiscrete for the reach set
+data. We start by explaining how to define a system using
+LinSysContinuous object. Also we can use LinSysFactory class for the
+description of this system. Through it’s method create user can get
+LinSysContinuous or LinSysDiscrete object. For example, description of
+the system</p>
+<div class="math">
+\[\begin{split}  \left[\begin{array}{cc}
+  \dot{x}_1\\
+  \dot{x}_2\end{array}\right] = \left[\begin{array}{cc}
+  0 &amp; 1\\
+  0 &amp; 0\end{array}\right]\left[\begin{array}{c}
+  x_1\\
+  x_2\end{array}\right] + \left[\begin{array}{c}
+  u_1(t)\\
+  u_2(t)\end{array}\right], ~~~ u(t)\in{\mathcal E}(p(t), P)\end{split}\]\[with\]</div>
+<div class="math">
+\[\begin{split}  p(t) = \left[\begin{array}{c}
+  \sin(t)\\
+  \cos(t)\end{array}\right], ~~~ P = \left[\begin{array}{cc}
+  9 &amp; 0\\
+  0 &amp; 2\end{array}\right],\end{split}\]\[is done by the following sequence of commands: If matrices :math:`A` or\]</div>
+<p><span class="math">B</span> depend on time, say <span class="math">A(t)=\left[\begin{array}{cc}
+0 & 1-\cos(2t)\\
+-\frac{1}{t} & 0\end{array}\right]</span>, then matrix aMat should be
+symbolic: To describe the system with disturbance</p>
+<div class="math">
+\[\begin{split}  \left[\begin{array}{cc}
+  \dot{x}_1\\
+  \dot{x}_2\end{array}\right] = \left[\begin{array}{cc}
+  0 &amp; 1\\
+  0 &amp; 0\end{array}\right]\left[\begin{array}{c}
+  x_1\\
+  x_2\end{array}\right] + \left[\begin{array}{c}
+  u_1(t)\\
+  u_2(t)\end{array}\right] + \left[\begin{array}{c}
+  0\\
+  1\end{array}\right]v(t),\end{split}\]\[with bounds on control as before, and disturbance being\]</div>
+<p><span class="math">-1\leqslantv(t)\leqslant1</span>, we type: Control and disturbance
+bounds SUBounds and vEllObj can have different types. If the bound is
+constant, it should be described by ellipsoid object. If the bound
+depends on time, then it is represented by a structure with fields
+center and shape, one or both of which are symbolic. In system sys, the
+control bound SUBounds is defined as such a structure. Finally, if the
+control or disturbance is known and fixed, it should be defined as a
+vector, of type double if constant, or symbolic, if it depends on time.</p>
+<p>To declare a discrete-time system</p>
+<div class="math">
+\[\begin{split}  \left[\begin{array}{c}
+  x_1[k+1]\\
+  x_2[k+1]\end{array}\right] = \left[\begin{array}{cc}
+  0 &amp; 1\\
+  -1 &amp; -0.5\end{array}\right]\left[\begin{array}{c}
+  x_1[k]\\
+  x_2[k]\end{array}\right] + \left[\begin{array}{c}
+  0\\
+  1\end{array}\right]u[k], ~~~ -1\leqslantu[k]\leqslant1,\end{split}\]\[we use LinSysDiscrete constructor: Once the LinSysDiscrete object is\]</div>
+<p>created, we need to specify the set of initial conditions, the time
+interval and values of the direction vector, for which the reach set
+approximations must be computed: The reach set approximation is computed
+by calling the constructor of the ReachContinuous object: At this point,
+variable firstRsObj contains the reach set approximations for the
+specified continuous-time system, time interval and set of initial
+conditions computed for given directions. Both external and internal
+approximations are computed. The reach set approximation data can be
+extracted in the form of arrays of ellipsoids:</p>
+<p>Ellipsoidal arrays externallEllMat and internalEllMat have <span class="math">4</span>
+rows because we computed the reach set approximations for <span class="math">4</span>
+directions. Each row of ellipsoids corresponds to one direction. The
+number of columns in externallEllMat and internalEllMat is defined by
+the nTimeGridPoints parameter, which is available from
+elltool.conf.Properties static class (see chapter 6 for details). It
+represents the number of time values in our time interval, at which the
+approximations are evaluated. These time values are returned in the
+optinal output parameter, array timeVec, whose length is the same as the
+number of columns in externallEllMat and internalEllMat. Intersection of
+ellipsoids in a particular column of externallEllMat gives external
+ellipsoidal approximation of the reach set at corresponding time.
+Internal ellipsoidal approximation of this set at this time is given by
+the union of ellipsoids in the same column of internalEllMat.</p>
+<p>We may be interested in the reachability data of our system in some
+particular time interval, smaller than the one for which the reach set
+was computed, say <span class="math">3\leqslantt\leqslant5</span>. This data can be
+extracted and returned in the form of ReachContinuous object by the cut
+function:</p>
+<p>To obtain a snap shot of the reach set at given time, the same function
+cut is used: It can be checked if the external or internal reach set
+approximation intersects with given ellipsoids, hyperplanes or
+polytopes:</p>
+<p>If a given set intersects with the internal approximation of the reach
+set, then this set intersects with the actual reach set. If the given
+set does not intersect with external approximation, this set does not
+intersect the actual reach set. There are situations, however, when the
+given set intersects with the external approximation but does not
+intersect with the internal one. In our example above, ellipsoid ellObj
+is such a case: the quality of the approximation does not allow us to
+determine whether or not ellObj intersects with the actual reach set. To
+improve the quality of approximation, refine function should be used:</p>
+<p>Now we are sure that ellipsoid ellObj intersects with the actual reach
+set. However, to use the refine function, the reach set object must
+contain all calculated data, otherwise, an error is returned.</p>
+<p>Having a reach set object resulting from the ReachContinuous, cut or
+refine operations, we can obtain the trajectory of the center of the
+reach set and the good curves along which the actual reach set is
+touched by its ellipsoidal approximations:</p>
+<p>Variable ctrMat here is a matrix whose columns are the points ofthe
+reach set center trajectory evaluated at time values returned in the
+array ttVec. Variable gcCMat contains <span class="math">4</span> matrices each of which
+corresponds to a good curve (columns of such matrix are points of the
+good curve evaluated at time values in ttVec). The analytic expression
+for the control driving the system along a good curve is given by
+formula ([uct]).</p>
+<p>We computed the reach set up to time <span class="math">10</span>. It is possible to
+continue the reach set computation for a longer time horizon using the
+reach set data at time <span class="math">10</span> as initial condition. It is also
+possible that the dynamics and inputs of the system change at certain
+time, and from that point on the system evolves according to the new
+system of differential equations. For example, starting at time
+<span class="math">10</span>, our reach set may evolve in time according to the
+time-variant system sys_t defined above. Switched systems are a special
+case of this situation. To compute the further evolution in time of the
+existing reach set, function evolve should be used: Function evolve can
+be viewed as an implementation of the semigroup property.</p>
+<p>To compute the backward reach set for some specified target set, we
+declare the time interval so that the terminating time comes first:</p>
+<p>Reach set and backward reach set computation for discrete-time systems
+and manipulations with the resulting reach set object are performed
+using the same functions as for continuous-time systems:</p>
+<p>Number of columns in the ellipsoidal arrays externalEllMat and
+internalEllMat is <span class="math">51</span> because the backward reach set is computed
+for <span class="math">50</span> time steps, and the first column of these arrays contains
+<span class="math">3</span> ellipsoids yEllObj - the terminating condition.</p>
+<p>When dealing with discrete-time systems, all functions that accept time
+or time interval as an input parameter, round the time values and treat
+them as integers.</p>
+</div>
+<div class="section" id="properties">
+<h2>Properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h2>
+<p>Functions of the <em>Ellipsoidal Toolbox</em> can be called with user-specified
+values of certain global parameters. System of the parameters are
+configured using xml files, which available from a set of command-line
+utilities: Here we list system parameters available from the ’default’
+configuration:</p>
+<ol class="arabic simple">
+<li>version = ’1.4dev’ - current version of <em>ET</em>.</li>
+<li>isVerbose = false - makes all the calls to <em>ET</em> routines silent, and
+no information except errors is displayed.</li>
+<li>absTol = 1e-7 - absolute tolerance.</li>
+<li>relTol = 1e-5 - relative tolerance.</li>
+<li>nTimeGridPoints = 200 - density of the time grid for the continuous
+time reach set computation. This parameter directly affects the
+number of ellipsoids to be stored in the
+ReachContinuous<span class="math">\backslash</span>ReachDiscrete object.</li>
+<li>ODESolverName = ode45 - specifies the ODE solver for continuous time
+reach set computation.</li>
+<li>isODENormControl = ’on’ - switches on and off the norm control in the
+ODE solver. When turned on, it slows down the computation, but
+improves the accuracy.</li>
+<li>isEnabledOdeSolverOptions = false - when set to false, calls the ODE
+solver without any additional options like norm control. It makes the
+computation faster but less accurate. Otherwise, it is assumed to be
+true, and only in this case the previous option makes a difference.</li>
+<li>nPlot2dPoints = 200 - the number of points used to plot a 2D
+ellipsoid. This parameter also affects the quality of 2D reach tube
+and reach set plots.</li>
+<li>nPlot3dPoints = 200 - the number of points used to plot a 3D
+ellipsoid. This parameter also affects the quality of 3D reach set
+plots.</li>
+</ol>
+<p>Once the configuration is loaded, the system parameters are available
+through elltool.conf.Properties. elltool.conf.Properties is a static
+class, providing emulation of static properties for toolbox. It has two
+function types: setters and getters. Using getters we obtain system
+parameters. Some of the parameters can be changed in run-time via
+setters.</p>
+</div>
+<div class="section" id="visualization">
+<h2>Visualization<a class="headerlink" href="#visualization" title="Permalink to this headline">¶</a></h2>
+<p><em>Ellipsoidal Toolbox</em> has several plotting routines:</p>
+<ul class="simple">
+<li>ellipsoid/plot - plots one or more ellipsoids, or arrays of
+ellipsoids, defined in <span class="math">{\bf R}</span>, <span class="math">{\bf R}^2</span> or
+<span class="math">{\bf R}^3</span>.</li>
+<li>ellipsoid/minksum - plots geometric sum of finite number of
+ellipsoids defined in <span class="math">{\bf R}</span>, <span class="math">{\bf R}^2</span> or
+<span class="math">{\bf R}^3</span>.</li>
+<li>ellipsoid/minkdiff - plots geometric difference (if it is not an
+empty set) of two ellipsoids defined in <span class="math">{\bf R}</span>,
+<span class="math">{\bf R}^2</span> or <span class="math">{\bf R}^3</span>.</li>
+<li>ellipsoid/minkmp - plots geometric (Minkowski) sum of the geometric
+difference of two ellipsoids and the geometric sum of <span class="math">n</span>
+ellipsoids defined in <span class="math">{\bf R}</span>, <span class="math">{\bf R}^2</span> or
+<span class="math">{\bf R}^3</span>.</li>
+<li>ellipsoid/minkpm - plots geometric (Minkowski) difference of the
+geometric sum of ellipsoids and a single ellipsoid defined in
+<span class="math">{\bf R}</span>, <span class="math">{\bf R}^2</span> or <span class="math">{\bf R}^3</span>.</li>
+<li>hyperplane/plot - plots one or more hyperplanes, or arrays of
+hyperplanes, defined in <span class="math">{\bf R}^2</span> or <span class="math">{\bf R}^3</span>.</li>
+<li>reach/plot_ea - plots external approximation of the reach set whose
+dimension is <span class="math">2</span> or <span class="math">3</span>.</li>
+<li>reach/plot_ia - plots internal approximation of the reach set whose
+dimension is <span class="math">2</span> or <span class="math">3</span>.</li>
+</ul>
+<p>All these functions allow the user to specify the color of the plotted
+objects, line width for 1D and 2D plots, and transparency level of the
+3D objects. Hyperplanes are displayed as line segments in 2D and square
+facets in 3D. In the hyperplane/plot method it is possible to specify
+the center of the line segment or facet and its size.</p>
+<p>Ellipsoids of dimensions higher than three must be projected onto a two-
+or three-dimensional subspace before being plotted. This is done by
+means of projection function:</p>
+<p>Since the operation of projection is linear, the projection of the
+geometric sum of ellipsoids equals the geometric sum of the projected
+ellipsoids. The same is true for the geometric difference of two
+ellipsoids.</p>
+<p>Function projection exists also for the
+ReachContinuous<span class="math">\backslash</span>ReachDiscrete objects:</p>
+<p>The quality of the ellipsoid and reach set plots is controlled by the
+parameters nPlot2dPoints and nPlot3dPoints, which are available from
+getters of ellipsoid class.</p>
+<div class="references"><p>“CVX Homepage.” cvxr.com/cvx.</p>
+<p>“Multi-Parametric Toolbox Homepage.” control.ee.ethz.ch/\~mpt.</p>
+<p>“SeDuMi Homepage.” sedumi.mcmaster.ca.</p>
+<p>“Stanley Chan Article Homepage.”
+<a class="reference external" href="http://videoprocessing.ucsd.edu/~stanleychan/publication/unpublished/Ellipse.pdf">http://videoprocessing.ucsd.edu/~stanleychan/publication/unpublished/Ellipse.pdf</a>.</p>
+<p>Kvasnica, M., P. Grieder, M. Baotić, and M. Morari. 2004.
+“Multi-Parametric Toolbox (MPT).” In <em>Hybrid Systems: Computation and
+Control</em>, edited by R. Alur and G. J. Pappas, 2993:448–462. Springer.</p>
+<p>Lin, A., and S. Han. 2002. “On the Distance Between Two Ellipsoids.”
+<em>SIAM Journal on Optimization</em> 13 (1): 298–308.</p>
+<p>Sturm, J. F. 1999. “Using SeDuMi 1.02, A MATLAB Toolbox for Optimization
+over Symmetric Cones.” <em>Optimization Methods and Software</em> 11-12:
+625–653.</p>
+</div></div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="main_manual.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Implementation</a><ul>
+<li><a class="reference internal" href="#operations-with-ellipsoids">Operations with ellipsoids</a></li>
+<li><a class="reference internal" href="#operations-with-hyperplanes">Operations with hyperplanes</a></li>
+<li><a class="reference internal" href="#operations-with-ellipsoidal-tubes">Operations with ellipsoidal tubes</a></li>
+<li><a class="reference internal" href="#reachability">Reachability</a></li>
+<li><a class="reference internal" href="#properties">Properties</a></li>
+<li><a class="reference internal" href="#visualization">Visualization</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/chap_implement.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li><a href="main_manual.html">elltool_manual 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Lukashevichus K..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b2.
+    </div>
+  </body>
+</html>
