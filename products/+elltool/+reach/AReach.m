@@ -1540,7 +1540,7 @@ classdef AReach < elltool.reach.IReach
             %
             % Output:
             %   intProbDynamicsList: cell[1,nLinSys] of cell[1,nTube] of
-            %   gras.ellapx.lreachplain.probdyn.LReachProblemDynamicsInterp -
+            %       gras.ellapx.lreachplain.probdyn.LReachProblemDynamicsInterp -
             %       list of of cell arrays filled with objects which describe 
             %       the system dynamics between switch time. 
             %       intProbDynamicsList is constructed during the internal 
@@ -1548,7 +1548,8 @@ classdef AReach < elltool.reach.IReach
             %       {{probDynObjSys1},{probDynObjSys2dir1,...,probDynObjSys2dirn},...,
             %       {probDynObjSyskdir1,...,probDynObjSyskdirn}}.           
             %       Nested cell arrays have dimensionality nTube equal to
-            %       the number of directions.
+            %       the number of directions. The order of intProbDynList{:}
+            %       corresponds to the time direction.
             %
             % Example:
             %   aMat = [0 1; 0 0]; bMat = eye(2);
@@ -1585,10 +1586,11 @@ classdef AReach < elltool.reach.IReach
             %   
             % Output:
             %   goodDirSetList: cell[1,nLinSys] of cell[1,nTube] of 
-            %   gras.ellapx.lreachplain.GoodDirsContinuousGen - list of
+            %       gras.ellapx.lreachplain.GoodDirsContinuousGen - list of
             %       cell arrays filled with gras.ellapx.lreachplain.GoodDirsContinuousGen 
             %       objects which containe good directions and curves data
-            %       between switch time.
+            %       between switch time. The order of goodDirSetList{:}
+            %       corresponds to the time direction.
             %
             % Example:
             %   aMat = [0 1; 0 0]; bMat = eye(2);
@@ -1625,11 +1627,12 @@ classdef AReach < elltool.reach.IReach
             %
             % Output:
             %   extProbDynamicsList: cell[1,nLinSys] of cell[1,nTube] of
-            %   gras.ellapx.lreachplain.probdyn.LReachProblemDynamicsInterp -
+            %       gras.ellapx.lreachplain.probdyn.LReachProblemDynamicsInterp -
             %       list of cell arrays filled with objects which describe 
             %       the system dynamics between switch time. 
             %       extProbDynamicsList is constructed during the external 
-            %       approximations.
+            %       approximations. If time is backward than the order of
+            %       extProbDynamicsList{:} is also backward.
             %
             % Example:
             %   aMat = [0 1; 0 0]; bMat = eye(2);
@@ -1656,6 +1659,20 @@ classdef AReach < elltool.reach.IReach
         end
            %        
         function linSysCVec = getSystemList(self)
+            %
+            % GETSYSTEMLISTLIST - returns the linSysCVec 
+            %                           property
+            %
+            % Input:
+            %   regular:
+            %       self: - reach tube
+            %
+            % Output:
+            %   linSysCVec: cell[1,nLinSys] of elltool.linsys.LinSysContinuous - 
+            %       list of nLinSys objects corresponding to nLinSys systems. Each 
+            %       elltool.linsys.LinSysContinuous object describes
+            %       the particular system between switch time.
+            %
             % Example:
             %   aMat = [0 1; 0 0]; bMat = eye(2);
             %   SUBounds = struct();
@@ -1666,7 +1683,22 @@ classdef AReach < elltool.reach.IReach
             %   timeVec = [0 10];
             %   dirsMat = [1 0; 0 1]';
             %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-            %   rsObj.getSystemList();
+            %   aMat2 = [0 1; 1 0]; bMat2 = [0 1;1 0];
+            %   SUBounds2 = struct();
+            %   SUBounds2.center = {'sin(t)'; 'cos(t)'};
+            %   SUBounds2.shape = [5 0; 0 3];
+            %   sys2 = elltool.linsys.LinSysContinuous(aMat2, bMat2, SUBounds2);
+            %   rsObj2=rsObj.evolve(15, sys2);
+            %   rsObj2.getSystemList()
+            %   ans = 
+            %
+            %       Column 1
+            %   
+            %           [1x1 elltool.linsys.LinSysContinuous]
+            %                 
+            %       Column 2
+            %                 
+            %           [1x1 elltool.linsys.LinSysContinuous]
             %
             linSysCVec = self.linSysCVec;
         end
