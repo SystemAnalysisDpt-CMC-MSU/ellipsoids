@@ -1,5 +1,5 @@
 classdef SuiteBasic < mlunitext.test_case
-    properties (Access=private)
+    properties (Access=protected)
         odeSolver;
         odeSolverNonReg;
     end
