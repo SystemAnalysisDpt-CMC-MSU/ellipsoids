@@ -1,5 +1,5 @@
 classdef MatrixSysODESolver
-    properties
+    properties(Access = protected)
         sizeEqList
         fSolveFunc
         nEquations
@@ -49,8 +49,18 @@ classdef MatrixSysODESolver
             varargin=cellfun(@(x)x(:),varargin,'UniformOutput',false);
             initValVec=vertcat(varargin{:});
             resList=cell(1,nFuncs);
-            [timeVec,resList{:}]=self.fSolveFunc(fMatrixDerivFuncList{:},...
+            indExtraOutputVec = (1 + self.nEquations*nFuncs):...
+                (2 + self.nEquations*nFuncs);
+            if nFuncs ~= 1
+                [timeVec,resList{:},varargout{indExtraOutputVec(1)}]=...
+                    self.fSolveFunc(fMatrixDerivFuncList{:},...
                 timeVec,initValVec(:));
+            else
+                [timeVec,resList{:},~,varargout{indExtraOutputVec(1)}]=...
+                    self.fSolveFunc(fMatrixDerivFuncList{:},...
+                timeVec,initValVec(:));          
+            end;
+            varargout{indExtraOutputVec(2)} = nFuncs;
             timeVec=timeVec.';
             nTimePoints=length(timeVec);
             nEqs=self.nEquations;
