@@ -43,16 +43,9 @@ of time steps. For example, consider the system,
 
 .. math:: x_{k+1} = Ax_k + u_k ,
 
-with 
-
-.. math:: 
-
-   A=\left[ 
-   \begin{array}{cc}
-   \cos 1 & -\sin 1\\
-   \sin 1 & \cos 1
-   \end{array}
-   \right],\ u_k \in \{u\in {\bf R}^2 ~|~ \|u\|_{\infty}\leqslant1\},\mbox{ and } x_0 \in \{x\in {\bf R}^2 ~|~ \|x\|_{\infty}\leqslant1\}.
+with :math:`A=\left[\begin{array}{cc}\cos 1 & -\sin 1\\ \sin 1 & \cos 1\end{array}\right]`, 
+:math:`\ u_k \in \{u\in {\bf R}^2 ~|~ \|u\|_{\infty}\leqslant1\}`, 
+and :math:`x_0 \in \{x\in {\bf R}^2 ~|~ \|x\|_{\infty}\leqslant1\}`.
 
 Starting with a rectangular initial set, the number of vertices of the
 reach set polytope is :math:`4k + 4` at the :math:`k`\ th step.
@@ -166,21 +159,8 @@ example, consider the discrete-time system
 
 .. math:: x_{k+1} = Ax_k + Bu_k
 
-with 
-
-.. math::
-
-   A=\left[\begin{array}{cc}
-   0 & 1\\
-   0 & 0\end{array}\right]
-
-and 
-
-.. math::
-
-   B=\left[\begin{array}{c}
-   0\\
-   1\end{array}\right]. 
+with :math:`A=\left[\begin{array}{cc}0 & 1\\0 & 0\end{array}\right]` 
+and :math:`B=\left[\begin{array}{c}0\\1\end{array}\right]`. 
 
 For initial conditions :math:`x_0\in\{x\in {\bf R}^2 ~|~ \|x\|_{\infty} \leqslant1\}` and
 controls :math:`u_k\in\{u\in {\bf R} ~|~ -1\leqslant u\leqslant1\}`, the

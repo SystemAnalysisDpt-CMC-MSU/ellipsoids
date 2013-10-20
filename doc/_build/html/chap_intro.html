@@ -90,14 +90,9 @@ vertices in the reach set polytope can grow very large with the number
 of time steps. For example, consider the system,</p>
 <div class="math">
 \[x_{k+1} = Ax_k + u_k ,\]</div>
-<p>with</p>
-<div class="math">
-\[\begin{split}A=\left[
-\begin{array}{cc}
-\cos 1 &amp; -\sin 1\\
-\sin 1 &amp; \cos 1
-\end{array}
-\right],\ u_k \in \{u\in {\bf R}^2 ~|~ \|u\|_{\infty}\leqslant1\},\mbox{ and } x_0 \in \{x\in {\bf R}^2 ~|~ \|x\|_{\infty}\leqslant1\}.\end{split}\]</div>
+<p>with <span class="math">\(A=\left[\begin{array}{cc}\cos 1 &amp; -\sin 1\\ \sin 1 &amp; \cos 1\end{array}\right]\)</span>,
+<span class="math">\(\ u_k \in \{u\in {\bf R}^2 ~|~ \|u\|_{\infty}\leqslant1\}\)</span>,
+and <span class="math">\(x_0 \in \{x\in {\bf R}^2 ~|~ \|x\|_{\infty}\leqslant1\}\)</span>.</p>
 <p>Starting with a rectangular initial set, the number of vertices of the
 reach set polytope is <span class="math">\(4k + 4\)</span> at the <span class="math">\(k\)</span>th step.</p>
 <p>In <span class="math">\(d/dt\)</span> (“$d/dt$ Homepage”), the reach set is approximated by
@@ -194,16 +189,8 @@ operations <span class="math">\(+\)</span>, <span class="math">\(\times\)</span>
 example, consider the discrete-time system</p>
 <div class="math">
 \[x_{k+1} = Ax_k + Bu_k\]</div>
-<p>with</p>
-<div class="math">
-\[\begin{split}A=\left[\begin{array}{cc}
-0 &amp; 1\\
-0 &amp; 0\end{array}\right]\end{split}\]</div>
-<p>and</p>
-<div class="math">
-\[\begin{split}B=\left[\begin{array}{c}
-0\\
-1\end{array}\right].\end{split}\]</div>
+<p>with <span class="math">\(A=\left[\begin{array}{cc}0 &amp; 1\\0 &amp; 0\end{array}\right]\)</span>
+and <span class="math">\(B=\left[\begin{array}{c}0\\1\end{array}\right]\)</span>.</p>
 <p>For initial conditions <span class="math">\(x_0\in\{x\in {\bf R}^2 ~|~ \|x\|_{\infty} \leqslant1\}\)</span> and
 controls <span class="math">\(u_k\in\{u\in {\bf R} ~|~ -1\leqslant u\leqslant1\}\)</span>, the
 reach set for <span class="math">\(k\geqslant0\)</span> is given by the quantified formula</p>
