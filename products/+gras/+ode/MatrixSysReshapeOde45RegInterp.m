@@ -1,5 +1,5 @@
 classdef MatrixSysReshapeOde45RegInterp
-    properties(Access=private)
+    properties(Access=public)
         VecOde45RegInterpObj
         sizeEqList
         nFuncs
@@ -19,11 +19,17 @@ classdef MatrixSysReshapeOde45RegInterp
             [timeVec,resList{:}] = ...
                 self.VecOde45RegInterpObj.evaluate(timeVec);
             nTimePoints = length(timeVec);
+            nEquations = length(self.sizeEqList);
+            nElemVec=cellfun(@prod,self.sizeEqList);
+            nElemCumVec=cumsum(nElemVec);
+            indEqList=cellfun(@(x,y)x:y,...
+                num2cell(ones(1,nEquations)+[0,nElemCumVec(1:end-1)]),...
+                num2cell(nElemCumVec),'UniformOutput',false);
             for iFunc = 1:self.nFuncs
-                indShift=(iFunc-1)*self.nEquations;
-                for iEq=1:self.nEquations
+                indShift=(iFunc-1)*nEquations;
+                for iEq=1:nEquations
                     varargout{indShift+iEq}=reshape(...
-                        transpose(resList{iFunc}(:,self.indEqList{iEq})),...
+                        transpose(resList{iFunc}(:,indEqList{iEq})),...
                         [self.sizeEqList{iEq} nTimePoints]);
                 end
             end

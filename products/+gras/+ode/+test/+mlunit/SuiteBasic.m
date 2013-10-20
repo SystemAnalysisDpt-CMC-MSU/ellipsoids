@@ -283,73 +283,10 @@ classdef SuiteBasic < mlunitext.test_case
             end
             
         end
-        function self=testMatrixSysODESolver(self)
-            odePropList={'NormControl','on','RelTol',0.001,'AbsTol',0.0001};
-            sizeVecList={[3 3],[2 2],[2 4 1],[2 1]};
-            nTimePoints=100;
-            timeVec=linspace(0,1,nTimePoints);
-            initValList=cellfun(@(x)prod(x).*ones(x),sizeVecList,...
-                'UniformOutput',false);
-            indEqNoDyn=2;
-            indFuncEqNoDyn=1;
-            fSolver=str2func(self.odeSolver);
-            check({@fSimpleDerivFunc,@fAdvRegFunc},'outArgStartIndVec',[1 2]);
-            fSolver=str2func(self.odeSolverNonReg);
-            check(@fSimpleDerivFunc);
-            %
-            function resList=check(fDerivFuncList,varargin)
-                import gras.ode.test.mlunit.SuiteBasic;
-                solveObj=gras.ode.MatrixSysODESolver(sizeVecList,...
-                    @(varargin)fSolver(varargin{:},odeset(odePropList{:})),...
-                    varargin{:});
-                resList=cell(1,length(sizeVecList)*...
-                    length(fDerivFuncList));
-                %
-                nEqs=length(sizeVecList);
-                [resTimeVec,resList{:}]=solveObj.solve(...
-                    fDerivFuncList,timeVec,initValList{:});
-                nFuncs=length(fDerivFuncList);
-                for iFunc=1:nFuncs
-                    indShift=(iFunc-1)*nEqs;
-                    for iEq=1:nEqs
-                        indEq=indShift+iEq;
-                        mlunitext.assert_equals(true,...
-                            isequal(size(resList{iEq}),...
-                            [sizeVecList{iEq},nTimePoints]));
-                        if iEq==indEqNoDyn&&iFunc==indFuncEqNoDyn
-                            isOk=isequal(resList{indEq},...
-                                repmat(initValList{iEq},...
-                                [ones(1,ndims(resList{indEq})-1),...
-                                nTimePoints]));
-                            mlunitext.assert_equals(true,isOk);
-                        end
-                    end
-                end
-                mlunitext.assert_equals(true,isequal(resTimeVec,timeVec));
-            end
-            %
-            function varargout=fAdvRegFunc(~,varargin)
-                nEqs=length(varargin);
-                varargout{1}=false;
-                for iEq=1:nEqs
-                    varargout{iEq+1}=max(varargin{iEq},0);
-                end
-            end
-            %
-            function varargout=fSimpleDerivFunc(t,varargin)
-                nEqs=length(varargin);
-                for iEq=1:nEqs
-                    if iEq==indEqNoDyn
-                        varargout{iEq}=zeros(size(varargin{iEq}));
-                    else
-                        varargout{iEq}=sin(t).*cos(varargin{iEq}).*iEq;
-                    end
-                end
-            end
-        end
         %
         function self=testMatrixSysODEInterpSolver(self)
-            odePropList={'NormControl','on','RelTol',0.001,'AbsTol',0.0001};
+            odePropList={'NormControl','on','RelTol',0.001,'AbsTol',...
+                0.0001};
             sizeVecList={[3 3],[2 2],[2 4 1],[2 1]};
             nTimePoints=100;
             timeVec=linspace(0,1,nTimePoints);
@@ -358,37 +295,81 @@ classdef SuiteBasic < mlunitext.test_case
             indEqNoDyn=2;
             indFuncEqNoDyn=1;
             fSolver=str2func(self.odeSolver);
-            check({@fSimpleDerivFunc,@fAdvRegFunc},'outArgStartIndVec',[1 2]);
+            check(true,{@fSimpleDerivFunc,@fAdvRegFunc},...
+                'outArgStartIndVec',[1 2]);
+            fSolver=str2func(self.odeSolverNonReg);
+            check(false,@fSimpleDerivFunc);
             %
-            function resList=check(fDerivFuncList,varargin)
+            function resList=check(isInterpTest,fDerivFuncList,varargin)
                 import gras.ode.test.mlunit.SuiteBasic;
-                solveObj=gras.ode.MatrixSysODEInterpSolver(sizeVecList,...
-                    @(varargin)fSolver(varargin{:},odeset(odePropList{:})),...
-                    varargin{:});
-                resList=cell(1,length(sizeVecList)*...
-                    length(fDerivFuncList));
+                if(isInterpTest)
+                    solveObj=gras.ode.MatrixSysODEInterpSolver(...
+                        sizeVecList,@(varargin)fSolver(varargin{:},...
+                        odeset(odePropList{:})),varargin{:});
+                    resList=cell(1,length(sizeVecList)*...
+                        length(fDerivFuncList));
+                    resIntrepEvalList = resList;
+                else
+                    solveObj=gras.ode.MatrixSysODESolver(sizeVecList,...
+                        @(varargin)fSolver(varargin{:},odeset(...
+                        odePropList{:})), varargin{:});
+                    resList=cell(1,length(sizeVecList)*...
+                        length(fDerivFuncList));
+                end;
                 %
                 nEqs=length(sizeVecList);
-                [resTimeVec,resList{:}]=solveObj.solve(...
-                    fDerivFuncList,timeVec,initValList{:});
+                if(isInterpTest)
+                    [resTimeVec,resList{:},...
+                        objMatrixSysReshapeOde45RegInterp]=...
+                        solveObj.solve(fDerivFuncList,timeVec,...
+                        initValList{:});
+                    [resInterpEvalTimeVec,resIntrepEvalList{:}] =...
+                       objMatrixSysReshapeOde45RegInterp.evaluate(timeVec);
+                else
+                    [resTimeVec,resList{:}]=solveObj.solve(...
+                        fDerivFuncList,timeVec,initValList{:});
+                end;
+                
                 nFuncs=length(fDerivFuncList);
                 for iFunc=1:nFuncs
                     indShift=(iFunc-1)*nEqs;
                     for iEq=1:nEqs
                         indEq=indShift+iEq;
+                        
                         mlunitext.assert_equals(true,...
                             isequal(size(resList{iEq}),...
                             [sizeVecList{iEq},nTimePoints]));
+                        
+                        if(isInterpTest)
+                            mlunitext.assert_equals(true,...
+                                isequal(size(resIntrepEvalList{iEq}),...
+                                [sizeVecList{iEq},nTimePoints]));
+                        end;
+                        
                         if iEq==indEqNoDyn&&iFunc==indFuncEqNoDyn
                             isOk=isequal(resList{indEq},...
                                 repmat(initValList{iEq},...
                                 [ones(1,ndims(resList{indEq})-1),...
                                 nTimePoints]));
                             mlunitext.assert_equals(true,isOk);
+                            
+                            if(isInterpTest)
+                                isInterpOk = isequal(...
+                                    resIntrepEvalList{indEq},...
+                                    repmat(initValList{iEq},...
+                                    [ones(1,ndims(...
+                                    resIntrepEvalList{indEq})-1),...
+                                    nTimePoints]));
+                                mlunitext.assert_equals(true,isInterpOk);
+                            end;
                         end
                     end
                 end
                 mlunitext.assert_equals(true,isequal(resTimeVec,timeVec));
+                if(isInterpTest)
+                    mlunitext.assert_equals(true,isequal(...
+                        resInterpEvalTimeVec.',timeVec));
+                end;
             end
             %
             function varargout=fAdvRegFunc(~,varargin)
