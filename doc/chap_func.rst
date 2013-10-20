@@ -5634,8 +5634,6 @@ smartdb.relations.ATypifiedStaticRelation:
 
 ::
 
-::
-
     FROMELLARRAY  - creates a relation object using an array of ellipsoids
 
     Input:
@@ -5989,8 +5987,6 @@ smartdb.relations.ATypifiedStaticRelation:
 
 ::
 
-::
-
     PROJECTTOORTHS - project elltube onto subspace defined by
     vectors of standart basis with indices specified in indVec
 
@@ -6108,8 +6104,6 @@ smartdb.relations.ATypifiedStaticRelation:
 
 ::
 
-::
-
     GETDATA - returns an indexed projection of CubeStruct object's content
 
     Input:
@@ -6214,8 +6208,6 @@ smartdb.relations.ATypifiedStaticRelation:
 
 ::
 
-::
-
     GETREACHTUBEANEPREFIX - return prefix of the reach tube
 
     Input:
@@ -6230,7 +6222,6 @@ smartdb.relations.ATypifiedStaticRelation:
       regular:
          self.
 
-::
 
 ::
 
@@ -6475,8 +6466,6 @@ smartdb.relations.ATypifiedStaticRelation:
 
 ::
 
-::
-
     FROMELLTUBES - returns union of the ellipsoidal tubes on time
 
     Input:
@@ -6693,12 +6682,6 @@ smartdb.relations.ATypifiedStaticRelation:
       projOrthMatTransArray=repmat(projMat.',[1,1,nTimePoints]);
      end
 
-::
-
-::
-
-::
-
 gras.ellapx.smartdb.rels.EllUnionTubeStaticProj
 -----------------------------------------------
 
@@ -6760,8 +6743,6 @@ gras.ellapx.smartdb.rels.EllUnionTubeStaticProj
 See the description of the following methods in section
 [secClassDescr:smartdb.relations.ATypifiedStaticRelation] for
 smartdb.relations.ATypifiedStaticRelation:
-
-::
 
 ::
 
@@ -6882,8 +6863,6 @@ smartdb.relations.ATypifiedStaticRelation:
 
 ::
 
-::
-
     GETREACHTUBEANEPREFIX - return prefix of the reach tube
 
     Input:
@@ -6897,8 +6876,6 @@ smartdb.relations.ATypifiedStaticRelation:
     Input:
       regular:
          self.
-
-::
 
 ::
 
@@ -7079,18 +7056,8 @@ smartdb.relations.ATypifiedStaticRelation:
           plObj: smartdb.disp.RelationDataPlotter[1,1] - returns the relation
           data plotter object.
 
-::
-
-::
-
-::
-
-::
-
 elltool.reach.AReach
 --------------------
-
-::
 
 ::
 
@@ -7531,8 +7498,6 @@ elltool.reach.AReach
           relTolArr and relTol,
       use relTolArr = rsArr.getRelTol() if you want get only
           relTolArr
-
-::
 
 ::
 
@@ -8135,7 +8100,6 @@ elltool.reach.AReach
       dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
       dRsObj.plotIa();
 
-::
 
 ::
 
@@ -8298,8 +8262,6 @@ elltool.reach.ReachFactory
       crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
       rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
       reachObj = rsObj.createInstance();
-
-::
 
 ::
 

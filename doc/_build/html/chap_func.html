@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Function Reference &mdash; elltool_manual 0.1 documentation</title>
+    <title>Function Reference &mdash; Ellipsoidal Toolbox 0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -24,7 +24,8 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="elltool_manual 0.1 documentation" href="index.html" /> 
+    <link rel="top" title="Ellipsoidal Toolbox 0.1 documentation" href="index.html" />
+    <link rel="prev" title="Acknowledgement" href="chap_acknowledge.html" /> 
   </head>
   <body>
     <div class="related">
@@ -33,7 +34,10 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li><a href="main_manual.html">elltool_manual 0.1 documentation</a> &raquo;</li> 
+        <li class="right" >
+          <a href="chap_acknowledge.html" title="Acknowledgement"
+             accesskey="P">previous</a> |</li>
+        <li><a href="main_manual.html">Ellipsoidal Toolbox 0.1 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -5281,36 +5285,26 @@ Output:
       smartdb.relation.DynamicRelation[1, 1] - relation object
       resulting from CAT operation</pre>
 </div>
-<div class="highlight-python"><pre>::</pre>
+<div class="highlight-python"><pre>FROMELLARRAY  - creates a relation object using an array of ellipsoids
+
+Input:
+  regular:
+    qEllArray: ellipsoid[nDim1, nDim2, ..., nDimN] - array of ellipsoids
+
+  optional:
+   timeVec:cell[1, m] - time vector
+   ltGoodDirArray:cell[1, nElem] - good direction at time s
+   sTime:double[1, 1] - time s
+   approxType:gras.ellapx.enums.EApproxType - type of approximation
+                (external, internal, not defined)
+   approxSchemaName:cell[1,] - name of the schema
+   approxSchemaDescr:cell[1,] - description of the schema
+   calcPrecision:double[1, 1] - calculation precision
+
+Output:
+   ellTubeRel: smartdb.relation.StaticRelation[1, 1] - constructed relation
+       object</pre>
 </div>
-<blockquote>
-<div><p>FROMELLARRAY  - creates a relation object using an array of ellipsoids</p>
-<dl class="docutils">
-<dt>Input:</dt>
-<dd><dl class="first last docutils">
-<dt>regular:</dt>
-<dd>qEllArray: ellipsoid[nDim1, nDim2, ..., nDimN] - array of ellipsoids</dd>
-<dt>optional:</dt>
-<dd><p class="first">timeVec:cell[1, m] - time vector
-ltGoodDirArray:cell[1, nElem] - good direction at time s
-sTime:double[1, 1] - time s
-approxType:gras.ellapx.enums.EApproxType - type of approximation</p>
-<blockquote>
-<div>(external, internal, not defined)</div></blockquote>
-<p class="last">approxSchemaName:cell[1,] - name of the schema
-approxSchemaDescr:cell[1,] - description of the schema
-calcPrecision:double[1, 1] - calculation precision</p>
-</dd>
-</dl>
-</dd>
-<dt>Output:</dt>
-<dd><dl class="first last docutils">
-<dt>ellTubeRel: smartdb.relation.StaticRelation[1, 1] - constructed relation</dt>
-<dd>object</dd>
-</dl>
-</dd>
-</dl>
-</div></blockquote>
 <div class="highlight-python"><pre>FROMELLMARRAY  - creates a relation object using an array of ellipsoids.
                  This method uses regularizer in the form of a matrix
                  function.
@@ -5620,46 +5614,29 @@ function [projOrthMatArray,projOrthMatTransArray]=fGetProjMat(projMat,...
   projOrthMatTransArray=repmat(projMat.',[1,1,nTimePoints]);
  end</pre>
 </div>
-<div class="highlight-python"><pre>::</pre>
+<div class="highlight-python"><pre>PROJECTTOORTHS - project elltube onto subspace defined by
+vectors of standart basis with indices specified in indVec
+
+Input:
+  regular:
+      self: gras.ellapx.smartdb.rels.EllTube[1, 1] - elltube
+          object
+      indVec: double[1, nProjDims] - indices specifying a subset of
+          standart basis
+  optional:
+      projType: gras.ellapx.enums.EProjType[1, 1] -  type of
+          projection
+
+Output:
+  regular:
+      ellTubeProjRel: gras.ellapx.smartdb.rels.EllTubeProj[1, 1] -
+          elltube projection
+
+Example:
+  ellTubeProjRel = ellTubeRel.projectToOrths([1,2])
+  projType = gras.ellapx.enums.EProjType.DynamicAlongGoodCurve
+  ellTubeProjRel = ellTubeRel.projectToOrths([3,4,5], projType)</pre>
 </div>
-<blockquote>
-<div><p>PROJECTTOORTHS - project elltube onto subspace defined by
-vectors of standart basis with indices specified in indVec</p>
-<dl class="docutils">
-<dt>Input:</dt>
-<dd><dl class="first last docutils">
-<dt>regular:</dt>
-<dd><dl class="first last docutils">
-<dt>self: gras.ellapx.smartdb.rels.EllTube[1, 1] - elltube</dt>
-<dd>object</dd>
-<dt>indVec: double[1, nProjDims] - indices specifying a subset of</dt>
-<dd>standart basis</dd>
-</dl>
-</dd>
-<dt>optional:</dt>
-<dd><dl class="first last docutils">
-<dt>projType: gras.ellapx.enums.EProjType[1, 1] -  type of</dt>
-<dd>projection</dd>
-</dl>
-</dd>
-</dl>
-</dd>
-<dt>Output:</dt>
-<dd><dl class="first last docutils">
-<dt>regular:</dt>
-<dd><dl class="first last docutils">
-<dt>ellTubeProjRel: gras.ellapx.smartdb.rels.EllTubeProj[1, 1] -</dt>
-<dd>elltube projection</dd>
-</dl>
-</dd>
-</dl>
-</dd>
-<dt>Example:</dt>
-<dd>ellTubeProjRel = ellTubeRel.projectToOrths([1,2])
-projType = gras.ellapx.enums.EProjType.DynamicAlongGoodCurve
-ellTubeProjRel = ellTubeRel.projectToOrths([3,4,5], projType)</dd>
-</dl>
-</div></blockquote>
 <div class="highlight-python"><pre>SCALE - scales relation object
 
  Input:
@@ -5745,87 +5722,72 @@ TODO: correct description of the fields in
 <p>See the description of the following methods in section
 [secClassDescr:smartdb.relations.ATypifiedStaticRelation] for
 smartdb.relations.ATypifiedStaticRelation:</p>
-<div class="highlight-python"><pre>::</pre>
+<div class="highlight-python"><pre>GETDATA - returns an indexed projection of CubeStruct object's content
+
+Input:
+  regular:
+      self: CubeStruct [1,1] - the object
+
+  optional:
+
+      subIndCVec:
+        Case#1: numeric[1,]/numeric[,1]
+
+        Case#2: cell[1,nDims]/cell[nDims,1] of double [nSubElem_i,1]
+              for i=1,...,nDims
+
+          -array of indices of field value slices that are selected
+          to be returned; if not given (default),
+          no indexation is performed
+
+        Note!: numeric components of subIndVec are allowed to contain
+           zeros which are be treated as they were references to null
+           data slices
+
+      dimVec: numeric[1,nDims]/numeric[nDims,1] - vector of dimension
+          numbers corresponding to subIndCVec
+
+  properties:
+
+      fieldNameList: char[1,]/cell[1,nFields] of char[1,]
+          list of field names to return
+
+      structNameList: char[1,]/cell[1,nStructs] of char[1,]
+          list of internal structures to return (by default it
+          is {SData, SIsNull, SIsValueNull}
+
+      replaceNull: logical[1,1] if true, null values are replaced with
+          certain default values uniformly across all the cells,
+              default value is false
+
+      nullReplacements: cell[1,nReplacedFields]  - list of null
+          replacements for each of the fields
+
+      nullReplacementFields: cell[1,nReplacedFields] - list of fields in
+         which the nulls are to be replaced with the specified values,
+         if not specified it is assumed that all fields are to be
+         replaced
+
+         NOTE!: all fields not listed in this parameter are replaced with
+         the default values
+
+      checkInputs: logical[1,1] - true by default (input arguments are
+         checked for correctness
+
+Output:
+  regular:
+    SData: struct [1,1] - structure containing values of
+        fields at the selected slices, each field is an array
+        containing values of the corresponding type
+
+    SIsNull: struct [1,1] - structure containing a nested
+        array with is-null indicators for each CubeStruct cell content
+
+    SIsValueNull: struct [1,1] - structure containing a
+       logical array [] for each of the fields (true
+       means that a corresponding cell doesn't not contain
+          any value</pre>
 </div>
-<blockquote>
-<div><p>GETDATA - returns an indexed projection of CubeStruct object&#8217;s content</p>
-<dl class="docutils">
-<dt>Input:</dt>
-<dd><dl class="first docutils">
-<dt>regular:</dt>
-<dd>self: CubeStruct [1,1] - the object</dd>
-</dl>
-<p>optional:</p>
-<blockquote>
-<div><dl class="docutils">
-<dt>subIndCVec:</dt>
-<dd><p class="first">Case#1: numeric[1,]/numeric[,1]</p>
-<dl class="last docutils">
-<dt>Case#2: cell[1,nDims]/cell[nDims,1] of double [nSubElem_i,1]</dt>
-<dd><blockquote class="first">
-<div>for i=1,...,nDims</div></blockquote>
-<p class="last">-array of indices of field value slices that are selected
-to be returned; if not given (default),
-no indexation is performed</p>
-</dd>
-<dt>Note!: numeric components of subIndVec are allowed to contain</dt>
-<dd>zeros which are be treated as they were references to null
-data slices</dd>
-</dl>
-</dd>
-<dt>dimVec: numeric[1,nDims]/numeric[nDims,1] - vector of dimension</dt>
-<dd>numbers corresponding to subIndCVec</dd>
-</dl>
-</div></blockquote>
-<p>properties:</p>
-<blockquote class="last">
-<div><dl class="docutils">
-<dt>fieldNameList: char[1,]/cell[1,nFields] of char[1,]</dt>
-<dd>list of field names to return</dd>
-<dt>structNameList: char[1,]/cell[1,nStructs] of char[1,]</dt>
-<dd>list of internal structures to return (by default it
-is {SData, SIsNull, SIsValueNull}</dd>
-<dt>replaceNull: logical[1,1] if true, null values are replaced with</dt>
-<dd><dl class="first last docutils">
-<dt>certain default values uniformly across all the cells,</dt>
-<dd>default value is false</dd>
-</dl>
-</dd>
-<dt>nullReplacements: cell[1,nReplacedFields]  - list of null</dt>
-<dd>replacements for each of the fields</dd>
-<dt>nullReplacementFields: cell[1,nReplacedFields] - list of fields in</dt>
-<dd><p class="first">which the nulls are to be replaced with the specified values,
-if not specified it is assumed that all fields are to be
-replaced</p>
-<p class="last">NOTE!: all fields not listed in this parameter are replaced with
-the default values</p>
-</dd>
-<dt>checkInputs: logical[1,1] - true by default (input arguments are</dt>
-<dd>checked for correctness</dd>
-</dl>
-</div></blockquote>
-</dd>
-<dt>Output:</dt>
-<dd><dl class="first last docutils">
-<dt>regular:</dt>
-<dd><dl class="first last docutils">
-<dt>SData: struct [1,1] - structure containing values of</dt>
-<dd>fields at the selected slices, each field is an array
-containing values of the corresponding type</dd>
-<dt>SIsNull: struct [1,1] - structure containing a nested</dt>
-<dd>array with is-null indicators for each CubeStruct cell content</dd>
-<dt>SIsValueNull: struct [1,1] - structure containing a</dt>
-<dd><p class="first">logical array [] for each of the fields (true
-means that a corresponding cell doesn&#8217;t not contain</p>
-<blockquote class="last">
-<div>any value</div></blockquote>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd>
-</dl>
-</div></blockquote>
 <div class="highlight-python"><pre>GETELLARRAY - returns array of matrix's ellipsoid according to
               approxType
 
@@ -5858,63 +5820,49 @@ Input:
 Output:
   resRel: smartdb.relations.ARelation[1,1] - join result</pre>
 </div>
-<div class="highlight-python"><pre>::</pre>
+<div class="highlight-python"><pre>GETREACHTUBEANEPREFIX - return prefix of the reach tube
+
+Input:
+  regular:
+     self.</pre>
 </div>
-<blockquote>
-<div><p>GETREACHTUBEANEPREFIX - return prefix of the reach tube</p>
-<dl class="docutils">
-<dt>Input:</dt>
-<dd><dl class="first last docutils">
-<dt>regular:</dt>
-<dd>self.</dd>
-</dl>
-</dd>
-</dl>
-</div></blockquote>
 <div class="highlight-python"><pre>GETREGTUBEANEPREFIX - return prefix of the reg tube
 
 Input:
   regular:
      self.</pre>
 </div>
-<div class="highlight-python"><pre>::</pre>
+<div class="highlight-python"><pre>ISEQUAL - compares current relation object with other relation object and
+          returns true if they are equal, otherwise it returns false
+
+
+Usage: isEq=isEqual(self,otherObj)
+
+Input:
+  regular:
+    self: ARelation [1,1] - current relation object
+    otherObj: ARelation [1,1] - other relation object
+
+  properties:
+    checkFieldOrder/isFieldOrderCheck: logical [1,1] - if true, then fields
+        in compared relations must be in the same order, otherwise the
+        order is not  important (false by default)
+    checkTupleOrder: logical[1,1] -  if true, then the tuples in the
+        compared relations are expected to be in the same order,
+        otherwise the order is not important (false by default)
+
+    maxTolerance: double [1,1] - maximum allowed tolerance
+
+    compareMetaDataBackwardRef: logical[1,1] if true, the CubeStruct's
+        referenced from the meta data objects are also compared
+
+    maxRelativeTolerance: double [1,1] - maximum allowed
+    relative tolerance
+
+Output:
+  isEq: logical[1,1] - result of comparison
+  reportStr: char[1,] - report of comparsion</pre>
 </div>
-<blockquote>
-<div><dl class="docutils">
-<dt>ISEQUAL - compares current relation object with other relation object and</dt>
-<dd>returns true if they are equal, otherwise it returns false</dd>
-</dl>
-<p>Usage: isEq=isEqual(self,otherObj)</p>
-<dl class="docutils">
-<dt>Input:</dt>
-<dd><dl class="first last docutils">
-<dt>regular:</dt>
-<dd>self: ARelation [1,1] - current relation object
-otherObj: ARelation [1,1] - other relation object</dd>
-<dt>properties:</dt>
-<dd><dl class="first docutils">
-<dt>checkFieldOrder/isFieldOrderCheck: logical [1,1] - if true, then fields</dt>
-<dd>in compared relations must be in the same order, otherwise the
-order is not  important (false by default)</dd>
-<dt>checkTupleOrder: logical[1,1] -  if true, then the tuples in the</dt>
-<dd>compared relations are expected to be in the same order,
-otherwise the order is not important (false by default)</dd>
-</dl>
-<p>maxTolerance: double [1,1] - maximum allowed tolerance</p>
-<dl class="docutils">
-<dt>compareMetaDataBackwardRef: logical[1,1] if true, the CubeStruct&#8217;s</dt>
-<dd>referenced from the meta data objects are also compared</dd>
-</dl>
-<p class="last">maxRelativeTolerance: double [1,1] - maximum allowed
-relative tolerance</p>
-</dd>
-</dl>
-</dd>
-<dt>Output:</dt>
-<dd>isEq: logical[1,1] - result of comparison
-reportStr: char[1,] - report of comparsion</dd>
-</dl>
-</div></blockquote>
 <div class="highlight-python"><pre>PLOT - displays ellipsoidal tubes using the specified
   RelationDataPlotter
 
@@ -6110,24 +6058,17 @@ TODO: correct description of the fields in
 <p>See the description of the following methods in section
 [secClassDescr:smartdb.relations.ATypifiedStaticRelation] for
 smartdb.relations.ATypifiedStaticRelation:</p>
-<div class="highlight-python"><pre>::</pre>
+<div class="highlight-python"><pre>FROMELLTUBES - returns union of the ellipsoidal tubes on time
+
+Input:
+   ellTubeRel: smartdb.relation.StaticRelation[1, 1]/
+      smartdb.relation.DynamicRelation[1, 1] - relation
+      object
+
+Output:
+ellUnionTubeRel: ellapx.smartdb.rel.EllUnionTube - union of the
+            ellipsoidal tubes</pre>
 </div>
-<blockquote>
-<div><p>FROMELLTUBES - returns union of the ellipsoidal tubes on time</p>
-<dl class="docutils">
-<dt>Input:</dt>
-<dd><dl class="first last docutils">
-<dt>ellTubeRel: smartdb.relation.StaticRelation[1, 1]/</dt>
-<dd>smartdb.relation.DynamicRelation[1, 1] - relation
-object</dd>
-</dl>
-</dd>
-</dl>
-<p>Output:
-ellUnionTubeRel: ellapx.smartdb.rel.EllUnionTube - union of the</p>
-<blockquote>
-<div>ellipsoidal tubes</div></blockquote>
-</div></blockquote>
 <div class="highlight-python"><pre>GETDATA - returns an indexed projection of CubeStruct object's content
 
 Input:
@@ -6321,8 +6262,6 @@ function [projOrthMatArray,projOrthMatTransArray]=fGetProjMat(projMat,...
   projOrthMatTransArray=repmat(projMat.',[1,1,nTimePoints]);
  end</pre>
 </div>
-<div class="highlight-python"><pre>::</pre>
-</div>
 </div>
 <div class="section" id="gras-ellapx-smartdb-rels-elluniontubestaticproj">
 <h2>gras.ellapx.smartdb.rels.EllUnionTubeStaticProj<a class="headerlink" href="#gras-ellapx-smartdb-rels-elluniontubestaticproj" title="Permalink to this headline">¶</a></h2>
@@ -6382,24 +6321,17 @@ Fields:
 <p>See the description of the following methods in section
 [secClassDescr:smartdb.relations.ATypifiedStaticRelation] for
 smartdb.relations.ATypifiedStaticRelation:</p>
-<div class="highlight-python"><pre>::</pre>
+<div class="highlight-python"><pre>FROMELLTUBES - returns union of the ellipsoidal tubes on time
+
+Input:
+   ellTubeRel: smartdb.relation.StaticRelation[1, 1]/
+      smartdb.relation.DynamicRelation[1, 1] - relation
+      object
+
+Output:
+ellUnionTubeRel: ellapx.smartdb.rel.EllUnionTube - union of the
+            ellipsoidal tubes</pre>
 </div>
-<blockquote>
-<div><p>FROMELLTUBES - returns union of the ellipsoidal tubes on time</p>
-<dl class="docutils">
-<dt>Input:</dt>
-<dd><dl class="first last docutils">
-<dt>ellTubeRel: smartdb.relation.StaticRelation[1, 1]/</dt>
-<dd>smartdb.relation.DynamicRelation[1, 1] - relation
-object</dd>
-</dl>
-</dd>
-</dl>
-<p>Output:
-ellUnionTubeRel: ellapx.smartdb.rel.EllUnionTube - union of the</p>
-<blockquote>
-<div>ellipsoidal tubes</div></blockquote>
-</div></blockquote>
 <div class="highlight-python"><pre>GETDATA - returns an indexed projection of CubeStruct object's content
 
 Input:
@@ -6498,63 +6430,49 @@ Input:
 Output:
   resRel: smartdb.relations.ARelation[1,1] - join result</pre>
 </div>
-<div class="highlight-python"><pre>::</pre>
+<div class="highlight-python"><pre>GETREACHTUBEANEPREFIX - return prefix of the reach tube
+
+Input:
+  regular:
+     self.</pre>
 </div>
-<blockquote>
-<div><p>GETREACHTUBEANEPREFIX - return prefix of the reach tube</p>
-<dl class="docutils">
-<dt>Input:</dt>
-<dd><dl class="first last docutils">
-<dt>regular:</dt>
-<dd>self.</dd>
-</dl>
-</dd>
-</dl>
-</div></blockquote>
 <div class="highlight-python"><pre>GETREGTUBEANEPREFIX - return prefix of the reg tube
 
 Input:
   regular:
      self.</pre>
 </div>
-<div class="highlight-python"><pre>::</pre>
+<div class="highlight-python"><pre>ISEQUAL - compares current relation object with other relation object and
+          returns true if they are equal, otherwise it returns false
+
+
+Usage: isEq=isEqual(self,otherObj)
+
+Input:
+  regular:
+    self: ARelation [1,1] - current relation object
+    otherObj: ARelation [1,1] - other relation object
+
+  properties:
+    checkFieldOrder/isFieldOrderCheck: logical [1,1] - if true, then fields
+        in compared relations must be in the same order, otherwise the
+        order is not  important (false by default)
+    checkTupleOrder: logical[1,1] -  if true, then the tuples in the
+        compared relations are expected to be in the same order,
+        otherwise the order is not important (false by default)
+
+    maxTolerance: double [1,1] - maximum allowed tolerance
+
+    compareMetaDataBackwardRef: logical[1,1] if true, the CubeStruct's
+        referenced from the meta data objects are also compared
+
+    maxRelativeTolerance: double [1,1] - maximum allowed
+    relative tolerance
+
+Output:
+  isEq: logical[1,1] - result of comparison
+  reportStr: char[1,] - report of comparsion</pre>
 </div>
-<blockquote>
-<div><dl class="docutils">
-<dt>ISEQUAL - compares current relation object with other relation object and</dt>
-<dd>returns true if they are equal, otherwise it returns false</dd>
-</dl>
-<p>Usage: isEq=isEqual(self,otherObj)</p>
-<dl class="docutils">
-<dt>Input:</dt>
-<dd><dl class="first last docutils">
-<dt>regular:</dt>
-<dd>self: ARelation [1,1] - current relation object
-otherObj: ARelation [1,1] - other relation object</dd>
-<dt>properties:</dt>
-<dd><dl class="first docutils">
-<dt>checkFieldOrder/isFieldOrderCheck: logical [1,1] - if true, then fields</dt>
-<dd>in compared relations must be in the same order, otherwise the
-order is not  important (false by default)</dd>
-<dt>checkTupleOrder: logical[1,1] -  if true, then the tuples in the</dt>
-<dd>compared relations are expected to be in the same order,
-otherwise the order is not important (false by default)</dd>
-</dl>
-<p>maxTolerance: double [1,1] - maximum allowed tolerance</p>
-<dl class="docutils">
-<dt>compareMetaDataBackwardRef: logical[1,1] if true, the CubeStruct&#8217;s</dt>
-<dd>referenced from the meta data objects are also compared</dd>
-</dl>
-<p class="last">maxRelativeTolerance: double [1,1] - maximum allowed
-relative tolerance</p>
-</dd>
-</dl>
-</dd>
-<dt>Output:</dt>
-<dd>isEq: logical[1,1] - result of comparison
-reportStr: char[1,] - report of comparsion</dd>
-</dl>
-</div></blockquote>
 <div class="highlight-python"><pre>PLOT - displays ellipsoidal tubes using the specified
   RelationDataPlotter
 
@@ -6695,51 +6613,38 @@ Output:
       plObj: smartdb.disp.RelationDataPlotter[1,1] - returns the relation
       data plotter object.</pre>
 </div>
-<div class="highlight-python"><pre>::</pre>
-</div>
-<div class="highlight-python"><pre>::</pre>
-</div>
 </div>
 <div class="section" id="elltool-reach-areach">
 <h2>elltool.reach.AReach<a class="headerlink" href="#elltool-reach-areach" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python"><pre>::</pre>
+<div class="highlight-python"><pre>CUT - extracts the piece of reach tube from given start time to given
+      end time. Given reach set self, find states that are reachable
+      within time interval specified by cutTimeVec. If cutTimeVec
+      is a scalar, then reach set at given time is returned.
+
+Input:
+  regular:
+      self.
+
+   cutTimeVec: double[1, 2]/double[1, 1] - time interval to cut.
+
+Output:
+  cutObj: elltool.reach.IReach[1, 1] - reach set resulting from the CUT
+        operation.
+
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  cutObj = rsObj.cut([3 5]);
+  dRsObj = elltool.reach.ReachDiscrete(dtsys, x0EllObj, dirsMat, timeVec);
+  dCutObj = dRsObj.cut([3 5]);</pre>
 </div>
-<blockquote>
-<div><dl class="docutils">
-<dt>CUT - extracts the piece of reach tube from given start time to given</dt>
-<dd>end time. Given reach set self, find states that are reachable
-within time interval specified by cutTimeVec. If cutTimeVec
-is a scalar, then reach set at given time is returned.</dd>
-<dt>Input:</dt>
-<dd><dl class="first last docutils">
-<dt>regular:</dt>
-<dd><blockquote class="first">
-<div>self.</div></blockquote>
-<p class="last">cutTimeVec: double[1, 2]/double[1, 1] - time interval to cut.</p>
-</dd>
-</dl>
-</dd>
-<dt>Output:</dt>
-<dd><dl class="first last docutils">
-<dt>cutObj: elltool.reach.IReach[1, 1] - reach set resulting from the CUT</dt>
-<dd>operation.</dd>
-</dl>
-</dd>
-<dt>Example:</dt>
-<dd>aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {&#8216;sin(t)&#8217;; &#8216;cos(t)&#8217;};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-x0EllObj = ell_unitball(2);
-timeVec = [0 10];
-dirsMat = [1 0; 0 1]&#8217;;
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-cutObj = rsObj.cut([3 5]);
-dRsObj = elltool.reach.ReachDiscrete(dtsys, x0EllObj, dirsMat, timeVec);
-dCutObj = dRsObj.cut([3 5]);</dd>
-</dl>
-</div></blockquote>
 <div class="highlight-python"><pre>DIMENSION - returns array of dimensions of given reach set array.
 
 Input:
@@ -7118,38 +7023,31 @@ Usage:
   use relTolArr = rsArr.getRelTol() if you want get only
       relTolArr</pre>
 </div>
-<div class="highlight-python"><pre>::</pre>
+<div class="highlight-python"><pre>GET_CENTER - returns the trajectory of the center of the reach set.
+
+Input:
+  regular:
+      self.
+
+Output:
+  trCenterMat: double[nDim, nPoints] - array of points that form the
+      trajectory of the reach set center, where nDim is reach set
+      dimentsion, nPoints - number of points in time grid.
+
+  timeVec: double[1, nPoints] - array of time values.
+
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  [trCenterMat timeVec] = rsObj.get_center();</pre>
 </div>
-<blockquote>
-<div><p>GET_CENTER - returns the trajectory of the center of the reach set.</p>
-<dl class="docutils">
-<dt>Input:</dt>
-<dd><dl class="first last docutils">
-<dt>regular:</dt>
-<dd>self.</dd>
-</dl>
-</dd>
-<dt>Output:</dt>
-<dd><dl class="first docutils">
-<dt>trCenterMat: double[nDim, nPoints] - array of points that form the</dt>
-<dd>trajectory of the reach set center, where nDim is reach set
-dimentsion, nPoints - number of points in time grid.</dd>
-</dl>
-<p class="last">timeVec: double[1, nPoints] - array of time values.</p>
-</dd>
-<dt>Example:</dt>
-<dd>aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {&#8216;sin(t)&#8217;; &#8216;cos(t)&#8217;};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-x0EllObj = ell_unitball(2);
-timeVec = [0 10];
-dirsMat = [1 0; 0 1]&#8217;;
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-[trCenterMat timeVec] = rsObj.get_center();</dd>
-</dl>
-</div></blockquote>
 <div class="highlight-python"><pre>GET_DIRECTIONS - returns the values of direction vectors for time grid
                  values.
 
@@ -7685,46 +7583,33 @@ Example:
   dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
   dRsObj.plotIa();</pre>
 </div>
-<div class="highlight-python"><pre>::</pre>
+<div class="highlight-python"><pre>REFINE - adds new approximations computed for the specified directions
+         to the given reach set or to the projection of reach set.
+
+Input:
+  regular:
+      self.
+      l0Mat: double[nDim, nDir] - matrix of directions for new
+          approximation
+
+Output:
+  regular:
+      reachObj: reach[1,1] - refine reach set for the directions
+          specified in l0Mat
+
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  newDirsMat = [1; -1];
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  rsObj = rsObj.refine(newDirsMat);</pre>
 </div>
-<blockquote>
-<div><dl class="docutils">
-<dt>REFINE - adds new approximations computed for the specified directions</dt>
-<dd>to the given reach set or to the projection of reach set.</dd>
-<dt>Input:</dt>
-<dd><dl class="first last docutils">
-<dt>regular:</dt>
-<dd><p class="first">self.
-l0Mat: double[nDim, nDir] - matrix of directions for new</p>
-<blockquote class="last">
-<div>approximation</div></blockquote>
-</dd>
-</dl>
-</dd>
-<dt>Output:</dt>
-<dd><dl class="first last docutils">
-<dt>regular:</dt>
-<dd><dl class="first last docutils">
-<dt>reachObj: reach[1,1] - refine reach set for the directions</dt>
-<dd>specified in l0Mat</dd>
-</dl>
-</dd>
-</dl>
-</dd>
-<dt>Example:</dt>
-<dd>aMat = [0 1; 0 0]; bMat = eye(2);
-SUBounds = struct();
-SUBounds.center = {&#8216;sin(t)&#8217;; &#8216;cos(t)&#8217;};
-SUBounds.shape = [9 0; 0 2];
-sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-x0EllObj = ell_unitball(2);
-timeVec = [0 10];
-dirsMat = [1 0; 0 1]&#8217;;
-newDirsMat = [1; -1];
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-rsObj = rsObj.refine(newDirsMat);</dd>
-</dl>
-</div></blockquote>
 <div class="highlight-python"><pre>REPMAT - is analogous to built-in repmat function with one exception - it
          copies the objects, not just the handles
 
@@ -7844,18 +7729,13 @@ Example:
   rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
   reachObj = rsObj.createInstance();</pre>
 </div>
-<div class="highlight-python"><pre>::</pre>
+<div class="highlight-python"><pre>Example:
+  import elltool.reach.ReachFactory;
+  crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
+  crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
+  rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
+  dim = rsObj.getDim();</pre>
 </div>
-<blockquote>
-<div><dl class="docutils">
-<dt>Example:</dt>
-<dd>import elltool.reach.ReachFactory;
-crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
-crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
-rsObj =  ReachFactory(&#8216;demo3firstTest&#8217;, crm, crmSys, false, false);
-dim = rsObj.getDim();</dd>
-</dl>
-</div></blockquote>
 <div class="highlight-python"><pre>Example:
   import elltool.reach.ReachFactory;
   crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
@@ -8386,6 +8266,9 @@ Examples:
 </li>
 </ul>
 
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="chap_acknowledge.html"
+                        title="previous chapter">Acknowledgement</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/chap_func.txt"
@@ -8414,7 +8297,10 @@ Examples:
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
-        <li><a href="main_manual.html">elltool_manual 0.1 documentation</a> &raquo;</li> 
+        <li class="right" >
+          <a href="chap_acknowledge.html" title="Acknowledgement"
+             >previous</a> |</li>
+        <li><a href="main_manual.html">Ellipsoidal Toolbox 0.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

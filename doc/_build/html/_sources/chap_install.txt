@@ -1,8 +1,4 @@
-.. role:: math(raw)
-   :format: html latex
-..
-
-Installation
+﻿Installation
 ============
 
 Additional Software

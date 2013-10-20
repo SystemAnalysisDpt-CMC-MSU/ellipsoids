@@ -1,8 +1,4 @@
-.. role:: math(raw)
-   :format: html latex
-..
-
-Examples
+﻿Examples
 ========
 
 Ellipsoids vs. Polytopes
@@ -27,7 +23,7 @@ Consider the system from chapter 1:
    u_1[k]\\
    u_2[k]\end{array}\right], ~~~ x[0]\in{\mathcal X}_0, ~~~ u[k]\in U, ~~~ k\geqslant0,
 
- where :math:`{\mathcal X}_0` is the set of initial conditions, and
+where :math:`{\mathcal X}_0` is the set of initial conditions, and
 :math:`U` is the control set.
 
 Let :math:`{\mathcal X}_0` and :math:`U` be unit boxes in
@@ -125,7 +121,7 @@ which results in equation ([spmassls]) getting an extra term
    v_1\\
    v_2\end{array}\right].
 
- Assuming that :math:`[v_1 ~~ v_2]^T` is unknown but bounded by
+Assuming that :math:`[v_1 ~~ v_2]^T` is unknown but bounded by
 ellipsoid :math:`{\mathcal E}(0, \frac{1}{4}I)`, we can compute the
 closed-loop reach set of the system with disturbance.
 

@@ -30,9 +30,8 @@ import os
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
-    'sphinx.ext.pngmath',
-    'sphinx.ext.mathjax',
     'sphinx.ext.ifconfig',
+    'sphinx.ext.mathjax',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -48,7 +47,7 @@ source_suffix = '.rst'
 master_doc = 'main_manual'
 
 # General information about the project.
-project = u'elltool_manual'
+project = u'Ellipsoidal Toolbox'
 copyright = u'2013, Lukashevichus K.'
 
 # The version info for the project you're documenting, acts as replacement for

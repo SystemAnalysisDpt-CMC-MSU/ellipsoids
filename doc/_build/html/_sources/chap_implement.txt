@@ -1,8 +1,4 @@
-.. role:: math(raw)
-   :format: html latex
-..
-
-Implementation
+﻿Implementation
 ==============
 
 Operations with ellipsoids
@@ -15,60 +11,73 @@ same ellipsoid :math:`{\mathcal E}(q,Q)`, with :math:`q\in{\bf R}^n` and
 For the ellipsoid class we overload the following functions and
 operators:
 
--  isEmpty(ellObj) - checks if :math:`{\mathcal E}(q,Q)` is an empty
+*  isEmpty(ellObj) - checks if :math:`{\mathcal E}(q,Q)` is an empty
    ellipsoid.
 
--  display(ellObj) - displays the details of ellipsoid
+*  display(ellObj) - displays the details of ellipsoid
    :math:`{\mathcal E}(q,Q)`, namely, its center :math:`q` and the shape
    matrix :math:`Q`.
 
--  plot(ellObj) - plots ellipsoid :math:`{\mathcal E}(q,Q)` if its
+*  plot(ellObj) - plots ellipsoid :math:`{\mathcal E}(q,Q)` if its
    dimension is not greater than 3.
 
--  firstEllObj == secEllObj - checks if ellipsoids
+*  firstEllObj == secEllObj - checks if ellipsoids
    :math:`{\mathcal E}(q_1,Q_1)` and :math:`{\mathcal E}(q_2,Q_2)` are
    equal.
 
--  firstEllObj = secEllObj - checks if ellipsoids
+*  firstEllObj ~= secEllObj - checks if ellipsoids
    :math:`{\mathcal E}(q_1,Q_1)` and :math:`{\mathcal E}(q_2,Q_2)` are
    not equal.
 
--  - concatenates the ellipsoids into the horizontal array, e.g. ellVec
+*  [ , ] - concatenates the ellipsoids into the horizontal array, e.g. ellVec
    = [firstEllObj secEllObj thirdEllObj].
 
--  - concatenates the ellipsoids into the vertical array, e.g. ellMat =
+*  [ ; ] - concatenates the ellipsoids into the vertical array, e.g. ellMat =
    [firstEllObj secEllObj; thirdEllObj fourthEllObj] defines
    :math:`2\times 2` array of ellipsoids.
 
--  firstEllObj >= secEllObj - checks if the ellipsoid firstEllObj is
+*  firstEllObj >= secEllObj - checks if the ellipsoid firstEllObj is
    bigger than the ellipsoid secEllObj, or equivalently
    :math:`{\mathcal E}(0,Q_1)\subseteq{\mathcal E}(0,Q_2)`.
 
--  firstEllObj <= secEllObj - checks if
+*  firstEllObj <= secEllObj - checks if
    :math:`{\mathcal E}(0,Q_2)\subseteq{\mathcal E}(0,Q_1)`.
 
--  -ellObj - defines ellipsoid :math:`{\mathcal E}(-q,Q)`.
+*  -ellObj - defines ellipsoid :math:`{\mathcal E}(-q,Q)`.
 
--  ellObj + bScal - defines ellipsoid :math:`{\mathcal E}(q+b,Q)`.
+*  ellObj + bScal - defines ellipsoid :math:`{\mathcal E}(q+b,Q)`.
 
--  ellObj - bScal - defines ellipsoid :math:`{\mathcal E}(q-b,Q)`.
+*  ellObj - bScal - defines ellipsoid :math:`{\mathcal E}(q-b,Q)`.
 
--  aMat \* ellObj - defines ellipsoid :math:`{\mathcal E}(q,AQA^T)`.
+*  aMat \* ellObj - defines ellipsoid :math:`{\mathcal E}(q,AQA^T)`.
 
--  ellObj.inv() - inverts the shape matrix of the ellipsoid:
+*  ellObj.inv() - inverts the shape matrix of the ellipsoid:
    :math:`{\mathcal E}(q,Q^{-1})`.
 
 All the listed operations can be applied to a single ellipsoid as well
-as to a two-dimensional array of ellipsoids. For example, To access
-individual elements of the array, the usual MATLAB subindexing is used:
+as to a two-dimensional array of ellipsoids. For example, 
+
+
+To access individual elements of the array, the usual MATLAB subindexing is used:
+
+
+
 Sometimes it may be useful to modify the shape of the ellipsoid without
 affecting its center. Say, we would like to bloat or squeeze the
-ellipsoid: Since function shape does not change the center of the
+ellipsoid: 
+
+Since function shape does not change the center of the
 ellipsoid, it only accepts scalars or square matrices as its second
 input parameter. Several functions access the internal data of the
-ellipsoid object: One way to check if two ellipsoids intersect, is to
+ellipsoid object: 
+
+
+One way to check if two ellipsoids intersect, is to
 compute the distance between them ( (“Stanley Chan Article Homepage”),
-Lin and Han (2002)): This result indicates that the ellipsoid
+Lin and Han (2002)): 
+
+
+This result indicates that the ellipsoid
 thirdEllObj does not intersect with the ellipsoid ellMat(2, 2), with all
 the other ellipsoids in ellMat it has nonempty intersection. If the
 intersection of the two ellipsoids is nonempty, it can be approximated
@@ -76,7 +85,10 @@ by ellipsoids from the outside as well as from the inside. See
 :math:`\mbox{\!\!\@OldCite{ROS_SABATER_THOMAS_EN_ELLIPSOIDAL_CALCULUS_BASED_ON_PROPAGATION_AND_FUSION}}`
 for more information about these methods. It can be checked that
 resulting ellipsoid externalEllObj contains the given intersection,
-whereas internalEllObj is contained in this intersection: Function
+whereas internalEllObj is contained in this intersection: 
+
+
+Function
 isInside in general checks if the intersection of ellipsoids in the
 given array contains the union or intersection of ellipsoids or
 polytopes.

@@ -1,8 +1,4 @@
-﻿.. role:: math(raw)
-   :format: html latex
-..
-
-Introduction
+﻿Introduction
 ============
 
 Research on dynamical and hybrid systems has produced several methods
@@ -64,9 +60,12 @@ reach set polytope is :math:`4k + 4` at the :math:`k`\ th step.
 In :math:`d/dt` (“$d/dt$ Homepage”), the reach set is approximated by
 unions of rectangular polytopes E.Asarin et al. (2000).
 
-|image|
+.. figure:: ddt.png
+   :align: center
+   :alt: approximation
+   :figwidth: 50 %
 
-[ddtfig]
+   Reach set approximation by union of rectangles.
 
 The algorithm works as follows. First, given the set of initial
 conditions defined as a polytope, the evolution in time of the
@@ -255,4 +254,4 @@ use the toolbox. Chapter 7 collects some conclusions and plans for
 future toolbox development. The functions provided by the toolbox
 together with their descriptions are listed in appendix A.
 
-.. |image| image:: ddt.eps
+.. |image| image:: ddt.png

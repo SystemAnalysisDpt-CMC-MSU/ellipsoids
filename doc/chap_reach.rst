@@ -1,8 +1,4 @@
-.. role:: math(raw)
-   :format: html latex
-..
-
-Reachability
+﻿Reachability
 ============
 
 Basics of Reachability Analysis
@@ -45,7 +41,7 @@ or [dtds1], with :math:`x(t_0)=x_0` through all possible controls
 
 .. math:: {\mathcal X}(t, t_0, {\mathcal X}_0) = \bigcup_{x_0\in{\mathcal X}_0}{\mathcal X}(t, t_0, x_0).
 
- [def:sub:`o`\ lrs] Here are two facts about forward reach sets.
+[def:sub:`o`\ lrs] Here are two facts about forward reach sets.
 
 #. :math:`{\mathcal X}(t, t_0, {\mathcal X}_0)` is the same for
    open-loop and closed-loop control.
@@ -72,15 +68,15 @@ system the state transition matrix is
 
 .. math:: \dot{\Phi}(t, t_0) = A(t)\Phi(t, t_0), \;\;\; \Phi(t, t) = I,
 
- which for constant :math:`A(t)\equiv A` simplifies as
+which for constant :math:`A(t)\equiv A` simplifies as
 
 .. math:: \Phi(t, t_0) = e^{A(t-t_0)} .
 
- For discrete-time linear system the state transition matrix is
+For discrete-time linear system the state transition matrix is
 
 .. math:: \Phi(t+1, t_0) = A(t)\Phi(t, t_0), \;\;\; \Phi(t, t) = I,
 
- which for constant :math:`A(t)\equiv A` simplifies as
+which for constant :math:`A(t)\equiv A` simplifies as
 
 .. math:: \Phi(t, t_0) = A^{t-t_0} .
 
@@ -132,7 +128,7 @@ the state :math:`y_1` at time :math:`t_1`. For the target set
 
 .. math:: {\mathcal Y}(t_1, t, {\mathcal Y}_1) = \bigcup_{y_1\in{\mathcal Y}_1}{\mathcal Y}(t_1, t, y_1).
 
- [def:sub:`o`\ lbrs] The backward reach set
+[def:sub:`o`\ lbrs] The backward reach set
 :math:`{\mathcal Y}(t_1, t, {\mathcal Y}_1)` is the largest *weakly
 invariant* set with respect to the target set :math:`{\mathcal Y}_1` and
 time values :math:`t` and :math:`t_1`. [4]_
@@ -303,11 +299,11 @@ with :math:`V(\tau_1, x(\tau_1))` given by ([maxminvf]), which yields
 
 .. math:: \underline{V}^1(t, x) \geqslant\underline{V}(t, x),
 
- and thus,
+and thus,
 
 .. math:: \overline{{\mathcal X}}_{OL}^1(t, t_0 {\mathcal X}_0) \subseteq \overline{{\mathcal X}}_{OL}(t, t_0, {\mathcal X}_0) .
 
- On the other hand, the piecewise minmax OLRS
+On the other hand, the piecewise minmax OLRS
 :math:`\underline{{\mathcal X}}_{OL}^1(t, t_0, {\mathcal X}_0)` is the
 subzero level set of the value function
 
@@ -322,11 +318,11 @@ with :math:`V(\tau_1, x(\tau_1))` given by ([minmaxvf]), which yields
 
 .. math:: \overline{V}(t, x) \geqslant\overline{V}^1(t, x),
 
- and thus,
+and thus,
 
 .. math:: \underline{{\mathcal X}}_{OL}(t, t_0 {\mathcal X}_0) \subseteq \underline{{\mathcal X}}_{OL}^1(t, t_0, {\mathcal X}_0) .
 
- We can now recursively define piecewise maxmin and minmax OLRS with
+We can now recursively define piecewise maxmin and minmax OLRS with
 :math:`k` corrections for :math:`t_0<\tau_1<\cdots<\tau_k<t`. The maxmin
 piecewise OLRS with :math:`k` corrections is
 
@@ -373,7 +369,7 @@ follows that
    \leqslant\underline{V}^k(t, x) \leqslant\overline{V}^k(t, x) \leqslant\cdots
    \leqslant\overline{V}^1(t, x) \leqslant\overline{V}(t, x) .
 
- Hence,
+Hence,
 
 .. math::
 
@@ -422,14 +418,14 @@ states :math:`{\mathcal X}_0`, the maxmin CLRS
    \dot{x}(\tau | v(\tau), u(\tau, x(\tau))) \in
    f(\tau, x(\tau), u(\tau, x(\tau)), v(\tau))
 
- in the continuous-time case, or
+in the continuous-time case, or
 
 .. math::
 
    x(\tau+1 | v(\tau), u(\tau, x(\tau))) \in
    f(\tau, x(\tau), u(\tau, x(\tau)), v(\tau))
 
- in the discrete-time case, with :math:`t_0\leqslant\tau<t`, is such
+in the discrete-time case, with :math:`t_0\leqslant\tau<t`, is such
 that :math:`x(t)=x`. [def:sub:`m`\ axminclrs] Given initial time
 :math:`t_0` and the set of initial states :math:`{\mathcal X}_0`, the
 maxmin CLRS
@@ -447,14 +443,14 @@ maxmin CLRS
    \dot{x}(\tau, v(\tau) | u(\tau, x(\tau))) \in
    f(\tau, x(\tau), u(\tau, x(\tau)), v(\tau))
 
- in the continuous-time case, or
+in the continuous-time case, or
 
 .. math::
 
    x(\tau+1, v(\tau) | u(\tau, x(\tau))) \in
    f(\tau, x(\tau), u(\tau, x(\tau)), v(\tau))
 
- in the discrete-time case, with :math:`t_0\leqslant\tau<t`, is such
+in the discrete-time case, with :math:`t_0\leqslant\tau<t`, is such
 that :math:`x(t)=x`. [def:sub:`m`\ inmaxclrs] By construction, both
 maxmin and minmax CLRS satisfy the semigroup property ([semigroup]).
 
@@ -493,14 +489,12 @@ through set valued integrals,
 and for discrete-time linear system through set-valued sums,
 
 .. math::
-
    \begin{array}{l}
    \overline{{\mathcal X}}_{OL}(t, t_0, {\mathcal X}_0) = \\
-   \left(\Phi(t, t_0){\mathcal X}_0 \oplus
-   \sum_{\tau=t_0}^{t-1}\Phi(t, \tau+1)B(\tau){\mathcal U}(\tau)\right) \dot{-} \\
+   (\Phi(t, t_0){\mathcal X}_0 \oplus \sum_{\tau=t_0}^{t-1}\Phi(t, \tau+1)B(\tau){\mathcal U}(\tau)) \dot{-} \\
    \sum_{\tau=t_0}^{t-1}\Phi(t, \tau+1)(-G(\tau)){\mathcal V}(\tau).
    \end{array}
-   \tag*{(\ref{ctlsmaxmin}d)}
+.. \tag*{(\ref{ctlsmaxmin}d)}
    \label{dtlsmaxmin}
 
 Similarly, the minmax OLRS for the continuous-time linear system is
@@ -522,12 +516,10 @@ and for the discrete-time linear system it is
 
    \begin{array}{l}
    \underline{{\mathcal X}}_{OL}(t, t_0, {\mathcal X}_0) = \\
-   \left(\Phi(t, t_0){\mathcal X}_0 \dot{-}
-   \sum_{\tau=t_0}^{t-1}\Phi(t, \tau+1)(-G(\tau)){\mathcal V}(\tau)\right)
-   \oplus \\
+   \left(\Phi(t, t_0){\mathcal X}_0 \dot{-} \sum_{\tau=t_0}^{t-1}\Phi(t, \tau+1)(-G(\tau)){\mathcal V}(\tau)\right) \oplus \\
    \sum_{\tau=t_0}^{t-1}\Phi(t, \tau+1)B(\tau){\mathcal U}(\tau).
    \end{array}
-   \tag*{(\ref{ctlsminmax}d)}
+.. \tag*{(\ref{ctlsminmax}d)}
    \label{dtlsminmax}
 
 The operation ‘:math:`\dot{-}`’ is *geometric difference*, also known as
@@ -556,7 +548,7 @@ in the continuous-time case, and for the discrete-time case into
    \sum_{\tau=\tau_k}^{t-1}\Phi(t, \tau+1)B(\tau){\mathcal U}(\tau)\right) \dot{-} \\
    \sum_{\tau=\tau_k}^{t-1}\Phi(t, \tau+1)(-G(\tau)){\mathcal V}(\tau).
    \end{array}
-   \tag*{(\ref{ctlsmaxmink}d)}
+.. \tag*{(\ref{ctlsmaxmink}d)}
    \label{dtlsmaxmink}
 
 Expression ([minmaxk]) translates into
@@ -565,11 +557,12 @@ Expression ([minmaxk]) translates into
 
    \begin{array}{l}
    \underline{{\mathcal X}}_{OL}^k(t, t_0, {\mathcal X}_0) = \\
-   \left(\Phi(t, \tau_k)\underline{{\mathcal X}}_{OL}^{k-1}(t, t_0, {\mathcal X}_0) \dot{-}
-   \int_{\tau_k}^t\Phi(t, \tau)(-G(\tau)){\mathcal V}(\tau)d\tau\right)
+   (\Phi(t, \tau_k)\underline{{\mathcal X}}_{OL}^{k-1}(t, t_0, {\mathcal X}_0) \dot{-}
+   \int_{\tau_k}^t\Phi(t, \tau)(-G(\tau)){\mathcal V}(\tau)d\tau)
    \oplus \\
    \int_{\tau_k}^t\Phi(t, \tau)B(\tau){\mathcal U}(\tau)d\tau,
    \end{array}
+
    \label{ctlsminmaxk}
 
 in the continuous-time case, and for the discrete-time case into
@@ -583,7 +576,7 @@ in the continuous-time case, and for the discrete-time case into
    \oplus \\
    \sum_{\tau=\tau_k}^{t-1}\Phi(t, \tau+1)B(\tau){\mathcal U}(\tau).
    \end{array}
-   \tag*{(\ref{ctlsminmaxk}d)}
+.. \tag*{(\ref{ctlsminmaxk}d)}
    \label{dtlsminmaxk}
 
 Since for any
@@ -596,9 +589,8 @@ it is true that
    ({\mathcal W}_1 \oplus {\mathcal W}_3) \dot{-} ({\mathcal W}_2 \oplus {\mathcal W}_3) \subseteq
    ({\mathcal W}_1 \oplus {\mathcal W}_3) \dot{-} {\mathcal W}_2,
 
- from ([ctlsmaxmink]), ([ctlsminmaxk]) and from [dtlsmaxmink],
+from ([ctlsmaxmink]), ([ctlsminmaxk]) and from [dtlsmaxmink],
 [dtlsminmaxk], it is clear that ([olrsinclusion]) is true.
-
 For linear systems, if the initial set :math:`{\mathcal X}_0`, control
 bounds :math:`{\mathcal U}(\tau)` and disturbance bounds
 :math:`{\mathcal V}(\tau)`, :math:`t_0\leqslant\tau<t`, are compact and
@@ -742,7 +734,7 @@ it follows that
    \leqslant\underline{V}^k_b(t, y) \leqslant\overline{V}^k_b(t, y) \leqslant\cdots
    \leqslant\overline{V}^1_b(t, y) \leqslant\overline{V}_b(t, y) .
 
- Hence,
+Hence,
 
 .. math::
 
@@ -792,14 +784,14 @@ target set :math:`{\mathcal Y}_1`, the maxmin CLBRS
    \dot{y}(\tau | v(\tau), u(\tau, y(\tau))) \in
    f(\tau, y(\tau), u(\tau, y(\tau)), v(\tau))
 
- in continuous-time case, or
+in continuous-time case, or
 
 .. math::
 
    y(\tau+1 | v(\tau), u(\tau, y(\tau))) \in
    f(\tau, y(\tau), u(\tau, y(\tau)), v(\tau))
 
- in discrete-time case, with :math:`t\leqslant\tau<t_1`, such that
+in discrete-time case, with :math:`t\leqslant\tau<t_1`, such that
 :math:`y(t) = y` and :math:`y(t_1)=y_1`. [def:sub:`m`\ axminclbrs] Given
 the terminal time :math:`t_1` and target set :math:`{\mathcal Y}_1`, the
 minmax CLBRS
@@ -816,14 +808,14 @@ minmax CLBRS
    \dot{y}(\tau, v(\tau) | u(\tau, y(\tau))) \in
    f(\tau, y(\tau), u(\tau, y(\tau)), v(\tau))
 
- in the continuous-time case, or
+in the continuous-time case, or
 
 .. math::
 
    y(\tau+1, v(\tau) | u(\tau, y(\tau))) \in
    f(\tau, y(\tau), u(\tau, y(\tau)), v(\tau))
 
- in the discrete-time case, with :math:`t\leqslant\tau<t_1`, such that
+in the discrete-time case, with :math:`t\leqslant\tau<t_1`, such that
 :math:`y(t) = y` and :math:`y(t_1)=y_1`. [def:sub:`m`\ inmaxclbrs] Both
 maxmin and minmax CLBRS satisfy the semigroup property
 ([semigroup:sub:`b`]).
@@ -851,7 +843,7 @@ and for the discrete-time linear system through set-valued sums,
    \sum_{\tau=t}^{t_1-1}-\Phi(t, \tau+1)B(\tau){\mathcal U}(\tau)\right) \dot{-} \\
    \sum_{\tau=t}^{t_1-1}\Phi(t, \tau+1)G(\tau){\mathcal V}(\tau).
    \end{array}
-   \tag*{(\ref{ctlsmaxminb}d)}
+.. \tag*{(\ref{ctlsmaxminb}d)}
    \label{dtlsmaxminb}
 
 Similarly, the minmax OLBRS for the continuous-time linear system is
@@ -878,7 +870,7 @@ and for the discrete-time linear system it is
    \oplus \\
    \sum_{\tau=t}^{t_1-1}-\Phi(t, \tau+1)B(\tau){\mathcal U}(\tau).
    \end{array}
-   \tag*{(\ref{ctlsminmaxb}d)}
+.. \tag*{(\ref{ctlsminmaxb}d)}
    \label{dtlsminmaxb}
 
 Now consider piecewise OLBRS with :math:`k` corrections. Expression
@@ -904,7 +896,7 @@ in the continuous-time case, and for the discrete-time case into
    \sum_{\tau=t}^{\tau_k-1}-\Phi(t, \tau+1)B(\tau){\mathcal U}(\tau)\right) \dot{-} \\
    \sum_{\tau=t}^{\tau_k-1}\Phi(t, \tau+1)G(\tau){\mathcal V}(\tau).
    \end{array}
-   \tag*{(\ref{ctlsmaxminbk}d)}
+.. \tag*{(\ref{ctlsmaxminbk}d)}
    \label{dtlsmaxminbk}
 
 Expression ([minmaxbk]) translates into
@@ -913,8 +905,8 @@ Expression ([minmaxbk]) translates into
 
    \begin{array}{l}
    \underline{{\mathcal Y}}_{OL}^k(t_1, t, {\mathcal Y}_1) = \\
-   \left(\Phi(t, \tau_k)\overline{{\mathcal Y}}_{OL}^{k-1}(t_1, \tau_k, {\mathcal Y}_1) \dot{-}
-   \int^{\tau_k}_t\Phi(t, \tau)G(\tau){\mathcal V}(\tau)d\tau\right)
+   (\Phi(t, \tau_k)\overline{{\mathcal Y}}_{OL}^{k-1}(t_1, \tau_k, {\mathcal Y}_1) \dot{-}
+   \int^{\tau_k}_t\Phi(t, \tau)G(\tau){\mathcal V}(\tau)d\tau)
    \oplus \\
    \int_{\tau_k}^t\Phi(t, \tau)B(\tau){\mathcal U}(\tau)d\tau,
    \end{array}
@@ -926,12 +918,12 @@ in the continuous-time case, and for the discrete-time case into
 
    \begin{array}{l}
    \underline{{\mathcal Y}}_{OL}^k(t_1, t, {\mathcal Y}_1) = \\
-   \left(\Phi(t, \tau_k)\overline{{\mathcal Y}}_{OL}^{k-1}(t_1, \tau_k, {\mathcal Y}_1) \dot{-}
-   \sum_{\tau=t}^{\tau_k-1}\Phi(t, \tau+1)G(\tau){\mathcal V}(\tau)\right)
+   (\Phi(t, \tau_k)\overline{{\mathcal Y}}_{OL}^{k-1}(t_1, \tau_k, {\mathcal Y}_1) \dot{-}
+   \sum_{\tau=t}^{\tau_k-1}\Phi(t, \tau+1)G(\tau){\mathcal V}(\tau))
    \oplus \\
    \sum_{\tau=t}^{\tau_k-1}-\Phi(t, \tau+1)B(\tau){\mathcal U}(\tau).
    \end{array}
-   \tag*{(\ref{ctlsminmaxk}d)}
+.. \tag*{(\ref{ctlsminmaxk}d)}
    \label{dtlsminmaxbk}
 
 For continuous-time linear systems
@@ -977,7 +969,7 @@ like the following:
    .. math::
 
       \arg\min_{\tau}
-      \{{\mathcal X}(\tau,t_0,{\mathcal X}_0)\cap{\mathcal Y}_1\neq\emptyset ~|~ t_0\leqslant\tau\leqslantt\}.
+      \{{\mathcal X}(\tau,t_0,{\mathcal X}_0)\cap{\mathcal Y}_1\neq\emptyset ~|~ t_0\leqslant\tau\leqslant t\}.
 
 #. Given the terminal time :math:`t_1`, target set
    :math:`{\mathcal Y}_1` and time :math:`t<t_1` find the set of states
@@ -1065,7 +1057,7 @@ which is equivalent to
 
 .. math:: l(t) = \Phi^T(t_0, t)l_0.
 
- If the reach set :math:`{\mathcal X}(t, t_0, {\mathcal E}(x_0,X_0))` is
+If the reach set :math:`{\mathcal X}(t, t_0, {\mathcal E}(x_0,X_0))` is
 nonempty, there exist tight external and tight internal approximating
 ellipsoids :math:`{\mathcal E}(x_c(t), X^+_l(t))` and
 :math:`{\mathcal E}(x_c(t), X^-_l(t))`, respectively, such that
@@ -1089,12 +1081,14 @@ The equation for the shape matrix of the external ellipsoid is
 
 .. math::
 
-   \begin{aligned}
    \dot{X}^+_l(t) & = & A(t)X^+_l(t) + X^+_l(t)A^T(t) +\nonumber \\
    & & \pi_l(t)X^+_l(t) + \frac{1}{\pi_l(t)}B(t)P(t)B^T(t) -\nonumber \\
    & & (X_l^{+}(t))^{1/2}S_l(t)(G(t)Q(t)G^T(t))^{1/2} \nonumber -\\
    & & (G(t)Q(t)G^T(t))^{1/2}S_l^T(t)(X_l^{+}(t))^{1/2}, \label{fwdext1} \\
-   X^+_l(t_0) & = & X_0, \label{fwdext2}\end{aligned}
+
+.. math::
+   
+   X^+_l(t_0) & = & X_0, \label{fwdext2}
 
 in which
 
@@ -1103,7 +1097,7 @@ in which
    \pi_l(t) = \frac{\langle l(t),
    B(t)P(t)B^T(t)l(t)\rangle^{1/2}}{\langle l(t), X^+_l(t)l(t)\rangle^{1/2}},
 
- and the orthogonal matrix :math:`S_l(t)` (:math:`S_l(t)S_l^T(t) = I`)
+and the orthogonal matrix :math:`S_l(t)` (:math:`S_l(t)S_l^T(t) = I`)
 is determined by the equation
 
 .. math::
@@ -1112,7 +1106,7 @@ is determined by the equation
    G(t)Q(t)G^T(t)l(t)\rangle^{1/2}}{\langle l(t),
    X_l^+(t)l(t)\rangle^{1/2}}(X_l^{+}(t))^{1/2}l(t).
 
- In the presence of disturbance, if the reach set is empty, the matrix
+In the presence of disturbance, if the reach set is empty, the matrix
 :math:`X^+_l(t)` becomes sign indefinite. For a system without
 disturbance, the terms containing :math:`G(t)` and :math:`Q(t)` vanish
 from the equation ([fwdext1]).
@@ -1121,12 +1115,12 @@ The equation for the shape matrix of the internal ellipsoid is
 
 .. math::
 
-   \begin{aligned}
    \dot{X}^-_l(t) & = & A(t)X^-_l(t) + X^-_l(t)A^T(t) +\nonumber \\
    & & (X_l^{-}(t))^{1/2}T_l(t)(B(t)P(t)B^T(t))^{1/2} +\nonumber \\
    & & (B(t)P(t)B^T(t))^{1/2}T_l^T(t)(X_l^{-}(t))^{1/2} -\nonumber \\
    & & \eta_l(t)X^-_l(t) - \frac{1}{\eta_l(t)}G(t)Q(t)G^T(t), \label{fwdint1} \\
-   X^-_l(t_0) & = & X_0, \label{fwdint2}\end{aligned}
+
+   X^-_l(t_0) & = & X_0, \label{fwdint2}
 
 in which
 
@@ -1135,7 +1129,7 @@ in which
    \eta_l(t) = \frac{\langle l(t),
    G(t)Q(t)G^T(t)l(t)\rangle^{1/2}}{\langle l(t), X^+_l(t)l(t)\rangle^{1/2}},
 
- and the orthogonal matrix :math:`T_l(t)` is determined by the equation
+and the orthogonal matrix :math:`T_l(t)` is determined by the equation
 
 .. math::
 
@@ -1143,7 +1137,7 @@ in which
    B(t)P(t)B^T(t)l(t)\rangle^{1/2}}{\langle l(t),
    X_l^-(t)l(t)\rangle^{1/2}}(X_l^{-}(t))^{1/2}l(t).
 
- Similarly to the external case, the terms containing :math:`G(t)` and
+Similarly to the external case, the terms containing :math:`G(t)` and
 :math:`Q(t)` vanish from the equation ([fwdint1]) for a system without
 disturbance.
 
@@ -1155,7 +1149,7 @@ of the reach set is given by
    x_l^*(t) = x_c(t) +
    \frac{X^+_l(t)l(t)}{\langle l(t), X^+_l(t)l(t)\rangle^{1/2}} .
 
- The boundary points :math:`x^*_l(t)` form trajectories, which we call
+The boundary points :math:`x^*_l(t)` form trajectories, which we call
 *extremal trajectories*. Due to the nonsingular nature of the state
 transition matrix :math:`\Phi(t,t_0)`, every boundary point of the reach
 set belongs to an extremal trajectory. To follow an extremal trajectory
@@ -1185,7 +1179,7 @@ fact,
    {\mathcal X}(t,t_0,{\mathcal E}(x_0,X_0)) =
    \bigcap_{\langle l_0,l_0\rangle=1}{\mathcal E}(x_c(t),X^+_l(t)).
 
- In practice this means that the more values of :math:`l_0` we use to
+In practice this means that the more values of :math:`l_0` we use to
 compute :math:`X^+_l(t)` and :math:`X^-_l(t)`, the better will be our
 approximation.
 
@@ -1231,12 +1225,14 @@ The equation for the shape matrix of the external ellipsoid is
 
 .. math::
 
-   \begin{aligned}
    \dot{Y}^+_l(t) & = & A(t)Y^+_l(t) + Y^+_l(t)A^T(t) -\nonumber \\
    & & \pi_l(t)Y^+_l(t) - \frac{1}{\pi_l(t)}B(t)P(t)B^T(t) +\nonumber \\
    & & (Y_l^{+}(t))^{1/2}S_l(t)(G(t)Q(t)G^T(t))^{1/2} +\nonumber \\
    & & (G(t)Q(t)G^T(t))^{1/2}S_l^T(t)(Y_l^{+}(t))^{1/2}, \label{bckext1} \\
-   Y^+_l(t_1) & = & Y_1, \label{bckext2}\end{aligned}
+
+.. math::
+
+   Y^+_l(t_1) & = & Y_1, \label{bckext2}
 
 in which
 
@@ -1246,7 +1242,7 @@ in which
    B(t)P(t)B^T(t)l(t)\rangle^{1/2}}{\langle l(t),
    Y^+_l(t)l(t)\rangle^{1/2}},
 
- and the orthogonal matrix :math:`S_l(t)` satisfies the equation
+and the orthogonal matrix :math:`S_l(t)` satisfies the equation
 
 .. math::
 
@@ -1254,16 +1250,16 @@ in which
    G(t)Q(t)G^T(t)l(t)\rangle^{1/2}}{\langle l(t),
    Y_l^+(t)l(t)\rangle^{1/2}}(Y_l^{+}(t))^{1/2}l(t).
 
- The equation for the shape matrix of the internal ellipsoid is
+The equation for the shape matrix of the internal ellipsoid is
 
 .. math::
 
-   \begin{aligned}
    \dot{Y}^-_l(t) & = & A(t)Y^-_l(t) + Y^-_l(t)A^T(t) -\nonumber \\
    & & (Y_l^{-}(t))^{1/2}T_l(t)(B(t)P(t)B^T(t))^{1/2} -\nonumber \\
    & & (B(t)P(t)B^T(t))^{1/2}T_l^T(t)(Y_l^{-}(t))^{1/2} +\nonumber \\
    & & \eta_l(t)Y^-_l(t) + \frac{1}{\eta_l(t)}G(t)Q(t)G^T(t), \label{bckint1} \\
-   Y^-_l(t_1) & = & Y_1, \label{bckint2}\end{aligned}
+ 
+   Y^-_l(t_1) & = & Y_1, \label{bckint2}
 
 in which
 
@@ -1273,7 +1269,7 @@ in which
    G(t)Q(t)G^T(t)l(t)\rangle^{1/2}}{\langle l(t),
    Y^+_l(t)l(t)\rangle^{1/2}},
 
- and the orthogonal matrix :math:`T_l(t)` is determined by the equation
+and the orthogonal matrix :math:`T_l(t)` is determined by the equation
 
 .. math::
 
@@ -1281,7 +1277,7 @@ in which
    B(t)P(t)B^T(t)l(t)\rangle^{1/2}}{\langle l(t),
    Y_l^-(t)l(t)\rangle^{1/2}}(Y_l^{-}(t))^{1/2}l(t).
 
- Just as in the forward reachability case, the terms containing
+Just as in the forward reachability case, the terms containing
 :math:`G(t)` and :math:`Q(t)` vanish from equations ([bckext1]) and
 ([bckint1]) in the absence of disturbances. The boundary value problems
 ([bckcenter]), ([bckext1]) and ([bckint1]) are converted to the initial
@@ -1310,7 +1306,7 @@ Consider the discrete-time linear system,
 .. math::
 
    x(t+1) = A(t)x(t) + B(t)u(t,x(t)) + G(t)v(t),
-   \tag*{(\ref{ctsystem})}
+..   \tag*{(\ref{ctsystem})}
    \label{dtsystem}
 
 in which :math:`x(t)\in{\bf R}^n` is the state,
@@ -1358,7 +1354,7 @@ or, equivalently
 
 .. math:: l(t) = \Phi^T(t_0, t)l_0 .
 
- There exist tight external ellipsoids
+There exist tight external ellipsoids
 :math:`{\mathcal E}(x_c(t), \overline{X}^+_l(t))`,
 :math:`{\mathcal E}(x_c(t), \underline{X}^+_l(t))` and tight internal
 ellipsoids :math:`{\mathcal E}(x_c(t), \overline{X}^-_l(t))`,
@@ -1397,16 +1393,16 @@ determined from
 
 .. math::
 
-   \begin{aligned}
    \hat{X}^+_l(t) & = & (1+\overline{\pi}_l(t))A(t)\overline{X}^+_l(t)A^T(t) +
    \left(1+\frac{1}{\overline{\pi}_l(t)}\right)
    B(t)P(t)B^T(t), \label{fwdextmaxmin1} \\
+
    \overline{X}^+_l(t+1) & = & \left((\hat{X}^+_l(t))^{1/2} +
    \overline{S}_l(t)(G(t)Q(t)G^T(t))^{1/2}\right)^T
    \times \nonumber \\
-   & &\left((\hat{X}^+_l(t))^{1/2} + \overline{S}_l(t)(G(t)Q(t)G^T(t))^{1/2}\right),
-   \label{fwdextmaxmin2}\\
-   \overline{X}^+_l(t_0) & = & X_0, \label{fwdextmaxmin3}\end{aligned}
+   & &\left((\hat{X}^+_l(t))^{1/2} + \overline{S}_l(t)(G(t)Q(t)G^T(t))^{1/2}\right), \label{fwdextmaxmin2}\\
+
+   \overline{X}^+_l(t_0) & = & X_0, \label{fwdextmaxmin3}
 
 wherein
 
@@ -1416,7 +1412,7 @@ wherein
    B(t)P(t)B^T(t)l(t+1)\rangle^{1/2}}{\langle l(t),
    \overline{X}^+_l(t)l(t)\rangle^{1/2}},
 
- and the orthogonal matrix :math:`\overline{S}_l(t)` is determined by
+and the orthogonal matrix :math:`\overline{S}_l(t)` is determined by
 the equation
 
 .. math::
@@ -1438,7 +1434,6 @@ determined from
 
 .. math::
 
-   \begin{aligned}
    \breve{X}^+_l(t) & = &
    \left((A(t)\underline{X}^+_l(t)A^T(t))^{1/2} +
    \underline{S}_l(t)(G(t)Q(t)G^T(t))^{1/2}\right)^T
@@ -1446,11 +1441,13 @@ determined from
    & &\left((A(t)\underline{X}^+_l(t)A^T(t))^{1/2} +
    \underline{S}_l(t)(G(t)Q(t)G^T(t))^{1/2}\right)
    \label{fwdextminmax1}\\
+
    \underline{X}^+_l(t+1) & = &
    (1+\underline{\pi}_l(t))\breve{X}^+_l(t) +
    \left(1+\frac{1}{\underline{\pi}_l(t)}\right)
    B(t)P(t)B^T(t), \label{fwdextminmax2} \\
-   \underline{X}^+_l(t_0) & = & X_0, \label{fwdextminmax3}\end{aligned}
+
+   \underline{X}^+_l(t_0) & = & X_0, \label{fwdextminmax3}
 
 where
 
@@ -1460,7 +1457,7 @@ where
    B(t)P(t)B^T(t)l(t+1)\rangle^{1/2}}{\langle l(t+1),
    \breve{X}^+_l(t)l(t+1)\rangle^{1/2}},
 
- and :math:`\underline{S}_l(t)` is orthogonal matrix determined from the
+and :math:`\underline{S}_l(t)` is orthogonal matrix determined from the
 equation
 
 .. math::
@@ -1482,7 +1479,6 @@ determined from
 
 .. math::
 
-   \begin{aligned}
    \hat{X}^-_l(t) & = &
    \left((A(t)\overline{X}^-_l(t)A^T(t))^{1/2} +
    \overline{T}_l(t)(B(t)P(t)B^T(t))^{1/2}\right)^T
@@ -1490,11 +1486,13 @@ determined from
    & &\left((A(t)\overline{X}^-_l(t)A^T(t))^{1/2} +
    \overline{T}_l(t)(B(t)P(t)B^T(t))^{1/2}\right)
    \label{fwdintmaxmin1}\\
+
    \overline{X}^-_l(t+1) & = &
    (1+\overline{\eta}_l(t))\hat{X}^-_l(t) +
    \left(1+\frac{1}{\underline{\eta}_l(t)}\right)
    G(t)Q(t)G^T(t), \label{fwdintmaxmin2} \\
-   \overline{X}^-_l(t_0) & = & X_0, \label{fwdintmaxmin3}\end{aligned}
+
+   \overline{X}^-_l(t_0) & = & X_0, \label{fwdintmaxmin3}
 
 where
 
@@ -1504,7 +1502,7 @@ where
    G(t)Q(t)G^T(t)l(t+1)\rangle^{1/2}}{\langle l(t+1),
    \hat{X}^-_l(t)l(t+1)\rangle^{1/2}},
 
- and :math:`\overline{T}_l(t)` is orthogonal matrix determined from the
+and :math:`\overline{T}_l(t)` is orthogonal matrix determined from the
 equation
 
 .. math::
@@ -1523,16 +1521,17 @@ determined by
 
 .. math::
 
-   \begin{aligned}
    \breve{X}^-_l(t) & = & (1+\underline{\eta}_l(t))A(t)\underline{X}^-_l(t)A^T(t) +
    \left(1+\frac{1}{\underline{\eta}_l(t)}\right)
    G(t)Q(t)G^T(t), \label{fwdintminmax1} \\
+
    \underline{X}^-_l(t+1) & = & \left((\breve{X}^-_l(t))^{1/2} +
    \underline{T}_l(t)(B(t)P(t)B^T(t))^{1/2}\right)^T
    \times \nonumber \\
    & &\left((\breve{X}^-_l(t))^{1/2} + \underline{T}_l(t)(B(t)P(t)B^T(t))^{1/2}\right),
    \label{fwdintminmax2}\\
-   \underline{X}^-_l(t_0) & = & X_0, \label{fwdintminmax3}\end{aligned}
+
+   \underline{X}^-_l(t_0) & = & X_0, \label{fwdintminmax3}
 
 wherein
 
@@ -1542,7 +1541,7 @@ wherein
    G(t)Q(t)G^T(t)l(t+1)\rangle^{1/2}}{\langle l(t),
    \underline{X}^-_l(t)l(t)\rangle^{1/2}},
 
- and the orthogonal matrix :math:`\underline{T}_l(t)` is determined by
+and the orthogonal matrix :math:`\underline{T}_l(t)` is determined by
 the equation
 
 .. math::
@@ -1564,14 +1563,14 @@ boundary of the maxmin CLRS is
    x_l^+(t) = x_c(t) + \frac{\overline{X}^+_l(t)l(t)}{\langle l(t),
    \overline{X}^+_l(t)l(t)\rangle^{1/2}} ,
 
- and the bounday point of minmax CLRS is
+and the bounday point of minmax CLRS is
 
 .. math::
 
    x_l^-(t) = x_c(t) + \frac{\overline{X}^-_l(t)l(t)}{\langle l(t),
    \overline{X}^-_l(t)l(t)\rangle^{1/2}} .
 
- Points :math:`x^{\pm}_l(t)`, :math:`t\geqslantt_0`, form extremal
+Points :math:`x^{\pm}_l(t)`, :math:`t\geqslantt_0`, form extremal
 trajectories. In order for the system to follow the extremal trajectory
 specified by some vector :math:`l_0`, the initial state must be
 
@@ -1599,7 +1598,7 @@ nonempty,
    \overline{{\mathcal X}}_{CL}(t,t_0,{\mathcal E}(x_0,X_0)) =
    \bigcap_{\langle l_0,l_0\rangle=1}{\mathcal E}(x_c(t),\overline{X}^+_l(t)).
 
- Similarly for
+Similarly for
 :math:`\underline{{\mathcal X}}_{CL}(t,t_0,{\mathcal E}(x_0,X_0))`,
 
 .. math::
@@ -1615,7 +1614,7 @@ obtained for those directions :math:`l(t)` satisfying
 .. math::
 
    l(t) = \Phi^T(t_1,t)l_1,
-   \tag*{(\ref{bckadjoint})}
+..   \tag*{(\ref{bckadjoint})}
    \label{bckadjointd}
 
 with some fixed :math:`l_1`, for which they exist.
@@ -1641,7 +1640,7 @@ sum-difference
    \dot{-}G(t){\mathcal E}(-q(t),Q(t))
    \right)
 
- and
+and
 
 .. math::
 
@@ -1650,7 +1649,7 @@ sum-difference
    \dot{-}G(t){\mathcal E}(-q(t),Q(t))
    \right)
 
- in direction :math:`l(t)` from [bckadjointd]. Section
+in direction :math:`l(t)` from [bckadjointd]. Section
 [subsec:sub:`s`\ umdiff] describes the operation of geometric
 sum-difference for ellipsoids.
 
@@ -1669,7 +1668,7 @@ difference-sum
    \oplus B(t){\mathcal E}(-p(t),P(t))
    \right)
 
- and
+and
 
 .. math::
 
@@ -1679,7 +1678,7 @@ difference-sum
    \oplus B(t){\mathcal E}(-p(t),P(t))
    \right)
 
- in direction :math:`l(t)` from [bckadjointd]. Section
+in direction :math:`l(t)` from [bckadjointd]. Section
 [subsec:sub:`d`\ iffsum] describes the operation of geometric
 difference-sum for ellipsoids.
 
@@ -1744,7 +1743,7 @@ Transactions on Automatic Control* 52 (1): 26–38.
       {\bf dist}({\mathcal W}, {\mathcal Z}) = \min\{\langle w-z, w-z\rangle^{1/2}
       ~|~ w\in{\mathcal W}, \; z\in{\mathcal Z}\},
 
-    where :math:`\langle\cdot, \cdot\rangle` denotes inner product.
+   where :math:`\langle\cdot, \cdot\rangle` denotes inner product.
 
 .. [7]
    The Minkowski difference of sets
@@ -1768,7 +1767,7 @@ Transactions on Automatic Control* 52 (1): 26–38.
 
    .. math:: A(t) = U(t)\Sigma(t)V(t) .
 
-    The parameter :math:`\delta` can be chosen based on the number of
+   The parameter :math:`\delta` can be chosen based on the number of
    time steps for which the reach set must be computed and the required
    accuracy. The issue of inverting ill-conditioned matrices is also
    addressed in A. A. Kurzhanskiy (2007).
