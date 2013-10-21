@@ -7,7 +7,7 @@ function chapter05_section03_dispPic_gen
 %            System Analysis Department 2013 $
     close all
     elltool.doc.snip.s_chapter05_section03_snippet07;
-    figHandle = findobj('Type','figure');
-    elltool.doc.picgen.PicGenController.savePicFileNameByCaller(figHandle, 0.38, 0.35);
+    hfigHandle = findobj('Type','figure');
+    elltool.doc.picgen.PicGenController.savePicFileNameByCaller(hfigHandle, 0.38, 0.35);
 
 end

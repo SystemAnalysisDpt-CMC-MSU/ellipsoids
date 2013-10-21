@@ -7,7 +7,8 @@ function chapter05_section03_reachTubeStatProj_gen
 %            System Analysis Department 2013 $
     close all
     elltool.doc.snip.s_chapter05_section03_snippet04;
-    figHandle = findobj('Type','figure');
-    elltool.doc.picgen.PicGenController.savePicFileNameByCaller(figHandle(4), 0.5, 0.6);
+    hfigHandle =  findobj('Type','figure', '-regexp','Name',...
+        'reachTube_stat[a-zA-Z_0-9;,\]\[\s]*=[1;0\],\w*=\w*');
+    elltool.doc.picgen.PicGenController.savePicFileNameByCaller(hfigHandle, 0.5, 0.6);
 
 end

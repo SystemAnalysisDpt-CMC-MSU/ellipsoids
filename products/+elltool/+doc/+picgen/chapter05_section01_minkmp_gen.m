@@ -8,6 +8,6 @@ function chapter05_section01_minkmp_gen
     elltool.doc.snip.s_chapter05_section01_snippet02;
     elltool.doc.snip.s_chapter05_section01_snippet16;
     elltool.doc.snip.s_chapter05_section01_snippet19;
-    figHandle = findobj('Type','figure');
-    elltool.doc.picgen.PicGenController.savePicFileNameByCaller(figHandle, 0.4, 0.5);
+    hfigHandle = findobj('Type','figure');
+    elltool.doc.picgen.PicGenController.savePicFileNameByCaller(hfigHandle, 0.4, 0.5);
 end

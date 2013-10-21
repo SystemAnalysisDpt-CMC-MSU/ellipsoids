@@ -8,7 +8,7 @@ function chapter05_section01_minkdiff_gen
     close all
     elltool.doc.snip.s_chapter05_section01_snippet02;
     elltool.doc.snip.s_chapter05_section01_snippet17;
-    figHandle = findobj('Type','figure');
-    elltool.doc.picgen.PicGenController.savePicFileNameByCaller(figHandle, 0.4, 0.5);
+    hfigHandle = findobj('Type','figure');
+    elltool.doc.picgen.PicGenController.savePicFileNameByCaller(hfigHandle, 0.4, 0.5);
 
 end
