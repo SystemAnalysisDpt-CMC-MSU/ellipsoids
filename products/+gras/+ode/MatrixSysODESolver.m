@@ -49,18 +49,10 @@ classdef MatrixSysODESolver
             varargin=cellfun(@(x)x(:),varargin,'UniformOutput',false);
             initValVec=vertcat(varargin{:});
             resList=cell(1,nFuncs);
-            if(nargout > 1 + self.nEquations*nFuncs)
-                indExtraOutputVec = (1 + self.nEquations*nFuncs):...
-                    (2 + self.nEquations*nFuncs);
-                [timeVec,resList{:},varargout{indExtraOutputVec(1)}]=...
-                    self.fSolveFunc(fMatrixDerivFuncList{:},...
-                    timeVec,initValVec(:));
-                varargout{indExtraOutputVec(2)} = nFuncs;
-            else
-                [timeVec,resList{:}]=...
-                    self.fSolveFunc(fMatrixDerivFuncList{:},...
-                    timeVec,initValVec(:));
-            end;
+            outExtraList=cell(1,nargout-nFuncs*length(self.sizeEqList)-1);
+            [timeVec,resList{:},outExtraList{:}]=...
+                self.fSolveFunc(fMatrixDerivFuncList{:},...
+                timeVec,initValVec(:));
             timeVec=timeVec.';
             nTimePoints=length(timeVec);
             nEqs=self.nEquations;
@@ -74,6 +66,7 @@ classdef MatrixSysODESolver
                         [sizeEqList{iEq} nTimePoints]);
                 end
             end
+            varargout = [varargout outExtraList];
         end
     end
     methods (Access=private)

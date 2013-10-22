@@ -1,5 +1,5 @@
 classdef MatrixSysReshapeOde45RegInterp
-    properties(Access=public)
+    properties(Access=private)
         VecOde45RegInterpObj
         sizeEqList
         nFuncs
