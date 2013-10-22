@@ -224,7 +224,7 @@ hyperplanes, halfspaces and polytopes. Hyperplane :math:`H(c,\gamma)` in
 
 
 with :math:`c\in{\bf R}^n` and :math:`\gamma\in{\bf R}` fixed.
-[hyperplanedef] The distance from ellipsoid :math:`{\mathcal E}(q,Q)` to
+The distance from ellipsoid :math:`{\mathcal E}(q,Q)` to
 hyperplane :math:`H(c,\gamma)` is
 
 .. math::
@@ -666,14 +666,14 @@ First, using the result of section 2.2.2, we obtain tight external
 :math:`{\mathcal E}(q_1+q_2,Q_l^{0+})` and internal
 :math:`{\mathcal E}(q_1+q_2,Q_l^{0-})` ellipsoidal approximations of the
 set :math:`{\mathcal E}(q_1,Q_1)\oplus{\mathcal E}(q_2,Q_2)`. In order
-for the set (:eq:`minkpm`) to be nonempty, inclusion
+for the set :eq:`minkpm` to be nonempty, inclusion
 :math:`{\mathcal E}(0,Q_3)\subseteq{\mathcal E}(0,Q_l^{0+})` must be
-true for any :math:`l`. Note, however, that even if (:eq:`minkpm`) is
+true for any :math:`l`. Note, however, that even if :eq:`minkpm` is
 nonempty, it may be that
 :math:`{\mathcal E}(0,Q_3)\not\subseteq{\mathcal E}(0,Q_l^{0-})`, then
 internal approximation for this direction does not exist.
 
-Assuming that (:eq:`minkpm`) is nonempty and
+Assuming that :eq:`minkpm` is nonempty and
 :math:`{\mathcal E}(0,Q_3)\subseteq{\mathcal E}(0,Q_l^{0-})`, the second
 step would be, using the results of section 2.2.3, to compute tight
 external ellipsoidal approximation
@@ -733,7 +733,7 @@ First of all, we transform the hyperplane :math:`H(c,\gamma)` into
 
 .. math:: y = Sx - \frac{\gamma}{\langle c,c\rangle^{1/2}}Sc,
 
-where :math:`S` is an orthogonal matrix found by :eq:`valign1`-:eq:`valign3`)
+where :math:`S` is an orthogonal matrix found by :eq:`valign1`-:eq:`valign3`
 with :math:`v_1=c` and :math:`v_2=[1~0~\cdots~0]^T`. The ellipsoid in
 the new coordinates becomes :math:`{\mathcal E}(q',Q')` with
 

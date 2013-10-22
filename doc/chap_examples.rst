@@ -56,19 +56,24 @@ The mechanical system presented in figure [springmassfig], is described
 by the following system of equations:
 
 .. math::
+   :label: spmass1
 
-   \begin{aligned}
-   m_1\ddot{x}_1+(k_1+k_2)x_1-k_2x_2 & = & u_1, \label{spmass1}\\
-   m_2\ddot{x}_2-k_2x_1+(k_1+k_2)x_2 & = & u_2 . \label{spmass2}\end{aligned}
+   m_1\ddot{x}_1+(k_1+k_2)x_1-k_2x_2 & = & u_1, 
+
+.. math::
+   :label: spmass2
+   
+   m_2\ddot{x}_2-k_2x_1+(k_1+k_2)x_2 & = & u_2 . 
 
 Here :math:`u_1` and :math:`u_2` are the forces applied to masses
 :math:`m_1` and :math:`m_2`, and we shall assume
 :math:`[u_1 ~~ u_2]^T\in{\mathcal E}(0,I)`. The initial conditions can
 be taken as :math:`x_1(0)=0`, :math:`x_2(0)=2`. Defining
 :math:`x_3=\dot{x}_1` and :math:`x_4=\dot{x}_2`, we can rewrite
-([spmass1]-[spmass2]) as a linear system in standard form:
+:eq:`spmass1`-:eq:`spmass2` as a linear system in standard form:
 
 .. math::
+   :label: spmassls
 
    \left[\begin{array}{c}
    \dot{x}_1 \\
@@ -89,18 +94,18 @@ be taken as :math:`x_1(0)=0`, :math:`x_2(0)=2`. Defining
    \frac{1}{m_1} & 0\\
    0 & \frac{1}{m_2}\end{array}\right]\left[\begin{array}{c}
    u_1\\
-   u_2\end{array}\right]. \label{spmassls}
+   u_2\end{array}\right]. 
 
-Now we can compute the reach set of system ([spmass1]-[spmass2]) for
-given time by computing the reach set of the linear system ([spmassls])
+Now we can compute the reach set of system :eq:`spmass1`-:eq:`spmass2` for
+given time by computing the reach set of the linear system :eq:`spmassls`
 and taking its projection onto :math:`(x_1, x_2)` subspace. Figure
 [mechreachfig](a) shows the reach set of the system
-([spmass1]-[spmass2]) evolving in time from :math:`t=0` to :math:`t=4`.
+:eq:`spmass1`-:eq:`spmass2` evolving in time from :math:`t=0` to :math:`t=4`.
 Figure [mechreachfig](b) presents a snapshot of this reach set at time
 :math:`t=4`.
 
 So far we considered an ideal system without any disturbance, such as
-friction. We introduce disturbance to ([spmass1]-[spmass2]) by adding
+friction. We introduce disturbance to :eq:`spmass1`-:eq:`spmass2` by adding
 extra terms, :math:`v_1` and :math:`v_2`,
 
 .. math::

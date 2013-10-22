@@ -95,18 +95,18 @@ complexity of ellipsoidal method grows linearly.</p>
 <h2>System with Disturbance<a class="headerlink" href="#system-with-disturbance" title="Permalink to this headline">¶</a></h2>
 <p>The mechanical system presented in figure [springmassfig], is described
 by the following system of equations:</p>
-<div class="math">
-\[\begin{split}\begin{aligned}
-m_1\ddot{x}_1+(k_1+k_2)x_1-k_2x_2 &amp; = &amp; u_1, \label{spmass1}\\
-m_2\ddot{x}_2-k_2x_1+(k_1+k_2)x_2 &amp; = &amp; u_2 . \label{spmass2}\end{aligned}\end{split}\]</div>
+<div class="math" id="equation-spmass1">
+<span class="eqno">(1)</span>\[\begin{split}m_1\ddot{x}_1+(k_1+k_2)x_1-k_2x_2 &amp; = &amp; u_1,\end{split}\]</div>
+<div class="math" id="equation-spmass2">
+<span class="eqno">(2)</span>\[\begin{split}m_2\ddot{x}_2-k_2x_1+(k_1+k_2)x_2 &amp; = &amp; u_2 .\end{split}\]</div>
 <p>Here <span class="math">\(u_1\)</span> and <span class="math">\(u_2\)</span> are the forces applied to masses
 <span class="math">\(m_1\)</span> and <span class="math">\(m_2\)</span>, and we shall assume
 <span class="math">\([u_1 ~~ u_2]^T\in{\mathcal E}(0,I)\)</span>. The initial conditions can
 be taken as <span class="math">\(x_1(0)=0\)</span>, <span class="math">\(x_2(0)=2\)</span>. Defining
 <span class="math">\(x_3=\dot{x}_1\)</span> and <span class="math">\(x_4=\dot{x}_2\)</span>, we can rewrite
-([spmass1]-[spmass2]) as a linear system in standard form:</p>
-<div class="math">
-\[\begin{split}\left[\begin{array}{c}
+<a href="#equation-spmass1">(1)</a>-<a href="#equation-spmass2">(2)</a> as a linear system in standard form:</p>
+<div class="math" id="equation-spmassls">
+<span class="eqno">(3)</span>\[\begin{split}\left[\begin{array}{c}
 \dot{x}_1 \\
 \dot{x}_2 \\
 \dot{x}_3 \\
@@ -125,16 +125,16 @@ x_4 \end{array}\right] + \left[\begin{array}{cc}
 \frac{1}{m_1} &amp; 0\\
 0 &amp; \frac{1}{m_2}\end{array}\right]\left[\begin{array}{c}
 u_1\\
-u_2\end{array}\right]. \label{spmassls}\end{split}\]</div>
-<p>Now we can compute the reach set of system ([spmass1]-[spmass2]) for
-given time by computing the reach set of the linear system ([spmassls])
+u_2\end{array}\right].\end{split}\]</div>
+<p>Now we can compute the reach set of system <a href="#equation-spmass1">(1)</a>-<a href="#equation-spmass2">(2)</a> for
+given time by computing the reach set of the linear system <a href="#equation-spmassls">(3)</a>
 and taking its projection onto <span class="math">\((x_1, x_2)\)</span> subspace. Figure
 [mechreachfig](a) shows the reach set of the system
-([spmass1]-[spmass2]) evolving in time from <span class="math">\(t=0\)</span> to <span class="math">\(t=4\)</span>.
+<a href="#equation-spmass1">(1)</a>-<a href="#equation-spmass2">(2)</a> evolving in time from <span class="math">\(t=0\)</span> to <span class="math">\(t=4\)</span>.
 Figure [mechreachfig](b) presents a snapshot of this reach set at time
 <span class="math">\(t=4\)</span>.</p>
 <p>So far we considered an ideal system without any disturbance, such as
-friction. We introduce disturbance to ([spmass1]-[spmass2]) by adding
+friction. We introduce disturbance to <a href="#equation-spmass1">(1)</a>-<a href="#equation-spmass2">(2)</a> by adding
 extra terms, <span class="math">\(v_1\)</span> and <span class="math">\(v_2\)</span>,</p>
 <div class="math">
 \[\begin{split}\begin{aligned}
