@@ -518,7 +518,7 @@ classdef AReach < elltool.reach.IReach
                 newTimeVec,  approxType, atStrCMat,...
                 btStrCMat, ptStrCMat, ptStrCVec, ctStrCMat, ...
                 qtStrCMat, qtStrCVec, x0MatArray, ...
-                x0VecMat,l0Mat,isDisturbance)
+                x0VecMat,l0Mat,isDisturbance, APPROX_TYPE)
             import gras.ellapx.smartdb.F;
             
             probDynObj = self.getProbDynamics(atStrCMat, ...
@@ -526,12 +526,12 @@ classdef AReach < elltool.reach.IReach
                     qtStrCMat, qtStrCVec, x0MatArray, ...
                     x0VecMat, newTimeVec, self.relTol, ...
                     isDisturbance);
-                ellTubeRel = self.makeEllTubeRel(...
+                ellTubeRel1 = self.makeEllTubeRel(...
                     probDynObj, l0Mat, ...
                     newTimeVec, isDisturbance, self.relTol, approxType);
                 ellTubeRel = ...
-                    ellTubeRel.getTuplesFilteredBy(...
-                    APPROX_TYPE, approxType).getData()
+                    ellTubeRel1.getTuplesFilteredBy(...
+                    APPROX_TYPE, approxType).getData();
              
  
         end 
@@ -551,27 +551,27 @@ classdef AReach < elltool.reach.IReach
             sysDimCols = size(oldData.QArray{1}, 2);
             %
             dataDimVec = oldData.dim;
-            l0VecNum = size(dataDimVec, 1);
-            l0Mat = zeros(dataDimVec(1), l0VecNum);
-            x0VecMat = zeros(sysDimRows, l0VecNum);
-            x0MatArray = zeros(sysDimRows, sysDimCols, l0VecNum);
+            nGoodDirs = size(dataDimVec, 1);
+            l0Mat = zeros(dataDimVec(1), nGoodDirs);
+            x0VecMat = zeros(sysDimRows, nGoodDirs);
+            x0MatArray = zeros(sysDimRows, sysDimCols, nGoodDirs);
             if self.isBackward
-                for il0Num = 1 : l0VecNum
-                    l0Mat(:, il0Num) =...
-                        oldData.ltGoodDirMat{il0Num}(:, 1);
+                for iGoodDir = 1 : nGoodDirs
+                    l0Mat(:, iGoodDir) =...
+                        oldData.ltGoodDirMat{iGoodDir}(:, 1);
                     %
-                    x0VecMat(:, il0Num) = oldData.aMat{il0Num}(:, 1);
-                    x0MatArray(:, :, il0Num) =...
-                        oldData.QArray{il0Num}(:, :, 1);
+                    x0VecMat(:, iGoodDir) = oldData.aMat{iGoodDir}(:, 1);
+                    x0MatArray(:, :, iGoodDir) =...
+                        oldData.QArray{iGoodDir}(:, :, 1);
                 end
             else
-                for il0Num = 1 : l0VecNum
-                    l0Mat(:, il0Num) =...
-                        oldData.ltGoodDirMat{il0Num}(:, end);
+                for iGoodDir = 1 : nGoodDirs
+                    l0Mat(:, iGoodDir) =...
+                        oldData.ltGoodDirMat{iGoodDir}(:, end);
                     %
-                    x0VecMat(:, il0Num) = oldData.aMat{il0Num}(:, end);
-                    x0MatArray(:, :, il0Num) =...
-                        oldData.QArray{il0Num}(:, :, end);
+                    x0VecMat(:, iGoodDir) = oldData.aMat{iGoodDir}(:, end);
+                    x0MatArray(:, :, iGoodDir) =...
+                        oldData.QArray{iGoodDir}(:, :, end);
                 end
             end
             [atStrCMat btStrCMat ctStrCMat ptStrCMat ptStrCVec ...
@@ -580,48 +580,37 @@ classdef AReach < elltool.reach.IReach
             %
             % ext/int-approx on the next time interval
             %
-            ellTubeRelList = cell(1, l0VecNum);
+            ellTubeRelList = cell(1, nGoodDirs);
             isDisturbance = self.isDisturbance(ctStrCMat, qtStrCMat);
             
+            %
             pCalc=elltool.pcalc.ParCalculator();
-           
-            for il0Num = l0VecNum: -1 : 1
-                 l0Mat=l0Mat(:, il0Num);
-            end
-            [nTimeSGoodDirs,l0VecNum]=size(l0Mat);
-            kVec=zeros(1,l0VecNum); kVec(:)=1;
-            l0MatCVec=mat2cell(l0Mat,nTimeSGoodDirs,[kVec])
+            
+            [nTimeSGoodDirs]=size(l0Mat,1);
+            l0MatCVec=mat2cell(fliplr(l0Mat),nTimeSGoodDirs,[ones(1,nGoodDirs)]);
             
             
+            [sysDimRows, sysDimCols, nGoodDirs]=size(x0MatArray);
+            x0MatArrayCArray=mat2cell(flipdim(x0MatArray,3),sysDimRows, sysDimCols,[ones(1,nGoodDirs)]);
+            x0MatArrayCVec=cell(1,nGoodDirs);
+            x0MatArrayCVec(:)={x0MatArrayCArray{:,:,:}};
             
-            for il0Num = l0VecNum: -1 : 1
-                 x0MatArray=x0MatArray(:,:, il0Num);
-            end
-            [sysDimRows, sysDimCols, l0VecNum]=size(x0MatArray);
-            kVec=zeros(1,l0VecNum); kVec(:)=1;
-            x0MatArrayCArray=mat2cell(x0MatArray,sysDimRows, sysDimCols,[kVec])
-            x0MatArrayCVec=cell(1,l0VecNum);
-            x0MatArrayCVec(:)={x0MatArrayCArray{:,:,:}}
+            [sysDimRows]=size(x0VecMat,1);
+            x0VecMatCVec=mat2cell(fliplr(x0VecMat),sysDimRows,[ones(1,nGoodDirs)]);
             
-            
-            for il0Num = l0VecNum: -1 : 1
-                 x0VecMat=x0VecMat(:, il0Num);
-            end
-            [sysDimRows, l0VecNum]=size(x0VecMat);
-            kVec=zeros(1,l0VecNum); kVec(:)=1;
-            x0VecMatCVec=mat2cell(x0VecMat,sysDimRows,[kVec])
-            
-            selfCVec=cell(1,l0VecNum);
-            newTimeVecCVec=cell(1,l0VecNum);
-            approxTypeCVec=cell(1,l0VecNum);
-            atStrCMatCVec=cell(1,l0VecNum);
-            btStrCMatCVec=cell(1,l0VecNum);
-            ptStrCMatCVec=cell(1,l0VecNum);
-            ptStrCVecCVec=cell(1,l0VecNum);
-            ctStrCMatCVec=cell(1,l0VecNum);
-            qtStrCMatCVec=cell(1,l0VecNum);
-            qtStrCVecCVec=cell(1,l0VecNum);
-            isDisturbanceCVec=cell(1,l0VecNum);
+            selfCVec=cell(1,nGoodDirs);
+            newTimeVecCVec=cell(1,nGoodDirs);
+            approxTypeCVec=cell(1,nGoodDirs);
+            atStrCMatCVec=cell(1,nGoodDirs);
+            btStrCMatCVec=cell(1,nGoodDirs);
+            ptStrCMatCVec=cell(1,nGoodDirs);
+            ptStrCVecCVec=cell(1,nGoodDirs);
+            ctStrCMatCVec=cell(1,nGoodDirs);
+            qtStrCMatCVec=cell(1,nGoodDirs);
+            qtStrCVecCVec=cell(1,nGoodDirs);
+            isDisturbanceCVec=cell(1,nGoodDirs);
+            APPROX_TYPECVec=cell(1,nGoodDirs);
+
             
             selfCVec(:)={self};
             newTimeVecCVec(:)={newTimeVec};
@@ -634,16 +623,15 @@ classdef AReach < elltool.reach.IReach
             qtStrCMatCVec(:)={qtStrCMat};
             qtStrCVecCVec(:)={qtStrCVec};
             isDisturbanceCVec(:)={isDisturbance};
+            APPROX_TYPECVec(:)={APPROX_TYPE};
        
              [ellTubeRelCVec]=pCalc.eval(@elltool.reach.AReach.fCalcTube, selfCVec,  ...
                 newTimeVecCVec,  approxTypeCVec, atStrCMatCVec,...
                 btStrCMatCVec, ptStrCMatCVec, ptStrCVecCVec, ctStrCMatCVec, ...
                 qtStrCMatCVec, qtStrCVecCVec, x0MatArrayCVec, ...
-                x0VecMatCVec,l0MatCVec,isDisturbanceCVec)
-               
-             for il0Num = l0VecNum: -1 : 1
-                  ellTubeRelList{il0Num}=cell2mat(ellTubeRelCVec(il0Num))
-             end
+                x0VecMatCVec,l0MatCVec,isDisturbanceCVec, APPROX_TYPECVec);
+
+             ellTubeRelList=flipud(ellTubeRelCVec);
         end
     end
     %
@@ -766,6 +754,7 @@ classdef AReach < elltool.reach.IReach
             end
         end
     end
+
     methods
         function self=AReach(linSys, x0Ell, l0Mat, timeVec, varargin)
             import modgen.common.checkmultvar;
@@ -1352,14 +1341,7 @@ classdef AReach < elltool.reach.IReach
             
         end
         
-        function [reachSetObj outReachObj]=fCalcTube3 (reachSetObj, outReachObj, outReachObjLinSysCVec,iLinSys)
-                          reachSetObj = ...
-                            reachSetObj.evolve(...
-                            getNewTime(outReachObj.switchSysTimeVec,...
-                           outReachObj.isBackward,iLinSys),...
-                           outReachObjLinSysCVec);
-         
-        end    
+       
         function outReachObj = refine(self, l0Mat)
             import modgen.common.throwerror;
             import gras.ellapx.enums.EApproxType;
@@ -1397,24 +1379,8 @@ classdef AReach < elltool.reach.IReach
             reachSetObj = feval(class(outReachObj), linSys, x0Ell,...
                 l0Mat, timeLimsVec);
             %
-%             
-%             pCalc=elltool.pcalc.ParCalculator();
-%             
-%             outReachObjLinSysCVec=cell(1,sysTimeVecLenght-1);
-%             outReachObjLinSysCVec=outReachObj.linSysCVec(2 : sysTimeVecLenght)
-%             
-%             iLinSys = 2 : sysTimeVecLenght;
-%             [M,N]=size(iLinSys);
-%             k=zeros(1,sysTimeVecLenght-1); k(1,:)=N/(sysTimeVecLenght-1);
-%             iLinSys1=mat2cell(iLinSys,M,[k]);
-%             
-%             [reachSetObj1, outReachObj1]=pCalc.eval(@elltool.reach.AReach.fCalcTube3,...
-%                 reachSetObj, outReachObj, outReachObjLinSysCVec,iLinSys)               
-%             for iLinSys = 2 : sysTimeVecLenght
-%                   reachSetObj{iLinSys}=cell2mat(reachSetObj1(iLinSys))
-%                   outReachObj{iLinSys}=cell2mat(outReachObj1(iLinSys))
-%              end
-% %             
+            
+            
             for iLinSys = 2 : sysTimeVecLenght
                 reachSetObj = ...
                     reachSetObj.evolve(...

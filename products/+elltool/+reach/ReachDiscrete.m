@@ -189,10 +189,8 @@ classdef ReachDiscrete < elltool.reach.AReach
             end
             pCalc=elltool.pcalc.ParCalculator();
             
-            l0Mat=l0Mat(:, 1:nTubes);
-            [nInitialGoodDirs,nTubes]=size(l0Mat);
-            kVec=zeros(1,nTubes); kVec(1,:)=1;
-            l0CVec=mat2cell(l0Mat,nInitialGoodDirs,[kVec]);
+            [nInitialGoodDirs]=size(l0Mat,1);
+            l0CVec=mat2cell(l0Mat,nInitialGoodDirs,[ones(1,nTubes)]);
             
             
             probDynObjCVec=cell(1,nTubes);

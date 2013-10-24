@@ -11,9 +11,9 @@ classdef ParCalculator
             %             and Computer Science,
             %             System Analysis Department 2013 $
             %
-        
          varargout=cell(1,nargout); 
-         [varargout{:}]=modgen.pcalc.auxdfeval(f, varargin{:});
+         [varargout{:}]=modgen.pcalc.auxdfeval(f, varargin{:},'ClusterSize',1);
+         %[varargout{:}]=modgen.pcalc.auxdfeval(f, varargin{:});
         end 
     end
 end
