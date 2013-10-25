@@ -11,9 +11,10 @@ classdef ParCalculator
             %             and Computer Science,
             %             System Analysis Department 2013 $
             %
-         varargout=cell(1,nargout); 
-         [varargout{:}]=modgen.pcalc.auxdfeval(f, varargin{:},'ClusterSize',1);
-         %[varargout{:}]=modgen.pcalc.auxdfeval(f, varargin{:});
+          nMaxParProcess=elltool.conf.Properties.getConfRepoMgr.getParam('parallelCompProps.nMaxParProcess')
+          varargout=cell(1,nargout); 
+          [varargout{:}]=modgen.pcalc.auxdfeval(f, varargin{:},'ClusterSize',nMaxParProcess);
+      
         end 
     end
 end
