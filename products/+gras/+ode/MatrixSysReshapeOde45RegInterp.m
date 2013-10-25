@@ -31,7 +31,7 @@ classdef MatrixSysReshapeOde45RegInterp
             %       gras.ode.VecOde45RegInterp for system of matrix
             %       equations.
             % $Author: Vadim Danilov <vadimdanilov93@gmail.com> $  
-            % $Date: 24-10-2013$
+            % $Date: 24-oct-2013$
             % $Copyright: Moscow State University,
             %  Faculty of Computational Mathematics and Cybernetics,
             %  Science, System Analysis Department 2013 $
@@ -67,14 +67,16 @@ classdef MatrixSysReshapeOde45RegInterp
             %   Output:
             %       timeVec: double[nPoints,1] - time grid, same meaning
             %           as in ode45
-            %       varargout: cell[1,nargout-1] of double array - cell
-            %           vector, which contains nEquations*nFuncs arrays of
-            %           dobule (nEquations for each function), each of 
-            %           which is a solution of the corresponding equation
-            %           for the corresponding function.
+            %       outArg1: any[]
+            %           ...
+            %       outArgPenult: any[] - these variables contains
+            %           nEquations*nFuncs arrays of dobule (nEquations
+            %           for each function), each of which is a solution of
+            %           the corresponding equation for the corresponding
+            %           function.
             %
             % $Author: Vadim Danilov  <vadimdanilov93@gmail.com>
-            % $	$Date: 24-10-2013$
+            % $	$Date: 24-oct-2013$
             % $Copyright: Moscow State University,
             %            Faculty of Computational Mathematics and Computer
             %            Science, System Analysis Department 2013 $
